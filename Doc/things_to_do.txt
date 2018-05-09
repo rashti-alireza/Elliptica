@@ -1,0 +1,12 @@
+. setup git local -> done
+. setup git remote
+. setup hierarchy of foldors
+. setup make files
+. automatic heaader inclusion
+. my config for installation
+. designe skeleton
+. designe structures
+. designe par file
+. designe control flow of project
+. designe control flow of prints
+. designe skeleton of initial date using new idea
