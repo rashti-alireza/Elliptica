@@ -1,2 +1,4 @@
 #Ignore the following:
-*.*~ # ignore backup joe files
+
+# ignore backup joe files:
+*.*~ 
