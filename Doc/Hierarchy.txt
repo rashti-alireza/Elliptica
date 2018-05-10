@@ -1,0 +1,26 @@
+
+Explaining the folders tree:
+.
+├── Bin : Executables
+├── Doc : Documentation
+├── Lib : Object files
+└── Src : Source Code
+    ├── Main
+    │   ├── Cores : Main codes and data types
+    │   └── Modules : Modules
+    │       ├── Coordinates
+    │       ├── Error_Handlings
+    │       ├── File_Tools
+    │       ├── Maths
+    │       │   ├── Linear_Algebra
+    │       │   ├── Precisions
+    │       │   └── Solvers
+    │       ├── Memory_Managers
+    │       ├── Prints
+    │       └── Utilites
+    └── Projects : Projects
+        └── BNS_Initial_Data
+            ├── Initial_Data_Passive_Method
+            └── TOV
+
+21 directories
