@@ -1,6 +1,6 @@
 . setup git local -> done
 . setup git remote
-. setup hierarchy of foldors
+. setup hierarchy of foldors -> done
 . setup make files
 . automatic heaader inclusion
 . my config for installation
@@ -10,3 +10,7 @@
 . designe control flow of project
 . designe control flow of prints
 . designe skeleton of initial date using new idea
+. designe solver
+. designe multiplication matrix
+. designe fields and it spectral coeffs
+. 
