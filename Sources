@@ -1,0 +1,13 @@
+#Sources to be compiled
+
+modules_path  = $(TOP)/Src/Main/Cores
+modules_path += $(TOP)/Src/Main/Modules/Coordinates
+modules_path += $(TOP)/Src/Main/Modules/Error_Handlings
+modules_path += $(TOP)/Src/Main/Modules/File_Tools
+modules_path += $(TOP)/Src/Main/Modules/Libraries
+modules_path += $(TOP)/Src/Main/Modules/Memory_Managers
+modules_path += $(TOP)/Src/Main/Modules/Prints
+modules_path += $(TOP)/Src/Main/Modules/Utilites
+modules_path += $(TOP)/Src/Main/Modules/Maths/Linear_Algebra/
+modules_path += $(TOP)/Src/Main/Modules/Maths/Precisions/
+modules_path += $(TOP)/Src/Main/Modules/Maths/Solvers/
