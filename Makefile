@@ -9,8 +9,8 @@ Lib := $(TOP)/Lib
 #Including MyConfig which has projects and gcc flags among others
 include MyConfig
 
-#Including Sources:
-include Sources
+#Including Modules:
+include MyModules
 
 #Searching path for module libraries
 INCLUDE = -I $(TOP)/Src/Main/Modules/Libraries
