@@ -4,13 +4,15 @@
 #Makefile Directory
 TOP := $(shell pwd)
 
-#Compiler
-CC = gcc
+#Lib directory
+Lib := $(TOP)/Lib
+#Including MyConfig which has projects and gcc flags among others
+include MyConfig
 
-#gcc flags
-GCCFLAGS = -Wall -g
+#Including Sources:
+include Sources
 
-#Include header files from different libraries
+#Searching path for module libraries
 INCLUDE = -I $(TOP)/Src/Main/Modules/Libraries
 
 #Compiler flags
@@ -22,15 +24,23 @@ LDFLAGS  = -lumfpack -lblas -lgfortran -llapack
 LDFLAGS += -lfftw3
 LDFLAGS += -lm
 
-#Sources:
-src = $(TOP)
+##Note: the following making object is very rudimentary
+## I need to work on it more later
+#Making Object files
+c_src += $(foreach dir,$(modules_path),$(wildcard $(dir)/*.c))
+c_src += $(foreach dir,$(projects_path),$(wildcard $(dir)/*.c))
+obj = $(c_src:.c=.o)
+	
+###Targets###
 
 #Compiling abc - default target
 .PHONY: abc
-abc: $(obj)
-	$(CC) $(CFLAGS) -o $@ $? $(LDFLAGS)
+$(EXE): $(obj)
+	$(CC) $(CFLAGS) -o $(EXEDIR)/$(EXE) $? $(LDFLAGS)
 
 #Cleaning the whole object and binary files 
 .PHONY: clean
 clean:
-	-rm -rf $(TOP)/Bin/* $(TOP)/Lib/*
+	-rm -rf $(TOP)/Bin/* $(TOP)/$(Lib)/*
+	$(foreach dir, $(modules_path), rm -rf $(dir)/*.o)
+	$(foreach dir, $(projects_path), rm -rf $(dir)/*.o)
