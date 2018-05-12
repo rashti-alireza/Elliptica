@@ -16,8 +16,7 @@ include MyModules
 INCLUDE = -I $(TOP)/Src/Main/Modules/Libraries
 
 #Compiler flags
-CFLAGS  = $(GCCFLAGS)
-CFLAGS += $(INLCUDE)
+CFLAGS = $(GCCFLAGS)
 
 #Linking Libraries
 LDFLAGS  = -lumfpack -lblas -lgfortran -llapack
@@ -36,7 +35,7 @@ obj = $(c_src:.c=.o)
 #Compiling abc - default target
 .PHONY: abc
 $(EXE): $(obj)
-	$(CC) $(CFLAGS) -o $(EXEDIR)/$(EXE) $? $(LDFLAGS)
+	$(CC) $(CFLAGS) $(INCLUDE) -o $(EXEDIR)/$(EXE) $? $(LDFLAGS)
 
 #Cleaning the whole object and binary files 
 .PHONY: clean
