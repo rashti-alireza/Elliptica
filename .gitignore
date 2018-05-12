@@ -2,3 +2,4 @@
 
 # ignore backup joe files:
 *.*~ 
+*~
