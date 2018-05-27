@@ -3,3 +3,4 @@
 # ignore backup joe files:
 *.*~ 
 *~
+DEADJOE
