@@ -1,9 +1,0 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <ctype.h>
-#include <assert.h>
-#include <float.h>
-#include <math.h>
-#include <time.h>
-#include <omp.h>
