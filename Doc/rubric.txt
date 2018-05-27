@@ -1,0 +1,6 @@
+Some rubric which should be met during the coding:
+
+1. The First letter of folder is capital
+2. All files are written in small letters
+3. tab should be 2 space i.e. /b/b = /t
+4. comments and explanations in the codes may be written in small letters
