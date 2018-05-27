@@ -1,0 +1,42 @@
+
+*** These modified files were found in JOE when it aborted on Wed May 23 07:29:38 2018
+*** JOE was aborted because the terminal closed
+
+*** File '(Unnamed)'
+SPLTMP=ispell.tmp;cat >$SPLTMP;aspell --lang=en_US.utf-8 -x -c $SPLTMP </dev/tty >/dev/tty;tr -d <$SPLTMP '\012';/bin/rm $SPLTMP
+
+*** File '(Unnamed)'
+find_remaining_bfaces
+make_bface
+find_adjacent_inner
+populate_adjacent
+IsCollocated
+get_x_coord
+IsC
+make_bface
+Sxx
+??
+
+*** File '(Unnamed)'
+t3_question.par
+t3_question.par
+t3_question.par
+t3/DNSdata_properties.txt
+ssh_ip.txt
+l
+l
+1
+1
+bashrc_neeshjaa
+reading_parameter_file.c
+reading_parameter_file.c
+reading_parameter_file.c
+reading_input_file.c
+reading_input_file.c
+reading_input_file.c
+
+*** File '* Startup Log *'
+Processing '/etc/joe/joerc'...
+Processing '/etc/joe/ftyperc'...
+Finished processing /etc/joe/ftyperc
+Finished processing /etc/joe/joerc
