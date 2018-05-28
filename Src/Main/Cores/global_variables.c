@@ -6,7 +6,9 @@
 #include "global_variables.h"
 
 /* initiate global variables */
-void global_variables_init(void)
+int global_variables_init(void)
 {
   global_parameter = 0;
+  
+  return EXIT_SUCCESS;
 }

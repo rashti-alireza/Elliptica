@@ -23,6 +23,8 @@ int read_input_file(char *const path)
   /* clean up */
   fclose(input);
   free(buff);
+  
+  return EXIT_SUCCESS;
 }
 
 /* populating parameters:
@@ -38,7 +40,7 @@ static void populate_parameters(char *const buff)
   i = strlen(buff)+1;
   buff2 = malloc(i);
   checkup(buff2);
-  stcpy(buff2,buff);
+  strcpy(buff2,buff);
   
   tok = strtok(buff2,delimit);
   while (tok != 0)
@@ -56,17 +58,17 @@ static void populate_parameters(char *const buff)
       {
         par_l = malloc(i);
         checkup(par_l);
-        strcp(par_l,tok2);
+        strcpy(par_l,tok2);
       }
       else if (f == RIGHT)
       {
         par_r = malloc(i);
         checkup(par_r);
-        strcp(par_r,tok2);
+        strcpy(par_r,tok2);
       }
       
       f = RIGHT;
-    }
+    }// while (tok2 != 0)
     
     add_parameter(par_l,par_r);
     
@@ -75,13 +77,13 @@ static void populate_parameters(char *const buff)
     if (par_l != 0)	free(par_l);
     if (par_r != 0)	free(par_r);
     
-  }
+  }// while (tok != 0)
   
 }
   
 
 /* parsing and reading input file and making buffer */
-static void *make_buff(FILE *input)
+static void *make_buffer(FILE *input)
 {
   char *buff, c;
   int i;

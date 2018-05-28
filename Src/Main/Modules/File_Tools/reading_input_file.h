@@ -10,5 +10,5 @@
 enum FLOW {LEFT,RIGHT};
 
 void add_parameter(char *lv, char *rv);
-static void *make_buff(FILE *input);
+static void *make_buffer(FILE *input);
 static void populate_parameters(char *const buff);

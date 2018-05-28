@@ -1,4 +1,4 @@
 #include "core_lib.h"
-#include "global_variables.h"
 
-void global_variables_init(void);
+int read_input_file(char *const path);
+int global_variables_init(void);

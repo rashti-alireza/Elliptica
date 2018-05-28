@@ -13,7 +13,8 @@ include MyConfig
 include MyModules
 
 #Searching path for module libraries
-INCLUDE = -I $(TOP)/Src/Main/Modules/Libraries
+INCLUDE  = -I$(TOP)/Src/Main/Modules/Libraries
+INCLUDE2 = -I$(TOP)/Src/Main/Cores
 
 #Compiler flags
 CFLAGS = $(GCCFLAGS)
@@ -34,8 +35,8 @@ obj = $(c_src:.c=.o)
 
 #Compiling abc - default target
 .PHONY: abc
-$(EXE): $(obj)
-	$(CC) $(CFLAGS) $(INCLUDE) -o $(EXEDIR)/$(EXE) $? $(LDFLAGS)
+$(EXE): $(c_src)
+	$(CC) $(CFLAGS) $(INCLUDE) $(INCLUDE2) -o $(EXEDIR)/$(EXE) $? $(LDFLAGS)
 
 #Cleaning the whole object and binary files 
 .PHONY: clean

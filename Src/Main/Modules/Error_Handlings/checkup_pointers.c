@@ -14,7 +14,7 @@ void checkup_pointer(void *const p, char *file, int line)
   {
     fprintf(stderr,"!!!!!!ERROR!!!!!!:\n"
       "\"Pointer allocation was failed.\n\""
-        "File: %s\nLine:%d\n");
+        "File: %s\nLine:%d\n",__FILE__,__LINE__);
     printf("!!!!!!EXIT due to ERROR!!!!!!\n");
     abort();
   }
@@ -25,7 +25,7 @@ void bad_input_error(char *file, int line)
 {
     fprintf(stderr,"!!!!!!ERROR!!!!!!:\n"
       "\"There is no such input for the function.\n\""
-        "File: %s\nLine:%d\n");
+        "File: %s\nLine:%d\n",__FILE__,__LINE__);
     printf("!!!!!!EXIT due to ERROR!!!!!!\n");
     abort();
 }

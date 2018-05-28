@@ -49,8 +49,6 @@ void *get_parameter(char *const par_name)
 */
 void *get_parameter_value(char *const par_name,Flag_T kind, double *value)
 {
-  extern Parameter_T **global_parameter;
-  char *v
   int i;
   
   i = 0;
