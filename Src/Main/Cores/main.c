@@ -7,15 +7,17 @@
 
 int main(int argn, char **argv, char **argv2)
 {
-  read_input_file(argv[argn-1]);
+  read_input_file(argv[argn-1]);// reading and populating parameters
+  global_variables_init();// initiating global variables
   
-  add_projets();//add all of the desired projects to the project data base
   
-  proj1 = get_project("BNS_Initial_Data");
-  project_execute(proj1);
+  //add_projets();//add all of the desired projects to the project data base
   
-  project_cleanup(proj1);
-  data_base_cleanup();
+  //proj1 = get_project("BNS_Initial_Data");
+  //project_execute(proj1);
+  
+  //project_cleanup(proj1);
+  //data_base_cleanup();
   
   return EXIT_SUCCESS;
 }
