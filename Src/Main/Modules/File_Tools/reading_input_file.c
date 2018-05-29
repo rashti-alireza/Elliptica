@@ -56,15 +56,11 @@ static void populate_parameters(char *const buff)
       
       if (f == LEFT)
       {
-        par_l = malloc(i);
-        checkup(par_l);
-        strcpy(par_l,tok2);
+        par_l = strdup(tok2);
       }
       else if (f == RIGHT)
       {
-        par_r = malloc(i);
-        checkup(par_r);
-        strcpy(par_r,tok2);
+        par_r = strdup(tok2);
       }
       
       f = RIGHT;
