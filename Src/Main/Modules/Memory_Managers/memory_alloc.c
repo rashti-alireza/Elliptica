@@ -13,13 +13,13 @@ void *alloc_parameter(Parameter_T **mem)
 {
   int i;
   
-  for (i = 0; mem[i] != 0; i++);
+  for (i = 0; mem != 0 && mem[i] != 0 ; i++);
   
   mem = realloc(mem,(i+2)*sizeof(*mem));
-  checkup(mem);
+  pointerEr(mem);
   
   mem[i] = malloc(sizeof(*mem[i]));
-  checkup(mem[i]);
+  pointerEr(mem[i]);
   
   mem[i+1] = 0;
   

@@ -11,18 +11,11 @@ void add_parameter(char *lv, char *rv)
   assert(lv != 0);
   
   Parameter_T *par;
-  int l = strlen(lv),
-      r = strlen(rv);
   
   par = alloc_parameter(global_parameter);
   
-  par->lv = malloc(l+1);
-  checkup(par->lv);
-  strcpy(par->lv,lv);
-  
-  par->rv = malloc(r+1);
-  checkup(par->rv);
-  strcpy(par->rv,rv);
+  par->lv = strdup(lv);
+  par->rv = strdup(rv);
 }
 
 /* having parameter name, it returns a pointer to 
@@ -66,7 +59,7 @@ void *get_parameter_value(char *const par_name,Flag_T kind, double *value)
         return global_parameter[i]->rv;
       }
       else
-        bad_input();
+        bad_inputEr();
     }
     
     i++;

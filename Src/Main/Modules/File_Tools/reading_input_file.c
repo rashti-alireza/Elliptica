@@ -11,14 +11,20 @@ int read_input_file(char *const path)
   FILE *input;// input file
   char *buff;
   
+  null_pathEr(path);
+  
   input = fopen(path,"r");
-  checkup(input);
+  pointerEr(input);
   
   /* parsing and reading input file and making buffer */
   buff = make_buffer(input);
   
   /* making parameters */
   populate_parameters(buff);
+  
+  /* printing parameters */
+  if (check_print(PRINT_PARAMETER))
+    print_parameter();
   
   /* clean up */
   fclose(input);
@@ -33,14 +39,10 @@ int read_input_file(char *const path)
 */
 static void populate_parameters(char *const buff)
 {
-  char *tok, delimit[1] = {ENTER}, delimit2[1] = {EQUAL};
+  char *tok, delimit[2] = {ENTER,'\0'}, delimit2[2] = {EQUAL,'\0'};
   char *buff2;
-  int i;
   
-  i = strlen(buff)+1;
-  buff2 = malloc(i);
-  checkup(buff2);
-  strcpy(buff2,buff);
+  buff2 = strdup(buff);
   
   tok = strtok(buff2,delimit);
   while (tok != 0)
@@ -52,7 +54,6 @@ static void populate_parameters(char *const buff)
     tok2 = strtok(tok,delimit2);
     while (tok2 != 0)
     {
-      i = strlen(tok2)+1;
       
       if (f == LEFT)
       {
@@ -64,11 +65,13 @@ static void populate_parameters(char *const buff)
       }
       
       f = RIGHT;
+      tok2 = strtok(0,delimit2);
+      
     }// while (tok2 != 0)
     
     add_parameter(par_l,par_r);
     
-    tok = strtok(0,delimit2);
+    tok = strtok(0,delimit);
     
     if (par_l != 0)	free(par_l);
     if (par_r != 0)	free(par_r);
@@ -81,7 +84,7 @@ static void populate_parameters(char *const buff)
 /* parsing and reading input file and making buffer */
 static void *make_buffer(FILE *input)
 {
-  char *buff, c;
+  char *buff = 0, c;
   int i;
   
   i = 0;
@@ -96,21 +99,21 @@ static void *make_buffer(FILE *input)
     /* excluding out the comments */
     else if (c == COMMENT)
     {
-      while (c != ENTER)
+      while (c != ENTER || c != EOF)
         c = fgetc(input);
     }
     
     else
     {
       buff = realloc(buff,i+1);
-      checkup(buff);
+      pointerEr(buff);
       buff[i++] = c;
     }
     
   }// end of while
 
     buff = realloc(buff,i+1);
-    checkup(buff);
+    pointerEr(buff);
     buff[i++] = END;
     
   return buff;
