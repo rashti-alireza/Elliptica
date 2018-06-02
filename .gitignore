@@ -7,5 +7,7 @@ DEADJOE
 # ignore folder Bin
 Bin
 
-
+#ignore input files
+*.in
+*.in~
 
