@@ -11,3 +11,7 @@ Bin
 *.in
 *.in~
 
+#ignore output directory
+*_output/
+
+
