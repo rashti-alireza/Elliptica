@@ -12,6 +12,16 @@ Bin
 *.in~
 
 #ignore output directory
-*_output/
+*_output_*/
+
+#ignore Input directory
+Input/*
+
+#ignore makes
+MyConfig
+Makefile
+MyModules
+
+
 
 
