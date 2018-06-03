@@ -10,11 +10,22 @@ int read_input_file(char *const path)
 {
   FILE *input;// input file
   char *buff;
+  char name[100]={'\0'};
+  char *path2;
   
   null_pathEr(path);
   
   input = fopen(path,"r");
   pointerEr(input);
+  
+  /* making a folder at the directory of 
+  // input file with the name of "inputfile_output" 
+  // and rewritting global_path with new directory path 
+  */
+  sprintf(name,"%s_output",global_inputfile_name);
+  path2 = make_directory(global_path,name,YES);
+  free(global_path);
+  global_path = path2;
   
   /* parsing and reading input file and making buffer */
   buff = make_buffer(input);
@@ -23,8 +34,8 @@ int read_input_file(char *const path)
   populate_parameters(buff);
   
   /* printing parameters */
-  if (check_print(PRINT_PARAMETER))
-    print_parameter();
+  if (test_print(PRINT_PARAMETER))
+    print_parameters();
   
   /* clean up */
   fclose(input);
