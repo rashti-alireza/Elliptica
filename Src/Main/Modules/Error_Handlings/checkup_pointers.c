@@ -12,10 +12,10 @@ void checkup_pointer_error(void *const p, char *file, int line)
 {
   if (p == NULL)
   {
-    fprintf(stderr,"\t!!!!!!ERROR!!!!!!\n"
+    fprintf(stderr,ERROR_MASSAGE
       "\"Pointer allocation was failed.\"\n"
         "File: %s\nLine:%d\n",file,line);
-    printf("\t!!!!!!EXIT due to ERROR!!!!!!\n");
+    printf(ERROR_MASSAGE_EXIT);
     abort();
   }
 }
@@ -23,10 +23,10 @@ void checkup_pointer_error(void *const p, char *file, int line)
 /* bad input */
 void bad_input_error(char *file, int line)
 {
-    fprintf(stderr,"\t!!!!!!ERROR!!!!!!\n"
+    fprintf(stderr,ERROR_MASSAGE
       "\"There is no such input for the function.\"\n"
         "File: %s\nLine:%d\n",file,line);
-    printf("\t!!!!!!EXIT due to ERROR!!!!!!\n");
+    printf(ERROR_MASSAGE_EXIT);
     abort();
 }
 
@@ -35,10 +35,10 @@ void null_path_error(char *path,char *file, int line)
 {
   if (path == NULL)
   {
-    fprintf(stderr,"\t!!!!!!ERROR!!!!!!\n"
+    fprintf(stderr,ERROR_MASSAGE
       "\"The directory path is null.\"\n"
         "File: %s\nLine:%d\n",file,line);
-    printf("\t!!!!!!EXIT due to ERROR!!!!!!\n");
+    printf(ERROR_MASSAGE_EXIT);
     abort();
   }
 }
