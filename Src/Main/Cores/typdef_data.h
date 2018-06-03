@@ -7,9 +7,15 @@
 typedef enum FLAG_T
 {
   NUMERIC,
-  LITERAL
+  LITERAL,
+  YES
 }Flag_T;
 
+/* print flags */
+typedef enum PRINT_T
+{
+  PRINT_PARAMETER
+}Print_T;
 /* parameters */
 typedef struct PARAMETER_T
 {
