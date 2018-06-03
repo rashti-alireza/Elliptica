@@ -6,57 +6,61 @@
 #include "global_variables.h"
 
 /* initiate global variables */
-int global_variables_init(char *path)
+int global_variables_init(char *const path)
 {
   global_parameter = 0;
-  make_global_path(path);
+  make_global_path();
   find_inputfile_name(path);
   
   return EXIT_SUCCESS;
 }
 
 /* finding inputfile name */
-static void find_inputfile_name(char *path)
+static void find_inputfile_name(char *const path)
 {
-  char *first,*last,*p;
-  char name[1000] = {'\0'};
-  
-  first = strrchr(path,'\\');
-  pointerEr(first);
+  char *last,*p;
+  char name[MAX_ARR] = {'\0'};
+  int i;
   
   last = strrchr(path,'.');
-  pointerEr(last);
   
-  if (last <= first)
+  if (last == 0)
   {
-    fprintf(stderr,ERROR_MASSAGE"The name of input file must be like:"
-    " \"input.in\"\n");
-    printf(ERROR_MASSAGE_EXIT);
-    abort();
-    
+    abortEr("The name of input file must have extension.\n");
   }
   
-  for (p = first; *p != '.'; p++)
-    name[p-first] = first[p-first];
+  i = 0;
+  for (p = path; p != last; p++)
+  {
+    if (*p == '.' || *p == '/')
+      continue;
+      
+    name[i] = *p;
+    i++;
+  }
   
   global_inputfile_name = strdup(name);
+  
+  //TEST_START
+    //printf("globale_inputfile_name = %s\n",global_inputfile_name);
+  //end
   
 }
 
 /* making global_path */
-static void make_global_path(char *path)
+static void make_global_path(void)
 {
-  char *first,*last,*p;
-  char dir[1000] = {'\0'};
+  char dir[MAX_ARR] = {'\0'};
+  char *p;
   
-  first = strchr(path,'\\');
-  pointerEr(first);
-  last = strrchr(path,'\\');
-  pointerEr(last);
-  
-  for (p = first; p < last; p++)
-    dir[p-first] = first[p-first];
+  p = getcwd(dir,sizeof(dir));
+  pointerEr(p);
   
   global_path = strdup(dir);
+  
+  //TEST_START
+    //printf("globale_path = %s\n",global_path);
+  //end
+ 
 }
 

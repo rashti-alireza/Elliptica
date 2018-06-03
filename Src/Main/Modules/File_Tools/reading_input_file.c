@@ -16,7 +16,7 @@ int read_input_file(char *const path)
   null_pathEr(path);
   
   input = fopen(path,"r");
-  pointerEr(input);
+  null_pathEr(input);  
   
   /* making a folder at the directory of 
   // input file with the name of "inputfile_output" 
@@ -29,6 +29,10 @@ int read_input_file(char *const path)
   
   /* parsing and reading input file and making buffer */
   buff = make_buffer(input);
+  
+  //TEST_START
+    //printf("buff:\n%s\n",buff);
+  //end
   
   /* making parameters */
   populate_parameters(buff);
@@ -50,45 +54,52 @@ int read_input_file(char *const path)
 */
 static void populate_parameters(char *const buff)
 {
-  char *tok, delimit[2] = {ENTER,'\0'}, delimit2[2] = {EQUAL,'\0'};
+  char *tok,*savestr;
+  char delimit[2] = {ENTER,'\0'}, delimit2[2] = {EQUAL,'\0'};
   char *buff2;
   
   buff2 = strdup(buff);
   
-  tok = strtok(buff2,delimit);
+  tok = strtok_r(buff2,delimit,&savestr);
   while (tok != 0)
   {
-    char *tok2;
+    char *subtok;
     char *par_l = 0, *par_r = 0;
     enum FLOW f = LEFT;
     
-    tok2 = strtok(tok,delimit2);
-    while (tok2 != 0)
+    subtok = strtok(tok,delimit2);
+    while (subtok != 0)
     {
       
       if (f == LEFT)
       {
-        par_l = strdup(tok2);
+        par_l = strdup(subtok);
       }
       else if (f == RIGHT)
       {
-        par_r = strdup(tok2);
+        par_r = strdup(subtok);
       }
       
       f = RIGHT;
-      tok2 = strtok(0,delimit2);
+      subtok = strtok(0,delimit2);
       
-    }// while (tok2 != 0)
+    }// while (subtok != 0)
     
-    add_parameter(par_l,par_r);
+    if (par_l != 0 && par_r != 0)
+      add_parameter(par_l,par_r);
     
-    tok = strtok(0,delimit);
+    tok = strtok_r(0,delimit,&savestr);
+  
+    //TEST_START
+      //printf("par_l = %s, par_r = %s, tok = %s\n",par_l,par_r,tok);
+    //end
     
     if (par_l != 0)	free(par_l);
     if (par_r != 0)	free(par_r);
     
   }// while (tok != 0)
   
+  free(buff2);
 }
   
 
@@ -97,7 +108,9 @@ static void *make_buffer(FILE *input)
 {
   char *buff = 0, c;
   int i;
+  long j;
   
+  j = 0;
   i = 0;
   while (!feof(input))
   {
@@ -110,8 +123,20 @@ static void *make_buffer(FILE *input)
     /* excluding out the comments */
     else if (c == COMMENT)
     {
-      while (c != ENTER || c != EOF)
+      while (c != ENTER && c != EOF)
+      {
         c = fgetc(input);
+        //test
+        //printf("%c",c);
+        //end
+      }
+      
+      if (c == ENTER)
+      {
+        buff = realloc(buff,i+1);
+        pointerEr(buff);
+        buff[i++] = c;
+      }
     }
     
     else
@@ -121,11 +146,16 @@ static void *make_buffer(FILE *input)
       buff[i++] = c;
     }
     
+    if (j > MAX_NUM_CHAR)
+      abortEr("Input file has been written wrong!\n"
+        "It might beacuse either it is too long or "
+          "beacuse its format has not been met\n");
+    j++;      
   }// end of while
 
     buff = realloc(buff,i+1);
     pointerEr(buff);
-    buff[i++] = END;
+    buff[i] = END;
     
   return buff;
 }

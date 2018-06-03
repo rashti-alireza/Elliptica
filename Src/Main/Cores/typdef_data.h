@@ -8,7 +8,8 @@ typedef enum FLAG_T
 {
   NUMERIC,
   LITERAL,
-  YES
+  YES,
+  NONE
 }Flag_T;
 
 /* print flags */

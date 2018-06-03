@@ -10,11 +10,22 @@
 */
 char *make_directory(char *path,char *name,Flag_T flg)
 {
-  char dir[1000]={'\0'};
+  char dir[MAX_ARR]     = {'\0'};
+  char command[MAX_ARR] = {'\0'};
   char *path2 = 0;
+  struct stat st = {0}; // status of files
+  int i;
   
-  sprintf(dir,"mkdir %s\\%s",path,name);
-  system(dir);
+  i = 0;
+  do 
+  {
+    sprintf(dir,"%s/%s_%d",path,name,i);
+    i++;
+  
+  }while(stat(dir, &st) != -1);
+  
+  sprintf(command,"mkdir %s",dir);
+  system(command);
   
   if (flg == YES)
   {

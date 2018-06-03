@@ -1,12 +1,14 @@
 #include "core_lib.h"
 #include "error_handling_lib.h"
 #include "print_lib.h"
+#include "utilites.h"
 
 #define COMMENT '#'
 #define ENTER   '\n'
 #define SPACE   ' '
 #define END      0
 #define EQUAL   '='
+#define MAX_NUM_CHAR 3000
 
 extern char *global_path;
 extern char *global_inputfile_name;

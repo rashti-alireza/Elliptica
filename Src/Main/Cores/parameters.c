@@ -12,7 +12,7 @@ void add_parameter(char *lv, char *rv)
   
   Parameter_T *par;
   
-  par = alloc_parameter(global_parameter);
+  par = alloc_parameter(&global_parameter);
   
   par->lv = strdup(lv);
   par->rv = strdup(rv);

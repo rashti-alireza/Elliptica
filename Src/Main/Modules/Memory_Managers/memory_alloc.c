@@ -9,19 +9,19 @@
 // and puting the last block to null and 
 // returning pointer to one before the last block
 */
-void *alloc_parameter(Parameter_T **mem)
+void *alloc_parameter(Parameter_T ***mem)
 {
   int i;
   
-  for (i = 0; mem != 0 && mem[i] != 0 ; i++);
+  for (i = 0; (*mem) != 0 && (*mem)[i] != 0 ; i++);
   
-  mem = realloc(mem,(i+2)*sizeof(*mem));
-  pointerEr(mem);
+  (*mem) = realloc((*mem),(i+2)*sizeof(*(*mem)));
+  pointerEr((*mem));
   
-  mem[i] = malloc(sizeof(*mem[i]));
-  pointerEr(mem[i]);
+  (*mem)[i] = malloc(sizeof(*(*mem)[i]));
+  pointerEr((*mem)[i]);
   
-  mem[i+1] = 0;
+  (*mem)[i+1] = 0;
   
-  return mem[i];
+  return (*mem)[i];
 }

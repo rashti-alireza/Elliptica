@@ -7,8 +7,8 @@
 
 int main(int argn, char **argv, char **argv2)
 {
+  global_variables_init(argv[argn-1]);// initiating global variables
   read_input_file(argv[argn-1]);// reading and populating parameters
-  global_variables_init();// initiating global variables
   
   
   //add_projets();//add all of the desired projects to the project data base
