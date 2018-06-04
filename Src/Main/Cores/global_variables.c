@@ -24,9 +24,9 @@ static void find_inputfile_name(char *const path)
   
   last = strrchr(path,'.');
   
-  if (last == 0)
+  if (strstr(path,".in") == 0)
   {
-    abortEr("The name of input file must have extension.\n");
+    abortEr("The name of input file must have extension\".in\".\n");
   }
   
   i = 0;
