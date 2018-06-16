@@ -6,6 +6,7 @@
 #define COMMENT '#'
 #define ENTER   '\n'
 #define SPACE   ' '
+#define TAB     '\t'
 #define END      0
 #define EQUAL   '='
 #define MAX_NUM_CHAR 3000
