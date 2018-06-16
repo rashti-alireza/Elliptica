@@ -5,7 +5,7 @@
 
 #include "reading_input_file.h"
 
-/* reading parameters */
+/* reading input file and make appropriate directories for output files */
 int read_input_file(char *const path)
 {
   FILE *input;// input file
@@ -22,10 +22,12 @@ int read_input_file(char *const path)
   // input file with the name of "inputfile_output" 
   // and rewritting global_path with new directory path 
   */
-  sprintf(name,"%s_output",global_inputfile_name);
-  path2 = make_directory(global_path,name,YES);
-  free(global_path);
-  global_path = path2;
+  sprintf(name,"%s_output",inputfile_name_global);
+  path2 = make_directory(path_global,name,YES);
+  free(path_global);
+  path_global = path2;
+  
+  add_parameter("output_dir",path_global);
   
   /* parsing and reading input file and making buffer */
   buff = make_buffer(input);

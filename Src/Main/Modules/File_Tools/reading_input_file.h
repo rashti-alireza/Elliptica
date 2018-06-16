@@ -11,8 +11,8 @@
 #define EQUAL   '='
 #define MAX_NUM_CHAR 3000
 
-extern char *global_path;
-extern char *global_inputfile_name;
+extern char *path_global;
+extern char *inputfile_name_global;
 
 enum FLOW {LEFT,RIGHT};
 

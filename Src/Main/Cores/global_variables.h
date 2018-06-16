@@ -6,10 +6,11 @@
 #define MAX_ARR 400
 
 /* global variables */
-Parameter_T **global_parameter;// parameters
-char *global_path;// path of a directory where input file is
-char *global_inputfile_name; //name of inputfile
+Parameter_T **parameters_global;// parameters
+Project_T   **projects_global;// projects
+char *path_global;// path of a directory where input file is
+char *inputfile_name_global; //name of inputfile
 
 
-static void make_global_path(void);
+static void make_path_global(void);
 static void find_inputfile_name(char *const path);

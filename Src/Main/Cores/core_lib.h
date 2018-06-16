@@ -9,3 +9,5 @@
 #include <omp.h>
 #include "typdef_data.h"
 #include "typdef_functions.h"
+
+void *get_parameter_value(char *const par_name,Flag_T kind, double *value);

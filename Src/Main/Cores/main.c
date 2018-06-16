@@ -7,13 +7,18 @@
 
 int main(int argn, char **argv, char **argv2)
 {
+  char *proj_name;
+  Project_T proj;
+  
   global_variables_init(argv[argn-1]);// initiating global variables
   read_input_file(argv[argn-1]);// reading and populating parameters
   
+  projects_data_base();// add all of the desired projects 
+                       // to the project data base
   
-  //add_projets();//add all of the desired projects to the project data base
+  proj_name = get_parameter_value("Initial_Data",LITERAL,0);
+  proj.func = get_project(proj_name);
   
-  //proj1 = get_project("BNS_Initial_Data");
   //project_execute(proj1);
   
   //project_cleanup(proj1);

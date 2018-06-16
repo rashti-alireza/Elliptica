@@ -51,3 +51,16 @@ void abort_error(char *massage,char *file, int line)
     printf(ERROR_MASSAGE_ABORT);
     abort();
 }
+
+/* general purpose error with more detail string version */
+void abort_error_string(char *massage,char *detail,char *file, int line)
+{
+  char msg[400] = {'\0'};
+  
+  sprintf(msg,massage,detail);
+  
+  fprintf(stderr,ERROR_MASSAGE"%s"
+      "File: %s\nLine:%d\n",msg,file,line);
+  printf(ERROR_MASSAGE_ABORT);
+  abort();
+}

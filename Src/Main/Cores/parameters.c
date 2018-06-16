@@ -8,11 +8,15 @@
 /* adding left value and right value to parameter data base*/
 void add_parameter(char *lv, char *rv)
 {
-  assert(lv != 0);
+  pointerEr(lv);
   
   Parameter_T *par;
   
-  par = alloc_parameter(&global_parameter);
+  par = get_parameter(lv);
+  if (par)
+    abortEr_s("This parameter \"%s\" has already been added!\n",lv);
+    
+  par = alloc_parameter(&parameters_global);
   
   par->lv = strdup(lv);
   par->rv = strdup(rv);
@@ -26,10 +30,11 @@ void *get_parameter(char *const par_name)
   int i;
   
   i = 0;
-  while (global_parameter[i] != 0)
+  while (parameters_global != 0 && parameters_global[i] != 0)
   {
-    if (strcmp(global_parameter[i]->lv,par_name) == 0)
-      return global_parameter[i];
+    if (strcmp(parameters_global[i]->lv,par_name) == 0)
+      return parameters_global[i];
+    i++;
   }
   
   return 0;
@@ -45,18 +50,18 @@ void *get_parameter_value(char *const par_name,Flag_T kind, double *value)
   int i;
   
   i = 0;
-  while (global_parameter[i] != 0)
+  while (parameters_global != 0 && parameters_global[i] != 0)
   {
-    if (strcmp(global_parameter[i]->lv,par_name) == 0)
+    if (strcmp(parameters_global[i]->lv,par_name) == 0)
     {
       if (kind == NUMERIC)
       {
-        *value = strtod(global_parameter[i]->rv,0);
+        *value = strtod(parameters_global[i]->rv,0);
         return 0;
       }
       else if (kind == LITERAL)
       {
-        return global_parameter[i]->rv;
+        return parameters_global[i]->rv;
       }
       else
         bad_inputEr();

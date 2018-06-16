@@ -11,19 +11,20 @@
 void print_parameters(void)
 {
   FILE *f;
-  char dir[1000]={'\0'};
-  extern Parameter_T **global_parameter;
+  char dir[1000]={'\0'}, *path;
+  extern Parameter_T **parameters_global;
   int i = 0;
   
-  sprintf(dir,"%s/parameters.out",global_path);
+  path = get_parameter_value("output_dir",LITERAL,0);
+  sprintf(dir,"%s/parameters.out",path);
   f = fopen(dir,"w");
   pointerEr(f);
   
   fprintf(f,SECTION"Parameters"SECTION"\n");
   
-  while (global_parameter[i] != 0)
+  while (parameters_global[i] != 0)
   {
-    fprintf(f,"%s = %s\n",global_parameter[i]->lv,global_parameter[i]->rv);
+    fprintf(f,"%s = %s\n",parameters_global[i]->lv,parameters_global[i]->rv);
     i++;
   }
   

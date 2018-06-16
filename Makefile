@@ -44,3 +44,4 @@ clean:
 	-rm -rf $(TOP)/Bin/$(EXE) $(TOP)/$(Lib)/*
 	$(foreach dir, $(modules_path), rm -rf $(dir)/*.o)
 	$(foreach dir, $(projects_path), rm -rf $(dir)/*.o)
+

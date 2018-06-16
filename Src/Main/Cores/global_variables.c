@@ -8,8 +8,9 @@
 /* initiate global variables */
 int global_variables_init(char *const path)
 {
-  global_parameter = 0;
-  make_global_path();
+  parameters_global = 0;
+  projects_global   = 0;
+  make_path_global();
   find_inputfile_name(path);
   
   return EXIT_SUCCESS;
@@ -39,7 +40,7 @@ static void find_inputfile_name(char *const path)
     i++;
   }
   
-  global_inputfile_name = strdup(name);
+  inputfile_name_global = strdup(name);
   
   //TEST_START
     //printf("globale_inputfile_name = %s\n",global_inputfile_name);
@@ -48,7 +49,7 @@ static void find_inputfile_name(char *const path)
 }
 
 /* making global_path */
-static void make_global_path(void)
+static void make_path_global(void)
 {
   char dir[MAX_ARR] = {'\0'};
   char *p;
@@ -56,7 +57,7 @@ static void make_global_path(void)
   p = getcwd(dir,sizeof(dir));
   pointerEr(p);
   
-  global_path = strdup(dir);
+  path_global = strdup(dir);
   
   //TEST_START
     //printf("globale_path = %s\n",global_path);
