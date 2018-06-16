@@ -9,7 +9,6 @@
 #include <omp.h>
 #include "typdef_data.h"
 #include "typdef_functions.h"
+#include "print_lib.h"
 
 void *get_parameter_value(char *const par_name,Flag_T kind, double *value);
-void pr_line(void);
-void pr_comment(char *comment);

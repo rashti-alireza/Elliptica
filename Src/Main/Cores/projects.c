@@ -14,7 +14,7 @@ int project_execute(Project_T *proj)
   pr_comment(proj->name);
   
   /* calling projectc func */
-  //ret = proj->func();
+  ret = proj->func();
   
   return ret;
 }

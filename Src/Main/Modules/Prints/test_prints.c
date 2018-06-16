@@ -8,7 +8,7 @@
 /* printing different quantities for test */
 
 /* print parameters */
-void print_parameters(void)
+void pr_parameters(void)
 {
   FILE *f;
   char dir[1000]={'\0'}, *path;

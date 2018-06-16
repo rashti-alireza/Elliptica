@@ -7,7 +7,10 @@
 
 int Laplace_Inhom(void)
 {
-  pr_line();
+  pr_clock();
+  
+  
+  pr_clock();
   
   return EXIT_SUCCESS;
 }

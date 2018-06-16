@@ -41,7 +41,7 @@ int read_input_file(char *const path)
   
   /* printing parameters */
   if (test_print(PRINT_PARAMETER))
-    print_parameters();
+    pr_parameters();
   
   /* clean up */
   fclose(input);

@@ -1,4 +1,8 @@
 #define SECTION "#######################"
 
 int test_print(Print_T f);
-void print_parameters(void);
+void pr_parameters(void);
+void pr_line(void);
+void pr_comment(char *comment);
+void pr_clock(void);
+
