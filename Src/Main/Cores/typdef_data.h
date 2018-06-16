@@ -41,7 +41,7 @@ typedef struct PARAMETER_T
 // *******************************************
 */
 
-/* functions*/
+/* functions */
 typedef int ProjFunc(void);
 
 /* projects */
@@ -53,6 +53,19 @@ typedef struct PROJECT_T
 }Project_T;
 
 /* *******************************************
-// grid:
+// grid and related: 
 // *******************************************
 */
+
+/* patch */
+typedef struct PATCH_T
+{
+  
+}Patch_T;
+
+/* grid */
+typedef struct GIRD_T
+{
+  Patch_T **patch;
+  //Field_T 
+}Grid_T;

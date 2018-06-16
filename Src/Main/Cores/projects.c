@@ -5,6 +5,21 @@
 
 #include "projects.h"
 
+/* executing the project */
+int project_execute(Project_T *proj)
+{
+  int ret;
+  
+  /* printing project name */
+  pr_comment(proj->name);
+  
+  /* calling projectc func */
+  //ret = proj->func();
+  
+  return ret;
+}
+
+
 /* adding the desired project for run */
 void add_project(ProjFunc *projfunc, char *const name, char *const des)
 {
@@ -35,7 +50,7 @@ void *get_project(char *const proj_name)
   while (projects_global != 0 && projects_global[i] != 0)
   {
     if (strcmp(projects_global[i]->name,proj_name) == 0)
-      return projects_global[i]->func;
+      return projects_global[i];
     i++;
   }
   

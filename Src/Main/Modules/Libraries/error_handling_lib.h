@@ -10,7 +10,7 @@ void abort_error_string(char *massage,char *detail,char *file, int line);
 #define null_pathEr(x) null_path_error(x,__FILE__,__LINE__)
 #define abortEr(x)     abort_error(x,__FILE__,__LINE__)
 #define abortEr_s(x,y)     abort_error_string(x,y,__FILE__,__LINE__)
-#define ERROR_MASSAGE       "\t!!!!!!ERROR and ABORT!!!!!!\n"
-#define ERROR_MASSAGE_ABORT "\t!!!!!!ABORT DUO TO ERROR!!!!!!\n"
+#define ERROR_MASSAGE       "\n\t!!!!!!ERROR and ABORT!!!!!!!!!\n"
+#define ERROR_MASSAGE_ABORT   "\t!!!!!!ABORT DUO TO ERROR!!!!!!\n"
 
 
