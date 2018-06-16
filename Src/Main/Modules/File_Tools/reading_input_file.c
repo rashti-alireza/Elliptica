@@ -117,7 +117,7 @@ static void *make_buffer(FILE *input)
     c = fgetc(input);
     
     /* excluding out the spaces and tabs*/
-    if (c == SPACE ||  c== TAB)
+    if (c == SPACE ||  c == TAB)
       continue;
     
     /* excluding out the comments */
