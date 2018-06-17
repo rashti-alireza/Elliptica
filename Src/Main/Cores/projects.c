@@ -42,7 +42,7 @@ void add_project(ProjFunc *projfunc, char *const name, char *const des)
 /* having project name, it returns a pointer to 
 // the corresponding project func
 */
-void *get_project(char *const proj_name)
+Project_T *get_project(char *const proj_name)
 {
   int i;
   

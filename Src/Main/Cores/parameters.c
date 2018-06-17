@@ -25,7 +25,7 @@ void add_parameter(char *lv, char *rv)
 /* having parameter name, it returns a pointer to 
 // the corresponding parameter
 */
-void *get_parameter(char *const par_name)
+Parameter_T *get_parameter(char *const par_name)
 {
   int i;
   
@@ -45,7 +45,7 @@ void *get_parameter(char *const par_name)
 // note: if it is NUMERIC the value is written in value otherwise
 // the value is returned.
 */
-void *get_parameter_value(char *const par_name,Flag_T kind, double *value)
+char *get_parameter_value(char *const par_name,Flag_T kind, double *value)
 {
   int i;
   

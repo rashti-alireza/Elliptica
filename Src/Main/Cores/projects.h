@@ -4,4 +4,4 @@
 
 extern Project_T **projects_global;
 
-void *get_project(char *const proj_name);
+Project_T *get_project(char *const proj_name);
