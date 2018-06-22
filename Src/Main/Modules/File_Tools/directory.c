@@ -5,7 +5,7 @@
 
 #include "directory.h"
 
-/* making a directory with given path and 
+/* making a directory with given path and name and then 
 // returning the path of made directory if flg = YES
 */
 char *make_directory(char *path,char *name,Flag_T flg)

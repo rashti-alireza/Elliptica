@@ -10,24 +10,13 @@ int read_input_file(char *const path)
 {
   FILE *input;// input file
   char *buff;
-  char name[100]={'\0'};
+  char folder[100]={'\0'}, *name;
   char *path2;
   
   null_pathEr(path);
   
   input = fopen(path,"r");
   null_pathEr(input);  
-  
-  /* making a folder at the directory of 
-  // input file with the name of "inputfile_output" 
-  // and rewritting global_path with new directory path 
-  */
-  sprintf(name,"%s_output",inputfile_name_global);
-  path2 = make_directory(path_global,name,YES);
-  free(path_global);
-  path_global = path2;
-  
-  add_parameter("output_dir",path_global);
   
   /* parsing and reading input file and making buffer */
   buff = make_buffer(input);
@@ -36,8 +25,35 @@ int read_input_file(char *const path)
     //printf("buff:\n%s\n",buff);
   //end
   
-  /* making parameters */
+  /* populating parameters */
   populate_parameters(buff);
+  
+  /* setting the default value of parameters if they are needed and
+  not provided by the inputfile */
+  set_default_parameter();
+  
+  /* making a folder at the directory of 
+  // input file with the name of "inputfile_output"
+  // or with the given name in input file 
+  // and rewritting global_path with new directory path 
+  */
+  name = get_parameter_value("output_directory_name",LITERAL,0);
+  /* if output_directory_name is not defined or has default value 
+  // define the name of folder by inputfile_name_global which is defined
+  // by the name of inputfile.
+  */
+  if (name == 0 || strcmp(name,"default"))
+  {
+    add_parameter("output_directory_name",inputfile_name_global);
+    name = inputfile_name_global;
+  }
+  
+  sprintf(folder,"%s_output",name);
+  path2 = make_directory(path_global,folder,YES);
+  free(path_global);
+  path_global = path2;
+  
+  add_parameter("output_path",path_global);
   
   /* printing parameters */
   if (test_print(PRINT_PARAMETER))
