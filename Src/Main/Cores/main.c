@@ -11,7 +11,8 @@ int main(int argn, char **argv, char **argv2)
   Project_T *proj;
   
   global_variables_init(argv[argn-1]);// initiating global variables
-  read_input_file(argv[argn-1]);// reading and populating parameters
+  make_parameters(argv[argn-1]);// reading input file 
+                                // and making parameters
   
   projects_data_base();// add all of the desired projects 
                        // to the project data base
