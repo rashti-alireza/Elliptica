@@ -14,7 +14,10 @@ typedef enum FLAG_T
   NUMERIC,
   LITERAL,
   YES,
-  NONE
+  NO,
+  NONE,
+  READY,
+  INUSE
 }Flag_T;
 
 /* print flags */
@@ -66,6 +69,7 @@ typedef struct PATCH_T
 /* grid */
 typedef struct GIRD_T
 {
+  Flag_T status;// INUSE or READY 
   Patch_T **patch;
   //Field_T 
 }Grid_T;
