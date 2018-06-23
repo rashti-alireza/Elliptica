@@ -6,20 +6,19 @@
 #include "directory.h"
 
 /* making a directory with given path and name and then 
-// returning the path of made directory if flg = YES
+// overriding the path of made directory if flg = YES
 */
-char *make_directory(char *path,char *name,Flag_T flg)
+void make_directory(char **path,char *name,Flag_T flg)
 {
   char dir[MAX_ARR]     = {'\0'};
   char command[MAX_ARR] = {'\0'};
-  char *path2 = 0;
   struct stat st = {0}; // status of files
   int i;
   
   i = 0;
   do 
   {
-    sprintf(dir,"%s/%s_%d",path,name,i);
+    sprintf(dir,"%s/%s_%d",*path,name,i);
     i++;
   
   }while(stat(dir, &st) != -1);
@@ -29,8 +28,8 @@ char *make_directory(char *path,char *name,Flag_T flg)
   
   if (flg == YES)
   {
-    path2 = strdup(dir);
+    free(*path); 
+    (*path) = strdup(dir);
   }
   
-  return path2;
 }
