@@ -29,7 +29,7 @@ static void set_default(char *lhs,char *rhs)
     add_parameter(lhs,rhs);
   else
   {
-    v = get_parameter_value(lhs,LITERAL,0);
+    v = get_parameter_value_S(lhs,0);
     if (strcmp(v,"default"))
       free(par->rv);
     par->rv = strdup(rhs);

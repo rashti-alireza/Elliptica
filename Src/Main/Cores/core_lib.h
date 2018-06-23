@@ -10,5 +10,8 @@
 #include "typdef_data.h"
 #include "typdef_functions.h"
 #include "print_lib.h"
+#include "macros_lib.h"
 
-void *get_parameter_value(char *const par_name,Flag_T kind, double *value);
+int    get_parameter_value_I(char *const par_name,Flag_T *flg);
+double get_parameter_value_D(char *const par_name,Flag_T *flg);
+char  *get_parameter_value_S(char *const par_name,Flag_T *flg);
