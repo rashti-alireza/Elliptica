@@ -4,6 +4,7 @@
 #include <unistd.h>
 
 #define MAX_ARR 400
+#define EXTENSION ".in"
 
 /* global variables */
 Grid_T **grids_global;

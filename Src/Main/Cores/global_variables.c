@@ -27,9 +27,9 @@ static void find_inputfile_name(char *const path)
   
   last = strrchr(path,'.');
   
-  if (strstr(path,".in") == 0)
+  if (strstr(path,EXTENSION) == 0)
   {
-    abortEr("The name of input file must have extension\".in\".\n");
+    abortEr_s("The name of input file must have extension\"%s\".\n",EXTENSION);
   }
   
   i = 0;
@@ -50,7 +50,7 @@ static void find_inputfile_name(char *const path)
   
 }
 
-/* making global_path */
+/* making global_path which shows the location of input file */
 static void make_path_global(void)
 {
   char dir[MAX_ARR] = {'\0'};
