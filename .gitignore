@@ -22,6 +22,9 @@ MyConfig
 Makefile
 MyModules
 
+#ignore ctags
+tags
+
 
 
 
