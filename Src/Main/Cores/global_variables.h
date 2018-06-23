@@ -1,11 +1,12 @@
 #include "core_lib.h"
 #include "error_handling_lib.h"
-#include "utilites.h"
+#include "utilities_lib.h"
 #include <unistd.h>
 
 #define MAX_ARR 400
 
 /* global variables */
+Grid_T **grids_global;
 Parameter_T **parameters_global;// parameters
 Project_T   **projects_global;// projects
 time_t initial_time_global;// initial time abc starts

@@ -59,7 +59,7 @@ void *alloc_grid(void)
   extern Grid_T **grids_global;
   int i;
   
-  for (i = 0; girds_global != 0 && grids_global[i] != 0; i++)
+  for (i = 0; grids_global != 0 && grids_global[i] != 0; i++)
   {
     if (grids_global[i]->status == READY)
     {
@@ -78,4 +78,77 @@ void *alloc_grid(void)
   
   grids_global[i]->status = INUSED;
   return grids_global[i];
+}
+
+/* allocating memory for patches based on type of coord sys */
+void alloc_patches(Grid_T *grid)
+{
+  if (!strcmp(grid->kind,"Cartesian"))
+    alloc_patches_cartesian(grid);
+  
+  //else if (grid->coord,"CubedSpherical")
+    //alloc_patches_CubedSpherical(grid);
+}
+
+/* allocating memory for nodes based on type of coord sys */
+void alloc_nodes(Grid_T *grid)
+{
+  if (!strcmp(grid->kind,"Cartesian"))
+    alloc_nodes_cartesian(grid);
+  
+  //else if (grid->coord,"CubedSpherical")
+    //alloc_nodes_CubedSpherical(grid);
+}
+
+/* memory alloc nodes for cartesian type */
+static void alloc_nodes_cartesian(Grid_T *grid)
+{
+  int *n;
+  int i;
+  
+  for_all_patches_macro(i,grid)
+  {
+    int j,U;
+    Node_T **node;
+    
+    n = grid->patch[i]->n;
+    grid->patch[i]->node = 
+      malloc((n[0]*n[1]*n[2]+1)*sizeof(*grid->patch[i]->node));
+    pointerEr(grid->patch[i]->node);
+    
+    node = grid->patch[i]->node;
+    U = countf(node);
+    for (j = 0; j < U; j++)
+    {
+      node[j] = malloc(sizeof(*node[j]));
+      pointerEr(node[j]);
+    }
+    
+  }
+  
+}
+
+/* memory alloc patches for cartesian type */
+static void alloc_patches_cartesian(Grid_T *grid)
+{
+  int Nboxes;// number of boxes
+  int i;
+  Flag_T flg;
+  
+  if (get_parameter("number_of_boxes") == 0)
+    abortEr("number_of_boxes parameter is not defined!\n");
+    
+  Nboxes = get_parameter_value_I("number_of_boxes",&flg);
+  parameterEr(flg);
+  
+  grid->patch = malloc((Nboxes+1)*sizeof(*grid->patch));
+  pointerEr(grid->patch);
+  grid->patch[Nboxes] = 0;
+  
+  for (i = 0; i < Nboxes; i++)
+  {
+    grid->patch[i] = malloc(sizeof(*grid->patch[i]));
+    pointerEr(grid->patch[i]);
+  }
+  
 }

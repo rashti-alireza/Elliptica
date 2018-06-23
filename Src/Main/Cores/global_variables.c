@@ -9,8 +9,9 @@
 int global_variables_init(char *const path)
 {
   initial_time_global = time(0);
-  parameters_global = 0;
-  projects_global   = 0;
+  grids_global        = 0;
+  parameters_global   = 0;
+  projects_global     = 0;
   make_path_global();
   find_inputfile_name(path);
   
