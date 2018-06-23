@@ -1,6 +1,5 @@
 #include "core_lib.h"
+#include "memory_managing_lib.h"
 
-Grid_T *add_grid(void);
-static int make_patches(Grid_T *grid);
-static int make_coords(Grid_T *grid);
-static int realize_geometry(Grid *grid);
+int make_patches(Grid_T *grid);
+int realize_geometry(Grid_T *grid);

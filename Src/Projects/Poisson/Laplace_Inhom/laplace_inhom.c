@@ -3,7 +3,7 @@
 // June 2018
 */
 
-#include "lalpace_inhom.h"
+#include "laplace_inhom.h"
 
 int Laplace_Inhom(void)
 {
@@ -12,10 +12,10 @@ int Laplace_Inhom(void)
   /* print clock */
   pr_clock();
   
-  grid = laplace_inhom_make_grid();// making grid
-  //laplace_inhom_solve_eq(grid);// solving laplace eq
-  //laplace_inhom_pr_answer(grid);// printing found answer
-  //laplace_inhom_clean_up(grid);// cleaning up
+  grid = Laplace_Inhom_make_grid();// making grid
+  //Laplace_Inhom_solve_eq(grid);// solving laplace eq
+  //Laplace_Inhom_pr_answer(grid);// printing found answer
+  //Laplace_Inhom_clean_up(grid);// cleaning up
   
   pr_clock();
   
