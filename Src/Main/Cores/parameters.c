@@ -43,7 +43,8 @@ Parameter_T *get_parameter(char *const par_name)
 /* having the parameter name,
 // it returns the INTEGER value of parameter.
 // note:  if the parameter is found the flg gets FOUND
-// value otherwise NONE value.
+// value otherwise NONE value; unless flg = 0 which in this case
+// it won't get any value
 */
 int get_parameter_value_I(char *const par_name,Flag_T *flg)
 {
@@ -71,7 +72,8 @@ int get_parameter_value_I(char *const par_name,Flag_T *flg)
 /* having the parameter name,
 // it returns the DOUBLE value of parameter.
 // note:  if the parameter is found the flg gets FOUND
-// value otherwise NONE value.
+// value otherwise NONE value; unless flg = 0 which in this case
+// it won't get any value
 */
 double get_parameter_value_D(char *const par_name,Flag_T *flg)
 {
@@ -100,7 +102,8 @@ double get_parameter_value_D(char *const par_name,Flag_T *flg)
 /* having the parameter name,
 // it returns the STRING value of parameter.
 // note:  if the parameter is found the flg gets FOUND
-// value otherwise NONE value.
+// value otherwise NONE value; unless flg = 0 which in this case
+// it won't get any value
 */
 char *get_parameter_value_S(char *const par_name,Flag_T *flg)
 {
@@ -121,7 +124,6 @@ char *get_parameter_value_S(char *const par_name,Flag_T *flg)
   
   if (flg != 0)
     *flg = f;
-    
       
   return v;
 }
@@ -132,7 +134,6 @@ char *get_parameter_value_S(char *const par_name,Flag_T *flg)
 int make_parameters(char *const path)
 {
   char folder[100]={'\0'}, *name;
-  char *path2;
   Flag_T flg;
   
   read_input_file(path);
@@ -149,9 +150,7 @@ int make_parameters(char *const path)
   name = get_parameter_value_S("output_directory_name",&flg);
   parameterEr(flg);
   sprintf(folder,"%s_output",name);
-  path2 = make_directory(path_global,folder,YES);
-  free(path_global);
-  path_global = path2;
+  make_directory(&path_global,folder,YES);
   
   add_parameter("output_path",path_global);
   
