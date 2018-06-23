@@ -68,7 +68,7 @@ static void fill_patches_cartesian(Grid_T *grid)
     Patch_T *const patch = grid->patch[i];
     
     /* filling name */
-    sprintf(name,"box_%d",i);
+    sprintf(name,"box%d",i);
     patch->name = strdup(name);
     
     /* filling n */
@@ -109,7 +109,7 @@ static void fill_patches_cartesian(Grid_T *grid)
     patch->max[2] = patch->c[2]+patch->s[2]/2;
     
     /* filling flags */
-    sprintf(name,"box_%d_collocation",i);
+    sprintf(name,"box%d_collocation",i);
     patch->coordsys = strdup("Cartesian");
     patch->collocation = get_parameter_value_S(name,&flg);
     parameterEr(flg);
@@ -138,11 +138,11 @@ static void make_keyword_parameter(struct Ret_S *ret,char *box,char *needle)
   }
   
   /* for box?_size_? */
-  else if (!strcmp(needle,"center"))
+  else if (!strcmp(needle,"size"))
   {
-    sprintf(ret->s0,"%s_center_a",box);
-    sprintf(ret->s1,"%s_center_b",box);
-    sprintf(ret->s2,"%s_center_c",box);
+    sprintf(ret->s0,"%s_size_a",box);
+    sprintf(ret->s1,"%s_size_b",box);
+    sprintf(ret->s2,"%s_size_c",box);
   }
   else
   {

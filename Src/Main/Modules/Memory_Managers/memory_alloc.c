@@ -117,7 +117,9 @@ static void alloc_nodes_cartesian(Grid_T *grid)
     pointerEr(grid->patch[i]->node);
     
     node = grid->patch[i]->node;
-    U = countf(node);
+    node[n[0]*n[1]*n[2]] = 0;
+    
+    U = n[0]*n[1]*n[2];
     for (j = 0; j < U; j++)
     {
       node[j] = malloc(sizeof(*node[j]));

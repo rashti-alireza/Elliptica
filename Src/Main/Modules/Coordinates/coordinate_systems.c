@@ -98,16 +98,29 @@ static void initialize_collocation_struct(Patch_T *patch,struct Collocation *col
     coll_s[0].a = 
       (coll_s[0].min-coll_s[0].max)/
         (cos(coll_s[0].phi_in)-cos(coll_s[0].phi_fi));
+    coll_s[0].b = 
+      (coll_s[0].max*cos(coll_s[0].phi_in)-
+        coll_s[0].min*cos(coll_s[0].phi_fi))/
+        (cos(coll_s[0].phi_in)-cos(coll_s[0].phi_fi));
+    
     coll_s[1].phi_in = 0.5*M_PI/coll_s[1].n;
     coll_s[1].phi_fi = M_PI-coll_s[1].phi_in;
     coll_s[1].a = 
       (coll_s[1].min-coll_s[1].max)/
+        (cos(coll_s[1].phi_in)-cos(coll_s[1].phi_fi));
+        coll_s[1].b = 
+    (coll_s[1].max*cos(coll_s[1].phi_in)-
+        coll_s[1].min*cos(coll_s[1].phi_fi))/
         (cos(coll_s[1].phi_in)-cos(coll_s[1].phi_fi));
 
     coll_s[2].phi_in = 0.5*M_PI/coll_s[2].n;
     coll_s[2].phi_fi = M_PI-coll_s[2].phi_in;
     coll_s[2].a = 
       (coll_s[2].min-coll_s[2].max)/
+        (cos(coll_s[2].phi_in)-cos(coll_s[2].phi_fi));
+    coll_s[2].b = 
+      (coll_s[2].max*cos(coll_s[2].phi_in)-
+        coll_s[2].min*cos(coll_s[2].phi_fi))/
         (cos(coll_s[2].phi_in)-cos(coll_s[2].phi_fi));
   }
   else

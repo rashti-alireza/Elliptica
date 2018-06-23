@@ -12,7 +12,7 @@ struct Collocation
 {
   double min;
   double max;
-  double n;
+  int n;
   double stp;
   double phi_in;
   double phi_fi;
