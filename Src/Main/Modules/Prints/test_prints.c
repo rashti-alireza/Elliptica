@@ -14,8 +14,10 @@ void pr_parameters(void)
   char dir[1000]={'\0'}, *path;
   extern Parameter_T **parameters_global;
   int i = 0;
+  Flag_T flg;
   
-  path = get_parameter_value("output_dir",LITERAL,0);
+  path = get_parameter_value_S("output_dir",&flg);
+  parameterEr(flg);
   sprintf(dir,"%s/parameters.out",path);
   f = fopen(dir,"w");
   pointerEr(f);
@@ -39,7 +41,7 @@ int test_print(Print_T f)
   switch(f)
   {
     case PRINT_PARAMETER:
-      on = get_parameter_value("print_parameter",LITERAL,0);
+      on = get_parameter_value_S("print_parameter",0);
       if (on == 0) return 0;
       
       if (strcmp(on,"yes") == 0 || strcmp(on,"y") == 0)

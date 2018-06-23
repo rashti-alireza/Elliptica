@@ -3,5 +3,3 @@
 #include "print_lib.h"
 
 extern Parameter_T **parameters_global;
-
-void *get_parameter_value(char *const par_name,Flag_T kind, double *value);
