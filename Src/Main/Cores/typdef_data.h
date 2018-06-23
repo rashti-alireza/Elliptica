@@ -11,13 +11,12 @@
 /* common flags*/
 typedef enum FLAG_T
 {
-  NUMERIC,
-  LITERAL,
   YES,
   NO,
   NONE,
   READY,
-  INUSE
+  INUSED,
+  FOUND
 }Flag_T;
 
 /* print flags */
@@ -60,16 +59,33 @@ typedef struct PROJECT_T
 // *******************************************
 */
 
+/* nodes*/
+typedef struct NODE_T
+{
+  double cart[3];// for Cartesian value x,y,z
+  double *curv;// for general curvilinear value a,b,c
+}Node_T;
+
 /* patch */
 typedef struct PATCH_T
 {
-  
+  char *name;// box name
+  char *coordsys;// coord sys used in this patch
+  char *collocation;// type of collocation in this patch
+  int n[3];// number of point in each direction
+  double c[3];// center
+  double s[3];// size like length, width and height
+  double min[3];// minimum of each direction like x_min = min[0]
+  double max[3];// maximum of each direction like b_max = max[1]
+  Node_T **node;// nodes info
 }Patch_T;
 
 /* grid */
 typedef struct GIRD_T
 {
-  Flag_T status;// INUSE or READY 
-  Patch_T **patch;
+  char *kind;// type of grid wich refers how we cover the grid
+  Flag_T status;// INUSE or READY
+  Patch_T **patch;// covering patch
+  
   //Field_T 
 }Grid_T;
