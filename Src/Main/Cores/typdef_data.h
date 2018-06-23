@@ -22,7 +22,8 @@ typedef enum FLAG_T
 /* print flags */
 typedef enum PRINT_T
 {
-  PRINT_PARAMETER
+  PRINT_PARAMETER,
+  PRINT_COORDS
 }Print_T;
 
 /* *******************************************

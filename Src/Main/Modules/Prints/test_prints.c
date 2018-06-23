@@ -6,6 +6,31 @@
 #include "test_prints.h"
 
 /* printing different quantities for test */
+/* if print option is on return 1 otherwise 0 */
+int test_print(Print_T f)
+{
+  char *on; 
+  
+  switch(f)
+  {
+    case PRINT_PARAMETER:
+      on = get_parameter_value_S("print_parameter",0);
+      if (on == 0) return 0;
+      if (strcmp(on,"yes") == 0 || strcmp(on,"y") == 0)
+        return 1;
+      break;
+    case PRINT_COORDS:
+      on = get_parameter_value_S("print_coords",0);
+      if (on == 0) return 0;
+      if (strcmp(on,"yes") == 0 || strcmp(on,"y") == 0)
+        return 1;
+      break;
+    default:
+      break;
+  }
+  
+  return 0;
+}
 
 /* print parameters */
 void pr_parameters(void)
@@ -33,25 +58,33 @@ void pr_parameters(void)
   fclose(f);
 }
 
-/* if print option is on return 1 otherwise 0 */
-int test_print(Print_T f)
+/* print coords */
+void pr_coords(Grid_T *grid)
 {
-  char *on; 
+  FILE *f;
+  char dir[1000]={'\0'}, *path;
+  int i = 0;
+  Flag_T flg;
   
-  switch(f)
+  path = get_parameter_value_S("output_directory_path",&flg);
+  parameterEr(flg);
+  for_all_patches_macro(i,grid)
   {
-    case PRINT_PARAMETER:
-      on = get_parameter_value_S("print_parameter",0);
-      if (on == 0) return 0;
-      
-      if (strcmp(on,"yes") == 0 || strcmp(on,"y") == 0)
-        return 1;
-        
-      break;
-      
-    default:
-      break;
+    Patch_T *patch = grid->patch[i];
+    int U = countf(patch->node);
+    int l;
+    
+    sprintf(dir,"%s/%s.out",path,patch->name);
+    f = fopen(dir,"w");
+    pointerEr(f);
+    
+    for (l = 0; l < U; l++)
+      fprintf(f,"%f %f %f\n",
+        patch->node[l]->cart[0],
+          patch->node[l]->cart[1],
+            patch->node[l]->cart[2]);
+    
+    fclose(f);
   }
   
-  return 0;
 }
