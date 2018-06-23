@@ -152,7 +152,7 @@ int make_parameters(char *const path)
   sprintf(folder,"%s_output",name);
   make_directory(&path_global,folder,YES);
   
-  add_parameter("output_path",path_global);
+  add_parameter("output_directory_path",path_global);
   
   /* printing parameters */
   if (test_print(PRINT_PARAMETER))

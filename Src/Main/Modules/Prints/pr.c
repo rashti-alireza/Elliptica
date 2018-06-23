@@ -46,8 +46,8 @@ void pr_clock(void)
   extern time_t initial_time_global;
   time_t now = time(0);
   
-  printf("Clock in Second: \"%f\"\n"
-          "Clock in Minuet: \"%f\"\n",
+  printf("Clock in Seconds: \"%f\"\n"
+          "Clock in Minuets: \"%f\"\n",
             difftime(now,initial_time_global),
             difftime(now,initial_time_global)/60);
   

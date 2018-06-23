@@ -16,7 +16,7 @@ void pr_parameters(void)
   int i = 0;
   Flag_T flg;
   
-  path = get_parameter_value_S("output_dir",&flg);
+  path = get_parameter_value_S("output_directory_path",&flg);
   parameterEr(flg);
   sprintf(dir,"%s/parameters.out",path);
   f = fopen(dir,"w");
