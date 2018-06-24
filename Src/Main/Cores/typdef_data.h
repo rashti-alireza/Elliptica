@@ -15,7 +15,7 @@ typedef enum FLAG_T
   NO,
   NONE,
   READY,
-  INUSED,
+  INUSE,
   FOUND
 }Flag_T;
 

@@ -63,7 +63,7 @@ void *alloc_grid(void)
   {
     if (grids_global[i]->status == READY)
     {
-      grids_global[i]->status = INUSED;
+      grids_global[i]->status = INUSE;
       return grids_global[i];
     }
   }
@@ -76,7 +76,7 @@ void *alloc_grid(void)
   
   grids_global[i+1] = 0;
   
-  grids_global[i]->status = INUSED;
+  grids_global[i]->status = INUSE;
   return grids_global[i];
 }
 
