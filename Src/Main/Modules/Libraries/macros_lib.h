@@ -4,6 +4,7 @@
 #define abortEr(x)     abort_error(x,__FILE__,__LINE__)
 #define abortEr_s(x,y)     abort_error_string(x,y,__FILE__,__LINE__)
 #define ERROR_MASSAGE       "\n\nERROR and ABORT:\n"
-#define for_all_patches_macro(x,y) for(x = 0; y->patch[x] != 0; x++)
+#define FOR_ALL(x,y) for(x = 0; y[x] != 0; x++)
 #define parameterEr(x) check_parameter(x,__FILE__,__LINE__)
-
+#define FOR_SURFACE(x,y,z,n0,n1,n2) z = n2;for (x = 0; x < n0; x++)\
+                                            for (y = 0,z=n2; y < n1; y++)

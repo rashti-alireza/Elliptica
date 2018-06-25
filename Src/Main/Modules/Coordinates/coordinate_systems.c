@@ -6,49 +6,34 @@
 #include "coordinate_systems.h"
 
 /* making coordinates of nodes */
-int make_coordinates(Grid_T *grid)
+int fill_nodes(Grid_T *grid)
 {
   int i;
-  for_all_patches_macro(i,grid)
+  FOR_ALL(i,grid->patch)
   {
     Patch_T *patch = grid->patch[i];
-    int U = countf(patch->node);
     
     /* if coord is Cartesian */
-    if (!strcmp(patch->coordsys,"Cartesian"))
+    if (strcmp_i(patch->coordsys,"Cartesian"))
     {
-    
-      if(!strcmp(patch->collocation,"EquiSpaced"))
-        make_coords_Cartesian(patch,U,EQUISPACED);
-    
-      //else if(!strcmp(patch->collocation,"Chebyshev_Zero"))
-        //make_coords_Cartesian(patch,U,CHEBYSHEV_ZERO);
-      else
-        abortEr("There is no such collocation.\n");
+        make_coords_Cartesian_coord(patch);
     }
     
-    /* if coord is CubedSphere */
-    /*
-    else if (!strcmp(patch->coord,"CubedSphere"))
-    {
-      if(!strcmp(patch->collocation,"Chebyshev_Zero"))
-        make_coords_CubedSphere(patch,U,CHEBYSHEV_ZERO);
-      else
-        abortEr("There is no such collocation.\n");
-    }*/
-    
+    else
+      abortEr_s("There is no such %s coordinate.\n",patch->coordsys);
   }
   
   return EXIT_SUCCESS;
 }
 
 /* making value of coords. it is a general function for Cartesian type */
-static void make_coords_Cartesian(Patch_T *patch,const int U, enum Flow coll_e)
+static void make_coords_Cartesian_coord(Patch_T *patch)
 {
-  struct Collocation coll_s[3];
+  struct Collocation_s coll_s[3];
+  const int U = countf(patch->node);
   int i,j,k,l,*n;
   
-  coll_s[0].f = coll_s[1].f = coll_s[2].f = coll_e;
+  coll_s[0].f = coll_s[1].f = coll_s[2].f = patch->collocation;
   initialize_collocation_struct(patch,coll_s);
   n = patch->n;
   
@@ -68,7 +53,7 @@ static void make_coords_Cartesian(Patch_T *patch,const int U, enum Flow coll_e)
 /* initializing collocation struct 
 // for making coords based on type of collocation.
 */
-static void initialize_collocation_struct(Patch_T *patch,struct Collocation *coll_s)
+static void initialize_collocation_struct(Patch_T *patch,struct Collocation_s *coll_s)
 {
   /* some assertions */
   assert(patch->min[0] < patch->max[0]);
@@ -85,13 +70,16 @@ static void initialize_collocation_struct(Patch_T *patch,struct Collocation *col
   coll_s[2].min = patch->min[2];
   coll_s[2].max = patch->max[2];
   
-  if (coll_s[0].f == EQUISPACED)
+  if (coll_s[0].f == EquiSpaced)
   {
+    assert(coll_s[0].n-1 != 0);
+    assert(coll_s[1].n-1 != 0);
+    assert(coll_s[2].n-1 != 0);
     coll_s[0].stp = (coll_s[0].max-coll_s[0].min)/(coll_s[0].n-1);
     coll_s[1].stp = (coll_s[1].max-coll_s[1].min)/(coll_s[1].n-1);
     coll_s[2].stp = (coll_s[2].max-coll_s[2].min)/(coll_s[2].n-1);
   }
-  else if (coll_s[0].f == CHEBYSHEV_ZERO)
+  else if (coll_s[0].f == Chebyshev_Zero)
   {
     coll_s[0].phi_in = 0.5*M_PI/coll_s[0].n;
     coll_s[0].phi_fi = M_PI-coll_s[0].phi_in;
@@ -128,15 +116,15 @@ static void initialize_collocation_struct(Patch_T *patch,struct Collocation *col
 }
 
 /* point value based on collocation */
-static double point(int i, struct Collocation *coll_s)
+static double point(int i, struct Collocation_s *coll_s)
 {
   double v;
    
-  if (coll_s->f == EQUISPACED)
+  if (coll_s->f == EquiSpaced)
   {
     v = coll_s->min + coll_s->stp*i;
   }
-  else if (coll_s->f == CHEBYSHEV_ZERO)
+  else if (coll_s->f == Chebyshev_Zero)
   {
     double phi = (i+0.5)*M_PI/coll_s->n;
     
@@ -148,14 +136,3 @@ static double point(int i, struct Collocation *coll_s)
   return v;
 }
 
-/* if it needs to fill up double *curv 
-  if (!strcmp(patch->coord,"Cartesian")
-  {
-    allocating mem for double *curv
-    for (i = 0; i < U; i++)
-    {
-      patch->node[i]->curv = malloc(3*sizeof(*patch->node[i]->curv));
-      pointerEr(patch->node[i]->curv);
-    }
-  }
-*/

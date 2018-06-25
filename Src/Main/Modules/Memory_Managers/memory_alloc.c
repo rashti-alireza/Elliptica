@@ -6,7 +6,7 @@
 #include "memory_alloc.h"
 
 /* adding 2 block of memory for parameter data base 
-// and puting the last block to null and 
+// and putting the last block to null and 
 // returning pointer to one before the last block
 */
 void *alloc_parameter(Parameter_T ***mem)
@@ -83,30 +83,22 @@ void *alloc_grid(void)
 /* allocating memory for patches based on type of coord sys */
 void alloc_patches(Grid_T *grid)
 {
-  if (!strcmp(grid->kind,"Cartesian"))
-    alloc_patches_cartesian(grid);
+  if (strcmp_i(grid->kind,"Cartesian_grid"))
+    alloc_patches_Cartesian_grid(grid);
   
-  //else if (grid->coord,"CubedSpherical")
-    //alloc_patches_CubedSpherical(grid);
+  //else if (strcmp_i(grid->kind,"CubedSpherical_grid"))
+    //alloc_patches_CubedSpherical_grid(grid);
+  else
+    abortEr_s("No such %s kind for grid.\n",grid->kind);
 }
 
-/* allocating memory for nodes based on type of coord sys */
+/* memory alloc nodes */
 void alloc_nodes(Grid_T *grid)
-{
-  if (!strcmp(grid->kind,"Cartesian"))
-    alloc_nodes_cartesian(grid);
-  
-  //else if (grid->coord,"CubedSpherical")
-    //alloc_nodes_CubedSpherical(grid);
-}
-
-/* memory alloc nodes for cartesian type */
-static void alloc_nodes_cartesian(Grid_T *grid)
 {
   int *n;
   int i;
   
-  for_all_patches_macro(i,grid)
+  FOR_ALL(i,grid->patch)
   {
     int j,U;
     Node_T **node;
@@ -131,14 +123,14 @@ static void alloc_nodes_cartesian(Grid_T *grid)
 }
 
 /* memory alloc patches for cartesian type */
-static void alloc_patches_cartesian(Grid_T *grid)
+static void alloc_patches_Cartesian_grid(Grid_T *grid)
 {
   int Nboxes;// number of boxes
   int i;
   Flag_T flg;
   
   if (get_parameter("number_of_boxes") == 0)
-    abortEr("number_of_boxes parameter is not defined!\n");
+    abortEr("\"number_of_boxes\" parameter is not defined!\n");
     
   Nboxes = get_parameter_value_I("number_of_boxes",&flg);
   parameterEr(flg);
@@ -153,4 +145,58 @@ static void alloc_patches_cartesian(Grid_T *grid)
     pointerEr(grid->patch[i]);
   }
   
+}
+
+/* memory allocation for interface struct */
+void *alloc_interface(Patch_T *patch)
+{
+  assert(patch);
+  
+  patch->interface = calloc(1,sizeof(*patch->interface));
+  return patch->interface;
+}
+
+/*
+// memory allocation for point struct based on
+// number of points on interface 
+*/
+void alloc_point(Patch_T *patch)
+{
+  assert(patch);
+  
+  int i;
+  int *n = patch->n;
+  int sum = (n[0]*n[1])+(n[0]*n[2])+(n[1]*n[2]);
+  sum *= 2;
+  
+  patch->interface->point = calloc(sum+1,sizeof(*patch->interface->point));
+  pointerEr(patch->interface->point);
+  
+  Point_T **const point = patch->interface->point;
+  for (i = 0; i < sum; i++)
+  {
+    point[i] = calloc(1,sizeof(*point[i]));
+    pointerEr(point[i]);
+  }
+}
+
+/* allocating 2 block of memory for sFunc_PtoV_T 
+// and putting the last block to NULL and returning
+// the new available pointer
+*/
+void *alloc_sFunc_PtoV(sFunc_PtoV_T ***mem)
+{
+  int i;
+  
+  for (i = 0; (*mem) != 0 && (*mem)[i] != 0 ; i++);
+  
+  (*mem) = realloc((*mem),(i+2)*sizeof(*(*mem)));
+  pointerEr((*mem));
+  
+  (*mem)[i] = malloc(sizeof(*(*mem)[i]));
+  pointerEr((*mem)[i]);
+  
+  (*mem)[i+1] = 0;
+  
+  return (*mem)[i];
 }

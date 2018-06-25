@@ -32,7 +32,7 @@ Parameter_T *get_parameter(char *const par_name)
   i = 0;
   while (parameters_global != 0 && parameters_global[i] != 0)
   {
-    if (strcmp(parameters_global[i]->lv,par_name) == 0)
+    if (strcmp_i(parameters_global[i]->lv,par_name))
       return parameters_global[i];
     i++;
   }
@@ -55,7 +55,7 @@ int get_parameter_value_I(char *const par_name,Flag_T *flg)
   i = 0;
   while (parameters_global != 0 && parameters_global[i] != 0)
   {
-    if (strcmp(parameters_global[i]->lv,par_name) == 0)
+    if (strcmp_i(parameters_global[i]->lv,par_name))
     {
         v = atoi(parameters_global[i]->rv);
         f = FOUND;
@@ -84,7 +84,7 @@ double get_parameter_value_D(char *const par_name,Flag_T *flg)
   i = 0;
   while (parameters_global != 0 && parameters_global[i] != 0)
   {
-    if (strcmp(parameters_global[i]->lv,par_name) == 0)
+    if (strcmp_i(parameters_global[i]->lv,par_name))
     {
         v = strtod(parameters_global[i]->rv,0);
         f = FOUND;
@@ -114,7 +114,7 @@ char *get_parameter_value_S(char *const par_name,Flag_T *flg)
   i = 0;
   while (parameters_global != 0 && parameters_global[i] != 0)
   {
-    if (strcmp(parameters_global[i]->lv,par_name) == 0)
+    if (strcmp_i(parameters_global[i]->lv,par_name))
     {
         v = parameters_global[i]->rv;
         f = FOUND;

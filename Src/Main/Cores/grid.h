@@ -1,6 +1,7 @@
 #include "core_lib.h"
 #include "error_handling_lib.h"
 #include "memory_managing_lib.h"
+#include "utilities_lib.h"
 
 /* returning value */
 struct Ret_S
@@ -10,8 +11,6 @@ struct Ret_S
 
 
 static void fill_patches(Grid_T *grid);
-static void fill_patches_cartesian(Grid_T *grid);
-static void fill_nodes(Grid_T *grid);
-static void fill_nodes_cartesian(Grid_T *grid);
+static void fill_patches_Cartesian_grid(Grid_T *grid);
 static void make_keyword_parameter(struct Ret_S *ret,char *box,char *needle);
-int make_coordinates(Grid_T *grid);
+int fill_nodes(Grid_T *grid);

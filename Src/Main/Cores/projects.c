@@ -49,7 +49,7 @@ Project_T *get_project(char *const proj_name)
   i = 0;
   while (projects_global != 0 && projects_global[i] != 0)
   {
-    if (strcmp(projects_global[i]->name,proj_name) == 0)
+    if (strcmp_i(projects_global[i]->name,proj_name))
       return projects_global[i];
     i++;
   }

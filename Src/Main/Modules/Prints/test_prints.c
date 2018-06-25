@@ -68,7 +68,7 @@ void pr_coords(Grid_T *grid)
   
   path = get_parameter_value_S("output_directory_path",&flg);
   parameterEr(flg);
-  for_all_patches_macro(i,grid)
+  FOR_ALL(i,grid->patch)
   {
     Patch_T *patch = grid->patch[i];
     int U = countf(patch->node);

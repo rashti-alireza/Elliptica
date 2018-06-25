@@ -8,13 +8,13 @@
 /* making the patches which cover the grid */
 int make_patches(Grid_T *grid)
 {
-  char *coord;
+  char *kind;
   Flag_T flg;
   
-  /* finding coord sys name in grid */
-  coord = get_parameter_value_S("coord_sys",&flg);
+  /* finding the kind of grid */
+  kind = get_parameter_value_S("grid_kind",&flg);
   parameterEr(flg);
-  grid->kind = strdup(coord);
+  grid->kind = strdup(kind);
   
   /* allocating and filling patches */
   alloc_patches(grid);
@@ -27,45 +27,32 @@ int make_patches(Grid_T *grid)
   return EXIT_SUCCESS;
 }
 
-/* filling node struc*/
-static void fill_nodes(Grid_T *grid)
-{
-  if (!strcmp(grid->kind,"Cartesian"))
-    fill_nodes_cartesian(grid);
-  
-  //else if (grid->coord,"CubedSpherical")
-    //fill_nodes_CubedSpherical(grid);
-}
-
-/* filling node struc for Cartesian*/
-static void fill_nodes_cartesian(Grid_T *grid)
-{
-  /* filling nodes based on coord sys type */
-  make_coordinates(grid);
-  
-}
-
 /* filling patch struct */
 static void fill_patches(Grid_T *grid)
 {
-  if (!strcmp(grid->kind,"Cartesian"))
-    fill_patches_cartesian(grid);
+  if (strcmp_i(grid->kind,"Cartesian_grid"))
+    fill_patches_Cartesian_grid(grid);
   
   //else if (grid->coord,"CubedSpherical")
-    //fill_patches_CubedSpherical(grid);
+    //fill_patches_CubedSpherical_grid(grid);
+  else
+    abortEr_s("There is no such %s grid kind.\n",grid->kind);
 }
 
 /*filling patch struct for Cartesian*/
-static void fill_patches_cartesian(Grid_T *grid)
+static void fill_patches_Cartesian_grid(Grid_T *grid)
 {
   int i;
   char name[20] = {'\0'};
   Flag_T flg;
   
-  for_all_patches_macro(i,grid)
+  FOR_ALL(i,grid->patch)
   {
     struct Ret_S ret;
     Patch_T *const patch = grid->patch[i];
+    
+    /* filling grid */
+    patch->grid = grid;
     
     /* filling name */
     sprintf(name,"box%d",i);
@@ -111,7 +98,7 @@ static void fill_patches_cartesian(Grid_T *grid)
     /* filling flags */
     sprintf(name,"box%d_collocation",i);
     patch->coordsys = strdup("Cartesian");
-    patch->collocation = get_parameter_value_S(name,&flg);
+    patch->collocation = get_collocation(get_parameter_value_S(name,&flg));
     parameterEr(flg);
     
   }
