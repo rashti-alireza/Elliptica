@@ -122,7 +122,7 @@ void alloc_nodes(Grid_T *grid)
   
 }
 
-/* memory alloc patches for cartesian type */
+/* memory alloc patches for Cartesian type */
 static void alloc_patches_Cartesian_grid(Grid_T *grid)
 {
   int Nboxes;// number of boxes
