@@ -68,3 +68,15 @@ int K(int l, int *n)
   tmp = l % (n[2]*n[1]);
   return tmp % n[2];
 }
+
+/* changing text to enum for collocation */
+Collocation_T get_collocation(char *coll)
+{
+  Collocation_T c;
+  if (strcmp_i(coll,"EquiSpaced")) c = EquiSpaced;
+  else if (strcmp_i(coll,"Chebyshev_Zero")) c = Chebyshev_Zero;
+  else
+    abortEr_s("There is no such %s collocation.\n",coll);
+    
+  return c;
+}
