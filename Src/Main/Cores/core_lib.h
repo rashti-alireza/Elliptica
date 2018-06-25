@@ -11,6 +11,7 @@
 #include "typdef_functions.h"
 #include "print_lib.h"
 #include "macros_lib.h"
+#include "text_tools_lib.h"
 
 int    get_parameter_value_I(char *const par_name,Flag_T *flg);
 double get_parameter_value_D(char *const par_name,Flag_T *flg);
