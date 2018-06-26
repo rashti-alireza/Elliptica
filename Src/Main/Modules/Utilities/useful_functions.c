@@ -3,9 +3,9 @@
 // June 2018
 */
 
-#include "little_functions.h"
+#include "useful_functions.h"
 
-/* helps you to find where litte tests start*/
+/* helps you to find where little tests start*/
 void test_start(char *file,int line)
 {
   printf("Test starts at\n"
@@ -79,4 +79,26 @@ Collocation_T get_collocation(char *coll)
     abortEr_s("There is no such %s collocation.\n",coll);
     
   return c;
+}
+
+/* find out if this point p located on an edge or not
+// the algorithm is simple; if it happens at two or more interface
+// it means this point is on an edge and returns 1 otherwise 0
+ */
+int IsThisEdge(int *n,int p)
+{
+  int i,j,k;
+  int c, r;
+  
+  IJK(p,n,&i,&j,&k);
+  
+  c = 0;
+  if (i == n[0]-1 || i == 0)  c++;
+  if (j == n[1]-1 || j == 0)  c++;
+  if (k == n[2]-1 || k == 0)  c++;
+  
+  r = 0;
+  if (c > 1)  r = 1;
+  
+  return r;
 }
