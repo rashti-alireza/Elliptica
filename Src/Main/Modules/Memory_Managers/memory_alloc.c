@@ -148,36 +148,40 @@ static void alloc_patches_Cartesian_grid(Grid_T *grid)
 }
 
 /* memory allocation for interface struct */
-void *alloc_interface(Patch_T *patch)
+void alloc_interface(Patch_T *patch)
 {
+  int i;
   assert(patch);
   
-  patch->interface = calloc(1,sizeof(*patch->interface));
-  return patch->interface;
+  patch->interface = calloc(FACE_NUM+1,sizeof(*patch->interface));
+  pointerEr(patch->interface);
+  
+  for (i = 0; i < FACE_NUM; i++)
+  {
+    patch->interface[i] = malloc(sizeof(*patch->interface[i]));
+    pointerEr(patch->interface[i]);
+  }
 }
 
 /*
 // memory allocation for point struct based on
 // number of points on interface 
 */
-void alloc_point(Patch_T *patch)
+void *alloc_point(int s)
 {
-  assert(patch);
-  
+  Point_T **point;
   int i;
-  int *n = patch->n;
-  int sum = (n[0]*n[1])+(n[0]*n[2])+(n[1]*n[2]);
-  sum *= 2;
   
-  patch->interface->point = calloc(sum+1,sizeof(*patch->interface->point));
-  pointerEr(patch->interface->point);
+  point = calloc(s+1,sizeof(*point));
+  pointerEr(point);
   
-  Point_T **const point = patch->interface->point;
-  for (i = 0; i < sum; i++)
+  for (i = 0; i < s; i++)
   {
     point[i] = calloc(1,sizeof(*point[i]));
     pointerEr(point[i]);
   }
+  
+  return point;
 }
 
 /* allocating 2 block of memory for sFunc_PtoV_T 

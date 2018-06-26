@@ -22,11 +22,7 @@ int realize_geometry(Grid_T *grid)
   FOR_ALL(i,grid->patch)
   {
     Patch_T *const patch = grid->patch[i];
-    patch->interface = alloc_interface(patch);
-    pointerEr(patch->interface);
-    alloc_point(patch);
-    patch->interface->np = countf(patch->interface->point);
-    
+    alloc_interface(patch);
     fill_basics(patch);// filling basic elements
     fill_N(patch);// filling point[?]->N
   }
@@ -44,63 +40,97 @@ static void fill_geometry(Grid_T *grid)
   int i;
   
   init_func_PtoV(&func);// initialize struct
-  /* adding func to struc to be called; 
-  // each coord must have its own func:
+  /* adding func to struc to be called each coord must have 
+  // its own func. note, also external face and inner face must be found
+  // in first place; thus, for each new coord sys one must add below 
+  // the related functions for these two purposes.
   */
   add_func_PtoV(&func,FindInnerB_Cartesian_coord,"FindInnerB",Cartesian);
-  //add_func_PtoV(&func,FindOuterB_Cartesian,"FindOuterB",Cartesian);
   add_func_PtoV(&func,FindExterF_Cartesian_coord,"FindExterF",Cartesian);
-  //add_func_PtoV(&func,FindNeighbor_Cartesian,"FindNeighbor",Cartesian);
   
-  /* calling function */
+  /* calling function to find external and internal faces*/
   FOR_ALL(i,grid->patch)
   {
     Patch_T *const patch = grid->patch[i];
     run_func_PtoV(func,"FindExterF",patch);// find external faces
     run_func_PtoV(func,"FindInnerB",patch);// find inner boundary
-    //run_fun_PtoV(fun,"FindOuterB",patch);// find outer boundary
-    //run_fun_PtoV(fun,"FindNeighbor",patch);// find neighbor boundary
   }
+  free_2d(func);// freeing func struct
   
-  free_2d(func);
+  /* find neighbor properties */
+  //FOR_ALL(i,grid->patch)
+    //FindNeighbor(grid->patch[i]);
+  
 }
 
-/* find neighbor of points for Cartesian type
-static void FindNeighbor_Cartesian_grid(Patch_T *patch)
+/* study neighbor of points to find quantities like 
+// point->face, point->touch, point->adjPoint and others.
+*/
+/*static void FindNeighbor_Cartesian_grid(Patch_T *patch)
 {
+  PointSet_T **inner_p;
+  
+  const int U = patch->interface->np;
   int i;
-  FOR_ALL(i,patch->interface->point)
-    patch->interface->point[i]->innerB = 0;
+  
+  for (i = 0; i < U; i++)
+  {
+    Point_T *const P = patch->interface->point[i];
+    Point_T **adjP = 0;
+    adjP = find_adjPoint(P);// finding adjacent points of point P
+    analyze_P(P,adjP);// analyzing P based on its adjacent points
+    
+    if (adjP != 0) free_2d(adjP);
+  }
 }*/
-
-
 
 /* find inner boundary for Cartesian type */
 static void FindInnerB_Cartesian_coord(Patch_T *patch)
 {
-  int i;
-  FOR_ALL(i,patch->interface->point)
-    patch->interface->point[i]->innerB = 0;
+  Interface_T **interface = patch->interface;
+  int i,f;
+  
+  FOR_ALL(f,interface)
+  {
+    Point_T **point = interface[f]->point;
+    FOR_ALL(i,point)
+    {
+      point[i]->innerB = 0;
+    }
+  }
+
 }
 
 /* find external faces for Cartesian type */
 static void FindExterF_Cartesian_coord(Patch_T *patch)
 {
-  int i;
+  Interface_T **interface = patch->interface;
+  int i,f;
   
-  FOR_ALL(i,patch->interface->point)
-    patch->interface->point[i]->exterF = 1;
+  FOR_ALL(f,interface)
+  {
+    Point_T **point = interface[f]->point;
+    FOR_ALL(i,point)
+    {
+      point[i]->exterF = 1;
+    }
+  }
+  
 }
 
 /* filling point[?]->N */
-static void fill_N(Patch_T *const patch)
+static void fill_N(Patch_T *patch)
 {
-  Point_T **const point = patch->interface->point;
-  int i;
+  Interface_T **interface = patch->interface;
+  int i,f;
   
-  FOR_ALL(i,point)
+  FOR_ALL(f,interface)
   {
-    normal_vec(point[i]);
+    Point_T **point = interface[f]->point;
+    FOR_ALL(i,point)
+    {
+      normal_vec(point[i]);
+    }
   }
 }
 
@@ -108,59 +138,97 @@ static void fill_N(Patch_T *const patch)
 // filling  basic elements:
 // point[?]->ind, point[?]->face and point[?]->patch 
 */
-static void fill_basics(Patch_T *const patch)
+static void fill_basics(Patch_T *patch)
 {
+  Point_T **point;
   int *n = patch->n;
-  const int np = patch->interface->np;
+  int s;
   int i,j,k,p;
   
-  for (p = 0; p < np; p++)
-    patch->interface->point[p]->patch = patch;
-  
+  s = n[0]*n[1];
+  patch->interface[K_0]->point = alloc_point(s);
+  patch->interface[K_0]->patch = patch;
+  point = patch->interface[K_0]->point;
   p = 0;
   FOR_SURFACE(i,j,k,n[0],n[1],0) // k = 0 surface
   {
-    patch->interface->point[p]->ind = L(n,i,j,k);
-    patch->interface->point[p]->face = K_0;
+    point[p]->ind = L(n,i,j,k);
+    point[p]->face = K_0;
+    point[p]->patch = patch;
     p++;
   }
+  patch->interface[K_0]->np = p;
   
+  s = n[0]*n[1];
+  patch->interface[K_n2]->point = alloc_point(s);
+  patch->interface[K_n2]->patch = patch;
+  point = patch->interface[K_n2]->point;
+  p = 0;
   FOR_SURFACE(i,j,k,n[0],n[1],n[2]-1) // k = n[2]-1 surface
   {
-    patch->interface->point[p]->ind = L(n,i,j,k);
-    patch->interface->point[p]->face = K_n2;
+    point[p]->ind = L(n,i,j,k);
+    point[p]->face = K_n2;
+    point[p]->patch = patch;
     p++;
   }
-    
+  patch->interface[K_n2]->np = p;
+  
+  s = n[0]*n[2];
+  patch->interface[J_0]->point = alloc_point(s);
+  patch->interface[J_0]->patch = patch;
+  point = patch->interface[J_0]->point;
+  p = 0;  
   FOR_SURFACE(i,k,j,n[0],n[2],0) // j = 0 surface
   {
-    patch->interface->point[p]->ind = L(n,i,j,k);
-    patch->interface->point[p]->face = J_0;
+    point[p]->ind = L(n,i,j,k);
+    point[p]->face = J_0;
+    point[p]->patch = patch;
     p++;
   }
-    
+  patch->interface[J_0]->np = p;
+  
+  s = n[0]*n[2];
+  patch->interface[J_n1]->point = alloc_point(s);
+  patch->interface[J_n1]->patch = patch;
+  point = patch->interface[J_n1]->point;
+  p = 0;
   FOR_SURFACE(i,k,j,n[0],n[2],n[1]-1) // j = n[1]-1 surface
   {
-    patch->interface->point[p]->ind = L(n,i,j,k);
-    patch->interface->point[p]->face = J_n1;
+    point[p]->ind = L(n,i,j,k);
+    point[p]->face = J_n1;
+    point[p]->patch = patch;
     p++;
   }
-    
+  patch->interface[J_n1]->np = p;  
+  
+  s = n[1]*n[2];
+  patch->interface[I_0]->point = alloc_point(s);
+  patch->interface[I_0]->patch = patch;
+  point = patch->interface[I_0]->point;
+  p = 0;
   FOR_SURFACE(j,k,i,n[1],n[2],0) // i = 0 surface
   {
-    patch->interface->point[p]->ind = L(n,i,j,k);
-    patch->interface->point[p]->face = I_0;
+    point[p]->ind = L(n,i,j,k);
+    point[p]->face = I_0;
+    point[p]->patch = patch;
     p++;
   }
+  patch->interface[I_0]->np = p;
   
+  s = n[1]*n[2];
+  patch->interface[I_n0]->point = alloc_point(s);
+  patch->interface[I_n0]->patch = patch;
+  point = patch->interface[I_n0]->point;
+  p = 0;
   FOR_SURFACE(j,k,i,n[1],n[2],n[0]-1) // i = n[0]-1 surface
   {
-    patch->interface->point[p]->ind = L(n,i,j,k);
-    patch->interface->point[p]->face = I_n0;
+    point[p]->ind = L(n,i,j,k);
+    point[p]->face = I_n0;
+    point[p]->patch = patch;
     p++;
   }
+  patch->interface[I_n0]->np = p;
   
-  assert(p == np);
 }
 
 /* normal vector at interface of patch, it points outward and normalized;

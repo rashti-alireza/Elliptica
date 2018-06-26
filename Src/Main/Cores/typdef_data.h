@@ -84,7 +84,7 @@ typedef struct NODE_T
 /* point */
 typedef struct POINT_T
 {
-  int ind;// linear index
+  int ind;// linear index in which node[ind] refers to this point
   double N[3];// normal vector
   struct PATCH_T *patch;// refers to its patch
   int adjPatch;// adjacent patch used in interpolation
@@ -93,7 +93,7 @@ typedef struct POINT_T
   unsigned int touch  : 1;// touch state 1, overlap state 0
   unsigned int copy   : 1;// copy state 1, interpolation state 0
   unsigned int exterF : 1;// external interface 1, internal 0
-                          // extenal means it can reach other interface
+                          // external means it can reach other interface
   unsigned int outerB : 1;// if it is outer boundary of grid 
                           // and needs boundary condition
   unsigned int innerB : 1;// if it is inner boundary of grid 
@@ -105,12 +105,13 @@ typedef struct Interface_T
 {
   int np;// number of points in this structure
   Point_T **point;// points on the interface
+  struct PATCH_T *patch;// refers to its patch
 }Interface_T;
 
 /* patch */
 typedef struct PATCH_T
 {
-  struct GIRD_T *grid;// referes to its grid
+  struct GIRD_T *grid;// refers to its grid
   char *name;// box name
   char *coordsys;// coord sys used in this patch
   Collocation_T collocation;// type of collocation in this patch
@@ -120,7 +121,7 @@ typedef struct PATCH_T
   double min[3];// minimum of each direction like x_min = min[0]
   double max[3];// maximum of each direction like b_max = max[1]
   Node_T **node;// node info
-  Interface_T *interface;// interface info 
+  Interface_T **interface;// interface info 
 }Patch_T;
 
 /* grid */
