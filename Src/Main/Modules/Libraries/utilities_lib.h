@@ -14,4 +14,4 @@ int L(int *n, int i, int j, int k);
 int I(int l, int *n);
 int J(int l, int *n);
 int K(int l, int *n);
-
+int IsThisEdge(int *n,int p);

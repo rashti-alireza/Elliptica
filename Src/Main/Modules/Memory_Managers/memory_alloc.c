@@ -114,7 +114,7 @@ void alloc_nodes(Grid_T *grid)
     U = n[0]*n[1]*n[2];
     for (j = 0; j < U; j++)
     {
-      node[j] = malloc(sizeof(*node[j]));
+      node[j] = calloc(1,sizeof(*node[j]));
       pointerEr(node[j]);
     }
     
@@ -164,8 +164,8 @@ void alloc_interface(Patch_T *patch)
 }
 
 /*
-// memory allocation for point struct based on
-// number of points on interface 
+// memory allocation for point struct;
+// s is the number of point which is demanded 
 */
 void *alloc_point(int s)
 {

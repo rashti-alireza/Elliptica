@@ -13,12 +13,6 @@ int realize_geometry(Grid_T *grid)
 {
   int i;
   
-  /* 
-  // allocating interface struct,
-  // allocating point struct and
-  // counting total number of point in each interface np
-  // filling ind, N, patch and face elements of point struct 
-  */
   FOR_ALL(i,grid->patch)
   {
     Patch_T *const patch = grid->patch[i];
@@ -29,6 +23,9 @@ int realize_geometry(Grid_T *grid)
   
   /* find various geometry of each point */
   fill_geometry(grid);
+  
+  /* printing boundary for test purposes */
+  //pr_boundary(grid);
   
   return EXIT_SUCCESS;
 }
@@ -57,32 +54,147 @@ static void fill_geometry(Grid_T *grid)
   }
   free_2d(func);// freeing func struct
   
-  /* find neighbor properties */
-  //FOR_ALL(i,grid->patch)
-    //FindNeighbor(grid->patch[i]);
+  /* realize neighbor properties */
+  FOR_ALL(i,grid->patch)
+    RealizeNeighbor(grid->patch[i]);
   
 }
 
 /* study neighbor of points to find quantities like 
 // point->face, point->touch, point->adjPoint and others.
+// algorithm:
+// for each interface do
+// 	a. seprate each interface to its inner and edge points
+// 	b. realize the adjacency of inner points
+// 	c. using 2, realize the adjacency of edge points
 */
-/*static void FindNeighbor_Cartesian_grid(Patch_T *patch)
+static int RealizeNeighbor(Patch_T *patch)
 {
   PointSet_T **inner_p;
+  const int nf = countf(patch->interface);
+  int f;
   
-  const int U = patch->interface->np;
-  int i;
-  
-  for (i = 0; i < U; i++)
+  for (f = 0; f < nf; f++)
   {
-    Point_T *const P = patch->interface->point[i];
-    Point_T **adjP = 0;
-    adjP = find_adjPoint(P);// finding adjacent points of point P
-    analyze_P(P,adjP);// analyzing P based on its adjacent points
+    Interface_T *interface = patch->interface[f];
+    PointSet_T **innerP, **edgeP;
     
-    if (adjP != 0) free_2d(adjP);
+    init_Points(interface,&innerP,&edgeP);
+    //realize_adj(innerP);
+    //realize_adj(edgeP);
+    
+    free_PointSet(innerP);
+    free_PointSet(edgeP);
   }
-}*/
+  return EXIT_SUCCESS;
+}
+
+/* initializing and finding inner points*/
+static void init_Points(Interface_T *interface,PointSet_T ***innP,PointSet_T ***edgP)
+{
+  PointSet_T **pnt_in,**pnt_ed;// inner and edge points
+  int N_in, N_ed;// number of inner and edge points
+  const int f = interface->fn;
+  int *n = interface->patch->n;
+  int i,j,k,im,iM,jm,jM,km,kM;// m for min and M for max
+  int sum,ed,in;
+  
+  N_in = NumPoint(interface,INNER);
+  pnt_in = alloc_PointSet(N_in);
+  N_ed = NumPoint(interface,EDGE);
+  pnt_ed = alloc_PointSet(N_ed);
+  
+  set_min_max_sum(n,f,&im,&iM,&jm,&jM,&km,&kM,&sum);
+  
+  ed = in = 0;
+  FOR_ijk(i,j,k,im,iM,jm,jM,km,kM)
+  {
+    int l = L(n,i,j,k);
+    int p = L2(n,f,i,j,k);
+    
+    if (IsThisEdge(n,l))
+    {
+      pnt_ed[ed]->point = interface->point[p];
+      pnt_ed[ed]->type = EDGE;
+      ed++;
+    }
+    else
+    {
+      pnt_in[in]->point = interface->point[p];
+      pnt_in[in]->type = INNER;
+      in++;
+    }  
+  }
+  assert(in+ed == sum);
+  
+  (*innP) = pnt_in;
+  (*edgP) = pnt_ed;
+}
+
+/* number of inner points on an interface */
+static int NumPoint(Interface_T *interface,enum Type type)
+{
+  int v;
+  int *n = interface->patch->n;
+  int f = interface->fn;
+  
+  if (type == INNER)
+  {
+    switch(f)
+    {
+      case I_0:
+        v = (n[1]-2)*(n[2]-2);
+        break;
+      case I_n0:
+        v = (n[1]-2)*(n[2]-2);
+        break; 
+      case J_0:
+        v = (n[0]-2)*(n[2]-2);
+        break; 
+      case J_n1:
+        v = (n[0]-2)*(n[2]-2);
+        break; 
+      case K_0:
+        v = (n[0]-2)*(n[1]-2);
+        break; 
+      case K_n2:
+        v = (n[0]-2)*(n[1]-2);
+        break;
+      default:
+        abortEr("There is not such interface.\n");
+    }
+  }
+  else if (type == EDGE)
+  {
+    switch(f)
+    {
+      case I_0:
+        v = 2*(n[1]+n[2]-2);
+        break;
+      case I_n0:
+        v = 2*(n[1]+n[2]-2);
+        break; 
+      case J_0:
+        v = 2*(n[0]+n[2]-2);
+        break; 
+      case J_n1:
+        v = 2*(n[0]+n[2]-2);
+        break; 
+      case K_0:
+        v = 2*(n[0]+n[1]-2);
+        break; 
+      case K_n2:
+        v = 2*(n[0]+n[1]-2);
+        break;
+      default:
+        abortEr("There is not such interface.\n");
+    }
+  }
+  else
+    abortEr("There is no such type.\n");
+  
+  return v;
+}
 
 /* find inner boundary for Cartesian type */
 static void FindInnerB_Cartesian_coord(Patch_T *patch)
@@ -127,6 +239,7 @@ static void fill_N(Patch_T *patch)
   FOR_ALL(f,interface)
   {
     Point_T **point = interface[f]->point;
+    
     FOR_ALL(i,point)
     {
       normal_vec(point[i]);
@@ -136,99 +249,145 @@ static void fill_N(Patch_T *patch)
 
 /* 
 // filling  basic elements:
-// point[?]->ind, point[?]->face and point[?]->patch 
+// point[?]->ind, point[?]->face and point[?]->patch and
+// also realize those nodes reach boundary of patch
 */
 static void fill_basics(Patch_T *patch)
 {
-  Point_T **point;
   int *n = patch->n;
-  int s;
-  int i,j,k,p;
+  int f;
   
-  s = n[0]*n[1];
-  patch->interface[K_0]->point = alloc_point(s);
-  patch->interface[K_0]->patch = patch;
-  point = patch->interface[K_0]->point;
-  p = 0;
-  FOR_SURFACE(i,j,k,n[0],n[1],0) // k = 0 surface
+  for (f = I_0; f < TOT_FACE; f++)
   {
-    point[p]->ind = L(n,i,j,k);
-    point[p]->face = K_0;
-    point[p]->patch = patch;
-    p++;
+    Point_T **point;
+    int i,j,k,im,iM,jm,jM,km,kM,sum;// m for min and M for max
+    int t = 0;// test purposes
+    
+    set_min_max_sum(n,f,&im,&iM,&jm,&jM,&km,&kM,&sum);
+    patch->interface[f]->point = alloc_point(sum);
+    patch->interface[f]->patch = patch;
+    patch->interface[f]->fn = f;
+    patch->interface[f]->np = sum;
+    point = patch->interface[f]->point;
+    
+    t = 0;
+    FOR_ijk(i,j,k,im,iM,jm,jM,km,kM)
+    {
+      int p = L2(n,f,i,j,k);
+      point[p]->ind = L(n,i,j,k);
+      point[p]->face = f;
+      point[p]->patch = patch;
+      patch->node[L(n,i,j,k)]->Bpoint = point[p];
+      t++;
+    }
+    assert(t == sum);
   }
-  patch->interface[K_0]->np = p;
+}
+
+/*2d linear index format for interface points 
+// L = k+n2*(j+n1*i) so depends on interface some of i,j,j,n2 and n1
+// are zero or supremum as follows:
+*/
+static int L2(int *n,int f, int i, int j, int k)
+{
+  int v;
   
-  s = n[0]*n[1];
-  patch->interface[K_n2]->point = alloc_point(s);
-  patch->interface[K_n2]->patch = patch;
-  point = patch->interface[K_n2]->point;
-  p = 0;
-  FOR_SURFACE(i,j,k,n[0],n[1],n[2]-1) // k = n[2]-1 surface
+  switch(f)
   {
-    point[p]->ind = L(n,i,j,k);
-    point[p]->face = K_n2;
-    point[p]->patch = patch;
-    p++;
+    case I_0:// i = 0
+      v = k+n[2]*j;
+      break;
+    case I_n0:// i = n[0]-1
+      v = k+n[2]*j;
+      break;
+    case J_0:// j = 0
+      v = k+n[2]*i;
+      break;
+    case J_n1:// j = n[1]-1
+      v = k+n[2]*i;
+      break;
+    case K_0:// k = 0
+      v = j+n[1]*i;
+      break;
+    case K_n2:// k = n[2]-1
+      v = j+n[1]*i;
+      break;
+    default:
+      abortEr("Exceeding from total number of face.\n");
+      break; 
   }
-  patch->interface[K_n2]->np = p;
   
-  s = n[0]*n[2];
-  patch->interface[J_0]->point = alloc_point(s);
-  patch->interface[J_0]->patch = patch;
-  point = patch->interface[J_0]->point;
-  p = 0;  
-  FOR_SURFACE(i,k,j,n[0],n[2],0) // j = 0 surface
+  return v;
+}
+
+/* setting min and max of total number of point on an interface.
+// the purpose it serves is making loop over interface point easier.
+// note: since in FOR_ijk the condition for loop is less than sign <
+// then the maximum value must be the supremum; but the slice 
+// should be at the exact value.
+*/
+static void set_min_max_sum(int *n,int f,int *im,int *iM,int *jm,int *jM,int *km,int *kM,int *sum)
+{
+  switch(f)
   {
-    point[p]->ind = L(n,i,j,k);
-    point[p]->face = J_0;
-    point[p]->patch = patch;
-    p++;
+    case I_0:
+      *im = 0;
+      *iM = 1;
+      *jm = 0;
+      *jM = n[1];
+      *km = 0;
+      *kM = n[2];
+      *sum = n[1]*n[2];
+      break;
+    case I_n0:
+      *im = n[0]-1;
+      *iM = n[0];
+      *jm = 0;
+      *jM = n[1];
+      *km = 0;
+      *kM = n[2];
+      *sum = n[1]*n[2];
+      break;
+    case J_0:
+      *im = 0;
+      *iM = n[0];
+      *jm = 0;
+      *jM = 1;
+      *km = 0;
+      *kM = n[2];
+      *sum = n[0]*n[2];
+      break;    
+    case J_n1:
+      *im = 0;
+      *iM = n[0];
+      *jm = n[1]-1;
+      *jM = n[1];
+      *km = 0;
+      *kM = n[2];
+      *sum = n[0]*n[2];
+      break;    
+    case K_0:
+      *im = 0;
+      *iM = n[0];
+      *jm = 0;
+      *jM = n[1];
+      *km = 0;
+      *kM = 1;
+      *sum = n[0]*n[1]; 
+      break;    
+    case K_n2:
+      *im = 0;
+      *iM = n[0];
+      *jm = 0;
+      *jM = n[1];
+      *km = n[2]-1;
+      *kM = n[2];
+      *sum = n[0]*n[1];
+      break;
+    default:
+      abortEr("Exceeding from total number of face.\n");
+      break;
   }
-  patch->interface[J_0]->np = p;
-  
-  s = n[0]*n[2];
-  patch->interface[J_n1]->point = alloc_point(s);
-  patch->interface[J_n1]->patch = patch;
-  point = patch->interface[J_n1]->point;
-  p = 0;
-  FOR_SURFACE(i,k,j,n[0],n[2],n[1]-1) // j = n[1]-1 surface
-  {
-    point[p]->ind = L(n,i,j,k);
-    point[p]->face = J_n1;
-    point[p]->patch = patch;
-    p++;
-  }
-  patch->interface[J_n1]->np = p;  
-  
-  s = n[1]*n[2];
-  patch->interface[I_0]->point = alloc_point(s);
-  patch->interface[I_0]->patch = patch;
-  point = patch->interface[I_0]->point;
-  p = 0;
-  FOR_SURFACE(j,k,i,n[1],n[2],0) // i = 0 surface
-  {
-    point[p]->ind = L(n,i,j,k);
-    point[p]->face = I_0;
-    point[p]->patch = patch;
-    p++;
-  }
-  patch->interface[I_0]->np = p;
-  
-  s = n[1]*n[2];
-  patch->interface[I_n0]->point = alloc_point(s);
-  patch->interface[I_n0]->patch = patch;
-  point = patch->interface[I_n0]->point;
-  p = 0;
-  FOR_SURFACE(j,k,i,n[1],n[2],n[0]-1) // i = n[0]-1 surface
-  {
-    point[p]->ind = L(n,i,j,k);
-    point[p]->face = I_n0;
-    point[p]->patch = patch;
-    p++;
-  }
-  patch->interface[I_n0]->np = p;
-  
 }
 
 /* normal vector at interface of patch, it points outward and normalized;
@@ -292,4 +451,39 @@ static void normal_vec_Cartesian_coord(Point_T *point)
     default:
       abortEr("There is no such face.\n");
   }
+}
+
+/* allocation mem for PointSet_T strcut */
+static void *alloc_PointSet(int N)
+{
+  PointSet_T **pnt;
+  int i;
+  
+  pnt = calloc(N+1,sizeof(*pnt));
+  pointerEr(pnt);
+  
+  for (i = 0; i < N; i++)
+  {
+    pnt[i] =  calloc(1,sizeof(*pnt[i]));
+    pointerEr(pnt);
+  }
+  
+  return pnt;
+}
+
+/* free mem for PointSet_T strcut */
+static void free_PointSet(PointSet_T **pnt)
+{
+  if(pnt) return;
+  
+  int i;
+  FOR_ALL (i,pnt)
+  {
+    if (pnt[i]->adj != 0)
+      free(pnt[i]->adj);
+    
+    free(pnt[i]);
+  }
+  
+  free(pnt);
 }

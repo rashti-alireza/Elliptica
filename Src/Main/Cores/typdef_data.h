@@ -79,6 +79,11 @@ typedef struct NODE_T
 {
   double cart[3];// for Cartesian value x,y,z
   double *curv;// for general curvilinear value a,b,c
+  struct POINT_T *Bpoint;// if this node doesn't reach patch boundary 0
+                        // if this node is on boundary, it points to 
+                        // boundary point stuct. note: node initially
+                        // MUST allocate with calloc or make sure
+                        // you put this point sturct to 0 initially
 }Node_T;
 
 /* point */
@@ -97,13 +102,16 @@ typedef struct POINT_T
   unsigned int outerB : 1;// if it is outer boundary of grid 
                           // and needs boundary condition
   unsigned int innerB : 1;// if it is inner boundary of grid 
-                          // and needs boundary condition                 
+                          // and needs boundary condition 
+  unsigned int houseK : 1;// house-keeping purposes like if it is already
+                          // counted 1 otherwise 0 among others
 }Point_T;
 
 /* face */
 typedef struct Interface_T
 {
   int np;// number of points in this structure
+  int fn;// its interface number
   Point_T **point;// points on the interface
   struct PATCH_T *patch;// refers to its patch
 }Interface_T;
