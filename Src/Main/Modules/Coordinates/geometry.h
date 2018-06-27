@@ -2,6 +2,8 @@
 #include "memory_managing_lib.h"
 #include "error_handling_lib.h"
 #include "utilities_lib.h"
+#include "maths_general_lib.h"
+#define EPS 1E-5
 
 /* face number */
 enum Face
@@ -26,16 +28,16 @@ typedef struct ADJACENT_T
 {
   int p;// adjacent patch
   int f;// adjacent face
+  int npnt;// number of adjacent points
+  Point_T **pnt;// adjacent point
 }Adjacent_T;
 
 /* points to be studied for realizing of geometry */
 typedef struct POINTSET_T
 {
-  Point_T *point;
-  Adjacent_T *adj;
-  int Np;// number of point
-  int Nadj;// number of adjacent
-  enum Type type;// inner or edge point type
+  Point_T *point;// the point under study
+  Adjacent_T *adjPnt;
+  int NadjPnt;// number of adjacent
 }PointSet_T;
 
 static void fill_basics(Patch_T *patch);
@@ -48,7 +50,11 @@ static int L2(int *n,int f, int i, int j, int k);
 static void set_min_max_sum(int *n,int f,int *im,int *iM,int *jm,int *jM,int *km,int *kM,int *sum);
 static void free_PointSet(PointSet_T **pnt);
 static void *alloc_PointSet(int N);
+static void realize_adj(PointSet_T **Pnt,enum Type type,Adjacent_T ***guide);
+static void find_adjPnt(PointSet_T *Pnt,Adjacent_T ***guide);
+static void analyze_adjPnt(PointSet_T *Pnt);
 static int NumPoint(Interface_T *interface,enum Type type);
 static int  RealizeNeighbor(Patch_T *patch);
+int *find_point_in_patch(double *q,Grid_T *grid,int *in,int *out,int Nin,int Nout, int *Nfound);
 double *normal_vec(Point_T *point);
 static void normal_vec_Cartesian_coord(Point_T *point);

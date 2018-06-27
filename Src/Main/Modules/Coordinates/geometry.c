@@ -37,7 +37,7 @@ static void fill_geometry(Grid_T *grid)
   int i;
   
   init_func_PtoV(&func);// initialize struct
-  /* adding func to struc to be called each coord must have 
+  /* adding func to struct to be called each coord must have 
   // its own func. note, also external face and inner face must be found
   // in first place; thus, for each new coord sys one must add below 
   // the related functions for these two purposes.
@@ -78,15 +78,69 @@ static int RealizeNeighbor(Patch_T *patch)
   {
     Interface_T *interface = patch->interface[f];
     PointSet_T **innerP, **edgeP;
-    
-    init_Points(interface,&innerP,&edgeP);
-    //realize_adj(innerP);
-    //realize_adj(edgeP);
+    Adjacent_T **guide;// helping to find adjacent points 
+                       // based on previously found points
+    init_Points(interface,&innerP,&edgeP);// initializing points
+    realize_adj(innerP, INNER, &guide);// realizing adjacency of the points
+    //realize_adj(edgeP,EDGE,&guide);
     
     free_PointSet(innerP);
     free_PointSet(edgeP);
+    free_AdjGuild(guild);
   }
   return EXIT_SUCCESS;
+}
+
+/* realizing adjacency of given points */
+static void realize_adj(PointSet_T **Pnt, enum Type type, Adjacent_T ***guide)
+{
+  int p;
+  
+  if (type == INNER)
+  {
+    FOR_ALL(p,Pnt)
+    {
+      find_adjPnt(Pnt[p],guide);
+      analyze_adjPnt(Pnt[p]);
+    }
+  }
+  else if (type == EDGE)
+  {
+    FOR_ALL(p,Pnt)
+    {
+    
+    }
+  }
+  else
+    abortEr("No such type.\n");
+}
+
+static void find_adjPnt(PointSet_T *pnt,Adjacent_T ***guide)
+{
+  int ind = pnt->point->ind;
+  double *x = pnt->point->patch->node[ind]->x;
+  double *N = pnt->point->N;
+  double eps = rms(3,x)*EPS;
+  double q[3] = {x[0]+eps*N[0],
+                 x[1]+eps*N[1],
+                 x[2]+eps*N[2]};// q = pnt+eps*N
+  Grid_T *grid = pnt->point->patch->grid;
+  found = find_point_in_patch(q,grid,in,out,Nin,Nout,&Nfound);
+}
+
+/* found out if the point q can be found inside patches in
+// and put Nfound equal to the number of patches that include this point.
+// explanation of inputs: q is the triple coordinates of points in 
+// "CARTESIAN" coord, grid is grid, in says the patches which we wish to
+// find point q so it first seeks inside the in patches - for example,
+// in[3] = patch10, so it will look at patch10 - and their
+// total number is Nin. out says ignore these patches like out[0] = patch2
+// means do not look inside patch2; the total number of out patches is 
+// Nout. finally, it returns a pointer to all of the found patches.
+*/
+int *find_point_in_patch(double *q,Patch_T *patch);
+Grid_T *grid,int *in,int *out,int Nin,int Nout, int *Nfound)
+{
 }
 
 /* initializing and finding inner points*/
@@ -115,13 +169,11 @@ static void init_Points(Interface_T *interface,PointSet_T ***innP,PointSet_T ***
     if (IsThisEdge(n,l))
     {
       pnt_ed[ed]->point = interface->point[p];
-      pnt_ed[ed]->type = EDGE;
       ed++;
     }
     else
     {
       pnt_in[in]->point = interface->point[p];
-      pnt_in[in]->type = INNER;
       in++;
     }  
   }
@@ -480,7 +532,11 @@ static void free_PointSet(PointSet_T **pnt)
   FOR_ALL (i,pnt)
   {
     if (pnt[i]->adj != 0)
-      free(pnt[i]->adj);
+    {
+      if (pnt[i]->adjPnt->npnt != 0)  
+        free(pnt[i]->adjPnt->pnt);
+      free(pnt[i]->adjPnt);
+    }
     
     free(pnt[i]);
   }
