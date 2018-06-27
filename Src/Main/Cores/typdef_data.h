@@ -124,6 +124,7 @@ typedef struct PATCH_T
   char *coordsys;// coord sys used in this patch
   Collocation_T collocation;// type of collocation in this patch
   int n[3];// number of point in each direction
+  int pn;// its patch number i.e. patch[pn] = patch
   double c[3];// center
   double s[3];// size like length, width and height
   double min[3];// minimum of each direction like x_min = min[0]
