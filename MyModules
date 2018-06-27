@@ -11,3 +11,4 @@ modules_path += $(TOP)/Src/Main/Modules/Utilities
 modules_path += $(TOP)/Src/Main/Modules/Maths/Linear_Algebra/
 modules_path += $(TOP)/Src/Main/Modules/Maths/Precisions/
 modules_path += $(TOP)/Src/Main/Modules/Maths/Solvers/
+modules_path += $(TOP)/Src/Main/Modules/Maths/General/
