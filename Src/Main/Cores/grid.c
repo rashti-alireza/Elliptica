@@ -142,3 +142,15 @@ static void make_keyword_parameter(struct Ret_S *ret,char *box,char *needle)
     abortEr_s("There is no such %s.\n",needle);
   }
 }
+
+/* setting all of houseK flags in Point_T to zero for given patch */
+void flush_houseK(Patch_T *patch)
+{
+  Interface_T **const interface = patch->interface;
+  const int nf = countf(interface);
+  int i,f;
+  
+  for (f = 0; f < nf; f++)
+    for (i = 0; i < interface[f]->np; i++)
+      interface[f]->point[i]->houseK = 0;
+}
