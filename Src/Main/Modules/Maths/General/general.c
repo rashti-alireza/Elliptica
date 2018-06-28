@@ -48,7 +48,7 @@ long double rmsL(const long int n, double *v2, double *v1)
     for(i = 0; i < n; i++)
       sum += SQR(v2[i]-v1[i]);
     
-  sum = sqrt(sum);
+  sum = sqrtl(sum);
   
   return sum;
 }
