@@ -5,6 +5,9 @@
 
 #include "useful_functions.h"
 
+#define RES_EPS 1E-11
+
+//-----------------------------------------------------------------//
 /* find the point in patches which are specified needle and fill
 // the needle with the answers.
 // for more information about needle look at the typede_data.h in 
@@ -210,31 +213,51 @@ static void find(Needle_T *needle,Mode_T mode)
   
   for (i = 0; i < np; i++)
   {
+    double X[3];
+    double lim[TOT_Limit];
     Patch_T *patch = needle->grid->patch[p[i]];
-    if (strcmp_i(patch->coordsys,"Cartesian"))
-      find_Cartesian_coord(needle,patch);
-    /* other coord sys comes here
-    .
-    .
-    .
-    */
-    else
-      abortEr_s("No finder for this %s coordinate.\n",patch->coordsys);
-      
+    int a;
     
+    a = X_of_x(X,needle->x,patch);
+    
+    fill_limits(lim,patch);
+    
+    if (a && IsInside(X,lim))
+      needle_ans(needle,patch);
+      
   }
 }
 
-/* find point x in patch with Cartesian coord */
-static void find_Cartesian_coord(Needle_T *needle,Patch_T *patch)
+/* find point X correspond to x in given patch.
+// ->return value 1 if it is successful, otherwise 0.
+*/
+int X_of_x(double *X,double *x,Patch_T *patch)
 {
-  double *x = needle->x;
-  double lim[TOT_Limit];
+  int r = 0;
   
-  fill_limits(lim,patch);
+  if (strcmp_i(patch->coordsys,"Cartesian"))
+    r = X_of_x_Cartesian_coord(X,x,patch);
+  /* other coord sys comes here
+  .
+  .
+  .
+  */
+  else
+      abortEr_s("No finder for this %s coordinate.\n",patch->coordsys);
+ 
+  return r;
+}
+
+/* find point X correspond to x for patch with Cartesian coord.
+// ->return value: 1 if it is successful, otherwise 0.
+*/
+int X_of_x_Cartesian_coord(double *X,double *x,Patch_T *patch)
+{
+  X[0] = x[0];
+  X[1] = x[1];
+  X[2] = x[2];
   
-  if (IsInside(x,lim))
-    needle_ans(needle,patch);
+  return 1;
 }
 
 /* fill limits based on patch boundary */
@@ -262,5 +285,51 @@ static int IsInside(double *x,double *lim)
   else
     v = 0;
     
+  return v;
+}
+
+/* given point and patch find if the is any node collocated 
+// to that point and then return its index. otherwise return -1.
+*/
+int find_node(double *x, Patch_T *patch)
+{
+  int v = -1;
+  double X[3];
+  const int r = X_of_x(X,x,patch);
+  
+  if (r)
+  {
+    const double res = RES_EPS*rms(3,X,0);// resolution
+    int i;
+    double *y, nrm;
+    
+    if (strcmp_i(patch->coordsys,"Cartesian"))
+    {
+      FOR_ALL(i,patch->node)
+      {
+        y = patch->node[i]->x;
+        nrm = rms(3,x,y);
+        if (LSSEQL(nrm,res))
+        {
+          v = i;
+          break;
+        }
+      }
+    }
+    else
+    {
+      FOR_ALL(i,patch->node)
+      {
+        y = patch->node[i]->X;
+        nrm = rms(3,x,y);
+        if (LSSEQL(nrm,res))
+        {
+          v = i;
+          break;
+        }
+      }
+    }
+  }
+  
   return v;
 }

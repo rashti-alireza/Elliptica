@@ -84,8 +84,9 @@ Collocation_T get_collocation(char *coll)
 /* find out if this point p located on an edge or not
 // the algorithm is simple; if it happens at two or more interface
 // it means this point is on an edge and returns 1 otherwise 0
- */
-int IsThisEdge(int *n,int p)
+// ->return value: 1 if found 0 if not.
+*/
+int IsOnEdge(int *n,int p)
 {
   int i,j,k;
   int c, r;
@@ -101,4 +102,35 @@ int IsThisEdge(int *n,int p)
   if (c > 1)  r = 1;
   
   return r;
+}
+
+/* find out if this point p located on an face or not
+// the algorithm is simple; if it happens at two or more interface
+// it means this point is on an face and returns number of face 
+// otherwise 0.
+// moreover, the found face f written like the example below:
+// f[I_0] = 1, the point happens at face I_0,
+// f[J_n1] = 0, the point won't happen at face J_n1 and etc.
+// ->return value: number of interface that found.
+*/
+int IsOnFace(int *n,int p, int *f)
+{
+  int i,j,k;
+  int c;
+  int u;
+  
+  for (u = 0; u < TOT_FACE; u++)
+    f[u] = 0;
+  
+  IJK(p,n,&i,&j,&k);
+  
+  c = 0;
+  if (i == n[0]-1) {f[I_n0] = 1; c++;}
+  if (i == 0)      {f[I_0]  = 1; c++;}
+  if (j == n[1]-1) {f[J_n1] = 1; c++;}
+  if (j == 0)	   {f[J_0]  = 1; c++;}
+  if (k == n[2]-1) {f[K_n2] = 1; c++;}
+  if (k == 0)	   {f[K_0]  = 1; c++;}
+    
+  return c;
 }

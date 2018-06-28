@@ -41,6 +41,19 @@ typedef enum PRINT_T
   PRINT_COORDS
 }Print_T;
 
+/* face (interface) number */
+typedef enum FACE_T
+{
+  I_0 = 0,
+  I_n0,
+  J_0,
+  J_n1,
+  K_0,
+  K_n2,
+  TOT_FACE = 6
+}Face_T;
+
+
 /* *******************************************
 // parameter:
 // *******************************************
@@ -80,11 +93,6 @@ typedef struct NODE_T
 {
   double x[3];// for Cartesian value x,y,z
   double *X;// for general curvilinear value a,b,c
-  struct POINT_T *Bpoint;// if this node doesn't reach patch boundary 0
-                        // if this node is on boundary, it points to 
-                        // boundary point stuct. note: node initially
-                        // MUST allocate with calloc or make sure
-                        // you put this point sturct to 0 initially
 }Node_T;
 
 /* point */
@@ -94,7 +102,11 @@ typedef struct POINT_T
   double N[3];// normal vector
   struct PATCH_T *patch;// refers to its patch
   int adjPatch;// adjacent patch used in interpolation
+  unsigned int adjFace: 5;// adjacent face used in interpolation
   struct POINT_T *adjPoint;// adjacent point
+  unsigned int sameX  : 1;// 1 if addjacent face is on X = const
+  unsigned int sameY  : 1;// 1 if addjacent face is on Y = const
+  unsigned int sameZ  : 1;// 1 if addjacent face is on Z = const
   unsigned int face   : 5;// the interface in which this point located
   unsigned int touch  : 1;// touch state 1, overlap state 0
   unsigned int copy   : 1;// copy state 1, interpolation state 0

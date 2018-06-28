@@ -4,17 +4,6 @@
 #include "utilities_lib.h"
 #include "maths_general_lib.h"
 
-/* face number */
-enum Face
-{
-  I_0 = 0,
-  I_n0,
-  J_0,
-  J_n1,
-  K_0,
-  K_n2,
-  TOT_FACE
-};
 
 /* type point */
 enum Type
@@ -27,16 +16,18 @@ enum Type
 typedef struct ADJACENT_T
 {
   int p;// adjacent patch
-  int f;// adjacent face
-  Point_T *pnt;// adjacent point
+  int f[TOT_FACE];// 0 if not located on an interface, positive otherwise
+  int node;// node refers to index of adjacent point if any
+  double N2[TOT_FACE][3];// normal of this adjPnt
+  double N1dotN2[TOT_FACE];// dot product of normals(adjPnt,point)
 }Adjacent_T;
 
 /* points to be studied for realizing of geometry */
 typedef struct POINTSET_T
 {
-  Point_T *point;// the point under study
-  Adjacent_T *adjPnt;
-  int NadjPnt;// number of adjacent
+  Point_T    *point;// the point under study
+  Adjacent_T *adjPnt;// its adjacent points
+  int NadjPnt;// number of adjacent point
 }PointSet_T;
 
 static void fill_basics(Patch_T *patch);
@@ -50,9 +41,10 @@ static void free_PointSet(PointSet_T **pnt);
 static void alloc_PointSet(int N,PointSet_T ***pnt);
 static void realize_adj(PointSet_T **Pnt,enum Type type);
 static void find_adjPnt(PointSet_T *Pnt,enum Type type);
+static void find_adjNode(PointSet_T *pnt,const int N);
 static void analyze_adjPnt(PointSet_T *Pnt,enum Type type);
-static void normal_vec_Cartesian_coord(Point_T *point);
 static void add_adjPnt(PointSet_T *pnt,int *p, int np);
+static void normal_vec_Cartesian_coord(Point_T *point);
 static void tangent(Point_T *pnt,double *N);
 static int NumPoint(Interface_T *interface,enum Type type);
 static int L2(int *n,int f, int i, int j, int k);
@@ -61,3 +53,5 @@ void point_finder(Needle_T *needle);
 double *normal_vec(Point_T *point);
 void needle_ex(Needle_T *needle,Patch_T *patch);
 void needle_in(Needle_T *needle,Patch_T *patch);
+void flush_houseK(Patch_T *patch);
+int find_node(double *x, Patch_T *patch);

@@ -52,3 +52,17 @@ long double rmsL(const long int n, double *v2, double *v1)
   
   return sum;
 }
+
+/* taking dot product of two v1 and v2 vector with n components
+// ->return value : v2.v1
+*/
+double dot(const int n, double *v2,double *v1)
+{
+  int i;
+  double d = 0;
+  
+  for (i = 0; i < n; i++)
+    d += v2[i]*v1[i];
+  
+  return d;
+}
