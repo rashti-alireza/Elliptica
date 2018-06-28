@@ -3,7 +3,6 @@
 #include "error_handling_lib.h"
 #include "utilities_lib.h"
 #include "maths_general_lib.h"
-#define EPS 1E-5
 
 /* face number */
 enum Face
@@ -24,12 +23,12 @@ enum Type
   EDGE
 };
 
+/* adjacent info */
 typedef struct ADJACENT_T
 {
   int p;// adjacent patch
   int f;// adjacent face
-  int npnt;// number of adjacent points
-  Point_T **pnt;// adjacent point
+  Point_T *pnt;// adjacent point
 }Adjacent_T;
 
 /* points to be studied for realizing of geometry */
@@ -46,15 +45,19 @@ static void fill_geometry(Grid_T *grid);
 static void FindInnerB_Cartesian_coord(Patch_T *patch);
 static void FindExterF_Cartesian_coord(Patch_T *patch);
 static void init_Points(Interface_T *interface,PointSet_T ***innP,PointSet_T ***edgP);
-static int L2(int *n,int f, int i, int j, int k);
 static void set_min_max_sum(int *n,int f,int *im,int *iM,int *jm,int *jM,int *km,int *kM,int *sum);
 static void free_PointSet(PointSet_T **pnt);
-static void *alloc_PointSet(int N);
-static void realize_adj(PointSet_T **Pnt,enum Type type,Adjacent_T ***guide);
-static void find_adjPnt(PointSet_T *Pnt,Adjacent_T ***guide);
-static void analyze_adjPnt(PointSet_T *Pnt);
-static int NumPoint(Interface_T *interface,enum Type type);
-static int  RealizeNeighbor(Patch_T *patch);
-int *find_point_in_patch(double *q,Grid_T *grid,int *in,int *out,int Nin,int Nout, int *Nfound);
-double *normal_vec(Point_T *point);
+static void alloc_PointSet(int N,PointSet_T ***pnt);
+static void realize_adj(PointSet_T **Pnt,enum Type type);
+static void find_adjPnt(PointSet_T *Pnt,enum Type type);
+static void analyze_adjPnt(PointSet_T *Pnt,enum Type type);
 static void normal_vec_Cartesian_coord(Point_T *point);
+static void add_adjPnt(PointSet_T *pnt,int *p, int np);
+static void tangent(Point_T *pnt,double *N);
+static int NumPoint(Interface_T *interface,enum Type type);
+static int L2(int *n,int f, int i, int j, int k);
+static int  RealizeNeighbor(Patch_T *patch);
+void point_finder(Needle_T *needle);
+double *normal_vec(Point_T *point);
+void needle_ex(Needle_T *needle,Patch_T *patch);
+void needle_in(Needle_T *needle,Patch_T *patch);

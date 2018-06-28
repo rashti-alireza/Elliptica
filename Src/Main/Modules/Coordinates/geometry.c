@@ -5,6 +5,8 @@
 
 #include "geometry.h"
 
+#define EPS 1E-5
+
 /* 
 // realizing the geometry of grid such as how patches are glued
 // normal vectors at boundary, boundary of grid and etc.
@@ -66,7 +68,9 @@ static void fill_geometry(Grid_T *grid)
 // for each interface do
 // 	a. seprate each interface to its inner and edge points
 // 	b. realize the adjacency of inner points
-// 	c. using 2, realize the adjacency of edge points
+// 	c. realize the adjacency of edge points
+// the reason the inner and edge points are separated is they
+// use different algorithm, since edge points need be treated specially
 */
 static int RealizeNeighbor(Patch_T *patch)
 {
@@ -78,69 +82,77 @@ static int RealizeNeighbor(Patch_T *patch)
   {
     Interface_T *interface = patch->interface[f];
     PointSet_T **innerP, **edgeP;
-    Adjacent_T **guide;// helping to find adjacent points 
-                       // based on previously found points
-    init_Points(interface,&innerP,&edgeP);// initializing points
-    realize_adj(innerP, INNER, &guide);// realizing adjacency of the points
-    //realize_adj(edgeP,EDGE,&guide);
+    init_Points(interface,&innerP,&edgeP);// initializing inner and 
+                                          // edge points
+    realize_adj(innerP, INNER);// realizing the adjacency INNER one
+    //realize_adj(edgeP,EDGE);// realizing the adjacency EDGE one
     
     free_PointSet(innerP);
     free_PointSet(edgeP);
-    free_AdjGuild(guild);
   }
   return EXIT_SUCCESS;
 }
 
 /* realizing adjacency of given points */
-static void realize_adj(PointSet_T **Pnt, enum Type type, Adjacent_T ***guide)
+static void realize_adj(PointSet_T **Pnt, enum Type type)
 {
   int p;
   
+  FOR_ALL(p,Pnt)
+  {
+    find_adjPnt(Pnt[p],type);
+    //analyze_adjPnt(Pnt[p],type);
+  }
+}
+
+/* finding the adjacent points of point pnt */
+static void find_adjPnt(PointSet_T *pnt,enum Type type)
+{
+  int ind = pnt->point->ind;
+  int *found;// patches have been found
+  int nfp;// number of found patches
+  double *x = pnt->point->patch->node[ind]->x;
+  Needle_T *needle = alloc_needle();
+  needle->grid = pnt->point->patch->grid;
+  needle_ex(needle,pnt->point->patch);
+  
   if (type == INNER)
   {
-    FOR_ALL(p,Pnt)
-    {
-      find_adjPnt(Pnt[p],guide);
-      analyze_adjPnt(Pnt[p]);
-    }
+    double *N = pnt->point->N;
+    double eps = rms(3,x,0)*EPS;
+    double q[3] = {x[0]+eps*N[0],
+                   x[1]+eps*N[1],
+                   x[2]+eps*N[2]};// q = pnt+eps*N
+    needle->x = q;
+    point_finder(needle);
+    found = needle->ans;
+    nfp = needle->Nans;
+    add_adjPnt(pnt,found,nfp);
+    
   }
   else if (type == EDGE)
   {
-    FOR_ALL(p,Pnt)
-    {
+    double eps = rms(3,x,0)*EPS;
+    double *N1,N2[3];
+    double q[3];
     
-    }
+    tangent(pnt->point,N2);
+    N1 = pnt->point->N;
+    q[0] = x[0]+eps*(N1[0]+N2[0]);
+    q[1] = x[1]+eps*(N1[1]+N2[1]);
+    q[2] = x[2]+eps*(N1[2]+N2[2]);// q = pnt+eps*N1+N2
+    
+    needle->x = q;
+    point_finder(needle);
+    found = needle->ans;
+    nfp = needle->Nans;
+    add_adjPnt(pnt,found,nfp);
   }
   else
     abortEr("No such type.\n");
-}
 
-static void find_adjPnt(PointSet_T *pnt,Adjacent_T ***guide)
-{
-  int ind = pnt->point->ind;
-  double *x = pnt->point->patch->node[ind]->x;
-  double *N = pnt->point->N;
-  double eps = rms(3,x)*EPS;
-  double q[3] = {x[0]+eps*N[0],
-                 x[1]+eps*N[1],
-                 x[2]+eps*N[2]};// q = pnt+eps*N
-  Grid_T *grid = pnt->point->patch->grid;
-  found = find_point_in_patch(q,grid,in,out,Nin,Nout,&Nfound);
-}
-
-/* found out if the point q can be found inside patches in
-// and put Nfound equal to the number of patches that include this point.
-// explanation of inputs: q is the triple coordinates of points in 
-// "CARTESIAN" coord, grid is grid, in says the patches which we wish to
-// find point q so it first seeks inside the in patches - for example,
-// in[3] = patch10, so it will look at patch10 - and their
-// total number is Nin. out says ignore these patches like out[0] = patch2
-// means do not look inside patch2; the total number of out patches is 
-// Nout. finally, it returns a pointer to all of the found patches.
-*/
-int *find_point_in_patch(double *q,Patch_T *patch);
-Grid_T *grid,int *in,int *out,int Nin,int Nout, int *Nfound)
-{
+  /* freeing */    
+  free_needle(needle);
 }
 
 /* initializing and finding inner points*/
@@ -154,30 +166,35 @@ static void init_Points(Interface_T *interface,PointSet_T ***innP,PointSet_T ***
   int sum,ed,in;
   
   N_in = NumPoint(interface,INNER);
-  pnt_in = alloc_PointSet(N_in);
   N_ed = NumPoint(interface,EDGE);
-  pnt_ed = alloc_PointSet(N_ed);
   
   set_min_max_sum(n,f,&im,&iM,&jm,&jM,&km,&kM,&sum);
+  assert(N_in+N_ed == sum);
   
   ed = in = 0;
+  pnt_in = 0;
+  pnt_ed = 0;
   FOR_ijk(i,j,k,im,iM,jm,jM,km,kM)
   {
     int l = L(n,i,j,k);
     int p = L2(n,f,i,j,k);
     
+    /* excluding the points located on an internal interface */
+    if (interface->point[p]->exterF == 0) continue;
+      
     if (IsThisEdge(n,l))
     {
+      alloc_PointSet(ed+1,&pnt_ed);
       pnt_ed[ed]->point = interface->point[p];
       ed++;
     }
     else
     {
+      alloc_PointSet(in+1,&pnt_in);
       pnt_in[in]->point = interface->point[p];
       in++;
     }  
   }
-  assert(in+ed == sum);
   
   (*innP) = pnt_in;
   (*edgP) = pnt_ed;
@@ -505,22 +522,22 @@ static void normal_vec_Cartesian_coord(Point_T *point)
   }
 }
 
-/* allocation mem for PointSet_T strcut */
-static void *alloc_PointSet(int N)
+/* reallocation mem for PointSet_T strcut with one extera block
+// to put the last pointer to null.
+*/
+static void alloc_PointSet(int N,PointSet_T ***pnt)
 {
-  PointSet_T **pnt;
   int i;
   
-  pnt = calloc(N+1,sizeof(*pnt));
-  pointerEr(pnt);
+  assert(pnt);
   
-  for (i = 0; i < N; i++)
-  {
-    pnt[i] =  calloc(1,sizeof(*pnt[i]));
-    pointerEr(pnt);
-  }
+  (*pnt) = realloc((*pnt),(N+1)*sizeof((*pnt)));
+  pointerEr(*pnt);
   
-  return pnt;
+  (*pnt)[N-1] = calloc(1,sizeof(*(*pnt)[i]));
+  pointerEr((*pnt)[N-1]);
+  
+  (*pnt)[N] = 0;
 }
 
 /* free mem for PointSet_T strcut */
@@ -531,10 +548,8 @@ static void free_PointSet(PointSet_T **pnt)
   int i;
   FOR_ALL (i,pnt)
   {
-    if (pnt[i]->adj != 0)
+    if (pnt[i]->adjPnt != 0)
     {
-      if (pnt[i]->adjPnt->npnt != 0)  
-        free(pnt[i]->adjPnt->pnt);
       free(pnt[i]->adjPnt);
     }
     
@@ -542,4 +557,74 @@ static void free_PointSet(PointSet_T **pnt)
   }
   
   free(pnt);
+}
+
+/* adding all of patches found in to point->adjPnt.
+// it won't add if the patch is already exists.
+*/
+static void add_adjPnt(PointSet_T *pnt,int *p, int np)
+{
+  int i,j;
+  Flag_T flg = NONE;
+  
+  for (i = 0; i < np; i++)
+  {
+    for(j = 0; j < pnt->NadjPnt; j++)
+    {
+      if(p[i] == pnt->adjPnt->p)
+        flg = FOUND;
+    }
+    
+    if (flg == NONE)
+    {
+      pnt->adjPnt = 
+        realloc(pnt->adjPnt,(pnt->NadjPnt+1)*sizeof(*pnt->adjPnt));
+      pointerEr(pnt->adjPnt);
+      pnt->adjPnt[pnt->NadjPnt].p = p[i];
+      pnt->NadjPnt++;
+    }
+  }
+}
+
+/* find the closest inner point to this point and then 
+// put the vector made by the difference of these two points in N.
+// this is the approximate tangent vector. note, the tangent
+// vector won't be "NORMALIZED". I want to keep the magnetitue to be of
+// the order of grid size.
+*/
+static void tangent(Point_T *pnt,double *N)
+{
+  int *const n = pnt->patch->n;
+  const int ind = pnt->ind;
+  const int f = pnt->face;
+  double *x = pnt->patch->node[ind]->x;
+  double *y;
+  double s_ds = DBL_MAX;// smallest distance
+  int s_in = -1;// index referring to point with smallest distance
+  int i,j,k,im,iM,jm,jM,km,kM,sum;// m for min and M for max
+  
+  set_min_max_sum(n,f,&im,&iM,&jm,&jM,&km,&kM,&sum);
+  
+  FOR_ijk(i,j,k,im,iM,jm,jM,km,kM)
+  {
+    int l = L(n,i,j,k);
+    double nrm;
+    
+    if (!IsThisEdge(n,l))
+    {
+      y = pnt->patch->node[l]->x;
+      nrm = rms(3,x,y);
+      
+      if (LSS(nrm,s_ds)) s_in = l;
+    }
+  }
+  
+  if (s_in < 0)
+    abortEr("Tangent vector could not be found.\n");
+  
+  /* note: it must be y-x to tilt toward interface not out of it */  
+  y = pnt->patch->node[s_in]->x;
+  N[0] = y[0]-x[0];
+  N[1] = y[1]-x[1];
+  N[2] = y[2]-x[2];
 }

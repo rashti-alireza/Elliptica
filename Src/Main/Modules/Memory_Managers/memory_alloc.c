@@ -204,3 +204,15 @@ void *alloc_sFunc_PtoV(sFunc_PtoV_T ***mem)
   
   return (*mem)[i];
 }
+
+/* make an empty needle */
+void *alloc_needle(void)
+{
+  Needle_T *needle;
+  
+  needle = calloc(1,sizeof(*needle));
+  pointerEr(needle);
+
+  return needle;
+}
+

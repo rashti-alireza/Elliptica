@@ -16,7 +16,8 @@ typedef enum FLAG_T
   NONE,
   READY,
   INUSE,
-  FOUND
+  FOUND,
+  BRUTE_FORCE
 }Flag_T;
 
 /* collocation */
@@ -77,8 +78,8 @@ typedef struct PROJECT_T
 /* node*/
 typedef struct NODE_T
 {
-  double cart[3];// for Cartesian value x,y,z
-  double *curv;// for general curvilinear value a,b,c
+  double x[3];// for Cartesian value x,y,z
+  double *X;// for general curvilinear value a,b,c
   struct POINT_T *Bpoint;// if this node doesn't reach patch boundary 0
                         // if this node is on boundary, it points to 
                         // boundary point stuct. note: node initially
@@ -131,6 +132,7 @@ typedef struct PATCH_T
   double max[3];// maximum of each direction like b_max = max[1]
   Node_T **node;// node info
   Interface_T **interface;// interface info 
+  unsigned int innerB:1;// if this patch has inner boundary 1 otherwise 0
 }Patch_T;
 
 /* grid */
@@ -142,3 +144,28 @@ typedef struct GIRD_T
   
   //Field_T 
 }Grid_T;
+
+/* *******************************************
+// some typedef are common and used in different functions 
+// *******************************************
+*/
+
+/* needle which should be found.
+// it is a general purpose structure could be used by different functions
+// like,point_finder function
+*/
+typedef struct NEEDLE_T
+{
+  double *x;
+  Grid_T *grid;// the grid which is used
+  int *guess;// these are guess patches searched firstly
+  int *in;// force it to look only inside these patches.
+          // notation: in[?] = patch number
+  int *ex;// force it to not look inside these patches
+           // notation: ex[?] = patch number
+  int *ans;// the answers found which pointing to patch number
+  int Nans;// number of answer
+  int Nin;// number of included patches
+  int Nex;// number of excluded patches
+  int Ng;// numbef of guess patches
+}Needle_T;

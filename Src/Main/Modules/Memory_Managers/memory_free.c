@@ -35,3 +35,17 @@ void free_matrix(void *mem0, long int c)
     
 }
 
+/* free needle */
+void free_needle(Needle_T *needle)
+{
+  if (needle == 0) return;
+  
+  else
+  {
+    if (needle->Nin  != 0) free (needle->in);
+    if (needle->Nex  != 0) free (needle->ex);
+    if (needle->Ng   != 0) free (needle->guess);
+    
+  }
+  
+}

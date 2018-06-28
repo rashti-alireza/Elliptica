@@ -39,14 +39,14 @@ static void make_coords_Cartesian_coord(Patch_T *patch)
   
   for (l = 0; l < U; l++)
   {
-    double *x = patch->node[l]->cart;
+    double *x = patch->node[l]->x;
     
     IJK(l,n,&i,&j,&k);
     x[0] = point(i,&coll_s[0]);
     x[1] = point(j,&coll_s[1]);
     x[2] = point(k,&coll_s[2]);
     
-    patch->node[l]->curv = 0;
+    patch->node[l]->X = 0;
   }
 }
 

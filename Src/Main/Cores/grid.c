@@ -57,6 +57,9 @@ static void fill_patches_Cartesian_grid(Grid_T *grid)
     /* filling patch number */
     patch->pn = i;
     
+    /* filling inner boundary */
+    patch->innerB = 0;
+    
     /* filling name */
     sprintf(name,"box%d",i);
     patch->name = strdup(name);

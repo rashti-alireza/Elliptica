@@ -6,5 +6,7 @@ void alloc_nodes(Grid_T *grid);
 void *alloc_point(int s);
 void alloc_interface(Patch_T *patch);
 void *alloc_sFunc_PtoV(sFunc_PtoV_T ***mem);
+void *alloc_needle(void);
+void free_needle(Needle_T *needle);
 void free_2d(void *mem0);
 void free_matrix(void *mem, long int c);

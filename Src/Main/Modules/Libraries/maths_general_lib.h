@@ -1,4 +1,4 @@
-#define SQR(x,x) ((x)*(x))
+#define SQR(x) ((x)*(x))
 
-long double rms_l(long int n, double *v);
-double rms(int n, double *v);
+long double rms_l(const long int n, double *v2, double *v1);
+double rms(const int n, double *v2, double *v1);
