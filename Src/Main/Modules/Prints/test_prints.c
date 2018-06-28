@@ -80,9 +80,9 @@ void pr_coords(Grid_T *grid)
     
     for (l = 0; l < U; l++)
       fprintf(f,"%f %f %f\n",
-        patch->node[l]->cart[0],
-          patch->node[l]->cart[1],
-            patch->node[l]->cart[2]);
+        patch->node[l]->x[0],
+          patch->node[l]->x[1],
+            patch->node[l]->x[2]);
     
     fclose(f);
   }
