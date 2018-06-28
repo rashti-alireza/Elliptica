@@ -66,3 +66,11 @@ double dot(const int n, double *v2,double *v1)
   
   return d;
 }
+
+/* taking absolute value of v
+// ->return value: absolute(v)
+*/
+double ABS(double v)
+{
+  return v > 0 ? v : -v;
+}

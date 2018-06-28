@@ -19,7 +19,7 @@ typedef struct ADJACENT_T
   int f[TOT_FACE];// 0 if not located on an interface, positive otherwise
   int node;// node refers to index of adjacent point if any
   double N2[TOT_FACE][3];// normal of this adjPnt
-  double N1dotN2[TOT_FACE];// dot product of normals(adjPnt,point)
+  double N1dotN2[TOT_FACE];// ABS(dot product of normals(adjPnt,point))
 }Adjacent_T;
 
 /* points to be studied for realizing of geometry */

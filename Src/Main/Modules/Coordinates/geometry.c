@@ -650,7 +650,7 @@ static void find_adjNode(PointSet_T *pnt,const int N)
           adjPnt->N2[i][0] = N2[0];
           adjPnt->N2[i][1] = N2[1];
           adjPnt->N2[i][2] = N2[2];
-          adjPnt->N1dotN2[i] = dot(3,pnt->point->N,N2);
+          adjPnt->N1dotN2[i] = ABS(dot(3,pnt->point->N,N2));
         }
       }
     }// if (IsOnFace(n,ind2,f))
