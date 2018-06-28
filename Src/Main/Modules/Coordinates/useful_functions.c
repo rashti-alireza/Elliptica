@@ -39,14 +39,14 @@ void point_finder(Needle_T *needle)
   /* it only looks inside guess patches if found it gets out */
   if (needle->Ng != 0)
   {
-    look(needle,GUESS);
+    find(needle,GUESS);
     if (needle->Nans > 0) return;
   }// end of if (needle->Ng != 0)
   
   /* it only looks inside include patches if found it gets out */
   if (needle->Nin > 0)
   {
-    look(needle,FORCE_IN);
+    find(needle,FORCE_IN);
     if (needle->Nans > 0) return;
   }// end of if (needle->Nin > 0)
   
@@ -70,7 +70,7 @@ void point_finder(Needle_T *needle)
         needle_in(needle,needle->grid->patch[i]);
     }
     
-    look(needle,FORCE_IN);
+    find(needle,FORCE_IN);
   }// end of if (needle->Nex > 0)
   
   else // if non of above met
@@ -78,7 +78,7 @@ void point_finder(Needle_T *needle)
     FOR_ALL(i,needle->grid->patch)
       needle_in(needle,needle->grid->patch[i]);
       
-    look(needle,FORCE_IN);
+    find(needle,FORCE_IN);
   }
 }
 
@@ -142,12 +142,41 @@ void needle_guess(Needle_T *needle,Patch_T *patch)
   needle->guess[needle->Ng] = patch->pn;
 }
 
-/* check if in != ex and in != guess */
+/* adding a patch to needle->ans */
+void needle_ans(Needle_T *needle,Patch_T *patch)
+{
+  assert(needle);
+  int i;
+  
+  i = 0;
+  while(i < needle->Nans)
+  {
+    if (needle->ans[i] == patch->pn)
+      abortEr("This point has been found twice in a same patch.\n"
+      "Apparently, some part of point_finder is wrong or the needle"
+      "has not been initialized correctly.\n");
+    i++;
+  }
+  
+  needle->ans = 
+    realloc(needle->ans,(needle->Nans+1)*sizeof(*needle->ans));
+  pointerEr(needle->ans);
+  
+  needle->guess[needle->Nans] = patch->pn;
+}
+
+/* check if in != ex, ex !=guess */
 static void IsConsistent(Needle_T *needle)
 {
   int i,j;
   
-  if (needle->in == 0) return;
+  if (needle->in == 0)
+  {
+    for (i = 0; i < needle->Nex; i++)
+      for (j = 0; j < needle->Ng; j++)
+        if (needle->ex[i] == needle->guess[j])
+          abortEr("Guess and Exclude must be mutually exclusive.\n");
+  }
   else
   {
     for (i = 0; i < needle->Nex; i++)
@@ -162,8 +191,76 @@ static void IsConsistent(Needle_T *needle)
   }
 }
 
-/* look for point in designated patches inside needle based on mode */
-static void look(Needle_T *needle,Mode_T mode)
+/* find for point in designated patches inside needle based on mode */
+static void find(Needle_T *needle,Mode_T mode)
 {
-  pr_line();
+  int *p, np;
+  int i;
+  
+  if (mode == GUESS)
+  {
+    p = needle->guess;
+    np = needle->Ng;
+  }
+  else if (mode == FORCE_IN)
+  {
+    p = needle->in;
+    np = needle->Nin;
+  }
+  
+  for (i = 0; i < np; i++)
+  {
+    Patch_T *patch = needle->grid->patch[p[i]];
+    if (strcmp_i(patch->coordsys,"Cartesian"))
+      find_Cartesian_coord(needle,patch);
+    /* other coord sys comes here
+    .
+    .
+    .
+    */
+    else
+      abortEr_s("No finder for this %s coordinate.\n",patch->coordsys);
+      
+    
+  }
+}
+
+/* find point x in patch with Cartesian coord */
+static void find_Cartesian_coord(Needle_T *needle,Patch_T *patch)
+{
+  double *x = needle->x;
+  double lim[TOT_Limit];
+  
+  fill_limits(lim,patch);
+  
+  if (IsInside(x,lim))
+    needle_ans(needle,patch);
+}
+
+/* fill limits based on patch boundary */
+static void fill_limits(double *lim, Patch_T *patch)
+{
+  lim[MIN0] = patch->min[0];
+  lim[MIN1] = patch->min[1];
+  lim[MIN2] = patch->min[2];
+  lim[MAX0] = patch->max[0];
+  lim[MAX1] = patch->max[1];
+  lim[MAX2] = patch->max[2];
+}
+
+/* if x occurs inside the limits (boundary) return 1 otherwise 0 */
+static int IsInside(double *x,double *lim)
+{
+  int v = 0;
+  
+  if (
+      LSSEQL(x[0],lim[MAX0]) && GRTEQL(x[0],lim[MIN0]) &&
+      LSSEQL(x[1],lim[MAX1]) && GRTEQL(x[1],lim[MIN1]) &&
+      LSSEQL(x[2],lim[MAX2]) && GRTEQL(x[2],lim[MIN2])
+      )
+    v = 1;
+  else
+    v = 0;
+    
+  return v;
 }
