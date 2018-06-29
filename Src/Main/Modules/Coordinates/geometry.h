@@ -19,8 +19,9 @@ typedef struct ADJACENT_T
   int f[TOT_FACE];// 0 if not located on an interface, positive otherwise
   int node;// node refers to index of adjacent point if any
   double N2[TOT_FACE][3];// normal of this adjPnt
-  double N1dotN2[TOT_FACE];// ABS(dot product of normals(adjPnt,point))
-  int FaceFlg;// is 1 if found on an interface 0 otherwise
+  double N1dotN2[TOT_FACE];// dot product of normals(adjPnt,point)
+  int FaceFlg;// equals 1 if found on an interface 0 otherwise
+  int FitF;// equals face number if (N1dotN2 == -1); otherwise -1
 }Adjacent_T;
 
 /* points to be studied for realizing of geometry */
@@ -29,6 +30,7 @@ typedef struct POINTSET_T
   Point_T    *point;// the point under study
   Adjacent_T *adjPnt;// its adjacent points
   int NadjPnt;// number of adjacent point
+  int FitN;// fittest number for adjPnt
 }PointSet_T;
 
 static void fill_basics(Patch_T *patch);
@@ -51,6 +53,8 @@ static int NumPoint(Interface_T *interface,enum Type type);
 static int L2(int *n,int f, int i, int j, int k);
 static int  realize_neighbor(Patch_T *patch);
 static int IsOverlap(PointSet_T *Pnt);
+static int IsNormalFit(PointSet_T *Pnt);
+static Point_T *get_p2(PointSet_T *Pnt);
 void point_finder(Needle_T *needle);
 double *normal_vec(Point_T *point);
 void needle_ex(Needle_T *needle,Patch_T *patch);

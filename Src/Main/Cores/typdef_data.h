@@ -102,12 +102,12 @@ typedef struct POINT_T
   double N[3];// normal vector
   struct PATCH_T *patch;// refers to its patch
   int adjPatch;// adjacent patch used in interpolation
-  unsigned int adjFace: 5;// adjacent face used in interpolation
   struct POINT_T *adjPoint;// adjacent point
+  unsigned int face   : 5;// the interface in which this point located
+  unsigned int adjFace: 5;// adjacent face used in interpolation
   unsigned int sameX  : 1;// 1 if addjacent face is on X = const
   unsigned int sameY  : 1;// 1 if addjacent face is on Y = const
   unsigned int sameZ  : 1;// 1 if addjacent face is on Z = const
-  unsigned int face   : 5;// the interface in which this point located
   unsigned int touch  : 1;// touch state 1, overlap state 0
   unsigned int copy   : 1;// copy state 1, interpolation state 0
   unsigned int exterF : 1;// external interface 1, internal 0

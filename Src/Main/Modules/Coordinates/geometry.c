@@ -115,33 +115,95 @@ static void realize_adj(PointSet_T **Pnt, enum Type type)
 */
 static void analyze_adjPnt(PointSet_T *Pnt,enum Type type)
 {
-  if (Pnt->NadjPnt == 0)// this point is on outer boundary
+  Point_T *const p1 = Pnt->point;
+  Point_T *p2;
+  Adjacent_T *adjp1;
+  
+  /* this point is on outer boundary */
+  if (Pnt->NadjPnt == 0)
   {
-    Pnt->point->outerB = 1;
+    p1->outerB = 1;
   }
-  else if (IsOverlap(Pnt))// if none of the points are on the interface
+  /* if none of the points are on the interface */
+  else if (IsOverlap(Pnt))
   {
-    Pnt->point->touch = 0;
-    Pnt->point->copy  = 0;
+    p1->touch = 0;
+    p1->adjPatch = Pnt->adjPnt[0].p;
+    p1->copy  = 0;
+  }
+  /* which point best meets the normal conditon (N2dotN1 == -1)  */
+  else if (IsNormalFit(Pnt))
+  {
+    adjp1 = &Pnt->adjPnt[Pnt->FitN];
     
+    p1->touch = 1;
+    p1->copy  = 1;
+    p1->adjPatch = adjp1->p;
+    p1->adjFace  = adjp1->FitF;
+    p2 = get_p2(Pnt);
+    assert(p2);
+    p1->adjPoint = p2;
+    
+    p2->touch = 1;
+    p2->copy  = 1;
+    p2->adjPatch = p1->patch->pn;
+    p2->adjFace  = p1->face;
+    p2->adjPoint = p1;
+    p2->houseK = 1;
   }
   
-  Pnt->point->houseK = 1;
+  p1->houseK = 1;
 }
 
+/* find the point p on the interface which has the fittest normal.
+// ->return value: a pointer to point struct on interface
+*/
+static Point_T *get_p2(PointSet_T *Pnt)
+{
+  int f = Pnt->adjPnt[Pnt->FitN].FitF;
+  int p = Pnt->adjPnt[Pnt->FitN].p;
+  const int node = Pnt->adjPnt[Pnt->FitN].node;
+  Patch_T *const patch = Pnt->point->patch->grid->patch[p];
+  Interface_T *const face = patch->interface[f];
+  int i;
+  
+  FOR_ALL(i,face->point)
+    if (face->point[i]->ind == node)
+      return face->point[i];
+  
+  return 0;
+}
+
+/* if there is an adjacent point collocated with the point,
+// and their interfaces are tangent correctly, i.e. their normals
+// are in expected directions (N1dotN2 == -1)
+// ->retrun value: 1 if fittest normal exists, 0 otherwise
+*/
+static int IsNormalFit(PointSet_T *Pnt)
+{
+  int i;
+  
+  for (i = 0; i < Pnt->NadjPnt; i++)
+    if (Pnt->adjPnt[i].FitF >= 0) 
+    {
+      Pnt->FitN = i;
+      return 1;
+    }
+  
+  return 0;
+}
 /* if none of the adjacent points are on an interface,
 // thus, this point overlaps with other patch(es) 
 // ->retrun value: 1 if it is overlap, 0 otherwise
 */
 static int IsOverlap(PointSet_T *Pnt)
 {
-  int i,f;
+  int i;
   
   for (i = 0; i < Pnt->NadjPnt; i++)
-    for (f = 0; f < TOT_FACE; f++)
-      if (Pnt->adjPnt[i].f[f]) return 1;
+    if (Pnt->adjPnt[i].FaceFlg == 1) return 0;
   
-  return 0;
+  return 1;
 }
 
 /* finding the adjacent points of point pnt */
@@ -496,7 +558,7 @@ static void set_min_max_sum(int *n,int f,int *im,int *iM,int *jm,int *jM,int *km
   }
 }
 
-/* normal vector at interface of patch, it points outward and normalized;
+/* normal vector at interface of patch, points "OUTWARD" and "NORMALIZED";
 // the normal vector is written in N at point structure;
 // note: the members in point struct that must be filled before
 // passing to this function are: "ind","patch","face".
@@ -671,7 +733,9 @@ static void find_adjNode(PointSet_T *pnt,const int N)
           adjPnt->N2[i][0] = N2[0];
           adjPnt->N2[i][1] = N2[1];
           adjPnt->N2[i][2] = N2[2];
-          adjPnt->N1dotN2[i] = ABS(dot(3,pnt->point->N,N2));
+          adjPnt->N1dotN2[i] = dot(3,pnt->point->N,N2);
+          if (EQL(adjPnt->N1dotN2[i],-1)) 
+            adjPnt->FitF = i;
         }
       }
     }// if (IsOnFace(n,ind2,f))
