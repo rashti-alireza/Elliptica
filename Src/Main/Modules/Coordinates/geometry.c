@@ -119,11 +119,29 @@ static void analyze_adjPnt(PointSet_T *Pnt,enum Type type)
   {
     Pnt->point->outerB = 1;
   }
-  else
+  else if (IsOverlap(Pnt))// if none of the points are on the interface
   {
+    Pnt->point->touch = 0;
+    Pnt->point->copy  = 0;
+    
   }
   
   Pnt->point->houseK = 1;
+}
+
+/* if none of the adjacent points are on an interface,
+// thus, this point overlaps with other patch(es) 
+// ->retrun value: 1 if it is overlap, 0 otherwise
+*/
+static int IsOverlap(PointSet_T *Pnt)
+{
+  int i,f;
+  
+  for (i = 0; i < Pnt->NadjPnt; i++)
+    for (f = 0; f < TOT_FACE; f++)
+      if (Pnt->adjPnt[i].f[f]) return 1;
+  
+  return 0;
 }
 
 /* finding the adjacent points of point pnt */

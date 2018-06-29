@@ -50,6 +50,7 @@ static void tangent(Point_T *pnt,double *N);
 static int NumPoint(Interface_T *interface,enum Type type);
 static int L2(int *n,int f, int i, int j, int k);
 static int  realize_neighbor(Patch_T *patch);
+static int IsOverlap(PointSet_T *Pnt);
 void point_finder(Needle_T *needle);
 double *normal_vec(Point_T *point);
 void needle_ex(Needle_T *needle,Patch_T *patch);
