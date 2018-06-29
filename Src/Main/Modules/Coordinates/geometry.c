@@ -60,7 +60,7 @@ static void fill_geometry(Grid_T *grid)
   
   /* realize neighbor properties */
   FOR_ALL(i,grid->patch)
-    RealizeNeighbor(grid->patch[i]);
+    realize_neighbor(grid->patch[i]);
   
 }
 
@@ -73,8 +73,9 @@ static void fill_geometry(Grid_T *grid)
 // 	c. realize the adjacency of edge points
 // the reason the inner and edge points are separated is they
 // use different algorithm, since edge points need be treated specially
+// ->return value-> EXIT_SUCCESS
 */
-static int RealizeNeighbor(Patch_T *patch)
+static int realize_neighbor(Patch_T *patch)
 {
   const int nf = countf(patch->interface);
   int f;
@@ -605,7 +606,8 @@ static void add_adjPnt(PointSet_T *pnt,int *p, int np)
       pointerEr(pnt->adjPnt);
       
       pnt->adjPnt[pnt->NadjPnt].p = p[i];// fill p
-      find_adjNode(pnt,pnt->NadjPnt);// fill f and node
+      pnt->adjPnt[pnt->NadjPnt].FaceFlg = 0;// initialize
+      find_adjNode(pnt,pnt->NadjPnt);// fill f and node and normals
       
       pnt->NadjPnt++;
      
@@ -640,6 +642,7 @@ static void find_adjNode(PointSet_T *pnt,const int N)
       int i;
       po.ind = ind2;
       po.patch = grid->patch[adjPnt->p];
+      adjPnt->FaceFlg = 1;
       
       for (i = 0; i < TOT_FACE; i++)
       {

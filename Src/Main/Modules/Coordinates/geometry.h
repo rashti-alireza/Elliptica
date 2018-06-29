@@ -20,6 +20,7 @@ typedef struct ADJACENT_T
   int node;// node refers to index of adjacent point if any
   double N2[TOT_FACE][3];// normal of this adjPnt
   double N1dotN2[TOT_FACE];// ABS(dot product of normals(adjPnt,point))
+  int FaceFlg;// is 1 if found on an interface 0 otherwise
 }Adjacent_T;
 
 /* points to be studied for realizing of geometry */
@@ -48,7 +49,7 @@ static void normal_vec_Cartesian_coord(Point_T *point);
 static void tangent(Point_T *pnt,double *N);
 static int NumPoint(Interface_T *interface,enum Type type);
 static int L2(int *n,int f, int i, int j, int k);
-static int  RealizeNeighbor(Patch_T *patch);
+static int  realize_neighbor(Patch_T *patch);
 void point_finder(Needle_T *needle);
 double *normal_vec(Point_T *point);
 void needle_ex(Needle_T *needle,Patch_T *patch);
