@@ -6,7 +6,7 @@
 #include "global_variables.h"
 
 /* initiate global variables */
-int global_variables_init(char *const path)
+int global_variables_init(const char *const path)
 {
   initial_time_global = time(0);
   grids_global        = 0;
@@ -19,9 +19,10 @@ int global_variables_init(char *const path)
 }
 
 /* finding inputfile name */
-static void find_inputfile_name(char *const path)
+static void find_inputfile_name(const char *const path)
 {
-  char *last,*p;
+  char *last;
+  const char *p;
   char name[MAX_ARR] = {'\0'};
   int i;
   
@@ -42,11 +43,11 @@ static void find_inputfile_name(char *const path)
     i++;
   }
   
-  inputfile_name_global = strdup(name);
+  inputfile_name_global = dup_s(name);
   
-  //TEST_START
+  /*TEST_START
     //printf("globale_inputfile_name = %s\n",global_inputfile_name);
-  //end
+  end */
   
 }
 
@@ -59,11 +60,11 @@ static void make_path_global(void)
   p = getcwd(dir,sizeof(dir));
   pointerEr(p);
   
-  path_global = strdup(dir);
+  path_global = dup_s(dir);
   
-  //TEST_START
+  /*TEST_START
     //printf("globale_path = %s\n",global_path);
-  //end
+  end */
  
 }
 

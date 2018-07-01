@@ -9,9 +9,9 @@
 // and putting the last block to null and 
 // returning pointer to one before the last block
 */
-void *alloc_parameter(Parameter_T ***mem)
+void *alloc_parameter(Parameter_T ***const mem)
 {
-  int i;
+  unsigned i;
   
   for (i = 0; (*mem) != 0 && (*mem)[i] != 0 ; i++);
   
@@ -30,9 +30,9 @@ void *alloc_parameter(Parameter_T ***mem)
 // and puting the last block to null and 
 // returning pointer to one before the last block
 */
-void *alloc_project(Project_T ***mem)
+void *alloc_project(Project_T ***const mem)
 {
-  int i;
+  unsigned i;
   
   for (i = 0; (*mem) != 0 && (*mem)[i] != 0 ; i++);
   
@@ -56,8 +56,7 @@ void *alloc_project(Project_T ***mem)
 */
 void *alloc_grid(void)
 {
-  extern Grid_T **grids_global;
-  int i;
+  unsigned i;
   
   for (i = 0; grids_global != 0 && grids_global[i] != 0; i++)
   {
@@ -81,26 +80,26 @@ void *alloc_grid(void)
 }
 
 /* allocating memory for patches based on type of coord sys */
-void alloc_patches(Grid_T *grid)
+void alloc_patches(Grid_T *const grid)
 {
   if (strcmp_i(grid->kind,"Cartesian_grid"))
     alloc_patches_Cartesian_grid(grid);
   
-  //else if (strcmp_i(grid->kind,"CubedSpherical_grid"))
-    //alloc_patches_CubedSpherical_grid(grid);
+  /*else if (strcmp_i(grid->kind,"CubedSpherical_grid"))
+    //alloc_patches_CubedSpherical_grid(grid); */
   else
     abortEr_s("No such %s kind for grid.\n",grid->kind);
 }
 
 /* memory alloc nodes */
-void alloc_nodes(Grid_T *grid)
+void alloc_nodes(Grid_T *const grid)
 {
-  int *n;
-  int i;
+  unsigned *n;
+  unsigned i;
   
   FOR_ALL(i,grid->patch)
   {
-    int j,U;
+    unsigned j,U;
     Node_T **node;
     
     n = grid->patch[i]->n;
@@ -123,16 +122,16 @@ void alloc_nodes(Grid_T *grid)
 }
 
 /* memory alloc patches for Cartesian type */
-static void alloc_patches_Cartesian_grid(Grid_T *grid)
+static void alloc_patches_Cartesian_grid(Grid_T *const grid)
 {
-  int Nboxes;// number of boxes
-  int i;
+  unsigned Nboxes;/* number of boxes */
+  unsigned i;
   Flag_T flg;
   
   if (get_parameter("number_of_boxes") == 0)
     abortEr("\"number_of_boxes\" parameter is not defined!\n");
     
-  Nboxes = get_parameter_value_I("number_of_boxes",&flg);
+  Nboxes = (unsigned) get_parameter_value_I("number_of_boxes",&flg);
   parameterEr(flg);
   
   grid->patch = malloc((Nboxes+1)*sizeof(*grid->patch));
@@ -148,9 +147,9 @@ static void alloc_patches_Cartesian_grid(Grid_T *grid)
 }
 
 /* memory allocation for interface struct */
-void alloc_interface(Patch_T *patch)
+void alloc_interface(Patch_T *const patch)
 {
-  int i;
+  unsigned i;
   assert(patch);
   
   patch->interface = calloc(FACE_NUM+1,sizeof(*patch->interface));
@@ -167,10 +166,10 @@ void alloc_interface(Patch_T *patch)
 // memory allocation for point struct;
 // s is the number of point which is demanded 
 */
-void *alloc_point(int s)
+void *alloc_point(const unsigned s)
 {
   Point_T **point;
-  int i;
+  unsigned i;
   
   point = calloc(s+1,sizeof(*point));
   pointerEr(point);
@@ -188,9 +187,9 @@ void *alloc_point(int s)
 // and putting the last block to NULL and returning
 // the new available pointer
 */
-void *alloc_sFunc_PtoV(sFunc_PtoV_T ***mem)
+void *alloc_sFunc_PtoV(sFunc_PtoV_T ***const mem)
 {
-  int i;
+  unsigned i;
   
   for (i = 0; (*mem) != 0 && (*mem)[i] != 0 ; i++);
   

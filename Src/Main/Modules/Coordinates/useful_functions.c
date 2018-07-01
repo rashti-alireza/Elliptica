@@ -7,32 +7,14 @@
 
 #define RES_EPS 1E-11
 
-//-----------------------------------------------------------------//
 /* find the point in patches which are specified needle and fill
 // the needle with the answers.
 // for more information about needle look at the typede_data.h in 
 // Core folder. for an example to how make needle look at grid.c and
 // search for Needle_T or point_finder.
 // note: don't forget to free at the end of the day the answer of
-/////////////////////////////////////////////////////////////////////
-typedef struct NEEDLE_T
-{
-  double *x;
-  Grid_T *grid;// the grid which is used
-  int *guess;// these are guess patches searched firstly
-  int *in;// force it to look only inside these patches.
-          // notation: in[?] = patch number
-  int *ex;// force it to not look inside these patches
-           // notation: ex[?] = patch number
-  int *ans;// the answers found which pointing to patch number
-  int Nans;// number of answer
-  int Nin;// number of included patches
-  int Nex;// number of excluded patches
-  int Ng;// numbef of guess patches
-}Needle_T;
-/////////////////////////////////////////////////////////////////////
 */
-void point_finder(Needle_T *needle)
+void point_finder(Needle_T *const needle)
 {
   int i;
   
@@ -44,19 +26,19 @@ void point_finder(Needle_T *needle)
   {
     find(needle,GUESS);
     if (needle->Nans > 0) return;
-  }// end of if (needle->Ng != 0)
+  }/* end of if (needle->Ng != 0) */
   
   /* it only looks inside include patches if found it gets out */
   if (needle->Nin > 0)
   {
     find(needle,FORCE_IN);
     if (needle->Nans > 0) return;
-  }// end of if (needle->Nin > 0)
+  }/* end of if (needle->Nin > 0) */
   
   /* find in all patched exluding needle->ex */
   if (needle->Nex > 0)
   {
-    int j;
+    unsigned j;
     Flag_T flg = NO;
     
     FOR_ALL(i,needle->grid->patch)
@@ -74,9 +56,9 @@ void point_finder(Needle_T *needle)
     }
     
     find(needle,FORCE_IN);
-  }// end of if (needle->Nex > 0)
+  }/* end of if (needle->Nex > 0) */
   
-  else // if non of above met
+  else /* if non of above met */
   {
     FOR_ALL(i,needle->grid->patch)
       needle_in(needle,needle->grid->patch[i]);
@@ -86,10 +68,10 @@ void point_finder(Needle_T *needle)
 }
 
 /* adding a patch to needle->ex */
-void needle_ex(Needle_T *needle,Patch_T *patch)
+void needle_ex(Needle_T *const needle,const Patch_T *const patch)
 {
   assert(needle);
-  int i;
+  unsigned i;
   
   i = 0;
   while(i < needle->Nex)
@@ -106,10 +88,10 @@ void needle_ex(Needle_T *needle,Patch_T *patch)
 }
 
 /* adding a patch to needle->in */
-void needle_in(Needle_T *needle,Patch_T *patch)
+void needle_in(Needle_T *const needle,const Patch_T *const patch)
 {
   assert(needle);
-  int i;
+  unsigned i;
   
   i = 0;
   while(i < needle->Nin)
@@ -126,10 +108,10 @@ void needle_in(Needle_T *needle,Patch_T *patch)
 }
 
 /* adding a patch to needle->guess */
-void needle_guess(Needle_T *needle,Patch_T *patch)
+void needle_guess(Needle_T *const needle,const Patch_T *const patch)
 {
   assert(needle);
-  int i;
+  unsigned i;
   
   i = 0;
   while(i < needle->Ng)
@@ -146,10 +128,10 @@ void needle_guess(Needle_T *needle,Patch_T *patch)
 }
 
 /* adding a patch to needle->ans */
-void needle_ans(Needle_T *needle,Patch_T *patch)
+void needle_ans(Needle_T *const needle,const Patch_T *const patch)
 {
   assert(needle);
-  int i;
+  unsigned i;
   
   i = 0;
   while(i < needle->Nans)
@@ -169,9 +151,9 @@ void needle_ans(Needle_T *needle,Patch_T *patch)
 }
 
 /* check if in != ex, ex !=guess */
-static void IsConsistent(Needle_T *needle)
+static void IsConsistent(const Needle_T *const needle)
 {
-  int i,j;
+  unsigned i,j;
   
   if (needle->in == 0)
   {
@@ -195,10 +177,10 @@ static void IsConsistent(Needle_T *needle)
 }
 
 /* find for point in designated patches inside needle based on mode */
-static void find(Needle_T *needle,Mode_T mode)
+static void find(Needle_T *const needle,Mode_T mode)
 {
-  int *p, np;
-  int i;
+  unsigned *p = 0, np = UINT_MAX;
+  unsigned i;
   
   if (mode == GUESS)
   {
@@ -210,6 +192,8 @@ static void find(Needle_T *needle,Mode_T mode)
     p = needle->in;
     np = needle->Nin;
   }
+  else
+    abortEr("There is no such mode.\n");
   
   for (i = 0; i < np; i++)
   {
@@ -231,12 +215,12 @@ static void find(Needle_T *needle,Mode_T mode)
 /* find point X correspond to x in given patch.
 // ->return value 1 if it is successful, otherwise 0.
 */
-int X_of_x(double *X,double *x,Patch_T *patch)
+int X_of_x(double *const X,const double *const x,const Patch_T *const patch)
 {
   int r = 0;
   
   if (strcmp_i(patch->coordsys,"Cartesian"))
-    r = X_of_x_Cartesian_coord(X,x,patch);
+    r = X_of_x_Cartesian_coord(X,x);
   /* other coord sys comes here
   .
   .
@@ -251,7 +235,7 @@ int X_of_x(double *X,double *x,Patch_T *patch)
 /* find point X correspond to x for patch with Cartesian coord.
 // ->return value: 1 if it is successful, otherwise 0.
 */
-int X_of_x_Cartesian_coord(double *X,double *x,Patch_T *patch)
+int X_of_x_Cartesian_coord(double *const X,const double *const x)
 {
   X[0] = x[0];
   X[1] = x[1];
@@ -261,7 +245,7 @@ int X_of_x_Cartesian_coord(double *X,double *x,Patch_T *patch)
 }
 
 /* fill limits based on patch boundary */
-static void fill_limits(double *lim, Patch_T *patch)
+static void fill_limits(double *const lim, const Patch_T *const patch)
 {
   lim[MIN0] = patch->min[0];
   lim[MIN1] = patch->min[1];
@@ -272,7 +256,7 @@ static void fill_limits(double *lim, Patch_T *patch)
 }
 
 /* if x occurs inside the limits (boundary) return 1 otherwise 0 */
-static int IsInside(double *x,double *lim)
+static int IsInside(const double *const x,const double *const lim)
 {
   int v = 0;
   
@@ -290,17 +274,18 @@ static int IsInside(double *x,double *lim)
 
 /* given point and patch find if the is any node collocated 
 // to that point and then return its index. otherwise return -1.
+// ->return value: found index, -1 if not found.
 */
-int find_node(double *x, Patch_T *patch)
+unsigned find_node(const double *const x, const Patch_T *const patch,Flag_T *const flg)
 {
-  int v = -1;
+  unsigned v = 0;
   double X[3];
   const int r = X_of_x(X,x,patch);
   
   if (r)
   {
-    const double res = RES_EPS*rms(3,X,0);// resolution
-    int i;
+    const double res = RES_EPS*rms(3,X,0);/* resolution */
+    unsigned i;
     double *y, nrm;
     
     if (strcmp_i(patch->coordsys,"Cartesian"))
@@ -312,6 +297,7 @@ int find_node(double *x, Patch_T *patch)
         if (LSSEQL(nrm,res))
         {
           v = i;
+          *flg = FOUND;
           break;
         }
       }
@@ -325,6 +311,7 @@ int find_node(double *x, Patch_T *patch)
         if (LSSEQL(nrm,res))
         {
           v = i;
+          *flg = FOUND;
           break;
         }
       }

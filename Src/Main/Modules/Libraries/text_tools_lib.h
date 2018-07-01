@@ -1,1 +1,4 @@
-int strcmp_i(char *s1, char *s2);
+int strcmp_i(const char *const s1, const char *const s2);
+char *dup_s(const char *const str);
+char *tok_s(char *const str,const char delimit,char **const savestr);
+

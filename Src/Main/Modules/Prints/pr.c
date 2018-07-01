@@ -6,7 +6,7 @@
 #include "pr.h"
 
 /* printing a line with a comment inside */
-void pr_comment(char *comment)
+void pr_comment(const char *const comment)
 {
   int i,d;
   
@@ -43,7 +43,6 @@ void pr_line(void)
 /* printing the sepnt time form the start of abc */
 void pr_clock(void)
 {
-  extern time_t initial_time_global;
   time_t now = time(0);
   
   printf("Clock in Seconds: \"%f\"\n"

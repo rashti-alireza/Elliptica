@@ -12,52 +12,74 @@ enum Type
   EDGE
 };
 
-/* adjacent info */
-typedef struct ADJACENT_T
+/* Face and normal properties for adjPnt */
+struct Face_S
 {
-  int p;// adjacent patch
-  int f[TOT_FACE];// 0 if not located on an interface, positive otherwise
-  int node;// node refers to index of adjacent point if any
-  double N2[TOT_FACE][3];// normal of this adjPnt
-  double N1dotN2[TOT_FACE];// dot product of normals(adjPnt,point)
-  int FaceFlg;// equals 1 if found on an interface 0 otherwise
-  int FitF;// equals face number if (N1dotN2 == -1); otherwise -1
-}Adjacent_T;
+  unsigned on;/* if on this face 1; otherwise 0 */
+  unsigned FitFlg;/* 1 if (N1dotN2 == -1); otherwise 0 */
+  unsigned OrthFlg;/* 1 if (N1dotN2==0); othewise 0 */
+  unsigned f;/* face number */
+  double N2[3];/*normal at a this face*/
+  double N1dotN2;/* dot product of normals(adjPnt,point) */
+};
+
+/* adjacent info */
+typedef struct ADJPOINT_T
+{
+  unsigned p;/* adjacent patch */
+  unsigned FaceFlg;/* equals 1 if found on an interface; 0 otherwise */
+  unsigned node;/* node refers to index of adjacent point if any */
+  struct Face_S fs[TOT_FACE];
+  unsigned InterpFace;/* face number for interpolation */
+  unsigned CopyFace;/* face number for copy */
+}AdjPoint_T;
 
 /* points to be studied for realizing of geometry */
 typedef struct POINTSET_T
 {
-  Point_T    *point;// the point under study
-  Adjacent_T *adjPnt;// its adjacent points
-  int NadjPnt;// number of adjacent point
-  int FitN;// fittest number for adjPnt
+  Point_T     *Pnt;/* the point under study */
+  AdjPoint_T *adjPnt;/* its adjacent points */
+  unsigned NadjPnt;/* number of adjacent point */
+  unsigned idFit;/* id for fittest case */
+  unsigned idOrth;/* id for Orthogonal cases */
+  unsigned idInterp;/* id for interpolation case */
+  unsigned overlap;/* 1 if overlaps, 0 otherwise */
 }PointSet_T;
 
-static void fill_basics(Patch_T *patch);
-static void fill_N(Patch_T *patch);
-static void fill_geometry(Grid_T *grid);
-static void FindInnerB_Cartesian_coord(Patch_T *patch);
-static void FindExterF_Cartesian_coord(Patch_T *patch);
-static void init_Points(Interface_T *interface,PointSet_T ***innP,PointSet_T ***edgP);
-static void set_min_max_sum(int *n,int f,int *im,int *iM,int *jm,int *jM,int *km,int *kM,int *sum);
+static void fill_basics(Patch_T *const patch);
+static void fill_N(Patch_T *const patch);
+static void fill_geometry(Grid_T * const grid);
+static void FindInnerB_Cartesian_coord(Patch_T *const patch);
+static void FindExterF_Cartesian_coord(Patch_T *const patch);
+static void init_Points(const Interface_T *const interface,PointSet_T ***const innP,PointSet_T ***const edgP);
+static void set_min_max_sum(const unsigned *const n,const unsigned f,unsigned *const im,unsigned *const iM,unsigned *const jm,unsigned *const jM,unsigned *const km,unsigned *const kM,unsigned *const sum);
 static void free_PointSet(PointSet_T **pnt);
-static void alloc_PointSet(int N,PointSet_T ***pnt);
-static void realize_adj(PointSet_T **Pnt,enum Type type);
-static void find_adjPnt(PointSet_T *Pnt,enum Type type);
-static void find_adjNode(PointSet_T *pnt,const int N);
-static void analyze_adjPnt(PointSet_T *Pnt,enum Type type);
-static void add_adjPnt(PointSet_T *pnt,int *p, int np);
-static void normal_vec_Cartesian_coord(Point_T *point);
-static void tangent(Point_T *pnt,double *N);
-static int NumPoint(Interface_T *interface,enum Type type);
-static int L2(int *n,int f, int i, int j, int k);
-static int  realize_neighbor(Patch_T *patch);
-static int IsOverlap(PointSet_T *Pnt);
-static int IsNormalFit(PointSet_T *Pnt);
-static Point_T *get_p2(PointSet_T *Pnt);
-void point_finder(Needle_T *needle);
-double *normal_vec(Point_T *point);
-void needle_ex(Needle_T *needle,Patch_T *patch);
-void needle_in(Needle_T *needle,Patch_T *patch);
-void flush_houseK(Patch_T *patch);
-int find_node(double *x, Patch_T *patch);
+static void alloc_PointSet(const unsigned N,PointSet_T ***const pnt);
+static void realize_adj(PointSet_T **const Pnt,const enum Type type);
+static void find_adjPnt(PointSet_T *const Pnt,const enum Type type);
+static void fill_adjPnt(PointSet_T *const pnt,const unsigned N);
+static void analyze_adjPnt(PointSet_T *const Pnt,const enum Type type);
+static void add_adjPnt(PointSet_T *const pnt,const unsigned *const p, const unsigned np);
+static void normal_vec_Cartesian_coord(Point_T *const point);
+static void tangent(const Point_T *const pnt,double *const N);
+static unsigned NumPoint(const Interface_T *const interface,const enum Type type);
+static unsigned L2(const unsigned *const n,const unsigned f, const unsigned i, const unsigned j, const unsigned k);
+static int realize_neighbor(Patch_T *const patch);
+static int IsOverlap(PointSet_T *const Pnt);
+static int IsNormalFit(PointSet_T *const Pnt);
+static int IsOrthOutBndry(PointSet_T *const Pnt);
+static int IsOutBndry(PointSet_T *const Pnt);
+static int IsInterpolation(PointSet_T *const Pnt);
+static int IsMildOrth(PointSet_T *const Pnt);
+static int ReachBnd(PointSet_T *const Pnt,const unsigned p,const unsigned f);
+static Point_T *get_p2(const PointSet_T *const Pnt);
+static double find_grid_size(const PointSet_T *const Pnt,const unsigned i,const unsigned f);
+void point_finder(Needle_T *const needle);
+double *normal_vec(Point_T *const point);
+void needle_ex(Needle_T *const needle,const Patch_T *const patch);
+void needle_in(Needle_T *const needle,const Patch_T *const patch);
+void flush_houseK(Patch_T *const patch);
+void check_houseK(const Patch_T *const patch);
+unsigned find_node(const double *const x, const Patch_T *const patch,Flag_T *const flg);
+unsigned node_onFace(const double *const x, const unsigned f,const Patch_T *const patch);
+int realize_geometry(Grid_T *const grid);

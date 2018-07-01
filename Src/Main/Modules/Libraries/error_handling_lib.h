@@ -1,6 +1,6 @@
-void checkup_pointer_error(void *const p, char *file, int line);
-void bad_input_error(char *file, int line);
-void null_path_error(void *path,char *file, int line);
-void abort_error(char *massage,char *file, int line);
-void abort_error_string(char *massage,char *detail,char *file, int line);
-void check_parameter(Flag_T flg,char *file, int line);
+void checkup_pointer_error(const void *const p, const char *const file, const int line);
+void bad_input_error(const char *const file, const int line);
+void null_path_error(const void *const path,const char *const file, const int line);
+void abort_error(const char *const massage,const char *const file, const int line);
+void abort_error_string(const char *const massage,const char *const detail,const char *const file, const int line);
+void check_parameter(const Flag_T flg,const char *const file, const int line);

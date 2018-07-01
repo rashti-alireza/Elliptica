@@ -8,11 +8,11 @@
 /* making a directory with given path and name and then 
 // overriding the path of made directory if flg = YES
 */
-void make_directory(char **path,char *name,Flag_T flg)
+void make_directory(char **const path,const char *const name,const Flag_T flg)
 {
   char dir[MAX_ARR]     = {'\0'};
   char command[MAX_ARR] = {'\0'};
-  struct stat st = {0}; // status of files
+  struct stat st = {0};/* status of files */
   int i;
   
   i = 0;
@@ -29,7 +29,7 @@ void make_directory(char **path,char *name,Flag_T flg)
   if (flg == YES)
   {
     free(*path); 
-    (*path) = strdup(dir);
+    (*path) = dup_s(dir);
   }
   
 }

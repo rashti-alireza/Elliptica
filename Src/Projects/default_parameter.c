@@ -19,7 +19,7 @@ void set_default_parameter(void)
   
 }
 
-static void set_default(char *lhs,char *rhs)
+static void set_default(const char *const lhs,const char *const rhs)
 {
   char *v;
   Parameter_T *par;
@@ -32,6 +32,6 @@ static void set_default(char *lhs,char *rhs)
     v = get_parameter_value_S(lhs,0);
     if (strcmp(v,"default"))
       free(par->rv);
-    par->rv = strdup(rhs);
+    par->rv = dup_s(rhs);
   }
 }

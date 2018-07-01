@@ -6,9 +6,9 @@
 #include "general.h"
 
 /* taking squre root of vector v2-v1 which has l components double version*/
-double rms(const int n, double *v2,double *v1)
+double rms(const unsigned n, const double *const v2,const double *const v1)
 {
-  int i;
+  unsigned i;
   double sum;
   sum = 0;
   
@@ -31,9 +31,9 @@ double rms(const int n, double *v2,double *v1)
 /* taking squre root of vector v2-v1 which has l components 
 // long double version
 */
-long double rmsL(const long int n, double *v2, double *v1)
+long double rmsL(const unsigned long n, const double *const v2, const double *const v1)
 {
-  long int i;
+  unsigned long i;
   long double sum;
   sum = 0;
   
@@ -56,9 +56,9 @@ long double rmsL(const long int n, double *v2, double *v1)
 /* taking dot product of two v1 and v2 vector with n components
 // ->return value : v2.v1
 */
-double dot(const int n, double *v2,double *v1)
+double dot(const unsigned n, const double *const v2,const double *const v1)
 {
-  int i;
+  unsigned i;
   double d = 0;
   
   for (i = 0; i < n; i++)
@@ -70,7 +70,7 @@ double dot(const int n, double *v2,double *v1)
 /* taking absolute value of v
 // ->return value: absolute(v)
 */
-double ABS(double v)
+double ABS(const double v)
 {
   return v > 0 ? v : -v;
 }

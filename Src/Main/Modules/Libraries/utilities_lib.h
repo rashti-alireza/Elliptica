@@ -1,18 +1,15 @@
-void test_start(char *file,int line);
-int countf(void *p);
-void init_func_PtoV(sFunc_PtoV_T ***func);
-void add_func_PtoV(sFunc_PtoV_T ***func,void (*f)(Patch_T *patch),char *task,Coord_T coord);
-void run_func_PtoV(sFunc_PtoV_T **func,char *task,Patch_T *patch);
-Coord_T find_coord(Patch_T *patch);
-Collocation_T get_collocation(char *coll);
+#define TEST_START test_start(__FILE__,__LINE__);void test_start(const char *const file,const int line);
 
-#define TEST_START test_start(__FILE__,__LINE__);
-
-
-void IJK(int l, int *n, int *i, int *j, int *k);
-int L(int *n, int i, int j, int k);
-int I(int l, int *n);
-int J(int l, int *n);
-int K(int l, int *n);
-int IsOnEdge(int *n,int p);
-int IsOnFace(int *n,int p, int *f);
+unsigned countf(void *const p);
+void init_func_PtoV(sFunc_PtoV_T ***const func);
+void add_func_PtoV(sFunc_PtoV_T ***const func,void (*f)(Patch_T *const patch),const char *const task,Coord_T coord);
+void run_func_PtoV(sFunc_PtoV_T **const func,const char *const task,Patch_T *const patch);
+Coord_T find_coord(const Patch_T *const patch);
+Collocation_T get_collocation(const char *const coll);
+void IJK(const unsigned l, const unsigned *const n, unsigned *const i, unsigned *const j, unsigned *const k);
+unsigned L(const unsigned *const n, const unsigned i, const unsigned j, const unsigned k);
+unsigned I(const unsigned l, const unsigned *const n);
+unsigned J(const unsigned l, const unsigned *const n);
+unsigned K(const unsigned l, const unsigned *const n);
+int IsOnEdge(const unsigned *const n,const unsigned p);
+int IsOnFace(const double *const x, const Patch_T *const patch,unsigned *const f);

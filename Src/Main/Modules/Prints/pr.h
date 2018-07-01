@@ -5,3 +5,9 @@
 #define L_SYM '>'
 #define R_SYM '<'
 #define LINE '-'
+
+extern time_t initial_time_global;
+
+void pr_comment(const char *const comment);
+void pr_line(void);
+void pr_clock(void);

@@ -9,7 +9,7 @@
 */
 
 /* general function patch to void */
-typedef void fFunc_PtoV_T(Patch_T *patch);
+typedef void fFunc_PtoV_T(Patch_T *const patch);
 
 /* patch to void struct */
 typedef struct sFUNC_PtoV_T

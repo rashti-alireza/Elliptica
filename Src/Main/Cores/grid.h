@@ -9,8 +9,10 @@ struct Ret_S
   char s0[20],s1[20],s2[20];
 };
 
-
-static void fill_patches(Grid_T *grid);
-static void fill_patches_Cartesian_grid(Grid_T *grid);
-static void make_keyword_parameter(struct Ret_S *ret,char *box,char *needle);
-int fill_nodes(Grid_T *grid);
+int make_patches(Grid_T *const grid);
+static void fill_patches(Grid_T *const grid);
+static void fill_patches_Cartesian_grid(Grid_T *const grid);
+static void make_keyword_parameter(struct Ret_S *const ret,const char *const box,const char *const needle);
+int fill_nodes(Grid_T *const grid);
+void check_houseK(Patch_T *const patch);
+void flush_houseK(Patch_T *const patch);

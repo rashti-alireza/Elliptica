@@ -17,7 +17,7 @@ INCLUDE  = -I$(TOP)/Src/Main/Modules/Libraries
 INCLUDE2 = -I$(TOP)/Src/Main/Cores
 
 #Compiler flags
-CFLAGS = $(GCCFLAGS)
+CFLAGS = $(GCCFLAGS) #in MyConfig
 
 #Linking Libraries
 LDFLAGS  = -lumfpack -lblas -lgfortran -llapack

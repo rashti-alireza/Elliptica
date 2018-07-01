@@ -23,9 +23,9 @@ void free_2d(void *mem0)
 /* freeing 2 dimensions block of memory
 // knowing the number of columns is c
 */
-void free_matrix(void *mem0, long int c)
+void free_matrix(void *mem0, const unsigned long c)
 {
-  long int i;
+  unsigned long i;
   void **mem = mem0;
   
   for (i = 0; i < c; i++)

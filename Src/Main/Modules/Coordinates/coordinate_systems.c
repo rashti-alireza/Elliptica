@@ -6,7 +6,7 @@
 #include "coordinate_systems.h"
 
 /* making coordinates of nodes */
-int fill_nodes(Grid_T *grid)
+int fill_nodes(Grid_T *const grid)
 {
   int i;
   FOR_ALL(i,grid->patch)
@@ -27,11 +27,11 @@ int fill_nodes(Grid_T *grid)
 }
 
 /* making value of coords. it is a general function for Cartesian type */
-static void make_coords_Cartesian_coord(Patch_T *patch)
+static void make_coords_Cartesian_coord(Patch_T *const patch)
 {
   struct Collocation_s coll_s[3];
-  const int U = countf(patch->node);
-  int i,j,k,l,*n;
+  const unsigned U = countf(patch->node);
+  unsigned i,j,k,l,*n;
   
   coll_s[0].f = coll_s[1].f = coll_s[2].f = patch->collocation;
   initialize_collocation_struct(patch,coll_s);
@@ -53,7 +53,7 @@ static void make_coords_Cartesian_coord(Patch_T *patch)
 /* initializing collocation struct 
 // for making coords based on type of collocation.
 */
-static void initialize_collocation_struct(Patch_T *patch,struct Collocation_s *coll_s)
+static void initialize_collocation_struct(const Patch_T *const patch,struct Collocation_s *const coll_s)
 {
   /* some assertions */
   assert(patch->min[0] < patch->max[0]);
@@ -116,9 +116,9 @@ static void initialize_collocation_struct(Patch_T *patch,struct Collocation_s *c
 }
 
 /* point value based on collocation */
-static double point(int i, struct Collocation_s *coll_s)
+static double point(const unsigned i, const struct Collocation_s *const coll_s)
 {
-  double v;
+  double v = DBL_MAX;
    
   if (coll_s->f == EquiSpaced)
   {

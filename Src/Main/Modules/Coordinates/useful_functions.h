@@ -20,10 +20,15 @@ enum Limit
   TOT_Limit
 };
 
-static void IsConsistent(Needle_T *needle);
-static void find(Needle_T *needle,Mode_T mode);
-static int IsInside(double *x,double *lim);
-static void fill_limits(double *lim, Patch_T *patch);
-int X_of_x(double *X,double *x,Patch_T *patch);
-int X_of_x_Cartesian_coord(double *X,double *x,Patch_T *patch);
-void needle_in(Needle_T *needle,Patch_T *patch);
+void point_finder(Needle_T *const needle);
+void needle_ex(Needle_T *const needle,const Patch_T *const patch);
+void needle_in(Needle_T *const needle,const Patch_T *const patch);
+void needle_guess(Needle_T *const needle,const Patch_T *const patch);
+void needle_ans(Needle_T *const needle,const Patch_T *const patch);
+static void IsConsistent(const Needle_T *const needle);
+static void find(Needle_T *const needle,Mode_T mode);
+static int IsInside(const double *const x,const double *const lim);
+static void fill_limits(double *const lim, const Patch_T *const patch);
+int X_of_x(double *const X,const double *const x,const Patch_T *const patch);
+int X_of_x_Cartesian_coord(double *const X,const double *const x);
+unsigned find_node(const double *const x, const Patch_T *const patch,Flag_T *const flg);

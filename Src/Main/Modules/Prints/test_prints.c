@@ -7,7 +7,7 @@
 
 /* printing different quantities for test */
 /* if print option is on return 1 otherwise 0 */
-int test_print(Print_T f)
+int test_print(const Print_T f)
 {
   char *on; 
   
@@ -37,7 +37,6 @@ void pr_parameters(void)
 {
   FILE *f;
   char dir[1000]={'\0'}, *path;
-  extern Parameter_T **parameters_global;
   int i = 0;
   Flag_T flg;
   
@@ -59,11 +58,11 @@ void pr_parameters(void)
 }
 
 /* print coords */
-void pr_coords(Grid_T *grid)
+void pr_coords(const Grid_T *const grid)
 {
   FILE *f;
   char dir[1000]={'\0'}, *path;
-  int i = 0;
+  unsigned i = 0;
   Flag_T flg;
   
   path = get_parameter_value_S("output_directory_path",&flg);
@@ -71,8 +70,8 @@ void pr_coords(Grid_T *grid)
   FOR_ALL(i,grid->patch)
   {
     Patch_T *patch = grid->patch[i];
-    int U = countf(patch->node);
-    int l;
+    unsigned U = countf(patch->node);
+    unsigned l;
     
     sprintf(dir,"%s/%s.out",path,patch->name);
     f = fopen(dir,"w");

@@ -13,6 +13,7 @@
 
 enum FLOW {LEFT,RIGHT};
 
-static void *make_buffer(FILE *input);
-static void populate_parameters(char *const buff);
-void add_parameter(char *lv, char *rv);
+void read_input_file(const char *const path);
+static void *make_buffer(FILE *const input);
+static void populate_parameters(const char *const buff);
+void add_parameter(const char *const lv, const char *const rv);

@@ -6,7 +6,7 @@
 #include "grid.h"
 
 /* making the patches which cover the grid */
-int make_patches(Grid_T *grid)
+int make_patches(Grid_T *const grid)
 {
   char *kind;
   Flag_T flg;
@@ -14,7 +14,7 @@ int make_patches(Grid_T *grid)
   /* finding the kind of grid */
   kind = get_parameter_value_S("grid_kind",&flg);
   parameterEr(flg);
-  grid->kind = strdup(kind);
+  grid->kind = dup_s(kind);
   
   /* allocating and filling patches */
   alloc_patches(grid);
@@ -28,21 +28,22 @@ int make_patches(Grid_T *grid)
 }
 
 /* filling patch struct */
-static void fill_patches(Grid_T *grid)
+static void fill_patches(Grid_T *const grid)
 {
   if (strcmp_i(grid->kind,"Cartesian_grid"))
     fill_patches_Cartesian_grid(grid);
   
-  //else if (grid->coord,"CubedSpherical")
-    //fill_patches_CubedSpherical_grid(grid);
+  /*else if (grid->coord,"CubedSpherical")
+    //fill_patches_CubedSpherical_grid(grid); 
+    */
   else
     abortEr_s("There is no such %s grid kind.\n",grid->kind);
 }
 
 /*filling patch struct for Cartesian*/
-static void fill_patches_Cartesian_grid(Grid_T *grid)
+static void fill_patches_Cartesian_grid(Grid_T *const grid)
 {
-  int i;
+  unsigned i;
   char name[20] = {'\0'};
   Flag_T flg;
   
@@ -62,15 +63,15 @@ static void fill_patches_Cartesian_grid(Grid_T *grid)
     
     /* filling name */
     sprintf(name,"box%d",i);
-    patch->name = strdup(name);
+    patch->name = dup_s(name);
     
     /* filling n */
     make_keyword_parameter(&ret,name,"n");
-    patch->n[0] = get_parameter_value_I(ret.s0,&flg);
+    patch->n[0] = (unsigned)get_parameter_value_I(ret.s0,&flg);
     parameterEr(flg);
-    patch->n[1] = get_parameter_value_I(ret.s1,&flg);
+    patch->n[1] = (unsigned)get_parameter_value_I(ret.s1,&flg);
     parameterEr(flg);
-    patch->n[2] = get_parameter_value_I(ret.s2,&flg);
+    patch->n[2] = (unsigned)get_parameter_value_I(ret.s2,&flg);
     parameterEr(flg);
     
     /* filling center */
@@ -103,7 +104,7 @@ static void fill_patches_Cartesian_grid(Grid_T *grid)
     
     /* filling flags */
     sprintf(name,"box%d_collocation",i);
-    patch->coordsys = strdup("Cartesian");
+    patch->coordsys = dup_s("Cartesian");
     patch->collocation = get_collocation(get_parameter_value_S(name,&flg));
     parameterEr(flg);
     
@@ -112,7 +113,7 @@ static void fill_patches_Cartesian_grid(Grid_T *grid)
 }
 
 /* making keyword for searching of parameter value */
-static void make_keyword_parameter(struct Ret_S *ret,char *box,char *needle)
+static void make_keyword_parameter(struct Ret_S *const ret,const char *const box,const char *const needle)
 {
   /* for box?_n_? */
   if (!strcmp(needle,"n"))
@@ -143,12 +144,32 @@ static void make_keyword_parameter(struct Ret_S *ret,char *box,char *needle)
   }
 }
 
-/* setting all of houseK flags in Point_T to zero for given patch */
-void flush_houseK(Patch_T *patch)
+/* check if all of houseKs have been marked */
+void check_houseK(Patch_T *const patch)
 {
   Interface_T **const interface = patch->interface;
-  const int nf = countf(interface);
-  int i,f;
+  const unsigned nf = countf(interface);
+  Node_T *node;
+  unsigned i,f;
+  
+  for (f = 0; f < nf; f++)
+    for (i = 0; i < interface[f]->np; i++)
+      if (interface[f]->point[i]->houseK == 0)
+      {
+        node = patch->node[interface[f]->point[i]->ind];
+        double *x = node->x;
+        fprintf(stderr,"This point(%f,%f,%f) has not been found.\n",
+                        x[0],x[1],x[2]);
+        abortEr("Incomplete function.\n");
+      }
+}
+
+/* setting all of houseK flags in Point_T to zero for given patch */
+void flush_houseK(Patch_T *const patch)
+{
+  Interface_T **const interface = patch->interface;
+  const unsigned nf = countf(interface);
+  unsigned i,f;
   
   for (f = 0; f < nf; f++)
     for (i = 0; i < interface[f]->np; i++)

@@ -1,16 +1,19 @@
 . setup git local -> done
 . setup git remote
 . setup hierarchy of foldors -> done
-. setup make files
-. automatic heaader inclusion
-. my config for installation
-. designe skeleton
-. designe structures
-. designe par file
-. designe control flow of project
-. designe control flow of prints
-. designe skeleton of initial date using new idea
+. setup make files ->done
+. automatic heaader inclusion ->done
+. my config for installation ->done
+. designe skeleton ->done
+. designe structures ->done
+. designe par file ->done
+. designe control flow of project ->done
+. designe control flow of prints ->done
+. designe skeleton of initial date using new idea ->done
 . designe solver
 . designe multiplication matrix
 . designe fields and it spectral coeffs
-. 
+. make compatible with ANS
+. proof read geometry
+. find on face in geometry for adjPnt must include also non collocated
+

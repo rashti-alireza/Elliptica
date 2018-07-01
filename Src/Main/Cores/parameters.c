@@ -6,7 +6,7 @@
 #include "parameters.h"
 
 /* adding left value and right value to parameter data base*/
-void add_parameter(char *lv, char *rv)
+void add_parameter(const char *const lv, const char *const rv)
 {
   pointerEr(lv);
   
@@ -17,15 +17,15 @@ void add_parameter(char *lv, char *rv)
     abortEr_s("This parameter \"%s\" has already been added!\n",lv);
     
   par = alloc_parameter(&parameters_global);
-  par->lv = strdup(lv);
+  par->lv = dup_s(lv);
   if (!strcmp(rv,"") || !strcmp(rv," ")) par->rv = 0;
-  else par->rv = strdup(rv);
+  else par->rv = dup_s(rv);
 }
 
 /* having parameter name, it returns a pointer to 
 // the corresponding parameter
 */
-Parameter_T *get_parameter(char *const par_name)
+Parameter_T *get_parameter(const char *const par_name)
 {
   int i;
   
@@ -46,9 +46,9 @@ Parameter_T *get_parameter(char *const par_name)
 // value otherwise NONE value; unless flg = 0 which in this case
 // it won't get any value
 */
-int get_parameter_value_I(char *const par_name,Flag_T *flg)
+int get_parameter_value_I(const char *const par_name,Flag_T *const flg)
 {
-  int v;
+  int v = INT_MAX;
   int i;
   Flag_T f = NONE;
   
@@ -75,9 +75,9 @@ int get_parameter_value_I(char *const par_name,Flag_T *flg)
 // value otherwise NONE value; unless flg = 0 which in this case
 // it won't get any value
 */
-double get_parameter_value_D(char *const par_name,Flag_T *flg)
+double get_parameter_value_D(const char *const par_name,Flag_T *const flg)
 {
-  double v;
+  double v = DBL_MAX;
   int i;
   Flag_T f = NONE;
   
@@ -105,7 +105,7 @@ double get_parameter_value_D(char *const par_name,Flag_T *flg)
 // value otherwise NONE value; unless flg = 0 which in this case
 // it won't get any value
 */
-char *get_parameter_value_S(char *const par_name,Flag_T *flg)
+char *get_parameter_value_S(const char *const par_name,Flag_T *const flg)
 {
   char *v = 0;
   int i;
@@ -131,7 +131,7 @@ char *get_parameter_value_S(char *const par_name,Flag_T *flg)
 /* reading the input file and make all of parameters 
 // with their defualt value to the data base 
 */
-int make_parameters(char *const path)
+int make_parameters(const char *const path)
 {
   char folder[100]={'\0'}, *name;
   Flag_T flg;

@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+#include <limits.h>
 #include <assert.h>
 #include <float.h>
 #include <math.h>
@@ -20,6 +21,6 @@
 #define LSSEQL(x,y) (LSS(x,y) || EQL(x,y))
 #define GRTEQL(x,y) (GRT(x,y) || EQL(x,y))
 
-int    get_parameter_value_I(char *const par_name,Flag_T *flg);
-double get_parameter_value_D(char *const par_name,Flag_T *flg);
-char  *get_parameter_value_S(char *const par_name,Flag_T *flg);
+int    get_parameter_value_I(const char *const par_name,Flag_T *const flg);
+double get_parameter_value_D(const char *const par_name,Flag_T *const flg);
+char  *get_parameter_value_S(const char *const par_name,Flag_T *const flg);

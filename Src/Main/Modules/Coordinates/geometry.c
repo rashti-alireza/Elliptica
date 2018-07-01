@@ -11,36 +11,42 @@
 // realizing the geometry of grid such as how patches are glued
 // normal vectors at boundary, boundary of grid and etc.
 */
-int realize_geometry(Grid_T *grid)
+int realize_geometry(Grid_T *const grid)
 {
-  int i;
+  unsigned i;
   
   FOR_ALL(i,grid->patch)
   {
     Patch_T *const patch = grid->patch[i];
     
-    alloc_interface(patch);// allocating interfaces
-    fill_basics(patch);// filling basic elements
-    fill_N(patch);// filling point[?]->N
-    flush_houseK(patch);// set all of housK flag to zero
+    alloc_interface(patch);/* allocating interfaces */
+    fill_basics(patch);/* filling basic elements */
+    fill_N(patch);/* filling point[?]->N */
+    flush_houseK(patch);/* set all of housK flag to zero */
   }
   
   /* find various geometry of each point */
   fill_geometry(grid);
   
+  /* check if all point have been found and then flush them */
+  FOR_ALL(i,grid->patch)
+  {
+    check_houseK(grid->patch[i]);
+    flush_houseK(grid->patch[i]);
+  }
   /* printing boundary for test purposes */
-  //pr_boundary(grid);
+  /*pr_boundary(grid);*/
   
   return EXIT_SUCCESS;
 }
 
 /* filling the geometry of point struct */
-static void fill_geometry(Grid_T *grid)
+static void fill_geometry(Grid_T *const grid)
 {
   sFunc_PtoV_T **func;
   int i;
   
-  init_func_PtoV(&func);// initialize struct
+  init_func_PtoV(&func);/* initialize struct */
   /* adding func to struct to be called each coord must have 
   // its own func. note, also external face and inner face must be found
   // in first place; thus, for each new coord sys one must add below 
@@ -53,10 +59,10 @@ static void fill_geometry(Grid_T *grid)
   FOR_ALL(i,grid->patch)
   {
     Patch_T *const patch = grid->patch[i];
-    run_func_PtoV(func,"FindExterF",patch);// find external faces
-    run_func_PtoV(func,"FindInnerB",patch);// find inner boundary
+    run_func_PtoV(func,"FindExterF",patch);/* find external faces */
+    run_func_PtoV(func,"FindInnerB",patch);/* find inner boundary */
   }
-  free_2d(func);// freeing func struct
+  free_2d(func);/* freeing func struct */
   
   /* realize neighbor properties */
   FOR_ALL(i,grid->patch)
@@ -75,19 +81,19 @@ static void fill_geometry(Grid_T *grid)
 // use different algorithm, since edge points need be treated specially
 // ->return value-> EXIT_SUCCESS
 */
-static int realize_neighbor(Patch_T *patch)
+static int realize_neighbor(Patch_T *const patch)
 {
-  const int nf = countf(patch->interface);
-  int f;
+  const unsigned nf = countf(patch->interface);
+  unsigned f;
   
   for (f = 0; f < nf; f++)
   {
     Interface_T *interface = patch->interface[f];
     PointSet_T **innerP, **edgeP;
-    init_Points(interface,&innerP,&edgeP);// initializing inner and 
-                                          // edge points
-    realize_adj(innerP, INNER);// realizing the adjacency INNER one
-    realize_adj(edgeP,EDGE);// realizing the adjacency EDGE one
+    init_Points(interface,&innerP,&edgeP);/* initializing inner and 
+                                          // edge points */
+    realize_adj(innerP, INNER);/* realizing the adjacency INNER one */
+    realize_adj(edgeP,EDGE);/* realizing the adjacency EDGE one */
     
     free_PointSet(innerP);
     free_PointSet(edgeP);
@@ -96,13 +102,13 @@ static int realize_neighbor(Patch_T *patch)
 }
 
 /* realizing adjacency of given points */
-static void realize_adj(PointSet_T **Pnt, enum Type type)
+static void realize_adj(PointSet_T **const Pnt, const enum Type type)
 {
   int p;
   
   FOR_ALL(p,Pnt)
   {
-    if (Pnt[p]->point->houseK == 1) continue;
+    if (Pnt[p]->Pnt->houseK == 1) continue;
     
     find_adjPnt(Pnt[p],type);
     analyze_adjPnt(Pnt[p],type);
@@ -113,14 +119,14 @@ static void realize_adj(PointSet_T **Pnt, enum Type type)
 // see which one best encompasses the adjacent boundary of the interface
 // and then fill the flags of Point_T.
 */
-static void analyze_adjPnt(PointSet_T *Pnt,enum Type type)
+static void analyze_adjPnt(PointSet_T *const Pnt,const enum Type type)
 {
-  Point_T *const p1 = Pnt->point;
+  Point_T *const p1 = Pnt->Pnt;
   Point_T *p2;
-  Adjacent_T *adjp1;
+  AdjPoint_T *adjp1;
   
   /* this point is on outer boundary */
-  if (Pnt->NadjPnt == 0)
+  if (IsOutBndry(Pnt))
   {
     p1->outerB = 1;
   }
@@ -131,15 +137,15 @@ static void analyze_adjPnt(PointSet_T *Pnt,enum Type type)
     p1->adjPatch = Pnt->adjPnt[0].p;
     p1->copy  = 0;
   }
-  /* which point best meets the normal conditon (N2dotN1 == -1)  */
+  /* which point best meets the normal conditon (N2.N1 = -1)  */
   else if (IsNormalFit(Pnt))
   {
-    adjp1 = &Pnt->adjPnt[Pnt->FitN];
+    adjp1 = &Pnt->adjPnt[Pnt->idFit];
     
     p1->touch = 1;
     p1->copy  = 1;
     p1->adjPatch = adjp1->p;
-    p1->adjFace  = adjp1->FitF;
+    p1->adjFace  = adjp1->CopyFace;
     p2 = get_p2(Pnt);
     assert(p2);
     p1->adjPoint = p2;
@@ -151,21 +157,292 @@ static void analyze_adjPnt(PointSet_T *Pnt,enum Type type)
     p2->adjPoint = p1;
     p2->houseK = 1;
   }
-  
+  /* cases in which N1.N2 = 0 and reach outerbound */
+  else if (IsOrthOutBndry(Pnt))
+  {
+    p1->outerB = 1;
+  }
+  /* cases in which although N1.N2 != -1 but copy still possible */
+  else if (IsMildOrth(Pnt))
+  {
+    adjp1 = &Pnt->adjPnt[Pnt->idFit];
+    
+    p1->touch = 1;
+    p1->copy  = 1;
+    p1->adjPatch = adjp1->p;
+    p1->adjFace  = adjp1->CopyFace;
+    p2 = get_p2(Pnt);
+    assert(p2);
+    p1->adjPoint = p2;
+  }
+  /* cases in which the points needs interpolation */
+  else if (IsInterpolation(Pnt))
+  {
+    if (Pnt->overlap == 0) p1->touch = 1;
+    else  		   p1->touch = 0;
+    
+    p1->copy = 0;
+    p1->adjPatch = Pnt->adjPnt[Pnt->idInterp].p;
+    
+    if (Pnt->adjPnt[Pnt->idInterp].FaceFlg == 1)
+    {
+      p1->IntFace = 1;
+      p1->adjFace = Pnt->adjPnt[Pnt->idInterp].InterpFace;
+    }
+  }
+  else
+  {
+    unsigned ind = p1->ind;
+    double *x = p1->patch->node[ind]->x;
+    
+    fprintf(stderr,"This point(%f,%f,%f) has not been found.\n",
+                    x[0],x[1],x[2]);
+    abortEr("Incomplete function.\n");
+  }
   p1->houseK = 1;
+}
+
+/* does this need interpolation?
+// algorithm:
+// 1. if: adjPnt is not on an interface safly pick this patch as interpolation
+// 2. else: pick all of adjPnts which are on an interface, chose the closest point
+// on the same interface and get its normal, if dot product of this normal
+// with Pnt normal is negative, save it and finally pick the one which
+// has this dot product closest to -1.
+// ->return value: 1 if yes; 0 otherwise.
+*/
+static int IsInterpolation(PointSet_T *const Pnt)
+{
+  struct Interp_S
+  {
+    unsigned adjid;/* adjPnt id */
+    unsigned fid;/* adjPnt face id */
+    double dot;/* N1 dot N2 */
+  }*interp = 0;
+  double tmp;
+  unsigned i,j,id;
+  
+  /* check if Pnt reach inside any adj patch */
+  for (i = 0; i < Pnt->NadjPnt; i++)
+  {
+    if (Pnt->adjPnt[i].FaceFlg == 0)
+    {
+      Pnt->idInterp = i;
+      Pnt->overlap = 1;
+      return 1;
+    }
+  }
+  
+  /* find the all related N1dotN2 */
+  j = 0;
+  for (i = 0; i < Pnt->NadjPnt; i++)
+  {
+    if (Pnt->adjPnt[i].FaceFlg == 1)
+    {
+      for (j = 0; j < TOT_FACE; j++)
+      {
+        struct Face_S *const f = &Pnt->adjPnt[i].fs[j];
+        if (f->on == 1 && LSS(f->N1dotN2,0))
+        {
+          interp = realloc(interp,(j+1)*sizeof(*interp));
+          interp[j].adjid = i;
+          interp[j].fid   = j;
+          interp[j].dot   = f->N1dotN2;
+          j++;
+        }
+      }/* for (j = 0; j < TOT_FACE; j++) */
+    }
+  }/* end of for (i = 0; i < Pnt->NadjPnt; i++) */
+  
+  /* find the closest N1dotN2 to -1 */
+  if (j > 0)
+  {
+    tmp = interp[0].dot;
+    Flag_T flg = NONE;
+    
+    for (i = 1; i < j; i++)
+      if (LSS(interp[i].dot,tmp))
+      {
+        id = i;
+        flg = FOUND;
+      }
+      
+    if (flg == FOUND)
+    {
+      Pnt->idInterp = id;
+      Pnt->adjPnt[id].InterpFace = interp[id].fid;
+      Pnt->overlap = 0;
+    }
+    else
+      abortEr("It seems the algorithm is wrong!\n");
+    
+    free(interp);
+    return 1;
+  }
+  
+  return 0;
+}
+
+/* if pnt and adjPnt have N2 has tangentical component to N1
+// less than grid size of adjPnt and N1 can goes to adjacent patch, 
+// this boundary condition is still valid.
+// ->return value: 1 if yes; otherwise 0.
+*/
+static int IsMildOrth(PointSet_T *const Pnt)
+{
+  const unsigned node = Pnt->Pnt->ind;
+  Patch_T *const patch = Pnt->Pnt->patch;
+  double *const x = patch->node[node]->x;
+  const double eps = rms(3,x,0)*EPS;
+  double *const N = Pnt->Pnt->N;
+  unsigned i,f;
+  Needle_T *needle = alloc_needle();
+  double q[3] = {x[0]+eps*N[0],
+                  x[1]+eps*N[1],
+                   x[2]+eps*N[2]};/* q = pnt+eps*N */
+  needle->grid = patch->grid;
+  needle_ex(needle,patch);
+  needle->x = q;
+  
+  for (i = 0; i < Pnt->NadjPnt; i++)
+  {
+    for (f = 0; f < TOT_FACE; f++)
+    {
+      double s = Pnt->adjPnt[i].fs[f].N1dotN2;
+      /* make sure the product of normal is negative */
+      if (LSS(s,0))
+      {
+        point_finder(needle);
+        unsigned nfp = needle->Nans;
+        /* make sure q is on adjPatch */
+        if (nfp > 0)
+        {
+          double grid_size = find_grid_size(Pnt,i,f);
+          
+          if (LSS(sqrt(1-SQR(s)),grid_size))
+          {
+            Pnt->idOrth = i;
+            return 1;
+          }
+        }
+      }/* end of if (LSS(s,0)) */
+    }/* end of for (f = 0; f < TOT_FACE; f++) */
+  }/* end of for (i = 0; i < Pnt->NadjPnt; i++) */
+  
+  free_needle(needle);
+  
+  return 0;
+}
+
+/* finding the closest point to adjPnt in the same patch
+// with index i in PointSet_T then finding its distance to adjPnt.
+// ->return value: distance between adjPnt and its closest point.
+*/
+static double find_grid_size(const PointSet_T *const Pnt,const unsigned i,const unsigned f)
+{
+  Grid_T *const grid = Pnt->Pnt->patch->grid;
+  const unsigned p = Pnt->adjPnt[i].p;
+  Interface_T *const face = grid->patch[p]->interface[f];
+  double s = DBL_MAX;
+  double *x = grid->patch[p]->node[Pnt->adjPnt[i].node]->x;
+  double *y;
+  unsigned ind,j;
+  
+  FOR_ALL(j,face->point)
+  {
+    double r;
+    ind = face->point[j]->ind;
+    y = grid->patch[p]->node[ind]->x;
+    r = rms(3,x,y);
+
+    if (LSS(r,s))
+    {
+      ind = j;
+      s = r;
+    }
+  }
+  
+  return s;
+}
+
+/* is this and outerboundary point?
+// if no points are in adjPnt yes.
+// ->return value = 1 if outerbound; 0 otherwise.
+*/
+static int IsOutBndry(PointSet_T *const Pnt)
+{
+  if (Pnt->NadjPnt == 0)
+    return 1;
+    
+  return 0;
+}
+
+/* there are some cases -take place generally when interfaces of
+// two patches reach outerbound - in which two normals are orthogonal 
+// (or closely orthogonal) and those points can be flaged as outerbound.
+// the algorithm goes like that:
+// if normal orthogonal tilt each point's normal toward the other one
+// if the new point couldn't be found in any other patches, flaged this
+// as outerbound.
+// ->return value: if their normals are orthogonal and surrounded by
+// outerbound 1, otherwise 0.
+*/
+static int IsOrthOutBndry(PointSet_T *const Pnt)
+{
+  unsigned i,j;
+  
+  for (i = 0; i < Pnt->NadjPnt; i++)
+    for (j = 0; j < TOT_FACE; j++)
+      if (Pnt->adjPnt[i].fs[j].OrthFlg == 1) 
+        if (ReachBnd(Pnt,i,j))
+        {
+          Pnt->idOrth = i;
+          return 1;
+        }
+    
+  return 0;
+}
+
+/* check if one tilts normal toward the adjPnt normal 
+// there is no other patches, which means outerboundary.
+// ->return value: 1 if outerboundary; 0 otherwise.
+*/
+static int ReachBnd(PointSet_T *const Pnt,const unsigned p,const unsigned f)
+{
+  unsigned node = Pnt->Pnt->ind;
+  Patch_T *const patch = Pnt->Pnt->patch;
+  double *x = patch->node[node]->x;
+  double *N1 = Pnt->Pnt->N;
+  double *N2 = Pnt->adjPnt[p].fs[f].N2;
+  double eps = rms(3,x,0)*EPS;
+  double q[3] = {x[0]+eps*N1[0]+EPS*N2[0],
+                 x[1]+eps*N1[1]+EPS*N2[1],
+                 x[2]+eps*N1[2]+EPS*N2[2]};
+  Needle_T *needle = alloc_needle();
+  needle->grid = patch->grid;
+  needle_ex(needle,Pnt->Pnt->patch);
+  needle->x = q;
+  point_finder(needle);
+  
+  if (needle->Nans == 0)
+    return 1;
+  
+  free_needle(needle);
+  
+  return 0;
 }
 
 /* find the point p on the interface which has the fittest normal.
 // ->return value: a pointer to point struct on interface
 */
-static Point_T *get_p2(PointSet_T *Pnt)
+static Point_T *get_p2(const PointSet_T *const Pnt)
 {
-  int f = Pnt->adjPnt[Pnt->FitN].FitF;
-  int p = Pnt->adjPnt[Pnt->FitN].p;
-  const int node = Pnt->adjPnt[Pnt->FitN].node;
-  Patch_T *const patch = Pnt->point->patch->grid->patch[p];
+  unsigned f = Pnt->adjPnt[Pnt->idFit].CopyFace;
+  unsigned p = Pnt->adjPnt[Pnt->idFit].p;
+  const unsigned node = Pnt->adjPnt[Pnt->idFit].node;
+  Patch_T *const patch = Pnt->Pnt->patch->grid->patch[p];
   Interface_T *const face = patch->interface[f];
-  int i;
+  unsigned i;
   
   FOR_ALL(i,face->point)
     if (face->point[i]->ind == node)
@@ -179,14 +456,16 @@ static Point_T *get_p2(PointSet_T *Pnt)
 // are in expected directions (N1dotN2 == -1)
 // ->retrun value: 1 if fittest normal exists, 0 otherwise
 */
-static int IsNormalFit(PointSet_T *Pnt)
+static int IsNormalFit(PointSet_T *const Pnt)
 {
-  int i;
+  unsigned i,f;
   
   for (i = 0; i < Pnt->NadjPnt; i++)
-    if (Pnt->adjPnt[i].FitF >= 0) 
+    for (f = 0; f < TOT_FACE; f++)
+    if (Pnt->adjPnt[i].fs[f].FitFlg == 1) 
     {
-      Pnt->FitN = i;
+      Pnt->idFit = i;
+      Pnt->adjPnt[i].CopyFace = f;
       return 1;
     }
   
@@ -196,9 +475,9 @@ static int IsNormalFit(PointSet_T *Pnt)
 // thus, this point overlaps with other patch(es) 
 // ->retrun value: 1 if it is overlap, 0 otherwise
 */
-static int IsOverlap(PointSet_T *Pnt)
+static int IsOverlap(PointSet_T *const Pnt)
 {
-  int i;
+  unsigned i;
   
   for (i = 0; i < Pnt->NadjPnt; i++)
     if (Pnt->adjPnt[i].FaceFlg == 1) return 0;
@@ -207,22 +486,22 @@ static int IsOverlap(PointSet_T *Pnt)
 }
 
 /* finding the adjacent points of point pnt */
-static void find_adjPnt(PointSet_T *pnt,enum Type type)
+static void find_adjPnt(PointSet_T *const pnt,const enum Type type)
 {
-  int ind = pnt->point->ind;
-  int *found;// patches have been found
-  int nfp;// number of found patches
-  double *x = pnt->point->patch->node[ind]->x;
+  unsigned ind = pnt->Pnt->ind;
+  unsigned *found;/* patches have been found */
+  unsigned nfp;/* number of found patches */
+  double *x = pnt->Pnt->patch->node[ind]->x;
+  /*double eps = rms(3,x,0)*EPS; test*/
   Needle_T *needle = alloc_needle();
-  needle->grid = pnt->point->patch->grid;
-  needle_ex(needle,pnt->point->patch);
+  needle->grid = pnt->Pnt->patch->grid;
+  needle_ex(needle,pnt->Pnt->patch);
   needle->x = x;
-  point_finder(needle);// first find the point itself
+  point_finder(needle);
   
-  if (type == INNER)
+  /*if (type == INNER)
   {
-    double *N = pnt->point->N;
-    double eps = rms(3,x,0)*EPS;
+    double *N = pnt->Pnt->N;
     double q[3] = {x[0]+eps*N[0],
                    x[1]+eps*N[1],
                    x[2]+eps*N[2]};// q = pnt+eps*N
@@ -231,12 +510,11 @@ static void find_adjPnt(PointSet_T *pnt,enum Type type)
   }
   else if (type == EDGE)
   {
-    double eps = rms(3,x,0)*EPS;
     double *N1,N2[3];
     double q[3];
     
-    tangent(pnt->point,N2);
-    N1 = pnt->point->N;
+    tangent(pnt->Pnt,N2);
+    N1 = pnt->Pnt->N;
     q[0] = x[0]+eps*N1[0]+EPS*N2[0];
     q[1] = x[1]+eps*N1[1]+EPS*N2[1];
     q[2] = x[2]+eps*N1[2]+EPS*N2[2];// q = pnt+eps*N1+N2
@@ -246,6 +524,7 @@ static void find_adjPnt(PointSet_T *pnt,enum Type type)
   }
   else
     abortEr("No such type.\n");
+  */
   
   found = needle->ans;  
   nfp = needle->Nans;
@@ -256,14 +535,14 @@ static void find_adjPnt(PointSet_T *pnt,enum Type type)
 }
 
 /* initializing and finding inner points*/
-static void init_Points(Interface_T *interface,PointSet_T ***innP,PointSet_T ***edgP)
+static void init_Points(const Interface_T *const interface,PointSet_T ***const innP,PointSet_T ***const edgP)
 {
-  PointSet_T **pnt_in,**pnt_ed;// inner and edge points
-  int N_in, N_ed;// number of inner and edge points
-  const int f = interface->fn;
-  int *n = interface->patch->n;
-  int i,j,k,im,iM,jm,jM,km,kM;// m for min and M for max
-  int sum,ed,in;
+  PointSet_T **pnt_in,**pnt_ed;/* inner and edge points */
+  unsigned N_in, N_ed;/* number of inner and edge points */
+  const unsigned f = interface->fn;
+  const unsigned *const n = interface->patch->n;
+  unsigned i,j,k,im,iM,jm,jM,km,kM;/* m for min and M for max */
+  unsigned sum,ed,in;
   
   N_in = NumPoint(interface,INNER);
   N_ed = NumPoint(interface,EDGE);
@@ -276,8 +555,8 @@ static void init_Points(Interface_T *interface,PointSet_T ***innP,PointSet_T ***
   pnt_ed = 0;
   FOR_ijk(i,j,k,im,iM,jm,jM,km,kM)
   {
-    int l = L(n,i,j,k);
-    int p = L2(n,f,i,j,k);
+    unsigned l = L(n,i,j,k);
+    unsigned p = L2(n,f,i,j,k);
     
     /* excluding the points located on an internal interface */
     if (interface->point[p]->exterF == 0) continue;
@@ -285,13 +564,13 @@ static void init_Points(Interface_T *interface,PointSet_T ***innP,PointSet_T ***
     if (IsOnEdge(n,l))
     {
       alloc_PointSet(ed+1,&pnt_ed);
-      pnt_ed[ed]->point = interface->point[p];
+      pnt_ed[ed]->Pnt = interface->point[p];
       ed++;
     }
     else
     {
       alloc_PointSet(in+1,&pnt_in);
-      pnt_in[in]->point = interface->point[p];
+      pnt_in[in]->Pnt = interface->point[p];
       in++;
     }  
   }
@@ -300,12 +579,14 @@ static void init_Points(Interface_T *interface,PointSet_T ***innP,PointSet_T ***
   (*edgP) = pnt_ed;
 }
 
-/* number of inner points on an interface */
-static int NumPoint(Interface_T *interface,enum Type type)
+/* number of inner points on an interface
+// ->return value: number of points on the given interface.
+*/
+static unsigned NumPoint(const Interface_T *const interface,const enum Type type)
 {
-  int v;
-  int *n = interface->patch->n;
-  int f = interface->fn;
+  unsigned v = UINT_MAX;
+  unsigned *n = interface->patch->n;
+  unsigned f = interface->fn;
   
   if (type == INNER)
   {
@@ -366,7 +647,7 @@ static int NumPoint(Interface_T *interface,enum Type type)
 }
 
 /* find inner boundary for Cartesian type */
-static void FindInnerB_Cartesian_coord(Patch_T *patch)
+static void FindInnerB_Cartesian_coord(Patch_T *const patch)
 {
   Interface_T **interface = patch->interface;
   int i,f;
@@ -383,7 +664,7 @@ static void FindInnerB_Cartesian_coord(Patch_T *patch)
 }
 
 /* find external faces for Cartesian type */
-static void FindExterF_Cartesian_coord(Patch_T *patch)
+static void FindExterF_Cartesian_coord(Patch_T *const patch)
 {
   Interface_T **interface = patch->interface;
   int i,f;
@@ -400,7 +681,7 @@ static void FindExterF_Cartesian_coord(Patch_T *patch)
 }
 
 /* filling point[?]->N */
-static void fill_N(Patch_T *patch)
+static void fill_N(Patch_T *const patch)
 {
   Interface_T **interface = patch->interface;
   int i,f;
@@ -421,16 +702,16 @@ static void fill_N(Patch_T *patch)
 // point[?]->ind, point[?]->face and point[?]->patch and
 // also realize those nodes reach boundary of patch
 */
-static void fill_basics(Patch_T *patch)
+static void fill_basics(Patch_T *const patch)
 {
-  int *n = patch->n;
-  int f;
+  unsigned *n = patch->n;
+  unsigned f;
   
   for (f = I_0; f < TOT_FACE; f++)
   {
     Point_T **point;
-    int i,j,k,im,iM,jm,jM,km,kM,sum;// m for min and M for max
-    int t = 0;// test purposes
+    unsigned i,j,k,im,iM,jm,jM,km,kM,sum;/* m for min and M for max */
+    unsigned t = 0;/* test purposes */
     
     set_min_max_sum(n,f,&im,&iM,&jm,&jM,&km,&kM,&sum);
     patch->interface[f]->point = alloc_point(sum);
@@ -442,7 +723,7 @@ static void fill_basics(Patch_T *patch)
     t = 0;
     FOR_ijk(i,j,k,im,iM,jm,jM,km,kM)
     {
-      int p = L2(n,f,i,j,k);
+      unsigned p = L2(n,f,i,j,k);
       point[p]->ind = L(n,i,j,k);
       point[p]->face = f;
       point[p]->patch = patch;
@@ -456,28 +737,28 @@ static void fill_basics(Patch_T *patch)
 // L = k+n2*(j+n1*i) so depends on interface some of i,j,j,n2 and n1
 // are zero or supremum as follows:
 */
-static int L2(int *n,int f, int i, int j, int k)
+static unsigned L2(const unsigned *const n,const unsigned f, const unsigned i, const unsigned j, const unsigned k)
 {
-  int v;
+  unsigned v = UINT_MAX;
   
   switch(f)
   {
-    case I_0:// i = 0
+    case I_0:/* i = 0 */
       v = k+n[2]*j;
       break;
-    case I_n0:// i = n[0]-1
+    case I_n0:/* i = n[0]-1 */
       v = k+n[2]*j;
       break;
-    case J_0:// j = 0
+    case J_0:/* j = 0 */
       v = k+n[2]*i;
       break;
-    case J_n1:// j = n[1]-1
+    case J_n1:/* j = n[1]-1 */
       v = k+n[2]*i;
       break;
-    case K_0:// k = 0
+    case K_0:/* k = 0 */
       v = j+n[1]*i;
       break;
-    case K_n2:// k = n[2]-1
+    case K_n2:/* k = n[2]-1 */
       v = j+n[1]*i;
       break;
     default:
@@ -494,7 +775,7 @@ static int L2(int *n,int f, int i, int j, int k)
 // then the maximum value must be the supremum; but the slice 
 // should be at the exact value.
 */
-static void set_min_max_sum(int *n,int f,int *im,int *iM,int *jm,int *jM,int *km,int *kM,int *sum)
+static void set_min_max_sum(const unsigned *const n,const unsigned f,unsigned *const im,unsigned *const iM,unsigned *const jm,unsigned *const jM,unsigned *const km,unsigned *const kM,unsigned *const sum)
 {
   switch(f)
   {
@@ -564,16 +845,16 @@ static void set_min_max_sum(int *n,int f,int *im,int *iM,int *jm,int *jM,int *km
 // passing to this function are: "ind","patch","face".
 // -> return value: a pointer to N.
 */
-double *normal_vec(Point_T *point)
+double *normal_vec(Point_T *const point)
 {
   if (strcmp_i(point->patch->coordsys,"Cartesian"))
   {
     normal_vec_Cartesian_coord(point);
   }
-  //if (strcmp_i(point->patch->coordsys,"CubedSphere"))
+  /*if (strcmp_i(point->patch->coordsys,"CubedSphere"))
   //{
     //normal_vec_CubedSphere(point);
-  //}
+  //}*/
   else
     abortEr_s("Normal for %s is not defined yet!\n",
       point->patch->coordsys);
@@ -582,7 +863,7 @@ double *normal_vec(Point_T *point)
 }
 
 /* finding normal for Cartesian coord */
-static void normal_vec_Cartesian_coord(Point_T *point)
+static void normal_vec_Cartesian_coord(Point_T *const point)
 {
   switch(point->face)
   {
@@ -624,23 +905,22 @@ static void normal_vec_Cartesian_coord(Point_T *point)
 /* reallocation mem for PointSet_T strcut with one extera block
 // to put the last pointer to null.
 */
-static void alloc_PointSet(int N,PointSet_T ***pnt)
+static void alloc_PointSet(const unsigned N,PointSet_T ***const pnt)
 {
-  int i;
   
   assert(pnt);
   
   (*pnt) = realloc((*pnt),(N+1)*sizeof((*pnt)));
   pointerEr(*pnt);
   
-  (*pnt)[N-1] = calloc(1,sizeof(*(*pnt)[i]));
+  (*pnt)[N-1] = calloc(1,sizeof(*(*pnt)[N-1]));
   pointerEr((*pnt)[N-1]);
   
   (*pnt)[N] = 0;
 }
 
 /* free mem for PointSet_T strcut */
-static void free_PointSet(PointSet_T **pnt)
+static void free_PointSet(PointSet_T **const pnt)
 {
   if(pnt) return;
   
@@ -665,9 +945,9 @@ static void free_PointSet(PointSet_T **pnt)
 // it is 0.
 // note: it won't add any thing if the patch is already exists.
 */
-static void add_adjPnt(PointSet_T *pnt,int *p, int np)
+static void add_adjPnt(PointSet_T *const pnt,const unsigned *const p, const unsigned np)
 {
-  int i,j;
+  unsigned i,j;
   Flag_T flg = NONE;
   
   for (i = 0; i < np; i++)
@@ -685,9 +965,9 @@ static void add_adjPnt(PointSet_T *pnt,int *p, int np)
         realloc(pnt->adjPnt,(pnt->NadjPnt+1)*sizeof(*pnt->adjPnt));
       pointerEr(pnt->adjPnt);
       
-      pnt->adjPnt[pnt->NadjPnt].p = p[i];// fill p
-      pnt->adjPnt[pnt->NadjPnt].FaceFlg = 0;// initialize
-      find_adjNode(pnt,pnt->NadjPnt);// fill f and node and normals
+      pnt->adjPnt[pnt->NadjPnt].p = p[i];/* fill p */
+      pnt->adjPnt[pnt->NadjPnt].FaceFlg = 0;/* initialize */
+      fill_adjPnt(pnt,pnt->NadjPnt);/* filling elemetns of adjPnt struct */
       
       pnt->NadjPnt++;
      
@@ -701,45 +981,47 @@ static void add_adjPnt(PointSet_T *pnt,int *p, int np)
 // and find its normal vector and its dot product with the pnt
 // the last one gets used for realizing the geometry of neighbor of pnt
 */
-static void find_adjNode(PointSet_T *pnt,const int N)
+static void fill_adjPnt(PointSet_T *const pnt,const unsigned N)
 {
-  Adjacent_T *adjPnt = &pnt->adjPnt[N];
-  int ind = pnt->point->ind;
-  double *x = pnt->point->patch->node[ind]->x;
-  int *f = adjPnt->f;
-  int *n = pnt->point->patch->n;
-  Grid_T *grid = pnt->point->patch->grid;
-  int ind2;
-  
-  ind2 = find_node(x,pnt->point->patch);
-  if (ind2 >= 0)
+  AdjPoint_T *adjPnt = &pnt->adjPnt[N];
+  unsigned ind = pnt->Pnt->ind;
+  double *x = pnt->Pnt->patch->node[ind]->x;
+  unsigned f[TOT_FACE];
+  Grid_T *grid = pnt->Pnt->patch->grid;
+  Flag_T flg;
+  unsigned ind2;
+
+  ind2 = find_node(x,grid->patch[adjPnt->p],&flg);
+  if (flg == FOUND) adjPnt->node = ind2;
+    
+  if (IsOnFace(x,grid->patch[adjPnt->p],f))
   {
-    adjPnt->node = ind2;
-    if (IsOnFace(n,ind2,f))
+    Point_T po;
+    double *N2;
+    unsigned i;
+    
+    po.patch = grid->patch[adjPnt->p];
+    adjPnt->FaceFlg = 1;
+    
+    for (i = 0; i < TOT_FACE; i++)
     {
-      Point_T po;
-      double *N2;
-      int i;
-      po.ind = ind2;
-      po.patch = grid->patch[adjPnt->p];
-      adjPnt->FaceFlg = 1;
-      
-      for (i = 0; i < TOT_FACE; i++)
+      if (f[i])
       {
-        if (f[i])
-        {
-          po.face = i;
-          N2 = normal_vec(&po);
-          adjPnt->N2[i][0] = N2[0];
-          adjPnt->N2[i][1] = N2[1];
-          adjPnt->N2[i][2] = N2[2];
-          adjPnt->N1dotN2[i] = dot(3,pnt->point->N,N2);
-          if (EQL(adjPnt->N1dotN2[i],-1)) 
-            adjPnt->FitF = i;
-        }
+        po.ind = node_onFace(x,i,po.patch);
+        po.face = i;
+        N2 = normal_vec(&po);
+        adjPnt->fs[i].N2[0] = N2[0];
+        adjPnt->fs[i].N2[1] = N2[1];
+        adjPnt->fs[i].N2[2] = N2[2];
+        adjPnt->fs[i].N1dotN2 = dot(3,pnt->Pnt->N,N2);
+        
+        if (EQL(adjPnt->fs[i].N1dotN2,-1)) 
+          adjPnt->fs[i].FitFlg = 1;
+        else if (EQL(adjPnt->fs[i].N1dotN2,0)) 
+          adjPnt->fs[i].OrthFlg = 1;
       }
-    }// if (IsOnFace(n,ind2,f))
-  }// end of if (ind2 >= 0)
+    }
+  }/* if (IsOnFace(n,ind2,f)) */
   
 }
 
@@ -749,22 +1031,23 @@ static void find_adjNode(PointSet_T *pnt,const int N)
 // vector won't be "NORMALIZED". I want to keep the magnetitue to be of
 // the order of grid size.
 */
-static void tangent(Point_T *pnt,double *N)
+static void tangent(const Point_T *const pnt,double *const N)
 {
-  int *const n = pnt->patch->n;
-  const int ind = pnt->ind;
-  const int f = pnt->face;
+  const unsigned *const n = pnt->patch->n;
+  const unsigned ind = pnt->ind;
+  const unsigned f = pnt->face;
   double *x = pnt->patch->node[ind]->x;
   double *y;
-  double s_ds = DBL_MAX;// smallest distance
-  int s_in = -1;// index referring to point with smallest distance
-  int i,j,k,im,iM,jm,jM,km,kM,sum;// m for min and M for max
+  double s_ds = DBL_MAX;/* smallest distance */
+  unsigned s_in;/* index referring to point with smallest distance */
+  unsigned i,j,k,im,iM,jm,jM,km,kM,sum;/* m for min and M for max */
+  Flag_T flg = NONE;
   
   set_min_max_sum(n,f,&im,&iM,&jm,&jM,&km,&kM,&sum);
   
   FOR_ijk(i,j,k,im,iM,jm,jM,km,kM)
   {
-    int l = L(n,i,j,k);
+    unsigned l = L(n,i,j,k);
     double nrm;
     
     if (!IsOnEdge(n,l))
@@ -772,11 +1055,15 @@ static void tangent(Point_T *pnt,double *N)
       y = pnt->patch->node[l]->x;
       nrm = rms(3,x,y);
       
-      if (LSS(nrm,s_ds)) s_in = l;
+      if (LSS(nrm,s_ds)) 
+      {
+        flg = FOUND;
+        s_in = l;
+      }
     }
   }
   
-  if (s_in < 0)
+  if (flg == NONE)
     abortEr("Tangent vector could not be found.\n");
   
   /* note: it must be y-x to tilt toward interface not out of it */  

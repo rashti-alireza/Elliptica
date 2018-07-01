@@ -6,7 +6,7 @@
 #include "projects.h"
 
 /* executing the project */
-int project_execute(Project_T *proj)
+int project_execute(Project_T *const proj)
 {
   int ret;
   
@@ -21,9 +21,10 @@ int project_execute(Project_T *proj)
 
 
 /* adding the desired project for run */
-void add_project(ProjFunc *projfunc, char *const name, char *const des)
+void add_project(ProjFunc *const projfunc, const char *const name, const char *const des)
 {
-  pointerEr(projfunc);
+  if (projfunc == 0)
+   abortEr("Empty project.\n");
   
   Project_T *proj;
 
@@ -33,8 +34,8 @@ void add_project(ProjFunc *projfunc, char *const name, char *const des)
   
   proj = alloc_project(&projects_global);
   
-  proj->name = strdup(name);
-  proj->des  = strdup(des);
+  proj->name = dup_s(name);
+  proj->des  = dup_s(des);
   proj->func = projfunc;
 
 }
@@ -42,7 +43,7 @@ void add_project(ProjFunc *projfunc, char *const name, char *const des)
 /* having project name, it returns a pointer to 
 // the corresponding project func
 */
-Project_T *get_project(char *const proj_name)
+Project_T *get_project(const char *const proj_name)
 {
   int i;
   

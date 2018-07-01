@@ -1,6 +1,10 @@
 #define SQR(x) ((x)*(x))
 
-long double rms_l(const long int n, double *v2, double *v1);
-double rms(const int n, double *v2, double *v1);
-double dot(const int n, double *v2,double *v1);
-double ABS(double v);
+#ifndef M_PI
+#define M_PI 3.141592653589793
+#endif
+
+long double rms_l(const unsigned long n, const double *v2, const double *v1);
+double rms(const unsigned n, const double *const v2, const double *const v1);
+double dot(const unsigned n, const double *const v2, const double *const v1);
+double ABS(const double v);
