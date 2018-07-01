@@ -10,6 +10,10 @@
 /* 
 // realizing the geometry of grid such as how patches are glued
 // normal vectors at boundary, boundary of grid and etc.
+// basically, it goes through all of points on interfaces of a patch,
+// finding their normals and adjacent points and then studying
+// how best this point and its neighbor matched.
+// ->return value: EXIT_SUCCESS
 */
 int realize_geometry(Grid_T *const grid)
 {
@@ -34,6 +38,7 @@ int realize_geometry(Grid_T *const grid)
     check_houseK(grid->patch[i]);
     flush_houseK(grid->patch[i]);
   }
+  
   /* printing boundary for test purposes */
   /*pr_boundary(grid);*/
   
@@ -44,10 +49,10 @@ int realize_geometry(Grid_T *const grid)
 static void fill_geometry(Grid_T *const grid)
 {
   sFunc_PtoV_T **func;
-  int i;
+  unsigned i;
   
   init_func_PtoV(&func);/* initialize struct */
-  /* adding func to struct to be called each coord must have 
+  /* adding func to struct to be called. each coord must have 
   // its own func. note, also external face and inner face must be found
   // in first place; thus, for each new coord sys one must add below 
   // the related functions for these two purposes.
@@ -92,7 +97,7 @@ static int realize_neighbor(Patch_T *const patch)
     PointSet_T **innerP, **edgeP;
     init_Points(interface,&innerP,&edgeP);/* initializing inner and 
                                           // edge points */
-    realize_adj(innerP, INNER);/* realizing the adjacency INNER one */
+    realize_adj(innerP,INNER);/* realizing the adjacency INNER one */
     realize_adj(edgeP,EDGE);/* realizing the adjacency EDGE one */
     
     free_PointSet(innerP);
@@ -101,10 +106,12 @@ static int realize_neighbor(Patch_T *const patch)
   return EXIT_SUCCESS;
 }
 
-/* realizing adjacency of given points */
-static void realize_adj(PointSet_T **const Pnt, const enum Type type)
+/* realizing adjacency of given points
+// ->return value: EXIT_SUCCESS.
+*/
+static int realize_adj(PointSet_T **const Pnt, const enum Type type)
 {
-  int p;
+  unsigned p;
   
   FOR_ALL(p,Pnt)
   {
@@ -559,7 +566,11 @@ static void init_Points(const Interface_T *const interface,PointSet_T ***const i
     unsigned p = L2(n,f,i,j,k);
     
     /* excluding the points located on an internal interface */
-    if (interface->point[p]->exterF == 0) continue;
+    if (interface->point[p]->exterF == 0) 
+    {
+      interface->point[p]->houseK = 1;
+      continue;
+    }
       
     if (IsOnEdge(n,l))
     {
@@ -650,7 +661,7 @@ static unsigned NumPoint(const Interface_T *const interface,const enum Type type
 static void FindInnerB_Cartesian_coord(Patch_T *const patch)
 {
   Interface_T **interface = patch->interface;
-  int i,f;
+  unsigned i,f;
   
   FOR_ALL(f,interface)
   {
@@ -667,7 +678,7 @@ static void FindInnerB_Cartesian_coord(Patch_T *const patch)
 static void FindExterF_Cartesian_coord(Patch_T *const patch)
 {
   Interface_T **interface = patch->interface;
-  int i,f;
+  unsigned i,f;
   
   FOR_ALL(f,interface)
   {
@@ -684,7 +695,7 @@ static void FindExterF_Cartesian_coord(Patch_T *const patch)
 static void fill_N(Patch_T *const patch)
 {
   Interface_T **interface = patch->interface;
-  int i,f;
+  unsigned i,f;
   
   FOR_ALL(f,interface)
   {
@@ -733,9 +744,10 @@ static void fill_basics(Patch_T *const patch)
   }
 }
 
-/*2d linear index format for interface points 
+/* 2d linear index format for interface points.
 // L = k+n2*(j+n1*i) so depends on interface some of i,j,j,n2 and n1
 // are zero or supremum as follows:
+// ->return value: 2d index.
 */
 static unsigned L2(const unsigned *const n,const unsigned f, const unsigned i, const unsigned j, const unsigned k)
 {
@@ -924,7 +936,7 @@ static void free_PointSet(PointSet_T **const pnt)
 {
   if(pnt) return;
   
-  int i;
+  unsigned i;
   FOR_ALL (i,pnt)
   {
     if (pnt[i]->adjPnt != 0)

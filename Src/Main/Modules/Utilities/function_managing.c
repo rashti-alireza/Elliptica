@@ -15,7 +15,7 @@ void init_func_PtoV(sFunc_PtoV_T ***const func)
 void add_func_PtoV(sFunc_PtoV_T ***const func,
                     void (*f)(Patch_T *const patch),
                       const char *const task,
-                        Coord_T coord)
+                        const Coord_T coord)
 {
   sFunc_PtoV_T *new_func;
   

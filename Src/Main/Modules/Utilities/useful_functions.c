@@ -72,7 +72,7 @@ unsigned K(const unsigned l, const unsigned *const n)
 /* changing text to enum for collocation */
 Collocation_T get_collocation(const char *const coll)
 {
-  Collocation_T c = NOT_DEFINED;
+  Collocation_T c = NDEF_COLLOCATION;
   if (strcmp_i(coll,"EquiSpaced")) c = EquiSpaced;
   else if (strcmp_i(coll,"Chebyshev_Zero")) c = Chebyshev_Zero;
   else
@@ -82,7 +82,7 @@ Collocation_T get_collocation(const char *const coll)
 }
 
 /* find out if this point p located on an edge or not
-// the algorithm is simple; if it happens at two or more interface
+// the algorithm is simple; if it happens at two or more interfaces,
 // it means this point is on an edge and returns 1 otherwise 0
 // note: it's only for points which are collocated
 // ->return value: 1 if found 0 if not.
@@ -90,7 +90,7 @@ Collocation_T get_collocation(const char *const coll)
 int IsOnEdge(const unsigned *const n,const unsigned p)
 {
   unsigned i,j,k;
-  int c, r;
+  int c;
   
   IJK(p,n,&i,&j,&k);
   
@@ -99,10 +99,9 @@ int IsOnEdge(const unsigned *const n,const unsigned p)
   if (j == n[1]-1 || j == 0)  c++;
   if (k == n[2]-1 || k == 0)  c++;
   
-  r = 0;
-  if (c > 1)  r = 1;
+  if (c > 1)  return 1;
   
-  return r;
+  return 0;
 }
 
 /* find out if this point p located on an face or not.

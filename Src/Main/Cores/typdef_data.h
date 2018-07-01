@@ -25,7 +25,7 @@ typedef enum COLLOCATION_T
 {
   EquiSpaced,
   Chebyshev_Zero,
-  NOT_DEFINED
+  NDEF_COLLOCATION
 }Collocation_T;
 
 /* coordinate system */

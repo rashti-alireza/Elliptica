@@ -55,7 +55,7 @@ static void init_Points(const Interface_T *const interface,PointSet_T ***const i
 static void set_min_max_sum(const unsigned *const n,const unsigned f,unsigned *const im,unsigned *const iM,unsigned *const jm,unsigned *const jM,unsigned *const km,unsigned *const kM,unsigned *const sum);
 static void free_PointSet(PointSet_T **pnt);
 static void alloc_PointSet(const unsigned N,PointSet_T ***const pnt);
-static void realize_adj(PointSet_T **const Pnt,const enum Type type);
+static int realize_adj(PointSet_T **const Pnt,const enum Type type);
 static void find_adjPnt(PointSet_T *const Pnt,const enum Type type);
 static void fill_adjPnt(PointSet_T *const pnt,const unsigned N);
 static void analyze_adjPnt(PointSet_T *const Pnt,const enum Type type);

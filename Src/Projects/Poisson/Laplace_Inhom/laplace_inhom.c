@@ -17,6 +17,8 @@ int Laplace_Inhom(void)
   //Laplace_Inhom_pr_answer(grid);// printing found answer
   //Laplace_Inhom_clean_up(grid);// cleaning up
   
+  assert(grid);/* test to avoid error unused variable! */
+  
   pr_clock();
   
   return EXIT_SUCCESS;

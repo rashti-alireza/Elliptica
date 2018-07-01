@@ -165,6 +165,7 @@ void alloc_interface(Patch_T *const patch)
 /*
 // memory allocation for point struct;
 // s is the number of point which is demanded 
+// ->return value: pointer to new allocated memory
 */
 void *alloc_point(const unsigned s)
 {
