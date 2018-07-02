@@ -195,9 +195,11 @@ static void analyze_adjPnt(PointSet_T *const Pnt)
     
     if (Pnt->adjPnt[Pnt->idInterp].FaceFlg == 1)
     {
+      assert(Pnt->overlap == 0);
       p1->IntFace = 1;
       p1->adjFace = Pnt->adjPnt[Pnt->idInterp].InterpFace;
-      assert(Pnt->overlap == 0);
+      set_sameXYZ(p1,p1->adjFace);
+      
     }
   }
   else
@@ -1072,4 +1074,46 @@ void tangent(const Point_T *const pnt,double *const N)
   N[0] = y[0]-x[0];
   N[1] = y[1]-x[1];
   N[2] = y[2]-x[2];
+}
+
+/* getting interface, figures what is the constant coordinates
+// on this interface.
+*/
+static void set_sameXYZ(Point_T *const p,const unsigned f)
+{
+  switch(f)
+  {
+    case I_0:
+      p->sameX = 1;
+      p->sameY = 0;
+      p->sameZ = 0;
+      break;
+    case I_n0:
+      p->sameX = 1;
+      p->sameY = 0;
+      p->sameZ = 0;
+      break; 
+    case J_0:
+      p->sameX = 0;
+      p->sameY = 1;
+      p->sameZ = 0;
+      break; 
+    case J_n1:
+      p->sameX = 0;
+      p->sameY = 1;
+      p->sameZ = 0;
+      break; 
+    case K_0:
+      p->sameX = 0;
+      p->sameY = 0;
+      p->sameZ = 1;
+      break; 
+    case K_n2:
+      p->sameX = 0;
+      p->sameY = 0;
+      p->sameZ = 1;
+      break;
+    default:
+      abortEr("There is not such interface.\n");
+  }
 }
