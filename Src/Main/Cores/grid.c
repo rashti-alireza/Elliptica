@@ -24,6 +24,10 @@ int make_patches(Grid_T *const grid)
   alloc_nodes(grid);
   fill_nodes(grid);
   
+  /* test printing coords */
+  if (test_print(PRINT_COORDS))
+    pr_coords(grid);
+  
   return EXIT_SUCCESS;
 }
 
@@ -116,7 +120,7 @@ static void fill_patches_Cartesian_grid(Grid_T *const grid)
 static void make_keyword_parameter(struct Ret_S *const ret,const char *const box,const char *const needle)
 {
   /* for box?_n_? */
-  if (!strcmp(needle,"n"))
+  if (strcmp_i(needle,"n"))
   {
     sprintf(ret->s0,"%s_n_a",box);
     sprintf(ret->s1,"%s_n_b",box);
@@ -124,7 +128,7 @@ static void make_keyword_parameter(struct Ret_S *const ret,const char *const box
   }
   
   /* for box?_center_? */
-  else if (!strcmp(needle,"center"))
+  else if (strcmp_i(needle,"center"))
   {
     sprintf(ret->s0,"%s_center_a",box);
     sprintf(ret->s1,"%s_center_b",box);
@@ -132,7 +136,7 @@ static void make_keyword_parameter(struct Ret_S *const ret,const char *const box
   }
   
   /* for box?_size_? */
-  else if (!strcmp(needle,"size"))
+  else if (strcmp_i(needle,"size"))
   {
     sprintf(ret->s0,"%s_size_a",box);
     sprintf(ret->s1,"%s_size_b",box);

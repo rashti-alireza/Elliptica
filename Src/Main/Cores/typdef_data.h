@@ -102,10 +102,10 @@ typedef struct POINT_T
   unsigned ind;/* linear index in which node[ind] refers to this point */
   double N[3];/* normal vector */
   struct PATCH_T *patch;/* refers to its patch */
-  unsigned adjPatch;/* adjacent patch used in interpolation */
   struct POINT_T *adjPoint;/* adjacent point */
-  unsigned face;/* the interface in which this point located */
-  unsigned adjFace;/* adjacent face used in interpolation */
+  unsigned face    ;/* the interface in which this point located */
+  unsigned adjFace ;/* adjacent face used in interpolation */
+  unsigned adjPatch;/* adjacent patch used in interpolation */
   unsigned IntFace: 1;/* 1 if interpolation happens at adjFace, 0 otherwise */
   unsigned sameX  : 1;/* 1 if addjacent face is on X = const */
   unsigned sameY  : 1;/* 1 if addjacent face is on Y = const */

@@ -1,5 +1,6 @@
-#define TEST_START test_start(__FILE__,__LINE__);void test_start(const char *const file,const int line);
+#define TEST_START test_start(__FILE__,__LINE__);
 
+void test_start(const char *const file,const int line);
 unsigned countf(void *const p);
 void init_func_PtoV(sFunc_PtoV_T ***const func);
 void add_func_PtoV(sFunc_PtoV_T ***const func,void (*f)(Patch_T *const patch),const char *const task,const Coord_T coord);

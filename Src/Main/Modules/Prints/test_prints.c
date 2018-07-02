@@ -16,13 +16,13 @@ int test_print(const Print_T f)
     case PRINT_PARAMETER:
       on = get_parameter_value_S("print_parameter",0);
       if (on == 0) return 0;
-      if (strcmp(on,"yes") == 0 || strcmp(on,"y") == 0)
+      if (strcmp_i(on,"yes")|| strcmp_i(on,"y"))
         return 1;
       break;
     case PRINT_COORDS:
       on = get_parameter_value_S("print_coords",0);
       if (on == 0) return 0;
-      if (strcmp(on,"yes") == 0 || strcmp(on,"y") == 0)
+      if (strcmp_i(on,"yes")|| strcmp_i(on,"y"))
         return 1;
       break;
     default:

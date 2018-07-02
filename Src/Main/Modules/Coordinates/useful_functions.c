@@ -17,45 +17,50 @@
 */
 void point_finder(Needle_T *const needle)
 {
-  int i;
+  Flag_T flg = NO;
+  unsigned i,j;
   
-  /* check consistency between in, ex and guess */
-  IsConsistent(needle);
-  
-  /* it only looks inside guess patches if found, it gets out */
+  /* look inside guess patches */
   if (needle->Ng != 0)
   {
     find(needle,GUESS);
-    if (needle->Nans > 0) return;
-  }/* end of if (needle->Ng != 0) */
-  
-  /* it only looks inside include patches if found, it gets out */
-  if (needle->Nin != 0)
-  {
-    find(needle,FORCE_IN);
-    if (needle->Nans > 0) return;
-  }/* end of if (needle->Nin > 0) */
-  
-  /* find in all patched exluding needle->ex */
-  if (needle->Nex != 0)
-  {
-    unsigned j;
-    Flag_T flg = NO;
     
-    /* avoiding patches that have already been sought unsuccessfully */
-    if (needle->Nin != 0)
+    /* if guess didn't work seek in the rest patches */
+    if (needle->Nans == 0)
     {
-      for (j = 0 ; j < needle->Nin; j++)
-      {
-        unsigned pn = needle->in[j];
-        needle_ex(needle,needle->grid->patch[pn]);
-      }
       free(needle->in);
       needle->Nin = 0;
-    }
+      
+      FOR_ALL(i,needle->grid->patch)
+      {
+        flg = NO;
+        /* look if this patch has been already found to exclude it */
+        for (j = 0; j < needle->Ng; j++)
+          if (needle->guess[j] == needle->grid->patch[i]->pn)
+          {
+            flg = YES;
+            break;
+          }
+        if (flg == NO)
+          needle_in(needle,needle->grid->patch[i]);
+      }
+      
+      find(needle,FORCE_IN);
+    }/* end of if (needle->Nans == 0) */
     
+  }/* end of if (needle->Ng != 0) */
+  
+  /* look inside include patches */
+  else if (needle->Nin != 0)
+  {
+    find(needle,FORCE_IN);
+  }/* end of if (needle->Nin > 0) */
+  /* find in all patched exluding needle->ex */
+  else if (needle->Nex != 0)
+  {
     FOR_ALL(i,needle->grid->patch)
     {
+      flg = NO;
       for (j = 0; j < needle->Nex; j++)
       {
         if (needle->ex[j] == needle->grid->patch[i]->pn)
@@ -69,21 +74,8 @@ void point_finder(Needle_T *const needle)
     }
     
     find(needle,FORCE_IN);
-    
-    if (needle->Nans > 0) return;
   }/* end of if (needle->Nex > 0) */
   
-  /* if non of above is the case */
-  if (needle->Nin != 0)
-  {
-    free(needle->in);
-    needle->Nin = 0;
-  }
-  
-  FOR_ALL(i,needle->grid->patch)
-    needle_in(needle,needle->grid->patch[i]);
-    
-  find(needle,FORCE_IN);
 }
 
 /* adding a patch to needle->ex */
@@ -170,30 +162,6 @@ void needle_ans(Needle_T *const needle,const Patch_T *const patch)
   
   needle->ans[needle->Nans] = patch->pn;
   needle->Nans++;
-}
-
-/* check if in != ex, ex !=guess */
-static void IsConsistent(const Needle_T *const needle)
-{
-  unsigned i,j;
-  
-  if (needle->ex == 0) 
-    return;
-  
-  else
-  {
-    for (i = 0; i < needle->Nex; i++)
-    {
-      for (j = 0; j < needle->Ng; j++)
-        if (needle->ex[i] == needle->guess[j])
-          abortEr("Guess and Exclude must be mutually exclusive.\n");
-      
-      for (j = 0; j < needle->Nin; j++)
-        if (needle->ex[i] == needle->in[j])
-          abortEr("Include and Exclude must be mutually exclusive.\n");
-     
-    }
-  }
 }
 
 /* find for point in designated patches inside needle based on mode */

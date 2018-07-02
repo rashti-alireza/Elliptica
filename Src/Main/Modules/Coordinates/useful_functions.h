@@ -25,7 +25,6 @@ void needle_ex(Needle_T *const needle,const Patch_T *const patch);
 void needle_in(Needle_T *const needle,const Patch_T *const patch);
 void needle_guess(Needle_T *const needle,const Patch_T *const patch);
 void needle_ans(Needle_T *const needle,const Patch_T *const patch);
-static void IsConsistent(const Needle_T *const needle);
 static void find(Needle_T *const needle,Mode_T mode);
 static int IsInside(const double *const x,const double *const lim);
 static void fill_limits(double *const lim, const Patch_T *const patch);

@@ -30,7 +30,7 @@ static void set_default(const char *const lhs,const char *const rhs)
   else
   {
     v = get_parameter_value_S(lhs,0);
-    if (strcmp(v,"default"))
+    if (strcmp_i(v,"default"))
       free(par->rv);
     par->rv = dup_s(rhs);
   }

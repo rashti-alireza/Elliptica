@@ -61,7 +61,7 @@ static void fill_adjPnt(PointSet_T *const pnt,const unsigned N);
 static void analyze_adjPnt(PointSet_T *const Pnt);
 static void add_adjPnt(PointSet_T *const pnt,const unsigned *const p, const unsigned np);
 static void normal_vec_Cartesian_coord(Point_T *const point);
-static void tangent(const Point_T *const pnt,double *const N);
+void tangent(const Point_T *const pnt,double *const N);
 static unsigned NumPoint(const Interface_T *const interface,const enum Type type);
 static unsigned L2(const unsigned *const n,const unsigned f, const unsigned i, const unsigned j, const unsigned k);
 static int realize_neighbor(Patch_T *const patch);

@@ -13,9 +13,6 @@ Grid_T *Laplace_Inhom_make_grid(void)
                      // including the way patches have been sewed,
                      // normal to the boundary, 
                      // outer-boundary, inner boundary and etc. */
-  if (test_print(PRINT_COORDS))
-    pr_coords(grid);
-    
   return grid;
 }
 

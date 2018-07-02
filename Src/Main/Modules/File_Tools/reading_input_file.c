@@ -65,7 +65,7 @@ static void populate_parameters(const char *const buff)
       }
       
       f = RIGHT;
-      subtok = tok_s(0,delimit2,&savestr2);
+      subtok = tok_s(0,delimit,&savestr2);
       
     }/* while (subtok != 0) */
     
@@ -74,10 +74,6 @@ static void populate_parameters(const char *const buff)
     
     tok = tok_s(0,delimit,&savestr);
   
-    /*TEST_START
-      //printf("par_l = %s, par_r = %s, tok = %s\n",par_l,par_r,tok);
-    //end */
-    
     if (par_l != 0)	free(par_l);
     if (par_r != 0)	free(par_r);
     

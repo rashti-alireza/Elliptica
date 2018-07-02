@@ -5,10 +5,12 @@
 
 #include "text_tools.h"
 
-/* strcmp case insensitive, it returns 1 for success otherwise 0 */
+/* strcmp case insensitive
+// ->return value: 1 for success, 0 otherwise.
+*/
 int strcmp_i(const char *const s1, const char *const s2)
 {
-  assert(s2 && s1);
+  if (!s2 || !s1) return 0;
   
   char *tmp1 = calloc(strlen(s1)+1,1);
   char *tmp2 = calloc(strlen(s2)+1,1);
@@ -64,7 +66,7 @@ char *dup_s(const char *const str)
 }
 
 /* 
-// returning the first substring from str delimited by delimit
+// returning the first sub-string from str delimited by delimit
 // and make savestr points to the the rest of str after delimit.
 // if str is 0 it uses savestr as the str.
 //->return value: point to substring delimited by delimit, if nothing 
@@ -74,22 +76,46 @@ char *tok_s(char *const str,const char delimit,char **const savestr)
 {
   char *s = 0;
   char *ps = 0;
-  unsigned l,i;
+  unsigned l,i,f;
+  Flag_T flg = NONE;
+
   
   if (str != 0) s = str;
   else 		s = *savestr;
   
-  l = (unsigned)strlen(s);
+  /* return null if s is empty*/
+  if (!s) return 0;
   
+  l = (unsigned)strlen(s);
+  assert(s[l] == '\0');/* make sure this string end with null char */
+  
+  /* if start with delimit */
+  if (s[0] == delimit) 
+  {
+    ++s;
+    --l;
+  }
   for (i = 0; i < l; i++)
   {
-    if (s[i] == delimit && s[i+1] != delimit && s[i+1] != '\0')
+    if (s[i] == delimit)
     {
-      s[i] = '\0';
-      ps = &s[i];
-      *savestr = ps+1;
+      /* make this sub-string empty of delimits */
+      f = i;
+      while (s[f] == delimit && s[f] != '\0' && f < l)
+        s[f++] = '\0';
+      
+      ps = s;
+      *savestr = &s[f];
+      flg = FOUND;
+      break;
     }
   }
   
+  if (flg == NONE)
+  {
+    *savestr = 0;
+    ps = s;
+  }
+    
   return ps;
 }

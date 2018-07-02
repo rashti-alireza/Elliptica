@@ -174,7 +174,7 @@ static void analyze_adjPnt(PointSet_T *const Pnt)
   /* cases in which although N1.N2 != -1 but copy still possible */
   else if (IsMildOrth(Pnt))
   {
-    adjp1 = &Pnt->adjPnt[Pnt->idFit];
+    adjp1 = &Pnt->adjPnt[Pnt->idOrth];
     
     p1->touch = 1;
     p1->copy  = 1;
@@ -187,16 +187,17 @@ static void analyze_adjPnt(PointSet_T *const Pnt)
   /* cases in which the points needs interpolation */
   else if (IsInterpolation(Pnt))
   {
-    if (Pnt->overlap == 0) p1->touch = 1;
-    else  		   p1->touch = 0;
-    
     p1->copy = 0;
     p1->adjPatch = Pnt->adjPnt[Pnt->idInterp].p;
+
+    if (Pnt->overlap == 0) p1->touch = 1;
+    else  		   p1->touch = 0;
     
     if (Pnt->adjPnt[Pnt->idInterp].FaceFlg == 1)
     {
       p1->IntFace = 1;
       p1->adjFace = Pnt->adjPnt[Pnt->idInterp].InterpFace;
+      assert(Pnt->overlap == 0);
     }
   }
   else
@@ -204,8 +205,9 @@ static void analyze_adjPnt(PointSet_T *const Pnt)
     unsigned ind = p1->ind;
     double *x = p1->patch->node[ind]->x;
     
-    fprintf(stderr,"This point(%f,%f,%f) has not been found.\n",
-                    x[0],x[1],x[2]);
+    fprintf(stderr,"\nThis point(%f,%f,%f) at patch = '%s'"
+    " \nhas not been found.\n",
+                    x[0],x[1],x[2],p1->patch->name);
     abortEr("Incomplete function.\n");
   }
   p1->houseK = 1;
@@ -213,7 +215,7 @@ static void analyze_adjPnt(PointSet_T *const Pnt)
 
 /* does this need interpolation?
 // algorithm:
-// 1. if: adjPnt is not on an interface safly pick this patch as interpolation
+// 1. if: adjPnt is not on an interface safely pick this patch as interpolation
 // 2. else: pick all of adjPnts which are on an interface, chose the closest point
 // on the same interface and get its normal, if dot product of this normal
 // with Pnt normal is negative, save it and finally pick the one which
@@ -229,7 +231,7 @@ static int IsInterpolation(PointSet_T *const Pnt)
     double dot;/* N1 dot N2 */
   }*interp = 0;
   double tmp;
-  unsigned i,j,id;
+  unsigned i,j,id,f;
   
   /* check if Pnt reach inside any adj patch */
   for (i = 0; i < Pnt->NadjPnt; i++)
@@ -248,15 +250,15 @@ static int IsInterpolation(PointSet_T *const Pnt)
   {
     if (Pnt->adjPnt[i].FaceFlg == 1)
     {
-      for (j = 0; j < TOT_FACE; j++)
+      for (f = 0; f < TOT_FACE; f++)
       {
-        struct Face_S *const f = &Pnt->adjPnt[i].fs[j];
-        if (f->on_f == 1 && LSS(f->N1dotN2,0))
+        struct Face_S *const fs = &Pnt->adjPnt[i].fs[f];
+        if (fs->on_f == 1 && LSS(fs->N1dotN2,0))
         {
           interp = realloc(interp,(j+1)*sizeof(*interp));
           interp[j].adjid = i;
-          interp[j].fid   = j;
-          interp[j].dot   = f->N1dotN2;
+          interp[j].fid   = f;
+          interp[j].dot   = fs->N1dotN2;
           j++;
         }
       }/* for (j = 0; j < TOT_FACE; j++) */
@@ -266,24 +268,18 @@ static int IsInterpolation(PointSet_T *const Pnt)
   /* find the closest N1dotN2 to -1 */
   if (j > 0)
   {
-    tmp = interp[0].dot;
-    Flag_T flg = NONE;
+    id = 0;
+    tmp = interp[id].dot;
     
     for (i = 1; i < j; i++)
       if (LSS(interp[i].dot,tmp))
-      {
         id = i;
-        flg = FOUND;
-      }
       
-    if (flg == FOUND)
-    {
-      Pnt->idInterp = id;
-      Pnt->adjPnt[id].InterpFace = interp[id].fid;
-      Pnt->overlap = 0;
-    }
-    else
-      abortEr("It seems the algorithm is wrong!\n");
+    struct Interp_S *int_S = &interp[id];
+  
+    Pnt->idInterp = int_S->adjid;
+    Pnt->adjPnt[int_S->adjid].InterpFace = int_S->fid;
+    Pnt->overlap = 0;
     
     free(interp);
     return 1;
@@ -292,7 +288,7 @@ static int IsInterpolation(PointSet_T *const Pnt)
   return 0;
 }
 
-/* if pnt and adjPnt have N2 has tangentical component to N1
+/* if N2,the normal of adjPnt, has tangentical component to N1
 // less than grid size of adjPnt and N1 can goes to adjacent patch, 
 // this boundary condition is still valid.
 // ->return value: 1 if yes; otherwise 0.
@@ -310,27 +306,37 @@ static int IsMildOrth(PointSet_T *const Pnt)
                   x[1]+eps*N[1],
                    x[2]+eps*N[2]};/* q = pnt+eps*N */
   needle->grid = patch->grid;
-  needle_ex(needle,patch);
   needle->x = q;
   
   for (i = 0; i < Pnt->NadjPnt; i++)
   {
+    Patch_T *patch2 = patch->grid->patch[Pnt->adjPnt[i].p];
+    
+    if (Pnt->adjPnt[i].on_c == 0 || 
+        Pnt->adjPnt[i].FaceFlg == 0) 
+          continue;
+    
+    if (Pnt->adjPnt[i].FaceFlg == 1)
     for (f = 0; f < TOT_FACE; f++)
     {
+      if (Pnt->adjPnt[i].fs[f].on_f == 0) continue;
+      
       double s = Pnt->adjPnt[i].fs[f].N1dotN2;
       /* make sure the product of normal is negative */
       if (LSS(s,0))
       {
+        free_needle(needle);
+        needle_in(needle,patch2);
         point_finder(needle);
-        unsigned nfp = needle->Nans;
         /* make sure q is on adjPatch */
-        if (nfp > 0)
+        if (needle->Nans > 0)
         {
           double grid_size = find_grid_size(Pnt,i,f);
           
           if (LSS(sqrt(1-SQR(s)),grid_size))
           {
             Pnt->idOrth = i;
+            Pnt->adjPnt[i].CopyFace = f;
             return 1;
           }
         }
@@ -343,8 +349,8 @@ static int IsMildOrth(PointSet_T *const Pnt)
   return 0;
 }
 
-/* finding the closest point to adjPnt in the same patch
-// with index i in PointSet_T then finding its distance to adjPnt.
+/* finding the closest point to adjPnt wiht index i in PointSet_T
+// at the same patch and then finding its distance to adjPnt.
 // ->return value: distance between adjPnt and its closest point.
 */
 static double find_grid_size(const PointSet_T *const Pnt,const unsigned i,const unsigned f)
@@ -364,17 +370,14 @@ static double find_grid_size(const PointSet_T *const Pnt,const unsigned i,const 
     y = grid->patch[p]->node[ind]->x;
     r = rms(3,x,y);
 
-    if (LSS(r,s))
-    {
-      ind = j;
-      s = r;
-    }
+    if (LSS(r,s))  s = r;
   }
+  assert(j > 0);
   
   return s;
 }
 
-/* is this and outerboundary point?
+/* is this an outerboundary point?
 // if no points are in adjPnt yes.
 // ->return value = 1 if outerbound; 0 otherwise.
 */
@@ -390,8 +393,8 @@ static int IsOutBndry(PointSet_T *const Pnt)
 // two patches reach outerbound - in which two normals are orthogonal 
 // (or closely orthogonal) and those points can be flaged as outerbound.
 // the algorithm goes like that:
-// if normal orthogonal tilt each point's normal toward the other one
-// if the new point couldn't be found in any other patches, flaged this
+// if each orthogonal normal be tilted toward the other one, and tip of
+// this new vector couldn't be found in any other patches, flaged this
 // as outerbound.
 // ->return value: if their normals are orthogonal and surrounded by
 // outerbound 1, otherwise 0.
@@ -470,14 +473,18 @@ static int IsNormalFit(PointSet_T *const Pnt)
   unsigned i,f;
   
   for (i = 0; i < Pnt->NadjPnt; i++)
-    for (f = 0; f < TOT_FACE; f++)
-    if (Pnt->adjPnt[i].fs[f].FitFlg == 1) 
+    if (Pnt->adjPnt[i].on_c == 1 && 
+        Pnt->adjPnt[i].FaceFlg == 1)
     {
-      Pnt->idFit = i;
-      Pnt->adjPnt[i].CopyFace = f;
-      return 1;
+      for (f = 0; f < TOT_FACE; f++)
+        if (Pnt->adjPnt[i].fs[f].FitFlg == 1) 
+        {
+          Pnt->idFit = i;
+          Pnt->adjPnt[i].CopyFace = f;
+          return 1;
+        }
     }
-  
+    
   return 0;
 }
 /* if none of the adjacent points are on an interface,
@@ -992,11 +999,15 @@ static void fill_adjPnt(PointSet_T *const pnt,const unsigned N)
     
     for (i = 0; i < TOT_FACE; i++)
     {
+      adjPnt->fs[i].FitFlg  = 0;
+      adjPnt->fs[i].OrthFlg = 0;
+      
       if (f[i])
       {
         po.ind = node_onFace(x,i,po.patch);
         po.face = i;
         N2 = normal_vec(&po);
+        
         adjPnt->fs[i].on_f = 1;
         adjPnt->fs[i].N2[0] = N2[0];
         adjPnt->fs[i].N2[1] = N2[1];
@@ -1004,15 +1015,9 @@ static void fill_adjPnt(PointSet_T *const pnt,const unsigned N)
         adjPnt->fs[i].N1dotN2 = dot(3,pnt->Pnt->N,N2);
         
         if (EQL(adjPnt->fs[i].N1dotN2,-1)) 
-        {
           adjPnt->fs[i].FitFlg  = 1;
-          adjPnt->fs[i].OrthFlg = 0;
-        }
         else if (EQL(adjPnt->fs[i].N1dotN2,0)) 
-        {
-          adjPnt->fs[i].FitFlg  = 0;
           adjPnt->fs[i].OrthFlg = 1;
-        }
       }
       else
         adjPnt->fs[i].on_f = 0;
@@ -1021,13 +1026,13 @@ static void fill_adjPnt(PointSet_T *const pnt,const unsigned N)
   
 }
 
-/* find the closest inner point to this point and then 
+/* find the closest inner point (not on edge) to this point and then 
 // put the vector made by the difference of these two points in N.
 // this is the approximate tangent vector. note, the tangent
 // vector won't be "NORMALIZED". I want to keep the magnetitue to be of
 // the order of grid size.
 */
-static void tangent(const Point_T *const pnt,double *const N)
+void tangent(const Point_T *const pnt,double *const N)
 {
   const unsigned *const n = pnt->patch->n;
   const unsigned ind = pnt->ind;
@@ -1035,7 +1040,7 @@ static void tangent(const Point_T *const pnt,double *const N)
   double *x = pnt->patch->node[ind]->x;
   double *y;
   double s_ds = DBL_MAX;/* smallest distance */
-  unsigned s_in;/* index referring to point with smallest distance */
+  unsigned s_in = UINT_MAX;/* index referring to point with smallest distance */
   unsigned i,j,k,im,iM,jm,jM,km,kM,sum;/* m for min and M for max */
   Flag_T flg = NONE;
   
