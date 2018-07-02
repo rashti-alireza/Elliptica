@@ -97,8 +97,8 @@ static int realize_neighbor(Patch_T *const patch)
     PointSet_T **innerP, **edgeP;
     init_Points(interface,&innerP,&edgeP);/* initializing inner and 
                                           // edge points */
-    realize_adj(innerP,INNER);/* realizing the adjacency INNER one */
-    realize_adj(edgeP,EDGE);/* realizing the adjacency EDGE one */
+    realize_adj(innerP);/* realizing the adjacency INNER one */
+    realize_adj(edgeP);/* realizing the adjacency EDGE one */
     
     free_PointSet(innerP);
     free_PointSet(edgeP);
@@ -109,7 +109,7 @@ static int realize_neighbor(Patch_T *const patch)
 /* realizing adjacency of given points
 // ->return value: EXIT_SUCCESS.
 */
-static int realize_adj(PointSet_T **const Pnt, const enum Type type)
+static int realize_adj(PointSet_T **const Pnt)
 {
   unsigned p;
   
@@ -117,16 +117,18 @@ static int realize_adj(PointSet_T **const Pnt, const enum Type type)
   {
     if (Pnt[p]->Pnt->houseK == 1) continue;
     
-    find_adjPnt(Pnt[p],type);
-    analyze_adjPnt(Pnt[p],type);
+    find_adjPnt(Pnt[p]);
+    analyze_adjPnt(Pnt[p]);
   }
+  
+  return EXIT_SUCCESS;
 }
 
 /* analyzing the adjacent point of point pnt; 
-// see which one best encompasses the adjacent boundary of the interface
+// see which one best describe the adjacent boundary of the interface
 // and then fill the flags of Point_T.
 */
-static void analyze_adjPnt(PointSet_T *const Pnt,const enum Type type)
+static void analyze_adjPnt(PointSet_T *const Pnt)
 {
   Point_T *const p1 = Pnt->Pnt;
   Point_T *p2;
@@ -249,7 +251,7 @@ static int IsInterpolation(PointSet_T *const Pnt)
       for (j = 0; j < TOT_FACE; j++)
       {
         struct Face_S *const f = &Pnt->adjPnt[i].fs[j];
-        if (f->on == 1 && LSS(f->N1dotN2,0))
+        if (f->on_f == 1 && LSS(f->N1dotN2,0))
         {
           interp = realloc(interp,(j+1)*sizeof(*interp));
           interp[j].adjid = i;
@@ -493,46 +495,17 @@ static int IsOverlap(PointSet_T *const Pnt)
 }
 
 /* finding the adjacent points of point pnt */
-static void find_adjPnt(PointSet_T *const pnt,const enum Type type)
+static void find_adjPnt(PointSet_T *const pnt)
 {
   unsigned ind = pnt->Pnt->ind;
   unsigned *found;/* patches have been found */
   unsigned nfp;/* number of found patches */
   double *x = pnt->Pnt->patch->node[ind]->x;
-  /*double eps = rms(3,x,0)*EPS; test*/
   Needle_T *needle = alloc_needle();
   needle->grid = pnt->Pnt->patch->grid;
   needle_ex(needle,pnt->Pnt->patch);
   needle->x = x;
-  point_finder(needle);
-  
-  /*if (type == INNER)
-  {
-    double *N = pnt->Pnt->N;
-    double q[3] = {x[0]+eps*N[0],
-                   x[1]+eps*N[1],
-                   x[2]+eps*N[2]};// q = pnt+eps*N
-    needle->x = q;
-    point_finder(needle);
-  }
-  else if (type == EDGE)
-  {
-    double *N1,N2[3];
-    double q[3];
-    
-    tangent(pnt->Pnt,N2);
-    N1 = pnt->Pnt->N;
-    q[0] = x[0]+eps*N1[0]+EPS*N2[0];
-    q[1] = x[1]+eps*N1[1]+EPS*N2[1];
-    q[2] = x[2]+eps*N1[2]+EPS*N2[2];// q = pnt+eps*N1+N2
-    
-    needle->x = q;
-    point_finder(needle);
-  }
-  else
-    abortEr("No such type.\n");
-  */
-  
+  point_finder(needle); 
   found = needle->ans;  
   nfp = needle->Nans;
   add_adjPnt(pnt,found,nfp);
@@ -953,59 +926,61 @@ static void free_PointSet(PointSet_T **const pnt)
 /* adding all of patches found in to point->adjPnt;
 // and find if there is any node in adjacent patch correspond to
 // this point pnt. moreover, study if this pnt located on some interfaces
-// of adjacent patch, if yes put adjPnt->f[face_nun] = 1 and if not
+// of adjacent patch, if yes put adjPnt->fs[face_nun].on = 1 and if not
 // it is 0.
 // note: it won't add any thing if the patch is already exists.
 */
 static void add_adjPnt(PointSet_T *const pnt,const unsigned *const p, const unsigned np)
 {
   unsigned i,j;
-  Flag_T flg = NONE;
   
   for (i = 0; i < np; i++)
   {
     for(j = 0; j < pnt->NadjPnt; j++)
-    {
-      if(p[i] == pnt->adjPnt->p)
-        flg = FOUND;
-    }
+      if(p[i] == pnt->adjPnt[j].p) return;
+        
+    /* realloc memory for new found point */
+    pnt->adjPnt = 
+      realloc(pnt->adjPnt,(pnt->NadjPnt+1)*sizeof(*pnt->adjPnt));
+    pointerEr(pnt->adjPnt);
     
-    if (flg == NONE)
-    {
-      /* realloc memory for new found point */
-      pnt->adjPnt = 
-        realloc(pnt->adjPnt,(pnt->NadjPnt+1)*sizeof(*pnt->adjPnt));
-      pointerEr(pnt->adjPnt);
-      
-      pnt->adjPnt[pnt->NadjPnt].p = p[i];/* fill p */
-      pnt->adjPnt[pnt->NadjPnt].FaceFlg = 0;/* initialize */
-      fill_adjPnt(pnt,pnt->NadjPnt);/* filling elemetns of adjPnt struct */
-      
-      pnt->NadjPnt++;
-     
-    }
+    /* initializing */
+    AdjPoint_T *const adjPnt = &pnt->adjPnt[pnt->NadjPnt];
+    adjPnt->p = p[i];/* fill p */
+    adjPnt->FaceFlg = 0;
+    adjPnt->on_c = 0;
+    
+    fill_adjPnt(pnt,pnt->NadjPnt);/* filling elemetns of adjPnt struct */
+    
+    pnt->NadjPnt++;
   }
 }
 
 /* study:
-// 1. if this pnt collocated with some node of adjacent patch->fill node
-// 2. if this pnt located on some interfaces of adjacent patch->fill f 
-// and find its normal vector and its dot product with the pnt
+// 1. if this pnt collocated with some node of adjacent patch
+// 2. if this pnt located on some interfaces of adjacent patch
+// 3. find adjPnt normal vector and its dot product with the pnt
 // the last one gets used for realizing the geometry of neighbor of pnt
 */
 static void fill_adjPnt(PointSet_T *const pnt,const unsigned N)
 {
-  AdjPoint_T *adjPnt = &pnt->adjPnt[N];
+  AdjPoint_T *const adjPnt = &pnt->adjPnt[N];
   unsigned ind = pnt->Pnt->ind;
-  double *x = pnt->Pnt->patch->node[ind]->x;
+  const double *const x = pnt->Pnt->patch->node[ind]->x;
   unsigned f[TOT_FACE];
-  Grid_T *grid = pnt->Pnt->patch->grid;
+  const Grid_T *const grid = pnt->Pnt->patch->grid;
   Flag_T flg;
   unsigned ind2;
-
+  
+  /* find if it is on a node (collocation) */
   ind2 = find_node(x,grid->patch[adjPnt->p],&flg);
-  if (flg == FOUND) adjPnt->node = ind2;
-    
+  if (flg == FOUND)
+  {
+    adjPnt->node = ind2;
+    adjPnt->on_c = 1;
+  }
+  
+  /* find if it is on a face or not */  
   if (IsOnFace(x,grid->patch[adjPnt->p],f))
   {
     Point_T po;
@@ -1022,16 +997,25 @@ static void fill_adjPnt(PointSet_T *const pnt,const unsigned N)
         po.ind = node_onFace(x,i,po.patch);
         po.face = i;
         N2 = normal_vec(&po);
+        adjPnt->fs[i].on_f = 1;
         adjPnt->fs[i].N2[0] = N2[0];
         adjPnt->fs[i].N2[1] = N2[1];
         adjPnt->fs[i].N2[2] = N2[2];
         adjPnt->fs[i].N1dotN2 = dot(3,pnt->Pnt->N,N2);
         
         if (EQL(adjPnt->fs[i].N1dotN2,-1)) 
-          adjPnt->fs[i].FitFlg = 1;
+        {
+          adjPnt->fs[i].FitFlg  = 1;
+          adjPnt->fs[i].OrthFlg = 0;
+        }
         else if (EQL(adjPnt->fs[i].N1dotN2,0)) 
+        {
+          adjPnt->fs[i].FitFlg  = 0;
           adjPnt->fs[i].OrthFlg = 1;
+        }
       }
+      else
+        adjPnt->fs[i].on_f = 0;
     }
   }/* if (IsOnFace(n,ind2,f)) */
   

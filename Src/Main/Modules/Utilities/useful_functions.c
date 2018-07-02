@@ -105,13 +105,13 @@ int IsOnEdge(const unsigned *const n,const unsigned p)
 }
 
 /* find out if this point p located on an face or not.
-// the algorithm is simple; if it happens at two or more interface
+// the algorithm is simple; if it happens at two or more interfaces
 // it means this point is on an face and returns number of face 
 // otherwise 0.
 // moreover, the found face f written like the example below:
 // f[I_0] = 1, the point happens at face I_0,
 // f[J_n1] = 0, the point won't happen at face J_n1 and etc.
-// note: it's a general function and work for points which are not 
+// note: it's a general function and works for points which are not 
 // collocated as well.
 // ->return value: number of interface that found.
 */
@@ -136,7 +136,7 @@ int IsOnFace(const double *const x, const Patch_T *const patch,unsigned *const f
   return c;
 }
 
-/* check if X is on specific it interface
+/* check if X is on specific interface.
 // ->return value: 1 if yes, 0 otherwise.
 */
 static unsigned check_interface(const double *const X, const Patch_T *const patch, const int u)
@@ -192,7 +192,7 @@ unsigned node_onFace(const double *const x, const unsigned f,const Patch_T *cons
   {
     unsigned id = face->point[i]->ind;
     nrm = rms(3,x,node[id]->x);
-    if (LSS(s,nrm))
+    if (LSS(nrm,s))
     {
       s = nrm;
       ind = id;

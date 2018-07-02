@@ -15,10 +15,9 @@ enum Type
 /* Face and normal properties for adjPnt */
 struct Face_S
 {
-  unsigned on;/* if on this face 1; otherwise 0 */
+  unsigned on_f;/* if on this face 1; otherwise 0 */
   unsigned FitFlg;/* 1 if (N1dotN2 == -1); otherwise 0 */
   unsigned OrthFlg;/* 1 if (N1dotN2==0); othewise 0 */
-  unsigned f;/* face number */
   double N2[3];/*normal at a this face*/
   double N1dotN2;/* dot product of normals(adjPnt,point) */
 };
@@ -29,6 +28,7 @@ typedef struct ADJPOINT_T
   unsigned p;/* adjacent patch */
   unsigned FaceFlg;/* equals 1 if found on an interface; 0 otherwise */
   unsigned node;/* node refers to index of adjacent point if any */
+  unsigned on_c;/* 1 if it is collocation, 0 otherwise */
   struct Face_S fs[TOT_FACE];
   unsigned InterpFace;/* face number for interpolation */
   unsigned CopyFace;/* face number for copy */
@@ -40,9 +40,9 @@ typedef struct POINTSET_T
   Point_T     *Pnt;/* the point under study */
   AdjPoint_T *adjPnt;/* its adjacent points */
   unsigned NadjPnt;/* number of adjacent point */
-  unsigned idFit;/* id for fittest case */
-  unsigned idOrth;/* id for Orthogonal cases */
-  unsigned idInterp;/* id for interpolation case */
+  unsigned idFit;/* id of adjPnt for fittest case */
+  unsigned idOrth;/* id of adjPnt for Orthogonal cases */
+  unsigned idInterp;/* id of adjPnt for interpolation case */
   unsigned overlap;/* 1 if overlaps, 0 otherwise */
 }PointSet_T;
 
@@ -55,10 +55,10 @@ static void init_Points(const Interface_T *const interface,PointSet_T ***const i
 static void set_min_max_sum(const unsigned *const n,const unsigned f,unsigned *const im,unsigned *const iM,unsigned *const jm,unsigned *const jM,unsigned *const km,unsigned *const kM,unsigned *const sum);
 static void free_PointSet(PointSet_T **pnt);
 static void alloc_PointSet(const unsigned N,PointSet_T ***const pnt);
-static int realize_adj(PointSet_T **const Pnt,const enum Type type);
-static void find_adjPnt(PointSet_T *const Pnt,const enum Type type);
+static int realize_adj(PointSet_T **const Pnt);
+static void find_adjPnt(PointSet_T *const Pnt);
 static void fill_adjPnt(PointSet_T *const pnt,const unsigned N);
-static void analyze_adjPnt(PointSet_T *const Pnt,const enum Type type);
+static void analyze_adjPnt(PointSet_T *const Pnt);
 static void add_adjPnt(PointSet_T *const pnt,const unsigned *const p, const unsigned np);
 static void normal_vec_Cartesian_coord(Point_T *const point);
 static void tangent(const Point_T *const pnt,double *const N);

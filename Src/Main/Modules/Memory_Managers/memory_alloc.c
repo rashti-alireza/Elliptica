@@ -205,7 +205,9 @@ void *alloc_sFunc_PtoV(sFunc_PtoV_T ***const mem)
   return (*mem)[i];
 }
 
-/* make an empty needle */
+/* make an empty needle 
+// ->return value: pointer to new needle
+*/
 void *alloc_needle(void)
 {
   Needle_T *needle;

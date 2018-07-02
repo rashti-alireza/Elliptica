@@ -7,12 +7,13 @@
 
 #define RES_EPS 1E-11
 
-/* find the point in patches which are specified needle and fill
+/* find the point in patches given specified needle and fill
 // the needle with the answers.
 // for more information about needle look at the typede_data.h in 
 // Core folder. for an example to how make needle look at grid.c and
-// search for Needle_T or point_finder.
-// note: don't forget to free at the end of the day the answer of
+// search for point_finder.
+// note: don't forget to free memory at the end of the day for needle
+// using free_needle.
 */
 void point_finder(Needle_T *const needle)
 {
@@ -21,25 +22,37 @@ void point_finder(Needle_T *const needle)
   /* check consistency between in, ex and guess */
   IsConsistent(needle);
   
-  /* it only looks inside guess patches if found it gets out */
+  /* it only looks inside guess patches if found, it gets out */
   if (needle->Ng != 0)
   {
     find(needle,GUESS);
     if (needle->Nans > 0) return;
   }/* end of if (needle->Ng != 0) */
   
-  /* it only looks inside include patches if found it gets out */
-  if (needle->Nin > 0)
+  /* it only looks inside include patches if found, it gets out */
+  if (needle->Nin != 0)
   {
     find(needle,FORCE_IN);
     if (needle->Nans > 0) return;
   }/* end of if (needle->Nin > 0) */
   
   /* find in all patched exluding needle->ex */
-  if (needle->Nex > 0)
+  if (needle->Nex != 0)
   {
     unsigned j;
     Flag_T flg = NO;
+    
+    /* avoiding patches that have already been sought unsuccessfully */
+    if (needle->Nin != 0)
+    {
+      for (j = 0 ; j < needle->Nin; j++)
+      {
+        unsigned pn = needle->in[j];
+        needle_ex(needle,needle->grid->patch[pn]);
+      }
+      free(needle->in);
+      needle->Nin = 0;
+    }
     
     FOR_ALL(i,needle->grid->patch)
     {
@@ -56,15 +69,21 @@ void point_finder(Needle_T *const needle)
     }
     
     find(needle,FORCE_IN);
+    
+    if (needle->Nans > 0) return;
   }/* end of if (needle->Nex > 0) */
   
-  else /* if non of above met */
+  /* if non of above is the case */
+  if (needle->Nin != 0)
   {
-    FOR_ALL(i,needle->grid->patch)
-      needle_in(needle,needle->grid->patch[i]);
-      
-    find(needle,FORCE_IN);
+    free(needle->in);
+    needle->Nin = 0;
   }
+  
+  FOR_ALL(i,needle->grid->patch)
+    needle_in(needle,needle->grid->patch[i]);
+    
+  find(needle,FORCE_IN);
 }
 
 /* adding a patch to needle->ex */
@@ -105,6 +124,7 @@ void needle_in(Needle_T *const needle,const Patch_T *const patch)
   pointerEr(needle->in);
   
   needle->in[needle->Nin] = patch->pn;
+  needle->Nin++;
 }
 
 /* adding a patch to needle->guess */
@@ -125,6 +145,7 @@ void needle_guess(Needle_T *const needle,const Patch_T *const patch)
   pointerEr(needle->guess);
   
   needle->guess[needle->Ng] = patch->pn;
+  needle->Ng++;
 }
 
 /* adding a patch to needle->ans */
@@ -147,7 +168,8 @@ void needle_ans(Needle_T *const needle,const Patch_T *const patch)
     realloc(needle->ans,(needle->Nans+1)*sizeof(*needle->ans));
   pointerEr(needle->ans);
   
-  needle->guess[needle->Nans] = patch->pn;
+  needle->ans[needle->Nans] = patch->pn;
+  needle->Nans++;
 }
 
 /* check if in != ex, ex !=guess */
@@ -155,23 +177,21 @@ static void IsConsistent(const Needle_T *const needle)
 {
   unsigned i,j;
   
-  if (needle->in == 0)
-  {
-    for (i = 0; i < needle->Nex; i++)
-      for (j = 0; j < needle->Ng; j++)
-        if (needle->ex[i] == needle->guess[j])
-          abortEr("Guess and Exclude must be mutually exclusive.\n");
-  }
+  if (needle->ex == 0) 
+    return;
+  
   else
   {
     for (i = 0; i < needle->Nex; i++)
     {
-      for (j = 0; j < needle->Nin; j++)
-        if (needle->ex[i] == needle->in[j])
-          abortEr("Include and Exclude must be mutually exclusive.\n");
       for (j = 0; j < needle->Ng; j++)
         if (needle->ex[i] == needle->guess[j])
           abortEr("Guess and Exclude must be mutually exclusive.\n");
+      
+      for (j = 0; j < needle->Nin; j++)
+        if (needle->ex[i] == needle->in[j])
+          abortEr("Include and Exclude must be mutually exclusive.\n");
+     
     }
   }
 }
@@ -255,7 +275,9 @@ static void fill_limits(double *const lim, const Patch_T *const patch)
   lim[MAX2] = patch->max[2];
 }
 
-/* if x occurs inside the limits (boundary) return 1 otherwise 0 */
+/* if x occurs inside the limits (boundary of a patch).
+// ->return value : 1 if yes, 0 otherwise.
+*/
 static int IsInside(const double *const x,const double *const lim)
 {
   int v = 0;
@@ -273,12 +295,12 @@ static int IsInside(const double *const x,const double *const lim)
 }
 
 /* given point and patch find if the is any node collocated 
-// to that point and then return its index. otherwise return -1.
-// ->return value: found index, -1 if not found.
+// to that point and then return its index.
+// ->return value: found index, and put flg = FOUND, otherwise, flg =NONE.
 */
 unsigned find_node(const double *const x, const Patch_T *const patch,Flag_T *const flg)
 {
-  unsigned v = 0;
+  unsigned v = UINT_MAX;
   double X[3];
   const int r = X_of_x(X,x,patch);
   
