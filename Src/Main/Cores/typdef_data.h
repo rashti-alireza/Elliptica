@@ -38,8 +38,9 @@ typedef enum COORD_T
 /* print flags */
 typedef enum PRINT_T
 {
-  PRINT_PARAMETER,
-  PRINT_COORDS
+  PRINT_PARAMETERS,
+  PRINT_COORDS,
+  PRINT_INTERFACES
 }Print_T;
 
 /* face (interface) number */
@@ -106,7 +107,6 @@ typedef struct POINT_T
   unsigned face    ;/* the interface in which this point located */
   unsigned adjFace ;/* adjacent face used in interpolation */
   unsigned adjPatch;/* adjacent patch used in interpolation */
-  unsigned IntFace: 1;/* 1 if interpolation happens at adjFace, 0 otherwise */
   unsigned sameX  : 1;/* 1 if addjacent face is on X = const */
   unsigned sameY  : 1;/* 1 if addjacent face is on Y = const */
   unsigned sameZ  : 1;/* 1 if addjacent face is on Z = const */
@@ -122,13 +122,41 @@ typedef struct POINT_T
                       // counted 1 otherwise 0 among others */
 }Point_T;
 
-/* face */
+/* a subset of point on an interface */
+typedef struct SUBFACE_T
+{
+  struct PATCH_T *patch;/* refers to its patch */
+  char *flags_str  ;/* encodes all of flags info in string format */
+  unsigned sn     ;/* its subface number */
+  unsigned np     ;/* number of points this surface has */
+  unsigned *id    ;/* id of points this subface made of; it refers to node number*/
+  unsigned *adjid ;/* id of adjacent point of each point, their index must be matched 
+                   // e.g. adjacent point of id[ind1]=? is adjid[ind1]=? */
+  unsigned face    ;/* the interface in which this point located */
+  unsigned adjFace ;/* adjacent face used in interpolation */
+  unsigned adjPatch;/* adjacent patch used in interpolation */
+  unsigned sameX  : 1;/* 1 if addjacent face is on X = const */
+  unsigned sameY  : 1;/* 1 if addjacent face is on Y = const */
+  unsigned sameZ  : 1;/* 1 if addjacent face is on Z = const */
+  unsigned touch  : 1;/* touch state 1, overlap state 0 */
+  unsigned copy   : 1;/* copy state 1, interpolation state 0 */
+  unsigned exterF : 1;/* external interface 1, internal 0
+                      // external means it can reach other interface */
+  unsigned outerB : 1;/* if it is outer boundary of grid 
+                      // and needs boundary condition */
+  unsigned innerB : 1;/* if it is inner boundary of grid 
+                      // and needs boundary condition */
+}SubFace_T;
+
+/* interface (face) */
 typedef struct Interface_T
 {
+  struct PATCH_T *patch;/* refers to its patch */
   unsigned np;/* number of points in this structure */
   unsigned fn;/* its interface number */
+  unsigned ns;/* number of subfaces */
   Point_T **point;/* points on the interface */
-  struct PATCH_T *patch;/* refers to its patch */
+  SubFace_T **subface;/* subset of points on this interface with same flags */
 }Interface_T;
 
 /* patch */

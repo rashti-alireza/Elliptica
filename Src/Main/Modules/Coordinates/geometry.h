@@ -73,6 +73,8 @@ static int IsOutBndry(PointSet_T *const Pnt);
 static int IsInterpolation(PointSet_T *const Pnt);
 static int IsMildOrth(PointSet_T *const Pnt);
 static int ReachBnd(PointSet_T *const Pnt,const unsigned p,const unsigned f);
+static void group_points(Grid_T *const grid);
+static char *inspect_flags(Point_T *pnt);
 static Point_T *get_p2(const PointSet_T *const Pnt);
 static double find_grid_size(const PointSet_T *const Pnt,const unsigned i,const unsigned f);
 void point_finder(Needle_T *const needle);

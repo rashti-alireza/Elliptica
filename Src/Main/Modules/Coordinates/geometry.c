@@ -39,10 +39,108 @@ int realize_geometry(Grid_T *const grid)
     flush_houseK(grid->patch[i]);
   }
   
+  /* grouping together all points with same flags into a single subface */
+  group_points(grid);
+  
   /* printing boundary for test purposes */
-  /*pr_boundary(grid);*/
+  //if(test_print(PRINT_INTERFACES))
+    //pr_interfaces(grid);
   
   return EXIT_SUCCESS;
+}
+
+/* grouping together all points with same flags into a single subface */
+static void group_points(Grid_T *const grid)
+{
+  unsigned pa;
+  
+  FOR_ALL(pa,grid->patch)
+  {
+    Interface_T **face = grid->patch[pa]->interface;
+    unsigned f;
+    FOR_ALL(f,face)
+    {
+      Point_T **pnt = face[f]->point;
+      unsigned po;
+      FOR_ALL(po,pnt)
+      {
+        char *lead = inspect_flags(pnt[po]);
+        //add_to_subface(face[f],lead);
+        
+        if (lead != 0)
+          free(lead);
+      }
+    }
+  }
+  
+}
+
+/* inspecting flags and put the result into a string 
+// for purposes of convenient searching. note: the flags which are not
+// defined, get '-' char.
+// ->result value: string made of flags, null of it is unsuccessful.
+*/
+static char *inspect_flags(Point_T *pnt)
+{
+  char str[1000] = {'\0'}, *ret = 0;
+  char tmp[100] = {'\0'};
+  
+  sprintf(str,"patch:%u,face:%u,",pnt->patch->pn,pnt->face);
+  
+  /* outerB */
+  if (pnt->outerB == 1) strcat(str,"outerB:1,");
+  else 			strcat(str,"outerB:0,");
+  
+  /* innerB */
+  if (pnt->innerB == 1) strcat(str,"innerB:1,");
+  else 			strcat(str,"innerB:0,");
+  
+  /* exterF */
+  if (pnt->exterF == 1) strcat(str,"exterF:1,");
+  else 			strcat(str,"exterF:0,");
+  
+  /* touch */
+  if (pnt->touch == 1) 	strcat(str,"touch:1,");
+  else 			strcat(str,"touch:0,");
+  
+  /* copy */
+  if (pnt->copy == 1)   strcat(str,"copy:1,");
+  else 			strcat(str,"copy:0,");
+  
+  if (strstr(str,"touch:1,copy:0"))/* interpolation onto adjFace */
+  {
+    tmp[0] = '\0';
+    sprintf(tmp,"adjPatch:%u,adjFace:%u,",pnt->adjPatch,pnt->adjFace);
+    strcat(str,tmp);
+    /* sameX */
+    if (pnt->sameX == 1)  strcat(str,"sameX:1,");
+    else 		  strcat(str,"sameX:0,");
+    
+    /* sameY */
+    if (pnt->sameY == 1)  strcat(str,"sameY:1,");
+    else		  strcat(str,"sameY:0,");
+    /* sameZ */
+    if (pnt->sameZ == 1)  strcat(str,"sameZ:1,");
+    else		  strcat(str,"sameZ:0,");
+    
+  }
+  else if (strstr(str,"touch:1,copy:1,"))/* copy to adj */
+  {
+    tmp[0] = '\0';
+    sprintf(tmp,"adjPatch:%u,adjFace:%u,",pnt->adjPatch,pnt->adjFace);
+    strcat(str,tmp);
+    strcat(str,"sameX:-,sameY:-,sameZ:-,");
+  }
+  else/* interpolation inside adjPatch */
+  {
+    tmp[0] = '\0';
+    sprintf(tmp,"adjPatch:%u,adjFace:-,",pnt->adjPatch);
+    strcat(str,tmp);
+    strcat(str,"sameX:-,sameY:-,sameZ:-,");
+  }
+  
+  ret = dup_s(str);  
+  return ret;
 }
 
 /* filling the geometry of point struct */
@@ -196,7 +294,6 @@ static void analyze_adjPnt(PointSet_T *const Pnt)
     if (Pnt->adjPnt[Pnt->idInterp].FaceFlg == 1)
     {
       assert(Pnt->overlap == 0);
-      p1->IntFace = 1;
       p1->adjFace = Pnt->adjPnt[Pnt->idInterp].InterpFace;
       set_sameXYZ(p1,p1->adjFace);
       
