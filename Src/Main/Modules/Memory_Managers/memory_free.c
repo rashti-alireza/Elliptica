@@ -49,3 +49,23 @@ void free_needle(Needle_T *needle)
   }
   
 }
+
+/* feeing memory of Point_T inside grid */
+void free_points(Grid_T *const grid)
+{
+  unsigned pa;
+  
+  FOR_ALL(pa,grid->patch)
+  {
+    Interface_T **face = grid->patch[pa]->interface;
+    unsigned f;
+    
+    FOR_ALL(f,face)
+    {
+      free_matrix(face[f]->point,face[f]->np);
+      face[f]->np = 0;
+    }
+
+  }
+}
+

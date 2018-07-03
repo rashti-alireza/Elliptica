@@ -42,6 +42,9 @@ int realize_geometry(Grid_T *const grid)
   /* grouping together all points with same flags into a single subface */
   group_points(grid);
   
+  /* freeing Point_T */
+  free_points(grid);
+  
   /* printing boundary for test purposes */
   //if(test_print(PRINT_INTERFACES))
     //pr_interfaces(grid);
@@ -62,17 +65,87 @@ static void group_points(Grid_T *const grid)
     {
       Point_T **pnt = face[f]->point;
       unsigned po;
+      
+      /* initializing */
+      face[f]->ns = 0;
+      face[f]->subface = 0;
+      
       FOR_ALL(po,pnt)
       {
         char *lead = inspect_flags(pnt[po]);
-        //add_to_subface(face[f],lead);
+        add_to_subface(pnt[po],face[f],lead);
         
-        if (lead != 0)
-          free(lead);
+        if (lead != 0)  free(lead);
       }
     }
   }
+}
+
+/* having lead and pnt, see which subface best fit for this point */
+static void add_to_subface(const Point_T *const pnt,Interface_T *const face,const char *const lead)
+{
+  SubFace_T *subface;
+  Flag_T flg;
+  unsigned sf;
   
+  /* compare lead with the previous sub-faces */
+  flg = NONE;
+  for (sf = 0; sf < face->ns; ++sf)
+  {
+    subface = face->subface[sf];
+    if (strcmp_i(subface->flags_str,lead))
+    {
+      flg = FOUND;
+      break;
+    }
+  }
+  if (flg == NONE)
+  {
+    face->subface = 
+      realloc(face->subface,(face->ns+1)*sizeof(*face->subface));
+    pointerEr(face->subface);
+    face->subface[face->ns] = 
+      calloc(1,sizeof(*face->subface[face->ns]));
+    pointerEr(face->subface[face->ns]);
+    subface = face->subface[face->ns];
+    face->ns++;
+    
+    /* setting flags of this new sub face */
+    subface->flags_str = dup_s(lead);
+    subface->face      = pnt->face;
+    subface->adjFace   = pnt->adjFace;
+    subface->adjPatch  = pnt->adjPatch;
+    subface->sameX     = pnt->sameX;
+    subface->sameY     = pnt->sameY;
+    subface->sameZ     = pnt->sameZ;
+    subface->touch     = pnt->touch;
+    subface->copy      = pnt->copy;
+    subface->exterF    = pnt->exterF;
+    subface->outerB    = pnt->outerB;
+    subface->innerB    = pnt->innerB;
+  }
+  
+  /* add this point to the subface */
+  add_point(subface,pnt);
+}
+
+/* adding one point adequately to the pertinent sub-face */
+static void add_point(SubFace_T *const subface,const Point_T *const pnt)
+{
+  subface->id = 
+    realloc(subface->id,(subface->np+1)*sizeof(*subface->id));
+  pointerEr(subface->id);
+  subface->id[subface->np] = pnt->ind;
+  
+  if (pnt->copy == 1)
+  {
+    subface->adjid = 
+      realloc(subface->adjid,(subface->np+1)*sizeof(*subface->adjid));
+    pointerEr(subface->adjid);
+    subface->adjid[subface->np] = pnt->adjPoint->ind;
+  }
+  
+  subface->np++;
 }
 
 /* inspecting flags and put the result into a string 
@@ -80,7 +153,7 @@ static void group_points(Grid_T *const grid)
 // defined, get '-' char.
 // ->result value: string made of flags, null of it is unsuccessful.
 */
-static char *inspect_flags(Point_T *pnt)
+static char *inspect_flags(const Point_T *const pnt)
 {
   char str[1000] = {'\0'}, *ret = 0;
   char tmp[100] = {'\0'};
