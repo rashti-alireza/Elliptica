@@ -155,7 +155,7 @@ int make_parameters(const char *const path)
   add_parameter("output_directory_path",path_global);
   
   /* printing parameters */
-  if (test_print(PRINT_PARAMETER))
+  if (test_print(PRINT_PARAMETERS))
     pr_parameters();
   
   return EXIT_SUCCESS;
