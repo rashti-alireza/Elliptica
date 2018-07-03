@@ -67,6 +67,7 @@ static void group_points(Grid_T *const grid)
       face[f]->ns = 0;
       face[f]->subface = 0;
       
+      /* grouping all of the similar points */
       FOR_ALL(po,pnt)
       {
         char *lead = inspect_flags(pnt[po]);
