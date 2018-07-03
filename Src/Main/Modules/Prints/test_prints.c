@@ -6,15 +6,15 @@
 #include "test_prints.h"
 
 /* printing different quantities for test */
-/* if print option is on return 1 otherwise 0 */
+/* ->return value: if print option is on return 1 otherwise 0 */
 int test_print(const Print_T f)
 {
   char *on; 
   
   switch(f)
   {
-    case PRINT_PARAMETER:
-      on = get_parameter_value_S("print_parameter",0);
+    case PRINT_PARAMETERS:
+      on = get_parameter_value_S("print_parameters",0);
       if (on == 0) return 0;
       if (strcmp_i(on,"yes")|| strcmp_i(on,"y"))
         return 1;
@@ -25,11 +25,43 @@ int test_print(const Print_T f)
       if (strcmp_i(on,"yes")|| strcmp_i(on,"y"))
         return 1;
       break;
+    case PRINT_INTERFACES:
+      on = get_parameter_value_S("print_interfaces",0);
+      if (on == 0) return 0;
+      if (strcmp_i(on,"yes")|| strcmp_i(on,"y"))
+        return 1;
+      break;  
     default:
       break;
   }
   
   return 0;
+}
+
+/* print interfaces */
+void pr_interfaces(void)
+{
+  FILE *f;
+  char dir[1000]={'\0'}, *path;
+  int i = 0;
+  Flag_T flg;
+  
+  path = get_parameter_value_S("output_directory_path",&flg);
+  parameterEr(flg);
+  sprintf(dir,"%s/parameters.out",path);
+  f = fopen(dir,"w");
+  pointerEr(f);
+  
+  fprintf(f,SECTION"Parameters"SECTION"\n");
+  
+  while (parameters_global[i] != 0)
+  {
+    fprintf(f,"%s = %s\n",parameters_global[i]->lv,parameters_global[i]->rv);
+    i++;
+  }
+  
+  fclose(f);
+
 }
 
 /* print parameters */

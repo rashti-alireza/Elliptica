@@ -34,10 +34,7 @@ int realize_geometry(Grid_T *const grid)
   
   /* check if all point have been found and then flush them */
   FOR_ALL(i,grid->patch)
-  {
     check_houseK(grid->patch[i]);
-    flush_houseK(grid->patch[i]);
-  }
   
   /* grouping together all points with same flags into a single subface */
   group_points(grid);
