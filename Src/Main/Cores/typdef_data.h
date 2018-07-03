@@ -126,8 +126,9 @@ typedef struct POINT_T
 typedef struct SUBFACE_T
 {
   struct PATCH_T *patch;/* refers to its patch */
-  char *flags_str  ;/* encodes all of flags info in string format */
+  char *flags_str ;/* encodes all of flags info in string format */
   unsigned sn     ;/* its subface number */
+  unsigned adjsn  ;/* adjacent surface number */
   unsigned np     ;/* number of points this surface has */
   unsigned *id    ;/* id of points this subface made of; it refers to node number*/
   unsigned *adjid ;/* id of adjacent point of each point, their index must be matched 
@@ -135,6 +136,7 @@ typedef struct SUBFACE_T
   unsigned face    ;/* the interface in which this point located */
   unsigned adjFace ;/* adjacent face used in interpolation */
   unsigned adjPatch;/* adjacent patch used in interpolation */
+  unsigned Dn_Df  : 1;/* 1 if Dn_Dfield is set at interface, 0 otherwise */
   unsigned sameX  : 1;/* 1 if addjacent face is on X = const */
   unsigned sameY  : 1;/* 1 if addjacent face is on Y = const */
   unsigned sameZ  : 1;/* 1 if addjacent face is on Z = const */
@@ -152,7 +154,7 @@ typedef struct SUBFACE_T
 typedef struct Interface_T
 {
   struct PATCH_T *patch;/* refers to its patch */
-  unsigned np;/* number of points in this structure */
+  unsigned np;/* number of points in Point_T */
   unsigned fn;/* its interface number */
   unsigned ns;/* number of subfaces */
   Point_T **point;/* points on the interface */

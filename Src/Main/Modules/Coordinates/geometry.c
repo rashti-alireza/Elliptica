@@ -32,7 +32,7 @@ int realize_geometry(Grid_T *const grid)
   /* find various geometry of each point */
   fill_geometry(grid);
   
-  /* check if all point have been found and then flush them */
+  /* check if all point have been found */
   FOR_ALL(i,grid->patch)
     check_houseK(grid->patch[i]);
   
@@ -42,11 +42,91 @@ int realize_geometry(Grid_T *const grid)
   /* freeing Point_T */
   free_points(grid);
   
+  /* set Dn_Df flags */
+  Dn_Df(grid);
+  
   /* printing boundary for test purposes */
   //if(test_print(PRINT_INTERFACES))
     //pr_interfaces(grid);
   
   return EXIT_SUCCESS;
+}
+
+/* setting Dn_Df flags inside sub-faces. this flag says if we have 
+// interpolation or copy situation at an interface, 
+// whether value of field is used or its derivative along normal to 
+// that interface.
+*/
+static void Dn_Df(Grid_T *const grid)
+{
+  unsigned pa;
+  
+  FOR_ALL(pa,grid->patch)
+  {
+    Interface_T **face = grid->patch[pa]->interface;
+    unsigned f;
+    FOR_ALL(f,face)
+    {
+      unsigned sf;
+      for (sf = 0; sf < face[f]->ns; ++sf)
+      {
+        SubFace_T *subf = face[f]->subface[sf];
+        SubFace_T *subf2;
+        
+        if (subf->outerB == 0 && subf->touch == 1)
+        {
+          subf2 = find_subface(subf);
+          if (subf->Dn_Df == 0 && subf2->Dn_Df == 0)
+          {
+            subf->Dn_Df = 1;
+            subf->adjsn = subf2->sn;
+          }
+          
+        }
+      }
+    }/* end of FOR_ALL(f,face) */
+  }/* end of FOR_ALL(pa,grid->patch) */
+}
+
+/* getting a subface, find its correspondingly paired subface to it.
+// algorithm: 
+// 1. go to adjPatch and adjFace.
+// 2. pick one of subfaces that are not outerboundary and are touch, sub2.
+// 3. pick an adjacent point on sub and search this point in sub2.
+// 4. if this point has been found return sub2, otherwise go to 2.
+// note: searching of one point is enough, because you subfacess' points
+// are mutually exclusive.
+*/
+static SubFace_T *find_subface(const SubFace_T *const sub)
+{
+  const Interface_T *const face = 
+    sub->patch->grid->patch[sub->adjPatch]->interface[sub->adjFace];
+  SubFace_T *sub2;
+  unsigned po = sub->adjid[0];
+  unsigned s;
+  Flag_T flg = NONE;
+  
+  for (s = 0; s <face->ns; ++s)
+  {
+    sub2 = face->subface[s];
+    if (sub2->outerB == 0 && sub2->touch == 1)
+    {
+      unsigned i;
+      for (i = 0; i < sub2->np; ++i)
+      {
+        if (sub2->id[i] == po)
+        {
+          flg = FOUND;
+          return sub2;
+        }
+      }
+    }
+  }
+  
+  if (flg == NONE)
+    abortEr("The related subface could not be found.\n");
+    
+  return 0;
 }
 
 /* grouping together all points with same flags into a single subface */
@@ -202,7 +282,7 @@ static char *inspect_flags(const Point_T *const pnt)
     strcat(str,tmp);
     strcat(str,"sameX:-,sameY:-,sameZ:-,");
   }
-  else/* interpolation inside adjPatch */
+  else/* interpolation inside adjPatch.note: touch:0,copy:0 doen't exist*/
   {
     tmp[0] = '\0';
     sprintf(tmp,"adjPatch:%u,adjFace:-,",pnt->adjPatch);
