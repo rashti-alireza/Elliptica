@@ -46,8 +46,8 @@ int realize_geometry(Grid_T *const grid)
   Dn_Df(grid);
   
   /* printing boundary for test purposes */
-  //if(test_print(PRINT_INTERFACES))
-    //pr_interfaces(grid);
+  if(test_print(PRINT_INTERFACES))
+    pr_interfaces(grid);
   
   return EXIT_SUCCESS;
 }
@@ -102,24 +102,42 @@ static SubFace_T *find_subface(const SubFace_T *const sub)
   const Interface_T *const face = 
     sub->patch->grid->patch[sub->adjPatch]->interface[sub->adjFace];
   SubFace_T *sub2;
-  unsigned po = sub->adjid[0];
+  unsigned po;
   unsigned s;
   Flag_T flg = NONE;
   
-  for (s = 0; s <face->ns; ++s)
+  if (sub->copy == 1)
   {
-    sub2 = face->subface[s];
-    if (sub2->outerB == 0 && sub2->touch == 1)
+    po = sub->adjid[0];
+    for (s = 0; s <face->ns; ++s)
     {
-      unsigned i;
-      for (i = 0; i < sub2->np; ++i)
+      sub2 = face->subface[s];
+      if (sub2->outerB == 0 && sub2->touch == 1)
       {
-        if (sub2->id[i] == po)
+        unsigned i;
+        for (i = 0; i < sub2->np; ++i)
         {
-          flg = FOUND;
-          return sub2;
+          if (sub2->id[i] == po)
+          {
+            flg = FOUND;
+            return sub2;
+          }
         }
       }
+    }/* end of if (sub2->outerB == 0 && sub2->touch == 1) */
+  }/* end of if (sub->copy == 1) */
+  /* if the other interface has not any subface to be interpolated 
+  // to subface, choose one of the subfaces which needs interpolating. 
+  // I think that's fine, since sub after all will be interpolated 
+  // to this interface 
+  */
+  else
+  {
+    for (s = 0; s <face->ns; ++s)
+    {
+      sub2 = face->subface[s];
+      if (sub2->outerB == 0 && sub2->touch == 1)
+        return sub2;
     }
   }
   
@@ -189,6 +207,7 @@ static void add_to_subface(const Point_T *const pnt,Interface_T *const face,cons
     face->ns++;
     
     /* setting flags of this new sub face */
+    subface->patch     = pnt->patch;
     subface->flags_str = dup_s(lead);
     subface->face      = pnt->face;
     subface->adjFace   = pnt->adjFace;
@@ -271,8 +290,8 @@ static char *inspect_flags(const Point_T *const pnt)
     if (pnt->sameY == 1)  strcat(str,"sameY:1,");
     else		  strcat(str,"sameY:0,");
     /* sameZ */
-    if (pnt->sameZ == 1)  strcat(str,"sameZ:1,");
-    else		  strcat(str,"sameZ:0,");
+    if (pnt->sameZ == 1)  strcat(str,"sameZ:1");
+    else		  strcat(str,"sameZ:0");
     
   }
   else if (strstr(str,"touch:1,copy:1,"))/* copy to adj */
@@ -280,14 +299,14 @@ static char *inspect_flags(const Point_T *const pnt)
     tmp[0] = '\0';
     sprintf(tmp,"adjPatch:%u,adjFace:%u,",pnt->adjPatch,pnt->adjFace);
     strcat(str,tmp);
-    strcat(str,"sameX:-,sameY:-,sameZ:-,");
+    strcat(str,"sameX:-,sameY:-,sameZ:-");
   }
   else/* interpolation inside adjPatch.note: touch:0,copy:0 doen't exist*/
   {
     tmp[0] = '\0';
     sprintf(tmp,"adjPatch:%u,adjFace:-,",pnt->adjPatch);
     strcat(str,tmp);
-    strcat(str,"sameX:-,sameY:-,sameZ:-,");
+    strcat(str,"sameX:-,sameY:-,sameZ:-");
   }
   
   ret = dup_s(str);  
@@ -455,9 +474,10 @@ static void analyze_adjPnt(PointSet_T *const Pnt)
     unsigned ind = p1->ind;
     double *x = p1->patch->node[ind]->x;
     
-    fprintf(stderr,"\nThis point(%f,%f,%f) at patch = '%s'"
+    fprintf(stderr,"\nThis point(%f,%f,%f) at patch = '%s' "
+      "and face = '%d' "
     " \nhas not been found.\n",
-                    x[0],x[1],x[2],p1->patch->name);
+                    x[0],x[1],x[2],p1->patch->name,p1->face);
     abortEr("Incomplete function.\n");
   }
   p1->houseK = 1;
@@ -548,13 +568,16 @@ static int IsMildOrth(PointSet_T *const Pnt)
   const unsigned node = Pnt->Pnt->ind;
   Patch_T *const patch = Pnt->Pnt->patch;
   double *const x = patch->node[node]->x;
-  const double eps = rms(3,x,0)*EPS;
+  double eps = rms(3,x,0)*EPS;
   double *const N = Pnt->Pnt->N;
   unsigned i,f;
   Needle_T *needle = alloc_needle();
-  double q[3] = {x[0]+eps*N[0],
-                  x[1]+eps*N[1],
-                   x[2]+eps*N[2]};/* q = pnt+eps*N */
+  double q[3];/* q = pnt+eps*N */
+  
+  eps = GRT(eps,EPS) ? eps : EPS;
+  q[0] = x[0]+eps*N[0];
+  q[1] = x[1]+eps*N[1];
+  q[2] = x[2]+eps*N[2];
   needle->grid = patch->grid;
   needle->x = q;
   
@@ -587,6 +610,7 @@ static int IsMildOrth(PointSet_T *const Pnt)
           {
             Pnt->idOrth = i;
             Pnt->adjPnt[i].CopyFace = f;
+            free_needle(needle);
             return 1;
           }
         }
@@ -628,14 +652,43 @@ static double find_grid_size(const PointSet_T *const Pnt,const unsigned i,const 
 }
 
 /* is this an outerboundary point?
-// if no points are in adjPnt yes.
+// yes if no points are in adjPnt or if we slightly move along the normal 
+// reach nowhere.
 // ->return value = 1 if outerbound; 0 otherwise.
 */
 static int IsOutBndry(PointSet_T *const Pnt)
 {
+  /* confidently there is no close by patch */
   if (Pnt->NadjPnt == 0)
     return 1;
+  /* slightly move along normal and see if there is any other patches */
+  else
+  {
+    unsigned node = Pnt->Pnt->ind;
+    Patch_T *const patch = Pnt->Pnt->patch;
+    double *x = patch->node[node]->x;
+    double *N1 = Pnt->Pnt->N;
+    double eps = rms(3,x,0)*EPS;
+    double q[3];
+    unsigned ans;
     
+    eps = GRT(eps,EPS) ? eps : EPS;
+    q[0] = x[0]+eps*N1[0];
+    q[1] = x[1]+eps*N1[1];
+    q[2] = x[2]+eps*N1[2];
+    
+    Needle_T *needle = alloc_needle();
+    needle->grid = patch->grid;
+    needle_ex(needle,Pnt->Pnt->patch);
+    needle->x = q;
+    point_finder(needle);
+    ans = needle->Nans;
+    free_needle(needle);
+    
+    if (ans == 0)
+      return 1;
+  }
+  
   return 0;
 }
 
@@ -654,6 +707,9 @@ static int IsOrthOutBndry(PointSet_T *const Pnt)
   unsigned i,j;
   
   for (i = 0; i < Pnt->NadjPnt; i++)
+  {
+    if (Pnt->adjPnt[i].FaceFlg == 0) continue;
+    
     for (j = 0; j < TOT_FACE; j++)
       if (Pnt->adjPnt[i].fs[j].OrthFlg == 1) 
         if (ReachBnd(Pnt,i,j))
@@ -661,7 +717,7 @@ static int IsOrthOutBndry(PointSet_T *const Pnt)
           Pnt->idOrth = i;
           return 1;
         }
-    
+  }  
   return 0;
 }
 
@@ -677,19 +733,24 @@ static int ReachBnd(PointSet_T *const Pnt,const unsigned p,const unsigned f)
   double *N1 = Pnt->Pnt->N;
   double *N2 = Pnt->adjPnt[p].fs[f].N2;
   double eps = rms(3,x,0)*EPS;
-  double q[3] = {x[0]+eps*N1[0]+EPS*N2[0],
-                 x[1]+eps*N1[1]+EPS*N2[1],
-                 x[2]+eps*N1[2]+EPS*N2[2]};
+  double q[3];
+  unsigned ans;
+  
+  eps = GRT(eps,EPS) ? eps : EPS;
+  q[0] = x[0]+eps*N1[0]+EPS*N2[0];
+  q[1] = x[1]+eps*N1[1]+EPS*N2[1];
+  q[2] = x[2]+eps*N1[2]+EPS*N2[2];
+  
   Needle_T *needle = alloc_needle();
   needle->grid = patch->grid;
   needle_ex(needle,Pnt->Pnt->patch);
   needle->x = q;
   point_finder(needle);
-  
-  if (needle->Nans == 0)
-    return 1;
-  
+  ans = needle->Nans;
   free_needle(needle);
+  
+  if (ans == 0)
+    return 1;
   
   return 0;
 }
@@ -1190,7 +1251,6 @@ static void free_PointSet(PointSet_T **const pnt)
 static void add_adjPnt(PointSet_T *const pnt,const unsigned *const p, const unsigned np)
 {
   unsigned i,j;
-  
   for (i = 0; i < np; i++)
   {
     for(j = 0; j < pnt->NadjPnt; j++)
