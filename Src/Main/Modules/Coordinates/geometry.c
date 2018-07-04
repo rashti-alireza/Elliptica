@@ -75,15 +75,63 @@ static void Dn_Df(Grid_T *const grid)
         
         if (subf->outerB == 0 && subf->touch == 1)
         {
-          subf2 = find_subface(subf);
-          if (subf->Dn_Df == 0 && subf2->Dn_Df == 0)
-          {
-            subf->Dn_Df = 1;
-            subf->adjsn = subf2->sn;
-          }
+          unsigned ss;
           
-        }
-      }
+          subf2 = find_subface(subf);
+          
+          if (subf->Dn_Df == 1  && subf2->Dn_Df == 1)
+            abortEr("Wrong Dn_Df flag for two subfaces.\n");
+            
+          else if (subf->Dn_Df == 0  && subf2->Dn_Df == 0)
+          {
+            /* when two subfaces are pristine */
+            if (!strstr(subf->flags_str,"Dn:0") && 
+                !strstr(subf2->flags_str,"Dn:0"))
+            {
+              subf->Dn_Df = 1;
+              subf->adjsn = subf2->sn;
+              ss = (unsigned) strlen(subf->flags_str)+5;
+              subf->flags_str = realloc(subf->flags_str,ss);
+              pointerEr(subf->flags_str);
+              strcat(subf->flags_str,"Dn:1");
+              ss = (unsigned) strlen(subf2->flags_str)+5;
+              subf2->flags_str = realloc(subf2->flags_str,ss);
+              pointerEr(subf2->flags_str);
+              strcat(subf2->flags_str,"Dn:0");
+            }
+            /* when the subf is already paired and sub2 is pristine */
+            else if (strstr(subf->flags_str,"Dn:0") && 
+                     !strstr(subf2->flags_str,"Dn:0"))
+            {
+              subf2->Dn_Df = 1;
+              ss = (unsigned) strlen(subf2->flags_str)+5;
+              subf2->flags_str = realloc(subf2->flags_str,ss);
+              pointerEr(subf2->flags_str);
+              strcat(subf2->flags_str,"Dn:1");
+            }
+            /* when the subf2 is already paired and sub is pristine */
+            else if (!strstr(subf->flags_str,"Dn:0") && 
+                     strstr(subf2->flags_str,"Dn:0"))
+            {
+              subf->Dn_Df = 1;
+              subf->adjsn = subf2->sn;
+              ss = (unsigned) strlen(subf->flags_str)+5;
+              subf->flags_str = realloc(subf->flags_str,ss);
+              pointerEr(subf->flags_str);
+              strcat(subf->flags_str,"Dn:1");
+              ss = (unsigned) strlen(subf2->flags_str)+5;
+              subf2->flags_str = realloc(subf2->flags_str,ss);
+              pointerEr(subf2->flags_str);
+              strcat(subf2->flags_str,"Dn:0");
+            }
+            /* all other cases */
+            else
+             abortEr("Dn_Df can not be set; thess two pairs \n"
+               "are alredy sat with other two paires with fix Dn_Df.\n");
+          }/* end of if (subf->Dn_Df == 0  && subf2->Dn_Df == 0) */
+          
+        }/* end of if (subf->outerB == 0 && subf->touch == 1) */
+      }/* end of for (sf = 0; sf < face[f]->ns; ++sf) */
     }/* end of FOR_ALL(f,face) */
   }/* end of FOR_ALL(pa,grid->patch) */
 }
@@ -257,18 +305,6 @@ static char *inspect_flags(const Point_T *const pnt)
   
   sprintf(str,"patch:%u,face:%u,",pnt->patch->pn,pnt->face);
   
-  /* outerB */
-  if (pnt->outerB == 1) strcat(str,"outerB:1,");
-  else 			strcat(str,"outerB:0,");
-  
-  /* innerB */
-  if (pnt->innerB == 1) strcat(str,"innerB:1,");
-  else 			strcat(str,"innerB:0,");
-  
-  /* exterF */
-  if (pnt->exterF == 1) strcat(str,"exterF:1,");
-  else 			strcat(str,"exterF:0,");
-  
   /* touch */
   if (pnt->touch == 1) 	strcat(str,"touch:1,");
   else 			strcat(str,"touch:0,");
@@ -291,7 +327,7 @@ static char *inspect_flags(const Point_T *const pnt)
     else		  strcat(str,"sameY:0,");
     /* sameZ */
     if (pnt->sameZ == 1)  strcat(str,"sameZ:1");
-    else		  strcat(str,"sameZ:0");
+    else		  strcat(str,"sameZ:0,");
     
   }
   else if (strstr(str,"touch:1,copy:1,"))/* copy to adj */
@@ -299,15 +335,27 @@ static char *inspect_flags(const Point_T *const pnt)
     tmp[0] = '\0';
     sprintf(tmp,"adjPatch:%u,adjFace:%u,",pnt->adjPatch,pnt->adjFace);
     strcat(str,tmp);
-    strcat(str,"sameX:-,sameY:-,sameZ:-");
+    strcat(str,"sameX:-,sameY:-,sameZ:-,");
   }
   else/* interpolation inside adjPatch.note: touch:0,copy:0 doen't exist*/
   {
     tmp[0] = '\0';
     sprintf(tmp,"adjPatch:%u,adjFace:-,",pnt->adjPatch);
     strcat(str,tmp);
-    strcat(str,"sameX:-,sameY:-,sameZ:-");
+    strcat(str,"sameX:-,sameY:-,sameZ:-,");
   }
+  
+  /* outerB */
+  if (pnt->outerB == 1) strcat(str,"outerB:1,");
+  else 			strcat(str,"outerB:0,");
+  
+  /* innerB */
+  if (pnt->innerB == 1) strcat(str,"innerB:1,");
+  else 			strcat(str,"innerB:0,");
+  
+  /* exterF */
+  if (pnt->exterF == 1) strcat(str,"exterF:1,");
+  else 			strcat(str,"exterF:0,");
   
   ret = dup_s(str);  
   return ret;

@@ -203,3 +203,17 @@ unsigned node_onFace(const double *const x, const unsigned f,const Patch_T *cons
   
   return ind; 
 }
+
+/* getting the subface which paired with sub
+// ->return value: found paired subface.
+*/
+SubFace_T *get_paired_subface(const SubFace_T *const sub)
+{
+  const Patch_T *const patch = sub->patch->grid->patch[sub->adjPatch];
+  const Interface_T *const face = patch->interface[sub->adjFace];
+  
+  assert(face);
+  
+  return face->subface[sub->adjsn];
+  
+}

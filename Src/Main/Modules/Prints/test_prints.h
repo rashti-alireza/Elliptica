@@ -5,7 +5,17 @@
 
 extern Parameter_T **parameters_global;
 
+struct Archive_S
+{
+  SubFace_T *s1;
+  SubFace_T *s2;
+  char *n1;
+  char *n2;
+};
+
 int test_print(const Print_T f);
 void pr_parameters(void);
 void pr_coords(const Grid_T *const grid);
 void pr_interfaces(const Grid_T *const grid);
+static void add_to_archive(struct Archive_S **const arch,SubFace_T *const s1,SubFace_T *const s2,const unsigned i);
+static void free_archive(struct Archive_S *arch,const unsigned Narch);

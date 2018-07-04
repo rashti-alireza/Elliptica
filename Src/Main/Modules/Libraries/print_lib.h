@@ -1,4 +1,5 @@
 #define SECTION "#######################"
+#define PR_LINE "--------------------------------------------------------------------------"
 
 int test_print(const Print_T f);
 void pr_parameters(void);
