@@ -143,8 +143,10 @@ static unsigned check_interface(const double *const X, const Patch_T *const patc
 {
   
   const unsigned ind = patch->interface[u]->point[0]->ind;
-  const double res = EPS*rms(3,X,0);
+  double res = EPS*rms(3,X,0);
   double *Y;
+  
+  res = GRT(res,EPS) ? res: EPS;
   
   if (patch->node[ind]->X != 0) Y = patch->node[ind]->X;
   else                          Y = patch->node[ind]->x;
@@ -152,22 +154,22 @@ static unsigned check_interface(const double *const X, const Patch_T *const patc
   switch (u)
   {
     case I_0:
-      if (LSS(ABS(Y[0]-X[0]),res)) return 1;
+      if (LSSEQL(ABS(Y[0]-X[0]),res)) return 1;
       break;
     case I_n0:
-      if (LSS(ABS(Y[0]-X[0]),res)) return 1;
+      if (LSSEQL(ABS(Y[0]-X[0]),res)) return 1;
       break;
     case J_0:
-      if (LSS(ABS(Y[1]-X[1]),res)) return 1;
+      if (LSSEQL(ABS(Y[1]-X[1]),res)) return 1;
       break;
     case J_n1:
-      if (LSS(ABS(Y[1]-X[1]),res)) return 1;
+      if (LSSEQL(ABS(Y[1]-X[1]),res)) return 1;
       break;
     case K_0:
-      if (LSS(ABS(Y[2]-X[2]),res)) return 1;
+      if (LSSEQL(ABS(Y[2]-X[2]),res)) return 1;
       break;
     case K_n2:
-      if (LSS(ABS(Y[2]-X[2]),res)) return 1;
+      if (LSSEQL(ABS(Y[2]-X[2]),res)) return 1;
       break;
     default:
       abortEr("No such interface was defined for this function.\n");

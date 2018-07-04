@@ -96,6 +96,7 @@ void needle_ex(Needle_T *const needle,const Patch_T *const patch)
   pointerEr(needle->ex);
   
   needle->ex[needle->Nex] = patch->pn;
+  needle->Nex++;
 }
 
 /* adding a patch to needle->in */
@@ -272,11 +273,14 @@ unsigned find_node(const double *const x, const Patch_T *const patch,Flag_T *con
   double X[3];
   const int r = X_of_x(X,x,patch);
   
+  *flg = NONE;
   if (r)
   {
-    const double res = RES_EPS*rms(3,X,0);/* resolution */
+    double res = RES_EPS*rms(3,X,0);/* resolution */
     unsigned i;
     double *y, nrm;
+    
+    res = GRT(res,RES_EPS) ? res : RES_EPS;
     
     if (strcmp_i(patch->coordsys,"Cartesian"))
     {
