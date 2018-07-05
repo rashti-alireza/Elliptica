@@ -157,7 +157,7 @@ void alloc_interface(Patch_T *const patch)
   
   for (i = 0; i < FACE_NUM; i++)
   {
-    patch->interface[i] = malloc(sizeof(*patch->interface[i]));
+    patch->interface[i] = calloc(1,sizeof(*patch->interface[i]));
     pointerEr(patch->interface[i]);
   }
 }

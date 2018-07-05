@@ -36,14 +36,12 @@ int realize_geometry(Grid_T *const grid)
   FOR_ALL(i,grid->patch)
     check_houseK(grid->patch[i]);
   
-  /* grouping together all points with same flags into a single subface */
-  group_points(grid);
-  
   /* freeing Point_T */
   free_points(grid);
   
   /* set Dn_Df flags */
   Dn_Df(grid);
+  //think performe various test
   
   /* printing boundary for test purposes */
   if(test_print(PRINT_INTERFACES))
@@ -60,6 +58,7 @@ int realize_geometry(Grid_T *const grid)
 static void Dn_Df(Grid_T *const grid)
 {
   unsigned pa;
+  const unsigned AS = strlen(",Dn:?")+1;/* size of attached */
   
   FOR_ALL(pa,grid->patch)
   {
@@ -72,16 +71,42 @@ static void Dn_Df(Grid_T *const grid)
       {
         SubFace_T *subf = face[f]->subface[sf];
         SubFace_T *subf2;
-        
+        //think about subf2
         if (subf->outerB == 0 && subf->touch == 1)
         {
           unsigned ss;
           
           subf2 = find_subface(subf);
+          subf->adjsn = subf2->sn;
           
-          if (subf->Dn_Df == 1  && subf2->Dn_Df == 1)
+          //if (strstr(subf->flags_str,"Dn:") && strstr(subf2->flags_str,"Dn:"))
+            //continue;
+          
+          /*else */if (subf->Dn_Df == 1  && subf2->Dn_Df == 1)
             abortEr("Wrong Dn_Df flag for two subfaces.\n");
             
+          else if (subf->Dn_Df == 1  && subf2->Dn_Df == 0)
+          {
+              if (!strstr(subf2->flags_str,"Dn:0"))
+              {
+                ss = (unsigned) strlen(subf2->flags_str)+AS;
+                subf2->flags_str = realloc(subf2->flags_str,ss);
+                pointerEr(subf2->flags_str);
+                strcat(subf2->flags_str,",Dn:0");
+              }
+          }
+           
+          else if (subf->Dn_Df == 0  && subf2->Dn_Df == 1)
+          {
+              if (!strstr(subf->flags_str,"Dn:0"))
+              {
+                ss = (unsigned) strlen(subf->flags_str)+AS;
+                subf->flags_str = realloc(subf->flags_str,ss);
+                pointerEr(subf->flags_str);
+                strcat(subf->flags_str,",Dn:0");
+              }
+          }
+             
           else if (subf->Dn_Df == 0  && subf2->Dn_Df == 0)
           {
             /* when two subfaces are pristine */
@@ -89,51 +114,69 @@ static void Dn_Df(Grid_T *const grid)
                 !strstr(subf2->flags_str,"Dn:0"))
             {
               subf->Dn_Df = 1;
-              subf->adjsn = subf2->sn;
-              ss = (unsigned) strlen(subf->flags_str)+5;
+              ss = (unsigned) strlen(subf->flags_str)+AS;
               subf->flags_str = realloc(subf->flags_str,ss);
               pointerEr(subf->flags_str);
-              strcat(subf->flags_str,"Dn:1");
-              ss = (unsigned) strlen(subf2->flags_str)+5;
+              strcat(subf->flags_str,",Dn:1");
+              ss = (unsigned) strlen(subf2->flags_str)+AS;
               subf2->flags_str = realloc(subf2->flags_str,ss);
               pointerEr(subf2->flags_str);
-              strcat(subf2->flags_str,"Dn:0");
+              strcat(subf2->flags_str,",Dn:0");
             }
             /* when the subf is already paired and sub2 is pristine */
             else if (strstr(subf->flags_str,"Dn:0") && 
                      !strstr(subf2->flags_str,"Dn:0"))
             {
               subf2->Dn_Df = 1;
-              ss = (unsigned) strlen(subf2->flags_str)+5;
+              ss = (unsigned) strlen(subf2->flags_str)+AS;
               subf2->flags_str = realloc(subf2->flags_str,ss);
               pointerEr(subf2->flags_str);
-              strcat(subf2->flags_str,"Dn:1");
+              strcat(subf2->flags_str,",Dn:1");
             }
             /* when the subf2 is already paired and sub is pristine */
             else if (!strstr(subf->flags_str,"Dn:0") && 
                      strstr(subf2->flags_str,"Dn:0"))
             {
               subf->Dn_Df = 1;
-              subf->adjsn = subf2->sn;
-              ss = (unsigned) strlen(subf->flags_str)+5;
+              ss = (unsigned) strlen(subf->flags_str)+AS;
               subf->flags_str = realloc(subf->flags_str,ss);
               pointerEr(subf->flags_str);
-              strcat(subf->flags_str,"Dn:1");
-              ss = (unsigned) strlen(subf2->flags_str)+5;
-              subf2->flags_str = realloc(subf2->flags_str,ss);
-              pointerEr(subf2->flags_str);
-              strcat(subf2->flags_str,"Dn:0");
+              strcat(subf->flags_str,",Dn:1");
             }
             /* all other cases */
             else
              abortEr("Dn_Df can not be set; thess two pairs \n"
                "are alredy sat with other two paires with fix Dn_Df.\n");
           }/* end of if (subf->Dn_Df == 0  && subf2->Dn_Df == 0) */
-          
+        
         }/* end of if (subf->outerB == 0 && subf->touch == 1) */
       }/* end of for (sf = 0; sf < face[f]->ns; ++sf) */
     }/* end of FOR_ALL(f,face) */
   }/* end of FOR_ALL(pa,grid->patch) */
+  
+  /* some testing */
+  FOR_ALL(pa,grid->patch)
+  {
+    Interface_T **face = grid->patch[pa]->interface;
+    unsigned f;
+    FOR_ALL(f,face)
+    {
+      unsigned sf;
+      for (sf = 0; sf < face[f]->ns; ++sf)
+      {
+        SubFace_T *subf = face[f]->subface[sf];
+        if (strstr(subf->flags_str,"Dn:1"))
+        {
+          assert(subf->Dn_Df == 1);
+        }
+        
+        else if (strstr(subf->flags_str,"Dn:0"))
+        {
+          assert(subf->Dn_Df == 0);
+        }
+      }
+    }/* end of FOR_ALL(f,face) */
+  }
 }
 
 /* getting a subface, find its correspondingly paired subface to it.
@@ -160,7 +203,7 @@ static SubFace_T *find_subface(const SubFace_T *const sub)
     for (s = 0; s <face->ns; ++s)
     {
       sub2 = face->subface[s];
-      if (sub2->outerB == 0 && sub2->touch == 1)
+      if (sub2->outerB == 0 && sub2->copy == 1)
       {
         unsigned i;
         for (i = 0; i < sub2->np; ++i)
@@ -172,7 +215,7 @@ static SubFace_T *find_subface(const SubFace_T *const sub)
           }
         }
       }
-    }/* end of if (sub2->outerB == 0 && sub2->touch == 1) */
+    }/* end of if (sub2->outerB == 0 && sub2->copy == 1) */
   }/* end of if (sub->copy == 1) */
   /* if the other interface has not any subface to be interpolated 
   // to subface, choose one of the subfaces which needs interpolating. 
@@ -185,49 +228,23 @@ static SubFace_T *find_subface(const SubFace_T *const sub)
     {
       sub2 = face->subface[s];
       if (sub2->outerB == 0 && sub2->touch == 1)
-        return sub2;
+      {
+        flg = FOUND;
+        break;
+      }
     }
   }
   
   if (flg == NONE)
     abortEr("The related subface could not be found.\n");
     
-  return 0;
-}
-
-/* grouping together all points with same flags into a single subface */
-static void group_points(Grid_T *const grid)
-{
-  unsigned pa;
-  
-  FOR_ALL(pa,grid->patch)
-  {
-    Interface_T **face = grid->patch[pa]->interface;
-    unsigned f;
-    FOR_ALL(f,face)
-    {
-      Point_T **pnt = face[f]->point;
-      unsigned po;
-      
-      /* initializing */
-      face[f]->ns = 0;
-      face[f]->subface = 0;
-      
-      /* grouping all of the similar points */
-      FOR_ALL(po,pnt)
-      {
-        char *lead = inspect_flags(pnt[po]);
-        add_to_subface(pnt[po],face[f],lead);
-        
-        if (lead != 0)  free(lead);
-      }
-    }
-  }
+  return sub2;
 }
 
 /* having lead and pnt, see which subface best fit for this point */
-static void add_to_subface(const Point_T *const pnt,Interface_T *const face,const char *const lead)
+static void add_to_subface(const Point_T *const pnt,const char *const lead)
 {
+  Interface_T *const face = pnt->patch->interface[pnt->face];
   SubFace_T *subface;
   Flag_T flg;
   unsigned sf;
@@ -257,6 +274,7 @@ static void add_to_subface(const Point_T *const pnt,Interface_T *const face,cons
     /* setting flags of this new sub face */
     subface->patch     = pnt->patch;
     subface->flags_str = dup_s(lead);
+    subface->sn        = face->ns-1;
     subface->face      = pnt->face;
     subface->adjFace   = pnt->adjFace;
     subface->adjPatch  = pnt->adjPatch;
@@ -354,8 +372,8 @@ static char *inspect_flags(const Point_T *const pnt)
   else 			strcat(str,"innerB:0,");
   
   /* exterF */
-  if (pnt->exterF == 1) strcat(str,"exterF:1,");
-  else 			strcat(str,"exterF:0,");
+  if (pnt->exterF == 1) strcat(str,"exterF:1");
+  else 			strcat(str,"exterF:0");
   
   ret = dup_s(str);  
   return ret;
@@ -413,8 +431,8 @@ static int realize_neighbor(Patch_T *const patch)
     PointSet_T **innerP, **edgeP;
     init_Points(interface,&innerP,&edgeP);/* initializing inner and 
                                           // edge points */
-    realize_adj(innerP);/* realizing the adjacency INNER one */
-    realize_adj(edgeP);/* realizing the adjacency EDGE one */
+    realize_adj(innerP);/* first, realizing the adjacency, INNER one */
+    realize_adj(edgeP);/* second, realizing the adjacency, EDGE one */
     
     free_PointSet(innerP);
     free_PointSet(edgeP);
@@ -449,11 +467,15 @@ static void analyze_adjPnt(PointSet_T *const Pnt)
   Point_T *const p1 = Pnt->Pnt;
   Point_T *p2;
   AdjPoint_T *adjp1;
+  char *lead = 0;
   
   /* this point is on outer boundary */
   if (IsOutBndry(Pnt))
   {
     p1->outerB = 1;
+    
+    lead = inspect_flags(p1);
+    add_to_subface(p1,lead);
   }
   /* if none of the points are on the interface */
   else if (IsOverlap(Pnt))
@@ -461,6 +483,9 @@ static void analyze_adjPnt(PointSet_T *const Pnt)
     p1->touch = 0;
     p1->adjPatch = Pnt->adjPnt[0].p;
     p1->copy  = 0;
+    
+    lead = inspect_flags(p1);
+    add_to_subface(p1,lead);
   }
   /* which point best meets the normal conditon (N2.N1 = -1)  */
   else if (IsNormalFit(Pnt))
@@ -475,17 +500,31 @@ static void analyze_adjPnt(PointSet_T *const Pnt)
     assert(p2);
     p1->adjPoint = p2;
     
-    p2->touch = 1;
-    p2->copy  = 1;
-    p2->adjPatch = p1->patch->pn;
-    p2->adjFace  = p1->face;
-    p2->adjPoint = p1;
-    p2->houseK = 1;
+    if (p2->houseK == 0)
+    {
+      p2->touch = 1;
+      p2->copy  = 1;
+      p2->adjPatch = p1->patch->pn;
+      p2->adjFace  = p1->face;
+      p2->adjPoint = p1;
+      p2->houseK = 1;
+      
+      lead = inspect_flags(p2);
+      add_to_subface(p2,lead);
+      free(lead);
+    }
+    
+    lead = inspect_flags(p1);
+    add_to_subface(p1,lead);
+    
   }
   /* cases in which N1.N2 = 0 and reach outerbound */
   else if (IsOrthOutBndry(Pnt))
   {
     p1->outerB = 1;
+    lead = inspect_flags(p1);
+    add_to_subface(p1,lead);
+    
   }
   /* cases in which although N1.N2 != -1 but copy still possible */
   else if (IsMildOrth(Pnt))
@@ -499,6 +538,10 @@ static void analyze_adjPnt(PointSet_T *const Pnt)
     p2 = get_p2(Pnt);
     assert(p2);
     p1->adjPoint = p2;
+    
+    lead = inspect_flags(p1);
+    add_to_subface(p1,lead);
+    
   }
   /* cases in which the points needs interpolation */
   else if (IsInterpolation(Pnt))
@@ -514,8 +557,11 @@ static void analyze_adjPnt(PointSet_T *const Pnt)
       assert(Pnt->overlap == 0);
       p1->adjFace = Pnt->adjPnt[Pnt->idInterp].InterpFace;
       set_sameXYZ(p1,p1->adjFace);
-      
     }
+    
+    lead = inspect_flags(p1);
+    add_to_subface(p1,lead);
+    
   }
   else
   {
@@ -529,6 +575,8 @@ static void analyze_adjPnt(PointSet_T *const Pnt)
     abortEr("Incomplete function.\n");
   }
   p1->houseK = 1;
+  
+  if (lead) free(lead);
 }
 
 /* does this need interpolation?
@@ -547,7 +595,7 @@ static int IsInterpolation(PointSet_T *const Pnt)
     unsigned adjid;/* adjPnt id */
     unsigned fid;/* adjPnt face id */
     double dot;/* N1 dot N2 */
-  }*interp = 0;
+  }*interp = 0, *interpEq = 0;
   double tmp;
   unsigned i,j,id,f;
   
@@ -574,6 +622,7 @@ static int IsInterpolation(PointSet_T *const Pnt)
         if (fs->on_f == 1 && LSS(fs->N1dotN2,0))
         {
           interp = realloc(interp,(j+1)*sizeof(*interp));
+          pointerEr(interp);
           interp[j].adjid = i;
           interp[j].fid   = f;
           interp[j].dot   = fs->N1dotN2;
@@ -586,20 +635,77 @@ static int IsInterpolation(PointSet_T *const Pnt)
   /* find the closest N1dotN2 to -1 */
   if (j > 0)
   {
+    unsigned e, id2 = UINT_MAX;
+    struct Interp_S *int_S;
+    Flag_T flg = NONE;
+    
     id = 0;
     tmp = interp[id].dot;
     
     for (i = 1; i < j; i++)
       if (LSS(interp[i].dot,tmp))
         id = i;
+        
+    e = 0;
+    interpEq = realloc(interpEq,(e+1)*sizeof(*interpEq));
+    pointerEr(interpEq);
+    interpEq[e].adjid = interp[id].adjid;
+    interpEq[e].fid   = interp[id].fid;
+    interpEq[e].dot   = interp[id].dot;
+    e++;
+   
+    for (i = 0; i < j; i++)
+    {
+      if (i == id) continue;
       
-    struct Interp_S *int_S = &interp[id];
+      if (EQL(interp[i].dot,interp[id].dot))
+      {
+        interpEq = realloc(interpEq,(e+1)*sizeof(*interpEq));
+        pointerEr(interpEq);
+        interpEq[e].adjid = interp[i].adjid;
+        interpEq[e].fid   = interp[i].fid;
+        interpEq[e].dot   = interp[i].dot;
+        e++;
+      }
+    }
+
+    if (e > 1)
+    {
+      Point_T p1 = *Pnt->Pnt;
+      char *lead = 0;
+      
+      p1.touch = 1;
+      p1.copy  = 0;
+      
+      for (i = 0; i < e; i++)
+      {
+        int_S = &interpEq[i];
+        p1.adjPatch = Pnt->adjPnt[int_S->adjid].p;
+        p1.adjFace = int_S->fid;
+        set_sameXYZ(&p1,p1.adjFace);
+        
+        lead = inspect_flags(&p1);
+        if (IsOnSubface(&p1,lead))
+        {
+          free(lead);
+          id2 = i;
+          flg = FOUND;
+          break;
+        }
+        free(lead);
+
+      }/* end of for (i = 0; i < e; i++) */
+    }/* end of if (e > 1)*/
+    
+    if (flg == FOUND)  int_S = &interpEq[id2];
+    else	       int_S = &interp[id];
   
     Pnt->idInterp = int_S->adjid;
     Pnt->adjPnt[int_S->adjid].InterpFace = int_S->fid;
     Pnt->overlap = 0;
     
     free(interp);
+    free(interpEq);
     return 1;
   }
   
@@ -618,7 +724,13 @@ static int IsMildOrth(PointSet_T *const Pnt)
   double *const x = patch->node[node]->x;
   double eps = rms(3,x,0)*EPS;
   double *const N = Pnt->Pnt->N;
-  unsigned i,f;
+  struct Interp_S
+  {
+    unsigned adjid;/* adjPnt id */
+    unsigned fid;/* adjPnt face id */
+    double t;/* tnagent component */
+  }*copy = 0;
+  unsigned i,f,c,id;
   Needle_T *needle = alloc_needle();
   double q[3];/* q = pnt+eps*N */
   
@@ -629,15 +741,14 @@ static int IsMildOrth(PointSet_T *const Pnt)
   needle->grid = patch->grid;
   needle->x = q;
   
+  c = 0;
   for (i = 0; i < Pnt->NadjPnt; i++)
   {
     Patch_T *patch2 = patch->grid->patch[Pnt->adjPnt[i].p];
     
-    if (Pnt->adjPnt[i].on_c == 0 || 
-        Pnt->adjPnt[i].FaceFlg == 0) 
-          continue;
+    if (Pnt->adjPnt[i].on_c == 0 || Pnt->adjPnt[i].FaceFlg == 0) 
+      continue;
     
-    if (Pnt->adjPnt[i].FaceFlg == 1)
     for (f = 0; f < TOT_FACE; f++)
     {
       if (Pnt->adjPnt[i].fs[f].on_f == 0) continue;
@@ -646,27 +757,81 @@ static int IsMildOrth(PointSet_T *const Pnt)
       /* make sure the product of normal is negative */
       if (LSS(s,0))
       {
-        free_needle(needle);
+        /* make needle->in empty from left overs in previous run */
+        if (needle->Nin != 0)
+        {
+          free(needle->in);
+          needle->Nin = 0;
+        }
         needle_in(needle,patch2);
         point_finder(needle);
         /* make sure q is on adjPatch */
         if (needle->Nans > 0)
         {
           double grid_size = find_grid_size(Pnt,i,f);
+          double t = sqrt(1-SQR(s));
           
-          if (LSS(sqrt(1-SQR(s)),grid_size))
+          if (LSS(t,grid_size))
           {
-            Pnt->idOrth = i;
-            Pnt->adjPnt[i].CopyFace = f;
-            free_needle(needle);
-            return 1;
+            copy = realloc(copy,(c+1)*sizeof(*copy));
+            pointerEr(copy);
+            copy[c].adjid = i;
+            copy[c].fid   = f;
+            copy[c].t     = t;
+            c++;
           }
+          
+          free(needle->ans);
+          needle->Nans = 0;
         }
       }/* end of if (LSS(s,0)) */
     }/* end of for (f = 0; f < TOT_FACE; f++) */
   }/* end of for (i = 0; i < Pnt->NadjPnt; i++) */
   
   free_needle(needle);
+  
+  if (c > 0)
+  {
+    Point_T p1 = *Pnt->Pnt;
+    char *lead;
+    Flag_T flg = NONE;
+    
+    p1.touch = 1;
+    p1.copy  = 1;
+    
+    for (i = 0; i < c; ++i)
+    {
+      p1.adjPatch = Pnt->adjPnt[copy[i].adjid].p;
+      p1.adjFace = copy[i].fid;
+      lead = inspect_flags(&p1);
+      
+      if (IsOnSubface(&p1,lead))
+      {
+        free(lead);
+        flg = FOUND;
+        id = i;
+        break;
+      }
+
+    }/* end of for (i = 0; i < c; ++i) */
+    
+    if (flg == NONE)
+    {
+      id = 0;
+      for (i = 1; i < c; ++i)
+      {
+        if (LSS(copy[i].t,copy[id].t))
+          id = i;
+      }
+    
+    }
+    
+    Pnt->idOrth = copy[id].adjid;
+    Pnt->adjPnt[copy[id].adjid].CopyFace = copy[id].fid;
+
+    free(copy);
+    return 1;
+  }
   
   return 0;
 }
@@ -824,25 +989,53 @@ static Point_T *get_p2(const PointSet_T *const Pnt)
 
 /* if there is an adjacent point collocated with the point,
 // and their interfaces are tangent correctly, i.e. their normals
-// are in expected directions (N1dotN2 == -1)
+// are in expected directions (N1dotN2 == -1). make sure
+// that, among couple of possibilities, the one matches with the 
+// previous subfaces, is excluded out.
 // ->retrun value: 1 if fittest normal exists, 0 otherwise
 */
 static int IsNormalFit(PointSet_T *const Pnt)
 {
   unsigned i,f;
+  Point_T p1 = *Pnt->Pnt;
+  char *lead;
+  Flag_T flg = NONE;
+  
+  p1.touch = 1;
+  p1.copy  = 1;
   
   for (i = 0; i < Pnt->NadjPnt; i++)
-    if (Pnt->adjPnt[i].on_c == 1 && 
-        Pnt->adjPnt[i].FaceFlg == 1)
+  {
+    if (Pnt->adjPnt[i].on_c == 1 && Pnt->adjPnt[i].FaceFlg == 1)
     {
       for (f = 0; f < TOT_FACE; f++)
         if (Pnt->adjPnt[i].fs[f].FitFlg == 1) 
         {
+          flg = FOUND;
           Pnt->idFit = i;
           Pnt->adjPnt[i].CopyFace = f;
-          return 1;
-        }
+          
+          p1.adjPatch = Pnt->adjPnt[i].p;
+          p1.adjFace  = f;
+          lead = inspect_flags(&p1);
+          
+          /* pick out the fittest one according to 
+          // the previous made subfaces 
+          */
+          if (IsOnSubface(&p1,lead))
+          {
+            free(lead);
+            return 1;
+          }
+          free(lead);
+          
+        }/* end of if (Pnt->adjPnt[i].fs[f].FitFlg == 1) */
     }
+  }/* end of for (i = 0; i < Pnt->NadjPnt; i++) */
+    /* if non of the found point has been on a subface, 
+    // so it means it needs new subface. 
+    */
+    if (flg == FOUND)  return 1;
     
   return 0;
 }
@@ -1472,4 +1665,22 @@ static void set_sameXYZ(Point_T *const p,const unsigned f)
     default:
       abortEr("There is not such interface.\n");
   }
+}
+
+/* see if there is subface with these lead as its flags_str 
+// ->return value: 1 if found, 0 otherwise.
+*/
+static int IsOnSubface(const Point_T *const pnt, const char *const lead)
+{
+  Interface_T *const face = pnt->patch->interface[pnt->face];
+  unsigned sf;
+  
+  /* compare lead with the previous sub-faces */
+  for (sf = 0; sf < face->ns; ++sf)
+  {
+    if (strcmp_i(face->subface[sf]->flags_str,lead))
+      return 1;
+  }
+
+  return 0;
 }

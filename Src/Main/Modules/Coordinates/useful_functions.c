@@ -265,52 +265,29 @@ static int IsInside(const double *const x,const double *const lim)
 
 /* given point and patch find if the is any node collocated 
 // to that point and then return its index.
-// ->return value: found index, and put flg = FOUND, otherwise, flg =NONE.
+// ->return value: found index, and put flg = FOUND, otherwise, flg = NONE.
 */
 unsigned find_node(const double *const x, const Patch_T *const patch,Flag_T *const flg)
 {
   unsigned v = UINT_MAX;
-  double X[3];
-  const int r = X_of_x(X,x,patch);
-  
+  double res = RES_EPS*rms(3,x,0);/* resolution */
+  unsigned i;
+  double *y, nrm;
+
+  res = GRT(res,RES_EPS) ? res : RES_EPS;
   *flg = NONE;
-  if (r)
+    
+  FOR_ALL(i,patch->node)
   {
-    double res = RES_EPS*rms(3,X,0);/* resolution */
-    unsigned i;
-    double *y, nrm;
-    
-    res = GRT(res,RES_EPS) ? res : RES_EPS;
-    
-    if (strcmp_i(patch->coordsys,"Cartesian"))
+    y = patch->node[i]->x;
+    nrm = rms(3,x,y);
+    if (LSSEQL(nrm,res))
     {
-      FOR_ALL(i,patch->node)
-      {
-        y = patch->node[i]->x;
-        nrm = rms(3,x,y);
-        if (LSSEQL(nrm,res))
-        {
-          v = i;
-          *flg = FOUND;
-          break;
-        }
-      }
-    }
-    else
-    {
-      FOR_ALL(i,patch->node)
-      {
-        y = patch->node[i]->X;
-        nrm = rms(3,x,y);
-        if (LSSEQL(nrm,res))
-        {
-          v = i;
-          *flg = FOUND;
-          break;
-        }
-      }
+      v = i;
+      res = nrm;
+      *flg = FOUND;
     }
   }
-  
+
   return v;
 }
