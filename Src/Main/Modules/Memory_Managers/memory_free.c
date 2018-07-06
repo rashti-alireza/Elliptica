@@ -45,9 +45,11 @@ void free_needle(Needle_T *needle)
     if (needle->Nin  != 0) free (needle->in);
     if (needle->Nex  != 0) free (needle->ex);
     if (needle->Ng   != 0) free (needle->guess);
+    if (needle->Nans != 0) free (needle->ans);
     
   }
   
+  free(needle);
 }
 
 /* feeing memory of Point_T inside grid */
@@ -69,3 +71,16 @@ void free_points(Grid_T *const grid)
   }
 }
 
+/* free function structure form patch to void */
+void free_func_PtoV(sFunc_PtoV_T **func)
+{
+  unsigned i;
+  
+  for (i = 0; func[i] != 0; ++i)
+  {
+    free(func[i]->task);
+    free(func[i]);
+  }
+  
+  free(func);
+}

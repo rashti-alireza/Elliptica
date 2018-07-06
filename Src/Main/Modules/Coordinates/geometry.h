@@ -74,7 +74,7 @@ static int IsInterpolation(PointSet_T *const Pnt);
 static int IsMildOrth(PointSet_T *const Pnt);
 static int IsOnSubface(const Point_T *const pnt, const char *const lead);
 static int ReachBnd(PointSet_T *const Pnt,const unsigned p,const unsigned f);
-//static void test_subfaces(Grid_T *const grid);
+static void test_subfaces(const Grid_T *const grid);
 static char *inspect_flags(const Point_T *const pnt);
 static void add_to_subface(const Point_T *const pnt,const char *const lead);
 static void add_point(SubFace_T *const subface,const Point_T *const pnt);

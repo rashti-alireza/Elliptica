@@ -32,22 +32,90 @@ int realize_geometry(Grid_T *const grid)
   /* find various geometry of each point */
   fill_geometry(grid);
   
-  /* check if all point have been found */
-  FOR_ALL(i,grid->patch)
-    check_houseK(grid->patch[i]);
-  
   /* freeing Point_T */
   free_points(grid);
   
   /* set Dn_Df flags */
   Dn_Df(grid);
-  //think performe various test
+  
+  /* testing */
+  test_subfaces(grid);
   
   /* printing boundary for test purposes */
   if(test_print(PRINT_INTERFACES))
     pr_interfaces(grid);
   
   return EXIT_SUCCESS;
+}
+
+/* testing various properties of subfaces */
+static void test_subfaces(const Grid_T *const grid)
+{
+  Interface_T **face;
+  SubFace_T *subf, *subf2;
+  unsigned pa,f,sf;
+  
+  /* check if all point have been found */
+  FOR_ALL(pa,grid->patch)
+    check_houseK(grid->patch[pa]);
+  
+  /* flag consistency */
+  FOR_ALL(pa,grid->patch)
+  {
+    face = grid->patch[pa]->interface;
+    FOR_ALL(f,face)
+    {
+      for (sf = 0; sf < face[f]->ns; ++sf)
+      {
+        subf = face[f]->subface[sf];
+        
+        if (subf->outerB && subf->innerB)
+          abortEr("Outerbound and innerboundary faces conflict.\n");
+        if (subf->outerB && subf->touch)
+          abortEr("Outerbound and touch faces conflict.\n");
+        if (subf->innerB && subf->touch)
+          abortEr("innerB and touch faces conflict.\n");
+        if (subf->outerB && subf->copy)
+          abortEr("Outerbound and copy faces conflict.\n");
+        if (subf->outerB && !subf->exterF)
+          abortEr("Outerbound and external face conflict.\n");
+        if (subf->patch->pn == subf->adjPatch && 
+            !subf->outerB && !subf->innerB && subf->exterF)
+          abortEr("patch and adjacent patch conflict.\n");
+        if (subf->sameX && subf->sameY)
+          abortEr("Two constant for an interface.\n");
+        if (subf->sameX && subf->sameZ)
+          abortEr("Two constant for an interface.\n");
+        if (subf->sameZ && subf->sameY)
+          abortEr("Two constant for an interface.\n");
+      }
+    }
+  }/* FOR_ALL(pa,grid->patch) */
+  
+  /* connection consistency */
+  FOR_ALL(pa,grid->patch)
+  {
+    face = grid->patch[pa]->interface;
+    FOR_ALL(f,face)
+    {
+      for (sf = 0; sf < face[f]->ns; ++sf)
+      {
+        subf = face[f]->subface[sf];
+        
+        if (subf->touch)
+        {
+          subf2 = get_paired_subface(subf);
+          
+          if (subf->Dn_Df && subf2->Dn_Df)
+            abortEr("Wrong Dn_Df flags.\n");
+          if (!subf2->touch)
+            abortEr("Wrong paired subface.\n");
+          
+        }
+
+      }
+    }
+  }/* FOR_ALL(pa,grid->patch) */
 }
 
 /* setting Dn_Df flags inside sub-faces. this flag says if we have 
@@ -71,18 +139,17 @@ static void Dn_Df(Grid_T *const grid)
       {
         SubFace_T *subf = face[f]->subface[sf];
         SubFace_T *subf2;
-        //think about subf2
-        if (subf->outerB == 0 && subf->touch == 1)
+        if (subf->touch == 1)
         {
           unsigned ss;
           
           subf2 = find_subface(subf);
           subf->adjsn = subf2->sn;
           
-          //if (strstr(subf->flags_str,"Dn:") && strstr(subf2->flags_str,"Dn:"))
-            //continue;
+          if (strstr(subf->flags_str,"Dn:") && strstr(subf2->flags_str,"Dn:"))
+            continue;
           
-          /*else */if (subf->Dn_Df == 1  && subf2->Dn_Df == 1)
+          else if (subf->Dn_Df == 1  && subf2->Dn_Df == 1)
             abortEr("Wrong Dn_Df flag for two subfaces.\n");
             
           else if (subf->Dn_Df == 1  && subf2->Dn_Df == 0)
@@ -154,29 +221,6 @@ static void Dn_Df(Grid_T *const grid)
     }/* end of FOR_ALL(f,face) */
   }/* end of FOR_ALL(pa,grid->patch) */
   
-  /* some testing */
-  FOR_ALL(pa,grid->patch)
-  {
-    Interface_T **face = grid->patch[pa]->interface;
-    unsigned f;
-    FOR_ALL(f,face)
-    {
-      unsigned sf;
-      for (sf = 0; sf < face[f]->ns; ++sf)
-      {
-        SubFace_T *subf = face[f]->subface[sf];
-        if (strstr(subf->flags_str,"Dn:1"))
-        {
-          assert(subf->Dn_Df == 1);
-        }
-        
-        else if (strstr(subf->flags_str,"Dn:0"))
-        {
-          assert(subf->Dn_Df == 0);
-        }
-      }
-    }/* end of FOR_ALL(f,face) */
-  }
 }
 
 /* getting a subface, find its correspondingly paired subface to it.
@@ -192,7 +236,7 @@ static SubFace_T *find_subface(const SubFace_T *const sub)
 {
   const Interface_T *const face = 
     sub->patch->grid->patch[sub->adjPatch]->interface[sub->adjFace];
-  SubFace_T *sub2;
+  SubFace_T *sub2 = 0;
   unsigned po;
   unsigned s;
   Flag_T flg = NONE;
@@ -203,7 +247,7 @@ static SubFace_T *find_subface(const SubFace_T *const sub)
     for (s = 0; s <face->ns; ++s)
     {
       sub2 = face->subface[s];
-      if (sub2->outerB == 0 && sub2->copy == 1)
+      if (sub2->copy == 1)
       {
         unsigned i;
         for (i = 0; i < sub2->np; ++i)
@@ -217,23 +261,43 @@ static SubFace_T *find_subface(const SubFace_T *const sub)
       }
     }/* end of if (sub2->outerB == 0 && sub2->copy == 1) */
   }/* end of if (sub->copy == 1) */
+  
   /* if the other interface has not any subface to be interpolated 
-  // to subface, choose one of the subfaces which needs interpolating. 
+  // to subface, choose one of the subfaces which needs interpolating,
+  // preferably the closest one.
   // I think that's fine, since sub after all will be interpolated 
   // to this interface 
   */
   else
   {
+    Node_T **const node = sub->patch->grid->patch[sub->adjPatch]->node;
+    double dis = DBL_MAX;
+    SubFace_T *sub3;
+    
     for (s = 0; s <face->ns; ++s)
     {
-      sub2 = face->subface[s];
-      if (sub2->outerB == 0 && sub2->touch == 1)
+      sub3 = face->subface[s];
+      if (sub3->touch == 1)
       {
-        flg = FOUND;
+        unsigned i;
+        
+        for (i = 0; i < sub3->np; ++i)
+        {
+          double *x = node[sub3->id[i]]->x;
+          double r = rms(3,x,0);
+          
+          if (LSS(r,dis))
+          {
+            dis = r;
+            sub2 = sub3;
+            flg = FOUND;
+          }
+        }
+        
         break;
-      }
-    }
-  }
+      }/* end of if (sub3->touch == 1) */
+    }/* for (s = 0; s <face->ns; ++s) */
+  }/* end of else */
   
   if (flg == NONE)
     abortEr("The related subface could not be found.\n");
@@ -401,7 +465,7 @@ static void fill_geometry(Grid_T *const grid)
     run_func_PtoV(func,"FindExterF",patch);/* find external faces */
     run_func_PtoV(func,"FindInnerB",patch);/* find inner boundary */
   }
-  free_2d(func);/* freeing func struct */
+  free_func_PtoV(func);/* freeing func struct */
   
   /* realize neighbor properties */
   FOR_ALL(i,grid->patch)
@@ -1461,10 +1525,9 @@ static void normal_vec_Cartesian_coord(Point_T *const point)
 */
 static void alloc_PointSet(const unsigned N,PointSet_T ***const pnt)
 {
-  
   assert(pnt);
   
-  (*pnt) = realloc((*pnt),(N+1)*sizeof((*pnt)));
+  (*pnt) = realloc((*pnt),(N+1)*sizeof(*(*pnt)));
   pointerEr(*pnt);
   
   (*pnt)[N-1] = calloc(1,sizeof(*(*pnt)[N-1]));
@@ -1476,12 +1539,12 @@ static void alloc_PointSet(const unsigned N,PointSet_T ***const pnt)
 /* free mem for PointSet_T strcut */
 static void free_PointSet(PointSet_T **const pnt)
 {
-  if(pnt) return;
+  if(!pnt) return;
   
   unsigned i;
   FOR_ALL (i,pnt)
   {
-    if (pnt[i]->adjPnt != 0)
+    if (pnt[i]->adjPnt)
     {
       free(pnt[i]->adjPnt);
     }

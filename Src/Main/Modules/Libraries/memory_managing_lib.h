@@ -11,3 +11,4 @@ void free_needle(Needle_T *needle);
 void free_2d(void *mem0);
 void free_matrix(void *mem, const unsigned long c);
 void free_points(Grid_T *const grid);
+void free_func_PtoV(sFunc_PtoV_T **func);
