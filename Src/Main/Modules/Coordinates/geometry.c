@@ -13,6 +13,7 @@
 // basically, it goes through all of points on interfaces of a patch,
 // finding their normals and adjacent points and then studying
 // how best this point and its neighbor matched.
+// NOTE: NOT THREAD SAFE!
 // ->return value: EXIT_SUCCESS
 */
 int realize_geometry(Grid_T *const grid)
