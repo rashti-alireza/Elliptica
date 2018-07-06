@@ -456,6 +456,7 @@ static int realize_adj(PointSet_T **const Pnt)
       lead = inspect_flags(Pnt[p]->Pnt);
       add_to_subface(Pnt[p]->Pnt,lead);
       free(lead);
+      Pnt[p]->Pnt->houseK = 1;
     }
     if (Pnt[p]->Pnt->houseK == 1) continue;
     
@@ -1105,13 +1106,6 @@ static void init_Points(const Interface_T *const interface,PointSet_T ***const i
     unsigned l = L(n,i,j,k);
     unsigned p = L2(n,f,i,j,k);
     
-    /* excluding the points located on an internal interface */
-    if (interface->point[p]->exterF == 0) 
-    {
-      interface->point[p]->houseK = 1;
-      continue;
-    }
-      
     if (IsOnEdge(n,l))
     {
       alloc_PointSet(ed+1,&pnt_ed);
