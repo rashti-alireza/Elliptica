@@ -121,7 +121,7 @@ static void test_subfaces(const Grid_T *const grid)
 /* setting Dn_Df flags inside sub-faces. this flag says if we have 
 // interpolation or copy situation at an interface, 
 // whether value of field is used or its derivative along normal to 
-// that interface.
+// that interface. moreover, it pairs the related subfaces.
 */
 static void Dn_Df(Grid_T *const grid)
 {
@@ -139,7 +139,7 @@ static void Dn_Df(Grid_T *const grid)
       {
         SubFace_T *subf = face[f]->subface[sf];
         SubFace_T *subf2;
-        if (subf->touch == 1)
+        if (subf->touch)
         {
           unsigned ss;
           
@@ -241,7 +241,7 @@ static SubFace_T *find_subface(const SubFace_T *const sub)
   unsigned s;
   Flag_T flg = NONE;
   
-  if (sub->copy == 1)
+  if (sub->copy)
   {
     po = sub->adjid[0];
     for (s = 0; s <face->ns; ++s)
@@ -277,7 +277,7 @@ static SubFace_T *find_subface(const SubFace_T *const sub)
     for (s = 0; s <face->ns; ++s)
     {
       sub3 = face->subface[s];
-      if (sub3->touch == 1)
+      if (sub3->touch)
       {
         unsigned i;
         
