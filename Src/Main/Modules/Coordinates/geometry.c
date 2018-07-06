@@ -458,6 +458,14 @@ static int realize_adj(PointSet_T **const Pnt)
       free(lead);
       Pnt[p]->Pnt->houseK = 1;
     }
+    /* second take care of inner boundary */
+    if (Pnt[p]->Pnt->innerB == 1)
+    {
+      lead = inspect_flags(Pnt[p]->Pnt);
+      add_to_subface(Pnt[p]->Pnt,lead);
+      free(lead);
+      Pnt[p]->Pnt->houseK = 1;
+    }
     if (Pnt[p]->Pnt->houseK == 1) continue;
     
     find_adjPnt(Pnt[p]);
