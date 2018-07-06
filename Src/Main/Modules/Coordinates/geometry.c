@@ -446,9 +446,17 @@ static int realize_neighbor(Patch_T *const patch)
 static int realize_adj(PointSet_T **const Pnt)
 {
   unsigned p;
+  char *lead;
   
   FOR_ALL(p,Pnt)
   {
+    /* first take care of non external faces */
+    if (Pnt[p]->Pnt->exterF == 0)
+    {
+      lead = inspect_flags(Pnt[p]->Pnt);
+      add_to_subface(Pnt[p]->Pnt,lead);
+      free(lead);
+    }
     if (Pnt[p]->Pnt->houseK == 1) continue;
     
     find_adjPnt(Pnt[p]);
