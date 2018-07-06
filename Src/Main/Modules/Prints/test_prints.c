@@ -60,7 +60,7 @@ void pr_interfaces(const Grid_T *const grid)
   };
   struct Archive_S *arch[TOT_ARCH];
   unsigned N[TOT_ARCH];
-  unsigned pa,fc,sf,i,j,n;
+  unsigned pa,fc,sf,i,j,n,save;
   
   /* initializing */
   for (i = 0; i < TOT_ARCH; ++i)
@@ -233,15 +233,20 @@ void pr_interfaces(const Grid_T *const grid)
         {
           subf2 = get_paired_subface(subf);
           
-          str[0] = '\0';
-          sprintf(str,"|->faceIntrptn%u:a{ %s }\n",N[IN_P],subf->flags_str);
-          fprintf(f,"%s",str);
-          str[0] = '\0';
-          sprintf(str,"|->faceIntrptn%u:b{ %s }\n",N[IN_P],subf2->flags_str);
-          fprintf(f,"%s",str);
-          fprintf(f,"%s\n",PR_LINE);
-          
+          save = N[IN_P];
           add_to_archive(&arch[IN_P],subf,subf2,&N[IN_P],"faceIntrptn");
+          
+          /* avoiding double writing */
+          if (save != N[IN_P])
+          {
+            str[0] = '\0';
+            sprintf(str,"|->faceIntrptn%u:a{ %s }\n",N[IN_P]-1,subf->flags_str);
+            fprintf(f,"%s",str);
+            str[0] = '\0';
+            sprintf(str,"|->faceIntrptn%u:b{ %s }\n",N[IN_P]-1,subf2->flags_str);
+            fprintf(f,"%s",str);
+            fprintf(f,"%s\n",PR_LINE);
+          }
           
           flg = FOUND;
         }
@@ -272,15 +277,20 @@ void pr_interfaces(const Grid_T *const grid)
         {
           subf2 = get_paired_subface(subf);
           
-          str[0] = '\0';
-          sprintf(str,"|->faceCpy%u:a{ %s }\n",N[C],subf->flags_str);
-          fprintf(f,"%s",str);
-          str[0] = '\0';
-          sprintf(str,"|->faceCpy%u:b{ %s }\n",N[C],subf2->flags_str);
-          fprintf(f,"%s",str);
-          fprintf(f,"%s\n",PR_LINE);
-          
+          save = N[C];
           add_to_archive(&arch[C],subf,subf2,&N[C],"faceCpy");
+          
+          /* avoiding double writing */
+          if (save != N[C])
+          {
+            str[0] = '\0';
+            sprintf(str,"|->faceCpy%u:a{ %s }\n",N[C]-1,subf->flags_str);
+            fprintf(f,"%s",str);
+            str[0] = '\0';
+            sprintf(str,"|->faceCpy%u:b{ %s }\n",N[C]-1,subf2->flags_str);
+            fprintf(f,"%s",str);
+            fprintf(f,"%s\n",PR_LINE);
+          }
 
           flg = FOUND;
         }
