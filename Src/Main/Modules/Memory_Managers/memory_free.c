@@ -66,6 +66,7 @@ void free_points(Grid_T *const grid)
     {
       free_matrix(face[f]->point,face[f]->np);
       face[f]->np = 0;
+      face[f]->point = 0;
     }
 
   }
