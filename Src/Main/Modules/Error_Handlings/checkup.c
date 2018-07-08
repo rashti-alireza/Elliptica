@@ -44,7 +44,7 @@ void null_path_error(const void *const path,const char *const file, const int li
 void abort_error(const char *const massage,const char *const file, const int line)
 {
   
-  fprintf(stderr,ERROR_MASSAGE"%s"
+  fprintf(stderr,ERROR_MASSAGE"\"%s\""
         "File: %s\nLine:%d\n",massage,file,line);
   abort();
 }
