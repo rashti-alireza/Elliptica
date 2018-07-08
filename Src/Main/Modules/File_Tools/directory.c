@@ -15,8 +15,6 @@ void make_directory(char **const path,const char *const name,const Flag_T flg)
   struct stat st = {0};/* status of files */
   int i;
   
-  null_pathEr(path);
-  
   i = 0;
   do 
   {
