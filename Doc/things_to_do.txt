@@ -1,18 +1,20 @@
 . setup git local -> done
 . setup git remote
-. setup hierarchy of foldors -> done
+. setup hierarchy of folders -> done
 . setup make files ->done
-. automatic heaader inclusion ->done
+. automatic header inclusion ->done
 . my config for installation ->done
-. designe skeleton ->done
-. designe structures ->done
-. designe par file ->done
-. designe control flow of project ->done
-. designe control flow of prints ->done
-. designe skeleton of initial date using new idea ->done
-. designe solver
-. designe multiplication matrix
-. designe fields and it spectral coeffs
+. design skeleton ->done
+. design structures ->done
+. design par file ->done
+. design control flow of project ->done
+. design control flow of prints ->done
+. design skeleton of initial date using new idea ->done
+. design solver
+. design multiplication matrix
+. design fields and it spectral coeffs
 . make compatible with C11 ->done
-. proof read geometry
+. proof read geometry ->done
+. a routine to test derivatives, this routine composed of many analytic
+	functions to compare them with numerical derivative.
 
