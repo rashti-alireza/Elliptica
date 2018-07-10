@@ -55,6 +55,12 @@ typedef enum FACE_T
   TOT_FACE = 6
 }Face_T;
 
+/* types of basis enum */
+typedef enum BASIS_E
+{
+  Chebyshev_FirstKind_Basis
+}Basis_E;
+
 
 /* *******************************************
 // parameter:
@@ -178,6 +184,22 @@ typedef struct PATCH_T
   Interface_T **interface;/* interface info  */
   unsigned innerB:1;/* if this patch has inner boundary 1 otherwise 0 */
 }Patch_T;
+
+/* basis */
+typedef struct BASIS_T
+{
+  double *coeff;/* coefficients of basis if needed */
+  Basis_E type;/* type of basis, like Chebyshev first kind or second */
+}Basis_T;
+
+/* field */
+typedef struct FIELD_T
+{
+  char *name;/* its name like alpha or psi */
+  double *value;/* its value on each grid point */
+  Basis_T **basis;/* its basis info on each patch;
+                  // so each patch could use different basis */
+}Field_T;
 
 /* grid */
 typedef struct GIRD_T
