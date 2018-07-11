@@ -13,6 +13,7 @@ unsigned I(const unsigned l, const unsigned *const n);
 unsigned J(const unsigned l, const unsigned *const n);
 unsigned K(const unsigned l, const unsigned *const n);
 Collocation_T get_collocation(const char *const coll);
+Basis_T get_basis(const char *const basis);
 int IsOnEdge(const unsigned *const n,const unsigned p);
 int IsOnFace(const double *const x, const Patch_T *const patch,unsigned *const f);
 unsigned node_onFace(const double *const x, const unsigned f,const Patch_T *const patch);

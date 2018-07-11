@@ -11,9 +11,10 @@
 /* common flags*/
 typedef enum FLAG_T
 {
-  YES,
-  NO,
+  UNDEFINED = 0,
   NONE,
+  NO,
+  YES,
   READY,
   INUSE,
   FOUND,
@@ -23,14 +24,15 @@ typedef enum FLAG_T
 /* collocation */
 typedef enum COLLOCATION_T
 {
+  UNDEFINED_COLLOCATION = 0,
   EquiSpaced,
-  Chebyshev_Zero,
-  NDEF_COLLOCATION
+  Chebyshev_Zero
 }Collocation_T;
 
 /* coordinate system */
 typedef enum COORD_T
 {
+  UNDEFINED_COORD = 0,
   Cartesian,
   CubedSphere
 }Coord_T;
@@ -38,6 +40,7 @@ typedef enum COORD_T
 /* print flags */
 typedef enum PRINT_T
 {
+  UNDEFINED_PRINT,
   PRINT_PARAMETERS,
   PRINT_COORDS,
   PRINT_INTERFACES
@@ -58,8 +61,9 @@ typedef enum FACE_T
 /* types of basis enum */
 typedef enum BASIS_T
 {
-  No_Basis = 0,/* when no basis is used */
-  Chebyshev_FirstKind_Basis/* first kind Chebyshev basis */
+  UNDEFINED_BASIS = 0/* undefined basis  */,
+  No_BASIS/* when no basis is used */,
+  Chebyshev_FirstKind_BASIS/* first kind Chebyshev basis */
 }Basis_T;
 
 /* *******************************************

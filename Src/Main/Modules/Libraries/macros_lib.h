@@ -1,4 +1,4 @@
-#define ERROR_LINE "x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x"
+#define ERROR_LINE "x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x"
 #define pointerEr(x)   checkup_pointer_error(x,__FILE__,__LINE__)
 #define bad_inputEr()  bad_input_error(__FILE__,__LINE__)
 #define null_pathEr(x) null_path_error(x,__FILE__,__LINE__)

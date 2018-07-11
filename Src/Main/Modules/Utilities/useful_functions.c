@@ -69,17 +69,40 @@ unsigned K(const unsigned l, const unsigned *const n)
   return tmp % n[2];
 }
 
-/* changing text to enum for collocation */
+/* changing text to enum for collocation 
+// ->return value: collocation type, error if couldn't be found, 0 if null coll
+*/
 Collocation_T get_collocation(const char *const coll)
 {
-  Collocation_T c = NDEF_COLLOCATION;
-  if (strcmp_i(coll,"EquiSpaced")) c = EquiSpaced;
+  Collocation_T c = UNDEFINED_COLLOCATION;
+  
+  if (!coll) return c;
+  else if (strcmp_i(coll,"EquiSpaced")) c = EquiSpaced;
   else if (strcmp_i(coll,"Chebyshev_Zero")) c = Chebyshev_Zero;
   else
     abortEr_s("There is no such %s collocation.\n",coll);
     
   return c;
 }
+
+/* changing text to enum for basis 
+// ->return value: basis type, error if couldn't be found, 0 if null basis
+*/
+Basis_T get_basis(const char *const basis)
+{
+  Basis_T b = UNDEFINED_BASIS;
+  
+  if (!basis) return b;
+  else if (strcmp_i(basis,"Chebyshev_FirstKind")) 
+    b = Chebyshev_FirstKind_BASIS;
+  else if (strcmp_i(basis,"No_Basis")) 
+    b = No_BASIS;
+  else
+    abortEr_s("There is no such %s basis.\n",basis);
+    
+  return b;
+}
+
 
 /* find out if this point p located on an edge or not
 // the algorithm is simple; if it happens at two or more interfaces,

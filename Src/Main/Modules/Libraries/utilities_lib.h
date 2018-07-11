@@ -7,6 +7,7 @@ void add_func_PtoV(sFunc_PtoV_T ***const func,void (*f)(Patch_T *const patch),co
 void run_func_PtoV(sFunc_PtoV_T **const func,const char *const task,Patch_T *const patch);
 Coord_T find_coord(const Patch_T *const patch);
 Collocation_T get_collocation(const char *const coll);
+Basis_T get_basis(const char *const basis);
 void IJK(const unsigned l, const unsigned *const n, unsigned *const i, unsigned *const j, unsigned *const k);
 unsigned L(const unsigned *const n, const unsigned i, const unsigned j, const unsigned k);
 unsigned I(const unsigned l, const unsigned *const n);

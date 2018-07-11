@@ -140,7 +140,7 @@ static void alloc_patches_Cartesian_grid(Grid_T *const grid)
   
   for (i = 0; i < Nboxes; i++)
   {
-    grid->patch[i] = malloc(sizeof(*grid->patch[i]));
+    grid->patch[i] = calloc(1,sizeof(*grid->patch[i]));
     pointerEr(grid->patch[i]);
   }
   
@@ -246,7 +246,7 @@ Field_T *alloc_field(const Grid_T *const grid)
   
   /* check if it needs coeffs */
   FOR_ALL(i,grid->patch)
-    if (grid->patch[i]->basis != No_Basis)
+    if (grid->patch[i]->basis != No_BASIS)
       flg = YES;
   
   if (flg == YES)

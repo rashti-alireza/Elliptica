@@ -52,12 +52,17 @@ static void fill_patches_Cartesian_grid(Grid_T *const grid)
 {
   unsigned i;
   char name[20] = {'\0'};
+  Collocation_T c;
+  Basis_T b;
   Flag_T flg;
   
   FOR_ALL(i,grid->patch)
   {
     struct Ret_S ret;
     Patch_T *const patch = grid->patch[i];
+    c = UNDEFINED_COLLOCATION;
+    b = UNDEFINED_BASIS;
+    unsigned n;
     
     /* filling grid */
     patch->grid = grid;
@@ -73,13 +78,19 @@ static void fill_patches_Cartesian_grid(Grid_T *const grid)
     patch->name = dup_s(name);
     
     /* filling n */
+    n = (unsigned)get_parameter_value_I("all_Nabc",&flg);
+    if (flg != NONE)
+      patch->n[0] = patch->n[1] = patch->n[2] = n;
+    /* check for override */
     make_keyword_parameter(&ret,name,"n");
-    patch->n[0] = (unsigned)get_parameter_value_I(ret.s0,&flg);
-    parameterEr(flg);
-    patch->n[1] = (unsigned)get_parameter_value_I(ret.s1,&flg);
-    parameterEr(flg);
-    patch->n[2] = (unsigned)get_parameter_value_I(ret.s2,&flg);
-    parameterEr(flg);
+    n = (unsigned)get_parameter_value_I(ret.s0,&flg);
+    if (flg != NONE)	patch->n[0] = n;
+    n = (unsigned)get_parameter_value_I(ret.s1,&flg);
+    if (flg != NONE)	patch->n[1] = n;
+    n = (unsigned)get_parameter_value_I(ret.s2,&flg);
+    if (flg != NONE)	patch->n[2] = n;
+    
+    assert(patch->n[0] && patch->n[1] && patch->n[2]);
     
     /* filling center */
     make_keyword_parameter(&ret,name,"center");
@@ -110,10 +121,28 @@ static void fill_patches_Cartesian_grid(Grid_T *const grid)
     patch->max[2] = patch->c[2]+patch->s[2]/2;
     
     /* filling flags */
-    sprintf(name,"box%d_collocation",i);
     patch->coordsys = dup_s("Cartesian");
-    patch->collocation = get_collocation(get_parameter_value_S(name,&flg));
-    parameterEr(flg);
+    
+    /* collocation */
+    c = get_collocation(get_parameter_value_S("all_collocation",&flg));
+    if (flg != NONE)  patch->collocation = c;
+    /* check for override */
+    sprintf(name,"box%d_collocation",i);
+    c = get_collocation(get_parameter_value_S(name,&flg));
+    if (flg != NONE)  patch->collocation = c;
+    
+    assert(patch->collocation != UNDEFINED_COLLOCATION);
+    
+    /* basis */
+    b = get_basis(get_parameter_value_S("all_basis",&flg));
+    if (flg != NONE)  patch->basis = b;
+    /* check for override */
+    sprintf(name,"box%d_basis",i);
+    b = get_basis(get_parameter_value_S(name,&flg));
+    if (flg != NONE)  patch->basis = b;
+    
+    assert(patch->basis != UNDEFINED_BASIS);
+    
     
   }
   
