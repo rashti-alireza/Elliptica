@@ -27,7 +27,7 @@ void *alloc_parameter(Parameter_T ***const mem)
 }
 
 /* adding 2 block of memory for project data base 
-// and puting the last block to null and 
+// and putting the last block to null and 
 // returning pointer to one before the last block
 */
 void *alloc_project(Project_T ***const mem)
@@ -47,8 +47,8 @@ void *alloc_project(Project_T ***const mem)
   return (*mem)[i];
 }
 
-/* allocating memory for gird structure.
-// there are flags which determine wheather or not the grid should 
+/* allocating memory for grid structure.
+// there are flags which determine whether or not the grid should 
 // be newly allocated or there is already a gird which is recently 
 // deleted and can be used readily. note: this function add grid to 
 // grids_global; furthermore, the end of grids_global is determined by
@@ -70,7 +70,7 @@ void *alloc_grid(void)
   grids_global = realloc(grids_global,(i+2)*sizeof(*grids_global));
   pointerEr(grids_global);
   
-  grids_global[i] = malloc(sizeof(*grids_global[i]));
+  grids_global[i] = calloc(1,sizeof(*grids_global[i]));
   pointerEr(grids_global[i]);
   
   grids_global[i+1] = 0;
@@ -237,23 +237,20 @@ Field_T *alloc_field(const Grid_T *const grid)
 {
   Field_T *f;
   unsigned i;
+  Flag_T flg = NO;
   
   f = calloc(1,sizeof(*f));
   pointerEr(f);
   
   f->value = alloc_double(grid->nn);
   
-  /* find number of basis needed */
-  FOR_ALL(f->nb,grid->patch);
+  /* check if it needs coeffs */
+  FOR_ALL(i,grid->patch)
+    if (grid->patch[i]->basis != No_Basis)
+      flg = YES;
   
-  f->basis = calloc(f->nb,sizeof(*f->basis));
-  pointerEr(f->basis);
-  
-  for (i = 0; i < f->nb; ++i)
-  {
-    f->basis[i] = calloc(1,sizeof(*f->basis[i]));
-    pointerEr(f->basis[i]);
-  }
+  if (flg == YES)
+    f->coeffs = alloc_double(grid->nn);
   
   return f;
 }
