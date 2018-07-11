@@ -58,7 +58,8 @@ typedef enum FACE_T
 /* types of basis enum */
 typedef enum BASIS_E
 {
-  Chebyshev_FirstKind_Basis
+  No_Basis,/* when no basis is used */
+  Chebyshev_FirstKind_Basis/* first kind Chebyshev basis */
 }Basis_E;
 
 
@@ -188,7 +189,8 @@ typedef struct PATCH_T
 /* basis */
 typedef struct BASIS_T
 {
-  double *coeff;/* coefficients of basis if needed */
+  double *coeffs;/* coefficients of basis if needed */
+  unsigned nc;/* number of coeffs */
   Basis_E type;/* type of basis, like Chebyshev first kind or second */
 }Basis_T;
 
@@ -198,7 +200,12 @@ typedef struct FIELD_T
   char *name;/* its name like alpha or psi */
   double *value;/* its value on each grid point */
   Basis_T **basis;/* its basis info on each patch;
-                  // so each patch could use different basis */
+                  // so each patch could use different basis 
+                  // basis[patch #] is basis used in patch[patch #]
+                  */
+  unsigned nb;/* number of basis == number of patches */
+  unsigned basis_flg: 1;/* 1 if this field uses basis, 0 otherwise */
+  
 }Field_T;
 
 /* grid */
@@ -207,7 +214,7 @@ typedef struct GIRD_T
   char *kind;/* type of grid which refers how we cover the grid */
   Flag_T status;/* INUSE or READY */
   Patch_T **patch;/* covering patch */
-  
+  unsigned nn;/* total number of node on grid */
   /*Field_T  */
 }Grid_T;
 

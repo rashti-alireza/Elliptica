@@ -218,3 +218,43 @@ void *alloc_needle(void)
   return needle;
 }
 
+/* return value-> N*sizeof(double), using calloc*/
+double *alloc_double(const unsigned N)
+{
+  double *d;
+  
+  d = calloc(N,sizeof(*d));
+  pointerEr(d);
+  
+  return d;
+}
+
+/* allocating a field on grid, using calloc.
+// note: it just prepares the basis and doesn't filling them.
+// ->return value: a ready field.
+*/
+Field_T *alloc_field(const Grid_T *const grid)
+{
+  Field_T *f;
+  unsigned i;
+  
+  f = calloc(1,sizeof(*f));
+  pointerEr(f);
+  
+  f->value = alloc_double(grid->nn);
+  
+  /* find number of basis needed */
+  FOR_ALL(f->nb,grid->patch);
+  
+  f->basis = calloc(f->nb,sizeof(*f->basis));
+  pointerEr(f->basis);
+  
+  for (i = 0; i < f->nb; ++i)
+  {
+    f->basis[i] = calloc(1,sizeof(*f->basis[i]));
+    pointerEr(f->basis[i]);
+  }
+  
+  return f;
+}
+

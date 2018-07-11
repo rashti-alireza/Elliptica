@@ -217,3 +217,21 @@ SubFace_T *get_paired_subface(const SubFace_T *const sub)
   return face->subface[sub->adjsn];
   
 }
+
+/* ->return value: total number of nodes on the given grid */
+unsigned total_nodes_grid(const Grid_T *const grid)
+{
+  unsigned pa;
+  unsigned sum = 0;
+  
+  FOR_ALL(pa,grid->patch)
+    sum += total_nodes_patch(grid->patch[pa]);
+  
+  return sum;
+}
+
+/* ->return value: total number of nodes on the given patch */
+unsigned total_nodes_patch(const Patch_T *const patch)
+{
+  return patch->n[0]*patch->n[1]*patch->n[2];
+}

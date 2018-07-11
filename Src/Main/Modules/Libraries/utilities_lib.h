@@ -15,3 +15,5 @@ unsigned K(const unsigned l, const unsigned *const n);
 int IsOnEdge(const unsigned *const n,const unsigned p);
 int IsOnFace(const double *const x, const Patch_T *const patch,unsigned *const f);
 SubFace_T *get_paired_subface(const SubFace_T *const sub);
+unsigned total_nodes_grid(const Grid_T *const grid);
+unsigned total_nodes_patch(const Patch_T *const patch);

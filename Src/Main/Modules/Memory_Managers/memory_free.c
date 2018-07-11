@@ -85,3 +85,21 @@ void free_func_PtoV(sFunc_PtoV_T **func)
   
   free(func);
 }
+
+/* freeing a field */
+void free_field(Field_T *f)
+{
+  unsigned i;
+  
+  for (i = 0; i < f->nb; ++i)
+    if (f->basis[i]->coeffs) 
+      free(f->basis[i]->coeffs);
+      
+  free_matrix(f->basis,f->nb);
+  
+  if (f->name)
+    free(f->name);
+    
+  if (f->value)
+    free(f->value);
+}

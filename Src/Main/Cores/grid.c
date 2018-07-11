@@ -24,6 +24,9 @@ int make_patches(Grid_T *const grid)
   alloc_nodes(grid);
   fill_nodes(grid);
   
+  /* filling grid->nn */
+  grid->nn = total_nodes_grid(grid);
+  
   /* test printing coords */
   if (test_print(PRINT_COORDS))
     pr_coords(grid);

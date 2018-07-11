@@ -19,3 +19,5 @@ unsigned node_onFace(const double *const x, const unsigned f,const Patch_T *cons
 void IJK(const unsigned l, const unsigned *const n, unsigned *const i, unsigned *const j, unsigned *const k);
 static unsigned check_interface(const double *const X, const Patch_T *const patch, const int u);
 SubFace_T *get_paired_subface(const SubFace_T *const sub);
+unsigned total_nodes_grid(const Grid_T *const grid);
+unsigned total_nodes_patch(const Patch_T *const patch);
