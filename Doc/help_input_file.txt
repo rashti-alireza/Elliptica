@@ -18,7 +18,7 @@ o. For patch and grid and related:
     grid_kind = {Cartesian_grid} #type of grid
     number_of_boxes = 2 # for example
     all_basis = {Chebyshev_first_kind,no_basis} # 
-    all_collocation = {Chebyshev_zero,EquiSpaced}
+    all_collocation = {Chebyshev_Extrema,EquiSpaced}
     all_Nabc = ? # number of point in each direction
 
     box?_center_a = 2 # center of box? in direction a

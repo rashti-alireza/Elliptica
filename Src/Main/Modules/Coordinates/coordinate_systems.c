@@ -52,6 +52,26 @@ static void make_coords_Cartesian_coord(Patch_T *const patch)
 
 /* initializing collocation struct 
 // for making coords based on type of collocation.
+//
+// transformations:
+// ========================
+//
+// note: a and b refer to the minimum and maximum of a line respectively,
+// and n refers to number of points on that line.
+//
+// o. EquiSpaced:
+//      dividing a line in equal sizes
+//	-> grid space = (b-a)/(n-1)
+//
+// o. Chebyshev_extrema:
+//	mapping a line [a,b] to [-1,1] and then using Chebyshev extrema
+//	in [0,Pi] to find the nodes on the line. the following map is used:
+//	x = 0.5*(a-b)*y + 0.5*(a+b) where x in [a,b] and y in [-1,1].
+// 	y = cos(t).
+// 	note that x and y are in reverse order, and the reason is that
+// 	I wanted to have same increasing behavior between t and x.
+//
+//	
 */
 static void initialize_collocation_struct(const Patch_T *const patch,struct Collocation_s *const coll_s)
 {
@@ -69,47 +89,26 @@ static void initialize_collocation_struct(const Patch_T *const patch,struct Coll
   coll_s[2].n = patch->n[2];
   coll_s[2].min = patch->min[2];
   coll_s[2].max = patch->max[2];
-  
+
+  assert(coll_s[0].n-1 != 0);
+  assert(coll_s[1].n-1 != 0);
+  assert(coll_s[2].n-1 != 0);
+
   if (coll_s[0].f == EquiSpaced)
   {
-    assert(coll_s[0].n-1 != 0);
-    assert(coll_s[1].n-1 != 0);
-    assert(coll_s[2].n-1 != 0);
     coll_s[0].stp = (coll_s[0].max-coll_s[0].min)/(coll_s[0].n-1);
     coll_s[1].stp = (coll_s[1].max-coll_s[1].min)/(coll_s[1].n-1);
     coll_s[2].stp = (coll_s[2].max-coll_s[2].min)/(coll_s[2].n-1);
   }
-  else if (coll_s[0].f == Chebyshev_Zero)
+  else if (coll_s[0].f == Chebyshev_Extrema)
   {
-    coll_s[0].phi_in = 0.5*M_PI/coll_s[0].n;
-    coll_s[0].phi_fi = M_PI-coll_s[0].phi_in;
-    coll_s[0].a = 
-      (coll_s[0].min-coll_s[0].max)/
-        (cos(coll_s[0].phi_in)-cos(coll_s[0].phi_fi));
-    coll_s[0].b = 
-      (coll_s[0].max*cos(coll_s[0].phi_in)-
-        coll_s[0].min*cos(coll_s[0].phi_fi))/
-        (cos(coll_s[0].phi_in)-cos(coll_s[0].phi_fi));
+    coll_s[0].a = 0.5*(coll_s[0].min-coll_s[0].max);
+    coll_s[1].a = 0.5*(coll_s[1].min-coll_s[1].max);
+    coll_s[2].a = 0.5*(coll_s[2].min-coll_s[2].max);
     
-    coll_s[1].phi_in = 0.5*M_PI/coll_s[1].n;
-    coll_s[1].phi_fi = M_PI-coll_s[1].phi_in;
-    coll_s[1].a = 
-      (coll_s[1].min-coll_s[1].max)/
-        (cos(coll_s[1].phi_in)-cos(coll_s[1].phi_fi));
-        coll_s[1].b = 
-    (coll_s[1].max*cos(coll_s[1].phi_in)-
-        coll_s[1].min*cos(coll_s[1].phi_fi))/
-        (cos(coll_s[1].phi_in)-cos(coll_s[1].phi_fi));
-
-    coll_s[2].phi_in = 0.5*M_PI/coll_s[2].n;
-    coll_s[2].phi_fi = M_PI-coll_s[2].phi_in;
-    coll_s[2].a = 
-      (coll_s[2].min-coll_s[2].max)/
-        (cos(coll_s[2].phi_in)-cos(coll_s[2].phi_fi));
-    coll_s[2].b = 
-      (coll_s[2].max*cos(coll_s[2].phi_in)-
-        coll_s[2].min*cos(coll_s[2].phi_fi))/
-        (cos(coll_s[2].phi_in)-cos(coll_s[2].phi_fi));
+    coll_s[0].b = 0.5*(coll_s[0].min+coll_s[0].max);
+    coll_s[1].b = 0.5*(coll_s[1].min+coll_s[1].max);
+    coll_s[2].b = 0.5*(coll_s[2].min+coll_s[2].max);
   }
   else
     abortEr("There is no such COLLOCATION.\n");
@@ -124,9 +123,9 @@ static double point(const unsigned i, const struct Collocation_s *const coll_s)
   {
     v = coll_s->min + coll_s->stp*i;
   }
-  else if (coll_s->f == Chebyshev_Zero)
+  else if (coll_s->f == Chebyshev_Extrema)
   {
-    double phi = (i+0.5)*M_PI/coll_s->n;
+    double phi = i*M_PI/(coll_s->n-1);
     
     v = coll_s->a*cos(phi)+coll_s->b;
   }

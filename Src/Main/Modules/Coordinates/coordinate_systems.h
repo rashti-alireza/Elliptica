@@ -9,8 +9,6 @@ struct Collocation_s
   double max;
   unsigned n;
   double stp;
-  double phi_in;
-  double phi_fi;
   double a;
   double b;
   Collocation_T f;
