@@ -1,0 +1,40 @@
+In the following one can find list of all parameters and some rules:
+
+Rules:
+o. Character '#' comments out from 
+    where it has been put to the the end of line.
+o. all in beginning of a parameters means it is a shared value.
+
+
+Parameters: different values written in {here} and comments marked by #
+
+o. For projects:
+    Project = {Laplace_Inhom} #executing project
+
+o. For output folder:
+    output_directory_name = {default} # one can put any name
+
+o. For patch and grid and related:
+    grid_kind = {Cartesian_grid} #type of grid
+    number_of_boxes = 2 # for example
+    all_basis = {Chebyshev_first_kind,no_basis} # 
+    all_collocation = {Chebyshev_zero,EquiSpaced}
+    all_Nabc = ? # number of point in each direction
+
+    box?_center_a = 2 # center of box? in direction a
+    box?_center_b = 0 # center of box? in direction b
+    box?_center_c = -2 # center of box? in direction c
+    box?_size_a = 4; # length of a
+    box?_size_b = 4; # length of b
+    box?_size_c = 4; # length of c
+    box?_n_a = 30; # number of point in direction a
+    box?_n_b = 30; # number of point in direction b
+    box?_n_c = 30; # number of point in direction c
+    box?_collocation = {Chebyshev_zero,EquiSpaced}
+    box?_basis = {Chebyshev_first_kind,no_basis}
+
+o. For printing:
+#if one doesn't write each of them, it means no.
+    print_parameter = {yes,no}
+    print_coords = {yes,no}#prints nodes in Cartesian coords
+    print_interfaces = {yes,no}#prints interfaces between patches
