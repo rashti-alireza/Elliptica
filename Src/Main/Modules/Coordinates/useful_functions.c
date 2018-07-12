@@ -291,3 +291,39 @@ unsigned find_node(const double *const x, const Patch_T *const patch,Flag_T *con
 
   return v;
 }
+
+/* ->return value: x coord in specified patch */
+double x_coord(const unsigned i,const Patch_T *const patch)
+{
+  return patch->node[i-patch->nc]->x[0];
+}
+
+/* ->return value: y coord in specified patch */
+double y_coord(const unsigned i,const Patch_T *const patch)
+{
+  return patch->node[i-patch->nc]->x[1];
+}
+
+/* ->return value: z coord in specified patch */
+double z_coord(const unsigned i,const Patch_T *const patch)
+{
+  return patch->node[i-patch->nc]->x[2];
+}
+
+/* ->return value: X coord in specified patch */
+double X_coord(const unsigned i,const Patch_T *const patch)
+{
+  return patch->node[i-patch->nc]->X[0];
+}
+
+/* ->return value: Y coord in specified patch */
+double Y_coord(const unsigned i,const Patch_T *const patch)
+{
+  return patch->node[i-patch->nc]->X[1];
+}
+
+/* ->return value: Z coord in specified patch */
+double Z_coord(const unsigned i,const Patch_T *const patch)
+{
+  return patch->node[i-patch->nc]->X[2];
+}

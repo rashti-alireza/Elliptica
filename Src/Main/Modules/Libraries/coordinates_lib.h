@@ -1,3 +1,9 @@
 int make_patches(Grid_T *const grid);
 int realize_geometry(Grid_T *const grid);
 int X_of_x(double *const X,const double *const x,const Patch_T *const patch);
+double x_coord(const unsigned i,const Patch_T *const patch);
+double y_coord(const unsigned i,const Patch_T *const patch);
+double z_coord(const unsigned i,const Patch_T *const patch);
+double X_coord(const unsigned i,const Patch_T *const patch);
+double Y_coord(const unsigned i,const Patch_T *const patch);
+double Z_coord(const unsigned i,const Patch_T *const patch);
