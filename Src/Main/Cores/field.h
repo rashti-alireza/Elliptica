@@ -9,3 +9,4 @@ Field_T *init_field(const char *const name,Grid_T *const grid);
 void add_field(Field_T *const f,Grid_T *const grid);
 Field_T *get_field_S(const char *const name,Grid_T *const grid);
 double *make_coeffs(Field_T *const f);
+double *make_coeffs_inverse(Field_T *const f);

@@ -41,7 +41,8 @@ Field_T *get_field_S(const char *const name,Grid_T *const grid)
   return 0;
 }
 
-/* making coeffs of a field based on basis used for expansion.
+/* values -> coeffs.
+// making coeffs of a field based on basis used for expansion.
 // note: each patch uses it own basis type and each part of coeffs
 // corresponds to that basis type.
 // ->return value: coeffs, null no patches use basis.
@@ -68,4 +69,34 @@ double *make_coeffs(Field_T *const f)
   }
   
   return f->coeffs;
+}
+
+/* coeffs -> values
+// making values of field based on basis used for expansion.
+// note: each patch uses it own basis type and each part of coeffs
+// corresponds to that basis type.
+// ->return value: values.
+*/
+double *make_coeffs_inverse(Field_T *const f)
+{
+  Grid_T *const grid = f->grid;
+  double *coeffs, *values;
+  unsigned i,*n;
+  unsigned pa;
+  
+  i = 0;
+  FOR_ALL(pa,grid->patch)
+  {
+    coeffs = &f->coeffs[i];
+    values = &f->values[i];
+    n = grid->patch[pa]->n;
+    
+    /* basis finders come here */
+    if (grid->patch[pa]->basis == Chebyshev_FirstKind_BASIS)
+      fftw_3d_ChebyshevExtrema_values(values,coeffs,(int *)n);
+      
+    i += total_nodes_patch(grid->patch[pa]);
+  }
+  
+  return f->values;
 }
