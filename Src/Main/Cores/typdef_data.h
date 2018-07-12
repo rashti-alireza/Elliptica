@@ -206,8 +206,8 @@ typedef struct GIRD_T
   Flag_T status;/* INUSE or READY */
   Patch_T **patch;/* covering patch */
   unsigned nn;/* total number of nodes on grid */
-  Field_T  **field;/* fields */
   unsigned nf;/* number of fields */
+  Field_T  **field;/* fields */
 }Grid_T;
 
 /* *******************************************
