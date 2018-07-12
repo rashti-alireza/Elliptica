@@ -5,13 +5,25 @@
 
 #include "field.h"
 
+/* initializing a field.
+// ->return value: a ready field.
+*/
+Field_T *init_field(const char *const name,Grid_T *const grid)
+{
+  Field_T *f = alloc_field(grid);
+  if (name)
+    f->name = dup_s(name);
+  f->grid = grid;
+  
+  return f;
+}
+
 /* adding a field to field data base */
-void add_field(const char *const name,Grid_T *const grid)
+void add_field(Field_T *const f,Grid_T *const grid)
 {
   grid->field = realloc(grid->field,(grid->nf+1)*sizeof(*grid->field));
   pointerEr(grid->field);
-  grid->field[grid->nf] = alloc_field(grid);
-  grid->field[grid->nf]->name = dup_s(name);
+  grid->field[grid->nf] = f;
   grid->nf++;
 }
 
@@ -28,3 +40,5 @@ Field_T *get_field_S(const char *const name,Grid_T *const grid)
       
   return 0;
 }
+
+//make_coeffs(Field_T *const f)

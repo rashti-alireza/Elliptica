@@ -11,7 +11,7 @@
 // input explanation: 
 // =================
 //
-// o. *f is the value of function at each point
+// o. *values refers to the value of function at each point
 // o. coeffs are the coefficients
 // o. *n is n[3] i.e. number of points in each direction
 // 
@@ -27,11 +27,11 @@
 //
 // ->return value: EXIT_SUCCESS
 */
-int fftw_3d_ChebyshevExtrema_coeffs(double *const f,double *const coeffs,const int *const n)
+int fftw_3d_ChebyshevExtrema_coeffs(double *const values,double *const coeffs,const int *const n)
 {
   fftw_plan p;
   
-  p = fftw_plan_r2r_3d(n[0],n[1],n[2],f,coeffs,
+  p = fftw_plan_r2r_3d(n[0],n[1],n[2],values,coeffs,
             FFTW_REDFT00,FFTW_REDFT00,FFTW_REDFT00,FFTW_ESTIMATE);
   fftw_execute(p);
         
@@ -46,11 +46,11 @@ int fftw_3d_ChebyshevExtrema_coeffs(double *const f,double *const coeffs,const i
 // based on given coeffs.
 // ->return value: EXIT_SUCCESS.
 */
-int fftw_3d_ChebyshevExtrema_values(double *const f,double *const coeffs,const int *const n)
+int fftw_3d_ChebyshevExtrema_values(double *const values,double *const coeffs,const int *const n)
 {
   fftw_plan p;
   
-  p = fftw_plan_r2r_3d(n[0],n[1],n[2],coeffs,f,
+  p = fftw_plan_r2r_3d(n[0],n[1],n[2],coeffs,values,
             FFTW_REDFT00,FFTW_REDFT00,FFTW_REDFT00,FFTW_ESTIMATE);
   fftw_execute(p);
         

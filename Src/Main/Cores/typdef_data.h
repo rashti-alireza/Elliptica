@@ -196,6 +196,7 @@ typedef struct FIELD_T
   char *name;/* its name like alpha or psi */
   double *value;/* its value on each grid point */
   double *coeffs;/* coefficients of basis if needed */
+  struct GIRD_T *grid;/* refers to its grid */
 }Field_T;
 
 /* grid */
