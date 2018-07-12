@@ -1,0 +1,30 @@
+#include "core_lib.h"
+#include "coordinates_lib.h"
+#include "macros_lib.h"
+#include "memory_managing_lib.h"
+#include "maths_general_lib.h"
+#include "utilities_lib.h"
+#include "error_handling_lib.h"
+
+double *x_f(const Grid_T *const grid);
+double *y_f(const Grid_T *const grid);
+double *z_f(const Grid_T *const grid);
+double *r_f(const Grid_T *const grid);
+double *cosx_f(const Grid_T *const grid);
+double *cosy_f(const Grid_T *const grid);
+double *cosz_f(const Grid_T *const grid);
+double *sinx_f(const Grid_T *const grid);
+double *siny_f(const Grid_T *const grid);
+double *sinz_f(const Grid_T *const grid);
+double *cosxyz_f(const Grid_T *const grid);
+double *cos4xyz_f(const Grid_T *const grid);
+double *cos5xyz_f(const Grid_T *const grid);
+double *sinxyz_f(const Grid_T *const grid);
+double *sin3xyz_f(const Grid_T *const grid);
+double *coshxyz_f(const Grid_T *const grid);
+double *sinhxyz_f(const Grid_T *const grid);
+double *tanhxyz_f(const Grid_T *const grid);
+double *logxyz_f(const Grid_T *const grid);
+double *mix1_f(const Grid_T *const grid);
+double *mix2_f(const Grid_T *const grid);
+

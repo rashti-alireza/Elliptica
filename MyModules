@@ -13,3 +13,5 @@ modules_path += $(TOP)/Src/Main/Modules/Maths/Precisions/
 modules_path += $(TOP)/Src/Main/Modules/Maths/Solvers/
 modules_path += $(TOP)/Src/Main/Modules/Maths/General/
 modules_path += $(TOP)/Src/Main/Modules/Maths/Approximation/
+modules_path += $(TOP)/Src/Main/Modules/Maths/Analytic/
+

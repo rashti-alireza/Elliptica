@@ -53,6 +53,7 @@ void *alloc_project(Project_T ***const mem)
 // deleted and can be used readily. note: this function add grid to 
 // grids_global; furthermore, the end of grids_global is determined by
 // NULL.
+// ->return value: a new grid
 */
 void *alloc_grid(void)
 {

@@ -14,4 +14,9 @@
                        for (y = y_i; y < y_f; ++y)\
                         for (z = z_i; z < z_f; ++z)
 
-                                            
+#define x_(i)	x_coord(i,patch)
+#define y_(i)	y_coord(i,patch)
+#define z_(i)	z_coord(i,patch)
+#define X_(i)	X_coord(i,patch)
+#define Y_(i)	Y_coord(i,patch)
+#define Z_(i)	Z_coord(i,patch)
