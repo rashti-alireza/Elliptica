@@ -181,6 +181,7 @@ typedef struct PATCH_T
   Basis_T basis;/* the type of basis for functions used in this patch */
   unsigned n[3];/* number of points (nodes) in each direction */
   unsigned pn;/* its patch number i.e. patch[pn] = patch */
+  unsigned nc;/* node counter, sum of all nodes in previous patches */
   double c[3];/* center */
   double s[3];/* size like length, width and height */
   double min[3];/* minimum of each direction like x_min = min[0] */
@@ -205,9 +206,9 @@ typedef struct GIRD_T
   char *kind;/* type of grid which refers how we cover the grid */
   Flag_T status;/* INUSE or READY */
   Patch_T **patch;/* covering patch */
+  Field_T  **field;/* fields */
   unsigned nn;/* total number of nodes on grid */
   unsigned nf;/* number of fields */
-  Field_T  **field;/* fields */
 }Grid_T;
 
 /* *******************************************

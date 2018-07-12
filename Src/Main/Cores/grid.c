@@ -50,12 +50,14 @@ static void fill_patches(Grid_T *const grid)
 /*filling patch struct for Cartesian*/
 static void fill_patches_Cartesian_grid(Grid_T *const grid)
 {
-  unsigned i;
+  unsigned nc;
   char name[20] = {'\0'};
   Collocation_T c;
   Basis_T b;
   Flag_T flg;
+  unsigned i;
   
+  nc = 0;
   FOR_ALL(i,grid->patch)
   {
     struct Ret_S ret;
@@ -69,6 +71,9 @@ static void fill_patches_Cartesian_grid(Grid_T *const grid)
     
     /* filling patch number */
     patch->pn = i;
+    
+    /* filling node counter */
+    patch->nc = nc;
     
     /* filling inner boundary */
     patch->innerB = 0;
@@ -143,7 +148,7 @@ static void fill_patches_Cartesian_grid(Grid_T *const grid)
     
     assert(patch->basis != UNDEFINED_BASIS);
     
-    
+    nc +=  patch->n[0]*patch->n[1]*patch->n[2];
   }
   
 }
