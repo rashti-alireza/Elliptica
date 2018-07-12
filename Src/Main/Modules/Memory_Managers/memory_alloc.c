@@ -242,7 +242,7 @@ Field_T *alloc_field(const Grid_T *const grid)
   f = calloc(1,sizeof(*f));
   pointerEr(f);
   
-  f->value = alloc_double(grid->nn);
+  f->values = alloc_double(grid->nn);
   
   /* check if it needs coeffs */
   FOR_ALL(i,grid->patch)

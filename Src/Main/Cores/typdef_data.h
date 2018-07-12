@@ -179,7 +179,7 @@ typedef struct PATCH_T
   char *coordsys;/* coord sys used in this patch */
   Collocation_T collocation;/* type of collocation in this patch */
   Basis_T basis;/* the type of basis for functions used in this patch */
-  unsigned n[3];/* number of point in each direction */
+  unsigned n[3];/* number of points (nodes) in each direction */
   unsigned pn;/* its patch number i.e. patch[pn] = patch */
   double c[3];/* center */
   double s[3];/* size like length, width and height */
@@ -194,7 +194,7 @@ typedef struct PATCH_T
 typedef struct FIELD_T
 {
   char *name;/* its name like alpha or psi */
-  double *value;/* its value on each grid point */
+  double *values;/* its value on each grid point */
   double *coeffs;/* coefficients of basis if needed */
   struct GIRD_T *grid;/* refers to its grid */
 }Field_T;

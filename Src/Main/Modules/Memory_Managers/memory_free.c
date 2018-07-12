@@ -92,8 +92,8 @@ void free_field(Field_T *f)
   if (f->name)
     free(f->name);
     
-  if (f->value)
-    free(f->value);
+  if (f->values)
+    free(f->values);
     
   if (f->coeffs)
     free(f->coeffs);
