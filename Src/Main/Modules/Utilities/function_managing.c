@@ -5,7 +5,7 @@
 
 #include "function_managing.h"
 
-/* initializing func */
+/* initializing func patch to void */
 void init_func_PtoV(sFunc_PtoV_T ***const func)
 {
   (*func) = 0;
