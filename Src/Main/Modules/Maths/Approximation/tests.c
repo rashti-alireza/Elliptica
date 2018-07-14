@@ -5,7 +5,7 @@
 
 #include "tests.h"
 #define ArgM(a) a,#a/*used for being more accurate in naming and fast */
-#define MAXSTR 200
+#define MAXSTR 400
 
 /* testing:
 // ========
@@ -14,14 +14,23 @@
 // take its various derivatives ans finally 
 // compares the analytic results with numeric results.
 // note: the results will be printed accordingly in 
-// "ExpantionTests_Derivatives" folder.
+// "DerivativeTest" folder.
 // note: only those patches that use basis will be compared.
 // ->return value: EXIT_SUCCESS;
 */
 int DerivativeTest(Grid_T *const grid)
 {
   sFunc_Grid2Pdouble_T **DataBase_func;
+  char *path;
   unsigned fi;
+  Flag_T flg;
+  
+  path = get_parameter_value_S("output_directory_path",&flg);
+  parameterEr(flg);
+
+  path = dup_s(path);
+  make_directory(&path,"DerivativeTest",YES);
+
   
   init_func_Grid2Pdouble(&DataBase_func);
   /* below is all the available analytic functions with their derivatives. 
@@ -112,15 +121,14 @@ int DerivativeTest(Grid_T *const grid)
     if (DataBase_func[fi]->flg == 1) continue;
     
     sFunc_Grid2Pdouble_T *F[N_FUNC];
-    double *anal[N_FUNC];/* analytic */
+    double *anac[N_FUNC];/* analytic */
     double *numc[N_FUNC];/* numeric */
     enum FUNC_E e;
-    Flag_T flg;
     
     /* initializing, make them to point to 0 */
     for (e = FUNC; e < N_FUNC; ++e)
     {
-      anal[e] = 0;
+      anac[e] = 0;
       numc[e] = 0;
     }
     
@@ -130,32 +138,33 @@ int DerivativeTest(Grid_T *const grid)
     /* if the is no derivative for this function it continues */
     if (flg == NO) continue;
     
-    /* compute anal if any */
+    /* compute anac if any */
     for (e = FUNC; e < N_FUNC; ++e)
-      if (F[e])  anal[e] = F[e]->func(grid);
+      if (F[e])  anac[e] = F[e]->func(grid);
     
     for (e = FUNC_x; e < N_FUNC; ++e)
     {
-      /* if anal is define and so not null, compare with numeric */
-      if (anal[e])
+      /* if anac is define and so not null, compare with numeric */
+      if (anac[e])
       {
         //test
         printf("%s\n",F[e]->name);
         //end
-        //numc[e] = derivative(anal[FUNC],e);
-        //analyze(numc[e],anal[e],grid);
+        //numc[e] = derivative(anac[FUNC],e);
+        compare_derivative(F[e]->name,numc[e],anac[e],grid,path);
       }
     }
     
     /* freeing */
     for (e = FUNC; e < N_FUNC; ++e)
     {
-      if (anal[e]) free(anal[e]);
+      if (anac[e]) free(anac[e]);
       //if (numc[e]) free(numc[e]);
     }
   }/* end of FOR_ALL(fi,DataBase_func) */
   
   free_func_Grid2Pdouble(DataBase_func);
+  free(path);
   
   return EXIT_SUCCESS;
 }
@@ -234,6 +243,16 @@ static void enum2strcat(enum FUNC_E e,char *const fname_derivative)
       "If you added more kind of derivative please add" 
         "to enum FUNC_E and consequently other locations.\n");
   }
+}
+
+/* comparing the values obtained from numeric and with analytic one */
+static void compare_derivative(const char *const name,const double *const numc,const double *const anac,const Grid_T *const grid,const char *const path)
+{
+  char prefix[MAXSTR];
+  //unsigned p;
+  
+  sprintf(prefix,"%s/%s.DiffByNode",path,name);
+  pr_derivatives_DiffByNode(numc,anac,grid,prefix);
 }
 
 /* testing: Chebyshev first kind basis. */

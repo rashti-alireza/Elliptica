@@ -28,3 +28,4 @@ int DerivativeTest(Grid_T *const grid);
 static void ChebyshevFirstKindBasis_DerivativeTest(const Patch_T *const patch);
 static Flag_T read_F(sFunc_Grid2Pdouble_T **const F,sFunc_Grid2Pdouble_T **const DataBase_func,const enum FUNC_E fn);
 static void enum2strcat(enum FUNC_E e,char *const f_derivative);
+static void compare_derivative(const char *const name,const double *const numc,const double *const anac,const Grid_T *const grid,const char *const path);

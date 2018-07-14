@@ -4,7 +4,7 @@
 */
 
 #include "test_prints.h"
-
+#define MAXSTR 400
 /* printing different quantities for test */
 /* ->return value: if print option is on return 1 otherwise 0 */
 int test_print(const Print_T f)
@@ -42,7 +42,7 @@ int test_print(const Print_T f)
 void pr_interfaces(const Grid_T *const grid)
 {
   FILE *f;
-  char str[1000]={'\0'}, *path;
+  char str[MAXSTR]={'\0'}, *path;
   Interface_T **face;
   Node_T **node;
   SubFace_T *subf,*subf2;
@@ -371,7 +371,7 @@ void pr_interfaces(const Grid_T *const grid)
 void pr_parameters(void)
 {
   FILE *f;
-  char dir[1000]={'\0'}, *path;
+  char dir[MAXSTR]={'\0'}, *path;
   int i = 0;
   Flag_T flg;
   
@@ -396,7 +396,7 @@ void pr_parameters(void)
 void pr_coords(const Grid_T *const grid)
 {
   FILE *f;
-  char dir[1000]={'\0'}, *path;
+  char dir[MAXSTR]={'\0'}, *path;
   unsigned i = 0;
   Flag_T flg;
   
@@ -430,7 +430,7 @@ void pr_coords(const Grid_T *const grid)
 static void add_to_archive(struct Archive_S **const arch,SubFace_T *const s1,SubFace_T *const s2,unsigned *const n,const char *const desc)
 {
   struct Archive_S *A = (*arch);
-  char str[400] = {'\0'};
+  char str[MAXSTR] = {'\0'};
   const unsigned N = *n;
   
   if (s1 == 0 && s2 == 0) 
@@ -506,3 +506,40 @@ static void free_archive(struct Archive_S *arch,const unsigned N)
   
   free(arch);
 }
+
+/* print derivatives numc[#]-anac[#] versus node # for grid and each patch */
+void pr_derivatives_DiffByNode(const double *const numc, const double *const anac,const Grid_T *const grid,const char *const prefix)
+{
+  FILE *f;
+  char file_name[MAXSTR];
+  unsigned nn;
+  unsigned p,pa;
+  
+  if (!numc)
+    abortEr("There is no numeric value.\n");
+  
+  if (!anac)
+    abortEr("There is no analytic value.\n");
+  
+  /* printing for the whole grid */
+  sprintf(file_name,"%s.grid",prefix);
+  f = fopen(file_name,"w");
+  pointerEr(f);
+  for (p = 0; p < grid->nn; ++p)
+    fprintf(f,"%u %f\n",p,numc[p]-anac[p]);
+  fclose(f);
+  
+  /* printing for each patch */
+  FOR_ALL(pa,grid->patch)
+  {
+    nn = total_nodes_patch(grid->patch[pa]);
+    sprintf(file_name,"%s.%s",prefix,grid->patch[pa]->name);
+    f = fopen(file_name,"w");
+    pointerEr(f);
+    for (p = 0; p < nn; ++p)
+      fprintf(f,"%u %f\n",p,numc[p]-anac[p]);
+    fclose(f);
+  }
+  
+}
+

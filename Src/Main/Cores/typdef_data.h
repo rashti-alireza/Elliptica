@@ -183,7 +183,7 @@ typedef struct Interface_T
 typedef struct PATCH_T
 {
   struct GIRD_T *grid;/* refers to its grid */
-  char *name;/* box name */
+  char *name;/* patch name */
   char *coordsys;/* coord sys used in this patch */
   Collocation_T collocation;/* type of collocation in this patch */
   Basis_T basis;/* the type of basis for functions used in this patch */

@@ -8,3 +8,4 @@ void pr_line(void);
 void pr_comment(const char *const comment);
 void pr_clock(void);
 void pr_interfaces(const Grid_T *const grid);
+void pr_derivatives_DiffByNode(const double *const numc, const double *const anac,const Grid_T *const grid,const char *const prefix);

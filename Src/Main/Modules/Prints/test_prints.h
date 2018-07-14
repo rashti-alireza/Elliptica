@@ -20,3 +20,4 @@ void pr_coords(const Grid_T *const grid);
 void pr_interfaces(const Grid_T *const grid);
 static void add_to_archive(struct Archive_S **const arch,SubFace_T *const s1,SubFace_T *const s2,unsigned *const n,const char *const desc);
 static void free_archive(struct Archive_S *arch,const unsigned Narch);
+void pr_derivatives_DiffByNode(const double *const numc, const double *const anac,const Grid_T *const grid,const char *const prefix);
