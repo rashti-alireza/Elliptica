@@ -45,14 +45,15 @@ int strcmp_i(const char *const s1, const char *const s2)
 }
 
 /* duplicating a given string and INCLUDING '\0'
-// ->return value: a pointer to string
+// ->return value: a pointer to string, or null if str is null
 */
 char *dup_s(const char *const str)
 {
   unsigned i,n;
   char *r = 0;
   
-  assert(str);
+  if (!str) return 0;
+  
   n = (unsigned)strlen(str)+1;
   
   r = malloc(n);
