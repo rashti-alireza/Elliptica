@@ -5,6 +5,12 @@
 
 /* *******************************************
 // enum:
+// =====
+//
+// NOTE: DON'T CHANGE THE INITIALIZATION NUMBER 
+// OF ENUMS. THESE CONVENTIONS ARE USED THROUGHOUT
+// THE CODE. CHANGING THEM MIGHT LEAD TO SEGMENTAION
+// FALUT.
 // *******************************************
 */
 
@@ -55,7 +61,9 @@ typedef enum FACE_T
   J_n1,
   K_0,
   K_n2,
-  TOT_FACE = 6
+  TOT_FACE = 6/* it's assumed we have 6 faces for each patch.
+              // one might change this number with caveat.
+              */
 }Face_T;
 
 /* types of basis enum */

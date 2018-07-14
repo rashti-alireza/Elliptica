@@ -4,12 +4,21 @@
 */
 
 /* *******************************************
-// general purpose functions and related struct
+// general purpose functions typedef
 // *******************************************
 */
 
 /* general function patch to void */
-typedef void fFunc_PtoV_T(Patch_T *const patch);
+typedef void fFunc_PtoV_T (Patch_T *const patch);
+
+/* general function grid to pointer to double */
+typedef double *fFunc_Grid2Pdouble_T(Grid_T *const grid);
+
+
+/* *******************************************
+// general purpose structure typedef for functinos
+// *******************************************
+*/
 
 /* patch to void struct */
 typedef struct sFUNC_PtoV_T
@@ -19,3 +28,10 @@ typedef struct sFUNC_PtoV_T
   fFunc_PtoV_T *f;
 }sFunc_PtoV_T;
 
+/* grid to double struct */
+typedef struct sFUNC_GRID2PDOUBLE_T
+{
+  char *name;
+  fFunc_Grid2Pdouble_T *func;
+  unsigned flg: 1;/* used for different purposes */
+}sFunc_Grid2Pdouble_T;

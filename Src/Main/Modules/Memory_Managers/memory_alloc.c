@@ -187,7 +187,8 @@ void *alloc_point(const unsigned s)
 
 /* allocating 2 block of memory for sFunc_PtoV_T 
 // and putting the last block to NULL and returning
-// the new available pointer
+// the new available pointer.
+// ->return value: a pointer to a ready sFunc_PtoV
 */
 void *alloc_sFunc_PtoV(sFunc_PtoV_T ***const mem)
 {
@@ -205,6 +206,29 @@ void *alloc_sFunc_PtoV(sFunc_PtoV_T ***const mem)
   
   return (*mem)[i];
 }
+
+/* allocating 2 block of memory for sFunc_Grid2Pdouble_T 
+// and putting the last block to NULL and returning
+// the new available pointer.
+// ->return value: a pointer to a ready sFunc_Grid2Pdouble
+*/
+void *alloc_sFunc_Grid2Pdouble(sFunc_Grid2Pdouble_T ***const mem)
+{
+  unsigned i;
+  
+  for (i = 0; (*mem) != 0 && (*mem)[i] != 0 ; i++);
+  
+  (*mem) = realloc((*mem),(i+2)*sizeof(*(*mem)));
+  pointerEr((*mem));
+  
+  (*mem)[i] = calloc(1,sizeof(*(*mem)[i]));
+  pointerEr((*mem)[i]);
+  
+  (*mem)[i+1] = 0;
+  
+  return (*mem)[i];
+}
+
 
 /* make an empty needle 
 // ->return value: pointer to new needle

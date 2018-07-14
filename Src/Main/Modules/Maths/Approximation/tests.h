@@ -7,10 +7,11 @@
 #include "maths_general_lib.h"
 #include "maths_analytic_lib.h"
 
+/* types of derivatives; new one "must" be added to one before the last */
 enum FUNC_E
 {
   FUNC = 0,
-  FUNC_x = 1,
+  FUNC_x = 1,/* this number must to be changed */
   FUNC_y,
   FUNC_z,
   FUNC_xx,
@@ -23,5 +24,7 @@ enum FUNC_E
   N_FUNC
 };
 
-int DerivativeTest(const Grid_T *const grid)
+int DerivativeTest(Grid_T *const grid);
 static void ChebyshevFirstKindBasis_DerivativeTest(const Patch_T *const patch);
+static Flag_T read_F(sFunc_Grid2Pdouble_T **const F,sFunc_Grid2Pdouble_T **const func,const enum FUNC_E fn);
+static void enum2strcat(enum FUNC_E e,char *const f_derivative);

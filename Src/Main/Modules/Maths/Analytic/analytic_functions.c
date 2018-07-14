@@ -23,7 +23,7 @@
 */
 
 /* f: grid -> const */
-double *c_f(const Grid_T *const grid)
+double *c_f(Grid_T *const grid)
 {
   double *f = alloc_double(grid->nn);
   unsigned in/* initial point */,fi/* final point */;
@@ -44,7 +44,7 @@ double *c_f(const Grid_T *const grid)
 }
 
 /* f: grid -> x */
-double *x_f(const Grid_T *const grid)
+double *x_f(Grid_T *const grid)
 {
   double *f = alloc_double(grid->nn);
   unsigned in/* initial point */,fi/* final point */;
@@ -65,7 +65,7 @@ double *x_f(const Grid_T *const grid)
 }
 
 /* f: grid -> y */
-double *y_f(const Grid_T *const grid)
+double *y_f(Grid_T *const grid)
 {
   double *f = alloc_double(grid->nn);
   unsigned in/* initial point */,fi/* final point */;
@@ -86,7 +86,7 @@ double *y_f(const Grid_T *const grid)
 }
 
 /* f: grid -> z */
-double *z_f(const Grid_T *const grid)
+double *z_f(Grid_T *const grid)
 {
   double *f = alloc_double(grid->nn);
   unsigned in/* initial point */,fi/* final point */;
@@ -107,7 +107,7 @@ double *z_f(const Grid_T *const grid)
 }
 
 /* f: grid -> x^3-y^3+z^3-x^2*y*z+z^2*y^2*x */
-double *poly3_f(const Grid_T *const grid)
+double *poly3_f(Grid_T *const grid)
 {
   double *f = alloc_double(grid->nn);
   unsigned in/* initial point */,fi/* final point */;
@@ -129,7 +129,7 @@ double *poly3_f(const Grid_T *const grid)
 }
 
 /* f: grid -> r = sqrt(x^2+y^2+z^2) */
-double *r_f(const Grid_T *const grid)
+double *r_f(Grid_T *const grid)
 {
   double *f = alloc_double(grid->nn);
   unsigned in/* initial point */,fi/* final point */;
@@ -150,7 +150,7 @@ double *r_f(const Grid_T *const grid)
 }
 
 /* f: grid -> cos(x) */
-double *cosx_f(const Grid_T *const grid)
+double *cosx_f(Grid_T *const grid)
 {
   double *f = alloc_double(grid->nn);
   unsigned in/* initial point */,fi/* final point */;
@@ -171,7 +171,7 @@ double *cosx_f(const Grid_T *const grid)
 }
 
 /* f: grid -> cos(y) */
-double *cosy_f(const Grid_T *const grid)
+double *cosy_f(Grid_T *const grid)
 {
   double *f = alloc_double(grid->nn);
   unsigned in/* initial point */,fi/* final point */;
@@ -191,7 +191,7 @@ double *cosy_f(const Grid_T *const grid)
   return f;
 }
 /* f: grid -> cos(z) */
-double *cosz_f(const Grid_T *const grid)
+double *cosz_f(Grid_T *const grid)
 {
   double *f = alloc_double(grid->nn);
   unsigned in/* initial point */,fi/* final point */;
@@ -211,7 +211,7 @@ double *cosz_f(const Grid_T *const grid)
   return f;
 }
 /* f: grid -> sin(x) */
-double *sinx_f(const Grid_T *const grid)
+double *sinx_f(Grid_T *const grid)
 {
   double *f = alloc_double(grid->nn);
   unsigned in/* initial point */,fi/* final point */;
@@ -231,7 +231,7 @@ double *sinx_f(const Grid_T *const grid)
   return f;
 }
 /* f: grid -> sin(y) */
-double *siny_f(const Grid_T *const grid)
+double *siny_f(Grid_T *const grid)
 {
   double *f = alloc_double(grid->nn);
   unsigned in/* initial point */,fi/* final point */;
@@ -253,7 +253,7 @@ double *siny_f(const Grid_T *const grid)
 
 
 /* f: grid -> sin(z) */
-double *sinz_f(const Grid_T *const grid)
+double *sinz_f(Grid_T *const grid)
 {
   double *f = alloc_double(grid->nn);
   unsigned in/* initial point */,fi/* final point */;
@@ -274,7 +274,7 @@ double *sinz_f(const Grid_T *const grid)
 }
 
 /* f: grid -> cos(xyz) */
-double *cosxyz_f(const Grid_T *const grid)
+double *cosxyz_f(Grid_T *const grid)
 {
   double *f = alloc_double(grid->nn);
   unsigned in/* initial point */,fi/* final point */;
@@ -295,7 +295,7 @@ double *cosxyz_f(const Grid_T *const grid)
 }
 
 /* f: grid -> cos^4(xyz) */
-double *cos4xyz_f(const Grid_T *const grid)
+double *cos4xyz_f(Grid_T *const grid)
 {
   double *f = alloc_double(grid->nn);
   unsigned in/* initial point */,fi/* final point */;
@@ -316,7 +316,7 @@ double *cos4xyz_f(const Grid_T *const grid)
 }
 
 /* f: grid -> cos^5(xyz) */
-double *cos5xyz_f(const Grid_T *const grid)
+double *cos5xyz_f(Grid_T *const grid)
 {
   double *f = alloc_double(grid->nn);
   unsigned in/* initial point */,fi/* final point */;
@@ -337,7 +337,7 @@ double *cos5xyz_f(const Grid_T *const grid)
 }
 
 /* f: grid -> sin(xyz) */
-double *sinxyz_f(const Grid_T *const grid)
+double *sinxyz_f(Grid_T *const grid)
 {
   double *f = alloc_double(grid->nn);
   unsigned in/* initial point */,fi/* final point */;
@@ -358,7 +358,7 @@ double *sinxyz_f(const Grid_T *const grid)
 }
 
 /* f: grid -> sin^3(xyz) */
-double *sin3xyz_f(const Grid_T *const grid)
+double *sin3xyz_f(Grid_T *const grid)
 {
   double *f = alloc_double(grid->nn);
   unsigned in/* initial point */,fi/* final point */;
@@ -379,7 +379,7 @@ double *sin3xyz_f(const Grid_T *const grid)
 }
 
 /* f: grid -> cosh(xyz) */
-double *coshxyz_f(const Grid_T *const grid)
+double *coshxyz_f(Grid_T *const grid)
 {
   double *f = alloc_double(grid->nn);
   unsigned in/* initial point */,fi/* final point */;
@@ -401,7 +401,7 @@ double *coshxyz_f(const Grid_T *const grid)
 
 
 /* f: grid -> sinh(xyz) */
-double *sinhxyz_f(const Grid_T *const grid)
+double *sinhxyz_f(Grid_T *const grid)
 {
   double *f = alloc_double(grid->nn);
   unsigned in/* initial point */,fi/* final point */;
@@ -423,7 +423,7 @@ double *sinhxyz_f(const Grid_T *const grid)
 
 
 /* f: grid -> tanh(xyz) */
-double *tanhxyz_f(const Grid_T *const grid)
+double *tanhxyz_f(Grid_T *const grid)
 {
   double *f = alloc_double(grid->nn);
   unsigned in/* initial point */,fi/* final point */;
@@ -444,7 +444,7 @@ double *tanhxyz_f(const Grid_T *const grid)
 }
 
 /* f: grid -> log(1+(xyz)^2) */
-double *logxyz_f(const Grid_T *const grid)
+double *logxyz_f(Grid_T *const grid)
 {
   double *f = alloc_double(grid->nn);
   unsigned in/* initial point */,fi/* final point */;
@@ -466,7 +466,7 @@ double *logxyz_f(const Grid_T *const grid)
 
 
 /* f: grid -> x^2*cos(x*y^3*z) +y^3*z^4*x*sin(x^2*z) */
-double *mix1_f(const Grid_T *const grid)
+double *mix1_f(Grid_T *const grid)
 {
   double *f = alloc_double(grid->nn);
   unsigned in/* initial point */,fi/* final point */;
@@ -488,7 +488,7 @@ double *mix1_f(const Grid_T *const grid)
 }
 
 /* f: grid -> log(1+z^2)*cosh{sqrt(x^2+y^2+z^2)+sin(exp(x*y*z))} */
-double *mix2_f(const Grid_T *const grid)
+double *mix2_f(Grid_T *const grid)
 {
   double *f = alloc_double(grid->nn);
   unsigned in/* initial point */,fi/* final point */;
@@ -514,7 +514,7 @@ double *mix2_f(const Grid_T *const grid)
 /* the following is the derivative of functions above, shown by _* */
 
 /* f: c -> dc/dx */
-double *c_f_x(const Grid_T *const grid)
+double *c_f_x(Grid_T *const grid)
 {
   double *f = alloc_double(grid->nn);
   unsigned in/* initial point */,fi/* final point */;
@@ -535,7 +535,7 @@ double *c_f_x(const Grid_T *const grid)
 }
 
 /* f: c -> dc/dy */
-double *c_f_y(const Grid_T *const grid)
+double *c_f_y(Grid_T *const grid)
 {
   double *f = alloc_double(grid->nn);
   unsigned in/* initial point */,fi/* final point */;
@@ -557,7 +557,7 @@ double *c_f_y(const Grid_T *const grid)
 
 
 /* f: c -> dc/dz */
-double *c_f_z(const Grid_T *const grid)
+double *c_f_z(Grid_T *const grid)
 {
   double *f = alloc_double(grid->nn);
   unsigned in/* initial point */,fi/* final point */;
@@ -579,7 +579,7 @@ double *c_f_z(const Grid_T *const grid)
 
 
 /* f: x -> dx/dx */
-double *x_f_x(const Grid_T *const grid)
+double *x_f_x(Grid_T *const grid)
 {
   double *f = alloc_double(grid->nn);
   unsigned in/* initial point */,fi/* final point */;
@@ -600,7 +600,7 @@ double *x_f_x(const Grid_T *const grid)
 }
 
 /* f: x -> dx/dy */
-double *x_f_y(const Grid_T *const grid)
+double *x_f_y(Grid_T *const grid)
 {
   double *f = alloc_double(grid->nn);
   unsigned in/* initial point */,fi/* final point */;
@@ -621,7 +621,7 @@ double *x_f_y(const Grid_T *const grid)
 }
 
 /* f: x -> dx/dz */
-double *x_f_z(const Grid_T *const grid)
+double *x_f_z(Grid_T *const grid)
 {
   double *f = alloc_double(grid->nn);
   unsigned in/* initial point */,fi/* final point */;
@@ -642,7 +642,7 @@ double *x_f_z(const Grid_T *const grid)
 }
 
 /* f: x -> d2x/dxx */
-double *x_f_xx(const Grid_T *const grid)
+double *x_f_xx(Grid_T *const grid)
 {
   double *f = alloc_double(grid->nn);
   unsigned in/* initial point */,fi/* final point */;
@@ -663,7 +663,7 @@ double *x_f_xx(const Grid_T *const grid)
 }
 
 /* f: y -> dy/dx */
-double *y_f_x(const Grid_T *const grid)
+double *y_f_x(Grid_T *const grid)
 {
   double *f = alloc_double(grid->nn);
   unsigned in/* initial point */,fi/* final point */;
@@ -684,7 +684,7 @@ double *y_f_x(const Grid_T *const grid)
 }
 
 /* f: y -> dy/dy */
-double *y_f_y(const Grid_T *const grid)
+double *y_f_y(Grid_T *const grid)
 {
   double *f = alloc_double(grid->nn);
   unsigned in/* initial point */,fi/* final point */;
@@ -705,7 +705,7 @@ double *y_f_y(const Grid_T *const grid)
 }
 
 /* f: y -> dy/dz */
-double *y_f_z(const Grid_T *const grid)
+double *y_f_z(Grid_T *const grid)
 {
   double *f = alloc_double(grid->nn);
   unsigned in/* initial point */,fi/* final point */;
@@ -726,7 +726,7 @@ double *y_f_z(const Grid_T *const grid)
 }
 
 /* f: y -> d2y/dyy */
-double *y_f_yy(const Grid_T *const grid)
+double *y_f_yy(Grid_T *const grid)
 {
   double *f = alloc_double(grid->nn);
   unsigned in/* initial point */,fi/* final point */;
@@ -747,7 +747,7 @@ double *y_f_yy(const Grid_T *const grid)
 }
 
 /* f: z -> dz/dx */
-double *z_f_x(const Grid_T *const grid)
+double *z_f_x(Grid_T *const grid)
 {
   double *f = alloc_double(grid->nn);
   unsigned in/* initial point */,fi/* final point */;
@@ -768,7 +768,7 @@ double *z_f_x(const Grid_T *const grid)
 }
 
 /* f: z -> dz/dy */
-double *z_f_y(const Grid_T *const grid)
+double *z_f_y(Grid_T *const grid)
 {
   double *f = alloc_double(grid->nn);
   unsigned in/* initial point */,fi/* final point */;
@@ -789,7 +789,7 @@ double *z_f_y(const Grid_T *const grid)
 }
 
 /* f: z -> dz/dz */
-double *z_f_z(const Grid_T *const grid)
+double *z_f_z(Grid_T *const grid)
 {
   double *f = alloc_double(grid->nn);
   unsigned in/* initial point */,fi/* final point */;
@@ -810,7 +810,7 @@ double *z_f_z(const Grid_T *const grid)
 }
 
 /* f: z -> d2z/dzz */
-double *z_f_zz(const Grid_T *const grid)
+double *z_f_zz(Grid_T *const grid)
 {
   double *f = alloc_double(grid->nn);
   unsigned in/* initial point */,fi/* final point */;
@@ -831,7 +831,7 @@ double *z_f_zz(const Grid_T *const grid)
 }
 
 /* f: r -> dr/dx */
-double *r_f_x(const Grid_T *const grid)
+double *r_f_x(Grid_T *const grid)
 {
   double *f = alloc_double(grid->nn);
   unsigned in/* initial point */,fi/* final point */;
@@ -852,7 +852,7 @@ double *r_f_x(const Grid_T *const grid)
 }
 
 /* f: r -> dr/dy */
-double *r_f_y(const Grid_T *const grid)
+double *r_f_y(Grid_T *const grid)
 {
   double *f = alloc_double(grid->nn);
   unsigned in/* initial point */,fi/* final point */;
@@ -873,7 +873,7 @@ double *r_f_y(const Grid_T *const grid)
 }
 
 /* f: r -> dr/dz */
-double *r_f_z(const Grid_T *const grid)
+double *r_f_z(Grid_T *const grid)
 {
   double *f = alloc_double(grid->nn);
   unsigned in/* initial point */,fi/* final point */;
@@ -894,7 +894,7 @@ double *r_f_z(const Grid_T *const grid)
 }
 
 /* f: r -> dr/dxx */
-double *r_f_xx(const Grid_T *const grid)
+double *r_f_xx(Grid_T *const grid)
 {
   double *f = alloc_double(grid->nn);
   unsigned in/* initial point */,fi/* final point */;
@@ -916,7 +916,7 @@ double *r_f_xx(const Grid_T *const grid)
 }
 
 /* f: r -> dr/dyy */
-double *r_f_yy(const Grid_T *const grid)
+double *r_f_yy(Grid_T *const grid)
 {
   double *f = alloc_double(grid->nn);
   unsigned in/* initial point */,fi/* final point */;
@@ -938,7 +938,7 @@ double *r_f_yy(const Grid_T *const grid)
 }
 
 /* f: r -> dr/dzz */
-double *r_f_zz(const Grid_T *const grid)
+double *r_f_zz(Grid_T *const grid)
 {
   double *f = alloc_double(grid->nn);
   unsigned in/* initial point */,fi/* final point */;
@@ -960,7 +960,7 @@ double *r_f_zz(const Grid_T *const grid)
 }
 
 /* f: r -> dr/dxy */
-double *r_f_xy(const Grid_T *const grid)
+double *r_f_xy(Grid_T *const grid)
 {
   double *f = alloc_double(grid->nn);
   unsigned in/* initial point */,fi/* final point */;
@@ -981,7 +981,7 @@ double *r_f_xy(const Grid_T *const grid)
 }
 
 /* f: r -> dr/dxz */
-double *r_f_xz(const Grid_T *const grid)
+double *r_f_xz(Grid_T *const grid)
 {
   double *f = alloc_double(grid->nn);
   unsigned in/* initial point */,fi/* final point */;
@@ -1002,7 +1002,7 @@ double *r_f_xz(const Grid_T *const grid)
 }
 
 /* f: r -> dr/dyz */
-double *r_f_yz(const Grid_T *const grid)
+double *r_f_yz(Grid_T *const grid)
 {
   double *f = alloc_double(grid->nn);
   unsigned in/* initial point */,fi/* final point */;
@@ -1023,7 +1023,7 @@ double *r_f_yz(const Grid_T *const grid)
 }
 
 /* f: r -> dr/dxyz */
-double *r_f_xyz(const Grid_T *const grid)
+double *r_f_xyz(Grid_T *const grid)
 {
   double *f = alloc_double(grid->nn);
   unsigned in/* initial point */,fi/* final point */;
@@ -1044,7 +1044,7 @@ double *r_f_xyz(const Grid_T *const grid)
 }
 
 /* f: sin(xyz)->d(sin(xyz))/dx */
-double *sinxyz_f_x(const Grid_T *const grid)
+double *sinxyz_f_x(Grid_T *const grid)
 {
   double *f = alloc_double(grid->nn);
   unsigned in/* initial point */,fi/* final point */;
@@ -1065,7 +1065,7 @@ double *sinxyz_f_x(const Grid_T *const grid)
 }
 
 /* f: sin(xyz)->d(sin(xyz))/dy */
-double *sinxyz_f_y(const Grid_T *const grid)
+double *sinxyz_f_y(Grid_T *const grid)
 {
   double *f = alloc_double(grid->nn);
   unsigned in/* initial point */,fi/* final point */;
@@ -1086,7 +1086,7 @@ double *sinxyz_f_y(const Grid_T *const grid)
 }
 
 /* f: sin(xyz)->d(sin(xyz))/dz */
-double *sinxyz_f_z(const Grid_T *const grid)
+double *sinxyz_f_z(Grid_T *const grid)
 {
   double *f = alloc_double(grid->nn);
   unsigned in/* initial point */,fi/* final point */;
@@ -1107,7 +1107,7 @@ double *sinxyz_f_z(const Grid_T *const grid)
 }
 
 /* f: sin(xyz)->d(sin(xyz))/dxx */
-double *sinxyz_f_xx(const Grid_T *const grid)
+double *sinxyz_f_xx(Grid_T *const grid)
 {
   double *f = alloc_double(grid->nn);
   unsigned in/* initial point */,fi/* final point */;
@@ -1128,7 +1128,7 @@ double *sinxyz_f_xx(const Grid_T *const grid)
 }
 
 /* f: sin(xyz)->d(sin(xyz))/dyy */
-double *sinxyz_f_yy(const Grid_T *const grid)
+double *sinxyz_f_yy(Grid_T *const grid)
 {
   double *f = alloc_double(grid->nn);
   unsigned in/* initial point */,fi/* final point */;
@@ -1149,7 +1149,7 @@ double *sinxyz_f_yy(const Grid_T *const grid)
 }
 
 /* f: sin(xyz)->d(sin(xyz))/dzz */
-double *sinxyz_f_zz(const Grid_T *const grid)
+double *sinxyz_f_zz(Grid_T *const grid)
 {
   double *f = alloc_double(grid->nn);
   unsigned in/* initial point */,fi/* final point */;
@@ -1170,7 +1170,7 @@ double *sinxyz_f_zz(const Grid_T *const grid)
 }
 
 /* f: sin(xyz)->d(sin(xyz))/dxy */
-double *sinxyz_f_xy(const Grid_T *const grid)
+double *sinxyz_f_xy(Grid_T *const grid)
 {
   double *f = alloc_double(grid->nn);
   unsigned in/* initial point */,fi/* final point */;
@@ -1191,7 +1191,7 @@ double *sinxyz_f_xy(const Grid_T *const grid)
 }
 
 /* f: sin(xyz)->d(sin(xyz))/dxz */
-double *sinxyz_f_xz(const Grid_T *const grid)
+double *sinxyz_f_xz(Grid_T *const grid)
 {
   double *f = alloc_double(grid->nn);
   unsigned in/* initial point */,fi/* final point */;
@@ -1212,7 +1212,7 @@ double *sinxyz_f_xz(const Grid_T *const grid)
 }
 
 /* f: sin(xyz)->d(sin(xyz))/dyz */
-double *sinxyz_f_yz(const Grid_T *const grid)
+double *sinxyz_f_yz(Grid_T *const grid)
 {
   double *f = alloc_double(grid->nn);
   unsigned in/* initial point */,fi/* final point */;
@@ -1233,7 +1233,7 @@ double *sinxyz_f_yz(const Grid_T *const grid)
 }
 
 /* f: sin(xyz)->d(sin(xyz))/dxyz*/
-double *sinxyz_f_xyz(const Grid_T *const grid)
+double *sinxyz_f_xyz(Grid_T *const grid)
 {
   double *f = alloc_double(grid->nn);
   unsigned in/* initial point */,fi/* final point */;
@@ -1255,7 +1255,7 @@ double *sinxyz_f_xyz(const Grid_T *const grid)
 }
 
 /* f: grid -> d(poly3)_dx */
-double *poly3_f_x(const Grid_T *const grid)
+double *poly3_f_x(Grid_T *const grid)
 {
   double *f = alloc_double(grid->nn);
   unsigned in/* initial point */,fi/* final point */;
@@ -1276,7 +1276,7 @@ double *poly3_f_x(const Grid_T *const grid)
 }
 
 /* f: grid -> d(poly3)_dy */
-double *poly3_f_y(const Grid_T *const grid)
+double *poly3_f_y(Grid_T *const grid)
 {
   double *f = alloc_double(grid->nn);
   unsigned in/* initial point */,fi/* final point */;
@@ -1297,7 +1297,7 @@ double *poly3_f_y(const Grid_T *const grid)
 }
 
 /* f: grid -> d(poly3)_dz */
-double *poly3_f_z(const Grid_T *const grid)
+double *poly3_f_z(Grid_T *const grid)
 {
   double *f = alloc_double(grid->nn);
   unsigned in/* initial point */,fi/* final point */;
@@ -1318,7 +1318,7 @@ double *poly3_f_z(const Grid_T *const grid)
 }
 
 /* f: grid -> d(poly3)_dxx */
-double *poly3_f_xx(const Grid_T *const grid)
+double *poly3_f_xx(Grid_T *const grid)
 {
   double *f = alloc_double(grid->nn);
   unsigned in/* initial point */,fi/* final point */;
@@ -1339,7 +1339,7 @@ double *poly3_f_xx(const Grid_T *const grid)
 }
 
 /* f: grid -> d(poly3)_dyy */
-double *poly3_f_yy(const Grid_T *const grid)
+double *poly3_f_yy(Grid_T *const grid)
 {
   double *f = alloc_double(grid->nn);
   unsigned in/* initial point */,fi/* final point */;
@@ -1360,7 +1360,7 @@ double *poly3_f_yy(const Grid_T *const grid)
 }
 
 /* f: grid -> d(poly3)_dzz */
-double *poly3_f_zz(const Grid_T *const grid)
+double *poly3_f_zz(Grid_T *const grid)
 {
   double *f = alloc_double(grid->nn);
   unsigned in/* initial point */,fi/* final point */;
@@ -1381,7 +1381,7 @@ double *poly3_f_zz(const Grid_T *const grid)
 }
 
 /* f: grid -> d(poly3)_dxy */
-double *poly3_f_xy(const Grid_T *const grid)
+double *poly3_f_xy(Grid_T *const grid)
 {
   double *f = alloc_double(grid->nn);
   unsigned in/* initial point */,fi/* final point */;
@@ -1402,7 +1402,7 @@ double *poly3_f_xy(const Grid_T *const grid)
 }
 
 /* f: grid -> d(poly3)_dxz */
-double *poly3_f_xz(const Grid_T *const grid)
+double *poly3_f_xz(Grid_T *const grid)
 {
   double *f = alloc_double(grid->nn);
   unsigned in/* initial point */,fi/* final point */;
@@ -1423,7 +1423,7 @@ double *poly3_f_xz(const Grid_T *const grid)
 }
 
 /* f: grid -> d(poly3)_dyz */
-double *poly3_f_yz(const Grid_T *const grid)
+double *poly3_f_yz(Grid_T *const grid)
 {
   double *f = alloc_double(grid->nn);
   unsigned in/* initial point */,fi/* final point */;
@@ -1444,7 +1444,7 @@ double *poly3_f_yz(const Grid_T *const grid)
 }
 
 /* f: grid -> d(poly3)_dxyz */
-double *poly3_f_xyz(const Grid_T *const grid)
+double *poly3_f_xyz(Grid_T *const grid)
 {
   double *f = alloc_double(grid->nn);
   unsigned in/* initial point */,fi/* final point */;
@@ -1465,7 +1465,7 @@ double *poly3_f_xyz(const Grid_T *const grid)
 }
 
 /* f: dmix2/dx */
-double *mix2_f_x(const Grid_T *const grid)
+double *mix2_f_x(Grid_T *const grid)
 {
   double *f = alloc_double(grid->nn);
   unsigned in/* initial point */,fi/* final point */;
@@ -1489,7 +1489,7 @@ double *mix2_f_x(const Grid_T *const grid)
 }
 
 /* f: dmix2/dy */
-double *mix2_f_y(const Grid_T *const grid)
+double *mix2_f_y(Grid_T *const grid)
 {
   double *f = alloc_double(grid->nn);
   unsigned in/* initial point */,fi/* final point */;
@@ -1514,7 +1514,7 @@ double *mix2_f_y(const Grid_T *const grid)
 
 
 /* f: dmix2/dz */
-double *mix2_f_z(const Grid_T *const grid)
+double *mix2_f_z(Grid_T *const grid)
 {
   double *f = alloc_double(grid->nn);
   unsigned in/* initial point */,fi/* final point */;
@@ -1540,7 +1540,7 @@ double *mix2_f_z(const Grid_T *const grid)
 }
 
 /* f: dmix2/dxx */
-double *mix2_f_xx(const Grid_T *const grid)
+double *mix2_f_xx(Grid_T *const grid)
 {
   double *f = alloc_double(grid->nn);
   unsigned in/* initial point */,fi/* final point */;
@@ -1574,7 +1574,7 @@ double *mix2_f_xx(const Grid_T *const grid)
 
 
 /* f: dmix2/dyy */
-double *mix2_f_yy(const Grid_T *const grid)
+double *mix2_f_yy(Grid_T *const grid)
 {
   double *f = alloc_double(grid->nn);
   unsigned in/* initial point */,fi/* final point */;
@@ -1607,7 +1607,7 @@ double *mix2_f_yy(const Grid_T *const grid)
 }
 
 /* f: dmix2/dzz */
-double *mix2_f_zz(const Grid_T *const grid)
+double *mix2_f_zz(Grid_T *const grid)
 {
   double *f = alloc_double(grid->nn);
   unsigned in/* initial point */,fi/* final point */;
@@ -1648,7 +1648,7 @@ double *mix2_f_zz(const Grid_T *const grid)
 
 
 /* f: dmix2/dxy */
-double *mix2_f_xy(const Grid_T *const grid)
+double *mix2_f_xy(Grid_T *const grid)
 {
   double *f = alloc_double(grid->nn);
   unsigned in/* initial point */,fi/* final point */;
@@ -1684,7 +1684,7 @@ double *mix2_f_xy(const Grid_T *const grid)
 }
 
 /* f: dmix2/dxz */
-double *mix2_f_xz(const Grid_T *const grid)
+double *mix2_f_xz(Grid_T *const grid)
 {
   double *f = alloc_double(grid->nn);
   unsigned in/* initial point */,fi/* final point */;
@@ -1721,7 +1721,7 @@ double *mix2_f_xz(const Grid_T *const grid)
 }
 
 /* f: dmix2/dyz */
-double *mix2_f_yz(const Grid_T *const grid)
+double *mix2_f_yz(Grid_T *const grid)
 {
   double *f = alloc_double(grid->nn);
   unsigned in/* initial point */,fi/* final point */;
@@ -1757,7 +1757,7 @@ double *mix2_f_yz(const Grid_T *const grid)
 }
 
 /* f: dmix2/dxyz */
-double *mix2_f_xyz(const Grid_T *const grid)
+double *mix2_f_xyz(Grid_T *const grid)
 {
   double *f = alloc_double(grid->nn);
   unsigned in/* initial point */,fi/* final point */;

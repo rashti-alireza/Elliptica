@@ -19,3 +19,4 @@ static void alloc_patches_Cartesian_grid(Grid_T *const grid);
 Parameter_T *get_parameter(const char *const par_name);
 Field_T *alloc_field(const Grid_T *const grid);
 double *alloc_double(const unsigned N);
+void *alloc_sFunc_Grid2Pdouble(sFunc_Grid2Pdouble_T ***const mem);

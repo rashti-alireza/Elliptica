@@ -86,6 +86,21 @@ void free_func_PtoV(sFunc_PtoV_T **func)
   free(func);
 }
 
+/* free function structure form grid to pointer to double */
+void free_func_Grid2Pdouble(sFunc_Grid2Pdouble_T **func)
+{
+  unsigned i;
+  
+  for (i = 0; func[i] != 0; ++i)
+  {
+    free(func[i]->name);
+    free(func[i]);
+  }
+  
+  free(func);
+}
+
+
 /* freeing a field */
 void free_field(Field_T *f)
 {

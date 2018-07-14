@@ -18,3 +18,6 @@ int IsOnFace(const double *const x, const Patch_T *const patch,unsigned *const f
 SubFace_T *get_paired_subface(const SubFace_T *const sub);
 unsigned total_nodes_grid(const Grid_T *const grid);
 unsigned total_nodes_patch(const Patch_T *const patch);
+void init_func_Grid2Pdouble(sFunc_Grid2Pdouble_T ***const func);
+void add_func_Grid2Pdouble(sFunc_Grid2Pdouble_T ***const func,double *(*f)(Grid_T *const grid),const char *const name);
+sFunc_Grid2Pdouble_T *get_func_Grid2Pdouble(const char *const name,sFunc_Grid2Pdouble_T **const func);
