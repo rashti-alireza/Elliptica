@@ -149,6 +149,27 @@ double *r_f(Grid_T *const grid)
   return f;
 }
 
+/* f: grid -> 1/(1+r) */
+double *inv_rP1_f(Grid_T *const grid)
+{
+  double *f = alloc_double(grid->nn);
+  unsigned in/* initial point */,fi/* final point */;
+  unsigned i,pa;
+  
+  in = 0;
+  FOR_ALL(pa,grid->patch)
+  {
+    Patch_T *patch = grid->patch[pa];
+    fi = total_nodes_patch(patch) + in;
+    
+    for (i = in; i < fi; ++i)
+      f[i] = 1/(1+sqrt(pow(x_(i),2)+pow(y_(i),2)+pow(z_(i),2)));
+      
+    in = fi;
+  }
+  return f;
+}
+
 /* f: grid -> cos(x) */
 double *cosx_f(Grid_T *const grid)
 {
@@ -824,6 +845,245 @@ double *z_f_zz(Grid_T *const grid)
     /* go over all patch's points */
     for (i = in; i < fi; ++i)
       f[i] = 0;
+      
+    in = fi;
+  }
+  return f;
+}
+
+/* f: grid -> d(1/(1+r))/dx */
+double *inv_rP1_f_x(Grid_T *const grid)
+{
+  double *f = alloc_double(grid->nn);
+  unsigned in/* initial point */,fi/* final point */;
+  unsigned i,pa;
+  
+  in = 0;
+  FOR_ALL(pa,grid->patch)
+  {
+    Patch_T *patch = grid->patch[pa];
+    fi = total_nodes_patch(patch) + in;
+    
+    for (i = in; i < fi; ++i)
+      f[i] = -(xM/(Sqrt(Power(xM,2) + Power(yM,2) + Power(zM,2))*
+       Power(1 + Sqrt(Power(xM,2) + Power(yM,2) + Power(zM,2)),2)));
+      
+    in = fi;
+  }
+  return f;
+}
+
+/* f: grid -> d(1/(1+r))/dy */
+double *inv_rP1_f_y(Grid_T *const grid)
+{
+  double *f = alloc_double(grid->nn);
+  unsigned in/* initial point */,fi/* final point */;
+  unsigned i,pa;
+  
+  in = 0;
+  FOR_ALL(pa,grid->patch)
+  {
+    Patch_T *patch = grid->patch[pa];
+    fi = total_nodes_patch(patch) + in;
+    
+    for (i = in; i < fi; ++i)
+      f[i] = -(yM/(Sqrt(Power(xM,2) + Power(yM,2) + Power(zM,2))*
+       Power(1 + Sqrt(Power(xM,2) + Power(yM,2) + Power(zM,2)),2)));
+      
+    in = fi;
+  }
+  return f;
+}
+
+/* f: grid -> d(1/(1+r))/dz */
+double *inv_rP1_f_z(Grid_T *const grid)
+{
+  double *f = alloc_double(grid->nn);
+  unsigned in/* initial point */,fi/* final point */;
+  unsigned i,pa;
+  
+  in = 0;
+  FOR_ALL(pa,grid->patch)
+  {
+    Patch_T *patch = grid->patch[pa];
+    fi = total_nodes_patch(patch) + in;
+    
+    for (i = in; i < fi; ++i)
+      f[i] = -(zM/(Sqrt(Power(xM,2) + Power(yM,2) + Power(zM,2))*
+       Power(1 + Sqrt(Power(xM,2) + Power(yM,2) + Power(zM,2)),2)));
+      
+    in = fi;
+  }
+  return f;
+}
+
+/* f: grid -> d(1/(1+r))/dxx */
+double *inv_rP1_f_xx(Grid_T *const grid)
+{
+  double *f = alloc_double(grid->nn);
+  unsigned in/* initial point */,fi/* final point */;
+  unsigned i,pa;
+  
+  in = 0;
+  FOR_ALL(pa,grid->patch)
+  {
+    Patch_T *patch = grid->patch[pa];
+    fi = total_nodes_patch(patch) + in;
+    
+    for (i = in; i < fi; ++i)
+      f[i] = (2*Power(xM,2))/
+    ((Power(xM,2) + Power(yM,2) + Power(zM,2))*
+      Power(1 + Sqrt(Power(xM,2) + Power(yM,2) + Power(zM,2)),3)) + 
+   Power(xM,2)/
+    (Power(Power(xM,2) + Power(yM,2) + Power(zM,2),1.5)*
+      Power(1 + Sqrt(Power(xM,2) + Power(yM,2) + Power(zM,2)),2)) - 
+   1/(Sqrt(Power(xM,2) + Power(yM,2) + Power(zM,2))*
+      Power(1 + Sqrt(Power(xM,2) + Power(yM,2) + Power(zM,2)),2));
+      
+    in = fi;
+  }
+  return f;
+}
+
+/* f: grid -> d(1/(1+r))/dyy */
+double *inv_rP1_f_yy(Grid_T *const grid)
+{
+  double *f = alloc_double(grid->nn);
+  unsigned in/* initial point */,fi/* final point */;
+  unsigned i,pa;
+  
+  in = 0;
+  FOR_ALL(pa,grid->patch)
+  {
+    Patch_T *patch = grid->patch[pa];
+    fi = total_nodes_patch(patch) + in;
+    
+    for (i = in; i < fi; ++i)
+      f[i] = (2*Power(yM,2)*Sqrt(Power(xM,2) + Power(yM,2) + Power(zM,2)) - 
+     Power(xM,2)*(1 + Sqrt(Power(xM,2) + Power(yM,2) + 
+          Power(zM,2))) - Power(zM,2)*
+      (1 + Sqrt(Power(xM,2) + Power(yM,2) + Power(zM,2))))/
+   (Power(Power(xM,2) + Power(yM,2) + Power(zM,2),1.5)*
+     Power(1 + Sqrt(Power(xM,2) + Power(yM,2) + Power(zM,2)),3));
+      
+    in = fi;
+  }
+  return f;
+}
+
+/* f: grid -> d(1/(1+r))/dzz */
+double *inv_rP1_f_zz(Grid_T *const grid)
+{
+  double *f = alloc_double(grid->nn);
+  unsigned in/* initial point */,fi/* final point */;
+  unsigned i,pa;
+  
+  in = 0;
+  FOR_ALL(pa,grid->patch)
+  {
+    Patch_T *patch = grid->patch[pa];
+    fi = total_nodes_patch(patch) + in;
+    
+    for (i = in; i < fi; ++i)
+      f[i] = (2*Power(zM,2)*Sqrt(Power(xM,2) + Power(yM,2) + Power(zM,2)) - 
+     Power(xM,2)*(1 + Sqrt(Power(xM,2) + Power(yM,2) + 
+          Power(zM,2))) - Power(yM,2)*
+      (1 + Sqrt(Power(xM,2) + Power(yM,2) + Power(zM,2))))/
+   (Power(Power(xM,2) + Power(yM,2) + Power(zM,2),1.5)*
+     Power(1 + Sqrt(Power(xM,2) + Power(yM,2) + Power(zM,2)),3));
+      
+    in = fi;
+  }
+  return f;
+}
+
+/* f: grid -> d(1/(1+r))/dxy */
+double *inv_rP1_f_xy(Grid_T *const grid)
+{
+  double *f = alloc_double(grid->nn);
+  unsigned in/* initial point */,fi/* final point */;
+  unsigned i,pa;
+  
+  in = 0;
+  FOR_ALL(pa,grid->patch)
+  {
+    Patch_T *patch = grid->patch[pa];
+    fi = total_nodes_patch(patch) + in;
+    
+    for (i = in; i < fi; ++i)
+      f[i] = (xM*yM*(1 + 3*Sqrt(Power(xM,2) + Power(yM,2) + Power(zM,2))))/
+   (Power(Power(xM,2) + Power(yM,2) + Power(zM,2),1.5)*
+     Power(1 + Sqrt(Power(xM,2) + Power(yM,2) + Power(zM,2)),3));
+      
+    in = fi;
+  }
+  return f;
+}
+
+/* f: grid -> d(1/(1+r))/dxz */
+double *inv_rP1_f_xz(Grid_T *const grid)
+{
+  double *f = alloc_double(grid->nn);
+  unsigned in/* initial point */,fi/* final point */;
+  unsigned i,pa;
+  
+  in = 0;
+  FOR_ALL(pa,grid->patch)
+  {
+    Patch_T *patch = grid->patch[pa];
+    fi = total_nodes_patch(patch) + in;
+    
+    for (i = in; i < fi; ++i)
+      f[i] = (xM*zM*(1 + 3*Sqrt(Power(xM,2) + Power(yM,2) + Power(zM,2))))/
+   (Power(Power(xM,2) + Power(yM,2) + Power(zM,2),1.5)*
+     Power(1 + Sqrt(Power(xM,2) + Power(yM,2) + Power(zM,2)),3));
+      
+    in = fi;
+  }
+  return f;
+}
+
+/* f: grid -> d(1/(1+r))/dyz */
+double *inv_rP1_f_yz(Grid_T *const grid)
+{
+  double *f = alloc_double(grid->nn);
+  unsigned in/* initial point */,fi/* final point */;
+  unsigned i,pa;
+  
+  in = 0;
+  FOR_ALL(pa,grid->patch)
+  {
+    Patch_T *patch = grid->patch[pa];
+    fi = total_nodes_patch(patch) + in;
+    
+    for (i = in; i < fi; ++i)
+      f[i] = (yM*zM*(1 + 3*Sqrt(Power(xM,2) + Power(yM,2) + Power(zM,2))))/
+   (Power(Power(xM,2) + Power(yM,2) + Power(zM,2),1.5)*
+     Power(1 + Sqrt(Power(xM,2) + Power(yM,2) + Power(zM,2)),3));
+      
+    in = fi;
+  }
+  return f;
+}
+
+/* f: grid -> d(1/(1+r))/dxyz */
+double *inv_rP1_f_xyz(Grid_T *const grid)
+{
+  double *f = alloc_double(grid->nn);
+  unsigned in/* initial point */,fi/* final point */;
+  unsigned i,pa;
+  
+  in = 0;
+  FOR_ALL(pa,grid->patch)
+  {
+    Patch_T *patch = grid->patch[pa];
+    fi = total_nodes_patch(patch) + in;
+    
+    for (i = in; i < fi; ++i)
+      f[i] = (-3*xM*yM*zM*(1 + 5*Power(xM,2) + 5*Power(yM,2) + 5*Power(zM,2) + 
+       4*Sqrt(Power(xM,2) + Power(yM,2) + Power(zM,2))))/
+   (Power(Power(xM,2) + Power(yM,2) + Power(zM,2),2.5)*
+     Power(1 + Sqrt(Power(xM,2) + Power(yM,2) + Power(zM,2)),4));
       
     in = fi;
   }

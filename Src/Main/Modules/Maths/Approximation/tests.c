@@ -74,6 +74,17 @@ int DerivativeTest(Grid_T *const grid)
   add_func_Grid2Pdouble(&DataBase_func,ArgM(r_f_xz));
   add_func_Grid2Pdouble(&DataBase_func,ArgM(r_f_yz));
   add_func_Grid2Pdouble(&DataBase_func,ArgM(r_f_xyz));
+  add_func_Grid2Pdouble(&DataBase_func,ArgM(inv_rP1_f));
+  add_func_Grid2Pdouble(&DataBase_func,ArgM(inv_rP1_f_x));
+  add_func_Grid2Pdouble(&DataBase_func,ArgM(inv_rP1_f_y));
+  add_func_Grid2Pdouble(&DataBase_func,ArgM(inv_rP1_f_z));
+  add_func_Grid2Pdouble(&DataBase_func,ArgM(inv_rP1_f_xx));
+  add_func_Grid2Pdouble(&DataBase_func,ArgM(inv_rP1_f_yy));
+  add_func_Grid2Pdouble(&DataBase_func,ArgM(inv_rP1_f_zz));
+  add_func_Grid2Pdouble(&DataBase_func,ArgM(inv_rP1_f_xy));
+  add_func_Grid2Pdouble(&DataBase_func,ArgM(inv_rP1_f_xz));
+  add_func_Grid2Pdouble(&DataBase_func,ArgM(inv_rP1_f_yz));
+  add_func_Grid2Pdouble(&DataBase_func,ArgM(inv_rP1_f_xyz));
   add_func_Grid2Pdouble(&DataBase_func,ArgM(sinxyz_f_x));
   add_func_Grid2Pdouble(&DataBase_func,ArgM(sinxyz_f_y));
   add_func_Grid2Pdouble(&DataBase_func,ArgM(sinxyz_f_z));
