@@ -26,5 +26,5 @@ enum FUNC_E
 
 int DerivativeTest(Grid_T *const grid);
 static void ChebyshevFirstKindBasis_DerivativeTest(const Patch_T *const patch);
-static Flag_T read_F(sFunc_Grid2Pdouble_T **const F,sFunc_Grid2Pdouble_T **const func,const enum FUNC_E fn);
+static Flag_T read_F(sFunc_Grid2Pdouble_T **const F,sFunc_Grid2Pdouble_T **const DataBase_func,const enum FUNC_E fn);
 static void enum2strcat(enum FUNC_E e,char *const f_derivative);

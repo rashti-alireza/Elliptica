@@ -3,7 +3,7 @@
 #include "error_handling_lib.h"
 #include "utilities_lib.h"
 #include "maths_general_lib.h"
-#include "approximation_lib.h"
+#include "maths_approximation_lib.h"
 
 Field_T *init_field(const char *const name,Grid_T *const grid);
 void add_field(Field_T *const f,Grid_T *const grid);
