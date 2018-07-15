@@ -112,4 +112,6 @@ void free_field(Field_T *f)
     
   if (f->coeffs)
     free(f->coeffs);
+    
+  free(f);
 }

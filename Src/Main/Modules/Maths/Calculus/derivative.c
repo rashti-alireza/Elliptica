@@ -5,6 +5,7 @@
 
 #include "derivative.h"
 #define DELIMIT '|'
+#define COMMA ','
 
 /* derivative function. it does the task and return the result.
 // note: this function allocate memory for the result.
@@ -28,41 +29,140 @@
 // so for example if DELIMIT is | then *task = "x | Finite_Difference".
 // ->return value: derivative of Field_T f accordingly, null for error.
 */
-double *Df(const Field_T *const f,const char *task)
+double *Df(Field_T *const f,const char *task)
 {
+  /* check up */
+  if (!f)
+    abortEr("The field is empty!\n");
+  if (!f->values && !f->coeffs)  
+    abortEr("The field is empty!\n");
   if (!task)
     abortEr("The task is empty!\n");
-    
+
   double *r = 0;
   const char *der_par = get_parameter_value_S("Derivative_Method",0);
-  Derivative_T Der_e = derivative_type(der_par,task);
+  unsigned Ndir;
+  Method_T method_e = derivative_method(der_par,task);
+  Direction_T  *dir_e = derivative_direction(task,&Ndir);
   
+  if (method_e == SPECTRAL)
+    r = take_derivative_spectral(f,dir_e,Ndir);
+  else
+    abortEr("There is no such derivative method defined for this function.\n");
+    
+  free(dir_e);
   return r;
+}
+
+/* taking spectral derivative of the given field 
+// based on direction of derivative.
+// ->return value: values of the resultant.
+*/
+static double *take_derivative_spectral(Field_T *const f,const Direction_T  *const dir_e,const unsigned Ndir)
+{
+  double *deriv = 0;
+  Field_T *ff[2];
+  unsigned bck,frd;
+  unsigned i;
+  
+  /* 3-D */
+  if (f->dim == 3)
+  {
+    
+    ff[0] = init_field_3d("tmp1",f->grid);
+    ff[1] = init_field_3d("tmp2",f->grid);
+    
+    /* if coeffs are not ready */
+    if (!f->coeffs)
+      make_coeffs(f);
+    
+    ff[0]->values = spectral_derivative_3d(f,dir_e[i]);
+    make_coeffs(ff[0]);
+    
+    for (i = 1; i < Ndir; ++i)
+    {
+      frd = i%2;
+      bck = i/2;
+      
+      ff[frd]->values = spectral_derivative_3d(ff[bck],dir_e[i]);
+      /* make next ff ready */
+      free(ff[bck]->values);
+      free(ff[bck]->coeffs);
+      ff[bck]->values = 0;
+      ff[bck]->coeffs = 0;
+      
+      /* if it is not the last loop */
+      if (i != Ndir-1)
+        make_coeffs(ff[frd]);
+      else
+      {
+        deriv = ff[frd]->values;
+        ff[frd]->values = 0;
+      }
+    }
+    
+    /* free leftovers */
+    free_field(ff[0]);
+    free_field(ff[1]);
+  }/* end of if (f->dim == 3) */
+  else
+    abortEr("No such Dimension is defined for this function.\n");
+  
+  return deriv;
+}
+
+/* finding all of types of derivatives and put them into 
+// an array of Direction_T with size n in order that they are written.
+// note: this function allocate memory.
+// ->return value: array of Direction_T and number of this arrays
+*/
+static Direction_T *derivative_direction(const char *const task,unsigned *const n)
+{
+  Direction_T *e = 0;
+  char *savestr,*str = dup_s(task);
+  char *tok = tok_s(str,DELIMIT,&savestr);
+  
+  if (!tok)
+    abortEr_s("There is No direction in %s.\n",task);
+  
+  *n = 0;  
+  while (tok)
+  {
+    e = realloc(e,(*n+1)*sizeof(*e));
+    pointerEr(e);
+    e[*n] = str2enum_direction(tok);
+    tok = tok_s(0,COMMA,&savestr);
+    ++(*n);
+  }
+  
+  free(str);
+  
+  return e;
 }
 
 /* getting both task and par, it finds the derivative method.
 // if task has a derivative method, it is preferred over par.
 // ->return value: derivative method in enum format.
 */
-static Derivative_T derivative_type(const char *const par,const char *const task)
+static Method_T derivative_method(const char *const par,const char *const task)
 {
   const char delimit = DELIMIT;
-  Derivative_T type = UNDEFINED_DERIVATIVE;
+  Method_T type = UNDEFINED_METHOD;
   char *s = dup_s(task);
   char *rs = 0;
   
   tok_s(s,delimit,&rs);
-  type = str2enum(rs);
+  type = str2enum_method(rs);
   if (s) free(s);
   
   /* if check parameter if no info is in task */
-  if (type == UNDEFINED_DERIVATIVE)
+  if (type == UNDEFINED_METHOD)
   {
-    type = str2enum(par);
+    type = str2enum_method(par);
   } 
   
   /* if still no type has been found => no info in parameter and task */
-  if (type == UNDEFINED_DERIVATIVE)
+  if (type == UNDEFINED_METHOD)
     abortEr("No Derivative Method is defined "
       "in parameter file or in function task.\n");
   
@@ -70,12 +170,12 @@ static Derivative_T derivative_type(const char *const par,const char *const task
 }
 
 /* getting a derivative method in string format and 
-// returing the Derivative_T.
-// ->return value: Derivative_T and if not found UNDEFINED_DERIVATIVE.
+// returing the Method_T.
+// ->return value: Method_T and if not found UNDEFINED_Method.
 */
-static Derivative_T str2enum(const char *const str)
+static Method_T str2enum_method(const char *const str)
 {
-  Derivative_T type = UNDEFINED_DERIVATIVE;
+  Method_T type = UNDEFINED_METHOD;
   
   if (strcmp_i(str,"Spectral"))
     type = SPECTRAL;
@@ -83,4 +183,36 @@ static Derivative_T str2enum(const char *const str)
     type = FINITE_DIFF;
   
   return type;
+}
+
+/* getting a derivative direction in string format and 
+// returning the Direction_T.
+// ->return value: Direction_T and if not found error.
+*/
+static Direction_T str2enum_direction(const char *const str)
+{
+  if (strcmp_i(str,"x"))
+    return x_DIR;
+  else if (strcmp_i(str,"y"))
+    return y_DIR;
+  else if (strcmp_i(str,"z"))
+    return z_DIR;
+  else if (strcmp_i(str,"a"))
+    return a_DIR;
+  else if (strcmp_i(str,"b"))
+    return b_DIR;
+  else if (strcmp_i(str,"c"))
+    return c_DIR;
+  else
+    abortEr_s("There is no derivative such as %s.\n",str);
+  
+  return UNDEFINED_DIR;
+}
+
+/* taking 3-D spectral derivative in specified direction
+// ->return value: derivative.
+*/
+static double *spectral_derivative_3d(Field_T *const f,const Direction_T dir_e)
+{
+  
 }

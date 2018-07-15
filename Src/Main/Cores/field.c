@@ -5,15 +5,16 @@
 
 #include "field.h"
 
-/* initializing a field.
+/* initializing a 3d field.
 // ->return value: a ready field.
 */
-Field_T *init_field(const char *const name,Grid_T *const grid)
+Field_T *init_field_3d(const char *const name,Grid_T *const grid)
 {
-  Field_T *f = alloc_field(grid);
+  Field_T *f = calloc(1,sizeof(*f));
   if (name)
     f->name = dup_s(name);
   f->grid = grid;
+  f->dim = 3;
   
   return f;
 }
@@ -54,6 +55,10 @@ double *make_coeffs(Field_T *const f)
   unsigned i,*n;
   unsigned pa;
   
+  /* allocate memory for coeffs if hasn't been allocated yet*/
+  if (!f->coeffs)
+    f->coeffs = alloc_double(grid->nn);
+  
   i = 0;
   FOR_ALL(pa,grid->patch)
   {
@@ -83,6 +88,10 @@ double *make_coeffs_inverse(Field_T *const f)
   double *coeffs, *values;
   unsigned i,*n;
   unsigned pa;
+  
+  /* allocate memory for values if hasn't been allocated yet*/
+  if (!f->values)
+    f->values = alloc_double(grid->nn);
   
   i = 0;
   FOR_ALL(pa,grid->patch)

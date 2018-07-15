@@ -253,30 +253,3 @@ double *alloc_double(const unsigned N)
   
   return d;
 }
-
-/* allocating a field on grid, using calloc.
-// note: it just prepares the basis and doesn't filling them.
-// ->return value: a ready field.
-*/
-Field_T *alloc_field(const Grid_T *const grid)
-{
-  Field_T *f;
-  unsigned i;
-  Flag_T flg = NO;
-  
-  f = calloc(1,sizeof(*f));
-  pointerEr(f);
-  
-  f->values = alloc_double(grid->nn);
-  
-  /* check if it needs coeffs */
-  FOR_ALL(i,grid->patch)
-    if (grid->patch[i]->basis != No_BASIS)
-      flg = YES;
-  
-  if (flg == YES)
-    f->coeffs = alloc_double(grid->nn);
-  
-  return f;
-}
-

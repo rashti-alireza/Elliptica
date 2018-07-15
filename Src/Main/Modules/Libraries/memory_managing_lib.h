@@ -9,7 +9,6 @@ void alloc_interface(Patch_T *const patch);
 void *alloc_sFunc_PtoV(sFunc_PtoV_T ***const mem);
 void *alloc_needle(void);
 void *alloc_sFunc_Grid2Pdouble(sFunc_Grid2Pdouble_T ***const mem);
-Field_T *alloc_field(const Grid_T *const grid);
 double *alloc_double(const unsigned N);
 
 /* free */

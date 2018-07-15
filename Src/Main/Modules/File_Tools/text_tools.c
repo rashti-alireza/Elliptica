@@ -69,6 +69,7 @@ char *dup_s(const char *const str)
 /* 
 // returning the first sub-string from str delimited by delimit
 // and make savestr points to the the rest of str after delimit.
+// note: savestr must not be null.
 // if str is 0 it uses savestr as the str.
 //->return value: point to substring delimited by delimit, if nothing 
 // is found point to NULL.
@@ -80,6 +81,7 @@ char *tok_s(char *const str,const char delimit,char **const savestr)
   unsigned l,i,f;
   Flag_T flg = NONE;
 
+  assert(savestr);
   
   if (str != 0) s = str;
   else 		s = *savestr;
