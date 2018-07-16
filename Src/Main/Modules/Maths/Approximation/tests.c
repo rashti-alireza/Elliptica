@@ -256,6 +256,6 @@ static void compare_derivative(const char *const name,const double *const numc,c
 }
 
 /* testing: Chebyshev first kind basis. */
-static void ChebyshevFirstKindBasis_DerivativeTest(const Patch_T *const patch)
+static void Chebyshev_Tn_DerivativeTest(const Patch_T *const patch)
 {
 }

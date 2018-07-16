@@ -57,20 +57,19 @@ static void make_coords_Cartesian_coord(Patch_T *const patch)
 // transformations:
 // ========================
 //
-// note: a and b refer to the minimum and maximum of a line respectively,
+// note: min and max refer to the minimum and maximum of a line respectively,
 // and n refers to number of points on that line.
 //
 // o. EquiSpaced:
 //      dividing a line in equal sizes
-//	-> grid space = (b-a)/(n-1)
+//	-> grid space = (max-min)/(n-1)
 //
-// o. Chebyshev_extrema:
-//	mapping a line [a,b] to [-1,1] and then using Chebyshev extrema
+// o. Chebyshev_Extrema:
+//	mapping a line [min,max] to [-1,1] and then using Chebyshev extrema
 //	in [0,Pi] to find the nodes on the line. the following map is used:
-//	x = 0.5*(a-b)*y + 0.5*(a+b) where x in [a,b] and y in [-1,1].
-// 	y = cos(t).
-// 	note that x and y are in reverse order, and the reason is that
-// 	I wanted to have same increasing behavior between t and x.
+// 	x = a*N+b = a*cos(t)+b i.e.
+//	x = 0.5*(max-min)*N + 0.5*(max+min) where x in [min,max] and N in [-1,1].
+// 	N = cos(t).
 //
 //	
 */
@@ -92,39 +91,43 @@ static void initialize_collocation_struct(const Patch_T *const patch,struct Coll
   }
   else if (coll_s->c == Chebyshev_Extrema)
   {
-    coll_s->a = 0.5*(coll_s->min-coll_s->max);
-    coll_s->b = 0.5*(coll_s->min+coll_s->max);
+    coll_s->a = 0.5*(coll_s->max-coll_s->min);
+    coll_s->b = 0.5*(coll_s->max+coll_s->min);
   }
   else
     abortEr("There is no such COLLOCATION.\n");
 }
 
-/* point value based on collocation */
+/* point value based on collocation 
+// ->return value: collocation point on i-th location.
+*/
 static double point(const unsigned i, const struct Collocation_s *const coll_s)
 {
-  double v = DBL_MAX;
-   
+  double x = DBL_MAX;
+  
+  /* x = min + i*grid_size */ 
   if (coll_s->c == EquiSpaced)
   {
-    v = coll_s->min + coll_s->stp*i;
+    x = coll_s->min + coll_s->stp*i;
   }
+  /* x =  a*N+b => x = a*cos(t)+b */
   else if (coll_s->c == Chebyshev_Extrema)
   {
-    double phi = i*M_PI/(coll_s->n-1);
+    double t = i*M_PI/(coll_s->n-1);
     
-    v = coll_s->a*cos(phi)+coll_s->b;
+    x = coll_s->a*cos(t)+coll_s->b;
   }
   else
     abortEr("There is no such collocation.\n");
   
-  return v;
+  return x;
 }
 
 /* making collocation point based on patch properties and direction
-// when x is normalized i.e x in [-1,1].
+// when x in [min,max].
 // Note: it allocates memory.
 //-> return value: collocations point for given patch and direction */
-double *make_normalized_collocation_1d(const Patch_T *const patch,const unsigned dir)
+double *make_collocation_1d(const Patch_T *const patch,const unsigned dir,const double min,const double max)
 {
   const unsigned N = patch->n[dir];
   double *const x = alloc_double(N);
@@ -132,12 +135,12 @@ double *make_normalized_collocation_1d(const Patch_T *const patch,const unsigned
   
   if (patch->collocation[dir] == EquiSpaced)
     for (i = 0; i < N; i++)
-      x[i] = -1+i*2.0/(N-1);
+      x[i] = min+i*(max-min)/(N-1);
   else if (patch->collocation[dir] == Chebyshev_Extrema)
   {
-    double phi0 = M_PI/(N-1);
+    double t0 = M_PI/(N-1);
     for (i = 0; i < N; i++)
-      x[i] = cos(i*phi0);
+      x[i] = 0.5*(max-min)*cos(i*t0) +0.5*(max+min);
   }
   else
     abortEr("No such collocation exists.\n");

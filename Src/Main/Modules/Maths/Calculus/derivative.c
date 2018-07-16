@@ -240,7 +240,7 @@ static double *derivative_Chebyshev_Tn_1d(Field_T *const f,const Patch_T *const 
   const unsigned nn = total_nodes_patch(patch);
   const unsigned B = n[dir]-1;
   double *der = alloc_double(nn);
-  double *x = make_normalized_collocation_1d(patch,dir);
+  double *x = make_collocation_1d(patch,dir,-1,1);
   unsigned l;
   
   #pragma omp parallel for
@@ -250,13 +250,15 @@ static double *derivative_Chebyshev_Tn_1d(Field_T *const f,const Patch_T *const 
     unsigned L = nc+l;
     for (m = 2; m < B; ++m)
     {
-      unsigned lc = L_c(l,m,n,dir);
+      unsigned M = L_c(l,m,n,dir)+nc;
       double u = Cheb_Un(m-1,x[m]);
-      der[L] += m*coeffs[][lc]*u;
+      der[L] += m*coeffs[M]*u;
     }
-    der[L] += coeffs[][L_c(l,1,n,dir)];
+    der[L] += coeffs[L_c(l,1,n,dir)+nc];
     der[L] *= 2;
   }
   
   free(x);
+  
+  return der;
 }

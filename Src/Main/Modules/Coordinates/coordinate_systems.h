@@ -20,4 +20,4 @@ int fill_nodes(Grid_T *const grid);
 static void make_coords_Cartesian_coord(Patch_T *const patch);
 static void initialize_collocation_struct(const Patch_T *const patch,struct Collocation_s *const colloc,const unsigned dir);
 static double point(const unsigned i, const struct Collocation_s *const coll_s);
-double *make_normalized_collocation_1d(const Patch_T *const patch,const unsigned dir);
+double *make_collocation_1d(const Patch_T *const patch,const unsigned dir,const double min,const double max);
