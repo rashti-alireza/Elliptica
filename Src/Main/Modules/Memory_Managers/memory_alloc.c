@@ -135,9 +135,8 @@ static void alloc_patches_Cartesian_grid(Grid_T *const grid)
   Nboxes = (unsigned) get_parameter_value_I("number_of_boxes",&flg);
   parameterEr(flg);
   
-  grid->patch = malloc((Nboxes+1)*sizeof(*grid->patch));
+  grid->patch = calloc((Nboxes+1),sizeof(*grid->patch));
   pointerEr(grid->patch);
-  grid->patch[Nboxes] = 0;
   
   for (i = 0; i < Nboxes; i++)
   {

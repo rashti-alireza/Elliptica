@@ -16,8 +16,10 @@ struct Collocation_s
 };
 
 
-int fill_nodes(Grid_T *const grid);
-static void make_coords_Cartesian_coord(Patch_T *const patch);
+int make_nodes(Grid_T *const grid);
+int make_JacobianT(Grid_T *const grid);
+static void make_nodes_Cartesian_coord(Patch_T *const patch);
+static void make_JacobianT_Cartesian_coord(Patch_T *const patch);
 static void initialize_collocation_struct(const Patch_T *const patch,struct Collocation_s *const colloc,const unsigned dir);
 static double point(const unsigned i, const struct Collocation_s *const coll_s);
 double *make_collocation_1d(const Patch_T *const patch,const unsigned dir,const double min,const double max);

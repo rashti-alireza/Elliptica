@@ -22,7 +22,7 @@ int make_patches(Grid_T *const grid)
   
   /* allocating and filling nodes */
   alloc_nodes(grid);
-  fill_nodes(grid);
+  make_nodes(grid);
   
   /* filling grid->nn */
   grid->nn = total_nodes_grid(grid);

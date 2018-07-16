@@ -224,7 +224,7 @@ typedef struct PATCH_T
   double max[3];/* maximum of each direction like b_max = max[1] */
   Node_T **node;/* node info */
   Interface_T **interface;/* interface info  */
-  JacobianTrans_T *Jacobian;/* Jacobian transformation between the coords */
+  JacobianTrans_T *JacobianT;/* Jacobian transformation between the coords */
   unsigned innerB:1;/* if this patch has inner boundary 1 otherwise 0 */
 }Patch_T;
 

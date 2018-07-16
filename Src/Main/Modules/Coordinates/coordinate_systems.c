@@ -6,7 +6,7 @@
 #include "coordinate_systems.h"
 
 /* making coordinates of nodes */
-int fill_nodes(Grid_T *const grid)
+int make_nodes(Grid_T *const grid)
 {
   int i;
   FOR_ALL(i,grid->patch)
@@ -16,7 +16,7 @@ int fill_nodes(Grid_T *const grid)
     /* if coord is Cartesian */
     if (strcmp_i(patch->coordsys,"Cartesian"))
     {
-        make_coords_Cartesian_coord(patch);
+      make_nodes_Cartesian_coord(patch);
     }
     
     else
@@ -26,8 +26,39 @@ int fill_nodes(Grid_T *const grid)
   return EXIT_SUCCESS;
 }
 
+/* making Jacobian Transformation of coords.
+// ->return value: EXIT_SUCCESS.
+*/
+int make_JacobianT(Grid_T *const grid)
+{
+  int i;
+  FOR_ALL(i,grid->patch)
+  {
+    Patch_T *patch = grid->patch[i];
+    
+    /* if coord is Cartesian */
+    if (strcmp_i(patch->coordsys,"Cartesian"))
+    {
+      patch->JacobianT = calloc(1,sizeof(patch->JacobianT));
+      pointerEr(patch->JacobianT);
+      make_JacobianT_Cartesian_coord(patch);
+    }
+    
+    else
+      abortEr_s("There is no such %s coordinate.\n",patch->coordsys);
+  }
+  
+  return EXIT_SUCCESS;
+}
+
+/* making Jacobian transformation for Cartesian coord. */
+static void make_JacobianT_Cartesian_coord(Patch_T *const patch)
+{
+  patch->JacobianT->j = JT_Cartesian_patch;
+}
+
 /* making value of coords. it is a general function for Cartesian type */
-static void make_coords_Cartesian_coord(Patch_T *const patch)
+static void make_nodes_Cartesian_coord(Patch_T *const patch)
 {
   struct Collocation_s coll_s[3];
   const unsigned U = countf(patch->node);
@@ -188,7 +219,7 @@ double dq2_dq1(const Patch_T *const patch,const dq2_dq1_T q2_e, const dq2_dq1_T 
   }
   /* this part means q2_e and q1_e are from x,y,z or a,b,c */
   else
-    return patch->Jacobian->j(patch,q2_e,q1_e,q2,q1);
+    return patch->JacobianT->j(patch,q2_e,q1_e,q2,q1);
   
   return j;
 }
