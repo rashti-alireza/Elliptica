@@ -8,3 +8,4 @@ double z_coord(const unsigned i,const Patch_T *const patch);
 double X_coord(const unsigned i,const Patch_T *const patch);
 double Y_coord(const unsigned i,const Patch_T *const patch);
 double Z_coord(const unsigned i,const Patch_T *const patch);
+double dq2_dq1(const Patch_T *const patch,const dq2_dq1_T q2_e, const dq2_dq1_T q1_e,const unsigned q2, const unsigned q1);
