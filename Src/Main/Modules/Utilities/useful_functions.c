@@ -192,9 +192,7 @@ static unsigned check_interface(const double *const X, const Patch_T *const patc
   double *Y;
   
   res = GRT(res,EPS) ? res: EPS;
-  
-  if (patch->node[ind]->X != 0) Y = patch->node[ind]->X;
-  else                          Y = patch->node[ind]->x;
+  Y = patch->node[ind]->X;
   
   switch (u)
   {

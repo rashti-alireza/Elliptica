@@ -78,7 +78,8 @@ static void make_nodes_Cartesian_coord(Patch_T *const patch)
     x[1] = point(j,&coll_s[1]);
     x[2] = point(k,&coll_s[2]);
     
-    patch->node[l]->X = 0;
+    /* since X and x are the same we have: */
+    patch->node[l]->X = x;
   }
 }
 
@@ -201,7 +202,7 @@ double *make_collocation_1d(const Patch_T *const patch,const unsigned dir,const 
 //
 // ->return value = dq2/dq1.
 */
-double dq2_dq1(const Patch_T *const patch,const dq2_dq1_T q2_e, const dq2_dq1_T q1_e,const unsigned q2, const unsigned q1)
+double dq2_dq1(const Patch_T *const patch,const dq2_dq1_T q2_e, const dq2_dq1_T q1_e,const unsigned p)
 {
   double j = 0;
   
@@ -211,7 +212,7 @@ double dq2_dq1(const Patch_T *const patch,const dq2_dq1_T q2_e, const dq2_dq1_T 
     
   else if (q2_e == _N0_ || q2_e == _N1_ || q2_e == _N2_ )
   {
-    j = dN_dq(patch,q2_e,q1_e,q2,q1);
+    j = dN_dq(patch,q2_e,q1_e,p);
   }
   else if (q1_e == _N0_ || q1_e == _N1_ || q1_e == _N2_ )
   {
@@ -219,7 +220,7 @@ double dq2_dq1(const Patch_T *const patch,const dq2_dq1_T q2_e, const dq2_dq1_T 
   }
   /* this part means q2_e and q1_e are from x,y,z or a,b,c */
   else
-    return patch->JacobianT->j(patch,q2_e,q1_e,q2,q1);
+    return patch->JacobianT->j(patch,q2_e,q1_e,p);
   
   return j;
 }
@@ -227,7 +228,7 @@ double dq2_dq1(const Patch_T *const patch,const dq2_dq1_T q2_e, const dq2_dq1_T 
 /* Jacobian transformation for dN/dX?.
 // ->return value: dN/dX?
 */
-static double dN_dX(const Patch_T *const patch,const dq2_dq1_T q2_e, const dq2_dq1_T q1_e,const unsigned q2, const unsigned q1)
+static double dN_dX(const Patch_T *const patch,const dq2_dq1_T q2_e, const dq2_dq1_T q1_e,const unsigned p)
 {
   double jN_X = 0;
   
@@ -243,8 +244,7 @@ static double dN_dX(const Patch_T *const patch,const dq2_dq1_T q2_e, const dq2_d
     abortEr(INCOMPLETE_FUNC);
   }
   
-  UNUSED(q1);
-  UNUSED(q2);
+  UNUSED(p);
   
   return jN_X;
 }
@@ -252,7 +252,7 @@ static double dN_dX(const Patch_T *const patch,const dq2_dq1_T q2_e, const dq2_d
 /* Jacobian transformation for dN/dq?.
 // ->return value: dN/dq?
 */
-static double dN_dq(const Patch_T *const patch,const dq2_dq1_T q2_e, const dq2_dq1_T q1_e,const unsigned q2, const unsigned q1)
+static double dN_dq(const Patch_T *const patch,const dq2_dq1_T q2_e, const dq2_dq1_T q1_e,const unsigned p)
 {
   double jN_X = 0;
   
@@ -261,14 +261,14 @@ static double dN_dq(const Patch_T *const patch,const dq2_dq1_T q2_e, const dq2_d
     /* means dN?/dx? = dN?/da*da/dx? + dN?/db*db/dx? + dN?/dc*dc/dx? */
     if (q1_e == _x_ || q1_e == _y_ || q1_e == _z_ )
     {
-      jN_X = dN_dX(patch,q2_e,_a_,q2,q1)*dq2_dq1(patch,_a_,q1_e,q2,q1)+
-             dN_dX(patch,q2_e,_b_,q2,q1)*dq2_dq1(patch,_b_,q1_e,q2,q1)+
-             dN_dX(patch,q2_e,_c_,q2,q1)*dq2_dq1(patch,_c_,q1_e,q2,q1);
+      jN_X = dN_dX(patch,q2_e,_a_,p)*dq2_dq1(patch,_a_,q1_e,p)+
+             dN_dX(patch,q2_e,_b_,p)*dq2_dq1(patch,_b_,q1_e,p)+
+             dN_dX(patch,q2_e,_c_,p)*dq2_dq1(patch,_c_,q1_e,p);
               
     }
     else /* means q1_e is between _a_, _b_ or _c_*/
     {
-      return dN_dX(patch,q2_e,q1_e,q2,q1);
+      return dN_dX(patch,q2_e,q1_e,p);
     }
   }
   else
@@ -281,7 +281,7 @@ static double dN_dq(const Patch_T *const patch,const dq2_dq1_T q2_e, const dq2_d
 /* Jacobian transformation for Cartesian patch.
 // ->return value: dq2/dq1
 */
-double JT_Cartesian_patch(const Patch_T *const patch,const dq2_dq1_T q2_e, const dq2_dq1_T q1_e,const unsigned q2, const unsigned q1)
+double JT_Cartesian_patch(const Patch_T *const patch,const dq2_dq1_T q2_e, const dq2_dq1_T q1_e,const unsigned p)
 {
   double j;
   
@@ -291,8 +291,7 @@ double JT_Cartesian_patch(const Patch_T *const patch,const dq2_dq1_T q2_e, const
     j = 0;
     
   UNUSED(patch);
-  UNUSED(q1);
-  UNUSED(q2);
+  UNUSED(p);
   
   return j;
 }

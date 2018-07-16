@@ -198,7 +198,7 @@ typedef struct Interface_T
 /* Jacobian transformation between different coords  */
 typedef struct JACOBIAN_TRANS_T
 {
-  double (*j)(const struct PATCH_T *const patch,const dq2_dq1_T q2_e, const dq2_dq1_T q1_e,const unsigned q2, const unsigned q1);/* function for transformation */
+  double (*j)(const struct PATCH_T *const patch,const dq2_dq1_T q2_e, const dq2_dq1_T q1_e,const unsigned p);/* function for transformation */
   double *dX_dx[3][3];/* saving some transformation to save time for dX[0..2]/dx[0..2] */
   double *dx_dX[3][3];/* saving some transformation to save time dx[0..2]/dX[0..2] */
 }JacobianTrans_T;

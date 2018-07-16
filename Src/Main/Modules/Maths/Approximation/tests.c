@@ -21,7 +21,9 @@
 int DerivativeTest(Grid_T *const grid)
 {
   sFunc_Grid2Pdouble_T **DataBase_func;
+  Field_T *df_num = init_field_3d("Numerica_derivative",grid);
   char *path;
+  char der_s[MAXSTR];
   unsigned fi;
   Flag_T flg;
   
@@ -150,7 +152,9 @@ int DerivativeTest(Grid_T *const grid)
         //test
         printf("%s\n",F[e]->name);
         //end
-        //numc[e] = derivative(anac[FUNC],e);
+        df_num->values = anac[FUNC];
+        enum2str(e,der_s);
+        numc[e] = Df(df_num,der_s);
         compare_derivative(F[e]->name,numc[e],anac[e],grid,path);
       }
     }
@@ -159,12 +163,13 @@ int DerivativeTest(Grid_T *const grid)
     for (e = FUNC; e < N_FUNC; ++e)
     {
       if (anac[e]) free(anac[e]);
-      //if (numc[e]) free(numc[e]);
+      if (numc[e]) free(numc[e]);
     }
   }/* end of FOR_ALL(fi,DataBase_func) */
   
   free_func_Grid2Pdouble(DataBase_func);
   free(path);
+  free_field(df_num);
   
   return EXIT_SUCCESS;
 }
@@ -245,6 +250,48 @@ static void enum2strcat(enum FUNC_E e,char *const fname_derivative)
   }
 }
 
+/* filling a string str based on the given enum e  */
+static void enum2str(enum FUNC_E e,char *const str)
+{
+  switch (e)
+  {
+    case FUNC_x:
+      sprintf(str,"x");
+      break;
+    case FUNC_y:
+      sprintf(str,"y");
+      break;
+    case FUNC_z:
+      sprintf(str,"z");
+      break;
+    case FUNC_xx:
+      sprintf(str,"_xx");
+      break;
+    case FUNC_yy:
+      sprintf(str,"yy");
+      break;
+    case FUNC_zz:
+      sprintf(str,"zz");
+      break;
+    case FUNC_xy:
+      sprintf(str,"xy");
+      break;
+    case FUNC_xz:
+      sprintf(str,"xz");
+      break;
+    case FUNC_yz:
+      sprintf(str,"yz");
+      break;
+    case FUNC_xyz:
+      sprintf(str,"xyz");
+      break;
+    default:
+      abortEr("There is no such derivative defined.\n"
+      "If you added more kind of derivative please add" 
+        "to enum FUNC_E and consequently other locations.\n");
+  }
+}
+
 /* comparing the values obtained from numeric and with analytic one */
 static void compare_derivative(const char *const name,const double *const numc,const double *const anac,const Grid_T *const grid,const char *const path)
 {
@@ -253,9 +300,4 @@ static void compare_derivative(const char *const name,const double *const numc,c
   
   sprintf(prefix,"%s/%s.DiffByNode",path,name);
   pr_derivatives_DiffByNode(numc,anac,grid,prefix);
-}
-
-/* testing: Chebyshev first kind basis. */
-static void Chebyshev_Tn_DerivativeTest(const Patch_T *const patch)
-{
 }

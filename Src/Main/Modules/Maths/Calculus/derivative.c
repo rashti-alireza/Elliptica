@@ -72,7 +72,7 @@ static double *take_spectral_derivative(Field_T *const f,const Direction_T  *con
     ff[0] = init_field_3d("tmp1",f->grid);
     ff[1] = init_field_3d("tmp2",f->grid);
     
-    ff[0]->values = spectral_derivative_1d(f,dir_e[i]);
+    ff[0]->values = spectral_derivative_1d(f,dir_e[0]);
     
     for (i = 1; i < Ndir; ++i)
     {
@@ -201,15 +201,16 @@ static Direction_T str2enum_direction(const char *const str)
 */
 static double *spectral_derivative_1d(Field_T *const f,const Direction_T dir_e)
 {
-  double *der = 0;
-  double *df_dN[3];
   Grid_T *const grid = f->grid;
+  double *der = alloc_double(grid->nn);
+  double *df_dN[3];
   const Patch_T *patch;
-  unsigned pa,d;
+  unsigned pa,d,i;
   
   FOR_ALL(pa,grid->patch)
   {
     patch = grid->patch[pa];
+    unsigned nn = total_nodes_patch(patch);
     
     for (d = 0; d < 3; ++d)
     {
@@ -220,8 +221,17 @@ static double *spectral_derivative_1d(Field_T *const f,const Direction_T dir_e)
         abortEr("There is no such basis or collocation defined for this function.\n");
     }
     
-    //JACOBIAN MULTIPLICATION
+    #pragma omp parallel for
+    for (i = 0; i < nn; ++i)
+      der[i] = df_dN[_N0_][i]*dq2_dq1(patch,_N0_,dir_e,i) + 
+               df_dN[_N1_][i]*dq2_dq1(patch,_N1_,dir_e,i) +
+               df_dN[_N2_][i]*dq2_dq1(patch,_N2_,dir_e,i);
+    
   }
+  
+  free(df_dN[_N0_]);
+  free(df_dN[_N1_]);
+  free(df_dN[_N2_]);
   
   return der;
 }
