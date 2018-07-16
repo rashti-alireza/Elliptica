@@ -35,6 +35,14 @@ typedef enum COLLOCATION_T
   Chebyshev_Extrema
 }Collocation_T;
 
+/* types of basis enum */
+typedef enum BASIS_T
+{
+  UNDEFINED_BASIS = 0/* undefined basis  */,
+  No_BASIS/* when no basis is used */,
+  Chebyshev_Tn_BASIS/* first kind Chebyshev basis T_n*/
+}Basis_T;
+
 /* coordinate system */
 typedef enum COORD_T
 {
@@ -65,14 +73,6 @@ typedef enum FACE_T
               // one might change this number with caveat.
               */
 }Face_T;
-
-/* types of basis enum */
-typedef enum BASIS_T
-{
-  UNDEFINED_BASIS = 0/* undefined basis  */,
-  No_BASIS/* when no basis is used */,
-  Chebyshev_FirstKind_BASIS/* first kind Chebyshev basis */
-}Basis_T;
 
 /* *******************************************
 // parameter:
@@ -185,8 +185,12 @@ typedef struct PATCH_T
   struct GIRD_T *grid;/* refers to its grid */
   char *name;/* patch name */
   char *coordsys;/* coord sys used in this patch */
-  Collocation_T collocation;/* type of collocation in this patch */
-  Basis_T basis;/* the type of basis for functions used in this patch */
+  Collocation_T collocation[3];/* type of collocation in each direction */
+  Basis_T basis[3];/* the type of basis for functions used in this patch 
+                   // each refers to basis in that specific direction.
+                   // e.g. basis[2] = Chebyshev_FirstKind_BASIS means
+                   // in c direction it uses that basis.
+                   */
   unsigned n[3];/* number of points (nodes) in each direction */
   unsigned pn;/* its patch number i.e. patch[pn] = patch */
   unsigned nc;/* node counter, sum of all nodes in previous patches */
@@ -204,7 +208,8 @@ typedef struct FIELD_T
 {
   char *name;/* its name like alpha or psi */
   double *values;/* its value on each grid point */
-  double *coeffs;/* coefficients of basis if needed */
+  double *coeffs;/* coefficients of basis */
+  char *info;/* keep track of available coeffs among others */
   unsigned dim;/* dimension of field */
   struct GIRD_T *grid;/* refers to its grid */
 }Field_T;

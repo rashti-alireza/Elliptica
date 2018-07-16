@@ -3,9 +3,9 @@
 #include "memory_managing_lib.h"
 #include "macros_lib.h"
 #include "error_handling_lib.h"
-//#include "coordinates_lib.h"
-//#include "utilities_lib.h"
-//#include "maths_general_lib.h"
+#include "coordinates_lib.h"
+#include "utilities_lib.h"
+#include "maths_general_lib.h"
 //#include "maths_analytic_lib.h"
 
 /* methods of derivative */
@@ -34,5 +34,6 @@ static Method_T derivative_method(const char *const par,const char *const task);
 static Method_T str2enum_method(const char *const str);
 static Direction_T *derivative_direction(const char *const task,unsigned *const n);
 static Direction_T str2enum_direction(const char *const str);
-static double *take_derivative_spectral(Field_T *const f,const Direction_T  *const dir_e,const unsigned Ndir);
-static double *spectral_derivative_3d(Field_T *const f,const Direction_T dir_e);
+static double *take_spectral_derivative(Field_T *const f,const Direction_T  *const dir_e,const unsigned Ndir);
+static double *spectral_derivative_1d(Field_T *const f,const Direction_T dir_e);
+static double *derivative_Chebyshev_Tn_1d(Field_T *const f,const Patch_T *const patch,const unsigned dir);

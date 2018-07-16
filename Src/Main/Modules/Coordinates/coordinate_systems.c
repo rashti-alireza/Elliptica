@@ -33,8 +33,9 @@ static void make_coords_Cartesian_coord(Patch_T *const patch)
   const unsigned U = countf(patch->node);
   unsigned i,j,k,l,*n;
   
-  coll_s[0].f = coll_s[1].f = coll_s[2].f = patch->collocation;
-  initialize_collocation_struct(patch,coll_s);
+  initialize_collocation_struct(patch,&coll_s[0],0);
+  initialize_collocation_struct(patch,&coll_s[1],1);
+  initialize_collocation_struct(patch,&coll_s[2],2);
   n = patch->n;
   
   for (l = 0; l < U; l++)
@@ -73,42 +74,26 @@ static void make_coords_Cartesian_coord(Patch_T *const patch)
 //
 //	
 */
-static void initialize_collocation_struct(const Patch_T *const patch,struct Collocation_s *const coll_s)
+static void initialize_collocation_struct(const Patch_T *const patch,struct Collocation_s *const coll_s,const unsigned dir)
 {
   /* some assertions */
-  assert(patch->min[0] < patch->max[0]);
-  assert(patch->min[1] < patch->max[1]);
-  assert(patch->min[2] < patch->max[2]);
+  assert(dir < 3);
+  assert(patch->min[dir] < patch->max[dir]);
   
-  coll_s[0].n = patch->n[0];
-  coll_s[0].min = patch->min[0];
-  coll_s[0].max = patch->max[0];
-  coll_s[1].n = patch->n[1];
-  coll_s[1].min = patch->min[1];
-  coll_s[1].max = patch->max[1];
-  coll_s[2].n = patch->n[2];
-  coll_s[2].min = patch->min[2];
-  coll_s[2].max = patch->max[2];
+  coll_s->c = patch->collocation[dir];
+  coll_s->n = patch->n[dir];
+  coll_s->min = patch->min[dir];
+  coll_s->max = patch->max[dir];
+  assert(coll_s->n-1 != 0);
 
-  assert(coll_s[0].n-1 != 0);
-  assert(coll_s[1].n-1 != 0);
-  assert(coll_s[2].n-1 != 0);
-
-  if (coll_s[0].f == EquiSpaced)
+  if (coll_s->c == EquiSpaced)
   {
-    coll_s[0].stp = (coll_s[0].max-coll_s[0].min)/(coll_s[0].n-1);
-    coll_s[1].stp = (coll_s[1].max-coll_s[1].min)/(coll_s[1].n-1);
-    coll_s[2].stp = (coll_s[2].max-coll_s[2].min)/(coll_s[2].n-1);
+    coll_s->stp = (coll_s->max-coll_s->min)/(coll_s->n-1);
   }
-  else if (coll_s[0].f == Chebyshev_Extrema)
+  else if (coll_s->c == Chebyshev_Extrema)
   {
-    coll_s[0].a = 0.5*(coll_s[0].min-coll_s[0].max);
-    coll_s[1].a = 0.5*(coll_s[1].min-coll_s[1].max);
-    coll_s[2].a = 0.5*(coll_s[2].min-coll_s[2].max);
-    
-    coll_s[0].b = 0.5*(coll_s[0].min+coll_s[0].max);
-    coll_s[1].b = 0.5*(coll_s[1].min+coll_s[1].max);
-    coll_s[2].b = 0.5*(coll_s[2].min+coll_s[2].max);
+    coll_s->a = 0.5*(coll_s->min-coll_s->max);
+    coll_s->b = 0.5*(coll_s->min+coll_s->max);
   }
   else
     abortEr("There is no such COLLOCATION.\n");
@@ -119,11 +104,11 @@ static double point(const unsigned i, const struct Collocation_s *const coll_s)
 {
   double v = DBL_MAX;
    
-  if (coll_s->f == EquiSpaced)
+  if (coll_s->c == EquiSpaced)
   {
     v = coll_s->min + coll_s->stp*i;
   }
-  else if (coll_s->f == Chebyshev_Extrema)
+  else if (coll_s->c == Chebyshev_Extrema)
   {
     double phi = i*M_PI/(coll_s->n-1);
     
@@ -135,3 +120,27 @@ static double point(const unsigned i, const struct Collocation_s *const coll_s)
   return v;
 }
 
+/* making collocation point based on patch properties and direction
+// when x is normalized i.e x in [-1,1].
+// Note: it allocates memory.
+//-> return value: collocations point for given patch and direction */
+double *make_normalized_collocation_1d(const Patch_T *const patch,const unsigned dir)
+{
+  const unsigned N = patch->n[dir];
+  double *const x = alloc_double(N);
+  unsigned i;
+  
+  if (patch->collocation[dir] == EquiSpaced)
+    for (i = 0; i < N; i++)
+      x[i] = -1+i*2.0/(N-1);
+  else if (patch->collocation[dir] == Chebyshev_Extrema)
+  {
+    double phi0 = M_PI/(N-1);
+    for (i = 0; i < N; i++)
+      x[i] = cos(i*phi0);
+  }
+  else
+    abortEr("No such collocation exists.\n");
+
+  return x;
+}

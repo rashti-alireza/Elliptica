@@ -46,7 +46,7 @@ double *Df(Field_T *const f,const char *task)
   Direction_T  *dir_e = derivative_direction(task,&Ndir);
   
   if (method_e == SPECTRAL)
-    r = take_derivative_spectral(f,dir_e,Ndir);
+    r = take_spectral_derivative(f,dir_e,Ndir);
   else
     abortEr("There is no such derivative method defined for this function.\n");
     
@@ -58,7 +58,7 @@ double *Df(Field_T *const f,const char *task)
 // based on direction of derivative.
 // ->return value: values of the resultant.
 */
-static double *take_derivative_spectral(Field_T *const f,const Direction_T  *const dir_e,const unsigned Ndir)
+static double *take_spectral_derivative(Field_T *const f,const Direction_T  *const dir_e,const unsigned Ndir)
 {
   double *deriv = 0;
   Field_T *ff[2];
@@ -72,33 +72,20 @@ static double *take_derivative_spectral(Field_T *const f,const Direction_T  *con
     ff[0] = init_field_3d("tmp1",f->grid);
     ff[1] = init_field_3d("tmp2",f->grid);
     
-    /* if coeffs are not ready */
-    if (!f->coeffs)
-      make_coeffs(f);
-    
-    ff[0]->values = spectral_derivative_3d(f,dir_e[i]);
-    make_coeffs(ff[0]);
+    ff[0]->values = spectral_derivative_1d(f,dir_e[i]);
     
     for (i = 1; i < Ndir; ++i)
     {
       frd = i%2;
       bck = i/2;
       
-      ff[frd]->values = spectral_derivative_3d(ff[bck],dir_e[i]);
+      ff[frd]->values = spectral_derivative_1d(ff[bck],dir_e[i]);
       /* make next ff ready */
       free(ff[bck]->values);
       free(ff[bck]->coeffs);
       ff[bck]->values = 0;
       ff[bck]->coeffs = 0;
-      
-      /* if it is not the last loop */
-      if (i != Ndir-1)
-        make_coeffs(ff[frd]);
-      else
-      {
-        deriv = ff[frd]->values;
-        ff[frd]->values = 0;
-      }
+      //THINK ABOUT THIS!!!
     }
     
     /* free leftovers */
@@ -212,7 +199,64 @@ static Direction_T str2enum_direction(const char *const str)
 /* taking 3-D spectral derivative in specified direction
 // ->return value: derivative.
 */
-static double *spectral_derivative_3d(Field_T *const f,const Direction_T dir_e)
+static double *spectral_derivative_1d(Field_T *const f,const Direction_T dir_e)
 {
+  double *der = 0;
+  double *df_dN[3];
+  Grid_T *const grid = f->grid;
+  const Patch_T *patch;
+  unsigned pa,d;
   
+  FOR_ALL(pa,grid->patch)
+  {
+    patch = grid->patch[pa];
+    
+    for (d = 0; d < 3; ++d)
+    {
+      if(patch->basis[d]       == Chebyshev_Tn_BASIS && 
+         patch->collocation[d] == Chebyshev_Extrema)
+        df_dN[d] = derivative_Chebyshev_Tn_1d(f,patch,d);
+      else
+        abortEr("There is no such basis or collocation defined for this function.\n");
+    }
+    
+    //JACOBIAN MULTIPLICATION
+  }
+  
+  return der;
+}
+
+/* taking derivative for f(x)= sum_{0}^{n-1}a_n*T_n(x), in the specified
+// patch.
+// note: it is 1-D, and x is in [-1,1]. for 3-d one needs to combine these
+// with Jacobian transformation.
+// ->return value: df(x)/dx.
+*/
+static double *derivative_Chebyshev_Tn_1d(Field_T *const f,const Patch_T *const patch,const unsigned dir)
+{
+  const double *const coeffs = make_coeffs_1d(f,dir,patch);
+  const unsigned *const n = patch->n;
+  const unsigned nc = patch->nc;
+  const unsigned nn = total_nodes_patch(patch);
+  const unsigned B = n[dir]-1;
+  double *der = alloc_double(nn);
+  double *x = make_normalized_collocation_1d(patch,dir);
+  unsigned l;
+  
+  #pragma omp parallel for
+  for (l = 0; l < nn; ++l)
+  {
+    unsigned m;
+    unsigned L = nc+l;
+    for (m = 2; m < B; ++m)
+    {
+      unsigned lc = L_c(l,m,n,dir);
+      double u = Cheb_Un(m-1,x[m]);
+      der[L] += m*coeffs[][lc]*u;
+    }
+    der[L] += coeffs[][L_c(l,1,n,dir)];
+    der[L] *= 2;
+  }
+  
+  free(x);
 }

@@ -5,7 +5,8 @@
 
 #include "fftw.h"
 
-/* finding coefficients of a function with Chebyshev basis expansion
+/* finding coefficients of a function with Chebyshev basis of 
+// first kind expansion
 // such that grid's node collocated at Chebyshev extrema.
 //
 // input explanation: 
@@ -13,7 +14,7 @@
 //
 // o. *values refers to the value of function at each point
 // o. coeffs are the coefficients
-// o. *n is n[3] i.e. number of points in each direction
+// o. n is number of points in each direction
 // 
 // some definitions:
 // =================
@@ -24,39 +25,58 @@
 // moreover the inverse transformation is the same, i.e. REDFT00.
 // o. for each transformation the result is unnormalized and to normalize
 // it one must divide the result by N = 2*(n-1).
-//
-// ->return value: EXIT_SUCCESS
 */
-int fftw_3d_ChebyshevExtrema_coeffs(double *const values,double *const coeffs,const int *const n)
+void fftw_1d_ChebyshevExtrema_coeffs(double *const values,double *const coeffs,const unsigned n)
 {
   fftw_plan p;
   
-  p = fftw_plan_r2r_3d(n[0],n[1],n[2],values,coeffs,
-            FFTW_REDFT00,FFTW_REDFT00,FFTW_REDFT00,FFTW_ESTIMATE);
+  p = fftw_plan_r2r_1d((int)n,values,coeffs,FFTW_REDFT00,FFTW_ESTIMATE);
   fftw_execute(p);
         
   /*Freeing*/
   fftw_destroy_plan(p);
   fftw_cleanup();
-
-  return EXIT_SUCCESS;
 }
 
-/* it is same as above, but this one calculates the values of field
-// based on given coeffs.
-// ->return value: EXIT_SUCCESS.
+/* finding coefficients of a function with Chebyshev basis of 
+// first kind expansion with Chebyshev extrema collocation, 3-D one.
 */
-int fftw_3d_ChebyshevExtrema_values(double *const values,double *const coeffs,const int *const n)
+void fftw_3d_ChebyshevExtrema_coeffs(double *const values,double *const coeffs,const unsigned *const n)
 {
   fftw_plan p;
   
-  p = fftw_plan_r2r_3d(n[0],n[1],n[2],coeffs,values,
+  p = fftw_plan_r2r_3d((int)n[0],(int)n[1],(int)n[2],values,coeffs,
             FFTW_REDFT00,FFTW_REDFT00,FFTW_REDFT00,FFTW_ESTIMATE);
   fftw_execute(p);
         
   /*Freeing*/
   fftw_destroy_plan(p);
   fftw_cleanup();
+}
 
-  return EXIT_SUCCESS;
+/* calculates the values of field based on given coeffs. */
+void fftw_3d_ChebyshevExtrema_values(double *const values,double *const coeffs,const unsigned *const n)
+{
+  fftw_plan p;
+  
+  p = fftw_plan_r2r_3d((int)n[0],(int)n[1],(int)n[2],coeffs,values,
+            FFTW_REDFT00,FFTW_REDFT00,FFTW_REDFT00,FFTW_ESTIMATE);
+  fftw_execute(p);
+        
+  /*Freeing*/
+  fftw_destroy_plan(p);
+  fftw_cleanup();
+}
+
+/* calculates the values of field based on given coeffs. */
+void fftw_1d_ChebyshevExtrema_values(double *const values,double *const coeffs,const unsigned n)
+{
+  fftw_plan p;
+  
+  p = fftw_plan_r2r_1d((int)n,coeffs,values,FFTW_REDFT00,FFTW_ESTIMATE);
+  fftw_execute(p);
+        
+  /*Freeing*/
+  fftw_destroy_plan(p);
+  fftw_cleanup();
 }

@@ -74,3 +74,23 @@ double ABS(const double v)
 {
   return v > 0 ? v : -v;
 }
+
+/* Chebyshev polynomial of second kind Un(x). x MUST be normalized value.
+// ->return value: U
+*/
+double Cheb_Un(const unsigned n, const double x)
+{
+  double u = DBL_MAX;
+  
+  if (n == 0) 
+    u = 1;
+  else if (EQL(x,1) || EQL(x,-1)) 
+    u = n+1;
+  else
+  {
+    double th = acos(x);
+    u = sin((n+1)*th)/sin(th);
+  }
+  
+  return u;
+}

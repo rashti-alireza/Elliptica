@@ -130,23 +130,44 @@ static void fill_patches_Cartesian_grid(Grid_T *const grid)
     
     /* collocation */
     c = get_collocation(get_parameter_value_S("all_collocation",&flg));
-    if (flg != NONE)  patch->collocation = c;
+    if (flg != NONE)
+      patch->collocation[0] = patch->collocation[1] = 
+          patch->collocation[2] = c;
     /* check for override */
-    sprintf(name,"box%d_collocation",i);
-    c = get_collocation(get_parameter_value_S(name,&flg));
-    if (flg != NONE)  patch->collocation = c;
+    make_keyword_parameter(&ret,name,"collocation");
+    c = get_collocation(get_parameter_value_S(ret.s0,&flg));
+    if (flg != NONE)
+      patch->collocation[0] = c;
+    c = get_collocation(get_parameter_value_S(ret.s1,&flg));
+    if (flg != NONE)
+      patch->collocation[1] = c;
+    c = get_collocation(get_parameter_value_S(ret.s2,&flg));
+    if (flg != NONE)
+      patch->collocation[2] = c;
     
-    assert(patch->collocation != UNDEFINED_COLLOCATION);
+    assert(patch->collocation[0] != UNDEFINED_COLLOCATION);
+    assert(patch->collocation[1] != UNDEFINED_COLLOCATION);
+    assert(patch->collocation[2] != UNDEFINED_COLLOCATION);
     
     /* basis */
     b = get_basis(get_parameter_value_S("all_basis",&flg));
-    if (flg != NONE)  patch->basis = b;
+    if (flg != NONE)
+      patch->basis[0] = patch->basis[1] = patch->basis[2] = b;
     /* check for override */
-    sprintf(name,"box%d_basis",i);
-    b = get_basis(get_parameter_value_S(name,&flg));
-    if (flg != NONE)  patch->basis = b;
+    make_keyword_parameter(&ret,name,"basis");
+    b = get_basis(get_parameter_value_S(ret.s0,&flg));
+    if (flg != NONE)
+      patch->basis[0] = b;
+    b = get_basis(get_parameter_value_S(ret.s1,&flg));
+    if (flg != NONE)
+      patch->basis[1] = b;
+    b = get_basis(get_parameter_value_S(ret.s2,&flg));
+    if (flg != NONE)
+      patch->basis[2] = b;
     
-    assert(patch->basis != UNDEFINED_BASIS);
+    assert(patch->basis[0] != UNDEFINED_BASIS);
+    assert(patch->basis[1] != UNDEFINED_BASIS);
+    assert(patch->basis[2] != UNDEFINED_BASIS);
     
     nc +=  patch->n[0]*patch->n[1]*patch->n[2];
   }
