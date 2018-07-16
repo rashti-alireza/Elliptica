@@ -74,6 +74,20 @@ typedef enum FACE_T
               */
 }Face_T;
 
+/* various coords name for Jacobian transformation */
+typedef enum DQ2_DQ1_T
+{
+  _N0_/* for normalized 0-coord [-1,1] */,
+  _N1_/* for normalized 1-coord [-1,1] */,
+  _N2_/* for normalized 2-coord [-1,1] */,
+  _x_/* for Carteisian 0-coord */,
+  _y_/* for Carteisian 1-coord */,
+  _z_/* for Carteisian 2-coord */,
+  _a_/* for Curvilinear 0-coord */,
+  _b_/* for Curvilinear 1-coord */,
+  _c_/* for Curvilinear 2-coord */
+}dq2_dq1_T;
+
 /* *******************************************
 // parameter:
 // *******************************************
@@ -179,6 +193,14 @@ typedef struct Interface_T
   SubFace_T **subface;/* subset of points on this interface with same flags */
 }Interface_T;
 
+/* Jacobian transformation between different coords  */
+typedef struct JACOBIAN_TRANS_T
+{
+  double (*j)(const dq2_dq1_T q2_e, const dq2_dq1_T q1_e,const unsigned q2, const unsigned q1);/* function for transformation */
+  double *dX_dx[3][3];/* saving some transformation to save time for dX[0..2]/dx[0..2] */
+  double *dx_dX[3][3];/* saving some transformation to save time dx[0..2]/dX[0..2] */
+}JacobianTrans_T;
+
 /* patch */
 typedef struct PATCH_T
 {
@@ -200,6 +222,7 @@ typedef struct PATCH_T
   double max[3];/* maximum of each direction like b_max = max[1] */
   Node_T **node;/* node info */
   Interface_T **interface;/* interface info  */
+  JacobianTrans_T *Jac;/* Jacobian transformation between the coords */
   unsigned innerB:1;/* if this patch has inner boundary 1 otherwise 0 */
 }Patch_T;
 
