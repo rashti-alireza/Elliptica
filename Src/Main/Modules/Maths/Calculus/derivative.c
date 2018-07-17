@@ -43,7 +43,7 @@ double *Df(Field_T *const f,const char *task)
   const char *der_par = get_parameter_value_S("Derivative_Method",0);
   unsigned Ndir;
   Method_T method_e = derivative_method(der_par,task);
-  Direction_T  *dir_e = derivative_direction(task,&Ndir);
+  Dd_T  *dir_e = derivative_direction(task,&Ndir);
   
   if (method_e == SPECTRAL)
     r = take_spectral_derivative(f,dir_e,Ndir);
@@ -58,7 +58,7 @@ double *Df(Field_T *const f,const char *task)
 // based on direction of derivative.
 // ->return value: values of the resultant.
 */
-static double *take_spectral_derivative(Field_T *const f,const Direction_T  *const dir_e,const unsigned Ndir)
+static double *take_spectral_derivative(Field_T *const f,const Dd_T  *const dir_e,const unsigned Ndir)
 {
   double *deriv = 0;
   Field_T *ff[2];
@@ -99,13 +99,13 @@ static double *take_spectral_derivative(Field_T *const f,const Direction_T  *con
 }
 
 /* finding all of types of derivatives and put them into 
-// an array of Direction_T with size n in order that they are written.
+// an array of Dd_T with size n in order that they are written.
 // note: this function allocate memory.
-// ->return value: array of Direction_T and number of this arrays
+// ->return value: array of Dd_T and number of this arrays
 */
-static Direction_T *derivative_direction(const char *const task,unsigned *const n)
+static Dd_T *derivative_direction(const char *const task,unsigned *const n)
 {
-  Direction_T *e = 0;
+  Dd_T *e = 0;
   char *savestr,*str = dup_s(task);
   char *tok = tok_s(str,DELIMIT,&savestr);
   
@@ -173,25 +173,25 @@ static Method_T str2enum_method(const char *const str)
 }
 
 /* getting a derivative direction in string format and 
-// returning the Direction_T.
-// ->return value: Direction_T and if not found error.
+// returning the Dd_T.
+// ->return value: Dd_T and if not found error.
 */
-static Direction_T str2enum_direction(const char *const str)
+static Dd_T str2enum_direction(const char *const str)
 {
   if (strcmp_i(str,"x"))
-    return x_DIR;
+    return _x_;
   else if (strcmp_i(str,"y"))
-    return y_DIR;
+    return _y_;
   else if (strcmp_i(str,"z"))
-    return z_DIR;
+    return _z_;
   else if (strcmp_i(str,"a"))
-    return a_DIR;
+    return _a_;
   else if (strcmp_i(str,"b"))
-    return b_DIR;
+    return _b_;
   else if (strcmp_i(str,"c"))
-    return c_DIR;
+    return _c_;
   else
-    abortEr_s("There is no derivative such as %s.\n",str);
+    abortEr_s("There such %s derivative defined!\n",str);
   
   return UNDEFINED_DIR;
 }
@@ -199,20 +199,21 @@ static Direction_T str2enum_direction(const char *const str)
 /* taking 3-D spectral derivative in specified direction
 // ->return value: derivative.
 */
-static double *spectral_derivative_1d(Field_T *const f,const Direction_T dir_e)
+static double *spectral_derivative_1d(Field_T *const f,const Dd_T dir_e)
 {
   Grid_T *const grid = f->grid;
   double *der = alloc_double(grid->nn);
   double *df_dN[3];
   const Patch_T *patch;
-  unsigned pa,d,i;
+  Dd_T d;
+  unsigned pa,i;
   
   FOR_ALL(pa,grid->patch)
   {
     patch = grid->patch[pa];
     unsigned nn = total_nodes_patch(patch);
     
-    for (d = 0; d < 3; ++d)
+    for (d = _N0_; d <= _N2_; ++d)
     {
       if(patch->basis[d]       == Chebyshev_Tn_BASIS && 
          patch->collocation[d] == Chebyshev_Extrema)
@@ -242,7 +243,7 @@ static double *spectral_derivative_1d(Field_T *const f,const Direction_T dir_e)
 // with Jacobian transformation.
 // ->return value: df(x)/dx.
 */
-static double *derivative_Chebyshev_Tn_1d(Field_T *const f,const Patch_T *const patch,const unsigned dir)
+static double *derivative_Chebyshev_Tn_1d(Field_T *const f,const Patch_T *const patch,const Dd_T dir)
 {
   const double *const coeffs = make_coeffs_1d(f,dir,patch);
   const unsigned *const n = patch->n;

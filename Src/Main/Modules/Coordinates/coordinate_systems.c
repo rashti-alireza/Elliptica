@@ -202,7 +202,7 @@ double *make_collocation_1d(const Patch_T *const patch,const unsigned dir,const 
 //
 // ->return value = dq2/dq1.
 */
-double dq2_dq1(const Patch_T *const patch,const dq2_dq1_T q2_e, const dq2_dq1_T q1_e,const unsigned p)
+double dq2_dq1(const Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const unsigned p)
 {
   double j = 0;
   
@@ -228,7 +228,7 @@ double dq2_dq1(const Patch_T *const patch,const dq2_dq1_T q2_e, const dq2_dq1_T 
 /* Jacobian transformation for dN/dX?.
 // ->return value: dN/dX?
 */
-static double dN_dX(const Patch_T *const patch,const dq2_dq1_T q2_e, const dq2_dq1_T q1_e,const unsigned p)
+static double dN_dX(const Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const unsigned p)
 {
   double jN_X = 0;
   
@@ -252,7 +252,7 @@ static double dN_dX(const Patch_T *const patch,const dq2_dq1_T q2_e, const dq2_d
 /* Jacobian transformation for dN/dq?.
 // ->return value: dN/dq?
 */
-static double dN_dq(const Patch_T *const patch,const dq2_dq1_T q2_e, const dq2_dq1_T q1_e,const unsigned p)
+static double dN_dq(const Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const unsigned p)
 {
   double jN_X = 0;
   
@@ -281,7 +281,7 @@ static double dN_dq(const Patch_T *const patch,const dq2_dq1_T q2_e, const dq2_d
 /* Jacobian transformation for Cartesian patch.
 // ->return value: dq2/dq1
 */
-double JT_Cartesian_patch(const Patch_T *const patch,const dq2_dq1_T q2_e, const dq2_dq1_T q1_e,const unsigned p)
+double JT_Cartesian_patch(const Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const unsigned p)
 {
   double j;
   

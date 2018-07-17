@@ -74,10 +74,10 @@ typedef enum FACE_T
               */
 }Face_T;
 
-/* various coords name for Jacobian transformation
-// NOTE: DON'T CHANGE THE NUMERATION. GONNA AFFECT JACOBIAN.
+/* various directions for derivative and Jacobian transformation
+// NOTE: DON'T CHANGE THE NUMERATION.
 */
-typedef enum DQ2_DQ1_T
+typedef enum DD_T
 {
   _N0_ = 0/* for normalized 0-coord [-1,1] */,
   _N1_/* for normalized 1-coord [-1,1] */,
@@ -87,8 +87,9 @@ typedef enum DQ2_DQ1_T
   _z_/* for Carteisian 2-coord */,
   _a_/* for Curvilinear 0-coord */,
   _b_/* for Curvilinear 1-coord */,
-  _c_/* for Curvilinear 2-coord */
-}dq2_dq1_T;
+  _c_/* for Curvilinear 2-coord */,
+  UNDEFINED_DIR,
+}Dd_T;
 
 /* *******************************************
 // parameter:
@@ -198,7 +199,7 @@ typedef struct Interface_T
 /* Jacobian transformation between different coords  */
 typedef struct JACOBIAN_TRANS_T
 {
-  double (*j)(const struct PATCH_T *const patch,const dq2_dq1_T q2_e, const dq2_dq1_T q1_e,const unsigned p);/* function for transformation */
+  double (*j)(const struct PATCH_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const unsigned p);/* function for transformation */
   double *dX_dx[3][3];/* saving some transformation to save time for dX[0..2]/dx[0..2] */
   double *dx_dX[3][3];/* saving some transformation to save time dx[0..2]/dX[0..2] */
 }JacobianTrans_T;
