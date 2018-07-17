@@ -1466,18 +1466,12 @@ static void set_min_max_sum(const unsigned *const n,const unsigned f,unsigned *c
 */
 double *normal_vec(Point_T *const point)
 {
-  if (strcmp_i(point->patch->coordsys,"Cartesian"))
+  if (point->patch->coordsys == Cartesian)
   {
     normal_vec_Cartesian_coord(point);
   }
-  /*if (strcmp_i(point->patch->coordsys,"CubedSphere"))
-  //{
-    //normal_vec_CubedSphere(point);
-  //}*/
   else
-    abortEr_s("Normal for %s is not defined yet!\n",
-      point->patch->coordsys);
-    
+    abortEr("No Normal defined for such coordinate yet!\n");    
   return point->N;
 }
 

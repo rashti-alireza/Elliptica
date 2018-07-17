@@ -29,7 +29,7 @@ void add_func_PtoV(sFunc_PtoV_T ***const func,
 void run_func_PtoV(sFunc_PtoV_T **const func,const char *const task,Patch_T *const patch)
 {
   unsigned i;
-  Coord_T coord = find_coord(patch);
+  Coord_T coord = patch->coordsys;
   Flag_T flg = NONE;
   
   if (!func) abortEr("The func is null!\n");
@@ -43,19 +43,6 @@ void run_func_PtoV(sFunc_PtoV_T **const func,const char *const task,Patch_T *con
   
   if (flg != FOUND)
     abortEr_s("There is not %s task.\n",task);
-}
-
-/* find coord enum based in patch */
-Coord_T find_coord(const Patch_T *const patch)
-{
-  Coord_T coord;
-  
-  if(strcmp_i(patch->coordsys,"Cartesian"))
-    coord = Cartesian;
-  else
-    abortEr_s("There is no such %s coordinates.\n",patch->coordsys);  
-    
-  return coord;
 }
 
 /* initiatin a sFunc_Grid2Pdouble_T struct */

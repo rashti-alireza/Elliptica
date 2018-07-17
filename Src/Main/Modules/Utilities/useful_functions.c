@@ -278,3 +278,18 @@ unsigned total_nodes_patch(const Patch_T *const patch)
 {
   return patch->n[0]*patch->n[1]*patch->n[2];
 }
+
+/* find coord enum based in give str.
+// ->return value: found Coord_T .
+*/
+Coord_T find_coord(const char *const coordsys)
+{
+  Coord_T coord;
+  
+  if(strcmp_i(coordsys,"Cartesian"))
+    coord = Cartesian;
+  else
+    abortEr_s("There is no such %s coordinates.\n",coordsys);  
+    
+  return coord;
+}

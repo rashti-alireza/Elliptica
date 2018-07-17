@@ -208,7 +208,7 @@ int X_of_x(double *const X,const double *const x,const Patch_T *const patch)
 {
   int r = 0;
   
-  if (strcmp_i(patch->coordsys,"Cartesian"))
+  if (patch->coordsys == Cartesian)
     r = X_of_x_Cartesian_coord(X,x);
   /* other coord sys comes here
   .
@@ -216,7 +216,7 @@ int X_of_x(double *const X,const double *const x,const Patch_T *const patch)
   .
   */
   else
-      abortEr_s("No finder for this %s coordinate.\n",patch->coordsys);
+      abortEr("No finder for this coordinate.\n");
  
   return r;
 }

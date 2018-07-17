@@ -126,7 +126,7 @@ static void fill_patches_Cartesian_grid(Grid_T *const grid)
     patch->max[2] = patch->c[2]+patch->s[2]/2;
     
     /* filling flags */
-    patch->coordsys = dup_s("Cartesian");
+    patch->coordsys = Cartesian;
     
     /* collocation */
     c = get_collocation(get_parameter_value_S("all_collocation",&flg));

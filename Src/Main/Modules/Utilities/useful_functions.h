@@ -23,3 +23,4 @@ static unsigned check_interface(const double *const X, const Patch_T *const patc
 SubFace_T *get_paired_subface(const SubFace_T *const sub);
 unsigned total_nodes_grid(const Grid_T *const grid);
 unsigned total_nodes_patch(const Patch_T *const patch);
+Coord_T find_coord(const char *const coordsys);

@@ -14,13 +14,13 @@ int make_nodes(Grid_T *const grid)
     Patch_T *patch = grid->patch[i];
     
     /* if coord is Cartesian */
-    if (strcmp_i(patch->coordsys,"Cartesian"))
+    if (patch->coordsys == Cartesian)
     {
       make_nodes_Cartesian_coord(patch);
     }
     
     else
-      abortEr_s("There is no such %s coordinate.\n",patch->coordsys);
+      abortEr("No action for such coordinate.\n");
   }
   
   return EXIT_SUCCESS;
@@ -37,7 +37,7 @@ int make_JacobianT(Grid_T *const grid)
     Patch_T *patch = grid->patch[i];
     
     /* if coord is Cartesian */
-    if (strcmp_i(patch->coordsys,"Cartesian"))
+    if (patch->coordsys == Cartesian)
     {
       patch->JacobianT = calloc(1,sizeof(patch->JacobianT));
       pointerEr(patch->JacobianT);
@@ -45,7 +45,7 @@ int make_JacobianT(Grid_T *const grid)
     }
     
     else
-      abortEr_s("There is no such %s coordinate.\n",patch->coordsys);
+      abortEr("No job for such coordinate.\n");
   }
   
   return EXIT_SUCCESS;
