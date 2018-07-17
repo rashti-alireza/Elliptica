@@ -60,7 +60,7 @@ static void make_JacobianT_Cartesian_coord(Patch_T *const patch)
 /* making value of coords. it is a general function for Cartesian type */
 static void make_nodes_Cartesian_coord(Patch_T *const patch)
 {
-  struct Collocation_s coll_s[3];
+  struct Collocation_s coll_s[3] = {0};
   const unsigned U = countf(patch->node);
   unsigned i,j,k,l,*n;
   

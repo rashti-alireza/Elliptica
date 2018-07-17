@@ -42,14 +42,14 @@ int DerivativeTest(Grid_T *const grid)
   // notation for naming of functions.
   // note: functions are defined in Analytic folder in Maths.
   */
-  add_func_Grid2Pdouble(&DataBase_func,ArgM(c_f));
+/*  add_func_Grid2Pdouble(&DataBase_func,ArgM(c_f));
   add_func_Grid2Pdouble(&DataBase_func,ArgM(x_f));
   add_func_Grid2Pdouble(&DataBase_func,ArgM(y_f));
   add_func_Grid2Pdouble(&DataBase_func,ArgM(z_f));
   add_func_Grid2Pdouble(&DataBase_func,ArgM(poly3_f));
-  add_func_Grid2Pdouble(&DataBase_func,ArgM(r_f));
+  add_func_Grid2Pdouble(&DataBase_func,ArgM(r_f));*/
   add_func_Grid2Pdouble(&DataBase_func,ArgM(sinxyz_f));
-  add_func_Grid2Pdouble(&DataBase_func,ArgM(mix2_f));
+/*  add_func_Grid2Pdouble(&DataBase_func,ArgM(mix2_f));
   add_func_Grid2Pdouble(&DataBase_func,ArgM(c_f_x));
   add_func_Grid2Pdouble(&DataBase_func,ArgM(c_f_y));
   add_func_Grid2Pdouble(&DataBase_func,ArgM(c_f_z));
@@ -95,7 +95,7 @@ int DerivativeTest(Grid_T *const grid)
   add_func_Grid2Pdouble(&DataBase_func,ArgM(inv_rP1_f_xy));
   add_func_Grid2Pdouble(&DataBase_func,ArgM(inv_rP1_f_xz));
   add_func_Grid2Pdouble(&DataBase_func,ArgM(inv_rP1_f_yz));
-  add_func_Grid2Pdouble(&DataBase_func,ArgM(inv_rP1_f_xyz));
+  add_func_Grid2Pdouble(&DataBase_func,ArgM(inv_rP1_f_xyz));*/
   add_func_Grid2Pdouble(&DataBase_func,ArgM(sinxyz_f_x));
   add_func_Grid2Pdouble(&DataBase_func,ArgM(sinxyz_f_y));
   add_func_Grid2Pdouble(&DataBase_func,ArgM(sinxyz_f_z));
@@ -106,7 +106,7 @@ int DerivativeTest(Grid_T *const grid)
   add_func_Grid2Pdouble(&DataBase_func,ArgM(sinxyz_f_xz));
   add_func_Grid2Pdouble(&DataBase_func,ArgM(sinxyz_f_yz));
   add_func_Grid2Pdouble(&DataBase_func,ArgM(sinxyz_f_xyz));
-  add_func_Grid2Pdouble(&DataBase_func,ArgM(mix2_f_x));
+/*  add_func_Grid2Pdouble(&DataBase_func,ArgM(mix2_f_x));
   add_func_Grid2Pdouble(&DataBase_func,ArgM(mix2_f_y));
   add_func_Grid2Pdouble(&DataBase_func,ArgM(mix2_f_z));
   add_func_Grid2Pdouble(&DataBase_func,ArgM(mix2_f_xx));
@@ -115,7 +115,7 @@ int DerivativeTest(Grid_T *const grid)
   add_func_Grid2Pdouble(&DataBase_func,ArgM(mix2_f_xy));
   add_func_Grid2Pdouble(&DataBase_func,ArgM(mix2_f_xz));
   add_func_Grid2Pdouble(&DataBase_func,ArgM(mix2_f_yz));
-  add_func_Grid2Pdouble(&DataBase_func,ArgM(mix2_f_xyz));
+  add_func_Grid2Pdouble(&DataBase_func,ArgM(mix2_f_xyz));*/
   
   FOR_ALL(fi,DataBase_func)
   {
@@ -169,6 +169,7 @@ int DerivativeTest(Grid_T *const grid)
   
   free_func_Grid2Pdouble(DataBase_func);
   free(path);
+  df_num->values = 0;
   free_field(df_num);
   
   return EXIT_SUCCESS;
@@ -265,25 +266,25 @@ static void enum2str(enum FUNC_E e,char *const str)
       sprintf(str,"z");
       break;
     case FUNC_xx:
-      sprintf(str,"_xx");
+      sprintf(str,"x,x");
       break;
     case FUNC_yy:
-      sprintf(str,"yy");
+      sprintf(str,"y,y");
       break;
     case FUNC_zz:
-      sprintf(str,"zz");
+      sprintf(str,"z,z");
       break;
     case FUNC_xy:
-      sprintf(str,"xy");
+      sprintf(str,"x,y");
       break;
     case FUNC_xz:
-      sprintf(str,"xz");
+      sprintf(str,"x,z");
       break;
     case FUNC_yz:
-      sprintf(str,"yz");
+      sprintf(str,"y,z");
       break;
     case FUNC_xyz:
-      sprintf(str,"xyz");
+      sprintf(str,"x,y,z");
       break;
     default:
       abortEr("There is no such derivative defined.\n"

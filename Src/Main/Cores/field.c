@@ -573,14 +573,16 @@ static void coeffs_patch_Tn_Extrema_1d(const Field_T *const f,const Patch_T *con
 static void add_Tinfo(Field_T *const f,const unsigned pn,const unsigned dir,const Collocation_T collocation,const Basis_T basis)
 {
   char inf[MAX_STR] = {'\0'};
-  unsigned l_info = 0;
+  unsigned l1 = 0,l2 = 0;
   
   if (f->info)
-    l_info = (unsigned)strlen(f->info);
-    
+    l1 = (unsigned)strlen(f->info);
   /* (patch,direction,collocation,basis) */
   sprintf(inf,PR_FORMAT,pn,dir,collocation,basis);
-  f->info = realloc(f->info,l_info+strlen(inf)+1);
+  l2 = l1+(unsigned)strlen(inf)+1;
+  f->info = realloc(f->info,l2);
+  pointerEr(f->info);
+  f->info[l1] = '\0';
   strcat(f->info,inf);
   
 }

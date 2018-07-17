@@ -16,13 +16,16 @@ int make_patches(Grid_T *const grid)
   parameterEr(flg);
   grid->kind = dup_s(kind);
   
-  /* allocating and filling patches */
+  /* allocating and filling basics of patches */
   alloc_patches(grid);
   fill_patches(grid);
   
   /* allocating and filling nodes */
   alloc_nodes(grid);
   make_nodes(grid);
+  
+  /* allocating and making Jacobian coordinate transformation */
+  make_JacobianT(grid);
   
   /* filling grid->nn */
   grid->nn = total_nodes_grid(grid);

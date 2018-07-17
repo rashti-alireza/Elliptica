@@ -244,7 +244,7 @@ static double *spectral_derivative_in1dir(Field_T *const f,const Dd_T dir_e)
     
     if (flg[0] == YES && flg[1] == YES && flg[2] == YES)
     {
-      #pragma omp parallel for
+      OpenMP_2d_Pragma(omp parallel for)
       for (i = 0; i < nn; ++i)
         der[i+nc] = df_dp[0][i]*dq2_dq1(patch,dp[0],dir_e,i) + 
                     df_dp[1][i]*dq2_dq1(patch,dp[1],dir_e,i) +
@@ -252,33 +252,33 @@ static double *spectral_derivative_in1dir(Field_T *const f,const Dd_T dir_e)
     }
     else if (flg[0] == YES && flg[1] == YES)
     {
-      #pragma omp parallel for
+      OpenMP_2d_Pragma(omp parallel for)
       for (i = 0; i < nn; ++i)
         der[i+nc] = df_dp[0][i]*dq2_dq1(patch,dp[0],dir_e,i) + 
                     df_dp[1][i]*dq2_dq1(patch,dp[1],dir_e,i);
     }
     else if (flg[1] == YES && flg[2] == YES)
     {
-      #pragma omp parallel for
+      OpenMP_2d_Pragma(omp parallel for)
       for (i = 0; i < nn; ++i)
         der[i+nc] = df_dp[1][i]*dq2_dq1(patch,dp[1],dir_e,i) + 
                     df_dp[2][i]*dq2_dq1(patch,dp[2],dir_e,i);
     }
     else if (flg[0] == YES)
     {
-      #pragma omp parallel for
+      OpenMP_2d_Pragma(omp parallel for)
       for (i = 0; i < nn; ++i)
         der[i+nc] = df_dp[0][i]*dq2_dq1(patch,dp[0],dir_e,i);
     }
     else if (flg[1] == YES)
     {
-      #pragma omp parallel for
+      OpenMP_2d_Pragma(omp parallel for)
       for (i = 0; i < nn; ++i)
         der[i+nc] = df_dp[1][i]*dq2_dq1(patch,dp[1],dir_e,i); 
     }
     else if (flg[2] == YES)
     {
-      #pragma omp parallel for
+      OpenMP_2d_Pragma(omp parallel for)
       for (i = 0; i < nn; ++i)
         der[i+nc] = df_dp[2][i]*dq2_dq1(patch,dp[2],dir_e,i); 
     }
@@ -311,7 +311,7 @@ static double *derivative_Chebyshev_Tn_in1dim(Field_T *const f,const Patch_T *co
   const double *const coeffs = &f->coeffs[patch->nc];
   unsigned l;
   
-  #pragma omp parallel for
+  OpenMP_2d_Pragma(omp parallel for)
   for (l = 0; l < nn; ++l)
   {
     unsigned i,j,k;
