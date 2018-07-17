@@ -5,6 +5,7 @@
 
 #include "field.h"
 #define MAX_STR 400
+#define PR_FORMAT "(p%u,d%u,c%d,b%d)"
 
 /* initializing a 3d field.
 // ->return value: a ready field.
@@ -63,18 +64,20 @@ Field_T *get_field_S(const char *const name,Grid_T *const grid)
 // ======================
 //
 // o. f is demanded field
-// o. dir referes to directions which this coefficents may be found.
+// o. dir refers to directions which this coefficients may be found.
 //	0 for a-direction, 1 for b-direction, 2 for c-direction.
 // o. patch: coeffs will be made in this patch only.
 //
 // note1: each patch uses it own basis type and each part of coeffs
 // corresponds to that basis type.
-// note3: it allocates memory for coeffs if not available.
-// ->return value: coeffs.
+// note2: it allocates memory for coeffs on the "whole grid" if not available.
+// note3: it returns the pointer points to the begining of coeffs
+// which contains the coeffs of the given patch.
+// ->return value: coeffs of the given patch
 */
 double *make_coeffs_1d(Field_T *const f,const unsigned dir,const Patch_T *const patch)
 {
-  const unsigned N = total_nodes_grid(f->grid);
+  const unsigned N = f->grid->nn;
   
   assert(dir <= 2);
   assert(patch);
@@ -99,12 +102,12 @@ double *make_coeffs_1d(Field_T *const f,const unsigned dir,const Patch_T *const 
 */
 double *make_coeffs_2d(Field_T *const f,const unsigned dir1,const unsigned dir2,const Patch_T *const patch)
 {
-  const unsigned N = total_nodes_grid(f->grid);
+  const unsigned N = f->grid->nn;
   int dir;
   Field_T *f_tmp = init_field_3d("f_tmp",f->grid);
   
-  assert(dir2 <= 2);
   assert(dir1 <= 2);
+  assert(dir2 <= 2);
   assert(patch);
   assert(f->dim == 3);
   
@@ -272,6 +275,7 @@ double *make_coeffs_grid_3d(Field_T *const f)
 }
 
 /* check if this coeffs has been already made.
+// furthermore if the coeffs are not appropriate, clean them.
 // ->return value: 1 if already made, 0 otherwise.
 */
 static unsigned IsAvailable_1d(Field_T *const f,const Patch_T *const patch,const unsigned dir)
@@ -281,34 +285,38 @@ static unsigned IsAvailable_1d(Field_T *const f,const Patch_T *const patch,const
   unsigned r = 0;
   unsigned pn = patch->pn;
   char needle[3][MAX_STR] = {'\0'};
+  Flag_T flg = CLEAN;
   
   /* if there is no coeffs */
-  if (!f->coeffs) return 0;
+  if (!f->coeffs || !f->info) return 0;
   
-  sprintf(needle[0],"p%u,d%u",pn,dir);
+  sprintf(needle[0],PR_FORMAT,pn,dir,collocation,basis);
   sprintf(needle[1],"p%u,d%u",pn,(dir+1)%3);
   sprintf(needle[2],"p%u,d%u",pn,3-dir-(dir+1)%3);
   
   /* if other direction exist one needs to clean coeffs */
   if (strstr(f->info,needle[1]) || strstr(f->info,needle[2]))
   {
-    free(f->coeffs);
-    f->coeffs = 0;
+    flg = CLEAN;
     r = 0;
   }
-  /* if coeffs is ready */
   else if (strstr(f->info,needle[0]))
   {
-    /* check if the basis and collocation are also match */
-    sprintf(needle[0],"p%u,d%u,c%d,b%d",pn,dir,collocation,basis);
-    if (strstr(f->info,needle[0]))
-      r = 1;
-    else
-    {
-      free(f->coeffs);
-      f->coeffs = 0;
-      r = 0;
-    }
+    flg = NO;
+    r = 1;
+  }
+  else/* if some mismatches exist */
+  {
+    flg = CLEAN;
+    r = 0;
+  }
+  
+  if (flg == CLEAN)
+  {
+    free(f->coeffs);
+    free(f->info);
+    f->coeffs = 0;
+    f->info   = 0;
   }
   
   return r;
@@ -317,88 +325,74 @@ static unsigned IsAvailable_1d(Field_T *const f,const Patch_T *const patch,const
 /* check if this coeffs has been already made.
 // if only one of them is available put the other one in dir.
 // ->return value: 1 if already made, 0 otherwise.
-// ->return value: if 1 and dir == -1, it means the field is ready ready.
+// ->return value: if 1 and dir == -1, it means the coeffs is ready ready, 
+// otherwise fill dir in required direction.
 */
 static unsigned IsAvailable_2d(Field_T *const f,const Patch_T *const patch,const unsigned dir1,const unsigned dir2,int *dir)
 {
-  Collocation_T collocation[2];
-  Basis_T basis[2];
+  Collocation_T collocation[3];
+  Basis_T basis[3];
   unsigned r = 0;
   unsigned pn = patch->pn;
   char needle[6][MAX_STR] = {'\0'};
+  Flag_T flg = CLEAN;
   
-  collocation[0] = patch->collocation[dir1];
-  collocation[1] = patch->collocation[dir2];
-  basis[0]       = patch->basis[dir1];
-  basis[1]       = patch->basis[dir2];
+  *dir = INT_MAX;
+  collocation[dir1] = patch->collocation[dir1];
+  collocation[dir2] = patch->collocation[dir2];
+  basis[dir1]       = patch->basis[dir1];
+  basis[dir2]       = patch->basis[dir2];
   
   /* if there is no coeffs */
-  if (!f->coeffs) return 0;
-  
-  sprintf(needle[0],"p%u,d%u",pn,dir1);
+  if (!f->coeffs || !f->info) return 0;
+
+  sprintf(needle[0],PR_FORMAT,pn,dir1,collocation[dir1],basis[dir1]);
   sprintf(needle[1],"p%u,d%u",pn,(dir1+1)%3);
   sprintf(needle[2],"p%u,d%u",pn,3-dir1-(dir1+1)%3);
-  sprintf(needle[3],"p%u,d%u",pn,dir2);
+  sprintf(needle[3],PR_FORMAT,pn,dir2,collocation[dir2],basis[dir2]);
   sprintf(needle[4],"p%u,d%u",pn,(dir2+1)%3);
   sprintf(needle[5],"p%u,d%u",pn,3-dir2-(dir2+1)%3);
   
   /* if other direction exists one needs to clean coeffs */
   if ( strstr(f->info,needle[1]) || strstr(f->info,needle[2]) || 
-       strstr(f->info,needle[3]) || strstr(f->info,needle[4])   )
+       strstr(f->info,needle[4]) || strstr(f->info,needle[5])   )
   {
-    free(f->coeffs);
-    f->coeffs = 0;
+    flg = CLEAN;
     r = 0;
   }
   /* if coeffs is ready */
   else if (strstr(f->info,needle[0]) && strstr(f->info,needle[3]))
   {
-    /* check if the basis and collocation are also match */
-    sprintf(needle[0],"p%u,d%u,c%d,b%d",pn,dir1,collocation[0],basis[0]);
-    sprintf(needle[3],"p%u,d%u,c%d,b%d",pn,dir2,collocation[1],basis[1]);
-    if (strstr(f->info,needle[0]) && strstr(f->info,needle[3]))
-    {
-      r = 1;
-      *dir = -1;
-    }
-    else
-    {
-      free(f->coeffs);
-      f->coeffs = 0;
-      r = 0;
-    }
+    flg = NO;
+    r = 1;
+    *dir = -1;
   }
   else if (strstr(f->info,needle[0]))
   {
-    /* check if the basis and collocation are also match */
-    sprintf(needle[0],"p%u,d%u,c%d,b%d",pn,dir1,collocation[0],basis[0]);
-    if (strstr(f->info,needle[0]))
-    {
-      r = 1;
-      *dir = (int)dir2;
-    }
-    else
-    {
-      free(f->coeffs);
-      f->coeffs = 0;
-      r = 0;
-    }
+    flg = NO;
+    r = 1;
+    *dir = (int)dir2;
+      
   }
   else if (strstr(f->info,needle[3]))
   {
-    /* check if the basis and collocation are also match */
-    sprintf(needle[3],"p%u,d%u,c%d,b%d",pn,dir2,collocation[1],basis[1]);
-    if (strstr(f->info,needle[3]))
-    {
-      r = 1;
-      *dir = (int)dir1;
-    }
-    else
-    {
-      free(f->coeffs);
-      f->coeffs = 0;
-      r = 0;
-    }
+    flg = NO;
+    r = 1;
+    *dir = (int)dir1;
+      
+  }
+  else
+  {
+    flg = CLEAN;
+    r = 0;
+  }
+  
+  if (flg == CLEAN)
+  {
+    free(f->coeffs);
+    free(f->info);
+    f->coeffs = 0;
+    f->info   = 0;
   }
   
   return r;
@@ -423,13 +417,13 @@ static unsigned IsAvailable_3d(Field_T *const f,const Patch_T *const patch)
   basis[2]       = patch->basis[2];
   
   /* if there is no coeffs */
-  if (!f->coeffs) return 0;
+  if (!f->coeffs || !f->info) return 0;
   
-  sprintf(needle[0],"p%u,d%u,c%d,b%d",pn,0,collocation[0],basis[0]);
-  sprintf(needle[1],"p%u,d%u,c%d,b%d",pn,1,collocation[1],basis[1]);
-  sprintf(needle[2],"p%u,d%u,c%d,b%d",pn,2,collocation[2],basis[2]);
+  sprintf(needle[0],PR_FORMAT,pn,0,collocation[0],basis[0]);
+  sprintf(needle[1],PR_FORMAT,pn,1,collocation[1],basis[1]);
+  sprintf(needle[2],PR_FORMAT,pn,2,collocation[2],basis[2]);
   
-  /* if other direction exist one needs to clean coeffs */
+  /* if coeffs are ready */
   if (strstr(f->info,needle[0]) && strstr(f->info,needle[1]) 
       && strstr(f->info,needle[2]))
   {
@@ -438,7 +432,9 @@ static unsigned IsAvailable_3d(Field_T *const f,const Patch_T *const patch)
   else
   {
     free(f->coeffs);
+    free(f->info);
     f->coeffs = 0;
+    f->info   = 0;
     r = 0;
   }
   
@@ -574,7 +570,7 @@ static void add_Tinfo(Field_T *const f,const unsigned pn,const unsigned dir,cons
   char inf[MAX_STR] = {'\0'};
   
   /* (patch,direction,collocation,basis) */
-  sprintf(inf,"(p%u,d%u,c%d,b%d)",pn,dir,collocation,basis);
+  sprintf(inf,PR_FORMAT,pn,dir,collocation,basis);
   f->info = realloc(f->info,strlen(f->info)+strlen(inf)+1);
   strcat(f->info,inf);
   

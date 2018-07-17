@@ -24,6 +24,7 @@ typedef enum FLAG_T
   READY,
   INUSE,
   FOUND,
+  CLEAN,
   BRUTE_FORCE
 }Flag_T;
 
