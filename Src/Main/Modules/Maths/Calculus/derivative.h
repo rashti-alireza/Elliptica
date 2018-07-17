@@ -16,6 +16,9 @@ typedef enum METHOD_T
   FINITE_DIFF
 }Method_T;
 
+/* function for taking spectral derivative */
+typedef double *SpecDerivative_Func_T(Field_T *const f,const Patch_T *const patch,const Dd_T dir);
+
 double *Df(Field_T *const f,const char *task);
 static Method_T derivative_method(const char *const par,const char *const task);
 static Method_T str2enum_method(const char *const str);
@@ -24,3 +27,6 @@ static Dd_T str2enum_direction(const char *const str);
 static double *take_spectral_derivative(Field_T *const f,const Dd_T  *const dir_e,const unsigned Ndir);
 static double *spectral_derivative_in1dir(Field_T *const f,const Dd_T dir_e);
 static double *derivative_Chebyshev_Tn_in1dir(Field_T *const f,const Patch_T *const patch,const Dd_T dir);
+static void get_dp(const Patch_T *const patch,SpecDerivative_Func_T **func,const Dd_T dir,Dd_T *dp);
+static void get_dependency(const Patch_T *const patch,const Dd_T dir, unsigned *dep);
+static void get_SpecDerivative_func(const Patch_T *const patch,SpecDerivative_Func_T **func);

@@ -202,50 +202,92 @@ static Dd_T str2enum_direction(const char *const str)
 
 /* taking 3-D spectral derivative in the specified direction dir_e 
 // on the whole grid.
-// note: it allocates memory for resultant in each revoking.
-// ->return value: derivative.
+// it is worth explaining that some bases are expanded in 
+// different coordinate than x,y and z or a,b and c; for example Chebyshev Tn
+// which expanded in normal coords N0,N1 and N2. so in taking
+// derivative one needs to consider this. the variable being used
+// for this is "Dd_T dp[3]".
+// note: it allocates memory for resultant in each invoking.
+// ->return value: sepctral derivative.
 */
 static double *spectral_derivative_in1dir(Field_T *const f,const Dd_T dir_e)
 {
   Grid_T *const grid = f->grid;
   double *der = alloc_double(grid->nn);
-  double *df_dN[3];
-  const Patch_T *patch;
-  Dd_T d;
-  unsigned pa,i;
+  unsigned pa;
   
   FOR_ALL(pa,grid->patch)
   {
-    patch = grid->patch[pa];
+    const Patch_T *patch = grid->patch[pa];
+    SpecDerivative_Func_T *df[3];/* spectral derivative function in each direction */
+    Dd_T dp[3];/* see above explanation */
+    double *df_dp[3];
     unsigned nn = total_nodes_patch(patch);
+    unsigned nc = patch->nc;
+    unsigned i;
+    Dd_T d;
+    Flag_T flg[3];
     
-    /* improving perfomance */
-    if (patch->coordsys == Cartesian)
+    get_SpecDerivative_func(patch,df);
+    get_dp(patch,df,dir_e,dp);
+    
+    for (d = 0; d < 3; ++d)
     {
+      flg[d] = NO;
+      df_dp[d] = 0;
+      if (dp[d] != UNDEFINED_DIR)
+      {
+        df_dp[d] = df[d](f,patch,dp[d]);
+        flg[d] = YES;
+      }
     }
     
-    else
+    if (flg[0] == YES && flg[1] == YES && flg[2] == YES)
     {
-      for (d = _N0_; d <= _N2_; ++d)
-      {
-        if(patch->basis[d]       == Chebyshev_Tn_BASIS && 
-           patch->collocation[d] == Chebyshev_Extrema)
-          df_dN[d] = derivative_Chebyshev_Tn_in1dir(f,patch,d);
-        else
-          abortEr("There is no such basis or collocation defined for this function.\n");
-      }
-      
       #pragma omp parallel for
       for (i = 0; i < nn; ++i)
-        der[i] = df_dN[_N0_][i]*dq2_dq1(patch,_N0_,dir_e,i) + 
-                 df_dN[_N1_][i]*dq2_dq1(patch,_N1_,dir_e,i) +
-                 df_dN[_N2_][i]*dq2_dq1(patch,_N2_,dir_e,i);
-    }/* end of else */
-  }/* end of FOR_ALL(pa,grid->patch) */
+        der[i+nc] = df_dp[0][i]*dq2_dq1(patch,dp[0],dir_e,i) + 
+                    df_dp[1][i]*dq2_dq1(patch,dp[1],dir_e,i) +
+                    df_dp[2][i]*dq2_dq1(patch,dp[2],dir_e,i);
+    }
+    else if (flg[0] == YES && flg[1] == YES)
+    {
+      #pragma omp parallel for
+      for (i = 0; i < nn; ++i)
+        der[i+nc] = df_dp[0][i]*dq2_dq1(patch,dp[0],dir_e,i) + 
+                    df_dp[1][i]*dq2_dq1(patch,dp[1],dir_e,i);
+    }
+    else if (flg[1] == YES && flg[2] == YES)
+    {
+      #pragma omp parallel for
+      for (i = 0; i < nn; ++i)
+        der[i+nc] = df_dp[1][i]*dq2_dq1(patch,dp[1],dir_e,i) + 
+                    df_dp[2][i]*dq2_dq1(patch,dp[2],dir_e,i);
+    }
+    else if (flg[0] == YES)
+    {
+      #pragma omp parallel for
+      for (i = 0; i < nn; ++i)
+        der[i+nc] = df_dp[0][i]*dq2_dq1(patch,dp[0],dir_e,i);
+    }
+    else if (flg[1] == YES)
+    {
+      #pragma omp parallel for
+      for (i = 0; i < nn; ++i)
+        der[i+nc] = df_dp[1][i]*dq2_dq1(patch,dp[1],dir_e,i); 
+    }
+    else if (flg[2] == YES)
+    {
+      #pragma omp parallel for
+      for (i = 0; i < nn; ++i)
+        der[i+nc] = df_dp[2][i]*dq2_dq1(patch,dp[2],dir_e,i); 
+    }
   
-  free(df_dN[_N0_]);
-  free(df_dN[_N1_]);
-  free(df_dN[_N2_]);
+  
+    for (d = 0; d < 3; ++d)
+      if (df_dp[d])
+        free(df_dp[d]);
+  }/* end of FOR_ALL(pa,grid->patch) */
   
   return der;
 }
@@ -258,6 +300,8 @@ static double *spectral_derivative_in1dir(Field_T *const f,const Dd_T dir_e)
 */
 static double *derivative_Chebyshev_Tn_in1dir(Field_T *const f,const Patch_T *const patch,const Dd_T dir)
 {
+  assert(dir <= _N2_);
+  
   const double *const coeffs = make_coeffs_1d(f,dir,patch);
   const unsigned *const n = patch->n;
   const unsigned nc = patch->nc;
@@ -285,4 +329,76 @@ static double *derivative_Chebyshev_Tn_in1dir(Field_T *const f,const Patch_T *co
   free(x);
   
   return der;
+}
+
+/* based on basis and collocation,
+// get the pertinent function for spectral derivative. 
+*/
+static void get_SpecDerivative_func(const Patch_T *const patch,SpecDerivative_Func_T **func)
+{
+  unsigned i;
+  
+  for (i = 0; i < 3; ++i)
+  {
+    if (patch->basis[i] == Chebyshev_Tn_BASIS 
+        && patch->collocation[i] == Chebyshev_Extrema)
+    {
+      func[i] = derivative_Chebyshev_Tn_in1dir;
+    }
+    else
+      abortEr("There is no such basis or collocation defined for this function.\n");
+  }
+}
+
+/* based on coordinate system and given direction,
+// it find this direction depends on what "a,b,c".
+// note: it is ONLY for a,b,c; since it is assumed we want
+// to expand or fields on a,b,c.
+// for example:
+// ============
+//
+// in spherical coords, if (dir == r) => r = r(r)= r(a)
+// in spherical coords, if (dir == x) => x = x(r,theta,phi) = x(a,b,c)
+// Notation: dep[?] = 1 means dir depends on ?. 
+// and if dep[?] = 0 it means it is not depended.
+*/
+static void get_dependency(const Patch_T *const patch,const Dd_T dir, unsigned *dep)
+{
+  unsigned i;
+  
+  for (i = 0; i < 3; i++)
+  {
+    dep[i] = 0;
+  }
+  
+  if (patch->coordsys == Cartesian)
+  {
+    dep[dir%3] = 1;
+  }
+  else
+     abortEr("There is no coordinate defined for this function.\n");
+}
+
+/* based on spectral derivative function and dependencies 
+// it finds the Dd_T dp used for direction of partial derivative.
+*/
+static void get_dp(const Patch_T *const patch,SpecDerivative_Func_T **func,const Dd_T dir,Dd_T *dp)
+{
+  unsigned depend[3];
+  unsigned i;
+  
+  get_dependency(patch,dir,depend);
+  
+  for (i = 0; i < 3; ++i)
+  {
+    dp[i] = UNDEFINED_DIR;
+    if (depend[i])/* if this direction depends on _a_,_b_,_c_ */
+    {
+      if (func[i] == derivative_Chebyshev_Tn_in1dir)
+        dp[i] = i;/* means _N0_or _N1_or _N2_ */
+      else
+        abortEr("There is no such derivative function defined for this function.\n");
+
+    }
+  }
 }
