@@ -44,6 +44,45 @@ int strcmp_i(const char *const s1, const char *const s2)
   return i;
 }
 
+/* strstr case insensitive
+// ->return value: 1 for found, 0 otherwise.
+*/
+int strstr_i(const char *const s1, const char *const s2)
+{
+  if (!s2 || !s1) return 0;
+  
+  char *tmp1 = calloc(strlen(s1)+1,1);
+  char *tmp2 = calloc(strlen(s2)+1,1);
+  int i;
+  
+  i = 0;
+  while(s1[i] != '\0')
+  {
+    tmp1[i] = (char)tolower(s1[i]);
+    i++;
+  }
+  
+  tmp1[i] = '\0';
+  
+  i = 0;
+  while(s2[i] != '\0')
+  {
+    tmp2[i] = (char)tolower(s2[i]);
+    i++;
+  }
+  tmp2[i] = '\0';
+    
+  if (strstr(tmp1,tmp2))
+    i = 1;
+  else
+    i = 0;
+  
+  free(tmp1);
+  free(tmp2);
+  
+  return i;
+}
+
 /* duplicating a given string and INCLUDING '\0'
 // ->return value: a pointer to string, or null if str is null
 */
