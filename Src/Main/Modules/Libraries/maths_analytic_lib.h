@@ -87,4 +87,13 @@ double *mix2_f_xy(Grid_T *const grid);
 double *mix2_f_xz(Grid_T *const grid);
 double *mix2_f_yz(Grid_T *const grid);
 double *mix2_f_xyz(Grid_T *const grid);
-
+double *sinx_f_x(Grid_T *const grid);
+double *sinx_f_y(Grid_T *const grid);
+double *sinx_f_z(Grid_T *const grid);
+double *sinx_f_xx(Grid_T *const grid);
+double *sinx_f_yy(Grid_T *const grid);
+double *sinx_f_zz(Grid_T *const grid);
+double *sinx_f_xy(Grid_T *const grid);
+double *sinx_f_xz(Grid_T *const grid);
+double *sinx_f_yz(Grid_T *const grid);
+double *sinx_f_xyz(Grid_T *const grid);

@@ -231,6 +231,7 @@ double *cosz_f(Grid_T *const grid)
   }
   return f;
 }
+
 /* f: grid -> sin(x) */
 double *sinx_f(Grid_T *const grid)
 {
@@ -251,6 +252,7 @@ double *sinx_f(Grid_T *const grid)
   }
   return f;
 }
+
 /* f: grid -> sin(y) */
 double *siny_f(Grid_T *const grid)
 {
@@ -271,7 +273,6 @@ double *siny_f(Grid_T *const grid)
   }
   return f;
 }
-
 
 /* f: grid -> sin(z) */
 double *sinz_f(Grid_T *const grid)
@@ -2084,3 +2085,214 @@ double *mix2_f_xyz(Grid_T *const grid)
   }
   return f;
 }
+
+/* f: grid -> dsin(x)/dx */
+double *sinx_f_x(Grid_T *const grid)
+{
+  double *f = alloc_double(grid->nn);
+  unsigned in/* initial point */,fi/* final point */;
+  unsigned i,pa;
+  
+  in = 0;
+  FOR_ALL(pa,grid->patch)
+  {
+    Patch_T *patch = grid->patch[pa];
+    fi = total_nodes_patch(patch) + in;
+    
+    for (i = in; i < fi; ++i)
+      f[i] = cos(xM);
+      
+    in = fi;
+  }
+  return f;
+}
+
+/* f: grid -> dsin(x)/dy */
+double *sinx_f_y(Grid_T *const grid)
+{
+  double *f = alloc_double(grid->nn);
+  unsigned in/* initial point */,fi/* final point */;
+  unsigned i,pa;
+  
+  in = 0;
+  FOR_ALL(pa,grid->patch)
+  {
+    Patch_T *patch = grid->patch[pa];
+    fi = total_nodes_patch(patch) + in;
+    
+    for (i = in; i < fi; ++i)
+      f[i] = 0;
+      
+    in = fi;
+  }
+  return f;
+}
+
+/* f: grid -> dsin(x)/dz */
+double *sinx_f_z(Grid_T *const grid)
+{
+  double *f = alloc_double(grid->nn);
+  unsigned in/* initial point */,fi/* final point */;
+  unsigned i,pa;
+  
+  in = 0;
+  FOR_ALL(pa,grid->patch)
+  {
+    Patch_T *patch = grid->patch[pa];
+    fi = total_nodes_patch(patch) + in;
+    
+    for (i = in; i < fi; ++i)
+      f[i] = 0;
+      
+    in = fi;
+  }
+  return f;
+}
+
+/* f: grid -> dsin(x)/dxx */
+double *sinx_f_xx(Grid_T *const grid)
+{
+  double *f = alloc_double(grid->nn);
+  unsigned in/* initial point */,fi/* final point */;
+  unsigned i,pa;
+  
+  in = 0;
+  FOR_ALL(pa,grid->patch)
+  {
+    Patch_T *patch = grid->patch[pa];
+    fi = total_nodes_patch(patch) + in;
+    
+    for (i = in; i < fi; ++i)
+      f[i] = -sin(xM);
+      
+    in = fi;
+  }
+  return f;
+}
+
+/* f: grid -> dsin(x)/dyy */
+double *sinx_f_yy(Grid_T *const grid)
+{
+  double *f = alloc_double(grid->nn);
+  unsigned in/* initial point */,fi/* final point */;
+  unsigned i,pa;
+  
+  in = 0;
+  FOR_ALL(pa,grid->patch)
+  {
+    Patch_T *patch = grid->patch[pa];
+    fi = total_nodes_patch(patch) + in;
+    
+    for (i = in; i < fi; ++i)
+      f[i] = 0;
+      
+    in = fi;
+  }
+  return f;
+}
+
+/* f: grid -> dsin(x)/dzz */
+double *sinx_f_zz(Grid_T *const grid)
+{
+  double *f = alloc_double(grid->nn);
+  unsigned in/* initial point */,fi/* final point */;
+  unsigned i,pa;
+  
+  in = 0;
+  FOR_ALL(pa,grid->patch)
+  {
+    Patch_T *patch = grid->patch[pa];
+    fi = total_nodes_patch(patch) + in;
+    
+    for (i = in; i < fi; ++i)
+      f[i] = 0;
+      
+    in = fi;
+  }
+  return f;
+}
+
+/* f: grid -> dsin(x)/dxy */
+double *sinx_f_xy(Grid_T *const grid)
+{
+  double *f = alloc_double(grid->nn);
+  unsigned in/* initial point */,fi/* final point */;
+  unsigned i,pa;
+  
+  in = 0;
+  FOR_ALL(pa,grid->patch)
+  {
+    Patch_T *patch = grid->patch[pa];
+    fi = total_nodes_patch(patch) + in;
+    
+    for (i = in; i < fi; ++i)
+      f[i] = 0;
+      
+    in = fi;
+  }
+  return f;
+}
+
+/* f: grid -> dsin(x)/dxz */
+double *sinx_f_xz(Grid_T *const grid)
+{
+  double *f = alloc_double(grid->nn);
+  unsigned in/* initial point */,fi/* final point */;
+  unsigned i,pa;
+  
+  in = 0;
+  FOR_ALL(pa,grid->patch)
+  {
+    Patch_T *patch = grid->patch[pa];
+    fi = total_nodes_patch(patch) + in;
+    
+    for (i = in; i < fi; ++i)
+      f[i] = 0;
+      
+    in = fi;
+  }
+  return f;
+}
+
+/* f: grid -> dsin(x)/dyz */
+double *sinx_f_yz(Grid_T *const grid)
+{
+  double *f = alloc_double(grid->nn);
+  unsigned in/* initial point */,fi/* final point */;
+  unsigned i,pa;
+  
+  in = 0;
+  FOR_ALL(pa,grid->patch)
+  {
+    Patch_T *patch = grid->patch[pa];
+    fi = total_nodes_patch(patch) + in;
+    
+    for (i = in; i < fi; ++i)
+      f[i] = 0;
+      
+    in = fi;
+  }
+  return f;
+}
+
+/* f: grid -> dsin(x)/dxyz */
+double *sinx_f_xyz(Grid_T *const grid)
+{
+  double *f = alloc_double(grid->nn);
+  unsigned in/* initial point */,fi/* final point */;
+  unsigned i,pa;
+  
+  in = 0;
+  FOR_ALL(pa,grid->patch)
+  {
+    Patch_T *patch = grid->patch[pa];
+    fi = total_nodes_patch(patch) + in;
+    
+    for (i = in; i < fi; ++i)
+      f[i] = 0;
+      
+    in = fi;
+  }
+  return f;
+}
+
