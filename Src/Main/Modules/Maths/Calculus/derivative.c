@@ -301,13 +301,14 @@ static double *spectral_derivative_in1dir(Field_T *const f,const Dd_T dir_e)
 static double *derivative_Chebyshev_Tn_in1dim(Field_T *const f,const Patch_T *const patch,const Dd_T dir)
 {
   assert(dir <= _N2_);
+  make_coeffs_1d(f,patch,dir);
   
-  const double *const coeffs = make_coeffs_1d(f,dir,patch);
   const unsigned *const n = patch->n;
   const unsigned nn = total_nodes_patch(patch);
   const unsigned B = n[dir]-1;
   double *der = alloc_double(nn);
   double *x = make_collocation_1d(patch,dir,-1,1);
+  const double *const coeffs = &f->coeffs[patch->nc];
   unsigned l;
   
   #pragma omp parallel for

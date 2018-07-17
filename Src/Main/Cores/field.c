@@ -70,18 +70,17 @@ Field_T *get_field_S(const char *const name,Grid_T *const grid)
 //
 // note1: each patch uses it own basis type and each part of coeffs
 // corresponds to that basis type.
-// note2: it allocates memory for coeffs on the "whole grid" if not available.
-// note3: it returns the pointer points to the begining of coeffs
-// which contains the coeffs of the given patch.
-// ->return value: coeffs of the given patch
+// note2: it DOES ALLOCATED MEMORY for coeffs on the "whole grid" if not available.
+// and puts it inside f->coeffs
+// ->return value: coeffs
 */
-double *make_coeffs_1d(Field_T *const f,const unsigned dir,const Patch_T *const patch)
+double *make_coeffs_1d(Field_T *const f,const Patch_T *const patch,const unsigned dir)
 {
-  const unsigned N = f->grid->nn;
-  
   assert(dir <= 2);
   assert(patch);
   assert(f->dim == 3);
+  
+  const unsigned N = f->grid->nn;
   
   if (IsAvailable_1d(f,patch,dir))
     return f->coeffs;
@@ -100,26 +99,30 @@ double *make_coeffs_1d(Field_T *const f,const unsigned dir,const Patch_T *const 
 // for more info refere to make_coeffs_1d
 // ->return value: coeffs.
 */
-double *make_coeffs_2d(Field_T *const f,const unsigned dir1,const unsigned dir2,const Patch_T *const patch)
+double *make_coeffs_2d(Field_T *const f,const Patch_T *const patch,const unsigned dir1,const unsigned dir2)
 {
-  const unsigned N = f->grid->nn;
-  int dir;
-  Field_T *f_tmp = init_field_3d("f_tmp",f->grid);
-  
   assert(dir1 <= 2);
   assert(dir2 <= 2);
   assert(patch);
   assert(f->dim == 3);
+  
+  const unsigned N = f->grid->nn;
+  int dir;
+  Field_T *f_tmp = init_field_3d("f_tmp",f->grid);
+  
   
   if (IsAvailable_2d(f,patch,dir1,dir2,&dir))
   {
     /* if field is ready ready */
     if (dir == -1)
       return f->coeffs;
-      
-    f_tmp->values = f->coeffs;
-    f->coeffs = find_1d_coeffs_in_patch(f_tmp,patch,(unsigned)dir);
-    
+    else/* it only make coeffs in dir since the other one in ready */
+    {  
+      f_tmp->values = f->coeffs;
+      /* since f_tmp->coeffs is empty it will be made by the function below */
+      f->coeffs = find_1d_coeffs_in_patch(f_tmp,patch,(unsigned)dir);
+      free(f_tmp->values);
+    }
   }
   else
   {
@@ -128,8 +131,9 @@ double *make_coeffs_2d(Field_T *const f,const unsigned dir1,const unsigned dir2,
     
     find_1d_coeffs_in_patch(f,patch,dir1);
     f_tmp->values = f->coeffs;
+    /* since f_tmp->coeffs is empty it will be made by the function below */
     f->coeffs = find_1d_coeffs_in_patch(f_tmp,patch,dir2);
-    find_1d_coeffs_in_patch(f,patch,(unsigned)dir);
+    free(f_tmp->values);
   }
   
   f_tmp->values = 0;
@@ -197,8 +201,8 @@ double *make_coeffs_3d(Field_T *const f,const Patch_T *const patch)
       /* f_tmp2->values == f_tmp1->coeffs
       // f_tmp2->coeffs == 0
       */
-      f_tmp2->coeffs = alloc_double(N);
       free(f->coeffs);/* => free(f_tmp1->values)*/
+      f_tmp2->coeffs = alloc_double(N);
       f->coeffs      = find_1d_coeffs_in_patch(f_tmp2,patch,2);
       /* f_tmp2->values == f_tmp1->coeffs
       // f_tmp2->coeffs == f->coeffs
@@ -229,7 +233,7 @@ double *make_coeffs_grid_1d(Field_T *const f,const unsigned dir)
   
   FOR_ALL(pa,grid->patch)
   {
-    coeffs = make_coeffs_1d(f,dir,grid->patch[pa]);
+    coeffs = make_coeffs_1d(f,grid->patch[pa],dir);
   }
 
   return coeffs;
@@ -248,7 +252,7 @@ double *make_coeffs_grid_2d(Field_T *const f,const unsigned dir1,const unsigned 
   
   FOR_ALL(pa,grid->patch)
   {
-    coeffs = make_coeffs_2d(f,dir1,dir2,grid->patch[pa]);
+    coeffs = make_coeffs_2d(f,grid->patch[pa],dir1,dir2);
   }
 
   return coeffs;
@@ -443,19 +447,19 @@ static unsigned IsAvailable_3d(Field_T *const f,const Patch_T *const patch)
 
 /* finding NORMALIZED coeffs of expansion in direction dir 
 // for a given field, patch and direction.
+// note: it DOESN'T ALLOCATE MEMORY.
 // ->return value: coeffs
 */
 static double *find_1d_coeffs_in_patch(Field_T *const f,const Patch_T *const patch,const unsigned dir)
 {
   const Collocation_T collocation = patch->collocation[dir];
   const Basis_T basis = patch->basis[dir];
-  double *const coeffs = &f->coeffs[patch->nc];
   
   if(basis == Chebyshev_Tn_BASIS)
   {
     if (collocation == Chebyshev_Extrema)
     {
-      coeffs_patch_Tn_Extrema_1d(f,patch,dir,coeffs);
+      coeffs_patch_Tn_Extrema_1d(f,patch,dir);
       add_Tinfo(f,patch->pn,dir,Chebyshev_Tn_BASIS,Chebyshev_Extrema);
     }
     else
@@ -470,14 +474,15 @@ static double *find_1d_coeffs_in_patch(Field_T *const f,const Patch_T *const pat
   else
     abortEr("There is no such BASIS defined for this function.\n");
     
-  return coeffs;
+  return f->coeffs;
 }
 
 /* finding coeffs in in patch For Tn basis 
 // with Chebyshev extrema collocation.
 */
-static void coeffs_patch_Tn_Extrema_1d(const Field_T *const f,const Patch_T *const patch,const unsigned dir,double *const coeffs)
+static void coeffs_patch_Tn_Extrema_1d(const Field_T *const f,const Patch_T *const patch,const unsigned dir)
 {
+  double *const coeffs = &f->coeffs[patch->nc];
   double *coeffs_tmp, *values;
   const unsigned *n = patch->n;
   const unsigned B = n[(dir+1)%3]*n[3-dir-(dir+1)%3];
@@ -562,16 +567,20 @@ static void coeffs_patch_Tn_Extrema_1d(const Field_T *const f,const Patch_T *con
 }
 
 /* adding Transformation info in f->info.
-// for each transformation we have (patch,direction,collocation,basis)
-// in row.
+// for each transformation the print format PR_FORMAT is
+// (patch,direction,collocation,basis) and concatenated in row.
 */
 static void add_Tinfo(Field_T *const f,const unsigned pn,const unsigned dir,const Collocation_T collocation,const Basis_T basis)
 {
   char inf[MAX_STR] = {'\0'};
+  unsigned l_info = 0;
   
+  if (f->info)
+    l_info = (unsigned)strlen(f->info);
+    
   /* (patch,direction,collocation,basis) */
   sprintf(inf,PR_FORMAT,pn,dir,collocation,basis);
-  f->info = realloc(f->info,strlen(f->info)+strlen(inf)+1);
+  f->info = realloc(f->info,l_info+strlen(inf)+1);
   strcat(f->info,inf);
   
 }
@@ -597,10 +606,6 @@ static unsigned Is3d_fft(const Collocation_T *collocation,const Basis_T *basis)
         else
           r = 0;
       }
-    }
-    else if (basis[0] == No_BASIS)
-    {
-      r = 0;
     }
     else
       abortEr("No such a basis defined for this function.\n");
