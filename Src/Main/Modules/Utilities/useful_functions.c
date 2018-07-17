@@ -69,28 +69,6 @@ unsigned K(const unsigned l, const unsigned *const n)
   return tmp % n[2];
 }
 
-/* based on direction find the linearized index for coeffs.
-// used when one wants to move along a specified direction.
-// ->return value: linearized index for coeffs
-*/
-unsigned L_c(const unsigned l,const unsigned c,const unsigned *const n,const unsigned dir)
-{
-  unsigned r = UINT_MAX;
-  unsigned i,j,k;
-  
-  IJK(l,n,&i,&j,&k);
-    
-  if (dir == 0)
-    r = L(n,c,j,k);
-  else if (dir == 1)
-    r = L(n,i,c,k);
-  else if (dir == 2)
-    r = L(n,i,j,c);
-    
-  return r;
-}
-
-
 /* changing text to enum for collocation 
 // ->return value: collocation type, error if couldn't be found, 0 if null coll
 */

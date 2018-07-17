@@ -165,6 +165,8 @@ double *make_collocation_1d(const Patch_T *const patch,const unsigned dir,const 
   double *const x = alloc_double(N);
   unsigned i;
   
+  assert (LSS(min, max));
+  
   if (patch->collocation[dir] == EquiSpaced)
     for (i = 0; i < N; i++)
       x[i] = min+i*(max-min)/(N-1);
@@ -172,7 +174,10 @@ double *make_collocation_1d(const Patch_T *const patch,const unsigned dir,const 
   {
     double t0 = M_PI/(N-1);
     for (i = 0; i < N; i++)
-      x[i] = 0.5*(max-min)*cos(i*t0) +0.5*(max+min);
+    {
+      /* in order to have the values increasingly x[i]->x[N-1-i]*/
+      x[N-1-i] = 0.5*(max-min)*cos(i*t0) +0.5*(max+min);
+    }
   }
   else
     abortEr("No such collocation exists.\n");

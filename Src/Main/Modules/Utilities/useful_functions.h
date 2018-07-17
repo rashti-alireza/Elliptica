@@ -12,7 +12,6 @@ unsigned L(const unsigned *const n, const unsigned i, const unsigned j, const un
 unsigned I(const unsigned l, const unsigned *const n);
 unsigned J(const unsigned l, const unsigned *const n);
 unsigned K(const unsigned l, const unsigned *const n);
-unsigned L_c(const unsigned l,const unsigned c,const unsigned *const n,const unsigned dir);
 Collocation_T get_collocation(const char *const coll);
 Basis_T get_basis(const char *const basis);
 int IsOnEdge(const unsigned *const n,const unsigned p);

@@ -13,7 +13,6 @@ unsigned L(const unsigned *const n, const unsigned i, const unsigned j, const un
 unsigned I(const unsigned l, const unsigned *const n);
 unsigned J(const unsigned l, const unsigned *const n);
 unsigned K(const unsigned l, const unsigned *const n);
-unsigned L_c(const unsigned l,const unsigned c,const unsigned *const n,const unsigned dir);
 int IsOnEdge(const unsigned *const n,const unsigned p);
 int IsOnFace(const double *const x, const Patch_T *const patch,unsigned *const f);
 SubFace_T *get_paired_subface(const SubFace_T *const sub);

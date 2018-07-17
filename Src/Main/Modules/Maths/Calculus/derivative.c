@@ -292,19 +292,18 @@ static double *spectral_derivative_in1dir(Field_T *const f,const Dd_T dir_e)
   return der;
 }
 
-/* taking derivative for f(x)= sum_{0}^{n-1}a_n*T_n(x), in the specified
+/* taking derivative for f(N) = sum_{0}^{n-1}a_n*T_n(N), in the specified
 // patch.
-// note: it is 1-D, and x is in [-1,1]. for 3-d one needs to combine these
+// note: it is 1 dim, and N is in [-1,1]. for 3-d one needs to combine these
 // with Jacobian transformation.
-// ->return value: df(x)/dx.
+// ->return value: df(N)/dN.
 */
-static double *derivative_Chebyshev_Tn_in1dir(Field_T *const f,const Patch_T *const patch,const Dd_T dir)
+static double *derivative_Chebyshev_Tn_in1dim(Field_T *const f,const Patch_T *const patch,const Dd_T dir)
 {
   assert(dir <= _N2_);
   
   const double *const coeffs = make_coeffs_1d(f,dir,patch);
   const unsigned *const n = patch->n;
-  const unsigned nc = patch->nc;
   const unsigned nn = total_nodes_patch(patch);
   const unsigned B = n[dir]-1;
   double *der = alloc_double(nn);
@@ -314,16 +313,18 @@ static double *derivative_Chebyshev_Tn_in1dir(Field_T *const f,const Patch_T *co
   #pragma omp parallel for
   for (l = 0; l < nn; ++l)
   {
-    unsigned m;
-    unsigned L = nc+l;
-    for (m = 2; m < B; ++m)
+    unsigned i,j,k;
+    unsigned c;
+    
+    IJK(l,n,&i,&j,&k);
+    
+    for (c = 2; c < B; ++c)
     {
-      unsigned M = L_c(l,m,n,dir)+nc;
-      double u = Cheb_Un(m-1,x[m]);
-      der[L] += m*coeffs[M]*u;
+      unsigned C = coeff_ind(i,j,k,c,n,dir);
+      der[l] += c*coeffs[C]*Cheb_Un(c-1,x[c]);
     }
-    der[L] += coeffs[L_c(l,1,n,dir)+nc];
-    der[L] *= 2;
+    der[l] += coeffs[coeff_ind(i,j,k,1,n,dir)];
+    der[l] *= 2;
   }
   
   free(x);
@@ -343,7 +344,7 @@ static void get_SpecDerivative_func(const Patch_T *const patch,SpecDerivative_Fu
     if (patch->basis[i] == Chebyshev_Tn_BASIS 
         && patch->collocation[i] == Chebyshev_Extrema)
     {
-      func[i] = derivative_Chebyshev_Tn_in1dir;
+      func[i] = derivative_Chebyshev_Tn_in1dim;
     }
     else
       abortEr("There is no such basis or collocation defined for this function.\n");
@@ -394,7 +395,7 @@ static void get_dp(const Patch_T *const patch,SpecDerivative_Func_T **func,const
     dp[i] = UNDEFINED_DIR;
     if (depend[i])/* if this direction depends on _a_,_b_,_c_ */
     {
-      if (func[i] == derivative_Chebyshev_Tn_in1dir)
+      if (func[i] == derivative_Chebyshev_Tn_in1dim)
         dp[i] = i;/* means _N0_or _N1_or _N2_ */
       else
         abortEr("There is no such derivative function defined for this function.\n");
@@ -402,3 +403,22 @@ static void get_dp(const Patch_T *const patch,SpecDerivative_Func_T **func,const
     }
   }
 }
+
+/* move along a specified direction in (i,j,k) and 
+// return its linearized index.
+// ->return value: linearized index L
+*/
+static unsigned coeff_ind(const unsigned i,const unsigned j,const unsigned k,const unsigned c,const unsigned *const n,const unsigned dir)
+{
+  unsigned r = UINT_MAX;
+    
+  if (dir == 0)
+    r = L(n,c,j,k);
+  else if (dir == 1)
+    r = L(n,i,c,k);
+  else if (dir == 2)
+    r = L(n,i,j,c);
+    
+  return r;
+}
+
