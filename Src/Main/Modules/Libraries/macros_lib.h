@@ -22,3 +22,10 @@
 #define X_(i)	X_coord(i,patch)
 #define Y_(i)	Y_coord(i,patch)
 #define Z_(i)	Z_coord(i,patch)
+
+/* OpenMP for 2 dimension */
+#ifdef Pragma_OpenMP_2d
+#define OpenMP_2d_Pragma(x) _Pragma ( #x )
+#else 
+#define OpenMP_2d_Pragma(x)
+#endif

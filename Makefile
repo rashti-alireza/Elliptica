@@ -19,6 +19,9 @@ INCLUDE2 = -I$(TOP)/Src/Main/Cores
 #Compiler flags
 CFLAGS = $(GCCFLAGS) #in MyConfig
 
+#Definition flags
+DFLAGS = $(DEFFLAGS) #in MyConfig
+
 #Linking Libraries
 LDFLAGS  = -lumfpack -lblas -lgfortran -llapack
 LDFLAGS += -lfftw3
@@ -36,7 +39,7 @@ obj = $(c_src:.c=.o)
 #Compiling abc - default target
 .PHONY: abc
 $(EXE): $(c_src)
-	$(CC) $(CFLAGS) $(INCLUDE) $(INCLUDE2) -o $(EXEDIR)/$(EXE) $? $(LDFLAGS)
+	$(CC) $(CFLAGS) $(DFLAGS) $(INCLUDE) $(INCLUDE2) -o $(EXEDIR)/$(EXE) $? $(LDFLAGS)
 
 #Cleaning the whole object and binary files 
 .PHONY: clean
