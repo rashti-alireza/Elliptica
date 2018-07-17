@@ -445,7 +445,7 @@ static unsigned IsAvailable_3d(Field_T *const f,const Patch_T *const patch)
   return r;
 }
 
-/* finding NORMALIZED coeffs of expansion in direction dir 
+/* finding coeffs of expansion in direction dir 
 // for a given field, patch and direction.
 // note: it DOESN'T ALLOCATE MEMORY.
 // ->return value: coeffs
@@ -486,7 +486,6 @@ static void coeffs_patch_Tn_Extrema_1d(const Field_T *const f,const Patch_T *con
   double *coeffs_tmp, *values;
   const unsigned *n = patch->n;
   const unsigned B = n[(dir+1)%3]*n[3-dir-(dir+1)%3];
-  const double Nrm = 2*(n[dir]-1);
   unsigned l,i,j,k,s;
   coeffs_tmp = alloc_double(n[dir]);
   values = alloc_double(n[dir]);
@@ -509,7 +508,7 @@ static void coeffs_patch_Tn_Extrema_1d(const Field_T *const f,const Patch_T *con
       for (i = 0; i < n[dir]; ++i)
       {
         l = L(n,i,j,k);
-        coeffs[l] = coeffs_tmp[i]/Nrm;
+        coeffs[l] = coeffs_tmp[i];
       }
     }
   }/* end of if (dir == 0) */
@@ -532,7 +531,7 @@ static void coeffs_patch_Tn_Extrema_1d(const Field_T *const f,const Patch_T *con
       for (j = 0; j < n[dir]; ++j)
       {
         l = L(n,i,j,k);
-        coeffs[l] = coeffs_tmp[j]/Nrm;
+        coeffs[l] = coeffs_tmp[j];
       }
     }
   }/* end of if (dir == 1) */
@@ -555,7 +554,7 @@ static void coeffs_patch_Tn_Extrema_1d(const Field_T *const f,const Patch_T *con
       for (k = 0; k < n[dir]; ++k)
       {
         l = L(n,i,j,k);
-        coeffs[l] = coeffs_tmp[k]/Nrm;
+        coeffs[l] = coeffs_tmp[k];
       }
     }
   }/* end of if (dir == 2) */
