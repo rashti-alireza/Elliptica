@@ -202,8 +202,7 @@ double *make_collocation_1d(const Patch_T *const patch,const unsigned dir,const 
 //
 // o. q2_e is for q2 direction
 // o. q1_e is for q1 direction
-// o. q2 is for index of q2.
-// o. q1 is for index of q1.
+// o. p is the interested point.
 //
 // ->return value = dq2/dq1.
 */
