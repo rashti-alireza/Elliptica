@@ -78,14 +78,21 @@ double ABS(const double v)
 /* Chebyshev polynomial of second kind Un(x). x MUST be normalized value.
 // ->return value: U
 */
-double Cheb_Un(const unsigned n, const double x)
+double Cheb_Un(const int n, const double x)
 {
   double u = DBL_MAX;
   
   if (n == 0) 
     u = 1;
-  else if (EQL(x,1) || EQL(x,-1)) 
+  else if (EQL(x,1))
     u = n+1;
+  else if (EQL(x,-1)) 
+  {
+    if (n%2)
+      u = -n-1;
+    else
+      u = n+1;
+  }  
   else
   {
     double th = acos(x);

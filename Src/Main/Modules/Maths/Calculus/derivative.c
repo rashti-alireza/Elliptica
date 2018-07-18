@@ -322,7 +322,7 @@ static double *derivative_Chebyshev_Tn_in1dim(Field_T *const f,const Patch_T *co
     for (c = 2; c < B; ++c)
     {
       unsigned C = coeff_ind(i,j,k,c,n,dir);
-      der[l] += c*coeffs[C]*Cheb_Un(c-1,x[c]);
+      der[l] += c*coeffs[C]*Cheb_Un((int)c-1,x[c]);
     }
     der[l] += coeffs[coeff_ind(i,j,k,1,n,dir)];
     der[l] *= 2;
