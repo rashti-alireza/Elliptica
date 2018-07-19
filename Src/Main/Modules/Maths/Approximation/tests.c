@@ -42,23 +42,15 @@ int DerivativeTest(Grid_T *const grid)
   // notation for naming of functions.
   // note: functions are defined in Analytic folder in Maths.
   */
-  add_func_Grid2Pdouble(&DataBase_func,ArgM(sinx_f));
-  add_func_Grid2Pdouble(&DataBase_func,ArgM(sinx_f_x));
-  add_func_Grid2Pdouble(&DataBase_func,ArgM(sinx_f_y));
-  add_func_Grid2Pdouble(&DataBase_func,ArgM(sinx_f_z));
-  add_func_Grid2Pdouble(&DataBase_func,ArgM(sinx_f_xx));
-  add_func_Grid2Pdouble(&DataBase_func,ArgM(sinx_f_yy));
-  add_func_Grid2Pdouble(&DataBase_func,ArgM(sinx_f_zz));
-  add_func_Grid2Pdouble(&DataBase_func,ArgM(sinx_f_xy));
-  add_func_Grid2Pdouble(&DataBase_func,ArgM(sinx_f_xz));
-  add_func_Grid2Pdouble(&DataBase_func,ArgM(sinx_f_yz));
-  add_func_Grid2Pdouble(&DataBase_func,ArgM(sinx_f_xyz));  
-/*  add_func_Grid2Pdouble(&DataBase_func,ArgM(c_f));
+  add_func_Grid2Pdouble(&DataBase_func,ArgM(r_f));
+  add_func_Grid2Pdouble(&DataBase_func,ArgM(r_f_x));
+  add_func_Grid2Pdouble(&DataBase_func,ArgM(c_f));
   add_func_Grid2Pdouble(&DataBase_func,ArgM(x_f));
   add_func_Grid2Pdouble(&DataBase_func,ArgM(y_f));
   add_func_Grid2Pdouble(&DataBase_func,ArgM(z_f));
+  add_func_Grid2Pdouble(&DataBase_func,ArgM(sinx_f));
   add_func_Grid2Pdouble(&DataBase_func,ArgM(poly3_f));
-  add_func_Grid2Pdouble(&DataBase_func,ArgM(r_f));
+  //add_func_Grid2Pdouble(&DataBase_func,ArgM(r_f));
   add_func_Grid2Pdouble(&DataBase_func,ArgM(sinxyz_f));
   add_func_Grid2Pdouble(&DataBase_func,ArgM(mix2_f));
   add_func_Grid2Pdouble(&DataBase_func,ArgM(c_f_x));
@@ -76,6 +68,16 @@ int DerivativeTest(Grid_T *const grid)
   add_func_Grid2Pdouble(&DataBase_func,ArgM(z_f_y));
   add_func_Grid2Pdouble(&DataBase_func,ArgM(z_f_z));
   add_func_Grid2Pdouble(&DataBase_func,ArgM(z_f_zz));
+  add_func_Grid2Pdouble(&DataBase_func,ArgM(sinx_f_x));
+  add_func_Grid2Pdouble(&DataBase_func,ArgM(sinx_f_y));
+  add_func_Grid2Pdouble(&DataBase_func,ArgM(sinx_f_z));
+  add_func_Grid2Pdouble(&DataBase_func,ArgM(sinx_f_xx));
+  add_func_Grid2Pdouble(&DataBase_func,ArgM(sinx_f_yy));
+  add_func_Grid2Pdouble(&DataBase_func,ArgM(sinx_f_zz));
+  add_func_Grid2Pdouble(&DataBase_func,ArgM(sinx_f_xy));
+  add_func_Grid2Pdouble(&DataBase_func,ArgM(sinx_f_xz));
+  add_func_Grid2Pdouble(&DataBase_func,ArgM(sinx_f_yz));
+  add_func_Grid2Pdouble(&DataBase_func,ArgM(sinx_f_xyz));
   add_func_Grid2Pdouble(&DataBase_func,ArgM(poly3_f_x));
   add_func_Grid2Pdouble(&DataBase_func,ArgM(poly3_f_y));
   add_func_Grid2Pdouble(&DataBase_func,ArgM(poly3_f_z));
@@ -86,7 +88,7 @@ int DerivativeTest(Grid_T *const grid)
   add_func_Grid2Pdouble(&DataBase_func,ArgM(poly3_f_xz));
   add_func_Grid2Pdouble(&DataBase_func,ArgM(poly3_f_yz));
   add_func_Grid2Pdouble(&DataBase_func,ArgM(poly3_f_xyz));
-  add_func_Grid2Pdouble(&DataBase_func,ArgM(r_f_x));
+  //add_func_Grid2Pdouble(&DataBase_func,ArgM(r_f_x));
   add_func_Grid2Pdouble(&DataBase_func,ArgM(r_f_y));
   add_func_Grid2Pdouble(&DataBase_func,ArgM(r_f_z));
   add_func_Grid2Pdouble(&DataBase_func,ArgM(r_f_xx));
@@ -126,7 +128,7 @@ int DerivativeTest(Grid_T *const grid)
   add_func_Grid2Pdouble(&DataBase_func,ArgM(mix2_f_xy));
   add_func_Grid2Pdouble(&DataBase_func,ArgM(mix2_f_xz));
   add_func_Grid2Pdouble(&DataBase_func,ArgM(mix2_f_yz));
-  add_func_Grid2Pdouble(&DataBase_func,ArgM(mix2_f_xyz));*/
+  add_func_Grid2Pdouble(&DataBase_func,ArgM(mix2_f_xyz));
   
   FOR_ALL(fi,DataBase_func)
   {
@@ -164,6 +166,9 @@ int DerivativeTest(Grid_T *const grid)
         printf("%s\n",F[e]->name);
         //end
         df_num->values = anac[FUNC];
+        //test
+        free_coeffs(df_num);
+        //end
         enum2str(e,der_s);
         numc[e] = Df(df_num,der_s);
         compare_derivative(F[e]->name,numc[e],anac[e],grid,path);
@@ -308,7 +313,6 @@ static void enum2str(enum FUNC_E e,char *const str)
 static void compare_derivative(const char *const name,const double *const numc,const double *const anac,const Grid_T *const grid,const char *const path)
 {
   char prefix[MAXSTR];
-  //unsigned p;
   
   sprintf(prefix,"%s/%s.DiffByNode",path,name);
   pr_derivatives_DiffByNode(numc,anac,grid,prefix);

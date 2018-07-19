@@ -525,6 +525,7 @@ void pr_derivatives_DiffByNode(const double *const numc, const double *const ana
   sprintf(file_name,"%s.grid",prefix);
   f = fopen(file_name,"w");
   pointerEr(f);
+  
   for (p = 0; p < grid->nn; ++p)
     fprintf(f,"%u %f\n",p,numc[p]-anac[p]);
   fclose(f);
@@ -536,6 +537,7 @@ void pr_derivatives_DiffByNode(const double *const numc, const double *const ana
     sprintf(file_name,"%s.%s",prefix,grid->patch[pa]->name);
     f = fopen(file_name,"w");
     pointerEr(f);
+    
     for (p = 0; p < nn; ++p)
       fprintf(f,"%u %f\n",p,numc[p]-anac[p]);
     fclose(f);

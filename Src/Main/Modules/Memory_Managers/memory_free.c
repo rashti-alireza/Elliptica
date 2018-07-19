@@ -118,3 +118,11 @@ void free_field(Field_T *f)
     
   free(f);
 }
+
+/* freeing coeffs of field and put it to 0 */
+void free_coeffs(Field_T *f)
+{
+  if (f->coeffs)
+    free(f->coeffs);
+  f->coeffs = 0;
+}

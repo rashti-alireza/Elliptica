@@ -86,9 +86,8 @@ static double *take_spectral_derivative(Field_T *const f,const Dd_T  *const dir_
       /* make next ff ready */
       ff[frd]->values = deriv;
       free(ff[bck]->values);
-      free(ff[bck]->coeffs);
+      free_coeffs(ff[bck]);
       ff[bck]->values = 0;
-      ff[bck]->coeffs = 0;
     }
     
     ff[frd]->values = 0;
@@ -244,7 +243,7 @@ static double *spectral_derivative_in1dir(Field_T *const f,const Dd_T dir_e)
     
     if (flg[0] == YES && flg[1] == YES && flg[2] == YES)
     {
-      OpenMP_2d_Pragma(omp parallel for)
+      OpenMP_1d_Pragma(omp parallel for)
       for (i = 0; i < nn; ++i)
         der[i+nc] = df_dp[0][i]*dq2_dq1(patch,dp[0],dir_e,i) + 
                     df_dp[1][i]*dq2_dq1(patch,dp[1],dir_e,i) +
@@ -252,33 +251,33 @@ static double *spectral_derivative_in1dir(Field_T *const f,const Dd_T dir_e)
     }
     else if (flg[0] == YES && flg[1] == YES)
     {
-      OpenMP_2d_Pragma(omp parallel for)
+      OpenMP_1d_Pragma(omp parallel for)
       for (i = 0; i < nn; ++i)
         der[i+nc] = df_dp[0][i]*dq2_dq1(patch,dp[0],dir_e,i) + 
                     df_dp[1][i]*dq2_dq1(patch,dp[1],dir_e,i);
     }
     else if (flg[1] == YES && flg[2] == YES)
     {
-      OpenMP_2d_Pragma(omp parallel for)
+      OpenMP_1d_Pragma(omp parallel for)
       for (i = 0; i < nn; ++i)
         der[i+nc] = df_dp[1][i]*dq2_dq1(patch,dp[1],dir_e,i) + 
                     df_dp[2][i]*dq2_dq1(patch,dp[2],dir_e,i);
     }
     else if (flg[0] == YES)
     {
-      OpenMP_2d_Pragma(omp parallel for)
+      OpenMP_1d_Pragma(omp parallel for)
       for (i = 0; i < nn; ++i)
         der[i+nc] = df_dp[0][i]*dq2_dq1(patch,dp[0],dir_e,i);
     }
     else if (flg[1] == YES)
     {
-      OpenMP_2d_Pragma(omp parallel for)
+      OpenMP_1d_Pragma(omp parallel for)
       for (i = 0; i < nn; ++i)
         der[i+nc] = df_dp[1][i]*dq2_dq1(patch,dp[1],dir_e,i); 
     }
     else if (flg[2] == YES)
     {
-      OpenMP_2d_Pragma(omp parallel for)
+      OpenMP_1d_Pragma(omp parallel for)
       for (i = 0; i < nn; ++i)
         der[i+nc] = df_dp[2][i]*dq2_dq1(patch,dp[2],dir_e,i); 
     }
@@ -322,7 +321,7 @@ static double *derivative_Chebyshev_Tn_in1dim(Field_T *const f,const Patch_T *co
     for (c = 2; c < B; ++c)
     {
       unsigned C = coeff_ind(i,j,k,c,n,dir);
-      der[l] += c*coeffs[C]*Cheb_Un((int)c-1,x[c]);
+      der[l] += c*coeffs[C]*Cheb_Un((int)c-1,x[i]);
     }
     der[l] += coeffs[coeff_ind(i,j,k,1,n,dir)];
     der[l] *= 2;

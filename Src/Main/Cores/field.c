@@ -201,15 +201,14 @@ double *make_coeffs_3d(Field_T *const f,const Patch_T *const patch)
       /* f_tmp2->values == f_tmp1->coeffs
       // f_tmp2->coeffs == 0
       */
-      free(f->coeffs);/* => free(f_tmp1->values)*/
+      free_coeffs(f);/* => free(f_tmp1->values)*/
       f_tmp2->coeffs = alloc_double(N);
       f->coeffs      = find_1d_coeffs_in_patch(f_tmp2,patch,2);
       /* f_tmp2->values == f_tmp1->coeffs
       // f_tmp2->coeffs == f->coeffs
       */
-      free(f_tmp1->coeffs);
+      free_coeffs(f_tmp1);
       f_tmp1->values = 0;
-      f_tmp1->coeffs = 0;
       f_tmp2->values = 0;
       f_tmp2->coeffs = 0;
       free_field(f_tmp1);
@@ -317,9 +316,8 @@ static unsigned IsAvailable_1d(Field_T *const f,const Patch_T *const patch,const
   
   if (flg == CLEAN)
   {
-    free(f->coeffs);
+    free_coeffs(f);
     free(f->info);
-    f->coeffs = 0;
     f->info   = 0;
   }
   
@@ -393,9 +391,8 @@ static unsigned IsAvailable_2d(Field_T *const f,const Patch_T *const patch,const
   
   if (flg == CLEAN)
   {
-    free(f->coeffs);
+    free_coeffs(f);
     free(f->info);
-    f->coeffs = 0;
     f->info   = 0;
   }
   
@@ -435,9 +432,8 @@ static unsigned IsAvailable_3d(Field_T *const f,const Patch_T *const patch)
   }
   else
   {
-    free(f->coeffs);
+    free_coeffs(f);
     free(f->info);
-    f->coeffs = 0;
     f->info   = 0;
     r = 0;
   }
@@ -483,12 +479,13 @@ static double *find_1d_coeffs_in_patch(Field_T *const f,const Patch_T *const pat
 static void coeffs_patch_Tn_Extrema_1d(const Field_T *const f,const Patch_T *const patch,const unsigned dir)
 {
   double *const coeffs = &f->coeffs[patch->nc];
-  double *coeffs_tmp, *values;
+  const double *const values = &f->values[patch->nc];
+  double *out, *in;
   const unsigned *n = patch->n;
   const unsigned B = n[(dir+1)%3]*n[3-dir-(dir+1)%3];
   unsigned l,i,j,k,s;
-  coeffs_tmp = alloc_double(n[dir]);
-  values = alloc_double(n[dir]);
+  out = alloc_double(n[dir]);
+  in = alloc_double(n[dir]);
   
   if (dir == 0)
   {
@@ -501,14 +498,14 @@ static void coeffs_patch_Tn_Extrema_1d(const Field_T *const f,const Patch_T *con
       for (i = 0; i < n[dir]; ++i)
       {
         l = L(n,i,j,k);
-        values[i] = f->values[l];
+        in[i] = values[l];
       }
-      fftw_1d_ChebyshevExtrema_coeffs(values,coeffs_tmp,n[dir]);
+      fftw_1d_ChebyshevExtrema_coeffs(in,out,n[dir]);
       
       for (i = 0; i < n[dir]; ++i)
       {
         l = L(n,i,j,k);
-        coeffs[l] = coeffs_tmp[i];
+        coeffs[l] = out[i];
       }
     }
   }/* end of if (dir == 0) */
@@ -524,14 +521,14 @@ static void coeffs_patch_Tn_Extrema_1d(const Field_T *const f,const Patch_T *con
       for (j = 0; j < n[dir]; ++j)
       {
         l = L(n,i,j,k);
-        values[j] = f->values[l];
+        in[j] = values[l];
       }
-      fftw_1d_ChebyshevExtrema_coeffs(values,coeffs_tmp,n[dir]);
+      fftw_1d_ChebyshevExtrema_coeffs(in,out,n[dir]);
       
       for (j = 0; j < n[dir]; ++j)
       {
         l = L(n,i,j,k);
-        coeffs[l] = coeffs_tmp[j];
+        coeffs[l] = out[j];
       }
     }
   }/* end of if (dir == 1) */
@@ -547,22 +544,22 @@ static void coeffs_patch_Tn_Extrema_1d(const Field_T *const f,const Patch_T *con
       for (k = 0; k < n[dir]; ++k)
       {
         l = L(n,i,j,k);
-        values[k] = f->values[l];
+        in[k] = values[l];
       }
-      fftw_1d_ChebyshevExtrema_coeffs(values,coeffs_tmp,n[dir]);
+      fftw_1d_ChebyshevExtrema_coeffs(in,out,n[dir]);
       
       for (k = 0; k < n[dir]; ++k)
       {
         l = L(n,i,j,k);
-        coeffs[l] = coeffs_tmp[k];
+        coeffs[l] = out[k];
       }
     }
   }/* end of if (dir == 2) */
   else
     abortEr("direction must be 0,1 or 2.\n");
     
-  free(coeffs_tmp);
-  free(values);
+  free(out);
+  free(in);
 }
 
 /* adding Transformation info in f->info.

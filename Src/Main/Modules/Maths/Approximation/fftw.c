@@ -30,7 +30,6 @@ void fftw_1d_ChebyshevExtrema_coeffs(double *const values,double *const coeffs,c
 {
   fftw_plan p;
   const double Nrm = 2*(n-1);
-  const unsigned B = n;
   unsigned i;
   
   p = fftw_plan_r2r_1d((int)n,values,coeffs,FFTW_REDFT00,FFTW_ESTIMATE);
@@ -40,7 +39,7 @@ void fftw_1d_ChebyshevExtrema_coeffs(double *const values,double *const coeffs,c
   fftw_destroy_plan(p);
   fftw_cleanup();
   
-  for (i = 0; i < B; ++i)
+  for (i = 0; i < n; ++i)
     coeffs[i] /= Nrm;
 }
 
@@ -93,7 +92,6 @@ void fftw_1d_ChebyshevExtrema_values(double *const values,double *const coeffs,c
 {
   fftw_plan p;
   const double Nrm = 2*(n-1);
-  const unsigned B = n;
   unsigned i;
   
   p = fftw_plan_r2r_1d((int)n,coeffs,values,FFTW_REDFT00,FFTW_ESTIMATE);
@@ -103,6 +101,6 @@ void fftw_1d_ChebyshevExtrema_values(double *const values,double *const coeffs,c
   fftw_destroy_plan(p);
   fftw_cleanup();
   
-  for (i = 0; i < B; ++i)
+  for (i = 0; i < n; ++i)
     values[i] /= Nrm;
 }

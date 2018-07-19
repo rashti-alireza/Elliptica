@@ -175,8 +175,7 @@ double *make_collocation_1d(const Patch_T *const patch,const unsigned dir,const 
     double t0 = M_PI/(N-1);
     for (i = 0; i < N; i++)
     {
-      /* in order to have the values increasingly x[i]->x[N-1-i]*/
-      x[N-1-i] = 0.5*(max-min)*cos(i*t0) +0.5*(max+min);
+      x[i] = 0.5*((max-min)*cos(i*t0)+(max+min));
     }
   }
   else
