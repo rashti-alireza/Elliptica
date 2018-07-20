@@ -205,6 +205,30 @@ typedef struct JACOBIAN_TRANS_T
   double *dx_dX[3][3];/* saving some transformation to save time dx[0..2]/dX[0..2] */
 }JacobianTrans_T;
 
+/* variable structure */
+typedef struct VARIABLE_T
+{
+  double *v;/* values on each node on patch */
+  double *v2;/* if this variable has two kind of values:
+             // e.g. fields in spectral expansion needs both 
+             // coeffs of expansion and values on each node.
+             */
+  char *info;/* each variable might need some info or attribute 
+             //  which save here.
+             */
+  struct PATCH_T *patch;/* refers to its patch */
+}Variable_T;
+
+/* dictionary for naming convention of variable pool */
+typedef struct DICTIONARY_T
+{
+  char *name;/* name of variable */
+  unsigned ind;/* its index in pool; 
+               // e.g: name="phi_f",ind=3 =>pool[3] refers to field phi.
+               */
+}Dictionary_T;
+
+
 /* patch */
 typedef struct PATCH_T
 {
@@ -227,6 +251,14 @@ typedef struct PATCH_T
   Node_T **node;/* node info */
   Interface_T **interface;/* interface info  */
   JacobianTrans_T *JacobianT;/* Jacobian transformation between the coords */
+  Variable_T **pool;/* pool of variables, 
+                        // notation: pool[Var("Phi_f")] refers 
+                        // to field phi.
+                        // one can access to values of field on this 
+                        // patch like pool[Var("phi_f")]->v */
+  Dictionary_T **dictionary;/* dictionary, keep tracking of naming 
+                            // of variables in the pool.
+                            */
   unsigned innerB:1;/* if this patch has inner boundary 1 otherwise 0 */
 }Patch_T;
 
@@ -247,7 +279,8 @@ typedef struct GIRD_T
   char *kind;/* type of grid which refers how we cover the grid */
   Flag_T status;/* INUSE or READY */
   Patch_T **patch;/* covering patch */
-  Field_T  **field;/* fields */
+  Field_T **field;/* fields */
+  unsigned np;/* number of patches on grid */
   unsigned nn;/* total number of nodes on grid */
   unsigned nf;/* number of fields */
 }Grid_T;
