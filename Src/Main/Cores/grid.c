@@ -29,6 +29,8 @@ int make_patches(Grid_T *const grid)
   
   /* filling grid->nn */
   grid->nn = total_nodes_grid(grid);
+  /* filling grid->np */
+  grid->np = countf(grid->patch);
   
   /* test printing coords */
   if (test_print(PRINT_COORDS))

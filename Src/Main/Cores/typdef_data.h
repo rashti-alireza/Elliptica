@@ -208,26 +208,17 @@ typedef struct JACOBIAN_TRANS_T
 /* variable structure */
 typedef struct VARIABLE_T
 {
+  char *name;/* name of variable */
   double *v;/* values on each node on patch */
   double *v2;/* if this variable has two kind of values:
              // e.g. fields in spectral expansion needs both 
              // coeffs of expansion and values on each node.
              */
-  char *info;/* each variable might need some info or attribute 
+  char *info;/* each variable might need some info or attributes 
              //  which save here.
              */
   struct PATCH_T *patch;/* refers to its patch */
 }Variable_T;
-
-/* dictionary for naming convention of variable pool */
-typedef struct DICTIONARY_T
-{
-  char *name;/* name of variable */
-  unsigned ind;/* its index in pool; 
-               // e.g: name="phi_f",ind=3 =>pool[3] refers to field phi.
-               */
-}Dictionary_T;
-
 
 /* patch */
 typedef struct PATCH_T
@@ -256,9 +247,7 @@ typedef struct PATCH_T
                         // to field phi.
                         // one can access to values of field on this 
                         // patch like pool[Var("phi_f")]->v */
-  Dictionary_T **dictionary;/* dictionary, keep tracking of naming 
-                            // of variables in the pool.
-                            */
+  unsigned nv;/* number of variables or dictionaries */
   unsigned innerB:1;/* if this patch has inner boundary 1 otherwise 0 */
 }Patch_T;
 
