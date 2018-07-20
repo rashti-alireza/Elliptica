@@ -126,3 +126,21 @@ void free_coeffs(Field_T *f)
     free(f->coeffs);
   f->coeffs = 0;
 }
+
+/* freeing a variable */
+void free_variable(Variable_T *var)
+{
+  if (!var)
+    return;
+  
+  if (var->name)
+    free(var->name);
+  if (var->v)
+    free(var->v);
+  if (var->v2)
+    free(var->v2);
+  if (var->info)
+    free(var->info);
+    
+  free(var);
+}

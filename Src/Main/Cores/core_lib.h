@@ -35,3 +35,8 @@ double *make_coeffs_3d(Field_T *const f,const Patch_T *const patch);
 double *make_coeffs_grid_1d(Field_T *const f,const unsigned dir);
 double *make_coeffs_grid_2d(Field_T *const f,const unsigned dir1,const unsigned dir2);
 double *make_coeffs_grid_3d(Field_T *const f);
+/* variables */
+Variable_T *add_variable(const char *const name,const char *const attribute,Patch_T *const patch,const Flag_T alloc_flg);
+void remove_variable(const char *const name,Patch_T *const patch);
+void add_attribute(Variable_T *const var,const char *const attribute);
+int LookUpVar(const char *const name,Patch_T *const patch);
