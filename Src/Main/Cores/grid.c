@@ -102,6 +102,9 @@ static void fill_patches_Cartesian_grid(Grid_T *const grid)
     
     assert(patch->n[0] && patch->n[1] && patch->n[2]);
     
+    /* filling nn */
+    patch->nn = total_nodes_patch(patch);
+    
     /* filling center */
     make_keyword_parameter(&ret,name,"center");
     patch->c[0] = get_parameter_value_D(ret.s0,&flg);

@@ -233,6 +233,7 @@ typedef struct PATCH_T
                    // in c direction it uses that basis.
                    */
   unsigned n[3];/* number of points (nodes) in each direction */
+  unsigned nn;/* number of nodes in this patch */
   unsigned pn;/* its patch number i.e. patch[pn] = patch */
   unsigned nc;/* node counter, sum of all nodes in previous patches */
   double c[3];/* center */
