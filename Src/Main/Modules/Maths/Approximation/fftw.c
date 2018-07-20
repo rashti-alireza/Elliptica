@@ -24,7 +24,7 @@
 // where Y_k s are coeffes and X_k s are field value. 
 // moreover the inverse transformation is the same, i.e. REDFT00.
 // o. for each transformation the result is unnormalized and to normalize
-// it one must divide the result by N = 2*(n-1).
+// it, one must divide the result by N = 2*(n-1).
 */
 void fftw_1d_ChebyshevExtrema_coeffs(double *const values,double *const coeffs,const unsigned n)
 {
@@ -40,7 +40,14 @@ void fftw_1d_ChebyshevExtrema_coeffs(double *const values,double *const coeffs,c
   fftw_cleanup();
   
   for (i = 0; i < n; ++i)
-    coeffs[i] /= Nrm;
+  {
+  //test
+    //if (LSS(ABS(coeffs[i]),1E-9))
+      //coeffs[i] = 0;
+    //else
+    //end
+      coeffs[i] /= Nrm;
+  }
 }
 
 /* finding NORMALIZED coefficients of a function with Chebyshev basis of 

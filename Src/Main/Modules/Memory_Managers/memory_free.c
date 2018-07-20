@@ -87,7 +87,7 @@ void free_func_PtoV(sFunc_PtoV_T **func)
 }
 
 /* free function structure form grid to pointer to double */
-void free_func_Grid2Pdouble(sFunc_Grid2Pdouble_T **func)
+void free_func_Patch2Pdouble(sFunc_Patch2Pdouble_T **func)
 {
   unsigned i;
   
@@ -100,47 +100,28 @@ void free_func_Grid2Pdouble(sFunc_Grid2Pdouble_T **func)
   free(func);
 }
 
-
-/* freeing a field */
-void free_field(Field_T *f)
+/* freeing v2 of field and put it to 0 */
+void free_v2(Field_T *f)
 {
-  if (f->name)
-    free(f->name);
-    
-  if (f->values)
-    free(f->values);
-    
-  if (f->coeffs)
-    free(f->coeffs);
-    
-  if (f->info)
-    free(f->info);
-    
-  free(f);
-}
-
-/* freeing coeffs of field and put it to 0 */
-void free_coeffs(Field_T *f)
-{
-  if (f->coeffs)
-    free(f->coeffs);
-  f->coeffs = 0;
+  if (f->v2)
+    free(f->v2);
+  f->v2 = 0;
 }
 
 /* freeing a variable */
-void free_variable(Variable_T *var)
+void free_field(Field_T *fld)
 {
-  if (!var)
+  if (!fld)
     return;
   
-  if (var->name)
-    free(var->name);
-  if (var->v)
-    free(var->v);
-  if (var->v2)
-    free(var->v2);
-  if (var->info)
-    free(var->info);
+  if (fld->name)
+    free(fld->name);
+  if (fld->v)
+    free(fld->v);
+  if (fld->v2)
+    free(fld->v2);
+  if (fld->info)
+    free(fld->info);
     
-  free(var);
+  free(fld);
 }

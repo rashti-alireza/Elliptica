@@ -7,9 +7,9 @@
 #define abortEr(x)     abort_error(x,__FILE__,__LINE__)
 #define abortEr_s(x,y)     abort_error_string(x,y,__FILE__,__LINE__)
 #define ERROR_MASSAGE       "\n"ERROR_LINE"\nERROR and ABORT:\n"
-#define Var(x) LookUpVar(x,patch)
-#define FOR_ALL_PATCHES (n,grid) for ((n) = 0; (n) < grid->np; ++(n))/* loop over all patches of the given grid */
-#define FOR_ALL_POINTS (n,patch) for ((n) = 0; (n) < patch->nn; ++(n))/* loop over all points of the given patch */
+#define Ind(x) LookUpField(x,patch)
+#define FOR_ALL_PATCHES(n,grid) for ((n) = 0; (n) < grid->np; ++(n))/* loop over all patches of the given grid */
+#define FOR_ALL_POINTS(n,patch) for ((n) = 0; (n) < patch->nn; ++(n))/* loop over all points of the given patch */
 #define FOR_ALL(x,y) for((x) = 0; y[x] != 0; (x)++)
 #define parameterEr(x) check_parameter(x,__FILE__,__LINE__)
 #define FOR_SURFACE(x,y,z,n0,n1,n2) (z) = (n2);for ((x) = 0; (x) < (n0); ++(x))\

@@ -5,10 +5,10 @@
 #include "maths_general_lib.h"
 #include "maths_approximation_lib.h"
 
-Field_T *init_field_3d(const char *const name,Grid_T *const grid);
-Field_T *init_field_2d(const char *const name,Grid_T *const grid);
-void add_field(Field_T *const f,Grid_T *const grid);
-Field_T *get_field_S(const char *const name,Grid_T *const grid);
+Field_T *add_field(const char *const name,const char *attribute,Patch_T *const patch,const Flag_T alloc_flg);
+void remove_field(const char *const name,Patch_T *const patch);
+void add_attribute(Field_T *const fld,const char *const attribute);
+int LookUpField(const char *const name,Patch_T *const patch);
 double *make_coeffs_1d(Field_T *const f,const Patch_T *const patch,const unsigned dir);
 double *make_coeffs_2d(Field_T *const f,const Patch_T *const patch,const unsigned dir1,const unsigned dir2);
 double *make_coeffs_3d(Field_T *const f,const Patch_T *const patch);

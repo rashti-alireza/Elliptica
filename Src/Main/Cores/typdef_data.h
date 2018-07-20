@@ -205,20 +205,20 @@ typedef struct JACOBIAN_TRANS_T
   double *dx_dX[3][3];/* saving some transformation to save time dx[0..2]/dX[0..2] */
 }JacobianTrans_T;
 
-/* variable structure */
-typedef struct VARIABLE_T
+/* Field structure */
+typedef struct Field_T
 {
-  char *name;/* name of variable */
+  char *name;/* name of field */
   double *v;/* values on each node on patch */
-  double *v2;/* if this variable has two kind of values:
+  double *v2;/* if this field has two kinds of value:
              // e.g. fields in spectral expansion needs both 
              // coeffs of expansion and values on each node.
              */
-  char *info;/* each variable might need some info or attributes 
+  char *info;/* each field might need some info or attributes 
              //  which save here.
              */
-  struct PATCH_T *patch;/* refers to its patch */
-}Variable_T;
+  struct PATCH_T *patch;/* refers to its patch which this field defined */
+}Field_T;
 
 /* patch */
 typedef struct PATCH_T
@@ -236,6 +236,7 @@ typedef struct PATCH_T
   unsigned nn;/* number of nodes in this patch */
   unsigned pn;/* its patch number i.e. patch[pn] = patch */
   unsigned nc;/* node counter, sum of all nodes in previous patches */
+  unsigned nfld;/* number of fields */
   double c[3];/* center */
   double s[3];/* size like length, width and height */
   double min[3];/* minimum of each direction like x_min = min[0] */
@@ -243,25 +244,13 @@ typedef struct PATCH_T
   Node_T **node;/* node info */
   Interface_T **interface;/* interface info  */
   JacobianTrans_T *JacobianT;/* Jacobian transformation between the coords */
-  Variable_T **pool;/* pool of variables, 
-                        // notation: pool[Var("Phi_f")] refers 
+  Field_T **pool;/* pool of fields, 
+                        // notation: pool[Ind("Phi_f")] refers 
                         // to field phi.
                         // one can access to values of field on this 
-                        // patch like pool[Var("phi_f")]->v */
-  unsigned nv;/* number of variables or dictionaries */
+                        // patch like pool[Ind("phi_f")]->v */
   unsigned innerB:1;/* if this patch has inner boundary 1 otherwise 0 */
 }Patch_T;
-
-/* field */
-typedef struct FIELD_T
-{
-  char *name;/* its name like alpha or psi */
-  double *values;/* its value on each grid point */
-  double *coeffs;/* coefficients of basis */
-  char *info;/* keep track of available coeffs among others */
-  unsigned dim;/* dimension of field */
-  struct GIRD_T *grid;/* refers to its grid */
-}Field_T;
 
 /* grid */
 typedef struct GIRD_T
@@ -269,10 +258,8 @@ typedef struct GIRD_T
   char *kind;/* type of grid which refers how we cover the grid */
   Flag_T status;/* INUSE or READY */
   Patch_T **patch;/* covering patch */
-  Field_T **field;/* fields */
   unsigned np;/* number of patches on grid */
   unsigned nn;/* total number of nodes on grid */
-  unsigned nf;/* number of fields */
 }Grid_T;
 
 /* *******************************************

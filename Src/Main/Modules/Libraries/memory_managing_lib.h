@@ -8,7 +8,7 @@ void *alloc_point(const unsigned s);
 void alloc_interface(Patch_T *const patch);
 void *alloc_sFunc_PtoV(sFunc_PtoV_T ***const mem);
 void *alloc_needle(void);
-void *alloc_sFunc_Grid2Pdouble(sFunc_Grid2Pdouble_T ***const mem);
+void *alloc_sFunc_Patch2Pdouble(sFunc_Patch2Pdouble_T ***const mem);
 double *alloc_double(const unsigned N);
 
 /* free */
@@ -18,6 +18,5 @@ void free_matrix(void *mem, const unsigned long c);
 void free_points(Grid_T *const grid);
 void free_func_PtoV(sFunc_PtoV_T **func);
 void free_field(Field_T *f);
-void free_func_Grid2Pdouble(sFunc_Grid2Pdouble_T **func);
-void free_coeffs(Field_T *f);
-void free_variable(Variable_T *var);
+void free_func_Patch2Pdouble(sFunc_Patch2Pdouble_T **func);
+void free_v2(Field_T *f);

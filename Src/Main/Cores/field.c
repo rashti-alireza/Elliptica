@@ -7,56 +7,117 @@
 #define MAX_STR 400
 #define PR_FORMAT "(p%u,d%u,c%d,b%d)"
 
-/* initializing a 3d field.
-// ->return value: a ready field.
+/* add field with the specified name and attribute to
+// the pool in the given patch.
+// if alloc_flg == YES, it also allocates memroy for v on the patch.
+// note: if attribute is null, the field attribute is (3dim).
+// ->return value: a pointer to the new made field
 */
-Field_T *init_field_3d(const char *const name,Grid_T *const grid)
+Field_T *add_field(const char *const name,const char *attribute,Patch_T *const patch,const Flag_T alloc_flg)
 {
-  Field_T *f = calloc(1,sizeof(*f));
-  if (name)
-    f->name = dup_s(name);
-  f->grid = grid;
-  f->dim = 3;
+  assert(name);
+  assert(patch);
   
-  return f;
+  Field_T *fld = 0;
+  
+  if (LookUpField(name,patch) >= 0)
+    abortEr_s("There is already a field with the same name %s.\n",name);
+  else
+  {  
+    
+    fld = calloc(1,sizeof(*fld));
+    pointerEr(fld);
+    fld->patch = patch;
+    
+    /* if attribute is null */
+    if (!attribute)
+      attribute = "(3dim)";
+    add_attribute(fld,attribute);
+    
+    if (alloc_flg == YES)
+    {
+      const unsigned nn = total_nodes_patch(patch);
+      fld->v = calloc(nn,sizeof(*fld->v));
+      pointerEr(fld->v);
+    }
+    
+    patch->pool = 
+      realloc(patch->pool,(patch->nfld+1)*sizeof(*patch->pool));
+    pointerEr(patch->pool);
+    patch->pool[patch->nfld] = fld;
+    ++patch->nfld;
+  }
+  
+  return fld;
 }
 
-/* initializing a 2d field.
-// ->return value: a ready field.
+/* remove the field with the given name from the pool.
+// and then shrink the pool.
+// NOTE: THE INDEX OF VARIABLES ARE DYNAMIC,
+// SO IT IS UNSAFE TO SAVE AN INDEX AND USED IT LATER. ONLY THE VALUES AND
+// POINTER TO VALUES ARE STATIC AND SAFE TO SAVE.
 */
-Field_T *init_field_2d(const char *const name,Grid_T *const grid)
+void remove_field(const char *const name,Patch_T *const patch)
 {
-  Field_T *f = calloc(1,sizeof(*f));
-  if (name)
-    f->name = dup_s(name);
-  f->grid = grid;
-  f->dim = 2;
+  /* if patch has no field */
+  if (!patch->nfld) return;
   
-  return f;
+  const int ind_remove = LookUpField(name,patch);
+  Field_T *v_remove = patch->pool[ind_remove];
+  Field_T *v_last   = patch->pool[patch->nfld-1];
+  patch->pool[ind_remove] = v_last;
+ 
+  free_field(v_remove);
+  patch->pool = realloc(patch->pool,(patch->nfld)*sizeof(*patch->pool));
+  pointerEr(patch->pool);
 }
 
-/* adding a field to field data base */
-void add_field(Field_T *const f,Grid_T *const grid)
+/* adding an attribute or info to fld. each attribute must be writen in
+//  format = (attribute).
+// attribute could be: (3dim), (2dim) etc.
+*/
+void add_attribute(Field_T *const fld,const char *const attribute)
 {
-  grid->field = realloc(grid->field,(grid->nf+1)*sizeof(*grid->field));
-  pointerEr(grid->field);
-  grid->field[grid->nf] = f;
-  grid->nf++;
+  unsigned l1 = 0,l2 = 1;
+  
+  assert(fld);
+  /* if no attribute, return */
+  if (!attribute)
+    return;
+  if(!strchr(attribute,'(') || !strchr(attribute,')'))
+    abortEr_s("Each attribute must be written in parentheses.\n"
+    "This attribute %s doesn't have.\n",attribute);
+    
+  /* if the attribute already exists, return */
+  if (strstr(fld->info,attribute))
+    return;
+  
+  if (fld->info)
+    l1 = (unsigned)strlen(fld->info);
+  l2 += (unsigned)strlen(attribute);
+  
+  fld->info = realloc(fld->info,l1+l2);
+  pointerEr(fld->info);
+  fld->info[l1] = '\0';
+  strcat(fld->info,attribute);
+  
 }
 
-/* getting a field when its name is given (String version) 
-// return value-> pointer to found field, 0 otherwise
+/* given name and patch find the index of a field in the pool.
+// ->return value: index of field in the pool. INT_MIN if not found.
 */
-Field_T *get_field_S(const char *const name,Grid_T *const grid)
+int LookUpField(const char *const name,Patch_T *const patch)
 {
-  unsigned f;
+  int ind = INT_MIN;
+  int i;
   
-  for (f = 0; f < grid->nf; ++f)
-    if (strcmp_i(grid->field[f]->name,name))
-      return grid->field[f];
-      
-  return 0;
+  for (i = 0; i < (int)patch->nfld; ++i )
+    if (!strcmp(patch->pool[i]->name,name))
+      ind = i;
+  
+  return ind;
 }
+
 
 /* values -> 1-d coeffs in specified direction and patch.
 // making coeffs of a field based on basis used for expansion.

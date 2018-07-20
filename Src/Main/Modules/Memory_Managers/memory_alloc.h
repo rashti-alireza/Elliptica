@@ -18,4 +18,4 @@ void *alloc_needle(void);
 static void alloc_patches_Cartesian_grid(Grid_T *const grid);
 Parameter_T *get_parameter(const char *const par_name);
 double *alloc_double(const unsigned N);
-void *alloc_sFunc_Grid2Pdouble(sFunc_Grid2Pdouble_T ***const mem);
+void *alloc_sFunc_Patch2Pdouble(sFunc_Patch2Pdouble_T ***const mem);

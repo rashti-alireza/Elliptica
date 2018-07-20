@@ -7,6 +7,5 @@ void free_needle(Needle_T *needle);
 void free_points(Grid_T *const grid);
 void free_func_PtoV(sFunc_PtoV_T **func);
 void free_field(Field_T *f);
-void free_func_Grid2Pdouble(sFunc_Grid2Pdouble_T **func);
-void free_coeffs(Field_T *f);
-void free_variable(Variable_T *var);
+void free_func_Patch2Pdouble(sFunc_Patch2Pdouble_T **func);
+void free_v2(Field_T *f);

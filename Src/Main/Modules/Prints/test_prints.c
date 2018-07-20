@@ -507,13 +507,13 @@ static void free_archive(struct Archive_S *arch,const unsigned N)
   free(arch);
 }
 
-/* print derivatives numc[#]-anac[#] versus node # for grid and each patch */
-void pr_derivatives_DiffByNode(const double *const numc, const double *const anac,const Grid_T *const grid,const char *const prefix)
+/* print derivatives numc[#]-anac[#] versus node # for each given patch */
+void pr_derivatives_DiffByNode(const double *const numc, const double *const anac,const Patch_T *const patch,const char *const prefix)
 {
   FILE *f;
   char file_name[MAXSTR];
   unsigned nn;
-  unsigned p,pa;
+  unsigned p;
   
   if (!numc)
     abortEr("There is no numeric value.\n");
@@ -521,35 +521,19 @@ void pr_derivatives_DiffByNode(const double *const numc, const double *const ana
   if (!anac)
     abortEr("There is no analytic value.\n");
   
-  /* printing for the whole grid */
-  sprintf(file_name,"%s.grid",prefix);
+  nn = total_nodes_patch(patch);
+  sprintf(file_name,"%s.%s",prefix,patch->name);
   f = fopen(file_name,"w");
   pointerEr(f);
   
-  fprintf(f,"#Node (df/d?|N-df/d?|A): \n");
-  for (p = 0; p < grid->nn; ++p)
-    fprintf(f,"%u %f\n",p,numc[p]-anac[p]);
-  fclose(f);
-  
-  /* printing for each patch */
-  FOR_ALL(pa,grid->patch)
+  fprintf(f,"#Node (df/d?|N-df/d?|A) df/d?|N df/d?|A i j k x y z:\n");
+  for (p = 0; p < nn; ++p)
   {
-    Patch_T *patch = grid->patch[pa];
-    
-    nn = total_nodes_patch(patch);
-    sprintf(file_name,"%s.%s",prefix,patch->name);
-    f = fopen(file_name,"w");
-    pointerEr(f);
-    
-    fprintf(f,"#Node (df/d?|N-df/d?|A) df/d?|N df/d?|A i j k x y z:\n");
-    for (p = 0; p < nn; ++p)
-    {
-      unsigned i1,j1,k1;
-      IJK(p,patch->n,&i1,&j1,&k1);
-      fprintf(f,"%u %f %f %f %u %u %u %f %f %f\n",p,numc[p]-anac[p],numc[p],anac[p],i1,j1,k1,x_(p),y_(p),z_(p));
-    }
-    fclose(f);
+    unsigned i1,j1,k1;
+    IJK(p,patch->n,&i1,&j1,&k1);
+    fprintf(f,"%u %f %f %f %u %u %u %f %f %f\n",p,numc[p]-anac[p],numc[p],anac[p],i1,j1,k1,x_(p),y_(p),z_(p));
   }
+  fclose(f);
   
 }
 
