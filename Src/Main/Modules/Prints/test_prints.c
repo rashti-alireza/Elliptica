@@ -73,7 +73,7 @@ void pr_interfaces(const Grid_T *const grid)
   parameterEr(flg);
   
   path = dup_s(path);
-  make_directory(&path,"interface_info",YES);
+  make_directory(&path,"InterfaceInfo",YES);
   
   str[0] = '\0';
   sprintf(str,"%s/interface_pairings.rm",path);
@@ -526,6 +526,7 @@ void pr_derivatives_DiffByNode(const double *const numc, const double *const ana
   f = fopen(file_name,"w");
   pointerEr(f);
   
+  fprintf(f,"#Node (df/d?|N-df/d?|A): \n");
   for (p = 0; p < grid->nn; ++p)
     fprintf(f,"%u %f\n",p,numc[p]-anac[p]);
   fclose(f);
@@ -533,13 +534,20 @@ void pr_derivatives_DiffByNode(const double *const numc, const double *const ana
   /* printing for each patch */
   FOR_ALL(pa,grid->patch)
   {
-    nn = total_nodes_patch(grid->patch[pa]);
-    sprintf(file_name,"%s.%s",prefix,grid->patch[pa]->name);
+    Patch_T *patch = grid->patch[pa];
+    
+    nn = total_nodes_patch(patch);
+    sprintf(file_name,"%s.%s",prefix,patch->name);
     f = fopen(file_name,"w");
     pointerEr(f);
     
+    fprintf(f,"#Node (df/d?|N-df/d?|A) df/d?|N df/d?|A i j k x y z:\n");
     for (p = 0; p < nn; ++p)
-      fprintf(f,"%u %f\n",p,numc[p]-anac[p]);
+    {
+      unsigned i1,j1,k1;
+      IJK(p,patch->n,&i1,&j1,&k1);
+      fprintf(f,"%u %f %f %f %u %u %u %f %f %f\n",p,numc[p]-anac[p],numc[p],anac[p],i1,j1,k1,x_(p),y_(p),z_(p));
+    }
     fclose(f);
   }
   

@@ -3,6 +3,9 @@
 #include "print_lib.h"
 #include "utilities_lib.h"
 #include "text_tools_lib.h"
+#include "macros_lib.h"
+#include "maths_general_lib.h"
+#include "coordinates_lib.h"
 
 extern Parameter_T **parameters_global;
 
