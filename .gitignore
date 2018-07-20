@@ -17,6 +17,9 @@ Bin
 #ignore Input directory
 Input/*
 
+#ignore Trash directory
+Trash/*
+
 #ignore makes
 MyConfig
 Makefile
