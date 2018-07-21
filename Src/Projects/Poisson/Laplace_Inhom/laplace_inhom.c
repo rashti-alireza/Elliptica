@@ -18,7 +18,7 @@ int Laplace_Inhom(void)
   //Laplace_Inhom_clean_up(grid);// cleaning up
   
   test = get_parameter_value_S("test_derivative",0);
-  if (strcmp_i(test,"yes"))
+  if (strstr_i(test,"yes"))
     DerivativeTest(grid);
     
   pr_clock();

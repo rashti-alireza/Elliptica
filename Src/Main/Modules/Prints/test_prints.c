@@ -507,19 +507,32 @@ static void free_archive(struct Archive_S *arch,const unsigned N)
   free(arch);
 }
 
-/* print derivatives numc[#]-anac[#] versus node # for each given patch */
-void pr_derivatives_DiffByNode(const double *const numc, const double *const anac,const Patch_T *const patch,const char *const prefix)
+/* print derivatives numc[#]-anac[#] versus node # for each given patch.
+// ->return valuenn: if the mentioned difference greater than 
+// the given tolerance NO, YES otherwise.
+*/
+Flag_T pr_derivatives_DiffByNode(const double *const numc, const double *const anac,const Patch_T *const patch,const char *const prefix)
 {
   FILE *f;
   char file_name[MAXSTR];
   unsigned nn;
   unsigned p;
+  double tol = ROUND_OFF_ERR;
+  const char *par = get_parameter_value_S("test_derivative",0);
+  char *save,*tol_s = dup_s(par);
+  Flag_T flg = YES;
   
   if (!numc)
     abortEr("There is no numeric value.\n");
   
   if (!anac)
     abortEr("There is no analytic value.\n");
+  
+  if (strchr(tol_s,COMMA))
+  {
+    par = tok_s(tol_s,COMMA,&save);
+    tol = atof(save);
+  }
   
   nn = total_nodes_patch(patch);
   sprintf(file_name,"%s.%s",prefix,patch->name);
@@ -530,10 +543,16 @@ void pr_derivatives_DiffByNode(const double *const numc, const double *const ana
   for (p = 0; p < nn; ++p)
   {
     unsigned i1,j1,k1;
+    double diff = numc[p]-anac[p];
     IJK(p,patch->n,&i1,&j1,&k1);
-    fprintf(f,"%u %f %f %f %u %u %u %f %f %f\n",p,numc[p]-anac[p],numc[p],anac[p],i1,j1,k1,x_(p),y_(p),z_(p));
+    fprintf(f,"%u %f %f %f %u %u %u %f %f %f\n",p,diff,numc[p],anac[p],i1,j1,k1,x_(p),y_(p),z_(p));
+    
+    if (GRT(ABS(diff),tol))
+      flg = NO;
   }
   fclose(f);
   
+  free(tol_s);
+  return flg;
 }
 

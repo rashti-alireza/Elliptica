@@ -167,15 +167,19 @@ int DerivativeTest(Grid_T *const grid)
         /* if anac is define and so not null, compare with numeric */
         if (anac[e])
         {
-          printf("Testing Derivative for %15s\t",F[e]->name);
+          printf("Testing Derivative: patch=%s, function:%15s\t",patch->name,F[e]->name);
           df_num->v = anac[FUNC];
           free_v2(df_num);
           enum2str(e,der_s);
           numc[e] = Df(df_num,der_s);
-          compare_derivative(F[e]->name,numc[e],anac[e],patch,path);
+          flg = compare_derivative(F[e]->name,numc[e],anac[e],patch,path);
           free(anac[e]);
           free(numc[e]);
-          printf("[X] Ready.\n");
+          
+          if (flg == YES)
+            printf("[+].\n");
+          else
+            printf("[-].\n");
         }
       }/* end of for (e = FUNC_x; e < N_FUNC; ++e) */
       free(anac[FUNC]);
@@ -311,10 +315,13 @@ static void enum2str(enum FUNC_E e,char *const str)
 }
 
 /* comparing the values obtained from numeric and with analytic one */
-static void compare_derivative(const char *const name,const double *const numc,const double *const anac,const Patch_T *const patch,const char *const path)
+static Flag_T compare_derivative(const char *const name,const double *const numc,const double *const anac,const Patch_T *const patch,const char *const path)
 {
   char prefix[MAXSTR];
+  Flag_T flg;
   
   sprintf(prefix,"%s/%s.DiffByNode",path,name);
-  pr_derivatives_DiffByNode(numc,anac,patch,prefix);
+  flg = pr_derivatives_DiffByNode(numc,anac,patch,prefix);
+  
+  return flg;
 }
