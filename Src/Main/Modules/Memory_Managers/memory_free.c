@@ -108,7 +108,15 @@ void free_v2(Field_T *f)
   f->v2 = 0;
 }
 
-/* freeing a variable */
+/* freeing v of field and put it to 0 */
+void free_v(Field_T *f)
+{
+  if (f->v)
+    free(f->v);
+  f->v = 0;
+}
+
+/* freeing a the content of a given field */
 void free_field(Field_T *fld)
 {
   if (!fld)

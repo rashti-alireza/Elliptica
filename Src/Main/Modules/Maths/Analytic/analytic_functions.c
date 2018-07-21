@@ -665,7 +665,6 @@ double *r_f_xz(Patch_T *const patch)
   unsigned i;
   
   FOR_ALL_POINTS(i,patch)
-    for (i = in; i < fi; ++i)
     f[i] = -((xM*zM)/Power(Power(xM,2) + Power(yM,2) + Power(zM,2),1.5));
   return f;
 }

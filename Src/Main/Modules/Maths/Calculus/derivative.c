@@ -35,7 +35,7 @@ double *Df(Field_T *const f,const char *task)
   /* check up */
   if (!f)
     abortEr("The field is empty!\n");
-  if (!f->values && !f->coeffs)  
+  if (!f->v && !f->v2)  
     abortEr("The field is empty!\n");
   if (!task)
     abortEr("The task is empty!\n");
@@ -69,13 +69,13 @@ static double *take_spectral_derivative(Field_T *const f,const Dd_T  *const dir_
   assert(Ndir);
   
   /* 3-D fields */
-  if (f->dim == 3)
+  if (strstr(f->info,"(3dim)"))
   {
-    ff[0] = init_field_3d("tmp1",f->grid);
-    ff[1] = init_field_3d("tmp2",f->grid);
+    ff[0] = add_field("tmp1",0,f->patch,NO);
+    ff[1] = add_field("tmp2",0,f->patch,NO);
     
     deriv = spectral_derivative_in1dir(f,dir_e[0]);
-    ff[0]->values = deriv;
+    ff[0]->v = deriv;
     frd = 0;
     for (i = 1; i < Ndir; ++i)
     {
@@ -84,16 +84,15 @@ static double *take_spectral_derivative(Field_T *const f,const Dd_T  *const dir_
       deriv = spectral_derivative_in1dir(ff[bck],dir_e[i]);
       
       /* make next ff ready */
-      ff[frd]->values = deriv;
-      free(ff[bck]->values);
-      free_coeffs(ff[bck]);
-      ff[bck]->values = 0;
+      ff[frd]->v = deriv;
+      free_v(ff[bck]);
+      free_v2(ff[bck]);
     }
     
-    ff[frd]->values = 0;
+    ff[frd]->v = 0;
     /* free leftovers */
-    free_field(ff[0]);
-    free_field(ff[1]);
+    remove_field(ff[0]);
+    remove_field(ff[1]);
   }/* end of if (f->dim == 3) */
   else
     abortEr("No such Dimension is defined for this function.\n");
@@ -200,7 +199,7 @@ static Dd_T str2enum_direction(const char *const str)
 }
 
 /* taking 3-D spectral derivative in the specified direction dir_e 
-// on the whole grid.
+// on a patch determined by field.
 // it is worth explaining that some bases are expanded in 
 // different coordinate than x,y and z or a,b and c; for example Chebyshev Tn
 // which expanded in normal coords N0,N1 and N2. so in taking
@@ -211,82 +210,76 @@ static Dd_T str2enum_direction(const char *const str)
 */
 static double *spectral_derivative_in1dir(Field_T *const f,const Dd_T dir_e)
 {
-  Grid_T *const grid = f->grid;
-  double *der = alloc_double(grid->nn);
-  unsigned pa;
+  Patch_T *const patch = f->patch;
+  double *der = alloc_double(patch->nn);
+  SpecDerivative_Func_T *df[3];/* spectral derivative function in each direction */
+  Dd_T dp[3];/* see above explanation */
+  double *df_dp[3];
+  unsigned nn = total_nodes_patch(patch);
+  unsigned nc = patch->nc;
+  unsigned i;
+  Dd_T d;
+  Flag_T flg[3];
   
-  FOR_ALL(pa,grid->patch)
+  get_SpecDerivative_func(patch,df);
+  get_dp(patch,df,dir_e,dp);
+  
+  for (d = 0; d < 3; ++d)
   {
-    const Patch_T *patch = grid->patch[pa];
-    SpecDerivative_Func_T *df[3];/* spectral derivative function in each direction */
-    Dd_T dp[3];/* see above explanation */
-    double *df_dp[3];
-    unsigned nn = total_nodes_patch(patch);
-    unsigned nc = patch->nc;
-    unsigned i;
-    Dd_T d;
-    Flag_T flg[3];
-    
-    get_SpecDerivative_func(patch,df);
-    get_dp(patch,df,dir_e,dp);
-    
-    for (d = 0; d < 3; ++d)
+    flg[d] = NO;
+    df_dp[d] = 0;
+    if (dp[d] != UNDEFINED_DIR)
     {
-      flg[d] = NO;
-      df_dp[d] = 0;
-      if (dp[d] != UNDEFINED_DIR)
-      {
-        df_dp[d] = df[d](f,patch,dp[d]);
-        flg[d] = YES;
-      }
+      df_dp[d] = df[d](f,dp[d]);
+      flg[d] = YES;
     }
-    
-    if (flg[0] == YES && flg[1] == YES && flg[2] == YES)
-    {
-      OpenMP_1d_Pragma(omp parallel for)
-      for (i = 0; i < nn; ++i)
-        der[i+nc] = df_dp[0][i]*dq2_dq1(patch,dp[0],dir_e,i) + 
-                    df_dp[1][i]*dq2_dq1(patch,dp[1],dir_e,i) +
-                    df_dp[2][i]*dq2_dq1(patch,dp[2],dir_e,i);
-    }
-    else if (flg[0] == YES && flg[1] == YES)
-    {
-      OpenMP_1d_Pragma(omp parallel for)
-      for (i = 0; i < nn; ++i)
-        der[i+nc] = df_dp[0][i]*dq2_dq1(patch,dp[0],dir_e,i) + 
-                    df_dp[1][i]*dq2_dq1(patch,dp[1],dir_e,i);
-    }
-    else if (flg[1] == YES && flg[2] == YES)
-    {
-      OpenMP_1d_Pragma(omp parallel for)
-      for (i = 0; i < nn; ++i)
-        der[i+nc] = df_dp[1][i]*dq2_dq1(patch,dp[1],dir_e,i) + 
-                    df_dp[2][i]*dq2_dq1(patch,dp[2],dir_e,i);
-    }
-    else if (flg[0] == YES)
-    {
-      OpenMP_1d_Pragma(omp parallel for)
-      for (i = 0; i < nn; ++i)
-        der[i+nc] = df_dp[0][i]*dq2_dq1(patch,dp[0],dir_e,i);
-    }
-    else if (flg[1] == YES)
-    {
-      OpenMP_1d_Pragma(omp parallel for)
-      for (i = 0; i < nn; ++i)
-        der[i+nc] = df_dp[1][i]*dq2_dq1(patch,dp[1],dir_e,i); 
-    }
-    else if (flg[2] == YES)
-    {
-      OpenMP_1d_Pragma(omp parallel for)
-      for (i = 0; i < nn; ++i)
-        der[i+nc] = df_dp[2][i]*dq2_dq1(patch,dp[2],dir_e,i); 
-    }
+  }
   
-  
-    for (d = 0; d < 3; ++d)
-      if (df_dp[d])
-        free(df_dp[d]);
-  }/* end of FOR_ALL(pa,grid->patch) */
+  if (flg[0] == YES && flg[1] == YES && flg[2] == YES)
+  {
+    OpenMP_1d_Pragma(omp parallel for)
+    for (i = 0; i < nn; ++i)
+      der[i+nc] = df_dp[0][i]*dq2_dq1(patch,dp[0],dir_e,i) + 
+                  df_dp[1][i]*dq2_dq1(patch,dp[1],dir_e,i) +
+                  df_dp[2][i]*dq2_dq1(patch,dp[2],dir_e,i);
+  }
+  else if (flg[0] == YES && flg[1] == YES)
+  {
+    OpenMP_1d_Pragma(omp parallel for)
+    for (i = 0; i < nn; ++i)
+      der[i+nc] = df_dp[0][i]*dq2_dq1(patch,dp[0],dir_e,i) + 
+                  df_dp[1][i]*dq2_dq1(patch,dp[1],dir_e,i);
+  }
+  else if (flg[1] == YES && flg[2] == YES)
+  {
+    OpenMP_1d_Pragma(omp parallel for)
+    for (i = 0; i < nn; ++i)
+      der[i+nc] = df_dp[1][i]*dq2_dq1(patch,dp[1],dir_e,i) + 
+                  df_dp[2][i]*dq2_dq1(patch,dp[2],dir_e,i);
+  }
+  else if (flg[0] == YES)
+  {
+    OpenMP_1d_Pragma(omp parallel for)
+    for (i = 0; i < nn; ++i)
+      der[i+nc] = df_dp[0][i]*dq2_dq1(patch,dp[0],dir_e,i);
+  }
+  else if (flg[1] == YES)
+  {
+    OpenMP_1d_Pragma(omp parallel for)
+    for (i = 0; i < nn; ++i)
+      der[i+nc] = df_dp[1][i]*dq2_dq1(patch,dp[1],dir_e,i); 
+  }
+  else if (flg[2] == YES)
+  {
+    OpenMP_1d_Pragma(omp parallel for)
+    for (i = 0; i < nn; ++i)
+      der[i+nc] = df_dp[2][i]*dq2_dq1(patch,dp[2],dir_e,i); 
+  }
+
+
+  for (d = 0; d < 3; ++d)
+    if (df_dp[d])
+      free(df_dp[d]);
   
   return der;
 }
@@ -297,36 +290,77 @@ static double *spectral_derivative_in1dir(Field_T *const f,const Dd_T dir_e)
 // with Jacobian transformation.
 // ->return value: df(N)/dN.
 */
-static double *derivative_Chebyshev_Tn_in1dim(Field_T *const f,const Patch_T *const patch,const Dd_T dir)
+static double *derivative_Chebyshev_Tn_in1dim(Field_T *const f,const Dd_T dir)
 {
   assert(dir <= _N2_);
-  make_coeffs_1d(f,patch,dir);
+  make_coeffs_1d(f,dir);
   
+  Patch_T *const patch = f->patch;
   const unsigned *const n = patch->n;
   const unsigned nn = total_nodes_patch(patch);
   const unsigned B = n[dir]-1;
   double *der = alloc_double(nn);
   double *x = make_collocation_1d(patch,dir,-1,1);
-  const double *const coeffs = &f->coeffs[patch->nc];
+  const double *const coeffs = f->v2;
   unsigned l;
   
-  OpenMP_2d_Pragma(omp parallel for)
-  for (l = 0; l < nn; ++l)
+  if (dir == 0)
   {
-    unsigned i,j,k;
-    unsigned c;
-    
-    IJK(l,n,&i,&j,&k);
-    
-    for (c = 2; c < B; ++c)
+    OpenMP_2d_Pragma(omp parallel for)
+    for (l = 0; l < nn; ++l)
     {
-      unsigned C = coeff_ind(i,j,k,c,n,dir);
-      der[l] += c*coeffs[C]*Cheb_Un((int)c-1,x[i]);
+      unsigned i,j,k;
+      unsigned c;
+      
+      IJK(l,n,&i,&j,&k);
+      
+      for (c = 2; c < B; ++c)
+      {
+        unsigned C = L(n,c,j,k);//coeff_ind(i,j,k,c,n,dir);
+        der[l] += c*coeffs[C]*Cheb_Un((int)c-1,x[i]);
+      }
+      der[l] += coeffs[L(n,1,j,k)];//coeff_ind(i,j,k,1,n,dir)];
+      der[l] *= 2;
     }
-    der[l] += coeffs[coeff_ind(i,j,k,1,n,dir)];
-    der[l] *= 2;
   }
-  
+  else if (dir == 1)
+  {
+    OpenMP_2d_Pragma(omp parallel for)
+    for (l = 0; l < nn; ++l)
+    {
+      unsigned i,j,k;
+      unsigned c;
+      
+      IJK(l,n,&i,&j,&k);
+      
+      for (c = 2; c < B; ++c)
+      {
+        unsigned C = L(n,i,c,k);//coeff_ind(i,j,k,c,n,dir);
+        der[l] += c*coeffs[C]*Cheb_Un((int)c-1,x[j]);
+      }
+      der[l] += coeffs[L(n,i,1,k)];//coeff_ind(i,j,k,1,n,dir)];
+      der[l] *= 2;
+    }
+  }
+  else /* (dir == 2) */
+  {
+    OpenMP_2d_Pragma(omp parallel for)
+    for (l = 0; l < nn; ++l)
+    {
+      unsigned i,j,k;
+      unsigned c;
+      
+      IJK(l,n,&i,&j,&k);
+      
+      for (c = 2; c < B; ++c)
+      {
+        unsigned C = L(n,i,j,c);//coeff_ind(i,j,k,c,n,dir);
+        der[l] += c*coeffs[C]*Cheb_Un((int)c-1,x[k]);
+      }
+      der[l] += coeffs[L(n,i,j,1)];//coeff_ind(i,j,k,1,n,dir)];
+      der[l] *= 2;
+    }
+  }
   free(x);
   
   return der;
@@ -402,23 +436,5 @@ static void get_dp(const Patch_T *const patch,SpecDerivative_Func_T **func,const
 
     }
   }
-}
-
-/* move along a specified direction in (i,j,k) and 
-// return its linearized index.
-// ->return value: linearized index L
-*/
-static unsigned coeff_ind(const unsigned i,const unsigned j,const unsigned k,const unsigned c,const unsigned *const n,const unsigned dir)
-{
-  unsigned r = UINT_MAX;
-    
-  if (dir == 0)
-    r = L(n,c,j,k);
-  else if (dir == 1)
-    r = L(n,i,c,k);
-  else if (dir == 2)
-    r = L(n,i,j,c);
-    
-  return r;
 }
 

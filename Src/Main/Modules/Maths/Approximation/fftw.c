@@ -40,14 +40,7 @@ void fftw_1d_ChebyshevExtrema_coeffs(double *const values,double *const coeffs,c
   fftw_cleanup();
   
   for (i = 0; i < n; ++i)
-  {
-  //test
-    //if (LSS(ABS(coeffs[i]),1E-9))
-      //coeffs[i] = 0;
-    //else
-    //end
-      coeffs[i] /= Nrm;
-  }
+    coeffs[i] /= Nrm;
 }
 
 /* finding NORMALIZED coefficients of a function with Chebyshev basis of 

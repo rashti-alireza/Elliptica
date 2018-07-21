@@ -210,9 +210,11 @@ typedef struct Field_T
 {
   char *name;/* name of field */
   double *v;/* values on each node on patch */
-  double *v2;/* if this field has two kinds of value:
+  double *v2;/* other values. if this field has two kinds of value:
              // e.g. fields in spectral expansion needs both 
-             // coeffs of expansion and values on each node.
+             // coefficients of expansion and values of field on each node.
+             // so for field with expansion this v2 refers to coefficents
+             // value.
              */
   char *info;/* each field might need some info or attributes 
              //  which save here.

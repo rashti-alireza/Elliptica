@@ -20,3 +20,4 @@ void free_func_PtoV(sFunc_PtoV_T **func);
 void free_field(Field_T *f);
 void free_func_Patch2Pdouble(sFunc_Patch2Pdouble_T **func);
 void free_v2(Field_T *f);
+void free_v(Field_T *f);

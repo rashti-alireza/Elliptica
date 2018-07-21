@@ -167,31 +167,27 @@ int DerivativeTest(Grid_T *const grid)
         /* if anac is define and so not null, compare with numeric */
         if (anac[e])
         {
-          //test
-          printf("%s\n",F[e]->name);
-          //end
+          printf("Testing Derivative for %15s\t",F[e]->name);
           df_num->v = anac[FUNC];
-          //test
           free_v2(df_num);
-          //end
           enum2str(e,der_s);
           numc[e] = Df(df_num,der_s);
           compare_derivative(F[e]->name,numc[e],anac[e],patch,path);
           free(anac[e]);
-          free(numc[e])
-          
+          free(numc[e]);
+          printf("[X] Ready.\n");
         }
       }/* end of for (e = FUNC_x; e < N_FUNC; ++e) */
       free(anac[FUNC]);
-      
+      df_num->v = 0;
+      remove_field(df_num);
+  
     }/* end of FOR_ALL_PATCHES(pa,grid) */
     
   }/* end of FOR_ALL(fi,DataBase_func) */
   
   free_func_Patch2Pdouble(DataBase_func);
   free(path);
-  df_num->values = 0;
-  free_field(df_num);
   
   return EXIT_SUCCESS;
 }

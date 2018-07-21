@@ -8,7 +8,7 @@
 int Laplace_Inhom(void)
 {
   Grid_T *grid;
-  
+  char *test;
   /* print clock */
   pr_clock();
   
@@ -17,11 +17,10 @@ int Laplace_Inhom(void)
   //Laplace_Inhom_pr_answer(grid);// printing found answer
   //Laplace_Inhom_clean_up(grid);// cleaning up
   
-  //test
-  DerivativeTest(grid);
-  //end
-  assert(grid);/* test to avoid error unused variable! */
-  
+  test = get_parameter_value_S("test_derivative",0);
+  if (strcmp_i(test,"yes"))
+    DerivativeTest(grid);
+    
   pr_clock();
   
   return EXIT_SUCCESS;

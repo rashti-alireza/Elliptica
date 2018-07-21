@@ -20,6 +20,9 @@ Field_T *add_field(const char *const name,const char *attribute,Patch_T *const p
   
   Field_T *fld = 0;
   
+  if (alloc_flg != NO && alloc_flg != YES)
+    abortEr("Wrong Flag was used. Flag for allocation is either YES or NO.\n");
+  
   if (LookUpField(name,patch) >= 0)
     abortEr_s("There is already a field with the same name %s.\n",name);
   else
@@ -51,23 +54,28 @@ Field_T *add_field(const char *const name,const char *attribute,Patch_T *const p
   return fld;
 }
 
-/* remove the field with the given name from the pool.
-// and then shrink the pool.
+/* remove the given field from the pool and then shrink the pool.
 // NOTE: THE INDEX OF VARIABLES ARE DYNAMIC,
 // SO IT IS UNSAFE TO SAVE AN INDEX AND USED IT LATER. ONLY THE VALUES AND
 // POINTER TO VALUES ARE STATIC AND SAFE TO SAVE.
 */
-void remove_field(const char *const name,Patch_T *const patch)
+void remove_field(Field_T *f)
 {
-  /* if patch has no field */
-  if (!patch->nfld) return;
+  if (!f) return;
   
-  const int ind_remove = LookUpField(name,patch);
-  Field_T *v_remove = patch->pool[ind_remove];
-  Field_T *v_last   = patch->pool[patch->nfld-1];
-  patch->pool[ind_remove] = v_last;
+  Patch_T *const patch = f->patch;
+  char *const name = f->name;
+  
+  const int remove_ind = LookUpField(name,patch);
+  /* if no such field exists */
+  if (remove_ind < 0) 
+    return;
+  
+  Field_T *remove_fld = patch->pool[remove_ind];
+  Field_T *last_fld   = patch->pool[patch->nfld-1];
+  patch->pool[remove_ind] = last_fld;
  
-  free_field(v_remove);
+  free_field(remove_fld);
   patch->pool = realloc(patch->pool,(patch->nfld)*sizeof(*patch->pool));
   pointerEr(patch->pool);
 }
@@ -89,8 +97,9 @@ void add_attribute(Field_T *const fld,const char *const attribute)
     "This attribute %s doesn't have.\n",attribute);
     
   /* if the attribute already exists, return */
-  if (strstr(fld->info,attribute))
-    return;
+  if (fld->info)
+    if (strstr(fld->info,attribute))
+      return;
   
   if (fld->info)
     l1 = (unsigned)strlen(fld->info);
@@ -104,22 +113,31 @@ void add_attribute(Field_T *const fld,const char *const attribute)
 }
 
 /* given name and patch find the index of a field in the pool.
-// ->return value: index of field in the pool. INT_MIN if not found.
+// ->return value: index of field in the pool. INT_MIN if doesn't exist.
 */
 int LookUpField(const char *const name,Patch_T *const patch)
 {
   int ind = INT_MIN;
   int i;
   
+  if (!patch->pool)
+    return ind;
+    
   for (i = 0; i < (int)patch->nfld; ++i )
-    if (!strcmp(patch->pool[i]->name,name))
+  {
+    if (!patch->pool[i])
+      continue;
+    else if(!patch->pool[i]->name)
+      continue;
+    else if (!strcmp(patch->pool[i]->name,name))
       ind = i;
+  }
   
   return ind;
 }
 
 
-/* values -> 1-d coeffs in specified direction and patch.
+/* values -> 1-d coeffs for thr specified direction.
 // making coeffs of a field based on basis used for expansion.
 // arguments of function:
 // ======================
@@ -127,232 +145,170 @@ int LookUpField(const char *const name,Patch_T *const patch)
 // o. f is demanded field
 // o. dir refers to directions which this coefficients may be found.
 //	0 for a-direction, 1 for b-direction, 2 for c-direction.
-// o. patch: coeffs will be made in this patch only.
 //
 // note1: each patch uses it own basis type and each part of coeffs
 // corresponds to that basis type.
-// note2: it DOES ALLOCATED MEMORY for coeffs on the "whole grid" if not available.
-// and puts it inside f->coeffs
+// note2: it DOES ALLOCATED MEMORY for coeffs on the "the patch" if not available.
+// and puts it inside f->v2
 // ->return value: coeffs
 */
-double *make_coeffs_1d(Field_T *const f,const Patch_T *const patch,const unsigned dir)
+double *make_coeffs_1d(Field_T *const f,const unsigned dir)
 {
+  assert(f);
   assert(dir <= 2);
-  assert(patch);
-  assert(f->dim == 3);
+  assert(strstr(f->info,"(3dim)"));
   
-  const unsigned N = f->grid->nn;
+  const unsigned N = f->patch->nn;
   
-  if (IsAvailable_1d(f,patch,dir))
-    return f->coeffs;
+  if (IsAvailable_1d(f,dir))
+    return f->v2;
   else
   {
-    if (!f->coeffs)
-      f->coeffs = alloc_double(N);
+    if (!f->v2)
+      f->v2 = alloc_double(N);
     
-    find_1d_coeffs_in_patch(f,patch,dir);
+    find_1d_coeffs_in_patch(f,dir);
   }
   
-  return f->coeffs;
+  return f->v2;
 }
 
 /* values -> 2-d coeffs in specified direction and patch.
 // for more info refere to make_coeffs_1d
 // ->return value: coeffs.
 */
-double *make_coeffs_2d(Field_T *const f,const Patch_T *const patch,const unsigned dir1,const unsigned dir2)
+double *make_coeffs_2d(Field_T *const f,const unsigned dir1,const unsigned dir2)
 {
   assert(dir1 <= 2);
   assert(dir2 <= 2);
-  assert(patch);
-  assert(f->dim == 3);
-  
-  const unsigned N = f->grid->nn;
+  assert(strstr(f->info,"(3dim)"));
+    
+  const unsigned N = f->patch->nn;
   int dir;
-  Field_T *f_tmp = init_field_3d("f_tmp",f->grid);
+  Field_T *f_tmp = add_field("f_tmp","(3dim)",f->patch,NO);
   
-  
-  if (IsAvailable_2d(f,patch,dir1,dir2,&dir))
+  if (IsAvailable_2d(f,dir1,dir2,&dir))
   {
     /* if field is ready ready */
     if (dir == -1)
-      return f->coeffs;
+      return f->v2;
     else/* it only make coeffs in dir since the other one in ready */
     {  
-      f_tmp->values = f->coeffs;
-      /* since f_tmp->coeffs is empty it will be made by the function below */
-      f->coeffs = find_1d_coeffs_in_patch(f_tmp,patch,(unsigned)dir);
-      free(f_tmp->values);
+      f_tmp->v = f->v2;
+      /* since f_tmp->v2 is empty it will be made by the function below */
+      f->v2 = find_1d_coeffs_in_patch(f_tmp,(unsigned)dir);
+      free_v(f_tmp);
     }
   }
   else
   {
-    if (!f->coeffs)
-      f->coeffs = alloc_double(N);
+    if (!f->v2)
+      f->v2 = alloc_double(N);
     
-    find_1d_coeffs_in_patch(f,patch,dir1);
-    f_tmp->values = f->coeffs;
-    /* since f_tmp->coeffs is empty it will be made by the function below */
-    f->coeffs = find_1d_coeffs_in_patch(f_tmp,patch,dir2);
-    free(f_tmp->values);
+    find_1d_coeffs_in_patch(f,dir1);
+    f_tmp->v = f->v2;
+    /* since f_tmp->v2 is empty it will be made by the function below */
+    f->v2 = find_1d_coeffs_in_patch(f_tmp,dir2);
+    free_v(f_tmp);
   }
   
-  f_tmp->values = 0;
-  f_tmp->coeffs = 0;
-  free_field(f_tmp);
+  f_tmp->v = 0;
+  f_tmp->v2 = 0;
+  remove_field(f_tmp);
     
-  return f->coeffs;
+  return f->v2;
 }
 
 /* values -> 3-d coeffs in specified patch.
 // for more info refere to make_coeffs_1d
 // ->return value: coeffs.
 */
-double *make_coeffs_3d(Field_T *const f,const Patch_T *const patch)
+double *make_coeffs_3d(Field_T *const f)
 {
-  Grid_T *const grid = f->grid;
-  const unsigned N = total_nodes_grid(grid);
+  const unsigned N = f->patch->nn;
   Collocation_T collocation[3];
   Basis_T basis[3];
   
-  collocation[0] = patch->collocation[0];
-  collocation[1] = patch->collocation[1];
-  collocation[2] = patch->collocation[2];
-  basis[0]       = patch->basis[0];
-  basis[1]       = patch->basis[1];
-  basis[2]       = patch->basis[2];
+  collocation[0] = f->patch->collocation[0];
+  collocation[1] = f->patch->collocation[1];
+  collocation[2] = f->patch->collocation[2];
+  basis[0]       = f->patch->basis[0];
+  basis[1]       = f->patch->basis[1];
+  basis[2]       = f->patch->basis[2];
   
-  assert(patch);
-  assert(f->dim == 3);
+  assert(strstr(f->info,"(3dim)"));
   
-  if (IsAvailable_3d(f,patch))
+  if (IsAvailable_3d(f))
   {
-    return f->coeffs;
+    return f->v2;
   }
   else
   {
-    if (!f->coeffs)
-      f->coeffs = alloc_double(N);
+    if (!f->v2)
+      f->v2 = alloc_double(N);
     
     /* when all of directions and basis are the same.
     // it gets used for high performance.
     */
     if (Is3d_fft(collocation,basis))
     {
-      double *coeffs = &f->coeffs[patch->nc];
-      double *values = &f->values[patch->nc];
-      const unsigned *n = patch->n;
+      double *coeffs = f->v2;
+      double *values = f->v;
+      const unsigned *n = f->patch->n;
     
-      if (patch->basis[0] == Chebyshev_Tn_BASIS)
+      if (f->patch->basis[0] == Chebyshev_Tn_BASIS)
         fftw_3d_ChebyshevExtrema_coeffs(values,coeffs,n);
       else
         abortEr("No such basis is defined for this function.\n");
     }
     else
     {
-      Field_T *f_tmp1 = init_field_3d("f_tmp1",f->grid);
-      Field_T *f_tmp2 = init_field_3d("f_tmp2",f->grid);
+      Field_T *f_tmp1 = add_field("f_tmp1","(3dim)",f->patch,NO);
+      Field_T *f_tmp2 = add_field("f_tmp2","(3dim)",f->patch,NO);
  
-      f_tmp1->values = find_1d_coeffs_in_patch(f,patch,0);
-      /* f_tmp1->values == f->coeffs 
-      // f_tmp1->coeffs == 0
+      f_tmp1->v = find_1d_coeffs_in_patch(f,0);
+      /* f_tmp1->v == f->v2 
+      // f_tmp1->v2 == 0
       */
-      f_tmp1->coeffs = alloc_double(N);
-      f_tmp2->values = find_1d_coeffs_in_patch(f_tmp1,patch,1);
-      /* f_tmp2->values == f_tmp1->coeffs
-      // f_tmp2->coeffs == 0
+      f_tmp1->v2 = alloc_double(N);
+      f_tmp2->v = find_1d_coeffs_in_patch(f_tmp1,1);
+      /* f_tmp2->v == f_tmp1->v2
+      // f_tmp2->v2 == 0
       */
-      free_coeffs(f);/* => free(f_tmp1->values)*/
-      f_tmp2->coeffs = alloc_double(N);
-      f->coeffs      = find_1d_coeffs_in_patch(f_tmp2,patch,2);
-      /* f_tmp2->values == f_tmp1->coeffs
-      // f_tmp2->coeffs == f->coeffs
+      free_v2(f);/* => free(f_tmp1->v)*/
+      f_tmp2->v2 = alloc_double(N);
+      f->v2      = find_1d_coeffs_in_patch(f_tmp2,2);
+      /* f_tmp2->v == f_tmp1->v2
+      // f_tmp2->v2 == f->v2
       */
-      free_coeffs(f_tmp1);
-      f_tmp1->values = 0;
-      f_tmp2->values = 0;
-      f_tmp2->coeffs = 0;
-      free_field(f_tmp1);
-      free_field(f_tmp2);
+      free_v2(f_tmp1);
+      f_tmp1->v = 0;
+      f_tmp2->v = 0;
+      f_tmp2->v2 = 0;
+      remove_field(f_tmp1);
+      remove_field(f_tmp2);
     }
   }
   
-  return f->coeffs;
-}
-
-/* values -> 1-d coeffs
-// making coeffs of a field based on basis used for expansion
-// on the whole grid for the specified direction.
-// ->return value: coeffs.
-*/
-double *make_coeffs_grid_1d(Field_T *const f,const unsigned dir)
-{
-  Grid_T *const grid = f->grid;
-  double *coeffs = 0;
-  unsigned pa;
-  
-  FOR_ALL(pa,grid->patch)
-  {
-    coeffs = make_coeffs_1d(f,grid->patch[pa],dir);
-  }
-
-  return coeffs;
-}  
-
-/* values -> 2-d coeffs
-// making coeffs of a field based on basis used for expansion
-// on the whole grid for the specified directions.
-// ->return value: coeffs.
-*/
-double *make_coeffs_grid_2d(Field_T *const f,const unsigned dir1,const unsigned dir2)
-{
-  Grid_T *const grid = f->grid;
-  double *coeffs = 0;
-  unsigned pa;
-  
-  FOR_ALL(pa,grid->patch)
-  {
-    coeffs = make_coeffs_2d(f,grid->patch[pa],dir1,dir2);
-  }
-
-  return coeffs;
-}  
-
-
-/* values -> 3-d coeffs.
-// making coeffs of a field based on basis used for expansion
-// on the whole grid.
-// ->return value: coeffs.
-*/
-double *make_coeffs_grid_3d(Field_T *const f)
-{
-  Grid_T *const grid = f->grid;
-  double *coeffs = 0;
-  unsigned pa;
-  
-  FOR_ALL(pa,grid->patch)
-  {
-    coeffs = make_coeffs_3d(f,grid->patch[pa]);
-  }
-
-  return coeffs;
+  return f->v2;
 }
 
 /* check if this coeffs has been already made.
 // furthermore if the coeffs are not appropriate, clean them.
 // ->return value: 1 if already made, 0 otherwise.
 */
-static unsigned IsAvailable_1d(Field_T *const f,const Patch_T *const patch,const unsigned dir)
+static unsigned IsAvailable_1d(Field_T *const f,const unsigned dir)
 {
-  Collocation_T collocation = patch->collocation[dir];
-  Basis_T basis = patch->basis[dir];
+  Patch_T *const patch = f->patch;
+  const Collocation_T collocation = patch->collocation[dir];
+  const Basis_T basis = patch->basis[dir];
   unsigned r = 0;
-  unsigned pn = patch->pn;
+  const unsigned pn = patch->pn;
   char needle[3][MAX_STR] = {'\0'};
   Flag_T flg = CLEAN;
   
   /* if there is no coeffs */
-  if (!f->coeffs || !f->info) return 0;
+  if (!f->v2 || !f->info) return 0;
   
   sprintf(needle[0],PR_FORMAT,pn,dir,collocation,basis);
   sprintf(needle[1],"p%u,d%u",pn,(dir+1)%3);
@@ -377,7 +333,7 @@ static unsigned IsAvailable_1d(Field_T *const f,const Patch_T *const patch,const
   
   if (flg == CLEAN)
   {
-    free_coeffs(f);
+    free_v2(f);
     free(f->info);
     f->info   = 0;
   }
@@ -391,12 +347,13 @@ static unsigned IsAvailable_1d(Field_T *const f,const Patch_T *const patch,const
 // ->return value: if 1 and dir == -1, it means the coeffs is ready ready, 
 // otherwise fill dir in required direction.
 */
-static unsigned IsAvailable_2d(Field_T *const f,const Patch_T *const patch,const unsigned dir1,const unsigned dir2,int *dir)
+static unsigned IsAvailable_2d(Field_T *const f,const unsigned dir1,const unsigned dir2,int *dir)
 {
+  Patch_T *const patch = f->patch;
   Collocation_T collocation[3];
   Basis_T basis[3];
   unsigned r = 0;
-  unsigned pn = patch->pn;
+  unsigned pn = f->patch->pn;
   char needle[6][MAX_STR] = {'\0'};
   Flag_T flg = CLEAN;
   
@@ -407,7 +364,7 @@ static unsigned IsAvailable_2d(Field_T *const f,const Patch_T *const patch,const
   basis[dir2]       = patch->basis[dir2];
   
   /* if there is no coeffs */
-  if (!f->coeffs || !f->info) return 0;
+  if (!f->v2 || !f->info) return 0;
 
   sprintf(needle[0],PR_FORMAT,pn,dir1,collocation[dir1],basis[dir1]);
   sprintf(needle[1],"p%u,d%u",pn,(dir1+1)%3);
@@ -452,7 +409,7 @@ static unsigned IsAvailable_2d(Field_T *const f,const Patch_T *const patch,const
   
   if (flg == CLEAN)
   {
-    free_coeffs(f);
+    free_v2(f);
     free(f->info);
     f->info   = 0;
   }
@@ -463,8 +420,9 @@ static unsigned IsAvailable_2d(Field_T *const f,const Patch_T *const patch,const
 /* check if this coeffs has been already made.
 // ->return value: 1 if already made, 0 otherwise.
 */
-static unsigned IsAvailable_3d(Field_T *const f,const Patch_T *const patch)
+static unsigned IsAvailable_3d(Field_T *const f)
 {
+  Patch_T *const patch = f->patch;
   Collocation_T collocation[3];
   Basis_T basis[3];
   unsigned r = 0;
@@ -479,7 +437,7 @@ static unsigned IsAvailable_3d(Field_T *const f,const Patch_T *const patch)
   basis[2]       = patch->basis[2];
   
   /* if there is no coeffs */
-  if (!f->coeffs || !f->info) return 0;
+  if (!f->v2 || !f->info) return 0;
   
   sprintf(needle[0],PR_FORMAT,pn,0,collocation[0],basis[0]);
   sprintf(needle[1],PR_FORMAT,pn,1,collocation[1],basis[1]);
@@ -493,7 +451,7 @@ static unsigned IsAvailable_3d(Field_T *const f,const Patch_T *const patch)
   }
   else
   {
-    free_coeffs(f);
+    free_v2(f);
     free(f->info);
     f->info   = 0;
     r = 0;
@@ -507,17 +465,17 @@ static unsigned IsAvailable_3d(Field_T *const f,const Patch_T *const patch)
 // note: it DOESN'T ALLOCATE MEMORY.
 // ->return value: coeffs
 */
-static double *find_1d_coeffs_in_patch(Field_T *const f,const Patch_T *const patch,const unsigned dir)
+static double *find_1d_coeffs_in_patch(Field_T *const f,const unsigned dir)
 {
-  const Collocation_T collocation = patch->collocation[dir];
-  const Basis_T basis = patch->basis[dir];
+  const Collocation_T collocation = f->patch->collocation[dir];
+  const Basis_T basis = f->patch->basis[dir];
   
   if(basis == Chebyshev_Tn_BASIS)
   {
     if (collocation == Chebyshev_Extrema)
     {
-      coeffs_patch_Tn_Extrema_1d(f,patch,dir);
-      add_Tinfo(f,patch->pn,dir,Chebyshev_Tn_BASIS,Chebyshev_Extrema);
+      coeffs_patch_Tn_Extrema_1d(f,dir);
+      add_Tinfo(f,dir,Chebyshev_Tn_BASIS,Chebyshev_Extrema);
     }
     else
       abortEr("There is no such COLLOCATION defined for this function.\n");
@@ -531,18 +489,18 @@ static double *find_1d_coeffs_in_patch(Field_T *const f,const Patch_T *const pat
   else
     abortEr("There is no such BASIS defined for this function.\n");
     
-  return f->coeffs;
+  return f->v2;
 }
 
 /* finding coeffs in in patch For Tn basis 
 // with Chebyshev extrema collocation.
 */
-static void coeffs_patch_Tn_Extrema_1d(const Field_T *const f,const Patch_T *const patch,const unsigned dir)
+static void coeffs_patch_Tn_Extrema_1d(Field_T *const f,const unsigned dir)
 {
-  double *const coeffs = &f->coeffs[patch->nc];
-  const double *const values = &f->values[patch->nc];
+  double *const coeffs = f->v2;
+  const double *const values = f->v;
   double *out, *in;
-  const unsigned *n = patch->n;
+  const unsigned *n = f->patch->n;
   const unsigned B = n[(dir+1)%3]*n[3-dir-(dir+1)%3];
   unsigned l,i,j,k,s;
   out = alloc_double(n[dir]);
@@ -627,10 +585,11 @@ static void coeffs_patch_Tn_Extrema_1d(const Field_T *const f,const Patch_T *con
 // for each transformation the print format PR_FORMAT is
 // (patch,direction,collocation,basis) and concatenated in row.
 */
-static void add_Tinfo(Field_T *const f,const unsigned pn,const unsigned dir,const Collocation_T collocation,const Basis_T basis)
+static void add_Tinfo(Field_T *const f,const unsigned dir,const Collocation_T collocation,const Basis_T basis)
 {
   char inf[MAX_STR] = {'\0'};
   unsigned l1 = 0,l2 = 0;
+  const unsigned pn = f->patch->pn;
   
   if (f->info)
     l1 = (unsigned)strlen(f->info);
