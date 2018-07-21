@@ -216,8 +216,13 @@ typedef struct Field_T
              // so for field with expansion this v2 refers to coefficents
              // value.
              */
-  char *info;/* each field might need some info or attributes 
-             //  which save here.
+  char *attr;/* attributes of fields like its dimension 
+             // or other essential info.
+             */
+  char *info;/* each field might need more info or attributes 
+             // which will save here and they are temporary.
+             // e.g. the info about the coeffs of field. this info 
+             // is dynamic.
              */
   struct PATCH_T *patch;/* refers to its patch which this field defined */
 }Field_T;

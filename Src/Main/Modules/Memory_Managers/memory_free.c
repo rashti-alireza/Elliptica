@@ -116,6 +116,15 @@ void free_v(Field_T *f)
   f->v = 0;
 }
 
+
+/* freeing info of field and put it to 0 */
+void free_info(Field_T *f)
+{
+  if (f->info)
+    free(f->info);
+  f->info = 0;
+}
+
 /* freeing a the content of a given field */
 void free_field(Field_T *fld)
 {
@@ -128,6 +137,8 @@ void free_field(Field_T *fld)
     free(fld->v);
   if (fld->v2)
     free(fld->v2);
+  if (fld->attr)
+    free(fld->attr);
   if (fld->info)
     free(fld->info);
     

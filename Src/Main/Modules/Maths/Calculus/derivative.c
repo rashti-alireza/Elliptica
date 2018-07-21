@@ -69,10 +69,10 @@ static double *take_spectral_derivative(Field_T *const f,const Dd_T  *const dir_
   assert(Ndir);
   
   /* 3-D fields */
-  if (strstr(f->info,"(3dim)"))
+  if (strstr(f->attr,"(3dim)"))
   {
-    ff[0] = add_field("tmp1",0,f->patch,NO);
-    ff[1] = add_field("tmp2",0,f->patch,NO);
+    ff[0] = add_field("tmp1","(3dim)",f->patch,NO);
+    ff[1] = add_field("tmp2","(3dim)",f->patch,NO);
     
     deriv = spectral_derivative_in1dir(f,dir_e[0]);
     ff[0]->v = deriv;
@@ -93,7 +93,7 @@ static double *take_spectral_derivative(Field_T *const f,const Dd_T  *const dir_
     /* free leftovers */
     remove_field(ff[0]);
     remove_field(ff[1]);
-  }/* end of if (strstr(f->info,"(3dim)")) */
+  }/* end of if (strstr(f->attr,"(3dim)")) */
   else
     abortEr("No such Dimension is defined for this function.\n");
   

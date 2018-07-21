@@ -4,6 +4,7 @@
 */
 
 #include "checkup.h"
+#define MAX_ARR 600
 
 /* checking up if the allocation of the pointer is failed;
 // if it is failed then exit.
@@ -52,19 +53,9 @@ void abort_error(const char *const massage,const char *const file, const int lin
 /* general purpose error with more detail string version */
 void abort_error_string(const char *const massage,const char *const detail,const char *const file, const int line)
 {
-  char msg[400] = {'\0'};
-  char up[100] = {'\0'};
-  int i;
+  char msg[MAX_ARR] = {'\0'};
   
-  /* lower to upper case */
-  i = 0;
-  while (detail[i])
-  {
-    up[i] = (char)toupper(detail[i]);
-    i++;
-  }
-  
-  sprintf(msg,massage,up);
+  sprintf(msg,massage,detail);
   
   fprintf(stderr,ERROR_MASSAGE"%s"
       "File: %s\nLine:%d\n",msg,file,line);

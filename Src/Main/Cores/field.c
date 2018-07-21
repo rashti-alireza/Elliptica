@@ -24,13 +24,15 @@ Field_T *add_field(const char *const name,const char *attribute,Patch_T *const p
     abortEr("Wrong Flag was used. Flag for allocation is either YES or NO.\n");
   
   if (LookUpField(name,patch) >= 0)
-    abortEr_s("There is already a field with the same name %s.\n",name);
+    abortEr_s("There is already a field with the same name \"%s\".\n",name);
   else
   {  
     
     fld = calloc(1,sizeof(*fld));
     pointerEr(fld);
     fld->patch = patch;
+    
+    fld->name = dup_s(name);
     
     /* if attribute is null */
     if (!attribute)
@@ -78,10 +80,12 @@ void remove_field(Field_T *f)
   free_field(remove_fld);
   patch->pool = realloc(patch->pool,(patch->nfld)*sizeof(*patch->pool));
   pointerEr(patch->pool);
+  
+  --patch->nfld;
 }
 
 /* adding an attribute or info to fld. each attribute must be writen in
-//  format = (attribute).
+// format = (attribute).
 // attribute could be: (3dim), (2dim) etc.
 */
 void add_attribute(Field_T *const fld,const char *const attribute)
@@ -97,18 +101,18 @@ void add_attribute(Field_T *const fld,const char *const attribute)
     "This attribute %s doesn't have.\n",attribute);
     
   /* if the attribute already exists, return */
-  if (fld->info)
-    if (strstr(fld->info,attribute))
+  if (fld->attr)
+    if (strstr(fld->attr,attribute))
       return;
   
-  if (fld->info)
-    l1 = (unsigned)strlen(fld->info);
+  if (fld->attr)
+    l1 = (unsigned)strlen(fld->attr);
   l2 += (unsigned)strlen(attribute);
   
-  fld->info = realloc(fld->info,l1+l2);
-  pointerEr(fld->info);
-  fld->info[l1] = '\0';
-  strcat(fld->info,attribute);
+  fld->attr = realloc(fld->attr,l1+l2);
+  pointerEr(fld->attr);
+  fld->attr[l1] = '\0';
+  strcat(fld->attr,attribute);
   
 }
 
@@ -156,7 +160,7 @@ double *make_coeffs_1d(Field_T *const f,const unsigned dir)
 {
   assert(f);
   assert(dir <= 2);
-  assert(strstr(f->info,"(3dim)"));
+  assert(strstr(f->attr,"(3dim)"));
   
   const unsigned N = f->patch->nn;
   
@@ -181,7 +185,7 @@ double *make_coeffs_2d(Field_T *const f,const unsigned dir1,const unsigned dir2)
 {
   assert(dir1 <= 2);
   assert(dir2 <= 2);
-  assert(strstr(f->info,"(3dim)"));
+  assert(strstr(f->attr,"(3dim)"));
     
   const unsigned N = f->patch->nn;
   int dir;
@@ -236,7 +240,7 @@ double *make_coeffs_3d(Field_T *const f)
   basis[1]       = f->patch->basis[1];
   basis[2]       = f->patch->basis[2];
   
-  assert(strstr(f->info,"(3dim)"));
+  assert(strstr(f->attr,"(3dim)"));
   
   if (IsAvailable_3d(f))
   {
@@ -307,15 +311,18 @@ static unsigned IsAvailable_1d(Field_T *const f,const unsigned dir)
   char needle[3][MAX_STR] = {'\0'};
   Flag_T flg = CLEAN;
   
-  /* if there is no coeffs */
-  if (!f->v2 || !f->info) return 0;
-  
   sprintf(needle[0],PR_FORMAT,pn,dir,collocation,basis);
   sprintf(needle[1],"p%u,d%u",pn,(dir+1)%3);
   sprintf(needle[2],"p%u,d%u",pn,3-dir-(dir+1)%3);
   
+  /* if there is no coeffs */
+  if (!f->v2 || !f->info) 
+  {
+    flg = CLEAN;
+    r = 0;
+  }
   /* if other direction exist one needs to clean coeffs */
-  if (strstr(f->info,needle[1]) || strstr(f->info,needle[2]))
+  else if (strstr(f->info,needle[1]) || strstr(f->info,needle[2]))
   {
     flg = CLEAN;
     r = 0;
@@ -334,8 +341,7 @@ static unsigned IsAvailable_1d(Field_T *const f,const unsigned dir)
   if (flg == CLEAN)
   {
     free_v2(f);
-    free(f->info);
-    f->info   = 0;
+    free_info(f);
   }
   
   return r;
@@ -363,9 +369,6 @@ static unsigned IsAvailable_2d(Field_T *const f,const unsigned dir1,const unsign
   basis[dir1]       = patch->basis[dir1];
   basis[dir2]       = patch->basis[dir2];
   
-  /* if there is no coeffs */
-  if (!f->v2 || !f->info) return 0;
-
   sprintf(needle[0],PR_FORMAT,pn,dir1,collocation[dir1],basis[dir1]);
   sprintf(needle[1],"p%u,d%u",pn,(dir1+1)%3);
   sprintf(needle[2],"p%u,d%u",pn,3-dir1-(dir1+1)%3);
@@ -373,8 +376,14 @@ static unsigned IsAvailable_2d(Field_T *const f,const unsigned dir1,const unsign
   sprintf(needle[4],"p%u,d%u",pn,(dir2+1)%3);
   sprintf(needle[5],"p%u,d%u",pn,3-dir2-(dir2+1)%3);
   
+  /* if there is no coeffs */
+  if (!f->v2 || !f->info)
+  {
+    flg = CLEAN;
+    r = 0;
+  }
   /* if other direction exists one needs to clean coeffs */
-  if ( strstr(f->info,needle[1]) || strstr(f->info,needle[2]) || 
+  else if ( strstr(f->info,needle[1]) || strstr(f->info,needle[2]) || 
        strstr(f->info,needle[4]) || strstr(f->info,needle[5])   )
   {
     flg = CLEAN;
@@ -410,8 +419,7 @@ static unsigned IsAvailable_2d(Field_T *const f,const unsigned dir1,const unsign
   if (flg == CLEAN)
   {
     free_v2(f);
-    free(f->info);
-    f->info   = 0;
+    free_info(f);
   }
   
   return r;
@@ -428,6 +436,7 @@ static unsigned IsAvailable_3d(Field_T *const f)
   unsigned r = 0;
   unsigned pn = patch->pn;
   char needle[3][MAX_STR] = {'\0'};
+  Flag_T flg = CLEAN;
   
   collocation[0] = patch->collocation[0];
   collocation[1] = patch->collocation[1];
@@ -436,24 +445,29 @@ static unsigned IsAvailable_3d(Field_T *const f)
   basis[1]       = patch->basis[1];
   basis[2]       = patch->basis[2];
   
-  /* if there is no coeffs */
-  if (!f->v2 || !f->info) return 0;
-  
   sprintf(needle[0],PR_FORMAT,pn,0,collocation[0],basis[0]);
   sprintf(needle[1],PR_FORMAT,pn,1,collocation[1],basis[1]);
   sprintf(needle[2],PR_FORMAT,pn,2,collocation[2],basis[2]);
   
+  /* if there is no coeffs */
+  if (!f->v2 || !f->info)
+  {
+    flg = CLEAN;
+    r = 0;
+  }
+  
   /* if coeffs are ready */
-  if (strstr(f->info,needle[0]) && strstr(f->info,needle[1]) 
+  else if (strstr(f->info,needle[0]) && strstr(f->info,needle[1]) 
       && strstr(f->info,needle[2]))
   {
+    flg = NO;
     r = 1;
   }
-  else
+  
+  if (flg == CLEAN)
   {
     free_v2(f);
-    free(f->info);
-    f->info   = 0;
+    free_info(f);
     r = 0;
   }
   
