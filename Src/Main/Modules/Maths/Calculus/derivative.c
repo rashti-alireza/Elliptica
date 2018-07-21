@@ -71,8 +71,9 @@ static double *take_spectral_derivative(Field_T *const f,const Dd_T  *const dir_
   /* 3-D fields */
   if (strstr(f->attr,"(3dim)"))
   {
-    ff[0] = add_field("tmp1","(3dim)",f->patch,NO);
-    ff[1] = add_field("tmp2","(3dim)",f->patch,NO);
+    /* using weird name to be hard to have the same name for others */
+    ff[0] = add_field("$_____tmp1_____$","(3dim)",f->patch,NO);
+    ff[1] = add_field("$_____tmp2_____$","(3dim)",f->patch,NO);
     
     deriv = spectral_derivative_in1dir(f,dir_e[0]);
     ff[0]->v = deriv;

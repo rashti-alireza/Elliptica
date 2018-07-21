@@ -159,7 +159,9 @@ int LookUpField(const char *const name,Patch_T *const patch)
 double *make_coeffs_1d(Field_T *const f,const unsigned dir)
 {
   assert(f);
-  assert(dir <= 2);
+  assert(dir < 3);/* note that we cannot have more that 3 direction, 
+                  // since the grid is 3 dimension.
+                  */
   assert(strstr(f->attr,"(3dim)"));
   
   const unsigned N = f->patch->nn;
@@ -183,13 +185,17 @@ double *make_coeffs_1d(Field_T *const f,const unsigned dir)
 */
 double *make_coeffs_2d(Field_T *const f,const unsigned dir1,const unsigned dir2)
 {
-  assert(dir1 <= 2);
-  assert(dir2 <= 2);
+  assert(dir1 < 3);
+  assert(dir2 < 3);
   assert(strstr(f->attr,"(3dim)"));
+  
+  if (dir1 == dir2)
+    abortEr_s("What does it mean to have twice transformation "
+        "in the same direction for the field \"%s\"!\n",f->name);
     
   const unsigned N = f->patch->nn;
   int dir;
-  Field_T *f_tmp = add_field("f_tmp","(3dim)",f->patch,NO);
+  Field_T *f_tmp = add_field("$_____f_tmp____$","(3dim)",f->patch,NO);
   
   if (IsAvailable_2d(f,dir1,dir2,&dir))
   {
@@ -199,7 +205,9 @@ double *make_coeffs_2d(Field_T *const f,const unsigned dir1,const unsigned dir2)
     else/* it only make coeffs in dir since the other one in ready */
     {  
       f_tmp->v = f->v2;
-      /* since f_tmp->v2 is empty it will be made by the function below */
+      /* since f_tmp->v2 is empty we have to allocate memory for that */
+      f_tmp->v2 = alloc_double(N);
+
       f->v2 = find_1d_coeffs_in_patch(f_tmp,(unsigned)dir);
       free_v(f_tmp);
     }
@@ -267,8 +275,8 @@ double *make_coeffs_3d(Field_T *const f)
     }
     else
     {
-      Field_T *f_tmp1 = add_field("f_tmp1","(3dim)",f->patch,NO);
-      Field_T *f_tmp2 = add_field("f_tmp2","(3dim)",f->patch,NO);
+      Field_T *f_tmp1 = add_field("$______f_tmp1_____$","(3dim)",f->patch,NO);
+      Field_T *f_tmp2 = add_field("$______f_tmp2_____$","(3dim)",f->patch,NO);
  
       f_tmp1->v = find_1d_coeffs_in_patch(f,0);
       /* f_tmp1->v == f->v2 
@@ -360,8 +368,10 @@ static unsigned IsAvailable_2d(Field_T *const f,const unsigned dir1,const unsign
   Basis_T basis[3];
   unsigned r = 0;
   unsigned pn = f->patch->pn;
-  char needle[6][MAX_STR] = {'\0'};
-  Flag_T flg = CLEAN;
+  char needle[3][MAX_STR] = {'\0'};
+  unsigned DIR[3];
+  Dd_T e;
+  Flag_T flg = CLEAN, pristine = YES;
   
   *dir = INT_MAX;
   collocation[dir1] = patch->collocation[dir1];
@@ -369,12 +379,20 @@ static unsigned IsAvailable_2d(Field_T *const f,const unsigned dir1,const unsign
   basis[dir1]       = patch->basis[dir1];
   basis[dir2]       = patch->basis[dir2];
   
-  sprintf(needle[0],PR_FORMAT,pn,dir1,collocation[dir1],basis[dir1]);
-  sprintf(needle[1],"p%u,d%u",pn,(dir1+1)%3);
-  sprintf(needle[2],"p%u,d%u",pn,3-dir1-(dir1+1)%3);
-  sprintf(needle[3],PR_FORMAT,pn,dir2,collocation[dir2],basis[dir2]);
-  sprintf(needle[4],"p%u,d%u",pn,(dir2+1)%3);
-  sprintf(needle[5],"p%u,d%u",pn,3-dir2-(dir2+1)%3);
+  /* finding the unrelated directions */
+  for (e = 0 ; e < 3; ++e)
+  {
+    if (e == dir1 || e == dir2)
+    {
+      DIR[e] = 0;
+      sprintf(needle[e],PR_FORMAT,pn,e,collocation[e],basis[e]);
+    }
+    else
+    {
+      DIR[e] = 1;/* means unrelated direction */
+      sprintf(needle[e],"p%u,d%u",pn,e);
+    }
+  }
   
   /* if there is no coeffs */
   if (!f->v2 || !f->info)
@@ -382,39 +400,54 @@ static unsigned IsAvailable_2d(Field_T *const f,const unsigned dir1,const unsign
     flg = CLEAN;
     r = 0;
   }
-  /* if other direction exists one needs to clean coeffs */
-  else if ( strstr(f->info,needle[1]) || strstr(f->info,needle[2]) || 
-       strstr(f->info,needle[4]) || strstr(f->info,needle[5])   )
-  {
-    flg = CLEAN;
-    r = 0;
-  }
-  /* if coeffs is ready */
-  else if (strstr(f->info,needle[0]) && strstr(f->info,needle[3]))
-  {
-    flg = NO;
-    r = 1;
-    *dir = -1;
-  }
-  else if (strstr(f->info,needle[0]))
-  {
-    flg = NO;
-    r = 1;
-    *dir = (int)dir2;
-      
-  }
-  else if (strstr(f->info,needle[3]))
-  {
-    flg = NO;
-    r = 1;
-    *dir = (int)dir1;
-      
-  }
   else
   {
-    flg = CLEAN;
-    r = 0;
-  }
+    /* check the coeffs be pristine */
+    for (e = 0 ; e < 3; ++e)
+    {
+      /* for unrelated */
+      if (DIR[e])
+      {
+        /* if has unrelated */
+        if (strstr(f->info,needle[e]))
+        {
+          flg = CLEAN;
+          pristine = NO;
+          r = 0;
+          break;
+        }
+      }
+    }/* end of for (e = 0 ; e < 3; ++e) */
+    
+    if (pristine == YES)
+    {
+      if (strstr(f->info,needle[dir1]) && 
+          strstr(f->info,needle[dir2])   )
+      {
+        r = 1;
+        flg = NO;
+        *dir = -1;
+      }
+      else if (strstr(f->info,needle[dir1]))
+      {
+        r = 1;
+        flg = NO;
+        *dir = (int)dir2;
+      }
+      else if (strstr(f->info,needle[dir2]))
+      {
+        r = 1;
+        flg = NO;
+        *dir = (int)dir1;
+      }
+      else
+      {
+        flg = CLEAN;
+        r = 0;
+      }
+      
+    }/* end of if (pristine == YES) */
+  }/* end of else */
   
   if (flg == CLEAN)
   {
@@ -511,6 +544,8 @@ static double *find_1d_coeffs_in_patch(Field_T *const f,const unsigned dir)
 */
 static void coeffs_patch_Tn_Extrema_1d(Field_T *const f,const unsigned dir)
 {
+  assert(f->v2);
+  assert(f->v);
   double *const coeffs = f->v2;
   const double *const values = f->v;
   double *out, *in;

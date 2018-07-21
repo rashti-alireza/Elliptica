@@ -89,7 +89,10 @@ typedef enum DD_T
   _a_/* for Curvilinear 0-coord */,
   _b_/* for Curvilinear 1-coord */,
   _c_/* for Curvilinear 2-coord */,
-  UNDEFINED_DIR,
+  N_DD_T/* number of total DD_T*/,
+  UNDEFINED_DIR/* for referring to undefined Dd_T */,
+  _3_ = 3/* number three for tracking dimensions for different quantities */
+ 
 }Dd_T;
 
 /* *******************************************

@@ -156,7 +156,7 @@ int DerivativeTest(Grid_T *const grid)
     FOR_ALL_PATCHES(p,grid)
     {
       Patch_T *patch = grid->patch[p];
-      Field_T *df_num = add_field("Numerica_derivative","(3dim)",patch,NO);
+      Field_T *df_num = add_field("$Numerica_derivative_TEST_FUNCTION$","(3dim)",patch,NO);
       
       /* compute anac if any */
       for (e = FUNC; e < N_FUNC; ++e)
