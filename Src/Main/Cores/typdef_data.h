@@ -275,7 +275,7 @@ typedef struct GIRD_T
 */
 typedef struct NEEDLE_T
 {
-  double *x;
+  const double *x;
   Grid_T *grid;/* the grid which is used */
   unsigned *guess;/* these are guess patches searched firstly */
   unsigned *in;/* force it to look only inside these patches. */

@@ -7,7 +7,7 @@
 
 #define RES_EPS 1E-11
 
-/* find the point in patches given specified needle and fill
+/* find the point in patches given by needle and fill
 // the needle with the answers.
 // for more information about needle look at the typede_data.h in 
 // Core folder. for an example to how make needle look at grid.c and

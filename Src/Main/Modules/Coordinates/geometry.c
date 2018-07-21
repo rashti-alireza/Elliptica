@@ -1471,8 +1471,44 @@ double *normal_vec(Point_T *const point)
     normal_vec_Cartesian_coord(point);
   }
   else
-    abortEr("No Normal defined for such coordinate yet!\n");    
+    abortEr("No Normal defined for such coordinate yet!\n");
+  
+  /* make sure the normal is outward as well. */
+  make_it_outward(point);
   return point->N;
+}
+
+/* make sure the normal is outward. 
+// it checks if q = x+eps*N won't be found in the patch 
+// where the normal on its interface is being found.
+// if it finds then it will multiplies N by -1.
+*/
+static void make_it_outward(Point_T *const point)
+{
+  const double *const x = point->patch->node[point->ind]->x;
+  
+  double eps = rms(3,x,0)*EPS;
+  Needle_T *needle = alloc_needle();
+  const double *N = point->N;
+  double q[3];/* q = pnt+eps*N */
+  
+  eps = GRT(eps,EPS) ? eps : EPS;
+  q[0] = x[0]+eps*N[0];
+  q[1] = x[1]+eps*N[1];
+  q[2] = x[2]+eps*N[2];
+  needle->grid = point->patch->grid;
+  needle->x = q;
+  needle_in(needle,point->patch);
+  point_finder(needle);
+  
+  if (needle->Nans > 0)
+  {
+    point->N[0] *= -1;
+    point->N[1] *= -1;
+    point->N[2] *= -1;
+  }
+  
+  free_needle(needle);
 }
 
 /* finding normal for Cartesian coord */

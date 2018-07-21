@@ -1,7 +1,6 @@
 int make_patches(Grid_T *const grid);
 int realize_geometry(Grid_T *const grid);
 int X_of_x(double *const X,const double *const x,const Patch_T *const patch);
-double *make_collocation_1d(const Patch_T *const patch,const unsigned dir,const double min,const double max);
 double x_coord(const unsigned i,const Patch_T *const patch);
 double y_coord(const unsigned i,const Patch_T *const patch);
 double z_coord(const unsigned i,const Patch_T *const patch);

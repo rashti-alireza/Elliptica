@@ -97,11 +97,12 @@ static void make_nodes_Cartesian_coord(Patch_T *const patch)
 //	-> grid space = (max-min)/(n-1)
 //
 // o. Chebyshev_Extrema:
-//	mapping a line [min,max] to [-1,1] and then using Chebyshev extrema
+//	mapping a line [min,max] to [1,-1] and then using Chebyshev extrema
 //	in [0,Pi] to find the nodes on the line. the following map is used:
 // 	x = a*N+b = a*cos(t)+b i.e.
-//	x = 0.5*(max-min)*N + 0.5*(max+min) where x in [min,max] and N in [-1,1].
-// 	N = cos(t).
+//	x = 0.5*(-max+min)*N + 0.5*(max+min) where x in [min,max] and N in [-1,1].
+// 	N = cos(t). Note that the order of x and N are in reverse. the reason is that
+//	it x MUST increase by i. it's crucial for interface realization.
 //
 //	
 */
@@ -123,7 +124,7 @@ static void initialize_collocation_struct(const Patch_T *const patch,struct Coll
   }
   else if (coll_s->c == Chebyshev_Extrema)
   {
-    coll_s->a = 0.5*(coll_s->max-coll_s->min);
+    coll_s->a = 0.5*(-coll_s->max+coll_s->min);
     coll_s->b = 0.5*(coll_s->max+coll_s->min);
   }
   else
@@ -152,35 +153,6 @@ static double point(const unsigned i, const struct Collocation_s *const coll_s)
   else
     abortEr("There is no such collocation.\n");
   
-  return x;
-}
-
-/* making collocation point based on patch properties and direction
-// when x in [min,max].
-// Note: it allocates memory.
-//-> return value: collocations point for given patch and direction */
-double *make_collocation_1d(const Patch_T *const patch,const unsigned dir,const double min,const double max)
-{
-  const unsigned N = patch->n[dir];
-  double *const x = alloc_double(N);
-  unsigned i;
-  
-  assert (LSS(min, max));
-  
-  if (patch->collocation[dir] == EquiSpaced)
-    for (i = 0; i < N; i++)
-      x[i] = min+i*(max-min)/(N-1);
-  else if (patch->collocation[dir] == Chebyshev_Extrema)
-  {
-    double t0 = M_PI/(N-1);
-    for (i = 0; i < N; i++)
-    {
-      x[i] = 0.5*((max-min)*cos(i*t0)+(max+min));
-    }
-  }
-  else
-    abortEr("No such collocation exists.\n");
-
   return x;
 }
 
@@ -238,7 +210,7 @@ static double dN_dX(const Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,
   if (patch->collocation[q1_e%3] == Chebyshev_Extrema)
   {
     if (q2_e%3 == q1_e%3)
-      jN_X = 2.0/(patch->max[q1_e%3] -patch->min[q1_e%3]); 
+      jN_X = 2.0/(-patch->max[q1_e%3]+patch->min[q1_e%3]); 
     else
       jN_X = 0;
   }

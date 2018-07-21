@@ -299,7 +299,7 @@ static double *derivative_Chebyshev_Tn_in1dim(Field_T *const f,const Dd_T dir)
   const unsigned nn = total_nodes_patch(patch);
   const unsigned B = n[dir]-1;
   double *der = alloc_double(nn);
-  double *x = make_collocation_1d(patch,dir,-1,1);
+  double *x = make_1Dcollocation_ChebExtrema(n[dir]);
   const double *const coeffs = f->v2;
   unsigned l;
   
@@ -437,3 +437,18 @@ static void get_dp(const Patch_T *const patch,SpecDerivative_Func_T **func,const
   }
 }
 
+/* making collocation point for Chebyshev Extrema in [-1,1]
+// Note: it allocates memory.
+//-> return value: Chebyshev Extrema points
+*/
+static double *make_1Dcollocation_ChebExtrema(const unsigned N)
+{
+    const double t0 = M_PI/(N-1);
+    double *x = alloc_double(N);
+    unsigned i;
+    
+    for (i = 0; i < N; i++)
+      x[i] = cos(i*t0);
+
+  return x;
+}

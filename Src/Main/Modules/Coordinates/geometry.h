@@ -91,3 +91,4 @@ void check_houseK(const Patch_T *const patch);
 unsigned find_node(const double *const x, const Patch_T *const patch,Flag_T *const flg);
 unsigned node_onFace(const double *const x, const unsigned f,const Patch_T *const patch);
 int realize_geometry(Grid_T *const grid);
+static void make_it_outward(Point_T *const point);
