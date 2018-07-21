@@ -137,7 +137,7 @@ int LookUpField(const char *const name,Patch_T *const patch)
 }
 
 
-/* values -> 1-d coeffs for thr specified direction.
+/* values -> 1-d coeffs for the specified direction.
 // making coeffs of a field based on basis used for expansion.
 // arguments of function:
 // ======================

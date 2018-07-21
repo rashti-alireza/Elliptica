@@ -93,7 +93,7 @@ static double *take_spectral_derivative(Field_T *const f,const Dd_T  *const dir_
     /* free leftovers */
     remove_field(ff[0]);
     remove_field(ff[1]);
-  }/* end of if (f->dim == 3) */
+  }/* end of if (strstr(f->info,"(3dim)")) */
   else
     abortEr("No such Dimension is defined for this function.\n");
   
@@ -216,7 +216,6 @@ static double *spectral_derivative_in1dir(Field_T *const f,const Dd_T dir_e)
   Dd_T dp[3];/* see above explanation */
   double *df_dp[3];
   unsigned nn = total_nodes_patch(patch);
-  unsigned nc = patch->nc;
   unsigned i;
   Dd_T d;
   Flag_T flg[3];
@@ -239,7 +238,7 @@ static double *spectral_derivative_in1dir(Field_T *const f,const Dd_T dir_e)
   {
     OpenMP_1d_Pragma(omp parallel for)
     for (i = 0; i < nn; ++i)
-      der[i+nc] = df_dp[0][i]*dq2_dq1(patch,dp[0],dir_e,i) + 
+      der[i] = df_dp[0][i]*dq2_dq1(patch,dp[0],dir_e,i) + 
                   df_dp[1][i]*dq2_dq1(patch,dp[1],dir_e,i) +
                   df_dp[2][i]*dq2_dq1(patch,dp[2],dir_e,i);
   }
@@ -247,33 +246,33 @@ static double *spectral_derivative_in1dir(Field_T *const f,const Dd_T dir_e)
   {
     OpenMP_1d_Pragma(omp parallel for)
     for (i = 0; i < nn; ++i)
-      der[i+nc] = df_dp[0][i]*dq2_dq1(patch,dp[0],dir_e,i) + 
+      der[i] = df_dp[0][i]*dq2_dq1(patch,dp[0],dir_e,i) + 
                   df_dp[1][i]*dq2_dq1(patch,dp[1],dir_e,i);
   }
   else if (flg[1] == YES && flg[2] == YES)
   {
     OpenMP_1d_Pragma(omp parallel for)
     for (i = 0; i < nn; ++i)
-      der[i+nc] = df_dp[1][i]*dq2_dq1(patch,dp[1],dir_e,i) + 
+      der[i] = df_dp[1][i]*dq2_dq1(patch,dp[1],dir_e,i) + 
                   df_dp[2][i]*dq2_dq1(patch,dp[2],dir_e,i);
   }
   else if (flg[0] == YES)
   {
     OpenMP_1d_Pragma(omp parallel for)
     for (i = 0; i < nn; ++i)
-      der[i+nc] = df_dp[0][i]*dq2_dq1(patch,dp[0],dir_e,i);
+      der[i] = df_dp[0][i]*dq2_dq1(patch,dp[0],dir_e,i);
   }
   else if (flg[1] == YES)
   {
     OpenMP_1d_Pragma(omp parallel for)
     for (i = 0; i < nn; ++i)
-      der[i+nc] = df_dp[1][i]*dq2_dq1(patch,dp[1],dir_e,i); 
+      der[i] = df_dp[1][i]*dq2_dq1(patch,dp[1],dir_e,i); 
   }
   else if (flg[2] == YES)
   {
     OpenMP_1d_Pragma(omp parallel for)
     for (i = 0; i < nn; ++i)
-      der[i+nc] = df_dp[2][i]*dq2_dq1(patch,dp[2],dir_e,i); 
+      der[i] = df_dp[2][i]*dq2_dq1(patch,dp[2],dir_e,i); 
   }
 
 
