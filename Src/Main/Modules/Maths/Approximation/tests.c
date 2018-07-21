@@ -47,7 +47,7 @@ int DerivativeTest(Grid_T *const grid)
   add_func_Patch2Pdouble(&DataBase_func,ArgM(y_f));
   add_func_Patch2Pdouble(&DataBase_func,ArgM(z_f));
   add_func_Patch2Pdouble(&DataBase_func,ArgM(sinx_f));*/
-  add_func_Patch2Pdouble(&DataBase_func,ArgM(poly3_f));
+  add_func_Patch2Pdouble(&DataBase_func,ArgM(poly5_f));
   //add_func_Patch2Pdouble(&DataBase_func,ArgM(r_f));
   add_func_Patch2Pdouble(&DataBase_func,ArgM(sinxyz_f));
 /*  add_func_Patch2Pdouble(&DataBase_func,ArgM(mix2_f));
@@ -76,16 +76,16 @@ int DerivativeTest(Grid_T *const grid)
   add_func_Patch2Pdouble(&DataBase_func,ArgM(sinx_f_xz));
   add_func_Patch2Pdouble(&DataBase_func,ArgM(sinx_f_yz));
   add_func_Patch2Pdouble(&DataBase_func,ArgM(sinx_f_xyz));*/
-  add_func_Patch2Pdouble(&DataBase_func,ArgM(poly3_f_x));
-  add_func_Patch2Pdouble(&DataBase_func,ArgM(poly3_f_y));
-  add_func_Patch2Pdouble(&DataBase_func,ArgM(poly3_f_z));
-  add_func_Patch2Pdouble(&DataBase_func,ArgM(poly3_f_xx));
-  add_func_Patch2Pdouble(&DataBase_func,ArgM(poly3_f_yy));
-  add_func_Patch2Pdouble(&DataBase_func,ArgM(poly3_f_zz));
-  add_func_Patch2Pdouble(&DataBase_func,ArgM(poly3_f_xy));
-  add_func_Patch2Pdouble(&DataBase_func,ArgM(poly3_f_xz));
-  add_func_Patch2Pdouble(&DataBase_func,ArgM(poly3_f_yz));
-  add_func_Patch2Pdouble(&DataBase_func,ArgM(poly3_f_xyz));
+  add_func_Patch2Pdouble(&DataBase_func,ArgM(poly5_f_x));
+  add_func_Patch2Pdouble(&DataBase_func,ArgM(poly5_f_y));
+  add_func_Patch2Pdouble(&DataBase_func,ArgM(poly5_f_z));
+  add_func_Patch2Pdouble(&DataBase_func,ArgM(poly5_f_xx));
+  add_func_Patch2Pdouble(&DataBase_func,ArgM(poly5_f_yy));
+  add_func_Patch2Pdouble(&DataBase_func,ArgM(poly5_f_zz));
+  add_func_Patch2Pdouble(&DataBase_func,ArgM(poly5_f_xy));
+  add_func_Patch2Pdouble(&DataBase_func,ArgM(poly5_f_xz));
+  add_func_Patch2Pdouble(&DataBase_func,ArgM(poly5_f_yz));
+  add_func_Patch2Pdouble(&DataBase_func,ArgM(poly5_f_xyz));
 /*  add_func_Patch2Pdouble(&DataBase_func,ArgM(r_f_x));
   add_func_Patch2Pdouble(&DataBase_func,ArgM(r_f_y));
   add_func_Patch2Pdouble(&DataBase_func,ArgM(r_f_z));
@@ -203,7 +203,7 @@ int DerivativeTest(Grid_T *const grid)
 static Flag_T read_F(sFunc_Patch2Pdouble_T **const F,sFunc_Patch2Pdouble_T **const DataBase_func,const enum FUNC_E fn)
 {
   const char *fname = DataBase_func[fn]->name;/* function name */
-  char fname_derivative[MAXSTR];/* e.g. poly3_f_xy */
+  char fname_derivative[MAXSTR];/* e.g. poly5_f_xy */
   enum FUNC_E e;
   Flag_T flg = NO;
   

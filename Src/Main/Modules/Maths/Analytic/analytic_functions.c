@@ -69,7 +69,7 @@ double *z_f(Patch_T *const patch)
 }
 
 /* f: patch -> x^3-y^3+z^3-x^2*y*z+z^2*y^2*x */
-double *poly3_f(Patch_T *const patch)
+double *poly5_f(Patch_T *const patch)
 {
   double *f = alloc_double(patch->nn);
   unsigned i;
@@ -802,8 +802,8 @@ double *sinxyz_f_xyz(Patch_T *const patch)
   return f;
 }
 
-/* f: patch -> d(poly3)_dx */
-double *poly3_f_x(Patch_T *const patch)
+/* f: patch -> d(poly5)_dx */
+double *poly5_f_x(Patch_T *const patch)
 {
   double *f = alloc_double(patch->nn);
   unsigned i;
@@ -813,8 +813,8 @@ double *poly3_f_x(Patch_T *const patch)
   return f;
 }
 
-/* f: patch -> d(poly3)_dy */
-double *poly3_f_y(Patch_T *const patch)
+/* f: patch -> d(poly5)_dy */
+double *poly5_f_y(Patch_T *const patch)
 {
   double *f = alloc_double(patch->nn);
   unsigned i;
@@ -824,8 +824,8 @@ double *poly3_f_y(Patch_T *const patch)
   return f;
 }
 
-/* f: patch -> d(poly3)_dz */
-double *poly3_f_z(Patch_T *const patch)
+/* f: patch -> d(poly5)_dz */
+double *poly5_f_z(Patch_T *const patch)
 {
   double *f = alloc_double(patch->nn);
   unsigned i;
@@ -835,8 +835,8 @@ double *poly3_f_z(Patch_T *const patch)
   return f;
 }
 
-/* f: patch -> d(poly3)_dxx */
-double *poly3_f_xx(Patch_T *const patch)
+/* f: patch -> d(poly5)_dxx */
+double *poly5_f_xx(Patch_T *const patch)
 {
   double *f = alloc_double(patch->nn);
   unsigned i;
@@ -846,8 +846,8 @@ double *poly3_f_xx(Patch_T *const patch)
   return f;
 }
 
-/* f: patch -> d(poly3)_dyy */
-double *poly3_f_yy(Patch_T *const patch)
+/* f: patch -> d(poly5)_dyy */
+double *poly5_f_yy(Patch_T *const patch)
 {
   double *f = alloc_double(patch->nn);
   unsigned i;
@@ -857,8 +857,8 @@ double *poly3_f_yy(Patch_T *const patch)
   return f;
 }
 
-/* f: patch -> d(poly3)_dzz */
-double *poly3_f_zz(Patch_T *const patch)
+/* f: patch -> d(poly5)_dzz */
+double *poly5_f_zz(Patch_T *const patch)
 {
   double *f = alloc_double(patch->nn);
   unsigned i;
@@ -868,8 +868,8 @@ double *poly3_f_zz(Patch_T *const patch)
   return f;
 }
 
-/* f: patch -> d(poly3)_dxy */
-double *poly3_f_xy(Patch_T *const patch)
+/* f: patch -> d(poly5)_dxy */
+double *poly5_f_xy(Patch_T *const patch)
 {
   double *f = alloc_double(patch->nn);
   unsigned i;
@@ -879,8 +879,8 @@ double *poly3_f_xy(Patch_T *const patch)
   return f;
 }
 
-/* f: patch -> d(poly3)_dxz */
-double *poly3_f_xz(Patch_T *const patch)
+/* f: patch -> d(poly5)_dxz */
+double *poly5_f_xz(Patch_T *const patch)
 {
   double *f = alloc_double(patch->nn);
   unsigned i;
@@ -890,8 +890,8 @@ double *poly3_f_xz(Patch_T *const patch)
   return f;
 }
 
-/* f: patch -> d(poly3)_dyz */
-double *poly3_f_yz(Patch_T *const patch)
+/* f: patch -> d(poly5)_dyz */
+double *poly5_f_yz(Patch_T *const patch)
 {
   double *f = alloc_double(patch->nn);
   unsigned i;
@@ -901,8 +901,8 @@ double *poly3_f_yz(Patch_T *const patch)
   return f;
 }
 
-/* f: patch -> d(poly3)_dxyz */
-double *poly3_f_xyz(Patch_T *const patch)
+/* f: patch -> d(poly5)_dxyz */
+double *poly5_f_xyz(Patch_T *const patch)
 {
   double *f = alloc_double(patch->nn);
   unsigned i;
