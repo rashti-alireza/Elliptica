@@ -3,11 +3,11 @@
 // July 2018
 */
 
-#include "derivative.h"
+#include "derivatives.h"
 #define DELIMIT '|'
 #define COMMA ','
 
-/* derivative function. it does the task and return the result.
+/* partial derivative function. it does the task and return the result.
 // note: this function allocate memory for the result.
 //
 // list of available derivative methods:
@@ -28,9 +28,9 @@
 // => *task = "x DELIMIT Finite_Difference", DELIMIT is a macro defined above.
 // so for example if DELIMIT is | then *task = "x | Finite_Difference".
 //
-// ->return value: derivative of Field_T f accordingly, null for error.
+// ->return value: partial derivative of Field_T f accordingly, null for error.
 */
-double *Df(Field_T *const f,const char *task)
+double *Partial_Derivative(Field_T *const f,const char *task)
 {
   /* check up */
   if (!f)

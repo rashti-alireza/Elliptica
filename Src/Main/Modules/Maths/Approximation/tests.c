@@ -171,7 +171,7 @@ int DerivativeTest(Grid_T *const grid)
           df_num->v = anac[FUNC];
           free_v2(df_num);
           enum2str(e,der_s);
-          numc[e] = Df(df_num,der_s);
+          numc[e] = Partial_Derivative(df_num,der_s);
           flg = compare_derivative(F[e]->name,numc[e],anac[e],patch,path);
           free(anac[e]);
           free(numc[e]);

@@ -19,7 +19,7 @@ typedef enum METHOD_T
 /* function for taking spectral derivative */
 typedef double *SpecDerivative_Func_T(Field_T *const f,const Dd_T dir);
 
-double *Df(Field_T *const f,const char *task);
+double *Partial_Derivative(Field_T *const f,const char *task);
 static Method_T derivative_method(const char *const par,const char *const task);
 static Method_T str2enum_method(const char *const str);
 static Dd_T *derivative_direction(const char *const task,unsigned *const n);
