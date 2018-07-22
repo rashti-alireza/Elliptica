@@ -71,34 +71,228 @@ static double *take_spectral_derivative(Field_T *const f,const Dd_T  *const dir_
   /* 3-D fields */
   if (strstr(f->attr,"(3dim)"))
   {
-    /* using weird name to be hard to have the same name for others */
-    ff[0] = add_field("$_____tmp1_____$","(3dim)",f->patch,NO);
-    ff[1] = add_field("$_____tmp2_____$","(3dim)",f->patch,NO);
-    
-    deriv = spectral_derivative_in1dir(f,dir_e[0]);
-    ff[0]->v = deriv;
-    frd = 0;
-    for (i = 1; i < Ndir; ++i)
+    /* check if it is a second order derivative and it is
+    // possible to apply second oreder derivative formulas.
+    */
+    if (IsSecondOrderFormula(f,dir_e,Ndir))
+      deriv = spectral_derivative_2ndOrder(f,dir_e[0]);
+    else
     {
-      frd = i%2;
-      bck = i/2;
-      deriv = spectral_derivative_in1dir(ff[bck],dir_e[i]);
+      /* using weird name to be hard to have the same name for others */
+      ff[0] = add_field("$_____tmp1_____$","(3dim)",f->patch,NO);
+      ff[1] = add_field("$_____tmp2_____$","(3dim)",f->patch,NO);
       
-      /* make next ff ready */
-      ff[frd]->v = deriv;
-      free_v(ff[bck]);
-      free_v2(ff[bck]);
+      deriv = spectral_derivative_1stOrder(f,dir_e[0]);
+      ff[0]->v = deriv;
+      frd = 0;
+      for (i = 1; i < Ndir; ++i)
+      {
+        frd = i%2;
+        bck = i/2;
+        deriv = spectral_derivative_1stOrder(ff[bck],dir_e[i]);
+        
+        /* make next ff ready */
+        ff[frd]->v = deriv;
+        free_v(ff[bck]);
+        free_v2(ff[bck]);
+      }
+      
+      ff[frd]->v = 0;
+      /* free leftovers */
+      remove_field(ff[0]);
+      remove_field(ff[1]);
     }
-    
-    ff[frd]->v = 0;
-    /* free leftovers */
-    remove_field(ff[0]);
-    remove_field(ff[1]);
   }/* end of if (strstr(f->attr,"(3dim)")) */
   else
     abortEr("No such Dimension is defined for this function.\n");
   
   return deriv;
+}
+
+/* find out if one can apply second order derivative formula for
+// this derivative.
+// ->return value: 1 if applicable , 0 otherwise.
+*/
+static unsigned IsSecondOrderFormula(Field_T *const f,const Dd_T *const dir_e,const unsigned Ndir)
+{
+  unsigned r = 0;
+  SpecDerivative_Func_T *df[3];
+  Dd_T dp[3];
+  int c;
+  unsigned d;
+  
+  if (Ndir != 2)/* if it doesn't have 2 derivatives */
+    return 0;
+  else if (dir_e[0] != dir_e[1])/* if directions are not matched */
+    return 0;
+  else
+  {
+    get_SpecDerivative_func_2ndOrder(f->patch,df);
+    get_dp_2ndOrder(f->patch,df,dir_e[0],dp);
+    
+    c = -1;
+    for (d = 0; d < 3; ++d)
+    {
+      if (dp[d] != UNDEFINED_DIR)
+        c = (int)d;
+    }
+
+    /* since it is only depends on one directions
+    // so second order formula is likely applicable.
+    // further study required.
+    */
+    r = 0;
+    if (c != -1)
+    {
+      r = JacobianFormat_2ndOrder(f->patch,dir_e[0],dp[c]);
+    }
+  }
+  
+  return r;
+}
+
+/* study if the format of Jacobian is matched with second order derivative.
+// it must be like that: d^2f(X)/dX^2 = (dN/dX)^2 d^2f/dN^2. if the transformation
+// is not like that, Jacobian format is not matched.
+// ->return value: 1 if matches, 0 otherwise.
+*/
+static unsigned JacobianFormat_2ndOrder(const Patch_T *const patch,const Dd_T dir,Dd_T dp)
+{
+  unsigned r = 0;
+  
+  if (patch->coordsys == Cartesian)
+  {
+    if (dir%3 == dp%3)
+      r = 1;
+  }
+  else
+     abortEr("There is no coordinate defined for this function.\n");
+  
+  return r;
+}
+
+/* based on basis and collocation,
+// get the pertinent function for second order spectral derivative. 
+*/
+static void get_SpecDerivative_func_2ndOrder(const Patch_T *const patch,SpecDerivative_Func_T **func)
+{
+  unsigned i;
+  
+  for (i = 0; i < 3; ++i)
+  {
+    if (patch->basis[i] == Chebyshev_Tn_BASIS 
+        && patch->collocation[i] == Chebyshev_Extrema)
+    {
+      func[i] = derivative_Chebyshev_Tn_2ndOrder;
+    }
+    else
+      abortEr("There is no such basis or collocation defined for this function.\n");
+  }
+}
+
+/* based on second order spectral derivative function and dependencies 
+// it finds the Dd_T dp used for direction of partial derivative.
+*/
+static void get_dp_2ndOrder(const Patch_T *const patch,SpecDerivative_Func_T **func,const Dd_T dir,Dd_T *dp)
+{
+  unsigned depend[3];
+  unsigned i;
+  
+  get_dependency(patch,dir,depend);
+  
+  for (i = 0; i < 3; ++i)
+  {
+    dp[i] = UNDEFINED_DIR;
+    if (depend[i])/* if this direction depends on _a_,_b_,_c_ */
+    {
+      if (func[i] == derivative_Chebyshev_Tn_2ndOrder)
+        dp[i] = i;/* means _N0_or _N1_or _N2_ */
+      else
+        abortEr("There is no such derivative function defined for this function.\n");
+
+    }
+  }
+}
+
+/* taking second order 3-D spectral derivative in 
+// the specified direction dir_e on a patch determined by field.
+// it is worth explaining that some bases are expanded in 
+// different coordinate than x,y and z or a,b and c; for example Chebyshev Tn
+// which expanded in normal coords N0,N1 and N2. so in taking
+// derivative one needs to consider this. the variable being used
+// for this is "Dd_T dp[3]".
+// note: it allocates memory for resultant in each invoking.
+// note: second order means that: d^2f(x)/dx^2 = (dN/dx)^2 *d^2f(N)/dN^2
+// and one can take d^2f(N)/dN^2 by some special formula. for example:
+// in Chebyshev Tn we have d^2Tn(N)/d^2N = some knowm formula.
+// so one can take advantage of this to calculate the derivative.
+// ->return value: second order spectral derivative.
+*/
+static double *spectral_derivative_2ndOrder(Field_T *const f,const Dd_T dir_e)
+{
+  Patch_T *const patch = f->patch;
+  double *der = alloc_double(patch->nn);
+  SpecDerivative_Func_T *df[3];/* spectral derivative function in each direction */
+  Dd_T dp[3];/* see above explanation */
+  double *df_dp[3];
+  unsigned nn = total_nodes_patch(patch);
+  unsigned i ,c;
+  Dd_T d;
+  Flag_T flg[3];
+  
+  get_SpecDerivative_func_2ndOrder(patch,df);
+  get_dp_2ndOrder(patch,df,dir_e,dp);
+  
+  c = 0;
+  for (d = 0; d < 3; ++d)
+  {
+    flg[d] = NO;
+    df_dp[d] = 0;
+    if (dp[d] != UNDEFINED_DIR)
+    {
+      df_dp[d] = df[d](f,dp[d]);/* taking derivative with respect to dp[d] */
+      flg[d] = YES;
+      c++;
+    }
+  }
+  
+  /* since this is second order, we have to have only one direction */
+  assert(c == 1);
+  
+  if (flg[0] == YES)
+  {
+    OpenMP_1d_Pragma(omp parallel for)
+    for (i = 0; i < nn; ++i)
+    {
+      double j = dq2_dq1(patch,dp[0],dir_e,i);
+      der[i] = df_dp[0][i]*SQR(j);
+    }
+  }
+  else if (flg[1] == YES)
+  {
+    OpenMP_1d_Pragma(omp parallel for)
+    for (i = 0; i < nn; ++i)
+    {
+      double j = dq2_dq1(patch,dp[1],dir_e,i);
+      der[i] = df_dp[1][i]*SQR(j);
+    }
+  }
+  else if (flg[2] == YES)
+  {
+    OpenMP_1d_Pragma(omp parallel for)
+    for (i = 0; i < nn; ++i)
+    {
+      double j = dq2_dq1(patch,dp[2],dir_e,i);
+      der[i] = df_dp[2][i]*SQR(j); 
+    }
+  }
+
+
+  for (d = 0; d < 3; ++d)
+    if (df_dp[d])
+      free(df_dp[d]);
+  
+  return der;
 }
 
 /* finding all of types of derivatives and put them into 
@@ -209,7 +403,7 @@ static Dd_T str2enum_direction(const char *const str)
 // note: it allocates memory for resultant in each invoking.
 // ->return value: sepctral derivative.
 */
-static double *spectral_derivative_in1dir(Field_T *const f,const Dd_T dir_e)
+static double *spectral_derivative_1stOrder(Field_T *const f,const Dd_T dir_e)
 {
   Patch_T *const patch = f->patch;
   double *der = alloc_double(patch->nn);
@@ -221,8 +415,8 @@ static double *spectral_derivative_in1dir(Field_T *const f,const Dd_T dir_e)
   Dd_T d;
   Flag_T flg[3];
   
-  get_SpecDerivative_func(patch,df);
-  get_dp(patch,df,dir_e,dp);
+  get_SpecDerivative_func_1stOrder(patch,df);
+  get_dp_1stOrder(patch,df,dir_e,dp);
   
   for (d = 0; d < 3; ++d)
   {
@@ -230,7 +424,7 @@ static double *spectral_derivative_in1dir(Field_T *const f,const Dd_T dir_e)
     df_dp[d] = 0;
     if (dp[d] != UNDEFINED_DIR)
     {
-      df_dp[d] = df[d](f,dp[d]);
+      df_dp[d] = df[d](f,dp[d]);/* taking derivative with respect to dp[d] */
       flg[d] = YES;
     }
   }
@@ -286,11 +480,10 @@ static double *spectral_derivative_in1dir(Field_T *const f,const Dd_T dir_e)
 
 /* taking derivative for f(N) = sum_{0}^{n-1}a_n*T_n(N), in the specified
 // patch.
-// note: it is 1 dim, and N is in [-1,1]. for 3-d one needs to combine these
-// with Jacobian transformation.
+// note: N is in [-1,1].
 // ->return value: df(N)/dN.
 */
-static double *derivative_Chebyshev_Tn_in1dim(Field_T *const f,const Dd_T dir)
+static double *derivative_Chebyshev_Tn_1stOrder(Field_T *const f,const Dd_T dir)
 {
   assert(dir <= _N2_);
   make_coeffs_1d(f,dir);
@@ -366,10 +559,91 @@ static double *derivative_Chebyshev_Tn_in1dim(Field_T *const f,const Dd_T dir)
   return der;
 }
 
+/* taking second order derivative for f(N) = sum_{0}^{n-1}a_n*T_n(N), in the specified
+// patch.
+// note: N is in [-1,1].
+// ->return value: d^2f(N)/d^2N.
+*/
+static double *derivative_Chebyshev_Tn_2ndOrder(Field_T *const f,const Dd_T dir)
+{
+  assert(dir <= _N2_);
+  make_coeffs_1d(f,dir);
+  
+  Patch_T *const patch = f->patch;
+  const unsigned *const n = patch->n;
+  const unsigned nn = total_nodes_patch(patch);
+  const unsigned B = n[dir]-1;
+  double *der = alloc_double(nn);
+  double *x = make_1Dcollocation_ChebExtrema(n[dir]);
+  const double *const coeffs = f->v2;
+  unsigned l;
+  
+  if (dir == 0)
+  {
+    OpenMP_2d_Pragma(omp parallel for)
+    for (l = 0; l < nn; ++l)
+    {
+      unsigned i,j,k;
+      unsigned c;
+      
+      IJK(l,n,&i,&j,&k);
+      
+      for (c = 3; c < B; ++c)
+      {
+        unsigned C = L(n,c,j,k);
+        der[l] += coeffs[C]*d2T_dx2((int)c,x[i]);
+      }
+      der[l] += 4*coeffs[L(n,2,j,k)];
+      der[l] *= 2;
+    }
+  }
+  else if (dir == 1)
+  {
+    OpenMP_2d_Pragma(omp parallel for)
+    for (l = 0; l < nn; ++l)
+    {
+      unsigned i,j,k;
+      unsigned c;
+      
+      IJK(l,n,&i,&j,&k);
+      
+      for (c = 3; c < B; ++c)
+      {
+        unsigned C = L(n,i,c,k);
+        der[l] += coeffs[C]*d2T_dx2((int)c,x[j]);
+      }
+      der[l] += 4*coeffs[L(n,i,2,k)];
+      der[l] *= 2;
+    }
+  }
+  else /* (dir == 2) */
+  {
+    OpenMP_2d_Pragma(omp parallel for)
+    for (l = 0; l < nn; ++l)
+    {
+      unsigned i,j,k;
+      unsigned c;
+      
+      IJK(l,n,&i,&j,&k);
+      
+      for (c = 3; c < B; ++c)
+      {
+        unsigned C = L(n,i,j,c);
+        der[l] += coeffs[C]*d2T_dx2((int)c,x[k]);
+      }
+      der[l] += 4*coeffs[L(n,i,j,2)];
+      der[l] *= 2;
+    }
+  }
+  free(x);
+  
+  return der;
+}
+
 /* based on basis and collocation,
 // get the pertinent function for spectral derivative. 
 */
-static void get_SpecDerivative_func(const Patch_T *const patch,SpecDerivative_Func_T **func)
+static void get_SpecDerivative_func_1stOrder(const Patch_T *const patch,SpecDerivative_Func_T **func)
 {
   unsigned i;
   
@@ -378,7 +652,7 @@ static void get_SpecDerivative_func(const Patch_T *const patch,SpecDerivative_Fu
     if (patch->basis[i] == Chebyshev_Tn_BASIS 
         && patch->collocation[i] == Chebyshev_Extrema)
     {
-      func[i] = derivative_Chebyshev_Tn_in1dim;
+      func[i] = derivative_Chebyshev_Tn_1stOrder;
     }
     else
       abortEr("There is no such basis or collocation defined for this function.\n");
@@ -408,7 +682,7 @@ static void get_dependency(const Patch_T *const patch,const Dd_T dir, unsigned *
   
   if (patch->coordsys == Cartesian)
   {
-    dep[dir%3] = 1;
+    dep[dir%3] = 1;/* means that for example _y_%3 = 1 = _b_ */
   }
   else
      abortEr("There is no coordinate defined for this function.\n");
@@ -417,7 +691,7 @@ static void get_dependency(const Patch_T *const patch,const Dd_T dir, unsigned *
 /* based on spectral derivative function and dependencies 
 // it finds the Dd_T dp used for direction of partial derivative.
 */
-static void get_dp(const Patch_T *const patch,SpecDerivative_Func_T **func,const Dd_T dir,Dd_T *dp)
+static void get_dp_1stOrder(const Patch_T *const patch,SpecDerivative_Func_T **func,const Dd_T dir,Dd_T *dp)
 {
   unsigned depend[3];
   unsigned i;
@@ -429,7 +703,7 @@ static void get_dp(const Patch_T *const patch,SpecDerivative_Func_T **func,const
     dp[i] = UNDEFINED_DIR;
     if (depend[i])/* if this direction depends on _a_,_b_,_c_ */
     {
-      if (func[i] == derivative_Chebyshev_Tn_in1dim)
+      if (func[i] == derivative_Chebyshev_Tn_1stOrder)
         dp[i] = i;/* means _N0_or _N1_or _N2_ */
       else
         abortEr("There is no such derivative function defined for this function.\n");
