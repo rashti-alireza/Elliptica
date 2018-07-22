@@ -9,6 +9,5 @@ long double rmsL(const unsigned long n, const double *const v2, const double *co
 double dot(const unsigned n, const double *const v2,const double *const v1);
 double ABS(const double v);
 double Cheb_U(const int n, const double x);
-
-
-
+double Cheb_Tn(const int n, const double x);
+double d2T_dx2(const int n, const double x);

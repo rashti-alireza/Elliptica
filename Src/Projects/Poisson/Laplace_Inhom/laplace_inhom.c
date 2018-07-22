@@ -5,7 +5,7 @@
 
 #include "laplace_inhom.h"
 
-  double *sinxyz_f(Patch_T *const patch);
+//double *sinxyz_f(Patch_T *const patch);
 int Laplace_Inhom(void)
 {
   Grid_T *grid;
