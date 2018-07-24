@@ -228,6 +228,9 @@ typedef struct Field_T
              // is dynamic.
              */
   struct PATCH_T *patch;/* refers to its patch which this field defined */
+  Point_T *point;/* refers to points needed for some purposes, 
+                 // like interpolation, among others.
+                 */
 }Field_T;
 
 /* patch */
