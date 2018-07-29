@@ -3,7 +3,7 @@
 // June 2018
 */
 
-#include "test_prints.h"
+#include "pr_for_tests.h"
 #define MAXSTR 400
 /* printing different quantities for test */
 /* ->return value: if print option is on return 1 otherwise 0 */
