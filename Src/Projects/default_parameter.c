@@ -21,7 +21,7 @@ void set_default_parameter(void)
 
 static void set_default(const char *const lhs,const char *const rhs)
 {
-  char *v;
+  const char *v;
   Parameter_T *par;
   
   par = get_parameter(lhs);

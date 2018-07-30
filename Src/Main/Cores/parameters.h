@@ -13,6 +13,6 @@ void make_directory(char **const path,const char *const name,const Flag_T flg);
 void set_default_parameter(void);
 int get_parameter_value_I(const char *const par_name,Flag_T *const flg);
 double get_parameter_value_D(const char *const par_name,Flag_T *const flg);
-char *get_parameter_value_S(const char *const par_name,Flag_T *const flg);
+const char *get_parameter_value_S(const char *const par_name,Flag_T *const flg);
 int make_parameters(const char *const path);
 

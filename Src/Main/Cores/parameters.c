@@ -105,7 +105,7 @@ double get_parameter_value_D(const char *const par_name,Flag_T *const flg)
 // value otherwise NONE value; unless flg = 0 which in this case
 // it won't get any value
 */
-char *get_parameter_value_S(const char *const par_name,Flag_T *const flg)
+const char *get_parameter_value_S(const char *const par_name,Flag_T *const flg)
 {
   char *v = 0;
   int i;
@@ -133,7 +133,8 @@ char *get_parameter_value_S(const char *const par_name,Flag_T *const flg)
 */
 int make_parameters(const char *const path)
 {
-  char folder[100]={'\0'}, *name;
+  char folder[100]={'\0'};
+  const char *name;
   Flag_T flg;
   
   read_input_file(path);

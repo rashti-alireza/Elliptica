@@ -7,7 +7,7 @@
 
 int main(int argn, char **argv)
 {
-  char *proj_name;
+  const char *proj_name;
   Project_T *proj;
   
   global_variables_init(argv[argn-1]);/* initiating global variables */

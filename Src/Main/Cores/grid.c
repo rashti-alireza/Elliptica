@@ -8,7 +8,7 @@
 /* making the patches which cover the grid */
 int make_patches(Grid_T *const grid)
 {
-  char *kind;
+  const char *kind;
   Flag_T flg;
   
   /* finding the kind of grid */

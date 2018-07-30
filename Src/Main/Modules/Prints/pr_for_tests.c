@@ -9,7 +9,7 @@
 /* ->return value: if print option is on return 1 otherwise 0 */
 int test_print(const Print_T f)
 {
-  char *on; 
+  const char *on; 
   
   switch(f)
   {
@@ -42,7 +42,8 @@ int test_print(const Print_T f)
 void pr_interfaces(const Grid_T *const grid)
 {
   FILE *f;
-  char str[MAXSTR]={'\0'}, *path;
+  char str[MAXSTR]={'\0'},*path;
+  const char *path_par;
   Interface_T **face;
   Node_T **node;
   SubFace_T *subf,*subf2;
@@ -69,10 +70,10 @@ void pr_interfaces(const Grid_T *const grid)
     N[i] = 0;
   }
   
-  path = get_parameter_value_S("output_directory_path",&flg);
+  path_par = get_parameter_value_S("output_directory_path",&flg);
   parameterEr(flg);
   
-  path = dup_s(path);
+  path = dup_s(path_par);
   make_directory(&path,"InterfaceInfo",YES);
   
   str[0] = '\0';
@@ -371,7 +372,8 @@ void pr_interfaces(const Grid_T *const grid)
 void pr_parameters(void)
 {
   FILE *f;
-  char dir[MAXSTR]={'\0'}, *path;
+  char dir[MAXSTR]={'\0'};
+  const char *path;
   int i = 0;
   Flag_T flg;
   
@@ -397,13 +399,14 @@ void pr_coords(const Grid_T *const grid)
 {
   FILE *f;
   char dir[MAXSTR]={'\0'}, *path;
+  const char *path_par;
   unsigned i = 0;
   Flag_T flg;
   
-  path = get_parameter_value_S("output_directory_path",&flg);
+  path_par = get_parameter_value_S("output_directory_path",&flg);
   parameterEr(flg);
   
-  path = dup_s(path);
+  path = dup_s(path_par);
   make_directory(&path,"Patches",YES);
   
   FOR_ALL(i,grid->patch)

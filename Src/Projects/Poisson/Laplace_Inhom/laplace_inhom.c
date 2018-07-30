@@ -9,7 +9,7 @@
 int Laplace_Inhom(void)
 {
   Grid_T *grid;
-  char *test;
+  const char *test;
   /* print clock */
   pr_clock();
   

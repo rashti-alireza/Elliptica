@@ -22,15 +22,16 @@ int DerivativeTest(Grid_T *const grid)
 {
   sFunc_Patch2Pdouble_T **DataBase_func;
   
+  const char *path_par;
   char *path;
   char der_s[MAXSTR];
   unsigned fi;
   Flag_T flg;
   
-  path = get_parameter_value_S("output_directory_path",&flg);
+  path_par = get_parameter_value_S("output_directory_path",&flg);
   parameterEr(flg);
 
-  path = dup_s(path);
+  path = dup_s(path_par);
   make_directory(&path,"DerivativeTest",YES);
 
   

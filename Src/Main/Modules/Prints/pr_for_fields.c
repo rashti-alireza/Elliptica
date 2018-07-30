@@ -11,10 +11,11 @@
 /* printing all the field designated in the input file */
 void pr_fields(const Grid_T *const grid)
 {
-  char *par4 = get_parameter_value_S("print_fields_4d",0);
-  char *par3 = get_parameter_value_S("print_fields_3d",0);
-  char *par2 = get_parameter_value_S("print_fields_2d",0);
+  const char *par4 = get_parameter_value_S("print_fields_4d",0);
+  const char *par3 = get_parameter_value_S("print_fields_3d",0);
+  const char *par2 = get_parameter_value_S("print_fields_2d",0);
   char **field_name = 0, **coord[3] = {0};
+  const char *path_par;
   char *folder = 0;
   unsigned nf = 0;/* number of fields */
   Flag_T flg;
@@ -23,10 +24,9 @@ void pr_fields(const Grid_T *const grid)
   /* 4d prints, i.e. field versus a,b,c */
   if (strstr_i(par4,"yes"))
   {
-    par4 = dup_s(par4);
-    folder = get_parameter_value_S("output_directory_path",&flg);
+    path_par = get_parameter_value_S("output_directory_path",&flg);
     parameterEr(flg);
-    folder = dup_s(folder);
+    folder = dup_s(path_par);
     make_directory(&folder,"Pr_Fields_3D",YES);
 
     get_field_vs_coords_3d(par4,&field_name,&coord[0],&coord[1],&coord[2],&nf);
@@ -46,7 +46,6 @@ void pr_fields(const Grid_T *const grid)
     free(coord[0]);
     free(coord[1]);
     free(coord[2]);
-    free(par4);
     free(folder);
   }
   /* 3d prints, i.e. ?*/
