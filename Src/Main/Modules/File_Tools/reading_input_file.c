@@ -19,9 +19,9 @@ void read_input_file(const char *const path)
   /* parsing and reading input file and making buffer */
   buff = make_buffer(input);
   
-  /*TEST_START
+  //TEST_START
     //printf("buff:\n%s\n",buff);
-  //end */
+  //end
   
   /* populating parameters */
   populate_parameters(buff);

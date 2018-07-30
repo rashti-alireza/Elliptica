@@ -402,6 +402,10 @@ void pr_coords(const Grid_T *const grid)
   
   path = get_parameter_value_S("output_directory_path",&flg);
   parameterEr(flg);
+  
+  path = dup_s(path);
+  make_directory(&path,"Patches",YES);
+  
   FOR_ALL(i,grid->patch)
   {
     Patch_T *patch = grid->patch[i];
@@ -420,7 +424,7 @@ void pr_coords(const Grid_T *const grid)
     
     fclose(f);
   }
-  
+  free(path);
 }
 
 /* adding s1 and s2 to archive to make their name 

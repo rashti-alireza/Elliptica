@@ -125,8 +125,9 @@ char *tok_s(char *const str,const char delimit,char **const savestr)
   if (str != 0) s = str;
   else 		s = *savestr;
   
-  /* return null if s is empty*/
+  /* return null if s is empty */
   if (!s) return 0;
+  if (s[0] == '\0')  return 0;
   
   l = (unsigned)strlen(s);
   assert(s[l] == '\0');/* make sure this string end with null char */

@@ -23,6 +23,10 @@ int Laplace_Inhom(void)
     DerivativeTest(grid);
   
   //test
+  pr_fields(grid);
+  //end
+  
+  //test
   //Patch_T *patch = grid->patch[0];
   //Field_T *df_num = add_field("Numerica_derivative","(3dim)",patch,NO);
   //df_num->v = sinxyz_f(patch);
