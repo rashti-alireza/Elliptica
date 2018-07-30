@@ -41,7 +41,7 @@ double *Partial_Derivative(Field_T *const f,const char *task)
     abortEr("The task is empty!\n");
 
   double *r = 0;
-  const char *der_par = get_parameter_value_S("Derivative_Method",0);
+  const char *der_par = GetParameterS("Derivative_Method");
   unsigned Ndir;
   Method_T method_e = derivative_method(der_par,task);
   Dd_T  *dir_e = derivative_direction(task,&Ndir);

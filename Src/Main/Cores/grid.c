@@ -9,11 +9,9 @@
 int make_patches(Grid_T *const grid)
 {
   const char *kind;
-  Flag_T flg;
   
   /* finding the kind of grid */
-  kind = get_parameter_value_S("grid_kind",&flg);
-  parameterEr(flg);
+  kind = GetParameterS_E("grid_kind");
   grid->kind = dup_s(kind);
   
   /* allocating and filling basics of patches */
@@ -59,7 +57,6 @@ static void fill_patches_Cartesian_grid(Grid_T *const grid)
   char name[20] = {'\0'};
   Collocation_T c;
   Basis_T b;
-  Flag_T flg;
   unsigned i;
   
   nc = 0;
@@ -88,17 +85,17 @@ static void fill_patches_Cartesian_grid(Grid_T *const grid)
     patch->name = dup_s(name);
     
     /* filling n */
-    n = (unsigned)get_parameter_value_I("all_Nabc",&flg);
-    if (flg != NONE)
+    n = (unsigned)GetParameterI_E("all_Nabc");
+    if (n != INT_MAX)
       patch->n[0] = patch->n[1] = patch->n[2] = n;
     /* check for override */
     make_keyword_parameter(&ret,name,"n");
-    n = (unsigned)get_parameter_value_I(ret.s0,&flg);
-    if (flg != NONE)	patch->n[0] = n;
-    n = (unsigned)get_parameter_value_I(ret.s1,&flg);
-    if (flg != NONE)	patch->n[1] = n;
-    n = (unsigned)get_parameter_value_I(ret.s2,&flg);
-    if (flg != NONE)	patch->n[2] = n;
+    n = (unsigned)GetParameterI_E(ret.s0);
+    if (n != INT_MAX)	patch->n[0] = n;
+    n = (unsigned)GetParameterI_E(ret.s1);
+    if (n != INT_MAX)	patch->n[1] = n;
+    n = (unsigned)GetParameterI_E(ret.s2);
+    if (n != INT_MAX)	patch->n[2] = n;
     
     assert(patch->n[0] && patch->n[1] && patch->n[2]);
     
@@ -107,21 +104,15 @@ static void fill_patches_Cartesian_grid(Grid_T *const grid)
     
     /* filling center */
     make_keyword_parameter(&ret,name,"center");
-    patch->c[0] = get_parameter_value_D(ret.s0,&flg);
-    parameterEr(flg);
-    patch->c[1] = get_parameter_value_D(ret.s1,&flg);
-    parameterEr(flg);
-    patch->c[2] = get_parameter_value_D(ret.s2,&flg);
-    parameterEr(flg);
+    patch->c[0] = GetParameterD_E(ret.s0);
+    patch->c[1] = GetParameterD_E(ret.s1);
+    patch->c[2] = GetParameterD_E(ret.s2);
     
     /* filling size */
     make_keyword_parameter(&ret,name,"size");
-    patch->s[0] = get_parameter_value_D(ret.s0,&flg);
-    parameterEr(flg);
-    patch->s[1] = get_parameter_value_D(ret.s1,&flg);
-    parameterEr(flg);
-    patch->s[2] = get_parameter_value_D(ret.s2,&flg);
-    parameterEr(flg);
+    patch->s[0] = GetParameterD_E(ret.s0);
+    patch->s[1] = GetParameterD_E(ret.s1);
+    patch->s[2] = GetParameterD_E(ret.s2);
     
     /* filling min: min = center-l/2 */
     patch->min[0] = patch->c[0]-patch->s[0]/2;
@@ -137,20 +128,20 @@ static void fill_patches_Cartesian_grid(Grid_T *const grid)
     patch->coordsys = Cartesian;
     
     /* collocation */
-    c = get_collocation(get_parameter_value_S("all_collocation",&flg));
-    if (flg != NONE)
+    c = get_collocation(GetParameterS("all_collocation"));
+    if (c != UNDEFINED_COLLOCATION)
       patch->collocation[0] = patch->collocation[1] = 
-          patch->collocation[2] = c;
+      patch->collocation[2] = c;
     /* check for override */
     make_keyword_parameter(&ret,name,"collocation");
-    c = get_collocation(get_parameter_value_S(ret.s0,&flg));
-    if (flg != NONE)
+    c = get_collocation(GetParameterS(ret.s0));
+    if (c != UNDEFINED_COLLOCATION)
       patch->collocation[0] = c;
-    c = get_collocation(get_parameter_value_S(ret.s1,&flg));
-    if (flg != NONE)
+    c = get_collocation(GetParameterS(ret.s1));
+    if (c != UNDEFINED_COLLOCATION)
       patch->collocation[1] = c;
-    c = get_collocation(get_parameter_value_S(ret.s2,&flg));
-    if (flg != NONE)
+    c = get_collocation(GetParameterS(ret.s2));
+    if (c != UNDEFINED_COLLOCATION)
       patch->collocation[2] = c;
     
     assert(patch->collocation[0] != UNDEFINED_COLLOCATION);
@@ -158,19 +149,19 @@ static void fill_patches_Cartesian_grid(Grid_T *const grid)
     assert(patch->collocation[2] != UNDEFINED_COLLOCATION);
     
     /* basis */
-    b = get_basis(get_parameter_value_S("all_basis",&flg));
-    if (flg != NONE)
+    b = get_basis(GetParameterS_E("all_basis"));
+    if ( b != UNDEFINED_BASIS)
       patch->basis[0] = patch->basis[1] = patch->basis[2] = b;
     /* check for override */
     make_keyword_parameter(&ret,name,"basis");
-    b = get_basis(get_parameter_value_S(ret.s0,&flg));
-    if (flg != NONE)
+    b = get_basis(GetParameterS(ret.s0));
+    if ( b != UNDEFINED_BASIS)
       patch->basis[0] = b;
-    b = get_basis(get_parameter_value_S(ret.s1,&flg));
-    if (flg != NONE)
+    b = get_basis(GetParameterS(ret.s1));
+    if ( b != UNDEFINED_BASIS)
       patch->basis[1] = b;
-    b = get_basis(get_parameter_value_S(ret.s2,&flg));
-    if (flg != NONE)
+    b = get_basis(GetParameterS(ret.s2));
+    if ( b != UNDEFINED_BASIS)
       patch->basis[2] = b;
     
     assert(patch->basis[0] != UNDEFINED_BASIS);

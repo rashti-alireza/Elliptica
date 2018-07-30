@@ -42,11 +42,10 @@ Parameter_T *get_parameter(const char *const par_name)
 
 /* having the parameter name,
 // it returns the INTEGER value of parameter.
-// note:  if the parameter is found the flg gets FOUND
-// value otherwise NONE value; unless flg = 0 which in this case
-// it won't get any value
+// if flag == FATAL and couldn't find the par_name, gives error.
+// ->return value: integer value of parameter.
 */
-int get_parameter_value_I(const char *const par_name,Flag_T *const flg)
+int get_parameter_value_I(const char *const par_name,const char *const file, const int line,const Flag_T flg)
 {
   int v = INT_MAX;
   int i;
@@ -57,25 +56,26 @@ int get_parameter_value_I(const char *const par_name,Flag_T *const flg)
   {
     if (strcmp_i(parameters_global[i]->lv,par_name))
     {
-        v = atoi(parameters_global[i]->rv);
-        f = FOUND;
+      v = atoi(parameters_global[i]->rv);
+      f = FOUND;
     }
     i++;
   }
   
-  if (flg != 0)
-    *flg = f;
-      
+  if (flg == FATAL && f != FOUND)
+  {
+    abort_error_string("Parameter %s couldn't be found.\n",par_name,file,line);
+  }
+
   return v;
 }
 
 /* having the parameter name,
 // it returns the DOUBLE value of parameter.
-// note:  if the parameter is found the flg gets FOUND
-// value otherwise NONE value; unless flg = 0 which in this case
-// it won't get any value
+// if flag == FATAL and couldn't find the par_name, gives error.
+// ->return value: double value of parameter.
 */
-double get_parameter_value_D(const char *const par_name,Flag_T *const flg)
+double get_parameter_value_D(const char *const par_name,const char *const file, const int line,const Flag_T flg)
 {
   double v = DBL_MAX;
   int i;
@@ -86,26 +86,26 @@ double get_parameter_value_D(const char *const par_name,Flag_T *const flg)
   {
     if (strcmp_i(parameters_global[i]->lv,par_name))
     {
-        v = strtod(parameters_global[i]->rv,0);
-        f = FOUND;
+      v = strtod(parameters_global[i]->rv,0);
+      f = FOUND;
     }
     i++;
   }
   
-  if (flg != 0)
-    *flg = f;
-        
+  if (flg == FATAL && f != FOUND)
+  {
+    abort_error_string("Parameter %s couldn't be found.\n",par_name,file,line);
+  }
+
   return v;
 }
 
-
 /* having the parameter name,
 // it returns the STRING value of parameter.
-// note:  if the parameter is found the flg gets FOUND
-// value otherwise NONE value; unless flg = 0 which in this case
-// it won't get any value
+// if flag == FATAL and couldn't find the par_name, gives error.
+// ->return value: string value of parameter.
 */
-const char *get_parameter_value_S(const char *const par_name,Flag_T *const flg)
+const char *get_parameter_value_S(const char *const par_name,const char *const file, const int line,const Flag_T flg)
 {
   char *v = 0;
   int i;
@@ -116,26 +116,28 @@ const char *get_parameter_value_S(const char *const par_name,Flag_T *const flg)
   {
     if (strcmp_i(parameters_global[i]->lv,par_name))
     {
-        v = parameters_global[i]->rv;
-        f = FOUND;
+      v = parameters_global[i]->rv;
+      f = FOUND;
     }
     i++;
   }
   
-  if (flg != 0)
-    *flg = f;
+  if (flg == FATAL && f != FOUND)
+  {
+    abort_error_string("Parameter %s couldn't be found.\n",par_name,file,line);
+  }
       
   return v;
 }
 
 /* reading the input file and make all of parameters 
-// with their defualt value to the data base 
+// with their default value to the data base 
 */
 int make_parameters(const char *const path)
 {
   char folder[100]={'\0'};
   const char *name;
-  Flag_T flg;
+  char *new_path;
   
   read_input_file(path);
   
@@ -146,14 +148,14 @@ int make_parameters(const char *const path)
   /* making a folder at the directory of 
   // input file with the name of "inputfile_output"
   // or with the given name in input file 
-  // and rewritting global_path with new directory path 
+  // and rewriting global_path with new directory path 
   */
-  name = get_parameter_value_S("output_directory_name",&flg);
-  parameterEr(flg);
+  name = GetParameterS_E("output_directory_name");
   sprintf(folder,"%s_output",name);
-  make_directory(&path_global,folder,YES);
-  
-  add_parameter("output_directory_path",path_global);
+  new_path = make_directory(path_global,folder);
+  free(path_global);
+  path_global = dup_s(new_path);
+  add_parameter("output_directory_path",new_path);
   
   /* printing parameters */
   if (test_print(PRINT_PARAMETERS))

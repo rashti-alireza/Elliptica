@@ -17,7 +17,7 @@ int main(int argn, char **argv)
   projects_data_base();/* add all of the desired projects 
                        // to the project data base */
   
-  proj_name = get_parameter_value_S("Project",0);
+  proj_name = GetParameterS("Project");
   proj = get_project(proj_name);
   
   /* check if the parameter file is correct and this project exists */

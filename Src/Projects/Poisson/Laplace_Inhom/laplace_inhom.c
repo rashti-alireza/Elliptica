@@ -18,12 +18,15 @@ int Laplace_Inhom(void)
   //Laplace_Inhom_pr_answer(grid);// printing found answer
   //Laplace_Inhom_clean_up(grid);// cleaning up
   
-  test = get_parameter_value_S("test_derivative",0);
+  test = GetParameterS("test_derivative");
   if (strstr_i(test,"yes"))
     DerivativeTest(grid);
   
   //test
-  pr_fields(grid);
+  const char *path_par = GetParameterS("output_directory_path");
+  char *folder = make_directory(path_par,"Pr_Fields_4D");
+  pr_fields(grid,"print_scalar_fields_4d",folder,0);
+  free(folder);
   //end
   
   //test

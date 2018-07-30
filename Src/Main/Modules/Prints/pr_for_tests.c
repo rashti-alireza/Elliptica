@@ -14,19 +14,19 @@ int test_print(const Print_T f)
   switch(f)
   {
     case PRINT_PARAMETERS:
-      on = get_parameter_value_S("print_parameters",0);
+      on = GetParameterS("print_parameters");
       if (on == 0) return 0;
       if (strcmp_i(on,"yes")|| strcmp_i(on,"y"))
         return 1;
       break;
     case PRINT_COORDS:
-      on = get_parameter_value_S("print_coords",0);
+      on = GetParameterS("print_coords");
       if (on == 0) return 0;
       if (strcmp_i(on,"yes")|| strcmp_i(on,"y"))
         return 1;
       break;
     case PRINT_INTERFACES:
-      on = get_parameter_value_S("print_interfaces",0);
+      on = GetParameterS("print_interfaces");
       if (on == 0) return 0;
       if (strcmp_i(on,"yes")|| strcmp_i(on,"y"))
         return 1;
@@ -47,7 +47,6 @@ void pr_interfaces(const Grid_T *const grid)
   Interface_T **face;
   Node_T **node;
   SubFace_T *subf,*subf2;
-  Flag_T flg;
   enum archive_e 
   {
     C = 0/* copy pair */,
@@ -62,6 +61,7 @@ void pr_interfaces(const Grid_T *const grid)
   struct Archive_S *arch[TOT_ARCH];
   unsigned N[TOT_ARCH];
   unsigned pa,fc,sf,i,j,n,save;
+  Flag_T flg;
   
   /* initializing */
   for (i = 0; i < TOT_ARCH; ++i)
@@ -70,11 +70,8 @@ void pr_interfaces(const Grid_T *const grid)
     N[i] = 0;
   }
   
-  path_par = get_parameter_value_S("output_directory_path",&flg);
-  parameterEr(flg);
-  
-  path = dup_s(path_par);
-  make_directory(&path,"InterfaceInfo",YES);
+  path_par = GetParameterS_E("output_directory_path");
+  path = make_directory(path_par,"InterfaceInfo");
   
   str[0] = '\0';
   sprintf(str,"%s/interface_pairings.rm",path);
@@ -375,10 +372,8 @@ void pr_parameters(void)
   char dir[MAXSTR]={'\0'};
   const char *path;
   int i = 0;
-  Flag_T flg;
   
-  path = get_parameter_value_S("output_directory_path",&flg);
-  parameterEr(flg);
+  path = GetParameterS_E("output_directory_path");
   sprintf(dir,"%s/parameters.out",path);
   f = fopen(dir,"w");
   pointerEr(f);
@@ -401,13 +396,9 @@ void pr_coords(const Grid_T *const grid)
   char dir[MAXSTR]={'\0'}, *path;
   const char *path_par;
   unsigned i = 0;
-  Flag_T flg;
   
-  path_par = get_parameter_value_S("output_directory_path",&flg);
-  parameterEr(flg);
-  
-  path = dup_s(path_par);
-  make_directory(&path,"Patches",YES);
+  path_par = GetParameterS_E("output_directory_path");
+  path = make_directory(path_par,"Patches");
   
   FOR_ALL(i,grid->patch)
   {
@@ -525,7 +516,7 @@ Flag_T pr_derivatives_DiffByNode(const double *const numc, const double *const a
   unsigned nn;
   unsigned p;
   double tol = ROUND_OFF_ERR;
-  const char *par = get_parameter_value_S("test_derivative",0);
+  const char *par = GetParameterS("test_derivative");
   char *save,*tol_s = dup_s(par);
   Flag_T flg = YES;
   

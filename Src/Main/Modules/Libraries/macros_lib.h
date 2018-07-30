@@ -11,7 +11,14 @@
 #define FOR_ALL_PATCHES(n,grid) for ((n) = 0; (n) < grid->np; ++(n))/* loop over all patches of the given grid */
 #define FOR_ALL_POINTS(n,patch) for ((n) = 0; (n) < patch->nn; ++(n))/* loop over all points of the given patch */
 #define FOR_ALL(x,y) for((x) = 0; y[x] != 0; (x)++)
-#define parameterEr(x) check_parameter(x,__FILE__,__LINE__)
+#define GetParameterS(x)   get_parameter_value_S(x,__FILE__,__LINE__,NONE)
+#define GetParameterI(x)   get_parameter_value_I(x,__FILE__,__LINE__,NONE)
+#define GetParameterD(x)   get_parameter_value_D(x,__FILE__,__LINE__,NONE)
+#define GetParameterS_E(x) get_parameter_value_S(x,__FILE__,__LINE__,FATAL)
+#define GetParameterI_E(x) get_parameter_value_I(x,__FILE__,__LINE__,FATAL)
+#define GetParameterD_E(x) get_parameter_value_D(x,__FILE__,__LINE__,FATAL)
+
+
 #define FOR_SURFACE(x,y,z,n0,n1,n2) (z) = (n2);for ((x) = 0; (x) < (n0); ++(x))\
                                             for ((y) = 0; (y) < (n1); ++(y))
 #define FOR_ijk(x,y,z,x_i,x_f,y_i,y_f,z_i,z_f) \

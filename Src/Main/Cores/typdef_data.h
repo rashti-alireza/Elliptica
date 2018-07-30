@@ -25,7 +25,8 @@ typedef enum FLAG_T
   INUSE,
   FOUND,
   CLEAN,
-  BRUTE_FORCE
+  BRUTE_FORCE,
+  FATAL
 }Flag_T;
 
 /* collocation */
@@ -297,3 +298,16 @@ typedef struct NEEDLE_T
   unsigned Nex;/* number of excluded patches */
   unsigned Ng;/* numbef of guess patches */
 }Needle_T;
+
+/* print field */
+typedef struct PR_FIELD_T
+{
+  const Grid_T *grid;
+  const char *par;
+  const char *folder;
+  const int cycle;
+  double time;
+  char **const field_name;
+  char **const coord[3];
+  int nf;/* number of fields */
+}Pr_Field_T;

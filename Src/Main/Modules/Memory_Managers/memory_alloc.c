@@ -127,13 +127,11 @@ static void alloc_patches_Cartesian_grid(Grid_T *const grid)
 {
   unsigned Nboxes;/* number of boxes */
   unsigned i;
-  Flag_T flg;
   
   if (get_parameter("number_of_boxes") == 0)
     abortEr("\"number_of_boxes\" parameter is not defined!\n");
     
-  Nboxes = (unsigned) get_parameter_value_I("number_of_boxes",&flg);
-  parameterEr(flg);
+  Nboxes = (unsigned) GetParameterI_E("number_of_boxes");
   
   grid->patch = calloc((Nboxes+1),sizeof(*grid->patch));
   pointerEr(grid->patch);
