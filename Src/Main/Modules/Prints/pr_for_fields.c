@@ -11,6 +11,7 @@
 #define DL_OP '('
 #define DL_CP ')'
 #define DL_C ','
+#define DL_B '|'
 
 /* given print parameter related to fields, the folder, and time = cycle,
 // it reads the parameter and the fields indicated there 
@@ -27,13 +28,13 @@ void pr_fields(Pr_Field_T *const pr)
   {
     read_parameter_4d(par4,pr);
     
-    if (strstr_i(par4,"Format:HDF5"))
+/*    if (strstr_i(par4,"Format:HDF5"))
     {
       pr_fields_on_grid_HDF5_4d(pr);
     }
     else
       abortEr("The print format for 4d print is "
-        "not recognized in the input-file.\n");
+        "not recognized in the input-file.\n");*/
     
     /* freeing */
     free_info_s(pr);
@@ -98,9 +99,9 @@ static void read_parameter_4d(const char *const par,Pr_Field_T *const pr)
   if (!strchr(tok,DL_OC) || !strchr(tok,DL_CC))
     abortEr("Incorrect parameter format.\n"
     "Print_Fields_4D must be written like:\n"
-      "Print_Fields_4D = yes: format:..,{(field1,field2,...)vs(x,y,z)}...\n");
+      "Print_Fields_4D = yes: format:..,{(field1,field2,...)vs(x,y,z)|coord}...\n");
   
-  /* sub_tok = (field1,field2,...)vs(x,y,z) */
+  /* sub_tok = (field1,field2,...)vs(x,y,z)|coord */
   sub_tok = sub_s(tok,DL_OC,DL_CC,&save);
   while (sub_tok)
   {
@@ -137,7 +138,8 @@ static void read_parameter_4d(const char *const par,Pr_Field_T *const pr)
     sprintf(Pinfo->axis[1],ss);
     ss = tok_s(0,DL_C,&savess); /*ss = c*/
     sprintf(Pinfo->axis[2],ss);
-    
+    ss = tok_s(0,DL_B,&savec);
+    sprintf(Pinfo->coord,ss);/* ss = coord */
     sub_tok = sub_s(0,DL_OC,DL_CC,&save);
     Ninfo++;
   }

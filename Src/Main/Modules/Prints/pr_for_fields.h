@@ -13,6 +13,7 @@ struct Info_S
 {
   char (*field)[MAX_STR_LEN];
   char axis[3][MAX_STR_LEN];
+  char coord[MAX_STR_LEN];
   unsigned nf;/* number of fields */
 };
 
