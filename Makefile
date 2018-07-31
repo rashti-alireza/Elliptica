@@ -26,6 +26,7 @@ DFLAGS = $(DEFFLAGS) #in MyConfig
 LDFLAGS  = -lumfpack -lblas -lgfortran -llapack
 LDFLAGS += -lfftw3
 LDFLAGS += -lm
+LDFLAGS += -lsiloh5
 
 ##Note: the following making object is very rudimentary
 ## I need to work on it more later

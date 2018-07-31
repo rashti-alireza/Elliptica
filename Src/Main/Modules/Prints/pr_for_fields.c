@@ -28,13 +28,13 @@ void pr_fields(Pr_Field_T *const pr)
   {
     read_parameter_4d(par4,pr);
     
-/*    if (strstr_i(par4,"Format:HDF5"))
+    if (strstr_i(par4,"Format:HDF5"))
     {
       pr_fields_on_grid_HDF5_4d(pr);
     }
     else
       abortEr("The print format for 4d print is "
-        "not recognized in the input-file.\n");*/
+        "not recognized in the input-file.\n");
     
     /* freeing */
     free_info_s(pr);
@@ -66,22 +66,139 @@ static void free_info_s(Pr_Field_T *const pr)
 
 }
 
-/* printing fields with HDF5 format using silo library
+/* printing fields with HDF5 format using silo library */
 static void pr_fields_on_grid_HDF5_4d(Pr_Field_T *const pr)
 {
-  DBfile *dbfile = 0;
+  const struct Info_S *const pr_info = pr->vptr;
+  const unsigned npr = pr->nobj;
   unsigned pa;
-  char file_name[MAX_STR_LEN];
   
-  FOR_ALL_PATCHES(pa,grid)
+  FOR_ALL_PATCHES(pa,pr->grid)
   {
-    unsigned i;
-    for (i = 0; i < nf; ++i)
+    Patch_T *patch = pr->grid->patch[pa];
+    DBfile *dbfile = 0;
+    char file_name[MAX_STR_LEN];
+    float *x = 0,*y = 0,*z = 0;
+    //float *a = 0,*b = 0,*c = 0;
+    unsigned i_pr;
+    Flag_T flg;
+    
+    /* printing type of coords */
+    flg = NONE;
+    for (i_pr = 0; i_pr < npr; ++i_pr)
     {
+      unsigned f;
+      if (strcmp_i(pr_info[i_pr].coord,"Cartesian"))
+      {
+        if (flg == NONE)
+        {
+          prepare_node_structured_mesh_3d_silo("Cartesian",patch,&x,&y,&z);
+          flg = FOUND;
+        }
+        
+        pr->a = x;
+        pr->b = y;
+        pr->c = z;
+        pr->patch = patch;
+        
+        for (f = 0; f < pr_info[i_pr].nf; ++f)
+        {
+          sprintf(file_name,"%s/%s.xyz.%s.%04d.silo",
+            pr->folder,pr_info[i_pr].field[f],patch->name,pr->cycle);
+          dbfile = DBCreate(file_name,DB_CLOBBER,DB_LOCAL,
+            "Printing Field on 3D mesh in HDF5 format using silo library",
+            DB_HDF5);
+          pointerEr(dbfile);
+          
+          pr->file = dbfile;
+          pr_structured_mesh_3d_silo(pr);
+          //pr_field_on_structured_mesh_3d_silo(pr);
+          DBClose(dbfile);
+        }
+          
+      }
+    }
+    if (flg == FOUND)
+      free_nodes_silo(x,y,z);
+      
+    //prepare_node_structured_mesh_3d_silo("Curvilinear",patch,&a,&b,&c);
+    
+    //free_nodes_silo(x,y,z);
+    //free_nodes_silo(a,b,c);
+  }
+}
+
+/* printing a 3d structured mesh using silo library */
+static void pr_structured_mesh_3d_silo(const Pr_Field_T *const pr)
+{
+  DBfile *dbfile = pr->file;
+  float *coords[] = {pr->a,pr->b,pr->c};
+  int dims[] = 
+    {(int)pr->patch->n[0],(int)pr->patch->n[1],(int)pr->patch->n[2]};
+  const int ndims = 3;
+  
+  DBPutQuadmesh(dbfile,pr->patch->name,0,coords,dims,ndims,DB_FLOAT,DB_NONCOLLINEAR,0);
+  
+}
+
+/* filling x,y,z value for each node for a structured mesh,
+// in compliance with what silo library needs. in fact, silo needs
+// x[k][j][i] for each coords and this 3D format maped 
+// like i+n0*(j+n1*k) to a 1D format.
+*/
+static void prepare_node_structured_mesh_3d_silo(const char *const type,const Patch_T *const patch,float **const x,float **const y,float **const z)
+{
+  float *a, *b, *c;
+  const unsigned n0 = patch->n[0];
+  const unsigned n1 = patch->n[1];
+  const unsigned nn = patch->nn;
+  unsigned i,j,k,n;
+  
+  a = malloc(nn*sizeof(*a));
+  pointerEr(a);
+  b = malloc(nn*sizeof(*b));
+  pointerEr(b);
+  c = malloc(nn*sizeof(*c));
+  pointerEr(c);
+  
+  if (strcmp_i(type,"Cartesian"))
+  {
+    for (n = 0; n < nn; ++n)
+    {
+      IJK(n,patch->n,&i,&j,&k);
+      a[i+n0*(j+n1*k)] = (float)patch->node[n]->x[0];
+      b[i+n0*(j+n1*k)] = (float)patch->node[n]->x[1];
+      c[i+n0*(j+n1*k)] = (float)patch->node[n]->x[2];
       
     }
   }
-}*/
+  else if (strcmp_i(type,"Curvilinear"))
+  {
+    for (n = 0; n < nn; ++n)
+    {
+      IJK(n,patch->n,&i,&j,&k);
+      a[i+n0*(j+n1*k)] = (float)patch->node[n]->X[0];
+      b[i+n0*(j+n1*k)] = (float)patch->node[n]->X[1];
+      c[i+n0*(j+n1*k)] = (float)patch->node[n]->X[2];
+
+    }
+  }
+  else
+    abortEr_s("There is no such type of coordinates"
+      " \"%s\"for printing.\n",type);
+  
+  *x = a;
+  *y = b;
+  *z = c;
+}
+
+/* freeing nodes for silo library */
+static void free_nodes_silo(float *x,float *y,float *z)
+{
+  if (x) free(x);
+  if (y) free(y);
+  if (z) free(z);
+}
 
 /* it reads the parameter to find out what and how it's going to be print.
 // given parameter it finds the name of all of the fields to be printed 

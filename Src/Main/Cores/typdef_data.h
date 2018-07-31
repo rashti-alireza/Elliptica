@@ -309,14 +309,10 @@ typedef struct PR_FIELD_T
   double time;
   unsigned nobj;/* number of general objects */
   void *vptr;/* points to general objects */
-  /****** flags *******/
-  /* if each of the following flags gets 1, the option related to
-  that flag will be turned on. by default they are all 0 but label_flg */
-  unsigned time_flg   : 1;/* time when this data happend */
-  unsigned cycle_flg  : 1;/* cycle at which this data happend */
-  unsigned sepf_flg   : 1;/* each cycle will be printed in seprate file */
-  unsigned vector_flg : 1;/* if it is multidimensional */
-  unsigned label_flg  : 1;/* lable of each axis */
-  unsigned unit_flg   : 1;/* unit of each axis */
-  unsigned double_flg : 1;/* double data type, default is float */
+  const Patch_T *patch;
+  void *a;/* a in double or float */
+  void *b;/* b in double or float */
+  void *c;/* c in double or float */
+  void *v;/* v in double or float */
+  void *file;/* file */
 }Pr_Field_T;

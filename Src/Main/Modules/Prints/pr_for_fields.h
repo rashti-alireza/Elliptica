@@ -25,3 +25,7 @@ Pr_Field_T *init_PrField(const Grid_T *const grid);
 void free_PrField(Pr_Field_T *pr);
 static void read_parameter_4d(const char *const par,Pr_Field_T *const pr);
 static void free_info_s(Pr_Field_T *const pr);
+static void pr_fields_on_grid_HDF5_4d(Pr_Field_T *const pr);
+static void pr_structured_mesh_3d_silo(const Pr_Field_T *const pr);
+static void prepare_node_structured_mesh_3d_silo(const char *const type,const Patch_T *const patch,float **const x,float **const y,float **const z);
+static void free_nodes_silo(float *x,float *y,float *z);
