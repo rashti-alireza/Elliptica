@@ -95,16 +95,18 @@ static void read_parameter_4d(const char *const par,Pr_Field_T *const pr)
   char *tok = dup_s(par);
   char *save = 0,*sub_tok = 0;
   unsigned Ninfo = 0;
+  
   /* check if parameter has been written correctly */
-  if (!strchr(tok,DL_OC) || !strchr(tok,DL_CC))
-    abortEr("Incorrect parameter format.\n"
-    "Print_Fields_4D must be written like:\n"
-      "Print_Fields_4D = yes: format:..,{(field1,field2,...)vs(x,y,z)|coord}...\n");
+  if (!check_format_s(tok,"?{(?)?(?,?,?)|?}?"))
+    abortEr(FORMAT_ER_PAR);
   
   /* sub_tok = (field1,field2,...)vs(x,y,z)|coord */
   sub_tok = sub_s(tok,DL_OC,DL_CC,&save);
   while (sub_tok)
   {
+    if (!check_format_s(sub_tok,"(?)?(?,?,?)|?"))
+      abortEr(FORMAT_ER_PAR);
+  
     char *savef = 0,*sub_tokf = 0;
     char *savec = 0,*sub_tokc = 0;
     char *savess = 0,*ss = 0;

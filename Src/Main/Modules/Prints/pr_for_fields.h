@@ -8,6 +8,9 @@
 #include "coordinates_lib.h"
 
 #define MAX_STR_LEN 500
+#define FORMAT_ER_PAR "Incorrect parameter format.\n"\
+    "Print_Fields_4D must be written like:\n"\
+      "Print_Fields_4D = yes: format:..,{(field1,field2,...)vs(x,y,z)|coord}...\n"
 
 struct Info_S
 {

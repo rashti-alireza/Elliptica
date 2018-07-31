@@ -5,6 +5,8 @@
 
 #include "text_tools.h"
 
+#define MAX_STR_LEN 400
+
 /* strcmp case insensitive
 // ->return value: 1 for success, 0 otherwise.
 */
@@ -184,4 +186,75 @@ char *sub_s(char *const str,const char d1,const char d2,char **const save)
   tok_s(sub2,d1,&sub); /* sub = (d1->\0+1)...(d2->\0) */
   
   return sub;
+}
+
+/* getting a format and string, find out if the string is in compliance
+// with the format. in case there are numbers of sub-strings with the
+// supposedly same format, it ONLY checks the first sub-string.
+// format is like: "{?(?)|?}" so it checks to see the string has all of the
+// delimits specified in the format. NOTE: ONLY DELIMITS MUST BE SPECIFIED.
+// WORDS are TO BE WRITTEN BY ?.
+// ->return value: 1 if in compliance, 0 otherwise.
+*/
+int check_format_s(const char *str,const char *const format)
+{
+  int r;
+  char (*delimits)[2];
+  char trim[MAX_STR_LEN]  = {'\0'}/* triming the format */,
+       trim2[MAX_STR_LEN] = {'\0'}/* triming the str */;
+  char *subs1,*subs2;/* make sure you check the first substring */
+  unsigned i,n;
+  
+  assert(str);
+  delimits = 0;
+  
+  n = 0;
+  i = 0;
+  while (format[i] != '\0')
+  {
+    if (format[i] != '?')
+    {
+      delimits = realloc(delimits,(n+1)*sizeof(*delimits));
+      pointerEr(delimits);
+      delimits[n][0] = format[i];
+      delimits[n][1] = '\0';
+      trim[n] = format[i];
+      trim[n+1] = '\0';
+      n++;
+    }
+    i++;
+  }
+  
+  subs1 = dup_s(str);
+  subs2 = strchr(subs1,delimits[n-1][0]);
+  subs2[1] = '\0';
+  str = subs1;
+  
+  r = 1;
+  for (i = 0; i < n; i++)
+  {
+    str = strchr(str,delimits[i][0]);
+    if (str == 0)
+    {
+      r = 0;
+      break;
+    }
+    else
+    {
+      trim2[i] = str[0];
+      trim2[i+1] = '\0';
+      str++;
+    }
+  }
+  
+  if (strcmp(trim,trim2))
+  {
+    r = 0;
+  }
+  
+  if (delimits)
+    free(delimits);
+  free(subs1);  
+  
+  return r;
 }
