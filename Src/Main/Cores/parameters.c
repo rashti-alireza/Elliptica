@@ -161,5 +161,7 @@ int make_parameters(const char *const path)
   if (test_print(PRINT_PARAMETERS))
     pr_parameters();
   
+  free(new_path);
+  
   return EXIT_SUCCESS;
 }

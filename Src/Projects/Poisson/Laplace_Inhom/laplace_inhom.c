@@ -10,6 +10,7 @@ int Laplace_Inhom(void)
 {
   Grid_T *grid;
   const char *test;
+  
   /* print clock */
   pr_clock();
   
@@ -25,8 +26,12 @@ int Laplace_Inhom(void)
   //test
   const char *path_par = GetParameterS("output_directory_path");
   char *folder = make_directory(path_par,"Pr_Fields_4D");
-  pr_fields(grid,"print_scalar_fields_4d",folder,0);
+  Pr_Field_T *pr = init_PrField(grid);
+  pr->folder = folder;
+  pr->par = "print_fields_4d";
+  pr_fields(pr);
   free(folder);
+  free_PrField(pr);
   //end
   
   //test

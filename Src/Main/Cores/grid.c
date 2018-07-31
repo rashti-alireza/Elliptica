@@ -90,11 +90,11 @@ static void fill_patches_Cartesian_grid(Grid_T *const grid)
       patch->n[0] = patch->n[1] = patch->n[2] = n;
     /* check for override */
     make_keyword_parameter(&ret,name,"n");
-    n = (unsigned)GetParameterI_E(ret.s0);
+    n = (unsigned)GetParameterI(ret.s0);
     if (n != INT_MAX)	patch->n[0] = n;
-    n = (unsigned)GetParameterI_E(ret.s1);
+    n = (unsigned)GetParameterI(ret.s1);
     if (n != INT_MAX)	patch->n[1] = n;
-    n = (unsigned)GetParameterI_E(ret.s2);
+    n = (unsigned)GetParameterI(ret.s2);
     if (n != INT_MAX)	patch->n[2] = n;
     
     assert(patch->n[0] && patch->n[1] && patch->n[2]);

@@ -18,7 +18,6 @@
 #define GetParameterI_E(x) get_parameter_value_I(x,__FILE__,__LINE__,FATAL)
 #define GetParameterD_E(x) get_parameter_value_D(x,__FILE__,__LINE__,FATAL)
 
-
 #define FOR_SURFACE(x,y,z,n0,n1,n2) (z) = (n2);for ((x) = 0; (x) < (n0); ++(x))\
                                             for ((y) = 0; (y) < (n1); ++(y))
 #define FOR_ijk(x,y,z,x_i,x_f,y_i,y_f,z_i,z_f) \

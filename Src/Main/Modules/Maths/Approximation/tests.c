@@ -26,6 +26,7 @@ int DerivativeTest(Grid_T *const grid)
   char *path;
   char der_s[MAXSTR];
   unsigned fi;
+  Flag_T flg;
   
   path_par = GetParameterS_E("output_directory_path");
   path = make_directory(path_par,"DerivativeTest");

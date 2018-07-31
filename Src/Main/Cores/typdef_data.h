@@ -305,9 +305,18 @@ typedef struct PR_FIELD_T
   const Grid_T *grid;
   const char *par;
   const char *folder;
-  const int cycle;
+  int cycle;
   double time;
-  char **const field_name;
-  char **const coord[3];
-  int nf;/* number of fields */
+  unsigned nobj;/* number of general objects */
+  void *vptr;/* points to general objects */
+  /****** flags *******/
+  /* if each of the following flags gets 1, the option related to
+  that flag will be turned on. by default they are all 0 but label_flg */
+  unsigned time_flg   : 1;/* time when this data happend */
+  unsigned cycle_flg  : 1;/* cycle at which this data happend */
+  unsigned sepf_flg   : 1;/* each cycle will be printed in seprate file */
+  unsigned vector_flg : 1;/* if it is multidimensional */
+  unsigned label_flg  : 1;/* lable of each axis */
+  unsigned unit_flg   : 1;/* unit of each axis */
+  unsigned double_flg : 1;/* double data type, default is float */
 }Pr_Field_T;

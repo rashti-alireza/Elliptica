@@ -108,8 +108,10 @@ char *dup_s(const char *const str)
 /* 
 // returning the first sub-string from str delimited by delimit
 // and make savestr points to the the rest of str after delimit.
-// note: savestr must not be null.
+// NOTE: savestr must not be null.
 // if str is 0 it uses savestr as the str.
+// if str starts from delimit it'll be ignored and search begins from
+// the next character.
 //->return value: point to substring delimited by delimit, if nothing 
 // is found point to NULL.
 */
@@ -137,6 +139,9 @@ char *tok_s(char *const str,const char delimit,char **const savestr)
   {
     ++s;
     --l;
+    flg = FOUND;
+    *savestr = s;
+    ps = s;
   }
   for (i = 0; i < l; i++)
   {
@@ -161,4 +166,22 @@ char *tok_s(char *const str,const char delimit,char **const savestr)
   }
     
   return ps;
+}
+
+/* taking out a portion of string delimited between d1 and d2.
+// at their first occurrences.
+// if str is 0 it uses savestr as the str.
+// NOTE: savestr must not be null.
+// ->return value: taken out substring and put the right leftover to save.
+*/
+char *sub_s(char *const str,const char d1,const char d2,char **const save)
+{
+  char *sub = 0;
+  char *sub2 = 0;
+  
+  /* str = ...d1...d2...\0 */
+  sub2 = tok_s(str,d2,save);/* sub2 = ...d1....(d2->\0)save */
+  tok_s(sub2,d1,&sub); /* sub = (d1->\0+1)...(d2->\0) */
+  
+  return sub;
 }
