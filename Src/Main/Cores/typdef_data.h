@@ -318,4 +318,5 @@ typedef struct PR_FIELD_T
   void *c;/* c in double or float */
   void *v;/* v in double or float */
   void *file;/* file */
+  void *file2;/* file */
 }Pr_Field_T;

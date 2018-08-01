@@ -227,6 +227,9 @@ int check_format_s(const char *str,const char *const format)
   
   subs1 = dup_s(str);
   subs2 = strchr(subs1,delimits[n-1][0]);
+  if (!subs2)
+    return 0;
+    
   subs2[1] = '\0';
   str = subs1;
   
