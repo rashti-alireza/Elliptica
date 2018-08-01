@@ -24,6 +24,19 @@ int Laplace_Inhom(void)
     DerivativeTest(grid);
   
   //test
+  unsigned p;
+  Field_T *x_ff;
+  Field_T *sinx_ff;
+  FOR_ALL_PATCHES(p,grid)
+  {
+    Patch_T *patch = grid->patch[p];
+    
+    x_ff = add_field("x_ff","(3dim)",patch,NO);
+    sinx_ff = add_field("sinx_ff","(3dim)",patch,NO);
+    x_ff->v = x_f(patch);
+    sinx_ff->v = sinx_f(patch);
+  }
+  
   const char *path_par = GetParameterS("output_directory_path");
   char *folder = make_directory(path_par,"Pr_Fields_4D");
   Pr_Field_T *pr = init_PrField(grid);
@@ -32,6 +45,15 @@ int Laplace_Inhom(void)
   pr_fields(pr);
   free(folder);
   free_PrField(pr);
+  
+  FOR_ALL_PATCHES(p,grid)
+  {
+    Patch_T *patch = grid->patch[p];
+    sinx_ff = patch->pool[Ind("sinx_ff")];
+    x_ff    = patch->pool[Ind("x_ff")];
+    remove_field(sinx_ff);
+    remove_field(x_ff);
+  }
   //end
   
   //test

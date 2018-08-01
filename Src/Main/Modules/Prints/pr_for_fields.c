@@ -15,7 +15,7 @@
 
 /* given print parameter related to fields, the folder, and time = cycle,
 // it reads the parameter and the fields indicated there 
-// and print the result in the specified folder.
+// and print the result in the specified folder over ALL GRID.
 */
 void pr_fields(Pr_Field_T *const pr)
 {
@@ -27,7 +27,6 @@ void pr_fields(Pr_Field_T *const pr)
   if (strstr_i(par4,"yes"))
   {
     read_parameter_4d(par4,pr);
-    
     if (strstr_i(par4,"Format:HDF5"))
     {
       pr_fields_on_grid_HDF5_4d(pr);
@@ -35,9 +34,6 @@ void pr_fields(Pr_Field_T *const pr)
     else
       abortEr("The print format for 4d print is "
         "not recognized in the input-file.\n");
-    
-    /* freeing */
-    free_info_s(pr);
     
   }/* end of if (strstr_i(par4,"yes")) */
   /* 3d prints, i.e. ?*/
@@ -53,14 +49,20 @@ void pr_fields(Pr_Field_T *const pr)
   
 }
 
+/* freeing info struct */
 static void free_info_s(Pr_Field_T *const pr)
 {
-  struct Info_S *info = pr->vptr;
+  struct Info_S *info = pr->group;
   unsigned i;
   
-  for (i = 0; i < pr->nobj; ++i)
+  for (i = 0; i < pr->ng; ++i)
   {
     free(info[i].field);
+    free(info[i].axis[0]);
+    free(info[i].axis[1]);
+    free(info[i].axis[2]);
+    free(info[i].coord);
+    
   }
   free(info);
 
@@ -69,8 +71,8 @@ static void free_info_s(Pr_Field_T *const pr)
 /* printing fields with HDF5 format using silo library */
 static void pr_fields_on_grid_HDF5_4d(Pr_Field_T *const pr)
 {
-  const struct Info_S *const pr_info = pr->vptr;
-  const unsigned npr = pr->nobj;
+  struct Info_S *const pr_info = pr->group;
+  const unsigned npr = pr->ng;
   unsigned pa;
   
   FOR_ALL_PATCHES(pa,pr->grid)
@@ -79,15 +81,14 @@ static void pr_fields_on_grid_HDF5_4d(Pr_Field_T *const pr)
     DBfile *dbfile = 0;
     char file_name[MAX_STR_LEN];
     float *x = 0,*y = 0,*z = 0;
-    //float *a = 0,*b = 0,*c = 0;
+    float *a = 0,*b = 0,*c = 0;
     unsigned i_pr;
     Flag_T flg;
     
-    /* printing type of coords */
+    /* printing Cartesian type */
     flg = NONE;
     for (i_pr = 0; i_pr < npr; ++i_pr)
     {
-      unsigned f;
       if (strcmp_i(pr_info[i_pr].coord,"Cartesian"))
       {
         if (flg == NONE)
@@ -96,36 +97,130 @@ static void pr_fields_on_grid_HDF5_4d(Pr_Field_T *const pr)
           flg = FOUND;
         }
         
+        /* opening a file to write in */
+        sprintf(file_name,"%s/%s.xyz.%s.%04d.silo",
+          pr->folder,pr_info[i_pr].field,patch->name,pr->cycle);
+        dbfile = DBCreate(file_name,DB_CLOBBER,DB_LOCAL,
+          "Printing Field on 3D mesh in HDF5 format using silo library",
+          DB_HDF5);
+        pointerEr(dbfile);
+        
+        /* setting up some options */
+        DBoptlist *opt = DBMakeOptlist(5);
+        DBAddOption(opt,DBOPT_XLABEL,(void *)pr_info[i_pr].axis[0]);
+        DBAddOption(opt,DBOPT_YLABEL,(void *)pr_info[i_pr].axis[1]);
+        DBAddOption(opt,DBOPT_ZLABEL,(void *)pr_info[i_pr].axis[2]);
+        DBAddOption(opt,DBOPT_DTIME,&pr->time);
+        DBAddOption(opt,DBOPT_CYCLE,&pr->cycle);
+
+        
+        /* setting up pr */
         pr->a = x;
         pr->b = y;
         pr->c = z;
         pr->patch = patch;
+        pr->opt_patch = opt;
+        pr->file = dbfile;
+        pr->vptr = &pr_info[i_pr];
+        /* printing mesh */
+        pr_structured_mesh_3d_silo(pr);
+        /* printing filed on mesh */
+        pr_field_on_structured_mesh_3d_silo(pr);
         
-        for (f = 0; f < pr_info[i_pr].nf; ++f)
-        {
-          sprintf(file_name,"%s/%s.xyz.%s.%04d.silo",
-            pr->folder,pr_info[i_pr].field[f],patch->name,pr->cycle);
-          dbfile = DBCreate(file_name,DB_CLOBBER,DB_LOCAL,
-            "Printing Field on 3D mesh in HDF5 format using silo library",
-            DB_HDF5);
-          pointerEr(dbfile);
-          
-          pr->file = dbfile;
-          pr_structured_mesh_3d_silo(pr);
-          //pr_field_on_structured_mesh_3d_silo(pr);
-          DBClose(dbfile);
-        }
-          
-      }
-    }
+        DBClose(dbfile);
+        DBFreeOptlist(opt);
+      }/* end of if (strcmp_i(pr_info[i_pr].coord,"Cartesian")) */
+    }/* end of for (i_pr = 0; i_pr < npr; ++i_pr) */
     if (flg == FOUND)
       free_nodes_silo(x,y,z);
-      
-    //prepare_node_structured_mesh_3d_silo("Curvilinear",patch,&a,&b,&c);
     
-    //free_nodes_silo(x,y,z);
-    //free_nodes_silo(a,b,c);
+    /* printing Curvilinear type */
+    flg = NONE;
+    for (i_pr = 0; i_pr < npr; ++i_pr)
+    {
+      if (strcmp_i(pr_info[i_pr].coord,"Curvilinear"))
+      {
+        if (flg == NONE)
+        {
+          prepare_node_structured_mesh_3d_silo("Curvilinear",patch,&a,&b,&c);
+          flg = FOUND;
+        }
+        
+        /* opening a file to write in */
+        sprintf(file_name,"%s/%s.abc.%s.%04d.silo",
+          pr->folder,pr_info[i_pr].field,patch->name,pr->cycle);
+        dbfile = DBCreate(file_name,DB_CLOBBER,DB_LOCAL,
+          "Printing Field on 3D mesh in HDF5 format using silo library",
+          DB_HDF5);
+        pointerEr(dbfile);
+        
+        /* setting up some options */
+        DBoptlist *opt = DBMakeOptlist(5);
+        DBAddOption(opt,DBOPT_XLABEL,(void *)pr_info[i_pr].axis[0]);
+        DBAddOption(opt,DBOPT_YLABEL,(void *)pr_info[i_pr].axis[1]);
+        DBAddOption(opt,DBOPT_ZLABEL,(void *)pr_info[i_pr].axis[2]);
+        DBAddOption(opt,DBOPT_DTIME,&pr->time);
+        DBAddOption(opt,DBOPT_CYCLE,&pr->cycle);
+        
+        /* setting up pr */
+        pr->a = a;
+        pr->b = b;
+        pr->c = c;
+        pr->patch = patch;
+        pr->opt_patch = opt;
+        pr->file = dbfile;
+        pr->vptr = &pr_info[i_pr];
+        /* printing mesh */
+        pr_structured_mesh_3d_silo(pr);
+        /* printing filed on mesh */
+        pr_field_on_structured_mesh_3d_silo(pr);
+        
+        DBClose(dbfile);
+        DBFreeOptlist(opt);
+      }/* end of if (strcmp_i(pr_info[i_pr].coord,"Curvilinear")) */
+    }/* end of for (i_pr = 0; i_pr < npr; ++i_pr) */
+    if (flg == FOUND)
+      free_nodes_silo(a,b,c);
+    
+  }/* end of FOR_ALL_PATCHES(pa,pr->grid) */
+}
+
+/* printing field on structured 3d mesh node centered format.
+// note data for silo library must be written in cloumn format,
+// i.e. 3d to 1d map is i+n0*(j+n1*k).
+*/
+static void pr_field_on_structured_mesh_3d_silo(const Pr_Field_T *const pr)
+{
+  DBfile *const dbfile = pr->file; 
+  const Patch_T *const patch = pr->patch;
+  struct Info_S *subg = pr->vptr;
+  float *data;
+  double *v;
+  const int nnodes = (int)total_nodes_patch(patch);
+  int dims[] = 
+    {(int)pr->patch->n[0],(int)pr->patch->n[1],(int)pr->patch->n[2]};
+  const int ndims = 3;
+  const int v_ind = Ind(subg->field);
+  unsigned i,j,k;
+  int l;
+  
+  if (v_ind < 0)
+    abortEr_s("There is no such field \"%s\" among the fields!\n",subg->field);
+  
+  data = malloc((long unsigned)nnodes*sizeof(*data));
+  pointerEr(data);
+  
+  v = patch->pool[v_ind]->v;
+  for (l = 0 ; l < nnodes; ++l)
+  {
+    IJK((unsigned)l,patch->n,&i,&j,&k);
+    data[i+(unsigned)dims[0]*(j+(unsigned)dims[1]*k)] = (float)v[l];
   }
+   
+  DBPutQuadvar1(dbfile,subg->field,pr->patch->name,
+    data,dims,ndims,0,0,DB_FLOAT,DB_NODECENT,0);
+  
+  free(data);
 }
 
 /* printing a 3d structured mesh using silo library */
@@ -137,7 +232,8 @@ static void pr_structured_mesh_3d_silo(const Pr_Field_T *const pr)
     {(int)pr->patch->n[0],(int)pr->patch->n[1],(int)pr->patch->n[2]};
   const int ndims = 3;
   
-  DBPutQuadmesh(dbfile,pr->patch->name,0,coords,dims,ndims,DB_FLOAT,DB_NONCOLLINEAR,0);
+  DBPutQuadmesh(dbfile,pr->patch->name,0,coords,dims,ndims,
+      DB_FLOAT,DB_NONCOLLINEAR,pr->opt_patch);
   
 }
 
@@ -204,7 +300,7 @@ static void free_nodes_silo(float *x,float *y,float *z)
 // given parameter it finds the name of all of the fields to be printed 
 // and the coordinates which these field evaluated on.
 // coords can be Cartesian x,y,z or Curvilinear a,b,c.
-// NOTE: fields are supposed to be written like {(field1,field2...)vs(a,b,c)}.
+// NOTE: fields are supposed to be written like {(field1)vs(a,b,c)|coord}.
 */
 static void read_parameter_4d(const char *const par,Pr_Field_T *const pr)
 {
@@ -217,8 +313,9 @@ static void read_parameter_4d(const char *const par,Pr_Field_T *const pr)
   if (!check_format_s(tok,"?{(?)?(?,?,?)|?}?"))
     abortEr(FORMAT_ER_PAR);
   
-  /* sub_tok = (field1,field2,...)vs(x,y,z)|coord */
+  
   sub_tok = sub_s(tok,DL_OC,DL_CC,&save);
+  /* => sub_tok = (field1)vs(x,y,z)|coord */
   while (sub_tok)
   {
     if (!check_format_s(sub_tok,"(?)?(?,?,?)|?"))
@@ -232,39 +329,27 @@ static void read_parameter_4d(const char *const par,Pr_Field_T *const pr)
     pointerEr(info_s);
     Pinfo = &info_s[Ninfo];
     Pinfo->field = 0;
-    Pinfo->nf = 0;
     
     /* getting field names */
-    sub_tokf = sub_s(sub_tok,DL_OP,DL_CP,&savef);/* sub_tokf = field1,field2,... */
-    ss = tok_s(sub_tokf,DL_C,&savess);/* ss = field1*/
-    while (ss)
-    {
-      Pinfo->field = 
-        realloc(Pinfo->field,(Pinfo->nf+1)*sizeof(*Pinfo->field));
-      pointerEr(Pinfo->field);
-      
-      sprintf(Pinfo->field[Pinfo->nf],ss);
-      
-      ss = tok_s(0,DL_C,&savess);
-      Pinfo->nf++;
-    }
+    sub_tokf = sub_s(sub_tok,DL_OP,DL_CP,&savef);/* => sub_tokf = field */
+    Pinfo->field = dup_s(sub_tokf);
     
     /* getting axis */
-    sub_tokc = sub_s(savef,DL_OP,DL_CP,&savec);/* sub_tokc = a,b,c */
-    ss = tok_s(sub_tokc,DL_C,&savess);/* ss = a*/
-    sprintf(Pinfo->axis[0],ss);
-    ss = tok_s(0,DL_C,&savess); /*ss = b*/
-    sprintf(Pinfo->axis[1],ss);
-    ss = tok_s(0,DL_C,&savess); /*ss = c*/
-    sprintf(Pinfo->axis[2],ss);
+    sub_tokc = sub_s(savef,DL_OP,DL_CP,&savec);/* => sub_tokc = a,b,c */
+    ss = tok_s(sub_tokc,DL_C,&savess);/* => ss = a */
+    Pinfo->axis[0] = dup_s(ss);
+    ss = tok_s(0,DL_C,&savess); /* => ss = b */
+    Pinfo->axis[1] = dup_s(ss);
+    ss = tok_s(0,DL_C,&savess); /* => ss = c */
+    Pinfo->axis[2] = dup_s(ss);
     ss = tok_s(0,DL_B,&savec);
-    sprintf(Pinfo->coord,ss);/* ss = coord */
+    Pinfo->coord = dup_s(ss);/* ss = coord */
     sub_tok = sub_s(0,DL_OC,DL_CC,&save);
     Ninfo++;
   }
   
-  pr->vptr = info_s;
-  pr->nobj = Ninfo;
+  pr->group = info_s;
+  pr->ng = Ninfo;
   
   free(tok);
 }
@@ -284,5 +369,6 @@ Pr_Field_T *init_PrField(const Grid_T *const grid)
 /* freeing Pr_Field_T */
 void free_PrField(Pr_Field_T *pr)
 {
+  free_info_s(pr);
   free(pr);
 }

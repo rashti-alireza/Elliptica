@@ -14,10 +14,9 @@
 
 struct Info_S
 {
-  char (*field)[MAX_STR_LEN];
-  char axis[3][MAX_STR_LEN];
-  char coord[MAX_STR_LEN];
-  unsigned nf;/* number of fields */
+  char *field;
+  char *axis[3];
+  char *coord;
 };
 
 void pr_fields(Pr_Field_T *const pr);
@@ -27,5 +26,6 @@ static void read_parameter_4d(const char *const par,Pr_Field_T *const pr);
 static void free_info_s(Pr_Field_T *const pr);
 static void pr_fields_on_grid_HDF5_4d(Pr_Field_T *const pr);
 static void pr_structured_mesh_3d_silo(const Pr_Field_T *const pr);
+static void pr_field_on_structured_mesh_3d_silo(const Pr_Field_T *const pr);
 static void prepare_node_structured_mesh_3d_silo(const char *const type,const Patch_T *const patch,float **const x,float **const y,float **const z);
 static void free_nodes_silo(float *x,float *y,float *z);

@@ -1,5 +1,6 @@
 #include "core_lib.h"
 #include "maths_approximation_lib.h"
+#include "maths_analytic_lib.h"
 
 int Laplace_Inhom(void);
 Grid_T *Laplace_Inhom_make_grid(void);

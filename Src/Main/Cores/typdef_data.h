@@ -303,13 +303,16 @@ typedef struct NEEDLE_T
 typedef struct PR_FIELD_T
 {
   const Grid_T *grid;
+  const Patch_T *patch;
   const char *par;
   const char *folder;
   int cycle;
   double time;
-  unsigned nobj;/* number of general objects */
-  void *vptr;/* points to general objects */
-  const Patch_T *patch;
+  unsigned ng;/* number of group */
+  void *group;/* points to a group for printing */
+  void *opt_patch;/* points to options for patch */
+  void *opt_field;/* points to options for field */
+  void *vptr;/* general pointer for different purposes */
   void *a;/* a in double or float */
   void *b;/* b in double or float */
   void *c;/* c in double or float */
