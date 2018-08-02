@@ -7,8 +7,12 @@
 #define DELIMIT '|'
 #define COMMA ','
 
-/* partial derivative function. it does the task and return the result.
-// note: this function allocate memory for the result.
+/* partial derivative function. it takes partial derivative for each field
+// according to the task and return the result. 
+// NOTE1 : each field has been defined on just one patch.
+// NOTE2 : this function also in case of spectral derivative makes the 
+// spectral coefficients and save them in f->v2;
+// NOTE3 : this function allocate memory for the result.
 //
 // list of available derivative methods:
 // =====================================
@@ -78,7 +82,7 @@ static double *take_spectral_derivative(Field_T *const f,const Dd_T  *const dir_
       deriv = spectral_derivative_2ndOrder(f,dir_e[0]);
     else
     {
-      /* using weird name to be hard to have the same name for others */
+      /* using weird name to be hard to have the same name with others */
       ff[0] = add_field("$_____tmp1_____$","(3dim)",f->patch,NO);
       ff[1] = add_field("$_____tmp2_____$","(3dim)",f->patch,NO);
       
@@ -215,7 +219,7 @@ static void get_dp_2ndOrder(const Patch_T *const patch,SpecDerivative_Func_T **f
 }
 
 /* taking second order 3-D spectral derivative in 
-// the specified direction dir_e on a patch determined by field.
+// the specified direction dir_e on the patch determined by field.
 // it is worth explaining that some bases are expanded in 
 // different coordinate than x,y and z or a,b and c; for example Chebyshev Tn
 // which expanded in normal coords N0,N1 and N2. so in taking
