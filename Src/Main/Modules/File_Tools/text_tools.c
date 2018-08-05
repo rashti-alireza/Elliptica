@@ -8,6 +8,7 @@
 #define MAX_STR_LEN 400
 
 /* strcmp case insensitive
+// note: if either of them is null 0 is returned.
 // ->return value: 1 for success, 0 otherwise.
 */
 int strcmp_i(const char *const s1, const char *const s2)
@@ -47,6 +48,7 @@ int strcmp_i(const char *const s1, const char *const s2)
 }
 
 /* strstr case insensitive
+// note: if either of them is null 0 is returned.
 // ->return value: 1 for found, 0 otherwise.
 */
 int strstr_i(const char *const s1, const char *const s2)
