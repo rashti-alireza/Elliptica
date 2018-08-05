@@ -3,7 +3,7 @@
 // July 2018
 */
 
-#include "fftw.h"
+#include "fourier_transformations.h"
 
 /* finding NORMALIZED coefficients of a function with Chebyshev basis of 
 // first kind expansion
