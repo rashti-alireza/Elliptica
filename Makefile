@@ -24,7 +24,7 @@ DFLAGS = $(DEFFLAGS) #in MyConfig
 
 #Linking Libraries
 LDFLAGS  = -lumfpack -lblas -lgfortran -llapack
-LDFLAGS += -lfftw3
+LDFLAGS += -lfftw3_omp -lfftw3
 LDFLAGS += -lm
 LDFLAGS += -lsiloh5
 
