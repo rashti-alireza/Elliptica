@@ -16,6 +16,8 @@ void set_default_parameter(void)
   // as the default value
   */
   set_default("output_directory_name",inputfile_name_global); 
+  set_default("Fourier_Transformation_Method","RFT"); 
+  
   
 }
 

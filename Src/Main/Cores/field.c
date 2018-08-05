@@ -546,6 +546,7 @@ static void coeffs_patch_Tn_Extrema_1d(Field_T *const f,const unsigned dir)
 {
   assert(f->v2);
   assert(f->v);
+  Fourier_Transformation_1d_F *FourierTrans;
   double *const coeffs = f->v2;
   const double *const values = f->v;
   double *out, *in;
@@ -554,6 +555,15 @@ static void coeffs_patch_Tn_Extrema_1d(Field_T *const f,const unsigned dir)
   unsigned l,i,j,k,s;
   out = alloc_double(n[dir]);
   in = alloc_double(n[dir]);
+  
+  if (strstr_i(GetParameterS("Fourier_Transformation_Method"),"RFT"))
+    FourierTrans = rft_1d_ChebyshevExtrema_coeffs;
+  else if (strstr_i(GetParameterS("Fourier_Transformation_Method"),"FFTW"))
+    abortEr("FFTW is not thread safe. If your are sure you won't wanna use it in \n"
+      "multi-thread environment, remove this abortEr and add\n"
+        " \"FourierTrans = rft_1d_ChebyshevExtrema_coeffs;\"\n");
+  else
+    abortEr("No such Fourier_Transformation_Method defined for this function.\n");
   
   if (dir == 0)
   {
@@ -568,7 +578,7 @@ static void coeffs_patch_Tn_Extrema_1d(Field_T *const f,const unsigned dir)
         l = L(n,i,j,k);
         in[i] = values[l];
       }
-      fftw_1d_ChebyshevExtrema_coeffs(in,out,n[dir]);
+      FourierTrans(in,out,n[dir]);
       
       for (i = 0; i < n[dir]; ++i)
       {
@@ -591,7 +601,7 @@ static void coeffs_patch_Tn_Extrema_1d(Field_T *const f,const unsigned dir)
         l = L(n,i,j,k);
         in[j] = values[l];
       }
-      fftw_1d_ChebyshevExtrema_coeffs(in,out,n[dir]);
+      FourierTrans(in,out,n[dir]);
       
       for (j = 0; j < n[dir]; ++j)
       {
@@ -614,7 +624,7 @@ static void coeffs_patch_Tn_Extrema_1d(Field_T *const f,const unsigned dir)
         l = L(n,i,j,k);
         in[k] = values[l];
       }
-      fftw_1d_ChebyshevExtrema_coeffs(in,out,n[dir]);
+      FourierTrans(in,out,n[dir]);
       
       for (k = 0; k < n[dir]; ++k)
       {
@@ -656,6 +666,9 @@ static void add_Tinfo(Field_T *const f,const unsigned dir,const Collocation_T co
 static unsigned Is3d_fft(const Collocation_T *collocation,const Basis_T *basis)
 {
   unsigned r = 0;
+  
+  if (!strstr_i(GetParameterS("Fourier_Transformation_Method"),"fftw"))
+    return 0;
   
   /* if all bases are the same type */
   if (basis[0] == basis[1] && basis[1] == basis[2])

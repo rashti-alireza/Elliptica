@@ -5,6 +5,8 @@
 #include "maths_general_lib.h"
 #include "maths_approximation_lib.h"
 
+typedef void Fourier_Transformation_1d_F(double *const values,double *const coeffs,const unsigned n);
+
 Field_T *add_field(const char *const name,const char *attribute,Patch_T *const patch,const Flag_T alloc_flg);
 void remove_field(Field_T *f);
 void add_attribute(Field_T *const fld,const char *const attribute);
