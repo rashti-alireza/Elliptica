@@ -250,3 +250,21 @@ double *alloc_double(const unsigned N)
   
   return d;
 }
+
+/* return value-> M[R][C] double type memory using calloc */
+double **alloc_matrix(const long unsigned R,const long unsigned C)
+{
+  double **M;
+  long unsigned row;
+  
+  M = calloc(R,sizeof(*M));
+  pointerEr(M);
+  
+  for (row = 0; row < R; ++row)
+  {
+    M[row] = calloc(C,sizeof(*M[row]));
+    pointerEr(M[row]);
+  }
+  
+  return M;
+}
