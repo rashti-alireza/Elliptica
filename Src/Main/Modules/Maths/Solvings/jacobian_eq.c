@@ -6,6 +6,65 @@
 #include "jacobian_eq.h"
 #define MAX_STR_LEN 100
 
+/* making Jacobian for equations at the inner mesh
+// types are pointers to string determining the type of jacobian
+// e.g. *types[3] = {"J_xx","J_y",0}.Note: the number of
+// types is found by null.
+*/
+void make_jacobian_eq(Grid_T *const grid, char **const types)
+{
+  Jacobian_eq_F *Jacobian;
+  double **J = 0;
+  JType_E jt_e;
+  unsigned i,p,nn;
+  
+  /* selecting Jacobian method for making of jacobian equation */
+  if (strcmp_i(GetParameterS_E("Making_Jacobian_Eq_Method"),"spectral"))
+    Jacobian = make_jacobian_spectral_method;
+  else
+    abortEr(INCOMPLETE_FUNC);
+  
+  i = 0;
+  while (types[i] != 0)
+  {
+    jt_e = str2enum(types[i]);
+    
+    FOR_ALL_PATCHES(p,grid)
+    {
+      Patch_T *patch = grid->patch[p];
+      nn = total_nodes_patch(patch);
+      J = alloc_matrix(nn,nn);
+      Jacobian(J,patch,jt_e);
+      
+      free_matrix(J,nn);
+    }
+  }
+}
+
+/* translating string to enum JType_E */
+static JType_E str2enum(const char *const str)
+{
+  JType_E jt_e = T_UNDEF;
+  
+  if (strcmp_i(str,"J_x"))
+    jt_e = T_x;
+  else if (strcmp_i(str,"J_xx"))
+    jt_e = T_xx;
+  else if (strcmp_i(str,"J_y"))
+    jt_e = T_y;
+  else if (strcmp_i(str,"J_yy"))
+    jt_e = T_yy;
+  else if (strcmp_i(str,"J_z"))
+    jt_e = T_z;
+  else if (strcmp_i(str,"J_zz"))
+    jt_e = T_zz;
+  else
+    abortEr(INCOMPLETE_FUNC);
+  
+  return jt_e;
+}
+
+/* making Jacobian equations using spectral method */
 static void make_jacobian_spectral_method(double **const J,Patch_T *const patch,JType_E jt_e)
 {
   switch(jt_e)

@@ -10,16 +10,23 @@
 /* Jacobian type */
 typedef enum JTYPE_E
 {
-  T_x,
-  T_xx,
-  T_y,
-  T_yy,
-  T_z,
-  T_zz
+  T_x/* df_x/df */,
+  T_xx/* df_xx/df */,
+  T_y/* df_y/df */,
+  T_yy/* df_yy/df */,
+  T_z/* df_z/df */,
+  T_zz/* df_zz/df */,
+  T_UNDEF
 }JType_E;
+
+/* Jacobain for equation */
+typedef void Jacobian_eq_F(double **const J,Patch_T *const patch,JType_E jt_e);
 
 static double SIGN[2] = {1.0,-1.0};
 
+void make_jacobian_eq(Grid_T *const grid, char **const types);
+static JType_E str2enum(const char *const str);
+static void make_jacobian_spectral_method(double **const J,Patch_T *const patch,JType_E jt_e);
 static void fill_jacobian_spectral_method_x(double **const j,Patch_T *const patch);
 static void fill_jacobian_spectral_method_xx(double **const j,Patch_T *const patch);
 static void fill_jacobian_spectral_method_y(double **const j,Patch_T *const patch);
