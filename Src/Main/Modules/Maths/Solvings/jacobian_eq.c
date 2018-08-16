@@ -556,13 +556,13 @@ static void JType_E2str(const JType_E e,char *const str)
       sprintf(str,"z");
       break;
     case T_xx:
-      sprintf(str,"xx");
+      sprintf(str,"x,x");
       break;
     case T_yy:
-      sprintf(str,"yy");
+      sprintf(str,"y,y");
       break;
     case T_zz:
-      sprintf(str,"zz");
+      sprintf(str,"z,z");
       break;
     default:
       abortEr(INCOMPLETE_FUNC);
