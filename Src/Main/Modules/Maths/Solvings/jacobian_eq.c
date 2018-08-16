@@ -21,6 +21,8 @@ void make_jacobian_eq(Grid_T *const grid, char **const types)
   /* selecting Jacobian method for making of jacobian equation */
   if (strcmp_i(GetParameterS_E("Making_Jacobian_Eq_Method"),"spectral"))
     Jacobian = make_jacobian_spectral_method;
+  else if (strcmp_i(GetParameterS_E("Making_Jacobian_Eq_Method"),"direct"))
+    Jacobian = make_jacobian_direct_method;
   else
     abortEr(INCOMPLETE_FUNC);
   
@@ -62,6 +64,382 @@ static JType_E str2enum(const char *const str)
     abortEr(INCOMPLETE_FUNC);
   
   return jt_e;
+}
+
+/* making Jacobian equations using direct method */
+static void make_jacobian_direct_method(double **const J,Patch_T *const patch,JType_E jt_e)
+{
+  switch(jt_e)
+  {
+    case T_x:
+      fill_jacobian_direct_method_x(J,patch);
+      break;
+    case T_xx:
+      fill_jacobian_direct_method_xx(J,patch);
+      break;
+    case T_y:
+      fill_jacobian_direct_method_y(J,patch);
+      break;
+    case T_yy:
+      fill_jacobian_direct_method_yy(J,patch);
+      break;
+    case T_z:
+      fill_jacobian_direct_method_z(J,patch);
+      break;
+    case T_zz:
+      fill_jacobian_direct_method_zz(J,patch);
+      break;
+    default:
+      abortEr("No such type for Jacobian defined!\n");
+  }
+}
+
+/* making Jacobian using direct method in direction x 
+// d(df(i,j,k)/dx)/df(l,m,n) = (d(f+df)/dx-df/dx)/df
+*/
+static void fill_jacobian_direct_method_x(double **const J, Patch_T *const patch)
+{
+  const unsigned num_thread = (unsigned)omp_get_num_threads();
+  Field_T **j;
+  const double EPS = 1E-7;
+  const double CONST = 1.0;
+  const unsigned nn = total_nodes_patch(patch);
+  unsigned lmn,tn;
+  char name[MAX_STR_LEN];
+  
+  j = malloc(num_thread*sizeof(*j));
+  pointerEr(j);
+  
+  /* adding a field for each thread */
+  for (tn = 0; tn < num_thread; ++tn)
+  {
+    sprintf(name,"j%d",tn);
+    j[tn] = add_field(name,"(3dim)",patch,YES);
+    
+    for (lmn = 0; lmn < nn; ++lmn)
+      j[tn]->v[lmn] = CONST;
+  }
+  
+  OpenMP_1d_Pragma(omp parallel for)
+  for (lmn = 0; lmn < nn; ++lmn)
+  {
+    Field_T *Jf = j[omp_get_thread_num()];
+    double *J_x = 0;
+    unsigned ijk;
+    
+    Jf->v[lmn] += EPS;   
+    J_x = Partial_Derivative(Jf,"x");
+    /* since it was added v2 and info in J_x we clean them 
+    // to avoid using them again for new data in next iteration
+    */
+    free_info(Jf);
+    free_v2(Jf);
+    
+    for (ijk = 0; ijk < nn; ++ijk)
+      J[ijk][lmn] = J_x[ijk]/EPS;
+      
+    free(J_x);
+    Jf->v[lmn] -= EPS;
+  }/* end of for (lmn = 0; lmn < nn; ++lmn) */
+  
+  /* removing field and freeing memories */
+  for (tn = 0; tn < num_thread; ++tn)
+  {
+    sprintf(name,"j%d",tn);
+    Field_T *f = patch->pool[Ind(name)];
+    remove_field(f);
+  }
+  free(j);
+}
+
+/* making Jacobian using direct method in direction xx 
+// d(d^2f(i,j,k)/dx^2)/df(l,m,n) = (d^2(f+df)/dx^2-d^2f/dx^2)/df
+*/
+static void fill_jacobian_direct_method_xx(double **const J, Patch_T *const patch)
+{
+  const unsigned num_thread = (unsigned)omp_get_num_threads();
+  Field_T **j;
+  const double EPS = 1E-7;
+  const double CONST = 1.0;
+  const unsigned nn = total_nodes_patch(patch);
+  unsigned lmn,tn;
+  char name[MAX_STR_LEN];
+  
+  j = malloc(num_thread*sizeof(*j));
+  pointerEr(j);
+  
+  /* adding a field for each thread */
+  for (tn = 0; tn < num_thread; ++tn)
+  {
+    sprintf(name,"j%d",tn);
+    j[tn] = add_field(name,"(3dim)",patch,YES);
+    
+    for (lmn = 0; lmn < nn; ++lmn)
+      j[tn]->v[lmn] = CONST;
+  }
+  
+  OpenMP_1d_Pragma(omp parallel for)
+  for (lmn = 0; lmn < nn; ++lmn)
+  {
+    Field_T *Jf = j[omp_get_thread_num()];
+    double *J_xx = 0;
+    unsigned ijk;
+    
+    Jf->v[lmn] += EPS;   
+    J_xx = Partial_Derivative(Jf,"xx");
+    /* since it was added v2 and info in J_xx we clean them 
+    // to avoid using them again for new data in next iteration
+    */
+    free_info(Jf);
+    free_v2(Jf);
+    
+    for (ijk = 0; ijk < nn; ++ijk)
+      J[ijk][lmn] = J_xx[ijk]/EPS;
+      
+    free(J_xx);
+    Jf->v[lmn] -= EPS;
+  }/* end of for (lmn = 0; lmn < nn; ++lmn) */
+  
+  /* removing field and freeing memories */
+  for (tn = 0; tn < num_thread; ++tn)
+  {
+    sprintf(name,"j%d",tn);
+    Field_T *f = patch->pool[Ind(name)];
+    remove_field(f);
+  }
+  free(j);
+}
+
+/* making Jacobian using direct method in direction y
+// d(df(i,j,k)/dy)/df(l,m,n) = (d(f+df)/dy-df/dy)/df
+*/
+static void fill_jacobian_direct_method_y(double **const J, Patch_T *const patch)
+{
+  const unsigned num_thread = (unsigned)omp_get_num_threads();
+  Field_T **j;
+  const double EPS = 1E-7;
+  const double CONST = 1.0;
+  const unsigned nn = total_nodes_patch(patch);
+  unsigned lmn,tn;
+  char name[MAX_STR_LEN];
+  
+  j = malloc(num_thread*sizeof(*j));
+  pointerEr(j);
+  
+  /* adding a field for each thread */
+  for (tn = 0; tn < num_thread; ++tn)
+  {
+    sprintf(name,"j%d",tn);
+    j[tn] = add_field(name,"(3dim)",patch,YES);
+    
+    for (lmn = 0; lmn < nn; ++lmn)
+      j[tn]->v[lmn] = CONST;
+  }
+  
+  OpenMP_1d_Pragma(omp parallel for)
+  for (lmn = 0; lmn < nn; ++lmn)
+  {
+    Field_T *Jf = j[omp_get_thread_num()];
+    double *J_y = 0;
+    unsigned ijk;
+    
+    Jf->v[lmn] += EPS;   
+    J_y = Partial_Derivative(Jf,"y");
+    /* since it was added v2 and info in J_y we clean them 
+    // to avoid using them again for new data in next iteration
+    */
+    free_info(Jf);
+    free_v2(Jf);
+    
+    for (ijk = 0; ijk < nn; ++ijk)
+      J[ijk][lmn] = J_y[ijk]/EPS;
+      
+    free(J_y);
+    Jf->v[lmn] -= EPS;
+  }/* end of for (lmn = 0; lmn < nn; ++lmn) */
+  
+  /* removing field and freeing memories */
+  for (tn = 0; tn < num_thread; ++tn)
+  {
+    sprintf(name,"j%d",tn);
+    Field_T *f = patch->pool[Ind(name)];
+    remove_field(f);
+  }
+  free(j);
+}
+
+/* making Jacobian using direct method in direction yy
+// d(d^2f(i,j,k)/dy^2)/df(l,m,n) = (d^2(f+df)/dy^2-d^2f/dy^2)/df
+*/
+static void fill_jacobian_direct_method_yy(double **const J, Patch_T *const patch)
+{
+  const unsigned num_thread = (unsigned)omp_get_num_threads();
+  Field_T **j;
+  const double EPS = 1E-7;
+  const double CONST = 1.0;
+  const unsigned nn = total_nodes_patch(patch);
+  unsigned lmn,tn;
+  char name[MAX_STR_LEN];
+  
+  j = malloc(num_thread*sizeof(*j));
+  pointerEr(j);
+  
+  /* adding a field for each thread */
+  for (tn = 0; tn < num_thread; ++tn)
+  {
+    sprintf(name,"j%d",tn);
+    j[tn] = add_field(name,"(3dim)",patch,YES);
+    
+    for (lmn = 0; lmn < nn; ++lmn)
+      j[tn]->v[lmn] = CONST;
+  }
+  
+  OpenMP_1d_Pragma(omp parallel for)
+  for (lmn = 0; lmn < nn; ++lmn)
+  {
+    Field_T *Jf = j[omp_get_thread_num()];
+    double *J_yy = 0;
+    unsigned ijk;
+    
+    Jf->v[lmn] += EPS;   
+    J_yy = Partial_Derivative(Jf,"yy");
+    /* since it was added v2 and info in J_yy we clean them 
+    // to avoid using them again for new data in next iteration
+    */
+    free_info(Jf);
+    free_v2(Jf);
+    
+    for (ijk = 0; ijk < nn; ++ijk)
+      J[ijk][lmn] = J_yy[ijk]/EPS;
+      
+    free(J_yy);
+    Jf->v[lmn] -= EPS;
+  }/* end of for (lmn = 0; lmn < nn; ++lmn) */
+  
+  /* removing field and freeing memories */
+  for (tn = 0; tn < num_thread; ++tn)
+  {
+    sprintf(name,"j%d",tn);
+    Field_T *f = patch->pool[Ind(name)];
+    remove_field(f);
+  }
+  free(j);
+}
+
+/* making Jacobian using direct method in direction z
+// d(df(i,j,k)/dz)/df(l,m,n) = (d(f+df)/dz-df/dz)/df
+*/
+static void fill_jacobian_direct_method_z(double **const J, Patch_T *const patch)
+{
+  const unsigned num_thread = (unsigned)omp_get_num_threads();
+  Field_T **j;
+  const double EPS = 1E-7;
+  const double CONST = 1.0;
+  const unsigned nn = total_nodes_patch(patch);
+  unsigned lmn,tn;
+  char name[MAX_STR_LEN];
+  
+  j = malloc(num_thread*sizeof(*j));
+  pointerEr(j);
+  
+  /* adding a field for each thread */
+  for (tn = 0; tn < num_thread; ++tn)
+  {
+    sprintf(name,"j%d",tn);
+    j[tn] = add_field(name,"(3dim)",patch,YES);
+    
+    for (lmn = 0; lmn < nn; ++lmn)
+      j[tn]->v[lmn] = CONST;
+  }
+  
+  OpenMP_1d_Pragma(omp parallel for)
+  for (lmn = 0; lmn < nn; ++lmn)
+  {
+    Field_T *Jf = j[omp_get_thread_num()];
+    double *J_z = 0;
+    unsigned ijk;
+    
+    Jf->v[lmn] += EPS;   
+    J_z = Partial_Derivative(Jf,"z");
+    /* since it was added v2 and info in J_z we clean them 
+    // to avoid using them again for new data in next iteration
+    */
+    free_info(Jf);
+    free_v2(Jf);
+    
+    for (ijk = 0; ijk < nn; ++ijk)
+      J[ijk][lmn] = J_z[ijk]/EPS;
+      
+    free(J_z);
+    Jf->v[lmn] -= EPS;
+  }/* end of for (lmn = 0; lmn < nn; ++lmn) */
+  
+  /* removing field and freeing memories */
+  for (tn = 0; tn < num_thread; ++tn)
+  {
+    sprintf(name,"j%d",tn);
+    Field_T *f = patch->pool[Ind(name)];
+    remove_field(f);
+  }
+  free(j);
+}
+
+/* making Jacobian using direct method in direction x 
+// d(d^2f(i,j,k)/dz^2)/df(l,m,n) = (d^2(f+df)/dz^2-d^2f/dz^2)/df
+*/
+static void fill_jacobian_direct_method_zz(double **const J, Patch_T *const patch)
+{
+  const unsigned num_thread = (unsigned)omp_get_num_threads();
+  Field_T **j;
+  const double EPS = 1E-7;
+  const double CONST = 1.0;
+  const unsigned nn = total_nodes_patch(patch);
+  unsigned lmn,tn;
+  char name[MAX_STR_LEN];
+  
+  j = malloc(num_thread*sizeof(*j));
+  pointerEr(j);
+  
+  /* adding a field for each thread */
+  for (tn = 0; tn < num_thread; ++tn)
+  {
+    sprintf(name,"j%d",tn);
+    j[tn] = add_field(name,"(3dim)",patch,YES);
+    
+    for (lmn = 0; lmn < nn; ++lmn)
+      j[tn]->v[lmn] = CONST;
+  }
+  
+  OpenMP_1d_Pragma(omp parallel for)
+  for (lmn = 0; lmn < nn; ++lmn)
+  {
+    Field_T *Jf = j[omp_get_thread_num()];
+    double *J_zz = 0;
+    unsigned ijk;
+    
+    Jf->v[lmn] += EPS;   
+    J_zz = Partial_Derivative(Jf,"zz");
+    /* since it was added v2 and info in J_zz we clean them 
+    // to avoid using them again for new data in next iteration
+    */
+    free_info(Jf);
+    free_v2(Jf);
+    
+    for (ijk = 0; ijk < nn; ++ijk)
+      J[ijk][lmn] = J_zz[ijk]/EPS;
+      
+    free(J_zz);
+    Jf->v[lmn] -= EPS;
+  }/* end of for (lmn = 0; lmn < nn; ++lmn) */
+  
+  /* removing field and freeing memories */
+  for (tn = 0; tn < num_thread; ++tn)
+  {
+    sprintf(name,"j%d",tn);
+    Field_T *f = patch->pool[Ind(name)];
+    remove_field(f);
+  }
+  free(j);
 }
 
 /* making Jacobian equations using spectral method */
