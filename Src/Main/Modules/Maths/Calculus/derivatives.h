@@ -20,6 +20,8 @@ typedef enum METHOD_T
 typedef double *SpecDerivative_Func_T(Field_T *const f,const Dd_T dir);
 
 double *Partial_Derivative(Field_T *const f,const char *task);
+Patch_T make_temp_patch(const Patch_T *const patch);
+void free_temp_patch(Patch_T *const patch);
 static Method_T derivative_method(const char *const par,const char *const task);
 static Method_T str2enum_method(const char *const str);
 static Dd_T *derivative_direction(const char *const task,unsigned *const n);

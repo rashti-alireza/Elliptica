@@ -6,6 +6,7 @@
 #include "derivatives.h"
 #define DELIMIT '|'
 #define COMMA ','
+#define MAX_STR_LEN 100
 
 /* partial derivative function. it takes partial derivative for each field
 // according to the task and return the result. 
@@ -68,6 +69,8 @@ static double *take_spectral_derivative(Field_T *const f,const Dd_T  *const dir_
   double *deriv = 0;
   Field_T *ff[2];
   unsigned bck,frd;
+  Patch_T p_tmp1 = make_temp_patch(f->patch);
+  Patch_T p_tmp2 = make_temp_patch(f->patch);
   unsigned i;
   
   assert(Ndir);
@@ -82,9 +85,8 @@ static double *take_spectral_derivative(Field_T *const f,const Dd_T  *const dir_
       deriv = spectral_derivative_2ndOrder(f,dir_e[0]);
     else
     {
-      /* using weird name to be hard to have the same name with others */
-      ff[0] = add_field("$_____tmp1_____$","(3dim)",f->patch,NO);
-      ff[1] = add_field("$_____tmp2_____$","(3dim)",f->patch,NO);
+      ff[0] = add_field("tmp1","(3dim)",&p_tmp1,NO);
+      ff[1] = add_field("tmp2","(3dim)",&p_tmp2,NO);
       
       deriv = spectral_derivative_1stOrder(f,dir_e[0]);
       ff[0]->v = deriv;
@@ -105,6 +107,9 @@ static double *take_spectral_derivative(Field_T *const f,const Dd_T  *const dir_
       /* free leftovers */
       remove_field(ff[0]);
       remove_field(ff[1]);
+      
+      free_temp_patch(&p_tmp1);
+      free_temp_patch(&p_tmp2);
     }
   }/* end of if (strstr(f->attr,"(3dim)")) */
   else
@@ -730,4 +735,55 @@ static double *make_1Dcollocation_ChebExtrema(const unsigned N)
       x[i] = cos(i*t0);
 
   return x;
+}
+
+/* making a temporary patch for thread safety purposes */
+Patch_T make_temp_patch(const Patch_T *const patch)
+{
+  Patch_T tmp_patch;
+  
+  tmp_patch = *patch;
+  tmp_patch.nfld = 0;
+  tmp_patch.pn = UINT_MAX;
+  tmp_patch.grid = 0;
+  tmp_patch.name = 0;
+  tmp_patch.node = 0;
+  tmp_patch.interface = 0;
+  tmp_patch.pool = 0;
+  
+  /*
+  tmp_patch.grid = 0;
+  tmp_patch.name = 0;
+  tmp_patch.coordsys = patch->coordsys;
+  tmp_patch.collocation[0] = patch->collocation[0];
+  tmp_patch.collocation[1] = patch->collocation[1];
+  tmp_patch.collocation[2] = patch->collocation[2];
+  tmp_patch.basis[0] = patch->basis[0];
+  tmp_patch.basis[1] = patch->basis[1];
+  tmp_patch.basis[2] = patch->basis[2];
+  tmp_patch.nfld = 0;
+  tmp_patch.nn = patch->nn;
+  tmp_patch.pn = 0;
+  tmp_patch.n[0] = patch->n[0];
+  tmp_patch.n[1] = patch->n[1];
+  tmp_patch.n[2] = patch->n[2];
+  tmp_patch.min[0] = patch->min[0];
+  tmp_patch.min[1] = patch->min[1];
+  tmp_patch.min[2] = patch->min[2];
+  tmp_patch.max[0] = patch->max[0];
+  tmp_patch.max[1] = patch->max[1];
+  tmp_patch.max[2] = patch->max[2];
+  tmp_patch.c[0] = patch->c[0];
+  tmp_patch.c[1] = patch->c[1];
+  tmp_patch.c[2] = patch->c[2];
+  tmp_patch.pool = 0;
+  */
+  return tmp_patch;
+}
+
+/* freeing the temporary made patch */
+void free_temp_patch(Patch_T *const patch)
+{
+  if (patch->pool != 0)
+    free(patch->pool);
 }
