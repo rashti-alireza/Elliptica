@@ -13,7 +13,7 @@ int Laplace_Inhom_solve_eq(Grid_T *const grid)
   //test jacobian
   const char *const types[] = {"J_x","J_xx",0};
 
-  make_jacobian_eq(grid,types);
+  test_make_jacobian_eq(grid,types);
   //end test jacobian
   return EXIT_SUCCESS;
 }

@@ -4,7 +4,7 @@
 */
 
 #include "jacobian_eq.h"
-#define MAX_STR_LEN 100
+#define MAX_STR_LEN 400
 
 /* making Jacobian for equations at the inner mesh
 // types are pointers to string determining the type of jacobian
@@ -42,6 +42,72 @@ void make_jacobian_eq(Grid_T *const grid, const char * const* types)
     }
     i++;
   }
+}
+
+/* testing make_jacobian_eq function:
+// it checks the consistensy between direct and spectral methods 
+*/
+void test_make_jacobian_eq(Grid_T *const grid, const char * const* types)
+{
+  enum Method_E {Spectral_e = 0,Direct_e,N_Method_E};
+  Jacobian_eq_F *Jacobian[N_Method_E] = 
+      {make_jacobian_spectral_method,make_jacobian_direct_method};
+  double **cmp[N_Method_E];
+  double **J = 0;
+  const char *path_par = GetParameterS_E("output_directory_path");
+  char *path = make_directory(path_par,"Test_Jacobian_Eq");
+  char file_name[MAX_STR_LEN];
+  FILE *file = 0;
+  const double ROUND_E = 1E-5;
+  double Err = 0;
+  JType_E jt_e;
+  unsigned i,p,nn,r,c;
+  enum Method_E e;
+  
+  i = 0;
+  while (types[i] != 0)
+  {
+    jt_e = str2JType_E(types[i]);
+    
+    FOR_ALL_PATCHES(p,grid)
+    {
+      Patch_T *patch = grid->patch[p];
+      nn = total_nodes_patch(patch);
+      Err = ROUND_E*pow(nn,1/3);
+      
+      for (e = Spectral_e; e < N_Method_E; ++e)
+      {
+        J = alloc_matrix(nn,nn);
+        Jacobian[e](J,patch,jt_e);
+        cmp[e] = J;
+      }
+      sprintf(file_name,"%s/%s_SepctalDirect.patch%u",path,types[i],patch->pn);
+      file = fopen(file_name,"w");
+      pointerEr(file);
+      fprintf(file,"Row Column J_Spectal J_Direct\n");
+      
+      for (r = 0; r < nn; ++r)
+      {
+        for (c = 0; c < nn; ++c)
+        {
+          if (GRT(ABS(cmp[Spectral_e][r][c]-cmp[Direct_e][r][c]),Err))
+            fprintf(file,"%3u %3u   %0.10f    %0.10f\n",
+              r,c,cmp[Spectral_e][r][c],cmp[Direct_e][r][c]);
+        }
+      }
+      
+      fclose(file);
+      
+      for (e = Spectral_e; e < N_Method_E; ++e)
+      {
+        free_matrix(cmp[e],nn);
+      }
+      
+    }
+    i++;
+  }
+  
+  free(path);
 }
 
 /* translating string to enum JType_E */
@@ -102,9 +168,9 @@ static void fill_jacobian_direct_method_1stOrder(double **const J, Patch_T *cons
 {
   Field_T **j_1st_deriv_field = 0;
   Patch_T *temp_patch = 0;
-  const double EPS = 1E-7;
   const double CONST = 1.0;/* some const number the result doesn't depend on it */
   const unsigned nn = total_nodes_patch(patch);
+  const double EPS = CONST/pow(nn,1/3);
   unsigned num_thread;
   char name[MAX_STR_LEN],deriv_str[MAX_STR_LEN] ;
   unsigned lmn,tn;
@@ -269,7 +335,7 @@ static void make_jacobian_spectral_method(double **const J,Patch_T *const patch,
 }
 
 /* making Jacobian using spectral method in direction $
-// d(df(i,j,k)/d$)/df(l,m,n) = j(N_i,$) * \sum_{ip,jp,kp} dc(ip,jp,kp)/df(l,m,n)*dT(i,j,k)/dN_i
+// d(df(i,j,k)/d$)/df(l,m,n) = j(N_i,$) * 2 \sum_{ip,jp,kp} dc(ip,jp,kp)/df(l,m,n)*dT(i,j,k)/dN_i
 */
 static void fill_jacobian_spectral_method_1stOrder(double **const J,Patch_T *const patch,const JType_E jt_e)
 {
@@ -315,7 +381,7 @@ static void fill_jacobian_spectral_method_1stOrder(double **const J,Patch_T *con
             dc_df = dc0_df(N[0],ip,l);
             j0 += dc_df*dT_dx((int)ip,x);
           }
-          j0 *= cj0;
+          j0 *= 2*cj0;
         }
       }
       
@@ -328,7 +394,7 @@ static void fill_jacobian_spectral_method_1stOrder(double **const J,Patch_T *con
             dc_df = dc1_df(N[1],jp,m);
             j1 += dc_df*dT_dx((int)jp,y);
           }
-          j1 *= cj1;
+          j1 *= 2*cj1;
         }
       }
       
@@ -341,7 +407,7 @@ static void fill_jacobian_spectral_method_1stOrder(double **const J,Patch_T *con
             dc_df = dc2_df(N[2],kp,n);
             j2 += dc_df*dT_dx((int)kp,z);
           }
-          j2 *= cj2;
+          j2 *= 2*cj2;
         }
       }
       
