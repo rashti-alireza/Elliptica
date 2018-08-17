@@ -144,3 +144,11 @@ void free_field(Field_T *fld)
     
   free(fld);
 }
+
+/* freeing v2 and info of a field */
+void free_coeffs(Field_T *fld)
+{
+  free_info(fld);
+  free_v2(fld);
+}
+
