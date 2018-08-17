@@ -58,11 +58,13 @@ void test_make_jacobian_eq(Grid_T *const grid, const char * const* types)
   const char *path_par = GetParameterS_E("output_directory_path");
   char *path = make_directory(path_par,"Test_Jacobian_Eq");
   char file_name[MAX_STR_LEN];
+  char line[MAX_STR_LEN]={'\0'};
   FILE *file = 0;
   double Err = 0;
   JType_E jt_e;
   unsigned i,p,nn,r,c;
   enum Method_E e;
+  Flag_T flg = NONE;
   
   i = 0;
   while (types[i] != 0)
@@ -81,6 +83,9 @@ void test_make_jacobian_eq(Grid_T *const grid, const char * const* types)
         Jacobian[e](J,patch,jt_e);
         cmp[e] = J;
       }
+      
+      printf("Testing Jacobian for Equations: patch=%s, type:%5s\t",patch->name,types[i]);
+      
       sprintf(file_name,"%s/%s_SepctalDirect.patch%u",path,types[i],patch->pn);
       file = fopen(file_name,"w");
       pointerEr(file);
@@ -95,7 +100,6 @@ void test_make_jacobian_eq(Grid_T *const grid, const char * const* types)
               r,c,cmp[Spectral_e][r][c],cmp[Direct_e][r][c]);
         }
       }
-      
       fclose(file);
       
       for (e = Spectral_e; e < N_Method_E; ++e)
@@ -103,6 +107,16 @@ void test_make_jacobian_eq(Grid_T *const grid, const char * const* types)
         free_matrix(cmp[e],nn);
       }
       
+      flg = NO;
+      /* check if the second line is empty so both approach are equal */
+      file = fopen(file_name,"r");
+      fgets(line,sizeof(line),file);
+      if(fgets(line,sizeof(line),file) == 0)
+        flg = YES;
+        
+      if (flg == YES) printf("[+].\n");
+      else	      printf("[-].\n");
+
     }
     i++;
   }
