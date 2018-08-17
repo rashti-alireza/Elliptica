@@ -359,7 +359,6 @@ static void fill_jacobian_spectral_method_1stOrder(double **const J,Patch_T *con
     
     for (lmn = 0; lmn < nn; ++lmn)
     {
-      double dc_df;
       double j0,j1,j2;
       unsigned l,m,n,ip,jp,kp;
       
@@ -374,8 +373,7 @@ static void fill_jacobian_spectral_method_1stOrder(double **const J,Patch_T *con
         {
           for (ip = 1; ip < N[0]-1; ++ip)
           {
-            dc_df = dc0_df(N[0],ip,l);
-            j0 += dc_df*dT_dx((int)ip,x);
+            j0 += dc_df(N[0],ip,l)*dT_dx((int)ip,x);
           }
           j0 *= 2*cj0;
         }
@@ -387,8 +385,7 @@ static void fill_jacobian_spectral_method_1stOrder(double **const J,Patch_T *con
         {
           for (jp = 1; jp < N[1]-1; ++jp)
           {
-            dc_df = dc1_df(N[1],jp,m);
-            j1 += dc_df*dT_dx((int)jp,y);
+            j1 += dc_df(N[1],jp,m)*dT_dx((int)jp,y);
           }
           j1 *= 2*cj1;
         }
@@ -400,8 +397,7 @@ static void fill_jacobian_spectral_method_1stOrder(double **const J,Patch_T *con
         {
           for (kp = 1; kp < N[2]-1; ++kp)
           {
-            dc_df = dc2_df(N[2],kp,n);
-            j2 += dc_df*dT_dx((int)kp,z);
+            j2 += dc_df(N[2],kp,n)*dT_dx((int)kp,z);
           }
           j2 *= 2*cj2;
         }
@@ -469,7 +465,7 @@ static void fill_jacobian_spectral_method_2ndOrder(double **const J, Patch_T *co
     }
   }
   
-  fill_jacobian_spectral_method_1stOrder(J,patch,deriv_1st);/* -> J_1st_deriv */
+  fill_jacobian_spectral_method_1stOrder(J,patch,deriv_1st);/* -> J = d(df/d@)/df */
   
   OpenMP_1d_Pragma(omp parallel for)
   for (lmn = 0; lmn < nn; ++lmn)
@@ -527,64 +523,24 @@ static void read_1st_and_2nd_deriv(const JType_E deriv_dir,JType_E *const deriv_
   }
 }
 
-/* dc/df where c is coefficients of expansion in direction 0
+/* dc/df where c is coefficients of expansion in a direction with n nodes
 // ->return value: dc(i)/df(l)
 */
-static double dc0_df(const unsigned n0,const unsigned i,const unsigned l)
+static double dc_df(const unsigned n,const unsigned i,const unsigned l)
 {
-  double dc_df = 0;
+  double dcdf = 0;
   
   if (l == 0)
-    dc_df = 1;
-  else if (l == n0-1)
-    dc_df = SIGN[i%2];
+    dcdf = 1;
+  else if (l == n-1)
+    dcdf = SIGN[i%2];
   else
   {
-    double xi = ChebExtrema_1point(n0,i);
-    dc_df = 2 * Cheb_Tn((int)l,xi);
+    double xi = ChebExtrema_1point(n,i);
+    dcdf = 2 * Cheb_Tn((int)l,xi);
   }
   
-  return dc_df/(2*(n0-1));
-}
-
-/* dc/df where c is coefficients of expansion in direction 1
-// ->return value: dc(j)/df(m)
-*/
-static double dc1_df(const unsigned n1,const unsigned j,const unsigned m)
-{
-  double dc_df = 0;
-  
-  if (m == 0)
-    dc_df = 1;
-  else if (m == n1-1)
-    dc_df = SIGN[j%2];
-  else
-  {
-    double yj = ChebExtrema_1point(n1,j);
-    dc_df = 2 * Cheb_Tn((int)m,yj);
-  }
-  
-  return dc_df/(2*(n1-1));
-}
-
-/* dc/df where c is coefficients of expansion in direction 2
-// ->return value: dc(k)/df(n)
-*/
-static double dc2_df(const unsigned n2,const unsigned k,const unsigned n)
-{
-  double dc_df = 0;
-  
-  if (n == 0)
-    dc_df = 1;
-  else if (n == n2-1)
-    dc_df = SIGN[k%2];
-  else
-  {
-    double zk = ChebExtrema_1point(n2,k);
-    dc_df = 2 * Cheb_Tn((int)n,zk);
-  }
-  
-  return dc_df/(2*(n2-1));
+  return dcdf/(2*(n-1));
 }
 
 /* given number of point in a line and the point number

@@ -35,9 +35,7 @@ static void make_jacobian_direct_method(double **const J,Patch_T *const patch,co
 static void fill_jacobian_direct_method_1stOrder(double **const J,Patch_T *const patch,const JType_E jt_e);
 static void fill_jacobian_direct_method_2ndOrder(double **const J, Patch_T *const patch,const JType_E deriv_dir);
 static double ChebExtrema_1point(const unsigned n, const unsigned p);
-static double dc0_df(const unsigned n0,const unsigned i,const unsigned l);
-static double dc1_df(const unsigned n1,const unsigned j,const unsigned m);
-static double dc2_df(const unsigned n2,const unsigned k,const unsigned n);
+static double dc_df(const unsigned n,const unsigned i,const unsigned l);
 static double dT_dx(const int n,const double x);
 static void read_1st_and_2nd_deriv(const JType_E deriv_dir,JType_E *const deriv_1st,JType_E *const deriv_2nd);
 static void JType_E2Dd_T(const JType_E jt_e, Dd_T *const q_dir);
