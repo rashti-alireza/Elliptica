@@ -5,6 +5,7 @@
 
 #include "jacobian_eq.h"
 #define MAX_STR_LEN 400
+static const double CONST = 1.0;
 
 /* making Jacobian for equations at the inner mesh
 // types are pointers to string determining the type of jacobian
@@ -58,7 +59,6 @@ void test_make_jacobian_eq(Grid_T *const grid, const char * const* types)
   char *path = make_directory(path_par,"Test_Jacobian_Eq");
   char file_name[MAX_STR_LEN];
   FILE *file = 0;
-  const double ROUND_E = 1E-5;
   double Err = 0;
   JType_E jt_e;
   unsigned i,p,nn,r,c;
@@ -73,7 +73,7 @@ void test_make_jacobian_eq(Grid_T *const grid, const char * const* types)
     {
       Patch_T *patch = grid->patch[p];
       nn = total_nodes_patch(patch);
-      Err = ROUND_E*pow(nn,1/3);
+      Err = CONST/nn;
       
       for (e = Spectral_e; e < N_Method_E; ++e)
       {
@@ -168,9 +168,8 @@ static void fill_jacobian_direct_method_1stOrder(double **const J, Patch_T *cons
 {
   Field_T **j_1st_deriv_field = 0;
   Patch_T *temp_patch = 0;
-  const double CONST = 1.0;/* some const number the result doesn't depend on it */
   const unsigned nn = total_nodes_patch(patch);
-  const double EPS = CONST/pow(nn,1/3);
+  const double EPS = CONST/nn;
   unsigned num_thread;
   char name[MAX_STR_LEN],deriv_str[MAX_STR_LEN] ;
   unsigned lmn,tn;
@@ -212,8 +211,7 @@ static void fill_jacobian_direct_method_1stOrder(double **const J, Patch_T *cons
     /* since it was added v2 and info in J_deriv we clean them 
     // to avoid using them again for new data in next iteration
     */
-    free_info(Jf);
-    free_v2(Jf);
+    free_coeffs(Jf);
     
     for (ijk = 0; ijk < nn; ++ijk)
       J[ijk][lmn] = J_deriv[ijk]/EPS;
@@ -238,9 +236,8 @@ static void fill_jacobian_direct_method_1stOrder(double **const J, Patch_T *cons
 */
 static void fill_jacobian_direct_method_2ndOrder(double **const J, Patch_T *const patch,const JType_E deriv_dir)
 {
-  const double EPS = 1E-7;
-  const double CONST = 1.0;
   const unsigned nn = total_nodes_patch(patch);
+  const double EPS = CONST/nn;
   unsigned num_thread;
   Field_T **j;
   Patch_T *temp_patch = 0;
@@ -285,8 +282,7 @@ static void fill_jacobian_direct_method_2ndOrder(double **const J, Patch_T *cons
     /* since it was added v2 and info in J_2nd we clean them 
     // to avoid using them again for new data in next iteration
     */
-    free_info(Jf);
-    free_v2(Jf);
+    free_coeffs(Jf);
     
     for (ijk = 0; ijk < nn; ++ijk)
       J[ijk][lmn] = J_2nd[ijk]/EPS;
@@ -489,8 +485,7 @@ static void fill_jacobian_spectral_method_2ndOrder(double **const J, Patch_T *co
     /* since it was added v2 and info in J_1st_deriv_field we clean them 
     // to avoid using them again for new data in next iteration
     */
-    free_info(J_1st_deriv_field);
-    free_v2(J_1st_deriv_field);
+    free_coeffs(J_1st_deriv_field);
     
     for (ijk = 0; ijk < nn; ++ijk)
       J[ijk][lmn] = J_2nd_deriv_value[ijk];/* -> J_2nd_deriv_value */

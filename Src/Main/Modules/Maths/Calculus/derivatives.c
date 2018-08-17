@@ -751,33 +751,6 @@ Patch_T make_temp_patch(const Patch_T *const patch)
   tmp_patch.interface = 0;
   tmp_patch.pool = 0;
   
-  /*
-  tmp_patch.grid = 0;
-  tmp_patch.name = 0;
-  tmp_patch.coordsys = patch->coordsys;
-  tmp_patch.collocation[0] = patch->collocation[0];
-  tmp_patch.collocation[1] = patch->collocation[1];
-  tmp_patch.collocation[2] = patch->collocation[2];
-  tmp_patch.basis[0] = patch->basis[0];
-  tmp_patch.basis[1] = patch->basis[1];
-  tmp_patch.basis[2] = patch->basis[2];
-  tmp_patch.nfld = 0;
-  tmp_patch.nn = patch->nn;
-  tmp_patch.pn = 0;
-  tmp_patch.n[0] = patch->n[0];
-  tmp_patch.n[1] = patch->n[1];
-  tmp_patch.n[2] = patch->n[2];
-  tmp_patch.min[0] = patch->min[0];
-  tmp_patch.min[1] = patch->min[1];
-  tmp_patch.min[2] = patch->min[2];
-  tmp_patch.max[0] = patch->max[0];
-  tmp_patch.max[1] = patch->max[1];
-  tmp_patch.max[2] = patch->max[2];
-  tmp_patch.c[0] = patch->c[0];
-  tmp_patch.c[1] = patch->c[1];
-  tmp_patch.c[2] = patch->c[2];
-  tmp_patch.pool = 0;
-  */
   return tmp_patch;
 }
 
