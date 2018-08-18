@@ -14,7 +14,6 @@ typedef void fFunc_PtoV_T (Patch_T *const patch);
 /* general function grid to pointer to double */
 typedef double *fFunc_Patch2Pdouble_T(Patch_T *const patch);
 
-
 /* *******************************************
 // general purpose structure typedef for functinos
 // *******************************************
@@ -35,3 +34,4 @@ typedef struct sFUNC_PATCH2PDOUBLE_T
   fFunc_Patch2Pdouble_T *func;
   unsigned flg: 1;/* used for different purposes */
 }sFunc_Patch2Pdouble_T;
+

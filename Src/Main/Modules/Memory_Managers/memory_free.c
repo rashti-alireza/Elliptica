@@ -152,3 +152,18 @@ void free_coeffs(Field_T *fld)
   free_v2(fld);
 }
 
+/* freeing Equation_T data base */
+void free_db_eqs(sEquation_T **db)
+{
+  unsigned ndb;
+  
+  if (!db) return;
+  
+  for (ndb = 0; db[ndb] != 0; ++ndb)
+  {
+    free(db[ndb]);
+  }
+  
+  free(db);
+}
+

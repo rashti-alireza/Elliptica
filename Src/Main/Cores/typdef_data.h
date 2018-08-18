@@ -4,6 +4,13 @@
 */
 
 /* *******************************************
+// constants:
+// *******************************************
+*/
+
+#define ___MAX_STR_LEN___ 400
+
+/* *******************************************
 // enum:
 // =====
 //
@@ -210,7 +217,7 @@ typedef struct JACOBIAN_TRANS_T
 }JacobianTrans_T;
 
 /* Field structure */
-typedef struct Field_T
+typedef struct FIELD_T
 {
   char *name;/* name of field */
   double *v;/* values on each node on patch */
@@ -231,6 +238,37 @@ typedef struct Field_T
   struct PATCH_T *patch;/* refers to its patch which this field defined */
   void *v_ptr;/* refers to various quantities based on need */
 }Field_T;
+
+/* equation solver */
+typedef int fEquation_Solver_T(void *Structure);
+
+/* equation that field obeys */
+typedef void fEquation_T(void *Structure,double *const F);
+
+/* fields we attempt to find their answers based on eq's and b.c.'s */
+typedef struct SEEKING_FIELD_T
+{
+  char **id;/* id[id#]="name of field" */
+  double **a;/* e.g. in ax = b */
+  double *b;/* e.g. in ax = b */
+  unsigned *f_occupy;/* refers to starting memory in 
+                     // which the field number f occupies;
+                     // so b[f_occupy[f]] to b[f_occupy[f]+nn] 
+                     // are all memories in b which are used by 
+                     // field with id f, nn is total nodes of a patch
+                     */ 
+  Field_T **field;/* fields to be found to satisfy equations and B.C.s */
+  fEquation_T **field_eq;/* the equation needed to be satisfied */
+  fEquation_T **bc_eq;/* the B.C needed to be satisfied */
+  fEquation_Solver_T *f_eq;/* solver for ax = b */
+}Seeking_Field_T;
+
+/* equation stucture */
+typedef struct sEQUATION_T
+{
+  char name[___MAX_STR_LEN___];
+  fEquation_T *eq;/* the equation needed to be satisfied */
+}sEquation_T;
 
 /* patch */
 typedef struct PATCH_T
@@ -258,9 +296,11 @@ typedef struct PATCH_T
   JacobianTrans_T *JacobianT;/* Jacobian transformation between the coords */
   Field_T **pool;/* pool of fields, 
                         // notation: pool[Ind("Phi_f")] refers 
-                        // to field phi.
+                        // to field phi. note: Ind is macro.
                         // one can access to values of field on this 
                         // patch like pool[Ind("phi_f")]->v */
+  Seeking_Field_T **seeking_field;/* seeking fields based on eq's & b.c.'s */
+  unsigned nsf;/* number of seeking field */
   unsigned innerB:1;/* if this patch has inner boundary 1 otherwise 0 */
 }Patch_T;
 
