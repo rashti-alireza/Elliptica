@@ -3,7 +3,7 @@
 // August 2018
 */
 
-#include "solving_managing.h"
+#include "solving_managings.h"
 
 /* initializing Equation_T by null*/
 void *init_eq(void)
