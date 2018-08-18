@@ -270,7 +270,7 @@ static double *spectral_derivative_2ndOrder(Field_T *const f,const Dd_T dir_e)
   
   if (flg[0] == YES)
   {
-    OpenMP_1d_Pragma(omp parallel for)
+    /* OpenMP_1d_Pragma(omp parallel for) */
     for (i = 0; i < nn; ++i)
     {
       double j = dq2_dq1(patch,dp[0],dir_e,i);
@@ -279,7 +279,7 @@ static double *spectral_derivative_2ndOrder(Field_T *const f,const Dd_T dir_e)
   }
   else if (flg[1] == YES)
   {
-    OpenMP_1d_Pragma(omp parallel for)
+    /* OpenMP_1d_Pragma(omp parallel for) */
     for (i = 0; i < nn; ++i)
     {
       double j = dq2_dq1(patch,dp[1],dir_e,i);
@@ -288,7 +288,7 @@ static double *spectral_derivative_2ndOrder(Field_T *const f,const Dd_T dir_e)
   }
   else if (flg[2] == YES)
   {
-    OpenMP_1d_Pragma(omp parallel for)
+    /* OpenMP_1d_Pragma(omp parallel for) */
     for (i = 0; i < nn; ++i)
     {
       double j = dq2_dq1(patch,dp[2],dir_e,i);
@@ -440,7 +440,7 @@ static double *spectral_derivative_1stOrder(Field_T *const f,const Dd_T dir_e)
   
   if (flg[0] == YES && flg[1] == YES && flg[2] == YES)
   {
-    OpenMP_1d_Pragma(omp parallel for)
+    /* OpenMP_1d_Pragma(omp parallel for) */
     for (i = 0; i < nn; ++i)
       der[i] = df_dp[0][i]*dq2_dq1(patch,dp[0],dir_e,i) + 
                   df_dp[1][i]*dq2_dq1(patch,dp[1],dir_e,i) +
@@ -448,33 +448,33 @@ static double *spectral_derivative_1stOrder(Field_T *const f,const Dd_T dir_e)
   }
   else if (flg[0] == YES && flg[1] == YES)
   {
-    OpenMP_1d_Pragma(omp parallel for)
+    /* OpenMP_1d_Pragma(omp parallel for) */
     for (i = 0; i < nn; ++i)
       der[i] = df_dp[0][i]*dq2_dq1(patch,dp[0],dir_e,i) + 
                   df_dp[1][i]*dq2_dq1(patch,dp[1],dir_e,i);
   }
   else if (flg[1] == YES && flg[2] == YES)
   {
-    OpenMP_1d_Pragma(omp parallel for)
+    /* OpenMP_1d_Pragma(omp parallel for) */
     for (i = 0; i < nn; ++i)
       der[i] = df_dp[1][i]*dq2_dq1(patch,dp[1],dir_e,i) + 
                   df_dp[2][i]*dq2_dq1(patch,dp[2],dir_e,i);
   }
   else if (flg[0] == YES)
   {
-    OpenMP_1d_Pragma(omp parallel for)
+    /* OpenMP_1d_Pragma(omp parallel for) */
     for (i = 0; i < nn; ++i)
       der[i] = df_dp[0][i]*dq2_dq1(patch,dp[0],dir_e,i);
   }
   else if (flg[1] == YES)
   {
-    OpenMP_1d_Pragma(omp parallel for)
+    /* OpenMP_1d_Pragma(omp parallel for) */
     for (i = 0; i < nn; ++i)
       der[i] = df_dp[1][i]*dq2_dq1(patch,dp[1],dir_e,i); 
   }
   else if (flg[2] == YES)
   {
-    OpenMP_1d_Pragma(omp parallel for)
+    /* OpenMP_1d_Pragma(omp parallel for) */
     for (i = 0; i < nn; ++i)
       der[i] = df_dp[2][i]*dq2_dq1(patch,dp[2],dir_e,i); 
   }
@@ -508,7 +508,7 @@ static double *derivative_Chebyshev_Tn_1stOrder(Field_T *const f,const Dd_T dir)
   
   if (dir == 0)
   {
-    OpenMP_2d_Pragma(omp parallel for)
+    /* OpenMP_2d_Pragma(omp parallel for) */
     for (l = 0; l < nn; ++l)
     {
       unsigned i,j,k;
@@ -527,7 +527,7 @@ static double *derivative_Chebyshev_Tn_1stOrder(Field_T *const f,const Dd_T dir)
   }
   else if (dir == 1)
   {
-    OpenMP_2d_Pragma(omp parallel for)
+    /* OpenMP_2d_Pragma(omp parallel for) */
     for (l = 0; l < nn; ++l)
     {
       unsigned i,j,k;
@@ -546,7 +546,7 @@ static double *derivative_Chebyshev_Tn_1stOrder(Field_T *const f,const Dd_T dir)
   }
   else /* (dir == 2) */
   {
-    OpenMP_2d_Pragma(omp parallel for)
+    /* OpenMP_2d_Pragma(omp parallel for) */
     for (l = 0; l < nn; ++l)
     {
       unsigned i,j,k;
@@ -589,7 +589,7 @@ static double *derivative_Chebyshev_Tn_2ndOrder(Field_T *const f,const Dd_T dir)
   
   if (dir == 0)
   {
-    OpenMP_2d_Pragma(omp parallel for)
+    /* OpenMP_2d_Pragma(omp parallel for) */
     for (l = 0; l < nn; ++l)
     {
       unsigned i,j,k;
@@ -608,7 +608,7 @@ static double *derivative_Chebyshev_Tn_2ndOrder(Field_T *const f,const Dd_T dir)
   }
   else if (dir == 1)
   {
-    OpenMP_2d_Pragma(omp parallel for)
+    /* OpenMP_2d_Pragma(omp parallel for) */
     for (l = 0; l < nn; ++l)
     {
       unsigned i,j,k;
@@ -627,7 +627,7 @@ static double *derivative_Chebyshev_Tn_2ndOrder(Field_T *const f,const Dd_T dir)
   }
   else /* (dir == 2) */
   {
-    OpenMP_2d_Pragma(omp parallel for)
+    /* OpenMP_2d_Pragma(omp parallel for) */
     for (l = 0; l < nn; ++l)
     {
       unsigned i,j,k;
