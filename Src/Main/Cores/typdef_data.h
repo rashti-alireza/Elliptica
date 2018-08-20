@@ -8,7 +8,7 @@
 // *******************************************
 */
 
-#define ___MAX_STR_LEN___ 400
+#define _____MAX_STR_LEN_____ 400
 
 /* *******************************************
 // enum:
@@ -240,15 +240,16 @@ typedef struct FIELD_T
 }Field_T;
 
 /* equation solver */
-typedef int fEquation_Solver_T(void *Structure);
+typedef int fEquation_Solver_T(void *vp);
 
 /* equation that field obeys */
-typedef void fEquation_T(void *Structure,double *const F);
+typedef void fEquation_T(void *vp,double *const F);
 
 /* fields we attempt to find their answers based on eq's and b.c.'s */
-typedef struct SEEKING_FIELD_T
+typedef struct SOLUTION_T
 {
-  char **id;/* id[id#]="name of field" */
+  char **f_name;/* f_name[#]="name of field #" */
+  unsigned nf;/* number of fields */
   double **a;/* e.g. in ax = b */
   double *b;/* e.g. in ax = b */
   unsigned *f_occupy;/* refers to starting memory in 
@@ -260,15 +261,30 @@ typedef struct SEEKING_FIELD_T
   Field_T **field;/* fields to be found to satisfy equations and B.C.s */
   fEquation_T **field_eq;/* the equation needed to be satisfied */
   fEquation_T **bc_eq;/* the B.C needed to be satisfied */
-  fEquation_Solver_T *f_eq;/* solver for ax = b */
-}Seeking_Field_T;
+  fEquation_Solver_T *solver;/* solver for ax = b */
+}Solution_T;
 
 /* equation stucture */
 typedef struct sEQUATION_T
 {
-  char name[___MAX_STR_LEN___];
+  char name[_____MAX_STR_LEN_____];
   fEquation_T *eq;/* the equation needed to be satisfied */
 }sEquation_T;
+
+/* solution managing */
+typedef struct SOLUTION_MAN_T
+{
+  char **field_name;/* field to be solved */
+  unsigned nf;/* number of fields */
+  unsigned ns;/* number of solutions structure */
+  Solution_T **solution;/* group fields to be solved together
+                        // and in order appread in input file
+                        // based on eq's & b.c.'s.
+                        // so seeking_field[0] is the first
+                        // group of fields to be solved
+                        // seeking_field[1] is the next and so on.
+                        */
+}Solution_Man_T;
 
 /* patch */
 typedef struct PATCH_T
@@ -295,11 +311,11 @@ typedef struct PATCH_T
   Interface_T **interface;/* interface info  */
   JacobianTrans_T *JacobianT;/* Jacobian transformation between the coords */
   Field_T **pool;/* pool of fields, 
-                        // notation: pool[Ind("Phi_f")] refers 
-                        // to field phi. note: Ind is macro.
-                        // one can access to values of field on this 
-                        // patch like pool[Ind("phi_f")]->v */
-  Seeking_Field_T **seeking_field;/* seeking fields based on eq's & b.c.'s */
+                 // notation: pool[Ind("Phi_f")] refers 
+                 // to field phi. note: Ind is macro.
+                 // one can access to values of field on this 
+                 // patch like pool[Ind("phi_f")]->v */
+  Solution_Man_T *solution_man;/* solution managing */
   unsigned nsf;/* number of seeking field */
   unsigned innerB:1;/* if this patch has inner boundary 1 otherwise 0 */
 }Patch_T;
