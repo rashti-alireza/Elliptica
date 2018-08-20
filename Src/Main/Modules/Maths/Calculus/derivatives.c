@@ -737,26 +737,3 @@ static double *make_1Dcollocation_ChebExtrema(const unsigned N)
   return x;
 }
 
-/* making a temporary patch for thread safety purposes */
-Patch_T make_temp_patch(const Patch_T *const patch)
-{
-  Patch_T tmp_patch;
-  
-  tmp_patch = *patch;
-  tmp_patch.nfld = 0;
-  tmp_patch.pn = UINT_MAX;
-  tmp_patch.grid = 0;
-  tmp_patch.name = 0;
-  tmp_patch.node = 0;
-  tmp_patch.interface = 0;
-  tmp_patch.pool = 0;
-  
-  return tmp_patch;
-}
-
-/* freeing the temporary made patch */
-void free_temp_patch(Patch_T *const patch)
-{
-  if (patch->pool != 0)
-    free(patch->pool);
-}

@@ -17,3 +17,5 @@ int make_nodes(Grid_T *const grid);
 int make_JacobianT(Grid_T *const grid);
 void check_houseK(Patch_T *const patch);
 void flush_houseK(Patch_T *const patch);
+Patch_T make_temp_patch(const Patch_T *const patch);
+void free_temp_patch(Patch_T *const patch);
