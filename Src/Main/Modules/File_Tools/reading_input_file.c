@@ -69,7 +69,7 @@ static void populate_parameters(const char *const buff)
       
     }/* while (subtok != 0) */
     
-    if (par_l != 0 && par_r != 0)
+    if (par_l != 0)
       add_parameter(par_l,par_r);
     
     tok = tok_s(0,delimit,&savestr);

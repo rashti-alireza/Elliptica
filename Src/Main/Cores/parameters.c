@@ -18,8 +18,12 @@ void add_parameter(const char *const lv, const char *const rv)
     
   par = alloc_parameter(&parameters_global);
   par->lv = dup_s(lv);
-  if (!strcmp(rv,"") || !strcmp(rv," ")) par->rv = 0;
-  else par->rv = dup_s(rv);
+  if (rv == 0)
+    par->rv = 0;
+  else if(!strcmp(rv,"") || !strcmp(rv," ") || rv[0] == '\0') 
+    par->rv = 0;
+  else 
+    par->rv = dup_s(rv);
 }
 
 /* having parameter name, it returns a pointer to 

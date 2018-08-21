@@ -32,8 +32,12 @@ static void set_default(const char *const lhs,const char *const rhs)
   else
   {
     v = GetParameterS(lhs);
-    if (strcmp_i(v,"default"))
+    if (v == 0)
+      par->rv = dup_s(rhs);
+    else if (v[0] == '\0' || strcmp_i(v,"default"))
+    {
       free(par->rv);
-    par->rv = dup_s(rhs);
+      par->rv = dup_s(rhs);
+    }
   }
 }
