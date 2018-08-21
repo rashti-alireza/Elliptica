@@ -383,3 +383,21 @@ typedef struct BOUNDARY_CONDITION_T
   SubFace_T *subface;/* the subface located at interesting boundary */
   Field_T *field;/* the field this B.C.s to be imposed */
 }Boundary_Condition_T;
+
+/* *******************************************
+// structures for solvers
+// *******************************************
+*/
+
+/* umfpack direct solver */
+typedef struct UMFPACK_T
+{
+  int row;/* number of row in matrix A */
+  int col;/* number of column in matrix A */
+  /* Ap, Ai and Ax refer to compressed column storage format for matrix A */
+  long *Ap;
+  long *Ai;
+  double *Ax;
+  double *b;/* in Ax=b */
+  double *x;/* in Ax=b */
+}UmfPack_T;
