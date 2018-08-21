@@ -162,7 +162,7 @@ static void fill_solution(Grid_T *const grid,char **const group,const unsigned n
       solution->field_eq[i] = get_field_eq(group[i],field_eq);
       solution->bc_eq[i]    = get_field_eq(group[i],bc_eq);
       solution->solver      = get_solver_method(GetParameterS_E("Solver"));
-      solution->field[i]    = prepare_field(group[i],"(3dim)",patch,&b[i*patch->nn]);
+      solution->field[i]    = prepare_field(group[i],"(3dim)",patch);
     }
     
   }/* end of FOR_ALL_PATCHES(p,grid) */
@@ -210,18 +210,18 @@ fEquation_Solver_T *get_solver_method(const char *const solver)
   return solver_eq;
 }
 
-/* given name, attribute and patch and also 
-// the "beginning of the address" of field memroy field->v,
+/* given name, attribute and patch
 // it returns a field with demanded properties.
+// ->return value: new made field
 */
-static Field_T *prepare_field(const char *const name,const char *const attr,Patch_T *const patch,double *const mem)
+static Field_T *prepare_field(const char *const name,const char *const attr,Patch_T *const patch)
 {
   Field_T *field = calloc(1,sizeof(*field));
   pointerEr(field);
   
   field->name = dup_s(name);
   field->attr = dup_s(attr);
-  field->v = mem;
+  field->v = alloc_double(patch->nn);
   field->patch = patch;
   
   return field;
