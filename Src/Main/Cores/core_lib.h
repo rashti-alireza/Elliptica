@@ -33,6 +33,7 @@ int LookUpField(const char *const name,const Patch_T *const patch);
 double *make_coeffs_1d(Field_T *const f,const unsigned dir);
 double *make_coeffs_2d(Field_T *const f,const unsigned dir1,const unsigned dir2);
 double *make_coeffs_3d(Field_T *const f);
+void enable_fields(Grid_T *const grid);
 /* grid */
 Patch_T make_temp_patch(const Patch_T *const patch);
 void free_temp_patch(Patch_T *const patch);

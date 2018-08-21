@@ -695,3 +695,22 @@ static unsigned Is3d_fft(const Collocation_T *collocation,const Basis_T *basis)
   
   return r;
 }
+
+/* allocating 3-D fields on the whole grid to be solved 
+// according to solution_man in each patch.
+*/
+void enable_fields(Grid_T *const grid)
+{
+  unsigned p;
+  
+  FOR_ALL_PATCHES(p,grid)
+  {
+    Patch_T *patch = grid->patch[p];
+    char **field_name = patch->solution_man->field_name;
+    unsigned nf = patch->solution_man->nf;
+    unsigned i;
+    
+    for (i = 0; i < nf; ++i)
+      add_field(field_name[i],"(3dim)",patch,YES);
+  }
+}

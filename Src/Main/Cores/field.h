@@ -21,3 +21,4 @@ static unsigned Is3d_fft(const Collocation_T *collocation,const Basis_T *basis);
 static double *find_1d_coeffs_in_patch(Field_T *const f,const unsigned dir);
 static void coeffs_patch_Tn_Extrema_1d(Field_T *const f,const unsigned dir);
 static void add_Tinfo(Field_T *const f,const unsigned dir,const Collocation_T collocation,const Basis_T basis);
+void enable_fields(Grid_T *const grid);
