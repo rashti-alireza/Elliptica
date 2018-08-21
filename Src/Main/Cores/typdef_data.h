@@ -376,3 +376,10 @@ typedef struct PR_FIELD_T
   void *file;/* file */
   void *file2;/* file */
 }Pr_Field_T;
+
+/* boundary condition struct */
+typedef struct BOUNDARY_CONDITION_T
+{
+  SubFace_T *subface;/* the subface located at interesting boundary */
+  Field_T *field;/* the field this B.C.s to be imposed */
+}Boundary_Condition_T;
