@@ -245,8 +245,10 @@ typedef int fEquation_Solver_T(void *vp);
 /* equation that field obeys */
 typedef void fEquation_T(void *vp,double *const F);
 
-/* fields we attempt to find their answers based on eq's and b.c.'s */
-typedef struct SOLUTION_T
+/* solve collects the entites needed to solve fields 
+// based on eq's and b.c.'s and etc.
+*/
+typedef struct SOLVE_T
 {
   char **f_name;/* f_name[#]="name of field #" */
   unsigned nf;/* number of fields */
@@ -262,7 +264,7 @@ typedef struct SOLUTION_T
   fEquation_T **field_eq;/* the equation needed to be satisfied */
   fEquation_T **bc_eq;/* the B.C needed to be satisfied */
   fEquation_Solver_T *solver;/* solver for ax = b */
-}Solution_T;
+}Solve_T;
 
 /* equation stucture */
 typedef struct sEQUATION_T
@@ -277,8 +279,8 @@ typedef struct SOLUTION_MAN_T
   char **field_name;/* field to be solved */
   unsigned nf;/* number of fields */
   unsigned ns;/* number of solutions structure */
-  Solution_T **solution;/* group fields to be solved together
-                        // and in order appread in input file
+  Solve_T **solve;/* group fields to be solved together
+                        // and in order appeared in input file
                         // based on eq's & b.c.'s.
                         // so seeking_field[0] is the first
                         // group of fields to be solved

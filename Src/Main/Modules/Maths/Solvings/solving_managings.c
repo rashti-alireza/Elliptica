@@ -118,7 +118,7 @@ void populate_solution_man(Grid_T *const grid,sEquation_T **const field_eq,sEqua
     if (!ng)
       abortEr("No group fields to be solved are found!\n");
       
-    fill_solution(grid,group,ng,field_eq,bc_eq);
+    fill_solve(grid,group,ng,field_eq,bc_eq);
     
     tok = tok_s(0,FLASH,&save);/* tok = {f3,f4,...} */
     free_matrix(group,ng);
@@ -126,8 +126,8 @@ void populate_solution_man(Grid_T *const grid,sEquation_T **const field_eq,sEqua
   free(par);
 }
 
-/* allocating memory and filling solution struct group by group */
-static void fill_solution(Grid_T *const grid,char **const group,const unsigned ng,sEquation_T **const field_eq,sEquation_T **const bc_eq)
+/* allocating memory and filling solve struct group by group */
+static void fill_solve(Grid_T *const grid,char **const group,const unsigned ng,sEquation_T **const field_eq,sEquation_T **const bc_eq)
 {
   unsigned p;
   
@@ -136,33 +136,33 @@ static void fill_solution(Grid_T *const grid,char **const group,const unsigned n
   FOR_ALL_PATCHES(p,grid)
   {
     Patch_T *patch = grid->patch[p];
-    Solution_T *solution;
+    Solve_T *solve;
     double *b = alloc_double(ng*patch->nn);
     unsigned ns,i;
     
     ns = ++patch->solution_man->ns;
-    solution = alloc_solution(patch,ns);
-    solution->b = b;
-    solution->nf = ng;
-    solution->field = calloc(ng,sizeof(*solution->field));
-    pointerEr(solution->field);
-    solution->f_occupy = calloc(ng,sizeof(*solution->f_occupy));
-    pointerEr(solution->f_occupy);
-    solution->field_eq = calloc(ng,sizeof(*solution->field_eq));
-    pointerEr(solution->field_eq);
-    solution->bc_eq = calloc(ng,sizeof(*solution->bc_eq));
-    pointerEr(solution->bc_eq);
-    solution->f_name = calloc(ng,sizeof(*solution->f_name));
-    pointerEr(solution->f_name);
+    solve = alloc_solve(patch,ns);
+    solve->b = b;
+    solve->nf = ng;
+    solve->field = calloc(ng,sizeof(*solve->field));
+    pointerEr(solve->field);
+    solve->f_occupy = calloc(ng,sizeof(*solve->f_occupy));
+    pointerEr(solve->f_occupy);
+    solve->field_eq = calloc(ng,sizeof(*solve->field_eq));
+    pointerEr(solve->field_eq);
+    solve->bc_eq = calloc(ng,sizeof(*solve->bc_eq));
+    pointerEr(solve->bc_eq);
+    solve->f_name = calloc(ng,sizeof(*solve->f_name));
+    pointerEr(solve->f_name);
     
     for (i = 0; i < ng; ++i)
     {
-      solution->f_name[i] = dup_s(group[i]);
-      solution->f_occupy[i] = i*patch->nn;
-      solution->field_eq[i] = get_field_eq(group[i],field_eq);
-      solution->bc_eq[i]    = get_field_eq(group[i],bc_eq);
-      solution->solver      = get_solver_method(GetParameterS_E("Solver"));
-      solution->field[i]    = prepare_field(group[i],"(3dim)",patch);
+      solve->f_name[i] = dup_s(group[i]);
+      solve->f_occupy[i] = i*patch->nn;
+      solve->field_eq[i] = get_field_eq(group[i],field_eq);
+      solve->bc_eq[i]    = get_field_eq(group[i],bc_eq);
+      solve->solver      = get_solver_method(GetParameterS_E("Solver"));
+      solve->field[i]    = prepare_field(group[i],"(3dim)",patch);
     }
     
   }/* end of FOR_ALL_PATCHES(p,grid) */
@@ -182,7 +182,7 @@ fEquation_T *get_field_eq(const char *const name, sEquation_T **const db)
   
   for (i = 0; db[i] != 0; ++i)
   {
-    if (strcmp_i(db[i]->name,name))
+    if (strstr_i(db[i]->name,name))
     {
       eq = db[i]->eq;
       break;
@@ -190,7 +190,7 @@ fEquation_T *get_field_eq(const char *const name, sEquation_T **const db)
   }
   
   if (!eq)
-    printf("fix! %s,%d\n",__FILE__,__LINE__);//abortEr_s("No such equation for \"%s\" exists.\n",name);
+    abortEr_s("No such equation for \"%s\" exists.\n",name);
   
   return eq;
 }
@@ -203,7 +203,9 @@ fEquation_Solver_T *get_solver_method(const char *const solver)
   fEquation_Solver_T *solver_eq = 0;
   
   if (strcmp_i(solver,"UMFPACK"))
-    /*solver_eq = 0;*/printf("add umfpack here %s,%d\n",__FILE__,__LINE__);
+    solver_eq = direct_solver_umfpack_di;
+  else if (strcmp_i(solver,"UMFPACK_long"))
+    solver_eq = direct_solver_umfpack_dl;
   else
     abortEr_s("There is no such solver defined.\n",solver);
     

@@ -20,4 +20,4 @@ Parameter_T *get_parameter(const char *const par_name);
 double *alloc_double(const unsigned N);
 void *alloc_sFunc_Patch2Pdouble(sFunc_Patch2Pdouble_T ***const mem);
 double **alloc_matrix(const long unsigned R,const long unsigned C);
-Solution_T *alloc_solution(Patch_T *const patch, const unsigned n);
+Solve_T *alloc_solve(Patch_T *const patch, const unsigned n);

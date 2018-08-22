@@ -273,18 +273,18 @@ double **alloc_matrix(const long unsigned R,const long unsigned C)
 // return the pointer to solution[n-1]
 // ->return value: patch->solution_man->solution[n-1]
 */
-Solution_T *alloc_solution(Patch_T *const patch, const unsigned n)
+Solve_T *alloc_solve(Patch_T *const patch, const unsigned n)
 {
   if (!patch->solution_man)
     return 0;
   
-  Solution_T **sol = patch->solution_man->solution;
+  Solve_T **sol = patch->solution_man->solve;
 
   sol = realloc(sol,n*sizeof(*sol));
   pointerEr(sol);
   sol[n-1] = calloc(1,sizeof(*sol[n-1]));
   pointerEr(sol[n-1]);
-  patch->solution_man->solution = sol;
+  patch->solution_man->solve = sol;
   
   return sol[n-1];
 }
