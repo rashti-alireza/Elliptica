@@ -149,6 +149,7 @@ typedef struct POINT_T
 {
   unsigned ind;/* linear index in which node[ind] refers to this point */
   double N[3];/* normal vector */
+  double *x;/* points to some triple values for coords of a point */
   struct PATCH_T *patch;/* refers to its patch */
   struct POINT_T *adjPoint;/* adjacent point */
   unsigned face    ;/* the interface in which this point located */
@@ -181,16 +182,16 @@ typedef struct SUBFACE_T
   unsigned *adjid ;/* id of adjacent point of each point, their index must be matched 
                    // e.g. adjacent point of id[ind1]=? is adjid[ind1]=? */
   unsigned face    ;/* the interface in which this point located */
-  unsigned adjFace ;/* adjacent face used in interpolation */
-  unsigned adjPatch;/* adjacent patch used in interpolation */
-  unsigned Dn_Df  : 1;/* 1 if Dn_Dfield is set at interface, 0 otherwise */
+  unsigned adjFace ;/* adjacent face used in interpolation or copy */
+  unsigned adjPatch;/* adjacent patch used in interpolation or copy */
+  unsigned df_dn  : 1;/* 1 if d(field)/dn is set at interface, 0 otherwise */
   unsigned sameX  : 1;/* 1 if addjacent face is on X = const */
   unsigned sameY  : 1;/* 1 if addjacent face is on Y = const */
   unsigned sameZ  : 1;/* 1 if addjacent face is on Z = const */
   unsigned touch  : 1;/* touch state 1, overlap state 0 */
   unsigned copy   : 1;/* copy state 1, interpolation state 0 */
   unsigned exterF : 1;/* external interface 1, internal 0
-                      // external means it can reach other interface */
+                      // external means it can reach other interfaces */
   unsigned outerB : 1;/* if it is outer boundary of grid 
                       // and needs boundary condition */
   unsigned innerB : 1;/* if it is inner boundary of grid 
@@ -252,8 +253,9 @@ typedef struct SOLVE_T
 {
   char **f_name;/* f_name[#]="name of field #" */
   unsigned nf;/* number of fields */
-  double **a;/* e.g. in ax = b */
-  double *b;/* e.g. in ax = b */
+  double **a;/* in a.x = b */
+  double *b;/* in  a.x = b */
+  double *x;/* in  a.x = b */
   unsigned *f_occupy;/* refers to starting memory in 
                      // which the field number f occupies;
                      // so b[f_occupy[f]] to b[f_occupy[f]+nn] 
@@ -318,7 +320,6 @@ typedef struct PATCH_T
                  // one can access to values of field on this 
                  // patch like pool[Ind("phi_f")]->v */
   Solution_Man_T *solution_man;/* solution managing */
-  unsigned nsf;/* number of seeking field */
   unsigned innerB:1;/* if this patch has inner boundary 1 otherwise 0 */
 }Patch_T;
 
@@ -379,11 +380,22 @@ typedef struct PR_FIELD_T
   void *file2;/* file */
 }Pr_Field_T;
 
+/* interpolation struct used in interpolation function */
+typedef struct INTERPOLATION_T
+{
+  Field_T *field;/* interesting field for interpolation */
+  Point_T *point;/* info about the point that interpolation takes place */
+}Interpolation_T;
+
 /* boundary condition struct */
 typedef struct BOUNDARY_CONDITION_T
 {
   SubFace_T *subface;/* the subface located at interesting boundary */
   Field_T *field;/* the field this B.C.s to be imposed */
+  Solve_T *solve;/* used in interpolation and copy among others */
+  unsigned cn;/* collection number */
+  unsigned *node;/* nodes's index at the boundary, i.e node[i] = node number used in the patch */
+  unsigned nn;/* number of nodes */
 }Boundary_Condition_T;
 
 /* *******************************************

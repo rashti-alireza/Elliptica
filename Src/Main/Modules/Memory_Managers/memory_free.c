@@ -167,3 +167,18 @@ void free_db_eqs(sEquation_T **db)
   free(db);
 }
 
+/* freeing interpolation structure.
+// NOTE: it frees 
+// o. interp_s->point struct 
+// o. interp_s
+*/
+void free_interpolation(Interpolation_T *interp_s)
+{
+  if (!interp_s)
+    return;
+    
+  if (interp_s->point)
+    free(interp_s->point);
+    
+  free(interp_s);
+}
