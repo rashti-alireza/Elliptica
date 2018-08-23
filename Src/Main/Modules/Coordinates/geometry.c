@@ -36,8 +36,8 @@ int realize_geometry(Grid_T *const grid)
   /* freeing Point_T */
   free_points(grid);
   
-  /* set Dn_Df flags */
-  Dn_Df(grid);
+  /* set df_dn flags */
+  df_dn(grid);
   
   /* testing */
   test_subfaces(grid);
@@ -107,8 +107,8 @@ static void test_subfaces(const Grid_T *const grid)
         {
           subf2 = get_paired_subface(subf);
           
-          if (subf->Dn_Df && subf2->Dn_Df)
-            abortEr("Wrong Dn_Df flags.\n");
+          if (subf->df_dn && subf2->df_dn)
+            abortEr("Wrong df_dn flags.\n");
           if (!subf2->touch)
             abortEr("Wrong paired subface.\n");
           
@@ -119,12 +119,12 @@ static void test_subfaces(const Grid_T *const grid)
   }/* FOR_ALL(pa,grid->patch) */
 }
 
-/* setting Dn_Df flags inside sub-faces. this flag says if we have 
+/* setting df_dn flags inside sub-faces. this flag says if we have 
 // interpolation or copy situation at an interface, 
 // whether value of field is used or its derivative along normal to 
 // that interface. moreover, it pairs the related subfaces.
 */
-static void Dn_Df(Grid_T *const grid)
+static void df_dn(Grid_T *const grid)
 {
   unsigned pa;
   const unsigned AS = strlen(",Dn:?")+1;/* size of attached */
@@ -150,10 +150,10 @@ static void Dn_Df(Grid_T *const grid)
           if (strstr(subf->flags_str,"Dn:") && strstr(subf2->flags_str,"Dn:"))
             continue;
           
-          else if (subf->Dn_Df == 1  && subf2->Dn_Df == 1)
-            abortEr("Wrong Dn_Df flag for two subfaces.\n");
+          else if (subf->df_dn == 1  && subf2->df_dn == 1)
+            abortEr("Wrong df_dn flag for two subfaces.\n");
             
-          else if (subf->Dn_Df == 1  && subf2->Dn_Df == 0)
+          else if (subf->df_dn == 1  && subf2->df_dn == 0)
           {
               if (!strstr(subf2->flags_str,"Dn:0"))
               {
@@ -164,7 +164,7 @@ static void Dn_Df(Grid_T *const grid)
               }
           }
            
-          else if (subf->Dn_Df == 0  && subf2->Dn_Df == 1)
+          else if (subf->df_dn == 0  && subf2->df_dn == 1)
           {
               if (!strstr(subf->flags_str,"Dn:0"))
               {
@@ -175,13 +175,13 @@ static void Dn_Df(Grid_T *const grid)
               }
           }
              
-          else if (subf->Dn_Df == 0  && subf2->Dn_Df == 0)
+          else if (subf->df_dn == 0  && subf2->df_dn == 0)
           {
             /* when two subfaces are pristine */
             if (!strstr(subf->flags_str,"Dn:0") && 
                 !strstr(subf2->flags_str,"Dn:0"))
             {
-              subf->Dn_Df = 1;
+              subf->df_dn = 1;
               ss = (unsigned) strlen(subf->flags_str)+AS;
               subf->flags_str = realloc(subf->flags_str,ss);
               pointerEr(subf->flags_str);
@@ -195,7 +195,7 @@ static void Dn_Df(Grid_T *const grid)
             else if (strstr(subf->flags_str,"Dn:0") && 
                      !strstr(subf2->flags_str,"Dn:0"))
             {
-              subf2->Dn_Df = 1;
+              subf2->df_dn = 1;
               ss = (unsigned) strlen(subf2->flags_str)+AS;
               subf2->flags_str = realloc(subf2->flags_str,ss);
               pointerEr(subf2->flags_str);
@@ -205,7 +205,7 @@ static void Dn_Df(Grid_T *const grid)
             else if (!strstr(subf->flags_str,"Dn:0") && 
                      strstr(subf2->flags_str,"Dn:0"))
             {
-              subf->Dn_Df = 1;
+              subf->df_dn = 1;
               ss = (unsigned) strlen(subf->flags_str)+AS;
               subf->flags_str = realloc(subf->flags_str,ss);
               pointerEr(subf->flags_str);
@@ -213,9 +213,9 @@ static void Dn_Df(Grid_T *const grid)
             }
             /* all other cases */
             else
-             abortEr("Dn_Df can not be set; thess two pairs \n"
-               "are alredy sat with other two paires with fix Dn_Df.\n");
-          }/* end of if (subf->Dn_Df == 0  && subf2->Dn_Df == 0) */
+             abortEr("df_dn can not be set; thess two pairs \n"
+               "are alredy sat with other two paires with fix df_dn.\n");
+          }/* end of if (subf->df_dn == 0  && subf2->df_dn == 0) */
         
         }/* end of if (subf->outerB == 0 && subf->touch == 1) */
       }/* end of for (sf = 0; sf < face[f]->ns; ++sf) */
@@ -1458,7 +1458,8 @@ static void set_min_max_sum(const unsigned *const n,const unsigned f,unsigned *c
   }
 }
 
-/* normal vector at interface of patch, points "OUTWARD" and "NORMALIZED";
+/* normal vector at interface of patch, points "OUTWARD" and "NORMALIZED" and
+// in calculated in Cartesian coords.
 // the normal vector is written in N at point structure;
 // note: the members in point struct that must be filled before
 // passing to this function are: "ind","patch","face".

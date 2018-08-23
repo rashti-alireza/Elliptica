@@ -78,7 +78,7 @@ static void test_subfaces(const Grid_T *const grid);
 static char *inspect_flags(const Point_T *const pnt);
 static void add_to_subface(const Point_T *const pnt,const char *const lead);
 static void add_point(SubFace_T *const subface,const Point_T *const pnt);
-static void Dn_Df(Grid_T *const grid);
+static void df_dn(Grid_T *const grid);
 static Point_T *get_p2(const PointSet_T *const Pnt);
 static double find_grid_size(const PointSet_T *const Pnt,const unsigned i,const unsigned f);
 static SubFace_T *find_subface(const SubFace_T *const sub);
