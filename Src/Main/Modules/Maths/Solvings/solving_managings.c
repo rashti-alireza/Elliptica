@@ -161,7 +161,7 @@ static void fill_solve(Grid_T *const grid,char **const group,const unsigned ng,s
       solve->f_occupy[i] = i*patch->nn;
       solve->field_eq[i] = get_field_eq(group[i],field_eq);
       solve->bc_eq[i]    = get_field_eq(group[i],bc_eq);
-      solve->solver      = get_solver_method(GetParameterS_E("Solver"));
+      solve->solver      = get_solver_method(GetParameterS_E("Linear_Solver"));
       solve->field[i]    = prepare_field(group[i],"(3dim)",patch);
     }
     
