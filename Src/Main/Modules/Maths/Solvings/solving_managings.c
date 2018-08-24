@@ -88,7 +88,7 @@ void populate_solution_man(Grid_T *const grid,sEquation_T **const field_eq,sEqua
       
     patch->solution_man->nf = nf;
   }
-  free_matrix(field_name,nf);
+  free_2d_mem(field_name,nf);
   
   /* finding solving order */
   save = 0;
@@ -121,7 +121,7 @@ void populate_solution_man(Grid_T *const grid,sEquation_T **const field_eq,sEqua
     fill_solve(grid,group,ng,field_eq,bc_eq);
     
     tok = tok_s(0,FLASH,&save);/* tok = {f3,f4,...} */
-    free_matrix(group,ng);
+    free_2d_mem(group,ng);
   }
   free(par);
 }

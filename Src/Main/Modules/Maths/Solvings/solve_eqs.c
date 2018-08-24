@@ -46,7 +46,7 @@ static int parallel_patch_method(Grid_T *const grid)
       b_in_ax_b_whole_ppm(patch,cn);
       b_in_ax_b_bndry_ppm(patch,cn);
       /* making a in ax = b */
-      //a_in_ax_b_whole_ppm(patch,cn);
+      a_in_ax_b_whole_ppm(patch,cn);
       //a_in_ax_b_bndry_ppm(patch,cn);
       /* solve ax = b */
       //solve_ax_b_ppm(patch,cn);
@@ -58,7 +58,30 @@ static int parallel_patch_method(Grid_T *const grid)
   return EXIT_SUCCESS;
 }
 
-/* filling b in ax = b for whole points of the given patch
+/* filling a in a.x = b for whole points of the given patch
+// for the given colloction of fields cn according to the equations for a.
+// THREAD SAFE.
+// ->return value: EXIT_SUCCESS
+*/
+static int a_in_ax_b_whole_ppm(Patch_T *const patch,const unsigned cn)
+{
+  Solve_T *const slv = patch->solution_man->solve[cn];
+  unsigned i;
+  
+  for (i = 0; i < slv->nf; ++i)
+  {
+    Field_T *field        = slv->field[i];
+    fEquation_T *field_eq = slv->field_eq[i];
+    double *b             = &slv->b[slv->f_occupy[i]];
+    
+    /* fill b in ax = b for the specified field */
+    field_eq(field,b);
+  }
+  
+  return EXIT_SUCCESS;
+}
+
+/* filling b in a.x = b for whole points of the given patch
 // for the given colloction of fields cn according to field equations.
 // THREAD SAFE.
 // ->return value: EXIT_SUCCESS
@@ -81,7 +104,7 @@ static int b_in_ax_b_whole_ppm(Patch_T *const patch,const unsigned cn)
   return EXIT_SUCCESS;
 }
 
-/* filling b in ax = b for boundary points of the given patch
+/* filling b in a.x = b for boundary points of the given patch
 // for the given collocation of fields cn according to the boundary 
 // conditions between adjacent patches and boundary conditions equations.
 // THREAD SAFE.
@@ -295,7 +318,7 @@ static int bndry_interpolate_ppm(Boundary_Condition_T *const bc)
   return EXIT_SUCCESS;
 }
 
-/* filling values of b in ax = b for those points reach outer boundary
+/* filling values of b in a.x = b for those points reach outer boundary
 // according to boundary condition imposed by the equation for
 // parallel patch method.
 // ->return value: EXIT_SUCCESS
