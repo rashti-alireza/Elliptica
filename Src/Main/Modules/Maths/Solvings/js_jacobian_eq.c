@@ -7,6 +7,51 @@
 #define MAX_STR_LEN 400
 static const double CONST = 1.0;
 
+/* preparing J_* used in equations for each patch
+// according to given types. note: end of types pointer
+// must be marked with null pointer, e.g. *types[3] = {"J_xx","J_y",0}.
+*/
+void prepare_Js_jacobian_eq(Patch_T *const patch,const char * const *types)
+{
+  Js_Jacobian_eq_F *Jacobian;
+  Solution_Man_T *const sol_man = patch->solution_man;
+  const unsigned nn = patch->nn;
+  Matrix_T *J = 0;
+  JType_E jt_e;
+  unsigned i;
+  
+  /* selecting Jacobian method for making of jacobian equation */
+  if (strcmp_i(GetParameterS_E("Making_Jacobian_Eq_Method"),"spectral"))
+    Jacobian = make_jacobian_spectral_method;
+  else if (strcmp_i(GetParameterS_E("Making_Jacobian_Eq_Method"),"direct"))
+    Jacobian = make_jacobian_direct_method;
+  else
+    abortEr(INCOMPLETE_FUNC);
+  
+  i = 0;
+  while (types[i] != 0)
+  {
+    /* making Jacobian elements */
+    jt_e = str2JType_E(types[i]);
+    J = alloc_matrix(REG_SF,nn,nn);
+    Jacobian(J->reg->A,patch,jt_e);
+    
+    /* saving jacobian elements */
+    sol_man->jacobian = 
+      realloc(sol_man->jacobian,(i+1)*sizeof(*sol_man->jacobian));
+    pointerEr(sol_man->jacobian);
+    sol_man->jacobian[i] = calloc(1,sizeof(*sol_man->jacobian[i]));
+    pointerEr(sol_man->jacobian[i]);
+    sprintf(sol_man->jacobian[i]->type,types[i]);
+    sol_man->jacobian[i]->J = cast_matrix_ccs(J);
+    free_matrix(J);
+    //sol_man->jacobian->j_func = read_matrix_reg2ccs;
+    
+    i++;
+  }
+  sol_man->nj = i;
+}
+
 /* making elements of Jacobian for equations at the inner mesh.
 // types are pointers to string determining the type of jacobian
 // e.g. *types[3] = {"J_xx","J_y",0}.Note: the number of
@@ -15,7 +60,7 @@ static const double CONST = 1.0;
 void make_Js_jacobian_eq(Grid_T *const grid, const char * const* types)
 {
   Js_Jacobian_eq_F *Jacobian;
-  double **J = 0;
+  Matrix_T *J = 0;
   JType_E jt_e;
   unsigned i,p,nn;
   
@@ -36,10 +81,10 @@ void make_Js_jacobian_eq(Grid_T *const grid, const char * const* types)
     {
       Patch_T *patch = grid->patch[p];
       nn = total_nodes_patch(patch);
-      J = alloc_matrix(nn,nn);
-      Jacobian(J,patch,jt_e);
-      
-      free_matrix(J,nn);
+      J = alloc_matrix(REG_SF,nn,nn);
+      Jacobian(J->reg->A,patch,jt_e);
+      printf("This function is not ready yet!\n%s,%d\n",__FILE__,__LINE__);
+      free_matrix(J);
     }
     i++;
   }
@@ -54,7 +99,7 @@ void test_make_Js_jacobian_eq(Grid_T *const grid, const char * const* types)
   Js_Jacobian_eq_F *Jacobian[N_Method_E] = 
       {make_jacobian_spectral_method,make_jacobian_direct_method};
   double **cmp[N_Method_E];
-  double **J = 0;
+  Matrix_T *J = 0;
   const char *path_par = GetParameterS_E("output_directory_path");
   char *path = make_directory(path_par,"Test_Jacobian_Eq");
   char file_name[MAX_STR_LEN];
@@ -79,9 +124,9 @@ void test_make_Js_jacobian_eq(Grid_T *const grid, const char * const* types)
       
       for (e = Spectral_e; e < N_Method_E; ++e)
       {
-        J = alloc_matrix(nn,nn);
-        Jacobian[e](J,patch,jt_e);
-        cmp[e] = J;
+        J = alloc_matrix(REG_SF,nn,nn);
+        Jacobian[e](J->reg->A,patch,jt_e);
+        cmp[e] = J->reg->A;
       }
       
       printf("Testing Jacobian for Equations: patch=%s, type:%5s\t",patch->name,types[i]);
@@ -104,7 +149,7 @@ void test_make_Js_jacobian_eq(Grid_T *const grid, const char * const* types)
       
       for (e = Spectral_e; e < N_Method_E; ++e)
       {
-        free_matrix(cmp[e],nn);
+        free_2d_mem(cmp[e],nn);
       }
       
       flg = NO;
@@ -182,7 +227,7 @@ static void fill_jacobian_direct_method_1stOrder(double **const J, Patch_T *cons
 {
   Field_T **j_1st_deriv_field = 0;
   Patch_T *temp_patch = 0;
-  const unsigned nn = total_nodes_patch(patch);
+  const unsigned nn = patch->nn;
   const double EPS = CONST/nn;
   unsigned num_thread;
   char name[MAX_STR_LEN],deriv_str[MAX_STR_LEN] ;
@@ -250,7 +295,7 @@ static void fill_jacobian_direct_method_1stOrder(double **const J, Patch_T *cons
 */
 static void fill_jacobian_direct_method_2ndOrder(double **const J, Patch_T *const patch,const JType_E deriv_dir)
 {
-  const unsigned nn = total_nodes_patch(patch);
+  const unsigned nn = patch->nn;
   const double EPS = CONST/nn;
   unsigned num_thread;
   Field_T **j;
@@ -349,7 +394,7 @@ static void make_jacobian_spectral_method(double **const J,Patch_T *const patch,
 */
 static void fill_jacobian_spectral_method_1stOrder(double **const J,Patch_T *const patch,const JType_E jt_e)
 {
-  const unsigned nn = total_nodes_patch(patch);
+  const unsigned nn = patch->nn;
   const unsigned *const N = patch->n;
   Dd_T q_dir;
   unsigned ijk;
@@ -448,7 +493,7 @@ static void JType_E2Dd_T(const JType_E jt_e, Dd_T *const q_dir)
 */
 static void fill_jacobian_spectral_method_2ndOrder(double **const J, Patch_T *const patch,const JType_E deriv_dir)
 {
-  const unsigned nn = total_nodes_patch(patch);
+  const unsigned nn = patch->nn;
   unsigned num_thread;
   Field_T **j_1st_deriv_field = 0;
   Patch_T *temp_patch = 0;
@@ -598,4 +643,28 @@ static void JType_E2str(const JType_E e,char *const str)
     default:
       abortEr(INCOMPLETE_FUNC);
   }
+}
+
+/* getting j_* matrix according to its type */
+Matrix_T *get_j_matrix(const Patch_T *const patch,const char *type)
+{
+  Solution_Man_T *const sol_man = patch->solution_man;
+  Matrix_T *j = 0;
+  unsigned i;
+  
+  if (!sol_man)
+    return 0;
+  if (!sol_man->jacobian)
+    return 0;
+  
+  for (i = 0; i < sol_man->nj; ++i)
+  {
+    if (strcmp_i(sol_man->jacobian[i]->type,type))
+    {
+      j = sol_man->jacobian[i]->J;
+      break;
+    }
+  }
+  
+  return j;
 }

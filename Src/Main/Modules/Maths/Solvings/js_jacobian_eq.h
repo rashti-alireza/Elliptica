@@ -6,6 +6,7 @@
 #include "maths_general_lib.h"
 #include "maths_calculus_lib.h"
 #include "memory_managing_lib.h"
+#include "maths_linear_algebra_lib.h"
 
 /* Jacobian type */
 typedef enum JTYPE_E
@@ -24,8 +25,10 @@ typedef void Js_Jacobian_eq_F(double **const J,Patch_T *const patch,JType_E jt_e
 
 static double SIGN[2] = {1.0,-1.0};
 
+void prepare_Js_jacobian_eq(Patch_T *const patch,const char * const *types);
 void make_Js_jacobian_eq(Grid_T *const grid, const char * const* types);
 void test_make_Js_jacobian_eq(Grid_T *const grid, const char * const* types);
+Matrix_T *get_j_matrix(const Patch_T *const patch,const char *type);
 static JType_E str2JType_E(const char *const str);
 static void JType_E2str(const JType_E e,char *const str);
 static void make_jacobian_spectral_method(double **const J,Patch_T *const patch,const JType_E jt_e);
