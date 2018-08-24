@@ -14,8 +14,8 @@ int direct_solver_umfpack_di(void *vp)
   /* A is row by col matrix at Ax = b and in compressed column storage */
   const int row    = umf->row;
   const int col    = umf->col;
-  int *const Ap    = (int*)umf->Ap;
-  int *const Ai    = (int*)umf->Ai;
+  int *const Ap    = umf->Ap;
+  int *const Ai    = umf->Ai;
   double *const Ax = umf->Ax;
   double *const b  = umf->b;
   double *const x  = umf->x;
@@ -52,8 +52,8 @@ int direct_solver_umfpack_dl(void *vp)
   /* A is row by col matrix at Ax = b and in compressed column storage */
   const int row    = umf->row;
   const int col    = umf->col;
-  long *const Ap   = umf->Ap;
-  long *const Ai   = umf->Ai;
+  long *const Ap   = umf->Ap_long;
+  long *const Ai   = umf->Ai_long;
   double *const Ax = umf->Ax;
   double *const b  = umf->b;
   double *const x  = umf->x;
