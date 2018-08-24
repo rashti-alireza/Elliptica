@@ -3,18 +3,18 @@
 // August 2018
 */
 
-#include "jacobian_eq.h"
+#include "js_jacobian_eq.h"
 #define MAX_STR_LEN 400
 static const double CONST = 1.0;
 
-/* making Jacobian for equations at the inner mesh
+/* making elements of Jacobian for equations at the inner mesh.
 // types are pointers to string determining the type of jacobian
 // e.g. *types[3] = {"J_xx","J_y",0}.Note: the number of
 // types is found by null.
 */
-void make_jacobian_eq(Grid_T *const grid, const char * const* types)
+void make_Js_jacobian_eq(Grid_T *const grid, const char * const* types)
 {
-  Jacobian_eq_F *Jacobian;
+  Js_Jacobian_eq_F *Jacobian;
   double **J = 0;
   JType_E jt_e;
   unsigned i,p,nn;
@@ -48,10 +48,10 @@ void make_jacobian_eq(Grid_T *const grid, const char * const* types)
 /* testing make_jacobian_eq function:
 // it checks the consistensy between direct and spectral methods 
 */
-void test_make_jacobian_eq(Grid_T *const grid, const char * const* types)
+void test_make_Js_jacobian_eq(Grid_T *const grid, const char * const* types)
 {
   enum Method_E {Spectral_e = 0,Direct_e,N_Method_E};
-  Jacobian_eq_F *Jacobian[N_Method_E] = 
+  Js_Jacobian_eq_F *Jacobian[N_Method_E] = 
       {make_jacobian_spectral_method,make_jacobian_direct_method};
   double **cmp[N_Method_E];
   double **J = 0;

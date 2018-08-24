@@ -20,12 +20,12 @@ typedef enum JTYPE_E
 }JType_E;
 
 /* Jacobain for equation */
-typedef void Jacobian_eq_F(double **const J,Patch_T *const patch,JType_E jt_e);
+typedef void Js_Jacobian_eq_F(double **const J,Patch_T *const patch,JType_E jt_e);
 
 static double SIGN[2] = {1.0,-1.0};
 
-void make_jacobian_eq(Grid_T *const grid, const char * const* types);
-void test_make_jacobian_eq(Grid_T *const grid, const char * const* types);
+void make_Js_jacobian_eq(Grid_T *const grid, const char * const* types);
+void test_make_Js_jacobian_eq(Grid_T *const grid, const char * const* types);
 static JType_E str2JType_E(const char *const str);
 static void JType_E2str(const JType_E e,char *const str);
 static void make_jacobian_spectral_method(double **const J,Patch_T *const patch,const JType_E jt_e);
