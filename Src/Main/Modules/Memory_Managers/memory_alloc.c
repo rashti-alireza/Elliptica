@@ -252,7 +252,7 @@ double *alloc_double(const unsigned N)
 }
 
 /* return value-> M[R][C] double type memory using calloc */
-double **alloc_matrix(const long unsigned R,const long unsigned C)
+double **alloc_2D_double(const long unsigned R,const long unsigned C)
 {
   double **M;
   long unsigned row;
@@ -288,3 +288,42 @@ Solve_T *alloc_solve(Patch_T *const patch, const unsigned n)
   
   return sol[n-1];
 }
+
+/* given row and column of a asked matrix it allocates matrix 
+// according to the given type using calloc and return the result.
+// ->return value: new empty matrix
+*/
+Matrix_T *alloc_matrix(const Matrix_SF_T type_e,const long unsigned row,const long unsigned col)
+{
+  Matrix_T *m = 0;
+  
+  if (type_e == UNDEF_SF)
+    return m;
+    
+  m = calloc(1,sizeof(*m));
+  pointerEr(m);
+  m->row = row;
+  m->col = col;
+  
+  switch(type_e)
+  {
+    case REG_SF:
+      m->reg_f = 1;
+      m->reg->A = alloc_2D_double(row,col);
+      break;
+    case TRI_SF:
+      m->tri_f = 1;
+      break;
+    case CCS_SF:
+      m->ccs_f = 1;
+      break;
+    case CRS_SF:
+      m->crs_f = 1;
+      break;
+    default:
+      abortEr("The specified type is undefined.\n");
+  }
+  
+  return m;
+}
+

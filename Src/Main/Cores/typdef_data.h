@@ -8,7 +8,7 @@
 // *******************************************
 */
 
-#define _____MAX_STR_LEN_____ 400
+#define __1MAX_STR_LEN1__ 400
 
 /* *******************************************
 // enum:
@@ -103,6 +103,16 @@ typedef enum DD_T
  
 }Dd_T;
 
+/* matrix storage format */
+typedef enum MATRIX_SF_T
+{
+  REG_SF/* regular storage format */,
+  CCS_SF/* compressed column storage format */,
+  CRS_SF/* compressed row storage format */,
+  TRI_SF/* triplet storage format */,
+  UNDEF_SF/* undefined */
+}Matrix_SF_T;
+
 /* *******************************************
 // parameter:
 // *******************************************
@@ -133,7 +143,7 @@ typedef struct PROJECT_T
 }Project_T;
 
 /* *******************************************
-// grid and related: 
+// grid, patch, solve, equations etc.
 // *******************************************
 */
 
@@ -149,7 +159,7 @@ typedef struct POINT_T
 {
   unsigned ind;/* linear index in which node[ind] refers to this point */
   double N[3];/* normal vector */
-  double *x;/* points to some triple values for coords of a point */
+  double *x;/* points to some triplet values for coords of a point */
   struct PATCH_T *patch;/* refers to its patch */
   struct POINT_T *adjPoint;/* adjacent point */
   unsigned face    ;/* the interface in which this point located */
@@ -240,11 +250,56 @@ typedef struct FIELD_T
   void *v_ptr;/* refers to various quantities based on need */
 }Field_T;
 
+/* matrix */
+typedef struct MATRIX_T
+{
+  unsigned reg_f: 1;/* regular format */
+  unsigned tri_f: 1;/* 1 if tripet storage format, 0 otherwise*/
+  unsigned ccs_f: 1;/* 1 if compressed column storage format, 0 otherwise */
+  unsigned crs_f: 1;/* 1 if compressed row storage format,0 otherwise */
+  long unsigned row;
+  long unsigned col;
+  struct/* triplet storage format */
+  {
+    long *row;
+    long *col;
+    double *a;
+  }tri[1];
+  struct/* compressed column storage format */
+  {
+    long *Ap;
+    long *Ai;
+    double *Ax;
+  }ccs[1];
+  struct/* compressed row storage format */
+  {
+    long *Ap;
+    long *Aj;
+    double *Ax;
+  }crs[1];
+  struct/* regular storage format */
+  {
+    double **A;
+  }reg[1];
+}Matrix_T;
+
+/* jacobian for equations */
+typedef struct JACOBIAN_EQ_T
+{
+  Matrix_T *matrix;
+}Jacobian_Eq_T;
+
+/* function for making Jacobian for equations */
+typedef void fJacobian_Eq_T(Jacobian_Eq_T *const jac);
+
 /* equation solver */
 typedef int fEquation_Solver_T(void *vp);
 
 /* equation that field obeys */
 typedef void fEquation_T(void *vp,double *const F);
+
+/* elements of Jacobian for equations like J_xx etc. */
+typedef double fJs_T(Matrix_T *const m,const unsigned i,const unsigned j);
 
 /* solve collects the entites needed to solve fields 
 // based on eq's and b.c.'s and etc.
@@ -253,25 +308,26 @@ typedef struct SOLVE_T
 {
   char **f_name;/* f_name[#]="name of field #" */
   unsigned nf;/* number of fields */
-  double **a;/* in a.x = b */
-  double *b;/* in  a.x = b */
-  double *x;/* in  a.x = b */
   unsigned *f_occupy;/* refers to starting memory in 
                      // which the field number f occupies;
                      // so b[f_occupy[f]] to b[f_occupy[f]+nn] 
                      // are all memories in b which are used by 
                      // field with id f, nn is total nodes of a patch
                      */ 
+  double *b;/* in  a.x = b */
+  double *x;/* in  a.x = b */
+  Matrix_T *a;/* in a.x = b */
   Field_T **field;/* fields to be found to satisfy equations and B.C.s */
   fEquation_T **field_eq;/* the equation needed to be satisfied */
   fEquation_T **bc_eq;/* the B.C needed to be satisfied */
+  fJacobian_Eq_T **jac_eq;/* jacobian for equations */
   fEquation_Solver_T *solver;/* solver for ax = b */
 }Solve_T;
 
 /* equation stucture */
 typedef struct sEQUATION_T
 {
-  char name[_____MAX_STR_LEN_____];
+  char name[__1MAX_STR_LEN1__];
   fEquation_T *eq;/* the equation needed to be satisfied */
 }sEquation_T;
 
@@ -282,12 +338,19 @@ typedef struct SOLUTION_MAN_T
   unsigned nf;/* number of fields */
   unsigned ns;/* number of solutions structure */
   Solve_T **solve;/* group fields to be solved together
-                        // and in order appeared in input file
-                        // based on eq's & b.c.'s.
-                        // so seeking_field[0] is the first
-                        // group of fields to be solved
-                        // seeking_field[1] is the next and so on.
-                        */
+                  // and in order appeared in input file
+                  // based on eq's & b.c.'s.
+                  // so seeking_field[0] is the first
+                  // group of fields to be solved
+                  // seeking_field[1] is the next and so on.
+                  */
+  struct/* jacobian elements */
+  {
+    char type[__1MAX_STR_LEN1__];
+    Matrix_T *J;
+  }**jacobian;
+  unsigned nj;/* number of jacobian */
+  fJs_T *j_func;
 }Solution_Man_T;
 
 /* patch */
@@ -409,8 +472,10 @@ typedef struct UMFPACK_T
   int row;/* number of row in matrix A */
   int col;/* number of column in matrix A */
   /* Ap, Ai and Ax refer to compressed column storage format for matrix A */
-  long *Ap;
-  long *Ai;
+  long *Ap_long;
+  long *Ai_long;
+  int  *Ap;
+  int  *Ai;
   double *Ax;
   double *b;/* in Ax=b */
   double *x;/* in Ax=b */

@@ -21,9 +21,9 @@ void free_2d(void *mem0)
 }
 
 /* freeing 2 dimensions block of memory
-// knowing the number of columns is c
+// knowing the number of rows is c
 */
-void free_matrix(void *mem0, const unsigned long c)
+void free_2d_mem(void *mem0, const unsigned long c)
 {
   unsigned long i;
   void **mem = mem0;
@@ -64,7 +64,7 @@ void free_points(Grid_T *const grid)
     
     FOR_ALL(f,face)
     {
-      free_matrix(face[f]->point,face[f]->np);
+      free_2d_mem(face[f]->point,face[f]->np);
       face[f]->np = 0;
       face[f]->point = 0;
     }
@@ -181,4 +181,46 @@ void free_interpolation(Interpolation_T *interp_s)
     free(interp_s->point);
     
   free(interp_s);
+}
+
+/* freeing matrix memroy */
+void free_matrix(Matrix_T *m)
+{
+  if (!m)
+    return;
+    
+  if (m->reg_f)
+  {
+    free_2d_mem(m->reg->A,m->row);
+  }
+  else if (m->tri_f)
+  {
+    if (m->tri->row)
+      free(m->tri->row);
+    if (m->tri->col)
+      free(m->tri->col);
+    if (m->tri->a)
+      free(m->tri->a); 
+  }
+  else if (m->ccs_f)
+  {
+    if (m->ccs->Ap)
+      free(m->ccs->Ap);
+    if (m->ccs->Ai)
+      free(m->ccs->Ai);
+    if (m->ccs->Ax)
+      free(m->ccs->Ax);
+  }
+  else if (m->crs_f)
+  {
+    if (m->crs->Ap)
+      free(m->crs->Ap);
+    if (m->crs->Aj)
+      free(m->crs->Aj);
+    if (m->crs->Ax)
+      free(m->crs->Ax);
+  }
+  else
+    abortEr("No matrix format is defined for this given matrix.\n");
+  free(m);
 }
