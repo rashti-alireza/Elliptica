@@ -48,7 +48,7 @@ void add_eq(sEquation_T ***const data_base, fEquation_T *const eq,const char *co
 /* allocating and filling Solution_Man_T struct and its elements 
 // in each patch according to input file.
 */
-void populate_solution_man(Grid_T *const grid,sEquation_T **const field_eq,sEquation_T **const bc_eq)
+void populate_solution_man(Grid_T *const grid,sEquation_T **const field_eq,sEquation_T **const bc_eq,sEquation_T **const jacobian_eq)
 {
   const char *par_f = GetParameterS_E("Fields");
   const char *par_o = GetParameterS_E("Solving_Order");
@@ -118,7 +118,7 @@ void populate_solution_man(Grid_T *const grid,sEquation_T **const field_eq,sEqua
     if (!ng)
       abortEr("No group fields to be solved are found!\n");
       
-    fill_solve(grid,group,ng,field_eq,bc_eq);
+    fill_solve(grid,group,ng,field_eq,bc_eq,jacobian_eq);
     
     tok = tok_s(0,FLASH,&save);/* tok = {f3,f4,...} */
     free_2d_mem(group,ng);
@@ -127,7 +127,7 @@ void populate_solution_man(Grid_T *const grid,sEquation_T **const field_eq,sEqua
 }
 
 /* allocating memory and filling solve struct group by group */
-static void fill_solve(Grid_T *const grid,char **const group,const unsigned ng,sEquation_T **const field_eq,sEquation_T **const bc_eq)
+static void fill_solve(Grid_T *const grid,char **const group,const unsigned ng,sEquation_T **const field_eq,sEquation_T **const bc_eq,sEquation_T **const jacobian_eq)
 {
   unsigned p;
   
@@ -164,6 +164,8 @@ static void fill_solve(Grid_T *const grid,char **const group,const unsigned ng,s
       solve->solver      = get_solver_method(GetParameterS_E("Linear_Solver"));
       solve->field[i]    = prepare_field(group[i],"(3dim)",patch);
     }
+    /* since all of this group supposed to have only one jacobian eq. */
+    solve->jacobian_eq   = get_field_eq("jacobian",jacobian_eq);
     
   }/* end of FOR_ALL_PATCHES(p,grid) */
 }
