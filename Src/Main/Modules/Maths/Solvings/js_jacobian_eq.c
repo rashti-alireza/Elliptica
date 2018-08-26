@@ -31,6 +31,19 @@ void prepare_Js_jacobian_eq(Patch_T *const patch,const char * const *types)
   i = 0;
   while (types[i] != 0)
   {
+    /* check if this type has been already made the skip this */
+    Flag_T flg = NONE;
+    unsigned c;
+    for (c = 0; c < sol_man->nj; ++c)
+      if (strcmp_i(sol_man->jacobian[c]->type,types[i]))
+      {
+        flg = FOUND;
+        break;
+      }
+    
+    if (flg == FOUND)
+      continue;
+      
     /* making Jacobian elements */
     jt_e = str2JType_E(types[i]);
     J = alloc_matrix(REG_SF,nn,nn);
