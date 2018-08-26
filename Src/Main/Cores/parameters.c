@@ -27,7 +27,8 @@ void add_parameter(const char *const lv, const char *const rv)
 }
 
 /* having parameter name, it returns a pointer to 
-// the corresponding parameter
+// the corresponding parameter.
+// ->return value: lhs=rhs of a parameter, 0 if not found
 */
 Parameter_T *get_parameter(const char *const par_name)
 {
