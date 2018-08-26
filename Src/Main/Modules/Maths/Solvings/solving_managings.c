@@ -138,11 +138,13 @@ static void fill_solve(Grid_T *const grid,char **const group,const unsigned ng,s
     Patch_T *patch = grid->patch[p];
     Solve_T *solve;
     double *b = alloc_double(ng*patch->nn);
+    double *x = alloc_double(ng*patch->nn);
     unsigned ns,i;
     
     ns = ++patch->solution_man->ns;
     solve = alloc_solve(patch,ns);
     solve->b = b;
+    solve->x = x;
     solve->nf = ng;
     solve->field = calloc(ng,sizeof(*solve->field));
     pointerEr(solve->field);
@@ -161,7 +163,6 @@ static void fill_solve(Grid_T *const grid,char **const group,const unsigned ng,s
       solve->f_occupy[i] = i*patch->nn;
       solve->field_eq[i] = get_field_eq(group[i],field_eq);
       solve->bc_eq[i]    = get_field_eq(group[i],bc_eq);
-      solve->solver      = get_solver_method(GetParameterS_E("Linear_Solver"));
       solve->field[i]    = prepare_field(group[i],"(3dim)",patch);
     }
     /* since all of this group supposed to have only one jacobian eq. */

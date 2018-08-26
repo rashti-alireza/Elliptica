@@ -35,6 +35,18 @@ Matrix_T *cast_matrix_ccs(Matrix_T *const m)
   {
     abortEr(INCOMPLETE_FUNC);
   }
+  else if (m->tri_l_f)
+  {
+    abortEr(INCOMPLETE_FUNC);
+  }
+  else if (m->ccs_l_f)
+  {
+    abortEr(INCOMPLETE_FUNC);
+  }
+  else if (m->crs_l_f)
+  {
+    abortEr(INCOMPLETE_FUNC);
+  }
   else
     abortEr("No matrix format is defined for this given matrix.\n");
   
@@ -49,8 +61,8 @@ static void convert_reg2ccs(const Matrix_T *const reg,Matrix_T *const ccs,const 
   const long unsigned Nr = reg->row;
   const long unsigned Nc = reg->col;
   double **const m = reg->reg->A;
-  long *Ap   = calloc(Nc+1,sizeof(*Ap));
-  long *Ai   = 0;
+  int *Ap   = calloc(Nc+1,sizeof(*Ap));
+  int *Ai   = 0;
   double *Ax = 0;
   long tNN0 = 0;/* total number of none zero entries */
   long NN0;/* number of none zero entries in each columnt */
@@ -67,13 +79,13 @@ static void convert_reg2ccs(const Matrix_T *const reg,Matrix_T *const ccs,const 
         pointerEr(Ai);
         Ax = realloc(Ax,(long unsigned)(Ap[c]+NN0+1)*sizeof(*Ax));
         pointerEr(Ax);
-        Ai[Ap[c]+NN0] = (long)r;
+        Ai[Ap[c]+NN0] = (int)r;
         Ax[Ap[c]+NN0] = m[r][c];
         NN0++;
         tNN0++;
       }
     }
-    Ap[c+1] = tNN0;
+    Ap[c+1] = (int)tNN0;
   }
   
   ccs->ccs->Ap = Ap;

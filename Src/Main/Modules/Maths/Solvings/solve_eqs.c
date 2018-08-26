@@ -49,12 +49,44 @@ static int parallel_patch_method(Grid_T *const grid)
       a_in_ax_b_whole_ppm(patch,cn);
       a_in_ax_b_bndry_ppm(patch,cn);
       /* solve ax = b */
-      //solve_ax_b_ppm(patch,cn);
+      solve_ax_b_ppm(patch,cn);
     }
     break;
     //current_tol_grid = calculate_tolerance_on_grid(grid);
   }
   
+  return EXIT_SUCCESS;
+}
+
+/* solving a.x = b.
+// THREAD SAFE.
+// ->return value: EXIT_SUCCESS
+*/
+static int solve_ax_b_ppm(Patch_T *const patch,const unsigned cn)
+{
+  Solve_T *const solve = patch->solution_man->solve[cn];
+  
+  if (strcmp_i(GetParameterS_E("Linear_Solver"),"UMFPACK"))
+  {
+    UmfPack_T umfpack;
+    umfpack.a = solve->a;
+    umfpack.b = solve->b;
+    umfpack.x = solve->x;
+    direct_solver_umfpack_di(&umfpack);
+    
+  }
+  else if (strcmp_i(GetParameterS_E("Linear_Solver"),"UMFPACK_long"))
+  {
+    UmfPack_T umfpack;
+    umfpack.a = solve->a;
+    umfpack.b = solve->b;
+    umfpack.x = solve->x;
+    direct_solver_umfpack_dl(&umfpack);
+  }
+  else
+    abortEr_s("There is no such \"%s\" solver defined.\n",
+        GetParameterS_E("Linear_Solver"));
+        
   return EXIT_SUCCESS;
 }
 

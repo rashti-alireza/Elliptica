@@ -688,26 +688,32 @@ Matrix_T *get_j_matrix(const Patch_T *const patch,const char *type)
 */
 double read_matrix_entry_ccs(Matrix_T *const m, const unsigned r,const unsigned c)
 {
-  long *const Ap   = m->ccs->Ap;
-  long *const Ai   = m->ccs->Ai;
-  double *const Ax = m->ccs->Ax;
   double aij = 0;
-  long i;
   
-  /* moving along none zero entries of the matrix at column c */
-  for (i = Ap[c]; i < Ap[c+1]-1; ++i)
+  if (m->ccs_f)
   {
-    if (Ai[i] == r)
+    int *const Ap   = m->ccs->Ap;
+    int *const Ai   = m->ccs->Ai;
+    const double *const Ax = m->ccs->Ax;
+    int i;
+    
+    /* moving along none zero entries of the matrix at column c */
+    for (i = Ap[c]; i < Ap[c+1]-1; ++i)
     {
-      aij = Ax[i];
-      break;
+      if (Ai[i] == (int)r)
+      {
+        aij = Ax[i];
+        break;
+      }
+      /* it is supposed that the matrix m is in order in rows
+      // therefor, if the seeking row is passed, the entry is 0.
+      */
+      else if (Ai[i] > (int)r)
+        break;
     }
-    /* it is supposed that the matrix m is in order in rows
-    // therefor, if the seeking row is passed, the entry is 0.
-    */
-    else if (Ai[i] > r)
-      break;
   }
-  
+  else
+    abortEr(INCOMPLETE_FUNC);
+    
   return aij;
 }

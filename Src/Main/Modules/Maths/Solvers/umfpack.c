@@ -11,12 +11,12 @@
 int direct_solver_umfpack_di(void *vp)
 {
   UmfPack_T *const umf = vp;
-  /* A is row by col matrix at Ax = b and in compressed column storage */
-  const int row    = umf->row;
-  const int col    = umf->col;
-  int *const Ap    = umf->Ap;
-  int *const Ai    = umf->Ai;
-  double *const Ax = umf->Ax;
+  /* a is row by col matrix at a.x = b and in compressed column storage */
+  const int row    = (int)umf->a->row;
+  const int col    = (int)umf->a->col;
+  int *const Ap    = umf->a->ccs->Ap;
+  int *const Ai    = umf->a->ccs->Ai;
+  double *const Ax = umf->a->ccs->Ax;
   double *const b  = umf->b;
   double *const x  = umf->x;
   void *Symbolic,*Numeric;
@@ -49,12 +49,12 @@ int direct_solver_umfpack_di(void *vp)
 int direct_solver_umfpack_dl(void *vp)
 {
   UmfPack_T *const umf = vp;
-  /* A is row by col matrix at Ax = b and in compressed column storage */
-  const int row    = umf->row;
-  const int col    = umf->col;
-  long *const Ap   = umf->Ap_long;
-  long *const Ai   = umf->Ai_long;
-  double *const Ax = umf->Ax;
+  /* a is row by col matrix at a.x = b and in compressed column storage */
+  const int row    = (int)umf->a->row;
+  const int col    = (int)umf->a->col;
+  long *const Ap   = umf->a->ccs_long->Ap;
+  long *const Ai   = umf->a->ccs_long->Ai;
+  double *const Ax = umf->a->ccs_long->Ax;
   double *const b  = umf->b;
   double *const x  = umf->x;
   void *Symbolic,*Numeric;

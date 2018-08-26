@@ -220,6 +220,33 @@ void free_matrix(Matrix_T *m)
     if (m->crs->Ax)
       free(m->crs->Ax);
   }
+  else if (m->tri_l_f)
+  {
+    if (m->tri_long->row)
+      free(m->tri_long->row);
+    if (m->tri_long->col)
+      free(m->tri_long->col);
+    if (m->tri_long->a)
+      free(m->tri_long->a); 
+  }
+  else if (m->ccs_l_f)
+  {
+    if (m->ccs_long->Ap)
+      free(m->ccs_long->Ap);
+    if (m->ccs_long->Ai)
+      free(m->ccs_long->Ai);
+    if (m->ccs_long->Ax)
+      free(m->ccs_long->Ax);
+  }
+  else if (m->crs_l_f)
+  {
+    if (m->crs_long->Ap)
+      free(m->crs_long->Ap);
+    if (m->crs_long->Aj)
+      free(m->crs_long->Aj);
+    if (m->crs_long->Ax)
+      free(m->crs_long->Ax);
+  }
   else
     abortEr("No matrix format is defined for this given matrix.\n");
   free(m);

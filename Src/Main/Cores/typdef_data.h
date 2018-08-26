@@ -110,6 +110,9 @@ typedef enum MATRIX_SF_T
   CCS_SF/* compressed column storage format */,
   CRS_SF/* compressed row storage format */,
   TRI_SF/* triplet storage format */,
+  CCS_L_SF/* long compressed column storage format */,
+  CRS_L_SF/* long compressed row storage format */,
+  TRI_L_SF/* long triplet storage format */,
   UNDEF_SF/* undefined */
 }Matrix_SF_T;
 
@@ -257,30 +260,51 @@ typedef struct MATRIX_T
   unsigned tri_f: 1;/* 1 if tripet storage format, 0 otherwise*/
   unsigned ccs_f: 1;/* 1 if compressed column storage format, 0 otherwise */
   unsigned crs_f: 1;/* 1 if compressed row storage format,0 otherwise */
+  unsigned tri_l_f: 1;/* 1 if long tripet storage format, 0 otherwise*/
+  unsigned ccs_l_f: 1;/* 1 if long compressed column storage format, 0 otherwise */
+  unsigned crs_l_f: 1;/* 1 if long compressed row storage format,0 otherwise */
   long unsigned row;
   long unsigned col;
   struct/* triplet storage format */
   {
-    long *row;
-    long *col;
+    int *row;
+    int *col;
     double *a;
   }tri[1];
   struct/* compressed column storage format */
   {
-    long *Ap;
-    long *Ai;
+    int *Ap;
+    int *Ai;
     double *Ax;
   }ccs[1];
   struct/* compressed row storage format */
   {
-    long *Ap;
-    long *Aj;
+    int *Ap;
+    int *Aj;
     double *Ax;
   }crs[1];
   struct/* regular storage format */
   {
     double **A;
   }reg[1];
+  struct/* triplet storage format */
+  {
+    long *row;
+    long *col;
+    double *a;
+  }tri_long[1];
+  struct/* compressed column storage format */
+  {
+    long *Ap;
+    long *Ai;
+    double *Ax;
+  }ccs_long[1];
+  struct/* compressed row storage format */
+  {
+    long *Ap;
+    long *Aj;
+    double *Ax;
+  }crs_long[1];
 }Matrix_T;
 
 /* equation solver */
@@ -317,7 +341,6 @@ typedef struct SOLVE_T
                            // be solved together. so providing this equation 
                            // is on user.
                            */
-  fEquation_Solver_T *solver;/* solver for ax = b */
 }Solve_T;
 
 /* equation stucture */
@@ -473,14 +496,7 @@ typedef struct BOUNDARY_CONDITION_T
 /* umfpack direct solver */
 typedef struct UMFPACK_T
 {
-  int row;/* number of row in matrix A */
-  int col;/* number of column in matrix A */
-  /* Ap, Ai and Ax refer to compressed column storage format for matrix A */
-  long *Ap_long;
-  long *Ai_long;
-  int  *Ap;
-  int  *Ai;
-  double *Ax;
+  Matrix_T *a;/* a in a.x = b */
   double *b;/* in Ax=b */
   double *x;/* in Ax=b */
 }UmfPack_T;

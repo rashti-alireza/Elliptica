@@ -320,6 +320,15 @@ Matrix_T *alloc_matrix(const Matrix_SF_T type_e,const long unsigned row,const lo
     case CRS_SF:
       m->crs_f = 1;
       break;
+    case TRI_L_SF:
+      m->tri_l_f = 1;
+      break;
+    case CCS_L_SF:
+      m->ccs_l_f = 1;
+      break;
+    case CRS_L_SF:
+      m->crs_l_f = 1;
+      break;
     default:
       abortEr("The specified type is undefined.\n");
   }
