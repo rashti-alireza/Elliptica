@@ -47,13 +47,77 @@ static int parallel_patch_method(Grid_T *const grid)
       b_in_ax_b_bndry_ppm(patch,cn);
       /* making a in ax = b */
       a_in_ax_b_whole_ppm(patch,cn);
-      //a_in_ax_b_bndry_ppm(patch,cn);
+      a_in_ax_b_bndry_ppm(patch,cn);
       /* solve ax = b */
       //solve_ax_b_ppm(patch,cn);
     }
     break;
     //current_tol_grid = calculate_tolerance_on_grid(grid);
   }
+  
+  return EXIT_SUCCESS;
+}
+
+/* filling a in a.x = b for the bndry points of the given patch
+// for the given colloction of fields cn according to the equations for a.
+// THREAD SAFE.
+// ->return value: EXIT_SUCCESS
+*/
+static int a_in_ax_b_bndry_ppm(Patch_T *const patch,const unsigned cn)
+{
+  const unsigned nintfc = countf(patch->interface);
+  Solve_T *const solve = patch->solution_man->solve[cn];
+  unsigned intfc;
+  
+  for (intfc = 0; intfc < nintfc; ++intfc)
+  {
+    Interface_T *interface = patch->interface[intfc];
+    unsigned nsfc = interface->ns;
+    unsigned sfc;
+    
+    for (sfc = 0; sfc < nsfc; ++sfc)
+    {
+      SubFace_T *subface = interface->subface[sfc];
+      Boundary_Condition_T BC;
+      
+      BC.subface = subface;
+      BC.solve   = solve;
+      BC.cn      = cn;
+      
+      if (!subface->exterF)/* if subface is internal */
+      {
+        continue;
+      }
+      else if (subface->innerB)/* if there is inner boundary */
+      {
+        abortEr(INCOMPLETE_FUNC);
+      }
+      else if (subface->outerB)/* if it reaches outer boundary */
+      {
+        a_bndry_outerB_ppm(&BC);
+      }
+      else if (subface->touch)/* if two patches are in touch */
+      {
+        if (subface->copy)/* if the collocated point */
+        {
+          /* copy values */
+          a_bndry_copy_ppm(&BC);
+        }
+        else
+        {
+          /* interpolate values */
+          a_bndry_interpolate_ppm(&BC);
+        }
+      }
+      else /* if there is an overlap case */
+      {
+        /* interpolate values */
+        a_bndry_interpolate_ppm(&BC);
+      }
+      
+    }/* end of for (sfc = 0; sfc < nsfc; ++sfc) */
+    
+  }/* end of for (intfc = 0; intfc < nintfc; ++intfc) */
   
   return EXIT_SUCCESS;
 }
@@ -66,17 +130,21 @@ static int parallel_patch_method(Grid_T *const grid)
 static int a_in_ax_b_whole_ppm(Patch_T *const patch,const unsigned cn)
 {
   Solve_T *const slv = patch->solution_man->solve[cn];
-  unsigned i;
+  Jacobian_Eq_T *jac = calloc(1,sizeof(*jac));
+  pointerEr(jac);
   
-  for (i = 0; i < slv->nf; ++i)
-  {
-    Field_T *field        = slv->field[i];
-    fEquation_T *field_eq = slv->field_eq[i];
-    double *b             = &slv->b[slv->f_occupy[i]];
-    
-    /* fill b in ax = b for the specified field */
-    field_eq(field,b);
-  }
+  /* filling up the jacobian struct */
+  jac->field = slv->field;
+  jac->nf    = slv->nf;
+  
+  /* getting the pertinent equation for jacobian */
+  fEquation_T *const jacobian  = slv->jacobian_eq;
+  
+  /* fill a in a.x = b for the specified field */
+  slv->a = jacobian(jac,patch);
+  
+  /* freeing memory */
+  free(jac);
   
   return EXIT_SUCCESS;
 }
@@ -137,29 +205,29 @@ static int b_in_ax_b_bndry_ppm(Patch_T *const patch,const unsigned cn)
       }
       else if (subface->innerB)/* if there is inner boundary */
       {
-        continue;/* this part can be develope for general cases */
+        abortEr(INCOMPLETE_FUNC);
       }
       else if (subface->outerB)/* if it reaches outer boundary */
       {
-        bndry_outerB_ppm(&BC);
+        b_bndry_outerB_ppm(&BC);
       }
       else if (subface->touch)/* if two patches are in touch */
       {
         if (subface->copy)/* if the collocated point */
         {
           /* copy values */
-          bndry_copy_ppm(&BC);
+          b_bndry_copy_ppm(&BC);
         }
         else
         {
           /* interpolate values */
-          bndry_interpolate_ppm(&BC);
+          b_bndry_interpolate_ppm(&BC);
         }
       }
       else /* if there is an overlap case */
       {
         /* interpolate values */
-        bndry_interpolate_ppm(&BC);
+        b_bndry_interpolate_ppm(&BC);
       }
       
     }/* end of for (sfc = 0; sfc < nsfc; ++sfc) */
@@ -174,7 +242,7 @@ static int b_in_ax_b_bndry_ppm(Patch_T *const patch,const unsigned cn)
 // at the boundary between two patches for parallel patch method.
 // ->return value: EXIT_SUCCESS
 */
-static int bndry_copy_ppm(Boundary_Condition_T *const bc)
+static int b_bndry_copy_ppm(Boundary_Condition_T *const bc)
 {
   SubFace_T *const subface = bc->subface;
   Solve_T *const solve     = bc->solve;
@@ -270,11 +338,137 @@ static int bndry_copy_ppm(Boundary_Condition_T *const bc)
 }
 
 
+/* making those parts of jacobian related to the section in b in which 
+// it copys values of fields or their derivative
+// along the normaln vector between collocated points 
+// at the boundary between two patches for parallel patch method.
+// ->return value: EXIT_SUCCESS
+*/
+static int a_bndry_copy_ppm(Boundary_Condition_T *const bc)
+{
+  SubFace_T *const subface = bc->subface;
+  Solve_T *const solve     = bc->solve;
+  Patch_T *const patch = subface->patch;
+  const unsigned nb        = subface->np;
+  const unsigned nn = bc->subface->patch->nn;
+  const unsigned *const bndry = subface->id;
+  double **const a = solve->a->reg->A;
+  double *Nvec = 0;
+  unsigned i;
+  
+  /* df/dn = df/dn|adjacent */
+  if (subface->df_dn)
+  {
+    const char *types[] = {"j_x","j_y","j_z",0};
+    fJs_T *const jf = patch->solution_man->j_func;
+    Matrix_T *j_x = 0,*j_y = 0,*j_z = 0;
+    Point_T point;
+    point.patch = patch;
+    point.face  = subface->face;
+    
+    /* if one wants to solve whole equations on curvilinear patches */
+    if (!strcmp_i(GetParameterS("Solving_Interpolation_Normal"),"Cartesian_Normal"))
+    {
+      abortEr(INCOMPLETE_FUNC);
+      
+      const char *types2[] = {"j_a","j_b","j_c",0};
+      prepare_Js_jacobian_eq(patch,types2);
+      j_x = get_j_matrix(patch,"j_a");
+      j_y = get_j_matrix(patch,"j_b");
+      j_z = get_j_matrix(patch,"j_c");
+  
+    }
+    else
+    {
+      prepare_Js_jacobian_eq(patch,types);
+      j_x = get_j_matrix(patch,"j_x");
+      j_y = get_j_matrix(patch,"j_y");
+      j_z = get_j_matrix(patch,"j_z");
+    }
+    
+    for (i = 0; i < solve->nf; ++i)
+    {
+      unsigned initial = solve->f_occupy[i];
+      unsigned final   = initial+nn;
+      unsigned ijk,lmn;
+      
+      /* fill a in a.x = b for the specified field */
+      for (ijk = 0; ijk < nb; ++ijk)
+      {
+        point.ind   = bndry[ijk];
+        Nvec = normal_vec(&point);
+        for (lmn = initial; lmn < final;++lmn)
+          a[initial+bndry[ijk]][lmn] = 
+              Nvec[0]*jf(j_x,bndry[ijk],lmn-initial) +
+              Nvec[1]*jf(j_y,bndry[ijk],lmn-initial) +
+              Nvec[2]*jf(j_z,bndry[ijk],lmn-initial) ;
+      }
+    }/* end of for (i = 0; i < solve->nf; ++i) */
+  }/* if (subface->df_dn) */
+  
+  /* f = f|adjacent */
+  else
+  {
+    for (i = 0; i < solve->nf; ++i)
+    {
+      unsigned initial = solve->f_occupy[i];
+      unsigned final   = initial+nn;
+      unsigned ijk,lmn;
+      
+      /* fill a in a.x = b for the specified field */
+      for (ijk = 0; ijk < nb; ++ijk)
+      {
+        for (lmn = initial; lmn < final;++lmn)
+          a[initial+bndry[ijk]][lmn] = 0;
+          
+        a[initial+bndry[ijk]][initial+bndry[ijk]] = 1;
+
+      }
+      
+    }/* end of for (i = 0; i < solve->nf; ++i) */
+  }
+  
+  return EXIT_SUCCESS;
+}
+
+/* making a in a.x = b for sections which needs 
+// interpolating values of fields at the interface of 
+// two patches for parallel patch method.
+// ->return value: EXIT_SUCCESS
+*/
+static int a_bndry_interpolate_ppm(Boundary_Condition_T *const bc)
+{
+  Solve_T *const solve = bc->solve;
+  double **a = solve->a->reg->A;
+  const unsigned *const bndry = bc->subface->id;
+  const unsigned Nb = bc->subface->np;
+  const unsigned nn = bc->subface->patch->nn;
+  unsigned i;
+  
+  for (i = 0; i < solve->nf; ++i)
+  {
+    unsigned initial = solve->f_occupy[i];
+    unsigned final   = initial+nn;
+    unsigned ijk,lmn;
+    
+    /* fill a in a.x = b for the specified field */
+    for (ijk = 0; ijk < Nb; ++ijk)
+    {
+      for (lmn = initial; lmn < final;++lmn)
+        a[initial+bndry[ijk]][lmn] = 0;
+      
+      a[initial+bndry[ijk]][initial+bndry[ijk]] = 1;
+    }
+  }
+
+  return EXIT_SUCCESS;
+}
+
 /* interpolating values of fields at the interface of 
 // two patches for parallel patch method.
 // ->return value: EXIT_SUCCESS
 */
-static int bndry_interpolate_ppm(Boundary_Condition_T *const bc)
+static int b_bndry_interpolate_ppm(Boundary_Condition_T *const bc)
 {
   SubFace_T *const subface   = bc->subface;
   Solve_T   *const solve     = bc->solve;
@@ -323,21 +517,54 @@ static int bndry_interpolate_ppm(Boundary_Condition_T *const bc)
 // parallel patch method.
 // ->return value: EXIT_SUCCESS
 */
-static int bndry_outerB_ppm(Boundary_Condition_T *const bc)
+static int b_bndry_outerB_ppm(Boundary_Condition_T *const bc)
 {
   Solve_T *const solve = bc->solve;
+  bc->node	       = bc->subface->id;
+  bc->nn               = bc->subface->np;
   unsigned i;
   
   for (i = 0; i < solve->nf; ++i)
   {
     bc->field        	 = solve->field[i];
-    bc->node		 = bc->subface->id;
-    bc->nn 		 = bc->subface->np;
     fEquation_T *bc_eq   = solve->bc_eq[i];
     double *b            = &solve->b[solve->f_occupy[i]];
     
-    /* fill b in ax = b for the specified field */
+    /* fill b in a.x = b for the specified field */
     bc_eq(bc,b);
+  }
+  
+  return EXIT_SUCCESS;
+}
+
+/* filling values of a in a.x = b for those points reach outer boundary
+// for parallel patch method. note that since b equals to eq|i = f[i]-bc
+// then d(eq|i)/df(j) = Dirac_Delta(i,j).
+// ->return value: EXIT_SUCCESS
+*/
+static int a_bndry_outerB_ppm(Boundary_Condition_T *const bc)
+{
+  Solve_T *const solve = bc->solve;
+  double **a = solve->a->reg->A;
+  const unsigned *const bndry = bc->subface->id;
+  const unsigned nb = bc->subface->np;
+  const unsigned nn = bc->subface->patch->nn;
+  unsigned i;
+  
+  for (i = 0; i < solve->nf; ++i)
+  {
+    unsigned initial = solve->f_occupy[i];
+    unsigned final   = initial+nn;
+    unsigned ijk,lmn;
+    
+    /* fill a in a.x = b for the specified field */
+    for (ijk = 0; ijk < nb; ++ijk)
+    {
+      for (lmn = initial; lmn < final;++lmn)
+        a[initial+bndry[ijk]][lmn] = 0;
+      
+      a[initial+bndry[ijk]][initial+bndry[ijk]] = 1;
+    }
   }
   
   return EXIT_SUCCESS;
