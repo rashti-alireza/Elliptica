@@ -29,6 +29,7 @@ void prepare_Js_jacobian_eq(Patch_T *const patch,const char * const *types);
 void make_Js_jacobian_eq(Grid_T *const grid, const char * const* types);
 void test_make_Js_jacobian_eq(Grid_T *const grid, const char * const* types);
 Matrix_T *get_j_matrix(const Patch_T *const patch,const char *type);
+double read_matrix_entry_ccs(Matrix_T *const m, const unsigned r,const unsigned c);
 static JType_E str2JType_E(const char *const str);
 static void JType_E2str(const JType_E e,char *const str);
 static void make_jacobian_spectral_method(double **const J,Patch_T *const patch,const JType_E jt_e);

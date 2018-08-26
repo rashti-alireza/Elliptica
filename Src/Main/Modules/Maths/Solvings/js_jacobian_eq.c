@@ -45,7 +45,7 @@ void prepare_Js_jacobian_eq(Patch_T *const patch,const char * const *types)
     sprintf(sol_man->jacobian[i]->type,types[i]);
     sol_man->jacobian[i]->J = cast_matrix_ccs(J);
     free_matrix(J);
-    //sol_man->jacobian->j_func = read_matrix_reg2ccs;
+    sol_man->j_func = read_matrix_entry_ccs;
     
     i++;
   }
@@ -667,4 +667,34 @@ Matrix_T *get_j_matrix(const Patch_T *const patch,const char *type)
   }
   
   return j;
+}
+
+/* given matrix, row and column of a CCS format matrix,
+// it returns the corresponing enteries of matrix.
+// ->return value: m[i][j] in which m is in CCS format
+*/
+double read_matrix_entry_ccs(Matrix_T *const m, const unsigned r,const unsigned c)
+{
+  long *const Ap   = m->ccs->Ap;
+  long *const Ai   = m->ccs->Ai;
+  double *const Ax = m->ccs->Ax;
+  double aij = 0;
+  long i;
+  
+  /* moving along none zero entries of the matrix at column c */
+  for (i = Ap[c]; i < Ap[c+1]-1; ++i)
+  {
+    if (Ai[i] == r)
+    {
+      aij = Ax[i];
+      break;
+    }
+    /* it is supposed that the matrix m is in order in rows
+    // therefor, if the seeking row is passed, the entry is 0.
+    */
+    else if (Ai[i] > r)
+      break;
+  }
+  
+  return aij;
 }
