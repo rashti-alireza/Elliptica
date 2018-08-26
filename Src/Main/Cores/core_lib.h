@@ -25,6 +25,7 @@
 int get_parameter_value_I(const char *const par_name,const char *const file, const int line,const Flag_T flg);
 double get_parameter_value_D(const char *const par_name,const char *const file, const int line,const Flag_T flg);
 const char *get_parameter_value_S(const char *const par_name,const char *const file, const int line,const Flag_T flg);
+Parameter_T *get_parameter(const char *const par_name);
 /* fields */
 Field_T *add_field(const char *const name,const char *attribute,Patch_T *const patch,const Flag_T alloc_flg);
 void remove_field(Field_T *f);
