@@ -283,20 +283,11 @@ typedef struct MATRIX_T
   }reg[1];
 }Matrix_T;
 
-/* jacobian for equations */
-typedef struct JACOBIAN_EQ_T
-{
-  Matrix_T *matrix;
-}Jacobian_Eq_T;
-
-/* function for making Jacobian for equations */
-typedef void fJacobian_Eq_T(Jacobian_Eq_T *const jac);
-
 /* equation solver */
 typedef int fEquation_Solver_T(void *vp);
 
-/* equation that field obeys */
-typedef void fEquation_T(void *vp,double *const F);
+/* a general prototype to embrace various types of equations */
+typedef void *fEquation_T(void *vp1,void *vp2);
 
 /* elements of Jacobian for equations like J_xx etc. */
 typedef double fJs_T(Matrix_T *const m,const unsigned i,const unsigned j);
@@ -320,7 +311,12 @@ typedef struct SOLVE_T
   Field_T **field;/* fields to be found to satisfy equations and B.C.s */
   fEquation_T **field_eq;/* the equation needed to be satisfied */
   fEquation_T **bc_eq;/* the B.C needed to be satisfied */
-  fJacobian_Eq_T **jac_eq;/* jacobian for equations */
+  fEquation_T *jacobian_eq;/* jacobian for equations, 
+                           // note: all of fields in this structure must 
+                           // have one equation since they are supposed to 
+                           // be solved together. so providing this equation 
+                           // is on user.
+                           */
   fEquation_Solver_T *solver;/* solver for ax = b */
 }Solve_T;
 
@@ -395,6 +391,14 @@ typedef struct GIRD_T
   unsigned np;/* number of patches on grid */
   unsigned nn;/* total number of nodes on grid */
 }Grid_T;
+
+/* jacobian for equations */
+typedef struct JACOBIAN_EQ_T
+{
+  Field_T **field;
+  unsigned nf;/* number of fields */
+}Jacobian_Eq_T;
+
 
 /* *******************************************
 // some typedef are common and used in different functions 
