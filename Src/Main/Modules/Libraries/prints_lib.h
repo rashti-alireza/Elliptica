@@ -9,7 +9,7 @@ void pr_comment(const char *const comment);
 void pr_clock(void);
 void pr_interfaces(const Grid_T *const grid);
 void pr_fields(Pr_Field_T *const pr);
-double get_time(void);
+double get_time_sec(void);
 void pr_spent_time(const double start,const char *const event);
 Pr_Field_T *init_PrField(const Grid_T *const grid);
 void free_PrField(Pr_Field_T *pr);

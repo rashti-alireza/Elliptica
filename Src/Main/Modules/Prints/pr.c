@@ -52,20 +52,22 @@ void pr_clock(void)
   
 }
 
-/* giving the current time in second*/
-double get_time(void)
+/* giving the current time in second.
+// ->return current time in second.
+*/
+double get_time_sec(void)
 {
   time_t now = time(0);
   return difftime(now,initial_time_global)/60;
 }
 
-/* printing the amount of time spent for an event.
-// given start time and an appropriate message, it prints
+/* printing the amount of time spent for an event in second.
+// given start time in SECOND and an appropriate message, it prints
 // the difference between start and current time with the message.
 */
 void pr_spent_time(const double start,const char *const event)
 {
-  const double end = get_time();
+  const double end = get_time_sec();
   
   printf("Spent time for %s is \"%f\"\n",event,end-start);
 }
