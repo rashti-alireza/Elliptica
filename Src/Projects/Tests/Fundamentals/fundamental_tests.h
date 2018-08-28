@@ -9,5 +9,7 @@
 #include "maths_solvings_lib.h"
 #include "maths_general_lib.h"
 
+#define OpenMP(x) _Pragma(#x)
+
 int Fundamental_Tests(void);
 Grid_T *fundamental_tests_make_grid(void);
