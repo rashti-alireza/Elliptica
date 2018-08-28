@@ -191,7 +191,8 @@ void free_matrix(Matrix_T *m)
     
   if (m->reg_f)
   {
-    free_2d_mem(m->reg->A,(long unsigned)m->row);
+    if (m->reg->A)
+      free_2d_mem(m->reg->A,(long unsigned)m->row);
   }
   else if (m->tri_f)
   {

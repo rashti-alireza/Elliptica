@@ -156,6 +156,8 @@ void test_make_Js_jacobian_eq(Grid_T *const grid, const char * const* types)
         J = alloc_matrix(REG_SF,nn,nn);
         Jacobian[e](J->reg->A,patch,jt_e);
         cmp[e] = J->reg->A;
+        J->reg->A = 0;
+        free_matrix(J);
       }
       
       printf("Testing Jacobian for Equations: patch=%s, type:%5s\t",patch->name,types[i]);
@@ -292,7 +294,6 @@ static void fill_jacobian_direct_method_1stOrder(double **const J, Patch_T *cons
   Field_T *f = temp_patch.pool[LookUpField("j_1st_deriv_field",&temp_patch)];
   remove_field(f);
   free_temp_patch(&temp_patch);
-  free(j_1st_deriv_field);
 }
 
 /* making Jacobian using direct method in direction $&
@@ -339,7 +340,6 @@ static void fill_jacobian_direct_method_2ndOrder(double **const J, Patch_T *cons
   Field_T *f = temp_patch.pool[LookUpField("j",&temp_patch)];
   remove_field(f);
   free_temp_patch(&temp_patch);
-  free(j);
 }
 
 /* making Jacobian equations using spectral method */
@@ -513,7 +513,6 @@ static void fill_jacobian_spectral_method_2ndOrder(double **const J, Patch_T *co
   Field_T *f = temp_patch.pool[LookUpField("j_1st_deriv_field",&temp_patch)];
   remove_field(f);
   free_temp_patch(&temp_patch);
-  free(j_1st_deriv_field);
 }
 
 /* decomposing deriv_dir and finding 1st and 2nd direction for derivative */
