@@ -45,7 +45,7 @@ $(EXE): $(c_src)
 #Cleaning the whole object and binary files 
 .PHONY: clean
 clean:
-	-rm -rf $(TOP)/Bin/$(EXE) $(TOP)/$(Lib)/*
+	-rm -rf $(TOP)/Bin/$(EXE) $(TOP)/$(Lib)/* $(TOP)/*~
 	$(foreach dir, $(modules_path), rm -rf $(dir)/*.o)
 	$(foreach dir, $(projects_path), rm -rf $(dir)/*.o)
 	$(foreach dir, $(modules_path), rm -rf $(dir)/*.*~)
