@@ -10,3 +10,4 @@ int projects_data_base(void);
 
 
 int Laplace_Inhom (void);
+int Fundamental_Tests(void);
