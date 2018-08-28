@@ -291,9 +291,9 @@ Solve_T *alloc_solve(Patch_T *const patch, const unsigned n)
 
 /* given row and column of a asked matrix it allocates matrix 
 // according to the given type using calloc and return the result.
-// ->return value: new empty matrix
+// ->return value: new empty matrix. null if something not defined correctly.
 */
-Matrix_T *alloc_matrix(const Matrix_SF_T type_e,const long unsigned row,const long unsigned col)
+Matrix_T *alloc_matrix(const Matrix_SF_T type_e,const long row,const long col)
 {
   Matrix_T *m = 0;
   
@@ -309,7 +309,7 @@ Matrix_T *alloc_matrix(const Matrix_SF_T type_e,const long unsigned row,const lo
   {
     case REG_SF:
       m->reg_f = 1;
-      m->reg->A = alloc_2D_double(row,col);
+      m->reg->A = alloc_2D_double((long unsigned)row,(long unsigned)col);
       break;
     case TRI_SF:
       m->tri_f = 1;

@@ -5,6 +5,8 @@
 
 #include "js_jacobian_eq.h"
 #define MAX_STR_LEN 400
+#define MAX_J_SIZE 10
+
 static const double CONST = 1.0;
 
 /* preparing J_* used in equations for each patch
@@ -16,9 +18,16 @@ void prepare_Js_jacobian_eq(Patch_T *const patch,const char * const *types)
   Js_Jacobian_eq_F *Jacobian;
   Solution_Man_T *const sol_man = patch->solution_man;
   const unsigned nn = patch->nn;
+  /* default value of J if it gets larger than 10 Mb it will 
+  // be written in a file unless user assigne other value. 
+  */
+  double max_j_size = MAX_J_SIZE;
   Matrix_T *J = 0;
   JType_E jt_e;
   unsigned i;
+  
+  if (get_parameter("Maximum_Size_of_J_Kept_in_Mb"))
+    max_j_size = GetParameterD("Maximum_Size_of_J_Kept_in_Mb");
   
   /* selecting Jacobian method for making of jacobian equation */
   if (strcmp_i(GetParameterS_E("Making_Jacobian_Eq_Method"),"spectral"))
@@ -31,7 +40,7 @@ void prepare_Js_jacobian_eq(Patch_T *const patch,const char * const *types)
   i = 0;
   while (types[i] != 0)
   {
-    /* check if this type has been already made the skip this */
+    /* check if this type has been already made then skip this */
     Flag_T flg = NONE;
     unsigned c;
     for (c = 0; c < sol_man->nj; ++c)
@@ -42,7 +51,10 @@ void prepare_Js_jacobian_eq(Patch_T *const patch,const char * const *types)
       }
     
     if (flg == FOUND)
+    {
+      i++;
       continue;
+    }
       
     /* making Jacobian elements */
     jt_e = str2JType_E(types[i]);
@@ -50,15 +62,19 @@ void prepare_Js_jacobian_eq(Patch_T *const patch,const char * const *types)
     Jacobian(J->reg->A,patch,jt_e);
     
     /* saving jacobian elements */
+    c = sol_man->nj;
     sol_man->jacobian = 
-      realloc(sol_man->jacobian,(i+1)*sizeof(*sol_man->jacobian));
+      realloc(sol_man->jacobian,(c+1)*sizeof(*sol_man->jacobian));
     pointerEr(sol_man->jacobian);
-    sol_man->jacobian[i] = calloc(1,sizeof(*sol_man->jacobian[i]));
-    pointerEr(sol_man->jacobian[i]);
-    sprintf(sol_man->jacobian[i]->type,types[i]);
-    sol_man->jacobian[i]->J = cast_matrix_ccs(J);
+    sol_man->jacobian[c] = calloc(1,sizeof(*sol_man->jacobian[c]));
+    pointerEr(sol_man->jacobian[c]);
+    sprintf(sol_man->jacobian[c]->type,types[i]);
+    sol_man->jacobian[c]->J = cast_matrix_ccs(J);
     free_matrix(J);
     sol_man->j_func = read_matrix_entry_ccs;
+    
+    if (GRT(J_sizeMb_ccs(sol_man->jacobian[i]->J),max_j_size))
+      write_J_in_disk_ccs();
     
     i++;
   }
@@ -689,31 +705,65 @@ Matrix_T *get_j_matrix(const Patch_T *const patch,const char *type)
 double read_matrix_entry_ccs(Matrix_T *const m, const unsigned r,const unsigned c)
 {
   double aij = 0;
+  int *const Ap   = m->ccs->Ap;
+  int *const Ai   = m->ccs->Ai;
+  const double *const Ax = m->ccs->Ax;
+  int i;
+  
+  /* moving along none zero entries of the matrix at column c */
+  for (i = Ap[c]; i < Ap[c+1]-1; ++i)
+  {
+    if (Ai[i] == (int)r)
+    {
+      aij = Ax[i];
+      break;
+    }
+    /* it is supposed that the matrix m is in order in rows
+    // therefor, if the seeking row is passed, the entry is 0.
+    */
+    else if (Ai[i] > (int)r)
+      break;
+  }
+    
+  return aij;
+}
+
+/* calculating the give ccs matirx size.
+// ->return value: size of matrix in Mb
+*/
+static double J_sizeMb_ccs(const Matrix_T *const m)
+{
+  long unsigned n1,n2,n3;
+  double sum = 0;
   
   if (m->ccs_f)
   {
-    int *const Ap   = m->ccs->Ap;
-    int *const Ai   = m->ccs->Ai;
-    const double *const Ax = m->ccs->Ax;
-    int i;
-    
-    /* moving along none zero entries of the matrix at column c */
-    for (i = Ap[c]; i < Ap[c+1]-1; ++i)
-    {
-      if (Ai[i] == (int)r)
-      {
-        aij = Ax[i];
-        break;
-      }
-      /* it is supposed that the matrix m is in order in rows
-      // therefor, if the seeking row is passed, the entry is 0.
-      */
-      else if (Ai[i] > (int)r)
-        break;
-    }
+    n1 = (long unsigned)m->col;
+    n2 = (long unsigned)m->ccs->Ap[n1];/* number of none zero entries */
+    n3 = (n1+1)*sizeof(int)/* size of Ap */ + 
+         n2*sizeof(int)/* size of Ai */+
+         n2*sizeof(double)/* size of aij */;
+    sum = (double)n3/1E6;
+  }
+  else if (m->ccs_l_f)
+  {
+    n1 = (long unsigned)m->col;
+    n2 = (long unsigned)m->ccs_long->Ap[n1];/* number of none zero entries */
+    n3 =  (n1+1)*sizeof(int)/* size of Ap */ + 
+          n2*sizeof(int)/* size of Ai */+
+          n2*sizeof(double)/* size of aij */;
+    sum = (double)n3/1E6;
   }
   else
-    abortEr(INCOMPLETE_FUNC);
-    
-  return aij;
+  {
+    abortEr("This given matrix is not in CCS format.\n");
+  }
+  
+  return sum;
+}
+
+/* supposed to write J in ccs format in disk. No completed yet! */
+static void write_J_in_disk_ccs(void)
+{
+  abortEr(INCOMPLETE_FUNC);
 }

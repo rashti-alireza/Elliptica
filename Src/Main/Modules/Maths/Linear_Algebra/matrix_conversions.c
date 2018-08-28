@@ -18,8 +18,8 @@ Matrix_T *cast_matrix_ccs(Matrix_T *const m)
   if (m->reg_f)
   {
     double DropLimit = 0;
-    if (get_parameter("Ignore_Number_Less_Than"))	
-      DropLimit = GetParameterD("Ignore_Number_Less_Than");
+    if (get_parameter("Ignore_Number_Less_Than_in_CCS_format"))	
+      DropLimit = GetParameterD("Ignore_Number_Less_Than_in_CCS_format");
       
     convert_reg2ccs(m,ccs,DropLimit);
   }
@@ -58,15 +58,18 @@ Matrix_T *cast_matrix_ccs(Matrix_T *const m)
 */
 static void convert_reg2ccs(const Matrix_T *const reg,Matrix_T *const ccs,const double DropLimit)
 {
-  const long unsigned Nr = reg->row;
-  const long unsigned Nc = reg->col;
+  const long Nr = reg->row;
+  const long Nc = reg->col;
   double **const m = reg->reg->A;
-  int *Ap   = calloc(Nc+1,sizeof(*Ap));
+  int *Ap   = calloc((long unsigned)Nc+1,sizeof(*Ap));
   int *Ai   = 0;
   double *Ax = 0;
   long tNN0 = 0;/* total number of none zero entries */
-  long NN0;/* number of none zero entries in each columnt */
-  long unsigned r,c;/* row and column */
+  long NN0;/* number of none zero entries in each column */
+  long r,c;/* row and column */
+  
+  ccs->row = Nr;
+  ccs->col = Nc;
   
   for (c = 0; c < Nc; ++c)
   {

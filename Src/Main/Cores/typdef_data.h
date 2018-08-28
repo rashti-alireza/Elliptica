@@ -263,8 +263,8 @@ typedef struct MATRIX_T
   unsigned tri_l_f: 1;/* 1 if long tripet storage format, 0 otherwise*/
   unsigned ccs_l_f: 1;/* 1 if long compressed column storage format, 0 otherwise */
   unsigned crs_l_f: 1;/* 1 if long compressed row storage format,0 otherwise */
-  long unsigned row;
-  long unsigned col;
+  long row;
+  long col;
   struct/* triplet storage format */
   {
     int *row;

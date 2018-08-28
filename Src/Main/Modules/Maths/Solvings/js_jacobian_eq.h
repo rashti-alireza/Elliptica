@@ -43,4 +43,5 @@ static double dc_df(const unsigned n,const unsigned i,const unsigned l);
 static double dT_dx(const int n,const double x);
 static void read_1st_and_2nd_deriv(const JType_E deriv_dir,JType_E *const deriv_1st,JType_E *const deriv_2nd);
 static void JType_E2Dd_T(const JType_E jt_e, Dd_T *const q_dir);
-
+static void write_J_in_disk_ccs(void);
+static double J_sizeMb_ccs(const Matrix_T *const m);
