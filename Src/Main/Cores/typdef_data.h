@@ -355,7 +355,7 @@ typedef struct SOLUTION_MAN_T
 {
   char **field_name;/* field to be solved */
   unsigned nf;/* number of fields */
-  unsigned ns;/* number of solutions structure */
+  unsigned ns;/* number of solution structures */
   Solve_T **solve;/* group fields to be solved together
                   // and in order appeared in input file
                   // based on eq's & b.c.'s.

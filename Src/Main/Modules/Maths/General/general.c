@@ -5,7 +5,9 @@
 
 #include "general.h"
 
-/* taking squre root of vector v2-v1 which has l components double version*/
+/* taking squre root of vector v2-v1 which has l double type components.
+// ->return value: root mean square of v2-v1.
+*/
 double rms(const unsigned n, const double *const v2,const double *const v1)
 {
   unsigned i;
@@ -28,10 +30,11 @@ double rms(const unsigned n, const double *const v2,const double *const v1)
   return sum;
 }
 
-/* taking squre root of vector v2-v1 which has l components 
-// long double version
+/* taking root means squre of vector v2-v1 which has l double type components
+// and l is of order of long unsigned.
+// ->return value: root mean square of v2-v1
 */
-long double rmsL(const unsigned long n, const double *const v2, const double *const v1)
+long double rmsL(const long unsigned n, const double *const v2, const double *const v1)
 {
   unsigned long i;
   long double sum;

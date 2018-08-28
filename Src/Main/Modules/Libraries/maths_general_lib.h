@@ -9,7 +9,7 @@
 #endif
 
 
-long double rms_l(const unsigned long n, const double *v2, const double *v1);
+long double rms_l(const long unsigned n, const double *v2, const double *v1);
 double rms(const unsigned n, const double *const v2, const double *const v1);
 double dot(const unsigned n, const double *const v2, const double *const v1);
 double ABS(const double v);
