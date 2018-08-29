@@ -16,6 +16,9 @@ int project_execute(Project_T *const proj)
   /* calling projectc func */
   ret = proj->func();
   
+  /* printing project name */
+  pr_comment(proj->name);
+  
   return ret;
 }
 
