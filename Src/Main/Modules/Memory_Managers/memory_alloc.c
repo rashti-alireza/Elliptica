@@ -291,11 +291,16 @@ Solve_T *alloc_solve(Patch_T *const patch, const unsigned n)
 
 /* given row and column of a asked matrix it allocates matrix 
 // according to the given type using calloc and return the result.
+// note : if either of col or row is zero, it returns null.
 // ->return value: new empty matrix. null if something not defined correctly.
 */
 Matrix_T *alloc_matrix(const Matrix_SF_T type_e,const long row,const long col)
 {
   Matrix_T *m = 0;
+  
+  /* returns null if either of row or col is zero */
+  if (row == 0 || col == 0)
+    return m;
   
   if (type_e == UNDEF_SF)
     return m;

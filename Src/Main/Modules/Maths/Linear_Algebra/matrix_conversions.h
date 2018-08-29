@@ -1,7 +1,11 @@
 #include "core_lib.h"
-#include "macros_lib.h"
 #include "memory_managing_lib.h"
 #include "error_handling_lib.h"
+#include "maths_general_lib.h"
 
 Matrix_T *cast_matrix_ccs(Matrix_T *const m);
+Matrix_T *cast_matrix_reg(Matrix_T *const m);
+void copy_reg2reg(const Matrix_T *const reg1,Matrix_T *const reg2);
+void copy_ccs2ccs(const Matrix_T *const ccs1,Matrix_T *const ccs2);
 static void convert_reg2ccs(const Matrix_T *const reg,Matrix_T *const ccs,const double DropLimit);
+static void convert_ccs2reg(const Matrix_T *const ccs,Matrix_T *const reg);
