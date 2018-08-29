@@ -76,7 +76,7 @@ void prepare_Js_jacobian_eq(Patch_T *const patch,const char * const *types)
     if (GRT(J_sizeMb_ccs(sol_man->jacobian[i]->J),max_j_size))
       write_J_in_disk_ccs();
     
-    i++;
+    ++i;
     ++sol_man->nj;
   }
 }
@@ -628,18 +628,18 @@ Matrix_T *get_j_matrix(const Patch_T *const patch,const char *type)
 // it returns the corresponing enteries of matrix.
 // ->return value: m[i][j] in which m is in CCS format
 */
-double read_matrix_entry_ccs(Matrix_T *const m, const unsigned r,const unsigned c)
+double read_matrix_entry_ccs(Matrix_T *const m, const long r,const long c)
 {
   double aij = 0;
-  int *const Ap   = m->ccs->Ap;
-  int *const Ai   = m->ccs->Ai;
+  const int *const Ap   = m->ccs->Ap;
+  const int *const Ai   = m->ccs->Ai;
   const double *const Ax = m->ccs->Ax;
   int i;
   
   /* moving along none zero entries of the matrix at column c */
-  for (i = Ap[c]; i < Ap[c+1]-1; ++i)
+  for (i = Ap[c]; i < Ap[c+1]; ++i)
   {
-    if (Ai[i] == (int)r)
+    if (Ai[i] == r)
     {
       aij = Ax[i];
       break;
@@ -647,7 +647,7 @@ double read_matrix_entry_ccs(Matrix_T *const m, const unsigned r,const unsigned 
     /* it is supposed that the matrix m is in order in rows
     // therefor, if the seeking row is passed, the entry is 0.
     */
-    else if (Ai[i] > (int)r)
+    else if (Ai[i] > r)
       break;
   }
     

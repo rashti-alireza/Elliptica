@@ -314,7 +314,7 @@ typedef int fEquation_Solver_T(void *vp);
 typedef void *fEquation_T(void *vp1,void *vp2);
 
 /* elements of Jacobian for equations like J_xx etc. */
-typedef double fJs_T(Matrix_T *const m,const unsigned i,const unsigned j);
+typedef double fJs_T(Matrix_T *const m,const long i,const long j);
 
 /* solve collects the entites needed to solve fields 
 // based on eq's and b.c.'s and etc.
