@@ -12,10 +12,10 @@
 int parallel_patch_method(Grid_T *const grid)
 {
   unsigned p;
-  /* tolerance demanded in the input file */
-  const double tol_input = GetParameterD_E("Solving_Tolerance");
+  /* residual determined in the input file */
+  const double res_input = GetParameterD_E("Solving_Residual");
   
-  OMP_PARALLEL_PATCH(omp parallel for)
+  PARALLEL_PATCH_METHOD_OpenMP(omp parallel for)
   for (p = 0; p < grid->np; ++p)
   {
     Patch_T *patch = grid->patch[p];
@@ -25,7 +25,7 @@ int parallel_patch_method(Grid_T *const grid)
     
     for (cn = 0; cn < patch->solution_man->ns; ++cn)
     {
-      double tol_patch;/* tolerance of each collection at this patch */
+      double res_patch;/* residual of each collection at this patch */
       double *b = patch->solution_man->solve[cn]->b;
       /* number of components of b */
       unsigned nb = patch->nn*patch->solution_man->solve[cn]->nf;
@@ -34,10 +34,10 @@ int parallel_patch_method(Grid_T *const grid)
       b_in_ax_b_whole_ppm(patch,cn);
       b_in_ax_b_bndry_ppm(patch,cn);
       
-      /* if root means square of b is less than tol_input skip otherwise keep going */
-      tol_patch = rms(nb,b,0);
+      /* if root means square of b is less than res_input skip otherwise keep going */
+      res_patch = rms(nb,b,0);
       
-      if (LSS(tol_patch,tol_input))
+      if (LSS(res_patch,res_input))
         continue;
       
       /* making a in ax = b */
@@ -385,7 +385,6 @@ static int a_bndry_copy_ppm(Boundary_Condition_T *const bc)
   /* df/dn = df/dn|adjacent */
   if (subface->df_dn)
   {
-    const char *types[] = {"j_x","j_y","j_z",0};
     fJs_T *const jf = patch->solution_man->j_func;
     Matrix_T *j_x = 0,*j_y = 0,*j_z = 0;
     Point_T point;
@@ -397,8 +396,8 @@ static int a_bndry_copy_ppm(Boundary_Condition_T *const bc)
     {
       abortEr(INCOMPLETE_FUNC);
       
-      const char *types2[] = {"j_a","j_b","j_c",0};
-      prepare_Js_jacobian_eq(patch,types2);
+      const char *types[] = {"j_a","j_b","j_c",0};
+      prepare_Js_jacobian_eq(patch,types);
       j_x = get_j_matrix(patch,"j_a");
       j_y = get_j_matrix(patch,"j_b");
       j_z = get_j_matrix(patch,"j_c");
@@ -406,6 +405,7 @@ static int a_bndry_copy_ppm(Boundary_Condition_T *const bc)
     }
     else
     {
+      const char *types[] = {"j_x","j_y","j_z",0};
       prepare_Js_jacobian_eq(patch,types);
       j_x = get_j_matrix(patch,"j_x");
       j_y = get_j_matrix(patch,"j_y");

@@ -8,7 +8,7 @@
 #include "maths_solvers_lib.h"
 #include "maths_general_lib.h"
 
-#define OMP_PARALLEL_PATCH(x) _Pragma ( #x )
+#define PARALLEL_PATCH_METHOD_OpenMP(x) _Pragma ( #x )
 static const double _Dirac_Delta_[2] = {0.0,1.0};/* dirac's delta */
 #define Dirac_Delta(x,y) _Dirac_Delta_[(x)==(y)]
 
