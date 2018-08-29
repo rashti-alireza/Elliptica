@@ -65,5 +65,11 @@ int Fundamental_Tests(void)
     matrix_tests();
   }
   
+  if (strcmp_i(GetParameterS("Test_Solver_Consistency"),"yes"))
+  {
+    solver_tests();
+  }
+  
+  
   return EXIT_SUCCESS;
 }
