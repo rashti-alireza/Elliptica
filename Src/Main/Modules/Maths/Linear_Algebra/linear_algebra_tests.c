@@ -16,19 +16,19 @@ void matrix_tests(void)
   {
     printf("Casting of regular matrix to CCS one:");
     status = cast_matrix_ccs_test();
-    check_status(status);
+    check_test_result(status);
   }
   if (DO)
   {
     printf("Reading a CCS matrix directly one:");
     status = read_ccs_test();
-    check_status(status);
+    check_test_result(status);
   } 
 }
 
 /* test: reading a CCS matrix directly rather casting 
 // it to regular format.
-// ->return value: OK or DISCREPANCY_ERR
+// ->return value: TEST_SUCCESSFUL or TEST_UNSUCCESSFUL
 */
 static int read_ccs_test(void)
 {
@@ -58,12 +58,14 @@ static int read_ccs_test(void)
   free_matrix(ccs);
   
   if (flg == FOUND)
-    return DISCREPANCY_ERR;
+    return TEST_UNSUCCESSFUL;
   
-  return OK;
+  return TEST_SUCCESSFUL;
 }
 
-/* testing function "cast_matrix_ccs" */
+/* testing function "cast_matrix_ccs" 
+// ->return value: TEST_SUCCESSFUL or TEST_UNSUCCESSFUL.
+*/
 static int cast_matrix_ccs_test(void)
 {
   const long Nr = ROW;
@@ -100,23 +102,9 @@ static int cast_matrix_ccs_test(void)
   free_matrix(reg2);
   
   if (flg == FOUND)
-    return DISCREPANCY_ERR;
+    return TEST_UNSUCCESSFUL;
   
-  return OK;
-}
-
-/* check if the status for result of test. */
-static void check_status(const int status)
-{
-  switch(status)
-  {
-    case OK:
-      printf("  [+].\n");
-      break;
-    case DISCREPANCY_ERR:
-      printf("  [-].\n");
-      break;
-  }
+  return TEST_SUCCESSFUL;
 }
 
 /* making a generic matrix at regular format for test purposes.

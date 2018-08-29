@@ -45,4 +45,7 @@
 #else 
 #define OpenMP_1d_Pragma(x)
 #endif
+
+#define TEST_SUCCESSFUL 0
+#define TEST_UNSUCCESSFUL 1
  

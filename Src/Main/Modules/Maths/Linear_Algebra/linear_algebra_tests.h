@@ -12,7 +12,6 @@ void matrix_tests(void);
 Matrix_T *cast_matrix_ccs(Matrix_T *const m);
 Matrix_T *cast_matrix_reg(Matrix_T *const m);
 static int cast_matrix_ccs_test(void);
-static void check_status(const int status);
 static Matrix_T *make_generic_matrix(const long Nr,const long Nc);
 static int read_ccs_test(void);
 
