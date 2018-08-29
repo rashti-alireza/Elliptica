@@ -3,7 +3,7 @@
 // August 2018
 */
 
-#include "umfpack.h"
+#include "umfpack_method.h"
 
 /* umfpack direct solver double interger kind 
 // ->return value: EXIT_SUCCESS
