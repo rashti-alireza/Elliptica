@@ -20,7 +20,8 @@ int direct_solver_umfpack_di(void *vp)
   double *const b  = umf->b;
   double *const x  = umf->x;
   void *Symbolic,*Numeric;
-  double Control[UMFPACK_CONTROL],Info[UMFPACK_INFO];
+  //double Control[UMFPACK_CONTROL],Info[UMFPACK_INFO];
+  double *Control = 0, *Info = 0;
   int status;
   
   status = umfpack_di_symbolic(row,col,Ap,Ai,Ax,&Symbolic,Control,Info);
@@ -58,7 +59,8 @@ int direct_solver_umfpack_dl(void *vp)
   double *const b  = umf->b;
   double *const x  = umf->x;
   void *Symbolic,*Numeric;
-  double Control[UMFPACK_CONTROL],Info[UMFPACK_INFO];
+  //double Control[UMFPACK_CONTROL],Info[UMFPACK_INFO];
+  double *Control = 0, *Info = 0;
   long status;
   
   status = umfpack_dl_symbolic(row,col,Ap,Ai,Ax,&Symbolic,Control,Info);
