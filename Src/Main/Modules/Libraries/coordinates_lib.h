@@ -10,3 +10,4 @@ double Z_coord(const unsigned i,const Patch_T *const patch);
 double dq2_dq1(const Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const unsigned p);
 double JT_Cartesian_patch(const Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const unsigned p);
 double *normal_vec(Point_T *const point);
+double General2ChebyshevExtrema(const double x,const unsigned dir,const Patch_T *const patch);

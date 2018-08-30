@@ -1,6 +1,6 @@
 /*
 // Alireza Rashti
-// July 2018
+// August 2018
 */
 
 #include "interpolations.h"
@@ -45,8 +45,6 @@ double execute_interpolation(Interpolation_T *const interp_struct)
 // input file and patch and flags in interp_s.
 // note, only when the "flags or patch or input file" 
 // in interp_s is changed one must call this function.
-// after the appropriate function chosen, this function fill
-// 
 */
 void plan_interpolation(Interpolation_T *const interp_s)
 {
@@ -91,19 +89,26 @@ static fInterpolation_T *interpolation_Chebyshev_Tn(Interpolation_T *const inter
   
   if (interp_s->XYZ_dir_flag)
     func = interpolation_Chebyshev_Tn_XYZ;
-  else if (interp_s->X_dir_flag && interp_s->Y_dir_flag)
+    
+  else if (interp_s->XY_dir_flag)
     func = interpolation_Chebyshev_Tn_XY;
-  else if (interp_s->X_dir_flag && interp_s->Z_dir_flag)
+    
+  else if (interp_s->XZ_dir_flag)
     func = interpolation_Chebyshev_Tn_XZ;
-  else if (interp_s->Y_dir_flag && interp_s->Z_dir_flag)
+    
+  else if (interp_s->YZ_dir_flag)
     func = interpolation_Chebyshev_Tn_YZ;
+    
   else if (interp_s->X_dir_flag)
     func = interpolation_Chebyshev_Tn_X;
+    
   else if (interp_s->Y_dir_flag)
     func = interpolation_Chebyshev_Tn_Y;
+    
   else if (interp_s->Z_dir_flag)
     func = interpolation_Chebyshev_Tn_Z;
-  else/* in all directions */
+    
+  else
     abortEr("The flags in interpolation structure were not set correctly.\n");
   
   return func;
@@ -115,7 +120,7 @@ static fInterpolation_T *interpolation_Chebyshev_Tn(Interpolation_T *const inter
 static double interpolation_Chebyshev_Tn_X(Interpolation_T *const interp_s)
 {
   Field_T *const field = interp_s->field;/* interesting field */
-  const double X = interp_s->X;/* X coord of the interesting point */
+  const double X = General2ChebyshevExtrema(interp_s->X,0,field->patch);/* X coord of the interesting point */
   const unsigned *const n = interp_s->field->patch->n;
   const unsigned J = interp_s->J;/* index of const coords */
   const unsigned K = interp_s->K;/* index of const coords */
@@ -138,7 +143,7 @@ static double interpolation_Chebyshev_Tn_X(Interpolation_T *const interp_s)
 static double interpolation_Chebyshev_Tn_Y(Interpolation_T *const interp_s)
 {
   Field_T *const field = interp_s->field;/* interesting field */
-  const double Y = interp_s->Y;/* Y coord of the interesting point */
+  const double Y = General2ChebyshevExtrema(interp_s->Y,1,field->patch);/* Y coord of the interesting point */
   const unsigned *const n = interp_s->field->patch->n;
   const unsigned I = interp_s->I;/* index of const coords */
   const unsigned K = interp_s->K;/* index of const coords */
@@ -161,7 +166,7 @@ static double interpolation_Chebyshev_Tn_Y(Interpolation_T *const interp_s)
 static double interpolation_Chebyshev_Tn_Z(Interpolation_T *const interp_s)
 {
   Field_T *const field = interp_s->field;/* interesting field */
-  const double Z = interp_s->Z;/* Z coord of the interesting point */
+  const double Z = General2ChebyshevExtrema(interp_s->Z,2,field->patch);/* Z coord of the interesting point */
   const unsigned *const n = interp_s->field->patch->n;
   const unsigned I = interp_s->I;/* index of const coords */
   const unsigned J = interp_s->J;/* index of const coords */
@@ -184,10 +189,10 @@ static double interpolation_Chebyshev_Tn_Z(Interpolation_T *const interp_s)
 static double interpolation_Chebyshev_Tn_XY(Interpolation_T *const interp_s)
 {
   Field_T *const field = interp_s->field;/* interesting field */
-  const double X = interp_s->X;/* X coord of the interesting point */
-  const double Y = interp_s->Y;/* Y coord of the interesting point */
+  const double X = General2ChebyshevExtrema(interp_s->X,0,field->patch);/* X coord of the interesting point */
+  const double Y = General2ChebyshevExtrema(interp_s->Y,1,field->patch);/* Y coord of the interesting point */
   const unsigned *const n = interp_s->field->patch->n;
-  const unsigned K = interp_s->K;/* index of interesting point */
+  const unsigned K = interp_s->K;/* index of const coords */
   const double *C = 0;/* coeffs of expansion of field in Tn */
   double interp_v = 0;
   unsigned i,j;
@@ -208,10 +213,10 @@ static double interpolation_Chebyshev_Tn_XY(Interpolation_T *const interp_s)
 static double interpolation_Chebyshev_Tn_XZ(Interpolation_T *const interp_s)
 {
   Field_T *const field = interp_s->field;/* interesting field */
-  const double X = interp_s->X;/* X coord of the interesting point */
-  const double Z = interp_s->Z;/* Z coord of the interesting point */
+  const double X = General2ChebyshevExtrema(interp_s->X,0,field->patch);/* X coord of the interesting point */
+  const double Z = General2ChebyshevExtrema(interp_s->Z,2,field->patch);/* Z coord of the interesting point */
   const unsigned *const n = interp_s->field->patch->n;
-  const unsigned J = interp_s->J;/* index of interesting point */
+  const unsigned J = interp_s->J;/* index of const coords. */
   const double *C = 0;/* coeffs of expansion of field in Tn */
   double interp_v = 0;
   unsigned i,k;
@@ -232,10 +237,10 @@ static double interpolation_Chebyshev_Tn_XZ(Interpolation_T *const interp_s)
 static double interpolation_Chebyshev_Tn_YZ(Interpolation_T *const interp_s)
 {
   Field_T *const field = interp_s->field;/* interesting field */
-  const double Y = interp_s->Y;/* Y coord of the interesting point */
-  const double Z = interp_s->Z;/* Z coord of the interesting point */
+  const double Y = General2ChebyshevExtrema(interp_s->Y,1,field->patch);/* Y coord of the interesting point */
+  const double Z = General2ChebyshevExtrema(interp_s->Z,2,field->patch);/* Z coord of the interesting point */
   const unsigned *const n = interp_s->field->patch->n;
-  const unsigned I = interp_s->I;/* index of interesting point */
+  const unsigned I = interp_s->I;/* index of const coords. */
   const double *C = 0;/* coeffs of expansion of field in Tn */
   double interp_v = 0;
   unsigned j,k;
@@ -255,9 +260,9 @@ static double interpolation_Chebyshev_Tn_YZ(Interpolation_T *const interp_s)
 static double interpolation_Chebyshev_Tn_XYZ(Interpolation_T *const interp_s)
 {
   Field_T *const field = interp_s->field;/* interesting field */
-  const double X = interp_s->X;/* X coord of the interesting point */
-  const double Y = interp_s->Y;/* Y coord of the interesting point */
-  const double Z = interp_s->Z;/* Z coord of the interesting point */
+  const double X = General2ChebyshevExtrema(interp_s->X,0,field->patch);/* X coord of the interesting point */
+  const double Y = General2ChebyshevExtrema(interp_s->Y,1,field->patch);/* Y coord of the interesting point */
+  const double Z = General2ChebyshevExtrema(interp_s->Z,2,field->patch);/* Z coord of the interesting point */
   const unsigned *const n = interp_s->field->patch->n;
   const double *C = 0;/* coeffs of expansion of field in Tn */
   double interp_v = 0;
@@ -276,8 +281,8 @@ static double interpolation_Chebyshev_Tn_XYZ(Interpolation_T *const interp_s)
 
 /* basis of expansion of interpolation with 
 // "first kind Chebyshev" with extrema collocation
-// which combined with some coefficients and simplification
-// for ease of using in interpolation.
+// which combined with some coefficients and simplifications
+// for ease of using at interpolation implementation.
 // ->return value: value of this compound basis at specific point.
 */
 static double T(const unsigned n,const unsigned i,const double x)

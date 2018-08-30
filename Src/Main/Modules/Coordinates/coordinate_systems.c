@@ -270,3 +270,21 @@ double JT_Cartesian_patch(const Patch_T *const patch,const Dd_T q2_e, const Dd_T
   
   return j;
 }
+
+/* given patch, general coord of a point and its direction,
+// it will change the coord to Chebyshev Extrema format.
+// note: x = 0.5*(min-max)*N +0.5*(min+max)
+// ->return value: Chebyshe Extrema point.
+*/
+double General2ChebyshevExtrema(const double x,const unsigned dir,const Patch_T *const patch)
+{
+  if (patch->basis[dir]       != Chebyshev_Tn_BASIS && 
+      patch->collocation[dir] != Chebyshev_Extrema    )
+    abortEr("This direction at the specified patch doesn't use first kind Chebyshev,\n"
+      "and Chebyshev Extrema collocation which this function needs.\n");
+    
+  const double a = -patch->max[dir]+patch->min[dir];
+  const double b =  patch->max[dir]+patch->min[dir];
+  
+  return (x*2+b)/a;
+}
