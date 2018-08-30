@@ -271,3 +271,16 @@ Coord_T find_coord(const char *const coordsys)
     
   return coord;
 }
+
+/* generating a number number within final-initial.
+// ->return value: random number in the double data type within the range.
+*/
+double random_double(const double initial,const double final)
+{
+  time_t t;
+  
+  /* Intializes random number generator */
+  srand((unsigned) time(&t));
+   
+  return initial+((final-initial)/RAND_MAX)*rand();
+}
