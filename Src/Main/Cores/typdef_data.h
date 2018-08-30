@@ -470,11 +470,29 @@ typedef struct PR_FIELD_T
   void *file2;/* file */
 }Pr_Field_T;
 
+struct INTERPOLATION_T;
+
+/* interpolation function typedef */
+typedef double fInterpolation_T(struct INTERPOLATION_T *const interp_s);
+
 /* interpolation struct used in interpolation function */
 typedef struct INTERPOLATION_T
 {
   Field_T *field;/* interesting field for interpolation */
-  Point_T *point;/* info about the point that interpolation takes place */
+  fInterpolation_T *interpolation_func;/* interpolation function */
+  double X,Y,Z;/* where interpolant calculated. 
+               // MUST be provided in coords sys. used by patch.
+               */
+  unsigned X_dir_flag   : 1;/* 1-D interpolation in X direction */
+  unsigned Y_dir_flag   : 1;/* 1-D interpolation in Y direction */
+  unsigned Z_dir_flag   : 1;/* 1-D interpolation in Z direction */
+  unsigned XY_dir_flag  : 1;/* 2-D interpolation in X&Y direction */
+  unsigned XZ_dir_flag  : 1;/* 2-D interpolation in X&Z direction */
+  unsigned YZ_dir_flag  : 1;/* 2-D interpolation in Y&Z direction */
+  unsigned XYZ_dir_flag : 1;/* 3-D interpolation in X&Y&Z direction */
+  unsigned I;/* the index held constant in case of interpolation in 1-D and 2-D */
+  unsigned J;/* the index held constant in case of interpolation in 1-D and 2-D */
+  unsigned K;/* the index held constant in case of interpolation in 1-D and 2-D */
 }Interpolation_T;
 
 /* boundary condition struct */

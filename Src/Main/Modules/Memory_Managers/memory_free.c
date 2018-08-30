@@ -177,9 +177,6 @@ void free_interpolation(Interpolation_T *interp_s)
   if (!interp_s)
     return;
     
-  if (interp_s->point)
-    free(interp_s->point);
-    
   free(interp_s);
 }
 

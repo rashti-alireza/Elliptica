@@ -80,6 +80,16 @@ double *poly5_f(Patch_T *const patch)
   return f;
 }
 
+/* f: (x,y,z) -> x^3-y^3+z^3-x^2*y*z+z^2*y^2*x */
+double poly5_f_point(const double x,const double y,const double z)
+{
+  double f;
+  f = Power(x,3) - Power(y,3) - Power(x,2)*y*z + x*Power(y,2)*Power(z,2) + 
+      Power(z,3);
+        
+  return f;
+}
+
 /* f: patch -> r = sqrt(x^2+y^2+z^2) */
 double *r_f(Patch_T *const patch)
 {

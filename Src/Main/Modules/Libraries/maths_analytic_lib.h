@@ -97,3 +97,4 @@ double *sinx_f_xy(Patch_T *const patch);
 double *sinx_f_xz(Patch_T *const patch);
 double *sinx_f_yz(Patch_T *const patch);
 double *sinx_f_xyz(Patch_T *const patch);
+double poly5_f_point(const double x,const double y,const double z);

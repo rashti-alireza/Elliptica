@@ -201,7 +201,8 @@ static void find(Needle_T *const needle,Mode_T mode)
   }
 }
 
-/* find point X correspond to x in given patch.
+/* find point X(general coords) correspond to x(Cartesian coords) 
+// in the given patch.
 // ->return value 1 if it is successful, otherwise 0.
 */
 int X_of_x(double *const X,const double *const x,const Patch_T *const patch)

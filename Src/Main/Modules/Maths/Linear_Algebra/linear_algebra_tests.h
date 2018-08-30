@@ -3,8 +3,6 @@
 #include "error_handling_lib.h"
 #include "maths_solvings_lib.h"
 
-#define DISCREPANCY_ERR 1
-#define OK 0
 #define DO 1
 #define NOT_DO 0
 

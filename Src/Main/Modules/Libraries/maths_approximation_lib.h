@@ -3,6 +3,9 @@ void fftw_1d_ChebyshevExtrema_values(double *const values,double *const coeffs,c
 void fftw_3d_ChebyshevExtrema_coeffs(double *const values,double *const coeffs,const unsigned *const n);
 void fftw_3d_ChebyshevExtrema_values(double *const values,double *const coeffs,const unsigned *const n);
 void rft_1d_ChebyshevExtrema_coeffs(double *const values ,double *const coeffs,const unsigned n);
-int DerivativeTest(Grid_T *const grid);
+int derivative_tests(Grid_T *const grid);
+int interpolation_tests(Grid_T *const grid);
 Interpolation_T *init_interpolation(void);
-double interpolation(Interpolation_T *const interp_s);
+double execute_interpolation(Interpolation_T *const interp_s);
+void plan_interpolation(Interpolation_T *const interp_s);
+

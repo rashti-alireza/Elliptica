@@ -11,6 +11,7 @@ double *x_f(Patch_T *const patch);
 double *y_f(Patch_T *const patch);
 double *z_f(Patch_T *const patch);
 double *poly5_f(Patch_T *const patch);
+double poly5_f_point(const double x,const double y,const double z);
 double *r_f(Patch_T *const patch);
 double *inv_rP1_f(Patch_T *const patch);
 double *cosx_f(Patch_T *const patch);

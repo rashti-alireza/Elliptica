@@ -499,36 +499,37 @@ static int b_bndry_interpolate_ppm(Boundary_Condition_T *const bc)
   SubFace_T *const subface   = bc->subface;
   Solve_T   *const solve     = bc->solve;
   Grid_T    *const grid      = subface->patch->grid;
-  Patch_T   *const patch_adj = grid->patch[subface->adjPatch];
+  Patch_T   *const adj_patch = grid->patch[subface->adjPatch];
   unsigned   const np        = subface->np;
   unsigned  *const id        = subface->id;
-  Patch_T patch_tmp = make_temp_patch(patch_adj);/* for thread safety purposes */
+  Patch_T adj_patch_tmp = make_temp_patch(adj_patch);/* for thread safety purposes */
   Field_T *field_tmp;/* for thread safety purposes */
   Interpolation_T *interp_s = init_interpolation();
+  double X[3],*x;
   unsigned i;
-  
-  interp_s->point->patch    = patch_adj;
-  interp_s->point->touch    = subface->touch;
-  interp_s->point->face     = subface->adjFace;
-  interp_s->point->sameX    = subface->sameX;
-  interp_s->point->sameY    = subface->sameY;
-  interp_s->point->sameZ    = subface->sameZ;
   
   for (i = 0; i < solve->nf; ++i)
   {
     Field_T *field     = solve->field[i];
-    Field_T *field_adj = patch_adj->solution_man->solve[bc->cn]->field[i];
+    Field_T *field_adj = adj_patch->solution_man->solve[bc->cn]->field[i];
     double *b = &solve->b[solve->f_occupy[i]];
     unsigned n;
     
-    field_tmp = add_field("tmp_field","(3dim)",&patch_tmp,NO);
+    field_tmp = add_field("tmp_field","(3dim)",&adj_patch_tmp,NO);
     field_tmp->v = field_adj->v;/* soft copying values of fields */
     interp_s->field = field_tmp;
-     
+    
+    fill_interpolation_flags(interp_s,subface);
+    plan_interpolation(interp_s);
+    
     for (n = 0; n < np; ++n)
     {
-      interp_s->point->x = 0;
-      b[id[n]] = field->v[id[n]] - interpolation(interp_s);
+      x = subface->patch->node[id[n]]->x;
+      X_of_x(X,x,&adj_patch_tmp);
+      interp_s->X = X[0];
+      interp_s->Y = X[1];
+      interp_s->Z = X[2];
+      b[id[n]] = field->v[id[n]] - execute_interpolation(interp_s);
     }
     
   }/* end of for (i = 0; i < solve->nf; ++i) */
@@ -609,4 +610,73 @@ static double *normal_vec_curvilinear(Point_T *const point)
   UNUSED(point);
   abortEr("This part is not developed yet!\n");
   return 0;
+}
+
+/* filling flags of iterpolation and based on subface. */
+static void fill_interpolation_flags(Interpolation_T *const it,const SubFace_T *const sf)
+{
+  if (sf->sameX)
+  {
+    it->YZ_dir_flag = 1;
+    it->I = const_index_on_AdjFace(sf);
+  }
+  else if (sf->sameY)
+  {
+    it->XZ_dir_flag = 1;
+    it->J = const_index_on_AdjFace(sf);
+  }
+  else if (sf->sameZ)
+  {
+    it->XY_dir_flag = 1;
+    it->K = const_index_on_AdjFace(sf);
+  }
+  else if (!sf->sameX && !sf->sameY && !sf->sameZ)
+  {
+    it->XYZ_dir_flag = 1;
+  }
+  else if (sf->sameX && sf->sameY && sf->sameZ)
+  {
+    abortEr("How come to have all the sameX,Y,Z flags of subface be the same.\n"
+    "It means there is something wrong at finding of adjacent patches.\n");
+  }
+  
+}
+
+/* according to the adjFace where the subface touches it,
+// it returns the index of those points on the "adjacent face" which
+// not varying on the adjFace.
+// ->return value: constant index(coords) of a given face.
+*/
+static unsigned const_index_on_AdjFace(const SubFace_T *const sf)
+{
+  const unsigned f = sf->adjFace;
+  const Patch_T *const patch = sf->patch->grid->patch[sf->adjPatch];
+  const unsigned *const n = patch->n;
+  unsigned C = 0;/* constant value */
+  
+  switch(f)
+  {
+    case I_0:
+      C = 0;
+      break;
+    case I_n0:
+      C = n[0]-1;
+      break; 
+    case J_0:
+      C = 0;
+      break; 
+    case J_n1:
+      C = n[1]-1;
+      break; 
+    case K_0:
+      C = 0;
+      break; 
+    case K_n2:
+      C = n[2]-1;
+      break;
+    default:
+      abortEr("There is not such interface.\n");
+  }
+  
+  return C;
 }

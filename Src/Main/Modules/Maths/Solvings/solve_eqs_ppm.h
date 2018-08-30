@@ -27,3 +27,5 @@ static int b_in_ax_b_bndry_ppm(Patch_T *const patch,const unsigned cn);
 static int a_in_ax_b_whole_ppm(Patch_T *const patch,const unsigned cn);
 static int a_in_ax_b_bndry_ppm(Patch_T *const patch,const unsigned cn);
 static double *normal_vec_curvilinear(Point_T *const point);
+static void fill_interpolation_flags(Interpolation_T *const it,const SubFace_T *const sf);
+static unsigned const_index_on_AdjFace(const SubFace_T *const sf);

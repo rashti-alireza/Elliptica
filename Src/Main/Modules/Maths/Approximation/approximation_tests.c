@@ -7,6 +7,88 @@
 #define ArgM(a) a,#a/*used for being more accurate in naming and fast */
 #define MAXSTR 400
 
+/* testing interpolation functions.
+// takes bunch of random points intside each patch and compares
+// the value of interpolation and exact value for a field.
+// ->return value: EXIT_SUCCESS
+*/
+int interpolation_tests(Grid_T *const grid)
+{
+  unsigned p;
+  double *x,*y,*z;
+  Field_T *field;
+  int status;
+  
+  FOR_ALL_PATCHES(p,grid)
+  {
+    Patch_T *patch = grid->patch[p];
+    const unsigned *n = patch->n;
+    const double *min = patch->min;
+    const double *max = patch->max;
+    
+    /* making a field which have analytic properties */
+    field = add_field("interpolant","(3dim)",patch,YES);
+    field->v = poly5_f(patch);/* a polynomial */
+    
+    /* making random number in each direction */
+    x = make_random_number(2*n[0],min[0],max[0]);
+    y = make_random_number(2*n[1],min[1],max[1]);
+    z = make_random_number(2*n[2],min[2],max[2]);
+    
+    if (DO)
+    {
+      printf("Interpolation test x direction:");
+      status = interpolation_tests_x(x,field);
+      check_test_result(status);
+    }
+    if (DO)
+    {
+      printf("Interpolation test y direction:");
+      status = interpolation_tests_y(y,field);
+      check_test_result(status);
+    }
+    if (DO)
+    {
+      printf("Interpolation test z direction:");
+      status = interpolation_tests_z(z,field);
+      check_test_result(status);
+    }
+    if (DO)
+    {
+      printf("Interpolation test x and y directions:");
+      status = interpolation_tests_xy(x,y,field);
+      check_test_result(status);
+    }
+    if (DO)
+    {
+      printf("Interpolation test x and z directions:");
+      status = interpolation_tests_xz(x,z,field);
+      check_test_result(status);
+    } 
+    if (DO)
+    {
+      printf("Interpolation test y and z directions:");
+      status = interpolation_tests_yz(y,z,field);
+      check_test_result(status);
+    }
+    
+    if (DO)
+    {
+      printf("Interpolation test 3-D:");
+      status = interpolation_tests_xyz(x,y,z,field);
+      check_test_result(status);
+    }
+    
+    /* freeing */
+    free(x);
+    free(y);
+    free(z);
+    remove_field(field);
+  }
+  
+  return EXIT_SUCCESS;
+}
+
 /* testing:
 // ========
 //
@@ -14,11 +96,11 @@
 // take its various derivatives ans finally 
 // compares the analytic results with numeric results.
 // note: the results will be printed accordingly in 
-// "DerivativeTest" folder.
+// "Derivative_Tests" folder.
 // note: only those patches that use basis will be compared.
 // ->return value: EXIT_SUCCESS;
 */
-int DerivativeTest(Grid_T *const grid)
+int derivative_tests(Grid_T *const grid)
 {
   sFunc_Patch2Pdouble_T **DataBase_func;
   
@@ -29,7 +111,7 @@ int DerivativeTest(Grid_T *const grid)
   Flag_T flg;
   
   path_par = GetParameterS_E("output_directory_path");
-  path = make_directory(path_par,"DerivativeTest");
+  path = make_directory(path_par,"Derivative_Tests");
 
   
   init_func_Patch2Pdouble(&DataBase_func);
@@ -322,4 +404,20 @@ static Flag_T compare_derivative(const char *const name,const double *const numc
   flg = pr_derivatives_DiffByNode(numc,anac,patch,prefix);
   
   return flg;
+}
+
+/* making N random number in the within min and max.
+// ->return value: random number(s)
+*/
+static double *make_random_number(const unsigned N,const double min,const double max)
+{
+  double *x = calloc(N,sizeof(*x));
+  unsigned i;
+  
+  for (i = 0; i < N; ++i)
+  {
+    x[i] = random_double(min,max);
+  }
+  
+  return x;
 }

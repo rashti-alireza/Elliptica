@@ -264,6 +264,7 @@ Patch_T make_temp_patch(const Patch_T *const patch)
   tmp_patch.node = 0;
   tmp_patch.interface = 0;
   tmp_patch.pool = 0;
+  tmp_patch.solution_man = 0;
 
   return tmp_patch;
 }

@@ -14,7 +14,7 @@ int Fundamental_Tests(void)
   Grid_T *grid = fundamental_tests_make_grid();/* making grid */
   
   if (strstr_i(GetParameterS("test_derivative"),"yes"))
-    DerivativeTest(grid);
+    derivative_tests(grid);
     
   if (strcmp_i(GetParameterS("Test_Jacobian_Elements_Js_Values"),"yes"))
   {
@@ -68,6 +68,11 @@ int Fundamental_Tests(void)
   if (strcmp_i(GetParameterS("Test_Solver_Consistency"),"yes"))
   {
     solver_tests();
+  }
+  
+  if (strstr_i(GetParameterS("Test_Interpolation"),"yes"))
+  {
+    interpolation_tests(grid);
   }
   
   
