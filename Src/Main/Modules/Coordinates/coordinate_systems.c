@@ -286,5 +286,5 @@ double General2ChebyshevExtrema(const double x,const unsigned dir,const Patch_T 
   const double a = -patch->max[dir]+patch->min[dir];
   const double b =  patch->max[dir]+patch->min[dir];
   
-  return (x*2+b)/a;
+  return (x*2-b)/a;
 }
