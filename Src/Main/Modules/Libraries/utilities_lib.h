@@ -21,4 +21,5 @@ unsigned total_nodes_patch(const Patch_T *const patch);
 void init_func_Patch2Pdouble(sFunc_Patch2Pdouble_T ***const func);
 void add_func_Patch2Pdouble(sFunc_Patch2Pdouble_T ***const func,double *(*f)(Patch_T *const patch),const char *const name);
 sFunc_Patch2Pdouble_T *get_func_Patch2Pdouble(const char *const name,sFunc_Patch2Pdouble_T **const func);
-double random_double(const double initial,const double final);
+double random_double(const double initial,const double final,const unsigned s);
+

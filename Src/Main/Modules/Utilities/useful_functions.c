@@ -273,14 +273,18 @@ Coord_T find_coord(const char *const coordsys)
 }
 
 /* generating a number number within final-initial.
+// s determines weather srand be called or not.
+// in fact, only when s is zero srand is called. and the reason is to avoid
+// producing same random number in a loop.
 // ->return value: random number in the double data type within the range.
 */
-double random_double(const double initial,const double final)
+double random_double(const double initial,const double final,const unsigned s)
 {
   time_t t;
   
-  /* Intializes random number generator */
-  srand((unsigned) time(&t));
+  /* Initializes random number generator */
+  if (s == 0)
+    srand((unsigned) time(&t));
    
   return initial+((final-initial)/RAND_MAX)*rand();
 }

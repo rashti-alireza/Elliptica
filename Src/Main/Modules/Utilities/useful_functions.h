@@ -23,4 +23,4 @@ SubFace_T *get_paired_subface(const SubFace_T *const sub);
 unsigned total_nodes_grid(const Grid_T *const grid);
 unsigned total_nodes_patch(const Patch_T *const patch);
 Coord_T find_coord(const char *const coordsys);
-double random_double(const double initial,const double final);
+double random_double(const double initial,const double final,const unsigned s);
