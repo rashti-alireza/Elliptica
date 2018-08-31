@@ -27,55 +27,55 @@ int interpolation_tests(Grid_T *const grid)
     const double *max = patch->max;
     
     /* making a field which have analytic properties */
-    field = add_field("interpolant","(3dim)",patch,YES);
+    field = add_field("interpolant","(3dim)",patch,NO);
     field->v = poly5_f(patch);/* a polynomial */
     
-    /* making random number in each direction */
+    /* making 2n random number in each direction */
     x = make_random_number(2*n[0],min[0],max[0]);
     y = make_random_number(2*n[1],min[1],max[1]);
     z = make_random_number(2*n[2],min[2],max[2]);
     
     if (DO)
     {
-      printf("Interpolation test x direction:");
-      status = interpolation_tests_x(x,field);
-      check_test_result(status);
-    }
-    if (DO)
-    {
-      printf("Interpolation test y direction:");
-      status = interpolation_tests_y(y,field);
-      check_test_result(status);
-    }
-    if (DO)
-    {
-      printf("Interpolation test z direction:");
-      status = interpolation_tests_z(z,field);
-      check_test_result(status);
-    }
-    if (DO)
-    {
-      printf("Interpolation test x and y directions:");
-      status = interpolation_tests_xy(x,y,field);
-      check_test_result(status);
-    }
-    if (DO)
-    {
-      printf("Interpolation test x and z directions:");
-      status = interpolation_tests_xz(x,z,field);
-      check_test_result(status);
-    } 
-    if (DO)
-    {
-      printf("Interpolation test y and z directions:");
-      status = interpolation_tests_yz(y,z,field);
+      printf("Interpolation test:      x direction, patch %10s =>",patch->name);
+      status = interpolation_tests_x(field,x,2*n[0]);
       check_test_result(status);
     }
     
     if (DO)
     {
-      printf("Interpolation test 3-D:");
-      status = interpolation_tests_xyz(x,y,z,field);
+      printf("Interpolation test:      y direction, patch %10s =>",patch->name);
+      status = interpolation_tests_y(field,y,2*n[1]);
+      check_test_result(status);
+    }
+    if (DO)
+    {
+      printf("Interpolation test:      z direction, patch %10s =>",patch->name);
+      status = interpolation_tests_z(field,z,2*n[2]);
+      check_test_result(status);
+    }
+    if (DO)
+    {
+      printf("Interpolation test: x & y directions, patch %10s =>",patch->name);
+      status = interpolation_tests_xy(field,x,y,2*n[0],2*n[1]);
+      check_test_result(status);
+    }
+    if (DO)
+    {
+      printf("Interpolation test: x & z directions, patch %10s =>",patch->name);
+      status = interpolation_tests_xz(field,x,z,2*n[0],2*n[2]);
+      check_test_result(status);
+    } 
+    if (DO)
+    {
+      printf("Interpolation test: y & z directions, patch %10s =>",patch->name);
+      status = interpolation_tests_yz(field,y,z,2*n[1],2*n[2]);
+      check_test_result(status);
+    }
+    if (DO)
+    {
+      printf("Interpolation test:              3-D, patch %10s =>",patch->name);
+      status = interpolation_tests_xyz(field,x,y,z,2*n[0],2*n[1],2*n[2]);
       check_test_result(status);
     }
     
@@ -87,6 +87,492 @@ int interpolation_tests(Grid_T *const grid)
   }
   
   return EXIT_SUCCESS;
+}
+
+/* testing interpolation in x direction and comparing
+// to analytical value and returning the result.
+// ->return value: result of test.
+*/
+static int interpolation_tests_x(Field_T *const field,const double *const x,const unsigned N)
+{
+  Interpolation_T *interp_s = init_interpolation();
+  Patch_T *const patch = field->patch;
+  const unsigned *const n = patch->n;
+  Node_T **const node = patch->node;
+  double diff = 0;
+  double tol = 0;
+  double y,z;
+  const char *const par = GetParameterS("Test_Interpolation");
+  char *tok,*save;
+  Flag_T flg;
+  unsigned i,j;
+  
+  if (patch->coordsys != Cartesian)
+    abortEr("In order to use this function in different coordinates,\n"
+      "one needs to consider that analytic function calculates only in \n"
+      "Cartesian coordinate system, so the transformation between\n"
+      "Curvilinear and Cartesian for random point must be done.\n");
+  
+  /* find the tolerance defined in input file if any */
+  assert(par);
+  tok = dup_s(par);
+  tok_s(tok,',',&save);
+  tol = fabs(atof(save));
+  
+  /* setting up interpolation */
+  interp_s->field = field;
+  interp_s->X_dir_flag = 1;
+  plan_interpolation(interp_s);
+  
+  flg = NONE;
+  for (j = 0; j < N; ++j)/* -> choose different slices for testing */
+  {
+    interp_s->J = (unsigned) floor(random_double(0,n[1],j));
+    interp_s->K = (unsigned) floor(random_double(0,n[2],1));
+    
+    y = node[L(n,0,interp_s->J,0)]->x[1];
+    z = node[L(n,0,0,interp_s->K)]->x[2];
+    
+    for (i = 0; i < N; ++i)
+    {
+      interp_s->X = x[i];
+      diff = poly5_f_point(x[i],y,z)-execute_interpolation(interp_s);
+      if (GRT(fabs(diff),tol))
+      {
+        flg = FOUND;
+        break;
+      }
+    }
+    
+    if (flg == FOUND)
+      break;
+  }
+  
+  free_interpolation(interp_s);
+  free(tok);
+  
+  if (flg == FOUND)
+    return TEST_UNSUCCESSFUL;
+  
+  return TEST_SUCCESSFUL;
+}
+
+/* testing interpolation in y direction and comparing
+// to analytical value and returning the result.
+// ->return value: result of test.
+*/
+static int interpolation_tests_y(Field_T *const field,const double *const y,const unsigned N)
+{
+  Interpolation_T *interp_s = init_interpolation();
+  Patch_T *const patch = field->patch;
+  const unsigned *const n = patch->n;
+  Node_T **const node = patch->node;
+  double diff = 0;
+  double tol = 0;
+  double x,z;
+  const char *const par = GetParameterS("Test_Interpolation");
+  char *tok,*save;
+  Flag_T flg;
+  unsigned i,j;
+  
+  if (patch->coordsys != Cartesian)
+    abortEr("In order to use this function in different coordinates,\n"
+      "one needs to consider that analytic function calculates only in \n"
+      "Cartesian coordinate system, so the transformation between\n"
+      "Curvilinear and Cartesian for random point must be done.\n");
+  
+  /* find the tolerance defined in input file if any */
+  assert(par);
+  tok = dup_s(par);
+  tok_s(tok,',',&save);
+  tol = fabs(atof(save));
+  
+  /* setting up interpolation */
+  interp_s->field = field;
+  interp_s->Y_dir_flag = 1;
+  plan_interpolation(interp_s);
+  
+  flg = NONE;
+  for (j = 0; j < N; ++j)/* -> choose different slices for testing */
+  {
+    interp_s->I = (unsigned) floor(random_double(0,n[0],j));
+    interp_s->K = (unsigned) floor(random_double(0,n[2],1));
+    
+    x = node[L(n,interp_s->I,0,0)]->x[0];
+    z = node[L(n,0,0,interp_s->K)]->x[2];
+    
+    for (i = 0; i < N; ++i)
+    {
+      interp_s->Y = y[i];
+      diff = poly5_f_point(x,y[i],z)-execute_interpolation(interp_s);
+      if (GRT(fabs(diff),tol))
+      {
+        flg = FOUND;
+        break;
+      }
+    }
+    
+    if (flg == FOUND)
+      break;
+  }
+  
+  free_interpolation(interp_s);
+  free(tok);
+  
+  if (flg == FOUND)
+    return TEST_UNSUCCESSFUL;
+  
+  return TEST_SUCCESSFUL;
+}
+
+/* testing interpolation in z direction and comparing
+// to analytical value and returning the result.
+// ->return value: result of test.
+*/
+static int interpolation_tests_z(Field_T *const field,const double *const z,const unsigned N)
+{
+  Interpolation_T *interp_s = init_interpolation();
+  Patch_T *const patch = field->patch;
+  const unsigned *const n = patch->n;
+  Node_T **const node = patch->node;
+  double diff = 0;
+  double tol = 0;
+  double y,x;
+  const char *const par = GetParameterS("Test_Interpolation");
+  char *tok,*save;
+  Flag_T flg;
+  unsigned i,j;
+  
+  if (patch->coordsys != Cartesian)
+    abortEr("In order to use this function in different coordinates,\n"
+      "one needs to consider that analytic function calculates only in \n"
+      "Cartesian coordinate system, so the transformation between\n"
+      "Curvilinear and Cartesian for random point must be done.\n");
+  
+  /* find the tolerance defined in input file if any */
+  assert(par);
+  tok = dup_s(par);
+  tok_s(tok,',',&save);
+  tol = fabs(atof(save));
+  
+  /* setting up interpolation */
+  interp_s->field = field;
+  interp_s->Z_dir_flag = 1;
+  plan_interpolation(interp_s);
+  
+  flg = NONE;
+  for (j = 0; j < N; ++j)/* -> choose different slices for testing */
+  {
+    interp_s->J = (unsigned) floor(random_double(0,n[1],j));
+    interp_s->I = (unsigned) floor(random_double(0,n[0],1));
+    
+    y = node[L(n,0,interp_s->J,0)]->x[1];
+    x = node[L(n,interp_s->I,0,0)]->x[0];
+    
+    for (i = 0; i < N; ++i)
+    {
+      interp_s->Z = z[i];
+      diff = poly5_f_point(x,y,z[i])-execute_interpolation(interp_s);
+      if (GRT(fabs(diff),tol))
+      {
+        flg = FOUND;
+        break;
+      }
+    }
+    
+    if (flg == FOUND)
+      break;
+  }
+  
+  free_interpolation(interp_s);
+  free(tok);
+  
+  if (flg == FOUND)
+    return TEST_UNSUCCESSFUL;
+  
+  return TEST_SUCCESSFUL;
+}
+
+/* testing interpolation in x&y directions and comparing
+// to analytical value and returning the result.
+// ->return value: result of test.
+*/
+static int interpolation_tests_xy(Field_T *const field,const double *const x,const double *const y,const unsigned Nx,const unsigned Ny)
+{
+  Interpolation_T *interp_s = init_interpolation();
+  Patch_T *const patch = field->patch;
+  const unsigned *const n = patch->n;
+  Node_T **const node = patch->node;
+  double diff = 0;
+  double tol = 0;
+  double z;
+  const char *const par = GetParameterS("Test_Interpolation");
+  char *tok,*save;
+  Flag_T flg;
+  unsigned a,b,c;
+  
+  if (patch->coordsys != Cartesian)
+    abortEr("In order to use this function in different coordinates,\n"
+      "one needs to consider that analytic function calculates only in \n"
+      "Cartesian coordinate system, so the transformation between\n"
+      "Curvilinear and Cartesian for random point must be done.\n");
+  
+  /* find the tolerance defined in input file if any */
+  assert(par);
+  tok = dup_s(par);
+  tok_s(tok,',',&save);
+  tol = fabs(atof(save));
+  
+  /* setting up interpolation */
+  interp_s->field = field;
+  interp_s->XY_dir_flag = 1;
+  plan_interpolation(interp_s);
+  
+  flg = NONE;
+  for (a = 0; a < Nx; ++a)/* -> choose different slices for testing */
+  {
+    interp_s->K = (unsigned) floor(random_double(0,n[2],a));
+    
+    z = node[L(n,0,0,interp_s->K)]->x[2];
+    
+    for (b = 0; b < Nx; ++b)
+    {
+      interp_s->X = x[b];
+      for (c = 0; c < Ny; ++c)
+      {
+        interp_s->Y = y[c];
+        diff = poly5_f_point(x[b],y[c],z)-execute_interpolation(interp_s);
+        if (GRT(fabs(diff),tol))
+        {
+          flg = FOUND;
+          break;
+        }
+      }
+    
+      if (flg == FOUND)
+        break;
+    }
+    if (flg == FOUND)
+        break;
+  }
+  
+  free_interpolation(interp_s);
+  free(tok);
+  
+  if (flg == FOUND)
+    return TEST_UNSUCCESSFUL;
+  
+  return TEST_SUCCESSFUL;
+}
+
+/* testing interpolation in x&z directions and comparing
+// to analytical value and returning the result.
+// ->return value: result of test.
+*/
+static int interpolation_tests_xz(Field_T *const field,const double *const x,const double *const z,const unsigned Nx,const unsigned Nz)
+{
+  Interpolation_T *interp_s = init_interpolation();
+  Patch_T *const patch = field->patch;
+  const unsigned *const n = patch->n;
+  Node_T **const node = patch->node;
+  double diff = 0;
+  double tol = 0;
+  double y;
+  const char *const par = GetParameterS("Test_Interpolation");
+  char *tok,*save;
+  Flag_T flg;
+  unsigned a,b,c;
+  
+  if (patch->coordsys != Cartesian)
+    abortEr("In order to use this function in different coordinates,\n"
+      "one needs to consider that analytic function calculates only in \n"
+      "Cartesian coordinate system, so the transformation between\n"
+      "Curvilinear and Cartesian for random point must be done.\n");
+  
+  /* find the tolerance defined in input file if any */
+  assert(par);
+  tok = dup_s(par);
+  tok_s(tok,',',&save);
+  tol = fabs(atof(save));
+  
+  /* setting up interpolation */
+  interp_s->field = field;
+  interp_s->XZ_dir_flag = 1;
+  plan_interpolation(interp_s);
+  
+  flg = NONE;
+  for (a = 0; a < Nx; ++a)/* -> choose different slices for testing */
+  {
+    interp_s->J = (unsigned) floor(random_double(0,n[1],a));
+    
+    y = node[L(n,0,interp_s->J,0)]->x[1];
+    
+    for (b = 0; b < Nx; ++b)
+    {
+      interp_s->X = x[b];
+      for (c = 0; c < Nz; ++c)
+      {
+        interp_s->Z = z[c];
+        diff = poly5_f_point(x[b],y,z[c])-execute_interpolation(interp_s);
+        if (GRT(fabs(diff),tol))
+        {
+          flg = FOUND;
+          break;
+        }
+      }
+    
+      if (flg == FOUND)
+        break;
+    }
+    if (flg == FOUND)
+        break;
+  }
+  
+  free_interpolation(interp_s);
+  free(tok);
+  
+  if (flg == FOUND)
+    return TEST_UNSUCCESSFUL;
+  
+  return TEST_SUCCESSFUL;
+}
+
+/* testing interpolation in y&z directions and comparing
+// to analytical value and returning the result.
+// ->return value: result of test.
+*/
+static int interpolation_tests_yz(Field_T *const field,const double *const y,const double *const z,const unsigned Ny,const unsigned Nz)
+{
+  Interpolation_T *interp_s = init_interpolation();
+  Patch_T *const patch = field->patch;
+  const unsigned *const n = patch->n;
+  Node_T **const node = patch->node;
+  double diff = 0;
+  double tol = 0;
+  double x;
+  const char *const par = GetParameterS("Test_Interpolation");
+  char *tok,*save;
+  Flag_T flg;
+  unsigned a,b,c;
+  
+  if (patch->coordsys != Cartesian)
+    abortEr("In order to use this function in different coordinates,\n"
+      "one needs to consider that analytic function calculates only in \n"
+      "Cartesian coordinate system, so the transformation between\n"
+      "Curvilinear and Cartesian for random point must be done.\n");
+  
+  /* find the tolerance defined in input file if any */
+  assert(par);
+  tok = dup_s(par);
+  tok_s(tok,',',&save);
+  tol = fabs(atof(save));
+  
+  /* setting up interpolation */
+  interp_s->field = field;
+  interp_s->YZ_dir_flag = 1;
+  plan_interpolation(interp_s);
+  
+  flg = NONE;
+  for (a = 0; a < Ny; ++a)/* -> choose different slices for testing */
+  {
+    interp_s->I = (unsigned) floor(random_double(0,n[0],a));
+    
+    x = node[L(n,interp_s->I,0,0)]->x[0];
+    
+    for (b = 0; b < Ny; ++b)
+    {
+      interp_s->Y = y[b];
+      for (c = 0; c < Nz; ++c)
+      {
+        interp_s->Z = z[c];
+        diff = poly5_f_point(x,y[b],z[c])-execute_interpolation(interp_s);
+        if (GRT(fabs(diff),tol))
+        {
+          flg = FOUND;
+          break;
+        }
+      }
+    
+      if (flg == FOUND)
+        break;
+    }
+    if (flg == FOUND)
+        break;
+  }
+  
+  free_interpolation(interp_s);
+  free(tok);
+  
+  if (flg == FOUND)
+    return TEST_UNSUCCESSFUL;
+  
+  return TEST_SUCCESSFUL;
+}
+
+/* testing interpolation in x&y&z directions and comparing
+// to analytical value and returning the result.
+// ->return value: result of test.
+*/
+static int interpolation_tests_xyz(Field_T *const field,const double *const x,const double *const y,const double *const z,const unsigned Nx,const unsigned Ny,const unsigned Nz)
+{
+  Interpolation_T *interp_s = init_interpolation();
+  Patch_T *const patch = field->patch;
+  double diff = 0;
+  double tol = 0;
+  const char *const par = GetParameterS("Test_Interpolation");
+  char *tok,*save;
+  Flag_T flg;
+  unsigned a,b,c;
+  
+  if (patch->coordsys != Cartesian)
+    abortEr("In order to use this function in different coordinates,\n"
+      "one needs to consider that analytic function calculates only in \n"
+      "Cartesian coordinate system, so the transformation between\n"
+      "Curvilinear and Cartesian for random point must be done.\n");
+  
+  /* find the tolerance defined in input file if any */
+  assert(par);
+  tok = dup_s(par);
+  tok_s(tok,',',&save);
+  tol = fabs(atof(save));
+  
+  /* setting up interpolation */
+  interp_s->field = field;
+  interp_s->XYZ_dir_flag = 1;
+  plan_interpolation(interp_s);
+  
+  flg = NONE;
+  for (a = 0; a < Nx; ++a)/* -> choose different slices for testing */
+  {
+    interp_s->X = x[a];
+    for (b = 0; b < Ny; ++b)
+    {
+      interp_s->Y = y[b];
+      for (c = 0; c < Nz; ++c)
+      {
+        interp_s->Z = z[c];
+        diff = poly5_f_point(x[a],y[b],z[c])-execute_interpolation(interp_s);
+        if (GRT(fabs(diff),tol))
+        {
+          flg = FOUND;
+          break;
+        }
+      }
+    
+      if (flg == FOUND)
+        break;
+    }
+    if (flg == FOUND)
+        break;
+  }
+  
+  free_interpolation(interp_s);
+  free(tok);
+  
+  if (flg == FOUND)
+    return TEST_UNSUCCESSFUL;
+  
+  return TEST_SUCCESSFUL;
 }
 
 /* testing:
@@ -416,7 +902,7 @@ static double *make_random_number(const unsigned N,const double min,const double
   
   for (i = 0; i < N; ++i)
   {
-    x[i] = random_double(min,max);
+    x[i] = random_double(min,max,i);
   }
   
   return x;
