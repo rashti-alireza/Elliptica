@@ -258,7 +258,7 @@ Patch_T make_temp_patch(const Patch_T *const patch)
 
   tmp_patch = *patch;
   tmp_patch.nfld = 0;
-  tmp_patch.pn = UINT_MAX;
+  //tmp_patch.pn = UINT_MAX;
   tmp_patch.grid = 0;
   tmp_patch.name = 0;
   tmp_patch.node = 0;

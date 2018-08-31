@@ -25,6 +25,7 @@ void free_func_Patch2Pdouble(sFunc_Patch2Pdouble_T **func);
 void free_v2(Field_T *f);
 void free_v(Field_T *f);
 void free_info(Field_T *f);
+void free_attr(Field_T *f);
 void free_coeffs(Field_T *fld);
 void free_db_eqs(sEquation_T **db);
 void free_interpolation(Interpolation_T *interp_s);

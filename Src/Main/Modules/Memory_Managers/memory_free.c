@@ -108,6 +108,14 @@ void free_v2(Field_T *f)
   f->v2 = 0;
 }
 
+/* freeing attr of field and put it to 0 */
+void free_attr(Field_T *f)
+{
+  if (f->attr)
+    free(f->attr);
+  f->attr = 0;
+}
+
 /* freeing v of field and put it to 0 */
 void free_v(Field_T *f)
 {

@@ -195,21 +195,30 @@ double *make_coeffs_2d(Field_T *const f,const unsigned dir1,const unsigned dir2)
     
   const unsigned N = f->patch->nn;
   int dir;
-  Field_T *f_tmp = add_field("$_____f_tmp____$","(3dim)",f->patch,NO);
+  Patch_T p_tmp1 = make_temp_patch(f->patch);
+  Field_T *f_tmp = add_field("f_tmp","(3dim)",&p_tmp1,NO);
   
   if (IsAvailable_2d(f,dir1,dir2,&dir))
   {
     /* if field is ready ready */
     if (dir == -1)
+    {
+      remove_field(f_tmp);
+      free_temp_patch(&p_tmp1);
+      
       return f->v2;
+    }
     else/* it only make coeffs in dir since the other one in ready */
     {  
       f_tmp->v = f->v2;
+      free_attr(f_tmp);
+      f_tmp->attr = dup_s(f->attr);
+      f_tmp->info = dup_s(f->info);
+      
       /* since f_tmp->v2 is empty we have to allocate memory for that */
       f_tmp->v2 = alloc_double(N);
-
       f->v2 = find_1d_coeffs_in_patch(f_tmp,(unsigned)dir);
-      free_v(f_tmp);
+      
     }
   }
   else
@@ -219,15 +228,25 @@ double *make_coeffs_2d(Field_T *const f,const unsigned dir1,const unsigned dir2)
     
     find_1d_coeffs_in_patch(f,dir1);
     f_tmp->v = f->v2;
-    /* since f_tmp->v2 is empty it will be made by the function below */
+    free(f_tmp->attr);
+    f_tmp->attr = dup_s(f->attr);
+    f_tmp->info = dup_s(f->info);
+      
+    /* since f_tmp->v2 is empty it will be made by the functions below */
+    f_tmp->v2 = alloc_double(N);
     f->v2 = find_1d_coeffs_in_patch(f_tmp,dir2);
-    free_v(f_tmp);
   }
   
+  free_attr(f);
+  free_info(f);
+  f->attr = dup_s(f_tmp->attr);
+  f->info = dup_s(f_tmp->info);
+  free_v(f_tmp);
   f_tmp->v = 0;
   f_tmp->v2 = 0;
   remove_field(f_tmp);
-    
+  free_temp_patch(&p_tmp1);
+  
   return f->v2;
 }
 
@@ -275,21 +294,35 @@ double *make_coeffs_3d(Field_T *const f)
     }
     else
     {
-      Field_T *f_tmp1 = add_field("$______f_tmp1_____$","(3dim)",f->patch,NO);
-      Field_T *f_tmp2 = add_field("$______f_tmp2_____$","(3dim)",f->patch,NO);
+      Patch_T p_tmp1 = make_temp_patch(f->patch);
+      Patch_T p_tmp2 = make_temp_patch(f->patch);
+      Field_T *f_tmp1 = add_field("f_tmp1","(3dim)",&p_tmp1,NO);
+      Field_T *f_tmp2 = add_field("f_tmp2","(3dim)",&p_tmp2,NO);
  
       f_tmp1->v = find_1d_coeffs_in_patch(f,0);
+      free_attr(f_tmp1);
+      f_tmp1->attr = dup_s(f->attr);
+      free_info(f_tmp1);
+      f_tmp1->info = dup_s(f->info);
       /* f_tmp1->v == f->v2 
       // f_tmp1->v2 == 0
       */
       f_tmp1->v2 = alloc_double(N);
       f_tmp2->v = find_1d_coeffs_in_patch(f_tmp1,1);
+      free_attr(f_tmp2);
+      f_tmp2->attr = dup_s(f_tmp1->attr);
+      free_info(f_tmp2);
+      f_tmp2->info = dup_s(f_tmp1->info);
       /* f_tmp2->v == f_tmp1->v2
       // f_tmp2->v2 == 0
       */
       free_v2(f);/* => free(f_tmp1->v)*/
       f_tmp2->v2 = alloc_double(N);
       f->v2      = find_1d_coeffs_in_patch(f_tmp2,2);
+      free_attr(f);
+      f->attr = dup_s(f_tmp2->attr);
+      free_info(f);
+      f->info = dup_s(f_tmp2->info);
       /* f_tmp2->v == f_tmp1->v2
       // f_tmp2->v2 == f->v2
       */
@@ -299,6 +332,8 @@ double *make_coeffs_3d(Field_T *const f)
       f_tmp2->v2 = 0;
       remove_field(f_tmp1);
       remove_field(f_tmp2);
+      free_temp_patch(&p_tmp1);
+      free_temp_patch(&p_tmp2);
     }
   }
   
