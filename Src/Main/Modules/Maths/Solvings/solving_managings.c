@@ -8,7 +8,7 @@
 #define DL_OC '{'
 #define DL_CC '}'
 #define COMMA ','
-#define FLASH '>'
+#define ARROW '>'
 
 /* initializing Equation_T by null*/
 void *init_eq(void)
@@ -49,6 +49,18 @@ void add_eq(sEquation_T ***const data_base, fEquation_T *const eq,const char *co
 // in each patch according to input file.
 */
 void populate_solution_man(Grid_T *const grid,sEquation_T **const field_eq,sEquation_T **const bc_eq,sEquation_T **const jacobian_eq)
+{
+  if (strcmp_i(GetParameterS_E("Solving_Method"),"Parallel_Patch_Method"))
+    populate_solution_man_PPM(grid,field_eq,bc_eq,jacobian_eq);
+  else
+    abortEr("No such method defined for \"Solving_Method\".\n");
+}
+
+/* allocating and filling Solution_Man_T struct and its elements 
+// in each patch according to input file.
+// Parallel Patch Method.
+*/
+static void populate_solution_man_PPM(Grid_T *const grid,sEquation_T **const field_eq,sEquation_T **const bc_eq,sEquation_T **const jacobian_eq)
 {
   const char *par_f = GetParameterS_E("Fields");
   const char *par_o = GetParameterS_E("Solving_Order");
@@ -93,7 +105,7 @@ void populate_solution_man(Grid_T *const grid,sEquation_T **const field_eq,sEqua
   /* finding solving order */
   save = 0;
   par = dup_s(par_o);/* par = {f1,f2,...}->{f3,f4,...}->... */
-  tok = tok_s(par,FLASH,&save);/* =>tok = {f1,f2,...}- */
+  tok = tok_s(par,ARROW,&save);/* =>tok = {f1,f2,...}- */
   while(tok)
   {
     char *sub,*save_sub;
@@ -118,16 +130,18 @@ void populate_solution_man(Grid_T *const grid,sEquation_T **const field_eq,sEqua
     if (!ng)
       abortEr("No group fields to be solved are found!\n");
       
-    fill_solve(grid,group,ng,field_eq,bc_eq,jacobian_eq);
+    fill_solve_ppm(grid,group,ng,field_eq,bc_eq,jacobian_eq);
     
-    tok = tok_s(0,FLASH,&save);/* tok = {f3,f4,...} */
+    tok = tok_s(0,ARROW,&save);/* tok = {f3,f4,...} */
     free_2d_mem(group,ng);
   }
   free(par);
 }
 
-/* allocating memory and filling solve struct group by group */
-static void fill_solve(Grid_T *const grid,char **const group,const unsigned ng,sEquation_T **const field_eq,sEquation_T **const bc_eq,sEquation_T **const jacobian_eq)
+/* allocating memory and filling solve struct group by group.
+// each group composed of couple of fields to be solved.
+*/
+static void fill_solve_ppm(Grid_T *const grid,char **const group,const unsigned ng,sEquation_T **const field_eq,sEquation_T **const bc_eq,sEquation_T **const jacobian_eq)
 {
   unsigned p;
   
@@ -159,14 +173,13 @@ static void fill_solve(Grid_T *const grid,char **const group,const unsigned ng,s
     
     for (i = 0; i < ng; ++i)
     {
-      solve->f_name[i] = dup_s(group[i]);
+      solve->f_name[i]   = dup_s(group[i]);
       solve->f_occupy[i] = i*patch->nn;
       solve->field_eq[i] = get_field_eq(group[i],field_eq);
       solve->bc_eq[i]    = get_field_eq(group[i],bc_eq);
+      solve->jacobian_eq = get_field_eq(group[i],jacobian_eq);
       solve->field[i]    = prepare_field(group[i],"(3dim)",patch);
     }
-    /* since all of this group supposed to have only one jacobian eq. */
-    solve->jacobian_eq   = get_field_eq("jacobian",jacobian_eq);
     
   }/* end of FOR_ALL_PATCHES(p,grid) */
 }
@@ -193,7 +206,10 @@ fEquation_T *get_field_eq(const char *const name, sEquation_T **const db)
   }
   
   if (!eq)
-    abortEr_s("No such equation for \"%s\" exists.\n",name);
+    abortEr_s("No such equation for \"%s\" exists.\n"
+    "Note: if it is a Jacobian E.Q. and supposed to be for couple of fields, \n"
+    "the naming convenstion is jacobian_f1_f2_... \n"
+    "i.e. every related field must be mentioned in the name of function.\n",name);
   
   return eq;
 }
@@ -217,6 +233,7 @@ fEquation_Solver_T *get_solver_method(const char *const solver)
 
 /* given name, attribute and patch
 // it returns a field with demanded properties.
+// Note: this field is not in the patch->pool
 // ->return value: new made field
 */
 static Field_T *prepare_field(const char *const name,const char *const attr,Patch_T *const patch)

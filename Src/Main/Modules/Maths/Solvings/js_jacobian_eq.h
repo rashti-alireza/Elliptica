@@ -45,3 +45,4 @@ static void read_1st_and_2nd_deriv(const JType_E deriv_dir,JType_E *const deriv_
 static void JType_E2Dd_T(const JType_E jt_e, Dd_T *const q_dir);
 static void write_J_in_disk_ccs(void);
 static double J_sizeMb_ccs(const Matrix_T *const m);
+fJs_T *get_j_reader(const Matrix_T *const m);

@@ -11,11 +11,70 @@
 */
 int parallel_patch_method(Grid_T *const grid)
 {
-  unsigned p;
   /* residual determined in the input file */
-  const double res_input = GetParameterD_E("Solving_Residual");
+  const double res_input = fabs(GetParameterD_E("Solving_Residual"));
+  Flag_T IsItSolved = NO;
   
-  PARALLEL_PATCH_METHOD_OpenMP(omp parallel for)
+  while (IsItSolved == NO)
+  {
+    unsigned p;
+    
+    IsItSolved = check_residual(grid,res_input);
+    if (IsItSolved == YES)
+      break;
+      
+    /* initializing fields to be solved. */
+    initialize_ppm(grid);
+    PARALLEL_PATCH_METHOD_OpenMP(omp parallel for)
+    for (p = 0; p < grid->np; ++p)
+    {
+      Patch_T *patch = grid->patch[p];
+      unsigned cn;/* collection number, which refers to 
+                  // collection of fields to be solved.
+                  */
+      
+      for (cn = 0; cn < patch->solution_man->ns; ++cn)
+      {
+        double res_patch;/* residual of each collection at this patch */
+        double *b = patch->solution_man->solve[cn]->b;
+        /* number of components of b */
+        unsigned nb = patch->nn*patch->solution_man->solve[cn]->nf;
+        
+        /* making b in ax = b */
+        b_in_ax_b_whole_ppm(patch,cn);
+        b_in_ax_b_bndry_ppm(patch,cn);
+        
+        /* if root means square of b is less than res_input skip otherwise keep going */
+        res_patch = rms(nb,b,0);
+        //test
+        printf("res_%s=%0.15f\n",patch->name,res_patch);
+        //end
+        if (LSS(res_patch,res_input))
+          continue;
+        
+        /* making a in ax = b */
+        a_in_ax_b_whole_ppm(patch,cn);
+        a_in_ax_b_bndry_ppm(patch,cn);
+        
+        /* solve ax = b */
+        solve_ax_b_ppm(patch,cn);
+      }
+    }/* end of for (p = 0; p < grid->np; ++p) */
+    update_fields_ppm(grid);/*  update fields with new solution */
+  }
+  
+  return EXIT_SUCCESS;
+}
+
+/* find out the residual of each patch and decide weather the equations
+// are alredy solve or not.
+// ->return value: YES if EQs are solver, No otherwise.
+*/
+static Flag_T check_residual(const Grid_T *const grid,const double res_input)
+{
+  Flag_T flg = YES;
+  unsigned p;
+  
   for (p = 0; p < grid->np; ++p)
   {
     Patch_T *patch = grid->patch[p];
@@ -37,19 +96,100 @@ int parallel_patch_method(Grid_T *const grid)
       /* if root means square of b is less than res_input skip otherwise keep going */
       res_patch = rms(nb,b,0);
       
-      if (LSS(res_patch,res_input))
-        continue;
+      if (GRT(res_patch,res_input))
+      {
+        flg = NO;
+        break;
+      }
       
-      /* making a in ax = b */
-      a_in_ax_b_whole_ppm(patch,cn);
-      a_in_ax_b_bndry_ppm(patch,cn);
-      
-      /* solve ax = b */
-      solve_ax_b_ppm(patch,cn);
-    }
+    }/* end of for (cn = 0; cn < patch->solution_man->ns; ++cn) */
+    if (flg == NO)
+      break;
   }/* end of for (p = 0; p < grid->np; ++p) */
   
-  return EXIT_SUCCESS;
+  return flg;
+}
+
+/* having solved for fields, now one needs to 
+// update them with found value.
+// Note: in ppm method solving algorith is Newton so for update
+// we have: J.(x_2-x_1) = -F -> J.(x_1-x_2) = F -> J.x = F
+// => u_new = u_old-x.
+*/
+static void update_fields_ppm(Grid_T *const grid)
+{
+  unsigned p;
+  
+  FOR_ALL_PATCHES(p,grid)
+  {
+    Patch_T *patch = grid->patch[p];
+    Solution_Man_T *solution_man = patch->solution_man;
+    unsigned s;
+    
+    for (s = 0; s < solution_man->ns; ++s)
+    {
+      Solve_T *solve = solution_man->solve[s];
+      unsigned f;
+      
+      for (f = 0; f < solve->nf; ++f)
+      {
+        Field_T *field = patch->pool[Ind(solve->field[f]->name)];
+        double *x = &solve->b[solve->f_occupy[f]];
+        double *u_old = field->v;
+        unsigned i;
+        
+        free_coeffs(field);
+        
+        for (i = 0; i < patch->nn; ++i)
+          field->v[i] = u_old[i]-x[i];
+      }
+      
+    }/* end of for (cn = 0; cn < solution_man->ns; ++cn) */
+    
+  }/* end of FOR_ALL_PATCHES(p,grid) */
+}
+
+
+/* initializing some fields in each Solve_T 
+// and duplicating some memories to prohibit race condition/
+*/
+static void initialize_ppm(Grid_T *const grid)
+{
+  copy_initial_values_ppm(grid);
+}
+
+/* copying initial value of fields in patch->pool
+// to solve->fields in each patch.
+*/
+static void copy_initial_values_ppm(Grid_T *const grid)
+{
+  unsigned p;
+  
+  FOR_ALL_PATCHES(p,grid)
+  {
+    Patch_T *patch = grid->patch[p];
+    Solution_Man_T *solution_man = patch->solution_man;
+    unsigned s;
+    
+    for (s = 0; s < solution_man->ns; ++s)
+    {
+      Solve_T *solve = solution_man->solve[s];
+      unsigned f;
+      
+      for (f = 0; f < solve->nf; ++f)
+      {
+        Field_T *field_rec = solve->field[f];
+        Field_T *field_src = patch->pool[Ind(field_rec->name)];
+        unsigned i;
+        
+        free_coeffs(field_rec);
+        for (i = 0; i < patch->nn; ++i)
+          field_rec->v[i] = field_src->v[i];
+      }
+      
+    }/* end of for (cn = 0; cn < solution_man->ns; ++cn) */
+    
+  }/* end of FOR_ALL_PATCHES(p,grid) */
 }
 
 /* solving a.x = b.
@@ -59,10 +199,17 @@ int parallel_patch_method(Grid_T *const grid)
 static int solve_ax_b_ppm(Patch_T *const patch,const unsigned cn)
 {
   Solve_T *const solve = patch->solution_man->solve[cn];
+  Matrix_T *m = 0;
   
   if (strcmp_i(GetParameterS_E("Linear_Solver"),"UMFPACK"))
   {
     UmfPack_T umfpack[1] = {0};
+    if (!solve->a->ccs_f)
+    {
+      m = cast_matrix_ccs(solve->a);
+      free_matrix(solve->a);
+      solve->a = m;
+    }
     umfpack->a = solve->a;
     umfpack->b = solve->b;
     umfpack->x = solve->x;
@@ -72,6 +219,13 @@ static int solve_ax_b_ppm(Patch_T *const patch,const unsigned cn)
   else if (strcmp_i(GetParameterS_E("Linear_Solver"),"UMFPACK_long"))
   {
     UmfPack_T umfpack[1] = {0};
+    if (!solve->a->ccs_l_f)
+    {
+      abortEr(INCOMPLETE_FUNC);
+      //m = cast_matrix_ccs(solve->a);
+      //free_matrix(solve->a);
+      //solve->a = m;
+    }
     umfpack->a = solve->a;
     umfpack->b = solve->b;
     umfpack->x = solve->x;
@@ -385,8 +539,8 @@ static int a_bndry_copy_ppm(Boundary_Condition_T *const bc)
   /* df/dn = df/dn|adjacent */
   if (subface->df_dn)
   {
-    fJs_T *const jf = patch->solution_man->j_func;
-    Matrix_T *j_x = 0,*j_y = 0,*j_z = 0;
+    fJs_T *j_x = 0,*j_y = 0,*j_z = 0;
+    Matrix_T *j0 = 0,*j1 = 0,*j2 = 0;
     Point_T point;
     point.patch = patch;
     point.face  = subface->face;
@@ -398,18 +552,24 @@ static int a_bndry_copy_ppm(Boundary_Condition_T *const bc)
       
       const char *types[] = {"j_a","j_b","j_c",0};
       prepare_Js_jacobian_eq(patch,types);
-      j_x = get_j_matrix(patch,"j_a");
-      j_y = get_j_matrix(patch,"j_b");
-      j_z = get_j_matrix(patch,"j_c");
+      j0  = get_j_matrix(patch,"j_a");
+      j1  = get_j_matrix(patch,"j_b");
+      j2  = get_j_matrix(patch,"j_c");
+      j_x = get_j_reader(j0);
+      j_y = get_j_reader(j1);
+      j_z = get_j_reader(j2);
   
     }
     else
     {
       const char *types[] = {"j_x","j_y","j_z",0};
       prepare_Js_jacobian_eq(patch,types);
-      j_x = get_j_matrix(patch,"j_x");
-      j_y = get_j_matrix(patch,"j_y");
-      j_z = get_j_matrix(patch,"j_z");
+      j0  = get_j_matrix(patch,"j_x");
+      j1  = get_j_matrix(patch,"j_y");
+      j2  = get_j_matrix(patch,"j_z");
+      j_x = get_j_reader(j0);
+      j_y = get_j_reader(j1);
+      j_z = get_j_reader(j2);
     }
     
     for (i = 0; i < solve->nf; ++i)
@@ -425,9 +585,9 @@ static int a_bndry_copy_ppm(Boundary_Condition_T *const bc)
         Nvec = normal_vec(&point);
         for (lmn = initial; lmn < final;++lmn)
           a[initial+bndry[ijk]][lmn] = 
-              Nvec[0]*jf(j_x,bndry[ijk],lmn-initial) +
-              Nvec[1]*jf(j_y,bndry[ijk],lmn-initial) +
-              Nvec[2]*jf(j_z,bndry[ijk],lmn-initial) ;
+              Nvec[0]*j_x(j0,bndry[ijk],lmn-initial) +
+              Nvec[1]*j_y(j1,bndry[ijk],lmn-initial) +
+              Nvec[2]*j_z(j2,bndry[ijk],lmn-initial) ;
       }
     }/* end of for (i = 0; i < solve->nf; ++i) */
   }/* if (subface->df_dn) */
@@ -531,7 +691,7 @@ static int b_bndry_interpolate_ppm(Boundary_Condition_T *const bc)
       interp_s->Z = X[2];
       b[id[n]] = field->v[id[n]] - execute_interpolation(interp_s);
     }
-    
+    /* freeing coeffss and fields????????????????? */
   }/* end of for (i = 0; i < solve->nf; ++i) */
   
   free_interpolation(interp_s);

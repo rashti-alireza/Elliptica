@@ -369,7 +369,6 @@ typedef struct SOLUTION_MAN_T
     Matrix_T *J;
   }**jacobian;
   unsigned nj;/* number of jacobian */
-  fJs_T *j_func;
 }Solution_Man_T;
 
 /* patch */

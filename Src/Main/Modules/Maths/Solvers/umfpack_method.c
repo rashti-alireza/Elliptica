@@ -24,6 +24,9 @@ int direct_solver_umfpack_di(void *vp)
   double *Control = 0, *Info = 0;
   int status;
   
+  if (!umf->a->ccs_f)
+    abortEr("The matrix a in a.x = b in umfpack must be in CCS format.\n");
+  
   status = umfpack_di_symbolic(row,col,Ap,Ai,Ax,&Symbolic,Control,Info);
   if(status != UMFPACK_OK)
      umfpack_error(status,__FILE__,__LINE__);
@@ -124,8 +127,8 @@ static void umfpack_error(const int status,const char *const file,const int line
         "described above.\n",file,line);
       break;
     case UMFPACK_ERROR_argument_missing:
-      abort_error("Some arguments of some are optional (you can pass\n"
-        "a NULL pointer instead of an array). This error code occurs if you pass a NULL pointer when\n"
+      abort_error("Some arguments of some are optional (you can pass a NULL pointer instead of an array).\n"
+      "This error code occurs if you pass a NULL pointer when\n"
         "that argument is required to be present.\n",file,line);
       break;
     case UMFPACK_ERROR_n_nonpositive:

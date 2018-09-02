@@ -71,7 +71,6 @@ void prepare_Js_jacobian_eq(Patch_T *const patch,const char * const *types)
     sprintf(sol_man->jacobian[c]->type,types[i]);
     sol_man->jacobian[c]->J = cast_matrix_ccs(J);
     free_matrix(J);
-    sol_man->j_func = read_matrix_entry_ccs;
     
     if (GRT(J_sizeMb_ccs(sol_man->jacobian[i]->J),max_j_size))
       write_J_in_disk_ccs();
@@ -598,6 +597,22 @@ static void JType_E2str(const JType_E e,char *const str)
     default:
       abortEr(INCOMPLETE_FUNC);
   }
+}
+
+/* getting the appropriate reader for J matrices according
+// to their format.
+// ->return value: matrix reader for specific format
+*/
+fJs_T *get_j_reader(const Matrix_T *const m)
+{
+  fJs_T *reader = 0;
+  
+  if (m->ccs_f)
+    reader = read_matrix_entry_ccs;
+  else
+    abortEr(INCOMPLETE_FUNC);
+  
+  return reader;  
 }
 
 /* getting j_* matrix according to its type */
