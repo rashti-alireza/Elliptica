@@ -92,8 +92,7 @@ static void umfpack_error(const int status,const char *const file,const int line
   switch(status)
   {
     case UMFPACK_WARNING_singular_matrix:
-      abort_error("Matrix is singular. There are exact zeros on the\n"
-        "diagonal of U.\n",file,line);
+      abort_error("Matrix is singular. There are exact zeros on the diagonal of U.\n",file,line);
       break;
     case UMFPACK_WARNING_determinant_underflow:
       abort_error("The determinant is nonzero, but smaller in\n"
