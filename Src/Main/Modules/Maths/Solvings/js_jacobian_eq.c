@@ -30,9 +30,9 @@ void prepare_Js_jacobian_eq(Patch_T *const patch,const char * const *types)
     max_j_size = GetParameterD("Maximum_Size_of_J_Kept_in_Mb");
   
   /* selecting Jacobian method for making of jacobian equation */
-  if (strcmp_i(GetParameterS_E("Making_Jacobian_Eq_Method"),"spectral"))
+  if (strcmp_i(GetParameterS_E("dF/du_for_Newton_Method"),"Spectral"))
     Jacobian = make_jacobian_spectral_method;
-  else if (strcmp_i(GetParameterS_E("Making_Jacobian_Eq_Method"),"direct"))
+  else if (strcmp_i(GetParameterS_E("dF/du_for_Newton_Method"),"Finite_Difference"))
     Jacobian = make_jacobian_direct_method;
   else
     abortEr(INCOMPLETE_FUNC);
