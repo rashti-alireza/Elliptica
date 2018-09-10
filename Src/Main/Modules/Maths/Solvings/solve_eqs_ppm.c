@@ -84,6 +84,8 @@ int parallel_patch_method(Grid_T *const grid)
 */
 static int a_in_ax_b_finite_diff_ppm(Patch_T *const patch,const unsigned cn)
 {
+  abortEr(INCOMPLETE_FUNC"\n NOT THREAD SAFE.\n");
+  
   Solve_T *const slv = patch->solution_man->solve[cn];
   unsigned nn = patch->nn;
   const double EPS = 1.0/nn;
@@ -109,6 +111,12 @@ static int a_in_ax_b_finite_diff_ppm(Patch_T *const patch,const unsigned cn)
     /* varying b by fields and filling up jacobian */
     for (j = 0; j < nn; ++j)
     {
+      /* ERRORRRRR: NOT THREAD SAFE
+      // not thread safe since when one changes 
+      // the following field value, since the other thread needs this value
+      // for interpolation and other boundary conditions, it messes up
+      // thread safety.
+      */
       field->v[j] += EPS;
       free_coeffs(field);
       
@@ -121,6 +129,7 @@ static int a_in_ax_b_finite_diff_ppm(Patch_T *const patch,const unsigned cn)
       }
         
       field->v[j] -= EPS;
+      free_coeffs(field);
     }/* end of for (j = 0; j < nn; ++j) */
 
     slv->a = jac;
@@ -269,7 +278,8 @@ static int solve_ax_b_ppm(Patch_T *const patch,const unsigned cn)
   Solve_T *const solve = patch->solution_man->solve[cn];
   Matrix_T *m = 0;
   
-  precondition(solve->a,solve->b);
+  if (strstr_i(GetParameterS("Solving_Preconditioning"),"yes"))
+    precondition(solve->a,solve->b);
   if (strcmp_i(GetParameterS_E("Linear_Solver"),"UMFPACK"))
   {
     UmfPack_T umfpack[1] = {0};
