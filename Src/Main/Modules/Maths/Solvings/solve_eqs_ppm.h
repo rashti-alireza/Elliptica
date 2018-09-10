@@ -35,3 +35,7 @@ static unsigned const_index_on_AdjFace(const SubFace_T *const sf);
 fJs_T *get_j_reader(const Matrix_T *const m);
 static void update_fields_ppm(Grid_T *const grid);
 static Flag_T check_residual(const Grid_T *const grid,const double res_input);
+double read_matrix_entry_ccs(Matrix_T *const m, const long r,const long c);
+static int a_in_ax_b_finite_diff_ppm(Patch_T *const patch,const unsigned cn);
+
+

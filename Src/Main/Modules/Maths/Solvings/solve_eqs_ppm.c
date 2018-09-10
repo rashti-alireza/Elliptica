@@ -14,17 +14,20 @@ int parallel_patch_method(Grid_T *const grid)
   /* residual determined in the input file */
   const double res_input = fabs(GetParameterD_E("Solving_Residual"));
   Flag_T IsItSolved = NO;
+  const int NumIter = GetParameterI_E("Linear_Solver_Number_of_Iteration");
+  int iter = 0;
   
-  while (IsItSolved == NO)
+  while (IsItSolved == NO && iter < NumIter)
   {
     unsigned p;
+    
+    /* initializing fields to be solved. */
+    initialize_ppm(grid);
     
     IsItSolved = check_residual(grid,res_input);
     if (IsItSolved == YES)
       break;
       
-    /* initializing fields to be solved. */
-    initialize_ppm(grid);
     PARALLEL_PATCH_METHOD_OpenMP(omp parallel for)
     for (p = 0; p < grid->np; ++p)
     {
@@ -32,6 +35,7 @@ int parallel_patch_method(Grid_T *const grid)
       unsigned cn;/* collection number, which refers to 
                   // collection of fields to be solved.
                   */
+      printf("Solving Equation(s) at patch = %s\n",patch->name);
       
       for (cn = 0; cn < patch->solution_man->ns; ++cn)
       {
@@ -46,29 +50,93 @@ int parallel_patch_method(Grid_T *const grid)
         
         /* if root means square of b is less than res_input skip otherwise keep going */
         res_patch = rms(nb,b,0);
-        //test
-        printf("res_%s=%0.15f\n",patch->name,res_patch);
-        //end
+        printf("L2-norm of F at J.x = -F in %s = %0.15f\n",patch->name,res_patch);
         if (LSS(res_patch,res_input))
           continue;
         
         /* making a in ax = b */
-        a_in_ax_b_whole_ppm(patch,cn);
-        a_in_ax_b_bndry_ppm(patch,cn);
+        if (strstr_i(GetParameterS_E("Making_Jacobian_For_Newton_Method"),"Finite_Difference")) 
+        {
+          a_in_ax_b_finite_diff_ppm(patch,cn);
+        }
+        else if (strstr_i(GetParameterS_E("Making_Jacobian_For_Newton_Method"),"Spectral"))
+        {
+          a_in_ax_b_whole_ppm(patch,cn);
+          a_in_ax_b_bndry_ppm(patch,cn);
+        }
+        else
+          abortEr("There is no such option for \" Making_Jacobian_For_Newton_Method\" \n");
         
         /* solve ax = b */
         solve_ax_b_ppm(patch,cn);
       }
     }/* end of for (p = 0; p < grid->np; ++p) */
+    
     update_fields_ppm(grid);/*  update fields with new solution */
+    iter++;
   }
   
   return EXIT_SUCCESS;
 }
 
+/* using finite difference to find a in a.x = b.
+// a[i][j] = { (b2(u1,u2,...,uj+eps,..,un)-b1(u1,u2,...,un))/eps } |i.
+*/
+static int a_in_ax_b_finite_diff_ppm(Patch_T *const patch,const unsigned cn)
+{
+  Solve_T *const slv = patch->solution_man->solve[cn];
+  unsigned nn = patch->nn;
+  const double EPS = 1.0/nn;
+  unsigned i,j,f;
+  double *b1 = alloc_double(nn);
+  
+  if (slv->nf > 1)
+    abortEr(INCOMPLETE_FUNC);
+    
+  for (f = 0; f < slv->nf; ++f)
+  {
+    Field_T *field  = slv->field[f];
+    Matrix_T *jac   = alloc_matrix(REG_SF,nn,nn);
+    double **J      = jac->reg->A;
+    double *b2      = &slv->b[slv->f_occupy[f]];
+    
+    //b_in_ax_b_whole_ppm(patch,cn);
+    //b_in_ax_b_bndry_ppm(patch,cn);
+    
+    for(i = 0; i < nn; ++i)
+      b1[i] = b2[i];
+     
+    /* varying b by fields and filling up jacobian */
+    for (j = 0; j < nn; ++j)
+    {
+      field->v[j] += EPS;
+      free_coeffs(field);
+      
+      b_in_ax_b_whole_ppm(patch,cn);
+      b_in_ax_b_bndry_ppm(patch,cn);
+      
+      for (i = 0; i < nn; ++i)
+      {
+        J[i][j] = (b2[i]-b1[i])/EPS;
+      }
+        
+      field->v[j] -= EPS;
+    }/* end of for (j = 0; j < nn; ++j) */
+
+    slv->a = jac;
+    
+    /* since b is modified we need to retrieve it again */
+    b_in_ax_b_whole_ppm(patch,cn);
+    b_in_ax_b_bndry_ppm(patch,cn);
+  }/* end of for (f = 0; f < slv->nf; ++f) */
+  
+  free(b1);
+  return EXIT_SUCCESS;
+}
+
 /* find out the residual of each patch and decide weather the equations
-// are alredy solve or not.
-// ->return value: YES if EQs are solver, No otherwise.
+// are already solved or not.
+// ->return value: YES if EQs are solved, NO otherwise.
 */
 static Flag_T check_residual(const Grid_T *const grid,const double res_input)
 {
@@ -134,21 +202,21 @@ static void update_fields_ppm(Grid_T *const grid)
       for (f = 0; f < solve->nf; ++f)
       {
         Field_T *field = patch->pool[Ind(solve->field[f]->name)];
-        double *x = &solve->b[solve->f_occupy[f]];
+        double *x = &solve->x[solve->f_occupy[f]];
         double *u_old = field->v;
+        double *u_new = field->v;
         unsigned i;
         
         free_coeffs(field);
         
         for (i = 0; i < patch->nn; ++i)
-          field->v[i] = u_old[i]-x[i];
+          u_new[i] = u_old[i]-x[i];
       }
       
     }/* end of for (cn = 0; cn < solution_man->ns; ++cn) */
     
   }/* end of FOR_ALL_PATCHES(p,grid) */
 }
-
 
 /* initializing some fields in each Solve_T 
 // and duplicating some memories to prohibit race condition/
@@ -201,6 +269,7 @@ static int solve_ax_b_ppm(Patch_T *const patch,const unsigned cn)
   Solve_T *const solve = patch->solution_man->solve[cn];
   Matrix_T *m = 0;
   
+  precondition(solve->a,solve->b);
   if (strcmp_i(GetParameterS_E("Linear_Solver"),"UMFPACK"))
   {
     UmfPack_T umfpack[1] = {0};
@@ -210,11 +279,12 @@ static int solve_ax_b_ppm(Patch_T *const patch,const unsigned cn)
       free_matrix(solve->a);
       solve->a = m;
     }
+    
     umfpack->a = solve->a;
     umfpack->b = solve->b;
     umfpack->x = solve->x;
     direct_solver_umfpack_di(umfpack);
-    
+    free_matrix(m);
   }
   else if (strcmp_i(GetParameterS_E("Linear_Solver"),"UMFPACK_long"))
   {
@@ -239,7 +309,7 @@ static int solve_ax_b_ppm(Patch_T *const patch,const unsigned cn)
 }
 
 /* filling a in a.x = b for the bndry points of the given patch
-// for the given colloction of fields cn according to the equations for a.
+// for the given collection of fields cn according to the equations for a.
 // THREAD SAFE.
 // ->return value: EXIT_SUCCESS
 */
@@ -249,12 +319,14 @@ static int a_in_ax_b_bndry_ppm(Patch_T *const patch,const unsigned cn)
   Solve_T *const solve = patch->solution_man->solve[cn];
   unsigned intfc;
   
+  /* loop over all interfaces */
   for (intfc = 0; intfc < nintfc; ++intfc)
   {
     Interface_T *interface = patch->interface[intfc];
     unsigned nsfc = interface->ns;
     unsigned sfc;
     
+    /* loop over all subfaces */
     for (sfc = 0; sfc < nsfc; ++sfc)
     {
       SubFace_T *subface = interface->subface[sfc];
@@ -266,7 +338,7 @@ static int a_in_ax_b_bndry_ppm(Patch_T *const patch,const unsigned cn)
       
       if (!subface->exterF)/* if subface is internal */
       {
-        continue;
+        abortEr(INCOMPLETE_FUNC);
       }
       else if (subface->innerB)/* if there is inner boundary */
       {
@@ -303,7 +375,7 @@ static int a_in_ax_b_bndry_ppm(Patch_T *const patch,const unsigned cn)
 }
 
 /* filling a in a.x = b for whole points of the given patch
-// for the given colloction of fields cn according to the equations for a.
+// for the given collection of fields cn according to the equations for a.
 // THREAD SAFE.
 // ->return value: EXIT_SUCCESS
 */
@@ -330,7 +402,7 @@ static int a_in_ax_b_whole_ppm(Patch_T *const patch,const unsigned cn)
 }
 
 /* filling b in a.x = b for whole points of the given patch
-// for the given colloction of fields cn according to field equations.
+// for the given collection of fields cn according to field equations.
 // THREAD SAFE.
 // ->return value: EXIT_SUCCESS
 */
@@ -345,7 +417,7 @@ static int b_in_ax_b_whole_ppm(Patch_T *const patch,const unsigned cn)
     fEquation_T *field_eq = slv->field_eq[i];
     double *b             = &slv->b[slv->f_occupy[i]];
     
-    /* fill b in ax = b for the specified field */
+    /* fill b in a.x = b for the specified field */
     field_eq(field,b);
   }
   
@@ -353,7 +425,7 @@ static int b_in_ax_b_whole_ppm(Patch_T *const patch,const unsigned cn)
 }
 
 /* filling b in a.x = b for boundary points of the given patch
-// for the given collocation of fields cn according to the boundary 
+// for the given collection of fields cn according to the boundary 
 // conditions between adjacent patches and boundary conditions equations.
 // THREAD SAFE.
 // ->return value: EXIT_SUCCESS
@@ -364,12 +436,14 @@ static int b_in_ax_b_bndry_ppm(Patch_T *const patch,const unsigned cn)
   Solve_T *const solve = patch->solution_man->solve[cn];
   unsigned intfc;
   
+  /* loop over all interfaces */
   for (intfc = 0; intfc < nintfc; ++intfc)
   {
     Interface_T *interface = patch->interface[intfc];
     unsigned nsfc = interface->ns;
     unsigned sfc;
     
+    /* loop over all subfaces */
     for (sfc = 0; sfc < nsfc; ++sfc)
     {
       SubFace_T *subface = interface->subface[sfc];
@@ -381,7 +455,7 @@ static int b_in_ax_b_bndry_ppm(Patch_T *const patch,const unsigned cn)
       
       if (!subface->exterF)/* if subface is internal */
       {
-        continue;
+        abortEr(INCOMPLETE_FUNC);
       }
       else if (subface->innerB)/* if there is inner boundary */
       {
@@ -417,9 +491,9 @@ static int b_in_ax_b_bndry_ppm(Patch_T *const patch,const unsigned cn)
   return EXIT_SUCCESS;
 }
 
-/* copy values of fields or their derivative
-// along the normaln vector between collocated points 
-// at the boundary between two patches for parallel patch method.
+/* copy values of fields or their derivatives
+// along the normal vector at collocated points occured at
+// the boundary between two patches for parallel patch method.
 // ->return value: EXIT_SUCCESS
 */
 static int b_bndry_copy_ppm(Boundary_Condition_T *const bc)
@@ -434,6 +508,7 @@ static int b_bndry_copy_ppm(Boundary_Condition_T *const bc)
   Field_T *field;
   Field_T *field_adj;
   double *b;
+  unsigned xyz1,xyz2,boundary;
   unsigned n;
   unsigned i;
   
@@ -445,7 +520,7 @@ static int b_bndry_copy_ppm(Boundary_Condition_T *const bc)
     double *Nvec;/* normal vector */
     const char *der0 = "x",*der1 = "y",*der2 = "z";
     
-    /* if one wants to solve whole equations on curvilinear patches */
+    /* if one wants to solve the whole equations on curvilinear patches */
     if (!strcmp_i(GetParameterS("Solving_Interpolation_Normal"),"Cartesian_Normal"))
     {
       der0 = "a";
@@ -479,15 +554,17 @@ static int b_bndry_copy_ppm(Boundary_Condition_T *const bc)
         point.patch = subface->patch;
         point.face  = subface->face;
         Nvec = normal_vec(&point);
+        xyz1 = id[n];
+        xyz2 = adjid[n];
+        boundary = id[n];
         
-        b[id[n]]   = Nvec[0]*(f_a[id[n]] - f_a_adj[adjid[n]]) +
-                     Nvec[1]*(f_b[id[n]] - f_a_adj[adjid[n]]) +
-                     Nvec[2]*(f_c[id[n]] - f_a_adj[adjid[n]]) ;
+        b[boundary] = Nvec[0]*(f_a[xyz1] - f_a_adj[xyz2]) +
+                      Nvec[1]*(f_b[xyz1] - f_a_adj[xyz2]) +
+                      Nvec[2]*(f_c[xyz1] - f_a_adj[xyz2]) ;
       }
       /* freeing memories */
       field_tmp ->v = 0;/* since pointing to field_adj->v */
       remove_field(field_tmp);
-      free(field_tmp);
       free(f_a);
       free(f_b);
       free(f_c);
@@ -508,7 +585,11 @@ static int b_bndry_copy_ppm(Boundary_Condition_T *const bc)
       
       for (n = 0; n < np; ++n)
       {
-        b[id[n]]   = field->v[id[n]] - field_adj->v[adjid[n]];
+        xyz1 = id[n];
+        xyz2 = adjid[n];
+        boundary = id[n];
+        
+        b[boundary] = field->v[xyz1] - field_adj->v[xyz2];
       }
       
     }/* end of for (i = 0; i < solve->nf; ++i) */
@@ -519,8 +600,8 @@ static int b_bndry_copy_ppm(Boundary_Condition_T *const bc)
 
 
 /* making those parts of jacobian related to the section in b in which 
-// it copys values of fields or their derivative
-// along the normaln vector between collocated points 
+// it copys values of fields or their derivatives
+// along the normal vector between collocated points 
 // at the boundary between two patches for parallel patch method.
 // ->return value: EXIT_SUCCESS
 */
@@ -689,6 +770,7 @@ static int b_bndry_interpolate_ppm(Boundary_Condition_T *const bc)
       interp_s->X = X[0];
       interp_s->Y = X[1];
       interp_s->Z = X[2];
+      
       b[id[n]] = field->v[id[n]] - execute_interpolation(interp_s);
     }
     /* freeing coeffss and fields????????????????? */
