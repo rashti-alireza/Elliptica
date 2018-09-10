@@ -20,30 +20,34 @@ int direct_solver_umfpack_di(void *vp)
   double *const b  = umf->b;
   double *const x  = umf->x;
   void *Symbolic,*Numeric;
-  //double Control[UMFPACK_CONTROL],Info[UMFPACK_INFO];
-  double *Control = 0, *Info = 0;
+  double Info[UMFPACK_INFO];
+  double Control[UMFPACK_CONTROL];
   int status;
   
   if (!umf->a->ccs_f)
     abortEr("The matrix a in a.x = b in umfpack must be in CCS format.\n");
   
+  umfpack_di_defaults(Control);
+  
   status = umfpack_di_symbolic(row,col,Ap,Ai,Ax,&Symbolic,Control,Info);
   if(status != UMFPACK_OK)
-     umfpack_error(status,__FILE__,__LINE__);
+    umfpack_error_di(Control,status,__FILE__,__LINE__);
      
   status = umfpack_di_numeric(Ap,Ai,Ax,Symbolic,&Numeric,Control,Info);
   if(status != UMFPACK_OK)
-     umfpack_error(status,__FILE__,__LINE__);
+    umfpack_error_di(Control,status,__FILE__,__LINE__);
      
   umfpack_di_free_symbolic(&Symbolic);
 
+  printf("Condition_Number = %g\n", 1/Info[UMFPACK_RCOND]);
+
   status = umfpack_di_solve(UMFPACK_A,Ap,Ai,Ax,x,b,Numeric,Control,Info);
   if(status != UMFPACK_OK)
-     umfpack_error(status,__FILE__,__LINE__);
+    umfpack_error_di(Control,status,__FILE__,__LINE__);
 
   /*freeing*/
   umfpack_di_free_numeric(&Numeric);
-  
+ 
   return EXIT_SUCCESS;
 }
 
@@ -62,23 +66,30 @@ int direct_solver_umfpack_dl(void *vp)
   double *const b  = umf->b;
   double *const x  = umf->x;
   void *Symbolic,*Numeric;
-  //double Control[UMFPACK_CONTROL],Info[UMFPACK_INFO];
-  double *Control = 0, *Info = 0;
+  double Control[UMFPACK_CONTROL];
+  double Info[UMFPACK_INFO];
   long status;
+  
+  if (!umf->a->ccs_l_f)
+    abortEr("The matrix a in a.x = b in umfpack must be in CCS long format.\n");
+  
+  umfpack_dl_defaults(Control);
   
   status = umfpack_dl_symbolic(row,col,Ap,Ai,Ax,&Symbolic,Control,Info);
   if(status != UMFPACK_OK)
-     umfpack_error((int)status,__FILE__,__LINE__);
+    umfpack_error_dl(Control,status,__FILE__,__LINE__);
      
   status = umfpack_dl_numeric(Ap,Ai,Ax,Symbolic,&Numeric,Control,Info);
   if(status != UMFPACK_OK)
-     umfpack_error((int)status,__FILE__,__LINE__);
+    umfpack_error_dl(Control,status,__FILE__,__LINE__);
      
   umfpack_dl_free_symbolic(&Symbolic);
 
+  printf("Condition_Number = %g\n", 1/Info[UMFPACK_RCOND]);
+
   status = umfpack_dl_solve(UMFPACK_A,Ap,Ai,Ax,x,b,Numeric,Control,Info);
   if(status != UMFPACK_OK)
-     umfpack_error((int)status,__FILE__,__LINE__);
+    umfpack_error_dl(Control,status,__FILE__,__LINE__);
 
   /*freeing*/
   umfpack_dl_free_numeric(&Numeric);
@@ -87,7 +98,21 @@ int direct_solver_umfpack_dl(void *vp)
 }
 
 /* umfpack was unsuccessful. it prints the reason and aborts */
-static void umfpack_error(const int status,const char *const file,const int line)
+void umfpack_error_di(const double *const Control,const int status,const char *const file,const int line)
+{
+  umfpack_di_report_status(Control,status);
+  umfpack_failed(status,file,line);
+}  
+
+/* umfpack was unsuccessful. it prints the reason and aborts */
+void umfpack_error_dl(const double *const Control,const long status,const char *const file,const int line)
+{
+  umfpack_dl_report_status(Control,status);
+  umfpack_failed((int)status,file,line);
+}  
+
+/* printing errors and reason of failure and then abort */
+static void umfpack_failed(const int status,const char *const file,const int line)
 {
   switch(status)
   {
