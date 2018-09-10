@@ -5,6 +5,9 @@
 
 #include "laplace_inhom_grid.h"
 
+/* making grid for Laplace_Inhom project.
+// ->return value: made grid.
+*/
 Grid_T *Laplace_Inhom_make_grid(void)
 {
   Grid_T *grid = alloc_grid();/* adding a new grid */
