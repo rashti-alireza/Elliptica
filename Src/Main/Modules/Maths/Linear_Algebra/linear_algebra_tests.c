@@ -12,18 +12,18 @@ void matrix_tests(void)
 {
   int status;
   
-  if (NOT_DO)
+  if(NOT_DO)
   {
     printf("Casting of regular matrix to CCS one:");
     status = cast_matrix_ccs_test();
     check_test_result(status);
   }
-  if (DO)
+  if (NOT_DO)
   {
     printf("Reading a CCS matrix directly one:");
     status = read_ccs_test();
     check_test_result(status);
-  } 
+  }
 }
 
 /* test: reading a CCS matrix directly rather casting 
