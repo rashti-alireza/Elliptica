@@ -7,3 +7,5 @@
 #define MAX_ARR 400
 
 char *make_directory(const char *const path,const char *const name);
+char *make_folder(const char *const folder);
+char *open_folder(const char *const folder);
