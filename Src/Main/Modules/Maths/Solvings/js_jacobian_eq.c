@@ -370,7 +370,7 @@ static void make_jacobian_spectral_method(double **const J,Patch_T *const patch,
 }
 
 /* making Jacobian using spectral method in direction $
-// d(df(i,j,k)/d$)/df(l,m,n) = j(N_i,$) * 2 \sum_{ip,jp,kp} dc(ip,jp,kp)/df(l,m,n)*dT(i,j,k)/dN_i
+// d(df(i)/d$)/df(l) = j(N_i,$) *(2 \sum_{ip=1}^{n-2} dc(ip)/df(l)*dT(ip)/dN_i + dc(n-1)/df(l)*dT(n-1)/dN_i)
 */
 static void fill_jacobian_spectral_method_1stOrder(double **const J,Patch_T *const patch,const JType_E jt_e)
 {
@@ -413,7 +413,9 @@ static void fill_jacobian_spectral_method_1stOrder(double **const J,Patch_T *con
           {
             j0 += dc_df(N[0],ip,l)*dT_dx((int)ip,x);
           }
-          j0 *= 2*cj0;
+          j0 *= 2;
+          j0 += dc_df(N[0],ip,l)*dT_dx((int)ip,x);
+          j0 *= cj0;
         }
       }
       
@@ -425,7 +427,9 @@ static void fill_jacobian_spectral_method_1stOrder(double **const J,Patch_T *con
           {
             j1 += dc_df(N[1],jp,m)*dT_dx((int)jp,y);
           }
-          j1 *= 2*cj1;
+          j1 *= 2;
+          j1 += dc_df(N[1],jp,m)*dT_dx((int)jp,y);
+          j1 *= cj1;
         }
       }
       
@@ -437,7 +441,9 @@ static void fill_jacobian_spectral_method_1stOrder(double **const J,Patch_T *con
           {
             j2 += dc_df(N[2],kp,n)*dT_dx((int)kp,z);
           }
-          j2 *= 2*cj2;
+          j2 *= 2;
+          j2 += dc_df(N[2],kp,n)*dT_dx((int)kp,z);
+          j2 *= cj2;
         }
       }
       
