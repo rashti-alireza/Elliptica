@@ -14,3 +14,5 @@ void pr_spent_time(const double start,const char *const event);
 Pr_Field_T *init_PrField(const Grid_T *const grid);
 void free_PrField(Pr_Field_T *pr);
 Flag_T pr_derivatives_DiffByNode(const double *const numc, const double *const anac,const Patch_T *const patch,const char *const prefix);
+void pr_matrix(const Matrix_T *const M,const char *const name);
+

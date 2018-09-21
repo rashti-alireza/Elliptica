@@ -554,3 +554,61 @@ Flag_T pr_derivatives_DiffByNode(const double *const numc, const double *const a
   return flg;
 }
 
+/* printing the given matrix with specified name in "Matrix" folder.
+*/
+void pr_matrix(const Matrix_T *const M,const char *const name)
+{
+  char *folder = open_folder("Matrix");
+  char path[MAXSTR];
+  FILE *file;
+  long r,c;
+  
+  sprintf(path,"%s/%s",folder,name);
+  file = fopen(path,"w");
+  pointerEr(file);
+  
+  fprintf(file,"#row = %ld ,#column = %ld\n",M->row,M->col);
+  
+  if (!M->row || !M->col)
+    fclose(file);
+  else if (M->reg_f)
+  {
+    double **const m = M->reg->A;
+    
+    for (r = 0; r < M->row; ++r)
+    {
+      for (c = 0; c < M->col; ++c)
+        fprintf(file,"%f ",m[r][c]);
+      fprintf(file,"\n");
+    }
+  }
+  else if (M->tri_f)
+  {
+    abortEr(INCOMPLETE_FUNC);
+  }
+  else if (M->ccs_f)
+  {
+    abortEr(INCOMPLETE_FUNC);
+  }
+  else if (M->crs_f)
+  {
+    abortEr(INCOMPLETE_FUNC);
+  }
+  else if (M->tri_l_f)
+  {
+    abortEr(INCOMPLETE_FUNC);
+  }
+  else if (M->ccs_l_f)
+  {
+    abortEr(INCOMPLETE_FUNC);
+  }
+  else if (M->crs_l_f)
+  {
+    abortEr(INCOMPLETE_FUNC);
+  }
+  else
+    abortEr("No matrix format is defined for this given matrix.\n");
+
+  fclose(file);
+  free(folder);
+}
