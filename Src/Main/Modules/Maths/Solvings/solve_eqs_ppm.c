@@ -757,7 +757,7 @@ static int a_bndry_interpolate_ppm(Boundary_Condition_T *const bc)
   unsigned i;
   
   /* df/dn = df/dn|adjacent */
-  if (subface->df_dn)
+  if (subface->df_dn&&0)
   {
     fJs_T *j_x = 0,*j_y = 0,*j_z = 0;
     Matrix_T *j0 = 0,*j1 = 0,*j2 = 0;
@@ -854,7 +854,7 @@ static int b_bndry_interpolate_ppm(Boundary_Condition_T *const bc)
   unsigned i;
   
   /* df/dn = df/dn|adjacent */
-  if (subface->df_dn)
+  if (subface->df_dn&&0)
   {
     double *Nvec;/* normal vector */
     const char *der0 = "x",*der1 = "y",*der2 = "z";
