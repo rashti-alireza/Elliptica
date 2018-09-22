@@ -84,9 +84,7 @@ int parallel_patch_method(Grid_T *const grid)
 */
 static int a_in_ax_b_finite_diff_ppm(Patch_T *const patch,const unsigned cn)
 {
-  //test
-  //abortEr(INCOMPLETE_FUNC"\n NOT THREAD SAFE.\n");
-  //end
+  abortEr(INCOMPLETE_FUNC"\n NOT THREAD SAFE.\n");
   
   Solve_T *const slv = patch->solution_man->solve[cn];
   unsigned nn = patch->nn;
@@ -127,10 +125,6 @@ static int a_in_ax_b_finite_diff_ppm(Patch_T *const patch,const unsigned cn)
       
       for (i = 0; i < nn; ++i)
       {
-        //test
-        //if (i == 13)
-          //printf("b2=%f,b1=%f,diff=%f\n",b2[i],b1[i],b2[i]-b1[i]);
-        //end
         J[i][j] = (b2[i]-b1[i])/EPS;
       }
         
@@ -291,21 +285,10 @@ static int solve_ax_b_ppm(Patch_T *const patch,const unsigned cn)
     UmfPack_T umfpack[1] = {0};
     if (!solve->a->ccs_f)
     {
-      //test
-      //pr_matrix(solve->a,"J_ij");
-      //end
       m = cast_matrix_ccs(solve->a);
       free_matrix(solve->a);
       solve->a = m;
     }
-    //test
-    /*Node_T **node = patch->node;
-    for(unsigned nn=0;nn<patch->nn;++nn)
-      fprintf(stderr,"F(%f,%f,%f|%u)=%f\n",
-      node[nn]->x[0],node[nn]->x[1],node[nn]->x[2],nn,
-      solve->b[nn]);
-      */
-    //end
     umfpack->a = solve->a;
     umfpack->b = solve->b;
     umfpack->x = solve->x;
@@ -586,16 +569,6 @@ static int b_bndry_copy_ppm(Boundary_Condition_T *const bc)
         b[boundary] = Nvec[0]*(f_a[xyz1] - f_a_adj[xyz2]) +
                       Nvec[1]*(f_b[xyz1] - f_b_adj[xyz2]) +
                       Nvec[2]*(f_c[xyz1] - f_c_adj[xyz2]) ;
-          //test
-          /*
-          fprintf(stderr,"b[%u]=%g\n",boundary,b[boundary]);
-          if (EQL(b[boundary],4))
-          {
-            double *pp = subface->patch->node[xyz1]->x;
-            fprintf(stderr,"at(%f,%f,%f) f_b=%g,f_b_adj=%g\n",
-            pp[0],pp[1],pp[2],f_b[xyz1],f_a_adj[xyz2]);
-          }*/
-          //end
       }
       /* freeing memories */
       field_tmp ->v = 0;/* since pointing to field_adj->v */
