@@ -3,6 +3,12 @@
 // August 2018
 */
 
+/* Note: this version of file for boundary condition in case of 
+// interpolation uses only value of function 
+// and not normal derivative of them.
+// for more completed version checkout master.
+*/
+
 #include "solve_eqs_ppm.h"
 
 /* threads are sprawned over patches and 
