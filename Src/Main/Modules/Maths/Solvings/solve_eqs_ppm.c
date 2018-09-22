@@ -542,7 +542,6 @@ static int b_bndry_copy_ppm(Boundary_Condition_T *const bc)
   if (subface->df_dn)
   {
     Patch_T patch_tmp = make_temp_patch(patch_adj);/* for thread safety purposes */
-    Field_T *field_tmp;/* for thread safety purposes */
     double *Nvec;/* normal vector */
     const char *der0 = "x",*der1 = "y",*der2 = "z";
     
@@ -558,11 +557,11 @@ static int b_bndry_copy_ppm(Boundary_Condition_T *const bc)
     
     for (i = 0; i < solve->nf; ++i)
     {
+      Field_T *field_tmp = add_field("tmp_field","(3dim)",&patch_tmp,NO);
       double *f_a = 0,*f_b = 0,*f_c = 0;
       double *f_a_adj = 0,*f_b_adj = 0,*f_c_adj = 0;
       field     = solve->field[i];
       field_adj = patch_adj->solution_man->solve[bc->cn]->field[i];
-      field_tmp = add_field("tmp_field","(3dim)",&patch_tmp,NO);
       field_tmp->v = field_adj->v;/* soft copying values of fields */
       b = &solve->b[solve->f_occupy[i]];
       
@@ -591,6 +590,7 @@ static int b_bndry_copy_ppm(Boundary_Condition_T *const bc)
       /* freeing memories */
       field_tmp ->v = 0;/* since pointing to field_adj->v */
       remove_field(field_tmp);
+      free_temp_patch(&patch_tmp);
       free(f_a);
       free(f_b);
       free(f_c);
@@ -844,7 +844,6 @@ static int b_bndry_interpolate_ppm(Boundary_Condition_T *const bc)
     double *Nvec;/* normal vector */
     const char *der0 = "x",*der1 = "y",*der2 = "z";
     Patch_T adj_patch_tmp = make_temp_patch(adj_patch);/* for thread safety purposes */
-    Field_T *field_tmp;/* for thread safety purposes */
     
     /* if one wants to solve the whole equations on curvilinear patches */
     if (!strcmp_i(GetParameterS("Solving_Interpolation_Normal"),"Cartesian_Normal"))
@@ -864,13 +863,13 @@ static int b_bndry_interpolate_ppm(Boundary_Condition_T *const bc)
       Interpolation_T *interp_s_c_adj = init_interpolation();
       Field_T *field     = solve->field[i];
       Field_T *field_adj = adj_patch->solution_man->solve[bc->cn]->field[i];
-      Field_T *f_a_adj = add_field("f_a_adj","(3dim)",&adj_patch_tmp,NO),
-              *f_b_adj = add_field("f_b_adj","(3dim)",&adj_patch_tmp,NO), 
-              *f_c_adj = add_field("f_c_adj","(3dim)",&adj_patch_tmp,NO);
+      Field_T *field_tmp = add_field("tmp_field","(3dim)",&adj_patch_tmp,NO);
+      Field_T *f_a_adj   = add_field("f_a_adj","(3dim)",&adj_patch_tmp,NO),
+              *f_b_adj   = add_field("f_b_adj","(3dim)",&adj_patch_tmp,NO), 
+              *f_c_adj   = add_field("f_c_adj","(3dim)",&adj_patch_tmp,NO);
       double *f_a = 0, *f_b = 0, *f_c = 0;
       unsigned n;
       
-      field_tmp = add_field("tmp_field","(3dim)",&adj_patch_tmp,NO);
       field_tmp->v = field_adj->v;/* soft copying values of fields */
       f_a_adj->v = Partial_Derivative(field_tmp,der0);
       f_b_adj->v = Partial_Derivative(field_tmp,der1);
@@ -916,6 +915,7 @@ static int b_bndry_interpolate_ppm(Boundary_Condition_T *const bc)
                       Nvec[1]*(f_b[boundary] - execute_interpolation(interp_s_b_adj)) +
                       Nvec[2]*(f_c[boundary] - execute_interpolation(interp_s_c_adj));
       }
+      /* freeing */
       field_tmp->v = 0;
       free_interpolation(interp_s_a_adj);
       free_interpolation(interp_s_b_adj);
@@ -924,22 +924,26 @@ static int b_bndry_interpolate_ppm(Boundary_Condition_T *const bc)
       remove_field(f_b_adj);
       remove_field(f_c_adj);
       remove_field(field_tmp);
+      free_temp_patch(&adj_patch_tmp);
+      free(f_a);
+      free(f_b);
+      free(f_c);
     }/* end of for (i = 0; i < solve->nf; ++i) */
   }/* end of if (subface->df_dn) */
   /* f = f|adjacent */
   else
   {
     Patch_T adj_patch_tmp = make_temp_patch(adj_patch);/* for thread safety purposes */
-    Field_T *field_tmp;/* for thread safety purposes */
+    
     for (i = 0; i < solve->nf; ++i)
     {
+      double *b = &solve->b[solve->f_occupy[i]];
       Interpolation_T *interp_s = init_interpolation();
       Field_T *field     = solve->field[i];
       Field_T *field_adj = adj_patch->solution_man->solve[bc->cn]->field[i];
-      double *b = &solve->b[solve->f_occupy[i]];
+      Field_T *field_tmp = add_field("tmp_field","(3dim)",&adj_patch_tmp,NO);
       unsigned n;
       
-      field_tmp = add_field("tmp_field","(3dim)",&adj_patch_tmp,NO);
       field_tmp->v = field_adj->v;/* soft copying values of fields */
       interp_s->field = field_tmp;
       
@@ -957,8 +961,10 @@ static int b_bndry_interpolate_ppm(Boundary_Condition_T *const bc)
         
         b[boundary] = field->v[boundary] - execute_interpolation(interp_s);
       }
+      /* freeing */
       field_tmp->v = 0;
       remove_field(field_tmp);
+      free_temp_patch(&adj_patch_tmp);
       free_interpolation(interp_s);
     }/* end of for (i = 0; i < solve->nf; ++i) */
   }/* end of else */
