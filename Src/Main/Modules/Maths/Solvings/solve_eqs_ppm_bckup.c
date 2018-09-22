@@ -295,7 +295,6 @@ static int solve_ax_b_ppm(Patch_T *const patch,const unsigned cn)
       free_matrix(solve->a);
       solve->a = m;
     }
-    
     umfpack->a = solve->a;
     umfpack->b = solve->b;
     umfpack->x = solve->x;
@@ -532,7 +531,6 @@ static int b_bndry_copy_ppm(Boundary_Condition_T *const bc)
   if (subface->df_dn)
   {
     Patch_T patch_tmp = make_temp_patch(patch_adj);/* for thread safety purposes */
-    Field_T *field_tmp;/* for thread safety purposes */
     double *Nvec;/* normal vector */
     const char *der0 = "x",*der1 = "y",*der2 = "z";
     
@@ -548,11 +546,11 @@ static int b_bndry_copy_ppm(Boundary_Condition_T *const bc)
     
     for (i = 0; i < solve->nf; ++i)
     {
+      Field_T *field_tmp = add_field("tmp_field","(3dim)",&patch_tmp,NO);
       double *f_a = 0,*f_b = 0,*f_c = 0;
       double *f_a_adj = 0,*f_b_adj = 0,*f_c_adj = 0;
       field     = solve->field[i];
       field_adj = patch_adj->solution_man->solve[bc->cn]->field[i];
-      field_tmp = add_field("tmp_field","(3dim)",&patch_tmp,NO);
       field_tmp->v = field_adj->v;/* soft copying values of fields */
       b = &solve->b[solve->f_occupy[i]];
       
@@ -581,6 +579,7 @@ static int b_bndry_copy_ppm(Boundary_Condition_T *const bc)
       /* freeing memories */
       field_tmp ->v = 0;/* since pointing to field_adj->v */
       remove_field(field_tmp);
+      free_temp_patch(&patch_tmp);
       free(f_a);
       free(f_b);
       free(f_c);
@@ -721,29 +720,94 @@ static int a_bndry_copy_ppm(Boundary_Condition_T *const bc)
 */
 static int a_bndry_interpolate_ppm(Boundary_Condition_T *const bc)
 {
-  Solve_T *const solve = bc->solve;
-  double **a = solve->a->reg->A;
-  const unsigned *const bndry = bc->subface->id;
-  const unsigned Nb = bc->subface->np;
+  SubFace_T *const subface = bc->subface;
+  Solve_T *const solve     = bc->solve;
+  Patch_T *const patch = subface->patch;
+  const unsigned nb        = subface->np;
   const unsigned nn = bc->subface->patch->nn;
+  const unsigned *const bndry = subface->id;
+  double **const a = solve->a->reg->A;
+  double *Nvec = 0;
   unsigned i;
   
-  for (i = 0; i < solve->nf; ++i)
+  /* df/dn = df/dn|adjacent */
+  if (subface->df_dn)
   {
-    unsigned initial = solve->f_occupy[i];
-    unsigned final   = initial+nn;
-    unsigned ijk,lmn;
+    fJs_T *j_x = 0,*j_y = 0,*j_z = 0;
+    Matrix_T *j0 = 0,*j1 = 0,*j2 = 0;
+    Point_T point;
+    point.patch = patch;
+    point.face  = subface->face;
     
-    /* fill a in a.x = b for the specified field */
-    for (ijk = 0; ijk < Nb; ++ijk)
+    /* if one wants to solve whole equations on curvilinear patches */
+    if (!strcmp_i(GetParameterS("Solving_Interpolation_Normal"),"Cartesian_Normal"))
     {
-      for (lmn = initial; lmn < final;++lmn)
-        a[initial+bndry[ijk]][lmn] = 0;
+      abortEr(INCOMPLETE_FUNC);
       
-      a[initial+bndry[ijk]][initial+bndry[ijk]] = 1;
+      const char *types[] = {"j_a","j_b","j_c",0};
+      prepare_Js_jacobian_eq(patch,types);
+      j0  = get_j_matrix(patch,"j_a");
+      j1  = get_j_matrix(patch,"j_b");
+      j2  = get_j_matrix(patch,"j_c");
+      j_x = get_j_reader(j0);
+      j_y = get_j_reader(j1);
+      j_z = get_j_reader(j2);
+  
     }
-  }
+    else
+    {
+      const char *types[] = {"j_x","j_y","j_z",0};
+      prepare_Js_jacobian_eq(patch,types);
+      j0  = get_j_matrix(patch,"j_x");
+      j1  = get_j_matrix(patch,"j_y");
+      j2  = get_j_matrix(patch,"j_z");
+      j_x = get_j_reader(j0);
+      j_y = get_j_reader(j1);
+      j_z = get_j_reader(j2);
+    }
+    
+    for (i = 0; i < solve->nf; ++i)
+    {
+      unsigned initial = solve->f_occupy[i];
+      unsigned final   = initial+nn;
+      unsigned ijk,lmn;
+      
+      /* fill a in a.x = b for the specified field */
+      for (ijk = 0; ijk < nb; ++ijk)
+      {
+        point.ind   = bndry[ijk];
+        Nvec = normal_vec(&point);
+        for (lmn = initial; lmn < final;++lmn)
+          a[initial+bndry[ijk]][lmn] = 
+              Nvec[0]*j_x(j0,bndry[ijk],lmn-initial) +
+              Nvec[1]*j_y(j1,bndry[ijk],lmn-initial) +
+              Nvec[2]*j_z(j2,bndry[ijk],lmn-initial) ;
+      }
+    }/* end of for (i = 0; i < solve->nf; ++i) */
+  }/* if (subface->df_dn) */
+  
+  /* f = f|adjacent */
+  else
+  {
+    for (i = 0; i < solve->nf; ++i)
+    {
+      unsigned initial = solve->f_occupy[i];
+      unsigned final   = initial+nn;
+      unsigned ijk,lmn;
+      
+      /* fill a in a.x = b for the specified field */
+      for (ijk = 0; ijk < nb; ++ijk)
+      {
+        for (lmn = initial; lmn < final;++lmn)
+          a[initial+bndry[ijk]][lmn] = 0;
+          
+        a[initial+bndry[ijk]][initial+bndry[ijk]] = 1;
 
+      }
+      
+    }/* end of for (i = 0; i < solve->nf; ++i) */
+  }
+  
   return EXIT_SUCCESS;
 }
 
@@ -759,40 +823,140 @@ static int b_bndry_interpolate_ppm(Boundary_Condition_T *const bc)
   Patch_T   *const adj_patch = grid->patch[subface->adjPatch];
   unsigned   const np        = subface->np;
   unsigned  *const id        = subface->id;
-  Patch_T adj_patch_tmp = make_temp_patch(adj_patch);/* for thread safety purposes */
-  Field_T *field_tmp;/* for thread safety purposes */
-  Interpolation_T *interp_s = init_interpolation();
+  unsigned boundary;
   double X[3],*x;
   unsigned i;
   
-  for (i = 0; i < solve->nf; ++i)
+  /* df/dn = df/dn|adjacent */
+  if (subface->df_dn)
   {
-    Field_T *field     = solve->field[i];
-    Field_T *field_adj = adj_patch->solution_man->solve[bc->cn]->field[i];
-    double *b = &solve->b[solve->f_occupy[i]];
-    unsigned n;
+    double *Nvec;/* normal vector */
+    const char *der0 = "x",*der1 = "y",*der2 = "z";
+    Patch_T adj_patch_tmp = make_temp_patch(adj_patch);/* for thread safety purposes */
     
-    field_tmp = add_field("tmp_field","(3dim)",&adj_patch_tmp,NO);
-    field_tmp->v = field_adj->v;/* soft copying values of fields */
-    interp_s->field = field_tmp;
-    
-    fill_interpolation_flags(interp_s,subface);
-    plan_interpolation(interp_s);
-    
-    for (n = 0; n < np; ++n)
+    /* if one wants to solve the whole equations on curvilinear patches */
+    if (!strcmp_i(GetParameterS("Solving_Interpolation_Normal"),"Cartesian_Normal"))
     {
-      x = subface->patch->node[id[n]]->x;
-      X_of_x(X,x,&adj_patch_tmp);
-      interp_s->X = X[0];
-      interp_s->Y = X[1];
-      interp_s->Z = X[2];
-      
-      b[id[n]] = field->v[id[n]] - execute_interpolation(interp_s);
+      der0 = "a";
+      der1 = "b";
+      der2 = "c";
+      normal_vec_curvilinear(0);/* NOTE: it should be defined a pointer to function 
+                                // since it is called for each points */
     }
-    /* freeing coeffss and fields????????????????? */
-  }/* end of for (i = 0; i < solve->nf; ++i) */
-  
-  free_interpolation(interp_s);
+    
+    for (i = 0; i < solve->nf; ++i)
+    {
+      double *b = &solve->b[solve->f_occupy[i]];
+      Interpolation_T *interp_s_a_adj = init_interpolation();
+      Interpolation_T *interp_s_b_adj = init_interpolation();
+      Interpolation_T *interp_s_c_adj = init_interpolation();
+      Field_T *field     = solve->field[i];
+      Field_T *field_adj = adj_patch->solution_man->solve[bc->cn]->field[i];
+      Field_T *field_tmp = add_field("tmp_field","(3dim)",&adj_patch_tmp,NO);
+      Field_T *f_a_adj   = add_field("f_a_adj","(3dim)",&adj_patch_tmp,NO),
+              *f_b_adj   = add_field("f_b_adj","(3dim)",&adj_patch_tmp,NO), 
+              *f_c_adj   = add_field("f_c_adj","(3dim)",&adj_patch_tmp,NO);
+      double *f_a = 0, *f_b = 0, *f_c = 0;
+      unsigned n;
+      
+      field_tmp->v = field_adj->v;/* soft copying values of fields */
+      f_a_adj->v = Partial_Derivative(field_tmp,der0);
+      f_b_adj->v = Partial_Derivative(field_tmp,der1);
+      f_c_adj->v = Partial_Derivative(field_tmp,der2);
+      
+      f_a = Partial_Derivative(field,der0);
+      f_b = Partial_Derivative(field,der1);
+      f_c = Partial_Derivative(field,der2);
+      
+      interp_s_a_adj->field = f_a_adj;
+      interp_s_b_adj->field = f_b_adj;
+      interp_s_c_adj->field = f_c_adj;
+      
+      fill_interpolation_flags(interp_s_a_adj,subface);
+      plan_interpolation(interp_s_a_adj);
+      fill_interpolation_flags(interp_s_b_adj,subface);
+      plan_interpolation(interp_s_b_adj);
+      fill_interpolation_flags(interp_s_c_adj,subface);
+      plan_interpolation(interp_s_c_adj);
+      
+      for (n = 0; n < np; ++n)
+      {
+        Point_T point;
+        point.ind   = id[n];
+        point.patch = subface->patch;
+        point.face  = subface->face;
+        Nvec = normal_vec(&point);
+        x = subface->patch->node[id[n]]->x;
+        X_of_x(X,x,&adj_patch_tmp);
+        interp_s_a_adj->X = X[0];
+        interp_s_a_adj->Y = X[1];
+        interp_s_a_adj->Z = X[2];
+        interp_s_b_adj->X = X[0];
+        interp_s_b_adj->Y = X[1];
+        interp_s_b_adj->Z = X[2];
+        interp_s_c_adj->X = X[0];
+        interp_s_c_adj->Y = X[1];
+        interp_s_c_adj->Z = X[2];
+        
+        boundary = id[n];
+        
+        b[boundary] = Nvec[0]*(f_a[boundary] - execute_interpolation(interp_s_a_adj)) +
+                      Nvec[1]*(f_b[boundary] - execute_interpolation(interp_s_b_adj)) +
+                      Nvec[2]*(f_c[boundary] - execute_interpolation(interp_s_c_adj));
+      }
+      /* freeing */
+      field_tmp->v = 0;
+      free_interpolation(interp_s_a_adj);
+      free_interpolation(interp_s_b_adj);
+      free_interpolation(interp_s_c_adj);
+      remove_field(f_a_adj);
+      remove_field(f_b_adj);
+      remove_field(f_c_adj);
+      remove_field(field_tmp);
+      free_temp_patch(&adj_patch_tmp);
+      free(f_a);
+      free(f_b);
+      free(f_c);
+    }/* end of for (i = 0; i < solve->nf; ++i) */
+  }/* end of if (subface->df_dn) */
+  /* f = f|adjacent */
+  else
+  {
+    Patch_T adj_patch_tmp = make_temp_patch(adj_patch);/* for thread safety purposes */
+    
+    for (i = 0; i < solve->nf; ++i)
+    {
+      double *b = &solve->b[solve->f_occupy[i]];
+      Interpolation_T *interp_s = init_interpolation();
+      Field_T *field     = solve->field[i];
+      Field_T *field_adj = adj_patch->solution_man->solve[bc->cn]->field[i];
+      Field_T *field_tmp = add_field("tmp_field","(3dim)",&adj_patch_tmp,NO);
+      unsigned n;
+      
+      field_tmp->v = field_adj->v;/* soft copying values of fields */
+      interp_s->field = field_tmp;
+      
+      fill_interpolation_flags(interp_s,subface);
+      plan_interpolation(interp_s);
+      
+      for (n = 0; n < np; ++n)
+      {
+        x = subface->patch->node[id[n]]->x;
+        X_of_x(X,x,&adj_patch_tmp);
+        interp_s->X = X[0];
+        interp_s->Y = X[1];
+        interp_s->Z = X[2];
+        boundary = id[n];
+        
+        b[boundary] = field->v[boundary] - execute_interpolation(interp_s);
+      }
+      /* freeing */
+      field_tmp->v = 0;
+      remove_field(field_tmp);
+      free_temp_patch(&adj_patch_tmp);
+      free_interpolation(interp_s);
+    }/* end of for (i = 0; i < solve->nf; ++i) */
+  }/* end of else */
   
   return EXIT_SUCCESS;
 }
