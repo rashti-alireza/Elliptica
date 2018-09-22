@@ -569,8 +569,8 @@ static int b_bndry_copy_ppm(Boundary_Condition_T *const bc)
         boundary = id[n];
         
         b[boundary] = Nvec[0]*(f_a[xyz1] - f_a_adj[xyz2]) +
-                      Nvec[1]*(f_b[xyz1] - f_a_adj[xyz2]) +
-                      Nvec[2]*(f_c[xyz1] - f_a_adj[xyz2]) ;
+                      Nvec[1]*(f_b[xyz1] - f_b_adj[xyz2]) +
+                      Nvec[2]*(f_c[xyz1] - f_c_adj[xyz2]) ;
       }
       /* freeing memories */
       field_tmp ->v = 0;/* since pointing to field_adj->v */
