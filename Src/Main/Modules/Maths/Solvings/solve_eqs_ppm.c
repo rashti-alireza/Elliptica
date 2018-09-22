@@ -178,7 +178,12 @@ static Flag_T check_residual(const Grid_T *const grid,const double res_input)
       
       /* if root means square of b is less than res_input skip otherwise keep going */
       res_patch = rms(nb,b,0);
+      //test
+      static int si = 0;
       
+      fprintf(stderr,"%d %s,%g\n",si,patch->name,res_patch);
+      si++;
+      //end
       if (GRT(res_patch,res_input))
       {
         flg = NO;
@@ -539,7 +544,7 @@ static int b_bndry_copy_ppm(Boundary_Condition_T *const bc)
   unsigned i;
   
   /* df/dn = df/dn|adjacent */
-  if (subface->df_dn)
+  if (subface->df_dn&&0)
   {
     Patch_T patch_tmp = make_temp_patch(patch_adj);/* for thread safety purposes */
     double *Nvec;/* normal vector */
@@ -587,14 +592,14 @@ static int b_bndry_copy_ppm(Boundary_Condition_T *const bc)
                       Nvec[1]*(f_b[xyz1] - f_b_adj[xyz2]) +
                       Nvec[2]*(f_c[xyz1] - f_c_adj[xyz2]) ;
           //test
-          /*
+          
           fprintf(stderr,"b[%u]=%g\n",boundary,b[boundary]);
-          if (EQL(b[boundary],4))
+          //if (EQL(b[boundary],4))
           {
             double *pp = subface->patch->node[xyz1]->x;
             fprintf(stderr,"at(%f,%f,%f) f_b=%g,f_b_adj=%g\n",
-            pp[0],pp[1],pp[2],f_b[xyz1],f_a_adj[xyz2]);
-          }*/
+            pp[0],pp[1],pp[2],f_b[xyz1],f_b_adj[xyz2]);
+          }//*/
           //end
       }
       /* freeing memories */
@@ -654,7 +659,7 @@ static int a_bndry_copy_ppm(Boundary_Condition_T *const bc)
   unsigned i;
   
   /* df/dn = df/dn|adjacent */
-  if (subface->df_dn)
+  if (subface->df_dn&&0)
   {
     fJs_T *j_x = 0,*j_y = 0,*j_z = 0;
     Matrix_T *j0 = 0,*j1 = 0,*j2 = 0;
