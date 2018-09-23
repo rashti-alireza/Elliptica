@@ -5,6 +5,8 @@
 
 #include "solve_eqs_ppm.h"
 
+/* Test: only uses Dirichlet BC */
+
 /* threads are sprawned over patches and 
 // each solves equations in their region (patch)
 // ->return value: EXIT_SUCCESS
@@ -84,9 +86,7 @@ int parallel_patch_method(Grid_T *const grid)
 */
 static int a_in_ax_b_finite_diff_ppm(Patch_T *const patch,const unsigned cn)
 {
-  //test
-  //abortEr(INCOMPLETE_FUNC"\n NOT THREAD SAFE.\n");
-  //end
+  abortEr(INCOMPLETE_FUNC"\n NOT THREAD SAFE.\n");
   
   Solve_T *const slv = patch->solution_man->solve[cn];
   unsigned nn = patch->nn;
@@ -593,12 +593,12 @@ static int b_bndry_copy_ppm(Boundary_Condition_T *const bc)
                       Nvec[2]*(f_c[xyz1] - f_c_adj[xyz2]) ;
           //test
           
-          fprintf(stderr,"b[%u]=%g\n",boundary,b[boundary]);
+          //fprintf(stderr,"b[%u]=%g\n",boundary,b[boundary]);
           //if (EQL(b[boundary],4))
           {
-            double *pp = subface->patch->node[xyz1]->x;
-            fprintf(stderr,"at(%f,%f,%f) f_b=%g,f_b_adj=%g\n",
-            pp[0],pp[1],pp[2],f_b[xyz1],f_b_adj[xyz2]);
+            //double *pp = subface->patch->node[xyz1]->x;
+            //fprintf(stderr,"at(%f,%f,%f) f_b=%g,f_b_adj=%g\n",
+            //pp[0],pp[1],pp[2],f_b[xyz1],f_b_adj[xyz2]);
           }//*/
           //end
       }
