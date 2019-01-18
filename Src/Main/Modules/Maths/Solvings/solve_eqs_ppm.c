@@ -8,11 +8,17 @@
 /* Test: only uses Dirichlet BC */
 
 /* threads are sprawned over patches and 
-// each solves equations in their region (patch)
+// each solves equations in their region (patch).
+// This method seems to be Additive Schwartz Method.
+// Furthermore, this is not compelete and fails for
+// pathes without overlap. Algorithms and methematics need
+// to be work out.
 // ->return value: EXIT_SUCCESS
 */
 int parallel_patch_method(Grid_T *const grid)
 {
+  abortEr("This method has not been tested and compeleted!\n");
+  
   /* residual determined in the input file */
   const double res_input = fabs(GetParameterD_E("Solving_Residual"));
   Flag_T IsItSolved = NO;
@@ -854,7 +860,7 @@ static int b_bndry_interpolate_ppm(Boundary_Condition_T *const bc)
   unsigned i;
   
   /* df/dn = df/dn|adjacent */
-  if (subface->df_dn&&0)
+  if (subface->df_dn)
   {
     double *Nvec;/* normal vector */
     const char *der0 = "x",*der1 = "y",*der2 = "z";
