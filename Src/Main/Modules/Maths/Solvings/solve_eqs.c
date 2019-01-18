@@ -13,8 +13,8 @@ int solve_eqs(Grid_T *const grid)
   fSolve_T *solve = 0;
   
   /* choosing solving method */
-  if (strcmp_i(GetParameterS_E("Solving_Method"),"Domain_Decomposition_Method"))
-    solve = domain_decomposition_method;
+  if (strcmp_i(GetParameterS_E("Solving_Method"),"DDM_Schur_Complement"))
+    solve = ddm_schur_complement;
   else if (strcmp_i(GetParameterS_E("Solving_Method"),"Parallel_Patch_Method"))
     solve = parallel_patch_method;
   else

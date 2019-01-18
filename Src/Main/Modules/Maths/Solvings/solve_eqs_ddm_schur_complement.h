@@ -9,4 +9,4 @@
 #include "maths_general_lib.h"
 #include "maths_linear_algebra_lib.h"
 
-int domain_decomposition_method(Grid_T *const grid);
+int ddm_schur_complement(Grid_T *const grid);
