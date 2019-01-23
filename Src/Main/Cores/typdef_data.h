@@ -350,6 +350,16 @@ typedef struct sEQUATION_T
   fEquation_T *eq;/* the equation needed to be satisfied */
 }sEquation_T;
 
+/* ingredients needed for mapping, labeling and etc for
+// domain decomposition schur complement method
+*/
+typedef struct DDM_SCHUR_COMPLEMENT_T
+{
+  /* regular means L(n,i,j,k) */
+  unsigned *map;/* map: regular -> relabeled. ex: map[2] = 5 */
+  unsigned *inv;/* inv: relabeled -> regular. ex: inv[5] = 2 */
+}DDM_Schur_Complement_T;
+
 /* solution managing */
 typedef struct SOLUTION_MAN_T
 {
@@ -369,6 +379,13 @@ typedef struct SOLUTION_MAN_T
     Matrix_T *J;
   }**jacobian;
   unsigned nj;/* number of jacobian */
+  
+  struct/* various method to solve */
+  {
+    /* type of method */
+    unsigned Schur_Complement: 1;/*1 if schur complement, 0 otherwise*/
+    DDM_Schur_Complement_T *SchurC;
+  }method[1];
 }Solution_Man_T;
 
 /* patch */

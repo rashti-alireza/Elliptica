@@ -10,3 +10,6 @@
 #include "maths_linear_algebra_lib.h"
 
 int ddm_schur_complement(Grid_T *const grid);
+static void preparing_ingredients(Grid_T *const grid);
+static void make_map_and_inv(Patch_T *const patch);
+
