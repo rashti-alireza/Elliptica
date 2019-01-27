@@ -333,7 +333,7 @@ static void make_g_partial(Patch_T *const patch)
     
     /* loop over all subfaces */
     for (sfc = 0; sfc < nsfc; ++sfc)
-{
+    {
       SubFace_T *subface = interface->subface[sfc];
       
       if (!subface->exterF)/* if subface is internal */
