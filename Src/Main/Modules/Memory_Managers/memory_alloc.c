@@ -269,26 +269,6 @@ double **alloc_2D_double(const long unsigned R,const long unsigned C)
   return M;
 }
 
-/* realloc patch->solution_man->solution struct by n units and
-// return the pointer to solution[n-1]
-// ->return value: patch->solution_man->solution[n-1]
-*/
-Solve_T *alloc_solve(Patch_T *const patch, const unsigned n)
-{
-  if (!patch->solution_man)
-    return 0;
-  
-  Solve_T **sol = patch->solution_man->solve;
-
-  sol = realloc(sol,n*sizeof(*sol));
-  pointerEr(sol);
-  sol[n-1] = calloc(1,sizeof(*sol[n-1]));
-  pointerEr(sol[n-1]);
-  patch->solution_man->solve = sol;
-  
-  return sol[n-1];
-}
-
 /* given row and column of a asked matrix it allocates matrix 
 // according to the given type using calloc and return the result.
 // note : if either of col or row is zero, it returns null.

@@ -741,8 +741,8 @@ void enable_fields(Grid_T *const grid)
   FOR_ALL_PATCHES(p,grid)
   {
     Patch_T *patch = grid->patch[p];
-    char **field_name = patch->solution_man->field_name;
-    unsigned nf = patch->solution_man->nf;
+    char **field_name = patch->solving_man->field_name;
+    unsigned nf = patch->solving_man->nf;
     unsigned i;
     
     for (i = 0; i < nf; ++i)

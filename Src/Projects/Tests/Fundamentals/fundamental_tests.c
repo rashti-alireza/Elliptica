@@ -34,7 +34,7 @@ int Fundamental_Tests(void)
     fundamental_tests_fill_db_eqs(&field_eq,&bc_eq,&jacobian_eq);
 
     /* initializing and solving */
-    populate_solution_man(grid,field_eq,bc_eq,jacobian_eq);/* populating solution_man */
+    initialize_solving_man(grid,field_eq,bc_eq,jacobian_eq);/* populating solution_man */
     
     double start = get_time_sec();
     FT_OpenMP(omp parallel for)

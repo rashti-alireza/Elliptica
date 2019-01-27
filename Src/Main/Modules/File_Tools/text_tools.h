@@ -7,3 +7,4 @@ char *dup_s(const char *const str);
 char *tok_s(char *const str,const char delimit,char **const savestr);
 char *sub_s(char *const str,const char d1,const char d2,char **const save);
 int check_format_s(const char *str,const char *const format);
+unsigned find_index_string(char **const heystack,const unsigned N,const char *const needle);

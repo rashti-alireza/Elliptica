@@ -45,30 +45,13 @@ void add_eq(sEquation_T ***const data_base, fEquation_T *const eq,const char *co
   *data_base = db;
 }
 
-/* allocating and filling Solution_Man_T struct and its elements 
-// in each patch according to input file.
-*/
-void populate_solution_man(Grid_T *const grid,sEquation_T **const field_eq,sEquation_T **const bc_eq,sEquation_T **const jacobian_eq)
-{
-  if (strcmp_i(GetParameterS_E("Solving_Method"),"Parallel_Patch_Method"))
-    populate_solution_man_PPM(grid,field_eq,bc_eq,jacobian_eq);
-  else
-    abortEr("No such method defined for \"Solving_Method\".\n");
-}
-
-/* allocating and filling Solution_Man_T struct and its elements 
-// in each patch according to input file.
-// Parallel Patch Method.
-*/
-static void populate_solution_man_PPM(Grid_T *const grid,sEquation_T **const field_eq,sEquation_T **const bc_eq,sEquation_T **const jacobian_eq)
+/* initializing Solving_Man_T struct and its elements */
+void initialize_solving_man(Grid_T *const grid,sEquation_T **const field_eq,sEquation_T **const bc_eq,sEquation_T **const jacobian_eq)
 {
   const char *par_f = GetParameterS_E("Fields");
-  const char *par_o = GetParameterS_E("Solving_Order");
   char *par;
   char **field_name = 0;
-  char **group = 0;
   unsigned nf = 0;
-  unsigned ng = 0;
   char *tok,*save = 0;
   unsigned p,i;
   
@@ -85,104 +68,38 @@ static void populate_solution_man_PPM(Grid_T *const grid,sEquation_T **const fie
   }
   free(par);
   
-  /* filling solution_man in each patch */
+  /* filling solving_man in each patch */
   FOR_ALL_PATCHES(p,grid)
   {
     Patch_T *patch = grid->patch[p];
-    patch->solution_man = calloc(1,sizeof(*patch->solution_man));
-    pointerEr(patch->solution_man);
-    patch->solution_man->field_name = 
-        calloc(nf,sizeof(*patch->solution_man->field_name));
-      pointerEr(patch->solution_man->field_name);
-      
+    
+    /* allocations */
+    patch->solving_man = calloc(1,sizeof(*patch->solving_man));
+    pointerEr(patch->solving_man);
+    patch->solving_man->field_name = 
+        calloc(nf,sizeof(*patch->solving_man->field_name));
+    pointerEr(patch->solving_man->field_name);
+    patch->solving_man->field_eq = calloc(nf,sizeof(*patch->solving_man->field_eq));
+    pointerEr(patch->solving_man->field_eq);
+    patch->solving_man->bc_eq = calloc(nf,sizeof(*patch->solving_man->bc_eq));
+    pointerEr(patch->solving_man->bc_eq);
+    patch->solving_man->jacobian_eq = calloc(nf,sizeof(*patch->solving_man->jacobian_eq));
+    pointerEr(patch->solving_man->jacobian_eq);
+    
     for (i = 0; i < nf; ++i)
-      patch->solution_man->field_name[i] = dup_s(field_name[i]);
-      
-    patch->solution_man->nf = nf;
-  }
-  free_2d_mem(field_name,nf);
-  
-  /* finding solving order */
-  save = 0;
-  par = dup_s(par_o);/* par = {f1,f2,...}->{f3,f4,...}->... */
-  tok = tok_s(par,ARROW,&save);/* =>tok = {f1,f2,...}- */
-  while(tok)
-  {
-    char *sub,*save_sub;
-    char *tok2,*save2 = 0;
-    if (!check_format_s(tok,"?{?}?"))
-      abortEr(FORMAT_ER_PAR);
-      
-    ng = 0;
-    group = 0;
-    sub  = sub_s(tok,DL_OC,DL_CC,&save_sub);/* sub = f1,f2,... */
-    tok2 = tok_s(sub,COMMA,&save2);/* tok2 = f1 */
-    while(tok2)
     {
-      group = realloc(group,(ng+1)*sizeof(*group));
-      pointerEr(group);
-      group[ng] = dup_s(tok2);
-      tok2 = tok_s(0,COMMA,&save2);/* tok2 = f2 */
-      ng++;
-    }/* group = {f1,f2,...}*/
-    
-    /* filling solution structure */
-    if (!ng)
-      abortEr("No group fields to be solved are found!\n");
+      patch->solving_man->field_name[i]  = dup_s(field_name[i]);
+      patch->solving_man->field_eq[i]    = get_field_eq(field_name[i],field_eq);
+      patch->solving_man->bc_eq[i]       = get_field_eq(field_name[i],bc_eq);
+      patch->solving_man->jacobian_eq[i] = get_field_eq(field_name[i],jacobian_eq);
+    }
       
-    fill_solve_ppm(grid,group,ng,field_eq,bc_eq,jacobian_eq);
-    
-    tok = tok_s(0,ARROW,&save);/* tok = {f3,f4,...} */
-    free_2d_mem(group,ng);
+    patch->solving_man->nf = nf;
   }
-  free(par);
+  
+  free_2d_mem(field_name,nf);
 }
 
-/* allocating memory and filling solve struct group by group.
-// each group composed of couple of fields to be solved.
-*/
-static void fill_solve_ppm(Grid_T *const grid,char **const group,const unsigned ng,sEquation_T **const field_eq,sEquation_T **const bc_eq,sEquation_T **const jacobian_eq)
-{
-  unsigned p;
-  
-  assert(ng);
-  
-  FOR_ALL_PATCHES(p,grid)
-  {
-    Patch_T *patch = grid->patch[p];
-    Solve_T *solve;
-    double *b = alloc_double(ng*patch->nn);
-    double *x = alloc_double(ng*patch->nn);
-    unsigned ns,i;
-    
-    ns = ++patch->solution_man->ns;
-    solve = alloc_solve(patch,ns);
-    solve->b = b;
-    solve->x = x;
-    solve->nf = ng;
-    solve->field = calloc(ng,sizeof(*solve->field));
-    pointerEr(solve->field);
-    solve->f_occupy = calloc(ng,sizeof(*solve->f_occupy));
-    pointerEr(solve->f_occupy);
-    solve->field_eq = calloc(ng,sizeof(*solve->field_eq));
-    pointerEr(solve->field_eq);
-    solve->bc_eq = calloc(ng,sizeof(*solve->bc_eq));
-    pointerEr(solve->bc_eq);
-    solve->f_name = calloc(ng,sizeof(*solve->f_name));
-    pointerEr(solve->f_name);
-    
-    for (i = 0; i < ng; ++i)
-    {
-      solve->f_name[i]   = dup_s(group[i]);
-      solve->f_occupy[i] = i*patch->nn;
-      solve->field_eq[i] = get_field_eq(group[i],field_eq);
-      solve->bc_eq[i]    = get_field_eq(group[i],bc_eq);
-      solve->jacobian_eq = get_field_eq(group[i],jacobian_eq);
-      solve->field[i]    = prepare_field(group[i],"(3dim)",patch);
-    }
-    
-  }/* end of FOR_ALL_PATCHES(p,grid) */
-}
 
 /* given name of equation and data base of equations 
 // it returns the corresponding equation to that given name.
@@ -229,22 +146,4 @@ fEquation_Solver_T *get_solver_method(const char *const solver)
     abortEr_s("There is no such solver defined.\n",solver);
     
   return solver_eq;
-}
-
-/* given name, attribute and patch
-// it returns a field with demanded properties.
-// Note: this field is not in the patch->pool
-// ->return value: new made field
-*/
-static Field_T *prepare_field(const char *const name,const char *const attr,Patch_T *const patch)
-{
-  Field_T *field = calloc(1,sizeof(*field));
-  pointerEr(field);
-  
-  field->name = dup_s(name);
-  field->attr = dup_s(attr);
-  field->v = alloc_double(patch->nn);
-  field->patch = patch;
-  
-  return field;
 }

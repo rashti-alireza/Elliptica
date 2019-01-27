@@ -263,3 +263,21 @@ int check_format_s(const char *str,const char *const format)
   
   return r;
 }
+
+/* given a lists (heystack) and number (N) of names,
+// it returns the index of the matched needle.(case sensitive)
+// ->return value: i if heystach[i] = needle, otherwise UINT_MAX.
+*/
+unsigned find_index_string(char **const heystack,const unsigned N,const char *const needle)
+{
+  unsigned i,j = UINT_MAX;
+  
+  for (i = 0; i < N; ++i)
+    if (!strcmp(heystack[i],needle))
+    {
+      j = i;
+      break;
+    }
+  
+  return j;
+}

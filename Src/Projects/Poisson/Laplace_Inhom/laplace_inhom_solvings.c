@@ -16,7 +16,7 @@ int Laplace_Inhom_solve_eq(Grid_T *const grid)
   Laplace_Inhom_fill_db_eqs(&field_eq,&bc_eq,&jacobian_eq);
   
   /* initializing and solving */
-  populate_solution_man(grid,field_eq,bc_eq,jacobian_eq);/* populating solution managing */
+  initialize_solving_man(grid,field_eq,bc_eq,jacobian_eq);/* populating solution managing */
   enable_fields(grid);/* allocating required fields in patch->pool */
   Laplace_Inhom_initial_data_alpha(grid);/* initial data for field alpha */
   solve_eqs(grid);/* solving equation(s) */
