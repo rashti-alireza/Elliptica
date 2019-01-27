@@ -316,33 +316,6 @@ typedef void *fEquation_T(void *vp1,void *vp2);
 /* elements of Jacobian for equations like J_xx etc. */
 typedef double fJs_T(Matrix_T *const m,const long i,const long j);
 
-/* solve collects the entites needed to solve fields 
-// based on eq's and b.c.'s and etc.
-*/
-typedef struct SOLVE_T
-{
-  char **f_name;/* f_name[#]="name of field #" */
-  unsigned nf;/* number of fields */
-  unsigned *f_occupy;/* refers to starting memory in 
-                     // which the field number f occupies;
-                     // so b[f_occupy[f]] to b[f_occupy[f]+nn] 
-                     // are all memories in b which are used by 
-                     // field with id f, nn is total nodes of a patch
-                     */ 
-  double *b;/* in  a.x = b */
-  double *x;/* in  a.x = b */
-  Matrix_T *a;/* in a.x = b */
-  Field_T **field;/* fields to be found to satisfy equations and B.C.s */
-  fEquation_T **field_eq;/* the equation needed to be satisfied */
-  fEquation_T **bc_eq;/* the B.C needed to be satisfied */
-  fEquation_T *jacobian_eq;/* jacobian for equations, 
-                           // note: all of fields in this structure must 
-                           // have one equation since they are supposed to 
-                           // be solved together. so providing this equation 
-                           // is on user.
-                           */
-}Solve_T;
-
 /* equation stucture */
 typedef struct sEQUATION_T
 {
@@ -350,26 +323,65 @@ typedef struct sEQUATION_T
   fEquation_T *eq;/* the equation needed to be satisfied */
 }sEquation_T;
 
-/* solution managing */
-typedef struct SOLUTION_MAN_T
+/* ingredients needed for mapping, labeling and etc for
+// domain decomposition schur complement method
+*/
+typedef struct DDM_SCHUR_COMPLEMENT_T
+{
+  /* regular means L(n,i,j,k) */
+  unsigned *map;/* map: regular -> relabeled. ex: map[2] = 5 */
+  unsigned *inv;/* inv: relabeled -> regular. ex: inv[5] = 2 */
+  unsigned *Imap;/* interface point map */
+  unsigned *Iinv;/* interface point inverse map */
+  unsigned NS;/* Number of subdomain points i.e. 
+              // number of inner points + outerboundar points =>
+              // total nodes - N = number of interface points. Note:
+              // outerboundary points excluded from interface points.
+              */
+/* namings:
+   |B E||x|   |f|
+   |F C||y| = |g|
+*/
+  double *f;
+  double *g;
+  double *x;
+  double *y;
+  Matrix_T *B;
+  Matrix_T *E;
+  Matrix_T *F;
+  Matrix_T *C;
+  double *pg;/* partial g */
+}DDM_Schur_Complement_T;
+
+/* solving managing */
+typedef struct SOLVING_MAN_T
 {
   char **field_name;/* field to be solved */
   unsigned nf;/* number of fields */
-  unsigned ns;/* number of solution structures */
-  Solve_T **solve;/* group fields to be solved together
-                  // and in order appeared in input file
-                  // based on eq's & b.c.'s.
-                  // so seeking_field[0] is the first
-                  // group of fields to be solved
-                  // seeking_field[1] is the next and so on.
-                  */
+  unsigned cf;/* current field; index of the field the is being solved */
+  fEquation_T **field_eq;/* the equation needed to be satisfied */
+  fEquation_T **bc_eq;/* the B.C needed to be satisfied */
+  fEquation_T **jacobian_eq;/* jacobian for equations, 
+                            // note: all of fields in this structure must 
+                            // have one equation since they are supposed to 
+                            // be solved together. so providing this equation 
+                            // is on user.
+                           */
   struct/* jacobian elements */
   {
     char type[__1MAX_STR_LEN1__];
     Matrix_T *J;
   }**jacobian;
   unsigned nj;/* number of jacobian */
-}Solution_Man_T;
+  
+  struct/* various method to solve */
+  {
+    /* type of method */
+    unsigned Schur_Complement: 1;/*1 if schur complement, 0 otherwise*/
+    DDM_Schur_Complement_T *SchurC;
+  }method[1];
+  
+}Solving_Man_T;
 
 /* patch */
 typedef struct PATCH_T
@@ -400,7 +412,7 @@ typedef struct PATCH_T
                  // to field phi. note: Ind is macro.
                  // one can access to values of field on this 
                  // patch like pool[Ind("phi_f")]->v */
-  Solution_Man_T *solution_man;/* solution managing */
+  Solving_Man_T *solving_man;/* solving managing */
   unsigned innerB:1;/* if this patch has inner boundary 1 otherwise 0 */
 }Patch_T;
 
@@ -497,9 +509,9 @@ typedef struct INTERPOLATION_T
 /* boundary condition struct */
 typedef struct BOUNDARY_CONDITION_T
 {
+  Patch_T *patch;/* patch that has this boundary */
   SubFace_T *subface;/* the subface located at interesting boundary */
   Field_T *field;/* the field this B.C.s to be imposed */
-  Solve_T *solve;/* used in interpolation and copy among others */
   unsigned cn;/* collection number */
   unsigned *node;/* nodes's index at the boundary, i.e node[i] = node number used in the patch */
   unsigned nn;/* number of nodes */

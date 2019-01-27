@@ -13,8 +13,8 @@ int solve_eqs(Grid_T *const grid)
   fSolve_T *solve = 0;
   
   /* choosing solving method */
-  if (strcmp_i(GetParameterS_E("Solving_Method"),"Parallel_Patch_Method"))
-    solve = parallel_patch_method;
+  if (strcmp_i(GetParameterS_E("Solving_Method"),"DDM_Schur_Complement"))
+    solve = ddm_schur_complement;
   else
     abortEr_s("No such method \"%s\" defined for this function.\n",
       GetParameterS("Solving_Method"));

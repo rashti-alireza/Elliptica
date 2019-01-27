@@ -16,7 +16,7 @@ static const double CONST = 1.0;
 void prepare_Js_jacobian_eq(Patch_T *const patch,const char * const *types)
 {
   Js_Jacobian_eq_F *Jacobian;
-  Solution_Man_T *const sol_man = patch->solution_man;
+  Solving_Man_T *const sol_man = patch->solving_man;
   const unsigned nn = patch->nn;
   /* default value of J if it gets larger than 10 Mb it will 
   // be written in a file unless user assigne other value. 
@@ -624,7 +624,7 @@ fJs_T *get_j_reader(const Matrix_T *const m)
 /* getting j_* matrix according to its type */
 Matrix_T *get_j_matrix(const Patch_T *const patch,const char *type)
 {
-  Solution_Man_T *const sol_man = patch->solution_man;
+  Solving_Man_T *const sol_man = patch->solving_man;
   Matrix_T *j = 0;
   unsigned i;
   

@@ -7,3 +7,4 @@ char *sub_s(char *const str,const char d1,const char d2,char **const save);
 int check_format_s(const char *str,const char *const format);
 char *make_folder(const char *const folder);
 char *open_folder(const char *const folder);
+unsigned find_index_string(char **const heystack,const unsigned N,const char *const needle);

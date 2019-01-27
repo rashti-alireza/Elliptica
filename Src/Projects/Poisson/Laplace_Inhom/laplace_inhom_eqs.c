@@ -26,7 +26,9 @@ void Laplace_Inhom_fill_db_eqs(sEquation_T ***const field_eq,sEquation_T ***cons
 static void *eq_alpha(void *vp1,void *vp2)
 {
   Field_T *const alpha = vp1;
-  double *const F      = vp2;
+  DDM_Schur_Complement_T *const S = vp2;
+  double *const F      = S->f;
+  unsigned *const map  = S->map;
   double *alpha_xx = Partial_Derivative(alpha,"x,x");
   double *alpha_yy = Partial_Derivative(alpha,"y,y");
   double *alpha_zz = Partial_Derivative(alpha,"z,z");
@@ -35,7 +37,7 @@ static void *eq_alpha(void *vp1,void *vp2)
   unsigned i;
   
   for(i = 0; i < nn; ++i)
-    F[i] = 
+    F[map[i]] = 
       alpha_xx[i]+alpha_yy[i]+alpha_zz[i]-6;//1/(1+pow(SQR(x_(i)),100)+pow(SQR(y_(i)),100)+pow(SQR(z_(i)),100);
     
   free(alpha_xx);
@@ -48,17 +50,21 @@ static void *eq_alpha(void *vp1,void *vp2)
 static void *bc_alpha(void *vp1,void *vp2)
 {
   Boundary_Condition_T *const bc = vp1;
-  double *const F = vp2;
-  Patch_T *const patch = bc->subface->patch;
+  DDM_Schur_Complement_T *const S = vp2;
+  double *const F      = S->f;
+  unsigned *const map  = S->map;
+  Patch_T *const patch = bc->patch;
   const unsigned *const Bnode = bc->node;/* nodes at boundary */
   const unsigned nn = bc->nn;/* number of nodes at boundary */
   double *const alpha = bc->field->v;
-  unsigned i;
+  unsigned i,B;
   
   /* alpha = 0 at outer boundary */
   for (i = 0; i < nn; ++i)
-    F[Bnode[i]] = alpha[Bnode[i]]
-      -SQR(x_(Bnode[i]))-SQR(y_(Bnode[i]))-SQR(z_(Bnode[i]));
+  {
+    B = Bnode[i];
+    F[map[B]] = alpha[B]-SQR(x_(B))-SQR(y_(B))-SQR(z_(B));
+  }
       
   return 0;
 }
