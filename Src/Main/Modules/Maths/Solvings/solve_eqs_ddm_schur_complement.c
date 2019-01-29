@@ -76,9 +76,9 @@ static int solve_field(Grid_T *const grid)
     {
       Patch_T *patch = grid->patch[p];
       make_f(patch);
-      make_g_partial(patch);
+      make_partial_g(patch);
     }
-    //make_g(grid);
+    make_g(grid);
     
     IsItSolved = check_residual(grid,res_input);
     if (IsItSolved == YES)
@@ -112,6 +112,64 @@ static int solve_field(Grid_T *const grid)
   return EXIT_SUCCESS;
 }
 
+/* having been made partial g's, now make g column */
+static void make_g(Grid_T *const grid)
+{
+  Patch_T *patch;
+  DDM_Schur_Complement_T *Schur;
+  Sewing_T *sewing;
+  Pair_T *pair1, *pair2;
+  unsigned *Imap;/* interface map */
+  unsigned *Smap;/* subface map */
+  double *g,*pg1,*pg2;/* g and partial g's */
+  double sign1, sign2;
+  unsigned npair,ni;
+  unsigned p,s,i;
+  
+  FOR_ALL_PATCHES(p,grid)
+  {
+    patch  = grid->patch[p];
+    Schur  = patch->solving_man->method->SchurC;
+    sewing = Schur->sewing[p];
+    npair  = sewing->npair;
+    Imap  = Schur->Imap;
+    
+    if (!Schur->g)
+      Schur->g = alloc_double(Schur->NI);
+    g = Schur->g;
+      
+    for (s = 0; s < npair; ++s)
+    {
+      pair1 = sewing->pair[s];
+      pair2 = pair1->stitch;
+      ni    = pair1->subface->np;
+      Smap  = pair1->subface->id;
+      pg1   = pair1->pg;
+      pg2   = pair2->pg;
+      
+      if (pair1->subface->df_dn) 
+      {
+        sign1 = -1;
+        sign2 = 1;
+      }
+      else
+      {
+        sign1 = 1;
+        sign2 = -1;
+      }
+      
+      for (i = 0; i < ni; ++i)
+      {
+        if (Imap[Smap[i]] == UINT_MAX)
+          continue;
+        
+        g[Imap[Smap[i]]] = sign1*pg1[i]+sign2*pg2[i];
+      }
+    }
+    
+  }
+}
+
 /* since Shur Complement needs:
 // 1. specific labeling for grid 
 // 2. boundary points counted only once
@@ -136,12 +194,296 @@ static void preparing_ingredients(Grid_T *const grid)
     pointerEr(SchurC->map);
     SchurC->inv = malloc(patch->nn*sizeof(*SchurC->inv));
     pointerEr(SchurC->inv);  
+    SchurC->patch = patch;
     patch->solving_man->method->Schur_Complement = 1;
     patch->solving_man->method->SchurC =  SchurC;
     
     /* making map and inv */
     make_map_and_inv(patch);
+    /* populating sewing structure for boundary info */
+    populate_sewing(patch);
   }
+  
+  /* adding more info and struct */
+  FOR_ALL_PATCHES(p,grid)
+  {
+    Patch_T *patch = grid->patch[p];
+    stitch_pairs(patch);
+  }
+  
+}
+
+/* populating sewing struct in each patch using subfaces
+// and geometry of grid. in effect, we duplicate sufaces in oreder
+// for each patch can make boundary condition without causing racing
+// condition for each thread.thus, each patch knows exactly what others
+// and itself need for boundary conditions like interpolation and continuity.
+*/
+static void populate_sewing(Patch_T *const patch)
+{
+  Grid_T *const grid = patch->grid;
+  DDM_Schur_Complement_T *const SchurC = 
+                                patch->solving_man->method->SchurC;
+  const unsigned np = patch->grid->np;
+  Sewing_T **sewing = 0;
+  unsigned p;
+  
+  sewing = calloc(np,sizeof(*sewing));
+  pointerEr(sewing);
+  
+  /* initialize sewings and pairs */
+  for (p = 0; p < grid->np; ++p)
+  {
+    Patch_T *patch2 = grid->patch[p];
+    
+    if (patch2 == patch)
+    {
+      make_its_sewing(patch,sewing);
+    }
+    else
+    {
+      make_others_sewing(patch,patch2,sewing);
+    }
+  }
+  
+  SchurC->sewing  = sewing;
+  SchurC->nsewing = np;
+}
+
+/* stitch pairs of different patches */
+static void stitch_pairs(Patch_T *const patch)
+{
+  Grid_T *const grid = patch->grid;
+  DDM_Schur_Complement_T *const SchurC = 
+                                patch->solving_man->method->SchurC;
+  Sewing_T *const sewing = SchurC->sewing[patch->pn];
+  unsigned p;
+  
+  for (p = 0; p < sewing->npair; ++p)
+  {
+    Pair_T *pair = sewing->pair[p];
+    unsigned ap = pair->subface->adjPatch;
+    Sewing_T *sewing2 = 
+          grid->patch[ap]->solving_man->method->SchurC->sewing[patch->pn];
+    pair->stitch = find_pair_in_sewing(sewing2,pair->subface);
+    assert(pair->stitch);
+  }
+}  
+
+/* finding the pair for a given subface and sewing. it finds based on
+// face number and subface number of the given subface
+// ->return value: found pair, 0 otherwise.
+*/
+static Pair_T *find_pair_in_sewing(const Sewing_T *const sewing,const SubFace_T *const subface)
+{
+  Pair_T *pair = 0;
+  unsigned i;
+  
+  for (i = 0; i < sewing->npair; ++i)
+  {
+    SubFace_T *s = sewing->pair[i]->subface;
+    
+    if (s->face == subface->face && s->sn == subface->sn)
+    {
+      pair = sewing->pair[i];
+      break;
+    }
+  }
+  
+  return pair;
+}
+
+/* making all of sewings deduced form its own subfaces */
+static void make_its_sewing(const Patch_T *const patch,Sewing_T **const sewing)
+{
+  const unsigned nintfc = countf(patch->interface);
+  const unsigned p = patch->pn;
+  unsigned intfc;
+
+  /* loop over all interfaces */
+  for (intfc = 0; intfc < nintfc; ++intfc)
+  {
+    Interface_T *interface = patch->interface[intfc];
+    unsigned nsfc = interface->ns;
+    unsigned sfc;
+    
+    /* loop over all subfaces */
+    for (sfc = 0; sfc < nsfc; ++sfc)
+    {
+      SubFace_T *subface = interface->subface[sfc];
+      
+      if (!subface->exterF)
+      {
+        abortEr(INCOMPLETE_FUNC);
+      }
+      else if (subface->innerB)
+      {
+        abortEr(INCOMPLETE_FUNC);
+      }
+      else if (subface->outerB)
+      {
+        continue;
+      }
+      else if (subface->adjPatch != patch->pn)
+      {
+        if (!sewing[p])
+        {
+          sewing[p] = alloc_sewing();
+          sewing[p]->patchN = p;
+        }
+          
+        populate_pair(sewing[p],subface,ITS);
+      }
+      else
+      {
+        abortEr("This case has not been considered.\n");
+      }
+    }/* end of for (sfc = 0; sfc < nsfc; ++sfc) */
+  }/* end of for (intfc = 0; intfc < nintfc; ++intfc) */
+}
+
+/* making all of sewings deduced from subfaces of patch2 */
+static void make_others_sewing(const Patch_T *const patch,const Patch_T *const patch2,Sewing_T **const sewing)
+{
+  const unsigned nintfc = countf(patch2->interface);
+  const unsigned p = patch2->pn;
+  unsigned intfc;
+
+  /* loop over all interfaces */
+  for (intfc = 0; intfc < nintfc; ++intfc)
+  {
+    Interface_T *interface = patch2->interface[intfc];
+    unsigned nsfc = interface->ns;
+    unsigned sfc;
+    
+    /* loop over all subfaces */
+    for (sfc = 0; sfc < nsfc; ++sfc)
+    {
+      SubFace_T *subface = interface->subface[sfc];
+      
+      if (!subface->exterF)
+      {
+        abortEr(INCOMPLETE_FUNC);
+      }
+      else if (subface->innerB)
+      {
+        abortEr(INCOMPLETE_FUNC);
+      }
+      else if (subface->outerB)
+      {
+        continue;
+      }
+      else if (subface->adjPatch == patch->pn)
+      {
+        if (!sewing[p])
+        {
+          sewing[p] = alloc_sewing();
+          sewing[p]->patchN = p;
+        }
+          
+        populate_pair(sewing[p],subface,OTHERS);
+      }
+      else
+      {
+        abortEr("This case has not been considered.\n");
+      }
+   
+    }/* end of for (sfc = 0; sfc < nsfc; ++sfc) */
+  }/* end of for (intfc = 0; intfc < nintfc; ++intfc) */
+} 
+
+/* populate pair in sewing.
+// if flag == ITS, it only connects subfaces pointers, 
+// if flag == OTHERS, it duplicate the subface.
+*/
+static void populate_pair(Sewing_T *const sewing,SubFace_T *const subface,const DDM_SC_Flag_T flag)
+{
+  Grid_T *const grid = subface->patch->grid;
+  Pair_T *const pair = calloc(1,sizeof(*pair));
+  const unsigned np = subface->np;
+  unsigned i;
+  pointerEr(pair);
+  
+  if (flag == OTHERS)
+  {
+    pair->subface = calloc(1,sizeof(*pair->subface));
+    pointerEr(pair->subface);
+    copy_subface(pair->subface,subface);
+  }
+  else if (flag == ITS)
+    pair->subface = subface;
+  else
+    abortEr("Wrong flag.\n");
+  
+  pair->patchN = sewing->patchN;
+  
+  /* if this subface needs normal vector */
+  if (subface->df_dn)
+  {
+    double *N;
+    Point_T point;
+    
+    pair->nv = calloc(subface->np,sizeof(*pair->nv));
+    pointerEr(pair->nv);
+    
+    point.patch = subface->patch;
+    point.face  = subface->face;
+    
+    for (i = 0; i < np; ++i)
+    {
+      point.ind = subface->id[i];
+      N = normal_vec(&point);
+      pair->nv[i].N[0] = N[0];
+      pair->nv[i].N[1] = N[1];
+      pair->nv[i].N[2] = N[2];  
+    }
+    
+  }
+  
+  /* if this interface is an interpolation one */
+  if (!subface->copy)
+  {
+    const unsigned *node = subface->id;
+    const Patch_T *adjPatch;
+    
+    pair->ip = calloc(subface->np,sizeof(*pair->ip));
+    pointerEr(pair->ip);
+    
+    if (flag == OTHERS)
+    {
+      adjPatch = grid->patch[subface->adjPatch];
+      double X[3];
+      
+      for (i = 0; i < np; ++i)
+      {
+        double *x = subface->patch->node[node[i]]->x;
+        X_of_x(X,x,adjPatch);
+        
+        pair->ip[i].X[0] = X[0];
+        pair->ip[i].X[1] = X[1];
+        pair->ip[i].X[2] = X[2];
+      }
+    }
+    else if (flag == ITS)
+    {
+      for (i = 0; i < np; ++i)
+      {
+        double *X = subface->patch->node[node[i]]->X;
+        pair->ip[i].X[0] = X[0];
+        pair->ip[i].X[1] = X[1];
+        pair->ip[i].X[2] = X[2];
+      } 
+    }
+    else
+      abortEr("Wrong flag.\n");
+    
+  }
+  
+  sewing->pair = 
+    realloc(sewing->pair,(sewing->npair+1)*sizeof(*sewing->pair));
+  pointerEr(sewing->pair);
+  sewing->pair[sewing->npair] = pair;
+  sewing->npair++;
   
 }
 
@@ -208,11 +550,18 @@ static void make_map_and_inv(Patch_T *const patch)
   
   /* all of subdomain points already considered so : */
   patch->solving_man->method->SchurC->NS = j;
+  patch->solving_man->method->SchurC->NI = nn-j;
+  
   j2 = 0;
   Imap = calloc(nn,sizeof(*Imap));
   pointerEr(Imap);
   Iinv = calloc(nn-j,sizeof(*Iinv));
   pointerEr(Iinv);
+  
+  /* make sure if it is given a point outside of its domain
+  // it returns UINT_MAX. */
+  for (i = 0; i < nn; ++i)
+    Imap[i] = UINT_MAX;
   
   /* filling the other remaining points */
   for (intfc = 0; intfc < nintfc; ++intfc)
@@ -315,63 +664,277 @@ static void make_f(Patch_T *const patch)
 // and partly coming from patch2. when all of partial g's are made
 // the g coloumn itself will be populated.
 */
-static void make_g_partial(Patch_T *const patch)
+static void make_partial_g(Patch_T *const patch)
 {
-  DDM_Schur_Complement_T *Schur = patch->solving_man->method->SchurC;
-  assert(!Schur->pg);
-  double *pg = alloc_double(patch->nn-Schur->NS);
-  Schur->pg = pg;
-  const unsigned nintfc = countf(patch->interface);
-  unsigned intfc;
+  DDM_Schur_Complement_T *const Schur = patch->solving_man->method->SchurC;
+  Sewing_T **const sewing = Schur->sewing;
+  unsigned np = patch->grid->np;
+  unsigned p;
   
-  /* loop over all interfaces */
-  for (intfc = 0; intfc < nintfc; ++intfc)
+  /* go thru all of sewings  */
+  for (p = 0; p < np; ++p)
   {
-    Interface_T *interface = patch->interface[intfc];
-    unsigned nsfc = interface->ns;
-    unsigned sfc;
+    unsigned pr;
     
-    /* loop over all subfaces */
-    for (sfc = 0; sfc < nsfc; ++sfc)
+    if (!sewing[p])
+      continue;
+      
+    /* go thru all of pairs in each sewings */
+    for (pr = 0; pr < sewing[p]->npair; ++pr)
     {
-      SubFace_T *subface = interface->subface[sfc];
-      
-      if (!subface->exterF)/* if subface is internal */
-      {
-        abortEr(INCOMPLETE_FUNC);
-      }
-      else if (subface->innerB)/* if there is inner boundary */
-      {
-        abortEr(INCOMPLETE_FUNC);
-      }
-      else if (subface->outerB)/* if it reaches outer boundary */
-      {
-        continue;
-      }
-      else if (subface->touch)/* if two patches are in touch */
-      {
-        if (subface->copy)/* if the collocated point */
-        {
-          /* copy values */
-          b_bndry_copy_ppm(&BC);
-        }
-        else
-        {
-          /* interpolate values */
-          b_bndry_interpolate_ppm(&BC);
-        }
-      }
-      else /* if there is an overlap case */
-      {
-        /* interpolate values */
-        b_bndry_interpolate_ppm(&BC);
-      }
-      
-    }/* end of for (sfc = 0; sfc < nsfc; ++sfc) */
+      Pair_T *const pair = sewing[p]->pair[pr];
+      make_pg(patch,pair);/* make partial g pertinent to this pair */
+    }
+  }
+}
+
+/* make partial g pertinent to this pair */
+static void make_pg(Patch_T *const patch, Pair_T *const pair)
+{
+  
+  SubFace_T *const subface= pair->subface;
+  
+  pair->pg = alloc_double(subface->np);
+  
+  if (!subface->exterF)/* if subface is internal */
+  {
+    abortEr(INCOMPLETE_FUNC);
+  }
+  else if (subface->innerB)/* if there is inner boundary */
+  {
+    abortEr(INCOMPLETE_FUNC);
+  }
+  else if (subface->outerB)/* if it reaches outer boundary */
+  {
+    abortEr("Wrong subface;"
+        "it isn't suppoed to have this subface here!\n");
+  }
+  else if (subface->touch)/* if two patches are in touch */
+  {
+    if (subface->copy)/* if it is collocated point */
+    {
+      pg_collocation(patch,pair);
+    }
+    else
+    {
+      pg_interpolation(patch,pair);
+    }
+  }
+  else /* if there is an overlap case */
+  {
+    pg_interpolation(patch,pair);
+  }
+}
+
+/* making pg whose part coming from collocation points,
+// thus, we need copy the field or their normal derivatives.
+*/
+static void pg_collocation(Patch_T *const patch, Pair_T *const pair)
+{
+  SubFace_T *const subface= pair->subface;
+  const unsigned cf = patch->solving_man->cf;
+  const char *const field_name = patch->solving_man->field_name[cf];
+  Field_T *const f   = patch->pool[Ind(field_name)];
+  const unsigned np = subface->np;
+  const unsigned *node = 0;
+  double *const pg = pair->pg; 
+  unsigned i;
+  
+  /* if this pg is for the same patch */
+  if (patch->pn == pair->patchN)
+  {
+    node = subface->id;
+  }
+  else
+  {
+    node = subface->adjid;
+  }
     
-  }/* end of for (intfc = 0; intfc < nintfc; ++intfc) */
+  if (subface->df_dn)
+  {
+    double *f_x, *f_y, *f_z;
+    
+    f_x = Partial_Derivative(f,"x");
+    f_y = Partial_Derivative(f,"y");
+    f_z = Partial_Derivative(f,"z");
+    
+    for (i = 0; i < np; ++i)
+    {
+      double *N = pair->nv[i].N;
+      
+      pg[i] = N[0]*f_x[node[i]]+N[1]*f_y[node[i]]+N[2]*f_z[node[i]];
+    }
+    
+    free(f_x);
+    free(f_y);
+    free(f_z);
+  }
+  else
+  {
+    for (i = 0; i < np; ++i)
+    {
+      pg[i] = f->v[node[i]];
+    }
+  }
+}
+
+/* making pg whose part coming from interpolation points,
+// thus, we need copy the field or their normal derivatives
+// at interpolation points.
+*/
+static void pg_interpolation(Patch_T *const patch, Pair_T *const pair)
+{
+  SubFace_T *const subface= pair->subface;
+  const unsigned cf = patch->solving_man->cf;
+  const char *const field_name = patch->solving_man->field_name[cf];
+  Field_T *const f   = patch->pool[Ind(field_name)];
+  const unsigned np = subface->np;
+  double *const pg = pair->pg; 
+  unsigned i;
+  
+  if (subface->df_dn)
+  {
+    Patch_T tmp_patch = make_temp_patch(patch);
+    Field_T *f_x = add_field("df_dx","(3dim)",&tmp_patch,NO),
+            *f_y = add_field("df_dy","(3dim)",&tmp_patch,NO), 
+            *f_z = add_field("df_dz","(3dim)",&tmp_patch,NO);
+    Interpolation_T *interp_x = init_interpolation();
+    Interpolation_T *interp_y = init_interpolation();
+    Interpolation_T *interp_z = init_interpolation();
+    double *N;
+    double *X;
+    
+    f_x->v = Partial_Derivative(f,"x");
+    f_y->v = Partial_Derivative(f,"y");
+    f_z->v = Partial_Derivative(f,"z");
+    
+    interp_x->field = f_x;
+    interp_y->field = f_y;
+    interp_z->field = f_z;
+
+    for (i = 0; i < np; ++i)
+    {
+      X = pair->ip[i].X;
+      N = pair->nv[i].N;
+      
+      interp_x->X = X[0];
+      interp_x->Y = X[1];
+      interp_x->Z = X[2];
+      
+      interp_x->X = X[0];
+      interp_x->Y = X[1];
+      interp_x->Z = X[2];
+      
+      interp_x->X = X[0];
+      interp_x->Y = X[1];
+      interp_x->Z = X[2];
+
+      pg[i] = N[0]*execute_interpolation(interp_x)+
+              N[1]*execute_interpolation(interp_y)+
+              N[2]*execute_interpolation(interp_z);
+    }
+    
+    free(f_x);
+    free(f_y);
+    free(f_z);
+    free_interpolation(interp_x);
+    free_interpolation(interp_y);
+    free_interpolation(interp_z);
+    remove_field(f_x);
+    remove_field(f_y);
+    remove_field(f_z);
+    free_temp_patch(&tmp_patch);
+    
+  }
+  else
+  {
+    Interpolation_T *interp = init_interpolation();
+    interp->field = f;
+    fill_interpolation_flags(interp,patch,subface);
+    plan_interpolation(interp);
+
+    for (i = 0; i < np; ++i)
+    {
+      interp->X = pair->ip[i].X[0];
+      interp->Y = pair->ip[i].X[1];
+      interp->Z = pair->ip[i].X[2];
+      
+      pg[i] = execute_interpolation(interp);
+    }
+    
+    free_interpolation(interp);
+  }
+}
+
+/* filling flags of iterpolation and based on subface. */
+static void fill_interpolation_flags(Interpolation_T *const it,Patch_T *const patch,const SubFace_T *const sf)
+{
+  if (sf->sameX)
+  {
+    it->YZ_dir_flag = 1;
+    it->I = const_index_of_face(patch,sf);
+  }
+  else if (sf->sameY)
+  {
+    it->XZ_dir_flag = 1;
+    it->J = const_index_of_face(patch,sf);
+  }
+  else if (sf->sameZ)
+  {
+    it->XY_dir_flag = 1;
+    it->K = const_index_of_face(patch,sf);
+  }
+  else if (!sf->sameX && !sf->sameY && !sf->sameZ)
+  {
+    it->XYZ_dir_flag = 1;
+  }
+    else if (sf->sameX && sf->sameY && sf->sameZ)
+  {
+    abortEr("How come to have all the sameX,Y,Z flags of subface be the same.\n"
+    "It means there is something wrong at finding of adjacent patches.\n");
+  }
 
 }
+
+/* it finds the equation of a face(plane), for example
+// a=2 show the plane or face in which in cartesian coord
+// this plane intersect x = 2.
+// ->return value: constant index(coords) of a given face.
+*/
+static unsigned const_index_of_face(Patch_T *const patch,const SubFace_T *const sf)
+{
+  const unsigned f = sf->face;
+  const unsigned *const n = patch->n;
+  unsigned C = 0;/* constant value */
+  
+  switch(f)
+  {
+    case I_0:
+      C = 0;
+      break;
+    case I_n0:
+      C = n[0]-1;
+      break; 
+    case J_0:
+      C = 0;
+      break; 
+    case J_n1:
+      C = n[1]-1;
+      break; 
+      break; 
+    case K_0:
+      C = 0;
+      break; 
+    case K_n2:
+      C = n[2]-1;
+      break;
+    default:
+      abortEr("There is not such interface.\n");
+  }
+  
+  return C;
+}
+
 
 /* calculating the part of f coming from equation */
 static void f_in_equation_part(Patch_T *const patch)

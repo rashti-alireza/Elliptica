@@ -24,3 +24,5 @@ unsigned total_nodes_grid(const Grid_T *const grid);
 unsigned total_nodes_patch(const Patch_T *const patch);
 Coord_T find_coord(const char *const coordsys);
 double random_double(const double initial,const double final,const unsigned s);
+void copy_subface(SubFace_T *const s2,const SubFace_T *const s1);
+unsigned subface_map_invers_id(const SubFace_T *const subface,const unsigned n);

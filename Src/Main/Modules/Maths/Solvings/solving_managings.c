@@ -95,6 +95,7 @@ void initialize_solving_man(Grid_T *const grid,sEquation_T **const field_eq,sEqu
     }
       
     patch->solving_man->nf = nf;
+    patch->solving_man->patch = patch;
   }
   
   free_2d_mem(field_name,nf);

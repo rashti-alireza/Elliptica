@@ -288,3 +288,55 @@ double random_double(const double initial,const double final,const unsigned s)
    
   return initial+((final-initial)/RAND_MAX)*rand();
 }
+
+/* hard copy subface s1 to subface s2 */
+void copy_subface(SubFace_T *const s2,const SubFace_T *const s1)
+{
+  unsigned i;
+
+  s2->patch = s1->patch;
+  s2->flags_str = dup_s(s1->flags_str);
+  s2->sn = s1->sn;
+  s2->adjsn = s1->adjsn;
+  s2->np = s1->np;
+  s2->id = calloc(s2->np,sizeof(*s2->id));
+  pointerEr(s2->id);
+  s2->adjid = calloc(s2->np,sizeof(*s2->adjid));
+  pointerEr(s2->adjid);
+  for (i = 0; i < s2->np; ++i)
+    s2->id[i]    = s1->id[i];
+    
+  if (s1->touch || s1->copy)
+    for (i = 0; i < s2->np; ++i)
+      s2->adjid[i] = s1->adjid[i];
+      
+  s2->face     = s1->face;
+  s2->adjFace  = s1->adjFace;
+  s2->adjPatch = s1->adjPatch;
+  s2->df_dn  = s1->df_dn;
+  s2->sameX  = s1->sameX;
+  s2->sameY  = s1->sameY;
+  s2->sameZ  = s1->sameZ;
+  s2->touch  = s1->touch;
+  s2->copy   = s1->copy;
+  s2->exterF = s1->exterF;
+  s2->outerB = s1->outerB;
+  s2->innerB = s1->innerB;
+}
+
+/* map: points on each subface has an index for example id[i] = n.
+// which says point with index i correspond to node n.
+// this function gets n and return i mean invers(id[i]) = i;
+// ->return value : invers(id[i])
+*/
+unsigned subface_map_invers_id(const SubFace_T *const subface,const unsigned n)
+{
+  unsigned i;
+  unsigned s = UINT_MAX;
+  
+  for (i = 0; i < subface->np; ++i)
+    if (subface->id[i] == n)
+      return i;
+  
+  return s;  
+}

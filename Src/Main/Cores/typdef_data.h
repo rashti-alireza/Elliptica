@@ -323,21 +323,56 @@ typedef struct sEQUATION_T
   fEquation_T *eq;/* the equation needed to be satisfied */
 }sEquation_T;
 
+/* different quantities giving info abour pairing used in Schur complement */
+typedef struct PAIR_T
+{
+  double *pg;/* partial g that comping from this pair*/
+  SubFace_T *subface;/* differet subfaces due to patch[pn] that
+                     // is related to the current patch that equations
+                     // are being set up 
+                     */
+  struct PAIR_T *stitch;/* the pair that stitched to this pair */
+  unsigned patchN;/* patch number which is equal to its sewing number */
+  struct/* interpolation points;general coords of points
+        // needed for interpolation subfaces */
+  {
+    double X[3];
+  }*ip;
+  struct/* normal vector at the subface */
+  {
+    double N[3];
+  }*nv;
+  
+}Pair_T;
+
+/* boundary information and how different patches are sown.
+// this struct is made specially for having a good concurrency.
+*/
+typedef struct SEWING_T
+{
+  Pair_T **pair;
+  unsigned patchN;/* patch number which is equal to its sewing number */
+  unsigned npair;/* number of pairs */
+}Sewing_T;
+
 /* ingredients needed for mapping, labeling and etc for
 // domain decomposition schur complement method
 */
 typedef struct DDM_SCHUR_COMPLEMENT_T
 {
+  struct PATCH_T *patch;/* refers to its patch itself */
   /* regular means L(n,i,j,k) */
   unsigned *map;/* map: regular -> relabeled. ex: map[2] = 5 */
   unsigned *inv;/* inv: relabeled -> regular. ex: inv[5] = 2 */
-  unsigned *Imap;/* interface point map */
+  unsigned *Imap;/* interface point map , if it is given a point
+                 // outside of its domain, it returns UINT_MAX. */
   unsigned *Iinv;/* interface point inverse map */
   unsigned NS;/* Number of subdomain points i.e. 
               // number of inner points + outerboundar points =>
-              // total nodes - N = number of interface points. Note:
+              // total nodes - NS = number of interface points. Note:
               // outerboundary points excluded from interface points.
               */
+  unsigned NI;/* number of interface points */
 /* namings:
    |B E||x|   |f|
    |F C||y| = |g|
@@ -346,16 +381,19 @@ typedef struct DDM_SCHUR_COMPLEMENT_T
   double *g;
   double *x;
   double *y;
-  Matrix_T *B;
-  Matrix_T *E;
-  Matrix_T *F;
-  Matrix_T *C;
-  double *pg;/* partial g */
+  Matrix_T **B;
+  Matrix_T **E;
+  Matrix_T **F;
+  Matrix_T **C;
+  Sewing_T **sewing;/* sewing[patch_number] */
+  unsigned nsewing;/* number of sewings which is = number of patches */ 
+  
 }DDM_Schur_Complement_T;
 
 /* solving managing */
 typedef struct SOLVING_MAN_T
 {
+  struct PATCH_T *patch;/* refers to its patch itself */
   char **field_name;/* field to be solved */
   unsigned nf;/* number of fields */
   unsigned cf;/* current field; index of the field the is being solved */

@@ -321,3 +321,13 @@ Matrix_T *alloc_matrix(const Matrix_SF_T type_e,const long row,const long col)
   return m;
 }
 
+/* calloc one sewing.
+// ->return value = memory for 1 sewing struct.
+*/
+Sewing_T *alloc_sewing(void)
+{
+  Sewing_T *sewing = calloc(1, sizeof(*sewing));
+  pointerEr(sewing);
+  
+  return sewing;
+}
