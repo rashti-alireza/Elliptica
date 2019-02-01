@@ -17,8 +17,6 @@ typedef enum DDM_SCHUR_COMPLEMENT_FLAG_T
   OTHERS
 }DDM_SC_Flag_T;
 
-typedef unsigned InvMap(const SubFace_T *const subface,const unsigned n);
-
 int ddm_schur_complement(Grid_T *const grid);
 static void preparing_ingredients(Grid_T *const grid);
 static void make_map_and_inv(Patch_T *const patch);
@@ -39,9 +37,10 @@ static void make_others_sewing(const Patch_T *const patch,const Patch_T *const p
 static void make_its_sewing(const Patch_T *const patch,Sewing_T **const sewing);
 static void populate_pair(Sewing_T *const sewing,SubFace_T *const subface,const DDM_SC_Flag_T flag);
 static Pair_T *find_pair_in_sewing(const Sewing_T *const sewing,const SubFace_T *const subface);
-static void stitch_pairs(Patch_T *const patch);
+static void mirror_pairs(Patch_T *const patch);
 static unsigned const_index_of_face(Patch_T *const patch,const SubFace_T *const sf);
 static void fill_interpolation_flags(Interpolation_T *const it,Patch_T *const patch,const SubFace_T *const sf);
+static unsigned OnFace(const unsigned *const n, const unsigned p);
 
 
 

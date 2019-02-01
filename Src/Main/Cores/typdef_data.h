@@ -331,7 +331,8 @@ typedef struct PAIR_T
                      // is related to the current patch that equations
                      // are being set up 
                      */
-  struct PAIR_T *stitch;/* the pair that stitched to this pair */
+  struct PAIR_T *mirror;/* the pair that is mirror of itself but
+                        // from the other patch. */
   unsigned patchN;/* patch number which is equal to its sewing number */
   struct/* interpolation points;general coords of points
         // needed for interpolation subfaces */
@@ -452,6 +453,9 @@ typedef struct PATCH_T
                  // patch like pool[Ind("phi_f")]->v */
   Solving_Man_T *solving_man;/* solving managing */
   unsigned innerB:1;/* if this patch has inner boundary 1 otherwise 0 */
+  unsigned is_a_closed: 1;/* if coordinate a is periodic or closed 1, otherwise 0 */
+  unsigned is_b_closed: 1;/* if coordinate b is periodic or closed 1, otherwise 0 */
+  unsigned is_c_closed: 1;/* if coordinate c is periodic or closed 1, otherwise 0 */
 }Patch_T;
 
 /* grid */

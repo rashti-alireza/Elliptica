@@ -128,7 +128,7 @@ int IsOnEdge(const unsigned *const n,const unsigned p)
 }
 
 /* find out if this point p located on an face or not.
-// the algorithm is simple; if it happens at two or more interfaces
+// the algorithm is simple; if it happens at one or more interfaces
 // it means this point is on an face and returns number of face 
 // otherwise 0.
 // moreover, the found face f written like the example below:
@@ -304,9 +304,9 @@ void copy_subface(SubFace_T *const s2,const SubFace_T *const s1)
   s2->adjid = calloc(s2->np,sizeof(*s2->adjid));
   pointerEr(s2->adjid);
   for (i = 0; i < s2->np; ++i)
-    s2->id[i]    = s1->id[i];
+    s2->id[i] = s1->id[i];
     
-  if (s1->touch || s1->copy)
+  if (s1->copy)
     for (i = 0; i < s2->np; ++i)
       s2->adjid[i] = s1->adjid[i];
       
