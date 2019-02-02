@@ -14,4 +14,4 @@
 
 int Fundamental_Tests(void);
 Grid_T *fundamental_tests_make_grid(void);
-void fundamental_tests_fill_db_eqs(sEquation_T ***const field_eq,sEquation_T ***const bc_eq,sEquation_T ***const jacobian_eq);
+void fundamental_tests_fill_db_eqs(sEquation_T ***const field_eq,sEquation_T ***const bc_eq,sEquation_T ***const jacobian_field_eq,sEquation_T ***const jacobian_bc_eq);

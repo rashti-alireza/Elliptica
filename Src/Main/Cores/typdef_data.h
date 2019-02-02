@@ -365,25 +365,36 @@ typedef struct DDM_SCHUR_COMPLEMENT_T
   /* regular means L(n,i,j,k) */
   unsigned *map;/* map: regular -> relabeled. ex: map[2] = 5 */
   unsigned *inv;/* inv: relabeled -> regular. ex: inv[5] = 2 */
-  unsigned *Imap;/* interface point map , if it is given a point
+  unsigned *Imap;/* interface point map, if it is given a point
                  // outside of its domain, it returns UINT_MAX. */
   unsigned *Iinv;/* interface point inverse map */
   unsigned NS;/* Number of subdomain points i.e. 
-              // number of inner points + outerboundar points =>
+              // number of inner points + outerboundar points (NO) =>
               // total nodes - NS = number of interface points. Note:
               // outerboundary points excluded from interface points.
               */
-  unsigned NI;/* number of interface points */
+  unsigned NI;/* total number of interface points, if 0, it means there
+              // is no interface for this patch, for example when you
+              // only have one single patch, all sides of the patch
+              // are outerbounday so no interface with other patches. */
+  unsigned Oi;/* initial index of outer boundary points at new label.
+              // e.g. if NS = 10 and the last 3 points are 
+              // outer boundary points then Oi = 7. 
+              // furthermore, if there is no any outer boundary points 
+              // then Oi = NS. */
+  
 /* namings:
    |B E||x|   |f|
    |F C||y| = |g|
 */
   double *f;
+  double *f_prime;
   double *g;
   double *x;
   double *y;
-  Matrix_T **B;
-  Matrix_T **E;
+  Matrix_T *B;
+  Matrix_T *E_Trans;/* NOE: this is TRANSPOSE of E */
+  Matrix_T *E_prime;/* NOTE: it is E' of E NOT E TRANSPOSE */
   Matrix_T **F;
   Matrix_T **C;
   Sewing_T **sewing;/* sewing[patch_number] */
@@ -398,14 +409,12 @@ typedef struct SOLVING_MAN_T
   char **field_name;/* field to be solved */
   unsigned nf;/* number of fields */
   unsigned cf;/* current field; index of the field the is being solved */
+  double Frms;/* the residual(rms) of F in, Jx=-F for this field. 
+              // note: it's initialized to DBL_MAX. */
   fEquation_T **field_eq;/* the equation needed to be satisfied */
-  fEquation_T **bc_eq;/* the B.C needed to be satisfied */
-  fEquation_T **jacobian_eq;/* jacobian for equations, 
-                            // note: all of fields in this structure must 
-                            // have one equation since they are supposed to 
-                            // be solved together. so providing this equation 
-                            // is on user.
-                           */
+  fEquation_T **bc_eq;/* the B.C. needed to be satisfied */
+  fEquation_T **jacobian_field_eq;/* jacobian for field equations */
+  fEquation_T **jacobian_bc_eq;/* jacobian for B.C. equations */
   struct/* jacobian elements */
   {
     char type[__1MAX_STR_LEN1__];
@@ -568,6 +577,9 @@ typedef struct BOUNDARY_CONDITION_T
 typedef struct UMFPACK_T
 {
   Matrix_T *a;/* a in a.x = b */
-  double *b;/* in Ax=b */
-  double *x;/* in Ax=b */
+  double *b;/* in ax=b */
+  double *x;/* in ax=b */
+  double **xs;/* x for series solving Ax[i]=b[i], i runs 0,...,ns */
+  double **bs;/* b for series solving Ax[i]=b[i], i runs 0,...,ns */
+  unsigned ns;/* number of series */
 }UmfPack_T;

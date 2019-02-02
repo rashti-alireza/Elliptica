@@ -41,6 +41,8 @@ static void mirror_pairs(Patch_T *const patch);
 static unsigned const_index_of_face(Patch_T *const patch,const SubFace_T *const sf);
 static void fill_interpolation_flags(Interpolation_T *const it,Patch_T *const patch,const SubFace_T *const sf);
 static unsigned OnFace(const unsigned *const n, const unsigned p);
+static void making_B_and_E(Patch_T *const patch);
+static void making_E_prime_and_f_prime(Patch_T *const patch);
 
 
 

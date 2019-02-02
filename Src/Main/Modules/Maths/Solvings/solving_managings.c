@@ -46,7 +46,7 @@ void add_eq(sEquation_T ***const data_base, fEquation_T *const eq,const char *co
 }
 
 /* initializing Solving_Man_T struct and its elements */
-void initialize_solving_man(Grid_T *const grid,sEquation_T **const field_eq,sEquation_T **const bc_eq,sEquation_T **const jacobian_eq)
+void initialize_solving_man(Grid_T *const grid,sEquation_T **const field_eq,sEquation_T **const bc_eq,sEquation_T **const jacobian_field_eq,sEquation_T **const jacobian_bc_eq)
 {
   const char *par_f = GetParameterS_E("Fields");
   char *par;
@@ -83,19 +83,23 @@ void initialize_solving_man(Grid_T *const grid,sEquation_T **const field_eq,sEqu
     pointerEr(patch->solving_man->field_eq);
     patch->solving_man->bc_eq = calloc(nf,sizeof(*patch->solving_man->bc_eq));
     pointerEr(patch->solving_man->bc_eq);
-    patch->solving_man->jacobian_eq = calloc(nf,sizeof(*patch->solving_man->jacobian_eq));
-    pointerEr(patch->solving_man->jacobian_eq);
+    patch->solving_man->jacobian_field_eq = calloc(nf,sizeof(*patch->solving_man->jacobian_field_eq));
+    pointerEr(patch->solving_man->jacobian_field_eq);
+    patch->solving_man->jacobian_bc_eq = calloc(nf,sizeof(*patch->solving_man->jacobian_bc_eq));
+    pointerEr(patch->solving_man->jacobian_bc_eq);
     
     for (i = 0; i < nf; ++i)
     {
       patch->solving_man->field_name[i]  = dup_s(field_name[i]);
       patch->solving_man->field_eq[i]    = get_field_eq(field_name[i],field_eq);
       patch->solving_man->bc_eq[i]       = get_field_eq(field_name[i],bc_eq);
-      patch->solving_man->jacobian_eq[i] = get_field_eq(field_name[i],jacobian_eq);
+      patch->solving_man->jacobian_field_eq[i] = get_field_eq(field_name[i],jacobian_field_eq);
+      patch->solving_man->jacobian_bc_eq[i]    = get_field_eq(field_name[i],jacobian_bc_eq);
     }
       
-    patch->solving_man->nf = nf;
+    patch->solving_man->nf    = nf;
     patch->solving_man->patch = patch;
+    patch->solving_man->Frms  = DBL_MAX;
   }
   
   free_2d_mem(field_name,nf);

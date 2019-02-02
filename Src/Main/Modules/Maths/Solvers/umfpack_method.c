@@ -111,6 +111,59 @@ void umfpack_error_dl(const double *const Control,const long status,const char *
   umfpack_failed((int)status,file,line);
 }  
 
+/* umfpack direct solver double interger kind 
+// used to solve ax = b for series of b's but same a.
+// thus, it won't need to decompose a each time.
+// ->return value: EXIT_SUCCESS
+*/
+int direct_solver_series_umfpack_di(void *vp)
+{
+  UmfPack_T *const umf = vp;
+  /* a is row by col matrix at a.x = b and in compressed column storage */
+  const int row    = (int)umf->a->row;
+  const int col    = (int)umf->a->col;
+  int *const Ap    = umf->a->ccs->Ap;
+  int *const Ai    = umf->a->ccs->Ai;
+  double *const Ax = umf->a->ccs->Ax;
+  double **const b  = umf->bs;/* b's */
+  double **const x  = umf->xs;/* x's */
+  const unsigned ns = umf->ns;/* number of series to be solved */
+  void *Symbolic,*Numeric;
+  double Info[UMFPACK_INFO];
+  double Control[UMFPACK_CONTROL];
+  int status;
+  unsigned i;
+  
+  if (!umf->a->ccs_f)
+    abortEr("The matrix a in a.x = b in umfpack must be in CCS format.\n");
+  
+  umfpack_di_defaults(Control);
+  
+  status = umfpack_di_symbolic(row,col,Ap,Ai,Ax,&Symbolic,Control,Info);
+  if(status != UMFPACK_OK)
+    umfpack_error_di(Control,status,__FILE__,__LINE__);
+     
+  status = umfpack_di_numeric(Ap,Ai,Ax,Symbolic,&Numeric,Control,Info);
+  if(status != UMFPACK_OK)
+    umfpack_error_di(Control,status,__FILE__,__LINE__);
+     
+  umfpack_di_free_symbolic(&Symbolic);
+
+  printf("Condition_Number = %g\n", 1/Info[UMFPACK_RCOND]);
+
+  /* solve for series ax[i]=b[i] */
+  for (i = 0; i < ns; ++i)
+  {
+    status = umfpack_di_solve(UMFPACK_A,Ap,Ai,Ax,x[i],b[i],Numeric,Control,Info);
+    if(status != UMFPACK_OK)
+      umfpack_error_di(Control,status,__FILE__,__LINE__);
+  }
+  /*freeing*/
+  umfpack_di_free_numeric(&Numeric);
+ 
+  return EXIT_SUCCESS;
+}
+
 /* printing errors and reason of failure and then abort */
 static void umfpack_failed(const int status,const char *const file,const int line)
 {

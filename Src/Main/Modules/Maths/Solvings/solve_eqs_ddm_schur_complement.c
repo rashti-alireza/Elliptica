@@ -69,10 +69,11 @@ static int solve_field(Grid_T *const grid)
   
   while (IsItSolved == NO && iter < NumIter)
   {
+    const unsigned npatch = grid->np;
     unsigned p;
     
     DDM_SCHUR_COMPLEMENT_OpenMP(omp parallel for)
-    for (p = 0; p < grid->np; ++p)
+    for (p = 0; p < npatch; ++p)
     {
       Patch_T *patch = grid->patch[p];
       make_f(patch);
@@ -83,23 +84,23 @@ static int solve_field(Grid_T *const grid)
     IsItSolved = check_residual(grid,res_input);
     if (IsItSolved == YES)
       break;
-   /*   
+      
     DDM_SCHUR_COMPLEMENT_OpenMP(omp parallel for)
-    for (p = 0; p < grid->np; ++p)
+    for (p = 0; p < npatch; ++p)
     {
       Patch_T *patch = grid->patch[p];
       making_B_and_E(patch);
       making_E_prime_and_f_prime(patch);
-      making_F_and_C(patch);
-      compute_g_prime(patch);
-      compute_S(patch);
+      //making_F_and_C(patch);
+      //compute_g_prime(patch);
+      //compute_S(patch);
     }
-    */
+    
     /* solve Sy = g' */
     //solve_Sy_g_prime(grid);
     /*
     DDM_SCHUR_COMPLEMENT_OpenMP(omp parallel for)
-    for (p = 0; p < grid->np; ++p)
+    for (p = 0; p < npatch; ++p)
     {
       Patch_T *patch = grid->patch[p];*/
       /* x = f'-E'y */
@@ -107,9 +108,96 @@ static int solve_field(Grid_T *const grid)
       
     //}
     
+    //test
+    break;
+    //end
   }/* end of while (IsItSolved == NO && iter < NumIter) */
   
   return EXIT_SUCCESS;
+}
+
+/* making E prime and f prime. refer to the note on the very top */
+static void making_E_prime_and_f_prime(Patch_T *const patch)
+{
+  DDM_Schur_Complement_T *const S = patch->solving_man->method->SchurC;
+  double **E_Trans;
+  Matrix_T *const a = cast_matrix_ccs(S->B);
+  double *const f = S->f;
+  double **xs,**bs;
+  Matrix_T *E_prime;
+  UmfPack_T umfpack[1] = {0};
+  unsigned ns = 1;
+  unsigned i;
+  
+  /* free unwanted memories */
+  free_matrix(S->B);
+  S->B = 0;/* making sure B refers to null */
+  
+  /* if there is any interface points */
+  if (S->NI)
+    ns += (unsigned)S->E_Trans->row;
+    
+  xs = calloc(ns,sizeof(*xs));
+  pointerEr(xs);
+  bs = calloc(ns,sizeof(*bs));
+  pointerEr(bs);
+  
+  if (S->NI)
+  {
+    E_Trans = S->E_Trans->reg->A;
+    for (i = 0; i < ns-1; ++i)
+    {
+      bs[i] = E_Trans[i];
+      xs[i] = calloc(S->NS,sizeof(*xs[i]));
+      pointerEr(xs[i]);
+    }
+  }
+  
+  bs[ns-1] = f;
+  xs[ns-1] = calloc(S->NS,sizeof(*xs[ns-1]));
+  pointerEr(xs[ns-1]);
+  
+  umfpack->a = a;
+  umfpack->bs = bs;
+  umfpack->xs = xs;
+  direct_solver_series_umfpack_di(umfpack);
+  
+  S->f_prime = xs[ns-1];
+  if (S->NI)
+  {
+    E_prime = calloc(1,sizeof(*E_prime));
+    pointerEr(E_prime);
+    E_prime->row = (long)S->E_Trans->col;
+    E_prime->col = (long)S->E_Trans->row;
+    E_prime->reg_f = 1;
+    E_prime->reg->A = xs;
+    S->E_prime = E_prime;
+    free_matrix(S->E_Trans);
+  }
+  
+  free_matrix(a);
+  free(S->f);
+  free(bs);
+}
+
+/* making B and E matrices. refer to the note on the very top */
+static void making_B_and_E(Patch_T *const patch)
+{
+  Solving_Man_T *const S      = patch->solving_man;
+  const unsigned cf           = S->cf;
+  fEquation_T *const jacobian_field_eq = S->jacobian_field_eq[cf];
+  fEquation_T *const jacobian_bc_eq = S->jacobian_bc_eq[cf];
+  const long Brow = (long)S->method->SchurC->NS;
+  const long Bcol = (long)S->method->SchurC->NS;
+  const long Erow = (long)S->method->SchurC->NS;
+  const long Ecol = (long)S->method->SchurC->NI;
+  
+  S->method->SchurC->B       = alloc_matrix(REG_SF,Brow,Bcol);
+  S->method->SchurC->E_Trans = alloc_matrix(REG_SF,Ecol,Erow);
+    
+  jacobian_field_eq(patch,S->method->SchurC);
+  jacobian_bc_eq(patch,S->method->SchurC);
+  
 }
 
 /* having been made partial g's, now make g column */
@@ -131,9 +219,13 @@ static void make_g(Grid_T *const grid)
     patch  = grid->patch[p];
     Schur  = patch->solving_man->method->SchurC;
     sewing = Schur->sewing[p];
+    
+    if (!sewing)
+      continue;
+    
     npair  = sewing->npair;
     Imap   = Schur->Imap;
-    
+      
     if (!Schur->g)
       Schur->g = alloc_double(Schur->NI);
     g = Schur->g;
@@ -261,6 +353,10 @@ static void mirror_pairs(Patch_T *const patch)
                                 patch->solving_man->method->SchurC;
   Sewing_T *const sewing = SchurC->sewing[patch->pn];
   unsigned p;
+  
+  /* if there is no sewing, happen for single patch */
+  if (!sewing)
+    return;
   
   for (p = 0; p < sewing->npair; ++p)
   {
@@ -507,6 +603,9 @@ static void make_map_and_inv(Patch_T *const patch)
       j++;
     }
   }
+  
+  /* set initial index for outer boundary points. */
+  patch->solving_man->method->SchurC->Oi = j;
   
   /* filling outer boundary points */
   for (intfc = 0; intfc < nintfc; ++intfc)
@@ -975,12 +1074,9 @@ static unsigned const_index_of_face(Patch_T *const patch,const SubFace_T *const 
 static void f_in_equation_part(Patch_T *const patch)
 {
   Solving_Man_T *const S      = patch->solving_man;
-  const unsigned cf           = S->cf;
-  const char *const fname     = S->field_name[cf];
-  fEquation_T *const field_eq = S->field_eq[cf];
-  Field_T *const field        = patch->pool[Ind(fname)];
+  fEquation_T *const field_eq = S->field_eq[S->cf];
   
-  field_eq(field,S->method->SchurC);
+  field_eq(patch,S->method->SchurC);
 }
 
 /* calculating the part of f coming from outerboundary points */
@@ -1021,17 +1117,47 @@ static void f_in_outerboundary_part(Patch_T *const patch)
   }
 }
 
-/* find out the residual of each patch and decide weather the equations
-// are already solved or not.
-// ->return value: YES if EQs are solved, NO otherwise.
+/* calculate root mean square of F, in Jx=-F, for the whole grid.
+// and check if the equation is solved up to the residual res_input.
+// ->return value: YES if EQ is solved, NO otherwise.
 */
 static Flag_T check_residual(const Grid_T *const grid,const double res_input)
 {
+  const unsigned npatch = grid->np;
+  double *sqrs = alloc_double(npatch);
+  double sum = 0;
+  double rms = 0;
   Flag_T flg = YES;
+  unsigned p;
+    
+  DDM_SCHUR_COMPLEMENT_OpenMP(omp parallel for)
+  for (p = 0; p < npatch; ++p)
+  {
+    Patch_T *patch = grid->patch[p];
+    DDM_Schur_Complement_T *S = patch->solving_man->method->SchurC;
+    double *f = S->f;
+    double *g = S->g;
+    double sqr1 = dot(S->NS,f,f);
+    double sqr2 = dot(S->NI,g,g);
+    sqrs[p] = sqr1+sqr2;
+    patch->solving_man->Frms = sqrt(sqrs[p]);
+    //test
+    printf("Residual at %s = %0.15f\n",
+      patch->name,patch->solving_man->Frms);
+    //end
+  }
+  
+  for (p = 0; p < npatch; ++p)
+    sum += sqrs[p];
+  
+  rms = sqrt(sum);
+  
+  if (GRT(rms,res_input))
+    flg = NO;
+    
+  free(sqrs);
   
   return flg;
-  UNUSED(grid);
-  UNUSED(res_input);
 }
 
 /* figure out if a given node is located on a face or not,

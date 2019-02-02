@@ -26,15 +26,16 @@ int Fundamental_Tests(void)
   
   if (strcmp_i(GetParameterS("Test_Jacobian_Elements_Js_Consistency"),"yes"))
   {
-    sEquation_T **field_eq,**bc_eq,**jacobian_eq;/* data base of equations */
+    sEquation_T **field_eq,**bc_eq,
+                **jacobian_field_eq,**jacobian_bc_eq;/* data base of equations */
     const char *types[] = {"j_x","j_y",0};
     unsigned p;
     
     /* fill data base of equations */
-    fundamental_tests_fill_db_eqs(&field_eq,&bc_eq,&jacobian_eq);
+    fundamental_tests_fill_db_eqs(&field_eq,&bc_eq,&jacobian_field_eq,&jacobian_bc_eq);
 
     /* initializing and solving */
-    initialize_solving_man(grid,field_eq,bc_eq,jacobian_eq);/* populating solution_man */
+    initialize_solving_man(grid,field_eq,bc_eq,jacobian_field_eq,jacobian_bc_eq);/* populating solution_man */
     
     double start = get_time_sec();
     FT_OpenMP(omp parallel for)
@@ -57,7 +58,8 @@ int Fundamental_Tests(void)
     
     free_db_eqs(field_eq);
     free_db_eqs(bc_eq);
-    free_db_eqs(jacobian_eq);
+    free_db_eqs(jacobian_field_eq);
+    free_db_eqs(jacobian_bc_eq);
   }
   
   if (strcmp_i(GetParameterS("Test_Matrix_Consistency"),"yes"))
