@@ -714,3 +714,75 @@ static void write_J_in_disk_ccs(void)
 {
   abortEr(INCOMPLETE_FUNC);
 }
+
+/* d(interp(f_x))/df at point X in general coordinates.
+// df is node number which we are varying field at that point.
+// ->return value: 
+*/
+double dinterp_x_df(const Patch_T *const patch,const double *const X,const unsigned df)
+{	
+  UNUSED(patch);
+  UNUSED(X);
+  UNUSED(df);
+  return 0;
+}
+
+/* d(interp(f_y))/df at point X in general coordinates.
+// df is node number which we are varying field at that point.
+// ->return value: d(interp(f_y))/df. */
+double dinterp_y_df(const Patch_T *const patch,const double *const X,const unsigned df)
+{
+  
+  UNUSED(patch);
+  UNUSED(X);
+  UNUSED(df);
+  return 0;
+}
+
+/* d(interp(f_z))/df at point X in general coordinates.
+// df is node number which we are varying field at that point.
+// ->return value: d(interp(f_z))/df. */
+double dinterp_z_df(const Patch_T *const patch,const double *const X,const unsigned df)
+{
+  
+  UNUSED(patch);
+  UNUSED(X);
+  UNUSED(df);
+  return 0;
+}
+
+/* d(interp(f))/df when interpolation happen in 1-D.
+// df is node number which we are varying field at that point.
+// ->return value: d(interp(f))/df. */
+double dinterp_df_1d_index(const Patch_T *const patch,const double *const X,const unsigned df)
+{
+  UNUSED(patch);
+  UNUSED(X);
+  UNUSED(df);
+  return 0;
+}
+
+/* d(interp(f))/df when interpolation happen in 2-D.
+// df is node number which we are varying field at that point.
+// ->return value: d(interp(f))/df. */
+double dinterp_df_2d_index(const Patch_T *const patch,const double *const X,const unsigned df)
+{
+  
+  UNUSED(patch);
+  UNUSED(X);
+  UNUSED(df);
+  return 0;
+}
+
+/* d(interp(f))/df when interpolation happen in 3-D.
+// df is node number which we are varying field at that point.
+// ->return value: d(interp(f))/df. */
+double dinterp_df_3d_index(const Patch_T *const patch,const double *const X,const unsigned df)
+{
+  
+  UNUSED(patch);
+  UNUSED(X);
+  UNUSED(df);
+  return 0;
+}
+
