@@ -125,8 +125,8 @@ int direct_solver_series_umfpack_di(void *vp)
   int *const Ap    = umf->a->ccs->Ap;
   int *const Ai    = umf->a->ccs->Ai;
   double *const Ax = umf->a->ccs->Ax;
-  double **const b  = umf->bs;/* b's */
-  double **const x  = umf->xs;/* x's */
+  double **const bs  = umf->bs;/* b's */
+  double **const xs  = umf->xs;/* x's */
   const unsigned ns = umf->ns;/* number of series to be solved */
   void *Symbolic,*Numeric;
   double Info[UMFPACK_INFO];
@@ -154,7 +154,7 @@ int direct_solver_series_umfpack_di(void *vp)
   /* solve for series ax[i]=b[i] */
   for (i = 0; i < ns; ++i)
   {
-    status = umfpack_di_solve(UMFPACK_A,Ap,Ai,Ax,x[i],b[i],Numeric,Control,Info);
+    status = umfpack_di_solve(UMFPACK_A,Ap,Ai,Ax,xs[i],bs[i],Numeric,Control,Info);
     if(status != UMFPACK_OK)
       umfpack_error_di(Control,status,__FILE__,__LINE__);
   }
