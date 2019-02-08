@@ -30,17 +30,20 @@ static void *eq_alpha(void *vp1,void *vp2)
   Patch_T *const patch = vp1;
   DDM_Schur_Complement_T *const S = vp2;
   Field_T *const alpha = patch->pool[Ind("alpha")];
-  double *const F      = S->f;
-  unsigned *const map  = S->map;
+  double *const F = S->f;
+  const unsigned *const inv  = S->inv;
   double *alpha_xx = Partial_Derivative(alpha,"x,x");
   double *alpha_yy = Partial_Derivative(alpha,"y,y");
   double *alpha_zz = Partial_Derivative(alpha,"z,z");
-  const unsigned nn = patch->nn;
+  const unsigned NInnerMesh = S->Oi;
+  unsigned n;/* node */
   unsigned i;
   
-  for(i = 0; i < nn; ++i)
-    F[map[i]] = 
-      alpha_xx[i]+alpha_yy[i]+alpha_zz[i]-6;//1/(1+pow(SQR(x_(i)),100)+pow(SQR(y_(i)),100)+pow(SQR(z_(i)),100);
+  for(i = 0; i < NInnerMesh; ++i)
+  {
+    n = inv[i];
+    F[i] = alpha_xx[n]+alpha_yy[n]+alpha_zz[n]-6;//1/(1+pow(SQR(x_(i)),100)+pow(SQR(y_(i)),100)+pow(SQR(z_(i)),100);
+  }
     
   free(alpha_xx);
   free(alpha_yy);
@@ -49,7 +52,9 @@ static void *eq_alpha(void *vp1,void *vp2)
   return 0;
 }
 
-/* boundary condition for alpha */
+/* boundary condition for alpha 
+// alpha = (x^2+y^2+z^2) at boundary
+*/
 static void *bc_alpha(void *vp1,void *vp2)
 {
   Boundary_Condition_T *const bc = vp1;
@@ -58,12 +63,12 @@ static void *bc_alpha(void *vp1,void *vp2)
   unsigned *const map  = S->map;
   Patch_T *const patch = bc->patch;
   const unsigned *const Bnode = bc->node;/* nodes at boundary */
-  const unsigned nn = bc->nn;/* number of nodes at boundary */
-  double *const alpha = bc->field->v;
+  const unsigned NOuterBoundary = bc->nn;/* number of nodes at boundary */
+  double *const alpha = patch->pool[Ind("alpha")]->v;
   unsigned i,B;
   
-  /* alpha = 0 at outer boundary */
-  for (i = 0; i < nn; ++i)
+  /* alpha at outer boundary */
+  for (i = 0; i < NOuterBoundary; ++i)
   {
     B = Bnode[i];
     F[map[B]] = alpha[B]-SQR(x_(B))-SQR(y_(B))-SQR(z_(B));
@@ -89,7 +94,7 @@ static void *jacobian_eq_alpha(void *vp1,void *vp2)
   const char *types[] = {"j_xx","j_yy","j_zz",0};
   fJs_T *j_xx = 0,*j_yy = 0,*j_zz = 0;
   Matrix_T *j0 = 0,*j1 = 0,*j2 = 0;
-  unsigned i,j;
+  unsigned i,j,ii,jj;
   
   prepare_Js_jacobian_eq(patch,types);
   j0   = get_j_matrix(patch,"j_xx");
@@ -103,24 +108,27 @@ static void *jacobian_eq_alpha(void *vp1,void *vp2)
   
   /* B part: */
   for (i = 0; i < NInnerMesh; ++i)
+  {
+    ii = inv[i];
     for (j = 0; j < NInnerMeshAndOuterB; ++j)
-      B[i][j] = j_xx(j0,inv[i],inv[j])
-                +
-                j_yy(j1,inv[i],inv[j])
-                +
-                j_zz(j2,inv[i],inv[j]);
-                
+    {
+      jj = inv[j];
+      B[i][j] = j_xx(j0,ii,jj)+j_yy(j1,ii,jj)+j_zz(j2,ii,jj);
+    }
+  }             
   /* E part: */
   if (S->NI)/* if there is any interface points then E is needed */
   {
     E_Trans = S->E_Trans->reg->A;
     for (j = NInnerMeshAndOuterB; j < NNode; ++j)
+    {
+      jj = inv[j];
       for (i = 0; i < NInnerMesh; ++i)
-        E_Trans[j-Ref][i] = j_xx(j0,inv[i],inv[j])
-                            +
-                            j_yy(j1,inv[i],inv[j])
-                            +
-                            j_zz(j2,inv[i],inv[j]);
+      {
+        ii = inv[i];
+        E_Trans[j-Ref][i] = j_xx(j0,ii,jj)+j_yy(j1,ii,jj)+j_zz(j2,ii,jj);
+      }
+    }
   }
   
   return 0;
