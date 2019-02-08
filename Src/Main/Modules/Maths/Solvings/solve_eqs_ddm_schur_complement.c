@@ -91,7 +91,7 @@ static int solve_field(Grid_T *const grid)
       Patch_T *patch = grid->patch[p];
       making_B_and_E(patch);
       making_E_prime_and_f_prime(patch);
-      //making_F_and_C(patch);
+      making_F_and_C(patch);
       //compute_g_prime(patch);
       //compute_S(patch);
     }
@@ -114,6 +114,333 @@ static int solve_field(Grid_T *const grid)
   }/* end of while (IsItSolved == NO && iter < NumIter) */
   
   return EXIT_SUCCESS;
+}
+
+/* making F and C parts. refer to the note on the very top */
+static void making_F_and_C(Patch_T *const patch)
+{
+  DDM_Schur_Complement_T *const Schur = patch->solving_man->method->SchurC;
+  Sewing_T **const sewing = Schur->sewing;
+  const unsigned np = patch->grid->np;
+  unsigned p;
+  
+  /* allocation matrices */
+  Schur->F = calloc(np,sizeof(*Schur->F));
+  pointerEr(Schur->F);
+  Schur->C = calloc(np,sizeof(*Schur->C));
+  pointerEr(Schur->C);
+  
+  /* go thru all of sewings  */
+  for (p = 0; p < np; ++p)
+  {
+    unsigned pr;
+    unsigned rowF,colF,rowC,colC;
+    
+    /* if there is no connection bewteen the patches, skip */
+    if (!sewing[p])
+      continue;
+    
+    /* allocate F and C matrices */
+    rowF = sewing[p]->NI;/* must be number of interface point for patch[p] */
+    rowC = sewing[p]->NI;/* must be number of interface point for patch[p] */
+    colF = Schur->NS;/* must be number of subdomain point for patch */
+    colC = Schur->NI;/* must be number of interface point for patch */
+    
+    Schur->F[p] = alloc_matrix(REG_SF,rowF,colF);
+    Schur->C[p] = alloc_matrix(REG_SF,rowC,colC);
+    
+    /* go thru all of pairs in each sewings */
+    for (pr = 0; pr < sewing[p]->npair; ++pr)
+    {
+      Pair_T *const pair = sewing[p]->pair[pr];
+      
+      populate_F_and_C(patch,pair);/* filling F and C pertinent to this pair */
+    }
+  }
+}
+
+/* filling F and C pertinent to this pair */
+static void populate_F_and_C(Patch_T *const patch, Pair_T *const pair)
+{
+  SubFace_T *const subface = pair->subface;
+  
+  if (!subface->exterF)/* if subface is internal */
+  {
+    abortEr(INCOMPLETE_FUNC);
+  }
+  else if (subface->innerB)/* if there is inner boundary */
+  {
+    abortEr(INCOMPLETE_FUNC);
+  }
+  else if (subface->outerB)/* if it reaches outer boundary */
+  {
+    abortEr("Wrong subface:\n"
+        "It isn't suppoed to have this subface here!\n");
+  }
+  else if (subface->touch)/* if two patches are in touch */
+  {
+    if (subface->copy)/* if it is collocated point */
+    {
+      fill_C_F_collocation(patch,pair);
+    }
+    else
+    {
+      fill_C_F_interpolation(patch,pair);
+    }
+  }
+  else /* if there is an overlap case */
+  {
+    fill_C_F_interpolation(patch,pair);
+  }
+}
+
+
+/* filling C and F matrices whose entries coming from interpolation points */
+static void fill_C_F_interpolation(Patch_T *const patch, Pair_T *const pair)
+{
+  DDM_Schur_Complement_T *const Schur = patch->solving_man->method->SchurC;
+  SubFace_T *const subface = pair->subface;
+  const unsigned ppn = pair->patchN;
+  const unsigned NsubFP = subface->np;
+  const unsigned NsubM  = Schur->NS;
+  const unsigned NinterFP  = Schur->NI;
+  const unsigned *const node = subface->id;
+  double **const F = Schur->F[ppn]->reg->A;
+  double **const C = Schur->C[ppn]->reg->A;
+  double *X;
+  unsigned subfp,subfp2,i,i2,j,j1,s,s1,sp,sp1,ip,ip1;
+  
+  /* if normal derivatives of fields should be continuous */
+  if (subface->df_dn)/* n.interp(y1') - n.interp(y2') = 0 */
+  {
+    double *N;
+    
+    if (patch->pn == ppn)
+    {
+      const unsigned *const inv = Schur->inv;
+      const unsigned *const Imap = Schur->Imap;
+      const unsigned *const Iinv = Schur->Iinv;
+      
+      for (subfp = 0; subfp < NsubFP; ++subfp)
+      {
+        /* d(interp(y1_a))/dy1|X */
+        N = pair->nv[subfp].N;
+        X = patch->node[node[subfp]]->X;
+        i = Imap[node[subfp]];
+        
+        if (i == UINT_MAX)
+          continue;
+          
+        /* F part */
+        for (s = 0; s < NsubM; ++s)
+        {
+          sp = inv[s];
+          F[i][s] -= N[0]*J_dInterp_df(patch,subface,X,sp,"x derivative")
+                     +
+                     N[1]*J_dInterp_df(patch,subface,X,sp,"y derivative")
+                     +
+                     N[2]*J_dInterp_df(patch,subface,X,sp,"z derivative");
+        }
+        
+        /* C part */
+        for (j = 0; j < NinterFP; ++j)
+        {
+          ip = Iinv[j];
+          if (ip == UINT_MAX)
+            continue;
+            
+          C[i][ip] -= N[0]*J_dInterp_df(patch,subface,X,ip,"x derivative")
+                      +
+                      N[1]*J_dInterp_df(patch,subface,X,ip,"y derivative")
+                      +
+                      N[2]*J_dInterp_df(patch,subface,X,ip,"z derivative");
+        }
+      }
+    }/* end of if (patch->pn == ppn) */
+    else
+    {
+      const unsigned *const Imap2 = pair->sewing->Imap;
+      const unsigned *const inv1 = Schur->inv;
+      const unsigned *const Iinv1 = Schur->Iinv;
+      
+      for (subfp2 = 0; subfp2 < NsubFP; ++subfp2)
+      {
+        /* d(interp(y1_a))/dy1|X */
+        N = pair->nv[subfp2].N;
+        X = pair->ip[subfp2].X;
+        i2 = Imap2[node[subfp2]];
+        
+        if (i2 == UINT_MAX)
+          continue;
+        
+        /* F part */
+        for (s1 = 0; s1 < NsubM; s1++)
+        {
+          sp1 = inv1[s1];
+          F[i2][s1] -= N[0]*J_dInterp_df(patch,subface,X,sp1,"x derivative")
+                       +
+                       N[1]*J_dInterp_df(patch,subface,X,sp1,"y derivative")
+                       +
+                       N[2]*J_dInterp_df(patch,subface,X,sp1,"z derivative");
+        }
+        
+        /* C part */
+        for (j1 = 0; j1 < NinterFP; ++j1)
+        {
+          ip1 = Iinv1[j1];
+          if (ip1 == UINT_MAX)
+            continue;
+            
+          C[i2][ip1] -= N[0]*J_dInterp_df(patch,subface,X,ip1,"x derivative")
+                        +
+                        N[1]*J_dInterp_df(patch,subface,X,ip1,"y derivative")
+                        +
+                        N[2]*J_dInterp_df(patch,subface,X,ip1,"z derivative");
+        }
+          
+      }
+    }/* end of else */
+  }/* end of if (subface->df_dn) */
+  /* if field should be continuous */
+  else/* "y1-interp(y2) = 0" */
+  {
+    if (patch->pn == ppn)
+    {
+      const unsigned *const Imap = Schur->Imap;
+      
+      /* F should be zero */
+      /* C part */
+      for (subfp = 0; subfp < NsubFP; ++subfp)
+      {
+        i = Imap[node[subfp]];
+        
+        if (i == UINT_MAX)
+          continue;
+          
+        C[i][i] += 1;
+      }
+    }
+    else
+    {
+      const unsigned *const Imap2 = pair->sewing->Imap;
+      const unsigned *const inv1 = Schur->inv;
+      const unsigned *const Iinv1 = Schur->Iinv;
+      
+      for (subfp2 = 0; subfp2 < NsubFP; ++subfp2)
+      {
+        X = pair->ip[subfp2].X;
+        i2 = Imap2[node[subfp2]];
+        
+        if (i2 == UINT_MAX)
+          continue;
+        
+        /* F part */
+        for (s1 = 0; s1 < NsubM; s1++)
+        {
+          sp1 = inv1[s1];
+          F[i2][s1] -= J_dInterp_df(patch,subface,X,sp1,"none");
+        }
+        
+        /* C part */
+        for (j1 = 0; j1 < NinterFP; ++j1)
+        {
+          ip1 = Iinv1[j1];
+          if (ip1 == UINT_MAX)
+            continue;
+            
+          C[i2][ip1] -= J_dInterp_df(patch,subface,X,ip1,"none");
+        }
+      }
+    }/* end of else */
+  }/* end of else "y1-interp(y2) = 0" */
+}
+
+/* filling C and F matrices whose entries coming from collocation points */
+static void fill_C_F_collocation(Patch_T *const patch, Pair_T *const pair)
+{
+  DDM_Schur_Complement_T *const Schur = patch->solving_man->method->SchurC;
+  SubFace_T *const subface = pair->subface;
+  const unsigned *const Imap1 = Schur->Imap;
+  const unsigned *const Imap2 = pair->sewing->Imap;
+  const unsigned *const inv1 = Schur->inv;
+  const unsigned ppn = pair->patchN;
+  const unsigned I1 = subface->np;
+  const unsigned I2 = subface->np;/* since it is a collocation, I1 = I2 */
+  const unsigned S1 = Schur->NS;
+  const unsigned *node1 = 0,*node2 = 0;
+  double **const F = Schur->F[ppn]->reg->A;
+  double **const C = Schur->C[ppn]->reg->A;
+  unsigned s1,i1,i2,i,j;
+  
+  /* if this pair is for the same patch */
+  if (patch->pn == ppn)
+  {
+    node1 = subface->id;
+    node2 = subface->id;
+  }
+  else
+  {
+    node1 = subface->id;
+    node2 = subface->adjid;
+  }
+    
+  if (subface->df_dn)/* y1' - y2' = 0 => F and C != 0*/
+  {
+    const char *types[] = {"j_x","j_y","j_z",0};
+    fJs_T *j_x = 0,*j_y = 0,*j_z = 0;
+    Matrix_T *j0 = 0,*j1 = 0,*j2 = 0;
+  
+    prepare_Js_jacobian_eq(patch,types);
+    j0   = get_j_matrix(patch,"j_x");
+    j1   = get_j_matrix(patch,"j_y");
+    j2   = get_j_matrix(patch,"j_z");
+    j_x = get_j_reader(j0);
+    j_y = get_j_reader(j1);
+    j_z = get_j_reader(j2);
+    
+    for (i2 = 0; i2 < I2; ++i2)
+    {
+      double *N = pair->nv[i2].N;
+      i = Imap2[node2[i2]];
+      
+      if (i == UINT_MAX)
+          continue;
+      
+      for (s1 = 0; s1 < S1; ++s1)
+      {
+        j = inv1[s1];
+        F[i][s1] -= N[0]*j_x(j0,node1[i2],j)+
+                    N[1]*j_y(j1,node1[i2],j)+
+                    N[2]*j_z(j2,node1[i2],j);
+      }
+      
+      for (i1 = 0; i1 < I1; ++i1)
+      {
+        j = Imap1[node1[i1]];
+        if (j == UINT_MAX)
+          continue;
+       
+        C[i][j] -= N[0]*j_x(j0,node1[i2],node1[i1])+
+                   N[1]*j_y(j1,node1[i2],node1[i1])+
+                   N[2]*j_z(j2,node1[i2],node1[i1]);
+      }
+    }/* end of for (i2 = 0; i2 < I2; ++i2) */
+  }
+  else/* y1 - y2 = 0 => F is zero */
+  {
+    for (i2 = 0; i2 < I2; ++i2)
+    {
+      i1 = i2;/* since the subfaces have collocation 
+              // points which sewn together. */
+      i = Imap2[node2[i2]];
+      j = Imap1[node1[i1]];
+      
+      if (i == UINT_MAX || j == UINT_MAX)
+        continue;
+        
+      C[i][j] += 1;
+    }
+  }
 }
 
 /* making E prime and f prime. refer to the note on the very top */
@@ -160,6 +487,7 @@ static void making_E_prime_and_f_prime(Patch_T *const patch)
   umfpack->a = a;
   umfpack->bs = bs;
   umfpack->xs = xs;
+  umfpack->ns = ns;
   direct_solver_series_umfpack_di(umfpack);
   
   S->f_prime = xs[ns-1];
@@ -255,7 +583,7 @@ static void make_g(Grid_T *const grid)
         if (Imap[Smap[i]] == UINT_MAX)
           continue;
         
-        g[Imap[Smap[i]]] = sign1*pg1[i]+sign2*pg2[i];
+        g[Imap[Smap[i]]] += sign1*pg1[i]+sign2*pg2[i];
       }
       
       free(pg1);
@@ -304,8 +632,56 @@ static void preparing_ingredients(Grid_T *const grid)
   {
     Patch_T *patch = grid->patch[p];
     mirror_pairs(patch);
+    others_in_sewing(patch);
   }
   
+}
+
+
+/* since some of the info should be added after all other sewings have
+// already been made, this function is needed. */
+static void others_in_sewing(Patch_T *const patch)
+{
+  DDM_Schur_Complement_T *const S = patch->solving_man->method->SchurC;
+  DDM_Schur_Complement_T *S2;
+  Sewing_T *sewing;
+  Grid_T *const grid = patch->grid;
+  const unsigned np  = grid->np;
+  const unsigned cp  = patch->pn;
+  unsigned p;
+  
+  /* go thru all sewings */
+  for (p = 0; p < np; ++p)
+  {
+    sewing = S->sewing[p];
+    
+    if (!sewing)
+      continue;
+      
+    else if (p == cp)
+    {
+      sewing->NS   = S->NS;
+      sewing->NI   = S->NI;
+      sewing->Oi   = S->Oi;
+      /* note the following are soft copy */
+      sewing->map  = S->map;
+      sewing->inv  = S->inv;
+      sewing->Imap = S->Imap;
+      sewing->Iinv = S->Iinv;
+    }
+    else
+    {
+      S2 = grid->patch[p]->solving_man->method->SchurC;
+      sewing->NS   = S2->NS;
+      sewing->NI   = S2->NI;
+      sewing->Oi   = S2->Oi;
+      /* note the following are hard copy */
+      sewing->map  = dup_UINT(S2->map,S2->NS+S2->NI);
+      sewing->inv  = dup_UINT(S2->inv,S2->NS+S2->NI);
+      sewing->Imap = dup_UINT(S2->Imap,S2->NS+S2->NI);
+      sewing->Iinv = dup_UINT(S2->Iinv,S2->NI);
+    }
+  }
 }
 
 /* populating sewing struct in each patch using subfaces
@@ -439,6 +815,7 @@ static void make_its_sewing(const Patch_T *const patch,Sewing_T **const sewing)
       
     }/* end of for (sfc = 0; sfc < nsfc; ++sfc) */
   }/* end of for (intfc = 0; intfc < nintfc; ++intfc) */
+  
 }
 
 /* making all of sewings deduced from subfaces of patch2 */
@@ -559,6 +936,7 @@ static void populate_pair(Sewing_T *const sewing,SubFace_T *const subface,const 
     }
   }
   
+  pair->sewing = sewing;
   pair->patchN = sewing->patchN;
   sewing->pair = 
     realloc(sewing->pair,(sewing->npair+1)*sizeof(*sewing->pair));
@@ -749,8 +1127,7 @@ static void make_f(Patch_T *const patch)
 {
   DDM_Schur_Complement_T *Schur = patch->solving_man->method->SchurC;
   
-  if(!Schur->f)
-    Schur->f = alloc_double(patch->nn);
+  Schur->f = alloc_double(Schur->NS);
   
   f_in_equation_part(patch);
   f_in_outerboundary_part(patch);
@@ -1085,15 +1462,11 @@ static void f_in_outerboundary_part(Patch_T *const patch)
   const unsigned nintfc    = countf(patch->interface);
   Solving_Man_T *const S   = patch->solving_man;
   const unsigned cf        = S->cf;
-  const char *const fname  = S->field_name[cf];
   fEquation_T *const bc_eq = S->bc_eq[cf];
-  Field_T *const field     = patch->pool[Ind(fname)];
   Boundary_Condition_T bc;
   unsigned intfc;
-  
-  bc.field   = field;
   bc.patch   = patch;
-    
+  
   /* loop over all interfaces */
   for (intfc = 0; intfc < nintfc; ++intfc)
   {
@@ -1176,3 +1549,23 @@ static unsigned OnFace(const unsigned *const n, const unsigned p)
   
   return 0;
 }
+
+/* getting patch, subface, point X and positon of varying field df 
+// and an string for a directive, it decides which d(interpolation)/df 
+// be chosen and then returns the value of variation.
+// directives:
+//	x derivative # calculate d(interp(f_x))/df
+//	y derivative # calculate d(interp(f_y))/df
+//	z derivative # calculate d(interp(f_z))/df
+// 	none	     # calculate d(interp(f))/df
+// ->return value: d(interp(?))/df */
+static double J_dInterp_df(const Patch_T *const patch,const SubFace_T *const subface,const double *const X,const unsigned df,const char *const dir)
+{
+  UNUSED(patch);
+  UNUSED(subface);
+  UNUSED(X);
+  UNUSED(df);
+  UNUSED(dir);
+  return 0;
+}
+

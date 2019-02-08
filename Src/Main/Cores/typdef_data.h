@@ -326,6 +326,7 @@ typedef struct sEQUATION_T
 /* different quantities giving info abour pairing used in Schur complement */
 typedef struct PAIR_T
 {
+  struct SEWING_T *sewing;/* refers to its sewing */
   double *pg;/* partial g that comping from this pair*/
   SubFace_T *subface;/* differet subfaces due to patch[pn] that
                      // is related to the current patch that equations
@@ -354,6 +355,18 @@ typedef struct SEWING_T
   Pair_T **pair;
   unsigned patchN;/* patch number which is equal to its sewing number */
   unsigned npair;/* number of pairs */
+  /* the following are the quantities that SchurC strcut 
+  // of the patch, that this sewing refers to, has. 
+  // it's used for purpose of concurrency and avoing race conditon
+  // bewteen pairs of different patches. more definition of each quantity
+  // refer to SchurC strcut. */
+  unsigned NS;
+  unsigned NI;
+  unsigned Oi;
+  unsigned *map;
+  unsigned *inv;
+  unsigned *Imap;
+  unsigned *Iinv;
 }Sewing_T;
 
 /* ingredients needed for mapping, labeling and etc for
