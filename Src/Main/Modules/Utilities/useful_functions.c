@@ -340,3 +340,20 @@ unsigned subface_map_invers_id(const SubFace_T *const subface,const unsigned n)
   
   return s;  
 }
+
+/* given array s and its dimention, duplicate the array.
+// ->return value: duplicated unsigned array
+*/
+unsigned *dup_UINT(const unsigned *const s,const unsigned N)
+{
+  assert(s);
+  
+  unsigned *dup = calloc(N,sizeof(*dup));
+  pointerEr(dup);
+  unsigned i;
+  
+  for (i = 0; i < N; ++i)
+    dup[i] = s[i];
+    
+  return dup;
+}

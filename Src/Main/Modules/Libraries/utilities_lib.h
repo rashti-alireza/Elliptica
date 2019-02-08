@@ -24,4 +24,4 @@ sFunc_Patch2Pdouble_T *get_func_Patch2Pdouble(const char *const name,sFunc_Patch
 double random_double(const double initial,const double final,const unsigned s);
 void copy_subface(SubFace_T *const s2,const SubFace_T *const s1);
 unsigned subface_map_invers_id(const SubFace_T *const subface,const unsigned n);
-
+unsigned *dup_UINT(const unsigned *const s,const unsigned N);
