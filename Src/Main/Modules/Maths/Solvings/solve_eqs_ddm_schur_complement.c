@@ -194,183 +194,222 @@ static void populate_F_and_C(Patch_T *const patch, Pair_T *const pair)
   }
 }
 
-
-/* filling C and F matrices whose entries coming from interpolation points */
+/* filling C and F matrices whose entries coming from interpolation points.
+// algorithm:
+// find variation the following with respect to field(Jacobian):
+// ' means derivative with respect to x, y or z
+// and N means outward normal on the interface at that point
+// y1 = interpolation(y2)
+// interpolation(y1) = y2
+// Nx.y1_x+Ny.y1_y+Nz.y1_z = Nx.interpolation(y2_x)+Ny.interpolation(y2_y)+Nz.interpolation(y2_z)
+// Nx.y2_x+Ny.y2_y+Nz.y2_z = Nx.interpolation(y1_x)+Ny.interpolation(y1_y)+Nz.interpolation(y1_z)
+*/
 static void fill_C_F_interpolation(Patch_T *const patch, Pair_T *const pair)
 {
+  /* variable notation convention:
+  // let's say we have two patches patch1 and patch2, all of the subscripts 1
+  // refer to patch1 and all of the subscripts 2 refer to patch2.
+  // some time to improve the readability of the code I defined
+  // same variables but with two names. furthermore, we always assume
+  // that we are in patch1 and y1 and y2 refer to a generic field
+  // that we want to find their F and C; again 1 and 2 refer
+  // to their patch numbers. */
   DDM_Schur_Complement_T *const Schur = patch->solving_man->method->SchurC;
-  SubFace_T *const subface = pair->subface;
+  const SubFace_T *const subface = pair->subface;
   const unsigned ppn = pair->patchN;
-  const unsigned NsubFP = subface->np;
-  const unsigned NsubM  = Schur->NS;
-  const unsigned NinterFP  = Schur->NI;
-  const unsigned *const node = subface->id;
+  const unsigned NsubFP1    = subface->np;
+  const unsigned NsubFP2    = subface->np;
+  const unsigned NsubM1     = Schur->NS;
+  const unsigned NinterFP1  = Schur->NI;
   double **const F = Schur->F[ppn]->reg->A;
   double **const C = Schur->C[ppn]->reg->A;
-  double *X;
-  unsigned subfp,subfp2,i,i2,j,j1,s,s1,sp,sp1,ip,ip1;
+  double *i2_point;
+  double sign;
+  unsigned subfp1,subfp2,i1,i1_node,i2,s1,s1_node,ip1,ip1_node;
   
-  /* if normal derivatives of fields should be continuous */
-  if (subface->df_dn)/* n.interp(y1') - n.interp(y2') = 0 */
+  /* "if normal derivatives of the interpolated fields must be continuous" */
+  if (subface->df_dn)
   {
     double *N;
     
+    /* -(Nx.y1_x+Ny.y1_y+Nz.y1_z)+Nx.interpolation(y2_x)+Ny.interpolation(y2_y)+Nz.interpolation(y2_z) = 0*/
     if (patch->pn == ppn)
     {
-      const unsigned *const inv = Schur->inv;
-      const unsigned *const Imap = Schur->Imap;
-      const unsigned *const Iinv = Schur->Iinv;
+      sign = -1;
+      const unsigned *const inv1 = Schur->inv;
+      const unsigned *const Imap1 = Schur->Imap;
+      const unsigned *const Iinv1 = Schur->Iinv;
+      const unsigned *const node1 = subface->id;
+      const char *types[] = {"j_x","j_y","j_z",0};
+      fJs_T *dfx_df = 0,*dfy_df = 0,*dfz_df = 0;
+      Matrix_T *j0 = 0,*j1 = 0,*j2 = 0;
+    
+      prepare_Js_jacobian_eq(patch,types);
+      j0   = get_j_matrix(patch,"j_x");
+      j1   = get_j_matrix(patch,"j_y");
+      j2   = get_j_matrix(patch,"j_z");
+      dfx_df = get_j_reader(j0);
+      dfy_df = get_j_reader(j1);
+      dfz_df = get_j_reader(j2);
       
-      for (subfp = 0; subfp < NsubFP; ++subfp)
+      for (subfp1 = 0; subfp1 < NsubFP1; ++subfp1)
       {
-        /* d(interp(y1_a))/dy1|X */
-        N = pair->nv[subfp].N;
-        X = patch->node[node[subfp]]->X;
-        i = Imap[node[subfp]];
+        N = pair->nv[subfp1].N;
+        i1_node = node1[subfp1];
+        i1 = Imap1[i1_node];
         
-        if (i == UINT_MAX)
+        if (i1 == UINT_MAX)
           continue;
           
         /* F part */
-        for (s = 0; s < NsubM; ++s)
+        for (s1 = 0; s1 < NsubM1; ++s1)
         {
-          sp = inv[s];
-          F[i][s] -= N[0]*J_dInterp_df(patch,subface,X,sp,"x derivative")
-                     +
-                     N[1]*J_dInterp_df(patch,subface,X,sp,"y derivative")
-                     +
-                     N[2]*J_dInterp_df(patch,subface,X,sp,"z derivative");
+          s1_node = inv1[s1];
+          F[i1][s1] += sign*(
+                       N[0]*dfx_df(j0,i1_node,s1_node)
+                       +
+                       N[1]*dfy_df(j1,i1_node,s1_node)
+                       +
+                       N[2]*dfz_df(j2,i1_node,s1_node));
         }
-        
         /* C part */
-        for (j = 0; j < NinterFP; ++j)
+        for (ip1 = 0; ip1 < NinterFP1; ++ip1)
         {
-          ip = Iinv[j];
-          if (ip == UINT_MAX)
-            continue;
-            
-          C[i][ip] -= N[0]*J_dInterp_df(patch,subface,X,ip,"x derivative")
-                      +
-                      N[1]*J_dInterp_df(patch,subface,X,ip,"y derivative")
-                      +
-                      N[2]*J_dInterp_df(patch,subface,X,ip,"z derivative");
+          ip1_node = Iinv1[ip1];
+          C[i1][ip1] += sign*(
+                        N[0]*dfx_df(j0,i1_node,ip1_node)
+                        +
+                        N[1]*dfy_df(j1,i1_node,ip1_node)
+                        +
+                        N[2]*dfz_df(j2,i1_node,ip1_node));
         }
       }
     }/* end of if (patch->pn == ppn) */
+    /* -(Nx.y2_x+Ny.y2_y+Nz.y2_z)+Nx.interpolation(y1_x)+Ny.interpolation(y1_y)+Nz.interpolation(y1_z) = 0 */
     else
     {
+      sign = 1;
       const unsigned *const Imap2 = pair->sewing->Imap;
-      const unsigned *const inv1 = Schur->inv;
+      const unsigned *const inv1  = Schur->inv;
       const unsigned *const Iinv1 = Schur->Iinv;
+      const unsigned *const node2 = subface->id;
       
-      for (subfp2 = 0; subfp2 < NsubFP; ++subfp2)
+      for (subfp2 = 0; subfp2 < NsubFP2; ++subfp2)
       {
-        /* d(interp(y1_a))/dy1|X */
         N = pair->nv[subfp2].N;
-        X = pair->ip[subfp2].X;
-        i2 = Imap2[node[subfp2]];
+        i2_point = pair->ip[subfp2].X;
+        i2 = Imap2[node2[subfp2]];
         
         if (i2 == UINT_MAX)
           continue;
         
         /* F part */
-        for (s1 = 0; s1 < NsubM; s1++)
+        for (s1 = 0; s1 < NsubM1; s1++)
         {
-          sp1 = inv1[s1];
-          F[i2][s1] -= N[0]*J_dInterp_df(patch,subface,X,sp1,"x derivative")
+          s1_node = inv1[s1];
+          F[i2][s1] += sign*(
+                       N[0]*J_dInterp_df(patch,subface,i2_point,s1_node,"x derivative")
                        +
-                       N[1]*J_dInterp_df(patch,subface,X,sp1,"y derivative")
+                       N[1]*J_dInterp_df(patch,subface,i2_point,s1_node,"y derivative")
                        +
-                       N[2]*J_dInterp_df(patch,subface,X,sp1,"z derivative");
+                       N[2]*J_dInterp_df(patch,subface,i2_point,s1_node,"z derivative"));
         }
-        
         /* C part */
-        for (j1 = 0; j1 < NinterFP; ++j1)
+        for (i1 = 0; i1 < NinterFP1; ++i1)
         {
-          ip1 = Iinv1[j1];
-          if (ip1 == UINT_MAX)
-            continue;
-            
-          C[i2][ip1] -= N[0]*J_dInterp_df(patch,subface,X,ip1,"x derivative")
-                        +
-                        N[1]*J_dInterp_df(patch,subface,X,ip1,"y derivative")
-                        +
-                        N[2]*J_dInterp_df(patch,subface,X,ip1,"z derivative");
+          i1_node = Iinv1[i1];
+          C[i2][i1] += sign*(
+                       N[0]*J_dInterp_df(patch,subface,i2_point,i1_node,"x derivative")
+                       +
+                       N[1]*J_dInterp_df(patch,subface,i2_point,i1_node,"y derivative")
+                       +
+                       N[2]*J_dInterp_df(patch,subface,i2_point,i1_node,"z derivative"));
         }
           
       }
     }/* end of else */
   }/* end of if (subface->df_dn) */
-  /* if field should be continuous */
-  else/* "y1-interp(y2) = 0" */
+  else/* "if field should be continuous" */
   {
+    /* y1-interpolation(y2) = 0 */
     if (patch->pn == ppn)
     {
-      const unsigned *const Imap = Schur->Imap;
+      sign = 1;
+      const unsigned *const Imap1 = Schur->Imap;
+      const unsigned *const node1 = subface->id;
       
       /* F should be zero */
       /* C part */
-      for (subfp = 0; subfp < NsubFP; ++subfp)
+      for (subfp1 = 0; subfp1 < NsubFP1; ++subfp1)
       {
-        i = Imap[node[subfp]];
+        i1 = Imap1[node1[subfp1]];
         
-        if (i == UINT_MAX)
+        if (i1 == UINT_MAX)
           continue;
           
-        C[i][i] += 1;
+        C[i1][i1] += 1;
       }
     }
+    /* y2-interpolation(y1) = 0 */
     else
     {
+      sign = -1;
       const unsigned *const Imap2 = pair->sewing->Imap;
       const unsigned *const inv1 = Schur->inv;
       const unsigned *const Iinv1 = Schur->Iinv;
+      const unsigned *const node2 = subface->id;
       
-      for (subfp2 = 0; subfp2 < NsubFP; ++subfp2)
+      for (subfp2 = 0; subfp2 < NsubFP2; ++subfp2)
       {
-        X = pair->ip[subfp2].X;
-        i2 = Imap2[node[subfp2]];
+        i2_point = pair->ip[subfp2].X;
+        i2 = Imap2[node2[subfp2]];
         
         if (i2 == UINT_MAX)
           continue;
         
         /* F part */
-        for (s1 = 0; s1 < NsubM; s1++)
+        for (s1 = 0; s1 < NsubM1; s1++)
         {
-          sp1 = inv1[s1];
-          F[i2][s1] -= J_dInterp_df(patch,subface,X,sp1,"none");
+          s1_node = inv1[s1];
+          F[i2][s1] += sign*J_dInterp_df(patch,subface,i2_point,s1_node,"none");
         }
-        
         /* C part */
-        for (j1 = 0; j1 < NinterFP; ++j1)
+        for (i1 = 0; i1 < NinterFP1; ++i1)
         {
-          ip1 = Iinv1[j1];
-          if (ip1 == UINT_MAX)
-            continue;
-            
-          C[i2][ip1] -= J_dInterp_df(patch,subface,X,ip1,"none");
+          i1_node = Iinv1[i1];
+          C[i2][i1] += sign*J_dInterp_df(patch,subface,i2_point,i1_node,"none");
         }
       }
     }/* end of else */
-  }/* end of else "y1-interp(y2) = 0" */
+  }/* end of else "if field should be continuous" */
 }
 
 /* filling C and F matrices whose entries coming from collocation points */
 static void fill_C_F_collocation(Patch_T *const patch, Pair_T *const pair)
 {
+  /* variable notation convention:
+  // let's say we have two patches patch1 and patch2, all of the subscripts 1
+  // refer to patch1 and all of the subscripts 2 refer to patch2.
+  // some time to improve the readability of the code I defined
+  // same variables but with two names. furthermore, we always assume
+  // that we are in patch 1 and y1 and y2 refer to a generic field
+  // that we want to find their F and C; again 1 and 2 refer
+  // to their patch numbers. */
   DDM_Schur_Complement_T *const Schur = patch->solving_man->method->SchurC;
-  SubFace_T *const subface = pair->subface;
+  const SubFace_T *const subface = pair->subface;
   const unsigned *const Imap1 = Schur->Imap;
   const unsigned *const Imap2 = pair->sewing->Imap;
   const unsigned *const inv1 = Schur->inv;
+  const unsigned *const Iinv1 = Schur->Iinv;
   const unsigned ppn = pair->patchN;
-  const unsigned I1 = subface->np;
-  const unsigned I2 = subface->np;/* since it is a collocation, I1 = I2 */
-  const unsigned S1 = Schur->NS;
+  const unsigned NsubFP2 = subface->np;
+  const unsigned NsubM1 = Schur->NS;
+  const unsigned NinterFP1 = Schur->NI;
   const unsigned *node1 = 0,*node2 = 0;
   double **const F = Schur->F[ppn]->reg->A;
   double **const C = Schur->C[ppn]->reg->A;
-  unsigned s1,i1,i2,i,j;
+  double sign;
+  unsigned subfp2,i1,i2,s1,s1_node,i1_node,i2_node;
   
   /* if this pair is for the same patch */
   if (patch->pn == ppn)
@@ -380,65 +419,76 @@ static void fill_C_F_collocation(Patch_T *const patch, Pair_T *const pair)
   }
   else
   {
-    node1 = subface->id;
-    node2 = subface->adjid;
+    node1 = subface->adjid;
+    node2 = subface->id;
   }
     
-  if (subface->df_dn)/* y1' - y2' = 0 => F and C != 0*/
+  if (subface->df_dn)/* n.y1' - n.y2' = 0 => F and C != 0*/
   {
+    if (patch->pn == ppn) sign = -1;/* -n.y1'+n.y2'=0 */
+    else		  sign =  1;/* -n.y2'+n.y1'=0 */
+    
     const char *types[] = {"j_x","j_y","j_z",0};
-    fJs_T *j_x = 0,*j_y = 0,*j_z = 0;
+    fJs_T *dfx_df = 0,*dfy_df = 0,*dfz_df = 0;
     Matrix_T *j0 = 0,*j1 = 0,*j2 = 0;
   
     prepare_Js_jacobian_eq(patch,types);
     j0   = get_j_matrix(patch,"j_x");
     j1   = get_j_matrix(patch,"j_y");
     j2   = get_j_matrix(patch,"j_z");
-    j_x = get_j_reader(j0);
-    j_y = get_j_reader(j1);
-    j_z = get_j_reader(j2);
+    dfx_df = get_j_reader(j0);
+    dfy_df = get_j_reader(j1);
+    dfz_df = get_j_reader(j2);
     
-    for (i2 = 0; i2 < I2; ++i2)
+    for (subfp2 = 0; subfp2 < NsubFP2; ++subfp2)
     {
-      double *N = pair->nv[i2].N;
-      i = Imap2[node2[i2]];
+      double *N = pair->nv[subfp2].N;
+      i2 = Imap2[node2[subfp2]];
       
-      if (i == UINT_MAX)
+      if (i2 == UINT_MAX)
           continue;
       
-      for (s1 = 0; s1 < S1; ++s1)
+      i2_node = node1[subfp2];
+      for (s1 = 0; s1 < NsubM1; ++s1)
       {
-        j = inv1[s1];
-        F[i][s1] -= N[0]*j_x(j0,node1[i2],j)+
-                    N[1]*j_y(j1,node1[i2],j)+
-                    N[2]*j_z(j2,node1[i2],j);
+        s1_node = inv1[s1];
+        F[i2][s1] += sign*(
+                     N[0]*dfx_df(j0,i2_node,s1_node)
+                     +
+                     N[1]*dfy_df(j1,i2_node,s1_node)
+                     +
+                     N[2]*dfz_df(j2,i2_node,s1_node));
       }
-      
-      for (i1 = 0; i1 < I1; ++i1)
+      for (i1 = 0; i1 < NinterFP1; ++i1)
       {
-        j = Imap1[node1[i1]];
-        if (j == UINT_MAX)
-          continue;
-       
-        C[i][j] -= N[0]*j_x(j0,node1[i2],node1[i1])+
-                   N[1]*j_y(j1,node1[i2],node1[i1])+
-                   N[2]*j_z(j2,node1[i2],node1[i1]);
+        i1_node = Iinv1[i1];
+        C[i2][i1] += sign*(
+                     N[0]*dfx_df(j0,i2_node,i1_node)
+                     +
+                     N[1]*dfy_df(j1,i2_node,i1_node)
+                     +
+                     N[2]*dfz_df(j2,i2_node,i1_node));
       }
-    }/* end of for (i2 = 0; i2 < I2; ++i2) */
-  }
+    }/* end of for (subfp2 = 0; subfp2 < NsubFP2; ++subfp2) */
+  }/* end of if (subface->df_dn) */
   else/* y1 - y2 = 0 => F is zero */
   {
-    for (i2 = 0; i2 < I2; ++i2)
+    if (patch->pn == ppn) sign =  1;/* y1-y2=0 */
+    else		  sign = -1;/* y2-y1=0 */
+    
+    for (subfp2 = 0; subfp2 < NsubFP2; ++subfp2)
     {
-      i1 = i2;/* since the subfaces have collocation 
-              // points which sewn together. */
-      i = Imap2[node2[i2]];
-      j = Imap1[node1[i1]];
+      i2 = Imap2[node2[subfp2]];
       
-      if (i == UINT_MAX || j == UINT_MAX)
-        continue;
-        
-      C[i][j] += 1;
+      if (i2 == UINT_MAX)
+          continue;
+      
+      i1 = Imap1[node1[subfp2]];
+      /* note: there is a small possibility that i1 becomes UINT_MAX, it means that
+      // in finding of the subfaces some points could have been considered as outerboundary
+      // but the don't. it is not really a bug for subfaces, but it causes segfault for this
+      // algorithm. if you ever get segfault at this part, be aware of this note! */
+      C[i2][i1] += sign*1;
     }
   }
 }

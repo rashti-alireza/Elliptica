@@ -46,10 +46,10 @@ static void JType_E2Dd_T(const JType_E jt_e, Dd_T *const q_dir);
 static void write_J_in_disk_ccs(void);
 static double J_sizeMb_ccs(const Matrix_T *const m);
 fJs_T *get_j_reader(const Matrix_T *const m);
-double dinterp_x_df(const Patch_T *const patch,const double *const X,const unsigned df);
-double dinterp_y_df(const Patch_T *const patch,const double *const X,const unsigned df);
-double dinterp_z_df(const Patch_T *const patch,const double *const X,const unsigned df);
-double dinterp_df_1d_index(const Patch_T *const patch,const double *const X,const unsigned df);
-double dinterp_df_2d_index(const Patch_T *const patch,const double *const X,const unsigned df);
-double dinterp_df_3d_index(const Patch_T *const patch,const double *const X,const unsigned df);
+double dInterp_x_df(const Patch_T *const patch,const double *const X,const unsigned df);
+double dInterp_y_df(const Patch_T *const patch,const double *const X,const unsigned df);
+double dInterp_z_df(const Patch_T *const patch,const double *const X,const unsigned df);
+double dInterp_df_1d_index(const Patch_T *const patch,const double *const X,const unsigned df);
+double dInterp_df_2d_index(const Patch_T *const patch,const double *const X,const unsigned df);
+double dInterp_df_3d_index(const Patch_T *const patch,const double *const X,const unsigned df);
 
