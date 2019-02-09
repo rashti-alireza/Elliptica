@@ -21,12 +21,7 @@ int ddm_schur_complement(Grid_T *const grid);
 fJs_T *get_j_reader(const Matrix_T *const m);
 void prepare_Js_jacobian_eq(Patch_T *const patch,const char * const *types);
 Matrix_T *get_j_matrix(const Patch_T *const patch,const char *type);
-double dinterp_x_df(const Patch_T *const patch,const double *const X,const unsigned df);
-double dinterp_y_df(const Patch_T *const patch,const double *const X,const unsigned df);
-double dinterp_z_df(const Patch_T *const patch,const double *const X,const unsigned df);
-double dinterp_df_1d_index(const Patch_T *const patch,const double *const X,const unsigned df);
-double dinterp_df_2d_index(const Patch_T *const patch,const double *const X,const unsigned df);
-double dinterp_df_3d_index(const Patch_T *const patch,const double *const X,const unsigned df);
+fdInterp_dfs_T *get_dInterp_df(const Patch_T *const patch,const SubFace_T *const sf,const char *const dir);
 static void preparing_ingredients(Grid_T *const grid);
 static void make_map_and_inv(Patch_T *const patch);
 static Flag_T check_residual(const Grid_T *const grid,const double res_input);
@@ -57,7 +52,6 @@ static void populate_F_and_C(Patch_T *const patch, Pair_T *const pair);
 static void fill_C_F_collocation(Patch_T *const patch, Pair_T *const pair);
 static void fill_C_F_interpolation(Patch_T *const patch, Pair_T *const pair);
 static void others_in_sewing(Patch_T *const patch);
-static double J_dInterp_df(const Patch_T *const patch,const SubFace_T *const subface,const double *const X,const unsigned df,const char *const dir);
 
 
 

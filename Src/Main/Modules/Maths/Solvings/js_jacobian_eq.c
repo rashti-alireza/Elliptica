@@ -715,12 +715,85 @@ static void write_J_in_disk_ccs(void)
   abortEr(INCOMPLETE_FUNC);
 }
 
+/* getting patch, subface and directive, it decides which d(interpolation)/df 
+// be chosen and then returns the appropriate function.
+// directives:
+//	x derivative # calculate d(interp(f_x))/df
+//	y derivative # calculate d(interp(f_y))/df
+//	z derivative # calculate d(interp(f_z))/df
+// 	none	     # calculate d(interp(f))/df
+// ->return value: d(interp(?))/df */
+fdInterp_dfs_T *get_dInterp_df(const Patch_T *const patch,const SubFace_T *const sf,const char *const dir)
+{
+  fdInterp_dfs_T *Func = 0;
+  char type[_MAX_STR_] = {'\0'};
+  unsigned i;
+
+  for (i = 0; i < 3; ++i)
+  {
+    if (patch->basis[i]       == Chebyshev_Tn_BASIS &&
+        patch->collocation[i] == Chebyshev_Extrema)
+        strcat(type,"Tn_Extrema,");
+  }
+  
+  if (!strcmp(type,"Tn_Extrema,Tn_Extrema,Tn_Extrema,"))
+  {
+    if (sf->sameX)
+    {
+      if      (!strcmp("x derivative",dir)) Func = dInterp_x_df_YZ_Tn_Ex;
+      else if (!strcmp("y derivative",dir)) Func = dInterp_y_df_YZ_Tn_Ex;
+      else if (!strcmp("z derivative",dir)) Func = dInterp_z_df_YZ_Tn_Ex;
+      else if (!strcmp("none",dir))	    Func = dInterp_df_YZ_Tn_Ex;
+      else
+        abortEr("No such directive defined for this function.\n");
+    }
+    else if (sf->sameY)
+    {
+      if      (!strcmp("x derivative",dir)) Func = dInterp_x_df_XZ_Tn_Ex;
+      else if (!strcmp("y derivative",dir)) Func = dInterp_y_df_XZ_Tn_Ex;
+      else if (!strcmp("z derivative",dir)) Func = dInterp_z_df_XZ_Tn_Ex;
+      else if (!strcmp("none",dir))	    Func = dInterp_df_XZ_Tn_Ex;
+      else
+        abortEr("No such directive defined for this function.\n");
+    }
+    else if (sf->sameZ)
+    {
+      if      (!strcmp("x derivative",dir)) Func = dInterp_x_df_XY_Tn_Ex;
+      else if (!strcmp("y derivative",dir)) Func = dInterp_y_df_XY_Tn_Ex;
+      else if (!strcmp("z derivative",dir)) Func = dInterp_z_df_XY_Tn_Ex;
+      else if (!strcmp("none",dir))	    Func = dInterp_df_XY_Tn_Ex;
+      else
+        abortEr("No such directive defined for this function.\n");
+    }
+    else if (!sf->sameX && !sf->sameY && !sf->sameZ)
+    {
+      if      (!strcmp("x derivative",dir)) Func = dInterp_x_df_XYZ_Tn_Ex;
+      else if (!strcmp("y derivative",dir)) Func = dInterp_y_df_XYZ_Tn_Ex;
+      else if (!strcmp("z derivative",dir)) Func = dInterp_z_df_XYZ_Tn_Ex;
+      else if (!strcmp("none",dir))	    Func = dInterp_df_XYZ_Tn_Ex;
+      else
+        abortEr("No such directive defined for this function.\n");
+    }
+    else 
+    {
+      abortEr("Such surface's flag has not been defined for this function.\n");
+    }
+  }/* end of if (!strcmp(type,"Tn_Extrema,Tn_Extrema,Tn_Extrema,")) */
+  else
+  {
+    abortEr("No such option hsa been defined for this function.\n");
+  }
+  
+  return Func;
+}
+
 /* d(interp(f_x))/df at point X in general coordinates.
 // df is node number which we are varying field at that point.
-// ->return value: 
-*/
-double dInterp_x_df(const Patch_T *const patch,const double *const X,const unsigned df)
-{	
+// interpolation takes place in Y and Z direction using Cheb Tn bases
+// with Extrema points.
+// ->return value: d(interp(f_x))/df */
+static double dInterp_x_df_YZ_Tn_Ex(const Patch_T *const patch,const double *const X,const unsigned df)
+{
   UNUSED(patch);
   UNUSED(X);
   UNUSED(df);
@@ -729,8 +802,10 @@ double dInterp_x_df(const Patch_T *const patch,const double *const X,const unsig
 
 /* d(interp(f_y))/df at point X in general coordinates.
 // df is node number which we are varying field at that point.
-// ->return value: d(interp(f_y))/df. */
-double dInterp_y_df(const Patch_T *const patch,const double *const X,const unsigned df)
+// interpolation takes place in Y and Z direction using Cheb Tn bases
+// with Extrema points.
+// ->return value: d(interp(f_y))/df */
+static double dInterp_y_df_YZ_Tn_Ex(const Patch_T *const patch,const double *const X,const unsigned df)
 {
   
   UNUSED(patch);
@@ -741,8 +816,23 @@ double dInterp_y_df(const Patch_T *const patch,const double *const X,const unsig
 
 /* d(interp(f_z))/df at point X in general coordinates.
 // df is node number which we are varying field at that point.
-// ->return value: d(interp(f_z))/df. */
-double dInterp_z_df(const Patch_T *const patch,const double *const X,const unsigned df)
+// interpolation takes place in Y and Z direction using Cheb Tn bases
+// with Extrema points.
+// ->return value: d(interp(f_z))/df */
+static double dInterp_z_df_YZ_Tn_Ex(const Patch_T *const patch,const double *const X,const unsigned df)
+{
+  UNUSED(patch);
+  UNUSED(X);
+  UNUSED(df);
+  return 0;
+}
+
+/* d(interp(f))/df at point X in general coordinates.
+// df is node number which we are varying field at that point.
+// interpolation takes place in Y and Z direction using Cheb Tn bases
+// with Extrema points.
+// ->return value: d(interp(f))/df */
+static double dInterp_df_YZ_Tn_Ex(const Patch_T *const patch,const double *const X,const unsigned df)
 {
   
   UNUSED(patch);
@@ -751,21 +841,12 @@ double dInterp_z_df(const Patch_T *const patch,const double *const X,const unsig
   return 0;
 }
 
-/* d(interp(f))/df when interpolation happen in 1-D.
+/* d(interp(f_x))/df at point X in general coordinates.
 // df is node number which we are varying field at that point.
-// ->return value: d(interp(f))/df. */
-double dInterp_df_1d_index(const Patch_T *const patch,const double *const X,const unsigned df)
-{
-  UNUSED(patch);
-  UNUSED(X);
-  UNUSED(df);
-  return 0;
-}
-
-/* d(interp(f))/df when interpolation happen in 2-D.
-// df is node number which we are varying field at that point.
-// ->return value: d(interp(f))/df. */
-double dInterp_df_2d_index(const Patch_T *const patch,const double *const X,const unsigned df)
+// interpolation takes place in X and Z direction using Cheb Tn bases
+// with Extrema points.
+// ->return value: d(interp(f_x))/df */
+static double dInterp_x_df_XZ_Tn_Ex(const Patch_T *const patch,const double *const X,const unsigned df)
 {
   
   UNUSED(patch);
@@ -774,10 +855,153 @@ double dInterp_df_2d_index(const Patch_T *const patch,const double *const X,cons
   return 0;
 }
 
-/* d(interp(f))/df when interpolation happen in 3-D.
+/* d(interp(f_y))/df at point X in general coordinates.
 // df is node number which we are varying field at that point.
-// ->return value: d(interp(f))/df. */
-double dInterp_df_3d_index(const Patch_T *const patch,const double *const X,const unsigned df)
+// interpolation takes place in X and Z direction using Cheb. Tn bases
+// with Extrema points.
+// ->return value: d(interp(f_y))/df */
+static double dInterp_y_df_XZ_Tn_Ex(const Patch_T *const patch,const double *const X,const unsigned df)
+{
+  
+  UNUSED(patch);
+  UNUSED(X);
+  UNUSED(df);
+  return 0;
+}
+
+/* d(interp(f_z))/df at point X in general coordinates.
+// df is node number which we are varying field at that point.
+// interpolation takes place in X and Z direction using Cheb Tn bases
+// with Extrema points.
+// ->return value: d(interp(f_z))/df */
+static double dInterp_z_df_XZ_Tn_Ex(const Patch_T *const patch,const double *const X,const unsigned df)
+{
+  
+  UNUSED(patch);
+  UNUSED(X);
+  UNUSED(df);
+  return 0;
+}
+
+/* d(interp(f))/df at point X in general coordinates.
+// df is node number which we are varying field at that point.
+// interpolation takes place in X and Z direction using Cheb Tn bases
+// with Extrema points.
+// ->return value: d(interp(f))/df */
+static double dInterp_df_XZ_Tn_Ex(const Patch_T *const patch,const double *const X,const unsigned df)
+{
+  
+  UNUSED(patch);
+  UNUSED(X);
+  UNUSED(df);
+  return 0;
+}
+
+/* d(interp(f_x))/df at point X in general coordinates.
+// df is node number which we are varying field at that point.
+// interpolation takes place in X and Y direction using Cheb Tn bases
+// with Extrema points.
+// ->return value: d(interp(f_x))/df */
+static double dInterp_x_df_XY_Tn_Ex(const Patch_T *const patch,const double *const X,const unsigned df)
+{
+  
+  UNUSED(patch);
+  UNUSED(X);
+  UNUSED(df);
+  return 0;
+}
+
+/* d(interp(f_y))/df at point X in general coordinates.
+// df is node number which we are varying field at that point.
+// interpolation takes place in X and Y direction using Cheb Tn bases
+// with Extrema points.
+// ->return value: d(interp(f_y))/df */
+static double dInterp_y_df_XY_Tn_Ex(const Patch_T *const patch,const double *const X,const unsigned df)
+{
+  
+  UNUSED(patch);
+  UNUSED(X);
+  UNUSED(df);
+  return 0;
+}
+
+/* d(interp(f_z))/df at point X in general coordinates.
+// df is node number which we are varying field at that point.
+// interpolation takes place in X and Y direction using Cheb Tn bases
+// with Extrema points.
+// ->return value: d(interp(f_z))/df */
+static double dInterp_z_df_XY_Tn_Ex(const Patch_T *const patch,const double *const X,const unsigned df)
+{
+  
+  UNUSED(patch);
+  UNUSED(X);
+  UNUSED(df);
+  return 0;
+}
+
+/* d(interp(f))/df at point X in general coordinates.
+// df is node number which we are varying field at that point.
+// interpolation takes place in X and Y direction using Cheb Tn bases
+// with Extrema points.
+// ->return value: d(interp(f))/df */
+static double dInterp_df_XY_Tn_Ex(const Patch_T *const patch,const double *const X,const unsigned df)
+{
+  
+  UNUSED(patch);
+  UNUSED(X);
+  UNUSED(df);
+  return 0;
+}
+
+
+/* d(interp(f_x))/df at point X in general coordinates.
+// df is node number which we are varying field at that point.
+// interpolation takes place in X and Y and Z direction using Cheb Tn bases
+// with Extrema points.
+// ->return value: d(interp(f_x))/df */
+static double dInterp_x_df_XYZ_Tn_Ex(const Patch_T *const patch,const double *const X,const unsigned df)
+{
+  
+  UNUSED(patch);
+  UNUSED(X);
+  UNUSED(df);
+  return 0;
+}
+
+/* d(interp(f_y))/df at point X in general coordinates.
+// df is node number which we are varying field at that point.
+// interpolation takes place in X and Y and Z direction using Cheb Tn bases
+// with Extrema points.
+// ->return value: d(interp(f_y))/df */
+static double dInterp_y_df_XYZ_Tn_Ex(const Patch_T *const patch,const double *const X,const unsigned df)
+{
+  
+  UNUSED(patch);
+  UNUSED(X);
+  UNUSED(df);
+  return 0;
+}
+
+/* d(interp(f_z))/df at point X in general coordinates.
+// df is node number which we are varying field at that point.
+// interpolation takes place in X and Y and Z direction using Cheb Tn bases
+// with Extrema points.
+// ->return value: d(interp(f_z))/df */
+static double dInterp_z_df_XYZ_Tn_Ex(const Patch_T *const patch,const double *const X,const unsigned df)
+{
+  
+  UNUSED(patch);
+  UNUSED(X);
+  UNUSED(df);
+  return 0;
+}
+
+/* d(interp(f))/df at point X in general coordinates.
+// df is node number which we are varying field at that point.
+// interpolation takes place in X and Y and Z direction using Cheb Tn bases
+// with Extrema points.
+// ->return value: d(interp(f))/df */
+static double dInterp_df_XYZ_Tn_Ex(const Patch_T *const patch,const double *const X,const unsigned df)
 {
   
   UNUSED(patch);

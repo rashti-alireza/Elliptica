@@ -293,6 +293,9 @@ static void fill_C_F_interpolation(Patch_T *const patch, Pair_T *const pair)
       const unsigned *const inv1  = Schur->inv;
       const unsigned *const Iinv1 = Schur->Iinv;
       const unsigned *const node2 = subface->id;
+      fdInterp_dfs_T *const dInterp_df_x = get_dInterp_df(patch,subface,"x derivative");
+      fdInterp_dfs_T *const dInterp_df_y = get_dInterp_df(patch,subface,"y derivative");
+      fdInterp_dfs_T *const dInterp_df_z = get_dInterp_df(patch,subface,"z derivative");
       
       for (subfp2 = 0; subfp2 < NsubFP2; ++subfp2)
       {
@@ -308,22 +311,22 @@ static void fill_C_F_interpolation(Patch_T *const patch, Pair_T *const pair)
         {
           s1_node = inv1[s1];
           F[i2][s1] += sign*(
-                       N[0]*J_dInterp_df(patch,subface,i2_point,s1_node,"x derivative")
+                       N[0]*dInterp_df_x(patch,i2_point,s1_node)
                        +
-                       N[1]*J_dInterp_df(patch,subface,i2_point,s1_node,"y derivative")
+                       N[1]*dInterp_df_y(patch,i2_point,s1_node)
                        +
-                       N[2]*J_dInterp_df(patch,subface,i2_point,s1_node,"z derivative"));
+                       N[2]*dInterp_df_z(patch,i2_point,s1_node));
         }
         /* C part */
         for (i1 = 0; i1 < NinterFP1; ++i1)
         {
           i1_node = Iinv1[i1];
           C[i2][i1] += sign*(
-                       N[0]*J_dInterp_df(patch,subface,i2_point,i1_node,"x derivative")
+                       N[0]*dInterp_df_x(patch,i2_point,i1_node)
                        +
-                       N[1]*J_dInterp_df(patch,subface,i2_point,i1_node,"y derivative")
+                       N[1]*dInterp_df_y(patch,i2_point,i1_node)
                        +
-                       N[2]*J_dInterp_df(patch,subface,i2_point,i1_node,"z derivative"));
+                       N[2]*dInterp_df_z(patch,i2_point,i1_node));
         }
           
       }
@@ -358,6 +361,7 @@ static void fill_C_F_interpolation(Patch_T *const patch, Pair_T *const pair)
       const unsigned *const inv1 = Schur->inv;
       const unsigned *const Iinv1 = Schur->Iinv;
       const unsigned *const node2 = subface->id;
+      fdInterp_dfs_T *const dInterp_df = get_dInterp_df(patch,subface,"none");
       
       for (subfp2 = 0; subfp2 < NsubFP2; ++subfp2)
       {
@@ -371,13 +375,13 @@ static void fill_C_F_interpolation(Patch_T *const patch, Pair_T *const pair)
         for (s1 = 0; s1 < NsubM1; s1++)
         {
           s1_node = inv1[s1];
-          F[i2][s1] += sign*J_dInterp_df(patch,subface,i2_point,s1_node,"none");
+          F[i2][s1] += sign*dInterp_df(patch,i2_point,s1_node);
         }
         /* C part */
         for (i1 = 0; i1 < NinterFP1; ++i1)
         {
           i1_node = Iinv1[i1];
-          C[i2][i1] += sign*J_dInterp_df(patch,subface,i2_point,i1_node,"none");
+          C[i2][i1] += sign*dInterp_df(patch,i2_point,i1_node);
         }
       }
     }/* end of else */
@@ -1597,25 +1601,6 @@ static unsigned OnFace(const unsigned *const n, const unsigned p)
   if (j == n[1]-1 || j == 0)  return 1;
   if (k == n[2]-1 || k == 0)  return 1;
   
-  return 0;
-}
-
-/* getting patch, subface, point X and positon of varying field df 
-// and an string for a directive, it decides which d(interpolation)/df 
-// be chosen and then returns the value of variation.
-// directives:
-//	x derivative # calculate d(interp(f_x))/df
-//	y derivative # calculate d(interp(f_y))/df
-//	z derivative # calculate d(interp(f_z))/df
-// 	none	     # calculate d(interp(f))/df
-// ->return value: d(interp(?))/df */
-static double J_dInterp_df(const Patch_T *const patch,const SubFace_T *const subface,const double *const X,const unsigned df,const char *const dir)
-{
-  UNUSED(patch);
-  UNUSED(subface);
-  UNUSED(X);
-  UNUSED(df);
-  UNUSED(dir);
   return 0;
 }
 
