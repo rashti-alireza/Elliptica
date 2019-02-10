@@ -48,10 +48,24 @@ static unsigned OnFace(const unsigned *const n, const unsigned p);
 static void making_B_and_E(Patch_T *const patch);
 static void making_E_prime_and_f_prime(Patch_T *const patch);
 static void making_F_and_C(Patch_T *const patch);
+static void making_F_by_f_prime(Patch_T *const patch);
+static void making_F_by_E_prime(Patch_T *const patch);
+static double *compute_g_prime(Grid_T *const grid);
+static Matrix_T *compute_S(Grid_T *const grid);
+static void compute_x(Patch_T *const patch);
+static void solve_Sy_g_prime(Matrix_T *const S,double *const g_prime,Grid_T *const grid);
 static void populate_F_and_C(Patch_T *const patch, Pair_T *const pair);
 static void fill_C_F_collocation(Patch_T *const patch, Pair_T *const pair);
 static void fill_C_F_interpolation(Patch_T *const patch, Pair_T *const pair);
-static void others_in_sewing(Patch_T *const patch);
+static void miscellany_in_sewing(Patch_T *const patch);
+static void set_NSs_NIs(Patch_T *const patch);
+static void free_E_Trans_prime(Patch_T *const patch);
+static void update_field(Patch_T *const patch);
+static void free_x_and_y(Patch_T *const patch);
+
+
+
+
 
 
 

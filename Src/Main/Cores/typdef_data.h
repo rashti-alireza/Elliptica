@@ -355,9 +355,9 @@ typedef struct SEWING_T
   Pair_T **pair;
   unsigned patchN;/* patch number which is equal to its sewing number */
   unsigned npair;/* number of pairs */
-  /* the following are the quantities that SchurC strcut 
-  // of the patch, that this sewing refers to, has. 
-  // it's used for purpose of concurrency and avoing race conditon
+  /* the following are the quantities that 
+  // patch[patchN]->method->SchurC has.
+  // it's used for purpose of concurrency and avoing race condition
   // bewteen pairs of different patches. more definition of each quantity
   // refer to SchurC strcut. */
   unsigned NS;
@@ -402,16 +402,22 @@ typedef struct DDM_SCHUR_COMPLEMENT_T
 */
   double *f;
   double *f_prime;
+  double *F_by_f_prime;
   double *g;
   double *x;
   double *y;
   Matrix_T *B;
   Matrix_T *E_Trans;/* NOE: this is TRANSPOSE of E */
-  Matrix_T *E_prime;/* NOTE: it is E' of E NOT E TRANSPOSE */
+  Matrix_T *E_Trans_prime;/* NOTE: it is E' of E_Trnas. */
+  Matrix_T *F_by_E_prime;
   Matrix_T **F;
   Matrix_T **C;
   Sewing_T **sewing;/* sewing[patch_number] */
   unsigned nsewing;/* number of sewings which is = number of patches */ 
+  unsigned *NS_p;/* SchurC->NS for each patch p */
+  unsigned NS_total;/* summation of all NS_p */
+  unsigned *NI_p;/* SchurC->NI for each patch p */
+  unsigned NI_total;/* summation of all NI_p */
   
 }DDM_Schur_Complement_T;
 
