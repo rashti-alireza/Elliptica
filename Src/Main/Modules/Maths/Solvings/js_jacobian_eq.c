@@ -15,7 +15,7 @@ static const double CONST = 1.0;
 */
 void prepare_Js_jacobian_eq(Patch_T *const patch,const char * const *types)
 {
-  Js_Jacobian_eq_F *Jacobian;
+  Js_Jacobian_eq_F *Jacobian = 0;
   Solving_Man_T *const sol_man = patch->solving_man;
   const unsigned nn = patch->nn;
   /* default value of J if it gets larger than 10 Mb it will 
@@ -23,7 +23,7 @@ void prepare_Js_jacobian_eq(Patch_T *const patch,const char * const *types)
   */
   double max_j_size = MAX_J_SIZE;
   Matrix_T *J = 0;
-  JType_E jt_e;
+  JType_E jt_e = T_UNDEF;
   unsigned i;
   
   if (get_parameter("Maximum_Size_of_J_Kept_in_Mb"))
@@ -87,9 +87,9 @@ void prepare_Js_jacobian_eq(Patch_T *const patch,const char * const *types)
 */
 void make_Js_jacobian_eq(Grid_T *const grid, const char * const* types)
 {
-  Js_Jacobian_eq_F *Jacobian;
+  Js_Jacobian_eq_F *Jacobian = 0;
   Matrix_T *J = 0;
-  JType_E jt_e;
+  JType_E jt_e = T_UNDEF;
   unsigned i,p,nn;
   
   /* selecting Jacobian method for making of jacobian equation */
@@ -376,7 +376,7 @@ static void fill_jacobian_spectral_method_1stOrder(double **const J,Patch_T *con
 {
   const unsigned nn = patch->nn;
   const unsigned *const N = patch->n;
-  Dd_T q_dir;
+  Dd_T q_dir = UNDEFINED_DIR;
   unsigned ijk;
   
   JType_E2Dd_T(jt_e,&q_dir);
@@ -481,7 +481,7 @@ static void fill_jacobian_spectral_method_2ndOrder(double **const J, Patch_T *co
   const unsigned nn = patch->nn;
   Field_T *j_1st_deriv_field = 0;
   Patch_T temp_patch;
-  JType_E deriv_1st,deriv_2nd;
+  JType_E deriv_1st = T_UNDEF,deriv_2nd = T_UNDEF;
   char deriv_2nd_s[MAX_STR_LEN];
   unsigned lmn;
   
