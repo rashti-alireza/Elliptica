@@ -5,7 +5,7 @@
 
 #include "general.h"
 
-/* taking squre root of vector v2-v1 which has l double type components.
+/* taking square root of vector v2-v1 which has l double type components.
 // ->return value: root mean square of v2-v1.
 */
 double rms(const unsigned n, const double *const v2,const double *const v1)
@@ -30,7 +30,7 @@ double rms(const unsigned n, const double *const v2,const double *const v1)
   return sum;
 }
 
-/* taking root means squre of vector v2-v1 which has l double type components
+/* taking root means square of vector v2-v1 which has l double type components
 // and l is of order of long unsigned.
 // ->return value: root mean square of v2-v1
 */
@@ -159,3 +159,216 @@ double d2T_dx2(const int n, const double x)
   
   return d;
 }
+
+/* finding summation of functional derivative of Chebyshev coefficients
+// multiply by derivative of Chebyshev bases. used for functional derivatives 
+// in Jacobian J at Jx=-F for Newton method.
+//
+// arguments:
+// o. N # number of grid points in the direction
+// o. j # functional derivative w.r.t field(j)
+//	# in other words the position of field that is being varied 
+// o. q # normalized point q i.e. -1 <= q <= 1
+//
+// ->return value: sum_0_^{n}{dC(i)/df(j)*dT_i(q)/dq}. */
+double sum_0_N_dCi_dfj_by_dTi_dq(const unsigned N,const unsigned j,const double q)
+{
+  /* some checks */
+  if (!GRTEQL(q,-1) || !LSSEQL(q,1))
+    abortEr("q must be in interval [-1,1].");
+  if (j >= N)
+    abortEr("j must be smaller that N");
+    
+  double sum = 0;
+  const double scale = 0.5/(N-1);/* coming when one does Fourier transformation */
+  //const double theta = acos(q);
+  
+  if (j == 0)
+  {
+    sum = 0;
+  }
+  else if (j == N-1)
+  {
+    sum = 0;
+  }
+  else
+  {
+    //const double alpha = j*M_PI/(N-1);
+    sum = 0;
+  }
+  
+  
+  return sum*scale;
+}
+
+/* finding summation of functional derivative of Chebyshev coefficients
+// multiply by Chebyshev bases. used for functional derivatives 
+// in Jacobian J at Jx=-F for Newton method.
+//
+// arguments:
+// o. N # number of grid points in the direction
+// o. j # functional derivative w.r.t field(j)
+//	# in other words the position of field that is being varied 
+// o. q # normalized point q i.e. -1 <= q <= 1
+//
+// ->return value: sum_0_^{n}{dC(i)/df(j)*cos(i*acos(q))}. */
+double sum_0_N_dCi_dfj_by_Ti_q(const unsigned N,const unsigned j,const double q)
+{
+  /* some checks */
+  if (!GRTEQL(q,-1) || !LSSEQL(q,1))
+    abortEr("q must be in interval [-1,1].");
+  if (j >= N)
+    abortEr("j must be smaller that N");
+    
+  double sum = 0;
+  const double scale = 0.5/(N-1);/* coming when one does Fourier transformation */
+  const double theta = acos(q);
+  
+  if (j == 0)
+  {
+    sum = 1 + cos((N-1)*theta) + 2*sum_1_N_cosi_theta(N,theta);
+  }
+  else if (j == N-1)
+  {
+    sum = 1 + SIGN[j%2]*cos((N-1)*theta)
+            + sum_1_N_cosi_theta(N-2,theta+M_PI)
+            + sum_1_N_cosi_theta(N-2,theta-M_PI);
+  }
+  else
+  {
+    const double alpha = j*M_PI/(N-1);
+    sum = 2 + 2*SIGN[j%2]*cos((N-1)*theta)
+            + 2*sum_1_N_cosi_theta(N-2,theta+alpha)
+            + 2*sum_1_N_cosi_theta(N-2,theta-alpha);
+  }
+  
+  
+  return sum*scale;
+}
+
+/* calculate:  d/dq{sum_1_^{N}(cos(i.b).Ti(q))} = 
+//             d/dq{sum_1_^{N}(cos(i.b).cos(i.a))}
+// ->return value: d/dq{sum_1_^{N}(cos(i.b).cos(i.a))} , q = cos(a) */
+double d_dq_sum_1_N_cos_ixb_cos_ixa(const int N, const double b,const double a)
+{
+  double sum = 0;
+  
+  if (EQL(a,0))
+  {
+    if (EQL(b,0))
+    {
+      sum = N*(N+1)*(2*N+1)/6.0;
+    }
+    else
+    {
+      sum = (
+              Power(Csc(b/2.0),3)
+              *
+              (Power(1 + N,2)*Sin((0.5 - N)*b) 
+              + 
+              (-1 + 2*N + 2*Power(N,2))*Sin((0.5 + N)*b) 
+              - 
+              Power(N,2)*Sin((1.5 + N)*b))
+            )/8.0;
+    }
+  }
+  else if (EQL(a,M_PI))
+  {
+    if (EQL(b,0))
+    {
+      double k;
+      
+      if (N%2 == 0)
+      {
+        k = N/2.;
+        sum = -(2*k*k+k);
+      }
+      else
+      {
+        k = (N-1)/2.;
+        sum = -(2*k*k+3*k+1);
+      }
+    }
+    else if (EQL(b,M_PI))
+    {
+      sum = -N*(N+1)*(2*N+1)/6.0;
+    }
+    else
+    {
+      const double g1 = M_PI+b;
+      const double g2 = M_PI-b;
+      sum = (
+              Power(Csc(g1/2.0),3)
+              *
+              (Power(1 + N,2)*Sin((0.5 - N)*g1) 
+              + 
+              (-1 + 2*N + 2*Power(N,2))*Sin((0.5 + N)*g1) 
+              - 
+              Power(N,2)*Sin((1.5 + N)*g1))
+            )/8.0 
+            +
+            (
+              Power(Csc(g2/2.0),3)
+              *
+              (Power(1 + N,2)*Sin((0.5 - N)*g2) 
+              + 
+              (-1 + 2*N + 2*Power(N,2))*Sin((0.5 + N)*g2) 
+              - 
+              Power(N,2)*Sin((1.5 + N)*g2))
+            )/8.0;
+      sum /= -2;
+    }
+  }
+  else
+  {
+    if (EQL(a-b,0))
+    {
+      const double g1 = M_PI+b;
+      sum = (
+             Csc(g1/2.)*((1 + 2*N)*Cos((0.5 + N)*g1) 
+             - 
+             Cot(g1/2.)*Sin((0.5 + N)*g1))
+            )/4.;
+      sum /= -2*Sin(a);
+    }
+    else
+    {
+      const double g1 = M_PI+b;
+      const double g2 = M_PI-b;
+      sum = (
+             Csc(g1/2.)*((1 + 2*N)*Cos((0.5 + N)*g1) 
+             - 
+             Cot(g1/2.)*Sin((0.5 + N)*g1))
+            )/4.
+            +
+            (
+             Csc(g2/2.)*((1 + 2*N)*Cos((0.5 + N)*g2) 
+             - 
+             Cot(g2/2.)*Sin((0.5 + N)*g2))
+            )/4.;
+      sum /= -2*Sin(a);      
+    }
+  }
+  
+  return sum;
+}
+
+
+
+/* ->return value: sum_1_^{N}{cos(i*theta)} */
+double sum_1_N_cosi_theta(const unsigned N, const double theta)
+{
+  double sum = 0;
+  
+  if (EQL(theta,0) || EQL(theta,2*M_PI))
+  {
+    sum = N;
+  }
+  else
+  {
+    sum = -0.5 + 0.5*sin((N+0.5)*theta)/sin(0.5*theta);
+  }
+  
+  return sum;
+}
+

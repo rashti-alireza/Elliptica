@@ -4,6 +4,20 @@
 #include "utilities_lib.h"
 #include "maths_general_lib.h"
 
+/* these following are used for compatibility with CForm in mathematica */
+#define E M_E
+#define Cos(a) cos(a)
+#define Sin(a) sin(a)
+#define Cosh(a) cosh(a)
+#define Sinh(a) sinh(a)
+#define Log(a) log(a)
+#define Power(a,b) pow(a,b)
+#define Sqrt(a) sqrt(a)
+#define Csc(a) 1/sin(a)
+#define Cot(a) 1/tan(a)
+
+static double SIGN[2] = {1,-1};
+
 double rms(const unsigned n, const double *const v2,const double *const v1);
 long double rmsL(const long unsigned n, const double *const v2, const double *const v1);
 double dot(const unsigned n, const double *const v2,const double *const v1);
@@ -11,3 +25,8 @@ double ABS(const double v);
 double Cheb_U(const int n, const double x);
 double Cheb_Tn(const int n, const double x);
 double d2T_dx2(const int n, const double x);
+double sum_1_N_cosi_theta(const unsigned N, const double theta);
+double sum_0_N_dCi_dfj_by_Ti_q(const unsigned N,const unsigned j,const double q);
+double sum_0_N_dCi_dfj_by_dTi_dq(const unsigned N,const unsigned j,const double q);
+double d_dq_sum_1_N_cos_ixb_cos_ixa(const int N, const double b,const double a);
+
