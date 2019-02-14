@@ -39,7 +39,7 @@ int make_JacobianT(Grid_T *const grid)
     /* if coord is Cartesian */
     if (patch->coordsys == Cartesian)
     {
-      patch->JacobianT = calloc(1,sizeof(patch->JacobianT));
+      patch->JacobianT = calloc(1,sizeof(*patch->JacobianT));
       pointerEr(patch->JacobianT);
       make_JacobianT_Cartesian_coord(patch);
     }
@@ -54,7 +54,16 @@ int make_JacobianT(Grid_T *const grid)
 /* making Jacobian transformation for Cartesian coord. */
 static void make_JacobianT_Cartesian_coord(Patch_T *const patch)
 {
-  patch->JacobianT->j = JT_Cartesian_patch;
+  patch->JacobianT->j      = JT_Cartesian_patch;
+  patch->JacobianT->dN0_dx = dN0_dx_Cartesian_patch;
+  patch->JacobianT->dN0_dy = dN0_dy_Cartesian_patch;
+  patch->JacobianT->dN0_dz = dN0_dz_Cartesian_patch;
+  patch->JacobianT->dN1_dx = dN1_dx_Cartesian_patch;
+  patch->JacobianT->dN1_dy = dN1_dy_Cartesian_patch;
+  patch->JacobianT->dN1_dz = dN1_dz_Cartesian_patch;
+  patch->JacobianT->dN2_dx = dN2_dx_Cartesian_patch;
+  patch->JacobianT->dN2_dy = dN2_dy_Cartesian_patch;
+  patch->JacobianT->dN2_dz = dN2_dz_Cartesian_patch;
 }
 
 /* making value of coords. it is a general function for Cartesian type */
@@ -269,6 +278,89 @@ double JT_Cartesian_patch(const Patch_T *const patch,const Dd_T q2_e, const Dd_T
   UNUSED(p);
   
   return j;
+}
+
+/* Calculating dN0/dx at arbitrary curvilinear point point X.
+// used for interpolation.
+// x = 0.5*(min-max)*N0 +0.5*(min+max)
+// ->return value: dN0/dx */
+double dN0_dx_Cartesian_patch(const Patch_T *const patch,const double *const X)
+{
+  UNUSED(X);
+  return (-patch->max[0]+patch->min[0])/2;
+}
+
+/* Calculating dN0/dy at arbitrary curvilinear point point X.
+// used for interpolation.
+// ->return value: dN0/dy */
+double dN0_dy_Cartesian_patch(const Patch_T *const patch,const double *const X)
+{
+  UNUSED(X);
+  UNUSED(patch);
+  return 0;
+}
+/* Calculating dN0/dz at arbitrary curvilinear point point X.
+// used for interpolation.
+// ->return value: dN0/dz */
+double dN0_dz_Cartesian_patch(const Patch_T *const patch,const double *const X)
+{
+  UNUSED(X);
+  UNUSED(patch);
+  return 0;
+}
+/* Calculating dN1/dx at arbitrary curvilinear point point X.
+// used for interpolation.
+// ->return value: dN1/dx */
+double dN1_dx_Cartesian_patch(const Patch_T *const patch,const double *const X)
+{
+  UNUSED(X);
+  UNUSED(patch);
+  return 0;
+}
+/* Calculating dN1/dy at arbitrary curvilinear point point X.
+// used for interpolation.
+// y = 0.5*(min-max)*N1 +0.5*(min+max)
+// ->return value: dN1/dy */
+double dN1_dy_Cartesian_patch(const Patch_T *const patch,const double *const X)
+{
+  UNUSED(X);
+  return (-patch->max[1]+patch->min[1])/2;
+}
+/* Calculating dN1/dz at arbitrary curvilinear point point X.
+// used for interpolation.
+// ->return value: dN1/dz */
+double dN1_dz_Cartesian_patch(const Patch_T *const patch,const double *const X)
+{
+  UNUSED(X);
+  UNUSED(patch);
+  return 0;
+}
+/* Calculating dN0/dx at arbitrary curvilinear point point X.
+// used for interpolation.
+// ->return value: dN0/dx */
+double dN2_dx_Cartesian_patch(const Patch_T *const patch,const double *const X)
+{
+  UNUSED(X);
+  UNUSED(patch);
+  return 0;
+}
+/* Calculating dN0/dx at arbitrary curvilinear point point X.
+// used for interpolation.
+// ->return value: dN0/dx */
+double dN2_dy_Cartesian_patch(const Patch_T *const patch,const double *const X)
+{
+  UNUSED(X);
+  UNUSED(patch);
+  return 0;
+}
+/* Calculating dN0/dx at arbitrary curvilinear point point X.
+// used for interpolation.
+// z = 0.5*(min-max)*N2 +0.5*(min+max)
+// ->return value: dN0/dx */
+double dN2_dz_Cartesian_patch(const Patch_T *const patch,const double *const X)
+{
+  UNUSED(X);
+  return (-patch->max[2]+patch->min[2])/2;
 }
 
 /* given patch, general coord of a point and its direction,

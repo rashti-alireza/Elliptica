@@ -27,3 +27,12 @@ static double dN_dq(const Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,
 static double dN_dX(const Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const unsigned p);
 double JT_Cartesian_patch(const Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const unsigned p);
 double General2ChebyshevExtrema(const double x,const unsigned dir,const Patch_T *const patch);
+double dN0_dx_Cartesian_patch(const Patch_T *const patch,const double *const X);
+double dN0_dy_Cartesian_patch(const Patch_T *const patch,const double *const X);
+double dN0_dz_Cartesian_patch(const Patch_T *const patch,const double *const X);
+double dN1_dx_Cartesian_patch(const Patch_T *const patch,const double *const X);
+double dN1_dy_Cartesian_patch(const Patch_T *const patch,const double *const X);
+double dN1_dz_Cartesian_patch(const Patch_T *const patch,const double *const X);
+double dN2_dx_Cartesian_patch(const Patch_T *const patch,const double *const X);
+double dN2_dy_Cartesian_patch(const Patch_T *const patch,const double *const X);
+double dN2_dz_Cartesian_patch(const Patch_T *const patch,const double *const X);

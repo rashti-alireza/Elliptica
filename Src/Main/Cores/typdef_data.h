@@ -226,6 +226,15 @@ typedef struct Interface_T
 typedef struct JACOBIAN_TRANS_T
 {
   double (*j)(const struct PATCH_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const unsigned p);/* function for transformation */
+  double (*dN0_dx)(const struct PATCH_T *const patch,const double *const X);/* specifically calculating dN0/dx at X */
+  double (*dN0_dy)(const struct PATCH_T *const patch,const double *const X);/* specifically calculating dN0/dy at X */
+  double (*dN0_dz)(const struct PATCH_T *const patch,const double *const X);/* specifically calculating dN0/dz at X */
+  double (*dN1_dx)(const struct PATCH_T *const patch,const double *const X);/* specifically calculating dN1/dx at X */
+  double (*dN1_dy)(const struct PATCH_T *const patch,const double *const X);/* specifically calculating dN1/dy at X */
+  double (*dN1_dz)(const struct PATCH_T *const patch,const double *const X);/* specifically calculating dN1/dz at X */
+  double (*dN2_dx)(const struct PATCH_T *const patch,const double *const X);/* specifically calculating dN2/dx at X */
+  double (*dN2_dy)(const struct PATCH_T *const patch,const double *const X);/* specifically calculating dN2/dy at X */
+  double (*dN2_dz)(const struct PATCH_T *const patch,const double *const X);/* specifically calculating dN2/dz at X */
   double *dX_dx[3][3];/* saving some transformation to save time for dX[0..2]/dx[0..2] */
   double *dx_dX[3][3];/* saving some transformation to save time dx[0..2]/dX[0..2] */
 }JacobianTrans_T;
