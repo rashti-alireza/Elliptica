@@ -794,10 +794,58 @@ fdInterp_dfs_T *get_dInterp_df(const Patch_T *const patch,const SubFace_T *const
 // ->return value: d(interp(f_x))/df */
 static double dInterp_x_df_YZ_Tn_Ex(const Patch_T *const patch,const double *const X,const unsigned df)
 {
-  UNUSED(patch);
-  UNUSED(X);
-  UNUSED(df);
-  return 0;
+  const unsigned *const n = patch->n;
+  const double *point = patch->node[df]->X;
+  double dq0_dx = patch->JacobianT->dN0_dx(patch,X);
+  double dq1_dx = patch->JacobianT->dN1_dx(patch,X);
+  double dq2_dx = patch->JacobianT->dN2_dx(patch,X);
+  double q[3];/* normalized coords. it is the same as N0, N1 and N2 */
+  double sum = 0;
+  const double scale012 = 1./(8*(n[0]-1)*(n[1]-1)*(n[2]-1));
+  const double scale12 = 1./(4*(n[1]-1)*(n[2]-1));
+  unsigned i,j,k;
+  
+  IJK(df,n,&i,&j,&k);
+  q[0] = General2ChebyshevExtrema(X[0],0,patch);
+  q[1] = General2ChebyshevExtrema(X[1],1,patch);
+  q[2] = General2ChebyshevExtrema(X[2],2,patch);
+  
+  if (!EQL(dq0_dx,0))
+  {
+    sum += dq0_dx/scale012
+           *
+           sum_0_N_dCi_dfj_by_dTi_dq(n[0],i,q[0])
+           *
+           sum_0_N_dCi_dfj_by_Ti_q(n[1],j,q[1])
+           *
+           sum_0_N_dCi_dfj_by_Ti_q(n[2],k,q[2]);
+           ;
+  }
+  
+  if (!EQL(dq1_dx,0))
+  {
+    /* only changing of field at the plane X=X[0] must contribute */
+    if (EQL(point[0],X[0]))
+      sum += dq1_dx/scale12
+             *
+             sum_0_N_dCi_dfj_by_dTi_dq(n[1],j,q[1])
+             *
+             sum_0_N_dCi_dfj_by_Ti_q(n[2],k,q[2]);
+             ;
+  }
+  
+  if (!EQL(dq2_dx,0))
+  {
+    /* only changing of field at the plane X=X[0] must contribute */
+    if (EQL(point[0],X[0]))
+      sum += dq2_dx/scale12
+           *
+           sum_0_N_dCi_dfj_by_dTi_dq(n[2],k,q[2])
+           *
+           sum_0_N_dCi_dfj_by_Ti_q(n[1],j,q[1]);
+  }
+  
+  return sum;
 }
 
 /* d(interp(f_y))/df at point X in general coordinates.
@@ -807,11 +855,56 @@ static double dInterp_x_df_YZ_Tn_Ex(const Patch_T *const patch,const double *con
 // ->return value: d(interp(f_y))/df */
 static double dInterp_y_df_YZ_Tn_Ex(const Patch_T *const patch,const double *const X,const unsigned df)
 {
+  const unsigned *const n = patch->n;
+  const double *point = patch->node[df]->X;
+  double q[3];/* normalized coords. it is the same as N0, N1 and N2 */
+  double dq0_dy = patch->JacobianT->dN0_dy(patch,X);
+  double dq1_dy = patch->JacobianT->dN1_dy(patch,X);
+  double dq2_dy = patch->JacobianT->dN2_dy(patch,X);
+  double sum = 0;
+  const double scale012 = 1./(8*(n[0]-1)*(n[1]-1)*(n[2]-1));
+  const double scale12 = 1./(4*(n[1]-1)*(n[2]-1));
+  unsigned i,j,k;
   
-  UNUSED(patch);
-  UNUSED(X);
-  UNUSED(df);
-  return 0;
+  IJK(df,n,&i,&j,&k);
+  q[0] = General2ChebyshevExtrema(X[0],0,patch);
+  q[1] = General2ChebyshevExtrema(X[1],1,patch);
+  q[2] = General2ChebyshevExtrema(X[2],2,patch);
+  
+  if (!EQL(dq0_dy,0))
+  {
+    sum += dq0_dy/scale012
+           *
+           sum_0_N_dCi_dfj_by_dTi_dq(n[0],i,q[0])
+           *
+           sum_0_N_dCi_dfj_by_Ti_q(n[1],j,q[1])
+           *
+           sum_0_N_dCi_dfj_by_Ti_q(n[2],k,q[2]);
+  }
+  
+  if (!EQL(dq1_dy,0))
+  {
+    /* only changing of field at the plane X=X[0] must contribute */
+    if (EQL(point[0],X[0]))
+      sum += dq1_dy/scale12
+             *
+             sum_0_N_dCi_dfj_by_dTi_dq(n[1],j,q[1])
+             *
+             sum_0_N_dCi_dfj_by_Ti_q(n[2],k,q[2]);
+  }
+  
+  if (!EQL(dq2_dy,0))
+  {
+    /* only changing of field at the plane X=X[0] must contribute */
+    if (EQL(point[0],X[0]))
+      sum += dq2_dy/scale12
+           *
+           sum_0_N_dCi_dfj_by_dTi_dq(n[2],k,q[2])
+           *
+           sum_0_N_dCi_dfj_by_Ti_q(n[1],j,q[1]);
+  }
+  
+  return sum;
 }
 
 /* d(interp(f_z))/df at point X in general coordinates.
@@ -821,10 +914,57 @@ static double dInterp_y_df_YZ_Tn_Ex(const Patch_T *const patch,const double *con
 // ->return value: d(interp(f_z))/df */
 static double dInterp_z_df_YZ_Tn_Ex(const Patch_T *const patch,const double *const X,const unsigned df)
 {
-  UNUSED(patch);
-  UNUSED(X);
-  UNUSED(df);
-  return 0;
+  const unsigned *const n = patch->n;
+  const double *point = patch->node[df]->X;
+  double q[3];/* normalized coords. it is the same as N0, N1 and N2 */
+  double dq0_dz = patch->JacobianT->dN0_dz(patch,X);
+  double dq1_dz = patch->JacobianT->dN1_dz(patch,X);
+  double dq2_dz = patch->JacobianT->dN2_dz(patch,X);
+  double sum = 0;
+  const double scale012 = 1./(8*(n[0]-1)*(n[1]-1)*(n[2]-1));
+  const double scale12 = 1./(4*(n[1]-1)*(n[2]-1));
+  unsigned i,j,k;
+  
+  IJK(df,n,&i,&j,&k);
+  q[0] = General2ChebyshevExtrema(X[0],0,patch);
+  q[1] = General2ChebyshevExtrema(X[1],1,patch);
+  q[2] = General2ChebyshevExtrema(X[2],2,patch);
+  
+  if (!EQL(dq0_dz,0))
+  {
+    sum += dq0_dz/scale012
+           *
+           sum_0_N_dCi_dfj_by_dTi_dq(n[0],i,q[0])
+           *
+           sum_0_N_dCi_dfj_by_Ti_q(n[1],j,q[1])
+           *
+           sum_0_N_dCi_dfj_by_Ti_q(n[2],k,q[2]);
+  }
+  
+  if (!EQL(dq1_dz,0))
+  {
+    /* only changing of field at the plane X=X[0] must contribute */
+    if (EQL(point[0],X[0]))
+      sum += dq1_dz/scale12
+             *
+             sum_0_N_dCi_dfj_by_dTi_dq(n[1],j,q[1])
+             *
+             sum_0_N_dCi_dfj_by_Ti_q(n[2],k,q[2]);
+
+  }
+  
+  if (!EQL(dq2_dz,0))
+  {
+    /* only changing of field at the plane X=X[0] must contribute */
+    if (EQL(point[0],X[0]))
+      sum += dq2_dz/scale12
+           *
+           sum_0_N_dCi_dfj_by_dTi_dq(n[2],k,q[2])
+           *
+           sum_0_N_dCi_dfj_by_Ti_q(n[1],j,q[1]);
+  }
+  
+  return sum;
 }
 
 /* d(interp(f))/df at point X in general coordinates.
@@ -834,11 +974,22 @@ static double dInterp_z_df_YZ_Tn_Ex(const Patch_T *const patch,const double *con
 // ->return value: d(interp(f))/df */
 static double dInterp_df_YZ_Tn_Ex(const Patch_T *const patch,const double *const X,const unsigned df)
 {
+  const unsigned *const n = patch->n;
+  const double *point = patch->node[df]->X;
+  double q[3];/* normalized coords */
+  unsigned i,j,k;
   
-  UNUSED(patch);
-  UNUSED(X);
-  UNUSED(df);
-  return 0;
+  IJK(df,n,&i,&j,&k);
+  q[1] = General2ChebyshevExtrema(X[1],1,patch);
+  q[2] = General2ChebyshevExtrema(X[2],2,patch);
+  
+  /* only changing of field at the plane X=X[0] must contribute */
+  if (!EQL(point[0],X[0]))
+    return 0;
+    
+  return sum_0_N_dCi_dfj_by_Ti_q(n[1],i,q[1])
+         *
+         sum_0_N_dCi_dfj_by_Ti_q(n[2],j,q[2]);
 }
 
 /* d(interp(f_x))/df at point X in general coordinates.
@@ -848,11 +999,58 @@ static double dInterp_df_YZ_Tn_Ex(const Patch_T *const patch,const double *const
 // ->return value: d(interp(f_x))/df */
 static double dInterp_x_df_XZ_Tn_Ex(const Patch_T *const patch,const double *const X,const unsigned df)
 {
+  const unsigned *const n = patch->n;
+  const double *point = patch->node[df]->X;
+  double q[3];/* normalized coords. it is the same as N0, N1 and N2 */
+  double dq0_dx = patch->JacobianT->dN0_dx(patch,X);
+  double dq1_dx = patch->JacobianT->dN1_dx(patch,X);
+  double dq2_dx = patch->JacobianT->dN2_dx(patch,X);
+  double sum = 0;
+  const double scale012 = 1./(8*(n[0]-1)*(n[1]-1)*(n[2]-1));
+  const double scale02 = 1./(4*(n[0]-1)*(n[2]-1));
+  unsigned i,j,k;
   
-  UNUSED(patch);
-  UNUSED(X);
-  UNUSED(df);
-  return 0;
+  IJK(df,n,&i,&j,&k);
+  q[0] = General2ChebyshevExtrema(X[0],0,patch);
+  q[1] = General2ChebyshevExtrema(X[1],1,patch);
+  q[2] = General2ChebyshevExtrema(X[2],2,patch);
+  
+  if (!EQL(dq0_dx,0))
+  {
+    
+    /* only changing of field at the plane X=X[1] must contribute */
+    if (EQL(point[1],X[1]))
+      sum += dq0_dx/scale02
+           *
+           sum_0_N_dCi_dfj_by_dTi_dq(n[0],i,q[0])
+           *
+           sum_0_N_dCi_dfj_by_Ti_q(n[2],k,q[2]);
+  }
+  
+  if (!EQL(dq1_dx,0))
+  {
+      sum += dq1_dx/scale012
+             *
+             sum_0_N_dCi_dfj_by_Ti_q(n[0],k,q[0])
+             *
+             sum_0_N_dCi_dfj_by_dTi_dq(n[1],j,q[1])
+             *
+             sum_0_N_dCi_dfj_by_Ti_q(n[2],k,q[2]);
+             ;
+  }
+  
+  if (!EQL(dq2_dx,0))
+  {
+    /* only changing of field at the plane X=X[1] must contribute */
+    if (EQL(point[1],X[1]))
+      sum += dq2_dx/scale02
+           *
+           sum_0_N_dCi_dfj_by_dTi_dq(n[2],k,q[2])
+           *
+           sum_0_N_dCi_dfj_by_Ti_q(n[0],j,q[0]);
+  }
+  
+  return sum;
 }
 
 /* d(interp(f_y))/df at point X in general coordinates.
@@ -862,11 +1060,58 @@ static double dInterp_x_df_XZ_Tn_Ex(const Patch_T *const patch,const double *con
 // ->return value: d(interp(f_y))/df */
 static double dInterp_y_df_XZ_Tn_Ex(const Patch_T *const patch,const double *const X,const unsigned df)
 {
+  const unsigned *const n = patch->n;
+  const double *point = patch->node[df]->X;
+  double q[3];/* normalized coords. it is the same as N0, N1 and N2  */
+  double dq0_dy = patch->JacobianT->dN0_dy(patch,X);
+  double dq1_dy = patch->JacobianT->dN1_dy(patch,X);
+  double dq2_dy = patch->JacobianT->dN2_dy(patch,X);
+  double sum = 0;
+  const double scale012 = 1./(8*(n[0]-1)*(n[1]-1)*(n[2]-1));
+  const double scale02 = 1./(4*(n[0]-1)*(n[2]-1));
+  unsigned i,j,k;
   
-  UNUSED(patch);
-  UNUSED(X);
-  UNUSED(df);
-  return 0;
+  IJK(df,n,&i,&j,&k);
+  q[0] = General2ChebyshevExtrema(X[0],0,patch);
+  q[1] = General2ChebyshevExtrema(X[1],1,patch);
+  q[2] = General2ChebyshevExtrema(X[2],2,patch);
+  
+  if (!EQL(dq0_dy,0))
+  {
+    
+    /* only changing of field at the plane X=X[1] must contribute */
+    if (EQL(point[1],X[1]))
+      sum += dq0_dy/scale02
+           *
+           sum_0_N_dCi_dfj_by_dTi_dq(n[0],i,q[0])
+           *
+           sum_0_N_dCi_dfj_by_Ti_q(n[2],k,q[2]);
+  }
+  
+  if (!EQL(dq1_dy,0))
+  {
+      sum += dq1_dy/scale012
+             *
+             sum_0_N_dCi_dfj_by_Ti_q(n[0],k,q[0])
+             *
+             sum_0_N_dCi_dfj_by_dTi_dq(n[1],j,q[1])
+             *
+             sum_0_N_dCi_dfj_by_Ti_q(n[2],k,q[2]);
+             ;
+  }
+  
+  if (!EQL(dq2_dy,0))
+  {
+    /* only changing of field at the plane X=X[1] must contribute */
+    if (EQL(point[1],X[1]))
+      sum += dq2_dy/scale02
+           *
+           sum_0_N_dCi_dfj_by_dTi_dq(n[2],k,q[2])
+           *
+           sum_0_N_dCi_dfj_by_Ti_q(n[0],j,q[0]);
+  }
+  
+  return sum;
 }
 
 /* d(interp(f_z))/df at point X in general coordinates.
@@ -876,11 +1121,58 @@ static double dInterp_y_df_XZ_Tn_Ex(const Patch_T *const patch,const double *con
 // ->return value: d(interp(f_z))/df */
 static double dInterp_z_df_XZ_Tn_Ex(const Patch_T *const patch,const double *const X,const unsigned df)
 {
+  const unsigned *const n = patch->n;
+  const double *point = patch->node[df]->X;
+  double q[3];/* normalized coords. it is the same as N0, N1 and N2 */
+  double dq0_dz = patch->JacobianT->dN0_dz(patch,X);
+  double dq1_dz = patch->JacobianT->dN1_dz(patch,X);
+  double dq2_dz = patch->JacobianT->dN2_dz(patch,X);
+  double sum = 0;
+  const double scale012 = 1./(8*(n[0]-1)*(n[1]-1)*(n[2]-1));
+  const double scale02 = 1./(4*(n[0]-1)*(n[2]-1));
+  unsigned i,j,k;
   
-  UNUSED(patch);
-  UNUSED(X);
-  UNUSED(df);
-  return 0;
+  IJK(df,n,&i,&j,&k);
+  q[0] = General2ChebyshevExtrema(X[0],0,patch);
+  q[1] = General2ChebyshevExtrema(X[1],1,patch);
+  q[2] = General2ChebyshevExtrema(X[2],2,patch);
+  
+  if (!EQL(dq0_dz,0))
+  {
+    
+    /* only changing of field at the plane X=X[1] must contribute */
+    if (EQL(point[1],X[1]))
+      sum += dq0_dz/scale02
+           *
+           sum_0_N_dCi_dfj_by_dTi_dq(n[0],i,q[0])
+           *
+           sum_0_N_dCi_dfj_by_Ti_q(n[2],k,q[2]);
+  }
+  
+  if (!EQL(dq1_dz,0))
+  {
+      sum += dq1_dz/scale012
+             *
+             sum_0_N_dCi_dfj_by_Ti_q(n[0],k,q[0])
+             *
+             sum_0_N_dCi_dfj_by_dTi_dq(n[1],j,q[1])
+             *
+             sum_0_N_dCi_dfj_by_Ti_q(n[2],k,q[2]);
+             ;
+  }
+  
+  if (!EQL(dq2_dz,0))
+  {
+    /* only changing of field at the plane X=X[1] must contribute */
+    if (EQL(point[1],X[1]))
+      sum += dq2_dz/scale02
+           *
+           sum_0_N_dCi_dfj_by_dTi_dq(n[2],k,q[2])
+           *
+           sum_0_N_dCi_dfj_by_Ti_q(n[0],j,q[0]);
+  }
+  
+  return sum;
 }
 
 /* d(interp(f))/df at point X in general coordinates.
@@ -890,11 +1182,23 @@ static double dInterp_z_df_XZ_Tn_Ex(const Patch_T *const patch,const double *con
 // ->return value: d(interp(f))/df */
 static double dInterp_df_XZ_Tn_Ex(const Patch_T *const patch,const double *const X,const unsigned df)
 {
+  const unsigned *const n = patch->n;
+  const double *point = patch->node[df]->X;
+  double q[3];/* normalized coords */
+  unsigned i,j,k;
   
-  UNUSED(patch);
-  UNUSED(X);
-  UNUSED(df);
-  return 0;
+  IJK(df,n,&i,&j,&k);
+  q[0] = General2ChebyshevExtrema(X[0],0,patch);
+  q[2] = General2ChebyshevExtrema(X[2],2,patch);
+  
+  
+  /* only changing of field at the plane X=X[1] must contribute */
+  if (!EQL(point[1],X[1]))
+    return 0;
+    
+  return sum_0_N_dCi_dfj_by_Ti_q(n[0],i,q[0])
+         *
+         sum_0_N_dCi_dfj_by_Ti_q(n[2],j,q[2]);
 }
 
 /* d(interp(f_x))/df at point X in general coordinates.
@@ -904,11 +1208,56 @@ static double dInterp_df_XZ_Tn_Ex(const Patch_T *const patch,const double *const
 // ->return value: d(interp(f_x))/df */
 static double dInterp_x_df_XY_Tn_Ex(const Patch_T *const patch,const double *const X,const unsigned df)
 {
+  const unsigned *const n = patch->n;
+  const double *point = patch->node[df]->X;
+  double q[3];/* normalized coords. it is the same as N0, N1 and N2 */
+  double dq0_dx = patch->JacobianT->dN0_dx(patch,X);
+  double dq1_dx = patch->JacobianT->dN1_dx(patch,X);
+  double dq2_dx = patch->JacobianT->dN2_dx(patch,X);
+  double sum = 0;
+  const double scale012 = 1./(8*(n[0]-1)*(n[1]-1)*(n[2]-1));
+  const double scale01 = 1./(4*(n[0]-1)*(n[1]-1));
+  unsigned i,j,k;
   
-  UNUSED(patch);
-  UNUSED(X);
-  UNUSED(df);
-  return 0;
+  IJK(df,n,&i,&j,&k);
+  q[0] = General2ChebyshevExtrema(X[0],0,patch);
+  q[1] = General2ChebyshevExtrema(X[1],1,patch);
+  q[2] = General2ChebyshevExtrema(X[2],2,patch);
+  
+  if (!EQL(dq0_dx,0))
+  {
+    /* only changing of field at the plane X=X[2] must contribute */
+    if (EQL(point[2],X[2]))
+      sum += dq0_dx/scale01
+           *
+           sum_0_N_dCi_dfj_by_dTi_dq(n[0],i,q[0])
+           *
+           sum_0_N_dCi_dfj_by_Ti_q(n[1],k,q[1]);
+  }
+  
+  if (!EQL(dq1_dx,0))
+  {
+      /* only changing of field at the plane X=X[2] must contribute */
+      if (EQL(point[2],X[2]))
+        sum += dq1_dx/scale01
+             *
+             sum_0_N_dCi_dfj_by_Ti_q(n[0],k,q[0])
+             *
+             sum_0_N_dCi_dfj_by_dTi_dq(n[1],j,q[1]);
+  }
+  
+  if (!EQL(dq2_dx,0))
+  {
+      sum += dq2_dx/scale012
+           *
+           sum_0_N_dCi_dfj_by_Ti_q(n[1],j,q[1])
+           *
+           sum_0_N_dCi_dfj_by_dTi_dq(n[2],k,q[2])
+           *
+           sum_0_N_dCi_dfj_by_Ti_q(n[0],j,q[0]);
+  }
+  
+  return sum;
 }
 
 /* d(interp(f_y))/df at point X in general coordinates.
@@ -918,11 +1267,56 @@ static double dInterp_x_df_XY_Tn_Ex(const Patch_T *const patch,const double *con
 // ->return value: d(interp(f_y))/df */
 static double dInterp_y_df_XY_Tn_Ex(const Patch_T *const patch,const double *const X,const unsigned df)
 {
+  const unsigned *const n = patch->n;
+  const double *point = patch->node[df]->X;
+  double q[3];/* normalized coords. it is the same as N0, N1 and N2 */
+  double dq0_dy = patch->JacobianT->dN0_dy(patch,X);
+  double dq1_dy = patch->JacobianT->dN1_dy(patch,X);
+  double dq2_dy = patch->JacobianT->dN2_dy(patch,X);
+  double sum = 0;
+  const double scale012 = 1./(8*(n[0]-1)*(n[1]-1)*(n[2]-1));
+  const double scale01 = 1./(4*(n[0]-1)*(n[1]-1));
+  unsigned i,j,k;
   
-  UNUSED(patch);
-  UNUSED(X);
-  UNUSED(df);
-  return 0;
+  IJK(df,n,&i,&j,&k);
+  q[0] = General2ChebyshevExtrema(X[0],0,patch);
+  q[1] = General2ChebyshevExtrema(X[1],1,patch);
+  q[2] = General2ChebyshevExtrema(X[2],2,patch);
+  
+  if (!EQL(dq0_dy,0))
+  {
+    /* only changing of field at the plane X=X[2] must contribute */
+    if (EQL(point[2],X[2]))
+      sum += dq0_dy/scale01
+           *
+           sum_0_N_dCi_dfj_by_dTi_dq(n[0],i,q[0])
+           *
+           sum_0_N_dCi_dfj_by_Ti_q(n[1],k,q[1]);
+  }
+  
+  if (!EQL(dq1_dy,0))
+  {
+      /* only changing of field at the plane X=X[2] must contribute */
+      if (EQL(point[2],X[2]))
+        sum += dq1_dy/scale01
+             *
+             sum_0_N_dCi_dfj_by_Ti_q(n[0],k,q[0])
+             *
+             sum_0_N_dCi_dfj_by_dTi_dq(n[1],j,q[1]);
+  }
+  
+  if (!EQL(dq2_dy,0))
+  {
+      sum += dq2_dy/scale012
+           *
+           sum_0_N_dCi_dfj_by_Ti_q(n[1],j,q[1])
+           *
+           sum_0_N_dCi_dfj_by_dTi_dq(n[2],k,q[2])
+           *
+           sum_0_N_dCi_dfj_by_Ti_q(n[0],j,q[0]);
+  }
+  
+  return sum;
 }
 
 /* d(interp(f_z))/df at point X in general coordinates.
@@ -932,11 +1326,56 @@ static double dInterp_y_df_XY_Tn_Ex(const Patch_T *const patch,const double *con
 // ->return value: d(interp(f_z))/df */
 static double dInterp_z_df_XY_Tn_Ex(const Patch_T *const patch,const double *const X,const unsigned df)
 {
+  const unsigned *const n = patch->n;
+  const double *point = patch->node[df]->X;
+  double q[3];/* normalized coords. it is the same as N0, N1 and N2 */
+  double dq0_dz = patch->JacobianT->dN0_dz(patch,X);
+  double dq1_dz = patch->JacobianT->dN1_dz(patch,X);
+  double dq2_dz = patch->JacobianT->dN2_dz(patch,X);
+  double sum = 0;
+  const double scale012 = 1./(8*(n[0]-1)*(n[1]-1)*(n[2]-1));
+  const double scale01 = 1./(4*(n[0]-1)*(n[1]-1));
+  unsigned i,j,k;
   
-  UNUSED(patch);
-  UNUSED(X);
-  UNUSED(df);
-  return 0;
+  IJK(df,n,&i,&j,&k);
+  q[0] = General2ChebyshevExtrema(X[0],0,patch);
+  q[1] = General2ChebyshevExtrema(X[1],1,patch);
+  q[2] = General2ChebyshevExtrema(X[2],2,patch);
+  
+  if (!EQL(dq0_dz,0))
+  {
+    /* only changing of field at the plane X=X[2] must contribute */
+    if (EQL(point[2],X[2]))
+      sum += dq0_dz/scale01
+           *
+           sum_0_N_dCi_dfj_by_dTi_dq(n[0],i,q[0])
+           *
+           sum_0_N_dCi_dfj_by_Ti_q(n[1],k,q[1]);
+  }
+  
+  if (!EQL(dq1_dz,0))
+  {
+      /* only changing of field at the plane X=X[2] must contribute */
+      if (EQL(point[2],X[2]))
+        sum += dq1_dz/scale01
+             *
+             sum_0_N_dCi_dfj_by_Ti_q(n[0],k,q[0])
+             *
+             sum_0_N_dCi_dfj_by_dTi_dq(n[1],j,q[1]);
+  }
+  
+  if (!EQL(dq2_dz,0))
+  {
+      sum += dq2_dz/scale012
+           *
+           sum_0_N_dCi_dfj_by_Ti_q(n[1],j,q[1])
+           *
+           sum_0_N_dCi_dfj_by_dTi_dq(n[2],k,q[2])
+           *
+           sum_0_N_dCi_dfj_by_Ti_q(n[0],j,q[0]);
+  }
+  
+  return sum;
 }
 
 /* d(interp(f))/df at point X in general coordinates.
@@ -946,11 +1385,22 @@ static double dInterp_z_df_XY_Tn_Ex(const Patch_T *const patch,const double *con
 // ->return value: d(interp(f))/df */
 static double dInterp_df_XY_Tn_Ex(const Patch_T *const patch,const double *const X,const unsigned df)
 {
+  const unsigned *const n = patch->n;
+  const double *point = patch->node[df]->X;
+  double q[3];/* normalized coords */
+  unsigned i,j,k;
   
-  UNUSED(patch);
-  UNUSED(X);
-  UNUSED(df);
-  return 0;
+  IJK(df,n,&i,&j,&k);
+  q[0] = General2ChebyshevExtrema(X[0],0,patch);
+  q[1] = General2ChebyshevExtrema(X[1],1,patch);
+  
+  /* only changing of field at the plane X=X[2] must contribute */
+  if (!EQL(point[2],X[2]))
+    return 0;
+  
+  return sum_0_N_dCi_dfj_by_Ti_q(n[0],i,q[0])
+         *
+         sum_0_N_dCi_dfj_by_Ti_q(n[1],j,q[1]);
 }
 
 
@@ -961,11 +1411,55 @@ static double dInterp_df_XY_Tn_Ex(const Patch_T *const patch,const double *const
 // ->return value: d(interp(f_x))/df */
 static double dInterp_x_df_XYZ_Tn_Ex(const Patch_T *const patch,const double *const X,const unsigned df)
 {
+  const unsigned *const n = patch->n;
+  double q[3];/* normalized coords. it is the same as N0, N1 and N2 */
+  double dq0_dx = patch->JacobianT->dN0_dx(patch,X);
+  double dq1_dx = patch->JacobianT->dN1_dx(patch,X);
+  double dq2_dx = patch->JacobianT->dN2_dx(patch,X);
+  double sum = 0;
+  const double scale012 = 1./(8*(n[0]-1)*(n[1]-1)*(n[2]-1));
+  unsigned i,j,k;
   
-  UNUSED(patch);
-  UNUSED(X);
-  UNUSED(df);
-  return 0;
+  IJK(df,n,&i,&j,&k);
+  q[0] = General2ChebyshevExtrema(X[0],0,patch);
+  q[1] = General2ChebyshevExtrema(X[1],1,patch);
+  q[2] = General2ChebyshevExtrema(X[2],2,patch);
+  
+  if (!EQL(dq0_dx,0))
+  {
+    sum += dq0_dx/scale012
+           *
+           sum_0_N_dCi_dfj_by_dTi_dq(n[0],i,q[0])
+           *
+           sum_0_N_dCi_dfj_by_Ti_q(n[1],j,q[1])
+           *
+           sum_0_N_dCi_dfj_by_Ti_q(n[2],k,q[2]);
+  }
+  
+  if (!EQL(dq1_dx,0))
+  {	
+  
+    sum += dq1_dx/scale012
+           *
+           sum_0_N_dCi_dfj_by_Ti_q(n[0],i,q[0])
+           *
+           sum_0_N_dCi_dfj_by_dTi_dq(n[1],j,q[1])
+           *
+           sum_0_N_dCi_dfj_by_Ti_q(n[2],k,q[2]);
+  }
+  
+  if (!EQL(dq2_dx,0))
+  {
+    sum += dq2_dx/scale012
+           *
+           sum_0_N_dCi_dfj_by_Ti_q(n[0],i,q[0])
+           *
+           sum_0_N_dCi_dfj_by_Ti_q(n[1],j,q[1])
+           *
+           sum_0_N_dCi_dfj_by_dTi_dq(n[2],k,q[2]);
+  }
+  
+  return sum;
 }
 
 /* d(interp(f_y))/df at point X in general coordinates.
@@ -975,11 +1469,55 @@ static double dInterp_x_df_XYZ_Tn_Ex(const Patch_T *const patch,const double *co
 // ->return value: d(interp(f_y))/df */
 static double dInterp_y_df_XYZ_Tn_Ex(const Patch_T *const patch,const double *const X,const unsigned df)
 {
+  const unsigned *const n = patch->n;
+  double q[3];/* normalized coords. it is the same as N0, N1 and N2 */
+  double dq0_dy = patch->JacobianT->dN0_dy(patch,X);
+  double dq1_dy = patch->JacobianT->dN1_dy(patch,X);
+  double dq2_dy = patch->JacobianT->dN2_dy(patch,X);
+  double sum = 0;
+  const double scale012 = 1./(8*(n[0]-1)*(n[1]-1)*(n[2]-1));
+  unsigned i,j,k;
   
-  UNUSED(patch);
-  UNUSED(X);
-  UNUSED(df);
-  return 0;
+  IJK(df,n,&i,&j,&k);
+  q[0] = General2ChebyshevExtrema(X[0],0,patch);
+  q[1] = General2ChebyshevExtrema(X[1],1,patch);
+  q[2] = General2ChebyshevExtrema(X[2],2,patch);
+  
+  if (!EQL(dq0_dy,0))
+  {
+    sum += dq0_dy/scale012
+           *
+           sum_0_N_dCi_dfj_by_dTi_dq(n[0],i,q[0])
+           *
+           sum_0_N_dCi_dfj_by_Ti_q(n[1],j,q[1])
+           *
+           sum_0_N_dCi_dfj_by_Ti_q(n[2],k,q[2]);
+  }
+  
+  if (!EQL(dq1_dy,0))
+  {	
+  
+    sum += dq1_dy/scale012
+           *
+           sum_0_N_dCi_dfj_by_Ti_q(n[0],i,q[0])
+           *
+           sum_0_N_dCi_dfj_by_dTi_dq(n[1],j,q[1])
+           *
+           sum_0_N_dCi_dfj_by_Ti_q(n[2],k,q[2]);
+  }
+  
+  if (!EQL(dq2_dy,0))
+  {
+    sum += dq2_dy/scale012
+           *
+           sum_0_N_dCi_dfj_by_Ti_q(n[0],i,q[0])
+           *
+           sum_0_N_dCi_dfj_by_Ti_q(n[1],j,q[1])
+           *
+           sum_0_N_dCi_dfj_by_dTi_dq(n[2],k,q[2]);
+  }
+  
+  return sum;
 }
 
 /* d(interp(f_z))/df at point X in general coordinates.
@@ -989,11 +1527,55 @@ static double dInterp_y_df_XYZ_Tn_Ex(const Patch_T *const patch,const double *co
 // ->return value: d(interp(f_z))/df */
 static double dInterp_z_df_XYZ_Tn_Ex(const Patch_T *const patch,const double *const X,const unsigned df)
 {
+  const unsigned *const n = patch->n;
+  double q[3];/* normalized coords. it is the same as N0, N1 and N2 */
+  double dq0_dz = patch->JacobianT->dN0_dz(patch,X);
+  double dq1_dz = patch->JacobianT->dN1_dz(patch,X);
+  double dq2_dz = patch->JacobianT->dN2_dz(patch,X);
+  double sum = 0;
+  const double scale012 = 1./(8*(n[0]-1)*(n[1]-1)*(n[2]-1));
+  unsigned i,j,k;
   
-  UNUSED(patch);
-  UNUSED(X);
-  UNUSED(df);
-  return 0;
+  IJK(df,n,&i,&j,&k);
+  q[0] = General2ChebyshevExtrema(X[0],0,patch);
+  q[1] = General2ChebyshevExtrema(X[1],1,patch);
+  q[2] = General2ChebyshevExtrema(X[2],2,patch);
+  
+  if (!EQL(dq0_dz,0))
+  {
+    sum += dq0_dz/scale012
+           *
+           sum_0_N_dCi_dfj_by_dTi_dq(n[0],i,q[0])
+           *
+           sum_0_N_dCi_dfj_by_Ti_q(n[1],j,q[1])
+           *
+           sum_0_N_dCi_dfj_by_Ti_q(n[2],k,q[2]);
+  }
+  
+  if (!EQL(dq1_dz,0))
+  {	
+  
+    sum += dq1_dz/scale012
+           *
+           sum_0_N_dCi_dfj_by_Ti_q(n[0],i,q[0])
+           *
+           sum_0_N_dCi_dfj_by_dTi_dq(n[1],j,q[1])
+           *
+           sum_0_N_dCi_dfj_by_Ti_q(n[2],k,q[2]);
+  }
+  
+  if (!EQL(dq2_dz,0))
+  {
+    sum += dq2_dz/scale012
+           *
+           sum_0_N_dCi_dfj_by_Ti_q(n[0],i,q[0])
+           *
+           sum_0_N_dCi_dfj_by_Ti_q(n[1],j,q[1])
+           *
+           sum_0_N_dCi_dfj_by_dTi_dq(n[2],k,q[2]);
+  }
+  
+  return sum;
 }
 
 /* d(interp(f))/df at point X in general coordinates.
@@ -1003,10 +1585,18 @@ static double dInterp_z_df_XYZ_Tn_Ex(const Patch_T *const patch,const double *co
 // ->return value: d(interp(f))/df */
 static double dInterp_df_XYZ_Tn_Ex(const Patch_T *const patch,const double *const X,const unsigned df)
 {
+  const unsigned *const n = patch->n;
+  double q[3];/* normalized coords */
+  unsigned i,j,k;
   
-  UNUSED(patch);
-  UNUSED(X);
-  UNUSED(df);
-  return 0;
+  IJK(df,n,&i,&j,&k);
+  q[0] = General2ChebyshevExtrema(X[0],0,patch);
+  q[1] = General2ChebyshevExtrema(X[1],1,patch);
+  q[2] = General2ChebyshevExtrema(X[2],2,patch);
+  
+  return sum_0_N_dCi_dfj_by_Ti_q(n[0],i,q[0])*
+         sum_0_N_dCi_dfj_by_Ti_q(n[1],j,q[1])*
+         sum_0_N_dCi_dfj_by_Ti_q(n[2],k,q[2]);
+  
 }
 
