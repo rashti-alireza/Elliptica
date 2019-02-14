@@ -181,20 +181,27 @@ double sum_0_N_dCi_dfj_by_dTi_dq(const unsigned N,const unsigned j,const double 
     
   double sum = 0;
   const double scale = 0.5/(N-1);/* coming when one does Fourier transformation */
-  //const double theta = acos(q);
   
   if (j == 0)
   {
-    sum = 0;
+    sum = (N-1)*Cheb_Un((int)N-2,q)
+          + 
+          2*d_dq_sum_1_N_cos_ixb_cos_ixa((int)N-2,0,acos(q));
   }
   else if (j == N-1)
   {
-    sum = 0;
+    
+    sum = (N-1)*Cheb_Un((int)N-2,q)*SIGN[j%2]
+          + 
+          2*d_dq_sum_1_N_cos_ixb_cos_ixa((int)N-2,M_PI,acos(q));
   }
   else
   {
-    //const double alpha = j*M_PI/(N-1);
-    sum = 0;
+    const double b = j*M_PI/(N-1);
+    
+    sum = (N-1)*Cheb_Un((int)N-2,q)*SIGN[j%2]
+          + 
+          4*d_dq_sum_1_N_cos_ixb_cos_ixa((int)N-2,b,acos(q));
   }
   
   
@@ -226,20 +233,21 @@ double sum_0_N_dCi_dfj_by_Ti_q(const unsigned N,const unsigned j,const double q)
   
   if (j == 0)
   {
-    sum = 1 + cos((N-1)*theta) + 2*sum_1_N_cosi_theta(N,theta);
+    sum = 1 + cos((N-1)*theta) + 2*sum_1_N_cos_ia(N,theta);
   }
   else if (j == N-1)
   {
     sum = 1 + SIGN[j%2]*cos((N-1)*theta)
-            + sum_1_N_cosi_theta(N-2,theta+M_PI)
-            + sum_1_N_cosi_theta(N-2,theta-M_PI);
+            + sum_1_N_cos_ia(N-2,theta+M_PI)
+            + sum_1_N_cos_ia(N-2,theta-M_PI);
   }
   else
   {
     const double alpha = j*M_PI/(N-1);
-    sum = 2 + 2*SIGN[j%2]*cos((N-1)*theta)
-            + 2*sum_1_N_cosi_theta(N-2,theta+alpha)
-            + 2*sum_1_N_cosi_theta(N-2,theta-alpha);
+    sum = 1 + SIGN[j%2]*cos((N-1)*theta)
+            + sum_1_N_cos_ia(N-2,theta+alpha)
+            + sum_1_N_cos_ia(N-2,theta-alpha);
+    sum *= 2;
   }
   
   
@@ -248,6 +256,7 @@ double sum_0_N_dCi_dfj_by_Ti_q(const unsigned N,const unsigned j,const double q)
 
 /* calculate:  d/dq{sum_1_^{N}(cos(i.b).Ti(q))} = 
 //             d/dq{sum_1_^{N}(cos(i.b).cos(i.a))}
+// note: a and b are angels.
 // ->return value: d/dq{sum_1_^{N}(cos(i.b).cos(i.a))} , q = cos(a) */
 double d_dq_sum_1_N_cos_ixb_cos_ixa(const int N, const double b,const double a)
 {
@@ -356,17 +365,17 @@ double d_dq_sum_1_N_cos_ixb_cos_ixa(const int N, const double b,const double a)
 
 
 /* ->return value: sum_1_^{N}{cos(i*theta)} */
-double sum_1_N_cosi_theta(const unsigned N, const double theta)
+double sum_1_N_cos_ia(const unsigned N, const double a)
 {
   double sum = 0;
   
-  if (EQL(theta,0) || EQL(theta,2*M_PI))
+  if (EQL(a,0) || EQL(a,2*M_PI))
   {
     sum = N;
   }
   else
   {
-    sum = -0.5 + 0.5*sin((N+0.5)*theta)/sin(0.5*theta);
+    sum = -0.5 + 0.5*sin((N+0.5)*a)/sin(0.5*a);
   }
   
   return sum;
