@@ -362,6 +362,7 @@ static void making_F_by_E_prime(Patch_T *const patch)
   const Matrix_T *const E_Trans_prime = Schur->E_Trans_prime;
   
   Schur->F_by_E_prime = matrix_by_matrix(F,E_Trans_prime,"a*transpose(b)");
+  
   free_matrix(F);
 }
 
