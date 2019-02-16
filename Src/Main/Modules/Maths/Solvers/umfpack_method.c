@@ -113,7 +113,7 @@ void umfpack_error_dl(const double *const Control,const long status,const char *
 
 /* umfpack direct solver double interger kind 
 // used to solve ax = b for series of b's but same a.
-// thus, it won't need to decompose a each time.
+// thus, it won't need to decompose matrix a each time.
 // ->return value: EXIT_SUCCESS
 */
 int direct_solver_series_umfpack_di(void *vp)

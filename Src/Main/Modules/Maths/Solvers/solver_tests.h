@@ -14,4 +14,5 @@
 #define NOT_DO 0
 
 static int test_solver_umfpack_di(void);
+static int test_solver_series_umfpack_di(void);
 void solver_tests(void);
