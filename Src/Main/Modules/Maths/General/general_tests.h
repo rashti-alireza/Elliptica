@@ -1,0 +1,11 @@
+#include "core_lib.h"
+#include "memory_managing_lib.h"
+#include "error_handling_lib.h"
+#include "utilities_lib.h"
+#include "maths_general_lib.h"
+
+#define DO 1
+#define NOT_DO 0
+
+void summation_tests(void);
+static int various_sums_of_cos_test(void);

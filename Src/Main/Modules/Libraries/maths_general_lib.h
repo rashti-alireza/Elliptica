@@ -20,3 +20,4 @@ double sum_1_N_cos_ia(const unsigned N, const double a);
 double sum_0_N_dCi_dfj_by_Ti_q(const unsigned N,const unsigned j,const double q);
 double sum_0_N_dCi_dfj_by_dTi_dq(const unsigned N,const unsigned j,const double q);
 double d_dq_sum_1_N_cos_ixb_cos_ixa(const int N, const double b,const double a);
+void summation_tests(void);

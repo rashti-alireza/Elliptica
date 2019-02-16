@@ -77,6 +77,11 @@ int Fundamental_Tests(void)
     interpolation_tests(grid);
   }
   
+  if (strstr_i(GetParameterS("Test_Math_General"),"yes"))
+  {
+    summation_tests();
+  }
+  
   
   return EXIT_SUCCESS;
 }
