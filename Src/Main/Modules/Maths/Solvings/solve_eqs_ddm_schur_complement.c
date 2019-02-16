@@ -388,7 +388,7 @@ static void making_F_by_f_prime(Patch_T *const patch)
     
     if (F)
     {
-      matrix_by_vector(F,f_prime,&F_by_f_prime[p_index]);
+      matrix_by_vector(F,f_prime,&F_by_f_prime[p_index],NOT_INITIALIZE);
       if (p != cp)
         free_matrix(F);
     }

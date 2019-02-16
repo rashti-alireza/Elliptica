@@ -33,7 +33,9 @@ typedef enum FLAG_T
   FOUND,
   CLEAN,
   BRUTE_FORCE,
-  FATAL
+  FATAL,
+  INITIALIZE,
+  NOT_INITIALIZE
 }Flag_T;
 
 /* collocation */
