@@ -341,12 +341,12 @@ unsigned subface_map_invers_id(const SubFace_T *const subface,const unsigned n)
   return s;  
 }
 
-/* given array s and its dimention, duplicate the array.
-// ->return value: duplicated unsigned array
-*/
+/* given array s and its dimension, duplicate the array.
+// ->return value: duplicated unsigned array. */
 unsigned *dup_UINT(const unsigned *const s,const unsigned N)
 {
-  assert(s);
+  if (!s)
+    abortEr("The given array to be duplicated is Null!");
   
   unsigned *dup = calloc(N,sizeof(*dup));
   pointerEr(dup);
