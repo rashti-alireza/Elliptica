@@ -255,6 +255,7 @@ double sum_0_N_dCi_dfj_by_Ti_q(const unsigned N,const unsigned j,const double q)
 }
 
 /* calculate:  d/dq{sum_1_^{N}(cos(i.b).Ti(q))} = 
+// 	       sum_1_^{N}(cos(i.b).dTi(q)/dq)   = 
 //             d/dq{sum_1_^{N}(cos(i.b).cos(i.a))}
 // note: a and b are angels.
 // ->return value: d/dq{sum_1_^{N}(cos(i.b).cos(i.a))} , q = cos(a) */
@@ -273,11 +274,11 @@ double d_dq_sum_1_N_cos_ixb_cos_ixa(const int N, const double b,const double a)
       sum = (
               Power(Csc(b/2.0),3)
               *
-              (Power(1 + N,2)*Sin((0.5 - N)*b) 
+              (SQR(1 + N)*Sin((0.5 - N)*b) 
               + 
-              (-1 + 2*N + 2*Power(N,2))*Sin((0.5 + N)*b) 
+              (-1 + 2*N + 2*SQR(N))*Sin((0.5 + N)*b) 
               - 
-              Power(N,2)*Sin((1.5 + N)*b))
+              SQR(N)*Sin((1.5 + N)*b))
             )/8.0;
     }
   }
@@ -290,12 +291,12 @@ double d_dq_sum_1_N_cos_ixb_cos_ixa(const int N, const double b,const double a)
       if (N%2 == 0)
       {
         k = N/2.;
-        sum = -(2*k*k+k);
+        sum = -(2*SQR(k)+k);
       }
       else
       {
         k = (N-1)/2.;
-        sum = -(2*k*k+3*k+1);
+        sum = 2*SQR(k)+3*k+1;
       }
     }
     else if (EQL(b,M_PI))
@@ -304,26 +305,26 @@ double d_dq_sum_1_N_cos_ixb_cos_ixa(const int N, const double b,const double a)
     }
     else
     {
-      const double g1 = M_PI+b;
-      const double g2 = M_PI-b;
+      const double g1 = a+b;
+      const double g2 = a-b;
       sum = (
               Power(Csc(g1/2.0),3)
               *
-              (Power(1 + N,2)*Sin((0.5 - N)*g1) 
+              (SQR(1 + N)*Sin((0.5 - N)*g1) 
               + 
-              (-1 + 2*N + 2*Power(N,2))*Sin((0.5 + N)*g1) 
+              (-1 + 2*N + 2*SQR(N))*Sin((0.5 + N)*g1) 
               - 
-              Power(N,2)*Sin((1.5 + N)*g1))
+              SQR(N)*Sin((1.5 + N)*g1))
             )/8.0 
             +
             (
               Power(Csc(g2/2.0),3)
               *
-              (Power(1 + N,2)*Sin((0.5 - N)*g2) 
+              (SQR(1 + N)*Sin((0.5 - N)*g2) 
               + 
-              (-1 + 2*N + 2*Power(N,2))*Sin((0.5 + N)*g2) 
+              (-1 + 2*N + 2*SQR(N))*Sin((0.5 + N)*g2) 
               - 
-              Power(N,2)*Sin((1.5 + N)*g2))
+              SQR(N)*Sin((1.5 + N)*g2))
             )/8.0;
       sum /= -2;
     }
@@ -332,7 +333,7 @@ double d_dq_sum_1_N_cos_ixb_cos_ixa(const int N, const double b,const double a)
   {
     if (EQL(a-b,0))
     {
-      const double g1 = M_PI+b;
+      const double g1 = a+b;
       sum = (
              Csc(g1/2.)*((1 + 2*N)*Cos((0.5 + N)*g1) 
              - 
@@ -342,8 +343,8 @@ double d_dq_sum_1_N_cos_ixb_cos_ixa(const int N, const double b,const double a)
     }
     else
     {
-      const double g1 = M_PI+b;
-      const double g2 = M_PI-b;
+      const double g1 = a+b;
+      const double g2 = a-b;
       sum = (
              Csc(g1/2.)*((1 + 2*N)*Cos((0.5 + N)*g1) 
              - 
@@ -379,3 +380,11 @@ double sum_1_N_cos_ia(const unsigned N, const double a)
   return sum;
 }
 
+/* given two number a and b it returns the number with
+// MAXIMUM MAGNITUDE.
+// ->return value: maximum magnitude between a and b
+*/
+double MaxMag_d(const double a,const double b)
+{
+  return ABS(a) > ABS(b) ? ABS(a) : ABS(b);
+}
