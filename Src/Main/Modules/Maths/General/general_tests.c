@@ -25,23 +25,24 @@ void summation_tests(void)
 // ->return value: TEST_SUCCESSFUL or TEST_UNSUCCESSFUL */
 static int various_sums_of_cos_test(void)
 {
-  const unsigned M = 40;/* number of different numbers */
+  const unsigned M = 60;/* number of different numbers MUST BE > 4 */
   const unsigned N = (unsigned)floor(random_double(10,60,0));
-  double a[M],sum_cal,sum_real;
-  Flag_T flg_sum_1_N_cos_ia;
-  unsigned i;
+  double a[M],b[M],sum_cal,sum_real;
+  Flag_T flg_sum_1_N_cos_ia,flg_d_dq_sum_1_N_cos_ixb_cos_ixa;
+  unsigned i,j,k;
   
   /* filling a */
   a[0] = 0;
   a[1] = 2*M_PI;
-  for (i = 2; i < M; ++i)
-    a[i] = random_double(0,2*M_PI,i-2);
+  a[2] = M_PI;
+  a[3] = -M_PI;
+  for (i = 4; i < M; ++i)
+    a[i] = random_double(-M_PI,2*M_PI,i-4);
   
   /* testing sum_1_N_cos_ia */
   flg_sum_1_N_cos_ia = NONE;
   for (i = 0; i < M; ++i)
   {
-    unsigned j;
     /* real calculation */
     sum_real = 0;
     
@@ -57,9 +58,63 @@ static int various_sums_of_cos_test(void)
     
   }
   
+  /* filling a and b */
+  a[0] = 0;
+  a[1] = M_PI;
+  a[2] = M_PI/3;
+  a[3] = M_PI/11;
+  b[0] = 0;
+  b[1] = M_PI;
+  b[2] = M_PI/3;
+  b[3] = M_PI/11;
+  
+  for (i = 4; i < M; ++i)
+  {
+    a[i] = random_double(0,M_PI,i-4);
+    b[i] = random_double(0,M_PI,i);
+  }
+  
+  /* testing d_dq_sum_1_N_cos_ixb_cos_ixa */
+  flg_d_dq_sum_1_N_cos_ixb_cos_ixa = NONE;
+  for (i = 0; i < M; ++i)
+  {
+    for (j = 0; j < M; ++j)
+    {
+      /* real calculation */
+      sum_real = 0;
+      
+      for (k = 1; k <= N; ++k)
+      {
+        double dT_dx = k*Cheb_Un((int)k-1,cos(a[i]));
+        sum_real += cos(k*b[j])*dT_dx;
+      }
+        
+      sum_cal = d_dq_sum_1_N_cos_ixb_cos_ixa((int)N,b[j],a[i]);
+      
+      if (!EQL(ABS(sum_real-sum_cal)/MaxMag_d(sum_real,sum_cal),0))
+      {
+        /* more details */
+        printf("Discrepancy as follows:\n"
+        "(N,a,b,real,cal,diff)=(%u,%f,%f,%f,%f,%0.15f)\n"
+        "Note:\nWhen using summation method a huge round off error incurred.\n"
+          ,N,a[i],b[j],sum_real,sum_cal,sum_real-sum_cal);
+        flg_d_dq_sum_1_N_cos_ixb_cos_ixa = FOUND;
+        break;
+      }
+      
+    }
+    if (flg_d_dq_sum_1_N_cos_ixb_cos_ixa == FOUND)
+      break;
+  }
+  
   if (flg_sum_1_N_cos_ia == FOUND)
   {
     printf("sum_1_N_cos_ia function failed!\n");
+    return TEST_UNSUCCESSFUL;
+  }
+  if (flg_d_dq_sum_1_N_cos_ixb_cos_ixa == FOUND)
+  {
+    printf("d_dq_sum_1_N_cos_ixb_cos_ixa function failed!\n");
     return TEST_UNSUCCESSFUL;
   }
   
