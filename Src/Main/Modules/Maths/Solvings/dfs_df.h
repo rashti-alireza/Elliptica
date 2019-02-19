@@ -31,6 +31,7 @@ static double SIGN[2] = {1.0,-1.0};
 void prepare_Js_jacobian_eq(Patch_T *const patch,const char * const *types);
 void make_Js_jacobian_eq(Grid_T *const grid, const char * const* types);
 void test_make_Js_jacobian_eq(Grid_T *const grid, const char * const* types);
+void obsolete_fill_jacobian_spectral_method_1stOrder(double **const J,Patch_T *const patch,const JType_E jt_e);
 Matrix_T *get_j_matrix(const Patch_T *const patch,const char *type);
 double read_matrix_entry_ccs(Matrix_T *const m, const long r,const long c);
 fdInterp_dfs_T *get_dInterp_df(const Patch_T *const patch,const SubFace_T *const sf,const char *const dir);
@@ -66,4 +67,3 @@ static double dInterp_x_df_XYZ_Tn_Ex(const Patch_T *const patch,const double *co
 static double dInterp_y_df_XYZ_Tn_Ex(const Patch_T *const patch,const double *const X,const unsigned df);
 static double dInterp_z_df_XYZ_Tn_Ex(const Patch_T *const patch,const double *const X,const unsigned df);
 static double dInterp_df_XYZ_Tn_Ex(const Patch_T *const patch,const double *const X,const unsigned df);
-

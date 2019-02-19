@@ -372,7 +372,7 @@ static void make_jacobian_spectral_method(double **const J,Patch_T *const patch,
 /* making Jacobian using spectral method in direction $
 // d(df(i)/d$)/df(l) = j(N_i,$) *(2 \sum_{ip=1}^{n-2} dc(ip)/df(l)*dT(ip)/dN_i + dc(n-1)/df(l)*dT(n-1)/dN_i)
 */
-static void fill_jacobian_spectral_method_1stOrder(double **const J,Patch_T *const patch,const JType_E jt_e)
+void obsolete_fill_jacobian_spectral_method_1stOrder(double **const J,Patch_T *const patch,const JType_E jt_e)
 {
   const unsigned nn = patch->nn;
   const unsigned *const N = patch->n;
@@ -450,6 +450,50 @@ static void fill_jacobian_spectral_method_1stOrder(double **const J,Patch_T *con
       J[ijk][lmn] = j0+j1+j2;  
     }/* end of for (lmn = 0; lmn < nn; ++lmn) */
     
+  }/* end of for (ijk = 0; ijk < nn; ++ijk) */
+  
+}
+
+/* making Jacobian using spectral method in direction $
+// d(df(i)/d$)/df(l) = j(N_i,$) *(2 \sum_{ip=1}^{n-2} dc(ip)/df(l)*dT(ip)/dN_i + dc(n-1)/df(l)*dT(n-1)/dN_i)
+*/
+static void fill_jacobian_spectral_method_1stOrder(double **const J,Patch_T *const patch,const JType_E jt_e)
+{
+  const unsigned nn = patch->nn;
+  const unsigned *const N = patch->n;
+  Dd_T q_dir = UNDEFINED_DIR;
+  unsigned ijk;
+  
+  JType_E2Dd_T(jt_e,&q_dir);
+  
+  for (ijk = 0; ijk < nn; ++ijk)
+  {
+    double dN0_dq = dq2_dq1(patch,_N0_,q_dir,ijk);/* coordinate jacobian */
+    double dN1_dq = dq2_dq1(patch,_N1_,q_dir,ijk);/* coordinate jacobian */
+    double dN2_dq = dq2_dq1(patch,_N2_,q_dir,ijk);/* coordinate jacobian */
+    double x,y,z;
+    unsigned i,j,k,l,m,n;
+    IJK(ijk,N,&i,&j,&k);
+    
+    x = ChebExtrema_1point(N[0],i);
+    y = ChebExtrema_1point(N[1],j);
+    z = ChebExtrema_1point(N[2],k);
+    
+    if (!EQL(dN0_dq,0))
+    {
+      for (l = 0; l < N[0]; ++l)
+        J[ijk][L(N,l,j,k)] += dN0_dq*sum_0_N_dCi_dfj_by_dTi_dq(N[0],l,x);
+    }
+    if (!EQL(dN1_dq,0))
+    {
+      for (m = 0; m < N[1]; ++m)
+        J[ijk][L(N,i,m,k)] += dN1_dq*sum_0_N_dCi_dfj_by_dTi_dq(N[1],m,y);
+    }
+    if (!EQL(dN2_dq,0))
+    {
+      for (n = 0; n < N[2]; ++n)
+        J[ijk][L(N,i,j,n)] += dN2_dq*sum_0_N_dCi_dfj_by_dTi_dq(N[2],n,z);
+    }
   }/* end of for (ijk = 0; ijk < nn; ++ijk) */
   
 }
