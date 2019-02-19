@@ -128,6 +128,7 @@ static int solve_field(Grid_T *const grid)
     check_residual(grid,res_input);
     //break;
     //end
+    iter++;
   }/* end of while (IsItSolved == NO && iter < NumIter) */
   
   return EXIT_SUCCESS;
