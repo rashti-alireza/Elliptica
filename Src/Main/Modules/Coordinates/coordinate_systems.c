@@ -287,7 +287,7 @@ double JT_Cartesian_patch(const Patch_T *const patch,const Dd_T q2_e, const Dd_T
 double dN0_dx_Cartesian_patch(const Patch_T *const patch,const double *const X)
 {
   UNUSED(X);
-  return (-patch->max[0]+patch->min[0])/2;
+  return 2./(-patch->max[0]+patch->min[0]);
 }
 
 /* Calculating dN0/dy at arbitrary curvilinear point point X.
@@ -324,7 +324,7 @@ double dN1_dx_Cartesian_patch(const Patch_T *const patch,const double *const X)
 double dN1_dy_Cartesian_patch(const Patch_T *const patch,const double *const X)
 {
   UNUSED(X);
-  return (-patch->max[1]+patch->min[1])/2;
+  return 2./(-patch->max[1]+patch->min[1]);
 }
 /* Calculating dN1/dz at arbitrary curvilinear point point X.
 // used for interpolation.
@@ -360,7 +360,7 @@ double dN2_dy_Cartesian_patch(const Patch_T *const patch,const double *const X)
 double dN2_dz_Cartesian_patch(const Patch_T *const patch,const double *const X)
 {
   UNUSED(X);
-  return (-patch->max[2]+patch->min[2])/2;
+  return 2./(-patch->max[2]+patch->min[2]);
 }
 
 /* given patch, general coord of a point and its direction,
