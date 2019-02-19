@@ -1,5 +1,7 @@
 void make_Js_jacobian_eq(Grid_T *const grid, const char * const* types);
 void test_make_Js_jacobian_eq(Grid_T *const grid, const char * const* types);
+void test_dfs_df_values(Grid_T *const grid);
+void test_dInterp_a_df(Grid_T *const grid);
 void *init_eq(void);
 void add_eq(sEquation_T ***const data_base, fEquation_T *const eq,const char *const name);
 void initialize_solving_man(Grid_T *const grid,sEquation_T **const field_eq,sEquation_T **const bc_eq,sEquation_T **const jacobian_field_eq, sEquation_T **const jacobian_bc_eq);

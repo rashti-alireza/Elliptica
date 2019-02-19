@@ -18,10 +18,12 @@ int Fundamental_Tests(void)
     
   if (strcmp_i(GetParameterS("Test_Jacobian_Elements_Js_Values"),"yes"))
   {
-    const char *const types[] = {"J_x","J_xx","J_y","J_yy","J_z","J_zz",0};
-    const double start = get_time_sec();
-    test_make_Js_jacobian_eq(grid,types);
-    pr_spent_time(start,"Making Jacobian");
+    test_dfs_df_values(grid);
+  }
+  
+  if (strcmp_i(GetParameterS("Test_d(interp_a)/df"),"yes"))
+  {
+    test_dInterp_a_df(grid);
   }
   
   if (strcmp_i(GetParameterS("Test_Jacobian_Elements_Js_Consistency"),"yes"))
