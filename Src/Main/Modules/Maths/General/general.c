@@ -163,7 +163,8 @@ double d2T_dx2(const int n, const double x)
 /* finding summation of functional derivative of Chebyshev coefficients
 // multiply by derivative of Chebyshev bases. used for functional derivatives 
 // in Jacobian J at Jx=-F for Newton method.
-//
+// if f(x) = sum_0_^{n}{C(i)T_i(q)} it calculates:
+// 	     sum_0_^{n}{dC(i)/df(j)*dT_i(q)/dq}
 // arguments:
 // o. N # number of grid points in the direction
 // o. j # functional derivative w.r.t field(j)
@@ -174,36 +175,34 @@ double d2T_dx2(const int n, const double x)
 double sum_0_N_dCi_dfj_by_dTi_dq(const unsigned N,const unsigned j,const double q)
 {
   /* some checks */
-  if (!GRTEQL(q,-1) || !LSSEQL(q,1))
+  if (LSS(q,-1) || GRT(q,1))
     abortEr("q must be in interval [-1,1].");
   if (j >= N)
     abortEr("j must be smaller that N");
     
   double sum = 0;
   const double scale = 0.5/(N-1);/* coming when one does Fourier transformation */
+  const double a = acos(q);
   
   if (j == 0)
   {
     sum = (N-1)*Cheb_Un((int)N-2,q)
           + 
-          2*d_dq_sum_1_N_cos_ixb_cos_ixa((int)N-2,0,acos(q));
+          2*d_dq_sum_1_N_cos_ixb_cos_ixa((int)N-2,0,a);
   }
   else if (j == N-1)
   {
-    
     sum = (N-1)*Cheb_Un((int)N-2,q)*SIGN[j%2]
           + 
-          2*d_dq_sum_1_N_cos_ixb_cos_ixa((int)N-2,M_PI,acos(q));
+          2*d_dq_sum_1_N_cos_ixb_cos_ixa((int)N-2,M_PI,a);
   }
   else
   {
     const double b = j*M_PI/(N-1);
-    
-    sum = (N-1)*Cheb_Un((int)N-2,q)*SIGN[j%2]
+    sum = 2*(N-1)*Cheb_Un((int)N-2,q)*SIGN[j%2]
           + 
-          4*d_dq_sum_1_N_cos_ixb_cos_ixa((int)N-2,b,acos(q));
+          4*d_dq_sum_1_N_cos_ixb_cos_ixa((int)N-2,b,a);
   }
-  
   
   return sum*scale;
 }
@@ -211,10 +210,12 @@ double sum_0_N_dCi_dfj_by_dTi_dq(const unsigned N,const unsigned j,const double 
 /* finding summation of functional derivative of Chebyshev coefficients
 // multiply by Chebyshev bases. used for functional derivatives 
 // in Jacobian J at Jx=-F for Newton method.
+// if f(x) = sum_0_^{n}{C(i)T_i(q)} it calculates:
+// 	     sum_0_^{n}{dC(i)/df(j)*T_i(q)},T_i(q) = cos(i*acos(q))
 //
 // arguments:
 // o. N # number of grid points in the direction
-// o. j # functional derivative w.r.t field(j)
+// o. j # functional derivative w.r.t. field(j)
 //	# in other words the position of field that is being varied 
 // o. q # normalized point q i.e. -1 <= q <= 1
 //
@@ -222,7 +223,7 @@ double sum_0_N_dCi_dfj_by_dTi_dq(const unsigned N,const unsigned j,const double 
 double sum_0_N_dCi_dfj_by_Ti_q(const unsigned N,const unsigned j,const double q)
 {
   /* some checks */
-  if (!GRTEQL(q,-1) || !LSSEQL(q,1))
+  if (LSS(q,-1) || GRT(q,1))
     abortEr("q must be in interval [-1,1].");
   if (j >= N)
     abortEr("j must be smaller that N");
@@ -233,7 +234,7 @@ double sum_0_N_dCi_dfj_by_Ti_q(const unsigned N,const unsigned j,const double q)
   
   if (j == 0)
   {
-    sum = 1 + cos((N-1)*theta) + 2*sum_1_N_cos_ia(N,theta);
+    sum = 1 + cos((N-1)*theta) + 2*sum_1_N_cos_ia(N-2,theta);
   }
   else if (j == N-1)
   {
@@ -249,7 +250,6 @@ double sum_0_N_dCi_dfj_by_Ti_q(const unsigned N,const unsigned j,const double q)
             + sum_1_N_cos_ia(N-2,theta-alpha);
     sum *= 2;
   }
-  
   
   return sum*scale;
 }
