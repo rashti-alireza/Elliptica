@@ -1669,6 +1669,7 @@ static void pg_collocation(Patch_T *const patch, Pair_T *const pair)
   const unsigned np = subface->np;
   const unsigned *node = 0;
   double *const pg = pair->pg; 
+  double sign;
   unsigned i;
   
   /* if this pg is for the same patch */
