@@ -969,9 +969,8 @@ static void make_g(Grid_T *const grid)
   unsigned *Imap;/* interface map */
   unsigned *Smap;/* subface map */
   double *g,*pg1,*pg2;/* g and partial g's */
-  double sign1, sign2;
-  unsigned npair,ni;
-  unsigned p,s,i;
+  unsigned npair,NSubFP;
+  unsigned p,s,pr;
   
   FOR_ALL_PATCHES(p,grid)
   {
@@ -989,32 +988,22 @@ static void make_g(Grid_T *const grid)
       Schur->g = alloc_double(Schur->NI);
     g = Schur->g;
       
-    for (s = 0; s < npair; ++s)
+    for (pr = 0; pr < npair; ++pr)
     {
-      pair1 = sewing->pair[s];
-      pair2 = pair1->mirror;
-      ni    = pair1->subface->np;
-      Smap  = pair1->subface->id;
-      pg1   = pair1->pg;
-      pg2   = pair2->pg;
+      pair1  = sewing->pair[pr];
+      pair2  = pair1->mirror;
+      NSubFP = pair1->subface->np;
+      Smap   = pair1->subface->id;
+      pg1    = pair1->pg;
+      pg2    = pair2->pg;
       
-      if (pair1->subface->df_dn) 
+      for (s = 0; s < NSubFP; ++s)
       {
-        sign1 = -1;
-        sign2 = 1;
-      }
-      else
-      {
-        sign1 = 1;
-        sign2 = -1;
-      }
-      
-      for (i = 0; i < ni; ++i)
-      {
-        if (Imap[Smap[i]] == UINT_MAX)
+        unsigned s_node = Smap[s];
+        if (Imap[s_node] == UINT_MAX)
           continue;
         
-        g[Imap[Smap[i]]] += sign1*pg1[i]+sign2*pg2[i];
+        g[Imap[s_node]] += pg1[s]+pg2[s];
       }
       
       free(pg1);
@@ -1666,14 +1655,15 @@ static void pg_collocation(Patch_T *const patch, Pair_T *const pair)
   const unsigned cf = patch->solving_man->cf;
   const char *const field_name = patch->solving_man->field_name[cf];
   Field_T *const f   = patch->pool[Ind(field_name)];
-  const unsigned np = subface->np;
+  const unsigned ppn = pair->patchN;
+  const unsigned NSubFP = subface->np;
   const unsigned *node = 0;
   double *const pg = pair->pg; 
   double sign;
-  unsigned i;
+  unsigned s,s_node;
   
   /* if this pg is for the same patch */
-  if (patch->pn == pair->patchN)
+  if (patch->pn == ppn)
   {
     node = subface->id;
   }
@@ -1684,28 +1674,35 @@ static void pg_collocation(Patch_T *const patch, Pair_T *const pair)
     
   if (subface->df_dn)
   {
+    if (patch->pn == ppn) sign = -1;/* -n.y1'+n.y2'=0 */
+    else                  sign =  1;/* -n.y2'+n.y1'=0 */
+
     double *f_x, *f_y, *f_z;
     
     f_x = Partial_Derivative(f,"x");
     f_y = Partial_Derivative(f,"y");
     f_z = Partial_Derivative(f,"z");
     
-    for (i = 0; i < np; ++i)
+    for (s = 0; s < NSubFP; ++s)
     {
-      double *N = pair->nv[i].N;
-      
-      pg[i] = N[0]*f_x[node[i]]+N[1]*f_y[node[i]]+N[2]*f_z[node[i]];
+      double *N = pair->nv[s].N;
+      s_node = node[s];
+      pg[s] += sign*(N[0]*f_x[s_node]+N[1]*f_y[s_node]+N[2]*f_z[s_node]);
     }
     
     free(f_x);
     free(f_y);
     free(f_z);
-  }
+  }/* end of if (subface->df_dn) */
   else
   {
-    for (i = 0; i < np; ++i)
+    if (patch->pn == ppn) sign =  1;/* y1-y2=0 */
+    else		  sign = -1;/* y2-y1=0 */
+    
+    for (s = 0; s < NSubFP; ++s)
     {
-      pg[i] = f->v[node[i]];
+      s_node = node[s];
+      pg[s] += sign*f->v[s_node];
     }
   }
 }
@@ -1721,7 +1718,9 @@ static void pg_interpolation(Patch_T *const patch, Pair_T *const pair)
   const char *const field_name = patch->solving_man->field_name[cf];
   Field_T *const f   = patch->pool[Ind(field_name)];
   const unsigned np = subface->np;
+  const unsigned ppn = pair->patchN;
   double *const pg = pair->pg; 
+  double sign;
   unsigned i;
   
   /* if normal derivatives of fields should be continuous */
@@ -1737,23 +1736,28 @@ static void pg_interpolation(Patch_T *const patch, Pair_T *const pair)
     f_y->v = Partial_Derivative(f,"y");
     f_z->v = Partial_Derivative(f,"z");
     
-    /* if this pg is for the same patch */
-    if (patch->pn == pair->patchN)
+    /* -(Nx.y1_x+Ny.y1_y+Nz.y1_z)+Nx.interpolation(y2_x)+Ny.interpolation(y2_y)+Nz.interpolation(y2_z) = 0*/
+    if (patch->pn == ppn)
     {
+      sign = -1;
       unsigned *node = subface->id;
       
       for (i = 0; i < np; ++i)
       {
         N = pair->nv[i].N;
-        pg[i] = N[0]*f_x->v[node[i]]
-                +
-                N[1]*f_y->v[node[i]]
-                +
-                N[2]*f_z->v[node[i]];
+        pg[i] += sign*(
+                  N[0]*f_x->v[node[i]]
+                  +
+                  N[1]*f_y->v[node[i]]
+                  +
+                  N[2]*f_z->v[node[i]]
+                  );
       }
     }
+    /* -(Nx.y2_x+Ny.y2_y+Nz.y2_z)+Nx.interpolation(y1_x)+Ny.interpolation(y1_y)+Nz.interpolation(y1_z) = 0 */
     else
     {
+      sign = 1;
       double *X;
       Interpolation_T *interp_x = init_interpolation();
       Interpolation_T *interp_y = init_interpolation();
@@ -1786,11 +1790,13 @@ static void pg_interpolation(Patch_T *const patch, Pair_T *const pair)
         interp_z->Y = X[1];
         interp_z->Z = X[2];
 
-        pg[i] = N[0]*execute_interpolation(interp_x)
-                +
-                N[1]*execute_interpolation(interp_y)
-                +
-                N[2]*execute_interpolation(interp_z);
+        pg[i] += sign*(
+                  N[0]*execute_interpolation(interp_x)
+                  +
+                  N[1]*execute_interpolation(interp_y)
+                  +
+                  N[2]*execute_interpolation(interp_z)
+                  );
       }
       free_interpolation(interp_x);
       free_interpolation(interp_y);
@@ -1806,18 +1812,21 @@ static void pg_interpolation(Patch_T *const patch, Pair_T *const pair)
   /* if field should be continuous */
   else
   {
-    /* if this pg is for the same patch */
-    if (patch->pn == pair->patchN)
+    /* y1-interpolation(y2) = 0 */
+    if (patch->pn == ppn)
     {
+      sign = 1;
       unsigned *node = subface->id;
       
       for (i = 0; i < np; ++i)
       {
-        pg[i] = f->v[node[i]];
+        pg[i] += sign*f->v[node[i]];
       }
     }
+    /* y2-interpolation(y1) = 0 */
     else
     {
+      sign = -1;
       Interpolation_T *interp = init_interpolation();
       interp->field = f;
       fill_interpolation_flags(interp,patch,subface);
@@ -1829,7 +1838,7 @@ static void pg_interpolation(Patch_T *const patch, Pair_T *const pair)
         interp->Y = pair->ip[i].X[1];
         interp->Z = pair->ip[i].X[2];
         
-        pg[i] = execute_interpolation(interp);
+        pg[i] += sign*execute_interpolation(interp);
       }
       
       free_interpolation(interp);
