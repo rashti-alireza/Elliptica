@@ -169,7 +169,7 @@ typedef struct POINT_T
   struct POINT_T *adjPoint;/* adjacent point */
   unsigned face    ;/* the interface in which this point located */
   unsigned adjFace ;/* adjacent face used in interpolation */
-  unsigned adjPatch;/* adjacent patch used in interpolation */
+  unsigned adjPatch;/* adjacent patch used in interpolation default is UINT_MAX */
   unsigned sameX  : 1;/* 1 if addjacent face is on X = const */
   unsigned sameY  : 1;/* 1 if addjacent face is on Y = const */
   unsigned sameZ  : 1;/* 1 if addjacent face is on Z = const */
@@ -197,8 +197,8 @@ typedef struct SUBFACE_T
   unsigned *adjid ;/* id of adjacent point of each point, their index must be matched 
                    // e.g. adjacent point of id[ind1]=? is adjid[ind1]=? */
   unsigned face    ;/* the interface in which this point located */
-  unsigned adjFace ;/* adjacent face used in interpolation or copy */
-  unsigned adjPatch;/* adjacent patch used in interpolation or copy */
+  unsigned adjFace ;/* adjacent face used in interpolation or copy, for outerB or innerB they are UINT_MAX */
+  unsigned adjPatch;/* adjacent patch used in interpolation or copy for outerB or innerB they are UINT_MAX */
   unsigned df_dn  : 1;/* 1 if d(field)/dn is set at interface, 0 otherwise */
   unsigned sameX  : 1;/* 1 if addjacent face is on X = const */
   unsigned sameY  : 1;/* 1 if addjacent face is on Y = const */

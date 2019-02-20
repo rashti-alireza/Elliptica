@@ -39,6 +39,9 @@ int realize_geometry(Grid_T *const grid)
   /* set df_dn flags */
   df_dn(grid);
   
+  /* taking some precaution and adding more info at your whim */
+  misc(grid);
+  
   /* testing */
   test_subfaces(grid);
   
@@ -47,6 +50,44 @@ int realize_geometry(Grid_T *const grid)
     pr_interfaces(grid);
   
   return EXIT_SUCCESS;
+}
+
+
+/* taking some precaution and adding more info at your whim */
+static void misc(Grid_T *const grid)
+{
+  Interface_T **face;
+  SubFace_T *subf;
+  unsigned pa,f,sf;
+  
+  /* for all patches */
+  FOR_ALL(pa,grid->patch)
+  {
+    face = grid->patch[pa]->interface;
+    /* for all faces */
+    FOR_ALL(f,face)
+    {
+      /* for all subfaces */
+      for (sf = 0; sf < face[f]->ns; ++sf)
+      {
+        subf = face[f]->subface[sf];
+        
+        if (subf->outerB)
+        {
+          /* these help to get segfault in case of using their value */
+          subf->adjPatch = UINT_MAX;
+          subf->adjFace  = UINT_MAX;
+        }
+        if (subf->innerB)
+        {
+          /* these help to get segfault in case of using their value */
+          subf->adjPatch = UINT_MAX;
+          subf->adjFace  = UINT_MAX;
+        }
+      }
+    }
+  }
+  
 }
 
 /* testing various properties of subfaces */
