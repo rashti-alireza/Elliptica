@@ -63,6 +63,10 @@ static void free_E_Trans_prime(Patch_T *const patch);
 static void update_field(Patch_T *const patch);
 static void free_x(Patch_T *const patch);
 static void free_y(Grid_T *const grid);
+static void making_B_single_patch(Patch_T *const patch);
+static void solve_Bx_f(Patch_T *const patch);
+static void update_field_single_patch(Patch_T *const patch);
+static Flag_T check_residual_single_patch(const Patch_T *const patch,const double res_input);
 
 
 

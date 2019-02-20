@@ -67,62 +67,87 @@ static int solve_field(Grid_T *const grid)
   Flag_T IsItSolved = NO;
   int iter = 0;
   
-  while (IsItSolved == NO && iter < NumIter)
+  /* if number grid only has one patch */
+  if (grid->np == 1)
   {
-    const unsigned npatch = grid->np;
-    double *g_prime = 0;
-    Matrix_T *S;
-    unsigned p;
-    
-    printf("Newton Step:%d\n",iter);
-    
-    DDM_SCHUR_COMPLEMENT_OpenMP(omp parallel for)
-    for (p = 0; p < npatch; ++p)
+    while (IsItSolved == NO && iter < NumIter)
     {
-      Patch_T *patch = grid->patch[p];
-      make_f(patch);
-      make_partial_g(patch);
+      Patch_T *patch = grid->patch[0];
+      DDM_Schur_Complement_T *Schur = patch->solving_man->method->SchurC;
+      
+      make_f(patch);/* making f */
+      making_B_single_patch(patch);/* making B */
+      solve_Bx_f(patch);/* solve Bx=f */
+      update_field_single_patch(patch);
+      free(Schur->x);
+      make_f(patch);/* making f */
+      IsItSolved = check_residual_single_patch(patch,res_input);
+      free(Schur->f);
+      
+      if (IsItSolved == YES)
+        break;
+        
+      iter++;
     }
-    make_g(grid);
-    
-    IsItSolved = check_residual(grid,res_input);
-    if (IsItSolved == YES)
-      //break;
-    //test
-    IsItSolved = NO;
-    //end
-    
-    DDM_SCHUR_COMPLEMENT_OpenMP(omp parallel for)
-    for (p = 0; p < npatch; ++p)
+  }
+  else
+  {
+    while (IsItSolved == NO && iter < NumIter)
     {
-      Patch_T *patch = grid->patch[p];
-      making_B_and_E(patch);
-      making_E_prime_and_f_prime(patch);
-      making_F_and_C(patch);
-      making_F_by_f_prime(patch);
-      making_F_by_E_prime(patch);
-    }
-    g_prime = compute_g_prime(grid);
-    S = compute_S(grid);
-    
-    /* solve Sy = g' */
-    solve_Sy_g_prime(S,g_prime,grid);
-    free(g_prime);
-    
-    DDM_SCHUR_COMPLEMENT_OpenMP(omp parallel for)
-    for (p = 0; p < npatch; ++p)
-    {
-      Patch_T *patch = grid->patch[p];
-      /* x = f'-E'y */
-      compute_x(patch);
-      free_E_Trans_prime(patch);
-      update_field(patch);
-      free_x(patch);
-    }
-    free_y(grid);
-    
-    iter++;
-  }/* end of while (IsItSolved == NO && iter < NumIter) */
+      const unsigned npatch = grid->np;
+      double *g_prime = 0;
+      Matrix_T *S;
+      unsigned p;
+      
+      printf("Newton Step:%d\n",iter);
+      
+      DDM_SCHUR_COMPLEMENT_OpenMP(omp parallel for)
+      for (p = 0; p < npatch; ++p)
+      {
+        Patch_T *patch = grid->patch[p];
+        make_f(patch);
+        make_partial_g(patch);
+      }
+      make_g(grid);
+      
+      IsItSolved = check_residual(grid,res_input);
+      if (IsItSolved == YES)
+        break;
+      //test
+      //IsItSolved = NO;
+      //end
+      
+      DDM_SCHUR_COMPLEMENT_OpenMP(omp parallel for)
+      for (p = 0; p < npatch; ++p)
+      {
+        Patch_T *patch = grid->patch[p];
+        making_B_and_E(patch);
+        making_E_prime_and_f_prime(patch);
+        making_F_and_C(patch);
+        making_F_by_f_prime(patch);
+        making_F_by_E_prime(patch);
+      }
+      g_prime = compute_g_prime(grid);
+      S = compute_S(grid);
+      
+      /* solve Sy = g' */
+      solve_Sy_g_prime(S,g_prime,grid);
+      
+      DDM_SCHUR_COMPLEMENT_OpenMP(omp parallel for)
+      for (p = 0; p < npatch; ++p)
+      {
+        Patch_T *patch = grid->patch[p];
+        /* x = f'-E'y */
+        compute_x(patch);
+        free_E_Trans_prime(patch);
+        update_field(patch);
+        free_x(patch);
+      }
+      free_y(grid);
+      
+      iter++;
+    }/* end of while (IsItSolved == NO && iter < NumIter) */
+  }/* end of else */
   
   return EXIT_SUCCESS;
 }
@@ -140,7 +165,7 @@ static void update_field(Patch_T *const patch)
   const unsigned cf = patch->solving_man->cf;
   const char *const field_name = patch->solving_man->field_name[cf];
   Field_T *const f = patch->pool[Ind(field_name)];
-  double *const u_old = f->v;
+  const double *const u_old = f->v;
   double *const u_new = f->v;
   unsigned s,s_node,i,i_node;
   
@@ -156,6 +181,28 @@ static void update_field(Patch_T *const patch)
     u_new[i_node] = u_old[i_node]-y[i];
   }
   
+}
+
+/* updating field when the grid only has single patch */
+static void update_field_single_patch(Patch_T *const patch)
+{
+  DDM_Schur_Complement_T *const Schur = patch->solving_man->method->SchurC;
+  const unsigned NS = Schur->NS;
+  const unsigned *const inv = Schur->inv;
+  const double *const x = Schur->x;
+  const unsigned cf = patch->solving_man->cf;
+  const char *const field_name = patch->solving_man->field_name[cf];
+  Field_T *const f = patch->pool[Ind(field_name)];
+  const double *const u_old = f->v;
+  double *const u_new = f->v;
+  unsigned s,s_node;
+  
+  free_coeffs(f);
+  for (s = 0; s < NS; ++s)
+  {
+    s_node = inv[s];
+    u_new[s_node] = u_old[s_node]-x[s];
+  }
 }
 
 /* free x in Schur */
@@ -210,7 +257,7 @@ static void compute_x(Patch_T *const patch)
 }
 
 /* allocate y and solve Sy = g' and then populate SchurC->y;
-// note: it frees S too.
+// note: it frees S and g_prime too.
 // ->return value: y. */
 static void solve_Sy_g_prime(Matrix_T *const S,double *const g_prime,Grid_T *const grid)
 {
@@ -241,9 +288,11 @@ static void solve_Sy_g_prime(Matrix_T *const S,double *const g_prime,Grid_T *con
     R += NI_p[p];
   }
   free_matrix(S_ccs);
+  free(g_prime);
 }
 
-/* allocate and compute S 
+/* allocate and compute S
+// note: it frees Cs and F_by_E_primes.
 // ->return value: S matrix. */
 static Matrix_T *compute_S(Grid_T *const grid)
 {
@@ -357,7 +406,8 @@ static double *compute_g_prime(Grid_T *const grid)
   return g_prime;
 }
 
-/* computing matrix multiplication: F[p][j]xE'[p] */
+/* computing matrix multiplication: F[p][j]xE'[p].
+// it also frees Fs. */
 static void making_F_by_E_prime(Patch_T *const patch)
 {
   DDM_Schur_Complement_T *const Schur = patch->solving_man->method->SchurC;
@@ -882,6 +932,24 @@ static void making_B_and_E(Patch_T *const patch)
   
   S->method->SchurC->B       = alloc_matrix(REG_SF,Brow,Bcol);
   S->method->SchurC->E_Trans = alloc_matrix(REG_SF,Ecol,Erow);
+    
+  jacobian_field_eq(patch,S->method->SchurC);
+  jacobian_bc_eq(patch,S->method->SchurC);
+  
+}
+
+/* making B when the grid only has one patch.
+// refer to the note on the very top. */
+static void making_B_single_patch(Patch_T *const patch)
+{
+  Solving_Man_T *const S      = patch->solving_man;
+  const unsigned cf           = S->cf;
+  fEquation_T *const jacobian_field_eq = S->jacobian_field_eq[cf];
+  fEquation_T *const jacobian_bc_eq = S->jacobian_bc_eq[cf];
+  const long Brow = (long)S->method->SchurC->NS;
+  const long Bcol = (long)S->method->SchurC->NS;
+  
+  S->method->SchurC->B       = alloc_matrix(REG_SF,Brow,Bcol);
     
   jacobian_field_eq(patch,S->method->SchurC);
   jacobian_bc_eq(patch,S->method->SchurC);
@@ -1880,6 +1948,30 @@ static void f_in_outerboundary_part(Patch_T *const patch)
   }
 }
 
+/* calculate root mean square of F, in Jx=-F, for the whole grid when
+// it has only one patch.
+// and check if the equation is solved up to the residual res_input.
+// ->return value: YES if EQ is solved, NO otherwise.
+*/
+static Flag_T check_residual_single_patch(const Patch_T *const patch,const double res_input)
+{
+  DDM_Schur_Complement_T *S = patch->solving_man->method->SchurC;
+  Flag_T flg = YES;
+  double *f = S->f;
+  double sqr = dot(S->NS,f,f);
+  
+  patch->solving_man->Frms = sqrt(sqr);
+  //test
+  printf("Residual at %s = %0.15f\n",
+    patch->name,patch->solving_man->Frms);
+  //end
+  
+  if (GRT(patch->solving_man->Frms,res_input))
+    flg = NO;
+    
+  return flg;
+}
+
 /* calculate root mean square of F, in Jx=-F, for the whole grid.
 // and check if the equation is solved up to the residual res_input.
 // ->return value: YES if EQ is solved, NO otherwise.
@@ -1940,3 +2032,26 @@ static unsigned OnFace(const unsigned *const n, const unsigned p)
   return 0;
 }
 
+/* solving Bx = f when grid only has only one patch. */
+static void solve_Bx_f(Patch_T *const patch)
+{
+  DDM_Schur_Complement_T *Schur = patch->solving_man->method->SchurC;
+  const unsigned NS = Schur->NS;
+  double *f = Schur->f;
+  double *x = alloc_double(NS);
+  Matrix_T *B = Schur->B;
+  Matrix_T *B_ccs = cast_matrix_ccs(B);
+  UmfPack_T umfpack[1] = {0};
+  
+  free_matrix(B);
+  
+  umfpack->a = B_ccs;
+  umfpack->b = f;
+  umfpack->x = x;
+  direct_solver_umfpack_di(umfpack);
+  
+  free_matrix(B_ccs);
+  free(f);
+  
+  Schur->x = x;
+}
