@@ -424,7 +424,8 @@ typedef struct DDM_SCHUR_COMPLEMENT_T
   Matrix_T **F;
   Matrix_T **C;
   Sewing_T **sewing;/* sewing[patch_number] */
-  unsigned nsewing;/* number of sewings which is = number of patches */ 
+  unsigned nsewing;/* number of sewings which is = number of patches */
+  unsigned np;/* total number of patches */
   unsigned *NS_p;/* SchurC->NS for each patch p */
   unsigned NS_total;/* summation of all NS_p */
   unsigned *NI_p;/* SchurC->NI for each patch p */

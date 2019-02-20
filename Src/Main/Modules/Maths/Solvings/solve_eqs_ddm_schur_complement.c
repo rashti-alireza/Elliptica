@@ -25,8 +25,8 @@
   
 // some definitions used here:
 // subdomain = inner nodes + outer boundary points
-// interface = all nodes - subdomains.
-// note: I interface struct includes all boundary points.
+// interface = all nodes - subdomain.
+// note: interface struct includes all boundary points.
 */
 
 /* using Schur Complement domain decomposition method
@@ -35,9 +35,9 @@
 */
 int ddm_schur_complement(Grid_T *const grid)
 {
-  char **field_name = 0;
-  unsigned nf = 0;
-  unsigned f;
+  char **field_name = 0;/* name of all fields to be solved */
+  unsigned nf = 0;/* number of all fields */
+  unsigned f;/* dummy index */
   
   /* picking up labeling, mapping etc. */
   preparing_ingredients(grid);
@@ -74,6 +74,8 @@ static int solve_field(Grid_T *const grid)
     Matrix_T *S;
     unsigned p;
     
+    printf("Newton Step:%d\n",iter);
+    
     DDM_SCHUR_COMPLEMENT_OpenMP(omp parallel for)
     for (p = 0; p < npatch; ++p)
     {
@@ -85,8 +87,11 @@ static int solve_field(Grid_T *const grid)
     
     IsItSolved = check_residual(grid,res_input);
     if (IsItSolved == YES)
-      break;
-      
+      //break;
+    //test
+    IsItSolved = NO;
+    //end
+    
     DDM_SCHUR_COMPLEMENT_OpenMP(omp parallel for)
     for (p = 0; p < npatch; ++p)
     {
@@ -112,22 +117,10 @@ static int solve_field(Grid_T *const grid)
       compute_x(patch);
       free_E_Trans_prime(patch);
       update_field(patch);
-      free_x_and_y(patch);
+      free_x(patch);
     }
+    free_y(grid);
     
-    //test
-    DDM_SCHUR_COMPLEMENT_OpenMP(omp parallel for)
-    for (p = 0; p < npatch; ++p)
-    {
-      Patch_T *patch = grid->patch[p];
-      make_f(patch);
-      make_partial_g(patch);
-    }
-    make_g(grid);
-    
-    check_residual(grid,res_input);
-    //break;
-    //end
     iter++;
   }/* end of while (IsItSolved == NO && iter < NumIter) */
   
@@ -165,20 +158,31 @@ static void update_field(Patch_T *const patch)
   
 }
 
-/* free x and y in Schur */
-static void free_x_and_y(Patch_T *const patch)
+/* free x in Schur */
+static void free_x(Patch_T *const patch)
 {
   DDM_Schur_Complement_T *const Schur = 
                           patch->solving_man->method->SchurC;
   free(Schur->x);
+}
+
+/* free y in Schur.
+// NOTE: since y memory is shared between the patches 
+// ONLY free one of them. */
+static void free_y(Grid_T *const grid)
+{
+  DDM_Schur_Complement_T *const Schur = 
+                          grid->patch[0]->solving_man->method->SchurC;
+  
   free(Schur->y); 
 }
 
-/* free E_Trans_prime matrix in each patch */
+/* free E_Trans_prime matrix in each patch. */
 static void free_E_Trans_prime(Patch_T *const patch)
 {
   DDM_Schur_Complement_T *const Schur = patch->solving_man->method->SchurC;
-  free_matrix(Schur->E_Trans_prime);
+  if (Schur->E_Trans_prime)
+    free_matrix(Schur->E_Trans_prime);
 }
 
 /* x = f'-E'y */
@@ -187,20 +191,21 @@ static void compute_x(Patch_T *const patch)
   DDM_Schur_Complement_T *const Schur = patch->solving_man->method->SchurC;
   const unsigned NS            = Schur->NS;
   const unsigned NI            = Schur->NI;
-  const double *const f_prime  = Schur->f_prime;
+  double *f_prime  = Schur->f_prime;
   double **const E_Trans_prime = Schur->E_Trans_prime->reg->A;
   const double *const y = Schur->y;
   double *const x = alloc_double(NS);
-  double Etpy;/* E_Trans_prime by y */
+  double Ey;/* E_Trans_prime by y */
   unsigned i,s;
   
   for(s = 0; s < NS; ++s)
   {
-    Etpy = 0;/* E_Trans_prime by y */
+    Ey = 0;/* E_Trans_prime by y */
     for (i = 0; i < NI; ++i)
-      Etpy += E_Trans_prime[i][s]*y[i];
-    x[s] = f_prime[s]-Etpy;
+      Ey += E_Trans_prime[i][s]*y[i];
+    x[s] = f_prime[s]-Ey;
   }
+  free(Schur->f_prime);
   Schur->x = x;
 }
 
@@ -219,7 +224,7 @@ static void solve_Sy_g_prime(Matrix_T *const S,double *const g_prime,Grid_T *con
   UmfPack_T umfpack[1] = {0};
   DDM_Schur_Complement_T *Schur;
   unsigned R = 0;
-  unsigned p,i;
+  unsigned p;
   free_matrix(S);
   
   umfpack->a = S_ccs;
@@ -232,12 +237,10 @@ static void solve_Sy_g_prime(Matrix_T *const S,double *const g_prime,Grid_T *con
   {
     Patch_T *patch = grid->patch[p];
     Schur = patch->solving_man->method->SchurC;
-    Schur->y = alloc_double(NI_p[p]);
-    for (i = 0; i < NI_p[p]; ++i)
-      Schur->y[i] = y[R+i];
+    Schur->y = &y[R];
     R += NI_p[p];
   }
-  free(y);
+  free_matrix(S_ccs);
 }
 
 /* allocate and compute S 
@@ -257,14 +260,14 @@ static Matrix_T *compute_S(Grid_T *const grid)
   unsigned R1,R2;/* reference */
   unsigned p,i,j,k;
   
-  /* making composing C part of S */
+  /* composing C part of S */
   R2 = 0;
   FOR_ALL_PATCHES(p,grid)
   {
     Patch_T *patch = grid->patch[p];
     Schur = patch->solving_man->method->SchurC;
     
-    /* go thru all C */
+    /* go thru all Cij */
     R1 = 0;
     for (k = 0; k < np; ++k)
     {
@@ -282,21 +285,21 @@ static Matrix_T *compute_S(Grid_T *const grid)
       R1 += NI_p[k];
     }
     R2 += NI_p[p];
+    free(Schur->C);
   }
   
   /* making composing F.E' part of S */
-  R1 = 0;R2 = 0;
+  R2 = 0;
   FOR_ALL_PATCHES(p,grid)
   {
     Patch_T *patch = grid->patch[p];
     Schur = patch->solving_man->method->SchurC;
     double **F_by_E_prime = Schur->F_by_E_prime->reg->A;
     
-    for (i = 0; i < NI_p[p]; i++)
+    for (i = 0; i < NI_total; i++)
       for (j = 0; j < NI_p[p]; ++j)
-        s[R1+i][R2+j] -= F_by_E_prime[i][j];
+        s[i][R2+j] -= F_by_E_prime[i][j];
     
-    R1 += NI_p[p];
     R2 += NI_p[p];    
     free_matrix(Schur->F_by_E_prime);
   }
@@ -344,7 +347,7 @@ static double *compute_g_prime(Grid_T *const grid)
     Schur = patch->solving_man->method->SchurC;
     
     NI = Schur->NI;
-    g = Schur->g;
+    g  = Schur->g;
     
     for (i = 0; i < NI; ++i)
       g_prime[R+i] = g[i]-g_prime[R+i];
@@ -354,32 +357,53 @@ static double *compute_g_prime(Grid_T *const grid)
   return g_prime;
 }
 
-/* computing matrix multiplication: F[p][p]xE'[p] */
+/* computing matrix multiplication: F[p][j]xE'[p] */
 static void making_F_by_E_prime(Patch_T *const patch)
 {
   DDM_Schur_Complement_T *const Schur = patch->solving_man->method->SchurC;
-  const unsigned cp = patch->pn;/* current patch number */
-  Matrix_T *F = Schur->F[cp];
+  const unsigned np = Schur->np;
+  const unsigned *const NI_p = Schur->NI_p;
+  const unsigned NI = Schur->NI;
+  const unsigned NI_total = Schur->NI_total;
+  Schur->F_by_E_prime = alloc_matrix(REG_SF,NI_total,NI);
   const Matrix_T *const E_Trans_prime = Schur->E_Trans_prime;
+  double **const FxEp = Schur->F_by_E_prime->reg->A;
+  Matrix_T *MxM;
+  unsigned p,R,i,j;
   
-  Schur->F_by_E_prime = matrix_by_matrix(F,E_Trans_prime,"a*transpose(b)");
-  
-  free_matrix(F);
+  R = 0;
+  for (p = 0; p < np; ++p)
+  {
+    Matrix_T *F = Schur->F[p];
+    
+    if (F)
+    {
+      MxM = matrix_by_matrix(F,E_Trans_prime,"a*transpose(b)");
+      free_matrix(F);
+      
+      for (i = 0; i < NI_p[p]; ++i)
+        for (j = 0; j < NI; ++j)
+          FxEp[i+R][j] = MxM->reg->A[i][j];
+      
+      free_matrix(MxM);
+    }
+    R += NI_p[p];
+  }
+  free(Schur->F);
 }
 
 /* computing:
-  |F[p][0]f'[p]|
-  |F[p][1]f'[p]|
-  |F[p][2]f'[p]|
+  |F[0][p]f'[p]|
+  |F[1][p]f'[p]|
+  |F[2][p]f'[p]|
   |...         |
 */
 static void making_F_by_f_prime(Patch_T *const patch)
 {
   DDM_Schur_Complement_T *const Schur = patch->solving_man->method->SchurC;
-  const unsigned np = patch->grid->np;
-  const unsigned cp = patch->pn;/* current patch number */
+  const unsigned np = Schur->np;
   const unsigned *const NI_p = Schur->NI_p;
-  unsigned p_index = 0;
+  unsigned R = 0;/* reference */
   const double *const f_prime = Schur->f_prime;
   double *const F_by_f_prime = alloc_double(Schur->NI_total);
   unsigned p;
@@ -390,11 +414,9 @@ static void making_F_by_f_prime(Patch_T *const patch)
     
     if (F)
     {
-      matrix_by_vector(F,f_prime,&F_by_f_prime[p_index],NOT_INITIALIZE);
-      if (p != cp)
-        free_matrix(F);
+      matrix_by_vector(F,f_prime,&F_by_f_prime[R],NOT_INITIALIZE);
     }
-    p_index += NI_p[p];
+    R += NI_p[p];
   }
   
   Schur->F_by_f_prime = F_by_f_prime;
@@ -405,7 +427,7 @@ static void making_F_and_C(Patch_T *const patch)
 {
   DDM_Schur_Complement_T *const Schur = patch->solving_man->method->SchurC;
   Sewing_T **const sewing = Schur->sewing;
-  const unsigned np = patch->grid->np;
+  const unsigned np = Schur->np;
   unsigned p;
   
   /* allocation matrices */
@@ -956,6 +978,7 @@ static void preparing_ingredients(Grid_T *const grid)
     SchurC->inv = malloc(patch->nn*sizeof(*SchurC->inv));
     pointerEr(SchurC->inv);  
     SchurC->patch = patch;
+    SchurC->np    = patch->grid->np;
     patch->solving_man->method->Schur_Complement = 1;
     patch->solving_man->method->SchurC =  SchurC;
     
@@ -999,9 +1022,9 @@ static void set_NSs_NIs(Patch_T *const patch)
     NI_p[p]   = patch_p->solving_man->method->SchurC->NI;
     NI_total += NI_p[p];
   }
-  Schur->NS_p = NS_p;
+  Schur->NS_p     = NS_p;
   Schur->NS_total = NS_total;
-  Schur->NI_p = NI_p;
+  Schur->NI_p     = NI_p;
   Schur->NI_total = NI_total;
 }
 
@@ -1510,7 +1533,7 @@ static void make_partial_g(Patch_T *const patch)
 {
   DDM_Schur_Complement_T *const Schur = patch->solving_man->method->SchurC;
   Sewing_T **const sewing = Schur->sewing;
-  const unsigned np = patch->grid->np;
+  const unsigned np = Schur->np;
   unsigned p;
   
   /* go thru all of sewings  */

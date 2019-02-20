@@ -61,7 +61,8 @@ static void miscellany_in_sewing(Patch_T *const patch);
 static void set_NSs_NIs(Patch_T *const patch);
 static void free_E_Trans_prime(Patch_T *const patch);
 static void update_field(Patch_T *const patch);
-static void free_x_and_y(Patch_T *const patch);
+static void free_x(Patch_T *const patch);
+static void free_y(Grid_T *const grid);
 
 
 
