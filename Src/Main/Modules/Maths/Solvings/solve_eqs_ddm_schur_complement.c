@@ -59,6 +59,8 @@ int ddm_schur_complement(Grid_T *const grid)
   return EXIT_SUCCESS;
 }  
 
+/* solving the field.
+// ->return value: EXIT_SUCCESS. */
 static int solve_field(Grid_T *const grid)
 {
   /* residual determined in the input file */
@@ -87,6 +89,8 @@ static int solve_field(Grid_T *const grid)
       if (IsItSolved == YES)
         break;
         
+      printf("Newton Step:%d\n",iter+1);
+      
       iter++;
     }
   }
@@ -98,8 +102,6 @@ static int solve_field(Grid_T *const grid)
       double *g_prime = 0;
       Matrix_T *S;
       unsigned p;
-      
-      printf("Newton Step:%d\n",iter);
       
       DDM_SCHUR_COMPLEMENT_OpenMP(omp parallel for)
       for (p = 0; p < npatch; ++p)
@@ -116,6 +118,7 @@ static int solve_field(Grid_T *const grid)
       //test
       //IsItSolved = NO;
       //end
+      printf("Newton Step:%d\n",iter+1);
       
       DDM_SCHUR_COMPLEMENT_OpenMP(omp parallel for)
       for (p = 0; p < npatch; ++p)
@@ -1035,7 +1038,7 @@ static void preparing_ingredients(Grid_T *const grid)
   {
     Patch_T *patch = grid->patch[p];
     
-    /* if this path already has Schur stucture */
+    /* if this patch already has Schur stucture */
     if (patch->solving_man->method->Schur_Complement)
       continue;
       

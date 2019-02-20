@@ -19,7 +19,7 @@ int Laplace_Inhom_initial_data_alpha(Grid_T *const grid)
     unsigned n;
     
     FOR_ALL_POINTS(n,patch)
-      alpha[n] = SQR(x_(n))+SQR(y_(n))+SQR(z_(n))+0.3;//sin(x_(n));
+      alpha[n] = SQR(x_(n))+SQR(y_(n))+SQR(z_(n))+0.3+sin(x_(n));
   }
   
   return EXIT_SUCCESS;
