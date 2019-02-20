@@ -846,7 +846,7 @@ static void fill_C_F_collocation(Patch_T *const patch, Pair_T *const pair)
       i1 = Imap1[node1[subfp2]];
       /* note: there is a small possibility that i1 becomes UINT_MAX, it means that
       // in finding of the subfaces some points could have been considered as outerboundary
-      // but the don't. it is not really a bug for subfaces, but it causes segfault for this
+      // but they didn't. it is not really a bug for subfaces, but it causes segfault for this
       // algorithm. if you ever get segfault at this part, be aware of this note! */
       C[i2][i1] += sign*1;
     }
@@ -1316,10 +1316,6 @@ static void make_others_sewing(const Patch_T *const patch,const Patch_T *const p
         }
           
         populate_pair(sewing[p2],subface,OTHERS);
-      }
-      else
-      {
-        abortEr("This case has not been considered.\n");
       }
    
     }/* end of for (sfc = 0; sfc < nsfc; ++sfc) */
