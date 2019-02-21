@@ -540,15 +540,24 @@ static void populate_F_and_C(Patch_T *const patch, Pair_T *const pair)
   {
     if (subface->copy)/* if it is collocated point */
     {
+      //test
+      //printf("****colloc*****\n");
+      //end
       fill_C_F_collocation(patch,pair);
     }
     else
     {
+      //test
+      //printf("****interp1*****\n");
+      //end
       fill_C_F_interpolation(patch,pair);
     }
   }
   else /* if there is an overlap case */
   {
+    //test
+      //printf("****interp2****\n");
+      //end
     fill_C_F_interpolation(patch,pair);
   }
 }
