@@ -1011,7 +1011,8 @@ static void make_g(Grid_T *const grid)
         unsigned s_node = Smap[s];
         if (Imap[s_node] == UINT_MAX)
           continue;
-        
+        /* NOTE: because we've filled each pg's in order 
+        // now we can add them with same indices; otherwise we couldn't. */
         g[Imap[s_node]] += pg1[s]+pg2[s];
       }
       
