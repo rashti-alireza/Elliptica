@@ -17,7 +17,8 @@
 #define GetParameterS_E(x) get_parameter_value_S(x,__FILE__,__LINE__,FATAL)
 #define GetParameterI_E(x) get_parameter_value_I(x,__FILE__,__LINE__,FATAL)
 #define GetParameterD_E(x) get_parameter_value_D(x,__FILE__,__LINE__,FATAL)
-
+#define TIMER_ON(x) double x = get_time_sec();
+#define TIMER_OFF(x) pr_spent_time(x,#x);
 #define FOR_SURFACE(x,y,z,n0,n1,n2) (z) = (n2);for ((x) = 0; (x) < (n0); ++(x))\
                                             for ((y) = 0; (y) < (n1); ++(y))
 #define FOR_ijk(x,y,z,x_i,x_f,y_i,y_f,z_i,z_f) \

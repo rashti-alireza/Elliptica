@@ -105,7 +105,7 @@ static void *jacobian_eq_alpha(void *vp1,void *vp2)
   j_zz = get_j_reader(j2);
   
   /* fill up jacobian for alpha equation: */
-  
+  //TIMER_ON(Jacobian_B);
   /* B part: */
   for (i = 0; i < NInnerMesh; ++i)
   {
@@ -115,7 +115,8 @@ static void *jacobian_eq_alpha(void *vp1,void *vp2)
       jj = inv[j];
       B[i][j] = j_xx(j0,ii,jj)+j_yy(j1,ii,jj)+j_zz(j2,ii,jj);
     }
-  }             
+  }
+  //TIMER_OFF(Jacobian_B);
   /* E part: */
   if (S->NI)/* if there is any interface points then E is needed */
   {
