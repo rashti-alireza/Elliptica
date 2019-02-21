@@ -1014,6 +1014,15 @@ static void make_g(Grid_T *const grid)
         /* NOTE: because we've filled each pg's in order 
         // now we can add them with same indices; otherwise we couldn't. */
         g[Imap[s_node]] += pg1[s]+pg2[s];
+        //test
+        if (GRT(g[Imap[s_node]],0.00000001))
+        {
+          printf("%f %f %f\n",
+          patch->node[s_node]->x[0],
+          patch->node[s_node]->x[1],
+          patch->node[s_node]->x[2]);
+        }
+        //end
       }
       
       free(pg1);
