@@ -25,4 +25,4 @@ static void add_to_archive(struct Archive_S **const arch,SubFace_T *const s1,Sub
 static void free_archive(struct Archive_S *arch,const unsigned Narch);
 Flag_T pr_derivatives_DiffByNode(const double *const numc, const double *const anac,const Patch_T *const patch,const char *const prefix);
 void pr_matrix(const Matrix_T *const M,const char *const name);
-
+void pr_field_difference(const Grid_T *const grid,const char *const fld1,const char *const fld2);

@@ -421,6 +421,51 @@ void pr_coords(const Grid_T *const grid)
   free(path);
 }
 
+/* print the difference of two given name of fields at each node 
+// on the whole grid.
+*/
+void pr_field_difference(const Grid_T *const grid,const char *const fld1,const char *const fld2)
+{
+  FILE *file1,*file2;
+  char dir[MAXSTR]={'\0'}, *path;
+  const char *path_par;
+  unsigned l,i,R;
+  
+  path_par = GetParameterS_E("output_directory_path");
+  path = make_directory(path_par,"Fields");
+  
+  sprintf(dir,"%s/%s-%s.grid",path,fld1,fld2);
+  file1 = fopen(dir,"w");
+  pointerEr(file1);
+  
+  fprintf(file1,"# node %s %s %s-%s\n",fld2,fld1,fld2,fld1);
+  R = 0;
+  FOR_ALL(i,grid->patch)
+  {
+    Patch_T *patch = grid->patch[i];
+    const double *f1 = patch->pool[Ind(fld1)]->v;
+    const double *f2 = patch->pool[Ind(fld2)]->v;
+    unsigned U = patch->nn;
+    
+    sprintf(dir,"%s/%s-%s.%s",path,fld1,fld2,patch->name);
+    file2 = fopen(dir,"w");
+    pointerEr(file2);
+  
+    for (l = 0; l < U; l++)
+    {
+      fprintf(file1,"%u %0.15f %0.15f %0.15f\n",l+R,f2[l],f1[l],f2[l]-f1[l]);
+      fprintf(file2,"%u %0.15f %0.15f %0.15f\n",l,f2[l],f1[l],f2[l]-f1[l]);
+    }
+      
+    R += U;
+    fclose(file2);
+  }
+  
+  fclose(file1);
+  free(path);
+}
+
+
 /* adding s1 and s2 to archive to make their name 
 // for printing name purposes. note: if one if s1 or s2 is null,
 // the none null one will be written in A[i].s1.
