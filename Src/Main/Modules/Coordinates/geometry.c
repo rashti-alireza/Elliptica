@@ -95,6 +95,7 @@ static void test_subfaces(const Grid_T *const grid)
 {
   Interface_T **face;
   SubFace_T *subf, *subf2;
+  Flag_T flg;
   unsigned pa,f,sf;
   
   /* check if all point have been found */
@@ -148,16 +149,45 @@ static void test_subfaces(const Grid_T *const grid)
         {
           subf2 = get_paired_subface(subf);
           
+          /* making sure two touching sufaces have different df_dn */
           if (subf->df_dn && subf2->df_dn)
-            abortEr("Wrong df_dn flags.\n");
+            abortEr("Wrong df_dn flags; both have df_dn = 1.\n");
+          /* making sure two touching sufaces have different df_dn */
+          if (!subf->df_dn && !subf2->df_dn)
+            abortEr("Wrong df_dn flags; both have df_dn = 0.\n");
           if (!subf2->touch)
             abortEr("Wrong paired subface.\n");
-          
         }
 
       }
     }
   }/* FOR_ALL(pa,grid->patch) */
+  
+  /* make sure not all of the subfaces have df_dn = 1
+  // at least one of them must have df_dn = 0 or has outerB */
+  FOR_ALL(pa,grid->patch)
+  {
+    face = grid->patch[pa]->interface;
+    flg = NO;
+    FOR_ALL(f,face)
+    {
+      for (sf = 0; sf < face[f]->ns; ++sf)
+      {
+        subf = face[f]->subface[sf];
+        if (subf->df_dn == 0 || subf->outerB == 1)
+        {
+          flg = YES;
+          break;
+        }
+      }
+      if (flg == YES)
+        break;
+    }
+    if (flg == NO)
+      abortEr("One of patches has all Neumann boundary condition.");
+    
+  }/* FOR_ALL(pa,grid->patch) */  
+  
 }
 
 /* setting df_dn flags inside sub-faces. this flag says if we have 
