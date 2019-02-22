@@ -78,6 +78,10 @@ static int solve_field(Grid_T *const grid)
       DDM_Schur_Complement_T *Schur = patch->solving_man->method->SchurC;
       
       make_f(patch);/* making f */
+      IsItSolved = check_residual_single_patch(patch,res_input);
+      if (IsItSolved == YES)
+        break;
+      
       making_B_single_patch(patch);/* making B */
       solve_Bx_f(patch);/* solve Bx=f */
       update_field_single_patch(patch);
@@ -1056,7 +1060,29 @@ static void preparing_ingredients(Grid_T *const grid)
     miscellany_in_sewing(patch);
     set_NSs_NIs(patch);
   }
+  checks_and_constraints(grid);
   
+}
+
+/* conduct some tests and checkups */
+static void checks_and_constraints(const Grid_T *const grid)
+{
+  DDM_Schur_Complement_T *Schur;
+  unsigned p,count;
+  
+  count = 0;
+  FOR_ALL_PATCHES(p,grid)
+  {
+    Patch_T *patch = grid->patch[p];
+    Schur = patch->solving_man->method->SchurC;
+    if (!Schur->NI)
+      count++;
+    
+  }
+  
+  if (count > 1)
+    abortEr("Disconnected Manifold: It seems that the grid has some gaps in it!\n"
+    " At least two of the patches are disconnected.");
 }
 
 /* set NS_p, NI_p, NS_total and NI_total for each patch */
@@ -1971,7 +1997,7 @@ static Flag_T check_residual_single_patch(const Patch_T *const patch,const doubl
   
   patch->solving_man->Frms = sqrt(sqr);
   //test
-  printf("Residual at %s = %0.15f\n",
+  printf("Residual at %s = %g\n",
     patch->name,patch->solving_man->Frms);
   //end
   

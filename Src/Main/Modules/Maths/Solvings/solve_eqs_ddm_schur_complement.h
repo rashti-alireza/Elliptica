@@ -67,7 +67,7 @@ static void making_B_single_patch(Patch_T *const patch);
 static void solve_Bx_f(Patch_T *const patch);
 static void update_field_single_patch(Patch_T *const patch);
 static Flag_T check_residual_single_patch(const Patch_T *const patch,const double res_input);
-
+static void checks_and_constraints(const Grid_T *const grid);
 
 
 
