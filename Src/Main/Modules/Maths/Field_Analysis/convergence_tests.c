@@ -28,7 +28,7 @@ int analytic_numeric_convergence_test(const Grid_T *const grid,const char *const
     nn         = patch->nn;
     f_analytic = patch->pool[Ind(f_analytic_name)];
     f_numeric  = patch->pool[Ind(f_numeric_name)];
-    scale      = L_inf(f_analytic->v,nn);
+    scale      = L_inf(nn,f_analytic->v);
     diff       = alloc_double(nn);
     
     if (EQL(scale,0)) scale = 1;
@@ -36,7 +36,7 @@ int analytic_numeric_convergence_test(const Grid_T *const grid,const char *const
     for (i = 0; i < nn; ++i)
       diff[i] = f_analytic->v[i]-f_numeric->v[i];
       
-    Linf  = L_inf(diff,nn);
+    Linf  = L_inf(nn,diff);
     Linf /= scale;
     L2    = L2_norm(nn,f_analytic->v,f_numeric->v);
     L2   /= scale;
