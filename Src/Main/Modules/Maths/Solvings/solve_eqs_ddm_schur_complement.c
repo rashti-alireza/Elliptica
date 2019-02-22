@@ -277,6 +277,7 @@ static void solve_Sy_g_prime(Matrix_T *const S,double *const g_prime,Grid_T *con
   unsigned p;
   free_matrix(S);
   
+  umfpack->description = "Solving Sy = g'";
   umfpack->a = S_ccs;
   umfpack->b = g_prime;
   umfpack->x = y;
@@ -906,6 +907,7 @@ static void making_E_prime_and_f_prime(Patch_T *const patch)
   xs[ns-1] = calloc(S->NS,sizeof(*xs[ns-1]));
   pointerEr(xs[ns-1]);
   
+  umfpack->description = "Solving BE' = E and Bf' = f";
   umfpack->a = a;
   umfpack->bs = bs;
   umfpack->xs = xs;
@@ -2073,6 +2075,7 @@ static void solve_Bx_f(Patch_T *const patch)
   
   free_matrix(B);
   
+  umfpack->description = "Solving Bx = f";
   umfpack->a = B_ccs;
   umfpack->b = f;
   umfpack->x = x;

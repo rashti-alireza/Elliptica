@@ -38,8 +38,13 @@ int direct_solver_umfpack_di(void *vp)
     umfpack_error_di(Control,status,__FILE__,__LINE__);
      
   umfpack_di_free_symbolic(&Symbolic);
-
-  printf("Condition_Number = %g\n", 1/Info[UMFPACK_RCOND]);
+  
+  if (umf->description)
+  {
+    printf("%s\n",umf->description);
+    printf("o.  Matrix Dimension %dx%d\n", row,col);
+    printf("o.  Condition_Number = %g\n", 1/Info[UMFPACK_RCOND]);
+  }
 
   status = umfpack_di_solve(UMFPACK_A,Ap,Ai,Ax,x,b,Numeric,Control,Info);
   if(status != UMFPACK_OK)
@@ -85,7 +90,13 @@ int direct_solver_umfpack_dl(void *vp)
      
   umfpack_dl_free_symbolic(&Symbolic);
 
-  printf("Condition_Number = %g\n", 1/Info[UMFPACK_RCOND]);
+  if (umf->description)
+  {
+    printf("%s\n",umf->description);
+    printf("o.  Matrix Dimension %dx%d\n", row,col);
+    printf("o.  Condition_Number = %g\n", 1/Info[UMFPACK_RCOND]);
+  }
+
 
   status = umfpack_dl_solve(UMFPACK_A,Ap,Ai,Ax,x,b,Numeric,Control,Info);
   if(status != UMFPACK_OK)
@@ -149,7 +160,12 @@ int direct_solver_series_umfpack_di(void *vp)
      
   umfpack_di_free_symbolic(&Symbolic);
 
-  printf("Condition_Number = %g\n", 1/Info[UMFPACK_RCOND]);
+  if (umf->description)
+  {
+    printf("%s\n",umf->description);
+    printf("o.  Matrix Dimension %dx%d\n", row,col);
+    printf("o.  Condition_Number = %g\n", 1/Info[UMFPACK_RCOND]);
+  }
 
   /* solve for series ax[i]=b[i] */
   for (i = 0; i < ns; ++i)

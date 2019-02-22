@@ -607,6 +607,7 @@ typedef struct BOUNDARY_CONDITION_T
 /* umfpack direct solver */
 typedef struct UMFPACK_T
 {
+  const char *description;
   Matrix_T *a;/* a in a.x = b */
   double *b;/* in ax=b */
   double *x;/* in ax=b */
