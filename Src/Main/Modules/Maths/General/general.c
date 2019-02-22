@@ -6,6 +6,7 @@
 #include "general.h"
 
 /* taking square root of vector v2-v1 which has l double type components.
+// it is L2 norm basically.
 // ->return value: root mean square of v2-v1.
 */
 double rms(const unsigned n, const double *const v2,const double *const v1)
@@ -27,6 +28,39 @@ double rms(const unsigned n, const double *const v2,const double *const v1)
     
   sum = sqrt(sum);
   
+  return sum;
+}
+
+/* calculate the L2 norm of v2 - v1, i.e. :
+// L2Norm = sqrt(sum{(v2[i]-v1[i])^2})
+// ->return value: L2 norm.
+*/
+double L2_norm(const unsigned n, const double *const v2,const double *const v1)
+{
+  return rms(n,v2,v1);
+}
+
+/* calculate the L1 norm of v2 - v1, i.e. :
+// L1Norm = sum{|v2[i]-v1[i]|}
+// ->return value: L1 norm.
+*/
+double L1_norm(const unsigned n, const double *const v2,const double *const v1)
+{
+  unsigned i;
+  double sum;
+  sum = 0;
+  
+  if (v2 == 0 && v1 == 0) return 0;
+  else if (v1 == 0)    	  
+    for(i = 0; i < n; i++)
+      sum += ABS(v2[i]);
+  else if (v2 == 0)       
+    for(i = 0; i < n; i++)
+      sum += ABS(v1[i]);
+  else
+    for(i = 0; i < n; i++)
+      sum += ABS(v2[i]-v1[i]);
+    
   return sum;
 }
 
@@ -388,3 +422,26 @@ double MaxMag_d(const double a,const double b)
 {
   return ABS(a) > ABS(b) ? ABS(a) : ABS(b);
 }
+
+/* given adouble array and its dimension N, 
+// it finds the maximum magnitude of the elements, i.e. L infinity norm
+// ->return value: maximum magnitude of a double array (L infinity). */
+double L_inf(const double *const v,const double N)
+{
+  if (!v || !N)
+    abortEr("The given array is empty.");
+  
+  double max = ABS(v[0]);
+  unsigned i;
+  
+  for (i = 1; i < N; ++i)
+  {
+    double a = ABS(v[i]);
+    
+    if (GRT(a,max))
+      max = a;
+  }
+  
+  return max;
+}
+
