@@ -26,6 +26,8 @@ int Laplace_Inhom_analyze_answer(const Grid_T *const grid)
   
   pr_field_difference(grid,"alpha","alpha_real");
   
+  analytic_numeric_convergence_test(grid,"alpha_real","alpha");
+  
   FOR_ALL_PATCHES(p,grid)
   {
     Patch_T *patch = grid->patch[p];
