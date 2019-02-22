@@ -1015,13 +1015,13 @@ static void make_g(Grid_T *const grid)
         // now we can add them with same indices; otherwise we couldn't. */
         g[Imap[s_node]] += pg1[s]+pg2[s];
         //test
-        if (GRT(g[Imap[s_node]],0.00000001))
+        /*if (GRT(g[Imap[s_node]],0.00000001))
         {
           printf("%f %f %f\n",
           patch->node[s_node]->x[0],
           patch->node[s_node]->x[1],
           patch->node[s_node]->x[2]);
-        }
+        }*/
         //end
       }
       
@@ -2025,7 +2025,7 @@ static Flag_T check_residual(const Grid_T *const grid,const double res_input)
     sqrs[p] = sqr1+sqr2;
     patch->solving_man->Frms = sqrt(sqrs[p]);
     //test
-    printf("Residual at %s = %0.15f\n",
+    printf("Residual at %s = %g\n",
       patch->name,patch->solving_man->Frms);
     //end
   }
