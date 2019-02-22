@@ -115,9 +115,6 @@ static int solve_field(Grid_T *const grid)
       IsItSolved = check_residual(grid,res_input);
       if (IsItSolved == YES)
         break;
-      //test
-      //IsItSolved = NO;
-      //end
       printf("Newton Step:%d\n",iter+1);
       
       DDM_SCHUR_COMPLEMENT_OpenMP(omp parallel for)
@@ -541,24 +538,15 @@ static void populate_F_and_C(Patch_T *const patch, Pair_T *const pair)
   {
     if (subface->copy)/* if it is collocated point */
     {
-      //test
-      //printf("****colloc*****\n");
-      //end
       fill_C_F_collocation(patch,pair);
     }
     else
     {
-      //test
-      //printf("****interp1*****\n");
-      //end
       fill_C_F_interpolation(patch,pair);
     }
   }
   else /* if there is an overlap case */
   {
-    //test
-      //printf("****interp2****\n");
-      //end
     fill_C_F_interpolation(patch,pair);
   }
 }
@@ -1016,15 +1004,6 @@ static void make_g(Grid_T *const grid)
         /* NOTE: because we've filled each pg's in order 
         // now we can add them with same indices; otherwise we couldn't. */
         g[Imap[s_node]] += pg1[s]+pg2[s];
-        //test
-        /*if (GRT(g[Imap[s_node]],0.00000001))
-        {
-          printf("%f %f %f\n",
-          patch->node[s_node]->x[0],
-          patch->node[s_node]->x[1],
-          patch->node[s_node]->x[2]);
-        }*/
-        //end
       }
       
       free(pg1);
