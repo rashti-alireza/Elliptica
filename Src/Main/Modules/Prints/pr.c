@@ -44,11 +44,8 @@ void pr_line(void)
 void pr_clock(void)
 {
   time_t now = time(0);
-  
-  printf("Clock in Seconds: \"%f\"\n"
-          "Clock in Minuets: \"%f\"\n",
-            difftime(now,initial_time_global),
-            difftime(now,initial_time_global)/60);
+  double t = difftime(now,initial_time_global);
+  printf("CLOCK:  \"%f Second(s) = %f Minuet(s)\"\n",t,t/60.);
   
 }
 
