@@ -191,7 +191,7 @@ typedef struct SUBFACE_T
   struct PATCH_T *patch;/* refers to its patch */
   char *flags_str ;/* encodes all of flags info in string format */
   unsigned sn     ;/* its subface number */
-  unsigned adjsn  ;/* adjacent surface number */
+  unsigned adjsn  ;/* adjacent subface number */
   unsigned np     ;/* number of points this surface has */
   unsigned *id    ;/* id of points this subface made of; it refers to node number*/
   unsigned *adjid ;/* id of adjacent point of each point, their index must be matched 
