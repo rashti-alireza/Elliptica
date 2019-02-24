@@ -748,10 +748,10 @@ static void analyze_adjPnt(PointSet_T *const Pnt)
 // the possible subfaces on a same face use the same adjPatch.
 // algorithm:
 // 1. it first finds all of the subfaces on the same Pnt->Pnt->face 
-// with the same adjFace and adjPatch as the adjPnt has.
-// 2. it studies normal vector on these adjPatches and adjFaces to see if
+// with the same adjPatch as the adjPnt has.
+// 2. it then studies normal vector on this adjPatches to see if
 // the match can be made.
-// 3. if normal vector mathched, take this adjPatch and adjFace as the mathed one
+// 3. if normal vector mathched, take this adjPatch as the matched one
 // and return 1, else return 0.
 // ->return value: 1 if yes; 0 otherwise.
 */
