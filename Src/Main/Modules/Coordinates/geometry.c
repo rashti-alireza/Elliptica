@@ -784,96 +784,98 @@ static int IsMatchedOtherInnerSubface(PointSet_T *const Pnt)
     {
       subface = face->subface[sf];
       
-      if (subface->adjPatch == adjPatch)
+      /* we privilege the adjPnt with same adjPatch as the subface */
+      if (subface->adjPatch != adjPatch)
+        continue;
+        
+      /* which point best meets the normal conditon (N2.N1 = -1)  */
+      if (IsNormalFit(&Pnt_copy))
       {
-        /* which point best meets the normal conditon (N2.N1 = -1)  */
-        if (IsNormalFit(&Pnt_copy))
+        Pnt->idFit    = i;
+        Pnt->idOrth   = UINT_MAX;
+        Pnt->idInterp = UINT_MAX;
+        adjp1 = Pnt_copy.adjPnt;
+        
+        p1->touch = 1;
+        p1->copy  = 1;
+        p1->adjPatch = adjp1->p;
+        p1->adjFace  = adjp1->CopyFace;
+        p2 = get_p2(Pnt);
+        assert(p2);
+        p1->adjPoint = p2;
+        
+        if (p2->houseK == 0)
         {
-          Pnt->idFit    = i;
-          Pnt->idOrth   = UINT_MAX;
-          Pnt->idInterp = UINT_MAX;
-          adjp1 = Pnt_copy.adjPnt;
+          p2->touch = 1;
+          p2->copy  = 1;
+          p2->adjPatch = p1->patch->pn;
+          p2->adjFace  = p1->face;
+          p2->adjPoint = p1;
+          p2->houseK = 1;
           
-          p1->touch = 1;
-          p1->copy  = 1;
-          p1->adjPatch = adjp1->p;
-          p1->adjFace  = adjp1->CopyFace;
-          p2 = get_p2(Pnt);
-          assert(p2);
-          p1->adjPoint = p2;
-          
-          if (p2->houseK == 0)
-          {
-            p2->touch = 1;
-            p2->copy  = 1;
-            p2->adjPatch = p1->patch->pn;
-            p2->adjFace  = p1->face;
-            p2->adjPoint = p1;
-            p2->houseK = 1;
-            
-            lead = inspect_flags(p2);
-            add_to_subface(p2,lead);
-            free(lead);
-          }
-          
-          lead = inspect_flags(p1);
-          add_to_subface(p1,lead);
-          
-          flg = FOUND;
-          break;
+          lead = inspect_flags(p2);
+          add_to_subface(p2,lead);
+          free(lead);
         }
-        /* cases in which although N1.N2 != -1 but copy still possible */
-        else if (IsMildOrth(&Pnt_copy))
-        {
-          Pnt->idFit = Pnt->idOrth   = i;
-          Pnt->idInterp = UINT_MAX;
-          adjp1 = Pnt_copy.adjPnt;
-          
-          p1->touch = 1;
-          p1->copy  = 1;
-          p1->adjPatch = adjp1->p;
-          p1->adjFace  = adjp1->CopyFace;
-          p2 = get_p2(Pnt);
-          assert(p2);
-          p1->adjPoint = p2;
-          
-          lead = inspect_flags(p1);
-          add_to_subface(p1,lead);
-          
-          flg = FOUND;
-          break;
-          
-        }
-        /* cases in which the points needs interpolation */
-        else if (IsInterpolation(&Pnt_copy))
-        {
-          Pnt->idFit    = UINT_MAX;
-          Pnt->idOrth   = UINT_MAX;
-          Pnt->idInterp = i;
-          Pnt->overlap = Pnt_copy.overlap;
-          
-          adjp1 = Pnt_copy.adjPnt;
-          
-          p1->copy = 0;
-          p1->adjPatch = adjp1->p;
+        
+        lead = inspect_flags(p1);
+        add_to_subface(p1,lead);
+        
+        flg = FOUND;
+        break;
+      }
+      /* cases in which although N1.N2 != -1 but copy still possible */
+      else if (IsMildOrth(&Pnt_copy))
+      {
+        Pnt->idFit = Pnt->idOrth = i;
+        Pnt->idInterp = UINT_MAX;
+        adjp1 = Pnt_copy.adjPnt;
+        
+        p1->touch = 1;
+        p1->copy  = 1;
+        p1->adjPatch = adjp1->p;
+        p1->adjFace  = adjp1->CopyFace;
+        p2 = get_p2(Pnt);
+        assert(p2);
+        p1->adjPoint = p2;
+        
+        lead = inspect_flags(p1);
+        add_to_subface(p1,lead);
+        
+        flg = FOUND;
+        break;
+        
+      }
+      /* cases in which the points needs interpolation */
+      else if (IsInterpolation(&Pnt_copy))
+      {
+        Pnt->idFit    = UINT_MAX;
+        Pnt->idOrth   = UINT_MAX;
+        Pnt->idInterp = i;
+        Pnt->overlap = Pnt_copy.overlap;
+        
+        adjp1 = Pnt_copy.adjPnt;
+        
+        p1->copy = 0;
+        p1->adjPatch = adjp1->p;
 
-          if (Pnt_copy.overlap == 0)  p1->touch = 1;
-          else  		      p1->touch = 0;
-          
-          if (adjp1->FaceFlg == 1)
-          {
-            assert(Pnt_copy.overlap == 0);
-            p1->adjFace = adjp1->InterpFace;
-            set_sameXYZ(p1,p1->adjFace);
-          }
-          
-          lead = inspect_flags(p1);
-          add_to_subface(p1,lead);
-          
-          flg = FOUND;
-          break;
-        }  
-      }/* end of if (subface->adjPatch == adjPatch) */
+        if (Pnt_copy.overlap == 0)  p1->touch = 1;
+        else  		      	    p1->touch = 0;
+        
+        if (adjp1->FaceFlg == 1)
+        {
+          assert(Pnt_copy.overlap == 0);
+          p1->adjFace = adjp1->InterpFace;
+          set_sameXYZ(p1,p1->adjFace);
+        }
+        
+        lead = inspect_flags(p1);
+        add_to_subface(p1,lead);
+        
+        flg = FOUND;
+        break;
+      }
+      
     }/* end of for (sf = 0; sf < face->ns; ++sf) */
     if (flg == FOUND)
       break;
