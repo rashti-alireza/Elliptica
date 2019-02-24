@@ -55,7 +55,7 @@ void pr_clock(void)
 double get_time_sec(void)
 {
   time_t now = time(0);
-  return difftime(now,initial_time_global)/60;
+  return difftime(now,initial_time_global)/60.;
 }
 
 /* printing the amount of time spent for an event in second.
