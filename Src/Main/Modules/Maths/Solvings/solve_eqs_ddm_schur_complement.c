@@ -118,7 +118,8 @@ static int solve_field(Grid_T *const grid)
       
       IsItSolved = check_residual(grid,res_input);
       if (IsItSolved == YES)
-        break;
+      IsItSolved = NO;
+        //break;
       printf("Newton Step:%d\n",iter+1);
       
       DDM_SCHUR_COMPLEMENT_OpenMP(omp parallel for)
@@ -1924,7 +1925,6 @@ static unsigned const_index_of_face(Patch_T *const patch,const SubFace_T *const 
       break; 
     case J_n1:
       C = n[1]-1;
-      break; 
       break; 
     case K_0:
       C = 0;
