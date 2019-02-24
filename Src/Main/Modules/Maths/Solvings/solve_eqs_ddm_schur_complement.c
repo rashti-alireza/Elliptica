@@ -118,8 +118,8 @@ static int solve_field(Grid_T *const grid)
       
       IsItSolved = check_residual(grid,res_input);
       if (IsItSolved == YES)
-      IsItSolved = NO;
-        //break;
+        break;
+        
       printf("Newton Step:%d\n",iter+1);
       
       DDM_SCHUR_COMPLEMENT_OpenMP(omp parallel for)
