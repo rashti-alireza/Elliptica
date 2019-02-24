@@ -825,7 +825,7 @@ fdInterp_dfs_T *get_dInterp_df(const Patch_T *const patch,const SubFace_T *const
   }/* end of if (!strcmp(type,"Tn_Extrema,Tn_Extrema,Tn_Extrema,")) */
   else
   {
-    abortEr("No such option hsa been defined for this function.\n");
+    abortEr("No such option has been defined for this function.\n");
   }
   
   return Func;
