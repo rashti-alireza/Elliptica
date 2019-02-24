@@ -1144,7 +1144,7 @@ static Point_T *get_p2(const PointSet_T *const Pnt)
 // and their interfaces are tangent correctly, i.e. their normals
 // are in expected directions (N1dotN2 == -1). make sure
 // that, among couple of possibilities, the one matches with the 
-// previous subfaces, is excluded out.
+// previous subfaces, is chosen out.
 // ->retrun value: 1 if fittest normal exists, 0 otherwise
 */
 static int IsNormalFit(PointSet_T *const Pnt)
