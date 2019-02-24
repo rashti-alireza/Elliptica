@@ -622,6 +622,9 @@ static void analyze_adjPnt(PointSet_T *const Pnt)
   AdjPoint_T *adjp1;
   char *lead = 0;
   
+  /* NOTE: these following if's are order dependent, 
+  // BE CAREFUL if you wanna change something. */
+  
   /* this point is on outer boundary */
   if (IsOutBndry(Pnt))
   {
@@ -639,6 +642,12 @@ static void analyze_adjPnt(PointSet_T *const Pnt)
     
     lead = inspect_flags(p1);
     add_to_subface(p1,lead);
+  }
+  /* if this point can be matched with the susbface made by inner points.
+  // this helps setting of B.C. between patches and lowe the condition number. */
+  else if (IsMatchedOtherInnerSubface(Pnt))
+  {
+    return;
   }
   /* which point best meets the normal conditon (N2.N1 = -1)  */
   else if (IsNormalFit(Pnt))
@@ -683,7 +692,7 @@ static void analyze_adjPnt(PointSet_T *const Pnt)
   else if (IsMildOrth(Pnt))
   {
     adjp1 = &Pnt->adjPnt[Pnt->idOrth];
-    
+    Pnt->idFit = Pnt->idOrth;/* note: idFit used in get_p2 function */
     p1->touch = 1;
     p1->copy  = 1;
     p1->adjPatch = adjp1->p;
@@ -730,6 +739,150 @@ static void analyze_adjPnt(PointSet_T *const Pnt)
   p1->houseK = 1;
   
   if (lead) free(lead);
+}
+
+/* if there is other subfaces in this face and this point Pnt
+// can be matched with the same adjPatch then use the same
+// adjPatch. it helps the B.C between the patches and lowers 
+// the condition number. in a nut shell, this function helps all of 
+// the possible subfaces on a same face use the same adjPatch.
+// algorithm:
+// 1. it first finds all of the subfaces on the same Pnt->Pnt->face 
+// with the same adjFace and adjPatch as the adjPnt has.
+// 2. it studies normal vector on these adjPatches and adjFaces to see if
+// the match can be made.
+// 3. if normal vector mathched, take this adjPatch and adjFace as the mathed one
+// and return 1, else return 0.
+// ->return value: 1 if yes; 0 otherwise.
+*/
+static int IsMatchedOtherInnerSubface(PointSet_T *const Pnt)
+{
+  if (!Pnt->NadjPnt) return 0;
+  
+  Point_T *const p1 = Pnt->Pnt;
+  Point_T *p2;
+  AdjPoint_T *adjp1;
+  Interface_T *const face = p1->patch->interface[p1->face];
+  SubFace_T *subface;
+  PointSet_T Pnt_copy = Pnt[0];
+  Flag_T flg;
+  char *lead = 0;
+  unsigned i,sf;
+  
+  /* go thru all adjPnt */
+  for (i = 0; i < Pnt->NadjPnt; i++)
+  {
+    unsigned adjPatch = Pnt->adjPnt[i].p;
+    
+    /* study a similar point but with only one adjPnt */
+    Pnt_copy.NadjPnt = 1;
+    Pnt_copy.adjPnt = &Pnt->adjPnt[i];
+    
+    flg = NONE;
+    /* study each subface on the face Pnt->Pnt->face with the same adjPatch */
+    for (sf = 0; sf < face->ns; ++sf)
+    {
+      subface = face->subface[sf];
+      
+      if (subface->adjPatch == adjPatch)
+      {
+        /* which point best meets the normal conditon (N2.N1 = -1)  */
+        if (IsNormalFit(&Pnt_copy))
+        {
+          Pnt->idFit    = i;
+          Pnt->idOrth   = UINT_MAX;
+          Pnt->idInterp = UINT_MAX;
+          adjp1 = Pnt_copy.adjPnt;
+          
+          p1->touch = 1;
+          p1->copy  = 1;
+          p1->adjPatch = adjp1->p;
+          p1->adjFace  = adjp1->CopyFace;
+          p2 = get_p2(Pnt);
+          assert(p2);
+          p1->adjPoint = p2;
+          
+          if (p2->houseK == 0)
+          {
+            p2->touch = 1;
+            p2->copy  = 1;
+            p2->adjPatch = p1->patch->pn;
+            p2->adjFace  = p1->face;
+            p2->adjPoint = p1;
+            p2->houseK = 1;
+            
+            lead = inspect_flags(p2);
+            add_to_subface(p2,lead);
+            free(lead);
+          }
+          
+          lead = inspect_flags(p1);
+          add_to_subface(p1,lead);
+          
+          flg = FOUND;
+          break;
+        }
+        /* cases in which although N1.N2 != -1 but copy still possible */
+        else if (IsMildOrth(&Pnt_copy))
+        {
+          Pnt->idFit = Pnt->idOrth   = i;
+          Pnt->idInterp = UINT_MAX;
+          adjp1 = Pnt_copy.adjPnt;
+          
+          p1->touch = 1;
+          p1->copy  = 1;
+          p1->adjPatch = adjp1->p;
+          p1->adjFace  = adjp1->CopyFace;
+          p2 = get_p2(Pnt);
+          assert(p2);
+          p1->adjPoint = p2;
+          
+          lead = inspect_flags(p1);
+          add_to_subface(p1,lead);
+          
+          flg = FOUND;
+          break;
+          
+        }
+        /* cases in which the points needs interpolation */
+        else if (IsInterpolation(&Pnt_copy))
+        {
+          Pnt->idFit    = UINT_MAX;
+          Pnt->idOrth   = UINT_MAX;
+          Pnt->idInterp = i;
+          Pnt->overlap = Pnt_copy.overlap;
+          
+          adjp1 = Pnt_copy.adjPnt;
+          
+          p1->copy = 0;
+          p1->adjPatch = adjp1->p;
+
+          if (Pnt_copy.overlap == 0)  p1->touch = 1;
+          else  		      p1->touch = 0;
+          
+          if (adjp1->FaceFlg == 1)
+          {
+            assert(Pnt_copy.overlap == 0);
+            p1->adjFace = adjp1->InterpFace;
+            set_sameXYZ(p1,p1->adjFace);
+          }
+          
+          lead = inspect_flags(p1);
+          add_to_subface(p1,lead);
+          
+          flg = FOUND;
+          break;
+        }  
+      }/* end of if (subface->adjPatch == adjPatch) */
+    }/* end of for (sf = 0; sf < face->ns; ++sf) */
+    if (flg == FOUND)
+      break;
+  }/* end of for (i = 0; i < Pnt->NadjPnt; i++) */
+  
+  if (flg == FOUND)
+    return 1;
+  
+  return 0;
 }
 
 /* does this need interpolation?
@@ -1150,7 +1303,7 @@ static Point_T *get_p2(const PointSet_T *const Pnt)
 static int IsNormalFit(PointSet_T *const Pnt)
 {
   unsigned i,f;
-  Point_T p1 = *Pnt->Pnt;
+  Point_T p1 = *Pnt->Pnt;/* copying */
   char *lead;
   Flag_T flg = NONE;
   
@@ -1185,10 +1338,11 @@ static int IsNormalFit(PointSet_T *const Pnt)
         }/* end of if (Pnt->adjPnt[i].fs[f].FitFlg == 1) */
     }
   }/* end of for (i = 0; i < Pnt->NadjPnt; i++) */
-    /* if non of the found point has been on a subface, 
-    // so it means it needs new subface. 
-    */
-    if (flg == FOUND)  return 1;
+  
+  /* if non of the found point has been on a subface, 
+  // so it means it needs new subface. 
+  */
+  if (flg == FOUND)  return 1;
     
   return 0;
 }
@@ -1843,7 +1997,7 @@ static void set_sameXYZ(Point_T *const p,const unsigned f)
   }
 }
 
-/* see if there is subface with these lead as its flags_str 
+/* see if there is a subface with these lead as its flags_str 
 // ->return value: 1 if found, 0 otherwise.
 */
 static int IsOnSubface(const Point_T *const pnt, const char *const lead)

@@ -93,3 +93,4 @@ unsigned node_onFace(const double *const x, const unsigned f,const Patch_T *cons
 int realize_geometry(Grid_T *const grid);
 static void make_it_outward(Point_T *const point);
 static void misc(Grid_T *const grid);
+static int IsMatchedOtherInnerSubface(PointSet_T *const Pnt);
