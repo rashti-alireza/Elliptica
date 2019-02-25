@@ -86,7 +86,7 @@ static void *jacobian_eq_alpha(void *vp1,void *vp2)
   DDM_Schur_Complement_T *const S = vp2;
   double **const B = S->B->reg->A;
   double **E_Trans;
-  const unsigned *const inv = S->inv;
+  const unsigned *const node = S->inv;
   const unsigned NInnerMesh = S->Oi;/* number of inner mesh nodes */
   const unsigned NInnerMeshAndOuterB = S->NS;/* number of inner mesh+outer-boundary nodes*/
   const unsigned NNode = patch->nn;/* total number of nodes */
@@ -94,7 +94,7 @@ static void *jacobian_eq_alpha(void *vp1,void *vp2)
   const char *types[] = {"j_xx","j_yy","j_zz",0};
   fJs_T *j_xx = 0,*j_yy = 0,*j_zz = 0;
   Matrix_T *j0 = 0,*j1 = 0,*j2 = 0;
-  unsigned i,j,ii,jj;
+  unsigned i,j,ijk,lmn;
   
   prepare_Js_jacobian_eq(patch,types);
   j0   = get_j_matrix(patch,"j_xx");
@@ -105,29 +105,29 @@ static void *jacobian_eq_alpha(void *vp1,void *vp2)
   j_zz = get_j_reader(j2);
   
   /* fill up jacobian for alpha equation: */
-  //TIMER_ON(Jacobian_B);
+  
   /* B part: */
   for (i = 0; i < NInnerMesh; ++i)
   {
-    ii = inv[i];
+    ijk = node[i];
     for (j = 0; j < NInnerMeshAndOuterB; ++j)
     {
-      jj = inv[j];
-      B[i][j] = j_xx(j0,ii,jj)+j_yy(j1,ii,jj)+j_zz(j2,ii,jj);
+      lmn = node[j];
+      B[i][j] = j_xx(j0,ijk,lmn)+j_yy(j1,ijk,lmn)+j_zz(j2,ijk,lmn);
     }
   }
-  //TIMER_OFF(Jacobian_B);
+  
   /* E part: */
   if (S->NI)/* if there is any interface points then E is needed */
   {
     E_Trans = S->E_Trans->reg->A;
     for (j = NInnerMeshAndOuterB; j < NNode; ++j)
     {
-      jj = inv[j];
+      lmn = node[j];
       for (i = 0; i < NInnerMesh; ++i)
       {
-        ii = inv[i];
-        E_Trans[j-Ref][i] = j_xx(j0,ii,jj)+j_yy(j1,ii,jj)+j_zz(j2,ii,jj);
+        ijk = node[i];
+        E_Trans[j-Ref][i] = j_xx(j0,ijk,lmn)+j_yy(j1,ijk,lmn)+j_zz(j2,ijk,lmn);
       }
     }
   }
@@ -142,14 +142,14 @@ static void *jacobian_bc_alpha(void *vp1,void *vp2)
 {
   DDM_Schur_Complement_T *const S = vp2;
   double **const B = S->B->reg->A;
-  const unsigned NInnerMesh = S->Oi;/* number of inner mesh nodes */
-  const unsigned NInnerMeshAndOuterB = S->NS;/* number of inner mesh+outer-boundary nodes*/
+  const unsigned I0 = S->Oi;/* number of inner mesh nodes */
+  const unsigned N = S->NS;/* number of inner mesh+outer-boundary nodes*/
   unsigned i;
   
   /* fill up jacobian for alpha equation: */
   
   /* B part: */
-  for (i = NInnerMesh; i < NInnerMeshAndOuterB; ++i)
+  for (i = I0; i < N; ++i)
    B[i][i] = 1;
                 
   /* E part: */
