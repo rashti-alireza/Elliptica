@@ -88,13 +88,14 @@ static void *jacobian_eq_alpha(void *vp1,void *vp2)
   double **E_Trans;
   const unsigned *const node = S->inv;
   const unsigned Ni = S->Oi;/* number of inner mesh nodes */
-  const unsigned NInnerMeshAndOuterB = S->NS;/* number of inner mesh+outer-boundary nodes*/
-  const unsigned NNode = patch->nn;/* total number of nodes */
-  const unsigned Ref = NInnerMeshAndOuterB;/* for shorhand purposes */
+  const unsigned Nj = S->NS;/* number of inner mesh+outer-boundary nodes*/
+  const unsigned K0 = S->NS;/* number of inner mesh+outer-boundary nodes*/
+  const unsigned Nk = patch->nn;/* total number of nodes */
+  const unsigned Ref = Nj;/* for shorhand purposes */
   const char *types[] = {"j_xx","j_yy","j_zz",0};
   fJs_T *j_xx = 0,*j_yy = 0,*j_zz = 0;
   Matrix_T *j0 = 0,*j1 = 0,*j2 = 0;
-  unsigned i,j,ijk,lmn;
+  unsigned i,j,k,ijk,lmn;
   
   prepare_Js_jacobian_eq(patch,types);
   j0   = get_j_matrix(patch,"j_xx");
@@ -110,7 +111,7 @@ static void *jacobian_eq_alpha(void *vp1,void *vp2)
   for (i = 0; i < Ni; ++i)
   {
     ijk = node[i];
-    for (j = 0; j < NInnerMeshAndOuterB; ++j)
+    for (j = 0; j < Nj; ++j)
     {
       lmn = node[j];
       B[i][j] = j_xx(j0,ijk,lmn)+j_yy(j1,ijk,lmn)+j_zz(j2,ijk,lmn);
@@ -121,8 +122,8 @@ static void *jacobian_eq_alpha(void *vp1,void *vp2)
   if (S->NI)/* if there is any interface points then E is needed */
   {
     E_Trans = S->E_Trans->reg->A;
-    unsigned k;
-    for (k = NInnerMeshAndOuterB; k < NNode; ++k)
+    
+    for (k = K0; k < Nk; ++k)
     {
       lmn = node[k];
       j = k-Ref;
