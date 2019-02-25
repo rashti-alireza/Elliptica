@@ -45,6 +45,8 @@ int analytic_numeric_convergence_test(const Grid_T *const grid,const char *const
     
     printf("%s Linf L2 L1\n",patch->name);
     printf("%u %g %g %g\n",nn,Linf,L2,L1);
+    
+    free(diff);
   }
   
   return EXIT_SUCCESS;
