@@ -74,6 +74,8 @@ static Matrix_T *making_J_Old_Fashion(Grid_T *const grid);
 static int solve_field_test(Grid_T *const grid);
 static double *make_col_F(Grid_T *const grid);
 static Matrix_T *making_J_Old_Fashion(Grid_T *const grid);
+static int compare_Js(Grid_T *const grid,const Matrix_T *const J_Reg,const Matrix_T *const J_Schur);
+static void free_schur_f_g(Grid_T *const grid);
 
 
 

@@ -118,7 +118,8 @@ static int solve_field(Grid_T *const grid)
       
       IsItSolved = check_residual(grid,res_input);
       if (IsItSolved == YES)
-        break;
+        IsItSolved = NO;
+        //break;
         
       printf("Newton Step:%d\n",iter+1);
       
@@ -373,7 +374,7 @@ static double *compute_g_prime(Grid_T *const grid)
   const unsigned NI_total = grid->patch[0]->solving_man->method->SchurC->NI_total;
   DDM_Schur_Complement_T *Schur;
   double *const g_prime = Ff;/* to save some memory */
-  const double *g;
+  double *g;
   double *Ffp;
   unsigned NI;
   const unsigned np = grid->np;
@@ -407,6 +408,8 @@ static double *compute_g_prime(Grid_T *const grid)
     for (i = 0; i < NI; ++i)
       g_prime[R+i] = g[i]-g_prime[R+i];
     R += NI;
+    
+    free(g);
   }
   
   return g_prime;
@@ -988,8 +991,7 @@ static void make_g(Grid_T *const grid)
     npair  = sewing->npair;
     Imap   = Schur->Imap;
       
-    if (!Schur->g)
-      Schur->g = alloc_double(Schur->NI);
+    Schur->g = alloc_double(Schur->NI);
     g = Schur->g;
       
     for (pr = 0; pr < npair; ++pr)
@@ -2098,6 +2100,7 @@ static void solve_Bx_f(Patch_T *const patch)
 */
 void test_solve_ddm_schur_complement(Grid_T *const grid)
 {
+  int status;
   char **field_name = 0;/* name of all fields to be solved */
   unsigned nf = 0;/* number of all fields */
   unsigned f;/* dummy index */
@@ -2112,9 +2115,11 @@ void test_solve_ddm_schur_complement(Grid_T *const grid)
   /* solving fields in order */
   for (f = 0; f < nf; ++f)
   {
-    printf("Testing Schur Complement for %s:\n",field_name[f]);
+    printf("Testing Schur Complement Method:\n");
     set_cf(grid,field_name[f]);/* solving_man->cf */
-    solve_field_test(grid);/* solve field[f] */
+    status = solve_field_test(grid);/* solve field[f] */
+    printf("Testing Schur Complement for %s: ",field_name[f]);
+    check_test_result(status);
   }
   
   /* free names */
@@ -2122,11 +2127,13 @@ void test_solve_ddm_schur_complement(Grid_T *const grid)
 
 }
 
-/* function for testing purposes.
-// ->return value: EXIT_SUCCESS. */
+/* function for testing of Schur complement algorithm purposes.
+// ->return value: status which is TEST_UNSUCCESSFUL or TEST_SUCCESSFUL */
 static int solve_field_test(Grid_T *const grid)
 {
   Matrix_T *J_Schur,*J_Reg;
+  int status;
+  
   /* if number grid only has one patch */
   if (grid->np == 1)
     abortEr(INCOMPLETE_FUNC);
@@ -2134,14 +2141,60 @@ static int solve_field_test(Grid_T *const grid)
   J_Schur = making_J_Schur_Method(grid);
   J_Reg   = making_J_Old_Fashion(grid);
   
-  UNUSED(J_Reg);
-  UNUSED(J_Schur);
-  return EXIT_SUCCESS;
+  status = compare_Js(grid,J_Reg,J_Schur);
+  free_matrix(J_Reg);
+  free_matrix(J_Schur);
+  
+  return status;
 }
 
-/* using Schur Complement method, makes J.
-// also it returns it back to normal order not new labeled one which
-// used in Schur complement method.
+/* comparing entries of J_Schur and J_Reg
+// ->return value: TEST_UNSUCCESSFUL or TEST_SUCCESSFUL */
+static int compare_Js(Grid_T *const grid,const Matrix_T *const J_Reg,const Matrix_T *const J_Schur)
+{
+  const unsigned dim = grid->nn;
+  const double ERR = 1e-9;
+  double **const J_s = J_Schur->reg->A;
+  double **const J_r = J_Reg->reg->A;
+  Flag_T flg = NONE;
+  unsigned i,j;
+  
+  for (i = 0; i < dim; ++i)
+  {
+    for (j = 0; j < dim; ++j)
+      if (GRT(ABS(J_s[i][j]-J_r[i][j]),ERR))
+      {
+        printf("J_Schur = %g, J_Reg = %g, diff = %g\n",
+                  J_s[i][j],J_r[i][j],J_s[i][j]-J_r[i][j]);
+                  
+        flg = FOUND;
+      }
+  }
+  
+  if (flg == FOUND)
+    return TEST_UNSUCCESSFUL;
+  
+  return TEST_SUCCESSFUL;
+
+}
+
+/* free(Schur->f) free(Schur->g) */
+static void free_schur_f_g(Grid_T *const grid)
+{
+  DDM_Schur_Complement_T *Schur;
+  unsigned p;
+  
+  /* free f */
+  for (p = 0; p < grid->np; ++p)
+  {
+    Patch_T *patch = grid->patch[p];
+    Schur = patch->solving_man->method->SchurC;
+    free(Schur->f);
+    free(Schur->g);
+  }
+}
+
+/* making J by varying of F in Jx = -F.
 // ->return value: J in regular order. */
 static Matrix_T *making_J_Old_Fashion(Grid_T *const grid)
 {
@@ -2150,9 +2203,10 @@ static Matrix_T *making_J_Old_Fashion(Grid_T *const grid)
   const double CONST = 1.;
   const unsigned npatch = grid->np;
   double *F1,*F2;
-  unsigned p,pn,ijk,lmn;
+  unsigned R;/* reference */
+  unsigned p,pn,ijk,df;
   
-  DDM_SCHUR_COMPLEMENT_OpenMP(omp parallel for)
+  /* making F1 = F(f) */
   for (p = 0; p < npatch; ++p)
   {
     Patch_T *patch = grid->patch[p];
@@ -2162,38 +2216,44 @@ static Matrix_T *making_J_Old_Fashion(Grid_T *const grid)
   make_g(grid);
   
   F1 = make_col_F(grid);
+  free_schur_f_g(grid);
   
+  /* making F2 = F(f+df) */
+  R = 0;
   for (pn = 0; pn < npatch; ++pn)
   {
     Patch_T *patch2 = grid->patch[pn];
     Field_T *f = patch2->pool[LookUpField("alpha",patch2)];
     double EPS = CONST/patch2->nn;
     
-    for (lmn = 0; lmn < patch2->nn; ++lmn)
+    for (df = 0; df < patch2->nn; ++df)
     {
-      f->v[lmn] += EPS;
+      f->v[df] += EPS;
       free_coeffs(f);
       
-      make_f(patch2);
-      
-      DDM_SCHUR_COMPLEMENT_OpenMP(omp parallel for)
       for (p = 0; p < npatch; ++p)
       {
         Patch_T *patch = grid->patch[p];
+        make_f(patch);
         make_partial_g(patch);
       }
       make_g(grid);
       
       F2 = make_col_F(grid);
+      free_schur_f_g(grid);
       
-      f->v[lmn] = EPS;
+      f->v[df] -= EPS;
       free_coeffs(f);
       
       for (ijk = 0; ijk < grid->nn; ++ijk)
-        J[ijk][lmn] = (F2[ijk]-F1[ijk])/EPS;
+        J[ijk][df+R] = (F2[ijk]-F1[ijk])/EPS;
+      
+      free(F2);
     }
+    R += patch2->nn;
   }/* end of for (pn = 0; pn < npatch; ++pn) */
   
+  free(F1);
   return J_Reg;
 }
 
@@ -2278,14 +2338,18 @@ static Matrix_T *making_J_Schur_Method(Grid_T *const grid)
     for (i = 0; i < NS; ++i)
       for (j = 0; j < NS; ++j)
         J[R+inv[i]][R+inv[j]] = B->reg->A[i][j];
+        
+    free_matrix(B);
     
     for (i = 0; i < NS; ++i)
       for (j = 0; j < NI; ++j)
         J[R+inv[i]][R+Iinv[j]] = Et->reg->A[j][i];/* E is transpose */
         
+    free_matrix(Et);
+    
+    unsigned r = 0;/* reference */
     for (k = 0; k < npatch; ++k)
     {
-      unsigned r = 0;/* reference */
       DDM_Schur_Complement_T *Schur2;
       const unsigned *Iinv2;
       Schur2 = grid->patch[k]->solving_man->method->SchurC;
@@ -2296,14 +2360,17 @@ static Matrix_T *making_J_Schur_Method(Grid_T *const grid)
         for (i = 0; i < NI_p[k]; ++i)
           for (j = 0; j < NS; ++j)
             J[r+Iinv2[i]][R+inv[j]] = F[k]->reg->A[i][j];
+        
+        free_matrix(F[k]);
       }
       if (C[k])
       {
         for (i = 0; i < NI_p[k]; ++i)
           for (j = 0; j < NI; ++j)
             J[r+Iinv2[i]][R+Iinv[j]] = C[k]->reg->A[i][j];
+        
+        free_matrix(C[k]);
       }
-      
       r += grid->patch[k]->nn;
     }
     R += patch->nn;
