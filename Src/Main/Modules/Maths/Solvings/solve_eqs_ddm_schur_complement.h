@@ -8,6 +8,7 @@
 #include "maths_solvers_lib.h"
 #include "maths_general_lib.h"
 #include "maths_linear_algebra_lib.h"
+#include "prints_lib.h"
 
 #define DDM_SCHUR_COMPLEMENT_OpenMP(x) _Pragma ( #x )
 

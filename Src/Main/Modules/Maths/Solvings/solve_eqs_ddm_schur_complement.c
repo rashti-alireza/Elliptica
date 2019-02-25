@@ -48,7 +48,9 @@ int ddm_schur_complement(Grid_T *const grid)
   /* solving fields in order */
   for (f = 0; f < nf; ++f)
   {
-    printf("Solving Equation for %s:\n",field_name[f]);
+    pr_line_custom('~');
+    printf("Solving Equation for field: \"%s\"\n",field_name[f]);
+    pr_line_custom('~');
     set_cf(grid,field_name[f]);/* solving_man->cf */
     solve_field(grid);/* solve field[f] */
   }
@@ -82,6 +84,10 @@ static int solve_field(Grid_T *const grid)
       if (IsItSolved == YES)
         break;
       
+      printf("\n~~~~~~~~~~~~~~~~~~~~\n");
+      printf("Newton Step '%d':\n",iter+1);
+      printf("~~~~~~~~~~~~~~~~~~~~\n");
+      
       making_B_single_patch(patch);/* making B */
       solve_Bx_f(patch);/* solve Bx=f, free{B,f} */
       update_field_single_patch(patch);
@@ -92,8 +98,6 @@ static int solve_field(Grid_T *const grid)
       
       if (IsItSolved == YES)
         break;
-        
-      printf("Newton Step:%d\n",iter+1);
       
       iter++;
     }
@@ -119,12 +123,13 @@ static int solve_field(Grid_T *const grid)
       IsItSolved = check_residual(grid,res_input);
       if (IsItSolved == YES)
       {
-        IsItSolved = NO;
-        //free_schur_f_g(grid);/* free {f,g} */
-        //break;
+        free_schur_f_g(grid);/* free {f,g} */
+        break;
       }
-        
-      printf("Newton Step:%d\n",iter+1);
+      
+      printf("\n~~~~~~~~~~~~~~~~~~~~\n");
+      printf("Newton Step '%d':\n",iter+1);
+      printf("~~~~~~~~~~~~~~~~~~~~\n");
       
       DDM_SCHUR_COMPLEMENT_OpenMP(omp parallel for)
       for (p = 0; p < npatch; ++p)
@@ -283,7 +288,7 @@ static void solve_Sy_g_prime(Matrix_T *const S,double *const g_prime,Grid_T *con
   unsigned p;
   free_matrix(S);
   
-  umfpack->description = "Solving Sy = g'";
+  umfpack->description = "...Interface Equations:\nSolving Sy = g'";
   umfpack->a = S_ccs;
   umfpack->b = g_prime;
   umfpack->x = y;
@@ -875,6 +880,7 @@ static void making_E_prime_and_f_prime(Patch_T *const patch)
   double **xs,**bs;
   Matrix_T *E_prime;
   UmfPack_T umfpack[1] = {0};
+  char desc[400] = {'\0'};
   unsigned ns = 1;
   unsigned i;
   
@@ -902,7 +908,8 @@ static void making_E_prime_and_f_prime(Patch_T *const patch)
   xs[ns-1] = calloc(S->NS,sizeof(*xs[ns-1]));
   pointerEr(xs[ns-1]);
   
-  umfpack->description = "Solving BE' = E and Bf' = f";
+  sprintf(desc,"...%s:\nSolving BE' = E and Bf' = f",patch->name);
+  umfpack->description = desc;
   umfpack->a = a;
   umfpack->bs = bs;
   umfpack->xs = xs;
@@ -1993,11 +2000,9 @@ static Flag_T check_residual_single_patch(const Patch_T *const patch,const doubl
   double *f = S->f;
   double sqr = dot(S->NS,f,f);
   
+  printf("\nResidual:\n");
   patch->solving_man->Frms = sqrt(sqr);
-  //test
-  printf("Residual at %s = %g\n",
-    patch->name,patch->solving_man->Frms);
-  //end
+  printf("-------->%s = %g\n", patch->name,patch->solving_man->Frms);
   
   if (GRT(patch->solving_man->Frms,res_input))
     flg = NO;
@@ -2017,7 +2022,8 @@ static Flag_T check_residual(const Grid_T *const grid,const double res_input)
   double rms = 0;
   Flag_T flg = YES;
   unsigned p;
-    
+  
+  printf("\nResiduals:\n");
   DDM_SCHUR_COMPLEMENT_OpenMP(omp parallel for)
   for (p = 0; p < npatch; ++p)
   {
@@ -2029,10 +2035,8 @@ static Flag_T check_residual(const Grid_T *const grid,const double res_input)
     double sqr2 = dot(S->NI,g,g);
     sqrs[p] = sqr1+sqr2;
     patch->solving_man->Frms = sqrt(sqrs[p]);
-    //test
-    printf("Residual at %s = %g\n",
-      patch->name,patch->solving_man->Frms);
-    //end
+    printf("--------->%s = %g\n", patch->name,patch->solving_man->Frms);
+  
   }
   
   for (p = 0; p < npatch; ++p)

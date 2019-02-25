@@ -40,12 +40,23 @@ void pr_line(void)
   
 }
 
+/* print a line with a costum character*/
+void pr_line_custom(const char c)
+{
+  int i;
+  
+  for (i = 0; i < MAX_LENGTH; i++)
+    printf("%c",c);
+  printf("\n");
+  
+}
+
 /* printing the sepnt time form the start of abc */
 void pr_clock(void)
 {
   time_t now = time(0);
   double t = difftime(now,initial_time_global);
-  printf("CLOCK:  \"%f Second(s) = %f Minuet(s)\"\n",t,t/60.);
+  printf("\nCLOCK: [%f Second(s)] = [%f Minuet(s)]\n\n",t,t/60.);
   
 }
 
