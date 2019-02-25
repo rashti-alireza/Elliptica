@@ -883,23 +883,19 @@ static void making_E_prime_and_f_prime(Patch_T *const patch)
   S->B = 0;/* making sure B refers to null */
   
   /* if there is any interface points */
-  if (S->NI)
-    ns += (unsigned)S->E_Trans->row;
+  ns += (unsigned)S->E_Trans->row;
     
   xs = calloc(ns,sizeof(*xs));
   pointerEr(xs);
   bs = calloc(ns,sizeof(*bs));
   pointerEr(bs);
   
-  if (S->NI)
+  E_Trans = S->E_Trans->reg->A;
+  for (i = 0; i < ns-1; ++i)
   {
-    E_Trans = S->E_Trans->reg->A;
-    for (i = 0; i < ns-1; ++i)
-    {
-      bs[i] = E_Trans[i];
-      xs[i] = calloc(S->NS,sizeof(*xs[i]));
-      pointerEr(xs[i]);
-    }
+    bs[i] = E_Trans[i];
+    xs[i] = calloc(S->NS,sizeof(*xs[i]));
+    pointerEr(xs[i]);
   }
   
   bs[ns-1] = f;
@@ -914,17 +910,14 @@ static void making_E_prime_and_f_prime(Patch_T *const patch)
   direct_solver_series_umfpack_di(umfpack);
   
   S->f_prime = xs[ns-1];
-  if (S->NI)
-  {
-    E_prime = calloc(1,sizeof(*E_prime));
-    pointerEr(E_prime);
-    E_prime->col = (long)S->E_Trans->col;
-    E_prime->row = (long)S->E_Trans->row;
-    E_prime->reg_f = 1;
-    E_prime->reg->A = xs;
-    S->E_Trans_prime = E_prime;
-    free_matrix(S->E_Trans);
-  }
+  E_prime = calloc(1,sizeof(*E_prime));
+  pointerEr(E_prime);
+  E_prime->col = (long)S->E_Trans->col;
+  E_prime->row = (long)S->E_Trans->row;
+  E_prime->reg_f = 1;
+  E_prime->reg->A = xs;
+  S->E_Trans_prime = E_prime;
+  free_matrix(S->E_Trans);
   
   free_matrix(a);
   free(S->f);
