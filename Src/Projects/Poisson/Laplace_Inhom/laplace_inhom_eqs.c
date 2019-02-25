@@ -42,7 +42,7 @@ static void *eq_alpha(void *vp1,void *vp2)
   for (n = 0; n < N; ++n)
   {
     ijk  = node[n];
-    F[n] = alpha_xx[ijk]+alpha_yy[ijk]+alpha_zz[ijk]-6;
+    F[n] = alpha_xx[ijk]+alpha_yy[ijk]+alpha_zz[ijk]-6;/* note: for each new equation, only this line is changed */
   }
     
   free(alpha_xx);
@@ -71,7 +71,7 @@ static void *bc_alpha(void *vp1,void *vp2)
   for (n = 0; n < N; ++n)
   {
     ijk = node[n];
-    F[map[ijk]] = alpha[ijk]-SQR(x_(ijk))-SQR(y_(ijk))-SQR(z_(ijk));
+    F[map[ijk]] = alpha[ijk]-SQR(x_(ijk))-SQR(y_(ijk))-SQR(z_(ijk));/* note: for each new equation, only this line is changed */
   }
       
   return 0;
@@ -92,18 +92,18 @@ static void *jacobian_eq_alpha(void *vp1,void *vp2)
   const unsigned K0 = S->NS;/* number of inner mesh+outer-boundary nodes*/
   const unsigned Nk = patch->nn;/* total number of nodes */
   const unsigned Ref = Nj;/* for shorhand purposes */
-  const char *types[] = {"j_xx","j_yy","j_zz",0};
-  fJs_T *j_xx = 0,*j_yy = 0,*j_zz = 0;
+  const char *types[] = {"dfxx_df","dfyy_df","dfzz_df",0};
+  fJs_T *dfxx_df = 0,*dfyy_df = 0,*dfzz_df = 0;
   Matrix_T *j0 = 0,*j1 = 0,*j2 = 0;
   unsigned i,j,k,ijk,lmn;
   
   prepare_Js_jacobian_eq(patch,types);
-  j0   = get_j_matrix(patch,"j_xx");
-  j1   = get_j_matrix(patch,"j_yy");
-  j2   = get_j_matrix(patch,"j_zz");
-  j_xx = get_j_reader(j0);
-  j_yy = get_j_reader(j1);
-  j_zz = get_j_reader(j2);
+  j0      = get_j_matrix(patch,"dfxx_df");
+  j1      = get_j_matrix(patch,"dfyy_df");
+  j2      = get_j_matrix(patch,"dfzz_df");
+  dfxx_df = get_j_reader(j0);
+  dfyy_df = get_j_reader(j1);
+  dfzz_df = get_j_reader(j2);
   
   /* fill up jacobian for alpha equation: */
   
@@ -114,7 +114,7 @@ static void *jacobian_eq_alpha(void *vp1,void *vp2)
     for (j = 0; j < Nj; ++j)
     {
       lmn = node[j];
-      B[i][j] = j_xx(j0,ijk,lmn)+j_yy(j1,ijk,lmn)+j_zz(j2,ijk,lmn);
+      B[i][j] = dfxx_df(j0,ijk,lmn)+dfyy_df(j1,ijk,lmn)+dfzz_df(j2,ijk,lmn);/* note: for each new equation, only this line is changed */
     }
   }
   
@@ -130,7 +130,7 @@ static void *jacobian_eq_alpha(void *vp1,void *vp2)
       for (i = 0; i < Ni; ++i)
       {
         ijk = node[i];
-        E_Trans[j][i] = j_xx(j0,ijk,lmn)+j_yy(j1,ijk,lmn)+j_zz(j2,ijk,lmn);
+        E_Trans[j][i] = dfxx_df(j0,ijk,lmn)+dfyy_df(j1,ijk,lmn)+dfzz_df(j2,ijk,lmn);/* note: for each new equation, only this line is changed */
       }
     }
   }
@@ -153,7 +153,7 @@ static void *jacobian_bc_alpha(void *vp1,void *vp2)
   
   /* B part: */
   for (i = I0; i < N; ++i)
-   B[i][i] = 1;
+   B[i][i] = 1;/* note: for each new equation, only this line is changed, unless the b.c. is more complicated and has field in it */
                 
   /* E part: */
   /* since B.C. equation doesn't have any dependency on interface points,

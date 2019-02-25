@@ -324,7 +324,7 @@ typedef int fEquation_Solver_T(void *vp);
 /* a general prototype to embrace various types of equations */
 typedef void *fEquation_T(void *vp1,void *vp2);
 
-/* elements of Jacobian for equations like J_xx etc. */
+/* elements of Jacobian for equations like dfxx_df etc. */
 typedef double fJs_T(Matrix_T *const m,const long i,const long j);
 
 /* equation stucture */

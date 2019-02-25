@@ -49,7 +49,7 @@ int Fundamental_Tests(void)
   
   if (strcmp_i(GetParameterS("Test_Jacobian_Elements_Js_Consistency"),"yes"))
   {
-    const char *types[] = {"j_x","j_y",0};
+    const char *types[] = {"dfx_df","dfy_df",0};
     unsigned p;
     
     /* fill data base of equations */
@@ -67,7 +67,7 @@ int Fundamental_Tests(void)
     }
     pr_spent_time(start,"Making Jacobian");
     
-    const char *types2[] = {"j_z","j_y",0};
+    const char *types2[] = {"dfz_df","dfy_df",0};
     start = get_time_sec();
     FT_OpenMP(omp parallel for)
     for (p = 0; p < grid->np; ++p)

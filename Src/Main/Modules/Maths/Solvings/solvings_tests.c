@@ -8,7 +8,7 @@
 /* testing if the value of dfs_df are correct */
 void test_dfs_df_values(Grid_T *const grid)
 {
-  const char *const types[] = {"J_x","J_xx","J_y","J_yy","J_z","J_zz",0};
+  const char *const types[] = {"dfx_df","dfxx_df","dfy_df","dfyy_df","dfz_df","dfzz_df",0};
   const double start = get_time_sec();
   test_make_Js_jacobian_eq(grid,types);
   pr_spent_time(start,"Making Jacobian");

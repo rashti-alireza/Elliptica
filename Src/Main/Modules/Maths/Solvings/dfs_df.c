@@ -204,17 +204,17 @@ static JType_E str2JType_E(const char *const str)
 {
   JType_E jt_e = T_UNDEF;
   
-  if (strcmp_i(str,"J_x"))
+  if (strcmp_i(str,"dfx_df"))
     jt_e = T_x;
-  else if (strcmp_i(str,"J_xx"))
+  else if (strcmp_i(str,"dfxx_df"))
     jt_e = T_xx;
-  else if (strcmp_i(str,"J_y"))
+  else if (strcmp_i(str,"dfy_df"))
     jt_e = T_y;
-  else if (strcmp_i(str,"J_yy"))
+  else if (strcmp_i(str,"dfyy_df"))
     jt_e = T_yy;
-  else if (strcmp_i(str,"J_z"))
+  else if (strcmp_i(str,"dfz_df"))
     jt_e = T_z;
-  else if (strcmp_i(str,"J_zz"))
+  else if (strcmp_i(str,"dfzz_df"))
     jt_e = T_zz;
   else
     abortEr(INCOMPLETE_FUNC);

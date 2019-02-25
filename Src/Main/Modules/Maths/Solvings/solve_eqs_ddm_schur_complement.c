@@ -608,14 +608,14 @@ static void fill_C_F_interpolation(Patch_T *const patch, Pair_T *const pair)
       const unsigned *const Imap1 = Schur->Imap;
       const unsigned *const Iinv1 = Schur->Iinv;
       const unsigned *const node1 = subface->id;
-      const char *types[] = {"j_x","j_y","j_z",0};
+      const char *types[] = {"dfx_df","dfy_df","dfz_df",0};
       fJs_T *dfx_df = 0,*dfy_df = 0,*dfz_df = 0;
       Matrix_T *j0 = 0,*j1 = 0,*j2 = 0;
     
       prepare_Js_jacobian_eq(patch,types);
-      j0   = get_j_matrix(patch,"j_x");
-      j1   = get_j_matrix(patch,"j_y");
-      j2   = get_j_matrix(patch,"j_z");
+      j0   = get_j_matrix(patch,"dfx_df");
+      j1   = get_j_matrix(patch,"dfy_df");
+      j2   = get_j_matrix(patch,"dfz_df");
       dfx_df = get_j_reader(j0);
       dfy_df = get_j_reader(j1);
       dfz_df = get_j_reader(j2);
@@ -800,14 +800,14 @@ static void fill_C_F_collocation(Patch_T *const patch, Pair_T *const pair)
     if (patch->pn == ppn) sign = -1;/* -n.y1'+n.y2'=0 */
     else		  sign =  1;/* -n.y2'+n.y1'=0 */
     
-    const char *types[] = {"j_x","j_y","j_z",0};
+    const char *types[] = {"dfx_df","dfy_df","dfz_df",0};
     fJs_T *dfx_df = 0,*dfy_df = 0,*dfz_df = 0;
     Matrix_T *j0 = 0,*j1 = 0,*j2 = 0;
   
     prepare_Js_jacobian_eq(patch,types);
-    j0   = get_j_matrix(patch,"j_x");
-    j1   = get_j_matrix(patch,"j_y");
-    j2   = get_j_matrix(patch,"j_z");
+    j0   = get_j_matrix(patch,"dfx_df");
+    j1   = get_j_matrix(patch,"dfy_df");
+    j2   = get_j_matrix(patch,"dfz_df");
     dfx_df = get_j_reader(j0);
     dfy_df = get_j_reader(j1);
     dfz_df = get_j_reader(j2);
