@@ -759,6 +759,9 @@ static int IsMatchedOtherInnerSubface(PointSet_T *const Pnt)
 {
   if (!Pnt->NadjPnt) return 0;
   
+  if (strcmp_i(GetParameterS("Interface_BC_Maximum_Face_Match"),"no"))
+    return 0;
+  
   Point_T *const p1 = Pnt->Pnt;
   Point_T *p2;
   AdjPoint_T *adjp1;
