@@ -31,18 +31,18 @@ static void *eq_alpha(void *vp1,void *vp2)
   DDM_Schur_Complement_T *const S = vp2;
   Field_T *const alpha = patch->pool[Ind("alpha")];
   double *const F = S->f;
-  const unsigned *const inv  = S->inv;
+  const unsigned *const node  = S->inv;/* inverse map to node */
   double *alpha_xx = Partial_Derivative(alpha,"x,x");
   double *alpha_yy = Partial_Derivative(alpha,"y,y");
   double *alpha_zz = Partial_Derivative(alpha,"z,z");
-  const unsigned NInnerMesh = S->Oi;
-  unsigned n;/* node */
-  unsigned i;
+  const unsigned N = S->Oi;/* number of inner mesh nodes */
+  unsigned ijk;/* node */
+  unsigned n;
   
-  for(i = 0; i < NInnerMesh; ++i)
+  for (n = 0; n < N; ++n)
   {
-    n = inv[i];
-    F[i] = alpha_xx[n]+alpha_yy[n]+alpha_zz[n]-6;//1/(1+pow(SQR(x_(i)),100)+pow(SQR(y_(i)),100)+pow(SQR(z_(i)),100);
+    ijk  = node[n];
+    F[n] = alpha_xx[ijk]+alpha_yy[ijk]+alpha_zz[ijk]-6;
   }
     
   free(alpha_xx);
@@ -62,16 +62,16 @@ static void *bc_alpha(void *vp1,void *vp2)
   double *const F      = S->f;
   unsigned *const map  = S->map;
   Patch_T *const patch = bc->patch;
-  const unsigned *const Bnode = bc->node;/* nodes at boundary */
-  const unsigned NOuterBoundary = bc->nn;/* number of nodes at boundary */
+  const unsigned *const node = bc->node;/* nodes at boundary */
+  const unsigned N = bc->nn;/* number of nodes at boundary */
   double *const alpha = patch->pool[Ind("alpha")]->v;
-  unsigned i,B;
+  unsigned n,ijk;
   
   /* alpha at outer boundary */
-  for (i = 0; i < NOuterBoundary; ++i)
+  for (n = 0; n < N; ++n)
   {
-    B = Bnode[i];
-    F[map[B]] = alpha[B]-SQR(x_(B))-SQR(y_(B))-SQR(z_(B));
+    ijk = node[n];
+    F[map[ijk]] = alpha[ijk]-SQR(x_(ijk))-SQR(y_(ijk))-SQR(z_(ijk));
   }
       
   return 0;
