@@ -588,7 +588,7 @@ Flag_T pr_derivatives_DiffByNode(const double *const numc, const double *const a
     unsigned i1,j1,k1;
     double diff = numc[p]-anac[p];
     IJK(p,patch->n,&i1,&j1,&k1);
-    fprintf(f,"%u %f %f %f %u %u %u %f %f %f\n",p,diff,numc[p],anac[p],i1,j1,k1,x_(p),y_(p),z_(p));
+    fprintf(f,"%u %g %g %g %u %u %u %g %g %g\n",p,diff,numc[p],anac[p],i1,j1,k1,x_(p),y_(p),z_(p));
     
     if (GRT(ABS(diff),tol))
       flg = NO;
@@ -623,7 +623,7 @@ void pr_matrix(const Matrix_T *const M,const char *const name)
     for (r = 0; r < M->row; ++r)
     {
       for (c = 0; c < M->col; ++c)
-        fprintf(file,"%f ",m[r][c]);
+        fprintf(file,"%g ",m[r][c]);
       fprintf(file,"\n");
     }
   }
