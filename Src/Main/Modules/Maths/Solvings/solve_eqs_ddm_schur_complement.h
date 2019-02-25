@@ -18,6 +18,7 @@ typedef enum DDM_SCHUR_COMPLEMENT_FLAG_T
 }DDM_SC_Flag_T;
 
 int ddm_schur_complement(Grid_T *const grid);
+void test_solve_ddm_schur_complement(Grid_T *const grid);
 fJs_T *get_j_reader(const Matrix_T *const m);
 void prepare_Js_jacobian_eq(Patch_T *const patch,const char * const *types);
 Matrix_T *get_j_matrix(const Patch_T *const patch,const char *type);
@@ -68,7 +69,11 @@ static void solve_Bx_f(Patch_T *const patch);
 static void update_field_single_patch(Patch_T *const patch);
 static Flag_T check_residual_single_patch(const Patch_T *const patch,const double res_input);
 static void checks_and_constraints(const Grid_T *const grid);
-
+static Matrix_T *making_J_Schur_Method(Grid_T *const grid);
+static Matrix_T *making_J_Old_Fashion(Grid_T *const grid);
+static int solve_field_test(Grid_T *const grid);
+static double *make_col_F(Grid_T *const grid);
+static Matrix_T *making_J_Old_Fashion(Grid_T *const grid);
 
 
 

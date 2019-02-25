@@ -2091,3 +2091,229 @@ static void solve_Bx_f(Patch_T *const patch)
   
   Schur->x = x;
 }
+
+/* testing ddm schur complement method.
+// matrix J in Jx = -F in Newton method is made by two methods of
+// schur complement and regular one and then they compared.
+*/
+void test_solve_ddm_schur_complement(Grid_T *const grid)
+{
+  char **field_name = 0;/* name of all fields to be solved */
+  unsigned nf = 0;/* number of all fields */
+  unsigned f;/* dummy index */
+  
+  /* making up an example like the below */
+  
+  /* picking up labeling, mapping etc. */
+  preparing_ingredients(grid);
+  
+  /* read order of fields to be solved from input */
+  field_name = read_fields_in_order(&nf);
+  /* solving fields in order */
+  for (f = 0; f < nf; ++f)
+  {
+    printf("Testing Schur Complement for %s:\n",field_name[f]);
+    set_cf(grid,field_name[f]);/* solving_man->cf */
+    solve_field_test(grid);/* solve field[f] */
+  }
+  
+  /* free names */
+  free_2d_mem(field_name,nf);
+
+}
+
+/* function for testing purposes.
+// ->return value: EXIT_SUCCESS. */
+static int solve_field_test(Grid_T *const grid)
+{
+  Matrix_T *J_Schur,*J_Reg;
+  /* if number grid only has one patch */
+  if (grid->np == 1)
+    abortEr(INCOMPLETE_FUNC);
+  
+  J_Schur = making_J_Schur_Method(grid);
+  J_Reg   = making_J_Old_Fashion(grid);
+  
+  UNUSED(J_Reg);
+  UNUSED(J_Schur);
+  return EXIT_SUCCESS;
+}
+
+/* using Schur Complement method, makes J.
+// also it returns it back to normal order not new labeled one which
+// used in Schur complement method.
+// ->return value: J in regular order. */
+static Matrix_T *making_J_Old_Fashion(Grid_T *const grid)
+{
+  Matrix_T *J_Reg = alloc_matrix(REG_SF,grid->nn,grid->nn);
+  double **const J = J_Reg->reg->A;
+  const double CONST = 1.;
+  const unsigned npatch = grid->np;
+  double *F1,*F2;
+  unsigned p,pn,ijk,lmn;
+  
+  DDM_SCHUR_COMPLEMENT_OpenMP(omp parallel for)
+  for (p = 0; p < npatch; ++p)
+  {
+    Patch_T *patch = grid->patch[p];
+    make_f(patch);
+    make_partial_g(patch);
+  }
+  make_g(grid);
+  
+  F1 = make_col_F(grid);
+  
+  for (pn = 0; pn < npatch; ++pn)
+  {
+    Patch_T *patch2 = grid->patch[pn];
+    Field_T *f = patch2->pool[LookUpField("alpha",patch2)];
+    double EPS = CONST/patch2->nn;
+    
+    for (lmn = 0; lmn < patch2->nn; ++lmn)
+    {
+      f->v[lmn] += EPS;
+      free_coeffs(f);
+      
+      make_f(patch2);
+      
+      DDM_SCHUR_COMPLEMENT_OpenMP(omp parallel for)
+      for (p = 0; p < npatch; ++p)
+      {
+        Patch_T *patch = grid->patch[p];
+        make_partial_g(patch);
+      }
+      make_g(grid);
+      
+      F2 = make_col_F(grid);
+      
+      f->v[lmn] = EPS;
+      free_coeffs(f);
+      
+      for (ijk = 0; ijk < grid->nn; ++ijk)
+        J[ijk][lmn] = (F2[ijk]-F1[ijk])/EPS;
+    }
+  }/* end of for (pn = 0; pn < npatch; ++pn) */
+  
+  return J_Reg;
+}
+
+/* making the whole col F in Jx = -F in Newton method.
+// ->return value: F */
+static double *make_col_F(Grid_T *const grid)
+{
+  double *F = alloc_double(grid->nn);
+  DDM_Schur_Complement_T *Schur;
+  double *f,*g;
+  unsigned R;/* reference */
+  const unsigned *inv,*Iinv;
+  unsigned NS,NI;
+  unsigned p,i,j;
+  
+  R = 0;
+  for (p = 0; p < grid->np; ++p)
+  {
+    Patch_T *patch = grid->patch[p];
+    Schur = patch->solving_man->method->SchurC;
+    NS = Schur->NS;
+    NI = Schur->NI;
+    inv = Schur->inv;
+    Iinv = Schur->Iinv;
+    f = Schur->f;
+    g = Schur->g;
+    
+    for (i = 0; i < NS; ++i)
+      F[R+inv[i]] = f[i];
+    
+    for (j = 0; j < NI; ++j)
+      F[R+Iinv[j]] = g[j];
+      
+    R += patch->nn;
+  }
+  
+  return F;
+}
+
+
+/* using Schur Complement method, makes J.
+// also it returns it back to normal order not new labeled one which
+// used in Schur complement method.
+// ->return value: J in regular order. */
+static Matrix_T *making_J_Schur_Method(Grid_T *const grid)
+{
+  Matrix_T *J_Schur = alloc_matrix(REG_SF,grid->nn,grid->nn);
+  double **const J = J_Schur->reg->A; 
+  DDM_Schur_Complement_T *Schur;
+  Matrix_T *B,*Et,**F,**C;
+  const unsigned npatch = grid->np;
+  const unsigned *inv,*Iinv,*NI_p;
+  unsigned NS,NI;
+  unsigned R;/* reference */
+  unsigned p;
+  
+  DDM_SCHUR_COMPLEMENT_OpenMP(omp parallel for)
+  for (p = 0; p < npatch; ++p)
+  {
+    Patch_T *patch = grid->patch[p];
+    making_B_and_E(patch);
+    making_F_and_C(patch);
+  }
+  
+  R = 0;
+  for (p = 0; p < npatch; ++p)
+  {
+    Patch_T *patch = grid->patch[p];
+    unsigned i,j,k;
+    
+    Schur = patch->solving_man->method->SchurC;
+    NS = Schur->NS;
+    NI = Schur->NI;
+    inv = Schur->inv;
+    Iinv = Schur->Iinv;
+    B = Schur->B;
+    Et = Schur->E_Trans;
+    F = Schur->F;
+    C = Schur->C;
+    NI_p = Schur->NI_p;
+    
+    for (i = 0; i < NS; ++i)
+      for (j = 0; j < NS; ++j)
+        J[R+inv[i]][R+inv[j]] = B->reg->A[i][j];
+    
+    for (i = 0; i < NS; ++i)
+      for (j = 0; j < NI; ++j)
+        J[R+inv[i]][R+Iinv[j]] = Et->reg->A[j][i];/* E is transpose */
+        
+    for (k = 0; k < npatch; ++k)
+    {
+      unsigned r = 0;/* reference */
+      DDM_Schur_Complement_T *Schur2;
+      const unsigned *Iinv2;
+      Schur2 = grid->patch[k]->solving_man->method->SchurC;
+      Iinv2 = Schur2->Iinv;
+      
+      if (F[k])
+      {
+        for (i = 0; i < NI_p[k]; ++i)
+          for (j = 0; j < NS; ++j)
+            J[r+Iinv2[i]][R+inv[j]] = F[k]->reg->A[i][j];
+      }
+      if (C[k])
+      {
+        for (i = 0; i < NI_p[k]; ++i)
+          for (j = 0; j < NI; ++j)
+            J[r+Iinv2[i]][R+Iinv[j]] = C[k]->reg->A[i][j];
+      }
+      
+      r += grid->patch[k]->nn;
+    }
+    R += patch->nn;
+  }
+  
+  return J_Schur;
+}
+
+
+
+
+
+
