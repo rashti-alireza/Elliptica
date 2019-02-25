@@ -83,12 +83,12 @@ static int solve_field(Grid_T *const grid)
         break;
       
       making_B_single_patch(patch);/* making B */
-      solve_Bx_f(patch);/* solve Bx=f */
+      solve_Bx_f(patch);/* solve Bx=f, free{B,f} */
       update_field_single_patch(patch);
-      free(Schur->x);
+      free(Schur->x);/* free{x} */
       make_f(patch);/* making f */
       IsItSolved = check_residual_single_patch(patch,res_input);
-      free(Schur->f);
+      free(Schur->f);/* free{x} */
       
       if (IsItSolved == YES)
         break;
@@ -118,8 +118,11 @@ static int solve_field(Grid_T *const grid)
       
       IsItSolved = check_residual(grid,res_input);
       if (IsItSolved == YES)
+      {
         IsItSolved = NO;
+        //free_schur_f_g(grid);/* free {f,g} */
         //break;
+      }
         
       printf("Newton Step:%d\n",iter+1);
       
@@ -128,16 +131,16 @@ static int solve_field(Grid_T *const grid)
       {
         Patch_T *patch = grid->patch[p];
         making_B_and_E(patch);
-        making_E_prime_and_f_prime(patch);
+        making_E_prime_and_f_prime(patch);/* free{B,E} */
         making_F_and_C(patch);
         making_F_by_f_prime(patch);
-        making_F_by_E_prime(patch);
+        making_F_by_E_prime(patch);/* free {F} */
       }
-      g_prime = compute_g_prime(grid);
-      S = compute_S(grid);
+      g_prime = compute_g_prime(grid);/* free {g,Ff'} */
+      S = compute_S(grid);/* free {C,FE'} */
       
       /* solve Sy = g' */
-      solve_Sy_g_prime(S,g_prime,grid);
+      solve_Sy_g_prime(S,g_prime,grid);/* free{S,g'} */
       
       DDM_SCHUR_COMPLEMENT_OpenMP(omp parallel for)
       for (p = 0; p < npatch; ++p)
@@ -145,11 +148,11 @@ static int solve_field(Grid_T *const grid)
         Patch_T *patch = grid->patch[p];
         /* x = f'-E'y */
         compute_x(patch);
-        free_E_Trans_prime(patch);
+        free_E_Trans_prime(patch);/* free{E^T'} */
         update_field(patch);
-        free_x(patch);
+        free_x(patch);/* free{x} */
       }
-      free_y(grid);
+      free_y(grid);/* free{y} */
       
       iter++;
     }/* end of while (IsItSolved == NO && iter < NumIter) */
@@ -2292,7 +2295,6 @@ static double *make_col_F(Grid_T *const grid)
   
   return F;
 }
-
 
 /* using Schur Complement method, makes J.
 // also it returns it back to normal order not new labeled one which
