@@ -27,6 +27,11 @@ int Fundamental_Tests(void)
     fundamental_test_initial_data_alpha(grid);
     /* testing schur complement method */
     test_solve_ddm_schur_complement(grid);
+    
+    free_db_eqs(field_eq);
+    free_db_eqs(bc_eq);
+    free_db_eqs(jacobian_field_eq);
+    free_db_eqs(jacobian_bc_eq);
   }
     
   if (strcmp_i(GetParameterS("Test_Jacobian_Elements_Js_Values"),"yes"))

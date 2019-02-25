@@ -880,6 +880,8 @@ static int IsMatchedOtherInnerSubface(PointSet_T *const Pnt)
     if (flg == FOUND)
       break;
   }/* end of for (i = 0; i < Pnt->NadjPnt; i++) */
+ 
+  if (lead) free(lead); 
   
   if (flg == FOUND)
     return 1;
