@@ -85,9 +85,8 @@ void alloc_patches(Grid_T *const grid)
 {
   if (strcmp_i(grid->kind,"Cartesian_grid"))
     alloc_patches_Cartesian_grid(grid);
-  
-  /*else if (strcmp_i(grid->kind,"CubedSpherical_grid"))
-    //alloc_patches_CubedSpherical_grid(grid); */
+  else if (strcmp_i(grid->kind,"BNS_Projective_grid"))
+    alloc_patches_BNS_Projective_grid(grid);
   else
     abortEr_s("No such %s kind for grid.\n",grid->kind);
 }
@@ -137,6 +136,31 @@ static void alloc_patches_Cartesian_grid(Grid_T *const grid)
   pointerEr(grid->patch);
   
   for (i = 0; i < Nboxes; i++)
+  {
+    grid->patch[i] = calloc(1,sizeof(*grid->patch[i]));
+    pointerEr(grid->patch[i]);
+  }
+  
+}
+
+/* memory alloc patches for BNS_Projective type */
+static void alloc_patches_BNS_Projective_grid(Grid_T *const grid)
+{
+  unsigned Np = 10;/* number of patches without outermost's*/
+  unsigned outermost;
+  unsigned i;
+  
+  outermost = (unsigned) GetParameterI("Number_of_Outermost_Patches_Left");
+  if (outermost != (unsigned)INT_MAX)
+    Np++;
+  outermost = (unsigned) GetParameterI("Number_of_Outermost_Patches_Right");
+  if (outermost != (unsigned)INT_MAX)
+    Np++;
+  
+  grid->patch = calloc((Np+1),sizeof(*grid->patch));
+  pointerEr(grid->patch);
+  
+  for (i = 0; i < Np; i++)
   {
     grid->patch[i] = calloc(1,sizeof(*grid->patch[i]));
     pointerEr(grid->patch[i]);
