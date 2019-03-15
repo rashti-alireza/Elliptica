@@ -59,7 +59,10 @@ typedef enum COORD_T
 {
   UNDEFINED_COORD = 0,
   Cartesian,
-  CubedSphere
+  ProjectiveHemisphereUp,
+  ProjectiveHemisphereDown,
+  StereographicSphereLeft,
+  StereographicSphereRight  
 }Coord_T;
 
 /* print flags */
@@ -468,6 +471,11 @@ typedef struct PATCH_T
   struct GIRD_T *grid;/* refers to its grid */
   char *name;/* patch name */
   Coord_T coordsys;/* coord sys used in this patch */
+  struct
+  {
+   double R1_StereographicSphere;
+   double R2_InfiniteRadius;
+  }CoordSysInfo[1];
   Collocation_T collocation[3];/* type of collocation in each direction */
   Basis_T basis[3];/* the type of basis for functions used in this patch 
                    // each refers to basis in that specific direction.
