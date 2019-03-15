@@ -19,6 +19,30 @@ int make_nodes(Grid_T *const grid)
       make_nodes_Cartesian_coord(patch);
     }
     
+    /* if coord is Protective Hemisphere Up */
+    else if (patch->coordsys == ProjectiveHemisphereUp)
+    {
+      make_nodes_ProjectiveHemisphereUp_coord(patch);
+    }
+    
+    /* if coord is Protective Hemisphere Down */
+    else if (patch->coordsys == ProjectiveHemisphereDown)
+    {
+      make_nodes_ProjectiveHemisphereDown_coord(patch);
+    }
+    
+    /* if coord is Stereographic Sphere Left */
+    else if (patch->coordsys == StereographicSphereLeft)
+    {
+      make_nodes_StereographicSphereLeft_coord(patch);
+    }
+
+    /* if coord is Stereographic Sphere Right */
+    else if (patch->coordsys == StereographicSphereRight)
+    {
+      make_nodes_StereographicSphereRight_coord(patch);
+    }
+
     else
       abortEr("No action for such coordinate.\n");
   }
@@ -89,6 +113,164 @@ static void make_nodes_Cartesian_coord(Patch_T *const patch)
     
     /* since X and x are the same we have: */
     patch->node[l]->X = x;
+  }
+}
+
+/* making value of coords. it is a general function for Protective Hemisphere Up type */
+static void make_nodes_ProjectiveHemisphereUp_coord(Patch_T *const patch)
+{
+  struct Collocation_s coll_s[3] = {0};
+  const unsigned U = countf(patch->node);
+  const Field_T *const R1 = patch->pool[Ind("R1_ProjectiveHemisphereUp")];
+  const Field_T *const R2 = patch->pool[Ind("R2_ProjectiveHemisphereUp")];
+  const double *const c = patch->c;/* center of origine translated */
+  unsigned i,j,k,l,*n;
+  
+  initialize_collocation_struct(patch,&coll_s[0],0);
+  initialize_collocation_struct(patch,&coll_s[1],1);
+  initialize_collocation_struct(patch,&coll_s[2],2);
+  n = patch->n;
+  
+  for (l = 0; l < U; l++)
+  {
+    double *X = alloc_double(3);
+    double *x = patch->node[l]->x;
+    double r;
+    
+    IJK(l,n,&i,&j,&k);
+    X[0] = point(i,&coll_s[0]);
+    X[1] = point(j,&coll_s[1]);
+    X[2] = point(k,&coll_s[2]);
+    patch->node[l]->X = X;
+    
+    r = 0.5*X[2]*(R2->v[L(n,i,j,0)]-R1->v[L(n,i,j,0)])+
+        0.5*(R2->v[L(n,i,j,0)]+R1->v[L(n,i,j,0)]);
+    
+    x[0] = r*X[0]*sqrt(1-0.5*SQR(X[1]));
+    x[1] = r*X[1]*sqrt(1-0.5*SQR(X[0]));
+    x[2] = sqrt(SQR(r)-SQR(x[0])-SQR(x[1]));
+    x[0]+= c[0];
+    x[1]+= c[1];
+    x[2]+= c[2];
+  }
+}
+
+/* making value of coords. it is a general function for Protective Hemisphere Down type */
+static void make_nodes_ProjectiveHemisphereDown_coord(Patch_T *const patch)
+{
+  struct Collocation_s coll_s[3] = {0};
+  const unsigned U = countf(patch->node);
+  const Field_T *const R1 = patch->pool[Ind("R1_ProjectiveHemisphereDown")];
+  const Field_T *const R2 = patch->pool[Ind("R2_ProjectiveHemisphereDown")];
+  const double *const c = patch->c;/* center of origine translated */
+  unsigned i,j,k,l,*n;
+  
+  initialize_collocation_struct(patch,&coll_s[0],0);
+  initialize_collocation_struct(patch,&coll_s[1],1);
+  initialize_collocation_struct(patch,&coll_s[2],2);
+  n = patch->n;
+  
+  for (l = 0; l < U; l++)
+  {
+    double *X = alloc_double(3);
+    double *x = patch->node[l]->x;
+    double r;
+    
+    IJK(l,n,&i,&j,&k);
+    X[0] = point(i,&coll_s[0]);
+    X[1] = point(j,&coll_s[1]);
+    X[2] = point(k,&coll_s[2]);
+    patch->node[l]->X = X;
+    
+    r = 0.5*X[2]*(R2->v[L(n,i,j,0)]-R1->v[L(n,i,j,0)])+
+        0.5*(R2->v[L(n,i,j,0)]+R1->v[L(n,i,j,0)]);
+    
+    x[0] = r*X[0]*sqrt(1-0.5*SQR(X[1]));
+    x[1] = r*X[1]*sqrt(1-0.5*SQR(X[0]));
+    x[2] = -sqrt(SQR(r)-SQR(x[0])-SQR(x[1]));
+    x[0]+= c[0];
+    x[1]+= c[1];
+    x[2]+= c[2];
+  }
+}
+
+/* making value of coords. it is a general function for Stereographic Sphere Left type */
+static void make_nodes_StereographicSphereLeft_coord(Patch_T *const patch)
+{
+  struct Collocation_s coll_s[3] = {0};
+  const unsigned U = countf(patch->node);
+  const double R0 = patch->c[1];
+  const double R1 = patch->CoordSysInfo->R1_StereographicSphere;
+  const double R2 = patch->CoordSysInfo->R2_InfiniteRadius;
+  unsigned i,j,k,l,*n;
+  
+  initialize_collocation_struct(patch,&coll_s[0],0);
+  initialize_collocation_struct(patch,&coll_s[1],1);
+  initialize_collocation_struct(patch,&coll_s[2],2);
+  n = patch->n;
+  
+  for (l = 0; l < U; l++)
+  {
+    double *X = alloc_double(3);
+    double *x = patch->node[l]->x;
+    double u,w;
+    double r,R,A;
+    
+    IJK(l,n,&i,&j,&k);
+    X[0] = point(i,&coll_s[0]);
+    X[1] = point(j,&coll_s[1]);
+    X[2] = point(k,&coll_s[2]);
+    patch->node[l]->X = X;
+    
+    r = 0.5*X[1]*(R2-R1)+0.5*(R2+R1);
+    R = sqrt(SQR(r)-SQR(R0));
+    u = R*X[0]*sqrt(1-0.5*SQR(X[2]));
+    w = R*X[2]*sqrt(1-0.5*SQR(X[0]));
+    A = SQR(u/(R0-r))+SQR(w/(R0-r))+1;
+    x[1] = ((A-1)*(r-R0)-sqrt(SQR(r)+R0*(A-1)*(2*r-R0)))/A;
+    x[0] = u*(x[1]+R0-r)/(R0-r);
+    x[2] = w*(x[1]+R0-r)/(R0-r);
+    
+  }
+}
+
+/* making value of coords. it is a general function for Stereographic Sphere Right type */
+static void make_nodes_StereographicSphereRight_coord(Patch_T *const patch)
+{
+  struct Collocation_s coll_s[3] = {0};
+  const unsigned U = countf(patch->node);
+  const double R0 = patch->c[1];
+  const double R1 = patch->CoordSysInfo->R1_StereographicSphere;
+  const double R2 = patch->CoordSysInfo->R2_InfiniteRadius;
+  unsigned i,j,k,l,*n;
+  
+  initialize_collocation_struct(patch,&coll_s[0],0);
+  initialize_collocation_struct(patch,&coll_s[1],1);
+  initialize_collocation_struct(patch,&coll_s[2],2);
+  n = patch->n;
+  
+  for (l = 0; l < U; l++)
+  {
+    double *X = alloc_double(3);
+    double *x = patch->node[l]->x;
+    double u,w;
+    double r,R,A;
+    
+    IJK(l,n,&i,&j,&k);
+    X[0] = point(i,&coll_s[0]);
+    X[1] = point(j,&coll_s[1]);
+    X[2] = point(k,&coll_s[2]);
+    patch->node[l]->X = X;
+    
+    r = 0.5*X[1]*(R2-R1)+0.5*(R2+R1);
+    R = sqrt(SQR(r)-SQR(R0));
+    u = R*X[0]*sqrt(1-0.5*SQR(X[2]));
+    w = R*X[2]*sqrt(1-0.5*SQR(X[0]));
+    A = SQR(u/(R0-r))+SQR(w/(R0-r))+1;
+    x[1] = ((r-R0)*(1-A)+sqrt(SQR(r)+R0*(A-1)*(2*r-R0)))/A;
+    x[0] = u*(x[1]-R0+r)/(r-R0);
+    x[2] = w*(x[1]-R0+r)/(r-R0);
+    
   }
 }
 
