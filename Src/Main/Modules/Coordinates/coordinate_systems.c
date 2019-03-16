@@ -200,8 +200,8 @@ static void make_nodes_StereographicSphereLeft_coord(Patch_T *const patch)
   struct Collocation_s coll_s[3] = {0};
   const unsigned U = countf(patch->node);
   const double R0 = patch->c[1];
-  const double R1 = patch->CoordSysInfo->R1_StereographicSphere;
-  const double R2 = patch->CoordSysInfo->R2_InfiniteRadius;
+  const double R1 = patch->CoordSysInfo->R1;
+  const double R2 = patch->CoordSysInfo->R2;
   unsigned i,j,k,l,*n;
   
   initialize_collocation_struct(patch,&coll_s[0],0);
@@ -240,8 +240,8 @@ static void make_nodes_StereographicSphereRight_coord(Patch_T *const patch)
   struct Collocation_s coll_s[3] = {0};
   const unsigned U = countf(patch->node);
   const double R0 = patch->c[1];
-  const double R1 = patch->CoordSysInfo->R1_StereographicSphere;
-  const double R2 = patch->CoordSysInfo->R2_InfiniteRadius;
+  const double R1 = patch->CoordSysInfo->R1;
+  const double R2 = patch->CoordSysInfo->R2;
   unsigned i,j,k,l,*n;
   
   initialize_collocation_struct(patch,&coll_s[0],0);

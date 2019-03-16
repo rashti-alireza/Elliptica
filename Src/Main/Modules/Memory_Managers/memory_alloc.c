@@ -18,7 +18,7 @@ void *alloc_parameter(Parameter_T ***const mem)
   (*mem) = realloc((*mem),(i+2)*sizeof(*(*mem)));
   pointerEr((*mem));
   
-  (*mem)[i] = malloc(sizeof(*(*mem)[i]));
+  (*mem)[i] = calloc(1,sizeof(*(*mem)[i]));
   pointerEr((*mem)[i]);
   
   (*mem)[i+1] = 0;
@@ -48,35 +48,27 @@ void *alloc_project(Project_T ***const mem)
 }
 
 /* allocating memory for grid structure.
-// there are flags which determine whether or not the grid should 
-// be newly allocated or there is already a gird which is recently 
-// deleted and can be used readily. note: this function add grid to 
-// grids_global; furthermore, the end of grids_global is determined by
-// NULL.
+// this function add grid to grids_global; 
+// furthermore, the end of grids_global is determined by NULL.
 // ->return value: a new grid
 */
 void *alloc_grid(void)
 {
   unsigned i;
   
-  for (i = 0; grids_global != 0 && grids_global[i] != 0; i++)
-  {
-    if (grids_global[i]->status == READY)
-    {
-      grids_global[i]->status = INUSE;
-      return grids_global[i];
-    }
-  }
+  for (i = 0; grids_global != 0 && grids_global[i] != 0; i++);
   
   grids_global = realloc(grids_global,(i+2)*sizeof(*grids_global));
   pointerEr(grids_global);
   
+  /* allocate new grid */
   grids_global[i] = calloc(1,sizeof(*grids_global[i]));
   pointerEr(grids_global[i]);
-  
+  /* set grid number */
+  grids_global[i]->gn = i;
+  /* determine the last grid */
   grids_global[i+1] = 0;
   
-  grids_global[i]->status = INUSE;
   return grids_global[i];
 }
 
