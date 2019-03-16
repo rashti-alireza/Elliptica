@@ -22,10 +22,17 @@
 #define GRTEQL(x,y) (GRT(x,y) || EQL(x,y))
 
 /* parameters */
+void add_parameter(const char *const lv, const char *const rv);
+void add_parameter_string(const char *const lv, const char *const rv);
+void add_parameter_double(const char *const lv, const double rv);
+void add_parameter_array(const char *const lv, const double *const rv,const unsigned n);
 int get_parameter_value_I(const char *const par_name,const char *const file, const int line,const Flag_T flg);
 double get_parameter_value_D(const char *const par_name,const char *const file, const int line,const Flag_T flg);
 const char *get_parameter_value_S(const char *const par_name,const char *const file, const int line,const Flag_T flg);
+double get_parameter_double_format(const char *const par_name,const char *const file, const int line,const Flag_T flg);
+double *get_parameter_array_format(const char *const par_name,const char *const file, const int line,const Flag_T flg);
 Parameter_T *get_parameter(const char *const par_name);
+
 /* fields */
 Field_T *add_field(const char *const name,const char *attribute,Patch_T *const patch,const Flag_T alloc_flg);
 void remove_field(Field_T *f);

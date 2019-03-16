@@ -5,7 +5,55 @@
 
 #include "parameters.h"
 
-/* adding left value and right value to parameter data base*/
+/* adding left value and right value to parameter data base 
+// double format. */
+void add_parameter_double(const char *const lv, const double rv)
+{
+  pointerEr(lv);
+  
+  Parameter_T *par;
+  
+  par = get_parameter(lv);
+  if (par)
+    abortEr_s("This parameter \"%s\" has already been added!\n",lv);
+    
+  par = alloc_parameter(&parameters_global);
+  par->lv = dup_s(lv);
+  par->rv_double = rv;
+}
+
+/* adding left value and right value to parameter data base 
+// array format. */
+void add_parameter_array(const char *const lv, const double *const rv,const unsigned n)
+{
+  pointerEr(lv);
+  
+  Parameter_T *par;
+  unsigned i;
+  
+  par = get_parameter(lv);
+  if (par)
+    abortEr_s("This parameter \"%s\" has already been added!\n",lv);
+    
+  par = alloc_parameter(&parameters_global);
+  par->lv = dup_s(lv);
+  
+  par->rv_array = alloc_double(n);
+  par->rv_n = n;
+  for (i = 0; i < n; ++i)
+    par->rv_array[i] = rv[i];
+  
+}
+
+/* adding left value and right value to parameter data base 
+// string format */
+void add_parameter_string(const char *const lv, const char *const rv)
+{
+  add_parameter(lv,rv);
+}
+
+/* adding left value and right value to parameter data base 
+// string format (the most common one) */
 void add_parameter(const char *const lv, const char *const rv)
 {
   pointerEr(lv);
@@ -44,6 +92,67 @@ Parameter_T *get_parameter(const char *const par_name)
   
   return 0;
 }
+
+/* having the parameter name,
+// it returns the double value of parameter which has been filled in double format.
+// if flag == FATAL and couldn't find the par_name, gives error.
+// ->return value: double value of parameter.
+*/
+double get_parameter_double_format(const char *const par_name,const char *const file, const int line,const Flag_T flg)
+{
+  double v = DBL_MAX;
+  int i;
+  Flag_T f = NONE;
+  
+  i = 0;
+  while (parameters_global != 0 && parameters_global[i] != 0)
+  {
+    if (strcmp_i(parameters_global[i]->lv,par_name))
+    {
+      v = parameters_global[i]->rv_double;
+      f = FOUND;
+    }
+    i++;
+  }
+  
+  if (flg == FATAL && f != FOUND)
+  {
+    abort_error_string("Parameter %s couldn't be found.\n",par_name,file,line);
+  }
+
+  return v;
+}
+
+/* having the parameter name,
+// it returns the array parameter which has been filled in array format.
+// if flag == FATAL and couldn't find the par_name, gives error.
+// ->return value: array value of parameter.
+*/
+double *get_parameter_array_format(const char *const par_name,const char *const file, const int line,const Flag_T flg)
+{
+  double *v = 0;
+  int i;
+  Flag_T f = NONE;
+  
+  i = 0;
+  while (parameters_global != 0 && parameters_global[i] != 0)
+  {
+    if (strcmp_i(parameters_global[i]->lv,par_name))
+    {
+      v = parameters_global[i]->rv_array;
+      f = FOUND;
+    }
+    i++;
+  }
+  
+  if (flg == FATAL && f != FOUND)
+  {
+    abort_error_string("Parameter %s couldn't be found.\n",par_name,file,line);
+  }
+
+  return v;
+}
+
 
 /* having the parameter name,
 // it returns the INTEGER value of parameter.

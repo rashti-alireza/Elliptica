@@ -14,9 +14,13 @@
 #define GetParameterS(x)   get_parameter_value_S(x,__FILE__,__LINE__,NONE)
 #define GetParameterI(x)   get_parameter_value_I(x,__FILE__,__LINE__,NONE)
 #define GetParameterD(x)   get_parameter_value_D(x,__FILE__,__LINE__,NONE)
+#define GetParameterArrayF(x)  get_parameter_array_format(x,__FILE__,__LINE__,NONE)
+#define GetParameterDoubleF(x) get_parameter_double_format(x,__FILE__,__LINE__,NONE)
 #define GetParameterS_E(x) get_parameter_value_S(x,__FILE__,__LINE__,FATAL)
 #define GetParameterI_E(x) get_parameter_value_I(x,__FILE__,__LINE__,FATAL)
 #define GetParameterD_E(x) get_parameter_value_D(x,__FILE__,__LINE__,FATAL)
+#define GetParameterArrayF_E(x)  get_parameter_array_format(x,__FILE__,__LINE__,FATAL)
+#define GetParameterDoubleF_E(x) get_parameter_double_format(x,__FILE__,__LINE__,FATAL)
 #define TIMER_ON(x) double x = get_time_sec();
 #define TIMER_OFF(x) pr_spent_time(x,#x);
 #define FOR_SURFACE(x,y,z,n0,n1,n2) (z) = (n2);for ((x) = 0; (x) < (n0); ++(x))\

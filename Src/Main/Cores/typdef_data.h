@@ -130,8 +130,11 @@ typedef enum MATRIX_SF_T
 typedef struct PARAMETER_T
 {
   /* syntax is expected to be lv = rv */
-  char *lv;/* letf value */
-  char *rv;/* right value */
+  char *lv;/* letf value its name*/
+  char *rv;/* right value string */
+  double rv_double;/* right value double */
+  double *rv_array;/* right value array */
+  unsigned rv_n;/* right value unsigned or dimension of field */
 }Parameter_T;
 
 /* *******************************************
@@ -473,8 +476,8 @@ typedef struct PATCH_T
   Coord_T coordsys;/* coord sys used in this patch */
   struct
   {
-   double R1_StereographicSphere;
-   double R2_InfiniteRadius;
+   double R1;/* smaller R */
+   double R2;/* bigger R */
   }CoordSysInfo[1];
   Collocation_T collocation[3];/* type of collocation in each direction */
   Basis_T basis[3];/* the type of basis for functions used in this patch 
@@ -485,7 +488,6 @@ typedef struct PATCH_T
   unsigned n[3];/* number of points (nodes) in each direction */
   unsigned nn;/* number of nodes in this patch */
   unsigned pn;/* its patch number i.e. patch[pn] = patch */
-  unsigned nc;/* node counter, sum of all nodes in previous patches */
   unsigned nfld;/* number of fields */
   double c[3];/* center */
   double s[3];/* size like length, width and height */
@@ -510,8 +512,8 @@ typedef struct PATCH_T
 typedef struct GIRD_T
 {
   char *kind;/* type of grid which refers how we cover the grid */
-  Flag_T status;/* INUSE or READY */
   Patch_T **patch;/* covering patch */
+  unsigned gn;/* grid number */
   unsigned np;/* number of patches on grid */
   unsigned nn;/* total number of nodes on grid */
 }Grid_T;
