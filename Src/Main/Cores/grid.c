@@ -182,26 +182,26 @@ static void fill_patches_BNS_Projective_grid(Grid_T *const grid)
   unsigned pn,i;
   
   pn = 0;
-  populate_NS_central_box_left(grid,pn++);
-  populate_NS_hemisphere_up_left(grid,pn++);
-  populate_NS_hemisphere_down_left(grid,pn++);
-  populate_NS_surrounding_up_left(grid,pn++);
-  populate_NS_surrounding_down_left(grid,pn++);
+  populate_left_NS_central_box(grid,pn++);
+  populate_left_NS_hemisphere_up(grid,pn++);
+  populate_left_NS_hemisphere_down(grid,pn++);
+  populate_left_NS_surrounding_up(grid,pn++);
+  populate_left_NS_surrounding_down(grid,pn++);
   for (i = 0; i < N_outermost_split; i++)
-    populate_outermost_left(grid,pn++,i);
+    populate_left_outermost(grid,pn++,i);
     
-  populate_NS_central_box_right(grid,pn++);
-  populate_NS_hemisphere_up_right(grid,pn++);
-  populate_NS_hemisphere_down_right(grid,pn++);
-  populate_NS_surrounding_up_right(grid,pn++);
-  populate_NS_surrounding_down_right(grid,pn++);
+  populate_right_NS_central_box(grid,pn++);
+  populate_right_NS_hemisphere_up(grid,pn++);
+  populate_right_NS_hemisphere_down(grid,pn++);
+  populate_right_NS_surrounding_up(grid,pn++);
+  populate_right_NS_surrounding_down(grid,pn++);
   for (i = 0; i < N_outermost_split; i++)
-    populate_outermost_right(grid,pn++,i);
+    populate_right_outermost(grid,pn++,i);
   
 }
 
 /* populating properties of patch for outermost left */
-static void populate_outermost_left(Grid_T *const grid,const unsigned pn,const unsigned outermost_n)
+static void populate_left_outermost(Grid_T *const grid,const unsigned pn,const unsigned outermost_n)
 {
   Patch_T *const patch = grid->patch[pn];
   char name[100] = {'\0'};
@@ -219,7 +219,7 @@ static void populate_outermost_left(Grid_T *const grid,const unsigned pn,const u
   patch->innerB = 0;
   
   /* filling name */
-  sprintf(name,"grid%u_Outermost%u_left",grid->gn,outermost_n);
+  sprintf(name,"grid%u_left_outermost%u",grid->gn,outermost_n);
   patch->name = dup_s(name);
   
   /* filling n */
@@ -228,7 +228,7 @@ static void populate_outermost_left(Grid_T *const grid,const unsigned pn,const u
   patch->n[2] = (unsigned)GetParameterI("n_c");
   /* check for override */
   sprintf(var,"Outermost%u",outermost_n);
-  make_keyword_parameter(&ret,name,"n");
+  make_keyword_parameter(&ret,var,"n");
   n = (unsigned)GetParameterI(ret.s0);
   if (n != INT_MAX)	patch->n[0] = n;
   n = (unsigned)GetParameterI(ret.s1);
@@ -247,17 +247,17 @@ static void populate_outermost_left(Grid_T *const grid,const unsigned pn,const u
   patch->nn = total_nodes_patch(patch);
   
   /* filling center */
-  sprintf(var,"grid%u_NS_left_center_a",grid->gn);
+  sprintf(var,"grid%u_left_NS_center_a",grid->gn);
   patch->c[0] = GetParameterDoubleF_E(var);
-  sprintf(var,"grid%u_NS_left_center_b",grid->gn);
+  sprintf(var,"grid%u_left_NS_center_b",grid->gn);
   patch->c[1] = GetParameterDoubleF_E(var);
-  sprintf(var,"grid%u_NS_left_center_c",grid->gn);
+  sprintf(var,"grid%u_left_NS_center_c",grid->gn);
   patch->c[2] = GetParameterDoubleF_E(var);
   
   /* filling Rs */
-  sprintf(var,"grid%u_Outermost%u_R1_left",grid->gn,outermost_n);
+  sprintf(var,"grid%u_left_outermost%u_R1",grid->gn,outermost_n);
   patch->CoordSysInfo->R1 = GetParameterDoubleF_E(var);
-  sprintf(var,"grid%u_Outermost%u_R2_left",grid->gn,outermost_n);
+  sprintf(var,"grid%u_left_outermost%u_R2",grid->gn,outermost_n);
   patch->CoordSysInfo->R2 = GetParameterDoubleF_E(var);
   
   assert(GRT(patch->CoordSysInfo->R2,patch->CoordSysInfo->R1));
@@ -295,8 +295,8 @@ static void populate_outermost_left(Grid_T *const grid,const unsigned pn,const u
   
 }
 
-/* populating properties of patch for outermost right */
-static void populate_outermost_right(Grid_T *const grid,const unsigned pn,const unsigned outermost_n)
+/* populating properties of patch for right outermost */
+static void populate_right_outermost(Grid_T *const grid,const unsigned pn,const unsigned outermost_n)
 {
   Patch_T *const patch = grid->patch[pn];
   char name[100] = {'\0'};
@@ -314,7 +314,7 @@ static void populate_outermost_right(Grid_T *const grid,const unsigned pn,const 
   patch->innerB = 0;
   
   /* filling name */
-  sprintf(name,"grid%u_Outermost%u_right",grid->gn,outermost_n);
+  sprintf(name,"grid%u_right_outermost%u",grid->gn,outermost_n);
   patch->name = dup_s(name);
   
   /* filling n */
@@ -323,7 +323,7 @@ static void populate_outermost_right(Grid_T *const grid,const unsigned pn,const 
   patch->n[2] = (unsigned)GetParameterI("n_c");
   /* check for override */
   sprintf(var,"Outermost%u",outermost_n);
-  make_keyword_parameter(&ret,name,"n");
+  make_keyword_parameter(&ret,var,"n");
   n = (unsigned)GetParameterI(ret.s0);
   if (n != INT_MAX)	patch->n[0] = n;
   n = (unsigned)GetParameterI(ret.s1);
@@ -342,17 +342,17 @@ static void populate_outermost_right(Grid_T *const grid,const unsigned pn,const 
   patch->nn = total_nodes_patch(patch);
   
   /* filling center */
-  sprintf(var,"grid%u_NS_right_center_a",grid->gn);
+  sprintf(var,"grid%u_right_NS_center_a",grid->gn);
   patch->c[0] = GetParameterDoubleF_E(var);
-  sprintf(var,"grid%u_NS_right_center_b",grid->gn);
+  sprintf(var,"grid%u_right_NS_center_b",grid->gn);
   patch->c[1] = GetParameterDoubleF_E(var);
-  sprintf(var,"grid%u_NS_right_center_c",grid->gn);
+  sprintf(var,"grid%u_right_NS_center_c",grid->gn);
   patch->c[2] = GetParameterDoubleF_E(var);
   
   /* filling Rs */
-  sprintf(var,"grid%u_Outermost%u_R1_right",grid->gn,outermost_n);
+  sprintf(var,"grid%u_right_outermost%u_R1",grid->gn,outermost_n);
   patch->CoordSysInfo->R1 = GetParameterDoubleF_E(var);
-  sprintf(var,"grid%u_Outermost%u_R2_right",grid->gn,outermost_n);
+  sprintf(var,"grid%u_right_outermost%u_R2",grid->gn,outermost_n);
   patch->CoordSysInfo->R2 = GetParameterDoubleF_E(var);
   
   assert(GRT(patch->CoordSysInfo->R2,patch->CoordSysInfo->R1));
@@ -390,13 +390,13 @@ static void populate_outermost_right(Grid_T *const grid,const unsigned pn,const 
   
 }
 
-/* populating properties of patch for NS hemisphere up left */
-static void populate_NS_hemisphere_up_left(Grid_T *const grid,const unsigned pn)
+/* populating properties of patch for NS left hemisphere up */
+static void populate_left_NS_hemisphere_up(Grid_T *const grid,const unsigned pn)
 {
   Patch_T *const patch = grid->patch[pn];
   Field_T *R1 = add_field("R1_ProjectiveHemisphereUp",0,patch,NO);
   Field_T *R2 = add_field("R2_ProjectiveHemisphereUp",0,patch,NO);
-  double R1_const,*R2_varied;
+  double *R1_array,*R2_array;
   char name[100] = {'\0'};
   char var[100] = {'\0'};
   struct Ret_S ret;
@@ -412,7 +412,7 @@ static void populate_NS_hemisphere_up_left(Grid_T *const grid,const unsigned pn)
   patch->innerB = 0;
   
   /* filling name */
-  sprintf(name,"grid%u_NS_hemisphere_up_left",grid->gn);
+  sprintf(name,"grid%u_left_NS_hemisphere_up",grid->gn);
   patch->name = dup_s(name);
   
   /* filling n */
@@ -420,8 +420,8 @@ static void populate_NS_hemisphere_up_left(Grid_T *const grid,const unsigned pn)
   patch->n[1] = (unsigned)GetParameterI("n_b");
   patch->n[2] = (unsigned)GetParameterI("n_c");
   /* check for override */
-  sprintf(var,"NS_left");
-  make_keyword_parameter(&ret,name,"n");
+  sprintf(var,"left_NS");
+  make_keyword_parameter(&ret,var,"n");
   n = (unsigned)GetParameterI(ret.s0);
   if (n != INT_MAX)	patch->n[0] = n;
   n = (unsigned)GetParameterI(ret.s1);
@@ -440,18 +440,18 @@ static void populate_NS_hemisphere_up_left(Grid_T *const grid,const unsigned pn)
   patch->nn = total_nodes_patch(patch);
   
   /* filling center */
-  sprintf(var,"grid%u_NS_left_center_a",grid->gn);
+  sprintf(var,"grid%u_left_NS_center_a",grid->gn);
   patch->c[0] = GetParameterDoubleF_E(var);
-  sprintf(var,"grid%u_NS_left_center_b",grid->gn);
+  sprintf(var,"grid%u_left_NS_center_b",grid->gn);
   patch->c[1] = GetParameterDoubleF_E(var);
-  sprintf(var,"grid%u_NS_left_center_c",grid->gn);
+  sprintf(var,"grid%u_left_NS_center_c",grid->gn);
   patch->c[2] = GetParameterDoubleF_E(var);
   
   /* filling Rs */
-  sprintf(var,"grid%u_NS_R_inside_left",grid->gn);
-  R1_const = GetParameterDoubleF_E(var);
-  sprintf(var,"grid%u_NS_left_radius",grid->gn);
-  R2_varied = GetParameterArrayF_E(var);
+  sprintf(var,"grid%u_left_NS_R1_up",grid->gn);
+  R1_array = GetParameterArrayF_E(var);
+  sprintf(var,"grid%u_left_NS_R2_up",grid->gn);
+  R2_array = GetParameterArrayF_E(var);
   
   R1->v = alloc_double(patch->nn);
   R2->v = alloc_double(patch->nn);
@@ -459,8 +459,8 @@ static void populate_NS_hemisphere_up_left(Grid_T *const grid,const unsigned pn)
     for (j = 0; j < patch->n[1]; ++j)
     {
       unsigned ij0 = L(patch->n,i,j,0);
-      R2->v[ij0] = R2_varied[ij0];
-      R1->v[ij0] = R1_const;
+      R2->v[ij0] = R2_array[ij0];
+      R1->v[ij0] = R1_array[ij0];
     }
   
   /* filling min */
@@ -496,13 +496,13 @@ static void populate_NS_hemisphere_up_left(Grid_T *const grid,const unsigned pn)
   
 }
 
-/* populating properties of patch for NS hemisphere down left */
-static void populate_NS_hemisphere_down_left(Grid_T *const grid,const unsigned pn)
+/* populating properties of patch for NS left hemisphere down */
+static void populate_left_NS_hemisphere_down(Grid_T *const grid,const unsigned pn)
 {
   Patch_T *const patch = grid->patch[pn];
   Field_T *R1 = add_field("R1_ProjectiveHemisphereDown",0,patch,NO);
   Field_T *R2 = add_field("R2_ProjectiveHemisphereDown",0,patch,NO);
-  double R1_const,*R2_varied;
+  double *R1_array,*R2_array;
   char name[100] = {'\0'};
   char var[100] = {'\0'};
   struct Ret_S ret;
@@ -518,7 +518,7 @@ static void populate_NS_hemisphere_down_left(Grid_T *const grid,const unsigned p
   patch->innerB = 0;
   
   /* filling name */
-  sprintf(name,"grid%u_NS_hemisphere_down_left",grid->gn);
+  sprintf(name,"grid%u_left_NS_hemisphere_down",grid->gn);
   patch->name = dup_s(name);
   
   /* filling n */
@@ -526,8 +526,8 @@ static void populate_NS_hemisphere_down_left(Grid_T *const grid,const unsigned p
   patch->n[1] = (unsigned)GetParameterI("n_b");
   patch->n[2] = (unsigned)GetParameterI("n_c");
   /* check for override */
-  sprintf(var,"NS_left");
-  make_keyword_parameter(&ret,name,"n");
+  sprintf(var,"left_NS");
+  make_keyword_parameter(&ret,var,"n");
   n = (unsigned)GetParameterI(ret.s0);
   if (n != INT_MAX)	patch->n[0] = n;
   n = (unsigned)GetParameterI(ret.s1);
@@ -546,18 +546,18 @@ static void populate_NS_hemisphere_down_left(Grid_T *const grid,const unsigned p
   patch->nn = total_nodes_patch(patch);
   
   /* filling center */
-  sprintf(var,"grid%u_NS_left_center_a",grid->gn);
+  sprintf(var,"grid%u_left_NS_center_a",grid->gn);
   patch->c[0] = GetParameterDoubleF_E(var);
-  sprintf(var,"grid%u_NS_left_center_b",grid->gn);
+  sprintf(var,"grid%u_left_NS_center_b",grid->gn);
   patch->c[1] = GetParameterDoubleF_E(var);
-  sprintf(var,"grid%u_NS_left_center_c",grid->gn);
+  sprintf(var,"grid%u_left_NS_center_c",grid->gn);
   patch->c[2] = GetParameterDoubleF_E(var);
   
   /* filling Rs */
-  sprintf(var,"grid%u_NS_R_inside_left",grid->gn);
-  R1_const = GetParameterDoubleF_E(var);
-  sprintf(var,"grid%u_NS_left_radius",grid->gn);
-  R2_varied = GetParameterArrayF_E(var);
+  sprintf(var,"grid%u_left_NS_R1_down",grid->gn);
+  R1_array = GetParameterArrayF_E(var);
+  sprintf(var,"grid%u_left_NS_R2_down",grid->gn);
+  R2_array = GetParameterArrayF_E(var);
   
   R1->v = alloc_double(patch->nn);
   R2->v = alloc_double(patch->nn);
@@ -565,8 +565,8 @@ static void populate_NS_hemisphere_down_left(Grid_T *const grid,const unsigned p
     for (j = 0; j < patch->n[1]; ++j)
     {
       unsigned ij0 = L(patch->n,i,j,0);
-      R2->v[ij0] = R2_varied[ij0];
-      R1->v[ij0] = R1_const;
+      R2->v[ij0] = R2_array[ij0];
+      R1->v[ij0] = R1_array[ij0];
     }
   
   /* filling min */
@@ -602,13 +602,13 @@ static void populate_NS_hemisphere_down_left(Grid_T *const grid,const unsigned p
   
 }
 
-/* populating properties of patch for NS hemisphere up right */
-static void populate_NS_hemisphere_up_right(Grid_T *const grid,const unsigned pn)
+/* populating properties of patch for NS right hemisphere up */
+static void populate_right_NS_hemisphere_up(Grid_T *const grid,const unsigned pn)
 {
   Patch_T *const patch = grid->patch[pn];
   Field_T *R1 = add_field("R1_ProjectiveHemisphereUp",0,patch,NO);
   Field_T *R2 = add_field("R2_ProjectiveHemisphereUp",0,patch,NO);
-  double R1_const,*R2_varied;
+  double *R1_array,*R2_array;
   char name[100] = {'\0'};
   char var[100] = {'\0'};
   struct Ret_S ret;
@@ -624,7 +624,7 @@ static void populate_NS_hemisphere_up_right(Grid_T *const grid,const unsigned pn
   patch->innerB = 0;
   
   /* filling name */
-  sprintf(name,"grid%u_NS_hemisphere_up_right",grid->gn);
+  sprintf(name,"grid%u_right_NS_hemisphere_up",grid->gn);
   patch->name = dup_s(name);
   
   /* filling n */
@@ -632,8 +632,8 @@ static void populate_NS_hemisphere_up_right(Grid_T *const grid,const unsigned pn
   patch->n[1] = (unsigned)GetParameterI("n_b");
   patch->n[2] = (unsigned)GetParameterI("n_c");
   /* check for override */
-  sprintf(var,"NS_right");
-  make_keyword_parameter(&ret,name,"n");
+  sprintf(var,"right_NS");
+  make_keyword_parameter(&ret,var,"n");
   n = (unsigned)GetParameterI(ret.s0);
   if (n != INT_MAX)	patch->n[0] = n;
   n = (unsigned)GetParameterI(ret.s1);
@@ -652,18 +652,18 @@ static void populate_NS_hemisphere_up_right(Grid_T *const grid,const unsigned pn
   patch->nn = total_nodes_patch(patch);
   
   /* filling center */
-  sprintf(var,"grid%u_NS_right_center_a",grid->gn);
+  sprintf(var,"grid%u_right_NS_center_a",grid->gn);
   patch->c[0] = GetParameterDoubleF_E(var);
-  sprintf(var,"grid%u_NS_right_center_b",grid->gn);
+  sprintf(var,"grid%u_right_NS_center_b",grid->gn);
   patch->c[1] = GetParameterDoubleF_E(var);
-  sprintf(var,"grid%u_NS_right_center_c",grid->gn);
+  sprintf(var,"grid%u_right_NS_center_c",grid->gn);
   patch->c[2] = GetParameterDoubleF_E(var);
   
   /* filling Rs */
-  sprintf(var,"grid%u_NS_R_inside_right",grid->gn);
-  R1_const = GetParameterDoubleF_E(var);
-  sprintf(var,"grid%u_NS_right_radius",grid->gn);
-  R2_varied = GetParameterArrayF_E(var);
+  sprintf(var,"grid%u_right_NS_R1_up",grid->gn);
+  R1_array = GetParameterArrayF_E(var);
+  sprintf(var,"grid%u_right_NS_R2_up",grid->gn);
+  R2_array = GetParameterArrayF_E(var);
   
   R1->v = alloc_double(patch->nn);
   R2->v = alloc_double(patch->nn);
@@ -671,8 +671,8 @@ static void populate_NS_hemisphere_up_right(Grid_T *const grid,const unsigned pn
     for (j = 0; j < patch->n[1]; ++j)
     {
       unsigned ij0 = L(patch->n,i,j,0);
-      R2->v[ij0] = R2_varied[ij0];
-      R1->v[ij0] = R1_const;
+      R2->v[ij0] = R2_array[ij0];
+      R1->v[ij0] = R1_array[ij0];
     }
   
   /* filling min */
@@ -708,13 +708,13 @@ static void populate_NS_hemisphere_up_right(Grid_T *const grid,const unsigned pn
   
 }
 
-/* populating properties of patch for NS hemisphere down right */
-static void populate_NS_hemisphere_down_right(Grid_T *const grid,const unsigned pn)
+/* populating properties of patch for NS right hemisphere down */
+static void populate_right_NS_hemisphere_down(Grid_T *const grid,const unsigned pn)
 {
   Patch_T *const patch = grid->patch[pn];
   Field_T *R1 = add_field("R1_ProjectiveHemisphereDown",0,patch,NO);
   Field_T *R2 = add_field("R2_ProjectiveHemisphereDown",0,patch,NO);
-  double R1_const,*R2_varied;
+  double *R1_array,*R2_array;
   char name[100] = {'\0'};
   char var[100] = {'\0'};
   struct Ret_S ret;
@@ -730,7 +730,7 @@ static void populate_NS_hemisphere_down_right(Grid_T *const grid,const unsigned 
   patch->innerB = 0;
   
   /* filling name */
-  sprintf(name,"grid%u_NS_hemisphere_down_right",grid->gn);
+  sprintf(name,"grid%u_right_NS_hemisphere_down",grid->gn);
   patch->name = dup_s(name);
   
   /* filling n */
@@ -738,8 +738,8 @@ static void populate_NS_hemisphere_down_right(Grid_T *const grid,const unsigned 
   patch->n[1] = (unsigned)GetParameterI("n_b");
   patch->n[2] = (unsigned)GetParameterI("n_c");
   /* check for override */
-  sprintf(var,"NS_right");
-  make_keyword_parameter(&ret,name,"n");
+  sprintf(var,"right_NS");
+  make_keyword_parameter(&ret,var,"n");
   n = (unsigned)GetParameterI(ret.s0);
   if (n != INT_MAX)	patch->n[0] = n;
   n = (unsigned)GetParameterI(ret.s1);
@@ -758,18 +758,18 @@ static void populate_NS_hemisphere_down_right(Grid_T *const grid,const unsigned 
   patch->nn = total_nodes_patch(patch);
   
   /* filling center */
-  sprintf(var,"grid%u_NS_right_center_a",grid->gn);
+  sprintf(var,"grid%u_right_NS_center_a",grid->gn);
   patch->c[0] = GetParameterDoubleF_E(var);
-  sprintf(var,"grid%u_NS_right_center_b",grid->gn);
+  sprintf(var,"grid%u_right_NS_center_b",grid->gn);
   patch->c[1] = GetParameterDoubleF_E(var);
-  sprintf(var,"grid%u_NS_right_center_c",grid->gn);
+  sprintf(var,"grid%u_right_NS_center_c",grid->gn);
   patch->c[2] = GetParameterDoubleF_E(var);
   
   /* filling Rs */
-  sprintf(var,"grid%u_NS_R_inside_right",grid->gn);
-  R1_const = GetParameterDoubleF_E(var);
-  sprintf(var,"grid%u_NS_right_radius",grid->gn);
-  R2_varied = GetParameterArrayF_E(var);
+  sprintf(var,"grid%u_right_NS_R1_down",grid->gn);
+  R1_array = GetParameterArrayF_E(var);
+  sprintf(var,"grid%u_right_NS_R2_down",grid->gn);
+  R2_array = GetParameterArrayF_E(var);
   
   R1->v = alloc_double(patch->nn);
   R2->v = alloc_double(patch->nn);
@@ -777,8 +777,8 @@ static void populate_NS_hemisphere_down_right(Grid_T *const grid,const unsigned 
     for (j = 0; j < patch->n[1]; ++j)
     {
       unsigned ij0 = L(patch->n,i,j,0);
-      R2->v[ij0] = R2_varied[ij0];
-      R1->v[ij0] = R1_const;
+      R2->v[ij0] = R2_array[ij0];
+      R1->v[ij0] = R1_array[ij0];
     }
   
   /* filling min */
@@ -814,13 +814,13 @@ static void populate_NS_hemisphere_down_right(Grid_T *const grid,const unsigned 
   
 }
 
-/* populating properties of patch for NS's surrounding up left */
-static void populate_NS_surrounding_up_left(Grid_T *const grid,const unsigned pn)
+/* populating properties of patch for left NS's surrounding up */
+static void populate_left_NS_surrounding_up(Grid_T *const grid,const unsigned pn)
 {
   Patch_T *const patch = grid->patch[pn];
   Field_T *R1 = add_field("R1_ProjectiveHemisphereUp",0,patch,NO);
   Field_T *R2 = add_field("R2_ProjectiveHemisphereUp",0,patch,NO);
-  double R2_const,*R1_varied;
+  double R2_const,*R1_array;
   char name[100] = {'\0'};
   char var[100] = {'\0'};
   struct Ret_S ret;
@@ -836,7 +836,7 @@ static void populate_NS_surrounding_up_left(Grid_T *const grid,const unsigned pn
   patch->innerB = 0;
   
   /* filling name */
-  sprintf(name,"grid%u_NS_surrounding_up_left",grid->gn);
+  sprintf(name,"grid%u_left_NS_surrounding_up",grid->gn);
   patch->name = dup_s(name);
   
   /* filling n */
@@ -844,8 +844,8 @@ static void populate_NS_surrounding_up_left(Grid_T *const grid,const unsigned pn
   patch->n[1] = (unsigned)GetParameterI("n_b");
   patch->n[2] = (unsigned)GetParameterI("n_c");
   /* check for override */
-  sprintf(var,"NS_left");
-  make_keyword_parameter(&ret,name,"n");
+  sprintf(var,"left_NS");
+  make_keyword_parameter(&ret,var,"n");
   n = (unsigned)GetParameterI(ret.s0);
   if (n != INT_MAX)	patch->n[0] = n;
   n = (unsigned)GetParameterI(ret.s1);
@@ -864,18 +864,18 @@ static void populate_NS_surrounding_up_left(Grid_T *const grid,const unsigned pn
   patch->nn = total_nodes_patch(patch);
   
   /* filling center */
-  sprintf(var,"grid%u_NS_left_center_a",grid->gn);
+  sprintf(var,"grid%u_left_NS_center_a",grid->gn);
   patch->c[0] = GetParameterDoubleF_E(var);
-  sprintf(var,"grid%u_NS_left_center_b",grid->gn);
+  sprintf(var,"grid%u_left_NS_center_b",grid->gn);
   patch->c[1] = GetParameterDoubleF_E(var);
-  sprintf(var,"grid%u_NS_left_center_c",grid->gn);
+  sprintf(var,"grid%u_left_NS_center_c",grid->gn);
   patch->c[2] = GetParameterDoubleF_E(var);
   
   /* filling Rs */
-  sprintf(var,"grid%u_NS_Surrounding_R2_left",grid->gn);
+  sprintf(var,"grid%u_left_NS_Surrounding_R2",grid->gn);
   R2_const = GetParameterDoubleF_E(var);
-  sprintf(var,"grid%u_NS_left_radius",grid->gn);
-  R1_varied = GetParameterArrayF_E(var);
+  sprintf(var,"grid%u_left_NS_R2_up",grid->gn);
+  R1_array = GetParameterArrayF_E(var);
   
   R1->v = alloc_double(patch->nn);
   R2->v = alloc_double(patch->nn);
@@ -883,7 +883,7 @@ static void populate_NS_surrounding_up_left(Grid_T *const grid,const unsigned pn
     for (j = 0; j < patch->n[1]; ++j)
     {
       unsigned ij0 = L(patch->n,i,j,0);
-      R1->v[ij0] = R1_varied[ij0];
+      R1->v[ij0] = R1_array[ij0];
       R2->v[ij0] = R2_const;
     }
   
@@ -920,13 +920,13 @@ static void populate_NS_surrounding_up_left(Grid_T *const grid,const unsigned pn
   
 }
 
-/* populating properties of patch for NS's surrounding down left */
-static void populate_NS_surrounding_down_left(Grid_T *const grid,const unsigned pn)
+/* populating properties of patch for left NS's surrounding down */
+static void populate_left_NS_surrounding_down(Grid_T *const grid,const unsigned pn)
 {
   Patch_T *const patch = grid->patch[pn];
   Field_T *R1 = add_field("R1_ProjectiveHemisphereDown",0,patch,NO);
   Field_T *R2 = add_field("R2_ProjectiveHemisphereDown",0,patch,NO);
-  double R2_const,*R1_varied;
+  double R2_const,*R1_array;
   char name[100] = {'\0'};
   char var[100] = {'\0'};
   struct Ret_S ret;
@@ -942,7 +942,7 @@ static void populate_NS_surrounding_down_left(Grid_T *const grid,const unsigned 
   patch->innerB = 0;
   
   /* filling name */
-  sprintf(name,"grid%u_NS_surrounding_down_left",grid->gn);
+  sprintf(name,"grid%u_left_NS_surrounding_down",grid->gn);
   patch->name = dup_s(name);
   
   /* filling n */
@@ -950,8 +950,8 @@ static void populate_NS_surrounding_down_left(Grid_T *const grid,const unsigned 
   patch->n[1] = (unsigned)GetParameterI("n_b");
   patch->n[2] = (unsigned)GetParameterI("n_c");
   /* check for override */
-  sprintf(var,"NS_left");
-  make_keyword_parameter(&ret,name,"n");
+  sprintf(var,"left_NS");
+  make_keyword_parameter(&ret,var,"n");
   n = (unsigned)GetParameterI(ret.s0);
   if (n != INT_MAX)	patch->n[0] = n;
   n = (unsigned)GetParameterI(ret.s1);
@@ -970,18 +970,18 @@ static void populate_NS_surrounding_down_left(Grid_T *const grid,const unsigned 
   patch->nn = total_nodes_patch(patch);
   
   /* filling center */
-  sprintf(var,"grid%u_NS_left_center_a",grid->gn);
+  sprintf(var,"grid%u_left_NS_center_a",grid->gn);
   patch->c[0] = GetParameterDoubleF_E(var);
-  sprintf(var,"grid%u_NS_left_center_b",grid->gn);
+  sprintf(var,"grid%u_left_NS_center_b",grid->gn);
   patch->c[1] = GetParameterDoubleF_E(var);
-  sprintf(var,"grid%u_NS_left_center_c",grid->gn);
+  sprintf(var,"grid%u_left_NS_center_c",grid->gn);
   patch->c[2] = GetParameterDoubleF_E(var);
   
   /* filling Rs */
-  sprintf(var,"grid%u_NS_Surrounding_R2_left",grid->gn);
+  sprintf(var,"grid%u_left_NS_Surrounding_R2",grid->gn);
   R2_const = GetParameterDoubleF_E(var);
-  sprintf(var,"grid%u_NS_left_radius",grid->gn);
-  R1_varied = GetParameterArrayF_E(var);
+  sprintf(var,"grid%u_left_NS_R2_down",grid->gn);
+  R1_array = GetParameterArrayF_E(var);
   
   R1->v = alloc_double(patch->nn);
   R2->v = alloc_double(patch->nn);
@@ -989,7 +989,7 @@ static void populate_NS_surrounding_down_left(Grid_T *const grid,const unsigned 
     for (j = 0; j < patch->n[1]; ++j)
     {
       unsigned ij0 = L(patch->n,i,j,0);
-      R1->v[ij0] = R1_varied[ij0];
+      R1->v[ij0] = R1_array[ij0];
       R2->v[ij0] = R2_const;
     }
   
@@ -1026,13 +1026,13 @@ static void populate_NS_surrounding_down_left(Grid_T *const grid,const unsigned 
   
 }
 
-/* populating properties of patch for NS's surrounding up right */
-static void populate_NS_surrounding_up_right(Grid_T *const grid,const unsigned pn)
+/* populating properties of patch for right NS's surrounding up */
+static void populate_right_NS_surrounding_up(Grid_T *const grid,const unsigned pn)
 {
   Patch_T *const patch = grid->patch[pn];
   Field_T *R1 = add_field("R1_ProjectiveHemisphereUp",0,patch,NO);
   Field_T *R2 = add_field("R2_ProjectiveHemisphereUp",0,patch,NO);
-  double R2_const,*R1_varied;
+  double R2_const,*R1_array;
   char name[100] = {'\0'};
   char var[100] = {'\0'};
   struct Ret_S ret;
@@ -1048,7 +1048,7 @@ static void populate_NS_surrounding_up_right(Grid_T *const grid,const unsigned p
   patch->innerB = 0;
   
   /* filling name */
-  sprintf(name,"grid%u_NS_surrounding_up_right",grid->gn);
+  sprintf(name,"grid%u_right_NS_surrounding_up",grid->gn);
   patch->name = dup_s(name);
   
   /* filling n */
@@ -1056,8 +1056,8 @@ static void populate_NS_surrounding_up_right(Grid_T *const grid,const unsigned p
   patch->n[1] = (unsigned)GetParameterI("n_b");
   patch->n[2] = (unsigned)GetParameterI("n_c");
   /* check for override */
-  sprintf(var,"NS_right");
-  make_keyword_parameter(&ret,name,"n");
+  sprintf(var,"right_NS");
+  make_keyword_parameter(&ret,var,"n");
   n = (unsigned)GetParameterI(ret.s0);
   if (n != INT_MAX)	patch->n[0] = n;
   n = (unsigned)GetParameterI(ret.s1);
@@ -1076,18 +1076,18 @@ static void populate_NS_surrounding_up_right(Grid_T *const grid,const unsigned p
   patch->nn = total_nodes_patch(patch);
   
   /* filling center */
-  sprintf(var,"grid%u_NS_right_center_a",grid->gn);
+  sprintf(var,"grid%u_right_NS_center_a",grid->gn);
   patch->c[0] = GetParameterDoubleF_E(var);
-  sprintf(var,"grid%u_NS_right_center_b",grid->gn);
+  sprintf(var,"grid%u_right_NS_center_b",grid->gn);
   patch->c[1] = GetParameterDoubleF_E(var);
-  sprintf(var,"grid%u_NS_right_center_c",grid->gn);
+  sprintf(var,"grid%u_right_NS_center_c",grid->gn);
   patch->c[2] = GetParameterDoubleF_E(var);
   
   /* filling Rs */
-  sprintf(var,"grid%u_NS_Surrounding_R2_right",grid->gn);
+  sprintf(var,"grid%u_right_NS_Surrounding_R2",grid->gn);
   R2_const = GetParameterDoubleF_E(var);
-  sprintf(var,"grid%u_NS_right_radius",grid->gn);
-  R1_varied = GetParameterArrayF_E(var);
+  sprintf(var,"grid%u_right_NS_R2_up",grid->gn);
+  R1_array = GetParameterArrayF_E(var);
   
   R1->v = alloc_double(patch->nn);
   R2->v = alloc_double(patch->nn);
@@ -1095,7 +1095,7 @@ static void populate_NS_surrounding_up_right(Grid_T *const grid,const unsigned p
     for (j = 0; j < patch->n[1]; ++j)
     {
       unsigned ij0 = L(patch->n,i,j,0);
-      R1->v[ij0] = R1_varied[ij0];
+      R1->v[ij0] = R1_array[ij0];
       R2->v[ij0] = R2_const;
     }
   
@@ -1132,13 +1132,13 @@ static void populate_NS_surrounding_up_right(Grid_T *const grid,const unsigned p
   
 }
 
-/* populating properties of patch for NS's surrounding down right */
-static void populate_NS_surrounding_down_right(Grid_T *const grid,const unsigned pn)
+/* populating properties of patch for right_NS's surrounding down */
+static void populate_right_NS_surrounding_down(Grid_T *const grid,const unsigned pn)
 {
   Patch_T *const patch = grid->patch[pn];
   Field_T *R1 = add_field("R1_ProjectiveHemisphereDown",0,patch,NO);
   Field_T *R2 = add_field("R2_ProjectiveHemisphereDown",0,patch,NO);
-  double R2_const,*R1_varied;
+  double R2_const,*R1_array;
   char name[100] = {'\0'};
   char var[100] = {'\0'};
   struct Ret_S ret;
@@ -1154,7 +1154,7 @@ static void populate_NS_surrounding_down_right(Grid_T *const grid,const unsigned
   patch->innerB = 0;
   
   /* filling name */
-  sprintf(name,"grid%u_NS_surrounding_down_right",grid->gn);
+  sprintf(name,"grid%u_right_NS_surrounding_down",grid->gn);
   patch->name = dup_s(name);
   
   /* filling n */
@@ -1162,8 +1162,8 @@ static void populate_NS_surrounding_down_right(Grid_T *const grid,const unsigned
   patch->n[1] = (unsigned)GetParameterI("n_b");
   patch->n[2] = (unsigned)GetParameterI("n_c");
   /* check for override */
-  sprintf(var,"NS_right");
-  make_keyword_parameter(&ret,name,"n");
+  sprintf(var,"right_NS");
+  make_keyword_parameter(&ret,var,"n");
   n = (unsigned)GetParameterI(ret.s0);
   if (n != INT_MAX)	patch->n[0] = n;
   n = (unsigned)GetParameterI(ret.s1);
@@ -1182,18 +1182,18 @@ static void populate_NS_surrounding_down_right(Grid_T *const grid,const unsigned
   patch->nn = total_nodes_patch(patch);
   
   /* filling center */
-  sprintf(var,"grid%u_NS_right_center_a",grid->gn);
+  sprintf(var,"grid%u_right_NS_center_a",grid->gn);
   patch->c[0] = GetParameterDoubleF_E(var);
-  sprintf(var,"grid%u_NS_right_center_b",grid->gn);
+  sprintf(var,"grid%u_right_NS_center_b",grid->gn);
   patch->c[1] = GetParameterDoubleF_E(var);
-  sprintf(var,"grid%u_NS_right_center_c",grid->gn);
+  sprintf(var,"grid%u_right_NS_center_c",grid->gn);
   patch->c[2] = GetParameterDoubleF_E(var);
   
   /* filling Rs */
-  sprintf(var,"grid%u_NS_Surrounding_R2_right",grid->gn);
+  sprintf(var,"grid%u_right_NS_Surrounding_R2",grid->gn);
   R2_const = GetParameterDoubleF_E(var);
-  sprintf(var,"grid%u_NS_right_radius",grid->gn);
-  R1_varied = GetParameterArrayF_E(var);
+  sprintf(var,"grid%u_right_NS_R2_down",grid->gn);
+  R1_array = GetParameterArrayF_E(var);
   
   R1->v = alloc_double(patch->nn);
   R2->v = alloc_double(patch->nn);
@@ -1201,7 +1201,7 @@ static void populate_NS_surrounding_down_right(Grid_T *const grid,const unsigned
     for (j = 0; j < patch->n[1]; ++j)
     {
       unsigned ij0 = L(patch->n,i,j,0);
-      R1->v[ij0] = R1_varied[ij0];
+      R1->v[ij0] = R1_array[ij0];
       R2->v[ij0] = R2_const;
     }
   
@@ -1239,7 +1239,7 @@ static void populate_NS_surrounding_down_right(Grid_T *const grid,const unsigned
 }
 
 /* populating properties of the box at the middle of left NS */
-static void populate_NS_central_box_left(Grid_T *const grid,const unsigned pn)
+static void populate_left_NS_central_box(Grid_T *const grid,const unsigned pn)
 {
   Patch_T *const patch = grid->patch[pn];
   unsigned n;
@@ -1256,11 +1256,11 @@ static void populate_NS_central_box_left(Grid_T *const grid,const unsigned pn)
   patch->innerB = 0;
   
   /* filling name */
-  sprintf(name,"grid%u_centeral_box_left",grid->gn);
+  sprintf(name,"grid%u_left_centeral_box",grid->gn);
   patch->name = dup_s(name);
   
   /* filling n */
-  sprintf(var,"grid%u_centeral_box_left_n_abc",grid->gn);
+  sprintf(var,"grid%u_left_centeral_box_n_abc",grid->gn);
   n = (unsigned)GetParameterI_E(var);
   patch->n[0] = patch->n[1] = patch->n[2] = n;
   
@@ -1275,19 +1275,19 @@ static void populate_NS_central_box_left(Grid_T *const grid,const unsigned pn)
   patch->nn = total_nodes_patch(patch);
   
   /* filling center */
-  sprintf(var,"grid%u_NS_left_center_a",grid->gn);
+  sprintf(var,"grid%u_left_NS_center_a",grid->gn);
   patch->c[0] = GetParameterDoubleF_E(var);
-  sprintf(var,"grid%u_NS_left_center_b",grid->gn);
+  sprintf(var,"grid%u_left_NS_center_b",grid->gn);
   patch->c[1] = GetParameterDoubleF_E(var);
-  sprintf(var,"grid%u_NS_left_center_c",grid->gn);
+  sprintf(var,"grid%u_left_NS_center_c",grid->gn);
   patch->c[2] = GetParameterDoubleF_E(var);
   
   /* filling size */
-  sprintf(var,"grid%u_centeral_box_left_size_a",grid->gn);
+  sprintf(var,"grid%u_left_centeral_box_size_a",grid->gn);
   patch->s[0] = GetParameterDoubleF_E(var);
-  sprintf(var,"grid%u_centeral_box_left_size_b",grid->gn);
+  sprintf(var,"grid%u_left_centeral_box_size_b",grid->gn);
   patch->s[1] = GetParameterDoubleF_E(var);
-  sprintf(var,"grid%u_centeral_box_left_size_c",grid->gn);
+  sprintf(var,"grid%u_left_centeral_box_size_c",grid->gn);
   patch->s[2] = GetParameterDoubleF_E(var);
   
   /* filling min: min = center-l/2 */
@@ -1324,7 +1324,7 @@ static void populate_NS_central_box_left(Grid_T *const grid,const unsigned pn)
 }
 
 /* populating properties of the box at the middle of right NS */
-static void populate_NS_central_box_right(Grid_T *const grid,const unsigned pn)
+static void populate_right_NS_central_box(Grid_T *const grid,const unsigned pn)
 {
   Patch_T *const patch = grid->patch[pn];
   unsigned n;
@@ -1341,11 +1341,11 @@ static void populate_NS_central_box_right(Grid_T *const grid,const unsigned pn)
   patch->innerB = 0;
   
   /* filling name */
-  sprintf(name,"grid%u_centeral_box_right",grid->gn);
+  sprintf(name,"grid%u_right_centeral_box",grid->gn);
   patch->name = dup_s(name);
   
   /* filling n */
-  sprintf(var,"grid%u_centeral_box_right_n_abc",grid->gn);
+  sprintf(var,"grid%u_right_centeral_box_n_abc",grid->gn);
   n = (unsigned)GetParameterI_E(var);
   patch->n[0] = patch->n[1] = patch->n[2] = n;
   
@@ -1360,19 +1360,19 @@ static void populate_NS_central_box_right(Grid_T *const grid,const unsigned pn)
   patch->nn = total_nodes_patch(patch);
   
   /* filling center */
-  sprintf(var,"grid%u_NS_right_center_a",grid->gn);
+  sprintf(var,"grid%u_right_NS_center_a",grid->gn);
   patch->c[0] = GetParameterDoubleF_E(var);
-  sprintf(var,"grid%u_NS_right_center_b",grid->gn);
+  sprintf(var,"grid%u_right_NS_center_b",grid->gn);
   patch->c[1] = GetParameterDoubleF_E(var);
-  sprintf(var,"grid%u_NS_right_center_c",grid->gn);
+  sprintf(var,"grid%u_right_NS_center_c",grid->gn);
   patch->c[2] = GetParameterDoubleF_E(var);
   
   /* filling size */
-  sprintf(var,"grid%u_centeral_box_right_size_a",grid->gn);
+  sprintf(var,"grid%u_right_centeral_box_size_a",grid->gn);
   patch->s[0] = GetParameterDoubleF_E(var);
-  sprintf(var,"grid%u_centeral_box_right_size_b",grid->gn);
+  sprintf(var,"grid%u_right_centeral_box_size_b",grid->gn);
   patch->s[1] = GetParameterDoubleF_E(var);
-  sprintf(var,"grid%u_centeral_box_right_size_c",grid->gn);
+  sprintf(var,"grid%u_right_centeral_box_size_c",grid->gn);
   patch->s[2] = GetParameterDoubleF_E(var);
   
   /* filling min: min = center-l/2 */

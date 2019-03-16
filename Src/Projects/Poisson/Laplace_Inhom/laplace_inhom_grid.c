@@ -54,13 +54,12 @@ static void characteristics_BNS_Projective_grid(Grid_T *const grid)
   const unsigned gn   = grid->gn;
   const double CONST  = 5.0;
   const double C      = GetParameterD_E("Centers_Distance");
-  const double R_NS_l = GetParameterD_E("NS_left_radius");/* assuming perfect sphere */
-  const double R_NS_r = GetParameterD_E("NS_right_radius");/* assuming perfect sphere */
+  const double R_NS_l = GetParameterD_E("left_NS_radius");/* assuming perfect sphere */
+  const double R_NS_r = GetParameterD_E("right_NS_radius");/* assuming perfect sphere */
   double R_max_l,R_max_r;/* maximum distance from the center of each star */
   const unsigned N_Outermost_Split = (unsigned)GetParameterI_E("Number_of_Outermost_Split"); 
   double O,O_l,O_r,
          R_Surr_l,R_Surr_r,
-         R_inside_l,R_inside_r,
          box_size_l,box_size_r,
          *R_outmost_l = alloc_double(N_Outermost_Split),
          *R_outmost_r = alloc_double(N_Outermost_Split),
@@ -76,32 +75,29 @@ static void characteristics_BNS_Projective_grid(Grid_T *const grid)
   assert(GRT(R_NS_l,0));
   assert(GRT(R_NS_r,0));
   
-  /* making field of NS's radius and 
-  // finding the max distance from the center of the star */
-  make_field_of_NS_radius(grid,&R_max_l,&R_max_r);
-  
   n_l = (unsigned)GetParameterI("n_c");
-  i   = (unsigned)GetParameterI("NS_left_n_c");
+  i   = (unsigned)GetParameterI("left_NS_n_c");
   if (i != INT_MAX) 	n_l = i;
   if (n_l == INT_MAX)   abortEr("n_l could not be set.");
   assert(n_l > 2);
   
   n_r = (unsigned)GetParameterI("n_c");
-  i   = (unsigned)GetParameterI("NS_right_n_c");
+  i   = (unsigned)GetParameterI("right_NS_n_c");
   if (i != INT_MAX) 	n_r = i;
   if (n_r == INT_MAX)   abortEr("n_r could not be set.");
   assert(n_r > 2);
+  
+  /* making field of NS's radius and 
+  // finding the max distance from the center of the star */
+  make_field_of_NS_radii(grid,&R_max_l,&R_max_r);
+  
+  box_size_l = 2*R_max_l/(n_l-1);
+  box_size_r = 2*R_max_r/(n_r-1);
   
   O = C-R_NS_l-R_NS_r;
   assert(GRT(O,0));
   O_l = O/2+R_NS_l;
   O_r = O/2+R_NS_r;
-  
-  R_inside_l = R_NS_l/n_l;
-  R_inside_r = R_NS_r/n_r;
-  
-  box_size_l = 2*R_NS_l/(n_l-1);
-  box_size_r = 2*R_NS_r/(n_r-1);
   
   M = GRT(O_l,O_r) ? O_l : O_r;
   m = LSS(R_max_l,R_max_r) ? R_max_l : R_max_r;
@@ -130,45 +126,38 @@ static void characteristics_BNS_Projective_grid(Grid_T *const grid)
   /* adding the results to the parameter data base */
   
   /* n_a, n_b, n_c */
-  sprintf(par,"grid%u_centeral_box_left_n_abc",gn);
+  sprintf(par,"grid%u_left_centeral_box_n_abc",gn);
   sprintf(val,"%u",n_box_l);
   add_parameter_string(par,val);
   
-  sprintf(par,"grid%u_centeral_box_right_n_abc",gn);
+  sprintf(par,"grid%u_right_centeral_box_n_abc",gn);
   sprintf(val,"%u",n_box_r);
   add_parameter_string(par,val);
   
   /* size a,b,c */
-  sprintf(par,"grid%u_centeral_box_left_size_a",gn);
+  sprintf(par,"grid%u_left_centeral_box_size_a",gn);
   add_parameter_double(par,box_size_l);
   
-  sprintf(par,"grid%u_centeral_box_left_size_b",gn);
+  sprintf(par,"grid%u_left_centeral_box_size_b",gn);
   add_parameter_double(par,box_size_l);
   
-  sprintf(par,"grid%u_centeral_box_left_size_c",gn);
+  sprintf(par,"grid%u_left_centeral_box_size_c",gn);
   add_parameter_double(par,box_size_l);
   
-  sprintf(par,"grid%u_centeral_box_right_size_a",gn);
+  sprintf(par,"grid%u_right_centeral_box_size_a",gn);
   add_parameter_double(par,box_size_r);
   
-  sprintf(par,"grid%u_centeral_box_right_size_b",gn);
+  sprintf(par,"grid%u_right_centeral_box_size_b",gn);
   add_parameter_double(par,box_size_r);
   
-  sprintf(par,"grid%u_centeral_box_right_size_c",gn);
+  sprintf(par,"grid%u_right_centeral_box_size_c",gn);
   add_parameter_double(par,box_size_r);
-  
-  /* R inside */
-  sprintf(par,"grid%u_NS_R_inside_left",gn);
-  add_parameter_double(par,R_inside_l);
-  
-  sprintf(par,"grid%u_NS_R_inside_right",gn);
-  add_parameter_double(par,R_inside_r);
   
   /* R2 surroundings */
-  sprintf(par,"grid%u_NS_Surrounding_R2_left",gn);
+  sprintf(par,"grid%u_left_NS_surrounding_R2",gn);
   add_parameter_double(par,R_Surr_l);
   
-  sprintf(par,"grid%u_NS_Surrounding_R2_right",gn);
+  sprintf(par,"grid%u_right_NS_surrounding_R2",gn);
   add_parameter_double(par,R_Surr_r);
   
   /* R1 and R2 outermost */
@@ -177,47 +166,47 @@ static void characteristics_BNS_Projective_grid(Grid_T *const grid)
     /* R1: */
     if (i == 0)
     {
-      sprintf(par,"grid%u_Outermost%u_R1_left",gn,i);
+      sprintf(par,"grid%u_left_outermost%u_R1",gn,i);
       add_parameter_double(par,R_Surr_l);
       
-      sprintf(par,"grid%u_Outermost%u_R1_right",gn,i);
+      sprintf(par,"grid%u_right_outermost%u_R1",gn,i);
       add_parameter_double(par,R_Surr_r);
     }
     else
     {
-      sprintf(par,"grid%u_Outermost%u_R1_left",gn,i);
+      sprintf(par,"grid%u_left_outermost%u_R1",gn,i);
       add_parameter_double(par,R_outmost_l[i-1]);
       
-      sprintf(par,"grid%u_Outermost%u_R1_right",gn,i);
+      sprintf(par,"grid%u_right_outermost%u_R1",gn,i);
       add_parameter_double(par,R_outmost_r[i-1]);
     }
     
     /* R2: */
-    sprintf(par,"grid%u_Outermost%u_R2_left",gn,i);
+    sprintf(par,"grid%u_left_outermost%u_R2",gn,i);
     add_parameter_double(par,R_outmost_l[i]);
     
-    sprintf(par,"grid%u_Outermost%u_R2_right",gn,i);
+    sprintf(par,"grid%u_right_outermost%u_R2",gn,i);
     add_parameter_double(par,R_outmost_r[i]);
   }
   
   /* assuming the center of left NS at (0,-O_l,0) */
-  sprintf(par,"grid%u_NS_left_center_a",gn);
+  sprintf(par,"grid%u_left_NS_center_a",gn);
   add_parameter_double(par,0.0);
   
-  sprintf(par,"grid%u_NS_left_center_b",gn);
+  sprintf(par,"grid%u_left_NS_center_b",gn);
   add_parameter_double(par,-O_l);
   
-  sprintf(par,"grid%u_NS_left_center_c",gn);
+  sprintf(par,"grid%u_left_NS_center_c",gn);
   add_parameter_double(par,0.0);
   
   /* assuming the center of right NS at (0,O_r,0) */
-  sprintf(par,"grid%u_NS_right_center_a",gn);
+  sprintf(par,"grid%u_right_NS_center_a",gn);
   add_parameter_double(par,0.0);
   
-  sprintf(par,"grid%u_NS_right_center_b",gn);
+  sprintf(par,"grid%u_right_NS_center_b",gn);
   add_parameter_double(par,O_r);
   
-  sprintf(par,"grid%u_NS_right_center_c",gn);
+  sprintf(par,"grid%u_right_NS_center_c",gn);
   add_parameter_double(par,0.0);
   
   free(R0);
@@ -225,28 +214,30 @@ static void characteristics_BNS_Projective_grid(Grid_T *const grid)
   free(R_outmost_l);
 }
 
-/* making field of NS's radius 
+/* making field of NS's inside (R1) and surface (R2) radius and 
 // finding the max distance from the center of the star */
-static void make_field_of_NS_radius(Grid_T *const grid,double *const R_max_l,double *const R_max_r)
+static void make_field_of_NS_radii(Grid_T *const grid,double *const R_max_l,double *const R_max_r)
 {
-  const double R_NS_l = GetParameterD_E("NS_left_radius");/* assuming perfect sphere */
-  const double R_NS_r = GetParameterD_E("NS_right_radius");/* assuming perfect sphere */
-  double *R_field;
-  char var[100] = {'\0'};
+  const double R_NS_l = GetParameterD_E("left_NS_radius");/* assuming perfect sphere */
+  const double R_NS_r = GetParameterD_E("right_NS_radius");/* assuming perfect sphere */
+  double *R1_down,*R2_down;
+  double *R1_up,*R2_up;
+  char par[100] = {'\0'};
   unsigned N[3],n,i,j,N_total;
   
-  /* left side: */
+  /* left NS */
   *R_max_l = R_NS_l;/* since this star is perfect sphere */
+  
   /* filling N */
   N[0] = (unsigned)GetParameterI("n_a");
   N[1] = (unsigned)GetParameterI("n_b");
   N[2] = (unsigned)GetParameterI("n_c");
   /* check for override */
-  n = (unsigned)GetParameterI("NS_left_n_a");
+  n = (unsigned)GetParameterI("left_NS_n_a");
   if (n != INT_MAX)     N[0] = n;
-  n = (unsigned)GetParameterI("NS_left_n_b");
+  n = (unsigned)GetParameterI("left_NS_n_b");
   if (n != INT_MAX)     N[1] = n;
-  n = (unsigned)GetParameterI("NS_left_n_c");
+  n = (unsigned)GetParameterI("left_NS_n_c");
   if (n != INT_MAX)     N[2] = n;
   
   if(N[0] == INT_MAX)
@@ -257,28 +248,66 @@ static void make_field_of_NS_radius(Grid_T *const grid,double *const R_max_l,dou
     abortEr("n_c could not be set.\n");
     
   N_total = N[0]*N[1]*N[2];
-  R_field = alloc_double(N_total);
   
+  /* surface: */
+  
+  /* up side */
+  R2_up = alloc_double(N_total);
   for (i = 0; i < N[0]; ++i)
     for (j = 0; j < N[1]; ++j)
-      R_field[L(N,i,j,0)] = R_NS_l;
+      R2_up[L(N,i,j,0)] = R_NS_l;
       
-  sprintf(var,"grid%u_NS_left_radius",grid->gn);
-  add_parameter_array(var,R_field,N_total);
-  free(R_field);
+  sprintf(par,"grid%u_left_NS_R2_up",grid->gn);
+  add_parameter_array(par,R2_up,N_total);
+  /* end of up side */
+  /* down side */
+  R2_down = alloc_double(N_total);
+  for (i = 0; i < N[0]; ++i)
+    for (j = 0; j < N[1]; ++j)
+      R2_down[L(N,i,j,0)] = R_NS_l;
+      
+  sprintf(par,"grid%u_left_NS_R2_down",grid->gn);
+  add_parameter_array(par,R2_down,N_total);
+  /* end of down side */
   
-  /* right side: */
+  /* inside: */
+  
+  /* up side */
+  R1_up = alloc_double(N_total);
+  for (i = 0; i < N[0]; ++i)
+    for (j = 0; j < N[1]; ++j)
+      R1_up[L(N,i,j,0)] = R2_up[L(N,i,j,0)]/N[2];
+      
+  sprintf(par,"grid%u_left_NS_R1_up",grid->gn);
+  add_parameter_array(par,R1_up,N_total);
+  free(R1_up);
+  free(R2_up);
+  /* end of up side */
+  /* down side */
+  R1_down = alloc_double(N_total);
+  for (i = 0; i < N[0]; ++i)
+    for (j = 0; j < N[1]; ++j)
+      R1_down[L(N,i,j,0)] = R2_down[L(N,i,j,0)]/N[2];
+      
+  sprintf(par,"grid%u_left_NS_R1_down",grid->gn);
+  add_parameter_array(par,R1_down,N_total);
+  free(R1_down);
+  free(R2_down);
+  /* end of down side */
+  
+  /* right NS */
+  
   *R_max_r = R_NS_r;/* since this star is perfect sphere */
   /* filling N */
   N[0] = (unsigned)GetParameterI("n_a");
   N[1] = (unsigned)GetParameterI("n_b");
   N[2] = (unsigned)GetParameterI("n_c");
   /* check for override */
-  n = (unsigned)GetParameterI("NS_right_n_a");
+  n = (unsigned)GetParameterI("right_NS_n_a");
   if (n != INT_MAX)     N[0] = n;
-  n = (unsigned)GetParameterI("NS_right_n_b");
+  n = (unsigned)GetParameterI("right_NS_n_b");
   if (n != INT_MAX)     N[1] = n;
-  n = (unsigned)GetParameterI("NS_right_n_c");
+  n = (unsigned)GetParameterI("right_NS_n_c");
   if (n != INT_MAX)     N[2] = n;
   
   if(N[0] == INT_MAX)
@@ -289,14 +318,52 @@ static void make_field_of_NS_radius(Grid_T *const grid,double *const R_max_l,dou
     abortEr("n_c could not be set.\n");
     
   N_total = N[0]*N[1]*N[2];
-  R_field = alloc_double(N_total);
   
+  /* surface: */
+  
+  /* up side */
+  R2_up = alloc_double(N_total);
   for (i = 0; i < N[0]; ++i)
     for (j = 0; j < N[1]; ++j)
-      R_field[L(N,i,j,0)] = R_NS_r;
+      R2_up[L(N,i,j,0)] = R_NS_r;
+      
+  sprintf(par,"grid%u_right_NS_R2_up",grid->gn);
+  add_parameter_array(par,R2_up,N_total);
+  /* end of up side */
+  /* down side */
+  R2_down = alloc_double(N_total);
+  for (i = 0; i < N[0]; ++i)
+    for (j = 0; j < N[1]; ++j)
+      R2_down[L(N,i,j,0)] = R_NS_r;
+      
+  sprintf(par,"grid%u_right_NS_R2_down",grid->gn);
+  add_parameter_array(par,R2_down,N_total);
+  /* end of down side */
   
-  sprintf(var,"grid%u_NS_right_radius",grid->gn);
-  add_parameter_array(var,R_field,N_total);
-  free(R_field);
+  /* inside: */
+  
+  /* up side */
+  R1_up = alloc_double(N_total);
+  for (i = 0; i < N[0]; ++i)
+    for (j = 0; j < N[1]; ++j)
+      R1_up[L(N,i,j,0)] = R2_up[L(N,i,j,0)]/N[2];
+      
+  sprintf(par,"grid%u_right_NS_R1_up",grid->gn);
+  add_parameter_array(par,R1_up,N_total);
+  free(R1_up);
+  free(R2_up);
+  /* end of up side */
+  /* down side */
+  R1_down = alloc_double(N_total);
+  for (i = 0; i < N[0]; ++i)
+    for (j = 0; j < N[1]; ++j)
+      R1_down[L(N,i,j,0)] = R2_down[L(N,i,j,0)]/N[2];
+      
+  sprintf(par,"grid%u_right_NS_R1_down",grid->gn);
+  add_parameter_array(par,R1_down,N_total);
+  free(R1_down);
+  free(R2_down);
+  /* end of down side */
+  
 }
 
