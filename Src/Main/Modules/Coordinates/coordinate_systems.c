@@ -94,13 +94,13 @@ static void make_JacobianT_Cartesian_coord(Patch_T *const patch)
 static void make_nodes_Cartesian_coord(Patch_T *const patch)
 {
   struct Collocation_s coll_s[3] = {0};
-  const unsigned U = countf(patch->node);
-  unsigned i,j,k,l,*n;
+  const unsigned U = patch->nn;
+  const unsigned *const n = patch->n;
+  unsigned i,j,k,l;
   
   initialize_collocation_struct(patch,&coll_s[0],0);
   initialize_collocation_struct(patch,&coll_s[1],1);
   initialize_collocation_struct(patch,&coll_s[2],2);
-  n = patch->n;
   
   for (l = 0; l < U; l++)
   {
@@ -120,16 +120,18 @@ static void make_nodes_Cartesian_coord(Patch_T *const patch)
 static void make_nodes_ProjectiveHemisphereUp_coord(Patch_T *const patch)
 {
   struct Collocation_s coll_s[3] = {0};
-  const unsigned U = countf(patch->node);
-  const Field_T *const R1 = patch->pool[Ind("R1_ProjectiveHemisphereUp")];
-  const Field_T *const R2 = patch->pool[Ind("R2_ProjectiveHemisphereUp")];
+  const unsigned U = patch->nn;
+  const unsigned *const n = patch->n;
+  const Field_T *const R1_field = patch->pool[Ind("R1_ProjectiveHemisphereUp")];
+  const Field_T *const R2_field = patch->pool[Ind("R2_ProjectiveHemisphereUp")];
+  double R1,R2;
   const double *const c = patch->c;/* center of origine translated */
-  unsigned i,j,k,l,*n;
+  double r2_x2_y2;
+  unsigned i,j,k,l;
   
   initialize_collocation_struct(patch,&coll_s[0],0);
   initialize_collocation_struct(patch,&coll_s[1],1);
   initialize_collocation_struct(patch,&coll_s[2],2);
-  n = patch->n;
   
   for (l = 0; l < U; l++)
   {
@@ -143,15 +145,21 @@ static void make_nodes_ProjectiveHemisphereUp_coord(Patch_T *const patch)
     X[2] = point(k,&coll_s[2]);
     patch->node[l]->X = X;
     
-    r = 0.5*X[2]*(R2->v[L(n,i,j,0)]-R1->v[L(n,i,j,0)])+
-        0.5*(R2->v[L(n,i,j,0)]+R1->v[L(n,i,j,0)]);
+    R1 = R1_field->v[L(n,i,j,0)];
+    R2 = R2_field->v[L(n,i,j,0)];
+    r = 0.5*X[2]*(R2-R1)+0.5*(R2+R1);
     
-    x[0] = r*X[0]*sqrt(1-0.5*SQR(X[1]));
-    x[1] = r*X[1]*sqrt(1-0.5*SQR(X[0]));
-    x[2] = sqrt(SQR(r)-SQR(x[0])-SQR(x[1]));
+    x[0] = r*X[0]*sqrt(1-0.5*SQR(X[1])); assert(!isnan(x[0]));
+    x[1] = r*X[1]*sqrt(1-0.5*SQR(X[0])); assert(!isnan(x[1]));
+    r2_x2_y2 = SQR(r)-SQR(x[0])-SQR(x[1]);
+    if (EQL(r2_x2_y2,0))
+      r2_x2_y2 = 0;/* avoiding infinitesimal negative */
+    x[2] = sqrt(r2_x2_y2); assert(!isnan(x[2]));
+    
     x[0]+= c[0];
     x[1]+= c[1];
     x[2]+= c[2];
+    
   }
 }
 
@@ -159,16 +167,18 @@ static void make_nodes_ProjectiveHemisphereUp_coord(Patch_T *const patch)
 static void make_nodes_ProjectiveHemisphereDown_coord(Patch_T *const patch)
 {
   struct Collocation_s coll_s[3] = {0};
-  const unsigned U = countf(patch->node);
-  const Field_T *const R1 = patch->pool[Ind("R1_ProjectiveHemisphereDown")];
-  const Field_T *const R2 = patch->pool[Ind("R2_ProjectiveHemisphereDown")];
+  const unsigned U = patch->nn;
+  const unsigned *const n = patch->n;
+  const Field_T *const R1_field = patch->pool[Ind("R1_ProjectiveHemisphereDown")];
+  const Field_T *const R2_field = patch->pool[Ind("R2_ProjectiveHemisphereDown")];
+  double R1,R2;
+  double r2_x2_y2;
   const double *const c = patch->c;/* center of origine translated */
-  unsigned i,j,k,l,*n;
+  unsigned i,j,k,l;
   
   initialize_collocation_struct(patch,&coll_s[0],0);
   initialize_collocation_struct(patch,&coll_s[1],1);
   initialize_collocation_struct(patch,&coll_s[2],2);
-  n = patch->n;
   
   for (l = 0; l < U; l++)
   {
@@ -181,13 +191,18 @@ static void make_nodes_ProjectiveHemisphereDown_coord(Patch_T *const patch)
     X[1] = point(j,&coll_s[1]);
     X[2] = point(k,&coll_s[2]);
     patch->node[l]->X = X;
+
+    R1 = R1_field->v[L(n,i,j,0)];
+    R2 = R2_field->v[L(n,i,j,0)];
+    r = 0.5*X[2]*(R2-R1)+0.5*(R2+R1);    
     
-    r = 0.5*X[2]*(R2->v[L(n,i,j,0)]-R1->v[L(n,i,j,0)])+
-        0.5*(R2->v[L(n,i,j,0)]+R1->v[L(n,i,j,0)]);
+    x[0] = r*X[0]*sqrt(1-0.5*SQR(X[1])); assert(!isnan(x[0]));
+    x[1] = r*X[1]*sqrt(1-0.5*SQR(X[0])); assert(!isnan(x[1]));
+    r2_x2_y2 = SQR(r)-SQR(x[0])-SQR(x[1]);
+    if (EQL(r2_x2_y2,0))
+      r2_x2_y2 = 0;/* avoiding infinitesimal negative */
+    x[2] = -sqrt(r2_x2_y2); assert(!isnan(x[2]));
     
-    x[0] = r*X[0]*sqrt(1-0.5*SQR(X[1]));
-    x[1] = r*X[1]*sqrt(1-0.5*SQR(X[0]));
-    x[2] = -sqrt(SQR(r)-SQR(x[0])-SQR(x[1]));
     x[0]+= c[0];
     x[1]+= c[1];
     x[2]+= c[2];
@@ -198,16 +213,16 @@ static void make_nodes_ProjectiveHemisphereDown_coord(Patch_T *const patch)
 static void make_nodes_StereographicSphereLeft_coord(Patch_T *const patch)
 {
   struct Collocation_s coll_s[3] = {0};
-  const unsigned U = countf(patch->node);
+  const unsigned U = patch->nn;
   const double R0 = patch->c[1];
   const double R1 = patch->CoordSysInfo->R1;
   const double R2 = patch->CoordSysInfo->R2;
-  unsigned i,j,k,l,*n;
+  const unsigned *const n = patch->n;
+  unsigned i,j,k,l;
   
   initialize_collocation_struct(patch,&coll_s[0],0);
   initialize_collocation_struct(patch,&coll_s[1],1);
   initialize_collocation_struct(patch,&coll_s[2],2);
-  n = patch->n;
   
   for (l = 0; l < U; l++)
   {
@@ -223,11 +238,11 @@ static void make_nodes_StereographicSphereLeft_coord(Patch_T *const patch)
     patch->node[l]->X = X;
     
     r = 0.5*X[1]*(R2-R1)+0.5*(R2+R1);
-    R = sqrt(SQR(r)-SQR(R0));
-    u = R*X[0]*sqrt(1-0.5*SQR(X[2]));
-    w = R*X[2]*sqrt(1-0.5*SQR(X[0]));
+    R = sqrt(SQR(r)-SQR(R0)); assert(!isnan(R));
+    u = R*X[0]*sqrt(1-0.5*SQR(X[2])); assert(!isnan(u));
+    w = R*X[2]*sqrt(1-0.5*SQR(X[0])); assert(!isnan(w));
     A = SQR(u/(R0-r))+SQR(w/(R0-r))+1;
-    x[1] = ((A-1)*(r-R0)-sqrt(SQR(r)+R0*(A-1)*(2*r-R0)))/A;
+    x[1] = ((A-1)*(r-R0)-sqrt(SQR(r)+R0*(A-1)*(2*r-R0)))/A; assert(!isnan(x[1]));
     x[0] = u*(x[1]+R0-r)/(R0-r);
     x[2] = w*(x[1]+R0-r)/(R0-r);
     
@@ -238,16 +253,16 @@ static void make_nodes_StereographicSphereLeft_coord(Patch_T *const patch)
 static void make_nodes_StereographicSphereRight_coord(Patch_T *const patch)
 {
   struct Collocation_s coll_s[3] = {0};
-  const unsigned U = countf(patch->node);
+  const unsigned U = patch->nn;
+  const unsigned *const n = patch->n;
   const double R0 = patch->c[1];
   const double R1 = patch->CoordSysInfo->R1;
   const double R2 = patch->CoordSysInfo->R2;
-  unsigned i,j,k,l,*n;
+  unsigned i,j,k,l;
   
   initialize_collocation_struct(patch,&coll_s[0],0);
   initialize_collocation_struct(patch,&coll_s[1],1);
   initialize_collocation_struct(patch,&coll_s[2],2);
-  n = patch->n;
   
   for (l = 0; l < U; l++)
   {
@@ -263,11 +278,11 @@ static void make_nodes_StereographicSphereRight_coord(Patch_T *const patch)
     patch->node[l]->X = X;
     
     r = 0.5*X[1]*(R2-R1)+0.5*(R2+R1);
-    R = sqrt(SQR(r)-SQR(R0));
-    u = R*X[0]*sqrt(1-0.5*SQR(X[2]));
-    w = R*X[2]*sqrt(1-0.5*SQR(X[0]));
+    R = sqrt(SQR(r)-SQR(R0)); assert(!isnan(R));
+    u = R*X[0]*sqrt(1-0.5*SQR(X[2])); assert(!isnan(u));
+    w = R*X[2]*sqrt(1-0.5*SQR(X[0])); assert(!isnan(w));
     A = SQR(u/(R0-r))+SQR(w/(R0-r))+1;
-    x[1] = ((r-R0)*(1-A)+sqrt(SQR(r)+R0*(A-1)*(2*r-R0)))/A;
+    x[1] = ((r-R0)*(1-A)+sqrt(SQR(r)+R0*(A-1)*(2*r-R0)))/A; assert(!isnan(x[1]));
     x[0] = u*(x[1]-R0+r)/(r-R0);
     x[2] = w*(x[1]-R0+r)/(r-R0);
     
@@ -301,7 +316,7 @@ static void initialize_collocation_struct(const Patch_T *const patch,struct Coll
 {
   /* some assertions */
   assert(dir < 3);
-  assert(patch->min[dir] < patch->max[dir]);
+  assert(LSS(patch->min[dir],patch->max[dir]));
   
   coll_s->c = patch->collocation[dir];
   coll_s->n = patch->n[dir];

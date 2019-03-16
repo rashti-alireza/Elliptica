@@ -16,6 +16,13 @@ int make_patches(Grid_T *const grid)
   alloc_nodes(grid);
   make_nodes(grid);
   
+  //test
+  /* test printing coords */
+  if (test_print(PRINT_COORDS))
+    pr_coords(grid);
+  abort();
+  //end
+  
   /* allocating and making Jacobian coordinate transformation */
   make_JacobianT(grid);
   
@@ -405,7 +412,7 @@ static void populate_NS_hemisphere_up_left(Grid_T *const grid,const unsigned pn)
   patch->innerB = 0;
   
   /* filling name */
-  sprintf(name,"grid%u_NS_hemisphere_left",grid->gn);
+  sprintf(name,"grid%u_NS_hemisphere_up_left",grid->gn);
   patch->name = dup_s(name);
   
   /* filling n */
@@ -511,7 +518,7 @@ static void populate_NS_hemisphere_down_left(Grid_T *const grid,const unsigned p
   patch->innerB = 0;
   
   /* filling name */
-  sprintf(name,"grid%u_NS_hemisphere_left",grid->gn);
+  sprintf(name,"grid%u_NS_hemisphere_down_left",grid->gn);
   patch->name = dup_s(name);
   
   /* filling n */
@@ -617,7 +624,7 @@ static void populate_NS_hemisphere_up_right(Grid_T *const grid,const unsigned pn
   patch->innerB = 0;
   
   /* filling name */
-  sprintf(name,"grid%u_NS_hemisphere_right",grid->gn);
+  sprintf(name,"grid%u_NS_hemisphere_up_right",grid->gn);
   patch->name = dup_s(name);
   
   /* filling n */
@@ -723,7 +730,7 @@ static void populate_NS_hemisphere_down_right(Grid_T *const grid,const unsigned 
   patch->innerB = 0;
   
   /* filling name */
-  sprintf(name,"grid%u_NS_hemisphere_right",grid->gn);
+  sprintf(name,"grid%u_NS_hemisphere_down_right",grid->gn);
   patch->name = dup_s(name);
   
   /* filling n */
@@ -935,7 +942,7 @@ static void populate_NS_surrounding_down_left(Grid_T *const grid,const unsigned 
   patch->innerB = 0;
   
   /* filling name */
-  sprintf(name,"grid%u_NS_surrounding_up_left",grid->gn);
+  sprintf(name,"grid%u_NS_surrounding_down_left",grid->gn);
   patch->name = dup_s(name);
   
   /* filling n */
@@ -1147,7 +1154,7 @@ static void populate_NS_surrounding_down_right(Grid_T *const grid,const unsigned
   patch->innerB = 0;
   
   /* filling name */
-  sprintf(name,"grid%u_NS_surrounding_up_right",grid->gn);
+  sprintf(name,"grid%u_NS_surrounding_down_right",grid->gn);
   patch->name = dup_s(name);
   
   /* filling n */

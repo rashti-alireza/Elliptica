@@ -9,4 +9,5 @@ Grid_T *Laplace_Inhom_make_grid(void);
 static void grid_characteristics_Laplace_Inhome (Grid_T *const grid);
 static void characteristics_Cartesian_grid(Grid_T *const grid);
 static void characteristics_BNS_Projective_grid(Grid_T *const grid);
-static void make_field_of_NS_radius(Grid_T *const grid);
+static void make_field_of_NS_radius(Grid_T *const grid,double *const R_max_l,double *const R_max_r);
+

@@ -27,6 +27,7 @@ void add_parameter_double(const char *const lv, const double rv)
 void add_parameter_array(const char *const lv, const double *const rv,const unsigned n)
 {
   pointerEr(lv);
+  pointerEr(rv);
   
   Parameter_T *par;
   unsigned i;

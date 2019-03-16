@@ -56,6 +56,7 @@ static void characteristics_BNS_Projective_grid(Grid_T *const grid)
   const double C      = GetParameterD_E("Centers_Distance");
   const double R_NS_l = GetParameterD_E("NS_left_radius");/* assuming perfect sphere */
   const double R_NS_r = GetParameterD_E("NS_right_radius");/* assuming perfect sphere */
+  double R_max_l,R_max_r;/* maximum distance from the center of each star */
   const unsigned N_Outermost_Split = (unsigned)GetParameterI_E("Number_of_Outermost_Split"); 
   double O,O_l,O_r,
          R_Surr_l,R_Surr_r,
@@ -71,22 +72,28 @@ static void characteristics_BNS_Projective_grid(Grid_T *const grid)
   char val[100] = {'\0'};
   unsigned i;
   
-  /* making field of NS's radius */
-  make_field_of_NS_radius(grid);
+  assert(GRT(C,0));
+  assert(GRT(R_NS_l,0));
+  assert(GRT(R_NS_r,0));
+  
+  /* making field of NS's radius and 
+  // finding the max distance from the center of the star */
+  make_field_of_NS_radius(grid,&R_max_l,&R_max_r);
   
   n_l = (unsigned)GetParameterI("n_c");
   i   = (unsigned)GetParameterI("NS_left_n_c");
-  if (i != INT_MAX) n_l = i;
-  if (n_l == INT_MAX)
-    abortEr("n_l could not be set.");
-    
+  if (i != INT_MAX) 	n_l = i;
+  if (n_l == INT_MAX)   abortEr("n_l could not be set.");
+  assert(n_l > 2);
+  
   n_r = (unsigned)GetParameterI("n_c");
   i   = (unsigned)GetParameterI("NS_right_n_c");
-  if (i != INT_MAX) n_r = i;
-  if (n_r == INT_MAX)
-    abortEr("n_r could not be set.");
+  if (i != INT_MAX) 	n_r = i;
+  if (n_r == INT_MAX)   abortEr("n_r could not be set.");
+  assert(n_r > 2);
   
-  O = 2*(C-R_NS_l-R_NS_r);
+  O = C-R_NS_l-R_NS_r;
+  assert(GRT(O,0));
   O_l = O/2+R_NS_l;
   O_r = O/2+R_NS_r;
   
@@ -96,11 +103,13 @@ static void characteristics_BNS_Projective_grid(Grid_T *const grid)
   box_size_l = 2*R_NS_l/(n_l-1);
   box_size_r = 2*R_NS_r/(n_r-1);
   
-  m = O_l > O_r ? O_r : O_l;
-  M = O_l > O_r ? O_l : O_r;
+  M = GRT(O_l,O_r) ? O_l : O_r;
+  m = LSS(R_max_l,R_max_r) ? R_max_l : R_max_r;
   s = SQR(m/M);
   R_Surr_l = sqrt(SQR(O_l)+s);
   R_Surr_r = sqrt(SQR(O_r)+s);
+  assert(LSS(R_Surr_l-O_l,O/2));
+  assert(LSS(R_Surr_r-O_r,O/2));
   
   for (i = 0; i < N_Outermost_Split; i++)
   {
@@ -216,8 +225,9 @@ static void characteristics_BNS_Projective_grid(Grid_T *const grid)
   free(R_outmost_l);
 }
 
-/* making field of NS's radius */
-static void make_field_of_NS_radius(Grid_T *const grid)
+/* making field of NS's radius 
+// finding the max distance from the center of the star */
+static void make_field_of_NS_radius(Grid_T *const grid,double *const R_max_l,double *const R_max_r)
 {
   const double R_NS_l = GetParameterD_E("NS_left_radius");/* assuming perfect sphere */
   const double R_NS_r = GetParameterD_E("NS_right_radius");/* assuming perfect sphere */
@@ -226,8 +236,8 @@ static void make_field_of_NS_radius(Grid_T *const grid)
   unsigned N[3],n,i,j,N_total;
   
   /* left side: */
-  
-  /* filling n */
+  *R_max_l = R_NS_l;/* since this star is perfect sphere */
+  /* filling N */
   N[0] = (unsigned)GetParameterI("n_a");
   N[1] = (unsigned)GetParameterI("n_b");
   N[2] = (unsigned)GetParameterI("n_c");
@@ -258,8 +268,8 @@ static void make_field_of_NS_radius(Grid_T *const grid)
   free(R_field);
   
   /* right side: */
-  
-  /* filling n */
+  *R_max_r = R_NS_r;/* since this star is perfect sphere */
+  /* filling N */
   N[0] = (unsigned)GetParameterI("n_a");
   N[1] = (unsigned)GetParameterI("n_b");
   N[2] = (unsigned)GetParameterI("n_c");
@@ -285,7 +295,7 @@ static void make_field_of_NS_radius(Grid_T *const grid)
     for (j = 0; j < N[1]; ++j)
       R_field[L(N,i,j,0)] = R_NS_r;
   
-  sprintf(var,"grid%u_NS_left_radius",grid->gn);
+  sprintf(var,"grid%u_NS_right_radius",grid->gn);
   add_parameter_array(var,R_field,N_total);
   free(R_field);
 }

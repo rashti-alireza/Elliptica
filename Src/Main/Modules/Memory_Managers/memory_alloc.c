@@ -142,12 +142,9 @@ static void alloc_patches_BNS_Projective_grid(Grid_T *const grid)
   unsigned outermost;
   unsigned i;
   
-  outermost = (unsigned) GetParameterI("Number_of_Outermost_Patches_Left");
+  outermost = (unsigned) GetParameterI("Number_of_Outermost_Split");
   if (outermost != (unsigned)INT_MAX)
-    Np++;
-  outermost = (unsigned) GetParameterI("Number_of_Outermost_Patches_Right");
-  if (outermost != (unsigned)INT_MAX)
-    Np++;
+    Np += 2*outermost;
   
   grid->patch = calloc((Np+1),sizeof(*grid->patch));
   pointerEr(grid->patch);

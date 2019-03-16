@@ -11,6 +11,10 @@
 // the pool in the given patch.
 // if alloc_flg == YES, it also allocates memroy for v on the patch.
 // note: if attribute is null, the field attribute is (3dim).
+// note: one can simulate 2-d field by puting the coordinate 
+// which doesn't exist to 0 and treat the field like 3-d. for example,
+// if the field is 2-d like F = F(y,z) one can populate F = F(0,y,z) which
+// is 3-d but the x direction is not effective.
 // ->return value: a pointer to the new made field
 */
 Field_T *add_field(const char *const name,const char *attribute,Patch_T *const patch,const Flag_T alloc_flg)
