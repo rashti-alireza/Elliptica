@@ -106,6 +106,11 @@ static void characteristics_BNS_Projective_grid(Grid_T *const grid)
   {
     sprintf(var,"Outermost%u_radius",i);
     R0[i] = GetParameterD_E(var);
+    
+    if (i > 0)
+      if (LSS(R0[i],R0[i-1]))
+        abortEr("The radius of outermost must be increasing.");
+        
     R_outmost_l[i] = sqrt(SQR(O_l)+SQR(R0[i]));
     R_outmost_r[i] = sqrt(SQR(O_r)+SQR(R0[i]));
   }
@@ -206,6 +211,9 @@ static void characteristics_BNS_Projective_grid(Grid_T *const grid)
   sprintf(par,"grid%u_NS_right_center_c",gn);
   add_parameter_double(par,0.0);
   
+  free(R0);
+  free(R_outmost_r);
+  free(R_outmost_l);
 }
 
 /* making field of NS's radius */

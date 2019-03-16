@@ -253,6 +253,8 @@ static void populate_outermost_left(Grid_T *const grid,const unsigned pn,const u
   sprintf(var,"grid%u_Outermost%u_R2_left",grid->gn,outermost_n);
   patch->CoordSysInfo->R2 = GetParameterDoubleF_E(var);
   
+  assert(GRT(patch->CoordSysInfo->R2,patch->CoordSysInfo->R1));
+  
   /* filling min */
   patch->min[0] = -1;
   patch->min[1] = -1;
@@ -345,6 +347,8 @@ static void populate_outermost_right(Grid_T *const grid,const unsigned pn,const 
   patch->CoordSysInfo->R1 = GetParameterDoubleF_E(var);
   sprintf(var,"grid%u_Outermost%u_R2_right",grid->gn,outermost_n);
   patch->CoordSysInfo->R2 = GetParameterDoubleF_E(var);
+  
+  assert(GRT(patch->CoordSysInfo->R2,patch->CoordSysInfo->R1));
   
   /* filling min */
   patch->min[0] = -1;
