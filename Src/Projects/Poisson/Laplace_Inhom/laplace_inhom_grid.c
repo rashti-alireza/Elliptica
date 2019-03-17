@@ -95,7 +95,9 @@ static void characteristics_BNS_Projective_grid(Grid_T *const grid)
   box_size_r = 2*R_max_r/(n_r-1);
   
   O = C-R_NS_l-R_NS_r;
-  assert(GRT(O,0));
+  if(!GRT(O,0))
+    abortEr("The centers of neutron stars are too close.");
+    
   O_l = O/2+R_NS_l;
   O_r = O/2+R_NS_r;
   
@@ -112,12 +114,15 @@ static void characteristics_BNS_Projective_grid(Grid_T *const grid)
     sprintf(var,"Outermost%u_radius",i);
     R0[i] = GetParameterD_E(var);
     
+    assert(!EQL(R0[i],s));/* => R2_outermost == R2_Surr */
+    
     if (i > 0)
       if (LSS(R0[i],R0[i-1]))
         abortEr("The radius of outermost must be increasing.");
         
     R_outmost_l[i] = sqrt(SQR(O_l)+SQR(R0[i]));
     R_outmost_r[i] = sqrt(SQR(O_r)+SQR(R0[i]));
+    
   }
   
   n_box_l = (unsigned)(3 + n_l/CONST);

@@ -209,12 +209,13 @@ static void make_nodes_ProjectiveHemisphereDown_coord(Patch_T *const patch)
   }
 }
 
-/* making value of coords. it is a general function for Stereographic Sphere Left type */
+/* making value of coords. it is a general function for Stereographic Sphere Left type
+// projected in y = 0 plane for a sphere at center (0,-R0,0) */
 static void make_nodes_StereographicSphereLeft_coord(Patch_T *const patch)
 {
   struct Collocation_s coll_s[3] = {0};
   const unsigned U = patch->nn;
-  const double R0 = patch->c[1];
+  const double R0 = fabs(patch->c[1]);
   const double R1 = patch->CoordSysInfo->R1;
   const double R2 = patch->CoordSysInfo->R2;
   const unsigned *const n = patch->n;
@@ -229,7 +230,7 @@ static void make_nodes_StereographicSphereLeft_coord(Patch_T *const patch)
     double *X = alloc_double(3);
     double *x = patch->node[l]->x;
     double u,w;
-    double r,R,A;
+    double r,R,A,c;
     
     IJK(l,n,&i,&j,&k);
     X[0] = point(i,&coll_s[0]);
@@ -242,14 +243,16 @@ static void make_nodes_StereographicSphereLeft_coord(Patch_T *const patch)
     u = R*X[0]*sqrt(1-0.5*SQR(X[2])); assert(!isnan(u));
     w = R*X[2]*sqrt(1-0.5*SQR(X[0])); assert(!isnan(w));
     A = SQR(u/(R0-r))+SQR(w/(R0-r))+1;
-    x[1] = ((A-1)*(r-R0)-sqrt(SQR(r)+R0*(A-1)*(2*r-R0)))/A; assert(!isnan(x[1]));
-    x[0] = u*(x[1]+R0-r)/(R0-r);
-    x[2] = w*(x[1]+R0-r)/(R0-r);
+    x[1] = -r*(2/A-1)-R0;
+    c = 2*r/(A*(r-R0));
+    x[0] = c*u;
+    x[2] = c*w;
     
   }
 }
 
-/* making value of coords. it is a general function for Stereographic Sphere Right type */
+/* making value of coords. it is a general function for Stereographic Sphere Right type 
+// projected in y = 0 plane for a sphere at center (0,R0,0) */
 static void make_nodes_StereographicSphereRight_coord(Patch_T *const patch)
 {
   struct Collocation_s coll_s[3] = {0};
@@ -269,7 +272,7 @@ static void make_nodes_StereographicSphereRight_coord(Patch_T *const patch)
     double *X = alloc_double(3);
     double *x = patch->node[l]->x;
     double u,w;
-    double r,R,A;
+    double r,R,A,c;
     
     IJK(l,n,&i,&j,&k);
     X[0] = point(i,&coll_s[0]);
@@ -282,9 +285,10 @@ static void make_nodes_StereographicSphereRight_coord(Patch_T *const patch)
     u = R*X[0]*sqrt(1-0.5*SQR(X[2])); assert(!isnan(u));
     w = R*X[2]*sqrt(1-0.5*SQR(X[0])); assert(!isnan(w));
     A = SQR(u/(R0-r))+SQR(w/(R0-r))+1;
-    x[1] = ((r-R0)*(1-A)+sqrt(SQR(r)+R0*(A-1)*(2*r-R0)))/A; assert(!isnan(x[1]));
-    x[0] = u*(x[1]-R0+r)/(r-R0);
-    x[2] = w*(x[1]-R0+r)/(r-R0);
+    x[1] = r*(2/A-1)+R0;
+    c = 2*r/(A*(r-R0));
+    x[0] = c*u;
+    x[2] = c*w;
     
   }
 }
