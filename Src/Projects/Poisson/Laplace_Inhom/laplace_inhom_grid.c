@@ -53,7 +53,7 @@ static void characteristics_BNS_Projective_grid(Grid_T *const grid)
 {
   const unsigned gn   = grid->gn;
   const double CONST  = 5.0;
-  const double C      = GetParameterD_E("Centers_Distance");
+  const double C      = GetParameterD_E("BNS_Distance");
   const double R_NS_l = GetParameterD_E("left_NS_radius");/* assuming perfect sphere */
   const double R_NS_r = GetParameterD_E("right_NS_radius");/* assuming perfect sphere */
   double R_max_l,R_max_r;/* maximum distance from the center of each star */
@@ -114,10 +114,13 @@ static void characteristics_BNS_Projective_grid(Grid_T *const grid)
     sprintf(var,"Outermost%u_radius",i);
     R0[i] = GetParameterD_E(var);
     
-    assert(!EQL(R0[i],s));/* => R2_outermost == R2_Surr */
+    assert(GRT(R0[i],s));/* => R2_outermost <= R2_Surr */
+    
+    if (LSS(R0[i],C))
+      abortEr("the radius of outermost patches must be greater than BNS distance.");
     
     if (i > 0)
-      if (LSS(R0[i],R0[i-1]))
+      if (LSSEQL(R0[i],R0[i-1]))
         abortEr("The radius of outermost must be increasing.");
         
     R_outmost_l[i] = sqrt(SQR(O_l)+SQR(R0[i]));
