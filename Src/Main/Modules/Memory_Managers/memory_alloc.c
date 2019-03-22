@@ -79,6 +79,8 @@ void alloc_patches(Grid_T *const grid)
     alloc_patches_Cartesian_grid(grid);
   else if (strcmp_i(grid->kind,"BNS_Projective_grid"))
     alloc_patches_BNS_Projective_grid(grid);
+  else if (strcmp_i(grid->kind,"BNS_Spherical_grid"))
+    alloc_patches_BNS_Spherical_grid(grid);
   else
     abortEr_s("No such %s kind for grid.\n",grid->kind);
 }
@@ -139,6 +141,28 @@ static void alloc_patches_Cartesian_grid(Grid_T *const grid)
 static void alloc_patches_BNS_Projective_grid(Grid_T *const grid)
 {
   unsigned Np = 10;/* number of patches without outermost's*/
+  unsigned outermost;
+  unsigned i;
+  
+  outermost = (unsigned) GetParameterI("Number_of_Outermost_Split");
+  if (outermost != (unsigned)INT_MAX)
+    Np += 2*outermost;
+  
+  grid->patch = calloc((Np+1),sizeof(*grid->patch));
+  pointerEr(grid->patch);
+  
+  for (i = 0; i < Np; i++)
+  {
+    grid->patch[i] = calloc(1,sizeof(*grid->patch[i]));
+    pointerEr(grid->patch[i]);
+  }
+  
+}
+
+/* memory alloc patches for BNS_Spherical type */
+static void alloc_patches_BNS_Spherical_grid(Grid_T *const grid)
+{
+  unsigned Np = 4;/* number of patches without outermost's*/
   unsigned outermost;
   unsigned i;
   

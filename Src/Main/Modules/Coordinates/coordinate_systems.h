@@ -19,6 +19,7 @@ struct Collocation_s
 int make_nodes(Grid_T *const grid);
 int make_JacobianT(Grid_T *const grid);
 static void make_nodes_Cartesian_coord(Patch_T *const patch);
+static void make_nodes_Spherical_coord(Patch_T *const patch);
 static void make_nodes_ProjectiveHemisphereUp_coord(Patch_T *const patch);
 static void make_nodes_ProjectiveHemisphereDown_coord(Patch_T *const patch);
 static void make_nodes_StereographicSphereLeft_coord(Patch_T *const patch);

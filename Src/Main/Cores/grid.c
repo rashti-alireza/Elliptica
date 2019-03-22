@@ -15,6 +15,10 @@ int make_patches(Grid_T *const grid)
   /* allocating and filling nodes */
   alloc_nodes(grid);
   make_nodes(grid);
+  //test
+  pr_coords(grid);
+  abort();
+  //end
   
   /* allocating and making Jacobian coordinate transformation */
   make_JacobianT(grid);
@@ -39,9 +43,56 @@ static void fill_patches(Grid_T *const grid)
   
   else if (strcmp_i(grid->kind,"BNS_Projective_grid"))
     fill_patches_BNS_Projective_grid(grid); 
+  
+  else if (strcmp_i(grid->kind,"BNS_Spherical_grid"))
+    fill_patches_BNS_Spherical_grid(grid); 
     
   else
     abortEr_s("There is no such %s grid kind.\n",grid->kind);
+}
+
+/* filling patch struct for BNS_Projective_grid */
+static void fill_patches_BNS_Projective_grid(Grid_T *const grid)
+{
+  const unsigned N_outermost_split = (unsigned) GetParameterI_E("Number_of_Outermost_Split");
+  unsigned pn,i;
+  
+  pn = 0;
+  populate_left_NS_central_box(grid,pn++);
+  populate_left_NS_hemisphere_up(grid,pn++);
+  populate_left_NS_hemisphere_down(grid,pn++);
+  populate_left_NS_surrounding_up(grid,pn++);
+  populate_left_NS_surrounding_down(grid,pn++);
+  for (i = 0; i < N_outermost_split; i++)
+    populate_left_outermost(grid,pn++,i);
+    
+  populate_right_NS_central_box(grid,pn++);
+  populate_right_NS_hemisphere_up(grid,pn++);
+  populate_right_NS_hemisphere_down(grid,pn++);
+  populate_right_NS_surrounding_up(grid,pn++);
+  populate_right_NS_surrounding_down(grid,pn++);
+  for (i = 0; i < N_outermost_split; i++)
+    populate_right_outermost(grid,pn++,i);
+  
+}
+
+/* filling patch struct for BNS_Spherical_grid */
+static void fill_patches_BNS_Spherical_grid(Grid_T *const grid)
+{
+  const unsigned N_outermost_split = (unsigned) GetParameterI_E("Number_of_Outermost_Split");
+  unsigned pn,i;
+  
+  pn = 0;
+  populate_left_NS_sphere(grid,pn++);
+  populate_left_NS_surrounding_sphere(grid,pn++);
+  for (i = 0; i < N_outermost_split; i++)
+    populate_left_outermost(grid,pn++,i);
+    
+  populate_right_NS_sphere(grid,pn++);
+  populate_right_NS_surrounding_sphere(grid,pn++);
+  for (i = 0; i < N_outermost_split; i++)
+    populate_right_outermost(grid,pn++,i);
+  
 }
 
 /*filling patch struct for Cartesian*/
@@ -168,30 +219,6 @@ static void fill_patches_Cartesian_grid(Grid_T *const grid)
   
 }
 
-/* filling patch struct for BNS_Projective_grid */
-static void fill_patches_BNS_Projective_grid(Grid_T *const grid)
-{
-  const unsigned N_outermost_split = (unsigned) GetParameterI_E("Number_of_Outermost_Split");
-  unsigned pn,i;
-  
-  pn = 0;
-  populate_left_NS_central_box(grid,pn++);
-  populate_left_NS_hemisphere_up(grid,pn++);
-  populate_left_NS_hemisphere_down(grid,pn++);
-  populate_left_NS_surrounding_up(grid,pn++);
-  populate_left_NS_surrounding_down(grid,pn++);
-  for (i = 0; i < N_outermost_split; i++)
-    populate_left_outermost(grid,pn++,i);
-    
-  populate_right_NS_central_box(grid,pn++);
-  populate_right_NS_hemisphere_up(grid,pn++);
-  populate_right_NS_hemisphere_down(grid,pn++);
-  populate_right_NS_surrounding_up(grid,pn++);
-  populate_right_NS_surrounding_down(grid,pn++);
-  for (i = 0; i < N_outermost_split; i++)
-    populate_right_outermost(grid,pn++,i);
-  
-}
 
 /* populating properties of patch for outermost left */
 static void populate_left_outermost(Grid_T *const grid,const unsigned pn,const unsigned outermost_n)
@@ -1400,6 +1427,431 @@ static void populate_right_NS_central_box(Grid_T *const grid,const unsigned pn)
   assert(patch->basis[2] != UNDEFINED_BASIS);
   
 }
+
+/* populating properties of patch for left NS */
+static void populate_left_NS_sphere(Grid_T *const grid,const unsigned pn)
+{
+  Patch_T *const patch = grid->patch[pn];
+  Field_T *R1 = add_field("R1_radius",0,patch,NO);
+  Field_T *R2 = add_field("R2_radius",0,patch,NO);
+  double *R1_array,*R2_array;
+  char name[100] = {'\0'};
+  char var[100] = {'\0'};
+  struct Ret_S ret;
+  unsigned n,j,k;
+  
+  /* filling grid */
+  patch->grid = grid;
+  
+  /* filling patch number */
+  patch->pn = pn;
+  
+  /* filling inner boundary */
+  patch->innerB = 0;
+  
+  /* filling name */
+  sprintf(name,"grid%u_left_NS",grid->gn);
+  patch->name = dup_s(name);
+  
+  /* filling n */
+  patch->n[0] = (unsigned)GetParameterI("n_a");
+  patch->n[1] = (unsigned)GetParameterI("n_b");
+  patch->n[2] = (unsigned)GetParameterI("n_c");
+  /* check for override */
+  sprintf(var,"left_NS");
+  make_keyword_parameter(&ret,var,"n");
+  n = (unsigned)GetParameterI(ret.s0);
+  if (n != INT_MAX)	patch->n[0] = n;
+  n = (unsigned)GetParameterI(ret.s1);
+  if (n != INT_MAX)	patch->n[1] = n;
+  n = (unsigned)GetParameterI(ret.s2);
+  if (n != INT_MAX)	patch->n[2] = n;
+    
+  if(patch->n[0] == INT_MAX)
+    abortEr("n_a could not be set.\n");
+  if(patch->n[1] == INT_MAX)
+    abortEr("n_b could not be set.\n");
+  if(patch->n[2] == INT_MAX)
+    abortEr("n_c could not be set.\n");
+  
+  /* filling nn */
+  patch->nn = total_nodes_patch(patch);
+  
+  /* filling center */
+  sprintf(var,"grid%u_left_NS_center_a",grid->gn);
+  patch->c[0] = GetParameterDoubleF_E(var);
+  sprintf(var,"grid%u_left_NS_center_b",grid->gn);
+  patch->c[1] = GetParameterDoubleF_E(var);
+  sprintf(var,"grid%u_left_NS_center_c",grid->gn);
+  patch->c[2] = GetParameterDoubleF_E(var);
+  
+  /* filling Rs */
+  sprintf(var,"grid%u_left_NS_R1",grid->gn);
+  R1_array = GetParameterArrayF_E(var);
+  sprintf(var,"grid%u_left_NS_R2",grid->gn);
+  R2_array = GetParameterArrayF_E(var);
+  
+  R1->v = alloc_double(patch->nn);
+  R2->v = alloc_double(patch->nn);
+  for (j = 0; j < patch->n[1]; ++j)
+    for (k = 0; k < patch->n[2]; ++k)
+    {
+      unsigned ijk = L(patch->n,0,j,k);
+      R2->v[ijk] = R2_array[ijk];
+      R1->v[ijk] = R1_array[ijk];
+    }
+  
+  /* filling min */
+  patch->min[0] = 0;
+  patch->min[1] = 0;
+  patch->min[2] = 0;
+  
+  /* filling max */
+  patch->max[0] = 1;
+  patch->max[1] = M_PI;
+  patch->max[2] = 2*M_PI;
+  
+  /* filling flags */
+  patch->coordsys = Spherical;
+  
+  /* collocation */
+  patch->collocation[0] = get_collocation(GetParameterS_E("collocation_a"));
+  patch->collocation[1] = get_collocation(GetParameterS_E("collocation_b"));
+  patch->collocation[2] = get_collocation(GetParameterS_E("collocation_c"));
+  
+  assert(patch->collocation[0] != UNDEFINED_COLLOCATION);
+  assert(patch->collocation[1] != UNDEFINED_COLLOCATION);
+  assert(patch->collocation[2] != UNDEFINED_COLLOCATION);
+  
+  /* basis */
+  patch->basis[0] = get_basis(GetParameterS_E("basis_a"));
+  patch->basis[1] = get_basis(GetParameterS_E("basis_b"));
+  patch->basis[2] = get_basis(GetParameterS_E("basis_c"));
+    
+  assert(patch->basis[0] != UNDEFINED_BASIS);
+  assert(patch->basis[1] != UNDEFINED_BASIS);
+  assert(patch->basis[2] != UNDEFINED_BASIS);
+  
+}
+
+/* populating properties of patch for right NS */
+static void populate_right_NS_sphere(Grid_T *const grid,const unsigned pn)
+{
+  Patch_T *const patch = grid->patch[pn];
+  Field_T *R1 = add_field("R1_radius",0,patch,NO);
+  Field_T *R2 = add_field("R2_radius",0,patch,NO);
+  double *R1_array,*R2_array;
+  char name[100] = {'\0'};
+  char var[100] = {'\0'};
+  struct Ret_S ret;
+  unsigned n,k,j;
+  
+  /* filling grid */
+  patch->grid = grid;
+  
+  /* filling patch number */
+  patch->pn = pn;
+  
+  /* filling inner boundary */
+  patch->innerB = 0;
+  
+  /* filling name */
+  sprintf(name,"grid%u_right_NS",grid->gn);
+  patch->name = dup_s(name);
+  
+  /* filling n */
+  patch->n[0] = (unsigned)GetParameterI("n_a");
+  patch->n[1] = (unsigned)GetParameterI("n_b");
+  patch->n[2] = (unsigned)GetParameterI("n_c");
+  /* check for override */
+  sprintf(var,"right_NS");
+  make_keyword_parameter(&ret,var,"n");
+  n = (unsigned)GetParameterI(ret.s0);
+  if (n != INT_MAX)	patch->n[0] = n;
+  n = (unsigned)GetParameterI(ret.s1);
+  if (n != INT_MAX)	patch->n[1] = n;
+  n = (unsigned)GetParameterI(ret.s2);
+  if (n != INT_MAX)	patch->n[2] = n;
+    
+  if(patch->n[0] == INT_MAX)
+    abortEr("n_a could not be set.\n");
+  if(patch->n[1] == INT_MAX)
+    abortEr("n_b could not be set.\n");
+  if(patch->n[2] == INT_MAX)
+    abortEr("n_c could not be set.\n");
+  
+  /* filling nn */
+  patch->nn = total_nodes_patch(patch);
+  
+  /* filling center */
+  sprintf(var,"grid%u_right_NS_center_a",grid->gn);
+  patch->c[0] = GetParameterDoubleF_E(var);
+  sprintf(var,"grid%u_right_NS_center_b",grid->gn);
+  patch->c[1] = GetParameterDoubleF_E(var);
+  sprintf(var,"grid%u_right_NS_center_c",grid->gn);
+  patch->c[2] = GetParameterDoubleF_E(var);
+  
+  /* filling Rs */
+  sprintf(var,"grid%u_right_NS_R1",grid->gn);
+  R1_array = GetParameterArrayF_E(var);
+  sprintf(var,"grid%u_right_NS_R2",grid->gn);
+  R2_array = GetParameterArrayF_E(var);
+  
+  R1->v = alloc_double(patch->nn);
+  R2->v = alloc_double(patch->nn);
+  for (j = 0; j < patch->n[1]; ++j)
+    for (k = 0; k < patch->n[2]; ++k)
+    {
+      unsigned ijk = L(patch->n,0,j,k);
+      R2->v[ijk] = R2_array[ijk];
+      R1->v[ijk] = R1_array[ijk];
+    }
+  
+  /* filling min */
+  patch->min[0] = 0;
+  patch->min[1] = 0;
+  patch->min[2] = 0;
+  
+  /* filling max */
+  patch->max[0] = 1;
+  patch->max[1] = M_PI;
+  patch->max[2] = 2*M_PI;
+  
+  /* filling flags */
+  patch->coordsys = Spherical;
+  
+  /* collocation */
+  patch->collocation[0] = get_collocation(GetParameterS_E("collocation_a"));
+  patch->collocation[1] = get_collocation(GetParameterS_E("collocation_b"));
+  patch->collocation[2] = get_collocation(GetParameterS_E("collocation_c"));
+  
+  assert(patch->collocation[0] != UNDEFINED_COLLOCATION);
+  assert(patch->collocation[1] != UNDEFINED_COLLOCATION);
+  assert(patch->collocation[2] != UNDEFINED_COLLOCATION);
+  
+  /* basis */
+  patch->basis[0] = get_basis(GetParameterS_E("basis_a"));
+  patch->basis[1] = get_basis(GetParameterS_E("basis_b"));
+  patch->basis[2] = get_basis(GetParameterS_E("basis_c"));
+    
+  assert(patch->basis[0] != UNDEFINED_BASIS);
+  assert(patch->basis[1] != UNDEFINED_BASIS);
+  assert(patch->basis[2] != UNDEFINED_BASIS);
+  
+}
+
+/* populating properties of patch for left NS's surrounding */
+static void populate_left_NS_surrounding_sphere(Grid_T *const grid,const unsigned pn)
+{
+  Patch_T *const patch = grid->patch[pn];
+  Field_T *R1 = add_field("R1_radius",0,patch,NO);
+  Field_T *R2 = add_field("R2_radius",0,patch,NO);
+  double R2_const,*R1_array;
+  char name[100] = {'\0'};
+  char var[100] = {'\0'};
+  struct Ret_S ret;
+  unsigned n,k,j;
+  
+  /* filling grid */
+  patch->grid = grid;
+  
+  /* filling patch number */
+  patch->pn = pn;
+  
+  /* filling inner boundary */
+  patch->innerB = 0;
+  
+  /* filling name */
+  sprintf(name,"grid%u_left_NS_surrounding",grid->gn);
+  patch->name = dup_s(name);
+  
+  /* filling n */
+  patch->n[0] = (unsigned)GetParameterI("n_a");
+  patch->n[1] = (unsigned)GetParameterI("n_b");
+  patch->n[2] = (unsigned)GetParameterI("n_c");
+  /* check for override */
+  sprintf(var,"left_NS");
+  make_keyword_parameter(&ret,var,"n");
+  n = (unsigned)GetParameterI(ret.s0);
+  if (n != INT_MAX)	patch->n[0] = n;
+  n = (unsigned)GetParameterI(ret.s1);
+  if (n != INT_MAX)	patch->n[1] = n;
+  n = (unsigned)GetParameterI(ret.s2);
+  if (n != INT_MAX)	patch->n[2] = n;
+    
+  if(patch->n[0] == INT_MAX)
+    abortEr("n_a could not be set.\n");
+  if(patch->n[1] == INT_MAX)
+    abortEr("n_b could not be set.\n");
+  if(patch->n[2] == INT_MAX)
+    abortEr("n_c could not be set.\n");
+  
+  /* filling nn */
+  patch->nn = total_nodes_patch(patch);
+  
+  /* filling center */
+  sprintf(var,"grid%u_left_NS_center_a",grid->gn);
+  patch->c[0] = GetParameterDoubleF_E(var);
+  sprintf(var,"grid%u_left_NS_center_b",grid->gn);
+  patch->c[1] = GetParameterDoubleF_E(var);
+  sprintf(var,"grid%u_left_NS_center_c",grid->gn);
+  patch->c[2] = GetParameterDoubleF_E(var);
+  
+  /* filling Rs */
+  sprintf(var,"grid%u_left_NS_Surrounding_R2",grid->gn);
+  R2_const = GetParameterDoubleF_E(var);
+  sprintf(var,"grid%u_left_NS_R2",grid->gn);
+  R1_array = GetParameterArrayF_E(var);
+  
+  R1->v = alloc_double(patch->nn);
+  R2->v = alloc_double(patch->nn);
+  for (j = 0; j < patch->n[1]; ++j)
+    for (k = 0; k < patch->n[2]; ++k)
+    {
+      unsigned ijk = L(patch->n,0,j,k);
+      R1->v[ijk] = R1_array[ijk];
+      R2->v[ijk] = R2_const;
+    }
+  
+  /* filling min */
+  patch->min[0] = 0;
+  patch->min[1] = 0;
+  patch->min[2] = 0;
+  
+  /* filling max */
+  patch->max[0] = 1;
+  patch->max[1] = M_PI;
+  patch->max[2] = 2*M_PI;
+  
+  /* filling flags */
+  patch->coordsys = Spherical;
+  
+  /* collocation */
+  patch->collocation[0] = get_collocation(GetParameterS_E("collocation_a"));
+  patch->collocation[1] = get_collocation(GetParameterS_E("collocation_b"));
+  patch->collocation[2] = get_collocation(GetParameterS_E("collocation_c"));
+  
+  assert(patch->collocation[0] != UNDEFINED_COLLOCATION);
+  assert(patch->collocation[1] != UNDEFINED_COLLOCATION);
+  assert(patch->collocation[2] != UNDEFINED_COLLOCATION);
+  
+  /* basis */
+  patch->basis[0] = get_basis(GetParameterS_E("basis_a"));
+  patch->basis[1] = get_basis(GetParameterS_E("basis_b"));
+  patch->basis[2] = get_basis(GetParameterS_E("basis_c"));
+    
+  assert(patch->basis[0] != UNDEFINED_BASIS);
+  assert(patch->basis[1] != UNDEFINED_BASIS);
+  assert(patch->basis[2] != UNDEFINED_BASIS);
+  
+}
+
+/* populating properties of patch for right NS's surrounding */
+static void populate_right_NS_surrounding_sphere(Grid_T *const grid,const unsigned pn)
+{
+  Patch_T *const patch = grid->patch[pn];
+  Field_T *R1 = add_field("R1_radius",0,patch,NO);
+  Field_T *R2 = add_field("R2_radius",0,patch,NO);
+  double R2_const,*R1_array;
+  char name[100] = {'\0'};
+  char var[100] = {'\0'};
+  struct Ret_S ret;
+  unsigned n,k,j;
+  
+  /* filling grid */
+  patch->grid = grid;
+  
+  /* filling patch number */
+  patch->pn = pn;
+  
+  /* filling inner boundary */
+  patch->innerB = 0;
+  
+  /* filling name */
+  sprintf(name,"grid%u_right_NS_surrounding",grid->gn);
+  patch->name = dup_s(name);
+  
+  /* filling n */
+  patch->n[0] = (unsigned)GetParameterI("n_a");
+  patch->n[1] = (unsigned)GetParameterI("n_b");
+  patch->n[2] = (unsigned)GetParameterI("n_c");
+  /* check for override */
+  sprintf(var,"right_NS");
+  make_keyword_parameter(&ret,var,"n");
+  n = (unsigned)GetParameterI(ret.s0);
+  if (n != INT_MAX)	patch->n[0] = n;
+  n = (unsigned)GetParameterI(ret.s1);
+  if (n != INT_MAX)	patch->n[1] = n;
+  n = (unsigned)GetParameterI(ret.s2);
+  if (n != INT_MAX)	patch->n[2] = n;
+    
+  if(patch->n[0] == INT_MAX)
+    abortEr("n_a could not be set.\n");
+  if(patch->n[1] == INT_MAX)
+    abortEr("n_b could not be set.\n");
+  if(patch->n[2] == INT_MAX)
+    abortEr("n_c could not be set.\n");
+  
+  /* filling nn */
+  patch->nn = total_nodes_patch(patch);
+  
+  /* filling center */
+  sprintf(var,"grid%u_right_NS_center_a",grid->gn);
+  patch->c[0] = GetParameterDoubleF_E(var);
+  sprintf(var,"grid%u_right_NS_center_b",grid->gn);
+  patch->c[1] = GetParameterDoubleF_E(var);
+  sprintf(var,"grid%u_right_NS_center_c",grid->gn);
+  patch->c[2] = GetParameterDoubleF_E(var);
+  
+  /* filling Rs */
+  sprintf(var,"grid%u_right_NS_Surrounding_R2",grid->gn);
+  R2_const = GetParameterDoubleF_E(var);
+  sprintf(var,"grid%u_right_NS_R2",grid->gn);
+  R1_array = GetParameterArrayF_E(var);
+  
+  R1->v = alloc_double(patch->nn);
+  R2->v = alloc_double(patch->nn);
+  for (j = 0; j < patch->n[1]; ++j)
+    for (k = 0; k < patch->n[2]; ++k)
+    {
+      unsigned ijk = L(patch->n,0,j,k);
+      R1->v[ijk] = R1_array[ijk];
+      R2->v[ijk] = R2_const;
+    }
+  
+  /* filling min */
+  patch->min[0] = 0;
+  patch->min[1] = 0;
+  patch->min[2] = 0;
+  
+  /* filling max */
+  patch->max[0] = 1;
+  patch->max[1] = M_PI;
+  patch->max[2] = 2*M_PI;
+  
+  /* filling flags */
+  patch->coordsys = Spherical;
+    
+  /* collocation */
+  patch->collocation[0] = get_collocation(GetParameterS_E("collocation_a"));
+  patch->collocation[1] = get_collocation(GetParameterS_E("collocation_b"));
+  patch->collocation[2] = get_collocation(GetParameterS_E("collocation_c"));
+  
+  assert(patch->collocation[0] != UNDEFINED_COLLOCATION);
+  assert(patch->collocation[1] != UNDEFINED_COLLOCATION);
+  assert(patch->collocation[2] != UNDEFINED_COLLOCATION);
+  
+  /* basis */
+  patch->basis[0] = get_basis(GetParameterS_E("basis_a"));
+  patch->basis[1] = get_basis(GetParameterS_E("basis_b"));
+  patch->basis[2] = get_basis(GetParameterS_E("basis_c"));
+    
+  assert(patch->basis[0] != UNDEFINED_BASIS);
+  assert(patch->basis[1] != UNDEFINED_BASIS);
+  assert(patch->basis[2] != UNDEFINED_BASIS);
+  
+}
+
 
 /* making keyword for searching of parameter value */
 static void make_keyword_parameter(struct Ret_S *const ret,const char *const box,const char *const needle)

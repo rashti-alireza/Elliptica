@@ -59,6 +59,7 @@ typedef enum COORD_T
 {
   UNDEFINED_COORD = 0,
   Cartesian,
+  Spherical,
   ProjectiveHemisphereUp,
   ProjectiveHemisphereDown,
   StereographicSphereLeft,
