@@ -358,11 +358,18 @@ static void make_nodes_StereographicSphereRight_coord(Patch_T *const patch)
 // o. Chebyshev_Extrema:
 //	mapping a line [min,max] to [1,-1] and then using Chebyshev extrema
 //	in [0,Pi] to find the nodes on the line. the following map is used:
-// 	x = a*N+b = a*cos(t)+b i.e.
+// 	x = a*N+b = a*cos(t)+b, t = i*Pi/(n-1) where i = 0,...,n-1; i.e.
 //	x = 0.5*(-max+min)*N + 0.5*(max+min) where x in [min,max] and N in [-1,1].
 // 	N = cos(t). Note that the order of x and N are in reverse. the reason is that
 //	it x MUST increase by i. it's crucial for interface realization.
 //
+// o. Chebyshev_Node:
+//	mapping a line [min,max] to [1,-1] and then using Chebyshev nodes
+//	in [0,Pi] to find the nodes on the line. the following map is used:
+// 	x = a*N+b = a*cos(t)+b, t = (2i+1)*Pi/(2n) where i = 0,...,n-1; i.e.
+//	x = 0.5*(-max+min)*N + 0.5*(max+min) where x in (min,max) and N in (-1,1).
+// 	N = cos(t). Note that the order of x and N are in reverse. the reason is that
+//	it x MUST increase by i. it's crucial for interface realization.
 //	
 */
 static void initialize_collocation_struct(const Patch_T *const patch,struct Collocation_s *const coll_s,const unsigned dir)
@@ -382,6 +389,11 @@ static void initialize_collocation_struct(const Patch_T *const patch,struct Coll
     coll_s->stp = (coll_s->max-coll_s->min)/(coll_s->n-1);
   }
   else if (coll_s->c == Chebyshev_Extrema)
+  {
+    coll_s->a = 0.5*(-coll_s->max+coll_s->min);
+    coll_s->b = 0.5*(coll_s->max+coll_s->min);
+  }
+  else if (coll_s->c == Chebyshev_Nodes)
   {
     coll_s->a = 0.5*(-coll_s->max+coll_s->min);
     coll_s->b = 0.5*(coll_s->max+coll_s->min);
@@ -406,6 +418,13 @@ static double point(const unsigned i, const struct Collocation_s *const coll_s)
   else if (coll_s->c == Chebyshev_Extrema)
   {
     double t = i*M_PI/(coll_s->n-1);
+    
+    x = coll_s->a*cos(t)+coll_s->b;
+  }
+  /* x = a*N+b => x = a*cos(t)+b */
+  else if (coll_s->c == Chebyshev_Nodes)
+  {
+    double t = (2*i+1)*M_PI/coll_s->n/2.;
     
     x = coll_s->a*cos(t)+coll_s->b;
   }

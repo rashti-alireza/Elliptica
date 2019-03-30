@@ -43,7 +43,8 @@ typedef enum COLLOCATION_T
 {
   UNDEFINED_COLLOCATION = 0,
   EquiSpaced,
-  Chebyshev_Extrema
+  Chebyshev_Extrema,
+  Chebyshev_Nodes
 }Collocation_T;
 
 /* types of basis enum */

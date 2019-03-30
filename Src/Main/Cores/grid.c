@@ -219,7 +219,6 @@ static void fill_patches_Cartesian_grid(Grid_T *const grid)
   
 }
 
-
 /* populating properties of patch for outermost left */
 static void populate_left_outermost(Grid_T *const grid,const unsigned pn,const unsigned outermost_n)
 {
@@ -296,22 +295,14 @@ static void populate_left_outermost(Grid_T *const grid,const unsigned pn,const u
   patch->coordsys = StereographicSphereLeft;
   
   /* collocation */
-  patch->collocation[0] = get_collocation(GetParameterS_E("collocation_a"));
-  patch->collocation[1] = get_collocation(GetParameterS_E("collocation_b"));
-  patch->collocation[2] = get_collocation(GetParameterS_E("collocation_c"));
-  
-  assert(patch->collocation[0] != UNDEFINED_COLLOCATION);
-  assert(patch->collocation[1] != UNDEFINED_COLLOCATION);
-  assert(patch->collocation[2] != UNDEFINED_COLLOCATION);
+  patch->collocation[0] = Chebyshev_Nodes;
+  patch->collocation[1] = Chebyshev_Extrema;
+  patch->collocation[2] = Chebyshev_Nodes;
   
   /* basis */
-  patch->basis[0] = get_basis(GetParameterS_E("basis_a"));
-  patch->basis[1] = get_basis(GetParameterS_E("basis_b"));
-  patch->basis[2] = get_basis(GetParameterS_E("basis_c"));
-    
-  assert(patch->basis[0] != UNDEFINED_BASIS);
-  assert(patch->basis[1] != UNDEFINED_BASIS);
-  assert(patch->basis[2] != UNDEFINED_BASIS);
+  patch->basis[0] = Chebyshev_Tn_BASIS;
+  patch->basis[1] = Chebyshev_Tn_BASIS;
+  patch->basis[2] = Chebyshev_Tn_BASIS;
   
 }
 
@@ -391,22 +382,14 @@ static void populate_right_outermost(Grid_T *const grid,const unsigned pn,const 
   patch->coordsys = StereographicSphereRight;
   
   /* collocation */
-  patch->collocation[0] = get_collocation(GetParameterS_E("collocation_a"));
-  patch->collocation[1] = get_collocation(GetParameterS_E("collocation_b"));
-  patch->collocation[2] = get_collocation(GetParameterS_E("collocation_c"));
-  
-  assert(patch->collocation[0] != UNDEFINED_COLLOCATION);
-  assert(patch->collocation[1] != UNDEFINED_COLLOCATION);
-  assert(patch->collocation[2] != UNDEFINED_COLLOCATION);
+  patch->collocation[0] = Chebyshev_Nodes;
+  patch->collocation[1] = Chebyshev_Extrema;
+  patch->collocation[2] = Chebyshev_Nodes;
   
   /* basis */
-  patch->basis[0] = get_basis(GetParameterS_E("basis_a"));
-  patch->basis[1] = get_basis(GetParameterS_E("basis_b"));
-  patch->basis[2] = get_basis(GetParameterS_E("basis_c"));
-    
-  assert(patch->basis[0] != UNDEFINED_BASIS);
-  assert(patch->basis[1] != UNDEFINED_BASIS);
-  assert(patch->basis[2] != UNDEFINED_BASIS);
+  patch->basis[0] = Chebyshev_Tn_BASIS;
+  patch->basis[1] = Chebyshev_Tn_BASIS;
+  patch->basis[2] = Chebyshev_Tn_BASIS;
   
 }
 
@@ -497,22 +480,14 @@ static void populate_left_NS_hemisphere_up(Grid_T *const grid,const unsigned pn)
   patch->coordsys = ProjectiveHemisphereUp;
   
   /* collocation */
-  patch->collocation[0] = get_collocation(GetParameterS_E("collocation_a"));
-  patch->collocation[1] = get_collocation(GetParameterS_E("collocation_b"));
-  patch->collocation[2] = get_collocation(GetParameterS_E("collocation_c"));
-  
-  assert(patch->collocation[0] != UNDEFINED_COLLOCATION);
-  assert(patch->collocation[1] != UNDEFINED_COLLOCATION);
-  assert(patch->collocation[2] != UNDEFINED_COLLOCATION);
+  patch->collocation[0] = Chebyshev_Nodes;
+  patch->collocation[1] = Chebyshev_Nodes;
+  patch->collocation[2] = Chebyshev_Extrema;
   
   /* basis */
-  patch->basis[0] = get_basis(GetParameterS_E("basis_a"));
-  patch->basis[1] = get_basis(GetParameterS_E("basis_b"));
-  patch->basis[2] = get_basis(GetParameterS_E("basis_c"));
-    
-  assert(patch->basis[0] != UNDEFINED_BASIS);
-  assert(patch->basis[1] != UNDEFINED_BASIS);
-  assert(patch->basis[2] != UNDEFINED_BASIS);
+  patch->basis[0] = Chebyshev_Tn_BASIS;
+  patch->basis[1] = Chebyshev_Tn_BASIS;
+  patch->basis[2] = Chebyshev_Tn_BASIS;
   
 }
 
@@ -602,24 +577,16 @@ static void populate_left_NS_hemisphere_down(Grid_T *const grid,const unsigned p
   /* filling flags */
   patch->coordsys = ProjectiveHemisphereDown;
   
-  /* collocation */
-  patch->collocation[0] = get_collocation(GetParameterS_E("collocation_a"));
-  patch->collocation[1] = get_collocation(GetParameterS_E("collocation_b"));
-  patch->collocation[2] = get_collocation(GetParameterS_E("collocation_c"));
-  
-  assert(patch->collocation[0] != UNDEFINED_COLLOCATION);
-  assert(patch->collocation[1] != UNDEFINED_COLLOCATION);
-  assert(patch->collocation[2] != UNDEFINED_COLLOCATION);
+/* collocation */
+  patch->collocation[0] = Chebyshev_Nodes;
+  patch->collocation[1] = Chebyshev_Nodes;
+  patch->collocation[2] = Chebyshev_Extrema;
   
   /* basis */
-  patch->basis[0] = get_basis(GetParameterS_E("basis_a"));
-  patch->basis[1] = get_basis(GetParameterS_E("basis_b"));
-  patch->basis[2] = get_basis(GetParameterS_E("basis_c"));
+  patch->basis[0] = Chebyshev_Tn_BASIS;
+  patch->basis[1] = Chebyshev_Tn_BASIS;
+  patch->basis[2] = Chebyshev_Tn_BASIS;
     
-  assert(patch->basis[0] != UNDEFINED_BASIS);
-  assert(patch->basis[1] != UNDEFINED_BASIS);
-  assert(patch->basis[2] != UNDEFINED_BASIS);
-  
 }
 
 /* populating properties of patch for NS right hemisphere up */
@@ -708,24 +675,16 @@ static void populate_right_NS_hemisphere_up(Grid_T *const grid,const unsigned pn
   /* filling flags */
   patch->coordsys = ProjectiveHemisphereUp;
   
-  /* collocation */
-  patch->collocation[0] = get_collocation(GetParameterS_E("collocation_a"));
-  patch->collocation[1] = get_collocation(GetParameterS_E("collocation_b"));
-  patch->collocation[2] = get_collocation(GetParameterS_E("collocation_c"));
-  
-  assert(patch->collocation[0] != UNDEFINED_COLLOCATION);
-  assert(patch->collocation[1] != UNDEFINED_COLLOCATION);
-  assert(patch->collocation[2] != UNDEFINED_COLLOCATION);
+/* collocation */
+  patch->collocation[0] = Chebyshev_Nodes;
+  patch->collocation[1] = Chebyshev_Nodes;
+  patch->collocation[2] = Chebyshev_Extrema;
   
   /* basis */
-  patch->basis[0] = get_basis(GetParameterS_E("basis_a"));
-  patch->basis[1] = get_basis(GetParameterS_E("basis_b"));
-  patch->basis[2] = get_basis(GetParameterS_E("basis_c"));
+  patch->basis[0] = Chebyshev_Tn_BASIS;
+  patch->basis[1] = Chebyshev_Tn_BASIS;
+  patch->basis[2] = Chebyshev_Tn_BASIS;
     
-  assert(patch->basis[0] != UNDEFINED_BASIS);
-  assert(patch->basis[1] != UNDEFINED_BASIS);
-  assert(patch->basis[2] != UNDEFINED_BASIS);
-  
 }
 
 /* populating properties of patch for NS right hemisphere down */
@@ -814,24 +773,16 @@ static void populate_right_NS_hemisphere_down(Grid_T *const grid,const unsigned 
   /* filling flags */
   patch->coordsys = ProjectiveHemisphereDown;
   
-  /* collocation */
-  patch->collocation[0] = get_collocation(GetParameterS_E("collocation_a"));
-  patch->collocation[1] = get_collocation(GetParameterS_E("collocation_b"));
-  patch->collocation[2] = get_collocation(GetParameterS_E("collocation_c"));
-  
-  assert(patch->collocation[0] != UNDEFINED_COLLOCATION);
-  assert(patch->collocation[1] != UNDEFINED_COLLOCATION);
-  assert(patch->collocation[2] != UNDEFINED_COLLOCATION);
+ /* collocation */
+  patch->collocation[0] = Chebyshev_Nodes;
+  patch->collocation[1] = Chebyshev_Nodes;
+  patch->collocation[2] = Chebyshev_Extrema;
   
   /* basis */
-  patch->basis[0] = get_basis(GetParameterS_E("basis_a"));
-  patch->basis[1] = get_basis(GetParameterS_E("basis_b"));
-  patch->basis[2] = get_basis(GetParameterS_E("basis_c"));
+  patch->basis[0] = Chebyshev_Tn_BASIS;
+  patch->basis[1] = Chebyshev_Tn_BASIS;
+  patch->basis[2] = Chebyshev_Tn_BASIS;
     
-  assert(patch->basis[0] != UNDEFINED_BASIS);
-  assert(patch->basis[1] != UNDEFINED_BASIS);
-  assert(patch->basis[2] != UNDEFINED_BASIS);
-  
 }
 
 /* populating properties of patch for left NS's surrounding up */
@@ -920,24 +871,16 @@ static void populate_left_NS_surrounding_up(Grid_T *const grid,const unsigned pn
   /* filling flags */
   patch->coordsys = ProjectiveHemisphereUp;
   
-  /* collocation */
-  patch->collocation[0] = get_collocation(GetParameterS_E("collocation_a"));
-  patch->collocation[1] = get_collocation(GetParameterS_E("collocation_b"));
-  patch->collocation[2] = get_collocation(GetParameterS_E("collocation_c"));
-  
-  assert(patch->collocation[0] != UNDEFINED_COLLOCATION);
-  assert(patch->collocation[1] != UNDEFINED_COLLOCATION);
-  assert(patch->collocation[2] != UNDEFINED_COLLOCATION);
+ /* collocation */
+  patch->collocation[0] = Chebyshev_Nodes;
+  patch->collocation[1] = Chebyshev_Nodes;
+  patch->collocation[2] = Chebyshev_Extrema;
   
   /* basis */
-  patch->basis[0] = get_basis(GetParameterS_E("basis_a"));
-  patch->basis[1] = get_basis(GetParameterS_E("basis_b"));
-  patch->basis[2] = get_basis(GetParameterS_E("basis_c"));
+  patch->basis[0] = Chebyshev_Tn_BASIS;
+  patch->basis[1] = Chebyshev_Tn_BASIS;
+  patch->basis[2] = Chebyshev_Tn_BASIS;
     
-  assert(patch->basis[0] != UNDEFINED_BASIS);
-  assert(patch->basis[1] != UNDEFINED_BASIS);
-  assert(patch->basis[2] != UNDEFINED_BASIS);
-  
 }
 
 /* populating properties of patch for left NS's surrounding down */
@@ -1026,24 +969,16 @@ static void populate_left_NS_surrounding_down(Grid_T *const grid,const unsigned 
   /* filling flags */
   patch->coordsys = ProjectiveHemisphereDown;
   
-  /* collocation */
-  patch->collocation[0] = get_collocation(GetParameterS_E("collocation_a"));
-  patch->collocation[1] = get_collocation(GetParameterS_E("collocation_b"));
-  patch->collocation[2] = get_collocation(GetParameterS_E("collocation_c"));
-  
-  assert(patch->collocation[0] != UNDEFINED_COLLOCATION);
-  assert(patch->collocation[1] != UNDEFINED_COLLOCATION);
-  assert(patch->collocation[2] != UNDEFINED_COLLOCATION);
+ /* collocation */
+  patch->collocation[0] = Chebyshev_Nodes;
+  patch->collocation[1] = Chebyshev_Nodes;
+  patch->collocation[2] = Chebyshev_Extrema;
   
   /* basis */
-  patch->basis[0] = get_basis(GetParameterS_E("basis_a"));
-  patch->basis[1] = get_basis(GetParameterS_E("basis_b"));
-  patch->basis[2] = get_basis(GetParameterS_E("basis_c"));
+  patch->basis[0] = Chebyshev_Tn_BASIS;
+  patch->basis[1] = Chebyshev_Tn_BASIS;
+  patch->basis[2] = Chebyshev_Tn_BASIS;
     
-  assert(patch->basis[0] != UNDEFINED_BASIS);
-  assert(patch->basis[1] != UNDEFINED_BASIS);
-  assert(patch->basis[2] != UNDEFINED_BASIS);
-  
 }
 
 /* populating properties of patch for right NS's surrounding up */
@@ -1132,24 +1067,16 @@ static void populate_right_NS_surrounding_up(Grid_T *const grid,const unsigned p
   /* filling flags */
   patch->coordsys = ProjectiveHemisphereUp;
   
-  /* collocation */
-  patch->collocation[0] = get_collocation(GetParameterS_E("collocation_a"));
-  patch->collocation[1] = get_collocation(GetParameterS_E("collocation_b"));
-  patch->collocation[2] = get_collocation(GetParameterS_E("collocation_c"));
-  
-  assert(patch->collocation[0] != UNDEFINED_COLLOCATION);
-  assert(patch->collocation[1] != UNDEFINED_COLLOCATION);
-  assert(patch->collocation[2] != UNDEFINED_COLLOCATION);
+ /* collocation */
+  patch->collocation[0] = Chebyshev_Nodes;
+  patch->collocation[1] = Chebyshev_Nodes;
+  patch->collocation[2] = Chebyshev_Extrema;
   
   /* basis */
-  patch->basis[0] = get_basis(GetParameterS_E("basis_a"));
-  patch->basis[1] = get_basis(GetParameterS_E("basis_b"));
-  patch->basis[2] = get_basis(GetParameterS_E("basis_c"));
+  patch->basis[0] = Chebyshev_Tn_BASIS;
+  patch->basis[1] = Chebyshev_Tn_BASIS;
+  patch->basis[2] = Chebyshev_Tn_BASIS;
     
-  assert(patch->basis[0] != UNDEFINED_BASIS);
-  assert(patch->basis[1] != UNDEFINED_BASIS);
-  assert(patch->basis[2] != UNDEFINED_BASIS);
-  
 }
 
 /* populating properties of patch for right_NS's surrounding down */
@@ -1238,24 +1165,16 @@ static void populate_right_NS_surrounding_down(Grid_T *const grid,const unsigned
   /* filling flags */
   patch->coordsys = ProjectiveHemisphereDown;
   
-  /* collocation */
-  patch->collocation[0] = get_collocation(GetParameterS_E("collocation_a"));
-  patch->collocation[1] = get_collocation(GetParameterS_E("collocation_b"));
-  patch->collocation[2] = get_collocation(GetParameterS_E("collocation_c"));
-  
-  assert(patch->collocation[0] != UNDEFINED_COLLOCATION);
-  assert(patch->collocation[1] != UNDEFINED_COLLOCATION);
-  assert(patch->collocation[2] != UNDEFINED_COLLOCATION);
+ /* collocation */
+  patch->collocation[0] = Chebyshev_Nodes;
+  patch->collocation[1] = Chebyshev_Nodes;
+  patch->collocation[2] = Chebyshev_Extrema;
   
   /* basis */
-  patch->basis[0] = get_basis(GetParameterS_E("basis_a"));
-  patch->basis[1] = get_basis(GetParameterS_E("basis_b"));
-  patch->basis[2] = get_basis(GetParameterS_E("basis_c"));
+  patch->basis[0] = Chebyshev_Tn_BASIS;
+  patch->basis[1] = Chebyshev_Tn_BASIS;
+  patch->basis[2] = Chebyshev_Tn_BASIS;
     
-  assert(patch->basis[0] != UNDEFINED_BASIS);
-  assert(patch->basis[1] != UNDEFINED_BASIS);
-  assert(patch->basis[2] != UNDEFINED_BASIS);
-  
 }
 
 /* populating properties of the box at the middle of left NS */
@@ -1323,24 +1242,16 @@ static void populate_left_NS_central_box(Grid_T *const grid,const unsigned pn)
   /* filling flags */
   patch->coordsys = Cartesian;
   
-  /* collocation */
-  patch->collocation[0] = get_collocation(GetParameterS_E("collocation_a"));
-  patch->collocation[1] = get_collocation(GetParameterS_E("collocation_b"));
-  patch->collocation[2] = get_collocation(GetParameterS_E("collocation_c"));
-  
-  assert(patch->collocation[0] != UNDEFINED_COLLOCATION);
-  assert(patch->collocation[1] != UNDEFINED_COLLOCATION);
-  assert(patch->collocation[2] != UNDEFINED_COLLOCATION);
+ /* collocation */
+  patch->collocation[0] = Chebyshev_Extrema;
+  patch->collocation[1] = Chebyshev_Extrema;
+  patch->collocation[2] = Chebyshev_Extrema;
   
   /* basis */
-  patch->basis[0] = get_basis(GetParameterS_E("basis_a"));
-  patch->basis[1] = get_basis(GetParameterS_E("basis_b"));
-  patch->basis[2] = get_basis(GetParameterS_E("basis_c"));
+  patch->basis[0] = Chebyshev_Tn_BASIS;
+  patch->basis[1] = Chebyshev_Tn_BASIS;
+  patch->basis[2] = Chebyshev_Tn_BASIS;
     
-  assert(patch->basis[0] != UNDEFINED_BASIS);
-  assert(patch->basis[1] != UNDEFINED_BASIS);
-  assert(patch->basis[2] != UNDEFINED_BASIS);
-  
 }
 
 /* populating properties of the box at the middle of right NS */
@@ -1408,24 +1319,16 @@ static void populate_right_NS_central_box(Grid_T *const grid,const unsigned pn)
   /* filling flags */
   patch->coordsys = Cartesian;
   
-  /* collocation */
-  patch->collocation[0] = get_collocation(GetParameterS_E("collocation_a"));
-  patch->collocation[1] = get_collocation(GetParameterS_E("collocation_b"));
-  patch->collocation[2] = get_collocation(GetParameterS_E("collocation_c"));
-  
-  assert(patch->collocation[0] != UNDEFINED_COLLOCATION);
-  assert(patch->collocation[1] != UNDEFINED_COLLOCATION);
-  assert(patch->collocation[2] != UNDEFINED_COLLOCATION);
+ /* collocation */
+  patch->collocation[0] = Chebyshev_Extrema;
+  patch->collocation[1] = Chebyshev_Extrema;
+  patch->collocation[2] = Chebyshev_Extrema;
   
   /* basis */
-  patch->basis[0] = get_basis(GetParameterS_E("basis_a"));
-  patch->basis[1] = get_basis(GetParameterS_E("basis_b"));
-  patch->basis[2] = get_basis(GetParameterS_E("basis_c"));
+  patch->basis[0] = Chebyshev_Tn_BASIS;
+  patch->basis[1] = Chebyshev_Tn_BASIS;
+  patch->basis[2] = Chebyshev_Tn_BASIS;
     
-  assert(patch->basis[0] != UNDEFINED_BASIS);
-  assert(patch->basis[1] != UNDEFINED_BASIS);
-  assert(patch->basis[2] != UNDEFINED_BASIS);
-  
 }
 
 /* populating properties of patch for left NS */
@@ -1438,6 +1341,8 @@ static void populate_left_NS_sphere(Grid_T *const grid,const unsigned pn)
   char name[100] = {'\0'};
   char var[100] = {'\0'};
   struct Ret_S ret;
+  Collocation_T c;
+  Basis_T b;
   unsigned n,j,k;
   
   /* filling grid */
@@ -1518,6 +1423,18 @@ static void populate_left_NS_sphere(Grid_T *const grid,const unsigned pn)
   patch->collocation[0] = get_collocation(GetParameterS_E("collocation_a"));
   patch->collocation[1] = get_collocation(GetParameterS_E("collocation_b"));
   patch->collocation[2] = get_collocation(GetParameterS_E("collocation_c"));
+
+  /* check for override */
+  make_keyword_parameter(&ret,name,"collocation");
+  c = get_collocation(GetParameterS(ret.s0));
+  if (c != UNDEFINED_COLLOCATION)
+    patch->collocation[0] = c;
+  c = get_collocation(GetParameterS(ret.s1));
+  if (c != UNDEFINED_COLLOCATION)
+    patch->collocation[1] = c;
+  c = get_collocation(GetParameterS(ret.s2));
+  if (c != UNDEFINED_COLLOCATION)
+    patch->collocation[2] = c;
   
   assert(patch->collocation[0] != UNDEFINED_COLLOCATION);
   assert(patch->collocation[1] != UNDEFINED_COLLOCATION);
@@ -1527,7 +1444,19 @@ static void populate_left_NS_sphere(Grid_T *const grid,const unsigned pn)
   patch->basis[0] = get_basis(GetParameterS_E("basis_a"));
   patch->basis[1] = get_basis(GetParameterS_E("basis_b"));
   patch->basis[2] = get_basis(GetParameterS_E("basis_c"));
-    
+
+  /* check for override */
+  make_keyword_parameter(&ret,name,"basis");
+  b = get_basis(GetParameterS(ret.s0));
+  if ( b != UNDEFINED_BASIS)
+    patch->basis[0] = b;
+  b = get_basis(GetParameterS(ret.s1));
+  if ( b != UNDEFINED_BASIS)
+    patch->basis[1] = b;
+  b = get_basis(GetParameterS(ret.s2));
+  if ( b != UNDEFINED_BASIS)
+    patch->basis[2] = b;
+  
   assert(patch->basis[0] != UNDEFINED_BASIS);
   assert(patch->basis[1] != UNDEFINED_BASIS);
   assert(patch->basis[2] != UNDEFINED_BASIS);
@@ -1544,6 +1473,8 @@ static void populate_right_NS_sphere(Grid_T *const grid,const unsigned pn)
   char name[100] = {'\0'};
   char var[100] = {'\0'};
   struct Ret_S ret;
+  Collocation_T c;
+  Basis_T b;
   unsigned n,k,j;
   
   /* filling grid */
@@ -1624,6 +1555,18 @@ static void populate_right_NS_sphere(Grid_T *const grid,const unsigned pn)
   patch->collocation[0] = get_collocation(GetParameterS_E("collocation_a"));
   patch->collocation[1] = get_collocation(GetParameterS_E("collocation_b"));
   patch->collocation[2] = get_collocation(GetParameterS_E("collocation_c"));
+
+  /* check for override */
+  make_keyword_parameter(&ret,name,"collocation");
+  c = get_collocation(GetParameterS(ret.s0));
+  if (c != UNDEFINED_COLLOCATION)
+    patch->collocation[0] = c;
+  c = get_collocation(GetParameterS(ret.s1));
+  if (c != UNDEFINED_COLLOCATION)
+    patch->collocation[1] = c;
+  c = get_collocation(GetParameterS(ret.s2));
+  if (c != UNDEFINED_COLLOCATION)
+    patch->collocation[2] = c;
   
   assert(patch->collocation[0] != UNDEFINED_COLLOCATION);
   assert(patch->collocation[1] != UNDEFINED_COLLOCATION);
@@ -1633,11 +1576,23 @@ static void populate_right_NS_sphere(Grid_T *const grid,const unsigned pn)
   patch->basis[0] = get_basis(GetParameterS_E("basis_a"));
   patch->basis[1] = get_basis(GetParameterS_E("basis_b"));
   patch->basis[2] = get_basis(GetParameterS_E("basis_c"));
-    
+
+  /* check for override */
+  make_keyword_parameter(&ret,name,"basis");
+  b = get_basis(GetParameterS(ret.s0));
+  if ( b != UNDEFINED_BASIS)
+    patch->basis[0] = b;
+  b = get_basis(GetParameterS(ret.s1));
+  if ( b != UNDEFINED_BASIS)
+    patch->basis[1] = b;
+  b = get_basis(GetParameterS(ret.s2));
+  if ( b != UNDEFINED_BASIS)
+    patch->basis[2] = b;
+  
   assert(patch->basis[0] != UNDEFINED_BASIS);
   assert(patch->basis[1] != UNDEFINED_BASIS);
   assert(patch->basis[2] != UNDEFINED_BASIS);
-  
+    
 }
 
 /* populating properties of patch for left NS's surrounding */
@@ -1650,6 +1605,8 @@ static void populate_left_NS_surrounding_sphere(Grid_T *const grid,const unsigne
   char name[100] = {'\0'};
   char var[100] = {'\0'};
   struct Ret_S ret;
+  Collocation_T c;
+  Basis_T b;
   unsigned n,k,j;
   
   /* filling grid */
@@ -1730,6 +1687,18 @@ static void populate_left_NS_surrounding_sphere(Grid_T *const grid,const unsigne
   patch->collocation[0] = get_collocation(GetParameterS_E("collocation_a"));
   patch->collocation[1] = get_collocation(GetParameterS_E("collocation_b"));
   patch->collocation[2] = get_collocation(GetParameterS_E("collocation_c"));
+
+  /* check for override */
+  make_keyword_parameter(&ret,name,"collocation");
+  c = get_collocation(GetParameterS(ret.s0));
+  if (c != UNDEFINED_COLLOCATION)
+    patch->collocation[0] = c;
+  c = get_collocation(GetParameterS(ret.s1));
+  if (c != UNDEFINED_COLLOCATION)
+    patch->collocation[1] = c;
+  c = get_collocation(GetParameterS(ret.s2));
+  if (c != UNDEFINED_COLLOCATION)
+    patch->collocation[2] = c;
   
   assert(patch->collocation[0] != UNDEFINED_COLLOCATION);
   assert(patch->collocation[1] != UNDEFINED_COLLOCATION);
@@ -1739,11 +1708,23 @@ static void populate_left_NS_surrounding_sphere(Grid_T *const grid,const unsigne
   patch->basis[0] = get_basis(GetParameterS_E("basis_a"));
   patch->basis[1] = get_basis(GetParameterS_E("basis_b"));
   patch->basis[2] = get_basis(GetParameterS_E("basis_c"));
-    
+
+  /* check for override */
+  make_keyword_parameter(&ret,name,"basis");
+  b = get_basis(GetParameterS(ret.s0));
+  if ( b != UNDEFINED_BASIS)
+    patch->basis[0] = b;
+  b = get_basis(GetParameterS(ret.s1));
+  if ( b != UNDEFINED_BASIS)
+    patch->basis[1] = b;
+  b = get_basis(GetParameterS(ret.s2));
+  if ( b != UNDEFINED_BASIS)
+    patch->basis[2] = b;
+  
   assert(patch->basis[0] != UNDEFINED_BASIS);
   assert(patch->basis[1] != UNDEFINED_BASIS);
   assert(patch->basis[2] != UNDEFINED_BASIS);
-  
+    
 }
 
 /* populating properties of patch for right NS's surrounding */
@@ -1756,6 +1737,8 @@ static void populate_right_NS_surrounding_sphere(Grid_T *const grid,const unsign
   char name[100] = {'\0'};
   char var[100] = {'\0'};
   struct Ret_S ret;
+  Collocation_T c;
+  Basis_T b;
   unsigned n,k,j;
   
   /* filling grid */
@@ -1836,6 +1819,18 @@ static void populate_right_NS_surrounding_sphere(Grid_T *const grid,const unsign
   patch->collocation[0] = get_collocation(GetParameterS_E("collocation_a"));
   patch->collocation[1] = get_collocation(GetParameterS_E("collocation_b"));
   patch->collocation[2] = get_collocation(GetParameterS_E("collocation_c"));
+
+  /* check for override */
+  make_keyword_parameter(&ret,name,"collocation");
+  c = get_collocation(GetParameterS(ret.s0));
+  if (c != UNDEFINED_COLLOCATION)
+    patch->collocation[0] = c;
+  c = get_collocation(GetParameterS(ret.s1));
+  if (c != UNDEFINED_COLLOCATION)
+    patch->collocation[1] = c;
+  c = get_collocation(GetParameterS(ret.s2));
+  if (c != UNDEFINED_COLLOCATION)
+    patch->collocation[2] = c;
   
   assert(patch->collocation[0] != UNDEFINED_COLLOCATION);
   assert(patch->collocation[1] != UNDEFINED_COLLOCATION);
@@ -1845,13 +1840,24 @@ static void populate_right_NS_surrounding_sphere(Grid_T *const grid,const unsign
   patch->basis[0] = get_basis(GetParameterS_E("basis_a"));
   patch->basis[1] = get_basis(GetParameterS_E("basis_b"));
   patch->basis[2] = get_basis(GetParameterS_E("basis_c"));
-    
+
+  /* check for override */
+  make_keyword_parameter(&ret,name,"basis");
+  b = get_basis(GetParameterS(ret.s0));
+  if ( b != UNDEFINED_BASIS)
+    patch->basis[0] = b;
+  b = get_basis(GetParameterS(ret.s1));
+  if ( b != UNDEFINED_BASIS)
+    patch->basis[1] = b;
+  b = get_basis(GetParameterS(ret.s2));
+  if ( b != UNDEFINED_BASIS)
+    patch->basis[2] = b;
+  
   assert(patch->basis[0] != UNDEFINED_BASIS);
   assert(patch->basis[1] != UNDEFINED_BASIS);
   assert(patch->basis[2] != UNDEFINED_BASIS);
-  
+    
 }
-
 
 /* making keyword for searching of parameter value */
 static void make_keyword_parameter(struct Ret_S *const ret,const char *const box,const char *const needle)

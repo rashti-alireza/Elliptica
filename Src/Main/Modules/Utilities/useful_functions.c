@@ -79,6 +79,7 @@ Collocation_T get_collocation(const char *const coll)
   if (!coll) return c;
   else if (strcmp_i(coll,"EquiSpaced")) c = EquiSpaced;
   else if (strcmp_i(coll,"Chebyshev_Extrema")) c = Chebyshev_Extrema;
+  else if (strcmp_i(coll,"Chebyshev_Nodes")) c = Chebyshev_Nodes;
   else
     abortEr_s("There is no such %s collocation.\n",coll);
     
