@@ -1,6 +1,7 @@
 int make_patches(Grid_T *const grid);
 int realize_geometry(Grid_T *const grid);
 int X_of_x(double *const X,const double *const x,const Patch_T *const patch);
+int x_of_X(double *const x,const double *const X,const Patch_T *const patch);
 double x_coord(const unsigned i,const Patch_T *const patch);
 double y_coord(const unsigned i,const Patch_T *const patch);
 double z_coord(const unsigned i,const Patch_T *const patch);
@@ -11,3 +12,4 @@ double dq2_dq1(const Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const
 double JT_Cartesian_patch(const Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const unsigned p);
 double *normal_vec(Point_T *const point);
 double General2ChebyshevExtrema(const double X,const unsigned dir,const Patch_T *const patch);
+double interpolation_2d_PH(Field_T *const R, const Patch_T *const patch,const double *const X);

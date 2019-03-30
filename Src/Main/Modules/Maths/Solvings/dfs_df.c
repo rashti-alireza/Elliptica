@@ -836,7 +836,7 @@ fdInterp_dfs_T *get_dInterp_df(const Patch_T *const patch,const SubFace_T *const
 // interpolation takes place in Y and Z direction using Cheb Tn bases
 // with Extrema points.
 // ->return value: d(interp(f_x))/df */
-static double dInterp_x_df_YZ_Tn_Ex(const Patch_T *const patch,const double *const X,const unsigned df)
+static double dInterp_x_df_YZ_Tn_Ex(Patch_T *const patch,const double *const X,const unsigned df)
 {
   const unsigned *const n = patch->n;
   const double *point = patch->node[df]->X;
@@ -892,7 +892,7 @@ static double dInterp_x_df_YZ_Tn_Ex(const Patch_T *const patch,const double *con
 // interpolation takes place in Y and Z direction using Cheb Tn bases
 // with Extrema points.
 // ->return value: d(interp(f_y))/df */
-static double dInterp_y_df_YZ_Tn_Ex(const Patch_T *const patch,const double *const X,const unsigned df)
+static double dInterp_y_df_YZ_Tn_Ex(Patch_T *const patch,const double *const X,const unsigned df)
 {
   const unsigned *const n = patch->n;
   const double *point = patch->node[df]->X;
@@ -949,7 +949,7 @@ static double dInterp_y_df_YZ_Tn_Ex(const Patch_T *const patch,const double *con
 // interpolation takes place in Y and Z direction using Cheb Tn bases
 // with Extrema points.
 // ->return value: d(interp(f_z))/df */
-static double dInterp_z_df_YZ_Tn_Ex(const Patch_T *const patch,const double *const X,const unsigned df)
+static double dInterp_z_df_YZ_Tn_Ex(Patch_T *const patch,const double *const X,const unsigned df)
 {
   const unsigned *const n = patch->n;
   const double *point = patch->node[df]->X;
@@ -1006,7 +1006,7 @@ static double dInterp_z_df_YZ_Tn_Ex(const Patch_T *const patch,const double *con
 // interpolation takes place in Y and Z direction using Cheb Tn bases
 // with Extrema points.
 // ->return value: d(interp(f))/df */
-static double dInterp_df_YZ_Tn_Ex(const Patch_T *const patch,const double *const X,const unsigned df)
+static double dInterp_df_YZ_Tn_Ex(Patch_T *const patch,const double *const X,const unsigned df)
 {
   const unsigned *const n = patch->n;
   const double *point = patch->node[df]->X;
@@ -1031,7 +1031,7 @@ static double dInterp_df_YZ_Tn_Ex(const Patch_T *const patch,const double *const
 // interpolation takes place in X and Z direction using Cheb Tn bases
 // with Extrema points.
 // ->return value: d(interp(f_x))/df */
-static double dInterp_x_df_XZ_Tn_Ex(const Patch_T *const patch,const double *const X,const unsigned df)
+static double dInterp_x_df_XZ_Tn_Ex(Patch_T *const patch,const double *const X,const unsigned df)
 {
   const unsigned *const n = patch->n;
   const double *point = patch->node[df]->X;
@@ -1087,7 +1087,7 @@ static double dInterp_x_df_XZ_Tn_Ex(const Patch_T *const patch,const double *con
 // interpolation takes place in X and Z direction using Cheb. Tn bases
 // with Extrema points.
 // ->return value: d(interp(f_y))/df */
-static double dInterp_y_df_XZ_Tn_Ex(const Patch_T *const patch,const double *const X,const unsigned df)
+static double dInterp_y_df_XZ_Tn_Ex(Patch_T *const patch,const double *const X,const unsigned df)
 {
   const unsigned *const n = patch->n;
   const double *point = patch->node[df]->X;
@@ -1142,7 +1142,7 @@ static double dInterp_y_df_XZ_Tn_Ex(const Patch_T *const patch,const double *con
 // interpolation takes place in X and Z direction using Cheb Tn bases
 // with Extrema points.
 // ->return value: d(interp(f_z))/df */
-static double dInterp_z_df_XZ_Tn_Ex(const Patch_T *const patch,const double *const X,const unsigned df)
+static double dInterp_z_df_XZ_Tn_Ex(Patch_T *const patch,const double *const X,const unsigned df)
 {
   const unsigned *const n = patch->n;
   const double *point = patch->node[df]->X;
@@ -1197,7 +1197,7 @@ static double dInterp_z_df_XZ_Tn_Ex(const Patch_T *const patch,const double *con
 // interpolation takes place in X and Z direction using Cheb Tn bases
 // with Extrema points.
 // ->return value: d(interp(f))/df */
-static double dInterp_df_XZ_Tn_Ex(const Patch_T *const patch,const double *const X,const unsigned df)
+static double dInterp_df_XZ_Tn_Ex(Patch_T *const patch,const double *const X,const unsigned df)
 {
   const unsigned *const n = patch->n;
   const double *point = patch->node[df]->X;
@@ -1223,7 +1223,7 @@ static double dInterp_df_XZ_Tn_Ex(const Patch_T *const patch,const double *const
 // interpolation takes place in X and Y direction using Cheb Tn bases
 // with Extrema points.
 // ->return value: d(interp(f_x))/df */
-static double dInterp_x_df_XY_Tn_Ex(const Patch_T *const patch,const double *const X,const unsigned df)
+static double dInterp_x_df_XY_Tn_Ex(Patch_T *const patch,const double *const X,const unsigned df)
 {
   const unsigned *const n = patch->n;
   const double *point = patch->node[df]->X;
@@ -1278,7 +1278,7 @@ static double dInterp_x_df_XY_Tn_Ex(const Patch_T *const patch,const double *con
 // interpolation takes place in X and Y direction using Cheb Tn bases
 // with Extrema points.
 // ->return value: d(interp(f_y))/df */
-static double dInterp_y_df_XY_Tn_Ex(const Patch_T *const patch,const double *const X,const unsigned df)
+static double dInterp_y_df_XY_Tn_Ex(Patch_T *const patch,const double *const X,const unsigned df)
 {
   const unsigned *const n = patch->n;
   const double *point = patch->node[df]->X;
@@ -1334,7 +1334,7 @@ static double dInterp_y_df_XY_Tn_Ex(const Patch_T *const patch,const double *con
 // interpolation takes place in X and Y direction using Cheb Tn bases
 // with Extrema points.
 // ->return value: d(interp(f_z))/df */
-static double dInterp_z_df_XY_Tn_Ex(const Patch_T *const patch,const double *const X,const unsigned df)
+static double dInterp_z_df_XY_Tn_Ex(Patch_T *const patch,const double *const X,const unsigned df)
 {
   const unsigned *const n = patch->n;
   const double *point = patch->node[df]->X;
@@ -1390,7 +1390,7 @@ static double dInterp_z_df_XY_Tn_Ex(const Patch_T *const patch,const double *con
 // interpolation takes place in X and Y direction using Cheb Tn bases
 // with Extrema points.
 // ->return value: d(interp(f))/df */
-static double dInterp_df_XY_Tn_Ex(const Patch_T *const patch,const double *const X,const unsigned df)
+static double dInterp_df_XY_Tn_Ex(Patch_T *const patch,const double *const X,const unsigned df)
 {
   const unsigned *const n = patch->n;
   const double *point = patch->node[df]->X;
@@ -1416,7 +1416,7 @@ static double dInterp_df_XY_Tn_Ex(const Patch_T *const patch,const double *const
 // interpolation takes place in X and Y and Z direction using Cheb Tn bases
 // with Extrema points.
 // ->return value: d(interp(f_x))/df */
-static double dInterp_x_df_XYZ_Tn_Ex(const Patch_T *const patch,const double *const X,const unsigned df)
+static double dInterp_x_df_XYZ_Tn_Ex(Patch_T *const patch,const double *const X,const unsigned df)
 {
   const unsigned *const n = patch->n;
   double q[3];/* normalized coords. it is the same as N0, N1 and N2 */
@@ -1471,7 +1471,7 @@ static double dInterp_x_df_XYZ_Tn_Ex(const Patch_T *const patch,const double *co
 // interpolation takes place in X and Y and Z direction using Cheb Tn bases
 // with Extrema points.
 // ->return value: d(interp(f_y))/df */
-static double dInterp_y_df_XYZ_Tn_Ex(const Patch_T *const patch,const double *const X,const unsigned df)
+static double dInterp_y_df_XYZ_Tn_Ex(Patch_T *const patch,const double *const X,const unsigned df)
 {
   const unsigned *const n = patch->n;
   double q[3];/* normalized coords. it is the same as N0, N1 and N2 */
@@ -1527,7 +1527,7 @@ static double dInterp_y_df_XYZ_Tn_Ex(const Patch_T *const patch,const double *co
 // interpolation takes place in X and Y and Z direction using Cheb Tn bases
 // with Extrema points.
 // ->return value: d(interp(f_z))/df */
-static double dInterp_z_df_XYZ_Tn_Ex(const Patch_T *const patch,const double *const X,const unsigned df)
+static double dInterp_z_df_XYZ_Tn_Ex(Patch_T *const patch,const double *const X,const unsigned df)
 {
   const unsigned *const n = patch->n;
   double q[3];/* normalized coords. it is the same as N0, N1 and N2 */
@@ -1582,7 +1582,7 @@ static double dInterp_z_df_XYZ_Tn_Ex(const Patch_T *const patch,const double *co
 // interpolation takes place in X and Y and Z direction using Cheb Tn bases
 // with Extrema points.
 // ->return value: d(interp(f))/df */
-static double dInterp_df_XYZ_Tn_Ex(const Patch_T *const patch,const double *const X,const unsigned df)
+static double dInterp_df_XYZ_Tn_Ex(Patch_T *const patch,const double *const X,const unsigned df)
 {
   const unsigned *const n = patch->n;
   double q[3];/* normalized coords */

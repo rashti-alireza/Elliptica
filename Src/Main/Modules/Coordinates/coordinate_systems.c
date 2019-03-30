@@ -73,6 +73,36 @@ int make_JacobianT(Grid_T *const grid)
       pointerEr(patch->JacobianT);
       make_JacobianT_Cartesian_coord(patch);
     }
+    /* if coord is ProjectiveHemisphereUp */
+    else if (patch->coordsys == ProjectiveHemisphereUp)
+    {
+      patch->JacobianT = calloc(1,sizeof(*patch->JacobianT));
+      pointerEr(patch->JacobianT);
+      make_JacobianT_ProjectiveHemisphere_coord(patch);
+    }
+    
+    /* if coord is ProjectiveHemisphereDown */
+    else if (patch->coordsys == ProjectiveHemisphereDown)
+    {
+      patch->JacobianT = calloc(1,sizeof(*patch->JacobianT));
+      pointerEr(patch->JacobianT);
+      make_JacobianT_ProjectiveHemisphere_coord(patch);
+    }
+    /* if coord is StereographicSphereLeft */
+    else if (patch->coordsys == StereographicSphereLeft)
+    {
+      patch->JacobianT = calloc(1,sizeof(*patch->JacobianT));
+      pointerEr(patch->JacobianT);
+      make_JacobianT_StereographicSphereLeft_coord(patch);
+    }
+    
+    /* if coord is StereographicSphereRight */
+    else if (patch->coordsys == StereographicSphereRight)
+    {
+      patch->JacobianT = calloc(1,sizeof(*patch->JacobianT));
+      pointerEr(patch->JacobianT);
+      make_JacobianT_StereographicSphereRight_coord(patch);
+    }
     
     else
       abortEr("No job for such coordinate.\n");
@@ -80,7 +110,6 @@ int make_JacobianT(Grid_T *const grid)
   
   return EXIT_SUCCESS;
 }
-
 
 
 /* initializing collocation struct 
@@ -196,7 +225,7 @@ double point_value(const unsigned i, const struct Collocation_s *const coll_s)
 //
 // ->return value = dq2/dq1.
 */
-double dq2_dq1(const Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const unsigned p)
+double dq2_dq1(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const unsigned p)
 {
   double j = 0;
   
@@ -222,11 +251,18 @@ double dq2_dq1(const Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const
 /* Jacobian transformation for dN/dX?.
 // ->return value: dN/dX?
 */
-static double dN_dX(const Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const unsigned p)
+static double dN_dX(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const unsigned p)
 {
   double jN_X = 0;
   
   if (patch->collocation[q1_e%3] == Chebyshev_Extrema)
+  {
+    if (q2_e%3 == q1_e%3)
+      jN_X = 2.0/(-patch->max[q1_e%3]+patch->min[q1_e%3]); 
+    else
+      jN_X = 0;
+  }
+  else if (patch->collocation[q1_e%3] == Chebyshev_Nodes)
   {
     if (q2_e%3 == q1_e%3)
       jN_X = 2.0/(-patch->max[q1_e%3]+patch->min[q1_e%3]); 
@@ -246,27 +282,22 @@ static double dN_dX(const Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,
 /* Jacobian transformation for dN/dq?.
 // ->return value: dN/dq?
 */
-static double dN_dq(const Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const unsigned p)
+static double dN_dq(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const unsigned p)
 {
   double jN_X = 0;
   
-  if (q2_e%3 == q1_e%3)/* e.g. _N2_%3 = 1 and _c_%3 = 1 */
+  /* means dN?/dx? = dN?/da*da/dx? + dN?/db*db/dx? + dN?/dc*dc/dx? */
+  if (q1_e == _x_ || q1_e == _y_ || q1_e == _z_ )
   {
-    /* means dN?/dx? = dN?/da*da/dx? + dN?/db*db/dx? + dN?/dc*dc/dx? */
-    if (q1_e == _x_ || q1_e == _y_ || q1_e == _z_ )
-    {
-      jN_X = dN_dX(patch,q2_e,_a_,p)*dq2_dq1(patch,_a_,q1_e,p)+
-             dN_dX(patch,q2_e,_b_,p)*dq2_dq1(patch,_b_,q1_e,p)+
-             dN_dX(patch,q2_e,_c_,p)*dq2_dq1(patch,_c_,q1_e,p);
-              
-    }
-    else /* means q1_e is between _a_, _b_ or _c_*/
-    {
-      return dN_dX(patch,q2_e,q1_e,p);
-    }
+    jN_X = dN_dX(patch,q2_e,_a_,p)*dq2_dq1(patch,_a_,q1_e,p)+
+           dN_dX(patch,q2_e,_b_,p)*dq2_dq1(patch,_b_,q1_e,p)+
+           dN_dX(patch,q2_e,_c_,p)*dq2_dq1(patch,_c_,q1_e,p);
+            
   }
-  else
-    return 0;
+  else /* means q1_e is between _a_, _b_ or _c_*/
+  {
+    return dN_dX(patch,q2_e,q1_e,p);
+  }
   
   return jN_X;
 }

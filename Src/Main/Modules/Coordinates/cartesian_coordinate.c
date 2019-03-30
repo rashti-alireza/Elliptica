@@ -49,7 +49,7 @@ void make_JacobianT_Cartesian_coord(Patch_T *const patch)
 /* Jacobian transformation for Cartesian patch.
 // ->return value: dq2/dq1
 */
-double JT_Cartesian_patch(const Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const unsigned p)
+double JT_Cartesian_patch(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const unsigned p)
 {
   double j;
   
@@ -68,16 +68,25 @@ double JT_Cartesian_patch(const Patch_T *const patch,const Dd_T q2_e, const Dd_T
 // used for interpolation.
 // x = 0.5*(min-max)*N0 +0.5*(min+max)
 // ->return value: dN0/dx */
-double dN0_dx_Cartesian_patch(const Patch_T *const patch,const double *const X)
+double dN0_dx_Cartesian_patch(Patch_T *const patch,const double *const X)
 {
-  UNUSED(X);
-  return 2./(-patch->max[0]+patch->min[0]);
+  double dN0_dx = 0;
+  
+  if (patch->collocation[0] == Chebyshev_Extrema || 
+      patch->collocation[0] == Chebyshev_Nodes)
+      dN0_dx = 2./(-patch->max[0]+patch->min[0]);
+  else
+    abortEr(NO_JOB);
+ 
+ UNUSED(X);
+ 
+ return dN0_dx;   
 }
 
 /* Calculating dN0/dy at arbitrary curvilinear point point X.
 // used for interpolation.
 // ->return value: dN0/dy */
-double dN0_dy_Cartesian_patch(const Patch_T *const patch,const double *const X)
+double dN0_dy_Cartesian_patch(Patch_T *const patch,const double *const X)
 {
   UNUSED(X);
   UNUSED(patch);
@@ -86,7 +95,7 @@ double dN0_dy_Cartesian_patch(const Patch_T *const patch,const double *const X)
 /* Calculating dN0/dz at arbitrary curvilinear point point X.
 // used for interpolation.
 // ->return value: dN0/dz */
-double dN0_dz_Cartesian_patch(const Patch_T *const patch,const double *const X)
+double dN0_dz_Cartesian_patch(Patch_T *const patch,const double *const X)
 {
   UNUSED(X);
   UNUSED(patch);
@@ -95,7 +104,7 @@ double dN0_dz_Cartesian_patch(const Patch_T *const patch,const double *const X)
 /* Calculating dN1/dx at arbitrary curvilinear point point X.
 // used for interpolation.
 // ->return value: dN1/dx */
-double dN1_dx_Cartesian_patch(const Patch_T *const patch,const double *const X)
+double dN1_dx_Cartesian_patch(Patch_T *const patch,const double *const X)
 {
   UNUSED(X);
   UNUSED(patch);
@@ -105,15 +114,24 @@ double dN1_dx_Cartesian_patch(const Patch_T *const patch,const double *const X)
 // used for interpolation.
 // y = 0.5*(min-max)*N1 +0.5*(min+max)
 // ->return value: dN1/dy */
-double dN1_dy_Cartesian_patch(const Patch_T *const patch,const double *const X)
+double dN1_dy_Cartesian_patch(Patch_T *const patch,const double *const X)
 {
+  double dN1_dy = 0;
+  
+  if (patch->collocation[1] == Chebyshev_Extrema || 
+      patch->collocation[1] == Chebyshev_Nodes)
+      dN1_dy = 2./(-patch->max[1]+patch->min[1]);
+  else
+    abortEr(NO_JOB);
+    
   UNUSED(X);
-  return 2./(-patch->max[1]+patch->min[1]);
+  
+  return dN1_dy;
 }
 /* Calculating dN1/dz at arbitrary curvilinear point point X.
 // used for interpolation.
 // ->return value: dN1/dz */
-double dN1_dz_Cartesian_patch(const Patch_T *const patch,const double *const X)
+double dN1_dz_Cartesian_patch(Patch_T *const patch,const double *const X)
 {
   UNUSED(X);
   UNUSED(patch);
@@ -122,7 +140,7 @@ double dN1_dz_Cartesian_patch(const Patch_T *const patch,const double *const X)
 /* Calculating dN0/dx at arbitrary curvilinear point point X.
 // used for interpolation.
 // ->return value: dN0/dx */
-double dN2_dx_Cartesian_patch(const Patch_T *const patch,const double *const X)
+double dN2_dx_Cartesian_patch(Patch_T *const patch,const double *const X)
 {
   UNUSED(X);
   UNUSED(patch);
@@ -131,7 +149,7 @@ double dN2_dx_Cartesian_patch(const Patch_T *const patch,const double *const X)
 /* Calculating dN0/dx at arbitrary curvilinear point point X.
 // used for interpolation.
 // ->return value: dN0/dx */
-double dN2_dy_Cartesian_patch(const Patch_T *const patch,const double *const X)
+double dN2_dy_Cartesian_patch(Patch_T *const patch,const double *const X)
 {
   UNUSED(X);
   UNUSED(patch);
@@ -141,8 +159,17 @@ double dN2_dy_Cartesian_patch(const Patch_T *const patch,const double *const X)
 // used for interpolation.
 // z = 0.5*(min-max)*N2 +0.5*(min+max)
 // ->return value: dN0/dx */
-double dN2_dz_Cartesian_patch(const Patch_T *const patch,const double *const X)
+double dN2_dz_Cartesian_patch(Patch_T *const patch,const double *const X)
 {
+  double dN2_dz = 0;
+  
+  if (patch->collocation[2] == Chebyshev_Extrema || 
+      patch->collocation[2] == Chebyshev_Nodes)
+   dN2_dz = 2./(-patch->max[2]+patch->min[2]);
+  else
+    abortEr(NO_JOB);
+    
   UNUSED(X);
-  return 2./(-patch->max[2]+patch->min[2]);
+  
+  return dN2_dz;
 }

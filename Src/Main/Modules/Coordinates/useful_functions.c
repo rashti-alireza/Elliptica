@@ -222,6 +222,152 @@ int X_of_x(double *const X,const double *const x,const Patch_T *const patch)
   return r;
 }
 
+/* find x in cartesian coord correspond to X (general coords) 
+// in the given patch.
+// ->return value 1 if it is successful, otherwise 0.
+*/
+int x_of_X(double *const x,const double *const X,const Patch_T *const patch)
+{
+  int ret = 0;
+  
+  if (patch->coordsys == ProjectiveHemisphereUp)
+    ret = x_of_X_PHUp_coord(x,X,patch);
+  else if (patch->coordsys == ProjectiveHemisphereDown)
+    ret = x_of_X_PHDown_coord(x,X,patch);
+  else if (patch->coordsys == StereographicSphereLeft)
+    ret = x_of_X_SSLeft_coord(x,X,patch);
+  else if (patch->coordsys == StereographicSphereRight)
+    ret = x_of_X_SSRight_coord(x,X,patch);
+  else
+      abortEr(NO_JOB);
+ 
+  return ret;
+}
+
+/* find x in cartesian coord correspond to X (general coords) 
+// for ProjectiveHemisphereUp 
+// ->return value 1 if it is successful, otherwise 0.
+*/
+static int x_of_X_PHUp_coord(double *const x,const double *const X,const Patch_T *const patch)
+{
+  Field_T *const R1_field = patch->pool[Ind("R1_ProjectiveHemisphere")];
+  Field_T *const R2_field = patch->pool[Ind("R2_ProjectiveHemisphere")];
+  const double R1 = interpolation_2d_PH(R1_field,patch,X);
+  const double R2 = interpolation_2d_PH(R2_field,patch,X); 
+  const double r = 0.5*((R2-R1)*X[2]+(R2+R1));
+  const double *const c = patch->c;/* center */
+  double z2;
+  int ret = 0;
+  
+  x[0] = r*X[0]*sqrt(1-0.5*SQR(X[1]));
+  x[1] = r*X[1]*sqrt(1-0.5*SQR(X[0]));
+  z2 = SQR(r)-SQR(x[0])-SQR(x[1]);
+  if (EQL(z2,0))
+    z2 = 0;/* avoid nan */
+  x[2] = sqrt(z2);
+  
+  if (isnan(x[0]) != 0 || 
+      isnan(x[1]) != 0 || 
+      isnan(x[2]) != 0   )
+  {
+    ret = 0;
+    abortEr("x could not been found.");
+  }
+  
+  x[0] += c[0];
+  x[1] += c[1];
+  x[2] += c[2];
+  
+  return ret;
+}
+
+/* find x in cartesian coord correspond to X (general coords) 
+// for StereographicSphereRight
+// ->return value 1 if it is successful, otherwise 0.
+*/
+static int x_of_X_SSRight_coord(double *const x,const double *const X,const Patch_T *const patch)
+{
+  const double R1 = patch->CoordSysInfo->R1;
+  const double R2 = patch->CoordSysInfo->R2;
+  const double R0 = patch->c[1];
+  double u,w;
+  double r,R,A,c;
+  
+  r = 0.5*X[1]*(R2-R1)+0.5*(R2+R1);
+  R = sqrt(SQR(r)-SQR(R0)); assert(!isnan(R));
+  u = R*X[0]*sqrt(1-0.5*SQR(X[2])); assert(!isnan(u));
+  w = R*X[2]*sqrt(1-0.5*SQR(X[0])); assert(!isnan(w));
+  A = SQR(u/(R0-r))+SQR(w/(R0-r))+1;
+  x[1] = r*(2/A-1)+R0;
+  c = 2*r/(A*(r-R0));
+  x[0] = c*u;
+  x[2] = c*w;
+  
+  return 1;
+}
+
+/* find x in cartesian coord correspond to X (general coords) 
+// for StereographicSphereLeft
+// ->return value 1 if it is successful, otherwise 0.
+*/
+static int x_of_X_SSLeft_coord(double *const x,const double *const X,const Patch_T *const patch)
+{
+  const double R1 = patch->CoordSysInfo->R1;
+  const double R2 = patch->CoordSysInfo->R2;
+  const double R0 = fabs(patch->c[1]);
+  double u,w;
+  double r,R,A,c;
+  
+  r = 0.5*X[1]*(R2-R1)+0.5*(R2+R1);
+  R = sqrt(SQR(r)-SQR(R0)); assert(!isnan(R));
+  u = R*X[0]*sqrt(1-0.5*SQR(X[2])); assert(!isnan(u));
+  w = R*X[2]*sqrt(1-0.5*SQR(X[0])); assert(!isnan(w));
+  A = SQR(u/(R0-r))+SQR(w/(R0-r))+1;
+  x[1] = -r*(2/A-1)-R0;
+  c = 2*r/(A*(r-R0));
+  x[0] = c*u;
+  x[2] = c*w;
+  
+  return 1;
+}
+
+/* find x in cartesian coord correspond to X (general coords) 
+// for ProjectiveHemisphereDown
+// ->return value 1 if it is successful, otherwise 0.
+*/
+static int x_of_X_PHDown_coord(double *const x,const double *const X,const Patch_T *const patch)
+{
+  Field_T *const R1_field = patch->pool[Ind("R1_ProjectiveHemisphere")];
+  Field_T *const R2_field = patch->pool[Ind("R2_ProjectiveHemisphere")];
+  const double R1 = interpolation_2d_PH(R1_field,patch,X);
+  const double R2 = interpolation_2d_PH(R2_field,patch,X); 
+  const double r = 0.5*((R2-R1)*X[2]+(R2+R1));
+  const double *const c = patch->c;/* center */
+  double z2;
+  int ret = 0;
+  
+  x[0] = r*X[0]*sqrt(1-0.5*SQR(X[1]));
+  x[1] = r*X[1]*sqrt(1-0.5*SQR(X[0]));
+  z2 = SQR(r)-SQR(x[0])-SQR(x[1]);
+  if (EQL(z2,0))
+    z2 = 0;/* avoid nan */
+  x[2] = -sqrt(z2);
+  
+  if (isnan(x[0]) != 0 || 
+      isnan(x[1]) != 0 || 
+      isnan(x[2]) != 0   )
+  {
+    ret = 0;
+    abortEr("x could not been found.");
+  }
+  
+  x[0] += c[0];
+  x[1] += c[1];
+  x[2] += c[2];
+  
+  return ret;
+}
+
 /* find point X correspond to x for patch with Cartesian coord.
 // ->return value: 1 if it is successful, otherwise 0.
 */

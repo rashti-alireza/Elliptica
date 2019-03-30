@@ -397,8 +397,8 @@ static void populate_right_outermost(Grid_T *const grid,const unsigned pn,const 
 static void populate_left_NS_hemisphere_up(Grid_T *const grid,const unsigned pn)
 {
   Patch_T *const patch = grid->patch[pn];
-  Field_T *R1 = add_field("R1_ProjectiveHemisphereUp",0,patch,NO);
-  Field_T *R2 = add_field("R2_ProjectiveHemisphereUp",0,patch,NO);
+  Field_T *R1 = add_field("R1_ProjectiveHemisphere",0,patch,NO);
+  Field_T *R2 = add_field("R2_ProjectiveHemisphere",0,patch,NO);
   double *R1_array,*R2_array;
   char name[100] = {'\0'};
   char var[100] = {'\0'};
@@ -495,8 +495,8 @@ static void populate_left_NS_hemisphere_up(Grid_T *const grid,const unsigned pn)
 static void populate_left_NS_hemisphere_down(Grid_T *const grid,const unsigned pn)
 {
   Patch_T *const patch = grid->patch[pn];
-  Field_T *R1 = add_field("R1_ProjectiveHemisphereDown",0,patch,NO);
-  Field_T *R2 = add_field("R2_ProjectiveHemisphereDown",0,patch,NO);
+  Field_T *R1 = add_field("R1_ProjectiveHemisphere",0,patch,NO);
+  Field_T *R2 = add_field("R2_ProjectiveHemisphere",0,patch,NO);
   double *R1_array,*R2_array;
   char name[100] = {'\0'};
   char var[100] = {'\0'};
@@ -593,8 +593,8 @@ static void populate_left_NS_hemisphere_down(Grid_T *const grid,const unsigned p
 static void populate_right_NS_hemisphere_up(Grid_T *const grid,const unsigned pn)
 {
   Patch_T *const patch = grid->patch[pn];
-  Field_T *R1 = add_field("R1_ProjectiveHemisphereUp",0,patch,NO);
-  Field_T *R2 = add_field("R2_ProjectiveHemisphereUp",0,patch,NO);
+  Field_T *R1 = add_field("R1_ProjectiveHemisphere",0,patch,NO);
+  Field_T *R2 = add_field("R2_ProjectiveHemisphere",0,patch,NO);
   double *R1_array,*R2_array;
   char name[100] = {'\0'};
   char var[100] = {'\0'};
@@ -691,8 +691,8 @@ static void populate_right_NS_hemisphere_up(Grid_T *const grid,const unsigned pn
 static void populate_right_NS_hemisphere_down(Grid_T *const grid,const unsigned pn)
 {
   Patch_T *const patch = grid->patch[pn];
-  Field_T *R1 = add_field("R1_ProjectiveHemisphereDown",0,patch,NO);
-  Field_T *R2 = add_field("R2_ProjectiveHemisphereDown",0,patch,NO);
+  Field_T *R1 = add_field("R1_ProjectiveHemisphere",0,patch,NO);
+  Field_T *R2 = add_field("R2_ProjectiveHemisphere",0,patch,NO);
   double *R1_array,*R2_array;
   char name[100] = {'\0'};
   char var[100] = {'\0'};
@@ -789,8 +789,8 @@ static void populate_right_NS_hemisphere_down(Grid_T *const grid,const unsigned 
 static void populate_left_NS_surrounding_up(Grid_T *const grid,const unsigned pn)
 {
   Patch_T *const patch = grid->patch[pn];
-  Field_T *R1 = add_field("R1_ProjectiveHemisphereUp",0,patch,NO);
-  Field_T *R2 = add_field("R2_ProjectiveHemisphereUp",0,patch,NO);
+  Field_T *R1 = add_field("R1_ProjectiveHemisphere",0,patch,NO);
+  Field_T *R2 = add_field("R2_ProjectiveHemisphere",0,patch,NO);
   double R2_const,*R1_array;
   char name[100] = {'\0'};
   char var[100] = {'\0'};
@@ -887,8 +887,8 @@ static void populate_left_NS_surrounding_up(Grid_T *const grid,const unsigned pn
 static void populate_left_NS_surrounding_down(Grid_T *const grid,const unsigned pn)
 {
   Patch_T *const patch = grid->patch[pn];
-  Field_T *R1 = add_field("R1_ProjectiveHemisphereDown",0,patch,NO);
-  Field_T *R2 = add_field("R2_ProjectiveHemisphereDown",0,patch,NO);
+  Field_T *R1 = add_field("R1_ProjectiveHemisphere",0,patch,NO);
+  Field_T *R2 = add_field("R2_ProjectiveHemisphere",0,patch,NO);
   double R2_const,*R1_array;
   char name[100] = {'\0'};
   char var[100] = {'\0'};
@@ -985,8 +985,8 @@ static void populate_left_NS_surrounding_down(Grid_T *const grid,const unsigned 
 static void populate_right_NS_surrounding_up(Grid_T *const grid,const unsigned pn)
 {
   Patch_T *const patch = grid->patch[pn];
-  Field_T *R1 = add_field("R1_ProjectiveHemisphereUp",0,patch,NO);
-  Field_T *R2 = add_field("R2_ProjectiveHemisphereUp",0,patch,NO);
+  Field_T *R1 = add_field("R1_ProjectiveHemisphere",0,patch,NO);
+  Field_T *R2 = add_field("R2_ProjectiveHemisphere",0,patch,NO);
   double R2_const,*R1_array;
   char name[100] = {'\0'};
   char var[100] = {'\0'};
@@ -1083,8 +1083,8 @@ static void populate_right_NS_surrounding_up(Grid_T *const grid,const unsigned p
 static void populate_right_NS_surrounding_down(Grid_T *const grid,const unsigned pn)
 {
   Patch_T *const patch = grid->patch[pn];
-  Field_T *R1 = add_field("R1_ProjectiveHemisphereDown",0,patch,NO);
-  Field_T *R2 = add_field("R2_ProjectiveHemisphereDown",0,patch,NO);
+  Field_T *R1 = add_field("R1_ProjectiveHemisphere",0,patch,NO);
+  Field_T *R2 = add_field("R2_ProjectiveHemisphere",0,patch,NO);
   double R2_const,*R1_array;
   char name[100] = {'\0'};
   char var[100] = {'\0'};
