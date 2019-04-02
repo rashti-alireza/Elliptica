@@ -194,7 +194,7 @@ double point_value(const unsigned i, const struct Collocation_s *const coll_s)
   /* x = a*N+b => x = a*cos(t)+b */
   else if (coll_s->c == Chebyshev_Nodes)
   {
-    double t = (2*i+1)*M_PI/coll_s->n/2.;
+    double t = (i+0.5)*M_PI/coll_s->n;
     
     x = coll_s->a*cos(t)+coll_s->b;
   }

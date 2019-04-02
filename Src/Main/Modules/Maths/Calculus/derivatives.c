@@ -32,6 +32,7 @@
 // Cartesian x derivative with finite difference:
 // => *task = "x DELIMIT Finite_Difference", DELIMIT is a macro defined above.
 // so for example if DELIMIT is | then *task = "x | Finite_Difference".
+// Note: curvilinear coordinate must be identified by a,b,c not X,Y,Z.
 //
 // ->return value: partial derivative of Field_T f accordingly, null for error.
 */
@@ -174,6 +175,20 @@ static unsigned JacobianFormat_2ndOrder(const Patch_T *const patch,const Dd_T di
     if (dir%3 == dp%3)
       r = 1;
   }
+  else if (patch->coordsys == ProjectiveHemisphereUp  || 
+           patch->coordsys == ProjectiveHemisphereDown  ||
+           patch->coordsys == StereographicSphereLeft ||
+           patch->coordsys == StereographicSphereRight  )
+  
+  {
+    /* in these coordinate only if derivative is on a,b, or c
+    // direction one can use second order formular. 
+    // Note: that they basese and collocations are already checked. */
+    if (dir == dp)
+      r = 1;
+    else
+      r = 0;
+  }
   else
      abortEr("There is no coordinate defined for this function.\n");
   
@@ -192,7 +207,12 @@ static void get_SpecDerivative_func_2ndOrder(const Patch_T *const patch,SpecDeri
     if (patch->basis[i] == Chebyshev_Tn_BASIS 
         && patch->collocation[i] == Chebyshev_Extrema)
     {
-      func[i] = derivative_Chebyshev_Tn_2ndOrder;
+      func[i] = derivative_ChebyshevExtrema_Tn_2ndOrder;
+    }
+    else if (patch->basis[i] == Chebyshev_Tn_BASIS 
+        && patch->collocation[i] == Chebyshev_Nodes)
+    {
+      func[i] = derivative_ChebyshevNodes_Tn_2ndOrder;
     }
     else
       abortEr("There is no such basis or collocation defined for this function.\n");
@@ -214,7 +234,9 @@ static void get_dp_2ndOrder(const Patch_T *const patch,SpecDerivative_Func_T **f
     dp[i] = UNDEFINED_DIR;
     if (depend[i])/* if this direction depends on _a_,_b_,_c_ */
     {
-      if (func[i] == derivative_Chebyshev_Tn_2ndOrder)
+      if (func[i] == derivative_ChebyshevExtrema_Tn_2ndOrder)
+        dp[i] = i;/* means _N0_or _N1_or _N2_ */
+      else if (func[i] == derivative_ChebyshevNodes_Tn_2ndOrder)
         dp[i] = i;/* means _N0_or _N1_or _N2_ */
       else
         abortEr("There is no such derivative function defined for this function.\n");
@@ -233,7 +255,7 @@ static void get_dp_2ndOrder(const Patch_T *const patch,SpecDerivative_Func_T **f
 // note: it allocates memory for resultant in each invoking.
 // note: second order means that: d^2f(x)/dx^2 = (dN/dx)^2 *d^2f(N)/dN^2
 // and one can take d^2f(N)/dN^2 by some special formula. for example:
-// in Chebyshev Tn we have d^2Tn(N)/d^2N = some knowm formula.
+// in Chebyshev Tn we have d^2Tn(N)/d^2N = some known formula.
 // so one can take advantage of this to calculate the derivative.
 // ->return value: second order spectral derivative.
 */
@@ -419,7 +441,7 @@ static double *spectral_derivative_1stOrder(Field_T *const f,const Dd_T dir_e)
   SpecDerivative_Func_T *df[3];/* spectral derivative function in each direction */
   Dd_T dp[3];/* see above explanation */
   double *df_dp[3];
-  unsigned nn = total_nodes_patch(patch);
+  unsigned nn = patch->nn;
   unsigned i;
   Dd_T d;
   Flag_T flg[3];
@@ -492,7 +514,7 @@ static double *spectral_derivative_1stOrder(Field_T *const f,const Dd_T dir_e)
 // note: N is in [-1,1].
 // ->return value: df(N)/dN.
 */
-static double *derivative_Chebyshev_Tn_1stOrder(Field_T *const f,const Dd_T dir)
+static double *derivative_ChebyshevExtrema_Tn_1stOrder(Field_T *const f,const Dd_T dir)
 {
   assert(dir <= _N2_);
   make_coeffs_1d(f,dir);
@@ -568,12 +590,90 @@ static double *derivative_Chebyshev_Tn_1stOrder(Field_T *const f,const Dd_T dir)
   return der;
 }
 
+/* taking derivative for f(N) = c(0)+2*\sum_{j=1}^{n-1} c(j)Tj(N), in the specified
+// patch for Chebyshev basis with Chebyshev nodes collocation.
+// note: N is in (-1,1).
+// ->return value: df(N)/dN.
+*/
+static double *derivative_ChebyshevNodes_Tn_1stOrder(Field_T *const f,const Dd_T dir)
+{
+  assert(dir <= _N2_);
+  make_coeffs_1d(f,dir);
+  
+  Patch_T *const patch = f->patch;
+  const unsigned *const n = patch->n;
+  const unsigned nn = patch->nn;
+  const unsigned B = n[dir];
+  double *der = alloc_double(nn);
+  double *x = make_1Dcollocation_ChebNodes(n[dir]);
+  const double *const coeffs = f->v2;
+  unsigned l;
+  
+  if (dir == 0)
+  {
+    /* OpenMP_2d_Pragma(omp parallel for) */
+    for (l = 0; l < nn; ++l)
+    {
+      unsigned i,j,k;
+      unsigned c;
+      
+      IJK(l,n,&i,&j,&k);
+      
+      for (c = 1; c < B; ++c)
+      {
+        unsigned C = L(n,c,j,k);//coeff_ind(i,j,k,c,n,dir);
+        der[l] += c*coeffs[C]*Cheb_Un((int)c-1,x[i]);
+      }
+      der[l] *= 2;
+    }
+  }
+  else if (dir == 1)
+  {
+    /* OpenMP_2d_Pragma(omp parallel for) */
+    for (l = 0; l < nn; ++l)
+    {
+      unsigned i,j,k;
+      unsigned c;
+      
+      IJK(l,n,&i,&j,&k);
+      
+      for (c = 1; c < B; ++c)
+      {
+        unsigned C = L(n,i,c,k);//coeff_ind(i,j,k,c,n,dir);
+        der[l] += c*coeffs[C]*Cheb_Un((int)c-1,x[j]);
+      }
+      der[l] *= 2;
+    }
+  }
+  else /* (dir == 2) */
+  {
+    /* OpenMP_2d_Pragma(omp parallel for) */
+    for (l = 0; l < nn; ++l)
+    {
+      unsigned i,j,k;
+      unsigned c;
+      
+      IJK(l,n,&i,&j,&k);
+      
+      for (c = 1; c < B; ++c)
+      {
+        unsigned C = L(n,i,j,c);//coeff_ind(i,j,k,c,n,dir);
+        der[l] += c*coeffs[C]*Cheb_Un((int)c-1,x[k]);
+      }
+      der[l] *= 2;
+    }
+  }
+  free(x);
+  
+  return der;
+}
+
 /* taking second order derivative for f(N) = sum_{0}^{n-1}a_n*T_n(N), in the specified
 // patch.
 // note: N is in [-1,1].
 // ->return value: d^2f(N)/d^2N.
 */
-static double *derivative_Chebyshev_Tn_2ndOrder(Field_T *const f,const Dd_T dir)
+static double *derivative_ChebyshevExtrema_Tn_2ndOrder(Field_T *const f,const Dd_T dir)
 {
   assert(dir <= _N2_);
   make_coeffs_1d(f,dir);
@@ -649,6 +749,85 @@ static double *derivative_Chebyshev_Tn_2ndOrder(Field_T *const f,const Dd_T dir)
   return der;
 }
 
+/* taking second order derivative for f(N) = sum_{0}^{n-1}a_n*T_n(N), in the specified
+// patch for chebyshev basis with chebyshev nodes collocation.
+// note: N is in (-1,1).
+// ->return value: d^2f(N)/d^2N.
+*/
+static double *derivative_ChebyshevNodes_Tn_2ndOrder(Field_T *const f,const Dd_T dir)
+{
+  assert(dir <= _N2_);
+  make_coeffs_1d(f,dir);
+  
+  Patch_T *const patch = f->patch;
+  const unsigned *const n = patch->n;
+  const unsigned nn = total_nodes_patch(patch);
+  const unsigned B = n[dir];
+  double *der = alloc_double(nn);
+  double *x = make_1Dcollocation_ChebNodes(n[dir]);
+  const double *const coeffs = f->v2;
+  unsigned l;
+  
+  if (dir == 0)
+  {
+    /* OpenMP_2d_Pragma(omp parallel for) */
+    for (l = 0; l < nn; ++l)
+    {
+      unsigned i,j,k;
+      unsigned c;
+      
+      IJK(l,n,&i,&j,&k);
+      
+      for (c = 2; c < B; ++c)
+      {
+        unsigned C = L(n,c,j,k);
+        der[l] += coeffs[C]*d2T_dx2((int)c,x[i]);
+      }
+      der[l] *= 2;
+    }
+  }
+  else if (dir == 1)
+  {
+    /* OpenMP_2d_Pragma(omp parallel for) */
+    for (l = 0; l < nn; ++l)
+    {
+      unsigned i,j,k;
+      unsigned c;
+      
+      IJK(l,n,&i,&j,&k);
+      
+      for (c = 2; c < B; ++c)
+      {
+        unsigned C = L(n,i,c,k);
+        der[l] += coeffs[C]*d2T_dx2((int)c,x[j]);
+      }
+      der[l] *= 2;
+    }
+  }
+  else /* (dir == 2) */
+  {
+    /* OpenMP_2d_Pragma(omp parallel for) */
+    for (l = 0; l < nn; ++l)
+    {
+      unsigned i,j,k;
+      unsigned c;
+      
+      IJK(l,n,&i,&j,&k);
+      
+      for (c = 2; c < B; ++c)
+      {
+        unsigned C = L(n,i,j,c);
+        der[l] += coeffs[C]*d2T_dx2((int)c,x[k]);
+      }
+      der[l] *= 2;
+    }
+  }
+  free(x);
+  
+  return der;
+}
+
+
 /* based on basis and collocation,
 // get the pertinent function for spectral derivative. 
 */
@@ -661,7 +840,12 @@ static void get_SpecDerivative_func_1stOrder(const Patch_T *const patch,SpecDeri
     if (patch->basis[i] == Chebyshev_Tn_BASIS 
         && patch->collocation[i] == Chebyshev_Extrema)
     {
-      func[i] = derivative_Chebyshev_Tn_1stOrder;
+      func[i] = derivative_ChebyshevExtrema_Tn_1stOrder;
+    }
+    else if (patch->basis[i] == Chebyshev_Tn_BASIS 
+        && patch->collocation[i] == Chebyshev_Nodes)
+    {
+      func[i] = derivative_ChebyshevNodes_Tn_1stOrder;
     }
     else
       abortEr("There is no such basis or collocation defined for this function.\n");
@@ -693,6 +877,42 @@ static void get_dependency(const Patch_T *const patch,const Dd_T dir, unsigned *
   {
     dep[dir%3] = 1;/* means that for example _y_%3 = 1 = _b_ */
   }
+  /* x(a,b,c), y(a,b,c), z(a,b,c) */
+  else if (patch->coordsys == ProjectiveHemisphereUp  || 
+           patch->coordsys == ProjectiveHemisphereDown  ||
+           patch->coordsys == StereographicSphereLeft ||
+           patch->coordsys == StereographicSphereRight  )
+  {
+    switch (dir)
+    {
+      case _x_:
+        dep[0] = 1;
+        dep[1] = 1;
+        dep[2] = 1;
+      break;
+      case _y_:
+        dep[0] = 1;
+        dep[1] = 1;
+        dep[2] = 1;
+      break;
+      case _z_:
+        dep[0] = 1;
+        dep[1] = 1;
+        dep[2] = 1;
+      break;
+      case _a_:
+        dep[0] = 1;
+      break;
+      case _b_:
+        dep[1] = 1;
+      break;
+      case _c_:
+        dep[2] = 1;
+      break;
+      default:
+        abortEr(NO_JOB);
+    }
+  }
   else
      abortEr("There is no coordinate defined for this function.\n");
 }
@@ -712,7 +932,9 @@ static void get_dp_1stOrder(const Patch_T *const patch,SpecDerivative_Func_T **f
     dp[i] = UNDEFINED_DIR;
     if (depend[i])/* if this direction depends on _a_,_b_,_c_ */
     {
-      if (func[i] == derivative_Chebyshev_Tn_1stOrder)
+      if (func[i] == derivative_ChebyshevExtrema_Tn_1stOrder)
+        dp[i] = i;/* means _N0_or _N1_or _N2_ */
+      else if (func[i] == derivative_ChebyshevNodes_Tn_1stOrder)
         dp[i] = i;/* means _N0_or _N1_or _N2_ */
       else
         abortEr("There is no such derivative function defined for this function.\n");
@@ -733,6 +955,22 @@ static double *make_1Dcollocation_ChebExtrema(const unsigned N)
     
     for (i = 0; i < N; i++)
       x[i] = cos(i*t0);
+
+  return x;
+}
+
+/* making collocation point for Chebyshev Nodes in [-1,1]
+// Note: it allocates memory.
+//-> return value: Chebyshev Nodes points
+*/
+static double *make_1Dcollocation_ChebNodes(const unsigned N)
+{
+    const double t0 = M_PI/N;
+    double *x = alloc_double(N);
+    unsigned i;
+    
+    for (i = 0; i < N; i++)
+      x[i] = cos((i+0.5)*t0);
 
   return x;
 }

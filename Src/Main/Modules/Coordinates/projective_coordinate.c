@@ -195,6 +195,7 @@ void make_JacobianT_ProjectiveHemisphere_coord(Patch_T *const patch)
   patch->JacobianT->dN2_dx = dN2_dx_ProjectiveHemisphere_patch;
   patch->JacobianT->dN2_dy = dN2_dy_ProjectiveHemisphere_patch;
   patch->JacobianT->dN2_dz = dN2_dz_ProjectiveHemisphere_patch;
+  R1_R2_derivative(patch);
 }
 
 /* making Jacobian transformation for StereographicSphere Left coord. */
@@ -422,15 +423,13 @@ double JT_ProjectiveHemisphere(Patch_T *const patch,const Dd_T q2_e, const Dd_T 
     unsigned i,j,k;
     IJK(p,n,&i,&j,&k);
     
-    /* preparing R1 and R2 derivatives */
-    R1_R2_derivative(patch);
-    R1 = patch->pool[Ind("R1_ProjectiveHemisphere")]->v[L(n,i,j,0)];
-    R2 = patch->pool[Ind("R2_ProjectiveHemisphere")]->v[L(n,i,j,0)];
-    dR2_dx = patch->pool[Ind("dR2_dx")]->v[L(n,i,j,0)];
-    dR2_dy = patch->pool[Ind("dR2_dy")]->v[L(n,i,j,0)];
+    R1 = patch->CoordSysInfo->R1_f->v[L(n,i,j,0)];
+    R2 = patch->CoordSysInfo->R2_f->v[L(n,i,j,0)];
+    dR2_dx = patch->CoordSysInfo->dR2_dx->v[L(n,i,j,0)];
+    dR2_dy = patch->CoordSysInfo->dR2_dy->v[L(n,i,j,0)];
     dR2_dz = 0;
-    dR1_dx = patch->pool[Ind("dR1_dx")]->v[L(n,i,j,0)];
-    dR1_dy = patch->pool[Ind("dR1_dy")]->v[L(n,i,j,0)];
+    dR1_dx = patch->CoordSysInfo->dR1_dx->v[L(n,i,j,0)];
+    dR1_dy = patch->CoordSysInfo->dR1_dy->v[L(n,i,j,0)];
     dR1_dz = 0;
   }
   
@@ -1293,38 +1292,47 @@ enum enum_dA_da get_dA_da(const Dd_T q2_e, const Dd_T q1_e)
 // NOTE: one must remove dR_? after each updating of R. */
 static void R1_R2_derivative(Patch_T *const patch)
 {
-  Field_T *dR1_dx = 0,
-          *dR1_dy = 0,
-          *dR2_dx = 0,
-          *dR2_dy = 0;
+  Field_T *dR1_dX = add_field("dR1_dX",0,patch,NO),
+          *dR1_dY = add_field("dR1_dY",0,patch,NO),
+          *dR2_dX = add_field("dR2_dX",0,patch,NO),
+          *dR2_dY = add_field("dR2_dY",0,patch,NO),
+          *dR1_dx = add_field("dR1_dx",0,patch,YES),
+          *dR1_dy = add_field("dR1_dy",0,patch,YES),
+          *dR2_dx = add_field("dR2_dx",0,patch,YES),
+          *dR2_dy = add_field("dR2_dy",0,patch,YES);
   Field_T *const R1 = patch->pool[Ind("R1_ProjectiveHemisphere")];
   Field_T *const R2 = patch->pool[Ind("R2_ProjectiveHemisphere")];
+  const unsigned *const n = patch->n;
+  unsigned i,j;
           
-  /* if there is no dR1_dx field */
-  if (LookUpField("dR1_dx",patch) == INT_MAX)
-  {
-    dR1_dx = add_field("dR1_dx",0,patch,NO);
-    dR1_dx->v = Partial_Derivative(R1,"x");
-  }
-  /* if there is no dR1_dy field */
-  if (LookUpField("dR1_dy",patch) == INT_MAX)
-  {
-    dR1_dy = add_field("dR1_dy",0,patch,NO);
-    dR1_dy->v = Partial_Derivative(R1,"y");
-  }
-  /* if there is no dR2_dx field */
-  if (LookUpField("dR2_dx",patch) == INT_MAX)
-  {
-    dR2_dx = add_field("dR2_dx",0,patch,NO);
-    dR2_dx->v = Partial_Derivative(R2,"x");
-  }
-  /* if there is no dR2_dy field */
-  if (LookUpField("dR2_dy",patch) == INT_MAX)
-  {
-    dR2_dy = add_field("dR2_dy",0,patch,NO);
-    dR2_dy->v = Partial_Derivative(R2,"y");
-  }
-
+  dR1_dX->v = Partial_Derivative(R1,"a");
+  dR1_dY->v = Partial_Derivative(R1,"b");
+  dR2_dX->v = Partial_Derivative(R2,"a");
+  dR2_dY->v = Partial_Derivative(R2,"b");
+    
+  for (i = 0; i < n[0]; ++i)
+    for (j = 0; j < n[1]; ++j)
+    {
+      unsigned p = L(n,i,j,0);
+      dR1_dx->v[p] = dR1_dX->v[p]*dq2_dq1(patch,_a_,_x_,p)+
+                     dR1_dY->v[p]*dq2_dq1(patch,_b_,_x_,p);
+      dR1_dy->v[p] = dR1_dX->v[p]*dq2_dq1(patch,_a_,_y_,p)+
+                     dR1_dY->v[p]*dq2_dq1(patch,_b_,_y_,p);
+      dR2_dx->v[p] = dR2_dX->v[p]*dq2_dq1(patch,_a_,_x_,p)+
+                     dR2_dY->v[p]*dq2_dq1(patch,_b_,_x_,p);
+      dR2_dy->v[p] = dR2_dX->v[p]*dq2_dq1(patch,_a_,_y_,p)+
+                     dR2_dY->v[p]*dq2_dq1(patch,_b_,_y_,p);
+      }
+                      
+  remove_field(dR1_dX);
+  remove_field(dR1_dY);
+  remove_field(dR2_dX);
+  remove_field(dR2_dY);
+  
+  patch->CoordSysInfo->dR1_dx = dR1_dx;
+  patch->CoordSysInfo->dR1_dy = dR1_dy;
+  patch->CoordSysInfo->dR2_dx = dR2_dx;
+  patch->CoordSysInfo->dR2_dy = dR2_dy; 
 }
 
 /* Jacobian transformation for dN/dX?.

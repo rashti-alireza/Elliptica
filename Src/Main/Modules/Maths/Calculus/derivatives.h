@@ -6,7 +6,6 @@
 #include "coordinates_lib.h"
 #include "utilities_lib.h"
 #include "maths_general_lib.h"
-//#include "maths_analytic_lib.h"
 
 /* methods of derivative */
 typedef enum METHOD_T
@@ -27,9 +26,12 @@ static Dd_T str2enum_direction(const char *const str);
 static double *take_spectral_derivative(Field_T *const f,const Dd_T  *const dir_e,const unsigned Ndir);
 static double *spectral_derivative_1stOrder(Field_T *const f,const Dd_T dir_e);
 static double *spectral_derivative_2ndOrder(Field_T *const f,const Dd_T dir_e);
-static double *derivative_Chebyshev_Tn_1stOrder(Field_T *const f,const Dd_T dir);
-static double *derivative_Chebyshev_Tn_2ndOrder(Field_T *const f,const Dd_T dir);
+static double *derivative_ChebyshevExtrema_Tn_1stOrder(Field_T *const f,const Dd_T dir);
+static double *derivative_ChebyshevNodes_Tn_1stOrder(Field_T *const f,const Dd_T dir);
+static double *derivative_ChebyshevExtrema_Tn_2ndOrder(Field_T *const f,const Dd_T dir);
+static double *derivative_ChebyshevNodes_Tn_2ndOrder(Field_T *const f,const Dd_T dir);
 static double *make_1Dcollocation_ChebExtrema(const unsigned N);
+static double *make_1Dcollocation_ChebNodes(const unsigned N);
 static void get_dp_1stOrder(const Patch_T *const patch,SpecDerivative_Func_T **func,const Dd_T dir,Dd_T *dp);
 static void get_dp_2ndOrder(const Patch_T *const patch,SpecDerivative_Func_T **func,const Dd_T dir,Dd_T *dp);
 static void get_dependency(const Patch_T *const patch,const Dd_T dir, unsigned *dep);

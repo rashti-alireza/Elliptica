@@ -68,6 +68,7 @@ static double dX_du_SS(const double u, const double w);
 static double dX_dw_SS(const double u, const double w);
 static double dZ_du_SS(const double u, const double w);
 static double dZ_dw_SS(const double u, const double w);
+double dq2_dq1(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const unsigned p);
 
 
 

@@ -293,7 +293,7 @@ static void populate_left_outermost(Grid_T *const grid,const unsigned pn,const u
   /* collocation */
   patch->collocation[0] = Chebyshev_Nodes;
   patch->collocation[1] = Chebyshev_Extrema;
-  patch->collocation[2] = Chebyshev_Nodes;
+  patch->collocation[2] = Chebyshev_Extrema;
   
   /* basis */
   patch->basis[0] = Chebyshev_Tn_BASIS;
@@ -378,7 +378,7 @@ static void populate_right_outermost(Grid_T *const grid,const unsigned pn,const 
   patch->coordsys = StereographicSphereRight;
   
   /* collocation */
-  patch->collocation[0] = Chebyshev_Nodes;
+  patch->collocation[0] = Chebyshev_Extrema;
   patch->collocation[1] = Chebyshev_Extrema;
   patch->collocation[2] = Chebyshev_Nodes;
   
@@ -451,6 +451,8 @@ static void populate_left_NS_hemisphere_up(Grid_T *const grid,const unsigned pn)
   R1_array = GetParameterArrayF_E(var);
   sprintf(var,"grid%u_left_NS_R2_up",grid->gn);
   R2_array = GetParameterArrayF_E(var);
+  patch->CoordSysInfo->R1_f = R1;
+  patch->CoordSysInfo->R2_f = R2;
   
   R1->v = alloc_double(patch->nn);
   R2->v = alloc_double(patch->nn);
@@ -477,7 +479,7 @@ static void populate_left_NS_hemisphere_up(Grid_T *const grid,const unsigned pn)
   
   /* collocation */
   patch->collocation[0] = Chebyshev_Nodes;
-  patch->collocation[1] = Chebyshev_Nodes;
+  patch->collocation[1] = Chebyshev_Extrema;
   patch->collocation[2] = Chebyshev_Extrema;
   
   /* basis */
@@ -549,6 +551,8 @@ static void populate_left_NS_hemisphere_down(Grid_T *const grid,const unsigned p
   R1_array = GetParameterArrayF_E(var);
   sprintf(var,"grid%u_left_NS_R2_down",grid->gn);
   R2_array = GetParameterArrayF_E(var);
+  patch->CoordSysInfo->R1_f = R1;
+  patch->CoordSysInfo->R2_f = R2;
   
   R1->v = alloc_double(patch->nn);
   R2->v = alloc_double(patch->nn);
@@ -574,7 +578,7 @@ static void populate_left_NS_hemisphere_down(Grid_T *const grid,const unsigned p
   patch->coordsys = ProjectiveHemisphereDown;
   
 /* collocation */
-  patch->collocation[0] = Chebyshev_Nodes;
+  patch->collocation[0] = Chebyshev_Extrema;
   patch->collocation[1] = Chebyshev_Nodes;
   patch->collocation[2] = Chebyshev_Extrema;
   
@@ -647,6 +651,8 @@ static void populate_right_NS_hemisphere_up(Grid_T *const grid,const unsigned pn
   R1_array = GetParameterArrayF_E(var);
   sprintf(var,"grid%u_right_NS_R2_up",grid->gn);
   R2_array = GetParameterArrayF_E(var);
+  patch->CoordSysInfo->R1_f = R1;
+  patch->CoordSysInfo->R2_f = R2;
   
   R1->v = alloc_double(patch->nn);
   R2->v = alloc_double(patch->nn);
@@ -673,7 +679,7 @@ static void populate_right_NS_hemisphere_up(Grid_T *const grid,const unsigned pn
   
 /* collocation */
   patch->collocation[0] = Chebyshev_Nodes;
-  patch->collocation[1] = Chebyshev_Nodes;
+  patch->collocation[1] = Chebyshev_Extrema;
   patch->collocation[2] = Chebyshev_Extrema;
   
   /* basis */
@@ -745,6 +751,8 @@ static void populate_right_NS_hemisphere_down(Grid_T *const grid,const unsigned 
   R1_array = GetParameterArrayF_E(var);
   sprintf(var,"grid%u_right_NS_R2_down",grid->gn);
   R2_array = GetParameterArrayF_E(var);
+  patch->CoordSysInfo->R1_f = R1;
+  patch->CoordSysInfo->R2_f = R2;
   
   R1->v = alloc_double(patch->nn);
   R2->v = alloc_double(patch->nn);
@@ -770,7 +778,7 @@ static void populate_right_NS_hemisphere_down(Grid_T *const grid,const unsigned 
   patch->coordsys = ProjectiveHemisphereDown;
   
  /* collocation */
-  patch->collocation[0] = Chebyshev_Nodes;
+  patch->collocation[0] = Chebyshev_Extrema;
   patch->collocation[1] = Chebyshev_Nodes;
   patch->collocation[2] = Chebyshev_Extrema;
   
@@ -843,6 +851,8 @@ static void populate_left_NS_surrounding_up(Grid_T *const grid,const unsigned pn
   R2_const = GetParameterDoubleF_E(var);
   sprintf(var,"grid%u_left_NS_R2_up",grid->gn);
   R1_array = GetParameterArrayF_E(var);
+  patch->CoordSysInfo->R1_f = R1;
+  patch->CoordSysInfo->R2_f = R2;
   
   R1->v = alloc_double(patch->nn);
   R2->v = alloc_double(patch->nn);
@@ -869,7 +879,7 @@ static void populate_left_NS_surrounding_up(Grid_T *const grid,const unsigned pn
   
  /* collocation */
   patch->collocation[0] = Chebyshev_Nodes;
-  patch->collocation[1] = Chebyshev_Nodes;
+  patch->collocation[1] = Chebyshev_Extrema;
   patch->collocation[2] = Chebyshev_Extrema;
   
   /* basis */
@@ -941,6 +951,8 @@ static void populate_left_NS_surrounding_down(Grid_T *const grid,const unsigned 
   R2_const = GetParameterDoubleF_E(var);
   sprintf(var,"grid%u_left_NS_R2_down",grid->gn);
   R1_array = GetParameterArrayF_E(var);
+  patch->CoordSysInfo->R1_f = R1;
+  patch->CoordSysInfo->R2_f = R2;
   
   R1->v = alloc_double(patch->nn);
   R2->v = alloc_double(patch->nn);
@@ -966,7 +978,7 @@ static void populate_left_NS_surrounding_down(Grid_T *const grid,const unsigned 
   patch->coordsys = ProjectiveHemisphereDown;
   
  /* collocation */
-  patch->collocation[0] = Chebyshev_Nodes;
+  patch->collocation[0] = Chebyshev_Extrema;
   patch->collocation[1] = Chebyshev_Nodes;
   patch->collocation[2] = Chebyshev_Extrema;
   
@@ -1039,6 +1051,8 @@ static void populate_right_NS_surrounding_up(Grid_T *const grid,const unsigned p
   R2_const = GetParameterDoubleF_E(var);
   sprintf(var,"grid%u_right_NS_R2_up",grid->gn);
   R1_array = GetParameterArrayF_E(var);
+  patch->CoordSysInfo->R1_f = R1;
+  patch->CoordSysInfo->R2_f = R2;
   
   R1->v = alloc_double(patch->nn);
   R2->v = alloc_double(patch->nn);
@@ -1065,7 +1079,7 @@ static void populate_right_NS_surrounding_up(Grid_T *const grid,const unsigned p
   
  /* collocation */
   patch->collocation[0] = Chebyshev_Nodes;
-  patch->collocation[1] = Chebyshev_Nodes;
+  patch->collocation[1] = Chebyshev_Extrema;
   patch->collocation[2] = Chebyshev_Extrema;
   
   /* basis */
@@ -1137,6 +1151,8 @@ static void populate_right_NS_surrounding_down(Grid_T *const grid,const unsigned
   R2_const = GetParameterDoubleF_E(var);
   sprintf(var,"grid%u_right_NS_R2_down",grid->gn);
   R1_array = GetParameterArrayF_E(var);
+  patch->CoordSysInfo->R1_f = R1;
+  patch->CoordSysInfo->R2_f = R2;
   
   R1->v = alloc_double(patch->nn);
   R2->v = alloc_double(patch->nn);
@@ -1162,7 +1178,7 @@ static void populate_right_NS_surrounding_down(Grid_T *const grid,const unsigned
   patch->coordsys = ProjectiveHemisphereDown;
   
  /* collocation */
-  patch->collocation[0] = Chebyshev_Nodes;
+  patch->collocation[0] = Chebyshev_Extrema;
   patch->collocation[1] = Chebyshev_Nodes;
   patch->collocation[2] = Chebyshev_Extrema;
   
@@ -1943,7 +1959,7 @@ Patch_T make_temp_patch(const Patch_T *const patch)
   //tmp_patch.pn = UINT_MAX;
   tmp_patch.grid = 0;
   tmp_patch.name = 0;
-  tmp_patch.node = 0;
+  //tmp_patch.node = patch->node;
   tmp_patch.interface = 0;
   tmp_patch.pool = 0;
   tmp_patch.solving_man = 0;

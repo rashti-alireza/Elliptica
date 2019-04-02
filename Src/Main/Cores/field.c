@@ -563,6 +563,11 @@ static double *find_1d_coeffs_in_patch(Field_T *const f,const unsigned dir)
       coeffs_patch_Tn_Extrema_1d(f,dir);
       add_Tinfo(f,dir,Chebyshev_Tn_BASIS,Chebyshev_Extrema);
     }
+    else if (collocation == Chebyshev_Nodes)
+    {
+      coeffs_patch_Tn_Nodes_1d(f,dir);
+      add_Tinfo(f,dir,Chebyshev_Tn_BASIS,Chebyshev_Nodes);
+    }
     else
       abortEr("There is no such COLLOCATION defined for this function.\n");
   }/* end of if(basis == Chebyshev_Tn_BASIS) */
@@ -678,6 +683,104 @@ static void coeffs_patch_Tn_Extrema_1d(Field_T *const f,const unsigned dir)
   free(out);
   free(in);
 }
+
+/* finding coeffs in in patch For Tn basis 
+// with Chebyshev nodes collocation.
+*/
+static void coeffs_patch_Tn_Nodes_1d(Field_T *const f,const unsigned dir)
+{
+  assert(f->v2);
+  assert(f->v);
+  Fourier_Transformation_1d_F *FourierTrans;
+  double *const coeffs = f->v2;
+  const double *const values = f->v;
+  double *out, *in;
+  const unsigned *n = f->patch->n;
+  const unsigned B = n[(dir+1)%3]*n[3-dir-(dir+1)%3];
+  unsigned l,i,j,k,s;
+  out = alloc_double(n[dir]);
+  in = alloc_double(n[dir]);
+  
+  if (strstr_i(GetParameterS("Fourier_Transformation_Method"),"RFT"))
+    FourierTrans = rft_1d_ChebyshevNodes_coeffs;
+  else
+    abortEr("No such Fourier_Transformation_Method defined for this function.\n");
+  
+  if (dir == 0)
+  {
+    for (s = 0; s < B; ++s)
+    {
+      /* s = k+n2*j */
+      j = s/n[2];
+      k = s%n[2];
+      
+      for (i = 0; i < n[dir]; ++i)
+      {
+        l = L(n,i,j,k);
+        in[i] = values[l];
+      }
+      FourierTrans(in,out,n[dir]);
+      
+      for (i = 0; i < n[dir]; ++i)
+      {
+        l = L(n,i,j,k);
+        coeffs[l] = out[i];
+      }
+    }
+  }/* end of if (dir == 0) */
+  
+  else if (dir == 1)
+  {
+    for (s = 0; s < B; ++s)
+    {
+      /* s = k+n2*i */
+      i = s/n[2];
+      k = s%n[2];
+      
+      for (j = 0; j < n[dir]; ++j)
+      {
+        l = L(n,i,j,k);
+        in[j] = values[l];
+      }
+      FourierTrans(in,out,n[dir]);
+      
+      for (j = 0; j < n[dir]; ++j)
+      {
+        l = L(n,i,j,k);
+        coeffs[l] = out[j];
+      }
+    }
+  }/* end of if (dir == 1) */
+  
+  else if (dir == 2)
+  {
+    for (s = 0; s < B; ++s)
+    {
+      /* s = j+n1*i */
+      i = s/n[1];
+      j = s%n[1];
+      
+      for (k = 0; k < n[dir]; ++k)
+      {
+        l = L(n,i,j,k);
+        in[k] = values[l];
+      }
+      FourierTrans(in,out,n[dir]);
+      
+      for (k = 0; k < n[dir]; ++k)
+      {
+        l = L(n,i,j,k);
+        coeffs[l] = out[k];
+      }
+    }
+  }/* end of if (dir == 2) */
+  else
+    abortEr("direction must be 0,1 or 2.\n");
+    
+  free(out);
+  free(in);
+}
+
 
 /* adding Transformation info in f->info.
 // for each transformation the print format PR_FORMAT is
