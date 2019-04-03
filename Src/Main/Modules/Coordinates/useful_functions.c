@@ -289,19 +289,24 @@ static int x_of_X_SSRight_coord(double *const x,const double *const X,const Patc
 {
   const double R1 = patch->CoordSysInfo->R1;
   const double R2 = patch->CoordSysInfo->R2;
-  const double R0 = patch->c[1];
+  const double *const c = patch->c;
+  const double R0 = c[1];
   double u,w;
-  double r,R,A,c;
+  double r,R,A,Co;
   
   r = 0.5*X[1]*(R2-R1)+0.5*(R2+R1);
   R = sqrt(SQR(r)-SQR(R0)); assert(!isnan(R));
   u = R*X[0]*sqrt(1-0.5*SQR(X[2])); assert(!isnan(u));
   w = R*X[2]*sqrt(1-0.5*SQR(X[0])); assert(!isnan(w));
-  A = SQR(u/(R0-r))+SQR(w/(R0-r))+1;
-  x[1] = r*(2/A-1)+R0;
-  c = 2*r/(A*(r-R0));
-  x[0] = c*u;
-  x[2] = c*w;
+  A = SQR(u/(r-R0))+SQR(w/(r-R0))+1;
+  x[1] = r*(2/A-1);
+  Co = 2*r/(A*(r-R0));
+  x[0] = Co*u;
+  x[2] = Co*w;
+  
+  x[0] += c[0];
+  x[1] += c[1];
+  x[2] += c[2];
   
   return 1;
 }
@@ -314,19 +319,24 @@ static int x_of_X_SSLeft_coord(double *const x,const double *const X,const Patch
 {
   const double R1 = patch->CoordSysInfo->R1;
   const double R2 = patch->CoordSysInfo->R2;
-  const double R0 = fabs(patch->c[1]);
+  const double *const c = patch->c;
+  const double R0 = -c[1];
   double u,w;
-  double r,R,A,c;
+  double r,R,A,Co;
   
   r = 0.5*X[1]*(R2-R1)+0.5*(R2+R1);
   R = sqrt(SQR(r)-SQR(R0)); assert(!isnan(R));
   u = R*X[0]*sqrt(1-0.5*SQR(X[2])); assert(!isnan(u));
   w = R*X[2]*sqrt(1-0.5*SQR(X[0])); assert(!isnan(w));
-  A = SQR(u/(R0-r))+SQR(w/(R0-r))+1;
-  x[1] = -r*(2/A-1)-R0;
-  c = 2*r/(A*(r-R0));
-  x[0] = c*u;
-  x[2] = c*w;
+  A = SQR(u/(r-R0))+SQR(w/(r-R0))+1;
+  x[1] = -r*(2/A-1);
+  Co = 2*r/(A*(r-R0));
+  x[0] = Co*u;
+  x[2] = Co*w;
+  
+  x[0] += c[0];
+  x[1] += c[1];
+  x[2] += c[2];  
   
   return 1;
 }

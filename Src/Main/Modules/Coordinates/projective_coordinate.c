@@ -104,7 +104,8 @@ void make_nodes_StereographicSphereLeft_coord(Patch_T *const patch)
 {
   struct Collocation_s coll_s[3] = {0};
   const unsigned U = patch->nn;
-  const double R0 = fabs(patch->c[1]);
+  const double *const c = patch->c;
+  const double R0 = -c[1];
   const double R1 = patch->CoordSysInfo->R1;
   const double R2 = patch->CoordSysInfo->R2;
   const unsigned *const n = patch->n;
@@ -119,7 +120,7 @@ void make_nodes_StereographicSphereLeft_coord(Patch_T *const patch)
     double *X = alloc_double(3);
     double *x = patch->node[l]->x;
     double u,w;
-    double r,R,A,c;
+    double r,R,A,Co;
     
     IJK(l,n,&i,&j,&k);
     X[0] = point_value(i,&coll_s[0]);
@@ -131,12 +132,15 @@ void make_nodes_StereographicSphereLeft_coord(Patch_T *const patch)
     R = sqrt(SQR(r)-SQR(R0)); assert(!isnan(R));
     u = R*X[0]*sqrt(1-0.5*SQR(X[2])); assert(!isnan(u));
     w = R*X[2]*sqrt(1-0.5*SQR(X[0])); assert(!isnan(w));
-    A = SQR(u/(R0-r))+SQR(w/(R0-r))+1;
-    x[1] = -r*(2/A-1)-R0;
-    c = 2*r/(A*(r-R0));
-    x[0] = c*u;
-    x[2] = c*w;
+    A = SQR(u/(r-R0))+SQR(w/(r-R0))+1;
+    x[1] = -r*(2/A-1);
+    Co = 2*r/(A*(r-R0));
+    x[0] = Co*u;
+    x[2] = Co*w;
     
+    x[0] += c[0];
+    x[1] += c[1];
+    x[2] += c[2];
   }
 }
 
@@ -146,10 +150,11 @@ void make_nodes_StereographicSphereRight_coord(Patch_T *const patch)
 {
   struct Collocation_s coll_s[3] = {0};
   const unsigned U = patch->nn;
-  const unsigned *const n = patch->n;
-  const double R0 = patch->c[1];
+  const double *const c = patch->c;
+  const double R0 = c[1];
   const double R1 = patch->CoordSysInfo->R1;
   const double R2 = patch->CoordSysInfo->R2;
+  const unsigned *const n = patch->n;
   unsigned i,j,k,l;
   
   initialize_collocation_struct(patch,&coll_s[0],0);
@@ -161,7 +166,7 @@ void make_nodes_StereographicSphereRight_coord(Patch_T *const patch)
     double *X = alloc_double(3);
     double *x = patch->node[l]->x;
     double u,w;
-    double r,R,A,c;
+    double r,R,A,Co;
     
     IJK(l,n,&i,&j,&k);
     X[0] = point_value(i,&coll_s[0]);
@@ -173,12 +178,15 @@ void make_nodes_StereographicSphereRight_coord(Patch_T *const patch)
     R = sqrt(SQR(r)-SQR(R0)); assert(!isnan(R));
     u = R*X[0]*sqrt(1-0.5*SQR(X[2])); assert(!isnan(u));
     w = R*X[2]*sqrt(1-0.5*SQR(X[0])); assert(!isnan(w));
-    A = SQR(u/(R0-r))+SQR(w/(R0-r))+1;
-    x[1] = r*(2/A-1)+R0;
-    c = 2*r/(A*(r-R0));
-    x[0] = c*u;
-    x[2] = c*w;
+    A = SQR(u/(r-R0))+SQR(w/(r-R0))+1;
+    x[1] = r*(2/A-1);
+    Co = 2*r/(A*(r-R0));
+    x[0] = Co*u;
+    x[2] = Co*w;
     
+    x[0] += c[0];
+    x[1] += c[1];
+    x[2] += c[2];
   }
 }
 
@@ -237,10 +245,11 @@ static double dNi_dxj_ProjectiveHemisphere(Patch_T *const patch, const Dd_T Ni, 
   double J = 0;/* dX?/dx? */
   double a[3];/* Cartesian value of X */
   int rx_of_X = x_of_X(a,X,patch);/* return value of function */
+  const double *const c = patch->c;
   const double 
-         x = a[0],
-         y = a[1],
-         z = a[2],
+         x = a[0]-c[0],
+         y = a[1]-c[1],
+         z = a[2]-c[2],
          r2 = SQR(x)+SQR(y)+SQR(z),
          r1 = sqrt(r2);
   double R1 = 0;
@@ -401,10 +410,11 @@ double JT_ProjectiveHemisphere(Patch_T *const patch,const Dd_T q2_e, const Dd_T 
   
   double J = 0;
   enum enum_dA_da dA_da = dA_da_UNDEFINED;
+  const double *const c = patch->c;
   const double 
-         x = patch->node[p]->x[0],
-         y = patch->node[p]->x[1],
-         z = patch->node[p]->x[2],
+         x = patch->node[p]->x[0]-c[0],
+         y = patch->node[p]->x[1]-c[1],
+         z = patch->node[p]->x[2]-c[2],
          r2 = SQR(x)+SQR(y)+SQR(z),
          r1 = sqrt(r2);
   const unsigned *const n = patch->n;
@@ -544,13 +554,14 @@ double JT_StereographicSphere_Left(Patch_T *const patch,const Dd_T q2_e, const D
   
   double J = 0;
   enum enum_dA_da dA_da = dA_da_UNDEFINED;
+  const double *const c = patch->c;
   const double 
-         x = patch->node[p]->x[0],
-         y = patch->node[p]->x[1],
-         z = patch->node[p]->x[2],
+         x = patch->node[p]->x[0]-c[0],
+         y = patch->node[p]->x[1]-c[1],
+         z = patch->node[p]->x[2]-c[2],
          r2 = SQR(x)+SQR(y)+SQR(z),
          r1 = sqrt(r2),
-         R0 = fabs(patch->c[1]),
+         R0 = -c[1],
          R  = sqrt(r2-SQR(R0));
   double R1 = 0;
   double R2 = 0;
@@ -602,7 +613,9 @@ double JT_StereographicSphere_Left(Patch_T *const patch,const Dd_T q2_e, const D
       J = dX_du_SS(x*S,z*S)*du_dx+dX_dw_SS(x*S,z*S)*dw_dx;
       
       if (fpclassify(J) == FP_NAN || fpclassify(J) == FP_INFINITE)
+      {
         abortEr("Jacobian is messed up.");
+      }
     break;
     case da_dy:
       du_dy = x*dS_dy;
@@ -680,10 +693,11 @@ double JT_StereographicSphere_Right(Patch_T *const patch,const Dd_T q2_e, const 
   
   double J = 0;
   enum enum_dA_da dA_da = dA_da_UNDEFINED;
+  const double *const c = patch->c;
   const double 
-         x = patch->node[p]->x[0],
-         y = patch->node[p]->x[1],
-         z = patch->node[p]->x[2],
+         x = patch->node[p]->x[0]-c[0],
+         y = patch->node[p]->x[1]-c[1],
+         z = patch->node[p]->x[2]-c[2],
          r2 = SQR(x)+SQR(y)+SQR(z),
          r1 = sqrt(r2),
          R0 = fabs(patch->c[1]),
@@ -806,10 +820,11 @@ static double dNi_dxj_StereographicSphereRight(Patch_T *const patch, const Dd_T 
   double J = 0;/* dX?/dx? */
   double a[3];/* Cartesian value of X */
   int rx_of_X = x_of_X(a,X,patch);/* return value of function */
+  const double *const c = patch->c;
   const double 
-         x = a[0],
-         y = a[1],
-         z = a[2],
+         x = a[0]-c[0],
+         y = a[1]-c[1],
+         z = a[2]-c[2],
          r2 = SQR(x)+SQR(y)+SQR(z),
          r1 = sqrt(r2),
          R0 = fabs(patch->c[1]),
@@ -947,10 +962,11 @@ static double dNi_dxj_StereographicSphereLeft(Patch_T *const patch, const Dd_T N
   double J = 0;/* dX?/dx? */
   double a[3];/* Cartesian value of X */
   int rx_of_X = x_of_X(a,X,patch);/* return value of function */
+  const double *const c = patch->c;
   const double 
-         x = a[0],
-         y = a[1],
-         z = a[2],
+         x = a[0]-c[0],
+         y = a[1]-c[1],
+         z = a[2]-c[2],
          r2 = SQR(x)+SQR(y)+SQR(z),
          r1 = sqrt(r2),
          R0 = fabs(patch->c[1]),
