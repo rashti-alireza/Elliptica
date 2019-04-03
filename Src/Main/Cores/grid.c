@@ -170,9 +170,9 @@ static void fill_patches_Cartesian_grid(Grid_T *const grid)
     patch->coordsys = Cartesian;
     
     /* collocation */
-    patch->collocation[0] = get_collocation(GetParameterS_E("collocation_a"));
-    patch->collocation[1] = get_collocation(GetParameterS_E("collocation_b"));
-    patch->collocation[2] = get_collocation(GetParameterS_E("collocation_c"));
+    patch->collocation[0] = get_collocation(GetParameterS("collocation_a"));
+    patch->collocation[1] = get_collocation(GetParameterS("collocation_b"));
+    patch->collocation[2] = get_collocation(GetParameterS("collocation_c"));
   
     /* check for override */
     make_keyword_parameter(&ret,name,"collocation");
@@ -191,9 +191,9 @@ static void fill_patches_Cartesian_grid(Grid_T *const grid)
     assert(patch->collocation[2] != UNDEFINED_COLLOCATION);
     
     /* basis */
-    patch->basis[0] = get_basis(GetParameterS_E("basis_a"));
-    patch->basis[1] = get_basis(GetParameterS_E("basis_b"));
-    patch->basis[2] = get_basis(GetParameterS_E("basis_c"));
+    patch->basis[0] = get_basis(GetParameterS("basis_a"));
+    patch->basis[1] = get_basis(GetParameterS("basis_b"));
+    patch->basis[2] = get_basis(GetParameterS("basis_c"));
   
     /* check for override */
     make_keyword_parameter(&ret,name,"basis");

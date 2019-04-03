@@ -33,7 +33,7 @@ static double *derivative_ChebyshevNodes_Tn_2ndOrder(Field_T *const f,const Dd_T
 static double *make_1Dcollocation_ChebExtrema(const unsigned N);
 static double *make_1Dcollocation_ChebNodes(const unsigned N);
 static void get_dp_1stOrder(const Patch_T *const patch,SpecDerivative_Func_T **func,const Dd_T dir,Dd_T *dp);
-static void get_dp_2ndOrder(const Patch_T *const patch,SpecDerivative_Func_T **func,const Dd_T dir,Dd_T *dp);
+static int get_dp_2ndOrder(const Patch_T *const patch,SpecDerivative_Func_T **func,const Dd_T dir,Dd_T *dp);
 static void get_dependency(const Patch_T *const patch,const Dd_T dir, unsigned *dep);
 static void get_SpecDerivative_func_1stOrder(const Patch_T *const patch,SpecDerivative_Func_T **func);
 static void get_SpecDerivative_func_2ndOrder(const Patch_T *const patch,SpecDerivative_Func_T **func);

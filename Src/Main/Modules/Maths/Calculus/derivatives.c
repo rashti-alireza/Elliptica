@@ -138,7 +138,9 @@ static unsigned IsSecondOrderFormula(Field_T *const f,const Dd_T *const dir_e,co
   else
   {
     get_SpecDerivative_func_2ndOrder(f->patch,df);
-    get_dp_2ndOrder(f->patch,df,dir_e[0],dp);
+    c = get_dp_2ndOrder(f->patch,df,dir_e[0],dp);
+    if (c > 1)/* if it depends more than 1 variable */
+      return 0;
     
     c = -1;
     for (d = 0; d < 3; ++d)
@@ -221,28 +223,41 @@ static void get_SpecDerivative_func_2ndOrder(const Patch_T *const patch,SpecDeri
 
 /* based on second order spectral derivative function and dependencies 
 // it finds the Dd_T dp used for direction of partial derivative.
+// also it returns the number of dependecy of dir on a,b,c, which obviously
+// if it greaters than 1, it means that 2nd order formula is not applicable.
+// ->return value: number of dependency
 */
-static void get_dp_2ndOrder(const Patch_T *const patch,SpecDerivative_Func_T **func,const Dd_T dir,Dd_T *dp)
+static int get_dp_2ndOrder(const Patch_T *const patch,SpecDerivative_Func_T **func,const Dd_T dir,Dd_T *dp)
 {
   unsigned depend[3];
   unsigned i;
+  int cnt;
   
   get_dependency(patch,dir,depend);
   
+  cnt = 0;
   for (i = 0; i < 3; ++i)
   {
     dp[i] = UNDEFINED_DIR;
     if (depend[i])/* if this direction depends on _a_,_b_,_c_ */
     {
       if (func[i] == derivative_ChebyshevExtrema_Tn_2ndOrder)
+      {
         dp[i] = i;/* means _N0_or _N1_or _N2_ */
+        cnt++;
+      }
       else if (func[i] == derivative_ChebyshevNodes_Tn_2ndOrder)
+      {
         dp[i] = i;/* means _N0_or _N1_or _N2_ */
+        cnt++;
+      }
       else
         abortEr("There is no such derivative function defined for this function.\n");
 
     }
   }
+  
+  return cnt;
 }
 
 /* taking second order 3-D spectral derivative in 
@@ -266,7 +281,7 @@ static double *spectral_derivative_2ndOrder(Field_T *const f,const Dd_T dir_e)
   SpecDerivative_Func_T *df[3];/* spectral derivative function in each direction */
   Dd_T dp[3];/* see above explanation */
   double *df_dp[3];
-  unsigned nn = total_nodes_patch(patch);
+  unsigned nn = patch->nn;
   unsigned i ,c;
   Dd_T d;
   Flag_T flg[3];
