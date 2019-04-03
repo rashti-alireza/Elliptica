@@ -610,7 +610,7 @@ double JT_StereographicSphere_Left(Patch_T *const patch,const Dd_T q2_e, const D
     case da_dx:
       du_dx = x*dS_dx +S;
       dw_dx = z*dS_dx;
-      J = dX_du_SS(x*S,z*S)*du_dx+dX_dw_SS(x*S,z*S)*dw_dx;
+      J = dX_du(x*S,z*S)*du_dx+dX_dw(x*S,z*S)*dw_dx;
       
       if (fpclassify(J) == FP_NAN || fpclassify(J) == FP_INFINITE)
       {
@@ -620,7 +620,7 @@ double JT_StereographicSphere_Left(Patch_T *const patch,const Dd_T q2_e, const D
     case da_dy:
       du_dy = x*dS_dy;
       dw_dy = z*dS_dy;
-      J = dX_du_SS(x*S,z*S)*du_dy+dX_dw_SS(x*S,z*S)*dw_dy;
+      J = dX_du(x*S,z*S)*du_dy+dX_dw(x*S,z*S)*dw_dy;
       
       if (fpclassify(J) == FP_NAN || fpclassify(J) == FP_INFINITE)
         abortEr("Jacobian is messed up.");
@@ -628,7 +628,7 @@ double JT_StereographicSphere_Left(Patch_T *const patch,const Dd_T q2_e, const D
     case da_dz:
       du_dz = x*dS_dz;
       dw_dz = z*dS_dz+S;
-      J = dX_du_SS(x*S,z*S)*du_dz+dX_dw_SS(x*S,z*S)*dw_dz;
+      J = dX_du (x*S,z*S)*du_dz+dX_dw (x*S,z*S)*dw_dz;
       
       if (fpclassify(J) == FP_NAN || fpclassify(J) == FP_INFINITE)
         abortEr("Jacobian is messed up.");
@@ -645,7 +645,7 @@ double JT_StereographicSphere_Left(Patch_T *const patch,const Dd_T q2_e, const D
     case dc_dx:
       du_dx = x*dS_dx +S;
       dw_dx = z*dS_dx;
-      J = dZ_du_SS(x*S,z*S)*du_dx+dZ_dw_SS(x*S,z*S)*dw_dx;
+      J = dZ_du (x*S,z*S)*du_dx+dZ_dw (x*S,z*S)*dw_dx;
       
       if (fpclassify(J) == FP_NAN || fpclassify(J) == FP_INFINITE)
         abortEr("Jacobian is messed up.");
@@ -653,7 +653,7 @@ double JT_StereographicSphere_Left(Patch_T *const patch,const Dd_T q2_e, const D
     case dc_dy:
       du_dy = x*dS_dy;
       dw_dy = z*dS_dy;
-      J = dZ_du_SS(x*S,z*S)*du_dy+dZ_dw_SS(x*S,z*S)*dw_dy;
+      J = dZ_du (x*S,z*S)*du_dy+dZ_dw (x*S,z*S)*dw_dy;
       
       if (fpclassify(J) == FP_NAN || fpclassify(J) == FP_INFINITE)
         abortEr("Jacobian is messed up."); 
@@ -661,7 +661,7 @@ double JT_StereographicSphere_Left(Patch_T *const patch,const Dd_T q2_e, const D
     case dc_dz:
       du_dz = x*dS_dz;
       dw_dz = z*dS_dz+S;
-      J = dZ_du_SS(x*S,z*S)*du_dz+dZ_dw_SS(x*S,z*S)*dw_dz;
+      J = dZ_du (x*S,z*S)*du_dz+dZ_dw (x*S,z*S)*dw_dz;
             
       if (fpclassify(J) == FP_NAN || fpclassify(J) == FP_INFINITE)
         abortEr("Jacobian is messed up.");
@@ -700,15 +700,15 @@ double JT_StereographicSphere_Right(Patch_T *const patch,const Dd_T q2_e, const 
          z = patch->node[p]->x[2]-c[2],
          r2 = SQR(x)+SQR(y)+SQR(z),
          r1 = sqrt(r2),
-         R0 = fabs(patch->c[1]),
+         R0 = c[1],
          R  = sqrt(r2-SQR(R0));
   double R1 = 0;
   double R2 = 0;
   double S;
   double dS_dx = 0,
          dS_dy = 0,
-         dS_dz = 0; 
-  double du_dx = 0,
+         dS_dz = 0,
+         du_dx = 0,
          du_dy = 0,
          du_dz = 0,
          dw_dx = 0,
@@ -724,32 +724,31 @@ double JT_StereographicSphere_Right(Patch_T *const patch,const Dd_T q2_e, const 
   }
   else if (q1_e == _x_)
   {
-    S = (r1-R0)/(R*(r1 + y-R0));
-    dS_dx = -((x*(Power(r2,1.5) + Power(R0,2)*(r1 + y) - R0*(2*r2 + r1*y)))/
-     (r1*Power(-Power(R0,2) + r2,1.5)*Power(-R0 + r1 + y,2)));
+    S = (r1-R0)/(R*(r1 + y));
+    dS_dx = -((x*(Power3(R0) + Power(r2,1.5) + Power2(R0)*y - R0*(2*r2 + r1*y)))/
+     (r1*Power(-Power2(R0) + r2,1.5)*Power2(r1 + y)));
   }
   else if (q1_e == _y_)
   {
-    S = (r1-R0)/(R*(r1 + y-R0));
-    dS_dy = (-Power(R0,3) - r2*(r1 + y) + Power(R0,2)*(r1 - y - Power(y,2)/r1) + 
-     R0*(Power(x,2) + 2*r1*y + 2*Power(y,2) + Power(z,2)))/
-   (Power(-Power(R0,2) + r2,1.5)*Power(-R0 + r1 + y,2));
+    S = (r1-R0)/(R*(r1 + y));
+    dS_dy = -(((-R0 + r1)*(-Power2(R0) + r2 - R0*y))/
+        (r1*Power(-Power2(R0) + r2,1.5)*(r1 + y)));
 
   }
   else if (q1_e == _z_)
   {
-    S = (r1-R0)/(R*(r1 + y-R0));
-    dS_dz =-(((Power(r2,1.5) + Power(R0,2)*(r1 + y) - R0*(2*r2 + r1*y))*z)/
-     (r1*Power(-Power(R0,2) + r2,1.5)*Power(-R0 + r1 + y,2)));
+    S = (r1-R0)/(R*(r1 + y));
+    dS_dz =-(((Power3(R0) + Power(r2,1.5) + Power2(R0)*y - R0*(2*r2 + r1*y))*z)/
+     (r1*Power(-Power2(R0) + r2,1.5)*Power2(r1 + y)));
   }
   
   dA_da = get_dA_da(q2_e,q1_e);
   switch(dA_da)
   {
     case da_dx:
-      du_dx = x*dS_dx +S;
+      du_dx = x*dS_dx+S;
       dw_dx = z*dS_dx;
-      J = dX_du_SS(x*S,z*S)*du_dx+dX_dw_SS(x*S,z*S)*dw_dx;
+      J = dX_du(x*S,z*S)*du_dx+dX_dw(x*S,z*S)*dw_dx;
       
       if (fpclassify(J) == FP_NAN || fpclassify(J) == FP_INFINITE)
         abortEr("Jacobian is messed up.");
@@ -757,7 +756,7 @@ double JT_StereographicSphere_Right(Patch_T *const patch,const Dd_T q2_e, const 
     case da_dy:
       du_dy = x*dS_dy;
       dw_dy = z*dS_dy;
-      J = dX_du_SS(x*S,z*S)*du_dy+dX_dw_SS(x*S,z*S)*dw_dy;
+      J = dX_du(x*S,z*S)*du_dy+dX_dw(x*S,z*S)*dw_dy;
       
       if (fpclassify(J) == FP_NAN || fpclassify(J) == FP_INFINITE)
         abortEr("Jacobian is messed up.");
@@ -765,7 +764,7 @@ double JT_StereographicSphere_Right(Patch_T *const patch,const Dd_T q2_e, const 
     case da_dz:
       du_dz = x*dS_dz;
       dw_dz = z*dS_dz+S;
-      J = dX_du_SS(x*S,z*S)*du_dz+dX_dw_SS(x*S,z*S)*dw_dz;
+      J = dX_du(x*S,z*S)*du_dz+dX_dw(x*S,z*S)*dw_dz;
       
       if (fpclassify(J) == FP_NAN || fpclassify(J) == FP_INFINITE)
         abortEr("Jacobian is messed up.");
@@ -782,7 +781,7 @@ double JT_StereographicSphere_Right(Patch_T *const patch,const Dd_T q2_e, const 
     case dc_dx:
       du_dx = x*dS_dx +S;
       dw_dx = z*dS_dx;
-      J = dZ_du_SS(x*S,z*S)*du_dx+dZ_dw_SS(x*S,z*S)*dw_dx;
+      J = dZ_du(x*S,z*S)*du_dx+dZ_dw(x*S,z*S)*dw_dx;
       
       if (fpclassify(J) == FP_NAN || fpclassify(J) == FP_INFINITE)
         abortEr("Jacobian is messed up.");
@@ -790,7 +789,7 @@ double JT_StereographicSphere_Right(Patch_T *const patch,const Dd_T q2_e, const 
     case dc_dy:
       du_dy = x*dS_dy;
       dw_dy = z*dS_dy;
-      J = dZ_du_SS(x*S,z*S)*du_dy+dZ_dw_SS(x*S,z*S)*dw_dy;
+      J = dZ_du(x*S,z*S)*du_dy+dZ_dw(x*S,z*S)*dw_dy;
       
       if (fpclassify(J) == FP_NAN || fpclassify(J) == FP_INFINITE)
         abortEr("Jacobian is messed up."); 
@@ -798,8 +797,8 @@ double JT_StereographicSphere_Right(Patch_T *const patch,const Dd_T q2_e, const 
     case dc_dz:
       du_dz = x*dS_dz;
       dw_dz = z*dS_dz+S;
-      J = dZ_du_SS(x*S,z*S)*du_dz+dZ_dw_SS(x*S,z*S)*dw_dz;
-            
+      J = dZ_du(x*S,z*S)*du_dz+dZ_dw(x*S,z*S)*dw_dz;
+      
       if (fpclassify(J) == FP_NAN || fpclassify(J) == FP_INFINITE)
         abortEr("Jacobian is messed up.");
       
@@ -807,7 +806,14 @@ double JT_StereographicSphere_Right(Patch_T *const patch,const Dd_T q2_e, const 
     default:
       abortEr("No such a enum!\n");
   }
-  
+  //test
+  //if (fabs(J) > 200)
+  //{
+    //printf("wow\n");
+  //}
+  //static unsigned iii = 0;
+  //fprintf(stderr,"%u %g\n",iii++,J);
+  //end
   return J;
 }
 
@@ -889,7 +895,7 @@ static double dNi_dxj_StereographicSphereRight(Patch_T *const patch, const Dd_T 
     case da_dx:
       du_dx = x*dS_dx +S;
       dw_dx = z*dS_dx;
-      J = dX_du_SS(x*S,z*S)*du_dx+dX_dw_SS(x*S,z*S)*dw_dx;
+      J = dX_du (x*S,z*S)*du_dx+dX_dw (x*S,z*S)*dw_dx;
       
       if (fpclassify(J) == FP_NAN || fpclassify(J) == FP_INFINITE)
         abortEr("Jacobian is messed up.");
@@ -897,7 +903,7 @@ static double dNi_dxj_StereographicSphereRight(Patch_T *const patch, const Dd_T 
     case da_dy:
       du_dy = x*dS_dy;
       dw_dy = z*dS_dy;
-      J = dX_du_SS(x*S,z*S)*du_dy+dX_dw_SS(x*S,z*S)*dw_dy;
+      J = dX_du (x*S,z*S)*du_dy+dX_dw (x*S,z*S)*dw_dy;
       
       if (fpclassify(J) == FP_NAN || fpclassify(J) == FP_INFINITE)
         abortEr("Jacobian is messed up.");
@@ -905,7 +911,7 @@ static double dNi_dxj_StereographicSphereRight(Patch_T *const patch, const Dd_T 
     case da_dz:
       du_dz = x*dS_dz;
       dw_dz = z*dS_dz+S;
-      J = dX_du_SS(x*S,z*S)*du_dz+dX_dw_SS(x*S,z*S)*dw_dz;
+      J = dX_du (x*S,z*S)*du_dz+dX_dw (x*S,z*S)*dw_dz;
       
       if (fpclassify(J) == FP_NAN || fpclassify(J) == FP_INFINITE)
         abortEr("Jacobian is messed up.");
@@ -922,7 +928,7 @@ static double dNi_dxj_StereographicSphereRight(Patch_T *const patch, const Dd_T 
     case dc_dx:
       du_dx = x*dS_dx +S;
       dw_dx = z*dS_dx;
-      J = dZ_du_SS(x*S,z*S)*du_dx+dZ_dw_SS(x*S,z*S)*dw_dx;
+      J = dZ_du (x*S,z*S)*du_dx+dZ_dw (x*S,z*S)*dw_dx;
       
       if (fpclassify(J) == FP_NAN || fpclassify(J) == FP_INFINITE)
         abortEr("Jacobian is messed up.");
@@ -930,7 +936,7 @@ static double dNi_dxj_StereographicSphereRight(Patch_T *const patch, const Dd_T 
     case dc_dy:
       du_dy = x*dS_dy;
       dw_dy = z*dS_dy;
-      J = dZ_du_SS(x*S,z*S)*du_dy+dZ_dw_SS(x*S,z*S)*dw_dy;
+      J = dZ_du (x*S,z*S)*du_dy+dZ_dw (x*S,z*S)*dw_dy;
       
       if (fpclassify(J) == FP_NAN || fpclassify(J) == FP_INFINITE)
         abortEr("Jacobian is messed up."); 
@@ -938,7 +944,7 @@ static double dNi_dxj_StereographicSphereRight(Patch_T *const patch, const Dd_T 
     case dc_dz:
       du_dz = x*dS_dz;
       dw_dz = z*dS_dz+S;
-      J = dZ_du_SS(x*S,z*S)*du_dz+dZ_dw_SS(x*S,z*S)*dw_dz;
+      J = dZ_du (x*S,z*S)*du_dz+dZ_dw (x*S,z*S)*dw_dz;
             
       if (fpclassify(J) == FP_NAN || fpclassify(J) == FP_INFINITE)
         abortEr("Jacobian is messed up.");
@@ -1032,7 +1038,7 @@ static double dNi_dxj_StereographicSphereLeft(Patch_T *const patch, const Dd_T N
     case da_dx:
       du_dx = x*dS_dx +S;
       dw_dx = z*dS_dx;
-      J = dX_du_SS(x*S,z*S)*du_dx+dX_dw_SS(x*S,z*S)*dw_dx;
+      J = dX_du (x*S,z*S)*du_dx+dX_dw (x*S,z*S)*dw_dx;
       
       if (fpclassify(J) == FP_NAN || fpclassify(J) == FP_INFINITE)
         abortEr("Jacobian is messed up.");
@@ -1040,7 +1046,7 @@ static double dNi_dxj_StereographicSphereLeft(Patch_T *const patch, const Dd_T N
     case da_dy:
       du_dy = x*dS_dy;
       dw_dy = z*dS_dy;
-      J = dX_du_SS(x*S,z*S)*du_dy+dX_dw_SS(x*S,z*S)*dw_dy;
+      J = dX_du (x*S,z*S)*du_dy+dX_dw (x*S,z*S)*dw_dy;
       
       if (fpclassify(J) == FP_NAN || fpclassify(J) == FP_INFINITE)
         abortEr("Jacobian is messed up.");
@@ -1048,7 +1054,7 @@ static double dNi_dxj_StereographicSphereLeft(Patch_T *const patch, const Dd_T N
     case da_dz:
       du_dz = x*dS_dz;
       dw_dz = z*dS_dz+S;
-      J = dX_du_SS(x*S,z*S)*du_dz+dX_dw_SS(x*S,z*S)*dw_dz;
+      J = dX_du (x*S,z*S)*du_dz+dX_dw (x*S,z*S)*dw_dz;
       
       if (fpclassify(J) == FP_NAN || fpclassify(J) == FP_INFINITE)
         abortEr("Jacobian is messed up.");
@@ -1065,7 +1071,7 @@ static double dNi_dxj_StereographicSphereLeft(Patch_T *const patch, const Dd_T N
     case dc_dx:
       du_dx = x*dS_dx +S;
       dw_dx = z*dS_dx;
-      J = dZ_du_SS(x*S,z*S)*du_dx+dZ_dw_SS(x*S,z*S)*dw_dx;
+      J = dZ_du (x*S,z*S)*du_dx+dZ_dw (x*S,z*S)*dw_dx;
       
       if (fpclassify(J) == FP_NAN || fpclassify(J) == FP_INFINITE)
         abortEr("Jacobian is messed up.");
@@ -1073,7 +1079,7 @@ static double dNi_dxj_StereographicSphereLeft(Patch_T *const patch, const Dd_T N
     case dc_dy:
       du_dy = x*dS_dy;
       dw_dy = z*dS_dy;
-      J = dZ_du_SS(x*S,z*S)*du_dy+dZ_dw_SS(x*S,z*S)*dw_dy;
+      J = dZ_du (x*S,z*S)*du_dy+dZ_dw (x*S,z*S)*dw_dy;
       
       if (fpclassify(J) == FP_NAN || fpclassify(J) == FP_INFINITE)
         abortEr("Jacobian is messed up."); 
@@ -1081,7 +1087,7 @@ static double dNi_dxj_StereographicSphereLeft(Patch_T *const patch, const Dd_T N
     case dc_dz:
       du_dz = x*dS_dz;
       dw_dz = z*dS_dz+S;
-      J = dZ_du_SS(x*S,z*S)*du_dz+dZ_dw_SS(x*S,z*S)*dw_dz;
+      J = dZ_du (x*S,z*S)*du_dz+dZ_dw (x*S,z*S)*dw_dz;
             
       if (fpclassify(J) == FP_NAN || fpclassify(J) == FP_INFINITE)
         abortEr("Jacobian is messed up.");
@@ -1408,36 +1414,49 @@ double interpolation_2d_PH(Field_T *const R, const Patch_T *const patch,const do
   return interp;
 }
 
-/* dX/du for Stereographic Sphere coord.
+/* dX/du for elliptical mapping used for projective coord.
 // ->return value: dX/du. */
-static double dX_du_SS(const double u, const double w)
+static double dX_du(const double u, const double v)
 {
-  return ((2*(Sqrt(2) - u))/Sqrt(2 - 2*Sqrt(2)*u + Power(u,2) - Power(w,2)) + 
-     (2*(Sqrt(2) + u))/Sqrt(2 + 2*Sqrt(2)*u + Power(u,2) - Power(w,2))
-     )/4.;
+  return ((2*(Sqrt2 - u))/
+      Sqrt(2 - 2*Sqrt2*u + 
+        Power2(u) - Power2(v)) + 
+     (2*(Sqrt2 + u))/
+      Sqrt(2 + 2*Sqrt2*u + 
+        Power2(u) - Power2(v)))/4.;
 }
 
-/* dX/dw for Stereographic Sphere coord.
-// ->return value: dX/dw. */
-static double dX_dw_SS(const double u, const double w)
+/* dX/dv for elliptical mapping used for projective coord.
+// ->return value: dX/dv. */
+static double dX_dv(const double u, const double v)
 {
-  return (w*(1/Sqrt(2 - 2*Sqrt(2)*u + Power(u,2) - Power(w,2)) - 
-       1/Sqrt(2 + 2*Sqrt(2)*u + Power(u,2) - Power(w,2))))/2.;
+  return (v*(1/Sqrt(2 - 2*Sqrt2*u + 
+          Power2(u) - Power2(v)) - 
+       1/
+        Sqrt(2 + 2*Sqrt2*u + 
+          Power2(u) - Power2(v))))/2.;
 }
 
-/* dZ/du for Stereographic Sphere coord.
-// ->return value: dZ/du. */
-static double dZ_du_SS(const double u, const double w)
+/* dY/du for elliptical mapping used for projective coord.
+// ->return value: dY/du. */
+static double dY_du(const double u, const double v)
 {
-  return (u*(1/Sqrt(2 - Power(u,2) - 2*Sqrt(2)*w + Power(w,2)) - 
-       1/Sqrt(2 - Power(u,2) + 2*Sqrt(2)*w + Power(w,2))))/2.;
+  return (u*(1/Sqrt(2 - Power(u,2) - 
+          2*Sqrt2*v + Power(v,2)) - 
+       1/
+        Sqrt(2 - Power2(u) + 
+          2*Sqrt2*v + Power2(v))))/2.;
 }
 
-/* dZ/dw for Stereographic Sphere coord.
-// ->return value: dZ/dw. */
-static double dZ_dw_SS(const double u, const double w)
+/* dY/du for elliptical mapping used for projective coord.
+// ->return value: dY/dv. */
+static double dY_dv(const double u, const double v)
 {
-  return ((2*(Sqrt(2) - w))/Sqrt(2 - Power(u,2) - 2*Sqrt(2)*w + Power(w,2)) + 
-     (2*(Sqrt(2) + w))/Sqrt(2 - Power(u,2) + 2*Sqrt(2)*w + Power(w,2))
-     )/4.;
+  return ((2*(Sqrt2 - v))/
+      Sqrt(2 - Power2(u) - 
+        2*Sqrt2*v + Power2(v)) + 
+     (2*(Sqrt2 + v))/
+      Sqrt(2 - Power2(u) + 
+        2*Sqrt2*v + Power2(v)))/4.;
 }
+

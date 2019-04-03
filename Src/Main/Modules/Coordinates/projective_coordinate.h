@@ -4,6 +4,13 @@
 
 #define Power(a,b) pow(a,b)
 #define Sqrt(a) sqrt(a)
+#define Power2(a) SQR(a)
+#define Power3(a) (a)*SQR(a)
+#define Sqrt2 1.4142135623730951
+#define dZ_du(u,w) dY_du(u,w)
+#define dZ_dw(u,w) dY_dv(u,w)
+#define dX_dw(u,w) dX_dv(u,w)
+
 
 enum enum_dA_da
 {
@@ -64,10 +71,10 @@ void make_JacobianT_StereographicSphereLeft_coord(Patch_T *const patch);
 void make_JacobianT_StereographicSphereRight_coord(Patch_T *const patch);
 double JT_StereographicSphere_Left(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const unsigned p);
 double JT_StereographicSphere_Right(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const unsigned p);
-static double dX_du_SS(const double u, const double w);
-static double dX_dw_SS(const double u, const double w);
-static double dZ_du_SS(const double u, const double w);
-static double dZ_dw_SS(const double u, const double w);
+static double dX_du(const double u, const double v);
+static double dX_dv(const double u, const double v);
+static double dY_du(const double u, const double v);
+static double dY_dv(const double u, const double v);
 double dq2_dq1(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const unsigned p);
 
 
