@@ -289,9 +289,28 @@ static double dN_dq(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const 
   /* means dN?/dx? = dN?/da*da/dx? + dN?/db*db/dx? + dN?/dc*dc/dx? */
   if (q1_e == _x_ || q1_e == _y_ || q1_e == _z_ )
   {
-    jN_X = dN_dX(patch,q2_e,_a_,p)*dq2_dq1(patch,_a_,q1_e,p)+
-           dN_dX(patch,q2_e,_b_,p)*dq2_dq1(patch,_b_,q1_e,p)+
-           dN_dX(patch,q2_e,_c_,p)*dq2_dq1(patch,_c_,q1_e,p);
+    /* it means N only depends on one of a,b or c */
+    if (patch->collocation[q2_e%3] == Chebyshev_Tn_BASIS)
+    {
+      switch(q2_e)
+      {
+        case _N0_:
+          jN_X = dN_dX(patch,q2_e,_a_,p)*dq2_dq1(patch,_a_,q1_e,p);
+        break;
+        case _N1_:
+          jN_X = dN_dX(patch,q2_e,_b_,p)*dq2_dq1(patch,_b_,q1_e,p);
+        break;
+        case _N2_:
+          jN_X = dN_dX(patch,q2_e,_c_,p)*dq2_dq1(patch,_c_,q1_e,p);
+        break;
+        default:
+          abortEr("It should not reach here!");
+      }
+    }
+    else
+      jN_X = dN_dX(patch,q2_e,_a_,p)*dq2_dq1(patch,_a_,q1_e,p)+
+             dN_dX(patch,q2_e,_b_,p)*dq2_dq1(patch,_b_,q1_e,p)+
+             dN_dX(patch,q2_e,_c_,p)*dq2_dq1(patch,_c_,q1_e,p);
             
   }
   else /* means q1_e is between _a_, _b_ or _c_*/
