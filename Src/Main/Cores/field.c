@@ -261,15 +261,6 @@ double *make_coeffs_2d(Field_T *const f,const unsigned dir1,const unsigned dir2)
 double *make_coeffs_3d(Field_T *const f)
 {
   const unsigned N = f->patch->nn;
-  Collocation_T collocation[3];
-  Basis_T basis[3];
-  
-  collocation[0] = f->patch->collocation[0];
-  collocation[1] = f->patch->collocation[1];
-  collocation[2] = f->patch->collocation[2];
-  basis[0]       = f->patch->basis[0];
-  basis[1]       = f->patch->basis[1];
-  basis[2]       = f->patch->basis[2];
   
   assert(strstr(f->attr,"(3dim)"));
   
@@ -282,20 +273,6 @@ double *make_coeffs_3d(Field_T *const f)
     if (!f->v2)
       f->v2 = alloc_double(N);
     
-    /* when all of directions and basis are the same.
-    // it gets used for high performance.
-    */
-    if (Is3d_fft(collocation,basis))
-    {
-      double *coeffs = f->v2;
-      double *values = f->v;
-      const unsigned *n = f->patch->n;
-    
-      if (f->patch->basis[0] == Chebyshev_Tn_BASIS)
-        fftw_3d_ChebyshevExtrema_coeffs(values,coeffs,n);
-      else
-        abortEr("No such basis is defined for this function.\n");
-    }
     else
     {
       Patch_T p_tmp1 = make_temp_patch(f->patch);
@@ -602,10 +579,6 @@ static void coeffs_patch_Tn_Extrema_1d(Field_T *const f,const unsigned dir)
   
   if (strstr_i(GetParameterS("Fourier_Transformation_Method"),"RFT"))
     FourierTrans = rft_1d_ChebyshevExtrema_coeffs;
-  else if (strstr_i(GetParameterS("Fourier_Transformation_Method"),"FFTW"))
-    abortEr("FFTW is not thread safe. If your are sure you won't wanna use it in \n"
-      "multi-thread environment, remove this abortEr and add\n"
-        " \"FourierTrans = rft_1d_ChebyshevExtrema_coeffs;\"\n");
   else
     abortEr("No such Fourier_Transformation_Method defined for this function.\n");
   
@@ -802,40 +775,6 @@ static void add_Tinfo(Field_T *const f,const unsigned dir,const Collocation_T co
   f->info[l1] = '\0';
   strcat(f->info,inf);
   
-}
-
-/* if one can performe 3d fft */
-static unsigned Is3d_fft(const Collocation_T *collocation,const Basis_T *basis)
-{
-  unsigned r = 0;
-  
-  if (!strstr_i(GetParameterS("Fourier_Transformation_Method"),"fftw"))
-    return 0;
-  
-  /* if all bases are the same type */
-  if (basis[0] == basis[1] && basis[1] == basis[2])
-  {
-    /* for Chebyshev Tn */
-    if (basis[0] == Chebyshev_Tn_BASIS)
-    {
-      /* if all collocations are the same type */
-      if (collocation[0] == collocation[1] && 
-          collocation[1] == collocation[2])
-      {
-        /* for Chebyshev extrema */
-        if (collocation[0] == Chebyshev_Extrema)
-          r = 1;
-        else
-          r = 0;
-      }
-    }
-    else
-      abortEr("No such a basis defined for this function.\n");
-  }
-  else
-    r = 0;
-  
-  return r;
 }
 
 /* allocating 3-D fields on the whole grid to be solved 
