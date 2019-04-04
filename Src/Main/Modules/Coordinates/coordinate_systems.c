@@ -290,7 +290,7 @@ static double dN_dq(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const 
   if (q1_e == _x_ || q1_e == _y_ || q1_e == _z_ )
   {
     /* it means N only depends on one of a,b or c */
-    if (patch->collocation[q2_e%3] == Chebyshev_Tn_BASIS)
+    if (patch->basis[q2_e%3] == Chebyshev_Tn_BASIS)
     {
       switch(q2_e)
       {

@@ -480,22 +480,22 @@ static double *spectral_derivative_1stOrder(Field_T *const f,const Dd_T dir_e)
     /* OpenMP_1d_Pragma(omp parallel for) */
     for (i = 0; i < nn; ++i)
       der[i] = df_dp[0][i]*dq2_dq1(patch,dp[0],dir_e,i) + 
-                  df_dp[1][i]*dq2_dq1(patch,dp[1],dir_e,i) +
-                  df_dp[2][i]*dq2_dq1(patch,dp[2],dir_e,i);
+               df_dp[1][i]*dq2_dq1(patch,dp[1],dir_e,i) +
+               df_dp[2][i]*dq2_dq1(patch,dp[2],dir_e,i);
   }
   else if (flg[0] == YES && flg[1] == YES)
   {
     /* OpenMP_1d_Pragma(omp parallel for) */
     for (i = 0; i < nn; ++i)
       der[i] = df_dp[0][i]*dq2_dq1(patch,dp[0],dir_e,i) + 
-                  df_dp[1][i]*dq2_dq1(patch,dp[1],dir_e,i);
+               df_dp[1][i]*dq2_dq1(patch,dp[1],dir_e,i);
   }
   else if (flg[1] == YES && flg[2] == YES)
   {
     /* OpenMP_1d_Pragma(omp parallel for) */
     for (i = 0; i < nn; ++i)
       der[i] = df_dp[1][i]*dq2_dq1(patch,dp[1],dir_e,i) + 
-                  df_dp[2][i]*dq2_dq1(patch,dp[2],dir_e,i);
+               df_dp[2][i]*dq2_dq1(patch,dp[2],dir_e,i);
   }
   else if (flg[0] == YES)
   {
