@@ -484,8 +484,10 @@ typedef struct PATCH_T
    Field_T *R2_f;/* bigger R field */
    Field_T *dR1_dx;/* dR1/dx */
    Field_T *dR1_dy;/* dR1/dy */
+   Field_T *dR1_dz;/* dR1/dz */
    Field_T *dR2_dx;/* dR2/dx */
    Field_T *dR2_dy;/* dR2/dy */
+   Field_T *dR2_dz;/* dR2/dz */
   }CoordSysInfo[1];
   Collocation_T collocation[3];/* type of collocation in each direction */
   Basis_T basis[3];/* the type of basis for functions used in this patch 
