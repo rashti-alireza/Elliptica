@@ -608,30 +608,31 @@ int derivative_tests(Grid_T *const grid)
   // notation for naming of functions.
   // note: functions are defined in Analytic folder in Maths.
   */
-/*  add_func_Patch2Pdouble(&DataBase_func,ArgM(c_f));
-  add_func_Patch2Pdouble(&DataBase_func,ArgM(x_f));
-  add_func_Patch2Pdouble(&DataBase_func,ArgM(y_f));
+  //add_func_Patch2Pdouble(&DataBase_func,ArgM(c_f));
+  //add_func_Patch2Pdouble(&DataBase_func,ArgM(x_f));
+  //add_func_Patch2Pdouble(&DataBase_func,ArgM(y_f));
   add_func_Patch2Pdouble(&DataBase_func,ArgM(z_f));
-  add_func_Patch2Pdouble(&DataBase_func,ArgM(sinx_f));*/
-  add_func_Patch2Pdouble(&DataBase_func,ArgM(poly5_f));
+  //add_func_Patch2Pdouble(&DataBase_func,ArgM(sinx_f));
+  //add_func_Patch2Pdouble(&DataBase_func,ArgM(poly5_f));
   //add_func_Patch2Pdouble(&DataBase_func,ArgM(r_f));
-  add_func_Patch2Pdouble(&DataBase_func,ArgM(sinxyz_f));
+  //add_func_Patch2Pdouble(&DataBase_func,ArgM(sinxyz_f));
 /*  add_func_Patch2Pdouble(&DataBase_func,ArgM(mix2_f));
   add_func_Patch2Pdouble(&DataBase_func,ArgM(c_f_x));
   add_func_Patch2Pdouble(&DataBase_func,ArgM(c_f_y));
-  add_func_Patch2Pdouble(&DataBase_func,ArgM(c_f_z));
-  add_func_Patch2Pdouble(&DataBase_func,ArgM(x_f_x));
-  add_func_Patch2Pdouble(&DataBase_func,ArgM(x_f_y));
-  add_func_Patch2Pdouble(&DataBase_func,ArgM(x_f_z));
-  add_func_Patch2Pdouble(&DataBase_func,ArgM(x_f_xx));
-  add_func_Patch2Pdouble(&DataBase_func,ArgM(y_f_x));
-  add_func_Patch2Pdouble(&DataBase_func,ArgM(y_f_y));
-  add_func_Patch2Pdouble(&DataBase_func,ArgM(y_f_z));
-  add_func_Patch2Pdouble(&DataBase_func,ArgM(y_f_yy));
-  add_func_Patch2Pdouble(&DataBase_func,ArgM(z_f_x));
-  add_func_Patch2Pdouble(&DataBase_func,ArgM(z_f_y));
+  add_func_Patch2Pdouble(&DataBase_func,ArgM(c_f_z));*/
+  //add_func_Patch2Pdouble(&DataBase_func,ArgM(x_f_x));
+  //add_func_Patch2Pdouble(&DataBase_func,ArgM(x_f_y));
+  //add_func_Patch2Pdouble(&DataBase_func,ArgM(x_f_z));
+  //add_func_Patch2Pdouble(&DataBase_func,ArgM(x_f_xx));
+  //add_func_Patch2Pdouble(&DataBase_func,ArgM(y_f_x));
+  //add_func_Patch2Pdouble(&DataBase_func,ArgM(y_f_y));
+  //add_func_Patch2Pdouble(&DataBase_func,ArgM(y_f_z));
+  //add_func_Patch2Pdouble(&DataBase_func,ArgM(y_f_yy));
+  //add_func_Patch2Pdouble(&DataBase_func,ArgM(z_f_x));
+  //add_func_Patch2Pdouble(&DataBase_func,ArgM(z_f_y));
   add_func_Patch2Pdouble(&DataBase_func,ArgM(z_f_z));
-  add_func_Patch2Pdouble(&DataBase_func,ArgM(z_f_zz));
+  //add_func_Patch2Pdouble(&DataBase_func,ArgM(z_f_zz));
+  /*
   add_func_Patch2Pdouble(&DataBase_func,ArgM(sinx_f_x));
   add_func_Patch2Pdouble(&DataBase_func,ArgM(sinx_f_y));
   add_func_Patch2Pdouble(&DataBase_func,ArgM(sinx_f_z));
@@ -642,16 +643,16 @@ int derivative_tests(Grid_T *const grid)
   add_func_Patch2Pdouble(&DataBase_func,ArgM(sinx_f_xz));
   add_func_Patch2Pdouble(&DataBase_func,ArgM(sinx_f_yz));
   add_func_Patch2Pdouble(&DataBase_func,ArgM(sinx_f_xyz));*/
-  add_func_Patch2Pdouble(&DataBase_func,ArgM(poly5_f_x));
-  add_func_Patch2Pdouble(&DataBase_func,ArgM(poly5_f_y));
-  add_func_Patch2Pdouble(&DataBase_func,ArgM(poly5_f_z));
-  add_func_Patch2Pdouble(&DataBase_func,ArgM(poly5_f_xx));
+  //add_func_Patch2Pdouble(&DataBase_func,ArgM(poly5_f_x));
+  //add_func_Patch2Pdouble(&DataBase_func,ArgM(poly5_f_y));
+  //add_func_Patch2Pdouble(&DataBase_func,ArgM(poly5_f_z));
+  /*add_func_Patch2Pdouble(&DataBase_func,ArgM(poly5_f_xx));
   add_func_Patch2Pdouble(&DataBase_func,ArgM(poly5_f_yy));
   add_func_Patch2Pdouble(&DataBase_func,ArgM(poly5_f_zz));
   add_func_Patch2Pdouble(&DataBase_func,ArgM(poly5_f_xy));
   add_func_Patch2Pdouble(&DataBase_func,ArgM(poly5_f_xz));
   add_func_Patch2Pdouble(&DataBase_func,ArgM(poly5_f_yz));
-  add_func_Patch2Pdouble(&DataBase_func,ArgM(poly5_f_xyz));
+  add_func_Patch2Pdouble(&DataBase_func,ArgM(poly5_f_xyz));*/
 /*  add_func_Patch2Pdouble(&DataBase_func,ArgM(r_f_x));
   add_func_Patch2Pdouble(&DataBase_func,ArgM(r_f_y));
   add_func_Patch2Pdouble(&DataBase_func,ArgM(r_f_z));
@@ -673,7 +674,7 @@ int derivative_tests(Grid_T *const grid)
   add_func_Patch2Pdouble(&DataBase_func,ArgM(inv_rP1_f_xz));
   add_func_Patch2Pdouble(&DataBase_func,ArgM(inv_rP1_f_yz));
   add_func_Patch2Pdouble(&DataBase_func,ArgM(inv_rP1_f_xyz));
-*/  add_func_Patch2Pdouble(&DataBase_func,ArgM(sinxyz_f_x));
+  add_func_Patch2Pdouble(&DataBase_func,ArgM(sinxyz_f_x));
   add_func_Patch2Pdouble(&DataBase_func,ArgM(sinxyz_f_y));
   add_func_Patch2Pdouble(&DataBase_func,ArgM(sinxyz_f_z));
   add_func_Patch2Pdouble(&DataBase_func,ArgM(sinxyz_f_xx));
@@ -683,7 +684,7 @@ int derivative_tests(Grid_T *const grid)
   add_func_Patch2Pdouble(&DataBase_func,ArgM(sinxyz_f_xz));
   add_func_Patch2Pdouble(&DataBase_func,ArgM(sinxyz_f_yz));
   add_func_Patch2Pdouble(&DataBase_func,ArgM(sinxyz_f_xyz));
- /* add_func_Patch2Pdouble(&DataBase_func,ArgM(mix2_f_x));
+  add_func_Patch2Pdouble(&DataBase_func,ArgM(mix2_f_x));
   add_func_Patch2Pdouble(&DataBase_func,ArgM(mix2_f_y));
   add_func_Patch2Pdouble(&DataBase_func,ArgM(mix2_f_z));
   add_func_Patch2Pdouble(&DataBase_func,ArgM(mix2_f_xx));
@@ -722,6 +723,7 @@ int derivative_tests(Grid_T *const grid)
     FOR_ALL_PATCHES(p,grid)
     {
       Patch_T *patch = grid->patch[p];
+      
       Field_T *df_num = add_field("$Numerica_derivative_TEST_FUNCTION$","(3dim)",patch,NO);
       
       /* compute anac if any */
