@@ -10,7 +10,7 @@
 #define EQUAL   '='
 #define MAX_NUM_CHAR 3000
 
-enum FLOW {LEFT,RIGHT};
+enum FLOW {e_Left,e_Right};
 
 void read_input_file(const char *const path);
 static void *make_buffer(FILE *const input);

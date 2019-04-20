@@ -35,6 +35,12 @@ typedef enum FLAG_T
   BRUTE_FORCE,
   FATAL,
   INITIALIZE,
+  UP,
+  DOWN,
+  LEFT,
+  RIGHT,
+  BACK,
+  FRONT,
   NOT_INITIALIZE
 }Flag_T;
 
@@ -64,7 +70,8 @@ typedef enum COORD_T
   ProjectiveHemisphereUp,
   ProjectiveHemisphereDown,
   StereographicSphereLeft,
-  StereographicSphereRight  
+  StereographicSphereRight,
+  CubedSpherical
 }Coord_T;
 
 /* print flags */

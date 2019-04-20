@@ -49,22 +49,22 @@ static void populate_parameters(const char *const buff)
   {
     char *subtok;
     char *par_l = 0, *par_r = 0;
-    enum FLOW f = LEFT;
+    enum FLOW f = e_Left;
     
     subtok = tok_s(tok,delimit2,&savestr2);
     while (subtok != 0)
     {
       
-      if (f == LEFT)
+      if (f == e_Left)
       {
         par_l = dup_s(subtok);
       }
-      else if (f == RIGHT)
+      else if (f == e_Right)
       {
         par_r = dup_s(subtok);
       }
       
-      f = RIGHT;
+      f = e_Right;
       subtok = tok_s(0,delimit,&savestr2);
       
     }/* while (subtok != 0) */
