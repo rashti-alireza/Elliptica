@@ -287,8 +287,8 @@ static int x_of_X_PHUp_coord(double *const x,const double *const X,const Patch_T
 */
 static int x_of_X_SSRight_coord(double *const x,const double *const X,const Patch_T *const patch)
 {
-  const double R1 = patch->CoordSysInfo->R1;
-  const double R2 = patch->CoordSysInfo->R2;
+  const double R1 = patch->CoordSysInfo->ProjectiveCoord->R1;
+  const double R2 = patch->CoordSysInfo->ProjectiveCoord->R2;
   const double *const c = patch->c;
   const double R0 = c[1];
   double u,w;
@@ -317,8 +317,8 @@ static int x_of_X_SSRight_coord(double *const x,const double *const X,const Patc
 */
 static int x_of_X_SSLeft_coord(double *const x,const double *const X,const Patch_T *const patch)
 {
-  const double R1 = patch->CoordSysInfo->R1;
-  const double R2 = patch->CoordSysInfo->R2;
+  const double R1 = patch->CoordSysInfo->ProjectiveCoord->R1;
+  const double R2 = patch->CoordSysInfo->ProjectiveCoord->R2;
   const double *const c = patch->c;
   const double R0 = -c[1];
   double u,w;

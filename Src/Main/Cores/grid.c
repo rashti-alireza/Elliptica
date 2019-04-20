@@ -43,6 +43,9 @@ static void fill_patches(Grid_T *const grid)
   else if (strcmp_i(grid->kind,"BNS_Spherical_grid"))
     fill_patches_BNS_Spherical_grid(grid); 
     
+  else if (strcmp_i(grid->kind,"BNS_CubedSpherical_grid"))
+    fill_patches_BNS_CubedSpherical_grid(grid); 
+    
   else
     abortEr_s("There is no such %s grid kind.\n",grid->kind);
 }

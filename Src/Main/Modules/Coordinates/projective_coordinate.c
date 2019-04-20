@@ -106,8 +106,8 @@ void make_nodes_StereographicSphereLeft_coord(Patch_T *const patch)
   const unsigned U = patch->nn;
   const double *const c = patch->c;
   const double R0 = -c[1];
-  const double R1 = patch->CoordSysInfo->R1;
-  const double R2 = patch->CoordSysInfo->R2;
+  const double R1 = patch->CoordSysInfo->ProjectiveCoord->R1;
+  const double R2 = patch->CoordSysInfo->ProjectiveCoord->R2;
   const unsigned *const n = patch->n;
   unsigned i,j,k,l;
   
@@ -152,8 +152,8 @@ void make_nodes_StereographicSphereRight_coord(Patch_T *const patch)
   const unsigned U = patch->nn;
   const double *const c = patch->c;
   const double R0 = c[1];
-  const double R1 = patch->CoordSysInfo->R1;
-  const double R2 = patch->CoordSysInfo->R2;
+  const double R1 = patch->CoordSysInfo->ProjectiveCoord->R1;
+  const double R2 = patch->CoordSysInfo->ProjectiveCoord->R2;
   const unsigned *const n = patch->n;
   unsigned i,j,k,l;
   
@@ -281,12 +281,12 @@ static double dNi_dxj_ProjectiveHemisphere(Patch_T *const patch, const Dd_T Ni, 
   {
     Field_T *const R1_field = patch->pool[Ind("R1_ProjectiveHemisphere")];
     Field_T *const R2_field = patch->pool[Ind("R2_ProjectiveHemisphere")];
-    Field_T *const dR1_dx_field = patch->CoordSysInfo->dR1_dx;
-    Field_T *const dR1_dy_field = patch->CoordSysInfo->dR1_dy;
-    Field_T *const dR1_dz_field = patch->CoordSysInfo->dR1_dz;
-    Field_T *const dR2_dx_field = patch->CoordSysInfo->dR2_dx;
-    Field_T *const dR2_dy_field = patch->CoordSysInfo->dR2_dy;
-    Field_T *const dR2_dz_field = patch->CoordSysInfo->dR2_dz;
+    Field_T *const dR1_dx_field = patch->CoordSysInfo->ProjectiveCoord->dR1_dx;
+    Field_T *const dR1_dy_field = patch->CoordSysInfo->ProjectiveCoord->dR1_dy;
+    Field_T *const dR1_dz_field = patch->CoordSysInfo->ProjectiveCoord->dR1_dz;
+    Field_T *const dR2_dx_field = patch->CoordSysInfo->ProjectiveCoord->dR2_dx;
+    Field_T *const dR2_dy_field = patch->CoordSysInfo->ProjectiveCoord->dR2_dy;
+    Field_T *const dR2_dz_field = patch->CoordSysInfo->ProjectiveCoord->dR2_dz;
     
     R1 	   = interpolation_2d_PH(R1_field,patch,X);
     dR1_dx = interpolation_2d_PH(dR1_dx_field,patch,X);
@@ -426,14 +426,14 @@ double JT_ProjectiveHemisphere(Patch_T *const patch,const Dd_T q2_e, const Dd_T 
     unsigned i,j,k;
     IJK(p,n,&i,&j,&k);
     
-    R1 = patch->CoordSysInfo->R1_f->v[L(n,i,j,0)];
-    R2 = patch->CoordSysInfo->R2_f->v[L(n,i,j,0)];
-    dR2_dx = patch->CoordSysInfo->dR2_dx->v[L(n,i,j,0)];
-    dR2_dy = patch->CoordSysInfo->dR2_dy->v[L(n,i,j,0)];
-    dR2_dz = patch->CoordSysInfo->dR2_dz->v[L(n,i,j,0)];
-    dR1_dx = patch->CoordSysInfo->dR1_dx->v[L(n,i,j,0)];
-    dR1_dy = patch->CoordSysInfo->dR1_dy->v[L(n,i,j,0)];
-    dR1_dz = patch->CoordSysInfo->dR1_dz->v[L(n,i,j,0)];
+    R1 = patch->CoordSysInfo->ProjectiveCoord->R1_f->v[L(n,i,j,0)];
+    R2 = patch->CoordSysInfo->ProjectiveCoord->R2_f->v[L(n,i,j,0)];
+    dR2_dx = patch->CoordSysInfo->ProjectiveCoord->dR2_dx->v[L(n,i,j,0)];
+    dR2_dy = patch->CoordSysInfo->ProjectiveCoord->dR2_dy->v[L(n,i,j,0)];
+    dR2_dz = patch->CoordSysInfo->ProjectiveCoord->dR2_dz->v[L(n,i,j,0)];
+    dR1_dx = patch->CoordSysInfo->ProjectiveCoord->dR1_dx->v[L(n,i,j,0)];
+    dR1_dy = patch->CoordSysInfo->ProjectiveCoord->dR1_dy->v[L(n,i,j,0)];
+    dR1_dz = patch->CoordSysInfo->ProjectiveCoord->dR1_dz->v[L(n,i,j,0)];
   }
   else
   {
@@ -567,8 +567,8 @@ double JT_StereographicSphere_Left(Patch_T *const patch,const Dd_T q2_e, const D
   /* if dZ_d? we need dR_d? thus: */
   if (q2_e == _b_)
   {
-    R1 = patch->CoordSysInfo->R1;
-    R2 = patch->CoordSysInfo->R2;
+    R1 = patch->CoordSysInfo->ProjectiveCoord->R1;
+    R2 = patch->CoordSysInfo->ProjectiveCoord->R2;
     S = 2./(R2-R1);
   }
   else if (q1_e == _x_)
@@ -702,8 +702,8 @@ double JT_StereographicSphere_Right(Patch_T *const patch,const Dd_T q2_e, const 
   /* if dZ_d? we need dR_d? thus: */
   if (q2_e == _b_)
   {
-    R1 = patch->CoordSysInfo->R1;
-    R2 = patch->CoordSysInfo->R2;
+    R1 = patch->CoordSysInfo->ProjectiveCoord->R1;
+    R2 = patch->CoordSysInfo->ProjectiveCoord->R2;
     S = 2./(R2-R1);
   }
   else if (q1_e == _x_)
@@ -842,8 +842,8 @@ static double dNi_dxj_StereographicSphereRight(Patch_T *const patch, const Dd_T 
   /* if dZ_d? we need dR_d? thus: */
   if (q2_e == _b_)
   {
-    R1 = patch->CoordSysInfo->R1;
-    R2 = patch->CoordSysInfo->R2;
+    R1 = patch->CoordSysInfo->ProjectiveCoord->R1;
+    R2 = patch->CoordSysInfo->ProjectiveCoord->R2;
     S = 2./(R2-R1);
   }
   else if (xj == _x_)
@@ -983,8 +983,8 @@ static double dNi_dxj_StereographicSphereLeft(Patch_T *const patch, const Dd_T N
   /* if dZ_d? we need dR_d? thus: */
   if (q2_e == _b_)
   {
-    R1 = patch->CoordSysInfo->R1;
-    R2 = patch->CoordSysInfo->R2;
+    R1 = patch->CoordSysInfo->ProjectiveCoord->R1;
+    R2 = patch->CoordSysInfo->ProjectiveCoord->R2;
     S = 2./(R2-R1);
   }
   else if (xj == _x_)
@@ -1332,12 +1332,12 @@ static void R1_R2_derivative(Patch_T *const patch)
   remove_field(dR2_dX);
   remove_field(dR2_dY);
   
-  patch->CoordSysInfo->dR1_dx = dR1_dx;
-  patch->CoordSysInfo->dR1_dy = dR1_dy;
-  patch->CoordSysInfo->dR1_dz = dR1_dz;
-  patch->CoordSysInfo->dR2_dx = dR2_dx;
-  patch->CoordSysInfo->dR2_dy = dR2_dy;
-  patch->CoordSysInfo->dR2_dz = dR2_dz; 
+  patch->CoordSysInfo->ProjectiveCoord->dR1_dx = dR1_dx;
+  patch->CoordSysInfo->ProjectiveCoord->dR1_dy = dR1_dy;
+  patch->CoordSysInfo->ProjectiveCoord->dR1_dz = dR1_dz;
+  patch->CoordSysInfo->ProjectiveCoord->dR2_dx = dR2_dx;
+  patch->CoordSysInfo->ProjectiveCoord->dR2_dy = dR2_dy;
+  patch->CoordSysInfo->ProjectiveCoord->dR2_dz = dR2_dz; 
 }
 
 /* Jacobian transformation for dN/dX?.
@@ -1524,11 +1524,11 @@ void populate_left_outermost(Grid_T *const grid,const unsigned pn,const unsigned
   
   /* filling Rs */
   sprintf(var,"grid%u_left_outermost%u_R1",grid->gn,outermost_n);
-  patch->CoordSysInfo->R1 = GetParameterDoubleF_E(var);
+  patch->CoordSysInfo->ProjectiveCoord->R1 = GetParameterDoubleF_E(var);
   sprintf(var,"grid%u_left_outermost%u_R2",grid->gn,outermost_n);
-  patch->CoordSysInfo->R2 = GetParameterDoubleF_E(var);
+  patch->CoordSysInfo->ProjectiveCoord->R2 = GetParameterDoubleF_E(var);
   
-  assert(GRT(patch->CoordSysInfo->R2,patch->CoordSysInfo->R1));
+  assert(GRT(patch->CoordSysInfo->ProjectiveCoord->R2,patch->CoordSysInfo->ProjectiveCoord->R1));
   
   /* filling min */
   patch->min[0] = -1;
@@ -1611,11 +1611,11 @@ void populate_right_outermost(Grid_T *const grid,const unsigned pn,const unsigne
   
   /* filling Rs */
   sprintf(var,"grid%u_right_outermost%u_R1",grid->gn,outermost_n);
-  patch->CoordSysInfo->R1 = GetParameterDoubleF_E(var);
+  patch->CoordSysInfo->ProjectiveCoord->R1 = GetParameterDoubleF_E(var);
   sprintf(var,"grid%u_right_outermost%u_R2",grid->gn,outermost_n);
-  patch->CoordSysInfo->R2 = GetParameterDoubleF_E(var);
+  patch->CoordSysInfo->ProjectiveCoord->R2 = GetParameterDoubleF_E(var);
   
-  assert(GRT(patch->CoordSysInfo->R2,patch->CoordSysInfo->R1));
+  assert(GRT(patch->CoordSysInfo->ProjectiveCoord->R2,patch->CoordSysInfo->ProjectiveCoord->R1));
   
   /* filling min */
   patch->min[0] = -1;
@@ -1704,8 +1704,8 @@ static void populate_left_NS_hemisphere_up(Grid_T *const grid,const unsigned pn)
   R1_array = GetParameterArrayF_E(var);
   sprintf(var,"grid%u_left_NS_R2_up",grid->gn);
   R2_array = GetParameterArrayF_E(var);
-  patch->CoordSysInfo->R1_f = R1;
-  patch->CoordSysInfo->R2_f = R2;
+  patch->CoordSysInfo->ProjectiveCoord->R1_f = R1;
+  patch->CoordSysInfo->ProjectiveCoord->R2_f = R2;
   
   R1->v = alloc_double(patch->nn);
   R2->v = alloc_double(patch->nn);
@@ -1804,8 +1804,8 @@ static void populate_left_NS_hemisphere_down(Grid_T *const grid,const unsigned p
   R1_array = GetParameterArrayF_E(var);
   sprintf(var,"grid%u_left_NS_R2_down",grid->gn);
   R2_array = GetParameterArrayF_E(var);
-  patch->CoordSysInfo->R1_f = R1;
-  patch->CoordSysInfo->R2_f = R2;
+  patch->CoordSysInfo->ProjectiveCoord->R1_f = R1;
+  patch->CoordSysInfo->ProjectiveCoord->R2_f = R2;
   
   R1->v = alloc_double(patch->nn);
   R2->v = alloc_double(patch->nn);
@@ -1904,8 +1904,8 @@ static void populate_right_NS_hemisphere_up(Grid_T *const grid,const unsigned pn
   R1_array = GetParameterArrayF_E(var);
   sprintf(var,"grid%u_right_NS_R2_up",grid->gn);
   R2_array = GetParameterArrayF_E(var);
-  patch->CoordSysInfo->R1_f = R1;
-  patch->CoordSysInfo->R2_f = R2;
+  patch->CoordSysInfo->ProjectiveCoord->R1_f = R1;
+  patch->CoordSysInfo->ProjectiveCoord->R2_f = R2;
   
   R1->v = alloc_double(patch->nn);
   R2->v = alloc_double(patch->nn);
@@ -2004,8 +2004,8 @@ static void populate_right_NS_hemisphere_down(Grid_T *const grid,const unsigned 
   R1_array = GetParameterArrayF_E(var);
   sprintf(var,"grid%u_right_NS_R2_down",grid->gn);
   R2_array = GetParameterArrayF_E(var);
-  patch->CoordSysInfo->R1_f = R1;
-  patch->CoordSysInfo->R2_f = R2;
+  patch->CoordSysInfo->ProjectiveCoord->R1_f = R1;
+  patch->CoordSysInfo->ProjectiveCoord->R2_f = R2;
   
   R1->v = alloc_double(patch->nn);
   R2->v = alloc_double(patch->nn);
@@ -2104,8 +2104,8 @@ static void populate_left_NS_surrounding_up(Grid_T *const grid,const unsigned pn
   R2_const = GetParameterDoubleF_E(var);
   sprintf(var,"grid%u_left_NS_R2_up",grid->gn);
   R1_array = GetParameterArrayF_E(var);
-  patch->CoordSysInfo->R1_f = R1;
-  patch->CoordSysInfo->R2_f = R2;
+  patch->CoordSysInfo->ProjectiveCoord->R1_f = R1;
+  patch->CoordSysInfo->ProjectiveCoord->R2_f = R2;
   
   R1->v = alloc_double(patch->nn);
   R2->v = alloc_double(patch->nn);
@@ -2204,8 +2204,8 @@ static void populate_left_NS_surrounding_down(Grid_T *const grid,const unsigned 
   R2_const = GetParameterDoubleF_E(var);
   sprintf(var,"grid%u_left_NS_R2_down",grid->gn);
   R1_array = GetParameterArrayF_E(var);
-  patch->CoordSysInfo->R1_f = R1;
-  patch->CoordSysInfo->R2_f = R2;
+  patch->CoordSysInfo->ProjectiveCoord->R1_f = R1;
+  patch->CoordSysInfo->ProjectiveCoord->R2_f = R2;
   
   R1->v = alloc_double(patch->nn);
   R2->v = alloc_double(patch->nn);
@@ -2304,8 +2304,8 @@ static void populate_right_NS_surrounding_up(Grid_T *const grid,const unsigned p
   R2_const = GetParameterDoubleF_E(var);
   sprintf(var,"grid%u_right_NS_R2_up",grid->gn);
   R1_array = GetParameterArrayF_E(var);
-  patch->CoordSysInfo->R1_f = R1;
-  patch->CoordSysInfo->R2_f = R2;
+  patch->CoordSysInfo->ProjectiveCoord->R1_f = R1;
+  patch->CoordSysInfo->ProjectiveCoord->R2_f = R2;
   
   R1->v = alloc_double(patch->nn);
   R2->v = alloc_double(patch->nn);
@@ -2404,8 +2404,8 @@ static void populate_right_NS_surrounding_down(Grid_T *const grid,const unsigned
   R2_const = GetParameterDoubleF_E(var);
   sprintf(var,"grid%u_right_NS_R2_down",grid->gn);
   R1_array = GetParameterArrayF_E(var);
-  patch->CoordSysInfo->R1_f = R1;
-  patch->CoordSysInfo->R2_f = R2;
+  patch->CoordSysInfo->ProjectiveCoord->R1_f = R1;
+  patch->CoordSysInfo->ProjectiveCoord->R2_f = R2;
   
   R1->v = alloc_double(patch->nn);
   R2->v = alloc_double(patch->nn);

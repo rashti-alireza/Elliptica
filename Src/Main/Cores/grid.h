@@ -8,6 +8,7 @@ int make_patches(Grid_T *const grid);
 static void fill_patches(Grid_T *const grid);
 void fill_patches_Cartesian_grid(Grid_T *const grid);
 void fill_patches_BNS_Projective_grid(Grid_T *const grid);
+void fill_patches_BNS_CubedSpherical_grid(Grid_T *const grid);
 void fill_patches_BNS_Spherical_grid(Grid_T *const grid);
 int make_nodes(Grid_T *const grid);
 int make_JacobianT(Grid_T *const grid);
