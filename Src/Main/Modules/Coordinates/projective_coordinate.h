@@ -11,7 +11,6 @@
 #define dZ_dw(u,w) dY_dv(u,w)
 #define dX_dw(u,w) dX_dv(u,w)
 
-
 enum enum_dA_da
 {
   da_dx = 0,
@@ -76,6 +75,18 @@ static double dX_dv(const double u, const double v);
 static double dY_du(const double u, const double v);
 static double dY_dv(const double u, const double v);
 double dq2_dq1(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const unsigned p);
-
+void fill_patches_BNS_Projective_grid(Grid_T *const grid);
+static void populate_left_NS_central_box(Grid_T *const grid,const unsigned pn);
+static void populate_left_NS_hemisphere_up(Grid_T *const grid,const unsigned pn);
+static void populate_left_NS_hemisphere_down(Grid_T *const grid,const unsigned pn);
+static void populate_left_NS_surrounding_up(Grid_T *const grid,const unsigned pn);
+static void populate_left_NS_surrounding_down(Grid_T *const grid,const unsigned pn);
+static void populate_right_NS_central_box(Grid_T *const grid,const unsigned pn);
+static void populate_right_NS_hemisphere_up(Grid_T *const grid,const unsigned pn);
+static void populate_right_NS_hemisphere_down(Grid_T *const grid,const unsigned pn);
+static void populate_right_NS_surrounding_up(Grid_T *const grid,const unsigned pn);
+static void populate_right_NS_surrounding_down(Grid_T *const grid,const unsigned pn);
+void populate_left_outermost(Grid_T *const grid,const unsigned pn,const unsigned outermost_n);
+void populate_right_outermost(Grid_T *const grid,const unsigned pn,const unsigned outermost_n);
 
 

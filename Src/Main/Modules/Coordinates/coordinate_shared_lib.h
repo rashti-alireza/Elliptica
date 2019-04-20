@@ -15,5 +15,12 @@ struct Collocation_s
   Collocation_T c;
 };
 
+/* returning value */
+struct Ret_S
+{
+  char s0[20],s1[20],s2[20];
+};
+
 double point_value(const unsigned i, const struct Collocation_s *const coll_s);
 void initialize_collocation_struct(const Patch_T *const patch,struct Collocation_s *const colloc,const unsigned dir);
+void make_keyword_parameter(struct Ret_S *const ret,const char *const box,const char *const needle);

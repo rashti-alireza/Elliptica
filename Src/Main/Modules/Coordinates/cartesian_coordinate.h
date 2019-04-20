@@ -12,3 +12,4 @@ double dN1_dz_Cartesian_patch(Patch_T *const patch,const double *const X);
 double dN2_dx_Cartesian_patch(Patch_T *const patch,const double *const X);
 double dN2_dy_Cartesian_patch(Patch_T *const patch,const double *const X);
 double dN2_dz_Cartesian_patch(Patch_T *const patch,const double *const X);
+void fill_patches_Cartesian_grid(Grid_T *const grid);

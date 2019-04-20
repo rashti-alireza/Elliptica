@@ -173,3 +173,127 @@ double dN2_dz_Cartesian_patch(Patch_T *const patch,const double *const X)
   
   return dN2_dz;
 }
+
+/*filling patch struct for Cartesian*/
+void fill_patches_Cartesian_grid(Grid_T *const grid)
+{
+  char name[20] = {'\0'};
+  Collocation_T c;
+  Basis_T b;
+  unsigned i;
+  
+  FOR_ALL(i,grid->patch)
+  {
+    struct Ret_S ret;
+    Patch_T *const patch = grid->patch[i];
+    c = UNDEFINED_COLLOCATION;
+    b = UNDEFINED_BASIS;
+    unsigned n;
+    
+    /* filling grid */
+    patch->grid = grid;
+    
+    /* filling patch number */
+    patch->pn = i;
+    
+    /* filling inner boundary */
+    patch->innerB = 0;
+    
+    /* filling name */
+    sprintf(name,"box%d",i);
+    patch->name = dup_s(name);
+    
+    /* filling n */
+    patch->n[0] = (unsigned)GetParameterI("n_a");
+    patch->n[1] = (unsigned)GetParameterI("n_b");
+    patch->n[2] = (unsigned)GetParameterI("n_c");
+    
+    /* check for override */
+    make_keyword_parameter(&ret,name,"n");
+    n = (unsigned)GetParameterI(ret.s0);
+    if (n != INT_MAX)	patch->n[0] = n;
+    n = (unsigned)GetParameterI(ret.s1);
+    if (n != INT_MAX)	patch->n[1] = n;
+    n = (unsigned)GetParameterI(ret.s2);
+    if (n != INT_MAX)	patch->n[2] = n;
+
+    if(patch->n[0] == INT_MAX)
+      abortEr("n_a could not be set.\n");
+    if(patch->n[1] == INT_MAX)
+      abortEr("n_b could not be set.\n");
+    if(patch->n[2] == INT_MAX)
+      abortEr("n_c could not be set.\n");
+      
+    /* filling nn */
+    patch->nn = total_nodes_patch(patch);
+    
+    /* filling center */
+    make_keyword_parameter(&ret,name,"center");
+    patch->c[0] = GetParameterD_E(ret.s0);
+    patch->c[1] = GetParameterD_E(ret.s1);
+    patch->c[2] = GetParameterD_E(ret.s2);
+    
+    /* filling size */
+    make_keyword_parameter(&ret,name,"size");
+    patch->s[0] = GetParameterD_E(ret.s0);
+    patch->s[1] = GetParameterD_E(ret.s1);
+    patch->s[2] = GetParameterD_E(ret.s2);
+    
+    /* filling min: min = center-l/2 */
+    patch->min[0] = patch->c[0]-patch->s[0]/2;
+    patch->min[1] = patch->c[1]-patch->s[1]/2;
+    patch->min[2] = patch->c[2]-patch->s[2]/2;
+    
+    /* filling max: max = center+l/2 */
+    patch->max[0] = patch->c[0]+patch->s[0]/2;
+    patch->max[1] = patch->c[1]+patch->s[1]/2;
+    patch->max[2] = patch->c[2]+patch->s[2]/2;
+    
+    /* filling flags */
+    patch->coordsys = Cartesian;
+    
+    /* collocation */
+    patch->collocation[0] = get_collocation(GetParameterS("collocation_a"));
+    patch->collocation[1] = get_collocation(GetParameterS("collocation_b"));
+    patch->collocation[2] = get_collocation(GetParameterS("collocation_c"));
+  
+    /* check for override */
+    make_keyword_parameter(&ret,name,"collocation");
+    c = get_collocation(GetParameterS(ret.s0));
+    if (c != UNDEFINED_COLLOCATION)
+      patch->collocation[0] = c;
+    c = get_collocation(GetParameterS(ret.s1));
+    if (c != UNDEFINED_COLLOCATION)
+      patch->collocation[1] = c;
+    c = get_collocation(GetParameterS(ret.s2));
+    if (c != UNDEFINED_COLLOCATION)
+      patch->collocation[2] = c;
+    
+    assert(patch->collocation[0] != UNDEFINED_COLLOCATION);
+    assert(patch->collocation[1] != UNDEFINED_COLLOCATION);
+    assert(patch->collocation[2] != UNDEFINED_COLLOCATION);
+    
+    /* basis */
+    patch->basis[0] = get_basis(GetParameterS("basis_a"));
+    patch->basis[1] = get_basis(GetParameterS("basis_b"));
+    patch->basis[2] = get_basis(GetParameterS("basis_c"));
+  
+    /* check for override */
+    make_keyword_parameter(&ret,name,"basis");
+    b = get_basis(GetParameterS(ret.s0));
+    if ( b != UNDEFINED_BASIS)
+      patch->basis[0] = b;
+    b = get_basis(GetParameterS(ret.s1));
+    if ( b != UNDEFINED_BASIS)
+      patch->basis[1] = b;
+    b = get_basis(GetParameterS(ret.s2));
+    if ( b != UNDEFINED_BASIS)
+      patch->basis[2] = b;
+    
+    assert(patch->basis[0] != UNDEFINED_BASIS);
+    assert(patch->basis[1] != UNDEFINED_BASIS);
+    assert(patch->basis[2] != UNDEFINED_BASIS);
+    
+  }
+  
+}

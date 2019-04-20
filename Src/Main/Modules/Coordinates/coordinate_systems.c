@@ -338,3 +338,49 @@ double General2ChebyshevExtrema(const double X,const unsigned dir,const Patch_T 
   
   return (X*2-b)/a;
 }
+
+/* making keyword for searching of parameter value */
+void make_keyword_parameter(struct Ret_S *const ret,const char *const box,const char *const needle)
+{
+  /* for box?_n_? */
+  if (strcmp_i(needle,"n"))
+  {
+    sprintf(ret->s0,"%s_n_a",box);
+    sprintf(ret->s1,"%s_n_b",box);
+    sprintf(ret->s2,"%s_n_c",box);
+  }
+  
+  /* for box?_center_? */
+  else if (strcmp_i(needle,"center"))
+  {
+    sprintf(ret->s0,"%s_center_a",box);
+    sprintf(ret->s1,"%s_center_b",box);
+    sprintf(ret->s2,"%s_center_c",box);
+  }
+  
+  /* for box?_size_? */
+  else if (strcmp_i(needle,"size"))
+  {
+    sprintf(ret->s0,"%s_size_a",box);
+    sprintf(ret->s1,"%s_size_b",box);
+    sprintf(ret->s2,"%s_size_c",box);
+  }
+  /* for box?_collocation_? */
+  else if (strcmp_i(needle,"collocation"))
+  {
+    sprintf(ret->s0,"%s_collocation_a",box);
+    sprintf(ret->s1,"%s_collocation_b",box);
+    sprintf(ret->s2,"%s_collocation_c",box);
+  }
+  /* for box?_basis_? */
+  else if (strcmp_i(needle,"basis"))
+  {
+    sprintf(ret->s0,"%s_basis_a",box);
+    sprintf(ret->s1,"%s_basis_b",box);
+    sprintf(ret->s2,"%s_basis_c",box);
+  }
+  else
+  {
+    abortEr_s("There is no such %s.\n",needle);
+  }
+}

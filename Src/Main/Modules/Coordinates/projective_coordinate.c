@@ -1,6 +1,6 @@
 /*
 // Alireza Rashti
-// March 2018
+// March 2019
 */
 
 #include "projective_coordinate.h"
@@ -1443,3 +1443,1155 @@ static double dY_dv(const double u, const double v)
         2*Sqrt2*v + Power2(v)))/4.;
 }
 
+/* filling patch struct for BNS_Projective_grid */
+void fill_patches_BNS_Projective_grid(Grid_T *const grid)
+{
+  const unsigned N_outermost_split = (unsigned) GetParameterI_E("Number_of_Outermost_Split");
+  unsigned pn,i;
+  
+  pn = 0;
+  populate_left_NS_central_box(grid,pn++);
+  populate_left_NS_hemisphere_up(grid,pn++);
+  populate_left_NS_hemisphere_down(grid,pn++);
+  populate_left_NS_surrounding_up(grid,pn++);
+  populate_left_NS_surrounding_down(grid,pn++);
+  for (i = 0; i < N_outermost_split; i++)
+    populate_left_outermost(grid,pn++,i);
+    
+  populate_right_NS_central_box(grid,pn++);
+  populate_right_NS_hemisphere_up(grid,pn++);
+  populate_right_NS_hemisphere_down(grid,pn++);
+  populate_right_NS_surrounding_up(grid,pn++);
+  populate_right_NS_surrounding_down(grid,pn++);
+  for (i = 0; i < N_outermost_split; i++)
+    populate_right_outermost(grid,pn++,i);
+  
+}
+
+/* populating properties of patch for outermost left */
+void populate_left_outermost(Grid_T *const grid,const unsigned pn,const unsigned outermost_n)
+{
+  Patch_T *const patch = grid->patch[pn];
+  char name[100] = {'\0'};
+  char var[100] = {'\0'};
+  struct Ret_S ret;
+  unsigned n;
+  
+  /* filling grid */
+  patch->grid = grid;
+  
+  /* filling patch number */
+  patch->pn = pn;
+  
+  /* filling inner boundary */
+  patch->innerB = 0;
+  
+  /* filling name */
+  sprintf(name,"grid%u_left_outermost%u",grid->gn,outermost_n);
+  patch->name = dup_s(name);
+  
+  /* filling n */
+  patch->n[0] = (unsigned)GetParameterI("n_a");
+  patch->n[1] = (unsigned)GetParameterI("n_b");
+  patch->n[2] = (unsigned)GetParameterI("n_c");
+  /* check for override */
+  sprintf(var,"Outermost%u",outermost_n);
+  make_keyword_parameter(&ret,var,"n");
+  n = (unsigned)GetParameterI(ret.s0);
+  if (n != INT_MAX)	patch->n[0] = n;
+  n = (unsigned)GetParameterI(ret.s1);
+  if (n != INT_MAX)	patch->n[1] = n;
+  n = (unsigned)GetParameterI(ret.s2);
+  if (n != INT_MAX)	patch->n[2] = n;
+    
+  if(patch->n[0] == INT_MAX)
+    abortEr("n_a could not be set.\n");
+  if(patch->n[1] == INT_MAX)
+    abortEr("n_b could not be set.\n");
+  if(patch->n[2] == INT_MAX)
+    abortEr("n_c could not be set.\n");
+  
+  /* filling nn */
+  patch->nn = total_nodes_patch(patch);
+  
+  /* filling center */
+  sprintf(var,"grid%u_left_NS_center_a",grid->gn);
+  patch->c[0] = GetParameterDoubleF_E(var);
+  sprintf(var,"grid%u_left_NS_center_b",grid->gn);
+  patch->c[1] = GetParameterDoubleF_E(var);
+  sprintf(var,"grid%u_left_NS_center_c",grid->gn);
+  patch->c[2] = GetParameterDoubleF_E(var);
+  
+  /* filling Rs */
+  sprintf(var,"grid%u_left_outermost%u_R1",grid->gn,outermost_n);
+  patch->CoordSysInfo->R1 = GetParameterDoubleF_E(var);
+  sprintf(var,"grid%u_left_outermost%u_R2",grid->gn,outermost_n);
+  patch->CoordSysInfo->R2 = GetParameterDoubleF_E(var);
+  
+  assert(GRT(patch->CoordSysInfo->R2,patch->CoordSysInfo->R1));
+  
+  /* filling min */
+  patch->min[0] = -1;
+  patch->min[1] = -1;
+  patch->min[2] = -1;
+  
+  /* filling max */
+  patch->max[0] = 1;
+  patch->max[1] = 1;
+  patch->max[2] = 1;
+  
+  /* filling flags */
+  patch->coordsys = StereographicSphereLeft;
+  
+  /* collocation */
+  patch->collocation[0] = Chebyshev_Nodes;
+  patch->collocation[1] = Chebyshev_Extrema;
+  patch->collocation[2] = Chebyshev_Extrema;
+  
+  /* basis */
+  patch->basis[0] = Chebyshev_Tn_BASIS;
+  patch->basis[1] = Chebyshev_Tn_BASIS;
+  patch->basis[2] = Chebyshev_Tn_BASIS;
+  
+}
+
+/* populating properties of patch for right outermost */
+void populate_right_outermost(Grid_T *const grid,const unsigned pn,const unsigned outermost_n)
+{
+  Patch_T *const patch = grid->patch[pn];
+  char name[100] = {'\0'};
+  char var[100] = {'\0'};
+  struct Ret_S ret;
+  unsigned n;
+  
+  /* filling grid */
+  patch->grid = grid;
+  
+  /* filling patch number */
+  patch->pn = pn;
+  
+  /* filling inner boundary */
+  patch->innerB = 0;
+  
+  /* filling name */
+  sprintf(name,"grid%u_right_outermost%u",grid->gn,outermost_n);
+  patch->name = dup_s(name);
+  
+  /* filling n */
+  patch->n[0] = (unsigned)GetParameterI("n_a");
+  patch->n[1] = (unsigned)GetParameterI("n_b");
+  patch->n[2] = (unsigned)GetParameterI("n_c");
+  /* check for override */
+  sprintf(var,"Outermost%u",outermost_n);
+  make_keyword_parameter(&ret,var,"n");
+  n = (unsigned)GetParameterI(ret.s0);
+  if (n != INT_MAX)	patch->n[0] = n;
+  n = (unsigned)GetParameterI(ret.s1);
+  if (n != INT_MAX)	patch->n[1] = n;
+  n = (unsigned)GetParameterI(ret.s2);
+  if (n != INT_MAX)	patch->n[2] = n;
+    
+  if(patch->n[0] == INT_MAX)
+    abortEr("n_a could not be set.\n");
+  if(patch->n[1] == INT_MAX)
+    abortEr("n_b could not be set.\n");
+  if(patch->n[2] == INT_MAX)
+    abortEr("n_c could not be set.\n");
+  
+  /* filling nn */
+  patch->nn = total_nodes_patch(patch);
+  
+  /* filling center */
+  sprintf(var,"grid%u_right_NS_center_a",grid->gn);
+  patch->c[0] = GetParameterDoubleF_E(var);
+  sprintf(var,"grid%u_right_NS_center_b",grid->gn);
+  patch->c[1] = GetParameterDoubleF_E(var);
+  sprintf(var,"grid%u_right_NS_center_c",grid->gn);
+  patch->c[2] = GetParameterDoubleF_E(var);
+  
+  /* filling Rs */
+  sprintf(var,"grid%u_right_outermost%u_R1",grid->gn,outermost_n);
+  patch->CoordSysInfo->R1 = GetParameterDoubleF_E(var);
+  sprintf(var,"grid%u_right_outermost%u_R2",grid->gn,outermost_n);
+  patch->CoordSysInfo->R2 = GetParameterDoubleF_E(var);
+  
+  assert(GRT(patch->CoordSysInfo->R2,patch->CoordSysInfo->R1));
+  
+  /* filling min */
+  patch->min[0] = -1;
+  patch->min[1] = -1;
+  patch->min[2] = -1;
+  
+  /* filling max */
+  patch->max[0] = 1;
+  patch->max[1] = 1;
+  patch->max[2] = 1;
+  
+  /* filling flags */
+  patch->coordsys = StereographicSphereRight;
+  
+  /* collocation */
+  patch->collocation[0] = Chebyshev_Extrema;
+  patch->collocation[1] = Chebyshev_Extrema;
+  patch->collocation[2] = Chebyshev_Nodes;
+  
+  /* basis */
+  patch->basis[0] = Chebyshev_Tn_BASIS;
+  patch->basis[1] = Chebyshev_Tn_BASIS;
+  patch->basis[2] = Chebyshev_Tn_BASIS;
+  
+}
+
+/* populating properties of patch for NS left hemisphere up */
+static void populate_left_NS_hemisphere_up(Grid_T *const grid,const unsigned pn)
+{
+  Patch_T *const patch = grid->patch[pn];
+  Field_T *R1 = add_field("R1_ProjectiveHemisphere",0,patch,NO);
+  Field_T *R2 = add_field("R2_ProjectiveHemisphere",0,patch,NO);
+  double *R1_array,*R2_array;
+  char name[100] = {'\0'};
+  char var[100] = {'\0'};
+  struct Ret_S ret;
+  unsigned n,i,j;
+  
+  /* filling grid */
+  patch->grid = grid;
+  
+  /* filling patch number */
+  patch->pn = pn;
+  
+  /* filling inner boundary */
+  patch->innerB = 0;
+  
+  /* filling name */
+  sprintf(name,"grid%u_left_NS_hemisphere_up",grid->gn);
+  patch->name = dup_s(name);
+  
+  /* filling n */
+  patch->n[0] = (unsigned)GetParameterI("n_a");
+  patch->n[1] = (unsigned)GetParameterI("n_b");
+  patch->n[2] = (unsigned)GetParameterI("n_c");
+  /* check for override */
+  sprintf(var,"left_NS");
+  make_keyword_parameter(&ret,var,"n");
+  n = (unsigned)GetParameterI(ret.s0);
+  if (n != INT_MAX)	patch->n[0] = n;
+  n = (unsigned)GetParameterI(ret.s1);
+  if (n != INT_MAX)	patch->n[1] = n;
+  n = (unsigned)GetParameterI(ret.s2);
+  if (n != INT_MAX)	patch->n[2] = n;
+    
+  if(patch->n[0] == INT_MAX)
+    abortEr("n_a could not be set.\n");
+  if(patch->n[1] == INT_MAX)
+    abortEr("n_b could not be set.\n");
+  if(patch->n[2] == INT_MAX)
+    abortEr("n_c could not be set.\n");
+  
+  /* filling nn */
+  patch->nn = total_nodes_patch(patch);
+  
+  /* filling center */
+  sprintf(var,"grid%u_left_NS_center_a",grid->gn);
+  patch->c[0] = GetParameterDoubleF_E(var);
+  sprintf(var,"grid%u_left_NS_center_b",grid->gn);
+  patch->c[1] = GetParameterDoubleF_E(var);
+  sprintf(var,"grid%u_left_NS_center_c",grid->gn);
+  patch->c[2] = GetParameterDoubleF_E(var);
+  
+  /* filling Rs */
+  sprintf(var,"grid%u_left_NS_R1_up",grid->gn);
+  R1_array = GetParameterArrayF_E(var);
+  sprintf(var,"grid%u_left_NS_R2_up",grid->gn);
+  R2_array = GetParameterArrayF_E(var);
+  patch->CoordSysInfo->R1_f = R1;
+  patch->CoordSysInfo->R2_f = R2;
+  
+  R1->v = alloc_double(patch->nn);
+  R2->v = alloc_double(patch->nn);
+  for (i = 0; i < patch->n[0]; ++i)
+    for (j = 0; j < patch->n[1]; ++j)
+    {
+      unsigned ij0 = L(patch->n,i,j,0);
+      R2->v[ij0] = R2_array[ij0];
+      R1->v[ij0] = R1_array[ij0];
+    }
+  
+  /* filling min */
+  patch->min[0] = -1;
+  patch->min[1] = -1;
+  patch->min[2] = -1;
+  
+  /* filling max */
+  patch->max[0] = 1;
+  patch->max[1] = 1;
+  patch->max[2] = 1;
+  
+  /* filling flags */
+  patch->coordsys = ProjectiveHemisphereUp;
+  
+  /* collocation */
+  patch->collocation[0] = Chebyshev_Nodes;
+  patch->collocation[1] = Chebyshev_Extrema;
+  patch->collocation[2] = Chebyshev_Extrema;
+  
+  /* basis */
+  patch->basis[0] = Chebyshev_Tn_BASIS;
+  patch->basis[1] = Chebyshev_Tn_BASIS;
+  patch->basis[2] = Chebyshev_Tn_BASIS;
+  
+}
+
+/* populating properties of patch for NS left hemisphere down */
+static void populate_left_NS_hemisphere_down(Grid_T *const grid,const unsigned pn)
+{
+  Patch_T *const patch = grid->patch[pn];
+  Field_T *R1 = add_field("R1_ProjectiveHemisphere",0,patch,NO);
+  Field_T *R2 = add_field("R2_ProjectiveHemisphere",0,patch,NO);
+  double *R1_array,*R2_array;
+  char name[100] = {'\0'};
+  char var[100] = {'\0'};
+  struct Ret_S ret;
+  unsigned n,i,j;
+  
+  /* filling grid */
+  patch->grid = grid;
+  
+  /* filling patch number */
+  patch->pn = pn;
+  
+  /* filling inner boundary */
+  patch->innerB = 0;
+  
+  /* filling name */
+  sprintf(name,"grid%u_left_NS_hemisphere_down",grid->gn);
+  patch->name = dup_s(name);
+  
+  /* filling n */
+  patch->n[0] = (unsigned)GetParameterI("n_a");
+  patch->n[1] = (unsigned)GetParameterI("n_b");
+  patch->n[2] = (unsigned)GetParameterI("n_c");
+  /* check for override */
+  sprintf(var,"left_NS");
+  make_keyword_parameter(&ret,var,"n");
+  n = (unsigned)GetParameterI(ret.s0);
+  if (n != INT_MAX)	patch->n[0] = n;
+  n = (unsigned)GetParameterI(ret.s1);
+  if (n != INT_MAX)	patch->n[1] = n;
+  n = (unsigned)GetParameterI(ret.s2);
+  if (n != INT_MAX)	patch->n[2] = n;
+    
+  if(patch->n[0] == INT_MAX)
+    abortEr("n_a could not be set.\n");
+  if(patch->n[1] == INT_MAX)
+    abortEr("n_b could not be set.\n");
+  if(patch->n[2] == INT_MAX)
+    abortEr("n_c could not be set.\n");
+  
+  /* filling nn */
+  patch->nn = total_nodes_patch(patch);
+  
+  /* filling center */
+  sprintf(var,"grid%u_left_NS_center_a",grid->gn);
+  patch->c[0] = GetParameterDoubleF_E(var);
+  sprintf(var,"grid%u_left_NS_center_b",grid->gn);
+  patch->c[1] = GetParameterDoubleF_E(var);
+  sprintf(var,"grid%u_left_NS_center_c",grid->gn);
+  patch->c[2] = GetParameterDoubleF_E(var);
+  
+  /* filling Rs */
+  sprintf(var,"grid%u_left_NS_R1_down",grid->gn);
+  R1_array = GetParameterArrayF_E(var);
+  sprintf(var,"grid%u_left_NS_R2_down",grid->gn);
+  R2_array = GetParameterArrayF_E(var);
+  patch->CoordSysInfo->R1_f = R1;
+  patch->CoordSysInfo->R2_f = R2;
+  
+  R1->v = alloc_double(patch->nn);
+  R2->v = alloc_double(patch->nn);
+  for (i = 0; i < patch->n[0]; ++i)
+    for (j = 0; j < patch->n[1]; ++j)
+    {
+      unsigned ij0 = L(patch->n,i,j,0);
+      R2->v[ij0] = R2_array[ij0];
+      R1->v[ij0] = R1_array[ij0];
+    }
+  
+  /* filling min */
+  patch->min[0] = -1;
+  patch->min[1] = -1;
+  patch->min[2] = -1;
+  
+  /* filling max */
+  patch->max[0] = 1;
+  patch->max[1] = 1;
+  patch->max[2] = 1;
+  
+  /* filling flags */
+  patch->coordsys = ProjectiveHemisphereDown;
+  
+/* collocation */
+  patch->collocation[0] = Chebyshev_Extrema;
+  patch->collocation[1] = Chebyshev_Nodes;
+  patch->collocation[2] = Chebyshev_Extrema;
+  
+  /* basis */
+  patch->basis[0] = Chebyshev_Tn_BASIS;
+  patch->basis[1] = Chebyshev_Tn_BASIS;
+  patch->basis[2] = Chebyshev_Tn_BASIS;
+    
+}
+
+/* populating properties of patch for NS right hemisphere up */
+static void populate_right_NS_hemisphere_up(Grid_T *const grid,const unsigned pn)
+{
+  Patch_T *const patch = grid->patch[pn];
+  Field_T *R1 = add_field("R1_ProjectiveHemisphere",0,patch,NO);
+  Field_T *R2 = add_field("R2_ProjectiveHemisphere",0,patch,NO);
+  double *R1_array,*R2_array;
+  char name[100] = {'\0'};
+  char var[100] = {'\0'};
+  struct Ret_S ret;
+  unsigned n,i,j;
+  
+  /* filling grid */
+  patch->grid = grid;
+  
+  /* filling patch number */
+  patch->pn = pn;
+  
+  /* filling inner boundary */
+  patch->innerB = 0;
+  
+  /* filling name */
+  sprintf(name,"grid%u_right_NS_hemisphere_up",grid->gn);
+  patch->name = dup_s(name);
+  
+  /* filling n */
+  patch->n[0] = (unsigned)GetParameterI("n_a");
+  patch->n[1] = (unsigned)GetParameterI("n_b");
+  patch->n[2] = (unsigned)GetParameterI("n_c");
+  /* check for override */
+  sprintf(var,"right_NS");
+  make_keyword_parameter(&ret,var,"n");
+  n = (unsigned)GetParameterI(ret.s0);
+  if (n != INT_MAX)	patch->n[0] = n;
+  n = (unsigned)GetParameterI(ret.s1);
+  if (n != INT_MAX)	patch->n[1] = n;
+  n = (unsigned)GetParameterI(ret.s2);
+  if (n != INT_MAX)	patch->n[2] = n;
+    
+  if(patch->n[0] == INT_MAX)
+    abortEr("n_a could not be set.\n");
+  if(patch->n[1] == INT_MAX)
+    abortEr("n_b could not be set.\n");
+  if(patch->n[2] == INT_MAX)
+    abortEr("n_c could not be set.\n");
+  
+  /* filling nn */
+  patch->nn = total_nodes_patch(patch);
+  
+  /* filling center */
+  sprintf(var,"grid%u_right_NS_center_a",grid->gn);
+  patch->c[0] = GetParameterDoubleF_E(var);
+  sprintf(var,"grid%u_right_NS_center_b",grid->gn);
+  patch->c[1] = GetParameterDoubleF_E(var);
+  sprintf(var,"grid%u_right_NS_center_c",grid->gn);
+  patch->c[2] = GetParameterDoubleF_E(var);
+  
+  /* filling Rs */
+  sprintf(var,"grid%u_right_NS_R1_up",grid->gn);
+  R1_array = GetParameterArrayF_E(var);
+  sprintf(var,"grid%u_right_NS_R2_up",grid->gn);
+  R2_array = GetParameterArrayF_E(var);
+  patch->CoordSysInfo->R1_f = R1;
+  patch->CoordSysInfo->R2_f = R2;
+  
+  R1->v = alloc_double(patch->nn);
+  R2->v = alloc_double(patch->nn);
+  for (i = 0; i < patch->n[0]; ++i)
+    for (j = 0; j < patch->n[1]; ++j)
+    {
+      unsigned ij0 = L(patch->n,i,j,0);
+      R2->v[ij0] = R2_array[ij0];
+      R1->v[ij0] = R1_array[ij0];
+    }
+  
+  /* filling min */
+  patch->min[0] = -1;
+  patch->min[1] = -1;
+  patch->min[2] = -1;
+  
+  /* filling max */
+  patch->max[0] = 1;
+  patch->max[1] = 1;
+  patch->max[2] = 1;
+  
+  /* filling flags */
+  patch->coordsys = ProjectiveHemisphereUp;
+  
+/* collocation */
+  patch->collocation[0] = Chebyshev_Nodes;
+  patch->collocation[1] = Chebyshev_Extrema;
+  patch->collocation[2] = Chebyshev_Extrema;
+  
+  /* basis */
+  patch->basis[0] = Chebyshev_Tn_BASIS;
+  patch->basis[1] = Chebyshev_Tn_BASIS;
+  patch->basis[2] = Chebyshev_Tn_BASIS;
+    
+}
+
+/* populating properties of patch for NS right hemisphere down */
+static void populate_right_NS_hemisphere_down(Grid_T *const grid,const unsigned pn)
+{
+  Patch_T *const patch = grid->patch[pn];
+  Field_T *R1 = add_field("R1_ProjectiveHemisphere",0,patch,NO);
+  Field_T *R2 = add_field("R2_ProjectiveHemisphere",0,patch,NO);
+  double *R1_array,*R2_array;
+  char name[100] = {'\0'};
+  char var[100] = {'\0'};
+  struct Ret_S ret;
+  unsigned n,i,j;
+  
+  /* filling grid */
+  patch->grid = grid;
+  
+  /* filling patch number */
+  patch->pn = pn;
+  
+  /* filling inner boundary */
+  patch->innerB = 0;
+  
+  /* filling name */
+  sprintf(name,"grid%u_right_NS_hemisphere_down",grid->gn);
+  patch->name = dup_s(name);
+  
+  /* filling n */
+  patch->n[0] = (unsigned)GetParameterI("n_a");
+  patch->n[1] = (unsigned)GetParameterI("n_b");
+  patch->n[2] = (unsigned)GetParameterI("n_c");
+  /* check for override */
+  sprintf(var,"right_NS");
+  make_keyword_parameter(&ret,var,"n");
+  n = (unsigned)GetParameterI(ret.s0);
+  if (n != INT_MAX)	patch->n[0] = n;
+  n = (unsigned)GetParameterI(ret.s1);
+  if (n != INT_MAX)	patch->n[1] = n;
+  n = (unsigned)GetParameterI(ret.s2);
+  if (n != INT_MAX)	patch->n[2] = n;
+    
+  if(patch->n[0] == INT_MAX)
+    abortEr("n_a could not be set.\n");
+  if(patch->n[1] == INT_MAX)
+    abortEr("n_b could not be set.\n");
+  if(patch->n[2] == INT_MAX)
+    abortEr("n_c could not be set.\n");
+  
+  /* filling nn */
+  patch->nn = total_nodes_patch(patch);
+  
+  /* filling center */
+  sprintf(var,"grid%u_right_NS_center_a",grid->gn);
+  patch->c[0] = GetParameterDoubleF_E(var);
+  sprintf(var,"grid%u_right_NS_center_b",grid->gn);
+  patch->c[1] = GetParameterDoubleF_E(var);
+  sprintf(var,"grid%u_right_NS_center_c",grid->gn);
+  patch->c[2] = GetParameterDoubleF_E(var);
+  
+  /* filling Rs */
+  sprintf(var,"grid%u_right_NS_R1_down",grid->gn);
+  R1_array = GetParameterArrayF_E(var);
+  sprintf(var,"grid%u_right_NS_R2_down",grid->gn);
+  R2_array = GetParameterArrayF_E(var);
+  patch->CoordSysInfo->R1_f = R1;
+  patch->CoordSysInfo->R2_f = R2;
+  
+  R1->v = alloc_double(patch->nn);
+  R2->v = alloc_double(patch->nn);
+  for (i = 0; i < patch->n[0]; ++i)
+    for (j = 0; j < patch->n[1]; ++j)
+    {
+      unsigned ij0 = L(patch->n,i,j,0);
+      R2->v[ij0] = R2_array[ij0];
+      R1->v[ij0] = R1_array[ij0];
+    }
+  
+  /* filling min */
+  patch->min[0] = -1;
+  patch->min[1] = -1;
+  patch->min[2] = -1;
+  
+  /* filling max */
+  patch->max[0] = 1;
+  patch->max[1] = 1;
+  patch->max[2] = 1;
+  
+  /* filling flags */
+  patch->coordsys = ProjectiveHemisphereDown;
+  
+ /* collocation */
+  patch->collocation[0] = Chebyshev_Extrema;
+  patch->collocation[1] = Chebyshev_Nodes;
+  patch->collocation[2] = Chebyshev_Extrema;
+  
+  /* basis */
+  patch->basis[0] = Chebyshev_Tn_BASIS;
+  patch->basis[1] = Chebyshev_Tn_BASIS;
+  patch->basis[2] = Chebyshev_Tn_BASIS;
+    
+}
+
+/* populating properties of patch for left NS's surrounding up */
+static void populate_left_NS_surrounding_up(Grid_T *const grid,const unsigned pn)
+{
+  Patch_T *const patch = grid->patch[pn];
+  Field_T *R1 = add_field("R1_ProjectiveHemisphere",0,patch,NO);
+  Field_T *R2 = add_field("R2_ProjectiveHemisphere",0,patch,NO);
+  double R2_const,*R1_array;
+  char name[100] = {'\0'};
+  char var[100] = {'\0'};
+  struct Ret_S ret;
+  unsigned n,i,j;
+  
+  /* filling grid */
+  patch->grid = grid;
+  
+  /* filling patch number */
+  patch->pn = pn;
+  
+  /* filling inner boundary */
+  patch->innerB = 0;
+  
+  /* filling name */
+  sprintf(name,"grid%u_left_NS_surrounding_up",grid->gn);
+  patch->name = dup_s(name);
+  
+  /* filling n */
+  patch->n[0] = (unsigned)GetParameterI("n_a");
+  patch->n[1] = (unsigned)GetParameterI("n_b");
+  patch->n[2] = (unsigned)GetParameterI("n_c");
+  /* check for override */
+  sprintf(var,"left_NS");
+  make_keyword_parameter(&ret,var,"n");
+  n = (unsigned)GetParameterI(ret.s0);
+  if (n != INT_MAX)	patch->n[0] = n;
+  n = (unsigned)GetParameterI(ret.s1);
+  if (n != INT_MAX)	patch->n[1] = n;
+  n = (unsigned)GetParameterI(ret.s2);
+  if (n != INT_MAX)	patch->n[2] = n;
+    
+  if(patch->n[0] == INT_MAX)
+    abortEr("n_a could not be set.\n");
+  if(patch->n[1] == INT_MAX)
+    abortEr("n_b could not be set.\n");
+  if(patch->n[2] == INT_MAX)
+    abortEr("n_c could not be set.\n");
+  
+  /* filling nn */
+  patch->nn = total_nodes_patch(patch);
+  
+  /* filling center */
+  sprintf(var,"grid%u_left_NS_center_a",grid->gn);
+  patch->c[0] = GetParameterDoubleF_E(var);
+  sprintf(var,"grid%u_left_NS_center_b",grid->gn);
+  patch->c[1] = GetParameterDoubleF_E(var);
+  sprintf(var,"grid%u_left_NS_center_c",grid->gn);
+  patch->c[2] = GetParameterDoubleF_E(var);
+  
+  /* filling Rs */
+  sprintf(var,"grid%u_left_NS_Surrounding_R2",grid->gn);
+  R2_const = GetParameterDoubleF_E(var);
+  sprintf(var,"grid%u_left_NS_R2_up",grid->gn);
+  R1_array = GetParameterArrayF_E(var);
+  patch->CoordSysInfo->R1_f = R1;
+  patch->CoordSysInfo->R2_f = R2;
+  
+  R1->v = alloc_double(patch->nn);
+  R2->v = alloc_double(patch->nn);
+  for (i = 0; i < patch->n[0]; ++i)
+    for (j = 0; j < patch->n[1]; ++j)
+    {
+      unsigned ij0 = L(patch->n,i,j,0);
+      R1->v[ij0] = R1_array[ij0];
+      R2->v[ij0] = R2_const;
+    }
+  
+  /* filling min */
+  patch->min[0] = -1;
+  patch->min[1] = -1;
+  patch->min[2] = -1;
+  
+  /* filling max */
+  patch->max[0] = 1;
+  patch->max[1] = 1;
+  patch->max[2] = 1;
+  
+  /* filling flags */
+  patch->coordsys = ProjectiveHemisphereUp;
+  
+ /* collocation */
+  patch->collocation[0] = Chebyshev_Nodes;
+  patch->collocation[1] = Chebyshev_Extrema;
+  patch->collocation[2] = Chebyshev_Extrema;
+  
+  /* basis */
+  patch->basis[0] = Chebyshev_Tn_BASIS;
+  patch->basis[1] = Chebyshev_Tn_BASIS;
+  patch->basis[2] = Chebyshev_Tn_BASIS;
+    
+}
+
+/* populating properties of patch for left NS's surrounding down */
+static void populate_left_NS_surrounding_down(Grid_T *const grid,const unsigned pn)
+{
+  Patch_T *const patch = grid->patch[pn];
+  Field_T *R1 = add_field("R1_ProjectiveHemisphere",0,patch,NO);
+  Field_T *R2 = add_field("R2_ProjectiveHemisphere",0,patch,NO);
+  double R2_const,*R1_array;
+  char name[100] = {'\0'};
+  char var[100] = {'\0'};
+  struct Ret_S ret;
+  unsigned n,i,j;
+  
+  /* filling grid */
+  patch->grid = grid;
+  
+  /* filling patch number */
+  patch->pn = pn;
+  
+  /* filling inner boundary */
+  patch->innerB = 0;
+  
+  /* filling name */
+  sprintf(name,"grid%u_left_NS_surrounding_down",grid->gn);
+  patch->name = dup_s(name);
+  
+  /* filling n */
+  patch->n[0] = (unsigned)GetParameterI("n_a");
+  patch->n[1] = (unsigned)GetParameterI("n_b");
+  patch->n[2] = (unsigned)GetParameterI("n_c");
+  /* check for override */
+  sprintf(var,"left_NS");
+  make_keyword_parameter(&ret,var,"n");
+  n = (unsigned)GetParameterI(ret.s0);
+  if (n != INT_MAX)	patch->n[0] = n;
+  n = (unsigned)GetParameterI(ret.s1);
+  if (n != INT_MAX)	patch->n[1] = n;
+  n = (unsigned)GetParameterI(ret.s2);
+  if (n != INT_MAX)	patch->n[2] = n;
+    
+  if(patch->n[0] == INT_MAX)
+    abortEr("n_a could not be set.\n");
+  if(patch->n[1] == INT_MAX)
+    abortEr("n_b could not be set.\n");
+  if(patch->n[2] == INT_MAX)
+    abortEr("n_c could not be set.\n");
+  
+  /* filling nn */
+  patch->nn = total_nodes_patch(patch);
+  
+  /* filling center */
+  sprintf(var,"grid%u_left_NS_center_a",grid->gn);
+  patch->c[0] = GetParameterDoubleF_E(var);
+  sprintf(var,"grid%u_left_NS_center_b",grid->gn);
+  patch->c[1] = GetParameterDoubleF_E(var);
+  sprintf(var,"grid%u_left_NS_center_c",grid->gn);
+  patch->c[2] = GetParameterDoubleF_E(var);
+  
+  /* filling Rs */
+  sprintf(var,"grid%u_left_NS_Surrounding_R2",grid->gn);
+  R2_const = GetParameterDoubleF_E(var);
+  sprintf(var,"grid%u_left_NS_R2_down",grid->gn);
+  R1_array = GetParameterArrayF_E(var);
+  patch->CoordSysInfo->R1_f = R1;
+  patch->CoordSysInfo->R2_f = R2;
+  
+  R1->v = alloc_double(patch->nn);
+  R2->v = alloc_double(patch->nn);
+  for (i = 0; i < patch->n[0]; ++i)
+    for (j = 0; j < patch->n[1]; ++j)
+    {
+      unsigned ij0 = L(patch->n,i,j,0);
+      R1->v[ij0] = R1_array[ij0];
+      R2->v[ij0] = R2_const;
+    }
+  
+  /* filling min */
+  patch->min[0] = -1;
+  patch->min[1] = -1;
+  patch->min[2] = -1;
+  
+  /* filling max */
+  patch->max[0] = 1;
+  patch->max[1] = 1;
+  patch->max[2] = 1;
+  
+  /* filling flags */
+  patch->coordsys = ProjectiveHemisphereDown;
+  
+ /* collocation */
+  patch->collocation[0] = Chebyshev_Extrema;
+  patch->collocation[1] = Chebyshev_Nodes;
+  patch->collocation[2] = Chebyshev_Extrema;
+  
+  /* basis */
+  patch->basis[0] = Chebyshev_Tn_BASIS;
+  patch->basis[1] = Chebyshev_Tn_BASIS;
+  patch->basis[2] = Chebyshev_Tn_BASIS;
+    
+}
+
+/* populating properties of patch for right NS's surrounding up */
+static void populate_right_NS_surrounding_up(Grid_T *const grid,const unsigned pn)
+{
+  Patch_T *const patch = grid->patch[pn];
+  Field_T *R1 = add_field("R1_ProjectiveHemisphere",0,patch,NO);
+  Field_T *R2 = add_field("R2_ProjectiveHemisphere",0,patch,NO);
+  double R2_const,*R1_array;
+  char name[100] = {'\0'};
+  char var[100] = {'\0'};
+  struct Ret_S ret;
+  unsigned n,i,j;
+  
+  /* filling grid */
+  patch->grid = grid;
+  
+  /* filling patch number */
+  patch->pn = pn;
+  
+  /* filling inner boundary */
+  patch->innerB = 0;
+  
+  /* filling name */
+  sprintf(name,"grid%u_right_NS_surrounding_up",grid->gn);
+  patch->name = dup_s(name);
+  
+  /* filling n */
+  patch->n[0] = (unsigned)GetParameterI("n_a");
+  patch->n[1] = (unsigned)GetParameterI("n_b");
+  patch->n[2] = (unsigned)GetParameterI("n_c");
+  /* check for override */
+  sprintf(var,"right_NS");
+  make_keyword_parameter(&ret,var,"n");
+  n = (unsigned)GetParameterI(ret.s0);
+  if (n != INT_MAX)	patch->n[0] = n;
+  n = (unsigned)GetParameterI(ret.s1);
+  if (n != INT_MAX)	patch->n[1] = n;
+  n = (unsigned)GetParameterI(ret.s2);
+  if (n != INT_MAX)	patch->n[2] = n;
+    
+  if(patch->n[0] == INT_MAX)
+    abortEr("n_a could not be set.\n");
+  if(patch->n[1] == INT_MAX)
+    abortEr("n_b could not be set.\n");
+  if(patch->n[2] == INT_MAX)
+    abortEr("n_c could not be set.\n");
+  
+  /* filling nn */
+  patch->nn = total_nodes_patch(patch);
+  
+  /* filling center */
+  sprintf(var,"grid%u_right_NS_center_a",grid->gn);
+  patch->c[0] = GetParameterDoubleF_E(var);
+  sprintf(var,"grid%u_right_NS_center_b",grid->gn);
+  patch->c[1] = GetParameterDoubleF_E(var);
+  sprintf(var,"grid%u_right_NS_center_c",grid->gn);
+  patch->c[2] = GetParameterDoubleF_E(var);
+  
+  /* filling Rs */
+  sprintf(var,"grid%u_right_NS_Surrounding_R2",grid->gn);
+  R2_const = GetParameterDoubleF_E(var);
+  sprintf(var,"grid%u_right_NS_R2_up",grid->gn);
+  R1_array = GetParameterArrayF_E(var);
+  patch->CoordSysInfo->R1_f = R1;
+  patch->CoordSysInfo->R2_f = R2;
+  
+  R1->v = alloc_double(patch->nn);
+  R2->v = alloc_double(patch->nn);
+  for (i = 0; i < patch->n[0]; ++i)
+    for (j = 0; j < patch->n[1]; ++j)
+    {
+      unsigned ij0 = L(patch->n,i,j,0);
+      R1->v[ij0] = R1_array[ij0];
+      R2->v[ij0] = R2_const;
+    }
+  
+  /* filling min */
+  patch->min[0] = -1;
+  patch->min[1] = -1;
+  patch->min[2] = -1;
+  
+  /* filling max */
+  patch->max[0] = 1;
+  patch->max[1] = 1;
+  patch->max[2] = 1;
+  
+  /* filling flags */
+  patch->coordsys = ProjectiveHemisphereUp;
+  
+ /* collocation */
+  patch->collocation[0] = Chebyshev_Nodes;
+  patch->collocation[1] = Chebyshev_Extrema;
+  patch->collocation[2] = Chebyshev_Extrema;
+  
+  /* basis */
+  patch->basis[0] = Chebyshev_Tn_BASIS;
+  patch->basis[1] = Chebyshev_Tn_BASIS;
+  patch->basis[2] = Chebyshev_Tn_BASIS;
+    
+}
+
+/* populating properties of patch for right_NS's surrounding down */
+static void populate_right_NS_surrounding_down(Grid_T *const grid,const unsigned pn)
+{
+  Patch_T *const patch = grid->patch[pn];
+  Field_T *R1 = add_field("R1_ProjectiveHemisphere",0,patch,NO);
+  Field_T *R2 = add_field("R2_ProjectiveHemisphere",0,patch,NO);
+  double R2_const,*R1_array;
+  char name[100] = {'\0'};
+  char var[100] = {'\0'};
+  struct Ret_S ret;
+  unsigned n,i,j;
+  
+  /* filling grid */
+  patch->grid = grid;
+  
+  /* filling patch number */
+  patch->pn = pn;
+  
+  /* filling inner boundary */
+  patch->innerB = 0;
+  
+  /* filling name */
+  sprintf(name,"grid%u_right_NS_surrounding_down",grid->gn);
+  patch->name = dup_s(name);
+  
+  /* filling n */
+  patch->n[0] = (unsigned)GetParameterI("n_a");
+  patch->n[1] = (unsigned)GetParameterI("n_b");
+  patch->n[2] = (unsigned)GetParameterI("n_c");
+  /* check for override */
+  sprintf(var,"right_NS");
+  make_keyword_parameter(&ret,var,"n");
+  n = (unsigned)GetParameterI(ret.s0);
+  if (n != INT_MAX)	patch->n[0] = n;
+  n = (unsigned)GetParameterI(ret.s1);
+  if (n != INT_MAX)	patch->n[1] = n;
+  n = (unsigned)GetParameterI(ret.s2);
+  if (n != INT_MAX)	patch->n[2] = n;
+    
+  if(patch->n[0] == INT_MAX)
+    abortEr("n_a could not be set.\n");
+  if(patch->n[1] == INT_MAX)
+    abortEr("n_b could not be set.\n");
+  if(patch->n[2] == INT_MAX)
+    abortEr("n_c could not be set.\n");
+  
+  /* filling nn */
+  patch->nn = total_nodes_patch(patch);
+  
+  /* filling center */
+  sprintf(var,"grid%u_right_NS_center_a",grid->gn);
+  patch->c[0] = GetParameterDoubleF_E(var);
+  sprintf(var,"grid%u_right_NS_center_b",grid->gn);
+  patch->c[1] = GetParameterDoubleF_E(var);
+  sprintf(var,"grid%u_right_NS_center_c",grid->gn);
+  patch->c[2] = GetParameterDoubleF_E(var);
+  
+  /* filling Rs */
+  sprintf(var,"grid%u_right_NS_Surrounding_R2",grid->gn);
+  R2_const = GetParameterDoubleF_E(var);
+  sprintf(var,"grid%u_right_NS_R2_down",grid->gn);
+  R1_array = GetParameterArrayF_E(var);
+  patch->CoordSysInfo->R1_f = R1;
+  patch->CoordSysInfo->R2_f = R2;
+  
+  R1->v = alloc_double(patch->nn);
+  R2->v = alloc_double(patch->nn);
+  for (i = 0; i < patch->n[0]; ++i)
+    for (j = 0; j < patch->n[1]; ++j)
+    {
+      unsigned ij0 = L(patch->n,i,j,0);
+      R1->v[ij0] = R1_array[ij0];
+      R2->v[ij0] = R2_const;
+    }
+  
+  /* filling min */
+  patch->min[0] = -1;
+  patch->min[1] = -1;
+  patch->min[2] = -1;
+  
+  /* filling max */
+  patch->max[0] = 1;
+  patch->max[1] = 1;
+  patch->max[2] = 1;
+  
+  /* filling flags */
+  patch->coordsys = ProjectiveHemisphereDown;
+  
+ /* collocation */
+  patch->collocation[0] = Chebyshev_Extrema;
+  patch->collocation[1] = Chebyshev_Nodes;
+  patch->collocation[2] = Chebyshev_Extrema;
+  
+  /* basis */
+  patch->basis[0] = Chebyshev_Tn_BASIS;
+  patch->basis[1] = Chebyshev_Tn_BASIS;
+  patch->basis[2] = Chebyshev_Tn_BASIS;
+    
+}
+
+/* populating properties of the box at the middle of left NS */
+static void populate_left_NS_central_box(Grid_T *const grid,const unsigned pn)
+{
+  Patch_T *const patch = grid->patch[pn];
+  unsigned n;
+  char name[100] = {'\0'};
+  char var[100] = {'\0'};
+  
+  /* filling grid */
+  patch->grid = grid;
+  
+  /* filling patch number */
+  patch->pn = pn;
+  
+  /* filling inner boundary */
+  patch->innerB = 0;
+  
+  /* filling name */
+  sprintf(name,"grid%u_left_centeral_box",grid->gn);
+  patch->name = dup_s(name);
+  
+  /* filling n */
+  sprintf(var,"grid%u_left_centeral_box_n_abc",grid->gn);
+  n = (unsigned)GetParameterI_E(var);
+  patch->n[0] = patch->n[1] = patch->n[2] = n;
+  
+  if(patch->n[0] == INT_MAX)
+    abortEr("n_a could not be set.\n");
+  if(patch->n[1] == INT_MAX)
+    abortEr("n_b could not be set.\n");
+  if(patch->n[2] == INT_MAX)
+    abortEr("n_c could not be set.\n");
+  
+  /* filling nn */
+  patch->nn = total_nodes_patch(patch);
+  
+  /* filling center */
+  sprintf(var,"grid%u_left_NS_center_a",grid->gn);
+  patch->c[0] = GetParameterDoubleF_E(var);
+  sprintf(var,"grid%u_left_NS_center_b",grid->gn);
+  patch->c[1] = GetParameterDoubleF_E(var);
+  sprintf(var,"grid%u_left_NS_center_c",grid->gn);
+  patch->c[2] = GetParameterDoubleF_E(var);
+  
+  /* filling size */
+  sprintf(var,"grid%u_left_centeral_box_size_a",grid->gn);
+  patch->s[0] = GetParameterDoubleF_E(var);
+  sprintf(var,"grid%u_left_centeral_box_size_b",grid->gn);
+  patch->s[1] = GetParameterDoubleF_E(var);
+  sprintf(var,"grid%u_left_centeral_box_size_c",grid->gn);
+  patch->s[2] = GetParameterDoubleF_E(var);
+  
+  /* filling min: min = center-l/2 */
+  patch->min[0] = patch->c[0]-patch->s[0]/2;
+  patch->min[1] = patch->c[1]-patch->s[1]/2;
+  patch->min[2] = patch->c[2]-patch->s[2]/2;
+  
+  /* filling max: max = center+l/2 */
+  patch->max[0] = patch->c[0]+patch->s[0]/2;
+  patch->max[1] = patch->c[1]+patch->s[1]/2;
+  patch->max[2] = patch->c[2]+patch->s[2]/2;
+  
+  /* filling flags */
+  patch->coordsys = Cartesian;
+  
+ /* collocation */
+  patch->collocation[0] = Chebyshev_Extrema;
+  patch->collocation[1] = Chebyshev_Extrema;
+  patch->collocation[2] = Chebyshev_Extrema;
+  
+  /* basis */
+  patch->basis[0] = Chebyshev_Tn_BASIS;
+  patch->basis[1] = Chebyshev_Tn_BASIS;
+  patch->basis[2] = Chebyshev_Tn_BASIS;
+    
+}
+
+/* populating properties of the box at the middle of right NS */
+static void populate_right_NS_central_box(Grid_T *const grid,const unsigned pn)
+{
+  Patch_T *const patch = grid->patch[pn];
+  unsigned n;
+  char name[100] = {'\0'};
+  char var[100] = {'\0'};
+  
+  /* filling grid */
+  patch->grid = grid;
+  
+  /* filling patch number */
+  patch->pn = pn;
+  
+  /* filling inner boundary */
+  patch->innerB = 0;
+  
+  /* filling name */
+  sprintf(name,"grid%u_right_centeral_box",grid->gn);
+  patch->name = dup_s(name);
+  
+  /* filling n */
+  sprintf(var,"grid%u_right_centeral_box_n_abc",grid->gn);
+  n = (unsigned)GetParameterI_E(var);
+  patch->n[0] = patch->n[1] = patch->n[2] = n;
+  
+  if(patch->n[0] == INT_MAX)
+    abortEr("n_a could not be set.\n");
+  if(patch->n[1] == INT_MAX)
+    abortEr("n_b could not be set.\n");
+  if(patch->n[2] == INT_MAX)
+    abortEr("n_c could not be set.\n");
+  
+  /* filling nn */
+  patch->nn = total_nodes_patch(patch);
+  
+  /* filling center */
+  sprintf(var,"grid%u_right_NS_center_a",grid->gn);
+  patch->c[0] = GetParameterDoubleF_E(var);
+  sprintf(var,"grid%u_right_NS_center_b",grid->gn);
+  patch->c[1] = GetParameterDoubleF_E(var);
+  sprintf(var,"grid%u_right_NS_center_c",grid->gn);
+  patch->c[2] = GetParameterDoubleF_E(var);
+  
+  /* filling size */
+  sprintf(var,"grid%u_right_centeral_box_size_a",grid->gn);
+  patch->s[0] = GetParameterDoubleF_E(var);
+  sprintf(var,"grid%u_right_centeral_box_size_b",grid->gn);
+  patch->s[1] = GetParameterDoubleF_E(var);
+  sprintf(var,"grid%u_right_centeral_box_size_c",grid->gn);
+  patch->s[2] = GetParameterDoubleF_E(var);
+  
+  /* filling min: min = center-l/2 */
+  patch->min[0] = patch->c[0]-patch->s[0]/2;
+  patch->min[1] = patch->c[1]-patch->s[1]/2;
+  patch->min[2] = patch->c[2]-patch->s[2]/2;
+  
+  /* filling max: max = center+l/2 */
+  patch->max[0] = patch->c[0]+patch->s[0]/2;
+  patch->max[1] = patch->c[1]+patch->s[1]/2;
+  patch->max[2] = patch->c[2]+patch->s[2]/2;
+  
+  /* filling flags */
+  patch->coordsys = Cartesian;
+  
+ /* collocation */
+  patch->collocation[0] = Chebyshev_Extrema;
+  patch->collocation[1] = Chebyshev_Extrema;
+  patch->collocation[2] = Chebyshev_Extrema;
+  
+  /* basis */
+  patch->basis[0] = Chebyshev_Tn_BASIS;
+  patch->basis[1] = Chebyshev_Tn_BASIS;
+  patch->basis[2] = Chebyshev_Tn_BASIS;
+    
+}
