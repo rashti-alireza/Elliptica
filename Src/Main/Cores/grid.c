@@ -16,6 +16,13 @@ int make_patches(Grid_T *const grid)
   alloc_nodes(grid);
   make_nodes(grid);
   
+  //test
+  /* test printing coords */
+  if (test_print(PRINT_COORDS))
+    pr_coords(grid);
+  abort();
+  //end
+  
   /* allocating and making Jacobian coordinate transformation */
   make_JacobianT(grid);
   

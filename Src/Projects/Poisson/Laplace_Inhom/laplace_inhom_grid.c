@@ -38,6 +38,9 @@ static void grid_characteristics_Laplace_Inhome (Grid_T *const grid)
     
   else if (strcmp_i(grid->kind,"BNS_Spherical_grid"))
     characteristics_BNS_Spherical_grid(grid); 
+    
+  else if (strcmp_i(grid->kind,"BNS_CubedSpherical_grid"))
+    characteristics_BNS_CubedSpherical_grid(grid); 
    
   else
     abortEr_s("There is no such %s grid kind.\n",grid->kind);
@@ -49,6 +52,137 @@ static void characteristics_Cartesian_grid(Grid_T *const grid)
 {
   /* this type of grid is so simple; nothing to calculate. */
   UNUSED(grid);
+}
+
+/* calculating the main characteristic of grid for BNS_CubedSpherical grid */
+static void characteristics_BNS_CubedSpherical_grid(Grid_T *const grid)
+{
+  const unsigned gn   = grid->gn;
+  const double CONST  = 5.0;
+  const double C      = GetParameterD_E("BNS_Distance");
+  const double R_NS_l = GetParameterD_E("left_NS_radius");/* assuming perfect sphere */
+  const double R_NS_r = GetParameterD_E("right_NS_radius");/* assuming perfect sphere */
+  double box_size_l,box_size_r;
+  const unsigned N_Outermost_Split = (unsigned)GetParameterI_E("Number_of_Outermost_Split"); 
+  double *R_outermost = calloc(N_Outermost_Split,sizeof(*R_outermost));
+  unsigned n_box_l, n_box_r,n_r,n_l;
+  char var[100] = {'\0'};
+  char par[100] = {'\0'};
+  char val[100] = {'\0'};
+  unsigned i;
+  
+  assert(GRT(C,0));
+  assert(GRT(R_NS_l,0));
+  assert(GRT(R_NS_r,0));
+  assert(LSS(2*R_NS_l,C));
+  assert(LSS(2*R_NS_r,C));
+  
+  n_l = (unsigned)GetParameterI("n_c");
+  i   = (unsigned)GetParameterI("left_NS_n_c");
+  if (i != INT_MAX) 	n_l = i;
+  if (n_l == INT_MAX)   abortEr("n_l could not be set.");
+  assert(n_l > 2);
+  
+  n_r = (unsigned)GetParameterI("n_c");
+  i   = (unsigned)GetParameterI("right_NS_n_c");
+  if (i != INT_MAX) 	n_r = i;
+  if (n_r == INT_MAX)   abortEr("n_r could not be set.");
+  assert(n_r > 2);
+  
+  /* making NS's surface function */
+  NS_surface_BNS_CubedSpherical_grid(grid);
+  
+  box_size_l = 2*R_NS_l/n_l;
+  box_size_r = 2*R_NS_r/n_r;
+  
+  for (i = 0; i < N_Outermost_Split; i++)
+  {
+    sprintf(var,"Outermost%u_radius",i);
+    R_outermost[i] = GetParameterD_E(var);
+    
+    if (LSS(R_outermost[i],2*C))
+      abortEr("the radius of outermost patches must be greater than twice of BNS distance.");
+    
+    if (i > 0)
+      if (LSSEQL(R_outermost[i],R_outermost[i-1]))
+        abortEr("The radius of outermost must be increasing.");
+    
+  }
+  
+  n_box_l = (unsigned)(3 + n_l/CONST);
+  n_box_r = (unsigned)(3 + n_r/CONST);
+  
+  /* adding the results to the parameter data base */
+  
+  /* n_a, n_b, n_c */
+  sprintf(par,"grid%u_left_centeral_box_n_abc",gn);
+  sprintf(val,"%u",n_box_l);
+  add_parameter_string(par,val);
+  
+  sprintf(par,"grid%u_right_centeral_box_n_abc",gn);
+  sprintf(val,"%u",n_box_r);
+  add_parameter_string(par,val);
+  
+  /* size a,b,c */
+  sprintf(par,"grid%u_left_centeral_box_size_a",gn);
+  add_parameter_double(par,box_size_l);
+  
+  sprintf(par,"grid%u_left_centeral_box_size_b",gn);
+  add_parameter_double(par,box_size_l);
+  
+  sprintf(par,"grid%u_left_centeral_box_size_c",gn);
+  add_parameter_double(par,box_size_l);
+  
+  sprintf(par,"grid%u_right_centeral_box_size_a",gn);
+  add_parameter_double(par,box_size_r);
+  
+  sprintf(par,"grid%u_right_centeral_box_size_b",gn);
+  add_parameter_double(par,box_size_r);
+  
+  sprintf(par,"grid%u_right_centeral_box_size_c",gn);
+  add_parameter_double(par,box_size_r);
+  
+  /* surrounding box length */
+  sprintf(par,"grid%u_surrounding_box_length",gn);
+  add_parameter_double(par,C);
+  
+  /* R1 and R2 outermost */
+  sprintf(par,"grid%u_outermost%u_R2",gn,0);
+  add_parameter_double(par,R_outermost[0]);
+    
+  for (i = 1; i < N_Outermost_Split; i++)
+  {
+    /* R1: */
+    sprintf(par,"grid%u_outermost%u_R1",gn,i);
+    add_parameter_double(par,R_outermost[i-1]);
+    
+    /* R2: */
+    sprintf(par,"grid%u_outermost%u_R2",gn,i);
+    add_parameter_double(par,R_outermost[i]);
+    
+  }
+  
+  /* assuming the center of left NS at (0,-C/2,0) */
+  sprintf(par,"grid%u_left_NS_center_a",gn);
+  add_parameter_double(par,0.0);
+  
+  sprintf(par,"grid%u_left_NS_center_b",gn);
+  add_parameter_double(par,-C/2);
+  
+  sprintf(par,"grid%u_left_NS_center_c",gn);
+  add_parameter_double(par,0.0);
+  
+  /* assuming the center of right NS at (0,C/2,0) */
+  sprintf(par,"grid%u_right_NS_center_a",gn);
+  add_parameter_double(par,0.0);
+  
+  sprintf(par,"grid%u_right_NS_center_b",gn);
+  add_parameter_double(par,C/2);
+  
+  sprintf(par,"grid%u_right_NS_center_c",gn);
+  add_parameter_double(par,0.0);
+  
+  free(R_outermost);
 }
 
 /* calculating the main characteristic of grid for BNS_Projective grid */
@@ -600,5 +734,103 @@ static void NS_radii_BNS_Spherical_grid(Grid_T *const grid,void *vp)
   add_parameter_array(par,R1,N_total);
   free(R1);
   free(R2);
+}
+
+/* making  NS's surface function */
+static void NS_surface_BNS_CubedSpherical_grid(Grid_T *const grid)
+{
+  const double R_NS_l = GetParameterD_E("left_NS_radius");/* assuming perfect sphere */
+  const double R_NS_r = GetParameterD_E("right_NS_radius");/* assuming perfect sphere */
+  double *R;
+  char par[100] = {'\0'};
+  unsigned N[3],n,i,j,N_total;
+  
+  /* left NS */
+  
+  /* filling N */
+  N[0] = (unsigned)GetParameterI("n_a");
+  N[1] = (unsigned)GetParameterI("n_b");
+  N[2] = (unsigned)GetParameterI("n_c");
+  /* check for override */
+  n = (unsigned)GetParameterI("left_NS_n_a");
+  if (n != INT_MAX)     N[0] = n;
+  n = (unsigned)GetParameterI("left_NS_n_b");
+  if (n != INT_MAX)     N[1] = n;
+  n = (unsigned)GetParameterI("left_NS_n_c");
+  if (n != INT_MAX)     N[2] = n;
+  
+  if(N[0] == INT_MAX)
+    abortEr("n_a could not be set.\n");
+  if(N[1] == INT_MAX)
+    abortEr("n_b could not be set.\n");
+  if(N[2] == INT_MAX)
+    abortEr("n_c could not be set.\n");
+    
+  N_total = N[0]*N[1]*N[2];
+  
+  /* surface */
+  R = alloc_double(N_total);
+  for (i = 0; i < N[0]; ++i)
+    for (j = 0; j < N[1]; ++j)
+      R[L(N,i,j,0)] = R_NS_l;
+      
+  sprintf(par,"grid%u_left_NS_surface_function_up",grid->gn);
+  add_parameter_array(par,R,N_total);
+  sprintf(par,"grid%u_left_NS_surface_function_down",grid->gn);
+  add_parameter_array(par,R,N_total);
+  sprintf(par,"grid%u_left_NS_surface_function_back",grid->gn);
+  add_parameter_array(par,R,N_total);
+  sprintf(par,"grid%u_left_NS_surface_function_front",grid->gn);
+  add_parameter_array(par,R,N_total);
+  sprintf(par,"grid%u_left_NS_surface_function_left",grid->gn);
+  add_parameter_array(par,R,N_total);
+  sprintf(par,"grid%u_left_NS_surface_function_right",grid->gn);
+  add_parameter_array(par,R,N_total);
+  
+  free(R);
+  
+  /* right NS */
+  
+  /* filling N */
+  N[0] = (unsigned)GetParameterI("n_a");
+  N[1] = (unsigned)GetParameterI("n_b");
+  N[2] = (unsigned)GetParameterI("n_c");
+  /* check for override */
+  n = (unsigned)GetParameterI("right_NS_n_a");
+  if (n != INT_MAX)     N[0] = n;
+  n = (unsigned)GetParameterI("right_NS_n_b");
+  if (n != INT_MAX)     N[1] = n;
+  n = (unsigned)GetParameterI("right_NS_n_c");
+  if (n != INT_MAX)     N[2] = n;
+  
+  if(N[0] == INT_MAX)
+    abortEr("n_a could not be set.\n");
+  if(N[1] == INT_MAX)
+    abortEr("n_b could not be set.\n");
+  if(N[2] == INT_MAX)
+    abortEr("n_c could not be set.\n");
+    
+  N_total = N[0]*N[1]*N[2];
+  
+  /* surface */
+  R = alloc_double(N_total);
+  for (i = 0; i < N[0]; ++i)
+    for (j = 0; j < N[1]; ++j)
+      R[L(N,i,j,0)] = R_NS_r;
+      
+  sprintf(par,"grid%u_right_NS_surface_function_up",grid->gn);
+  add_parameter_array(par,R,N_total);
+  sprintf(par,"grid%u_right_NS_surface_function_down",grid->gn);
+  add_parameter_array(par,R,N_total);
+  sprintf(par,"grid%u_right_NS_surface_function_back",grid->gn);
+  add_parameter_array(par,R,N_total);
+  sprintf(par,"grid%u_right_NS_surface_function_front",grid->gn);
+  add_parameter_array(par,R,N_total);
+  sprintf(par,"grid%u_right_NS_surface_function_left",grid->gn);
+  add_parameter_array(par,R,N_total);
+  sprintf(par,"grid%u_right_NS_surface_function_right",grid->gn);
+  add_parameter_array(par,R,N_total);
+  
+  free(R);
 }
 

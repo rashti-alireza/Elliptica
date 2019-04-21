@@ -35,12 +35,16 @@ typedef enum FLAG_T
   BRUTE_FORCE,
   FATAL,
   INITIALIZE,
-  UP,
-  DOWN,
-  LEFT,
-  RIGHT,
-  BACK,
-  FRONT,
+  UP = 0,
+  DOWN = 1,
+  LEFT = 2,
+  RIGHT = 3,
+  BACK = 4,
+  FRONT = 5,
+  NS_T_CS,/* NS type in cubed spherical */
+  SR_T_CS,/* surrounding type in cubed spherical */
+  OT_T1_CS,/* outermost type1 in cubed spherical */
+  OT_T2_CS,/* outermost type2 in cubed spherical */
   NOT_INITIALIZE
 }Flag_T;
 
@@ -498,10 +502,24 @@ typedef struct PATCH_T
     Field_T *dR2_dy;/* dR2/dy */
     Field_T *dR2_dz;/* dR2/dz */
    }ProjectiveCoord[1];
-   /*struct
+   struct
    {
-    
-   }CubedSphericalCoord[1];*/
+    Flag_T side;/* the side of this cubed coord, up, down, etc. */
+    Flag_T type;/* type of cubed spherical, NS, SR, OT */
+    Field_T *R1_f;/* cubed spherical surface function (small) */
+    Field_T *R2_f;/* cubed spherical surface function (big) */
+    //Field_T *xc2;/* bigger xc field */
+    //Field_T *dxc1_dx;/* dxc1/dx */
+    //Field_T *dxc1_dy;/* dxc1/dy */
+    //Field_T *dxc1_dz;/* dxc1/dz */
+    //Field_T *dxc2_dx;/* dxc2/dx */
+    //Field_T *dxc2_dy;/* dxc2/dy */
+    //Field_T *dxc2_dz;/* dxc2/dz */
+    double R1;/* small radius of outermost patches */
+    double R2;/* big radius of outermost patches */
+    double xc1;/* const xc value for those patches that have square (small)*/
+    double xc2;/* const xc value for those patches that have square (big)*/
+   }CubedSphericalCoord[1];
   }CoordSysInfo[1];
   Collocation_T collocation[3];/* type of collocation in each direction */
   Basis_T basis[3];/* the type of basis for functions used in this patch 

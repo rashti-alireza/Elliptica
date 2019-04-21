@@ -594,3 +594,25 @@ static void populate_right_NS_surrounding_sphere(Grid_T *const grid,const unsign
   assert(patch->basis[2] != UNDEFINED_BASIS);
     
 }
+
+/* memory alloc patches for BNS_Spherical type */
+void alloc_patches_BNS_Spherical_grid(Grid_T *const grid)
+{
+  unsigned Np = 4;/* number of patches without outermost's*/
+  unsigned outermost;
+  unsigned i;
+  
+  outermost = (unsigned) GetParameterI("Number_of_Outermost_Split");
+  if (outermost != (unsigned)INT_MAX)
+    Np += 2*outermost;
+  
+  grid->patch = calloc((Np+1),sizeof(*grid->patch));
+  pointerEr(grid->patch);
+  
+  for (i = 0; i < Np; i++)
+  {
+    grid->patch[i] = calloc(1,sizeof(*grid->patch[i]));
+    pointerEr(grid->patch[i]);
+  }
+  
+}

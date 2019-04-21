@@ -297,3 +297,353 @@ void fill_patches_Cartesian_grid(Grid_T *const grid)
   }
   
 }
+
+/* populating properties of the box at the middle of left NS */
+void populate_left_NS_central_box(Grid_T *const grid,const unsigned pn)
+{
+  Patch_T *const patch = grid->patch[pn];
+  unsigned n;
+  char name[100] = {'\0'};
+  char var[100] = {'\0'};
+  
+  /* filling grid */
+  patch->grid = grid;
+  
+  /* filling patch number */
+  patch->pn = pn;
+  
+  /* filling inner boundary */
+  patch->innerB = 0;
+  
+  /* filling name */
+  sprintf(name,"grid%u_left_centeral_box",grid->gn);
+  patch->name = dup_s(name);
+  
+  /* filling n */
+  sprintf(var,"grid%u_left_centeral_box_n_abc",grid->gn);
+  n = (unsigned)GetParameterI_E(var);
+  patch->n[0] = patch->n[1] = patch->n[2] = n;
+  
+  if(patch->n[0] == INT_MAX)
+    abortEr("n_a could not be set.\n");
+  if(patch->n[1] == INT_MAX)
+    abortEr("n_b could not be set.\n");
+  if(patch->n[2] == INT_MAX)
+    abortEr("n_c could not be set.\n");
+  
+  /* filling nn */
+  patch->nn = total_nodes_patch(patch);
+  
+  /* filling center */
+  sprintf(var,"grid%u_left_NS_center_a",grid->gn);
+  patch->c[0] = GetParameterDoubleF_E(var);
+  sprintf(var,"grid%u_left_NS_center_b",grid->gn);
+  patch->c[1] = GetParameterDoubleF_E(var);
+  sprintf(var,"grid%u_left_NS_center_c",grid->gn);
+  patch->c[2] = GetParameterDoubleF_E(var);
+  
+  /* filling size */
+  sprintf(var,"grid%u_left_centeral_box_size_a",grid->gn);
+  patch->s[0] = GetParameterDoubleF_E(var);
+  sprintf(var,"grid%u_left_centeral_box_size_b",grid->gn);
+  patch->s[1] = GetParameterDoubleF_E(var);
+  sprintf(var,"grid%u_left_centeral_box_size_c",grid->gn);
+  patch->s[2] = GetParameterDoubleF_E(var);
+  
+  /* filling min: min = center-l/2 */
+  patch->min[0] = patch->c[0]-patch->s[0]/2;
+  patch->min[1] = patch->c[1]-patch->s[1]/2;
+  patch->min[2] = patch->c[2]-patch->s[2]/2;
+  
+  /* filling max: max = center+l/2 */
+  patch->max[0] = patch->c[0]+patch->s[0]/2;
+  patch->max[1] = patch->c[1]+patch->s[1]/2;
+  patch->max[2] = patch->c[2]+patch->s[2]/2;
+  
+  /* filling flags */
+  patch->coordsys = Cartesian;
+  
+ /* collocation */
+  patch->collocation[0] = Chebyshev_Extrema;
+  patch->collocation[1] = Chebyshev_Extrema;
+  patch->collocation[2] = Chebyshev_Extrema;
+  
+  /* basis */
+  patch->basis[0] = Chebyshev_Tn_BASIS;
+  patch->basis[1] = Chebyshev_Tn_BASIS;
+  patch->basis[2] = Chebyshev_Tn_BASIS;
+    
+}
+
+/* populating properties of the filling box in cubed spherical grid */
+void populate_filling_box_CubedSpherical(Grid_T *const grid,const unsigned pn,const Flag_T side)
+{
+  Patch_T *const patch = grid->patch[pn];
+  unsigned n;
+  double l;/* length */
+  char name[100] = {'\0'};
+  char var[100] = {'\0'};
+  struct Ret_S ret;
+  
+  /* filling grid */
+  patch->grid = grid;
+  
+  /* filling patch number */
+  patch->pn = pn;
+  
+  /* filling inner boundary */
+  patch->innerB = 0;
+  
+  /* filling n */
+  patch->n[0] = (unsigned)GetParameterI("n_a");
+  patch->n[1] = (unsigned)GetParameterI("n_b");
+  patch->n[2] = (unsigned)GetParameterI("n_c");
+  
+  switch(side)
+  {
+    case UP:
+    /* filling name */
+    sprintf(name,"grid%u_filling_box_up",grid->gn);
+    patch->name = dup_s(name);
+    
+    sprintf(var,"grid%u_surrounding_box_length",grid->gn);
+    l = GetParameterDoubleF_E(var);
+    
+    /* filling center */
+    patch->c[0] = 0;
+    patch->c[1] = 0;
+    patch->c[2] = 3./4.*l;
+    
+    /* filling size */
+    patch->s[0] = l;
+    patch->s[1] = 2*l;
+    patch->s[2] = 0.5*l;
+  
+    /* check for override n*/
+    sprintf(var,"Outermost0");
+    make_keyword_parameter(&ret,var,"n");
+    n = (unsigned)GetParameterI(ret.s0);
+    if (n != INT_MAX)   patch->n[0] = n;
+    n = (unsigned)GetParameterI(ret.s1);
+    if (n != INT_MAX)   patch->n[1] = n;
+    n = (unsigned)GetParameterI(ret.s2);
+    if (n != INT_MAX)   patch->n[2] = n/2;
+    
+    break;
+    case DOWN:
+    /* filling name */
+    sprintf(name,"grid%u_filling_box_down",grid->gn);
+    patch->name = dup_s(name);
+    
+    sprintf(var,"grid%u_surrounding_box_length",grid->gn);
+    l = GetParameterDoubleF_E(var);
+    
+    /* filling center */
+    patch->c[0] = 0;
+    patch->c[1] = 0;
+    patch->c[2] = -3./4.*l;
+    
+    /* filling size */
+    patch->s[0] = l;
+    patch->s[1] = 2*l;
+    patch->s[2] = 0.5*l;
+  
+    /* check for override n*/
+    sprintf(var,"Outermost0");
+    make_keyword_parameter(&ret,var,"n");
+    n = (unsigned)GetParameterI(ret.s0);
+    if (n != INT_MAX)   patch->n[0] = n;
+    n = (unsigned)GetParameterI(ret.s1);
+    if (n != INT_MAX)   patch->n[1] = n;
+    n = (unsigned)GetParameterI(ret.s2);
+    if (n != INT_MAX)   patch->n[2] = n/2;
+    
+    break;
+    case BACK:
+    /* filling name */
+    sprintf(name,"grid%u_filling_box_back",grid->gn);
+    patch->name = dup_s(name);
+    
+    sprintf(var,"grid%u_surrounding_box_length",grid->gn);
+    l = GetParameterDoubleF_E(var);
+    
+    /* filling center */
+    patch->c[0] = -3./4.*l;
+    patch->c[1] = 0;
+    patch->c[2] = 0;
+    
+    /* filling size */
+    patch->s[0] = 0.5*l;
+    patch->s[1] = 2*l;
+    patch->s[2] = 2*l;
+  
+    /* check for override n*/
+    sprintf(var,"Outermost0");
+    make_keyword_parameter(&ret,var,"n");
+    n = (unsigned)GetParameterI(ret.s0);
+    if (n != INT_MAX)   patch->n[0] = n/2;
+    n = (unsigned)GetParameterI(ret.s1);
+    if (n != INT_MAX)   patch->n[1] = n;
+    n = (unsigned)GetParameterI(ret.s2);
+    if (n != INT_MAX)   patch->n[2] = n;
+    
+    break;
+    case FRONT:
+    /* filling name */
+    sprintf(name,"grid%u_filling_box_front",grid->gn);
+    patch->name = dup_s(name);
+    
+    sprintf(var,"grid%u_surrounding_box_length",grid->gn);
+    l = GetParameterDoubleF_E(var);
+    
+    /* filling center */
+    patch->c[0] = 3./4.*l;
+    patch->c[1] = 0;
+    patch->c[2] = 0;
+    
+    /* filling size */
+    patch->s[0] = 0.5*l;
+    patch->s[1] = 2*l;
+    patch->s[2] = 2*l;
+    
+    /* check for override n*/
+    sprintf(var,"Outermost0");
+    make_keyword_parameter(&ret,var,"n");
+    n = (unsigned)GetParameterI(ret.s0);
+    if (n != INT_MAX)   patch->n[0] = n/2;
+    n = (unsigned)GetParameterI(ret.s1);
+    if (n != INT_MAX)   patch->n[1] = n;
+    n = (unsigned)GetParameterI(ret.s2);
+    if (n != INT_MAX)   patch->n[2] = n;
+    
+    break;
+    default:
+      abortEr(NO_OPTION);
+  }
+  
+  /* filling nn */
+  patch->nn = total_nodes_patch(patch);
+  
+  /* filling min: min = center-l/2 */
+  patch->min[0] = patch->c[0]-patch->s[0]/2;
+  patch->min[1] = patch->c[1]-patch->s[1]/2;
+  patch->min[2] = patch->c[2]-patch->s[2]/2;
+  
+  /* filling max: max = center+l/2 */
+  patch->max[0] = patch->c[0]+patch->s[0]/2;
+  patch->max[1] = patch->c[1]+patch->s[1]/2;
+  patch->max[2] = patch->c[2]+patch->s[2]/2;
+  
+  /* filling flags */
+  patch->coordsys = Cartesian;
+  
+ /* collocation */
+  patch->collocation[0] = Chebyshev_Extrema;
+  patch->collocation[1] = Chebyshev_Extrema;
+  patch->collocation[2] = Chebyshev_Extrema;
+  
+  /* basis */
+  patch->basis[0] = Chebyshev_Tn_BASIS;
+  patch->basis[1] = Chebyshev_Tn_BASIS;
+  patch->basis[2] = Chebyshev_Tn_BASIS;
+    
+}
+
+/* populating properties of the box at the middle of right NS  */
+void populate_right_NS_central_box(Grid_T *const grid,const unsigned pn)
+{
+  Patch_T *const patch = grid->patch[pn];
+  unsigned n;
+  char name[100] = {'\0'};
+  char var[100] = {'\0'};
+  
+  /* filling grid */
+  patch->grid = grid;
+  
+  /* filling patch number */
+  patch->pn = pn;
+  
+  /* filling inner boundary */
+  patch->innerB = 0;
+  
+  /* filling name */
+  sprintf(name,"grid%u_right_centeral_box",grid->gn);
+  patch->name = dup_s(name);
+  
+  /* filling n */
+  sprintf(var,"grid%u_right_centeral_box_n_abc",grid->gn);
+  n = (unsigned)GetParameterI_E(var);
+  patch->n[0] = patch->n[1] = patch->n[2] = n;
+  
+  if(patch->n[0] == INT_MAX)
+    abortEr("n_a could not be set.\n");
+  if(patch->n[1] == INT_MAX)
+    abortEr("n_b could not be set.\n");
+  if(patch->n[2] == INT_MAX)
+    abortEr("n_c could not be set.\n");
+  
+  /* filling nn */
+  patch->nn = total_nodes_patch(patch);
+  
+  /* filling center */
+  sprintf(var,"grid%u_right_NS_center_a",grid->gn);
+  patch->c[0] = GetParameterDoubleF_E(var);
+  sprintf(var,"grid%u_right_NS_center_b",grid->gn);
+  patch->c[1] = GetParameterDoubleF_E(var);
+  sprintf(var,"grid%u_right_NS_center_c",grid->gn);
+  patch->c[2] = GetParameterDoubleF_E(var);
+  
+  /* filling size */
+  sprintf(var,"grid%u_right_centeral_box_size_a",grid->gn);
+  patch->s[0] = GetParameterDoubleF_E(var);
+  sprintf(var,"grid%u_right_centeral_box_size_b",grid->gn);
+  patch->s[1] = GetParameterDoubleF_E(var);
+  sprintf(var,"grid%u_right_centeral_box_size_c",grid->gn);
+  patch->s[2] = GetParameterDoubleF_E(var);
+  
+  /* filling min: min = center-l/2 */
+  patch->min[0] = patch->c[0]-patch->s[0]/2;
+  patch->min[1] = patch->c[1]-patch->s[1]/2;
+  patch->min[2] = patch->c[2]-patch->s[2]/2;
+  
+  /* filling max: max = center+l/2 */
+  patch->max[0] = patch->c[0]+patch->s[0]/2;
+  patch->max[1] = patch->c[1]+patch->s[1]/2;
+  patch->max[2] = patch->c[2]+patch->s[2]/2;
+  
+  /* filling flags */
+  patch->coordsys = Cartesian;
+  
+ /* collocation */
+  patch->collocation[0] = Chebyshev_Extrema;
+  patch->collocation[1] = Chebyshev_Extrema;
+  patch->collocation[2] = Chebyshev_Extrema;
+  
+  /* basis */
+  patch->basis[0] = Chebyshev_Tn_BASIS;
+  patch->basis[1] = Chebyshev_Tn_BASIS;
+  patch->basis[2] = Chebyshev_Tn_BASIS;
+    
+}
+
+/* memory alloc patches for Cartesian grid type */
+void alloc_patches_Cartesian_grid(Grid_T *const grid)
+{
+  unsigned Nboxes;/* number of boxes */
+  unsigned i;
+  
+  if (get_parameter("number_of_boxes") == 0)
+    abortEr("\"number_of_boxes\" parameter is not defined!\n");
+    
+  Nboxes = (unsigned) GetParameterI_E("number_of_boxes");
+  
+  grid->patch = calloc((Nboxes+1),sizeof(*grid->patch));
+  pointerEr(grid->patch);
+  
+  for (i = 0; i < Nboxes; i++)
+  {
+    grid->patch[i] = calloc(1,sizeof(*grid->patch[i]));
+    pointerEr(grid->patch[i]);
+  }
+  
+}

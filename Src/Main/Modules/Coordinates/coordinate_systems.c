@@ -25,6 +25,12 @@ int make_nodes(Grid_T *const grid)
       make_nodes_Spherical_coord(patch);
     }
     
+    /* if coord is Cubed Spherical */
+    else if (patch->coordsys == CubedSpherical)
+    {
+      make_nodes_CubedSpherical_coord(patch);
+    }
+
     /* if coord is Protective Hemisphere Up */
     else if (patch->coordsys == ProjectiveHemisphereUp)
     {

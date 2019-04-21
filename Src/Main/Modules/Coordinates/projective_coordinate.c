@@ -5,6 +5,31 @@
 
 #include "projective_coordinate.h"
 
+/* filling patch struct for BNS_Projective_grid */
+void fill_patches_BNS_Projective_grid(Grid_T *const grid)
+{
+  const unsigned N_outermost_split = (unsigned) GetParameterI_E("Number_of_Outermost_Split");
+  unsigned pn,i;
+  
+  pn = 0;
+  populate_left_NS_central_box(grid,pn++);
+  populate_left_NS_hemisphere_up(grid,pn++);
+  populate_left_NS_hemisphere_down(grid,pn++);
+  populate_left_NS_surrounding_up(grid,pn++);
+  populate_left_NS_surrounding_down(grid,pn++);
+  for (i = 0; i < N_outermost_split; i++)
+    populate_left_outermost(grid,pn++,i);
+    
+  populate_right_NS_central_box(grid,pn++);
+  populate_right_NS_hemisphere_up(grid,pn++);
+  populate_right_NS_hemisphere_down(grid,pn++);
+  populate_right_NS_surrounding_up(grid,pn++);
+  populate_right_NS_surrounding_down(grid,pn++);
+  for (i = 0; i < N_outermost_split; i++)
+    populate_right_outermost(grid,pn++,i);
+  
+}
+
 /* making value of coords. it is a general function for Protective Hemisphere Up type */
 void make_nodes_ProjectiveHemisphereUp_coord(Patch_T *const patch)
 {
@@ -1443,30 +1468,6 @@ static double dY_dv(const double u, const double v)
         2*Sqrt2*v + Power2(v)))/4.;
 }
 
-/* filling patch struct for BNS_Projective_grid */
-void fill_patches_BNS_Projective_grid(Grid_T *const grid)
-{
-  const unsigned N_outermost_split = (unsigned) GetParameterI_E("Number_of_Outermost_Split");
-  unsigned pn,i;
-  
-  pn = 0;
-  populate_left_NS_central_box(grid,pn++);
-  populate_left_NS_hemisphere_up(grid,pn++);
-  populate_left_NS_hemisphere_down(grid,pn++);
-  populate_left_NS_surrounding_up(grid,pn++);
-  populate_left_NS_surrounding_down(grid,pn++);
-  for (i = 0; i < N_outermost_split; i++)
-    populate_left_outermost(grid,pn++,i);
-    
-  populate_right_NS_central_box(grid,pn++);
-  populate_right_NS_hemisphere_up(grid,pn++);
-  populate_right_NS_hemisphere_down(grid,pn++);
-  populate_right_NS_surrounding_up(grid,pn++);
-  populate_right_NS_surrounding_down(grid,pn++);
-  for (i = 0; i < N_outermost_split; i++)
-    populate_right_outermost(grid,pn++,i);
-  
-}
 
 /* populating properties of patch for outermost left */
 void populate_left_outermost(Grid_T *const grid,const unsigned pn,const unsigned outermost_n)
@@ -2442,156 +2443,25 @@ static void populate_right_NS_surrounding_down(Grid_T *const grid,const unsigned
     
 }
 
-/* populating properties of the box at the middle of left NS */
-static void populate_left_NS_central_box(Grid_T *const grid,const unsigned pn)
+/* memory alloc patches for BNS_Projective type */
+void alloc_patches_BNS_Projective_grid(Grid_T *const grid)
 {
-  Patch_T *const patch = grid->patch[pn];
-  unsigned n;
-  char name[100] = {'\0'};
-  char var[100] = {'\0'};
+  unsigned Np = 10;/* number of patches without outermost's*/
+  unsigned outermost;
+  unsigned i;
   
-  /* filling grid */
-  patch->grid = grid;
+  outermost = (unsigned) GetParameterI("Number_of_Outermost_Split");
+  if (outermost != (unsigned)INT_MAX)
+    Np += 2*outermost;
   
-  /* filling patch number */
-  patch->pn = pn;
+  grid->patch = calloc((Np+1),sizeof(*grid->patch));
+  pointerEr(grid->patch);
   
-  /* filling inner boundary */
-  patch->innerB = 0;
+  for (i = 0; i < Np; i++)
+  {
+    grid->patch[i] = calloc(1,sizeof(*grid->patch[i]));
+    pointerEr(grid->patch[i]);
+  }
   
-  /* filling name */
-  sprintf(name,"grid%u_left_centeral_box",grid->gn);
-  patch->name = dup_s(name);
-  
-  /* filling n */
-  sprintf(var,"grid%u_left_centeral_box_n_abc",grid->gn);
-  n = (unsigned)GetParameterI_E(var);
-  patch->n[0] = patch->n[1] = patch->n[2] = n;
-  
-  if(patch->n[0] == INT_MAX)
-    abortEr("n_a could not be set.\n");
-  if(patch->n[1] == INT_MAX)
-    abortEr("n_b could not be set.\n");
-  if(patch->n[2] == INT_MAX)
-    abortEr("n_c could not be set.\n");
-  
-  /* filling nn */
-  patch->nn = total_nodes_patch(patch);
-  
-  /* filling center */
-  sprintf(var,"grid%u_left_NS_center_a",grid->gn);
-  patch->c[0] = GetParameterDoubleF_E(var);
-  sprintf(var,"grid%u_left_NS_center_b",grid->gn);
-  patch->c[1] = GetParameterDoubleF_E(var);
-  sprintf(var,"grid%u_left_NS_center_c",grid->gn);
-  patch->c[2] = GetParameterDoubleF_E(var);
-  
-  /* filling size */
-  sprintf(var,"grid%u_left_centeral_box_size_a",grid->gn);
-  patch->s[0] = GetParameterDoubleF_E(var);
-  sprintf(var,"grid%u_left_centeral_box_size_b",grid->gn);
-  patch->s[1] = GetParameterDoubleF_E(var);
-  sprintf(var,"grid%u_left_centeral_box_size_c",grid->gn);
-  patch->s[2] = GetParameterDoubleF_E(var);
-  
-  /* filling min: min = center-l/2 */
-  patch->min[0] = patch->c[0]-patch->s[0]/2;
-  patch->min[1] = patch->c[1]-patch->s[1]/2;
-  patch->min[2] = patch->c[2]-patch->s[2]/2;
-  
-  /* filling max: max = center+l/2 */
-  patch->max[0] = patch->c[0]+patch->s[0]/2;
-  patch->max[1] = patch->c[1]+patch->s[1]/2;
-  patch->max[2] = patch->c[2]+patch->s[2]/2;
-  
-  /* filling flags */
-  patch->coordsys = Cartesian;
-  
- /* collocation */
-  patch->collocation[0] = Chebyshev_Extrema;
-  patch->collocation[1] = Chebyshev_Extrema;
-  patch->collocation[2] = Chebyshev_Extrema;
-  
-  /* basis */
-  patch->basis[0] = Chebyshev_Tn_BASIS;
-  patch->basis[1] = Chebyshev_Tn_BASIS;
-  patch->basis[2] = Chebyshev_Tn_BASIS;
-    
 }
 
-/* populating properties of the box at the middle of right NS */
-static void populate_right_NS_central_box(Grid_T *const grid,const unsigned pn)
-{
-  Patch_T *const patch = grid->patch[pn];
-  unsigned n;
-  char name[100] = {'\0'};
-  char var[100] = {'\0'};
-  
-  /* filling grid */
-  patch->grid = grid;
-  
-  /* filling patch number */
-  patch->pn = pn;
-  
-  /* filling inner boundary */
-  patch->innerB = 0;
-  
-  /* filling name */
-  sprintf(name,"grid%u_right_centeral_box",grid->gn);
-  patch->name = dup_s(name);
-  
-  /* filling n */
-  sprintf(var,"grid%u_right_centeral_box_n_abc",grid->gn);
-  n = (unsigned)GetParameterI_E(var);
-  patch->n[0] = patch->n[1] = patch->n[2] = n;
-  
-  if(patch->n[0] == INT_MAX)
-    abortEr("n_a could not be set.\n");
-  if(patch->n[1] == INT_MAX)
-    abortEr("n_b could not be set.\n");
-  if(patch->n[2] == INT_MAX)
-    abortEr("n_c could not be set.\n");
-  
-  /* filling nn */
-  patch->nn = total_nodes_patch(patch);
-  
-  /* filling center */
-  sprintf(var,"grid%u_right_NS_center_a",grid->gn);
-  patch->c[0] = GetParameterDoubleF_E(var);
-  sprintf(var,"grid%u_right_NS_center_b",grid->gn);
-  patch->c[1] = GetParameterDoubleF_E(var);
-  sprintf(var,"grid%u_right_NS_center_c",grid->gn);
-  patch->c[2] = GetParameterDoubleF_E(var);
-  
-  /* filling size */
-  sprintf(var,"grid%u_right_centeral_box_size_a",grid->gn);
-  patch->s[0] = GetParameterDoubleF_E(var);
-  sprintf(var,"grid%u_right_centeral_box_size_b",grid->gn);
-  patch->s[1] = GetParameterDoubleF_E(var);
-  sprintf(var,"grid%u_right_centeral_box_size_c",grid->gn);
-  patch->s[2] = GetParameterDoubleF_E(var);
-  
-  /* filling min: min = center-l/2 */
-  patch->min[0] = patch->c[0]-patch->s[0]/2;
-  patch->min[1] = patch->c[1]-patch->s[1]/2;
-  patch->min[2] = patch->c[2]-patch->s[2]/2;
-  
-  /* filling max: max = center+l/2 */
-  patch->max[0] = patch->c[0]+patch->s[0]/2;
-  patch->max[1] = patch->c[1]+patch->s[1]/2;
-  patch->max[2] = patch->c[2]+patch->s[2]/2;
-  
-  /* filling flags */
-  patch->coordsys = Cartesian;
-  
- /* collocation */
-  patch->collocation[0] = Chebyshev_Extrema;
-  patch->collocation[1] = Chebyshev_Extrema;
-  patch->collocation[2] = Chebyshev_Extrema;
-  
-  /* basis */
-  patch->basis[0] = Chebyshev_Tn_BASIS;
-  patch->basis[1] = Chebyshev_Tn_BASIS;
-  patch->basis[2] = Chebyshev_Tn_BASIS;
-    
-}
