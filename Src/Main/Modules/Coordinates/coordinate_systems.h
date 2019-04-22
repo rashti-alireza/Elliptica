@@ -13,6 +13,7 @@ void make_JacobianT_Cartesian_coord(Patch_T *const patch);
 void make_JacobianT_ProjectiveHemisphere_coord(Patch_T *const patch);
 void make_JacobianT_StereographicSphereRight_coord(Patch_T *const patch);
 void make_JacobianT_StereographicSphereLeft_coord(Patch_T *const patch);
+void make_JacobianT_CubedSpherical_coord(Patch_T *const patch);
 void initialize_collocation_struct(const Patch_T *const patch,struct Collocation_s *const colloc,const unsigned dir);
 double point_value(const unsigned i, const struct Collocation_s *const coll_s);
 double dq2_dq1(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const unsigned p);

@@ -4,6 +4,21 @@
 #include "maths_general_lib.h"
 #include "memory_managing_lib.h"
 
+enum enum_dA_da
+{
+  da_dx = 0,
+  da_dy,
+  da_dz,
+  db_dx,
+  db_dy,
+  db_dz,
+  dc_dx,
+  dc_dy,
+  dc_dz,
+  dA_da_UNDEFINED
+};
+
+
 struct Collocation_s
 {
   double min;

@@ -506,17 +506,16 @@ typedef struct PATCH_T
    {
     Flag_T side;/* the side of this cubed coord, up, down, etc. */
     Flag_T type;/* type of cubed spherical, NS, SR, OT */
-    Field_T *R1_f;/* cubed spherical surface function (small) */
-    Field_T *R2_f;/* cubed spherical surface function (big) */
-    //Field_T *xc2;/* bigger xc field */
-    //Field_T *dxc1_dx;/* dxc1/dx */
-    //Field_T *dxc1_dy;/* dxc1/dy */
-    //Field_T *dxc1_dz;/* dxc1/dz */
-    //Field_T *dxc2_dx;/* dxc2/dx */
-    //Field_T *dxc2_dy;/* dxc2/dy */
-    //Field_T *dxc2_dz;/* dxc2/dz */
-    double R1;/* small radius of outermost patches */
-    double R2;/* big radius of outermost patches */
+    Field_T *R1_f;/* cubed spherical surface function (small). Note: it's always positive for all sides. */
+    Field_T *R2_f;/* cubed spherical surface function (big). Note: it's always positive for all sides. */
+    Field_T *dR1_dx;/* dR1/dx */
+    Field_T *dR1_dy;/* dR1/dy */
+    Field_T *dR1_dz;/* dR1/dz */
+    Field_T *dR2_dx;/* dR2/dx */
+    Field_T *dR2_dy;/* dR2/dy */
+    Field_T *dR2_dz;/* dR2/dz */
+    double R1;/* small radius of outermost patches. Note: it's always positive for all sides. */
+    double R2;/* big radius of outermost patches. Note: it's always positive for all sides.*/
     double xc1;/* const xc value for those patches that have square (small)*/
     double xc2;/* const xc value for those patches that have square (big)*/
    }CubedSphericalCoord[1];

@@ -1,5 +1,7 @@
 #include "coordinate_shared_lib.h"
 
+#define Power3(a) (a)*SQR(a)
+
 void fill_patches_BNS_CubedSpherical_grid(Grid_T *const grid);
 void SignAndIndex_permutation_CubedSphere(const Flag_T side,unsigned *const a,unsigned *const b,unsigned *const c,double *const s);
 void make_nodes_CubedSpherical_coord(Patch_T *const patch);
@@ -7,10 +9,37 @@ void populate_left_NS_central_box(Grid_T *const grid,const unsigned pn);
 void populate_right_NS_central_box(Grid_T *const grid,const unsigned pn);
 void populate_filling_box_CubedSpherical(Grid_T *const grid,const unsigned pn,const Flag_T side);
 void alloc_patches_BNS_CubedSpherical_grid(Grid_T *const grid);
+void make_JacobianT_CubedSpherical_coord(Patch_T *const patch);
+double JT_CS_NS_T_up(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const unsigned p);
+double JT_CS_NS_T_down(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const unsigned p);
+double JT_CS_NS_T_left(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const unsigned p);
+double JT_CS_NS_T_right(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const unsigned p);
+double JT_CS_NS_T_back(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const unsigned p);
+double JT_CS_NS_T_front(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const unsigned p);
+double JT_CS_SR_T_up(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const unsigned p);
+double JT_CS_SR_T_down(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const unsigned p);
+double JT_CS_SR_T_left(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const unsigned p);
+double JT_CS_SR_T_right(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const unsigned p);
+double JT_CS_SR_T_back(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const unsigned p);
+double JT_CS_SR_T_front(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const unsigned p);
+double JT_CS_OT_T1_up(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const unsigned p);
+double JT_CS_OT_T1_down(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const unsigned p);
+double JT_CS_OT_T1_left(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const unsigned p);
+double JT_CS_OT_T1_right(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const unsigned p);
+double JT_CS_OT_T1_back(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const unsigned p);
+double JT_CS_OT_T1_front(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const unsigned p);
+double JT_CS_OT_T2_up(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const unsigned p);
+double JT_CS_OT_T2_down(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const unsigned p);
+double JT_CS_OT_T2_left(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const unsigned p);
+double JT_CS_OT_T2_right(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const unsigned p);
+double JT_CS_OT_T2_back(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const unsigned p);
+double JT_CS_OT_T2_front(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const unsigned p);
 static void populate_left_NS(Grid_T *const grid,const unsigned pn);
 static void populate_left_NS_surrounding(Grid_T *const grid,const unsigned pn);
 static void populate_right_NS(Grid_T *const grid,const unsigned pn);
 static void populate_right_NS_surrounding(Grid_T *const grid,const unsigned pn);
 static void populate_outermost(Grid_T *const grid,const unsigned pn,const unsigned i);
 void populate_filling_box(Grid_T *const grid,const unsigned pn);
-  
+static void R1_derivative(Patch_T *const patch);
+static void R2_derivative(Patch_T *const patch);  
+static double dN_dX(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e);
