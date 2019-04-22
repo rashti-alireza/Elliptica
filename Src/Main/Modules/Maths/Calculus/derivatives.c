@@ -928,6 +928,13 @@ static void get_dependency(const Patch_T *const patch,const Dd_T dir, unsigned *
         abortEr(NO_JOB);
     }
   }
+  /* x(a,b,c), y(a,b,c), z(a,b,c) */
+  else if (patch->coordsys == CubedSpherical) 
+  {
+    dep[0] = 1;
+    dep[1] = 1;
+    dep[2] = 1;
+  }
   else
      abortEr("There is no coordinate defined for this function.\n");
 }
