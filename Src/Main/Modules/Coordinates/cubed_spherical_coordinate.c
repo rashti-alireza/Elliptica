@@ -4167,3 +4167,1174 @@ void SignAndIndex_permutation_CubedSphere(const Flag_T side,unsigned *const a,un
       abortEr(NO_OPTION);
   }
 }
+
+///////////////////////////NS_T/////////////////////////////////////
+
+/* return value-> dN0_dx for CubedSpherical */
+double dN0_dx_CS_NS_T_up(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N0_,_x_,X,UP,NS_T_CS);
+}
+/* return value-> dN0_dy for CubedSpherical */
+double dN0_dy_NS_T_CS_up(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N0_,_y_,X,UP,NS_T_CS);
+}
+/* return value-> dN0_dz for CubedSpherical */
+double dN0_dz_NS_T_CS_up(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N0_,_z_,X,UP,NS_T_CS);
+}
+/* return value-> dN1_dx for CubedSpherical */
+double dN1_dx_NS_T_CS_up(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N1_,_x_,X,UP,NS_T_CS);
+}
+/* return value-> dN1_dy for CubedSpherical */
+double dN1_dy_NS_T_CS_up(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N1_,_y_,X,UP,NS_T_CS);
+}
+/* return value-> dN1_dz for CubedSpherical */
+double dN1_dz_NS_T_CS_up(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N1_,_z_,X,UP,NS_T_CS);
+}
+/* return value-> dN2_dx for CubedSpherical */
+double dN2_dx_NS_T_CS_up(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N2_,_x_,X,UP,NS_T_CS);
+}
+/* return value-> dN2_dy for CubedSpherical */
+double dN2_dy_NS_T_CS_up(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N2_,_y_,X,UP,NS_T_CS);
+}
+/* return value-> dN2_dz for CubedSpherical */
+double dN2_dz_NS_T_CS_up(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N2_,_z_,X,UP,NS_T_CS);
+}
+
+/////////////////////////////////////////////////////////////////////
+
+/* return value-> dN0_dx for CubedSpherical */
+double dN0_dx_NS_T_CS_down(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N0_,_x_,X,DOWN,NS_T_CS);
+}
+/* return value-> dN0_dy for CubedSpherical */
+double dN0_dy_NS_T_CS_down(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N0_,_y_,X,DOWN,NS_T_CS);
+}
+/* return value-> dN0_dz for CubedSpherical */
+double dN0_dz_NS_T_CS_down(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N0_,_z_,X,DOWN,NS_T_CS);
+}
+/* return value-> dN1_dx for CubedSpherical */
+double dN1_dx_NS_T_CS_down(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N1_,_x_,X,DOWN,NS_T_CS);
+}
+/* return value-> dN1_dy for CubedSpherical */
+double dN1_dy_NS_T_CS_down(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N1_,_y_,X,DOWN,NS_T_CS);
+}
+/* return value-> dN1_dz for CubedSpherical */
+double dN1_dz_NS_T_CS_down(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N1_,_z_,X,DOWN,NS_T_CS);
+}
+/* return value-> dN2_dx for CubedSpherical */
+double dN2_dx_NS_T_CS_down(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N2_,_x_,X,DOWN,NS_T_CS);
+}
+/* return value-> dN2_dy for CubedSpherical */
+double dN2_dy_NS_T_CS_down(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N2_,_y_,X,DOWN,NS_T_CS);
+}
+/* return value-> dN2_dz for CubedSpherical */
+double dN2_dz_NS_T_CS_down(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N2_,_z_,X,DOWN,NS_T_CS);
+}
+
+//////////////////////////////////////////////////////////////////////
+
+/* return value-> dN0_dx for CubedSpherical */
+double dN0_dx_NS_T_CS_left(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N0_,_x_,X,LEFT,NS_T_CS);
+}
+/* return value-> dN0_dy for CubedSpherical */
+double dN0_dy_NS_T_CS_left(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N0_,_y_,X,LEFT,NS_T_CS);
+}
+/* return value-> dN0_dz for CubedSpherical */
+double dN0_dz_NS_T_CS_left(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N0_,_z_,X,LEFT,NS_T_CS);
+}
+/* return value-> dN1_dx for CubedSpherical */
+double dN1_dx_NS_T_CS_left(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N1_,_x_,X,LEFT,NS_T_CS);
+}
+/* return value-> dN1_dy for CubedSpherical */
+double dN1_dy_NS_T_CS_left(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N1_,_y_,X,LEFT,NS_T_CS);
+}
+/* return value-> dN1_dz for CubedSpherical */
+double dN1_dz_NS_T_CS_left(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N1_,_z_,X,LEFT,NS_T_CS);
+}
+/* return value-> dN2_dx for CubedSpherical */
+double dN2_dx_NS_T_CS_left(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N2_,_x_,X,LEFT,NS_T_CS);
+}
+/* return value-> dN2_dy for CubedSpherical */
+double dN2_dy_NS_T_CS_left(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N2_,_y_,X,LEFT,NS_T_CS);
+}
+/* return value-> dN2_dz for CubedSpherical */
+double dN2_dz_NS_T_CS_left(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N2_,_z_,X,LEFT,NS_T_CS);
+}
+
+///////////////////////////////////////////////////////////////////////
+
+/* return value-> dN0_dx for CubedSpherical */
+double dN0_dx_NS_T_CS_right(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N0_,_x_,X,RIGHT,NS_T_CS);
+}
+/* return value-> dN0_dy for CubedSpherical */
+double dN0_dy_NS_T_CS_right(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N0_,_y_,X,RIGHT,NS_T_CS);
+}
+/* return value-> dN0_dz for CubedSpherical */
+double dN0_dz_NS_T_CS_right(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N0_,_z_,X,RIGHT,NS_T_CS);
+}
+/* return value-> dN1_dx for CubedSpherical */
+double dN1_dx_NS_T_CS_right(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N1_,_x_,X,RIGHT,NS_T_CS);
+}
+/* return value-> dN1_dy for CubedSpherical */
+double dN1_dy_NS_T_CS_right(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N1_,_y_,X,RIGHT,NS_T_CS);
+}
+/* return value-> dN1_dz for CubedSpherical */
+double dN1_dz_NS_T_CS_right(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N1_,_z_,X,RIGHT,NS_T_CS);
+}
+/* return value-> dN2_dx for CubedSpherical */
+double dN2_dx_NS_T_CS_right(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N2_,_x_,X,RIGHT,NS_T_CS);
+}
+/* return value-> dN2_dy for CubedSpherical */
+double dN2_dy_NS_T_CS_right(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N2_,_y_,X,RIGHT,NS_T_CS);
+}
+/* return value-> dN2_dz for CubedSpherical */
+double dN2_dz_NS_T_CS_right(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N2_,_z_,X,RIGHT,NS_T_CS);
+}
+
+///////////////////////////////////////////////////////////////////////
+
+/* return value-> dN0_dx for CubedSpherical */
+double dN0_dx_NS_T_CS_back(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N0_,_x_,X,BACK,NS_T_CS);
+}
+/* return value-> dN0_dy for CubedSpherical */
+double dN0_dy_NS_T_CS_back(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N0_,_y_,X,BACK,NS_T_CS);
+}
+/* return value-> dN0_dz for CubedSpherical */
+double dN0_dz_NS_T_CS_back(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N0_,_z_,X,BACK,NS_T_CS);
+}
+/* return value-> dN1_dx for CubedSpherical */
+double dN1_dx_NS_T_CS_back(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N1_,_x_,X,BACK,NS_T_CS);
+}
+/* return value-> dN1_dy for CubedSpherical */
+double dN1_dy_NS_T_CS_back(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N1_,_y_,X,BACK,NS_T_CS);
+}
+/* return value-> dN1_dz for CubedSpherical */
+double dN1_dz_NS_T_CS_back(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N1_,_z_,X,BACK,NS_T_CS);
+}
+/* return value-> dN2_dx for CubedSpherical */
+double dN2_dx_NS_T_CS_back(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N2_,_x_,X,BACK,NS_T_CS);
+}
+/* return value-> dN2_dy for CubedSpherical */
+double dN2_dy_NS_T_CS_back(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N2_,_y_,X,BACK,NS_T_CS);
+}
+/* return value-> dN2_dz for CubedSpherical */
+double dN2_dz_NS_T_CS_back(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N2_,_z_,X,BACK,NS_T_CS);
+}
+
+////////////////////////////////////////////////////////////////////////
+
+/* return value-> dN0_dx for CubedSpherical */
+double dN0_dx_NS_T_CS_front(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N0_,_x_,X,FRONT,NS_T_CS);
+}
+/* return value-> dN0_dy for CubedSpherical */
+double dN0_dy_NS_T_CS_front(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N0_,_y_,X,FRONT,NS_T_CS);
+}
+/* return value-> dN0_dz for CubedSpherical */
+double dN0_dz_NS_T_CS_front(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N0_,_z_,X,FRONT,NS_T_CS);
+}
+/* return value-> dN1_dx for CubedSpherical */
+double dN1_dx_NS_T_CS_front(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N1_,_x_,X,FRONT,NS_T_CS);
+}
+/* return value-> dN1_dy for CubedSpherical */
+double dN1_dy_NS_T_CS_front(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N1_,_y_,X,FRONT,NS_T_CS);
+}
+/* return value-> dN1_dz for CubedSpherical */
+double dN1_dz_NS_T_CS_front(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N1_,_z_,X,FRONT,NS_T_CS);
+}
+/* return value-> dN2_dx for CubedSpherical */
+double dN2_dx_NS_T_CS_front(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N2_,_x_,X,FRONT,NS_T_CS);
+}
+/* return value-> dN2_dy for CubedSpherical */
+double dN2_dy_NS_T_CS_front(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N2_,_y_,X,FRONT,NS_T_CS);
+}
+/* return value-> dN2_dz for CubedSpherical */
+double dN2_dz_NS_T_CS_front(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N2_,_z_,X,FRONT,NS_T_CS);
+}
+
+///////////////////////////SR_T/////////////////////////////////////
+
+/* return value-> dN0_dx for CubedSpherical */
+double dN0_dx_CS_SR_T_up(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N0_,_x_,X,UP,SR_T_CS);
+}
+/* return value-> dN0_dy for CubedSpherical */
+double dN0_dy_SR_T_CS_up(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N0_,_y_,X,UP,SR_T_CS);
+}
+/* return value-> dN0_dz for CubedSpherical */
+double dN0_dz_SR_T_CS_up(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N0_,_z_,X,UP,SR_T_CS);
+}
+/* return value-> dN1_dx for CubedSpherical */
+double dN1_dx_SR_T_CS_up(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N1_,_x_,X,UP,SR_T_CS);
+}
+/* return value-> dN1_dy for CubedSpherical */
+double dN1_dy_SR_T_CS_up(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N1_,_y_,X,UP,SR_T_CS);
+}
+/* return value-> dN1_dz for CubedSpherical */
+double dN1_dz_SR_T_CS_up(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N1_,_z_,X,UP,SR_T_CS);
+}
+/* return value-> dN2_dx for CubedSpherical */
+double dN2_dx_SR_T_CS_up(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N2_,_x_,X,UP,SR_T_CS);
+}
+/* return value-> dN2_dy for CubedSpherical */
+double dN2_dy_SR_T_CS_up(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N2_,_y_,X,UP,SR_T_CS);
+}
+/* return value-> dN2_dz for CubedSpherical */
+double dN2_dz_SR_T_CS_up(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N2_,_z_,X,UP,SR_T_CS);
+}
+
+/////////////////////////////////////////////////////////////////////
+
+/* return value-> dN0_dx for CubedSpherical */
+double dN0_dx_SR_T_CS_down(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N0_,_x_,X,DOWN,SR_T_CS);
+}
+/* return value-> dN0_dy for CubedSpherical */
+double dN0_dy_SR_T_CS_down(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N0_,_y_,X,DOWN,SR_T_CS);
+}
+/* return value-> dN0_dz for CubedSpherical */
+double dN0_dz_SR_T_CS_down(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N0_,_z_,X,DOWN,SR_T_CS);
+}
+/* return value-> dN1_dx for CubedSpherical */
+double dN1_dx_SR_T_CS_down(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N1_,_x_,X,DOWN,SR_T_CS);
+}
+/* return value-> dN1_dy for CubedSpherical */
+double dN1_dy_SR_T_CS_down(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N1_,_y_,X,DOWN,SR_T_CS);
+}
+/* return value-> dN1_dz for CubedSpherical */
+double dN1_dz_SR_T_CS_down(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N1_,_z_,X,DOWN,SR_T_CS);
+}
+/* return value-> dN2_dx for CubedSpherical */
+double dN2_dx_SR_T_CS_down(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N2_,_x_,X,DOWN,SR_T_CS);
+}
+/* return value-> dN2_dy for CubedSpherical */
+double dN2_dy_SR_T_CS_down(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N2_,_y_,X,DOWN,SR_T_CS);
+}
+/* return value-> dN2_dz for CubedSpherical */
+double dN2_dz_SR_T_CS_down(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N2_,_z_,X,DOWN,SR_T_CS);
+}
+
+//////////////////////////////////////////////////////////////////////
+
+/* return value-> dN0_dx for CubedSpherical */
+double dN0_dx_SR_T_CS_left(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N0_,_x_,X,LEFT,SR_T_CS);
+}
+/* return value-> dN0_dy for CubedSpherical */
+double dN0_dy_SR_T_CS_left(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N0_,_y_,X,LEFT,SR_T_CS);
+}
+/* return value-> dN0_dz for CubedSpherical */
+double dN0_dz_SR_T_CS_left(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N0_,_z_,X,LEFT,SR_T_CS);
+}
+/* return value-> dN1_dx for CubedSpherical */
+double dN1_dx_SR_T_CS_left(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N1_,_x_,X,LEFT,SR_T_CS);
+}
+/* return value-> dN1_dy for CubedSpherical */
+double dN1_dy_SR_T_CS_left(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N1_,_y_,X,LEFT,SR_T_CS);
+}
+/* return value-> dN1_dz for CubedSpherical */
+double dN1_dz_SR_T_CS_left(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N1_,_z_,X,LEFT,SR_T_CS);
+}
+/* return value-> dN2_dx for CubedSpherical */
+double dN2_dx_SR_T_CS_left(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N2_,_x_,X,LEFT,SR_T_CS);
+}
+/* return value-> dN2_dy for CubedSpherical */
+double dN2_dy_SR_T_CS_left(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N2_,_y_,X,LEFT,SR_T_CS);
+}
+/* return value-> dN2_dz for CubedSpherical */
+double dN2_dz_SR_T_CS_left(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N2_,_z_,X,LEFT,SR_T_CS);
+}
+
+///////////////////////////////////////////////////////////////////////
+
+/* return value-> dN0_dx for CubedSpherical */
+double dN0_dx_SR_T_CS_right(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N0_,_x_,X,RIGHT,SR_T_CS);
+}
+/* return value-> dN0_dy for CubedSpherical */
+double dN0_dy_SR_T_CS_right(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N0_,_y_,X,RIGHT,SR_T_CS);
+}
+/* return value-> dN0_dz for CubedSpherical */
+double dN0_dz_SR_T_CS_right(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N0_,_z_,X,RIGHT,SR_T_CS);
+}
+/* return value-> dN1_dx for CubedSpherical */
+double dN1_dx_SR_T_CS_right(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N1_,_x_,X,RIGHT,SR_T_CS);
+}
+/* return value-> dN1_dy for CubedSpherical */
+double dN1_dy_SR_T_CS_right(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N1_,_y_,X,RIGHT,SR_T_CS);
+}
+/* return value-> dN1_dz for CubedSpherical */
+double dN1_dz_SR_T_CS_right(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N1_,_z_,X,RIGHT,SR_T_CS);
+}
+/* return value-> dN2_dx for CubedSpherical */
+double dN2_dx_SR_T_CS_right(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N2_,_x_,X,RIGHT,SR_T_CS);
+}
+/* return value-> dN2_dy for CubedSpherical */
+double dN2_dy_SR_T_CS_right(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N2_,_y_,X,RIGHT,SR_T_CS);
+}
+/* return value-> dN2_dz for CubedSpherical */
+double dN2_dz_SR_T_CS_right(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N2_,_z_,X,RIGHT,SR_T_CS);
+}
+
+///////////////////////////////////////////////////////////////////////
+
+/* return value-> dN0_dx for CubedSpherical */
+double dN0_dx_SR_T_CS_back(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N0_,_x_,X,BACK,SR_T_CS);
+}
+/* return value-> dN0_dy for CubedSpherical */
+double dN0_dy_SR_T_CS_back(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N0_,_y_,X,BACK,SR_T_CS);
+}
+/* return value-> dN0_dz for CubedSpherical */
+double dN0_dz_SR_T_CS_back(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N0_,_z_,X,BACK,SR_T_CS);
+}
+/* return value-> dN1_dx for CubedSpherical */
+double dN1_dx_SR_T_CS_back(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N1_,_x_,X,BACK,SR_T_CS);
+}
+/* return value-> dN1_dy for CubedSpherical */
+double dN1_dy_SR_T_CS_back(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N1_,_y_,X,BACK,SR_T_CS);
+}
+/* return value-> dN1_dz for CubedSpherical */
+double dN1_dz_SR_T_CS_back(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N1_,_z_,X,BACK,SR_T_CS);
+}
+/* return value-> dN2_dx for CubedSpherical */
+double dN2_dx_SR_T_CS_back(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N2_,_x_,X,BACK,SR_T_CS);
+}
+/* return value-> dN2_dy for CubedSpherical */
+double dN2_dy_SR_T_CS_back(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N2_,_y_,X,BACK,SR_T_CS);
+}
+/* return value-> dN2_dz for CubedSpherical */
+double dN2_dz_SR_T_CS_back(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N2_,_z_,X,BACK,SR_T_CS);
+}
+
+////////////////////////////////////////////////////////////////////////
+
+/* return value-> dN0_dx for CubedSpherical */
+double dN0_dx_SR_T_CS_front(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N0_,_x_,X,FRONT,SR_T_CS);
+}
+/* return value-> dN0_dy for CubedSpherical */
+double dN0_dy_SR_T_CS_front(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N0_,_y_,X,FRONT,SR_T_CS);
+}
+/* return value-> dN0_dz for CubedSpherical */
+double dN0_dz_SR_T_CS_front(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N0_,_z_,X,FRONT,SR_T_CS);
+}
+/* return value-> dN1_dx for CubedSpherical */
+double dN1_dx_SR_T_CS_front(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N1_,_x_,X,FRONT,SR_T_CS);
+}
+/* return value-> dN1_dy for CubedSpherical */
+double dN1_dy_SR_T_CS_front(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N1_,_y_,X,FRONT,SR_T_CS);
+}
+/* return value-> dN1_dz for CubedSpherical */
+double dN1_dz_SR_T_CS_front(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N1_,_z_,X,FRONT,SR_T_CS);
+}
+/* return value-> dN2_dx for CubedSpherical */
+double dN2_dx_SR_T_CS_front(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N2_,_x_,X,FRONT,SR_T_CS);
+}
+/* return value-> dN2_dy for CubedSpherical */
+double dN2_dy_SR_T_CS_front(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N2_,_y_,X,FRONT,SR_T_CS);
+}
+/* return value-> dN2_dz for CubedSpherical */
+double dN2_dz_SR_T_CS_front(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N2_,_z_,X,FRONT,SR_T_CS);
+}
+
+
+///////////////////////////OT_T1/////////////////////////////////////
+
+/* return value-> dN0_dx for CubedSpherical */
+double dN0_dx_CS_OT_T1_up(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N0_,_x_,X,UP,OT_T1_CS);
+}
+/* return value-> dN0_dy for CubedSpherical */
+double dN0_dy_CS_OT_T1_up(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N0_,_y_,X,UP,OT_T1_CS);
+}
+/* return value-> dN0_dz for CubedSpherical */
+double dN0_dz_CS_OT_T1_up(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N0_,_z_,X,UP,OT_T1_CS);
+}
+/* return value-> dN1_dx for CubedSpherical */
+double dN1_dx_CS_OT_T1_up(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N1_,_x_,X,UP,OT_T1_CS);
+}
+/* return value-> dN1_dy for CubedSpherical */
+double dN1_dy_CS_OT_T1_up(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N1_,_y_,X,UP,OT_T1_CS);
+}
+/* return value-> dN1_dz for CubedSpherical */
+double dN1_dz_CS_OT_T1_up(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N1_,_z_,X,UP,OT_T1_CS);
+}
+/* return value-> dN2_dx for CubedSpherical */
+double dN2_dx_CS_OT_T1_up(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N2_,_x_,X,UP,OT_T1_CS);
+}
+/* return value-> dN2_dy for CubedSpherical */
+double dN2_dy_CS_OT_T1_up(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N2_,_y_,X,UP,OT_T1_CS);
+}
+/* return value-> dN2_dz for CubedSpherical */
+double dN2_dz_CS_OT_T1_up(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N2_,_z_,X,UP,OT_T1_CS);
+}
+
+/////////////////////////////////////////////////////////////////////
+
+/* return value-> dN0_dx for CubedSpherical */
+double dN0_dx_CS_OT_T1_down(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N0_,_x_,X,DOWN,OT_T1_CS);
+}
+
+/* return value-> dN0_dy for CubedSpherical */
+double dN0_dy_CS_OT_T1_down(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N0_,_y_,X,DOWN,OT_T1_CS);
+}
+/* return value-> dN0_dz for CubedSpherical */
+double dN0_dz_CS_OT_T1_down(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N0_,_z_,X,DOWN,OT_T1_CS);
+}
+/* return value-> dN1_dx for CubedSpherical */
+double dN1_dx_CS_OT_T1_down(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N1_,_x_,X,DOWN,OT_T1_CS);
+}
+/* return value-> dN1_dy for CubedSpherical */
+double dN1_dy_CS_OT_T1_down(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N1_,_y_,X,DOWN,OT_T1_CS);
+}
+/* return value-> dN1_dz for CubedSpherical */
+double dN1_dz_CS_OT_T1_down(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N1_,_z_,X,DOWN,OT_T1_CS);
+}
+/* return value-> dN2_dx for CubedSpherical */
+double dN2_dx_CS_OT_T1_down(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N2_,_x_,X,DOWN,OT_T1_CS);
+}
+/* return value-> dN2_dy for CubedSpherical */
+double dN2_dy_CS_OT_T1_down(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N2_,_y_,X,DOWN,OT_T1_CS);
+}
+/* return value-> dN2_dz for CubedSpherical */
+double dN2_dz_CS_OT_T1_down(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N2_,_z_,X,DOWN,OT_T1_CS);
+}
+
+//////////////////////////////////////////////////////////////////////
+
+/* return value-> dN0_dx for CubedSpherical */
+double dN0_dx_CS_OT_T1_left(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N0_,_x_,X,LEFT,OT_T1_CS);
+}
+
+/* return value-> dN0_dy for CubedSpherical */
+double dN0_dy_CS_OT_T1_left(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N0_,_y_,X,LEFT,OT_T1_CS);
+}
+/* return value-> dN0_dz for CubedSpherical */
+double dN0_dz_CS_OT_T1_left(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N0_,_z_,X,LEFT,OT_T1_CS);
+}
+/* return value-> dN1_dx for CubedSpherical */
+double dN1_dx_CS_OT_T1_left(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N1_,_x_,X,LEFT,OT_T1_CS);
+}
+/* return value-> dN1_dy for CubedSpherical */
+double dN1_dy_CS_OT_T1_left(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N1_,_y_,X,LEFT,OT_T1_CS);
+}
+/* return value-> dN1_dz for CubedSpherical */
+double dN1_dz_CS_OT_T1_left(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N1_,_z_,X,LEFT,OT_T1_CS);
+}
+/* return value-> dN2_dx for CubedSpherical */
+double dN2_dx_CS_OT_T1_left(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N2_,_x_,X,LEFT,OT_T1_CS);
+}
+/* return value-> dN2_dy for CubedSpherical */
+double dN2_dy_CS_OT_T1_left(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N2_,_y_,X,LEFT,OT_T1_CS);
+}
+/* return value-> dN2_dz for CubedSpherical */
+double dN2_dz_CS_OT_T1_left(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N2_,_z_,X,LEFT,OT_T1_CS);
+}
+
+///////////////////////////////////////////////////////////////////////
+
+/* return value-> dN0_dx for CubedSpherical */
+double dN0_dx_CS_OT_T1_right(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N0_,_x_,X,RIGHT,OT_T1_CS);
+}
+
+/* return value-> dN0_dy for CubedSpherical */
+double dN0_dy_CS_OT_T1_right(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N0_,_y_,X,RIGHT,OT_T1_CS);
+}
+/* return value-> dN0_dz for CubedSpherical */
+double dN0_dz_CS_OT_T1_right(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N0_,_z_,X,RIGHT,OT_T1_CS);
+}
+/* return value-> dN1_dx for CubedSpherical */
+double dN1_dx_CS_OT_T1_right(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N1_,_x_,X,RIGHT,OT_T1_CS);
+}
+/* return value-> dN1_dy for CubedSpherical */
+double dN1_dy_CS_OT_T1_right(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N1_,_y_,X,RIGHT,OT_T1_CS);
+}
+/* return value-> dN1_dz for CubedSpherical */
+double dN1_dz_CS_OT_T1_right(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N1_,_z_,X,RIGHT,OT_T1_CS);
+}
+/* return value-> dN2_dx for CubedSpherical */
+double dN2_dx_CS_OT_T1_right(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N2_,_x_,X,RIGHT,OT_T1_CS);
+}
+/* return value-> dN2_dy for CubedSpherical */
+double dN2_dy_CS_OT_T1_right(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N2_,_y_,X,RIGHT,OT_T1_CS);
+}
+/* return value-> dN2_dz for CubedSpherical */
+double dN2_dz_CS_OT_T1_right(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N2_,_z_,X,RIGHT,OT_T1_CS);
+}
+
+///////////////////////////////////////////////////////////////////////
+
+/* return value-> dN0_dx for CubedSpherical */
+double dN0_dx_CS_OT_T1_back(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N0_,_x_,X,BACK,OT_T1_CS);
+}
+/* return value-> dN0_dy for CubedSpherical */
+double dN0_dy_CS_OT_T1_back(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N0_,_y_,X,BACK,OT_T1_CS);
+}
+/* return value-> dN0_dz for CubedSpherical */
+double dN0_dz_CS_OT_T1_back(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N0_,_z_,X,BACK,OT_T1_CS);
+}
+/* return value-> dN1_dx for CubedSpherical */
+double dN1_dx_CS_OT_T1_back(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N1_,_x_,X,BACK,OT_T1_CS);
+}
+/* return value-> dN1_dy for CubedSpherical */
+double dN1_dy_CS_OT_T1_back(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N1_,_y_,X,BACK,OT_T1_CS);
+}
+/* return value-> dN1_dz for CubedSpherical */
+double dN1_dz_CS_OT_T1_back(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N1_,_z_,X,BACK,OT_T1_CS);
+}
+/* return value-> dN2_dx for CubedSpherical */
+double dN2_dx_CS_OT_T1_back(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N2_,_x_,X,BACK,OT_T1_CS);
+}
+/* return value-> dN2_dy for CubedSpherical */
+double dN2_dy_CS_OT_T1_back(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N2_,_y_,X,BACK,OT_T1_CS);
+}
+/* return value-> dN2_dz for CubedSpherical */
+double dN2_dz_CS_OT_T1_back(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N2_,_z_,X,BACK,OT_T1_CS);
+}
+
+////////////////////////////////////////////////////////////////////////
+
+/* return value-> dN0_dx for CubedSpherical */
+double dN0_dx_CS_OT_T1_front(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N0_,_x_,X,FRONT,OT_T1_CS);
+}
+
+/* return value-> dN0_dy for CubedSpherical */
+double dN0_dy_CS_OT_T1_front(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N0_,_y_,X,FRONT,OT_T1_CS);
+}
+/* return value-> dN0_dz for CubedSpherical */
+double dN0_dz_CS_OT_T1_front(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N0_,_z_,X,FRONT,OT_T1_CS);
+}
+/* return value-> dN1_dx for CubedSpherical */
+double dN1_dx_CS_OT_T1_front(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N1_,_x_,X,FRONT,OT_T1_CS);
+}
+/* return value-> dN1_dy for CubedSpherical */
+double dN1_dy_CS_OT_T1_front(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N1_,_y_,X,FRONT,OT_T1_CS);
+}
+/* return value-> dN1_dz for CubedSpherical */
+double dN1_dz_CS_OT_T1_front(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N1_,_z_,X,FRONT,OT_T1_CS);
+}
+/* return value-> dN2_dx for CubedSpherical */
+double dN2_dx_CS_OT_T1_front(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N2_,_x_,X,FRONT,OT_T1_CS);
+}
+/* return value-> dN2_dy for CubedSpherical */
+double dN2_dy_CS_OT_T1_front(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N2_,_y_,X,FRONT,OT_T1_CS);
+}
+/* return value-> dN2_dz for CubedSpherical */
+double dN2_dz_CS_OT_T1_front(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N2_,_z_,X,FRONT,OT_T1_CS);
+}
+
+///////////////////////////OT_T2/////////////////////////////////////
+
+/* return value-> dN0_dx for CubedSpherical */
+double dN0_dx_CS_OT_T2_up(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N0_,_x_,X,UP,OT_T2_CS);
+}
+/* return value-> dN0_dy for CubedSpherical */
+double dN0_dy_CS_OT_T2_up(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N0_,_y_,X,UP,OT_T2_CS);
+}
+/* return value-> dN0_dz for CubedSpherical */
+double dN0_dz_CS_OT_T2_up(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N0_,_z_,X,UP,OT_T2_CS);
+}
+/* return value-> dN1_dx for CubedSpherical */
+double dN1_dx_CS_OT_T2_up(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N1_,_x_,X,UP,OT_T2_CS);
+}
+/* return value-> dN1_dy for CubedSpherical */
+double dN1_dy_CS_OT_T2_up(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N1_,_y_,X,UP,OT_T2_CS);
+}
+/* return value-> dN1_dz for CubedSpherical */
+double dN1_dz_CS_OT_T2_up(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N1_,_z_,X,UP,OT_T2_CS);
+}
+/* return value-> dN2_dx for CubedSpherical */
+double dN2_dx_CS_OT_T2_up(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N2_,_x_,X,UP,OT_T2_CS);
+}
+/* return value-> dN2_dy for CubedSpherical */
+double dN2_dy_CS_OT_T2_up(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N2_,_y_,X,UP,OT_T2_CS);
+}
+/* return value-> dN2_dz for CubedSpherical */
+double dN2_dz_CS_OT_T2_up(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N2_,_z_,X,UP,OT_T2_CS);
+}
+
+/////////////////////////////////////////////////////////////////////
+
+/* return value-> dN0_dx for CubedSpherical */
+double dN0_dx_CS_OT_T2_down(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N0_,_x_,X,DOWN,OT_T2_CS);
+}
+/* return value-> dN0_dy for CubedSpherical */
+double dN0_dy_CS_OT_T2_down(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N0_,_y_,X,DOWN,OT_T2_CS);
+}
+/* return value-> dN0_dz for CubedSpherical */
+double dN0_dz_CS_OT_T2_down(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N0_,_z_,X,DOWN,OT_T2_CS);
+}
+/* return value-> dN1_dx for CubedSpherical */
+double dN1_dx_CS_OT_T2_down(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N1_,_x_,X,DOWN,OT_T2_CS);
+}
+/* return value-> dN1_dy for CubedSpherical */
+double dN1_dy_CS_OT_T2_down(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N1_,_y_,X,DOWN,OT_T2_CS);
+}
+/* return value-> dN1_dz for CubedSpherical */
+double dN1_dz_CS_OT_T2_down(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N1_,_z_,X,DOWN,OT_T2_CS);
+}
+/* return value-> dN2_dx for CubedSpherical */
+double dN2_dx_CS_OT_T2_down(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N2_,_x_,X,DOWN,OT_T2_CS);
+}
+/* return value-> dN2_dy for CubedSpherical */
+double dN2_dy_CS_OT_T2_down(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N2_,_y_,X,DOWN,OT_T2_CS);
+}
+/* return value-> dN2_dz for CubedSpherical */
+double dN2_dz_CS_OT_T2_down(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N2_,_z_,X,DOWN,OT_T2_CS);
+}
+
+//////////////////////////////////////////////////////////////////////
+
+/* return value-> dN0_dx for CubedSpherical */
+double dN0_dx_CS_OT_T2_left(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N0_,_x_,X,LEFT,OT_T2_CS);
+}
+/* return value-> dN0_dy for CubedSpherical */
+double dN0_dy_CS_OT_T2_left(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N0_,_y_,X,LEFT,OT_T2_CS);
+}
+/* return value-> dN0_dz for CubedSpherical */
+double dN0_dz_CS_OT_T2_left(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N0_,_z_,X,LEFT,OT_T2_CS);
+}
+/* return value-> dN1_dx for CubedSpherical */
+double dN1_dx_CS_OT_T2_left(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N1_,_x_,X,LEFT,OT_T2_CS);
+}
+/* return value-> dN1_dy for CubedSpherical */
+double dN1_dy_CS_OT_T2_left(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N1_,_y_,X,LEFT,OT_T2_CS);
+}
+/* return value-> dN1_dz for CubedSpherical */
+double dN1_dz_CS_OT_T2_left(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N1_,_z_,X,LEFT,OT_T2_CS);
+}
+/* return value-> dN2_dx for CubedSpherical */
+double dN2_dx_CS_OT_T2_left(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N2_,_x_,X,LEFT,OT_T2_CS);
+}
+/* return value-> dN2_dy for CubedSpherical */
+double dN2_dy_CS_OT_T2_left(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N2_,_y_,X,LEFT,OT_T2_CS);
+}
+/* return value-> dN2_dz for CubedSpherical */
+double dN2_dz_CS_OT_T2_left(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N2_,_z_,X,LEFT,OT_T2_CS);
+}
+
+///////////////////////////////////////////////////////////////////////
+
+/* return value-> dN0_dx for CubedSpherical */
+double dN0_dx_CS_OT_T2_right(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N0_,_x_,X,RIGHT,OT_T2_CS);
+}
+
+/* return value-> dN0_dy for CubedSpherical */
+double dN0_dy_CS_OT_T2_right(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N0_,_y_,X,RIGHT,OT_T2_CS);
+}
+/* return value-> dN0_dz for CubedSpherical */
+double dN0_dz_CS_OT_T2_right(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N0_,_z_,X,RIGHT,OT_T2_CS);
+}
+/* return value-> dN1_dx for CubedSpherical */
+double dN1_dx_CS_OT_T2_right(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N1_,_x_,X,RIGHT,OT_T2_CS);
+}
+/* return value-> dN1_dy for CubedSpherical */
+double dN1_dy_CS_OT_T2_right(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N1_,_y_,X,RIGHT,OT_T2_CS);
+}
+/* return value-> dN1_dz for CubedSpherical */
+double dN1_dz_CS_OT_T2_right(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N1_,_z_,X,RIGHT,OT_T2_CS);
+}
+/* return value-> dN2_dx for CubedSpherical */
+double dN2_dx_CS_OT_T2_right(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N2_,_x_,X,RIGHT,OT_T2_CS);
+}
+/* return value-> dN2_dy for CubedSpherical */
+double dN2_dy_CS_OT_T2_right(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N2_,_y_,X,RIGHT,OT_T2_CS);
+}
+/* return value-> dN2_dz for CubedSpherical */
+double dN2_dz_CS_OT_T2_right(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N2_,_z_,X,RIGHT,OT_T2_CS);
+}
+
+///////////////////////////////////////////////////////////////////////
+
+/* return value-> dN0_dx for CubedSpherical */
+double dN0_dx_CS_OT_T2_back(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N0_,_x_,X,BACK,OT_T2_CS);
+}
+/* return value-> dN0_dy for CubedSpherical */
+double dN0_dy_CS_OT_T2_back(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N0_,_y_,X,BACK,OT_T2_CS);
+}
+/* return value-> dN0_dz for CubedSpherical */
+double dN0_dz_CS_OT_T2_back(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N0_,_z_,X,BACK,OT_T2_CS);
+}
+/* return value-> dN1_dx for CubedSpherical */
+double dN1_dx_CS_OT_T2_back(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N1_,_x_,X,BACK,OT_T2_CS);
+}
+/* return value-> dN1_dy for CubedSpherical */
+double dN1_dy_CS_OT_T2_back(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N1_,_y_,X,BACK,OT_T2_CS);
+}
+/* return value-> dN1_dz for CubedSpherical */
+double dN1_dz_CS_OT_T2_back(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N1_,_z_,X,BACK,OT_T2_CS);
+}
+/* return value-> dN2_dx for CubedSpherical */
+double dN2_dx_CS_OT_T2_back(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N2_,_x_,X,BACK,OT_T2_CS);
+}
+/* return value-> dN2_dy for CubedSpherical */
+double dN2_dy_CS_OT_T2_back(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N2_,_y_,X,BACK,OT_T2_CS);
+}
+/* return value-> dN2_dz for CubedSpherical */
+double dN2_dz_CS_OT_T2_back(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N2_,_z_,X,BACK,OT_T2_CS);
+}
+
+////////////////////////////////////////////////////////////////////////
+
+/* return value-> dN0_dx for CubedSpherical */
+double dN0_dx_CS_OT_T2_front(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N0_,_x_,X,FRONT,OT_T2_CS);
+}
+/* return value-> dN0_dy for CubedSpherical */
+double dN0_dy_CS_OT_T2_front(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N0_,_y_,X,FRONT,OT_T2_CS);
+}
+/* return value-> dN0_dz for CubedSpherical */
+double dN0_dz_CS_OT_T2_front(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N0_,_z_,X,FRONT,OT_T2_CS);
+}
+/* return value-> dN1_dx for CubedSpherical */
+double dN1_dx_CS_OT_T2_front(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N1_,_x_,X,FRONT,OT_T2_CS);
+}
+/* return value-> dN1_dy for CubedSpherical */
+double dN1_dy_CS_OT_T2_front(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N1_,_y_,X,FRONT,OT_T2_CS);
+}
+/* return value-> dN1_dz for CubedSpherical */
+double dN1_dz_CS_OT_T2_front(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N1_,_z_,X,FRONT,OT_T2_CS);
+}
+/* return value-> dN2_dx for CubedSpherical */
+double dN2_dx_CS_OT_T2_front(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N2_,_x_,X,FRONT,OT_T2_CS);
+}
+/* return value-> dN2_dy for CubedSpherical */
+double dN2_dy_CS_OT_T2_front(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N2_,_y_,X,FRONT,OT_T2_CS);
+}
+/* return value-> dN2_dz for CubedSpherical */
+double dN2_dz_CS_OT_T2_front(Patch_T *const patch,const double *const X)
+{
+  return dNi_dxj_CubedSpherical(patch,_N2_,_z_,X,FRONT,OT_T2_CS);
+}
+
+/* Calculating dN(1/2/3)/d(x/y/z) at arbitrary curvilinear point point X.
+// used for interpolation.
+// ->return value: dN(1/2/3)/d(x/y/z) */
+static double dNi_dxj_CubedSpherical(Patch_T *const patch,const Dd_T Ni,const Dd_T xj,const double *const X,const Flag_T side,const Flag_T type)
+{
+  UNUSED(patch);
+  UNUSED(Ni);
+  UNUSED(xj);
+  UNUSED(X);
+  UNUSED(side);
+  UNUSED(type);
+}
