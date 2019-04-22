@@ -592,6 +592,7 @@ static void read_1st_and_2nd_deriv(const JType_E deriv_dir,JType_E *const deriv_
 static double dc_df(const unsigned n,const unsigned i,const unsigned l)
 {
   double dcdf = 0;
+  const double SIGN[2] = {1.0,-1.0};
   
   if (l == 0)
     dcdf = 1;

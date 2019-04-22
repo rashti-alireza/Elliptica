@@ -217,6 +217,7 @@ double sum_0_N_dCi_dfj_by_dTi_dq(const unsigned N,const unsigned j,const double 
   double sum = 0;
   const double scale = 0.5/(N-1);/* coming when one does Fourier transformation */
   const double a = acos(q);
+  const double SIGN[2] = {1,-1};
   
   if (j == 0)
   {
@@ -265,6 +266,7 @@ double sum_0_N_dCi_dfj_by_Ti_q(const unsigned N,const unsigned j,const double q)
   double sum = 0;
   const double scale = 0.5/(N-1);/* coming when one does Fourier transformation */
   const double theta = acos(q);
+  const double SIGN[2] = {1,-1};
   
   if (j == 0)
   {

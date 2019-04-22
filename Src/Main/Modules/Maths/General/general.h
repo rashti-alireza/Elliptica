@@ -16,8 +16,6 @@
 #define Csc(a) 1/sin(a)
 #define Cot(a) 1/tan(a)
 
-static double SIGN[2] = {1,-1};
-
 double rms(const unsigned n, const double *const v2,const double *const v1);
 long double rmsL(const long unsigned n, const double *const v2, const double *const v1);
 double dot(const unsigned n, const double *const v2,const double *const v1);
