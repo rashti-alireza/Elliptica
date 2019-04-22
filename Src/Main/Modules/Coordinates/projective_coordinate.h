@@ -49,7 +49,6 @@ static double dNi_dxj_ProjectiveHemisphere(Patch_T *const patch, const Dd_T Ni, 
 static double dNi_dxj_StereographicSphereLeft(Patch_T *const patch, const Dd_T Ni, const Dd_T xj,const double *const X);
 static double dNi_dxj_StereographicSphereRight(Patch_T *const patch, const Dd_T Ni, const Dd_T xj,const double *const X);
 static double dN_dX(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e);
-enum enum_dA_da get_dA_da(const Dd_T q2_e, const Dd_T q1_e);
 static void R1_R2_derivative(Patch_T *const patch);
 int x_of_X(double *const x,const double *const X,const Patch_T *const patch);
 double interpolation_2d_PH(Field_T *const R, const Patch_T *const patch,const double *const X);

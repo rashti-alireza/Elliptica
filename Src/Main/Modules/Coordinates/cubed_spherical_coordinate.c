@@ -181,76 +181,76 @@ void make_JacobianT_CubedSpherical_coord(Patch_T *const patch)
     switch (side)
     {
       case UP:
-        patch->JacobianT->j      = JT_CS_NS_T_up;
-        patch->JacobianT->dN0_dx = dN0_dx_CS_NS_T_up;
-        patch->JacobianT->dN0_dy = dN0_dy_CS_NS_T_up;
-        patch->JacobianT->dN0_dz = dN0_dz_CS_NS_T_up;
-        patch->JacobianT->dN1_dx = dN1_dx_CS_NS_T_up;
-        patch->JacobianT->dN1_dy = dN1_dy_CS_NS_T_up;
-        patch->JacobianT->dN1_dz = dN1_dz_CS_NS_T_up;
-        patch->JacobianT->dN2_dx = dN2_dx_CS_NS_T_up;
-        patch->JacobianT->dN2_dy = dN2_dy_CS_NS_T_up;
-        patch->JacobianT->dN2_dz = dN2_dz_CS_NS_T_up;
+        patch->JacobianT->j      = JT_NS_T_CS_up;
+        patch->JacobianT->dN0_dx = dN0_dx_NS_T_CS_up;
+        patch->JacobianT->dN0_dy = dN0_dy_NS_T_CS_up;
+        patch->JacobianT->dN0_dz = dN0_dz_NS_T_CS_up;
+        patch->JacobianT->dN1_dx = dN1_dx_NS_T_CS_up;
+        patch->JacobianT->dN1_dy = dN1_dy_NS_T_CS_up;
+        patch->JacobianT->dN1_dz = dN1_dz_NS_T_CS_up;
+        patch->JacobianT->dN2_dx = dN2_dx_NS_T_CS_up;
+        patch->JacobianT->dN2_dy = dN2_dy_NS_T_CS_up;
+        patch->JacobianT->dN2_dz = dN2_dz_NS_T_CS_up;
       break;
       case DOWN:
-        patch->JacobianT->j      = JT_CS_NS_T_down;
-        patch->JacobianT->dN0_dx = dN0_dx_CS_NS_T_down;
-        patch->JacobianT->dN0_dy = dN0_dy_CS_NS_T_down;
-        patch->JacobianT->dN0_dz = dN0_dz_CS_NS_T_down;
-        patch->JacobianT->dN1_dx = dN1_dx_CS_NS_T_down;
-        patch->JacobianT->dN1_dy = dN1_dy_CS_NS_T_down;
-        patch->JacobianT->dN1_dz = dN1_dz_CS_NS_T_down;
-        patch->JacobianT->dN2_dx = dN2_dx_CS_NS_T_down;
-        patch->JacobianT->dN2_dy = dN2_dy_CS_NS_T_down;
-        patch->JacobianT->dN2_dz = dN2_dz_CS_NS_T_down;
+        patch->JacobianT->j      = JT_NS_T_CS_down;
+        patch->JacobianT->dN0_dx = dN0_dx_NS_T_CS_down;
+        patch->JacobianT->dN0_dy = dN0_dy_NS_T_CS_down;
+        patch->JacobianT->dN0_dz = dN0_dz_NS_T_CS_down;
+        patch->JacobianT->dN1_dx = dN1_dx_NS_T_CS_down;
+        patch->JacobianT->dN1_dy = dN1_dy_NS_T_CS_down;
+        patch->JacobianT->dN1_dz = dN1_dz_NS_T_CS_down;
+        patch->JacobianT->dN2_dx = dN2_dx_NS_T_CS_down;
+        patch->JacobianT->dN2_dy = dN2_dy_NS_T_CS_down;
+        patch->JacobianT->dN2_dz = dN2_dz_NS_T_CS_down;
       break;
       case LEFT:
-        patch->JacobianT->j      = JT_CS_NS_T_left;
-        patch->JacobianT->dN0_dx = dN0_dx_CS_NS_T_left;
-        patch->JacobianT->dN0_dy = dN0_dy_CS_NS_T_left;
-        patch->JacobianT->dN0_dz = dN0_dz_CS_NS_T_left;
-        patch->JacobianT->dN1_dx = dN1_dx_CS_NS_T_left;
-        patch->JacobianT->dN1_dy = dN1_dy_CS_NS_T_left;
-        patch->JacobianT->dN1_dz = dN1_dz_CS_NS_T_left;
-        patch->JacobianT->dN2_dx = dN2_dx_CS_NS_T_left;
-        patch->JacobianT->dN2_dy = dN2_dy_CS_NS_T_left;
-        patch->JacobianT->dN2_dz = dN2_dz_CS_NS_T_left;
+        patch->JacobianT->j      = JT_NS_T_CS_left;
+        patch->JacobianT->dN0_dx = dN0_dx_NS_T_CS_left;
+        patch->JacobianT->dN0_dy = dN0_dy_NS_T_CS_left;
+        patch->JacobianT->dN0_dz = dN0_dz_NS_T_CS_left;
+        patch->JacobianT->dN1_dx = dN1_dx_NS_T_CS_left;
+        patch->JacobianT->dN1_dy = dN1_dy_NS_T_CS_left;
+        patch->JacobianT->dN1_dz = dN1_dz_NS_T_CS_left;
+        patch->JacobianT->dN2_dx = dN2_dx_NS_T_CS_left;
+        patch->JacobianT->dN2_dy = dN2_dy_NS_T_CS_left;
+        patch->JacobianT->dN2_dz = dN2_dz_NS_T_CS_left;
       break;
       case RIGHT:
-        patch->JacobianT->j      = JT_CS_NS_T_right;
-        patch->JacobianT->dN0_dx = dN0_dx_CS_NS_T_right;
-        patch->JacobianT->dN0_dy = dN0_dy_CS_NS_T_right;
-        patch->JacobianT->dN0_dz = dN0_dz_CS_NS_T_right;
-        patch->JacobianT->dN1_dx = dN1_dx_CS_NS_T_right;
-        patch->JacobianT->dN1_dy = dN1_dy_CS_NS_T_right;
-        patch->JacobianT->dN1_dz = dN1_dz_CS_NS_T_right;
-        patch->JacobianT->dN2_dx = dN2_dx_CS_NS_T_right;
-        patch->JacobianT->dN2_dy = dN2_dy_CS_NS_T_right;
-        patch->JacobianT->dN2_dz = dN2_dz_CS_NS_T_right;
+        patch->JacobianT->j      = JT_NS_T_CS_right;
+        patch->JacobianT->dN0_dx = dN0_dx_NS_T_CS_right;
+        patch->JacobianT->dN0_dy = dN0_dy_NS_T_CS_right;
+        patch->JacobianT->dN0_dz = dN0_dz_NS_T_CS_right;
+        patch->JacobianT->dN1_dx = dN1_dx_NS_T_CS_right;
+        patch->JacobianT->dN1_dy = dN1_dy_NS_T_CS_right;
+        patch->JacobianT->dN1_dz = dN1_dz_NS_T_CS_right;
+        patch->JacobianT->dN2_dx = dN2_dx_NS_T_CS_right;
+        patch->JacobianT->dN2_dy = dN2_dy_NS_T_CS_right;
+        patch->JacobianT->dN2_dz = dN2_dz_NS_T_CS_right;
       break;
       case BACK:
-        patch->JacobianT->j      = JT_CS_NS_T_back;
-        patch->JacobianT->dN0_dx = dN0_dx_CS_NS_T_back;
-        patch->JacobianT->dN0_dy = dN0_dy_CS_NS_T_back;
-        patch->JacobianT->dN0_dz = dN0_dz_CS_NS_T_back;
-        patch->JacobianT->dN1_dx = dN1_dx_CS_NS_T_back;
-        patch->JacobianT->dN1_dy = dN1_dy_CS_NS_T_back;
-        patch->JacobianT->dN1_dz = dN1_dz_CS_NS_T_back;
-        patch->JacobianT->dN2_dx = dN2_dx_CS_NS_T_back;
-        patch->JacobianT->dN2_dy = dN2_dy_CS_NS_T_back;
-        patch->JacobianT->dN2_dz = dN2_dz_CS_NS_T_back;
+        patch->JacobianT->j      = JT_NS_T_CS_back;
+        patch->JacobianT->dN0_dx = dN0_dx_NS_T_CS_back;
+        patch->JacobianT->dN0_dy = dN0_dy_NS_T_CS_back;
+        patch->JacobianT->dN0_dz = dN0_dz_NS_T_CS_back;
+        patch->JacobianT->dN1_dx = dN1_dx_NS_T_CS_back;
+        patch->JacobianT->dN1_dy = dN1_dy_NS_T_CS_back;
+        patch->JacobianT->dN1_dz = dN1_dz_NS_T_CS_back;
+        patch->JacobianT->dN2_dx = dN2_dx_NS_T_CS_back;
+        patch->JacobianT->dN2_dy = dN2_dy_NS_T_CS_back;
+        patch->JacobianT->dN2_dz = dN2_dz_NS_T_CS_back;
       break;
       case FRONT:
-        patch->JacobianT->j      = JT_CS_NS_T_front;
-        patch->JacobianT->dN0_dx = dN0_dx_CS_NS_T_front;
-        patch->JacobianT->dN0_dy = dN0_dy_CS_NS_T_front;
-        patch->JacobianT->dN0_dz = dN0_dz_CS_NS_T_front;
-        patch->JacobianT->dN1_dx = dN1_dx_CS_NS_T_front;
-        patch->JacobianT->dN1_dy = dN1_dy_CS_NS_T_front;
-        patch->JacobianT->dN1_dz = dN1_dz_CS_NS_T_front;
-        patch->JacobianT->dN2_dx = dN2_dx_CS_NS_T_front;
-        patch->JacobianT->dN2_dy = dN2_dy_CS_NS_T_front;
-        patch->JacobianT->dN2_dz = dN2_dz_CS_NS_T_front;
+        patch->JacobianT->j      = JT_NS_T_CS_front;
+        patch->JacobianT->dN0_dx = dN0_dx_NS_T_CS_front;
+        patch->JacobianT->dN0_dy = dN0_dy_NS_T_CS_front;
+        patch->JacobianT->dN0_dz = dN0_dz_NS_T_CS_front;
+        patch->JacobianT->dN1_dx = dN1_dx_NS_T_CS_front;
+        patch->JacobianT->dN1_dy = dN1_dy_NS_T_CS_front;
+        patch->JacobianT->dN1_dz = dN1_dz_NS_T_CS_front;
+        patch->JacobianT->dN2_dx = dN2_dx_NS_T_CS_front;
+        patch->JacobianT->dN2_dy = dN2_dy_NS_T_CS_front;
+        patch->JacobianT->dN2_dz = dN2_dz_NS_T_CS_front;
       break;
       default:
         abortEr(NO_JOB);
@@ -263,76 +263,76 @@ void make_JacobianT_CubedSpherical_coord(Patch_T *const patch)
     switch (side)
     {
       case UP:
-        patch->JacobianT->j      = JT_CS_SR_T_up;
-        patch->JacobianT->dN0_dx = dN0_dx_CS_SR_T_up;
-        patch->JacobianT->dN0_dy = dN0_dy_CS_SR_T_up;
-        patch->JacobianT->dN0_dz = dN0_dz_CS_SR_T_up;
-        patch->JacobianT->dN1_dx = dN1_dx_CS_SR_T_up;
-        patch->JacobianT->dN1_dy = dN1_dy_CS_SR_T_up;
-        patch->JacobianT->dN1_dz = dN1_dz_CS_SR_T_up;
-        patch->JacobianT->dN2_dx = dN2_dx_CS_SR_T_up;
-        patch->JacobianT->dN2_dy = dN2_dy_CS_SR_T_up;
-        patch->JacobianT->dN2_dz = dN2_dz_CS_SR_T_up;
+        patch->JacobianT->j      = JT_SR_T_CS_up;
+        patch->JacobianT->dN0_dx = dN0_dx_SR_T_CS_up;
+        patch->JacobianT->dN0_dy = dN0_dy_SR_T_CS_up;
+        patch->JacobianT->dN0_dz = dN0_dz_SR_T_CS_up;
+        patch->JacobianT->dN1_dx = dN1_dx_SR_T_CS_up;
+        patch->JacobianT->dN1_dy = dN1_dy_SR_T_CS_up;
+        patch->JacobianT->dN1_dz = dN1_dz_SR_T_CS_up;
+        patch->JacobianT->dN2_dx = dN2_dx_SR_T_CS_up;
+        patch->JacobianT->dN2_dy = dN2_dy_SR_T_CS_up;
+        patch->JacobianT->dN2_dz = dN2_dz_SR_T_CS_up;
       break;
       case DOWN:
-        patch->JacobianT->j      = JT_CS_SR_T_down;
-        patch->JacobianT->dN0_dx = dN0_dx_CS_SR_T_down;
-        patch->JacobianT->dN0_dy = dN0_dy_CS_SR_T_down;
-        patch->JacobianT->dN0_dz = dN0_dz_CS_SR_T_down;
-        patch->JacobianT->dN1_dx = dN1_dx_CS_SR_T_down;
-        patch->JacobianT->dN1_dy = dN1_dy_CS_SR_T_down;
-        patch->JacobianT->dN1_dz = dN1_dz_CS_SR_T_down;
-        patch->JacobianT->dN2_dx = dN2_dx_CS_SR_T_down;
-        patch->JacobianT->dN2_dy = dN2_dy_CS_SR_T_down;
-        patch->JacobianT->dN2_dz = dN2_dz_CS_SR_T_down;
+        patch->JacobianT->j      = JT_SR_T_CS_down;
+        patch->JacobianT->dN0_dx = dN0_dx_SR_T_CS_down;
+        patch->JacobianT->dN0_dy = dN0_dy_SR_T_CS_down;
+        patch->JacobianT->dN0_dz = dN0_dz_SR_T_CS_down;
+        patch->JacobianT->dN1_dx = dN1_dx_SR_T_CS_down;
+        patch->JacobianT->dN1_dy = dN1_dy_SR_T_CS_down;
+        patch->JacobianT->dN1_dz = dN1_dz_SR_T_CS_down;
+        patch->JacobianT->dN2_dx = dN2_dx_SR_T_CS_down;
+        patch->JacobianT->dN2_dy = dN2_dy_SR_T_CS_down;
+        patch->JacobianT->dN2_dz = dN2_dz_SR_T_CS_down;
       break;
       case LEFT:
-        patch->JacobianT->j      = JT_CS_SR_T_left;
-        patch->JacobianT->dN0_dx = dN0_dx_CS_SR_T_left;
-        patch->JacobianT->dN0_dy = dN0_dy_CS_SR_T_left;
-        patch->JacobianT->dN0_dz = dN0_dz_CS_SR_T_left;
-        patch->JacobianT->dN1_dx = dN1_dx_CS_SR_T_left;
-        patch->JacobianT->dN1_dy = dN1_dy_CS_SR_T_left;
-        patch->JacobianT->dN1_dz = dN1_dz_CS_SR_T_left;
-        patch->JacobianT->dN2_dx = dN2_dx_CS_SR_T_left;
-        patch->JacobianT->dN2_dy = dN2_dy_CS_SR_T_left;
-        patch->JacobianT->dN2_dz = dN2_dz_CS_SR_T_left;
+        patch->JacobianT->j      = JT_SR_T_CS_left;
+        patch->JacobianT->dN0_dx = dN0_dx_SR_T_CS_left;
+        patch->JacobianT->dN0_dy = dN0_dy_SR_T_CS_left;
+        patch->JacobianT->dN0_dz = dN0_dz_SR_T_CS_left;
+        patch->JacobianT->dN1_dx = dN1_dx_SR_T_CS_left;
+        patch->JacobianT->dN1_dy = dN1_dy_SR_T_CS_left;
+        patch->JacobianT->dN1_dz = dN1_dz_SR_T_CS_left;
+        patch->JacobianT->dN2_dx = dN2_dx_SR_T_CS_left;
+        patch->JacobianT->dN2_dy = dN2_dy_SR_T_CS_left;
+        patch->JacobianT->dN2_dz = dN2_dz_SR_T_CS_left;
       break;
       case RIGHT:
-        patch->JacobianT->j      = JT_CS_SR_T_right;
-        patch->JacobianT->dN0_dx = dN0_dx_CS_SR_T_right;
-        patch->JacobianT->dN0_dy = dN0_dy_CS_SR_T_right;
-        patch->JacobianT->dN0_dz = dN0_dz_CS_SR_T_right;
-        patch->JacobianT->dN1_dx = dN1_dx_CS_SR_T_right;
-        patch->JacobianT->dN1_dy = dN1_dy_CS_SR_T_right;
-        patch->JacobianT->dN1_dz = dN1_dz_CS_SR_T_right;
-        patch->JacobianT->dN2_dx = dN2_dx_CS_SR_T_right;
-        patch->JacobianT->dN2_dy = dN2_dy_CS_SR_T_right;
-        patch->JacobianT->dN2_dz = dN2_dz_CS_SR_T_right;
+        patch->JacobianT->j      = JT_SR_T_CS_right;
+        patch->JacobianT->dN0_dx = dN0_dx_SR_T_CS_right;
+        patch->JacobianT->dN0_dy = dN0_dy_SR_T_CS_right;
+        patch->JacobianT->dN0_dz = dN0_dz_SR_T_CS_right;
+        patch->JacobianT->dN1_dx = dN1_dx_SR_T_CS_right;
+        patch->JacobianT->dN1_dy = dN1_dy_SR_T_CS_right;
+        patch->JacobianT->dN1_dz = dN1_dz_SR_T_CS_right;
+        patch->JacobianT->dN2_dx = dN2_dx_SR_T_CS_right;
+        patch->JacobianT->dN2_dy = dN2_dy_SR_T_CS_right;
+        patch->JacobianT->dN2_dz = dN2_dz_SR_T_CS_right;
       break;
       case BACK:
-        patch->JacobianT->j      = JT_CS_SR_T_back;
-        patch->JacobianT->dN0_dx = dN0_dx_CS_SR_T_back;
-        patch->JacobianT->dN0_dy = dN0_dy_CS_SR_T_back;
-        patch->JacobianT->dN0_dz = dN0_dz_CS_SR_T_back;
-        patch->JacobianT->dN1_dx = dN1_dx_CS_SR_T_back;
-        patch->JacobianT->dN1_dy = dN1_dy_CS_SR_T_back;
-        patch->JacobianT->dN1_dz = dN1_dz_CS_SR_T_back;
-        patch->JacobianT->dN2_dx = dN2_dx_CS_SR_T_back;
-        patch->JacobianT->dN2_dy = dN2_dy_CS_SR_T_back;
-        patch->JacobianT->dN2_dz = dN2_dz_CS_SR_T_back;
+        patch->JacobianT->j      = JT_SR_T_CS_back;
+        patch->JacobianT->dN0_dx = dN0_dx_SR_T_CS_back;
+        patch->JacobianT->dN0_dy = dN0_dy_SR_T_CS_back;
+        patch->JacobianT->dN0_dz = dN0_dz_SR_T_CS_back;
+        patch->JacobianT->dN1_dx = dN1_dx_SR_T_CS_back;
+        patch->JacobianT->dN1_dy = dN1_dy_SR_T_CS_back;
+        patch->JacobianT->dN1_dz = dN1_dz_SR_T_CS_back;
+        patch->JacobianT->dN2_dx = dN2_dx_SR_T_CS_back;
+        patch->JacobianT->dN2_dy = dN2_dy_SR_T_CS_back;
+        patch->JacobianT->dN2_dz = dN2_dz_SR_T_CS_back;
       break;
       case FRONT:
-        patch->JacobianT->j      = JT_CS_SR_T_front;
-        patch->JacobianT->dN0_dx = dN0_dx_CS_SR_T_front;
-        patch->JacobianT->dN0_dy = dN0_dy_CS_SR_T_front;
-        patch->JacobianT->dN0_dz = dN0_dz_CS_SR_T_front;
-        patch->JacobianT->dN1_dx = dN1_dx_CS_SR_T_front;
-        patch->JacobianT->dN1_dy = dN1_dy_CS_SR_T_front;
-        patch->JacobianT->dN1_dz = dN1_dz_CS_SR_T_front;
-        patch->JacobianT->dN2_dx = dN2_dx_CS_SR_T_front;
-        patch->JacobianT->dN2_dy = dN2_dy_CS_SR_T_front;
-        patch->JacobianT->dN2_dz = dN2_dz_CS_SR_T_front;
+        patch->JacobianT->j      = JT_SR_T_CS_front;
+        patch->JacobianT->dN0_dx = dN0_dx_SR_T_CS_front;
+        patch->JacobianT->dN0_dy = dN0_dy_SR_T_CS_front;
+        patch->JacobianT->dN0_dz = dN0_dz_SR_T_CS_front;
+        patch->JacobianT->dN1_dx = dN1_dx_SR_T_CS_front;
+        patch->JacobianT->dN1_dy = dN1_dy_SR_T_CS_front;
+        patch->JacobianT->dN1_dz = dN1_dz_SR_T_CS_front;
+        patch->JacobianT->dN2_dx = dN2_dx_SR_T_CS_front;
+        patch->JacobianT->dN2_dy = dN2_dy_SR_T_CS_front;
+        patch->JacobianT->dN2_dz = dN2_dz_SR_T_CS_front;
       break;
       default:
         abortEr(NO_JOB);
@@ -345,76 +345,76 @@ void make_JacobianT_CubedSpherical_coord(Patch_T *const patch)
     switch (side)
     {
       case UP:
-        patch->JacobianT->j      = JT_CS_OT_T1_up;
-        patch->JacobianT->dN0_dx = dN0_dx_CS_OT_T1_up;
-        patch->JacobianT->dN0_dy = dN0_dy_CS_OT_T1_up;
-        patch->JacobianT->dN0_dz = dN0_dz_CS_OT_T1_up;
-        patch->JacobianT->dN1_dx = dN1_dx_CS_OT_T1_up;
-        patch->JacobianT->dN1_dy = dN1_dy_CS_OT_T1_up;
-        patch->JacobianT->dN1_dz = dN1_dz_CS_OT_T1_up;
-        patch->JacobianT->dN2_dx = dN2_dx_CS_OT_T1_up;
-        patch->JacobianT->dN2_dy = dN2_dy_CS_OT_T1_up;
-        patch->JacobianT->dN2_dz = dN2_dz_CS_OT_T1_up;
+        patch->JacobianT->j      = JT_OT_T1_CS_up;
+        patch->JacobianT->dN0_dx = dN0_dx_OT_T1_CS_up;
+        patch->JacobianT->dN0_dy = dN0_dy_OT_T1_CS_up;
+        patch->JacobianT->dN0_dz = dN0_dz_OT_T1_CS_up;
+        patch->JacobianT->dN1_dx = dN1_dx_OT_T1_CS_up;
+        patch->JacobianT->dN1_dy = dN1_dy_OT_T1_CS_up;
+        patch->JacobianT->dN1_dz = dN1_dz_OT_T1_CS_up;
+        patch->JacobianT->dN2_dx = dN2_dx_OT_T1_CS_up;
+        patch->JacobianT->dN2_dy = dN2_dy_OT_T1_CS_up;
+        patch->JacobianT->dN2_dz = dN2_dz_OT_T1_CS_up;
       break;
       case DOWN:
-        patch->JacobianT->j      = JT_CS_OT_T1_down;
-        patch->JacobianT->dN0_dx = dN0_dx_CS_OT_T1_down;
-        patch->JacobianT->dN0_dy = dN0_dy_CS_OT_T1_down;
-        patch->JacobianT->dN0_dz = dN0_dz_CS_OT_T1_down;
-        patch->JacobianT->dN1_dx = dN1_dx_CS_OT_T1_down;
-        patch->JacobianT->dN1_dy = dN1_dy_CS_OT_T1_down;
-        patch->JacobianT->dN1_dz = dN1_dz_CS_OT_T1_down;
-        patch->JacobianT->dN2_dx = dN2_dx_CS_OT_T1_down;
-        patch->JacobianT->dN2_dy = dN2_dy_CS_OT_T1_down;
-        patch->JacobianT->dN2_dz = dN2_dz_CS_OT_T1_down;
+        patch->JacobianT->j      = JT_OT_T1_CS_down;
+        patch->JacobianT->dN0_dx = dN0_dx_OT_T1_CS_down;
+        patch->JacobianT->dN0_dy = dN0_dy_OT_T1_CS_down;
+        patch->JacobianT->dN0_dz = dN0_dz_OT_T1_CS_down;
+        patch->JacobianT->dN1_dx = dN1_dx_OT_T1_CS_down;
+        patch->JacobianT->dN1_dy = dN1_dy_OT_T1_CS_down;
+        patch->JacobianT->dN1_dz = dN1_dz_OT_T1_CS_down;
+        patch->JacobianT->dN2_dx = dN2_dx_OT_T1_CS_down;
+        patch->JacobianT->dN2_dy = dN2_dy_OT_T1_CS_down;
+        patch->JacobianT->dN2_dz = dN2_dz_OT_T1_CS_down;
       break;
       case LEFT:
-        patch->JacobianT->j      = JT_CS_OT_T1_left;
-        patch->JacobianT->dN0_dx = dN0_dx_CS_OT_T1_left;
-        patch->JacobianT->dN0_dy = dN0_dy_CS_OT_T1_left;
-        patch->JacobianT->dN0_dz = dN0_dz_CS_OT_T1_left;
-        patch->JacobianT->dN1_dx = dN1_dx_CS_OT_T1_left;
-        patch->JacobianT->dN1_dy = dN1_dy_CS_OT_T1_left;
-        patch->JacobianT->dN1_dz = dN1_dz_CS_OT_T1_left;
-        patch->JacobianT->dN2_dx = dN2_dx_CS_OT_T1_left;
-        patch->JacobianT->dN2_dy = dN2_dy_CS_OT_T1_left;
-        patch->JacobianT->dN2_dz = dN2_dz_CS_OT_T1_left;
+        patch->JacobianT->j      = JT_OT_T1_CS_left;
+        patch->JacobianT->dN0_dx = dN0_dx_OT_T1_CS_left;
+        patch->JacobianT->dN0_dy = dN0_dy_OT_T1_CS_left;
+        patch->JacobianT->dN0_dz = dN0_dz_OT_T1_CS_left;
+        patch->JacobianT->dN1_dx = dN1_dx_OT_T1_CS_left;
+        patch->JacobianT->dN1_dy = dN1_dy_OT_T1_CS_left;
+        patch->JacobianT->dN1_dz = dN1_dz_OT_T1_CS_left;
+        patch->JacobianT->dN2_dx = dN2_dx_OT_T1_CS_left;
+        patch->JacobianT->dN2_dy = dN2_dy_OT_T1_CS_left;
+        patch->JacobianT->dN2_dz = dN2_dz_OT_T1_CS_left;
       break;
       case RIGHT:
-        patch->JacobianT->j      = JT_CS_OT_T1_right;
-        patch->JacobianT->dN0_dx = dN0_dx_CS_OT_T1_right;
-        patch->JacobianT->dN0_dy = dN0_dy_CS_OT_T1_right;
-        patch->JacobianT->dN0_dz = dN0_dz_CS_OT_T1_right;
-        patch->JacobianT->dN1_dx = dN1_dx_CS_OT_T1_right;
-        patch->JacobianT->dN1_dy = dN1_dy_CS_OT_T1_right;
-        patch->JacobianT->dN1_dz = dN1_dz_CS_OT_T1_right;
-        patch->JacobianT->dN2_dx = dN2_dx_CS_OT_T1_right;
-        patch->JacobianT->dN2_dy = dN2_dy_CS_OT_T1_right;
-        patch->JacobianT->dN2_dz = dN2_dz_CS_OT_T1_right;
+        patch->JacobianT->j      = JT_OT_T1_CS_right;
+        patch->JacobianT->dN0_dx = dN0_dx_OT_T1_CS_right;
+        patch->JacobianT->dN0_dy = dN0_dy_OT_T1_CS_right;
+        patch->JacobianT->dN0_dz = dN0_dz_OT_T1_CS_right;
+        patch->JacobianT->dN1_dx = dN1_dx_OT_T1_CS_right;
+        patch->JacobianT->dN1_dy = dN1_dy_OT_T1_CS_right;
+        patch->JacobianT->dN1_dz = dN1_dz_OT_T1_CS_right;
+        patch->JacobianT->dN2_dx = dN2_dx_OT_T1_CS_right;
+        patch->JacobianT->dN2_dy = dN2_dy_OT_T1_CS_right;
+        patch->JacobianT->dN2_dz = dN2_dz_OT_T1_CS_right;
       break;
       case BACK:
-        patch->JacobianT->j      = JT_CS_OT_T1_back;
-        patch->JacobianT->dN0_dx = dN0_dx_CS_OT_T1_back;
-        patch->JacobianT->dN0_dy = dN0_dy_CS_OT_T1_back;
-        patch->JacobianT->dN0_dz = dN0_dz_CS_OT_T1_back;
-        patch->JacobianT->dN1_dx = dN1_dx_CS_OT_T1_back;
-        patch->JacobianT->dN1_dy = dN1_dy_CS_OT_T1_back;
-        patch->JacobianT->dN1_dz = dN1_dz_CS_OT_T1_back;
-        patch->JacobianT->dN2_dx = dN2_dx_CS_OT_T1_back;
-        patch->JacobianT->dN2_dy = dN2_dy_CS_OT_T1_back;
-        patch->JacobianT->dN2_dz = dN2_dz_CS_OT_T1_back;
+        patch->JacobianT->j      = JT_OT_T1_CS_back;
+        patch->JacobianT->dN0_dx = dN0_dx_OT_T1_CS_back;
+        patch->JacobianT->dN0_dy = dN0_dy_OT_T1_CS_back;
+        patch->JacobianT->dN0_dz = dN0_dz_OT_T1_CS_back;
+        patch->JacobianT->dN1_dx = dN1_dx_OT_T1_CS_back;
+        patch->JacobianT->dN1_dy = dN1_dy_OT_T1_CS_back;
+        patch->JacobianT->dN1_dz = dN1_dz_OT_T1_CS_back;
+        patch->JacobianT->dN2_dx = dN2_dx_OT_T1_CS_back;
+        patch->JacobianT->dN2_dy = dN2_dy_OT_T1_CS_back;
+        patch->JacobianT->dN2_dz = dN2_dz_OT_T1_CS_back;
       break;
       case FRONT:
-        patch->JacobianT->j      = JT_CS_OT_T1_front;
-        patch->JacobianT->dN0_dx = dN0_dx_CS_OT_T1_front;
-        patch->JacobianT->dN0_dy = dN0_dy_CS_OT_T1_front;
-        patch->JacobianT->dN0_dz = dN0_dz_CS_OT_T1_front;
-        patch->JacobianT->dN1_dx = dN1_dx_CS_OT_T1_front;
-        patch->JacobianT->dN1_dy = dN1_dy_CS_OT_T1_front;
-        patch->JacobianT->dN1_dz = dN1_dz_CS_OT_T1_front;
-        patch->JacobianT->dN2_dx = dN2_dx_CS_OT_T1_front;
-        patch->JacobianT->dN2_dy = dN2_dy_CS_OT_T1_front;
-        patch->JacobianT->dN2_dz = dN2_dz_CS_OT_T1_front;
+        patch->JacobianT->j      = JT_OT_T1_CS_front;
+        patch->JacobianT->dN0_dx = dN0_dx_OT_T1_CS_front;
+        patch->JacobianT->dN0_dy = dN0_dy_OT_T1_CS_front;
+        patch->JacobianT->dN0_dz = dN0_dz_OT_T1_CS_front;
+        patch->JacobianT->dN1_dx = dN1_dx_OT_T1_CS_front;
+        patch->JacobianT->dN1_dy = dN1_dy_OT_T1_CS_front;
+        patch->JacobianT->dN1_dz = dN1_dz_OT_T1_CS_front;
+        patch->JacobianT->dN2_dx = dN2_dx_OT_T1_CS_front;
+        patch->JacobianT->dN2_dy = dN2_dy_OT_T1_CS_front;
+        patch->JacobianT->dN2_dz = dN2_dz_OT_T1_CS_front;
       break;
       default:
         abortEr(NO_JOB);
@@ -425,76 +425,76 @@ void make_JacobianT_CubedSpherical_coord(Patch_T *const patch)
     switch (side)
     {
       case UP:
-        patch->JacobianT->j      = JT_CS_OT_T2_up;
-        patch->JacobianT->dN0_dx = dN0_dx_CS_OT_T2_up;
-        patch->JacobianT->dN0_dy = dN0_dy_CS_OT_T2_up;
-        patch->JacobianT->dN0_dz = dN0_dz_CS_OT_T2_up;
-        patch->JacobianT->dN1_dx = dN1_dx_CS_OT_T2_up;
-        patch->JacobianT->dN1_dy = dN1_dy_CS_OT_T2_up;
-        patch->JacobianT->dN1_dz = dN1_dz_CS_OT_T2_up;
-        patch->JacobianT->dN2_dx = dN2_dx_CS_OT_T2_up;
-        patch->JacobianT->dN2_dy = dN2_dy_CS_OT_T2_up;
-        patch->JacobianT->dN2_dz = dN2_dz_CS_OT_T2_up;
+        patch->JacobianT->j      = JT_OT_T2_CS_up;
+        patch->JacobianT->dN0_dx = dN0_dx_OT_T2_CS_up;
+        patch->JacobianT->dN0_dy = dN0_dy_OT_T2_CS_up;
+        patch->JacobianT->dN0_dz = dN0_dz_OT_T2_CS_up;
+        patch->JacobianT->dN1_dx = dN1_dx_OT_T2_CS_up;
+        patch->JacobianT->dN1_dy = dN1_dy_OT_T2_CS_up;
+        patch->JacobianT->dN1_dz = dN1_dz_OT_T2_CS_up;
+        patch->JacobianT->dN2_dx = dN2_dx_OT_T2_CS_up;
+        patch->JacobianT->dN2_dy = dN2_dy_OT_T2_CS_up;
+        patch->JacobianT->dN2_dz = dN2_dz_OT_T2_CS_up;
       break;
       case DOWN:
-        patch->JacobianT->j      = JT_CS_OT_T2_down;
-        patch->JacobianT->dN0_dx = dN0_dx_CS_OT_T2_down;
-        patch->JacobianT->dN0_dy = dN0_dy_CS_OT_T2_down;
-        patch->JacobianT->dN0_dz = dN0_dz_CS_OT_T2_down;
-        patch->JacobianT->dN1_dx = dN1_dx_CS_OT_T2_down;
-        patch->JacobianT->dN1_dy = dN1_dy_CS_OT_T2_down;
-        patch->JacobianT->dN1_dz = dN1_dz_CS_OT_T2_down;
-        patch->JacobianT->dN2_dx = dN2_dx_CS_OT_T2_down;
-        patch->JacobianT->dN2_dy = dN2_dy_CS_OT_T2_down;
-        patch->JacobianT->dN2_dz = dN2_dz_CS_OT_T2_down;
+        patch->JacobianT->j      = JT_OT_T2_CS_down;
+        patch->JacobianT->dN0_dx = dN0_dx_OT_T2_CS_down;
+        patch->JacobianT->dN0_dy = dN0_dy_OT_T2_CS_down;
+        patch->JacobianT->dN0_dz = dN0_dz_OT_T2_CS_down;
+        patch->JacobianT->dN1_dx = dN1_dx_OT_T2_CS_down;
+        patch->JacobianT->dN1_dy = dN1_dy_OT_T2_CS_down;
+        patch->JacobianT->dN1_dz = dN1_dz_OT_T2_CS_down;
+        patch->JacobianT->dN2_dx = dN2_dx_OT_T2_CS_down;
+        patch->JacobianT->dN2_dy = dN2_dy_OT_T2_CS_down;
+        patch->JacobianT->dN2_dz = dN2_dz_OT_T2_CS_down;
       break;
       case LEFT:
-        patch->JacobianT->j      = JT_CS_OT_T2_left;
-        patch->JacobianT->dN0_dx = dN0_dx_CS_OT_T2_left;
-        patch->JacobianT->dN0_dy = dN0_dy_CS_OT_T2_left;
-        patch->JacobianT->dN0_dz = dN0_dz_CS_OT_T2_left;
-        patch->JacobianT->dN1_dx = dN1_dx_CS_OT_T2_left;
-        patch->JacobianT->dN1_dy = dN1_dy_CS_OT_T2_left;
-        patch->JacobianT->dN1_dz = dN1_dz_CS_OT_T2_left;
-        patch->JacobianT->dN2_dx = dN2_dx_CS_OT_T2_left;
-        patch->JacobianT->dN2_dy = dN2_dy_CS_OT_T2_left;
-        patch->JacobianT->dN2_dz = dN2_dz_CS_OT_T2_left;
+        patch->JacobianT->j      = JT_OT_T2_CS_left;
+        patch->JacobianT->dN0_dx = dN0_dx_OT_T2_CS_left;
+        patch->JacobianT->dN0_dy = dN0_dy_OT_T2_CS_left;
+        patch->JacobianT->dN0_dz = dN0_dz_OT_T2_CS_left;
+        patch->JacobianT->dN1_dx = dN1_dx_OT_T2_CS_left;
+        patch->JacobianT->dN1_dy = dN1_dy_OT_T2_CS_left;
+        patch->JacobianT->dN1_dz = dN1_dz_OT_T2_CS_left;
+        patch->JacobianT->dN2_dx = dN2_dx_OT_T2_CS_left;
+        patch->JacobianT->dN2_dy = dN2_dy_OT_T2_CS_left;
+        patch->JacobianT->dN2_dz = dN2_dz_OT_T2_CS_left;
       break;
       case RIGHT:
-        patch->JacobianT->j      = JT_CS_OT_T2_right;
-        patch->JacobianT->dN0_dx = dN0_dx_CS_OT_T2_right;
-        patch->JacobianT->dN0_dy = dN0_dy_CS_OT_T2_right;
-        patch->JacobianT->dN0_dz = dN0_dz_CS_OT_T2_right;
-        patch->JacobianT->dN1_dx = dN1_dx_CS_OT_T2_right;
-        patch->JacobianT->dN1_dy = dN1_dy_CS_OT_T2_right;
-        patch->JacobianT->dN1_dz = dN1_dz_CS_OT_T2_right;
-        patch->JacobianT->dN2_dx = dN2_dx_CS_OT_T2_right;
-        patch->JacobianT->dN2_dy = dN2_dy_CS_OT_T2_right;
-        patch->JacobianT->dN2_dz = dN2_dz_CS_OT_T2_right;
+        patch->JacobianT->j      = JT_OT_T2_CS_right;
+        patch->JacobianT->dN0_dx = dN0_dx_OT_T2_CS_right;
+        patch->JacobianT->dN0_dy = dN0_dy_OT_T2_CS_right;
+        patch->JacobianT->dN0_dz = dN0_dz_OT_T2_CS_right;
+        patch->JacobianT->dN1_dx = dN1_dx_OT_T2_CS_right;
+        patch->JacobianT->dN1_dy = dN1_dy_OT_T2_CS_right;
+        patch->JacobianT->dN1_dz = dN1_dz_OT_T2_CS_right;
+        patch->JacobianT->dN2_dx = dN2_dx_OT_T2_CS_right;
+        patch->JacobianT->dN2_dy = dN2_dy_OT_T2_CS_right;
+        patch->JacobianT->dN2_dz = dN2_dz_OT_T2_CS_right;
       break;
       case BACK:
-        patch->JacobianT->j      = JT_CS_OT_T2_back;
-        patch->JacobianT->dN0_dx = dN0_dx_CS_OT_T2_back;
-        patch->JacobianT->dN0_dy = dN0_dy_CS_OT_T2_back;
-        patch->JacobianT->dN0_dz = dN0_dz_CS_OT_T2_back;
-        patch->JacobianT->dN1_dx = dN1_dx_CS_OT_T2_back;
-        patch->JacobianT->dN1_dy = dN1_dy_CS_OT_T2_back;
-        patch->JacobianT->dN1_dz = dN1_dz_CS_OT_T2_back;
-        patch->JacobianT->dN2_dx = dN2_dx_CS_OT_T2_back;
-        patch->JacobianT->dN2_dy = dN2_dy_CS_OT_T2_back;
-        patch->JacobianT->dN2_dz = dN2_dz_CS_OT_T2_back;
+        patch->JacobianT->j      = JT_OT_T2_CS_back;
+        patch->JacobianT->dN0_dx = dN0_dx_OT_T2_CS_back;
+        patch->JacobianT->dN0_dy = dN0_dy_OT_T2_CS_back;
+        patch->JacobianT->dN0_dz = dN0_dz_OT_T2_CS_back;
+        patch->JacobianT->dN1_dx = dN1_dx_OT_T2_CS_back;
+        patch->JacobianT->dN1_dy = dN1_dy_OT_T2_CS_back;
+        patch->JacobianT->dN1_dz = dN1_dz_OT_T2_CS_back;
+        patch->JacobianT->dN2_dx = dN2_dx_OT_T2_CS_back;
+        patch->JacobianT->dN2_dy = dN2_dy_OT_T2_CS_back;
+        patch->JacobianT->dN2_dz = dN2_dz_OT_T2_CS_back;
       break;
       case FRONT:
-        patch->JacobianT->j      = JT_CS_OT_T2_front;
-        patch->JacobianT->dN0_dx = dN0_dx_CS_OT_T2_front;
-        patch->JacobianT->dN0_dy = dN0_dy_CS_OT_T2_front;
-        patch->JacobianT->dN0_dz = dN0_dz_CS_OT_T2_front;
-        patch->JacobianT->dN1_dx = dN1_dx_CS_OT_T2_front;
-        patch->JacobianT->dN1_dy = dN1_dy_CS_OT_T2_front;
-        patch->JacobianT->dN1_dz = dN1_dz_CS_OT_T2_front;
-        patch->JacobianT->dN2_dx = dN2_dx_CS_OT_T2_front;
-        patch->JacobianT->dN2_dy = dN2_dy_CS_OT_T2_front;
-        patch->JacobianT->dN2_dz = dN2_dz_CS_OT_T2_front;
+        patch->JacobianT->j      = JT_OT_T2_CS_front;
+        patch->JacobianT->dN0_dx = dN0_dx_OT_T2_CS_front;
+        patch->JacobianT->dN0_dy = dN0_dy_OT_T2_CS_front;
+        patch->JacobianT->dN0_dz = dN0_dz_OT_T2_CS_front;
+        patch->JacobianT->dN1_dx = dN1_dx_OT_T2_CS_front;
+        patch->JacobianT->dN1_dy = dN1_dy_OT_T2_CS_front;
+        patch->JacobianT->dN1_dz = dN1_dz_OT_T2_CS_front;
+        patch->JacobianT->dN2_dx = dN2_dx_OT_T2_CS_front;
+        patch->JacobianT->dN2_dy = dN2_dy_OT_T2_CS_front;
+        patch->JacobianT->dN2_dz = dN2_dz_OT_T2_CS_front;
       break;
       default:
         abortEr(NO_JOB);
@@ -511,7 +511,7 @@ static void R1_derivative(Patch_T *const patch)
           *dR1_dY = add_field("dR1_dY",0,patch,NO),
           *dR1_dx = add_field("dR1_dx",0,patch,YES),
           *dR1_dy = add_field("dR1_dy",0,patch,YES),
-          *dR1_dz = add_field("dR1_dz",0,patch,YES),
+          *dR1_dz = add_field("dR1_dz",0,patch,YES);
   Field_T *const R1 = patch->pool[Ind("NS_surface")];
   const unsigned *const n = patch->n;
   unsigned i,j;
@@ -535,9 +535,9 @@ static void R1_derivative(Patch_T *const patch)
   remove_field(dR1_dX);
   remove_field(dR1_dY);
   
-  patch->CoordSysInfo->CubedSpherical->dR1_dx = dR1_dx;
-  patch->CoordSysInfo->CubedSpherical->dR1_dy = dR1_dy;
-  patch->CoordSysInfo->CubedSpherical->dR1_dz = dR1_dz;
+  patch->CoordSysInfo->CubedSphericalCoord->dR1_dx = dR1_dx;
+  patch->CoordSysInfo->CubedSphericalCoord->dR1_dy = dR1_dy;
+  patch->CoordSysInfo->CubedSphericalCoord->dR1_dz = dR1_dz;
 }
 
 /* preparing R2 derivatives of Cubed Spherical coords.
@@ -548,7 +548,7 @@ static void R2_derivative(Patch_T *const patch)
           *dR2_dY = add_field("dR2_dY",0,patch,NO),
           *dR2_dx = add_field("dR2_dx",0,patch,YES),
           *dR2_dy = add_field("dR2_dy",0,patch,YES),
-          *dR2_dz = add_field("dR2_dz",0,patch,YES),
+          *dR2_dz = add_field("dR2_dz",0,patch,YES);
   Field_T *const R2 = patch->pool[Ind("NS_surface")];
   const unsigned *const n = patch->n;
   unsigned i,j;
@@ -572,9 +572,9 @@ static void R2_derivative(Patch_T *const patch)
   remove_field(dR2_dX);
   remove_field(dR2_dY);
   
-  patch->CoordSysInfo->CubedSpherical->dR2_dx = dR2_dx;
-  patch->CoordSysInfo->CubedSpherical->dR2_dy = dR2_dy;
-  patch->CoordSysInfo->CubedSpherical->dR2_dz = dR2_dz;
+  patch->CoordSysInfo->CubedSphericalCoord->dR2_dx = dR2_dx;
+  patch->CoordSysInfo->CubedSphericalCoord->dR2_dy = dR2_dy;
+  patch->CoordSysInfo->CubedSphericalCoord->dR2_dz = dR2_dz;
 }
 
 /* Jacobian transformation for dN/dX?.
@@ -1704,11 +1704,11 @@ void alloc_patches_BNS_CubedSpherical_grid(Grid_T *const grid)
   
 }
 
-/* Jacobian transformation for cubed spherical patch.type : CS_NS_T_up
+/* Jacobian transformation for cubed spherical patch.type : NS_T_CS_up
 // convention:
 // _a_ = X, _b_ = Y, _c_ = Z
 // ->return value: dq2/dq1 */
-double JT_CS_NS_T_up(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const unsigned p)
+double JT_NS_T_CS_up(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const unsigned p)
 {
   /* ds/ds = 1 */
   if (q2_e == q1_e)
@@ -1726,7 +1726,7 @@ double JT_CS_NS_T_up(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const
   const double *const X = patch->node[p]->X;
   const unsigned *const n = patch->n;
   double d1,d3;
-  const unsigned l,a,b,c;
+  unsigned l,a,b,c;
   double xc1,
          xc2, dxc2_dx,dxc2_dy,dxc2_dz,
          R2,dR2_dx,dR2_dy,dR2_dz;
@@ -1767,7 +1767,7 @@ double JT_CS_NS_T_up(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const
       xc1 = patch->CoordSysInfo->CubedSphericalCoord->xc1;
       xc2 = S*R2/d1;
       dR2_dx   = patch->CoordSysInfo->CubedSphericalCoord->dR2_dx->v[L(n,a,b,0)];
-      dxc2_dx  = dR2_dx/d1-R2*(X[0]*JT_CS_NS_T_up(patch,_a_,_x_,p)+X[1]*JT_CS_NS_T_up(patch,_b_,_x_,p))/d3;
+      dxc2_dx  = dR2_dx/d1-R2*(X[0]*JT_NS_T_CS_up(patch,_a_,_x_,p)+X[1]*JT_NS_T_CS_up(patch,_b_,_x_,p))/d3;
       dxc2_dx *= S;
       J = (K[k==l]-(x[k]-xc1)*dxc2_dx/(xc2-xc1))/(xc2-xc1);
     break;
@@ -1780,7 +1780,7 @@ double JT_CS_NS_T_up(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const
       xc1 = patch->CoordSysInfo->CubedSphericalCoord->xc1;
       xc2 = S*R2/d1;
       dR2_dy   = patch->CoordSysInfo->CubedSphericalCoord->dR2_dy->v[L(n,a,b,0)];
-      dxc2_dy  = dR2_dy/d1-R2*(X[0]*JT_CS_NS_T_up(patch,_a_,_y_,p)+X[1]*JT_CS_NS_T_up(patch,_b_,_y_,p))/d3;
+      dxc2_dy  = dR2_dy/d1-R2*(X[0]*JT_NS_T_CS_up(patch,_a_,_y_,p)+X[1]*JT_NS_T_CS_up(patch,_b_,_y_,p))/d3;
       dxc2_dy *= S;
       J = (K[k==l]-(x[k]-xc1)*dxc2_dy/(xc2-xc1))/(xc2-xc1);
     break;
@@ -1793,7 +1793,7 @@ double JT_CS_NS_T_up(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const
       xc1 = patch->CoordSysInfo->CubedSphericalCoord->xc1;
       xc2 = S*R2/d1;
       dR2_dz   = patch->CoordSysInfo->CubedSphericalCoord->dR2_dz->v[L(n,a,b,0)];
-      dxc2_dz  = dR2_dz/d1-R2*(X[0]*JT_CS_NS_T_up(patch,_a_,_z_,p)+X[1]*JT_CS_NS_T_up(patch,_b_,_z_,p))/d3;
+      dxc2_dz  = dR2_dz/d1-R2*(X[0]*JT_NS_T_CS_up(patch,_a_,_z_,p)+X[1]*JT_NS_T_CS_up(patch,_b_,_z_,p))/d3;
       dxc2_dz *= S;
       J = (K[k==l]-(x[k]-xc1)*dxc2_dz/(xc2-xc1))/(xc2-xc1);
     break;
@@ -1804,11 +1804,11 @@ double JT_CS_NS_T_up(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const
   return J;
 }
 
-/* Jacobian transformation for cubed spherical patch.type : CS_NS_T_down
+/* Jacobian transformation for cubed spherical patch.type : NS_T_CS_down
 // convention:
 // _a_ = X, _b_ = Y, _c_ = Z
 // ->return value: dq2/dq1 */
-double JT_CS_NS_T_down(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const unsigned p)
+double JT_NS_T_CS_down(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const unsigned p)
 {
   /* ds/ds = 1 */
   if (q2_e == q1_e)
@@ -1826,7 +1826,7 @@ double JT_CS_NS_T_down(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,con
   const double *const X = patch->node[p]->X;
   const unsigned *const n = patch->n;
   double d1,d3;
-  const unsigned l,a,b,c;
+  unsigned l,a,b,c;
   double xc1,
          xc2, dxc2_dx,dxc2_dy,dxc2_dz,
          R2,dR2_dx,dR2_dy,dR2_dz;
@@ -1867,7 +1867,7 @@ double JT_CS_NS_T_down(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,con
       xc1 = patch->CoordSysInfo->CubedSphericalCoord->xc1;
       xc2 = S*R2/d1;
       dR2_dx   = patch->CoordSysInfo->CubedSphericalCoord->dR2_dx->v[L(n,a,b,0)];
-      dxc2_dx  = dR2_dx/d1-R2*(X[0]*JT_CS_NS_T_down(patch,_a_,_x_,p)+X[1]*JT_CS_NS_T_down(patch,_b_,_x_,p))/d3;
+      dxc2_dx  = dR2_dx/d1-R2*(X[0]*JT_NS_T_CS_down(patch,_a_,_x_,p)+X[1]*JT_NS_T_CS_down(patch,_b_,_x_,p))/d3;
       dxc2_dx *= S;
       J = (K[k==l]-(x[k]-xc1)*dxc2_dx/(xc2-xc1))/(xc2-xc1);
     break;
@@ -1880,7 +1880,7 @@ double JT_CS_NS_T_down(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,con
       xc1 = patch->CoordSysInfo->CubedSphericalCoord->xc1;
       xc2 = S*R2/d1;
       dR2_dy   = patch->CoordSysInfo->CubedSphericalCoord->dR2_dy->v[L(n,a,b,0)];
-      dxc2_dy  = dR2_dy/d1-R2*(X[0]*JT_CS_NS_T_down(patch,_a_,_y_,p)+X[1]*JT_CS_NS_T_down(patch,_b_,_y_,p))/d3;
+      dxc2_dy  = dR2_dy/d1-R2*(X[0]*JT_NS_T_CS_down(patch,_a_,_y_,p)+X[1]*JT_NS_T_CS_down(patch,_b_,_y_,p))/d3;
       dxc2_dy *= S;
       J = (K[k==l]-(x[k]-xc1)*dxc2_dy/(xc2-xc1))/(xc2-xc1);
     break;
@@ -1893,7 +1893,7 @@ double JT_CS_NS_T_down(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,con
       xc1 = patch->CoordSysInfo->CubedSphericalCoord->xc1;
       xc2 = S*R2/d1;
       dR2_dz   = patch->CoordSysInfo->CubedSphericalCoord->dR2_dz->v[L(n,a,b,0)];
-      dxc2_dz  = dR2_dz/d1-R2*(X[0]*JT_CS_NS_T_down(patch,_a_,_z_,p)+X[1]*JT_CS_NS_T_down(patch,_b_,_z_,p))/d3;
+      dxc2_dz  = dR2_dz/d1-R2*(X[0]*JT_NS_T_CS_down(patch,_a_,_z_,p)+X[1]*JT_NS_T_CS_down(patch,_b_,_z_,p))/d3;
       dxc2_dz *= S;
       J = (K[k==l]-(x[k]-xc1)*dxc2_dz/(xc2-xc1))/(xc2-xc1);
     break;
@@ -1904,11 +1904,11 @@ double JT_CS_NS_T_down(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,con
   return J;
 }
 
-/* Jacobian transformation for cubed spherical patch.type : CS_NS_T_left
+/* Jacobian transformation for cubed spherical patch.type : NS_T_CS_left
 // convention:
 // _a_ = X, _b_ = Y, _c_ = Z
 // ->return value: dq2/dq1 */
-double JT_CS_NS_T_left(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const unsigned p)
+double JT_NS_T_CS_left(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const unsigned p)
 {
   /* ds/ds = 1 */
   if (q2_e == q1_e)
@@ -1926,7 +1926,7 @@ double JT_CS_NS_T_left(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,con
   const double *const X = patch->node[p]->X;
   const unsigned *const n = patch->n;
   double d1,d3;
-  const unsigned l,a,b,c;
+  unsigned l,a,b,c;
   double xc1,
          xc2, dxc2_dx,dxc2_dy,dxc2_dz,
          R2,dR2_dx,dR2_dy,dR2_dz;
@@ -1967,7 +1967,7 @@ double JT_CS_NS_T_left(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,con
       xc1 = patch->CoordSysInfo->CubedSphericalCoord->xc1;
       xc2 = S*R2/d1;
       dR2_dx   = patch->CoordSysInfo->CubedSphericalCoord->dR2_dx->v[L(n,a,b,0)];
-      dxc2_dx  = dR2_dx/d1-R2*(X[0]*JT_CS_NS_T_left(patch,_a_,_x_,p)+X[1]*JT_CS_NS_T_left(patch,_b_,_x_,p))/d3;
+      dxc2_dx  = dR2_dx/d1-R2*(X[0]*JT_NS_T_CS_left(patch,_a_,_x_,p)+X[1]*JT_NS_T_CS_left(patch,_b_,_x_,p))/d3;
       dxc2_dx *= S;
       J = (K[k==l]-(x[k]-xc1)*dxc2_dx/(xc2-xc1))/(xc2-xc1);
     break;
@@ -1980,7 +1980,7 @@ double JT_CS_NS_T_left(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,con
       xc1 = patch->CoordSysInfo->CubedSphericalCoord->xc1;
       xc2 = S*R2/d1;
       dR2_dy   = patch->CoordSysInfo->CubedSphericalCoord->dR2_dy->v[L(n,a,b,0)];
-      dxc2_dy  = dR2_dy/d1-R2*(X[0]*JT_CS_NS_T_left(patch,_a_,_y_,p)+X[1]*JT_CS_NS_T_left(patch,_b_,_y_,p))/d3;
+      dxc2_dy  = dR2_dy/d1-R2*(X[0]*JT_NS_T_CS_left(patch,_a_,_y_,p)+X[1]*JT_NS_T_CS_left(patch,_b_,_y_,p))/d3;
       dxc2_dy *= S;
       J = (K[k==l]-(x[k]-xc1)*dxc2_dy/(xc2-xc1))/(xc2-xc1);
     break;
@@ -1993,7 +1993,7 @@ double JT_CS_NS_T_left(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,con
       xc1 = patch->CoordSysInfo->CubedSphericalCoord->xc1;
       xc2 = S*R2/d1;
       dR2_dz   = patch->CoordSysInfo->CubedSphericalCoord->dR2_dz->v[L(n,a,b,0)];
-      dxc2_dz  = dR2_dz/d1-R2*(X[0]*JT_CS_NS_T_left(patch,_a_,_z_,p)+X[1]*JT_CS_NS_T_left(patch,_b_,_z_,p))/d3;
+      dxc2_dz  = dR2_dz/d1-R2*(X[0]*JT_NS_T_CS_left(patch,_a_,_z_,p)+X[1]*JT_NS_T_CS_left(patch,_b_,_z_,p))/d3;
       dxc2_dz *= S;
       J = (K[k==l]-(x[k]-xc1)*dxc2_dz/(xc2-xc1))/(xc2-xc1);
     break;
@@ -2004,11 +2004,11 @@ double JT_CS_NS_T_left(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,con
   return J;
 }
 
-/* Jacobian transformation for cubed spherical patch.type : CS_NS_T_right
+/* Jacobian transformation for cubed spherical patch.type : NS_T_CS_right
 // convention:
 // _a_ = X, _b_ = Y, _c_ = Z
 // ->return value: dq2/dq1 */
-double JT_CS_NS_T_right(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const unsigned p)
+double JT_NS_T_CS_right(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const unsigned p)
 {
   /* ds/ds = 1 */
   if (q2_e == q1_e)
@@ -2026,7 +2026,7 @@ double JT_CS_NS_T_right(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,co
   const double *const X = patch->node[p]->X;
   const unsigned *const n = patch->n;
   double d1,d3;
-  const unsigned l,a,b,c;
+  unsigned l,a,b,c;
   double xc1,
          xc2, dxc2_dx,dxc2_dy,dxc2_dz,
          R2,dR2_dx,dR2_dy,dR2_dz;
@@ -2067,7 +2067,7 @@ double JT_CS_NS_T_right(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,co
       xc1 = patch->CoordSysInfo->CubedSphericalCoord->xc1;
       xc2 = S*R2/d1;
       dR2_dx   = patch->CoordSysInfo->CubedSphericalCoord->dR2_dx->v[L(n,a,b,0)];
-      dxc2_dx  = dR2_dx/d1-R2*(X[0]*JT_CS_NS_T_right(patch,_a_,_x_,p)+X[1]*JT_CS_NS_T_right(patch,_b_,_x_,p))/d3;
+      dxc2_dx  = dR2_dx/d1-R2*(X[0]*JT_NS_T_CS_right(patch,_a_,_x_,p)+X[1]*JT_NS_T_CS_right(patch,_b_,_x_,p))/d3;
       dxc2_dx *= S;
       J = (K[k==l]-(x[k]-xc1)*dxc2_dx/(xc2-xc1))/(xc2-xc1);
     break;
@@ -2080,7 +2080,7 @@ double JT_CS_NS_T_right(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,co
       xc1 = patch->CoordSysInfo->CubedSphericalCoord->xc1;
       xc2 = S*R2/d1;
       dR2_dy   = patch->CoordSysInfo->CubedSphericalCoord->dR2_dy->v[L(n,a,b,0)];
-      dxc2_dy  = dR2_dy/d1-R2*(X[0]*JT_CS_NS_T_right(patch,_a_,_y_,p)+X[1]*JT_CS_NS_T_right(patch,_b_,_y_,p))/d3;
+      dxc2_dy  = dR2_dy/d1-R2*(X[0]*JT_NS_T_CS_right(patch,_a_,_y_,p)+X[1]*JT_NS_T_CS_right(patch,_b_,_y_,p))/d3;
       dxc2_dy *= S;
       J = (K[k==l]-(x[k]-xc1)*dxc2_dy/(xc2-xc1))/(xc2-xc1);
     break;
@@ -2093,7 +2093,7 @@ double JT_CS_NS_T_right(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,co
       xc1 = patch->CoordSysInfo->CubedSphericalCoord->xc1;
       xc2 = S*R2/d1;
       dR2_dz   = patch->CoordSysInfo->CubedSphericalCoord->dR2_dz->v[L(n,a,b,0)];
-      dxc2_dz  = dR2_dz/d1-R2*(X[0]*JT_CS_NS_T_right(patch,_a_,_z_,p)+X[1]*JT_CS_NS_T_right(patch,_b_,_z_,p))/d3;
+      dxc2_dz  = dR2_dz/d1-R2*(X[0]*JT_NS_T_CS_right(patch,_a_,_z_,p)+X[1]*JT_NS_T_CS_right(patch,_b_,_z_,p))/d3;
       dxc2_dz *= S;
       J = (K[k==l]-(x[k]-xc1)*dxc2_dz/(xc2-xc1))/(xc2-xc1);
     break;
@@ -2104,11 +2104,11 @@ double JT_CS_NS_T_right(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,co
   return J;
 }
 
-/* Jacobian transformation for cubed spherical patch.type : CS_NS_T_back
+/* Jacobian transformation for cubed spherical patch.type : NS_T_CS_back
 // convention:
 // _a_ = X, _b_ = Y, _c_ = Z
 // ->return value: dq2/dq1 */
-double JT_CS_NS_T_back(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const unsigned p)
+double JT_NS_T_CS_back(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const unsigned p)
 {
   /* ds/ds = 1 */
   if (q2_e == q1_e)
@@ -2126,7 +2126,7 @@ double JT_CS_NS_T_back(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,con
   const double *const X = patch->node[p]->X;
   const unsigned *const n = patch->n;
   double d1,d3;
-  const unsigned l,a,b,c;
+  unsigned l,a,b,c;
   double xc1,
          xc2, dxc2_dx,dxc2_dy,dxc2_dz,
          R2,dR2_dx,dR2_dy,dR2_dz;
@@ -2167,7 +2167,7 @@ double JT_CS_NS_T_back(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,con
       xc1 = patch->CoordSysInfo->CubedSphericalCoord->xc1;
       xc2 = S*R2/d1;
       dR2_dx   = patch->CoordSysInfo->CubedSphericalCoord->dR2_dx->v[L(n,a,b,0)];
-      dxc2_dx  = dR2_dx/d1-R2*(X[0]*JT_CS_NS_T_back(patch,_a_,_x_,p)+X[1]*JT_CS_NS_T_back(patch,_b_,_x_,p))/d3;
+      dxc2_dx  = dR2_dx/d1-R2*(X[0]*JT_NS_T_CS_back(patch,_a_,_x_,p)+X[1]*JT_NS_T_CS_back(patch,_b_,_x_,p))/d3;
       dxc2_dx *= S;
       J = (K[k==l]-(x[k]-xc1)*dxc2_dx/(xc2-xc1))/(xc2-xc1);
     break;
@@ -2180,7 +2180,7 @@ double JT_CS_NS_T_back(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,con
       xc1 = patch->CoordSysInfo->CubedSphericalCoord->xc1;
       xc2 = S*R2/d1;
       dR2_dy   = patch->CoordSysInfo->CubedSphericalCoord->dR2_dy->v[L(n,a,b,0)];
-      dxc2_dy  = dR2_dy/d1-R2*(X[0]*JT_CS_NS_T_back(patch,_a_,_y_,p)+X[1]*JT_CS_NS_T_back(patch,_b_,_y_,p))/d3;
+      dxc2_dy  = dR2_dy/d1-R2*(X[0]*JT_NS_T_CS_back(patch,_a_,_y_,p)+X[1]*JT_NS_T_CS_back(patch,_b_,_y_,p))/d3;
       dxc2_dy *= S;
       J = (K[k==l]-(x[k]-xc1)*dxc2_dy/(xc2-xc1))/(xc2-xc1);
     break;
@@ -2193,7 +2193,7 @@ double JT_CS_NS_T_back(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,con
       xc1 = patch->CoordSysInfo->CubedSphericalCoord->xc1;
       xc2 = S*R2/d1;
       dR2_dz   = patch->CoordSysInfo->CubedSphericalCoord->dR2_dz->v[L(n,a,b,0)];
-      dxc2_dz  = dR2_dz/d1-R2*(X[0]*JT_CS_NS_T_back(patch,_a_,_z_,p)+X[1]*JT_CS_NS_T_back(patch,_b_,_z_,p))/d3;
+      dxc2_dz  = dR2_dz/d1-R2*(X[0]*JT_NS_T_CS_back(patch,_a_,_z_,p)+X[1]*JT_NS_T_CS_back(patch,_b_,_z_,p))/d3;
       dxc2_dz *= S;
       J = (K[k==l]-(x[k]-xc1)*dxc2_dz/(xc2-xc1))/(xc2-xc1);
     break;
@@ -2204,11 +2204,11 @@ double JT_CS_NS_T_back(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,con
   return J;
 }
 
-/* Jacobian transformation for cubed spherical patch.type : CS_NS_T_front
+/* Jacobian transformation for cubed spherical patch.type : NS_T_CS_front
 // convention:
 // _a_ = X, _b_ = Y, _c_ = Z
 // ->return value: dq2/dq1 */
-double JT_CS_NS_T_front(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const unsigned p)
+double JT_NS_T_CS_front(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const unsigned p)
 {
   /* ds/ds = 1 */
   if (q2_e == q1_e)
@@ -2226,7 +2226,7 @@ double JT_CS_NS_T_front(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,co
   const double *const X = patch->node[p]->X;
   const unsigned *const n = patch->n;
   double d1,d3;
-  const unsigned l,a,b,c;
+  unsigned l,a,b,c;
   double xc1,
          xc2, dxc2_dx,dxc2_dy,dxc2_dz,
          R2,dR2_dx,dR2_dy,dR2_dz;
@@ -2267,7 +2267,7 @@ double JT_CS_NS_T_front(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,co
       xc1 = patch->CoordSysInfo->CubedSphericalCoord->xc1;
       xc2 = S*R2/d1;
       dR2_dx   = patch->CoordSysInfo->CubedSphericalCoord->dR2_dx->v[L(n,a,b,0)];
-      dxc2_dx  = dR2_dx/d1-R2*(X[0]*JT_CS_NS_T_front(patch,_a_,_x_,p)+X[1]*JT_CS_NS_T_front(patch,_b_,_x_,p))/d3;
+      dxc2_dx  = dR2_dx/d1-R2*(X[0]*JT_NS_T_CS_front(patch,_a_,_x_,p)+X[1]*JT_NS_T_CS_front(patch,_b_,_x_,p))/d3;
       dxc2_dx *= S;
       J = (K[k==l]-(x[k]-xc1)*dxc2_dx/(xc2-xc1))/(xc2-xc1);
     break;
@@ -2280,7 +2280,7 @@ double JT_CS_NS_T_front(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,co
       xc1 = patch->CoordSysInfo->CubedSphericalCoord->xc1;
       xc2 = S*R2/d1;
       dR2_dy   = patch->CoordSysInfo->CubedSphericalCoord->dR2_dy->v[L(n,a,b,0)];
-      dxc2_dy  = dR2_dy/d1-R2*(X[0]*JT_CS_NS_T_front(patch,_a_,_y_,p)+X[1]*JT_CS_NS_T_front(patch,_b_,_y_,p))/d3;
+      dxc2_dy  = dR2_dy/d1-R2*(X[0]*JT_NS_T_CS_front(patch,_a_,_y_,p)+X[1]*JT_NS_T_CS_front(patch,_b_,_y_,p))/d3;
       dxc2_dy *= S;
       J = (K[k==l]-(x[k]-xc1)*dxc2_dy/(xc2-xc1))/(xc2-xc1);
     break;
@@ -2293,7 +2293,7 @@ double JT_CS_NS_T_front(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,co
       xc1 = patch->CoordSysInfo->CubedSphericalCoord->xc1;
       xc2 = S*R2/d1;
       dR2_dz   = patch->CoordSysInfo->CubedSphericalCoord->dR2_dz->v[L(n,a,b,0)];
-      dxc2_dz  = dR2_dz/d1-R2*(X[0]*JT_CS_NS_T_front(patch,_a_,_z_,p)+X[1]*JT_CS_NS_T_front(patch,_b_,_z_,p))/d3;
+      dxc2_dz  = dR2_dz/d1-R2*(X[0]*JT_NS_T_CS_front(patch,_a_,_z_,p)+X[1]*JT_NS_T_CS_front(patch,_b_,_z_,p))/d3;
       dxc2_dz *= S;
       J = (K[k==l]-(x[k]-xc1)*dxc2_dz/(xc2-xc1))/(xc2-xc1);
     break;
@@ -2304,11 +2304,11 @@ double JT_CS_NS_T_front(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,co
   return J;
 }
 
-/* Jacobian transformation for cubed spherical patch.type : CS_SR_T_up
+/* Jacobian transformation for cubed spherical patch.type : SR_T_CS_up
 // convention:
 // _a_ = X, _b_ = Y, _c_ = Z
 // ->return value: dq2/dq1 */
-double JT_CS_SR_T_up(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const unsigned p)
+double JT_SR_T_CS_up(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const unsigned p)
 {
   /* ds/ds = 1 */
   if (q2_e == q1_e)
@@ -2326,7 +2326,7 @@ double JT_CS_SR_T_up(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const
   const double *const X = patch->node[p]->X;
   const unsigned *const n = patch->n;
   double d1,d3;
-  const unsigned l,a,b,c;
+  unsigned l,a,b,c;
   double xc2,
          xc1, dxc1_dx,dxc1_dy,dxc1_dz,
          R1,dR1_dx,dR1_dy,dR1_dz;
@@ -2367,7 +2367,7 @@ double JT_CS_SR_T_up(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const
       xc2 = patch->CoordSysInfo->CubedSphericalCoord->xc2;
       xc1 = S*R1/d1;
       dR1_dx   = patch->CoordSysInfo->CubedSphericalCoord->dR1_dx->v[L(n,a,b,0)];
-      dxc1_dx  = dR1_dx/d1-R1*(X[0]*JT_CS_SR_T_up(patch,_a_,_x_,p)+X[1]*JT_CS_SR_T_up(patch,_b_,_x_,p))/d3;
+      dxc1_dx  = dR1_dx/d1-R1*(X[0]*JT_SR_T_CS_up(patch,_a_,_x_,p)+X[1]*JT_SR_T_CS_up(patch,_b_,_x_,p))/d3;
       dxc1_dx *= S;
       J = (K[k==l]-dxc1_dx+(x[k]-xc1)*dxc1_dx/(xc2-xc1))/(xc2-xc1);
     break;
@@ -2380,7 +2380,7 @@ double JT_CS_SR_T_up(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const
       xc2 = patch->CoordSysInfo->CubedSphericalCoord->xc2;
       xc1 = S*R1/d1;
       dR1_dy   = patch->CoordSysInfo->CubedSphericalCoord->dR1_dy->v[L(n,a,b,0)];
-      dxc1_dy  = dR1_dy/d1-R1*(X[0]*JT_CS_SR_T_up(patch,_a_,_y_,p)+X[1]*JT_CS_SR_T_up(patch,_b_,_y_,p))/d3;
+      dxc1_dy  = dR1_dy/d1-R1*(X[0]*JT_SR_T_CS_up(patch,_a_,_y_,p)+X[1]*JT_SR_T_CS_up(patch,_b_,_y_,p))/d3;
       dxc1_dy *= S;
       J = (K[k==l]-dxc1_dy+(x[k]-xc1)*dxc1_dy/(xc2-xc1))/(xc2-xc1);
     break;
@@ -2393,7 +2393,7 @@ double JT_CS_SR_T_up(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const
       xc2 = patch->CoordSysInfo->CubedSphericalCoord->xc2;
       xc1 = S*R1/d1;
       dR1_dz   = patch->CoordSysInfo->CubedSphericalCoord->dR1_dz->v[L(n,a,b,0)];
-      dxc1_dz  = dR1_dz/d1-R1*(X[0]*JT_CS_SR_T_up(patch,_a_,_z_,p)+X[1]*JT_CS_SR_T_up(patch,_b_,_z_,p))/d3;
+      dxc1_dz  = dR1_dz/d1-R1*(X[0]*JT_SR_T_CS_up(patch,_a_,_z_,p)+X[1]*JT_SR_T_CS_up(patch,_b_,_z_,p))/d3;
       dxc1_dz *= S;
       J = (K[k==l]-dxc1_dz+(x[k]-xc1)*dxc1_dz/(xc2-xc1))/(xc2-xc1);
     break;
@@ -2404,11 +2404,11 @@ double JT_CS_SR_T_up(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const
   return J;
 }
 
-/* Jacobian transformation for cubed spherical patch.type : CS_SR_T_down
+/* Jacobian transformation for cubed spherical patch.type : SR_T_CS_down
 // convention:
 // _a_ = X, _b_ = Y, _c_ = Z
 // ->return value: dq2/dq1 */
-double JT_CS_SR_T_down(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const unsigned p)
+double JT_SR_T_CS_down(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const unsigned p)
 {
   /* ds/ds = 1 */
   if (q2_e == q1_e)
@@ -2426,7 +2426,7 @@ double JT_CS_SR_T_down(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,con
   const double *const X = patch->node[p]->X;
   const unsigned *const n = patch->n;
   double d1,d3;
-  const unsigned l,a,b,c;
+  unsigned l,a,b,c;
   double xc2,
          xc1, dxc1_dx,dxc1_dy,dxc1_dz,
          R1,dR1_dx,dR1_dy,dR1_dz;
@@ -2467,7 +2467,7 @@ double JT_CS_SR_T_down(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,con
       xc2 = patch->CoordSysInfo->CubedSphericalCoord->xc2;
       xc1 = S*R1/d1;
       dR1_dx   = patch->CoordSysInfo->CubedSphericalCoord->dR1_dx->v[L(n,a,b,0)];
-      dxc1_dx  = dR1_dx/d1-R1*(X[0]*JT_CS_SR_T_down(patch,_a_,_x_,p)+X[1]*JT_CS_SR_T_down(patch,_b_,_x_,p))/d3;
+      dxc1_dx  = dR1_dx/d1-R1*(X[0]*JT_SR_T_CS_down(patch,_a_,_x_,p)+X[1]*JT_SR_T_CS_down(patch,_b_,_x_,p))/d3;
       dxc1_dx *= S;
       J = (K[k==l]-dxc1_dx+(x[k]-xc1)*dxc1_dx/(xc2-xc1))/(xc2-xc1);
     break;
@@ -2480,7 +2480,7 @@ double JT_CS_SR_T_down(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,con
       xc2 = patch->CoordSysInfo->CubedSphericalCoord->xc2;
       xc1 = S*R1/d1;
       dR1_dy   = patch->CoordSysInfo->CubedSphericalCoord->dR1_dy->v[L(n,a,b,0)];
-      dxc1_dy  = dR1_dy/d1-R1*(X[0]*JT_CS_SR_T_down(patch,_a_,_y_,p)+X[1]*JT_CS_SR_T_down(patch,_b_,_y_,p))/d3;
+      dxc1_dy  = dR1_dy/d1-R1*(X[0]*JT_SR_T_CS_down(patch,_a_,_y_,p)+X[1]*JT_SR_T_CS_down(patch,_b_,_y_,p))/d3;
       dxc1_dy *= S;
       J = (K[k==l]-dxc1_dy+(x[k]-xc1)*dxc1_dy/(xc2-xc1))/(xc2-xc1);
     break;
@@ -2493,7 +2493,7 @@ double JT_CS_SR_T_down(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,con
       xc2 = patch->CoordSysInfo->CubedSphericalCoord->xc2;
       xc1 = S*R1/d1;
       dR1_dz   = patch->CoordSysInfo->CubedSphericalCoord->dR1_dz->v[L(n,a,b,0)];
-      dxc1_dz  = dR1_dz/d1-R1*(X[0]*JT_CS_SR_T_down(patch,_a_,_z_,p)+X[1]*JT_CS_SR_T_down(patch,_b_,_z_,p))/d3;
+      dxc1_dz  = dR1_dz/d1-R1*(X[0]*JT_SR_T_CS_down(patch,_a_,_z_,p)+X[1]*JT_SR_T_CS_down(patch,_b_,_z_,p))/d3;
       dxc1_dz *= S;
       J = (K[k==l]-dxc1_dz+(x[k]-xc1)*dxc1_dz/(xc2-xc1))/(xc2-xc1);
     break;
@@ -2504,11 +2504,11 @@ double JT_CS_SR_T_down(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,con
   return J;
 }
 
-/* Jacobian transformation for cubed spherical patch.type : CS_SR_T_left
+/* Jacobian transformation for cubed spherical patch.type : SR_T_CS_left
 // convention:
 // _a_ = X, _b_ = Y, _c_ = Z
 // ->return value: dq2/dq1 */
-double JT_CS_SR_T_left(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const unsigned p)
+double JT_SR_T_CS_left(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const unsigned p)
 {
   /* ds/ds = 1 */
   if (q2_e == q1_e)
@@ -2526,7 +2526,7 @@ double JT_CS_SR_T_left(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,con
   const double *const X = patch->node[p]->X;
   const unsigned *const n = patch->n;
   double d1,d3;
-  const unsigned l,a,b,c;
+  unsigned l,a,b,c;
   double xc2,
          xc1, dxc1_dx,dxc1_dy,dxc1_dz,
          R1,dR1_dx,dR1_dy,dR1_dz;
@@ -2567,7 +2567,7 @@ double JT_CS_SR_T_left(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,con
       xc2 = patch->CoordSysInfo->CubedSphericalCoord->xc2;
       xc1 = S*R1/d1;
       dR1_dx   = patch->CoordSysInfo->CubedSphericalCoord->dR1_dx->v[L(n,a,b,0)];
-      dxc1_dx  = dR1_dx/d1-R1*(X[0]*JT_CS_SR_T_left(patch,_a_,_x_,p)+X[1]*JT_CS_SR_T_left(patch,_b_,_x_,p))/d3;
+      dxc1_dx  = dR1_dx/d1-R1*(X[0]*JT_SR_T_CS_left(patch,_a_,_x_,p)+X[1]*JT_SR_T_CS_left(patch,_b_,_x_,p))/d3;
       dxc1_dx *= S;
       J = (K[k==l]-dxc1_dx+(x[k]-xc1)*dxc1_dx/(xc2-xc1))/(xc2-xc1);
     break;
@@ -2580,7 +2580,7 @@ double JT_CS_SR_T_left(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,con
       xc2 = patch->CoordSysInfo->CubedSphericalCoord->xc2;
       xc1 = S*R1/d1;
       dR1_dy   = patch->CoordSysInfo->CubedSphericalCoord->dR1_dy->v[L(n,a,b,0)];
-      dxc1_dy  = dR1_dy/d1-R1*(X[0]*JT_CS_SR_T_left(patch,_a_,_y_,p)+X[1]*JT_CS_SR_T_left(patch,_b_,_y_,p))/d3;
+      dxc1_dy  = dR1_dy/d1-R1*(X[0]*JT_SR_T_CS_left(patch,_a_,_y_,p)+X[1]*JT_SR_T_CS_left(patch,_b_,_y_,p))/d3;
       dxc1_dy *= S;
       J = (K[k==l]-dxc1_dy+(x[k]-xc1)*dxc1_dy/(xc2-xc1))/(xc2-xc1);
     break;
@@ -2593,7 +2593,7 @@ double JT_CS_SR_T_left(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,con
       xc2 = patch->CoordSysInfo->CubedSphericalCoord->xc2;
       xc1 = S*R1/d1;
       dR1_dz   = patch->CoordSysInfo->CubedSphericalCoord->dR1_dz->v[L(n,a,b,0)];
-      dxc1_dz  = dR1_dz/d1-R1*(X[0]*JT_CS_SR_T_left(patch,_a_,_z_,p)+X[1]*JT_CS_SR_T_left(patch,_b_,_z_,p))/d3;
+      dxc1_dz  = dR1_dz/d1-R1*(X[0]*JT_SR_T_CS_left(patch,_a_,_z_,p)+X[1]*JT_SR_T_CS_left(patch,_b_,_z_,p))/d3;
       dxc1_dz *= S;
       J = (K[k==l]-dxc1_dz+(x[k]-xc1)*dxc1_dz/(xc2-xc1))/(xc2-xc1);
     break;
@@ -2604,11 +2604,11 @@ double JT_CS_SR_T_left(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,con
   return J;
 }
 
-/* Jacobian transformation for cubed spherical patch.type : CS_SR_T_right
+/* Jacobian transformation for cubed spherical patch.type : SR_T_CS_right
 // convention:
 // _a_ = X, _b_ = Y, _c_ = Z
 // ->return value: dq2/dq1 */
-double JT_CS_SR_T_right(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const unsigned p)
+double JT_SR_T_CS_right(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const unsigned p)
 {
   /* ds/ds = 1 */
   if (q2_e == q1_e)
@@ -2626,7 +2626,7 @@ double JT_CS_SR_T_right(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,co
   const double *const X = patch->node[p]->X;
   const unsigned *const n = patch->n;
   double d1,d3;
-  const unsigned l,a,b,c;
+  unsigned l,a,b,c;
   double xc2,
          xc1, dxc1_dx,dxc1_dy,dxc1_dz,
          R1,dR1_dx,dR1_dy,dR1_dz;
@@ -2667,7 +2667,7 @@ double JT_CS_SR_T_right(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,co
       xc2 = patch->CoordSysInfo->CubedSphericalCoord->xc2;
       xc1 = S*R1/d1;
       dR1_dx   = patch->CoordSysInfo->CubedSphericalCoord->dR1_dx->v[L(n,a,b,0)];
-      dxc1_dx  = dR1_dx/d1-R1*(X[0]*JT_CS_SR_T_right(patch,_a_,_x_,p)+X[1]*JT_CS_SR_T_right(patch,_b_,_x_,p))/d3;
+      dxc1_dx  = dR1_dx/d1-R1*(X[0]*JT_SR_T_CS_right(patch,_a_,_x_,p)+X[1]*JT_SR_T_CS_right(patch,_b_,_x_,p))/d3;
       dxc1_dx *= S;
       J = (K[k==l]-dxc1_dx+(x[k]-xc1)*dxc1_dx/(xc2-xc1))/(xc2-xc1);
     break;
@@ -2680,7 +2680,7 @@ double JT_CS_SR_T_right(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,co
       xc2 = patch->CoordSysInfo->CubedSphericalCoord->xc2;
       xc1 = S*R1/d1;
       dR1_dy   = patch->CoordSysInfo->CubedSphericalCoord->dR1_dy->v[L(n,a,b,0)];
-      dxc1_dy  = dR1_dy/d1-R1*(X[0]*JT_CS_SR_T_right(patch,_a_,_y_,p)+X[1]*JT_CS_SR_T_right(patch,_b_,_y_,p))/d3;
+      dxc1_dy  = dR1_dy/d1-R1*(X[0]*JT_SR_T_CS_right(patch,_a_,_y_,p)+X[1]*JT_SR_T_CS_right(patch,_b_,_y_,p))/d3;
       dxc1_dy *= S;
       J = (K[k==l]-dxc1_dy+(x[k]-xc1)*dxc1_dy/(xc2-xc1))/(xc2-xc1);
     break;
@@ -2693,7 +2693,7 @@ double JT_CS_SR_T_right(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,co
       xc2 = patch->CoordSysInfo->CubedSphericalCoord->xc2;
       xc1 = S*R1/d1;
       dR1_dz   = patch->CoordSysInfo->CubedSphericalCoord->dR1_dz->v[L(n,a,b,0)];
-      dxc1_dz  = dR1_dz/d1-R1*(X[0]*JT_CS_SR_T_right(patch,_a_,_z_,p)+X[1]*JT_CS_SR_T_right(patch,_b_,_z_,p))/d3;
+      dxc1_dz  = dR1_dz/d1-R1*(X[0]*JT_SR_T_CS_right(patch,_a_,_z_,p)+X[1]*JT_SR_T_CS_right(patch,_b_,_z_,p))/d3;
       dxc1_dz *= S;
       J = (K[k==l]-dxc1_dz+(x[k]-xc1)*dxc1_dz/(xc2-xc1))/(xc2-xc1);
     break;
@@ -2704,11 +2704,11 @@ double JT_CS_SR_T_right(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,co
   return J;
 }
 
-/* Jacobian transformation for cubed spherical patch.type : CS_SR_T_back
+/* Jacobian transformation for cubed spherical patch.type : SR_T_CS_back
 // convention:
 // _a_ = X, _b_ = Y, _c_ = Z
 // ->return value: dq2/dq1 */
-double JT_CS_SR_T_back(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const unsigned p)
+double JT_SR_T_CS_back(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const unsigned p)
 {
   /* ds/ds = 1 */
   if (q2_e == q1_e)
@@ -2726,7 +2726,7 @@ double JT_CS_SR_T_back(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,con
   const double *const X = patch->node[p]->X;
   const unsigned *const n = patch->n;
   double d1,d3;
-  const unsigned l,a,b,c;
+  unsigned l,a,b,c;
   double xc2,
          xc1, dxc1_dx,dxc1_dy,dxc1_dz,
          R1,dR1_dx,dR1_dy,dR1_dz;
@@ -2767,7 +2767,7 @@ double JT_CS_SR_T_back(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,con
       xc2 = patch->CoordSysInfo->CubedSphericalCoord->xc2;
       xc1 = S*R1/d1;
       dR1_dx   = patch->CoordSysInfo->CubedSphericalCoord->dR1_dx->v[L(n,a,b,0)];
-      dxc1_dx  = dR1_dx/d1-R1*(X[0]*JT_CS_SR_T_back(patch,_a_,_x_,p)+X[1]*JT_CS_SR_T_back(patch,_b_,_x_,p))/d3;
+      dxc1_dx  = dR1_dx/d1-R1*(X[0]*JT_SR_T_CS_back(patch,_a_,_x_,p)+X[1]*JT_SR_T_CS_back(patch,_b_,_x_,p))/d3;
       dxc1_dx *= S;
       J = (K[k==l]-dxc1_dx+(x[k]-xc1)*dxc1_dx/(xc2-xc1))/(xc2-xc1);
     break;
@@ -2780,7 +2780,7 @@ double JT_CS_SR_T_back(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,con
       xc2 = patch->CoordSysInfo->CubedSphericalCoord->xc2;
       xc1 = S*R1/d1;
       dR1_dy   = patch->CoordSysInfo->CubedSphericalCoord->dR1_dy->v[L(n,a,b,0)];
-      dxc1_dy  = dR1_dy/d1-R1*(X[0]*JT_CS_SR_T_back(patch,_a_,_y_,p)+X[1]*JT_CS_SR_T_back(patch,_b_,_y_,p))/d3;
+      dxc1_dy  = dR1_dy/d1-R1*(X[0]*JT_SR_T_CS_back(patch,_a_,_y_,p)+X[1]*JT_SR_T_CS_back(patch,_b_,_y_,p))/d3;
       dxc1_dy *= S;
       J = (K[k==l]-dxc1_dy+(x[k]-xc1)*dxc1_dy/(xc2-xc1))/(xc2-xc1);
     break;
@@ -2793,7 +2793,7 @@ double JT_CS_SR_T_back(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,con
       xc2 = patch->CoordSysInfo->CubedSphericalCoord->xc2;
       xc1 = S*R1/d1;
       dR1_dz   = patch->CoordSysInfo->CubedSphericalCoord->dR1_dz->v[L(n,a,b,0)];
-      dxc1_dz  = dR1_dz/d1-R1*(X[0]*JT_CS_SR_T_back(patch,_a_,_z_,p)+X[1]*JT_CS_SR_T_back(patch,_b_,_z_,p))/d3;
+      dxc1_dz  = dR1_dz/d1-R1*(X[0]*JT_SR_T_CS_back(patch,_a_,_z_,p)+X[1]*JT_SR_T_CS_back(patch,_b_,_z_,p))/d3;
       dxc1_dz *= S;
       J = (K[k==l]-dxc1_dz+(x[k]-xc1)*dxc1_dz/(xc2-xc1))/(xc2-xc1);
     break;
@@ -2804,11 +2804,11 @@ double JT_CS_SR_T_back(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,con
   return J;
 }
 
-/* Jacobian transformation for cubed spherical patch.type : CS_SR_T_front
+/* Jacobian transformation for cubed spherical patch.type : SR_T_CS_front
 // convention:
 // _a_ = X, _b_ = Y, _c_ = Z
 // ->return value: dq2/dq1 */
-double JT_CS_SR_T_front(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const unsigned p)
+double JT_SR_T_CS_front(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const unsigned p)
 {
   /* ds/ds = 1 */
   if (q2_e == q1_e)
@@ -2826,7 +2826,7 @@ double JT_CS_SR_T_front(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,co
   const double *const X = patch->node[p]->X;
   const unsigned *const n = patch->n;
   double d1,d3;
-  const unsigned l,a,b,c;
+  unsigned l,a,b,c;
   double xc2,
          xc1, dxc1_dx,dxc1_dy,dxc1_dz,
          R1,dR1_dx,dR1_dy,dR1_dz;
@@ -2867,7 +2867,7 @@ double JT_CS_SR_T_front(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,co
       xc2 = patch->CoordSysInfo->CubedSphericalCoord->xc2;
       xc1 = S*R1/d1;
       dR1_dx   = patch->CoordSysInfo->CubedSphericalCoord->dR1_dx->v[L(n,a,b,0)];
-      dxc1_dx  = dR1_dx/d1-R1*(X[0]*JT_CS_SR_T_front(patch,_a_,_x_,p)+X[1]*JT_CS_SR_T_front(patch,_b_,_x_,p))/d3;
+      dxc1_dx  = dR1_dx/d1-R1*(X[0]*JT_SR_T_CS_front(patch,_a_,_x_,p)+X[1]*JT_SR_T_CS_front(patch,_b_,_x_,p))/d3;
       dxc1_dx *= S;
       J = (K[k==l]-dxc1_dx+(x[k]-xc1)*dxc1_dx/(xc2-xc1))/(xc2-xc1);
     break;
@@ -2880,7 +2880,7 @@ double JT_CS_SR_T_front(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,co
       xc2 = patch->CoordSysInfo->CubedSphericalCoord->xc2;
       xc1 = S*R1/d1;
       dR1_dy   = patch->CoordSysInfo->CubedSphericalCoord->dR1_dy->v[L(n,a,b,0)];
-      dxc1_dy  = dR1_dy/d1-R1*(X[0]*JT_CS_SR_T_front(patch,_a_,_y_,p)+X[1]*JT_CS_SR_T_front(patch,_b_,_y_,p))/d3;
+      dxc1_dy  = dR1_dy/d1-R1*(X[0]*JT_SR_T_CS_front(patch,_a_,_y_,p)+X[1]*JT_SR_T_CS_front(patch,_b_,_y_,p))/d3;
       dxc1_dy *= S;
       J = (K[k==l]-dxc1_dy+(x[k]-xc1)*dxc1_dy/(xc2-xc1))/(xc2-xc1);
     break;
@@ -2893,7 +2893,7 @@ double JT_CS_SR_T_front(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,co
       xc2 = patch->CoordSysInfo->CubedSphericalCoord->xc2;
       xc1 = S*R1/d1;
       dR1_dz   = patch->CoordSysInfo->CubedSphericalCoord->dR1_dz->v[L(n,a,b,0)];
-      dxc1_dz  = dR1_dz/d1-R1*(X[0]*JT_CS_SR_T_front(patch,_a_,_z_,p)+X[1]*JT_CS_SR_T_front(patch,_b_,_z_,p))/d3;
+      dxc1_dz  = dR1_dz/d1-R1*(X[0]*JT_SR_T_CS_front(patch,_a_,_z_,p)+X[1]*JT_SR_T_CS_front(patch,_b_,_z_,p))/d3;
       dxc1_dz *= S;
       J = (K[k==l]-dxc1_dz+(x[k]-xc1)*dxc1_dz/(xc2-xc1))/(xc2-xc1);
     break;
@@ -2904,11 +2904,11 @@ double JT_CS_SR_T_front(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,co
   return J;
 }
 
-/* Jacobian transformation for cubed spherical patch.type : CS_OT_T1_up
+/* Jacobian transformation for cubed spherical patch.type : OT_T1_CS_up
 // convention:
 // _a_ = X, _b_ = Y, _c_ = Z
 // ->return value: dq2/dq1 */
-double JT_CS_OT_T1_up(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const unsigned p)
+double JT_OT_T1_CS_up(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const unsigned p)
 {
   /* ds/ds = 1 */
   if (q2_e == q1_e)
@@ -2926,7 +2926,7 @@ double JT_CS_OT_T1_up(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,cons
   const double *const X = patch->node[p]->X;
   const unsigned *const n = patch->n;
   double d1,d3;
-  const unsigned l,a,b,c;
+  unsigned l,a,b,c;
   double xc1,
          xc2, dxc2_dx,dxc2_dy,dxc2_dz,
          R2;
@@ -2966,7 +2966,7 @@ double JT_CS_OT_T1_up(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,cons
       R2  = patch->CoordSysInfo->CubedSphericalCoord->R2;
       xc1 = patch->CoordSysInfo->CubedSphericalCoord->xc1;
       xc2 = S*R2/d1;
-      dxc2_dx  = -R2*(X[0]*JT_CS_OT_T1_up(patch,_a_,_x_,p)+X[1]*JT_CS_OT_T1_up(patch,_b_,_x_,p))/d3;
+      dxc2_dx  = -R2*(X[0]*JT_OT_T1_CS_up(patch,_a_,_x_,p)+X[1]*JT_OT_T1_CS_up(patch,_b_,_x_,p))/d3;
       dxc2_dx *= S;
       J = (K[k==l]-(x[k]-xc1)*dxc2_dx/(xc2-xc1))/(xc2-xc1);
     break;
@@ -2978,7 +2978,7 @@ double JT_CS_OT_T1_up(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,cons
       R2  = patch->CoordSysInfo->CubedSphericalCoord->R2;
       xc1 = patch->CoordSysInfo->CubedSphericalCoord->xc1;
       xc2 = S*R2/d1;
-      dxc2_dy  = -R2*(X[0]*JT_CS_OT_T1_up(patch,_a_,_y_,p)+X[1]*JT_CS_OT_T1_up(patch,_b_,_y_,p))/d3;
+      dxc2_dy  = -R2*(X[0]*JT_OT_T1_CS_up(patch,_a_,_y_,p)+X[1]*JT_OT_T1_CS_up(patch,_b_,_y_,p))/d3;
       dxc2_dy *= S;
       J = (K[k==l]-(x[k]-xc1)*dxc2_dy/(xc2-xc1))/(xc2-xc1);
     break;
@@ -2990,7 +2990,7 @@ double JT_CS_OT_T1_up(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,cons
       R2  = patch->CoordSysInfo->CubedSphericalCoord->R2;
       xc1 = patch->CoordSysInfo->CubedSphericalCoord->xc1;
       xc2 = S*R2/d1;
-      dxc2_dz  = -R2*(X[0]*JT_CS_OT_T1_up(patch,_a_,_z_,p)+X[1]*JT_CS_OT_T1_up(patch,_b_,_z_,p))/d3;
+      dxc2_dz  = -R2*(X[0]*JT_OT_T1_CS_up(patch,_a_,_z_,p)+X[1]*JT_OT_T1_CS_up(patch,_b_,_z_,p))/d3;
       dxc2_dz *= S;
       J = (K[k==l]-(x[k]-xc1)*dxc2_dz/(xc2-xc1))/(xc2-xc1);
     break;
@@ -3001,11 +3001,11 @@ double JT_CS_OT_T1_up(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,cons
   return J;
 }
 
-/* Jacobian transformation for cubed spherical patch.type : CS_OT_T1_down
+/* Jacobian transformation for cubed spherical patch.type : OT_T1_CS_down
 // convention:
 // _a_ = X, _b_ = Y, _c_ = Z
 // ->return value: dq2/dq1 */
-double JT_CS_OT_T1_down(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const unsigned p)
+double JT_OT_T1_CS_down(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const unsigned p)
 {
   /* ds/ds = 1 */
   if (q2_e == q1_e)
@@ -3023,7 +3023,7 @@ double JT_CS_OT_T1_down(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,co
   const double *const X = patch->node[p]->X;
   const unsigned *const n = patch->n;
   double d1,d3;
-  const unsigned l,a,b,c;
+  unsigned l,a,b,c;
   double xc1,
          xc2, dxc2_dx,dxc2_dy,dxc2_dz,
          R2;
@@ -3063,7 +3063,7 @@ double JT_CS_OT_T1_down(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,co
       R2  = patch->CoordSysInfo->CubedSphericalCoord->R2;
       xc1 = patch->CoordSysInfo->CubedSphericalCoord->xc1;
       xc2 = S*R2/d1;
-      dxc2_dx  = -R2*(X[0]*JT_CS_OT_T1_down(patch,_a_,_x_,p)+X[1]*JT_CS_OT_T1_down(patch,_b_,_x_,p))/d3;
+      dxc2_dx  = -R2*(X[0]*JT_OT_T1_CS_down(patch,_a_,_x_,p)+X[1]*JT_OT_T1_CS_down(patch,_b_,_x_,p))/d3;
       dxc2_dx *= S;
       J = (K[k==l]-(x[k]-xc1)*dxc2_dx/(xc2-xc1))/(xc2-xc1);
     break;
@@ -3075,7 +3075,7 @@ double JT_CS_OT_T1_down(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,co
       R2  = patch->CoordSysInfo->CubedSphericalCoord->R2;
       xc1 = patch->CoordSysInfo->CubedSphericalCoord->xc1;
       xc2 = S*R2/d1;
-      dxc2_dy  = -R2*(X[0]*JT_CS_OT_T1_down(patch,_a_,_y_,p)+X[1]*JT_CS_OT_T1_down(patch,_b_,_y_,p))/d3;
+      dxc2_dy  = -R2*(X[0]*JT_OT_T1_CS_down(patch,_a_,_y_,p)+X[1]*JT_OT_T1_CS_down(patch,_b_,_y_,p))/d3;
       dxc2_dy *= S;
       J = (K[k==l]-(x[k]-xc1)*dxc2_dy/(xc2-xc1))/(xc2-xc1);
     break;
@@ -3087,7 +3087,7 @@ double JT_CS_OT_T1_down(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,co
       R2  = patch->CoordSysInfo->CubedSphericalCoord->R2;
       xc1 = patch->CoordSysInfo->CubedSphericalCoord->xc1;
       xc2 = S*R2/d1;
-      dxc2_dz  = -R2*(X[0]*JT_CS_OT_T1_down(patch,_a_,_z_,p)+X[1]*JT_CS_OT_T1_down(patch,_b_,_z_,p))/d3;
+      dxc2_dz  = -R2*(X[0]*JT_OT_T1_CS_down(patch,_a_,_z_,p)+X[1]*JT_OT_T1_CS_down(patch,_b_,_z_,p))/d3;
       dxc2_dz *= S;
       J = (K[k==l]-(x[k]-xc1)*dxc2_dz/(xc2-xc1))/(xc2-xc1);
     break;
@@ -3098,11 +3098,11 @@ double JT_CS_OT_T1_down(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,co
   return J;
 }
 
-/* Jacobian transformation for cubed spherical patch.type : CS_OT_T1_left
+/* Jacobian transformation for cubed spherical patch.type : OT_T1_CS_left
 // convention:
 // _a_ = X, _b_ = Y, _c_ = Z
 // ->return value: dq2/dq1 */
-double JT_CS_OT_T1_left(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const unsigned p)
+double JT_OT_T1_CS_left(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const unsigned p)
 {
   /* ds/ds = 1 */
   if (q2_e == q1_e)
@@ -3120,7 +3120,7 @@ double JT_CS_OT_T1_left(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,co
   const double *const X = patch->node[p]->X;
   const unsigned *const n = patch->n;
   double d1,d3;
-  const unsigned l,a,b,c;
+  unsigned l,a,b,c;
   double xc1,
          xc2, dxc2_dx,dxc2_dy,dxc2_dz,
          R2;
@@ -3160,7 +3160,7 @@ double JT_CS_OT_T1_left(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,co
       R2  = patch->CoordSysInfo->CubedSphericalCoord->R2;
       xc1 = patch->CoordSysInfo->CubedSphericalCoord->xc1;
       xc2 = S*R2/d1;
-      dxc2_dx  = -R2*(X[0]*JT_CS_OT_T1_left(patch,_a_,_x_,p)+X[1]*JT_CS_OT_T1_left(patch,_b_,_x_,p))/d3;
+      dxc2_dx  = -R2*(X[0]*JT_OT_T1_CS_left(patch,_a_,_x_,p)+X[1]*JT_OT_T1_CS_left(patch,_b_,_x_,p))/d3;
       dxc2_dx *= S;
       J = (K[k==l]-(x[k]-xc1)*dxc2_dx/(xc2-xc1))/(xc2-xc1);
     break;
@@ -3172,7 +3172,7 @@ double JT_CS_OT_T1_left(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,co
       R2  = patch->CoordSysInfo->CubedSphericalCoord->R2;
       xc1 = patch->CoordSysInfo->CubedSphericalCoord->xc1;
       xc2 = S*R2/d1;
-      dxc2_dy  = -R2*(X[0]*JT_CS_OT_T1_left(patch,_a_,_y_,p)+X[1]*JT_CS_OT_T1_left(patch,_b_,_y_,p))/d3;
+      dxc2_dy  = -R2*(X[0]*JT_OT_T1_CS_left(patch,_a_,_y_,p)+X[1]*JT_OT_T1_CS_left(patch,_b_,_y_,p))/d3;
       dxc2_dy *= S;
       J = (K[k==l]-(x[k]-xc1)*dxc2_dy/(xc2-xc1))/(xc2-xc1);
     break;
@@ -3184,7 +3184,7 @@ double JT_CS_OT_T1_left(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,co
       R2  = patch->CoordSysInfo->CubedSphericalCoord->R2;
       xc1 = patch->CoordSysInfo->CubedSphericalCoord->xc1;
       xc2 = S*R2/d1;
-      dxc2_dz  = -R2*(X[0]*JT_CS_OT_T1_left(patch,_a_,_z_,p)+X[1]*JT_CS_OT_T1_left(patch,_b_,_z_,p))/d3;
+      dxc2_dz  = -R2*(X[0]*JT_OT_T1_CS_left(patch,_a_,_z_,p)+X[1]*JT_OT_T1_CS_left(patch,_b_,_z_,p))/d3;
       dxc2_dz *= S;
       J = (K[k==l]-(x[k]-xc1)*dxc2_dz/(xc2-xc1))/(xc2-xc1);
     break;
@@ -3195,11 +3195,11 @@ double JT_CS_OT_T1_left(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,co
   return J;
 }
 
-/* Jacobian transformation for cubed spherical patch.type : CS_OT_T1_right
+/* Jacobian transformation for cubed spherical patch.type : OT_T1_CS_right
 // convention:
 // _a_ = X, _b_ = Y, _c_ = Z
 // ->return value: dq2/dq1 */
-double JT_CS_OT_T1_right(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const unsigned p)
+double JT_OT_T1_CS_right(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const unsigned p)
 {
   /* ds/ds = 1 */
   if (q2_e == q1_e)
@@ -3217,7 +3217,7 @@ double JT_CS_OT_T1_right(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,c
   const double *const X = patch->node[p]->X;
   const unsigned *const n = patch->n;
   double d1,d3;
-  const unsigned l,a,b,c;
+  unsigned l,a,b,c;
   double xc1,
          xc2, dxc2_dx,dxc2_dy,dxc2_dz,
          R2;
@@ -3257,7 +3257,7 @@ double JT_CS_OT_T1_right(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,c
       R2  = patch->CoordSysInfo->CubedSphericalCoord->R2;
       xc1 = patch->CoordSysInfo->CubedSphericalCoord->xc1;
       xc2 = S*R2/d1;
-      dxc2_dx  = -R2*(X[0]*JT_CS_OT_T1_right(patch,_a_,_x_,p)+X[1]*JT_CS_OT_T1_right(patch,_b_,_x_,p))/d3;
+      dxc2_dx  = -R2*(X[0]*JT_OT_T1_CS_right(patch,_a_,_x_,p)+X[1]*JT_OT_T1_CS_right(patch,_b_,_x_,p))/d3;
       dxc2_dx *= S;
       J = (K[k==l]-(x[k]-xc1)*dxc2_dx/(xc2-xc1))/(xc2-xc1);
     break;
@@ -3269,7 +3269,7 @@ double JT_CS_OT_T1_right(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,c
       R2  = patch->CoordSysInfo->CubedSphericalCoord->R2;
       xc1 = patch->CoordSysInfo->CubedSphericalCoord->xc1;
       xc2 = S*R2/d1;
-      dxc2_dy  = -R2*(X[0]*JT_CS_OT_T1_right(patch,_a_,_y_,p)+X[1]*JT_CS_OT_T1_right(patch,_b_,_y_,p))/d3;
+      dxc2_dy  = -R2*(X[0]*JT_OT_T1_CS_right(patch,_a_,_y_,p)+X[1]*JT_OT_T1_CS_right(patch,_b_,_y_,p))/d3;
       dxc2_dy *= S;
       J = (K[k==l]-(x[k]-xc1)*dxc2_dy/(xc2-xc1))/(xc2-xc1);
     break;
@@ -3281,7 +3281,7 @@ double JT_CS_OT_T1_right(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,c
       R2  = patch->CoordSysInfo->CubedSphericalCoord->R2;
       xc1 = patch->CoordSysInfo->CubedSphericalCoord->xc1;
       xc2 = S*R2/d1;
-      dxc2_dz  = -R2*(X[0]*JT_CS_OT_T1_right(patch,_a_,_z_,p)+X[1]*JT_CS_OT_T1_right(patch,_b_,_z_,p))/d3;
+      dxc2_dz  = -R2*(X[0]*JT_OT_T1_CS_right(patch,_a_,_z_,p)+X[1]*JT_OT_T1_CS_right(patch,_b_,_z_,p))/d3;
       dxc2_dz *= S;
       J = (K[k==l]-(x[k]-xc1)*dxc2_dz/(xc2-xc1))/(xc2-xc1);
     break;
@@ -3292,11 +3292,11 @@ double JT_CS_OT_T1_right(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,c
   return J;
 }
 
-/* Jacobian transformation for cubed spherical patch.type : CS_OT_T1_back
+/* Jacobian transformation for cubed spherical patch.type : OT_T1_CS_back
 // convention:
 // _a_ = X, _b_ = Y, _c_ = Z
 // ->return value: dq2/dq1 */
-double JT_CS_OT_T1_back(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const unsigned p)
+double JT_OT_T1_CS_back(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const unsigned p)
 {
   /* ds/ds = 1 */
   if (q2_e == q1_e)
@@ -3314,7 +3314,7 @@ double JT_CS_OT_T1_back(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,co
   const double *const X = patch->node[p]->X;
   const unsigned *const n = patch->n;
   double d1,d3;
-  const unsigned l,a,b,c;
+  unsigned l,a,b,c;
   double xc1,
          xc2, dxc2_dx,dxc2_dy,dxc2_dz,
          R2;
@@ -3354,7 +3354,7 @@ double JT_CS_OT_T1_back(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,co
       R2  = patch->CoordSysInfo->CubedSphericalCoord->R2;
       xc1 = patch->CoordSysInfo->CubedSphericalCoord->xc1;
       xc2 = S*R2/d1;
-      dxc2_dx  = -R2*(X[0]*JT_CS_OT_T1_back(patch,_a_,_x_,p)+X[1]*JT_CS_OT_T1_back(patch,_b_,_x_,p))/d3;
+      dxc2_dx  = -R2*(X[0]*JT_OT_T1_CS_back(patch,_a_,_x_,p)+X[1]*JT_OT_T1_CS_back(patch,_b_,_x_,p))/d3;
       dxc2_dx *= S;
       J = (K[k==l]-(x[k]-xc1)*dxc2_dx/(xc2-xc1))/(xc2-xc1);
     break;
@@ -3366,7 +3366,7 @@ double JT_CS_OT_T1_back(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,co
       R2  = patch->CoordSysInfo->CubedSphericalCoord->R2;
       xc1 = patch->CoordSysInfo->CubedSphericalCoord->xc1;
       xc2 = S*R2/d1;
-      dxc2_dy  = -R2*(X[0]*JT_CS_OT_T1_back(patch,_a_,_y_,p)+X[1]*JT_CS_OT_T1_back(patch,_b_,_y_,p))/d3;
+      dxc2_dy  = -R2*(X[0]*JT_OT_T1_CS_back(patch,_a_,_y_,p)+X[1]*JT_OT_T1_CS_back(patch,_b_,_y_,p))/d3;
       dxc2_dy *= S;
       J = (K[k==l]-(x[k]-xc1)*dxc2_dy/(xc2-xc1))/(xc2-xc1);
     break;
@@ -3378,7 +3378,7 @@ double JT_CS_OT_T1_back(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,co
       R2  = patch->CoordSysInfo->CubedSphericalCoord->R2;
       xc1 = patch->CoordSysInfo->CubedSphericalCoord->xc1;
       xc2 = S*R2/d1;
-      dxc2_dz  = -R2*(X[0]*JT_CS_OT_T1_back(patch,_a_,_z_,p)+X[1]*JT_CS_OT_T1_back(patch,_b_,_z_,p))/d3;
+      dxc2_dz  = -R2*(X[0]*JT_OT_T1_CS_back(patch,_a_,_z_,p)+X[1]*JT_OT_T1_CS_back(patch,_b_,_z_,p))/d3;
       dxc2_dz *= S;
       J = (K[k==l]-(x[k]-xc1)*dxc2_dz/(xc2-xc1))/(xc2-xc1);
     break;
@@ -3389,11 +3389,11 @@ double JT_CS_OT_T1_back(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,co
   return J;
 }
 
-/* Jacobian transformation for cubed spherical patch.type : CS_OT_T1_front
+/* Jacobian transformation for cubed spherical patch.type : OT_T1_CS_front
 // convention:
 // _a_ = X, _b_ = Y, _c_ = Z
 // ->return value: dq2/dq1 */
-double JT_CS_OT_T1_front(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const unsigned p)
+double JT_OT_T1_CS_front(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const unsigned p)
 {
   /* ds/ds = 1 */
   if (q2_e == q1_e)
@@ -3411,7 +3411,7 @@ double JT_CS_OT_T1_front(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,c
   const double *const X = patch->node[p]->X;
   const unsigned *const n = patch->n;
   double d1,d3;
-  const unsigned l,a,b,c;
+  unsigned l,a,b,c;
   double xc1,
          xc2, dxc2_dx,dxc2_dy,dxc2_dz,
          R2;
@@ -3451,7 +3451,7 @@ double JT_CS_OT_T1_front(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,c
       R2  = patch->CoordSysInfo->CubedSphericalCoord->R2;
       xc1 = patch->CoordSysInfo->CubedSphericalCoord->xc1;
       xc2 = S*R2/d1;
-      dxc2_dx  = -R2*(X[0]*JT_CS_OT_T1_front(patch,_a_,_x_,p)+X[1]*JT_CS_OT_T1_front(patch,_b_,_x_,p))/d3;
+      dxc2_dx  = -R2*(X[0]*JT_OT_T1_CS_front(patch,_a_,_x_,p)+X[1]*JT_OT_T1_CS_front(patch,_b_,_x_,p))/d3;
       dxc2_dx *= S;
       J = (K[k==l]-(x[k]-xc1)*dxc2_dx/(xc2-xc1))/(xc2-xc1);
     break;
@@ -3463,7 +3463,7 @@ double JT_CS_OT_T1_front(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,c
       R2  = patch->CoordSysInfo->CubedSphericalCoord->R2;
       xc1 = patch->CoordSysInfo->CubedSphericalCoord->xc1;
       xc2 = S*R2/d1;
-      dxc2_dy  = -R2*(X[0]*JT_CS_OT_T1_front(patch,_a_,_y_,p)+X[1]*JT_CS_OT_T1_front(patch,_b_,_y_,p))/d3;
+      dxc2_dy  = -R2*(X[0]*JT_OT_T1_CS_front(patch,_a_,_y_,p)+X[1]*JT_OT_T1_CS_front(patch,_b_,_y_,p))/d3;
       dxc2_dy *= S;
       J = (K[k==l]-(x[k]-xc1)*dxc2_dy/(xc2-xc1))/(xc2-xc1);
     break;
@@ -3475,7 +3475,7 @@ double JT_CS_OT_T1_front(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,c
       R2  = patch->CoordSysInfo->CubedSphericalCoord->R2;
       xc1 = patch->CoordSysInfo->CubedSphericalCoord->xc1;
       xc2 = S*R2/d1;
-      dxc2_dz  = -R2*(X[0]*JT_CS_OT_T1_front(patch,_a_,_z_,p)+X[1]*JT_CS_OT_T1_front(patch,_b_,_z_,p))/d3;
+      dxc2_dz  = -R2*(X[0]*JT_OT_T1_CS_front(patch,_a_,_z_,p)+X[1]*JT_OT_T1_CS_front(patch,_b_,_z_,p))/d3;
       dxc2_dz *= S;
       J = (K[k==l]-(x[k]-xc1)*dxc2_dz/(xc2-xc1))/(xc2-xc1);
     break;
@@ -3486,11 +3486,11 @@ double JT_CS_OT_T1_front(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,c
   return J;
 }
 
-/* Jacobian transformation for cubed spherical patch.type : CS_OT_T2_up
+/* Jacobian transformation for cubed spherical patch.type : OT_T2_CS_up
 // convention:
 // _a_ = X, _b_ = Y, _c_ = Z
 // ->return value: dq2/dq1 */
-double JT_CS_OT_T2_up(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const unsigned p)
+double JT_OT_T2_CS_up(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const unsigned p)
 {
   /* ds/ds = 1 */
   if (q2_e == q1_e)
@@ -3508,9 +3508,9 @@ double JT_CS_OT_T2_up(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,cons
   const double *const X = patch->node[p]->X;
   const unsigned *const n = patch->n;
   double d1,d3;
-  const unsigned l,a,b,c;
-  double xc1, dxc1_dx,dxc1_dy,dxc1_dz
-         xc2, dxc2_dx,dxc2_dy,dxc2_dz,
+  unsigned l,a,b,c;
+  double xc1,dxc1_dx,dxc1_dy,dxc1_dz,
+         xc2,dxc2_dx,dxc2_dy,dxc2_dz,
          R1,R2;
   
   dA_da = get_dA_da(q2_e,q1_e);
@@ -3549,8 +3549,8 @@ double JT_CS_OT_T2_up(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,cons
       R2  = patch->CoordSysInfo->CubedSphericalCoord->R2;
       xc1 = S*R1/d1;
       xc2 = S*R2/d1;
-      dxc1_dx  = -R1*(X[0]*JT_CS_OT_T2_up(patch,_a_,_x_,p)+X[1]*JT_CS_OT_T2_up(patch,_b_,_x_,p))/d3;
-      dxc2_dx  = -R2*(X[0]*JT_CS_OT_T2_up(patch,_a_,_x_,p)+X[1]*JT_CS_OT_T2_up(patch,_b_,_x_,p))/d3;
+      dxc1_dx  = -R1*(X[0]*JT_OT_T2_CS_up(patch,_a_,_x_,p)+X[1]*JT_OT_T2_CS_up(patch,_b_,_x_,p))/d3;
+      dxc2_dx  = -R2*(X[0]*JT_OT_T2_CS_up(patch,_a_,_x_,p)+X[1]*JT_OT_T2_CS_up(patch,_b_,_x_,p))/d3;
       dxc1_dx *= S;
       dxc2_dx *= S;
       J = (K[k==l]-dxc1_dx -(x[k]-xc1)*(dxc2_dx-dxc1_dx)/(xc2-xc1))/(xc2-xc1);
@@ -3564,8 +3564,8 @@ double JT_CS_OT_T2_up(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,cons
       R2  = patch->CoordSysInfo->CubedSphericalCoord->R2;
       xc1 = S*R1/d1;
       xc2 = S*R2/d1;
-      dxc1_dy  = -R1*(X[0]*JT_CS_OT_T2_up(patch,_a_,_y_,p)+X[1]*JT_CS_OT_T2_up(patch,_b_,_y_,p))/d3;
-      dxc2_dy  = -R2*(X[0]*JT_CS_OT_T2_up(patch,_a_,_y_,p)+X[1]*JT_CS_OT_T2_up(patch,_b_,_y_,p))/d3;
+      dxc1_dy  = -R1*(X[0]*JT_OT_T2_CS_up(patch,_a_,_y_,p)+X[1]*JT_OT_T2_CS_up(patch,_b_,_y_,p))/d3;
+      dxc2_dy  = -R2*(X[0]*JT_OT_T2_CS_up(patch,_a_,_y_,p)+X[1]*JT_OT_T2_CS_up(patch,_b_,_y_,p))/d3;
       dxc1_dy *= S;
       dxc2_dy *= S;
       J = (K[k==l]-dxc1_dy -(x[k]-xc1)*(dxc2_dy-dxc1_dy)/(xc2-xc1))/(xc2-xc1);
@@ -3579,8 +3579,8 @@ double JT_CS_OT_T2_up(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,cons
       R2  = patch->CoordSysInfo->CubedSphericalCoord->R2;
       xc1 = S*R1/d1;
       xc2 = S*R2/d1;
-      dxc1_dz  = -R1*(X[0]*JT_CS_OT_T2_up(patch,_a_,_z_,p)+X[1]*JT_CS_OT_T2_up(patch,_b_,_z_,p))/d3;
-      dxc2_dz  = -R2*(X[0]*JT_CS_OT_T2_up(patch,_a_,_z_,p)+X[1]*JT_CS_OT_T2_up(patch,_b_,_z_,p))/d3;
+      dxc1_dz  = -R1*(X[0]*JT_OT_T2_CS_up(patch,_a_,_z_,p)+X[1]*JT_OT_T2_CS_up(patch,_b_,_z_,p))/d3;
+      dxc2_dz  = -R2*(X[0]*JT_OT_T2_CS_up(patch,_a_,_z_,p)+X[1]*JT_OT_T2_CS_up(patch,_b_,_z_,p))/d3;
       dxc1_dz *= S;
       dxc2_dz *= S;
       J = (K[k==l]-dxc1_dz -(x[k]-xc1)*(dxc2_dz-dxc1_dz)/(xc2-xc1))/(xc2-xc1);
@@ -3592,11 +3592,11 @@ double JT_CS_OT_T2_up(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,cons
   return J;
 }
 
-/* Jacobian transformation for cubed spherical patch.type : CS_OT_T2_down
+/* Jacobian transformation for cubed spherical patch.type : OT_T2_CS_down
 // convention:
 // _a_ = X, _b_ = Y, _c_ = Z
 // ->return value: dq2/dq1 */
-double JT_CS_OT_T2_down(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const unsigned p)
+double JT_OT_T2_CS_down(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const unsigned p)
 {
   /* ds/ds = 1 */
   if (q2_e == q1_e)
@@ -3614,9 +3614,9 @@ double JT_CS_OT_T2_down(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,co
   const double *const X = patch->node[p]->X;
   const unsigned *const n = patch->n;
   double d1,d3;
-  const unsigned l,a,b,c;
-  double xc1, dxc1_dx,dxc1_dy,dxc1_dz
-         xc2, dxc2_dx,dxc2_dy,dxc2_dz,
+  unsigned l,a,b,c;
+  double xc1,dxc1_dx,dxc1_dy,dxc1_dz,
+         xc2,dxc2_dx,dxc2_dy,dxc2_dz,
          R1,R2;
   
   dA_da = get_dA_da(q2_e,q1_e);
@@ -3655,8 +3655,8 @@ double JT_CS_OT_T2_down(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,co
       R2  = patch->CoordSysInfo->CubedSphericalCoord->R2;
       xc1 = S*R1/d1;
       xc2 = S*R2/d1;
-      dxc1_dx  = -R1*(X[0]*JT_CS_OT_T2_up(patch,_a_,_x_,p)+X[1]*JT_CS_OT_T2_up(patch,_b_,_x_,p))/d3;
-      dxc2_dx  = -R2*(X[0]*JT_CS_OT_T2_up(patch,_a_,_x_,p)+X[1]*JT_CS_OT_T2_up(patch,_b_,_x_,p))/d3;
+      dxc1_dx  = -R1*(X[0]*JT_OT_T2_CS_up(patch,_a_,_x_,p)+X[1]*JT_OT_T2_CS_up(patch,_b_,_x_,p))/d3;
+      dxc2_dx  = -R2*(X[0]*JT_OT_T2_CS_up(patch,_a_,_x_,p)+X[1]*JT_OT_T2_CS_up(patch,_b_,_x_,p))/d3;
       dxc1_dx *= S;
       dxc2_dx *= S;
       J = (K[k==l]-dxc1_dx -(x[k]-xc1)*(dxc2_dx-dxc1_dx)/(xc2-xc1))/(xc2-xc1);
@@ -3670,8 +3670,8 @@ double JT_CS_OT_T2_down(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,co
       R2  = patch->CoordSysInfo->CubedSphericalCoord->R2;
       xc1 = S*R1/d1;
       xc2 = S*R2/d1;
-      dxc1_dy  = -R1*(X[0]*JT_CS_OT_T2_up(patch,_a_,_y_,p)+X[1]*JT_CS_OT_T2_up(patch,_b_,_y_,p))/d3;
-      dxc2_dy  = -R2*(X[0]*JT_CS_OT_T2_up(patch,_a_,_y_,p)+X[1]*JT_CS_OT_T2_up(patch,_b_,_y_,p))/d3;
+      dxc1_dy  = -R1*(X[0]*JT_OT_T2_CS_up(patch,_a_,_y_,p)+X[1]*JT_OT_T2_CS_up(patch,_b_,_y_,p))/d3;
+      dxc2_dy  = -R2*(X[0]*JT_OT_T2_CS_up(patch,_a_,_y_,p)+X[1]*JT_OT_T2_CS_up(patch,_b_,_y_,p))/d3;
       dxc1_dy *= S;
       dxc2_dy *= S;
       J = (K[k==l]-dxc1_dy -(x[k]-xc1)*(dxc2_dy-dxc1_dy)/(xc2-xc1))/(xc2-xc1);
@@ -3685,8 +3685,8 @@ double JT_CS_OT_T2_down(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,co
       R2  = patch->CoordSysInfo->CubedSphericalCoord->R2;
       xc1 = S*R1/d1;
       xc2 = S*R2/d1;
-      dxc1_dz  = -R1*(X[0]*JT_CS_OT_T2_up(patch,_a_,_z_,p)+X[1]*JT_CS_OT_T2_up(patch,_b_,_z_,p))/d3;
-      dxc2_dz  = -R2*(X[0]*JT_CS_OT_T2_up(patch,_a_,_z_,p)+X[1]*JT_CS_OT_T2_up(patch,_b_,_z_,p))/d3;
+      dxc1_dz  = -R1*(X[0]*JT_OT_T2_CS_up(patch,_a_,_z_,p)+X[1]*JT_OT_T2_CS_up(patch,_b_,_z_,p))/d3;
+      dxc2_dz  = -R2*(X[0]*JT_OT_T2_CS_up(patch,_a_,_z_,p)+X[1]*JT_OT_T2_CS_up(patch,_b_,_z_,p))/d3;
       dxc1_dz *= S;
       dxc2_dz *= S;
       J = (K[k==l]-dxc1_dz -(x[k]-xc1)*(dxc2_dz-dxc1_dz)/(xc2-xc1))/(xc2-xc1);
@@ -3698,11 +3698,11 @@ double JT_CS_OT_T2_down(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,co
   return J;
 }
 
-/* Jacobian transformation for cubed spherical patch.type : CS_OT_T2_left
+/* Jacobian transformation for cubed spherical patch.type : OT_T2_CS_left
 // convention:
 // _a_ = X, _b_ = Y, _c_ = Z
 // ->return value: dq2/dq1 */
-double JT_CS_OT_T2_left(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const unsigned p)
+double JT_OT_T2_CS_left(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const unsigned p)
 {
   /* ds/ds = 1 */
   if (q2_e == q1_e)
@@ -3720,9 +3720,9 @@ double JT_CS_OT_T2_left(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,co
   const double *const X = patch->node[p]->X;
   const unsigned *const n = patch->n;
   double d1,d3;
-  const unsigned l,a,b,c;
-  double xc1, dxc1_dx,dxc1_dy,dxc1_dz
-         xc2, dxc2_dx,dxc2_dy,dxc2_dz,
+  unsigned l,a,b,c;
+  double xc1,dxc1_dx,dxc1_dy,dxc1_dz,
+         xc2,dxc2_dx,dxc2_dy,dxc2_dz,
          R1,R2;  
          
   dA_da = get_dA_da(q2_e,q1_e);
@@ -3761,8 +3761,8 @@ double JT_CS_OT_T2_left(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,co
       R2  = patch->CoordSysInfo->CubedSphericalCoord->R2;
       xc1 = S*R1/d1;
       xc2 = S*R2/d1;
-      dxc1_dx  = -R1*(X[0]*JT_CS_OT_T2_up(patch,_a_,_x_,p)+X[1]*JT_CS_OT_T2_up(patch,_b_,_x_,p))/d3;
-      dxc2_dx  = -R2*(X[0]*JT_CS_OT_T2_up(patch,_a_,_x_,p)+X[1]*JT_CS_OT_T2_up(patch,_b_,_x_,p))/d3;
+      dxc1_dx  = -R1*(X[0]*JT_OT_T2_CS_up(patch,_a_,_x_,p)+X[1]*JT_OT_T2_CS_up(patch,_b_,_x_,p))/d3;
+      dxc2_dx  = -R2*(X[0]*JT_OT_T2_CS_up(patch,_a_,_x_,p)+X[1]*JT_OT_T2_CS_up(patch,_b_,_x_,p))/d3;
       dxc1_dx *= S;
       dxc2_dx *= S;
       J = (K[k==l]-dxc1_dx -(x[k]-xc1)*(dxc2_dx-dxc1_dx)/(xc2-xc1))/(xc2-xc1);
@@ -3776,8 +3776,8 @@ double JT_CS_OT_T2_left(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,co
       R2  = patch->CoordSysInfo->CubedSphericalCoord->R2;
       xc1 = S*R1/d1;
       xc2 = S*R2/d1;
-      dxc1_dy  = -R1*(X[0]*JT_CS_OT_T2_up(patch,_a_,_y_,p)+X[1]*JT_CS_OT_T2_up(patch,_b_,_y_,p))/d3;
-      dxc2_dy  = -R2*(X[0]*JT_CS_OT_T2_up(patch,_a_,_y_,p)+X[1]*JT_CS_OT_T2_up(patch,_b_,_y_,p))/d3;
+      dxc1_dy  = -R1*(X[0]*JT_OT_T2_CS_up(patch,_a_,_y_,p)+X[1]*JT_OT_T2_CS_up(patch,_b_,_y_,p))/d3;
+      dxc2_dy  = -R2*(X[0]*JT_OT_T2_CS_up(patch,_a_,_y_,p)+X[1]*JT_OT_T2_CS_up(patch,_b_,_y_,p))/d3;
       dxc1_dy *= S;
       dxc2_dy *= S;
       J = (K[k==l]-dxc1_dy -(x[k]-xc1)*(dxc2_dy-dxc1_dy)/(xc2-xc1))/(xc2-xc1);
@@ -3791,8 +3791,8 @@ double JT_CS_OT_T2_left(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,co
       R2  = patch->CoordSysInfo->CubedSphericalCoord->R2;
       xc1 = S*R1/d1;
       xc2 = S*R2/d1;
-      dxc1_dz  = -R1*(X[0]*JT_CS_OT_T2_up(patch,_a_,_z_,p)+X[1]*JT_CS_OT_T2_up(patch,_b_,_z_,p))/d3;
-      dxc2_dz  = -R2*(X[0]*JT_CS_OT_T2_up(patch,_a_,_z_,p)+X[1]*JT_CS_OT_T2_up(patch,_b_,_z_,p))/d3;
+      dxc1_dz  = -R1*(X[0]*JT_OT_T2_CS_up(patch,_a_,_z_,p)+X[1]*JT_OT_T2_CS_up(patch,_b_,_z_,p))/d3;
+      dxc2_dz  = -R2*(X[0]*JT_OT_T2_CS_up(patch,_a_,_z_,p)+X[1]*JT_OT_T2_CS_up(patch,_b_,_z_,p))/d3;
       dxc1_dz *= S;
       dxc2_dz *= S;
       J = (K[k==l]-dxc1_dz -(x[k]-xc1)*(dxc2_dz-dxc1_dz)/(xc2-xc1))/(xc2-xc1);
@@ -3804,11 +3804,11 @@ double JT_CS_OT_T2_left(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,co
   return J;
 }
 
-/* Jacobian transformation for cubed spherical patch.type : CS_OT_T2_right
+/* Jacobian transformation for cubed spherical patch.type : OT_T2_CS_right
 // convention:
 // _a_ = X, _b_ = Y, _c_ = Z
 // ->return value: dq2/dq1 */
-double JT_CS_OT_T2_right(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const unsigned p)
+double JT_OT_T2_CS_right(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const unsigned p)
 {
   /* ds/ds = 1 */
   if (q2_e == q1_e)
@@ -3826,9 +3826,9 @@ double JT_CS_OT_T2_right(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,c
   const double *const X = patch->node[p]->X;
   const unsigned *const n = patch->n;
   double d1,d3;
-  const unsigned l,a,b,c;
-  double xc1, dxc1_dx,dxc1_dy,dxc1_dz
-         xc2, dxc2_dx,dxc2_dy,dxc2_dz,
+  unsigned l,a,b,c;
+  double xc1,dxc1_dx,dxc1_dy,dxc1_dz,
+         xc2,dxc2_dx,dxc2_dy,dxc2_dz,
          R1,R2;
   
   dA_da = get_dA_da(q2_e,q1_e);
@@ -3867,8 +3867,8 @@ double JT_CS_OT_T2_right(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,c
       R2  = patch->CoordSysInfo->CubedSphericalCoord->R2;
       xc1 = S*R1/d1;
       xc2 = S*R2/d1;
-      dxc1_dx  = -R1*(X[0]*JT_CS_OT_T2_up(patch,_a_,_x_,p)+X[1]*JT_CS_OT_T2_up(patch,_b_,_x_,p))/d3;
-      dxc2_dx  = -R2*(X[0]*JT_CS_OT_T2_up(patch,_a_,_x_,p)+X[1]*JT_CS_OT_T2_up(patch,_b_,_x_,p))/d3;
+      dxc1_dx  = -R1*(X[0]*JT_OT_T2_CS_up(patch,_a_,_x_,p)+X[1]*JT_OT_T2_CS_up(patch,_b_,_x_,p))/d3;
+      dxc2_dx  = -R2*(X[0]*JT_OT_T2_CS_up(patch,_a_,_x_,p)+X[1]*JT_OT_T2_CS_up(patch,_b_,_x_,p))/d3;
       dxc1_dx *= S;
       dxc2_dx *= S;
       J = (K[k==l]-dxc1_dx -(x[k]-xc1)*(dxc2_dx-dxc1_dx)/(xc2-xc1))/(xc2-xc1);
@@ -3882,8 +3882,8 @@ double JT_CS_OT_T2_right(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,c
       R2  = patch->CoordSysInfo->CubedSphericalCoord->R2;
       xc1 = S*R1/d1;
       xc2 = S*R2/d1;
-      dxc1_dy  = -R1*(X[0]*JT_CS_OT_T2_up(patch,_a_,_y_,p)+X[1]*JT_CS_OT_T2_up(patch,_b_,_y_,p))/d3;
-      dxc2_dy  = -R2*(X[0]*JT_CS_OT_T2_up(patch,_a_,_y_,p)+X[1]*JT_CS_OT_T2_up(patch,_b_,_y_,p))/d3;
+      dxc1_dy  = -R1*(X[0]*JT_OT_T2_CS_up(patch,_a_,_y_,p)+X[1]*JT_OT_T2_CS_up(patch,_b_,_y_,p))/d3;
+      dxc2_dy  = -R2*(X[0]*JT_OT_T2_CS_up(patch,_a_,_y_,p)+X[1]*JT_OT_T2_CS_up(patch,_b_,_y_,p))/d3;
       dxc1_dy *= S;
       dxc2_dy *= S;
       J = (K[k==l]-dxc1_dy -(x[k]-xc1)*(dxc2_dy-dxc1_dy)/(xc2-xc1))/(xc2-xc1);
@@ -3897,8 +3897,8 @@ double JT_CS_OT_T2_right(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,c
       R2  = patch->CoordSysInfo->CubedSphericalCoord->R2;
       xc1 = S*R1/d1;
       xc2 = S*R2/d1;
-      dxc1_dz  = -R1*(X[0]*JT_CS_OT_T2_up(patch,_a_,_z_,p)+X[1]*JT_CS_OT_T2_up(patch,_b_,_z_,p))/d3;
-      dxc2_dz  = -R2*(X[0]*JT_CS_OT_T2_up(patch,_a_,_z_,p)+X[1]*JT_CS_OT_T2_up(patch,_b_,_z_,p))/d3;
+      dxc1_dz  = -R1*(X[0]*JT_OT_T2_CS_up(patch,_a_,_z_,p)+X[1]*JT_OT_T2_CS_up(patch,_b_,_z_,p))/d3;
+      dxc2_dz  = -R2*(X[0]*JT_OT_T2_CS_up(patch,_a_,_z_,p)+X[1]*JT_OT_T2_CS_up(patch,_b_,_z_,p))/d3;
       dxc1_dz *= S;
       dxc2_dz *= S;
       J = (K[k==l]-dxc1_dz -(x[k]-xc1)*(dxc2_dz-dxc1_dz)/(xc2-xc1))/(xc2-xc1);
@@ -3910,11 +3910,11 @@ double JT_CS_OT_T2_right(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,c
   return J;
 }
 
-/* Jacobian transformation for cubed spherical patch.type : CS_OT_T2_back
+/* Jacobian transformation for cubed spherical patch.type : OT_T2_CS_back
 // convention:
 // _a_ = X, _b_ = Y, _c_ = Z
 // ->return value: dq2/dq1 */
-double JT_CS_OT_T2_back(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const unsigned p)
+double JT_OT_T2_CS_back(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const unsigned p)
 {
   /* ds/ds = 1 */
   if (q2_e == q1_e)
@@ -3932,9 +3932,9 @@ double JT_CS_OT_T2_back(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,co
   const double *const X = patch->node[p]->X;
   const unsigned *const n = patch->n;
   double d1,d3;
-  const unsigned l,a,b,c;
-  double xc1, dxc1_dx,dxc1_dy,dxc1_dz
-         xc2, dxc2_dx,dxc2_dy,dxc2_dz,
+  unsigned l,a,b,c;
+  double xc1,dxc1_dx,dxc1_dy,dxc1_dz,
+         xc2,dxc2_dx,dxc2_dy,dxc2_dz,
          R1,R2;
   
   dA_da = get_dA_da(q2_e,q1_e);
@@ -3973,8 +3973,8 @@ double JT_CS_OT_T2_back(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,co
       R2  = patch->CoordSysInfo->CubedSphericalCoord->R2;
       xc1 = S*R1/d1;
       xc2 = S*R2/d1;
-      dxc1_dx  = -R1*(X[0]*JT_CS_OT_T2_up(patch,_a_,_x_,p)+X[1]*JT_CS_OT_T2_up(patch,_b_,_x_,p))/d3;
-      dxc2_dx  = -R2*(X[0]*JT_CS_OT_T2_up(patch,_a_,_x_,p)+X[1]*JT_CS_OT_T2_up(patch,_b_,_x_,p))/d3;
+      dxc1_dx  = -R1*(X[0]*JT_OT_T2_CS_up(patch,_a_,_x_,p)+X[1]*JT_OT_T2_CS_up(patch,_b_,_x_,p))/d3;
+      dxc2_dx  = -R2*(X[0]*JT_OT_T2_CS_up(patch,_a_,_x_,p)+X[1]*JT_OT_T2_CS_up(patch,_b_,_x_,p))/d3;
       dxc1_dx *= S;
       dxc2_dx *= S;
       J = (K[k==l]-dxc1_dx -(x[k]-xc1)*(dxc2_dx-dxc1_dx)/(xc2-xc1))/(xc2-xc1);
@@ -3988,8 +3988,8 @@ double JT_CS_OT_T2_back(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,co
       R2  = patch->CoordSysInfo->CubedSphericalCoord->R2;
       xc1 = S*R1/d1;
       xc2 = S*R2/d1;
-      dxc1_dy  = -R1*(X[0]*JT_CS_OT_T2_up(patch,_a_,_y_,p)+X[1]*JT_CS_OT_T2_up(patch,_b_,_y_,p))/d3;
-      dxc2_dy  = -R2*(X[0]*JT_CS_OT_T2_up(patch,_a_,_y_,p)+X[1]*JT_CS_OT_T2_up(patch,_b_,_y_,p))/d3;
+      dxc1_dy  = -R1*(X[0]*JT_OT_T2_CS_up(patch,_a_,_y_,p)+X[1]*JT_OT_T2_CS_up(patch,_b_,_y_,p))/d3;
+      dxc2_dy  = -R2*(X[0]*JT_OT_T2_CS_up(patch,_a_,_y_,p)+X[1]*JT_OT_T2_CS_up(patch,_b_,_y_,p))/d3;
       dxc1_dy *= S;
       dxc2_dy *= S;
       J = (K[k==l]-dxc1_dy -(x[k]-xc1)*(dxc2_dy-dxc1_dy)/(xc2-xc1))/(xc2-xc1);
@@ -4003,8 +4003,8 @@ double JT_CS_OT_T2_back(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,co
       R2  = patch->CoordSysInfo->CubedSphericalCoord->R2;
       xc1 = S*R1/d1;
       xc2 = S*R2/d1;
-      dxc1_dz  = -R1*(X[0]*JT_CS_OT_T2_up(patch,_a_,_z_,p)+X[1]*JT_CS_OT_T2_up(patch,_b_,_z_,p))/d3;
-      dxc2_dz  = -R2*(X[0]*JT_CS_OT_T2_up(patch,_a_,_z_,p)+X[1]*JT_CS_OT_T2_up(patch,_b_,_z_,p))/d3;
+      dxc1_dz  = -R1*(X[0]*JT_OT_T2_CS_up(patch,_a_,_z_,p)+X[1]*JT_OT_T2_CS_up(patch,_b_,_z_,p))/d3;
+      dxc2_dz  = -R2*(X[0]*JT_OT_T2_CS_up(patch,_a_,_z_,p)+X[1]*JT_OT_T2_CS_up(patch,_b_,_z_,p))/d3;
       dxc1_dz *= S;
       dxc2_dz *= S;
       J = (K[k==l]-dxc1_dz -(x[k]-xc1)*(dxc2_dz-dxc1_dz)/(xc2-xc1))/(xc2-xc1);
@@ -4016,11 +4016,11 @@ double JT_CS_OT_T2_back(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,co
   return J;
 }
 
-/* Jacobian transformation for cubed spherical patch.type : CS_OT_T2_front
+/* Jacobian transformation for cubed spherical patch.type : OT_T2_CS_front
 // convention:
 // _a_ = X, _b_ = Y, _c_ = Z
 // ->return value: dq2/dq1 */
-double JT_CS_OT_T2_front(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const unsigned p)
+double JT_OT_T2_CS_front(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const unsigned p)
 {
   /* ds/ds = 1 */
   if (q2_e == q1_e)
@@ -4038,9 +4038,9 @@ double JT_CS_OT_T2_front(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,c
   const double *const X = patch->node[p]->X;
   const unsigned *const n = patch->n;
   double d1,d3;
-  const unsigned l,a,b,c;
-  double xc1, dxc1_dx,dxc1_dy,dxc1_dz
-         xc2, dxc2_dx,dxc2_dy,dxc2_dz,
+  unsigned l,a,b,c;
+  double xc1,dxc1_dx,dxc1_dy,dxc1_dz,
+         xc2,dxc2_dx,dxc2_dy,dxc2_dz,
          R1,R2;
   
   dA_da = get_dA_da(q2_e,q1_e);
@@ -4079,8 +4079,8 @@ double JT_CS_OT_T2_front(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,c
       R2  = patch->CoordSysInfo->CubedSphericalCoord->R2;
       xc1 = S*R1/d1;
       xc2 = S*R2/d1;
-      dxc1_dx  = -R1*(X[0]*JT_CS_OT_T2_up(patch,_a_,_x_,p)+X[1]*JT_CS_OT_T2_up(patch,_b_,_x_,p))/d3;
-      dxc2_dx  = -R2*(X[0]*JT_CS_OT_T2_up(patch,_a_,_x_,p)+X[1]*JT_CS_OT_T2_up(patch,_b_,_x_,p))/d3;
+      dxc1_dx  = -R1*(X[0]*JT_OT_T2_CS_up(patch,_a_,_x_,p)+X[1]*JT_OT_T2_CS_up(patch,_b_,_x_,p))/d3;
+      dxc2_dx  = -R2*(X[0]*JT_OT_T2_CS_up(patch,_a_,_x_,p)+X[1]*JT_OT_T2_CS_up(patch,_b_,_x_,p))/d3;
       dxc1_dx *= S;
       dxc2_dx *= S;
       J = (K[k==l]-dxc1_dx -(x[k]-xc1)*(dxc2_dx-dxc1_dx)/(xc2-xc1))/(xc2-xc1);
@@ -4094,8 +4094,8 @@ double JT_CS_OT_T2_front(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,c
       R2  = patch->CoordSysInfo->CubedSphericalCoord->R2;
       xc1 = S*R1/d1;
       xc2 = S*R2/d1;
-      dxc1_dy  = -R1*(X[0]*JT_CS_OT_T2_up(patch,_a_,_y_,p)+X[1]*JT_CS_OT_T2_up(patch,_b_,_y_,p))/d3;
-      dxc2_dy  = -R2*(X[0]*JT_CS_OT_T2_up(patch,_a_,_y_,p)+X[1]*JT_CS_OT_T2_up(patch,_b_,_y_,p))/d3;
+      dxc1_dy  = -R1*(X[0]*JT_OT_T2_CS_up(patch,_a_,_y_,p)+X[1]*JT_OT_T2_CS_up(patch,_b_,_y_,p))/d3;
+      dxc2_dy  = -R2*(X[0]*JT_OT_T2_CS_up(patch,_a_,_y_,p)+X[1]*JT_OT_T2_CS_up(patch,_b_,_y_,p))/d3;
       dxc1_dy *= S;
       dxc2_dy *= S;
       J = (K[k==l]-dxc1_dy -(x[k]-xc1)*(dxc2_dy-dxc1_dy)/(xc2-xc1))/(xc2-xc1);
@@ -4109,8 +4109,8 @@ double JT_CS_OT_T2_front(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,c
       R2  = patch->CoordSysInfo->CubedSphericalCoord->R2;
       xc1 = S*R1/d1;
       xc2 = S*R2/d1;
-      dxc1_dz  = -R1*(X[0]*JT_CS_OT_T2_up(patch,_a_,_z_,p)+X[1]*JT_CS_OT_T2_up(patch,_b_,_z_,p))/d3;
-      dxc2_dz  = -R2*(X[0]*JT_CS_OT_T2_up(patch,_a_,_z_,p)+X[1]*JT_CS_OT_T2_up(patch,_b_,_z_,p))/d3;
+      dxc1_dz  = -R1*(X[0]*JT_OT_T2_CS_up(patch,_a_,_z_,p)+X[1]*JT_OT_T2_CS_up(patch,_b_,_z_,p))/d3;
+      dxc2_dz  = -R2*(X[0]*JT_OT_T2_CS_up(patch,_a_,_z_,p)+X[1]*JT_OT_T2_CS_up(patch,_b_,_z_,p))/d3;
       dxc1_dz *= S;
       dxc2_dz *= S;
       J = (K[k==l]-dxc1_dz -(x[k]-xc1)*(dxc2_dz-dxc1_dz)/(xc2-xc1))/(xc2-xc1);
@@ -4171,7 +4171,7 @@ void SignAndIndex_permutation_CubedSphere(const Flag_T side,unsigned *const a,un
 ///////////////////////////NS_T/////////////////////////////////////
 
 /* return value-> dN0_dx for CubedSpherical */
-double dN0_dx_CS_NS_T_up(Patch_T *const patch,const double *const X)
+double dN0_dx_NS_T_CS_up(Patch_T *const patch,const double *const X)
 {
   return dNi_dxj_CubedSpherical(patch,_N0_,_x_,X,UP,NS_T_CS);
 }
@@ -4459,7 +4459,7 @@ double dN2_dz_NS_T_CS_front(Patch_T *const patch,const double *const X)
 ///////////////////////////SR_T/////////////////////////////////////
 
 /* return value-> dN0_dx for CubedSpherical */
-double dN0_dx_CS_SR_T_up(Patch_T *const patch,const double *const X)
+double dN0_dx_SR_T_CS_up(Patch_T *const patch,const double *const X)
 {
   return dNi_dxj_CubedSpherical(patch,_N0_,_x_,X,UP,SR_T_CS);
 }
@@ -4748,47 +4748,47 @@ double dN2_dz_SR_T_CS_front(Patch_T *const patch,const double *const X)
 ///////////////////////////OT_T1/////////////////////////////////////
 
 /* return value-> dN0_dx for CubedSpherical */
-double dN0_dx_CS_OT_T1_up(Patch_T *const patch,const double *const X)
+double dN0_dx_OT_T1_CS_up(Patch_T *const patch,const double *const X)
 {
   return dNi_dxj_CubedSpherical(patch,_N0_,_x_,X,UP,OT_T1_CS);
 }
 /* return value-> dN0_dy for CubedSpherical */
-double dN0_dy_CS_OT_T1_up(Patch_T *const patch,const double *const X)
+double dN0_dy_OT_T1_CS_up(Patch_T *const patch,const double *const X)
 {
   return dNi_dxj_CubedSpherical(patch,_N0_,_y_,X,UP,OT_T1_CS);
 }
 /* return value-> dN0_dz for CubedSpherical */
-double dN0_dz_CS_OT_T1_up(Patch_T *const patch,const double *const X)
+double dN0_dz_OT_T1_CS_up(Patch_T *const patch,const double *const X)
 {
   return dNi_dxj_CubedSpherical(patch,_N0_,_z_,X,UP,OT_T1_CS);
 }
 /* return value-> dN1_dx for CubedSpherical */
-double dN1_dx_CS_OT_T1_up(Patch_T *const patch,const double *const X)
+double dN1_dx_OT_T1_CS_up(Patch_T *const patch,const double *const X)
 {
   return dNi_dxj_CubedSpherical(patch,_N1_,_x_,X,UP,OT_T1_CS);
 }
 /* return value-> dN1_dy for CubedSpherical */
-double dN1_dy_CS_OT_T1_up(Patch_T *const patch,const double *const X)
+double dN1_dy_OT_T1_CS_up(Patch_T *const patch,const double *const X)
 {
   return dNi_dxj_CubedSpherical(patch,_N1_,_y_,X,UP,OT_T1_CS);
 }
 /* return value-> dN1_dz for CubedSpherical */
-double dN1_dz_CS_OT_T1_up(Patch_T *const patch,const double *const X)
+double dN1_dz_OT_T1_CS_up(Patch_T *const patch,const double *const X)
 {
   return dNi_dxj_CubedSpherical(patch,_N1_,_z_,X,UP,OT_T1_CS);
 }
 /* return value-> dN2_dx for CubedSpherical */
-double dN2_dx_CS_OT_T1_up(Patch_T *const patch,const double *const X)
+double dN2_dx_OT_T1_CS_up(Patch_T *const patch,const double *const X)
 {
   return dNi_dxj_CubedSpherical(patch,_N2_,_x_,X,UP,OT_T1_CS);
 }
 /* return value-> dN2_dy for CubedSpherical */
-double dN2_dy_CS_OT_T1_up(Patch_T *const patch,const double *const X)
+double dN2_dy_OT_T1_CS_up(Patch_T *const patch,const double *const X)
 {
   return dNi_dxj_CubedSpherical(patch,_N2_,_y_,X,UP,OT_T1_CS);
 }
 /* return value-> dN2_dz for CubedSpherical */
-double dN2_dz_CS_OT_T1_up(Patch_T *const patch,const double *const X)
+double dN2_dz_OT_T1_CS_up(Patch_T *const patch,const double *const X)
 {
   return dNi_dxj_CubedSpherical(patch,_N2_,_z_,X,UP,OT_T1_CS);
 }
@@ -4796,48 +4796,48 @@ double dN2_dz_CS_OT_T1_up(Patch_T *const patch,const double *const X)
 /////////////////////////////////////////////////////////////////////
 
 /* return value-> dN0_dx for CubedSpherical */
-double dN0_dx_CS_OT_T1_down(Patch_T *const patch,const double *const X)
+double dN0_dx_OT_T1_CS_down(Patch_T *const patch,const double *const X)
 {
   return dNi_dxj_CubedSpherical(patch,_N0_,_x_,X,DOWN,OT_T1_CS);
 }
 
 /* return value-> dN0_dy for CubedSpherical */
-double dN0_dy_CS_OT_T1_down(Patch_T *const patch,const double *const X)
+double dN0_dy_OT_T1_CS_down(Patch_T *const patch,const double *const X)
 {
   return dNi_dxj_CubedSpherical(patch,_N0_,_y_,X,DOWN,OT_T1_CS);
 }
 /* return value-> dN0_dz for CubedSpherical */
-double dN0_dz_CS_OT_T1_down(Patch_T *const patch,const double *const X)
+double dN0_dz_OT_T1_CS_down(Patch_T *const patch,const double *const X)
 {
   return dNi_dxj_CubedSpherical(patch,_N0_,_z_,X,DOWN,OT_T1_CS);
 }
 /* return value-> dN1_dx for CubedSpherical */
-double dN1_dx_CS_OT_T1_down(Patch_T *const patch,const double *const X)
+double dN1_dx_OT_T1_CS_down(Patch_T *const patch,const double *const X)
 {
   return dNi_dxj_CubedSpherical(patch,_N1_,_x_,X,DOWN,OT_T1_CS);
 }
 /* return value-> dN1_dy for CubedSpherical */
-double dN1_dy_CS_OT_T1_down(Patch_T *const patch,const double *const X)
+double dN1_dy_OT_T1_CS_down(Patch_T *const patch,const double *const X)
 {
   return dNi_dxj_CubedSpherical(patch,_N1_,_y_,X,DOWN,OT_T1_CS);
 }
 /* return value-> dN1_dz for CubedSpherical */
-double dN1_dz_CS_OT_T1_down(Patch_T *const patch,const double *const X)
+double dN1_dz_OT_T1_CS_down(Patch_T *const patch,const double *const X)
 {
   return dNi_dxj_CubedSpherical(patch,_N1_,_z_,X,DOWN,OT_T1_CS);
 }
 /* return value-> dN2_dx for CubedSpherical */
-double dN2_dx_CS_OT_T1_down(Patch_T *const patch,const double *const X)
+double dN2_dx_OT_T1_CS_down(Patch_T *const patch,const double *const X)
 {
   return dNi_dxj_CubedSpherical(patch,_N2_,_x_,X,DOWN,OT_T1_CS);
 }
 /* return value-> dN2_dy for CubedSpherical */
-double dN2_dy_CS_OT_T1_down(Patch_T *const patch,const double *const X)
+double dN2_dy_OT_T1_CS_down(Patch_T *const patch,const double *const X)
 {
   return dNi_dxj_CubedSpherical(patch,_N2_,_y_,X,DOWN,OT_T1_CS);
 }
 /* return value-> dN2_dz for CubedSpherical */
-double dN2_dz_CS_OT_T1_down(Patch_T *const patch,const double *const X)
+double dN2_dz_OT_T1_CS_down(Patch_T *const patch,const double *const X)
 {
   return dNi_dxj_CubedSpherical(patch,_N2_,_z_,X,DOWN,OT_T1_CS);
 }
@@ -4845,48 +4845,48 @@ double dN2_dz_CS_OT_T1_down(Patch_T *const patch,const double *const X)
 //////////////////////////////////////////////////////////////////////
 
 /* return value-> dN0_dx for CubedSpherical */
-double dN0_dx_CS_OT_T1_left(Patch_T *const patch,const double *const X)
+double dN0_dx_OT_T1_CS_left(Patch_T *const patch,const double *const X)
 {
   return dNi_dxj_CubedSpherical(patch,_N0_,_x_,X,LEFT,OT_T1_CS);
 }
 
 /* return value-> dN0_dy for CubedSpherical */
-double dN0_dy_CS_OT_T1_left(Patch_T *const patch,const double *const X)
+double dN0_dy_OT_T1_CS_left(Patch_T *const patch,const double *const X)
 {
   return dNi_dxj_CubedSpherical(patch,_N0_,_y_,X,LEFT,OT_T1_CS);
 }
 /* return value-> dN0_dz for CubedSpherical */
-double dN0_dz_CS_OT_T1_left(Patch_T *const patch,const double *const X)
+double dN0_dz_OT_T1_CS_left(Patch_T *const patch,const double *const X)
 {
   return dNi_dxj_CubedSpherical(patch,_N0_,_z_,X,LEFT,OT_T1_CS);
 }
 /* return value-> dN1_dx for CubedSpherical */
-double dN1_dx_CS_OT_T1_left(Patch_T *const patch,const double *const X)
+double dN1_dx_OT_T1_CS_left(Patch_T *const patch,const double *const X)
 {
   return dNi_dxj_CubedSpherical(patch,_N1_,_x_,X,LEFT,OT_T1_CS);
 }
 /* return value-> dN1_dy for CubedSpherical */
-double dN1_dy_CS_OT_T1_left(Patch_T *const patch,const double *const X)
+double dN1_dy_OT_T1_CS_left(Patch_T *const patch,const double *const X)
 {
   return dNi_dxj_CubedSpherical(patch,_N1_,_y_,X,LEFT,OT_T1_CS);
 }
 /* return value-> dN1_dz for CubedSpherical */
-double dN1_dz_CS_OT_T1_left(Patch_T *const patch,const double *const X)
+double dN1_dz_OT_T1_CS_left(Patch_T *const patch,const double *const X)
 {
   return dNi_dxj_CubedSpherical(patch,_N1_,_z_,X,LEFT,OT_T1_CS);
 }
 /* return value-> dN2_dx for CubedSpherical */
-double dN2_dx_CS_OT_T1_left(Patch_T *const patch,const double *const X)
+double dN2_dx_OT_T1_CS_left(Patch_T *const patch,const double *const X)
 {
   return dNi_dxj_CubedSpherical(patch,_N2_,_x_,X,LEFT,OT_T1_CS);
 }
 /* return value-> dN2_dy for CubedSpherical */
-double dN2_dy_CS_OT_T1_left(Patch_T *const patch,const double *const X)
+double dN2_dy_OT_T1_CS_left(Patch_T *const patch,const double *const X)
 {
   return dNi_dxj_CubedSpherical(patch,_N2_,_y_,X,LEFT,OT_T1_CS);
 }
 /* return value-> dN2_dz for CubedSpherical */
-double dN2_dz_CS_OT_T1_left(Patch_T *const patch,const double *const X)
+double dN2_dz_OT_T1_CS_left(Patch_T *const patch,const double *const X)
 {
   return dNi_dxj_CubedSpherical(patch,_N2_,_z_,X,LEFT,OT_T1_CS);
 }
@@ -4894,48 +4894,48 @@ double dN2_dz_CS_OT_T1_left(Patch_T *const patch,const double *const X)
 ///////////////////////////////////////////////////////////////////////
 
 /* return value-> dN0_dx for CubedSpherical */
-double dN0_dx_CS_OT_T1_right(Patch_T *const patch,const double *const X)
+double dN0_dx_OT_T1_CS_right(Patch_T *const patch,const double *const X)
 {
   return dNi_dxj_CubedSpherical(patch,_N0_,_x_,X,RIGHT,OT_T1_CS);
 }
 
 /* return value-> dN0_dy for CubedSpherical */
-double dN0_dy_CS_OT_T1_right(Patch_T *const patch,const double *const X)
+double dN0_dy_OT_T1_CS_right(Patch_T *const patch,const double *const X)
 {
   return dNi_dxj_CubedSpherical(patch,_N0_,_y_,X,RIGHT,OT_T1_CS);
 }
 /* return value-> dN0_dz for CubedSpherical */
-double dN0_dz_CS_OT_T1_right(Patch_T *const patch,const double *const X)
+double dN0_dz_OT_T1_CS_right(Patch_T *const patch,const double *const X)
 {
   return dNi_dxj_CubedSpherical(patch,_N0_,_z_,X,RIGHT,OT_T1_CS);
 }
 /* return value-> dN1_dx for CubedSpherical */
-double dN1_dx_CS_OT_T1_right(Patch_T *const patch,const double *const X)
+double dN1_dx_OT_T1_CS_right(Patch_T *const patch,const double *const X)
 {
   return dNi_dxj_CubedSpherical(patch,_N1_,_x_,X,RIGHT,OT_T1_CS);
 }
 /* return value-> dN1_dy for CubedSpherical */
-double dN1_dy_CS_OT_T1_right(Patch_T *const patch,const double *const X)
+double dN1_dy_OT_T1_CS_right(Patch_T *const patch,const double *const X)
 {
   return dNi_dxj_CubedSpherical(patch,_N1_,_y_,X,RIGHT,OT_T1_CS);
 }
 /* return value-> dN1_dz for CubedSpherical */
-double dN1_dz_CS_OT_T1_right(Patch_T *const patch,const double *const X)
+double dN1_dz_OT_T1_CS_right(Patch_T *const patch,const double *const X)
 {
   return dNi_dxj_CubedSpherical(patch,_N1_,_z_,X,RIGHT,OT_T1_CS);
 }
 /* return value-> dN2_dx for CubedSpherical */
-double dN2_dx_CS_OT_T1_right(Patch_T *const patch,const double *const X)
+double dN2_dx_OT_T1_CS_right(Patch_T *const patch,const double *const X)
 {
   return dNi_dxj_CubedSpherical(patch,_N2_,_x_,X,RIGHT,OT_T1_CS);
 }
 /* return value-> dN2_dy for CubedSpherical */
-double dN2_dy_CS_OT_T1_right(Patch_T *const patch,const double *const X)
+double dN2_dy_OT_T1_CS_right(Patch_T *const patch,const double *const X)
 {
   return dNi_dxj_CubedSpherical(patch,_N2_,_y_,X,RIGHT,OT_T1_CS);
 }
 /* return value-> dN2_dz for CubedSpherical */
-double dN2_dz_CS_OT_T1_right(Patch_T *const patch,const double *const X)
+double dN2_dz_OT_T1_CS_right(Patch_T *const patch,const double *const X)
 {
   return dNi_dxj_CubedSpherical(patch,_N2_,_z_,X,RIGHT,OT_T1_CS);
 }
@@ -4943,47 +4943,47 @@ double dN2_dz_CS_OT_T1_right(Patch_T *const patch,const double *const X)
 ///////////////////////////////////////////////////////////////////////
 
 /* return value-> dN0_dx for CubedSpherical */
-double dN0_dx_CS_OT_T1_back(Patch_T *const patch,const double *const X)
+double dN0_dx_OT_T1_CS_back(Patch_T *const patch,const double *const X)
 {
   return dNi_dxj_CubedSpherical(patch,_N0_,_x_,X,BACK,OT_T1_CS);
 }
 /* return value-> dN0_dy for CubedSpherical */
-double dN0_dy_CS_OT_T1_back(Patch_T *const patch,const double *const X)
+double dN0_dy_OT_T1_CS_back(Patch_T *const patch,const double *const X)
 {
   return dNi_dxj_CubedSpherical(patch,_N0_,_y_,X,BACK,OT_T1_CS);
 }
 /* return value-> dN0_dz for CubedSpherical */
-double dN0_dz_CS_OT_T1_back(Patch_T *const patch,const double *const X)
+double dN0_dz_OT_T1_CS_back(Patch_T *const patch,const double *const X)
 {
   return dNi_dxj_CubedSpherical(patch,_N0_,_z_,X,BACK,OT_T1_CS);
 }
 /* return value-> dN1_dx for CubedSpherical */
-double dN1_dx_CS_OT_T1_back(Patch_T *const patch,const double *const X)
+double dN1_dx_OT_T1_CS_back(Patch_T *const patch,const double *const X)
 {
   return dNi_dxj_CubedSpherical(patch,_N1_,_x_,X,BACK,OT_T1_CS);
 }
 /* return value-> dN1_dy for CubedSpherical */
-double dN1_dy_CS_OT_T1_back(Patch_T *const patch,const double *const X)
+double dN1_dy_OT_T1_CS_back(Patch_T *const patch,const double *const X)
 {
   return dNi_dxj_CubedSpherical(patch,_N1_,_y_,X,BACK,OT_T1_CS);
 }
 /* return value-> dN1_dz for CubedSpherical */
-double dN1_dz_CS_OT_T1_back(Patch_T *const patch,const double *const X)
+double dN1_dz_OT_T1_CS_back(Patch_T *const patch,const double *const X)
 {
   return dNi_dxj_CubedSpherical(patch,_N1_,_z_,X,BACK,OT_T1_CS);
 }
 /* return value-> dN2_dx for CubedSpherical */
-double dN2_dx_CS_OT_T1_back(Patch_T *const patch,const double *const X)
+double dN2_dx_OT_T1_CS_back(Patch_T *const patch,const double *const X)
 {
   return dNi_dxj_CubedSpherical(patch,_N2_,_x_,X,BACK,OT_T1_CS);
 }
 /* return value-> dN2_dy for CubedSpherical */
-double dN2_dy_CS_OT_T1_back(Patch_T *const patch,const double *const X)
+double dN2_dy_OT_T1_CS_back(Patch_T *const patch,const double *const X)
 {
   return dNi_dxj_CubedSpherical(patch,_N2_,_y_,X,BACK,OT_T1_CS);
 }
 /* return value-> dN2_dz for CubedSpherical */
-double dN2_dz_CS_OT_T1_back(Patch_T *const patch,const double *const X)
+double dN2_dz_OT_T1_CS_back(Patch_T *const patch,const double *const X)
 {
   return dNi_dxj_CubedSpherical(patch,_N2_,_z_,X,BACK,OT_T1_CS);
 }
@@ -4991,48 +4991,48 @@ double dN2_dz_CS_OT_T1_back(Patch_T *const patch,const double *const X)
 ////////////////////////////////////////////////////////////////////////
 
 /* return value-> dN0_dx for CubedSpherical */
-double dN0_dx_CS_OT_T1_front(Patch_T *const patch,const double *const X)
+double dN0_dx_OT_T1_CS_front(Patch_T *const patch,const double *const X)
 {
   return dNi_dxj_CubedSpherical(patch,_N0_,_x_,X,FRONT,OT_T1_CS);
 }
 
 /* return value-> dN0_dy for CubedSpherical */
-double dN0_dy_CS_OT_T1_front(Patch_T *const patch,const double *const X)
+double dN0_dy_OT_T1_CS_front(Patch_T *const patch,const double *const X)
 {
   return dNi_dxj_CubedSpherical(patch,_N0_,_y_,X,FRONT,OT_T1_CS);
 }
 /* return value-> dN0_dz for CubedSpherical */
-double dN0_dz_CS_OT_T1_front(Patch_T *const patch,const double *const X)
+double dN0_dz_OT_T1_CS_front(Patch_T *const patch,const double *const X)
 {
   return dNi_dxj_CubedSpherical(patch,_N0_,_z_,X,FRONT,OT_T1_CS);
 }
 /* return value-> dN1_dx for CubedSpherical */
-double dN1_dx_CS_OT_T1_front(Patch_T *const patch,const double *const X)
+double dN1_dx_OT_T1_CS_front(Patch_T *const patch,const double *const X)
 {
   return dNi_dxj_CubedSpherical(patch,_N1_,_x_,X,FRONT,OT_T1_CS);
 }
 /* return value-> dN1_dy for CubedSpherical */
-double dN1_dy_CS_OT_T1_front(Patch_T *const patch,const double *const X)
+double dN1_dy_OT_T1_CS_front(Patch_T *const patch,const double *const X)
 {
   return dNi_dxj_CubedSpherical(patch,_N1_,_y_,X,FRONT,OT_T1_CS);
 }
 /* return value-> dN1_dz for CubedSpherical */
-double dN1_dz_CS_OT_T1_front(Patch_T *const patch,const double *const X)
+double dN1_dz_OT_T1_CS_front(Patch_T *const patch,const double *const X)
 {
   return dNi_dxj_CubedSpherical(patch,_N1_,_z_,X,FRONT,OT_T1_CS);
 }
 /* return value-> dN2_dx for CubedSpherical */
-double dN2_dx_CS_OT_T1_front(Patch_T *const patch,const double *const X)
+double dN2_dx_OT_T1_CS_front(Patch_T *const patch,const double *const X)
 {
   return dNi_dxj_CubedSpherical(patch,_N2_,_x_,X,FRONT,OT_T1_CS);
 }
 /* return value-> dN2_dy for CubedSpherical */
-double dN2_dy_CS_OT_T1_front(Patch_T *const patch,const double *const X)
+double dN2_dy_OT_T1_CS_front(Patch_T *const patch,const double *const X)
 {
   return dNi_dxj_CubedSpherical(patch,_N2_,_y_,X,FRONT,OT_T1_CS);
 }
 /* return value-> dN2_dz for CubedSpherical */
-double dN2_dz_CS_OT_T1_front(Patch_T *const patch,const double *const X)
+double dN2_dz_OT_T1_CS_front(Patch_T *const patch,const double *const X)
 {
   return dNi_dxj_CubedSpherical(patch,_N2_,_z_,X,FRONT,OT_T1_CS);
 }
@@ -5040,47 +5040,47 @@ double dN2_dz_CS_OT_T1_front(Patch_T *const patch,const double *const X)
 ///////////////////////////OT_T2/////////////////////////////////////
 
 /* return value-> dN0_dx for CubedSpherical */
-double dN0_dx_CS_OT_T2_up(Patch_T *const patch,const double *const X)
+double dN0_dx_OT_T2_CS_up(Patch_T *const patch,const double *const X)
 {
   return dNi_dxj_CubedSpherical(patch,_N0_,_x_,X,UP,OT_T2_CS);
 }
 /* return value-> dN0_dy for CubedSpherical */
-double dN0_dy_CS_OT_T2_up(Patch_T *const patch,const double *const X)
+double dN0_dy_OT_T2_CS_up(Patch_T *const patch,const double *const X)
 {
   return dNi_dxj_CubedSpherical(patch,_N0_,_y_,X,UP,OT_T2_CS);
 }
 /* return value-> dN0_dz for CubedSpherical */
-double dN0_dz_CS_OT_T2_up(Patch_T *const patch,const double *const X)
+double dN0_dz_OT_T2_CS_up(Patch_T *const patch,const double *const X)
 {
   return dNi_dxj_CubedSpherical(patch,_N0_,_z_,X,UP,OT_T2_CS);
 }
 /* return value-> dN1_dx for CubedSpherical */
-double dN1_dx_CS_OT_T2_up(Patch_T *const patch,const double *const X)
+double dN1_dx_OT_T2_CS_up(Patch_T *const patch,const double *const X)
 {
   return dNi_dxj_CubedSpherical(patch,_N1_,_x_,X,UP,OT_T2_CS);
 }
 /* return value-> dN1_dy for CubedSpherical */
-double dN1_dy_CS_OT_T2_up(Patch_T *const patch,const double *const X)
+double dN1_dy_OT_T2_CS_up(Patch_T *const patch,const double *const X)
 {
   return dNi_dxj_CubedSpherical(patch,_N1_,_y_,X,UP,OT_T2_CS);
 }
 /* return value-> dN1_dz for CubedSpherical */
-double dN1_dz_CS_OT_T2_up(Patch_T *const patch,const double *const X)
+double dN1_dz_OT_T2_CS_up(Patch_T *const patch,const double *const X)
 {
   return dNi_dxj_CubedSpherical(patch,_N1_,_z_,X,UP,OT_T2_CS);
 }
 /* return value-> dN2_dx for CubedSpherical */
-double dN2_dx_CS_OT_T2_up(Patch_T *const patch,const double *const X)
+double dN2_dx_OT_T2_CS_up(Patch_T *const patch,const double *const X)
 {
   return dNi_dxj_CubedSpherical(patch,_N2_,_x_,X,UP,OT_T2_CS);
 }
 /* return value-> dN2_dy for CubedSpherical */
-double dN2_dy_CS_OT_T2_up(Patch_T *const patch,const double *const X)
+double dN2_dy_OT_T2_CS_up(Patch_T *const patch,const double *const X)
 {
   return dNi_dxj_CubedSpherical(patch,_N2_,_y_,X,UP,OT_T2_CS);
 }
 /* return value-> dN2_dz for CubedSpherical */
-double dN2_dz_CS_OT_T2_up(Patch_T *const patch,const double *const X)
+double dN2_dz_OT_T2_CS_up(Patch_T *const patch,const double *const X)
 {
   return dNi_dxj_CubedSpherical(patch,_N2_,_z_,X,UP,OT_T2_CS);
 }
@@ -5088,47 +5088,47 @@ double dN2_dz_CS_OT_T2_up(Patch_T *const patch,const double *const X)
 /////////////////////////////////////////////////////////////////////
 
 /* return value-> dN0_dx for CubedSpherical */
-double dN0_dx_CS_OT_T2_down(Patch_T *const patch,const double *const X)
+double dN0_dx_OT_T2_CS_down(Patch_T *const patch,const double *const X)
 {
   return dNi_dxj_CubedSpherical(patch,_N0_,_x_,X,DOWN,OT_T2_CS);
 }
 /* return value-> dN0_dy for CubedSpherical */
-double dN0_dy_CS_OT_T2_down(Patch_T *const patch,const double *const X)
+double dN0_dy_OT_T2_CS_down(Patch_T *const patch,const double *const X)
 {
   return dNi_dxj_CubedSpherical(patch,_N0_,_y_,X,DOWN,OT_T2_CS);
 }
 /* return value-> dN0_dz for CubedSpherical */
-double dN0_dz_CS_OT_T2_down(Patch_T *const patch,const double *const X)
+double dN0_dz_OT_T2_CS_down(Patch_T *const patch,const double *const X)
 {
   return dNi_dxj_CubedSpherical(patch,_N0_,_z_,X,DOWN,OT_T2_CS);
 }
 /* return value-> dN1_dx for CubedSpherical */
-double dN1_dx_CS_OT_T2_down(Patch_T *const patch,const double *const X)
+double dN1_dx_OT_T2_CS_down(Patch_T *const patch,const double *const X)
 {
   return dNi_dxj_CubedSpherical(patch,_N1_,_x_,X,DOWN,OT_T2_CS);
 }
 /* return value-> dN1_dy for CubedSpherical */
-double dN1_dy_CS_OT_T2_down(Patch_T *const patch,const double *const X)
+double dN1_dy_OT_T2_CS_down(Patch_T *const patch,const double *const X)
 {
   return dNi_dxj_CubedSpherical(patch,_N1_,_y_,X,DOWN,OT_T2_CS);
 }
 /* return value-> dN1_dz for CubedSpherical */
-double dN1_dz_CS_OT_T2_down(Patch_T *const patch,const double *const X)
+double dN1_dz_OT_T2_CS_down(Patch_T *const patch,const double *const X)
 {
   return dNi_dxj_CubedSpherical(patch,_N1_,_z_,X,DOWN,OT_T2_CS);
 }
 /* return value-> dN2_dx for CubedSpherical */
-double dN2_dx_CS_OT_T2_down(Patch_T *const patch,const double *const X)
+double dN2_dx_OT_T2_CS_down(Patch_T *const patch,const double *const X)
 {
   return dNi_dxj_CubedSpherical(patch,_N2_,_x_,X,DOWN,OT_T2_CS);
 }
 /* return value-> dN2_dy for CubedSpherical */
-double dN2_dy_CS_OT_T2_down(Patch_T *const patch,const double *const X)
+double dN2_dy_OT_T2_CS_down(Patch_T *const patch,const double *const X)
 {
   return dNi_dxj_CubedSpherical(patch,_N2_,_y_,X,DOWN,OT_T2_CS);
 }
 /* return value-> dN2_dz for CubedSpherical */
-double dN2_dz_CS_OT_T2_down(Patch_T *const patch,const double *const X)
+double dN2_dz_OT_T2_CS_down(Patch_T *const patch,const double *const X)
 {
   return dNi_dxj_CubedSpherical(patch,_N2_,_z_,X,DOWN,OT_T2_CS);
 }
@@ -5136,47 +5136,47 @@ double dN2_dz_CS_OT_T2_down(Patch_T *const patch,const double *const X)
 //////////////////////////////////////////////////////////////////////
 
 /* return value-> dN0_dx for CubedSpherical */
-double dN0_dx_CS_OT_T2_left(Patch_T *const patch,const double *const X)
+double dN0_dx_OT_T2_CS_left(Patch_T *const patch,const double *const X)
 {
   return dNi_dxj_CubedSpherical(patch,_N0_,_x_,X,LEFT,OT_T2_CS);
 }
 /* return value-> dN0_dy for CubedSpherical */
-double dN0_dy_CS_OT_T2_left(Patch_T *const patch,const double *const X)
+double dN0_dy_OT_T2_CS_left(Patch_T *const patch,const double *const X)
 {
   return dNi_dxj_CubedSpherical(patch,_N0_,_y_,X,LEFT,OT_T2_CS);
 }
 /* return value-> dN0_dz for CubedSpherical */
-double dN0_dz_CS_OT_T2_left(Patch_T *const patch,const double *const X)
+double dN0_dz_OT_T2_CS_left(Patch_T *const patch,const double *const X)
 {
   return dNi_dxj_CubedSpherical(patch,_N0_,_z_,X,LEFT,OT_T2_CS);
 }
 /* return value-> dN1_dx for CubedSpherical */
-double dN1_dx_CS_OT_T2_left(Patch_T *const patch,const double *const X)
+double dN1_dx_OT_T2_CS_left(Patch_T *const patch,const double *const X)
 {
   return dNi_dxj_CubedSpherical(patch,_N1_,_x_,X,LEFT,OT_T2_CS);
 }
 /* return value-> dN1_dy for CubedSpherical */
-double dN1_dy_CS_OT_T2_left(Patch_T *const patch,const double *const X)
+double dN1_dy_OT_T2_CS_left(Patch_T *const patch,const double *const X)
 {
   return dNi_dxj_CubedSpherical(patch,_N1_,_y_,X,LEFT,OT_T2_CS);
 }
 /* return value-> dN1_dz for CubedSpherical */
-double dN1_dz_CS_OT_T2_left(Patch_T *const patch,const double *const X)
+double dN1_dz_OT_T2_CS_left(Patch_T *const patch,const double *const X)
 {
   return dNi_dxj_CubedSpherical(patch,_N1_,_z_,X,LEFT,OT_T2_CS);
 }
 /* return value-> dN2_dx for CubedSpherical */
-double dN2_dx_CS_OT_T2_left(Patch_T *const patch,const double *const X)
+double dN2_dx_OT_T2_CS_left(Patch_T *const patch,const double *const X)
 {
   return dNi_dxj_CubedSpherical(patch,_N2_,_x_,X,LEFT,OT_T2_CS);
 }
 /* return value-> dN2_dy for CubedSpherical */
-double dN2_dy_CS_OT_T2_left(Patch_T *const patch,const double *const X)
+double dN2_dy_OT_T2_CS_left(Patch_T *const patch,const double *const X)
 {
   return dNi_dxj_CubedSpherical(patch,_N2_,_y_,X,LEFT,OT_T2_CS);
 }
 /* return value-> dN2_dz for CubedSpherical */
-double dN2_dz_CS_OT_T2_left(Patch_T *const patch,const double *const X)
+double dN2_dz_OT_T2_CS_left(Patch_T *const patch,const double *const X)
 {
   return dNi_dxj_CubedSpherical(patch,_N2_,_z_,X,LEFT,OT_T2_CS);
 }
@@ -5184,48 +5184,48 @@ double dN2_dz_CS_OT_T2_left(Patch_T *const patch,const double *const X)
 ///////////////////////////////////////////////////////////////////////
 
 /* return value-> dN0_dx for CubedSpherical */
-double dN0_dx_CS_OT_T2_right(Patch_T *const patch,const double *const X)
+double dN0_dx_OT_T2_CS_right(Patch_T *const patch,const double *const X)
 {
   return dNi_dxj_CubedSpherical(patch,_N0_,_x_,X,RIGHT,OT_T2_CS);
 }
 
 /* return value-> dN0_dy for CubedSpherical */
-double dN0_dy_CS_OT_T2_right(Patch_T *const patch,const double *const X)
+double dN0_dy_OT_T2_CS_right(Patch_T *const patch,const double *const X)
 {
   return dNi_dxj_CubedSpherical(patch,_N0_,_y_,X,RIGHT,OT_T2_CS);
 }
 /* return value-> dN0_dz for CubedSpherical */
-double dN0_dz_CS_OT_T2_right(Patch_T *const patch,const double *const X)
+double dN0_dz_OT_T2_CS_right(Patch_T *const patch,const double *const X)
 {
   return dNi_dxj_CubedSpherical(patch,_N0_,_z_,X,RIGHT,OT_T2_CS);
 }
 /* return value-> dN1_dx for CubedSpherical */
-double dN1_dx_CS_OT_T2_right(Patch_T *const patch,const double *const X)
+double dN1_dx_OT_T2_CS_right(Patch_T *const patch,const double *const X)
 {
   return dNi_dxj_CubedSpherical(patch,_N1_,_x_,X,RIGHT,OT_T2_CS);
 }
 /* return value-> dN1_dy for CubedSpherical */
-double dN1_dy_CS_OT_T2_right(Patch_T *const patch,const double *const X)
+double dN1_dy_OT_T2_CS_right(Patch_T *const patch,const double *const X)
 {
   return dNi_dxj_CubedSpherical(patch,_N1_,_y_,X,RIGHT,OT_T2_CS);
 }
 /* return value-> dN1_dz for CubedSpherical */
-double dN1_dz_CS_OT_T2_right(Patch_T *const patch,const double *const X)
+double dN1_dz_OT_T2_CS_right(Patch_T *const patch,const double *const X)
 {
   return dNi_dxj_CubedSpherical(patch,_N1_,_z_,X,RIGHT,OT_T2_CS);
 }
 /* return value-> dN2_dx for CubedSpherical */
-double dN2_dx_CS_OT_T2_right(Patch_T *const patch,const double *const X)
+double dN2_dx_OT_T2_CS_right(Patch_T *const patch,const double *const X)
 {
   return dNi_dxj_CubedSpherical(patch,_N2_,_x_,X,RIGHT,OT_T2_CS);
 }
 /* return value-> dN2_dy for CubedSpherical */
-double dN2_dy_CS_OT_T2_right(Patch_T *const patch,const double *const X)
+double dN2_dy_OT_T2_CS_right(Patch_T *const patch,const double *const X)
 {
   return dNi_dxj_CubedSpherical(patch,_N2_,_y_,X,RIGHT,OT_T2_CS);
 }
 /* return value-> dN2_dz for CubedSpherical */
-double dN2_dz_CS_OT_T2_right(Patch_T *const patch,const double *const X)
+double dN2_dz_OT_T2_CS_right(Patch_T *const patch,const double *const X)
 {
   return dNi_dxj_CubedSpherical(patch,_N2_,_z_,X,RIGHT,OT_T2_CS);
 }
@@ -5233,47 +5233,47 @@ double dN2_dz_CS_OT_T2_right(Patch_T *const patch,const double *const X)
 ///////////////////////////////////////////////////////////////////////
 
 /* return value-> dN0_dx for CubedSpherical */
-double dN0_dx_CS_OT_T2_back(Patch_T *const patch,const double *const X)
+double dN0_dx_OT_T2_CS_back(Patch_T *const patch,const double *const X)
 {
   return dNi_dxj_CubedSpherical(patch,_N0_,_x_,X,BACK,OT_T2_CS);
 }
 /* return value-> dN0_dy for CubedSpherical */
-double dN0_dy_CS_OT_T2_back(Patch_T *const patch,const double *const X)
+double dN0_dy_OT_T2_CS_back(Patch_T *const patch,const double *const X)
 {
   return dNi_dxj_CubedSpherical(patch,_N0_,_y_,X,BACK,OT_T2_CS);
 }
 /* return value-> dN0_dz for CubedSpherical */
-double dN0_dz_CS_OT_T2_back(Patch_T *const patch,const double *const X)
+double dN0_dz_OT_T2_CS_back(Patch_T *const patch,const double *const X)
 {
   return dNi_dxj_CubedSpherical(patch,_N0_,_z_,X,BACK,OT_T2_CS);
 }
 /* return value-> dN1_dx for CubedSpherical */
-double dN1_dx_CS_OT_T2_back(Patch_T *const patch,const double *const X)
+double dN1_dx_OT_T2_CS_back(Patch_T *const patch,const double *const X)
 {
   return dNi_dxj_CubedSpherical(patch,_N1_,_x_,X,BACK,OT_T2_CS);
 }
 /* return value-> dN1_dy for CubedSpherical */
-double dN1_dy_CS_OT_T2_back(Patch_T *const patch,const double *const X)
+double dN1_dy_OT_T2_CS_back(Patch_T *const patch,const double *const X)
 {
   return dNi_dxj_CubedSpherical(patch,_N1_,_y_,X,BACK,OT_T2_CS);
 }
 /* return value-> dN1_dz for CubedSpherical */
-double dN1_dz_CS_OT_T2_back(Patch_T *const patch,const double *const X)
+double dN1_dz_OT_T2_CS_back(Patch_T *const patch,const double *const X)
 {
   return dNi_dxj_CubedSpherical(patch,_N1_,_z_,X,BACK,OT_T2_CS);
 }
 /* return value-> dN2_dx for CubedSpherical */
-double dN2_dx_CS_OT_T2_back(Patch_T *const patch,const double *const X)
+double dN2_dx_OT_T2_CS_back(Patch_T *const patch,const double *const X)
 {
   return dNi_dxj_CubedSpherical(patch,_N2_,_x_,X,BACK,OT_T2_CS);
 }
 /* return value-> dN2_dy for CubedSpherical */
-double dN2_dy_CS_OT_T2_back(Patch_T *const patch,const double *const X)
+double dN2_dy_OT_T2_CS_back(Patch_T *const patch,const double *const X)
 {
   return dNi_dxj_CubedSpherical(patch,_N2_,_y_,X,BACK,OT_T2_CS);
 }
 /* return value-> dN2_dz for CubedSpherical */
-double dN2_dz_CS_OT_T2_back(Patch_T *const patch,const double *const X)
+double dN2_dz_OT_T2_CS_back(Patch_T *const patch,const double *const X)
 {
   return dNi_dxj_CubedSpherical(patch,_N2_,_z_,X,BACK,OT_T2_CS);
 }
@@ -5281,47 +5281,47 @@ double dN2_dz_CS_OT_T2_back(Patch_T *const patch,const double *const X)
 ////////////////////////////////////////////////////////////////////////
 
 /* return value-> dN0_dx for CubedSpherical */
-double dN0_dx_CS_OT_T2_front(Patch_T *const patch,const double *const X)
+double dN0_dx_OT_T2_CS_front(Patch_T *const patch,const double *const X)
 {
   return dNi_dxj_CubedSpherical(patch,_N0_,_x_,X,FRONT,OT_T2_CS);
 }
 /* return value-> dN0_dy for CubedSpherical */
-double dN0_dy_CS_OT_T2_front(Patch_T *const patch,const double *const X)
+double dN0_dy_OT_T2_CS_front(Patch_T *const patch,const double *const X)
 {
   return dNi_dxj_CubedSpherical(patch,_N0_,_y_,X,FRONT,OT_T2_CS);
 }
 /* return value-> dN0_dz for CubedSpherical */
-double dN0_dz_CS_OT_T2_front(Patch_T *const patch,const double *const X)
+double dN0_dz_OT_T2_CS_front(Patch_T *const patch,const double *const X)
 {
   return dNi_dxj_CubedSpherical(patch,_N0_,_z_,X,FRONT,OT_T2_CS);
 }
 /* return value-> dN1_dx for CubedSpherical */
-double dN1_dx_CS_OT_T2_front(Patch_T *const patch,const double *const X)
+double dN1_dx_OT_T2_CS_front(Patch_T *const patch,const double *const X)
 {
   return dNi_dxj_CubedSpherical(patch,_N1_,_x_,X,FRONT,OT_T2_CS);
 }
 /* return value-> dN1_dy for CubedSpherical */
-double dN1_dy_CS_OT_T2_front(Patch_T *const patch,const double *const X)
+double dN1_dy_OT_T2_CS_front(Patch_T *const patch,const double *const X)
 {
   return dNi_dxj_CubedSpherical(patch,_N1_,_y_,X,FRONT,OT_T2_CS);
 }
 /* return value-> dN1_dz for CubedSpherical */
-double dN1_dz_CS_OT_T2_front(Patch_T *const patch,const double *const X)
+double dN1_dz_OT_T2_CS_front(Patch_T *const patch,const double *const X)
 {
   return dNi_dxj_CubedSpherical(patch,_N1_,_z_,X,FRONT,OT_T2_CS);
 }
 /* return value-> dN2_dx for CubedSpherical */
-double dN2_dx_CS_OT_T2_front(Patch_T *const patch,const double *const X)
+double dN2_dx_OT_T2_CS_front(Patch_T *const patch,const double *const X)
 {
   return dNi_dxj_CubedSpherical(patch,_N2_,_x_,X,FRONT,OT_T2_CS);
 }
 /* return value-> dN2_dy for CubedSpherical */
-double dN2_dy_CS_OT_T2_front(Patch_T *const patch,const double *const X)
+double dN2_dy_OT_T2_CS_front(Patch_T *const patch,const double *const X)
 {
   return dNi_dxj_CubedSpherical(patch,_N2_,_y_,X,FRONT,OT_T2_CS);
 }
 /* return value-> dN2_dz for CubedSpherical */
-double dN2_dz_CS_OT_T2_front(Patch_T *const patch,const double *const X)
+double dN2_dz_OT_T2_CS_front(Patch_T *const patch,const double *const X)
 {
   return dNi_dxj_CubedSpherical(patch,_N2_,_z_,X,FRONT,OT_T2_CS);
 }
@@ -5337,4 +5337,6 @@ static double dNi_dxj_CubedSpherical(Patch_T *const patch,const Dd_T Ni,const Dd
   UNUSED(X);
   UNUSED(side);
   UNUSED(type);
+  
+  return dN_dX(patch,Ni,xj);
 }

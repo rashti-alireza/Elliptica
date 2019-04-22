@@ -39,3 +39,5 @@ struct Ret_S
 double point_value(const unsigned i, const struct Collocation_s *const coll_s);
 void initialize_collocation_struct(const Patch_T *const patch,struct Collocation_s *const colloc,const unsigned dir);
 void make_keyword_parameter(struct Ret_S *const ret,const char *const box,const char *const needle);
+enum enum_dA_da get_dA_da(const Dd_T q2_e, const Dd_T q1_e);
+double dq2_dq1(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const unsigned p);

@@ -397,3 +397,70 @@ void make_keyword_parameter(struct Ret_S *const ret,const char *const box,const 
     abortEr_s("There is no such %s.\n",needle);
   }
 }
+
+/* getting q2 and q1 coordinate, it turns them to enum_dA_da.
+// ->return value: enum_dA_da
+*/
+enum enum_dA_da get_dA_da(const Dd_T q2_e, const Dd_T q1_e)
+{
+  enum enum_dA_da dA_da = dA_da_UNDEFINED;
+  
+  if (q2_e == _a_)
+  {
+   if (q1_e == _x_)
+   {
+     dA_da = da_dx;
+   }
+   else if (q1_e == _y_)
+   {
+     dA_da = da_dy;
+   }
+   else if (q1_e == _z_)
+   {
+     dA_da = da_dz;
+   }
+   else
+     abortEr("Invalid entry.");
+  }/* end of if (q2_e == _a_) */
+  
+  else if (q2_e == _b_)
+  {
+   if (q1_e == _x_)
+   {
+     dA_da = db_dx;
+   }
+   else if (q1_e == _y_)
+   {
+     dA_da = db_dy;
+   }
+   else if (q1_e == _z_)
+   {
+     dA_da = db_dz;
+   }
+   else
+     abortEr("Invalid entry.");
+  }/* end of else if (q2_e == _b_) */
+  
+  else if (q2_e == _c_)
+  {
+   if (q1_e == _x_)
+   {
+     dA_da = dc_dx;
+   }
+   else if (q1_e == _y_)
+   {
+     dA_da = dc_dy;
+   }
+   else if (q1_e == _z_)
+   {
+     dA_da = dc_dz;
+   }
+   else
+     abortEr("Invalid entry.");
+  }/* end of else if (q2_e == _c_) */
+  
+  else
+    abortEr("Invalid entry.");
+  
+  return dA_da;  
+}
