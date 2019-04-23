@@ -2,6 +2,7 @@
 #include "memory_managing_lib.h"
 #include "error_handling_lib.h"
 #include "maths_general_lib.h"
+#include "coordinates_lib.h"
 
 typedef enum MODE_T
 {
@@ -40,6 +41,6 @@ double Z_coord(const unsigned i,const Patch_T *const patch);
 int x_of_X(double *const x,const double *const X,const Patch_T *const patch);
 static int x_of_X_PHDown_coord(double *const x,const double *const X,const Patch_T *const patch);
 static int x_of_X_PHUp_coord(double *const x,const double *const X,const Patch_T *const patch);
-double interpolation_2d_PH(Field_T *const R, const Patch_T *const patch,const double *const X);
 static int x_of_X_SSLeft_coord(double *const x,const double *const X,const Patch_T *const patch);
 static int x_of_X_SSRight_coord(double *const x,const double *const X,const Patch_T *const patch);
+static int x_of_X_CS_coord(double *const x,const double *const X,const Patch_T *const patch);

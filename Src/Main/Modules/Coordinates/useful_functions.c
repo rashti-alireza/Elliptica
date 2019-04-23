@@ -238,10 +238,93 @@ int x_of_X(double *const x,const double *const X,const Patch_T *const patch)
     ret = x_of_X_SSLeft_coord(x,X,patch);
   else if (patch->coordsys == StereographicSphereRight)
     ret = x_of_X_SSRight_coord(x,X,patch);
+  else if (patch->coordsys == CubedSpherical)
+    ret = x_of_X_CS_coord(x,X,patch);
   else
       abortEr(NO_JOB);
  
   return ret;
+}
+
+/* find x in cartesian coord correspond to X (general coords) 
+// for Cubed Spherical. Note: x reported with respect to the origin (0,0,0)
+// ->return value 1 if it is successful, otherwise 0. */
+static int x_of_X_CS_coord(double *const x,const double *const X,const Patch_T *const patch)
+{
+  const Flag_T side = patch->CoordSysInfo->CubedSphericalCoord->side;
+  const Flag_T type = patch->CoordSysInfo->CubedSphericalCoord->type;
+  double S;/* sign */
+  unsigned a,b,c;/* permuted indices */
+  Field_T *R1_f = patch->CoordSysInfo->CubedSphericalCoord->R1_f,
+                *R2_f = patch->CoordSysInfo->CubedSphericalCoord->R2_f;
+  const double xc1 = patch->CoordSysInfo->CubedSphericalCoord->xc1,
+               xc2 = patch->CoordSysInfo->CubedSphericalCoord->xc2,
+                R1 = patch->CoordSysInfo->CubedSphericalCoord->R1,
+                R2 = patch->CoordSysInfo->CubedSphericalCoord->R2;
+  const double *const C = patch->c;/* center of origine translated */
+  double x1,x2,d;
+  
+  SignAndIndex_permutation_CubedSphere(side,&a,&b,&c,&S);
+
+  switch (type)
+  {
+    case NS_T_CS:
+      d = sqrt(1+SQR(X[0])+SQR(X[1]));
+      x1 = xc1;
+      x2 = S*interpolation_2d_CS(R2_f,patch,X)/d;
+      
+      x[c] = x1+(x2-x1)*X[2];
+      x[a] = S*x[c]*X[0];
+      x[b] = S*x[c]*X[1];
+      
+      x[a]+= C[a];
+      x[b]+= C[b];
+      x[c]+= C[c];
+    break;
+    case SR_T_CS:
+      d = sqrt(1+SQR(X[0])+SQR(X[1]));
+      x2 = xc2;
+      x1 = S*interpolation_2d_CS(R1_f,patch,X)/d;
+      
+      x[c] = x1+(x2-x1)*X[2];
+      x[a] = S*x[c]*X[0];
+      x[b] = S*x[c]*X[1];
+      
+      x[a]+= C[a];
+      x[b]+= C[b];
+      x[c]+= C[c];
+    break;
+    case OT_T1_CS:
+      d = sqrt(1+SQR(X[0])+SQR(X[1]));
+      x1 = xc1;
+      x2 = S*R2/d;
+      
+      x[c] = x1+(x2-x1)*X[2];
+      x[a] = S*x[c]*X[0];
+      x[b] = S*x[c]*X[1];
+      
+      x[a]+= C[a];
+      x[b]+= C[b];
+      x[c]+= C[c];
+    break;
+    case OT_T2_CS:
+      d = sqrt(1+SQR(X[0])+SQR(X[1]));
+      x1 = S*R1/d;
+      x2 = S*R2/d;
+      
+      x[c] = x1+(x2-x1)*X[2];
+      x[a] = S*x[c]*X[0];
+      x[b] = S*x[c]*X[1];
+      
+      x[a]+= C[a];
+      x[b]+= C[b];
+      x[c]+= C[c];
+    break;
+    default:
+      abortEr(NO_OPTION);
+  }
+  
+  return 1;
 }
 
 /* find x in cartesian coord correspond to X (general coords) 

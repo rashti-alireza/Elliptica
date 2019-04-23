@@ -14,3 +14,6 @@ double *normal_vec(Point_T *const point);
 double General2ChebyshevExtrema(const double X,const unsigned dir,const Patch_T *const patch);
 double interpolation_2d_PH(Field_T *const R, const Patch_T *const patch,const double *const X);
 void grid_characteristics_example(Grid_T *const grid);
+double interpolation_2d_PH(Field_T *const R, const Patch_T *const patch,const double *const X);
+double interpolation_2d_CS(Field_T *const R, const Patch_T *const patch,const double *const X);
+void SignAndIndex_permutation_CubedSphere(const Flag_T side,unsigned *const a,unsigned *const b,unsigned *const c,double *const s);

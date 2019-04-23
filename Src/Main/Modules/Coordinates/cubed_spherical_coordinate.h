@@ -1,5 +1,6 @@
 #include "coordinate_shared_lib.h"
 #include "maths_calculus_lib.h"
+#include "maths_approximation_lib.h"
 
 #define Power3(a) (a)*SQR(a)
 
@@ -260,4 +261,7 @@ static void populate_outermost(Grid_T *const grid,const unsigned pn,const unsign
 void populate_filling_box(Grid_T *const grid,const unsigned pn);
 static void R1_derivative(Patch_T *const patch);
 static void R2_derivative(Patch_T *const patch);  
+double interpolation_2d_CS(Field_T *const R, const Patch_T *const patch,const double *const X);
 static double dN_dX(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e);
+static double dab_dxyz(Patch_T *const patch,const Dd_T q2_e,const Dd_T q1_e,const double *const X);
+int x_of_X(double *const x,const double *const X,const Patch_T *const patch);
