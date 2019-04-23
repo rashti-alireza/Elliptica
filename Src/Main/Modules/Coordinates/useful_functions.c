@@ -256,7 +256,7 @@ static int x_of_X_CS_coord(double *const x,const double *const X,const Patch_T *
   double S;/* sign */
   unsigned a,b,c;/* permuted indices */
   Field_T *R1_f = patch->CoordSysInfo->CubedSphericalCoord->R1_f,
-                *R2_f = patch->CoordSysInfo->CubedSphericalCoord->R2_f;
+          *R2_f = patch->CoordSysInfo->CubedSphericalCoord->R2_f;
   const double xc1 = patch->CoordSysInfo->CubedSphericalCoord->xc1,
                xc2 = patch->CoordSysInfo->CubedSphericalCoord->xc2,
                 R1 = patch->CoordSysInfo->CubedSphericalCoord->R1,
@@ -340,7 +340,7 @@ static int x_of_X_PHUp_coord(double *const x,const double *const X,const Patch_T
   const double r = 0.5*((R2-R1)*X[2]+(R2+R1));
   const double *const c = patch->c;/* center */
   double z2;
-  int ret = 0;
+  int ret = 1;
   
   x[0] = r*X[0]*sqrt(1-0.5*SQR(X[1]));
   x[1] = r*X[1]*sqrt(1-0.5*SQR(X[0]));
@@ -437,7 +437,7 @@ static int x_of_X_PHDown_coord(double *const x,const double *const X,const Patch
   const double r = 0.5*((R2-R1)*X[2]+(R2+R1));
   const double *const c = patch->c;/* center */
   double z2;
-  int ret = 0;
+  int ret = 1;
   
   x[0] = r*X[0]*sqrt(1-0.5*SQR(X[1]));
   x[1] = r*X[1]*sqrt(1-0.5*SQR(X[0]));

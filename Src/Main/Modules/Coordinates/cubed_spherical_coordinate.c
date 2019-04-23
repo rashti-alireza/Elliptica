@@ -5329,11 +5329,7 @@ static double dNi_dxj_CubedSpherical(Patch_T *const patch,const Dd_T Ni,const Dd
       dRf_dx = patch->CoordSysInfo->CubedSphericalCoord->dR2_dx;
       dRf_dy = patch->CoordSysInfo->CubedSphericalCoord->dR2_dy;
       dRf_dz = patch->CoordSysInfo->CubedSphericalCoord->dR2_dz;
-      
       R2     = interpolation_2d_CS(Rf,patch,X);
-      dR2_dx = interpolation_2d_CS(dRf_dx,patch,X);
-      dR2_dy = interpolation_2d_CS(dRf_dy,patch,X);
-      dR2_dz = interpolation_2d_CS(dRf_dz,patch,X);
     }
     switch(dA_da)
     {
@@ -5367,6 +5363,7 @@ static double dNi_dxj_CubedSpherical(Patch_T *const patch,const Dd_T Ni,const Dd
         d3 = Power3(d1);
         xc1 = patch->CoordSysInfo->CubedSphericalCoord->xc1;
         xc2 = S*R2/d1;
+        dR2_dx   = interpolation_2d_CS(dRf_dx,patch,X);
         dxc2_dx  = dR2_dx/d1-R2*(X[0]*dab_dxyz(patch,_a_,_x_,x)+X[1]*dab_dxyz(patch,_b_,_x_,x))/d3;
         dxc2_dx *= S;
         J = (K[k==l]-(x[k]-xc1)*dxc2_dx/(xc2-xc1))/(xc2-xc1);
@@ -5377,6 +5374,7 @@ static double dNi_dxj_CubedSpherical(Patch_T *const patch,const Dd_T Ni,const Dd
         d3 = Power3(d1);
         xc1 = patch->CoordSysInfo->CubedSphericalCoord->xc1;
         xc2 = S*R2/d1;
+        dR2_dy   = interpolation_2d_CS(dRf_dy,patch,X);
         dxc2_dy  = dR2_dy/d1-R2*(X[0]*dab_dxyz(patch,_a_,_y_,x)+X[1]*dab_dxyz(patch,_b_,_y_,x))/d3;
         dxc2_dy *= S;
         J = (K[k==l]-(x[k]-xc1)*dxc2_dy/(xc2-xc1))/(xc2-xc1);
@@ -5387,6 +5385,7 @@ static double dNi_dxj_CubedSpherical(Patch_T *const patch,const Dd_T Ni,const Dd
         d3 = Power3(d1);
         xc1 = patch->CoordSysInfo->CubedSphericalCoord->xc1;
         xc2 = S*R2/d1;
+        dR2_dz   = interpolation_2d_CS(dRf_dz,patch,X);
         dxc2_dz  = dR2_dz/d1-R2*(X[0]*dab_dxyz(patch,_a_,_z_,x)+X[1]*dab_dxyz(patch,_b_,_z_,x))/d3;
         dxc2_dz *= S;
         J = (K[k==l]-(x[k]-xc1)*dxc2_dz/(xc2-xc1))/(xc2-xc1);
@@ -5404,11 +5403,7 @@ static double dNi_dxj_CubedSpherical(Patch_T *const patch,const Dd_T Ni,const Dd
       dRf_dx = patch->CoordSysInfo->CubedSphericalCoord->dR1_dx;
       dRf_dy = patch->CoordSysInfo->CubedSphericalCoord->dR1_dy;
       dRf_dz = patch->CoordSysInfo->CubedSphericalCoord->dR1_dz;
-      
       R1     = interpolation_2d_CS(Rf,patch,X);
-      dR1_dx = interpolation_2d_CS(dRf_dx,patch,X);
-      dR1_dy = interpolation_2d_CS(dRf_dy,patch,X);
-      dR1_dz = interpolation_2d_CS(dRf_dz,patch,X);
     }
     switch(dA_da)
     {
@@ -5442,6 +5437,7 @@ static double dNi_dxj_CubedSpherical(Patch_T *const patch,const Dd_T Ni,const Dd
         d3 = Power3(d1);
         xc2 = patch->CoordSysInfo->CubedSphericalCoord->xc2;
         xc1 = S*R1/d1;
+        dR1_dx   = interpolation_2d_CS(dRf_dx,patch,X);
         dxc1_dx  = dR1_dx/d1-R1*(X[0]*dab_dxyz(patch,_a_,_x_,x)+X[1]*dab_dxyz(patch,_b_,_x_,x))/d3;
         dxc1_dx *= S;
         J = (K[k==l]-dxc1_dx+(x[k]-xc1)*dxc1_dx/(xc2-xc1))/(xc2-xc1);
@@ -5452,6 +5448,7 @@ static double dNi_dxj_CubedSpherical(Patch_T *const patch,const Dd_T Ni,const Dd
         d3 = Power3(d1);
         xc2 = patch->CoordSysInfo->CubedSphericalCoord->xc2;
         xc1 = S*R1/d1;
+        dR1_dy   = interpolation_2d_CS(dRf_dy,patch,X);
         dxc1_dy  = dR1_dy/d1-R1*(X[0]*dab_dxyz(patch,_a_,_y_,x)+X[1]*dab_dxyz(patch,_b_,_y_,x))/d3;
         dxc1_dy *= S;
         J = (K[k==l]-dxc1_dy+(x[k]-xc1)*dxc1_dy/(xc2-xc1))/(xc2-xc1);
@@ -5462,6 +5459,7 @@ static double dNi_dxj_CubedSpherical(Patch_T *const patch,const Dd_T Ni,const Dd
         d3 = Power3(d1);
         xc2 = patch->CoordSysInfo->CubedSphericalCoord->xc2;
         xc1 = S*R1/d1;
+        dR1_dz   = interpolation_2d_CS(dRf_dz,patch,X);
         dxc1_dz  = dR1_dz/d1-R1*(X[0]*dab_dxyz(patch,_a_,_z_,x)+X[1]*dab_dxyz(patch,_b_,_z_,x))/d3;
         dxc1_dz *= S;
         J = (K[k==l]-dxc1_dz+(x[k]-xc1)*dxc1_dz/(xc2-xc1))/(xc2-xc1);
@@ -5615,9 +5613,8 @@ static double dNi_dxj_CubedSpherical(Patch_T *const patch,const Dd_T Ni,const Dd
   return dNi_dxj;
 }
 
-
 /* Calculating d(a/b)/d(x/y/z) at arbitrary Cartesian point point x.
-// note: x is respect to the center of patch not the real origin.
+// note: x is given with respect to the center of patch not the real origin.
 // ->return value: d(a/b)/d(x/y/z) */
 static double dab_dxyz(Patch_T *const patch,const Dd_T q2_e,const Dd_T q1_e,const double *const x)
 {
