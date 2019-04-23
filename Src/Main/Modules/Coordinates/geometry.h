@@ -3,6 +3,7 @@
 #include "error_handling_lib.h"
 #include "utilities_lib.h"
 #include "maths_general_lib.h"
+#include "coordinates_lib.h"
 
 
 /* type point */
@@ -94,3 +95,6 @@ int realize_geometry(Grid_T *const grid);
 static void make_it_outward(Point_T *const point);
 static void misc(Grid_T *const grid);
 static int IsMatchedOtherInnerSubface(PointSet_T *const Pnt);
+static void normal_vec_CS_coord(Point_T *const point);
+static void FindInnerB_CS_coord(Patch_T *const patch);
+static void FindExterF_CS_coord(Patch_T *const patch);

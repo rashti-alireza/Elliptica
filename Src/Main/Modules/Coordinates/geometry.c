@@ -529,6 +529,8 @@ static void fill_geometry(Grid_T *const grid)
   */
   add_func_PtoV(&func,FindInnerB_Cartesian_coord,"FindInnerB",Cartesian);
   add_func_PtoV(&func,FindExterF_Cartesian_coord,"FindExterF",Cartesian);
+  add_func_PtoV(&func,FindInnerB_CS_coord,"FindInnerB",CubedSpherical);
+  add_func_PtoV(&func,FindExterF_CS_coord,"FindExterF",CubedSpherical);
   
   /* calling function to find external and internal faces*/
   FOR_ALL(i,grid->patch)
@@ -1530,6 +1532,50 @@ static void FindExterF_Cartesian_coord(Patch_T *const patch)
   
 }
 
+/* find inner boundary for cubed spherical type */
+static void FindInnerB_CS_coord(Patch_T *const patch)
+{
+  Interface_T **interface = patch->interface;
+  unsigned i,f;
+  
+  if (strcmp_i(patch->grid->kind,"BNS_CubedSpherical_grid"))
+  {
+    FOR_ALL(f,interface)
+    {
+      Point_T **point = interface[f]->point;
+      FOR_ALL(i,point)
+      {
+        point[i]->innerB = 0;
+      }
+    }
+  }
+  else
+    abortEr(INCOMPLETE_FUNC);
+  /* black holes comes below */
+}
+
+/* find external faces for cubed spherical type */
+static void FindExterF_CS_coord(Patch_T *const patch)
+{
+  Interface_T **interface = patch->interface;
+  unsigned i,f;
+  
+  if (strcmp_i(patch->grid->kind,"BNS_CubedSpherical_grid"))
+  {
+    FOR_ALL(f,interface)
+    {
+      Point_T **point = interface[f]->point;
+      FOR_ALL(i,point)
+      {
+        point[i]->exterF = 1;
+      }
+    }
+  }
+  else
+    abortEr(INCOMPLETE_FUNC);
+  /* black holes comes below */
+}
+
 /* filling point[?]->N */
 static void fill_N(Patch_T *const patch)
 {
@@ -1703,6 +1749,10 @@ double *normal_vec(Point_T *const point)
   {
     normal_vec_Cartesian_coord(point);
   }
+  else if (point->patch->coordsys == CubedSpherical)
+  {
+    normal_vec_CS_coord(point);
+  }
   else
     abortEr("No Normal defined for such coordinate yet!\n");
   
@@ -1742,6 +1792,59 @@ static void make_it_outward(Point_T *const point)
   }
   
   free_needle(needle);
+}
+
+/* finding normal for cubed spherical coord */
+static void normal_vec_CS_coord(Point_T *const point)
+{
+  const unsigned p = point->ind;
+  Patch_T *const patch = point->patch;
+  double N;
+  
+  switch(point->face)
+  {
+    case I_0:
+      point->N[0] = dq2_dq1(patch,_a_,_x_,p);
+      point->N[1] = dq2_dq1(patch,_a_,_y_,p);
+      point->N[2] = dq2_dq1(patch,_a_,_z_,p);
+    break;
+    case I_n0:
+      point->N[0] = dq2_dq1(patch,_a_,_x_,p);
+      point->N[1] = dq2_dq1(patch,_a_,_y_,p);
+      point->N[2] = dq2_dq1(patch,_a_,_z_,p);
+    break;
+    case J_0:
+      point->N[0] = dq2_dq1(patch,_b_,_x_,p);
+      point->N[1] = dq2_dq1(patch,_b_,_y_,p);
+      point->N[2] = dq2_dq1(patch,_b_,_z_,p);
+    break;
+    case J_n1:
+      point->N[0] = dq2_dq1(patch,_b_,_x_,p);
+      point->N[1] = dq2_dq1(patch,_b_,_y_,p);
+      point->N[2] = dq2_dq1(patch,_b_,_z_,p);
+    break;
+    case K_0:
+      point->N[0] = dq2_dq1(patch,_c_,_x_,p);
+      point->N[1] = dq2_dq1(patch,_c_,_y_,p);
+      point->N[2] = dq2_dq1(patch,_c_,_z_,p);
+    break;
+    case K_n2:
+      point->N[0] = dq2_dq1(patch,_c_,_x_,p);
+      point->N[1] = dq2_dq1(patch,_c_,_y_,p);
+      point->N[2] = dq2_dq1(patch,_c_,_z_,p);
+    break;
+    default:
+      abortEr("There is no such face.\n");
+  }
+  
+  N = rms(3,point->N,0);
+  if (EQL(N,0))
+    abortEr("Normal vector is null!");
+  
+  /* make it unit */  
+  point->N[0] /= N;
+  point->N[1] /= N;
+  point->N[2] /= N;
 }
 
 /* finding normal for Cartesian coord */
