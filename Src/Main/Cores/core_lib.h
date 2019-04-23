@@ -14,7 +14,7 @@
 #include "macros_lib.h"
 #include "text_tools_lib.h"
 
-#define ROUND_OFF_ERR 1E-10
+#define ROUND_OFF_ERR 1E-12
 #define LSS(x,y) (x < y-ROUND_OFF_ERR)
 #define GRT(x,y) (x > y+ROUND_OFF_ERR)
 #define EQL(x,y) (x < y+ROUND_OFF_ERR && x > y-ROUND_OFF_ERR)
@@ -42,6 +42,8 @@ double *make_coeffs_1d(Field_T *const f,const unsigned dir);
 double *make_coeffs_2d(Field_T *const f,const unsigned dir1,const unsigned dir2);
 double *make_coeffs_3d(Field_T *const f);
 void enable_fields(Grid_T *const grid);
+
 /* grid */
 Patch_T make_temp_patch(const Patch_T *const patch);
 void free_temp_patch(Patch_T *const patch);
+
