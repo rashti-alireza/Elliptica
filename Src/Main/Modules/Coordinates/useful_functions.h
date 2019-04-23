@@ -44,3 +44,5 @@ static int x_of_X_PHUp_coord(double *const x,const double *const X,const Patch_T
 static int x_of_X_SSLeft_coord(double *const x,const double *const X,const Patch_T *const patch);
 static int x_of_X_SSRight_coord(double *const x,const double *const X,const Patch_T *const patch);
 static int x_of_X_CS_coord(double *const x,const double *const X,const Patch_T *const patch);
+static int X_of_x_CS_coord(double *const X,const double *const cart,const Patch_T *const patch);
+

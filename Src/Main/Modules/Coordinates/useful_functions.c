@@ -211,11 +211,8 @@ int X_of_x(double *const X,const double *const x,const Patch_T *const patch)
   
   if (patch->coordsys == Cartesian)
     r = X_of_x_Cartesian_coord(X,x);
-  /* other coord sys comes here
-  .
-  .
-  .
-  */
+  else if (patch->coordsys == CubedSpherical)
+    r = X_of_x_CS_coord(X,x,patch);
   else
       abortEr("No finder for this coordinate.\n");
  
@@ -472,6 +469,66 @@ int X_of_x_Cartesian_coord(double *const X,const double *const x)
   
   return 1;
 }
+
+/* find point X correspond to cart-coord for patch with cubed spherical coord.
+// it's a general algorithm and for even if the point is not collocated.
+// ->return value: 1 if it is successful, otherwise 0. */
+static int X_of_x_CS_coord(double *const X,const double *const cart,const Patch_T *const patch)
+{
+  const double *const C = patch->c;/* center of origine translated */
+  const Flag_T side = patch->CoordSysInfo->CubedSphericalCoord->side;
+  const Flag_T type = patch->CoordSysInfo->CubedSphericalCoord->type;
+  const double x[3]= {cart[0]-C[0],
+                      cart[1]-C[1],
+                      cart[2]-C[2]};
+  double S; /* sign */
+  unsigned i,j,k;/* permuted indices */
+  Field_T *R1_f = patch->CoordSysInfo->CubedSphericalCoord->R1_f,
+          *R2_f = patch->CoordSysInfo->CubedSphericalCoord->R2_f;
+  const double xc1 = patch->CoordSysInfo->CubedSphericalCoord->xc1,
+               xc2 = patch->CoordSysInfo->CubedSphericalCoord->xc2,
+                R1 = patch->CoordSysInfo->CubedSphericalCoord->R1,
+                R2 = patch->CoordSysInfo->CubedSphericalCoord->R2;
+  double x1,x2,d;
+  
+  SignAndIndex_permutation_CubedSphere(side,&i,&j,&k,&S);
+  
+  X[0] = S*x[i]/x[k];
+  X[1] = S*x[j]/x[k];
+  
+  switch (type)
+  {
+    case NS_T_CS:
+      d = sqrt(1+SQR(X[0])+SQR(X[1]));
+      x1 = xc1;
+      x2 = S*interpolation_2d_CS(R2_f,patch,X)/d;
+      X[2] = (x[k]-x1)/(x2-x1);
+    break;
+    case SR_T_CS:
+      d = sqrt(1+SQR(X[0])+SQR(X[1]));
+      x2 = xc2;
+      x1 = S*interpolation_2d_CS(R1_f,patch,X)/d;
+      X[2] = (x[k]-x1)/(x2-x1);
+    break;
+    case OT_T1_CS:
+      d = sqrt(1+SQR(X[0])+SQR(X[1]));
+      x1 = xc1;
+      x2 = S*R2/d;
+      X[2] = (x[k]-x1)/(x2-x1);
+    break;
+    case OT_T2_CS:
+      d = sqrt(1+SQR(X[0])+SQR(X[1]));
+      x1 = S*R1/d;
+      x2 = S*R2/d;
+      X[2] = (x[k]-x1)/(x2-x1);
+    break;
+    default:
+      abortEr(NO_OPTION);
+  }
+  
+  return 1;
+}
+
 
 /* fill limits based on patch boundary */
 static void fill_limits(double *const lim, const Patch_T *const patch)
