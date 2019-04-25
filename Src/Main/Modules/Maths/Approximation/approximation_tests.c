@@ -704,6 +704,7 @@ int derivative_tests(Grid_T *const grid)
     double *anac[N_FUNC];/* analytic */
     double *numc[N_FUNC];/* numeric */
     enum FUNC_E e;
+    struct Error_S error[1] = {0};
     unsigned p;
     
     /* initializing, make them to point to 0 */
@@ -739,14 +740,14 @@ int derivative_tests(Grid_T *const grid)
           free_v2(df_num);
           enum2str(e,der_s);
           numc[e] = Partial_Derivative(df_num,der_s);
-          flg = compare_derivative(F[e]->name,numc[e],anac[e],patch,path);
+          flg = compare_derivative(F[e]->name,numc[e],anac[e],df_num,e,patch,path,error);
           free(anac[e]);
           free(numc[e]);
           
           if (flg == YES)
-            printf("[+].\n");
+            printf("[+].(E_an,E_nu)=(%g,%g)\n",error->E_an,error->E_nu);
           else
-            printf("[-].\n");
+            printf("[-].(E_an,E_nu)=(%g,%g)\n",error->E_an,error->E_nu);
         }
       }/* end of for (e = FUNC_x; e < N_FUNC; ++e) */
       free(anac[FUNC]);
@@ -882,15 +883,97 @@ static void enum2str(enum FUNC_E e,char *const str)
 }
 
 /* comparing the values obtained from numeric and with analytic one */
-static Flag_T compare_derivative(const char *const name,const double *const numc,const double *const anac,const Patch_T *const patch,const char *const path)
+static Flag_T compare_derivative(const char *const name,const double *const numc,const double *const anac,const Field_T *const func,const enum FUNC_E fn,const Patch_T *const patch,const char *const path,struct Error_S *const error)
 {
   char prefix[MAXSTR];
+  double E_anac, E_numc;/* numeric and analytic error */
   Flag_T flg;
   
   sprintf(prefix,"%s/%s.DiffByNode",path,name);
-  flg = pr_derivatives_DiffByNode(numc,anac,patch,prefix);
+  error->E_nu = E_numc = pr_derivatives_DiffByNode(numc,anac,patch,prefix);
+  error->E_an = E_anac = calculate_expected_precision_for_derivative(func,fn,patch);
   
+  if (LSSEQL(E_numc/E_anac,1))
+    flg = YES;
+  else
+    flg = NO;
+    
   return flg;
+}
+
+/* calculating precision of derivative using the fact 
+// that computer is using finite number of digits.
+// ->return value: error in calculation = the bigger of Cn and precision
+1e-14*max(func)*max(Jacobian)^(order of derivative )*n*n^(order of derivative)*10  */
+static double calculate_expected_precision_for_derivative(const Field_T *const func,const enum FUNC_E fn,const Patch_T *const patch)
+{
+  double e = 0;/* error */
+  double p = 0;/* precision */
+  double max_f,
+         max_j,
+         Cn = 0;/* the last coeff. in the expansion */
+  unsigned max_n;
+  unsigned o;
+  const unsigned *const n = patch->n;
+  
+  max_f = L_inf(n[0]*n[1]*n[2],func->v);
+  max_j = max_Jacobian_dX_dx(patch);
+  max_n =  n[0] >= n[1] ? n[0]  : n[1];
+  max_n = max_n >= n[2] ? max_n : n[2];
+  o = order_of_derivative(fn);
+  p = 1e-14*max_f*pow(max_j,o)*max_n*pow(max_n,o)*10;
+  
+  if (func->v2 != 0)
+    Cn = fabs(func->v2[L(n,n[0]-1,n[1]-1,n[2]-1)]);
+  
+  e = p > Cn ? p : Cn;
+  return e;
+}
+
+/* ->retun value: order of derivative according to fn */
+static unsigned order_of_derivative(const enum FUNC_E fn)
+{
+  unsigned o;
+  
+  switch (fn)
+  {
+    case FUNC_x:
+      o = 1;
+      break;
+    case FUNC_y:
+      o = 1;
+      break;
+    case FUNC_z:
+      o = 1;
+      break;
+    case FUNC_xx:
+      o = 2;
+      break;
+    case FUNC_yy:
+      o = 2;
+      break;
+    case FUNC_zz:
+      o = 2;
+      break;
+    case FUNC_xy:
+      o = 2;
+      break;
+    case FUNC_xz:
+      o = 2;
+      break;
+    case FUNC_yz:
+      o = 2;
+      break;
+    case FUNC_xyz:
+      o = 3;
+      break;
+    default:
+      abortEr("There is no such derivative defined.\n"
+      "If you added more kind of derivative please add" 
+        "to enum FUNC_E and consequently other locations.\n");
+  }
+  
+  return o;
 }
 
 /* making N random number in the within min and max.

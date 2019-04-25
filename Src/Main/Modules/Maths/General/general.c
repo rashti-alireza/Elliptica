@@ -440,7 +440,8 @@ double L_inf(const double N,const double *const v)
   {
     double a = ABS(v[i]);
     
-    if (GRT(a,max))
+    //if (GRT(a,max))
+    if (a > max)
       max = a;
   }
   

@@ -358,3 +358,49 @@ unsigned *dup_UINT(const unsigned *const s,const unsigned N)
     
   return dup;
 }
+
+/* calculating the magnetude of d(X,Y,Z)/d(x,y,z) */
+double max_Jacobian_dX_dx(const Patch_T *const patch)
+{
+  double max = 0;
+  double abs_j;
+  const unsigned nn = patch->nn;
+  unsigned l; 
+  
+  for (l = 0; l < nn; ++l)
+  {
+    abs_j = dq2_dq1(patch,_a_,_x_,l);
+    if (abs_j > max)
+      max = abs_j;
+    abs_j = dq2_dq1(patch,_a_,_y_,l);
+    if (abs_j > max)
+      max = abs_j;
+    abs_j = dq2_dq1(patch,_a_,_z_,l);
+    if (abs_j > max)
+      max = abs_j;
+      
+    abs_j = dq2_dq1(patch,_b_,_x_,l);
+    if (abs_j > max)
+      max = abs_j;
+    abs_j = dq2_dq1(patch,_b_,_y_,l);
+    if (abs_j > max)
+      max = abs_j;
+    abs_j = dq2_dq1(patch,_b_,_z_,l);
+    if (abs_j > max)
+      max = abs_j;  
+      
+    abs_j = dq2_dq1(patch,_c_,_x_,l);
+    if (abs_j > max)
+      max = abs_j;
+    abs_j = dq2_dq1(patch,_c_,_y_,l);
+    if (abs_j > max)
+      max = abs_j;
+    abs_j = dq2_dq1(patch,_c_,_z_,l);
+    if (abs_j > max)
+      max = abs_j;
+      
+  }
+  
+  return max;
+}
+
