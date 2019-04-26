@@ -915,26 +915,11 @@ static Flag_T compare_derivative(const char *const name,const double *const numc
 // 1e-14*max(func)*max(Jacobian)^(order of derivative )*n*n^(2*order of derivative)*10  */
 static double calculate_expected_precision_for_derivative(const Field_T *const func,const enum FUNC_E fn,const Patch_T *const patch)
 {
-  double e = 0;/* error */
-  double max_f,
-         max_j;
-  unsigned max_n;
-  unsigned o;
-  const unsigned *const n = patch->n;
+  unsigned o = order_of_derivative(fn);
   
-  max_f = L_inf(n[0]*n[1]*n[2],func->v);
-  max_j = max_Jacobian_dX_dx(patch);
-  /* test */
-  //fprintf(stderr,"%s: Max(d(X,Y,Z)/d(x,y,z)) = %g\n",patch->name,max_j);
-  /* end */
-  max_n =  n[0] > n[1] ? n[0]  : n[1];
-  max_n = max_n > n[2] ? max_n : n[2];
-  o = order_of_derivative(fn);
-  e = 1e-14*max_f*max_n*pow(max_n,2*o);/* 1e-14 = (machine precision=1e-15)*(all other unwarranted factors=10) */
-  if (max_j > 1.0)/* if max_j is less than 1 it won't gonna make the error lesser! */
-    e *= pow(max_j,o);
+  UNUSED(patch);
   
-  return e;
+  return spectral_derivative_max_error(func,o);
 }
 
 /* ->retun value: order of derivative according to fn */

@@ -404,3 +404,36 @@ double max_Jacobian_dX_dx(const Patch_T *const patch)
   return max;
 }
 
+/* calculating the maximum error of spectral derivative using the fact 
+// that computer is using finite number of digits.
+// f : given field
+// o : given order of derivative
+// ->return value: error in calculation = general idea is as follow:
+// 1e-14*max(func)*max(Jacobian)^(order of derivative )*n*n^(2*order of derivative)*10  */
+double spectral_derivative_max_error(const Field_T *const f,const unsigned o)
+{
+  double e = 0;
+  double max_f,
+         max_j;
+  unsigned max_n;
+  const unsigned *const n = f->patch->n;
+  const char *der_par = GetParameterS("Derivative_Method");
+  
+  if (strstr_i(der_par,"Spectral"))
+  {
+    max_f = L_inf(n[0]*n[1]*n[2],f->v);
+    max_j = max_Jacobian_dX_dx(f->patch);
+    max_n =  n[0] > n[1] ? n[0]  : n[1];
+    max_n = max_n > n[2] ? max_n : n[2];
+    e = 1e-14*max_f*max_n*pow(max_n,2*o);/* 1e-14 coming from: (machine precision=1e-15)*(all other unwarranted factors=10) */
+    if (max_j > 1.0)/* if max_j is less than 1 it won't gonna make the error lesser! */
+      e *= pow(max_j,o);
+
+    if (e == 0.0) 
+      e = 1e-15;
+  } 
+  else
+    abortEr(NO_JOB);
+    
+  return e;
+}
