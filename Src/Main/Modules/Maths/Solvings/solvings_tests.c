@@ -37,38 +37,38 @@ void test_dInterp_a_df(Grid_T *const grid)
     {
       if (DO)
         test_dInterp_x_df_YZ_Tn_Ex(phi_field);
-      if (DO)
+      if (NOT_DO)
         test_dInterp_y_df_YZ_Tn_Ex(phi_field);
-      if (DO)
+      if (NOT_DO)
         test_dInterp_z_df_YZ_Tn_Ex(phi_field);
-      if (DO)
+      if (NOT_DO)
         test_dInterp_df_YZ_Tn_Ex(phi_field);
         
-      if (DO)
+      if (NOT_DO)
         test_dInterp_x_df_XZ_Tn_Ex(phi_field);
-      if (DO)
+      if (NOT_DO)
         test_dInterp_y_df_XZ_Tn_Ex(phi_field);
-      if (DO)
+      if (NOT_DO)
         test_dInterp_z_df_XZ_Tn_Ex(phi_field);
-      if (DO)
+      if (NOT_DO)
         test_dInterp_df_XZ_Tn_Ex(phi_field);
       
-      if (DO)
+      if (NOT_DO)
         test_dInterp_x_df_XY_Tn_Ex(phi_field);
-      if (DO)
+      if (NOT_DO)
         test_dInterp_y_df_XY_Tn_Ex(phi_field);
-      if (DO)
+      if (NOT_DO)
         test_dInterp_z_df_XY_Tn_Ex(phi_field);
-      if (DO)
+      if (NOT_DO)
         test_dInterp_df_XY_Tn_Ex(phi_field);
         
-      if (DO)
+      if (NOT_DO)
         test_dInterp_x_df_XYZ_Tn_Ex(phi_field);
-      if (DO)
+      if (NOT_DO)
         test_dInterp_y_df_XYZ_Tn_Ex(phi_field);
-      if (DO)
+      if (NOT_DO)
         test_dInterp_z_df_XYZ_Tn_Ex(phi_field);
-      if (DO)
+      if (NOT_DO)
         test_dInterp_df_XYZ_Tn_Ex(phi_field);
     }/* end of for (i = 0; i < Num_Tests; ++i) */
     remove_field(phi_field);
@@ -89,6 +89,7 @@ static void test_dInterp_x_df_YZ_Tn_Ex(Field_T *const phi_field)
   const unsigned *n = patch->n;
   const double CONST = 1.;
   const double EPS = CONST/nn;
+  const double interp_error = n[0]*n[1]*n[2]*spectral_derivative_max_error(phi_field,1);
   double X[3],f1,f2,spec_cal;
   unsigned df;
 
@@ -119,7 +120,7 @@ static void test_dInterp_x_df_YZ_Tn_Ex(Field_T *const phi_field)
     phi_field->v[df] -= EPS;
     
     spec_cal = dInterp_spec(patch,X,df);
-    if (!EQL(spec_cal,(f2-f1)/EPS))
+    if (GRT(fabs(spec_cal-(f2-f1)/EPS),interp_error))
     {
       printf("spec=%0.15f,direct=%0.15f\n",spec_cal,(f2-f1)/EPS);
       flg = FOUND;
