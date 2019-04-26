@@ -273,49 +273,46 @@ double *make_coeffs_3d(Field_T *const f)
     if (!f->v2)
       f->v2 = alloc_double(N);
     
-    else
-    {
-      Patch_T p_tmp1 = make_temp_patch(f->patch);
-      Patch_T p_tmp2 = make_temp_patch(f->patch);
-      Field_T *f_tmp1 = add_field("f_tmp1","(3dim)",&p_tmp1,NO);
-      Field_T *f_tmp2 = add_field("f_tmp2","(3dim)",&p_tmp2,NO);
+    Patch_T p_tmp1 = make_temp_patch(f->patch);
+    Patch_T p_tmp2 = make_temp_patch(f->patch);
+    Field_T *f_tmp1 = add_field("f_tmp1","(3dim)",&p_tmp1,NO);
+    Field_T *f_tmp2 = add_field("f_tmp2","(3dim)",&p_tmp2,NO);
  
-      f_tmp1->v = find_1d_coeffs_in_patch(f,0);
-      free_attr(f_tmp1);
-      f_tmp1->attr = dup_s(f->attr);
-      free_info(f_tmp1);
-      f_tmp1->info = dup_s(f->info);
-      /* f_tmp1->v == f->v2 
-      // f_tmp1->v2 == 0
-      */
-      f_tmp1->v2 = alloc_double(N);
-      f_tmp2->v = find_1d_coeffs_in_patch(f_tmp1,1);
-      free_attr(f_tmp2);
-      f_tmp2->attr = dup_s(f_tmp1->attr);
-      free_info(f_tmp2);
-      f_tmp2->info = dup_s(f_tmp1->info);
-      /* f_tmp2->v == f_tmp1->v2
-      // f_tmp2->v2 == 0
-      */
-      free_v2(f);/* => free(f_tmp1->v)*/
-      f_tmp2->v2 = alloc_double(N);
-      f->v2      = find_1d_coeffs_in_patch(f_tmp2,2);
-      free_attr(f);
-      f->attr = dup_s(f_tmp2->attr);
-      free_info(f);
-      f->info = dup_s(f_tmp2->info);
-      /* f_tmp2->v == f_tmp1->v2
-      // f_tmp2->v2 == f->v2
-      */
-      free_v2(f_tmp1);
-      f_tmp1->v = 0;
-      f_tmp2->v = 0;
-      f_tmp2->v2 = 0;
-      remove_field(f_tmp1);
-      remove_field(f_tmp2);
-      free_temp_patch(&p_tmp1);
-      free_temp_patch(&p_tmp2);
-    }
+    f_tmp1->v = find_1d_coeffs_in_patch(f,0);
+    free_attr(f_tmp1);
+    f_tmp1->attr = dup_s(f->attr);
+    free_info(f_tmp1);
+    f_tmp1->info = dup_s(f->info);
+    /* f_tmp1->v == f->v2 
+    // f_tmp1->v2 == 0
+    */
+    f_tmp1->v2 = alloc_double(N);
+    f_tmp2->v = find_1d_coeffs_in_patch(f_tmp1,1);
+    free_attr(f_tmp2);
+    f_tmp2->attr = dup_s(f_tmp1->attr);
+    free_info(f_tmp2);
+    f_tmp2->info = dup_s(f_tmp1->info);
+    /* f_tmp2->v == f_tmp1->v2
+    // f_tmp2->v2 == 0
+    */
+    free_v2(f);/* => free(f_tmp1->v)*/
+    f_tmp2->v2 = alloc_double(N);
+    f->v2      = find_1d_coeffs_in_patch(f_tmp2,2);
+    free_attr(f);
+    f->attr = dup_s(f_tmp2->attr);
+    free_info(f);
+    f->info = dup_s(f_tmp2->info);
+    /* f_tmp2->v == f_tmp1->v2
+    // f_tmp2->v2 == f->v2
+    */
+    free_v2(f_tmp1);
+    f_tmp1->v = 0;
+    f_tmp2->v = 0;
+    f_tmp2->v2 = 0;
+    remove_field(f_tmp1);
+    remove_field(f_tmp2);
+    free_temp_patch(&p_tmp1);
+    free_temp_patch(&p_tmp2);
   }
   
   return f->v2;
