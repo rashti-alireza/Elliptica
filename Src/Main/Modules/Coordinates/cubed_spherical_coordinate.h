@@ -265,3 +265,4 @@ double interpolation_2d_CS(Field_T *const R, const Patch_T *const patch,const do
 static double dN_dX(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e);
 static double dab_dxyz(Patch_T *const patch,const Dd_T q2_e,const Dd_T q1_e,const double *const X);
 int x_of_X(double *const x,const double *const X,const Patch_T *const patch);
+void test_dNi_dxj(Grid_T *const grid);

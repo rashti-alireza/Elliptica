@@ -5659,3 +5659,119 @@ static double dab_dxyz(Patch_T *const patch,const Dd_T q2_e,const Dd_T q1_e,cons
 
   return J;
 }
+
+/* performing a test for dNi/dxj, 2-D interpolations and x_of_X functions.
+// we expect that for collocation points dNi/dxj == dq2_dq1(Ni,xj)
+// otherwise some of the important functions like:
+// 2-d interpolations or x_of_X are wrong. */
+void test_dNi_dxj(Grid_T *const grid)
+{
+  unsigned p;
+  Flag_T flg = NONE;
+  
+  printf(" Testing \"dNi/dxj\" function: \n"
+         " It might take a while, please be patient!\n");
+  
+  FOR_ALL_PATCHES(p,grid)
+  {
+    Patch_T *patch = grid->patch[p];
+    unsigned n;
+    
+    for(n = 0; n < patch->nn; ++n)
+    {
+      const double *X = patch->node[n]->X;
+      double dN_dx, dq_dq;
+      
+      dN_dx = patch->JacobianT->dN0_dx(patch,X);
+      dq_dq = dq2_dq1(patch,_N0_,_x_,n);
+      if (!EQL(dN_dx,dq_dq))
+      {
+        flg = FOUND;
+        printf("dNi/dxj(%s) failed: (dNi/dxj,dq2/dq1(Ni,xj)) = (%g,%g)\n",patch->name,dN_dx,dq_dq);
+        break;
+      }
+      
+      dN_dx = patch->JacobianT->dN0_dy(patch,X);
+      dq_dq = dq2_dq1(patch,_N0_,_y_,n);
+      if (!EQL(dN_dx,dq_dq))
+      {
+        flg = FOUND;
+        printf("dNi/dxj(%s) failed: (dNi/dxj,dq2/dq1(Ni,xj)) = (%g,%g)\n",patch->name,dN_dx,dq_dq);
+        break;
+      }
+      
+      dN_dx = patch->JacobianT->dN0_dz(patch,X);
+      dq_dq = dq2_dq1(patch,_N0_,_z_,n);
+      if (!EQL(dN_dx,dq_dq))
+      {
+        flg = FOUND;
+        printf("dNi/dxj(%s) failed: (dNi/dxj,dq2/dq1(Ni,xj)) = (%g,%g)\n",patch->name,dN_dx,dq_dq);
+        break;
+      }
+      
+      dN_dx = patch->JacobianT->dN1_dx(patch,X);
+      dq_dq = dq2_dq1(patch,_N1_,_x_,n);
+      if (!EQL(dN_dx,dq_dq))
+      {
+        flg = FOUND;
+        printf("dNi/dxj(%s) failed: (dNi/dxj,dq2/dq1(Ni,xj)) = (%g,%g)\n",patch->name,dN_dx,dq_dq);
+        break;
+      }
+      
+      dN_dx = patch->JacobianT->dN1_dy(patch,X);
+      dq_dq = dq2_dq1(patch,_N1_,_y_,n);
+      if (!EQL(dN_dx,dq_dq))
+      {
+        flg = FOUND;
+        printf("dNi/dxj(%s) failed: (dNi/dxj,dq2/dq1(Ni,xj)) = (%g,%g)\n",patch->name,dN_dx,dq_dq);
+        break;
+      }
+      
+      dN_dx = patch->JacobianT->dN1_dz(patch,X);
+      dq_dq = dq2_dq1(patch,_N1_,_z_,n);
+      if (!EQL(dN_dx,dq_dq))
+      {
+        flg = FOUND;
+        printf("dNi/dxj(%s) failed: (dNi/dxj,dq2/dq1(Ni,xj)) = (%g,%g)\n",patch->name,dN_dx,dq_dq);
+        break;
+      }
+      
+      dN_dx = patch->JacobianT->dN2_dx(patch,X);
+      dq_dq = dq2_dq1(patch,_N2_,_x_,n);
+      if (!EQL(dN_dx,dq_dq))
+      {
+        flg = FOUND;
+        printf("dNi/dxj(%s) failed: (dNi/dxj,dq2/dq1(Ni,xj)) = (%g,%g)\n",patch->name,dN_dx,dq_dq);
+        break;
+      }
+      
+      dN_dx = patch->JacobianT->dN2_dy(patch,X);
+      dq_dq = dq2_dq1(patch,_N2_,_y_,n);
+      if (!EQL(dN_dx,dq_dq))
+      {
+        flg = FOUND;
+        printf("dNi/dxj(%s) failed: (dNi/dxj,dq2/dq1(Ni,xj)) = (%g,%g)\n",patch->name,dN_dx,dq_dq);
+        break;
+      }
+      
+      dN_dx = patch->JacobianT->dN2_dz(patch,X);
+      dq_dq = dq2_dq1(patch,_N2_,_z_,n);
+      if (!EQL(dN_dx,dq_dq))
+      {
+        flg = FOUND;
+        printf("dNi/dxj(%s) failed: (dNi/dxj,dq2/dq1(Ni,xj)) = (%g,%g)\n",patch->name,dN_dx,dq_dq);
+        break;
+      }
+      
+      
+    }/* end of for(n = 0; n < patch->nn; ++n) */
+    if (flg == FOUND)
+      break;
+  }/* end of FOR_ALL_PATCHES(p,grid) */
+  
+  if (flg != FOUND)
+    printf("Testing dNi_dxj function: [+].\n");
+  else
+    printf("Testing dNi_dxj function: [-].\n");
+
+}
