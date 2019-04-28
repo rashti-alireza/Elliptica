@@ -227,7 +227,9 @@ int x_of_X(double *const x,const double *const X,const Patch_T *const patch)
 {
   int ret = 0;
   
-  if (patch->coordsys == ProjectiveHemisphereUp)
+  if (patch->coordsys == Cartesian)
+    ret = x_of_X_Cartesian_coord(x,X,patch);
+  else if (patch->coordsys == ProjectiveHemisphereUp)
     ret = x_of_X_PHUp_coord(x,X,patch);
   else if (patch->coordsys == ProjectiveHemisphereDown)
     ret = x_of_X_PHDown_coord(x,X,patch);
@@ -241,6 +243,20 @@ int x_of_X(double *const x,const double *const X,const Patch_T *const patch)
       abortEr(NO_JOB);
  
   return ret;
+}
+
+/* find x in cartesian coord correspond to X (general coords) 
+// for Cartesian coord. Note: x reported with respect to the origin (0,0,0)
+// ->return value 1 if it is successful, otherwise 0. */
+static int x_of_X_Cartesian_coord(double *const x,const double *const X,const Patch_T *const patch)
+{
+  UNUSED(patch);  
+  
+  x[0] = X[0];
+  x[1] = X[1];
+  x[2] = X[2];
+  
+  return 1;
 }
 
 /* find x in cartesian coord correspond to X (general coords) 
