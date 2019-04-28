@@ -14,8 +14,9 @@
 // interp_s->X = p1;
 // interp_s->Y = p2;
 // * NOTE: X and Y and Z must be given in coords which patch uses *
-// interp_s->Z_dir_flag = 1;
-// 
+// interp_s->Z_dir_flag = 1; * means it only interpolates along Z direction *
+// interp_s->I = i0; * since the interpolation takes place for const i *
+// interp_s->J = j0; * since the interpolation takes place for const j *
 // ** planning the appropriate function for interpolation **
 // plan_interpolation(interp_s);
 //
