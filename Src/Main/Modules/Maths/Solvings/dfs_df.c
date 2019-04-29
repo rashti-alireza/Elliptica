@@ -837,23 +837,15 @@ fdInterp_dfs_T *get_dInterp_df(const Patch_T *const patch,const SubFace_T *const
 // interpolation takes place in Y and Z direction using Cheb Tn bases
 // with Extrema points.
 // ->return value: d(interp(f_x))/df */
-static double dInterp_x_df_YZ_Tn_Ex(Patch_T *const patch,const double *const X,const unsigned df)
+static double dInterp_x_df_YZ_Tn_Ex(Patch_T *const patch,const double *const X,const unsigned df,const unsigned plane)
 {
   const unsigned *const n = patch->n;
   Node_T **const node = patch->node;
-  unsigned X0;/* const. plane */
+  const unsigned X0 = plane;/* const. plane */
   double q[3];/* normalized coords. it is the same as N0, N1 and N2 */
   double sum = 0,s,qr;
   double J;
   unsigned a,b,c,r,l;
-  
-  
-  //temp
-  for (unsigned ll = 0; ll < n[0]; ++ll)
-   if (EQL(patch->node[L(n,ll,0,0)]->X[0],X[0]))
-    X0 = ll;
-  //temp
-  
   
   IJK(df,n,&a,&b,&c);
   q[0]   = General2ChebyshevExtrema(X[0],0,patch);
@@ -915,22 +907,15 @@ static double dInterp_x_df_YZ_Tn_Ex(Patch_T *const patch,const double *const X,c
 // interpolation takes place in Y and Z direction using Cheb Tn bases
 // with Extrema points.
 // ->return value: d(interp(f_y))/df */
-static double dInterp_y_df_YZ_Tn_Ex(Patch_T *const patch,const double *const X,const unsigned df)
+static double dInterp_y_df_YZ_Tn_Ex(Patch_T *const patch,const double *const X,const unsigned df,const unsigned plane)
 {
   const unsigned *const n = patch->n;
   Node_T **const node = patch->node;
-  unsigned X0;/* const. plane */
+  const unsigned X0 = plane;;/* const. plane */
   double q[3];/* normalized coords. it is the same as N0, N1 and N2 */
   double sum = 0,s,qr;
   double J;
   unsigned a,b,c,r,l;
-  
-  //temp
-  for (unsigned ll = 0; ll < n[0]; ++ll)
-   if (EQL(patch->node[L(n,ll,0,0)]->X[0],X[0]))
-    X0 = ll;
-  //temp
-  
   
   IJK(df,n,&a,&b,&c);
   q[0]   = General2ChebyshevExtrema(X[0],0,patch);
@@ -992,22 +977,15 @@ static double dInterp_y_df_YZ_Tn_Ex(Patch_T *const patch,const double *const X,c
 // interpolation takes place in Y and Z direction using Cheb Tn bases
 // with Extrema points.
 // ->return value: d(interp(f_z))/df */
-static double dInterp_z_df_YZ_Tn_Ex(Patch_T *const patch,const double *const X,const unsigned df)
+static double dInterp_z_df_YZ_Tn_Ex(Patch_T *const patch,const double *const X,const unsigned df,const unsigned plane)
 {
   const unsigned *const n = patch->n;
   Node_T **const node = patch->node;
-  unsigned X0;/* const. plane */
+  const unsigned X0 = plane;/* const. plane */
   double q[3];/* normalized coords. it is the same as N0, N1 and N2 */
   double sum = 0,s,qr;
   double J;
   unsigned a,b,c,r,l;
-  
-  //temp
-  for (unsigned ll = 0; ll < n[0]; ++ll)
-   if (EQL(patch->node[L(n,ll,0,0)]->X[0],X[0]))
-    X0 = ll;
-  //temp
-  
   
   IJK(df,n,&a,&b,&c);
   q[0]   = General2ChebyshevExtrema(X[0],0,patch);
@@ -1068,8 +1046,9 @@ static double dInterp_z_df_YZ_Tn_Ex(Patch_T *const patch,const double *const X,c
 // df is node number which we are varying field at that point.
 // interpolation takes place in Y and Z direction using Cheb Tn bases
 // with Extrema points.
+// plane argument is not used; it can be put to any number!
 // ->return value: d(interp(f))/df */
-static double dInterp_df_YZ_Tn_Ex(Patch_T *const patch,const double *const X,const unsigned df)
+static double dInterp_df_YZ_Tn_Ex(Patch_T *const patch,const double *const X,const unsigned df,const unsigned plane)
 {
   const unsigned *const n = patch->n;
   const double *point = patch->node[df]->X;
@@ -1083,7 +1062,8 @@ static double dInterp_df_YZ_Tn_Ex(Patch_T *const patch,const double *const X,con
   /* only changing of field at the plane X=X[0] must contribute */
   if (!EQL(point[0],X[0]))
     return 0;
-    
+  
+  UNUSED(plane);
   return sum_0_N_dCi_dfj_by_Ti_q(n[1],j,q[1])
          *
          sum_0_N_dCi_dfj_by_Ti_q(n[2],k,q[2]);
@@ -1094,22 +1074,15 @@ static double dInterp_df_YZ_Tn_Ex(Patch_T *const patch,const double *const X,con
 // interpolation takes place in X and Z direction using Cheb Tn bases
 // with Extrema points.
 // ->return value: d(interp(f_x))/df */
-static double dInterp_x_df_XZ_Tn_Ex(Patch_T *const patch,const double *const X,const unsigned df)
+static double dInterp_x_df_XZ_Tn_Ex(Patch_T *const patch,const double *const X,const unsigned df,const unsigned plane)
 {
   const unsigned *const n = patch->n;
   Node_T **const node = patch->node;
-  unsigned Y0;/* const. plane */
+  const unsigned Y0 = plane;/* const. plane */
   double q[3];/* normalized coords. it is the same as N0, N1 and N2 */
   double sum = 0,s,qr;
   double J;
   unsigned a,b,c,r,l;
-  
-  //temp
-  for (unsigned ll = 0; ll < n[1]; ++ll)
-   if (EQL(patch->node[L(n,0,ll,0)]->X[1],X[1]))
-    Y0 = ll;
-  //temp
-  
   
   IJK(df,n,&a,&b,&c);
   q[0]   = General2ChebyshevExtrema(X[0],0,patch);
@@ -1171,22 +1144,15 @@ static double dInterp_x_df_XZ_Tn_Ex(Patch_T *const patch,const double *const X,c
 // interpolation takes place in X and Z direction using Cheb. Tn bases
 // with Extrema points.
 // ->return value: d(interp(f_y))/df */
-static double dInterp_y_df_XZ_Tn_Ex(Patch_T *const patch,const double *const X,const unsigned df)
+static double dInterp_y_df_XZ_Tn_Ex(Patch_T *const patch,const double *const X,const unsigned df,const unsigned plane)
 {
   const unsigned *const n = patch->n;
   Node_T **const node = patch->node;
-  unsigned Y0;/* const. plane */
+  const unsigned Y0 = plane;/* const. plane */
   double q[3];/* normalized coords. it is the same as N0, N1 and N2 */
   double sum = 0,s,qr;
   double J;
   unsigned a,b,c,r,l;
-  
-  //temp
-  for (unsigned ll = 0; ll < n[1]; ++ll)
-   if (EQL(patch->node[L(n,0,ll,0)]->X[1],X[1]))
-    Y0 = ll;
-  //temp
-  
   
   IJK(df,n,&a,&b,&c);
   q[0]   = General2ChebyshevExtrema(X[0],0,patch);
@@ -1248,22 +1214,15 @@ static double dInterp_y_df_XZ_Tn_Ex(Patch_T *const patch,const double *const X,c
 // interpolation takes place in X and Z direction using Cheb Tn bases
 // with Extrema points.
 // ->return value: d(interp(f_z))/df */
-static double dInterp_z_df_XZ_Tn_Ex(Patch_T *const patch,const double *const X,const unsigned df)
+static double dInterp_z_df_XZ_Tn_Ex(Patch_T *const patch,const double *const X,const unsigned df,const unsigned plane)
 {
   const unsigned *const n = patch->n;
   Node_T **const node = patch->node;
-  unsigned Y0;/* const. plane */
+  const unsigned Y0 = plane;/* const. plane */
   double q[3];/* normalized coords. it is the same as N0, N1 and N2 */
   double sum = 0,s,qr;
   double J;
   unsigned a,b,c,r,l;
-  
-  //temp
-  for (unsigned ll = 0; ll < n[1]; ++ll)
-   if (EQL(patch->node[L(n,0,ll,0)]->X[1],X[1]))
-    Y0 = ll;
-  //temp
-  
   
   IJK(df,n,&a,&b,&c);
   q[0]   = General2ChebyshevExtrema(X[0],0,patch);
@@ -1323,8 +1282,9 @@ static double dInterp_z_df_XZ_Tn_Ex(Patch_T *const patch,const double *const X,c
 // df is node number which we are varying field at that point.
 // interpolation takes place in X and Z direction using Cheb Tn bases
 // with Extrema points.
+// plane argument is not used; it can be put to any number!
 // ->return value: d(interp(f))/df */
-static double dInterp_df_XZ_Tn_Ex(Patch_T *const patch,const double *const X,const unsigned df)
+static double dInterp_df_XZ_Tn_Ex(Patch_T *const patch,const double *const X,const unsigned df,const unsigned plane)
 {
   const unsigned *const n = patch->n;
   const double *point = patch->node[df]->X;
@@ -1339,7 +1299,8 @@ static double dInterp_df_XZ_Tn_Ex(Patch_T *const patch,const double *const X,con
   /* only changing of field at the plane X=X[1] must contribute */
   if (!EQL(point[1],X[1]))
     return 0;
-    
+  
+  UNUSED(plane);
   return sum_0_N_dCi_dfj_by_Ti_q(n[0],i,q[0])
          *
          sum_0_N_dCi_dfj_by_Ti_q(n[2],k,q[2]);
@@ -1350,22 +1311,15 @@ static double dInterp_df_XZ_Tn_Ex(Patch_T *const patch,const double *const X,con
 // interpolation takes place in X and Y direction using Cheb Tn bases
 // with Extrema points.
 // ->return value: d(interp(f_x))/df */
-static double dInterp_x_df_XY_Tn_Ex(Patch_T *const patch,const double *const X,const unsigned df)
+static double dInterp_x_df_XY_Tn_Ex(Patch_T *const patch,const double *const X,const unsigned df,const unsigned plane)
 {
   const unsigned *const n = patch->n;
   Node_T **const node = patch->node;
-  unsigned Z0;/* const. plane */
+  const unsigned Z0 = plane;/* const. plane */
   double q[3];/* normalized coords. it is the same as N0, N1 and N2 */
   double sum = 0,s,qr;
   double J;
   unsigned a,b,c,r,l;
-  
-  //temp
-  for (unsigned ll = 0; ll < n[2]; ++ll)
-   if (EQL(patch->node[L(n,0,0,ll)]->X[2],X[2]))
-    Z0 = ll;
-  //temp
-  
   
   IJK(df,n,&a,&b,&c);
   q[0]   = General2ChebyshevExtrema(X[0],0,patch);
@@ -1427,22 +1381,15 @@ static double dInterp_x_df_XY_Tn_Ex(Patch_T *const patch,const double *const X,c
 // interpolation takes place in X and Y direction using Cheb Tn bases
 // with Extrema points.
 // ->return value: d(interp(f_y))/df */
-static double dInterp_y_df_XY_Tn_Ex(Patch_T *const patch,const double *const X,const unsigned df)
+static double dInterp_y_df_XY_Tn_Ex(Patch_T *const patch,const double *const X,const unsigned df,const unsigned plane)
 {
   const unsigned *const n = patch->n;
   Node_T **const node = patch->node;
-  unsigned Z0;/* const. plane */
+  const unsigned Z0 = plane;/* const. plane */
   double q[3];/* normalized coords. it is the same as N0, N1 and N2 */
   double sum = 0,s,qr;
   double J;
   unsigned a,b,c,r,l;
-  
-  //temp
-  for (unsigned ll = 0; ll < n[2]; ++ll)
-   if (EQL(patch->node[L(n,0,0,ll)]->X[2],X[2]))
-    Z0 = ll;
-  //temp
-  
   
   IJK(df,n,&a,&b,&c);
   q[0]   = General2ChebyshevExtrema(X[0],0,patch);
@@ -1504,22 +1451,15 @@ static double dInterp_y_df_XY_Tn_Ex(Patch_T *const patch,const double *const X,c
 // interpolation takes place in X and Y direction using Cheb Tn bases
 // with Extrema points.
 // ->return value: d(interp(f_z))/df */
-static double dInterp_z_df_XY_Tn_Ex(Patch_T *const patch,const double *const X,const unsigned df)
+static double dInterp_z_df_XY_Tn_Ex(Patch_T *const patch,const double *const X,const unsigned df,const unsigned plane)
 {
   const unsigned *const n = patch->n;
   Node_T **const node = patch->node;
-  unsigned Z0;/* const. plane */
+  const unsigned Z0 = plane;/* const. plane */
   double q[3];/* normalized coords. it is the same as N0, N1 and N2 */
   double sum = 0,s,qr;
   double J;
   unsigned a,b,c,r,l;
-  
-  //temp
-  for (unsigned ll = 0; ll < n[2]; ++ll)
-   if (EQL(patch->node[L(n,0,0,ll)]->X[2],X[2]))
-    Z0 = ll;
-  //temp
-  
   
   IJK(df,n,&a,&b,&c);
   q[0]   = General2ChebyshevExtrema(X[0],0,patch);
@@ -1580,8 +1520,9 @@ static double dInterp_z_df_XY_Tn_Ex(Patch_T *const patch,const double *const X,c
 // df is node number which we are varying field at that point.
 // interpolation takes place in X and Y direction using Cheb Tn bases
 // with Extrema points.
+// plane argument is not used; it can be put to any number!
 // ->return value: d(interp(f))/df */
-static double dInterp_df_XY_Tn_Ex(Patch_T *const patch,const double *const X,const unsigned df)
+static double dInterp_df_XY_Tn_Ex(Patch_T *const patch,const double *const X,const unsigned df,const unsigned plane)
 {
   const unsigned *const n = patch->n;
   const double *point = patch->node[df]->X;
@@ -1596,6 +1537,7 @@ static double dInterp_df_XY_Tn_Ex(Patch_T *const patch,const double *const X,con
   if (!EQL(point[2],X[2]))
     return 0;
   
+  UNUSED(plane);
   return sum_0_N_dCi_dfj_by_Ti_q(n[0],i,q[0])
          *
          sum_0_N_dCi_dfj_by_Ti_q(n[1],j,q[1]);
@@ -1606,8 +1548,9 @@ static double dInterp_df_XY_Tn_Ex(Patch_T *const patch,const double *const X,con
 // df is node number which we are varying field at that point.
 // interpolation takes place in X and Y and Z direction using Cheb Tn bases
 // with Extrema points.
+// plane argument is not used; it can be put to any number!
 // ->return value: d(interp(f_x))/df */
-static double dInterp_x_df_XYZ_Tn_Ex(Patch_T *const patch,const double *const X,const unsigned df)
+static double dInterp_x_df_XYZ_Tn_Ex(Patch_T *const patch,const double *const X,const unsigned df,const unsigned plane)
 {
   const unsigned *const n = patch->n;
   Node_T **const node = patch->node;
@@ -1668,6 +1611,7 @@ static double dInterp_x_df_XYZ_Tn_Ex(Patch_T *const patch,const double *const X,
        sum_0_N_dCi_dfj_by_Ti_q(n[1],b,q[1]);
   sum += s;
   
+  UNUSED(plane);
   return sum;
 }
 
@@ -1675,8 +1619,9 @@ static double dInterp_x_df_XYZ_Tn_Ex(Patch_T *const patch,const double *const X,
 // df is node number which we are varying field at that point.
 // interpolation takes place in X and Y and Z direction using Cheb Tn bases
 // with Extrema points.
+// plane argument is not used; it can be put to any number!
 // ->return value: d(interp(f_y))/df */
-static double dInterp_y_df_XYZ_Tn_Ex(Patch_T *const patch,const double *const X,const unsigned df)
+static double dInterp_y_df_XYZ_Tn_Ex(Patch_T *const patch,const double *const X,const unsigned df,const unsigned plane)
 {
   const unsigned *const n = patch->n;
   Node_T **const node = patch->node;
@@ -1737,6 +1682,7 @@ static double dInterp_y_df_XYZ_Tn_Ex(Patch_T *const patch,const double *const X,
        sum_0_N_dCi_dfj_by_Ti_q(n[1],b,q[1]);
   sum += s;
   
+  UNUSED(plane);
   return sum;
 }
 
@@ -1744,8 +1690,9 @@ static double dInterp_y_df_XYZ_Tn_Ex(Patch_T *const patch,const double *const X,
 // df is node number which we are varying field at that point.
 // interpolation takes place in X and Y and Z direction using Cheb Tn bases
 // with Extrema points.
+// plane argument is not used; it can be put to any number!
 // ->return value: d(interp(f_z))/df */
-static double dInterp_z_df_XYZ_Tn_Ex(Patch_T *const patch,const double *const X,const unsigned df)
+static double dInterp_z_df_XYZ_Tn_Ex(Patch_T *const patch,const double *const X,const unsigned df,const unsigned plane)
 {
   const unsigned *const n = patch->n;
   Node_T **const node = patch->node;
@@ -1806,6 +1753,7 @@ static double dInterp_z_df_XYZ_Tn_Ex(Patch_T *const patch,const double *const X,
        sum_0_N_dCi_dfj_by_Ti_q(n[1],b,q[1]);
   sum += s;
   
+  UNUSED(plane);
   return sum;
 }
 
@@ -1813,8 +1761,9 @@ static double dInterp_z_df_XYZ_Tn_Ex(Patch_T *const patch,const double *const X,
 // df is node number which we are varying field at that point.
 // interpolation takes place in X and Y and Z direction using Cheb Tn bases
 // with Extrema points.
+// plane argument is not used; it can be put to any number!
 // ->return value: d(interp(f))/df */
-static double dInterp_df_XYZ_Tn_Ex(Patch_T *const patch,const double *const X,const unsigned df)
+static double dInterp_df_XYZ_Tn_Ex(Patch_T *const patch,const double *const X,const unsigned df,const unsigned plane)
 {
   const unsigned *const n = patch->n;
   double q[3];/* normalized coords */
@@ -1825,6 +1774,7 @@ static double dInterp_df_XYZ_Tn_Ex(Patch_T *const patch,const double *const X,co
   q[1] = General2ChebyshevExtrema(X[1],1,patch);
   q[2] = General2ChebyshevExtrema(X[2],2,patch);
   
+  UNUSED(plane);
   return sum_0_N_dCi_dfj_by_Ti_q(n[0],i,q[0])*
          sum_0_N_dCi_dfj_by_Ti_q(n[1],j,q[1])*
          sum_0_N_dCi_dfj_by_Ti_q(n[2],k,q[2]);

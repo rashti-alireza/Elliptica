@@ -87,13 +87,16 @@ static void test_dInterp_x_df_YZ_Tn_Ex(Field_T *const phi_field)
   Interpolation_T *interp_s = init_interpolation();
   const unsigned nn = patch->nn;
   const unsigned *const n = patch->n;
+  unsigned a,b,plane,l;
   const double E_i = n[0]*n[1]*n[2]*spectral_derivative_max_error(phi_field,1);/* interpolation error */
   const double EPS = E_i > 1.0 ? E_i*nn : 1.0;
   double X[3],f1,f2,spec_cal;
   unsigned df;
 
   phi_field_x->v = Partial_Derivative(phi_field,"x");
-  X[0] = patch->node[(unsigned)floor(random_double(0,nn-1,0))]->X[0];
+  l    = (unsigned)floor(random_double(0,nn-1,0));
+  IJK(l,n,&plane,&a,&b);
+  X[0] = patch->node[l]->X[0];
   X[1] = random_double(patch->min[1],patch->max[1],1);
   X[2] = random_double(patch->min[2],patch->max[2],1);
   interp_s->field = phi_field_x;  
@@ -118,7 +121,7 @@ static void test_dInterp_x_df_YZ_Tn_Ex(Field_T *const phi_field)
     f2 = execute_interpolation(interp_s);
     phi_field->v[df] -= EPS;
     
-    spec_cal = dInterp_spec(patch,X,df);
+    spec_cal = dInterp_spec(patch,X,df,plane);
     if (GRT(fabs(spec_cal-(f2-f1)/EPS),E_i))
     {
       printf("spec=%0.15f,direct=%0.15f\n",spec_cal,(f2-f1)/EPS);
@@ -151,11 +154,14 @@ static void test_dInterp_y_df_YZ_Tn_Ex(Field_T *const phi_field)
   const unsigned *const n = patch->n;
   const double E_i = n[0]*n[1]*n[2]*spectral_derivative_max_error(phi_field,1);/* interpolation error */
   const double EPS = E_i > 1.0 ? E_i*nn : 1.0;
+  unsigned a,b,plane,l;
   double X[3],f1,f2,spec_cal;
   unsigned df;
     
   phi_field_y->v = Partial_Derivative(phi_field,"y");
-  X[0] = patch->node[(unsigned)floor(random_double(0,nn-1,0))]->X[0];
+  l    = (unsigned)floor(random_double(0,nn-1,0));
+  IJK(l,n,&plane,&a,&b);
+  X[0] = patch->node[l]->X[0];
   X[1] = random_double(patch->min[1],patch->max[1],1);
   X[2] = random_double(patch->min[2],patch->max[2],1);
   interp_s->field = phi_field_y;
@@ -180,7 +186,7 @@ static void test_dInterp_y_df_YZ_Tn_Ex(Field_T *const phi_field)
     f2 = execute_interpolation(interp_s);
     phi_field->v[df] -= EPS;
     
-    spec_cal = dInterp_spec(patch,X,df);
+    spec_cal = dInterp_spec(patch,X,df,plane);
     if (GRT(fabs(spec_cal-(f2-f1)/EPS),E_i))
     {
       printf("spec=%0.15f,direct=%0.15f\n",spec_cal,(f2-f1)/EPS);
@@ -213,11 +219,14 @@ static void test_dInterp_z_df_YZ_Tn_Ex(Field_T *const phi_field)
   const unsigned *const n = patch->n;
   const double E_i = n[0]*n[1]*n[2]*spectral_derivative_max_error(phi_field,1);/* interpolation error */
   const double EPS = E_i > 1.0 ? E_i*nn : 1.0;
+  unsigned a,b,plane,l;
   double X[3],f1,f2,spec_cal;
   unsigned df;
     
   phi_field_z->v = Partial_Derivative(phi_field,"z");
-  X[0] = patch->node[(unsigned)floor(random_double(0,nn-1,0))]->X[0];
+  l    = (unsigned)floor(random_double(0,nn-1,0));
+  IJK(l,n,&plane,&a,&b);
+  X[0] = patch->node[l]->X[0];
   X[1] = random_double(patch->min[1],patch->max[1],1);
   X[2] = random_double(patch->min[2],patch->max[2],1);
   interp_s->field = phi_field_z;
@@ -242,7 +251,7 @@ static void test_dInterp_z_df_YZ_Tn_Ex(Field_T *const phi_field)
     f2 = execute_interpolation(interp_s);
     phi_field->v[df] -= EPS;
     
-    spec_cal = dInterp_spec(patch,X,df);
+    spec_cal = dInterp_spec(patch,X,df,plane);
     if (GRT(fabs(spec_cal-(f2-f1)/EPS),E_i))
     {
       printf("spec=%0.15f,direct=%0.15f\n",spec_cal,(f2-f1)/EPS);
@@ -274,9 +283,10 @@ static void test_dInterp_df_YZ_Tn_Ex(Field_T *const phi_field)
   const double E_i = n[0]*n[1]*n[2]*spectral_derivative_max_error(phi_field,1);/* interpolation error */
   const double EPS = E_i > 1.0 ? E_i*nn : 1.0;
   double X[3],f1,f2,spec_cal;
-  unsigned df;
+  unsigned df,l;
     
-  X[0] = patch->node[(unsigned)floor(random_double(0,nn-1,0))]->X[0];
+  l    = (unsigned)floor(random_double(0,nn-1,0));
+  X[0] = patch->node[l]->X[0];
   X[1] = random_double(patch->min[1],patch->max[1],1);
   X[2] = random_double(patch->min[2],patch->max[2],1);
   interp_s->field = phi_field;
@@ -299,7 +309,7 @@ static void test_dInterp_df_YZ_Tn_Ex(Field_T *const phi_field)
     f2 = execute_interpolation(interp_s);
     phi_field->v[df] -= EPS;
     
-    spec_cal = dInterp_spec(patch,X,df);
+    spec_cal = dInterp_spec(patch,X,df,0);
     if (GRT(fabs(spec_cal-(f2-f1)/EPS),E_i))
     {
       printf("spec=%0.15f,direct=%0.15f\n",spec_cal,(f2-f1)/EPS);
@@ -333,10 +343,13 @@ static void test_dInterp_x_df_XZ_Tn_Ex(Field_T *const phi_field)
   const double E_i = n[0]*n[1]*n[2]*spectral_derivative_max_error(phi_field,1);/* interpolation error */
   const double EPS = E_i > 1.0 ? E_i*nn : 1.0;
   double X[3],f1,f2,spec_cal;
+  unsigned a,b,plane,l;
   unsigned df;
 
   phi_field_x->v = Partial_Derivative(phi_field,"x");
-  X[1] = patch->node[(unsigned)floor(random_double(0,nn-1,0))]->X[1];
+  l    = (unsigned)floor(random_double(0,nn-1,0));
+  IJK(l,n,&a,&plane,&b);
+  X[1] = patch->node[l]->X[1];
   X[0] = random_double(patch->min[0],patch->max[0],1);
   X[2] = random_double(patch->min[2],patch->max[2],1);
   interp_s->field = phi_field_x;  
@@ -361,7 +374,7 @@ static void test_dInterp_x_df_XZ_Tn_Ex(Field_T *const phi_field)
     f2 = execute_interpolation(interp_s);
     phi_field->v[df] -= EPS;
     
-    spec_cal = dInterp_spec(patch,X,df);
+    spec_cal = dInterp_spec(patch,X,df,plane);
     if (GRT(fabs(spec_cal-(f2-f1)/EPS),E_i))
     {
       printf("spec=%0.15f,direct=%0.15f\n",spec_cal,(f2-f1)/EPS);
@@ -395,10 +408,13 @@ static void test_dInterp_y_df_XZ_Tn_Ex(Field_T *const phi_field)
   const double E_i = n[0]*n[1]*n[2]*spectral_derivative_max_error(phi_field,1);/* interpolation error */
   const double EPS = E_i > 1.0 ? E_i*nn : 1.0;
   double X[3],f1,f2,spec_cal;
+  unsigned a,b,plane,l;
   unsigned df;
     
   phi_field_y->v = Partial_Derivative(phi_field,"y");
-  X[1] = patch->node[(unsigned)floor(random_double(0,nn-1,0))]->X[1];
+  l    = (unsigned)floor(random_double(0,nn-1,0));
+  IJK(l,n,&a,&plane,&b);
+  X[1] = patch->node[l]->X[1];
   X[0] = random_double(patch->min[0],patch->max[0],1);
   X[2] = random_double(patch->min[2],patch->max[2],1);
   interp_s->field = phi_field_y;
@@ -423,7 +439,7 @@ static void test_dInterp_y_df_XZ_Tn_Ex(Field_T *const phi_field)
     f2 = execute_interpolation(interp_s);
     phi_field->v[df] -= EPS;
     
-    spec_cal = dInterp_spec(patch,X,df);
+    spec_cal = dInterp_spec(patch,X,df,plane);
     if (GRT(fabs(spec_cal-(f2-f1)/EPS),E_i))
     {
       printf("spec=%0.15f,direct=%0.15f\n",spec_cal,(f2-f1)/EPS);
@@ -457,10 +473,13 @@ static void test_dInterp_z_df_XZ_Tn_Ex(Field_T *const phi_field)
   const double E_i = n[0]*n[1]*n[2]*spectral_derivative_max_error(phi_field,1);/* interpolation error */
   const double EPS = E_i > 1.0 ? E_i*nn : 1.0;
   double X[3],f1,f2,spec_cal;
+  unsigned a,b,plane,l;
   unsigned df;
     
   phi_field_z->v = Partial_Derivative(phi_field,"z");
-  X[1] = patch->node[(unsigned)floor(random_double(0,nn-1,0))]->X[1];
+  l    = (unsigned)floor(random_double(0,nn-1,0));
+  IJK(l,n,&a,&plane,&b);
+  X[1] = patch->node[l]->X[1];
   X[0] = random_double(patch->min[0],patch->max[0],1);
   X[2] = random_double(patch->min[2],patch->max[2],1);
   interp_s->field = phi_field_z;
@@ -485,7 +504,7 @@ static void test_dInterp_z_df_XZ_Tn_Ex(Field_T *const phi_field)
     f2 = execute_interpolation(interp_s);
     phi_field->v[df] -= EPS;
     
-    spec_cal = dInterp_spec(patch,X,df);
+    spec_cal = dInterp_spec(patch,X,df,plane);
     if (GRT(fabs(spec_cal-(f2-f1)/EPS),E_i))
     {
       printf("spec=%0.15f,direct=%0.15f\n",spec_cal,(f2-f1)/EPS);
@@ -517,9 +536,10 @@ static void test_dInterp_df_XZ_Tn_Ex(Field_T *const phi_field)
   const double E_i = n[0]*n[1]*n[2]*spectral_derivative_max_error(phi_field,1);/* interpolation error */
   const double EPS = E_i > 1.0 ? E_i*nn : 1.0;
   double X[3],f1,f2,spec_cal;
-  unsigned df;
-    
-  X[1] = patch->node[(unsigned)floor(random_double(0,nn-1,0))]->X[1];
+  unsigned df,l;
+  
+  l    = (unsigned)floor(random_double(0,nn-1,0));
+  X[1] = patch->node[l]->X[1];
   X[0] = random_double(patch->min[0],patch->max[0],1);
   X[2] = random_double(patch->min[2],patch->max[2],1);
   interp_s->field = phi_field;
@@ -542,7 +562,7 @@ static void test_dInterp_df_XZ_Tn_Ex(Field_T *const phi_field)
     f2 = execute_interpolation(interp_s);
     phi_field->v[df] -= EPS;
     
-    spec_cal = dInterp_spec(patch,X,df);
+    spec_cal = dInterp_spec(patch,X,df,0);
     if (GRT(fabs(spec_cal-(f2-f1)/EPS),E_i))
     {
       printf("spec=%0.15f,direct=%0.15f\n",spec_cal,(f2-f1)/EPS);
@@ -576,10 +596,13 @@ static void test_dInterp_x_df_XY_Tn_Ex(Field_T *const phi_field)
   const double E_i = n[0]*n[1]*n[2]*spectral_derivative_max_error(phi_field,1);/* interpolation error */
   const double EPS = E_i > 1.0 ? E_i*nn : 1.0;
   double X[3],f1,f2,spec_cal;
+  unsigned a,b,plane,l;
   unsigned df;
 
   phi_field_x->v = Partial_Derivative(phi_field,"x");
-  X[2] = patch->node[(unsigned)floor(random_double(0,nn-1,0))]->X[2];
+  l    = (unsigned)floor(random_double(0,nn-1,0));
+  IJK(l,n,&a,&b,&plane);
+  X[2] = patch->node[l]->X[2];
   X[1] = random_double(patch->min[1],patch->max[1],1);
   X[0] = random_double(patch->min[0],patch->max[0],1);
   interp_s->field = phi_field_x;  
@@ -604,7 +627,7 @@ static void test_dInterp_x_df_XY_Tn_Ex(Field_T *const phi_field)
     f2 = execute_interpolation(interp_s);
     phi_field->v[df] -= EPS;
     
-    spec_cal = dInterp_spec(patch,X,df);
+    spec_cal = dInterp_spec(patch,X,df,plane);
     if (GRT(fabs(spec_cal-(f2-f1)/EPS),E_i))
     {
       printf("spec=%0.15f,direct=%0.15f\n",spec_cal,(f2-f1)/EPS);
@@ -638,10 +661,13 @@ static void test_dInterp_y_df_XY_Tn_Ex(Field_T *const phi_field)
   const double E_i = n[0]*n[1]*n[2]*spectral_derivative_max_error(phi_field,1);/* interpolation error */
   const double EPS = E_i > 1.0 ? E_i*nn : 1.0;
   double X[3],f1,f2,spec_cal;
+  unsigned a,b,plane,l;
   unsigned df;
     
   phi_field_y->v = Partial_Derivative(phi_field,"y");
-  X[2] = patch->node[(unsigned)floor(random_double(0,nn-1,0))]->X[2];
+  l    = (unsigned)floor(random_double(0,nn-1,0));
+  IJK(l,n,&a,&b,&plane);
+  X[2] = patch->node[l]->X[2];
   X[1] = random_double(patch->min[1],patch->max[1],1);
   X[0] = random_double(patch->min[0],patch->max[0],1);
   interp_s->field = phi_field_y;
@@ -666,7 +692,7 @@ static void test_dInterp_y_df_XY_Tn_Ex(Field_T *const phi_field)
     f2 = execute_interpolation(interp_s);
     phi_field->v[df] -= EPS;
     
-    spec_cal = dInterp_spec(patch,X,df);
+    spec_cal = dInterp_spec(patch,X,df,plane);
     if (GRT(fabs(spec_cal-(f2-f1)/EPS),E_i))
     {
       printf("spec=%0.15f,direct=%0.15f\n",spec_cal,(f2-f1)/EPS);
@@ -700,10 +726,13 @@ static void test_dInterp_z_df_XY_Tn_Ex(Field_T *const phi_field)
   const double E_i = n[0]*n[1]*n[2]*spectral_derivative_max_error(phi_field,1);/* interpolation error */
   const double EPS = E_i > 1.0 ? E_i*nn : 1.0;
   double X[3],f1,f2,spec_cal;
+  unsigned a,b,plane,l;
   unsigned df;
     
   phi_field_z->v = Partial_Derivative(phi_field,"z");
-  X[2] = patch->node[(unsigned)floor(random_double(0,nn-1,0))]->X[2];
+  l    = (unsigned)floor(random_double(0,nn-1,0));
+  IJK(l,n,&a,&b,&plane);
+  X[2] = patch->node[l]->X[2];
   X[1] = random_double(patch->min[1],patch->max[1],1);
   X[0] = random_double(patch->min[0],patch->max[0],1);
   interp_s->field = phi_field_z;
@@ -728,7 +757,7 @@ static void test_dInterp_z_df_XY_Tn_Ex(Field_T *const phi_field)
     f2 = execute_interpolation(interp_s);
     phi_field->v[df] -= EPS;
     
-    spec_cal = dInterp_spec(patch,X,df);
+    spec_cal = dInterp_spec(patch,X,df,plane);
     if (GRT(fabs(spec_cal-(f2-f1)/EPS),E_i))
     {
       printf("spec=%0.15f,direct=%0.15f\n",spec_cal,(f2-f1)/EPS);
@@ -785,7 +814,7 @@ static void test_dInterp_df_XY_Tn_Ex(Field_T *const phi_field)
     f2 = execute_interpolation(interp_s);
     phi_field->v[df] -= EPS;
     
-    spec_cal = dInterp_spec(patch,X,df);
+    spec_cal = dInterp_spec(patch,X,df,0);
     if (GRT(fabs(spec_cal-(f2-f1)/EPS),E_i))
     {
       printf("spec=%0.15f,direct=%0.15f\n",spec_cal,(f2-f1)/EPS);
@@ -846,7 +875,7 @@ static void test_dInterp_x_df_XYZ_Tn_Ex(Field_T *const phi_field)
     f2 = execute_interpolation(interp_s);
     phi_field->v[df] -= EPS;
     
-    spec_cal = dInterp_spec(patch,X,df);
+    spec_cal = dInterp_spec(patch,X,df,0);
     if (GRT(fabs(spec_cal-(f2-f1)/EPS),E_i))
     {
       printf("spec=%0.15f,direct=%0.15f\n",spec_cal,(f2-f1)/EPS);
@@ -908,7 +937,7 @@ static void test_dInterp_y_df_XYZ_Tn_Ex(Field_T *const phi_field)
     f2 = execute_interpolation(interp_s);
     phi_field->v[df] -= EPS;
     
-    spec_cal = dInterp_spec(patch,X,df);
+    spec_cal = dInterp_spec(patch,X,df,0);
     if (GRT(fabs(spec_cal-(f2-f1)/EPS),E_i))
     {
       printf("spec=%0.15f,direct=%0.15f\n",spec_cal,(f2-f1)/EPS);
@@ -970,7 +999,7 @@ static void test_dInterp_z_df_XYZ_Tn_Ex(Field_T *const phi_field)
     f2 = execute_interpolation(interp_s);
     phi_field->v[df] -= EPS;
     
-    spec_cal = dInterp_spec(patch,X,df);
+    spec_cal = dInterp_spec(patch,X,df,0);
     if (GRT(fabs(spec_cal-(f2-f1)/EPS),E_i))
     {
       printf("spec=%0.15f,direct=%0.15f\n",spec_cal,(f2-f1)/EPS);
@@ -1027,7 +1056,7 @@ static void test_dInterp_df_XYZ_Tn_Ex(Field_T *const phi_field)
     f2 = execute_interpolation(interp_s);
     phi_field->v[df] -= EPS;
     
-    spec_cal = dInterp_spec(patch,X,df);
+    spec_cal = dInterp_spec(patch,X,df,0);
     if (GRT(fabs(spec_cal-(f2-f1)/EPS),E_i))
     {
       printf("spec=%0.15f,direct=%0.15f\n",spec_cal,(f2-f1)/EPS);

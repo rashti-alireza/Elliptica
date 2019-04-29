@@ -16,7 +16,7 @@ typedef double *fFunc_Patch2Pdouble_T(Patch_T *const patch);
 
 /* general function for variation of various kind of interpolation with 
 // respect to the field. */
-typedef double fdInterp_dfs_T(Patch_T *const patch,const double *const X,const unsigned df);
+typedef double fdInterp_dfs_T(Patch_T *const patch,const double *const X,const unsigned df,const unsigned plane);
 
 /* *******************************************
 // general purpose structure typedef for functinos

@@ -684,22 +684,22 @@ static void fill_C_F_interpolation(Patch_T *const patch, Pair_T *const pair)
         {
           s1_node = inv1[s1];
           F[i2][s1] += sign*(
-                       N[0]*dInterp_df_x(patch,i2_point,s1_node)
+                       N[0]*dInterp_df_x(patch,i2_point,s1_node,subface->face)
                        +
-                       N[1]*dInterp_df_y(patch,i2_point,s1_node)
+                       N[1]*dInterp_df_y(patch,i2_point,s1_node,subface->face)
                        +
-                       N[2]*dInterp_df_z(patch,i2_point,s1_node));
+                       N[2]*dInterp_df_z(patch,i2_point,s1_node,subface->face));
         }
         /* C part */
         for (i1 = 0; i1 < NinterFP1; ++i1)
         {
           i1_node = Iinv1[i1];
           C[i2][i1] += sign*(
-                       N[0]*dInterp_df_x(patch,i2_point,i1_node)
+                       N[0]*dInterp_df_x(patch,i2_point,i1_node,subface->face)
                        +
-                       N[1]*dInterp_df_y(patch,i2_point,i1_node)
+                       N[1]*dInterp_df_y(patch,i2_point,i1_node,subface->face)
                        +
-                       N[2]*dInterp_df_z(patch,i2_point,i1_node));
+                       N[2]*dInterp_df_z(patch,i2_point,i1_node,subface->face));
         }
           
       }
@@ -748,13 +748,13 @@ static void fill_C_F_interpolation(Patch_T *const patch, Pair_T *const pair)
         for (s1 = 0; s1 < NsubM1; s1++)
         {
           s1_node = inv1[s1];
-          F[i2][s1] += sign*dInterp_df(patch,i2_point,s1_node);
+          F[i2][s1] += sign*dInterp_df(patch,i2_point,s1_node,subface->face);
         }
         /* C part */
         for (i1 = 0; i1 < NinterFP1; ++i1)
         {
           i1_node = Iinv1[i1];
-          C[i2][i1] += sign*dInterp_df(patch,i2_point,i1_node);
+          C[i2][i1] += sign*dInterp_df(patch,i2_point,i1_node,subface->face);
         }
       }
     }/* end of else */
