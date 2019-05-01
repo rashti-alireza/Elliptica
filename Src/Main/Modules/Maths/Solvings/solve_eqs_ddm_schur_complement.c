@@ -666,6 +666,7 @@ static void fill_C_F_interpolation(Patch_T *const patch, Pair_T *const pair)
       const unsigned *const inv1  = Schur->inv;
       const unsigned *const Iinv1 = Schur->Iinv;
       const unsigned *const node2 = subface->id;
+      const unsigned plane        = const_index_of_face(patch,subface);
       fdInterp_dfs_T *const dInterp_df_x = get_dInterp_df(patch,subface,"x derivative");
       fdInterp_dfs_T *const dInterp_df_y = get_dInterp_df(patch,subface,"y derivative");
       fdInterp_dfs_T *const dInterp_df_z = get_dInterp_df(patch,subface,"z derivative");
@@ -684,22 +685,22 @@ static void fill_C_F_interpolation(Patch_T *const patch, Pair_T *const pair)
         {
           s1_node = inv1[s1];
           F[i2][s1] += sign*(
-                       N[0]*dInterp_df_x(patch,i2_point,s1_node,subface->face)
+                       N[0]*dInterp_df_x(patch,i2_point,s1_node,plane)
                        +
-                       N[1]*dInterp_df_y(patch,i2_point,s1_node,subface->face)
+                       N[1]*dInterp_df_y(patch,i2_point,s1_node,plane)
                        +
-                       N[2]*dInterp_df_z(patch,i2_point,s1_node,subface->face));
+                       N[2]*dInterp_df_z(patch,i2_point,s1_node,plane));
         }
         /* C part */
         for (i1 = 0; i1 < NinterFP1; ++i1)
         {
           i1_node = Iinv1[i1];
           C[i2][i1] += sign*(
-                       N[0]*dInterp_df_x(patch,i2_point,i1_node,subface->face)
+                       N[0]*dInterp_df_x(patch,i2_point,i1_node,plane)
                        +
-                       N[1]*dInterp_df_y(patch,i2_point,i1_node,subface->face)
+                       N[1]*dInterp_df_y(patch,i2_point,i1_node,plane)
                        +
-                       N[2]*dInterp_df_z(patch,i2_point,i1_node,subface->face));
+                       N[2]*dInterp_df_z(patch,i2_point,i1_node,plane));
         }
           
       }
@@ -748,13 +749,13 @@ static void fill_C_F_interpolation(Patch_T *const patch, Pair_T *const pair)
         for (s1 = 0; s1 < NsubM1; s1++)
         {
           s1_node = inv1[s1];
-          F[i2][s1] += sign*dInterp_df(patch,i2_point,s1_node,subface->face);
+          F[i2][s1] += sign*dInterp_df(patch,i2_point,s1_node,0);
         }
         /* C part */
         for (i1 = 0; i1 < NinterFP1; ++i1)
         {
           i1_node = Iinv1[i1];
-          C[i2][i1] += sign*dInterp_df(patch,i2_point,i1_node,subface->face);
+          C[i2][i1] += sign*dInterp_df(patch,i2_point,i1_node,0);
         }
       }
     }/* end of else */
@@ -1909,36 +1910,49 @@ static void fill_interpolation_flags(Interpolation_T *const it,Patch_T *const pa
 }
 
 /* it finds the equation of a face(plane) in index format.
-// ->return value: constant index(coords) of a given face.
-*/
+// note: we need this function for case like interpolation and etc.
+// thus the sf subface is the subface of juxtapose patch which toches the patch,
+// so sf->adjFace is a face in patch.
+// more explanation:
+// given subface, if it is a juxtapose kind (touch), 
+// it returns the coordinate index of the surface of neighbor patch 
+// in which this interface touches it.
+// e.g. if two patches are juxtapose at X[0] = 4.5 in patch A and in this patch
+// it is correspond to the index I in patch->node[L(n,I,*,*,)]->X[0] so this function
+// returns I in case the subface of patch B which touches the mentioned interface is give.
+// ->return value: coordinate index of plane X = const. if they won't touch it gives UINT_MAX. */
+// ->return value: constant index(coords) of a given face, if not found UINT_MAX. */
 static unsigned const_index_of_face(Patch_T *const patch,const SubFace_T *const sf)
 {
   const unsigned f = sf->adjFace;
   const unsigned *const n = patch->n;
-  unsigned C = 0;/* constant value */
+  unsigned C = UINT_MAX;/* constant value */
   
-  switch(f)
+  if (sf->touch)
   {
-    case I_0:
-      C = 0;
-      break;
-    case I_n0:
-      C = n[0]-1;
-      break; 
-    case J_0:
-      C = 0;
-      break; 
-    case J_n1:
-      C = n[1]-1;
-      break; 
-    case K_0:
-      C = 0;
-      break; 
-    case K_n2:
-      C = n[2]-1;
-      break;
-    default:
-      abortEr("There is not such interface.\n");
+    switch(f)
+    {
+      case I_0:
+        C = 0;
+        break;
+      case I_n0:
+        C = n[0]-1;
+        break; 
+      case J_0:
+        C = 0;
+        break; 
+      case J_n1:
+        C = n[1]-1;
+        break; 
+      case K_0:
+        C = 0;
+        break; 
+      case K_n2:
+        C = n[2]-1;
+        break;
+      default:
+        abortEr(NO_OPTION);
+    }
   }
   
   return C;
@@ -2377,9 +2391,5 @@ static Matrix_T *making_J_Schur_Method(Grid_T *const grid)
   
   return J_Schur;
 }
-
-
-
-
 
 
