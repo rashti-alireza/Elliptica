@@ -37,7 +37,7 @@ int realize_geometry(Grid_T *const grid)
   free_points(grid);
   
   /* set df_dn flags */
-  df_dn(grid);
+  set_df_dn_and_pair(grid);
   
   /* taking some precaution and adding more info at your whim */
   misc(grid);
@@ -151,10 +151,10 @@ static void test_subfaces(const Grid_T *const grid)
           
           /* making sure two touching sufaces have different df_dn */
           if (subf->df_dn && subf2->df_dn)
-            abortEr("Wrong df_dn flags; both have df_dn = 1.\n");
+            abortEr("Wrong df_dn flags: both have df_dn = 1 (Neumann).\n");
           /* making sure two touching sufaces have different df_dn */
           if (!subf->df_dn && !subf2->df_dn)
-            abortEr("Wrong df_dn flags; both have df_dn = 0.\n");
+            abortEr("Wrong df_dn flags: both have df_dn = 0 (Dirichlet).\n");
           if (!subf2->touch)
             abortEr("Wrong paired subface.\n");
         }
@@ -193,107 +193,370 @@ static void test_subfaces(const Grid_T *const grid)
 /* setting df_dn flags inside sub-faces. this flag says if we have 
 // interpolation or copy situation at an interface, 
 // whether value of field is used or its derivative along normal to 
-// that interface. moreover, it pairs the related subfaces.
-*/
-static void df_dn(Grid_T *const grid)
+// that interface; in other words whether Drichlet or Nueman B.C applied.
+// the point is no two of patches must have all Neumman B.C. otherwise you get
+// inf condition number!
+// moreover, it pairs the related subfaces. */
+static void set_df_dn_and_pair(Grid_T *const grid)
 {
-  unsigned pa;
-  const unsigned AS = strlen(",Dn:?")+1;/* size of attached */
+  Interface_T **face;
+  SubFace_T *subf;
   
-  FOR_ALL(pa,grid->patch)
+  unsigned pa,f;
+  
+  /* one can add a function here if needs specific arrangement of df_dn */
+    
+  /* go thru all patches and set one Dirichlet BC for each */
+  FOR_ALL_PATCHES(pa,grid)
   {
-    Interface_T **face = grid->patch[pa]->interface;
-    unsigned f;
+    face = grid->patch[pa]->interface;
+    
+    /* set one of the subface->df_dn = 0 to rest assure 
+    // there is at least one Dirichlet b.c. in each patch */
+    set_one_Dirichlet_BC(face);
+  
+  }
+  
+  /* go thru all patches and setup df_dn */
+  FOR_ALL_PATCHES(pa,grid)
+  {
+    face = grid->patch[pa]->interface;
+    
+    /* set the rest of df_dn's. favor Neumann BC */
     FOR_ALL(f,face)
     {
       unsigned sf;
+      
       for (sf = 0; sf < face[f]->ns; ++sf)
       {
-        SubFace_T *subf = face[f]->subface[sf];
-        SubFace_T *subf2;
-        if (subf->touch)
-        {
-          unsigned ss;
-          
-          subf2 = find_subface(subf);
-          subf->adjsn = subf2->sn;
-          
-          if (strstr(subf->flags_str,"Dn:") && strstr(subf2->flags_str,"Dn:"))
-            continue;
-          
-          else if (subf->df_dn == 1  && subf2->df_dn == 1)
-            abortEr("Wrong df_dn flag for two subfaces.\n");
-            
-          else if (subf->df_dn == 1  && subf2->df_dn == 0)
-          {
-              if (!strstr(subf2->flags_str,"Dn:0"))
-              {
-                ss = (unsigned) strlen(subf2->flags_str)+AS;
-                subf2->flags_str = realloc(subf2->flags_str,ss);
-                pointerEr(subf2->flags_str);
-                strcat(subf2->flags_str,",Dn:0");
-              }
-          }
-           
-          else if (subf->df_dn == 0  && subf2->df_dn == 1)
-          {
-              if (!strstr(subf->flags_str,"Dn:0"))
-              {
-                ss = (unsigned) strlen(subf->flags_str)+AS;
-                subf->flags_str = realloc(subf->flags_str,ss);
-                pointerEr(subf->flags_str);
-                strcat(subf->flags_str,",Dn:0");
-              }
-          }
-             
-          else if (subf->df_dn == 0  && subf2->df_dn == 0)
-          {
-            /* when two subfaces are pristine */
-            if (!strstr(subf->flags_str,"Dn:0") && 
-                !strstr(subf2->flags_str,"Dn:0"))
-            {
-              subf->df_dn = 1;
-              ss = (unsigned) strlen(subf->flags_str)+AS;
-              subf->flags_str = realloc(subf->flags_str,ss);
-              pointerEr(subf->flags_str);
-              strcat(subf->flags_str,",Dn:1");
-              ss = (unsigned) strlen(subf2->flags_str)+AS;
-              subf2->flags_str = realloc(subf2->flags_str,ss);
-              pointerEr(subf2->flags_str);
-              strcat(subf2->flags_str,",Dn:0");
-            }
-            /* when the subf is already paired and sub2 is pristine */
-            else if (strstr(subf->flags_str,"Dn:0") && 
-                     !strstr(subf2->flags_str,"Dn:0"))
-            {
-              subf2->df_dn = 1;
-              ss = (unsigned) strlen(subf2->flags_str)+AS;
-              subf2->flags_str = realloc(subf2->flags_str,ss);
-              pointerEr(subf2->flags_str);
-              strcat(subf2->flags_str,",Dn:1");
-            }
-            /* when the subf2 is already paired and sub is pristine */
-            else if (!strstr(subf->flags_str,"Dn:0") && 
-                     strstr(subf2->flags_str,"Dn:0"))
-            {
-              subf->df_dn = 1;
-              ss = (unsigned) strlen(subf->flags_str)+AS;
-              subf->flags_str = realloc(subf->flags_str,ss);
-              pointerEr(subf->flags_str);
-              strcat(subf->flags_str,",Dn:1");
-            }
-            /* all other cases */
-            else
-             abortEr("df_dn can not be set; thess two pairs \n"
-               "are alredy sat with other two paires with fix df_dn.\n");
-          }/* end of if (subf->df_dn == 0  && subf2->df_dn == 0) */
+        subf = face[f]->subface[sf];
+        Subf_T **chain = 0, *ring = 0;
+        Flag_T flg = NONE;
+        unsigned nc;
         
-        }/* end of if (subf->outerB == 0 && subf->touch == 1) */
+        if (!subf->touch || strstr(subf->flags_str,"Dn:"))
+          continue;
+      
+        /* make the whole chain and determine the last ring by null pointer and so for next pointer */
+        chain = compose_the_chain(subf);
+        nc = countf(chain);
+        
+        if (nc == 1)
+          abortEr("There is no other subface matches to this subface.");
+      
+        /* first check if there is any clue for how to set this flags 
+        // by looking to other memebers of this chain */
+        for (ring = chain[1]; ring; ring = ring->next)
+        {
+          /* from the moment it finds a clue, it sets the afterward ones */
+          if (ring->set)
+          {
+            if (strstr(ring->subf->flags_str,"Dn:1"))
+            {
+              set_df_dn(ring,1);
+              flg = READY;
+              break;
+            }
+            else if (strstr(ring->subf->flags_str,"Dn:0"))
+            {
+              set_df_dn(ring,0);
+              flg = READY;
+              break;
+            }
+            else
+              abortEr("Flags in subface are not set right!");
+              
+          }
+        }
+        
+        /* if cluse didn't exist, favor Neumann bc  */
+        if (flg != READY)
+        {
+          set_df_dn(chain[0],1);
+          flg = READY;
+        }
+        
+        if (chain != 0)
+          free_2d(chain);
+        
+      }/* end of for (sf = 0; sf < face[f]->ns; ++sf) */
+    }/* end of FOR_ALL(f,face) */
+  }/* end of FOR_ALL(pa,grid->patch) */
+  
+  /* go thru all of the patches and setup adjsn */
+  FOR_ALL_PATCHES(pa,grid)
+  {
+    face = grid->patch[pa]->interface;
+    
+    /* set the rest of df_dn's. favor Neumann BC */
+    FOR_ALL(f,face)
+    {
+      unsigned sf;
+      
+      for (sf = 0; sf < face[f]->ns; ++sf)
+      {
+        subf = face[f]->subface[sf];
+        
+        if (!subf->touch)
+          continue;
+        
+        SubFace_T *subf2 = find_subface(subf);/* juxtapose subface of subf */
+        subf->adjsn = subf2->sn;
+  
       }/* end of for (sf = 0; sf < face[f]->ns; ++sf) */
     }/* end of FOR_ALL(f,face) */
   }/* end of FOR_ALL(pa,grid->patch) */
   
 }
+
+/* set one of the subface->df_dn = 0 to rest assure 
+// there is at least one Dirichlet b.c. in each patch. 
+// it also sets the flags df_dn adn adjsn if there are trivial cases. */
+static void set_one_Dirichlet_BC(Interface_T **const face)
+{ 
+  const Patch_T *const patch = face[0]->patch;
+  Subf_T **chain = 0, *ring;
+  unsigned nc;/* number of chain */
+  SubFace_T *subf;
+  unsigned sf,f; 
+  Flag_T flg;
+  
+  FOR_ALL(f,face)
+  {
+    for (sf = 0; sf < face[f]->ns; ++sf)
+    {
+      subf = face[f]->subface[sf];
+      flg = NONE;
+      
+      if (strstr(subf->flags_str,"Dn:0"))
+      {
+        flg = READY;
+        break;
+      }
+      
+      if (!subf->touch || strstr(subf->flags_str,"Dn:"))
+        continue;
+      
+      /* make the whole chain and determine the last ring by null pointer and so for next pointer */
+      chain = compose_the_chain(subf);
+      nc = countf(chain);
+      
+      if (nc == 1)
+        abortEr("There is no other subface matches to this subface.");
+        
+      /* first check if there is any clue for how to set this flags 
+      // by looking to other memebers of this chain */
+      for (ring = chain[1]; ring; ring = ring->next)
+      {
+        /* from the moment it finds a clue, it sets the afterward ones */
+        if (ring->set)
+        {
+          if (strstr(ring->subf->flags_str,"Dn:1"))
+          {
+            set_df_dn(ring,1);
+            flg = YES;
+            break;
+          }
+          else if (strstr(ring->subf->flags_str,"Dn:0"))
+          {
+            set_df_dn(ring,0);
+            flg = YES;
+            break;
+          }
+          else
+            abortEr("Flags in subface are not set right!");
+            
+        }
+      }
+      
+      /* if clue exists */
+      if (flg == YES)
+      {
+        /* check if it is Dirichlet */
+        if (strstr(subf->flags_str,"Dn:0"))
+        {
+          flg = READY;
+          break;
+        }
+        else
+          flg = NOT_READY;
+        
+      }
+      /* if cluse didn't exist */
+      else if (flg != YES)
+      {
+        set_df_dn(chain[0],0);
+        flg = READY;
+        break;
+      }
+      
+    }
+    /* if subf is ready */
+    if (flg == READY)
+      break;
+  }/* end of FOR_ALL(f,face) */
+  
+  if (chain != 0)
+    free_2d(chain);
+  
+  if (flg != READY)/* since it has a touching subface and no Drichlete BC */
+    abortEr_s("Drichlet Boundary Condition cannot be set for patch %s .\n",patch->name);
+    
+}
+
+/* given ring it sets df_dn flags in backward and forward direction 
+// of given ring in a chain (INCLUDING the ring itself) start with df_dn.
+// it takes df_dn as starting point. */
+static void set_df_dn(Subf_T *const ring,const unsigned df_dn)
+{
+  Subf_T *next = 0;
+  Subf_T *prev = 0;
+  const unsigned AS = strlen(",Dn:?")+1;/* size of attached */
+  char tail[10];
+  unsigned f,ss;
+  
+  f = df_dn;
+  for (next = ring; next; next = next->next)
+  {
+    if (next->set == 1)
+    { 
+      if (next->subf->df_dn != f%2)
+        abortEr("Wrong df_dn flags was found.");
+      else
+      {
+        ++f;
+        continue;
+      }
+    }
+      
+    next->subf->df_dn = f%2;
+    ss = (unsigned) strlen(next->subf->flags_str)+AS;
+    next->subf->flags_str = realloc(next->subf->flags_str,ss);
+    pointerEr(next->subf->flags_str);
+    sprintf(tail,",Dn:%u",f%2);
+    strcat(next->subf->flags_str,tail);
+    next->set = 1;
+    ++f;
+  }
+  
+  f = df_dn+1;/* starting from ring->prev so f = df_dn+1 */
+  for (prev = ring->prev; prev; prev = prev->prev)
+  {
+    if (prev->set == 1)
+    { 
+      if (prev->subf->df_dn != f%2)
+        abortEr("Wrong df_dn flags was found.");
+      else
+      {
+        ++f;
+        continue;
+      }
+    }
+    
+    prev->subf->df_dn = f%2;
+    ss = (unsigned) strlen(prev->subf->flags_str)+AS;
+    prev->subf->flags_str = realloc(prev->subf->flags_str,ss);
+    pointerEr(prev->subf->flags_str);
+    sprintf(tail,",Dn:%u",f%2);
+    strcat(prev->subf->flags_str,tail);
+    prev->set = 1;
+    ++f;
+  }
+  
+}
+
+/* increase the size of chain by 2 and put the last element to null.
+// ->return value: the last available ring of this chain. */
+static Subf_T *add_ring(Subf_T ***chain_addrss)
+{
+  Subf_T *ring = 0;
+  Subf_T **chain = *chain_addrss;
+  unsigned nc;/* number of chain */
+  
+  if (chain == 0)
+  {
+    chain = calloc(2,sizeof(*chain));
+    pointerEr(chain);
+    chain[0] = calloc(1,sizeof(*chain[0]));
+    pointerEr(chain[0]);
+    ring = chain[0];
+    ring->n = 0;
+  }
+  else
+  {
+    nc = countf(chain);
+    chain = realloc(chain,(nc+2)*sizeof(*chain));
+    pointerEr(chain);
+    chain[nc] = calloc(1,sizeof(*chain[nc]));
+    pointerEr(chain[nc]);
+    chain[nc+1] = 0;
+    ring = chain[nc];
+    ring->n = nc;
+  }
+  
+  (*chain_addrss) = chain;
+  return ring;
+}
+
+/* make the whole chain and determine the last ring of the chain by null pointer 
+// furthermore, it determines the last ring by subf->next = 0.
+// algorithm:
+// it looks for subf's juxtapose and when it reachs to the starting subface, 
+// it stops and put the next pointer to null.
+// ->return value: chain composes of subfaces connected to each other. */
+static Subf_T **compose_the_chain(SubFace_T *const subf1)
+{
+  Subf_T **chain = 0;
+  Subf_T *ring1, *ring2;
+  SubFace_T *subf2,*next;
+  Flag_T flg;
+  unsigned nc = 0,r;
+  
+  ring1 = add_ring(&chain);
+  ring1->subf = subf1;
+  ++nc;
+  
+  if (strstr(subf1->flags_str,"Dn:"))
+  {
+    ring1->set = 1;
+  }
+    
+  /* find the whole chain at determine the last ring by null pointer */
+  flg = NO;
+  next = subf1;
+  while (flg == NO)
+  {
+    subf2 = find_subface(next);/* juxtapose subface of subf1 */
+    
+    /* check if there is any repetition */
+    for (r = 0; r < nc; ++r)
+      if (subf2 == chain[r]->subf)
+      {
+        flg = YES;
+        break;
+      }
+      
+    if (flg == YES)
+      break;
+      
+    ring2 = add_ring(&chain);
+    ring2->subf = subf2;
+    ring2->prev = ring1;
+    ring1->next = ring2;
+    ++nc;
+    
+    if (strstr(subf2->flags_str,"Dn:"))
+    {
+      ring2->set = 1;
+    }
+    
+    ring1 = ring2;
+    next  = subf2;
+  }
+  
+  return chain;
+}      
+
 
 /* getting a subface, find its correspondingly paired subface to it.
 // algorithm: 
@@ -303,7 +566,9 @@ static void df_dn(Grid_T *const grid)
 // 4. if this point has been found return sub2, otherwise go to 2.
 // note: searching of one point is enough, because you subfacess' points
 // are mutually exclusive.
-*/
+// note: this returning subface doesn't mean that sub and sub2 are
+// necessarily paired.
+// ->return value: the adjacent subface, if can't error. */
 static SubFace_T *find_subface(const SubFace_T *const sub)
 {
   const Interface_T *const face = 
@@ -1076,6 +1341,7 @@ static int IsMildOrth(PointSet_T *const Pnt)
         if (needle->Nin != 0)
         {
           free(needle->in);
+          needle->in = 0;
           needle->Nin = 0;
         }
         needle_in(needle,patch2);
@@ -1097,6 +1363,7 @@ static int IsMildOrth(PointSet_T *const Pnt)
           }
           
           free(needle->ans);
+          needle->ans = 0;
           needle->Nans = 0;
         }
       }/* end of if (LSS(s,0)) */

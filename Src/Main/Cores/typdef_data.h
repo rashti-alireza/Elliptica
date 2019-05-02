@@ -29,6 +29,7 @@ typedef enum FLAG_T
   NO,
   YES,
   READY,
+  NOT_READY,
   INUSE,
   FOUND,
   CLEAN,

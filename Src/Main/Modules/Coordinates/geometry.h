@@ -47,6 +47,17 @@ typedef struct POINTSET_T
   unsigned overlap;/* 1 if overlaps, 0 otherwise */
 }PointSet_T;
 
+/* subface struct for setting some flags like df_dn and pairing purposes */
+typedef struct SUBF_T
+{
+  SubFace_T *subf;/* subface */
+  unsigned n;/* its number in a chain, ex: chain[n] = this struct */
+  unsigned set  : 1;/* set 1 unset 0 */
+  unsigned df_dn: 1;
+  struct SUBF_T *next;/* the next subface in which this subface connected */
+  struct SUBF_T *prev;/* the previous subface in which itconnected to this subface */
+}Subf_T;
+
 static void fill_basics(Patch_T *const patch);
 static void fill_N(Patch_T *const patch);
 static void fill_geometry(Grid_T * const grid);
@@ -79,7 +90,6 @@ static void test_subfaces(const Grid_T *const grid);
 static char *inspect_flags(const Point_T *const pnt);
 static void add_to_subface(const Point_T *const pnt,const char *const lead);
 static void add_point(SubFace_T *const subface,const Point_T *const pnt);
-static void df_dn(Grid_T *const grid);
 static Point_T *get_p2(const PointSet_T *const Pnt);
 static double find_grid_size(const PointSet_T *const Pnt,const unsigned i,const unsigned f);
 static SubFace_T *find_subface(const SubFace_T *const sub);
@@ -98,3 +108,9 @@ static int IsMatchedOtherInnerSubface(PointSet_T *const Pnt);
 static void normal_vec_CS_coord(Point_T *const point);
 static void FindInnerB_CS_coord(Patch_T *const patch);
 static void FindExterF_CS_coord(Patch_T *const patch);
+static void set_one_Dirichlet_BC(Interface_T **const face);
+static void set_df_dn_and_pair(Grid_T *const grid);
+static Subf_T *add_ring(Subf_T ***chain);
+static Subf_T **compose_the_chain(SubFace_T *const subf1);
+static void set_df_dn(Subf_T *const ring,const unsigned df_dn);
+
