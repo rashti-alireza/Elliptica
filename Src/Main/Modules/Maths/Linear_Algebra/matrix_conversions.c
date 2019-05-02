@@ -61,6 +61,63 @@ Matrix_T *cast_matrix_ccs(Matrix_T *const m)
   return ccs;
 }
 
+/* casting given matrix m to Long Compressed Column Storage Format.
+// it keeps the given matrix and makes a new matrix with the specified
+// format.
+// note 1: if the given matrix is ccs itself, it returns
+// a copy of the given matrix and returns it.
+// note 2: if the given matrix is 0 by 0, it returns null.
+// ->return value: a matirx with ccs long format.
+*/
+Matrix_T *cast_matrix_ccs_long(Matrix_T *const m)
+{
+  Matrix_T *ccs_l = 0;
+  
+  /* if empty, return null */
+  if (!m->row || !m->col)
+    return ccs_l;
+  
+  ccs_l = alloc_matrix(CCS_L_SF,m->row,m->col);
+  
+  if (m->reg_f)
+  {
+    double DropLimit = 0;
+    if (get_parameter("Ignore_Number_Less_Than_in_CCS_format"))	
+      DropLimit = GetParameterD("Ignore_Number_Less_Than_in_CCS_format");
+      
+    convert_reg2ccs_long(m,ccs_l,DropLimit);
+  }
+  else if (m->tri_f)
+  {
+    abortEr(INCOMPLETE_FUNC);
+  }
+  else if (m->ccs_f)
+  {
+    copy_ccs_long2ccs_long(m,ccs_l);
+  }
+  else if (m->crs_f)
+  {
+    abortEr(INCOMPLETE_FUNC);
+  }
+  else if (m->tri_l_f)
+  {
+    abortEr(INCOMPLETE_FUNC);
+  }
+  else if (m->ccs_l_f)
+  {
+    abortEr(INCOMPLETE_FUNC);
+  }
+  else if (m->crs_l_f)
+  {
+    abortEr(INCOMPLETE_FUNC);
+  }
+  else
+    abortEr("No matrix format is defined for this given matrix.\n");
+  
+  return ccs_l;
+}
+
+
 /* casting given matrix m to Regular Format.
 // it keeps the given matrix and makes a new matrix with the specified
 // format.
@@ -156,7 +213,7 @@ void copy_reg2reg(const Matrix_T *const reg1,Matrix_T *const reg2)
 */
 void copy_ccs2ccs(const Matrix_T *const ccs1,Matrix_T *const ccs2)
 {
-  if (ccs1->col && ccs1->row)
+  if (!ccs1->col || !ccs1->row)
     return;
     
   const long Nc = ccs1->col;
@@ -186,6 +243,44 @@ void copy_ccs2ccs(const Matrix_T *const ccs1,Matrix_T *const ccs2)
   ccs2->ccs->Ai = Ai2;
   ccs2->ccs->Ax = Ax2;
 }
+
+/* copying a ccs long matrix like ccs_l2 = ccs_l1.
+// note 1: ccs_l2 must already have been allocated memory.
+// note 2: if ccs_l1->row or ccs_l1->col is zero, it won't copy anything.
+*/
+void copy_ccs_long2ccs_long(const Matrix_T *const ccs_l1,Matrix_T *const ccs_l2)
+{
+  if (!ccs_l1->col || !ccs_l1->row)
+    return;
+    
+  const long Nc = ccs_l1->col;
+  const long *const Ap1   = ccs_l1->ccs_long->Ap;/* note: 
+                                        // Ap1[Nc] = total number of 
+                                        // none zero entries.
+                                        */
+  const long *const Ai1   = ccs_l1->ccs_long->Ai;
+  const double *const Ax1 = ccs_l1->ccs_long->Ax;
+  long *const Ap2   = calloc((long unsigned)Nc+1,sizeof(*Ap2));
+  long *const Ai2   = calloc((long unsigned)Ap1[Nc],sizeof(*Ai2));
+  double *const Ax2 = calloc((long unsigned)Ap1[Nc],sizeof(*Ax2));
+  long c,i;
+  
+  for (c = 0; c < Nc; c++)
+  {
+    Ap2[c] = Ap1[c];
+    for (i = Ap1[c]; i < Ap1[c+1]; ++i)
+    {
+      Ai2[i] = Ai1[i];
+      Ax2[i] = Ax1[i];
+    }
+  }
+  Ap2[Nc] = Ap1[Nc];
+  
+  ccs_l2->ccs_long->Ap = Ap2;
+  ccs_l2->ccs_long->Ai = Ai2;
+  ccs_l2->ccs_long->Ax = Ax2;
+}
+
 
 /* converting a regular storage format to ccs format.
 // note: the matrix will be made in CCS such that be in order in row.
@@ -225,4 +320,43 @@ static void convert_reg2ccs(const Matrix_T *const reg,Matrix_T *const ccs,const 
   ccs->ccs->Ap = Ap;
   ccs->ccs->Ai = Ai;
   ccs->ccs->Ax = Ax;
+}
+
+/* converting a regular storage format to ccs long format.
+// note: the matrix will be made in CCS long such that be in order in row. */
+static void convert_reg2ccs_long(const Matrix_T *const reg,Matrix_T *const ccs_l,const double DropLimit)
+{
+  const long Nr = reg->row;
+  const long Nc = reg->col;
+  double **const m = reg->reg->A;
+  long *Ap   = calloc((long unsigned)Nc+1,sizeof(*Ap));
+  long *Ai   = 0;
+  double *Ax = 0;
+  long tNN0 = 0;/* total number of none zero entries */
+  long NN0;/* number of none zero entries in each column */
+  long r,c;/* row and column */
+  
+  for (c = 0; c < Nc; ++c)
+  {
+    NN0 = 0;
+    for (r = 0; r < Nr; ++r)
+    {
+      if (GRT(ABS(m[r][c]),DropLimit))
+      {
+        Ai = realloc(Ai,(long unsigned)(Ap[c]+NN0+1)*sizeof(*Ai));
+        pointerEr(Ai);
+        Ax = realloc(Ax,(long unsigned)(Ap[c]+NN0+1)*sizeof(*Ax));
+        pointerEr(Ax);
+        Ai[Ap[c]+NN0] = (int)r;
+        Ax[Ap[c]+NN0] = m[r][c];
+        NN0++;
+        tNN0++;
+      }
+    }
+    Ap[c+1] = (int)tNN0;
+  }
+  
+  ccs_l->ccs_long->Ap = Ap;
+  ccs_l->ccs_long->Ai = Ai;
+  ccs_l->ccs_long->Ax = Ax;
 }
