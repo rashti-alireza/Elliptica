@@ -281,7 +281,7 @@ static void solve_Sy_g_prime(Matrix_T *const S,double *const g_prime,Grid_T *con
   const unsigned *const NI_p = 
                   grid->patch[0]->solving_man->method->SchurC->NI_p;
   double *y = alloc_double(NI_total);
-  Matrix_T *S_ccs = cast_matrix_ccs(S);
+  Matrix_T *S_ccs = cast_matrix_ccs_long(S);
   UmfPack_T umfpack[1] = {0};
   DDM_Schur_Complement_T *Schur;
   unsigned R = 0;
@@ -292,7 +292,7 @@ static void solve_Sy_g_prime(Matrix_T *const S,double *const g_prime,Grid_T *con
   umfpack->a = S_ccs;
   umfpack->b = g_prime;
   umfpack->x = y;
-  direct_solver_umfpack_di(umfpack);
+  direct_solver_umfpack_dl(umfpack);
 
   /* populate SchurC->y */
   FOR_ALL_PATCHES(p,grid)

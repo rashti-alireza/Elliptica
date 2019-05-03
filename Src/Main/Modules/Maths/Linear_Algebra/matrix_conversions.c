@@ -93,7 +93,7 @@ Matrix_T *cast_matrix_ccs_long(Matrix_T *const m)
   }
   else if (m->ccs_f)
   {
-    copy_ccs_long2ccs_long(m,ccs_l);
+    abortEr(INCOMPLETE_FUNC);
   }
   else if (m->crs_f)
   {
@@ -105,7 +105,7 @@ Matrix_T *cast_matrix_ccs_long(Matrix_T *const m)
   }
   else if (m->ccs_l_f)
   {
-    abortEr(INCOMPLETE_FUNC);
+    copy_ccs_long2ccs_long(m,ccs_l);
   }
   else if (m->crs_l_f)
   {
@@ -347,13 +347,13 @@ static void convert_reg2ccs_long(const Matrix_T *const reg,Matrix_T *const ccs_l
         pointerEr(Ai);
         Ax = realloc(Ax,(long unsigned)(Ap[c]+NN0+1)*sizeof(*Ax));
         pointerEr(Ax);
-        Ai[Ap[c]+NN0] = (int)r;
+        Ai[Ap[c]+NN0] = r;
         Ax[Ap[c]+NN0] = m[r][c];
         NN0++;
         tNN0++;
       }
     }
-    Ap[c+1] = (int)tNN0;
+    Ap[c+1] = tNN0;
   }
   
   ccs_l->ccs_long->Ap = Ap;
