@@ -348,7 +348,7 @@ static void set_one_Dirichlet_BC(Interface_T **const face)
       // by looking to other memebers of this chain */
       for (ring = chain[1]; ring; ring = ring->next)
       {
-        /* from the moment it finds a clue, it sets the afterward ones */
+        /* from the moment it finds a clue, it sets the flags accordingly */
         if (ring->set)
         {
           if (strstr(ring->subf->flags_str,"Dn:1"))
@@ -376,6 +376,8 @@ static void set_one_Dirichlet_BC(Interface_T **const face)
         if (strstr(subf->flags_str,"Dn:0"))
         {
           flg = READY;
+          free_2d(chain);
+          chain = 0;
           break;
         }
         else
@@ -387,6 +389,8 @@ static void set_one_Dirichlet_BC(Interface_T **const face)
       {
         set_df_dn(chain[0],0);
         flg = READY;
+        free_2d(chain);
+        chain = 0;
         break;
       }
       
@@ -498,11 +502,12 @@ static Subf_T *add_ring(Subf_T ***chain_addrss)
   return ring;
 }
 
-/* make the whole chain and determine the last ring of the chain by null pointer 
-// furthermore, it determines the last ring by subf->next = 0.
+/* make the whole chain and determine the last ring of the chain by null pointer.
+// furthermore, it determines the last ring by subf->next = 0 and 
+// the first ring by subf->prev = 0.
 // algorithm:
-// it looks for subf's juxtapose and when it reachs to the starting subface, 
-// it stops and put the next pointer to null.
+// it looks for subf's juxtapose and when it encounters repeated subface 
+// it will stop put the next pointer to null.
 // ->return value: chain composes of subfaces connected to each other. */
 static Subf_T **compose_the_chain(SubFace_T *const subf1)
 {
@@ -514,6 +519,7 @@ static Subf_T **compose_the_chain(SubFace_T *const subf1)
   
   ring1 = add_ring(&chain);
   ring1->subf = subf1;
+  ring1->prev = 0;
   ++nc;
   
   if (strstr(subf1->flags_str,"Dn:"))
@@ -521,7 +527,7 @@ static Subf_T **compose_the_chain(SubFace_T *const subf1)
     ring1->set = 1;
   }
     
-  /* find the whole chain at determine the last ring by null pointer */
+  /* find the whole chain that determine the last ring by null pointer */
   flg = NO;
   next = subf1;
   while (flg == NO)
