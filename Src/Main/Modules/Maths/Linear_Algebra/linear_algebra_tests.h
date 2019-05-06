@@ -10,6 +10,7 @@
 
 void matrix_tests(void);
 Matrix_T *cast_matrix_ccs(Matrix_T *const m);
+Matrix_T *cast_matrix_ccs_long(Matrix_T *const m);
 Matrix_T *cast_matrix_reg(Matrix_T *const m);
 int matrix_by_vector(const Matrix_T *const m, const double *const v,double *const b,const Flag_T flag);
 Matrix_T *matrix_by_matrix(const Matrix_T *const a, const Matrix_T *const b,const char *const dir);
@@ -17,4 +18,5 @@ static int cast_matrix_ccs_test(void);
 static Matrix_T *make_generic_matrix(const long Nr,const long Nc);
 static int read_ccs_test(void);
 static int matrices_arithmetic_test(void);
+static int cast_matrix_ccs_long_test(void);
 
