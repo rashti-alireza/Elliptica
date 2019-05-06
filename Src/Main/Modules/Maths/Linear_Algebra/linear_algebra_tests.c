@@ -12,13 +12,17 @@ void matrix_tests(void)
 {
   int status;
   
-  if(NOT_DO)
+  if(DO)
   {
     status = cast_matrix_ccs_test();
     printf("Casting of regular matrix to CCS format:");
     check_test_result(status);
+    
+    status = cast_matrix_ccs_long_test();
+    printf("Casting of regular matrix to CCS long format:");
+    check_test_result(status);
   }
-  if (NOT_DO)
+  if (DO)
   {
     status = read_ccs_test();
     printf("Testing the reader of CCS matrix:");
@@ -311,6 +315,50 @@ static int cast_matrix_ccs_test(void)
   
   return TEST_SUCCESSFUL;
 }
+
+/* testing function "cast_matrix_ccs_long" 
+// ->return value: TEST_SUCCESSFUL or TEST_UNSUCCESSFUL. */
+static int cast_matrix_ccs_long_test(void)
+{
+  const long Nr = ROW;
+  const long Nc = COL;
+  Matrix_T *reg = make_generic_matrix(Nr,Nc);
+  Matrix_T *ccs = 0;
+  Matrix_T *reg2 = 0;
+  double **m1,**m2;
+  long r,c;
+  Flag_T flg;
+  
+  ccs  = cast_matrix_ccs_long(reg);
+  reg2 = cast_matrix_reg(ccs);
+  
+  m1 = reg->reg->A;
+  m2 = reg2->reg->A;
+  
+  flg = NONE;
+  for (r = 0; r < Nr; ++r)
+  {
+    for (c = 0; c < Nc; ++c)
+      if (!EQL(m1[r][c],m2[r][c]))
+      {
+        flg = FOUND;
+        break;
+      }
+      
+    if (flg == FOUND)
+      break;
+  }
+  
+  free_matrix(ccs);
+  free_matrix(reg);
+  free_matrix(reg2);
+  
+  if (flg == FOUND)
+    return TEST_UNSUCCESSFUL;
+  
+  return TEST_SUCCESSFUL;
+}
+
 
 /* making a generic matrix at regular format for test purposes.
 // ->return value: made matrix.

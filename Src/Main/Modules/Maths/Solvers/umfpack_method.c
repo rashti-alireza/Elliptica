@@ -180,6 +180,64 @@ int direct_solver_series_umfpack_di(void *vp)
   return EXIT_SUCCESS;
 }
 
+/* umfpack direct solver double long kind 
+// used to solve ax = b for series of b's but same a.
+// thus, it won't need to decompose matrix a each time.
+// ->return value: EXIT_SUCCESS
+*/
+int direct_solver_series_umfpack_dl(void *vp)
+{
+  UmfPack_T *const umf = vp;
+  /* a is row by col matrix at a.x = b and in compressed column storage */
+  const int row     = (int)umf->a->row;
+  const int col     = (int)umf->a->col;
+  long *const Ap    = umf->a->ccs_long->Ap;
+  long *const Ai    = umf->a->ccs_long->Ai;
+  double *const Ax  = umf->a->ccs_long->Ax;
+  double **const bs = umf->bs;/* b's */
+  double **const xs = umf->xs;/* x's */
+  const unsigned ns = umf->ns;/* number of series to be solved */
+  void *Symbolic,*Numeric;
+  double Info[UMFPACK_INFO];
+  double Control[UMFPACK_CONTROL];
+  long status;
+  unsigned i;
+  
+  if (!umf->a->ccs_l_f)
+    abortEr("The matrix a in a.x = b in umfpack must be in CCS long format.\n");
+  
+  umfpack_dl_defaults(Control);
+  
+  status = umfpack_dl_symbolic(row,col,Ap,Ai,Ax,&Symbolic,Control,Info);
+  if(status != UMFPACK_OK)
+    umfpack_error_dl(Control,status,__FILE__,__LINE__);
+     
+  status = umfpack_dl_numeric(Ap,Ai,Ax,Symbolic,&Numeric,Control,Info);
+  if(status != UMFPACK_OK)
+    umfpack_error_dl(Control,status,__FILE__,__LINE__);
+     
+  umfpack_dl_free_symbolic(&Symbolic);
+
+  if (umf->description)
+  {
+    printf("%s\n",umf->description);
+    printf("o.  Matrix Dimension = %dx%d\n", row,col);
+    printf("o.  Condition Number = %g\n", 1/Info[UMFPACK_RCOND]);
+  }
+
+  /* solve for series ax[i]=b[i] */
+  for (i = 0; i < ns; ++i)
+  {
+    status = umfpack_dl_solve(UMFPACK_A,Ap,Ai,Ax,xs[i],bs[i],Numeric,Control,Info);
+    if(status != UMFPACK_OK)
+      umfpack_error_dl(Control,status,__FILE__,__LINE__);
+  }
+  /*freeing*/
+  umfpack_dl_free_numeric(&Numeric);
+ 
+  return EXIT_SUCCESS;
+}
+
 /* printing errors and reason of failure and then abort */
 static void umfpack_failed(const int status,const char *const file,const int line)
 {
