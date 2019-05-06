@@ -93,7 +93,7 @@ Matrix_T *cast_matrix_ccs_long(Matrix_T *const m)
   }
   else if (m->ccs_f)
   {
-    copy_ccs_long2ccs_long(m,ccs_l);
+    abortEr(INCOMPLETE_FUNC);
   }
   else if (m->crs_f)
   {
@@ -105,7 +105,7 @@ Matrix_T *cast_matrix_ccs_long(Matrix_T *const m)
   }
   else if (m->ccs_l_f)
   {
-    abortEr(INCOMPLETE_FUNC);
+    copy_ccs_long2ccs_long(m,ccs_l);
   }
   else if (m->crs_l_f)
   {
@@ -158,7 +158,7 @@ Matrix_T *cast_matrix_reg(Matrix_T *const m)
   }
   else if (m->ccs_l_f)
   {
-    abortEr(INCOMPLETE_FUNC);
+    convert_ccs_long2reg(m,reg);
   }
   else if (m->crs_l_f)
   {
@@ -179,6 +179,28 @@ static void convert_ccs2reg(const Matrix_T *const ccs,Matrix_T *const reg)
   const int *const Ai   = ccs->ccs->Ai;
   const double *const Ax = ccs->ccs->Ax;
   long c,i;
+  
+  reg->row = ccs->row;
+  reg->col = ccs->col;
+  
+  for (c = 0; c < Nc; ++c)
+    for (i = Ap[c]; i < Ap[c+1]; ++i)
+      m[Ai[i]][c] = Ax[i];
+  
+}
+
+/* converting a ccs_long format to reg format. */
+static void convert_ccs_long2reg(const Matrix_T *const ccs,Matrix_T *const reg)
+{
+  const long Nc = ccs->col;
+  double **const m = reg->reg->A;
+  const long *const Ap   = ccs->ccs_long->Ap;
+  const long *const Ai   = ccs->ccs_long->Ai;
+  const double *const Ax = ccs->ccs_long->Ax;
+  long c,i;
+  
+  reg->row = ccs->row;
+  reg->col = ccs->col;
   
   for (c = 0; c < Nc; ++c)
     for (i = Ap[c]; i < Ap[c+1]; ++i)
@@ -239,6 +261,8 @@ void copy_ccs2ccs(const Matrix_T *const ccs1,Matrix_T *const ccs2)
   }
   Ap2[Nc] = Ap1[Nc];
   
+  ccs2->row = ccs1->row;
+  ccs2->col = ccs1->col;
   ccs2->ccs->Ap = Ap2;
   ccs2->ccs->Ai = Ai2;
   ccs2->ccs->Ax = Ax2;
@@ -276,6 +300,8 @@ void copy_ccs_long2ccs_long(const Matrix_T *const ccs_l1,Matrix_T *const ccs_l2)
   }
   Ap2[Nc] = Ap1[Nc];
   
+  ccs_l2->row = ccs_l1->row;
+  ccs_l2->col = ccs_l1->col;
   ccs_l2->ccs_long->Ap = Ap2;
   ccs_l2->ccs_long->Ai = Ai2;
   ccs_l2->ccs_long->Ax = Ax2;
@@ -317,6 +343,8 @@ static void convert_reg2ccs(const Matrix_T *const reg,Matrix_T *const ccs,const 
     Ap[c+1] = (int)tNN0;
   }
   
+  ccs->row = reg->row;
+  ccs->col = reg->col;
   ccs->ccs->Ap = Ap;
   ccs->ccs->Ai = Ai;
   ccs->ccs->Ax = Ax;
@@ -347,16 +375,19 @@ static void convert_reg2ccs_long(const Matrix_T *const reg,Matrix_T *const ccs_l
         pointerEr(Ai);
         Ax = realloc(Ax,(long unsigned)(Ap[c]+NN0+1)*sizeof(*Ax));
         pointerEr(Ax);
-        Ai[Ap[c]+NN0] = (int)r;
+        Ai[Ap[c]+NN0] = r;
         Ax[Ap[c]+NN0] = m[r][c];
         NN0++;
         tNN0++;
       }
     }
-    Ap[c+1] = (int)tNN0;
+    Ap[c+1] = tNN0;
   }
   
+  ccs_l->row = reg->row;
+  ccs_l->col = reg->col;
   ccs_l->ccs_long->Ap = Ap;
   ccs_l->ccs_long->Ai = Ai;
   ccs_l->ccs_long->Ax = Ax;
 }
+
