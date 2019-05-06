@@ -21,7 +21,7 @@ int realize_geometry(Grid_T *const grid)
   unsigned i;
   
  pr_line_custom('~');
- printf("Realizing boundary conditions for each patch:\n");
+ printf("Realizing boundary conditions for each patch ...\n");
  pr_line_custom('~'); 
  
   FOR_ALL(i,grid->patch)
@@ -190,7 +190,7 @@ static void test_subfaces(const Grid_T *const grid)
     if (flg == NO)
       abortEr("One of patches has all Neumann boundary condition.");
     
-  }/* FOR_ALL(pa,grid->patch) */  
+  }/* FOR_ALL(pa,grid->patch) */
   
 }
 
@@ -890,8 +890,7 @@ static int realize_adj(PointSet_T **const Pnt)
 
 /* analyzing the adjacent point of point pnt; 
 // see which one best describe the adjacent boundary of the interface
-// and then fill the flags of Point_T.
-*/
+// and then fill the flags of Point_T. */
 static void analyze_adjPnt(PointSet_T *const Pnt)
 {
   Point_T *const p1 = Pnt->Pnt;
@@ -965,23 +964,6 @@ static void analyze_adjPnt(PointSet_T *const Pnt)
     add_to_subface(p1,lead);
     
   }
-  /* cases in which although N1.N2 != -1 but copy still possible */
-  else if (IsMildOrth(Pnt))
-  {
-    adjp1 = &Pnt->adjPnt[Pnt->idOrth];
-    Pnt->idFit = Pnt->idOrth;/* note: idFit used in get_p2 function */
-    p1->touch = 1;
-    p1->copy  = 1;
-    p1->adjPatch = adjp1->p;
-    p1->adjFace  = adjp1->CopyFace;
-    p2 = get_p2(Pnt);
-    assert(p2);
-    p1->adjPoint = p2;
-    
-    lead = inspect_flags(p1);
-    add_to_subface(p1,lead);
-    
-  }
   /* cases in which the points needs interpolation */
   else if (IsInterpolation(Pnt))
   {
@@ -1039,6 +1021,9 @@ static int IsMatchedOtherInnerSubface(PointSet_T *const Pnt)
   if (strcmp_i(GetParameterS("Interface_BC_Maximum_Face_Match"),"no"))
     return 0;
   
+  if (Pnt->type == INNER)
+    return 0;
+  
   Point_T *const p1 = Pnt->Pnt;
   Point_T *p2;
   AdjPoint_T *adjp1;
@@ -1056,7 +1041,7 @@ static int IsMatchedOtherInnerSubface(PointSet_T *const Pnt)
     
     /* study a similar point but with only one adjPnt */
     Pnt_copy.NadjPnt = 1;
-    Pnt_copy.adjPnt = &Pnt->adjPnt[i];
+    Pnt_copy.adjPnt  = &Pnt->adjPnt[i];
     
     flg = NONE;
     /* study each subface on the face Pnt->Pnt->face with the same adjPatch */
@@ -1104,28 +1089,6 @@ static int IsMatchedOtherInnerSubface(PointSet_T *const Pnt)
         flg = FOUND;
         break;
       }
-      /* cases in which although N1.N2 != -1 but copy still possible */
-      else if (IsMildOrth(&Pnt_copy))
-      {
-        Pnt->idFit = Pnt->idOrth = i;
-        Pnt->idInterp = UINT_MAX;
-        adjp1 = Pnt_copy.adjPnt;
-        
-        p1->touch = 1;
-        p1->copy  = 1;
-        p1->adjPatch = adjp1->p;
-        p1->adjFace  = adjp1->CopyFace;
-        p2 = get_p2(Pnt);
-        assert(p2);
-        p1->adjPoint = p2;
-        
-        lead = inspect_flags(p1);
-        add_to_subface(p1,lead);
-        
-        flg = FOUND;
-        break;
-        
-      }
       /* cases in which the points needs interpolation */
       else if (IsInterpolation(&Pnt_copy))
       {
@@ -1164,7 +1127,9 @@ static int IsMatchedOtherInnerSubface(PointSet_T *const Pnt)
   if (lead) free(lead); 
   
   if (flg == FOUND)
+  {
     return 1;
+  }
   
   return 0;
 }
@@ -1302,160 +1267,6 @@ static int IsInterpolation(PointSet_T *const Pnt)
   return 0;
 }
 
-/* if N2,the normal of adjPnt, has tangentical component to N1
-// less than grid size of adjPnt and N1 can goes to adjacent patch, 
-// this boundary condition is still valid.
-// ->return value: 1 if yes; otherwise 0.
-*/
-static int IsMildOrth(PointSet_T *const Pnt)
-{
-  const unsigned node = Pnt->Pnt->ind;
-  Patch_T *const patch = Pnt->Pnt->patch;
-  double *const x = patch->node[node]->x;
-  double eps = rms(3,x,0)*EPS;
-  double *const N = Pnt->Pnt->N;
-  struct Interp_S
-  {
-    unsigned adjid;/* adjPnt id */
-    unsigned fid;/* adjPnt face id */
-    double t;/* tnagent component */
-  }*copy = 0;
-  unsigned i,f,c,id;
-  Needle_T *needle = alloc_needle();
-  double q[3];/* q = pnt+eps*N */
-  
-  eps = GRT(eps,EPS) ? eps : EPS;
-  q[0] = x[0]+eps*N[0];
-  q[1] = x[1]+eps*N[1];
-  q[2] = x[2]+eps*N[2];
-  needle->grid = patch->grid;
-  needle->x = q;
-  
-  c = 0;
-  for (i = 0; i < Pnt->NadjPnt; i++)
-  {
-    Patch_T *patch2 = patch->grid->patch[Pnt->adjPnt[i].p];
-    
-    if (Pnt->adjPnt[i].on_c == 0 || Pnt->adjPnt[i].FaceFlg == 0) 
-      continue;
-    
-    for (f = 0; f < TOT_FACE; f++)
-    {
-      if (Pnt->adjPnt[i].fs[f].on_f == 0) continue;
-      
-      double s = Pnt->adjPnt[i].fs[f].N1dotN2;
-      /* make sure the product of normal is negative */
-      if (LSS(s,0))
-      {
-        /* make needle->in empty from left overs in previous run */
-        if (needle->Nin != 0)
-        {
-          free(needle->in);
-          needle->in = 0;
-          needle->Nin = 0;
-        }
-        needle_in(needle,patch2);
-        point_finder(needle);
-        /* make sure q is on adjPatch */
-        if (needle->Nans > 0)
-        {
-          double grid_size = find_grid_size(Pnt,i,f);
-          double t = sqrt(1-SQR(s));
-          
-          if (LSS(t,grid_size))
-          {
-            copy = realloc(copy,(c+1)*sizeof(*copy));
-            pointerEr(copy);
-            copy[c].adjid = i;
-            copy[c].fid   = f;
-            copy[c].t     = t;
-            c++;
-          }
-          
-          free(needle->ans);
-          needle->ans = 0;
-          needle->Nans = 0;
-        }
-      }/* end of if (LSS(s,0)) */
-    }/* end of for (f = 0; f < TOT_FACE; f++) */
-  }/* end of for (i = 0; i < Pnt->NadjPnt; i++) */
-  
-  free_needle(needle);
-  
-  if (c > 0)
-  {
-    Point_T p1 = *Pnt->Pnt;
-    char *lead;
-    Flag_T flg = NONE;
-    
-    p1.touch = 1;
-    p1.copy  = 1;
-    
-    for (i = 0; i < c; ++i)
-    {
-      p1.adjPatch = Pnt->adjPnt[copy[i].adjid].p;
-      p1.adjFace = copy[i].fid;
-      lead = inspect_flags(&p1);
-      
-      if (IsOnSubface(&p1,lead))
-      {
-        free(lead);
-        flg = FOUND;
-        id = i;
-        break;
-      }
-
-    }/* end of for (i = 0; i < c; ++i) */
-    
-    if (flg == NONE)
-    {
-      id = 0;
-      for (i = 1; i < c; ++i)
-      {
-        if (LSS(copy[i].t,copy[id].t))
-          id = i;
-      }
-    
-    }
-    
-    Pnt->idOrth = copy[id].adjid;
-    Pnt->adjPnt[copy[id].adjid].CopyFace = copy[id].fid;
-
-    free(copy);
-    return 1;
-  }
-  
-  return 0;
-}
-
-/* finding the closest point to adjPnt wiht index i in PointSet_T
-// at the same patch and then finding its distance to adjPnt.
-// ->return value: distance between adjPnt and its closest point.
-*/
-static double find_grid_size(const PointSet_T *const Pnt,const unsigned i,const unsigned f)
-{
-  Grid_T *const grid = Pnt->Pnt->patch->grid;
-  const unsigned p = Pnt->adjPnt[i].p;
-  Interface_T *const face = grid->patch[p]->interface[f];
-  double s = DBL_MAX;
-  double *x = grid->patch[p]->node[Pnt->adjPnt[i].node]->x;
-  double *y;
-  unsigned ind,j;
-  
-  FOR_ALL(j,face->point)
-  {
-    double r;
-    ind = face->point[j]->ind;
-    y = grid->patch[p]->node[ind]->x;
-    r = rms(3,x,y);
-
-    if (LSS(r,s))  s = r;
-  }
-  assert(j > 0);
-  
-  return s;
-}
-
 /* is this an outerboundary point?
 // yes if no points are in adjPnt or if we slightly move along the normal 
 // reach nowhere.
@@ -1478,9 +1289,39 @@ static int IsOutBndry(PointSet_T *const Pnt)
     unsigned ans;
     
     eps = GRT(eps,EPS) ? eps : EPS;
-    q[0] = x[0]+eps*N1[0];
-    q[1] = x[1]+eps*N1[1];
-    q[2] = x[2]+eps*N1[2];
+    
+    if (Pnt->type == EDGE)
+    {
+      double Ntan[3];/* tanget vector for tilting */
+      double Ntilt[3];/* tilting vector */
+      const double T = 0.1;/* tilting angle is arctan(T) */
+      double nrm;
+      
+      tangent(Pnt->Pnt,Ntan);
+      nrm = rms(3,Ntan,0);
+      if (EQL(nrm,0))
+        abortEr("Normal vector is null!");
+        
+      /* make it unit */  
+      Ntan[0] /= nrm;
+      Ntan[1] /= nrm;
+      Ntan[2] /= nrm;
+      
+      Ntilt[0] = N1[0]+T*Ntan[0];
+      Ntilt[1] = N1[1]+T*Ntan[1];
+      Ntilt[2] = N1[2]+T*Ntan[2];
+      q[0] = x[0]+eps*Ntilt[0];
+      q[1] = x[1]+eps*Ntilt[1];
+      q[2] = x[2]+eps*Ntilt[2];
+    }
+    else if (Pnt->type == INNER)
+    {
+      q[0] = x[0]+eps*N1[0];
+      q[1] = x[1]+eps*N1[1];
+      q[2] = x[2]+eps*N1[2];
+    }
+    else
+      abortEr(NO_OPTION);
     
     Needle_T *needle = alloc_needle();
     needle->grid = patch->grid;
@@ -1694,12 +1535,14 @@ static void init_Points(const Interface_T *const interface,PointSet_T ***const i
     {
       alloc_PointSet(ed+1,&pnt_ed);
       pnt_ed[ed]->Pnt = interface->point[p];
+      pnt_ed[ed]->type = EDGE;
       ed++;
     }
     else
     {
       alloc_PointSet(in+1,&pnt_in);
       pnt_in[in]->Pnt = interface->point[p];
+      pnt_in[in]->type = INNER;
       in++;
     }  
   }

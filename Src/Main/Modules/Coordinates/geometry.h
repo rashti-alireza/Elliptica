@@ -45,6 +45,7 @@ typedef struct POINTSET_T
   unsigned idOrth;/* id of adjPnt for Orthogonal cases */
   unsigned idInterp;/* id of adjPnt for interpolation case */
   unsigned overlap;/* 1 if overlaps, 0 otherwise */
+  enum Type type;
 }PointSet_T;
 
 /* subface struct for setting some flags like df_dn and pairing purposes */
@@ -83,7 +84,6 @@ static int IsNormalFit(PointSet_T *const Pnt);
 static int IsOrthOutBndry(PointSet_T *const Pnt);
 static int IsOutBndry(PointSet_T *const Pnt);
 static int IsInterpolation(PointSet_T *const Pnt);
-static int IsMildOrth(PointSet_T *const Pnt);
 static int IsOnSubface(const Point_T *const pnt, const char *const lead);
 static int ReachBnd(PointSet_T *const Pnt,const unsigned p,const unsigned f);
 static void test_subfaces(const Grid_T *const grid);
@@ -91,7 +91,6 @@ static char *inspect_flags(const Point_T *const pnt);
 static void add_to_subface(const Point_T *const pnt,const char *const lead);
 static void add_point(SubFace_T *const subface,const Point_T *const pnt);
 static Point_T *get_p2(const PointSet_T *const Pnt);
-static double find_grid_size(const PointSet_T *const Pnt,const unsigned i,const unsigned f);
 static SubFace_T *find_subface(const SubFace_T *const sub);
 void point_finder(Needle_T *const needle);
 double *normal_vec(Point_T *const point);
