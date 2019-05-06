@@ -20,6 +20,10 @@ int realize_geometry(Grid_T *const grid)
 {
   unsigned i;
   
+ pr_line_custom('~');
+ printf("Realizing boundary conditions for each patch:\n");
+ pr_line_custom('~'); 
+ 
   FOR_ALL(i,grid->patch)
   {
     Patch_T *const patch = grid->patch[i];
