@@ -2033,17 +2033,14 @@ double *normal_vec(Point_T *const point)
   else
     abortEr("No Normal defined for such coordinate yet!\n");
   
-  /* make sure the normal is outward as well. */
-  make_it_outward(point);
   return point->N;
 }
 
 /* make sure the normal is outward. 
 // it checks if q = x+eps*N won't be found in the patch 
 // where the normal on its interface is being found.
-// if it finds then it will multiplies N by -1.
-*/
-static void make_it_outward(Point_T *const point)
+// if it finds then it will multiplies N by -1. */
+void make_normal_outward(Point_T *const point)
 {
   const double *const x = point->patch->node[point->ind]->x;
   
@@ -2081,9 +2078,9 @@ static void normal_vec_CS_coord(Point_T *const point)
   switch(point->face)
   {
     case I_0:
-      point->N[0] = dq2_dq1(patch,_a_,_x_,p);
-      point->N[1] = dq2_dq1(patch,_a_,_y_,p);
-      point->N[2] = dq2_dq1(patch,_a_,_z_,p);
+      point->N[0] = -dq2_dq1(patch,_a_,_x_,p);
+      point->N[1] = -dq2_dq1(patch,_a_,_y_,p);
+      point->N[2] = -dq2_dq1(patch,_a_,_z_,p);
     break;
     case I_n0:
       point->N[0] = dq2_dq1(patch,_a_,_x_,p);
@@ -2091,9 +2088,9 @@ static void normal_vec_CS_coord(Point_T *const point)
       point->N[2] = dq2_dq1(patch,_a_,_z_,p);
     break;
     case J_0:
-      point->N[0] = dq2_dq1(patch,_b_,_x_,p);
-      point->N[1] = dq2_dq1(patch,_b_,_y_,p);
-      point->N[2] = dq2_dq1(patch,_b_,_z_,p);
+      point->N[0] = -dq2_dq1(patch,_b_,_x_,p);
+      point->N[1] = -dq2_dq1(patch,_b_,_y_,p);
+      point->N[2] = -dq2_dq1(patch,_b_,_z_,p);
     break;
     case J_n1:
       point->N[0] = dq2_dq1(patch,_b_,_x_,p);
@@ -2101,9 +2098,9 @@ static void normal_vec_CS_coord(Point_T *const point)
       point->N[2] = dq2_dq1(patch,_b_,_z_,p);
     break;
     case K_0:
-      point->N[0] = dq2_dq1(patch,_c_,_x_,p);
-      point->N[1] = dq2_dq1(patch,_c_,_y_,p);
-      point->N[2] = dq2_dq1(patch,_c_,_z_,p);
+      point->N[0] = -dq2_dq1(patch,_c_,_x_,p);
+      point->N[1] = -dq2_dq1(patch,_c_,_y_,p);
+      point->N[2] = -dq2_dq1(patch,_c_,_z_,p);
     break;
     case K_n2:
       point->N[0] = dq2_dq1(patch,_c_,_x_,p);
@@ -2162,6 +2159,8 @@ static void normal_vec_Cartesian_coord(Point_T *const point)
     default:
       abortEr("There is no such face.\n");
   }
+  
+  
 }
 
 /* reallocation mem for PointSet_T strcut with one extera block

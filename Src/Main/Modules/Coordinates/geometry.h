@@ -102,7 +102,7 @@ void check_houseK(const Patch_T *const patch);
 unsigned find_node(const double *const x, const Patch_T *const patch,Flag_T *const flg);
 unsigned node_onFace(const double *const x, const unsigned f,const Patch_T *const patch);
 int realize_geometry(Grid_T *const grid);
-static void make_it_outward(Point_T *const point);
+void make_normal_outward(Point_T *const point);
 static void misc(Grid_T *const grid);
 static int IsMatchedOtherInnerSubface(PointSet_T *const Pnt);
 static void normal_vec_CS_coord(Point_T *const point);
