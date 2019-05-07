@@ -175,7 +175,7 @@ Matrix_T *matrix_by_matrix(const Matrix_T *const a, const Matrix_T *const b,cons
 // note the char (+,-) determines the operator.
 // note if the rows or columns are inconsistent it gives error.
 // ->return value: resultant in CCS format */
-Matrix_T *ccsOpccs(Matrix_T *const ccs2,Matrix_T *const ccs1,const char Op)
+Matrix_T *CCSOpCCS(Matrix_T *const ccs2,Matrix_T *const ccs1,const char Op)
 {
   const long Nr = ccs2->row;
   const long Nc = ccs2->col;

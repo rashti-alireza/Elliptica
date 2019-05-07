@@ -440,9 +440,10 @@ typedef struct DDM_SCHUR_COMPLEMENT_T
   Matrix_T *B;
   Matrix_T *E_Trans;/* NOE: this is TRANSPOSE of E */
   Matrix_T *E_Trans_prime;/* NOTE: it is E' of E_Trnas. */
-  Matrix_T *F_by_E_prime;
+  Matrix_T *F_by_E_prime;/* it is made in CCS format */
   Matrix_T **F;
   Matrix_T **C;
+  Matrix_T *C_ccs;/* combining all of the C's into one CCS format matrix */
   Sewing_T **sewing;/* sewing[patch_number] */
   unsigned nsewing;/* number of sewings which is = number of patches */
   unsigned np;/* total number of patches */
