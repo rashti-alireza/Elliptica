@@ -348,8 +348,14 @@ double General2ChebyshevExtrema(const double X,const unsigned dir,const Patch_T 
     
   const double a = -patch->max[dir]+patch->min[dir];
   const double b =  patch->max[dir]+patch->min[dir];
+  double cheb = (X*2-b)/a;
   
-  return (X*2-b)/a;
+  if (EQL(cheb,1.0))
+    cheb = 1;
+  else if (EQL(cheb,-1.0))
+    cheb = -1;
+    
+  return cheb;
 }
 
 /* making keyword for searching of parameter value */
