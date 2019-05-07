@@ -169,3 +169,88 @@ Matrix_T *matrix_by_matrix(const Matrix_T *const a, const Matrix_T *const b,cons
   
   return d;
 }
+
+/* add or subtract to CCS matrices as ccs2-ccs1 or ccs2+ccs1 
+// and cast the resultant to CCS too and return it.
+// note the char (+,-) determines the operator.
+// note if the rows or columns are inconsistent it gives error.
+// ->return value: resultant in CCS format */
+Matrix_T *ccsOpccs(Matrix_T *const ccs2,Matrix_T *const ccs1,const char Op)
+{
+  const long Nr = ccs2->row;
+  const long Nc = ccs2->col;
+  Matrix_T *res = 0;
+  int *Ap   = 0;
+  int *Ai   = 0;
+  double *Ax = 0;
+  double ax;
+  long tNN0 = 0;/* total number of none zero entries */
+  long NN0;/* number of none zero entries in each column */
+  const double DropLimit = 0; 
+  long r,c;/* row and column */
+  
+  if (Nr != ccs1->row)
+    abortEr("Rows of the matrices are not matched.\n");
+  if (Nc != ccs1->col)
+    abortEr("columns of the matrices are not matched.\n");
+  
+  Ap = calloc((long unsigned)Nc+1,sizeof(*Ap));
+  pointerEr(Ap);
+  res = alloc_matrix(CCS_SF,Nr,Nc);
+  
+  if (Op == '+')
+  {
+    for (c = 0; c < Nc; ++c)
+    {
+      NN0 = 0;
+      for (r = 0; r < Nr; ++r)
+      {
+        ax = read_matrix_entry_ccs(ccs2,r,c)+read_matrix_entry_ccs(ccs1,r,c);
+        if (GRT(ABS(ax),DropLimit))
+        {
+          Ai = realloc(Ai,(long unsigned)(Ap[c]+NN0+1)*sizeof(*Ai));
+          pointerEr(Ai);
+          Ax = realloc(Ax,(long unsigned)(Ap[c]+NN0+1)*sizeof(*Ax));
+          pointerEr(Ax);
+          Ai[Ap[c]+NN0] = (int)r;
+          Ax[Ap[c]+NN0] = ax;
+          NN0++;
+          tNN0++;
+        }
+      }
+      Ap[c+1] = (int)tNN0;
+    }
+  }
+  else if (Op == '-')
+  {
+    for (c = 0; c < Nc; ++c)
+    {
+      NN0 = 0;
+      for (r = 0; r < Nr; ++r)
+      {
+        
+        ax = read_matrix_entry_ccs(ccs2,r,c)-read_matrix_entry_ccs(ccs1,r,c);
+        if (GRT(ABS(ax),DropLimit))
+        {
+          Ai = realloc(Ai,(long unsigned)(Ap[c]+NN0+1)*sizeof(*Ai));
+          pointerEr(Ai);
+          Ax = realloc(Ax,(long unsigned)(Ap[c]+NN0+1)*sizeof(*Ax));
+          pointerEr(Ax);
+          Ai[Ap[c]+NN0] = (int)r;
+          Ax[Ap[c]+NN0] = ax;
+          NN0++;
+          tNN0++;
+        }
+      }
+      Ap[c+1] = (int)tNN0;
+    }
+  }
+  else
+    abortEr(NO_OPTION);
+
+  res->ccs->Ap = Ap;
+  res->ccs->Ai = Ai;
+  res->ccs->Ax = Ax;  
+  
+  return res;
+}

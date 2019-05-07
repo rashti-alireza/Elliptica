@@ -5,13 +5,91 @@
 
 #include "matrix_conversions.h"
 
+
+/* casting a stack of matrices S to Compressed Column Storage Format.
+// the stack is collection of matrices such that each of them has
+// the same column but maybe different number of rows.
+// note: all of the members of the stack must have same number of columns.
+// note: some of the matrices in the stack might have all zero entries
+// in which case one might determine this matrix with null pointer.
+// note: if the flag is YES it will free all of the matrices of the stack
+// it won't free the stack itself.
+// ->return value: the compressed stack matrix in ccs format. */
+Matrix_T *compress_stack2ccs
+( Matrix_T **const S/* stack of matrices */,
+  const unsigned nm/* number of matrices in the stack */,
+  const unsigned *const nr/* number of rows in each matrix */,
+  const unsigned Nrow/* total number of rows */,
+  const unsigned Ncol/* total number of columns */,
+  const Flag_T flg/* if YES means free all of the matrices from the stack, do nothing otherwise */
+)
+{
+  Matrix_T *ccs = alloc_matrix(CCS_SF,Nrow,Ncol);
+  int *Ap   = calloc((long unsigned)Ncol+1,sizeof(*Ap));
+  int *Ai   = 0;
+  double *Ax = 0;
+  
+  long tNN0 = 0;/* total number of none zero entries */
+  long NN0;/* number of none zero entries in each column */
+  long r,c;/* row and column */
+  long R1 = 0;
+  const double DropLimit = 0;
+  double **m;
+  unsigned i;
+  
+  assert(Nrow < INT_MAX);
+  
+  for (c = 0; c < Ncol; ++c)
+  {
+    NN0 = 0;
+    /* go thru all of the rows */
+    for (i = 0; i < nm; ++i)
+    {
+      if (S[i])
+      {
+        m = S[i]->reg->A;
+        for (r = 0; r < nr[i]; ++r)
+        {
+          if (GRT(ABS(m[r][c]),DropLimit))
+          {
+            Ai = realloc(Ai,(long unsigned)(Ap[c]+NN0+1)*sizeof(*Ai));
+            pointerEr(Ai);
+            Ax = realloc(Ax,(long unsigned)(Ap[c]+NN0+1)*sizeof(*Ax));
+            pointerEr(Ax);
+            Ai[Ap[c]+NN0] = (int)(r+R1);
+            Ax[Ap[c]+NN0] = m[r][c];
+            NN0++;
+            tNN0++;
+          }
+        }
+      }/* end of if(C) */
+      R1 += nr[i];
+    }/* end of for (p = 0; p < np; ++p) */
+    Ap[c+1] = (int)tNN0;
+  }/* end of for (c = 0; c < Nc; ++c) */
+  
+  /* free S matrices */
+  if (flg == YES)
+  {
+    for (i = 0; i < nm; ++i)
+      if (S[i])
+        free_matrix(S[i]);
+  }
+      
+  ccs->ccs->Ap = Ap;
+  ccs->ccs->Ai = Ai;
+  ccs->ccs->Ax = Ax;
+  
+  return ccs;
+}
+
 /* casting given matrix m to Compressed Column Storage Format.
 // it keeps the given matrix and makes a new matrix with the specified
 // format.
 // note 1: if the given matrix is ccs itself, it returns
 // a copy of the given matrix and returns it.
 // note 2: if the given matrix is 0 by 0, it returns null.
-// ->return value: a matirx with ccs format.
+// ->return value: the matirx in ccs format.
 */
 Matrix_T *cast_matrix_ccs(Matrix_T *const m)
 {
