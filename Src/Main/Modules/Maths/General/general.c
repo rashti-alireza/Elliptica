@@ -209,7 +209,7 @@ double d2T_dx2(const int n, const double x)
 double sum_0_N_dCi_dfj_by_dTi_dq(const unsigned N,const unsigned j,const double q)
 {
   /* some checks */
-  if (LSS(q,-1) || GRT(q,1))
+  if (q < -1.0 || q > 1)
     abortEr("q must be in interval [-1,1].");
   if (j >= N)
     abortEr("j must be smaller that N");
@@ -258,7 +258,7 @@ double sum_0_N_dCi_dfj_by_dTi_dq(const unsigned N,const unsigned j,const double 
 double sum_0_N_dCi_dfj_by_Ti_q(const unsigned N,const unsigned j,const double q)
 {
   /* some checks */
-  if (LSS(q,-1) || GRT(q,1))
+  if (q < -1.0 || q > 1.0)
     abortEr("q must be in interval [-1,1].");
   if (j >= N)
     abortEr("j must be smaller that N");
