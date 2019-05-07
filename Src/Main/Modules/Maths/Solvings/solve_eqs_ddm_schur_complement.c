@@ -295,15 +295,13 @@ static void solve_Sy_g_prime(Matrix_T *const S,double *const g_prime,Grid_T *con
   const unsigned *const NI_p = 
                   grid->patch[0]->solving_man->method->SchurC->NI_p;
   double *y = alloc_double(NI_total);
-  Matrix_T *S_ccs = cast_matrix_ccs_long(S);
   UmfPack_T umfpack[1] = {0};
   DDM_Schur_Complement_T *Schur;
   unsigned R = 0;
   unsigned p;
-  free_matrix(S);
   
   umfpack->description = "\n... Interface Equations:\nSolving Sy = g'";
-  umfpack->a = S_ccs;
+  umfpack->a = S;
   umfpack->b = g_prime;
   umfpack->x = y;
   direct_solver_umfpack_dl(umfpack);
@@ -316,7 +314,8 @@ static void solve_Sy_g_prime(Matrix_T *const S,double *const g_prime,Grid_T *con
     Schur->y = &y[R];
     R += NI_p[p];
   }
-  free_matrix(S_ccs);
+  
+  free_matrix(S);
   free(g_prime);
 }
 
@@ -328,59 +327,61 @@ static Matrix_T *compute_S(Grid_T *const grid)
   /* since NI_total and NI_p are unique we pick one of them from patch[0] */
   const unsigned NI_total    = 
                   grid->patch[0]->solving_man->method->SchurC->NI_total;
-  const unsigned *const NI_p = 
-                  grid->patch[0]->solving_man->method->SchurC->NI_p;
-  Matrix_T *S = alloc_matrix(REG_SF,NI_total,NI_total);
-  double **const s = S->reg->A;
-  DDM_Schur_Complement_T *Schur;
-  Matrix_T *C;
-  const unsigned np = grid->np;
-  unsigned R1,R2;/* reference */
-  unsigned p,i,j,k;
+  const unsigned npatch = grid->np;
+  Matrix_T *S = alloc_matrix(CCS_L_SF,NI_total,NI_total);
+  Matrix_T **subS;
+  long *Ap = 0;
+  long *Ai = 0;
+  double *Ax = 0;
+  long i,j,nnz,R;
+  unsigned p;
   
-  /* composing C part of S */
-  R2 = 0;
-  FOR_ALL_PATCHES(p,grid)
+  subS = calloc(npatch,sizeof(*subS));
+  pointerEr(subS);
+  
+  DDM_SCHUR_COMPLEMENT_OpenMP(omp parallel for)
+  for (p = 0; p < npatch; ++p)
   {
     Patch_T *patch = grid->patch[p];
-    Schur = patch->solving_man->method->SchurC;
+    DDM_Schur_Complement_T *Schur = patch->solving_man->method->SchurC;
+    subS[p] = CCSOpCCS(Schur->C_ccs,Schur->F_by_E_prime,'-');
+  }
+  
+  /* to be safe we use long format data type */
+  R = nnz = 0;
+  Ap = calloc(NI_total+1,sizeof(*Ap));
+  for (p = 0; p < npatch; ++p)
+  {
+    int *Ap1    = subS[p]->ccs->Ap;
+    int *Ai1    = subS[p]->ccs->Ai;
+    double *Ax1 = subS[p]->ccs->Ax;
+    long Nc     = subS[p]->col;
     
-    /* go thru all Cij */
-    R1 = 0;
-    for (k = 0; k < np; ++k)
+    Ai = realloc(Ai,(long unsigned)(Ap[R]+Ap1[Nc])*sizeof(*Ai));
+    pointerEr(Ai);
+    Ax = realloc(Ax,(long unsigned)(Ap[R]+Ap1[Nc])*sizeof(*Ax));
+    pointerEr(Ax);
+    
+    for (i = 0; i < Nc; ++i)
     {
-      C = Schur->C[k];
-      if (C)/* if C is not empty */
+      Ap[i+R] = Ap1[i]+nnz;
+      for (j = Ap1[i]; j < Ap1[i+1]; ++j)
       {
-        double **c = C->reg->A;
-        
-        for (i = 0; i < NI_p[k]; ++i)
-          for (j = 0; j < NI_p[p]; ++j)
-            s[R1+i][R2+j] = c[i][j];
-        
-        free_matrix(C);
+        Ai[nnz+j] = Ai1[j];
+        Ax[nnz+j] = Ax1[j];
       }
-      R1 += NI_p[k];
     }
-    R2 += NI_p[p];
-    free(Schur->C);
+    R += Nc;
+    nnz += Ap1[Nc];
+    Ap[R] = nnz;
+    
+    free_matrix(subS[p]);
   }
+  free(subS);
   
-  /* making composing F.E' part of S */
-  R2 = 0;
-  FOR_ALL_PATCHES(p,grid)
-  {
-    Patch_T *patch = grid->patch[p];
-    Schur = patch->solving_man->method->SchurC;
-    double **F_by_E_prime = Schur->F_by_E_prime->reg->A;
-    
-    for (i = 0; i < NI_total; i++)
-      for (j = 0; j < NI_p[p]; ++j)
-        s[i][R2+j] -= F_by_E_prime[i][j];
-    
-    R2 += NI_p[p];    
-    free_matrix(Schur->F_by_E_prime);
-  }
+  S->ccs_long->Ap = Ap;
+  S->ccs_long->Ai = Ai;
+  S->ccs_long->Ax = Ax;
   
   return S;
 }
@@ -446,13 +447,11 @@ static void making_F_by_E_prime(Patch_T *const patch)
   const unsigned *const NI_p = Schur->NI_p;
   const unsigned NI = Schur->NI;
   const unsigned NI_total = Schur->NI_total;
-  Schur->F_by_E_prime = alloc_matrix(REG_SF,NI_total,NI);
+  Matrix_T **stack = calloc(np,sizeof(*stack));
   const Matrix_T *const E_Trans_prime = Schur->E_Trans_prime;
-  double **const FxEp = Schur->F_by_E_prime->reg->A;
   Matrix_T *MxM;
-  unsigned p,R,i,j;
+  unsigned p;
   
-  R = 0;
   for (p = 0; p < np; ++p)
   {
     Matrix_T *F = Schur->F[p];
@@ -462,15 +461,13 @@ static void making_F_by_E_prime(Patch_T *const patch)
       MxM = matrix_by_matrix(F,E_Trans_prime,"a*transpose(b)");
       free_matrix(F);
       
-      for (i = 0; i < NI_p[p]; ++i)
-        for (j = 0; j < NI; ++j)
-          FxEp[i+R][j] = MxM->reg->A[i][j];
-      
-      free_matrix(MxM);
+      stack[p] = MxM;
     }
-    R += NI_p[p];
   }
   free(Schur->F);
+  
+  Schur->F_by_E_prime = compress_stack2ccs(stack,np,NI_p,NI_total,NI,YES);
+  free(stack);
 }
 
 /* computing:
@@ -544,6 +541,9 @@ static void making_F_and_C(Patch_T *const patch)
       populate_F_and_C(patch,pair);/* filling F and C pertinent to this pair */
     }
   }
+  
+  /* compress all of C matrices in each patch to ccs  */
+  Schur->C_ccs = compress_stack2ccs(Schur->C,np,Schur->NI_p,Schur->NI_total,Schur->NI,YES);
 }
 
 /* filling F and C pertinent to this pair */
