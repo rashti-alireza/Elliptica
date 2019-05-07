@@ -321,7 +321,7 @@ static void solve_Sy_g_prime(Matrix_T *const S,double *const g_prime,Grid_T *con
 }
 
 /* allocate and compute S
-// note: it frees Cs and F_by_E_primes.
+// note: it frees C_ccs's and F_by_E_primes.
 // ->return value: S matrix. */
 static Matrix_T *compute_S(Grid_T *const grid)
 {
@@ -346,26 +346,27 @@ static Matrix_T *compute_S(Grid_T *const grid)
     Patch_T *patch = grid->patch[p];
     DDM_Schur_Complement_T *Schur = patch->solving_man->method->SchurC;
     subS[p] = CCSOpCCS(Schur->C_ccs,Schur->F_by_E_prime,'-');
+    free_matrix(Schur->C_ccs);
+    free_matrix(Schur->F_by_E_prime);
   }
   
   /* to be safe we used long format data type */
-  R = nnz = 0;
   Ap = calloc(NI_total+1,sizeof(*Ap));
+  pointerEr(Ap);
+  R = nnz = 0;
   for (p = 0; p < npatch; ++p)
   {
     int *Ap1    = subS[p]->ccs->Ap;
     int *Ai1    = subS[p]->ccs->Ai;
     double *Ax1 = subS[p]->ccs->Ax;
-    long Nc     = subS[p]->col;
-    //test
-    assert(Nc);
-    //end
-    Ai = realloc(Ai,(long unsigned)(Ap[R]+Ap1[Nc])*sizeof(*Ai));
+    long Nc1    = subS[p]->col;
+    
+    Ai = realloc(Ai,(long unsigned)(Ap[R]+Ap1[Nc1])*sizeof(*Ai));
     pointerEr(Ai);
-    Ax = realloc(Ax,(long unsigned)(Ap[R]+Ap1[Nc])*sizeof(*Ax));
+    Ax = realloc(Ax,(long unsigned)(Ap[R]+Ap1[Nc1])*sizeof(*Ax));
     pointerEr(Ax);
     
-    for (i = 0; i < Nc; ++i)
+    for (i = 0; i < Nc1; ++i)
     {
       Ap[i+R] = Ap1[i]+nnz;
       for (j = Ap1[i]; j < Ap1[i+1]; ++j)
@@ -374,8 +375,8 @@ static Matrix_T *compute_S(Grid_T *const grid)
         Ax[nnz+j] = Ax1[j];
       }
     }
-    R += Nc;
-    nnz += Ap1[Nc];
+    R    += Nc1;
+    nnz  += Ap1[Nc1];
     Ap[R] = nnz;
     
     free_matrix(subS[p]);
