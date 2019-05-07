@@ -20,7 +20,7 @@ Matrix_T *compress_stack2ccs
   const unsigned nm/* number of matrices in the stack */,
   const unsigned *const nr/* number of rows in each matrix */,
   const unsigned Nrow/* total number of rows */,
-  const unsigned Ncol/* total number of columns */,
+  const unsigned Ncol/* common number of columns */,
   const Flag_T flg/* if YES means free all of the matrices from the stack, do nothing otherwise */
 )
 {
