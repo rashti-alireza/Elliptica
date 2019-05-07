@@ -453,7 +453,7 @@ typedef struct DDM_SCHUR_COMPLEMENT_T
   
 }DDM_Schur_Complement_T;
 
-/* solving managing */
+/* solving management */
 typedef struct SOLVING_MAN_T
 {
   struct PATCH_T *patch;/* refers to its patch itself */
