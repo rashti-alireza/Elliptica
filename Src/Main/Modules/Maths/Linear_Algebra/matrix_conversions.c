@@ -32,7 +32,7 @@ Matrix_T *compress_stack2ccs
   long tNN0 = 0;/* total number of none zero entries */
   long NN0;/* number of none zero entries in each column */
   long r,c;/* row and column */
-  long R1 = 0;
+  long R = 0;
   const double DropLimit = 0;
   double **m;
   unsigned i;
@@ -42,6 +42,7 @@ Matrix_T *compress_stack2ccs
   for (c = 0; c < Ncol; ++c)
   {
     NN0 = 0;
+    R = 0;
     /* go thru all of the rows */
     for (i = 0; i < nm; ++i)
     {
@@ -56,14 +57,14 @@ Matrix_T *compress_stack2ccs
             pointerEr(Ai);
             Ax = realloc(Ax,(long unsigned)(Ap[c]+NN0+1)*sizeof(*Ax));
             pointerEr(Ax);
-            Ai[Ap[c]+NN0] = (int)(r+R1);
+            Ai[Ap[c]+NN0] = (int)(r+R);
             Ax[Ap[c]+NN0] = m[r][c];
             NN0++;
             tNN0++;
           }
         }
       }/* end of if(C) */
-      R1 += nr[i];
+      R += nr[i];
     }/* end of for (p = 0; p < np; ++p) */
     Ap[c+1] = (int)tNN0;
   }/* end of for (c = 0; c < Nc; ++c) */

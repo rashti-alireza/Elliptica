@@ -254,3 +254,36 @@ Matrix_T *CCSOpCCS(Matrix_T *const ccs2,Matrix_T *const ccs1,const char Op)
   
   return res;
 }
+
+/* compare if M1 == M2.
+// ->return value: 1 if they are equal, 0 if not. */
+int matrix_comparison(const Matrix_T *const M1,const Matrix_T *const M2)
+{
+  const long Nr = M1->row;
+  const long Nc = M1->col;
+  long r,c;
+  
+  if (M1->row != M2->row)
+    return 0;
+  if (M1->col != M2->col)
+    return 0;
+  
+  if (M1->reg_f && M2->reg_f)
+  {
+    double **const m1 = M1->reg->A;
+    double **const m2 = M2->reg->A;
+    
+    for (r = 0; r < Nr; ++r)
+    {
+      for (c = 0; c < Nc; ++c)
+      {
+        if (!EQL(m1[r][c],m2[r][c]))
+          return 0;
+      }
+    }
+  }/* end of if (M1->reg_f && M2->reg_f) */
+  else
+    abortEr(NO_OPTION);
+  
+  return 1;
+}
