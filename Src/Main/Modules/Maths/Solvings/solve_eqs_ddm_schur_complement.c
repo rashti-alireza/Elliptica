@@ -39,6 +39,9 @@ int ddm_schur_complement(Grid_T *const grid)
   unsigned nf = 0;/* number of all fields */
   unsigned f;/* dummy index */
   
+  pr_line_custom('=');
+  printf("Solving the Equations ...\n\n");
+  
   /* picking up labeling, mapping etc. */
   preparing_ingredients(grid);
   
@@ -48,15 +51,26 @@ int ddm_schur_complement(Grid_T *const grid)
   /* solving fields in order */
   for (f = 0; f < nf; ++f)
   {
-    pr_line_custom('~');
-    printf("Solving Equation for field: \"%s\"\n",field_name[f]);
-    pr_line_custom('~');
+    pr_half_line_custom('-');
+    printf("> Solving Equation for field: \"%s\" ...\n",field_name[f]);
+    pr_half_line_custom('-');
+    
     set_cf(grid,field_name[f]);/* solving_man->cf */
     solve_field(grid);/* solve field[f] */
+    
+    printf("\n");
+    pr_half_line_custom('-');
+    printf("> Solving Equation for field: \"%s\" ==> Done.\n",field_name[f]);
+    pr_half_line_custom('-');
+    pr_clock();
   }
   
   /* free names */
   free_2d_mem(field_name,nf);
+  
+  printf("\nSolving the Equations ==> Done.\n");
+  pr_clock();
+  pr_line_custom('=');
   
   return EXIT_SUCCESS;
 }  
@@ -288,7 +302,7 @@ static void solve_Sy_g_prime(Matrix_T *const S,double *const g_prime,Grid_T *con
   unsigned p;
   free_matrix(S);
   
-  umfpack->description = "...Interface Equations:\nSolving Sy = g'";
+  umfpack->description = "\n... Interface Equations:\nSolving Sy = g'";
   umfpack->a = S_ccs;
   umfpack->b = g_prime;
   umfpack->x = y;
@@ -909,7 +923,7 @@ static void making_E_prime_and_f_prime(Patch_T *const patch)
   xs[ns-1] = calloc(S->NS,sizeof(*xs[ns-1]));
   pointerEr(xs[ns-1]);
   
-  sprintf(desc,"...%s:\nSolving BE' = E and Bf' = f",patch->name);
+  sprintf(desc,"\n... %s:\nSolving BE' = E and Bf' = f",patch->name);
   umfpack->description = desc;
   umfpack->a = a;
   umfpack->bs = bs;

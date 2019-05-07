@@ -8,6 +8,9 @@
 /* making the patches which cover the grid */
 int make_patches(Grid_T *const grid)
 {
+  pr_line_custom('=');
+  printf("Making the patches ...\n");
+  
   /* allocating and filling basics of patches */
   alloc_patches(grid);
   fill_patches(grid);
@@ -27,6 +30,11 @@ int make_patches(Grid_T *const grid)
   /* test printing coords */
   if (test_print(PRINT_COORDS))
     pr_coords(grid);
+  
+  
+  printf("Making the patches ==> Done.\n");
+  pr_clock();
+  pr_line_custom('=');
   
   return EXIT_SUCCESS;
 }

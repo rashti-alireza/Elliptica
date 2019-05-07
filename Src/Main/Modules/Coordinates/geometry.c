@@ -20,9 +20,8 @@ int realize_geometry(Grid_T *const grid)
 {
   unsigned i;
   
- pr_line_custom('~');
- printf("Realizing boundary conditions for each patch ...\n");
- pr_line_custom('~'); 
+  pr_line_custom('=');
+  printf("Realizing boundary conditions for each patch ...\n");
  
   FOR_ALL(i,grid->patch)
   {
@@ -52,7 +51,11 @@ int realize_geometry(Grid_T *const grid)
   /* printing boundary for test purposes */
   if(test_print(PRINT_INTERFACES))
     pr_interfaces(grid);
-  
+ 
+  printf("Realizing boundary conditions for each patch ==> Done.\n");
+  pr_clock();
+  pr_line_custom('=');
+ 
   return EXIT_SUCCESS;
 }
 

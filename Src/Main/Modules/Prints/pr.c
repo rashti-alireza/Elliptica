@@ -51,6 +51,17 @@ void pr_line_custom(const char c)
   
 }
 
+/* print a line with a costum character*/
+void pr_half_line_custom(const char c)
+{
+  int i;
+  
+  for (i = 0; i < MAX_LENGTH/2; i++)
+    printf("%c",c);
+  printf("\n");
+  
+}
+
 /* printing the sepnt time form the start of abc */
 void pr_clock(void)
 {

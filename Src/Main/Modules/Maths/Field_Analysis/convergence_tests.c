@@ -22,6 +22,9 @@ int analytic_numeric_convergence_test(const Grid_T *const grid,const char *const
   unsigned nn;
   unsigned p,i;
   
+  pr_line_custom('=');
+  printf("Convergence test ... \n\n");
+  
   FOR_ALL_PATCHES(p,grid)
   {
     patch      = grid->patch[p];
@@ -48,6 +51,10 @@ int analytic_numeric_convergence_test(const Grid_T *const grid,const char *const
     
     free(diff);
   }
+  
+  printf("\nConvergence test ==> Done.\n");
+  pr_clock();
+  pr_line_custom('=');
   
   return EXIT_SUCCESS;
 }
