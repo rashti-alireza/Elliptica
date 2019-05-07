@@ -151,12 +151,13 @@ static int solve_field(Grid_T *const grid)
         Patch_T *patch = grid->patch[p];
         making_B_and_E(patch);
         making_E_prime_and_f_prime(patch);/* free{B,E} */
-        making_F_and_C(patch);
+        making_F_and_C(patch);/* free C and save C_ccs */
         making_F_by_f_prime(patch);
         making_F_by_E_prime(patch);/* free {F} */
       }
+      
       g_prime = compute_g_prime(grid);/* free {g,Ff'} */
-      S = compute_S(grid);/* free {C,FE'} */
+      S = compute_S(grid);/* free {C_ccs,FE'} */
       
       /* solve Sy = g' */
       solve_Sy_g_prime(S,g_prime,grid);/* free{S,g'} */
@@ -347,7 +348,7 @@ static Matrix_T *compute_S(Grid_T *const grid)
     subS[p] = CCSOpCCS(Schur->C_ccs,Schur->F_by_E_prime,'-');
   }
   
-  /* to be safe we use long format data type */
+  /* to be safe we used long format data type */
   R = nnz = 0;
   Ap = calloc(NI_total+1,sizeof(*Ap));
   for (p = 0; p < npatch; ++p)
@@ -356,7 +357,9 @@ static Matrix_T *compute_S(Grid_T *const grid)
     int *Ai1    = subS[p]->ccs->Ai;
     double *Ax1 = subS[p]->ccs->Ax;
     long Nc     = subS[p]->col;
-    
+    //test
+    assert(Nc);
+    //end
     Ai = realloc(Ai,(long unsigned)(Ap[R]+Ap1[Nc])*sizeof(*Ai));
     pointerEr(Ai);
     Ax = realloc(Ax,(long unsigned)(Ap[R]+Ap1[Nc])*sizeof(*Ax));
@@ -460,7 +463,6 @@ static void making_F_by_E_prime(Patch_T *const patch)
     {
       MxM = matrix_by_matrix(F,E_Trans_prime,"a*transpose(b)");
       free_matrix(F);
-      
       stack[p] = MxM;
     }
   }
@@ -544,6 +546,7 @@ static void making_F_and_C(Patch_T *const patch)
   
   /* compress all of C matrices in each patch to ccs  */
   Schur->C_ccs = compress_stack2ccs(Schur->C,np,Schur->NI_p,Schur->NI_total,Schur->NI,YES);
+  free(Schur->C);
 }
 
 /* filling F and C pertinent to this pair */
