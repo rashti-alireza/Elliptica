@@ -653,9 +653,13 @@ typedef struct BOUNDARY_CONDITION_T
 }Boundary_Condition_T;
 
 /* *******************************************
-// structures for solvers
+// structure for various tasks and projects
 // *******************************************
 */
+typedef struct TOV_PROJECT_T
+{
+ double m;/* NS mass */
+}TOV_T;
 
 /* umfpack direct solver */
 typedef struct UMFPACK_T
