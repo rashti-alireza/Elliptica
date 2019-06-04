@@ -8,6 +8,7 @@ modules_path += $(TOP)/Src/Main/Modules/Libraries
 modules_path += $(TOP)/Src/Main/Modules/Memory_Managers
 modules_path += $(TOP)/Src/Main/Modules/Prints
 modules_path += $(TOP)/Src/Main/Modules/Utilities
+modules_path += $(TOP)/Src/Main/Modules/EoS
 modules_path += $(TOP)/Src/Main/Modules/Maths/Linear_Algebra
 modules_path += $(TOP)/Src/Main/Modules/Maths/Field_Analysis
 modules_path += $(TOP)/Src/Main/Modules/Maths/Equation_Solvings
