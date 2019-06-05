@@ -31,7 +31,7 @@ double EoS_rho_h_pwp(EoS_T *const eos)
   return pow((h-1-a)/(K*(n+1)),n);
 }
 
-/* calculate energy density in terms of h for pwd
+/* calculate the total energy density in terms of h for pwd
 // ->return value: e(h) */
 double EoS_e_h_pwp(EoS_T *const eos)
 {
