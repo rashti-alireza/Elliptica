@@ -663,20 +663,20 @@ typedef struct TOV_PROJECT_T
  double desired_baryonic_m;/* desired NS baryonic mass */
  double calculated_baryonic_m;/* calculated NS baryonic mass */
  double h_cent;/* enthalpy at the center of NS */
- unsigned N;/* number of interpolation points */
+ unsigned N;/* number of interpolation points, choose them to be odd */
  double *m;/* total mass at each point */
  double *r;/* radius at each point */
  double *P;/* pressure at each point */
  double *h;/* enthalpy at each point */
- 
+ double *phi;/* at the spacetime metric g_00 = - exp[2phi] */
 }TOV_T;
 
-/* struct fot equation of states */
+/* struct for equation of states */
 typedef struct EquationOfState_T
 {
  char description[__1MAX_STR_LEN1__];
  char type[__1MAX_STR_LEN1__];
- char units[__1MAX_STR_LEN1__];
+ char unit[__1MAX_STR_LEN1__];
  double *K;/* polytropic constant */
  double *rho_th;/* thresholds of rest mass density */
  double *h_th;/* enthalpy thresholds */
@@ -684,18 +684,24 @@ typedef struct EquationOfState_T
  double *gamma;/* polytropic index */
  double *a;/* constant coefficient to ensure continuity */
  double h;/* enthalpy */
- unsigned N;/* number of intervals */
- int threshold_n;/* it is the interval number in which the thermodynamic 
-                // quantities fall in for piecewise polytropic EoS.
-                // for example:
-                // for rho_th_n < rho < rho_th_n+1 the threshold number is n.
-                // it is useful to speed up the calculation.
-                // if it is positive means the interval number, 
-                // if it is negative means it is not set yet. */
+ unsigned N;/* number of intervals i.e number of pieces */
  double (*pressure)(struct EquationOfState_T *eos);
- double (*energy_density)(struct EquationOfState_T *eos);
+ double (*energy_density)(struct EquationOfState_T *eos);/* total energy density */
  double (*rest_mass_density)(struct EquationOfState_T *eos);
 }EoS_T;
+
+/* struct fot integration */
+typedef struct INTEGRATION_T
+{
+ const char *type;
+ struct
+ {
+  double a,b;/* integral limits */
+  double *f;/* integrand */
+  unsigned n;/* odd positive integer  */
+ }Composite_Simpson_1D[1];
+ double (*integration_func)(struct INTEGRATION_T *const I);/* function that integrates */
+}Integration_T;
 
 /* umfpack direct solver */
 typedef struct UMFPACK_T
