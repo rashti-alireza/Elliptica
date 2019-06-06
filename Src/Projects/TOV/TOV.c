@@ -1,4 +1,4 @@
-/*
+r/*
 // Alireza Rashti
 // June 2019
 */
@@ -6,7 +6,8 @@
 #include "TOV.h"
 
 /* solving TOV equations. it approximates the properties of a NS.
-// ->return value: a TOV structure constituted with NS properties. */
+// it only deals with inside of the star, since the outside is analytic.
+// ->return value: solution of TOV equations for inside of a star with give EoS */
 TOV_T *TOV_solution(TOV_T *const TOV)
 {
   const double tol = 1E-5;/* tolerance in mass calculations */
@@ -17,11 +18,13 @@ TOV_T *TOV_solution(TOV_T *const TOV)
   Flag_T bisection = NO;
   
   /* some initialization and preparation */
+  TOV->ref_fac = 5;/* some odd number for refinement */
+  TOV->ref_N = TOV->ref_fac*TOV->N;
   TOV->calculated_baryonic_m = 0;
   TOV->h_cent = 10;
-  TOV->m = alloc_double(TOV->N);
-  TOV->r = alloc_double(TOV->N);
-  TOV->h = alloc_double(TOV->N);
+  TOV->m = alloc_double(TOV->ref_N);
+  TOV->r = alloc_double(TOV->ref_N);
+  TOV->h = alloc_double(TOV->ref_N);
   
   /* find enthalpy at the center of NS such that 
   // the baryonic mass reaches the desired value.
@@ -67,15 +70,170 @@ TOV_T *TOV_solution(TOV_T *const TOV)
   }
   
   calculate_phi(TOV);
-  //check_virial_relation(TOV);
+  check_virial_relation(TOV);
+  
+  /* now transform this solution in conformal decompostion form */
+  conformal_decomposition_transformation(TOV);
   
   return TOV;
 }
 
-/* calculate g_00 = - exp[2phi] for the metric of space time */
+/* transform the TOV solution in regular format in conformal decompostion format.
+// note: Ln(rbar/r) + C = integral f */
+static void conformal_decomposition_transformation(TOV_T *const TOV)
+{
+  Integration_T *I = init_integration();
+  double *f = 0,C = 0;
+  const double R = TOV->r[TOV->ref_N],
+               M = TOV->m[TOV->ref_N];
+  const double *const h = TOV->h,
+               *const r = TOV->r;
+  double *rbar = 0, *psi = 0;
+  unsigned i;
+  
+  I->type = "Composite Simpson's Rule 1D";
+  I->Composite_Simpson_1D->b = 1;/* since the variable is enthalpy */
+  I->Composite_Simpson_1D->a = TOV->h_cent;
+  I->Composite_Simpson_1D->n = TOV->ref_N;
+  f = con_dec_integrand(TOV);
+  I->Composite_Simpson_1D->f = f;
+  plan_integration(I);
+  C  = execute_integration(I);
+  C -= log((R-M+sqrt(SQR(R)-2*M*R))/(2*R));
+  
+  
+  /* fill rbar */
+  TOV->Conformal_Decomposition->r    = alloc_double(TOV->N);
+  rbar = TOV->Conformal_Decomposition->r;
+  rbar[0] = 0;
+  for (i = 1; i < TOV->N; ++i)
+  {
+    I->Composite_Simpson_1D->b = h[i*TOV->ref_fac];/* since the variable is enthalpy */
+    I->Composite_Simpson_1D->n = i*TOV->ref_fac;
+    rbar[i] = r[i*TOV->ref_fac]*exp(execute_integration(I)-C);
+  }
+  
+  TOV->Conformal_Decomposition->psi = alloc_double(TOV->N);
+  psi = TOV->Conformal_Decomposition->psi;
+  psi[0] = sqrt(exp(C));
+  for (i = 1; i < TOV->N; ++i)
+    psi[i] = sqrt(r[i*TOV->ref_fac]/rbar[i]);
+  
+  free(f);
+  free_integration(I);
+  
+}
+
+/* ->return value:the integrand needed in calculation r bar in conformal decomposition. */
+static double *con_dec_integrand(const TOV_T *const TOV)
+{
+  double *f = alloc_double(TOV->ref_N);
+  const double *const r = TOV->r,
+               *const m = TOV->m,
+               *const h = TOV->h;
+  unsigned i;
+  
+  f[0] = 0;
+  for (i = 1; i < TOV->ref_N; ++i)
+  {
+    f[i] = (1-sqrt(1-2*m[i]/r[i]))/(r[i]*sqrt(1-2*m[i]/r[i]))*dr_dh(h[i],r[i],m[i]);
+  }
+  
+  return f;
+}
+
+
+/* calculate phi in g_00 = - exp[2phi] for the metric of space time */
 static void calculate_phi(TOV_T *const TOV)
 {
+  const double R = TOV->r[TOV->ref_N],
+               M = TOV->m[TOV->ref_N],
+               *const h = TOV->h;
+  unsigned i;
+  TOV->phi = alloc_double(TOV->ref_N);
+  
+  for (i = 0; i < TOV->ref_N; ++i)
+    TOV->phi[i] = -log(h[i])+log(sqrt(1-2*M/R));
+  
 }
+
+/* check if the Komar mass and ADM mass are equal */
+static void check_virial_relation(const TOV_T *const TOV)
+{
+  Integration_T *I = init_integration();
+  double *f;
+  double Komar_mass, ADM_mass;
+  
+  I->type = "Composite Simpson's Rule 1D";
+  I->Composite_Simpson_1D->b = 1;/* since the variable is enthalpy */
+  I->Composite_Simpson_1D->a = TOV->h_cent;
+  I->Composite_Simpson_1D->n = TOV->ref_N;
+  f = Komar_mass_integrand(TOV);
+  I->Composite_Simpson_1D->f = f;
+  plan_integration(I);
+  Komar_mass = execute_integration(I);
+  free(f);
+  
+  f = ADM_mass_integrand(TOV);
+  I->Composite_Simpson_1D->f = f;
+  plan_integration(I);
+  ADM_mass = execute_integration(I);
+  free(f);
+  free_integration(I);
+  
+  printf("Komar mass = %g, ADM mass = %g\n",Komar_mass,ADM_mass);
+  if (!EQL(Komar_mass,ADM_mass))
+  {
+    abortEr("Komar mass and ADM mass must be equal!\n");
+  }
+}
+
+/* populate the integrand needed in calculation of Komar mass.
+// ->return value: integrand for Komar mass calculation. */
+static double *Komar_mass_integrand(const TOV_T *const TOV)
+{
+  double *f = alloc_double(TOV->ref_N);
+  const double *const r = TOV->r,
+               *const m = TOV->m,
+               *const h = TOV->h,
+               *const phi = TOV->phi;
+  EoS_T *eos = initialize_EoS();
+  unsigned i;
+  
+  for (i = 0; i < TOV->ref_N; ++i)
+  {
+    eos->h = h[i];
+    f[i] = 4*M_PI*(eos->energy_density(eos)+3*eos->pressure(eos))*
+            exp(phi[i])/sqrt(1-2*m[i]/r[i])*SQR(r[i])*dr_dh(h[i],r[i],m[i]);
+  }
+  
+  free_EoS(&eos);
+  
+  return f;
+}
+
+/* populate the integrand needed in calculation of ADM mass.
+// ->return value: integrand for ADM mass calculation. */
+static double *ADM_mass_integrand(const TOV_T *const TOV)
+{
+  double *f = alloc_double(TOV->ref_N);
+  const double *const r = TOV->r,
+               *const m = TOV->m,
+               *const h = TOV->h;
+  EoS_T *eos = initialize_EoS();
+  unsigned i;
+  
+  for (i = 0; i < TOV->ref_N; ++i)
+  {
+    eos->h = h[i];
+    f[i] = 4*M_PI*eos->energy_density(eos)*SQR(r[i])*dr_dh(h[i],r[i],m[i]);
+  }
+  
+  free_EoS(&eos);
+  
+  return f;
+}
+
 
 /* taking the integral of 4\pi \int ^{R}_{0}\rho \left( 1-\frac {2m}{r}\right) ^{-\frac {1}{2}}r^{2}dr.
 // ->return value: baryonic rest mass */
@@ -86,9 +244,9 @@ static double calculate_baryonic_mass(const TOV_T *const TOV)
   double integral;/* resultant */
   
   I->type = "Composite Simpson's Rule 1D";
-  I->Composite_Simpson_1D->a = 1;/* since the variable is enthalpy */
-  I->Composite_Simpson_1D->b = TOV->h_cent;
-  I->Composite_Simpson_1D->n = TOV->N;
+  I->Composite_Simpson_1D->b = 1;/* since the variable is enthalpy */
+  I->Composite_Simpson_1D->a = TOV->h_cent;
+  I->Composite_Simpson_1D->n = TOV->ref_N;
   I->Composite_Simpson_1D->f = f;
   plan_integration(I);
   integral = execute_integration(I);
@@ -100,10 +258,10 @@ static double calculate_baryonic_mass(const TOV_T *const TOV)
 }
 
 /* populate the integrand needed in calculation of baryonic rest mass.
-// ->return value: interand for baryonic rest mass calculation. */
+// ->return value: integrand for baryonic rest mass calculation. */
 static double *baryonic_mass_integrand(const TOV_T *const TOV)
 {
-  double *f = alloc_double(TOV->N);
+  double *f = alloc_double(TOV->ref_N);
   double rho;
   const double *const r = TOV->r,
                *const m = TOV->m,
@@ -111,7 +269,7 @@ static double *baryonic_mass_integrand(const TOV_T *const TOV)
   EoS_T *eos = initialize_EoS();
   unsigned i;
   
-  for (i = 0; i < TOV->N; ++i)
+  for (i = 0; i < TOV->ref_N; ++i)
   {
     eos->h = h[i];
     rho = (eos->energy_density(eos)+eos->pressure(eos))/h[i];
@@ -143,7 +301,7 @@ static void solve_ODE_enthalpy_approach(TOV_T *const TOV)
   double *const h = TOV->h;
   const double b = 1;/* h at the NS surface */
   const double a = TOV->h_cent;/* h at the center of NS */
-  const double s = (b-a)/(TOV->N-1);/* step size of h. note:
+  const double s = (b-a)/(TOV->ref_N-1);/* step size of h. note:
                                // it's negative since we start 
                                // from the center which has greater value
                                // of h compare to the NS's surface. */
@@ -158,7 +316,7 @@ static void solve_ODE_enthalpy_approach(TOV_T *const TOV)
   h[0] = a;/* h at center */
   
   /* for all points */
-  for (i = 1; i < TOV->N; ++i)
+  for (i = 1; i < TOV->ref_N; ++i)
   {
     double k1[2],k2[2],k3[2],k4[2];/* variables for Runge-Kutta method of 4th order */
     
