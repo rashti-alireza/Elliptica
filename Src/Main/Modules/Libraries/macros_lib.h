@@ -1,4 +1,3 @@
-#include "error_handling_lib.h"
 #define ERROR_LINE "x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x"
 #define INCOMPLETE_FUNC "Other options have not been developed yet for this part!\n"
 #define NO_JOB "No job has been defined for this case."
