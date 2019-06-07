@@ -13,7 +13,7 @@ int Binary_BH_NS_Initial_Data(void)
   /* print clock */
   pr_clock();
   
-  /* approximate this system with TOV star and Kerr-Shild blak hole */
+  /* initialize this system */
   grid = bbn_initialize_fields_and_grid();
   
   /* constructing ID starting with the above approximation */
