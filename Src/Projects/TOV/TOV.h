@@ -5,15 +5,16 @@
 #include "maths_calculus_lib.h"
 
 TOV_T *TOV_solution(TOV_T *const TOV);
+TOV_T *TOV_init(void);
+void TOV_free(TOV_T *TOV);
 static void solve_ODE_enthalpy_approach(TOV_T *const TOV);
 static double dr_dh(const double h,const double r, const double m);
 static double dm_dh(const double h,const double r, const double m);
+static double drbar_dh(const double h,const double rbar,const double r, const double m);
 static double calculate_baryonic_mass(const TOV_T *const TOV);
 static double *baryonic_mass_integrand(const TOV_T *const TOV);
 static void calculate_phi(TOV_T *const TOV);
 static void check_virial_relation(const TOV_T *const TOV);
 static double *Komar_mass_integrand(const TOV_T *const TOV);
 static double *ADM_mass_integrand(const TOV_T *const TOV);
-static void conformal_decomposition_transformation(TOV_T *const TOV);
-static double *con_dec_integrand(const TOV_T *const TOV);
 

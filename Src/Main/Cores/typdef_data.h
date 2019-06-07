@@ -664,20 +664,15 @@ typedef struct TOV_PROJECT_T
  double calculated_baryonic_m;/* calculated NS baryonic mass */
  double h_cent;/* enthalpy at the center of NS */
  unsigned N;/* number of interpolation points, choose them to be odd */
- unsigned ref_N;/* to avoid interpolation we refine the grid accoding to N */
- unsigned ref_fac;/* ref_N = ref_fac*N */
  double *m;/* total mass at each point */
  double *r;/* radius at each point for metric inside the star:
            // ds^{2}=-e^{2\phi \left( r\right) }dt^{2}+\left( 1-\frac {2m\left( r\right) }{r}\right) ^{-1}dr^{2}+r^{2}\left( d\theta^{2}+sin^{2} \left(\theta \right)d\phi^{2}) */
  double *P;/* pressure at each point */
  double *h;/* enthalpy at each point */
  double *phi;/* at the spacetime metric g_00 = - exp[2phi] */
- struct
- {
-  double *r; /* rbar -> radius at each point for metric inside the star:
+ double *rbar; /* rbar -> radius at each point for metric inside the star:
              // d^{2}_{s}=-e^{2\phi }dt^{2}+\psi^{4}\left( \overline {r}\right) \left( d\overline {r}^{2}+\overline {r}^{2}d\Omega \right) */
-  double *psi;
- }Conformal_Decomposition[1];
+ double *psi;/* conformal factor */
 }TOV_T;
 
 /* struct for equation of states */
@@ -694,9 +689,9 @@ typedef struct EquationOfState_T
  double *a;/* constant coefficient to ensure continuity */
  double h;/* enthalpy */
  unsigned N;/* number of intervals i.e number of pieces */
- double (*pressure)(struct EquationOfState_T *eos);
- double (*energy_density)(struct EquationOfState_T *eos);/* total energy density */
- double (*rest_mass_density)(struct EquationOfState_T *eos);
+ double (*pressure)(struct EquationOfState_T *const eos);
+ double (*energy_density)(struct EquationOfState_T *const eos);/* total energy density */
+ double (*rest_mass_density)(struct EquationOfState_T *const eos);
 }EoS_T;
 
 /* struct fot integration */

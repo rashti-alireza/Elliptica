@@ -11,3 +11,4 @@ int projects_data_base(void);
 
 int Laplace_Inhom (void);
 int Fundamental_Tests(void);
+int Binary_BH_NS_Initial_Data(void);

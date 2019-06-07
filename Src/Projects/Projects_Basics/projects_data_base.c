@@ -21,6 +21,8 @@ int projects_data_base(void)
     "Solving a Laplace eq with a source for testing purposes");
   add_project(Fundamental_Tests,"Fundamental_Tests",
     "Testing fundamentals routines and codes of abc");
+  add_project(Binary_BH_NS_Initial_Data,"Binary_BH_NS_Initial_Data",
+  "Constructing Initial Data for Binary Black Hole Neutron Star");
               
     return EXIT_SUCCESS;
 }
