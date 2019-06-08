@@ -11,5 +11,8 @@ one is not compatible with ANSI.
 and avoiding potential errors)
 6. use always unsigned for counting of objects and allocation of memory.
 7. all functions of a project which are not static must be named like
-	NameOfTheProject_description; for example:
+	NameOfTheProject_task; for example:
 	TOV_solution() or TOV_free().
+8. all functions of a module which are not static must be named like
+        task_NameOfTheModule; for example:
+        free_EoS().
