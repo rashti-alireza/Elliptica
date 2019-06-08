@@ -12,7 +12,7 @@ void test_EoS(Grid_T *const grid)
   char *path,file_name[400];
   FILE *file = 0;
   unsigned N = 100;
-  const double h_max = eos->h_th[eos->N-1]+10;
+  const double h_max = eos->h_th != 0 ? eos->h_th[eos->N-1]+10: 10;
   const double h_min = 1;
   double s = (h_max-h_min)/(N-1);
   unsigned i;
@@ -33,8 +33,6 @@ void test_EoS(Grid_T *const grid)
       fprintf(file,"%u      %e  %e  %e  %e  %e\n",i,eos->K[i],eos->rho_th[i],eos->gamma[i],eos->a[i],eos->h_th[i]-1);
     fclose(file);
   }
-  else
-    abortEr(NO_OPTION);
     
   /* continuity */
   sprintf(file_name,"%s/%s",path,"pressure");
@@ -71,6 +69,7 @@ void test_EoS(Grid_T *const grid)
   fclose(file);
   
   free_EoS(eos);
+  free(path);
   UNUSED(grid);
   
 }

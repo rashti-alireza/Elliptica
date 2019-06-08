@@ -73,7 +73,7 @@ double EoS_e_h_p(EoS_T *const eos)
   const double h = eos->h;
   const double n = eos->n[0];
   
-  return EoS_rho_h_pwp(eos)*(1+n*(h-1)/(n+1));
+  return EoS_rho_h_p(eos)*(1+n*(h-1)/(n+1));
 }
 
 /* given eos->h it finds this enthalpy takes place in which intervale.

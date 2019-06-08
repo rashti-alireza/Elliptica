@@ -72,8 +72,8 @@ static void populate_EoS(EoS_T *const eos)
   if (strcmp_i(eos->unit,"geo"))
   {
     /* if it is pwp */
-    if (strstr_i(eos->type,"piecewise_polytropic") ||
-        strstr_i(eos->type,"pwp"))
+    if (strcmp_i(eos->type,"piecewise_polytropic") ||
+        strcmp_i(eos->type,"pwp"))
     {    
       /* check if rho is in increasing order. */
       if (!rho_th)
@@ -95,8 +95,8 @@ static void populate_EoS(EoS_T *const eos)
       eos->energy_density    = EoS_e_h_pwp;
       eos->rest_mass_density = EoS_rho_h_pwp;
     }
-    else if (strstr_i(eos->type,"polytropic") ||
-             strstr_i(eos->type,"p"))
+    else if (strcmp_i(eos->type,"polytropic") ||
+             strcmp_i(eos->type,"p"))
     {
       if (N != 1)
         abortEr("This EoS is not polytropic, there is more than one piece.\n");
