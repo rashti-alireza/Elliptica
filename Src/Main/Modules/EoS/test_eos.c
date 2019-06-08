@@ -12,8 +12,9 @@ void test_EoS(Grid_T *const grid)
   char *path,file_name[400];
   FILE *file = 0;
   unsigned N = 100;
-  const double h_max = eos->h_th[eos->N-1]+2;
-  double s = (h_max-1)/(N-1);
+  const double h_max = eos->h_th[eos->N-1]+10;
+  const double h_min = 1;
+  double s = (h_max-h_min)/(N-1);
   unsigned i;
   
   path = make_directory(path_par,"EoS_Tests");
@@ -39,33 +40,33 @@ void test_EoS(Grid_T *const grid)
   sprintf(file_name,"%s/%s",path,"pressure");
   file = fopen(file_name,"w+");
   pointerEr(file);
-    
+  fprintf(file,"# enthalpy   pressure\n");  
   for (i = 0; i < N; ++i)
   {
     eos->h = 1+s*i;
-    fprintf(file,"%g %g\n",eos->h,eos->pressure(eos));
+    fprintf(file,"  %-7g    %-7g\n",eos->h,eos->pressure(eos));
   }
   fclose(file);
   
   sprintf(file_name,"%s/%s",path,"rest_mass_density");
   file = fopen(file_name,"w+");
   pointerEr(file);
-    
+  fprintf(file,"# enthalpy   rest_mass_density\n");  
   for (i = 0; i < N; ++i)
   {
     eos->h = 1+s*i;
-    fprintf(file,"%g %g\n",eos->h,eos->rest_mass_density(eos));
+    fprintf(file,"  %-7g    %-7g\n",eos->h,eos->rest_mass_density(eos));
   }
   fclose(file);
   
   sprintf(file_name,"%s/%s",path,"energy_density");
   file = fopen(file_name,"w+");
   pointerEr(file);
-    
+  fprintf(file,"# enthalpy   energy_density\n");
   for (i = 0; i < N; ++i)
   {
     eos->h = 1+s*i;
-    fprintf(file,"%g %g\n",eos->h,eos->energy_density(eos));
+    fprintf(file,"  %-7g    %-7g\n",eos->h,eos->energy_density(eos));
   }
   fclose(file);
   

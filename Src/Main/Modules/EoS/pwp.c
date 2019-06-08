@@ -62,10 +62,10 @@ static unsigned find_threshold_number_h(const EoS_T *const eos)
   else if (GRTEQL(eos->h,eos->h_th[eos->N-1]))
     return eos->N-1;
   
-  for (i = 2; i < eos->N; ++i)
+  for (i = 1; i < eos->N-1; ++i)
   {
-    if (GRTEQL(eos->h,eos->h_th[i-1]) &&
-        LSSEQL(eos->h,eos->h_th[i]) )
+    if (GRTEQL(eos->h,eos->h_th[i]) &&
+        LSSEQL(eos->h,eos->h_th[i+1]) )
         {
           flg = FOUND;
           break;
@@ -75,5 +75,5 @@ static unsigned find_threshold_number_h(const EoS_T *const eos)
   if (flg == NONE)
     abortEr("Threshold number could not be found.\n");
   
-  return i-1;
+  return i;
 }
