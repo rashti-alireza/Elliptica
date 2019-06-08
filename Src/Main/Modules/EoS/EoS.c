@@ -35,17 +35,17 @@ EoS_T *initialize_EoS(void)
 }
 
 /* clean EoS stuct */
-void free_EoS(EoS_T **eos)
+void free_EoS(EoS_T *s)
 {
-  EoS_T *s = *eos;
-  
   if (!s)
     return;
     
-  free(s->K);
-  free(s->rho_th);
-  free(s->n);
-  free(s->a);
+  if (s->K)      free(s->K);
+  if (s->rho_th) free(s->rho_th);
+  if (s->h_th)   free(s->h_th);
+  if (s->n)      free(s->n);
+  if (s->a)      free(s->a);
+  if (s->gamma)  free(s->gamma);
   free(s);
 }
 
@@ -54,16 +54,20 @@ static void populate_EoS(EoS_T *const eos)
 {
   double *K,*rho_th,*gamma;/* quantities in polytropic EoS */
   unsigned N;/* number of pieces in case of pwp */
+  unsigned i;
+  const char *par;
   
   /* populate eos struct */
-  strcpy(eos->description,GetParameterS("EoS_description"));
+  par = GetParameterS("EoS_description");
+  if (par)
+    strcpy(eos->description,par);
   strcpy(eos->type,GetParameterS_E("EoS_type")); 
   strcpy(eos->unit,GetParameterS_E("EoS_unit"));
   
   K      = read_EoS_in_parameter_file(GetParameterS_E("EoS_K"),&N);
   rho_th = read_EoS_in_parameter_file(GetParameterS("EoS_rho_th"),0);
   gamma  = read_EoS_in_parameter_file(GetParameterS_E("EoS_Gamma"),0);
-  
+
   /* if the units are geometrised units */
   if (strcmp_i(eos->unit,"geo"))
   {
@@ -71,6 +75,15 @@ static void populate_EoS(EoS_T *const eos)
     if (strstr_i(eos->type,"piecewise_polytropic") ||
         strstr_i(eos->type,"pwp"))
     {    
+      /* check if rho is in increasing order. */
+      if (!rho_th)
+        abortEr("rho threshold must be specified.\n");
+        
+      for (i = 1; i < N-1; ++i)
+        if (GRT(rho_th[i-1],rho_th[i]))
+          abortEr("rho_th for piecewise polytropic EoS "
+                  "must be written in increasing order.\n");
+    
       eos->N      = N;
       eos->K      = K;
       eos->rho_th = rho_th;
@@ -118,7 +131,7 @@ static void fill_a(EoS_T *const eos)
   for (i = 1; i < eos->N; ++i)
     a[i] = a[i-1] + 
            K[i-1]*pow(rho_th[i],gamma[i-1]-1)/(gamma[i-1]-1) -
-           K[i]*pow(rho_th[i],gamma[i]-1)/(gamma[i]-1) ;
+           K[i]*pow(rho_th[i],gamma[i]-1)/(gamma[i]-1);
            
 }
 
@@ -158,8 +171,8 @@ static double *read_EoS_in_parameter_file(const char *const par,unsigned *const 
   
   if (!check_format_s(par,"[?]"))
     abortEr("K, rho_th and Gamma in EoS must be written in square brackets.\n"
-    "If there are multivalues as in piecewise polytropic EoS, the values\n"
-    "must be separated by a comma ','");
+    "If there are multivalues, as in piecewise polytropic EoS, the values\n"
+    "must be separated by a comma ','\n");
   
   /* parsing */
   strcpy(str,par);

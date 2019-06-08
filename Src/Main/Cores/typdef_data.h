@@ -667,7 +667,7 @@ typedef struct TOV_PROJECT_T
  double *m;/* total mass at each point */
  double *r;/* radius at each point for metric inside the star:
            // ds^{2}=-e^{2\phi \left( r\right) }dt^{2}+\left( 1-\frac {2m\left( r\right) }{r}\right) ^{-1}dr^{2}+r^{2}\left( d\theta^{2}+sin^{2} \left(\theta \right)d\phi^{2}) */
- double *P;/* pressure at each point */
+ double *p;/* pressure at each point */
  double *h;/* enthalpy at each point */
  double *phi;/* at the spacetime metric g_00 = - exp[2phi] */
  double *rbar; /* rbar -> radius at each point for metric inside the star:

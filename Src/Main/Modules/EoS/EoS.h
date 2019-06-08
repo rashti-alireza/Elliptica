@@ -8,7 +8,7 @@ double EoS_rho_h_pwp(EoS_T *const eos);
 double EoS_p_h_pwp(EoS_T *const eos);
 double EoS_e_h_pwp(EoS_T *const eos);
 EoS_T *initialize_EoS(void);
-void free_EoS(EoS_T **eos);
+void free_EoS(EoS_T *eos);
 static void populate_EoS(EoS_T *const eos);
 static void fill_h_th(EoS_T *const eos);
 static void fill_a(EoS_T *const eos);

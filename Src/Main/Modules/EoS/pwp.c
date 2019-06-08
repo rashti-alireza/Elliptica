@@ -57,12 +57,12 @@ static unsigned find_threshold_number_h(const EoS_T *const eos)
   if (LSS(eos->h,1))
     abortEr("The value of the enthalpy is not set correctly.\n");
   
-  if (LSSEQL(eos->h,eos->h_th[0]))
+  if (LSSEQL(eos->h,eos->h_th[1]))
     return 0;
   else if (GRTEQL(eos->h,eos->h_th[eos->N-1]))
-    return eos->N;
+    return eos->N-1;
   
-  for (i = 1; i < eos->N-1;++i)
+  for (i = 2; i < eos->N; ++i)
   {
     if (GRTEQL(eos->h,eos->h_th[i-1]) &&
         LSSEQL(eos->h,eos->h_th[i]) )
@@ -75,5 +75,5 @@ static unsigned find_threshold_number_h(const EoS_T *const eos)
   if (flg == NONE)
     abortEr("Threshold number could not be found.\n");
   
-  return i;
+  return i-1;
 }

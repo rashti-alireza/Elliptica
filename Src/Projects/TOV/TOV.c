@@ -16,6 +16,8 @@ TOV_T *TOV_solution(TOV_T *const TOV)
   double a = 0,b = 0;
   Flag_T increase  = YES;
   Flag_T bisection = NO;
+  EoS_T *eos = 0;
+  unsigned i;
   
   /* some initialization and preparation */
   TOV->calculated_baryonic_m = 0;
@@ -23,6 +25,7 @@ TOV_T *TOV_solution(TOV_T *const TOV)
   TOV->m = alloc_double(TOV->N);
   TOV->r = alloc_double(TOV->N);
   TOV->h = alloc_double(TOV->N);
+  TOV->p = alloc_double(TOV->N);
   TOV->rbar = alloc_double(TOV->N);
   
   /* find enthalpy at the center of NS such that 
@@ -71,6 +74,15 @@ TOV_T *TOV_solution(TOV_T *const TOV)
   calculate_phi(TOV);
   check_virial_relation(TOV);
   
+  /* having known every thing, now populate pressure */
+  eos = initialize_EoS();
+  for (i = 0; i < TOV->N; ++i)
+  {
+    eos->h = TOV->h[i];
+    TOV->p[i] = eos->pressure(eos);
+  }
+  
+  free_EoS(eos);
   
   return TOV;
 }
@@ -139,7 +151,7 @@ static double *Komar_mass_integrand(const TOV_T *const TOV)
             exp(phi[i])/sqrt(1-2*m[i]/r[i])*SQR(r[i])*dr_dh(h[i],r[i],m[i]);
   }
   
-  free_EoS(&eos);
+  free_EoS(eos);
   
   return f;
 }
@@ -161,7 +173,7 @@ static double *ADM_mass_integrand(const TOV_T *const TOV)
     f[i] = 4*M_PI*eos->energy_density(eos)*SQR(r[i])*dr_dh(h[i],r[i],m[i]);
   }
   
-  free_EoS(&eos);
+  free_EoS(eos);
   
   return f;
 }
@@ -208,7 +220,7 @@ static double *baryonic_mass_integrand(const TOV_T *const TOV)
     f[i] = rho/sqrt(1-2*m[i]/r[i])*SQR(r[i])*dr_dh(h[i],r[i],m[i]);
   }
   
-  free_EoS(&eos);
+  free_EoS(eos);
   
   return f;
 }
@@ -304,7 +316,7 @@ static double dr_dh(const double h,const double r, const double m)
   p = eos->pressure(eos); 
   f = - r*(r-2*m)/(m+4*M_PI*r3*p)/h;
   
-  free_EoS(&eos);
+  free_EoS(eos);
 
   return f;
 }
@@ -322,7 +334,7 @@ static double dm_dh(const double h,const double r, const double m)
   e = eos->energy_density(eos); 
   f = 4*M_PI*r2*e*dr_dh(h,r,m);;
   
-  free_EoS(&eos);
+  free_EoS(eos);
 
   return f;
 }
@@ -340,7 +352,7 @@ void TOV_free(TOV_T *TOV)
 {
   free(TOV->m);
   free(TOV->r);
-  free(TOV->P);
+  free(TOV->p);
   free(TOV->h);
   free(TOV->phi);
   free(TOV->rbar);
