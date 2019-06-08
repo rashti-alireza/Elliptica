@@ -7,6 +7,9 @@
 double EoS_rho_h_pwp(EoS_T *const eos);
 double EoS_p_h_pwp(EoS_T *const eos);
 double EoS_e_h_pwp(EoS_T *const eos);
+double EoS_rho_h_p(EoS_T *const eos);
+double EoS_p_h_p(EoS_T *const eos);
+double EoS_e_h_p(EoS_T *const eos);
 EoS_T *initialize_EoS(void);
 void free_EoS(EoS_T *eos);
 static void populate_EoS(EoS_T *const eos);

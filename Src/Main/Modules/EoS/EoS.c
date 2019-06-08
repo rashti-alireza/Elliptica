@@ -95,6 +95,21 @@ static void populate_EoS(EoS_T *const eos)
       eos->energy_density    = EoS_e_h_pwp;
       eos->rest_mass_density = EoS_rho_h_pwp;
     }
+    else if (strstr_i(eos->type,"polytropic") ||
+             strstr_i(eos->type,"p"))
+    {
+      if (N != 1)
+        abortEr("This EoS is not polytropic, there is more than one piece.\n");
+        
+      eos->N      = N;
+      eos->K      = K;
+      eos->gamma = gamma;
+      fill_n(eos);
+      fill_a(eos);
+      eos->pressure          = EoS_p_h_p;
+      eos->energy_density    = EoS_e_h_p;
+      eos->rest_mass_density = EoS_rho_h_p;
+    }
     else
       abortEr(NO_JOB);
     

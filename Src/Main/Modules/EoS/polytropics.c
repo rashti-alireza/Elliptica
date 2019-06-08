@@ -3,7 +3,7 @@
 // June 2019
 */
 
-#include "pwp.h"
+#include "polytropics.h"
 
 /* calculate pressure in terms of h for pwp
 // ->return value: p(h) */
@@ -15,7 +15,7 @@ double EoS_p_h_pwp(EoS_T *const eos)
   const double a = eos->a[i];
   const double n = eos->n[i];
   
-  return K*pow((h-1-a)/(K*(n+1)),n+1);
+  return pow((h-1-a)/(n+1),n+1)*pow(K,-n);
 }
 
 /* calculate rest mass density in terms of h for pwp
@@ -28,7 +28,7 @@ double EoS_rho_h_pwp(EoS_T *const eos)
   const double a = eos->a[i];
   const double n = eos->n[i];
   
-  return pow((h-1-a)/(K*(n+1)),n);
+  return pow((h-1-a)/(n+1),n)*pow(K,-n);
 }
 
 /* calculate the total energy density in terms of h for pwd
@@ -41,6 +41,39 @@ double EoS_e_h_pwp(EoS_T *const eos)
   const double n = eos->n[i];
   
   return EoS_rho_h_pwp(eos)*(1+(a+n*(h-1))/(n+1));
+}
+
+/* calculate pressure in terms of h for polytropic
+// ->return value: p(h) */
+double EoS_p_h_p(EoS_T *const eos)
+{
+  const double K = eos->K[0];
+  const double h = eos->h;
+  const double n = eos->n[0];
+  
+  return pow((h-1)/(n+1),n+1)*pow(K,-n);
+}
+
+/* calculate rest mass density in terms of h for polytropic
+// ->return value: rho(h) */
+double EoS_rho_h_p(EoS_T *const eos)
+{
+  const double K = eos->K[0];
+  const double h = eos->h;
+  const double n = eos->n[0];
+  
+  return pow((h-1)/(n+1),n)*pow(K,-n);
+}
+
+
+/* calculate the total energy density in terms of h for polytropic
+// ->return value: e(h) */
+double EoS_e_h_p(EoS_T *const eos)
+{
+  const double h = eos->h;
+  const double n = eos->n[0];
+  
+  return EoS_rho_h_pwp(eos)*(1+n*(h-1)/(n+1));
 }
 
 /* given eos->h it finds this enthalpy takes place in which intervale.
