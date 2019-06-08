@@ -31,6 +31,30 @@ double EoS_rho_h_pwp(EoS_T *const eos)
   return pow((h-1-a)/(n+1),n)*pow(K,-n);
 }
 
+/* calculate d(rest mass density)/dh in terms of h for pwp
+// ->return value: d(rho(h))/dh */
+double EoS_drho_dh_h_pwp(EoS_T *const eos)
+{
+  const unsigned i = find_threshold_number_h(eos);    
+  const double K = eos->K[i];
+  const double h = eos->h;
+  const double a = eos->a[i];
+  const double n = eos->n[i];
+  
+  return pow((h-1-a)/(n+1),n-1)*pow(K,-n)*n/(n+1);
+}
+
+/* calculate d(rest mass density)/dh in terms of h for polytrop
+// ->return value: d(rho(h))/dh */
+double EoS_drho_dh_h_p(EoS_T *const eos)
+{
+  const double K = eos->K[0];
+  const double h = eos->h;
+  const double n = eos->n[0];
+  
+  return pow((h-1)/(n+1),n-1)*pow(K,-n)*n/(n+1);
+}
+
 /* calculate the total energy density in terms of h for pwd
 // ->return value: e(h) */
 double EoS_e_h_pwp(EoS_T *const eos)
@@ -41,6 +65,28 @@ double EoS_e_h_pwp(EoS_T *const eos)
   const double n = eos->n[i];
   
   return EoS_rho_h_pwp(eos)*(1+(a+n*(h-1))/(n+1));
+}
+
+/* calculate d(total energy density)/dh in terms of h for pwd
+// ->return value: de(h)/dh */
+double EoS_de_dh_h_pwp(EoS_T *const eos)
+{
+  const unsigned i = find_threshold_number_h(eos);
+  const double h = eos->h;
+  const double a = eos->a[i];
+  const double n = eos->n[i];
+  
+  return EoS_drho_dh_h_pwp(eos)*(1+(a+n*(h-1))/(n+1))+EoS_rho_h_pwp(eos)*n/(n+1);
+}
+
+/* calculate d(total energy density)/dh in terms of h for polytropic
+// ->return value: de(h)/dh */
+double EoS_de_dh_h_p(EoS_T *const eos)
+{
+  const double h = eos->h;
+  const double n = eos->n[0];
+  
+  return EoS_drho_dh_h_p(eos)*(1+n*(h-1)/(n+1))+EoS_rho_h_p(eos)*n/(n+1);
 }
 
 /* calculate pressure in terms of h for polytropic

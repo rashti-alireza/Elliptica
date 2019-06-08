@@ -94,6 +94,8 @@ static void populate_EoS(EoS_T *const eos)
       eos->pressure          = EoS_p_h_pwp;
       eos->energy_density    = EoS_e_h_pwp;
       eos->rest_mass_density = EoS_rho_h_pwp;
+      eos->de_dh             = EoS_de_dh_h_pwp;
+      eos->drho_dh	     = EoS_drho_dh_h_pwp;
     }
     else if (strcmp_i(eos->type,"polytropic") ||
              strcmp_i(eos->type,"p"))
@@ -109,6 +111,8 @@ static void populate_EoS(EoS_T *const eos)
       eos->pressure          = EoS_p_h_p;
       eos->energy_density    = EoS_e_h_p;
       eos->rest_mass_density = EoS_rho_h_p;
+      eos->de_dh             = EoS_de_dh_h_p;
+      eos->drho_dh	     = EoS_drho_dh_h_p;
     }
     else
       abortEr(NO_JOB);

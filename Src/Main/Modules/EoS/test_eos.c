@@ -68,6 +68,29 @@ void test_EoS(Grid_T *const grid)
   }
   fclose(file);
   
+  sprintf(file_name,"%s/%s",path,"drho_dh");
+  file = fopen(file_name,"w+");
+  pointerEr(file);
+  fprintf(file,"# enthalpy   drho_dh\n");  
+  for (i = 0; i < N; ++i)
+  {
+    eos->h = 1+s*i;
+    fprintf(file,"  %-7g    %-7g\n",eos->h,eos->drho_dh(eos));
+  }
+  fclose(file);
+  
+  sprintf(file_name,"%s/%s",path,"de_dh");
+  file = fopen(file_name,"w+");
+  pointerEr(file);
+  fprintf(file,"# enthalpy   de_dh\n");  
+  for (i = 0; i < N; ++i)
+  {
+    eos->h = 1+s*i;
+    fprintf(file,"  %-7g    %-7g\n",eos->h,eos->de_dh(eos));
+  }
+  fclose(file);
+  
+  
   free_EoS(eos);
   free(path);
   UNUSED(grid);
