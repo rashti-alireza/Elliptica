@@ -9,6 +9,7 @@
 #include "maths_solvings_lib.h"
 #include "maths_general_lib.h"
 #include "maths_linear_algebra_lib.h"
+#include "EoS_lib.h"
 
 #define FT_OpenMP(x) _Pragma(#x)
 

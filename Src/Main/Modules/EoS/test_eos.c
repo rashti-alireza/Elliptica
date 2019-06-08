@@ -1,0 +1,75 @@
+/*
+// Alireza Rashti
+// June 2019
+*/
+
+#include "test_eos.h"
+
+void test_EoS(Grid_T *const grid)
+{
+  EoS_T *eos = initialize_EoS();
+  const char *const path_par = GetParameterS_E("output_directory_path");
+  char *path,file_name[400];
+  FILE *file = 0;
+  unsigned N = 100;
+  const double h_max = eos->h_th[eos->N-1]+2;
+  double s = (h_max-1)/(N-1);
+  unsigned i;
+  
+  path = make_directory(path_par,"EoS_Tests");
+  
+  /* values */
+  /* if it is pwp */
+  if (strstr_i(eos->type,"piecewise_polytropic") ||
+      strstr_i(eos->type,"pwp"))
+  {
+    sprintf(file_name,"%s/%s.pwp",path,eos->description);
+    file = fopen(file_name,"w+");
+    pointerEr(file);
+    
+    fprintf(file,"piece  Kappa         rho           gamma         a             h-1\n");
+    for (i = 0; i < eos->N; ++i)  
+      fprintf(file,"%u      %e  %e  %e  %e  %e\n",i,eos->K[i],eos->rho_th[i],eos->gamma[i],eos->a[i],eos->h_th[i]-1);
+    fclose(file);
+  }
+  else
+    abortEr(NO_OPTION);
+    
+  /* continuity */
+  sprintf(file_name,"%s/%s",path,"pressure");
+  file = fopen(file_name,"w+");
+  pointerEr(file);
+    
+  for (i = 0; i < N; ++i)
+  {
+    eos->h = 1+s*i;
+    fprintf(file,"%g %g\n",eos->h,eos->pressure(eos));
+  }
+  fclose(file);
+  
+  sprintf(file_name,"%s/%s",path,"rest_mass_density");
+  file = fopen(file_name,"w+");
+  pointerEr(file);
+    
+  for (i = 0; i < N; ++i)
+  {
+    eos->h = 1+s*i;
+    fprintf(file,"%g %g\n",eos->h,eos->rest_mass_density(eos));
+  }
+  fclose(file);
+  
+  sprintf(file_name,"%s/%s",path,"energy_density");
+  file = fopen(file_name,"w+");
+  pointerEr(file);
+    
+  for (i = 0; i < N; ++i)
+  {
+    eos->h = 1+s*i;
+    fprintf(file,"%g %g\n",eos->h,eos->energy_density(eos));
+  }
+  fclose(file);
+  
+  free_EoS(eos);
+  UNUSED(grid);
+  
+}

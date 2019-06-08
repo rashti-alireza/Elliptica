@@ -15,6 +15,12 @@ int Fundamental_Tests(void)
   sEquation_T **field_eq,**bc_eq,
               **jacobian_field_eq,**jacobian_bc_eq;/* data base of equations */
   
+  if (strstr_i(GetParameterS("Test_EoS"),"yes"))
+  {
+    test_EoS(grid);
+  }
+  
+  
   if (strstr_i(GetParameterS("Test_Schur_Complement"),"yes"))
   {
      /* fill data base of equations */
