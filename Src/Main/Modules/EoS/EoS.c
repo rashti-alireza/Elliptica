@@ -98,6 +98,7 @@ static void populate_EoS(EoS_T *const eos)
       eos->drho_dh	     = EoS_drho_dh_h_pwp;
     }
     else if (strcmp_i(eos->type,"polytropic") ||
+             strcmp_i(eos->type,"polytrop")   ||
              strcmp_i(eos->type,"p"))
     {
       if (N != 1)
