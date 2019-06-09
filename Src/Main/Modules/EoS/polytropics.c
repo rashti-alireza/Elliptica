@@ -9,6 +9,8 @@
 // ->return value: p(h) */
 double EoS_p_h_pwp(EoS_T *const eos)
 {
+  if (EQL(eos->h,1)) eos->h = 1;
+  
   const unsigned i = find_threshold_number_h(eos);
   const double K = eos->K[i];
   const double h = eos->h;
@@ -22,6 +24,8 @@ double EoS_p_h_pwp(EoS_T *const eos)
 // ->return value: rho(h) */
 double EoS_rho_h_pwp(EoS_T *const eos)
 {
+  if (EQL(eos->h,1)) eos->h = 1;
+  
   const unsigned i = find_threshold_number_h(eos);    
   const double K = eos->K[i];
   const double h = eos->h;
@@ -35,6 +39,8 @@ double EoS_rho_h_pwp(EoS_T *const eos)
 // ->return value: d(rho(h))/dh */
 double EoS_drho_dh_h_pwp(EoS_T *const eos)
 {
+  if (EQL(eos->h,1)) eos->h = 1;
+  
   const unsigned i = find_threshold_number_h(eos);    
   const double K = eos->K[i];
   const double h = eos->h;
@@ -48,6 +54,8 @@ double EoS_drho_dh_h_pwp(EoS_T *const eos)
 // ->return value: d(rho(h))/dh */
 double EoS_drho_dh_h_p(EoS_T *const eos)
 {
+  if (EQL(eos->h,1)) eos->h = 1;
+  
   const double K = eos->K[0];
   const double h = eos->h;
   const double n = eos->n[0];
@@ -59,6 +67,8 @@ double EoS_drho_dh_h_p(EoS_T *const eos)
 // ->return value: e(h) */
 double EoS_e_h_pwp(EoS_T *const eos)
 {
+  if (EQL(eos->h,1)) eos->h = 1;
+  
   const unsigned i = find_threshold_number_h(eos);
   const double h = eos->h;
   const double a = eos->a[i];
@@ -71,6 +81,8 @@ double EoS_e_h_pwp(EoS_T *const eos)
 // ->return value: de(h)/dh */
 double EoS_de_dh_h_pwp(EoS_T *const eos)
 {
+  if (EQL(eos->h,1)) eos->h = 1;
+  
   const unsigned i = find_threshold_number_h(eos);
   const double h = eos->h;
   const double a = eos->a[i];
@@ -83,6 +95,8 @@ double EoS_de_dh_h_pwp(EoS_T *const eos)
 // ->return value: de(h)/dh */
 double EoS_de_dh_h_p(EoS_T *const eos)
 {
+  if (EQL(eos->h,1)) eos->h = 1;
+  
   const double h = eos->h;
   const double n = eos->n[0];
   
@@ -93,6 +107,8 @@ double EoS_de_dh_h_p(EoS_T *const eos)
 // ->return value: p(h) */
 double EoS_p_h_p(EoS_T *const eos)
 {
+  if (EQL(eos->h,1)) eos->h = 1;
+  
   const double K = eos->K[0];
   const double h = eos->h;
   const double n = eos->n[0];
@@ -104,6 +120,8 @@ double EoS_p_h_p(EoS_T *const eos)
 // ->return value: rho(h) */
 double EoS_rho_h_p(EoS_T *const eos)
 {
+  if (EQL(eos->h,1)) eos->h = 1;
+  
   const double K = eos->K[0];
   const double h = eos->h;
   const double n = eos->n[0];
@@ -116,6 +134,8 @@ double EoS_rho_h_p(EoS_T *const eos)
 // ->return value: e(h) */
 double EoS_e_h_p(EoS_T *const eos)
 {
+  if (EQL(eos->h,1)) eos->h = 1;
+  
   const double h = eos->h;
   const double n = eos->n[0];
   
