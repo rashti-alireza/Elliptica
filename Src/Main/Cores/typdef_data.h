@@ -660,8 +660,9 @@ typedef struct BOUNDARY_CONDITION_T
 /* struct for TOV stars */
 typedef struct TOV_PROJECT_T
 {
- double desired_baryonic_m;/* desired NS baryonic mass */
- double calculated_baryonic_m;/* calculated NS baryonic mass */
+ const char *description;
+ double ADM_m;/* ADM mass of NS */
+ double bar_m;/* baryonic mass of NS */
  double h_cent;/* enthalpy at the center of NS */
  unsigned N;/* number of interpolation points, choose them to be odd */
  double *m;/* total mass at each point */

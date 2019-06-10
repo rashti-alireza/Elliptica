@@ -10,40 +10,38 @@
 // ->return value: solution of TOV equations for inside of a star with give EoS */
 TOV_T *TOV_solution(TOV_T *const TOV)
 {
-  const double tol = 1E-5;/* tolerance in mass calculations */
   const double Fac = 0.25;
   double h_cent_prev = 1;
   double a = 0,b = 0;
+  double m = 0;/* ADM mass of NS for various central enthalpy */
   Flag_T increase  = YES;
   Flag_T bisection = NO;
   EoS_T *eos = 0;
   unsigned i;
+ 
+  pr_line_custom('=');
+  printf("Solving TOV equations for %s ...\n",TOV->description);
   
   /* some initialization and preparation */
-  TOV->calculated_baryonic_m = 0;
-  TOV->h_cent = 3;
+  TOV->h_cent = 1.5;
   TOV->m = alloc_double(TOV->N);
   TOV->r = alloc_double(TOV->N);
   TOV->h = alloc_double(TOV->N);
   TOV->p = alloc_double(TOV->N);
   
   /* find enthalpy at the center of NS such that 
-  // the baryonic mass reaches the desired value.
+  // the ADM mass reaches the desired value.
   // the spirit of the approach is bisection method in root finders */
-  while (GRT(fabs(TOV->desired_baryonic_m-TOV->calculated_baryonic_m),tol))
+  while (!EQL(m,TOV->ADM_m))
   {
     solve_ODE_enthalpy_approach(TOV);
-    
-    TOV->calculated_baryonic_m = /* test */TOV->m[TOV->N-1];
-    printf("h_cent =%g, calc m=%g\n",TOV->h_cent,TOV->calculated_baryonic_m);
-    UNUSED(calculate_baryonic_mass(TOV));
-                    
+    m = TOV->m[TOV->N-1];
     
     /* as long as the mass is less than desired mass, increase enthalpy
     // to find the range of enthalpy */
     if (increase == YES)
     {
-      if (LSS(TOV->calculated_baryonic_m,TOV->desired_baryonic_m))
+      if (LSS(m,TOV->ADM_m))
       {
         h_cent_prev = TOV->h_cent;
         /* increase the enthalpy: */
@@ -61,7 +59,7 @@ TOV_T *TOV_solution(TOV_T *const TOV)
     // to pin down the correct value of the central enthalpy */
     if (bisection == YES)
     {
-      if (GRT(TOV->calculated_baryonic_m,TOV->desired_baryonic_m))
+      if (GRT(m,TOV->ADM_m))
       {
         b = TOV->h_cent;
       }
@@ -72,9 +70,10 @@ TOV_T *TOV_solution(TOV_T *const TOV)
       TOV->h_cent = a+0.5*(b-a);
     }
   }
-  
+  TOV->ADM_m = TOV->m[TOV->N-1];
+  TOV->bar_m = calculate_baryonic_mass(TOV);
   calculate_phi(TOV);
-  check_virial_relation(TOV);
+  calculate_ADM_and_Komar_mass(TOV);
   
   /* having known every thing, now populate pressure */
   eos = initialize_EoS();
@@ -84,7 +83,21 @@ TOV_T *TOV_solution(TOV_T *const TOV)
     TOV->p[i] = eos->pressure(eos);
   }
   
+  /* print some informations about TOV */
+  printf("TOV properties:\n");
+  printf("--> NS radius (Schwarzschild Coords.) = %g\n",TOV->r[TOV->N-1]);
+  printf("--> NS radius (Isotropic Coords.)     = %g\n",-10000.);
+  printf("--> ADM mass                          = %g\n",TOV->ADM_m);
+  printf("--> baryonic mass                     = %g\n",TOV->bar_m);
+  printf("--> central pressure                  = %g\n",TOV->p[0]);
+  eos->h = TOV->h_cent;
+  printf("--> central energy density            = %g\n",eos->energy_density(eos));
+  
   free_EoS(eos);
+  
+  printf("Solving TOV equations for %s ==> Done.\n",TOV->description);
+  pr_clock();
+  pr_line_custom('=');
   
   return TOV;
 }
@@ -103,11 +116,12 @@ static void calculate_phi(TOV_T *const TOV)
   
 }
 
-/* check if the Komar mass and ADM mass are equal */
-static void check_virial_relation(const TOV_T *const TOV)
+/* calculate Komar mass and ADM mass and check virial theorem */
+static void calculate_ADM_and_Komar_mass(TOV_T *const TOV)
 {
+  const double tol = 1e-4;/* this is due to the integration */
   Integration_T *I = init_integration();
-  double *f;
+  double *f = 0;
   double Komar_mass, ADM_mass;
   
   I->type = "Composite Simpson's Rule 1D";
@@ -127,9 +141,10 @@ static void check_virial_relation(const TOV_T *const TOV)
   free(f);
   free_integration(I);
   
-  printf("Komar mass = %g, ADM mass = %g\n",Komar_mass,ADM_mass);
-  if (!EQL(Komar_mass,ADM_mass))
+  /* some test control */
+  if (GRT(fabs(Komar_mass-ADM_mass),tol))/* virial theorem */
   {
+    fprintf(stderr,"Komar mass = %g, ADM mass = %g\n",Komar_mass,ADM_mass);
     abortEr("Komar mass and ADM mass must be equal!\n");
   }
 }
@@ -182,7 +197,6 @@ static double *ADM_mass_integrand(const TOV_T *const TOV)
   return f;
 }
 
-
 /* taking the integral of 4\pi \int ^{R}_{0}\rho \left( 1-\frac {2m}{r}\right) ^{-\frac {1}{2}}r^{2}dr.
 // ->return value: baryonic rest mass */
 static double calculate_baryonic_mass(const TOV_T *const TOV)
@@ -215,15 +229,16 @@ static double *baryonic_mass_integrand(const TOV_T *const TOV)
                *const m = TOV->m,
                *const h = TOV->h;
   EoS_T *eos = initialize_EoS();
+  double s;
   unsigned i;
   
   f[0] = 0;
   for (i = 1; i < TOV->N; ++i)
   {
-    double s = EQL(1-2*m[i]/r[i],0) ? 0 : 1-2*m[i]/r[i];
     eos->h = h[i];
     rho = (eos->energy_density(eos)+eos->pressure(eos))/h[i];
-    f[i] = rho/sqrt(s)*SQR(r[i])*dr_dh(h[i],r[i],m[i]);
+    s = 1-2*m[i]/r[i];
+    f[i] = 4*M_PI*rho/sqrt(s)*SQR(r[i])*dr_dh(h[i],r[i],m[i]);
   }
   
   free_EoS(eos);

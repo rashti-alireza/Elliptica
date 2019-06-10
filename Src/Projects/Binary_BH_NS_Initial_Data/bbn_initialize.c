@@ -31,9 +31,12 @@ static Grid_T *TOV_KerrShild_approximation(void)
   tov->N = (unsigned)GetParameterI("left_NS_n_a");
   if (tov->N == INT_MAX)/* if not specifed override it */
     tov->N = (unsigned)GetParameterI("n_a");
-  if (tov->N%2 == 0)/* using Composite Simpson's rule integral N must be odd */
-    tov->N++;
-  tov->desired_baryonic_m = GetParameterD_E("NS_initial_baryonic_mass");
+  tov->N *= 10;/* using Composite Simpson's rule integral, for accuracy we increas N */
+  tov->N += 1;/* using Composite Simpson's rule integral, N must be odd */
+  
+  /* for the TOV guess we approximatly take adm mass as the barionic mass of the NS */
+  tov->ADM_m = GetParameterD_E("NS_initial_baryonic_mass");
+  tov->description = "Estimating NS";
   tov = TOV_solution(tov);
 
   /* solve fields for Kerr Shild black hole */

@@ -16,7 +16,7 @@ static double m_approx(const double h,const double h_c);
 static double calculate_baryonic_mass(const TOV_T *const TOV);
 static double *baryonic_mass_integrand(const TOV_T *const TOV);
 static void calculate_phi(TOV_T *const TOV);
-static void check_virial_relation(const TOV_T *const TOV);
+static void calculate_ADM_and_Komar_mass(TOV_T *const TOV);
 static double *Komar_mass_integrand(const TOV_T *const TOV);
 static double *ADM_mass_integrand(const TOV_T *const TOV);
 
