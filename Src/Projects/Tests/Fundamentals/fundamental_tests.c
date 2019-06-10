@@ -52,6 +52,9 @@ int Fundamental_Tests(void)
   
   if (strstr_i(GetParameterS("Test_Derivative"),"yes"))
     derivative_tests(grid);
+    
+  if (strstr_i(GetParameterS("Test_Integral"),"yes"))
+    integration_tests(grid);
   
   if (strstr_i(GetParameterS("Test_dNi/dxj"),"yes"))
     test_dNi_dxj(grid);
