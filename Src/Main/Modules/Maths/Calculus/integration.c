@@ -72,14 +72,15 @@ static double Composite_Simpson_1D(Integration_T *const I)
   if (I->Composite_Simpson_1D->n % 2 != 1)
     abortEr("Composite Simpson's Rule requires odd number of points.\n");
     
-  const double h = (I->Composite_Simpson_1D->b-I->Composite_Simpson_1D->a)/I->Composite_Simpson_1D->n;
+  const double h = (I->Composite_Simpson_1D->b-I->Composite_Simpson_1D->a)/(I->Composite_Simpson_1D->n-1);
   const double *const f = I->Composite_Simpson_1D->f;
   double i0 = 0,i1 = 0,i2 = 0;
   unsigned j;
   
-  i0 = f[0]+f[I->Composite_Simpson_1D->n-1];
+  I->err = fabs(I->Composite_Simpson_1D->b-I->Composite_Simpson_1D->a)/180*pow(h,4)*100;
   
-  for (j = 1; j < I->Composite_Simpson_1D->n-2; ++j)
+  i0 = f[0]+f[I->Composite_Simpson_1D->n-1];
+  for (j = 1; j < I->Composite_Simpson_1D->n-1; ++j)
   {
     if (j%2 == 0)
       i2 += f[j];

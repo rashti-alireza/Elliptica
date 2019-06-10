@@ -700,6 +700,7 @@ typedef struct EquationOfState_T
 typedef struct INTEGRATION_T
 {
  const char *type;
+ double err;/* expected error this method */
  struct
  {
   double a,b;/* integral limits */
