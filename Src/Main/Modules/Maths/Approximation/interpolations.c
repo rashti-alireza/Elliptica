@@ -49,15 +49,20 @@ double execute_interpolation(Interpolation_T *const interp_struct)
 */
 void plan_interpolation(Interpolation_T *const interp_s)
 {
-  fPick_Func_T *func = 0;
   unsigned i;
-  Patch_T *const patch = interp_s->field->patch;
-  
-  /* choose type of interpolation based on input file and patch
-  // and narrow down the options.
-  */
-  if (strstr_i(GetParameterS("Interpolation_Method"),"Spectral"))
+  Patch_T *patch;
+  /* choose method of interpolation based on inputs and patch
+  // and narrow down the options. */
+  if (strstr_i(interp_s->method,"Neville_1D"))
   {
+    interp_s->interpolation_func = interpolation_Neville_1d;
+  }
+  else if ( strstr_i(interp_s->method,"Spectral") || 
+       strstr_i(GetParameterS("Interpolation_Method"),"Spectral"))
+  {
+    fPick_Func_T *func = 0;
+    patch = interp_s->field->patch;
+  
     for (i = 0; i < 3; ++i)
     {
       if (patch->basis[i]       == Chebyshev_Tn_BASIS &&
@@ -69,15 +74,98 @@ void plan_interpolation(Interpolation_T *const interp_s)
          abortEr(INCOMPLETE_FUNC);
 
     }/* end of for (i = 0; i < 3; ++i) */
+    
+    /* having chosen the type of interpolation, 
+    // find out in which direction(s) interpolation happens
+    // and then assign which function should be called.
+    */
+    interp_s->interpolation_func = func(interp_s);
   }
   else
     abortEr(INCOMPLETE_FUNC);
   
-  /* having chosen the type of interpolation, 
-  // find out in which direction(s) interpolation happens
-  // and then assign which function should be called.
-  */
-  interp_s->interpolation_func = func(interp_s);
+}
+
+/* tutorial:
+// =========
+// given function f(xi)'s and points xi's it calculates value of f(h)
+// using Neville iterate method in 1-d
+// 
+// ** filling the interpolation struct **
+// Interpolation_T *interp_s = init_interpolation();
+// interp_s->method         = "Neville_1D";
+// interp_s->Neville_1d->f   = f;
+// interp_s->Neville_1d->x   = x;
+// interp_s->Neville_1d->h   = h;// the point that we wanna interpolate f i.e. f(h)
+// interp_s->Neville_1d->N   = 20;// dimention of array f and x
+// interp_s->Neville_1d->max = 10;// 10 out of N used for interpolation
+// ** planning the appropriate function for interpolation **
+// plan_interpolation(interp_s);
+//
+// ** evaluating interpolation **
+// value = execute_interpolation(interp_s);
+// ** freeing **
+// free_interpolation(interp_s);
+*/
+static double interpolation_Neville_1d(Interpolation_T *const interp_s)
+{
+  if (!interp_s->Neville_1d->f)
+    abortEr("No function is specified.\n");
+  
+  const double *const f = interp_s->Neville_1d->f;
+  double *x;
+  const double h = interp_s->Neville_1d->h;
+  double **q;
+  double interp = 0;
+  Matrix_T *Q;
+  unsigned N,i,j;
+  Flag_T flg = NO;
+  
+  if (interp_s->Neville_1d->max    			  && 
+      interp_s->Neville_1d->N > interp_s->Neville_1d->max &&
+      /* for small N we might get x[i]-x[i-j] = 0 thus: */
+      interp_s->Neville_1d->N > 10)
+  {
+    flg = YES;
+    N = interp_s->Neville_1d->max;
+    unsigned s = interp_s->Neville_1d->N/N;
+    assert(s);
+    Q = alloc_matrix(REG_SF,N,N);
+    q = Q->reg->A;
+    
+    x = alloc_double(N);
+    x[0]      = interp_s->Neville_1d->x[0];
+    x[N-1]    = interp_s->Neville_1d->x[N-1];
+    q[0][0]   = f[0];
+    q[N-1][0] = f[N-1];
+    for (i = 1; i < N-1; i++)
+    {
+      q[i][0] = f[i*s];
+      x[i] = interp_s->Neville_1d->x[i*s];
+    }
+  }
+  else
+  {
+    N = interp_s->Neville_1d->N;
+    Q = alloc_matrix(REG_SF,N,N);
+    q = Q->reg->A;
+    x = interp_s->Neville_1d->x;
+    
+    for (i = 0; i < N; i++)
+      q[i][0] = f[i];
+  }
+
+  for (i = 1; i < N; ++i)
+    for (j = 1; j <= i; ++j)
+      q[i][j] = ((h-x[i-j])*q[i][j-1]-(h-x[i])*q[i-1][j-1])/(x[i]-x[i-j]);
+
+  interp = q[N-1][N-1];
+
+  free_matrix(Q);
+  if (flg == YES)
+    free(x);
+  
+  return interp;
 }
 
 /* calculating interpolation using Chebyshev spectral method and

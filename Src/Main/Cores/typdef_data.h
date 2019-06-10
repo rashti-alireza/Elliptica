@@ -624,6 +624,7 @@ typedef double fInterpolation_T(struct INTERPOLATION_T *const interp_s);
 /* interpolation struct used in interpolation function */
 typedef struct INTERPOLATION_T
 {
+  const char *method;
   Field_T *field;/* interesting field for interpolation */
   fInterpolation_T *interpolation_func;/* interpolation function */
   double X,Y,Z;/* where interpolant calculated. 
@@ -639,6 +640,14 @@ typedef struct INTERPOLATION_T
   unsigned I;/* the index held constant in case of interpolation in 1-D and 2-D */
   unsigned J;/* the index held constant in case of interpolation in 1-D and 2-D */
   unsigned K;/* the index held constant in case of interpolation in 1-D and 2-D */
+  struct
+  {
+   const double *f;/* f(xi) */
+   double *x;/* xi */
+   double h;/* desired point to interpolate f */
+   unsigned N;/* number of xi */
+   unsigned max;/* desired number of xi to be used, if 0 then the value N is picked */
+  }Neville_1d[1];/* the method is Neville's iterated interpolation */
 }Interpolation_T;
 
 /* boundary condition struct */
