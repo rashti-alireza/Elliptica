@@ -79,6 +79,7 @@ int interpolation_tests(Grid_T *const grid)
       check_test_result(status);
     }
     
+    
     /* freeing */
     free(X);
     free(Y);
@@ -86,13 +87,73 @@ int interpolation_tests(Grid_T *const grid)
     remove_field(field);
   }
   
+  if (DO)
+  {
+      printf("Interpolation test:            Neville Iterative Method =>");
+      status = interpolation_tests_Neville_1d();
+      check_test_result(status);
+  }
+  
   return EXIT_SUCCESS;
+}
+
+/* test Neville iterative method for 1-d arrays.
+// ->return value: result of test. */
+static int interpolation_tests_Neville_1d(void)
+{
+  Interpolation_T *interp_s = init_interpolation();
+  const unsigned N = (unsigned)GetParameterI_E("n_a");
+  double *f = alloc_double(N);
+  double *x = alloc_double(N);
+  const double a = -M_PI, b = 3/4*M_PI;/* an arbitrary interval  */
+  double *hs = make_random_number(N,a,b);
+  const double s = (b-a)/(N-1);
+  double t,interp;
+  Flag_T flg = NONE;
+  unsigned i;
+  
+  for (i = 0; i < N; ++i)
+  {
+    t = x[i] = a+i*s;
+    f[i] = cos(t)+t*t*t;/* arbitrary function */
+  }
+    
+  interp_s->method         = "Neville_1D";
+  interp_s->Neville_1d->f   = f;
+  interp_s->Neville_1d->x   = x;
+  interp_s->Neville_1d->N   = N;
+  interp_s->Neville_1d->max = N/2;
+  plan_interpolation(interp_s);
+  
+  for (i = 0; i < N; ++i)
+  {
+    double diff;
+    t = hs[i];
+    interp_s->Neville_1d->h = t;
+    interp = execute_interpolation(interp_s);
+    diff = interp-(cos(t)+t*t*t);
+    
+    if (GRT(fabs(diff),s))
+    {
+      fprintf(stderr,"diff = %g\n",diff);
+      flg = FOUND;
+      break;
+    }
+  }
+  free_interpolation(interp_s);
+  free(f);
+  free(x);
+  free(hs);
+  
+  if (flg == FOUND)
+    return TEST_UNSUCCESSFUL;
+    
+  return TEST_SUCCESSFUL;
 }
 
 /* testing interpolation in X direction and comparing
 // to analytical value and returning the result.
-// ->return value: result of test.
-*/
+// ->return value: result of test. */
 static int interpolation_tests_X(Field_T *const field,const double *const X,const unsigned N)
 {
   Interpolation_T *interp_s = init_interpolation();
