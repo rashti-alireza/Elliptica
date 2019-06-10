@@ -11,69 +11,76 @@
 TOV_T *TOV_solution(TOV_T *const TOV)
 {
   const double Fac = 0.25;
+  const unsigned MAX_iter = 1000;
   double h_cent_prev = 1;
+  double h_cent_new;
   double a = 0,b = 0;
   double m = 0;/* ADM mass of NS for various central enthalpy */
   Flag_T increase  = YES;
   Flag_T bisection = NO;
   EoS_T *eos = 0;
-  unsigned i;
+  unsigned i,iter;
  
   pr_line_custom('=');
   printf("Solving TOV equations for %s ...\n",TOV->description);
   
   /* some initialization and preparation */
-  TOV->h_cent = 1.5;
+  iter = 0;
+  h_cent_new = 1.5;
   TOV->m = alloc_double(TOV->N);
   TOV->r = alloc_double(TOV->N);
   TOV->h = alloc_double(TOV->N);
   TOV->p = alloc_double(TOV->N);
   
   /* find enthalpy at the center of NS such that 
-  // the ADM mass reaches the desired value.
+  // the baryonic mass reaches the desired value.
   // the spirit of the approach is bisection method in root finders */
-  while (!EQL(m,TOV->ADM_m))
+  while (!EQL(m,TOV->bar_m) && iter < MAX_iter)
   {
+    TOV->h_cent = h_cent_new;
     solve_ODE_enthalpy_approach(TOV);
-    m = TOV->m[TOV->N-1];
+    m = calculate_baryonic_mass(TOV);
     
     /* as long as the mass is less than desired mass, increase enthalpy
     // to find the range of enthalpy */
     if (increase == YES)
     {
-      if (LSS(m,TOV->ADM_m))
+      if (LSS(m,TOV->bar_m))
       {
-        h_cent_prev = TOV->h_cent;
+        h_cent_prev = h_cent_new;
         /* increase the enthalpy: */
-        TOV->h_cent += TOV->h_cent*Fac;
+        h_cent_new += h_cent_new*Fac;
       }
       else
       {
         increase  = NO;
         bisection = YES;/* active bisection */
         a = h_cent_prev;
-        b = TOV->h_cent;
+        b = h_cent_new;
       }
     }
     /* now we know the range of enthalpy and we use bisection method
     // to pin down the correct value of the central enthalpy */
     if (bisection == YES)
     {
-      if (GRT(m,TOV->ADM_m))
+      if (GRT(m,TOV->bar_m))
       {
-        b = TOV->h_cent;
+        b = h_cent_new;
       }
       else
       {
-        a = TOV->h_cent;
+        a = h_cent_new;
       }
-      TOV->h_cent = a+0.5*(b-a);
+      h_cent_new = a+0.5*(b-a);
     }
+    iter++;
   }
+  /* if it couldn't find the root, set the last value as baryonic mass */
+  if (!EQL(m,TOV->bar_m))
+    TOV->bar_m = m;
   TOV->ADM_m = TOV->m[TOV->N-1];
-  TOV->bar_m = calculate_baryonic_mass(TOV);
   calculate_phi(TOV);
-  calculate_ADM_and_Komar_mass(TOV);
+  calculate_ADM_and_Komar_mass(TOV);/* perform some tests */
   
   /* having known every thing, now populate pressure */
   eos = initialize_EoS();
@@ -83,12 +90,15 @@ TOV_T *TOV_solution(TOV_T *const TOV)
     TOV->p[i] = eos->pressure(eos);
   }
   
+  isotropic_coords_transformation(TOV);
+  
   /* print some informations about TOV */
   printf("TOV properties:\n");
   printf("--> NS radius (Schwarzschild Coords.) = %g\n",TOV->r[TOV->N-1]);
-  printf("--> NS radius (Isotropic Coords.)     = %g\n",-10000.);
+  printf("--> NS radius (Isotropic Coords.)     = %g\n",TOV->rbar[TOV->N-1]);
   printf("--> ADM mass                          = %g\n",TOV->ADM_m);
   printf("--> baryonic mass                     = %g\n",TOV->bar_m);
+  printf("--> central enthalpy                  = %g\n",TOV->h[0]);
   printf("--> central pressure                  = %g\n",TOV->p[0]);
   eos->h = TOV->h_cent;
   printf("--> central energy density            = %g\n",eos->energy_density(eos));
@@ -100,6 +110,51 @@ TOV_T *TOV_solution(TOV_T *const TOV)
   pr_line_custom('=');
   
   return TOV;
+}
+
+/* finding rbar and psi in isotropic coordinates. */
+static void isotropic_coords_transformation(TOV_T *const TOV)
+{
+  TOV->rbar = alloc_double(TOV->N);
+  TOV->psi  = alloc_double(TOV->N);
+  double *const rbar = TOV->rbar;
+  double *const psi  = TOV->psi;
+  const double *const r = TOV->r;
+  const double *const m = TOV->m;
+  const double *const h = TOV->h;
+  const double M = m[TOV->N-1];
+  const double R = r[TOV->N-1];
+  const double a = 1;
+  const double b = TOV->h_cent;
+  const double s = (b-a)/(TOV->N-1);/* s > 0 */
+  double t;/* independent variable h, we conventionally called it t */
+  unsigned i;
+  
+  UNUSED(psi);
+  /* initialization */
+  rbar[0] = 0;/* rabr(h=h_cent) */
+  rbar[TOV->N-1] = 0.5*(R-M+sqrt(SQR(R)-2*M*R))/R;/* rbar(h=1) */
+  t = h[TOV->N-1];/* t = 1 */
+  
+  /* for all points */
+  for (i = TOV->N-2; i >= 1; --i)
+  {
+    double k1,k2,k3,k4;/* variables for Runge-Kutta method of 4th order */
+    
+    k1 = s*drbar_dh(t,rbar[i+1],TOV);
+    k2 = s*drbar_dh(t+s/2,rbar[i+1]+k1/2,TOV);
+    k3 = s*drbar_dh(t+s/2,rbar[i+1]+k2/2,TOV);
+    k4 = s*drbar_dh(t+s,rbar[i+1]+k3,TOV);
+    
+    /* updating the values */
+    rbar[i] = rbar[i+1]+(k1+2*k2+2*k3+k4)/6;
+    t = a+i*s;
+  }
+  
+  //test
+  for (i = 0; i < TOV->N; ++i)
+    fprintf(stderr,"%u %g\n",i,rbar[i]);
+  //end
 }
 
 /* calculate phi in g_00 = - exp[2phi] for the metric of space time */
@@ -119,7 +174,7 @@ static void calculate_phi(TOV_T *const TOV)
 /* calculate Komar mass and ADM mass and check virial theorem */
 static void calculate_ADM_and_Komar_mass(TOV_T *const TOV)
 {
-  const double tol = 1e-4;/* this is due to the integration */
+  const double tol = (TOV->h_cent-1)/TOV->N;/* this is due to the integration */
   Integration_T *I = init_integration();
   double *f = 0;
   double Komar_mass, ADM_mass;
@@ -349,10 +404,28 @@ static double m_approx(const double h,const double h_c/* central enthalpy */)
 
 /* rbar equation:
 // \frac {d\overline {r}}{dh}=\frac {\overline {r}}{r\sqrt {1-2\frac {m}{r}}}\frac {dr}{dh} */
-//static double drbar_dh(const double h,const double rbar,const double r, const double m)
-//{
-  //return rbar/sqrt(1-2*m/r)/r*dr_dh(h,r,m);
-//}
+static double drbar_dh(const double h,const double rbar,const TOV_T *const TOV)
+{
+  double r,m;
+  Interpolation_T *interp_s = init_interpolation();
+  
+  interp_s->method         = "Neville_1D";
+  interp_s->Neville_1d->x   = TOV->h;
+  interp_s->Neville_1d->h   = h;
+  interp_s->Neville_1d->N   = TOV->N;
+  interp_s->Neville_1d->max = 11;
+  plan_interpolation(interp_s);
+  
+  interp_s->Neville_1d->f   = TOV->r;
+  r = execute_interpolation(interp_s);
+  
+  interp_s->Neville_1d->f   = TOV->m;
+  m = execute_interpolation(interp_s);
+  
+  free_interpolation(interp_s);
+  
+  return rbar/sqrt(1-2*m/r)/r*dr_dh(h,r,m);
+}
 
 /* r equation:
 // \frac {dr}{dh}=-\frac {r\left( r-2m\right) }{\left( m+4\pi r^{3}p\right) h}\\ . */
