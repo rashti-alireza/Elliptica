@@ -99,6 +99,10 @@ static void order_arrays_natural_cubic_spline_1d(Interpolation_T *const interp_s
   const unsigned N = interp_s->N_cubic_spline_1d->N;
   unsigned i;
   
+  if (EQL(x[0],x[N-1]))
+  {
+    abortEr("Periodic case has not been considered.\n");
+  }
   if (GRT(x[0],x[N-1]))/* if the x's are in decreasing order */
   {
     interp_s->N_cubic_spline_1d->Alloc_Mem = 1;
@@ -153,12 +157,12 @@ static void find_coeffs_natural_cubic_spline_1d(Interpolation_T *const interp_s)
   for (i = n-1; i >= 1; --i)
   {
     c[i] = z[i]-mu[i]*c[i+1];
-    b[i] = (a[i+1]-a[i])/h[i]-h[i]*(c[i+1]+2*c[i])/3;
+    b[i] = (a[i+1]-a[i])/h[i]-h[i]*(c[i+1]+2.*c[i])/3.;
     d[i] = (c[i+1]-c[i])/3./h[i];
   }
-  /* i = 0 */
+  i = 0;
   c[i] = z[i]-mu[i]*c[i+1];
-  b[i] = (a[i+1]-a[i])/h[i]-h[i]*(c[i+1]+2*c[i])/3;
+  b[i] = (a[i+1]-a[i])/h[i]-h[i]*(c[i+1]+2.*c[i])/3.;
   d[i] = (c[i+1]-c[i])/3./h[i];
   
   interp_s->N_cubic_spline_1d->a = a;
