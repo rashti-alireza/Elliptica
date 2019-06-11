@@ -654,7 +654,7 @@ typedef struct INTERPOLATION_T
    double *x;/* xi's, note: it must be x0 < x1 < ...< xN */
    double h;/* desired point to interpolate f */
    unsigned N;/* number of xi's */
-   double *a,*b,*c,*d;/* coefficents in s(x) = a+b(x-xi)+c(x-xi)^2+d(x-xi)^3 */
+   double *a,*b,*c,*d;/* coefficents in s(h) = a+b(h-xi)+c(h-xi)^2+d(h-xi)^3 */
    unsigned Order: 1;/* if xi's in the order 1, otherwise 0 */
    unsigned Alloc_Mem: 1;/* if it allocates memory for x and f */
   }N_cubic_spline_1d[1];/* natural cubic spline 1d */
