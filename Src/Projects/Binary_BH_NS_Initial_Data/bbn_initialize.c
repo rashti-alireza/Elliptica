@@ -28,11 +28,6 @@ static Grid_T *TOV_KerrShild_approximation(void)
   
   /* solve fields for a TOV star located at left side of y axis */
   TOV_T *tov = TOV_init();
-  tov->N = (unsigned)GetParameterI("left_NS_n_a");
-  if (tov->N == INT_MAX)/* if not specifed override it */
-    tov->N = (unsigned)GetParameterI("n_a");
-  tov->N *= 10;/* using Composite Simpson's rule integral, for accuracy we increas N */
-  tov->N += 1;/* using Composite Simpson's rule integral, N must be odd */
   tov->bar_m = GetParameterD_E("NS_initial_baryonic_mass");
   tov->description = "Estimating NS";
   tov = TOV_solution(tov);
