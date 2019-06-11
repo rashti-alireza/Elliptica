@@ -52,6 +52,7 @@ static int interpolation_tests_XZ(Field_T *const field,const double *const X,con
 static int interpolation_tests_YZ(Field_T *const field,const double *const Y,const double *const Z,const unsigned Ny,const unsigned Nz);
 static int interpolation_tests_XYZ(Field_T *const field,const double *const X,const double *const Y,const double *const Z,const unsigned Nx,const unsigned Ny,const unsigned Nz);
 static int interpolation_tests_Neville_1d(void);
+static int interpolation_tests_N_cubic_spline_1d(void);
 static unsigned order_of_derivative(const enum FUNC_E fn);
 static double calculate_expected_precision_for_derivative(const Field_T *const func,const enum FUNC_E fn,const Patch_T *const patch);
 

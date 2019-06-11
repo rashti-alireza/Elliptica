@@ -642,12 +642,22 @@ typedef struct INTERPOLATION_T
   unsigned K;/* the index held constant in case of interpolation in 1-D and 2-D */
   struct
   {
-   const double *f;/* f(xi) */
-   double *x;/* xi */
+   const double *f;/* f(xi)'s */
+   double *x;/* xi's */
    double h;/* desired point to interpolate f */
-   unsigned N;/* number of xi */
+   unsigned N;/* number of xi's */
    unsigned max;/* desired number of xi to be used, if 0 then the value N is picked */
   }Neville_1d[1];/* the method is Neville's iterated interpolation */
+  struct
+  {
+   double *f;/* f(xi)'s */
+   double *x;/* xi's, note: it must be x0 < x1 < ...< xN */
+   double h;/* desired point to interpolate f */
+   unsigned N;/* number of xi's */
+   double *a,*b,*c,*d;/* coefficents in s(x) = a+b(x-xi)+c(x-xi)^2+d(x-xi)^3 */
+   unsigned Order: 1;/* if xi's in the order 1, otherwise 0 */
+   unsigned Alloc_Mem: 1;/* if it allocates memory for x and f */
+  }N_cubic_spline_1d[1];/* natural cubic spline 1d */
 }Interpolation_T;
 
 /* boundary condition struct */

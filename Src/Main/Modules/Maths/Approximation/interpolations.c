@@ -43,10 +43,7 @@ double execute_interpolation(Interpolation_T *const interp_struct)
 }
 
 /* planning interpolation function based on 
-// input file and patch and flags in interp_s.
-// note, only when the "flags or patch or input file" 
-// in interp_s is changed one must call this function.
-*/
+// input file and patch and flags in interp_s. */
 void plan_interpolation(Interpolation_T *const interp_s)
 {
   unsigned i;
@@ -56,6 +53,12 @@ void plan_interpolation(Interpolation_T *const interp_s)
   if (strstr_i(interp_s->method,"Neville_1D"))
   {
     interp_s->interpolation_func = interpolation_Neville_1d;
+  }
+  else if (strstr_i(interp_s->method,"Natural_Cubic_Spline_1D"))
+  {
+    order_arrays_natural_cubic_spline_1d(interp_s);
+    find_coeffs_natural_cubic_spline_1d(interp_s);
+    interp_s->interpolation_func = interpolation_natural_cubic_spline_1d;
   }
   else if ( strstr_i(interp_s->method,"Spectral") || 
        strstr_i(GetParameterS("Interpolation_Method"),"Spectral"))
@@ -84,6 +87,150 @@ void plan_interpolation(Interpolation_T *const interp_s)
   else
     abortEr(INCOMPLETE_FUNC);
   
+}
+
+/* xi's must be in increasing order, make sure this happens. */
+static void order_arrays_natural_cubic_spline_1d(Interpolation_T *const interp_s)
+{
+  double *x = interp_s->N_cubic_spline_1d->x;
+  double *f = interp_s->N_cubic_spline_1d->f;
+  double *y;/* ordered x */
+  double *g;/* ordered f */
+  const unsigned N = interp_s->N_cubic_spline_1d->N;
+  unsigned i;
+  
+  if (GRT(x[0],x[N-1]))/* if the x's are in decreasing order */
+  {
+    interp_s->N_cubic_spline_1d->Alloc_Mem = 1;
+    y = alloc_double(N);
+    g = alloc_double(N);
+    
+    for (i = 0; i < N; ++i)
+    {
+      y[i] = x[N-1-i];
+      g[i] = f[N-1-i];
+    }
+    interp_s->N_cubic_spline_1d->x = y;
+    interp_s->N_cubic_spline_1d->f = g;
+  }
+  interp_s->N_cubic_spline_1d->Order = 1;
+}
+
+/* find a, b, c and d coeffs */
+static void find_coeffs_natural_cubic_spline_1d(Interpolation_T *const interp_s)
+{
+  const unsigned n = interp_s->N_cubic_spline_1d->N-1;
+  const double *const x = interp_s->N_cubic_spline_1d->x;
+  double *const a = interp_s->N_cubic_spline_1d->f;
+  double *const b = alloc_double(n);
+  double *const c = alloc_double(n+1);
+  double *const d = alloc_double(n);
+  double *h  = alloc_double(n),
+         *l  = alloc_double(n+1),
+         *z  = alloc_double(n+1),
+         *al = alloc_double(n),
+         *mu = alloc_double(n);
+  unsigned i;
+  
+  for (i = 0; i < n; ++i)
+    h[i] = x[i+1]-x[i];
+  for (i = 1; i < n; ++i)
+    al[i] = 3*(a[i+1]-a[i])/h[i]-3*(a[i]-a[i-1])/h[i-1];
+  
+  l[0]  = 1;
+  mu[0] = 0;
+  z[0]  = 0;
+  for (i = 1; i < n; ++i)
+  {
+    l[i] = 2*(x[i+1]-x[i-1])-h[i-1]*mu[i-1];
+    mu[i] = h[i]/l[i];
+    z[i] = (al[i]-h[i-1]*z[i-1])/l[i];
+  }
+  l[n] = 1;
+  z[n] = 0;
+  c[n] = 0;
+  
+  for (i = n-1; i >= 1; --i)
+  {
+    c[i] = z[i]-mu[i]*c[i+1];
+    b[i] = (a[i+1]-a[i])/h[i]-h[i]*(c[i+1]+2*c[i])/3;
+    d[i] = (c[i+1]-c[i])/3./h[i];
+  }
+  /* i = 0 */
+  c[i] = z[i]-mu[i]*c[i+1];
+  b[i] = (a[i+1]-a[i])/h[i]-h[i]*(c[i+1]+2*c[i])/3;
+  d[i] = (c[i+1]-c[i])/3./h[i];
+  
+  interp_s->N_cubic_spline_1d->a = a;
+  interp_s->N_cubic_spline_1d->b = b;
+  interp_s->N_cubic_spline_1d->c = c;
+  interp_s->N_cubic_spline_1d->d = d;
+  
+  free(h);
+  free(l);
+  free(z);
+  free(mu);
+  free(al);
+}
+
+/* tutorial:
+// =========
+// given function f(xi)'s and points xi's it calculates value of f(h)
+// using Natural Cubic Spline method in 1-d
+// Note: this algothim doesn't work for arbitrty order of xi's
+// Only if the give xi's be in decreasing and increasing order
+// 
+// ** filling the interpolation struct **
+// Interpolation_T *interp_s = init_interpolation();
+// interp_s->method         = "Natural_Cubic_Spline_1D";
+// interp_s->N_cubic_spline_1d->f   = f;
+// interp_s->N_cubic_spline_1d->x   = x;
+// interp_s->N_cubic_spline_1d->h   = h;// the point that we wanna interpolate f i.e. f(h)
+// interp_s->N_cubic_spline_1d->N   = 20;// dimention of array f and x
+// interp_s->N_cubic_spline_1d->max = 10;// 10 out of N used for interpolation
+// ** planning the appropriate function for interpolation **
+// plan_interpolation(interp_s);
+//
+// ** evaluating interpolation **
+// value = execute_interpolation(interp_s);
+// ** freeing **
+// free_interpolation(interp_s);
+*/
+static double interpolation_natural_cubic_spline_1d(Interpolation_T *const interp_s)
+{
+  if (!interp_s->N_cubic_spline_1d->Order)
+    order_arrays_natural_cubic_spline_1d(interp_s);
+    
+  const double *const x = interp_s->N_cubic_spline_1d->x;
+  const double *const a = interp_s->N_cubic_spline_1d->a;
+  const double *const b = interp_s->N_cubic_spline_1d->b;
+  const double *const c = interp_s->N_cubic_spline_1d->c;
+  const double *const d = interp_s->N_cubic_spline_1d->d;
+  const double h = interp_s->N_cubic_spline_1d->h;
+  const double N = interp_s->N_cubic_spline_1d->N;
+  double ret = DBL_MAX;
+  unsigned i;
+  Flag_T flg = NONE;
+  
+  for (i = 0; i < N-1; ++i)
+  {
+    if (GRTEQL(h,x[i]) && LSSEQL(h,x[i+1]))
+    {
+      flg = FOUND;
+      break;
+    }
+  }
+  
+  if (flg != FOUND)
+  {
+    abortEr("The give point for interpolation is out of the domain.\n");
+  }
+  else
+  {
+    ret = a[i]+b[i]*(h-x[i])+c[i]*SQR(h-x[i])+d[i]*CUB(h-x[i]);
+  }
+  
+  return ret; 
 }
 
 /* tutorial:

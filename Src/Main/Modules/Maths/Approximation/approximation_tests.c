@@ -35,44 +35,44 @@ int interpolation_tests(Grid_T *const grid)
     Y = make_random_number(n[1],min[1],max[1]);
     Z = make_random_number(n[2],min[2],max[2]);
     
-    if (DO)
+    if (NOT_DO)
     {
       printf("Interpolation test:      X direction, patch %10s =>",patch->name);
       status = interpolation_tests_X(field,X,n[0]);
       check_test_result(status);
     }
     
-    if (DO)
+    if (NOT_DO)
     {
       printf("Interpolation test:      Y direction, patch %10s =>",patch->name);
       status = interpolation_tests_Y(field,Y,n[1]);
       check_test_result(status);
     }
-    if (DO)
+    if (NOT_DO)
     {
       printf("Interpolation test:      Z direction, patch %10s =>",patch->name);
       status = interpolation_tests_Z(field,Z,n[2]);
       check_test_result(status);
     }
-    if (DO)
+    if (NOT_DO)
     {
       printf("Interpolation test: X & Y directions, patch %10s =>",patch->name);
       status = interpolation_tests_XY(field,X,Y,n[0],n[1]);
       check_test_result(status);
     }
-    if (DO)
+    if (NOT_DO)
     {
       printf("Interpolation test: X & Z directions, patch %10s =>",patch->name);
       status = interpolation_tests_XZ(field,X,Z,n[0],n[2]);
       check_test_result(status);
     } 
-    if (DO)
+    if (NOT_DO)
     {
       printf("Interpolation test: Y & Z directions, patch %10s =>",patch->name);
       status = interpolation_tests_YZ(field,Y,Z,n[1],n[2]);
       check_test_result(status);
     }
-    if (DO)
+    if (NOT_DO)
     {
       printf("Interpolation test:              3-D, patch %10s =>",patch->name);
       status = interpolation_tests_XYZ(field,X,Y,Z,n[0],n[1],n[2]);
@@ -87,15 +87,108 @@ int interpolation_tests(Grid_T *const grid)
     remove_field(field);
   }
   
-  if (DO)
+  if (NOT_DO)
   {
       printf("Interpolation test:            Neville Iterative Method =>");
       status = interpolation_tests_Neville_1d();
       check_test_result(status);
   }
+  if (DO)
+  {
+      printf("Interpolation test:            Natural Cubic Spline Method =>");
+      status = interpolation_tests_N_cubic_spline_1d();
+      check_test_result(status);
+  }
   
   return EXIT_SUCCESS;
 }
+
+/* test Natural Cubic Spline method for 1-d arrays.
+// ->return value: result of test. */
+static int interpolation_tests_N_cubic_spline_1d(void)
+{
+  Interpolation_T *interp_s = init_interpolation();
+  const unsigned N = (unsigned)GetParameterI_E("n_a");
+  double *f = alloc_double(N);
+  double *x = alloc_double(N);
+  const double a = -M_PI, b = 3/4*M_PI;/* an arbitrary interval  */
+  double *hs = make_random_number(N,a,b);
+  double s = (b-a)/(N-1);
+  double t,interp;
+  Flag_T flg = NONE;
+  unsigned i;
+  
+  for (i = 0; i < N; ++i)
+  {
+    t = x[i] = a+i*s;
+    f[i] = cos(t)+t*t*t;/* arbitrary function */
+  }
+    
+  interp_s->method         = "Natural_Cubic_Spline_1D";
+  interp_s->N_cubic_spline_1d->f   = f;
+  interp_s->N_cubic_spline_1d->x   = x;
+  interp_s->N_cubic_spline_1d->N   = N;
+  plan_interpolation(interp_s);
+  
+  for (i = 0; i < N; ++i)
+  {
+    double diff;
+    t = hs[i];
+    interp_s->N_cubic_spline_1d->h = t;
+    interp = execute_interpolation(interp_s);
+    diff = interp-(cos(t)+t*t*t);
+    
+    if (GRT(fabs(diff),s))
+    {
+      fprintf(stderr,"diff = %g\n",diff);
+      flg = FOUND;
+      break;
+    }
+  }
+  free_interpolation(interp_s);
+  
+  /* let's test the reveres order for x's */
+  s = -(b-a)/(N-1);
+  interp_s = init_interpolation();
+  for (i = 0; i < N; ++i)
+  {
+    t = x[i] = b+i*s;
+    f[i] = cos(t)+t*t*t;/* arbitrary function */
+  }
+    
+  interp_s->method         = "Natural_Cubic_Spline_1D";
+  interp_s->N_cubic_spline_1d->f   = f;
+  interp_s->N_cubic_spline_1d->x   = x;
+  interp_s->N_cubic_spline_1d->N   = N;
+  plan_interpolation(interp_s);
+  
+  for (i = 0; i < N; ++i)
+  {
+    double diff;
+    t = hs[i];
+    interp_s->N_cubic_spline_1d->h = t;
+    interp = execute_interpolation(interp_s);
+    diff = interp-(cos(t)+t*t*t);
+    
+    if (GRT(fabs(diff),-s))
+    {
+      fprintf(stderr,"diff = %g\n",diff);
+      flg = FOUND;
+      break;
+    }
+  }
+  
+  free_interpolation(interp_s);
+  free(f);
+  free(x);
+  free(hs);
+  
+  if (flg == FOUND)
+    return TEST_UNSUCCESSFUL;
+    
+  return TEST_SUCCESSFUL;
+}
+
 
 /* test Neville iterative method for 1-d arrays.
 // ->return value: result of test. */
@@ -150,6 +243,7 @@ static int interpolation_tests_Neville_1d(void)
     
   return TEST_SUCCESSFUL;
 }
+
 
 /* testing interpolation in X direction and comparing
 // to analytical value and returning the result.
