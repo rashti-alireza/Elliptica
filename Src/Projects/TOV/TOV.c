@@ -4,12 +4,17 @@
 */
 
 #include "TOV.h"
+#define N_STEPS 91 /* it should relativity big and odd number 
+                   // because we are using composite Simpson's rule integral
+                   // and for accuracy we choose large number and the method
+                   // requires odd number */
 
 /* solving TOV equations. it approximates the properties of a NS.
 // it only deals with inside of the star, since the outside is analytic.
 // ->return value: solution of TOV equations for inside of a star with give EoS */
 TOV_T *TOV_solution(TOV_T *const TOV)
 {
+  TOV->N = N_STEPS;
   const double Fac = 0.25;
   const unsigned MAX_iter = 1000;
   double h_cent_prev = 1;
@@ -75,9 +80,19 @@ TOV_T *TOV_solution(TOV_T *const TOV)
     }
     iter++;
   }
-  /* if it couldn't find the root, set the last value as baryonic mass */
+  
+  /* if it finder messed up */
+  if (!isfinite(m))
+  {
+    abortEr("TOV solution failed!\n");
+  }
+  /* if it needs more step to find the root, set the last value as baryonic mass */
   if (!EQL(m,TOV->bar_m))
+  {
+    fprintf(stderr,"TOV root finder for enteral enthalpy needs more steps!\n"
+                   "The difference between current baryonic mass and desired one is = %e\n",m-TOV->bar_m);
     TOV->bar_m = m;
+  }
   TOV->ADM_m = TOV->m[TOV->N-1];
   calculate_phi(TOV);
   calculate_ADM_and_Komar_mass(TOV);/* perform some tests */
@@ -94,14 +109,15 @@ TOV_T *TOV_solution(TOV_T *const TOV)
   
   /* print some informations about TOV */
   printf("TOV properties:\n");
-  printf("--> NS radius (Schwarzschild Coords.) = %g\n",TOV->r[TOV->N-1]);
-  printf("--> NS radius (Isotropic Coords.)     = %g\n",TOV->rbar[TOV->N-1]);
-  printf("--> ADM mass                          = %g\n",TOV->ADM_m);
-  printf("--> baryonic mass                     = %g\n",TOV->bar_m);
-  printf("--> central enthalpy                  = %g\n",TOV->h[0]);
-  printf("--> central pressure                  = %g\n",TOV->p[0]);
+  printf("--> NS radius (Schwarzschild Coords.) = %e\n",TOV->r[TOV->N-1]);
+  printf("--> NS radius (Isotropic Coords.)     = %e\n",TOV->rbar[TOV->N-1]);
+  printf("--> ADM mass                          = %e\n",TOV->ADM_m);
+  printf("--> psi at the center                 = %e\n",TOV->psi[0]);
+  printf("--> baryonic mass                     = %e\n",TOV->bar_m);
+  printf("--> central enthalpy                  = %e\n",TOV->h[0]);
+  printf("--> central pressure                  = %e\n",TOV->p[0]);
   eos->h = TOV->h_cent;
-  printf("--> central energy density            = %g\n",eos->energy_density(eos));
+  printf("--> central energy density            = %e\n",eos->energy_density(eos));
   
   free_EoS(eos);
   
@@ -119,42 +135,108 @@ static void isotropic_coords_transformation(TOV_T *const TOV)
   TOV->psi  = alloc_double(TOV->N);
   double *const rbar = TOV->rbar;
   double *const psi  = TOV->psi;
-  const double *const r = TOV->r;
-  const double *const m = TOV->m;
-  const double *const h = TOV->h;
-  const double M = m[TOV->N-1];
-  const double R = r[TOV->N-1];
+  const double M = TOV->m[TOV->N-1];
+  const double R = TOV->r[TOV->N-1];
   const double a = 1;
   const double b = TOV->h_cent;
   const double s = (b-a)/(TOV->N-1);/* s > 0 */
+  const double c =  c_rbar(TOV);/* constant of integration in rbar */
   double t;/* independent variable h, we conventionally called it t */
+  double r,m;/* interpolated values for r and m */
+  Interpolation_T *interp_r = init_interpolation();
+  Interpolation_T *interp_m = init_interpolation();
   unsigned i;
   
-  UNUSED(psi);
+  interp_r->method         = "Natural_Cubic_Spline_1D";
+  interp_r->N_cubic_spline_1d->f   = TOV->r;
+  interp_r->N_cubic_spline_1d->x   = TOV->h;
+  interp_r->N_cubic_spline_1d->N   = TOV->N;
+  plan_interpolation(interp_r);
+  
+  interp_m->method         = "Natural_Cubic_Spline_1D";
+  interp_m->N_cubic_spline_1d->f   = TOV->m;
+  interp_m->N_cubic_spline_1d->x   = TOV->h;
+  interp_m->N_cubic_spline_1d->N   = TOV->N;
+  plan_interpolation(interp_m);
+  
   /* initialization */
   rbar[0] = 0;/* rabr(h=h_cent) */
-  rbar[TOV->N-1] = 0.5*(R-M+sqrt(SQR(R)-2*M*R))/R;/* rbar(h=1) */
-  t = h[TOV->N-1];/* t = 1 */
+  rbar[1] = r_approx(TOV->h[1],TOV->h[0])*exp(-c);/* rabr(h=h_cent-s) */
+  rbar[TOV->N-1] = 0.5*(R-M+sqrt(SQR(R)-2*M*R));/* rbar(h=1) */
+  t = TOV->h[TOV->N-1];/* t = 1 */
   
   /* for all points */
-  for (i = TOV->N-2; i >= 1; --i)
+  for (i = TOV->N-2; i >= 2; --i)
   {
     double k1,k2,k3,k4;/* variables for Runge-Kutta method of 4th order */
     
-    k1 = s*drbar_dh(t,rbar[i+1],TOV);
-    k2 = s*drbar_dh(t+s/2,rbar[i+1]+k1/2,TOV);
-    k3 = s*drbar_dh(t+s/2,rbar[i+1]+k2/2,TOV);
-    k4 = s*drbar_dh(t+s,rbar[i+1]+k3,TOV);
+    interp_r->N_cubic_spline_1d->h = t;
+    interp_m->N_cubic_spline_1d->h = t;
+    r = execute_interpolation(interp_r);
+    m = execute_interpolation(interp_m);
+    k1 = s*drbar_dh(t,rbar[i+1],r,m);
+    
+    interp_r->N_cubic_spline_1d->h = t+s/2;
+    interp_m->N_cubic_spline_1d->h = t+s/2;
+    r = execute_interpolation(interp_r);
+    m = execute_interpolation(interp_m);
+    k2 = s*drbar_dh(t+s/2,rbar[i+1]+k1/2,r,m);
+    k3 = s*drbar_dh(t+s/2,rbar[i+1]+k2/2,r,m);
+    
+    interp_r->N_cubic_spline_1d->h = t+s;
+    interp_m->N_cubic_spline_1d->h = t+s;
+    r = execute_interpolation(interp_r);
+    m = execute_interpolation(interp_m);
+    k4 = s*drbar_dh(t+s,rbar[i+1]+k3,r,m);
     
     /* updating the values */
     rbar[i] = rbar[i+1]+(k1+2*k2+2*k3+k4)/6;
-    t = a+i*s;
+    t = a+(TOV->N-1-i)*s;
+  }
+  free_interpolation(interp_r);
+  free_interpolation(interp_m);
+  
+  /* for all points */
+  psi[0] = sqrt(exp(c));
+  for (i = 1; i < TOV->N; ++i)
+    psi[i] = sqrt(TOV->r[i]/rbar[i]);
+  
+}
+
+/* ->return value - the constant of intergrartion in drbar_dr. */
+static double c_rbar(TOV_T *const TOV)
+{
+  Integration_T *I = init_integration();
+  double *f = alloc_double(TOV->N);
+  const double *const r = TOV->r,
+               *const m = TOV->m,
+               *const h = TOV->h;
+  const double M = m[TOV->N-1];
+  const double R = r[TOV->N-1];
+
+  double c,s;
+  unsigned i;
+  
+  f[0] = 0;
+  for (i = 1; i < TOV->N; ++i)
+  {
+    s = 1-2*m[i]/r[i];
+    f[i] = (1/sqrt(s)-1)/r[i]*dr_dh(h[i],r[i],m[i]);
   }
   
-  //test
-  for (i = 0; i < TOV->N; ++i)
-    fprintf(stderr,"%u %g\n",i,rbar[i]);
-  //end
+  I->type = "Composite Simpson's Rule 1D";
+  I->Composite_Simpson_1D->b = 1;/* since the variable is enthalpy */
+  I->Composite_Simpson_1D->a = TOV->h_cent;
+  I->Composite_Simpson_1D->n = TOV->N;
+  I->Composite_Simpson_1D->f = f;
+  plan_integration(I);
+  c = execute_integration(I);
+  c -= log(0.5*(R-M+sqrt(SQR(R)-2*M*R))/R);
+  
+  free(f);
+  free_integration(I);
+  
+  return c;
 }
 
 /* calculate phi in g_00 = - exp[2phi] for the metric of space time */
@@ -404,27 +486,17 @@ static double m_approx(const double h,const double h_c/* central enthalpy */)
 
 /* rbar equation:
 // \frac {d\overline {r}}{dh}=\frac {\overline {r}}{r\sqrt {1-2\frac {m}{r}}}\frac {dr}{dh} */
-static double drbar_dh(const double h,const double rbar,const TOV_T *const TOV)
+static double drbar_dh(const double h,const double rbar,const double r, const double m)
 {
-  double r,m;
-  Interpolation_T *interp_s = init_interpolation();
+  double ret;
   
-  interp_s->method         = "Neville_1D";
-  interp_s->Neville_1d->x   = TOV->h;
-  interp_s->Neville_1d->h   = h;
-  interp_s->Neville_1d->N   = TOV->N;
-  interp_s->Neville_1d->max = 11;
-  plan_interpolation(interp_s);
+  ret = rbar/sqrt(1-2*m/r)/r*dr_dh(h,r,m);
   
-  interp_s->Neville_1d->f   = TOV->r;
-  r = execute_interpolation(interp_s);
-  
-  interp_s->Neville_1d->f   = TOV->m;
-  m = execute_interpolation(interp_s);
-  
-  free_interpolation(interp_s);
-  
-  return rbar/sqrt(1-2*m/r)/r*dr_dh(h,r,m);
+  if (!isfinite(ret))
+    abortEr("The interpolation failed due to the high oscillation of interpolant.\n"
+            " One solution could be to lower the resolution.\n");
+    
+  return ret;
 }
 
 /* r equation:
