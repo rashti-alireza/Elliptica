@@ -11,10 +11,10 @@ void check_test_result(const int status)
   switch(status)
   {
     case TEST_SUCCESSFUL:
-      printf("[+].\n");
+      printf("PASSED :)\n");
       break;
     case TEST_UNSUCCESSFUL:
-      printf("[-].\n");
+      printf("FAILED :(\n");
       break;
   }
 }
