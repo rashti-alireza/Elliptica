@@ -3,7 +3,7 @@
 // June 2019
 */
 
-#include "TOV.h"
+#include "TOV_solution.h"
 #define N_STEPS 91 /* it should relativity big and odd number 
                    // because we are using composite Simpson's rule integral
                    // and for accuracy we choose large number and the method
@@ -14,7 +14,8 @@
 // ->return value: solution of TOV equations for inside of a star with give EoS */
 TOV_T *TOV_solution(TOV_T *const TOV)
 {
-  TOV->N = N_STEPS;
+  if (!TOV->N)/* if N is not determined */
+    TOV->N = N_STEPS;
   const double Fac = 0.25;
   const unsigned MAX_iter = 1000;
   double h_cent_prev = 1;

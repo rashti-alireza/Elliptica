@@ -11,9 +11,9 @@ int projects_data_base(void)
   /* add all project you want with the syntax of example below:
   // example:
   // in projects_data_base.c for adding:
-  // add_project(TOV,"TOV","guessing initial data for BNS");
+  // add_project(TOV_star,"TOV_Star","guessing initial data for a NS");
   // in projects_data_base.h for deceleration:
-  // int TOV(void);
+  // int TOV_star(void);
   // note: that the deceleration of project functions are all the same. 
   */
   
@@ -23,6 +23,7 @@ int projects_data_base(void)
     "Testing fundamentals routines and codes of abc");
   add_project(Binary_BH_NS_Initial_Data,"Binary_BH_NS_Initial_Data",
   "Constructing Initial Data for Binary Black Hole Neutron Star");
-              
-    return EXIT_SUCCESS;
+  add_project(TOV_star,"TOV_Star","guessing initial data for a NS");
+  
+  return EXIT_SUCCESS;
 }
