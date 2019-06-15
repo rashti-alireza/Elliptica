@@ -5,6 +5,7 @@
 #define Power3(a) (a)*SQR(a)
 
 void fill_patches_BNS_CubedSpherical_grid(Grid_T *const grid);
+void fill_patches_BBN_CubedSpherical_grid(Grid_T *const grid);
 void SignAndIndex_permutation_CubedSphere(const Flag_T side,unsigned *const a,unsigned *const b,unsigned *const c,double *const s);
 void make_nodes_CubedSpherical_coord(Patch_T *const patch);
 void populate_left_NS_central_box(Grid_T *const grid,const unsigned pn);
@@ -258,6 +259,7 @@ static void populate_left_NS(Grid_T *const grid,const unsigned pn);
 static void populate_left_NS_surrounding(Grid_T *const grid,const unsigned pn);
 static void populate_right_NS(Grid_T *const grid,const unsigned pn);
 static void populate_right_NS_surrounding(Grid_T *const grid,const unsigned pn);
+static void populate_right_BH_surrounding(Grid_T *const grid,const unsigned pn);
 static void populate_outermost(Grid_T *const grid,const unsigned pn,const unsigned i);
 void populate_filling_box(Grid_T *const grid,const unsigned pn);
 static void R1_derivative(Patch_T *const patch);
