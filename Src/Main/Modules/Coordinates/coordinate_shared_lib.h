@@ -3,6 +3,7 @@
 #include "utilities_lib.h"
 #include "maths_general_lib.h"
 #include "memory_managing_lib.h"
+#include "coordinates_lib.h"
 
 enum enum_dA_da
 {
@@ -18,26 +19,12 @@ enum enum_dA_da
   dA_da_UNDEFINED
 };
 
-
-struct Collocation_s
-{
-  double min;
-  double max;
-  unsigned n;
-  double stp;
-  double a;
-  double b;
-  Collocation_T c;
-};
-
 /* returning value */
 struct Ret_S
 {
   char s0[20],s1[20],s2[20];
 };
 
-double point_value(const unsigned i, const struct Collocation_s *const coll_s);
-void initialize_collocation_struct(const Patch_T *const patch,struct Collocation_s *const colloc,const unsigned dir);
 void make_keyword_parameter(struct Ret_S *const ret,const char *const box,const char *const needle);
 enum enum_dA_da get_dA_da(const Dd_T q2_e, const Dd_T q1_e);
 double dq2_dq1(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const unsigned p);

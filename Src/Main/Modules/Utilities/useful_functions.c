@@ -360,7 +360,7 @@ unsigned *dup_UINT(const unsigned *const s,const unsigned N)
 }
 
 /* calculating the magnetude of d(X,Y,Z)/d(x,y,z) */
-double max_Jacobian_dX_dx(const Patch_T *const patch)
+double max_Jacobian_dX_dx(Patch_T *const patch)
 {
   double max = 0;
   double abs_j;

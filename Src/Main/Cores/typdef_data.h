@@ -18,6 +18,11 @@
 // OF ENUMS. THESE CONVENTIONS ARE USED THROUGHOUT
 // THE CODE. CHANGING THEM MIGHT LEAD TO SEGMENTAION
 // FALUT.
+// NOTE: DON'T USE ENUM IN A STRUCTURE BECAUSE
+// WHEN YOU CALLOC MEMORY TO IT, IT INITIALIZES
+// THE ENUM TO ZERO AND LATER IF YOU FORGET TO
+// SET THIS ENUM TO THE CORRECT VALUE, IT BECOMES
+// A BUG; SO, IT IS PRONE TO MISTAKE!
 // *******************************************
 */
 
@@ -82,7 +87,7 @@ typedef enum COORD_T
 /* print flags */
 typedef enum PRINT_T
 {
-  UNDEFINED_PRINT,
+  UNDEFINED_PRINT = 0,
   PRINT_PARAMETERS,
   PRINT_COORDS,
   PRINT_INTERFACES
@@ -98,8 +103,7 @@ typedef enum FACE_T
   K_0,
   K_n2,
   TOT_FACE = 6/* it's assumed we have 6 faces for each patch.
-              // one might change this number with caveat.
-              */
+              // one might change this number with caveat. */
 }Face_T;
 
 /* various directions for derivative and Jacobian transformation
@@ -119,20 +123,19 @@ typedef enum DD_T
   N_DD_T/* number of total DD_T*/,
   UNDEFINED_DIR/* for referring to undefined Dd_T */,
   _3_ = 3/* number three for tracking dimensions for different quantities */
- 
 }Dd_T;
 
 /* matrix storage format */
 typedef enum MATRIX_SF_T
 {
+  UNDEF_SF = 0/* undefined */,
   REG_SF/* regular storage format */,
   CCS_SF/* compressed column storage format */,
   CRS_SF/* compressed row storage format */,
   TRI_SF/* triplet storage format */,
   CCS_L_SF/* long compressed column storage format */,
   CRS_L_SF/* long compressed row storage format */,
-  TRI_L_SF/* long triplet storage format */,
-  UNDEF_SF/* undefined */
+  TRI_L_SF/* long triplet storage format */
 }Matrix_SF_T;
 
 /* *******************************************
