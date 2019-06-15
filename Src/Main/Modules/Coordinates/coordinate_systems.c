@@ -509,14 +509,13 @@ static void characteristics_Cartesian_grid(Grid_T *const grid)
 static void characteristics_BNS_CubedSpherical_grid(Grid_T *const grid)
 {
   const unsigned gn   = grid->gn;
-  const double CONST  = 5.0;
   const double C      = GetParameterD_E("BNS_Distance");
   const double R_NS_l = GetParameterD_E("left_NS_radius");/* assuming perfect sphere */
   const double R_NS_r = GetParameterD_E("right_NS_radius");/* assuming perfect sphere */
   double box_size_l,box_size_r;
   const unsigned N_Outermost_Split = (unsigned)GetParameterI_E("Number_of_Outermost_Split"); 
   double *R_outermost = calloc(N_Outermost_Split,sizeof(*R_outermost));
-  unsigned n_box_l, n_box_r,n_r,n_l;
+  unsigned nlb[3]/*left box*/, nrb[3]/*right box*/,n;
   char var[100] = {'\0'};
   char par[100] = {'\0'};
   char val[100] = {'\0'};
@@ -528,23 +527,11 @@ static void characteristics_BNS_CubedSpherical_grid(Grid_T *const grid)
   assert(LSS(2*R_NS_l,C));
   assert(LSS(2*R_NS_r,C));
   
-  n_l = (unsigned)GetParameterI("n_c");
-  i   = (unsigned)GetParameterI("left_NS_n_c");
-  if (i != INT_MAX) 	n_l = i;
-  if (n_l == INT_MAX)   abortEr("n_l could not be set.");
-  assert(n_l > 2);
-  
-  n_r = (unsigned)GetParameterI("n_c");
-  i   = (unsigned)GetParameterI("right_NS_n_c");
-  if (i != INT_MAX) 	n_r = i;
-  if (n_r == INT_MAX)   abortEr("n_r could not be set.");
-  assert(n_r > 2);
-  
   /* making NS's surface function */
   NS_surface_BNS_CubedSpherical_grid(grid);
   
-  box_size_l = 2*R_NS_l/n_l;
-  box_size_r = 2*R_NS_r/n_r;
+  box_size_l = GetParameterD_E("left_central_box_length_ratio")*R_NS_l;
+  box_size_r = GetParameterD_E("right_central_box_length_ratio")*R_NS_r;
   
   for (i = 0; i < N_Outermost_Split; i++)
   {
@@ -560,18 +547,73 @@ static void characteristics_BNS_CubedSpherical_grid(Grid_T *const grid)
     
   }
   
-  n_box_l = (unsigned)(3 + n_l/CONST);
-  n_box_r = (unsigned)(3 + n_r/CONST);
+  /* filling n */
+  
+  /* left box */
+  nlb[0] = (unsigned)GetParameterI("n_a");
+  nlb[1] = (unsigned)GetParameterI("n_b");
+  nlb[2] = (unsigned)GetParameterI("n_c");
+  /* check for override */
+  n = (unsigned)GetParameterI("left_NS_n_a");
+  if (n != INT_MAX)   nlb[0] = n;
+  n = (unsigned)GetParameterI("left_NS_n_b");
+  if (n != INT_MAX)   nlb[1] = n;
+  n = (unsigned)GetParameterI("left_NS_n_c");
+  if (n != INT_MAX)   nlb[2] = n;
+    
+  if(nlb[0] == INT_MAX)
+    abortEr("n_a could not be set.\n");
+  if(nlb[1] == INT_MAX)
+    abortEr("n_b could not be set.\n");
+  if(nlb[2] == INT_MAX)
+    abortEr("n_c could not be set.\n");
+  
+  /* right box */
+  nrb[0] = (unsigned)GetParameterI("n_a");
+  nrb[1] = (unsigned)GetParameterI("n_b");
+  nrb[2] = (unsigned)GetParameterI("n_c");
+  /* check for override */
+  n = (unsigned)GetParameterI("right_NS_n_a");
+  if (n != INT_MAX)   nrb[0] = n;
+  n = (unsigned)GetParameterI("right_NS_n_b");
+  if (n != INT_MAX)   nrb[1] = n;
+  n = (unsigned)GetParameterI("right_NS_n_c");
+  if (n != INT_MAX)   nrb[2] = n;
+    
+  if(nrb[0] == INT_MAX)
+    abortEr("n_a could not be set.\n");
+  if(nrb[1] == INT_MAX)
+    abortEr("n_b could not be set.\n");
+  if(nrb[2] == INT_MAX)
+    abortEr("n_c could not be set.\n");
   
   /* adding the results to the parameter data base */
   
   /* n_a, n_b, n_c */
-  sprintf(par,"grid%u_left_centeral_box_n_abc",gn);
-  sprintf(val,"%u",n_box_l);
+  /* left box */
+  sprintf(par,"grid%u_left_centeral_box_n_a",nlb[0]);
+  sprintf(val,"%u",nlb[0]);
   add_parameter_string(par,val);
   
-  sprintf(par,"grid%u_right_centeral_box_n_abc",gn);
-  sprintf(val,"%u",n_box_r);
+  sprintf(par,"grid%u_left_centeral_box_n_b",nlb[1]);
+  sprintf(val,"%u",nlb[1]);
+  add_parameter_string(par,val);
+  
+  sprintf(par,"grid%u_left_centeral_box_n_c",nlb[2]);
+  sprintf(val,"%u",nlb[2]);
+  add_parameter_string(par,val);
+  
+  /* right box */
+  sprintf(par,"grid%u_right_centeral_box_n_a",nrb[0]);
+  sprintf(val,"%u",nrb[0]);
+  add_parameter_string(par,val);
+  
+  sprintf(par,"grid%u_right_centeral_box_n_b",nrb[1]);
+  sprintf(val,"%u",nrb[1]);
+  add_parameter_string(par,val);
+  
+  sprintf(par,"grid%u_right_centeral_box_n_c",nrb[2]);
+  sprintf(val,"%u",nrb[2]);
   add_parameter_string(par,val);
   
   /* size a,b,c */
