@@ -1703,6 +1703,31 @@ void alloc_patches_BNS_CubedSpherical_grid(Grid_T *const grid)
   
 }
 
+/* memory alloc patches for BBN_Projective type */
+void alloc_patches_BBN_CubedSpherical_grid(Grid_T *const grid)
+{
+  unsigned Np = 23;/* number of patches without outermost's 
+                   3 sets of cubed sphere = 3*6
+                   4 filling box
+                   1 central box */
+  unsigned outermost;
+  unsigned i;
+  
+  outermost = (unsigned) GetParameterI("Number_of_Outermost_Split");
+  if (outermost != (unsigned)INT_MAX)
+    Np += 6*outermost;
+  
+  grid->patch = calloc((Np+1),sizeof(*grid->patch));
+  pointerEr(grid->patch);
+  
+  for (i = 0; i < Np; i++)
+  {
+    grid->patch[i] = calloc(1,sizeof(*grid->patch[i]));
+    pointerEr(grid->patch[i]);
+  }
+  
+}
+
 /* Jacobian transformation for cubed spherical patch.type : NS_T_CS_up
 // convention:
 // _a_ = X, _b_ = Y, _c_ = Z

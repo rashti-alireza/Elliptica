@@ -11,6 +11,7 @@ void populate_left_NS_central_box(Grid_T *const grid,const unsigned pn);
 void populate_right_NS_central_box(Grid_T *const grid,const unsigned pn);
 void populate_filling_box_CubedSpherical(Grid_T *const grid,const unsigned pn,const Flag_T side);
 void alloc_patches_BNS_CubedSpherical_grid(Grid_T *const grid);
+void alloc_patches_BBN_CubedSpherical_grid(Grid_T *const grid);
 void make_JacobianT_CubedSpherical_coord(Patch_T *const patch);
 double JT_NS_T_CS_up(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const unsigned p);
 double JT_NS_T_CS_down(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const unsigned p);
