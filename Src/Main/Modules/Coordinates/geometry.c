@@ -129,6 +129,8 @@ static void test_subfaces(const Grid_T *const grid)
           abortEr("Outerbound and copy faces conflict.\n");
         if (subf->outerB && !subf->exterF)
           abortEr("Outerbound and external face conflict.\n");
+        if (subf->innerB && !subf->exterF)
+          abortEr("Innerbound and external face conflict.\n");
         if (subf->patch->pn == subf->adjPatch && 
             !subf->outerB && !subf->innerB && subf->exterF)
           abortEr("patch and adjacent patch conflict.\n");
@@ -171,7 +173,7 @@ static void test_subfaces(const Grid_T *const grid)
   }/* FOR_ALL(pa,grid->patch) */
   
   /* make sure not all of the subfaces have df_dn = 1
-  // at least one of them must have df_dn = 0 or has outerB */
+  // at least one of them must have df_dn = 0 or has outerB or innerB*/
   FOR_ALL(pa,grid->patch)
   {
     face = grid->patch[pa]->interface;
@@ -181,7 +183,7 @@ static void test_subfaces(const Grid_T *const grid)
       for (sf = 0; sf < face[f]->ns; ++sf)
       {
         subf = face[f]->subface[sf];
-        if (subf->df_dn == 0 || subf->outerB == 1)
+        if (subf->df_dn == 0 || subf->outerB == 1 || subf->innerB == 1)
         {
           flg = YES;
           break;
@@ -1672,9 +1674,22 @@ static void FindInnerB_CS_coord(Patch_T *const patch)
       }
     }
   }
+  else if (strcmp_i(patch->grid->kind,"BBN_CubedSpherical_grid"))
+  {
+    FOR_ALL(f,interface)
+    {
+      Point_T **point = interface[f]->point;
+      
+      if (patch->innerB && f == K_0)
+        FOR_ALL(i,point)
+          point[i]->innerB = 1;
+      else
+        FOR_ALL(i,point)
+          point[i]->innerB = 0;
+    }
+  }
   else
     abortEr(INCOMPLETE_FUNC);
-  /* black holes comes below */
 }
 
 /* find external faces for cubed spherical type */
@@ -1694,9 +1709,19 @@ static void FindExterF_CS_coord(Patch_T *const patch)
       }
     }
   }
+  else if (strcmp_i(patch->grid->kind,"BBN_CubedSpherical_grid"))
+  {
+    FOR_ALL(f,interface)
+    {
+      Point_T **point = interface[f]->point;
+      FOR_ALL(i,point)
+      {
+        point[i]->exterF = 1;
+      }
+    }
+  }
   else
     abortEr(INCOMPLETE_FUNC);
-  /* black holes comes below */
 }
 
 /* filling point[?]->N */

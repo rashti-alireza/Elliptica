@@ -1341,7 +1341,7 @@ static void populate_right_BH_surrounding(Grid_T *const grid,const unsigned pn)
     patch->pn = p;
     
     /* filling inner boundary */
-    patch->innerB = 0;
+    patch->innerB = 1;
     
     /* filling n */
     patch->n[0] = (unsigned)GetParameterI("n_a");
