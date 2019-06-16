@@ -34,3 +34,5 @@ static void characteristics_BNS_Spherical_grid(Grid_T *const grid);
 static void NS_radii_BNS_Spherical_grid(Grid_T *const grid,void *vp);
 static void characteristics_BNS_CubedSpherical_grid(Grid_T *const grid);
 static void NS_surface_BNS_CubedSpherical_grid(Grid_T *const grid);
+static void characteristics_BBN_CubedSpherical_grid(Grid_T *const grid);
+static void NS_BH_surface_CubedSpherical_grid(Grid_T *const grid,const double R_NS_l,const double R_BH_r,const double a_BH);

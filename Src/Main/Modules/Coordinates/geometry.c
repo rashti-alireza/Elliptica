@@ -84,12 +84,15 @@ static void misc(Grid_T *const grid)
           /* these help to get segfault in case of using their value */
           subf->adjPatch = UINT_MAX;
           subf->adjFace  = UINT_MAX;
+          grid->patch[pa]->outerB = 1;/* adding extra info for convenience */
         }
         if (subf->innerB)
         {
           /* these help to get segfault in case of using their value */
           subf->adjPatch = UINT_MAX;
           subf->adjFace  = UINT_MAX;
+          if (grid->patch[pa]->innerB != 1)
+            abortEr("The patch->innerB has not been set correctly!\n"); 
         }
       }
     }
@@ -914,6 +917,14 @@ static void analyze_adjPnt(PointSet_T *const Pnt)
     lead = inspect_flags(p1);
     add_to_subface(p1,lead);
   }
+  /* this point is on inner boundary */
+  else if (IsInnBndry(Pnt))
+  {
+    p1->innerB = 1;
+    
+    lead = inspect_flags(p1);
+    add_to_subface(p1,lead);
+  }
   /* if none of the points are on the interface */
   else if (IsOverlap(Pnt))
   {
@@ -1279,11 +1290,82 @@ static int IsInterpolation(PointSet_T *const Pnt)
 */
 static int IsOutBndry(PointSet_T *const Pnt)
 {
-  /* confidently there is no close by patch */
-  if (Pnt->NadjPnt == 0)
+  /* confidently there is no point close by patch */
+  if (Pnt->NadjPnt == 0 && !Pnt->Pnt->patch->innerB/* potentially it can be outerB. Note: innerB's are set a priory, but outerB's not */)
     return 1;
   /* slightly move along normal and see if there is any other patches */
-  else
+  else if (!Pnt->Pnt->patch->innerB)
+  {
+    unsigned node = Pnt->Pnt->ind;
+    Patch_T *const patch = Pnt->Pnt->patch;
+    double *x = patch->node[node]->x;
+    double *N1 = Pnt->Pnt->N;
+    double eps = rms(3,x,0)*EPS;
+    double q[3];
+    unsigned ans;
+    
+    eps = GRT(eps,EPS) ? eps : EPS;
+    
+    if (Pnt->type == EDGE)
+    {
+      double Ntan[3];/* tanget vector for tilting */
+      double Ntilt[3];/* tilting vector */
+      const double T = 0.1;/* tilting angle is arctan(T) */
+      double nrm;
+      
+      tangent(Pnt->Pnt,Ntan);
+      nrm = rms(3,Ntan,0);
+      if (EQL(nrm,0))
+        abortEr("Normal vector is null!");
+        
+      /* make it unit */  
+      Ntan[0] /= nrm;
+      Ntan[1] /= nrm;
+      Ntan[2] /= nrm;
+      
+      Ntilt[0] = N1[0]+T*Ntan[0];
+      Ntilt[1] = N1[1]+T*Ntan[1];
+      Ntilt[2] = N1[2]+T*Ntan[2];
+      q[0] = x[0]+eps*Ntilt[0];
+      q[1] = x[1]+eps*Ntilt[1];
+      q[2] = x[2]+eps*Ntilt[2];
+    }
+    else if (Pnt->type == INNER)
+    {
+      q[0] = x[0]+eps*N1[0];
+      q[1] = x[1]+eps*N1[1];
+      q[2] = x[2]+eps*N1[2];
+    }
+    else
+      abortEr(NO_OPTION);
+    
+    Needle_T *needle = alloc_needle();
+    needle->grid = patch->grid;
+    needle_ex(needle,Pnt->Pnt->patch);
+    needle->x = q;
+    point_finder(needle);
+    ans = needle->Nans;
+    free_needle(needle);
+    
+    if (ans == 0)
+      return 1;
+  }
+  
+  return 0;
+}
+
+/* is this an inner boundary point?
+// yes if no points are in adjPnt or if we slightly move along the normal 
+// reach nowhere.
+// ->return value = 1 if outerbound; 0 otherwise.
+*/
+static int IsInnBndry(PointSet_T *const Pnt)
+{
+  /* confidently there is no point close by patch */
+  if (Pnt->NadjPnt == 0 && Pnt->Pnt->patch->innerB/* potentially it can be innerB */)
+    return 1;
+  /* slightly move along normal and see if there is any other patches */
+  else if (Pnt->Pnt->patch->innerB)
   {
     unsigned node = Pnt->Pnt->ind;
     Patch_T *const patch = Pnt->Pnt->patch;

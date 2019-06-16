@@ -561,7 +561,8 @@ static void populate_F_and_C(Patch_T *const patch, Pair_T *const pair)
   }
   else if (subface->innerB)/* if there is inner boundary */
   {
-    abortEr(INCOMPLETE_FUNC);
+    abortEr("Wrong subface:\n"
+        "It isn't suppoed to have this subface here!\n");
   }
   else if (subface->outerB)/* if it reaches outer boundary */
   {
@@ -1099,6 +1100,12 @@ static void checks_and_constraints(const Grid_T *const grid)
   FOR_ALL_PATCHES(p,grid)
   {
     Patch_T *patch = grid->patch[p];
+    
+    if (patch->outerB && patch->innerB)
+      abortEr("In this version of domain decompostion method it is assumed \n"
+              "a patch can only have one outer boundary or inner bounday at a time;\n"
+              "but, it seems this patch has both outer boundary and inner bounday at a time!\n");
+    
     Schur = patch->solving_man->method->SchurC;
     if (!Schur->NI)
       count++;
@@ -1297,7 +1304,7 @@ static void make_its_sewing(const Patch_T *const patch,Sewing_T **const sewing)
       }
       else if (subface->innerB)
       {
-        abortEr(INCOMPLETE_FUNC);
+        continue;
       }
       else if (subface->outerB)
       {
@@ -1344,7 +1351,7 @@ static void make_others_sewing(const Patch_T *const patch,const Patch_T *const p
       }
       else if (subface->innerB)
       {
-        abortEr(INCOMPLETE_FUNC);
+        continue;
       }
       else if (subface->outerB)
       {
@@ -1495,7 +1502,7 @@ static void make_map_and_inv(Patch_T *const patch)
       SubFace_T *subface = interface->subface[sfc];
       const unsigned *const B = subface->id;
       
-      if (subface->outerB)/* if it reaches outer boundary */
+      if (subface->outerB || subface->innerB)/* if it reaches any kind of boundaries */
       {
         for (i = 0; i < subface->np; ++i)
           if (!flag_point[B[i]])
@@ -1543,7 +1550,7 @@ static void make_map_and_inv(Patch_T *const patch)
       }
       else if (subface->innerB)/* if there is inner boundary */
       {
-        abortEr(INCOMPLETE_FUNC);
+        continue;
       }
       else if (subface->outerB)/* if it reaches outer boundary */
       {
@@ -1627,7 +1634,7 @@ static void make_f(Patch_T *const patch)
   Schur->f = alloc_double(Schur->NS);
   
   f_in_equation_part(patch);
-  f_in_outerboundary_part(patch);
+  f_in_boundary_part(patch);
   
 }
 
@@ -1673,7 +1680,8 @@ static void make_pg(Patch_T *const patch, Pair_T *const pair)
   }
   else if (subface->innerB)/* if there is inner boundary */
   {
-    abortEr(INCOMPLETE_FUNC);
+    abortEr("Wrong subface:\n"
+        "It isn't suppoed to have this subface here!\n");
   }
   else if (subface->outerB)/* if it reaches outer boundary */
   {
@@ -1987,7 +1995,7 @@ static void f_in_equation_part(Patch_T *const patch)
 }
 
 /* calculating the part of f coming from outerboundary points */
-static void f_in_outerboundary_part(Patch_T *const patch)
+static void f_in_boundary_part(Patch_T *const patch)
 {
   const unsigned nintfc    = countf(patch->interface);
   Solving_Man_T *const S   = patch->solving_man;
@@ -2009,7 +2017,7 @@ static void f_in_outerboundary_part(Patch_T *const patch)
     {
       SubFace_T *subface = interface->subface[sfc];
       
-      if (subface->outerB)/* if it reaches outer boundary */
+      if (subface->outerB || subface->innerB)/* if it reaches any kind of boundaries */
       {
         bc.subface = subface;
         bc.node    = subface->id;

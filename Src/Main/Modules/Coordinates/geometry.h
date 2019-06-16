@@ -83,6 +83,7 @@ static int IsOverlap(PointSet_T *const Pnt);
 static int IsNormalFit(PointSet_T *const Pnt);
 static int IsOrthOutBndry(PointSet_T *const Pnt);
 static int IsOutBndry(PointSet_T *const Pnt);
+static int IsInnBndry(PointSet_T *const Pnt);
 static int IsInterpolation(PointSet_T *const Pnt);
 static int IsOnSubface(const Point_T *const pnt, const char *const lead);
 static int ReachBnd(PointSet_T *const Pnt,const unsigned p,const unsigned f);

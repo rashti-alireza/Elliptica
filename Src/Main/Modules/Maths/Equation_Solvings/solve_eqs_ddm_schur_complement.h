@@ -32,7 +32,7 @@ static char **read_fields_in_order(unsigned *const nf);
 static int solve_field(Grid_T *const grid);
 static void set_cf(Grid_T *const grid,const char *const field_name);
 static void f_in_equation_part(Patch_T *const patch);
-static void f_in_outerboundary_part(Patch_T *const patch);
+static void f_in_boundary_part(Patch_T *const patch);
 static void make_partial_g(Patch_T *const patch);
 static void pg_collocation(Patch_T *const patch, Pair_T *const pair);
 static void pg_interpolation(Patch_T *const patch, Pair_T *const pair);

@@ -549,6 +549,7 @@ typedef struct PATCH_T
                  // patch like pool[Ind("phi_f")]->v */
   Solving_Man_T *solving_man;/* solving managing */
   unsigned innerB:1;/* if this patch has inner boundary 1 otherwise 0 */
+  unsigned outerB:1;/* if this patch has outer boundary 1 otherwise 0 */
   unsigned is_a_closed: 1;/* if coordinate a is periodic or closed 1, otherwise 0 */
   unsigned is_b_closed: 1;/* if coordinate b is periodic or closed 1, otherwise 0 */
   unsigned is_c_closed: 1;/* if coordinate c is periodic or closed 1, otherwise 0 */

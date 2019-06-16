@@ -67,11 +67,23 @@ static void *bc_alpha(void *vp1,void *vp2)
   double *const alpha = patch->pool[Ind("alpha")]->v;
   unsigned n,ijk;
   
-  /* alpha at outer boundary */
-  for (n = 0; n < N; ++n)
+  if (patch->outerB)
   {
-    ijk = node[n];
-    F[map[ijk]] = alpha[ijk]-SQR(x_(ijk))-SQR(y_(ijk))-SQR(z_(ijk));/* note: for each new equation, only this line is changed */
+    /* alpha at outer boundary */
+    for (n = 0; n < N; ++n)
+    {
+      ijk = node[n];
+      F[map[ijk]] = alpha[ijk]-SQR(x_(ijk))-SQR(y_(ijk))-SQR(z_(ijk));/* note: for each new equation, only this line is changed */
+    }
+  }
+  else if (patch->innerB)
+  {
+    /* alpha at inner boundary */
+    for (n = 0; n < N; ++n)
+    {
+      ijk = node[n];
+      F[map[ijk]] = alpha[ijk]-SQR(x_(ijk))-SQR(y_(ijk))-SQR(z_(ijk));/* note: for each new equation, only this line is changed */
+    }
   }
       
   return 0;
@@ -144,6 +156,7 @@ static void *jacobian_eq_alpha(void *vp1,void *vp2)
 static void *jacobian_bc_alpha(void *vp1,void *vp2)
 {
   DDM_Schur_Complement_T *const S = vp2;
+  Patch_T *const patch = vp1;
   double **const B = S->B->reg->A;
   const unsigned I0 = S->Oi;/* number of inner mesh nodes */
   const unsigned N = S->NS;/* number of inner mesh+outer-boundary nodes*/
@@ -151,15 +164,26 @@ static void *jacobian_bc_alpha(void *vp1,void *vp2)
   
   /* fill up jacobian for alpha equation: */
   
-  /* B part: */
-  for (i = I0; i < N; ++i)
-   B[i][i] = 1;/* note: for each new equation, only this line is changed, unless the b.c. is more complicated and has field in it */
-                
-  /* E part: */
-  /* since B.C. equation doesn't have any dependency on interface points,
-  // E part is zero so nothing needs to be done. */
-  
-  UNUSED(vp1);
+  if (patch->outerB)
+  {
+    /* B part: */
+    for (i = I0; i < N; ++i)
+     B[i][i] = 1;/* note: for each new equation, only this line is changed, unless the b.c. is more complicated and has field in it */
+                  
+    /* E part: */
+    /* since B.C. equation doesn't have any dependency on interface points,
+    // E part is zero so nothing needs to be done. */
+  }
+  else if (patch->innerB)
+  {
+    /* B part: */
+    for (i = I0; i < N; ++i)
+     B[i][i] = 1;/* note: for each new equation, only this line is changed, unless the b.c. is more complicated and has field in it */
+                  
+    /* E part: */
+    /* since B.C. equation doesn't have any dependency on interface points,
+    // E part is zero so nothing needs to be done. */
+  }
   
   return 0;
 }
