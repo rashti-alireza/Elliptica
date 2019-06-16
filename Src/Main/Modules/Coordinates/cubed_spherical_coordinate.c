@@ -540,7 +540,7 @@ static void R1_derivative(Patch_T *const patch)
           *dR1_dx = add_field("dR1_dx",0,patch,YES),
           *dR1_dy = add_field("dR1_dy",0,patch,YES),
           *dR1_dz = add_field("dR1_dz",0,patch,YES);
-  Field_T *const R1 = patch->pool[Ind("NS_surface")];
+  Field_T *const R1 = patch->pool[Ind("surface_function")];
   const unsigned *const n = patch->n;
   unsigned i,j;
           
@@ -577,7 +577,7 @@ static void R2_derivative(Patch_T *const patch)
           *dR2_dx = add_field("dR2_dx",0,patch,YES),
           *dR2_dy = add_field("dR2_dy",0,patch,YES),
           *dR2_dz = add_field("dR2_dz",0,patch,YES);
-  Field_T *const R2 = patch->pool[Ind("NS_surface")];
+  Field_T *const R2 = patch->pool[Ind("surface_function")];
   const unsigned *const n = patch->n;
   unsigned i,j;
           
@@ -668,7 +668,7 @@ static void populate_left_NS(Grid_T *const grid,const unsigned pn)
   for (p = pn; p < pn+6; p++)
   {
     Patch_T *const patch = grid->patch[p];
-    Field_T *R2 = add_field("NS_surface",0,patch,NO);
+    Field_T *R2 = add_field("surface_function",0,patch,NO);
     double *R2_array;
     Flag_T side = p-pn;
     char name[100] = {'\0'};
@@ -886,7 +886,7 @@ static void populate_right_NS(Grid_T *const grid,const unsigned pn)
   for (p = pn; p < pn+6; p++)
   {
     Patch_T *const patch = grid->patch[p];
-    Field_T *R2 = add_field("NS_surface",0,patch,NO);
+    Field_T *R2 = add_field("surface_function",0,patch,NO);
     double *R2_array;
     Flag_T side = p-pn;
     char name[100] = {'\0'};
@@ -1104,7 +1104,7 @@ static void populate_right_NS_surrounding(Grid_T *const grid,const unsigned pn)
   for (p = pn; p < pn+6; p++)
   {
     Patch_T *const patch = grid->patch[p];
-    Field_T *R1 = add_field("NS_surface",0,patch,NO);
+    Field_T *R1 = add_field("surface_function",0,patch,NO);
     double *R1_array;
     Flag_T side = p-pn;
     char name[100] = {'\0'};
@@ -1322,7 +1322,7 @@ static void populate_right_BH_surrounding(Grid_T *const grid,const unsigned pn)
   for (p = pn; p < pn+6; p++)
   {
     Patch_T *const patch = grid->patch[p];
-    Field_T *R1 = add_field("BH_surface",0,patch,NO);
+    Field_T *R1 = add_field("surface_function",0,patch,NO);
     double *R1_array;
     Flag_T side = p-pn;
     char name[100] = {'\0'};
@@ -1540,7 +1540,7 @@ static void populate_left_NS_surrounding(Grid_T *const grid,const unsigned pn)
   for (p = pn; p < pn+6; p++)
   {
     Patch_T *const patch = grid->patch[p];
-    Field_T *R1 = add_field("NS_surface",0,patch,NO);
+    Field_T *R1 = add_field("surface_function",0,patch,NO);
     double *R1_array;
     Flag_T side = p-pn;
     char name[100] = {'\0'};
