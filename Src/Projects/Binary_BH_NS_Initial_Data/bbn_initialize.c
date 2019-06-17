@@ -19,7 +19,7 @@ Grid_T *bbn_initialize_next_grid(Grid_T *const grid_prev)
     else
       abortEr(NO_OPTION);
   }
-  else
+  else/* use previous grid to make the next one */
   {
     printf("Not made yet!\n");
   }
@@ -49,7 +49,7 @@ static Grid_T *TOV_KerrShild_approximation(void)
   printf("BH properties:\n");
   printf("--> BH radius (Kerr-Schild Coords.) = %e\n",bh_R);
   printf("--> BH dimensionless spin           = %e\n",bh_chi);
-  printf("--> ADM mass                        = %e\n",bh_mass);
+  printf("--> BH ADM mass                     = %e\n",bh_mass);
   printf("Acquiring Black Hole properties ==> Done.\n");
   pr_clock();
   pr_line_custom('=');
@@ -64,18 +64,18 @@ static Grid_T *TOV_KerrShild_approximation(void)
   return grid;
 }
 
-/* given the radius of NS and BH and theirs separation,
+/* given the radius of NS and BH and their separation,
 // create a grid with these properties.
 // ->return value: grid of NS and BH in which inside of the BH excised. */
 static Grid_T *creat_grid_TOV_KerrShild(const double R_NS_l,const double R_BH_r,const double a_BH)
 {
   Grid_T *grid = alloc_grid();/* adding a new grid */
   /* calculate the characteristics of this grid */
-  const unsigned gn   = grid->gn;
-  const double C      = GetParameterD_E("BH_NS_separation");
-  double box_size_l;
+  const unsigned gn = grid->gn;
+  const double C    = GetParameterD_E("BH_NS_separation");
   const unsigned N_Outermost_Split = (unsigned)GetParameterI_E("Number_of_Outermost_Split"); 
-  double *R_outermost = calloc(N_Outermost_Split,sizeof(*R_outermost));
+  double *R_outermost = alloc_double(N_Outermost_Split);
+  double box_size_l;
   unsigned nlb[3]/*left box*/,n;
   char var[100] = {'\0'};
   char par[100] = {'\0'};
@@ -104,7 +104,7 @@ static Grid_T *creat_grid_TOV_KerrShild(const double R_NS_l,const double R_BH_r,
     R_outermost[i] = GetParameterD_E(var);
     
     if (LSS(R_outermost[i],2*C))
-      abortEr("the radius of outermost patches must be greater than twice of BNS distance.");
+      abortEr("the radius of outermost patches must be greater than twice of BBN distance.");
     
     if (i > 0)
       if (LSSEQL(R_outermost[i],R_outermost[i-1]))
