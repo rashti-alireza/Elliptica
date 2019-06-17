@@ -541,24 +541,21 @@ static void R1_derivative(Patch_T *const patch)
           *dR1_dy = add_field("dR1_dy",0,patch,YES),
           *dR1_dz = add_field("dR1_dz",0,patch,YES);
   Field_T *const R1 = patch->pool[Ind("surface_function")];
-  const unsigned *const n = patch->n;
-  unsigned i,j;
+  const unsigned nn = patch->nn;
+  unsigned ijk;
           
   dR1_dX->v = Partial_Derivative(R1,"a");
   dR1_dY->v = Partial_Derivative(R1,"b");
     
-  for (i = 0; i < n[0]; ++i)
-    for (j = 0; j < n[1]; ++j)
-    {
-      unsigned p = L(n,i,j,0);
-      dR1_dx->v[p] = dR1_dX->v[p]*dq2_dq1(patch,_a_,_x_,p)+
-                     dR1_dY->v[p]*dq2_dq1(patch,_b_,_x_,p);
-      dR1_dy->v[p] = dR1_dX->v[p]*dq2_dq1(patch,_a_,_y_,p)+
-                     dR1_dY->v[p]*dq2_dq1(patch,_b_,_y_,p);
-      dR1_dz->v[p] = dR1_dX->v[p]*dq2_dq1(patch,_a_,_z_,p)+
-                     dR1_dY->v[p]*dq2_dq1(patch,_b_,_z_,p);
-      
-    }
+  for (ijk = 0; ijk < nn; ++ijk)
+  {
+    dR1_dx->v[ijk] = dR1_dX->v[ijk]*dq2_dq1(patch,_a_,_x_,ijk)+
+                     dR1_dY->v[ijk]*dq2_dq1(patch,_b_,_x_,ijk);
+    dR1_dy->v[ijk] = dR1_dX->v[ijk]*dq2_dq1(patch,_a_,_y_,ijk)+
+                     dR1_dY->v[ijk]*dq2_dq1(patch,_b_,_y_,ijk);
+    dR1_dz->v[ijk] = dR1_dX->v[ijk]*dq2_dq1(patch,_a_,_z_,ijk)+
+                     dR1_dY->v[ijk]*dq2_dq1(patch,_b_,_z_,ijk);
+  }
                       
   remove_field(dR1_dX);
   remove_field(dR1_dY);
@@ -578,24 +575,21 @@ static void R2_derivative(Patch_T *const patch)
           *dR2_dy = add_field("dR2_dy",0,patch,YES),
           *dR2_dz = add_field("dR2_dz",0,patch,YES);
   Field_T *const R2 = patch->pool[Ind("surface_function")];
-  const unsigned *const n = patch->n;
-  unsigned i,j;
+  const unsigned nn = patch->nn;
+  unsigned ijk;
           
   dR2_dX->v = Partial_Derivative(R2,"a");
   dR2_dY->v = Partial_Derivative(R2,"b");
     
-  for (i = 0; i < n[0]; ++i)
-    for (j = 0; j < n[1]; ++j)
-    {
-      unsigned p = L(n,i,j,0);
-      dR2_dx->v[p] = dR2_dX->v[p]*dq2_dq1(patch,_a_,_x_,p)+
-                     dR2_dY->v[p]*dq2_dq1(patch,_b_,_x_,p);
-      dR2_dy->v[p] = dR2_dX->v[p]*dq2_dq1(patch,_a_,_y_,p)+
-                     dR2_dY->v[p]*dq2_dq1(patch,_b_,_y_,p);
-      dR2_dz->v[p] = dR2_dX->v[p]*dq2_dq1(patch,_a_,_z_,p)+
-                     dR2_dY->v[p]*dq2_dq1(patch,_b_,_z_,p);
-      
-    }
+  for (ijk = 0; ijk < nn; ++ijk)
+  {
+    dR2_dx->v[ijk] = dR2_dX->v[ijk]*dq2_dq1(patch,_a_,_x_,ijk)+
+                     dR2_dY->v[ijk]*dq2_dq1(patch,_b_,_x_,ijk);
+    dR2_dy->v[ijk] = dR2_dX->v[ijk]*dq2_dq1(patch,_a_,_y_,ijk)+
+                     dR2_dY->v[ijk]*dq2_dq1(patch,_b_,_y_,ijk);
+    dR2_dz->v[ijk] = dR2_dX->v[ijk]*dq2_dq1(patch,_a_,_z_,ijk)+
+                     dR2_dY->v[ijk]*dq2_dq1(patch,_b_,_z_,ijk);
+  }
                       
   remove_field(dR2_dX);
   remove_field(dR2_dY);
@@ -674,7 +668,7 @@ static void populate_left_NS(Grid_T *const grid,const unsigned pn)
     char name[100] = {'\0'};
     char var[100] = {'\0'};
     struct Ret_S ret;
-    unsigned n,i,j;
+    unsigned n,ijk;
     
     /* filling flags */
     patch->CoordSysInfo->CubedSphericalCoord->side = side;
@@ -728,12 +722,8 @@ static void populate_left_NS(Grid_T *const grid,const unsigned pn)
         patch->CoordSysInfo->CubedSphericalCoord->xc1 = GetParameterDoubleF_E(var)/2.;
         R2->v = alloc_double(patch->nn);
         
-        for (i = 0; i < patch->n[0]; ++i)
-          for (j = 0; j < patch->n[1]; ++j)
-          {
-            unsigned ij0 = L(patch->n,i,j,0);
-            R2->v[ij0] = R2_array[ij0];
-          }
+        for (ijk = 0; ijk < patch->nn; ++ijk)
+          R2->v[ijk] = R2_array[ijk];
       
       break;
       case DOWN:
@@ -749,12 +739,8 @@ static void populate_left_NS(Grid_T *const grid,const unsigned pn)
         patch->CoordSysInfo->CubedSphericalCoord->xc1 = -GetParameterDoubleF_E(var)/2.;
         R2->v = alloc_double(patch->nn);
         
-        for (i = 0; i < patch->n[0]; ++i)
-          for (j = 0; j < patch->n[1]; ++j)
-          {
-            unsigned ij0 = L(patch->n,i,j,0);
-            R2->v[ij0] = R2_array[ij0];
-          }
+        for (ijk = 0; ijk < patch->nn; ++ijk)
+          R2->v[ijk] = R2_array[ijk];
       
       break;
       case LEFT:
@@ -770,13 +756,9 @@ static void populate_left_NS(Grid_T *const grid,const unsigned pn)
         patch->CoordSysInfo->CubedSphericalCoord->xc1 = -GetParameterDoubleF_E(var)/2.;
         R2->v = alloc_double(patch->nn);
         
-        for (i = 0; i < patch->n[0]; ++i)
-          for (j = 0; j < patch->n[1]; ++j)
-          {
-            unsigned ij0 = L(patch->n,i,j,0);
-            R2->v[ij0] = R2_array[ij0];
-          }
-      
+        for (ijk = 0; ijk < patch->nn; ++ijk)
+          R2->v[ijk] = R2_array[ijk];
+
       break;
       case RIGHT:
         /* filling name */
@@ -791,12 +773,8 @@ static void populate_left_NS(Grid_T *const grid,const unsigned pn)
         patch->CoordSysInfo->CubedSphericalCoord->xc1 = GetParameterDoubleF_E(var)/2.;
         R2->v = alloc_double(patch->nn);
         
-        for (i = 0; i < patch->n[0]; ++i)
-          for (j = 0; j < patch->n[1]; ++j)
-          {
-            unsigned ij0 = L(patch->n,i,j,0);
-            R2->v[ij0] = R2_array[ij0];
-          }
+        for (ijk = 0; ijk < patch->nn; ++ijk)
+          R2->v[ijk] = R2_array[ijk];
       
       break;
       case BACK:
@@ -812,12 +790,8 @@ static void populate_left_NS(Grid_T *const grid,const unsigned pn)
         patch->CoordSysInfo->CubedSphericalCoord->xc1 = -GetParameterDoubleF_E(var)/2.;
         R2->v = alloc_double(patch->nn);
         
-        for (i = 0; i < patch->n[0]; ++i)
-          for (j = 0; j < patch->n[1]; ++j)
-          {
-            unsigned ij0 = L(patch->n,i,j,0);
-            R2->v[ij0] = R2_array[ij0];
-          }
+        for (ijk = 0; ijk < patch->nn; ++ijk)
+          R2->v[ijk] = R2_array[ijk];
       
       break;
       case FRONT:
@@ -833,12 +807,8 @@ static void populate_left_NS(Grid_T *const grid,const unsigned pn)
         patch->CoordSysInfo->CubedSphericalCoord->xc1 = GetParameterDoubleF_E(var)/2.;
         R2->v = alloc_double(patch->nn);
         
-        for (i = 0; i < patch->n[0]; ++i)
-          for (j = 0; j < patch->n[1]; ++j)
-          {
-            unsigned ij0 = L(patch->n,i,j,0);
-            R2->v[ij0] = R2_array[ij0];
-          }
+        for (ijk = 0; ijk < patch->nn; ++ijk)
+          R2->v[ijk] = R2_array[ijk];
       
       break;
       default:
@@ -892,7 +862,7 @@ static void populate_right_NS(Grid_T *const grid,const unsigned pn)
     char name[100] = {'\0'};
     char var[100] = {'\0'};
     struct Ret_S ret;
-    unsigned n,i,j;
+    unsigned n,ijk;
     
     /* filling flags */
     patch->CoordSysInfo->CubedSphericalCoord->side = side;
@@ -946,12 +916,8 @@ static void populate_right_NS(Grid_T *const grid,const unsigned pn)
         patch->CoordSysInfo->CubedSphericalCoord->xc1 = GetParameterDoubleF_E(var)/2.;
         R2->v = alloc_double(patch->nn);
         
-        for (i = 0; i < patch->n[0]; ++i)
-          for (j = 0; j < patch->n[1]; ++j)
-          {
-            unsigned ij0 = L(patch->n,i,j,0);
-            R2->v[ij0] = R2_array[ij0];
-          }
+        for (ijk = 0; ijk < patch->nn; ++ijk)
+          R2->v[ijk] = R2_array[ijk];
       
       break;
       case DOWN:
@@ -967,12 +933,8 @@ static void populate_right_NS(Grid_T *const grid,const unsigned pn)
         patch->CoordSysInfo->CubedSphericalCoord->xc1 = -GetParameterDoubleF_E(var)/2.;
         R2->v = alloc_double(patch->nn);
         
-        for (i = 0; i < patch->n[0]; ++i)
-          for (j = 0; j < patch->n[1]; ++j)
-          {
-            unsigned ij0 = L(patch->n,i,j,0);
-            R2->v[ij0] = R2_array[ij0];
-          }
+        for (ijk = 0; ijk < patch->nn; ++ijk)
+          R2->v[ijk] = R2_array[ijk];
       
       break;
       case LEFT:
@@ -988,12 +950,8 @@ static void populate_right_NS(Grid_T *const grid,const unsigned pn)
         patch->CoordSysInfo->CubedSphericalCoord->xc1 = -GetParameterDoubleF_E(var)/2.;
         R2->v = alloc_double(patch->nn);
         
-        for (i = 0; i < patch->n[0]; ++i)
-          for (j = 0; j < patch->n[1]; ++j)
-          {
-            unsigned ij0 = L(patch->n,i,j,0);
-            R2->v[ij0] = R2_array[ij0];
-          }
+        for (ijk = 0; ijk < patch->nn; ++ijk)
+          R2->v[ijk] = R2_array[ijk];
       
       break;
       case RIGHT:
@@ -1009,12 +967,8 @@ static void populate_right_NS(Grid_T *const grid,const unsigned pn)
         patch->CoordSysInfo->CubedSphericalCoord->xc1 = GetParameterDoubleF_E(var)/2.;
         R2->v = alloc_double(patch->nn);
         
-        for (i = 0; i < patch->n[0]; ++i)
-          for (j = 0; j < patch->n[1]; ++j)
-          {
-            unsigned ij0 = L(patch->n,i,j,0);
-            R2->v[ij0] = R2_array[ij0];
-          }
+        for (ijk = 0; ijk < patch->nn; ++ijk)
+          R2->v[ijk] = R2_array[ijk];
       
       break;
       case BACK:
@@ -1030,12 +984,8 @@ static void populate_right_NS(Grid_T *const grid,const unsigned pn)
         patch->CoordSysInfo->CubedSphericalCoord->xc1 = -GetParameterDoubleF_E(var)/2.;
         R2->v = alloc_double(patch->nn);
         
-        for (i = 0; i < patch->n[0]; ++i)
-          for (j = 0; j < patch->n[1]; ++j)
-          {
-            unsigned ij0 = L(patch->n,i,j,0);
-            R2->v[ij0] = R2_array[ij0];
-          }
+        for (ijk = 0; ijk < patch->nn; ++ijk)
+          R2->v[ijk] = R2_array[ijk];
       
       break;
       case FRONT:
@@ -1051,12 +1001,8 @@ static void populate_right_NS(Grid_T *const grid,const unsigned pn)
         patch->CoordSysInfo->CubedSphericalCoord->xc1 = GetParameterDoubleF_E(var)/2.;
         R2->v = alloc_double(patch->nn);
         
-        for (i = 0; i < patch->n[0]; ++i)
-          for (j = 0; j < patch->n[1]; ++j)
-          {
-            unsigned ij0 = L(patch->n,i,j,0);
-            R2->v[ij0] = R2_array[ij0];
-          }
+        for (ijk = 0; ijk < patch->nn; ++ijk)
+          R2->v[ijk] = R2_array[ijk];
       
       break;
       default:
@@ -1110,7 +1056,7 @@ static void populate_right_NS_surrounding(Grid_T *const grid,const unsigned pn)
     char name[100] = {'\0'};
     char var[100] = {'\0'};
     struct Ret_S ret;
-    unsigned n,i,j;
+    unsigned n,ijk;
     
     /* filling flags */
     patch->CoordSysInfo->CubedSphericalCoord->side = side;
@@ -1164,13 +1110,9 @@ static void populate_right_NS_surrounding(Grid_T *const grid,const unsigned pn)
         patch->CoordSysInfo->CubedSphericalCoord->xc2 = GetParameterDoubleF_E(var)/2.;
         R1->v = alloc_double(patch->nn);
         
-        for (i = 0; i < patch->n[0]; ++i)
-          for (j = 0; j < patch->n[1]; ++j)
-          {
-            unsigned ij0 = L(patch->n,i,j,0);
-            R1->v[ij0] = R1_array[ij0];
-          }
-      
+        for (ijk = 0; ijk < patch->nn; ++ijk)
+          R1->v[ijk] = R1_array[ijk];
+
       break;
       case DOWN:
         /* filling name */
@@ -1185,12 +1127,8 @@ static void populate_right_NS_surrounding(Grid_T *const grid,const unsigned pn)
         patch->CoordSysInfo->CubedSphericalCoord->xc2 = -GetParameterDoubleF_E(var)/2.;
         R1->v = alloc_double(patch->nn);
         
-        for (i = 0; i < patch->n[0]; ++i)
-          for (j = 0; j < patch->n[1]; ++j)
-          {
-            unsigned ij0 = L(patch->n,i,j,0);
-            R1->v[ij0] = R1_array[ij0];
-          }
+        for (ijk = 0; ijk < patch->nn; ++ijk)
+          R1->v[ijk] = R1_array[ijk];
       
       break;
       case LEFT:
@@ -1206,12 +1144,8 @@ static void populate_right_NS_surrounding(Grid_T *const grid,const unsigned pn)
         patch->CoordSysInfo->CubedSphericalCoord->xc2 = -GetParameterDoubleF_E(var)/2.;
         R1->v = alloc_double(patch->nn);
         
-        for (i = 0; i < patch->n[0]; ++i)
-          for (j = 0; j < patch->n[1]; ++j)
-          {
-            unsigned ij0 = L(patch->n,i,j,0);
-            R1->v[ij0] = R1_array[ij0];
-          }
+        for (ijk = 0; ijk < patch->nn; ++ijk)
+          R1->v[ijk] = R1_array[ijk];
       
       break;
       case RIGHT:
@@ -1227,12 +1161,8 @@ static void populate_right_NS_surrounding(Grid_T *const grid,const unsigned pn)
         patch->CoordSysInfo->CubedSphericalCoord->xc2 = GetParameterDoubleF_E(var)/2.;
         R1->v = alloc_double(patch->nn);
         
-        for (i = 0; i < patch->n[0]; ++i)
-          for (j = 0; j < patch->n[1]; ++j)
-          {
-            unsigned ij0 = L(patch->n,i,j,0);
-            R1->v[ij0] = R1_array[ij0];
-          }
+        for (ijk = 0; ijk < patch->nn; ++ijk)
+          R1->v[ijk] = R1_array[ijk];
       
       break;
       case BACK:
@@ -1248,12 +1178,8 @@ static void populate_right_NS_surrounding(Grid_T *const grid,const unsigned pn)
         patch->CoordSysInfo->CubedSphericalCoord->xc2 = -GetParameterDoubleF_E(var)/2.;
         R1->v = alloc_double(patch->nn);
         
-        for (i = 0; i < patch->n[0]; ++i)
-          for (j = 0; j < patch->n[1]; ++j)
-          {
-            unsigned ij0 = L(patch->n,i,j,0);
-            R1->v[ij0] = R1_array[ij0];
-          }
+        for (ijk = 0; ijk < patch->nn; ++ijk)
+          R1->v[ijk] = R1_array[ijk];
       
       break;
       case FRONT:
@@ -1269,12 +1195,8 @@ static void populate_right_NS_surrounding(Grid_T *const grid,const unsigned pn)
         patch->CoordSysInfo->CubedSphericalCoord->xc2 = GetParameterDoubleF_E(var)/2.;
         R1->v = alloc_double(patch->nn);
         
-        for (i = 0; i < patch->n[0]; ++i)
-          for (j = 0; j < patch->n[1]; ++j)
-          {
-            unsigned ij0 = L(patch->n,i,j,0);
-            R1->v[ij0] = R1_array[ij0];
-          }
+        for (ijk = 0; ijk < patch->nn; ++ijk)
+          R1->v[ijk] = R1_array[ijk];
       
       break;
       default:
@@ -1328,7 +1250,7 @@ static void populate_right_BH_surrounding(Grid_T *const grid,const unsigned pn)
     char name[100] = {'\0'};
     char var[100] = {'\0'};
     struct Ret_S ret;
-    unsigned n,i,j;
+    unsigned n,ijk;
     
     /* filling flags */
     patch->CoordSysInfo->CubedSphericalCoord->side = side;
@@ -1382,12 +1304,8 @@ static void populate_right_BH_surrounding(Grid_T *const grid,const unsigned pn)
         patch->CoordSysInfo->CubedSphericalCoord->xc2 = GetParameterDoubleF_E(var)/2.;
         R1->v = alloc_double(patch->nn);
         
-        for (i = 0; i < patch->n[0]; ++i)
-          for (j = 0; j < patch->n[1]; ++j)
-          {
-            unsigned ij0 = L(patch->n,i,j,0);
-            R1->v[ij0] = R1_array[ij0];
-          }
+        for (ijk = 0; ijk < patch->nn; ++ijk)
+          R1->v[ijk] = R1_array[ijk];
       
       break;
       case DOWN:
@@ -1403,12 +1321,8 @@ static void populate_right_BH_surrounding(Grid_T *const grid,const unsigned pn)
         patch->CoordSysInfo->CubedSphericalCoord->xc2 = -GetParameterDoubleF_E(var)/2.;
         R1->v = alloc_double(patch->nn);
         
-        for (i = 0; i < patch->n[0]; ++i)
-          for (j = 0; j < patch->n[1]; ++j)
-          {
-            unsigned ij0 = L(patch->n,i,j,0);
-            R1->v[ij0] = R1_array[ij0];
-          }
+        for (ijk = 0; ijk < patch->nn; ++ijk)
+          R1->v[ijk] = R1_array[ijk];
       
       break;
       case LEFT:
@@ -1424,12 +1338,8 @@ static void populate_right_BH_surrounding(Grid_T *const grid,const unsigned pn)
         patch->CoordSysInfo->CubedSphericalCoord->xc2 = -GetParameterDoubleF_E(var)/2.;
         R1->v = alloc_double(patch->nn);
         
-        for (i = 0; i < patch->n[0]; ++i)
-          for (j = 0; j < patch->n[1]; ++j)
-          {
-            unsigned ij0 = L(patch->n,i,j,0);
-            R1->v[ij0] = R1_array[ij0];
-          }
+        for (ijk = 0; ijk < patch->nn; ++ijk)
+          R1->v[ijk] = R1_array[ijk];
       
       break;
       case RIGHT:
@@ -1445,12 +1355,8 @@ static void populate_right_BH_surrounding(Grid_T *const grid,const unsigned pn)
         patch->CoordSysInfo->CubedSphericalCoord->xc2 = GetParameterDoubleF_E(var)/2.;
         R1->v = alloc_double(patch->nn);
         
-        for (i = 0; i < patch->n[0]; ++i)
-          for (j = 0; j < patch->n[1]; ++j)
-          {
-            unsigned ij0 = L(patch->n,i,j,0);
-            R1->v[ij0] = R1_array[ij0];
-          }
+        for (ijk = 0; ijk < patch->nn; ++ijk)
+          R1->v[ijk] = R1_array[ijk];
       
       break;
       case BACK:
@@ -1466,12 +1372,8 @@ static void populate_right_BH_surrounding(Grid_T *const grid,const unsigned pn)
         patch->CoordSysInfo->CubedSphericalCoord->xc2 = -GetParameterDoubleF_E(var)/2.;
         R1->v = alloc_double(patch->nn);
         
-        for (i = 0; i < patch->n[0]; ++i)
-          for (j = 0; j < patch->n[1]; ++j)
-          {
-            unsigned ij0 = L(patch->n,i,j,0);
-            R1->v[ij0] = R1_array[ij0];
-          }
+        for (ijk = 0; ijk < patch->nn; ++ijk)
+          R1->v[ijk] = R1_array[ijk];
       
       break;
       case FRONT:
@@ -1487,12 +1389,8 @@ static void populate_right_BH_surrounding(Grid_T *const grid,const unsigned pn)
         patch->CoordSysInfo->CubedSphericalCoord->xc2 = GetParameterDoubleF_E(var)/2.;
         R1->v = alloc_double(patch->nn);
         
-        for (i = 0; i < patch->n[0]; ++i)
-          for (j = 0; j < patch->n[1]; ++j)
-          {
-            unsigned ij0 = L(patch->n,i,j,0);
-            R1->v[ij0] = R1_array[ij0];
-          }
+        for (ijk = 0; ijk < patch->nn; ++ijk)
+          R1->v[ijk] = R1_array[ijk];
       
       break;
       default:
@@ -1546,7 +1444,7 @@ static void populate_left_NS_surrounding(Grid_T *const grid,const unsigned pn)
     char name[100] = {'\0'};
     char var[100] = {'\0'};
     struct Ret_S ret;
-    unsigned n,i,j;
+    unsigned n,ijk;
     
     /* filling flags */
     patch->CoordSysInfo->CubedSphericalCoord->side = side;
@@ -1600,12 +1498,8 @@ static void populate_left_NS_surrounding(Grid_T *const grid,const unsigned pn)
         patch->CoordSysInfo->CubedSphericalCoord->xc2 = GetParameterDoubleF_E(var)/2.;
         R1->v = alloc_double(patch->nn);
         
-        for (i = 0; i < patch->n[0]; ++i)
-          for (j = 0; j < patch->n[1]; ++j)
-          {
-            unsigned ij0 = L(patch->n,i,j,0);
-            R1->v[ij0] = R1_array[ij0];
-          }
+        for (ijk = 0; ijk < patch->nn; ++ijk)
+          R1->v[ijk] = R1_array[ijk];
       
       break;
       case DOWN:
@@ -1621,12 +1515,8 @@ static void populate_left_NS_surrounding(Grid_T *const grid,const unsigned pn)
         patch->CoordSysInfo->CubedSphericalCoord->xc2 = -GetParameterDoubleF_E(var)/2.;
         R1->v = alloc_double(patch->nn);
         
-        for (i = 0; i < patch->n[0]; ++i)
-          for (j = 0; j < patch->n[1]; ++j)
-          {
-            unsigned ij0 = L(patch->n,i,j,0);
-            R1->v[ij0] = R1_array[ij0];
-          }
+        for (ijk = 0; ijk < patch->nn; ++ijk)
+          R1->v[ijk] = R1_array[ijk];
       
       break;
       case LEFT:
@@ -1642,12 +1532,8 @@ static void populate_left_NS_surrounding(Grid_T *const grid,const unsigned pn)
         patch->CoordSysInfo->CubedSphericalCoord->xc2 = -GetParameterDoubleF_E(var)/2.;
         R1->v = alloc_double(patch->nn);
         
-        for (i = 0; i < patch->n[0]; ++i)
-          for (j = 0; j < patch->n[1]; ++j)
-          {
-            unsigned ij0 = L(patch->n,i,j,0);
-            R1->v[ij0] = R1_array[ij0];
-          }
+        for (ijk = 0; ijk < patch->nn; ++ijk)
+          R1->v[ijk] = R1_array[ijk];
       
       break;
       case RIGHT:
@@ -1663,12 +1549,8 @@ static void populate_left_NS_surrounding(Grid_T *const grid,const unsigned pn)
         patch->CoordSysInfo->CubedSphericalCoord->xc2 = GetParameterDoubleF_E(var)/2.;
         R1->v = alloc_double(patch->nn);
         
-        for (i = 0; i < patch->n[0]; ++i)
-          for (j = 0; j < patch->n[1]; ++j)
-          {
-            unsigned ij0 = L(patch->n,i,j,0);
-            R1->v[ij0] = R1_array[ij0];
-          }
+        for (ijk = 0; ijk < patch->nn; ++ijk)
+          R1->v[ijk] = R1_array[ijk];
       
       break;
       case BACK:
@@ -1684,12 +1566,8 @@ static void populate_left_NS_surrounding(Grid_T *const grid,const unsigned pn)
         patch->CoordSysInfo->CubedSphericalCoord->xc2 = -GetParameterDoubleF_E(var)/2.;
         R1->v = alloc_double(patch->nn);
         
-        for (i = 0; i < patch->n[0]; ++i)
-          for (j = 0; j < patch->n[1]; ++j)
-          {
-            unsigned ij0 = L(patch->n,i,j,0);
-            R1->v[ij0] = R1_array[ij0];
-          }
+        for (ijk = 0; ijk < patch->nn; ++ijk)
+          R1->v[ijk] = R1_array[ijk];
       
       break;
       case FRONT:
@@ -1705,12 +1583,8 @@ static void populate_left_NS_surrounding(Grid_T *const grid,const unsigned pn)
         patch->CoordSysInfo->CubedSphericalCoord->xc2 = GetParameterDoubleF_E(var)/2.;
         R1->v = alloc_double(patch->nn);
         
-        for (i = 0; i < patch->n[0]; ++i)
-          for (j = 0; j < patch->n[1]; ++j)
-          {
-            unsigned ij0 = L(patch->n,i,j,0);
-            R1->v[ij0] = R1_array[ij0];
-          }
+        for (ijk = 0; ijk < patch->nn; ++ijk)
+          R1->v[ijk] = R1_array[ijk];
       
       break;
       default:
