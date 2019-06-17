@@ -149,9 +149,11 @@ typedef struct PARAMETER_T
   /* syntax is expected to be lv = rv */
   char *lv;/* letf value its name*/
   char *rv;/* right value string */
+  char *rv_ip;/* right value for iterative parameter */
   double rv_double;/* right value double */
   double *rv_array;/* right value array */
-  unsigned rv_n;/* right value unsigned or dimension of field */
+  unsigned rv_n;/* right value unsigned or size of the rv_array */
+  unsigned iterative:1;/* if this is an iterative par 1, otherwise 0. */
 }Parameter_T;
 
 /* *******************************************

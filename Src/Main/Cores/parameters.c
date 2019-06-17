@@ -69,10 +69,23 @@ void add_parameter(const char *const lv, const char *const rv)
   par->lv = dup_s(lv);
   if (rv == 0)
     par->rv = 0;
-  else if(!strcmp(rv,"") || !strcmp(rv," ") || rv[0] == '\0') 
+  else if(!strcmp(rv,"") || !strcmp(rv," ") || rv[0] == '\0')
     par->rv = 0;
-  else 
-    par->rv = dup_s(rv);
+  else
+  {
+    /* study if this is an iterative parameter */
+    if (strstr(rv,"->"))
+    {
+      par->iterative = 1;
+      par->rv_ip = dup_s(rv);
+      par->rv = get_n_value_str_ip(par,0);/* setting the first value of the iterative parameter */
+    }
+    else
+    {
+      par->iterative = 0;
+      par->rv = dup_s(rv);
+    }
+  }
 }
 
 /* having parameter name, it returns a pointer to 
@@ -279,4 +292,188 @@ int make_parameters(const char *const path)
   free(new_path);
   
   return EXIT_SUCCESS;
+}
+
+/* ->return value: count the total number of iterations */
+unsigned total_iterations_ip(void)
+{
+  unsigned max = 0;
+  char *subs = 0;
+  unsigned l = 0,i;
+  
+  i = 0;
+  while (parameters_global != 0 && parameters_global[i] != 0)
+  {
+    if (parameters_global[i]->iterative)
+    {
+      l = 0;
+      subs = strstr(parameters_global[i]->rv_ip,"->");
+      l++;
+      while (subs)
+      {
+        subs += 2;/* move forward */
+        if (subs[0]=='\0')/* if after -> is empty */
+          abortEr_s("No value is specified after -> in parameter %s.\n",parameters_global[i]->lv);
+        subs = strstr(subs,"->");
+        if (subs)
+          l++;
+      }
+      if (l > max)
+        max = l;
+    }
+    i++;
+  }
+  
+  return max+1;/* +1 since the last value also is counted */
+}
+
+/* ->return value: count the total number of iterative parameters */
+unsigned total_iterative_parameters_ip(void)
+{
+  unsigned i;
+  unsigned count = 0;
+  
+  i = 0;
+  while (parameters_global != 0 && parameters_global[i] != 0)
+  {
+    if (parameters_global[i]->iterative)
+      count++;
+    i++;
+  }
+  
+  return count;
+}
+
+/* updating the iterative parameter for iteration number iter */
+void update_iterative_parameter_ip(const unsigned iter)
+{
+  unsigned i;
+  
+  i = 0;
+  while (parameters_global != 0 && parameters_global[i] != 0)
+  {
+    if (parameters_global[i]->iterative)
+      parameters_global[i]->rv = 
+        get_n_value_str_ip(parameters_global[i],iter);
+    i++;
+  }
+    
+}
+
+/* getting the position number n-th of a value in the par and then
+// return that value in string format, it frees the previous value and
+// allocate memory for the new value.
+// if the n is larger than the total number of values in the string
+// it returns the last value.
+// ->return value: the n-th value in iterative parameter in string format. */
+char *get_n_value_str_ip(const Parameter_T *const par,const unsigned n)
+{
+  if (!par->iterative)
+    abortEr_s("The parameter %s is not an iterative parameter",par->lv);
+ 
+  if (!par->rv_ip)
+    abortEr_s("The parameter %s doesn't have an iterative value",par->lv);
+    
+  char *ret = 0;
+  char *subs,*subs2;
+  const char *const rv_ip = par->rv_ip;
+  unsigned j = 0;
+  unsigned len = 0;
+     
+  if (par->rv)
+    free(par->rv);
+  
+  j = 0;
+  subs = strstr(rv_ip,"->");
+  if (n == 0)
+  {
+    len = (unsigned)(subs-rv_ip+1);/* value-> */
+    assert(len != UINT_MAX);
+    ret = calloc(len,1);
+    pointerEr(ret);
+    strncpy(ret,rv_ip,len-1);
+    ret[len-1] = '\0';
+  }
+  else
+  {
+    while (subs)
+    {
+      j++;
+      subs += 2;
+      subs2 = strstr(subs,"->");
+      
+      if (!subs2)/* if it is the last piece */
+      {
+        ret = dup_s(subs);
+        break;
+      }
+      else if (j == n)
+      {
+        len = (unsigned)(subs2-subs+1);/* value1->value2 */
+        assert(len != UINT_MAX);
+        ret = calloc(len,1);
+        pointerEr(ret);
+        strncpy(ret,subs,len-1);
+        ret[len-1] = '\0';
+        break;
+      }
+      subs = subs2;
+    }
+  }
+  
+  return ret;   
+}
+
+/* ->return value: the name of n-th iterative variable, counting starts from 0 */
+char *par_name_ip(const unsigned n)
+{
+  char *ret = 0;
+  unsigned count;
+  unsigned i;
+  
+  i = 0;
+  count = 0;
+  while (parameters_global != 0 && parameters_global[i] != 0)
+  {
+    if (parameters_global[i]->iterative)
+    {
+      if (count == n)
+        return parameters_global[i]->lv;
+      else
+        count++;
+    }
+    i++;
+  }
+  
+  if (count < n)
+    abortEr("The total number of iterative parameters is fewer.\n");
+  
+  return ret;
+}
+
+/* ->return value: the value of n-th iterative variable in str format, counting starts from 0 */
+char *par_value_str_ip(const unsigned n)
+{
+  char *ret = 0;
+  unsigned count;
+  unsigned i;
+  
+  i = 0;
+  count = 0;
+  while (parameters_global != 0 && parameters_global[i] != 0)
+  {
+    if (parameters_global[i]->iterative)
+    {
+      if (count == n)
+        return parameters_global[i]->rv;
+      else
+        count++;
+    }
+    i++;
+  }
+  
+  if (count < n)
+    abortEr("The total number of iterative parameters is fewer.\n");
+  
+  return ret;
 }

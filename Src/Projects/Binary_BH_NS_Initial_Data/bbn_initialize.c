@@ -5,19 +5,26 @@
 
 #include "bbn_initialize.h"
 
-/* initialize this system according to the parameter file. 
-// ->return value: the grid as a result of this initialization. */
-Grid_T *bbn_initialize_fields_and_grid(void)
+/* initialize this system according to the previous grid. 
+// ->return value: the next grid as a result of this initialization. */
+Grid_T *bbn_initialize_next_grid(Grid_T *const grid_prev)
 {
-  Grid_T *grid = 0;
+  Grid_T *grid_next = 0;
   
-  /* if we use TOV and Kerr-Schil black hole approximation */
-  if (strcmp_i(GetParameterS_E("BBHNS_initialization"),"TOV_KerrShild"))
-    grid = TOV_KerrShild_approximation();
+  if (!grid_prev)/* if grid is empty come up with an approximation */
+  {
+    /* if we use TOV and Kerr-Schil black hole approximation */
+    if (strcmp_i(GetParameterS_E("BBHNS_initialization"),"TOV_KerrShild"))
+      grid_next = TOV_KerrShild_approximation();
+    else
+      abortEr(NO_OPTION);
+  }
   else
-    abortEr(NO_OPTION);
+  {
+    printf("Not made yet!\n");
+  }
   
-  return grid;   
+  return grid_next;   
 }
 
 /* use TOV and Kerr-Schil black hole approximation.

@@ -19,4 +19,12 @@ const char *get_parameter_value_S(const char *const par_name,const char *const f
 double get_parameter_double_format(const char *const par_name,const char *const file, const int line,const Flag_T flg);
 double *get_parameter_array_format(const char *const par_name,const char *const file, const int line,const Flag_T flg);
 int make_parameters(const char *const path);
+unsigned total_iterations_ip(void);
+unsigned total_iterative_parameters_ip(void);
+char *par_value_str_ip(const unsigned n);
+char *par_name_ip(const unsigned n);
+char *get_n_value_str_ip(const Parameter_T *const par,const unsigned n);
+void update_iterative_parameter_ip(const unsigned iter);
+unsigned total_iterative_parameters_ip(void);
+unsigned total_iterations_ip(void);
 
