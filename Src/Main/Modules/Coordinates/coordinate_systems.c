@@ -658,6 +658,26 @@ static void NS_BH_surface_CubedSpherical_grid(Grid_T *const grid,const double R_
   struct Collocation_s coll_s[2] = {0};
   double X[2],r;
   
+  /* filling min */
+  patch->min[0] = -1;
+  patch->min[1] = -1;
+  patch->min[2] = 0;
+
+  /* filling max */
+  patch->max[0] = 1;
+  patch->max[1] = 1;
+  patch->max[2] = 1;
+  
+  /* collocation */
+  patch->collocation[0] = Chebyshev_Extrema;
+  patch->collocation[1] = Chebyshev_Extrema;
+  patch->collocation[2] = Chebyshev_Extrema;
+
+  /* basis */
+  patch->basis[0] = Chebyshev_Tn_BASIS;
+  patch->basis[1] = Chebyshev_Tn_BASIS;
+  patch->basis[2] = Chebyshev_Tn_BASIS;
+  
   /* left NS */
   
   /* filling N */
@@ -678,27 +698,108 @@ static void NS_BH_surface_CubedSpherical_grid(Grid_T *const grid,const double R_
     abortEr("n_b could not be set.\n");
   if(N[2] == INT_MAX)
     abortEr("n_c could not be set.\n");
+  
+  patch->n[0] = N[0];
+  patch->n[1] = N[1];
+  patch->n[2] = N[2];
+  
+  initialize_collocation_struct(patch,&coll_s[0],0);
+  initialize_collocation_struct(patch,&coll_s[1],1);
     
   N_total = N[0]*N[1]*N[2];
   
-  /* surface */
-  R = alloc_double(N_total);
-  for (i = 0; i < N[0]; ++i)
-    for (j = 0; j < N[1]; ++j)
-      for (k = 0; k < N[2]; ++k)
-        R[L(N,i,j,k)] = R_NS_l;
+  /* NS surface */
   
-      
+  R = alloc_double(N_total);
+  /* surface up and down */
+  for (i = 0; i < N[0]; ++i)
+  {
+    X[0] = point_value(i,&coll_s[0]);
+    for (j = 0; j < N[1]; ++j)
+    {
+      X[1] = point_value(j,&coll_s[1]);
+      r = sqrt(
+               (1+SQR(X[0])+SQR(X[1]))/
+               ((SQR(X[0])+SQR(X[1]))/(SQR(R_NS_l)+1) + 1/SQR(R_NS_l))
+              );
+      for (k = 0; k < N[2]; ++k)
+        R[L(N,i,j,k)] = r;
+    }
+  }
   sprintf(par,"grid%u_left_NS_surface_function_up",grid->gn);
   add_parameter_array(par,R,N_total);
   sprintf(par,"grid%u_left_NS_surface_function_down",grid->gn);
   add_parameter_array(par,R,N_total);
+  
+  /* surface back */
+  for (i = 0; i < N[0]; ++i)
+  {
+    X[0] = point_value(i,&coll_s[0]);/* a = z/x */
+    for (j = 0; j < N[1]; ++j)
+    {
+      X[1] = point_value(j,&coll_s[1]);/* b = y/x */
+      r = sqrt(
+               (1+SQR(X[0])+SQR(X[1]))/
+               (((1+SQR(X[1])))/(SQR(R_NS_l)+1) + SQR(X[0])/SQR(R_NS_l))
+              );
+      for (k = 0; k < N[2]; ++k)
+        R[L(N,i,j,k)] = r;
+    }
+  }
   sprintf(par,"grid%u_left_NS_surface_function_back",grid->gn);
   add_parameter_array(par,R,N_total);
+  
+  /* surface front */
+  for (i = 0; i < N[0]; ++i)
+  {
+    X[0] = point_value(i,&coll_s[0]);/* a = y/x */
+    for (j = 0; j < N[1]; ++j)
+    {
+      X[1] = point_value(j,&coll_s[1]);/* b = z/x */
+      r = sqrt(
+               (1+SQR(X[0])+SQR(X[1]))/
+               (((1+SQR(X[0])))/(SQR(R_NS_l)+1) + SQR(X[1])/SQR(R_NS_l))
+              );
+      for (k = 0; k < N[2]; ++k)
+        R[L(N,i,j,k)] = r;
+    }
+  }
   sprintf(par,"grid%u_left_NS_surface_function_front",grid->gn);
   add_parameter_array(par,R,N_total);
+  
+  /* surface left */
+  for (i = 0; i < N[0]; ++i)
+  {
+    X[0] = point_value(i,&coll_s[0]);/* a = x/y */
+    for (j = 0; j < N[1]; ++j)
+    {
+      X[1] = point_value(j,&coll_s[1]);/* b = z/y */
+      r = sqrt(
+               (1+SQR(X[0])+SQR(X[1]))/
+               (((1+SQR(X[0])))/(SQR(R_NS_l)+1) + SQR(X[1])/SQR(R_NS_l))
+              );
+      for (k = 0; k < N[2]; ++k)
+        R[L(N,i,j,k)] = r;
+    }
+  }
   sprintf(par,"grid%u_left_NS_surface_function_left",grid->gn);
   add_parameter_array(par,R,N_total);
+  
+  /* surface right */
+  for (i = 0; i < N[0]; ++i)
+  {
+    X[0] = point_value(i,&coll_s[0]);/* a = z/y */
+    for (j = 0; j < N[1]; ++j)
+    {
+      X[1] = point_value(j,&coll_s[1]);/* b = x/y */
+      r = sqrt(
+               (1+SQR(X[0])+SQR(X[1]))/
+               (((1+SQR(X[1])))/(SQR(R_NS_l)+1) + SQR(X[0])/SQR(R_NS_l))
+              );
+      for (k = 0; k < N[2]; ++k)
+        R[L(N,i,j,k)] = r;
+    }
+  }
   sprintf(par,"grid%u_left_NS_surface_function_right",grid->gn);
   add_parameter_array(par,R,N_total);
   
@@ -706,26 +807,6 @@ static void NS_BH_surface_CubedSpherical_grid(Grid_T *const grid,const double R_
   
   /* right BH */
   
-  /* filling min */
-  patch->min[0] = -1;
-  patch->min[1] = -1;
-  patch->min[2] = 0;
-
-  /* filling max */
-  patch->max[0] = 1;
-  patch->max[1] = 1;
-  patch->max[2] = 1;
-  
-  /* collocation */
-  patch->collocation[0] = Chebyshev_Extrema;
-  patch->collocation[1] = Chebyshev_Extrema;
-  patch->collocation[2] = Chebyshev_Extrema;
-
-  /* basis */
-  patch->basis[0] = Chebyshev_Tn_BASIS;
-  patch->basis[1] = Chebyshev_Tn_BASIS;
-  patch->basis[2] = Chebyshev_Tn_BASIS;
-    
   /* filling N */
   N[0] = (unsigned)GetParameterI("n_a");
   N[1] = (unsigned)GetParameterI("n_b");
