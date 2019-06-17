@@ -11,9 +11,10 @@
 // the pool in the given patch.
 // if alloc_flg == YES, it also allocates memroy for v on the patch.
 // note: if attribute is null, the field attribute is (3dim).
-// note: one can simulate 2-d field by puting the coordinate 
-// which doesn't exist to 0 and treat the field like 3-d. for example,
-// if the field is 2-d like F = F(y,z) one can populate F = F(0,y,z) which
+// note: one can simulate 2-d fields by replicating the value of
+// the field in 2-d for each value of the coordiantes which this field doesn't depend on it.
+// for example,
+// if the field is 2-d like F = F(y,z) one can populate F = F(i,y,z) for all i's which
 // is 3-d but the x direction is not effective.
 // ->return value: a pointer to the new made field
 */

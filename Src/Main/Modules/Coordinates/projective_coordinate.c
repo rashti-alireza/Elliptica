@@ -1258,32 +1258,30 @@ static void R1_R2_derivative(Patch_T *const patch)
           *dR2_dz = add_field("dR2_dz",0,patch,YES);
   Field_T *const R1 = patch->pool[Ind("R1_ProjectiveHemisphere")];
   Field_T *const R2 = patch->pool[Ind("R2_ProjectiveHemisphere")];
-  const unsigned *const n = patch->n;
-  unsigned i,j;
+  const unsigned nn = patch->nn;
+  unsigned p;
           
   dR1_dX->v = Partial_Derivative(R1,"a");
   dR1_dY->v = Partial_Derivative(R1,"b");
   dR2_dX->v = Partial_Derivative(R2,"a");
   dR2_dY->v = Partial_Derivative(R2,"b");
     
-  for (i = 0; i < n[0]; ++i)
-    for (j = 0; j < n[1]; ++j)
-    {
-      unsigned p = L(n,i,j,0);
-      dR1_dx->v[p] = dR1_dX->v[p]*dq2_dq1(patch,_a_,_x_,p)+
-                     dR1_dY->v[p]*dq2_dq1(patch,_b_,_x_,p);
-      dR1_dy->v[p] = dR1_dX->v[p]*dq2_dq1(patch,_a_,_y_,p)+
-                     dR1_dY->v[p]*dq2_dq1(patch,_b_,_y_,p);
-      dR1_dz->v[p] = dR1_dX->v[p]*dq2_dq1(patch,_a_,_z_,p)+
-                     dR1_dY->v[p]*dq2_dq1(patch,_b_,_z_,p);
-      dR2_dx->v[p] = dR2_dX->v[p]*dq2_dq1(patch,_a_,_x_,p)+
-                     dR2_dY->v[p]*dq2_dq1(patch,_b_,_x_,p);
-      dR2_dy->v[p] = dR2_dX->v[p]*dq2_dq1(patch,_a_,_y_,p)+
-                     dR2_dY->v[p]*dq2_dq1(patch,_b_,_y_,p);
-      dR2_dz->v[p] = dR2_dX->v[p]*dq2_dq1(patch,_a_,_z_,p)+
-                     dR2_dY->v[p]*dq2_dq1(patch,_b_,_z_,p);
-      
-    }
+  for (p = 0; p < nn; ++p)
+  {
+    dR1_dx->v[p] = dR1_dX->v[p]*dq2_dq1(patch,_a_,_x_,p)+
+                   dR1_dY->v[p]*dq2_dq1(patch,_b_,_x_,p);
+    dR1_dy->v[p] = dR1_dX->v[p]*dq2_dq1(patch,_a_,_y_,p)+
+                   dR1_dY->v[p]*dq2_dq1(patch,_b_,_y_,p);
+    dR1_dz->v[p] = dR1_dX->v[p]*dq2_dq1(patch,_a_,_z_,p)+
+                   dR1_dY->v[p]*dq2_dq1(patch,_b_,_z_,p);
+    dR2_dx->v[p] = dR2_dX->v[p]*dq2_dq1(patch,_a_,_x_,p)+
+                   dR2_dY->v[p]*dq2_dq1(patch,_b_,_x_,p);
+    dR2_dy->v[p] = dR2_dX->v[p]*dq2_dq1(patch,_a_,_y_,p)+
+                   dR2_dY->v[p]*dq2_dq1(patch,_b_,_y_,p);
+    dR2_dz->v[p] = dR2_dX->v[p]*dq2_dq1(patch,_a_,_z_,p)+
+                   dR2_dY->v[p]*dq2_dq1(patch,_b_,_z_,p);
+    
+  }
                       
   remove_field(dR1_dX);
   remove_field(dR1_dY);

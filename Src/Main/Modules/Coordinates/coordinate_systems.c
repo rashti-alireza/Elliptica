@@ -653,10 +653,10 @@ static void NS_BH_surface_CubedSpherical_grid(Grid_T *const grid,const double R_
 {
   double *R;
   char par[100] = {'\0'};
-  unsigned N[3],n,i,j,N_total;
+  unsigned N[3],n,i,j,k,N_total;
   Patch_T patch[1] = {0};
   struct Collocation_s coll_s[2] = {0};
-  double X[2];
+  double X[2],r;
   
   /* left NS */
   
@@ -685,7 +685,9 @@ static void NS_BH_surface_CubedSpherical_grid(Grid_T *const grid,const double R_
   R = alloc_double(N_total);
   for (i = 0; i < N[0]; ++i)
     for (j = 0; j < N[1]; ++j)
-      R[L(N,i,j,0)] = R_NS_l;
+      for (k = 0; k < N[2]; ++k)
+        R[L(N,i,j,k)] = R_NS_l;
+  
       
   sprintf(par,"grid%u_left_NS_surface_function_up",grid->gn);
   add_parameter_array(par,R,N_total);
@@ -762,10 +764,12 @@ static void NS_BH_surface_CubedSpherical_grid(Grid_T *const grid,const double R_
     for (j = 0; j < N[1]; ++j)
     {
       X[1] = point_value(j,&coll_s[1]);
-      R[L(N,i,j,0)] = sqrt(
-                      (1+SQR(X[0])+SQR(X[1]))/
-                      ((SQR(X[0])+SQR(X[1]))/(SQR(R_BH_r)+SQR(a_BH)) + 1/SQR(R_BH_r))
-                          );
+      r = sqrt(
+               (1+SQR(X[0])+SQR(X[1]))/
+               ((SQR(X[0])+SQR(X[1]))/(SQR(R_BH_r)+SQR(a_BH)) + 1/SQR(R_BH_r))
+              );
+      for (k = 0; k < N[2]; ++k)
+        R[L(N,i,j,k)] = r;
     }
   }
   sprintf(par,"grid%u_right_BH_surface_function_up",grid->gn);
@@ -780,10 +784,12 @@ static void NS_BH_surface_CubedSpherical_grid(Grid_T *const grid,const double R_
     for (j = 0; j < N[1]; ++j)
     {
       X[1] = point_value(j,&coll_s[1]);/* b = y/x */
-      R[L(N,i,j,0)] = sqrt(
-                      (1+SQR(X[0])+SQR(X[1]))/
-                      (((1+SQR(X[1])))/(SQR(R_BH_r)+SQR(a_BH)) + SQR(X[0])/SQR(R_BH_r))
-                          );
+      r = sqrt(
+               (1+SQR(X[0])+SQR(X[1]))/
+               (((1+SQR(X[1])))/(SQR(R_BH_r)+SQR(a_BH)) + SQR(X[0])/SQR(R_BH_r))
+              );
+      for (k = 0; k < N[2]; ++k)
+        R[L(N,i,j,k)] = r;
     }
   }
   sprintf(par,"grid%u_right_BH_surface_function_back",grid->gn);
@@ -796,10 +802,12 @@ static void NS_BH_surface_CubedSpherical_grid(Grid_T *const grid,const double R_
     for (j = 0; j < N[1]; ++j)
     {
       X[1] = point_value(j,&coll_s[1]);/* b = z/x */
-      R[L(N,i,j,0)] = sqrt(
-                      (1+SQR(X[0])+SQR(X[1]))/
-                      (((1+SQR(X[0])))/(SQR(R_BH_r)+SQR(a_BH)) + SQR(X[1])/SQR(R_BH_r))
-                          );
+      r = sqrt(
+               (1+SQR(X[0])+SQR(X[1]))/
+               (((1+SQR(X[0])))/(SQR(R_BH_r)+SQR(a_BH)) + SQR(X[1])/SQR(R_BH_r))
+              );
+      for (k = 0; k < N[2]; ++k)
+        R[L(N,i,j,k)] = r;
     }
   }
   sprintf(par,"grid%u_right_BH_surface_function_front",grid->gn);
@@ -812,10 +820,12 @@ static void NS_BH_surface_CubedSpherical_grid(Grid_T *const grid,const double R_
     for (j = 0; j < N[1]; ++j)
     {
       X[1] = point_value(j,&coll_s[1]);/* b = z/y */
-      R[L(N,i,j,0)] = sqrt(
-                      (1+SQR(X[0])+SQR(X[1]))/
-                      (((1+SQR(X[0])))/(SQR(R_BH_r)+SQR(a_BH)) + SQR(X[1])/SQR(R_BH_r))
-                          );
+      r = sqrt(
+               (1+SQR(X[0])+SQR(X[1]))/
+               (((1+SQR(X[0])))/(SQR(R_BH_r)+SQR(a_BH)) + SQR(X[1])/SQR(R_BH_r))
+              );
+      for (k = 0; k < N[2]; ++k)
+        R[L(N,i,j,k)] = r;
     }
   }
   sprintf(par,"grid%u_right_BH_surface_function_left",grid->gn);
@@ -828,10 +838,12 @@ static void NS_BH_surface_CubedSpherical_grid(Grid_T *const grid,const double R_
     for (j = 0; j < N[1]; ++j)
     {
       X[1] = point_value(j,&coll_s[1]);/* b = x/y */
-      R[L(N,i,j,0)] = sqrt(
-                      (1+SQR(X[0])+SQR(X[1]))/
-                      (((1+SQR(X[1])))/(SQR(R_BH_r)+SQR(a_BH)) + SQR(X[0])/SQR(R_BH_r))
-                          );
+      r = sqrt(
+               (1+SQR(X[0])+SQR(X[1]))/
+               (((1+SQR(X[1])))/(SQR(R_BH_r)+SQR(a_BH)) + SQR(X[0])/SQR(R_BH_r))
+              );
+      for (k = 0; k < N[2]; ++k)
+        R[L(N,i,j,k)] = r;
     }
   }
   sprintf(par,"grid%u_right_BH_surface_function_right",grid->gn);
@@ -1321,7 +1333,7 @@ static void NS_radii_BNS_Projective_grid(Grid_T *const grid,void *vp)
   double *R1_up,*R2_up;
   struct R_max *const r_max = vp;
   char par[100] = {'\0'};
-  unsigned N[3],n,i,j,N_total;
+  unsigned N[3],n,ijk,N_total;
   
   /* left NS */
   r_max->R_max_l = R_NS_l;/* since this star is perfect sphere */
@@ -1351,19 +1363,17 @@ static void NS_radii_BNS_Projective_grid(Grid_T *const grid,void *vp)
   
   /* up side */
   R2_up = alloc_double(N_total);
-  for (i = 0; i < N[0]; ++i)
-    for (j = 0; j < N[1]; ++j)
-      R2_up[L(N,i,j,0)] = R_NS_l;
+  for (ijk = 0; ijk < N_total; ++ijk)
+      R2_up[ijk] = R_NS_l;
       
   sprintf(par,"grid%u_left_NS_R2_up",grid->gn);
   add_parameter_array(par,R2_up,N_total);
   /* end of up side */
   /* down side */
   R2_down = alloc_double(N_total);
-  for (i = 0; i < N[0]; ++i)
-    for (j = 0; j < N[1]; ++j)
-      R2_down[L(N,i,j,0)] = R_NS_l;
-      
+  for (ijk = 0; ijk < N_total; ++ijk)
+      R2_down[ijk] = R_NS_l;
+  
   sprintf(par,"grid%u_left_NS_R2_down",grid->gn);
   add_parameter_array(par,R2_down,N_total);
   /* end of down side */
@@ -1372,10 +1382,9 @@ static void NS_radii_BNS_Projective_grid(Grid_T *const grid,void *vp)
   
   /* up side */
   R1_up = alloc_double(N_total);
-  for (i = 0; i < N[0]; ++i)
-    for (j = 0; j < N[1]; ++j)
-      R1_up[L(N,i,j,0)] = R2_up[L(N,i,j,0)]/N[2];
-      
+  for (ijk = 0; ijk < N_total; ++ijk)
+    R1_up[ijk] = R2_up[ijk]/N[2];
+
   sprintf(par,"grid%u_left_NS_R1_up",grid->gn);
   add_parameter_array(par,R1_up,N_total);
   free(R1_up);
@@ -1383,10 +1392,9 @@ static void NS_radii_BNS_Projective_grid(Grid_T *const grid,void *vp)
   /* end of up side */
   /* down side */
   R1_down = alloc_double(N_total);
-  for (i = 0; i < N[0]; ++i)
-    for (j = 0; j < N[1]; ++j)
-      R1_down[L(N,i,j,0)] = R2_down[L(N,i,j,0)]/N[2];
-      
+  for (ijk = 0; ijk < N_total; ++ijk)
+    R1_down[ijk] = R2_down[ijk]/N[2];
+    
   sprintf(par,"grid%u_left_NS_R1_down",grid->gn);
   add_parameter_array(par,R1_down,N_total);
   free(R1_down);
@@ -1421,18 +1429,16 @@ static void NS_radii_BNS_Projective_grid(Grid_T *const grid,void *vp)
   
   /* up side */
   R2_up = alloc_double(N_total);
-  for (i = 0; i < N[0]; ++i)
-    for (j = 0; j < N[1]; ++j)
-      R2_up[L(N,i,j,0)] = R_NS_r;
+  for (ijk = 0; ijk < N_total; ++ijk)  
+    R2_up[ijk] = R_NS_r;
       
   sprintf(par,"grid%u_right_NS_R2_up",grid->gn);
   add_parameter_array(par,R2_up,N_total);
   /* end of up side */
   /* down side */
   R2_down = alloc_double(N_total);
-  for (i = 0; i < N[0]; ++i)
-    for (j = 0; j < N[1]; ++j)
-      R2_down[L(N,i,j,0)] = R_NS_r;
+  for (ijk = 0; ijk < N_total; ++ijk)
+    R2_down[ijk] = R_NS_r;
       
   sprintf(par,"grid%u_right_NS_R2_down",grid->gn);
   add_parameter_array(par,R2_down,N_total);
@@ -1442,9 +1448,8 @@ static void NS_radii_BNS_Projective_grid(Grid_T *const grid,void *vp)
   
   /* up side */
   R1_up = alloc_double(N_total);
-  for (i = 0; i < N[0]; ++i)
-    for (j = 0; j < N[1]; ++j)
-      R1_up[L(N,i,j,0)] = R2_up[L(N,i,j,0)]/N[2];
+  for (ijk = 0; ijk < N_total; ++ijk)
+    R1_up[ijk] = R2_up[ijk]/N[2];
       
   sprintf(par,"grid%u_right_NS_R1_up",grid->gn);
   add_parameter_array(par,R1_up,N_total);
@@ -1453,9 +1458,8 @@ static void NS_radii_BNS_Projective_grid(Grid_T *const grid,void *vp)
   /* end of up side */
   /* down side */
   R1_down = alloc_double(N_total);
-  for (i = 0; i < N[0]; ++i)
-    for (j = 0; j < N[1]; ++j)
-      R1_down[L(N,i,j,0)] = R2_down[L(N,i,j,0)]/N[2];
+  for (ijk = 0; ijk < N_total; ++ijk)
+   R1_down[ijk] = R2_down[ijk]/N[2];
       
   sprintf(par,"grid%u_right_NS_R1_down",grid->gn);
   add_parameter_array(par,R1_down,N_total);
@@ -1473,7 +1477,7 @@ static void NS_radii_BNS_Spherical_grid(Grid_T *const grid,void *vp)
   const double R_NS_r = GetParameterD_E("right_NS_radius");/* assuming perfect sphere */
   double *R1,*R2;
   char par[100] = {'\0'};
-  unsigned N[3],n,j,k,N_total;
+  unsigned N[3],n,ijk,N_total;
   
   UNUSED(vp);
   
@@ -1502,18 +1506,16 @@ static void NS_radii_BNS_Spherical_grid(Grid_T *const grid,void *vp)
   
   /* surface: R2 */
   R2 = alloc_double(N_total);
-  for (j = 0; j < N[1]; ++j)
-    for (k = 0; k < N[2]; ++k)
-      R2[L(N,0,j,k)] = R_NS_l;
+  for (ijk = 0; ijk < N_total; ++ijk)
+      R2[ijk] = R_NS_l;
       
   sprintf(par,"grid%u_left_NS_R2",grid->gn);
   add_parameter_array(par,R2,N_total);
   
   /* inside: R1 */
   R1 = alloc_double(N_total);
-  for (j = 0; j < N[1]; ++j)
-    for (k = 0; k < N[2]; ++k)
-      R1[L(N,0,j,k)] = 0;
+  for (ijk = 0; ijk < N_total; ++ijk)
+      R1[ijk] = 0;
       
   sprintf(par,"grid%u_left_NS_R1",grid->gn);
   add_parameter_array(par,R1,N_total);
@@ -1545,18 +1547,16 @@ static void NS_radii_BNS_Spherical_grid(Grid_T *const grid,void *vp)
   
   /* surface: R2 */
   R2 = alloc_double(N_total);
-  for (j = 0; j < N[1]; ++j)
-    for (k = 0; k < N[2]; ++k)
-      R2[L(N,0,j,k)] = R_NS_r;
+  for (ijk = 0; ijk < N_total; ++ijk)
+    R2[ijk] = R_NS_r;
       
   sprintf(par,"grid%u_right_NS_R2",grid->gn);
   add_parameter_array(par,R2,N_total);
   
   /* inside: R1*/
   R1 = alloc_double(N_total);
-  for (j = 0; j < N[1]; ++j)
-    for (k = 0; k < N[2]; ++k)
-      R1[L(N,0,j,k)] = 0;
+  for (ijk = 0; ijk < N_total; ++ijk)
+      R1[ijk] = 0;
 
   sprintf(par,"grid%u_right_NS_R1",grid->gn);
   add_parameter_array(par,R1,N_total);
@@ -1571,7 +1571,7 @@ static void NS_surface_BNS_CubedSpherical_grid(Grid_T *const grid)
   const double R_NS_r = GetParameterD_E("right_NS_radius");/* assuming perfect sphere */
   double *R;
   char par[100] = {'\0'};
-  unsigned N[3],n,i,j,N_total;
+  unsigned N[3],n,i,j,k,N_total;
   
   /* left NS */
   
@@ -1600,7 +1600,8 @@ static void NS_surface_BNS_CubedSpherical_grid(Grid_T *const grid)
   R = alloc_double(N_total);
   for (i = 0; i < N[0]; ++i)
     for (j = 0; j < N[1]; ++j)
-      R[L(N,i,j,0)] = R_NS_l;
+      for (k = 0; k < N[2]; ++k)
+        R[L(N,i,j,k)] = R_NS_l;
       
   sprintf(par,"grid%u_left_NS_surface_function_up",grid->gn);
   add_parameter_array(par,R,N_total);
@@ -1644,7 +1645,8 @@ static void NS_surface_BNS_CubedSpherical_grid(Grid_T *const grid)
   R = alloc_double(N_total);
   for (i = 0; i < N[0]; ++i)
     for (j = 0; j < N[1]; ++j)
-      R[L(N,i,j,0)] = R_NS_r;
+      for (k = 0; k < N[2]; ++k)
+        R[L(N,i,j,k)] = R_NS_r;
       
   sprintf(par,"grid%u_right_NS_surface_function_up",grid->gn);
   add_parameter_array(par,R,N_total);
