@@ -82,6 +82,7 @@ static int realize_neighbor(Patch_T *const patch);
 static int IsOverlap(PointSet_T *const Pnt);
 static int IsNormalFit(PointSet_T *const Pnt);
 static int IsOrthOutBndry(PointSet_T *const Pnt);
+static int IsOrthInnBndry(PointSet_T *const Pnt);
 static int IsOutBndry(PointSet_T *const Pnt);
 static int IsInnBndry(PointSet_T *const Pnt);
 static int IsInterpolation(PointSet_T *const Pnt);

@@ -84,7 +84,8 @@ static void misc(Grid_T *const grid)
           /* these help to get segfault in case of using their value */
           subf->adjPatch = UINT_MAX;
           subf->adjFace  = UINT_MAX;
-          grid->patch[pa]->outerB = 1;/* adding extra info for convenience */
+          if (grid->patch[pa]->outerB != 1)
+            abortEr("The patch->outerB has not been set correctly!\n");
         }
         if (subf->innerB)
         {
@@ -913,6 +914,7 @@ static void analyze_adjPnt(PointSet_T *const Pnt)
   if (IsOutBndry(Pnt))
   {
     p1->outerB = 1;
+    p1->patch->outerB = 1;
     
     lead = inspect_flags(p1);
     add_to_subface(p1,lead);
@@ -976,9 +978,17 @@ static void analyze_adjPnt(PointSet_T *const Pnt)
   else if (IsOrthOutBndry(Pnt))
   {
     p1->outerB = 1;
+    p1->patch->outerB = 1;
     lead = inspect_flags(p1);
     add_to_subface(p1,lead);
     
+  }
+  /* cases in which N1.N2 = 0 and reach innerbound */
+  else if (IsOrthInnBndry(Pnt))
+  {
+    p1->innerB = 1;
+    lead = inspect_flags(p1);
+    add_to_subface(p1,lead);
   }
   /* cases in which the points needs interpolation */
   else if (IsInterpolation(Pnt))
@@ -1286,12 +1296,11 @@ static int IsInterpolation(PointSet_T *const Pnt)
 /* is this an outerboundary point?
 // yes if no points are in adjPnt or if we slightly move along the normal 
 // reach nowhere.
-// ->return value = 1 if outerbound; 0 otherwise.
-*/
+// ->return value = 1 if outerbound; 0 otherwise. */
 static int IsOutBndry(PointSet_T *const Pnt)
 {
   /* confidently there is no point close by patch */
-  if (Pnt->NadjPnt == 0 && !Pnt->Pnt->patch->innerB/* potentially it can be outerB. Note: innerB's are set a priory, but outerB's not */)
+  if (Pnt->NadjPnt == 0 && !Pnt->Pnt->patch->innerB/* potentially it can be outerB. Note: innerB's are set a priory, but outerB's we don't know yet */)
     return 1;
   /* slightly move along normal and see if there is any other patches */
   else if (!Pnt->Pnt->patch->innerB)
@@ -1357,8 +1366,7 @@ static int IsOutBndry(PointSet_T *const Pnt)
 /* is this an inner boundary point?
 // yes if no points are in adjPnt or if we slightly move along the normal 
 // reach nowhere.
-// ->return value = 1 if outerbound; 0 otherwise.
-*/
+// ->return value = 1 if outerbound; 0 otherwise. */
 static int IsInnBndry(PointSet_T *const Pnt)
 {
   /* confidently there is no point close by patch */
@@ -1433,11 +1441,44 @@ static int IsInnBndry(PointSet_T *const Pnt)
 // this new vector couldn't be found in any other patches, flaged this
 // as outerbound.
 // ->return value: if their normals are orthogonal and surrounded by
-// outerbound 1, otherwise 0.
-*/
+// outerbound 1, otherwise 0. */
 static int IsOrthOutBndry(PointSet_T *const Pnt)
 {
   unsigned i,j;
+  
+  if (Pnt->Pnt->patch->innerB)/* this patch has inner boundary, it's suspicious  */
+    return 0;
+  
+  for (i = 0; i < Pnt->NadjPnt; i++)
+  {
+    if (Pnt->adjPnt[i].FaceFlg == 0) continue;
+    
+    for (j = 0; j < TOT_FACE; j++)
+      if (Pnt->adjPnt[i].fs[j].OrthFlg == 1) 
+        if (ReachBnd(Pnt,i,j))
+        {
+          Pnt->idOrth = i;
+          return 1;
+        }
+  }  
+  return 0;
+}
+
+/* there are some cases -take place generally when interfaces of
+// two patches reach inner boundary - in which two normals are orthogonal 
+// (or closely orthogonal) and those points can be flaged as inner boundary.
+// the algorithm goes like that:
+// if each orthogonal normal be tilted toward the other one, and tip of
+// this new vector couldn't be found in any other patches, flaged this
+// as innerbound.
+// ->return value: if their normals are orthogonal and surrounded by
+// innerbound 1, otherwise 0. */
+static int IsOrthInnBndry(PointSet_T *const Pnt)
+{
+  unsigned i,j;
+  
+  if (!Pnt->Pnt->patch->innerB)/* this patch dosen't have inner boundary, it's suspicious */
+    return 0;
   
   for (i = 0; i < Pnt->NadjPnt; i++)
   {
@@ -1455,9 +1496,8 @@ static int IsOrthOutBndry(PointSet_T *const Pnt)
 }
 
 /* check if one tilts normal toward the adjPnt normal 
-// there is no other patches, which means outerboundary.
-// ->return value: 1 if outerboundary; 0 otherwise.
-*/
+// there is no other patches, which means outerboundary or inner boundary.
+// ->return value: 1 if boundary; 0 otherwise. */
 static int ReachBnd(PointSet_T *const Pnt,const unsigned p,const unsigned f)
 {
   unsigned node = Pnt->Pnt->ind;
