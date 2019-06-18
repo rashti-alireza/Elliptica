@@ -3972,3 +3972,83 @@ void SignAndIndex_permutation_CubedSphere(const Flag_T side,unsigned *const a,un
   }
 }
 
+/* performing a test for CS coordinates:
+// test includes:
+// o. 2-D interpolations of radius.
+// o. x_of_X function
+// o. X_of_x function. */
+void test_CubedSpherical_Coordinates(Grid_T *const grid)
+{
+  unsigned p;
+  Flag_T flg = NONE;
+  
+  printf("Testing Cubed Spherical Coordinates:\n");
+  
+  FOR_ALL_PATCHES(p,grid)
+  {
+    Patch_T *patch 	= grid->patch[p];
+    const Flag_T type   = patch->CoordSysInfo->CubedSphericalCoord->type;
+    Field_T *const R1_f = patch->CoordSysInfo->CubedSphericalCoord->R1_f,
+            *const R2_f = patch->CoordSysInfo->CubedSphericalCoord->R2_f;
+    double Xp[3],xp[3],R;
+    unsigned n;
+    
+    for(n = 0; n < patch->nn; ++n)
+    {
+      const double *const X = patch->node[n]->X;
+      const double *const x = patch->node[n]->x;
+      
+      /* test x_of_X */
+      x_of_X(xp,X,patch);
+      if (!EQL(L2_norm(3,xp,x),0))
+      {
+        printf("x_of_X failed.\n");
+        flg = FOUND;
+        break;
+      }
+      
+      /* test X_of_x */
+      X_of_x(Xp,x,patch);
+      if (!EQL(L2_norm(3,Xp,X),0))
+      {
+        printf("X_of_x failed.\n");
+        flg = FOUND;
+        break;
+      }
+      
+      /* test Radius related */
+      switch (type)
+      {
+        case NS_T_CS:
+          R = interpolation_2d_CS(R2_f,patch,X);
+          if (!EQL(L2_norm(1,&R,&R2_f->v[n]),0))
+          {
+            printf("R interpolation failed.\n");
+            flg = FOUND;
+            break;
+          }
+          
+        break;
+        case SR_T_CS:
+          R = interpolation_2d_CS(R1_f,patch,X);
+          if (!EQL(L2_norm(1,&R,&R1_f->v[n]),0))
+          {
+            printf("R interpolation failed.\n");
+            flg = FOUND;
+            break;
+          }
+        break;
+        default:
+        break;
+      }
+  
+    }/* end of for(n = 0; n < patch->nn; ++n) */
+    if (flg == FOUND)
+      break;
+  }/* end of FOR_ALL_PATCHES(p,grid) */
+  
+  if (flg != FOUND)
+    printf("Testing Cubed Spherical Coordinates: [+].\n");
+  else
+    printf("Testing Cubed Spherical Coordinates: [-].\n");
+}

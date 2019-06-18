@@ -56,8 +56,8 @@ int Fundamental_Tests(void)
   if (strstr_i(GetParameterS("Test_Integral"),"yes"))
     integration_tests(grid);
   
-  //if (strstr_i(GetParameterS("Test_dNi/dxj"),"yes"))
-    //test_dNi_dxj(grid);
+  if (strstr_i(GetParameterS("Test_CubedSpherical_Coordinates"),"yes"))
+    test_CubedSpherical_Coordinates(grid);
   
   if (strcmp_i(GetParameterS("Test_Jacobian_Elements_Js_Consistency"),"yes"))
   {
