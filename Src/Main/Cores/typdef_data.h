@@ -77,10 +77,6 @@ typedef enum COORD_T
   UNDEFINED_COORD = 0,
   Cartesian,
   Spherical,
-  ProjectiveHemisphereUp,
-  ProjectiveHemisphereDown,
-  StereographicSphereLeft,
-  StereographicSphereRight,
   CubedSpherical
 }Coord_T;
 
@@ -253,15 +249,6 @@ typedef struct Interface_T
 typedef struct JACOBIAN_TRANS_T
 {
   double (*j)(struct PATCH_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const unsigned p);/* function for transformation */
-  double (*dN0_dx)(struct PATCH_T *const patch,const double *const X);/* specifically calculating dN0/dx at X */
-  double (*dN0_dy)(struct PATCH_T *const patch,const double *const X);/* specifically calculating dN0/dy at X */
-  double (*dN0_dz)(struct PATCH_T *const patch,const double *const X);/* specifically calculating dN0/dz at X */
-  double (*dN1_dx)(struct PATCH_T *const patch,const double *const X);/* specifically calculating dN1/dx at X */
-  double (*dN1_dy)(struct PATCH_T *const patch,const double *const X);/* specifically calculating dN1/dy at X */
-  double (*dN1_dz)(struct PATCH_T *const patch,const double *const X);/* specifically calculating dN1/dz at X */
-  double (*dN2_dx)(struct PATCH_T *const patch,const double *const X);/* specifically calculating dN2/dx at X */
-  double (*dN2_dy)(struct PATCH_T *const patch,const double *const X);/* specifically calculating dN2/dy at X */
-  double (*dN2_dz)(struct PATCH_T *const patch,const double *const X);/* specifically calculating dN2/dz at X */
   double *dX_dx[3][3];/* saving some transformation to save time for dX[0..2]/dx[0..2] */
   double *dx_dX[3][3];/* saving some transformation to save time dx[0..2]/dX[0..2] */
 }JacobianTrans_T;
@@ -496,19 +483,6 @@ typedef struct PATCH_T
   Coord_T coordsys;/* coord sys used in this patch */
   struct
   {
-   struct
-   {
-    double R1;/* smaller R */
-    double R2;/* bigger R */
-    Field_T *R1_f;/* smaller R field */
-    Field_T *R2_f;/* bigger R field */
-    Field_T *dR1_dx;/* dR1/dx */
-    Field_T *dR1_dy;/* dR1/dy */
-    Field_T *dR1_dz;/* dR1/dz */
-    Field_T *dR2_dx;/* dR2/dx */
-    Field_T *dR2_dy;/* dR2/dy */
-    Field_T *dR2_dz;/* dR2/dz */
-   }ProjectiveCoord[1];
    struct
    {
     Flag_T side;/* the side of this cubed coord, up, down, etc. */

@@ -177,22 +177,8 @@ static unsigned JacobianFormat_2ndOrder(const Patch_T *const patch,const Dd_T di
     if (dir%3 == dp%3)
       r = 1;
   }
-  else if (patch->coordsys == ProjectiveHemisphereUp  || 
-           patch->coordsys == ProjectiveHemisphereDown  ||
-           patch->coordsys == StereographicSphereLeft ||
-           patch->coordsys == StereographicSphereRight  )
-  
-  {
-    /* in these coordinate only if derivative is on a,b, or c
-    // direction one can use second order formular. 
-    // Note: that they basese and collocations are already checked. */
-    if (dir == dp)
-      r = 1;
-    else
-      r = 0;
-  }
   else
-     abortEr("There is no coordinate defined for this function.\n");
+     abortEr(NO_JOB);
   
   return r;
 }
@@ -891,42 +877,6 @@ static void get_dependency(const Patch_T *const patch,const Dd_T dir, unsigned *
   if (patch->coordsys == Cartesian)
   {
     dep[dir%3] = 1;/* means that for example _y_%3 = 1 = _b_ */
-  }
-  /* x(a,b,c), y(a,b,c), z(a,b,c) */
-  else if (patch->coordsys == ProjectiveHemisphereUp  || 
-           patch->coordsys == ProjectiveHemisphereDown  ||
-           patch->coordsys == StereographicSphereLeft ||
-           patch->coordsys == StereographicSphereRight  )
-  {
-    switch (dir)
-    {
-      case _x_:
-        dep[0] = 1;
-        dep[1] = 1;
-        dep[2] = 1;
-      break;
-      case _y_:
-        dep[0] = 1;
-        dep[1] = 1;
-        dep[2] = 1;
-      break;
-      case _z_:
-        dep[0] = 1;
-        dep[1] = 1;
-        dep[2] = 1;
-      break;
-      case _a_:
-        dep[0] = 1;
-      break;
-      case _b_:
-        dep[1] = 1;
-      break;
-      case _c_:
-        dep[2] = 1;
-      break;
-      default:
-        abortEr(NO_JOB);
-    }
   }
   /* x(a,b,c), y(a,b,c), z(a,b,c) */
   else if (patch->coordsys == CubedSpherical) 

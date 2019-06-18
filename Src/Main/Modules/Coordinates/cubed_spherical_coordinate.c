@@ -1554,7 +1554,7 @@ static void populate_outermost(Grid_T *const grid,const unsigned pn,const unsign
   }
 }
 
-/* memory alloc patches for BNS_Projective type */
+/* memory alloc patches for BNS_CubedSpherical type */
 void alloc_patches_BNS_CubedSpherical_grid(Grid_T *const grid)
 {
   unsigned Np = 30;/* number of patches without outermost's 
@@ -1579,7 +1579,7 @@ void alloc_patches_BNS_CubedSpherical_grid(Grid_T *const grid)
   
 }
 
-/* memory alloc patches for BBN_Projective type */
+/* memory alloc patches for BBN_CubedSpherical type */
 void alloc_patches_BBN_CubedSpherical_grid(Grid_T *const grid)
 {
   unsigned Np = 23;/* number of patches without outermost's 

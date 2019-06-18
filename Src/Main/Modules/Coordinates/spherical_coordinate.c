@@ -58,12 +58,13 @@ void fill_patches_BNS_Spherical_grid(Grid_T *const grid)
   populate_left_NS_sphere(grid,pn++);
   populate_left_NS_surrounding_sphere(grid,pn++);
   for (i = 0; i < N_outermost_split; i++)
-    populate_left_outermost(grid,pn++,i);
-    
+    abortEr(NO_JOB);
+ 
   populate_right_NS_sphere(grid,pn++);
   populate_right_NS_surrounding_sphere(grid,pn++);
   for (i = 0; i < N_outermost_split; i++)
-    populate_right_outermost(grid,pn++,i);
+    abortEr(NO_JOB);
+
   
 }
 

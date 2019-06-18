@@ -77,8 +77,6 @@ void alloc_patches(Grid_T *const grid)
 {
   if (strcmp_i(grid->kind,"Cartesian_grid"))
     alloc_patches_Cartesian_grid(grid);
-  else if (strcmp_i(grid->kind,"BNS_Projective_grid"))
-    alloc_patches_BNS_Projective_grid(grid);
   else if (strcmp_i(grid->kind,"BNS_Spherical_grid"))
     alloc_patches_BNS_Spherical_grid(grid);
   else if (strcmp_i(grid->kind,"BNS_CubedSpherical_grid"))

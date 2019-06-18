@@ -45,9 +45,6 @@ static void fill_patches(Grid_T *const grid)
   if (strcmp_i(grid->kind,"Cartesian_grid"))
     fill_patches_Cartesian_grid(grid);
   
-  else if (strcmp_i(grid->kind,"BNS_Projective_grid"))
-    fill_patches_BNS_Projective_grid(grid); 
-  
   else if (strcmp_i(grid->kind,"BNS_Spherical_grid"))
     fill_patches_BNS_Spherical_grid(grid); 
     

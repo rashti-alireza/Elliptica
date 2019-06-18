@@ -16,7 +16,6 @@ void *alloc_point(const unsigned s);
 void *alloc_sFunc_PtoV(sFunc_PtoV_T ***const mem);
 void *alloc_needle(void);
 void alloc_patches_Cartesian_grid(Grid_T *const grid);
-void alloc_patches_BNS_Projective_grid(Grid_T *const grid);
 void alloc_patches_BNS_Spherical_grid(Grid_T *const grid);
 void alloc_patches_BNS_CubedSpherical_grid(Grid_T *const grid);
 void alloc_patches_BBN_CubedSpherical_grid(Grid_T *const grid);
