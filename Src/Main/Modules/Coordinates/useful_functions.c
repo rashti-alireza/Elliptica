@@ -276,7 +276,7 @@ static int x_of_X_CS_coord(double *const x,const double *const X,const Patch_T *
     case NS_T_CS:
       d = sqrt(1+SQR(X[0])+SQR(X[1]));
       x1 = xc1;
-      x2 = S*interpolation_2d_CS(R2_f,patch,X)/d;
+      x2 = S*R_interpolation_CS(R2_f,X)/d;
       
       x[c] = x1+(x2-x1)*X[2];
       x[a] = S*x[c]*X[0];
@@ -289,7 +289,7 @@ static int x_of_X_CS_coord(double *const x,const double *const X,const Patch_T *
     case SR_T_CS:
       d = sqrt(1+SQR(X[0])+SQR(X[1]));
       x2 = xc2;
-      x1 = S*interpolation_2d_CS(R1_f,patch,X)/d;
+      x1 = S*R_interpolation_CS(R1_f,X)/d;
       
       x[c] = x1+(x2-x1)*X[2];
       x[a] = S*x[c]*X[0];
@@ -375,13 +375,13 @@ static int X_of_x_CS_coord(double *const X,const double *const cart,const Patch_
     case NS_T_CS:
       d = sqrt(1+SQR(X[0])+SQR(X[1]));
       x1 = xc1;
-      x2 = S*interpolation_2d_CS(R2_f,patch,X)/d;
+      x2 = S*R_interpolation_CS(R2_f,X)/d;
       X[2] = (x[k]-x1)/(x2-x1);
     break;
     case SR_T_CS:
       d = sqrt(1+SQR(X[0])+SQR(X[1]));
       x2 = xc2;
-      x1 = S*interpolation_2d_CS(R1_f,patch,X)/d;
+      x1 = S*R_interpolation_CS(R1_f,X)/d;
       X[2] = (x[k]-x1)/(x2-x1);
     break;
     case OT_T1_CS:

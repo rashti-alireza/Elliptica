@@ -26,6 +26,6 @@ double JT_Cartesian_patch(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,
 double *normal_vec(Point_T *const point);
 double General2ChebyshevExtrema(const double X,const unsigned dir,const Patch_T *const patch);
 void grid_characteristics_example(Grid_T *const grid);
-double interpolation_2d_CS(Field_T *const R, const Patch_T *const patch,const double *const X);
+double R_interpolation_CS(Field_T *const R,const double *const X);
 void SignAndIndex_permutation_CubedSphere(const Flag_T side,unsigned *const a,unsigned *const b,unsigned *const c,double *const s);
 void test_CubedSpherical_Coordinates(Grid_T *const grid);

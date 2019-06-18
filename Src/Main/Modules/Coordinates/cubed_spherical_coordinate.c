@@ -383,15 +383,14 @@ static void R2_derivative(Patch_T *const patch)
   patch->CoordSysInfo->CubedSphericalCoord->dR2_dz = dR2_dz;
 }
 
-/* interpolation of 2d field for Cubed Spherical coordinate.
-// Note in CS 2d fields are f(X,Y,0).
-// it mostly is used for radius or derivative of radius.
-// convection:
-// R = interesting field
-// patch = patch that has R
+/* interpolation of 2d field of radius R (surface function)
+// for Cubed Spherical coordinate.
+// R is only function of X[0] and X[1].
+// Note: R must be populated like a 3-d field f(X,Y,Z)
+// but its value is equal on all slices of Z; thus, df/dZ = 0.
 // X = the curvilinear coord in which we want R(X).
 // ->return value: R(X) */
-double interpolation_2d_CS(Field_T *const R, const Patch_T *const patch,const double *const X)
+double R_interpolation_CS(Field_T *const R,const double *const X)
 {
   double interp;
   Interpolation_T *interp_s = init_interpolation();
@@ -404,8 +403,6 @@ double interpolation_2d_CS(Field_T *const R, const Patch_T *const patch,const do
   plan_interpolation(interp_s);
   interp = execute_interpolation(interp_s);
   free_interpolation(interp_s);
-  
-  UNUSED(patch);
   
   return interp;
 }
@@ -4020,7 +4017,7 @@ void test_CubedSpherical_Coordinates(Grid_T *const grid)
       switch (type)
       {
         case NS_T_CS:
-          R = interpolation_2d_CS(R2_f,patch,X);
+          R = R_interpolation_CS(R2_f,X);
           if (!EQL(L2_norm(1,&R,&R2_f->v[n]),0))
           {
             printf("R interpolation failed.\n");
@@ -4030,7 +4027,7 @@ void test_CubedSpherical_Coordinates(Grid_T *const grid)
           
         break;
         case SR_T_CS:
-          R = interpolation_2d_CS(R1_f,patch,X);
+          R = R_interpolation_CS(R1_f,X);
           if (!EQL(L2_norm(1,&R,&R1_f->v[n]),0))
           {
             printf("R interpolation failed.\n");
