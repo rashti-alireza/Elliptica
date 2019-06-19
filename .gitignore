@@ -17,6 +17,9 @@ Bin
 #ignore Input directory
 Input/*
 
+#ignore Routines:
+Src/Routines/*
+
 #ignore Trash directory
 Trash/*
 
