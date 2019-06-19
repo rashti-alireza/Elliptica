@@ -1,0 +1,8 @@
+*Solver*
+     |--->Equations:
+     |             |--->step1:
+     |             |--->step2:
+     |             |--->step3:
+
+if you can come up with some idea how to output data in tree format, 
+it's very nice and convenient.
