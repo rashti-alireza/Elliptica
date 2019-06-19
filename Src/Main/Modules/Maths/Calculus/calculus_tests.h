@@ -1,6 +1,7 @@
 #include "core_lib.h"
 #include "memory_managing_lib.h"
 #include "maths_general_lib.h"
+#include "maths_calculus_lib.h"
 
 #define DO 1
 #define NOT_DO 0

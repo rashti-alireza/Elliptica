@@ -6,6 +6,7 @@
 #include "coordinates_lib.h"
 #include "utilities_lib.h"
 #include "maths_general_lib.h"
+#include "maths_calculus_lib.h"
 
 /* methods of derivative */
 typedef enum METHOD_T

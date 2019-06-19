@@ -3,7 +3,7 @@
 #include "error_handling_lib.h"
 #include "maths_solvings_lib.h"
 #include "utilities_lib.h"
-
+#include "maths_linear_algebra_lib.h"
 
 #define DO 1
 #define NOT_DO 0

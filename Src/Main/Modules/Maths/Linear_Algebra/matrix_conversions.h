@@ -2,6 +2,7 @@
 #include "memory_managing_lib.h"
 #include "error_handling_lib.h"
 #include "maths_general_lib.h"
+#include "maths_linear_algebra_lib.h"
 
 Matrix_T *cast_matrix_ccs(Matrix_T *const m);
 Matrix_T *cast_matrix_ccs_long(Matrix_T *const m);

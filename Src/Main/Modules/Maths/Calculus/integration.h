@@ -1,4 +1,5 @@
 #include "core_lib.h"
+#include "maths_calculus_lib.h"
 
 void free_integration(Integration_T *I);
 void plan_integration(Integration_T *const I);

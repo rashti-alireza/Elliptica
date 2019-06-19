@@ -1,3 +1,25 @@
+/* struct for equation of states */
+typedef struct EquationOfState_T
+{
+ char description[__1MAX_STR_LEN1__];
+ char type[__1MAX_STR_LEN1__];
+ char unit[__1MAX_STR_LEN1__];
+ double *K;/* polytropic constant */
+ double *rho_th;/* thresholds of rest mass density */
+ double *h_th;/* enthalpy thresholds */
+ double *n;/* polytropic index n = 1/(gamma-1)*/
+ double *gamma;/* polytropic index */
+ double *a;/* constant coefficient to ensure continuity */
+ double h;/* enthalpy */
+ unsigned N;/* number of intervals i.e number of pieces */
+ double (*pressure)(struct EquationOfState_T *const eos);
+ double (*energy_density)(struct EquationOfState_T *const eos);/* total energy density */
+ double (*rest_mass_density)(struct EquationOfState_T *const eos);
+ double (*de_dh)(struct EquationOfState_T *const eos);/* d(energy_density)/dh */
+ double (*drho_dh)(struct EquationOfState_T *const eos);/* d(rest_mass_density)/dh */
+}EoS_T;
+
+
 EoS_T *initialize_EoS(void);
 void free_EoS(EoS_T *eos);
 void test_EoS(Grid_T *const grid);
