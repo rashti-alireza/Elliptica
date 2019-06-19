@@ -8,7 +8,7 @@
 #include "maths_analytic_lib.h"
 #include "maths_calculus_lib.h"
 #include "maths_linear_algebra_lib.h"
-#include "maths_solvers_lib.h"
+#include "maths_matrix_solvers_lib.h"
 
 #define DO 1
 #define NOT_DO 0

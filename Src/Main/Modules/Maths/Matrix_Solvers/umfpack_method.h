@@ -2,7 +2,7 @@
 #include "error_handling_lib.h"
 #include <suitesparse/umfpack.h>
 #include "maths_linear_algebra_lib.h"
-#include "maths_solvers_lib.h"
+#include "maths_matrix_solvers_lib.h"
 
 int direct_solver_umfpack_di(void *vp);
 int direct_solver_umfpack_dl(void *vp);
