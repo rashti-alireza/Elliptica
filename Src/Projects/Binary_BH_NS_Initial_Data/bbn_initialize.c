@@ -27,6 +27,89 @@ Grid_T *bbn_initialize_next_grid(Grid_T *const grid_prev)
   return grid_next;   
 }
 
+/* creating all of the fields needed for construction of Initial Data */
+static void create_fields(Grid_T *const grid)
+{
+  unsigned p;
+  
+  FOR_ALL_PATCHES(p,grid)
+  {
+    Patch_T *patch = grid->patch[p];
+    
+    /* only if the patch covers a part of the NS add the following fields */
+    if (IsNSPatch(patch))
+    {
+      /* scalar for the irrotational part of fluid i.e h*u = dphi+W in NS */
+      add_field("phi",0,patch,YES);
+      
+      /* enthalpy in NS */
+      add_field("h",0,patch,YES);
+      
+      /* rest mass density in NS */
+      add_field("rho0",0,patch,YES);
+    }
+    
+    /* conformal factor */
+    add_field("psi",0,patch,YES);
+    
+    /* lapse */
+    add_field("alpha",0,patch,YES);
+    
+    /* eta = lapse * psi */
+    add_field("eta",0,patch,YES);
+    
+    /* shift, betha^i = B^i+omega*(-y+y_CM,x,0)+v_r/D*(x,y-y_CM) */
+    add_field("B_U1",0,patch,YES);
+    add_field("B_U2",0,patch,YES);
+    add_field("B_U3",0,patch,YES);
+    
+    /* conformal metric: _gamma_DiDj */
+    add_field("_gamma_D1D1",0,patch,YES);
+    add_field("_gamma_D1D2",0,patch,YES);
+    add_field("_gamma_D1D3",0,patch,YES);
+    add_field("_gamma_D2D2",0,patch,YES);
+    add_field("_gamma_D2D3",0,patch,YES);
+    add_field("_gamma_D3D3",0,patch,YES);
+    
+    /* conformal metric _gamma_UiUj */
+    add_field("_gamma_U1U1",0,patch,YES);
+    add_field("_gamma_U1U2",0,patch,YES);
+    add_field("_gamma_U1U3",0,patch,YES);
+    add_field("_gamma_U2U2",0,patch,YES);
+    add_field("_gamma_U2U3",0,patch,YES);
+    add_field("_gamma_U3U3",0,patch,YES);
+    
+    /* Christofer symbols made up of conformal metric */
+    add_field("_Gamma_U1D1D1",0,patch,YES);
+    add_field("_Gamma_U1D1D2",0,patch,YES);
+    add_field("_Gamma_U1D1D3",0,patch,YES);
+    add_field("_Gamma_U1D2D2",0,patch,YES);
+    add_field("_Gamma_U1D2D3",0,patch,YES);
+    add_field("_Gamma_U1D3D3",0,patch,YES);
+    
+    add_field("_Gamma_U2D1D1",0,patch,YES);
+    add_field("_Gamma_U2D1D2",0,patch,YES);
+    add_field("_Gamma_U2D1D3",0,patch,YES);
+    add_field("_Gamma_U2D2D2",0,patch,YES);
+    add_field("_Gamma_U2D2D3",0,patch,YES);
+    add_field("_Gamma_U2D3D3",0,patch,YES);
+    
+    add_field("_Gamma_U3D1D1",0,patch,YES);
+    add_field("_Gamma_U3D1D2",0,patch,YES);
+    add_field("_Gamma_U3D1D3",0,patch,YES);
+    add_field("_Gamma_U3D2D2",0,patch,YES);
+    add_field("_Gamma_U3D2D3",0,patch,YES);
+    add_field("_Gamma_U3D3D3",0,patch,YES);
+    
+    /* Ricci scalar made up of conformal metric _gamma */
+    add_field("_R",0,patch,YES);
+    
+    /* extrinsic curvature */
+    add_field("K",0,patch,YES);
+    
+  }
+}
+
 /* use TOV and Kerr-Schil black hole approximation.
 // ->return value: resultant grid from this approximation */
 static Grid_T *TOV_KerrShild_approximation(void)
@@ -57,11 +140,22 @@ static Grid_T *TOV_KerrShild_approximation(void)
   /* combining these two geometry to create the grid */
   grid = creat_grid_TOV_KerrShild(ns_R,bh_R,bh_chi*bh_mass/* a = chi*M */);
   
+  /* creating all of the fields needed for construction of Initial Data */
+  create_fields(grid);
+  
   /* initialize the fields using TOV and Kerr-Shild solution */
-  //initializing_fields();
+  init_field_TOV_plus_KerrSchild(grid);
+  
   TOV_free(tov);
   
   return grid;
+}
+
+/* initialize the fields using TOV and Kerr-Shild solution.
+// the idea is to superimpose two fields of each solution. */
+static void init_field_TOV_plus_KerrSchild(Grid_T *const grid)
+{
+  UNUSED(grid);
 }
 
 /* given the radius of NS and BH and their separation,
@@ -415,3 +509,20 @@ static void NS_BH_surface_CubedSpherical_grid(Grid_T *const grid,const double R_
   free(R);
 }
 
+/* ->return value: if the patch covers a part of the NS 1, otherwise 0 */
+static unsigned IsNSPatch(const Patch_T *const patch)
+{
+  unsigned ret = 0;
+  
+  if (strstr(patch->name,"left_centeral_box") || 
+      strstr(patch->name,"left_NS_up")        ||
+      strstr(patch->name,"left_NS_down")      ||
+      strstr(patch->name,"left_NS_back")      ||
+      strstr(patch->name,"left_NS_front")     ||
+      strstr(patch->name,"left_NS_left")      ||
+      strstr(patch->name,"left_NS_right")     
+     )
+     ret = 1;
+     
+  return ret;
+}
