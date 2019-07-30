@@ -12,6 +12,7 @@ static void NS_BH_surface_CubedSpherical_grid(Grid_T *const grid,const double R_
 static void init_field_TOV_plus_KerrSchild(Grid_T *const grid);
 static unsigned IsNSPatch(const Patch_T *const patch);
 static void create_fields(Grid_T *const grid);
+void populate_free_data(Grid_T *const grid);
 
 
 

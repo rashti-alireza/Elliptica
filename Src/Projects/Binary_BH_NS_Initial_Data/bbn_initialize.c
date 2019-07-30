@@ -71,15 +71,15 @@ static void create_fields(Grid_T *const grid)
     add_field("_gamma_D2D3",0,patch,YES);
     add_field("_gamma_D3D3",0,patch,YES);
     
-    /* conformal metric _gamma_UiUj */
-    add_field("_gamma_U1U1",0,patch,YES);
-    add_field("_gamma_U1U2",0,patch,YES);
-    add_field("_gamma_U1U3",0,patch,YES);
-    add_field("_gamma_U2U2",0,patch,YES);
-    add_field("_gamma_U2U3",0,patch,YES);
-    add_field("_gamma_U3U3",0,patch,YES);
+    /* conformal metric inverse _gammaI_UiUj I stands for inverse */
+    add_field("_gammaI_U1U1",0,patch,YES);
+    add_field("_gammaI_U1U2",0,patch,YES);
+    add_field("_gammaI_U1U3",0,patch,YES);
+    add_field("_gammaI_U2U2",0,patch,YES);
+    add_field("_gammaI_U2U3",0,patch,YES);
+    add_field("_gammaI_U3U3",0,patch,YES);
     
-    /* Christofer symbols made up of conformal metric */
+    /* Christoffer symbols made up of conformal metric */
     add_field("_Gamma_U1D1D1",0,patch,YES);
     add_field("_Gamma_U1D1D2",0,patch,YES);
     add_field("_Gamma_U1D1D3",0,patch,YES);
@@ -142,6 +142,9 @@ static Grid_T *TOV_KerrShild_approximation(void)
   
   /* creating all of the fields needed for construction of Initial Data */
   create_fields(grid);
+  
+  /* populating the free data part of initial data that we chose ourself */
+  populate_free_data(grid);
   
   /* initialize the fields using TOV and Kerr-Shild solution */
   init_field_TOV_plus_KerrSchild(grid);
