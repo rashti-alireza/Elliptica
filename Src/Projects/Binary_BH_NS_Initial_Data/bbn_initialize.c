@@ -59,47 +59,45 @@ static void create_fields(Grid_T *const grid)
     add_field("eta",0,patch,YES);
     
     /* shift, betha^i = B^i+omega*(-y+y_CM,x,0)+v_r/D*(x,y-y_CM) */
+    add_field("B_U0",0,patch,YES);
     add_field("B_U1",0,patch,YES);
     add_field("B_U2",0,patch,YES);
-    add_field("B_U3",0,patch,YES);
     
     /* conformal metric: _gamma_DiDj */
-    add_field("_gamma_D1D1",0,patch,YES);
-    add_field("_gamma_D1D2",0,patch,YES);
-    add_field("_gamma_D1D3",0,patch,YES);
-    add_field("_gamma_D2D2",0,patch,YES);
-    add_field("_gamma_D2D3",0,patch,YES);
-    add_field("_gamma_D3D3",0,patch,YES);
-    
+    ADD_FIELD(_gamma_D2D2)
+    ADD_FIELD(_gamma_D0D2)
+    ADD_FIELD(_gamma_D0D0)
+    ADD_FIELD(_gamma_D0D1)
+    ADD_FIELD(_gamma_D1D2)
+    ADD_FIELD(_gamma_D1D1)
+
     /* conformal metric inverse _gammaI_UiUj I stands for inverse */
-    add_field("_gammaI_U1U1",0,patch,YES);
-    add_field("_gammaI_U1U2",0,patch,YES);
-    add_field("_gammaI_U1U3",0,patch,YES);
-    add_field("_gammaI_U2U2",0,patch,YES);
-    add_field("_gammaI_U2U3",0,patch,YES);
-    add_field("_gammaI_U3U3",0,patch,YES);
-    
+    ADD_FIELD(_gammaI_U0U2)
+    ADD_FIELD(_gammaI_U0U0)
+    ADD_FIELD(_gammaI_U0U1)
+    ADD_FIELD(_gammaI_U1U2)
+    ADD_FIELD(_gammaI_U1U1)
+    ADD_FIELD(_gammaI_U2U2)
+
     /* Christoffer symbols made up of conformal metric */
-    add_field("_Gamma_U1D1D1",0,patch,YES);
-    add_field("_Gamma_U1D1D2",0,patch,YES);
-    add_field("_Gamma_U1D1D3",0,patch,YES);
-    add_field("_Gamma_U1D2D2",0,patch,YES);
-    add_field("_Gamma_U1D2D3",0,patch,YES);
-    add_field("_Gamma_U1D3D3",0,patch,YES);
-    
-    add_field("_Gamma_U2D1D1",0,patch,YES);
-    add_field("_Gamma_U2D1D2",0,patch,YES);
-    add_field("_Gamma_U2D1D3",0,patch,YES);
-    add_field("_Gamma_U2D2D2",0,patch,YES);
-    add_field("_Gamma_U2D2D3",0,patch,YES);
-    add_field("_Gamma_U2D3D3",0,patch,YES);
-    
-    add_field("_Gamma_U3D1D1",0,patch,YES);
-    add_field("_Gamma_U3D1D2",0,patch,YES);
-    add_field("_Gamma_U3D1D3",0,patch,YES);
-    add_field("_Gamma_U3D2D2",0,patch,YES);
-    add_field("_Gamma_U3D2D3",0,patch,YES);
-    add_field("_Gamma_U3D3D3",0,patch,YES);
+    ADD_FIELD(_Gamma_U2D1D1)
+    ADD_FIELD(_Gamma_U2D1D2)
+    ADD_FIELD(_Gamma_U0D1D1)
+    ADD_FIELD(_Gamma_U2D0D2)
+    ADD_FIELD(_Gamma_U2D2D2)
+    ADD_FIELD(_Gamma_U0D1D2)
+    ADD_FIELD(_Gamma_U0D0D2)
+    ADD_FIELD(_Gamma_U0D0D1)
+    ADD_FIELD(_Gamma_U0D0D0)
+    ADD_FIELD(_Gamma_U1D2D2)
+    ADD_FIELD(_Gamma_U2D0D1)
+    ADD_FIELD(_Gamma_U0D2D2)
+    ADD_FIELD(_Gamma_U2D0D0)
+    ADD_FIELD(_Gamma_U1D0D2)
+    ADD_FIELD(_Gamma_U1D1D2)
+    ADD_FIELD(_Gamma_U1D0D0)
+    ADD_FIELD(_Gamma_U1D0D1)
+    ADD_FIELD(_Gamma_U1D1D1)
     
     /* Ricci scalar made up of conformal metric _gamma */
     add_field("_R",0,patch,YES);
