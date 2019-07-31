@@ -3,6 +3,10 @@
 #include "coordinates_lib.h"
 #include "memory_managing_lib.h"
 #include "utilities_lib.h"
+#include "maths_calculus_lib.h"
 
 void populate_free_data(Grid_T *const grid);
 static void _gammas(Grid_T *const grid);
+static void free_conformal_metric_derivatives(Grid_T *const grid);
+static void preparing_conformal_metric_derivatives(Grid_T *const grid);
+
