@@ -13,10 +13,11 @@
 #define FOR_ALL_PATCHES(n,grid) for ((n) = 0; (n) < grid->np; ++(n))/* loop over all patches of the given grid */
 #define FOR_ALL_POINTS(n,patch) for ((n) = 0; (n) < patch->nn; ++(n))/* loop over all points of the given patch */
 #define FOR_ALL(x,y) for((x) = 0; y[x] != 0; (x)++)
-#define ADD_FIELD(name)      add_field(#name,0,patch,YES);
-#define REMOVE_FIELD(name)   remove_field(name);
-#define DECLARE_FIELD(name)  Field_T *const name = patch->pool[Ind(#name)];
-#define GET_FIELD(name)      double *const name = patch->pool[Ind(#name)]->v;
+#define ADD_FIELD(name)      add_field(#name,0,patch,YES);/* add field to patch->pool and alloc memory */
+#define ADD_FIELD_NoMem(name)      add_field(#name,0,patch,NO);/* add field to patch->pool BUT not alloc memory */
+#define REMOVE_FIELD(name)   remove_field(name);/* remove the field utterly */
+#define DECLARE_FIELD(name)  Field_T *const name = patch->pool[Ind(#name)];/* access to the whole field */
+#define GET_FIELD(name)      double *const name = patch->pool[Ind(#name)]->v;/* access to the memory values */
 #define GetParameterS(x)   get_parameter_value_S(x,__FILE__,__LINE__,NONE)
 #define GetParameterI(x)   get_parameter_value_I(x,__FILE__,__LINE__,NONE)
 #define GetParameterD(x)   get_parameter_value_D(x,__FILE__,__LINE__,NONE)
