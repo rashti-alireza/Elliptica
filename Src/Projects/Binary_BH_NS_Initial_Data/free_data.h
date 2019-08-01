@@ -10,5 +10,7 @@ static void _gammas(Grid_T *const grid);
 static void free_conformal_metric_derivatives(Patch_T *const patch);
 static void preparing_conformal_metric_derivatives(Patch_T *const patch);
 static void _Gamma(Grid_T *const grid);
+static void _dGamma(Grid_T *const grid);
+
 
 
