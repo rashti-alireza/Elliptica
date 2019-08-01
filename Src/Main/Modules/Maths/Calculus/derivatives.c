@@ -8,8 +8,40 @@
 #define COMMA ','
 #define MAX_STR_LEN 100
 
+/* Covariant Derivative function.
+// it takes covariant derivative of a given field.
+//
+// usage examples: 
+// ==============
+// double *Dphi     = Covariant_Derivative(phi,"x");// => d(phi)/dx
+// double *DxA_U2   = Covariant_Derivative(A_U2,"x");// => D(A_U2)/Dx = d(A(2))/dx + Gamma(2,0,k)*A(-k)
+// double *DzB_U1D0 = Covariant_Derivative(B_U1D2,"z");// => D(B_U1D2)/Dz = d(B(1,2))/dz + Gamma(1,2,k)*B(-k,2) - Gamma(k,2,2)*B(1,-k)
+//
+// NOTE1 : each field has been defined on just one patch.
+// NOTE2 : this function allocate memory for the result.
+// NOTE3 : "x","y","z" are Cartesian coords
+*/
+double *Covariant_Derivative(Field_T *const f,const char *task)
+{
+  /* The idea is to take the name of the field and then make the possible
+  // strings from its different components, e.g, in case f->name = "A_U1D2" 
+  // we need all component "A_U?D?", having made strings then
+  // a function can calculate the partial derivativce part and a loop can calculate
+  // Gamma*A_U?D? parts for each index. */
+  UNUSED(f);
+  UNUSED(task);
+  abortEr(NO_JOB);
+  return 0;
+}
+
 /* partial derivative function. it takes partial derivative for each field
-// according to the task and return the result. 
+// according to the task and return the result.
+//
+// usage example:
+// ==============
+// double *dphi = Partial_Derivative(phi,"x"); //=> taking d(phi)/dx
+//
+//
 // NOTE1 : each field has been defined on just one patch.
 // NOTE2 : this function also in case of spectral derivative makes the 
 // spectral coefficients and save them in f->v2;
