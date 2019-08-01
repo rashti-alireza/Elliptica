@@ -24,7 +24,7 @@ void populate_free_data(Grid_T *const grid)
   printf("Partial derivatives of _Gamma    ~> Done.\n");
   
   /* Ricci scalar made up of conformal metric _gamma */
-  //_Ricci(grid);
+  _Ricci(grid);
   printf("Ricci scalar (_R)                ~> Done.\n");
   
   /* extrinsic curvature */
@@ -35,7 +35,6 @@ void populate_free_data(Grid_T *const grid)
   pr_clock();
   pr_line_custom('=');
 }
-
 
 /* partial derivtive of _Gamma, used in covariant derivative and _R */
 static void _dGamma(Grid_T *const grid)
@@ -592,5 +591,156 @@ _dgamma_D0D2D1[ijk] - _dgamma_D1D2D0[ijk]);
     _Gamma_U1D1D1[ijk] = GAMMA_U1D1D1;
     }/*end of for(ijk = 0; ijk < nn; ++ijk)*/
     free_conformal_metric_derivatives(patch);
+  }
+}
+
+/* Ricci scalar */
+static void _Ricci(Grid_T *const grid)
+{
+  const unsigned np = grid->np;
+  unsigned p;
+
+  OpenMP_1d_Pragma(omp parallel for)
+  for(p = 0; p < np; ++p)
+  {
+    Patch_T *patch = grid->patch[p];
+
+    /* declaring: */
+    GET_FIELD(_gammaI_U0U2)
+    GET_FIELD(_gammaI_U0U0)
+    GET_FIELD(_gammaI_U0U1)
+    GET_FIELD(_gammaI_U1U2)
+    GET_FIELD(_gammaI_U1U1)
+    GET_FIELD(_gammaI_U2U2)
+    GET_FIELD(_dGamma_U2D2D2D0)
+    GET_FIELD(_dGamma_U2D2D2D1)
+    GET_FIELD(_dGamma_U2D0D0D2)
+    GET_FIELD(_dGamma_U1D1D2D2)
+    GET_FIELD(_dGamma_U1D1D2D0)
+    GET_FIELD(_dGamma_U1D1D2D1)
+    GET_FIELD(_dGamma_U2D0D2D1)
+    GET_FIELD(_dGamma_U1D0D1D0)
+    GET_FIELD(_dGamma_U1D0D1D1)
+    GET_FIELD(_dGamma_U1D0D1D2)
+    GET_FIELD(_dGamma_U1D2D2D1)
+    GET_FIELD(_dGamma_U1D0D0D1)
+    GET_FIELD(_dGamma_U0D1D2D0)
+    GET_FIELD(_dGamma_U2D0D2D0)
+    GET_FIELD(_dGamma_U1D0D2D1)
+    GET_FIELD(_dGamma_U2D1D1D2)
+    GET_FIELD(_dGamma_U2D0D2D2)
+    GET_FIELD(_dGamma_U0D0D1D0)
+    GET_FIELD(_dGamma_U2D1D2D1)
+    GET_FIELD(_dGamma_U2D0D1D2)
+    GET_FIELD(_dGamma_U2D1D2D2)
+    GET_FIELD(_dGamma_U0D1D1D0)
+    GET_FIELD(_dGamma_U1D1D1D0)
+    GET_FIELD(_dGamma_U1D1D1D2)
+    GET_FIELD(_dGamma_U0D0D1D1)
+    GET_FIELD(_dGamma_U0D0D2D2)
+    GET_FIELD(_dGamma_U0D0D2D0)
+    GET_FIELD(_dGamma_U0D0D2D1)
+    GET_FIELD(_dGamma_U2D1D2D0)
+    GET_FIELD(_dGamma_U0D0D0D1)
+    GET_FIELD(_dGamma_U0D0D0D2)
+    GET_FIELD(_dGamma_U0D2D2D0)
+    GET_FIELD(_dGamma_U0D0D1D2)
+    GET_FIELD(_Gamma_U2D1D1)
+    GET_FIELD(_Gamma_U2D1D2)
+    GET_FIELD(_Gamma_U0D1D1)
+    GET_FIELD(_Gamma_U2D0D2)
+    GET_FIELD(_Gamma_U2D2D2)
+    GET_FIELD(_Gamma_U0D1D2)
+    GET_FIELD(_Gamma_U0D0D2)
+    GET_FIELD(_Gamma_U0D0D1)
+    GET_FIELD(_Gamma_U0D0D0)
+    GET_FIELD(_Gamma_U1D2D2)
+    GET_FIELD(_Gamma_U2D0D1)
+    GET_FIELD(_Gamma_U0D2D2)
+    GET_FIELD(_Gamma_U2D0D0)
+    GET_FIELD(_Gamma_U1D0D2)
+    GET_FIELD(_Gamma_U1D1D2)
+    GET_FIELD(_Gamma_U1D0D0)
+    GET_FIELD(_Gamma_U1D0D1)
+    GET_FIELD(_Gamma_U1D1D1)
+
+
+    unsigned nn = patch->nn;
+    unsigned ijk;
+    GET_FIELD(_R)
+    for(ijk = 0; ijk < nn; ++ijk)
+    {
+    double R = 
+_gammaI_U0U0[ijk]*(_Gamma_U0D0D0[ijk]*_Gamma_U1D0D1[ijk] +
+_Gamma_U0D0D0[ijk]*_Gamma_U2D0D2[ijk] - _Gamma_U0D0D1[ijk]*
+_Gamma_U1D0D0[ijk] - _Gamma_U0D0D2[ijk]*_Gamma_U2D0D0[ijk] +
+_Gamma_U1D0D0[ijk]*_Gamma_U1D1D1[ijk] + _Gamma_U1D0D0[ijk]*
+_Gamma_U2D1D2[ijk] - pow(_Gamma_U1D0D1[ijk], 2) - 2.0*
+_Gamma_U1D0D2[ijk]*_Gamma_U2D0D1[ijk] + _Gamma_U1D1D2[ijk]*
+_Gamma_U2D0D0[ijk] + _Gamma_U2D0D0[ijk]*_Gamma_U2D2D2[ijk] -
+pow(_Gamma_U2D0D2[ijk], 2) + _dGamma_U1D0D0D1[ijk] -
+_dGamma_U1D0D1D0[ijk] + _dGamma_U2D0D0D2[ijk] - _dGamma_U2D0D2D0[ijk]) +
+_gammaI_U0U1[ijk]*(_Gamma_U0D0D1[ijk]*_Gamma_U1D0D1[ijk] +
+_Gamma_U0D0D1[ijk]*_Gamma_U2D0D2[ijk] - _Gamma_U0D1D1[ijk]*
+_Gamma_U1D0D0[ijk] - _Gamma_U0D1D2[ijk]*_Gamma_U2D0D0[ijk] +
+_Gamma_U1D0D1[ijk]*_Gamma_U2D1D2[ijk] - _Gamma_U1D0D2[ijk]*
+_Gamma_U2D1D1[ijk] + _Gamma_U2D0D1[ijk]*_Gamma_U2D2D2[ijk] -
+_Gamma_U2D0D2[ijk]*_Gamma_U2D1D2[ijk] - _dGamma_U0D0D0D1[ijk] +
+_dGamma_U0D0D1D0[ijk] + _dGamma_U2D0D1D2[ijk] - _dGamma_U2D0D2D1[ijk]) +
+_gammaI_U0U1[ijk]*(_Gamma_U0D0D1[ijk]*_Gamma_U1D0D1[ijk] +
+_Gamma_U0D0D1[ijk]*_Gamma_U2D0D2[ijk] - _Gamma_U0D1D1[ijk]*
+_Gamma_U1D0D0[ijk] - _Gamma_U0D1D2[ijk]*_Gamma_U2D0D0[ijk] +
+_Gamma_U1D0D1[ijk]*_Gamma_U2D1D2[ijk] - _Gamma_U1D0D2[ijk]*
+_Gamma_U2D1D1[ijk] + _Gamma_U2D0D1[ijk]*_Gamma_U2D2D2[ijk] -
+_Gamma_U2D0D2[ijk]*_Gamma_U2D1D2[ijk] + _dGamma_U1D0D1D1[ijk] -
+_dGamma_U1D1D1D0[ijk] + _dGamma_U2D0D1D2[ijk] - _dGamma_U2D1D2D0[ijk]) +
+_gammaI_U0U2[ijk]*(_Gamma_U0D0D2[ijk]*_Gamma_U1D0D1[ijk] +
+_Gamma_U0D0D2[ijk]*_Gamma_U2D0D2[ijk] - _Gamma_U0D1D2[ijk]*
+_Gamma_U1D0D0[ijk] - _Gamma_U0D2D2[ijk]*_Gamma_U2D0D0[ijk] -
+_Gamma_U1D0D1[ijk]*_Gamma_U1D1D2[ijk] + _Gamma_U1D0D2[ijk]*
+_Gamma_U1D1D1[ijk] + _Gamma_U1D1D2[ijk]*_Gamma_U2D0D2[ijk] -
+_Gamma_U1D2D2[ijk]*_Gamma_U2D0D1[ijk] - _dGamma_U0D0D0D2[ijk] +
+_dGamma_U0D0D2D0[ijk] - _dGamma_U1D0D1D2[ijk] + _dGamma_U1D0D2D1[ijk]) +
+_gammaI_U0U2[ijk]*(_Gamma_U0D0D2[ijk]*_Gamma_U1D0D1[ijk] +
+_Gamma_U0D0D2[ijk]*_Gamma_U2D0D2[ijk] - _Gamma_U0D1D2[ijk]*
+_Gamma_U1D0D0[ijk] - _Gamma_U0D2D2[ijk]*_Gamma_U2D0D0[ijk] -
+_Gamma_U1D0D1[ijk]*_Gamma_U1D1D2[ijk] + _Gamma_U1D0D2[ijk]*
+_Gamma_U1D1D1[ijk] + _Gamma_U1D1D2[ijk]*_Gamma_U2D0D2[ijk] -
+_Gamma_U1D2D2[ijk]*_Gamma_U2D0D1[ijk] + _dGamma_U1D0D2D1[ijk] -
+_dGamma_U1D1D2D0[ijk] + _dGamma_U2D0D2D2[ijk] - _dGamma_U2D2D2D0[ijk]) +
+_gammaI_U1U1[ijk]*(_Gamma_U0D0D0[ijk]*_Gamma_U0D1D1[ijk] -
+pow(_Gamma_U0D0D1[ijk], 2) + _Gamma_U0D0D1[ijk]*_Gamma_U1D1D1[ijk] +
+_Gamma_U0D0D2[ijk]*_Gamma_U2D1D1[ijk] - _Gamma_U0D1D1[ijk]*
+_Gamma_U1D0D1[ijk] + _Gamma_U0D1D1[ijk]*_Gamma_U2D0D2[ijk] - 2.0*
+_Gamma_U0D1D2[ijk]*_Gamma_U2D0D1[ijk] + _Gamma_U1D1D1[ijk]*
+_Gamma_U2D1D2[ijk] - _Gamma_U1D1D2[ijk]*_Gamma_U2D1D1[ijk] +
+_Gamma_U2D1D1[ijk]*_Gamma_U2D2D2[ijk] - pow(_Gamma_U2D1D2[ijk], 2) -
+_dGamma_U0D0D1D1[ijk] + _dGamma_U0D1D1D0[ijk] + _dGamma_U2D1D1D2[ijk] -
+_dGamma_U2D1D2D1[ijk]) + _gammaI_U1U2[ijk]*(_Gamma_U0D0D0[ijk]*
+_Gamma_U0D1D2[ijk] - _Gamma_U0D0D1[ijk]*_Gamma_U0D0D2[ijk] +
+_Gamma_U0D0D1[ijk]*_Gamma_U1D1D2[ijk] + _Gamma_U0D0D2[ijk]*
+_Gamma_U2D1D2[ijk] - _Gamma_U0D1D1[ijk]*_Gamma_U1D0D2[ijk] -
+_Gamma_U0D2D2[ijk]*_Gamma_U2D0D1[ijk] + _Gamma_U1D1D2[ijk]*
+_Gamma_U2D1D2[ijk] - _Gamma_U1D2D2[ijk]*_Gamma_U2D1D1[ijk] -
+_dGamma_U0D0D1D2[ijk] + _dGamma_U0D1D2D0[ijk] - _dGamma_U1D1D1D2[ijk] +
+_dGamma_U1D1D2D1[ijk]) + _gammaI_U1U2[ijk]*(_Gamma_U0D0D0[ijk]*
+_Gamma_U0D1D2[ijk] - _Gamma_U0D0D1[ijk]*_Gamma_U0D0D2[ijk] +
+_Gamma_U0D0D1[ijk]*_Gamma_U1D1D2[ijk] + _Gamma_U0D0D2[ijk]*
+_Gamma_U2D1D2[ijk] - _Gamma_U0D1D1[ijk]*_Gamma_U1D0D2[ijk] -
+_Gamma_U0D2D2[ijk]*_Gamma_U2D0D1[ijk] + _Gamma_U1D1D2[ijk]*
+_Gamma_U2D1D2[ijk] - _Gamma_U1D2D2[ijk]*_Gamma_U2D1D1[ijk] -
+_dGamma_U0D0D2D1[ijk] + _dGamma_U0D1D2D0[ijk] + _dGamma_U2D1D2D2[ijk] -
+_dGamma_U2D2D2D1[ijk]) + _gammaI_U2U2[ijk]*(_Gamma_U0D0D0[ijk]*
+_Gamma_U0D2D2[ijk] + _Gamma_U0D0D1[ijk]*_Gamma_U1D2D2[ijk] -
+pow(_Gamma_U0D0D2[ijk], 2) + _Gamma_U0D0D2[ijk]*_Gamma_U2D2D2[ijk] -
+2.0*_Gamma_U0D1D2[ijk]*_Gamma_U1D0D2[ijk] + _Gamma_U0D2D2[ijk]*
+_Gamma_U1D0D1[ijk] - _Gamma_U0D2D2[ijk]*_Gamma_U2D0D2[ijk] +
+_Gamma_U1D1D1[ijk]*_Gamma_U1D2D2[ijk] - pow(_Gamma_U1D1D2[ijk], 2) +
+_Gamma_U1D1D2[ijk]*_Gamma_U2D2D2[ijk] - _Gamma_U1D2D2[ijk]*
+_Gamma_U2D1D2[ijk] - _dGamma_U0D0D2D2[ijk] + _dGamma_U0D2D2D0[ijk] -
+_dGamma_U1D1D2D2[ijk] + _dGamma_U1D2D2D1[ijk]);
+
+      _R[ijk] = R;
+    }/*end of for(ijk = 0; ijk < nn; ++ijk)*/
   }
 }
