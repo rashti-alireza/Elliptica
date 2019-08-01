@@ -43,7 +43,7 @@ int Binary_BH_NS_Initial_Data(void)
     //bbn_construct_initial_data(grid_next);
     
     /* study and analyse the new grid */
-    //bbn_study_initial_data(grid_new);
+    //bbn_study_initial_data(grid_next);
     
     grid_prev = grid_next;
   }
