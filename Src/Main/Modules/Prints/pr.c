@@ -67,7 +67,7 @@ void pr_clock(void)
 {
   time_t now = time(0);
   double t = difftime(now,initial_time_global);
-  printf("\nCLOCK: [%f Second(s)] = [%f Minute(s)]\n\n",t,t/60.);
+  printf("\nCLOCK: [%.0f Second(s)] = [%.1f Minute(s)]\n\n",t,t/60.);
   
 }
 
