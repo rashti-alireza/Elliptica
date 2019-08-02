@@ -43,25 +43,34 @@ static void create_fields(Grid_T *const grid)
       add_field("phi",0,patch,YES);
       
       /* enthalpy in NS */
-      add_field("h",0,patch,YES);
+      add_field("enthalpy",0,patch,YES);
       
       /* rest mass density in NS */
       add_field("rho0",0,patch,YES);
+      
+      /* spin part of fluid W^i */
+      add_field("W_U0",0,patch,YES);
+      add_field("W_U1",0,patch,YES);
+      add_field("W_U2",0,patch,YES);
+    
     }
     
     /* conformal factor */
     add_field("psi",0,patch,YES);
     
-    /* lapse */
-    add_field("alpha",0,patch,YES);
-    
     /* eta = lapse * psi */
     add_field("eta",0,patch,YES);
     
-    /* shift, betha^i = B^i+omega*(-y+y_CM,x,0)+v_r/D*(x,y-y_CM) */
-    add_field("B_U0",0,patch,YES);
-    add_field("B_U1",0,patch,YES);
-    add_field("B_U2",0,patch,YES);
+    /* shift, Beta^i = B0^i+B1^i, B1^i = omega*(-y+y_CM,x,0)+v_r/D*(x,y-y_CM) */
+    add_field("B0_U0",0,patch,YES);
+    add_field("B0_U1",0,patch,YES);
+    add_field("B0_U2",0,patch,YES);
+    add_field("B1_U0",0,patch,YES);
+    add_field("B1_U1",0,patch,YES);
+    add_field("B1_U2",0,patch,YES);
+    add_field("Beta_U0",0,patch,YES);
+    add_field("Beta_U1",0,patch,YES);
+    add_field("Beta_U2",0,patch,YES);
     
     /* conformal metric: _gamma_DiDj */
     ADD_FIELD(_gamma_D2D2)
@@ -201,7 +210,7 @@ static Grid_T *TOV_KerrShild_approximation(void)
   populate_free_data(grid);
   
   /* initialize the fields using TOV and Kerr-Shild solution */
-  init_field_TOV_plus_KerrSchild(grid);
+  init_field_TOV_plus_KerrSchild(grid,tov,bh_chi*bh_mass,bh_mass);
   
   TOV_free(tov);
   
@@ -210,9 +219,267 @@ static Grid_T *TOV_KerrShild_approximation(void)
 
 /* initialize the fields using TOV and Kerr-Shild solution.
 // the idea is to superimpose two fields of each solution. */
-static void init_field_TOV_plus_KerrSchild(Grid_T *const grid)
+static void init_field_TOV_plus_KerrSchild(Grid_T *const grid,const TOV_T *const tov, const double a_BH, const double M_BH)
 {
-  UNUSED(grid);
+  pr_line_custom('=');
+  printf("Initializing the fields using TOV and Kerr-Shild solution ...\n");
+
+  const unsigned np = grid->np;
+  const double M_NS = tov->ADM_m;
+  const double D = GetParameterD_E("BH_NS_separation");
+  const double C_BH = 0.5*GetParameterD_E("BH_NS_separation");
+  const double C_NS = -C_BH;
+  const double R_Schwar = tov->r[tov->N-1];
+  const double a2_BH = SQR(a_BH);
+  const double y_CM = (M_NS*C_NS+M_BH*C_BH)/(M_NS+M_BH);
+  const double Omega_BHNS = GetParameterD_E("BH_NS_orbital_angular_velocity");
+  const double Omega_NS_x = GetParameterD_E("NS_spin_vector_x");
+  const double Omega_NS_y = GetParameterD_E("NS_spin_vector_y");
+  const double Omega_NS_z = GetParameterD_E("NS_spin_vector_z");
+  const double Vr = GetParameterD_E("BH_NS_infall_velocity");
+  unsigned p;
+  
+  add_parameter_double("NS_Center",C_NS);
+  add_parameter_double("y_CM",y_CM);
+  
+  /* black hole parts */
+  for (p = 0; p < np; ++p)
+  {
+    Patch_T *patch = grid->patch[p];
+    unsigned nn = patch->nn;
+    unsigned ijk;
+    
+    GET_FIELD(Beta_U0)
+    GET_FIELD(Beta_U1)
+    GET_FIELD(Beta_U2)
+    GET_FIELD(_gammaI_U0U2)
+    GET_FIELD(_gammaI_U0U0)
+    GET_FIELD(_gammaI_U0U1)
+    GET_FIELD(_gammaI_U1U2)
+    GET_FIELD(_gammaI_U1U1)
+    GET_FIELD(_gammaI_U2U2)
+
+    ADD_FIELD(KSbeta_D0)
+    ADD_FIELD(KSbeta_D1)
+    ADD_FIELD(KSbeta_D2)
+    GET_FIELD(KSbeta_D0)
+    GET_FIELD(KSbeta_D1)
+    GET_FIELD(KSbeta_D2)
+    
+    ADD_FIELD(KSalpha)
+    GET_FIELD(KSalpha)
+    
+    /* beta and alpha needed */
+    for (ijk = 0; ijk < nn; ++ijk)
+    {
+      double x   = patch->node[ijk]->x[0];
+      double y   = patch->node[ijk]->x[1]-C_BH;
+      double z   = patch->node[ijk]->x[2];
+      double r2 = SQR(x)+SQR(y)+SQR(z);
+      double rbar2  = 0.5*(r2-a2_BH+sqrt(SQR(r2-a2_BH)+4*a2_BH*SQR(z)));
+      double rbar   = sqrt(rbar2);
+      double k0 = (rbar*x+a_BH*y)/(rbar2+a2_BH);
+      double k1 = (rbar*y-a_BH*x)/(rbar2+a2_BH);
+      double k2 = z/rbar;
+      double H  = M_BH*rbar/(rbar2+a2_BH*SQR(k2));
+      double C = 2.*H;
+      
+      KSalpha[ijk] = 1/sqrt(1+C);
+      KSbeta_D0[ijk]  = C*k0;
+      KSbeta_D1[ijk]  = C*k1;
+      KSbeta_D2[ijk]  = C*k2;
+      
+      /* note the followings are multiplied by _gammaI, 
+      // they need also multiplication by (psi)^-4 to make it gammaI */
+      double shift_U0 = 
+KSbeta_D0[ijk]*_gammaI_U0U0[ijk] + KSbeta_D1[ijk]*_gammaI_U0U1[ijk] + 
+KSbeta_D2[ijk]*_gammaI_U0U2[ijk];
+
+      double shift_U1 = 
+KSbeta_D0[ijk]*_gammaI_U0U1[ijk] + KSbeta_D1[ijk]*_gammaI_U1U1[ijk] + 
+KSbeta_D2[ijk]*_gammaI_U1U2[ijk];
+
+      double shift_U2 = 
+KSbeta_D0[ijk]*_gammaI_U0U2[ijk] + KSbeta_D1[ijk]*_gammaI_U1U2[ijk] + 
+KSbeta_D2[ijk]*_gammaI_U2U2[ijk];
+
+
+      /* populating: */
+      Beta_U1[ijk] = shift_U1;
+      Beta_U0[ijk] = shift_U0;
+      Beta_U2[ijk] = shift_U2;
+      
+    }
+    
+  }/* end of black hole part */
+  
+  /* initialization psi, eta and matter fields: */
+  for (p = 0; p < np; ++p)
+  {
+    Patch_T *patch = grid->patch[p];
+    unsigned nn = patch->nn;
+    unsigned ijk;
+    
+    GET_FIELD(psi)
+    GET_FIELD(eta)
+    GET_FIELD(KSalpha)
+    
+    if (IsNSPatch(patch))
+    {
+      Interpolation_T *interp_psi = init_interpolation();
+      interp_psi->method          = "Natural_Cubic_Spline_1D";
+      interp_psi->N_cubic_spline_1d->f = tov->psi;
+      interp_psi->N_cubic_spline_1d->x = tov->rbar;
+      interp_psi->N_cubic_spline_1d->N = tov->N;
+      plan_interpolation(interp_psi);
+
+      Interpolation_T *interp_h = init_interpolation();
+      interp_h->method          = "Natural_Cubic_Spline_1D";
+      interp_h->N_cubic_spline_1d->f = tov->h;
+      interp_h->N_cubic_spline_1d->x = tov->rbar;
+      interp_h->N_cubic_spline_1d->N = tov->N;
+      plan_interpolation(interp_h);
+
+      EoS_T *eos = initialize_EoS();
+      
+      GET_FIELD(enthalpy)
+      GET_FIELD(rho0)
+      GET_FIELD(phi)
+      GET_FIELD(W_U0)
+      GET_FIELD(W_U1)
+      GET_FIELD(W_U2)
+      
+      for (ijk = 0; ijk < nn; ++ijk)
+      {
+        /* note that we naturally using isotropic for our coordiante, so rbar omitted */
+        /* coords respect to NS */
+        double x = patch->node[ijk]->x[0];
+        double y = patch->node[ijk]->x[1]-C_NS;
+        double z = patch->node[ijk]->x[2];
+        double r = sqrt(SQR(x)+SQR(y)+SQR(z));
+        double alpha;
+        double enthalpy_h;
+        
+        interp_psi->N_cubic_spline_1d->h = r;
+        interp_h->N_cubic_spline_1d->h = r;
+        
+        /* psi */
+        psi[ijk] = execute_interpolation(interp_psi);
+        /* + 1 for KS but we won't add and so we won't subtrac 1 either */
+        
+        /* eta */
+        enthalpy_h = execute_interpolation(interp_h);
+        alpha = sqrt(1-0.5*M_NS/R_Schwar)/enthalpy_h/* NS part */ + 
+                KSalpha[ijk]/* BH part */ - 1./* supper-position */;
+        eta[ijk] = psi[ijk]*alpha;
+        
+        /* enthalpy */
+        enthalpy[ijk] = enthalpy_h;
+        
+        /* rho0 */
+        eos->h = enthalpy_h;
+        rho0[ijk] = eos->rest_mass_density(eos);
+        
+        /* phi corrotating approximation */
+        phi[ijk] = 0;
+        
+        /* spin part */
+        W_U0[ijk] = Omega_NS_y*z-Omega_NS_z*y;
+        W_U1[ijk] = Omega_NS_z*x-Omega_NS_x*z;
+        W_U2[ijk] = Omega_NS_x*y-Omega_NS_y*x;
+      }
+      free_interpolation(interp_psi);
+      free_interpolation(interp_h);
+      free_EoS(eos);
+    }
+    else/* outside NS */
+    {
+      for (ijk = 0; ijk < nn; ++ijk)
+      {
+        /* note that we naturally using isotropic for our coordiante, so rbar omitted */
+        double x    = patch->node[ijk]->x[0];
+        double y    = patch->node[ijk]->x[1]-C_NS;
+        double z    = patch->node[ijk]->x[2];
+        double r = sqrt(SQR(x)+SQR(y)+SQR(z));
+        double alpha;
+        
+        /* psi */
+        psi[ijk] = 1+0.5*M_NS/r;
+        /* + 1 for KS but we won't add and so we won't subtrac 1 either */
+        
+        /* eta */
+        alpha = (1-0.5*M_NS/r)/(1+0.5*M_NS/r)+KSalpha[ijk]-1;
+        eta[ijk] = psi[ijk]*alpha;
+        
+      }
+    }
+    
+  }/* end of initialization psi, eta and matter fields */
+  
+  /* initializing Beta and B */
+  for (p = 0; p < np; ++p)
+  {
+     Patch_T *patch = grid->patch[p];
+     unsigned nn = patch->nn;
+     unsigned ijk;
+     double psim4;/* psi^-4 */
+      
+     GET_FIELD(psi)
+     GET_FIELD(B0_U0)
+     GET_FIELD(B0_U1)
+     GET_FIELD(B0_U2)
+     GET_FIELD(B1_U0)
+     GET_FIELD(B1_U1)
+     GET_FIELD(B1_U2)
+     GET_FIELD(Beta_U0)
+     GET_FIELD(Beta_U1)
+     GET_FIELD(Beta_U2)
+    
+     for (ijk = 0; ijk < nn; ++ijk)
+     {
+       double x   = patch->node[ijk]->x[0];
+       double y   = patch->node[ijk]->x[1];
+       
+       psim4 = pow(psi[ijk],-4);
+       
+       /* Beta */
+       Beta_U0[ijk] *= psim4;
+       Beta_U1[ijk] *= psim4;
+       Beta_U2[ijk] *= psim4;
+       
+       /* B1 */
+       B1_U0[ijk] = Omega_BHNS*(-y+y_CM)+Vr*x/D;
+       B1_U1[ijk] = Omega_BHNS*x+Vr*(y-y_CM)/D;
+       B1_U2[ijk] = 0;
+       
+       /* B0 */
+       B0_U0[ijk] = Beta_U0[ijk]-B0_U0[ijk];
+       B0_U1[ijk] = Beta_U1[ijk]-B0_U1[ijk];
+       B0_U2[ijk] = Beta_U2[ijk]-B0_U2[ijk];
+   }
+      
+  }/* end of * initializing Beta and B */
+  
+  /* freeing */
+  for (p = 0; p < np; ++p)
+  {
+    Patch_T *patch = grid->patch[p];
+    
+    DECLARE_FIELD(KSbeta_D0)
+    DECLARE_FIELD(KSbeta_D1)
+    DECLARE_FIELD(KSbeta_D2)
+    DECLARE_FIELD(KSalpha)
+
+    REMOVE_FIELD(KSbeta_D0)
+    REMOVE_FIELD(KSbeta_D1)
+    REMOVE_FIELD(KSbeta_D2)
+    REMOVE_FIELD(KSalpha)
+  }
+  
+  printf("Initializing the fields using TOV and Kerr-Shild solution ==> Done.\n");
+  pr_clock();
+  pr_line_custom('=');
+
 }
 
 /* given the radius of NS and BH and their separation,
