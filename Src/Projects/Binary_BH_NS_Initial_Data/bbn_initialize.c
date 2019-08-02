@@ -52,6 +52,17 @@ static void create_fields(Grid_T *const grid)
       add_field("W_U0",0,patch,YES);
       add_field("W_U1",0,patch,YES);
       add_field("W_U2",0,patch,YES);
+      
+      /* conformal total energy density */
+      add_field("_E",0,patch,YES);
+      
+      /* conformal trace of stress tensor */
+      add_field("_S",0,patch,YES);
+      
+      /* conformal momentum current */
+      add_field("_J_U0",0,patch,YES);
+      add_field("_J_U1",0,patch,YES);
+      add_field("_J_U2",0,patch,YES);
     
     }
     
