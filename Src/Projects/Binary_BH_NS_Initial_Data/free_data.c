@@ -303,7 +303,7 @@ static void free_conformal_metric_derivatives(Patch_T *const patch)
 /* populate conformal metric and its inverse */
 static void _gammas(Grid_T *const grid)
 {
-  /* roll off rate at exp(-(r/r0)^4)  */
+  /* roll off distance at exp(-(r/r0)^4)  */
   const double r0   = GetParameterD_E("RollOff_distance");
   const double M_BH = GetParameterD_E("BH_mass");
   const double a    = GetParameterD_E("BH_dimensionless_spin")*M_BH;
