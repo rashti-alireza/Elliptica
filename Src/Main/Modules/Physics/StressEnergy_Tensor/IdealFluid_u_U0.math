@@ -5,9 +5,56 @@ Dimension = 3;
 Point = ijk;
 
 C_macro = GET_FIELD(name);
-C_macro1 = ADD_FIELD(name);
 
-Ccode["void Tij_IF_u0(Patch_T *const patch)"]
-Ccode["{"]
+Ccode["void Tij_IF_u0(Patch_T *const patch)"];
+Ccode["{"];
+Ccode["  if (!IsItNSPatch(patch))"];
+Ccode["    return;"];
+Ccode["  const unsigned nn = patch->nn;"];
+Ccode["  unsigned ijk;"];
 
-Ccode["}"]
+Declare = 
+{
+
+ # conformal metric 
+ (obj = Field,name = _gamma, rank = DD, C_macro);
+
+ # conformal metric inverse
+ (obj = Field,name = _gammaI, rank = UU, C_macro);
+
+ # enthalpy
+ (obj = Field,name = enthalpy, rank = 0, C_macro);
+
+ # spin part of fluid
+ (obj = Field,name = W, rank = U, C_macro);
+
+ # d(phi)/d? for irrotional part of fluid
+ (obj = Field,name = dphi, rank = D, C_macro);
+
+ # eta
+ (obj = Field,name = eta, rank = 0, C_macro);
+
+ # conformal factor
+ (obj = Field,name = psi, rank = 0, C_macro);
+
+ # u0
+ (obj = Field,name = u0, rank = 0, C_macro);
+
+}
+
+# symmetries:
+Symm[_gammaI(i,j)  = _gammaI(j,i)];
+Symm[_gamma(i,j)   = _gamma(j,i)];
+
+# calculate u0:
+Ccode["  for(ijk = 0; ijk < nn; ++ijk)"];
+Ccode["  {"];
+     alpha = eta/psi;
+     psim4 = psi**(-4);
+     psi4  = psi**(4);
+     P2    = psim4*_gammaI(i,j)*dphi(-i)*dphi(-j)+2*dphi(-i)*W(i)+psi4*_gamma(-i,-j)*W(i)*W(j);
+     u_mu0 = (enthalpy**2+P2)**(0.5)/(enthalpy*alpha);
+     Ccode["  u0[ijk] = u_mu0;"];
+Ccode["  }"];
+
+Ccode["}"];
