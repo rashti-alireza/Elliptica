@@ -58,7 +58,7 @@ static Grid_T *TOV_KerrShild_approximation(void)
   grid = creat_grid_TOV_KerrShild(ns_R,bh_R,bh_chi*bh_mass/* a = chi*M */);
   
   /* creating all of the fields needed for construction of Initial Data */
-  bbn_create_fields(grid);
+  bbn_allocate_fields(grid);
   
   /* populating the free data part of initial data that we chose ourself */
   bbn_populate_free_data(grid);
@@ -68,6 +68,9 @@ static Grid_T *TOV_KerrShild_approximation(void)
   
   /* taking partial derivatives of the fields needed for equations */
   bbn_partial_derivatives_fields(grid);
+  
+  /* updating u0, _J^i, _E and _S */
+  Tij_IF_build_psi6Sources(grid);
   
   TOV_free(tov);
   

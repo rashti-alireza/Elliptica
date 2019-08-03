@@ -6,6 +6,7 @@
 #include "utilities_lib.h"
 #include "maths_approximation_lib.h"
 #include "EoS_lib.h"
+#include "physics_StressEnergyTensor_lib.h"
 
 Grid_T *bbn_initialize_next_grid(Grid_T *const grid_prev);
 static Grid_T *TOV_KerrShild_approximation(void);
