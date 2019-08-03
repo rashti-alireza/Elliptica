@@ -27,163 +27,6 @@ Grid_T *bbn_initialize_next_grid(Grid_T *const grid_prev)
   return grid_next;   
 }
 
-/* creating all of the fields needed for construction of Initial Data */
-static void create_fields(Grid_T *const grid)
-{
-  unsigned p;
-  
-  FOR_ALL_PATCHES(p,grid)
-  {
-    Patch_T *patch = grid->patch[p];
-    
-    /* only if the patch covers a part of the NS add the following fields */
-    if (IsNSPatch(patch))
-    {
-      /* scalar for the irrotational part of fluid i.e h*u = dphi+W in NS */
-      add_field("phi",0,patch,YES);
-      
-      /* enthalpy in NS */
-      add_field("enthalpy",0,patch,YES);
-      
-      /* rest mass density in NS */
-      add_field("rho0",0,patch,YES);
-      
-      /* spin part of fluid W^i */
-      add_field("W_U0",0,patch,YES);
-      add_field("W_U1",0,patch,YES);
-      add_field("W_U2",0,patch,YES);
-      
-      /* conformal total energy density */
-      add_field("_E",0,patch,YES);
-      
-      /* conformal trace of stress tensor */
-      add_field("_S",0,patch,YES);
-      
-      /* conformal momentum current */
-      add_field("_J_U0",0,patch,YES);
-      add_field("_J_U1",0,patch,YES);
-      add_field("_J_U2",0,patch,YES);
-    
-    }
-    
-    /* conformal factor */
-    add_field("psi",0,patch,YES);
-    
-    /* eta = lapse * psi */
-    add_field("eta",0,patch,YES);
-    
-    /* shift, Beta^i = B0^i+B1^i, B1^i = omega*(-y+y_CM,x,0)+v_r/D*(x,y-y_CM) */
-    add_field("B0_U0",0,patch,YES);
-    add_field("B0_U1",0,patch,YES);
-    add_field("B0_U2",0,patch,YES);
-    add_field("B1_U0",0,patch,YES);
-    add_field("B1_U1",0,patch,YES);
-    add_field("B1_U2",0,patch,YES);
-    add_field("Beta_U0",0,patch,YES);
-    add_field("Beta_U1",0,patch,YES);
-    add_field("Beta_U2",0,patch,YES);
-    
-    /* conformal metric: _gamma_DiDj */
-    ADD_FIELD(_gamma_D2D2)
-    ADD_FIELD(_gamma_D0D2)
-    ADD_FIELD(_gamma_D0D0)
-    ADD_FIELD(_gamma_D0D1)
-    ADD_FIELD(_gamma_D1D2)
-    ADD_FIELD(_gamma_D1D1)
-
-    /* conformal metric inverse _gammaI_UiUj I stands for inverse */
-    ADD_FIELD(_gammaI_U0U2)
-    ADD_FIELD(_gammaI_U0U0)
-    ADD_FIELD(_gammaI_U0U1)
-    ADD_FIELD(_gammaI_U1U2)
-    ADD_FIELD(_gammaI_U1U1)
-    ADD_FIELD(_gammaI_U2U2)
-
-    /* Christoffer symbols made up of conformal metric */
-    ADD_FIELD(_Gamma_U2D1D1)
-    ADD_FIELD(_Gamma_U2D1D2)
-    ADD_FIELD(_Gamma_U0D1D1)
-    ADD_FIELD(_Gamma_U2D0D2)
-    ADD_FIELD(_Gamma_U2D2D2)
-    ADD_FIELD(_Gamma_U0D1D2)
-    ADD_FIELD(_Gamma_U0D0D2)
-    ADD_FIELD(_Gamma_U0D0D1)
-    ADD_FIELD(_Gamma_U0D0D0)
-    ADD_FIELD(_Gamma_U1D2D2)
-    ADD_FIELD(_Gamma_U2D0D1)
-    ADD_FIELD(_Gamma_U0D2D2)
-    ADD_FIELD(_Gamma_U2D0D0)
-    ADD_FIELD(_Gamma_U1D0D2)
-    ADD_FIELD(_Gamma_U1D1D2)
-    ADD_FIELD(_Gamma_U1D0D0)
-    ADD_FIELD(_Gamma_U1D0D1)
-    ADD_FIELD(_Gamma_U1D1D1)
-    
-    /* partial derivative of Christoffer symbols */
-    ADD_FIELD_NoMem(_dGamma_U2D2D2D2)
-    ADD_FIELD_NoMem(_dGamma_U2D2D2D0)
-    ADD_FIELD_NoMem(_dGamma_U2D2D2D1)
-    ADD_FIELD_NoMem(_dGamma_U2D0D0D2)
-    ADD_FIELD_NoMem(_dGamma_U1D1D2D2)
-    ADD_FIELD_NoMem(_dGamma_U2D0D0D0)
-    ADD_FIELD_NoMem(_dGamma_U1D1D2D0)
-    ADD_FIELD_NoMem(_dGamma_U1D1D2D1)
-    ADD_FIELD_NoMem(_dGamma_U2D1D1D0)
-    ADD_FIELD_NoMem(_dGamma_U2D0D0D1)
-    ADD_FIELD_NoMem(_dGamma_U2D0D2D1)
-    ADD_FIELD_NoMem(_dGamma_U1D0D1D0)
-    ADD_FIELD_NoMem(_dGamma_U1D0D1D1)
-    ADD_FIELD_NoMem(_dGamma_U1D0D1D2)
-    ADD_FIELD_NoMem(_dGamma_U1D2D2D1)
-    ADD_FIELD_NoMem(_dGamma_U1D0D0D1)
-    ADD_FIELD_NoMem(_dGamma_U1D0D0D0)
-    ADD_FIELD_NoMem(_dGamma_U1D0D0D2)
-    ADD_FIELD_NoMem(_dGamma_U0D1D2D2)
-    ADD_FIELD_NoMem(_dGamma_U0D1D2D1)
-    ADD_FIELD_NoMem(_dGamma_U0D1D2D0)
-    ADD_FIELD_NoMem(_dGamma_U2D0D2D0)
-    ADD_FIELD_NoMem(_dGamma_U1D0D2D2)
-    ADD_FIELD_NoMem(_dGamma_U1D0D2D1)
-    ADD_FIELD_NoMem(_dGamma_U1D0D2D0)
-    ADD_FIELD_NoMem(_dGamma_U2D1D1D2)
-    ADD_FIELD_NoMem(_dGamma_U2D0D2D2)
-    ADD_FIELD_NoMem(_dGamma_U0D0D1D0)
-    ADD_FIELD_NoMem(_dGamma_U1D2D2D0)
-    ADD_FIELD_NoMem(_dGamma_U2D1D2D1)
-    ADD_FIELD_NoMem(_dGamma_U2D0D1D2)
-    ADD_FIELD_NoMem(_dGamma_U2D0D1D1)
-    ADD_FIELD_NoMem(_dGamma_U2D0D1D0)
-    ADD_FIELD_NoMem(_dGamma_U2D1D2D2)
-    ADD_FIELD_NoMem(_dGamma_U0D1D1D0)
-    ADD_FIELD_NoMem(_dGamma_U0D1D1D1)
-    ADD_FIELD_NoMem(_dGamma_U0D1D1D2)
-    ADD_FIELD_NoMem(_dGamma_U1D2D2D2)
-    ADD_FIELD_NoMem(_dGamma_U1D1D1D1)
-    ADD_FIELD_NoMem(_dGamma_U1D1D1D0)
-    ADD_FIELD_NoMem(_dGamma_U1D1D1D2)
-    ADD_FIELD_NoMem(_dGamma_U0D0D1D1)
-    ADD_FIELD_NoMem(_dGamma_U0D0D2D2)
-    ADD_FIELD_NoMem(_dGamma_U0D0D2D0)
-    ADD_FIELD_NoMem(_dGamma_U0D0D2D1)
-    ADD_FIELD_NoMem(_dGamma_U2D1D2D0)
-    ADD_FIELD_NoMem(_dGamma_U0D0D0D0)
-    ADD_FIELD_NoMem(_dGamma_U0D0D0D1)
-    ADD_FIELD_NoMem(_dGamma_U0D0D0D2)
-    ADD_FIELD_NoMem(_dGamma_U2D1D1D1)
-    ADD_FIELD_NoMem(_dGamma_U0D2D2D0)
-    ADD_FIELD_NoMem(_dGamma_U0D2D2D1)
-    ADD_FIELD_NoMem(_dGamma_U0D2D2D2)
-    ADD_FIELD_NoMem(_dGamma_U0D0D1D2)
-
-    /* Ricci scalar made up of conformal metric _gamma */
-    add_field("_R",0,patch,YES);
-    
-    /* extrinsic curvature */
-    add_field("K",0,patch,YES);
-    
-  }
-}
-
 /* use TOV and Kerr-Schil black hole approximation.
 // ->return value: resultant grid from this approximation */
 static Grid_T *TOV_KerrShild_approximation(void)
@@ -215,13 +58,16 @@ static Grid_T *TOV_KerrShild_approximation(void)
   grid = creat_grid_TOV_KerrShild(ns_R,bh_R,bh_chi*bh_mass/* a = chi*M */);
   
   /* creating all of the fields needed for construction of Initial Data */
-  create_fields(grid);
+  bbn_create_fields(grid);
   
   /* populating the free data part of initial data that we chose ourself */
-  populate_free_data(grid);
+  bbn_populate_free_data(grid);
   
   /* initialize the fields using TOV and Kerr-Shild solution */
   init_field_TOV_plus_KerrSchild(grid,tov,bh_chi*bh_mass,bh_mass);
+  
+  /* taking partial derivatives of the fields needed for equations */
+  bbn_partial_derivatives_fields(grid);
   
   TOV_free(tov);
   
@@ -335,7 +181,7 @@ KSbeta_D2[ijk]*_gammaI_U2U2[ijk];
     GET_FIELD(eta)
     GET_FIELD(KSalpha)
     
-    if (IsNSPatch(patch))
+    if (IsItNSPatch(patch))
     {
       Interpolation_T *interp_psi = init_interpolation();
       interp_psi->method          = "Natural_Cubic_Spline_1D";
@@ -844,20 +690,3 @@ static void NS_BH_surface_CubedSpherical_grid(Grid_T *const grid,const double R_
   free(R);
 }
 
-/* ->return value: if the patch covers a part of the NS 1, otherwise 0 */
-static unsigned IsNSPatch(const Patch_T *const patch)
-{
-  unsigned ret = 0;
-  
-  if (strstr(patch->name,"left_centeral_box") || 
-      strstr(patch->name,"left_NS_up")        ||
-      strstr(patch->name,"left_NS_down")      ||
-      strstr(patch->name,"left_NS_back")      ||
-      strstr(patch->name,"left_NS_front")     ||
-      strstr(patch->name,"left_NS_left")      ||
-      strstr(patch->name,"left_NS_right")     
-     )
-     ret = 1;
-     
-  return ret;
-}

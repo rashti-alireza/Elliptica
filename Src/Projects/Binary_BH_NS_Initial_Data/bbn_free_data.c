@@ -6,7 +6,7 @@
 #include "bbn_free_data.h"
 
 /* populating the free data part of initial data that we chose ourself */
-void populate_free_data(Grid_T *const grid)
+void bbn_populate_free_data(Grid_T *const grid)
 {
   pr_line_custom('=');
   printf("Populating free data and related ...\n");
