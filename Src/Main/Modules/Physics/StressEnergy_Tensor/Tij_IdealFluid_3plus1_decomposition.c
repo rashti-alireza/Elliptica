@@ -79,7 +79,8 @@ sqrt(P2 + pow(enthalpy[ijk], 2))/(alpha*enthalpy[ijk]);
 // given all of the fields needed for J = -gamma(i,-mu)*T(mu,nu)*n(-nu) 
 // it builds "momentum current * psi^6", where psi is conformal factor,
 // and puts it to _J_U?.
-// note: if patch does not contain fluid, it does nothing. */
+// note: if patch does not contain fluid, it does nothing.
+// note: it depends on u0, so better first to call Tij_IF_u0 function. */
 void Tij_IF_build_psi6J_Ui(Patch_T *const patch)
 {
   if (!IsItNSPatch(patch))
@@ -149,7 +150,8 @@ dphi_D2[ijk]));
 // given all of the fields needed for E = T(mu,nu)*n(-mu)*n(-nu)
 // it builds "total energy density * psi^6", where psi is conformal factor,
 // and puts it to _E.
-// note: if patch does not contain fluid, it does nothing. */
+// note: if patch does not contain fluid, it does nothing.
+// note: it depends on u0, so better first to call Tij_IF_u0 function. */
 void Tij_IF_build_psi6E(Patch_T *const patch)
 {
   if (!IsItNSPatch(patch))
@@ -192,7 +194,8 @@ p;
 // S = T(mu,nu)*gamma(i,j)*gamma(-i,-mu)*gamma(-j,-nu)
 // it builds "total energy density * psi^6", 
 // where psi is conformal factor, and puts it to _S. 
-// note: if patch does not contain fluid, it does nothing. */
+// note: if patch does not contain fluid, it does nothing.
+// note: it depends on u0, so better first to call Tij_IF_u0 function. */
 void Tij_IF_build_psi6S(Patch_T *const patch)
 {
   if (!IsItNSPatch(patch))
