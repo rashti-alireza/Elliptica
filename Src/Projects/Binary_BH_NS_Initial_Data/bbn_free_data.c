@@ -3,7 +3,7 @@
 // July 2019
 */
 
-#include "free_data.h"
+#include "bbn_free_data.h"
 
 /* populating the free data part of initial data that we chose ourself */
 void populate_free_data(Grid_T *const grid)
