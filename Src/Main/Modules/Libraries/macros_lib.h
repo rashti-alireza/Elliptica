@@ -18,6 +18,7 @@
 #define REMOVE_FIELD(name)   remove_field(name);/* remove the field utterly */
 #define DECLARE_FIELD(name)  Field_T *const name = patch->pool[Ind(#name)];/* access to the whole field */
 #define GET_FIELD(name)      double *const name = patch->pool[Ind(#name)]->v;/* access to the memory values */
+#define EMPTY_FIELD(name)  empty_field(name);/* free v,v2 and info of field */
 #define GetParameterS(x)   get_parameter_value_S(x,__FILE__,__LINE__,NONE)
 #define GetParameterI(x)   get_parameter_value_I(x,__FILE__,__LINE__,NONE)
 #define GetParameterD(x)   get_parameter_value_D(x,__FILE__,__LINE__,NONE)

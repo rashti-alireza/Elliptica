@@ -133,7 +133,7 @@ void free_info(Field_T *f)
   f->info = 0;
 }
 
-/* freeing a the content of a given field */
+/* freeing field */
 void free_field(Field_T *fld)
 {
   if (!fld)
@@ -151,6 +151,24 @@ void free_field(Field_T *fld)
     free(fld->info);
     
   free(fld);
+}
+
+/* free v, v2 and info to update values of a field */
+void empty_field(Field_T *fld)
+{
+  if (!fld)
+    return;
+  
+  if (fld->v)
+    free(fld->v);
+  if (fld->v2)
+    free(fld->v2);
+  if (fld->info)
+    free(fld->info);
+  
+  fld->v    = 0;
+  fld->v2   = 0;
+  fld->info = 0; 
 }
 
 /* freeing v2 and info of a field */
