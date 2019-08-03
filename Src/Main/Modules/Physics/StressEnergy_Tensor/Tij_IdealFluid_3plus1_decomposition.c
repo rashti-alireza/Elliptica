@@ -82,10 +82,66 @@ sqrt(P2 + pow(enthalpy[ijk], 2))/(alpha*enthalpy[ijk]);
 // note: if patch does not contain fluid, it does nothing. */
 void Tij_IF_build_psi6J_Ui(Patch_T *const patch)
 {
+  if (!IsItNSPatch(patch))
+    return;
+  const unsigned nn = patch->nn;
+  unsigned ijk;
+
+  /* declaring: */
+  GET_FIELD(_gammaI_U0U2)
+  GET_FIELD(_gammaI_U0U0)
+  GET_FIELD(_gammaI_U0U1)
+  GET_FIELD(_gammaI_U1U2)
+  GET_FIELD(_gammaI_U1U1)
+  GET_FIELD(_gammaI_U2U2)
+  GET_FIELD(rho0)
+  GET_FIELD(W_U1)
+  GET_FIELD(W_U0)
+  GET_FIELD(W_U2)
+  GET_FIELD(dphi_D2)
+  GET_FIELD(dphi_D1)
+  GET_FIELD(dphi_D0)
+  GET_FIELD(_J_U0)
+  GET_FIELD(_J_U1)
+  GET_FIELD(_J_U2)
+  GET_FIELD(eta)
+  GET_FIELD(psi)
+  GET_FIELD(u0)
+
+
+  for(ijk = 0; ijk < nn; ++ijk)
+  {
+  double alpha = 
+eta[ijk]/psi[ijk];
+
+  double psim4 = 
+pow(psi[ijk], -4);
+
+  double psi6 = 
+pow(psi[ijk], 6);
+
+  double j_u_U0 = 
+alpha*psi6*rho0[ijk]*u0[ijk]*(W_U0[ijk] + psim4*(_gammaI_U0U0[ijk]*
+dphi_D0[ijk] + _gammaI_U0U1[ijk]*dphi_D1[ijk] + _gammaI_U0U2[ijk]*
+dphi_D2[ijk]));
+
+  double j_u_U1 = 
+alpha*psi6*rho0[ijk]*u0[ijk]*(W_U1[ijk] + psim4*(_gammaI_U0U1[ijk]*
+dphi_D0[ijk] + _gammaI_U1U1[ijk]*dphi_D1[ijk] + _gammaI_U1U2[ijk]*
+dphi_D2[ijk]));
+
+  double j_u_U2 = 
+alpha*psi6*rho0[ijk]*u0[ijk]*(W_U2[ijk] + psim4*(_gammaI_U0U2[ijk]*
+dphi_D0[ijk] + _gammaI_U1U2[ijk]*dphi_D1[ijk] + _gammaI_U2U2[ijk]*
+dphi_D2[ijk]));
+
+
+  /* populating: */
+  _J_U0[ijk] = j_u_U0;
+  _J_U1[ijk] = j_u_U1;
+  _J_U2[ijk] = j_u_U2;
+  }
 }
-
-
-
 
 /* Note: Tij stands for Stress Energy tensor.
 // IF stands for ideal fluid. thus, 
