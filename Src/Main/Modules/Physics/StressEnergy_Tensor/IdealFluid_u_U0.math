@@ -1,0 +1,13 @@
+# Manifold or grid Dimension
+Dimension = 3;
+
+# point on manifold shown by:
+Point = ijk;
+
+C_macro = GET_FIELD(name);
+C_macro1 = ADD_FIELD(name);
+
+Ccode["void Tij_IF_u0(Patch_T *const patch)"]
+Ccode["{"]
+
+Ccode["}"]
