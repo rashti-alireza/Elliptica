@@ -165,4 +165,69 @@ void Tij_IF_build_psi6E(Patch_T *const patch)
 // note: if patch does not contain fluid, it does nothing. */
 void Tij_IF_build_psi6S(Patch_T *const patch)
 {
+  if (!IsItNSPatch(patch))
+    return;
+  const unsigned nn = patch->nn;
+  unsigned ijk;
+
+  /* declaring: */
+  GET_FIELD(_gamma_D2D2)
+  GET_FIELD(_gamma_D0D2)
+  GET_FIELD(_gamma_D0D0)
+  GET_FIELD(_gamma_D0D1)
+  GET_FIELD(_gamma_D1D2)
+  GET_FIELD(_gamma_D1D1)
+  GET_FIELD(_gammaI_U0U2)
+  GET_FIELD(_gammaI_U0U0)
+  GET_FIELD(_gammaI_U0U1)
+  GET_FIELD(_gammaI_U1U2)
+  GET_FIELD(_gammaI_U1U1)
+  GET_FIELD(_gammaI_U2U2)
+  GET_FIELD(enthalpy)
+  GET_FIELD(W_U1)
+  GET_FIELD(W_U0)
+  GET_FIELD(W_U2)
+  GET_FIELD(dphi_D2)
+  GET_FIELD(dphi_D1)
+  GET_FIELD(dphi_D0)
+  GET_FIELD(eta)
+  GET_FIELD(psi)
+  GET_FIELD(rho0)
+
+
+  EoS_T *eos = initialize_EoS();
+  for(ijk = 0; ijk < nn; ++ijk)
+  {
+    eos->h   = enthalpy[ijk];
+    double p = eos->pressure(eos);
+    double alpha = 
+eta[ijk]/psi[ijk];
+
+    double psim4 = 
+pow(psi[ijk], -4);
+
+    double psi4 = 
+pow(psi[ijk], 4);
+
+    double psi6 = 
+pow(psi[ijk], 6);
+
+    double P2 = 
+2.0*W_U0[ijk]*dphi_D0[ijk] + 2.0*W_U1[ijk]*dphi_D1[ijk] + 2.0*
+W_U2[ijk]*dphi_D2[ijk] + psi4*(pow(W_U0[ijk], 2)*_gamma_D0D0[ijk] +
+2.0*W_U0[ijk]*W_U1[ijk]*_gamma_D0D1[ijk] + 2.0*W_U0[ijk]*W_U2[ijk]*
+_gamma_D0D2[ijk] + pow(W_U1[ijk], 2)*_gamma_D1D1[ijk] + 2.0*W_U1[ijk]*
+W_U2[ijk]*_gamma_D1D2[ijk] + pow(W_U2[ijk], 2)*_gamma_D2D2[ijk]) +
+psim4*(_gammaI_U0U0[ijk]*pow(dphi_D0[ijk], 2) + 2.0*_gammaI_U0U1[ijk]*
+dphi_D0[ijk]*dphi_D1[ijk] + 2.0*_gammaI_U0U2[ijk]*dphi_D0[ijk]*
+dphi_D2[ijk] + _gammaI_U1U1[ijk]*pow(dphi_D1[ijk], 2) + 2.0*
+_gammaI_U1U2[ijk]*dphi_D1[ijk]*dphi_D2[ijk] + _gammaI_U2U2[ijk]*
+pow(dphi_D2[ijk], 2));
+
+    double Sbar = 
+P2*psi6*rho0[ijk]/enthalpy[ijk] + 3*p;
+
+  _S[ijk] = Sbar;
+  }
 }
+
