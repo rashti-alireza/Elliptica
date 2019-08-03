@@ -58,6 +58,13 @@
 #define OpenMP_1d_Pragma(x)
 #endif
 
+/* OpenMP for go over all patches */
+#ifdef Pragma_OpenMP_Patch
+#define OpenMP_Patch_Pragma(x) _Pragma ( #x )
+#else 
+#define OpenMP_Patch_Pragma(x)
+#endif
+
 #define TEST_SUCCESSFUL 0
 #define TEST_UNSUCCESSFUL 1
  
