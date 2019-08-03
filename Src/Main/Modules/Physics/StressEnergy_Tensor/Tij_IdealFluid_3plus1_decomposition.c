@@ -152,8 +152,38 @@ dphi_D2[ijk]));
 // note: if patch does not contain fluid, it does nothing. */
 void Tij_IF_build_psi6E(Patch_T *const patch)
 {
-}
+  if (!IsItNSPatch(patch))
+    return;
+  const unsigned nn = patch->nn;
+  unsigned ijk;
 
+  /* declaring: */
+  GET_FIELD(enthalpy)
+  GET_FIELD(eta)
+  GET_FIELD(u0)
+  GET_FIELD(psi)
+  GET_FIELD(rho0)
+  GET_FIELD(_E)
+
+
+  EoS_T *eos = initialize_EoS();
+  for(ijk = 0; ijk < nn; ++ijk)
+  {
+    eos->h   = enthalpy[ijk];
+    double p = eos->pressure(eos);
+    double alpha = 
+eta[ijk]/psi[ijk];
+
+    double psi6 = 
+pow(psi[ijk], 6);
+
+    double Ebar = 
+pow(alpha, 2)*enthalpy[ijk]*psi6*rho0[ijk]*pow(u0[ijk], 2) -
+p;
+
+  _E[ijk] = Ebar;
+  }
+}
 
 /* Note: Tij stands for Stress Energy tensor.
 // IF stands for ideal fluid. thus, 
