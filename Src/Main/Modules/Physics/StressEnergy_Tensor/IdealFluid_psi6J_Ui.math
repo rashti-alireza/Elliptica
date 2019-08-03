@@ -1,0 +1,57 @@
+# Manifold or grid Dimension
+Dimension = 3;
+
+# point on manifold shown by:
+Point = ijk;
+
+C_macro = GET_FIELD(name);
+
+Ccode["void Tij_IF_build_psi6J_Ui(Patch_T *const patch)"];
+Ccode["{"];
+Ccode["  if (!IsItNSPatch(patch))"];
+Ccode["    return;"];
+Ccode["  const unsigned nn = patch->nn;"];
+Ccode["  unsigned ijk;"];
+
+Declare = 
+{
+ # conformal metric inverse
+ (obj = Field,name = _gammaI, rank = UU, C_macro);
+
+ # enthalpy
+ (obj = Field,name = rho0, rank = 0, C_macro);
+
+ # spin part of fluid
+ (obj = Field,name = W, rank = U, C_macro);
+
+ # d(phi)/d? for irrotional part of fluid
+ (obj = Field,name = dphi, rank = D, C_macro);
+
+ # conformal momentum current
+ (obj = Field,name = _J, rank = U, C_macro);
+
+ # eta
+ (obj = Field,name = eta, rank = 0, C_macro);
+
+ # conformal factor
+ (obj = Field,name = psi, rank = 0, C_macro);
+
+ # u0
+ (obj = Field,name = u0, rank = 0, C_macro);
+
+}
+
+# symmetries:
+Symm[_gammaI(i,j)  = _gammaI(j,i)];
+
+# calculate _J:
+Ccode["  for(ijk = 0; ijk < nn; ++ijk)"];
+Ccode["  {"];
+     alpha  = eta/psi;
+     psim4  = psi**(-4);
+     psi6   = psi**(6);
+     j_u(i) = psi6*alpha*u0*rho0*(psim4*_gammaI(i,j)*dphi(-j)+W(i));
+     Cpopulate[_J = j_u];
+Ccode["  }"];
+
+Ccode["}"];
