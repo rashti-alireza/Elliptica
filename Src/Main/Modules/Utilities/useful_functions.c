@@ -439,3 +439,27 @@ double spectral_derivative_max_error(const Field_T *const f,const unsigned o)
     
   return e;
 }
+
+/* ->return value: if the patch covers a part of the NS 1, otherwise 0 */
+unsigned IsItNSPatch(const Patch_T *const patch)
+{
+  unsigned ret = 0;
+  
+  if (strcmp_i(patch->grid->kind,"BBN_CubedSpherical_grid"))
+  {
+    if (strstr(patch->name,"left_centeral_box") || 
+        strstr(patch->name,"left_NS_up")        ||
+        strstr(patch->name,"left_NS_down")      ||
+        strstr(patch->name,"left_NS_back")      ||
+        strstr(patch->name,"left_NS_front")     ||
+        strstr(patch->name,"left_NS_left")      ||
+        strstr(patch->name,"left_NS_right")     
+       )
+       ret = 1;
+  }
+  else
+    abortEr(NO_JOB);
+    
+  return ret;
+}
+
