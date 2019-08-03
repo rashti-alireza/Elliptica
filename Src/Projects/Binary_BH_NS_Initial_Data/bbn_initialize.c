@@ -14,7 +14,7 @@ Grid_T *bbn_initialize_next_grid(Grid_T *const grid_prev)
   if (!grid_prev)/* if grid is empty come up with an approximation */
   {
     /* if we use TOV and Kerr-Schil black hole approximation */
-    if (strcmp_i(GetParameterS_E("BBHNS_initialization"),"TOV_KerrShild"))
+    if (strcmp_i(GetParameterS_E("BH_NS_initialization"),"TOV_KerrShild"))
       grid_next = TOV_KerrShild_approximation();
     else
       abortEr(NO_OPTION);
@@ -78,20 +78,19 @@ static Grid_T *TOV_KerrShild_approximation(void)
 }
 
 /* initialize the fields using TOV and Kerr-Shild solution.
-// the idea is to superimpose two fields of each solution. */
+// the idea is to superimpose two fields of each solutions. */
 static void init_field_TOV_plus_KerrSchild(Grid_T *const grid,const TOV_T *const tov, const double a_BH, const double M_BH)
 {
   pr_line_custom('=');
-  printf("Initializing the fields using TOV and Kerr-Shild solution ...\n");
+  printf("Initializing the fields using TOV and Kerr-Schild solution ...\n");
 
-  const unsigned np = grid->np;
-  const double M_NS = tov->ADM_m;
+  const double M_NS = tov->ADM_m;/* NS adm mass */
   const double D = GetParameterD_E("BH_NS_separation");
-  const double C_BH = 0.5*GetParameterD_E("BH_NS_separation");
-  const double C_NS = -C_BH;
-  const double R_Schwar = tov->r[tov->N-1];
-  const double a2_BH = SQR(a_BH);
-  const double y_CM = (M_NS*C_NS+M_BH*C_BH)/(M_NS+M_BH);
+  const double C_BH = 0.5*GetParameterD_E("BH_NS_separation");/* center of BH it's on +y axis */
+  const double C_NS = -C_BH;/* center of NS it's on -y axis*/
+  const double R_Schwar = tov->r[tov->N-1];/* NS's Schwarzchild radius */
+  const double a2_BH = SQR(a_BH);/* spin vector of BH */
+  const double y_CM = (M_NS*C_NS+M_BH*C_BH)/(M_NS+M_BH);/* center of rotation, approx. Center of Mass */
   const double Omega_BHNS = GetParameterD_E("BH_NS_orbital_angular_velocity");
   const double Omega_NS_x = GetParameterD_E("NS_spin_vector_x");
   const double Omega_NS_y = GetParameterD_E("NS_spin_vector_y");
@@ -103,7 +102,7 @@ static void init_field_TOV_plus_KerrSchild(Grid_T *const grid,const TOV_T *const
   add_parameter_double("y_CM",y_CM);
   
   /* black hole parts */
-  for (p = 0; p < np; ++p)
+  FOR_ALL_PATCHES(p,grid)
   {
     Patch_T *patch = grid->patch[p];
     unsigned nn = patch->nn;
@@ -150,7 +149,8 @@ static void init_field_TOV_plus_KerrSchild(Grid_T *const grid,const TOV_T *const
       KSbeta_D2[ijk]  = C*k2;
       
       /* note the followings are multiplied by _gammaI, 
-      // they need also multiplication by (psi)^-4 to make it gammaI */
+      // they need also multiplication by (psi)^-4 to make gammaI 
+      // which will be done after psi is made */
       double shift_U0 = 
 KSbeta_D0[ijk]*_gammaI_U0U0[ijk] + KSbeta_D1[ijk]*_gammaI_U0U1[ijk] + 
 KSbeta_D2[ijk]*_gammaI_U0U2[ijk];
@@ -174,7 +174,7 @@ KSbeta_D2[ijk]*_gammaI_U2U2[ijk];
   }/* end of black hole part */
   
   /* initialization psi, eta and matter fields: */
-  for (p = 0; p < np; ++p)
+  FOR_ALL_PATCHES(p,grid)
   {
     Patch_T *patch = grid->patch[p];
     unsigned nn = patch->nn;
@@ -211,8 +211,8 @@ KSbeta_D2[ijk]*_gammaI_U2U2[ijk];
       
       for (ijk = 0; ijk < nn; ++ijk)
       {
-        /* note that we naturally using isotropic for our coordiante, so rbar omitted */
-        /* coords respect to NS */
+        /* note that we naturally using isotropic coords. 
+        // for our coordiante, so bar in rbar is dropped */
         double x = patch->node[ijk]->x[0];
         double y = patch->node[ijk]->x[1]-C_NS;
         double z = patch->node[ijk]->x[2];
@@ -256,7 +256,8 @@ KSbeta_D2[ijk]*_gammaI_U2U2[ijk];
     {
       for (ijk = 0; ijk < nn; ++ijk)
       {
-        /* note that we naturally using isotropic for our coordiante, so rbar omitted */
+        /* note that we naturally using isotropic for our coordiante, 
+        // so bar in rbar is dropped */
         double x    = patch->node[ijk]->x[0];
         double y    = patch->node[ijk]->x[1]-C_NS;
         double z    = patch->node[ijk]->x[2];
@@ -276,8 +277,8 @@ KSbeta_D2[ijk]*_gammaI_U2U2[ijk];
     
   }/* end of initialization psi, eta and matter fields */
   
-  /* initializing Beta and B */
-  for (p = 0; p < np; ++p)
+  /* initializing Beta and B's */
+  FOR_ALL_PATCHES(p,grid)
   {
      Patch_T *patch = grid->patch[p];
      unsigned nn = patch->nn;
@@ -313,15 +314,15 @@ KSbeta_D2[ijk]*_gammaI_U2U2[ijk];
        B1_U2[ijk] = 0;
        
        /* B0 */
-       B0_U0[ijk] = Beta_U0[ijk]-B0_U0[ijk];
-       B0_U1[ijk] = Beta_U1[ijk]-B0_U1[ijk];
-       B0_U2[ijk] = Beta_U2[ijk]-B0_U2[ijk];
+       B0_U0[ijk] = Beta_U0[ijk]-B1_U0[ijk];
+       B0_U1[ijk] = Beta_U1[ijk]-B1_U1[ijk];
+       B0_U2[ijk] = Beta_U2[ijk]-B1_U2[ijk];
    }
       
   }/* end of * initializing Beta and B */
   
   /* freeing */
-  for (p = 0; p < np; ++p)
+  FOR_ALL_PATCHES(p,grid)
   {
     Patch_T *patch = grid->patch[p];
     
@@ -336,7 +337,7 @@ KSbeta_D2[ijk]*_gammaI_U2U2[ijk];
     REMOVE_FIELD(KSalpha)
   }
   
-  printf("Initializing the fields using TOV and Kerr-Shild solution ==> Done.\n");
+  printf("Initializing the fields using TOV and Kerr-Schild solution ==> Done.\n");
   pr_clock();
   pr_line_custom('=');
 
