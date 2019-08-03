@@ -50,5 +50,6 @@ Ccode["    double p = eos->pressure(eos);"];
      Ebar = psi6*rho0*enthalpy*(u0*alpha)**2 - p;
      Ccode["  _E[ijk] = Ebar;"];
 Ccode["  }"];
+Ccode["  free_EoS(eos);"];
 
 Ccode["}"];

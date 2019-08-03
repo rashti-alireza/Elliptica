@@ -185,6 +185,7 @@ p;
 
   _E[ijk] = Ebar;
   }
+  free_EoS(eos);
 }
 
 /* Note: Tij stands for Stress Energy tensor.
@@ -259,6 +260,7 @@ P2*psi6*rho0[ijk]/enthalpy[ijk] + 3*p;
 
   _S[ijk] = Sbar;
   }
+  free_EoS(eos);
 }
 
 /* building u0, _J^i, _E and _S */
