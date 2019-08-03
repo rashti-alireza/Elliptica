@@ -1,6 +1,6 @@
 #include "core_lib.h"
 #include "memory_managing_lib.h"
-#include "EoS_lib.h"
+#include "physics_EoS_lib.h"
 #include "maths_general_lib.h"
 #include "maths_calculus_lib.h"
 #include "maths_approximation_lib.h"

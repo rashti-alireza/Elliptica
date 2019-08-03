@@ -1,5 +1,5 @@
 #include "core_lib.h"
-#include "EoS_lib.h"
+#include "physics_EoS_lib.h"
 
 EoS_T *initialize_EoS(void);
 void free_EoS(EoS_T *eos);
