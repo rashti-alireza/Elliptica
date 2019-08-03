@@ -31,9 +31,6 @@ Declare =
  # d(phi)/d? for irrotional part of fluid
  (obj = Field,name = dphi, rank = D, C_macro);
 
- # eta
- (obj = Field,name = eta, rank = 0, C_macro);
-
  # conformal factor
  (obj = Field,name = psi, rank = 0, C_macro);
 
@@ -42,6 +39,10 @@ Declare =
 
  # pressure
  (obj = Variable,name = p, rank = 0, None);
+
+ # _S
+ (obj = Field,name = _S, rank = 0, C_macro);
+
 
 }
 
@@ -55,7 +56,6 @@ Ccode["  for(ijk = 0; ijk < nn; ++ijk)"];
 Ccode["  {"];
 Ccode["    eos->h   = enthalpy[ijk];"];
 Ccode["    double p = eos->pressure(eos);"];
-     alpha = eta/psi;
      psim4 = psi**(-4);
      psi4  = psi**(4);
      psi6  = psi**(6);

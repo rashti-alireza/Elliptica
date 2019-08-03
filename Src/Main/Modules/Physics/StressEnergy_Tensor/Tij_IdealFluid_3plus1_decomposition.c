@@ -220,9 +220,9 @@ void Tij_IF_build_psi6S(Patch_T *const patch)
   GET_FIELD(dphi_D2)
   GET_FIELD(dphi_D1)
   GET_FIELD(dphi_D0)
-  GET_FIELD(eta)
   GET_FIELD(psi)
   GET_FIELD(rho0)
+  GET_FIELD(_S)
 
 
   EoS_T *eos = initialize_EoS();
@@ -230,9 +230,6 @@ void Tij_IF_build_psi6S(Patch_T *const patch)
   {
     eos->h   = enthalpy[ijk];
     double p = eos->pressure(eos);
-    double alpha = 
-eta[ijk]/psi[ijk];
-
     double psim4 = 
 pow(psi[ijk], -4);
 
