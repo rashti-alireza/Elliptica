@@ -328,6 +328,12 @@ void bbn_allocate_fields(Grid_T *const grid)
     
     /* extrinsic curvature */
     add_field("K",0,patch,YES);
+    ADD_FIELD_NoMem(dK_D2)
+    ADD_FIELD_NoMem(dK_D1)
+    ADD_FIELD_NoMem(dK_D0)
+
+    /*_A_ij*_A^ij */
+    ADD_FIELD(_AijAij)
     
   }
 }
@@ -439,7 +445,23 @@ void bbn_partial_derivatives_fields(Grid_T *const grid)
       du0_D2->v = Partial_Derivative(u0,"z");
       du0_D1->v = Partial_Derivative(u0,"y");
       du0_D0->v = Partial_Derivative(u0,"x");
-    }  
+    }
+    
+    /* K derivatives */
+    DECLARE_FIELD(K)
+
+    DECLARE_FIELD(dK_D2)
+    DECLARE_FIELD(dK_D1)
+    DECLARE_FIELD(dK_D0)
+
+    EMPTY_FIELD(dK_D2)
+    EMPTY_FIELD(dK_D1)
+    EMPTY_FIELD(dK_D0)
+
+    dK_D2->v = Partial_Derivative(K,"z");
+    dK_D1->v = Partial_Derivative(K,"y");
+    dK_D0->v = Partial_Derivative(K,"x");
+      
     /* psi derivatives */
     DECLARE_FIELD(psi)
 
