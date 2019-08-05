@@ -1,0 +1,55 @@
+# Manifold or grid Dimension
+Dimension = 3;
+
+# point on manifold shown by:
+Point = ijk;
+
+C_macro = GET_FIELD(name);
+
+Ccode["void Tij_IF_CTS_psi6E(Patch_T *const patch)"];
+Ccode["{"];
+Ccode["  if (!IsItNSPatch(patch))"];
+Ccode["    return;"];
+Ccode["  const unsigned nn = patch->nn;"];
+Ccode["  unsigned ijk;"];
+
+Declare = 
+{
+
+ # enthalpy
+ (obj = Field,name = enthalpy, rank = 0, C_macro);
+
+ # eta
+ (obj = Field,name = eta, rank = 0, C_macro);
+
+ # u0
+ (obj = Field,name = u0, rank = 0, C_macro);
+
+ # conformal factor
+ (obj = Field,name = psi, rank = 0, C_macro);
+
+ # rho0
+ (obj = Field,name = rho0, rank = 0, C_macro);
+
+ # pressure
+ (obj = Variable,name = p, rank = 0, None);
+
+ # _E
+ (obj = Field,name = _E, rank = 0, C_macro);
+
+}
+
+# calculate _E:
+Ccode["  EoS_T *eos = initialize_EoS();"];
+Ccode["  for(ijk = 0; ijk < nn; ++ijk)"];
+Ccode["  {"];
+Ccode["    eos->h   = enthalpy[ijk];"];
+Ccode["    double p = eos->pressure(eos);"];
+     alpha = eta/psi;
+     psi6  = psi**(6);
+     Ebar = psi6*rho0*enthalpy*(u0*alpha)**2 - p;
+     Ccode["  _E[ijk] = Ebar;"];
+Ccode["  }"];
+Ccode["  free_EoS(eos);"];
+
+Ccode["}"];

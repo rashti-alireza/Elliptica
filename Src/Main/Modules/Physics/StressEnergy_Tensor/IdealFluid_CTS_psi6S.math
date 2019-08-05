@@ -6,7 +6,7 @@ Point = ijk;
 
 C_macro = GET_FIELD(name);
 
-Ccode["void Tij_IF_build_psi6E(Patch_T *const patch)"];
+Ccode["void Tij_IF_CTS_psi6S(Patch_T *const patch)"];
 Ccode["{"];
 Ccode["  if (!IsItNSPatch(patch))"];
 Ccode["    return;"];
@@ -16,14 +16,20 @@ Ccode["  unsigned ijk;"];
 Declare = 
 {
 
+ # conformal metric 
+ (obj = Field,name = _gamma, rank = DD, C_macro);
+
+ # conformal metric inverse
+ (obj = Field,name = _gammaI, rank = UU, C_macro);
+
  # enthalpy
  (obj = Field,name = enthalpy, rank = 0, C_macro);
 
- # eta
- (obj = Field,name = eta, rank = 0, C_macro);
+ # spin part of fluid
+ (obj = Field,name = W, rank = U, C_macro);
 
- # u0
- (obj = Field,name = u0, rank = 0, C_macro);
+ # d(phi)/d? for irrotional part of fluid
+ (obj = Field,name = dphi, rank = D, C_macro);
 
  # conformal factor
  (obj = Field,name = psi, rank = 0, C_macro);
@@ -34,21 +40,28 @@ Declare =
  # pressure
  (obj = Variable,name = p, rank = 0, None);
 
- # _E
- (obj = Field,name = _E, rank = 0, C_macro);
+ # _S
+ (obj = Field,name = _S, rank = 0, C_macro);
+
 
 }
 
-# calculate _E:
+# symmetries:
+Symm[_gammaI(i,j)  = _gammaI(j,i)];
+Symm[_gamma(i,j)   = _gamma(j,i)];
+
+# calculate _S:
 Ccode["  EoS_T *eos = initialize_EoS();"];
 Ccode["  for(ijk = 0; ijk < nn; ++ijk)"];
 Ccode["  {"];
 Ccode["    eos->h   = enthalpy[ijk];"];
 Ccode["    double p = eos->pressure(eos);"];
-     alpha = eta/psi;
+     psim4 = psi**(-4);
+     psi4  = psi**(4);
      psi6  = psi**(6);
-     Ebar = psi6*rho0*enthalpy*(u0*alpha)**2 - p;
-     Ccode["  _E[ijk] = Ebar;"];
+     P2    = psim4*_gammaI(i,j)*dphi(-i)*dphi(-j)+2*dphi(-i)*W(i)+psi4*_gamma(-i,-j)*W(i)*W(j);
+     Sbar = psi6*rho0*P2/enthalpy+3*p;
+     Ccode["  _S[ijk] = Sbar;"];
 Ccode["  }"];
 Ccode["  free_EoS(eos);"];
 

@@ -70,7 +70,7 @@ static Grid_T *TOV_KerrShild_approximation(void)
   bbn_partial_derivatives_fields(grid);
   
   /* updating u0, _J^i, _E and _S */
-  Tij_IF_build_psi6Sources(grid);
+  Tij_IF_CTS_psi6Sources(grid);
   
   TOV_free(tov);
   

@@ -6,12 +6,12 @@
 #include "Tij_IdealFluid_3plus1_decomposition.h"
 
 /* Note: Tij stands for Stress Energy tensor.
-// IF stands for ideal fluid. thus, 
-// Tij_IF means stress enerfy of ideal fluid. 
+// IF stands for ideal fluid, CTS for conformal thin sandwich method;
+// thus, Tij_IF_CTS means stress enerfy of ideal fluid in CTS method. 
 // given all of the fields needed it builds 
 // the first component of fluid four velocity, i.e. 
 // u_mu = (u_U0,u_U1,u_U2,u_U3). */
-void Tij_IF_u0(Patch_T *const patch)
+void Tij_IF_CTS_u0(Patch_T *const patch)
 {
   if (!IsItNSPatch(patch))
     return;
@@ -73,15 +73,16 @@ sqrt(P2 + pow(enthalpy[ijk], 2))/(alpha*enthalpy[ijk]);
   }
 }
 
+
 /* Note: Tij stands for Stress Energy tensor.
-// IF stands for ideal fluid. thus, 
-// Tij_IF means stress enerfy of ideal fluid.
+// IF stands for ideal fluid, CTS for conformal thin sandwich method;
+// thus, Tij_IF_CTS means stress enerfy of ideal fluid in CTS method. 
 // given all of the fields needed for J = -gamma(i,-mu)*T(mu,nu)*n(-nu) 
 // it builds "momentum current * psi^6", where psi is conformal factor,
 // and puts it to _J_U?.
 // note: if patch does not contain fluid, it does nothing.
 // note: it depends on u0, so better first to call Tij_IF_u0 function. */
-void Tij_IF_build_psi6J_Ui(Patch_T *const patch)
+void Tij_IF_CTS_psi6J_Ui(Patch_T *const patch)
 {
   if (!IsItNSPatch(patch))
     return;
@@ -144,15 +145,16 @@ dphi_D2[ijk]));
   }
 }
 
+
 /* Note: Tij stands for Stress Energy tensor.
-// IF stands for ideal fluid. thus, 
-// Tij_IF means stress enerfy of ideal fluid.
+// IF stands for ideal fluid, CTS for conformal thin sandwich method;
+// thus, Tij_IF_CTS means stress enerfy of ideal fluid in CTS method. 
 // given all of the fields needed for E = T(mu,nu)*n(-mu)*n(-nu)
 // it builds "total energy density * psi^6", where psi is conformal factor,
 // and puts it to _E.
 // note: if patch does not contain fluid, it does nothing.
 // note: it depends on u0, so better first to call Tij_IF_u0 function. */
-void Tij_IF_build_psi6E(Patch_T *const patch)
+void Tij_IF_CTS_psi6E(Patch_T *const patch)
 {
   if (!IsItNSPatch(patch))
     return;
@@ -189,15 +191,15 @@ p;
 }
 
 /* Note: Tij stands for Stress Energy tensor.
-// IF stands for ideal fluid. thus, 
-// Tij_IF means stress enerfy of ideal fluid.
+// IF stands for ideal fluid, CTS for conformal thin sandwich method;
+// thus, Tij_IF_CTS means stress enerfy of ideal fluid in CTS method. 
 // given all of the fields needed for 
 // S = T(mu,nu)*gamma(i,j)*gamma(-i,-mu)*gamma(-j,-nu)
 // it builds "total energy density * psi^6", 
 // where psi is conformal factor, and puts it to _S. 
 // note: if patch does not contain fluid, it does nothing.
 // note: it depends on u0, so better first to call Tij_IF_u0 function. */
-void Tij_IF_build_psi6S(Patch_T *const patch)
+void Tij_IF_CTS_psi6S(Patch_T *const patch)
 {
   if (!IsItNSPatch(patch))
     return;
@@ -264,7 +266,7 @@ P2*psi6*rho0[ijk]/enthalpy[ijk] + 3*p;
 }
 
 /* building u0, _J^i, _E and _S */
-void Tij_IF_build_psi6Sources(Grid_T *const grid)
+void Tij_IF_CTS_psi6Sources(Grid_T *const grid)
 {
   pr_line_custom('=');
   printf("Building _J^i, _E and _S sources ...\n");
@@ -275,10 +277,10 @@ void Tij_IF_build_psi6Sources(Grid_T *const grid)
   {
     Patch_T *patch = grid->patch[p];
     
-    Tij_IF_u0(patch);
-    Tij_IF_build_psi6J_Ui(patch);
-    Tij_IF_build_psi6E(patch);
-    Tij_IF_build_psi6S(patch);
+    Tij_IF_CTS_u0(patch);
+    Tij_IF_CTS_psi6J_Ui(patch);
+    Tij_IF_CTS_psi6E(patch);
+    Tij_IF_CTS_psi6S(patch);
   }
   
   printf("Building _J^i, _E and _S sources ==> Done.\n");
