@@ -1,0 +1,68 @@
+# equation: ?
+
+# Manifold or grid Dimension
+Dimension = 3;
+
+# point on manifold shown by:
+Point = ijk;
+
+C_macro  = GET_FIELD(name);
+C_macro2 = PREP_FIELD(name);
+
+# main function:
+Ccode["#include "bbn_headers.h""];
+Ccode["#include "bbn_XCTS_equations_lib.h"\n\n"];
+
+Ccode["void *jacobian_bc_?(void *vp1,void *vp2)\n{"];
+
+Ccode["  DDM_Schur_Complement_T *const S = vp2;"];
+Ccode["  Patch_T *const patch = vp1;"];
+Ccode["  double **const B = S->B->reg->A;"];
+Ccode["  const unsigned I0 = S->Oi;/* number of inner mesh nodes */"];
+Ccode["  const unsigned N = S->NS;/* number of inner mesh+outer-boundary nodes*/"];
+Ccode["  unsigned i;"];
+
+Declare = 
+{
+ # conformal metric
+ (obj = Field,name = _gamma, rank = DD, C_macro);
+ # conformal metric inverse
+ (obj = Field,name = _gammaI, rank = UU, C_macro);
+ # Christoffer symbol
+ (obj = Field,name = _Gamma, rank = UDD, C_macro);
+}
+
+# symmetries:
+Symm[_gamma(i,j)   = _gamma(j,i)];
+Symm[_gammaI(i,j)  = _gammaI(j,i)];
+Symm[_Gamma(i,j,k) = _Gamma(i,k,j)];
+
+# outer boundary like infinity
+Ccode["  if (patch->outerB)"];
+Ccode["  {"];
+Ccode["    /* B part: */"];
+Ccode["    for (i = I0; i < N; ++i)"];
+Ccode["    {"];
+# calculations:
+
+Ccode["    }"];
+
+Ccode["    /* E part: */"];
+Ccode["  }"];# end of if (patch->outerB)
+
+# inner boundary like horizon
+Ccode["  else if (patch->innerB)"];
+Ccode["  {"];
+Ccode["    /* B part: */"];
+Ccode["    for (i = I0; i < N; ++i)"];
+Ccode["    {"];
+# calculations:
+
+Ccode["    }"];
+
+Ccode["    /* E part: */"];
+Ccode["  }"];# end of else if (patch->innerB)
+
+Ccode["  return 0;"];
+Ccode["}"];
+
