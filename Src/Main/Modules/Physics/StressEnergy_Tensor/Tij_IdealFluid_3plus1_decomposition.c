@@ -269,7 +269,7 @@ P2*psi6*rho0[ijk]/enthalpy[ijk] + 3*p;
 void Tij_IF_CTS_psi6Sources(Grid_T *const grid)
 {
   pr_line_custom('=');
-  printf("Building _J^i, _E and _S sources ...\n");
+  printf("Building _J^i, _E and _S of CTS sources ...\n");
   
   unsigned p;
   
@@ -283,7 +283,7 @@ void Tij_IF_CTS_psi6Sources(Grid_T *const grid)
     Tij_IF_CTS_psi6S(patch);
   }
   
-  printf("Building _J^i, _E and _S sources ==> Done.\n");
+  printf("Building _J^i, _E and _S of CTS sources ==> Done.\n");
   pr_clock();
   pr_line_custom('=');
 
