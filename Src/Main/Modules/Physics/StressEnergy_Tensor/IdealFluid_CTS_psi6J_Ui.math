@@ -1,3 +1,12 @@
+# Note: Tij stands for Stress Energy tensor.
+# IF stands for ideal fluid, CTS for conformal thin sandwich method;
+# thus, Tij_IF_CTS means stress enerfy of ideal fluid in CTS method. 
+# given all of the fields needed for J = -gamma(i,-mu)*T(mu,nu)*n(-nu) 
+# it builds "momentum current * psi^6", where psi is conformal factor,
+# and puts it to _J_U?.
+# note: if patch does not contain fluid, it does nothing.
+# note: it depends on u0, so better first to call Tij_IF_u0 function. */
+
 # Manifold or grid Dimension
 Dimension = 3;
 
@@ -5,7 +14,8 @@ Dimension = 3;
 Point = ijk;
 
 C_macro = GET_FIELD(name);
-
+C_macro2 = PREP_FIELD(name);
+Ccode["#include "IdealFluid_CTS_lib.h"\n\n"];
 Ccode["void Tij_IF_CTS_psi6J_Ui(Patch_T *const patch)"];
 Ccode["{"];
 Ccode["  if (!IsItNSPatch(patch))"];
@@ -28,7 +38,7 @@ Declare =
  (obj = Field,name = dphi, rank = D, C_macro);
 
  # conformal momentum current
- (obj = Field,name = _J, rank = U, C_macro);
+ (obj = Field,name = _J, rank = U, C_macro2);
 
  # eta
  (obj = Field,name = eta, rank = 0, C_macro);
