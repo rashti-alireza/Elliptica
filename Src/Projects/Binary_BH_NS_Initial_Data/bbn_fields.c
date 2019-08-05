@@ -332,8 +332,16 @@ void bbn_allocate_fields(Grid_T *const grid)
     ADD_FIELD_NoMem(dK_D1)
     ADD_FIELD_NoMem(dK_D0)
 
-    /*_A_ij*_A^ij */
-    ADD_FIELD(_AijAij)
+    /*_A_UiUj psi^10*A^{ij}*/
+    ADD_FIELD(_A_UiUj_U2U2)
+    ADD_FIELD(_A_UiUj_U1U2)
+    ADD_FIELD(_A_UiUj_U1U1)
+    ADD_FIELD(_A_UiUj_U0U2)
+    ADD_FIELD(_A_UiUj_U0U1)
+    ADD_FIELD(_A_UiUj_U0U0)
+    
+    /* contraction _A_{ij}*_A^{ij} */
+    ADD_FIELD(_Aij2)
     
   }
 }
@@ -908,7 +916,7 @@ void bbn_partial_derivatives_fields(Grid_T *const grid)
     ddBeta_U1D1D2->v = Partial_Derivative(dBeta_U1D1,"z");
     ddBeta_U2D1D2->v = Partial_Derivative(dBeta_U2D1,"z");
     ddBeta_U2D1D1->v = Partial_Derivative(dBeta_U2D1,"y");
-    ddBeta_U2D1D0->v = Partial_Derivative(dBeta_U2D1,"x");  
+    ddBeta_U2D1D0->v = Partial_Derivative(dBeta_U2D1,"x");
   }
   
   printf("Taking partial derivatives of fields ==> Done.\n");

@@ -16,7 +16,7 @@ static void init_field_TOV_plus_KerrSchild(Grid_T *const grid,const TOV_T *const
 void bbn_allocate_fields(Grid_T *const grid);
 void bbn_partial_derivatives_fields(Grid_T *const grid);
 void bbn_populate_free_data(Grid_T *const grid);
-
+void bbn_update_psi10A_UiUj(Grid_T *const grid);
 
 
 

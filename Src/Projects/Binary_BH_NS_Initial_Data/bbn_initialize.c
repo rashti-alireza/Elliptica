@@ -69,8 +69,12 @@ static Grid_T *TOV_KerrShild_approximation(void)
   /* taking partial derivatives of the fields needed for equations */
   bbn_partial_derivatives_fields(grid);
   
-  /* updating u0, _J^i, _E and _S */
+  /* update u0, _J^i, _E and _S */
   Tij_IF_CTS_psi6Sources(grid);
+  
+  /* update _Aij in K^{ij} = A^{ij}+1/3*gamma^{ij}*K and 
+  // _A^{ij} = gamma^10*A^{ij} */
+  bbn_update_psi10A_UiUj(grid);
   
   TOV_free(tov);
   
