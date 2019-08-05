@@ -18,6 +18,11 @@
 #define REMOVE_FIELD(name)   remove_field(name);/* remove the field utterly */
 #define DECLARE_FIELD(name)  Field_T *const name = patch->pool[Ind(#name)];/* access to the whole field */
 #define GET_FIELD(name)      double *const name = patch->pool[Ind(#name)]->v;/* access to the memory values */
+#define PREP_FIELD(name)     Field_T *const f_##name = patch->pool[Ind(#name)];\
+                             free_coeffs(f_##name);\
+                             double *const name = patch->pool[Ind(#name)]->v;/* it frees f->v2,f->info and gets f->v. 
+                                                                             // it is used to update value of a field and frees 
+                                                                             // the left over of previous values */
 #define EMPTY_FIELD(name)  empty_field(name);/* free v,v2 and info of field */
 #define GetParameterS(x)   get_parameter_value_S(x,__FILE__,__LINE__,NONE)
 #define GetParameterI(x)   get_parameter_value_I(x,__FILE__,__LINE__,NONE)
