@@ -112,15 +112,15 @@ static void init_field_TOV_plus_KerrSchild(Grid_T *const grid,const TOV_T *const
     unsigned nn = patch->nn;
     unsigned ijk;
     
-    GET_FIELD(Beta_U0)
-    GET_FIELD(Beta_U1)
-    GET_FIELD(Beta_U2)
-    GET_FIELD(_gammaI_U0U2)
-    GET_FIELD(_gammaI_U0U0)
-    GET_FIELD(_gammaI_U0U1)
-    GET_FIELD(_gammaI_U1U2)
-    GET_FIELD(_gammaI_U1U1)
-    GET_FIELD(_gammaI_U2U2)
+    PREP_FIELD(Beta_U0)
+    PREP_FIELD(Beta_U1)
+    PREP_FIELD(Beta_U2)
+    PREP_FIELD(_gammaI_U0U2)
+    PREP_FIELD(_gammaI_U0U0)
+    PREP_FIELD(_gammaI_U0U1)
+    PREP_FIELD(_gammaI_U1U2)
+    PREP_FIELD(_gammaI_U1U1)
+    PREP_FIELD(_gammaI_U2U2)
 
     ADD_FIELD(KSbeta_D0)
     ADD_FIELD(KSbeta_D1)
@@ -184,9 +184,9 @@ KSbeta_D2[ijk]*_gammaI_U2U2[ijk];
     unsigned nn = patch->nn;
     unsigned ijk;
     
-    GET_FIELD(psi)
-    GET_FIELD(eta)
-    GET_FIELD(KSalpha)
+    PREP_FIELD(psi)
+    PREP_FIELD(eta)
+    PREP_FIELD(KSalpha)
     
     if (IsItNSPatch(patch))
     {
@@ -206,12 +206,12 @@ KSbeta_D2[ijk]*_gammaI_U2U2[ijk];
 
       EoS_T *eos = initialize_EoS();
       
-      GET_FIELD(enthalpy)
-      GET_FIELD(rho0)
-      GET_FIELD(phi)
-      GET_FIELD(W_U0)
-      GET_FIELD(W_U1)
-      GET_FIELD(W_U2)
+      PREP_FIELD(enthalpy)
+      PREP_FIELD(rho0)
+      PREP_FIELD(phi)
+      PREP_FIELD(W_U0)
+      PREP_FIELD(W_U1)
+      PREP_FIELD(W_U2)
       
       for (ijk = 0; ijk < nn; ++ijk)
       {
@@ -289,16 +289,16 @@ KSbeta_D2[ijk]*_gammaI_U2U2[ijk];
      unsigned ijk;
      double psim4;/* psi^-4 */
       
-     GET_FIELD(psi)
-     GET_FIELD(B0_U0)
-     GET_FIELD(B0_U1)
-     GET_FIELD(B0_U2)
-     GET_FIELD(B1_U0)
-     GET_FIELD(B1_U1)
-     GET_FIELD(B1_U2)
-     GET_FIELD(Beta_U0)
-     GET_FIELD(Beta_U1)
-     GET_FIELD(Beta_U2)
+     PREP_FIELD(psi)
+     PREP_FIELD(B0_U0)
+     PREP_FIELD(B0_U1)
+     PREP_FIELD(B0_U2)
+     PREP_FIELD(B1_U0)
+     PREP_FIELD(B1_U1)
+     PREP_FIELD(B1_U2)
+     PREP_FIELD(Beta_U0)
+     PREP_FIELD(Beta_U1)
+     PREP_FIELD(Beta_U2)
     
      for (ijk = 0; ijk < nn; ++ijk)
      {
