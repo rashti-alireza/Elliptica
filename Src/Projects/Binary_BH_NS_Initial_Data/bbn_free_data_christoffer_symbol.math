@@ -1,3 +1,5 @@
+# Christoffer symbol _Gamma compatible with _gamma
+
 # Manifold or grid Dimension
 Dimension = 3;
 
@@ -6,16 +8,18 @@ Point = ijk;
 
 C_macro = GET_FIELD(name);
 C_macro1 = ADD_FIELD(name);
+C_macro2 = PREP_FIELD(name);
 
 # main function:
-Ccode["static void _Gamma(Grid_T *const grid)\n{"];
+Ccode["#include "bbn_headers.h"\n\n"];
+Ccode["void bbn_free_data_Gamma(Grid_T *const grid)\n{"];
 Ccode["  const unsigned np = grid->np;"];
 Ccode["  unsigned p;\n"];
 Ccode["  OpenMP_1d_Pragma(omp parallel for)"];
 Ccode["  for(p = 0; p < np; ++p)"];
 Ccode["  {"];
 Ccode["    Patch_T *patch = grid->patch[p];"];
-Ccode["    preparing_conformal_metric_derivatives(patch);"];
+Ccode["    bbn_preparing_conformal_metric_derivatives(patch);"];
 
 Declare = 
 {
@@ -24,7 +28,7 @@ Declare =
  # partial derivative of conformal metric
  (obj = Field,name = _dgamma, rank = DDD, C_macro);
  # Christoffer symbol value
- (obj = Field,name = _Gamma, rank = UDD, C_macro);
+ (obj = Field,name = _Gamma, rank = UDD, C_macro2);
 }
 
 # symmetries:
@@ -43,6 +47,6 @@ Symm[GAMMA(i,j,k) = GAMMA(i,k,j)];
 Cpopulate[_Gamma = GAMMA];
 
 Ccode["    }/*end of for(ijk = 0; ijk < nn; ++ijk)*/"];
-Ccode["    free_conformal_metric_derivatives(patch);"];
+Ccode["    bbn_free_conformal_metric_derivatives(patch);"];
 Ccode["  }"];
 Ccode["}"]; # end of _Gamma function

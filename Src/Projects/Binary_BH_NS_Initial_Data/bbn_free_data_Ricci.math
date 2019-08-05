@@ -1,3 +1,5 @@
+# _Ricci scalar
+
 # Manifold or grid Dimension
 Dimension = 3;
 
@@ -6,9 +8,11 @@ Point = ijk;
 
 C_macro = GET_FIELD(name);
 C_macro1 = ADD_FIELD(name);
+C_macro2 = PREP_FIELD(name);
 
 # main function:
-Ccode["static void _Ricci(Grid_T *const grid)\n{"];
+Ccode["#include "bbn_headers.h"\n\n"];
+Ccode["void bbn_free_data_Ricci(Grid_T *const grid)\n{"];
 Ccode["  const unsigned np = grid->np;"];
 Ccode["  unsigned p;\n"];
 Ccode["  OpenMP_1d_Pragma(omp parallel for)"];
@@ -33,7 +37,7 @@ Symm[_Gamma(i,j,k)  = _Gamma(i,k,j)];
 
 Ccode["    unsigned nn = patch->nn;"];
 Ccode["    unsigned ijk;"];
-Ccode["    GET_FIELD(_R)"];
+Ccode["    PREP_FIELD(_R)"];
 Ccode["    for(ijk = 0; ijk < nn; ++ijk)"];
 Ccode["    {"];
 

@@ -12,23 +12,23 @@ void bbn_populate_free_data(Grid_T *const grid)
   printf("Populating free data and related ...\n");
   
   /* populate conformal metric and its inverse */
-  _gammas(grid);
+  bbn_free_data_gammas(grid);
   printf("Conformal metric and its inverse ~> Done.\n");
   
   /* Christoffer symbols made up of conformal metric */
-  _Gamma(grid);
+  bbn_free_data_Gamma(grid);
   printf("Christoffer symbols (_Gamma)     ~> Done.\n");
   
   /* partial derivtive of _Gamma, used in covariant derivative and _R */
-  _dGamma(grid);
+  bbn_free_data_dGamma(grid);
   printf("Partial derivatives of _Gamma    ~> Done.\n");
   
   /* Ricci scalar made up of conformal metric _gamma */
-  _Ricci(grid);
+  bbn_free_data_Ricci(grid);
   printf("Ricci scalar (_R)                ~> Done.\n");
   
   /* trace of Kerr Schild extrinsic curvature */
-  tr_KSKij(grid);
+  bbn_free_data_tr_KSKij(grid);
   printf("Trace of Kerr Schild BH:tr(K_ij) ~> Done.\n");
   
   printf("Populating free data and related ==> Done.\n");
@@ -37,7 +37,7 @@ void bbn_populate_free_data(Grid_T *const grid)
 }
 
 /* partial derivtive of _Gamma, used in covariant derivative and _R */
-static void _dGamma(Grid_T *const grid)
+static void bbn_free_data_dGamma(Grid_T *const grid)
 {
   const unsigned np = grid->np;
   unsigned p;
@@ -102,6 +102,61 @@ static void _dGamma(Grid_T *const grid)
     DECLARE_FIELD(_dGamma_U0D2D2D1)
     DECLARE_FIELD(_dGamma_U0D2D2D2)
     DECLARE_FIELD(_dGamma_U0D0D1D2)
+    
+    EMPTY_FIELD(_dGamma_U2D2D2D2)
+    EMPTY_FIELD(_dGamma_U2D2D2D0)
+    EMPTY_FIELD(_dGamma_U2D2D2D1)
+    EMPTY_FIELD(_dGamma_U2D0D0D2)
+    EMPTY_FIELD(_dGamma_U1D1D2D2)
+    EMPTY_FIELD(_dGamma_U2D0D0D0)
+    EMPTY_FIELD(_dGamma_U1D1D2D0)
+    EMPTY_FIELD(_dGamma_U1D1D2D1)
+    EMPTY_FIELD(_dGamma_U2D1D1D0)
+    EMPTY_FIELD(_dGamma_U2D0D0D1)
+    EMPTY_FIELD(_dGamma_U2D0D2D1)
+    EMPTY_FIELD(_dGamma_U1D0D1D0)
+    EMPTY_FIELD(_dGamma_U1D0D1D1)
+    EMPTY_FIELD(_dGamma_U1D0D1D2)
+    EMPTY_FIELD(_dGamma_U1D2D2D1)
+    EMPTY_FIELD(_dGamma_U1D0D0D1)
+    EMPTY_FIELD(_dGamma_U1D0D0D0)
+    EMPTY_FIELD(_dGamma_U1D0D0D2)
+    EMPTY_FIELD(_dGamma_U0D1D2D2)
+    EMPTY_FIELD(_dGamma_U0D1D2D1)
+    EMPTY_FIELD(_dGamma_U0D1D2D0)
+    EMPTY_FIELD(_dGamma_U2D0D2D0)
+    EMPTY_FIELD(_dGamma_U1D0D2D2)
+    EMPTY_FIELD(_dGamma_U1D0D2D1)
+    EMPTY_FIELD(_dGamma_U1D0D2D0)
+    EMPTY_FIELD(_dGamma_U2D1D1D2)
+    EMPTY_FIELD(_dGamma_U2D0D2D2)
+    EMPTY_FIELD(_dGamma_U0D0D1D0)
+    EMPTY_FIELD(_dGamma_U1D2D2D0)
+    EMPTY_FIELD(_dGamma_U2D1D2D1)
+    EMPTY_FIELD(_dGamma_U2D0D1D2)
+    EMPTY_FIELD(_dGamma_U2D0D1D1)
+    EMPTY_FIELD(_dGamma_U2D0D1D0)
+    EMPTY_FIELD(_dGamma_U2D1D2D2)
+    EMPTY_FIELD(_dGamma_U0D1D1D0)
+    EMPTY_FIELD(_dGamma_U0D1D1D1)
+    EMPTY_FIELD(_dGamma_U0D1D1D2)
+    EMPTY_FIELD(_dGamma_U1D2D2D2)
+    EMPTY_FIELD(_dGamma_U1D1D1D1)
+    EMPTY_FIELD(_dGamma_U1D1D1D0)
+    EMPTY_FIELD(_dGamma_U1D1D1D2)
+    EMPTY_FIELD(_dGamma_U0D0D1D1)
+    EMPTY_FIELD(_dGamma_U0D0D2D2)
+    EMPTY_FIELD(_dGamma_U0D0D2D0)
+    EMPTY_FIELD(_dGamma_U0D0D2D1)
+    EMPTY_FIELD(_dGamma_U2D1D2D0)
+    EMPTY_FIELD(_dGamma_U0D0D0D0)
+    EMPTY_FIELD(_dGamma_U0D0D0D1)
+    EMPTY_FIELD(_dGamma_U0D0D0D2)
+    EMPTY_FIELD(_dGamma_U2D1D1D1)
+    EMPTY_FIELD(_dGamma_U0D2D2D0)
+    EMPTY_FIELD(_dGamma_U0D2D2D1)
+    EMPTY_FIELD(_dGamma_U0D2D2D2)
+    EMPTY_FIELD(_dGamma_U0D0D1D2)
     
     /* _Gamma */
     DECLARE_FIELD(_Gamma_U2D1D1)
@@ -184,7 +239,7 @@ static void _dGamma(Grid_T *const grid)
 
 /* to make christoffer symbol we need derivative of the metric, 
 // this function does that. */
-static void preparing_conformal_metric_derivatives(Patch_T *const patch)
+void bbn_preparing_conformal_metric_derivatives(Patch_T *const patch)
 {
   /* declaring conformal metric */
   DECLARE_FIELD(_gamma_D2D2)
@@ -256,7 +311,7 @@ static void preparing_conformal_metric_derivatives(Patch_T *const patch)
 }
 
 /* freeing conformal metric derivatives */
-static void free_conformal_metric_derivatives(Patch_T *const patch)
+void bbn_free_conformal_metric_derivatives(Patch_T *const patch)
 {
   /* declare _dgamma */
   DECLARE_FIELD(_dgamma_D0D0D1)
@@ -301,7 +356,7 @@ static void free_conformal_metric_derivatives(Patch_T *const patch)
 }
 
 /* populate conformal metric and its inverse */
-static void _gammas(Grid_T *const grid)
+void bbn_free_data_gammas(Grid_T *const grid)
 {
   /* roll off distance at exp(-(r/r0)^4)  */
   const double r0   = GetParameterD_E("RollOff_distance");
@@ -318,18 +373,18 @@ static void _gammas(Grid_T *const grid)
     Patch_T *patch = grid->patch[p];
     nn = patch->nn;
     
-    GET_FIELD(_gamma_D2D2)
-    GET_FIELD(_gamma_D0D2)
-    GET_FIELD(_gamma_D0D0)
-    GET_FIELD(_gamma_D0D1)
-    GET_FIELD(_gamma_D1D2)
-    GET_FIELD(_gamma_D1D1)
-    GET_FIELD(_gammaI_U0U2)
-    GET_FIELD(_gammaI_U0U0)
-    GET_FIELD(_gammaI_U0U1)
-    GET_FIELD(_gammaI_U1U2)
-    GET_FIELD(_gammaI_U1U1)
-    GET_FIELD(_gammaI_U2U2)
+    PREP_FIELD(_gamma_D2D2)
+    PREP_FIELD(_gamma_D0D2)
+    PREP_FIELD(_gamma_D0D0)
+    PREP_FIELD(_gamma_D0D1)
+    PREP_FIELD(_gamma_D1D2)
+    PREP_FIELD(_gamma_D1D1)
+    PREP_FIELD(_gammaI_U0U2)
+    PREP_FIELD(_gammaI_U0U0)
+    PREP_FIELD(_gammaI_U0U1)
+    PREP_FIELD(_gammaI_U1U2)
+    PREP_FIELD(_gammaI_U1U1)
+    PREP_FIELD(_gammaI_U2U2)
     
     for (ijk = 0; ijk < nn; ++ijk)
     {
@@ -418,335 +473,8 @@ static void _gammas(Grid_T *const grid)
   }
 }
 
-/* Christoffer symbol */
-static void _Gamma(Grid_T *const grid)
-{
-  const unsigned np = grid->np;
-  unsigned p;
-
-  OpenMP_Patch_Pragma(omp parallel for)
-  for(p = 0; p < np; ++p)
-  {
-    Patch_T *patch = grid->patch[p];
-    preparing_conformal_metric_derivatives(patch);
-
-    /* declaring: */
-    GET_FIELD(_gammaI_U0U2)
-    GET_FIELD(_gammaI_U0U0)
-    GET_FIELD(_gammaI_U0U1)
-    GET_FIELD(_gammaI_U1U2)
-    GET_FIELD(_gammaI_U1U1)
-    GET_FIELD(_gammaI_U2U2)
-    GET_FIELD(_dgamma_D0D0D1)
-    GET_FIELD(_dgamma_D0D0D0)
-    GET_FIELD(_dgamma_D2D2D2)
-    GET_FIELD(_dgamma_D0D0D2)
-    GET_FIELD(_dgamma_D0D2D1)
-    GET_FIELD(_dgamma_D1D1D0)
-    GET_FIELD(_dgamma_D1D1D2)
-    GET_FIELD(_dgamma_D2D2D0)
-    GET_FIELD(_dgamma_D2D2D1)
-    GET_FIELD(_dgamma_D0D1D0)
-    GET_FIELD(_dgamma_D0D1D1)
-    GET_FIELD(_dgamma_D0D1D2)
-    GET_FIELD(_dgamma_D0D2D0)
-    GET_FIELD(_dgamma_D1D1D1)
-    GET_FIELD(_dgamma_D1D2D1)
-    GET_FIELD(_dgamma_D1D2D2)
-    GET_FIELD(_dgamma_D1D2D0)
-    GET_FIELD(_dgamma_D0D2D2)
-    GET_FIELD(_Gamma_U2D1D1)
-    GET_FIELD(_Gamma_U2D1D2)
-    GET_FIELD(_Gamma_U0D1D1)
-    GET_FIELD(_Gamma_U2D0D2)
-    GET_FIELD(_Gamma_U2D2D2)
-    GET_FIELD(_Gamma_U0D1D2)
-    GET_FIELD(_Gamma_U0D0D2)
-    GET_FIELD(_Gamma_U0D0D1)
-    GET_FIELD(_Gamma_U0D0D0)
-    GET_FIELD(_Gamma_U1D2D2)
-    GET_FIELD(_Gamma_U2D0D1)
-    GET_FIELD(_Gamma_U0D2D2)
-    GET_FIELD(_Gamma_U2D0D0)
-    GET_FIELD(_Gamma_U1D0D2)
-    GET_FIELD(_Gamma_U1D1D2)
-    GET_FIELD(_Gamma_U1D0D0)
-    GET_FIELD(_Gamma_U1D0D1)
-    GET_FIELD(_Gamma_U1D1D1)
-
-
-    unsigned nn = patch->nn;
-    unsigned ijk;
-    for(ijk = 0; ijk < nn; ++ijk)
-    {
-    double GAMMA_U1D0D0 = 
-0.5*_dgamma_D0D0D0[ijk]*_gammaI_U0U1[ijk] - 0.5*_gammaI_U1U1[ijk]*
-(_dgamma_D0D0D1[ijk] - 2*_dgamma_D0D1D0[ijk]) - 0.5*_gammaI_U1U2[ijk]*
-(_dgamma_D0D0D2[ijk] - 2*_dgamma_D0D2D0[ijk]);
-
-    double GAMMA_U0D2D2 = 
-0.5*_dgamma_D2D2D2[ijk]*_gammaI_U0U2[ijk] + 0.5*_gammaI_U0U0[ijk]*(2*
-_dgamma_D0D2D2[ijk] - _dgamma_D2D2D0[ijk]) + 0.5*_gammaI_U0U1[ijk]*(2*
-_dgamma_D1D2D2[ijk] - _dgamma_D2D2D1[ijk]);
-
-    double GAMMA_U1D0D2 = 
-0.5*_dgamma_D0D0D2[ijk]*_gammaI_U0U1[ijk] + 0.5*_dgamma_D2D2D0[ijk]*
-_gammaI_U1U2[ijk] + 0.5*_gammaI_U1U1[ijk]*(_dgamma_D0D1D2[ijk] - 
-_dgamma_D0D2D1[ijk] + _dgamma_D1D2D0[ijk]);
-
-    double GAMMA_U2D2D2 = 
-0.5*_dgamma_D2D2D2[ijk]*_gammaI_U2U2[ijk] + 0.5*_gammaI_U0U2[ijk]*(2*
-_dgamma_D0D2D2[ijk] - _dgamma_D2D2D0[ijk]) + 0.5*_gammaI_U1U2[ijk]*(2*
-_dgamma_D1D2D2[ijk] - _dgamma_D2D2D1[ijk]);
-
-    double GAMMA_U2D1D1 = 
-0.5*_dgamma_D1D1D1[ijk]*_gammaI_U1U2[ijk] + 0.5*_gammaI_U0U2[ijk]*(2*
-_dgamma_D0D1D1[ijk] - _dgamma_D1D1D0[ijk]) - 0.5*_gammaI_U2U2[ijk]*
-(_dgamma_D1D1D2[ijk] - 2*_dgamma_D1D2D1[ijk]);
-
-    double GAMMA_U1D0D1 = 
-0.5*_dgamma_D0D0D1[ijk]*_gammaI_U0U1[ijk] + 0.5*_dgamma_D1D1D0[ijk]*
-_gammaI_U1U1[ijk] + 0.5*_gammaI_U1U2[ijk]*(-_dgamma_D0D1D2[ijk] + 
-_dgamma_D0D2D1[ijk] + _dgamma_D1D2D0[ijk]);
-
-    double GAMMA_U1D2D2 = 
-0.5*_dgamma_D2D2D2[ijk]*_gammaI_U1U2[ijk] + 0.5*_gammaI_U0U1[ijk]*(2*
-_dgamma_D0D2D2[ijk] - _dgamma_D2D2D0[ijk]) + 0.5*_gammaI_U1U1[ijk]*(2*
-_dgamma_D1D2D2[ijk] - _dgamma_D2D2D1[ijk]);
-
-    double GAMMA_U2D1D2 = 
-0.5*_dgamma_D1D1D2[ijk]*_gammaI_U1U2[ijk] + 0.5*_dgamma_D2D2D1[ijk]*
-_gammaI_U2U2[ijk] + 0.5*_gammaI_U0U2[ijk]*(_dgamma_D0D1D2[ijk] + 
-_dgamma_D0D2D1[ijk] - _dgamma_D1D2D0[ijk]);
-
-    double GAMMA_U2D0D2 = 
-0.5*_dgamma_D0D0D2[ijk]*_gammaI_U0U2[ijk] + 0.5*_dgamma_D2D2D0[ijk]*
-_gammaI_U2U2[ijk] + 0.5*_gammaI_U1U2[ijk]*(_dgamma_D0D1D2[ijk] - 
-_dgamma_D0D2D1[ijk] + _dgamma_D1D2D0[ijk]);
-
-    double GAMMA_U2D0D1 = 
-0.5*_dgamma_D0D0D1[ijk]*_gammaI_U0U2[ijk] + 0.5*_dgamma_D1D1D0[ijk]*
-_gammaI_U1U2[ijk] + 0.5*_gammaI_U2U2[ijk]*(-_dgamma_D0D1D2[ijk] + 
-_dgamma_D0D2D1[ijk] + _dgamma_D1D2D0[ijk]);
-
-    double GAMMA_U2D0D0 = 
-0.5*_dgamma_D0D0D0[ijk]*_gammaI_U0U2[ijk] - 0.5*_gammaI_U1U2[ijk]*
-(_dgamma_D0D0D1[ijk] - 2*_dgamma_D0D1D0[ijk]) - 0.5*_gammaI_U2U2[ijk]*
-(_dgamma_D0D0D2[ijk] - 2*_dgamma_D0D2D0[ijk]);
-
-    double GAMMA_U0D0D2 = 
-0.5*_dgamma_D0D0D2[ijk]*_gammaI_U0U0[ijk] + 0.5*_dgamma_D2D2D0[ijk]*
-_gammaI_U0U2[ijk] + 0.5*_gammaI_U0U1[ijk]*(_dgamma_D0D1D2[ijk] - 
-_dgamma_D0D2D1[ijk] + _dgamma_D1D2D0[ijk]);
-
-    double GAMMA_U1D1D1 = 
-0.5*_dgamma_D1D1D1[ijk]*_gammaI_U1U1[ijk] + 0.5*_gammaI_U0U1[ijk]*(2*
-_dgamma_D0D1D1[ijk] - _dgamma_D1D1D0[ijk]) - 0.5*_gammaI_U1U2[ijk]*
-(_dgamma_D1D1D2[ijk] - 2*_dgamma_D1D2D1[ijk]);
-
-    double GAMMA_U0D1D1 = 
-0.5*_dgamma_D1D1D1[ijk]*_gammaI_U0U1[ijk] + 0.5*_gammaI_U0U0[ijk]*(2*
-_dgamma_D0D1D1[ijk] - _dgamma_D1D1D0[ijk]) - 0.5*_gammaI_U0U2[ijk]*
-(_dgamma_D1D1D2[ijk] - 2*_dgamma_D1D2D1[ijk]);
-
-    double GAMMA_U0D0D0 = 
-0.5*_dgamma_D0D0D0[ijk]*_gammaI_U0U0[ijk] - 0.5*_gammaI_U0U1[ijk]*
-(_dgamma_D0D0D1[ijk] - 2*_dgamma_D0D1D0[ijk]) - 0.5*_gammaI_U0U2[ijk]*
-(_dgamma_D0D0D2[ijk] - 2*_dgamma_D0D2D0[ijk]);
-
-    double GAMMA_U1D1D2 = 
-0.5*_dgamma_D1D1D2[ijk]*_gammaI_U1U1[ijk] + 0.5*_dgamma_D2D2D1[ijk]*
-_gammaI_U1U2[ijk] + 0.5*_gammaI_U0U1[ijk]*(_dgamma_D0D1D2[ijk] + 
-_dgamma_D0D2D1[ijk] - _dgamma_D1D2D0[ijk]);
-
-    double GAMMA_U0D0D1 = 
-0.5*_dgamma_D0D0D1[ijk]*_gammaI_U0U0[ijk] + 0.5*_dgamma_D1D1D0[ijk]*
-_gammaI_U0U1[ijk] + 0.5*_gammaI_U0U2[ijk]*(-_dgamma_D0D1D2[ijk] + 
-_dgamma_D0D2D1[ijk] + _dgamma_D1D2D0[ijk]);
-
-    double GAMMA_U0D1D2 = 
-0.5*_dgamma_D1D1D2[ijk]*_gammaI_U0U1[ijk] + 0.5*_dgamma_D2D2D1[ijk]*
-_gammaI_U0U2[ijk] + 0.5*_gammaI_U0U0[ijk]*(_dgamma_D0D1D2[ijk] + 
-_dgamma_D0D2D1[ijk] - _dgamma_D1D2D0[ijk]);
-
-
-    /* populating: */
-    _Gamma_U2D1D1[ijk] = GAMMA_U2D1D1;
-    _Gamma_U2D1D2[ijk] = GAMMA_U2D1D2;
-    _Gamma_U0D1D1[ijk] = GAMMA_U0D1D1;
-    _Gamma_U2D0D2[ijk] = GAMMA_U2D0D2;
-    _Gamma_U2D2D2[ijk] = GAMMA_U2D2D2;
-    _Gamma_U0D1D2[ijk] = GAMMA_U0D1D2;
-    _Gamma_U0D0D2[ijk] = GAMMA_U0D0D2;
-    _Gamma_U0D0D1[ijk] = GAMMA_U0D0D1;
-    _Gamma_U0D0D0[ijk] = GAMMA_U0D0D0;
-    _Gamma_U1D2D2[ijk] = GAMMA_U1D2D2;
-    _Gamma_U2D0D1[ijk] = GAMMA_U2D0D1;
-    _Gamma_U0D2D2[ijk] = GAMMA_U0D2D2;
-    _Gamma_U2D0D0[ijk] = GAMMA_U2D0D0;
-    _Gamma_U1D0D2[ijk] = GAMMA_U1D0D2;
-    _Gamma_U1D1D2[ijk] = GAMMA_U1D1D2;
-    _Gamma_U1D0D0[ijk] = GAMMA_U1D0D0;
-    _Gamma_U1D0D1[ijk] = GAMMA_U1D0D1;
-    _Gamma_U1D1D1[ijk] = GAMMA_U1D1D1;
-    }/*end of for(ijk = 0; ijk < nn; ++ijk)*/
-    free_conformal_metric_derivatives(patch);
-  }
-}
-
-/* Ricci scalar */
-static void _Ricci(Grid_T *const grid)
-{
-  const unsigned np = grid->np;
-  unsigned p;
-
-  OpenMP_Patch_Pragma(omp parallel for)
-  for(p = 0; p < np; ++p)
-  {
-    Patch_T *patch = grid->patch[p];
-
-    /* declaring: */
-    GET_FIELD(_gammaI_U0U2)
-    GET_FIELD(_gammaI_U0U0)
-    GET_FIELD(_gammaI_U0U1)
-    GET_FIELD(_gammaI_U1U2)
-    GET_FIELD(_gammaI_U1U1)
-    GET_FIELD(_gammaI_U2U2)
-    GET_FIELD(_dGamma_U2D2D2D0)
-    GET_FIELD(_dGamma_U2D2D2D1)
-    GET_FIELD(_dGamma_U2D0D0D2)
-    GET_FIELD(_dGamma_U1D1D2D2)
-    GET_FIELD(_dGamma_U1D1D2D0)
-    GET_FIELD(_dGamma_U1D1D2D1)
-    GET_FIELD(_dGamma_U2D0D2D1)
-    GET_FIELD(_dGamma_U1D0D1D0)
-    GET_FIELD(_dGamma_U1D0D1D1)
-    GET_FIELD(_dGamma_U1D0D1D2)
-    GET_FIELD(_dGamma_U1D2D2D1)
-    GET_FIELD(_dGamma_U1D0D0D1)
-    GET_FIELD(_dGamma_U0D1D2D0)
-    GET_FIELD(_dGamma_U2D0D2D0)
-    GET_FIELD(_dGamma_U1D0D2D1)
-    GET_FIELD(_dGamma_U2D1D1D2)
-    GET_FIELD(_dGamma_U2D0D2D2)
-    GET_FIELD(_dGamma_U0D0D1D0)
-    GET_FIELD(_dGamma_U2D1D2D1)
-    GET_FIELD(_dGamma_U2D0D1D2)
-    GET_FIELD(_dGamma_U2D1D2D2)
-    GET_FIELD(_dGamma_U0D1D1D0)
-    GET_FIELD(_dGamma_U1D1D1D0)
-    GET_FIELD(_dGamma_U1D1D1D2)
-    GET_FIELD(_dGamma_U0D0D1D1)
-    GET_FIELD(_dGamma_U0D0D2D2)
-    GET_FIELD(_dGamma_U0D0D2D0)
-    GET_FIELD(_dGamma_U0D0D2D1)
-    GET_FIELD(_dGamma_U2D1D2D0)
-    GET_FIELD(_dGamma_U0D0D0D1)
-    GET_FIELD(_dGamma_U0D0D0D2)
-    GET_FIELD(_dGamma_U0D2D2D0)
-    GET_FIELD(_dGamma_U0D0D1D2)
-    GET_FIELD(_Gamma_U2D1D1)
-    GET_FIELD(_Gamma_U2D1D2)
-    GET_FIELD(_Gamma_U0D1D1)
-    GET_FIELD(_Gamma_U2D0D2)
-    GET_FIELD(_Gamma_U2D2D2)
-    GET_FIELD(_Gamma_U0D1D2)
-    GET_FIELD(_Gamma_U0D0D2)
-    GET_FIELD(_Gamma_U0D0D1)
-    GET_FIELD(_Gamma_U0D0D0)
-    GET_FIELD(_Gamma_U1D2D2)
-    GET_FIELD(_Gamma_U2D0D1)
-    GET_FIELD(_Gamma_U0D2D2)
-    GET_FIELD(_Gamma_U2D0D0)
-    GET_FIELD(_Gamma_U1D0D2)
-    GET_FIELD(_Gamma_U1D1D2)
-    GET_FIELD(_Gamma_U1D0D0)
-    GET_FIELD(_Gamma_U1D0D1)
-    GET_FIELD(_Gamma_U1D1D1)
-
-
-    unsigned nn = patch->nn;
-    unsigned ijk;
-    GET_FIELD(_R)
-    for(ijk = 0; ijk < nn; ++ijk)
-    {
-    double R = 
-_gammaI_U0U0[ijk]*(_Gamma_U0D0D0[ijk]*_Gamma_U1D0D1[ijk] +
-_Gamma_U0D0D0[ijk]*_Gamma_U2D0D2[ijk] - _Gamma_U0D0D1[ijk]*
-_Gamma_U1D0D0[ijk] - _Gamma_U0D0D2[ijk]*_Gamma_U2D0D0[ijk] +
-_Gamma_U1D0D0[ijk]*_Gamma_U1D1D1[ijk] + _Gamma_U1D0D0[ijk]*
-_Gamma_U2D1D2[ijk] - pow(_Gamma_U1D0D1[ijk], 2) - 2.0*
-_Gamma_U1D0D2[ijk]*_Gamma_U2D0D1[ijk] + _Gamma_U1D1D2[ijk]*
-_Gamma_U2D0D0[ijk] + _Gamma_U2D0D0[ijk]*_Gamma_U2D2D2[ijk] -
-pow(_Gamma_U2D0D2[ijk], 2) + _dGamma_U1D0D0D1[ijk] -
-_dGamma_U1D0D1D0[ijk] + _dGamma_U2D0D0D2[ijk] - _dGamma_U2D0D2D0[ijk]) +
-_gammaI_U0U1[ijk]*(_Gamma_U0D0D1[ijk]*_Gamma_U1D0D1[ijk] +
-_Gamma_U0D0D1[ijk]*_Gamma_U2D0D2[ijk] - _Gamma_U0D1D1[ijk]*
-_Gamma_U1D0D0[ijk] - _Gamma_U0D1D2[ijk]*_Gamma_U2D0D0[ijk] +
-_Gamma_U1D0D1[ijk]*_Gamma_U2D1D2[ijk] - _Gamma_U1D0D2[ijk]*
-_Gamma_U2D1D1[ijk] + _Gamma_U2D0D1[ijk]*_Gamma_U2D2D2[ijk] -
-_Gamma_U2D0D2[ijk]*_Gamma_U2D1D2[ijk] - _dGamma_U0D0D0D1[ijk] +
-_dGamma_U0D0D1D0[ijk] + _dGamma_U2D0D1D2[ijk] - _dGamma_U2D0D2D1[ijk]) +
-_gammaI_U0U1[ijk]*(_Gamma_U0D0D1[ijk]*_Gamma_U1D0D1[ijk] +
-_Gamma_U0D0D1[ijk]*_Gamma_U2D0D2[ijk] - _Gamma_U0D1D1[ijk]*
-_Gamma_U1D0D0[ijk] - _Gamma_U0D1D2[ijk]*_Gamma_U2D0D0[ijk] +
-_Gamma_U1D0D1[ijk]*_Gamma_U2D1D2[ijk] - _Gamma_U1D0D2[ijk]*
-_Gamma_U2D1D1[ijk] + _Gamma_U2D0D1[ijk]*_Gamma_U2D2D2[ijk] -
-_Gamma_U2D0D2[ijk]*_Gamma_U2D1D2[ijk] + _dGamma_U1D0D1D1[ijk] -
-_dGamma_U1D1D1D0[ijk] + _dGamma_U2D0D1D2[ijk] - _dGamma_U2D1D2D0[ijk]) +
-_gammaI_U0U2[ijk]*(_Gamma_U0D0D2[ijk]*_Gamma_U1D0D1[ijk] +
-_Gamma_U0D0D2[ijk]*_Gamma_U2D0D2[ijk] - _Gamma_U0D1D2[ijk]*
-_Gamma_U1D0D0[ijk] - _Gamma_U0D2D2[ijk]*_Gamma_U2D0D0[ijk] -
-_Gamma_U1D0D1[ijk]*_Gamma_U1D1D2[ijk] + _Gamma_U1D0D2[ijk]*
-_Gamma_U1D1D1[ijk] + _Gamma_U1D1D2[ijk]*_Gamma_U2D0D2[ijk] -
-_Gamma_U1D2D2[ijk]*_Gamma_U2D0D1[ijk] - _dGamma_U0D0D0D2[ijk] +
-_dGamma_U0D0D2D0[ijk] - _dGamma_U1D0D1D2[ijk] + _dGamma_U1D0D2D1[ijk]) +
-_gammaI_U0U2[ijk]*(_Gamma_U0D0D2[ijk]*_Gamma_U1D0D1[ijk] +
-_Gamma_U0D0D2[ijk]*_Gamma_U2D0D2[ijk] - _Gamma_U0D1D2[ijk]*
-_Gamma_U1D0D0[ijk] - _Gamma_U0D2D2[ijk]*_Gamma_U2D0D0[ijk] -
-_Gamma_U1D0D1[ijk]*_Gamma_U1D1D2[ijk] + _Gamma_U1D0D2[ijk]*
-_Gamma_U1D1D1[ijk] + _Gamma_U1D1D2[ijk]*_Gamma_U2D0D2[ijk] -
-_Gamma_U1D2D2[ijk]*_Gamma_U2D0D1[ijk] + _dGamma_U1D0D2D1[ijk] -
-_dGamma_U1D1D2D0[ijk] + _dGamma_U2D0D2D2[ijk] - _dGamma_U2D2D2D0[ijk]) +
-_gammaI_U1U1[ijk]*(_Gamma_U0D0D0[ijk]*_Gamma_U0D1D1[ijk] -
-pow(_Gamma_U0D0D1[ijk], 2) + _Gamma_U0D0D1[ijk]*_Gamma_U1D1D1[ijk] +
-_Gamma_U0D0D2[ijk]*_Gamma_U2D1D1[ijk] - _Gamma_U0D1D1[ijk]*
-_Gamma_U1D0D1[ijk] + _Gamma_U0D1D1[ijk]*_Gamma_U2D0D2[ijk] - 2.0*
-_Gamma_U0D1D2[ijk]*_Gamma_U2D0D1[ijk] + _Gamma_U1D1D1[ijk]*
-_Gamma_U2D1D2[ijk] - _Gamma_U1D1D2[ijk]*_Gamma_U2D1D1[ijk] +
-_Gamma_U2D1D1[ijk]*_Gamma_U2D2D2[ijk] - pow(_Gamma_U2D1D2[ijk], 2) -
-_dGamma_U0D0D1D1[ijk] + _dGamma_U0D1D1D0[ijk] + _dGamma_U2D1D1D2[ijk] -
-_dGamma_U2D1D2D1[ijk]) + _gammaI_U1U2[ijk]*(_Gamma_U0D0D0[ijk]*
-_Gamma_U0D1D2[ijk] - _Gamma_U0D0D1[ijk]*_Gamma_U0D0D2[ijk] +
-_Gamma_U0D0D1[ijk]*_Gamma_U1D1D2[ijk] + _Gamma_U0D0D2[ijk]*
-_Gamma_U2D1D2[ijk] - _Gamma_U0D1D1[ijk]*_Gamma_U1D0D2[ijk] -
-_Gamma_U0D2D2[ijk]*_Gamma_U2D0D1[ijk] + _Gamma_U1D1D2[ijk]*
-_Gamma_U2D1D2[ijk] - _Gamma_U1D2D2[ijk]*_Gamma_U2D1D1[ijk] -
-_dGamma_U0D0D1D2[ijk] + _dGamma_U0D1D2D0[ijk] - _dGamma_U1D1D1D2[ijk] +
-_dGamma_U1D1D2D1[ijk]) + _gammaI_U1U2[ijk]*(_Gamma_U0D0D0[ijk]*
-_Gamma_U0D1D2[ijk] - _Gamma_U0D0D1[ijk]*_Gamma_U0D0D2[ijk] +
-_Gamma_U0D0D1[ijk]*_Gamma_U1D1D2[ijk] + _Gamma_U0D0D2[ijk]*
-_Gamma_U2D1D2[ijk] - _Gamma_U0D1D1[ijk]*_Gamma_U1D0D2[ijk] -
-_Gamma_U0D2D2[ijk]*_Gamma_U2D0D1[ijk] + _Gamma_U1D1D2[ijk]*
-_Gamma_U2D1D2[ijk] - _Gamma_U1D2D2[ijk]*_Gamma_U2D1D1[ijk] -
-_dGamma_U0D0D2D1[ijk] + _dGamma_U0D1D2D0[ijk] + _dGamma_U2D1D2D2[ijk] -
-_dGamma_U2D2D2D1[ijk]) + _gammaI_U2U2[ijk]*(_Gamma_U0D0D0[ijk]*
-_Gamma_U0D2D2[ijk] + _Gamma_U0D0D1[ijk]*_Gamma_U1D2D2[ijk] -
-pow(_Gamma_U0D0D2[ijk], 2) + _Gamma_U0D0D2[ijk]*_Gamma_U2D2D2[ijk] -
-2.0*_Gamma_U0D1D2[ijk]*_Gamma_U1D0D2[ijk] + _Gamma_U0D2D2[ijk]*
-_Gamma_U1D0D1[ijk] - _Gamma_U0D2D2[ijk]*_Gamma_U2D0D2[ijk] +
-_Gamma_U1D1D1[ijk]*_Gamma_U1D2D2[ijk] - pow(_Gamma_U1D1D2[ijk], 2) +
-_Gamma_U1D1D2[ijk]*_Gamma_U2D2D2[ijk] - _Gamma_U1D2D2[ijk]*
-_Gamma_U2D1D2[ijk] - _dGamma_U0D0D2D2[ijk] + _dGamma_U0D2D2D0[ijk] -
-_dGamma_U1D1D2D2[ijk] + _dGamma_U1D2D2D1[ijk]);
-
-      _R[ijk] = R;
-    }/*end of for(ijk = 0; ijk < nn; ++ijk)*/
-  }
-}
-
 /* trace of Kerr Schild extrinsic curvature */
-static void tr_KSKij(Grid_T *const grid)
+static void bbn_free_data_tr_KSKij(Grid_T *const grid)
 {
   const unsigned np = grid->np;
   unsigned p;
@@ -766,7 +494,7 @@ static void tr_KSKij(Grid_T *const grid)
     partial_derivative_KSBeta(patch);
 
     /* populate KS trKij */
-    populate_KS_trKij(patch);
+    bbn_free_data_KS_trKij(patch);
     
     /* now free */
     free_KSfields(patch);
@@ -1107,7 +835,7 @@ static void populating_KSGamma(Patch_T *const patch)
   ADD_FIELD_NoMem(dKSgamma_D1D2D0)
   ADD_FIELD_NoMem(dKSgamma_D0D2D2)
   
-  /* make the following block local scope */
+  /* force the following block to be local scope */
   {
     DECLARE_FIELD(dKSgamma_D0D0D1)
     DECLARE_FIELD(dKSgamma_D0D0D0)
@@ -1334,125 +1062,4 @@ dKSgamma_D0D2D1[ijk] - dKSgamma_D1D2D0[ijk]);
     KSGamma_U1D0D1[ijk] = GAMMA_U1D0D1;
     KSGamma_U1D1D1[ijk] = GAMMA_U1D1D1;
   }/*end of for(ijk = 0; ijk < nn; ++ijk)*/
-}
-
-/* populate KS trKij */    
-static void populate_KS_trKij(Patch_T *const patch)
-{
-  const unsigned nn = patch->nn;
-  unsigned ijk;
-  
-  GET_FIELD(K)
-  GET_FIELD(KSalpha)
-  GET_FIELD(dKSB_D2D0)
-  GET_FIELD(dKSB_D0D0)
-  GET_FIELD(dKSB_D2D2)
-  GET_FIELD(dKSB_D0D1)
-  GET_FIELD(dKSB_D0D2)
-  GET_FIELD(dKSB_D1D2)
-  GET_FIELD(dKSB_D1D1)
-  GET_FIELD(dKSB_D1D0)
-  GET_FIELD(dKSB_D2D1)
-  GET_FIELD(KSGamma_U2D1D1)
-  GET_FIELD(KSGamma_U2D1D2)
-  GET_FIELD(KSGamma_U0D1D1)
-  GET_FIELD(KSGamma_U2D0D2)
-  GET_FIELD(KSGamma_U2D2D2)
-  GET_FIELD(KSGamma_U0D1D2)
-  GET_FIELD(KSGamma_U0D0D2)
-  GET_FIELD(KSGamma_U0D0D1)
-  GET_FIELD(KSGamma_U0D0D0)
-  GET_FIELD(KSGamma_U1D2D2)
-  GET_FIELD(KSGamma_U2D0D1)
-  GET_FIELD(KSGamma_U0D2D2)
-  GET_FIELD(KSGamma_U2D0D0)
-  GET_FIELD(KSGamma_U1D0D2)
-  GET_FIELD(KSGamma_U1D1D2)
-  GET_FIELD(KSGamma_U1D0D0)
-  GET_FIELD(KSGamma_U1D0D1)
-  GET_FIELD(KSGamma_U1D1D1)
-  GET_FIELD(KSgammaI_U0U2)
-  GET_FIELD(KSgammaI_U0U0)
-  GET_FIELD(KSgammaI_U0U1)
-  GET_FIELD(KSgammaI_U1U2)
-  GET_FIELD(KSgammaI_U1U1)
-  GET_FIELD(KSgammaI_U2U2)
-  GET_FIELD(KSB_D0)
-  GET_FIELD(KSB_D1)
-  GET_FIELD(KSB_D2)
-  
-    for(ijk = 0; ijk < nn; ++ijk)
-    {
-    double DB_D0D2 = 
--KSB_D0[ijk]*KSGamma_U0D0D2[ijk] - KSB_D1[ijk]*KSGamma_U1D0D2[ijk] - 
-KSB_D2[ijk]*KSGamma_U2D0D2[ijk] + dKSB_D0D2[ijk];
-
-    double DB_D0D0 = 
--KSB_D0[ijk]*KSGamma_U0D0D0[ijk] - KSB_D1[ijk]*KSGamma_U1D0D0[ijk] - 
-KSB_D2[ijk]*KSGamma_U2D0D0[ijk] + dKSB_D0D0[ijk];
-
-    double DB_D0D1 = 
--KSB_D0[ijk]*KSGamma_U0D0D1[ijk] - KSB_D1[ijk]*KSGamma_U1D0D1[ijk] - 
-KSB_D2[ijk]*KSGamma_U2D0D1[ijk] + dKSB_D0D1[ijk];
-
-    double DB_D2D0 = 
--KSB_D0[ijk]*KSGamma_U0D0D2[ijk] - KSB_D1[ijk]*KSGamma_U1D0D2[ijk] - 
-KSB_D2[ijk]*KSGamma_U2D0D2[ijk] + dKSB_D2D0[ijk];
-
-    double DB_D2D1 = 
--KSB_D0[ijk]*KSGamma_U0D1D2[ijk] - KSB_D1[ijk]*KSGamma_U1D1D2[ijk] - 
-KSB_D2[ijk]*KSGamma_U2D1D2[ijk] + dKSB_D2D1[ijk];
-
-    double DB_D2D2 = 
--KSB_D0[ijk]*KSGamma_U0D2D2[ijk] - KSB_D1[ijk]*KSGamma_U1D2D2[ijk] - 
-KSB_D2[ijk]*KSGamma_U2D2D2[ijk] + dKSB_D2D2[ijk];
-
-    double DB_D1D2 = 
--KSB_D0[ijk]*KSGamma_U0D1D2[ijk] - KSB_D1[ijk]*KSGamma_U1D1D2[ijk] - 
-KSB_D2[ijk]*KSGamma_U2D1D2[ijk] + dKSB_D1D2[ijk];
-
-    double DB_D1D1 = 
--KSB_D0[ijk]*KSGamma_U0D1D1[ijk] - KSB_D1[ijk]*KSGamma_U1D1D1[ijk] - 
-KSB_D2[ijk]*KSGamma_U2D1D1[ijk] + dKSB_D1D1[ijk];
-
-    double DB_D1D0 = 
--KSB_D0[ijk]*KSGamma_U0D0D1[ijk] - KSB_D1[ijk]*KSGamma_U1D0D1[ijk] - 
-KSB_D2[ijk]*KSGamma_U2D0D1[ijk] + dKSB_D1D0[ijk];
-
-    double K_D2D2 = 
-DB_D2D2/KSalpha[ijk];
-
-    double K_D2D0 = 
-0.5*(DB_D0D2 + DB_D2D0)/KSalpha[ijk];
-
-    double K_D2D1 = 
-0.5*(DB_D1D2 + DB_D2D1)/KSalpha[ijk];
-
-    double K_D0D0 = 
-DB_D0D0/KSalpha[ijk];
-
-    double K_D0D1 = 
-0.5*(DB_D0D1 + DB_D1D0)/KSalpha[ijk];
-
-    double K_D1D1 = 
-DB_D1D1/KSalpha[ijk];
-
-    double K_D1D0 = 
-0.5*(DB_D0D1 + DB_D1D0)/KSalpha[ijk];
-
-    double K_D0D2 = 
-0.5*(DB_D0D2 + DB_D2D0)/KSalpha[ijk];
-
-    double K_D1D2 = 
-0.5*(DB_D1D2 + DB_D2D1)/KSalpha[ijk];
-
-    double trK = 
-KSgammaI_U0U0[ijk]*K_D0D0 + KSgammaI_U0U1[ijk]*K_D0D1 +
-KSgammaI_U0U1[ijk]*K_D1D0 + KSgammaI_U0U2[ijk]*K_D0D2 +
-KSgammaI_U0U2[ijk]*K_D2D0 + KSgammaI_U1U1[ijk]*K_D1D1 +
-KSgammaI_U1U2[ijk]*K_D1D2 + KSgammaI_U1U2[ijk]*K_D2D1 +
-KSgammaI_U2U2[ijk]*K_D2D2;
-
-      K[ijk] = trK;
-    }/*end of for(ijk = 0; ijk < nn; ++ijk)*/
 }
