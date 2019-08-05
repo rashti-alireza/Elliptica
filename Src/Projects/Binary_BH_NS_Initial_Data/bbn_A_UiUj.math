@@ -4,7 +4,8 @@ Dimension = 3;
 # point on manifold shown by:
 Point = ijk;
 
-C_macro = GET_FIELD(name);
+C_macro  = GET_FIELD(name);
+C_macro2 = PREP_FIELD(name);
 
 # main function:
 Ccode["#include "bbn_headers.h"\n\n"];
@@ -20,9 +21,9 @@ Ccode["    Patch_T *patch = grid->patch[p];"];
 Declare = 
 {
  # _A^{ij}
- (obj = Field,name = _A_UiUj, rank = UU, C_macro);
+ (obj = Field,name = _A_UiUj, rank = UU, C_macro2);
  # _A^{ij}*_A_{ij}
- (obj = Field,name = _Aij2, rank = 0, C_macro);
+ (obj = Field,name = _Aij2, rank = 0, C_macro2);
  # shift
  (obj = Field,name = Beta, rank = U, C_macro);
  # d(shift)/d?
