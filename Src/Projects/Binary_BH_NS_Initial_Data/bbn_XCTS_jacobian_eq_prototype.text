@@ -6,8 +6,13 @@ Dimension = 3;
 # point on manifold shown by:
 Point = ijk;
 
+# C macros
 C_macro  = GET_FIELD(name);
 C_macro2 = PREP_FIELD(name);
+C_macro3 = JACOBIAN_DERIVATIVE(name);
+
+# C arguments
+C_arg = (j_name,ijk,lmn);
 
 # main function:
 Ccode["#include "bbn_headers.h""];
@@ -25,49 +30,29 @@ Ccode["  const unsigned Nj = S->NS;/* number of inner mesh+outer-boundary nodes 
 Ccode["  const unsigned K0 = S->NS;/* number of inner mesh+outer-boundary nodes */"];
 Ccode["  const unsigned Nk = patch->nn;/* total number of nodes  */"];
 Ccode["  const unsigned Ref = Nj;/* for shorhand purposes  */"];
-Ccode["  const char *types[] = {"dfx_df","dfy_df","dfz_df","dfxx_df","dfxy_df","dfxz_df","dfyy_df","dfyz_df","dfzz_df",0};"];
-Ccode["  fJs_T *dfx_df  = 0,  *dfy_df = 0, *dfz_df  = 0;"];
-Ccode["  fJs_T *dfxx_df = 0, *dfxy_df = 0, *dfxz_df = 0, *dfyy_df = 0, *dfyz_df = 0, *dfzz_df = 0;"];
-Ccode["  Matrix_T *jxx = 0,*jxy = 0,*jxz = 0;"];
-Ccode["  Matrix_T *jyy = 0,*jyz = 0,*jzz = 0;"];
-Ccode["  Matrix_T *jx  = 0,*jy  = 0,*jz  = 0;"];
 Ccode["  unsigned i,j,k,ijk,lmn;"];
-
-Ccode["  prepare_Js_jacobian_eq(patch,types);"];
-Ccode["  jxx = get_j_matrix(patch,"dfxx_df");"];
-Ccode["  jxy = get_j_matrix(patch,"dfxy_df");"];
-Ccode["  jxz = get_j_matrix(patch,"dfxz_df");"];
-Ccode["  jyy = get_j_matrix(patch,"dfyy_df");"];
-Ccode["  jyz = get_j_matrix(patch,"dfyz_df");"];
-Ccode["  jzz = get_j_matrix(patch,"dfzz_df");"];
-Ccode["  jx  = get_j_matrix(patch,"dfx_df");"];
-Ccode["  jy  = get_j_matrix(patch,"dfy_df");"];
-Ccode["  jz  = get_j_matrix(patch,"dfz_df");"];
-
-Ccode["  dfxx_df = get_j_reader(jxx);"];
-Ccode["  dfxy_df = get_j_reader(jxy);"];
-Ccode["  dfxz_df = get_j_reader(jxz);"];
-Ccode["  dfyy_df = get_j_reader(jyy);"];
-Ccode["  dfyz_df = get_j_reader(jyz);"];
-Ccode["  dfzz_df = get_j_reader(jzz);"];
-Ccode["  dfx_df  = get_j_reader(jx);"];
-Ccode["  dfy_df  = get_j_reader(jy);"];
-Ccode["  dfz_df  = get_j_reader(jz);"];
 
 Declare = 
 {
  # conformal metric
  (obj = Field,name = _gamma, rank = DD, C_macro);
+
  # conformal metric inverse
  (obj = Field,name = _gammaI, rank = UU, C_macro);
+
  # Christoffer symbol
  (obj = Field,name = _Gamma, rank = UDD, C_macro);
+
+ # jacobian derivative
+ (obj = Field,name = df, rank = DD, C_macro3,C_arg);
+ 
 }
 
 # symmetries:
 Symm[_gamma(i,j)   = _gamma(j,i)];
 Symm[_gammaI(i,j)  = _gammaI(j,i)];
 Symm[_Gamma(i,j,k) = _Gamma(i,k,j)];
+Symm[df(i,j)       = df(j,i)];
 
 
 Ccode["  /* fill up jacobian for alpha equation:  */"];
@@ -78,7 +63,13 @@ Ccode["    ijk = node[i];"];
 Ccode["    for (j = 0; j < Nj; ++j)"];
 Ccode["    {"];
 Ccode["    lmn = node[j];"];
-Ccode["    B[i][j] = dfxx_df(j0,ijk,lmn)+dfyy_df(j1,ijk,lmn)+dfzz_df(j2,ijk,lmn);/* note: for each new equation, only this line is changed  */"];
+	   # calculations:
+# Note: since there are two parts of calculations here and one for E_part,
+# one must used different naming for definition of new variable in each
+# part.
+	   b_jacobian = ?
+
+Ccode["    B[i][j] = b_jacobian;/* jacobian matrix */"];
 Ccode["    }"];# end of for (j = 0; j < Nj; ++j)
 Ccode["  }"];# end of for (i = 0; i < Ni; ++i)
 Ccode["  /* E part:  */"];
@@ -92,7 +83,13 @@ Ccode["      j = k-Ref;"];
 Ccode["      for (i = 0; i < Ni; ++i)"];
 Ccode["      {"];
 Ccode["      ijk = node[i];"];
-Ccode["      E_Trans[j][i] = dfxx_df(j0,ijk,lmn)+dfyy_df(j1,ijk,lmn)+dfzz_df(j2,ijk,lmn);/* note: for each new equation, only this line is changed  */"];
+	     # calculations:
+# Note: since there are two parts of calculations here and one for B_part,
+# one must used different naming for definition of new variable in each
+# part.
+
+             e_jacobian = ?
+Ccode["      E_Trans[j][i] = e_jacobian;/* jacobian matrix */"];
 Ccode["      }"];# end of for (i = 0; i < Ni; ++i)
 Ccode["    }"];# end of for (k = K0; k < Nk; ++k)
 Ccode["  }"];# if (S->NI)
