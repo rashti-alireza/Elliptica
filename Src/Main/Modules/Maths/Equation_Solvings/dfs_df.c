@@ -5,7 +5,7 @@
 
 #include "dfs_df.h"
 #define MAX_STR_LEN 400
-#define MAX_J_SIZE 10
+#define MAX_J_SIZE 10000 /* 10Gb */
 
 static const double CONST = 1.0;
 
@@ -757,7 +757,8 @@ static double J_sizeMb_ccs(const Matrix_T *const m)
 /* supposed to write J in ccs format in disk. No completed yet! */
 static void write_J_in_disk_ccs(void)
 {
-  abortEr(INCOMPLETE_FUNC);
+  abortEr("Jacobian Exceeded max size and no function implemented yet."
+          "To avoid this error increase \"Maximum_Size_of_J_Kept_in_Mb\" parameter.\n");
 }
 
 /* getting patch, subface and directive, it decides which d(interpolation)/df 
