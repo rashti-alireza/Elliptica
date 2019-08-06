@@ -3,7 +3,7 @@
 modules_path  = $(TOP)/Src/Main/Cores
 modules_path += $(TOP)/Src/Main/Modules/Coordinates
 modules_path += $(TOP)/Src/Main/Modules/Error_Handlings
-modules_path += $(TOP)/Src/Main/Modules/File_Tools
+modules_path += $(TOP)/Src/Main/Modules/Text_and_File_Tools
 modules_path += $(TOP)/Src/Main/Modules/Libraries
 modules_path += $(TOP)/Src/Main/Modules/Memory_Managers
 modules_path += $(TOP)/Src/Main/Modules/Prints

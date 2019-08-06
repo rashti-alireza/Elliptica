@@ -13,7 +13,7 @@
 #include "prints_lib.h"
 #include "error_handling_lib.h"
 #include "macros_lib.h"
-#include "text_tools_lib.h"
+#include "text_and_file_tools_lib.h"
 
 #define ROUND_OFF_ERR 1E-12
 #define LSS(x,y) (x < y-ROUND_OFF_ERR)
