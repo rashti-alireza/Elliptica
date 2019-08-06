@@ -112,6 +112,8 @@ static char *interpret_type(const char *const type)
    if (match[i] == '0')      strcat(jtype,"x");
    else if (match[i] == '1') strcat(jtype,"y");
    else if (match[i] == '2') strcat(jtype,"z");
+   else if (match[i] == 'U' || match[i] == 'D') continue;
+   else abortEr_s("This type '%s' has not been defined.\n",type);
   }
   
   strcat(jtype,"_df");
