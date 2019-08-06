@@ -424,18 +424,17 @@ void grid_characteristics_example(Grid_T *const grid)
   
   /* finding the kind of grid */
   kind = GetParameterS_E("grid_kind");
-  grid->kind = dup_s(kind);
   
-  if (strcmp_i(grid->kind,"Cartesian_grid"))
+  if (strcmp_i(kind,"Cartesian_grid"))
     characteristics_Cartesian_grid(grid);
   
-  else if (strcmp_i(grid->kind,"BNS_Spherical_grid"))
+  else if (strcmp_i(kind,"BNS_Spherical_grid"))
     characteristics_BNS_Spherical_grid(grid); 
     
-  else if (strcmp_i(grid->kind,"BNS_CubedSpherical_grid"))
+  else if (strcmp_i(kind,"BNS_CubedSpherical_grid"))
     characteristics_BNS_CubedSpherical_grid(grid); 
     
-  else if (strcmp_i(grid->kind,"BBN_CubedSpherical_grid"))
+  else if (strcmp_i(kind,"BBN_CubedSpherical_grid"))
     characteristics_BBN_CubedSpherical_grid(grid); 
    
   else
