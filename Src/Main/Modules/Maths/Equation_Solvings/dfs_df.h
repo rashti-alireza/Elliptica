@@ -15,8 +15,11 @@ typedef enum JTYPE_E
 {
   T_x/* df_x/df */,
   T_xx/* df_xx/df */,
+  T_xy/* df_xy/df */,
+  T_xz/* df_xz/df */,
   T_y/* df_y/df */,
   T_yy/* df_yy/df */,
+  T_yz/* df_yz/df */,
   T_z/* df_z/df */,
   T_zz/* df_zz/df */,
   T_UNDEF
@@ -33,6 +36,7 @@ Matrix_T *get_j_matrix(const Patch_T *const patch,const char *type);
 double read_matrix_entry_ccs(Matrix_T *const m, const long r,const long c);
 fdInterp_dfs_T *get_dInterp_df(const Patch_T *const patch,const SubFace_T *const sf,const char *const dir);
 static JType_E str2JType_E(const char *const str);
+static char *interpret_type(const char *const type);
 static void JType_E2str(const JType_E e,char *const str);
 static void make_jacobian_spectral_method(double **const J,Patch_T *const patch,const JType_E jt_e);
 static void fill_jacobian_spectral_method_1stOrder(double **const J,Patch_T *const patch,const JType_E jt_e);

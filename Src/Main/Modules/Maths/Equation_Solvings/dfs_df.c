@@ -11,7 +11,7 @@ static const double CONST = 1.0;
 
 /* preparing J_* used in equations for each patch
 // according to given types. note: end of types pointer
-// must be marked with null pointer, e.g. *types[3] = {"J_xx","J_y",0}.
+// must be marked with null pointer, e.g. *types[3] = {"dfxx_df","dfy_df",0}.
 */
 void prepare_Js_jacobian_eq(Patch_T *const patch,const char * const *types)
 {
@@ -19,10 +19,10 @@ void prepare_Js_jacobian_eq(Patch_T *const patch,const char * const *types)
   Solving_Man_T *const sol_man = patch->solving_man;
   const unsigned nn = patch->nn;
   /* default value of J if it gets larger than 10 Mb it will 
-  // be written in a file unless user assigne other value. 
-  */
+  // be written in a file unless user assigne other value. */
   double max_j_size = MAX_J_SIZE;
   Matrix_T *J = 0;
+  char *jtype = 0;
   JType_E jt_e = T_UNDEF;
   unsigned i;
   
@@ -40,11 +40,13 @@ void prepare_Js_jacobian_eq(Patch_T *const patch,const char * const *types)
   i = 0;
   while (types[i] != 0)
   {
+    jtype = interpret_type(types[i]);
+    
     /* check if this type has been already made then skip this */
     Flag_T flg = NONE;
     unsigned c;
     for (c = 0; c < sol_man->nj; ++c)
-      if (strcmp_i(sol_man->jacobian[c]->type,types[i]))
+      if (strcmp_i(sol_man->jacobian[c]->type,jtype))
       {
         flg = FOUND;
         break;
@@ -53,11 +55,12 @@ void prepare_Js_jacobian_eq(Patch_T *const patch,const char * const *types)
     if (flg == FOUND)
     {
       i++;
+      free(jtype);
       continue;
     }
       
     /* making Jacobian elements */
-    jt_e = str2JType_E(types[i]);
+    jt_e = str2JType_E(jtype);
     J = alloc_matrix(REG_SF,nn,nn);
     Jacobian(J->reg->A,patch,jt_e);
     
@@ -68,21 +71,62 @@ void prepare_Js_jacobian_eq(Patch_T *const patch,const char * const *types)
     pointerEr(sol_man->jacobian);
     sol_man->jacobian[c] = calloc(1,sizeof(*sol_man->jacobian[c]));
     pointerEr(sol_man->jacobian[c]);
-    sprintf(sol_man->jacobian[c]->type,types[i]);
+    sprintf(sol_man->jacobian[c]->type,jtype);
     sol_man->jacobian[c]->J = cast_matrix_ccs(J);
     free_matrix(J);
     
     if (GRT(J_sizeMb_ccs(sol_man->jacobian[i]->J),max_j_size))
       write_J_in_disk_ccs();
     
+    free(jtype);
+    
     ++i;
     ++sol_man->nj;
+    
   }
+}
+
+/* this function interprets what the given type means for argument of jacobian equations.
+// this function was developed to deal with cases that we wanna treat jacobians as the components
+// of a tensor to expand them.
+// ->return value: the type which is undestandable by make_jacobian_* functions. */
+static char *interpret_type(const char *const type)
+{
+ char *jtype = calloc(MAX_STR_LEN,1);
+ unsigned i,len;
+ 
+ pointerEr(jtype);
+ 
+ /*  possible given types are *_D?D?... or _U?U?... or U?D?... or D?U? ... 
+ or simply df*_df */
+ 
+ if (regex_search("^df[xyz]+_df$",type))
+  sprintf(jtype,"%s",type);
+ else if (regex_search("_([DU][[:digit:]])+$",type))
+ {
+  char *match = regex_find("_([DU][[:digit:]])+$",type);/* e.g _U2D0 */
+  sprintf(jtype,"%s","df");
+  len = (unsigned)strlen(match);
+  for (i = 2; i < len; ++i)/* starting from number */
+  {
+   if (match[i] == '0')      strcat(jtype,"x");
+   else if (match[i] == '1') strcat(jtype,"y");
+   else if (match[i] == '2') strcat(jtype,"z");
+  }
+  
+  strcat(jtype,"_df");
+  
+  free(match);
+ }
+ else
+  abortEr_s("The type '%s' cannot be realized!\n",type);
+ 
+  return jtype;
 }
 
 /* making elements of Jacobian for equations at the inner mesh.
 // types are pointers to string determining the type of jacobian
-// e.g. *types[3] = {"J_xx","J_y",0}.Note: the number of
+// e.g. *types[3] = {"dfxx_df","dfy_df",0}.Note: the number of
 // types is found by null.
 */
 void make_Js_jacobian_eq(Grid_T *const grid, const char * const* types)
@@ -206,16 +250,31 @@ static JType_E str2JType_E(const char *const str)
   
   if (strcmp_i(str,"dfx_df"))
     jt_e = T_x;
+    
   else if (strcmp_i(str,"dfxx_df"))
     jt_e = T_xx;
+    
   else if (strcmp_i(str,"dfy_df"))
     jt_e = T_y;
+    
   else if (strcmp_i(str,"dfyy_df"))
     jt_e = T_yy;
+    
   else if (strcmp_i(str,"dfz_df"))
     jt_e = T_z;
+    
   else if (strcmp_i(str,"dfzz_df"))
     jt_e = T_zz;
+    
+  else if (strcmp_i(str,"dfxy_df") || strcmp_i(str,"dfyx_df"))
+    jt_e = T_xy;
+
+  else if (strcmp_i(str,"dfxz_df") || strcmp_i(str,"dfzx_df"))
+    jt_e = T_xz;
+    
+  else if (strcmp_i(str,"dfyz_df") || strcmp_i(str,"dfzy_df"))
+    jt_e = T_yz;
+    
   else
     abortEr(INCOMPLETE_FUNC);
   
@@ -233,12 +292,23 @@ static void make_jacobian_direct_method(double **const J,Patch_T *const patch,co
     case T_xx:
       fill_jacobian_direct_method_2ndOrder(J,patch,T_xx);
       break;
+    case T_xy:
+      fill_jacobian_direct_method_2ndOrder(J,patch,T_xy);
+      break;
+    case T_xz:
+      fill_jacobian_direct_method_2ndOrder(J,patch,T_xz);
+      break;
+      
     case T_y:
       fill_jacobian_direct_method_1stOrder(J,patch,T_y);
       break;
     case T_yy:
       fill_jacobian_direct_method_2ndOrder(J,patch,T_yy);
       break;
+    case T_yz:
+      fill_jacobian_direct_method_2ndOrder(J,patch,T_yz);
+      break;
+      
     case T_z:
       fill_jacobian_direct_method_1stOrder(J,patch,T_z);
       break;
@@ -352,18 +422,30 @@ static void make_jacobian_spectral_method(double **const J,Patch_T *const patch,
     case T_xx:
       fill_jacobian_spectral_method_2ndOrder(J,patch,T_xx);
       break;
+    case T_xy:
+      fill_jacobian_spectral_method_2ndOrder(J,patch,T_xy);
+      break;
+    case T_xz:
+      fill_jacobian_spectral_method_2ndOrder(J,patch,T_xz);
+      break;
+      
     case T_y:
       fill_jacobian_spectral_method_1stOrder(J,patch,T_y);
       break;
     case T_yy:
       fill_jacobian_spectral_method_2ndOrder(J,patch,T_yy);
       break;
+    case T_yz:
+      fill_jacobian_spectral_method_2ndOrder(J,patch,T_yz);
+      break;
+      
     case T_z:
       fill_jacobian_spectral_method_1stOrder(J,patch,T_z);
       break;
     case T_zz:
       fill_jacobian_spectral_method_2ndOrder(J,patch,T_zz);
       break;
+      
     default:
       abortEr("No such type for Jacobian defined!\n");
   }
@@ -581,6 +663,18 @@ static void read_1st_and_2nd_deriv(const JType_E deriv_dir,JType_E *const deriv_
       *deriv_1st = T_z;
       *deriv_2nd = T_z;
       break;
+    case T_xy:
+      *deriv_1st = T_x;
+      *deriv_2nd = T_y;
+      break;
+    case T_xz:
+      *deriv_1st = T_x;
+      *deriv_2nd = T_z;
+      break;
+    case T_yz:
+      *deriv_1st = T_y;
+      *deriv_2nd = T_z;
+      break;
     default:
       abortEr(INCOMPLETE_FUNC);
   }
@@ -644,6 +738,15 @@ static void JType_E2str(const JType_E e,char *const str)
       break;
     case T_zz:
       sprintf(str,"z,z");
+      break;
+    case T_xy:
+      sprintf(str,"x,y");
+      break;
+    case T_xz:
+      sprintf(str,"x,z");
+      break;  
+    case T_yz:
+      sprintf(str,"y,z");
       break;
     default:
       abortEr(INCOMPLETE_FUNC);
