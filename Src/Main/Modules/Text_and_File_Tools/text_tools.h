@@ -1,5 +1,6 @@
 #include "core_lib.h"
 #include "error_handling_lib.h"
+#include <regex.h>
 
 int strcmp_i(const char *const s1, const char *const s2);
 int strstr_i(const char *const s1, const char *const s2);
@@ -8,3 +9,4 @@ char *tok_s(char *const str,const char delimit,char **const savestr);
 char *sub_s(char *const str,const char d1,const char d2,char **const save);
 int check_format_s(const char *str,const char *const format);
 unsigned find_index_string(char **const heystack,const unsigned N,const char *const needle);
+int regex_search(const char *const regex_pattern,const char *const str);

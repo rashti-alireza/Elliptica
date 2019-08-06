@@ -281,3 +281,27 @@ unsigned find_index_string(char **const heystack,const unsigned N,const char *co
   
   return j;
 }
+
+/* it checks if the pattern matches in the str 
+// by using regular expression libraries.
+// it's case sensitive, and new line is NOT treated as separator of new string.
+// ->return value: 1 if matches, 0 otherwise */
+int regex_search(const char *const regex_pattern,const char *const str)
+{
+  regex_t regex;
+  int ret_regex;
+  int ret = 0;
+  
+  ret_regex = regcomp(&regex,regex_pattern,REG_NOSUB);
+  if (ret_regex)
+    abortEr("Regular expression Faild. It could be wrong pattern or memory failure.\n");
+  
+  ret_regex = regexec(&regex,str,0,0,0);
+  
+  if (!ret_regex)
+    ret = 1;
+
+  regfree(&regex);
+      
+  return ret;
+}
