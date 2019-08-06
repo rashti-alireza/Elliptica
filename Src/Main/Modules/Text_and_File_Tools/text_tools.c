@@ -292,7 +292,7 @@ int regex_search(const char *const regex_pattern,const char *const str)
   int ret_regex;
   int ret = 0;
   
-  ret_regex = regcomp(&regex,regex_pattern,REG_NOSUB);
+  ret_regex = regcomp(&regex,regex_pattern,REG_EXTENDED);
   if (ret_regex)
     abortEr("Regular expression Faild. It could be wrong pattern or memory failure.\n");
   
@@ -303,5 +303,43 @@ int regex_search(const char *const regex_pattern,const char *const str)
 
   regfree(&regex);
       
+  return ret;
+}
+
+// it finds and returns a copy of the first match.
+// if there is no match, then return NULL.
+// it's case sensitive, and new line is NOT treated as separator of new string.
+// ->return value: return the first match, NULL otherwise */
+char *regex_find(const char *const regex_pattern,const char *const str)
+{
+  regex_t regex;
+  char *ret = 0;
+  const unsigned n_matches = 1;/* number of matches */
+  regmatch_t match[n_matches];
+  int status;
+  int len = 0;
+  int i;
+  
+  status = regcomp(&regex,regex_pattern,REG_EXTENDED);
+  if (status)
+    abortEr("Regular expression Faild. It could be wrong pattern or memory failure.\n");
+  
+  status = regexec(&regex,str,n_matches,match,0);
+  if (status)/* if no match is found */
+    return 0;
+
+  
+  regfree(&regex);
+  
+  len = match[0].rm_eo/* The offset in string of the end of the substring.  */
+      - match[0].rm_so/* The offset in string of the beginning of a substring. */
+      ;
+  ret = calloc((unsigned long)len+1,1);
+  pointerEr(ret);
+  
+  for (i = 0; i < len; ++i)
+    ret[i] = str[match[0].rm_so+i];
+  ret[len] = '\0';
+  
   return ret;
 }
