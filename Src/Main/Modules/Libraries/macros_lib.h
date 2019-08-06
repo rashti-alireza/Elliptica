@@ -18,12 +18,18 @@
 #define REMOVE_FIELD(name)   remove_field(name);/* remove the field utterly */
 #define DECLARE_FIELD(name)  Field_T *const name = patch->pool[Ind(#name)];/* access to the whole field */
 #define GET_FIELD(name)      double *const name = patch->pool[Ind(#name)]->v;/* access to the memory values */
+/* it frees f->v2,f->info and gets f->v. it is used to update value of a field and frees the left over of previous values */
 #define PREP_FIELD(name)     Field_T *const _F_##name = patch->pool[Ind(#name)];\
                              free_coeffs(_F_##name);\
-                             double *const name = patch->pool[Ind(#name)]->v;/* it frees f->v2,f->info and gets f->v. 
-                                                                             // it is used to update value of a field and frees 
-                                                                             // the left over of previous values */
+                             double *const name = patch->pool[Ind(#name)]->v;
+                             
 #define EMPTY_FIELD(name)  empty_field(name);/* free v,v2 and info of field */
+/* it compactifies the prepration of Jacobian of derivatives */
+#define JACOBIAN_DERIVATIVE(name) const char *types_##name[] = {#name,0};\
+                                  prepare_Js_jacobian_eq(patch,types_##name);\
+                                  Matrix_T *j_##name = get_j_matrix(patch,#name);\
+                                  fJs_T *name        = get_j_reader(j_##name);
+                                  
 #define GetParameterS(x)   get_parameter_value_S(x,__FILE__,__LINE__,NONE)
 #define GetParameterI(x)   get_parameter_value_I(x,__FILE__,__LINE__,NONE)
 #define GetParameterD(x)   get_parameter_value_D(x,__FILE__,__LINE__,NONE)
