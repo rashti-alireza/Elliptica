@@ -134,6 +134,7 @@ void make_Js_jacobian_eq(Grid_T *const grid, const char * const* types)
   Js_Jacobian_eq_F *Jacobian = 0;
   Matrix_T *J = 0;
   JType_E jt_e = T_UNDEF;
+  char *jtype = 0;
   unsigned i,p,nn;
   
   /* selecting Jacobian method for making of jacobian equation */
@@ -147,7 +148,8 @@ void make_Js_jacobian_eq(Grid_T *const grid, const char * const* types)
   i = 0;
   while (types[i] != 0)
   {
-    jt_e = str2JType_E(types[i]);
+    jtype = interpret_type(types[i]);
+    jt_e = str2JType_E(jtype);
     
     FOR_ALL_PATCHES(p,grid)
     {
@@ -158,6 +160,7 @@ void make_Js_jacobian_eq(Grid_T *const grid, const char * const* types)
       printf("This function is not ready yet!\n%s,%d\n",__FILE__,__LINE__);
       free_matrix(J);
     }
+    free(jtype);
     i++;
   }
 }
@@ -178,6 +181,7 @@ void test_make_Js_jacobian_eq(Grid_T *const grid, const char * const* types)
   char line[MAX_STR_LEN]={'\0'};
   FILE *file = 0;
   double Err = 0;
+  char *jtype = 0;
   JType_E jt_e;
   unsigned i,p,nn,r,c;
   enum Method_E e;
@@ -186,7 +190,8 @@ void test_make_Js_jacobian_eq(Grid_T *const grid, const char * const* types)
   i = 0;
   while (types[i] != 0)
   {
-    jt_e = str2JType_E(types[i]);
+    jtype = interpret_type(types[i]);
+    jt_e = str2JType_E(jtype);
     
     FOR_ALL_PATCHES(p,grid)
     {
@@ -203,9 +208,9 @@ void test_make_Js_jacobian_eq(Grid_T *const grid, const char * const* types)
         free_matrix(J);
       }
       
-      printf("Testing Jacobian for Equations: patch=%s, type:%5s\t",patch->name,types[i]);
+      printf("Testing Jacobian for Equations: patch=%s, type:%5s\t",patch->name,jtype);
       
-      sprintf(file_name,"%s/%s_SepctalDirect.patch%u",path,types[i],patch->pn);
+      sprintf(file_name,"%s/%s_SepctalDirect.patch%u",path,jtype,patch->pn);
       file = fopen(file_name,"w");
       pointerEr(file);
       fprintf(file,"Row Column J_Spectal J_Direct\n");
@@ -238,6 +243,8 @@ void test_make_Js_jacobian_eq(Grid_T *const grid, const char * const* types)
 
     }
     i++;
+    
+    free(jtype);
   }
   
   free(path);
