@@ -13,6 +13,7 @@ C_macro3 = JACOBIAN_DERIVATIVE(name);
 
 # C arguments for jacobian of derivatives
 C_arg = (j_name,ijk,lmn);
+C_arg2 = [ijk == lmn]; # for kd
 
 # main function:
 Ccode["#include "maths_equation_solvings_lib.h""];
@@ -23,11 +24,14 @@ Ccode["void *jacobian_bc_?(void *vp1,void *vp2)\n{"];
 # patch, S, B, E_Trans, node, I0, Ni, Nj, K0, Nk, i,j,k.
 # THUS, DO NOT DEFINE THEM AGAIN.
 Ccode["  DDM_SCHUR_JACOBIAN_BC_DECLARE"];
-Ccode["  unsigned ijk,lmn;\* for Jacobian entries J[ijk][lmn] *\"]
+Ccode["  unsigned ijk,lmn;/* for Jacobian entries J[ijk][lmn] */"];
+Ccode["  const double kd[2] = {0.,1.};/* Kronecker delta */"];
 
 # declare for Cpi
 Declare = 
 {
+  # Kroneker delta
+  (obj = field, name = kd, rank = 0, none,C_arg2);
 }
 
 # symmetries for Cpi
@@ -60,47 +64,67 @@ Declare =
 ###########################################################################
 
 
-# outer boundary like infinity
+# OUTER BOUNDARY LIKE INFINITY
 Ccode["  if (patch->outerB)"];
 Ccode["  {"];
-Ccode["  DDM_SCHUR_JACOBIAN_BC_Bpart_OPEN"];
 
-         # B matrix: J[ijk][lmn] in Jx = -F
-         outerB_Bpart = 0;
 
-Ccode["  B[i][j] = outerB_Bpart;"];
+###############################################
+####### B matrix: J[ijk][lmn] in Jx = -F ###### 
+###############################################
+Ccode["  DDM_SCHUR_JACOBIAN_BC_Bpart_OPEN\n"];
+outerB_Bpart = 0;
+
+
+Ccode["  B[i][j] = outerB_Bpart;\n"];
 Ccode["  DDM_SCHUR_JACOBIAN_BC_Bpart_CLOSE\n"];
+###############################################
 
-Ccode["  DDM_SCHUR_JACOBIAN_BC_Epart_OPEN"];
 
-         # E matrix: J[ijk][lmn] in Jx = -F
-         outerB_Epart = 0;
+###############################################
+###### E matrix: J[ijk][lmn] in Jx = -F #######
+###############################################
+Ccode["  DDM_SCHUR_JACOBIAN_BC_Epart_OPEN\n"];
+outerB_Epart = 0;
 
-Ccode["  E_Trans[j][i] = outerB_Epart;"];
+
+Ccode["  E_Trans[j][i] = outerB_Epart;\n"];
 Ccode["  DDM_SCHUR_JACOBIAN_BC_Epart_CLOSE"];
+###############################################
+
+
 Ccode["  }/* end of if (patch->outerB) */"];
 
-# inner boundary like horizon
+# INNER BOUNDARY LIKE BLACK HOLE HORIZON #
 Ccode["  else if (patch->innerB)"];
 Ccode["  {"];
-Ccode["  DDM_SCHUR_JACOBIAN_BC_Bpart_OPEN"];
 
-         # B matrix: J[ijk][lmn] in Jx = -F
-         innerB_Bpart = 0;
 
-Ccode["  B[i][j] = innerB_Bpart;"];
+###############################################
+####### B matrix: J[ijk][lmn] in Jx = -F ###### 
+###############################################
+Ccode["  DDM_SCHUR_JACOBIAN_BC_Bpart_OPEN\n"];
+innerB_Bpart = 0;
+
+
+Ccode["  B[i][j] = innerB_Bpart;\n"];
 Ccode["  DDM_SCHUR_JACOBIAN_BC_Bpart_CLOSE\n"];
+###############################################
 
-Ccode["  DDM_SCHUR_JACOBIAN_BC_Epart_OPEN"];
 
-         # E matrix: J[ijk][lmn] in Jx = -F
-         innerB_Epart = 0;
+###############################################
+####### E matrix: J[ijk][lmn] in Jx = -F ###### 
+###############################################
+Ccode["  DDM_SCHUR_JACOBIAN_BC_Epart_OPEN\n"];
+innerB_Epart = 0;
 
-Ccode["  E_Trans[j][i] = innerB_Epart;"];
+
+Ccode["  E_Trans[j][i] = innerB_Epart;\n"];
 Ccode["  DDM_SCHUR_JACOBIAN_BC_Epart_CLOSE\n"];
+###############################################
 
-Ccode["  }/* end of else if (patch->innerB) */"];
 
+Ccode["  }/* end of else if (patch->innerB) */\n"];
 
 Ccode["  return 0;"];
 Ccode["}"];

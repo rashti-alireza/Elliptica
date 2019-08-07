@@ -13,6 +13,7 @@ C_macro3 = JACOBIAN_DERIVATIVE(name);
 
 # C arguments for jacobian of derivative
 C_arg = (j_name,ijk,lmn);
+C_arg2 = [ijk == lmn]; # for kd
 
 # main function:
 Ccode["#include "maths_equation_solvings_lib.h""];
@@ -23,11 +24,14 @@ Ccode["void *jacobian_eq_?(void *vp1,void *vp2)\n{"];
 # patch, S, B, E_Trans, node, Ni, Nj, K0, Nk, i,j,k
 # THUS, DO NOT DEFINE THEM AGAIN.
 Ccode["  DDM_SCHUR_JACOBIAN_EQ_DECLARE"];
-Ccode["  unsigned ijk,lmn;\* for Jacobian entries J[ijk][lmn] *\"]
+Ccode["  unsigned ijk,lmn;/* for Jacobian entries J[ijk][lmn] */"];
+Ccode["  const double kd[2] = {0.,1.};/* Kronecker delta */"];
 
 # declare for cpi
 Declare = 
 {
+  # Kroneker delta
+  (obj = field, name = kd, rank = 0, none,C_arg2); 
 }
 
 # symmetries for cpi
@@ -56,21 +60,28 @@ Declare =
 ##########################################################################
 
 
-Ccode["  DDM_SCHUR_JACOBIAN_EQ_Bpart_OPEN"];
+###############################################
+####### B matrix: J[ijk][lmn] in Jx = -F ###### 
+###############################################
+Ccode["  DDM_SCHUR_JACOBIAN_EQ_Bpart_OPEN\n"];
+Bpart = 0;
 
-         # B matrix: J[ijk][lmn] in Jx = -F
-         Bpart = 0;
 
-Ccode["  B[i][j] = Bpart;"];
+Ccode["  B[i][j] = Bpart;\n"];
 Ccode["  DDM_SCHUR_JACOBIAN_EQ_Bpart_CLOSE\n"];
+###############################################
 
-Ccode["  DDM_SCHUR_JACOBIAN_EQ_Epart_OPEN"];
 
-         # E matrix: J[ijk][lmn] in Jx = -F
-         Epart = 0;
+###############################################
+###### E matrix: J[ijk][lmn] in Jx = -F #######
+###############################################
+Ccode["  DDM_SCHUR_JACOBIAN_EQ_Epart_OPEN\n"];
+Epart = 0;
 
-Ccode["  E_Trans[j][i] = Epart;"];
-Ccode["  DDM_SCHUR_JACOBIAN_EQ_Epart_CLOSE"];
+
+Ccode["  E_Trans[j][i] = Epart;\n"];
+Ccode["  DDM_SCHUR_JACOBIAN_EQ_Epart_CLOSE\n"];
+###############################################
 
 Ccode["  return 0;"];
 Ccode["}"];

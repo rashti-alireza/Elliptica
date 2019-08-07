@@ -30,27 +30,31 @@ Declare =
 # NOTE: write each equation in terms of ijk point, and if there is no
 # outer boundary or inner boundary equation, let it be 0.
 
-# outer boundary like infinity
+# OUTER BOUNDARY LIKE INFINITY #
 Ccode["  if (patch->outerB)/* at outer boundary */"];
 Ccode["  {"];
-Ccode["  DDM_SCHUR_BC_OPEN"];
+Ccode["  DDM_SCHUR_BC_OPEN\n"];
 
-	 # bc equation for outer boundary at ijk point:
-	 outerB_F = 0;
 
-Ccode["  F[map[ijk]] = outerB_F;"];
+# bc equation for outer boundary at ijk point:
+outerB_F = 0;
+
+
+Ccode["  F[map[ijk]] = outerB_F;\n"];
 Ccode["  DDM_SCHUR_BC_CLOSE"];
 Ccode["  }/* end of if (patch->outerB) */"];
 
-# inner boundary like BH horizon
-Ccode["  else if (patch->innerB)"/* at inner boundary */];
+# INNER BOUNDARY LIKE BLACK HOLE HORIZON #
+Ccode["  else if (patch->innerB)/* at inner boundary */"];
 Ccode["  {"];
-Ccode["  DDM_SCHUR_BC_OPEN"];
+Ccode["  DDM_SCHUR_BC_OPEN\n"];
 
-         # bc equation for outer boundary at ijk point:
-         innerB_F = 0;
 
-Ccode["  F[map[ijk]] = innerB_F;"];
+# bc equation for outer boundary at ijk point:
+innerB_F = 0;
+
+
+Ccode["  F[map[ijk]] = innerB_F;\n"];
 Ccode["  DDM_SCHUR_BC_CLOSE"];
 Ccode["  }/* end of else if (patch->innerB) */"];
 

@@ -35,12 +35,15 @@ Declare =
 # at Newton-Raphson scheme (Jx = -F_eq) in TERMS OF ijk POINT.
 ##########################################################################
 
-Ccode["  DDM_SCHUR_EQ_OPEN"];
+Ccode["  DDM_SCHUR_EQ_OPEN\n"];
 
-	 # write the equation below at ijk point:
-         F_eq = 0;
 
-Ccode["  F[n] = F_eq;"];# Jx = -F in Newton-Raphson scheme
+# write the equation below at ijk point:
+F_eq = 0;
+
+
+
+Ccode["  F[n] = F_eq;\n"];# Jx = -F in Newton-Raphson scheme
 Ccode["  DDM_SCHUR_EQ_CLOSE\n"];
 
 Ccode["  return 0;"];
