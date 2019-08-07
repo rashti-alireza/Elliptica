@@ -10,9 +10,8 @@ C_macro  = GET_FIELD(name);
 C_macro2 = PREP_FIELD(name);
 
 # main function:
-Ccode["#include "bbn_headers.h""];
-Ccode["#include "bbn_XCTS_equations_lib.h""];
-Ccode["#include "maths_equation_solvings_lib.h"\n\n"];
+Ccode["#include "maths_equation_solvings_lib.h""];
+Ccode["#include "?_headers.h""];
 Ccode["void *eq_?(void *vp1,void *vp2)\n{"];
 
 # NOTE: THE FOLLOWING MACRO DECLARES AND DEFINES THE FOLLOWING VARIABLES:
@@ -38,7 +37,7 @@ Declare =
 
 Ccode["  DDM_SCHUR_EQ_OPEN"];
 
-	 # write the equation below in terms of ijk:
+	 # write the equation below at ijk point:
          F_eq = 0;
 
 Ccode["  F[n] = F_eq;"];# Jx = -F in Newton-Raphson scheme

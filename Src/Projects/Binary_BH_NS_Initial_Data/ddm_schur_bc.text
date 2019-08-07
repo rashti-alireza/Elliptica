@@ -10,9 +10,8 @@ C_macro  = GET_FIELD(name);
 C_macro2 = PREP_FIELD(name);
 
 # main function:
-Ccode["#include "bbn_headers.h""];
-Ccode["#include "bbn_XCTS_equations_lib.h""];
-Ccode["#include "maths_equation_solvings_lib.h"\n\n"];
+Ccode["#include "maths_equation_solvings_lib.h""];
+Ccode["#include "?_headers.h""];
 Ccode["void *bc_?(void *vp1,void *vp2)\n{"];
 
 # NOTE: THE FOLLOWING MACRO DECLARES AND DEFINES THE FOLLOWING VARIABLES:
@@ -36,7 +35,7 @@ Ccode["  if (patch->outerB)/* at outer boundary */"];
 Ccode["  {"];
 Ccode["  DDM_SCHUR_BC_OPEN"];
 
-	 # bc equation for outer boundary:
+	 # bc equation for outer boundary at ijk point:
 	 outerB_F = 0;
 
 Ccode["  F[map[ijk]] = outerB_F;"];
@@ -48,7 +47,7 @@ Ccode["  else if (patch->innerB)"/* at inner boundary */];
 Ccode["  {"];
 Ccode["  DDM_SCHUR_BC_OPEN"];
 
-         # bc equation for outer boundary:
+         # bc equation for outer boundary at ijk point:
          innerB_F = 0;
 
 Ccode["  F[map[ijk]] = innerB_F;"];

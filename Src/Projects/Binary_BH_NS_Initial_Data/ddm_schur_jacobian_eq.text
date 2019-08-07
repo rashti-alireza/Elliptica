@@ -15,9 +15,8 @@ C_macro3 = JACOBIAN_DERIVATIVE(name);
 C_arg = (j_name,ijk,lmn);
 
 # main function:
-Ccode["#include "bbn_headers.h""];
-Ccode["#include "bbn_XCTS_equations_lib.h""];
-Ccode["#include "maths_equation_solvings_lib.h"\n\n"];
+Ccode["#include "maths_equation_solvings_lib.h""];
+Ccode["#include "?_headers.h""];
 Ccode["void *jacobian_eq_?(void *vp1,void *vp2)\n{"];
 
 # NOTE: THE FOLLOWING MACRO DECLARES OR DEFINES THE FOLLOWING VARIABLES:
@@ -59,7 +58,7 @@ Declare =
 
 Ccode["  DDM_SCHUR_JACOBIAN_EQ_Bpart_OPEN"];
 
-         # B matrix:
+         # B matrix: J[ijk][lmn] in Jx = -F
          Bpart = 0;
 
 Ccode["  B[i][j] = Bpart;"];
@@ -67,7 +66,7 @@ Ccode["  DDM_SCHUR_JACOBIAN_EQ_Bpart_CLOSE\n"];
 
 Ccode["  DDM_SCHUR_JACOBIAN_EQ_Epart_OPEN"];
 
-         # E matrix:
+         # E matrix: J[ijk][lmn] in Jx = -F
          Epart = 0;
 
 Ccode["  E_Trans[j][i] = Epart;"];
