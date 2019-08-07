@@ -1,0 +1,73 @@
+# alpha BC equation:
+
+# Manifold or grid Dimension
+Dimension = 3;
+
+# point on manifold shown by:
+Point = ijk;
+
+C_macro  = GET_FIELD(name);
+C_macro2 = PREP_FIELD(name);
+C_arg    = (ijk);
+
+# main function:
+Ccode["#include "laplace_inhom_headers.h""];
+Ccode["#include "maths_equation_solvings_lib.h""];
+Ccode["#include "laplace_inhom_equations_lib.h"\n\n"];
+Ccode["void *bc_alpha(void *vp1,void *vp2)\n{"];
+
+# NOTE: THE FOLLOWING MACRO DECLARES AND DEFINES THE FOLLOWING VARIABLES:
+# patch, S, map, F, node, N, n.
+# THUS, DO NOT DEFINE THEM AGAIN.
+Ccode["  DDM_SCHUR_BC_DECLARE"];
+Ccode["  unsigned ijk;/* node index */"];
+
+# declare for Cpi
+Declare = 
+{
+  # alpha;
+  (obj = field, name = alpha, rank = 0, C_macro);
+  # x;
+  (obj = field, name = x_, rank = 0, None,C_arg);
+  # y;
+  (obj = field, name = y_, rank = 0, None,C_arg);
+  # z;
+  (obj = field, name = z_, rank = 0, None,C_arg);
+
+
+
+}
+
+# symmetries for Cpi
+# no symmetry here.
+
+# NOTE: write each equation in terms of ijk point, and if there is no
+# outer boundary or inner boundary equation, let it be 0.
+
+# outer boundary like infinity
+Ccode["  if (patch->outerB)/* at outer boundary */"];
+Ccode["  {"];
+Ccode["  DDM_SCHUR_BC_OPEN"];
+
+	 # bc equation for outer boundary:
+	 outerB_F = alpha-(x_**2+y_**2+z_**2);
+
+Ccode["  F[map[ijk]] = outerB_F;"];
+Ccode["  DDM_SCHUR_BC_CLOSE"];
+Ccode["  }/* end of if (patch->outerB) */"];
+
+# inner boundary like BH horizon
+Ccode["  else if (patch->innerB)/* at inner boundary */"];
+Ccode["  {"];
+Ccode["  DDM_SCHUR_BC_OPEN"];
+
+         # bc equation for outer boundary:
+         innerB_F = alpha-(x_**2+y_**2+z_**2);
+
+Ccode["  F[map[ijk]] = innerB_F;"];
+Ccode["  DDM_SCHUR_BC_CLOSE"];
+Ccode["  }/* end of else if (patch->innerB) */"];
+
+Ccode["  return 0;"];
+Ccode["}"];
+

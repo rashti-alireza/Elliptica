@@ -31,3 +31,19 @@ int Laplace_Inhom_solve_eq(Grid_T *const grid)
   
   return EXIT_SUCCESS;
 }
+
+/* adding Laplace Inhomogeneous equations to data base */
+void Laplace_Inhom_fill_db_eqs(sEquation_T ***const field_eq,sEquation_T ***const bc_eq,sEquation_T ***const jacobian_field_eq,sEquation_T ***const jacobian_bc_eq)
+{
+  /* adding field and boundary condition equations */
+  *field_eq      = init_eq();
+  *bc_eq         = init_eq();
+  *jacobian_field_eq   = init_eq();
+  *jacobian_bc_eq      = init_eq();
+
+  add_eq(field_eq,eq_alpha,"eq_alpha");
+  add_eq(bc_eq   ,bc_alpha,"bc_alpha");
+  add_eq(jacobian_field_eq,jacobian_eq_alpha,"jacobian_eq_alpha");
+  add_eq(jacobian_bc_eq   ,jacobian_bc_alpha,"jacobian_bc_alpha");
+}
+
