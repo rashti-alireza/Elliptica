@@ -1056,13 +1056,26 @@ static void make_g(Grid_T *const grid)
 static void preparing_ingredients(Grid_T *const grid)
 {
   unsigned p;
+  unsigned count = 0;
+  
   FOR_ALL_PATCHES(p,grid)
   {
     Patch_T *patch = grid->patch[p];
     
-    /* if this patch already has Schur stucture */
-    if (patch->solving_man->method->Schur_Complement)
-      continue;
+    /* if this patch doesn't have Schur stucture */
+    if (!patch->solving_man->method->Schur_Complement)
+      count ++;
+  }
+  
+  if (!count)/* if all structures are ready, exit */
+    return;
+  else if (count != 0 && count < grid->np)/* is some structures have been made and some not */
+    abortEr(" How come that some Schur structure are ready and some are not!\n");
+  
+  /* populating Schur sturct */
+  FOR_ALL_PATCHES(p,grid)
+  {
+    Patch_T *patch = grid->patch[p];
       
     DDM_Schur_Complement_T *SchurC = calloc(1,sizeof(*SchurC));
     pointerEr(SchurC);
