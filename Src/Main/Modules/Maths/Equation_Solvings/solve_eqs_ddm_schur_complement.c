@@ -24,8 +24,11 @@
    5. compute x = f'-E'y
   
 // some definitions used here:
-// subdomain = inner nodes + outer boundary points
-// interface = all nodes - subdomain.
+// outer boundary = boundary at the outer most part of the patch, like infinity
+// inner boundary = boundary at some internal part of the patch, like black hole horizon.
+// boundary points = points (nodes) on outer boundary + inner boundary
+// subdomain = inner points + boundary points
+// interface = all nodes(points) - subdomain.
 // note: interface struct includes all boundary points.
 */
 
@@ -1489,14 +1492,14 @@ static void make_map_and_inv(Patch_T *const patch)
   /* set initial index for outer boundary points. */
   patch->solving_man->method->SchurC->Oi = j;
   
-  /* filling outer boundary points */
+  /* filling boundary points */
   for (intfc = 0; intfc < nintfc; ++intfc)
   {
     Interface_T *interface = patch->interface[intfc];
     unsigned nsfc = interface->ns;
     unsigned sfc;
     
-    /* loop over all subfaces to filling outerbound */
+    /* loop over all subfaces to filling boundary */
     for (sfc = 0; sfc < nsfc; ++sfc)
     {
       SubFace_T *subface = interface->subface[sfc];
@@ -1538,7 +1541,7 @@ static void make_map_and_inv(Patch_T *const patch)
     unsigned nsfc = interface->ns;
     unsigned sfc;
     
-    /* loop over all subfaces to filling outerbound */
+    /* loop over all subfaces to filling boundary points */
     for (sfc = 0; sfc < nsfc; ++sfc)
     {
       SubFace_T *subface = interface->subface[sfc];
@@ -1994,7 +1997,7 @@ static void f_in_equation_part(Patch_T *const patch)
   field_eq(patch,S->method->SchurC);
 }
 
-/* calculating the part of f coming from outerboundary points */
+/* calculating the part of f coming from boundary points */
 static void f_in_boundary_part(Patch_T *const patch)
 {
   const unsigned nintfc    = countf(patch->interface);
@@ -2012,7 +2015,7 @@ static void f_in_boundary_part(Patch_T *const patch)
     unsigned nsfc = interface->ns;
     unsigned sfc;
     
-    /* loop over all subfaces and look for outerboundary */
+    /* loop over all subfaces and look for boundary */
     for (sfc = 0; sfc < nsfc; ++sfc)
     {
       SubFace_T *subface = interface->subface[sfc];
