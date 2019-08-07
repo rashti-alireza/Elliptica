@@ -14,6 +14,10 @@ Ccode["#include "bbn_headers.h""];
 Ccode["#include "bbn_XCTS_equations_lib.h""];
 Ccode["#include "maths_equation_solvings_lib.h"\n\n"];
 Ccode["void *bc_?(void *vp1,void *vp2)\n{"];
+
+# NOTE: THE FOLLOWING MACRO DECLARES AND DEFINES THE FOLLOWING VARIABLES:
+# patch, S, map, F, node, N, n.
+# THUS, DO NOT DEFINE THEM AGAIN.
 Ccode["  DDM_SCHUR_BC_DECLARE"];
 Ccode["  unsigned ijk;/* node index */"];
 
@@ -39,7 +43,7 @@ Ccode["  F[map[ijk]] = outerB_F;"];
 Ccode["  DDM_SCHUR_BC_CLOSE"];
 Ccode["  }/* end of if (patch->outerB) */"];
 
-# inner boundary like Horizon
+# inner boundary like BH horizon
 Ccode["  else if (patch->innerB)"/* at inner boundary */];
 Ccode["  {"];
 Ccode["  DDM_SCHUR_BC_OPEN"];

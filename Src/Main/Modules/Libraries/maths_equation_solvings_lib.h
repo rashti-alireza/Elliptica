@@ -26,7 +26,6 @@ void test_solve_ddm_schur_complement(Grid_T *const grid);
   const unsigned Nj = S->NS;/* number of inner mesh+outer-boundary + inner-boundary nodes */\
   const unsigned K0 = S->NS;/* number of inner mesh+outer-boundary + inner-boundary nodes */\
   const unsigned Nk = patch->nn;/* total number of nodes */\
-  const unsigned Ref = Nj;/* for shorhand purposes */\
   unsigned i,j,k;
 
 /* macro for B part of jacobian */
@@ -50,7 +49,7 @@ void test_solve_ddm_schur_complement(Grid_T *const grid);
     for (k = K0; k < Nk; ++k)\
     {\
       lmn = node[k];\
-      j = k-Ref;\
+      j = k-K0;\
       for (i = 0; i < Ni; ++i)\
       {\
         ijk = node[i];
@@ -73,7 +72,6 @@ void test_solve_ddm_schur_complement(Grid_T *const grid);
   const unsigned Nj = S->NS;/* number of inner mesh+outer-boundary + inner-boundary nodes */\
   const unsigned K0 = S->NS;/* number of inner mesh+outer-boundary + inner-boundary nodes */\
   const unsigned Nk = patch->nn;/* total number of nodes */\
-  const unsigned Ref = Nj;/* for shorhand purposes */\
   unsigned i,j,k;
 
 /* macro for B part of outer boundary jacobian */
@@ -97,7 +95,7 @@ void test_solve_ddm_schur_complement(Grid_T *const grid);
     for (k = K0; k < Nk; ++k)\
     {\
       lmn = node[k];\
-      j = k-Ref;\
+      j = k-K0;\
       for (i = I0; i < Ni; ++i)\
       {\
         ijk = node[i];

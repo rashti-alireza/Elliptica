@@ -21,7 +21,7 @@ Ccode["#include "maths_equation_solvings_lib.h"\n\n"];
 Ccode["void *jacobian_bc_?(void *vp1,void *vp2)\n{"];
 
 # NOTE: THE FOLLOWING MACRO DECLARES AND DEFINES THE FOLLOWING VARIABLES:
-# patch, S, B, E_Trans, node, I0, Ni, Nj, K0, Nk, Ref, i,j,k.
+# patch, S, B, E_Trans, node, I0, Ni, Nj, K0, Nk, i,j,k.
 # THUS, DO NOT DEFINE THEM AGAIN.
 Ccode["  DDM_SCHUR_JACOBIAN_BC_DECLARE"];
 Ccode["  unsigned ijk,lmn;\* for Jacobian entries J[ijk][lmn] *\"]
@@ -40,11 +40,13 @@ Declare =
 #    NOTE2: In Schur domain decomposition method we need two types of
 # matrices for Jacobian of Newton-Raphson scheme, matrix B and matrix E. 
 # Let's say Jx = -F in Newton-Raphson scheme; then,
-# B[i][j] = d[F(f(ijk))]/df(lmn), ijk takes their values on boundary points
-# (either outer boundary or inner boundary), and lmn runs over 
-# all point of the patch.
-# E[i][j] = d[F(f(ijk))]/df(lmn), ijk takes their values on interface
-# points, and lmn runs over all point of the patch.
+# B[i][j] = d[F(f(ijk))]/df(lmn), ijk takes their values ON INNER POINTS
+# of a patch, namley those collocated points that don't reach boundary of
+# the patch, and lmn runs over ALL BUT the interface points (interface
+# points are those located between two patches).
+# E[i][j] = d[F(f(ijk))]/df(lmn), ijk takes their values ON INTERFACE
+# POINTS, namely those collocated points ON the boundary between two
+# patches, lmn runs over ALL BUT the interface points.
 #
 #    PRAGMATICALLY:
 #  If you have Dirichlet B.C. for outer-boundary (inner-boundary), 
@@ -54,6 +56,7 @@ Declare =
 # fill both B matrix and E matrix part WITH THE SAME EQUATION, you just
 # need to write two duplicated equations for each part, 
 # and if you're using interim variables use different names for each part.
+#
 #    NOTE3: For each part which doesn't exist, let it be 0.
 ###########################################################################
 

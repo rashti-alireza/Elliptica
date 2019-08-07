@@ -16,7 +16,7 @@ Ccode["#include "maths_equation_solvings_lib.h"\n\n"];
 Ccode["void *eq_?(void *vp1,void *vp2)\n{"];
 
 # NOTE: THE FOLLOWING MACRO DECLARES AND DEFINES THE FOLLOWING VARIABLES:
-# patch, S, B, F, node, N, n.
+# patch, S, F, node, N, n.
 # THUS, DO NOT DEFINE THEM AGAIN.
 Ccode["  DDM_SCHUR_EQ_DECLARE"];
 Ccode["  unsigned ijk;/* node index */"];
@@ -29,9 +29,9 @@ Declare =
 # symmetries for Cpi:
 
 ##########################################################################
-# NOTE: In domain decomposition method n is relabed of point ijk.
-# In fact ijk is mapped to point n, for relabeling purposes, encapsulated
-# in macro DDM_SCHUR_EQ_OPEN.
+# NOTE: In domain decomposition method n is relabed from point ijk.
+# In fact ijk is mapped to point n, for relabeling purposes of
+# domain decompostion which is encapsulated in macro DDM_SCHUR_EQ_OPEN.
 # The bottom line is JUST simply WRITE the equation FOR F_eq 
 # at Newton-Raphson scheme (Jx = -F_eq) in TERMS OF ijk POINT.
 ##########################################################################
@@ -41,7 +41,7 @@ Ccode["  DDM_SCHUR_EQ_OPEN"];
 	 # write the equation below in terms of ijk:
          F_eq = 0;
 
-Ccode["  F[n] = F_eq;"];
+Ccode["  F[n] = F_eq;"];# Jx = -F in Newton-Raphson scheme
 Ccode["  DDM_SCHUR_EQ_CLOSE\n"];
 
 Ccode["  return 0;"];
