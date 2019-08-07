@@ -1,4 +1,4 @@
-# equation: ?
+# Jacobian for ? BC equation:
 
 # Manifold or grid Dimension
 Dimension = 3;
@@ -6,62 +6,99 @@ Dimension = 3;
 # point on manifold shown by:
 Point = ijk;
 
+# C macors
 C_macro  = GET_FIELD(name);
 C_macro2 = PREP_FIELD(name);
+C_macro3 = JACOBIAN_DERIVATIVE(name);
+
+# C arguments for jacobian of derivatives
+C_arg = (j_name,ijk,lmn);
 
 # main function:
 Ccode["#include "bbn_headers.h""];
-Ccode["#include "bbn_XCTS_equations_lib.h"\n\n"];
-
+Ccode["#include "bbn_XCTS_equations_lib.h""];
+Ccode["#include "maths_equation_solvings_lib.h"\n\n"];
 Ccode["void *jacobian_bc_?(void *vp1,void *vp2)\n{"];
 
-Ccode["  DDM_Schur_Complement_T *const S = vp2;"];
-Ccode["  Patch_T *const patch = vp1;"];
-Ccode["  double **const B = S->B->reg->A;"];
-Ccode["  const unsigned I0 = S->Oi;/* number of inner mesh nodes */"];
-Ccode["  const unsigned N = S->NS;/* number of inner mesh+outer-boundary nodes*/"];
-Ccode["  unsigned i;"];
+# NOTE: THE FOLLOWING MACRO DECLARES AND DEFINES THE FOLLOWING VARIABLES:
+# patch, S, B, E_Trans, node, I0, Ni, Nj, K0, Nk, Ref, i,j,k.
+# THUS, DO NOT DEFINE THEM AGAIN.
+Ccode["  DDM_SCHUR_JACOBIAN_BC_DECLARE"];
+Ccode["  unsigned ijk,lmn;\* for Jacobian entries J[ijk][lmn] *\"]
 
+# declare for Cpi
 Declare = 
 {
- # conformal metric
- (obj = Field,name = _gamma, rank = DD, C_macro);
- # conformal metric inverse
- (obj = Field,name = _gammaI, rank = UU, C_macro);
- # Christoffer symbol
- (obj = Field,name = _Gamma, rank = UDD, C_macro);
 }
 
-# symmetries:
-Symm[_gamma(i,j)   = _gamma(j,i)];
-Symm[_gammaI(i,j)  = _gammaI(j,i)];
-Symm[_Gamma(i,j,k) = _Gamma(i,k,j)];
+# symmetries for Cpi
+
+
+###########################################################################
+#    NOTE1: There are different calculation parts, in each part use 
+# different name for new variables.
+#    NOTE2: In Schur domain decomposition method we need two types of
+# matrices for Jacobian of Newton-Raphson scheme, matrix B and matrix E. 
+# Let's say Jx = -F in Newton-Raphson scheme; then,
+# B[i][j] = d[F(f(ijk))]/df(lmn), ijk takes their values on boundary points
+# (either outer boundary or inner boundary), and lmn runs over 
+# all point of the patch.
+# E[i][j] = d[F(f(ijk))]/df(lmn), ijk takes their values on interface
+# points, and lmn runs over all point of the patch.
+#
+#    PRAGMATICALLY:
+#  If you have Dirichlet B.C. for outer-boundary (inner-boundary), 
+# only fill B matrix with the jacobian of the B.C. equation, 
+# and for E matrix put outerB_Epart = 0 (innerB_Epart = 0).
+#  If you have Neumann B.C. or any B.C. that has derivative in it
+# fill both B matrix and E matrix part WITH THE SAME EQUATION, you just
+# need to write two duplicated equations for each part, 
+# and if you're using interim variables use different names for each part.
+#    NOTE3: For each part which doesn't exist, let it be 0.
+###########################################################################
+
 
 # outer boundary like infinity
 Ccode["  if (patch->outerB)"];
 Ccode["  {"];
-Ccode["    /* B part: */"];
-Ccode["    for (i = I0; i < N; ++i)"];
-Ccode["    {"];
-# calculations:
+Ccode["  DDM_SCHUR_JACOBIAN_BC_Bpart_OPEN"];
 
-Ccode["    }"];
+         # B matrix:
+         outerB_Bpart = 0;
 
-Ccode["    /* E part: */"];
-Ccode["  }"];# end of if (patch->outerB)
+Ccode["  B[i][j] = outerB_Bpart;"];
+Ccode["  DDM_SCHUR_JACOBIAN_BC_Bpart_CLOSE\n"];
+
+Ccode["  DDM_SCHUR_JACOBIAN_BC_Epart_OPEN"];
+
+         # E matrix:
+         outerB_Epart = 0;
+
+Ccode["  E_Trans[j][i] = outerB_Epart;"];
+Ccode["  DDM_SCHUR_JACOBIAN_BC_Epart_CLOSE"];
+Ccode["  }/* end of if (patch->outerB) */"];
 
 # inner boundary like horizon
 Ccode["  else if (patch->innerB)"];
 Ccode["  {"];
-Ccode["    /* B part: */"];
-Ccode["    for (i = I0; i < N; ++i)"];
-Ccode["    {"];
-# calculations:
+Ccode["  DDM_SCHUR_JACOBIAN_BC_Bpart_OPEN"];
 
-Ccode["    }"];
+         # B matrix:
+         innerB_Bpart = 0;
 
-Ccode["    /* E part: */"];
-Ccode["  }"];# end of else if (patch->innerB)
+Ccode["  B[i][j] = innerB_Bpart;"];
+Ccode["  DDM_SCHUR_JACOBIAN_BC_Bpart_CLOSE\n"];
+
+Ccode["  DDM_SCHUR_JACOBIAN_BC_Epart_OPEN"];
+
+         # E matrix:
+         innerB_Epart = 0;
+
+Ccode["  E_Trans[j][i] = innerB_Epart;"];
+Ccode["  DDM_SCHUR_JACOBIAN_BC_Epart_CLOSE\n"];
+
+Ccode["  }/* end of else if (patch->innerB) */"];
+
 
 Ccode["  return 0;"];
 Ccode["}"];

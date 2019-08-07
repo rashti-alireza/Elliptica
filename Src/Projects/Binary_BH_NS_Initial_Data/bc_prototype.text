@@ -1,4 +1,4 @@
-# equation: ?
+# ? BC equation:
 
 # Manifold or grid Dimension
 Dimension = 3;
@@ -11,58 +11,45 @@ C_macro2 = PREP_FIELD(name);
 
 # main function:
 Ccode["#include "bbn_headers.h""];
-Ccode["#include "bbn_XCTS_equations_lib.h"\n\n"];
-
+Ccode["#include "bbn_XCTS_equations_lib.h""];
+Ccode["#include "maths_equation_solvings_lib.h"\n\n"];
 Ccode["void *bc_?(void *vp1,void *vp2)\n{"];
-Ccode["  Boundary_Condition_T *const bc = vp1;"];
-Ccode["  DDM_Schur_Complement_T *const S = vp2;"];
-Ccode["  double *const F      = S->f;"];
-Ccode["  unsigned *const map  = S->map;"];
-Ccode["  Patch_T *const patch = bc->patch;"];
-Ccode["  const unsigned *const node = bc->node;/* nodes at boundary */"];
-Ccode["  const unsigned N = bc->nn;/* number of nodes at boundary */"];
-Ccode["  unsigned n,ijk;"];
+Ccode["  DDM_SCHUR_BC_DECLARE"];
+Ccode["  unsigned ijk;/* node index */"];
 
+# declare for Cpi
 Declare = 
 {
- # conformal metric
- (obj = Field,name = _gamma, rank = DD, C_macro);
- # conformal metric inverse
- (obj = Field,name = _gammaI, rank = UU, C_macro);
- # Christoffer symbol
- (obj = Field,name = _Gamma, rank = UDD, C_macro);
 }
 
-# symmetries:
-Symm[_gamma(i,j)   = _gamma(j,i)];
-Symm[_gammaI(i,j)  = _gammaI(j,i)];
-Symm[_Gamma(i,j,k) = _Gamma(i,k,j)];
+# symmetries for Cpi
+
+# NOTE: write each equation in terms of ijk point, and if there is no
+# outer boundary or inner boundary equation, let it be 0.
 
 # outer boundary like infinity
-Ccode["  /* at outer boundary */"];
-Ccode["  if (patch->outerB)"];
+Ccode["  if (patch->outerB)/* at outer boundary */"];
 Ccode["  {"];
-Ccode["    for (n = 0; n < N; ++n)"];
-Ccode["    {"];
-Ccode["    ijk = node[n];"];
-# calculations:
+Ccode["  DDM_SCHUR_BC_OPEN"];
 
-Ccode["    F[map[ijk]] = F_bc;"];
-Ccode["    }"];
-Ccode["  }"];
+	 # bc equation for outer boundary:
+	 outerB_F = 0;
+
+Ccode["  F[map[ijk]] = outerB_F;"];
+Ccode["  DDM_SCHUR_BC_CLOSE"];
+Ccode["  }/* end of if (patch->outerB) */"];
 
 # inner boundary like Horizon
-Ccode["  /* at inner boundary */"];
-Ccode["  else if (patch->innerB)"];
+Ccode["  else if (patch->innerB)"/* at inner boundary */];
 Ccode["  {"];
-Ccode["    for (n = 0; n < N; ++n)"];
-Ccode["    {"];
-Ccode["    ijk = node[n];"];
-# calculatioins:
+Ccode["  DDM_SCHUR_BC_OPEN"];
 
-Ccode["    F[map[ijk]] = F_bc;"];
-Ccode["    }"];
-Ccode["  }"];
+         # bc equation for outer boundary:
+         innerB_F = 0;
+
+Ccode["  F[map[ijk]] = innerB_F;"];
+Ccode["  DDM_SCHUR_BC_CLOSE"];
+Ccode["  }/* end of else if (patch->innerB) */"];
 
 Ccode["  return 0;"];
 Ccode["}"];

@@ -11,39 +11,39 @@ C_macro2 = PREP_FIELD(name);
 
 # main function:
 Ccode["#include "bbn_headers.h""];
-Ccode["#include "bbn_XCTS_equations_lib.h"\n\n"];
-
+Ccode["#include "bbn_XCTS_equations_lib.h""];
+Ccode["#include "maths_equation_solvings_lib.h"\n\n"];
 Ccode["void *eq_?(void *vp1,void *vp2)\n{"];
-Ccode["  Patch_T *const patch = vp1;"];
-Ccode["  DDM_Schur_Complement_T *const S = vp2;"];
-Ccode["  double *const F = S->f;"];
-Ccode["  const unsigned *const node  = S->inv;/* inverse map to node */"];
-Ccode["  const unsigned N = S->Oi;/* number of inner mesh nodes */"];
-Ccode["  unsigned ijk;/* node */"];
-Ccode["  unsigned n;"];
 
+# NOTE: THE FOLLOWING MACRO DECLARES AND DEFINES THE FOLLOWING VARIABLES:
+# patch, S, B, F, node, N, n.
+# THUS, DO NOT DEFINE THEM AGAIN.
+Ccode["  DDM_SCHUR_EQ_DECLARE"];
+Ccode["  unsigned ijk;/* node index */"];
+
+# declare for Cpi:
 Declare = 
 {
- # conformal metric
- (obj = Field,name = _gamma, rank = DD, C_macro);
- # conformal metric inverse
- (obj = Field,name = _gammaI, rank = UU, C_macro);
- # Christoffer symbol
- (obj = Field,name = _Gamma, rank = UDD, C_macro);
 }
 
-# symmetries:
-Symm[_gamma(i,j)   = _gamma(j,i)];
-Symm[_gammaI(i,j)  = _gammaI(j,i)];
-Symm[_Gamma(i,j,k) = _Gamma(i,k,j)];
+# symmetries for Cpi:
 
-Ccode["  for (n = 0; n < N; ++n)"];
-Ccode["  {"];
-Ccode["  ijk  = node[n];"];
-# equations:
+##########################################################################
+# NOTE: In domain decomposition method n is relabed of point ijk.
+# In fact ijk is mapped to point n, for relabeling purposes, encapsulated
+# in macro DDM_SCHUR_EQ_OPEN.
+# The bottom line is JUST simply WRITE the equation FOR F_eq 
+# at Newton-Raphson scheme (Jx = -F_eq) in TERMS OF ijk POINT.
+##########################################################################
+
+Ccode["  DDM_SCHUR_EQ_OPEN"];
+
+	 # write the equation below in terms of ijk:
+         F_eq = 0;
 
 Ccode["  F[n] = F_eq;"];
-Ccode["  }"];
+Ccode["  DDM_SCHUR_EQ_CLOSE\n"];
+
 Ccode["  return 0;"];
 Ccode["}"];
 
