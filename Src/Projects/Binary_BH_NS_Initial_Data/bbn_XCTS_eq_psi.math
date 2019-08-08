@@ -49,7 +49,7 @@ Declare =
  # conformal metric inverse
  (obj = Field,name = _gammaI, rank = UU, C_macro);
 
- # partial derivative of conformal metric
+ # conformal connections
  (obj = Field,name = _Gamma, rank = UDD, C_macro);
 
 }
@@ -74,7 +74,7 @@ Symm[_Gamma(i,j,k)  = _Gamma(i,k,j)];
 # write the equation below at ijk point:
 F_eq = _gammaI(i,j)*ddpsi(-i,-j) \
      - _gammaI(-i,-j)*_Gamma(l,i,j)*dpsi(-l)\
-     - psi*_R/8 - psi**5*K**2/12 + psi**-7*_Aij2/8 + 2*pi*_E/psi;
+     - psi*_R/8 - (psi**5)*(K**2)/12 + (psi**-7)*_Aij2/8 + 2*pi*_E/psi;
 
 `  F[n] = F_eq;\n`;# Jx = -F in Newton-Raphson scheme
 `  DDM_SCHUR_EQ_CLOSE\n`;
