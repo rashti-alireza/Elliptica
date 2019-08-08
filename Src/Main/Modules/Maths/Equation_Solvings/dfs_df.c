@@ -783,6 +783,7 @@ Matrix_T *get_j_matrix(const Patch_T *const patch,const char *type)
 {
   Solving_Man_T *const sol_man = patch->solving_man;
   Matrix_T *j = 0;
+  char *jtype = interpret_type(type);
   unsigned i;
   
   if (!sol_man)
@@ -792,12 +793,14 @@ Matrix_T *get_j_matrix(const Patch_T *const patch,const char *type)
   
   for (i = 0; i < sol_man->nj; ++i)
   {
-    if (strcmp_i(sol_man->jacobian[i]->type,type))
+    if (strcmp_i(sol_man->jacobian[i]->type,jtype))
     {
       j = sol_man->jacobian[i]->J;
       break;
     }
   }
+  
+  free(jtype);
   
   return j;
 }
