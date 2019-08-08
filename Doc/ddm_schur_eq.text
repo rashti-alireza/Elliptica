@@ -10,15 +10,15 @@ C_macro  = GET_FIELD(name);
 C_macro2 = PREP_FIELD(name);
 
 # main function:
-Ccode["#include "maths_equation_solvings_lib.h""];
-Ccode["#include "?_headers.h""];
-Ccode["void *eq_?(void *vp1,void *vp2)\n{"];
+`#include "maths_equation_solvings_lib.h"`;
+`#include "?_headers.h"`;
+`void *eq_?(void *vp1,void *vp2)\n{`;
 
 # NOTE: THE FOLLOWING MACRO DECLARES AND DEFINES THE FOLLOWING VARIABLES:
 # patch, S, F, node, N, n.
 # THUS, DO NOT DEFINE THEM AGAIN.
-Ccode["  DDM_SCHUR_EQ_DECLARE"];
-Ccode["  unsigned ijk;/* node index */"];
+`  DDM_SCHUR_EQ_DECLARE`;
+`  unsigned ijk;/* node index */`;
 
 # declare for Cpi:
 Declare = 
@@ -35,7 +35,7 @@ Declare =
 # at Newton-Raphson scheme (Jx = -F_eq) in TERMS OF ijk POINT.
 ##########################################################################
 
-Ccode["  DDM_SCHUR_EQ_OPEN\n"];
+`  DDM_SCHUR_EQ_OPEN\n`;
 
 
 # write the equation below at ijk point:
@@ -43,9 +43,9 @@ F_eq = 0;
 
 
 
-Ccode["  F[n] = F_eq;\n"];# Jx = -F in Newton-Raphson scheme
-Ccode["  DDM_SCHUR_EQ_CLOSE\n"];
+`  F[n] = F_eq;\n`;# Jx = -F in Newton-Raphson scheme
+`  DDM_SCHUR_EQ_CLOSE\n`;
 
-Ccode["  return 0;"];
-Ccode["}"];
+`  return 0;`;
+`}`;
 

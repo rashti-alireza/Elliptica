@@ -10,15 +10,15 @@ C_macro  = GET_FIELD(name);
 C_macro2 = PREP_FIELD(name);
 
 # main function:
-Ccode["#include "maths_equation_solvings_lib.h""];
-Ccode["#include "?_headers.h""];
-Ccode["void *bc_?(void *vp1,void *vp2)\n{"];
+`#include "maths_equation_solvings_lib.h"`;
+`#include "?_headers.h"`;
+`void *bc_?(void *vp1,void *vp2)\n{`;
 
 # NOTE: THE FOLLOWING MACRO DECLARES AND DEFINES THE FOLLOWING VARIABLES:
 # patch, S, map, F, node, N, n.
 # THUS, DO NOT DEFINE THEM AGAIN.
-Ccode["  DDM_SCHUR_BC_DECLARE"];
-Ccode["  unsigned ijk;/* node index */"];
+`  DDM_SCHUR_BC_DECLARE`;
+`  unsigned ijk;/* node index */`;
 
 # declare for Cpi
 Declare = 
@@ -31,33 +31,33 @@ Declare =
 # outer boundary or inner boundary equation, let it be 0.
 
 # OUTER BOUNDARY LIKE INFINITY #
-Ccode["  if (patch->outerB)/* at outer boundary */"];
-Ccode["  {"];
-Ccode["  DDM_SCHUR_BC_OPEN\n"];
+`  if (patch->outerB)/* at outer boundary */`;
+`  {`;
+`  DDM_SCHUR_BC_OPEN\n`;
 
 
 # bc equation for outer boundary at ijk point:
 outerB_F = 0;
 
 
-Ccode["  F[map[ijk]] = outerB_F;\n"];
-Ccode["  DDM_SCHUR_BC_CLOSE"];
-Ccode["  }/* end of if (patch->outerB) */"];
+`  F[map[ijk]] = outerB_F;\n`;
+`  DDM_SCHUR_BC_CLOSE`;
+`  }/* end of if (patch->outerB) */`;
 
 # INNER BOUNDARY LIKE BLACK HOLE HORIZON #
-Ccode["  else if (patch->innerB)/* at inner boundary */"];
-Ccode["  {"];
-Ccode["  DDM_SCHUR_BC_OPEN\n"];
+`  else if (patch->innerB)/* at inner boundary */`;
+`  {`;
+`  DDM_SCHUR_BC_OPEN\n`;
 
 
 # bc equation for outer boundary at ijk point:
 innerB_F = 0;
 
 
-Ccode["  F[map[ijk]] = innerB_F;\n"];
-Ccode["  DDM_SCHUR_BC_CLOSE"];
-Ccode["  }/* end of else if (patch->innerB) */"];
+`  F[map[ijk]] = innerB_F;\n`;
+`  DDM_SCHUR_BC_CLOSE`;
+`  }/* end of else if (patch->innerB) */`;
 
-Ccode["  return 0;"];
-Ccode["}"];
+`  return 0;`;
+`}`;
 
