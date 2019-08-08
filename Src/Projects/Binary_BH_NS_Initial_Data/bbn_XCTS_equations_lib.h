@@ -1,3 +1,10 @@
+/* defining macro such that only gets the field value if the patch covers the BH horizon. */
+#define GET_FIELD_IF_ON_HORIZON(x) \
+ double *xNAME = 0;/* so it gets segfault if mistakenly the value is acquired. */\
+ if (regex_search("grid[[:digit:]]+_right_BH_surrounding_.+",patch->name))\
+   xNAME = patch->pool[Ind(#xNAME)]->v;
+
+
 void *eq_psi(void *vp1,void *vp2);
 void *bc_psi(void *vp1,void *vp2);
 void *jacobian_eq_psi(void *vp1,void *vp2);
