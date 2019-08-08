@@ -72,6 +72,24 @@ void bbn_allocate_fields(Grid_T *const grid)
     
     }
     
+    /* only if patch covers horzion */
+    if (IsItHorizonPatch(patch))
+    {
+      /* normal vector on horizon */
+      ADD_FIELD(_HS_U0);
+      ADD_FIELD(_HS_U1);
+      ADD_FIELD(_HS_U2);
+      ADD_FIELD_NoMem(_dHS_U1D0)
+      ADD_FIELD_NoMem(_dHS_U1D1)
+      ADD_FIELD_NoMem(_dHS_U1D2)
+      ADD_FIELD_NoMem(_dHS_U0D1)
+      ADD_FIELD_NoMem(_dHS_U0D0)
+      ADD_FIELD_NoMem(_dHS_U0D2)
+      ADD_FIELD_NoMem(_dHS_U2D2)
+      ADD_FIELD_NoMem(_dHS_U2D1)
+      ADD_FIELD_NoMem(_dHS_U2D0)
+    }
+    
     /* conformal factor and its derivative */
     add_field("psi",0,patch,YES);
     ADD_FIELD_NoMem(dpsi_D2)
@@ -453,6 +471,46 @@ void bbn_partial_derivatives_fields(Grid_T *const grid)
       du0_D2->v = Partial_Derivative(u0,"z");
       du0_D1->v = Partial_Derivative(u0,"y");
       du0_D0->v = Partial_Derivative(u0,"x");
+    }
+    
+    /* only if patch covers horzion */
+    if (IsItHorizonPatch(patch))
+    {
+      /* normal vector on horizon */
+      DECLARE_FIELD(_HS_U0);
+      DECLARE_FIELD(_HS_U1);
+      DECLARE_FIELD(_HS_U2);
+      
+      DECLARE_FIELD(_dHS_U1D0)
+      DECLARE_FIELD(_dHS_U1D1)
+      DECLARE_FIELD(_dHS_U1D2)
+      DECLARE_FIELD(_dHS_U0D1)
+      DECLARE_FIELD(_dHS_U0D0)
+      DECLARE_FIELD(_dHS_U0D2)
+      DECLARE_FIELD(_dHS_U2D2)
+      DECLARE_FIELD(_dHS_U2D1)
+      DECLARE_FIELD(_dHS_U2D0)
+      
+      EMPTY_FIELD(_dHS_U1D0)
+      EMPTY_FIELD(_dHS_U1D1)
+      EMPTY_FIELD(_dHS_U1D2)
+      EMPTY_FIELD(_dHS_U0D1)
+      EMPTY_FIELD(_dHS_U0D0)
+      EMPTY_FIELD(_dHS_U0D2)
+      EMPTY_FIELD(_dHS_U2D2)
+      EMPTY_FIELD(_dHS_U2D1)
+      EMPTY_FIELD(_dHS_U2D0)
+      
+      _dHS_U1D0->v = Partial_Derivative(_HS_U1,"x");
+      _dHS_U1D1->v = Partial_Derivative(_HS_U1,"y");
+      _dHS_U1D2->v = Partial_Derivative(_HS_U1,"z");
+      _dHS_U0D1->v = Partial_Derivative(_HS_U0,"y");
+      _dHS_U0D0->v = Partial_Derivative(_HS_U0,"x");
+      _dHS_U0D2->v = Partial_Derivative(_HS_U0,"z");
+      _dHS_U2D2->v = Partial_Derivative(_HS_U2,"z");
+      _dHS_U2D1->v = Partial_Derivative(_HS_U2,"y");
+      _dHS_U2D0->v = Partial_Derivative(_HS_U2,"x");
+
     }
     
     /* K derivatives */

@@ -76,9 +76,71 @@ static Grid_T *TOV_KerrShild_approximation(void)
   // _A^{ij} = gamma^10*A^{ij} */
   bbn_update_psi10A_UiUj(grid);
   
+  /* make normal vectorn on BH horizon */
+  make_normal_vector_on_BH_horizon(grid);
+  
   TOV_free(tov);
   
   return grid;
+}
+
+/* make normal vectorn on BH horizon */
+static void make_normal_vector_on_BH_horizon(Grid_T *const grid)
+{
+  pr_line_custom('=');
+  printf("Making normal vector on BH horizon ...\n");
+  
+  unsigned p,nn,ijk;
+  
+  FOR_ALL_PATCHES(p,grid)
+  {
+    Patch_T *patch = grid->patch[p];
+    
+    if (!IsItHorizonPatch(patch))
+      continue;
+      
+    nn = patch->nn;
+    
+    GET_FIELD(_gamma_D2D2)
+    GET_FIELD(_gamma_D0D2)
+    GET_FIELD(_gamma_D0D0)
+    GET_FIELD(_gamma_D0D1)
+    GET_FIELD(_gamma_D1D2)
+    GET_FIELD(_gamma_D1D1)
+    
+    /* normal vector on horizon */
+    PREP_FIELD(_HS_U0);
+    PREP_FIELD(_HS_U1);
+    PREP_FIELD(_HS_U2);
+    
+    for (ijk = 0; ijk < nn; ++ijk)
+    {
+      /* minus sign to point outside the black hole */
+      _HS_U0[ijk] = dq2_dq1(patch,_c_,_x_,ijk);
+      _HS_U1[ijk] = dq2_dq1(patch,_c_,_y_,ijk);
+      _HS_U2[ijk] = dq2_dq1(patch,_c_,_z_,ijk);
+      
+      double N2 = 
+pow(_HS_U0[ijk], 2)*_gamma_D0D0[ijk] + 2.0*_HS_U0[ijk]*_HS_U1[ijk]*
+_gamma_D0D1[ijk] + 2.0*_HS_U0[ijk]*_HS_U2[ijk]*_gamma_D0D2[ijk] +
+pow(_HS_U1[ijk], 2)*_gamma_D1D1[ijk] + 2.0*_HS_U1[ijk]*_HS_U2[ijk]*
+_gamma_D1D2[ijk] + pow(_HS_U2[ijk], 2)*_gamma_D2D2[ijk];
+        
+      double N = sqrt(N2);
+      
+      /* normalizing */
+      _HS_U0[ijk] /= N;
+      _HS_U1[ijk] /= N;
+      _HS_U2[ijk] /= N;
+      
+    }
+     
+  }
+  
+  printf("Making normal vector on BH horizon ==> Done.\n");
+  pr_clock();
+  pr_line_custom('=');
+  
 }
 
 /* initialize the fields using TOV and Kerr-Shild solution.
