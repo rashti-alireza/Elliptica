@@ -1,7 +1,7 @@
 /* defining macro such that only gets the field value if the patch covers the BH horizon. */
-#define GET_FIELD_IF_ON_HORIZON(x) \
+#define GET_FIELD_IF_ON_HORIZON(xNAME) \
  double *xNAME = 0;/* so it gets segfault if mistakenly the value is acquired. */\
- if (regex_search("grid[[:digit:]]+_right_BH_surrounding_.+",patch->name))\
+ if (IsItHorizonPatch(patch))\
    xNAME = patch->pool[Ind(#xNAME)]->v;
 
 
