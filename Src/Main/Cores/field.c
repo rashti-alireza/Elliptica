@@ -147,6 +147,20 @@ int LookUpField(const char *const name,const Patch_T *const patch)
   return ind;
 }
 
+/* given name and patch find the index of a field in the pool.
+// ->return value: index of field in the pool, OR gives error if it could not find it. */
+int LookUpField_E(const char *const name,const Patch_T *const patch)
+{
+  int ind = LookUpField(name,patch);
+  
+  if (ind == INT_MIN)
+  {
+    fprintf(stderr,"Field %s could not be found in patch %s.\n",name,patch->name);
+    abortEr("Field could not be found.\n");
+  }
+  
+  return ind;
+}
 
 /* values -> 1-d coeffs for the specified direction.
 // making coeffs of a field based on basis used for expansion.
