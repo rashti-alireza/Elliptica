@@ -122,8 +122,7 @@ void add_attribute(Field_T *const fld,const char *const attribute)
 }
 
 /* given name and patch find the index of a field in the pool.
-// ->return value: index of field in the pool. INT_MIN if doesn't exist.
-*/
+// ->return value: index of field in the pool. INT_MIN if doesn't exist. */
 int LookUpField(const char *const name,const Patch_T *const patch)
 {
   int ind = INT_MIN;
@@ -139,7 +138,10 @@ int LookUpField(const char *const name,const Patch_T *const patch)
     else if(!patch->pool[i]->name)
       continue;
     else if (!strcmp(patch->pool[i]->name,name))
+    {
       ind = i;
+      break;
+    }
   }
   
   return ind;
