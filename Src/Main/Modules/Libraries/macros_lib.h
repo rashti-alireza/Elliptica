@@ -13,22 +13,22 @@
 #define FOR_ALL_PATCHES(n,grid) for ((n) = 0; (n) < grid->np; ++(n))/* loop over all patches of the given grid */
 #define FOR_ALL_POINTS(n,patch) for ((n) = 0; (n) < patch->nn; ++(n))/* loop over all points of the given patch */
 #define FOR_ALL(x,y) for((x) = 0; y[x] != 0; (x)++)
-#define ADD_FIELD(name)      add_field(#name,0,patch,YES);/* add field to patch->pool and alloc memory */
-#define ADD_FIELD_NoMem(name)      add_field(#name,0,patch,NO);/* add field to patch->pool BUT not alloc memory */
-#define REMOVE_FIELD(name)   remove_field(name);/* remove the field utterly */
-#define DECLARE_FIELD(name)  Field_T *const name = patch->pool[Ind(#name)];/* access to the whole field */
-#define GET_FIELD(name)      double *const name = patch->pool[Ind(#name)]->v;/* access to the memory values */
+#define ADD_FIELD(xNAME)      add_field(#xNAME,0,patch,YES);/* add field to patch->pool and alloc memory */
+#define ADD_FIELD_NoMem(xNAME)      add_field(#xNAME,0,patch,NO);/* add field to patch->pool BUT not alloc memory */
+#define REMOVE_FIELD(xNAME)   remove_field(xNAME);/* remove the field utterly */
+#define DECLARE_FIELD(xNAME)  Field_T *const xNAME = patch->pool[Ind(#xNAME)];/* access to the whole field */
+#define GET_FIELD(xNAME)      double *const xNAME = patch->pool[Ind(#xNAME)]->v;/* access to the memory values */
 /* it frees f->v2,f->info and gets f->v. it is used to update value of a field and frees the left over of previous values */
-#define PREP_FIELD(name)     Field_T *const _F_##name = patch->pool[Ind(#name)];\
-                             free_coeffs(_F_##name);\
-                             double *const name = patch->pool[Ind(#name)]->v;
+#define PREP_FIELD(xNAME)     Field_T *const _F_##xNAME = patch->pool[Ind(#xNAME)];\
+                             free_coeffs(_F_##xNAME);\
+                             double *const xNAME = patch->pool[Ind(#xNAME)]->v;
                              
-#define EMPTY_FIELD(name)  empty_field(name);/* free v,v2 and info of field */
+#define EMPTY_FIELD(xNAME)  empty_field(xNAME);/* free v,v2 and info of field */
 /* it compactifies the prepration of Jacobian of derivatives */
-#define JACOBIAN_DERIVATIVE(name) const char *types_##name[] = {#name,0};\
-                                  prepare_Js_jacobian_eq(patch,types_##name);\
-                                  Matrix_T *j_##name = get_j_matrix(patch,#name);\
-                                  fJs_T *name        = get_j_reader(j_##name);
+#define JACOBIAN_DERIVATIVE(xNAME) const char *types_##xNAME[] = {#xNAME,0};\
+                                  prepare_Js_jacobian_eq(patch,types_##xNAME);\
+                                  Matrix_T *j_##xNAME = get_j_matrix(patch,#xNAME);\
+                                  fJs_T *xNAME        = get_j_reader(j_##xNAME);
                                   
 #define GetParameterS(x)   get_parameter_value_S(x,__FILE__,__LINE__,NONE)
 #define GetParameterI(x)   get_parameter_value_I(x,__FILE__,__LINE__,NONE)
