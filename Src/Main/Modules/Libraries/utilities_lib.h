@@ -27,4 +27,5 @@ unsigned subface_map_invers_id(const SubFace_T *const subface,const unsigned n);
 unsigned *dup_UINT(const unsigned *const s,const unsigned N);
 double max_Jacobian_dX_dx(Patch_T *const patch);
 double spectral_derivative_max_error(const Field_T *const f,const unsigned o);
+unsigned IsItHorizonPatch(const Patch_T *const patch);
 unsigned IsItNSPatch(const Patch_T *const patch);

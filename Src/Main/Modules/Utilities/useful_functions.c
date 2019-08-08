@@ -440,6 +440,22 @@ double spectral_derivative_max_error(const Field_T *const f,const unsigned o)
   return e;
 }
 
+/* ->return value: if the patch covers a part of the BH horizon 1, otherwise 0 */
+unsigned IsItHorizonPatch(const Patch_T *const patch)
+{
+  unsigned ret = 0;
+  
+  if (strcmp_i(patch->grid->kind,"BBN_CubedSpherical_grid"))
+  {
+    if (regex_search("grid[[:digit:]]+_right_BH_surrounding_.+",patch->name))
+      return 1;
+  }
+  else
+    abortEr(NO_JOB);
+  
+  return ret;
+}
+
 /* ->return value: if the patch covers a part of the NS 1, otherwise 0 */
 unsigned IsItNSPatch(const Patch_T *const patch)
 {
@@ -447,6 +463,7 @@ unsigned IsItNSPatch(const Patch_T *const patch)
   
   if (strcmp_i(patch->grid->kind,"BBN_CubedSpherical_grid"))
   {
+    /* it could have used regex, but need extra attention to NS surrounding case */
     if (strstr(patch->name,"left_centeral_box") || 
         strstr(patch->name,"left_NS_up")        ||
         strstr(patch->name,"left_NS_down")      ||
