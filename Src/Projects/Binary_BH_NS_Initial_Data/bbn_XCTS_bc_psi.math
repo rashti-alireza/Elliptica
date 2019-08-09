@@ -77,7 +77,7 @@ outerB_F = psi-1;
 `  {`;
 `  DDM_SCHUR_BC_OPEN\n`;
 
-# bc equation for outer boundary at ijk point:
+# bc equation for inner boundary at ijk point:
 
 _DHS(j,-i) = _dHS(j,i) + _Gamma(j,i,l)*_HS(-l);
 innerB_F   =  _HS(i)*dpsi(-i)/psi + \
