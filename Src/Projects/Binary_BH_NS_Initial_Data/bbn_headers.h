@@ -5,8 +5,10 @@
 #include "memory_managing_lib.h"
 #include "utilities_lib.h"
 #include "maths_approximation_lib.h"
+#include "maths_calculus_lib.h"
 #include "physics_EoS_lib.h"
 #include "physics_StressEnergyTensor_lib.h"
+
 
 void bbn_update_psi10A_UiUj(Grid_T *const grid);
 void bbn_populate_free_data(Grid_T *const grid);

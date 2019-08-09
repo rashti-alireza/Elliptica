@@ -10,7 +10,7 @@
 void bbn_update_psi10A_UiUj(Grid_T *const grid)
 {
   pr_line_custom('=');
-  printf("Updating _A^{ij} and _A^{ij}*A_{ij} ...\n");
+  printf("Updating _A^{ij}, _dA^{ij} and _A^{ij}*A_{ij} ...\n");
   unsigned p;
 
   FOR_ALL_PATCHES(p,grid)
@@ -24,6 +24,24 @@ void bbn_update_psi10A_UiUj(Grid_T *const grid)
     PREP_FIELD(_A_UiUj_U0U2)
     PREP_FIELD(_A_UiUj_U0U1)
     PREP_FIELD(_A_UiUj_U0U0)
+    DECLARE_AND_EMPTY_FIELD(_dA_UiUj_U2U2D2)
+    DECLARE_AND_EMPTY_FIELD(_dA_UiUj_U2U2D0)
+    DECLARE_AND_EMPTY_FIELD(_dA_UiUj_U2U2D1)
+    DECLARE_AND_EMPTY_FIELD(_dA_UiUj_U1U1D2)
+    DECLARE_AND_EMPTY_FIELD(_dA_UiUj_U1U1D0)
+    DECLARE_AND_EMPTY_FIELD(_dA_UiUj_U1U1D1)
+    DECLARE_AND_EMPTY_FIELD(_dA_UiUj_U0U0D2)
+    DECLARE_AND_EMPTY_FIELD(_dA_UiUj_U0U0D0)
+    DECLARE_AND_EMPTY_FIELD(_dA_UiUj_U0U0D1)
+    DECLARE_AND_EMPTY_FIELD(_dA_UiUj_U0U1D2)
+    DECLARE_AND_EMPTY_FIELD(_dA_UiUj_U0U1D1)
+    DECLARE_AND_EMPTY_FIELD(_dA_UiUj_U0U1D0)
+    DECLARE_AND_EMPTY_FIELD(_dA_UiUj_U1U2D1)
+    DECLARE_AND_EMPTY_FIELD(_dA_UiUj_U1U2D0)
+    DECLARE_AND_EMPTY_FIELD(_dA_UiUj_U1U2D2)
+    DECLARE_AND_EMPTY_FIELD(_dA_UiUj_U0U2D0)
+    DECLARE_AND_EMPTY_FIELD(_dA_UiUj_U0U2D1)
+    DECLARE_AND_EMPTY_FIELD(_dA_UiUj_U0U2D2)
     PREP_FIELD(_Aij2)
     GET_FIELD(Beta_U1)
     GET_FIELD(Beta_U0)
@@ -286,8 +304,32 @@ pow(_A_UUij_U2U2, 2)*pow(_gamma_D2D2[ijk], 2);
     _A_UiUj_U0U0[ijk] = _A_UUij_U0U0;
     _Aij2[ijk] = _AijAij;
     }/*end of for(ijk = 0; ijk < nn; ++ijk)*/
+  Field_T *f_A_UiUj_U2U2 = patch->pool[Ind("_A_UiUj_U2U2")];
+  Field_T *f_A_UiUj_U1U2 = patch->pool[Ind("_A_UiUj_U1U2")];
+  Field_T *f_A_UiUj_U1U1 = patch->pool[Ind("_A_UiUj_U1U1")];
+  Field_T *f_A_UiUj_U0U2 = patch->pool[Ind("_A_UiUj_U0U2")];
+  Field_T *f_A_UiUj_U0U1 = patch->pool[Ind("_A_UiUj_U0U1")];
+  Field_T *f_A_UiUj_U0U0 = patch->pool[Ind("_A_UiUj_U0U0")];
+  _dA_UiUj_U2U2D2->v = Partial_Derivative(f_A_UiUj_U2U2,"z");
+  _dA_UiUj_U2U2D0->v = Partial_Derivative(f_A_UiUj_U2U2,"x");
+  _dA_UiUj_U2U2D1->v = Partial_Derivative(f_A_UiUj_U2U2,"y");
+  _dA_UiUj_U1U1D2->v = Partial_Derivative(f_A_UiUj_U1U1,"z");
+  _dA_UiUj_U1U1D0->v = Partial_Derivative(f_A_UiUj_U1U1,"x");
+  _dA_UiUj_U1U1D1->v = Partial_Derivative(f_A_UiUj_U1U1,"y");
+  _dA_UiUj_U0U0D2->v = Partial_Derivative(f_A_UiUj_U0U0,"z");
+  _dA_UiUj_U0U0D0->v = Partial_Derivative(f_A_UiUj_U0U0,"x");
+  _dA_UiUj_U0U0D1->v = Partial_Derivative(f_A_UiUj_U0U0,"y");
+  _dA_UiUj_U0U1D2->v = Partial_Derivative(f_A_UiUj_U0U1,"z");
+  _dA_UiUj_U0U1D1->v = Partial_Derivative(f_A_UiUj_U0U1,"y");
+  _dA_UiUj_U0U1D0->v = Partial_Derivative(f_A_UiUj_U0U1,"x");
+  _dA_UiUj_U1U2D1->v = Partial_Derivative(f_A_UiUj_U1U2,"y");
+  _dA_UiUj_U1U2D0->v = Partial_Derivative(f_A_UiUj_U1U2,"x");
+  _dA_UiUj_U1U2D2->v = Partial_Derivative(f_A_UiUj_U1U2,"z");
+  _dA_UiUj_U0U2D0->v = Partial_Derivative(f_A_UiUj_U0U2,"x");
+  _dA_UiUj_U0U2D1->v = Partial_Derivative(f_A_UiUj_U0U2,"y");
+  _dA_UiUj_U0U2D2->v = Partial_Derivative(f_A_UiUj_U0U2,"z");
   }
-  printf("Updating _A^{ij} and _A^{ij}*A_{ij} ==> Done.\n");
+  printf("Updating _A^{ij}, _dA^{ij} and _A^{ij}*A_{ij} ==> Done.\n");
   pr_clock();
   pr_line_custom('=');
 }
