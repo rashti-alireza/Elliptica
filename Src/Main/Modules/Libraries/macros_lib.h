@@ -18,6 +18,8 @@
 #define REMOVE_FIELD(xNAME)   remove_field(xNAME);/* remove the field utterly */
 #define DECLARE_FIELD(xNAME)  Field_T *const xNAME = patch->pool[Ind(#xNAME)];/* access to the whole field */
 #define GET_FIELD(xNAME)      double *const xNAME = patch->pool[Ind(#xNAME)]->v;/* access to the memory values */
+#define GET_FIELD_UNUSED(xNAME)      double *const xNAME = patch->pool[Ind(#xNAME)]->v;\
+                                     UNUSED(xNAME);/* access to the memory values and unuse it in case if it isn't needed to avoid gcc warning */
 /* it frees f->v2,f->info and gets f->v. it is used to update value of a field and frees the left over of previous values */
 #define PREP_FIELD(xNAME)     Field_T *const _F_##xNAME = patch->pool[Ind(#xNAME)];\
                              free_coeffs(_F_##xNAME);\
