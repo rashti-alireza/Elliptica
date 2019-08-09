@@ -50,7 +50,7 @@ outerB_F = 0;
 `  DDM_SCHUR_BC_OPEN\n`;
 
 
-# bc equation for outer boundary at ijk point:
+# bc equation for inner boundary at ijk point:
 innerB_F = 0;
 
 
