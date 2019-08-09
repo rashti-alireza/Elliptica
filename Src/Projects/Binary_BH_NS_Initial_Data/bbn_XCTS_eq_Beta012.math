@@ -1,0 +1,180 @@
+# equation: Beta_U012 (shift) for all components
+
+# Manifold or grid Dimension
+Dimension = 3;
+
+# point on manifold shown by:
+Point = ijk;
+
+C_macro  = GET_FIELD(name);
+C_macro2 = PREP_FIELD(name);
+
+# main function:
+`#include "bbn_headers.h"`;
+`#include "maths_equation_solvings_lib.h"`;
+`#include "bbn_XCTS_equations_lib.h"\n\n`;
+
+`void *eq_Beta_U012(void *vp1,void *vp2)\n{`;
+
+# NOTE: THE FOLLOWING MACRO DECLARES AND DEFINES THE FOLLOWING VARIABLES:
+# patch, S, F, node, N, n.
+# THUS, DO NOT DEFINE THEM AGAIN.
+`  DDM_SCHUR_EQ_DECLARE`;
+`  unsigned ijk;/* node index */`;
+
+# declare for Cpi:
+Declare = 
+{
+ # B0 in Beta^i = B0^i+B1^i
+ (obj = Field,name = B0, rank = U, C_macro);
+
+ # B1 in Beta^i = B0^i+B1^i
+ (obj = Field,name = B1, rank = U, C_macro);
+
+ # B0 in Beta^i = B0^i+B1^i, 1st derivative
+ (obj = Field,name = dB0, rank = UD, C_macro);
+ 
+ # B0 in Beta^i = B0^i+B1^i, 2nd derivative
+ (obj = Field,name = ddB0, rank = UDD, C_macro);
+ 
+ # B1 in Beta^i = B0^i+B1^i, 1st derivative
+ (obj = Field,name = dB1, rank = UD, C_macro);
+ 
+ # B1 in Beta^i = B0^i+B1^i, 2nd derivative, 
+ # but for B1 = Omega_BHNS(-y+y_CM,x,0)+Vr/D(x,y-y_CM,0) 
+ # it's second derivative is 0.
+ #(obj = Field,name = ddB1, rank = UDD, C_macro);
+
+ # conformal factor
+ (obj = Field,name = psi, rank = 0, C_macro);
+ 
+ # conformal factor pd
+ (obj = Field,name = dpsi, rank = D, C_macro);
+ 
+ # eta = alpha*psi
+ (obj = Field,name = eta, rank = 0, C_macro);
+
+ # eta pd
+ (obj = Field,name = deta, rank = D, C_macro);
+
+ # trKij first derivative
+ (obj = Field,name = dK, rank = D, C_macro);
+
+ # conformal metric inverse
+ (obj = Field,name = _gammaI, rank = UU, C_macro);
+
+ # conformal connections
+ (obj = Field,name = _Gamma, rank = UDD, C_macro);
+
+ # conformal connections 1st derivative
+ (obj = Field,name = _dGamma, rank = UDDD, C_macro);
+
+ # conformal momentum current
+ (obj = Field,name = _J, rank = U, C_macro);
+
+}
+
+# symmetries for Cpi:
+Symm[ddB0(i,j,k)         = ddB0(i,k,j)];
+#Symm[ddB1(i,j,k)         = ddB1(i,k,j)];
+Symm[_gammaI(i,j)      = _gammaI(j,i)];
+Symm[_Gamma(i,j,k)     = _Gamma(i,k,j)];
+Symm[_dGamma(i,j,k,l)  = _dGamma(i,k,j,l)];
+
+
+
+##########################################################################
+# NOTE: In domain decomposition method n is relabed from point ijk.
+# In fact ijk is mapped to point n, for relabeling purposes of
+# domain decompostion which is encapsulated in macro DDM_SCHUR_EQ_OPEN.
+# The bottom line is JUST simply WRITE the equation FOR F_eq 
+# at Newton-Raphson scheme (Jx = -F_eq) in TERMS OF ijk POINT.
+##########################################################################
+
+`  DDM_SCHUR_EQ_OPEN\n`;
+
+dLnOf_alpha(i) = deta(i)/eta -7*dpsi(i)/psi;
+
+# B0 parts so the subscript 0:
+
+t1_0(i) =  _gammaI(-j,-m)*(ddB0(i,j,m) + _dGamma(i,m,l,j)*B0(-l));
+
+t2_0(i) =  _gammaI(-j,-m)*( _Gamma(i,m,l)*dB0(-l,j) +_Gamma(i,j,n)*dB0(-n,m));
+
+t3_0(i) =  _gammaI(-j,-m)*_Gamma(i,j,n)*KD(-n,-np)*_Gamma(np,m,l)*B0(-l);
+ 
+t4_0(i) = -_gammaI(-j,-m)*(_Gamma(n,m,j)*dB0(i,-n)+_Gamma(n,m,j)*KD(-n,-np)*_Gamma(i,np,l)*B0(-l));
+
+t5_0(i) = _gammaI(-i,-m)*(ddB0(jp,j,m)*KD(-jp,-j) + KD(-jp,-j)*_dGamma(jp,m,l,j)*B0(-l));
+
+t6_0(i) = _gammaI(-i,-m)*(_Gamma(j,m,l)*dB0(-l,-j) + KD(-jp,-j)*_Gamma(jp,j,n)*dB0(-n,m));
+
+t7_0(i) = _gammaI(-i,-m)*KD(-jp,-j)*_Gamma(jp,j,n)*KD(-n,-np)*_Gamma(np,m,l)*B0(-l);
+
+t8_0(i) = -_gammaI(-i,-m)*(_Gamma(n,m,j)*dB0(-j,-n) + _Gamma(n,m,j)*KD(-n,-np)*KD(-jp,-j)*_Gamma(jp,np,l)*B0(-l));
+
+t9_0(i)  = -2/3*_gammaI(-i,-j)*( ddB0(l,lp,j)*KD(-l,-lp) + KD(-l,-lp)*_Gamma(l,lp,m)*dB0(-m,j) );
+
+t10_0(i) = -2/3*_gammaI(-i,-j)*_dGamma(l,lp,m,j)*KD(-l,-lp)*B0(-m);
+
+t11_0(i) = -dLnOf_alpha(-j)*( \
+_gammaI(j,-m)*(dB0(i,m)+_Gamma(i,m,l)*B0(-l))+ \
+_gammaI(i,-m)*(dB0(j,m)+_Gamma(j,m,l)*B0(-l))- \
+2/3*_gammaI(i,j)*(dB0(-m,m)+KD(-mp,-m)*_Gamma(mp,m,l)*B0(-l))\
+);
+
+# B1 parts so the subscript 1:
+
+# if ddB1(l,lp,j) is not 0 use the immediate following:
+#t1_1(i) =  _gammaI(-j,-m)*(ddB1(i,j,m) + _dGamma(i,m,l,j)*B1(-l));
+
+# if ddB1(l,lp,j) is 0 use the immediate following:
+t1_1(i) =  _gammaI(-j,-m)*(                _dGamma(i,m,l,j)*B1(-l));
+
+t2_1(i) =  _gammaI(-j,-m)*( _Gamma(i,m,l)*dB1(-l,j) +_Gamma(i,j,n)*dB1(-n,m));
+
+t3_1(i) =  _gammaI(-j,-m)*_Gamma(i,j,n)*KD(-n,-np)*_Gamma(np,m,l)*B1(-l);
+ 
+t4_1(i) = -_gammaI(-j,-m)*(_Gamma(n,m,j)*dB1(i,-n)+_Gamma(n,m,j)*KD(-n,-np)*_Gamma(i,np,l)*B1(-l));
+
+# if ddB1(l,lp,j) is not 0 use the immediate following:
+#t5_1(i) = _gammaI(-i,-m)*(ddB1(jp,j,m)*KD(-jp,-j) + KD(-jp,-j)*_dGamma(jp,m,l,j)*B1(-l));
+
+# if ddB1(l,lp,j) is 0 use the immediate following:
+t5_1(i) = _gammaI(-i,-m)*(                        + KD(-jp,-j)*_dGamma(jp,m,l,j)*B1(-l));
+
+t6_1(i) = _gammaI(-i,-m)*(_Gamma(j,m,l)*dB1(-l,-j) + KD(-jp,-j)*_Gamma(jp,j,n)*dB1(-n,m));
+
+t7_1(i) = _gammaI(-i,-m)*KD(-jp,-j)*_Gamma(jp,j,n)*KD(-n,-np)*_Gamma(np,m,l)*B1(-l);
+
+t8_1(i) = -_gammaI(-i,-m)*(_Gamma(n,m,j)*dB1(-j,-n) + _Gamma(n,m,j)*KD(-n,-np)*KD(-jp,-j)*_Gamma(jp,np,l)*B1(-l));
+
+# if ddB1(l,lp,j) is not 0 use the immediate following:
+#t9_1(i)  = -2/3*_gammaI(-i,-j)*( ddB1(l,lp,j)*KD(-l,-lp) + KD(-l,-lp)*_Gamma(l,lp,m)*dB1(-m,j) );
+
+# if ddB1(l,lp,j) is 0 use the immediate following:
+t9_1(i)  = -2/3*_gammaI(-i,-j)*(                         + KD(-l,-lp)*_Gamma(l,lp,m)*dB1(-m,j) );
+
+t10_1(i) = -2/3*_gammaI(-i,-j)*_dGamma(l,lp,m,j)*KD(-l,-lp)*B1(-m);
+
+t11_1(i) = -dLnOf_alpha(-j)*( \
+_gammaI(j,-m)*(dB1(i,m)+_Gamma(i,m,l)*B1(-l))+ \
+_gammaI(i,-m)*(dB1(j,m)+_Gamma(j,m,l)*B1(-l))- \
+2/3*_gammaI(i,j)*(dB1(-m,m)+KD(-mp,-m)*_Gamma(mp,m,l)*B1(-l))\
+);
+
+# source
+S0(i) = -4/3*eta*_gammaI(i,j)*dK(-j)/psi - 16*pi*eta*_J(i)/(psi**3);
+
+F_eq(i) = \
+t1_0(i)+t2_0(i)+t3_0(i)+t4_0(i)+t5_0(i)+t6_0(i)+t7_0(i)+t8_0(i)+t9_0(i)+t10_0(i)+t11_0(i)+\
+t1_1(i)+t2_1(i)+t3_1(i)+t4_1(i)+t5_1(i)+t6_1(i)+t7_1(i)+t8_1(i)+t9_1(i)+t10_1(i)+t11_1(i)+\
+S0(i);
+
+
+`  F[n] = F_eq_U012;\n`;# Jx = -F in Newton-Raphson scheme
+`  DDM_SCHUR_EQ_CLOSE\n`;
+
+`  return 0;`;
+`}`;
+
