@@ -1,0 +1,98 @@
+# equation: eta = alpha*psi
+
+# Manifold or grid Dimension
+Dimension = 3;
+
+# point on manifold shown by:
+Point = ijk;
+
+C_macro  = GET_FIELD(name);
+C_macro2 = PREP_FIELD(name);
+
+# main function:
+`#include "bbn_headers.h"`;
+`#include "maths_equation_solvings_lib.h"`;
+`#include "bbn_XCTS_equations_lib.h"\n\n`;
+
+`void *eq_eta(void *vp1,void *vp2)\n{`;
+
+# NOTE: THE FOLLOWING MACRO DECLARES AND DEFINES THE FOLLOWING VARIABLES:
+# patch, S, F, node, N, n.
+# THUS, DO NOT DEFINE THEM AGAIN.
+`  DDM_SCHUR_EQ_DECLARE`;
+`  unsigned ijk;/* node index */`;
+
+# declare for Cpi:
+Declare = 
+{
+ # eta
+ (obj = Field,name = eta, rank = 0, C_macro);
+
+ # eta first derivative 
+ (obj = Field,name = deta, rank = D, C_macro);
+
+ # eta second derivative 
+ (obj = Field,name = ddeta, rank = DD, C_macro);
+
+ # conformal factor
+ (obj = Field,name = psi, rank = 0, C_macro);
+
+ # shifts
+ (obj = Field,name = Beta, rank = U, C_macro);
+
+ # Ricci
+ (obj = Field,name = _R, rank = 0, C_macro);
+
+ # trKij
+ (obj = Field,name = K, rank = 0, C_macro);
+
+ # d trKij
+ (obj = Field,name = dK, rank = D, C_macro);
+
+ # _A_{ij}*_A^{ij}
+ (obj = Field,name = _Aij2, rank = 0, C_macro);
+
+ # total conformal energy density
+ (obj = Field,name = _E, rank = 0, C_macro);
+
+ # conformal momentum density
+ (obj = Field,name = _S, rank = 0, C_macro);
+
+ # conformal metric inverse
+ (obj = Field,name = _gammaI, rank = UU, C_macro);
+
+ # conformal connections
+ (obj = Field,name = _Gamma, rank = UDD, C_macro);
+
+}
+
+# symmetries for Cpi:
+Symm[ddeta(i,j)     = ddeta(j,i)];
+Symm[_gammaI(i,j)   = _gammaI(j,i)];
+Symm[_Gamma(i,j,k)  = _Gamma(i,k,j)];
+
+##########################################################################
+# NOTE: In domain decomposition method n is relabed from point ijk.
+# In fact ijk is mapped to point n, for relabeling purposes of
+# domain decompostion which is encapsulated in macro DDM_SCHUR_EQ_OPEN.
+# The bottom line is JUST simply WRITE the equation FOR F_eq 
+# at Newton-Raphson scheme (Jx = -F_eq) in TERMS OF ijk POINT.
+##########################################################################
+
+`  DDM_SCHUR_EQ_OPEN\n`;
+
+
+# write the equation below at ijk point:
+
+F_eq = \
+ _gammaI(-i,-j)*(ddeta(i,j) - _Gamma(l,i,j)*deta(-l))\
+ - eta*(_R/8+(5/12)*(psi**4)*(K**2)+(7/8)*(psi**-8)*_Aij2)\
+ - Beta(i)*dK(-i)*(psi**5)+2*pi*eta*(psi**-2)*(_E+2*_S);
+
+
+`  F[n] = F_eq;\n`;# Jx = -F in Newton-Raphson scheme
+`  DDM_SCHUR_EQ_CLOSE\n`;
+
+`  return 0;`;
+`}`;
+

@@ -1,0 +1,133 @@
+# Jacobian for eta BC equation:
+
+# Manifold or grid Dimension
+Dimension = 3;
+
+# point on manifold shown by:
+Point = ijk;
+
+# C macors
+C_macro  = GET_FIELD(name);
+C_macro2 = PREP_FIELD(name);
+C_macro3 = JACOBIAN_DERIVATIVE(name);
+
+# C arguments for jacobian of derivatives
+C_arg = (j_name,ijk,lmn);
+C_arg2 = [ijk == lmn]; # for kd
+
+# main function:
+`#include "bbn_headers.h"`;
+`#include "maths_equation_solvings_lib.h"`;
+`#include "bbn_XCTS_equations_lib.h"\n\n`;
+
+`void *jacobian_bc_eta(void *vp1,void *vp2)\n{`;
+
+# NOTE: THE FOLLOWING MACRO DECLARES AND DEFINES THE FOLLOWING VARIABLES:
+# patch, S, B, E_Trans, node, I0, Ni, Nj, K0, Nk, i,j,k.
+# THUS, DO NOT DEFINE THEM AGAIN.
+`  DDM_SCHUR_JACOBIAN_BC_DECLARE`;
+`  unsigned ijk,lmn;/* for Jacobian entries J[ijk][lmn] */`;
+`  const double kd[2] = {0.,1.};/* Kronecker delta */`;
+
+# declare for Cpi
+Declare = 
+{
+  # Kroneker delta
+  (obj = field, name = kd, rank = 0, none,C_arg2);
+}
+
+# symmetries for Cpi
+
+
+###########################################################################
+#    NOTE1: There are different calculation parts, in each part use 
+# different name for new variables.
+#    NOTE2: In Schur domain decomposition method we need two types of
+# matrices for Jacobian of Newton-Raphson scheme, matrix B and matrix E. 
+# Let's say Jx = -F in Newton-Raphson scheme; then,
+# B[i][j] = d[F(f(ijk))]/df(lmn), ijk takes their values ON INNER POINTS
+# of a patch, namley those collocated points that don't reach boundary of
+# the patch, and lmn runs over ALL BUT the interface points (interface
+# points are those located between two patches).
+# E[i][j] = d[F(f(ijk))]/df(lmn), ijk takes their values ON INTERFACE
+# POINTS, namely those collocated points ON the boundary between two
+# patches, lmn runs over ALL BUT the interface points.
+#
+#    PRAGMATICALLY:
+#  If you have Dirichlet B.C. for outer-boundary (inner-boundary), 
+# only fill B matrix with the jacobian of the B.C. equation, 
+# and for E matrix put outerB_Epart = 0 (innerB_Epart = 0).
+#  If you have Neumann B.C. or any B.C. that has derivative in it
+# fill both B matrix and E matrix part WITH THE SAME EQUATION, you just
+# need to write two duplicated equations for each part, 
+# and if you're using interim variables use different names for each part.
+#
+#    NOTE3: For each part which doesn't exist, let it be 0.
+###########################################################################
+
+
+# OUTER BOUNDARY LIKE INFINITY
+`  if (patch->outerB)`;
+`  {`;
+
+
+###############################################
+####### B matrix: J[ijk][lmn] in Jx = -F ###### 
+###############################################
+`  DDM_SCHUR_JACOBIAN_BC_Bpart_OPEN\n`;
+outerB_Bpart = kd;
+
+
+`  B[i][j] = outerB_Bpart;\n`;
+`  DDM_SCHUR_JACOBIAN_BC_Bpart_CLOSE\n`;
+###############################################
+
+
+###############################################
+###### E matrix: J[ijk][lmn] in Jx = -F #######
+###############################################
+`  DDM_SCHUR_JACOBIAN_BC_Epart_OPEN\n`;
+outerB_Epart = 0;
+
+
+`  E_Trans[j][i] = outerB_Epart;\n`;
+`  DDM_SCHUR_JACOBIAN_BC_Epart_CLOSE`;
+###############################################
+
+
+`  }/* end of if (patch->outerB) */`;
+
+# INNER BOUNDARY LIKE BLACK HOLE HORIZON #
+`  else if (patch->innerB)`;
+`  {`;
+
+
+###############################################
+####### B matrix: J[ijk][lmn] in Jx = -F ###### 
+###############################################
+`  DDM_SCHUR_JACOBIAN_BC_Bpart_OPEN\n`;
+innerB_Bpart = kd;
+
+
+`  B[i][j] = innerB_Bpart;\n`;
+`  DDM_SCHUR_JACOBIAN_BC_Bpart_CLOSE\n`;
+###############################################
+
+
+###############################################
+####### E matrix: J[ijk][lmn] in Jx = -F ###### 
+###############################################
+`  DDM_SCHUR_JACOBIAN_BC_Epart_OPEN\n`;
+innerB_Epart = 0;
+
+
+`  E_Trans[j][i] = innerB_Epart;\n`;
+`  DDM_SCHUR_JACOBIAN_BC_Epart_CLOSE\n`;
+###############################################
+
+
+`  }/* end of else if (patch->innerB) */\n`;
+
+`  return 0;`;
+`}`;
+

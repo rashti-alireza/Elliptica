@@ -1,0 +1,133 @@
+# ? Jacobian equation:
+
+# Manifold or grid Dimension
+Dimension = 3;
+
+# point on manifold shown by:
+Point = ijk;
+
+# C macors
+C_macro  = GET_FIELD(name);
+C_macro2 = PREP_FIELD(name);
+C_macro3 = JACOBIAN_DERIVATIVE(name);
+
+# C arguments for jacobian of derivative
+C_arg = (j_name,ijk,lmn);
+C_arg2 = [ijk == lmn]; # for kd
+
+# main function:
+`#include "bbn_headers.h"`;
+`#include "maths_equation_solvings_lib.h"`;
+`#include "bbn_XCTS_equations_lib.h"\n\n`;
+
+`void *jacobian_eq_?(void *vp1,void *vp2)\n{`;
+
+# NOTE: THE FOLLOWING MACRO DECLARES OR DEFINES THE FOLLOWING VARIABLES:
+# patch, S, B, E_Trans, node, Ni, Nj, K0, Nk, i,j,k
+# THUS, DO NOT DEFINE THEM AGAIN.
+`  DDM_SCHUR_JACOBIAN_EQ_DECLARE`;
+`  unsigned ijk,lmn;/* for Jacobian entries J[ijk][lmn] */`;
+`  const double kd[2] = {0.,1.};/* Kronecker delta */`;
+
+# declare for cpi
+Declare = 
+{
+
+ # Jacobian first derivative 
+ (obj = Field,name = Jeta, rank = D, C_macro);
+
+ # Jacobian second derivative 
+ (obj = Field,name = JJeta, rank = DD, C_macro);
+
+  # Kroneker delta
+  (obj = field, name = kd, rank = 0, none,C_arg2); 
+
+ # conformal factor
+ (obj = Field,name = psi, rank = 0, C_macro);
+
+ # Ricci
+ (obj = Field,name = _R, rank = 0, C_macro);
+
+ # trKij
+ (obj = Field,name = K, rank = 0, C_macro);
+
+ # total conformal energy density
+ (obj = Field,name = _E, rank = 0, C_macro);
+
+ # conformal momentum density
+ (obj = Field,name = _S, rank = 0, C_macro);
+
+ # _A_{ij}*_A^{ij}
+ (obj = Field,name = _Aij2, rank = 0, C_macro);
+
+ # conformal metric inverse
+ (obj = Field,name = _gammaI, rank = UU, C_macro);
+
+ # conformal connections
+ (obj = Field,name = _Gamma, rank = UDD, C_macro);
+
+}
+
+# symmetries for cpi
+Symm[JJeta(i,j)     = JJeta(j,i)];
+Symm[_gammaI(i,j)   = _gammaI(j,i)];
+Symm[_Gamma(i,j,k)  = _Gamma(i,k,j)];
+
+
+##########################################################################
+#    NOTE1: There are different calculation parts, in each part use 
+# different names for new variables.
+#
+#    NOTE2: In Schur domain decomposition method we need two types of
+# matrices for Jacobian of Newton-Raphson scheme, matrix B and matrix E. 
+# Let's say Jx = -F in Newton-Raphson scheme; then,
+# B[i][j] = d[F(f(ijk))]/df(lmn), ijk takes their values ON INNER POINTS
+# of a patch, namley those collocated points that don't reach boundary of
+# the patch, and lmn runs over ALL BUT the interface points (interface
+# points are those located between two patches).
+# E[i][j] = d[F(f(ijk))]/df(lmn), ijk takes their values ON INTERFACE
+# POINTS, namely those collocated points ON the boundary between two
+# patches, lmn runs over ALL BUT the interface points.
+#
+#    PRAGMATICALLY:
+# Fill both B matrix and E matrix part WITH THE SAME EQUATION, you just
+# need to write two duplicated equations for each part, 
+# and if you're using interim variables use different names for each part.
+#
+#    NOTE3: For each part which doesn't exist, let it be 0.
+##########################################################################
+
+
+###############################################
+####### B matrix: J[ijk][lmn] in Jx = -F ###### 
+###############################################
+`  DDM_SCHUR_JACOBIAN_EQ_Bpart_OPEN\n`;
+Bpart = \
+ _gammaI(-i,-j)*(JJeta(i,j) - _Gamma(l,i,j)*Jeta(-l))\
+ - kd*(_R/8+(5/12)*(psi**4)*(K**2)+(7/8)*(psi**-8)*_Aij2)+\
+ 2*pi*kd*(psi**-2)*(_E+2*_S);
+
+
+`  B[i][j] = Bpart;\n`;
+`  DDM_SCHUR_JACOBIAN_EQ_Bpart_CLOSE\n`;
+###############################################
+
+
+###############################################
+###### E matrix: J[ijk][lmn] in Jx = -F #######
+###############################################
+`  DDM_SCHUR_JACOBIAN_EQ_Epart_OPEN\n`;
+Epart = \
+ _gammaI(-i,-j)*(JJeta(i,j) - _Gamma(l,i,j)*Jeta(-l))\
+ - kd*(_R/8+(5/12)*(psi**4)*(K**2)+(7/8)*(psi**-8)*_Aij2)+\
+ 2*pi*kd*(psi**-2)*(_E+2*_S);
+
+
+
+`  E_Trans[j][i] = Epart;\n`;
+`  DDM_SCHUR_JACOBIAN_EQ_Epart_CLOSE\n`;
+###############################################
+
+`  return 0;`;
+`}`;
+
