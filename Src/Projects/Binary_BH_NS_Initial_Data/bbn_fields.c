@@ -25,12 +25,9 @@ void bbn_allocate_fields(Grid_T *const grid)
       ADD_FIELD_NoMem(dphi_D1)
       ADD_FIELD_NoMem(dphi_D0)
       
-      ADD_FIELD_NoMem(ddphi_D2D0)
-      ADD_FIELD_NoMem(ddphi_D2D1)
       ADD_FIELD_NoMem(ddphi_D2D2)
       ADD_FIELD_NoMem(ddphi_D1D2)
       ADD_FIELD_NoMem(ddphi_D1D1)
-      ADD_FIELD_NoMem(ddphi_D1D0)
       ADD_FIELD_NoMem(ddphi_D0D2)
       ADD_FIELD_NoMem(ddphi_D0D0)
       ADD_FIELD_NoMem(ddphi_D0D1)
@@ -96,12 +93,9 @@ void bbn_allocate_fields(Grid_T *const grid)
     ADD_FIELD_NoMem(dpsi_D1)
     ADD_FIELD_NoMem(dpsi_D0)
     
-    ADD_FIELD_NoMem(ddpsi_D2D0)
-    ADD_FIELD_NoMem(ddpsi_D2D1)
     ADD_FIELD_NoMem(ddpsi_D2D2)
     ADD_FIELD_NoMem(ddpsi_D1D2)
     ADD_FIELD_NoMem(ddpsi_D1D1)
-    ADD_FIELD_NoMem(ddpsi_D1D0)
     ADD_FIELD_NoMem(ddpsi_D0D2)
     ADD_FIELD_NoMem(ddpsi_D0D0)
     ADD_FIELD_NoMem(ddpsi_D0D1)
@@ -112,16 +106,13 @@ void bbn_allocate_fields(Grid_T *const grid)
     ADD_FIELD_NoMem(deta_D2)
     ADD_FIELD_NoMem(deta_D1)
     ADD_FIELD_NoMem(deta_D0)
-    
-    ADD_FIELD_NoMem(ddeta_D2D0)
-    ADD_FIELD_NoMem(ddeta_D2D1)
+
     ADD_FIELD_NoMem(ddeta_D2D2)
     ADD_FIELD_NoMem(ddeta_D1D2)
     ADD_FIELD_NoMem(ddeta_D1D1)
-    ADD_FIELD_NoMem(ddeta_D1D0)
     ADD_FIELD_NoMem(ddeta_D0D2)
     ADD_FIELD_NoMem(ddeta_D0D0)
-    ADD_FIELD_NoMem(ddeta_D0D1)
+    ADD_FIELD_NoMem(ddeta_D0D1)    
     
     /* shift, Beta^i = B0^i+B1^i, B1^i = Omega_BHNS*(-y+y_CM,x,0)+v_r/D*(x,y-y_CM) 
     // and its partial derivative */
@@ -145,71 +136,24 @@ void bbn_allocate_fields(Grid_T *const grid)
     ADD_FIELD_NoMem(dB0_U2D1)
     ADD_FIELD_NoMem(dB0_U2D0)
 
-    ADD_FIELD_NoMem(ddB0_U2D2D0)
-    ADD_FIELD_NoMem(ddB0_U2D2D1)
+    ADD_FIELD_NoMem(ddB0_U1D2D2)
+    ADD_FIELD_NoMem(ddB0_U1D0D0)
+    ADD_FIELD_NoMem(ddB0_U1D0D1)
+    ADD_FIELD_NoMem(ddB0_U1D0D2)
+    ADD_FIELD_NoMem(ddB0_U1D1D2)
+    ADD_FIELD_NoMem(ddB0_U2D0D0)
+    ADD_FIELD_NoMem(ddB0_U2D1D2)
+    ADD_FIELD_NoMem(ddB0_U0D2D2)
+    ADD_FIELD_NoMem(ddB0_U2D1D1)
+    ADD_FIELD_NoMem(ddB0_U0D0D1)
+    ADD_FIELD_NoMem(ddB0_U0D1D1)
+    ADD_FIELD_NoMem(ddB0_U0D1D2)
+    ADD_FIELD_NoMem(ddB0_U0D0D2)
+    ADD_FIELD_NoMem(ddB0_U1D1D1)
+    ADD_FIELD_NoMem(ddB0_U2D0D1)
     ADD_FIELD_NoMem(ddB0_U2D2D2)
     ADD_FIELD_NoMem(ddB0_U2D0D2)
-    ADD_FIELD_NoMem(ddB0_U2D0D0)
-    ADD_FIELD_NoMem(ddB0_U2D0D1)
-    ADD_FIELD_NoMem(ddB0_U0D1D1)
-    ADD_FIELD_NoMem(ddB0_U0D1D0)
-    ADD_FIELD_NoMem(ddB0_U0D1D2)
     ADD_FIELD_NoMem(ddB0_U0D0D0)
-    ADD_FIELD_NoMem(ddB0_U0D0D1)
-    ADD_FIELD_NoMem(ddB0_U0D0D2)
-    ADD_FIELD_NoMem(ddB0_U0D2D2)
-    ADD_FIELD_NoMem(ddB0_U0D2D0)
-    ADD_FIELD_NoMem(ddB0_U0D2D1)
-    ADD_FIELD_NoMem(ddB0_U1D2D2)
-    ADD_FIELD_NoMem(ddB0_U1D2D1)
-    ADD_FIELD_NoMem(ddB0_U1D2D0)
-    ADD_FIELD_NoMem(ddB0_U1D0D1)
-    ADD_FIELD_NoMem(ddB0_U1D0D0)
-    ADD_FIELD_NoMem(ddB0_U1D0D2)
-    ADD_FIELD_NoMem(ddB0_U1D1D0)
-    ADD_FIELD_NoMem(ddB0_U1D1D1)
-    ADD_FIELD_NoMem(ddB0_U1D1D2)
-    ADD_FIELD_NoMem(ddB0_U2D1D2)
-    ADD_FIELD_NoMem(ddB0_U2D1D1)
-    ADD_FIELD_NoMem(ddB0_U2D1D0)
-
-    ADD_FIELD_NoMem(dB1_U1D0)
-    ADD_FIELD_NoMem(dB1_U1D1)
-    ADD_FIELD_NoMem(dB1_U1D2)
-    ADD_FIELD_NoMem(dB1_U0D1)
-    ADD_FIELD_NoMem(dB1_U0D0)
-    ADD_FIELD_NoMem(dB1_U0D2)
-    ADD_FIELD_NoMem(dB1_U2D2)
-    ADD_FIELD_NoMem(dB1_U2D1)
-    ADD_FIELD_NoMem(dB1_U2D0)
-
-    ADD_FIELD_NoMem(ddB1_U2D2D0)
-    ADD_FIELD_NoMem(ddB1_U2D2D1)
-    ADD_FIELD_NoMem(ddB1_U2D2D2)
-    ADD_FIELD_NoMem(ddB1_U2D0D2)
-    ADD_FIELD_NoMem(ddB1_U2D0D0)
-    ADD_FIELD_NoMem(ddB1_U2D0D1)
-    ADD_FIELD_NoMem(ddB1_U0D1D1)
-    ADD_FIELD_NoMem(ddB1_U0D1D0)
-    ADD_FIELD_NoMem(ddB1_U0D1D2)
-    ADD_FIELD_NoMem(ddB1_U0D0D0)
-    ADD_FIELD_NoMem(ddB1_U0D0D1)
-    ADD_FIELD_NoMem(ddB1_U0D0D2)
-    ADD_FIELD_NoMem(ddB1_U0D2D2)
-    ADD_FIELD_NoMem(ddB1_U0D2D0)
-    ADD_FIELD_NoMem(ddB1_U0D2D1)
-    ADD_FIELD_NoMem(ddB1_U1D2D2)
-    ADD_FIELD_NoMem(ddB1_U1D2D1)
-    ADD_FIELD_NoMem(ddB1_U1D2D0)
-    ADD_FIELD_NoMem(ddB1_U1D0D1)
-    ADD_FIELD_NoMem(ddB1_U1D0D0)
-    ADD_FIELD_NoMem(ddB1_U1D0D2)
-    ADD_FIELD_NoMem(ddB1_U1D1D0)
-    ADD_FIELD_NoMem(ddB1_U1D1D1)
-    ADD_FIELD_NoMem(ddB1_U1D1D2)
-    ADD_FIELD_NoMem(ddB1_U2D1D2)
-    ADD_FIELD_NoMem(ddB1_U2D1D1)
-    ADD_FIELD_NoMem(ddB1_U2D1D0)
 
     ADD_FIELD_NoMem(dBeta_U1D0)
     ADD_FIELD_NoMem(dBeta_U1D1)
@@ -221,33 +165,24 @@ void bbn_allocate_fields(Grid_T *const grid)
     ADD_FIELD_NoMem(dBeta_U2D1)
     ADD_FIELD_NoMem(dBeta_U2D0)
 
-    ADD_FIELD_NoMem(ddBeta_U2D2D0)
-    ADD_FIELD_NoMem(ddBeta_U2D2D1)
+    ADD_FIELD_NoMem(ddBeta_U1D2D2)
+    ADD_FIELD_NoMem(ddBeta_U1D0D0)
+    ADD_FIELD_NoMem(ddBeta_U1D0D1)
+    ADD_FIELD_NoMem(ddBeta_U1D0D2)
+    ADD_FIELD_NoMem(ddBeta_U1D1D2)
+    ADD_FIELD_NoMem(ddBeta_U2D0D0)
+    ADD_FIELD_NoMem(ddBeta_U2D1D2)
+    ADD_FIELD_NoMem(ddBeta_U0D2D2)
+    ADD_FIELD_NoMem(ddBeta_U2D1D1)
+    ADD_FIELD_NoMem(ddBeta_U0D0D1)
+    ADD_FIELD_NoMem(ddBeta_U0D1D1)
+    ADD_FIELD_NoMem(ddBeta_U0D1D2)
+    ADD_FIELD_NoMem(ddBeta_U0D0D2)
+    ADD_FIELD_NoMem(ddBeta_U1D1D1)
+    ADD_FIELD_NoMem(ddBeta_U2D0D1)
     ADD_FIELD_NoMem(ddBeta_U2D2D2)
     ADD_FIELD_NoMem(ddBeta_U2D0D2)
-    ADD_FIELD_NoMem(ddBeta_U2D0D0)
-    ADD_FIELD_NoMem(ddBeta_U2D0D1)
-    ADD_FIELD_NoMem(ddBeta_U0D1D1)
-    ADD_FIELD_NoMem(ddBeta_U0D1D0)
-    ADD_FIELD_NoMem(ddBeta_U0D1D2)
     ADD_FIELD_NoMem(ddBeta_U0D0D0)
-    ADD_FIELD_NoMem(ddBeta_U0D0D1)
-    ADD_FIELD_NoMem(ddBeta_U0D0D2)
-    ADD_FIELD_NoMem(ddBeta_U0D2D2)
-    ADD_FIELD_NoMem(ddBeta_U0D2D0)
-    ADD_FIELD_NoMem(ddBeta_U0D2D1)
-    ADD_FIELD_NoMem(ddBeta_U1D2D2)
-    ADD_FIELD_NoMem(ddBeta_U1D2D1)
-    ADD_FIELD_NoMem(ddBeta_U1D2D0)
-    ADD_FIELD_NoMem(ddBeta_U1D0D1)
-    ADD_FIELD_NoMem(ddBeta_U1D0D0)
-    ADD_FIELD_NoMem(ddBeta_U1D0D2)
-    ADD_FIELD_NoMem(ddBeta_U1D1D0)
-    ADD_FIELD_NoMem(ddBeta_U1D1D1)
-    ADD_FIELD_NoMem(ddBeta_U1D1D2)
-    ADD_FIELD_NoMem(ddBeta_U2D1D2)
-    ADD_FIELD_NoMem(ddBeta_U2D1D1)
-    ADD_FIELD_NoMem(ddBeta_U2D1D0)
   
     /* conformal metric: _gamma_DiDj */
     ADD_FIELD(_gamma_D2D2)
@@ -380,7 +315,6 @@ void bbn_allocate_fields(Grid_T *const grid)
     ADD_FIELD_NoMem(_dA_UiUj_U0U2D0)
     ADD_FIELD_NoMem(_dA_UiUj_U0U2D1)
     ADD_FIELD_NoMem(_dA_UiUj_U0U2D2)
-
     
   }
 }
@@ -409,12 +343,9 @@ void bbn_partial_derivatives_fields(Grid_T *const grid)
       DECLARE_AND_EMPTY_FIELD(dphi_D1)
       DECLARE_AND_EMPTY_FIELD(dphi_D0)
       
-      DECLARE_AND_EMPTY_FIELD(ddphi_D2D0)
-      DECLARE_AND_EMPTY_FIELD(ddphi_D2D1)
       DECLARE_AND_EMPTY_FIELD(ddphi_D2D2)
       DECLARE_AND_EMPTY_FIELD(ddphi_D1D2)
       DECLARE_AND_EMPTY_FIELD(ddphi_D1D1)
-      DECLARE_AND_EMPTY_FIELD(ddphi_D1D0)
       DECLARE_AND_EMPTY_FIELD(ddphi_D0D2)
       DECLARE_AND_EMPTY_FIELD(ddphi_D0D0)
       DECLARE_AND_EMPTY_FIELD(ddphi_D0D1)
@@ -423,16 +354,12 @@ void bbn_partial_derivatives_fields(Grid_T *const grid)
       dphi_D1->v = Partial_Derivative(phi,"y");
       dphi_D0->v = Partial_Derivative(phi,"x");
       
-      ddphi_D2D0->v = Partial_Derivative(dphi_D2,"x");
-      ddphi_D2D1->v = Partial_Derivative(dphi_D2,"y");
       ddphi_D2D2->v = Partial_Derivative(dphi_D2,"z");
       ddphi_D1D2->v = Partial_Derivative(dphi_D1,"z");
       ddphi_D1D1->v = Partial_Derivative(dphi_D1,"y");
-      ddphi_D1D0->v = Partial_Derivative(dphi_D1,"x");
       ddphi_D0D2->v = Partial_Derivative(dphi_D0,"z");
       ddphi_D0D0->v = Partial_Derivative(dphi_D0,"x");
       ddphi_D0D1->v = Partial_Derivative(dphi_D0,"y");
-
 
       /* enthalpy derivatives */
       DECLARE_FIELD(enthalpy)
@@ -476,15 +403,15 @@ void bbn_partial_derivatives_fields(Grid_T *const grid)
       DECLARE_FIELD(_HS_U1);
       DECLARE_FIELD(_HS_U2);
       
-      DECLARE_FIELD(_dHS_U1D0)
-      DECLARE_FIELD(_dHS_U1D1)
-      DECLARE_FIELD(_dHS_U1D2)
-      DECLARE_FIELD(_dHS_U0D1)
-      DECLARE_FIELD(_dHS_U0D0)
-      DECLARE_FIELD(_dHS_U0D2)
-      DECLARE_FIELD(_dHS_U2D2)
-      DECLARE_FIELD(_dHS_U2D1)
-      DECLARE_FIELD(_dHS_U2D0)
+      DECLARE_AND_EMPTY_FIELD(_dHS_U1D0)
+      DECLARE_AND_EMPTY_FIELD(_dHS_U1D1)
+      DECLARE_AND_EMPTY_FIELD(_dHS_U1D2)
+      DECLARE_AND_EMPTY_FIELD(_dHS_U0D1)
+      DECLARE_AND_EMPTY_FIELD(_dHS_U0D0)
+      DECLARE_AND_EMPTY_FIELD(_dHS_U0D2)
+      DECLARE_AND_EMPTY_FIELD(_dHS_U2D2)
+      DECLARE_AND_EMPTY_FIELD(_dHS_U2D1)
+      DECLARE_AND_EMPTY_FIELD(_dHS_U2D0)
       
       _dHS_U1D0->v = Partial_Derivative(_HS_U1,"x");
       _dHS_U1D1->v = Partial_Derivative(_HS_U1,"y");
@@ -516,12 +443,9 @@ void bbn_partial_derivatives_fields(Grid_T *const grid)
     DECLARE_AND_EMPTY_FIELD(dpsi_D1)
     DECLARE_AND_EMPTY_FIELD(dpsi_D0)
     
-    DECLARE_AND_EMPTY_FIELD(ddpsi_D2D0)
-    DECLARE_AND_EMPTY_FIELD(ddpsi_D2D1)
     DECLARE_AND_EMPTY_FIELD(ddpsi_D2D2)
     DECLARE_AND_EMPTY_FIELD(ddpsi_D1D2)
     DECLARE_AND_EMPTY_FIELD(ddpsi_D1D1)
-    DECLARE_AND_EMPTY_FIELD(ddpsi_D1D0)
     DECLARE_AND_EMPTY_FIELD(ddpsi_D0D2)
     DECLARE_AND_EMPTY_FIELD(ddpsi_D0D0)
     DECLARE_AND_EMPTY_FIELD(ddpsi_D0D1)
@@ -530,15 +454,12 @@ void bbn_partial_derivatives_fields(Grid_T *const grid)
     dpsi_D1->v = Partial_Derivative(psi,"y");
     dpsi_D0->v = Partial_Derivative(psi,"x");
     
-    ddpsi_D2D0->v = Partial_Derivative(dpsi_D2,"x");
-    ddpsi_D2D1->v = Partial_Derivative(dpsi_D2,"y");
     ddpsi_D2D2->v = Partial_Derivative(dpsi_D2,"z");
     ddpsi_D1D2->v = Partial_Derivative(dpsi_D1,"z");
     ddpsi_D1D1->v = Partial_Derivative(dpsi_D1,"y");
-    ddpsi_D1D0->v = Partial_Derivative(dpsi_D1,"x");
     ddpsi_D0D2->v = Partial_Derivative(dpsi_D0,"z");
     ddpsi_D0D0->v = Partial_Derivative(dpsi_D0,"x");
-    ddpsi_D0D1->v = Partial_Derivative(dpsi_D0,"y");
+    ddpsi_D0D1->v = Partial_Derivative(dpsi_D0,"y");    
    
     /* eta derivatives */
     DECLARE_FIELD(eta)
@@ -547,26 +468,20 @@ void bbn_partial_derivatives_fields(Grid_T *const grid)
     DECLARE_AND_EMPTY_FIELD(deta_D1)
     DECLARE_AND_EMPTY_FIELD(deta_D0)
     
-    DECLARE_AND_EMPTY_FIELD(ddeta_D2D0)
-    DECLARE_AND_EMPTY_FIELD(ddeta_D2D1)
     DECLARE_AND_EMPTY_FIELD(ddeta_D2D2)
     DECLARE_AND_EMPTY_FIELD(ddeta_D1D2)
     DECLARE_AND_EMPTY_FIELD(ddeta_D1D1)
-    DECLARE_AND_EMPTY_FIELD(ddeta_D1D0)
     DECLARE_AND_EMPTY_FIELD(ddeta_D0D2)
     DECLARE_AND_EMPTY_FIELD(ddeta_D0D0)
-    DECLARE_AND_EMPTY_FIELD(ddeta_D0D1)
+    DECLARE_AND_EMPTY_FIELD(ddeta_D0D1)    
 
     deta_D2->v = Partial_Derivative(eta,"z");
     deta_D1->v = Partial_Derivative(eta,"y");
     deta_D0->v = Partial_Derivative(eta,"x");
     
-    ddeta_D2D0->v = Partial_Derivative(deta_D2,"x");
-    ddeta_D2D1->v = Partial_Derivative(deta_D2,"y");
     ddeta_D2D2->v = Partial_Derivative(deta_D2,"z");
     ddeta_D1D2->v = Partial_Derivative(deta_D1,"z");
     ddeta_D1D1->v = Partial_Derivative(deta_D1,"y");
-    ddeta_D1D0->v = Partial_Derivative(deta_D1,"x");
     ddeta_D0D2->v = Partial_Derivative(deta_D0,"z");
     ddeta_D0D0->v = Partial_Derivative(deta_D0,"x");
     ddeta_D0D1->v = Partial_Derivative(deta_D0,"y");
@@ -585,34 +500,25 @@ void bbn_partial_derivatives_fields(Grid_T *const grid)
     DECLARE_AND_EMPTY_FIELD(dB0_U2D2)
     DECLARE_AND_EMPTY_FIELD(dB0_U2D1)
     DECLARE_AND_EMPTY_FIELD(dB0_U2D0)
-
-    DECLARE_AND_EMPTY_FIELD(ddB0_U2D2D0)
-    DECLARE_AND_EMPTY_FIELD(ddB0_U2D2D1)
+   
+    DECLARE_AND_EMPTY_FIELD(ddB0_U1D2D2)
+    DECLARE_AND_EMPTY_FIELD(ddB0_U1D0D0)
+    DECLARE_AND_EMPTY_FIELD(ddB0_U1D0D1)
+    DECLARE_AND_EMPTY_FIELD(ddB0_U1D0D2)
+    DECLARE_AND_EMPTY_FIELD(ddB0_U1D1D2)
+    DECLARE_AND_EMPTY_FIELD(ddB0_U2D0D0)
+    DECLARE_AND_EMPTY_FIELD(ddB0_U2D1D2)
+    DECLARE_AND_EMPTY_FIELD(ddB0_U0D2D2)
+    DECLARE_AND_EMPTY_FIELD(ddB0_U2D1D1)
+    DECLARE_AND_EMPTY_FIELD(ddB0_U0D0D1)
+    DECLARE_AND_EMPTY_FIELD(ddB0_U0D1D1)
+    DECLARE_AND_EMPTY_FIELD(ddB0_U0D1D2)
+    DECLARE_AND_EMPTY_FIELD(ddB0_U0D0D2)
+    DECLARE_AND_EMPTY_FIELD(ddB0_U1D1D1)
+    DECLARE_AND_EMPTY_FIELD(ddB0_U2D0D1)
     DECLARE_AND_EMPTY_FIELD(ddB0_U2D2D2)
     DECLARE_AND_EMPTY_FIELD(ddB0_U2D0D2)
-    DECLARE_AND_EMPTY_FIELD(ddB0_U2D0D0)
-    DECLARE_AND_EMPTY_FIELD(ddB0_U2D0D1)
-    DECLARE_AND_EMPTY_FIELD(ddB0_U0D1D1)
-    DECLARE_AND_EMPTY_FIELD(ddB0_U0D1D0)
-    DECLARE_AND_EMPTY_FIELD(ddB0_U0D1D2)
     DECLARE_AND_EMPTY_FIELD(ddB0_U0D0D0)
-    DECLARE_AND_EMPTY_FIELD(ddB0_U0D0D1)
-    DECLARE_AND_EMPTY_FIELD(ddB0_U0D0D2)
-    DECLARE_AND_EMPTY_FIELD(ddB0_U0D2D2)
-    DECLARE_AND_EMPTY_FIELD(ddB0_U0D2D0)
-    DECLARE_AND_EMPTY_FIELD(ddB0_U0D2D1)
-    DECLARE_AND_EMPTY_FIELD(ddB0_U1D2D2)
-    DECLARE_AND_EMPTY_FIELD(ddB0_U1D2D1)
-    DECLARE_AND_EMPTY_FIELD(ddB0_U1D2D0)
-    DECLARE_AND_EMPTY_FIELD(ddB0_U1D0D1)
-    DECLARE_AND_EMPTY_FIELD(ddB0_U1D0D0)
-    DECLARE_AND_EMPTY_FIELD(ddB0_U1D0D2)
-    DECLARE_AND_EMPTY_FIELD(ddB0_U1D1D0)
-    DECLARE_AND_EMPTY_FIELD(ddB0_U1D1D1)
-    DECLARE_AND_EMPTY_FIELD(ddB0_U1D1D2)
-    DECLARE_AND_EMPTY_FIELD(ddB0_U2D1D2)
-    DECLARE_AND_EMPTY_FIELD(ddB0_U2D1D1)
-    DECLARE_AND_EMPTY_FIELD(ddB0_U2D1D0)
 
     dB0_U1D0->v = Partial_Derivative(B0_U1,"x");
     dB0_U1D1->v = Partial_Derivative(B0_U1,"y");
@@ -624,114 +530,25 @@ void bbn_partial_derivatives_fields(Grid_T *const grid)
     dB0_U2D1->v = Partial_Derivative(B0_U2,"y");
     dB0_U2D0->v = Partial_Derivative(B0_U2,"x");
 
-    ddB0_U2D2D0->v = Partial_Derivative(dB0_U2D2,"x");
-    ddB0_U2D2D1->v = Partial_Derivative(dB0_U2D2,"y");
+    ddB0_U1D2D2->v = Partial_Derivative(dB0_U1D2,"z");
+    ddB0_U1D0D0->v = Partial_Derivative(dB0_U1D0,"x");
+    ddB0_U1D0D1->v = Partial_Derivative(dB0_U1D0,"y");
+    ddB0_U1D0D2->v = Partial_Derivative(dB0_U1D0,"z");
+    ddB0_U1D1D2->v = Partial_Derivative(dB0_U1D1,"z");
+    ddB0_U2D0D0->v = Partial_Derivative(dB0_U2D0,"x");
+    ddB0_U2D1D2->v = Partial_Derivative(dB0_U2D1,"z");
+    ddB0_U0D2D2->v = Partial_Derivative(dB0_U0D2,"z");
+    ddB0_U2D1D1->v = Partial_Derivative(dB0_U2D1,"y");
+    ddB0_U0D0D1->v = Partial_Derivative(dB0_U0D0,"y");
+    ddB0_U0D1D1->v = Partial_Derivative(dB0_U0D1,"y");
+    ddB0_U0D1D2->v = Partial_Derivative(dB0_U0D1,"z");
+    ddB0_U0D0D2->v = Partial_Derivative(dB0_U0D0,"z");
+    ddB0_U1D1D1->v = Partial_Derivative(dB0_U1D1,"y");
+    ddB0_U2D0D1->v = Partial_Derivative(dB0_U2D0,"y");
     ddB0_U2D2D2->v = Partial_Derivative(dB0_U2D2,"z");
     ddB0_U2D0D2->v = Partial_Derivative(dB0_U2D0,"z");
-    ddB0_U2D0D0->v = Partial_Derivative(dB0_U2D0,"x");
-    ddB0_U2D0D1->v = Partial_Derivative(dB0_U2D0,"y");
-    ddB0_U0D1D1->v = Partial_Derivative(dB0_U0D1,"y");
-    ddB0_U0D1D0->v = Partial_Derivative(dB0_U0D1,"x");
-    ddB0_U0D1D2->v = Partial_Derivative(dB0_U0D1,"z");
     ddB0_U0D0D0->v = Partial_Derivative(dB0_U0D0,"x");
-    ddB0_U0D0D1->v = Partial_Derivative(dB0_U0D0,"y");
-    ddB0_U0D0D2->v = Partial_Derivative(dB0_U0D0,"z");
-    ddB0_U0D2D2->v = Partial_Derivative(dB0_U0D2,"z");
-    ddB0_U0D2D0->v = Partial_Derivative(dB0_U0D2,"x");
-    ddB0_U0D2D1->v = Partial_Derivative(dB0_U0D2,"y");
-    ddB0_U1D2D2->v = Partial_Derivative(dB0_U1D2,"z");
-    ddB0_U1D2D1->v = Partial_Derivative(dB0_U1D2,"y");
-    ddB0_U1D2D0->v = Partial_Derivative(dB0_U1D2,"x");
-    ddB0_U1D0D1->v = Partial_Derivative(dB0_U1D0,"y");
-    ddB0_U1D0D0->v = Partial_Derivative(dB0_U1D0,"x");
-    ddB0_U1D0D2->v = Partial_Derivative(dB0_U1D0,"z");
-    ddB0_U1D1D0->v = Partial_Derivative(dB0_U1D1,"x");
-    ddB0_U1D1D1->v = Partial_Derivative(dB0_U1D1,"y");
-    ddB0_U1D1D2->v = Partial_Derivative(dB0_U1D1,"z");
-    ddB0_U2D1D2->v = Partial_Derivative(dB0_U2D1,"z");
-    ddB0_U2D1D1->v = Partial_Derivative(dB0_U2D1,"y");
-    ddB0_U2D1D0->v = Partial_Derivative(dB0_U2D1,"x");
 
-    /* B1^i*/
-    DECLARE_FIELD(B1_U2)
-    DECLARE_FIELD(B1_U0)
-    DECLARE_FIELD(B1_U1)
-    
-    DECLARE_AND_EMPTY_FIELD(dB1_U1D0)
-    DECLARE_AND_EMPTY_FIELD(dB1_U1D1)
-    DECLARE_AND_EMPTY_FIELD(dB1_U1D2)
-    DECLARE_AND_EMPTY_FIELD(dB1_U0D1)
-    DECLARE_AND_EMPTY_FIELD(dB1_U0D0)
-    DECLARE_AND_EMPTY_FIELD(dB1_U0D2)
-    DECLARE_AND_EMPTY_FIELD(dB1_U2D2)
-    DECLARE_AND_EMPTY_FIELD(dB1_U2D1)
-    DECLARE_AND_EMPTY_FIELD(dB1_U2D0)
-
-    DECLARE_AND_EMPTY_FIELD(ddB1_U2D2D0)
-    DECLARE_AND_EMPTY_FIELD(ddB1_U2D2D1)
-    DECLARE_AND_EMPTY_FIELD(ddB1_U2D2D2)
-    DECLARE_AND_EMPTY_FIELD(ddB1_U2D0D2)
-    DECLARE_AND_EMPTY_FIELD(ddB1_U2D0D0)
-    DECLARE_AND_EMPTY_FIELD(ddB1_U2D0D1)
-    DECLARE_AND_EMPTY_FIELD(ddB1_U0D1D1)
-    DECLARE_AND_EMPTY_FIELD(ddB1_U0D1D0)
-    DECLARE_AND_EMPTY_FIELD(ddB1_U0D1D2)
-    DECLARE_AND_EMPTY_FIELD(ddB1_U0D0D0)
-    DECLARE_AND_EMPTY_FIELD(ddB1_U0D0D1)
-    DECLARE_AND_EMPTY_FIELD(ddB1_U0D0D2)
-    DECLARE_AND_EMPTY_FIELD(ddB1_U0D2D2)
-    DECLARE_AND_EMPTY_FIELD(ddB1_U0D2D0)
-    DECLARE_AND_EMPTY_FIELD(ddB1_U0D2D1)
-    DECLARE_AND_EMPTY_FIELD(ddB1_U1D2D2)
-    DECLARE_AND_EMPTY_FIELD(ddB1_U1D2D1)
-    DECLARE_AND_EMPTY_FIELD(ddB1_U1D2D0)
-    DECLARE_AND_EMPTY_FIELD(ddB1_U1D0D1)
-    DECLARE_AND_EMPTY_FIELD(ddB1_U1D0D0)
-    DECLARE_AND_EMPTY_FIELD(ddB1_U1D0D2)
-    DECLARE_AND_EMPTY_FIELD(ddB1_U1D1D0)
-    DECLARE_AND_EMPTY_FIELD(ddB1_U1D1D1)
-    DECLARE_AND_EMPTY_FIELD(ddB1_U1D1D2)
-    DECLARE_AND_EMPTY_FIELD(ddB1_U2D1D2)
-    DECLARE_AND_EMPTY_FIELD(ddB1_U2D1D1)
-    DECLARE_AND_EMPTY_FIELD(ddB1_U2D1D0)
-
-    dB1_U1D0->v = Partial_Derivative(B1_U1,"x");
-    dB1_U1D1->v = Partial_Derivative(B1_U1,"y");
-    dB1_U1D2->v = Partial_Derivative(B1_U1,"z");
-    dB1_U0D1->v = Partial_Derivative(B1_U0,"y");
-    dB1_U0D0->v = Partial_Derivative(B1_U0,"x");
-    dB1_U0D2->v = Partial_Derivative(B1_U0,"z");
-    dB1_U2D2->v = Partial_Derivative(B1_U2,"z");
-    dB1_U2D1->v = Partial_Derivative(B1_U2,"y");
-    dB1_U2D0->v = Partial_Derivative(B1_U2,"x");
-
-    ddB1_U2D2D0->v = Partial_Derivative(dB1_U2D2,"x");
-    ddB1_U2D2D1->v = Partial_Derivative(dB1_U2D2,"y");
-    ddB1_U2D2D2->v = Partial_Derivative(dB1_U2D2,"z");
-    ddB1_U2D0D2->v = Partial_Derivative(dB1_U2D0,"z");
-    ddB1_U2D0D0->v = Partial_Derivative(dB1_U2D0,"x");
-    ddB1_U2D0D1->v = Partial_Derivative(dB1_U2D0,"y");
-    ddB1_U0D1D1->v = Partial_Derivative(dB1_U0D1,"y");
-    ddB1_U0D1D0->v = Partial_Derivative(dB1_U0D1,"x");
-    ddB1_U0D1D2->v = Partial_Derivative(dB1_U0D1,"z");
-    ddB1_U0D0D0->v = Partial_Derivative(dB1_U0D0,"x");
-    ddB1_U0D0D1->v = Partial_Derivative(dB1_U0D0,"y");
-    ddB1_U0D0D2->v = Partial_Derivative(dB1_U0D0,"z");
-    ddB1_U0D2D2->v = Partial_Derivative(dB1_U0D2,"z");
-    ddB1_U0D2D0->v = Partial_Derivative(dB1_U0D2,"x");
-    ddB1_U0D2D1->v = Partial_Derivative(dB1_U0D2,"y");
-    ddB1_U1D2D2->v = Partial_Derivative(dB1_U1D2,"z");
-    ddB1_U1D2D1->v = Partial_Derivative(dB1_U1D2,"y");
-    ddB1_U1D2D0->v = Partial_Derivative(dB1_U1D2,"x");
-    ddB1_U1D0D1->v = Partial_Derivative(dB1_U1D0,"y");
-    ddB1_U1D0D0->v = Partial_Derivative(dB1_U1D0,"x");
-    ddB1_U1D0D2->v = Partial_Derivative(dB1_U1D0,"z");
-    ddB1_U1D1D0->v = Partial_Derivative(dB1_U1D1,"x");
-    ddB1_U1D1D1->v = Partial_Derivative(dB1_U1D1,"y");
-    ddB1_U1D1D2->v = Partial_Derivative(dB1_U1D1,"z");
-    ddB1_U2D1D2->v = Partial_Derivative(dB1_U2D1,"z");
-    ddB1_U2D1D1->v = Partial_Derivative(dB1_U2D1,"y");
-    ddB1_U2D1D0->v = Partial_Derivative(dB1_U2D1,"x");
     
     /* Beta^i*/
     DECLARE_FIELD(Beta_U2)
@@ -748,34 +565,25 @@ void bbn_partial_derivatives_fields(Grid_T *const grid)
     DECLARE_AND_EMPTY_FIELD(dBeta_U2D1)
     DECLARE_AND_EMPTY_FIELD(dBeta_U2D0)
 
-    DECLARE_AND_EMPTY_FIELD(ddBeta_U2D2D0)
-    DECLARE_AND_EMPTY_FIELD(ddBeta_U2D2D1)
+    DECLARE_AND_EMPTY_FIELD(ddBeta_U1D2D2)
+    DECLARE_AND_EMPTY_FIELD(ddBeta_U1D0D0)
+    DECLARE_AND_EMPTY_FIELD(ddBeta_U1D0D1)
+    DECLARE_AND_EMPTY_FIELD(ddBeta_U1D0D2)
+    DECLARE_AND_EMPTY_FIELD(ddBeta_U1D1D2)
+    DECLARE_AND_EMPTY_FIELD(ddBeta_U2D0D0)
+    DECLARE_AND_EMPTY_FIELD(ddBeta_U2D1D2)
+    DECLARE_AND_EMPTY_FIELD(ddBeta_U0D2D2)
+    DECLARE_AND_EMPTY_FIELD(ddBeta_U2D1D1)
+    DECLARE_AND_EMPTY_FIELD(ddBeta_U0D0D1)
+    DECLARE_AND_EMPTY_FIELD(ddBeta_U0D1D1)
+    DECLARE_AND_EMPTY_FIELD(ddBeta_U0D1D2)
+    DECLARE_AND_EMPTY_FIELD(ddBeta_U0D0D2)
+    DECLARE_AND_EMPTY_FIELD(ddBeta_U1D1D1)
+    DECLARE_AND_EMPTY_FIELD(ddBeta_U2D0D1)
     DECLARE_AND_EMPTY_FIELD(ddBeta_U2D2D2)
     DECLARE_AND_EMPTY_FIELD(ddBeta_U2D0D2)
-    DECLARE_AND_EMPTY_FIELD(ddBeta_U2D0D0)
-    DECLARE_AND_EMPTY_FIELD(ddBeta_U2D0D1)
-    DECLARE_AND_EMPTY_FIELD(ddBeta_U0D1D1)
-    DECLARE_AND_EMPTY_FIELD(ddBeta_U0D1D0)
-    DECLARE_AND_EMPTY_FIELD(ddBeta_U0D1D2)
     DECLARE_AND_EMPTY_FIELD(ddBeta_U0D0D0)
-    DECLARE_AND_EMPTY_FIELD(ddBeta_U0D0D1)
-    DECLARE_AND_EMPTY_FIELD(ddBeta_U0D0D2)
-    DECLARE_AND_EMPTY_FIELD(ddBeta_U0D2D2)
-    DECLARE_AND_EMPTY_FIELD(ddBeta_U0D2D0)
-    DECLARE_AND_EMPTY_FIELD(ddBeta_U0D2D1)
-    DECLARE_AND_EMPTY_FIELD(ddBeta_U1D2D2)
-    DECLARE_AND_EMPTY_FIELD(ddBeta_U1D2D1)
-    DECLARE_AND_EMPTY_FIELD(ddBeta_U1D2D0)
-    DECLARE_AND_EMPTY_FIELD(ddBeta_U1D0D1)
-    DECLARE_AND_EMPTY_FIELD(ddBeta_U1D0D0)
-    DECLARE_AND_EMPTY_FIELD(ddBeta_U1D0D2)
-    DECLARE_AND_EMPTY_FIELD(ddBeta_U1D1D0)
-    DECLARE_AND_EMPTY_FIELD(ddBeta_U1D1D1)
-    DECLARE_AND_EMPTY_FIELD(ddBeta_U1D1D2)
-    DECLARE_AND_EMPTY_FIELD(ddBeta_U2D1D2)
-    DECLARE_AND_EMPTY_FIELD(ddBeta_U2D1D1)
-    DECLARE_AND_EMPTY_FIELD(ddBeta_U2D1D0)
-
+  
     dBeta_U1D0->v = Partial_Derivative(Beta_U1,"x");
     dBeta_U1D1->v = Partial_Derivative(Beta_U1,"y");
     dBeta_U1D2->v = Partial_Derivative(Beta_U1,"z");
@@ -786,33 +594,25 @@ void bbn_partial_derivatives_fields(Grid_T *const grid)
     dBeta_U2D1->v = Partial_Derivative(Beta_U2,"y");
     dBeta_U2D0->v = Partial_Derivative(Beta_U2,"x");
 
-    ddBeta_U2D2D0->v = Partial_Derivative(dBeta_U2D2,"x");
-    ddBeta_U2D2D1->v = Partial_Derivative(dBeta_U2D2,"y");
+    ddBeta_U1D2D2->v = Partial_Derivative(dBeta_U1D2,"z");
+    ddBeta_U1D0D0->v = Partial_Derivative(dBeta_U1D0,"x");
+    ddBeta_U1D0D1->v = Partial_Derivative(dBeta_U1D0,"y");
+    ddBeta_U1D0D2->v = Partial_Derivative(dBeta_U1D0,"z");
+    ddBeta_U1D1D2->v = Partial_Derivative(dBeta_U1D1,"z");
+    ddBeta_U2D0D0->v = Partial_Derivative(dBeta_U2D0,"x");
+    ddBeta_U2D1D2->v = Partial_Derivative(dBeta_U2D1,"z");
+    ddBeta_U0D2D2->v = Partial_Derivative(dBeta_U0D2,"z");
+    ddBeta_U2D1D1->v = Partial_Derivative(dBeta_U2D1,"y");
+    ddBeta_U0D0D1->v = Partial_Derivative(dBeta_U0D0,"y");
+    ddBeta_U0D1D1->v = Partial_Derivative(dBeta_U0D1,"y");
+    ddBeta_U0D1D2->v = Partial_Derivative(dBeta_U0D1,"z");
+    ddBeta_U0D0D2->v = Partial_Derivative(dBeta_U0D0,"z");
+    ddBeta_U1D1D1->v = Partial_Derivative(dBeta_U1D1,"y");
+    ddBeta_U2D0D1->v = Partial_Derivative(dBeta_U2D0,"y");
     ddBeta_U2D2D2->v = Partial_Derivative(dBeta_U2D2,"z");
     ddBeta_U2D0D2->v = Partial_Derivative(dBeta_U2D0,"z");
-    ddBeta_U2D0D0->v = Partial_Derivative(dBeta_U2D0,"x");
-    ddBeta_U2D0D1->v = Partial_Derivative(dBeta_U2D0,"y");
-    ddBeta_U0D1D1->v = Partial_Derivative(dBeta_U0D1,"y");
-    ddBeta_U0D1D0->v = Partial_Derivative(dBeta_U0D1,"x");
-    ddBeta_U0D1D2->v = Partial_Derivative(dBeta_U0D1,"z");
     ddBeta_U0D0D0->v = Partial_Derivative(dBeta_U0D0,"x");
-    ddBeta_U0D0D1->v = Partial_Derivative(dBeta_U0D0,"y");
-    ddBeta_U0D0D2->v = Partial_Derivative(dBeta_U0D0,"z");
-    ddBeta_U0D2D2->v = Partial_Derivative(dBeta_U0D2,"z");
-    ddBeta_U0D2D0->v = Partial_Derivative(dBeta_U0D2,"x");
-    ddBeta_U0D2D1->v = Partial_Derivative(dBeta_U0D2,"y");
-    ddBeta_U1D2D2->v = Partial_Derivative(dBeta_U1D2,"z");
-    ddBeta_U1D2D1->v = Partial_Derivative(dBeta_U1D2,"y");
-    ddBeta_U1D2D0->v = Partial_Derivative(dBeta_U1D2,"x");
-    ddBeta_U1D0D1->v = Partial_Derivative(dBeta_U1D0,"y");
-    ddBeta_U1D0D0->v = Partial_Derivative(dBeta_U1D0,"x");
-    ddBeta_U1D0D2->v = Partial_Derivative(dBeta_U1D0,"z");
-    ddBeta_U1D1D0->v = Partial_Derivative(dBeta_U1D1,"x");
-    ddBeta_U1D1D1->v = Partial_Derivative(dBeta_U1D1,"y");
-    ddBeta_U1D1D2->v = Partial_Derivative(dBeta_U1D1,"z");
-    ddBeta_U2D1D2->v = Partial_Derivative(dBeta_U2D1,"z");
-    ddBeta_U2D1D1->v = Partial_Derivative(dBeta_U2D1,"y");
-    ddBeta_U2D1D0->v = Partial_Derivative(dBeta_U2D1,"x");
+
   }
   
   printf("Taking partial derivatives of fields ==> Done.\n");
