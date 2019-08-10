@@ -25,7 +25,9 @@
                              free_coeffs(_F_##xNAME);\
                              double *const xNAME = patch->pool[Ind(#xNAME)]->v;
                              
-#define EMPTY_FIELD(xNAME)  empty_field(xNAME);/* free v,v2 and info of field */
+#define DECLARE_AND_EMPTY_FIELD(xNAME)  DECLARE_FIELD(xNAME)/* declare field */\
+                                        empty_field(xNAME);/* free v,v2 and info of field */
+                                        
 /* it compactifies the prepration of Jacobian of derivatives */
 #define JACOBIAN_DERIVATIVE(xNAME) const char *types_##xNAME[] = {#xNAME,0};\
                                   prepare_Js_jacobian_eq(patch,types_##xNAME);\
