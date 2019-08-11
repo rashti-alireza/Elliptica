@@ -62,19 +62,22 @@ outerB_F = eta - 1;
 `  else if (patch->innerB)/* at inner boundary */`;
 `  {`;
 `  const double r02   = SQR(GetParameterD_E("RollOff_distance"));`;
+`  const double M_BH  = GetParameterD_E("BH_mass");`;
+`  const double a_BH  = GetParameterD_E("BH_X_U2")*M_BH;`;
+`  const double a2_BH = SQR(a_BH);`;
+`  const double C_BH  = 0.5*GetParameterD_E("BH_NS_separation");`;
+
 `  DDM_SCHUR_BC_OPEN\n`;
 
 `   double x   = patch->node[ijk]->x[0];`;
 `   double y   = patch->node[ijk]->x[1]-C_BH;`;
 `   double z   = patch->node[ijk]->x[2];`;
-`   double r2 = SQR(x)+SQR(y)+SQR(z);`;
+`   double r2  = SQR(x)+SQR(y)+SQR(z);`;
 `   double rbar2  = 0.5*(r2-a2_BH+sqrt(SQR(r2-a2_BH)+4*a2_BH*SQR(z)));`;
 `   double rbar   = sqrt(rbar2);`;
-`   double k0 = (rbar*x+a_BH*y)/(rbar2+a2_BH);`;
-`   double k1 = (rbar*y-a_BH*x)/(rbar2+a2_BH);`;
 `   double k2 = z/rbar;`;
 `   double H  = M_BH*rbar/(rbar2+a2_BH*SQR(k2));`;
-`   double C = 2.*H;`;
+`   double C  = 2.*H;`;
 `   double KS_alpha = 1/sqrt(1+C);`
 
 innerB_F = eta - psi*exp(-((r2/r02)**2))*KS_alpha;
