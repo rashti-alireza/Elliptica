@@ -22,7 +22,6 @@ void *bc_Beta_U1(void *vp1,void *vp2)
   GET_FIELD_IF_ON_HORIZON(_HS_U1)
 
 
-  const double BH_Omega_U0 = GetParameterD_E("BH_mass")*GetParameterD_E("BH_X_U0");
   const double BH_Omega_U2 = GetParameterD_E("BH_mass")*GetParameterD_E("BH_X_U2");
   if (patch->outerB)/* at outer boundary */
   {
@@ -46,9 +45,8 @@ eta[ijk]/psi[ijk];
 _HS_U1[ijk]/pow(psi[ijk], 2);
 
   double x = patch->node[ijk]->x[0];
-  double z = patch->node[ijk]->x[2];
   double OmegaXr_U1 = 
--BH_Omega_U0*z + BH_Omega_U2*x;
+BH_Omega_U2*x;
 
   double innerB_F = 
 B0_U1[ijk] + B1_U1[ijk] - OmegaXr_U1 - S_U1*alpha;

@@ -34,7 +34,7 @@ Declare =
 {
 
  # dphi 1st derivative Jacobian
- (obj = Field,name = Jphi, rank = D, C_macro3);
+ (obj = Field,name = Jphi, rank = D, C_macro3,C_arg);
 
  # rest mass density 1st derivative
  (obj = Field,name = drho0, rank = D, C_macro4);

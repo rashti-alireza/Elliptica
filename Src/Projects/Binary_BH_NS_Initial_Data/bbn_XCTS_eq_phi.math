@@ -86,6 +86,7 @@ Declare =
 # symmetries for Cpi:
 Symm[_gammaI(i,j)   = _gammaI(j,i)];
 Symm[_Gamma(i,j,k)  = _Gamma(i,k,j)];
+Symm[ddphi(i,j)     = ddphi(j,i)];
 
 ##########################################################################
 # NOTE: In domain decomposition method n is relabed from point ijk.

@@ -37,10 +37,10 @@ Declare =
   (obj = field, name = kd, rank = 0, none,C_arg2); 
 
  # Jphi 1st derivative
- (obj = Field,name = Jphi, rank = D, C_macro3);
+ (obj = Field,name = Jphi, rank = D, C_macro3,C_arg);
 
  # JJphi 2nd derivative
- (obj = Field,name = JJphi, rank = DD, C_macro3);
+ (obj = Field,name = JJphi, rank = DD, C_macro3,C_arg);
 
  # enthalpy
  (obj = Field,name = enthalpy, rank = 0, C_macro4);
@@ -75,6 +75,7 @@ Declare =
 }
 
 # symmetries for cpi
+Symm[JJphi(i,j)      = JJphi(j,i)];
 Symm[_gammaI(i,j)   = _gammaI(j,i)];
 Symm[_Gamma(i,j,k)  = _Gamma(i,k,j)];
 

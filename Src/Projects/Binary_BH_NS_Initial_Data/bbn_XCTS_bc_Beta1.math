@@ -44,10 +44,10 @@ Declare =
  # Cartesian x, y and z coords
  (obj = variable,name = x,none);
  #(obj = variable,name = y,none);
- (obj = variable,name = z,none);
+ #(obj = variable,name = z,none);
 
  # BH_Omega
- (obj = variable,name = BH_Omega_U0,none);
+ #(obj = variable,name = BH_Omega_U0,none);
  #(obj = variable,name = BH_Omega_U1,none);
  (obj = variable,name = BH_Omega_U2,none);
 }
@@ -61,7 +61,8 @@ Declare =
 
 # OUTER BOUNDARY LIKE INFINITY #
 
-`  const double BH_Omega_U0 = GetParameterD_E("BH_mass")*GetParameterD_E("BH_X_U0");`;
+#`  const double C_BH = 0.5*GetParameterD_E("BH_NS_separation");`;
+#`  const double BH_Omega_U0 = GetParameterD_E("BH_mass")*GetParameterD_E("BH_X_U0");`;
 #`  const double BH_Omega_U1 = GetParameterD_E("BH_mass")*GetParameterD_E("BH_X_U1");`;
 `  const double BH_Omega_U2 = GetParameterD_E("BH_mass")*GetParameterD_E("BH_X_U2");`;
 
@@ -89,9 +90,11 @@ outerB_F = B0_U1;
 alpha = eta/psi;
 S_U1  = _HS_U1/(psi**2);
 `  double x = patch->node[ijk]->x[0];`;
-#`  double y = patch->node[ijk]->x[1];`;
-`  double z = patch->node[ijk]->x[2];`;
-OmegaXr_U1 = BH_Omega_U2*x-BH_Omega_U0*z;
+#`  double y = patch->node[ijk]->x[1]-C_BH;`;
+#`  double z = patch->node[ijk]->x[2];`;
+#OmegaXr_U1 = BH_Omega_U2*x-BH_Omega_U0*z;
+OmegaXr_U1 = BH_Omega_U2*x;
+
 innerB_F = B0_U1+B1_U1 - alpha*S_U1 - OmegaXr_U1;
 
 `  F[map[ijk]] = innerB_F;\n`;
