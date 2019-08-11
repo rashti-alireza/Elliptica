@@ -43,12 +43,12 @@ static Grid_T *TOV_KerrShild_approximation(void)
   /* basics of Kerr Shild black hole located at right side of y axis */
   pr_line_custom('=');
   printf("Acquiring Black Hole properties ...\n");
-  const double bh_chi  = GetParameterD_E("BH_dimensionless_spin");
+  const double bh_chi  = GetParameterD_E("BH_X_U2");
   const double bh_mass = GetParameterD_E("BH_mass");
   const double bh_R    = bh_mass*(1+sqrt(1-SQR(bh_chi)));
   printf("BH properties:\n");
   printf("--> BH radius (Kerr-Schild Coords.) = %e\n",bh_R);
-  printf("--> BH dimensionless spin           = %e\n",bh_chi);
+  printf("--> BH dimensionless spin (z comp.) = %e\n",bh_chi);
   printf("--> BH ADM mass                     = %e\n",bh_mass);
   printf("Acquiring Black Hole properties ==> Done.\n");
   pr_clock();
@@ -73,7 +73,7 @@ static Grid_T *TOV_KerrShild_approximation(void)
   Tij_IF_CTS_psi6Sources(grid);
   
   /* update _Aij in K^{ij} = A^{ij}+1/3*gamma^{ij}*K and 
-  // _A^{ij} = gamma^10*A^{ij} */
+  // _A^{ij} = gamma^10*A^{ij} and _dA^{ij} */
   bbn_update_psi10A_UiUj(grid);
   
   /* make normal vectorn on BH horizon */
@@ -158,9 +158,9 @@ static void init_field_TOV_plus_KerrSchild(Grid_T *const grid,const TOV_T *const
   const double a2_BH = SQR(a_BH);/* spin vector of BH */
   const double y_CM = (M_NS*C_NS+M_BH*C_BH)/(M_NS+M_BH);/* center of rotation, approx. Center of Mass */
   const double Omega_BHNS = GetParameterD_E("BH_NS_orbital_angular_velocity");
-  const double Omega_NS_x = GetParameterD_E("NS_spin_vector_x");
-  const double Omega_NS_y = GetParameterD_E("NS_spin_vector_y");
-  const double Omega_NS_z = GetParameterD_E("NS_spin_vector_z");
+  const double Omega_NS_x = GetParameterD_E("NS_Omega_U0");
+  const double Omega_NS_y = GetParameterD_E("NS_Omega_U1");
+  const double Omega_NS_z = GetParameterD_E("NS_Omega_U2");
   const double Vr = GetParameterD_E("BH_NS_infall_velocity");
   unsigned p;
   

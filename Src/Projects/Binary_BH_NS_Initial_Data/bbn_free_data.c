@@ -306,7 +306,7 @@ void bbn_free_data_gammas(Grid_T *const grid)
   /* roll off distance at exp(-(r/r0)^4)  */
   const double r0   = GetParameterD_E("RollOff_distance");
   const double M_BH = GetParameterD_E("BH_mass");
-  const double a    = GetParameterD_E("BH_dimensionless_spin")*M_BH;
+  const double a    = GetParameterD_E("BH_X_U2")*M_BH;
   const double a2   = SQR(a);
   double H,k0,k1,k2;/* in ds^2 = (eta_ij+2*H*ki*kj)dx^i*dx^j */
   /* center of BH */
@@ -619,7 +619,7 @@ static void partial_derivative_KSBeta(Patch_T *const patch)
 static void populate_KSgammas_KSalpha_KSBeta(Patch_T *const patch)
 {
   const double M_BH = GetParameterD_E("BH_mass");
-  const double a    = GetParameterD_E("BH_dimensionless_spin")*M_BH;
+  const double a    = GetParameterD_E("BH_X_U2")*M_BH;
   const double a2   = SQR(a);
   const double C_BH = 0.5*GetParameterD_E("BH_NS_separation");
   const unsigned nn = patch->nn;
