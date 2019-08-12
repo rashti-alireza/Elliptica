@@ -44,13 +44,12 @@ Declare =
 #    NOTE2: In Schur domain decomposition method we need two types of
 # matrices for Jacobian of Newton-Raphson scheme, matrix B and matrix E. 
 # Let's say Jx = -F in Newton-Raphson scheme; then,
-# B[i][j] = d[F(f(ijk))]/df(lmn), ijk takes their values ON INNER POINTS
-# of a patch, namley those collocated points that don't reach boundary of
-# the patch, and lmn runs over ALL BUT the interface points (interface
+# B[i][j] = d[F(f(ijk))]/df(lmn), where i = map[ijk], and j = map[lmn] and
+# ijk takes their values ON BOUNDARY POINTS of a patch, 
+# and lmn runs over ALL BUT the interface points (interface
 # points are those located between two patches).
-# E[i][j] = d[F(f(ijk))]/df(lmn), ijk takes their values ON INTERFACE
-# POINTS, namely those collocated points ON the boundary between two
-# patches, lmn runs over ALL BUT the interface points.
+# E[i][j] = d[F(f(ijk))]/df(lmn), where i = map[ijk], and j = map[lmn] and
+# ijk takes their values ON BOUNDARY POINTS and lmn runs over INTERFACE points.
 #
 #    PRAGMATICALLY:
 #  If you have Dirichlet B.C. for outer-boundary (inner-boundary), 
