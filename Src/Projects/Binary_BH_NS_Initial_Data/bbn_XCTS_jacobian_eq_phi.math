@@ -28,13 +28,13 @@ C_arg2 = [ijk == lmn]; # for kd
 # THUS, DO NOT DEFINE THEM AGAIN.
 `  DDM_SCHUR_JACOBIAN_EQ_DECLARE`;
 `  unsigned ijk,lmn;/* for Jacobian entries J[ijk][lmn] */`;
-`  const double kd[2] = {0.,1.};/* Kronecker delta */`;
+#`  const double kd[2] = {0.,1.};/* Kronecker delta */`;
 
 # declare for cpi
 Declare = 
 {
   # Kroneker delta
-  (obj = field, name = kd, rank = 0, none,C_arg2); 
+  #(obj = field, name = kd, rank = 0, none,C_arg2); 
 
  # Jphi 1st derivative
  (obj = Field,name = Jphi, rank = D, C_macro3,C_arg);
@@ -106,7 +106,15 @@ Symm[_Gamma(i,j,k)  = _Gamma(i,k,j)];
 ###############################################
 ####### B matrix: J[ijk][lmn] in Jx = -F ###### 
 ###############################################
-`  DDM_SCHUR_JACOBIAN_EQ_Bpart_OPEN\n`;
+
+`  B[0][0] = 1;` # for eq: phi = 0
+`  for (i = 1; i < Ni; ++i)`
+`  {`
+`    ijk = node[i];`
+`    for (j = 0; j < Nj; ++j)`
+`    {`
+`      lmn = node[j];`
+
 
 dLn_of_alpha_b(i) = deta(i)/eta - dpsi(i)/psi;
 dLn_of_rho0_b(i)  = drho0(i)/rho0;
@@ -128,7 +136,18 @@ Bpart = t1_b+t2_b+t3_b;
 ###############################################
 ###### E matrix: J[ijk][lmn] in Jx = -F #######
 ###############################################
-`  DDM_SCHUR_JACOBIAN_EQ_Epart_OPEN\n`;
+
+` if (S->NI)`;
+` {`;
+`    E_Trans = S->E_Trans->reg->A;`;
+`    for (k = K0; k < Nk; ++k)`;
+`    {`;
+`      lmn = node[k];`;
+`      j = k-K0;`;
+`      for (i = 1; i < Ni; ++i)`; # since phi = 0, it started form i = 1
+`      {`;
+`        ijk = node[i];`;
+
 
 dLn_of_alpha_e(i) = deta(i)/eta - dpsi(i)/psi;
 dLn_of_rho0_e(i)  = drho0(i)/rho0;

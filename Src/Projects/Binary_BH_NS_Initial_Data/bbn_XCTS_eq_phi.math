@@ -96,7 +96,14 @@ Symm[ddphi(i,j)     = ddphi(j,i)];
 # at Newton-Raphson scheme (Jx = -F_eq) in TERMS OF ijk POINT.
 ##########################################################################
 
-`  DDM_SCHUR_EQ_OPEN\n`;
+# NOTE, since I wanna solve phi = 0 at only one point, I need to change 
+# some of the default settings.
+
+`  ijk  = node[0];`;
+`  F[0] = phi[ijk];`; # phi = 0
+`  for (n = 1; n < N; ++n)`;
+`  {`;
+`    ijk  = node[n];`;
 
 # write the equation below at ijk point:
 
@@ -112,12 +119,14 @@ t1 = dLns0(-i)*((psi**-4)*_gammaI(i,l)*dphi(-l)+W(i));
 t2 = 2*(psi**-5)*dpsi(-i)*_gammaI(i,l)*dphi(-l);
 t3 = (psi**-4)*_gammaI(-i,-l)*(ddphi(i,l)-_Gamma(n,i,l)*dphi(-n));
 t4 = 6*dpsi(i)*W(-i)/psi + _Gamma(i,ip,l)*W(-l)*KD(-i,-ip);
-t5 = -enthalpy*u0*(dLns1(i)*2*Beta(-i)+2*alpha*K);
+#t5 = -enthalpy*u0*(dLns1(i)*2*Beta(-i)+2*alpha*K);
+t5 = -2*enthalpy*u0*dLns1(i)*Beta(-i);
+t6 = -2*enthalpy*u0*alpha*K;
 
-F_eq = t1+t2+t3+t4+t5;
+F_eq = t1+t2+t3+t4+t5+t6;
 
-`  F[n] = F_eq;\n`;# Jx = -F in Newton-Raphson scheme
-`  DDM_SCHUR_EQ_CLOSE\n`;
+`    F[n] = F_eq;\n`;# Jx = -F in Newton-Raphson scheme
+`  }`;
 
 `  return 0;`;
 `}`;
