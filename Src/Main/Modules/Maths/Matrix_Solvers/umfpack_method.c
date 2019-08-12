@@ -44,6 +44,7 @@ int direct_solver_umfpack_di(void *vp)
     printf("%s\n",umf->description);
     printf("o.  Matrix Dimension = %dx%d\n", row,col);
     printf("o.  Condition Number = %g\n", 1/Info[UMFPACK_RCOND]);
+    fflush(stdout);
   }
 
   status = umfpack_di_solve(UMFPACK_A,Ap,Ai,Ax,x,b,Numeric,Control,Info);
@@ -95,6 +96,7 @@ int direct_solver_umfpack_dl(void *vp)
     printf("%s\n",umf->description);
     printf("o.  Matrix Dimension = %dx%d\n", row,col);
     printf("o.  Condition Number = %g\n", 1/Info[UMFPACK_RCOND]);
+    fflush(stdout);
   }
 
 
@@ -165,6 +167,7 @@ int direct_solver_series_umfpack_di(void *vp)
     printf("%s\n",umf->description);
     printf("o.  Matrix Dimension = %dx%d\n", row,col);
     printf("o.  Condition Number = %g\n", 1/Info[UMFPACK_RCOND]);
+    fflush(stdout);
   }
 
   /* solve for series ax[i]=b[i] */
@@ -223,6 +226,7 @@ int direct_solver_series_umfpack_dl(void *vp)
     printf("%s\n",umf->description);
     printf("o.  Matrix Dimension = %dx%d\n", row,col);
     printf("o.  Condition Number = %g\n", 1/Info[UMFPACK_RCOND]);
+    fflush(stdout);
   }
 
   /* solve for series ax[i]=b[i] */

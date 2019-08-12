@@ -37,6 +37,7 @@ void pr_line(void)
   for (i = 0; i < MAX_LENGTH; i++)
     printf("%c",LINE);
   printf("\n");
+  fflush(stdout);
   
 }
 
@@ -48,6 +49,7 @@ void pr_line_custom(const char c)
   for (i = 0; i < MAX_LENGTH; i++)
     printf("%c",c);
   printf("\n");
+  fflush(stdout);
   
 }
 
@@ -59,6 +61,7 @@ void pr_half_line_custom(const char c)
   for (i = 0; i < MAX_LENGTH/2; i++)
     printf("%c",c);
   printf("\n");
+  fflush(stdout);
   
 }
 
@@ -68,6 +71,7 @@ void pr_clock(void)
   time_t now = time(0);
   double t = difftime(now,initial_time_global);
   printf("\nCLOCK: [%.0f Second(s)] = [%.1f Minute(s)]\n\n",t,t/60.);
+  fflush(stdout);
   
 }
 
