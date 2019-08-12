@@ -23,6 +23,7 @@ int direct_solver_umfpack_di(void *vp)
   double Info[UMFPACK_INFO];
   double Control[UMFPACK_CONTROL];
   int status;
+  double time1 = get_time_sec();
   
   if (!umf->a->ccs_f)
     abortEr("The matrix a in a.x = b in umfpack must be in CCS format.\n");
@@ -39,14 +40,6 @@ int direct_solver_umfpack_di(void *vp)
      
   umfpack_di_free_symbolic(&Symbolic);
   
-  if (umf->description)
-  {
-    printf("%s\n",umf->description);
-    printf("o.  Matrix Dimension = %dx%d\n", row,col);
-    printf("o.  Condition Number = %g\n", 1/Info[UMFPACK_RCOND]);
-    fflush(stdout);
-  }
-
   status = umfpack_di_solve(UMFPACK_A,Ap,Ai,Ax,x,b,Numeric,Control,Info);
   if(status != UMFPACK_OK)
     umfpack_error_di(Control,status,__FILE__,__LINE__);
@@ -54,6 +47,15 @@ int direct_solver_umfpack_di(void *vp)
   /*freeing*/
   umfpack_di_free_numeric(&Numeric);
  
+  if (umf->description)
+  {
+    printf("%s\n",umf->description);
+    printf("o.  Matrix Dimension = %dx%d\n", row,col);
+    printf("o.  Condition Number = %g\n", 1/Info[UMFPACK_RCOND]);
+    printf("o.  Elapsed Second(s)= %g\n",get_time_sec()-time1);
+    fflush(stdout);
+  }
+  
   return EXIT_SUCCESS;
 }
 
@@ -75,6 +77,7 @@ int direct_solver_umfpack_dl(void *vp)
   double Control[UMFPACK_CONTROL];
   double Info[UMFPACK_INFO];
   long status;
+  double time1 = get_time_sec();
   
   if (!umf->a->ccs_l_f)
     abortEr("The matrix a in a.x = b in umfpack must be in CCS long format.\n");
@@ -91,21 +94,21 @@ int direct_solver_umfpack_dl(void *vp)
      
   umfpack_dl_free_symbolic(&Symbolic);
 
-  if (umf->description)
-  {
-    printf("%s\n",umf->description);
-    printf("o.  Matrix Dimension = %dx%d\n", row,col);
-    printf("o.  Condition Number = %g\n", 1/Info[UMFPACK_RCOND]);
-    fflush(stdout);
-  }
-
-
   status = umfpack_dl_solve(UMFPACK_A,Ap,Ai,Ax,x,b,Numeric,Control,Info);
   if(status != UMFPACK_OK)
     umfpack_error_dl(Control,status,__FILE__,__LINE__);
 
   /*freeing*/
   umfpack_dl_free_numeric(&Numeric);
+  
+  if (umf->description)
+  {
+    printf("%s\n",umf->description);
+    printf("o.  Matrix Dimension = %dx%d\n", row,col);
+    printf("o.  Condition Number = %g\n", 1/Info[UMFPACK_RCOND]);
+    printf("o.  Elapsed Second(s)= %g\n",get_time_sec()-time1);
+    fflush(stdout);
+  }
   
   return EXIT_SUCCESS;
 }
@@ -146,6 +149,7 @@ int direct_solver_series_umfpack_di(void *vp)
   double Control[UMFPACK_CONTROL];
   int status;
   unsigned i;
+  double time1 = get_time_sec();
   
   if (!umf->a->ccs_f)
     abortEr("The matrix a in a.x = b in umfpack must be in CCS format.\n");
@@ -162,14 +166,6 @@ int direct_solver_series_umfpack_di(void *vp)
      
   umfpack_di_free_symbolic(&Symbolic);
 
-  if (umf->description)
-  {
-    printf("%s\n",umf->description);
-    printf("o.  Matrix Dimension = %dx%d\n", row,col);
-    printf("o.  Condition Number = %g\n", 1/Info[UMFPACK_RCOND]);
-    fflush(stdout);
-  }
-
   /* solve for series ax[i]=b[i] */
   for (i = 0; i < ns; ++i)
   {
@@ -180,6 +176,15 @@ int direct_solver_series_umfpack_di(void *vp)
   /*freeing*/
   umfpack_di_free_numeric(&Numeric);
  
+  if (umf->description)
+  {
+    printf("%s\n",umf->description);
+    printf("o.  Matrix Dimension = %dx%d\n", row,col);
+    printf("o.  Condition Number = %g\n", 1/Info[UMFPACK_RCOND]);
+    printf("o.  Elapsed Second(s)= %g\n",get_time_sec()-time1);
+    fflush(stdout);
+  }
+  
   return EXIT_SUCCESS;
 }
 
@@ -205,6 +210,7 @@ int direct_solver_series_umfpack_dl(void *vp)
   double Control[UMFPACK_CONTROL];
   long status;
   unsigned i;
+  double time1 = get_time_sec();
   
   if (!umf->a->ccs_l_f)
     abortEr("The matrix a in a.x = b in umfpack must be in CCS long format.\n");
@@ -221,14 +227,6 @@ int direct_solver_series_umfpack_dl(void *vp)
      
   umfpack_dl_free_symbolic(&Symbolic);
 
-  if (umf->description)
-  {
-    printf("%s\n",umf->description);
-    printf("o.  Matrix Dimension = %dx%d\n", row,col);
-    printf("o.  Condition Number = %g\n", 1/Info[UMFPACK_RCOND]);
-    fflush(stdout);
-  }
-
   /* solve for series ax[i]=b[i] */
   for (i = 0; i < ns; ++i)
   {
@@ -239,6 +237,15 @@ int direct_solver_series_umfpack_dl(void *vp)
   /*freeing*/
   umfpack_dl_free_numeric(&Numeric);
  
+  if (umf->description)
+  {
+    printf("%s\n",umf->description);
+    printf("o.  Matrix Dimension = %dx%d\n", row,col);
+    printf("o.  Condition Number = %g\n", 1/Info[UMFPACK_RCOND]);
+    printf("o.  Elapsed Second(s)= %g\n",get_time_sec()-time1);
+    fflush(stdout);
+  }
+  
   return EXIT_SUCCESS;
 }
 
