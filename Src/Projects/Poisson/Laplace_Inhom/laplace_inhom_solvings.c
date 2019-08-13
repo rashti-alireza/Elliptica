@@ -10,6 +10,7 @@
 */
 int Laplace_Inhom_solve_eq(Grid_T *const grid)
 {
+  Solve_Equations_T *SolveEqs = init_solve_equations(grid);/* initialization */
   sEquation_T **field_eq/* field equation */,
               **bc_eq/* B.C. for the field */,
               **jacobian_field_eq/* jacobian for field equation */,
@@ -22,8 +23,10 @@ int Laplace_Inhom_solve_eq(Grid_T *const grid)
   initialize_solving_man(grid,field_eq,bc_eq,jacobian_field_eq,jacobian_bc_eq);/* populating solution managing */
   enable_fields(grid);/* allocating required fields in patch->pool */
   Laplace_Inhom_initial_data_alpha(grid);/* initial data for field alpha */
-  solve_eqs(grid);/* solving equation(s) */
+  solve_eqs(SolveEqs);/* solving equation(s) */
   
+  /* freeing */
+  free_solve_equations(SolveEqs);
   free_db_eqs(field_eq);
   free_db_eqs(bc_eq);
   free_db_eqs(jacobian_field_eq);
