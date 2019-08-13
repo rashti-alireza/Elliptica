@@ -149,7 +149,7 @@ static int solve_field(Solve_Equations_T *const SolveEqs)
         make_f(patch);
         make_partial_g(patch);
       }
-      make_g(grid);
+      make_g(grid);/* free pg */
       
       IsItSolved = check_residual(grid,res_input);
       if (IsItSolved == YES)
