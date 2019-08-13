@@ -1,6 +1,3 @@
-/* a general prototype to embrace various types of tasks */
-typedef void *fSolveEqs_T(void *vp1,void *vp2);
-
 /* solve equation struc pass to the solver.
 // it may contain various functions and parameters to control and
 // execute different tasks. */
@@ -18,7 +15,7 @@ typedef struct SOLVE_EQUATIONS_T
     Grid_T *sgrid;/* e.g. the grid composed of NS patches for phi */
   }**Sgrid;/* the end of this struct determined by Null */
   
-  fSolveEqs_T *FieldUpdate;/* instructions for updating field and its derivative */
+  void (*FieldUpdate)(Patch_T *const patch,const char *const name);/* instructions for updating field and its derivative */
   
 }Solve_Equations_T;
 
