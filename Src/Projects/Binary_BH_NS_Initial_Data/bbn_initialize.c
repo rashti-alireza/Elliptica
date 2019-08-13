@@ -74,7 +74,7 @@ static Grid_T *TOV_KerrShild_approximation(void)
   
   /* update _Aij in K^{ij} = A^{ij}+1/3*gamma^{ij}*K and 
   // _A^{ij} = gamma^10*A^{ij} and _dA^{ij} */
-  bbn_update_psi10A_UiUj(grid);
+  bbn_update_Aij(grid);
   
   /* make normal vectorn on BH horizon */
   make_normal_vector_on_BH_horizon(grid);
@@ -82,6 +82,26 @@ static Grid_T *TOV_KerrShild_approximation(void)
   TOV_free(tov);
   
   return grid;
+}
+
+
+/* update _Aij in K^{ij} = A^{ij}+1/3*gamma^{ij}*K and 
+// _A^{ij} = gamma^10*A^{ij} and _dA^{ij} */
+static void bbn_update_Aij(Grid_T *const grid)
+{
+  pr_line_custom('=');
+  printf("Updating _A^{ij}, _dA^{ij} and _A^{ij}*A_{ij} ...\n");
+  unsigned p;
+
+  FOR_ALL_PATCHES(p,grid)
+  {
+    Patch_T *patch = grid->patch[p];
+    bbn_update_psi10A_UiUj(patch);
+  }
+  
+  printf("Updating _A^{ij}, _dA^{ij} and _A^{ij}*A_{ij} ==> Done.\n");
+  pr_clock();
+  pr_line_custom('=');
 }
 
 /* make normal vectorn on BH horizon */
