@@ -21,7 +21,7 @@
 #define GET_FIELD_UNUSED(xNAME)      double *const xNAME = patch->pool[Ind(#xNAME)]->v;\
                                      UNUSED(xNAME);/* access to the memory values and unuse it in case if it isn't needed to avoid gcc warning */
 /* it frees f->v2,f->info and gets f->v. it is used to update value of a field and frees the left over of previous values */
-#define PREP_FIELD(xNAME)     Field_T *const _F_##xNAME = patch->pool[Ind(#xNAME)];\
+#define PREP_FIELD(xNAME)    Field_T *const _F_##xNAME = patch->pool[Ind(#xNAME)];\
                              free_coeffs(_F_##xNAME);\
                              double *const xNAME = patch->pool[Ind(#xNAME)]->v;
                              
