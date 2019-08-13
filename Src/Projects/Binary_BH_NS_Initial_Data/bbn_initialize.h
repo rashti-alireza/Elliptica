@@ -1,12 +1,4 @@
-#include "core_lib.h"
-#include "TOV_lib.h"
-#include "maths_general_lib.h"
-#include "coordinates_lib.h"
-#include "memory_managing_lib.h"
-#include "utilities_lib.h"
-#include "maths_approximation_lib.h"
-#include "physics_EoS_lib.h"
-#include "physics_StressEnergyTensor_lib.h"
+#include "bbn_headers.h"
 
 Grid_T *bbn_initialize_next_grid(Grid_T *const grid_prev);
 static Grid_T *TOV_KerrShild_approximation(void);
@@ -17,7 +9,7 @@ static void make_normal_vector_on_BH_horizon(Grid_T *const grid);
 void bbn_allocate_fields(Grid_T *const grid);
 void bbn_partial_derivatives_fields(Grid_T *const grid);
 void bbn_populate_free_data(Grid_T *const grid);
-void bbn_update_psi10A_UiUj(Grid_T *const grid);
-
+void bbn_update_psi10A_UiUj(Patch_T *const patch);
+static void bbn_update_Aij(Grid_T *const grid);
 
 
