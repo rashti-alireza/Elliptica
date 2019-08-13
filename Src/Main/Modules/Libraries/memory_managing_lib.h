@@ -31,3 +31,7 @@ void free_coeffs(Field_T *fld);
 void free_db_eqs(sEquation_T **db);
 void free_interpolation(Interpolation_T *interp_s);
 void free_matrix(Matrix_T *m);
+void free_patch_interface(Patch_T *const patch);
+void free_patch_SolMan_jacobian(Patch_T *const patch);
+void free_patch_SolMan_method_Schur(Patch_T *const patch);
+void _free(void *p);

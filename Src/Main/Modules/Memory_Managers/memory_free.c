@@ -10,6 +10,9 @@
 */
 void free_2d(void *mem0)
 {
+  if (!mem0)
+    return;
+    
   int i;
   void **mem = mem0;
     
@@ -25,6 +28,9 @@ void free_2d(void *mem0)
 */
 void free_2d_mem(void *mem0, const unsigned long c)
 {
+  if (!mem0)
+    return;
+    
   unsigned long i;
   void **mem = mem0;
   
@@ -284,4 +290,116 @@ void free_matrix(Matrix_T *m)
     abortEr("No matrix format is defined for this given matrix.\n");
     
   free(m);
+}
+
+/* free thoroughly patch->interface */
+void free_patch_interface(Patch_T *const patch)
+{
+  Interface_T **face = patch->interface;
+  SubFace_T **subface = 0;
+  unsigned f,i;
+    
+  FOR_ALL(f,face)
+  {
+    /* free point */
+    free_2d_mem(face[f]->point,face[f]->np);
+    face[f]->np = 0;
+    
+    /* free subface */
+    subface = face[f]->subface;
+    for (i = 0; i < face[f]->ns; ++i)
+    {
+      _free(subface[i]->flags_str);
+      _free(subface[i]->id);
+      _free(subface[i]->adjid);
+      _free(subface[i]);
+    }
+    _free(subface);
+    
+    /* free face */
+    _free(face[f]);
+  }
+  _free(face);
+  
+  patch->interface = 0;
+}
+
+/* free thoroughly patch->interface */
+void free_patch_SolMan_jacobian(Patch_T *const patch)
+{
+  Solving_Man_T *const SolMan = patch->solving_man;
+  unsigned i;
+  
+  for (i = 0; i < SolMan->nj; ++i)
+  {
+    free_matrix(SolMan->jacobian[i]->J);
+    _free(SolMan->jacobian[i]);
+  }
+  _free(SolMan->jacobian);
+  
+  SolMan->jacobian = 0;
+  
+}
+
+/* free thoroughly patch->interface */
+void free_patch_SolMan_method_Schur(Patch_T *const patch)
+{
+  DDM_Schur_Complement_T *s = patch->solving_man->method->SchurC;
+  Sewing_T **se             = s->sewing;
+  Pair_T **p                = 0;
+  unsigned i,j;
+  
+  /* note, those matrices and double populated during solver
+  // won't needed to be freed */
+  _free(s->map);
+  _free(s->inv);
+  _free(s->Imap);
+  _free(s->Iinv);
+  _free(s->NS_p);
+  _free(s->NI_p);
+  
+  for (i = 0; i < s->nsewing; ++i)
+  {
+    p = 0;
+    if (se[i])
+    {
+      if (se[i]->patchN != patch->pn)
+      {
+        _free(se[i]->map);
+        _free(se[i]->inv);
+        _free(se[i]->Imap);
+        _free(se[i]->Iinv);
+      }
+      p = se[i]->pair;
+      for (j = 0; j < se[i]->npair; ++j)
+      {
+        _free(p[j]->ip);
+        _free(p[j]->nv);
+        
+        /* because only for the following patches we allocate memory */
+        if (se[i]->patchN != patch->pn)
+        {
+          _free(p[j]->subface->flags_str);
+          _free(p[j]->subface->id);
+          _free(p[j]->subface->adjid);
+          _free(p[j]->subface);  
+          p[j]->subface = 0;
+        }
+        free(p[j]);
+      }
+      _free(p);
+    }
+    _free(se[i]);
+  }
+  _free(se);
+  _free(s);
+  
+  patch->solving_man->method->SchurC = 0;
+}
+
+/* free only if p != NULL */
+void _free(void *p)
+{
+  if (p)
+    free(p);
 }
