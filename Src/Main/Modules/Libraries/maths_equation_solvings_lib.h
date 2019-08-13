@@ -1,3 +1,32 @@
+/* a general prototype to embrace various types of tasks */
+typedef void *fSolveEqs_T(void *vp1,void *vp2);
+
+/* solve equation struc pass to the solver.
+// it may contain various functions and parameters to control and
+// execute different tasks. */
+typedef struct SOLVE_EQUATIONS_T
+{
+  Grid_T *grid;/* original grid(default grid), 
+               // which is the whole physical domain */
+  char *field_name;/* the name of the field that is being solved now */
+  
+  /* some fields need their own grid, called sgrid (Special GRID) here. 
+  // e.g. phi in Euler's equations is solved only in NS not the whole grid */
+  struct
+  {
+    char *name;/* name of the field with special grid, e.g. phi */
+    Grid_T *sgrid;/* e.g. the grid composed of NS patches for phi */
+  }**Sgrid;/* the end of this struct determined by Null */
+  
+  fSolveEqs_T *FieldUpdate;/* instructions for updating field and its derivative */
+  
+}Solve_Equations_T;
+
+int solve_eqs(Solve_Equations_T *const SolveEqs);
+void free_solve_equations(Solve_Equations_T *solve);
+Solve_Equations_T *init_solve_equations(Grid_T *const grid);
+Grid_T *get_grid_solve_equations(Solve_Equations_T *const solve);
+void add_special_grid_solve_equations(Grid_T *const grid,const char *const name, Solve_Equations_T *const solve);
 void make_Js_jacobian_eq(Grid_T *const grid, const char * const* types);
 void test_make_Js_jacobian_eq(Grid_T *const grid, const char * const* types);
 void test_dfs_df_values(Grid_T *const grid);
@@ -5,7 +34,6 @@ void test_dInterp_a_df(Grid_T *const grid);
 void *init_eq(void);
 void add_eq(sEquation_T ***const data_base, fEquation_T *const eq,const char *const name);
 void initialize_solving_man(Grid_T *const grid,sEquation_T **const field_eq,sEquation_T **const bc_eq,sEquation_T **const jacobian_field_eq, sEquation_T **const jacobian_bc_eq);
-int solve_eqs(Grid_T *const grid);
 Matrix_T *get_j_matrix(const Patch_T *const patch,const char *type);
 void prepare_Js_jacobian_eq(Patch_T *const patch,const char * const *types);
 double read_matrix_entry_ccs(Matrix_T *const m, const long r,const long c);

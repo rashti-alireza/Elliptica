@@ -36,17 +36,15 @@
 // to solve equation. This method is capable of using direct solver
 // like UMFPACK and also it is parallelizable.
 */
-int ddm_schur_complement(Grid_T *const grid)
+int ddm_schur_complement(Solve_Equations_T *const SolveEqs)
 {
+  Grid_T *grid;
   char **field_name = 0;/* name of all fields to be solved */
   unsigned nf = 0;/* number of all fields */
   unsigned f;/* dummy index */
   
   pr_line_custom('=');
   printf("Solving the Equations ...\n\n");
-  
-  /* picking up labeling, mapping etc. */
-  preparing_ingredients(grid);
   
   /* read order of fields to be solved from input */
   field_name = read_fields_in_order(&nf);
@@ -58,8 +56,19 @@ int ddm_schur_complement(Grid_T *const grid)
     printf("> Solving Equation for field: \"%s\" ...\n",field_name[f]);
     pr_half_line_custom('-');
     
-    set_cf(grid,field_name[f]);/* solving_man->cf */
-    solve_field(grid);/* solve field[f] */
+    /* set the name of the field we are solving it */
+    SolveEqs->field_name = field_name[f];
+    /* having set the field name, find the grid we are solving this field on it */
+    grid = get_grid_solve_equations(SolveEqs);
+    
+    /* set solving_man->cf */
+    set_cf(grid,field_name[f]);
+    
+    /* picking up labeling, mapping etc. */
+    preparing_ingredients(SolveEqs);
+    
+    /* solve field[f] on grid_target */
+    solve_field(SolveEqs);
     
     printf("\n");
     pr_half_line_custom('-');
@@ -80,8 +89,10 @@ int ddm_schur_complement(Grid_T *const grid)
 
 /* solving the field.
 // ->return value: EXIT_SUCCESS. */
-static int solve_field(Grid_T *const grid)
+static int solve_field(Solve_Equations_T *const SolveEqs)
 {
+  Grid_T *const grid = get_grid_solve_equations(SolveEqs);
+  
   /* residual determined in the input file */
   const double res_input = fabs(GetParameterD_E("Solving_Residual"));
   const int NumIter = GetParameterI_E("Linear_Solver_Number_of_Iteration");
@@ -109,6 +120,9 @@ static int solve_field(Grid_T *const grid)
       solve_Bx_f(patch);/* solve Bx=f, free{B,f} */
       update_field_single_patch(patch);
       free(Schur->x);/* free{x} */
+      /* updating fields and their derivative and related */
+      if (SolveEqs->FieldUpdate)/* if any FieldUpdate set */
+        SolveEqs->FieldUpdate(patch,SolveEqs->field_name);
       make_f(patch);/* making f */
       IsItSolved = check_residual_single_patch(patch,res_input);
       free(Schur->f);/* free{x} */
@@ -168,12 +182,19 @@ static int solve_field(Grid_T *const grid)
       DDM_SCHUR_COMPLEMENT_OpenMP(omp parallel for)
       for (p = 0; p < npatch; ++p)
       {
-        Patch_T *patch = grid->patch[p];
+        Patch_T *patch    = grid->patch[p];
+        Solving_Man_T *SM = patch->solving_man;
+        char *field_name  = SM->field_name[SM->cf];
+        
         /* x = f'-E'y */
         compute_x(patch);
         free_E_Trans_prime(patch);/* free{E^T'} */
         update_field(patch);
         free_x(patch);/* free{x} */
+        
+        /* updating fields and their derivative and related */
+        if (SolveEqs->FieldUpdate)/* if defined any FieldUpdate function */
+          SolveEqs->FieldUpdate(patch,field_name);
       }
       free_y(grid);/* free{y} */
       
@@ -1053,8 +1074,10 @@ static void make_g(Grid_T *const grid)
 // patches use this patch to impose their boundary conditions.
 // this function provides these ingredients, among others.
 */
-static void preparing_ingredients(Grid_T *const grid)
+static void preparing_ingredients(Solve_Equations_T *const SolveEqs)
 {
+  Grid_T *const grid = get_grid_solve_equations(SolveEqs);
+  
   unsigned p;
   unsigned count = 0;
   
@@ -2092,7 +2115,7 @@ static Flag_T check_residual(const Grid_T *const grid,const double res_input)
     sqrs[p] = sqr1+sqr2;
     patch->solving_man->Frms = sqrt(sqrs[p]);
     printf("--------->%s = %g\n", patch->name,patch->solving_man->Frms);
-  
+    fflush(stdout);
   }
   
   for (p = 0; p < npatch; ++p)
@@ -2157,6 +2180,7 @@ static void solve_Bx_f(Patch_T *const patch)
 void test_solve_ddm_schur_complement(Grid_T *const grid)
 {
   int status;
+  Solve_Equations_T *SolveEqs = init_solve_equations(grid);
   char **field_name = 0;/* name of all fields to be solved */
   unsigned nf = 0;/* number of all fields */
   unsigned f;/* dummy index */
@@ -2164,7 +2188,7 @@ void test_solve_ddm_schur_complement(Grid_T *const grid)
   /* making up an example like the below */
   
   /* picking up labeling, mapping etc. */
-  preparing_ingredients(grid);
+  preparing_ingredients(SolveEqs);
   
   /* read order of fields to be solved from input */
   field_name = read_fields_in_order(&nf);
@@ -2178,9 +2202,9 @@ void test_solve_ddm_schur_complement(Grid_T *const grid)
     check_test_result(status);
   }
   
-  /* free names */
+  /* free */
   free_2d_mem(field_name,nf);
-
+  free_solve_equations(SolveEqs);
 }
 
 /* function for testing of Schur complement algorithm purposes.
@@ -2433,5 +2457,4 @@ static Matrix_T *making_J_Schur_Method(Grid_T *const grid)
   
   return J_Schur;
 }
-
 
