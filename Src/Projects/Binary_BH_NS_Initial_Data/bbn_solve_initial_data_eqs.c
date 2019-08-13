@@ -8,8 +8,6 @@
 /* solving initial data equations for the given grid */
 void bbn_solve_initial_data_eqs(Grid_T *const grid)
 {
-  UNUSED(grid);
-  
   pr_line_custom('='); 
   printf("Solving initial data equations for Binary BH and NS ...\n");
   
@@ -25,8 +23,14 @@ void bbn_solve_initial_data_eqs(Grid_T *const grid)
   initialize_solving_man(grid,field_eq,bc_eq,jacobian_field_eq,jacobian_bc_eq);
   
   /* solving equation(s) */
-  solve_eqs(grid);
-
+  Solve_Equations_T *SolveEqs = init_solve_equations(grid);
+  Grid_T *phi_grid = bbn_phi_grid(grid);/* phi needed to be solved only in NS */
+  add_special_grid_solve_equations(phi_grid,"phi",SolveEqs);
+  SolveEqs->FieldUpdate = bbn_SolveEqs_FieldUpdate;
+  solve_eqs(SolveEqs);
+  free_solve_equations(SolveEqs);
+  bbn_free_phi_grid(phi_grid);
+  
   /* free data base of equations */
   free_db_eqs(field_eq);
   free_db_eqs(bc_eq);
@@ -36,6 +40,135 @@ void bbn_solve_initial_data_eqs(Grid_T *const grid)
   printf("Solving initial data equations for Binary BH and NS ==> Done.\n");
   pr_clock();
   pr_line_custom('='); 
+}
+
+/* updating field after they were solved */
+void bbn_SolveEqs_FieldUpdate(Patch_T *const patch,const char *const name)
+{
+  if (!strcmp(name,"phi"))
+  {
+    bbn_update_derivative_phi(patch);
+  }
+  else if (!strcmp(name,"psi"))
+  {
+    bbn_update_derivative_psi(patch);
+  }
+  else if (!strcmp(name,"eta"))
+  {
+    bbn_update_derivative_eta(patch);
+  }
+  else if (!strcmp(name,"B0_U0"))
+  {
+    bbn_update_Beta_U0(patch);
+    bbn_update_derivative_Beta_U0(patch);
+    bbn_update_psi10A_UiUj(patch);
+  }
+  else if (!strcmp(name,"B0_U1"))
+  {
+    bbn_update_Beta_U1(patch);
+    bbn_update_derivative_Beta_U1(patch);
+    bbn_update_psi10A_UiUj(patch);
+  }
+  else if (!strcmp(name,"B0_U2"))
+  {
+    bbn_update_Beta_U2(patch);
+    bbn_update_derivative_Beta_U2(patch);
+    bbn_update_psi10A_UiUj(patch);
+  }
+  
+}
+
+/* at Euler's equation for phi field we need to confine the grid 
+// to only NS patches. this function collect all of NS patches and
+// make a new grid out of them and return it.
+// NOTE, WE ARE NOT ALLOWED TO ADD FIELD TO THIS GRID, generally
+// since, we want to keep track of the value of field, we do not
+// deep copy in structures.
+// ->return value: set of all NS patches as a separate grid */
+static Grid_T *bbn_phi_grid(Grid_T *const grid)
+{
+  Grid_T *phi_grid = 0;
+  
+  if (strcmp_i(grid->kind,"BBN_CubedSpherical_grid"))
+  {
+    phi_grid       = alloc_grid();
+    phi_grid->kind = grid->kind;
+    phi_grid->gn   = grid->gn;
+    /* NS at left composed of 6 cubed spherical + 1 Cartesian: */
+    phi_grid->np = 7;
+    bbn_phi_grid_CS(phi_grid,grid);
+  }
+  else
+    abortEr(NO_JOB);
+  
+  return phi_grid;
+}
+
+/* free only those thing we allocate for this particular grid */
+static void bbn_free_phi_grid(Grid_T *grid)
+{
+  if (!grid)
+    return;
+  
+  unsigned p;
+  
+  FOR_ALL_PATCHES(p,grid)
+  {
+    Patch_T *patch = grid->patch[p];
+    
+    free_patch_interface(patch);
+    free_patch_SolMan_jacobian(patch);
+    free_patch_SolMan_method_Schur(patch);
+    free(patch->solving_man);
+  }
+  free_2d_mem(grid->patch,grid->np);
+  free(grid);
+}
+
+/* confining the whole grid to only NS grid for phi in cubed spherical coords. */
+static void bbn_phi_grid_CS(Grid_T *const phi_grid,Grid_T *const grid)
+{
+  unsigned p,i;
+  
+  /* NS at left composed of 6 cubed spherical + 1 Cartesian,
+  // and 1 more to be Null = 8 */
+  phi_grid->patch = calloc(8,sizeof(*phi_grid->patch));
+  pointerEr(phi_grid->patch);
+  
+  i = 0;
+  FOR_ALL_PATCHES(p,grid)
+  {
+    Patch_T *patch = grid->patch[p];
+    
+    if (IsItNSPatch(patch))/* since we have only one NS we can use IsItNSPatch */
+    {
+      phi_grid->patch[i] = calloc(1,sizeof(*phi_grid->patch[i]));
+      pointerEr(phi_grid->patch[i]);
+      /* note, for the following all of the pointers inside the structures 
+      // will be equal, since this is not a deep copy. */
+      phi_grid->patch[i][0]    = patch[0];
+      phi_grid->patch[i]->pn   = i;
+      phi_grid->patch[i]->grid = phi_grid;
+      phi_grid->nn            += patch->nn;
+      /* the following needs to be constructed from scratch */
+      phi_grid->patch[i]->interface = 0;
+      phi_grid->patch[i]->solving_man = calloc(1,sizeof(*phi_grid->patch[i]->solving_man));
+      pointerEr(phi_grid->patch[i]->solving_man);
+      phi_grid->patch[i]->solving_man[0] = patch->solving_man[0];
+      phi_grid->patch[i]->solving_man->patch = phi_grid->patch[i];
+      phi_grid->patch[i]->solving_man->jacobian = 0;
+      phi_grid->patch[i]->solving_man->nj       = 0;
+      phi_grid->patch[i]->solving_man->method->Schur_Complement = 0;
+      phi_grid->patch[i]->solving_man->method->SchurC = 0;
+      
+      ++i;
+    }
+  }
+  
+  assert(i==7);
+  
+  /* no let's fill up phi_grid->patch[?]->interface */
+  realize_geometry(phi_grid);      
 }
 
 static void bbn_XCTS_fill_db_eqs(sEquation_T ***const field_eq, 
@@ -67,22 +200,23 @@ static void bbn_XCTS_fill_db_eqs(sEquation_T ***const field_eq,
   add_eq(jacobian_field_eq,jacobian_eq_eta,"jacobian_eq_eta");
   add_eq(jacobian_bc_eq   ,jacobian_bc_eta,"jacobian_bc_eta");
   
+  /* shift equations, remember we solve for B0_U? rather than Beta_U? */
   /* Beta_U0 equations */
-  add_eq(field_eq,eq_Beta_U0,"eq_Beta_U0");
-  add_eq(bc_eq   ,bc_Beta_U0,"bc_Beta_U0");
-  add_eq(jacobian_field_eq,jacobian_eq_Beta_U0,"jacobian_eq_Beta_U0");
-  add_eq(jacobian_bc_eq   ,jacobian_bc_Beta_U0,"jacobian_bc_Beta_U0");
+  add_eq(field_eq,eq_Beta_U0,"eq_B0_U0");
+  add_eq(bc_eq   ,bc_Beta_U0,"bc_B0_U0");
+  add_eq(jacobian_field_eq,jacobian_eq_Beta_U0,"jacobian_eq_B0_U0");
+  add_eq(jacobian_bc_eq   ,jacobian_bc_Beta_U0,"jacobian_bc_B0_U0");
   
   /* Beta_U1 equations */
-  add_eq(field_eq,eq_Beta_U1,"eq_Beta_U1");
-  add_eq(bc_eq   ,bc_Beta_U1,"bc_Beta_U1");
-  add_eq(jacobian_field_eq,jacobian_eq_Beta_U1,"jacobian_eq_Beta_U1");
-  add_eq(jacobian_bc_eq   ,jacobian_bc_Beta_U1,"jacobian_bc_Beta_U1");
+  add_eq(field_eq,eq_Beta_U1,"eq_B0_U1");
+  add_eq(bc_eq   ,bc_Beta_U1,"bc_B0_U1");
+  add_eq(jacobian_field_eq,jacobian_eq_Beta_U1,"jacobian_eq_B0_U1");
+  add_eq(jacobian_bc_eq   ,jacobian_bc_Beta_U1,"jacobian_bc_B0_U1");
   
   /* Beta_U2 equations */
-  add_eq(field_eq,eq_Beta_U2,"eq_Beta_U2");
-  add_eq(bc_eq   ,bc_Beta_U2,"bc_Beta_U2");
-  add_eq(jacobian_field_eq,jacobian_eq_Beta_U2,"jacobian_eq_Beta_U2");
-  add_eq(jacobian_bc_eq   ,jacobian_bc_Beta_U2,"jacobian_bc_Beta_U2");
+  add_eq(field_eq,eq_Beta_U2,"eq_B0_U2");
+  add_eq(bc_eq   ,bc_Beta_U2,"bc_B0_U2");
+  add_eq(jacobian_field_eq,jacobian_eq_Beta_U2,"jacobian_eq_B0_U2");
+  add_eq(jacobian_bc_eq   ,jacobian_bc_Beta_U2,"jacobian_bc_B0_U2");
   
 }
