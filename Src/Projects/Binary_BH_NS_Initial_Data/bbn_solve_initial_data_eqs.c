@@ -27,12 +27,31 @@ void bbn_solve_initial_data_eqs(Grid_T *const grid)
   SolveEqs->solving_order = GetParameterS_E("Solving_Order");
   SolveEqs->FieldUpdate  = bbn_SolveEqs_FieldUpdate;
   SolveEqs->SourceUpdate = bbn_SolveEqs_SourceUpdate;
+  SolveEqs->StopCriteria = bbn_stop_criteria;
   
   Grid_T *phi_grid = bbn_phi_grid(grid);/* phi needed to be solved only in NS */
   add_special_grid_solve_equations(phi_grid,"phi",SolveEqs);
   
-  solve_eqs(SolveEqs);
+  const int max_iter = GetParameterI_E("Solving_Max_Number_of_Iteration");
+  int iter = 0;
+  while (iter < max_iter)
+  {
+    /* some prints */
+    pr_line_custom('+');
+    printf("'%3d' Iteration(s) Over All Equations at a Fixed Resolution ...\n",iter);
+    printf("---> Solving Equations for field(s): %s\n",SolveEqs->solving_order);
+    
+    solve_eqs(SolveEqs);
+    
+    /* some prints */
+    printf("'%3d' Iteration(s) Over All Equations at a Fixed Resolution ==> Done.\n",iter);
+    pr_clock();
+    pr_line_custom('+'); 
+    
+    ++iter;
+  }
   
+  /* free SolveEqs and phi grid */
   free_solve_equations(SolveEqs);
   bbn_free_phi_grid(phi_grid);
   
@@ -45,6 +64,37 @@ void bbn_solve_initial_data_eqs(Grid_T *const grid)
   printf("Solving initial data equations for Binary BH and NS ==> Done.\n");
   pr_clock();
   pr_line_custom('='); 
+}
+
+/* stop criteria for solver, namely, if some conditions satisfied, 
+// it stops. one can give specific criteria according to the given field's name.
+// ->return value: 0 means stop, 1 means continue; */
+int bbn_stop_criteria(Grid_T *const grid,const char *const name)
+{
+  int stop = 1;
+  const double res_d    = GetParameterD_E("Solving_Residual");/* desired residual */
+  const int max_step    = GetParameterI_E("Solving_Max_Number_of_Solver_Step");
+  const double res_fac  = GetParameterD_E("Solving_Residual_Factor");
+  const unsigned npatch = grid->np;
+  unsigned p;
+  
+  for (p = 0; p < npatch; ++p)
+  {
+    Patch_T *patch  = grid->patch[p];
+    double res      = patch->solving_man->Frms;/* current residual */
+    double res_i    = patch->solving_man->settings->Frms_i;/* initial residual */
+    int solver_step = patch->solving_man->settings->solver_step;/* iteration number */
+    
+    if (LSS(res,res_fac*res_i) || LSS(res,res_d) || solver_step >= max_step )
+    {
+      stop = 0;/* it passes the criteria so stop */
+      break;
+    }
+  }
+  
+  UNUSED(name);
+  
+  return stop;
 }
 
 /* updating sources after field is solved */
