@@ -25,6 +25,30 @@ int solve_eqs(Solve_Equations_T *const SolveEqs)
   return EXIT_SUCCESS;
 }
 
+/* ->return value : get the double value of relaxation factor 
+// in relaxation scheme the default value is 1, 
+// which means no relaxation at all. */
+double get_relaxation_factor_solve_equations(Solve_Equations_T *const solve)
+{
+  const char *f_name = solve->field_name;
+  double factor = GetParameterD("Solving_Relaxation_Factor");/* relaxation factor */
+  char par[400] = {'\0'};
+  
+  if (factor == DBL_MAX)/* if no such parameter defined */
+    factor = 1;
+  
+  if (f_name)
+  {
+    
+    sprintf(par,"Solving_Relaxation_Factor_%s",f_name);
+    double factor2 = GetParameterD(par);
+    if (factor2 != DBL_MAX)
+      factor = factor2;
+  }
+  
+  return factor;
+}
+
 /* initialize Solve Equations struct */
 Solve_Equations_T *init_solve_equations(Grid_T *const grid)
 {

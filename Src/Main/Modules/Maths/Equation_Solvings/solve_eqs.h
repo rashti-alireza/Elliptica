@@ -11,3 +11,4 @@ Solve_Equations_T *init_solve_equations(Grid_T *const grid);
 void free_solve_equations(Solve_Equations_T *solve);
 Grid_T *get_grid_solve_equations(Solve_Equations_T *const solve);
 void add_special_grid_solve_equations(Grid_T *const grid,const char *const name, Solve_Equations_T *const solve);
+double get_relaxation_factor_solve_equations(Solve_Equations_T *const solve);

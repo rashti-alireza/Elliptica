@@ -1,15 +1,23 @@
-/* solve equation struc pass to the solver.
+/* solve equation struct that is passed to the solver.
 // it may contain various functions and parameters to control and
 // execute different tasks. */
 typedef struct SOLVE_EQUATIONS_T
 {
-  Grid_T *grid;/* original grid(default grid), 
-               // which is the whole physical domain */
+  Grid_T *grid;/* default grid, if no specific grid for particular
+               // field has been specified, it uses this grid which
+               // is given at the time of initialization. */
   const char *field_name;/* the name of the field that is being solved now */
   const char *solving_order;/* field name separated with comma to be solved,
                       // e.g. "phi,psi' means solve for first phi 
                       // and then psi. */
-  
+                      
+  double relaxation_factor;/* in relaxation scheme we have :
+                           // X_new = A*X'+(A-1)X_old, where
+                           // A is the relaxation_factor, 
+                           // X' is the solution found by the solver. 
+                           // this factor can be set for each field separately
+                           // and if no info is given, it is equal to 1, which
+                           // means no relaxation. */
   /* some fields need their own grid, called sgrid (Special GRID) here. 
   // e.g. phi in Euler's equations is solved only in NS not the whole grid */
   struct
@@ -32,6 +40,7 @@ typedef struct SOLVE_EQUATIONS_T
 
 int solve_eqs(Solve_Equations_T *const SolveEqs);
 void free_solve_equations(Solve_Equations_T *solve);
+double get_relaxation_factor_solve_equations(Solve_Equations_T *const solve);
 Solve_Equations_T *init_solve_equations(Grid_T *const grid);
 Grid_T *get_grid_solve_equations(Solve_Equations_T *const solve);
 void add_special_grid_solve_equations(Grid_T *const grid,const char *const name, Solve_Equations_T *const solve);
