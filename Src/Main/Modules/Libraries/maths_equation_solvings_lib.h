@@ -36,6 +36,12 @@ typedef struct SOLVE_EQUATIONS_T
   // note, if it has not been assigned it won't be executed.*/
   void (*SourceUpdate)(Grid_T *const grid,const char *const name);
   
+  /* this is the function specifies the stop criteria of the solver
+  // if 1 it means continue, 0 means stop. if no function defined 
+  // the default function is made using 
+  // Solving_Residual and Solving_Max_Number_of_Solver_Step parameter */
+  int (*StopCriteria)(Grid_T *const grid,const char *const name);
+  
 }Solve_Equations_T;
 
 int solve_eqs(Solve_Equations_T *const SolveEqs);

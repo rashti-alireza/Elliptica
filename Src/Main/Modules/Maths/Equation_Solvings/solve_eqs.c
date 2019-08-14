@@ -25,6 +25,33 @@ int solve_eqs(Solve_Equations_T *const SolveEqs)
   return EXIT_SUCCESS;
 }
 
+// ->return value: 0 means stop, 1 means continue; */
+int default_stop_criteria_solve_equations(Grid_T *const grid,const char *const name)
+{
+  int stop = 1;
+  const double res_d    = GetParameterD_E("Solving_Residual");/* desired residual */
+  const int max_step    = GetParameterI_E("Solving_Max_Number_of_Solver_Step");
+  const unsigned npatch = grid->np;
+  unsigned p;
+  
+  for (p = 0; p < npatch; ++p)
+  {
+    Patch_T *patch  = grid->patch[p];
+    double res      = patch->solving_man->Frms;/* current residual */
+    int solver_step = patch->solving_man->settings->solver_step;/* iteration number */
+
+    if ( LSS(res,res_d) || solver_step >= max_step )
+    {
+      stop = 0;/* it passes the criteria so stop */
+      break;
+    }
+  }
+
+  UNUSED(name);
+
+  return stop;
+}
+
 /* ->return value : get the double value of relaxation factor 
 // in relaxation scheme the default value is 1, 
 // which means no relaxation at all. */
@@ -54,7 +81,9 @@ Solve_Equations_T *init_solve_equations(Grid_T *const grid)
   Solve_Equations_T *solve = calloc(1,sizeof(*solve));
   pointerEr(solve);
   
-  solve->grid    = grid;
+  solve->grid         = grid;
+  solve->StopCriteria = default_stop_criteria_solve_equations; 
+  
   return solve;
 }
 
