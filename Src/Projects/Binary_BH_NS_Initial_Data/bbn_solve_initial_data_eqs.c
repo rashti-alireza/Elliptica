@@ -19,7 +19,7 @@ void bbn_solve_initial_data_eqs(Grid_T *const grid)
   /* filling db equations of XCTS */
   bbn_XCTS_fill_db_eqs(&field_eq,&bc_eq,&jacobian_field_eq,&jacobian_bc_eq);
   
-  /* populating solution managing */
+  /* populating solution managment */
   initialize_solving_man(grid,field_eq,bc_eq,jacobian_field_eq,jacobian_bc_eq);
   
   /* solving equation(s) */

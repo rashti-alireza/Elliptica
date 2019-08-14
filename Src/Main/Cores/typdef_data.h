@@ -523,7 +523,7 @@ typedef struct PATCH_T
                  // to field phi. note: Ind is macro.
                  // one can access to values of field on this 
                  // patch like pool[Ind("phi_f")]->v */
-  Solving_Man_T *solving_man;/* solving managing */
+  Solving_Man_T *solving_man;/* solving management */
   unsigned innerB:1;/* if this patch has inner boundary 1 otherwise 0 */
   unsigned outerB:1;/* if this patch has outer boundary 1 otherwise 0 */
   unsigned is_a_closed: 1;/* if coordinate a is periodic or closed 1, otherwise 0 */
