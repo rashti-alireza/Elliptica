@@ -8,5 +8,6 @@ static Grid_T *bbn_phi_grid(Grid_T *const grid);
 static void bbn_phi_grid_CS(Grid_T *const phi_grid,Grid_T *const grid);
 void bbn_SolveEqs_FieldUpdate(Patch_T *const patch,const char *const name);
 static void bbn_free_phi_grid(Grid_T *grid);
+void bbn_SolveEqs_SourceUpdate(Grid_T *const grid,const char *const name);
 
                           

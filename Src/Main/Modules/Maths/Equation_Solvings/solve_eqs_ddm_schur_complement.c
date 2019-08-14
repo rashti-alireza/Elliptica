@@ -47,7 +47,7 @@ int ddm_schur_complement(Solve_Equations_T *const SolveEqs)
   printf("Solving the Equations ...\n\n");
   
   /* read order of fields to be solved from input */
-  field_name = read_fields_in_order(&nf);
+  field_name = read_fields_in_order(SolveEqs,&nf);
   
   /* solving fields in order */
   for (f = 0; f < nf; ++f)
@@ -70,6 +70,10 @@ int ddm_schur_complement(Solve_Equations_T *const SolveEqs)
     /* solve field[f] on grid_target */
     solve_field(SolveEqs);
     
+    /* updating source if any has been set */
+    if (SolveEqs->SourceUpdate)
+      SolveEqs->SourceUpdate(grid,field_name[f]);
+      
     printf("\n");
     pr_half_line_custom('-');
     printf("> Solving Equation for field: \"%s\" ==> Done.\n",field_name[f]);
@@ -1626,11 +1630,10 @@ static void make_map_and_inv(Patch_T *const patch)
 /* read order of fields to be solved from inout file.
 // ->return value: name and number of fields.
 */
-static char **read_fields_in_order(unsigned *const nf)
+static char **read_fields_in_order(Solve_Equations_T *const SolveEqs,unsigned *const nf)
 {
   char COMMA = ',';
-  const char *par_f = GetParameterS_E("Solving_Order");
-  char *par;
+  const char *par_f = SolveEqs->solving_order;  char *par;
   char **field_name = 0;
   char *tok,*save = 0;
   
@@ -2081,7 +2084,7 @@ static Flag_T check_residual_single_patch(const Patch_T *const patch,const doubl
   
   printf("\nResidual:\n");
   patch->solving_man->Frms = sqrt(sqr);
-  printf("-------->%s = %g\n", patch->name,patch->solving_man->Frms);
+  printf("-------->%s = %e\n", patch->name,patch->solving_man->Frms);
   
   if (GRT(patch->solving_man->Frms,res_input))
     flg = NO;
@@ -2114,7 +2117,7 @@ static Flag_T check_residual(const Grid_T *const grid,const double res_input)
     double sqr2 = dot(S->NI,g,g);
     sqrs[p] = sqr1+sqr2;
     patch->solving_man->Frms = sqrt(sqrs[p]);
-    printf("--------->%s = %g\n", patch->name,patch->solving_man->Frms);
+    printf("--------->%s = %e\n", patch->name,patch->solving_man->Frms);
     fflush(stdout);
   }
   
@@ -2189,9 +2192,10 @@ void test_solve_ddm_schur_complement(Grid_T *const grid)
   
   /* picking up labeling, mapping etc. */
   preparing_ingredients(SolveEqs);
-  
+ 
   /* read order of fields to be solved from input */
-  field_name = read_fields_in_order(&nf);
+  SolveEqs->solving_order = GetParameterS_E("Solving_Order");
+  field_name = read_fields_in_order(SolveEqs,&nf);
   /* solving fields in order */
   for (f = 0; f < nf; ++f)
   {

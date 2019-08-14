@@ -24,10 +24,15 @@ void bbn_solve_initial_data_eqs(Grid_T *const grid)
   
   /* solving equation(s) */
   Solve_Equations_T *SolveEqs = init_solve_equations(grid);
+  SolveEqs->solving_order = GetParameterS_E("Solving_Order");
+  SolveEqs->FieldUpdate  = bbn_SolveEqs_FieldUpdate;
+  SolveEqs->SourceUpdate = bbn_SolveEqs_SourceUpdate;
+  
   Grid_T *phi_grid = bbn_phi_grid(grid);/* phi needed to be solved only in NS */
   add_special_grid_solve_equations(phi_grid,"phi",SolveEqs);
-  SolveEqs->FieldUpdate = bbn_SolveEqs_FieldUpdate;
+  
   solve_eqs(SolveEqs);
+  
   free_solve_equations(SolveEqs);
   bbn_free_phi_grid(phi_grid);
   
@@ -40,6 +45,15 @@ void bbn_solve_initial_data_eqs(Grid_T *const grid)
   printf("Solving initial data equations for Binary BH and NS ==> Done.\n");
   pr_clock();
   pr_line_custom('='); 
+}
+
+/* updating sources after field is solved */
+void bbn_SolveEqs_SourceUpdate(Grid_T *const grid,const char *const name)
+{
+  if (!strcmp(name,"phi"))
+  {
+    Tij_IF_CTS_psi6Sources(grid);
+  }
 }
 
 /* updating field after they were solved */

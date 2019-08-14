@@ -5,7 +5,10 @@ typedef struct SOLVE_EQUATIONS_T
 {
   Grid_T *grid;/* original grid(default grid), 
                // which is the whole physical domain */
-  char *field_name;/* the name of the field that is being solved now */
+  const char *field_name;/* the name of the field that is being solved now */
+  const char *solving_order;/* field name separated with comma to be solved,
+                      // e.g. "phi,psi' means solve for first phi 
+                      // and then psi. */
   
   /* some fields need their own grid, called sgrid (Special GRID) here. 
   // e.g. phi in Euler's equations is solved only in NS not the whole grid */
@@ -15,7 +18,15 @@ typedef struct SOLVE_EQUATIONS_T
     Grid_T *sgrid;/* e.g. the grid composed of NS patches for phi */
   }**Sgrid;/* the end of this struct determined by Null */
   
-  void (*FieldUpdate)(Patch_T *const patch,const char *const name);/* instructions for updating field and its derivative */
+  /* instructions for updating field and its derivative according to the
+  // field name particulare task for updating is done. note, if 
+  // it has not been assigned it won't be execute. */
+  void (*FieldUpdate)(Patch_T *const patch,const char *const name);
+  /* instructions for updating the sources after the field has been 
+  // solved on the whole grid and its derivative according to the given
+  // name of the field. 
+  // note, if it has not been assigned it won't be executed.*/
+  void (*SourceUpdate)(Grid_T *const grid,const char *const name);
   
 }Solve_Equations_T;
 

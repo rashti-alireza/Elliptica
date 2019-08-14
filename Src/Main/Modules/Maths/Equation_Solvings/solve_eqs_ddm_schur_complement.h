@@ -29,7 +29,7 @@ static void preparing_ingredients(Solve_Equations_T *const SolveEqs);
 static void make_map_and_inv(Patch_T *const patch);
 static Flag_T check_residual(const Grid_T *const grid,const double res_input);
 static void make_f(Patch_T *const patch);
-static char **read_fields_in_order(unsigned *const nf);
+static char **read_fields_in_order(Solve_Equations_T *const SolveEqs,unsigned *const nf);
 static int solve_field(Solve_Equations_T *const SolveEqs);
 static void set_cf(Grid_T *const grid,const char *const field_name);
 static void f_in_equation_part(Patch_T *const patch);

@@ -23,6 +23,8 @@ int Laplace_Inhom_solve_eq(Grid_T *const grid)
   initialize_solving_man(grid,field_eq,bc_eq,jacobian_field_eq,jacobian_bc_eq);/* populating solution managing */
   enable_fields(grid);/* allocating required fields in patch->pool */
   Laplace_Inhom_initial_data_alpha(grid);/* initial data for field alpha */
+  
+  SolveEqs->solving_order = GetParameterS_E("Solving_Order");
   solve_eqs(SolveEqs);/* solving equation(s) */
   
   /* freeing */
