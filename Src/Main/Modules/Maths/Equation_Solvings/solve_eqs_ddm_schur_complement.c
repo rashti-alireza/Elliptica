@@ -58,11 +58,15 @@ int ddm_schur_complement(Solve_Equations_T *const SolveEqs)
     
     /* set the name of the field we are solving it */
     SolveEqs->field_name = field_name[f];
-    /* having set the field name, find the grid we are solving this field on it */
+    
+    /* get the computational grid */
     grid = get_grid_solve_equations(SolveEqs);
     
     /* set solving_man->cf */
-    set_cf(grid,field_name[f]);
+    set_solving_man_cf(SolveEqs);
+    
+    /* set solving_man->settings */
+    set_solving_man_settings(SolveEqs);
     
     /* picking up labeling, mapping etc. */
     preparing_ingredients(SolveEqs);
@@ -222,6 +226,7 @@ static void update_field(Patch_T *const patch)
   const unsigned cf = patch->solving_man->cf;
   const char *const field_name = patch->solving_man->field_name[cf];
   Field_T *const f = patch->pool[Ind(field_name)];
+  const double lambda = patch->solving_man->settings->relaxation_factor;
   const double *const u_old = f->v;
   double *const u_new = f->v;
   unsigned s,s_node,i,i_node;
@@ -230,12 +235,12 @@ static void update_field(Patch_T *const patch)
   for (s = 0; s < NS; ++s)
   {
     s_node = inv[s];
-    u_new[s_node] = u_old[s_node]-x[s];
+    u_new[s_node] = u_old[s_node]-lambda*x[s];
   }
   for (i = 0; i < NI; ++i)
   {
     i_node = Iinv[i];
-    u_new[i_node] = u_old[i_node]-y[i];
+    u_new[i_node] = u_old[i_node]-lambda*y[i];
   }
   
 }
@@ -250,6 +255,7 @@ static void update_field_single_patch(Patch_T *const patch)
   const unsigned cf = patch->solving_man->cf;
   const char *const field_name = patch->solving_man->field_name[cf];
   Field_T *const f = patch->pool[Ind(field_name)];
+  const double lambda = patch->solving_man->settings->relaxation_factor;
   const double *const u_old = f->v;
   double *const u_new = f->v;
   unsigned s,s_node;
@@ -258,7 +264,7 @@ static void update_field_single_patch(Patch_T *const patch)
   for (s = 0; s < NS; ++s)
   {
     s_node = inv[s];
-    u_new[s_node] = u_old[s_node]-x[s];
+    u_new[s_node] = u_old[s_node]-lambda*x[s];
   }
 }
 
@@ -1633,7 +1639,8 @@ static void make_map_and_inv(Patch_T *const patch)
 static char **read_fields_in_order(Solve_Equations_T *const SolveEqs,unsigned *const nf)
 {
   char COMMA = ',';
-  const char *par_f = SolveEqs->solving_order;  char *par;
+  const char *par_f = SolveEqs->solving_order;  
+  char *par;
   char **field_name = 0;
   char *tok,*save = 0;
   
@@ -1653,9 +1660,14 @@ static char **read_fields_in_order(Solve_Equations_T *const SolveEqs,unsigned *c
   return field_name;
 }
 
-static void set_cf(Grid_T *const grid,const char *const field_name)
+/* set solving_man->cf, cf stands for current field */
+static void set_solving_man_cf(Solve_Equations_T *const SolveEqs)
 {
+  Grid_T *const grid = get_grid_solve_equations(SolveEqs);
+  const char *const field_name = SolveEqs->field_name;
   unsigned p;
+  
+  assert(field_name);
     
   for (p = 0; p < grid->np; ++p)
   {
@@ -1663,6 +1675,23 @@ static void set_cf(Grid_T *const grid,const char *const field_name)
     char **fields = patch->solving_man->field_name;
     unsigned nf = patch->solving_man->nf;
     patch->solving_man->cf = find_index_string(fields,nf,field_name);
+  }
+}
+
+/* set solving_man->settings */
+static void set_solving_man_settings(Solve_Equations_T *const SolveEqs)
+{
+  Grid_T *const grid = get_grid_solve_equations(SolveEqs);
+  unsigned p;
+    
+  for (p = 0; p < grid->np; ++p)
+  {
+    Patch_T *patch = grid->patch[p];
+    
+    /* relaxation factor: */
+    patch->solving_man->settings->relaxation_factor = 
+      get_relaxation_factor_solve_equations(SolveEqs);
+      
   }
 }
 
@@ -2190,17 +2219,22 @@ void test_solve_ddm_schur_complement(Grid_T *const grid)
   
   /* making up an example like the below */
   
-  /* picking up labeling, mapping etc. */
-  preparing_ingredients(SolveEqs);
- 
   /* read order of fields to be solved from input */
   SolveEqs->solving_order = GetParameterS_E("Solving_Order");
   field_name = read_fields_in_order(SolveEqs,&nf);
+  
+  /* picking up labeling, mapping etc. */
+  preparing_ingredients(SolveEqs);
+  
   /* solving fields in order */
   for (f = 0; f < nf; ++f)
   {
     printf("Testing Schur Complement Method:\n");
-    set_cf(grid,field_name[f]);/* solving_man->cf */
+    
+    /* set the name of the field we are solving it */
+    SolveEqs->field_name = field_name[f];
+
+    set_solving_man_cf(SolveEqs);/* solving_man->cf */
     status = solve_field_test(grid);/* solve field[f] */
     printf("Testing Schur Complement for %s: ",field_name[f]);
     check_test_result(status);
