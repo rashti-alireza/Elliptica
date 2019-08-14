@@ -39,7 +39,6 @@ double get_relaxation_factor_solve_equations(Solve_Equations_T *const solve)
   
   if (f_name)
   {
-    
     sprintf(par,"Solving_Relaxation_Factor_%s",f_name);
     double factor2 = GetParameterD(par);
     if (factor2 != DBL_MAX)
