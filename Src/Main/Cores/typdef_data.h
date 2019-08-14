@@ -453,8 +453,8 @@ typedef struct SOLVING_MAN_T
   char **field_name;/* field to be solved */
   unsigned nf;/* number of fields */
   unsigned cf;/* current field; index of the field the is being solved */
-  double Frms;/* the residual(rms) of F in, Jx=-F for this field. 
-              // note: it's initialized to DBL_MAX. */
+  double Frms;/* the current residual(rms) of F in, Jx=-F for this field 
+              // at this patch. note: it's initialized to DBL_MAX. */
   fEquation_T **field_eq;/* the equation needed to be satisfied */
   fEquation_T **bc_eq;/* the B.C. needed to be satisfied */
   fEquation_T **jacobian_field_eq;/* jacobian for field equations */
@@ -476,6 +476,9 @@ typedef struct SOLVING_MAN_T
   struct/* settings and options for solver */
   {
     double relaxation_factor;/* relaxation factor in relaxation scheme */
+    double Frms_i;/* the very beginning Frms (see Frms above for definition)
+                 // which this field has at the its entrance to the solver. */
+    int solver_step;/* number of steps have been taken by solver till now. starting from 0 */
   }settings[1];
 }Solving_Man_T;
 
