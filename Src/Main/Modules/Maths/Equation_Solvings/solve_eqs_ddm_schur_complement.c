@@ -143,7 +143,7 @@ static int solve_field(Solve_Equations_T *const SolveEqs)
   }
   else
   {
-    while (IsItSolved == NO && iter < NumIter)
+    while (IsItSolved == NO && iter <= NumIter)
     {
       const unsigned npatch = grid->np;
       double *g_prime = 0;
@@ -160,7 +160,7 @@ static int solve_field(Solve_Equations_T *const SolveEqs)
       make_g(grid);/* free pg */
       
       IsItSolved = check_residual(grid,res_input);
-      if (IsItSolved == YES)
+      if (IsItSolved == YES || iter == NumIter)
       {
         free_schur_f_g(grid);/* free {f,g} */
         break;
@@ -2134,7 +2134,6 @@ static Flag_T check_residual(const Grid_T *const grid,const double res_input)
   Flag_T flg = YES;
   unsigned p;
   
-  printf("\nResiduals:\n");
   DDM_SCHUR_COMPLEMENT_OpenMP(omp parallel for)
   for (p = 0; p < npatch; ++p)
   {
@@ -2146,6 +2145,13 @@ static Flag_T check_residual(const Grid_T *const grid,const double res_input)
     double sqr2 = dot(S->NI,g,g);
     sqrs[p] = sqr1+sqr2;
     patch->solving_man->Frms = sqrt(sqrs[p]);
+  }
+  
+  /* print residual */
+  printf("\nResiduals:\n");
+  for (p = 0; p < npatch; ++p)
+  {
+    Patch_T *patch = grid->patch[p];
     printf("--------->%s = %e\n", patch->name,patch->solving_man->Frms);
     fflush(stdout);
   }
