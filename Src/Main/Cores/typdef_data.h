@@ -473,6 +473,10 @@ typedef struct SOLVING_MAN_T
     DDM_Schur_Complement_T *SchurC;
   }method[1];
   
+  struct/* settings and options for solver */
+  {
+    double relaxation_factor;/* relaxation factor in relaxation scheme */
+  }settings[1];
 }Solving_Man_T;
 
 /* patch */
