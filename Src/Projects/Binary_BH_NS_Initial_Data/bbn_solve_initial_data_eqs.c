@@ -74,6 +74,7 @@ int bbn_stop_criteria(Grid_T *const grid,const char *const name)
   int stop = 1;
   int stop_max = 1;
   int stop_res = 0;
+  int stop_backtrack = 1;
   const double res_d    = GetParameterD_E("Solving_Residual");/* desired residual */
   const int max_step    = GetParameterI_E("Solving_Max_Number_of_Solver_Step");
   const double res_fac  = GetParameterD_E("Solving_Residual_Factor");
@@ -84,6 +85,7 @@ int bbn_stop_criteria(Grid_T *const grid,const char *const name)
   {
     Patch_T *patch  = grid->patch[p];
     double res      = patch->solving_man->Frms;/* current residual */
+    double res_last;
     double res_i    = patch->solving_man->settings->Frms_i;/* initial residual */
     int solver_step = patch->solving_man->settings->solver_step;/* iteration number */
     
@@ -94,12 +96,32 @@ int bbn_stop_criteria(Grid_T *const grid,const char *const name)
       break;
     }
     
+    /* if residual increased stop */
+    if (solver_step >= 1)
+    {
+      res_last = patch->solving_man->settings->HFrms[solver_step-1];
+      if (res > res_last)
+      {
+        stop_backtrack = 0;
+        break;
+      }
+    }
+    
     /* since one of them is enough to continue */
     if (res > res_d && res > res_fac*res_i)
     {
       stop_res = 1;
       break;
     }
+    
+  }
+  
+  if (!stop_backtrack)
+  {
+    printf("%s equation:\n"
+           "---> Newton solver increased the residual so existing ...\n",name);
+    fflush(stdout);
+    return stop_backtrack;
   }
   
   if (!stop_max)
