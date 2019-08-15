@@ -81,6 +81,16 @@ int bbn_stop_criteria(Grid_T *const grid,const char *const name)
   const unsigned npatch = grid->np;
   unsigned p;
   
+  /* if no step should be taken */
+  if (max_step  == 0)
+  {
+    printf("%s equation:\n"
+           "---> Newton solver reached maximum step number so existing ...\n",name);
+    fflush(stdout);
+    return 0;
+  }
+    
+  
   /* NOTE: due to the break command, the order of ifs are important */
   for (p = 0; p < npatch; ++p)
   {
@@ -88,13 +98,6 @@ int bbn_stop_criteria(Grid_T *const grid,const char *const name)
     double res      = patch->solving_man->Frms;/* current residual */
     double res_last;
     int solver_step = patch->solving_man->settings->solver_step;/* iteration number */
-    
-    /* note: all patches have same solver_step */
-    if (solver_step >= max_step)
-    {
-      stop_max = 0;
-      break;
-    }
     
     /* if this is the very first step, don't check the following */
     if (solver_step  == 0)
@@ -105,6 +108,13 @@ int bbn_stop_criteria(Grid_T *const grid,const char *const name)
     if (res > res_last)
     {
       stop_backtrack = 0;
+      break;
+    }
+    
+    /* note: all patches have same solver_step */
+    if (solver_step >= max_step)
+    {
+      stop_max = 0;
       break;
     }
   }
