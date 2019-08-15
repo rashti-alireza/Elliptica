@@ -81,12 +81,12 @@ int bbn_stop_criteria(Grid_T *const grid,const char *const name)
   const unsigned npatch = grid->np;
   unsigned p;
   
+  /* NOTE: due to the break command, the order of ifs are important */
   for (p = 0; p < npatch; ++p)
   {
     Patch_T *patch  = grid->patch[p];
     double res      = patch->solving_man->Frms;/* current residual */
     double res_last;
-    double res_i    = patch->solving_man->settings->Frms_i;/* initial residual */
     int solver_step = patch->solving_man->settings->solver_step;/* iteration number */
     
     /* note: all patches have same solver_step */
@@ -96,31 +96,26 @@ int bbn_stop_criteria(Grid_T *const grid,const char *const name)
       break;
     }
     
-    /* if residual increased stop */
-    if (solver_step >= 1)
-    {
-      res_last = patch->solving_man->settings->HFrms[solver_step-1];
-      if (res > res_last)
-      {
-        stop_backtrack = 0;
-        break;
-      }
-    }
+    /* if this is the very first step, don't check the following */
+    if (solver_step  == 0)
+      continue;
     
-    /* since one of them is enough to continue */
-    if (res > res_d && res > res_fac*res_i)
+    /* if residual increased stop */
+    res_last = patch->solving_man->settings->HFrms[solver_step-1];
+    if (res > res_last)
     {
-      stop_res = 1;
+      stop_backtrack = 0;
       break;
     }
-    
   }
   
   if (!stop_backtrack)
   {
+    /* get the value of last solution */
     printf("%s equation:\n"
-           "---> Newton solver increased the residual so existing ...\n",name);
+           "---> Newton solver increased the residual so backtrack and exist ...\n",name);
     fflush(stdout);
+    bbn_backtrack(grid,name);
     return stop_backtrack;
   }
   
@@ -132,6 +127,21 @@ int bbn_stop_criteria(Grid_T *const grid,const char *const name)
     return stop_max;
   }
   
+  for (p = 0; p < npatch; ++p)
+  {
+    Patch_T *patch  = grid->patch[p];
+    double res      = patch->solving_man->Frms;/* current residual */
+    double res_i    = patch->solving_man->settings->Frms_i;/* initial residual */
+    
+    /* since one of them is enough to continue */
+    if (res > res_d && res > res_fac*res_i)
+    {
+      stop_res = 1;
+      break;
+    }
+    
+  }
+  
   if (!stop_res)  
   {
     printf("%s equation:\n"
@@ -141,6 +151,30 @@ int bbn_stop_criteria(Grid_T *const grid,const char *const name)
   }
   
   return stop;
+}
+
+/* backtrack to restore to the last solution */
+static void bbn_backtrack(Grid_T *const grid,const char *const name)
+{
+  const unsigned npatch = grid->np;
+  unsigned p;
+  
+  OpenMP_Patch_Pragma(omp parallel for)
+  for (p = 0; p < npatch; ++p)
+  {
+    Patch_T *patch  = grid->patch[p];
+    Field_T *f      = patch->pool[Ind(name)];
+    double *v = f->v;
+    const double *last_sol = patch->solving_man->settings->last_sol;
+    unsigned ijk;
+    
+    free_coeffs(f);
+    for(ijk = 0; ijk < patch->nn; ++ijk)
+      v[ijk] = last_sol[ijk];
+    
+    bbn_SolveEqs_FieldUpdate(patch,name);
+  }
+  
 }
 
 /* updating sources after field is solved */

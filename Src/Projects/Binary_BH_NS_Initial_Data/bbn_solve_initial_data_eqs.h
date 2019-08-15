@@ -10,6 +10,7 @@ void bbn_SolveEqs_FieldUpdate(Patch_T *const patch,const char *const name);
 static void bbn_free_phi_grid(Grid_T *grid);
 void bbn_SolveEqs_SourceUpdate(Grid_T *const grid,const char *const name);
 int bbn_stop_criteria(Grid_T *const grid,const char *const name);
+static void bbn_backtrack(Grid_T *const grid,const char *const name);
 
 
                           
