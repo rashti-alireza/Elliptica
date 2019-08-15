@@ -278,6 +278,8 @@ static void update_field(Patch_T *const patch)
     u_bckup[i_node] = u_old[i_node];
     u_new[i_node]   = u_old[i_node]-lambda*y[i];
   }
+  _free(patch->solving_man->settings->last_sol);
+  patch->solving_man->settings->last_sol = 0;
   patch->solving_man->settings->last_sol = u_bckup;
   
 }
@@ -305,6 +307,8 @@ static void update_field_single_patch(Patch_T *const patch)
     u_bckup[s_node] = u_old[s_node];
     u_new[s_node]   = u_old[s_node]-lambda*x[s];
   }
+  _free(patch->solving_man->settings->last_sol);
+  patch->solving_man->settings->last_sol = 0;
   patch->solving_man->settings->last_sol = u_bckup;
 }
 
