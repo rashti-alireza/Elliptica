@@ -76,7 +76,7 @@ int bbn_stop_criteria(Grid_T *const grid,const char *const name)
   int stop_res = 0;
   int stop_backtrack = 1;
   const double res_d    = GetParameterD_E("Solving_Residual");/* desired residual */
-  const int max_step    = GetParameterI_E("Solving_Max_Number_of_Solver_Step");
+  const int max_step    = GetParameterI_E("Solving_Max_Number_of_Newton_Step");
   const double res_fac  = GetParameterD_E("Solving_Residual_Factor");
   const unsigned npatch = grid->np;
   unsigned p;
