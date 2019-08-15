@@ -328,6 +328,7 @@ static void set_df_dn_and_pair(Grid_T *const grid)
 static void set_one_Dirichlet_BC(Interface_T **const face)
 { 
   const Patch_T *const patch = face[0]->patch;
+  const unsigned np = patch->grid->np;
   Subf_T **chain = 0, *ring;
   unsigned nc;/* number of chain */
   SubFace_T *subf;
@@ -416,7 +417,7 @@ static void set_one_Dirichlet_BC(Interface_T **const face)
   if (chain != 0)
     free_2d(chain);
   
-  if (flg != READY)/* since it has a touching subface and no Drichlete BC */
+  if (flg != READY && np > 1)/* since it has a touching subface and no Drichlete BC */
     abortEr_s("Drichlet Boundary Condition cannot be set for patch %s .\n",patch->name);
     
 }
