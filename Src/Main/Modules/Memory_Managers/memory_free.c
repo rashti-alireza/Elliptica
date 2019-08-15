@@ -345,6 +345,9 @@ void free_patch_SolMan_jacobian(Patch_T *const patch)
 void free_patch_SolMan_method_Schur(Patch_T *const patch)
 {
   DDM_Schur_Complement_T *s = patch->solving_man->method->SchurC;
+  if (!s)
+    return;
+    
   Sewing_T **se             = s->sewing;
   Pair_T **p                = 0;
   unsigned i,j;
