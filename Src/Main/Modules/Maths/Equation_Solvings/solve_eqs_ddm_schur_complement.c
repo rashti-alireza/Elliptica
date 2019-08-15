@@ -141,11 +141,9 @@ static int solve_field(Solve_Equations_T *const SolveEqs)
       solve_Bx_f(patch);/* solve Bx=f, free{B,f} */
       update_field_single_patch(patch);
       free(Schur->x);/* free{x} */
-      free(Schur->f);/* free{f} */
       /* updating fields and their derivative and related */
       if (SolveEqs->FieldUpdate)/* if any FieldUpdate set */
         SolveEqs->FieldUpdate(patch,SolveEqs->field_name);
-      
       
       pr_line_custom('~');
       printf("|---> %s equation:\n",SolveEqs->field_name);
