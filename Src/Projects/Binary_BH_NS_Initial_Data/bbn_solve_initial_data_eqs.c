@@ -37,19 +37,19 @@ void bbn_solve_initial_data_eqs(Grid_T *const grid)
   while (iter < max_iter)
   {
     /* some prints */
-    pr_line_custom('+');
-    printf("'%3d' Iteration(s) Over All Equations at a Fixed Resolution ...\n",iter);
-    printf("---> Solving Equations for field(s): %s\n",SolveEqs->solving_order);
+    pr_line_custom('=');
+    printf("Iteration %d For Solving XCTS Equations at a Fixed Resolution ...\n",iter);
+    printf("        |---> %s Equations ...\n",SolveEqs->solving_order);
     
     solve_eqs(SolveEqs);
     
     /* some prints */
-    printf("'%3d' Iteration(s) Over All Equations at a Fixed Resolution ==> Done.\n",iter);
+    printf("Iteration %d For Solving XCTS Equations at a Fixed Resolution ==> Done.\n",iter);
     pr_clock();
-    pr_line_custom('+'); 
     
     ++iter;
   }
+  pr_line_custom('=');
   
   /* free SolveEqs and phi grid */
   free_solve_equations(SolveEqs);
@@ -68,10 +68,12 @@ void bbn_solve_initial_data_eqs(Grid_T *const grid)
 
 /* stop criteria for solver, namely, if some conditions satisfied, 
 // it stops. one can give specific criteria according to the given field's name.
-// ->return value: 0 means stop, 1 means continue; */
+// ->return value: 0 means stop, 1 means continue to solve */
 int bbn_stop_criteria(Grid_T *const grid,const char *const name)
 {
   int stop = 1;
+  int stop_max = 1;
+  int stop_res = 0;
   const double res_d    = GetParameterD_E("Solving_Residual");/* desired residual */
   const int max_step    = GetParameterI_E("Solving_Max_Number_of_Solver_Step");
   const double res_fac  = GetParameterD_E("Solving_Residual_Factor");
@@ -85,14 +87,36 @@ int bbn_stop_criteria(Grid_T *const grid,const char *const name)
     double res_i    = patch->solving_man->settings->Frms_i;/* initial residual */
     int solver_step = patch->solving_man->settings->solver_step;/* iteration number */
     
-    if (LSS(res,res_fac*res_i) || LSS(res,res_d) || solver_step >= max_step )
+    /* note: all patches have same solver_step */
+    if (solver_step >= max_step)
     {
-      stop = 0;/* it passes the criteria so stop */
+      stop_max = 0;
+      break;
+    }
+    
+    /* since one of them is enough to continue */
+    if (res > res_d && res > res_fac*res_i)
+    {
+      stop_res = 1;
       break;
     }
   }
   
-  UNUSED(name);
+  if (!stop_max)
+  {
+    printf("%s equation:\n"
+           "---> Newton solver reached maximum step number so existing ...\n",name);
+    fflush(stdout);
+    return stop_max;
+  }
+  
+  if (!stop_res)  
+  {
+    printf("%s equation:\n"
+           "---> Newton solver satisfies demanding residual so existing ...\n",name);
+    fflush(stdout);
+    return stop_res;
+  }
   
   return stop;
 }

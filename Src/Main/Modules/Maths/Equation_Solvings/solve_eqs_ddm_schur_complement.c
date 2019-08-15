@@ -100,50 +100,51 @@ int ddm_schur_complement(Solve_Equations_T *const SolveEqs)
 static int solve_field(Solve_Equations_T *const SolveEqs)
 {
   Grid_T *const grid = get_grid_solve_equations(SolveEqs);
-  
-  /* residual determined in the input file */
-  const double res_input = fabs(GetParameterD_E("Solving_Residual"));
-  const int NumIter = GetParameterI_E("Linear_Solver_Number_of_Iteration");
-  Flag_T IsItSolved = NO;
-  int iter = 0;
+  int CONTINUE = 1;
+  int step = 0;
   
   /* if number grid only has one patch */
   if (grid->np == 1)
   {
-    while (IsItSolved == NO && iter < NumIter)
+    while (CONTINUE)
     {
       Patch_T *patch = grid->patch[0];
       DDM_Schur_Complement_T *Schur = patch->solving_man->method->SchurC;
       
       make_f(patch);/* making f */
-      IsItSolved = check_residual_single_patch(patch,res_input);
-      if (IsItSolved == YES)
+      if (!step)/* only at first step */
+        set_solving_man_settings_Frms_i_single_patch(patch);
+      /* calculate the current residual and set it in patch->solving_man->Frms */  
+      calculate_residual_single_patch(patch);
+      /* set current step */
+      patch->solving_man->settings->solver_step = step;
+      /* check the stop criteria */
+      CONTINUE = SolveEqs->StopCriteria(grid,SolveEqs->field_name);
+      if (!CONTINUE)
+      {
+        free(Schur->f);/* free{f} */
         break;
-      
+      }
+
       printf("\n~~~~~~~~~~~~~~~~~~~~\n");
-      printf("Newton Step '%d':\n",iter+1);
+      printf("Newton Step '%d':\n",step+1);
       printf("~~~~~~~~~~~~~~~~~~~~\n");
       
       making_B_single_patch(patch);/* making B */
       solve_Bx_f(patch);/* solve Bx=f, free{B,f} */
       update_field_single_patch(patch);
       free(Schur->x);/* free{x} */
+      free(Schur->f);/* free{f} */
       /* updating fields and their derivative and related */
       if (SolveEqs->FieldUpdate)/* if any FieldUpdate set */
         SolveEqs->FieldUpdate(patch,SolveEqs->field_name);
-      make_f(patch);/* making f */
-      IsItSolved = check_residual_single_patch(patch,res_input);
-      free(Schur->f);/* free{x} */
       
-      if (IsItSolved == YES)
-        break;
-      
-      iter++;
+      step++;
     }
   }
   else
   {
-    while (IsItSolved == NO && iter <= NumIter)
+    while (CONTINUE)
     {
       const unsigned npatch = grid->np;
       double *g_prime = 0;
@@ -159,15 +160,24 @@ static int solve_field(Solve_Equations_T *const SolveEqs)
       }
       make_g(grid);/* free pg */
       
-      IsItSolved = check_residual(grid,res_input);
-      if (IsItSolved == YES || iter == NumIter)
+      if (!step)/* only at first step */
+        set_solving_man_settings_Frms_i(grid);
+      
+      /* calculate the current residual and set it in patch->solving_man->Frms */  
+      calculate_residual(grid);
+      /* set current step */
+      set_solving_man_settings_solver_step(grid,step);
+      /* check the stop criteria */
+      CONTINUE = SolveEqs->StopCriteria(grid,SolveEqs->field_name);
+      if (!CONTINUE)
       {
         free_schur_f_g(grid);/* free {f,g} */
+        free_solving_man_settings_HFrms(grid);/* free (solving_man->settings_HFrms) */
         break;
       }
       
       printf("\n~~~~~~~~~~~~~~~~~~~~\n");
-      printf("Newton Step '%d':\n",iter+1);
+      printf("Newton Step '%d':\n",step+1);
       printf("~~~~~~~~~~~~~~~~~~~~\n");
       
       DDM_SCHUR_COMPLEMENT_OpenMP(omp parallel for)
@@ -206,7 +216,7 @@ static int solve_field(Solve_Equations_T *const SolveEqs)
       }
       free_y(grid);/* free{y} */
       
-      iter++;
+      step++;
     }/* end of while (IsItSolved == NO && iter < NumIter) */
   }/* end of else */
   
@@ -2099,39 +2109,41 @@ static void f_in_boundary_part(Patch_T *const patch)
   }
 }
 
+
+
 /* calculate root mean square of F, in Jx=-F, for the whole grid when
-// it has only one patch.
-// and check if the equation is solved up to the residual res_input.
-// ->return value: YES if EQ is solved, NO otherwise.
-*/
-static Flag_T check_residual_single_patch(const Patch_T *const patch,const double res_input)
+// it has only one patch and set it in patch->solving_man->Frms */
+static void calculate_residual_single_patch(Patch_T *const patch)
 {
   DDM_Schur_Complement_T *S = patch->solving_man->method->SchurC;
-  Flag_T flg = YES;
   double *f = S->f;
   double sqr = dot(S->NS,f,f);
   
   printf("\nResidual:\n");
   patch->solving_man->Frms = sqrt(sqr);
   printf("-------->%s = %e\n", patch->name,patch->solving_man->Frms);
-  
-  if (GRT(patch->solving_man->Frms,res_input))
-    flg = NO;
-    
-  return flg;
 }
 
-/* calculate root mean square of F, in Jx=-F, for the whole grid.
-// and check if the equation is solved up to the residual res_input.
-// ->return value: YES if EQ is solved, NO otherwise.
-*/
-static Flag_T check_residual(const Grid_T *const grid,const double res_input)
+/* calculate root mean square of F, in Jx=-F, for the whole grid. 
+// and set it in patch->solving_man->settings->Frms_i for single patch */
+static void set_solving_man_settings_Frms_i_single_patch(Patch_T *const patch)
+{
+  DDM_Schur_Complement_T *S = patch->solving_man->method->SchurC;
+  double *f = S->f;
+  double sqr = dot(S->NS,f,f);
+  double *HFrms = alloc_double(1);
+  
+  patch->solving_man->settings->Frms_i = sqrt(sqr);
+  HFrms[0] = patch->solving_man->settings->Frms_i;
+  patch->solving_man->settings->HFrms  = HFrms;
+  patch->solving_man->settings->NHFrms = 1;
+}
+
+/* calculate root mean square of F, in Jx=-F, for the whole grid. 
+// and set it in patch->solving_man->settings->Frms_i */
+static void set_solving_man_settings_Frms_i(Grid_T *const grid)
 {
   const unsigned npatch = grid->np;
-  double *sqrs = alloc_double(npatch);
-  double sum = 0;
-  double rms = 0;
-  Flag_T flg = YES;
   unsigned p;
   
   DDM_SCHUR_COMPLEMENT_OpenMP(omp parallel for)
@@ -2143,30 +2155,98 @@ static Flag_T check_residual(const Grid_T *const grid,const double res_input)
     double *g = S->g;
     double sqr1 = dot(S->NS,f,f);
     double sqr2 = dot(S->NI,g,g);
-    sqrs[p] = sqr1+sqr2;
-    patch->solving_man->Frms = sqrt(sqrs[p]);
+    double sqrs = sqr1+sqr2;
+    patch->solving_man->settings->Frms_i = sqrt(sqrs);
   }
+}
+
+// set the current step of solver in patch->solving_man->settings->solver_step 
+// it is used for stop criteria */
+static void set_solving_man_settings_solver_step(Grid_T *const grid,const int current_step)
+{
+  const unsigned npatch = grid->np;
+  unsigned p;
   
-  /* print residual */
-  printf("\nResiduals:\n");
   for (p = 0; p < npatch; ++p)
   {
     Patch_T *patch = grid->patch[p];
-    printf("--------->%s = %e\n", patch->name,patch->solving_man->Frms);
-    fflush(stdout);
+    patch->solving_man->settings->solver_step = current_step;
+  }
+}
+
+/* calculate root mean square of F, in Jx=-F, for the whole grid. 
+// and set it in patch->solving_man->Frms */
+static void calculate_residual(Grid_T *const grid)
+{
+  const unsigned npatch = grid->np;
+  double *HFrms = alloc_double(npatch);
+  unsigned NHFrms;
+  double *extd = 0;
+  unsigned p,i;
+  
+  DDM_SCHUR_COMPLEMENT_OpenMP(omp parallel for)
+  for (p = 0; p < npatch; ++p)
+  {
+    Patch_T *patch = grid->patch[p];
+    DDM_Schur_Complement_T *S = patch->solving_man->method->SchurC;
+    double *f = S->f;
+    double *g = S->g;
+    double sqr1 = dot(S->NS,f,f);
+    double sqr2 = dot(S->NI,g,g);
+    double sqrs = sqr1+sqr2;
+    patch->solving_man->Frms = sqrt(sqrs);
+    HFrms[p]                 = patch->solving_man->Frms;
   }
   
   for (p = 0; p < npatch; ++p)
-    sum += sqrs[p];
-  
-  rms = sqrt(sum);
-  
-  if (GRT(rms,res_input))
-    flg = NO;
+  {
+    Patch_T *patch = grid->patch[p];
+    NHFrms = patch->solving_man->settings->NHFrms;
     
-  free(sqrs);
+    extd = patch->solving_man->settings->HFrms;
+    extd = realloc(extd,(NHFrms+1)*sizeof(*extd));
+    pointerEr(extd);
+    extd[NHFrms] = HFrms[p];
+    patch->solving_man->settings->HFrms = extd;
+    patch->solving_man->settings->NHFrms++;
+  }
+  free(HFrms);
+  HFrms = 0;
   
-  return flg;
+  /* print residual */
+  for (p = 0; p < npatch; ++p)
+  {
+    Patch_T *patch = grid->patch[p];
+    unsigned cf = patch->solving_man->cf;
+    char *field_name = patch->solving_man->field_name[cf];
+    printf("\nResidual History:\n");
+    printf("|---> %s equation:\n",field_name);
+    printf("      |---> %s:\n", patch->name);
+    HFrms = patch->solving_man->settings->HFrms;
+    NHFrms = patch->solving_man->settings->NHFrms;
+    for (i = 0; i < NHFrms; ++i)
+      printf("%*s|---> Newton step %d: %e\n",12," ",i,HFrms[i]);
+    printf("\n");
+    fflush(stdout);
+  }
+}
+
+
+/* free (patch->solving_man->settings_HFrms) */
+static void free_solving_man_settings_HFrms(Grid_T *const grid)
+{
+  const unsigned npatch = grid->np;
+  unsigned p;
+  
+  for (p = 0; p < npatch; ++p)
+  {
+    Patch_T *patch = grid->patch[p];
+    
+    _free(patch->solving_man->settings->HFrms);
+    patch->solving_man->settings->HFrms = 0;
+    patch->solving_man->settings->NHFrms = 0;
+  }
+   
 }
 
 /* figure out if a given node is located on a face or not,

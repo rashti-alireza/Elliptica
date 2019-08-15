@@ -30,6 +30,7 @@ typedef struct SOLVE_EQUATIONS_T
   // field name particulare task for updating is done. note, if 
   // it has not been assigned it won't be execute. */
   void (*FieldUpdate)(Patch_T *const patch,const char *const name);
+  
   /* instructions for updating the sources after the field has been 
   // solved on the whole grid and its derivative according to the given
   // name of the field. 

@@ -29,27 +29,52 @@ int solve_eqs(Solve_Equations_T *const SolveEqs)
 int default_stop_criteria_solve_equations(Grid_T *const grid,const char *const name)
 {
   int stop = 1;
+  int stop_max = 1;
+  int stop_res = 0;
   const double res_d    = GetParameterD_E("Solving_Residual");/* desired residual */
   const int max_step    = GetParameterI_E("Solving_Max_Number_of_Solver_Step");
   const unsigned npatch = grid->np;
   unsigned p;
-  
+
   for (p = 0; p < npatch; ++p)
   {
     Patch_T *patch  = grid->patch[p];
     double res      = patch->solving_man->Frms;/* current residual */
     int solver_step = patch->solving_man->settings->solver_step;/* iteration number */
 
-    if ( LSS(res,res_d) || solver_step >= max_step )
+    /* note: all patches have same solver_step */
+    if (solver_step >= max_step)
     {
-      stop = 0;/* it passes the criteria so stop */
+      stop_max = 0;
+      break;
+    }
+    
+    /* since one of them is enough to continue */
+    if (res > res_d)
+    {
+      stop_res = 1;
       break;
     }
   }
 
-  UNUSED(name);
+  if (!stop_max)
+  {
+    printf("%s equation:\n"
+           "---> Newton solver reached maximum step number so existing ...\n",name);
+    fflush(stdout);
+    return stop_max;
+  }
+
+  if (!stop_res)  
+  {
+    printf("%s equation:\n"
+           "---> Newton solver satisfies demanding residual so existing ...\n",name);
+    fflush(stdout);
+    return stop_res;
+  }
 
   return stop;
+
 }
 
 /* ->return value : get the double value of relaxation factor 
