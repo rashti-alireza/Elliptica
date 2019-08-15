@@ -110,6 +110,7 @@ static int solve_field(Solve_Equations_T *const SolveEqs)
     {
       Patch_T *patch = grid->patch[0];
       DDM_Schur_Complement_T *Schur = patch->solving_man->method->SchurC;
+      double time1 = get_time_sec();
       
       make_f(patch);/* making f */
       if (!step)/* only at first step */
@@ -126,9 +127,10 @@ static int solve_field(Solve_Equations_T *const SolveEqs)
         break;
       }
 
-      printf("\n~~~~~~~~~~~~~~~~~~~~\n");
-      printf("Newton Step '%d':\n",step+1);
-      printf("~~~~~~~~~~~~~~~~~~~~\n");
+      pr_line_custom('~');
+      printf("|---> %s equation:\n",SolveEqs->field_name);
+      printf("      |---> Newton step '%d':\n",step+1);
+      pr_line_custom('~');
       
       making_B_single_patch(patch);/* making B */
       solve_Bx_f(patch);/* solve Bx=f, free{B,f} */
@@ -139,16 +141,24 @@ static int solve_field(Solve_Equations_T *const SolveEqs)
       if (SolveEqs->FieldUpdate)/* if any FieldUpdate set */
         SolveEqs->FieldUpdate(patch,SolveEqs->field_name);
       
+      
+      pr_line_custom('~');
+      printf("|---> %s equation:\n",SolveEqs->field_name);
+      printf("      |---> Newton step '%d' is done.\n",step+1);
+      printf("            |---> Elapsed seconds = %.0f .\n",get_time_sec()-time1);
+      pr_clock();
+      pr_line_custom('~');
       step++;
     }
   }
-  else
+  else/* multi-domains grid */
   {
     while (CONTINUE)
     {
       const unsigned npatch = grid->np;
       double *g_prime = 0;
       Matrix_T *S;
+      double time1 = get_time_sec();
       unsigned p;
       
       DDM_SCHUR_COMPLEMENT_OpenMP(omp parallel for)
@@ -176,9 +186,10 @@ static int solve_field(Solve_Equations_T *const SolveEqs)
         break;
       }
       
-      printf("\n~~~~~~~~~~~~~~~~~~~~\n");
-      printf("Newton Step '%d':\n",step+1);
-      printf("~~~~~~~~~~~~~~~~~~~~\n");
+      pr_line_custom('~');
+      printf("|---> %s equation:\n",SolveEqs->field_name);
+      printf("      |---> Newton step '%d':\n",step+1);
+      pr_line_custom('~');
       
       DDM_SCHUR_COMPLEMENT_OpenMP(omp parallel for)
       for (p = 0; p < npatch; ++p)
@@ -215,6 +226,13 @@ static int solve_field(Solve_Equations_T *const SolveEqs)
           SolveEqs->FieldUpdate(patch,field_name);
       }
       free_y(grid);/* free{y} */
+      
+      pr_line_custom('~');
+      printf("|---> %s equation:\n",SolveEqs->field_name);
+      printf("      |---> Newton step '%d' is done.\n",step+1);
+      printf("            |---> Elapsed seconds = %.0f .\n",get_time_sec()-time1);
+      pr_clock();
+      pr_line_custom('~');
       
       step++;
     }/* end of while (IsItSolved == NO && iter < NumIter) */
@@ -342,10 +360,19 @@ static void solve_Sy_g_prime(Matrix_T *const S,double *const g_prime,Grid_T *con
   double *y = alloc_double(NI_total);
   UmfPack_T umfpack[1] = {0};
   DDM_Schur_Complement_T *Schur;
+  const unsigned cf = grid->patch[0]->solving_man->cf;
+  const char *field_name = grid->patch[0]->solving_man->field_name[cf];
+  const int step = grid->patch[0]->solving_man->settings->solver_step;
+  char desc[400] = {'\0'};
   unsigned R = 0;
   unsigned p;
   
-  umfpack->description = "\n... Interface Equations:\nSolving Sy = g'";
+  sprintf(desc,"\n. %s equation:\n"
+               ". . Newton step %d:\n"
+               ". . . Interface Equations:\n"
+               ". . . . Solving Sy = g':"
+               ,field_name,step);
+  umfpack->description = desc;
   umfpack->a = S;
   umfpack->b = g_prime;
   umfpack->x = y;
@@ -938,6 +965,9 @@ static void fill_C_F_collocation(Patch_T *const patch, Pair_T *const pair)
 static void making_E_prime_and_f_prime(Patch_T *const patch)
 {
   DDM_Schur_Complement_T *const S = patch->solving_man->method->SchurC;
+  const unsigned cf = patch->solving_man->cf;
+  const char *field_name = patch->solving_man->field_name[cf];
+  const int step = patch->solving_man->settings->solver_step;
   double **E_Trans;
   Matrix_T *const a = cast_matrix_ccs(S->B);
   double *const f = S->f;
@@ -972,7 +1002,11 @@ static void making_E_prime_and_f_prime(Patch_T *const patch)
   xs[ns-1] = calloc(S->NS,sizeof(*xs[ns-1]));
   pointerEr(xs[ns-1]);
   
-  sprintf(desc,"\n... %s:\nSolving BE' = E and Bf' = f",patch->name);
+  sprintf(desc,"\n. %s equation:\n"
+               ". . Newton step %d:\n"
+               ". . . %s:\n"
+               ". . . . Solving BE' = E and Bf' = f:"
+               ,field_name,step,patch->name);
   umfpack->description = desc;
   umfpack->a = a;
   umfpack->bs = bs;
@@ -1701,7 +1735,12 @@ static void set_solving_man_settings(Solve_Equations_T *const SolveEqs)
     /* relaxation factor: */
     patch->solving_man->settings->relaxation_factor = 
       get_relaxation_factor_solve_equations(SolveEqs);
-      
+    
+    patch->solving_man->settings->Frms_i  = DBL_MAX;
+    patch->solving_man->settings->HFrms   = 0;
+    patch->solving_man->settings->NHFrms  = 0;
+    patch->solving_man->settings->solver_step  = 0;
+    
   }
 }
 
@@ -2218,11 +2257,12 @@ static void calculate_residual(Grid_T *const grid)
   {
     Patch_T *patch = grid->patch[p];
     unsigned cf = patch->solving_man->cf;
-    char *field_name = patch->solving_man->field_name[cf];
+    const char *field_name = patch->solving_man->field_name[cf];
+    
     printf("\nResidual History:\n");
     printf("|---> %s equation:\n",field_name);
     printf("      |---> %s:\n", patch->name);
-    HFrms = patch->solving_man->settings->HFrms;
+    HFrms  = patch->solving_man->settings->HFrms;
     NHFrms = patch->solving_man->settings->NHFrms;
     for (i = 0; i < NHFrms; ++i)
       printf("%*s|---> Newton step %d: %e\n",12," ",i,HFrms[i]);
@@ -2243,7 +2283,7 @@ static void free_solving_man_settings_HFrms(Grid_T *const grid)
     Patch_T *patch = grid->patch[p];
     
     _free(patch->solving_man->settings->HFrms);
-    patch->solving_man->settings->HFrms = 0;
+    patch->solving_man->settings->HFrms  = 0;
     patch->solving_man->settings->NHFrms = 0;
   }
    
