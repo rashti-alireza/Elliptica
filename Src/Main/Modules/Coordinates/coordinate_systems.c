@@ -446,7 +446,7 @@ void grid_characteristics_example(Grid_T *const grid)
 static void characteristics_Cartesian_grid(Grid_T *const grid)
 {
   /* this type of grid is so simple; nothing to calculate. */
-  UNUSED(grid);
+  grid->kind = dup_s(GetParameterS_E("grid_kind"));
 }
 
 /* calculating the main characteristic of grid for BBN_CubedSpherical grid */
