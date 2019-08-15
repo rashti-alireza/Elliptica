@@ -124,6 +124,7 @@ static int solve_field(Solve_Equations_T *const SolveEqs)
       if (!CONTINUE)
       {
         free(Schur->f);/* free{f} */
+        free_solving_man_settings(grid);/* free (solving_man->settings) */
         break;
       }
 
@@ -182,7 +183,7 @@ static int solve_field(Solve_Equations_T *const SolveEqs)
       if (!CONTINUE)
       {
         free_schur_f_g(grid);/* free {f,g} */
-        free_solving_man_settings_HFrms(grid);/* free (solving_man->settings_HFrms) */
+        free_solving_man_settings(grid);/* free (solving_man->settings) */
         break;
       }
       
@@ -257,19 +258,23 @@ static void update_field(Patch_T *const patch)
   const double lambda = patch->solving_man->settings->relaxation_factor;
   const double *const u_old = f->v;
   double *const u_new = f->v;
+  double *const u_bckup = alloc_double(patch->nn);
   unsigned s,s_node,i,i_node;
   
   free_coeffs(f);
   for (s = 0; s < NS; ++s)
   {
     s_node = inv[s];
-    u_new[s_node] = u_old[s_node]-lambda*x[s];
+    u_bckup[s_node] = u_old[s_node];
+    u_new[s_node]   = u_old[s_node]-lambda*x[s];
   }
   for (i = 0; i < NI; ++i)
   {
     i_node = Iinv[i];
-    u_new[i_node] = u_old[i_node]-lambda*y[i];
+    u_bckup[i_node] = u_old[i_node];
+    u_new[i_node]   = u_old[i_node]-lambda*y[i];
   }
+  patch->solving_man->settings->last_sol = u_bckup;
   
 }
 
@@ -286,14 +291,17 @@ static void update_field_single_patch(Patch_T *const patch)
   const double lambda = patch->solving_man->settings->relaxation_factor;
   const double *const u_old = f->v;
   double *const u_new = f->v;
+  double *const u_bckup = alloc_double(patch->nn);
   unsigned s,s_node;
   
   free_coeffs(f);
   for (s = 0; s < NS; ++s)
   {
     s_node = inv[s];
-    u_new[s_node] = u_old[s_node]-lambda*x[s];
+    u_bckup[s_node] = u_old[s_node];
+    u_new[s_node]   = u_old[s_node]-lambda*x[s];
   }
+  patch->solving_man->settings->last_sol = u_bckup;
 }
 
 /* free x in Schur */
@@ -1740,7 +1748,7 @@ static void set_solving_man_settings(Solve_Equations_T *const SolveEqs)
     patch->solving_man->settings->HFrms   = 0;
     patch->solving_man->settings->NHFrms  = 0;
     patch->solving_man->settings->solver_step  = 0;
-    
+    patch->solving_man->settings->last_sol = 0;
   }
 }
 
@@ -2271,9 +2279,8 @@ static void calculate_residual(Grid_T *const grid)
   }
 }
 
-
-/* free (patch->solving_man->settings_HFrms) */
-static void free_solving_man_settings_HFrms(Grid_T *const grid)
+/* free patch->solving_man->settings */
+static void free_solving_man_settings(Grid_T *const grid)
 {
   const unsigned npatch = grid->np;
   unsigned p;
@@ -2285,6 +2292,9 @@ static void free_solving_man_settings_HFrms(Grid_T *const grid)
     _free(patch->solving_man->settings->HFrms);
     patch->solving_man->settings->HFrms  = 0;
     patch->solving_man->settings->NHFrms = 0;
+    
+    _free(patch->solving_man->settings->last_sol);
+    patch->solving_man->settings->last_sol = 0;
   }
    
 }

@@ -479,6 +479,8 @@ typedef struct SOLVING_MAN_T
     double Frms_i;/* the very beginning Frms (see Frms above for definition)
                  // which this field has at the its entrance to the solver. */
     double *HFrms;/* history of all Frms start form 0 to NFrms */
+    double *last_sol;/* it is back up of last solution, 
+                     // so in case the residula goes up, it uses this value. */
     unsigned NHFrms;/* number of HFrms */
     int solver_step;/* number of steps have been taken by solver till now. starting from 0 */
   }settings[1];
