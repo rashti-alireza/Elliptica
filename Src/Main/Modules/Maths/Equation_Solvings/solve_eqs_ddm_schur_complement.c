@@ -44,7 +44,7 @@ int ddm_schur_complement(Solve_Equations_T *const SolveEqs)
   unsigned f;/* dummy index */
   
   pr_line_custom('=');
-  printf("Solving the Equations ...\n\n");
+  printf("{ Solving the Equations ...\n\n");
   
   /* read order of fields to be solved from input */
   field_name = read_fields_in_order(SolveEqs,&nf);
@@ -53,7 +53,7 @@ int ddm_schur_complement(Solve_Equations_T *const SolveEqs)
   for (f = 0; f < nf; ++f)
   {
     pr_half_line_custom('-');
-    printf("> Solving Equation for field: \"%s\" ...\n",field_name[f]);
+    printf("{ Solving Equation for field: \"%s\" ...\n",field_name[f]);
     pr_half_line_custom('-');
     
     /* set the name of the field we are solving it */
@@ -80,7 +80,7 @@ int ddm_schur_complement(Solve_Equations_T *const SolveEqs)
       
     printf("\n");
     pr_half_line_custom('-');
-    printf("> Solving Equation for field: \"%s\" ==> Done.\n",field_name[f]);
+    printf("} Solving Equation for field: \"%s\" ==> Done.\n",field_name[f]);
     pr_half_line_custom('-');
     pr_clock();
   }
@@ -88,7 +88,7 @@ int ddm_schur_complement(Solve_Equations_T *const SolveEqs)
   /* free names */
   free_2d_mem(field_name,nf);
   
-  printf("\nSolving the Equations ==> Done.\n");
+  printf("\n} Solving the Equations ==> Done.\n");
   pr_clock();
   pr_line_custom('=');
   
@@ -133,7 +133,7 @@ static int solve_field(Solve_Equations_T *const SolveEqs)
       }
 
       pr_line_custom('~');
-      printf("|---> %s equation:\n",SolveEqs->field_name);
+      printf("{---> %s equation:\n",SolveEqs->field_name);
       printf("      |---> Newton step '%d':\n",step+1);
       pr_line_custom('~');
       
@@ -146,7 +146,7 @@ static int solve_field(Solve_Equations_T *const SolveEqs)
         SolveEqs->FieldUpdate(patch,SolveEqs->field_name);
       
       pr_line_custom('~');
-      printf("|---> %s equation:\n",SolveEqs->field_name);
+      printf("}---> %s equation:\n",SolveEqs->field_name);
       printf("      |---> Newton step '%d' is done.\n",step+1);
       printf("            |---> Elapsed seconds = %.0f .\n",get_time_sec()-time1);
       pr_clock();
@@ -192,7 +192,7 @@ static int solve_field(Solve_Equations_T *const SolveEqs)
       }
       
       pr_line_custom('~');
-      printf("|---> %s equation:\n",SolveEqs->field_name);
+      printf("{---> %s equation:\n",SolveEqs->field_name);
       printf("      |---> Newton step '%d':\n",step+1);
       pr_line_custom('~');
       
@@ -233,7 +233,7 @@ static int solve_field(Solve_Equations_T *const SolveEqs)
       free_y(grid);/* free{y} */
       
       pr_line_custom('~');
-      printf("|---> %s equation:\n",SolveEqs->field_name);
+      printf("}---> %s equation:\n",SolveEqs->field_name);
       printf("      |---> Newton step '%d' is done.\n",step+1);
       printf("            |---> Elapsed seconds = %.0f .\n",get_time_sec()-time1);
       pr_clock();
