@@ -27,7 +27,7 @@ int Binary_BH_NS_Initial_Data(void)
     /* update the parameter accoding to the iteration number */
     update_iterative_parameter_ip(iter);
     
-    printf("Iteration %u for the parameter(s) below:\n",iter);
+    printf("{ Iteration %u for the parameter(s) below:\n",iter);
     for (i = 0; i < N_iter_par; ++i)
     {
       printf("%-10s = %-10s\n",par_name_ip(i),par_value_str_ip(i));
@@ -46,6 +46,12 @@ int Binary_BH_NS_Initial_Data(void)
     //bbn_study_initial_data(grid_next);
     
     grid_prev = grid_next;
+    
+    printf("} Iteration %u for the parameter(s) below is done.\n",iter);
+    for (i = 0; i < N_iter_par; ++i)
+    {
+      printf("%-10s = %-10s\n",par_name_ip(i),par_value_str_ip(i));
+    }
   }
   grid = grid_next;/* final grid */
   UNUSED(grid);
