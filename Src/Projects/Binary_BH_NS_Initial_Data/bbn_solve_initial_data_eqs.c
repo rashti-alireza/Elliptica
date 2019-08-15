@@ -124,10 +124,11 @@ int bbn_stop_criteria(Grid_T *const grid,const char *const name)
 /* updating sources after field is solved */
 void bbn_SolveEqs_SourceUpdate(Grid_T *const grid,const char *const name)
 {
-  if (!strcmp(name,"phi"))
-  {
+  UNUSED(name);
+  //if (!strcmp(name,"phi"))
+  //{
     Tij_IF_CTS_psi6Sources(grid);
-  }
+  //}
 }
 
 /* updating field after they were solved */
