@@ -42,6 +42,8 @@ int default_stop_criteria_solve_equations(Grid_T *const grid,const char *const n
     double res      = patch->solving_man->Frms;/* current residual */
     int solver_step = patch->solving_man->settings->solver_step;/* iteration number */
 
+    /* NOTE: due to the break command, the order of ifs are important */
+    
     /* note: all patches have same solver_step */
     if (solver_step >= max_step)
     {
