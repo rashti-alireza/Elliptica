@@ -112,13 +112,17 @@ static int solve_field(Solve_Equations_T *const SolveEqs)
       DDM_Schur_Complement_T *Schur = patch->solving_man->method->SchurC;
       double time1 = get_time_sec();
       
-      make_f(patch);/* making f */
-      if (!step)/* only at first step */
-        set_solving_man_settings_Frms_i_single_patch(patch);
-      /* calculate the current residual and set it in patch->solving_man->Frms */  
-      calculate_residual_single_patch(patch);
       /* set current step */
       patch->solving_man->settings->solver_step = step;
+      
+      make_f(patch);/* making f */
+      
+      if (!step)/* only at first step */
+        set_solving_man_settings_Frms_i_single_patch(patch);
+        
+      /* calculate the current residual and set it in patch->solving_man->Frms */  
+      calculate_residual_single_patch(patch);
+      
       /* check the stop criteria */
       CONTINUE = SolveEqs->StopCriteria(grid,SolveEqs->field_name);
       if (!CONTINUE)
@@ -162,6 +166,9 @@ static int solve_field(Solve_Equations_T *const SolveEqs)
       double time1 = get_time_sec();
       unsigned p;
       
+      /* set current step */
+      set_solving_man_settings_solver_step(grid,step);
+      
       DDM_SCHUR_COMPLEMENT_OpenMP(omp parallel for)
       for (p = 0; p < npatch; ++p)
       {
@@ -176,8 +183,7 @@ static int solve_field(Solve_Equations_T *const SolveEqs)
       
       /* calculate the current residual and set it in patch->solving_man->Frms */  
       calculate_residual(grid);
-      /* set current step */
-      set_solving_man_settings_solver_step(grid,step);
+      
       /* check the stop criteria */
       CONTINUE = SolveEqs->StopCriteria(grid,SolveEqs->field_name);
       if (!CONTINUE)
