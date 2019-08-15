@@ -12,6 +12,19 @@
 #define DL_CP ')'
 #define DL_C ','
 
+/* Print Fields:
+//
+// usage examples:
+// ===============
+// # parameter that is determined in input file is like follows:
+// print_fields_4d = yes,Format:HDF5,{(V_U0,V_U1,V_U2),psi,eta,(a_U0,a_U1,a_U2)}
+// Pr_Field_T *pr  = init_PrField(grid);
+// pr->folder      = "folder_path";
+// pr->par         = "print_fields_4d";
+// pr_fields(pr);
+// free_PrField(pr);
+*/
+
 /* given print parameter related to fields, the folder, and time = cycle,
 // it reads the parameter and the fields indicated there 
 // and print the result in the specified folder over ALL GRID.
