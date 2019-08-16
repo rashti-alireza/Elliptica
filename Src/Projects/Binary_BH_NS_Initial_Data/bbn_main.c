@@ -27,19 +27,20 @@ int Binary_BH_NS_Initial_Data(void)
   for (iter = 0; iter < N_iter; ++iter)
   {
     unsigned i;
-    /* update the parameter accoding to the iteration number */
-    update_iterative_parameter_ip(iter);
-    
-    printf("{ Iteration %u for the parameter(s) below:\n",iter);
-    for (i = 0; i < N_iter_par; ++i)
-    {
-      printf("%-10s = %-10s\n",par_name_ip(i),par_value_str_ip(i));
-    }
     
     /* making a directory for this iteration and save the path */
     sprintf(folder_name,"BBN_Iteration");
     folder_path = make_directory(path_par,folder_name);
     update_parameter_string("iteration_output",folder_path);
+    
+    /* update the parameter accoding to the iteration number */
+    update_iterative_parameter_ip(iter);
+    printf("{ Iteration %u for the parameter(s) below:\n",iter);
+    pr_parameters();/* printing in the folder */
+    for (i = 0; i < N_iter_par; ++i)
+    {
+      printf("%-10s = %-10s\n",par_name_ip(i),par_value_str_ip(i));
+    }
     
     /* preparing fields and grid according to the given previous grid */
     grid_next = bbn_initialize_next_grid(grid_prev);
