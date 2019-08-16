@@ -21,7 +21,7 @@ Grid_T *bbn_initialize_next_grid(Grid_T *const grid_prev)
   }
   else/* use previous grid to make the next one */
   {
-    printf("Not made yet!\n");
+    abortEr(NO_JOB);
   }
   
   return grid_next;   
