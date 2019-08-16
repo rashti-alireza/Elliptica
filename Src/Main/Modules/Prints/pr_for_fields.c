@@ -117,6 +117,11 @@ static void pr_fields_on_grid_HDF5_4d(Pr_Field_T *const pr)
         pr_scalar_on_structured_mesh_3d_silo(pr);
     }
     
+    if (DBClose(dbfile_Cart) == -1)
+      abortEr("Silo library failed to close the file.\n");
+    
+    if (DBClose(dbfile_Curv) == -1)
+      abortEr("Silo library failed to close the file.\n");
   }/* end of FOR_ALL_PATCHES(pa,pr->grid) */
 }
 
@@ -218,7 +223,7 @@ static void *make_structured_mesh_3d_Curvilinear(Pr_Field_T *const pr,const Patc
 
 
 /* printing scalar on structured 3d mesh with node centered format.
-// note data for silo library must be written in cloumn format,
+// note data for silo library must be written in column format,
 // i.e. 3d to 1d map is i+n0*(j+n1*k).
 */
 static void pr_scalar_on_structured_mesh_3d_silo(const Pr_Field_T *const pr)
