@@ -5,6 +5,25 @@
 
 #include "parameters.h"
 
+/* add or updating a string value parameter */
+void update_parameter_string(const char *const lv, const char *const rv)
+{
+  if (!lv || !rv)
+    return;
+    
+  Parameter_T *par;
+  
+  par = get_parameter(lv);
+  if (par)/* if this parameter exists update it */
+  {
+    _free(par->rv);
+    par->rv = dup_s(rv);
+  }
+  else/* since it does not exist */
+    add_parameter(lv,rv);
+  
+}
+
 /* adding left value and right value to parameter data base 
 // double format. */
 void add_parameter_double(const char *const lv, const double rv)

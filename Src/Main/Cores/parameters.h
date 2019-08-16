@@ -6,6 +6,7 @@
 extern Parameter_T **parameters_global;
 extern char *path_global;
 
+void update_parameter_string(const char *const lv, const char *const rv);
 void read_input_file(const char *const path);
 Parameter_T *get_parameter(const char *const par_name);
 void add_parameter(const char *const lv, const char *const rv);

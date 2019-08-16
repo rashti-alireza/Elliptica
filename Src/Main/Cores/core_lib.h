@@ -23,6 +23,7 @@
 #define GRTEQL(x,y) (GRT(x,y) || EQL(x,y))
 
 /* parameters */
+void update_parameter_string(const char *const lv, const char *const rv);
 void add_parameter(const char *const lv, const char *const rv);
 void add_parameter_string(const char *const lv, const char *const rv);
 void add_parameter_double(const char *const lv, const double rv);
