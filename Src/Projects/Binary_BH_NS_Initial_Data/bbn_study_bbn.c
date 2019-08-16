@@ -28,7 +28,7 @@ static void print_fields(Grid_T *const grid)
   printf("{ Printing Specified Fields for Binary BH and NS ...\n");
 
   Pr_Field_T *pr  = init_PrField(grid);
-  const char *path_par = GetParameterS("iteration_output");
+  const char *path_par = GetParameterS_E("iteration_output");
   char *folder = make_directory(path_par,"output_3D");
   
   pr->folder = folder;
