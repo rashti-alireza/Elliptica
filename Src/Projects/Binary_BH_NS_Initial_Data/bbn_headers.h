@@ -10,6 +10,7 @@
 #include "physics_StressEnergyTensor_lib.h"
 
 
+void bbn_study_initial_data(Grid_T *const grid);
 void bbn_update_psi10A_UiUj(Patch_T *const patch);
 void bbn_populate_free_data(Grid_T *const grid);
 void bbn_free_data_gammas(Grid_T *const grid);

@@ -13,6 +13,9 @@ int Binary_BH_NS_Initial_Data(void)
          *grid = 0;
   const unsigned N_iter     = total_iterations_ip();
   const unsigned N_iter_par = total_iterative_parameters_ip();
+  const char *path_par = GetParameterS("output_directory_path");
+  char folder_name[100] = {'\0'};
+  const char *folder_path;
   unsigned iter;
   
   /* print some description */
@@ -32,6 +35,12 @@ int Binary_BH_NS_Initial_Data(void)
     {
       printf("%-10s = %-10s\n",par_name_ip(i),par_value_str_ip(i));
     }
+    
+    /* making a directory for this iteration and save the path */
+    sprintf(folder_name,"BBN_Iteration");
+    folder_path = make_directory(path_par,folder_name);
+    update_parameter_string("iteration_output",folder_path);
+    
     /* preparing fields and grid according to the given previous grid */
     grid_next = bbn_initialize_next_grid(grid_prev);
     
@@ -43,7 +52,7 @@ int Binary_BH_NS_Initial_Data(void)
     bbn_solve_initial_data_eqs(grid_next);
     
     /* study and analyse the new grid */
-    //bbn_study_initial_data(grid_next);
+    bbn_study_initial_data(grid_next);
     
     grid_prev = grid_next;
     
