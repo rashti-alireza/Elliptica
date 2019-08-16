@@ -94,8 +94,8 @@ static void pr_fields_on_grid_HDF5_4d(Pr_Field_T *const pr)
   FOR_ALL_PATCHES(pa,pr->grid)
   {
     Patch_T *patch = pr->grid->patch[pa];
-    DBfile *dbfile_Cart = 0;
-    DBfile *dbfile_Curv = 0;
+    DBfile *dbfile_Cart = 0;/* file cartesian  */
+    DBfile *dbfile_Curv = 0;/* file for curvilinear */
     unsigned i_pr;
    
     /* printing Cartesian mesh */
@@ -106,9 +106,10 @@ static void pr_fields_on_grid_HDF5_4d(Pr_Field_T *const pr)
     /* printing field on on the meshes */
     for (i_pr = 0; i_pr < npr; ++i_pr)
     {
-      pr->file = dbfile_Cart;
+      pr->file  = dbfile_Cart;
       pr->file2 = dbfile_Curv;
-      pr->vptr = &pr_info[i_pr];
+      pr->vptr  = &pr_info[i_pr];
+      
       /* if it is vector to be printed */
       if (pr_info[i_pr].vec_flg)
         pr_vector_on_structured_mesh_3d_silo(pr);
@@ -249,11 +250,11 @@ static void pr_scalar_on_structured_mesh_3d_silo(const Pr_Field_T *const pr)
   int dims[] = 
     {(int)pr->patch->n[0],(int)pr->patch->n[1],(int)pr->patch->n[2]};
   const int ndims = 3;
-  const int v_ind = Ind(subg->field);
+  const int v_ind = _Ind(subg->field);
   int DB_ret;
   
   if (v_ind < 0)
-    abortEr_s("There is no such field \"%s\" among the fields!\n",subg->field);
+    return;
   
   /* fields value */
   data = patch->pool[v_ind]->v;
@@ -284,19 +285,15 @@ static void pr_vector_on_structured_mesh_3d_silo(const Pr_Field_T *const pr)
   int dims[] = 
     {(int)pr->patch->n[0],(int)pr->patch->n[1],(int)pr->patch->n[2]};
   const int ndims = 3;
-  const int v_ind0 = Ind(subg->comp[0]);
-  const int v_ind1 = Ind(subg->comp[1]);
-  const int v_ind2 = Ind(subg->comp[2]);
+  const int v_ind0 = _Ind(subg->comp[0]);
+  const int v_ind1 = _Ind(subg->comp[1]);
+  const int v_ind2 = _Ind(subg->comp[2]);
   char *varnames[] = {subg->comp[0],subg->comp[1],subg->comp[2]};
   char desc[MAX_STR_LEN];
   int DB_ret;
   
-  if (v_ind0 < 0)
-    abortEr_s("There is no such field \"%s\" among the fields!\n",subg->comp[0]);
-  if (v_ind1 < 0)
-    abortEr_s("There is no such field \"%s\" among the fields!\n",subg->comp[1]);
-  if (v_ind2 < 0)
-    abortEr_s("There is no such field \"%s\" among the fields!\n",subg->comp[2]);
+  if (v_ind0 < 0 || v_ind1 < 0 || v_ind2 < 0)
+    return;
   
   comp[0] = patch->pool[v_ind0]->v;
   comp[1] = patch->pool[v_ind1]->v;
