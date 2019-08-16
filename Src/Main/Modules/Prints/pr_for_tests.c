@@ -70,7 +70,12 @@ void pr_interfaces(const Grid_T *const grid)
     N[i] = 0;
   }
   
-  path_par = GetParameterS_E("output_directory_path");
+  
+  if (get_parameter("iteration_output"))
+    path_par = GetParameterS("iteration_output");
+  else
+    path_par = GetParameterS("output_directory_path");
+  
   path = make_directory(path_par,"InterfaceInfo");
   
   str[0] = '\0';
@@ -373,7 +378,12 @@ void pr_parameters(void)
   const char *path;
   int i = 0;
   
-  path = GetParameterS_E("output_directory_path");
+  
+  if (get_parameter("iteration_output"))
+    path = GetParameterS("iteration_output");
+  else
+    path = GetParameterS("output_directory_path");
+  
   sprintf(dir,"%s/parameters.out",path);
   f = fopen(dir,"w");
   pointerEr(f);
@@ -397,7 +407,11 @@ void pr_coords(const Grid_T *const grid)
   const char *path_par;
   unsigned i = 0;
   
-  path_par = GetParameterS_E("output_directory_path");
+  if (get_parameter("iteration_output"))
+    path_par = GetParameterS("iteration_output");
+  else
+    path_par = GetParameterS("output_directory_path");
+    
   path = make_directory(path_par,"Patches");
   
   FOR_ALL(i,grid->patch)
