@@ -585,28 +585,6 @@ typedef struct NEEDLE_T
   unsigned Ng;/* numbef of guess patches */
 }Needle_T;
 
-/* print field */
-typedef struct PR_FIELD_T
-{
-  const Grid_T *grid;
-  const Patch_T *patch;
-  const char *par;
-  const char *folder;
-  int cycle;
-  double time;
-  unsigned ng;/* number of group */
-  void *group;/* points to a group for printing */
-  void *opt_patch;/* points to options for patch */
-  void *opt_field;/* points to options for field */
-  void *vptr;/* general pointer for different purposes */
-  void *a;/* a in double or float */
-  void *b;/* b in double or float */
-  void *c;/* c in double or float */
-  void *v;/* v in double or float */
-  void *file;/* file */
-  void *file2;/* file */
-}Pr_Field_T;
-
 struct INTERPOLATION_T;
 
 /* interpolation function typedef */

@@ -1,5 +1,5 @@
 #include <silo.h>
-#include "core_lib.h"
+#include "core_lib.h"/* it includes prints_lib.h too */
 #include "error_handling_lib.h"
 #include "utilities_lib.h"
 #include "macros_lib.h"
