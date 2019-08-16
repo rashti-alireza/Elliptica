@@ -3,6 +3,7 @@
 #include "utilities_lib.h"
 
 #define COMMENT '#'
+#define BACK_SLASH '\\'
 #define ENTER   '\n'
 #define SPACE   ' '
 #define TAB     '\t'

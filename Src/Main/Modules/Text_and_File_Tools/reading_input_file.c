@@ -117,6 +117,49 @@ static void *make_buffer(FILE *const input)
       }
     }
     
+    /* joining broken lines */
+    else if (c == BACK_SLASH)
+    {
+      c = fgetc(input);
+      if (c != ENTER)/* if after \ is not enter */
+        abortEr("No enter aftre '\\'. Broken line is incorrect.\n");
+        
+      c = fgetc(input);/* skip enter */
+      while (c != ENTER && c != EOF)
+      {
+        if (c == SPACE ||  c == TAB)/* trim white spaces */
+        {
+          c = fgetc(input);
+          continue;
+        }
+        else if (c == BACK_SLASH)/* if multi broken line */
+        {
+          c = fgetc(input);
+          if (c != ENTER)/* if after \ is not enter */
+            abortEr("No enter aftre '\\'. Broken line is incorrect.\n");
+          c = fgetc(input);/* skip enter */
+          continue;
+        }
+        //else if (c == EQUAL)
+          //abortEr("It found '=' sign in broken line. Broken line is incorrect.\n");
+        else if (c == COMMENT)/* time off comment */
+        {
+          while (c != ENTER && c != EOF) c = fgetc(input);
+          if (c == ENTER)                break;
+        }
+        
+        buff = realloc(buff,(i+1)*sizeof(*buff));
+        pointerEr(buff);
+        buff[i++] = (char)c;
+        c = fgetc(input);
+      }/* end of while (c != ENTER && c != EOF) */
+      if (c == ENTER)
+      {
+        buff = realloc(buff,(i+1)*sizeof(*buff));
+        pointerEr(buff);
+        buff[i++] = (char)c;
+      }
+    }/* end of else if (c == BACK_SLASH) */
     else
     {
       buff = realloc(buff,(i+1)*sizeof(*buff));
@@ -131,9 +174,9 @@ static void *make_buffer(FILE *const input)
     j++;      
   }/* end of while */
 
-    buff = realloc(buff,(i+1)*sizeof(*buff));
-    pointerEr(buff);
-    buff[i] = END;
+  buff = realloc(buff,(i+1)*sizeof(*buff));
+  pointerEr(buff);
+  buff[i] = END;
     
   return buff;
 }
