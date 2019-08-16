@@ -19,6 +19,16 @@ int Laplace_Inhom(void)
   //Laplace_Inhom_pr_answer(grid);/* printing found answer */
   //Laplace_Inhom_clean_up(grid);/* cleaning up */
   
+  /* print */
+  Pr_Field_T *pr  = init_PrField(grid);
+  const char *path_par = GetParameterS_E("output_directory_path");
+  char *folder = make_directory(path_par,"output_3D");
+  pr->folder = folder;
+  pr->par    = "print_fields_4d";
+  pr_fields(pr);
+  free_PrField(pr);
+  free(folder);
+  
   pr_clock();
   
   return EXIT_SUCCESS;
