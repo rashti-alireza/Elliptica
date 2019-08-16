@@ -4,6 +4,7 @@
 #include "utilities_lib.h"
 #include "macros_lib.h"
 #include "maths_general_lib.h"
+#include "memory_managing_lib.h"
 #include "coordinates_lib.h"
 
 #define MAX_STR_LEN 500
@@ -29,5 +30,4 @@ static void pr_scalar_on_structured_mesh_3d_silo(const Pr_Field_T *const pr);
 static void pr_vector_on_structured_mesh_3d_silo(const Pr_Field_T *const pr);
 static void *make_structured_mesh_3d_Cartesian(Pr_Field_T *const pr,const Patch_T *const patch);
 static void *make_structured_mesh_3d_Curvilinear(Pr_Field_T *const pr,const Patch_T *const patch);
-static void prepare_node_structured_mesh_3d_silo(const char *const type,const Patch_T *const patch,float **const x,float **const y,float **const z);
-static void free_nodes_silo(float *x,float *y,float *z);
+static void prepare_node_structured_mesh_3d_silo(const char *const type,const Patch_T *const patch,double *const x,double *const y,double *const z);

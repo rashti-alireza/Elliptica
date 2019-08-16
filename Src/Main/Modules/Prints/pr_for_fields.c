@@ -82,7 +82,6 @@ static void free_info_s(Pr_Field_T *const pr)
     
   }
   free(info);
-
 }
 
 /* printing fields with HDF5 format using silo library */
@@ -133,12 +132,15 @@ static void *make_structured_mesh_3d_Cartesian(Pr_Field_T *const pr,const Patch_
 {
   DBfile *dbfile = 0;
   char file_name[MAX_STR_LEN];
-  float *x = 0,*y = 0,*z = 0;
+  const unsigned nn = patch->nn;
+  double *x = alloc_double(nn),
+         *y = alloc_double(nn),
+         *z = alloc_double(nn);
   char *label[3];
-  prepare_node_structured_mesh_3d_silo("Cartesian",patch,&x,&y,&z);
+  prepare_node_structured_mesh_3d_silo("Cartesian",patch,x,y,z);
   
   /* opening a file to write in for Cartesian */
-  sprintf(file_name,"%s/%s.Cart%04d.silo",
+  sprintf(file_name,"%s/%s.xyz%02d.silo",
     pr->folder,patch->name,pr->cycle);
   dbfile = DBCreate(file_name,DB_CLOBBER,DB_LOCAL,
     "3D mesh in Cartesian values with HDF5 format using silo library",
@@ -163,10 +165,15 @@ static void *make_structured_mesh_3d_Cartesian(Pr_Field_T *const pr,const Patch_
   pr->patch = patch;
   pr->opt_patch = opt;
   pr->file = dbfile;
+  
   /* printing mesh */
   pr_structured_mesh_3d_silo(pr);
-  free_nodes_silo(x,y,z);
+  
+  /* freeing */
   DBFreeOptlist(opt);
+  free(x);
+  free(y);
+  free(z);
   free(label[0]);
   free(label[1]);
   free(label[2]);
@@ -181,12 +188,15 @@ static void *make_structured_mesh_3d_Curvilinear(Pr_Field_T *const pr,const Patc
 {
   DBfile *dbfile = 0;
   char file_name[MAX_STR_LEN];
-  float *x = 0,*y = 0,*z = 0;
+  const unsigned nn = patch->nn;
+  double *x = alloc_double(nn),
+         *y = alloc_double(nn),
+         *z = alloc_double(nn);
   char *label[3];
-  prepare_node_structured_mesh_3d_silo("Curvilinear",patch,&x,&y,&z);
+  prepare_node_structured_mesh_3d_silo("Curvilinear",patch,x,y,z);
   
   /* opening a file to write in for Cartesian */
-  sprintf(file_name,"%s/%s.Curv%04d.silo",
+  sprintf(file_name,"%s/%s.abc%02d.silo",
     pr->folder,patch->name,pr->cycle);
   dbfile = DBCreate(file_name,DB_CLOBBER,DB_LOCAL,
     "3D Curvilinear mesh with HDF5 format using silo library",
@@ -211,17 +221,21 @@ static void *make_structured_mesh_3d_Curvilinear(Pr_Field_T *const pr,const Patc
   pr->patch = patch;
   pr->opt_patch = opt;
   pr->file = dbfile;
+  
   /* printing mesh */
   pr_structured_mesh_3d_silo(pr);
-  free_nodes_silo(x,y,z);
+  
+  /* freeing */
   DBFreeOptlist(opt);
+  free(x);
+  free(y);
+  free(z);
   free(label[0]);
   free(label[1]);
   free(label[2]);
 
   return dbfile;
 }
-
 
 /* printing scalar on structured 3d mesh with node centered format. */
 static void pr_scalar_on_structured_mesh_3d_silo(const Pr_Field_T *const pr)
@@ -231,41 +245,31 @@ static void pr_scalar_on_structured_mesh_3d_silo(const Pr_Field_T *const pr)
   DBfile *const dbfile = pr->file; 
   const Patch_T *const patch = pr->patch;
   struct Info_S *subg = pr->vptr;
-  float *data;
-  double *v;
-  const int nnodes = (int)patch->nn;
+  double *data;
   int dims[] = 
     {(int)pr->patch->n[0],(int)pr->patch->n[1],(int)pr->patch->n[2]};
   const int ndims = 3;
   const int v_ind = Ind(subg->field);
   int DB_ret;
-  int ijk;
   
   if (v_ind < 0)
     abortEr_s("There is no such field \"%s\" among the fields!\n",subg->field);
   
-  data = malloc((long unsigned)nnodes*sizeof(*data));
-  pointerEr(data);
-  
-  v = patch->pool[v_ind]->v;
-  for (ijk = 0 ; ijk < nnodes; ++ijk)
-  {
-    data[ijk] = (float)v[ijk];
-  }
+  /* fields value */
+  data = patch->pool[v_ind]->v;
    
   DB_ret = DBPutQuadvar1(dbfile,subg->field,pr->patch->name,
-    data,dims,ndims,0,0,DB_FLOAT,DB_NODECENT,0);
+    data,dims,ndims,0,0,DB_DOUBLE,DB_NODECENT,0);
   if (DB_ret == -1)
     abortEr("Silo library failed to print.\n");
   
   /* if there is another file that the field needs to be printed */
   if (pr->file2)
     DB_ret = DBPutQuadvar1(pr->file2,subg->field,pr->patch->name,
-      data,dims,ndims,0,0,DB_FLOAT,DB_NODECENT,0);
+      data,dims,ndims,0,0,DB_DOUBLE,DB_NODECENT,0);
   if (DB_ret == -1)
     abortEr("Silo library failed to print.\n");
   
-  free(data);
 }
 
 /* printing vector field on structured 3d mesh with node centered format. */
@@ -276,9 +280,7 @@ static void pr_vector_on_structured_mesh_3d_silo(const Pr_Field_T *const pr)
   DBfile *const dbfile = pr->file; 
   const Patch_T *const patch = pr->patch;
   struct Info_S *subg = pr->vptr;
-  float *comp[3];
-  double *v[3];
-  const int nnodes = (int)total_nodes_patch(patch);
+  double *comp[3];
   int dims[] = 
     {(int)pr->patch->n[0],(int)pr->patch->n[1],(int)pr->patch->n[2]};
   const int ndims = 3;
@@ -288,7 +290,6 @@ static void pr_vector_on_structured_mesh_3d_silo(const Pr_Field_T *const pr)
   char *varnames[] = {subg->comp[0],subg->comp[1],subg->comp[2]};
   char desc[MAX_STR_LEN];
   int DB_ret;
-  int ijk;
   
   if (v_ind0 < 0)
     abortEr_s("There is no such field \"%s\" among the fields!\n",subg->comp[0]);
@@ -297,114 +298,75 @@ static void pr_vector_on_structured_mesh_3d_silo(const Pr_Field_T *const pr)
   if (v_ind2 < 0)
     abortEr_s("There is no such field \"%s\" among the fields!\n",subg->comp[2]);
   
-  comp[0] = malloc((long unsigned)nnodes*sizeof(*comp[0]));
-  pointerEr(comp[0]);
-  comp[1] = malloc((long unsigned)nnodes*sizeof(*comp[1]));
-  pointerEr(comp[1]);
-  comp[2] = malloc((long unsigned)nnodes*sizeof(*comp[2]));
-  pointerEr(comp[2]);
-  
-  v[0] = patch->pool[v_ind0]->v;
-  v[1] = patch->pool[v_ind1]->v;
-  v[2] = patch->pool[v_ind2]->v;
-  
-  for (ijk = 0 ; ijk < nnodes; ++ijk)
-  {
-    comp[0][ijk] = (float)v[0][ijk];
-    comp[1][ijk] = (float)v[1][ijk];
-    comp[2][ijk] = (float)v[2][ijk];
-  }
+  comp[0] = patch->pool[v_ind0]->v;
+  comp[1] = patch->pool[v_ind1]->v;
+  comp[2] = patch->pool[v_ind2]->v;
   
   sprintf(desc,"Vector_%s_%s_%s",
     subg->comp[0],subg->comp[1],subg->comp[2]);
   
   DB_ret = DBPutQuadvar(dbfile,desc,pr->patch->name,3,
-    varnames,comp,dims,ndims,0,0,DB_FLOAT,DB_NODECENT,0);
+    varnames,comp,dims,ndims,0,0,DB_DOUBLE,DB_NODECENT,0);
   if (DB_ret == -1)
     abortEr("Silo library failed to print.\n");
     
   /* if there is another file that the field needs to be printed */
   if (pr->file2)
     DB_ret = DBPutQuadvar(pr->file2,desc,pr->patch->name,3,
-      varnames,comp,dims,ndims,0,0,DB_FLOAT,DB_NODECENT,0);
+      varnames,comp,dims,ndims,0,0,DB_DOUBLE,DB_NODECENT,0);
     
   if (DB_ret == -1)
     abortEr("Silo library failed to print.\n");
   
-  free(comp[0]);
-  free(comp[1]);
-  free(comp[2]);
 }
 
 /* printing a 3d structured mesh using silo library */
 static void pr_structured_mesh_3d_silo(const Pr_Field_T *const pr)
 {
   DBfile *const dbfile = pr->file;
-  float *coords[] = {pr->a,pr->b,pr->c};
+  const double *coords[] = {pr->a,pr->b,pr->c};
   int dims[] = 
     {(int)pr->patch->n[0],(int)pr->patch->n[1],(int)pr->patch->n[2]};
   const int ndims = 3;
   int DB_ret;
   
   DB_ret = DBPutQuadmesh(dbfile,pr->patch->name,0,coords,dims,ndims,
-      DB_FLOAT,DB_NONCOLLINEAR,pr->opt_patch);
+      DB_DOUBLE,DB_NONCOLLINEAR,pr->opt_patch);
       
   if (DB_ret == -1)
-    abortEr("Silo library failed to print.\n");
-  
+    abortEr("Silo library failed to print.\n"); 
 }
 
 /* filling x,y,z value for each node for a structured mesh,
 // in compliance with what silo library needs. in fact, silo needs
-// x[k][j][i] for each coords and this 3D format maped 
-// like i+n0*(j+n1*k) to a 1D format.
-*/
-static void prepare_node_structured_mesh_3d_silo(const char *const type,const Patch_T *const patch,float **const x,float **const y,float **const z)
+// x[i][j][k] for each coords. */
+static void prepare_node_structured_mesh_3d_silo(const char *const type,const Patch_T *const patch,double *const x,double *const y,double *const z)
 {
-  float *a, *b, *c;
   const unsigned nn = patch->nn;
   unsigned ijk;
-  
-  a = malloc(nn*sizeof(*a));
-  pointerEr(a);
-  b = malloc(nn*sizeof(*b));
-  pointerEr(b);
-  c = malloc(nn*sizeof(*c));
-  pointerEr(c);
   
   if (strcmp_i(type,"Cartesian"))
   {
     for (ijk = 0; ijk < nn; ++ijk)
     {
-      a[ijk] = (float)patch->node[ijk]->x[0];
-      b[ijk] = (float)patch->node[ijk]->x[1];
-      c[ijk] = (float)patch->node[ijk]->x[2];
+      x[ijk] = patch->node[ijk]->x[0];
+      y[ijk] = patch->node[ijk]->x[1];
+      z[ijk] = patch->node[ijk]->x[2];
     }
   }
   else if (strcmp_i(type,"Curvilinear"))
   {
     for (ijk = 0; ijk < nn; ++ijk)
     {
-      a[ijk] = (float)patch->node[ijk]->X[0];
-      b[ijk] = (float)patch->node[ijk]->X[1];
-      c[ijk] = (float)patch->node[ijk]->X[2];
+      x[ijk] = patch->node[ijk]->X[0];
+      y[ijk] = patch->node[ijk]->X[1];
+      z[ijk] = patch->node[ijk]->X[2];
     }
   }
   else
     abortEr_s("There is no such type of coordinates"
       " \"%s\"for printing.\n",type);
   
-  *x = a;
-  *y = b;
-  *z = c;
-}
-
-/* freeing nodes for silo library */
-static void free_nodes_silo(float *x,float *y,float *z)
-{
-  if (x) free(x);
-  if (y) free(y);
-  if (z) free(z);
 }
 
 /* it reads the parameter to find out what and how it's going to be print.
