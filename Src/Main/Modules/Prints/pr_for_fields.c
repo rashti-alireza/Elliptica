@@ -16,8 +16,11 @@
 //
 // usage examples:
 // ===============
-// # parameter that is determined in input file is like follows:
+// # parameter that is determined in input file is like:
 // print_fields_4d = yes,Format:HDF5,{(V_U0,V_U1,V_U2),psi,eta,(a_U0,a_U1,a_U2)}
+// # as one can see the vector quantities determined by parenthesis 
+// # and all of the desired fields need to be put in curly bracket
+//
 // Pr_Field_T *pr  = init_PrField(grid);
 // pr->folder      = "folder_path";
 // pr->par         = "print_fields_4d";
@@ -27,8 +30,7 @@
 
 /* given print parameter related to fields, the folder, and time = cycle,
 // it reads the parameter and the fields indicated there 
-// and print the result in the specified folder over ALL GRID.
-*/
+// and prints the whole grid and fields in the specified folder. */
 void pr_fields(Pr_Field_T *const pr)
 {
   const char *par4 = GetParameterS(pr->par);/* print_fields_4d */
@@ -126,8 +128,7 @@ static void pr_fields_on_grid_HDF5_4d(Pr_Field_T *const pr)
 }
 
 /* printing 3D mesh with Cartesian value 
-// ->return value: the file containing the mesh.
-*/
+// ->return value: the file containing the mesh. */
 static void *make_structured_mesh_3d_Cartesian(Pr_Field_T *const pr,const Patch_T *const patch)
 {
   DBfile *dbfile = 0;
@@ -222,10 +223,7 @@ static void *make_structured_mesh_3d_Curvilinear(Pr_Field_T *const pr,const Patc
 }
 
 
-/* printing scalar on structured 3d mesh with node centered format.
-// note data for silo library must be written in column format,
-// i.e. 3d to 1d map is i+n0*(j+n1*k).
-*/
+/* printing scalar on structured 3d mesh with node centered format. */
 static void pr_scalar_on_structured_mesh_3d_silo(const Pr_Field_T *const pr)
 {
   assert(pr->file);
@@ -235,14 +233,13 @@ static void pr_scalar_on_structured_mesh_3d_silo(const Pr_Field_T *const pr)
   struct Info_S *subg = pr->vptr;
   float *data;
   double *v;
-  const int nnodes = (int)total_nodes_patch(patch);
+  const int nnodes = (int)patch->nn;
   int dims[] = 
     {(int)pr->patch->n[0],(int)pr->patch->n[1],(int)pr->patch->n[2]};
   const int ndims = 3;
   const int v_ind = Ind(subg->field);
   int DB_ret;
-  unsigned i,j,k;
-  int l;
+  int ijk;
   
   if (v_ind < 0)
     abortEr_s("There is no such field \"%s\" among the fields!\n",subg->field);
@@ -251,10 +248,9 @@ static void pr_scalar_on_structured_mesh_3d_silo(const Pr_Field_T *const pr)
   pointerEr(data);
   
   v = patch->pool[v_ind]->v;
-  for (l = 0 ; l < nnodes; ++l)
+  for (ijk = 0 ; ijk < nnodes; ++ijk)
   {
-    IJK((unsigned)l,patch->n,&i,&j,&k);
-    data[i+(unsigned)dims[0]*(j+(unsigned)dims[1]*k)] = (float)v[l];
+    data[ijk] = (float)v[ijk];
   }
    
   DB_ret = DBPutQuadvar1(dbfile,subg->field,pr->patch->name,
@@ -272,10 +268,7 @@ static void pr_scalar_on_structured_mesh_3d_silo(const Pr_Field_T *const pr)
   free(data);
 }
 
-/* printing vector field on structured 3d mesh with node centered format.
-// note data for silo library must be written in cloumn format,
-// i.e. 3d to 1d map is i+n0*(j+n1*k).
-*/
+/* printing vector field on structured 3d mesh with node centered format. */
 static void pr_vector_on_structured_mesh_3d_silo(const Pr_Field_T *const pr)
 {
   assert(pr->file);
@@ -295,8 +288,7 @@ static void pr_vector_on_structured_mesh_3d_silo(const Pr_Field_T *const pr)
   char *varnames[] = {subg->comp[0],subg->comp[1],subg->comp[2]};
   char desc[MAX_STR_LEN];
   int DB_ret;
-  unsigned i,j,k;
-  int l;
+  int ijk;
   
   if (v_ind0 < 0)
     abortEr_s("There is no such field \"%s\" among the fields!\n",subg->comp[0]);
@@ -316,13 +308,11 @@ static void pr_vector_on_structured_mesh_3d_silo(const Pr_Field_T *const pr)
   v[1] = patch->pool[v_ind1]->v;
   v[2] = patch->pool[v_ind2]->v;
   
-  for (l = 0 ; l < nnodes; ++l)
+  for (ijk = 0 ; ijk < nnodes; ++ijk)
   {
-    IJK((unsigned)l,patch->n,&i,&j,&k);
-    unsigned map = i+(unsigned)dims[0]*(j+(unsigned)dims[1]*k);
-    comp[0][map] = (float)v[0][l];
-    comp[1][map] = (float)v[1][l];
-    comp[2][map] = (float)v[2][l];
+    comp[0][ijk] = (float)v[0][ijk];
+    comp[1][ijk] = (float)v[1][ijk];
+    comp[2][ijk] = (float)v[2][ijk];
   }
   
   sprintf(desc,"Vector_%s_%s_%s",
@@ -372,10 +362,8 @@ static void pr_structured_mesh_3d_silo(const Pr_Field_T *const pr)
 static void prepare_node_structured_mesh_3d_silo(const char *const type,const Patch_T *const patch,float **const x,float **const y,float **const z)
 {
   float *a, *b, *c;
-  const unsigned n0 = patch->n[0];
-  const unsigned n1 = patch->n[1];
   const unsigned nn = patch->nn;
-  unsigned i,j,k,n;
+  unsigned ijk;
   
   a = malloc(nn*sizeof(*a));
   pointerEr(a);
@@ -386,24 +374,20 @@ static void prepare_node_structured_mesh_3d_silo(const char *const type,const Pa
   
   if (strcmp_i(type,"Cartesian"))
   {
-    for (n = 0; n < nn; ++n)
+    for (ijk = 0; ijk < nn; ++ijk)
     {
-      IJK(n,patch->n,&i,&j,&k);
-      a[i+n0*(j+n1*k)] = (float)patch->node[n]->x[0];
-      b[i+n0*(j+n1*k)] = (float)patch->node[n]->x[1];
-      c[i+n0*(j+n1*k)] = (float)patch->node[n]->x[2];
-      
+      a[ijk] = (float)patch->node[ijk]->x[0];
+      b[ijk] = (float)patch->node[ijk]->x[1];
+      c[ijk] = (float)patch->node[ijk]->x[2];
     }
   }
   else if (strcmp_i(type,"Curvilinear"))
   {
-    for (n = 0; n < nn; ++n)
+    for (ijk = 0; ijk < nn; ++ijk)
     {
-      IJK(n,patch->n,&i,&j,&k);
-      a[i+n0*(j+n1*k)] = (float)patch->node[n]->X[0];
-      b[i+n0*(j+n1*k)] = (float)patch->node[n]->X[1];
-      c[i+n0*(j+n1*k)] = (float)patch->node[n]->X[2];
-
+      a[ijk] = (float)patch->node[ijk]->X[0];
+      b[ijk] = (float)patch->node[ijk]->X[1];
+      c[ijk] = (float)patch->node[ijk]->X[2];
     }
   }
   else
