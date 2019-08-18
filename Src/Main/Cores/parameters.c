@@ -24,6 +24,30 @@ void update_parameter_string(const char *const lv, const char *const rv)
   
 }
 
+/* add or updating a integer value parameter */
+void update_parameter_integer(const char *const lv, const int rv)
+{
+  if (!lv)
+    return;
+    
+  Parameter_T *par;
+  char str_rv[100];
+  sprintf(str_rv,"%d",rv);
+  
+  par = get_parameter(lv);
+  if (par)/* if this parameter exists update it */
+  {
+    _free(par->rv);
+    par->rv = dup_s(str_rv);
+  }
+  else/* since it does not exist */
+  {
+    sprintf(str_rv,"%d",rv);
+    add_parameter(lv,str_rv);
+  }
+  
+}
+
 /* adding left value and right value to parameter data base 
 // double format. */
 void add_parameter_double(const char *const lv, const double rv)
