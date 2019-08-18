@@ -28,6 +28,9 @@ int Binary_BH_NS_Initial_Data(void)
   {
     unsigned i;
     
+    /* updating some parameter for new round of iteration */
+    update_parameter_integer("iteration_number",(int)iter);
+    
     /* making a directory for this iteration and save the path */
     sprintf(folder_name,"BBN_Iteration");
     folder_path = make_directory(path_par,folder_name);
