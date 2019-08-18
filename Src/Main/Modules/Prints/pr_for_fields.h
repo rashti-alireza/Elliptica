@@ -31,4 +31,7 @@ static void pr_vector_on_structured_mesh_3d_silo(const Pr_Field_T *const pr);
 static void *make_structured_mesh_3d_Cartesian(Pr_Field_T *const pr,const Patch_T *const patch);
 static void *make_structured_mesh_3d_Curvilinear(Pr_Field_T *const pr,const Patch_T *const patch);
 static void prepare_node_structured_mesh_3d_silo(const char *const type,const Patch_T *const patch,double *const x,double *const y,double *const z);
-static void pr_multi_mesh(Pr_Field_T *const pr);
+static void write_multi_mesh(const Pr_Field_T *const pr);
+static void write_multi_vars(const Pr_Field_T *const pr);
+static void make_multi_var(const Pr_Field_T *const pr,const char *const var);
+

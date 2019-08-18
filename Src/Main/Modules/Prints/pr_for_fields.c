@@ -130,12 +130,14 @@ static void pr_fields_on_grid_HDF5_4d(Pr_Field_T *const pr)
       abortEr("Silo library failed to close the file.\n");
   }/* end of FOR_ALL_PATCHES(pa,pr->grid) */
     
-  pr_multi_mesh(pr);
+  write_multi_mesh(pr);
+  write_multi_vars(pr);
 }
 
 /* make master file to encompass all of the patch info 
-// for convenience of visulization, so one doesn't need to add each box separately */
-static void pr_multi_mesh(Pr_Field_T *const pr)
+// for convenience of visulization, so one doesn't need to 
+// add each patch (mesh) one by one. */
+static void write_multi_mesh(const Pr_Field_T *const pr)
 {
   const int npatch   = (int)pr->grid->np;
   DBfile *grid_file_xyz  = 0;
@@ -203,6 +205,110 @@ static void pr_multi_mesh(Pr_Field_T *const pr)
     free(patch_names_abc[i]);
     
 }
+
+/* make master file to encompass ALL of the VARIABLES info 
+// for convenience of visulization, so one doesn't need to 
+// add each variables one by one. */
+static void write_multi_vars(const Pr_Field_T *const pr)
+{
+  struct Info_S *const pr_info = pr->group;
+  const unsigned npr = pr->ng;
+  unsigned i_pr;
+  
+  /* for all fields or variables */
+  for (i_pr = 0; i_pr < npr; ++i_pr)
+  {
+    /* if it is vector */
+    if (pr_info[i_pr].vec_flg)
+    {
+      make_multi_var(pr,pr_info[i_pr].comp[0]);
+      make_multi_var(pr,pr_info[i_pr].comp[1]);
+      make_multi_var(pr,pr_info[i_pr].comp[2]);
+    }
+    /* if it is scalar */
+    else
+      make_multi_var(pr,pr_info[i_pr].field);
+  }
+
+}
+
+/* make master file for ONE variable to encompass all of the variable info
+// at all patches for convenience of visulization, so one doesn't need to 
+// add each patch one by one. */  
+static void make_multi_var(const Pr_Field_T *const pr,const char *const var)
+{
+  const int npatch = (int)pr->grid->np;
+  DBfile *var_file_xyz  = 0;
+  DBfile *var_file_abc  = 0;
+  char *var_names_xyz[npatch];
+  char *var_names_abc[npatch];
+  char var_file_path_xyz[MAX_STR_LEN];
+  char var_file_path_abc[MAX_STR_LEN];
+  char var_name[MAX_STR_LEN];
+  int  var_types[npatch];
+  int DB_ret,i;
+  unsigned pa;
+  
+  FOR_ALL_PATCHES(pa,pr->grid)
+  {
+    Patch_T *patch = pr->grid->patch[pa];
+    
+    if (_Ind(var) < 0)
+      continue;
+    
+    /* populating DBPutMultimesh function arguments */
+    var_names_xyz[pa] = calloc(MAX_STR_LEN,1);
+    pointerEr(var_names_xyz[pa]);
+    var_names_abc[pa] = calloc(MAX_STR_LEN,1);
+    pointerEr(var_names_abc[pa]);
+    sprintf(var_names_xyz[pa],"%s_xyz_%04d.silo:%s",/* this is how we set var files */
+                             patch->name,pr->cycle,var);
+    sprintf(var_names_abc[pa],"%s_abc_%04d.silo:%s",/* this is how we set var files */
+                             patch->name,pr->cycle,var);
+    var_types[pa] = DB_QUADVAR;
+  }/* end of FOR_ALL_PATCHES(pa,pr->grid) */
+  
+  /* make multi-var master file for xyz type */
+  sprintf(var_file_path_xyz,"%s/grid%d_%s_xyz_%04d.silo",
+                            pr->folder,pr->grid->gn,var,pr->cycle);
+  var_file_xyz = 
+    DBCreate(var_file_path_xyz,DB_CLOBBER,DB_LOCAL,
+            "Master file composed of all variable path",DB_HDF5);
+  pointerEr(var_file_xyz);
+  sprintf(var_name,"%s_xyz",var);
+  DB_ret = DBPutMultivar(var_file_xyz,var_name,npatch,var_names_xyz,var_types,0);
+  if (DB_ret == -1)
+    abortEr("Silo library failed to make multi-mesh.\n");
+    
+  /* close and free */
+  if (DBClose(var_file_xyz) == -1)
+    abortEr("Silo library failed to close the file.\n");
+  for (i = 0; i < npatch; ++i)
+    free(var_names_xyz[i]);
+
+//test
+  //pointerEr(DBGetMultivar(var_file_xyz,var_name));
+//end
+  /* make multi-var master file for abc type */
+  sprintf(var_file_path_abc,"%s/grid%d_%s_abc_%04d.silo",
+                            pr->folder,pr->grid->gn,var,pr->cycle);
+  var_file_abc = 
+    DBCreate(var_file_path_abc,DB_CLOBBER,DB_LOCAL,
+            "Master file composed of all variable path",DB_HDF5);
+  pointerEr(var_file_abc);
+  sprintf(var_name,"%s_abc",var);
+  DB_ret = DBPutMultivar(var_file_abc,var_name,npatch,var_names_abc,var_types,0);
+  if (DB_ret == -1)
+    abortEr("Silo library failed to make multi-mesh.\n");
+    
+  /* close and free */
+  if (DBClose(var_file_abc) == -1)
+    abortEr("Silo library failed to close the file.\n");
+  for (i = 0; i < npatch; ++i)
+    free(var_names_abc[i]);
+
+}
+
 
 /* printing 3D mesh in Cartesian coordinates
 // ->return value: the file containing the mesh. */
