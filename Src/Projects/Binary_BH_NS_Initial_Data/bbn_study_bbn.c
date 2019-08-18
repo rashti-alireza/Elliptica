@@ -29,7 +29,7 @@ static void print_fields(Grid_T *const grid)
 
   Pr_Field_T *pr  = init_PrField(grid);
   const char *path_par = GetParameterS_E("iteration_output");
-  char *folder = make_directory(path_par,"output_3D");
+  char *folder = make_directory(path_par,"output_4d");
   
   pr->folder = folder;
   pr->par    = "print_fields_4d";
