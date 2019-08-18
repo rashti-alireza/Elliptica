@@ -24,6 +24,21 @@ typedef struct PR_FIELD_T
   void *v;/* v in double or float */
   void *file;/* file */
   void *file2;/* file */
+  
+  /* some options and flags */
+  unsigned abc_f: 1;/* if 1 prints also the patches and fields in 
+                    // their (a,b,c) coords ((X,Y,Z) coords ); 
+                    // but it seems boring, 
+                    // because it would be just a bunch of boxes. 
+                    // so the default is 0, which means print only
+                    // in Cartesian coords.
+                    // if 0 does nothing. default is 0 */
+  unsigned multimesh_f: 1;/* if 1 it makes a master file of 
+                          // all patches as a whole grid, 
+                          // if 0 does nothing. default is 0 */
+  unsigned multivar_f : 1;/* if 1 it makes a master file of 
+                          // all fields, if 0 does nothing. default is 0 */
+  
 }Pr_Field_T;
 
 int test_print(const Print_T f);

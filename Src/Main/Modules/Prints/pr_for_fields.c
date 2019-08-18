@@ -13,6 +13,8 @@
 #define DL_C ','
 
 /* Print Fields:
+// note: in Silo language, I'm using curvilinear format for both mesh and data (fields)
+// regardless of the patch is Cartesian or not.
 //
 // usage examples:
 // ===============
@@ -24,7 +26,17 @@
 // Pr_Field_T *pr  = init_PrField(grid);
 // pr->folder      = "folder_path";
 // pr->par         = "print_fields_4d";
+// pr->cycle       = iteration_number;// if you wanna plot data at each iteration
+//
+// # the following options and flag are not necessary, their default value is 0
+// pr->multimesh_f = 1; # if you wanna make a master file for all patches as a whole grid
+// pr->multivar_f  = 1; # if you wanna make a master file for all fields. This, option seems not working with VisIt.
+// pr->abc_f       = 1; # if you wanna have the patches and fields in (X,Y,Z) corods or (a,b,c) coords.
+//
+// # print all patchs and fields
 // pr_fields(pr);
+//
+// # free
 // free_PrField(pr);
 */
 
@@ -96,22 +108,16 @@ static void pr_fields_on_grid_HDF5_4d(Pr_Field_T *const pr)
   FOR_ALL_PATCHES(pa,pr->grid)
   {
     Patch_T *patch = pr->grid->patch[pa];
-    DBfile *dbfile_Cart = 0;/* file cartesian  */
-    DBfile *dbfile_Curv = 0;/* file for curvilinear */
+    DBfile *dbfile_xyz = 0;/* file for cartesian  */
     unsigned i_pr;
    
-    /* printing Cartesian mesh, 
-    // namely coords are Cartesian, e.g (x,y,z) */
-    dbfile_Cart = make_structured_mesh_3d_Cartesian(pr,patch);
-    /* printing Curvilinear mesh, 
-    // namely coords are Curvilinear, e.g (r,theta,phi) */
-    dbfile_Curv = make_structured_mesh_3d_Curvilinear(pr,patch);
+    /* printing in Cartesian coords, namely in (x,y,z) values */
+    dbfile_xyz = make_structured_mesh_3d_xyz(pr,patch);
     
     /* printing field on the meshes */
     for (i_pr = 0; i_pr < npr; ++i_pr)
     {
-      pr->file  = dbfile_Cart;
-      pr->file2 = dbfile_Curv;
+      pr->file  = dbfile_xyz;
       pr->vptr  = &pr_info[i_pr];
       
       /* if it is vector to be printed */
@@ -123,15 +129,47 @@ static void pr_fields_on_grid_HDF5_4d(Pr_Field_T *const pr)
         pr_scalar_on_structured_mesh_3d_silo(pr);
     }
     
-    if (DBClose(dbfile_Cart) == -1)
-      abortEr("Silo library failed to close the file.\n");
-    
-    if (DBClose(dbfile_Curv) == -1)
+    if (DBClose(dbfile_xyz) == -1)
       abortEr("Silo library failed to close the file.\n");
   }/* end of FOR_ALL_PATCHES(pa,pr->grid) */
+  
+  /* if you want in (a,b,c) coords */
+  if (pr->abc_f)
+  {
+    FOR_ALL_PATCHES(pa,pr->grid)
+    {
+      Patch_T *patch = pr->grid->patch[pa];
+      DBfile *dbfile_abc = 0;/* file for curvilinear */
+      unsigned i_pr;
+     
+      /* printing Curvilinear coords, namely in (a,b,c) values */
+      dbfile_abc = make_structured_mesh_3d_abc(pr,patch);
+      
+      /* printing field on the meshes */
+      for (i_pr = 0; i_pr < npr; ++i_pr)
+      {
+        pr->file  = dbfile_abc;
+        pr->vptr  = &pr_info[i_pr];
+        
+        /* if it is vector to be printed */
+        if (pr_info[i_pr].vec_flg)
+          pr_vector_on_structured_mesh_3d_silo(pr);
+        
+        /* printing scalar field on mesh */
+        else
+          pr_scalar_on_structured_mesh_3d_silo(pr);
+      }
+      
+      if (DBClose(dbfile_abc) == -1)
+        abortEr("Silo library failed to close the file.\n");
+    }/* end of FOR_ALL_PATCHES(pa,pr->grid) */
+  
+  }
     
-  write_multi_mesh(pr);
-  write_multi_vars(pr);
+  if (pr->multimesh_f)/* if multimesh flag active */
+    write_multi_mesh(pr);
+  if (pr->multivar_f)/* if multivar flag active */
+    write_multi_vars(pr);
 }
 
 /* make master file to encompass all of the patch info 
@@ -158,11 +196,7 @@ static void write_multi_mesh(const Pr_Field_T *const pr)
     /* populating DBPutMultimesh function arguments */
     patch_names_xyz[pa] = calloc(MAX_STR_LEN,1);
     pointerEr(patch_names_xyz[pa]);
-    patch_names_abc[pa] = calloc(MAX_STR_LEN,1);
-    pointerEr(patch_names_abc[pa]);
     sprintf(patch_names_xyz[pa],"%s_xyz_%04d.silo:%s",/* this is how we set patch files */
-                             patch->name,pr->cycle,patch->name);
-    sprintf(patch_names_abc[pa],"%s_abc_%04d.silo:%s",/* this is how we set patch files */
                              patch->name,pr->cycle,patch->name);
     patch_types[pa] = DB_QUAD_CURV;/* note, in my implementation both meshes 
                                    // are curvilinear type which makes it more flexible */
@@ -185,25 +219,41 @@ static void write_multi_mesh(const Pr_Field_T *const pr)
     abortEr("Silo library failed to close the file.\n");
   for (i = 0; i < npatch; ++i)
     free(patch_names_xyz[i]);
-
-  /* make multi-mesh master file for abc type */
-  sprintf(grid_file_path_abc,"%s/grid%d_abc_%04d.silo",
-                         pr->folder,pr->grid->gn,pr->cycle);
-  grid_file_abc = 
-    DBCreate(grid_file_path_abc,DB_CLOBBER,DB_LOCAL,
-            "Master file composed of all patches path",DB_HDF5);
-  pointerEr(grid_file_abc);
-  sprintf(grid_name,"grid%d_abc",pr->grid->gn);
-  DB_ret = DBPutMultimesh(grid_file_abc,grid_name,npatch,patch_names_abc,patch_types,0);
-  if (DB_ret == -1)
-    abortEr("Silo library failed to make multi-mesh.\n");
+  
+  /* if you want in (a,b,c) coords */
+  if (pr->abc_f)
+  {
+    FOR_ALL_PATCHES(pa,pr->grid)
+    {
+      Patch_T *patch = pr->grid->patch[pa];
+      
+      /* populating DBPutMultimesh function arguments */
+      patch_names_abc[pa] = calloc(MAX_STR_LEN,1);
+      pointerEr(patch_names_abc[pa]);
+      sprintf(patch_names_abc[pa],"%s_abc_%04d.silo:%s",/* this is how we set patch files */
+                               patch->name,pr->cycle,patch->name);
+      patch_types[pa] = DB_QUAD_CURV;/* note, in my implementation both meshes 
+                                     // are curvilinear type which makes it more flexible */
+    }/* end of FOR_ALL_PATCHES(pa,pr->grid) */
     
-  /* close and free */
-  if (DBClose(grid_file_abc) == -1)
-    abortEr("Silo library failed to close the file.\n");
-  for (i = 0; i < npatch; ++i)
-    free(patch_names_abc[i]);
-    
+    /* make multi-mesh master file for abc type */
+    sprintf(grid_file_path_abc,"%s/grid%d_abc_%04d.silo",
+                           pr->folder,pr->grid->gn,pr->cycle);
+    grid_file_abc = 
+      DBCreate(grid_file_path_abc,DB_CLOBBER,DB_LOCAL,
+              "Master file composed of all patches path",DB_HDF5);
+    pointerEr(grid_file_abc);
+    sprintf(grid_name,"grid%d_abc",pr->grid->gn);
+    DB_ret = DBPutMultimesh(grid_file_abc,grid_name,npatch,patch_names_abc,patch_types,0);
+    if (DB_ret == -1)
+      abortEr("Silo library failed to make multi-mesh.\n");
+      
+    /* close and free */
+    if (DBClose(grid_file_abc) == -1)
+      abortEr("Silo library failed to close the file.\n");
+    for (i = 0; i < npatch; ++i)
+      free(patch_names_abc[i]);
+  }/* end of if (pr->abc_f) */
 }
 
 /* make master file to encompass ALL of the VARIABLES info 
@@ -259,11 +309,7 @@ static void make_multi_var(const Pr_Field_T *const pr,const char *const var)
     /* populating DBPutMultimesh function arguments */
     var_names_xyz[pa] = calloc(MAX_STR_LEN,1);
     pointerEr(var_names_xyz[pa]);
-    var_names_abc[pa] = calloc(MAX_STR_LEN,1);
-    pointerEr(var_names_abc[pa]);
     sprintf(var_names_xyz[pa],"%s_xyz_%04d.silo:%s",/* this is how we set var files */
-                             patch->name,pr->cycle,var);
-    sprintf(var_names_abc[pa],"%s_abc_%04d.silo:%s",/* this is how we set var files */
                              patch->name,pr->cycle,var);
     var_types[pa] = DB_QUADVAR;
   }/* end of FOR_ALL_PATCHES(pa,pr->grid) */
@@ -273,12 +319,12 @@ static void make_multi_var(const Pr_Field_T *const pr,const char *const var)
                             pr->folder,pr->grid->gn,var,pr->cycle);
   var_file_xyz = 
     DBCreate(var_file_path_xyz,DB_CLOBBER,DB_LOCAL,
-            "Master file composed of all variable path",DB_HDF5);
+            "Master file composed of all fields path",DB_HDF5);
   pointerEr(var_file_xyz);
   sprintf(var_name,"%s_xyz",var);
   DB_ret = DBPutMultivar(var_file_xyz,var_name,npatch,var_names_xyz,var_types,0);
   if (DB_ret == -1)
-    abortEr("Silo library failed to make multi-mesh.\n");
+    abortEr("Silo library failed to make multi-var.\n");
     
   /* close and free */
   if (DBClose(var_file_xyz) == -1)
@@ -289,30 +335,48 @@ static void make_multi_var(const Pr_Field_T *const pr,const char *const var)
 //test
   //pointerEr(DBGetMultivar(var_file_xyz,var_name));
 //end
-  /* make multi-var master file for abc type */
-  sprintf(var_file_path_abc,"%s/grid%d_%s_abc_%04d.silo",
-                            pr->folder,pr->grid->gn,var,pr->cycle);
-  var_file_abc = 
-    DBCreate(var_file_path_abc,DB_CLOBBER,DB_LOCAL,
-            "Master file composed of all variable path",DB_HDF5);
-  pointerEr(var_file_abc);
-  sprintf(var_name,"%s_abc",var);
-  DB_ret = DBPutMultivar(var_file_abc,var_name,npatch,var_names_abc,var_types,0);
-  if (DB_ret == -1)
-    abortEr("Silo library failed to make multi-mesh.\n");
-    
-  /* close and free */
-  if (DBClose(var_file_abc) == -1)
-    abortEr("Silo library failed to close the file.\n");
-  for (i = 0; i < npatch; ++i)
-    free(var_names_abc[i]);
 
+  /* if you want in (a,b,c) coords */
+  if (pr->abc_f)
+  {
+    FOR_ALL_PATCHES(pa,pr->grid)
+    {
+      Patch_T *patch = pr->grid->patch[pa];
+      
+      if (_Ind(var) < 0)
+        continue;
+      
+      /* populating DBPutMultimesh function arguments */
+      var_names_abc[pa] = calloc(MAX_STR_LEN,1);
+      pointerEr(var_names_abc[pa]);
+      sprintf(var_names_abc[pa],"%s_abc_%04d.silo:%s",/* this is how we set var files */
+                               patch->name,pr->cycle,var);
+      var_types[pa] = DB_QUADVAR;
+    }/* end of FOR_ALL_PATCHES(pa,pr->grid) */
+
+    /* make multi-var master file for abc type */
+    sprintf(var_file_path_abc,"%s/grid%d_%s_abc_%04d.silo",
+                              pr->folder,pr->grid->gn,var,pr->cycle);
+    var_file_abc = 
+      DBCreate(var_file_path_abc,DB_CLOBBER,DB_LOCAL,
+              "Master file composed of all fields path",DB_HDF5);
+    pointerEr(var_file_abc);
+    sprintf(var_name,"%s_abc",var);
+    DB_ret = DBPutMultivar(var_file_abc,var_name,npatch,var_names_abc,var_types,0);
+    if (DB_ret == -1)
+      abortEr("Silo library failed to make multivar.\n");
+      
+    /* close and free */
+    if (DBClose(var_file_abc) == -1)
+      abortEr("Silo library failed to close the file.\n");
+    for (i = 0; i < npatch; ++i)
+      free(var_names_abc[i]);
+  }
 }
-
 
 /* printing 3D mesh in Cartesian coordinates
 // ->return value: the file containing the mesh. */
-static void *make_structured_mesh_3d_Cartesian(Pr_Field_T *const pr,const Patch_T *const patch)
+static void *make_structured_mesh_3d_xyz(Pr_Field_T *const pr,const Patch_T *const patch)
 {
   DBfile *dbfile = 0;
   char file_name[MAX_STR_LEN];
@@ -368,7 +432,7 @@ static void *make_structured_mesh_3d_Cartesian(Pr_Field_T *const pr,const Patch_
 /* printing 3D in Curvilinear coordinates
 // ->return value: the file containing the mesh.
 */
-static void *make_structured_mesh_3d_Curvilinear(Pr_Field_T *const pr,const Patch_T *const patch)
+static void *make_structured_mesh_3d_abc(Pr_Field_T *const pr,const Patch_T *const patch)
 {
   DBfile *dbfile = 0;
   char file_name[MAX_STR_LEN];
@@ -449,10 +513,12 @@ static void pr_scalar_on_structured_mesh_3d_silo(const Pr_Field_T *const pr)
   
   /* if there is another file that the field needs to be printed */
   if (pr->file2)
+  {
     DB_ret = DBPutQuadvar1(pr->file2,subg->field,pr->patch->name,
       data,dims,ndims,0,0,DB_DOUBLE,DB_NODECENT,0);
-  if (DB_ret == -1)
-    abortEr("Silo library failed to print.\n");
+    if (DB_ret == -1)
+      abortEr("Silo library failed to print.\n");
+  }
   
 }
 
@@ -492,11 +558,12 @@ static void pr_vector_on_structured_mesh_3d_silo(const Pr_Field_T *const pr)
     
   /* if there is another file that the field needs to be printed */
   if (pr->file2)
+  {
     DB_ret = DBPutQuadvar(pr->file2,desc,pr->patch->name,3,
       varnames,comp,dims,ndims,0,0,DB_DOUBLE,DB_NODECENT,0);
-    
-  if (DB_ret == -1)
-    abortEr("Silo library failed to print.\n");
+    if (DB_ret == -1)
+      abortEr("Silo library failed to print.\n");
+  }
   
 }
 
