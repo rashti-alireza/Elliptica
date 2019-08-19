@@ -24,7 +24,7 @@ void update_parameter_string(const char *const lv, const char *const rv)
   
 }
 
-/* add or updating a integer value parameter */
+/* add or updating an integer value parameter */
 void update_parameter_integer(const char *const lv, const int rv)
 {
   if (!lv)
@@ -42,7 +42,6 @@ void update_parameter_integer(const char *const lv, const int rv)
   }
   else/* since it does not exist */
   {
-    sprintf(str_rv,"%d",rv);
     add_parameter(lv,str_rv);
   }
   
