@@ -3,7 +3,7 @@
 // July 2018
 */
 
-#include "fourier_transformations.h"
+#include "fourier_transformation.h"
 
 
 /* 1-D regular Fourier transformation -as opposed to 
