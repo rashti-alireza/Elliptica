@@ -71,3 +71,33 @@ void rft_1d_ChebyshevNodes_coeffs(double *const values ,double *const coeffs,con
     coeffs[i] = c/scale;
   }
 }
+
+/* fourier transformation form real value to comlex ceoffs:
+// f(x) = \sum_{m=-l}^{l} c(m)*exp(I*m*x), where x is in [0,2*pi];
+// thus: we have:
+// c(m) = 1/(2*pi)*\integral_{0}^{2*pi} f(x)*exp(-I*m*x) dx.
+//
+// some notes:
+// ============
+// note: since f(x) is real we have: c(-m) = c*(m)
+// note: argument l is the limits of the sum 
+//       in f(x) = \sum_{m=-l}^{l} c(m)*exp(I*m*x).
+// note: argument n is the number of grid points in x direction.
+// note: we use trapezoidal rule to carry out the intergral. */
+void r2cft_1d_EquiSpaced_coeffs(const double *const value,double complex *const coeffs,const unsigned n,const unsigned l)
+{
+  const double complex x0 = -2.*I*M_PI/n;/* - included */
+  unsigned m;
+  
+  for (m = 0; m < l; ++m)
+  {
+    unsigned i;
+    
+    coeffs[m] = 0;
+    for (i = 0; i < n; ++i)
+      coeffs[m] += value[i]*cexp(m*i*x0);
+    
+    coeffs[m] /= n;
+  }
+  
+}
