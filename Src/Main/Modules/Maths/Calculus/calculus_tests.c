@@ -10,14 +10,68 @@ int integration_tests(Grid_T *const grid)
 {
   int status;
   
-  if (DO)
+  if (NOT_DO)
   {
     printf("Integration test: Composite Simpson's Rule 1D => \n");
     status = csr_1d(grid);
     check_test_result(status);
   }
+  if (DO)
+  {
+    printf("Integration test: Gaussian Quadrature Chebyshev Extrema => \n");
+    status = GQ_ChebExtrema(grid);
+    check_test_result(status);
+  }
   
   return EXIT_SUCCESS;
+}
+
+
+/* testing Gaussian Quadrature Chebyshev Extrema integration.
+// ->return value: if successful => TEST_SUCCESSFUL */
+static int GQ_ChebExtrema(Grid_T *const grid)
+{
+  unsigned N = 0;
+  Integration_T *I = init_integration();
+  const char *const par = GetParameterS_E("Test_Integration");
+  double *f;
+  double sf,an;/* resultant */
+  double t0,x;
+  unsigned i;
+  
+  if (regex_search("[[:digit:]]+",par))
+  {
+    char *s = regex_find("[[:digit:]]+",par);
+    N = (unsigned)atoi(s);
+    _free(s);
+  }
+  else
+    N = 20000;
+ 
+  f = alloc_double(N);/* integrant */
+  t0 = M_PI/(N-1);
+  I->type = "Gaussian Quadrature Chebyshev Extrema";
+  plan_integration(I);
+
+  /* [-1,1] */
+  for (i = 0; i < N; ++i)
+  {
+    x    = -cos(i*t0);
+    f[i] = sqrt(1-SQR(x))*(sin(x)+pow(x,2));/* integral sin(x)+x^2 dx */
+  }
+    
+  an = 2./3.;/* analytic answer from -1 to 1 */
+
+  I->GQ_ChebyshevExtrema->n = N;
+  I->GQ_ChebyshevExtrema->f = f;
+  sf = execute_integration(I);
+  free(f);
+  free_integration(I);
+  
+  printf("Numeric = %0.15f, Analytic = %0.15f, N = %u\n=> ",sf,an,N);
+  
+  UNUSED(grid);
+  return TEST_SUCCESSFUL;
 }
 
 /* testing composite simpson's Rule 1D.

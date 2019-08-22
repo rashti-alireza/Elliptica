@@ -2,6 +2,7 @@
 #include "memory_managing_lib.h"
 #include "maths_general_lib.h"
 #include "maths_calculus_lib.h"
+#include "maths_analytic_lib.h"
 
 #define DO 1
 #define NOT_DO 0
@@ -12,3 +13,4 @@ void plan_integration(Integration_T *const I);
 double execute_integration(Integration_T *const I);
 Integration_T *init_integration(void);
 static int csr_1d(Grid_T *const grid);
+static int GQ_ChebExtrema(Grid_T *const grid);

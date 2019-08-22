@@ -13,10 +13,15 @@
 //
 // *** for example if you want to use Composite Simpson's Rule 1D: ***
 // I->type = "Composite Simpson's Rule 1D"
-// I->Composite_Simpson_1D->a = 10;
-// I->Composite_Simpson_1D->b = 20;
-// I->Composite_Simpson_1D->n = 11;
+// I->Composite_Simpson_1D->a = 1.5;// e.g
+// I->Composite_Simpson_1D->b = M_PI;// e.g
+// I->Composite_Simpson_1D->n = 11;// e.g
 // I->Composite_Simpson_1D->f = array;
+//
+// *** for example if you want to use Gaussian Quadrature Chebyshev Extrema: ***
+// I->type = "Gaussian Quadrature Chebyshev Extrema"
+// I->GQ_ChebyshevExtrema->f = array;
+// I->GQ_ChebyshevExtrema->n = 10;// the dimension of array
 //
 // ** planning the appropriate function for integration **
 // plan_integration(I);
@@ -51,6 +56,10 @@ void plan_integration(Integration_T *const I)
   if (strcmp_i(I->type,"Composite Simpson's Rule 1D"))
   {
     I->integration_func = Composite_Simpson_1D;
+  }
+  else if (strcmp_i(I->type,"Gaussian Quadrature Chebyshev Extrema"))
+  {
+    I->integration_func = GaussQuadrature_ChebyshevExtrema;
   }
   else
     abortEr(NO_OPTION);
@@ -91,3 +100,24 @@ static double Composite_Simpson_1D(Integration_T *const I)
   return h*(i0+2*i2+4*i1)/3;
 }
 
+/* performing the integral \integral_{-1}^{1} dx f(x)/sqrt(1-x^2) 
+// using Guassian Quadrature method.
+// note: the collocation points for f(x) are Chebyshev Extrema
+// note: the integration is from -1 to 1 then the expected order of f(x)
+//       is f(-1) = f[0] and f(1) = f[n-1].
+// ->return value: \integral_{-1}^{1} f(x)dx */
+static double GaussQuadrature_ChebyshevExtrema(Integration_T *const I)
+{
+  double i0 = 0;
+  const double *const f = I->GQ_ChebyshevExtrema->f;
+  const unsigned n      = I->GQ_ChebyshevExtrema->n;
+  const double   w      = M_PI/(n-1);
+  unsigned i;
+  
+  for (i = 1; i <= n-2; ++i)
+    i0 += f[i];
+  i0 += (f[0]+f[n-1])/2;
+  i0 *= w;
+  
+  return i0;
+}
