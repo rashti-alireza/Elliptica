@@ -10,6 +10,7 @@ void *alloc_sFunc_PtoV(sFunc_PtoV_T ***const mem);
 void *alloc_needle(void);
 void *alloc_sFunc_Patch2Pdouble(sFunc_Patch2Pdouble_T ***const mem);
 double *alloc_double(const unsigned N);
+void *alloc_double_complex(const unsigned N);
 double **alloc_2D_double(const long unsigned R,const long unsigned C);
 Matrix_T *alloc_matrix(const Matrix_SF_T type_e,const long row,const long col);
 Sewing_T *alloc_sewing(void);

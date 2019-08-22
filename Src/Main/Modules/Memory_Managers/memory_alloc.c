@@ -303,3 +303,12 @@ Sewing_T *alloc_sewing(void)
   
   return sewing;
 }
+
+/* calloc memory for double complex */
+void *alloc_double_complex(const unsigned N)
+{
+  double complex *f = calloc(N,sizeof(*f));
+  pointerEr(f);
+  
+  return f;
+}
