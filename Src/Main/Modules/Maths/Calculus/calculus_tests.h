@@ -14,3 +14,4 @@ double execute_integration(Integration_T *const I);
 Integration_T *init_integration(void);
 static int csr_1d(Grid_T *const grid);
 static int GQ_ChebExtrema(Grid_T *const grid);
+static int GQ_Lobatto(Grid_T *const grid);

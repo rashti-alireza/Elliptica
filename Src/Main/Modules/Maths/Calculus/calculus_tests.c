@@ -10,7 +10,7 @@ int integration_tests(Grid_T *const grid)
 {
   int status;
   
-  if (NOT_DO)
+  if (DO)
   {
     printf("Integration test: Composite Simpson's Rule 1D => \n");
     status = csr_1d(grid);
@@ -20,6 +20,12 @@ int integration_tests(Grid_T *const grid)
   {
     printf("Integration test: Gaussian Quadrature Chebyshev Extrema => \n");
     status = GQ_ChebExtrema(grid);
+    check_test_result(status);
+  }
+  if (DO)
+  {
+    printf("Integration test: Gaussian Quadrature Lobatto method => \n");
+    status = GQ_Lobatto(grid);
     check_test_result(status);
   }
   
@@ -74,20 +80,79 @@ static int GQ_ChebExtrema(Grid_T *const grid)
   return TEST_SUCCESSFUL;
 }
 
+/* testing Gaussian Quadrature Lobatto method integration.
+// ->return value: if successful => TEST_SUCCESSFUL */
+static int GQ_Lobatto(Grid_T *const grid)
+{
+  unsigned N = 0;
+  Integration_T *I = init_integration();
+  const char *const par = GetParameterS_E("Test_Integration");
+  double *f;
+  double sf,an;/* resultant */
+  double x;
+  unsigned i;
+  
+  if (regex_search("[[:digit:]]+",par))
+  {
+    char *s = regex_find("[[:digit:]]+",par);
+    N = (unsigned)atoi(s);
+    _free(s);
+  }
+  else
+    N = 14;
+ 
+  f = alloc_double(N);/* integrant */
+  I->type = "Gaussian Quadrature Lobatto";
+  plan_integration(I);
+
+  /* [-1,1] */
+  x = -1.; f[0]   = sqrt(1-SQR(x))*(sin(x)+pow(x,2));
+  x = 1. ; f[N-1] = sqrt(1-SQR(x))*(sin(x)+pow(x,2));
+  for (i = 1; i <= N-2; ++i)
+  {
+    x    = Lobbatto_root_function(i-1,N-1);
+    f[i] = sqrt(1-SQR(x))*(sin(x)+pow(x,2));/* integral sqrt(1-x^2)*(sin(x)+x^2) dx */
+  }
+    
+  an = 0.39269908169872414;/* analytic answer from -1 to 1 */
+
+  I->GQ_Lobatto->n = N;
+  I->GQ_Lobatto->f = f;
+  sf = execute_integration(I);
+  free(f);
+  free_integration(I);
+  
+  printf("Numeric = %0.15f, Analytic = %0.15f, N = %u\n=> ",sf,an,N);
+  
+  UNUSED(grid);
+  return TEST_SUCCESSFUL;
+}
+
 /* testing composite simpson's Rule 1D.
 // ->return value: if successful => TEST_SUCCESSFUL, otherwise TEST_UNSUCCESSFUL */
 static int csr_1d(Grid_T *const grid)
 {
-  unsigned N = 2019;
+  unsigned N = 0;
   const double a = M_PI;
   const double b = 3./2.*M_PI;
   Integration_T *I = init_integration();
-  double *f = alloc_double(N);/* integrant */
+  const char *const par = GetParameterS_E("Test_Integration");
+  double *f;/* integrant */
   double sf,an;/* resultant */
   double dx;
   double err;/* expected error from theory */
   unsigned i;
   
+  if (regex_search("[[:digit:]]+",par))
+  {
+    char *s = regex_find("[[:digit:]]+",par);
+    N = (unsigned)atoi(s);
+    _free(s);
+  }
+  else
+    N = 2019;
+ 
+  f = alloc_double(N);
   UNUSED(grid);
   /* testing composite simpson's Rule 1D */
   dx = (b-a)/(N-1);

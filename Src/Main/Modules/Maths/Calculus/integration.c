@@ -23,6 +23,11 @@
 // I->GQ_ChebyshevExtrema->f = array;
 // I->GQ_ChebyshevExtrema->n = 10;// the dimension of array
 //
+// *** for example if you want to use Gaussian Quadrature Lobatto method: ***
+// I->type = "Gaussian Quadrature Lobatto"
+// I->GQ_Lobatto->f = array;
+// I->GQ_Lobatto->n = 10;// the dimension of array
+// 
 // ** planning the appropriate function for integration **
 // plan_integration(I);
 //
@@ -60,6 +65,10 @@ void plan_integration(Integration_T *const I)
   else if (strcmp_i(I->type,"Gaussian Quadrature Chebyshev Extrema"))
   {
     I->integration_func = GaussQuadrature_ChebyshevExtrema;
+  }
+  else if (strcmp_i(I->type,"Gaussian Quadrature Lobatto"))
+  {
+    I->integration_func = GaussQuadrature_Lobatto;
   }
   else
     abortEr(NO_OPTION);
@@ -102,10 +111,12 @@ static double Composite_Simpson_1D(Integration_T *const I)
 
 /* performing the integral \integral_{-1}^{1} dx f(x)/sqrt(1-x^2) 
 // using Guassian Quadrature method.
+// note: to get a good result for this method, you need many points
+//       unless f(x) is a polynomial which works best.
 // note: the collocation points for f(x) are Chebyshev Extrema
 // note: the integration is from -1 to 1 then the expected order of f(x)
 //       is f(-1) = f[0] and f(1) = f[n-1].
-// ->return value: \integral_{-1}^{1} f(x)dx */
+// ->return value: \integral_{-1}^{1} dx f(x)/sqrt(1-x^2) */
 static double GaussQuadrature_ChebyshevExtrema(Integration_T *const I)
 {
   double i0 = 0;
@@ -118,6 +129,27 @@ static double GaussQuadrature_ChebyshevExtrema(Integration_T *const I)
     i0 += f[i];
   i0 += (f[0]+f[n-1])/2;
   i0 *= w;
+  
+  return i0;
+}
+
+/* performing the integral \integral_{-1}^{1} dx f(x)
+// using Guassian Quadrature Lobatto's method.
+// note: the collocation points for f(x) are zeros of d(Legendre(x,n-1))/dx
+// note: the integration is from -1 to 1 then the expected order of f(x)
+//       is f(-1) = f[0] and f(1) = f[n-1].
+// ->return value: \integral_{-1}^{1} f(x)dx */
+static double GaussQuadrature_Lobatto(Integration_T *const I)
+{
+  double i0 = 0;
+  const double *const f = I->GQ_Lobatto->f;
+  const unsigned n      = I->GQ_Lobatto->n;
+  double (*w)(const double x, const unsigned n) = Lobbatto_weight_function;
+  unsigned i;
+  
+  for (i = 1; i <= n-2; ++i)
+    i0 += w(Lobbatto_root_function(i-1,n-1),n)*f[i];
+  i0 += 2*(f[0]+f[n-1])/(n*(n-1));
   
   return i0;
 }
