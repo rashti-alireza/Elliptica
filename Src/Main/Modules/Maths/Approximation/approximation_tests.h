@@ -7,6 +7,8 @@
 #include "maths_general_lib.h"
 #include "maths_analytic_lib.h"
 #include "maths_calculus_lib.h"
+#include "maths_approximation_lib.h"
+#include <complex.h>
 
 #define DO 1
 #define NOT_DO 0
@@ -55,6 +57,9 @@ static int interpolation_tests_Neville_1d(void);
 static int interpolation_tests_N_cubic_spline_1d(void);
 static unsigned order_of_derivative(const enum FUNC_E fn);
 static double calculate_expected_precision_for_derivative(const Field_T *const func,const enum FUNC_E fn,const Patch_T *const patch);
+int fourier_transformation_tests(Grid_T *const grid);
+static int r2cft_1d_EquiSpaced_coeffs_test(Grid_T *const grid);
+
 
 
 

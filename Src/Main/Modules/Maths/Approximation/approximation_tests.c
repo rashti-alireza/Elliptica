@@ -7,6 +7,92 @@
 #define ArgM(a) a,#a/*used for being more accurate in naming and fast */
 #define MAXSTR 400
 
+/* testing Fourier transformation functions.
+// ->return value: EXIT_SUCCESS */
+int fourier_transformation_tests(Grid_T *const grid)
+{
+  
+  if (DO)
+  {
+    printf("Fourier transformation test: real to complex Fourier transformation: \n");
+    r2cft_1d_EquiSpaced_coeffs_test(grid);
+  }
+  
+  return EXIT_SUCCESS;
+}
+
+
+/* testing : r2cft_1d_EquiSpaced_coeffs function.
+// ->return value: TEST_SUCCESSFUL */
+static int r2cft_1d_EquiSpaced_coeffs_test(Grid_T *const grid)
+{
+  unsigned N = 0;
+  const char *const par = GetParameterS_E("Test_FourierTransformation");
+  double *f;/* f(x) x = [0,2pi] */
+  double complex *c;/* f(x) = c_i*exp(I*i*x) */
+  double x;
+  unsigned i,j;
+  
+  if (regex_search("[[:digit:]]+",par))
+  {
+    char *s = regex_find("[[:digit:]]+",par);
+    N = (unsigned)atoi(s);
+    _free(s);
+  }
+  else
+    N = 20;
+ 
+  f = alloc_double_complex(N);
+  for (i = 0; i < N; ++i)
+  {
+    x    = 2.*i*M_PI/N;
+    f[i] = sin(2*x)*cos(x)+SQR(sin(4*x));
+  }
+  /* calculating coeffs */
+  c = r2cft_1d_EquiSpaced_coeffs(f,N);
+  
+  /* now let's see how Fourier sum works: */
+  
+  printf("%-*s%-*s diff:\n",40,"Fourier sum:",20,"f(x):");
+  for (i = 0; i < N; ++i)
+  {
+    x = 2.*i*M_PI/N;
+    double complex fc = 0;
+    fc = c[0];
+    for (j = 1; j < N/2+1; ++j)
+      fc += c[j]*cexp(I*(double)j*x)+conj(c[j])*cexp(-I*(double)j*x);
+    printf("%+0.15f%+0.15fI   %+0.15f   %+e\n",creal(fc),cimag(fc),f[i],creal(fc)-f[i]);
+  }
+  /* let's do some interpolation too: */
+  double *rand = make_random_number(N,0,2*M_PI);
+  printf("\nFor n = %u:\n",N);
+  printf("%-*s%-*s diff:\n",40,"Interpolation:",20,"f(x):");
+  for (i = 0; i < N; ++i)
+  {
+    x = rand[i];
+    double complex fi = 0;
+    double fr = sin(2*x)*cos(x)+SQR(sin(4*x));
+    fi = c[0];
+    for (j = 1; j < N/2+1; ++j)
+      fi += c[j]*cexp(I*(double)j*x)+conj(c[j])*cexp(-I*(double)j*x);
+    printf("%+0.15f%+0.15fI   %+0.15f   %+e\n",creal(fi),cimag(fi),fr,creal(fi)-fr);
+  }
+  
+ 
+/* undefining I complex */   
+#ifdef I
+#undef I
+#endif
+
+  free(f);
+  free(c);
+  free(rand);
+  
+  UNUSED(grid);
+  
+  return TEST_SUCCESSFUL;
+}
+
 /* testing interpolation functions.
 // takes bunch of random points inside each patch and compares
 // the value of interpolation and exact value for a field.

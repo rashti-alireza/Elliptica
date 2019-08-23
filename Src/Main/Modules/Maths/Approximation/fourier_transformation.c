@@ -73,23 +73,30 @@ void rft_1d_ChebyshevNodes_coeffs(double *const values ,double *const coeffs,con
 }
 
 /* fourier transformation form real value to comlex ceoffs:
-// f(x) = \sum_{m=-l}^{l} c(m)*exp(I*m*x), where x is in [0,2*pi];
-// thus: we have:
+// f(x) = \sum_{m=-l+1}^{l-1} c(m)*exp(I*m*x), where x is in [0,2*pi],
+// and l = n/2+1 (if n is odd, it is rounded down) thus: we have:
 // c(m) = 1/(2*pi)*\integral_{0}^{2*pi} f(x)*exp(-I*m*x) dx.
 //
 // some notes:
 // ============
-// note: since f(x) is real we have: c(-m) = c*(m)
-// note: argument l is the limits of the sum 
-//       in f(x) = \sum_{m=-l}^{l} c(m)*exp(I*m*x).
+// note: l = n/2 +1 if n is odd it is rounded down.
+// note: since f(x) is real we have: c(-m) = c*(m) 
+//       and we only calculate c(j), j = 0,...,l (l INCLUSIVE)
 // note: argument n is the number of grid points in x direction.
+// note: of course, works best when f function is periodic in [0,2*pi]
+// note: it allocates memory so at some point you need to free it.
 // note: we use trapezoidal rule to carry out the intergral. */
-void r2cft_1d_EquiSpaced_coeffs(const double *const value,double complex *const coeffs,const unsigned n,const unsigned l)
+void *r2cft_1d_EquiSpaced_coeffs(const double *const value,const unsigned n)
 {
+  if (n == 0)
+    abortEr("Fourier Transformation: No points!\n");
+  
+  const unsigned l = n/2+1;/* note: if n is not even, it is rounded down */
+  double complex *const coeffs = alloc_double_complex(l);
   const double complex x0 = -2.*I*M_PI/n;/* - included */
   unsigned m;
   
-  for (m = 0; m < l; ++m)
+  for (m = 0; m < l; ++m)/* note: l is excluded, otherwise one have aliasing and then error */
   {
     unsigned i;
     
@@ -100,4 +107,5 @@ void r2cft_1d_EquiSpaced_coeffs(const double *const value,double complex *const 
     coeffs[m] /= n;
   }
   
+  return coeffs;
 }
