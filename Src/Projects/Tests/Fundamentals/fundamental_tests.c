@@ -52,6 +52,9 @@ int Fundamental_Tests(void)
   
   if (strstr_i(GetParameterS("Test_Derivative"),"yes"))
     derivative_tests(grid);
+  
+  if (strstr_i(GetParameterS("Test_FourierTransformation"),"yes"))
+    fourier_transformation_tests(grid);
     
   if (strstr_i(GetParameterS("Test_Integration"),"yes"))
     integration_tests(grid);
