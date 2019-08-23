@@ -10,7 +10,7 @@ print (' /* direct output of this file to associated_legendre.c */')
 print ('#include "core_lib.h"')
 print ('#include "maths_analytic_lib.h"')
 # declaration
-print ('double associated_legendre(const int l, int m, const double x);')
+print ('double associated_legendre(const int l, const int m, const double x);')
 for l in range(lmax):
     for m in range(l+1):
         print('double associated_legendre_P_l{}m{}(const double x);'.format(l,m))
@@ -24,7 +24,7 @@ print ('static const int lmax = {};'.format(lmax))
 print ('typedef double fPlm_T (const double x);')
 print ('/* P_{l}^{m}(x)=\\left( -1\\right) ^{m}\\left( 1-x^{2}\\right) ^{\\frac {m} {2}}\\frac {d^{m}P_{l}\\left( x\\right) } {dx^{m}}')
 print ('// ->return value: P_{l}^{m}(x) */')
-print ('double associated_legendre(const int l, int m, const double x)')
+print ('double associated_legendre(const int l, const int m, const double x)')
 print ('{')
 print ('  fPlm_T *P[lmax][lmax];')
 print ('  fPlm_T *P_[lmax][lmax];') # for negative m, this is more accurate 

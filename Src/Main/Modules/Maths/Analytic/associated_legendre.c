@@ -1,7 +1,7 @@
  /* direct output of this file to associated_legendre.c */
 #include "core_lib.h"
 #include "maths_analytic_lib.h"
-double associated_legendre(const int l, int m, const double x);
+double associated_legendre(const int l, const int m, const double x);
 double associated_legendre_P_l0m0(const double x);
 double associated_legendre_P_l1m0(const double x);
 double associated_legendre_P_l1m1(const double x);
@@ -235,7 +235,7 @@ static const int lmax = 15;
 typedef double fPlm_T (const double x);
 /* P_{l}^{m}(x)=\left( -1\right) ^{m}\left( 1-x^{2}\right) ^{\frac {m} {2}}\frac {d^{m}P_{l}\left( x\right) } {dx^{m}}
 // ->return value: P_{l}^{m}(x) */
-double associated_legendre(const int l, int m, const double x)
+double associated_legendre(const int l, const int m, const double x)
 {
   fPlm_T *P[lmax][lmax];
   fPlm_T *P_[lmax][lmax];

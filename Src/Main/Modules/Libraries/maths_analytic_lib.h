@@ -99,4 +99,4 @@ double *sinx_f_yz(Patch_T *const patch);
 double *sinx_f_xyz(Patch_T *const patch);
 double poly5_f_point(const double x,const double y,const double z);
 int Factorial(const int n);
-double associated_legendre(const int l, int m, const double x);
+double associated_legendre(const int l, const int m, const double x);
