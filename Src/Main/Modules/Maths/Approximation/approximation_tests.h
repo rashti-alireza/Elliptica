@@ -58,7 +58,7 @@ static int interpolation_tests_N_cubic_spline_1d(void);
 static unsigned order_of_derivative(const enum FUNC_E fn);
 static double calculate_expected_precision_for_derivative(const Field_T *const func,const enum FUNC_E fn,const Patch_T *const patch);
 int fourier_transformation_tests(Grid_T *const grid);
-static int r2cft_1d_EquiSpaced_coeffs_test(Grid_T *const grid);
+static int cft_c2r_r2c_1d_EquiSpaced_test(Grid_T *const grid);
 
 
 

@@ -15,7 +15,7 @@ int fourier_transformation_tests(Grid_T *const grid)
   if (DO)
   {
     printf("Fourier transformation test: real to complex Fourier transformation: \n");
-    r2cft_1d_EquiSpaced_coeffs_test(grid);
+    cft_c2r_r2c_1d_EquiSpaced_test(grid);
   }
   
   return EXIT_SUCCESS;
@@ -24,7 +24,7 @@ int fourier_transformation_tests(Grid_T *const grid)
 
 /* testing : r2cft_1d_EquiSpaced_coeffs function.
 // ->return value: TEST_SUCCESSFUL */
-static int r2cft_1d_EquiSpaced_coeffs_test(Grid_T *const grid)
+static int cft_c2r_r2c_1d_EquiSpaced_test(Grid_T *const grid)
 {
   unsigned N = 0;
   const char *const par = GetParameterS_E("Test_FourierTransformation");
