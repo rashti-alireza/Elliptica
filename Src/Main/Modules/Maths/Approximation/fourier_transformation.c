@@ -72,7 +72,7 @@ void rft_1d_ChebyshevNodes_coeffs(double *const values ,double *const coeffs,con
   }
 }
 
-/* fourier transformation form real value to comlex ceoffs:
+/* fourier transformation from real value to complex coeffs:
 // f(x) = \sum_{m=-l+1}^{l-1} c(m)*exp(I*m*x), where x is in [0,2*pi],
 // and l = n/2+1 (if n is odd, it is rounded down) thus: we have:
 // c(m) = 1/(2*pi)*\integral_{0}^{2*pi} f(x)*exp(-I*m*x) dx.
@@ -81,11 +81,12 @@ void rft_1d_ChebyshevNodes_coeffs(double *const values ,double *const coeffs,con
 // ============
 // note: l = n/2 +1 if n is odd it is rounded down.
 // note: since f(x) is real we have: c(-m) = c*(m) 
-//       and we only calculate c(j), j = 0,...,l (l INCLUSIVE)
+//       and we only calculate c(j), j = 0,...,l-1
 // note: argument n is the number of grid points in x direction.
 // note: of course, works best when f function is periodic in [0,2*pi]
 // note: it allocates memory so at some point you need to free it.
-// note: we use trapezoidal rule to carry out the intergral. */
+// note: we use trapezoidal rule to carry out the intergral. 
+// ->return value: c(m) */
 void *r2cft_1d_EquiSpaced_coeffs(const double *const value,const unsigned n)
 {
   if (n == 0)
@@ -108,4 +109,31 @@ void *r2cft_1d_EquiSpaced_coeffs(const double *const value,const unsigned n)
   }
   
   return coeffs;
+}
+
+/* fourier transformation from complex coeffs to real values:
+// f(x) = \sum_{m=-l+1}^{l-1} c(m)*exp(I*m*x), where x is in [0,2*pi],
+// and l = n/2+1 (if n is odd, it is rounded down) thus: we have:
+// c(m) = 1/(2*pi)*\integral_{0}^{2*pi} f(x)*exp(-I*m*x) dx. 
+// ->return value : f(x) */
+double *c2rft_1d_EquiSpaced_values(void *const coeffs,const unsigned N)
+{
+  if (N == 0)
+    abortEr("Fourier Transformation: No points!\n");
+  
+  const double complex *const c = coeffs;
+  double *f = alloc_double(N);
+  const unsigned l = N/2+1;
+  const double complex x0 = 2.*I*M_PI/N;
+  unsigned i,j;
+  
+  for (i = 0; i < N; ++i)
+  {
+    double complex x = i*x0;
+    f[i] = creal(c[0]);
+    for (j = 1; j < l; ++j)
+      f[i] += 2.*creal(c[j]*cexp((double)j*x));
+  }
+
+  return f;
 }

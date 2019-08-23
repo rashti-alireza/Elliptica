@@ -52,7 +52,6 @@ static int r2cft_1d_EquiSpaced_coeffs_test(Grid_T *const grid)
   c = r2cft_1d_EquiSpaced_coeffs(f,N);
   
   /* now let's see how Fourier sum works: */
-  
   printf("%-*s%-*s diff:\n",40,"Fourier sum:",20,"f(x):");
   for (i = 0; i < N; ++i)
   {
@@ -63,6 +62,7 @@ static int r2cft_1d_EquiSpaced_coeffs_test(Grid_T *const grid)
       fc += c[j]*cexp(I*(double)j*x)+conj(c[j])*cexp(-I*(double)j*x);
     printf("%+0.15f%+0.15fI   %+0.15f   %+e\n",creal(fc),cimag(fc),f[i],creal(fc)-f[i]);
   }
+  
   /* let's do some interpolation too: */
   double *rand = make_random_number(N,0,2*M_PI);
   printf("\nFor n = %u:\n",N);
@@ -78,7 +78,14 @@ static int r2cft_1d_EquiSpaced_coeffs_test(Grid_T *const grid)
     printf("%+0.15f%+0.15fI   %+0.15f   %+e\n",creal(fi),cimag(fi),fr,creal(fi)-fr);
   }
   
- 
+  /* let's also check the inverse transformation: */
+  double *f_inv = c2rft_1d_EquiSpaced_values(c,N);
+  printf("\nFor n = %u:\n",N);
+  printf("Checking inverse Fourier function:\n");
+  printf("%-*s%-*s diff:\n",21,"Fourier sum:",20,"f(x):");
+  for (i = 0; i < N; ++i)
+    printf("%+0.15f   %+0.15f   %+e\n",f_inv[i],f[i],f_inv[i]-f[i]);
+  
 /* undefining I complex */   
 #ifdef I
 #undef I
@@ -87,7 +94,7 @@ static int r2cft_1d_EquiSpaced_coeffs_test(Grid_T *const grid)
   free(f);
   free(c);
   free(rand);
-  
+  free(f_inv);
   UNUSED(grid);
   
   return TEST_SUCCESSFUL;
