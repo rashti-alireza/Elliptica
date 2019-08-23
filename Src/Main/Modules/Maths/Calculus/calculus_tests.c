@@ -18,15 +18,13 @@ int integration_tests(Grid_T *const grid)
   }
   if (DO)
   {
-    printf("Integration test: Gaussian Quadrature Chebyshev Extrema => \n");
-    status = GQ_ChebExtrema(grid);
-    check_test_result(status);
+    printf("Integration test: Gaussian Quadrature Chebyshev Extrema: \n");
+    GQ_ChebExtrema(grid);
   }
   if (DO)
   {
-    printf("Integration test: Gaussian Quadrature Lobatto method => \n");
-    status = GQ_Lobatto(grid);
-    check_test_result(status);
+    printf("Integration test: Gaussian Quadrature Lobatto method: \n");
+    GQ_Lobatto(grid);
   }
   
   return EXIT_SUCCESS;
@@ -34,7 +32,7 @@ int integration_tests(Grid_T *const grid)
 
 
 /* testing Gaussian Quadrature Chebyshev Extrema integration.
-// ->return value: if successful => TEST_SUCCESSFUL */
+// ->return value: TEST_SUCCESSFUL */
 static int GQ_ChebExtrema(Grid_T *const grid)
 {
   unsigned N = 0;
@@ -81,7 +79,7 @@ static int GQ_ChebExtrema(Grid_T *const grid)
 }
 
 /* testing Gaussian Quadrature Lobatto method integration.
-// ->return value: if successful => TEST_SUCCESSFUL */
+// ->return value:  TEST_SUCCESSFUL */
 static int GQ_Lobatto(Grid_T *const grid)
 {
   unsigned N = 0;
