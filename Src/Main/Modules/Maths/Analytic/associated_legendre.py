@@ -32,7 +32,8 @@ print ('  fPlm_T *P_[lmax][lmax];') # for negative m, this is more accurate
 print ('  if (x > 1. || x < -1.)')
 print ('    abortEr("x exceeds from [-1,1] interval.\\n");')
 print ('  if (l >= {})'.format(lmax))
-print ('    abortEr("l exceeds the maximum.\\n");')
+print ('    abortEr("l exceeds the maximum.\\n"\n'\
+       '            "To go higher number change lmax in \'associated_legendre.py\'.\\n");')
 print ('  if (l < 0)')
 print ('    abortEr("l is negative.\\n");')
 print ('  if (abs(m) > l)')

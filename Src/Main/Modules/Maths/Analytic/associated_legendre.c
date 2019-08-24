@@ -242,7 +242,8 @@ double associated_legendre(const int l, const int m, const double x)
   if (x > 1. || x < -1.)
     abortEr("x exceeds from [-1,1] interval.\n");
   if (l >= 15)
-    abortEr("l exceeds the maximum.\n");
+    abortEr("l exceeds the maximum.\n"
+            "To go higher number change lmax in 'associated_legendre.py'.\n");
   if (l < 0)
     abortEr("l is negative.\n");
   if (abs(m) > l)
