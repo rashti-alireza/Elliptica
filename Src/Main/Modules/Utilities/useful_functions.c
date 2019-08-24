@@ -480,3 +480,20 @@ unsigned IsItNSPatch(const Patch_T *const patch)
   return ret;
 }
 
+/* print an array of double type with dimension n, for debuging purposes */
+void dbprint(const double *v,const unsigned n,const char *const desc)
+{
+  unsigned i;
+  
+  pr_line();
+  
+  if (desc)/* description */
+    printf("Debugging: %s\n",desc);
+  else
+    printf("Debugging:\n");
+  
+  for (i = 0; i < n; ++i)
+    printf("data[%02u] = %+.15f\n",i,v[i]);
+  
+  pr_line();
+}

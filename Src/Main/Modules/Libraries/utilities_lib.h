@@ -29,3 +29,4 @@ double max_Jacobian_dX_dx(Patch_T *const patch);
 double spectral_derivative_max_error(const Field_T *const f,const unsigned o);
 unsigned IsItHorizonPatch(const Patch_T *const patch);
 unsigned IsItNSPatch(const Patch_T *const patch);
+void dbprint(const double *v,const unsigned n,const char *const desc);
