@@ -19,6 +19,11 @@ typedef struct INTEGRATION_T
    const double *f;/* integrand in \integral_{-1}^{1} f(x) dx */
    unsigned n;/* number of collocation points for function f */
  }GQ_Lobatto[1];/* Gauss Quadrature using Lobatto's collocation */
+ struct
+ {
+   const double *f;/* integrand in \integral_{-1}^{1} f(x) dx */
+   unsigned n;/* number of collocation points for function f */
+ }GQ_Legendre[1];/* Gauss Quadrature using Legendre's collocation */
  double (*integration_func)(struct INTEGRATION_T *const I);/* function that integrates */
 }Integration_T;
 
@@ -30,4 +35,7 @@ Integration_T *init_integration(void);
 int integration_tests(Grid_T *const grid);
 double Lobbatto_weight_function(const double x, const unsigned N);
 double Lobbatto_root_function(const unsigned rootN, const unsigned N);
+double Legendre_root_function(const unsigned rootN, const unsigned N);
+double Legendre_weight_function(const double x, const unsigned N);
+double dlegendre_dx(const unsigned n, const double x);
 
