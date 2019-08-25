@@ -12,18 +12,18 @@ int integration_tests(Grid_T *const grid)
   
   if (DO)
   {
-    printf("Integration test: Composite Simpson's Rule 1D => \n");
+    printf("\nIntegration test: Composite Simpson's Rule 1D => \n");
     status = csr_1d(grid);
     check_test_result(status);
   }
   if (DO)
   {
-    printf("Integration test: Gaussian Quadrature Chebyshev Extrema: \n");
+    printf("\nIntegration test: Gaussian Quadrature Chebyshev Extrema: \n");
     GQ_ChebExtrema(grid);
   }
   if (DO)
   {
-    printf("Integration test: Gaussian Quadrature Lobatto method: \n");
+    printf("\nIntegration test: Gaussian Quadrature Lobatto method: \n");
     GQ_Lobatto(grid);
   }
   
@@ -61,18 +61,20 @@ static int GQ_ChebExtrema(Grid_T *const grid)
   for (i = 0; i < N; ++i)
   {
     x    = -cos(i*t0);
-    f[i] = sqrt(1-SQR(x))*(sin(x)+pow(x,2));/* integral sin(x)+x^2 dx */
+    f[i] = pow(x,2)+pow(x,4)+10*pow(x,6)+pow(x,3);/* \int f(x)/(1-x^2)dx */
   }
     
-  an = 2./3.;/* analytic answer from -1 to 1 */
+  an = 4*M_PI;/* analytic answer from -1 to 1 */
 
   I->GQ_ChebyshevExtrema->n = N;
   I->GQ_ChebyshevExtrema->f = f;
   sf = execute_integration(I);
+  
+  printf("Max expected error for N = %u is %e\n",N,I->err);
+  printf("Numeric = %e, Analytic = %e, diff = %e\n",sf,an,fabs(sf-an));
+
   free(f);
   free_integration(I);
-  
-  printf("Numeric = %0.15f, Analytic = %0.15f, N = %u\n=> ",sf,an,N);
   
   UNUSED(grid);
   return TEST_SUCCESSFUL;
@@ -104,23 +106,24 @@ static int GQ_Lobatto(Grid_T *const grid)
   plan_integration(I);
 
   /* [-1,1] */
-  x = -1.; f[0]   = sqrt(1-SQR(x))*(sin(x)+pow(x,2));
-  x = 1. ; f[N-1] = sqrt(1-SQR(x))*(sin(x)+pow(x,2));
+  x = -1.; f[0]   = pow(x,2)+pow(x,4)+10*pow(x,6)+pow(x,3);
+  x = 1. ; f[N-1] = pow(x,2)+pow(x,4)+10*pow(x,6)+pow(x,3);
   for (i = 1; i <= N-2; ++i)
   {
     x    = Lobbatto_root_function(i-1,N-1);
-    f[i] = sqrt(1-SQR(x))*(sin(x)+pow(x,2));/* integral sqrt(1-x^2)*(sin(x)+x^2) dx */
+    f[i] = pow(x,2)+pow(x,4)+10*pow(x,6)+pow(x,3);
   }
     
-  an = 0.39269908169872414;/* analytic answer from -1 to 1 */
-
+  an = 3.923809523809524;
   I->GQ_Lobatto->n = N;
   I->GQ_Lobatto->f = f;
   sf = execute_integration(I);
+  
+  printf("Max error for N = %u is %e\n",N,I->err);
+  printf("Numeric = %e, Analytic = %e, diff = %e\n ",sf,an,fabs(sf-an));
+  
   free(f);
   free_integration(I);
-  
-  printf("Numeric = %0.15f, Analytic = %0.15f, N = %u\n=> ",sf,an,N);
   
   UNUSED(grid);
   return TEST_SUCCESSFUL;

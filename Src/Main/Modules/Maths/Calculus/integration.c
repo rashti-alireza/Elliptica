@@ -123,7 +123,13 @@ static double GaussQuadrature_ChebyshevExtrema(Integration_T *const I)
   const double *const f = I->GQ_ChebyshevExtrema->f;
   const unsigned n      = I->GQ_ChebyshevExtrema->n;
   const double   w      = M_PI/(n-1);
+  double err = M_PI;
   unsigned i;
+  
+  err /= Factorial(2*(int)n);
+  err *= L_inf(n,f);/* approximately */
+  err /= pow(2,2*n-1);
+  I-> err = err;
   
   for (i = 1; i <= n-2; ++i)
     i0 += f[i];
@@ -144,9 +150,22 @@ static double GaussQuadrature_Lobatto(Integration_T *const I)
   double i0 = 0;
   const double *const f = I->GQ_Lobatto->f;
   const unsigned n      = I->GQ_Lobatto->n;
+  const int ni          = (int)n;
   double (*w)(const double x, const unsigned n) = Lobbatto_weight_function;
+  double err;
   unsigned i;
   
+  err = n*pow(n-1,3)/(2*n-1);
+  err *= pow(2,2*n-1)/Factorial(2*ni-2);
+  err *= Factorial(ni-2);
+  err *= Factorial(ni-2);
+  err /= Factorial(2*ni-2);
+  err *= Factorial(ni-2);
+  err /= Factorial(2*ni-2);
+  err *= Factorial(ni-2);
+  err *= L_inf(n,f);/* approximately */
+  I-> err = err;
+
   for (i = 1; i <= n-2; ++i)
     i0 += w(Lobbatto_root_function(i-1,n-1),n)*f[i];
   i0 += 2*(f[0]+f[n-1])/(n*(n-1));
