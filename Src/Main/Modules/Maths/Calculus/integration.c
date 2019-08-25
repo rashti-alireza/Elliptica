@@ -155,15 +155,19 @@ static double GaussQuadrature_Lobatto(Integration_T *const I)
   double err;
   unsigned i;
   
-  err = n*pow(n-1,3)/(2*n-1);
+  /* trying to tame err */
+  err = 1./Factorial(2*ni-2);
+  err *= n*pow(n-1,3);
   err *= pow(2,2*n-1)/Factorial(2*ni-2);
-  err *= Factorial(ni-2);
-  err *= Factorial(ni-2);
   err /= Factorial(2*ni-2);
   err *= Factorial(ni-2);
-  err /= Factorial(2*ni-2);
+  err *= Factorial(ni-2);
+  err /= (2*n-1);
+  err *= Factorial(ni-2);
   err *= Factorial(ni-2);
   err *= L_inf(n,f);/* approximately */
+  if (fabs(err) > 10.)/* if n gets big, we have overflow, so put it 0, which is not valid */
+    err = 0.;
   I-> err = err;/* note: this error is valid only for polynomial */
 
   for (i = 1; i <= n-2; ++i)
