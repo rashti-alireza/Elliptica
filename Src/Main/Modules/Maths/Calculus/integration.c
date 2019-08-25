@@ -129,7 +129,7 @@ static double GaussQuadrature_ChebyshevExtrema(Integration_T *const I)
   err /= Factorial(2*(int)n);
   err *= L_inf(n,f);/* approximately */
   err /= pow(2,2*n-1);
-  I-> err = err;
+  I-> err = err;/* note: this error is valid only for polynomial */
   
   for (i = 1; i <= n-2; ++i)
     i0 += f[i];
@@ -164,7 +164,7 @@ static double GaussQuadrature_Lobatto(Integration_T *const I)
   err /= Factorial(2*ni-2);
   err *= Factorial(ni-2);
   err *= L_inf(n,f);/* approximately */
-  I-> err = err;
+  I-> err = err;/* note: this error is valid only for polynomial */
 
   for (i = 1; i <= n-2; ++i)
     i0 += w(Lobbatto_root_function(i-1,n-1),n)*f[i];
