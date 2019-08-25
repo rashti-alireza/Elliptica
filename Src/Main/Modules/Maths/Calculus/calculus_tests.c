@@ -10,7 +10,7 @@ int integration_tests(Grid_T *const grid)
 {
   int status;
   
-  if (DO)
+  if (NOT_DO)
   {
     printf("\nIntegration test: Composite Simpson's Rule 1D => \n");
     status = csr_1d(grid);
@@ -25,6 +25,11 @@ int integration_tests(Grid_T *const grid)
   {
     printf("\nIntegration test: Gaussian Quadrature Lobatto method: \n");
     GQ_Lobatto(grid);
+  }
+  if (DO)
+  {
+    printf("\nIntegration test: Gaussian Quadrature Legendre method: \n");
+    GQ_Legendre(grid);
   }
   
   return EXIT_SUCCESS;
@@ -117,6 +122,53 @@ static int GQ_Lobatto(Grid_T *const grid)
   an = 3.923809523809524;
   I->GQ_Lobatto->n = N;
   I->GQ_Lobatto->f = f;
+  sf = execute_integration(I);
+  
+  printf("Max error for N = %u is %e\n",N,I->err);
+  printf("Numeric = %e, Analytic = %e, diff = %e\n ",sf,an,fabs(sf-an));
+  
+  free(f);
+  free_integration(I);
+  
+  UNUSED(grid);
+  return TEST_SUCCESSFUL;
+}
+
+/* testing Gaussian Quadrature Legendre method integration.
+// ->return value:  TEST_SUCCESSFUL */
+static int GQ_Legendre(Grid_T *const grid)
+{
+  unsigned N = 0;
+  Integration_T *I = init_integration();
+  const char *const par = GetParameterS_E("Test_Integration");
+  double *f;
+  double sf,an;/* resultant */
+  double x;
+  unsigned i;
+  
+  if (regex_search("[[:digit:]]+",par))
+  {
+    char *s = regex_find("[[:digit:]]+",par);
+    N = (unsigned)atoi(s);
+    _free(s);
+  }
+  else
+    N = 14;
+ 
+  f = alloc_double(N);/* integrant */
+  I->type = "Gaussian Quadrature Legendre";
+  plan_integration(I);
+
+  /* [-1,1] */
+  for (i = 0; i < N; ++i)
+  {
+    x    = Legendre_root_function(i,N);
+    f[i] = pow(x,2)+pow(x,4)+10*pow(x,6)+pow(x,3);
+  }
+    
+  an = 3.923809523809524;
+  I->GQ_Legendre->n = N;
+  I->GQ_Legendre->f = f;
   sf = execute_integration(I);
   
   printf("Max error for N = %u is %e\n",N,I->err);

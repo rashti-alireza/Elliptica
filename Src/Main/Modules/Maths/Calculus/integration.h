@@ -10,6 +10,8 @@ Integration_T *init_integration(void);
 static double Composite_Simpson_1D(Integration_T *const I);
 static double GaussQuadrature_ChebyshevExtrema(Integration_T *const I);
 static double GaussQuadrature_Lobatto(Integration_T *const I);
+static double GaussQuadrature_Legendre(Integration_T *const I);
+
 
 
 

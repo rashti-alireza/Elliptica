@@ -27,6 +27,11 @@
 // I->type = "Gaussian Quadrature Lobatto"
 // I->GQ_Lobatto->f = array;
 // I->GQ_Lobatto->n = 10;// the dimension of array
+//
+// *** for example if you want to use Gaussian Quadrature Legendre method: ***
+// I->type = "Gaussian Quadrature Legendre"
+// I->GQ_Legendre->f = array;
+// I->GQ_Legendre->n = 10;// the dimension of array
 // 
 // ** planning the appropriate function for integration **
 // plan_integration(I);
@@ -69,6 +74,10 @@ void plan_integration(Integration_T *const I)
   else if (strcmp_i(I->type,"Gaussian Quadrature Lobatto"))
   {
     I->integration_func = GaussQuadrature_Lobatto;
+  }
+  else if (strcmp_i(I->type,"Gaussian Quadrature Legendre"))
+  {
+    I->integration_func = GaussQuadrature_Legendre;
   }
   else
     abortEr(NO_OPTION);
@@ -173,6 +182,42 @@ static double GaussQuadrature_Lobatto(Integration_T *const I)
   for (i = 1; i <= n-2; ++i)
     i0 += w(Lobbatto_root_function(i-1,n-1),n)*f[i];
   i0 += 2*(f[0]+f[n-1])/(n*(n-1));
+  
+  return i0;
+}
+
+/* performing the integral \integral_{-1}^{1} dx f(x)
+// using Guass Legendre quadrature method.
+// note: the collocation points for f(x) are zeros of Legendre(n,x) 
+//       for array f of dimension n.
+// note: the integration is from -1 to 1 then the expected order of f(x)
+//       is f(-1) = f[0] and f(1) = f[n-1].
+// ->return value: \integral_{-1}^{1} f(x)dx */
+static double GaussQuadrature_Legendre(Integration_T *const I)
+{
+  double i0 = 0;
+  const double *const f = I->GQ_Legendre->f;
+  const unsigned n      = I->GQ_Legendre->n;
+  const int ni          = (int)n;
+  double (*w)(const double x, const unsigned n) = Legendre_weight_function;
+  double err;
+  unsigned i;
+  
+  /* trying to tame err */
+  err = 1./Factorial(2*ni);
+  err *= Factorial(ni);
+  err = pow(err,3);
+  err /= (2*n+1);
+  err *= Factorial(ni);
+  err *= pow(2,2*n+1);
+  err *= L_inf(n,f);/* approximately */
+  
+  if (fabs(err) > 10.)/* if n gets big, we have overflow, so put it 0, which is not valid */
+    err = 0.;
+  I-> err = err;/* note: this error is valid only for polynomial */
+
+  for (i = 0; i < n; ++i)
+    i0 += w(Legendre_root_function(i,n),n)*f[i];
   
   return i0;
 }
