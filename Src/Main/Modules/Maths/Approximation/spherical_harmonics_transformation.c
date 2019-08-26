@@ -17,6 +17,8 @@
 // o. Clm = realC[lm2n(l,m,lmax)] + imagC[lm2n(l,m,lmax)]*I;
 // o. Clm is only calculated for m >= 0, since C(l,-m) = (-1)^m C*(l,m)
 // o. since m >= 0 the total memory is N = (Lmax+1)*Lmax/2 + Lmax+1
+// o. an interesting observation is that even some simple functions like:
+//    sin(theta)*(cos(phi)-*sin(2*phi)) requires very large Lmax, bigger than 20!
 */
 void 
 get_Ylm_coeffs(
@@ -50,13 +52,11 @@ const unsigned Ntheta/* Ntheta points in theta direction */,
 const unsigned Nphi/* Nphi points in phi direction*/,
 const unsigned Lmax/* maximum l (inclusive) for the expansion */)
 {
-  const unsigned N = (Lmax+1)*Lmax/2 + Lmax+1;
-  double **Ftheta  = calloc(Ntheta,sizeof(*Ftheta));pointerEr(Ftheta);
-  double *g_r      = alloc_double(Ntheta);
-  double *g_i      = alloc_double(Ntheta);
-  double **g       = calloc(N,sizeof(*g));pointerEr(g);
-  double *theta    = alloc_double(Ntheta);
-  double complex **v = calloc(Lmax+1,sizeof(*v));pointerEr(v);
+  double **Ftheta    = calloc(Ntheta,sizeof(*Ftheta));pointerEr(Ftheta);
+  double *real_fYlm  = alloc_double(Ntheta);/* Re( \int f(theta,phi) Ylm^* sin(theta) exp^{-i m phi} dphi) */
+  double *imag_fYlm  = alloc_double(Ntheta);/* Im( \int f(theta,phi) Ylm^* sin(theta) exp^{-i m phi} dphi) */
+  double *theta      = alloc_double(Ntheta);
+  double complex **v = calloc(Lmax+1,sizeof(*v));pointerEr(v);/* v_{m}{theta} = \int f(theta,phi) exp^{-i m phi} dphi */
   Integration_T *I2  = init_integration();
   unsigned i,j,l,m,lm;
   
@@ -70,13 +70,9 @@ const unsigned Lmax/* maximum l (inclusive) for the expansion */)
     for (m = 0; m <= l; ++m)
     {
       lm    = lm2n(l,m);
-      g[lm] = alloc_double(Ntheta);
       for (i = 0; i < Ntheta; ++i)
-      {
-        g[lm][i]  = creal(Ylm(l,(int)m,theta[i],0));/* for phi = 0 Ylm is real */
         for (j = 0; j < Nphi; ++j)
           Ftheta[i][j] = f[j+i*Nphi];/* for each theta */
-      }
     }/* end of for (m = 0; m <= l; ++m) */
     
   /* carrying out the phi part of the integral, note: v(-m) = v*(m) */
@@ -102,20 +98,19 @@ const unsigned Lmax/* maximum l (inclusive) for the expansion */)
       lm = lm2n(l,m);
       for (i = 0; i < Ntheta; ++i)
       { 
-        g_r[i] = g[lm][i]*creal(v[m][i]);
-        g_i[i] = g[lm][i]*cimag(v[m][i]);
+        real_fYlm[i] = creal(Ylm(l,(int)m,theta[i],0))*creal(v[m][i]);
+        imag_fYlm[i] = creal(Ylm(l,(int)m,theta[i],0))*cimag(v[m][i]);
       }
-      I2->GQ_Legendre->f = g_r;
+      I2->GQ_Legendre->f = real_fYlm;
       realClm[lm]        = execute_integration(I2);
-      I2->GQ_Legendre->f = g_i;
+      I2->GQ_Legendre->f = imag_fYlm;
       imagClm[lm]        = execute_integration(I2);
     }/* end of for (m = 0; m <= l; ++m) */
   
   /* free: */  
-  free(g_r);
-  free(g_i);
+  free(real_fYlm);
+  free(imag_fYlm);
   free(theta);
-  free_2d_mem(g,N);
   free_2d_mem(v,Lmax+1);
   free_integration(I2);
 }
