@@ -16,7 +16,7 @@ print ('#include <complex.h>\n')
 print ('static const int lmax = {};'.format(lmax))
 print ('typedef double complex fYlm_T (const double theta, const double phi);\n')
 # declaration
-print ('double complex Ylm(const int l, const int m, const double theta, const double phi);')
+print ('double complex Ylm(const unsigned l, const int m, const double theta, const double phi);')
 for l in range(lmax):
     for m in range(l+1):
         print('double complex Ylm_l{}m{}(const double theta, const double phi);'.format(l,m))
@@ -28,7 +28,7 @@ for l in range(lmax):
 print ('\n\n')        
 print ('/* Y_n^m(\\theta, \\varphi) := \\sqrt{\\frac{(2n+1)(n-m)!}{4\\pi(n+m)!}} exp(i m \\varphi)\\mathrm{P}_n^m\\left(\\cos(\\theta)\\right) ');
 print ('// ->return value: Y_{l}^{m}(x) */')
-print ('double complex Ylm(const int l, int m, const double theta, const double phi)')
+print ('double complex Ylm(const unsigned l, int m, const double theta, const double phi)')
 print ('{')
 print ('  fYlm_T *Y[lmax][lmax];')
 print ('  fYlm_T *Y_[lmax][lmax];') # for negative m, this is more accurate 
@@ -39,9 +39,7 @@ print ('  if (phi > 2*M_PI || phi < 0)')
 print ('    abortEr("phi exceeds from [0,2*pi] interval.\\n");')
 print ('  if (l >= {})'.format(lmax))
 print ('    abortEr("l exceeds the maximum.\\n");')
-print ('  if (l < 0)')
-print ('    abortEr("l is negative.\\n");')
-print ('  if (abs(m) > l)')
+print ('  if ((unsigned)abs(m) > l)')
 print ('    return 0;')
 
 # assign functions

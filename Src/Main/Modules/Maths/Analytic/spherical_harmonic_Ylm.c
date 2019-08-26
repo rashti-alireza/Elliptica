@@ -7,7 +7,7 @@
 static const int lmax = 15;
 typedef double complex fYlm_T (const double theta, const double phi);
 
-double complex Ylm(const int l, const int m, const double theta, const double phi);
+double complex Ylm(const unsigned l, const int m, const double theta, const double phi);
 double complex Ylm_l0m0(const double theta, const double phi);
 double complex Ylm_l1m0(const double theta, const double phi);
 double complex Ylm_l1m1(const double theta, const double phi);
@@ -238,7 +238,7 @@ double complex Ylm_l14m_14(const double theta, const double phi);
 
 /* Y_n^m(\theta, \varphi) := \sqrt{\frac{(2n+1)(n-m)!}{4\pi(n+m)!}} exp(i m \varphi)\mathrm{P}_n^m\left(\cos(\theta)\right) 
 // ->return value: Y_{l}^{m}(x) */
-double complex Ylm(const int l, int m, const double theta, const double phi)
+double complex Ylm(const unsigned l, int m, const double theta, const double phi)
 {
   fYlm_T *Y[lmax][lmax];
   fYlm_T *Y_[lmax][lmax];
@@ -248,9 +248,7 @@ double complex Ylm(const int l, int m, const double theta, const double phi)
     abortEr("phi exceeds from [0,2*pi] interval.\n");
   if (l >= 15)
     abortEr("l exceeds the maximum.\n");
-  if (l < 0)
-    abortEr("l is negative.\n");
-  if (abs(m) > l)
+  if ((unsigned)abs(m) > l)
     return 0;
   Y[0][0] = Ylm_l0m0;
   Y[1][0] = Ylm_l1m0;
