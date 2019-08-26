@@ -35,7 +35,7 @@ int Ylm_transformation_tests(Grid_T *const grid)
   return EXIT_SUCCESS;
 }
 
-/* testing : get_Ylm_coeffs_complex function.
+/* testing : get_Ylm_coeffs function.
 // ->return value: TEST_SUCCESSFUL */
 static int Ylm_trans_test(Grid_T *const grid)
 {
@@ -51,6 +51,10 @@ static int Ylm_trans_test(Grid_T *const grid)
   double phi,theta,df;
   unsigned Smem;
   unsigned i,j,l,m,lm;
+  
+  /* initialize tables */
+  init_Ylm();
+  init_Legendre_root_function();
   
   if (regex_search("[[:digit:]]+",par))
   {
@@ -87,7 +91,7 @@ static int Ylm_trans_test(Grid_T *const grid)
   
   df = 0.;
   /* now let's see how Ylm sum works: */
-  printf("\nFor Ntheta = %u, Nphi = %u, Lmax = %u:\n",Ntheta,Nphi,lmax);
+  printf("For Ntheta = %u, Nphi = %u, Lmax = %u:\n",Ntheta,Nphi,lmax);
   /* for each theta and phi */
   for (i = 0; i < Ntheta; ++i)
   {

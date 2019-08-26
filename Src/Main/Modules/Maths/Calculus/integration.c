@@ -160,9 +160,14 @@ static double GaussQuadrature_Lobatto(Integration_T *const I)
   const double *const f = I->GQ_Lobatto->f;
   const unsigned n      = I->GQ_Lobatto->n;
   const int ni          = (int)n;
-  double (*w)(const double x, const unsigned n) = Lobbatto_weight_function;
+  double (*w)(const double x, const unsigned n) = Lobatto_weight_function;
   double err;
   unsigned i;
+  
+  /* initializing root tables */
+  init_Lobatto_root_function();
+  /* initialzing associated_legendre needed for Lobatto_weight_function */
+  init_associated_legendre();
   
   /* trying to tame err */
   err = 1./Factorial(2*ni-2);
@@ -180,7 +185,7 @@ static double GaussQuadrature_Lobatto(Integration_T *const I)
   I-> err = err;/* note: this error is valid only for polynomial */
 
   for (i = 1; i <= n-2; ++i)
-    i0 += w(Lobbatto_root_function(i-1,n-1),n)*f[i];
+    i0 += w(Lobatto_root_function(i-1,n-1),n)*f[i];
   i0 += 2*(f[0]+f[n-1])/(n*(n-1));
   
   return i0;
@@ -202,6 +207,12 @@ static double GaussQuadrature_Legendre(Integration_T *const I)
   double (*w)(const double x, const unsigned n) = Legendre_weight_function;
   double err;
   unsigned i;
+  
+  /* initializing root tables */
+  init_Legendre_root_function();
+  
+  /* initialzing dPn/dx needed for Legendre_weight_function */
+  init_dLegendre_dx();
   
   /* trying to tame err */
   err = 1./Factorial(2*ni);

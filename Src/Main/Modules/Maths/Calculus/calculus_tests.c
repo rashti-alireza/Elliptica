@@ -97,6 +97,8 @@ static int GQ_Lobatto(Grid_T *const grid)
   double x;
   unsigned i;
   
+  init_Lobatto_root_function();
+  
   if (regex_search("[[:digit:]]+",par))
   {
     char *s = regex_find("[[:digit:]]+",par);
@@ -115,7 +117,7 @@ static int GQ_Lobatto(Grid_T *const grid)
   x = 1. ; f[N-1] = pow(x,2)+pow(x,4)+10*pow(x,6)+pow(x,3);
   for (i = 1; i <= N-2; ++i)
   {
-    x    = Lobbatto_root_function(i-1,N-1);
+    x    = Lobatto_root_function(i-1,N-1);
     f[i] = pow(x,2)+pow(x,4)+10*pow(x,6)+pow(x,3);
   }
     
@@ -145,6 +147,8 @@ static int GQ_Legendre(Grid_T *const grid)
   double sf,an;/* resultant */
   double x;
   unsigned i;
+  
+  init_Legendre_root_function();
   
   if (regex_search("[[:digit:]]+",par))
   {
