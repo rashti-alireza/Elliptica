@@ -60,6 +60,10 @@ const unsigned Lmax/* maximum l (inclusive) for the expansion */)
   Integration_T *I2  = init_integration();
   unsigned i,j,l,m,lm;
   
+  /* initialize tables */
+  init_Ylm();
+  init_Legendre_root_function();
+  
   /* making the integrands, note: array must be in order */
   for (i = 0; i < Ntheta; ++i)
   {
@@ -123,6 +127,9 @@ double interpolation_Ylm(double *const realClm,double *const imagClm,const unsig
   double complex sum = 0;
   unsigned l,m,lm;
   
+  /* initialize Ylm table */
+  init_Ylm();
+  
   for (l = 0; l <= Lmax; ++l)
   {
     for (m = 1; m <= l; ++m)
@@ -140,8 +147,85 @@ double interpolation_Ylm(double *const realClm,double *const imagClm,const unsig
   return creal(sum);
 }
 
-/* ->return value: d(f(theta,phi))/dphi using Ylm expansion */
+/* ->return value: d(f(theta,phi))/dphi using Ylm expansion, 
+// assuming Legendre root in theta direction and EquiSpaced in phi direction. */
+double *df_dphi_Ylm(double *const realClm,double *const imagClm,const unsigned Lmax,const unsigned Ntheta, const unsigned Nphi)
+{
+  double *df_dphi = alloc_double(Ntheta*Nphi);
+  const double sign[2] = {1.,-1.};
+  double theta,phi;
+  double complex sum = 0;
+  unsigned i,j,l,m,lm;
+  
+  /* initialize tables */
+  init_dYlm_dphi();
+  init_Legendre_root_function();
+  
+  for (i = 0; i < Ntheta; ++i)
+  {
+    theta = acos(-Legendre_root_function(i,Ntheta));
+    for (j = 0; j < Nphi; ++j)
+    {
+      phi = j*2*M_PI/Nphi;
+      sum = 0;
+      for (l = 0; l <= Lmax; ++l)
+      {
+        for (m = 1; m <= l; ++m)
+        {
+          int mp = (int)m;
+          lm   = lm2n(l,m);
+          sum += (realClm[lm]+I*imagClm[lm])*dYlm_dphi(l,mp,theta,phi);/* m >= 0 */
+          sum += sign[m%2]*(realClm[lm]-I*imagClm[lm])*dYlm_dphi(l,-mp,theta,phi);/* m < 0 */
+        }
+        //lm   = lm2n(l,0);
+        //sum += (realClm[lm]+I*imagClm[lm])*dYlm_dphi(l,0,theta,phi);/* m == 0 */
+      }
+    }/* end of for (j = 0; j < Nphi; ++j) */
+    df_dphi[j+i*Nphi] = creal(sum);
+  }
+  
+  return df_dphi;
+}
 
+/* ->return value: d(f(theta,phi))/dtheta using Ylm expansion, 
+// assuming Legendre root in theta direction and EquiSpaced in phi direction. */
+double *df_dtheta_Ylm(double *const realClm,double *const imagClm,const unsigned Lmax,const unsigned Ntheta, const unsigned Nphi)
+{
+  double *df_dtheta    = alloc_double(Ntheta*Nphi);
+  const double sign[2] = {1.,-1.};
+  double theta,phi;
+  double complex sum = 0;
+  unsigned i,j,l,m,lm;
+  
+  /* initialize tables */
+  init_dYlm_dtheta();
+  init_Legendre_root_function();
+  
+  for (i = 0; i < Ntheta; ++i)
+  {
+    theta = acos(-Legendre_root_function(i,Ntheta));
+    for (j = 0; j < Nphi; ++j)
+    {
+      phi = j*2*M_PI/Nphi;
+      sum = 0;
+      for (l = 0; l <= Lmax; ++l)
+      {
+        for (m = 1; m <= l; ++m)
+        {
+          int mp = (int)m;
+          lm   = lm2n(l,m);
+          sum += (realClm[lm]+I*imagClm[lm])*dYlm_dtheta(l,mp,theta,phi);/* m >= 0 */
+          sum += sign[m%2]*(realClm[lm]-I*imagClm[lm])*dYlm_dtheta(l,-mp,theta,phi);/* m < 0 */
+        }
+        lm   = lm2n(l,0);
+        sum += (realClm[lm]+I*imagClm[lm])*dYlm_dtheta(l,0,theta,phi);/* m == 0 */
+      }
+    }/* end of for (j = 0; j < Nphi; ++j) */
+    df_dtheta[j+i*Nphi] = creal(sum);
+  }
+  
+  return df_dtheta;
+}
 
 /* map: (l,m) -> n  for mapping 2-d array to 1-d array for -l <= m <= l */
 int lm2n_Ylm(const int l,const int m, const int lmax)
