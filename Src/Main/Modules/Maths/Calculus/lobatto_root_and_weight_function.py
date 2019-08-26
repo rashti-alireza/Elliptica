@@ -39,9 +39,13 @@ print ('  root[2][0] = 0.;')
 
 for i in range(3,Nmax):
     root  = solve(diff(legendre(i,x),x),x,minimal=True,quick=True,warn=True)
+    Realroot  = []
     Nroot = len(root)
+    for j in range(Nroot):# make it real, some of the roots has 10-17 I part
+      Realroot.append(re(N(root[j],precision)));
+    Realroot  = sorted(Realroot)
     for j in range(Nroot):
-      print ('  root[{}][{}] = {};'.format(i,j,re(N(root[j],precision))))
+      print ('  root[{}][{}] = {};'.format(i,j,Realroot[j]))
 
 print ('  return root[N][rootN];')
 print ('}')
