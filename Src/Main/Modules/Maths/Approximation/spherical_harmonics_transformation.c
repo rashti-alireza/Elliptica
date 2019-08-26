@@ -160,3 +160,10 @@ static double complex integrate_expImphi(const double *const f, const unsigned n
  
   return i0;
 }
+
+/* ->return value: allocating memory for Clm coeffs of Ylm expansion 
+// for given Lmax, which is (Lmax+1)*Lmax/2 + Lmax+1. */
+double *alloc_ClmYlm(unsigned Lmax)
+{
+  return alloc_double((Lmax+1)*Lmax/2 + Lmax+1);
+}

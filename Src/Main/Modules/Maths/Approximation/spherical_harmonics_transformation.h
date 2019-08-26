@@ -13,5 +13,6 @@ static double complex integrate_expImphi(const double *const f, const unsigned n
 void n2lm_Ylm(const int n, int *const l, int *const m,const int lmax);
 int lm2n_Ylm(const int l,const int m, const int lmax);
 unsigned lm2n(const unsigned l, const unsigned m);
+double *alloc_ClmYlm(unsigned Lmax);
 
 
