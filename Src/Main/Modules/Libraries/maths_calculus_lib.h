@@ -33,9 +33,11 @@ void plan_integration(Integration_T *const I);
 double execute_integration(Integration_T *const I);
 Integration_T *init_integration(void);
 int integration_tests(Grid_T *const grid);
-double Lobbatto_weight_function(const double x, const unsigned N);
-double Lobbatto_root_function(const unsigned rootN, const unsigned N);
+double Lobatto_weight_function(const double x, const unsigned N);
+double Lobatto_root_function(const unsigned rootN, const unsigned N);
+void init_Lobatto_root_function(void);
 double Legendre_root_function(const unsigned rootN, const unsigned N);
 double Legendre_weight_function(const double x, const unsigned N);
-double dlegendre_dx(const unsigned n, const double x);
-
+double dLegendre_dx(const unsigned n, const double x);
+void init_Legendre_root_function(void);
+void init_dLegendre_dx(void);

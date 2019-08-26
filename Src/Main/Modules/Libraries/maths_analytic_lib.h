@@ -100,3 +100,7 @@ double *sinx_f_xyz(Patch_T *const patch);
 double poly5_f_point(const double x,const double y,const double z);
 int Factorial(const int n);
 double associated_legendre(const int l, const int m, const double x);
+void init_associated_legendre(void);
+void init_Ylm(void);
+void init_dYlm_dphi(void);
+void init_dYlm_dtheta(void);
