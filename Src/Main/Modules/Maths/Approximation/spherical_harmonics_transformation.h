@@ -14,5 +14,6 @@ void n2lm_Ylm(const int n, int *const l, int *const m,const int lmax);
 int lm2n_Ylm(const int l,const int m, const int lmax);
 unsigned lm2n(const unsigned l, const unsigned m);
 double *alloc_ClmYlm(unsigned Lmax);
+double interpolation_Ylm(double *const realClm,double *const imagClm,const unsigned Lmax, const double theta, const double phi);
 
 

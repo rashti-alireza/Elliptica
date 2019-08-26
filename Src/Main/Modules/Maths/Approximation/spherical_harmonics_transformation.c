@@ -115,6 +115,34 @@ const unsigned Lmax/* maximum l (inclusive) for the expansion */)
   free_integration(I2);
 }
 
+/* ->return value: given point (theta,phi) and Ylm coeffs, 
+// it interpolation to (theta,phi) */
+double interpolation_Ylm(double *const realClm,double *const imagClm,const unsigned Lmax, const double theta, const double phi)
+{
+  const double sign[2] = {1.,-1.};
+  double complex sum = 0;
+  unsigned l,m,lm;
+  
+  for (l = 0; l <= Lmax; ++l)
+  {
+    for (m = 1; m <= l; ++m)
+    {
+      int mp = (int)m;
+      lm   = lm2n(l,m);
+      
+      sum += (realClm[lm]+I*imagClm[lm])*Ylm(l,mp,theta,phi);/* m >= 0 */
+      sum += sign[m%2]*(realClm[lm]-I*imagClm[lm])*Ylm(l,-mp,theta,phi);/* m < 0 */
+    }
+    lm   = lm2n(l,0);
+    sum += (realClm[lm]+I*imagClm[lm])*Ylm(l,0,theta,phi);/* m == 0 */
+  }
+
+  return creal(sum);
+}
+
+/* ->return value: d(f(theta,phi))/dphi using Ylm expansion */
+
+
 /* map: (l,m) -> n  for mapping 2-d array to 1-d array for -l <= m <= l */
 int lm2n_Ylm(const int l,const int m, const int lmax)
 {
