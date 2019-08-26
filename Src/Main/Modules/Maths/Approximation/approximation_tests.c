@@ -21,6 +21,110 @@ int fourier_transformation_tests(Grid_T *const grid)
   return EXIT_SUCCESS;
 }
 
+/* testing spherical harmonica transformation functions.
+// ->return value: EXIT_SUCCESS */
+int Ylm_transformation_tests(Grid_T *const grid)
+{
+  
+  if (DO)
+  {
+    printf("Spherical harmonic transformation test: \n");
+    Ylm_trans_test(grid);
+  }
+  
+  return EXIT_SUCCESS;
+}
+
+/* testing : get_Ylm_coeffs_complex function.
+// ->return value: TEST_SUCCESSFUL */
+static int Ylm_trans_test(Grid_T *const grid)
+{
+  const char *const par = GetParameterS_E("Test_Ylm_Transformation");
+  const double sign[2] = {1.,-1.};
+  unsigned Ntheta = 0;
+  unsigned Nphi   = 0;
+  unsigned lmax   = 0;
+  unsigned N;
+  double *f;/* f(theta,phi) theta = [0,phi], phi = [0,2pi] */
+  double  *realClm;/* f(theta,phi) = Re(Clm)*Ylm(theta,phi) */
+  double  *imagClm;/* f(theta,phi) = Im(Clm)*Ylm(theta,phi) */
+  double phi,theta,df;
+  unsigned Smem;
+  unsigned i,j,l,m,lm;
+  
+  if (regex_search("[[:digit:]]+",par))
+  {
+    char *s = regex_find("[[:digit:]]+",par);
+    N = (unsigned)atoi(s);
+    _free(s);
+  }
+  else
+    N = 10;
+  
+  /* setting grid size */  
+  Ntheta = Nphi = N;
+  lmax = (Ntheta-1)/2;
+  Smem = (lmax+1)*lmax/2 + lmax+1;
+  
+  /* allocating memory */
+  f = alloc_double(Ntheta*Nphi);
+  realClm = alloc_double(Smem);
+  imagClm = alloc_double(Smem);
+  
+  /* populating f(theta,phi) */  
+  for (i = 0; i < Ntheta; ++i)
+  {
+    theta = acos(-Legendre_root_function(i,Ntheta));
+    for (j = 0; j < Nphi; ++j)
+    {
+      phi = j*2*M_PI/Nphi;
+      //f[j+Nphi*i] = (sin(theta)*cos(phi)-sin(theta)*sin(2*phi)); (this required high Lmax)
+      f[j+Nphi*i] = creal(Ylm(4,3,theta,phi));
+    }
+  }
+  /* calculating coeffs */
+  get_Ylm_coeffs(realClm,imagClm,f,Ntheta,Nphi,lmax);
+  
+  df = 0.;
+  /* now let's see how Ylm sum works: */
+  printf("\nFor Ntheta = %u, Nphi = %u, Lmax = %u:\n",Ntheta,Nphi,lmax);
+  /* for each theta and phi */
+  for (i = 0; i < Ntheta; ++i)
+  {
+    theta = acos(-Legendre_root_function(i,Ntheta));
+    for (j = 0; j < Nphi; ++j)
+    {
+      phi = j*2*M_PI/Nphi;
+      double fr = f[j+Nphi*i];
+      
+      /* sum: */
+      double complex sum = 0;
+      for (l = 0; l <= lmax; ++l)
+      {
+        for (m = 1; m <= l; ++m)
+        {
+          int mp = (int)m;
+          lm   = lm2n(l,m);
+          
+          sum += (realClm[lm]+I*imagClm[lm])*Ylm(l,mp,theta,phi);/* m >= 0 */
+          sum += sign[m%2]*(realClm[lm]-I*imagClm[lm])*Ylm(l,-mp,theta,phi);/* m < 0 */
+        }
+        lm   = lm2n(l,0);
+        sum += (realClm[lm]+I*imagClm[lm])*Ylm(l,0,theta,phi);/* m == 0 */
+      }
+      if (df < fabs(creal(sum)-fr))
+        df = fabs(creal(sum)-fr);
+    }
+  }/* for (i = 0; i < Ntheta; ++i) */
+  printf("Max Error = %e\n",df);
+  
+  free(f);
+  free(realClm);
+  free(imagClm);
+  UNUSED(grid);
+  
+  return TEST_SUCCESSFUL;
+}
 
 /* testing : r2cft_1d_EquiSpaced_coeffs function.
 // ->return value: TEST_SUCCESSFUL */
