@@ -61,6 +61,7 @@ int fourier_transformation_tests(Grid_T *const grid);
 static int cft_c2r_r2c_1d_EquiSpaced_test(Grid_T *const grid);
 static int Ylm_trans_test(Grid_T *const grid);
 int Ylm_transformation_tests(Grid_T *const grid);
+static int Ylm_derivatives_test(Grid_T *const grid);
 
 
 

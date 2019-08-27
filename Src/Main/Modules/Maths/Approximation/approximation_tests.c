@@ -28,8 +28,13 @@ int Ylm_transformation_tests(Grid_T *const grid)
   
   if (DO)
   {
-    printf("Spherical harmonic transformation test: \n");
+    printf("\nSpherical harmonic transformation test: \n");
     Ylm_trans_test(grid);
+  }
+  if (DO)
+  {
+    printf("\nSpherical harmonic derivatives test: \n");
+    Ylm_derivatives_test(grid);
   }
   
   return EXIT_SUCCESS;
@@ -91,7 +96,7 @@ static int Ylm_trans_test(Grid_T *const grid)
   
   df = 0.;
   /* now let's see how Ylm sum works: */
-  printf("For Ntheta = %u, Nphi = %u, Lmax = %u:\n",Ntheta,Nphi,lmax);
+  printf("--> For Ntheta = %u, Nphi = %u, Lmax = %u:\n",Ntheta,Nphi,lmax);
   /* for each theta and phi */
   for (i = 0; i < Ntheta; ++i)
   {
@@ -129,6 +134,115 @@ static int Ylm_trans_test(Grid_T *const grid)
   
   return TEST_SUCCESSFUL;
 }
+
+/* testing :  df_dphi_Ylm and df_dtheta_Ylm functions.
+// ->return value: TEST_SUCCESSFUL */
+static int Ylm_derivatives_test(Grid_T *const grid)
+{
+  const char *const par = GetParameterS_E("Test_Ylm_Transformation");
+  unsigned Ntheta = 0;
+  unsigned Nphi   = 0;
+  unsigned lmax   = 0;
+  unsigned N;
+  double *f;/* analytic: f(theta,phi), theta = [0,phi], phi = [0,2pi] */
+  double *f_dphi;/* analytic: df(theta,phi)/dphi, theta = [0,phi], phi = [0,2pi] */
+  double *f_dtheta;/* analytic: df(theta,phi)/dtheta, theta = [0,phi], phi = [0,2pi] */
+  double *df_dphi;/* numeric: df(theta,phi)/dphi */
+  double *df_dtheta;/* numeric: df(theta,phi)/dtheta */
+  double *realClm;/* f(theta,phi) = Re(Clm)*Ylm(theta,phi) */
+  double *imagClm;/* f(theta,phi) = Im(Clm)*Ylm(theta,phi) */
+  double phi,theta,df;
+  unsigned Smem;
+  unsigned i,j;
+  
+  /* initialize tables */
+  init_Ylm();
+  init_Legendre_root_function();
+  
+  if (regex_search("[[:digit:]]+",par))
+  {
+    char *s = regex_find("[[:digit:]]+",par);
+    N = (unsigned)atoi(s);
+    _free(s);
+  }
+  else
+    N = 10;
+  
+  /* setting grid size */  
+  Ntheta = Nphi = N;
+  lmax = (Ntheta-1)/2;
+  Smem = (lmax+1)*lmax/2 + lmax+1;
+  
+  /* allocating memory */
+  f        = alloc_double(Ntheta*Nphi);
+  f_dphi   = alloc_double(Ntheta*Nphi);
+  f_dtheta = alloc_double(Ntheta*Nphi);
+  realClm  = alloc_double(Smem);
+  imagClm  = alloc_double(Smem);
+  
+  /* populating f(theta,phi) */  
+  for (i = 0; i < Ntheta; ++i)
+  {
+    theta = acos(-Legendre_root_function(i,Ntheta));
+    for (j = 0; j < Nphi; ++j)
+    {
+      phi = j*2*M_PI/Nphi;
+      f[j+Nphi*i]        = creal(Ylm(6,-5,theta,phi));
+      f_dphi[j+Nphi*i]   = creal(-15.0/32.0*sqrt(1001)*I*exp(-5*I*phi)*pow(sin(theta), 5)*cos(theta)/sqrt(M_PI));
+      f_dtheta[j+Nphi*i] = creal((3.0/32.0)*sqrt(1001)*(5 - 6*pow(sin(theta), 2))*exp(-5*I*phi)*pow(sin(theta), 4)/sqrt(M_PI));
+    }
+  }
+  /* calculating coeffs */
+  get_Ylm_coeffs(realClm,imagClm,f,Ntheta,Nphi,lmax);
+  
+  df = 0.;
+  /* now let's see how Ylm derivatives: works: */
+  df_dphi = df_dphi_Ylm(realClm,imagClm,Ntheta,Nphi,lmax);
+  printf("df(theta,phi)/dphi:\n");
+  printf("--> For Ntheta = %u, Nphi = %u, Lmax = %u:\n",Ntheta,Nphi,lmax);
+  /* for each theta and phi */
+  for (i = 0; i < Ntheta; ++i)
+  {
+    theta = acos(-Legendre_root_function(i,Ntheta));
+    for (j = 0; j < Nphi; ++j)
+    {
+      phi = j*2*M_PI/Nphi;
+      if (df < fabs(f_dphi[j+Nphi*i]-df_dphi[j+Nphi*i]))
+        df = fabs(f_dphi[j+Nphi*i]-df_dphi[j+Nphi*i]);
+    }
+  }/* for (i = 0; i < Ntheta; ++i) */
+  printf("Max Error = %e\n",df);
+  
+  df = 0.;
+  /* now let's see how Ylm derivatives: works: */
+  df_dtheta = df_dtheta_Ylm(realClm,imagClm,Ntheta,Nphi,lmax);
+  printf("df(theta,phi)/dtheta:\n");
+  printf("--> For Ntheta = %u, Nphi = %u, Lmax = %u:\n",Ntheta,Nphi,lmax);
+  /* for each theta and phi */
+  for (i = 0; i < Ntheta; ++i)
+  {
+    theta = acos(-Legendre_root_function(i,Ntheta));
+    for (j = 0; j < Nphi; ++j)
+    {
+      phi = j*2*M_PI/Nphi;
+      if (df < fabs(f_dtheta[j+Nphi*i]-df_dtheta[j+Nphi*i]))
+        df = fabs(f_dtheta[j+Nphi*i]-df_dtheta[j+Nphi*i]);
+    }
+  }/* for (i = 0; i < Ntheta; ++i) */
+  printf("Max Error = %e\n",df);
+  
+  free(f);
+  free(f_dphi);
+  free(f_dtheta);
+  free(df_dphi);
+  free(df_dtheta);
+  free(realClm);
+  free(imagClm);
+  UNUSED(grid);
+  
+  return TEST_SUCCESSFUL;
+}
+
 
 /* testing : r2cft_1d_EquiSpaced_coeffs function.
 // ->return value: TEST_SUCCESSFUL */
