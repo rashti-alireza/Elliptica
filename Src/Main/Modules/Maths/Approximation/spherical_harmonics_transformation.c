@@ -149,7 +149,7 @@ double interpolation_Ylm(double *const realClm,double *const imagClm,const unsig
 
 /* ->return value: d(f(theta,phi))/dphi using Ylm expansion, 
 // assuming Legendre root in theta direction and EquiSpaced in phi direction. */
-double *df_dphi_Ylm(double *const realClm,double *const imagClm,const unsigned Lmax,const unsigned Ntheta, const unsigned Nphi)
+double *df_dphi_Ylm(double *const realClm,double *const imagClm,const unsigned Ntheta, const unsigned Nphi,const unsigned Lmax)
 {
   double *df_dphi = alloc_double(Ntheta*Nphi);
   const double sign[2] = {1.,-1.};
@@ -180,8 +180,8 @@ double *df_dphi_Ylm(double *const realClm,double *const imagClm,const unsigned L
         //lm   = lm2n(l,0);
         //sum += (realClm[lm]+I*imagClm[lm])*dYlm_dphi(l,0,theta,phi);/* m == 0 */
       }
+      df_dphi[j+i*Nphi] = creal(sum);
     }/* end of for (j = 0; j < Nphi; ++j) */
-    df_dphi[j+i*Nphi] = creal(sum);
   }
   
   return df_dphi;
@@ -189,7 +189,7 @@ double *df_dphi_Ylm(double *const realClm,double *const imagClm,const unsigned L
 
 /* ->return value: d(f(theta,phi))/dtheta using Ylm expansion, 
 // assuming Legendre root in theta direction and EquiSpaced in phi direction. */
-double *df_dtheta_Ylm(double *const realClm,double *const imagClm,const unsigned Lmax,const unsigned Ntheta, const unsigned Nphi)
+double *df_dtheta_Ylm(double *const realClm,double *const imagClm,const unsigned Ntheta, const unsigned Nphi,const unsigned Lmax)
 {
   double *df_dtheta    = alloc_double(Ntheta*Nphi);
   const double sign[2] = {1.,-1.};
@@ -220,8 +220,8 @@ double *df_dtheta_Ylm(double *const realClm,double *const imagClm,const unsigned
         lm   = lm2n(l,0);
         sum += (realClm[lm]+I*imagClm[lm])*dYlm_dtheta(l,0,theta,phi);/* m == 0 */
       }
+      df_dtheta[j+i*Nphi] = creal(sum);
     }/* end of for (j = 0; j < Nphi; ++j) */
-    df_dtheta[j+i*Nphi] = creal(sum);
   }
   
   return df_dtheta;
