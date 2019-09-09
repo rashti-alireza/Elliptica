@@ -19,9 +19,9 @@ Grid_T *bbn_initialize_next_grid(Grid_T *const grid_prev)
     else
       abortEr(NO_OPTION);
   }
-  else/* use previous grid to make the next one */
+  else/* use previous grid to make the next one with new adjustments */
   {
-    abortEr(NO_JOB);
+    grid_next = bbn_adjust_and_make_new_grid(grid_prev);
   }
   
   return grid_next;   
