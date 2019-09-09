@@ -21,10 +21,52 @@ Grid_T *bbn_initialize_next_grid(Grid_T *const grid_prev)
   }
   else/* use previous grid to make the next one with new adjustments */
   {
-    grid_next = bbn_adjust_and_make_new_grid(grid_prev);
+    grid_next = make_next_grid_using_previous_grid(grid_prev);
   }
   
   return grid_next;   
+}
+
+/* adjusting different quantities and then make the next grid using previous grid
+// ->return value: the next grid called 'grid_next' */
+static Grid_T *make_next_grid_using_previous_grid(Grid_T *const grid_prev)
+{
+  abortEr(NO_JOB);
+  UNUSED(grid_prev);
+  Grid_T *grid_next = 0;
+  
+  /* adjust Euler constant to fix NS baryonic mass */
+  /* adjust BH center to make P_ADM zero */
+  /* adjust the BH radius to acquire the desired BH mass */
+  /* adjust the Omega_BH to acquire the desired BH spin */
+  /* adjust y_CM using force balance equation */
+  /* adjust NS surface */
+  /* make new grid with new parameters */
+
+  /* fields: */
+  /* creating all of the fields needed for construction of Initial Data */
+  bbn_allocate_fields(grid_next);
+  
+  /* populating the free data part of initial data that we chose ourself */
+  bbn_populate_free_data(grid_next);
+
+  /* use previous grid to interpolate values of the fields for the next grid */
+  //interpolate_fields_into_next_grid(grid_next,grid_prev);
+  
+  /* taking partial derivatives of the fields needed for equations */
+  bbn_partial_derivatives_fields(grid_next);
+  
+  /* update u0, _J^i, _E and _S */
+  Tij_IF_CTS_psi6Sources(grid_next);
+  
+  /* update _Aij in K^{ij} = A^{ij}+1/3*gamma^{ij}*K and 
+  // _A^{ij} = gamma^10*A^{ij} and _dA^{ij} */
+  bbn_update_Aij(grid_next);
+  
+  /* make normal vectorn on BH horizon */
+  make_normal_vector_on_BH_horizon(grid_next);
+  
+  return grid_next;
 }
 
 /* use TOV and Kerr-Schil black hole approximation.
