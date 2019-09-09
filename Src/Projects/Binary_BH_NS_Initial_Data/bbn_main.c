@@ -32,7 +32,7 @@ int Binary_BH_NS_Initial_Data(void)
     update_parameter_integer("iteration_number",(int)iter);
     
     /* making a directory for this iteration and save the path */
-    sprintf(folder_name,"BBN_Iteration");
+    sprintf(folder_name,"BBN_Iteration_%02d",iter);
     folder_path = make_directory(path_par,folder_name);
     update_parameter_string("iteration_output",folder_path);
     
