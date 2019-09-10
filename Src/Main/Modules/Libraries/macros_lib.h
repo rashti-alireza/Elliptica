@@ -42,6 +42,7 @@
 #define UpdateParameterDoubleF(x,y) update_parameter_double_format(x,y)
 #define GetParameterArrayF(x)  get_parameter_array_format(x,__FILE__,__LINE__,NONE)
 #define GetParameterDoubleF(x) get_parameter_double_format(x,__FILE__,__LINE__,NONE)
+#define GetParameterDoubleF_E(x) get_parameter_double_format(x,__FILE__,__LINE__,FATAL)
 #define GetParameterS_E(x) get_parameter_value_S(x,__FILE__,__LINE__,FATAL)
 #define GetParameterI_E(x) get_parameter_value_I(x,__FILE__,__LINE__,FATAL)
 #define GetParameterD_E(x) get_parameter_value_D(x,__FILE__,__LINE__,FATAL)
