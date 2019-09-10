@@ -9,7 +9,7 @@
 void Tij_IF_CTS_psi6Sources(Grid_T *const grid)
 {
   pr_line_custom('=');
-  printf("Building _J^i, _E and _S of CTS sources ...\n");
+  printf("Building enthalpy, u^0, _J^i, _E and _S ...\n");
   
   unsigned p;
   
@@ -24,7 +24,7 @@ void Tij_IF_CTS_psi6Sources(Grid_T *const grid)
     Tij_IF_CTS_psi6S(patch);
   }
   
-  printf("Building _J^i, _E and _S of CTS sources ==> Done.\n");
+  printf("Building enthalpy, u^0, _J^i, _E and _S ==> Done.\n");
   pr_clock();
   pr_line_custom('=');
 
