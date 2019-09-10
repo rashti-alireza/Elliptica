@@ -184,11 +184,11 @@ W_U2[ijk]*_Gamma_U1D1D2[ijk] + W_U2[ijk]*_Gamma_U2D2D2[ijk]))/
 psi[ijk];
 
     double t5 = 
--2.0*enthalpy[ijk]*u0[ijk]*(Beta_U0[ijk]*dLns1_U0 + Beta_U1[ijk]*
-dLns1_U1 + Beta_U2[ijk]*dLns1_U2);
+-enthalpy[ijk]*u0[ijk]*(Beta_U0[ijk]*dLns1_U0 + Beta_U1[ijk]*dLns1_U1 +
+Beta_U2[ijk]*dLns1_U2);
 
     double t6 = 
--2*K[ijk]*alpha*enthalpy[ijk]*u0[ijk];
+-K[ijk]*alpha*enthalpy[ijk]*u0[ijk];
 
     double F_eq = 
 t1 + t2 + t3 + t4 + t5 + t6;

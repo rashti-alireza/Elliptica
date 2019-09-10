@@ -43,7 +43,7 @@ void *bc_phi(void *vp1,void *vp2)
   DDM_SCHUR_BC_OPEN
 
   double outerB_F = 
-(_gammaI_U0U0[ijk]*dphi_D0[ijk]*drho0_D0[ijk] + _gammaI_U0U1[ijk]*
+1.0*(_gammaI_U0U0[ijk]*dphi_D0[ijk]*drho0_D0[ijk] + _gammaI_U0U1[ijk]*
 dphi_D0[ijk]*drho0_D1[ijk] + _gammaI_U0U1[ijk]*dphi_D1[ijk]*
 drho0_D0[ijk] + _gammaI_U0U2[ijk]*dphi_D0[ijk]*drho0_D2[ijk] +
 _gammaI_U0U2[ijk]*dphi_D2[ijk]*drho0_D0[ijk] + _gammaI_U1U1[ijk]*
@@ -51,7 +51,7 @@ dphi_D1[ijk]*drho0_D1[ijk] + _gammaI_U1U2[ijk]*dphi_D1[ijk]*
 drho0_D2[ijk] + _gammaI_U1U2[ijk]*dphi_D2[ijk]*drho0_D1[ijk] +
 _gammaI_U2U2[ijk]*dphi_D2[ijk]*drho0_D2[ijk] + pow(psi[ijk], 4)*
 (W_U0[ijk]*drho0_D0[ijk] + W_U1[ijk]*drho0_D1[ijk] + W_U2[ijk]*
-drho0_D2[ijk] - 2.0*enthalpy[ijk]*u0[ijk]*(Beta_U0[ijk]*drho0_D0[ijk] +
+drho0_D2[ijk] - enthalpy[ijk]*u0[ijk]*(Beta_U0[ijk]*drho0_D0[ijk] +
 Beta_U1[ijk]*drho0_D1[ijk] + Beta_U2[ijk]*drho0_D2[ijk])))/
 pow(psi[ijk], 4);
 
