@@ -48,24 +48,23 @@ void update_parameter_integer(const char *const lv, const int rv)
 }
 
 /* add or update a double value parameter */
-void update_parameter_double(const char *const lv, const double rv)
+void update_parameter_double_format(const char *const lv, const double rv)
 {
   if (!lv)
     return;
     
   Parameter_T *par;
-  char str_rv[100];
-  sprintf(str_rv,"%15.15f",rv);
   
   par = get_parameter(lv);
   if (par)/* if this parameter exists update it */
   {
     _free(par->rv);
-    par->rv = dup_s(str_rv);
+    par->rv = 0;
+    par->rv_double = rv;
   }
   else/* since it does not exist */
   {
-    add_parameter(lv,str_rv);
+    add_parameter_double(lv,rv);
   }
   
 }
