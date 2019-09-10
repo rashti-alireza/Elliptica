@@ -83,8 +83,14 @@ dphi_D2[ijk];
 (1.0/2.0)*(b + sqrt(-4*pow(alpha, 4)*pow(uW, 2) + pow(b, 2)))/
 pow(alpha, 2);
 
+  double h2 = 
+L2 - P2;
+
+  if (EQL(fabs(h2),0.))
+    h2 = 0.;
+  
   double h = 
-sqrt(L2 - P2);
+sqrt(h2);
 
   enthalpy[ijk] = h;
   }

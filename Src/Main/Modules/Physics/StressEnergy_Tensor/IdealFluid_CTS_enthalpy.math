@@ -72,7 +72,11 @@ Ccode["  {"];
      Bdphi = Beta(i)*dphi(-i);
      b     = (Bdphi-Euler_C)**2 + 2*(alpha**2)*uW;
      L2    = (b+(b**2-4*(alpha**4)*(uW**2))**(0.5))/(2*alpha**2);
-     h     = (L2-P2)**(0.5);
+     h2    = L2-P2;
+     `  if (EQL(fabs(h2),0.))`
+     `    h2 = 0.;`
+     `  `
+     h     = (h2)**(0.5);
      Ccode["  enthalpy[ijk] = h;"];
 Ccode["  }"];
 
