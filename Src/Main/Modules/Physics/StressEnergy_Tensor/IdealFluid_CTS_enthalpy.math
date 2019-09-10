@@ -1,0 +1,79 @@
+# Note: Tij stands for Stress Energy tensor.
+# IF stands for ideal fluid, CTS for conformal thin sandwich method;
+# thus, Tij_IF_CTS means stress enerfy of ideal fluid in CTS method. 
+# given all of the fields needed it builds the enthalpy.
+# note: we assume that Killing vector : xi = alpha*laps+shift
+# thus, xi^i = 0
+
+# Manifold or grid Dimension
+Dimension = 3;
+
+# point on manifold shown by:
+Point = ijk;
+
+C_macro  = GET_FIELD(name);
+C_macro2 = PREP_FIELD(name);
+Ccode["#include "IdealFluid_CTS_lib.h"\n\n"];
+Ccode["void Tij_IF_CTS_enthalpy(Patch_T *const patch)"];
+Ccode["{"];
+Ccode["  if (!IsItNSPatch(patch))"];
+Ccode["    return;"];
+Ccode["  const unsigned nn = patch->nn;"];
+Ccode["  unsigned ijk;"];
+
+Declare = 
+{
+
+ # enthalpy
+ (obj = Field,name = enthalpy, rank = 0, C_macro2);
+
+ # conformal metric 
+ (obj = Field,name = _gamma, rank = DD, C_macro);
+
+ # conformal metric inverse
+ (obj = Field,name = _gammaI, rank = UU, C_macro);
+ 
+ # spin part of fluid
+ (obj = Field,name = W, rank = U, C_macro);
+
+ # d(phi)/d? for irrotional part of fluid
+ (obj = Field,name = dphi, rank = D, C_macro);
+
+ # eta
+ (obj = Field,name = eta, rank = 0, C_macro);
+
+ # Beta
+ (obj = Field,name = Beta, rank = U, C_macro);
+
+ # Killing vector xi^i, assumed 0
+ #(obj = Field,name = xi, rank = U, C_macro);
+
+ # conformal factor
+ (obj = Field,name = psi, rank = 0, C_macro);
+
+ # Euler equation constant
+ (obj = variable,name = Euler_C, none);
+
+}
+
+# symmetries:
+Symm[_gammaI(i,j)  = _gammaI(j,i)];
+Symm[_gamma(i,j)   = _gamma(j,i)];
+
+# calculate enthalpy:
+`  const double Euler_C = GetParameterDoubleF_E("Euler_equation_constant");`
+Ccode["  for(ijk = 0; ijk < nn; ++ijk)"];
+Ccode["  {"];
+     alpha = eta/psi;
+     psim4 = psi**(-4);
+     psi4  = psi**(4);
+     P2    = psim4*_gammaI(i,j)*dphi(-i)*dphi(-j)+2*dphi(-i)*W(i)+psi4*_gamma(-i,-j)*W(i)*W(j);
+     uW    = dphi(-i)*W(i)+psi4*_gamma(-i,-j)*W(i)*W(j);
+     Bdphi = Beta(i)*dphi(-i);
+     b     = (Bdphi-Euler_C)**2 + 2*(alpha**2)*uW;
+     L2    = (b+(b**2-4*(alpha**4)*(uW**2))**(0.5))/(2*alpha**2);
+     h     = (L2-P2)**(0.5);
+     Ccode["  enthalpy[ijk] = h;"];
+Ccode["  }"];
+
+Ccode["}"];

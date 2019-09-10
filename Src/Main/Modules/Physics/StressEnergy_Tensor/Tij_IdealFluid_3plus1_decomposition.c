@@ -5,7 +5,7 @@
 
 #include "Tij_IdealFluid_3plus1_decomposition.h"
 
-/* building u0, _J^i, _E and _S */
+/* building enthalpy, u0, _J^i, _E and _S */
 void Tij_IF_CTS_psi6Sources(Grid_T *const grid)
 {
   pr_line_custom('=');
@@ -17,6 +17,7 @@ void Tij_IF_CTS_psi6Sources(Grid_T *const grid)
   {
     Patch_T *patch = grid->patch[p];
     
+    Tij_IF_CTS_enthalpy(patch);
     Tij_IF_CTS_u0(patch);
     Tij_IF_CTS_psi6J_Ui(patch);
     Tij_IF_CTS_psi6E(patch);
