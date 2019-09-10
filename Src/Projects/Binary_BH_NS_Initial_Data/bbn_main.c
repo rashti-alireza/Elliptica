@@ -8,6 +8,27 @@
 /* constructing initial data for system of binary black hole neutron star */
 int Binary_BH_NS_Initial_Data(void)
 {
+  /* print some description */
+  pr_clock();
+  pr_line_custom('=');
+  printf("Constructing Initial Data for Binary BH and NS ...\n");
+  
+  /***********************************************************/
+  /* adding some parameters that are used in different parts: */
+  
+  /* BH_Omega, the angular frequency of the horizon,
+  // is a free vector that determines the spin of BH
+  // and it is related to the dimensionless spin by:
+  // BH_X = 4*BH_mass*BH_Omega .
+  // we only use U2 component, since we assume BH only has spin 
+  // in +/- of z direction (PRD 86 084033)*/
+  const double BH_X_U2 = GetParameterD_E("BH_X_U2");
+  const double BH_mass = GetParameterD_E("BH_mass");
+  AddParameterD("BH_Omega_U2",BH_X_U2/(4*BH_mass));
+  
+  
+  /***********************************************************/
+  /* the outer most main algorithm: */
   Grid_T *grid_prev = 0, 
          *grid_next = 0, 
          *grid = 0;
@@ -18,17 +39,12 @@ int Binary_BH_NS_Initial_Data(void)
   const char *folder_path;
   unsigned iter;
   
-  /* print some description */
-  pr_clock();
-  pr_line_custom('=');
-  printf("Constructing Initial Data for Binary BH and NS ...\n");
-  
   /* iterate over all parameters specified in parameter file */
   for (iter = 0; iter < N_iter; ++iter)
   {
     unsigned i;
     
-    /* updating some parameter for new round of iteration */
+    /* updating some parameters for the new round of iteration */
     update_parameter_integer("iteration_number",(int)iter);
     
     /* making a directory for this iteration and save the path */

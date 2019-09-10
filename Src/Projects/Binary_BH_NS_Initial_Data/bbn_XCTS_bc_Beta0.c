@@ -23,7 +23,7 @@ void *bc_Beta_U0(void *vp1,void *vp2)
 
 
   const double C_BH = 0.5*GetParameterD_E("BH_NS_separation");
-  const double BH_Omega_U2 = GetParameterD_E("BH_mass")*GetParameterD_E("BH_X_U2");
+  const double BH_Omega_U2 = GetParameterD_E("BH_Omega_U2");
   if (patch->outerB)/* at outer boundary */
   {
   DDM_SCHUR_BC_OPEN

@@ -22,7 +22,7 @@ void *bc_Beta_U1(void *vp1,void *vp2)
   GET_FIELD_IF_ON_HORIZON(_HS_U1)
 
 
-  const double BH_Omega_U2 = GetParameterD_E("BH_mass")*GetParameterD_E("BH_X_U2");
+  const double BH_Omega_U2 = GetParameterD_E("BH_Omega_U2");
   if (patch->outerB)/* at outer boundary */
   {
   DDM_SCHUR_BC_OPEN
