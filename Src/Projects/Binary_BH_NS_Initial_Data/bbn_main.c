@@ -24,8 +24,7 @@ int Binary_BH_NS_Initial_Data(void)
   // in +/- of z direction (PRD 86 084033)*/
   const double BH_X_U2 = GetParameterD_E("BH_X_U2");
   const double BH_mass = GetParameterD_E("BH_mass");
-  AddParameterD("BH_Omega_U2",BH_X_U2/(4*BH_mass));
-  
+  AddParameterDoubleF("BH_Omega_U2",BH_X_U2/(4*BH_mass));
   
   /***********************************************************/
   /* the outer most main algorithm: */
