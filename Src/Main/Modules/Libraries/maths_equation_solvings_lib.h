@@ -1,3 +1,26 @@
+/* struct for root finder routine */
+typedef struct ROOT_FINDER_T
+{
+  const char *type;/* type of root finder */
+  const char *description;/* if might give some description for the root finder */
+  double residual;/* residual of the function from zero */
+  double tolerance;/* tolerance for f(x) = 0, 
+                   // if |f(x)| < tol, the root finder stops */
+  unsigned n;/* number of variables (or equations) that make f = 0, 
+             // e.g in {f1(x1,x2) = 0,f2(x1,x2) = 0, n is 2 */
+  unsigned MaxIter;/* maximum iteration */
+  const double *x_gss;/* initial guess */
+  double *x_sol;/* solution of f(x) = 0 */
+  void *params;/* parameters needed for evaluation of f(x) */ 
+  /* f(x1,x2,...) = 0, params is supposed to refere to whatever is needed for evaluation of f */
+  // note: since it might be systems of equations like {f1=0,f2=0,...} I used pointer to pointer function */
+  double (**f)(void *params,const double *const x);
+  /* df/dx^{dir}, params is the parameters are used for evalution of df_dx,
+  // x is the dependent variables and dir is the direction of derivative */
+  double (**df_dx)(void *params,const double *const x,const unsigned dir);
+  double *(*root_finder_func)(struct ROOT_FINDER_T *const root);
+}Root_Finder_T;
+
 /* solve equation struct that is passed to the solver.
 // it may contain various functions and parameters to control and
 // execute different tasks. */
@@ -45,6 +68,10 @@ typedef struct SOLVE_EQUATIONS_T
   
 }Solve_Equations_T;
 
+Root_Finder_T *init_root_finder(const unsigned n);
+double *execute_root_finder(Root_Finder_T *const root);
+void plan_root_finder(Root_Finder_T *const root);
+void free_root_finder(Root_Finder_T *root);
 int solve_eqs(Solve_Equations_T *const SolveEqs);
 void free_solve_equations(Solve_Equations_T *solve);
 double get_relaxation_factor_solve_equations(Solve_Equations_T *const solve);
@@ -63,7 +90,7 @@ void prepare_Js_jacobian_eq(Patch_T *const patch,const char * const *types);
 double read_matrix_entry_ccs(Matrix_T *const m, const long r,const long c);
 fJs_T *get_j_reader(const Matrix_T *const m);
 void test_solve_ddm_schur_complement(Grid_T *const grid);
-
+void test_root_finders(Grid_T *const grid);
 
 /* defining some macros to improve the readability and simplicity */
 

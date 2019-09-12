@@ -1,0 +1,14 @@
+#include "core_lib.h"
+#include "maths_equation_solvings_lib.h"
+#include "maths_general_lib.h"
+#include "memory_managing_lib.h"
+
+Root_Finder_T *init_root_finder(const unsigned n);
+double *execute_root_finder(Root_Finder_T *const root);
+void plan_root_finder(Root_Finder_T *const root);
+void free_root_finder(Root_Finder_T *root);
+static double *root_finder_steepest_descent(Root_Finder_T *const root);
+static double g_SD(double (**f)(void *params,const double *const x),void *params,const double *const x);
+static double dg_dx_FD_SD(void *params,double *const x,const unsigned dir,double (**f)(void *params,const double *const x),double (**df_dx)(void *params,const double *const x,const unsigned dir));
+static double dg_dx_of_df_dx_SD(void *params,double *const x,const unsigned dir,double (**f)(void *params,const double *const x),double (**df_dx)(void *params,const double *const x,const unsigned dir));
+
