@@ -105,10 +105,10 @@ static double *root_finder_steepest_descent(Root_Finder_T *const root)
     printf("%s:\n",desc);
   else
     printf("Finding root of {f(x) = 0}:\n");
-  printf("Number of Equations = %u, Tolerance = %e\n",n,TOL);
+  printf("Num. of Eqs. = %u, Tolerance = %e, Max. Num. of Iter. = %u\n",n,TOL,MaxIter);
   
   /* setup differentials */
-  if (df_dx)
+  if (df_dx[0])/* if differentials are given */
     dg_dx = dg_dx_of_df_dx_SD;
   else
     dg_dx = dg_dx_FD_SD;
