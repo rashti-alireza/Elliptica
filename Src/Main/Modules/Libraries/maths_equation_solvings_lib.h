@@ -5,7 +5,7 @@ typedef struct ROOT_FINDER_T
   const char *description;/* if might give some description for the root finder */
   double residual;/* residual of the function from zero */
   double tolerance;/* tolerance for f(x) = 0, 
-                   // if |f(x)| < tol, the root finder stops */
+                   // if |f^{iter+1}(x)-f^{iter}(x)| < tol, the root finder stops */
   unsigned n;/* number of variables (or equations) that make f = 0, 
              // e.g in {f1(x1,x2) = 0,f2(x1,x2) = 0, n is 2 */
   unsigned MaxIter;/* maximum iteration */

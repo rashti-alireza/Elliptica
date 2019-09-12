@@ -101,6 +101,12 @@ static double *root_finder_steepest_descent(Root_Finder_T *const root)
   Flag_T small_alpha3_flg = NO;
   unsigned i,k;
   
+  if (desc)
+    printf("%s:\n",desc);
+  else
+    printf("Finding root of {f(x) = 0}:\n");
+  printf("Number of Equations = %u, Tolerance = %e\n",n,TOL);
+  
   /* setup differentials */
   if (df_dx)
     dg_dx = dg_dx_of_df_dx_SD;
@@ -115,6 +121,7 @@ static double *root_finder_steepest_descent(Root_Finder_T *const root)
   while (k <= MaxIter)
   {
     g1 = g_SD(f,params,x);
+    printf(".. Step[%02u]: Residual{f(x) = 0} = %+e\n",k-1,sqrt(g1));
     
     for (i = 0; i < n; i++)
       z[i] = dg_dx(params,x,i,f,df_dx);
@@ -123,8 +130,6 @@ static double *root_finder_steepest_descent(Root_Finder_T *const root)
     if (EQL(z0,0.))
     {
       root->residual = sqrt(g1);
-      if (desc)
-        printf("%s:\n",desc);
       printf("Root Finder -> Steepest Descent Method:\n"
              "Zero gradient thus an extrema; Residual = %e\n",root->residual);
       break;
@@ -147,8 +152,6 @@ static double *root_finder_steepest_descent(Root_Finder_T *const root)
       if(alpha3 < 0.5*TOL)
       {
         root->residual = sqrt(g3);
-        if (desc)
-          printf("%s:\n",desc);
         printf("Root Finder -> Steepest Descent Method:\n"
              "No likely improvement; Residual = %e\n",root->residual);
         
@@ -181,26 +184,25 @@ static double *root_finder_steepest_descent(Root_Finder_T *const root)
     
     g = g0 < g3 ? g0 : g3;
     root->residual = sqrt(g);
-    if (sqrt(fabs(g-g1)) < TOL)
-    {  
-      if (desc)
-        printf("%s:\n",desc);
+    if (fabs(g-g1) < TOL)
+    { 
+      printf(".. Step[%02u]: Residual[f(x) = 0] = %+e\n",k,root->residual);
       printf("Root Finder -> Steepest Descent Method:\n"
-             "Found root => Residual = %e\n",root->residual);
+             "The root(s) are found => Residual = %e\n",root->residual);
       break;
     }
     
     k++;
     if (k == MaxIter+1)
     {  
-      if (desc)
-        printf("%s:\n",desc);
+      printf(".. Step[%02u]: Residual[f(x) = 0] = %+e\n",k-1,root->residual);
       printf("Root Finder -> Steepest Descent Method:\n"
              "Exceeds maximum number of iterations => Residual = %e\n",root->residual);
       break;
     }
   }
   
+  fflush(stdout);
   root->x_sol = x;
   return x;
 }
