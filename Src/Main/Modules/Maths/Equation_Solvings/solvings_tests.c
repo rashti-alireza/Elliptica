@@ -5,6 +5,148 @@
 
 #include "solvings_tests.h"
 
+/* testing root finders */
+void test_root_finders(Grid_T *const grid)
+{
+  if (DO)
+  {
+    printf("\nRoot Finder test: Steepest Descent method: \n");
+    root_finder_SteepestDescent(grid);
+  }
+
+}
+
+/* testing steepest Descent root finder
+// ->return value: EXIT_SUCCESS */
+static int root_finder_SteepestDescent(Grid_T *const grid)
+{
+  double (*f0)(void *params,const double *const x) = root_finder_f0_eq;
+  double (*f1)(void *params,const double *const x) = root_finder_f1_eq;
+  double (*f2)(void *params,const double *const x) = root_finder_f2_eq;
+  double (*df0_dx)(void *params,const double *const x,const unsigned dir) = root_finder_df0_dx_eq;
+  double (*df1_dx)(void *params,const double *const x,const unsigned dir) = root_finder_df1_dx_eq;
+  double (*df2_dx)(void *params,const double *const x,const unsigned dir) = root_finder_df2_dx_eq;
+  double *x_sol;
+  
+  /* testing with the derivatives are given: */
+  Root_Finder_T *root = init_root_finder(3);
+  root->type          = "Steepest Descent";
+  plan_root_finder(root);
+  root->description = "solving f = 0";
+  root->tolerance   = 10E-10;
+  root->MaxIter     = 10;
+  root->f[0]        = f0;
+  root->f[1]        = f1;
+  root->f[2]        = f2;
+  root->df_dx[0]    = df0_dx;
+  root->df_dx[1]    = df1_dx;
+  root->df_dx[2]    = df2_dx;
+  x_sol             = execute_root_finder(root);
+  
+  /* printing solutions: */
+  printf("Steepest Descent Method root finder found:\n");
+  printf("x0 = %0.15f, x1 = %0.15f, x2 = %0.15f\n",x_sol[0],x_sol[1],x_sol[2]);
+  printf("Residual = %0.15f\n",root->residual);
+  free_root_finder(root);
+  free(x_sol);
+  
+  return EXIT_SUCCESS;
+  UNUSED(grid);
+}
+
+/* ->return value: d(root_finder_f0_eq)/dx^{dir} */
+static double root_finder_df0_dx_eq(void *params,const double *const x,const unsigned dir)
+{
+  double df_dx = 0;
+  
+  if (dir == 0)
+  {
+    df_dx = 1 - x[1]*x[2]*sin(x[0]*x[1]*x[2]);
+  }
+  else if (dir == 1)
+  {
+    df_dx = - x[0]*x[2]*sin(x[0]*x[1]*x[2]);
+  }
+  else if (dir == 2)
+  {
+    df_dx = - x[0]*x[1]*sin(x[0]*x[1]*x[2]);
+  }
+  else
+    abortEr("Bad argument for derivative.\n");
+  
+  return df_dx;
+  UNUSED(params);
+}
+
+/* ->return value: d(root_finder_f1_eq)/dx^{dir} */
+static double root_finder_df1_dx_eq(void *params,const double *const x,const unsigned dir)
+{
+  double df_dx = 0;
+  
+  if (dir == 0)
+  {
+    df_dx = -0.25*pow(1-x[0],-0.75);
+  }
+  else if (dir == 1)
+  {
+    df_dx = 1;
+  }
+  else if (dir == 2)
+  {
+    df_dx = 0.1*x[2]-0.15;
+  }
+  else
+    abortEr("Bad argument for derivative.\n");
+  
+  return df_dx;
+  UNUSED(params);
+}
+
+/* ->return value: d(root_finder_f2_eq)/dx^{dir} */
+static double root_finder_df2_dx_eq(void *params,const double *const x,const unsigned dir)
+{
+  double df_dx = 0;
+  
+  if (dir == 0)
+  {
+    df_dx = -2*x[0];
+  }
+  else if (dir == 1)
+  {
+    df_dx = -0.2 *x[1]+0.01;
+  }
+  else if (dir == 2)
+  {
+    df_dx = 1;
+  }
+  else
+    abortEr("Bad argument for derivative.\n");
+  
+  return df_dx;
+  UNUSED(params);
+}
+
+/* ->return value: x0+cos(x0 x1 x2) -1 */
+static double root_finder_f0_eq(void *params,const double *const x)
+{
+  return x[0]+cos(x[0]*x[1]*x[2])-1;
+  UNUSED(params);
+}
+
+/* ->return value: (1-x0)^(1/4) + x1 + 0.05*x2^2-0.15*x2-1 */
+static double root_finder_f1_eq(void *params,const double *const x)
+{
+  return pow(1-x[0],0.25)+x[1]+0.05*SQR(x[2])-0.15*x[2]-1;
+  UNUSED(params);
+}
+
+/* ->return value: -x0^2-0.1 x1^2 + 0.01 x1 + x2 -1 */
+static double root_finder_f2_eq(void *params,const double *const x)
+{
+  return -SQR(x[0])-0.1*SQR(x[1])+0.01*x[1]+x[2]-1;
+  UNUSED(params);
+}
+
 /* testing if the value of dfs_df are correct */
 void test_dfs_df_values(Grid_T *const grid)
 {

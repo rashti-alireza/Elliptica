@@ -50,6 +50,9 @@ int Fundamental_Tests(void)
     test_dInterp_a_df(grid);
   }
   
+  if (strstr_i(GetParameterS("Test_RootFinders"),"yes"))
+    test_root_finders(grid);
+  
   if (strstr_i(GetParameterS("Test_Derivative"),"yes"))
     derivative_tests(grid);
   

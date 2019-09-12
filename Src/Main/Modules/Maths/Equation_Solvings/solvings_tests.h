@@ -33,5 +33,11 @@ static void test_dInterp_x_df_XYZ_Tn_Ex(Field_T *const phi_field);
 static void test_dInterp_y_df_XYZ_Tn_Ex(Field_T *const phi_field);
 static void test_dInterp_z_df_XYZ_Tn_Ex(Field_T *const phi_field);
 static void test_dInterp_df_XYZ_Tn_Ex(Field_T *const phi_field);
-
-
+void test_root_finders(Grid_T *const grid);
+static int root_finder_SteepestDescent(Grid_T *const grid);
+static double root_finder_df0_dx_eq(void *params,const double *const x,const unsigned dir);
+static double root_finder_df1_dx_eq(void *params,const double *const x,const unsigned dir);
+static double root_finder_df2_dx_eq(void *params,const double *const x,const unsigned dir);
+static double root_finder_f0_eq(void *params,const double *const x);
+static double root_finder_f1_eq(void *params,const double *const x);
+static double root_finder_f2_eq(void *params,const double *const x);
