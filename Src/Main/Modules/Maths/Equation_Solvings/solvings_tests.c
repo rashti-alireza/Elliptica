@@ -10,7 +10,7 @@ void test_root_finders(Grid_T *const grid)
 {
   if (DO)
   {
-    printf("\nRoot Finder test: Steepest Descent method: \n");
+    printf("\nRoot Finder test: Steepest Descent method:\n\n");
     root_finder_SteepestDescent(grid);
   }
 
@@ -26,15 +26,26 @@ static int root_finder_SteepestDescent(Grid_T *const grid)
   double (*df0_dx)(void *params,const double *const x,const unsigned dir) = root_finder_df0_dx_eq;
   double (*df1_dx)(void *params,const double *const x,const unsigned dir) = root_finder_df1_dx_eq;
   double (*df2_dx)(void *params,const double *const x,const unsigned dir) = root_finder_df2_dx_eq;
+  Root_Finder_T *root;
+  const double x_analytic[3] = {0.,0.1,1.};
   double *x_sol;
+  const char *const par = GetParameterS_E("Test_RootFinders");
+  unsigned MaxIter = 20;
+  
+  if (regex_search("[[:digit:]]+",par))
+  {
+    char *s = regex_find("[[:digit:]]+",par);
+    MaxIter = (unsigned)atoi(s);
+    _free(s);
+  }
   
   /* testing with the derivatives are given: */
-  Root_Finder_T *root = init_root_finder(3);
+  root = init_root_finder(3);
   root->type          = "Steepest Descent";
   plan_root_finder(root);
-  root->description = "solving f = 0";
-  root->tolerance   = 10E-10;
-  root->MaxIter     = 10;
+  root->description = "solving f = 0, knowing df_dx";
+  root->tolerance   = 10E-15;
+  root->MaxIter     = MaxIter;
   root->f[0]        = f0;
   root->f[1]        = f1;
   root->f[2]        = f2;
@@ -44,9 +55,31 @@ static int root_finder_SteepestDescent(Grid_T *const grid)
   x_sol             = execute_root_finder(root);
   
   /* printing solutions: */
-  printf("Steepest Descent Method root finder found:\n");
-  printf("x0 = %0.15f, x1 = %0.15f, x2 = %0.15f\n",x_sol[0],x_sol[1],x_sol[2]);
-  printf("Residual = %0.15f\n",root->residual);
+  printf("->Steepest Descent Method root finder found (derivatives were given):\n");
+  printf("x0  = %+e, x1  = %+e, x2  = %+e\n",x_sol[0],x_sol[1],x_sol[2]);
+  printf("dx0 = %+e, dx1 = %+e, dx2 = %+e\n",
+         fabs(x_sol[0]-x_analytic[0]),fabs(x_sol[1]-x_analytic[1]),fabs(x_sol[2]-x_analytic[2]));
+  printf("Residual = %e\n\n",root->residual);
+  free_root_finder(root);
+  free(x_sol);
+  
+  /* testing without the derivatives are given: */
+  root = init_root_finder(3);
+  root->type          = "Steepest Descent";
+  plan_root_finder(root);
+  root->description = "solving f = 0, df_dx is calculated by finite difference";
+  root->tolerance   = 10E-15;
+  root->MaxIter     = MaxIter;
+  root->f[0]        = f0;
+  root->f[1]        = f1;
+  root->f[2]        = f2;
+  x_sol             = execute_root_finder(root);
+  /* printing solutions: */
+  printf("->Steepest Descent Method root finder found (No derivatives are given):\n");
+  printf("x0  = %+e, x1  = %+e, x2  = %+e\n",x_sol[0],x_sol[1],x_sol[2]);
+  printf("dx0 = %+e, dx1 = %+e, dx2 = %+e\n",
+         fabs(x_sol[0]-x_analytic[0]),fabs(x_sol[1]-x_analytic[1]),fabs(x_sol[2]-x_analytic[2]));
+  printf("Residual = %e\n\n",root->residual);
   free_root_finder(root);
   free(x_sol);
   
