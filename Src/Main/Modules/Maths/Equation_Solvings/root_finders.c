@@ -21,6 +21,8 @@ Root_Finder_T *init_root_finder(const unsigned n)
   pointerEr(root->df_dx);
   root->df_dx[n] = 0;
   
+  root->n = n;
+  
   return root;
 }
 
