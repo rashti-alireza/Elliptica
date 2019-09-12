@@ -66,7 +66,7 @@ void free_root_finder(Root_Finder_T *root)
 // synopsis:
 // =========
 //
-// Root_Finder_T *root = init_root_finder(n); # n is number of variables (equations)
+// Root_Finder_T *root = init_root_finder(n); # n is number of equations or (equivalently variables)
 // root->type          = "Steepest Descent";
 // plan_root_finder(root);
 // root->description = "solving f = 0";
@@ -98,6 +98,7 @@ static double *root_finder_steepest_descent(Root_Finder_T *const root)
   double *const x = alloc_double(n);
   double z[n],y[n];
   double g0,g1,g2,g3,g,h1,h2,h3,alpha0,alpha,alpha2,alpha3,z0;
+  Flag_T small_alpha3_flg = NO;
   unsigned i,k;
   
   /* setup differentials */
@@ -121,7 +122,7 @@ static double *root_finder_steepest_descent(Root_Finder_T *const root)
     z0 = L2_norm(n,z,0);
     if (EQL(z0,0.))
     {
-      root->residual = g1;
+      root->residual = sqrt(g1);
       if (desc)
         printf("%s:\n",desc);
       printf("Root Finder -> Steepest Descent Method:\n"
@@ -136,16 +137,16 @@ static double *root_finder_steepest_descent(Root_Finder_T *const root)
       y[i] = x[i] - alpha3*z[i];
     g3 = g_SD(f,params,y);
     
-    while (GRTEQL(g3,g1))
+    while (g3 >= g1)
     {
       alpha3 /= 2.;
       for (i = 0; i < n; i++)
         y[i] = x[i] - alpha3*z[i];
       g3 = g_SD(f,params,y);
       
-      if(LSS(alpha3,0.5*TOL))
+      if(alpha3 < 0.5*TOL)
       {
-        root->residual = g3;
+        root->residual = sqrt(g3);
         if (desc)
           printf("%s:\n",desc);
         printf("Root Finder -> Steepest Descent Method:\n"
@@ -153,10 +154,14 @@ static double *root_finder_steepest_descent(Root_Finder_T *const root)
         
         for (i = 0; i < n; i++)
           x[i] = y[i];
+          
+        small_alpha3_flg = YES;
         break;
       }
     }
-    
+    if (small_alpha3_flg == YES)
+      break;
+      
     alpha2 = alpha3*0.5;
     for (i = 0; i < n; i++)
       y[i] = x[i] - alpha2*z[i];
@@ -166,7 +171,7 @@ static double *root_finder_steepest_descent(Root_Finder_T *const root)
     h3 = (h2-h1)/alpha3;
     alpha0 = 0.5*(alpha2 - h1/h3);
     for (i = 0; i < n; i++)
-      y[i] = x[i] -alpha0*z[i];
+      y[i] = x[i] - alpha0*z[i];
     g0 = g_SD(f,params,y);
     
     alpha = g0 < g3 ? alpha0 : alpha3;
@@ -175,9 +180,9 @@ static double *root_finder_steepest_descent(Root_Finder_T *const root)
       x[i] -= alpha*z[i];
     
     g = g0 < g3 ? g0 : g3;
-    if (LSS(fabs(g-g1),TOL))
-    {
-      root->residual = g;
+    root->residual = sqrt(g);
+    if (sqrt(fabs(g-g1)) < TOL)
+    {  
       if (desc)
         printf("%s:\n",desc);
       printf("Root Finder -> Steepest Descent Method:\n"
@@ -186,6 +191,14 @@ static double *root_finder_steepest_descent(Root_Finder_T *const root)
     }
     
     k++;
+    if (k == MaxIter+1)
+    {  
+      if (desc)
+        printf("%s:\n",desc);
+      printf("Root Finder -> Steepest Descent Method:\n"
+             "Exceeds maximum number of iterations => Residual = %e\n",root->residual);
+      break;
+    }
   }
   
   root->x_sol = x;
