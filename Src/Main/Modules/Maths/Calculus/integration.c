@@ -63,6 +63,11 @@ double execute_integration(Integration_T *const I)
 /* given the information it decides how to perform the integral */
 void plan_integration(Integration_T *const I)
 {
+  Patch_T *patch;
+  Coord_T coordsys;
+  
+  unsigned i;
+  
   if (strcmp_i(I->type,"Composite Simpson's Rule 1D"))
   {
     I->integration_func = Composite_Simpson_1D;
@@ -79,6 +84,48 @@ void plan_integration(Integration_T *const I)
   {
     I->integration_func = GaussQuadrature_Legendre;
   }
+  else if (strcmp_i(I->type,"Integral{f(x)dV},Spectral"))/* means over the whole physical volume covered by the patch */
+  {
+    patch = I->Spectral->f->patch;
+    coordsys = patch->coordsys;
+    
+    if (coordsys == Cartesian || coordsys == CubedSpherical)
+    {
+      for (i = 0; i < 3; ++i)
+      {
+        if (patch->basis[i]       == Chebyshev_Tn_BASIS &&
+            patch->collocation[i] == Chebyshev_Extrema    )
+        {
+          I->integration_func = f_xyz_dV_Cheb_Ext_Spec;
+        }
+        else
+          abortEr(INCOMPLETE_FUNC);
+      }
+    }
+    else
+      abortEr(NO_OPTION);
+
+  }
+  //else if (strcmp_i(I->type,"Intergral{f(x)dA},Spectral"))/* means over the whole specified slice in physical area in the patch */
+  /*{
+    patch = I->Spectral->f->patch;
+    
+    if (coordsys == Cartesian || coordsys == CubedSpherical)
+    {
+      for (i = 0; i < 3; ++i)
+      {
+        if (patch->basis[i]       == Chebyshev_Tn_BASIS &&
+            patch->collocation[i] == Chebyshev_Extrema    )
+        {
+          I->integration_func = f_xyz_dA_Cheb_Ext_Spec;
+        }
+        else
+          abortEr(INCOMPLETE_FUNC);
+      }
+    }
+    else
+      abortEr(NO_OPTION);
+  }*/
   else
     abortEr(NO_OPTION);
 }
@@ -231,4 +278,83 @@ static double GaussQuadrature_Legendre(Integration_T *const I)
     i0 += w(Legendre_root_function(i,n),n)*f[i];
   
   return i0;
+}
+
+/* ->return value: integrating over the whole physical volume of the patch
+// which is Cartesian and has collocation points of Chebyshev extrema and
+// bases of Chebyshev. */
+static double f_xyz_dV_Cheb_Ext_Spec(Integration_T *const I)
+{
+  const Field_T *const f = I->Spectral->f;
+  Patch_T patch = make_temp_patch(f->patch);
+  Field_T *F    = add_field("integrand","(3dim)",&patch,YES);
+  const double *const fv = f->v;
+  double *const Fv = F->v;
+  const double *Fc;
+  const unsigned nn       = patch.nn;
+  const unsigned *const n = patch.n;
+  double sum = 0.;
+  unsigned ijk,i,j,k;
+  
+  for (ijk = 0; ijk < nn; ++ijk)
+    Fv[ijk] = fv[ijk]*J_xyzN0N1N2(&patch,ijk);
+  
+  Fc = make_coeffs_3d(F);
+  
+  for (ijk = 0; ijk < nn; ++ijk)
+  {
+    IJK(ijk,n,&i,&j,&k);
+    sum += Fc[ijk]*Int_ChebTn(i,n[0])*Int_ChebTn(j,n[1])*Int_ChebTn(k,n[2]);
+  }
+  sum *= -1.;/* - sign is for integration */
+  
+  remove_field(F);
+  free_temp_patch(&patch);
+  
+  return sum;
+}
+
+/* taking the integral of Chebyshev T(n,x) appears in Chebyshev expansion
+// from {-1,1}, namaly: f = c_{0}+c_{n-1}*T(n,x) + sum c_{n}*T(n,x)
+// note: n is the coeffs number in c_{n} and N is total number of coeffs.
+// -> return value: integral_{-1}^{1} T(n,x)dx */
+static double Int_ChebTn(const unsigned n,const unsigned N)
+{
+  if (n == 0)
+    return 2.;
+  else if (n == N-1)
+  {
+    if (n%2 == 0)
+      return -2./(SQR(n)-1.);
+    else
+      return 0.;
+  }
+  else
+  {
+    if (n%2 == 0)
+      return -4./(SQR(n)-1.);
+    else
+      return 0.;
+  }
+  
+  return DBL_MAX; 
+}
+
+/* -> return value: det (d(x,y,z)/d(N0,N1,N2)) */
+static double J_xyzN0N1N2(Patch_T *const patch,const unsigned ijk)
+{
+  const double a00 = dq2_dq1(patch,_x_,_N0_,ijk);
+  const double a01 = dq2_dq1(patch,_x_,_N1_,ijk);
+  const double a02 = dq2_dq1(patch,_x_,_N2_,ijk);
+  const double a10 = dq2_dq1(patch,_y_,_N0_,ijk);
+  const double a11 = dq2_dq1(patch,_y_,_N1_,ijk);
+  const double a12 = dq2_dq1(patch,_y_,_N2_,ijk);
+  const double a20 = dq2_dq1(patch,_z_,_N0_,ijk);
+  const double a21 = dq2_dq1(patch,_z_,_N1_,ijk);
+  const double a22 = dq2_dq1(patch,_z_,_N2_,ijk);
+  
+  return a00 *a11 *a22  - a00 *a12 *a21  -
+         a01 *a10 *a22  + a01 *a12 *a20  +
+         a02 *a10 *a21  - a02 *a11 *a20;
+  
 }

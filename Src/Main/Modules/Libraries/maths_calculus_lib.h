@@ -5,6 +5,10 @@ typedef struct INTEGRATION_T
  double err;/* expected error for this method */
  struct
  {
+  Field_T *f;/* integrand */
+ }Spectral[1];
+ struct
+ {
   double a,b;/* integral limits */
   const double *f;/* integrand */
   unsigned n;/* odd positive integer  */
