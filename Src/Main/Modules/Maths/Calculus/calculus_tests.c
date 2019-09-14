@@ -10,31 +10,114 @@ int integration_tests(Grid_T *const grid)
 {
   int status;
   
-  if (NOT_DO)
+  if (!DO)
   {
     printf("\nIntegration test: Composite Simpson's Rule 1D => \n");
     status = csr_1d(grid);
     check_test_result(status);
   }
-  if (DO)
+  if (!DO)
   {
     printf("\nIntegration test: Gaussian Quadrature Chebyshev Extrema: \n");
     GQ_ChebExtrema(grid);
   }
-  if (DO)
+  if (!DO)
   {
     printf("\nIntegration test: Gaussian Quadrature Lobatto method: \n");
     GQ_Lobatto(grid);
   }
-  if (DO)
+  if (!DO)
   {
     printf("\nIntegration test: Gaussian Quadrature Legendre method: \n");
     GQ_Legendre(grid);
+  }
+  if (DO)
+  {
+    printf("\nIntegration test: Integral{fdV}, Spectral method: \n\n");
+    fdV_spectral(grid);
   }
   
   return EXIT_SUCCESS;
 }
 
+/* testing Integral{fdV}, Spectral method.
+// ->return value: TEST_SUCCESSFUL */
+static int fdV_spectral(Grid_T *const grid)
+{
+  Integration_T *I = init_integration();
+  Field_T *f;
+  Patch_T *patch;
+  const double *s;
+  unsigned nn,ijk,p;
+  double r;
+  double analytic,numeric;
+  
+  /* to test this function we use f = 1, so it means we calculate the volume */
+  if (strcmp_i(grid->kind,"Cartesian_grid"))
+  {
+    patch   = grid->patch[0];
+    I->type = "Integral{f(x)dV},Spectral";
+    s       = patch->s;
+    //n       = patch->n;
+    nn      = patch->nn;
+    f       = add_field("int f",0,patch,YES);
+    
+    analytic = s[0]*s[1]*s[2];
+    
+    for (ijk = 0; ijk < nn; ++ijk)
+      f->v[ijk] = 1.;
+      
+   I->Spectral->f = f;
+   plan_integration(I);
+   
+   numeric = execute_integration(I);
+   
+   free_integration(I);
+   remove_field(f);
+   
+   printf("Cartesian coords:\n");
+   printf("numeric = %e, analytic = %e, df = %e\n",
+           numeric,analytic,numeric-analytic);
+    
+  }
+  else if (strcmp_i(grid->kind,"BNS_CubedSpherical_grid") ||
+           strcmp_i(grid->kind,"BBN_CubedSpherical_grid")   )
+  {
+    
+    r = GetParameterD_E("NS_radius");
+    analytic = 4./3.*M_PI*pow(r,3);
+    numeric  = 0;
+    I->type = "Integral{f(x)dV},Spectral";
+    
+    /* go over all NS patches */
+    FOR_ALL_PATCHES(p,grid)
+    {
+      patch   = grid->patch[p];
+      if (!IsItNSPatch(patch))
+        continue;
+      
+      f  = add_field("int f",0,patch,YES);
+      nn = patch->nn;
+      
+      for (ijk = 0; ijk < nn; ++ijk)
+        f->v[ijk] = 1.;
+        
+      I->Spectral->f = f;
+      plan_integration(I);
+     
+      numeric += execute_integration(I);
+      
+      remove_field(f);
+    }
+    
+    free_integration(I);
+    printf("Cubed Spherical coords:\n");
+    printf("numeric = %e, analytic = %e, df = %e\n",
+           numeric,analytic,numeric-analytic);
+  }
+  
+  return EXIT_SUCCESS;
+}
 
 /* testing Gaussian Quadrature Chebyshev Extrema integration.
 // ->return value: TEST_SUCCESSFUL */
