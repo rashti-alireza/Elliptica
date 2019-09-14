@@ -11,6 +11,11 @@
 // ** filling the integration struct **
 // Integration_T *I = init_integration();
 //
+// *** for example if you want to use Spectral method 
+// for integrating {fdV} over a whole patch in physical domain: ***
+// I->type = "Integral{f(x)dV},Spectral";
+// I->Spectral->f = field;# this is the Field f(x)
+//
 // *** for example if you want to use Composite Simpson's Rule 1D: ***
 // I->type = "Composite Simpson's Rule 1D"
 // I->Composite_Simpson_1D->a = 1.5;// e.g
@@ -340,21 +345,22 @@ static double Int_ChebTn(const unsigned n,const unsigned N)
   return DBL_MAX; 
 }
 
-/* -> return value: det (d(x,y,z)/d(N0,N1,N2)) */
+/* -> return value: det (d(x,y,z)/d(N0,N1,N2)) , 
+// note: det (d(x,y,z)/d(N0,N1,N2)) = 1/(det (d(N0,N1,N2)/d(x,y,z)))*/
 static double J_xyzN0N1N2(Patch_T *const patch,const unsigned ijk)
 {
-  const double a00 = dq2_dq1(patch,_x_,_N0_,ijk);
-  const double a01 = dq2_dq1(patch,_x_,_N1_,ijk);
-  const double a02 = dq2_dq1(patch,_x_,_N2_,ijk);
-  const double a10 = dq2_dq1(patch,_y_,_N0_,ijk);
-  const double a11 = dq2_dq1(patch,_y_,_N1_,ijk);
-  const double a12 = dq2_dq1(patch,_y_,_N2_,ijk);
-  const double a20 = dq2_dq1(patch,_z_,_N0_,ijk);
-  const double a21 = dq2_dq1(patch,_z_,_N1_,ijk);
-  const double a22 = dq2_dq1(patch,_z_,_N2_,ijk);
+  const double a00 = dq2_dq1(patch,_N0_,_x_,ijk);
+  const double a01 = dq2_dq1(patch,_N0_,_y_,ijk);
+  const double a02 = dq2_dq1(patch,_N0_,_z_,ijk);
+  const double a10 = dq2_dq1(patch,_N1_,_x_,ijk);
+  const double a11 = dq2_dq1(patch,_N1_,_y_,ijk);
+  const double a12 = dq2_dq1(patch,_N1_,_z_,ijk);
+  const double a20 = dq2_dq1(patch,_N2_,_x_,ijk);
+  const double a21 = dq2_dq1(patch,_N2_,_y_,ijk);
+  const double a22 = dq2_dq1(patch,_N2_,_z_,ijk);
   
-  return a00 *a11 *a22  - a00 *a12 *a21  -
-         a01 *a10 *a22  + a01 *a12 *a20  +
-         a02 *a10 *a21  - a02 *a11 *a20;
+  return 1./(a00 *a11 *a22  - a00 *a12 *a21  -
+             a01 *a10 *a22  + a01 *a12 *a20  +
+             a02 *a10 *a21  - a02 *a11 *a20  );
   
 }
