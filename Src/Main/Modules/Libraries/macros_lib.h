@@ -1,7 +1,7 @@
 #define ERROR_LINE "x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x"
 #define INCOMPLETE_FUNC "Other options have not been developed yet for this part!\n"
 #define NO_JOB "No job has been defined for this case."
-#define NO_OPTION "No option has been defined for this case."
+#define NO_OPTION "No such option has been defined."
 #define UNUSED(x) (void)(x);
 #define pointerEr(x)   checkup_pointer_error(x,__FILE__,__LINE__)
 #define bad_inputEr()  bad_input_error(__FILE__,__LINE__)
