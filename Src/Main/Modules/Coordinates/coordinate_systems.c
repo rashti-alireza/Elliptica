@@ -167,9 +167,9 @@ double point_value(const unsigned i, const struct Collocation_s *const coll_s)
 // list of q?_e:
 // =============
 //
-// _N0_ for normalized 0-coord [-1,1] 
-// _N1_ for normalized 1-coord [-1,1] 
-// _N2_ for normalized 2-coord [-1,1] 
+// _N0_ for normalized 0-coord like [-1,1] that is used in an expansion
+// _N1_ for normalized 1-coord like [-1,1] that is used in an expansion
+// _N2_ for normalized 2-coord like [-1,1] that is used in an expansion
 // _x_  for Carteisian 0-coord 
 // _y_  for Carteisian 1-coord 
 // _z_  for Carteisian 2-coord 
@@ -197,7 +197,7 @@ double dq2_dq1(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const unsig
   }
   else if (q1_e == _N0_ || q1_e == _N1_ || q1_e == _N2_ )
   {
-    abortEr(INCOMPLETE_FUNC);
+    j = dq_dN(patch,q2_e,q1_e,p);
   }
   /* this part means q2_e and q1_e are from x,y,z or a,b,c */
   else
@@ -277,6 +277,91 @@ static double dN_dq(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const 
   }
   
   return jN_X;
+}
+
+/* Jacobian transformation for dq/dN?. since we know dN/dq, 
+// we can use the inverse property of J^-1 = adj(J)/det(J) to find dq/dN.
+// ->return value: dq/dN? */
+static double dq_dN(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const unsigned p)
+{
+  double j = 0;
+  
+  if (q2_e == _x_ || q2_e == _y_ || q2_e == _z_)
+  {
+    const double a00 = dq2_dq1(patch,_N0_,_x_,p);
+    const double a01 = dq2_dq1(patch,_N0_,_y_,p);
+    const double a02 = dq2_dq1(patch,_N0_,_z_,p);
+    const double a10 = dq2_dq1(patch,_N1_,_x_,p);
+    const double a11 = dq2_dq1(patch,_N1_,_y_,p);
+    const double a12 = dq2_dq1(patch,_N1_,_z_,p);
+    const double a20 = dq2_dq1(patch,_N2_,_x_,p);
+    const double a21 = dq2_dq1(patch,_N2_,_y_,p);
+    const double a22 = dq2_dq1(patch,_N2_,_z_,p);
+    const double det = a00 *a11 *a22  - a00 *a12 *a21  -
+                       a01 *a10 *a22  + a01 *a12 *a20  +
+                       a02 *a10 *a21  - a02 *a11 *a20  ;/* determinate */
+    const unsigned a = q2_e%3;
+    const unsigned b = q1_e%3;
+    assert(!EQL(det,0));
+    
+    if (a == 0)
+    {
+      switch(b)
+      {
+        case 0:
+          j = ADJ_00/det;
+        break;
+        case 1:
+          j = ADJ_01/det;
+        break;
+        case 2:
+          j = ADJ_02/det;
+        break;
+        default:
+          abortEr(NO_OPTION);
+      }
+    }
+    else if(a == 1)
+    {
+      switch(b)
+      {
+        case 0:
+          j = ADJ_10/det;
+        break;
+        case 1:
+          j = ADJ_11/det;
+        break;
+        case 2:
+          j = ADJ_12/det;
+        break;
+        default:
+          abortEr(NO_OPTION);
+      }
+    }
+    else if (a == 2)
+    {
+      switch(b)
+      {
+        case 0:
+          j = ADJ_20/det;
+        break;
+        case 1:
+          j = ADJ_21/det;
+        break;
+        case 2:
+          j = ADJ_22/det;
+        break;
+        default:
+          abortEr(NO_OPTION);
+      }
+    }
+    else
+      abortEr(NO_OPTION);
+  }
+  else
+    abortEr(INCOMPLETE_FUNC);
+  
+  return j;
 }
 
 /* given patch, general coord of a point and its direction,
