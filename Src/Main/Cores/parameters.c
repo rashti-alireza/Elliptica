@@ -54,12 +54,14 @@ void update_parameter_double_format(const char *const lv, const double rv)
     return;
     
   Parameter_T *par;
+  char str_rv[100] = {'\0'};
   
   par = get_parameter(lv);
   if (par)/* if this parameter exists update it */
   {
+    sprintf(str_rv,"%15.18f",rv);
     _free(par->rv);
-    par->rv = 0;
+    par->rv        = dup_s(str_rv);
     par->rv_double = rv;
   }
   else/* since it does not exist */
@@ -76,12 +78,15 @@ void add_parameter_double(const char *const lv, const double rv)
   pointerEr(lv);
   
   Parameter_T *par;
+  char str_rv[100] = {'\0'};
   
   par = get_parameter(lv);
   if (par)
     abortEr_s("This parameter \"%s\" has already been added!\n",lv);
     
+  sprintf(str_rv,"%15.18f",rv);
   par = alloc_parameter(&parameters_global);
+  par->rv = dup_s(str_rv);
   par->lv = dup_s(lv);
   par->rv_double = rv;
 }
