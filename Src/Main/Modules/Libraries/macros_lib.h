@@ -13,7 +13,7 @@
 #define _Ind(x) LookUpField(x,patch)/* gives minus if field is not found */
 #define FOR_ALL_PATCHES(n,grid) for ((n) = 0; (n) < grid->np; ++(n))/* loop over all patches of the given grid */
 #define FOR_ALL_POINTS(n,patch) for ((n) = 0; (n) < patch->nn; ++(n))/* loop over all points of the given patch */
-#define FOR_ALL(x,y) for((x) = 0; y[x] != 0; (x)++)
+#define FOR_ALL(x,y) for((x) = 0; y[(x)] != 0; (x)++)
 #define ADD_FIELD(xNAME)      add_field(#xNAME,0,patch,YES);/* add field to patch->pool and alloc memory */
 #define ADD_FIELD_NoMem(xNAME)      add_field(#xNAME,0,patch,NO);/* add field to patch->pool BUT not alloc memory */
 #define REMOVE_FIELD(xNAME)   remove_field(xNAME);/* remove the field utterly */
