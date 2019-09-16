@@ -44,40 +44,44 @@ int integration_tests(Grid_T *const grid)
 // ->return value: TEST_SUCCESSFUL */
 static int fdV_spectral(Grid_T *const grid)
 {
-  Integration_T *I = init_integration();
+  Integration_T *I;
   Field_T *f;
   Patch_T *patch;
   const double *s;
   unsigned nn,ijk,p;
   double r;
-  double analytic,numeric;
+  double analytic = 0,numeric = 0;
   
   /* to test this function we use f = 1, so it means we calculate the volume */
   if (strcmp_i(grid->kind,"Cartesian_grid"))
   {
-    patch   = grid->patch[0];
-    I->type = "Integral{f(x)dV},Spectral";
-    s       = patch->s;
-    //n       = patch->n;
-    nn      = patch->nn;
-    f       = add_field("int f",0,patch,YES);
-    
-    analytic = s[0]*s[1]*s[2];
-    
-    for (ijk = 0; ijk < nn; ++ijk)
-      f->v[ijk] = 1.;
+    analytic = 0;
+    numeric = 0;
+    FOR_ALL_PATCHES(p,grid)
+    {
+      patch   = grid->patch[p];
+      I       = init_integration();
+      I->type = "Integral{f(x)dV},Spectral";
+      s       = patch->s;
+      nn      = patch->nn;
+      f       = add_field("int f",0,patch,YES);
       
-   I->Spectral->f = f;
-   plan_integration(I);
-   
-   numeric = execute_integration(I);
-   
-   free_integration(I);
-   remove_field(f);
-   
-   printf("Cartesian coords:\n");
-   printf("numeric = %e, analytic = %e, df = %e\n",
-           numeric,analytic,numeric-analytic);
+      analytic += s[0]*s[1]*s[2];
+      
+      for (ijk = 0; ijk < nn; ++ijk)
+        f->v[ijk] = 1.;
+        
+      I->Spectral->f = f;
+      plan_integration(I);
+     
+      numeric += execute_integration(I);
+     
+      free_integration(I);
+      remove_field(f);
+    }
+    printf("Cartesian coords:\n");
+    printf("numeric = %e, analytic = %e, df = %e\n",
+            numeric,analytic,numeric-analytic);
     
   }
   else if (strcmp_i(grid->kind,"BNS_CubedSpherical_grid") ||
@@ -87,7 +91,6 @@ static int fdV_spectral(Grid_T *const grid)
     r = GetParameterD_E("NS_radius");
     analytic = 4./3.*M_PI*pow(r,3);
     numeric  = 0;
-    I->type = "Integral{f(x)dV},Spectral";
     
     /* go over all NS patches */
     FOR_ALL_PATCHES(p,grid)
@@ -96,6 +99,8 @@ static int fdV_spectral(Grid_T *const grid)
       if (!IsItNSPatch(patch))
         continue;
       
+      I  = init_integration();
+      I->type = "Integral{f(x)dV},Spectral";
       f  = add_field("int f",0,patch,YES);
       nn = patch->nn;
       
@@ -104,13 +109,15 @@ static int fdV_spectral(Grid_T *const grid)
         
       I->Spectral->f = f;
       plan_integration(I);
-     
-      numeric += execute_integration(I);
+      
+      double s0 = execute_integration(I);
+      printf("%s, %e\n",patch->name,s0);
+      numeric += s0;
       
       remove_field(f);
+      free_integration(I);
     }
     
-    free_integration(I);
     printf("Cubed Spherical coords:\n");
     printf("numeric = %e, analytic = %e, df = %e\n",
            numeric,analytic,numeric-analytic);
