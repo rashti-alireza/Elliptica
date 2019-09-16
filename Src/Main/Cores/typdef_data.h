@@ -571,7 +571,7 @@ typedef struct JACOBIAN_EQ_T
 */
 typedef struct NEEDLE_T
 {
-  const double *x;
+  const double *x;/* Cartesian coords */
   Grid_T *grid;/* the grid which is used */
   unsigned *guess;/* these are guess patches searched firstly */
   unsigned *in;/* force it to look only inside these patches. */
