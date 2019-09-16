@@ -76,11 +76,74 @@ static Grid_T *make_next_grid_using_previous_grid(Grid_T *const grid_prev)
 static void interpolate_and_initialize_to_next_grid(Grid_T *const grid_next,Grid_T *const grid_prev)
 {
   UNUSED(grid_prev);
+  const unsigned np = grid_next->np;
   unsigned p;
   
-  /* the following fiels are interpolated: */
+  /* the following fields are interpolated: */
   /* B0_U[0-2],psi,eta,phi,enthalpy */
-  
+  OpenMP_Patch_Pragma(omp parallel for)
+  for (p = 0; p < np; ++p)
+  {
+    Patch_T *patch = grid_next->patch[p];
+    unsigned nn = patch->nn;
+    char hint[100],*root_name;
+    unsigned ijk;
+    
+    root_name = strstr(patch->name,"_");/* the patch->name convention is grid\d?_root */
+    assert(root_name);
+    sprintf(hint,"%s",root_name);
+    
+    PREP_FIELD(B0_U0)
+    PREP_FIELD(B0_U1)
+    PREP_FIELD(B0_U2)
+    PREP_FIELD(psi)
+    PREP_FIELD(eta)
+    
+    if (IsItNSPatch(patch))
+    {
+      PREP_FIELD(phi)
+      PREP_FIELD(enthalpy)
+      for (ijk = 0; ijk < nn; ++ijk)
+      {
+        double x[3] = { patch->node[ijk]->x[0],
+                        patch->node[ijk]->x[1],
+                        patch->node[ijk]->x[2] };
+        double Xp[3] = {0};/* (X,Y,Z)(x,y,z) in grid_prev */
+        Patch_T *patchp = 0;/* patch in grid_prev contains (x,y,z) */
+        
+        /* finding X and patch in grid_prev, associated to x */
+        find_Xp_and_patchp(x,hint,grid_prev,Xp,&patchp);
+        
+        B0_U0[ijk] = interpolate_from_prev_grid("B0_U0",Xp,patchp);
+        B0_U1[ijk] = interpolate_from_prev_grid("B0_U1",Xp,patchp);
+        B0_U2[ijk] = interpolate_from_prev_grid("B0_U2",Xp,patchp);
+        psi[ijk]   = interpolate_from_prev_grid("psi",Xp,patchp);
+        eta[ijk]   = interpolate_from_prev_grid("eta",Xp,patchp);
+        phi[ijk]   = interpolate_from_prev_grid("phi",Xp,patchp);
+        enthalpy[ijk] = interpolate_from_prev_grid("enthalpy",Xp,patchp);
+      }
+    }
+    else
+    {
+      for (ijk = 0; ijk < nn; ++ijk)
+      {
+        double x[3] = { patch->node[ijk]->x[0],
+                        patch->node[ijk]->x[1],
+                        patch->node[ijk]->x[2] };
+        double Xp[3] = {0};/* (X,Y,Z)(x,y,z) in grid_prev */
+        Patch_T *patchp = 0;/* patch in grid_prev contains (x,y,z) */
+        
+        /* finding X and patch in grid_prev, associated to x */
+        find_Xp_and_patchp(x,hint,grid_prev,Xp,&patchp);
+        
+        B0_U0[ijk] = interpolate_from_prev_grid("B0_U0",Xp,patchp);
+        B0_U1[ijk] = interpolate_from_prev_grid("B0_U1",Xp,patchp);
+        B0_U2[ijk] = interpolate_from_prev_grid("B0_U2",Xp,patchp);
+        psi[ijk]   = interpolate_from_prev_grid("psi",Xp,patchp);
+        eta[ijk]   = interpolate_from_prev_grid("eta",Xp,patchp);
+      }
+    }
+  }/* end of FOR_ALL_PATCHES(p,grid_next) */
   
   /* initializing some other fields: */
   /* rho0,W_U[0-2],Beta_U[0-2],B1_U[0-2] */
@@ -155,6 +218,84 @@ static void interpolate_and_initialize_to_next_grid(Grid_T *const grid_next,Grid
     
   }/* end of FOR_ALL_PATCHES(p,grid_next) */
   
+}
+
+/* given field name, X and patch, finds the value of the field in X  
+// using interpolation.
+// ->return value: f(X) */
+static double interpolate_from_prev_grid(const char *const field,const double *const X,Patch_T *const patch)
+{
+  double interp;
+  Interpolation_T *interp_s = init_interpolation();
+  
+  interp_s->field = patch->pool[Ind(field)];
+  interp_s->X = X[0];
+  interp_s->Y = X[1];
+  interp_s->Z = X[2];
+  plan_interpolation(interp_s);
+  interp = execute_interpolation(interp_s);
+  free_interpolation(interp_s);
+  
+  return interp;
+}
+
+/* given a cartesian point x on the grid, it finds the corresponding X and patch 
+// on which this x takes place. 
+// hint, is the name of the patch that potentially has the given x */
+static void find_Xp_and_patchp(const double *const x,const char *const hint,Grid_T *const grid,double *const X,Patch_T **const ppatch)
+{
+  Interface_T **face;
+  SubFace_T *subf;
+  Needle_T *needle = alloc_needle();
+  unsigned *found;
+  unsigned p,f,sf;
+  
+  needle->grid = grid;
+  needle->x    = x;
+  
+  FOR_ALL_PATCHES(p,grid)
+  {
+    Patch_T *patch = grid->patch[p];
+    
+    if (!strstr(patch->name,hint))
+    {
+      continue;
+    }
+    else
+    {
+      needle_in(needle,patch);
+      
+      /* find all neighbors of this patch */
+      face = patch->interface;
+      /* for all faces */
+      FOR_ALL(f,face)
+      {
+        /* for all subfaces */
+        for (sf = 0; sf < face[f]->ns; ++sf)
+        {
+          subf = face[f]->subface[sf];
+          if (subf->outerB || subf->innerB)
+            continue;
+            
+          needle_in(needle,grid->patch[subf->adjPatch]);
+        }
+      }
+      break;
+    }/* end of else */
+  }/* end of FOR_ALL_PATCHES(p,grid) */
+  
+  point_finder(needle);
+  found = needle->ans;
+  
+  /* if it could not find X in the given hint patch and its neighbors, raise a flag! */
+  if (!needle->Nans)
+    abortEr("It could not find the x at the given patches!\n");
+  
+  *ppatch = grid->patch[found[0]];
+  
+  X_of_x(X,x,*ppatch);
+  
+  free_needle(needle);
 }
 
 /* given the grid find the NS surface using the fact that 
