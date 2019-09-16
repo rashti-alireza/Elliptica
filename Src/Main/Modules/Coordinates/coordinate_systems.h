@@ -1,14 +1,14 @@
 #include "coordinate_shared_lib.h"
 
-#define ADJ_00  a11*a22 - a12*a21
-#define ADJ_01 -a01*a22 + a02*a21
-#define ADJ_02  a01*a12 - a02*a11
-#define ADJ_10 -a10*a22 + a12*a20
-#define ADJ_11  a00*a22 - a02*a20
-#define ADJ_12 -a00*a12 + a02*a10
-#define ADJ_20  a10*a21 - a11*a20
-#define ADJ_21 -a00*a21 + a01*a20
-#define ADJ_22  a00*a11 - a01*a10
+#define ADJ_00  (a11*a22 - a12*a21)
+#define ADJ_01 (-a01*a22 + a02*a21)
+#define ADJ_02  (a01*a12 - a02*a11)
+#define ADJ_10 (-a10*a22 + a12*a20)
+#define ADJ_11  (a00*a22 - a02*a20)
+#define ADJ_12 (-a00*a12 + a02*a10)
+#define ADJ_20  (a10*a21 - a11*a20)
+#define ADJ_21 (-a00*a21 + a01*a20)
+#define ADJ_22  (a00*a11 - a01*a10)
 
 struct R_max
 {
@@ -38,3 +38,4 @@ static void NS_surface_BNS_CubedSpherical_grid(Grid_T *const grid);
 static void characteristics_BBN_CubedSpherical_grid(Grid_T *const grid);
 static void NS_BH_surface_CubedSpherical_grid(Grid_T *const grid,const double R_NS_l,const double R_BH_r,const double a_BH);
 static double dq_dN(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const unsigned p);
+void test_dq_dN(Grid_T *const grid);

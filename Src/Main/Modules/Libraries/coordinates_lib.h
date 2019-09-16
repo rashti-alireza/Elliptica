@@ -29,3 +29,4 @@ void grid_characteristics_example(Grid_T *const grid);
 double R_interpolation_CS(Field_T *const R,const double *const X);
 void SignAndIndex_permutation_CubedSphere(const Flag_T side,unsigned *const a,unsigned *const b,unsigned *const c,double *const s);
 void test_CubedSpherical_Coordinates(Grid_T *const grid);
+void test_dq_dN(Grid_T *const grid);

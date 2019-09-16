@@ -364,6 +364,71 @@ static double dq_dN(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const 
   return j;
 }
 
+/* testing dq_dN function */
+void test_dq_dN(Grid_T *const grid)
+{
+  double a00,a01,a02,
+         a10,a11,a12,
+         a20,a21,a22,
+         b00,b01,b02,
+         b10,b11,b12,
+         b20,b21,b22,
+         c00,c01,c02,
+         c10,c11,c12,
+         c20,c21,c22;
+  unsigned p,ijk,nn;
+  
+  /* testing dx/dN */
+  FOR_ALL_PATCHES(p,grid)
+  {
+    Patch_T *const patch = grid->patch[p];
+    
+    nn = patch->nn;
+    for (ijk = 0; ijk < nn; ++ijk)
+    {
+      a00 = dq2_dq1(patch,_N0_,_x_,ijk);
+      a01 = dq2_dq1(patch,_N0_,_y_,ijk);
+      a02 = dq2_dq1(patch,_N0_,_z_,ijk);
+      a10 = dq2_dq1(patch,_N1_,_x_,ijk);
+      a11 = dq2_dq1(patch,_N1_,_y_,ijk);
+      a12 = dq2_dq1(patch,_N1_,_z_,ijk);
+      a20 = dq2_dq1(patch,_N2_,_x_,ijk);
+      a21 = dq2_dq1(patch,_N2_,_y_,ijk);
+      a22 = dq2_dq1(patch,_N2_,_z_,ijk);
+      
+      b00 = dq2_dq1(patch,_x_,_N0_,ijk);
+      b01 = dq2_dq1(patch,_x_,_N1_,ijk);
+      b02 = dq2_dq1(patch,_x_,_N2_,ijk);
+      b10 = dq2_dq1(patch,_y_,_N0_,ijk);
+      b11 = dq2_dq1(patch,_y_,_N1_,ijk);
+      b12 = dq2_dq1(patch,_y_,_N2_,ijk);
+      b20 = dq2_dq1(patch,_z_,_N0_,ijk);
+      b21 = dq2_dq1(patch,_z_,_N1_,ijk);
+      b22 = dq2_dq1(patch,_z_,_N2_,ijk);
+      
+      c00 = a00*b00 + a01*b10 + a02*b20;
+      c01 = a00*b01 + a01*b11 + a02*b21;
+      c02 = a00*b02 + a01*b12 + a02*b22;
+      c10 = a10*b00 + a11*b10 + a12*b20;
+      c11 = a10*b01 + a11*b11 + a12*b21;
+      c12 = a10*b02 + a11*b12 + a12*b22;
+      c20 = a20*b00 + a21*b10 + a22*b20;
+      c21 = a20*b01 + a21*b11 + a22*b21;
+      c22 = a20*b02 + a21*b12 + a22*b22;
+      
+      if(!EQL(c00,1))  abortEr("dx_dN is not correct!\n");
+      if(!EQL(c01,0))  abortEr("dx_dN is not correct!\n");
+      if(!EQL(c02,0))  abortEr("dx_dN is not correct!\n");
+      if(!EQL(c10,0))  abortEr("dx_dN is not correct!\n");
+      if(!EQL(c11,1))  abortEr("dx_dN is not correct!\n");
+      if(!EQL(c12,0))  abortEr("dx_dN is not correct!\n");
+      if(!EQL(c20,0))  abortEr("dx_dN is not correct!\n");
+      if(!EQL(c21,0))  abortEr("dx_dN is not correct!\n");
+      if(!EQL(c22,1))  abortEr("dx_dN is not correct!\n");
+    }
+  }
+}
+
 /* given patch, general coord of a point and its direction,
 // it will change the coord to Chebyshev Extrema format.
 // note: X = 0.5*(min-max)*N +0.5*(min+max)
