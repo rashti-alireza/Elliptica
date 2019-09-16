@@ -52,8 +52,9 @@ static Grid_T *make_next_grid_using_previous_grid(Grid_T *const grid_prev)
   /* populating the free data part of initial data that we chose ourself */
   bbn_populate_free_data(grid_next);
 
-  /* use previous grid to interpolate values of the fields for the next grid */
-  //interpolate_fields_into_next_grid(grid_next,grid_prev);
+  /* use previous grid to interpolate values of the fields for the next grid
+  // and initialzing some other fields */
+  interpolate_and_initialize_to_next_grid(grid_next,grid_prev);
   
   /* taking partial derivatives of the fields needed for equations */
   bbn_partial_derivatives_fields(grid_next);
@@ -69,6 +70,91 @@ static Grid_T *make_next_grid_using_previous_grid(Grid_T *const grid_prev)
   make_normal_vector_on_BH_horizon(grid_next);
   
   return grid_next;
+}
+
+/* use previous grid to interpolate values of the fields that will be solved for the next grid */
+static void interpolate_and_initialize_to_next_grid(Grid_T *const grid_next,Grid_T *const grid_prev)
+{
+  UNUSED(grid_prev);
+  unsigned p;
+  
+  /* the following fiels are interpolated: */
+  /* B0_U[0-2],psi,eta,phi,enthalpy */
+  
+  
+  /* initializing some other fields: */
+  /* rho0,W_U[0-2],Beta_U[0-2],B1_U[0-2] */
+  const double Omega_BHNS = GetParameterD_E("BH_NS_orbital_angular_velocity");
+  const double Omega_NS_x = GetParameterD_E("NS_Omega_U0");
+  const double Omega_NS_y = GetParameterD_E("NS_Omega_U1");
+  const double Omega_NS_z = GetParameterD_E("NS_Omega_U2");
+  const double Vr   = GetParameterD_E("BH_NS_infall_velocity");
+  const double y_CM = GetParameterDoubleF_E("y_CM");  
+  const double D    = GetParameterD_E("BH_NS_separation");
+  const double C_NS = GetParameterDoubleF_E("NS_Center");
+  
+  FOR_ALL_PATCHES(p,grid_next)
+  {
+    Patch_T *patch = grid_next->patch[p];
+    unsigned nn = patch->nn;
+    unsigned ijk;
+    
+    GET_FIELD(B0_U0)
+    GET_FIELD(B0_U1)
+    GET_FIELD(B0_U2)
+    PREP_FIELD(B1_U0)
+    PREP_FIELD(B1_U1)
+    PREP_FIELD(B1_U2)
+    PREP_FIELD(Beta_U0)
+    PREP_FIELD(Beta_U1)
+    PREP_FIELD(Beta_U2)
+    
+    for (ijk = 0; ijk < nn; ++ijk)
+    {
+      double x     = patch->node[ijk]->x[0];
+      double y     = patch->node[ijk]->x[1];
+       
+      /* B1 */
+      B1_U0[ijk] = Omega_BHNS*(-y+y_CM)+Vr*x/D;
+      B1_U1[ijk] = Omega_BHNS*x+Vr*(y-y_CM)/D;
+      B1_U2[ijk] = 0;
+       
+      /* Beta */
+      Beta_U0[ijk] = B0_U0[ijk]+B1_U0[ijk];
+      Beta_U1[ijk] = B0_U1[ijk]+B1_U1[ijk];
+      Beta_U2[ijk] = B0_U2[ijk]+B1_U2[ijk];
+    }
+    
+    if (IsItNSPatch(patch))
+    {
+      EoS_T *eos = initialize_EoS();
+      
+      GET_FIELD(enthalpy)
+      PREP_FIELD(rho0)
+      PREP_FIELD(W_U0)
+      PREP_FIELD(W_U1)
+      PREP_FIELD(W_U2)
+      
+      for (ijk = 0; ijk < nn; ++ijk)
+      {
+        double x = patch->node[ijk]->x[0];
+        double y = patch->node[ijk]->x[1]-C_NS;
+        double z = patch->node[ijk]->x[2];
+        
+        /* rho0 */
+        eos->h    = enthalpy[ijk];
+        rho0[ijk] = eos->rest_mass_density(eos);
+        
+        /* spin part */
+        W_U0[ijk] = Omega_NS_y*z-Omega_NS_z*y;
+        W_U1[ijk] = Omega_NS_z*x-Omega_NS_x*z;
+        W_U2[ijk] = Omega_NS_x*y-Omega_NS_y*x;
+      }
+      free_EoS(eos);
+    }/* end of if (IsItNSPatch(patch)) */
+    
+  }/* end of FOR_ALL_PATCHES(p,grid_next) */
+  
 }
 
 /* given the grid find the NS surface using the fact that 

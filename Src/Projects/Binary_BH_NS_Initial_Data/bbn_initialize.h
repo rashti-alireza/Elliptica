@@ -13,5 +13,6 @@ void bbn_partial_derivatives_fields(Grid_T *const grid);
 void bbn_populate_free_data(Grid_T *const grid);
 void bbn_update_psi10A_UiUj(Patch_T *const patch);
 static void bbn_update_Aij(Grid_T *const grid);
+static void interpolate_and_initialize_to_next_grid(Grid_T *const grid_next,Grid_T *const grid_prev);
 
 
