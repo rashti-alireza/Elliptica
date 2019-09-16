@@ -30,3 +30,6 @@ double R_interpolation_CS(Field_T *const R,const double *const X);
 void SignAndIndex_permutation_CubedSphere(const Flag_T side,unsigned *const a,unsigned *const b,unsigned *const c,double *const s);
 void test_CubedSpherical_Coordinates(Grid_T *const grid);
 void test_dq_dN(Grid_T *const grid);
+void needle_ex(Needle_T *const needle,const Patch_T *const patch);
+void needle_in(Needle_T *const needle,const Patch_T *const patch);
+void point_finder(Needle_T *const needle);
