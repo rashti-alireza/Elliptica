@@ -27,7 +27,7 @@ Grid_T *bbn_initialize_next_grid(Grid_T *const grid_prev)
   return grid_next;   
 }
 
-/* adjusting different quantities and then make the next grid using previous grid
+/* finding different quantities and then make the next grid using previous grid
 // ->return value: the next grid called 'grid_next' */
 static Grid_T *make_next_grid_using_previous_grid(Grid_T *const grid_prev)
 {
@@ -35,12 +35,14 @@ static Grid_T *make_next_grid_using_previous_grid(Grid_T *const grid_prev)
   UNUSED(grid_prev);
   Grid_T *grid_next = 0;
   
-  /* adjust Euler constant to fix NS baryonic mass */
-  /* adjust BH center to make P_ADM zero */
-  /* adjust the BH radius to acquire the desired BH mass */
-  /* adjust the Omega_BH to acquire the desired BH spin */
-  /* adjust y_CM using force balance equation */
-  /* adjust NS surface */
+  /* find Euler constant to fix NS baryonic mass */
+  // find_Euler_constant(grid_prev);
+  /* find BH center to make P_ADM zero */
+  /* find the BH radius to acquire the desired BH mass */
+  /* find the Omega_BH to acquire the desired BH spin */
+  /* find y_CM using force balance equation */
+  /* find NS surface */
+  find_NS_surface(grid_prev);
   /* make new grid with new parameters */
 
   /* fields: */
@@ -56,7 +58,7 @@ static Grid_T *make_next_grid_using_previous_grid(Grid_T *const grid_prev)
   /* taking partial derivatives of the fields needed for equations */
   bbn_partial_derivatives_fields(grid_next);
   
-  /* update u0, _J^i, _E and _S */
+  /* update enthalpy, u0, _J^i, _E and _S */
   Tij_IF_CTS_psi6Sources(grid_next);
   
   /* update _Aij in K^{ij} = A^{ij}+1/3*gamma^{ij}*K and 
@@ -67,6 +69,19 @@ static Grid_T *make_next_grid_using_previous_grid(Grid_T *const grid_prev)
   make_normal_vector_on_BH_horizon(grid_next);
   
   return grid_next;
+}
+
+/* given the grid find the NS surface using the fact that 
+// at the surface enthalpy = 1. */
+static void find_NS_surface(Grid_T *const grid)
+{
+   UNUSED(grid);
+   /* for each radial points: */
+   /* find the pertinent patch in which h is 1, 
+   // it is either NS patch or the surrounding. */
+   /* if it is NS patch then the point in which find h = 1 */
+   /* if it is surrounding patch extrapolate phi and update other sources
+   // and then find point in which h = 1 */
 }
 
 /* use TOV and Kerr-Schil black hole approximation.
@@ -111,7 +126,7 @@ static Grid_T *TOV_KerrShild_approximation(void)
   /* taking partial derivatives of the fields needed for equations */
   bbn_partial_derivatives_fields(grid);
   
-  /* update u0, _J^i, _E and _S */
+  /* update enthalpy, u0, _J^i, _E and _S */
   Tij_IF_CTS_psi6Sources(grid);
   
   /* update _Aij in K^{ij} = A^{ij}+1/3*gamma^{ij}*K and 
@@ -369,7 +384,7 @@ KSbeta_D2[ijk]*_gammaI_U2U2[ijk];
         rho0[ijk] = eos->rest_mass_density(eos);
         
         /* phi corrotating approximation */
-        phi[ijk] = 0;
+        phi[ijk] = 0.0001*x;
         
         /* spin part */
         W_U0[ijk] = Omega_NS_y*z-Omega_NS_z*y;
