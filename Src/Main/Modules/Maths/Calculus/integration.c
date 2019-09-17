@@ -306,11 +306,15 @@ static double f_xyz_dV_Cheb_Ext_Spec(Integration_T *const I)
   
   Fc = make_coeffs_3d(F);
   
-  for (ijk = 0; ijk < nn; ++ijk)
-  {
-    IJK(ijk,n,&i,&j,&k);
-    sum += Fc[ijk]*Int_ChebTn(i,n[0])*Int_ChebTn(j,n[1])*Int_ChebTn(k,n[2]);
-  }
+  /* note: if i,j or k is odd Int_ChebTn is 0, so it only loops over even numbers */
+  for (i = 0; i < n[0]; i += 2)
+    for (j = 0; j < n[1]; j += 2)
+      for (k = 0; k < n[2]; k += 2)
+        sum += Fc[L(n,i,j,k)]*\
+               Int_ChebTn_OPTM(i,n[0])*\
+               Int_ChebTn_OPTM(j,n[1])*\
+               Int_ChebTn_OPTM(k,n[2]);
+        
   sum *= -1.;/* - sign is for integration */
   
   remove_field(F);
@@ -320,33 +324,52 @@ static double f_xyz_dV_Cheb_Ext_Spec(Integration_T *const I)
 }
 
 /* taking the integral of Chebyshev T(n,x) appears in Chebyshev expansion
-// from {-1,1}, namaly: f = c_{0}+c_{N-1}*T(N-1,x) + sum c_{n}*T(n,x)
+// from {xi,xf}, namaly: f = c_{0}+c_{N-1}*T(N-1,x) + sum c_{n}*T(n,x)
+// note: n is the coeffs number in c_{n} and N is total number of coeffs.
+// -> return value: integral_{xi}^{xf} T(n,x)dx */
+double Int_ChebTn(const unsigned n,const unsigned N,const double xi,const double xf)
+{
+  if (fabs(xi) > 1. || fabs(xf) > 1. || n >= N)
+    abortEr("Bad argument for Int_ChebTn function.\n");
+    
+  const double i = acos(xi);
+  const double f = acos(xf);
+  double Int;
+  
+  if (n == 1)
+    Int = (cos(2*f) - cos(2*i))/4.;
+  else
+    Int = (-cos(f)*cos(f*n) + cos(i)*cos(i*n) -
+           n*sin(f)*sin(f*n) + n*sin(i)*sin(i*n))/
+           (SQR(n)-1.);
+     
+  if (n == 0 || n == N-1)
+    return Int;
+  
+  return 2.*Int;/* i.e if 0 < n < N-1 */
+}
+
+/* OPTIMIZED version of the integral of Chebyshev T(n,x) appears in Chebyshev expansion
+// from {-1,1}, namaly: f = c_{0}+c_{N-1}*T(N-1,x) + sum c_{n}*T(n,x).
+// in this version, we assume n is even, so it won't check it every time.
 // note: n is the coeffs number in c_{n} and N is total number of coeffs.
 // -> return value: integral_{-1}^{1} T(n,x)dx */
-static double Int_ChebTn(const unsigned n,const unsigned N)
+static double Int_ChebTn_OPTM(const unsigned n,const unsigned N)
 {
   if (n == 0)
     return 2.;
   else if (n == N-1)
-  {
-    if (n%2 == 0)
-      return -2./(SQR(n)-1.);
-    else
-      return 0.;
-  }
+    return -2./(SQR(n)-1.);
   else
-  {
-    if (n%2 == 0)
-      return -4./(SQR(n)-1.);
-    else
-      return 0.;
-  }
+    return -4./(SQR(n)-1.);
   
   return DBL_MAX; 
 }
 
 /* -> return value: det (d(x,y,z)/d(N0,N1,N2)) , 
-// note: det (d(x,y,z)/d(N0,N1,N2)) = 1/(det (d(N0,N1,N2)/d(x,y,z)))*/
+// note: det (d(x,y,z)/d(N0,N1,N2)) = 1/(det (d(N0,N1,N2)/d(x,y,z)))
+// we use, this method, calculating d(N0,N1,N2)/d(x,y,z) is faster
+// than d(x,y,z)/d(N0,N1,N2). */
 static double J_xyzN0N1N2(Patch_T *const patch,const unsigned ijk)
 {
   const double a00 = dq2_dq1(patch,_N0_,_x_,ijk);
