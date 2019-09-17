@@ -45,4 +45,4 @@ double Legendre_weight_function(const double x, const unsigned N);
 double dLegendre_dx(const unsigned n, const double x);
 void init_Legendre_root_function(void);
 void init_dLegendre_dx(void);
-double Int_ChebTn(const unsigned n,const unsigned N,const double xi,const double xf);
+double Integrate_ChebTn(const unsigned n,const double xi,const double xf);

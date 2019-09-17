@@ -9,7 +9,7 @@ void free_integration(Integration_T *I);
 void plan_integration(Integration_T *const I);
 double execute_integration(Integration_T *const I);
 Integration_T *init_integration(void);
-double Int_ChebTn(const unsigned n,const unsigned N,const double xi,const double xf);
+double Integrate_ChebTn(const unsigned n,const double xi,const double xf);
 static double Composite_Simpson_1D(Integration_T *const I);
 static double GaussQuadrature_ChebyshevExtrema(Integration_T *const I);
 static double GaussQuadrature_Lobatto(Integration_T *const I);

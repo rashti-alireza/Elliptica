@@ -324,12 +324,12 @@ static double f_xyz_dV_Cheb_Ext_Spec(Integration_T *const I)
 }
 
 /* taking the integral of Chebyshev T(n,x) appears in Chebyshev expansion
-// from {xi,xf}, namaly: f = c_{0}+c_{N-1}*T(N-1,x) + sum c_{n}*T(n,x)
+// from {xi,xf}, namaly: f = c_{0}+c_{N-1}*T(N-1,x) + 2*sum c_{n}*T(n,x)
 // note: n is the coeffs number in c_{n} and N is total number of coeffs.
 // -> return value: integral_{xi}^{xf} T(n,x)dx */
-double Int_ChebTn(const unsigned n,const unsigned N,const double xi,const double xf)
+double Integrate_ChebTn(const unsigned n,const double xi,const double xf)
 {
-  if (fabs(xi) > 1. || fabs(xf) > 1. || n >= N)
+  if (fabs(xi) > 1. || fabs(xf) > 1.)
     abortEr("Bad argument for Int_ChebTn function.\n");
     
   const double i = acos(xi);
@@ -343,10 +343,7 @@ double Int_ChebTn(const unsigned n,const unsigned N,const double xi,const double
            n*sin(f)*sin(f*n) + n*sin(i)*sin(i*n))/
            (SQR(n)-1.);
      
-  if (n == 0 || n == N-1)
-    return Int;
-  
-  return 2.*Int;/* i.e if 0 < n < N-1 */
+  return Int;
 }
 
 /* OPTIMIZED version of the integral of Chebyshev T(n,x) appears in Chebyshev expansion
