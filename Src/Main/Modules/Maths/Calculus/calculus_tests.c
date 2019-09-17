@@ -47,7 +47,6 @@ static int fdV_spectral(Grid_T *const grid)
   Integration_T *I;
   Field_T *f;
   Patch_T *patch;
-  const double *s;
   unsigned nn,ijk,p;
   double r;
   double analytic = 0,numeric = 0;
@@ -62,14 +61,23 @@ static int fdV_spectral(Grid_T *const grid)
       patch   = grid->patch[p];
       I       = init_integration();
       I->type = "Integral{f(x)dV},Spectral";
-      s       = patch->s;
       nn      = patch->nn;
       f       = add_field("int f",0,patch,YES);
       
-      analytic += s[0]*s[1]*s[2];
+      double x1 = patch->min[0];
+      double x2 = patch->max[0];
+      double y1 = patch->min[1];
+      double y2 = patch->max[1];
+      double z1 = patch->min[2];
+      double z2 = patch->max[2];
+      
+      analytic += (Power(E,y1 + y2 + z1 + z2)*(Power(E,2*x1)*(-2 + Cos(2*x1) + Sin(2*x1)) - 
+                   Power(E,2*x2)*(-2 + Cos(2*x2) + Sin(2*x2)))*Sinh(y1 - y2)*Sinh(z1 - z2))/8.;
       
       for (ijk = 0; ijk < nn; ++ijk)
-        f->v[ijk] = 1.;
+      {
+        f->v[ijk] = Power(E,2*x_(ijk) + 2*y_(ijk) + 2*z_(ijk))*Power(Sin(x_(ijk)),2);
+      }
         
       I->Spectral->f = f;
       plan_integration(I);
@@ -96,7 +104,8 @@ static int fdV_spectral(Grid_T *const grid)
     FOR_ALL_PATCHES(p,grid)
     {
       patch   = grid->patch[p];
-      if (!IsItNSPatch(patch))
+      if (!strstr(patch->name,"outermost1"))
+      //if (!IsItNSPatch(patch))
         continue;
       
       I  = init_integration();

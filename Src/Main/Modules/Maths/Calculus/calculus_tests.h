@@ -9,6 +9,15 @@
 #define DO 1
 #define NOT_DO 0
 
+#define E M_E
+#define Cos(a) cos(a)
+#define Sin(a) sin(a)
+#define Cosh(a) cosh(a)
+#define Sinh(a) sinh(a)
+#define Log(a) log(a)
+#define Power(a,b) pow(a,b)
+#define Sqrt(a) sqrt(a)
+
 int integration_tests(Grid_T *const grid);
 void free_integration(Integration_T *I);
 void plan_integration(Integration_T *const I);
