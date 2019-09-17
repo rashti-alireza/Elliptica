@@ -320,7 +320,7 @@ static double f_xyz_dV_Cheb_Ext_Spec(Integration_T *const I)
 }
 
 /* taking the integral of Chebyshev T(n,x) appears in Chebyshev expansion
-// from {-1,1}, namaly: f = c_{0}+c_{n-1}*T(n,x) + sum c_{n}*T(n,x)
+// from {-1,1}, namaly: f = c_{0}+c_{N-1}*T(N-1,x) + sum c_{n}*T(n,x)
 // note: n is the coeffs number in c_{n} and N is total number of coeffs.
 // -> return value: integral_{-1}^{1} T(n,x)dx */
 static double Int_ChebTn(const unsigned n,const unsigned N)
