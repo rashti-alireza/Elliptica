@@ -75,12 +75,51 @@ static Grid_T *make_next_grid_using_previous_grid(Grid_T *const grid_prev)
 /* use previous grid to interpolate values of the fields that will be solved for the next grid */
 static void interpolate_and_initialize_to_next_grid(Grid_T *const grid_next,Grid_T *const grid_prev)
 {
-  UNUSED(grid_prev);
   const unsigned np = grid_next->np;
   unsigned p;
+ 
+  /* test for race condition, test for residual after interpolation in grid_next */
+  printf("THIS function has not been tested deeply %s,%d\n",__FILE__,__LINE__);
   
   /* the following fields are interpolated: */
   /* B0_U[0-2],psi,eta,phi,enthalpy */
+  
+  /* to avoid race condition between threads write all coeffs */
+  OpenMP_Patch_Pragma(omp parallel for)
+  for (p = 0; p < np; ++p)
+  {
+    Patch_T *patch = grid_prev->patch[p];
+    
+    DECLARE_FIELD(B0_U0)
+    DECLARE_FIELD(B0_U1)
+    DECLARE_FIELD(B0_U2)
+    DECLARE_FIELD(psi)
+    DECLARE_FIELD(eta)
+    
+    if (IsItNSPatch(patch))
+    {
+      DECLARE_FIELD(phi)
+      DECLARE_FIELD(enthalpy)
+      
+      make_coeffs_3d(B0_U0);
+      make_coeffs_3d(B0_U1);
+      make_coeffs_3d(B0_U2);
+      make_coeffs_3d(psi);
+      make_coeffs_3d(eta);
+      make_coeffs_3d(phi);
+      make_coeffs_3d(enthalpy);
+    }
+    else
+    {
+      make_coeffs_3d(B0_U0);
+      make_coeffs_3d(B0_U1);
+      make_coeffs_3d(B0_U2);
+      make_coeffs_3d(psi);
+      make_coeffs_3d(eta);
+    }
+    
+  }
+  
   OpenMP_Patch_Pragma(omp parallel for)
   for (p = 0; p < np; ++p)
   {
@@ -114,12 +153,12 @@ static void interpolate_and_initialize_to_next_grid(Grid_T *const grid_next,Grid
         /* finding X and patch in grid_prev, associated to x */
         find_Xp_and_patchp(x,hint,grid_prev,Xp,&patchp);
         
-        B0_U0[ijk] = interpolate_from_prev_grid("B0_U0",Xp,patchp);
-        B0_U1[ijk] = interpolate_from_prev_grid("B0_U1",Xp,patchp);
-        B0_U2[ijk] = interpolate_from_prev_grid("B0_U2",Xp,patchp);
-        psi[ijk]   = interpolate_from_prev_grid("psi",Xp,patchp);
-        eta[ijk]   = interpolate_from_prev_grid("eta",Xp,patchp);
-        phi[ijk]   = interpolate_from_prev_grid("phi",Xp,patchp);
+        B0_U0[ijk]    = interpolate_from_prev_grid("B0_U0",Xp,patchp);
+        B0_U1[ijk]    = interpolate_from_prev_grid("B0_U1",Xp,patchp);
+        B0_U2[ijk]    = interpolate_from_prev_grid("B0_U2",Xp,patchp);
+        psi[ijk]      = interpolate_from_prev_grid("psi",Xp,patchp);
+        eta[ijk]      = interpolate_from_prev_grid("eta",Xp,patchp);
+        phi[ijk]      = interpolate_from_prev_grid("phi",Xp,patchp);
         enthalpy[ijk] = interpolate_from_prev_grid("enthalpy",Xp,patchp);
       }
     }
@@ -232,6 +271,7 @@ static double interpolate_from_prev_grid(const char *const field,const double *c
   interp_s->X = X[0];
   interp_s->Y = X[1];
   interp_s->Z = X[2];
+  interp_s->XYZ_dir_flag = 1;
   plan_interpolation(interp_s);
   interp = execute_interpolation(interp_s);
   free_interpolation(interp_s);
@@ -287,7 +327,7 @@ static void find_Xp_and_patchp(const double *const x,const char *const hint,Grid
   point_finder(needle);
   found = needle->ans;
   
-  /* if it could not find X in the given hint patch and its neighbors, raise a flag! */
+  /* if it could not find X in neither the given hint patch nor its neighbors, raise a flag! */
   if (!needle->Nans)
     abortEr("It could not find the x at the given patches!\n");
   
