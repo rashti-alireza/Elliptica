@@ -5,7 +5,10 @@ typedef struct INTEGRATION_T
  double err;/* expected error for this method */
  struct
  {
-  Field_T *f;/* integrand */
+  const Field_T *f;/* integrand */
+  const double *metric;/* physical metric used in integral{fdA} */
+  
+  
  }Spectral[1];
  struct
  {
