@@ -28,3 +28,5 @@ static int GQ_ChebExtrema(Grid_T *const grid);
 static int GQ_Lobatto(Grid_T *const grid);
 static int GQ_Legendre(Grid_T *const grid);
 static int fdV_spectral(Grid_T *const grid);
+static int fdA_spectral(Grid_T *const grid);
+

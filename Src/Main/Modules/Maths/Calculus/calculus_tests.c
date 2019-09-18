@@ -36,6 +36,191 @@ int integration_tests(Grid_T *const grid)
     printf("\nIntegration test: Integral{fdV}, Spectral method: \n\n");
     fdV_spectral(grid);
   }
+  if (DO)
+  {
+    printf("\nIntegration test: Integral{fdA}, Spectral method: \n\n");
+    fdA_spectral(grid);
+  }
+  
+  return EXIT_SUCCESS;
+}
+
+/* testing Integral{fdA}, Spectral method.
+// ->return value: TEST_SUCCESSFUL */
+static int fdA_spectral(Grid_T *const grid)
+{
+  Integration_T *I;
+  Field_T *f;
+  Patch_T *patch;
+  unsigned nn,ijk,p;
+  const unsigned *n;
+  double r;
+  double analytic = 0,numeric = 0;
+  
+  /* to test this function we use f = 1, so it means we calculate the volume */
+  if (strcmp_i(grid->kind,"Cartesian_grid"))
+  {
+    analytic = 0;
+    numeric = 0;
+    FOR_ALL_PATCHES(p,grid)
+    {
+      patch   = grid->patch[p];
+      I       = init_integration();
+      I->type = "Integral{f(x)dA},Spectral";
+      nn      = patch->nn;
+      n       = patch->n;
+      const double *s = patch->s;
+      f       = add_field("int f",0,patch,YES);
+      
+      double *g00 = alloc_double(nn);
+      double *g01 = alloc_double(nn);
+      double *g02 = alloc_double(nn);
+      double *g11 = alloc_double(nn);
+      double *g12 = alloc_double(nn);
+      double *g22 = alloc_double(nn);
+
+      //double x1 = patch->min[0];
+      //double x2 = patch->max[0];
+      //double y1 = patch->min[1];
+      //double y2 = patch->max[1];
+      //double z1 = patch->min[2];
+      //double z2 = patch->max[2];
+      
+      //analytic += (Power(E,y1 + y2 + z1 + z2)*(Power(E,2*x1)*(-2 + Cos(2*x1) + Sin(2*x1)) - 
+        //           Power(E,2*x2)*(-2 + Cos(2*x2) + Sin(2*x2)))*Sinh(y1 - y2)*Sinh(z1 - z2))/8.;
+      analytic = 2*(s[0]*s[1]+s[0]*s[2]+s[1]*s[2]);
+      for (ijk = 0; ijk < nn; ++ijk)
+      {
+        g00[ijk] = g11[ijk] = g22[ijk] = 1.;
+        //f->v[ijk] = Power(E,2*x_(ijk) + 2*y_(ijk) + 2*z_(ijk))*Power(Sin(x_(ijk)),2);
+        f->v[ijk] = 1;
+      }
+        
+      I->Spectral->f = f;
+      I->g00 = g00;
+      I->g01 = g01;
+      I->g02 = g02;
+      I->g11 = g11;
+      I->g12 = g12;
+      I->g22 = g22;
+      
+      /* for X = const */
+      I->Spectral->X_surface = 1;
+      I->Spectral->I         = 0; 
+      plan_integration(I);
+      numeric += execute_integration(I);
+      
+      I->Spectral->X_surface = 1;
+      I->Spectral->I         = n[0]-1; 
+      plan_integration(I);
+      numeric += execute_integration(I);
+
+      /* for Y = const */
+      I->Spectral->Y_surface = 1;
+      I->Spectral->J         = 0; 
+      plan_integration(I);
+      numeric += execute_integration(I);
+      
+      I->Spectral->Y_surface = 1;
+      I->Spectral->J         = n[1]-1; 
+      plan_integration(I);
+      numeric += execute_integration(I);
+
+
+      /* for Z = const */
+      I->Spectral->Z_surface = 1;
+      I->Spectral->K         = 0; 
+      plan_integration(I);
+      numeric += execute_integration(I);
+      
+      I->Spectral->Z_surface = 1;
+      I->Spectral->K         = n[2]-1; 
+      plan_integration(I);
+      numeric += execute_integration(I);
+      
+      free_integration(I);
+      remove_field(f);
+      free(g00);
+      free(g01);
+      free(g02);
+      free(g11);
+      free(g12);
+      free(g22);
+    }
+    printf("Cartesian coords:\n");
+    printf("numeric = %e, analytic = %e, df = %e\n",
+            numeric,analytic,numeric-analytic);
+    
+  }
+  else if (strcmp_i(grid->kind,"BNS_CubedSpherical_grid") ||
+           strcmp_i(grid->kind,"BBN_CubedSpherical_grid")   )
+  {
+    
+    r = GetParameterD_E("NS_radius");
+    analytic = 4./3.*M_PI*pow(r,3);
+    numeric  = 0;
+    
+    /* go over all NS patches */
+    FOR_ALL_PATCHES(p,grid)
+    {
+      patch   = grid->patch[p];
+      if (!strstr(patch->name,"outermost1"))
+      //if (!IsItNSPatch(patch))
+        continue;
+      
+      I  = init_integration();
+      I->type = "Integral{f(x)dV},Spectral";
+      f  = add_field("int f",0,patch,YES);
+      n  = patch->n;
+      nn = patch->nn;
+      
+      double *g00 = alloc_double(nn);
+      double *g01 = alloc_double(nn);
+      double *g02 = alloc_double(nn);
+      double *g11 = alloc_double(nn);
+      double *g12 = alloc_double(nn);
+      double *g22 = alloc_double(nn);
+
+      for (ijk = 0; ijk < nn; ++ijk)
+      { 
+        g00[ijk] = g11[ijk] = g22[ijk] = 1.;
+        f->v[ijk] = 1.;
+      }
+        
+      I->Spectral->f = f;
+      I->g00 = g00;
+      I->g01 = g01;
+      I->g02 = g02;
+      I->g11 = g11;
+      I->g12 = g12;
+      I->g22 = g22;
+
+      /* for X = const */
+      I->Spectral->Z_surface = 1;
+      I->Spectral->K         = n[2]-1; 
+      plan_integration(I);
+      numeric += execute_integration(I);
+      
+      plan_integration(I);
+      
+      //double s0 = execute_integration(I);
+      //printf("%s, %e\n",patch->name,s0);
+      //numeric += s0;
+      
+      remove_field(f);
+      free_integration(I);
+      free(g00);
+      free(g01);
+      free(g02);
+      free(g11);
+      free(g12);
+      free(g22);
+    }
+    
+    printf("Cubed Spherical coords:\n");
+    printf("numeric = %e, analytic = %e, df = %e\n",
+           numeric,analytic,numeric-analytic);
+  }
   
   return EXIT_SUCCESS;
 }
@@ -78,6 +263,7 @@ static int fdV_spectral(Grid_T *const grid)
       double z1 = patch->min[2];
       double z2 = patch->max[2];
       
+      /* analytic answer of the integral */
       analytic += (Power(E,y1 + y2 + z1 + z2)*(Power(E,2*x1)*(-2 + Cos(2*x1) + Sin(2*x1)) - 
                    Power(E,2*x2)*(-2 + Cos(2*x2) + Sin(2*x2)))*Sinh(y1 - y2)*Sinh(z1 - z2))/8.;
       
