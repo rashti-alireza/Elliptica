@@ -11,10 +11,43 @@
 // ** filling the integration struct **
 // Integration_T *I = init_integration();
 //
-// *** for example if you want to use Spectral method 
-// for integrating {fdV} over a whole patch in physical domain: ***
-// I->type = "Integral{f(x)dV},Spectral";
+// *** for example if you want to use Spectral method: ***
+// VOLUME integration:
+// *** for integrating {fdV} over a whole patch in physical domain: ***
+// I->type = "Integral{f(x)dV},Spectral"; # dV is sqrt(det(g)) dxdydz
 // I->Spectral->f = field;# this is the Field f(x)
+//
+// # filling the metric (assumed symmetry):
+// I->g00 = gamma_D0D0;
+// I->g01 = gamma_D0D1;
+// I->g02 = gamma_D0D2;
+// I->g11 = gamma_D1D1;
+// I->g12 = gamma_D1D2;
+// I->g22 = gamma_D2D2;
+
+// SURFACE integration:
+// *** for integrating {fdA} over a whole physical hypersurface: ***
+// I->type = "Integral{f(x)dA},Spectral"; # dA is sqrt(det(g_{ij} dx^i/dY dx^j/dZ))dYdZ for hypersurface X = const.
+//                                        # dA is sqrt(det(g_{ij} dx^i/dX dx^j/dZ))dXdZ for hypersurface Y = const.
+//                                        # dA is sqrt(det(g_{ij} dx^i/dX dx^j/dY))dXdY for hypersurface Z = const.
+// I->Spectral->f = field;# this is the Field f(x)
+// # selecting the hypersurface for example:
+// I->Spectral->X_surface = 1; # for hypersurface X = const.
+// I->Spectral->I         = i; # the index shows  X = const. plane
+// 
+// I->Spectral->Y_surface = 1; # for hypersurface Y = const.
+// I->Spectral->J         = i; # the index shows  Y = const. plane
+//
+// I->Spectral->Z_surface = 1; # for hypersurface Z = const.
+// I->Spectral->K         = i; # the index shows  Z = const. plane
+//
+// # filling the metric (assumed symmetry):
+// I->g00 = gamma_D0D0;
+// I->g01 = gamma_D0D1;
+// I->g02 = gamma_D0D2;
+// I->g11 = gamma_D1D1;
+// I->g12 = gamma_D1D2;
+// I->g22 = gamma_D2D2;
 //
 // *** for example if you want to use Composite Simpson's Rule 1D: ***
 // I->type = "Composite Simpson's Rule 1D"
@@ -37,7 +70,8 @@
 // I->type = "Gaussian Quadrature Legendre"
 // I->GQ_Legendre->f = array;
 // I->GQ_Legendre->n = 10;// the dimension of array
-// 
+//
+// having populated the I structure, now we have: 
 // ** planning the appropriate function for integration **
 // plan_integration(I);
 //
@@ -111,9 +145,10 @@ void plan_integration(Integration_T *const I)
       abortEr(NO_OPTION);
 
   }
-  //else if (strcmp_i(I->type,"Intergral{f(x)dA},Spectral"))/* means over the whole specified slice in physical area in the patch */
-  /*{
+  else if (strcmp_i(I->type,"Intergral{f(x)dA},Spectral"))/* means over the whole specified slice in physical area in the patch */
+  {
     patch = I->Spectral->f->patch;
+    coordsys = patch->coordsys;
     
     if (coordsys == Cartesian || coordsys == CubedSpherical)
     {
@@ -130,7 +165,7 @@ void plan_integration(Integration_T *const I)
     }
     else
       abortEr(NO_OPTION);
-  }*/
+  }
   else
     abortEr(NO_OPTION);
 }
@@ -286,8 +321,9 @@ static double GaussQuadrature_Legendre(Integration_T *const I)
 }
 
 /* ->return value: integrating over the whole physical volume of the patch
-// which is Cartesian and has collocation points of Chebyshev extrema and
-// bases of Chebyshev. */
+// which has collocation points of Chebyshev extrema and
+// bases of Chebyshev, USING CARTESIAN COORDINATES.
+// Thread Safe */
 static double f_xyz_dV_Cheb_Ext_Spec(Integration_T *const I)
 {
   const Field_T *const f = I->Spectral->f;
@@ -298,11 +334,21 @@ static double f_xyz_dV_Cheb_Ext_Spec(Integration_T *const I)
   const double *Fc;
   const unsigned nn       = patch.nn;
   const unsigned *const n = patch.n;
-  double sum = 0.;
+  double sum = 0.,g;
   unsigned ijk,i,j,k;
   
   for (ijk = 0; ijk < nn; ++ijk)
-    Fv[ijk] = fv[ijk]*J_xyzN0N1N2(&patch,ijk);
+  {
+    double g00 = I->g00[ijk];
+    double g01 = I->g01[ijk];
+    double g02 = I->g02[ijk];
+    double g11 = I->g11[ijk];
+    double g12 = I->g12[ijk];
+    double g22 = I->g22[ijk];
+    g = g00*g11*g22 - g00*pow(g12, 2) - pow(g01, 2)*g22 + 
+        2*g01*g02*g12 - pow(g02, 2)*g11;
+    Fv[ijk] = fv[ijk]*sqrt(g)*J_xyzN0N1N2(&patch,ijk);
+  }
   
   Fc = make_coeffs_3d(F);
   
@@ -310,12 +356,95 @@ static double f_xyz_dV_Cheb_Ext_Spec(Integration_T *const I)
   for (i = 0; i < n[0]; i += 2)
     for (j = 0; j < n[1]; j += 2)
       for (k = 0; k < n[2]; k += 2)
-        sum += Fc[L(n,i,j,k)]*\
-               Int_ChebTn_OPTM(i,n[0])*\
-               Int_ChebTn_OPTM(j,n[1])*\
+        sum += Fc[L(n,i,j,k)]*
+               Int_ChebTn_OPTM(i,n[0])*
+               Int_ChebTn_OPTM(j,n[1])*
                Int_ChebTn_OPTM(k,n[2]);
         
   sum *= -1.;/* - sign is for integration */
+  
+  remove_field(F);
+  free_temp_patch(&patch);
+  
+  return sum;
+}
+
+/* ->return value: integrating over the whole specified physical 
+// hypersurface of the patch that has collocation points of Chebyshev extrema and
+// bases of Chebyshev, USING CARTESIAN COORDINATES.
+// Thread Safe */
+static double f_xyz_dA_Cheb_Ext_Spec(Integration_T *const I)
+{
+  const Field_T *const f = I->Spectral->f;
+  Patch_T patch = make_temp_patch(f->patch);
+  Field_T *F    = add_field("integrand","(3dim)",&patch,YES);
+  const double *const fv = f->v;
+  double *const Fv = F->v;
+  const double *Fc;
+  const unsigned *const n = patch.n;
+  double sum = 0.;
+  unsigned ijk,i,j,k;
+  
+  /* populate integrand at X hypresurface */
+  if (I->Spectral->X_surface)
+  {
+    i = I->Spectral->I;
+    for (j = 0; j < n[1]; ++j)
+      for (k = 0; k < n[2]; ++k)
+      {
+        ijk     = L(n,i,j,k);
+        Fv[ijk] = fv[ijk]*sqrt(det_h_xyzN1N2_Cheb_Ext(&patch,I,ijk));
+      }
+    
+    Fc = make_coeffs_2d(F,1,2);
+    /* note: if i,j or k is odd Int_ChebTn is 0, so it only loops over even numbers */
+    for (j = 0; j < n[1]; j += 2)
+      for (k = 0; k < n[2]; k += 2)
+        sum += Fc[L(n,i,j,k)]*
+               Int_ChebTn_OPTM(j,n[1])*
+               Int_ChebTn_OPTM(k,n[2]);
+    
+  }
+  /* populate integrand at Y hypresurface */
+  else if (I->Spectral->Y_surface)
+  {
+    j = I->Spectral->J;
+    for (i = 0; i < n[0]; ++i)
+      for (k = 0; k < n[2]; ++k)
+      {
+        ijk     = L(n,i,j,k);
+        Fv[ijk] = fv[ijk]*sqrt(det_h_xyzN0N2_Cheb_Ext(&patch,I,ijk));
+      }
+    
+    Fc = make_coeffs_2d(F,0,2);
+    /* note: if i,j or k is odd Int_ChebTn is 0, so it only loops over even numbers */
+    for (i = 0; i < n[0]; i += 2)
+      for (k = 0; k < n[2]; k += 2)
+        sum += Fc[L(n,i,j,k)]*
+               Int_ChebTn_OPTM(i,n[0])*
+               Int_ChebTn_OPTM(k,n[2]);
+  }
+  /* populate integrand at Z hypresurface */
+  else if(I->Spectral->Z_surface)
+  {
+    k = I->Spectral->K;
+    for (i = 0; i < n[0]; ++i)
+      for (j = 0; j < n[1]; ++j)
+      {
+        ijk     = L(n,i,j,k);
+        Fv[ijk] = fv[ijk]*sqrt(det_h_xyzN0N1_Cheb_Ext(&patch,I,ijk));
+      }
+    
+    Fc = make_coeffs_2d(F,0,1);
+    /* note: if i,j or k is odd Int_ChebTn is 0, so it only loops over even numbers */
+    for (i = 0; i < n[0]; i += 2)
+      for (j = 0; j < n[1]; j += 2)
+        sum += Fc[L(n,i,j,k)]*
+               Int_ChebTn_OPTM(i,n[0])*
+               Int_ChebTn_OPTM(j,n[1]);
+  }
+  else
+    abortEr(NO_OPTION);
   
   remove_field(F);
   free_temp_patch(&patch);
