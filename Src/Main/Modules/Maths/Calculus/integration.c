@@ -36,10 +36,10 @@
 // I->Spectral->I         = i; # the index shows  X = const. plane
 // 
 // I->Spectral->Y_surface = 1; # for hypersurface Y = const.
-// I->Spectral->J         = i; # the index shows  Y = const. plane
+// I->Spectral->J         = j; # the index shows  Y = const. plane
 //
 // I->Spectral->Z_surface = 1; # for hypersurface Z = const.
-// I->Spectral->K         = i; # the index shows  Z = const. plane
+// I->Spectral->K         = k; # the index shows  Z = const. plane
 //
 // # filling the metric (assumed symmetry):
 // I->g00 = gamma_D0D0;
