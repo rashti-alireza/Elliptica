@@ -64,6 +64,13 @@ static int fdV_spectral(Grid_T *const grid)
       nn      = patch->nn;
       f       = add_field("int f",0,patch,YES);
       
+      double *g00 = alloc_double(nn);
+      double *g01 = alloc_double(nn);
+      double *g02 = alloc_double(nn);
+      double *g11 = alloc_double(nn);
+      double *g12 = alloc_double(nn);
+      double *g22 = alloc_double(nn);
+
       double x1 = patch->min[0];
       double x2 = patch->max[0];
       double y1 = patch->min[1];
@@ -76,16 +83,29 @@ static int fdV_spectral(Grid_T *const grid)
       
       for (ijk = 0; ijk < nn; ++ijk)
       {
+        g00[ijk] = g11[ijk] = g22[ijk] = 1.;
         f->v[ijk] = Power(E,2*x_(ijk) + 2*y_(ijk) + 2*z_(ijk))*Power(Sin(x_(ijk)),2);
       }
         
       I->Spectral->f = f;
+      I->g00 = g00;
+      I->g01 = g01;
+      I->g02 = g02;
+      I->g11 = g11;
+      I->g12 = g12;
+      I->g22 = g22;
       plan_integration(I);
      
       numeric += execute_integration(I);
      
       free_integration(I);
       remove_field(f);
+      free(g00);
+      free(g01);
+      free(g02);
+      free(g11);
+      free(g12);
+      free(g22);
     }
     printf("Cartesian coords:\n");
     printf("numeric = %e, analytic = %e, df = %e\n",
@@ -113,10 +133,27 @@ static int fdV_spectral(Grid_T *const grid)
       f  = add_field("int f",0,patch,YES);
       nn = patch->nn;
       
+      double *g00 = alloc_double(nn);
+      double *g01 = alloc_double(nn);
+      double *g02 = alloc_double(nn);
+      double *g11 = alloc_double(nn);
+      double *g12 = alloc_double(nn);
+      double *g22 = alloc_double(nn);
+
       for (ijk = 0; ijk < nn; ++ijk)
+      { 
+        g00[ijk] = g11[ijk] = g22[ijk] = 1.;
         f->v[ijk] = 1.;
+      }
         
       I->Spectral->f = f;
+      I->g00 = g00;
+      I->g01 = g01;
+      I->g02 = g02;
+      I->g11 = g11;
+      I->g12 = g12;
+      I->g22 = g22;
+
       plan_integration(I);
       
       double s0 = execute_integration(I);
@@ -125,6 +162,12 @@ static int fdV_spectral(Grid_T *const grid)
       
       remove_field(f);
       free_integration(I);
+      free(g00);
+      free(g01);
+      free(g02);
+      free(g11);
+      free(g12);
+      free(g22);
     }
     
     printf("Cubed Spherical coords:\n");
