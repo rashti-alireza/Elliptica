@@ -3,12 +3,23 @@ typedef struct INTEGRATION_T
 {
  const char *type;
  double err;/* expected error for this method */
+ /* metrices components used in surface and volume integrals.
+ // note: the metric is assumed to be symmetric */
+ const double *g00;
+ const double *g01;
+ const double *g02;
+ const double *g11;
+ const double *g12;
+ const double *g22;
  struct
  {
   const Field_T *f;/* integrand */
-  const double *metric;/* physical metric used in integral{fdA} */
-  
-  
+  unsigned X_surface : 1;/* integration on the hyper-surface X = const */
+  unsigned Y_surface : 1;/* integration on the hyper-surface Y = const */
+  unsigned Z_surface : 1;/* integration on the hyper-surface Z = const */
+  unsigned I;/* the index showing the hyper-surface X = const */
+  unsigned J;/* the index showing the hyper-surface Y = const */
+  unsigned K;/* the index showing the hyper-surface Z = const */
  }Spectral[1];
  struct
  {

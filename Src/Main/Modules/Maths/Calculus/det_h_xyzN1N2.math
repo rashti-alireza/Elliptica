@@ -1,0 +1,56 @@
+Dimension = 3;
+Point = ijk;
+
+C_macro1 = name;
+C_arg1 =;
+
+`/* det(g_{ij} dx^i/dN1 dx^j/dN2) */`
+`#include "core_lib.h"`
+`#include "maths_calculus_lib.h"`
+`#include "coordinates_lib.h"`
+`double det_h_xyzN1N2_Cheb_Ext(Patch_T *const patch,const Integration_T *const I,const unsigned ijk);`
+`double det_h_xyzN1N2_Cheb_Ext(Patch_T *const patch,const Integration_T *const I,const unsigned ijk)`
+`{`
+
+Declare = 
+{
+ # metric
+ (obj = Field,name = g, rank = DD,none);
+
+ # dx/dN1
+ (obj = Field,name = dx_dN1, rank = U,none,C_arg1);
+
+ # dx/dN2
+ (obj = Field,name = dx_dN2, rank = U,none,C_arg1);
+
+ # determinant
+ (obj = variable,name = h_det,none);
+}
+# symmetries:
+Symm[g(i,j) = g(j,i)];
+
+`  const double *const g_D0D0 = I->g00;`
+`  const double *const g_D0D1 = I->g01;`
+`  const double *const g_D0D2 = I->g02;`
+`  const double *const g_D1D1 = I->g11;`
+`  const double *const g_D1D2 = I->g12;`
+`  const double *const g_D2D2 = I->g22;`
+`  const double dx_dN1_U0 = dq2_dq1(patch,_x_,_N1_,ijk);`
+`  const double dx_dN1_U1 = dq2_dq1(patch,_y_,_N1_,ijk);`
+`  const double dx_dN1_U2 = dq2_dq1(patch,_z_,_N1_,ijk);`
+`  const double dx_dN2_U0 = dq2_dq1(patch,_x_,_N2_,ijk);`
+`  const double dx_dN2_U1 = dq2_dq1(patch,_y_,_N2_,ijk);`
+`  const double dx_dN2_U2 = dq2_dq1(patch,_z_,_N2_,ijk);`
+`\n`
+
+h00 = g(-i,-j)*dx_dN1(i)*dx_dN1(j);
+h01 = g(-i,-j)*dx_dN1(i)*dx_dN2(j);
+h10 = h01;
+h11 = g(-i,-j)*dx_dN2(i)*dx_dN2(j);
+
+PCode["hij   = Matrix([[h00,h01],[h10,h11]])"];
+Pcode["h_det = hij.det()"];
+h = h_det;
+`  return h;`
+
+`}`
