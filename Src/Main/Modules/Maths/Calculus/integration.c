@@ -145,10 +145,17 @@ void plan_integration(Integration_T *const I)
       abortEr(NO_OPTION);
 
   }
-  else if (strcmp_i(I->type,"Intergral{f(x)dA},Spectral"))/* means over the whole specified slice in physical area in the patch */
+  else if (strcmp_i(I->type,"Integral{f(x)dA},Spectral"))/* means over the whole specified slice in physical area in the patch */
   {
     patch = I->Spectral->f->patch;
     coordsys = patch->coordsys;
+    unsigned count = 0;
+    
+    if (I->Spectral->X_surface) count++;
+    if (I->Spectral->Y_surface) count++;
+    if (I->Spectral->Z_surface) count++;
+    if (count > 1)
+      abortEr("At 'Integral{f(x)dA},Spectral' more than one hypersurface was flagged.\n");
     
     if (coordsys == Cartesian || coordsys == CubedSpherical)
     {
