@@ -15,7 +15,7 @@ C_arg1 =;
 Declare = 
 {
  # metric
- (obj = Field,name = g, rank = DD,none);
+ (obj = Field,name = g, rank = DD,none,C_arg1);
 
  # dx/dN1
  (obj = Field,name = dx_dN1, rank = U,none,C_arg1);
@@ -29,12 +29,12 @@ Declare =
 # symmetries:
 Symm[g(i,j) = g(j,i)];
 
-`  const double *const g_D0D0 = I->g00;`
-`  const double *const g_D0D1 = I->g01;`
-`  const double *const g_D0D2 = I->g02;`
-`  const double *const g_D1D1 = I->g11;`
-`  const double *const g_D1D2 = I->g12;`
-`  const double *const g_D2D2 = I->g22;`
+`  const double g_D0D0 = I->g00[ijk];`
+`  const double g_D0D1 = I->g01[ijk];`
+`  const double g_D0D2 = I->g02[ijk];`
+`  const double g_D1D1 = I->g11[ijk];`
+`  const double g_D1D2 = I->g12[ijk];`
+`  const double g_D2D2 = I->g22[ijk];`
 `  const double dx_dN1_U0 = dq2_dq1(patch,_x_,_N1_,ijk);`
 `  const double dx_dN1_U1 = dq2_dq1(patch,_y_,_N1_,ijk);`
 `  const double dx_dN1_U2 = dq2_dq1(patch,_z_,_N1_,ijk);`

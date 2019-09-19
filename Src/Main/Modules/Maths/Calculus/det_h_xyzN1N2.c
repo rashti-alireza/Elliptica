@@ -15,12 +15,12 @@ double det_h_xyzN1N2_Cheb_Ext(Patch_T *const patch,const Integration_T *const I,
   /* declaring: */
 
 
-  const double *const g_D0D0 = I->g00;
-  const double *const g_D0D1 = I->g01;
-  const double *const g_D0D2 = I->g02;
-  const double *const g_D1D1 = I->g11;
-  const double *const g_D1D2 = I->g12;
-  const double *const g_D2D2 = I->g22;
+  const double g_D0D0 = I->g00[ijk];
+  const double g_D0D1 = I->g01[ijk];
+  const double g_D0D2 = I->g02[ijk];
+  const double g_D1D1 = I->g11[ijk];
+  const double g_D1D2 = I->g12[ijk];
+  const double g_D2D2 = I->g22[ijk];
   const double dx_dN1_U0 = dq2_dq1(patch,_x_,_N1_,ijk);
   const double dx_dN1_U1 = dq2_dq1(patch,_y_,_N1_,ijk);
   const double dx_dN1_U2 = dq2_dq1(patch,_z_,_N1_,ijk);
@@ -30,26 +30,23 @@ double det_h_xyzN1N2_Cheb_Ext(Patch_T *const patch,const Integration_T *const I,
 
 
   double h00 = 
-pow(dx_dN1_U0, 2)*g_D0D0[ijk] + 2.0*dx_dN1_U0*dx_dN1_U1*g_D0D1[ijk] +
-2.0*dx_dN1_U0*dx_dN1_U2*g_D0D2[ijk] + pow(dx_dN1_U1, 2)*g_D1D1[ijk] +
-2.0*dx_dN1_U1*dx_dN1_U2*g_D1D2[ijk] + pow(dx_dN1_U2, 2)*
-g_D2D2[ijk];
+pow(dx_dN1_U0, 2)*g_D0D0 + 2.0*dx_dN1_U0*dx_dN1_U1*g_D0D1 + 2.0*
+dx_dN1_U0*dx_dN1_U2*g_D0D2 + pow(dx_dN1_U1, 2)*g_D1D1 + 2.0*dx_dN1_U1*
+dx_dN1_U2*g_D1D2 + pow(dx_dN1_U2, 2)*g_D2D2;
 
   double h01 = 
-dx_dN1_U0*dx_dN2_U0*g_D0D0[ijk] + dx_dN1_U0*dx_dN2_U1*g_D0D1[ijk] +
-dx_dN1_U0*dx_dN2_U2*g_D0D2[ijk] + dx_dN1_U1*dx_dN2_U0*g_D0D1[ijk] +
-dx_dN1_U1*dx_dN2_U1*g_D1D1[ijk] + dx_dN1_U1*dx_dN2_U2*g_D1D2[ijk] +
-dx_dN1_U2*dx_dN2_U0*g_D0D2[ijk] + dx_dN1_U2*dx_dN2_U1*g_D1D2[ijk] +
-dx_dN1_U2*dx_dN2_U2*g_D2D2[ijk];
+dx_dN1_U0*dx_dN2_U0*g_D0D0 + dx_dN1_U0*dx_dN2_U1*g_D0D1 + dx_dN1_U0*
+dx_dN2_U2*g_D0D2 + dx_dN1_U1*dx_dN2_U0*g_D0D1 + dx_dN1_U1*dx_dN2_U1*
+g_D1D1 + dx_dN1_U1*dx_dN2_U2*g_D1D2 + dx_dN1_U2*dx_dN2_U0*g_D0D2 +
+dx_dN1_U2*dx_dN2_U1*g_D1D2 + dx_dN1_U2*dx_dN2_U2*g_D2D2;
 
   double h10 = 
 h01;
 
   double h11 = 
-pow(dx_dN2_U0, 2)*g_D0D0[ijk] + 2.0*dx_dN2_U0*dx_dN2_U1*g_D0D1[ijk] +
-2.0*dx_dN2_U0*dx_dN2_U2*g_D0D2[ijk] + pow(dx_dN2_U1, 2)*g_D1D1[ijk] +
-2.0*dx_dN2_U1*dx_dN2_U2*g_D1D2[ijk] + pow(dx_dN2_U2, 2)*
-g_D2D2[ijk];
+pow(dx_dN2_U0, 2)*g_D0D0 + 2.0*dx_dN2_U0*dx_dN2_U1*g_D0D1 + 2.0*
+dx_dN2_U0*dx_dN2_U2*g_D0D2 + pow(dx_dN2_U1, 2)*g_D1D1 + 2.0*dx_dN2_U1*
+dx_dN2_U2*g_D1D2 + pow(dx_dN2_U2, 2)*g_D2D2;
 
   double h = 
 h00*h11 - h01*h10;
