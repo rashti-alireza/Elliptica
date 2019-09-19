@@ -36,7 +36,7 @@ int integration_tests(Grid_T *const grid)
     printf("\nIntegration test: Integral{f(x)dV}, Spectral method: \n\n");
     fdV_spectral(grid);
   }
-  if (!DO)
+  if (DO)
   {
     printf("\nIntegration test: Integral{f(x)dA}, Spectral method: \n\n");
     fdA_spectral(grid);
@@ -161,6 +161,69 @@ static int fdA_spectral(Grid_T *const grid)
   {
     printf("BBN_CubedSpherical_grid:\n");
     
+    /* testing NS sphere surface: */
+    printf("\n--> Integral{f(x)dA}|at NS surface section:\n");
+    
+    r = GetParameterD_E("NS_radius");
+    analytic = 4*M_PI*pow(r,2);
+    numeric  = 0;
+    /* go over all patches */
+    FOR_ALL_PATCHES(p,grid)
+    {
+      patch   = grid->patch[p];
+      if (!IsItNSPatch(patch))
+        continue;
+      if (strstr(patch->name,"left_centeral_box"))
+        continue;
+
+      I  = init_integration();
+      I->type = "Integral{f(x)dA},Spectral";
+      f  = add_field("int f",0,patch,YES);
+      n  = patch->n;
+      nn = patch->nn;
+      
+      double *g00 = alloc_double(nn);
+      double *g01 = alloc_double(nn);
+      double *g02 = alloc_double(nn);
+      double *g11 = alloc_double(nn);
+      double *g12 = alloc_double(nn);
+      double *g22 = alloc_double(nn);
+
+      for (ijk = 0; ijk < nn; ++ijk)
+      { 
+        g00[ijk] = g11[ijk] = g22[ijk] = 1.;
+        f->v[ijk] = 1.;
+      }
+        
+      I->Spectral->f = f;
+      I->g00 = g00;
+      I->g01 = g01;
+      I->g02 = g02;
+      I->g11 = g11;
+      I->g12 = g12;
+      I->g22 = g22;
+
+      /* for Z = const */
+      I->Spectral->Z_surface = 1;
+      I->Spectral->K         = n[2]-1; 
+      plan_integration(I);
+      
+      double s0 = execute_integration(I);
+      printf("... Integral{f(x)dA}|%s: %e\n",patch->name,s0);
+      numeric += s0;
+      
+      remove_field(f);
+      free_integration(I);
+      free(g00);
+      free(g01);
+      free(g02);
+      free(g11);
+      free(g12);
+      free(g22);
+    }
+    printf("=> numeric = %e, analytic = %e, diff. = %e\n",
+           numeric,analytic,numeric-analytic);
+           
     /* testing outermost0 sphere surface: */
     printf("\n--> Integral{f(x)dA}|at sphere surface of outermost0 section:\n");
     
