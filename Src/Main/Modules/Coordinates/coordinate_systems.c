@@ -576,16 +576,16 @@ void grid_characteristics_example(Grid_T *const grid)
   kind = GetParameterS_E("grid_kind");
   
   if (strcmp_i(kind,"Cartesian_grid"))
-    characteristics_Cartesian_grid(grid);
+    characteristics_Cartesian_grid_eg(grid);
   
   else if (strcmp_i(kind,"BNS_Spherical_grid"))
-    characteristics_BNS_Spherical_grid(grid); 
+    characteristics_BNS_Spherical_grid_eg(grid); 
     
   else if (strcmp_i(kind,"BNS_CubedSpherical_grid"))
-    characteristics_BNS_CubedSpherical_grid(grid); 
+    characteristics_BNS_CS_grid_eg(grid); 
     
   else if (strcmp_i(kind,"BBN_CubedSpherical_grid"))
-    characteristics_BBN_CubedSpherical_grid(grid); 
+    characteristics_BBN_CS_grid_eg(grid); 
    
   else
     abortEr_s("There is no such %s grid kind.\n",grid->kind);
@@ -593,14 +593,14 @@ void grid_characteristics_example(Grid_T *const grid)
 }
 
 /* calculating the main characteristic of grid for Cartesian grid */
-static void characteristics_Cartesian_grid(Grid_T *const grid)
+static void characteristics_Cartesian_grid_eg(Grid_T *const grid)
 {
   /* this type of grid is so simple; nothing to calculate. */
   grid->kind = dup_s(GetParameterS_E("grid_kind"));
 }
 
 /* calculating the main characteristic of grid for BBN_CubedSpherical grid */
-static void characteristics_BBN_CubedSpherical_grid(Grid_T *const grid)
+static void characteristics_BBN_CS_grid_eg(Grid_T *const grid)
 {
   /* calculate the characteristics of this grid */
   const unsigned gn   = grid->gn;
@@ -631,7 +631,7 @@ static void characteristics_BBN_CubedSpherical_grid(Grid_T *const grid)
   assert(LSS(2*R_BH_r,C));
   
   /* making NS and BH surfaces function */
-  NS_BH_surface_CubedSpherical_grid(grid,R_NS_l,R_BH_r,bh_m*bh_chi);
+  NS_BH_surface_CS_grid_eg(grid,R_NS_l,R_BH_r,bh_m*bh_chi);
   
   box_size_l = GetParameterD_E("left_central_box_length_ratio")*R_NS_l;
   
@@ -740,7 +740,7 @@ static void characteristics_BBN_CubedSpherical_grid(Grid_T *const grid)
 }
 
 /* making  NS and BH surfaces function */
-static void NS_BH_surface_CubedSpherical_grid(Grid_T *const grid,const double R_NS_l,const double R_BH_r,const double a_BH)
+static void NS_BH_surface_CS_grid_eg(Grid_T *const grid,const double R_NS_l,const double R_BH_r,const double a_BH)
 {
   double *R;
   char par[100] = {'\0'};
@@ -953,7 +953,7 @@ static void NS_BH_surface_CubedSpherical_grid(Grid_T *const grid,const double R_
 }
 
 /* calculating the main characteristic of grid for BNS_CubedSpherical grid */
-static void characteristics_BNS_CubedSpherical_grid(Grid_T *const grid)
+static void characteristics_BNS_CS_grid_eg(Grid_T *const grid)
 {
   const unsigned gn   = grid->gn;
   const double C      = GetParameterD_E("BNS_Distance");
@@ -975,7 +975,7 @@ static void characteristics_BNS_CubedSpherical_grid(Grid_T *const grid)
   assert(LSS(2*R_NS_r,C));
   
   /* making NS's surface function */
-  NS_surface_BNS_CubedSpherical_grid(grid);
+  NS_surface_BNS_CS_grid_eg(grid);
   
   box_size_l = GetParameterD_E("left_central_box_length_ratio")*R_NS_l;
   box_size_r = GetParameterD_E("right_central_box_length_ratio")*R_NS_r;
@@ -1126,7 +1126,7 @@ static void characteristics_BNS_CubedSpherical_grid(Grid_T *const grid)
 }
 
 /* calculating the main characteristic of grid for BNS Spherical grid */
-static void characteristics_BNS_Spherical_grid(Grid_T *const grid)
+static void characteristics_BNS_Spherical_grid_eg(Grid_T *const grid)
 {
   const unsigned gn   = grid->gn;
   const double C      = GetParameterD_E("BNS_Distance");
@@ -1149,7 +1149,7 @@ static void characteristics_BNS_Spherical_grid(Grid_T *const grid)
   
   /* making field of NS's radius and 
   // finding the max distance from the center of the star */
-  NS_radii_BNS_Spherical_grid(grid,0);
+  NS_radii_BNS_Spherical_grid_eg(grid,0);
   
   O = C-R_NS_l-R_NS_r;
   if(!GRT(O,0))
@@ -1249,7 +1249,7 @@ static void characteristics_BNS_Spherical_grid(Grid_T *const grid)
 
 /* making field of NS's inside (R1) and surface (R2) radius and 
 // finding the max distance from the center of the star */
-static void NS_radii_BNS_Spherical_grid(Grid_T *const grid,void *vp)
+static void NS_radii_BNS_Spherical_grid_eg(Grid_T *const grid,void *vp)
 {
   const double R_NS_l = GetParameterD_E("left_NS_radius");/* assuming perfect sphere */
   const double R_NS_r = GetParameterD_E("right_NS_radius");/* assuming perfect sphere */
@@ -1343,7 +1343,7 @@ static void NS_radii_BNS_Spherical_grid(Grid_T *const grid,void *vp)
 }
 
 /* making  NS's surface function */
-static void NS_surface_BNS_CubedSpherical_grid(Grid_T *const grid)
+static void NS_surface_BNS_CS_grid_eg(Grid_T *const grid)
 {
   const double R_NS_l = GetParameterD_E("left_NS_radius");/* assuming perfect sphere */
   const double R_NS_r = GetParameterD_E("right_NS_radius");/* assuming perfect sphere */
