@@ -749,6 +749,8 @@ static void NS_BH_surface_CubedSpherical_grid(Grid_T *const grid,const double R_
   struct Collocation_s coll_s[2] = {0};
   double X[2],r;
   
+  /* left NS */
+  
   /* filling min */
   patch->min[0] = -1;
   patch->min[1] = -1;
@@ -802,95 +804,21 @@ static void NS_BH_surface_CubedSpherical_grid(Grid_T *const grid,const double R_
   /* NS surface */
   
   R = alloc_double(N_total);
-  /* surface up and down */
   for (i = 0; i < N[0]; ++i)
-  {
-    X[0] = point_value(i,&coll_s[0]);
     for (j = 0; j < N[1]; ++j)
-    {
-      X[1] = point_value(j,&coll_s[1]);
-      r = sqrt(
-               (1+SQR(X[0])+SQR(X[1]))/
-               ((SQR(X[0])+SQR(X[1]))/(SQR(R_NS_l)+1) + 1/SQR(R_NS_l))
-              );
       for (k = 0; k < N[2]; ++k)
-        R[L(N,i,j,k)] = r;
-    }
-  }
+        R[L(N,i,j,k)] = R_NS_l;
+        
   sprintf(par,"grid%u_left_NS_surface_function_up",grid->gn);
   add_parameter_array(par,R,N_total);
   sprintf(par,"grid%u_left_NS_surface_function_down",grid->gn);
   add_parameter_array(par,R,N_total);
-  
-  /* surface back */
-  for (i = 0; i < N[0]; ++i)
-  {
-    X[0] = point_value(i,&coll_s[0]);/* a = z/x */
-    for (j = 0; j < N[1]; ++j)
-    {
-      X[1] = point_value(j,&coll_s[1]);/* b = y/x */
-      r = sqrt(
-               (1+SQR(X[0])+SQR(X[1]))/
-               (((1+SQR(X[1])))/(SQR(R_NS_l)+1) + SQR(X[0])/SQR(R_NS_l))
-              );
-      for (k = 0; k < N[2]; ++k)
-        R[L(N,i,j,k)] = r;
-    }
-  }
   sprintf(par,"grid%u_left_NS_surface_function_back",grid->gn);
   add_parameter_array(par,R,N_total);
-  
-  /* surface front */
-  for (i = 0; i < N[0]; ++i)
-  {
-    X[0] = point_value(i,&coll_s[0]);/* a = y/x */
-    for (j = 0; j < N[1]; ++j)
-    {
-      X[1] = point_value(j,&coll_s[1]);/* b = z/x */
-      r = sqrt(
-               (1+SQR(X[0])+SQR(X[1]))/
-               (((1+SQR(X[0])))/(SQR(R_NS_l)+1) + SQR(X[1])/SQR(R_NS_l))
-              );
-      for (k = 0; k < N[2]; ++k)
-        R[L(N,i,j,k)] = r;
-    }
-  }
   sprintf(par,"grid%u_left_NS_surface_function_front",grid->gn);
   add_parameter_array(par,R,N_total);
-  
-  /* surface left */
-  for (i = 0; i < N[0]; ++i)
-  {
-    X[0] = point_value(i,&coll_s[0]);/* a = x/y */
-    for (j = 0; j < N[1]; ++j)
-    {
-      X[1] = point_value(j,&coll_s[1]);/* b = z/y */
-      r = sqrt(
-               (1+SQR(X[0])+SQR(X[1]))/
-               (((1+SQR(X[0])))/(SQR(R_NS_l)+1) + SQR(X[1])/SQR(R_NS_l))
-              );
-      for (k = 0; k < N[2]; ++k)
-        R[L(N,i,j,k)] = r;
-    }
-  }
   sprintf(par,"grid%u_left_NS_surface_function_left",grid->gn);
   add_parameter_array(par,R,N_total);
-  
-  /* surface right */
-  for (i = 0; i < N[0]; ++i)
-  {
-    X[0] = point_value(i,&coll_s[0]);/* a = z/y */
-    for (j = 0; j < N[1]; ++j)
-    {
-      X[1] = point_value(j,&coll_s[1]);/* b = x/y */
-      r = sqrt(
-               (1+SQR(X[0])+SQR(X[1]))/
-               (((1+SQR(X[1])))/(SQR(R_NS_l)+1) + SQR(X[0])/SQR(R_NS_l))
-              );
-      for (k = 0; k < N[2]; ++k)
-        R[L(N,i,j,k)] = r;
-    }
-  }
   sprintf(par,"grid%u_left_NS_surface_function_right",grid->gn);
   add_parameter_array(par,R,N_total);
   
