@@ -31,12 +31,12 @@ int integration_tests(Grid_T *const grid)
     printf("\nIntegration test: Gaussian Quadrature Legendre method: \n");
     GQ_Legendre(grid);
   }
-  if (!DO)
+  if (DO)
   {
     printf("\nIntegration test: Integral{f(x)dV}, Spectral method: \n\n");
     fdV_spectral(grid);
   }
-  if (DO)
+  if (!DO)
   {
     printf("\nIntegration test: Integral{f(x)dA}, Spectral method: \n\n");
     fdA_spectral(grid);
@@ -167,7 +167,7 @@ static int fdA_spectral(Grid_T *const grid)
     r = GetParameterD_E("Outermost0_radius");
     analytic = 4*M_PI*pow(r,2);
     numeric  = 0;
-    /* go over all NS patches */
+    /* go over all patches */
     FOR_ALL_PATCHES(p,grid)
     {
       patch   = grid->patch[p];
@@ -228,7 +228,7 @@ static int fdA_spectral(Grid_T *const grid)
     r = 2*GetParameterD_E("BH_NS_separation");
     analytic = 6*SQR(r);
     numeric  = 0;
-    /* go over all NS patches */
+    /* go over all patches */
     FOR_ALL_PATCHES(p,grid)
     {
       patch   = grid->patch[p];
@@ -357,25 +357,26 @@ static int fdV_spectral(Grid_T *const grid)
       free(g12);
       free(g22);
     }
-    printf("Cartesian coords:\n");
-    printf("numeric = %e, analytic = %e, df = %e\n",
+    printf("Cartesian grid::\n");
+    printf("=> numeric = %e, analytic = %e, diff. = %e\n",
             numeric,analytic,numeric-analytic);
-    
   }
-  else if (strcmp_i(grid->kind,"BNS_CubedSpherical_grid") ||
-           strcmp_i(grid->kind,"BBN_CubedSpherical_grid")   )
+  else if (strcmp_i(grid->kind,"BBN_CubedSpherical_grid"))
   {
+    printf("BBN_CubedSpherical_grid:\n");
     
-    r = GetParameterD_E("NS_radius");
-    analytic = 4./3.*M_PI*pow(r,3);
+    /* testing outermost0: */
+    printf("\n--> Integral{f(x)dV}|at outermost0 section:\n");
+    
+    r = GetParameterD_E("Outermost0_radius");
+    analytic = 4./3.*M_PI*pow(r,3)-pow(2*GetParameterD_E("BH_NS_separation"),3);
     numeric  = 0;
     
-    /* go over all NS patches */
+    /* go over all patches */
     FOR_ALL_PATCHES(p,grid)
     {
       patch   = grid->patch[p];
-      if (!strstr(patch->name,"outermost1"))
-      //if (!IsItNSPatch(patch))
+      if (!strstr(patch->name,"outermost0"))
         continue;
       
       I  = init_integration();
@@ -407,7 +408,7 @@ static int fdV_spectral(Grid_T *const grid)
       plan_integration(I);
       
       double s0 = execute_integration(I);
-      printf("%s, %e\n",patch->name,s0);
+      printf("... Integral{f(x)dA}|%s: %e\n",patch->name,s0);
       numeric += s0;
       
       remove_field(f);
@@ -419,10 +420,66 @@ static int fdV_spectral(Grid_T *const grid)
       free(g12);
       free(g22);
     }
-    
-    printf("Cubed Spherical coords:\n");
-    printf("numeric = %e, analytic = %e, df = %e\n",
+    printf("=> numeric = %e, analytic = %e, diff. = %e\n",
            numeric,analytic,numeric-analytic);
+           
+    /* testing NS: */
+    printf("\n--> Integral{f(x)dV}|at NS section:\n");
+    
+    r = GetParameterD_E("NS_radius");
+    analytic = 4./3.*M_PI*pow(r,3);
+    numeric  = 0;
+    
+    /* go over all patches */
+    FOR_ALL_PATCHES(p,grid)
+    {
+      patch   = grid->patch[p];
+      if (!IsItNSPatch(patch))
+        continue;
+      
+      I  = init_integration();
+      I->type = "Integral{f(x)dV},Spectral";
+      f  = add_field("int f",0,patch,YES);
+      nn = patch->nn;
+      
+      double *g00 = alloc_double(nn);
+      double *g01 = alloc_double(nn);
+      double *g02 = alloc_double(nn);
+      double *g11 = alloc_double(nn);
+      double *g12 = alloc_double(nn);
+      double *g22 = alloc_double(nn);
+
+      for (ijk = 0; ijk < nn; ++ijk)
+      { 
+        g00[ijk] = g11[ijk] = g22[ijk] = 1.;
+        f->v[ijk] = 1.;
+      }
+        
+      I->Spectral->f = f;
+      I->g00 = g00;
+      I->g01 = g01;
+      I->g02 = g02;
+      I->g11 = g11;
+      I->g12 = g12;
+      I->g22 = g22;
+
+      plan_integration(I);
+      
+      double s0 = execute_integration(I);
+      printf("... Integral{f(x)dA}|%s: %e\n",patch->name,s0);
+      numeric += s0;
+      
+      remove_field(f);
+      free_integration(I);
+      free(g00);
+      free(g01);
+      free(g02);
+      free(g11);
+      free(g12);
+      free(g22);
+    }
+    printf("=> numeric = %e, analytic = %e, diff. = %e\n",
+           numeric,analytic,numeric-analytic);       
   }
   
   return EXIT_SUCCESS;
