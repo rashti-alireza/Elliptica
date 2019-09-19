@@ -353,7 +353,7 @@ static double f_xyz_dV_Cheb_Ext_Spec(Integration_T *const I)
     double g12 = I->g12[ijk];
     double g22 = I->g22[ijk];
     g = g00*g11*g22 - g00*pow(g12, 2) - pow(g01, 2)*g22 + 
-        2*g01*g02*g12 - pow(g02, 2)*g11;
+        2*g01*g02*g12 - pow(g02, 2)*g11;/* determinant */
     Fv[ijk] = fv[ijk]*sqrt(g)*J_xyzN0N1N2(&patch,ijk);
   }
   
