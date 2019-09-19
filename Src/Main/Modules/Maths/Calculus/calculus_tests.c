@@ -479,7 +479,66 @@ static int fdV_spectral(Grid_T *const grid)
       free(g22);
     }
     printf("=> numeric = %e, analytic = %e, diff. = %e\n",
-           numeric,analytic,numeric-analytic);       
+           numeric,analytic,numeric-analytic);
+           
+    /* testing NS surrounding: */
+    printf("\n--> Integral{f(x)dV}|at NS surrounding ection:\n");
+    
+    r = GetParameterD_E("NS_radius");
+    analytic = pow(GetParameterD_E("BH_NS_separation"),3)-4./3.*M_PI*pow(r,3);
+    numeric  = 0;
+    
+    /* go over all patches */
+    FOR_ALL_PATCHES(p,grid)
+    {
+      patch   = grid->patch[p];
+      if (!strstr(patch->name,"left_NS_surrounding"))
+        continue;
+      
+      I  = init_integration();
+      I->type = "Integral{f(x)dV},Spectral";
+      f  = add_field("int f",0,patch,YES);
+      nn = patch->nn;
+      
+      double *g00 = alloc_double(nn);
+      double *g01 = alloc_double(nn);
+      double *g02 = alloc_double(nn);
+      double *g11 = alloc_double(nn);
+      double *g12 = alloc_double(nn);
+      double *g22 = alloc_double(nn);
+
+      for (ijk = 0; ijk < nn; ++ijk)
+      { 
+        g00[ijk] = g11[ijk] = g22[ijk] = 1.;
+        f->v[ijk] = 1.;
+      }
+        
+      I->Spectral->f = f;
+      I->g00 = g00;
+      I->g01 = g01;
+      I->g02 = g02;
+      I->g11 = g11;
+      I->g12 = g12;
+      I->g22 = g22;
+
+      plan_integration(I);
+      
+      double s0 = execute_integration(I);
+      printf("... Integral{f(x)dA}|%s: %e\n",patch->name,s0);
+      numeric += s0;
+      
+      remove_field(f);
+      free_integration(I);
+      free(g00);
+      free(g01);
+      free(g02);
+      free(g11);
+      free(g12);
+      free(g22);
+    }
+    printf("=> numeric = %e, analytic = %e, diff. = %e\n",
+           numeric,analytic,numeric-analytic);
+           
   }
   
   return EXIT_SUCCESS;
