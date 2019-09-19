@@ -326,6 +326,18 @@ static double interpolation_Neville_1d(Interpolation_T *const interp_s)
 static fInterpolation_T *interpolation_Chebyshev_Tn(Interpolation_T *const interp_s)
 {
   fInterpolation_T *func = 0;
+  unsigned count = 0;
+  
+  if (interp_s->XYZ_dir_flag) count++;
+  if (interp_s->XY_dir_flag)  count++;
+  if (interp_s->XZ_dir_flag)  count++;
+  if (interp_s->YZ_dir_flag)  count++;
+  if (interp_s->X_dir_flag)   count++;
+  if (interp_s->Y_dir_flag)   count++;
+  if (interp_s->Z_dir_flag)   count++;
+  
+  if (count > 1)
+    abortEr("For spectral interpolation, more than one direction was flagged.\n");
   
   if (interp_s->XYZ_dir_flag)
     func = interpolation_Chebyshev_Tn_XYZ;
