@@ -32,7 +32,6 @@ Grid_T *bbn_initialize_next_grid(Grid_T *const grid_prev)
 static Grid_T *make_next_grid_using_previous_grid(Grid_T *const grid_prev)
 {
   abortEr(NO_JOB);
-  UNUSED(grid_prev);
   Grid_T *grid_next = 0;
   
   /* find Euler constant to fix NS baryonic mass */
@@ -41,6 +40,7 @@ static Grid_T *make_next_grid_using_previous_grid(Grid_T *const grid_prev)
   /* find the BH radius to acquire the desired BH mass */
   /* find the Omega_BH to acquire the desired BH spin */
   /* find y_CM using force balance equation */
+  
   /* find NS surface */
   find_NS_surface(grid_prev);
   /* make new grid with new parameters */
@@ -52,8 +52,8 @@ static Grid_T *make_next_grid_using_previous_grid(Grid_T *const grid_prev)
   /* populating the free data part of initial data that we chose ourself */
   bbn_populate_free_data(grid_next);
 
-  /* use previous grid to interpolate values of the fields for the next grid
-  // and initialzing some other fields */
+  /* use previous grid to interpolate values of the fields for 
+  // the next grid  and initialzing some other fields */
   interpolate_and_initialize_to_next_grid(grid_next,grid_prev);
   
   /* taking partial derivatives of the fields needed for equations */
