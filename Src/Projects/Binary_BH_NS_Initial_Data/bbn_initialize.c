@@ -34,8 +34,8 @@ static Grid_T *make_next_grid_using_previous_grid(Grid_T *const grid_prev)
   abortEr(NO_JOB);
   Grid_T *grid_next = 0;
   
-  /* find Euler constant to fix NS baryonic mass */
-  // find_Euler_constant(grid_prev);
+  /* find Euler equation constant to meet NS baryonic mass */
+  find_Euler_eq_const(grid_prev);
   /* find BH center to make P_ADM zero */
   /* find the BH radius to acquire the desired BH mass */
   /* find the Omega_BH to acquire the desired BH spin */
@@ -70,6 +70,50 @@ static Grid_T *make_next_grid_using_previous_grid(Grid_T *const grid_prev)
   make_normal_vector_on_BH_horizon(grid_next);
   
   return grid_next;
+}
+
+/* find Euler equation constant to meet NS baryonic mass */
+static void find_Euler_eq_const(Grid_T *const grid)
+{
+  Root_Finder_T *root = init_root_finder(1);
+  double *Euler_const = 0;
+  double guess[1];/* initial guess for Euler const */
+  struct Params_S
+  {
+    Grid_T *grid;
+    double NS_baryonic_mass;
+  }params[1];
+  
+  params->grid = grid;
+  params->NS_baryonic_mass = GetParameterD_E("NS_baryonic_mass");
+  guess[0] = GetParameterD_E("Euler_equation_constant");
+  
+  root->description = "Finding Euler equation constant using NS baryonic mass:";
+  root->type        = GetParameterS_E("RootFinder_Method");
+  root->tolerance   = GetParameterD_E("RootFinder_Tolerance");
+  root->MaxIter     = (unsigned)GetParameterI_E("RootFinder_Max_Number_of_Iteration");
+  root->x_gss       = guess;
+  root->params      = params;
+  root->f[0]        = Euler_eq_const_rootfinder_eq;
+  plan_root_finder(root);
+  Euler_const       = execute_root_finder(root);
+  
+  update_parameter_double_format("Euler_equation_constant",Euler_const[0]);
+  
+  free(Euler_const);
+  free_root_finder(root);
+}
+
+/* root finder eqution for Euler equation constant */
+static double Euler_eq_const_rootfinder_eq(void *params,const double *const x)
+{
+  struct Params_S
+  {
+    Grid_T *grid;
+    double NS_baryonic_mass;
+  }*par = params;
+  
+  return bbn_NS_baryonic_mass(par->grid,x[0]) - par->NS_baryonic_mass;
 }
 
 /* use previous grid to interpolate values of the fields that will be solved for the next grid */

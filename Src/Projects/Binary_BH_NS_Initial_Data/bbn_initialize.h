@@ -1,5 +1,6 @@
 #include "bbn_headers.h"
 #include "utilities_lib.h"
+#include "maths_equation_solvings_lib.h"
 
 Grid_T *bbn_initialize_next_grid(Grid_T *const grid_prev);
 static Grid_T *make_next_grid_using_previous_grid(Grid_T *const grid_prev);
@@ -18,5 +19,8 @@ static void interpolate_and_initialize_to_next_grid(Grid_T *const grid_next,Grid
 static void find_Xp_and_patchp(const double *const x,const char *const hint,Grid_T *const grid,double *const X,Patch_T **const ppatch);
 static double interpolate_from_prev_grid(const char *const field,const double *const X,Patch_T *const patch);
 static void find_Euler_eq_const_TOV_KerrSchild(Grid_T *const grid);
+static void find_Euler_eq_const(Grid_T *const grid);
+static double Euler_eq_const_rootfinder_eq(void *params,const double *const x);
+
 
 
