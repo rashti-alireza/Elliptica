@@ -55,9 +55,6 @@ Declare =
 
  # rest mass density
  (obj = variable,name = rho0, none);
-
- # u0
- (obj = Field,name = u0, rank = 0, C_macro);
 }
 # symmetries:
 Symm[_gammaI(i,j)  = _gammaI(j,i)];
@@ -81,9 +78,10 @@ Ccode["    {"];
      L2    = (b+(b**2-4*(alpha**4)*(uW**2))**(0.5))/(2*alpha**2);
      h2    = L2-P2;
      h     = (h2)**(0.5);
+     u0    = (L2)**(0.5)/(h*alpha);
      `eos->h = h;`
      `rho0  = eos->rest_mass_density(eos);`
-     `baryonic_mass_integrand->v[ijk]  = rho0*u0[ijk]*alpha*psi6;`
+     `baryonic_mass_integrand->v[ijk]  = rho0*u0*alpha*psi6;`
 Ccode["  }"];
 Ccode["  free_EoS(eos);"];
 `  Integration_T *I = init_integration();`

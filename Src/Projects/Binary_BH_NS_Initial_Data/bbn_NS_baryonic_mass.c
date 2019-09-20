@@ -45,7 +45,6 @@ double bbn_NS_baryonic_mass(Grid_T *const grid,const double Euler_C)
     GET_FIELD(Beta_U0)
     GET_FIELD(Beta_U2)
     GET_FIELD(psi)
-    GET_FIELD(u0)
 
 
     EoS_T *eos = initialize_EoS();
@@ -102,9 +101,12 @@ L2 - P2;
     double h = 
 sqrt(h2);
 
+    double u0 = 
+sqrt(L2)/(alpha*h);
+
 eos->h = h;
 rho0  = eos->rest_mass_density(eos);
-baryonic_mass_integrand->v[ijk]  = rho0*u0[ijk]*alpha*psi6;
+baryonic_mass_integrand->v[ijk]  = rho0*u0*alpha*psi6;
   }
   free_EoS(eos);
   Integration_T *I = init_integration();
