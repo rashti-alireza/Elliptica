@@ -35,7 +35,7 @@ double *execute_root_finder(Root_Finder_T *const root)
 /* given the information it decides how to perform root finding */
 void plan_root_finder(Root_Finder_T *const root)
 {
-  if (strcmp_i(root->type,"Steepest Descent"))
+  if (strcmp_i(root->type,"Steepest_Descent"))
   {
     root->root_finder_func = root_finder_steepest_descent;
   }
@@ -67,7 +67,7 @@ void free_root_finder(Root_Finder_T *root)
 // =========
 //
 // Root_Finder_T *root = init_root_finder(n); # n is number of equations or (equivalently variables)
-// root->type          = "Steepest Descent";
+// root->type          = "Steepest_Descent";
 // plan_root_finder(root);
 // root->description = "solving f = 0";
 // root->tolerance   = 10E-10;

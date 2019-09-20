@@ -41,7 +41,7 @@ static int root_finder_SteepestDescent(Grid_T *const grid)
   
   /* testing with the derivatives are given: */
   root = init_root_finder(3);
-  root->type          = "Steepest Descent";
+  root->type          = "Steepest_Descent";
   plan_root_finder(root);
   root->description = "solving f = 0, knowing df_dx";
   root->tolerance   = 10E-15;
@@ -65,7 +65,7 @@ static int root_finder_SteepestDescent(Grid_T *const grid)
   
   /* testing without the derivatives are given: */
   root = init_root_finder(3);
-  root->type          = "Steepest Descent";
+  root->type          = "Steepest_Descent";
   plan_root_finder(root);
   root->description = "solving f = 0, df_dx is calculated by finite difference";
   root->tolerance   = 10E-15;
