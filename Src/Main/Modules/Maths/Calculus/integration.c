@@ -14,6 +14,8 @@
 // *** for example if you want to use Spectral method: ***
 // VOLUME integration:
 // *** for integrating {fdV} over a whole patch in physical domain: ***
+// Note: dV is made automatically using the given metric, however,
+// the integrand f(x) must be provided fully by the user.
 // I->type = "Integral{f(x)dV},Spectral"; # dV is sqrt(det(g)) dxdydz
 // I->Spectral->f = field;# this is the Field f(x)
 //
@@ -27,6 +29,8 @@
 
 // SURFACE integration:
 // *** for integrating {fdA} over a whole physical hypersurface: ***
+// Note: dA is made automatically using the given metric, however,
+// the integrand f(x) must be provided fully by the user.
 // I->type = "Integral{f(x)dA},Spectral"; # dA is sqrt(det(g_{ij} dx^i/dY dx^j/dZ))dYdZ for hypersurface X = const.
 //                                        # dA is sqrt(det(g_{ij} dx^i/dX dx^j/dZ))dXdZ for hypersurface Y = const.
 //                                        # dA is sqrt(det(g_{ij} dx^i/dX dx^j/dY))dXdY for hypersurface Z = const.
