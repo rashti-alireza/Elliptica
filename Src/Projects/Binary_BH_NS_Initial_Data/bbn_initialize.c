@@ -748,7 +748,7 @@ KSbeta_D2[ijk]*_gammaI_U2U2[ijk];
         rho0[ijk] = eos->rest_mass_density(eos);
         
         /* phi corrotating approximation */
-        phi[ijk] = 0;//-Omega_BHNS*(C_NS-y_CM)*x;
+        phi[ijk] = 0;//-Omega_BHNS*(y-y_CM)*x;
         
         /* spin part */
         W_U0[ijk] = Omega_NS_y*z-Omega_NS_z*y;
