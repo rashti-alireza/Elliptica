@@ -37,4 +37,5 @@ void bbn_update_derivative_Beta_U2(Patch_T *const patch);
 void bbn_update_Beta_U0(Patch_T *const patch);
 void bbn_update_Beta_U1(Patch_T *const patch);
 void bbn_update_Beta_U2(Patch_T *const patch);
+double bbn_NS_baryonic_mass(Grid_T *const grid,const double Euler_C);
 
