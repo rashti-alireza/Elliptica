@@ -86,9 +86,6 @@ pow(alpha, 2);
   double h2 = 
 L2 - P2;
 
-  if (EQL(fabs(h2),0.))
-    h2 = 0.;
-  
   double h = 
 sqrt(h2);
 
