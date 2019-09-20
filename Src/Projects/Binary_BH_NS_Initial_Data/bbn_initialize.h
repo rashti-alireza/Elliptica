@@ -17,5 +17,6 @@ static void bbn_update_Aij(Grid_T *const grid);
 static void interpolate_and_initialize_to_next_grid(Grid_T *const grid_next,Grid_T *const grid_prev);
 static void find_Xp_and_patchp(const double *const x,const char *const hint,Grid_T *const grid,double *const X,Patch_T **const ppatch);
 static double interpolate_from_prev_grid(const char *const field,const double *const X,Patch_T *const patch);
+static void find_Euler_eq_const_TOV_KerrSchild(Grid_T *const grid);
 
 

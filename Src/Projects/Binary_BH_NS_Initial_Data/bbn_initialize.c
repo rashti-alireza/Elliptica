@@ -59,7 +59,7 @@ static Grid_T *make_next_grid_using_previous_grid(Grid_T *const grid_prev)
   /* taking partial derivatives of the fields needed for equations */
   bbn_partial_derivatives_fields(grid_next);
   
-  /* update enthalpy, u0, _J^i, _E and _S */
+  /* update u0, _J^i, _E and _S */
   Tij_IF_CTS_psi6Sources(grid_next);
   
   /* update _Aij in K^{ij} = A^{ij}+1/3*gamma^{ij}*K and 
@@ -393,7 +393,7 @@ static Grid_T *TOV_KerrShild_approximation(void)
   /* taking partial derivatives of the fields needed for equations */
   bbn_partial_derivatives_fields(grid);
   
-  /* update enthalpy, u0, _J^i, _E and _S */
+  /* update u0, _J^i, _E and _S */
   Tij_IF_CTS_psi6Sources(grid);
   
   /* update _Aij in K^{ij} = A^{ij}+1/3*gamma^{ij}*K and 
@@ -403,11 +403,108 @@ static Grid_T *TOV_KerrShild_approximation(void)
   /* make normal vectorn on BH horizon */
   make_normal_vector_on_BH_horizon(grid);
   
+  /* find Euler equation const using enthalpy of TOV star and other fields */
+  find_Euler_eq_const_TOV_KerrSchild(grid);
+  
   TOV_free(tov);
   
   return grid;
 }
 
+/* find Euler equation const using enthalpy of TOV star and 
+// other fields that are found in TOV Kerr-Schild approximation.
+// this is important, since otherwise when h gets updated, it may
+// become 'nan' due to incorrect value of Euler equation constant.
+//
+// FORMULA I USED: 
+// C+h/u0+D_{i}phi*(D^{i}phi+W^{i})/(h*u0)-Beta^{i}*D_{i}phi = 0.
+// 
+// CPI SCRIPT that I used:
+ 
+Declare = 
+{
+
+ # enthalpy
+ (obj = Field,name = enthalpy, rank = 0, C_macro);
+
+ # conformal metric inverse
+ (obj = Field,name = _gammaI, rank = UU, C_macro);
+
+ # spin part of fluid
+ (obj = Field,name = W, rank = U, C_macro);
+
+ # d(phi)/d? for irrotional part of fluid
+ (obj = Field,name = dphi, rank = D, C_macro);
+
+ # Beta
+ (obj = Field,name = Beta, rank = U, C_macro);
+
+ # conformal factor
+ (obj = Field,name = psi, rank = 0, C_macro);
+
+ # u0
+ (obj = Field,name = u0, rank = 0, C_macro);
+}
+# symmetries:
+Symm[_gammaI(i,j)  = _gammaI(j,i)];
+
+psim4 = psi**(-4);
+dphiP = psim4*_gammaI(i,j)*dphi(-i)*dphi(-j)+dphi(-i)*W(i);
+Euler_C = -enthalpy/u0 - dphiP/(enthalpy*u0) + Beta(i)*dphi(-i);
+
+*/
+static void find_Euler_eq_const_TOV_KerrSchild(Grid_T *const grid)
+{
+  unsigned p,ijk;
+  double Euler_C;
+  
+  FOR_ALL_PATCHES(p,grid)
+  {
+    Patch_T *patch = grid->patch[p];
+    
+    if(!IsItNSPatch(patch))
+      continue;
+    
+    ijk = 0;/* for an arbitrary point */
+    GET_FIELD(enthalpy)
+    GET_FIELD(_gammaI_U0U2)
+    GET_FIELD(_gammaI_U0U0)
+    GET_FIELD(_gammaI_U0U1)
+    GET_FIELD(_gammaI_U1U2)
+    GET_FIELD(_gammaI_U1U1)
+    GET_FIELD(_gammaI_U2U2)
+    GET_FIELD(W_U1)
+    GET_FIELD(W_U0)
+    GET_FIELD(W_U2)
+    GET_FIELD(dphi_D2)
+    GET_FIELD(dphi_D1)
+    GET_FIELD(dphi_D0)
+    GET_FIELD(Beta_U1)
+    GET_FIELD(Beta_U0)
+    GET_FIELD(Beta_U2)
+    GET_FIELD(psi)
+    GET_FIELD(u0)
+
+    double psim4 = 
+pow(psi[ijk], -4);
+
+    double dphiP = 
+W_U0[ijk]*dphi_D0[ijk] + W_U1[ijk]*dphi_D1[ijk] + W_U2[ijk]*
+dphi_D2[ijk] + psim4*(_gammaI_U0U0[ijk]*pow(dphi_D0[ijk], 2) + 2.0*
+_gammaI_U0U1[ijk]*dphi_D0[ijk]*dphi_D1[ijk] + 2.0*_gammaI_U0U2[ijk]*
+dphi_D0[ijk]*dphi_D2[ijk] + _gammaI_U1U1[ijk]*pow(dphi_D1[ijk], 2) +
+2.0*_gammaI_U1U2[ijk]*dphi_D1[ijk]*dphi_D2[ijk] + _gammaI_U2U2[ijk]*
+pow(dphi_D2[ijk], 2));
+
+    Euler_C = 
+(-dphiP - pow(enthalpy[ijk], 2) + enthalpy[ijk]*u0[ijk]*(Beta_U0[ijk]*
+dphi_D0[ijk] + Beta_U1[ijk]*dphi_D1[ijk] + Beta_U2[ijk]*dphi_D2[ijk]))/
+(enthalpy[ijk]*u0[ijk]);
+    
+    break;/* only for 1 patch we find Euler constant */
+  }
+  update_parameter_double_format("Euler_equation_constant",Euler_C);
+}
 
 /* update _Aij in K^{ij} = A^{ij}+1/3*gamma^{ij}*K and 
 // _A^{ij} = gamma^10*A^{ij} and _dA^{ij} */
