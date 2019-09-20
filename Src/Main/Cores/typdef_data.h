@@ -235,7 +235,7 @@ typedef struct SUBFACE_T
 }SubFace_T;
 
 /* interface (face) */
-typedef struct Interface_T
+typedef struct INTERFACE_T
 {
   struct PATCH_T *patch;/* refers to its patch */
   unsigned np;/* number of points in Point_T */
