@@ -15,7 +15,7 @@ Grid_T *bbn_initialize_next_grid(Grid_T *const grid_prev)
   {
     /* if we use TOV and Kerr-Schil black hole approximation */
     if (strcmp_i(GetParameterS_E("BH_NS_initialization"),"TOV_KerrShild"))
-      grid_next = TOV_KerrShild_approximation();
+      grid_next = TOV_KerrShild_approximation_CS();
     else
       abortEr(NO_OPTION);
   }
@@ -42,7 +42,7 @@ static Grid_T *make_next_grid_using_previous_grid(Grid_T *const grid_prev)
   /* find y_CM using force balance equation */
   
   /* find NS surface */
-  find_NS_surface(grid_prev);
+  find_NS_surface_CS(grid_prev);
   /* make new grid with new parameters */
 
   /* fields: */
@@ -383,21 +383,86 @@ static void find_Xp_and_patchp(const double *const x,const char *const hint,Grid
 }
 
 /* given the grid find the NS surface using the fact that 
-// at the surface enthalpy = 1. */
-static void find_NS_surface(Grid_T *const grid)
+// at the surface enthalpy = 1. we assumed cubed spherical grid */
+static void find_NS_surface_CS(Grid_T *const grid)
 {
-   UNUSED(grid);
-   /* for each radial points: */
-   /* find the pertinent patch in which h is 1, 
-   // it is either NS patch or the surrounding. */
+   unsigned p;
+   Patch_T *h_patch = 0;/* the patch in which h = 1 */
+   Flag_T NS_patch_flg = NO;
+   
+   FOR_ALL_PATCHES(p,grid)
+   {
+     Patch_T *patch    = grid->patch[p];
+     const unsigned *n = patch->n;
+     unsigned ijk,i,j,k;
+     
+     /* finding at which patch h equals 1 takes place */
+     if (!IsItNSPatch(patch))
+       continue;
+     if (strstr(patch->name,"left_centeral_box"))
+       continue;
+       
+     GET_FIELD(enthalpy)
+     /* go over NS surface and test the value of h */
+     k = n[2]-1;/* this is where the NS surface takes place */
+     for (i = 0; i < n[0]; ++i)
+       for (j = 0; j < n[1]; ++j)
+       {
+         h_patch = 0;
+         NS_patch_flg = NONE;
+         
+         ijk = L(n,i,j,k);
+         if (LSSEQL(enthalpy[ijk],1))
+         {
+           h_patch = patch;
+           NS_patch_flg = YES;
+         }
+         else/* which means h = 1 occures in neighboring patch */
+         {
+           /* find the neighbor of this patch at face K_n2 
+           // using the maximum number of common points. */
+           Interface_T *face = patch->interface[K_n2];
+           unsigned s,max = 0;
+           for (s = 0; s < face->ns; ++s)
+           {
+             SubFace_T *subf = face->subface[s];
+             /* since this is a patch in the middle of the grid, we won't
+             // expect to have outerB, moreover, since this is NS patch
+             // we should not have innerB. */
+             assert(!subf->outerB);
+             assert(!subf->innerB);
+             
+             if (subf->np > max)
+             {
+               max = subf->np;
+               h_patch = grid->patch[subf->adjPatch];
+             }
+           }
+           assert(max);/* max = 0 is wrong */
+           NS_patch_flg = NO;
+         }/* end of else */
+         /* having found h_patch, now find the the position of h = 1 */
+         
+         if (NS_patch_flg == YES)
+         {
+         }
+         else if (NS_patch_flg == NO)
+         {
+         }
+         else
+           abortEr("Wrong flg!\n");
+       }
+     
    /* if it is NS patch then the point in which find h = 1 */
    /* if it is surrounding patch extrapolate phi and update other sources
    // and then find point in which h = 1 */
+  }/* end of FOR_ALL_PATCHES(p,grid) */
 }
 
 /* use TOV and Kerr-Schil black hole approximation.
+// NOTE: WE assume we are using cubed spherical grid.
 // ->return value: resultant grid from this approximation */
-static Grid_T *TOV_KerrShild_approximation(void)
+static Grid_T *TOV_KerrShild_approximation_CS(void)
 {
   Grid_T *grid = 0;
   
