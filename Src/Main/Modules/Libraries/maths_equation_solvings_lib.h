@@ -11,6 +11,8 @@ typedef struct ROOT_FINDER_T
   unsigned MaxIter;/* maximum iteration */
   const double *x_gss;/* initial guess */
   double *x_sol;/* solution of f(x) = 0 */
+  unsigned FD_Left : 1;/* if 1 it uses finite difference with Left side stencil */
+  unsigned FD_Right: 1;/* if 1 it uses finite difference with Right side stencil */
   void *params;/* parameters needed for evaluation of f(x) */ 
   /* f(x1,x2,...) = 0, params is supposed to refere to whatever is needed for evaluation of f */
   // note: since it might be systems of equations like {f1=0,f2=0,...} I used pointer to pointer function */

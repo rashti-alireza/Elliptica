@@ -77,8 +77,13 @@ void free_root_finder(Root_Finder_T *root)
 // root->f[0]        = f0; # f0 = 0 equation
 // root->f[1]        = f1; # f1 = 0 equation
 // # also if df_dx's are available (OPTIONAL):
+// # note if df_dx's not specified it automatically uses finite difference method
 // root->df_dx[0]    = df0_dx;
 // root->df_dx[1]    = df1_dx;
+// # to force use right side ot left side finite difference:
+// root->FD_Right = 1; # right side f.d. method
+// # or
+// root->FD_Left  = 1; # left side f.d. method
 // double *x_sol     = execute_root_finder(root);
 // free_root_finder(root); # free struct root
 // free(x_sol);
@@ -110,8 +115,12 @@ static double *root_finder_steepest_descent(Root_Finder_T *const root)
   /* setup differentials */
   if (df_dx[0])/* if differentials are given */
     dg_dx = dg_dx_of_df_dx_SD;
-  else
-    dg_dx = dg_dx_FD_SD;
+  else if (root->FD_Left)/* left side stencil */
+    dg_dx = dg_dx_FD3L_SD;
+  else if (root->FD_Right)/* right side stencil */
+    dg_dx = dg_dx_FD3R_SD;
+  else/* if not specified */
+    dg_dx = dg_dx_FD3M_SD;
   
   if (x_gss)/* if no guess is given, x has been initialized to 0 */
     for (i = 0; i < n; ++i)
@@ -241,7 +250,7 @@ static double dg_dx_of_df_dx_SD(void *params,double *const x,const unsigned dir,
 
 /* ->return value: derivative of e.g. f0^2(x0,x1)+f1^2(x0,x1) 
 // at point x with respect to x^{dir} using finite difference (three-point midpoint formula)*/
-static double dg_dx_FD_SD(void *params,double *const x,const unsigned dir,double (**f)(void *params,const double *const x),double (**df_dx)(void *params,const double *const x,const unsigned dir))
+static double dg_dx_FD3M_SD(void *params,double *const x,const unsigned dir,double (**f)(void *params,const double *const x),double (**df_dx)(void *params,const double *const x,const unsigned dir))
 {
   const double eps    = 10E-10;
   const double fabsx  = fabs(x[dir])*eps;
@@ -251,13 +260,64 @@ static double dg_dx_FD_SD(void *params,double *const x,const unsigned dir,double
   x[dir] -= h;/* x' = x-h */
   gl      = g_SD(f,params,x);/* g(x-h) */
   
-  x[dir] += 2.*h;/* x' + 2h => x' = x+h */
+  x[dir] += 2.*h;/* x' + 2h => x'' = x+h */
   gr      = g_SD(f,params,x);/* g(x+h) */
   
   dg_dx = 0.5*(gr-gl)/h;
   
-  x[dir] -= h;/* x'-h => x */
+  x[dir] -= h;/* x''-h => x */
   
   return dg_dx;
   UNUSED(df_dx);
 }
+
+/* ->return value: derivative of e.g. f0^2(x0,x1)+f1^2(x0,x1)
+// at point x with respect to x^{dir} using finite difference (three-point right end formula)*/
+static double dg_dx_FD3R_SD(void *params,double *const x,const unsigned dir,double (**f)(void *params,const double *const x),double (**df_dx)(void *params,const double *const x,const unsigned dir))
+{
+  const double eps    = 10E-10;
+  const double fabsx  = fabs(x[dir])*eps;
+  const double h      = fabsx > eps ? fabsx : eps;/* just in case fabsx is 0, so h won't get 0 */
+  double g,gr1,gr2,dg_dx;
+  
+  g       = g_SD(f,params,x);/* g(x) */
+  
+  x[dir] += h;/* x' = x+h */
+  gr1     = g_SD(f,params,x);/* g(x+h) */
+  
+  x[dir] += h;/* x' + h => x'' = x+2h */
+  gr2     = g_SD(f,params,x);/* g(x+2h) */
+  
+  dg_dx = 0.5*(-3*g+4*gr1-gr2)/h;
+  
+  x[dir] -= 2.*h;/* x''-2h => x */
+  
+  return dg_dx;
+  UNUSED(df_dx);
+}
+
+/* ->return value: derivative of e.g. f0^2(x0,x1)+f1^2(x0,x1)
+// at point x with respect to x^{dir} using finite difference (three-point left end formula)*/
+static double dg_dx_FD3L_SD(void *params,double *const x,const unsigned dir,double (**f)(void *params,const double *const x),double (**df_dx)(void *params,const double *const x,const unsigned dir))
+{
+  const double eps    = 10E-10;
+  const double fabsx  = fabs(x[dir])*eps;
+  const double h      = fabsx > eps ? fabsx : eps;/* just in case fabsx is 0, so h won't get 0 */
+  double g,gl1,gl2,dg_dx;
+  
+  g       = g_SD(f,params,x);/* g(x) */
+  
+  x[dir] -= h;/* x' = x-h */
+  gl1     = g_SD(f,params,x);/* g(x-h) */
+  
+  x[dir] -= h;/* x' - h => x'' = x-2h */
+  gl2     = g_SD(f,params,x);/* g(x-2h) */
+  
+  dg_dx = 0.5*(3*g-4*gl1+gl2)/h;
+  
+  x[dir] += 2.*h;/* x''+2h => x */
+  
+  return dg_dx;
+  UNUSED(df_dx);
+}
+
