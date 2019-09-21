@@ -133,6 +133,9 @@ static double *root_finder_steepest_descent(Root_Finder_T *const root)
   Flag_T small_alpha3_flg = NO;
   unsigned i,k;
   
+  if (!f)
+    abortEr("No equation has been given.\n");
+  
   if (desc)
     printf("%s:\n",desc);
   else
