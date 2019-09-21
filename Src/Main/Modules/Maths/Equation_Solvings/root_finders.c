@@ -5,6 +5,33 @@
 
 #include "root_finders.h"
 
+/*
+// synopsis:
+// =========
+//
+// Root_Finder_T *root = init_root_finder(n); # n is number of equations or (equivalently variables)
+// root->type          = "Steepest_Descent";
+// plan_root_finder(root);
+// root->description = "solving f = 0";
+// root->tolerance   = 10E-10;
+// root->MaxIter     = 10;
+// root->x_gss       = x0; # initial guess (OPTIONAL)
+// root->params      = params; # parameters used for evaluation of fs
+// root->f[0]        = f0; # f0 = 0 equation
+// root->f[1]        = f1; # f1 = 0 equation
+// # also if df_dx's are available (OPTIONAL):
+// # note if df_dx's not specified it automatically uses finite difference method
+// root->df_dx[0]    = df0_dx;
+// root->df_dx[1]    = df1_dx;
+// # to force use right side ot left side finite difference:
+// root->FD_Right = 1; # right side f.d. method
+// # or
+// root->FD_Left  = 1; # left side f.d. method
+// double *x_sol     = execute_root_finder(root);
+// free_root_finder(root); # free struct root
+// free(x_sol);
+*/
+
 /* initializing a Root_Finder_T struct with calloc.
 // n is the number of equations or equivalently number of variables
 // ->return value: a pristine struct */
