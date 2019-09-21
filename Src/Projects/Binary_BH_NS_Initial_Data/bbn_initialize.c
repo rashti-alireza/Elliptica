@@ -15,7 +15,7 @@ Grid_T *bbn_initialize_next_grid(Grid_T *const grid_prev)
   {
     /* if we use TOV and Kerr-Schil black hole approximation */
     if (strcmp_i(GetParameterS_E("BH_NS_initialization"),"TOV_KerrShild"))
-      grid_next = TOV_KerrShild_approximation_CS();
+      grid_next = TOV_KerrShild_approximation();
     else
       abortEr(NO_OPTION);
   }
@@ -460,9 +460,8 @@ static void find_NS_surface_CS(Grid_T *const grid)
 }
 
 /* use TOV and Kerr-Schil black hole approximation.
-// NOTE: WE assume we are using cubed spherical grid.
 // ->return value: resultant grid from this approximation */
-static Grid_T *TOV_KerrShild_approximation_CS(void)
+static Grid_T *TOV_KerrShild_approximation(void)
 {
   Grid_T *grid = 0;
   
@@ -488,7 +487,7 @@ static Grid_T *TOV_KerrShild_approximation_CS(void)
   pr_line_custom('=');
  
   /* combining these two geometry to create the grid */
-  grid = creat_grid_TOV_KerrShild(ns_R,bh_R,bh_chi*bh_mass/* a = chi*M */);
+  grid = creat_grid_TOV_KerrShild_CS(ns_R,bh_R,bh_chi*bh_mass/* a = chi*M */);
   
   /* creating all of the fields needed for construction of Initial Data */
   bbn_allocate_fields(grid);
@@ -961,8 +960,9 @@ KSbeta_D2[ijk]*_gammaI_U2U2[ijk];
 
 /* given the radius of NS and BH and their separation,
 // create a grid with these properties.
+// NOTE: WE assume we are using cubed spherical grid.
 // ->return value: grid of NS and BH in which inside of the BH excised. */
-static Grid_T *creat_grid_TOV_KerrShild(const double R_NS_l,const double R_BH_r,const double a_BH)
+static Grid_T *creat_grid_TOV_KerrShild_CS(const double R_NS_l,const double R_BH_r,const double a_BH)
 {
   Grid_T *grid = alloc_grid();/* adding a new grid */
   /* calculate the characteristics of this grid */
@@ -980,6 +980,9 @@ static Grid_T *creat_grid_TOV_KerrShild(const double R_NS_l,const double R_BH_r,
   
   /* finding the kind of grid */
   kind = GetParameterS_E("grid_kind");
+  if (!strcmp_i(kind,"BBN_CubedSpherical_grid"))
+    abortEr("This function only works with cubed spherical grid.\n");
+    
   grid->kind = dup_s(kind);
   
   assert(GRT(C,0));
