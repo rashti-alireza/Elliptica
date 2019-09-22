@@ -285,6 +285,7 @@ unsigned find_index_string(char **const heystack,const unsigned N,const char *co
 /* it checks if the pattern matches in the str 
 // by using regular expression libraries.
 // it's case sensitive, and new line is NOT treated as separator of new string.
+// note: regex_pattern must be in posix format, i.e. [:digit:], [:alpha:] etc.
 // ->return value: 1 if matches, 0 otherwise */
 int regex_search(const char *const regex_pattern,const char *const str)
 {
@@ -309,6 +310,7 @@ int regex_search(const char *const regex_pattern,const char *const str)
 // it finds and returns a copy of the first match.
 // if there is no match, then return NULL.
 // it's case sensitive, and new line is NOT treated as separator of new string.
+// note: regex_pattern must be in posix format, i.e. [:digit:], [:alpha:] etc.
 // ->return value: return the first match, NULL otherwise */
 char *regex_find(const char *const regex_pattern,const char *const str)
 {
