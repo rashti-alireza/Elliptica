@@ -21,6 +21,9 @@ static double interpolate_from_prev_grid(const char *const field,const double *c
 static void find_Euler_eq_const_TOV_KerrSchild(Grid_T *const grid);
 static void find_Euler_eq_const(Grid_T *const grid);
 static double Euler_eq_const_rootfinder_eq(void *params,const double *const x);
+static void extrapolate_fluid_fields_outsideNS_CS(Grid_T *const grid);
+static void expand_NS_surface_in_Ylm_CS(Grid_T *const grid);
+
 
 
 

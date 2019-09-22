@@ -42,9 +42,13 @@ static Grid_T *make_next_grid_using_previous_grid(Grid_T *const grid_prev)
   /* find y_CM using force balance equation */
   
   /* find NS surface */
-  find_NS_surface_CS(grid_prev);
+  if (!strcmp_i(grid_prev->kind,"BBN_CubedSpherical_grid"))
+    find_NS_surface_CS(grid_prev);
+  else
+    abortEr(NO_OPTION);
+    
   /* make new grid with new parameters */
-
+  
   /* fields: */
   /* creating all of the fields needed for construction of Initial Data */
   bbn_allocate_fields(grid_next);
@@ -382,83 +386,340 @@ static void find_Xp_and_patchp(const double *const x,const char *const hint,Grid
   free_needle(needle);
 }
 
-/* given the grid find the NS surface using the fact that 
+/* given the grid, find the NS surface using the fact that 
 // at the surface enthalpy = 1. we assumed cubed spherical grid */
 static void find_NS_surface_CS(Grid_T *const grid)
 {
-   unsigned p;
-   Patch_T *h_patch = 0;/* the patch in which h = 1 */
-   Flag_T NS_patch_flg = NO;
+  pr_line_custom('=');
+  printf("Finding the surface of NS ...\n");
+  
+  /* the stucture for the root finder */
+  struct Params_S
+  {
+    Patch_T *patch;
+    double x0[3];/* (x,y,z) at the surface */
+    double *N;/* the direction of increasing or decreasing of x = x0+N*d */
+    double Euler_C;/* Euler equation const. */
+  } par[1];
+  char par_str[1000];
+  unsigned p;
+  
+  par->Euler_C = GetParameterD_E("Euler_equation_constant");
+  
+  /* making NS fluid fields outside of NS*/
+  extrapolate_fluid_fields_outsideNS_CS(grid);
    
-   FOR_ALL_PATCHES(p,grid)
-   {
-     Patch_T *patch    = grid->patch[p];
-     const unsigned *n = patch->n;
-     unsigned ijk,i,j,k;
+  FOR_ALL_PATCHES(p,grid)
+  {
+    Patch_T *patch = grid->patch[p];
+    
+    /* finding at which patch h equals 1 takes place */
+    if (!IsItNSPatch(patch))
+      continue;
+    if (strstr(patch->name,"left_centeral_box"))
+      continue;
+    
+    const double *c = patch->c;
+    const unsigned *n = patch->n;
+    double *R_NS = alloc_double(patch->nn);
+    double R0_NS;/* initial length of R_NS */
+    double Rnew_NS;/* new R_NS */
+    double *x_sol;
+    double x,y,z;
+    unsigned ijk,i,j,k,kp;
+      
+    GET_FIELD(enthalpy)
+    
+    /* go over NS surface and test the value of h */
+    k = n[2]-1;/* this is where the NS surface takes place */
+    for (i = 0; i < n[0]; ++i)
+    {
+      for (j = 0; j < n[1]; ++j)
+      {
+        Patch_T *h_patch = 0;
+        Flag_T NS_patch_flg = NONE;
+        
+        ijk   = L(n,i,j,k);
+        x     = patch->node[ijk]->x[0]-c[0];
+        y     = patch->node[ijk]->x[1]-c[1];
+        z     = patch->node[ijk]->x[2]-c[2];
+        R0_NS = sqrt(SQR(x)+SQR(y)+SQR(z));
+        
+        if(EQL(enthalpy[ijk],1))/* if it takes place on the current NS surface */
+        {
+          for (kp = 0; kp < n[2]; ++kp)
+            R_NS[L(n,i,j,kp)] = R0_NS;
+        }
+        else/* if NS surface is displaced */
+        {
+          Point_T point[1];
+          point->ind = ijk;
+          point->patch = patch;
+          point->face  = K_n2;
+          
+          if (LSS(enthalpy[ijk],1))
+          {
+            h_patch      = patch;
+            NS_patch_flg = YES;
+          }
+          else/* which means h = 1 occures in neighboring patch */
+          {
+            NS_patch_flg = NO;
+            /* find the neighbor of this patch at face K_n2 
+            // using the maximum number of common points. */
+            Interface_T *face = patch->interface[K_n2];
+            unsigned s,max = 0;
+            for (s = 0; s < face->ns; ++s)
+            {
+              SubFace_T *subf = face->subface[s];
+              /* since this is a patch in the middle of the grid, we won't
+              // expect to have outerB, moreover, since this is NS patch
+              // we should not have innerB. */
+              assert(!subf->outerB);
+              assert(!subf->innerB);
+              
+              if (subf->np > max)
+              {
+                max = subf->np;
+                h_patch = grid->patch[subf->adjPatch];
+              }
+            }
+            assert(max);/* max = 0 is wrong */
+          }/* end of else */
+          
+          /* having found h_patch, now find the the position of h = 1 */
+          par->patch = h_patch;
+          par->x0[0] = patch->node[ijk]->x[0];
+          par->x0[1] = patch->node[ijk]->x[1];
+          par->x0[2] = patch->node[ijk]->x[2];
+          par->N     = normal_vec(point);/* normal vector pointing outwards */
+          if (NS_patch_flg == YES)
+          {
+            /* normal vector is toward the NS center */
+            par->N[0] *= -1;
+            par->N[1] *= -1;
+            par->N[2] *= -1;
+          }
+          
+          /* populate root finder */
+          Root_Finder_T *root = init_root_finder(1);
+          root->type      = GetParameterS_E("RootFinder_Method");
+          plan_root_finder(root);
+          root->tolerance = GetParameterD_E("RootFinder_Tolerance");
+          root->MaxIter   = (unsigned)GetParameterI_E("RootFinder_Max_Number_of_Iteration");
+          root->x_gss     = &R0_NS;
+          root->params    = par;
+          root->f[0]      = bbn_NS_surface_enthalpy_eq;
+          
+          if (NS_patch_flg == YES)
+          {
+            root->FD_Left  = 1;
+          }
+          else
+            root->FD_Right = 1;
+          
+          x_sol           = execute_root_finder(root);
+          Rnew_NS         = x_sol[0];
+          free_root_finder(root);
+          free(x_sol);
+          
+          /* having found new R now fill R_NS field */
+          for (kp = 0; kp < n[2]; ++kp)
+            R_NS[L(n,i,j,kp)] = Rnew_NS;
+        }
+      }/* end of for (j = 0; j < n[1]; ++j) */
+    }/* end of for (i = 0; i < n[0]; ++i) */
+    
+    sprintf(par_str,"grid%u_%s_h=1",grid->gn+1/* since we want it for the next grid */
+                                   ,patch->name);
+    add_parameter_array(par_str,R_NS,patch->nn);
+    free(R_NS);
+  }/* end of FOR_ALL_PATCHES(p,grid) */
+  
+  /* removing phi, dphi and W in NS surrounding patches in case if needed */
+  FOR_ALL_PATCHES(p,grid)
+  {
+    Patch_T *patch = grid->patch[p];
+    if (!IsItNSSurroundingPatch(patch))
+      continue;
      
-     /* finding at which patch h equals 1 takes place */
-     if (!IsItNSPatch(patch))
-       continue;
-     if (strstr(patch->name,"left_centeral_box"))
-       continue;
-       
-     GET_FIELD(enthalpy)
-     /* go over NS surface and test the value of h */
-     k = n[2]-1;/* this is where the NS surface takes place */
-     for (i = 0; i < n[0]; ++i)
-       for (j = 0; j < n[1]; ++j)
-       {
-         h_patch = 0;
-         NS_patch_flg = NONE;
-         
-         ijk = L(n,i,j,k);
-         if (LSSEQL(enthalpy[ijk],1))
-         {
-           h_patch = patch;
-           NS_patch_flg = YES;
-         }
-         else/* which means h = 1 occures in neighboring patch */
-         {
-           /* find the neighbor of this patch at face K_n2 
-           // using the maximum number of common points. */
-           Interface_T *face = patch->interface[K_n2];
-           unsigned s,max = 0;
-           for (s = 0; s < face->ns; ++s)
-           {
-             SubFace_T *subf = face->subface[s];
-             /* since this is a patch in the middle of the grid, we won't
-             // expect to have outerB, moreover, since this is NS patch
-             // we should not have innerB. */
-             assert(!subf->outerB);
-             assert(!subf->innerB);
-             
-             if (subf->np > max)
-             {
-               max = subf->np;
-               h_patch = grid->patch[subf->adjPatch];
-             }
-           }
-           assert(max);/* max = 0 is wrong */
-           NS_patch_flg = NO;
-         }/* end of else */
-         /* having found h_patch, now find the the position of h = 1 */
-         
-         if (NS_patch_flg == YES)
-         {
-         }
-         else if (NS_patch_flg == NO)
-         {
-         }
-         else
-           abortEr("Wrong flg!\n");
-       }
-     
-   /* if it is NS patch then the point in which find h = 1 */
-   /* if it is surrounding patch extrapolate phi and update other sources
-   // and then find point in which h = 1 */
+    DECLARE_FIELD(phi)
+    DECLARE_FIELD(dphi_D2)
+    DECLARE_FIELD(dphi_D1)
+    DECLARE_FIELD(dphi_D0)
+    DECLARE_FIELD(W_U0)
+    DECLARE_FIELD(W_U1)
+    DECLARE_FIELD(W_U2)
+    
+    REMOVE_FIELD(phi);
+    REMOVE_FIELD(dphi_D2)
+    REMOVE_FIELD(dphi_D1)
+    REMOVE_FIELD(dphi_D0)
+    REMOVE_FIELD(W_U0)
+    REMOVE_FIELD(W_U1)
+    REMOVE_FIELD(W_U2)
+  }
+  
+  /* using spherical harmonic to smooth the new NS surface */
+  expand_NS_surface_in_Ylm_CS(grid);
+  
+  printf("Finding the surface of NS ==> Done.\n");
+  pr_clock();
+  pr_line_custom('=');
+}
+
+/* using spherical harmonic to smooth the new NS surface */
+static void expand_NS_surface_in_Ylm_CS(Grid_T *const grid)
+{
+  unsigned p;
+  
+  FOR_ALL_PATCHES(p,grid)
+  {
+    Patch_T *patch = grid->patch[p];
+    
+    if (!IsItNSPatch(patch))
+      continue;
+      
   }/* end of FOR_ALL_PATCHES(p,grid) */
 }
 
+/* extrapolating phi, dphi and W in NS surrounding coords 
+// in case they are needed for interpolation to the next grid
+// or in calculation of enthalpy at NS surrounding patches.
+// for extrapolation we demand:
+// f(r) = f(r1)/(e^{-1}-e^{-r2/r1})*(e^{-r/r1}-e^{-r2/r1}), 
+// where r1 is radius of NS surface and r2 is twice of r1
+// note: f(r) = 0, if r >= r2 */
+static void extrapolate_fluid_fields_outsideNS_CS(Grid_T *const grid)
+{
+  const double BN_NS_d = GetParameterD_E("BH_NS_separation");
+  unsigned p;
+  
+  FOR_ALL_PATCHES(p,grid)
+  {
+    Patch_T *patch = grid->patch[p];
+    if (!IsItNSSurroundingPatch(patch))
+      continue;
+     
+    /* irrotational part of fluid */
+    ADD_FIELD(phi)
+    GET_FIELD(phi)
+    ADD_FIELD_NoMem(dphi_D2)
+    ADD_FIELD_NoMem(dphi_D1)
+    ADD_FIELD_NoMem(dphi_D0)
+    DECLARE_AND_EMPTY_FIELD(dphi_D2)
+    DECLARE_AND_EMPTY_FIELD(dphi_D1)
+    DECLARE_AND_EMPTY_FIELD(dphi_D0)
+    
+    /* spin part of fluid W^i */
+    ADD_FIELD(W_U0)
+    ADD_FIELD(W_U1)
+    ADD_FIELD(W_U2)
+    GET_FIELD(W_U0)
+    GET_FIELD(W_U1)
+    GET_FIELD(W_U2)
+    
+    /* find the corresponding NS patch to be used for extrapolation */
+    Patch_T *NS_patch;/* corresponding NS patch, to extrapolate out */
+    char stem[1000];
+    char *affix = regex_find("_[[:alpha:]]{2,5}$",patch->name);
+    
+    assert(affix);
+    sprintf(stem,"left_NS%s",affix);
+    free(affix);
+    NS_patch = GetPatch(stem,grid);
+    
+    /* populating phi and W fields */
+    Interpolation_T *interp_phi = init_interpolation();
+    interp_phi->field = NS_patch->pool[LookUpField_E("phi",NS_patch)];
+    interp_phi->XY_dir_flag = 1;
+    interp_phi->K     = NS_patch->n[2]-1;
+    plan_interpolation(interp_phi);
+    
+    Interpolation_T *interp_W_U0 = init_interpolation();
+    interp_W_U0->field = NS_patch->pool[LookUpField_E("W_U0",NS_patch)];
+    interp_W_U0->XY_dir_flag = 1;
+    interp_W_U0->K     = NS_patch->n[2]-1;
+    plan_interpolation(interp_W_U0);
+    
+    Interpolation_T *interp_W_U1 = init_interpolation();
+    interp_W_U1->field = NS_patch->pool[LookUpField_E("W_U1",NS_patch)];
+    interp_W_U1->XY_dir_flag = 1;
+    interp_W_U1->K     = NS_patch->n[2]-1;
+    plan_interpolation(interp_W_U1);
+    
+    Interpolation_T *interp_W_U2 = init_interpolation();
+    interp_W_U2->field = NS_patch->pool[LookUpField_E("W_U2",NS_patch)];
+    interp_W_U2->XY_dir_flag = 1;
+    interp_W_U2->K     = NS_patch->n[2]-1;
+    plan_interpolation(interp_W_U2);
+    
+    const unsigned *n = patch->n;
+    unsigned ijk,i,j,k;
+    double x[3],X[3];
+    k = 0;/* at the surface of NS surface */
+    for (i = 0; i < n[0]; ++i)
+    {
+      for (j = 0; j < n[1]; ++j)
+      {
+        ijk = L(n,i,j,k);
+        /* find the value of phi at NS surface */
+        X_of_x(X,patch->node[ijk]->x,NS_patch);
+        interp_phi->X = X[0];
+        interp_phi->Y = X[1];
+        phi[ijk]  = execute_interpolation(interp_phi);
+        W_U0[ijk] = execute_interpolation(interp_W_U0);
+        W_U1[ijk] = execute_interpolation(interp_W_U1);
+        W_U2[ijk] = execute_interpolation(interp_W_U2);
+      }
+    }
+    
+    /* since cubed spherical coords are radial in Z direction
+    // and angular in X and Y direction we have: */
+    for (i = 0; i < n[0]; ++i)
+    {
+      for (j = 0; j < n[1]; ++j)
+      {
+        ijk = L(n,i,j,0);
+        x[0] = patch->node[ijk]->x[0]-patch->c[0];
+        x[1] = patch->node[ijk]->x[1]-patch->c[1];
+        x[2] = patch->node[ijk]->x[2]-patch->c[2];
+        
+        double phi0  = phi[ijk];
+        double W0_U0 = W_U0[ijk];
+        double W0_U1 = W_U1[ijk];
+        double W0_U2 = W_U2[ijk];
+        double r1 = rms(3,x,0);
+        double r2 = 2*r1;
+        assert(LSS(r2,BN_NS_d));
+        
+        for (k = 1; k < n[2]; ++k)
+        {
+         double r,fac;
+         ijk = L(n,i,j,k);
+         x[0] = patch->node[ijk]->x[0]-patch->c[0];
+         x[1] = patch->node[ijk]->x[1]-patch->c[1];
+         x[2] = patch->node[ijk]->x[2]-patch->c[2];
+         r    = rms(3,x,0);
+         
+         if (GRTEQL(r,r2))
+           fac     = 0;
+         else
+           fac     = (exp(-r/r1)-exp(-r2/r1))/(1./M_E-exp(-r2/r1));
+           
+         phi[ijk]  = phi0*fac;
+         W_U0[ijk] = W0_U0*fac;
+         W_U1[ijk] = W0_U1*fac;
+         W_U2[ijk] = W0_U2*fac;
+        }
+      }
+    }
+    Field_T *phi_field = patch->pool[Ind("phi")];
+    dphi_D2->v = Partial_Derivative(phi_field,"z");
+    dphi_D1->v = Partial_Derivative(phi_field,"y");
+    dphi_D0->v = Partial_Derivative(phi_field,"x");
+  }
+}
 /* use TOV and Kerr-Schil black hole approximation.
 // ->return value: resultant grid from this approximation */
 static Grid_T *TOV_KerrShild_approximation(void)
