@@ -41,9 +41,16 @@ static Grid_T *make_next_grid_using_previous_grid(Grid_T *const grid_prev)
   /* find the Omega_BH to acquire the desired BH spin */
   /* find y_CM using force balance equation */
   
-  /* find NS surface */
+  
   if (!strcmp_i(grid_prev->kind,"BBN_CubedSpherical_grid"))
-    find_NS_surface_CS(grid_prev);
+  {
+    /* extrapolate fluid fields outside of NS in case their value needed. */
+    extrapolate_fluid_fields_outsideNS_CS(grid_prev);
+    /* find NS surface over all surface points */
+    find_NS_surface_all_points_CS(grid_prev);
+    /* find NS surface using Ylm expansion */
+    find_NS_surface_Ylm_points_CS(grid_prev);
+  }
   else
     abortEr(NO_OPTION);
     
@@ -386,12 +393,13 @@ static void find_Xp_and_patchp(const double *const x,const char *const hint,Grid
   free_needle(needle);
 }
 
-/* given the grid, find the NS surface using the fact that 
-// at the surface enthalpy = 1. we assumed cubed spherical grid */
-static void find_NS_surface_CS(Grid_T *const grid)
+/* given the grid, find the NS surface on all surface points 
+// using the fact that at the surface enthalpy = 1. 
+// we assumed cubed spherical grid */
+static void find_NS_surface_all_points_CS(Grid_T *const grid)
 {
   pr_line_custom('=');
-  printf("Finding the surface of NS ...\n");
+  printf("Finding the surface of NS over all surface points ...\n");
   
   /* the stucture for the root finder */
   struct Params_S
@@ -406,9 +414,6 @@ static void find_NS_surface_CS(Grid_T *const grid)
   
   par->Euler_C = GetParameterD_E("Euler_equation_constant");
   
-  /* making NS fluid fields outside of NS*/
-  extrapolate_fluid_fields_outsideNS_CS(grid);
-   
   FOR_ALL_PATCHES(p,grid)
   {
     Patch_T *patch = grid->patch[p];
@@ -453,6 +458,8 @@ static void find_NS_surface_CS(Grid_T *const grid)
         else/* if NS surface is displaced */
         {
           Point_T point[1];
+          double *N;/* normal vector */
+            
           point->ind = ijk;
           point->patch = patch;
           point->face  = K_n2;
@@ -469,6 +476,7 @@ static void find_NS_surface_CS(Grid_T *const grid)
             // using the maximum number of common points. */
             Interface_T *face = patch->interface[K_n2];
             unsigned s,max = 0;
+            
             for (s = 0; s < face->ns; ++s)
             {
               SubFace_T *subf = face->subface[s];
@@ -488,17 +496,18 @@ static void find_NS_surface_CS(Grid_T *const grid)
           }/* end of else */
           
           /* having found h_patch, now find the the position of h = 1 */
+          N          = normal_vec(point);/* normal vector pointing outwards */
           par->patch = h_patch;
           par->x0[0] = patch->node[ijk]->x[0];
           par->x0[1] = patch->node[ijk]->x[1];
           par->x0[2] = patch->node[ijk]->x[2];
-          par->N     = normal_vec(point);/* normal vector pointing outwards */
+          par->N     = N;
           if (NS_patch_flg == YES)
           {
             /* normal vector is toward the NS center */
-            par->N[0] *= -1;
-            par->N[1] *= -1;
-            par->N[2] *= -1;
+            N[0] *= -1;
+            N[1] *= -1;
+            N[2] *= -1;
           }
           
           /* populate root finder */
@@ -518,8 +527,14 @@ static void find_NS_surface_CS(Grid_T *const grid)
           else
             root->FD_Right = 1;
           
-          x_sol           = execute_root_finder(root);
-          Rnew_NS         = x_sol[0];
+          double xp[3];
+          x_sol   = execute_root_finder(root);
+          /*  new coords of R respect to the center of NS */
+          xp[0] = x+x_sol[0]*N[0];
+          xp[1] = y+x_sol[0]*N[1];
+          xp[2] = z+x_sol[0]*N[2];
+          
+          Rnew_NS = rms(3,xp,0);
           free_root_finder(root);
           free(x_sol);
           
@@ -536,51 +551,283 @@ static void find_NS_surface_CS(Grid_T *const grid)
     free(R_NS);
   }/* end of FOR_ALL_PATCHES(p,grid) */
   
-  /* removing phi, dphi and W in NS surrounding patches in case if needed */
-  FOR_ALL_PATCHES(p,grid)
-  {
-    Patch_T *patch = grid->patch[p];
-    if (!IsItNSSurroundingPatch(patch))
-      continue;
-     
-    DECLARE_FIELD(phi)
-    DECLARE_FIELD(dphi_D2)
-    DECLARE_FIELD(dphi_D1)
-    DECLARE_FIELD(dphi_D0)
-    DECLARE_FIELD(W_U0)
-    DECLARE_FIELD(W_U1)
-    DECLARE_FIELD(W_U2)
-    
-    REMOVE_FIELD(phi);
-    REMOVE_FIELD(dphi_D2)
-    REMOVE_FIELD(dphi_D1)
-    REMOVE_FIELD(dphi_D0)
-    REMOVE_FIELD(W_U0)
-    REMOVE_FIELD(W_U1)
-    REMOVE_FIELD(W_U2)
-  }
-  
-  /* using spherical harmonic to smooth the new NS surface */
-  expand_NS_surface_in_Ylm_CS(grid);
-  
-  printf("Finding the surface of NS ==> Done.\n");
+  printf("Finding the surface of NS over all surface points ==> Done.\n");
   pr_clock();
   pr_line_custom('=');
 }
 
-/* using spherical harmonic to smooth the new NS surface */
-static void expand_NS_surface_in_Ylm_CS(Grid_T *const grid)
+#define ij(i,j) (j)+Nphi*(i)
+/* given the grid, find the NS surface on Ylm points (Legendre,EquiSpaced)
+// using the fact that at the surface enthalpy = 1. 
+// we assumed cubed spherical grid */
+static void find_NS_surface_Ylm_points_CS(Grid_T *const grid)
 {
-  unsigned p;
+  pr_line_custom('=');
+  printf("Finding the surface of NS at Ylm points ...\n");
   
-  FOR_ALL_PATCHES(p,grid)
+  /* the stucture for the root finder */
+  struct Params_S
   {
-    Patch_T *patch = grid->patch[p];
-    
-    if (!IsItNSPatch(patch))
-      continue;
+    Patch_T *patch;
+    double x0[3];/* (x,y,z) at the surface */
+    double *N;/* the direction of increasing or decreasing of x = x0+N*d */
+    double Euler_C;/* Euler equation const. */
+  } par[1];
+  unsigned Ntheta,Nphi;/* total number of theta and phi points */
+  const unsigned lmax = (unsigned)GetParameterI_E("NS_surface_Ylm_expansion_max_l");
+  double theta,phi;
+  double *Rnew_NS = 0;/* new R for NS */
+  double X[3],x[3],N[3];
+  char par_str[1000],stem[1000],*affix;
+  Flag_T NS_patch_flg = NONE;
+  unsigned i,j;
+  
+  par->Euler_C = GetParameterD_E("Euler_equation_constant");
+  
+  /* initialize tables */
+  init_Legendre_root_function();
+  
+  Ntheta  = Nphi = 2*lmax+1;
+  Rnew_NS = alloc_double(Ntheta*Nphi);
+  
+  /* for each points of Ylm find the surface of NS */
+  for (i = 0; i < Ntheta; ++i)
+  {
+    theta = acos(-Legendre_root_function(i,Ntheta));
+    for (j = 0; j < Nphi; ++j)
+    {
+      phi = j*2*M_PI/Nphi;
+      NS_patch_flg = NONE;
+      Patch_T *h_patch = 0;
+      double h,y[3] = {0},R0_NS,*dr;
       
-  }/* end of FOR_ALL_PATCHES(p,grid) */
+      /* find the patch in which theta and phi take place */
+      Patch_T *patch = find_patch_of_theta_phi_NS_CS(theta,phi,grid);
+      /* find X,Y,Z at NS surface in which theta and phi take place */
+      find_XYZ_of_theta_phi_NS_CS(X,theta,phi,patch);
+      
+      /* find enthalpy at the (X,Y,Z) */
+      Interpolation_T *interp_h = init_interpolation();
+      interp_h->field = patch->pool[Ind("enthalpy")];
+      interp_h->XYZ_dir_flag = 1;
+      interp_h->X            = X[0];
+      interp_h->Y            = X[1];
+      interp_h->Z            = X[2];
+      plan_interpolation(interp_h);
+      h = execute_interpolation(interp_h);/* enthalpy */
+      free_interpolation(interp_h);
+      
+      /* finding x */
+      x_of_X(x,X,patch);
+      y[0] = x[0]-patch->c[0];
+      y[1] = x[1]-patch->c[2];
+      y[2] = x[2]-patch->c[1];
+      R0_NS = rms(3,y,0);
+      
+      if(EQL(h,1))/* if it takes place on the current NS surface */
+      {
+        Rnew_NS[ij(i,j)] = R0_NS;
+      }
+      else/* if NS surface is displaced */
+      {
+        /* r^ = sin(theta)cos(phi)x^+sin(theta)sin(phi)y^+cos(theta)z^ */
+        N[0] = sin(theta)*cos(phi);
+        N[1] = sin(theta)*sin(phi);
+        N[2] = cos(theta);
+        
+        if (LSS(h,1))
+        {
+          h_patch      = patch;
+          NS_patch_flg = YES;
+        }
+        else/* which means h = 1 occures in neighboring patch */
+        {
+          NS_patch_flg = NO;
+          /* finding the side of the patch */
+          affix = regex_find("_[[:alpha:]]{2,5}$",patch->name);
+          assert(affix);
+          sprintf(stem,"left_NS_surrounding_%s",affix);
+          free(affix);
+          h_patch = GetPatch(stem,grid);
+        }
+        /* having found h_patch, now find the the position of h = 1 */
+        par->patch = h_patch;
+        par->x0[0] = x[0];
+        par->x0[1] = x[1];
+        par->x0[2] = x[2];
+        par->N     = N;
+        if (NS_patch_flg == YES)
+        {
+          /* normal vector is toward the NS center */
+          N[0] *= -1;
+          N[1] *= -1;
+          N[2] *= -1;
+        }
+        
+        /* populate root finder */
+        Root_Finder_T *root = init_root_finder(1);
+        root->type      = GetParameterS_E("RootFinder_Method");
+        plan_root_finder(root);
+        root->tolerance = GetParameterD_E("RootFinder_Tolerance");
+        root->MaxIter   = (unsigned)GetParameterI_E("RootFinder_Max_Number_of_Iteration");
+        root->x_gss     = &R0_NS;
+        root->params    = par;
+        root->f[0]      = bbn_NS_surface_enthalpy_eq;
+        
+        if (NS_patch_flg == YES)
+        {
+          root->FD_Left  = 1;
+        }
+        else
+          root->FD_Right = 1;
+        
+        dr    = execute_root_finder(root);
+        /*  new coords of R respect to the center of NS */
+        y[0] += N[0]*dr[0];
+        y[1] += N[1]*dr[0];
+        y[2] += N[2]*dr[0];
+        
+        Rnew_NS[ij(i,j)] = rms(3,y,0);
+        free_root_finder(root);
+        free(dr);
+        
+      }/* end of else */
+      
+    }
+  }
+  
+  sprintf(par_str,"grid%u_NS_surface_h=1_Ylm_points",grid->gn);
+  add_parameter_array(par_str,Rnew_NS,Ntheta*Nphi);
+  free(Rnew_NS);
+  
+  printf("Finding the surface of NS at Ylm points ==> Done.\n");
+  pr_clock();
+  pr_line_custom('=');
+}
+#ifdef ij
+#undef ij
+#endif
+
+/* ->return value: patch in which theta and phi take place at 
+// the surface of NS, it is based on the symmetrical polar
+// and azimuthal angles of cubed spherical patches covering NS. */
+static Patch_T *find_patch_of_theta_phi_NS_CS(const double theta,const double phi,Grid_T *const grid)
+{
+  const double p1 = M_PI/4.;
+  const double p2 = 3*M_PI/4.;
+  const double a1 = M_PI/4.;
+  const double a2 = 3*M_PI/4.;
+  const double a3 = 5*M_PI/4.;
+  const double a4 = 7*M_PI/4.;
+  Patch_T *patch  = 0;
+  
+  if (LSSEQL(theta,p1))
+  {
+    patch = GetPatch("left_NS_up",grid);
+  }
+  else if (GRTEQL(theta,p2))
+  {
+    patch = GetPatch("left_NS_down",grid);
+  }
+  else if(GRTEQL(theta,p1) && LSSEQL(theta,p2))
+  {
+    if (GRTEQL(phi,a4) && LSSEQL(phi,a1))
+    {
+      patch = GetPatch("left_NS_front",grid);
+    }
+    else if (GRTEQL(phi,a2) && LSSEQL(phi,a3))
+    {
+      patch = GetPatch("left_NS_back",grid);
+    }
+    else if(GRTEQL(phi,a1) && LSSEQL(phi,a2))
+    {
+      patch = GetPatch("left_NS_right",grid);
+    }
+    else if(GRTEQL(phi,a3) && LSSEQL(phi,a4))
+    {
+      patch = GetPatch("left_NS_left",grid);
+    }
+    else
+      abortEr("Bad argument, phi must be in [0,2Pi]!\n");
+  }
+  else
+    abortEr("Bad argument, theta must be in [0,Pi]!\n");
+  
+  return patch;
+}
+
+/* given theta, phi and the patch, it finds the corresponding
+// X,Y,Z coordinate. */
+static void find_XYZ_of_theta_phi_NS_CS(double *const X,const double theta,const double phi,Patch_T *const patch)
+{
+  struct Params_S
+  {
+    Patch_T *patch;
+    const double *N;
+    const double *c;
+    double R0;
+  }par[1];
+  Root_Finder_T *root   = init_root_finder(1);
+  const double *const c = patch->c;
+  const double R0   = 0.5*patch->CoordSysInfo->CubedSphericalCoord->R2_f->v[0];
+  const double gss  = 0.1*R0;
+  const double N[3] = {sin(theta)*cos(phi),sin(theta)*sin(phi),cos(theta)};
+  double *dr,x[3];
+  
+  par->patch = patch;
+  par->N     = N;
+  par->R0    = R0;
+  par->c     = c;
+  root->type        = GetParameterS_E("RootFinder_Method");
+  root->description = "(X,Y,Z) of theta and phi at NS surface";
+  plan_root_finder(root);
+  root->tolerance = GetParameterD_E("RootFinder_Tolerance");
+  root->MaxIter   = (unsigned)GetParameterI_E("RootFinder_Max_Number_of_Iteration");
+  root->x_gss     = &gss;
+  root->params    = par;
+  root->f[0]      = XYZ_of_theta_phi_NS_CS_RT_EQ;
+  root->FD_Left  = 1;
+  dr = execute_root_finder(root);
+  
+  x[0] = N[0]*(R0+dr[0])+c[0];
+  x[1] = N[1]*(R0+dr[0])+c[1];
+  x[2] = N[2]*(R0+dr[0])+c[2];
+        
+  free_root_finder(root);
+  free(dr);
+  
+  X_of_x(X,x,patch);
+  
+  assert(EQL(X[2],1));/* since it is on NS surface */
+}
+
+/* root finder equation to finding where a line with specific angles
+// intercept NS surface to find (X,Y,Z) of given theta and phi angel */
+static double XYZ_of_theta_phi_NS_CS_RT_EQ(void *params,const double *const dr)
+{
+  struct Params_S
+  {
+    Patch_T *patch;
+    const double *N;
+    const double *c;
+    double R0;
+  }*par;
+  
+  par = params;
+  Patch_T *patch  = par->patch;
+  const double *N = par->N;
+  const double *c = par->c;
+  double R0       = par->R0;
+  double X[3],x[3];
+  
+  x[0] = N[0]*(R0+dr[0])+c[0];
+  x[1] = N[1]*(R0+dr[0])+c[1];
+  x[2] = N[2]*(R0+dr[0])+c[2];
+  
+  X_of_x(X,x,patch);
+  
+  return X[2]-1;
+  
 }
 
 /* extrapolating phi, dphi and W in NS surrounding coords 
@@ -622,7 +869,7 @@ static void extrapolate_fluid_fields_outsideNS_CS(Grid_T *const grid)
     /* find the corresponding NS patch to be used for extrapolation */
     Patch_T *NS_patch;/* corresponding NS patch, to extrapolate out */
     char stem[1000];
-    char *affix = regex_find("_[[:alpha:]]{2,5}$",patch->name);
+    char *affix = regex_find("_[[:alpha:]]{2,5}$",patch->name);/* finding the side of the patch */
     
     assert(affix);
     sprintf(stem,"left_NS%s",affix);
