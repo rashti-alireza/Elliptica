@@ -456,6 +456,33 @@ unsigned IsItHorizonPatch(const Patch_T *const patch)
   return ret;
 }
 
+/* ->return value: given stem name of a patch, 
+// it finds the corresponding one in the given grid. */
+Patch_T *GetPatch(const char *const stem,const Grid_T *const grid)
+{
+  Patch_T *retPatch = 0;
+  char name[1000];
+  unsigned p;
+  
+  sprintf(name,"grid%u_%s",grid->gn,stem);
+  
+  FOR_ALL_PATCHES(p,grid)
+  {
+    Patch_T *patch = grid->patch[p];
+    
+    if (strcmp_i(name,patch->name))
+    {
+      retPatch = patch;
+      break;
+    }
+  }
+  
+  if(!retPatch)
+    abortEr_s("It could not find patch %s.\n",name);
+    
+  return retPatch;
+}
+
 /* ->return value: if the patch covers a part of the NS 1, otherwise 0 */
 unsigned IsItNSPatch(const Patch_T *const patch)
 {
@@ -471,6 +498,28 @@ unsigned IsItNSPatch(const Patch_T *const patch)
         strstr(patch->name,"left_NS_front")     ||
         strstr(patch->name,"left_NS_left")      ||
         strstr(patch->name,"left_NS_right")     
+       )
+       ret = 1;
+  }
+  else
+    abortEr(NO_JOB);
+    
+  return ret;
+}
+
+/* ->return value: if the patch is one of the surrounding patches of the NS 1, otherwise 0 */
+unsigned IsItNSSurroundingPatch(const Patch_T *const patch)
+{
+  unsigned ret = 0;
+  
+  if (strcmp_i(patch->grid->kind,"BBN_CubedSpherical_grid"))
+  {
+    if (strstr(patch->name,"left_NS_surrounding_up")        ||
+        strstr(patch->name,"left_NS_surrounding_down")      ||
+        strstr(patch->name,"left_NS_surrounding_back")      ||
+        strstr(patch->name,"left_NS_surrounding_front")     ||
+        strstr(patch->name,"left_NS_surrounding_left")      ||
+        strstr(patch->name,"left_NS_surrounding_right")     
        )
        ret = 1;
   }
