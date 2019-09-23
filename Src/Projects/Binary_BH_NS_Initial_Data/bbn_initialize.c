@@ -882,9 +882,9 @@ static void find_XYZ_and_patch_of_theta_phi_NS_CS(double *const X,Patch_T **cons
 // in case they are needed for interpolation to the next grid
 // or in calculation of enthalpy at NS surrounding patches.
 // for extrapolation we demand:
-// f(r) = f(r1)/(e^{-1}-e^{-r2/r1})*(e^{-r/r1}-e^{-r2/r1}), 
+// f(r) = f(r1)*(e^{-r/r1}-e^{-r2/r1})/(e^{-1}-e^{-r2/r1}), 
 // where r1 is radius of NS surface and r2 is twice of r1
-// note: f(r) = 0, if r >= r2 */
+// note: f(r) = 0, for r >= r2 */
 static void extrapolate_fluid_fields_outsideNS_CS(Grid_T *const grid)
 {
   const double BN_NS_d = GetParameterD_E("BH_NS_separation");
