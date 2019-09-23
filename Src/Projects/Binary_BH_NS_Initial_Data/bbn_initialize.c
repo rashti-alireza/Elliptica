@@ -47,7 +47,7 @@ static Grid_T *make_next_grid_using_previous_grid(Grid_T *const grid_prev)
     /* extrapolate fluid fields outside of NS in case their value needed. */
     extrapolate_fluid_fields_outsideNS_CS(grid_prev);
     
-    GridParams->NS_R_type = GetParameterS_E("NS_surface_collocation");
+    GridParams->NS_R_type = GetParameterS_E("NS_surface_finder_method");
     
     /* find NS surface using cubed spherical points */
     if (strstr_i(GridParams->NS_R_type,"CubedSpherical"))
