@@ -14,7 +14,7 @@ void n2lm_Ylm(const int n, int *const l, int *const m,const int lmax);
 int lm2n_Ylm(const int l,const int m, const int lmax);
 unsigned lm2n(const unsigned l, const unsigned m);
 double *alloc_ClmYlm(unsigned Lmax);
-double interpolation_Ylm(double *const realClm,double *const imagClm,const unsigned Lmax, const double theta, const double phi);
-double *df_dphi_Ylm(double *const realClm,double *const imagClm,const unsigned Ntheta, const unsigned Nphi,const unsigned Lmax);
-double *df_dtheta_Ylm(double *const realClm,double *const imagClm,const unsigned Ntheta, const unsigned Nphi,const unsigned Lmax);
+double interpolation_Ylm(const double *const realClm,const double *const imagClm,const unsigned Lmax, const double theta, const double phi);
+double *df_dphi_Ylm(const double *const realClm,const double *const imagClm,const unsigned Ntheta, const unsigned Nphi,const unsigned Lmax);
+double *df_dtheta_Ylm(const double *const realClm,const double *const imagClm,const unsigned Ntheta, const unsigned Nphi,const unsigned Lmax);
 

@@ -121,7 +121,7 @@ const unsigned Lmax/* maximum l (inclusive) for the expansion */)
 
 /* ->return value: given point (theta,phi) and Ylm coeffs, 
 // it interpolation to (theta,phi) */
-double interpolation_Ylm(double *const realClm,double *const imagClm,const unsigned Lmax, const double theta, const double phi)
+double interpolation_Ylm(const double *const realClm,const double *const imagClm,const unsigned Lmax, const double theta, const double phi)
 {
   const double sign[2] = {1.,-1.};
   double complex sum = 0;
@@ -149,7 +149,7 @@ double interpolation_Ylm(double *const realClm,double *const imagClm,const unsig
 
 /* ->return value: d(f(theta,phi))/dphi using Ylm expansion, 
 // assuming Legendre root in theta direction and EquiSpaced in phi direction. */
-double *df_dphi_Ylm(double *const realClm,double *const imagClm,const unsigned Ntheta, const unsigned Nphi,const unsigned Lmax)
+double *df_dphi_Ylm(const double *const realClm,const double *const imagClm,const unsigned Ntheta, const unsigned Nphi,const unsigned Lmax)
 {
   double *df_dphi = alloc_double(Ntheta*Nphi);
   const double sign[2] = {1.,-1.};
@@ -189,7 +189,7 @@ double *df_dphi_Ylm(double *const realClm,double *const imagClm,const unsigned N
 
 /* ->return value: d(f(theta,phi))/dtheta using Ylm expansion, 
 // assuming Legendre root in theta direction and EquiSpaced in phi direction. */
-double *df_dtheta_Ylm(double *const realClm,double *const imagClm,const unsigned Ntheta, const unsigned Nphi,const unsigned Lmax)
+double *df_dtheta_Ylm(const double *const realClm,const double *const imagClm,const unsigned Ntheta, const unsigned Nphi,const unsigned Lmax)
 {
   double *df_dtheta    = alloc_double(Ntheta*Nphi);
   const double sign[2] = {1.,-1.};
