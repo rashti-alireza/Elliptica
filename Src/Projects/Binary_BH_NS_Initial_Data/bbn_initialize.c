@@ -625,13 +625,11 @@ static void find_NS_surface_Ylm_method_CS(Grid_T *const grid,struct Grid_Params_
     {
       phi = j*2*M_PI/Nphi;
       NS_patch_flg = NONE;
-      Patch_T *h_patch = 0;
+      Patch_T *h_patch = 0,*patch = 0;
       double h,y[3] = {0},R0_NS,*dr;
       
-      /* find the patch in which theta and phi take place */
-      Patch_T *patch = find_patch_of_theta_phi_NS_CS(theta,phi,grid);
-      /* find X,Y,Z at NS surface in which theta and phi take place */
-      find_XYZ_of_theta_phi_NS_CS(X,theta,phi,patch);
+      /* find patch and X,Y,Z at NS surface in which theta and phi take place */
+      find_XYZ_and_patch_of_theta_phi_NS_CS(X,&patch,theta,phi,grid);
       
       /* find enthalpy at the (X,Y,Z) */
       Interpolation_T *interp_h = init_interpolation();
@@ -751,143 +749,130 @@ static void find_NS_surface_Ylm_method_CS(Grid_T *const grid,struct Grid_Params_
 #undef ij
 #endif
 
-/* ->return value: patch in which theta and phi take place at 
-// the surface of NS, it is based on the symmetrical polar
-// and azimuthal angles of cubed spherical patches covering NS. */
-static Patch_T *find_patch_of_theta_phi_NS_CS(const double theta,const double phi,Grid_T *const grid)
-{
-  const double p1 = M_PI/4.;
-  const double p2 = 3*M_PI/4.;
-  const double a1 = M_PI/4.;
-  const double a2 = 3*M_PI/4.;
-  const double a3 = 5*M_PI/4.;
-  const double a4 = 7*M_PI/4.;
-  Patch_T *patch  = 0;
-  
-  if (LSSEQL(theta,p1))
-  {
-    patch = GetPatch("left_NS_up",grid);
-  }
-  else if (GRTEQL(theta,p2))
-  {
-    patch = GetPatch("left_NS_down",grid);
-  }
-  else if(GRTEQL(theta,p1) && LSSEQL(theta,p2))
-  {
-    if (GRTEQL(phi,a4) && LSSEQL(phi,a1))
-    {
-      patch = GetPatch("left_NS_front",grid);
-    }
-    else if (GRTEQL(phi,a2) && LSSEQL(phi,a3))
-    {
-      patch = GetPatch("left_NS_back",grid);
-    }
-    else if(GRTEQL(phi,a1) && LSSEQL(phi,a2))
-    {
-      patch = GetPatch("left_NS_right",grid);
-    }
-    else if(GRTEQL(phi,a3) && LSSEQL(phi,a4))
-    {
-      patch = GetPatch("left_NS_left",grid);
-    }
-    else
-      abortEr("Bad argument, phi must be in [0,2Pi]!\n");
-  }
-  else
-    abortEr("Bad argument, theta must be in [0,Pi]!\n");
-  
-  return patch;
-}
-
 /* given theta, phi and the patch, it finds the corresponding
-// X,Y,Z coordinate. */
-static void find_XYZ_of_theta_phi_NS_CS(double *const X,const double theta,const double phi,Patch_T *const patch)
+// patch and X,Y,Z coordinate. */
+static void find_XYZ_and_patch_of_theta_phi_NS_CS(double *const X,Patch_T **const ppatch,const double theta,const double phi,Grid_T *const grid)
 {
-  const Flag_T side = patch->CoordSysInfo->CubedSphericalCoord->side;
   const double tgphi    = tan(phi);
   const double costheta = cos(theta);
-  double a,b;
-  double a_sign,b_sign,c_sign;
-  X[2] = 1;/* since we are on NS surface */
+  Flag_T found_flg = NO;
+  unsigned p;
   
-  switch (side)
+  /* check all of NS patches in which (x,y,z) and 
+  // (X,Y,Z) and (theta,phi) are consistence */
+  FOR_ALL_PATCHES(p,grid)
   {
-    case UP:
-      a = Sqrt(1 - Power(costheta,2))/
-          Sqrt(Power(costheta,2) + Power(costheta,2)*Power(tgphi,2));
-      b = (Sqrt(1 - Power(costheta,2))*tgphi)/
-          Sqrt(Power(costheta,2)*(1 + Power(tgphi,2)));   
-    break;
-    case DOWN:
-      b = Sqrt(1 - Power(costheta,2))/
-          Sqrt(Power(costheta,2) + Power(costheta,2)*Power(tgphi,2));
-      a = (Sqrt(1 - Power(costheta,2))*tgphi)/
-          Sqrt(Power(costheta,2)*(1 + Power(tgphi,2)));
-    break;
-    case LEFT:
-      a = 1/tgphi;
-      b = Sqrt((-Power(costheta,2) - Power(costheta,2)*Power(tgphi,2))/
-          ((-1 + Power(costheta,2))*Power(tgphi,2)));
-    break;
-    case RIGHT:
-      b = 1/tgphi;
-      a = Sqrt((-Power(costheta,2) - Power(costheta,2)*Power(tgphi,2))/
-          ((-1 + Power(costheta,2))*Power(tgphi,2)));
-    break;
-    case BACK:
-      a = Sqrt(-Power(costheta,2) - Power(costheta,2)*Power(tgphi,2))/
-          Sqrt(-1 + Power(costheta,2));
-      b = tgphi;
-    break;
-    case FRONT:
-      b = Sqrt(-Power(costheta,2) - Power(costheta,2)*Power(tgphi,2))/
-          Sqrt(-1 + Power(costheta,2));
-      a = tgphi;
-    break;
-    default:
-      abortEr(NO_OPTION);
+    Patch_T *patch = grid->patch[p];
+    
+    if (!IsItNSPatch(patch))
+      continue;
+    if (strstr(patch->name,"left_centeral_box"))
+      continue;
+
+    Flag_T side = patch->CoordSysInfo->CubedSphericalCoord->side;
+    const double *c = patch->c;
+    double a,b;
+    double a_sign,b_sign,c_sign;
+    double x[3],phi2,theta2,r;
+    
+    X[2] = 1;/* since we are on NS surface */
+    
+    switch (side)
+    {
+      case UP:
+        a = Sqrt(1 - Power(costheta,2))/
+            Sqrt(Power(costheta,2) + Power(costheta,2)*Power(tgphi,2));
+        b = (Sqrt(1 - Power(costheta,2))*tgphi)/
+            Sqrt(Power(costheta,2)*(1 + Power(tgphi,2)));   
+      break;
+      case DOWN:
+        b = Sqrt(1 - Power(costheta,2))/
+            Sqrt(Power(costheta,2) + Power(costheta,2)*Power(tgphi,2));
+        a = (Sqrt(1 - Power(costheta,2))*tgphi)/
+            Sqrt(Power(costheta,2)*(1 + Power(tgphi,2)));
+      break;
+      case LEFT:
+        a = 1/tgphi;
+        b = Sqrt((-Power(costheta,2) - Power(costheta,2)*Power(tgphi,2))/
+            ((-1 + Power(costheta,2))*Power(tgphi,2)));
+      break;
+      case RIGHT:
+        b = 1/tgphi;
+        a = Sqrt((-Power(costheta,2) - Power(costheta,2)*Power(tgphi,2))/
+            ((-1 + Power(costheta,2))*Power(tgphi,2)));
+      break;
+      case BACK:
+        a = Sqrt(-Power(costheta,2) - Power(costheta,2)*Power(tgphi,2))/
+            Sqrt(-1 + Power(costheta,2));
+        b = tgphi;
+      break;
+      case FRONT:
+        b = Sqrt(-Power(costheta,2) - Power(costheta,2)*Power(tgphi,2))/
+            Sqrt(-1 + Power(costheta,2));
+        a = tgphi;
+      break;
+      default:
+        abortEr(NO_OPTION);
+    }
+    
+    /* having found the magnitude of a and b, we need to find out the sign of them.
+    // this is done by pay attention to side, signum(costheta) and range of tanphi */
+    switch (side)
+    {
+      case UP:
+        arctan_argument_signum(&b_sign,&a_sign,phi);
+      break;
+      case DOWN:
+        arctan_argument_signum(&a_sign,&b_sign,phi);
+      break;
+      case LEFT:
+        arctan_argument_signum(&c_sign,&a_sign,phi);
+        assert(c_sign < 0);
+        if (costheta > 0) b_sign = 1;
+        else		b_sign = -1;
+      break;
+      case RIGHT:
+        arctan_argument_signum(&c_sign,&b_sign,phi);
+        assert(c_sign > 0);
+        if (costheta > 0) a_sign = 1;
+        else		a_sign = -1;
+      break;
+      case BACK:
+        arctan_argument_signum(&b_sign,&c_sign,phi);
+        assert(c_sign < 0);
+        if (costheta > 0) a_sign = 1;
+        else		a_sign = -1;
+      break;
+      case FRONT:
+        arctan_argument_signum(&a_sign,&c_sign,phi);
+        assert(c_sign > 0);
+        if (costheta > 0) b_sign = 1;
+        else		b_sign = -1;
+      break;
+      default:
+        abortEr(NO_OPTION);
+    }
+    
+    X[0] = fabs(a)*a_sign;
+    X[1] = fabs(b)*b_sign;
+    
+    /* check if x of X really gives you the correct angles */
+    x_of_X(x,X,patch);
+    x[0] -= c[0];
+    x[1] -= c[1];
+    x[2] -= c[2];
+    r = rms(3,x,0);
+    theta2 = acos(x[2]/r);
+    phi2   = arctan(x[1],x[0]);
+    if (EQL(theta2,theta) && EQL(phi2,phi))
+    {
+      found_flg = YES;
+      *ppatch = patch;
+      break;
+    }
   }
-  
-  /* having found the magnitude of a and b, we need to find out the sign of them.
-  // this is done by pay attention to side, signum(costheta) and range of tanphi */
-  switch (side)
-  {
-    case UP:
-      arctan_argument_signum(&b_sign,&a_sign,phi);
-    break;
-    case DOWN:
-      arctan_argument_signum(&a_sign,&b_sign,phi);
-    break;
-    case LEFT:
-      arctan_argument_signum(&c_sign,&a_sign,phi);
-      assert(c_sign < 0);
-      if (costheta > 0) b_sign = 1;
-      else		b_sign = -1;
-    break;
-    case RIGHT:
-      arctan_argument_signum(&c_sign,&b_sign,phi);
-      assert(c_sign > 0);
-      if (costheta > 0) a_sign = 1;
-      else		a_sign = -1;
-    break;
-    case BACK:
-      arctan_argument_signum(&b_sign,&c_sign,phi);
-      assert(c_sign < 0);
-      if (costheta > 0) a_sign = 1;
-      else		a_sign = -1;
-    break;
-    case FRONT:
-      arctan_argument_signum(&a_sign,&c_sign,phi);
-      assert(c_sign > 0);
-      if (costheta > 0) b_sign = 1;
-      else		b_sign = -1;
-    break;
-    default:
-      abortEr(NO_OPTION);
-  }
-  
-  X[0] = fabs(a)*a_sign;
-  X[1] = fabs(b)*b_sign;
+  if (found_flg == NO)
+    abortEr("(X,Y,Z) or patch could not be found.\n");
 }
 
 /* extrapolating phi, dphi and W in NS surrounding coords 
