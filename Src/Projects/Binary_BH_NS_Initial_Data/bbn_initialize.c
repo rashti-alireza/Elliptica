@@ -68,7 +68,7 @@ static Grid_T *make_next_grid_using_previous_grid(Grid_T *const grid_prev)
   const double bh_R    = bh_mass*(1+sqrt(1-SQR(bh_chi)));
   GridParams->R_BH_r = bh_R;
   GridParams->a_BH   = bh_chi*bh_mass;
-  grid_next = creat_grid_CS(GridParams);
+  grid_next = creat_bbn_grid_CS(GridParams);
   
   /* fields: */
   /* creating all of the fields needed for construction of Initial Data */
@@ -1048,7 +1048,7 @@ static Grid_T *TOV_KerrShild_approximation(void)
   GridParams->R_BH_r     = bh_R;
   GridParams->a_BH       = bh_chi*bh_mass;
   GridParams->NS_R_type  = "PefectSphere";
-  grid = creat_grid_CS(GridParams);
+  grid = creat_bbn_grid_CS(GridParams);
   
   /* creating all of the fields needed for construction of Initial Data */
   bbn_allocate_fields(grid);
@@ -1526,7 +1526,7 @@ KSbeta_D2[ijk]*_gammaI_U2U2[ijk];
 // and BH spin as the parameters, create a grid with these properties.
 // NOTE: WE assume we are using cubed spherical grid.
 // ->return value: grid of NS and BH in which inside of the BH excised. */
-static Grid_T *creat_grid_CS(struct Grid_Params_S *const GridParams)
+static Grid_T *creat_bbn_grid_CS(struct Grid_Params_S *const GridParams)
 {
   Grid_T *grid = alloc_grid();/* adding a new grid */
   /* calculate the characteristics of this grid */
