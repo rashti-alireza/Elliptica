@@ -31,4 +31,6 @@ double MaxMag_d(const double a,const double b);
 double L_inf(const double N,const double *const v);
 double L1_norm(const unsigned n, const double *const v2,const double *const v1);
 double L2_norm(const unsigned n, const double *const v2,const double *const v1);
+double arctan(const double y,const double x);
+void arctan_argument_signum(double *const y_sign,double *const x_sign,const double phi);
 

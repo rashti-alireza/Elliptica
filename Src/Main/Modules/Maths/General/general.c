@@ -448,3 +448,70 @@ double L_inf(const double N,const double *const v)
   return max;
 }
 
+/* arctang in full range based on sign of x and y since: y/x = tan(phi)
+// ->return value: phi in [0,2Pi) */
+double arctan(const double y,const double x)
+{
+  double atg = DBL_MAX;
+
+  if (EQL(x,0))
+  {
+    if (EQL(y,0))
+      atg = 0;
+    else if (y > 0)
+      atg = M_PI/2;
+    else
+      atg = 3*M_PI/2;
+  }
+  else if (x > 0)/* x + */
+  {
+    if (EQL(y,0))
+      atg = 0;
+    else if (y > 0)
+      atg = atan(y/x);
+    else
+      atg = 2*M_PI-atan(-y/x);
+  }
+  else/* x - */
+  {
+    if (EQL(y,0))
+      atg = M_PI;
+    else if (y > 0)
+      atg = M_PI-atan(y/-x);
+    else
+      atg = M_PI+atan(-y/-x);
+  }
+  
+  return atg;
+}
+
+/* given phi in range [0,2Pi) it finds out the sign of x and y in y/x = tan(phi) */
+void arctan_argument_signum(double *const y_sign,double *const x_sign,const double phi)
+{
+  if (phi < 0 || phi >= 2*M_PI)
+    abortEr("Bad argument, phi must be in [0,2Pi).\n");
+  
+  if (GRTEQL(phi,0) && LSSEQL(phi,M_PI/2))
+  {
+    *y_sign = 1;
+    *x_sign = 1;
+  }
+  else if (GRTEQL(phi,M_PI/2) && LSSEQL(phi,M_PI))
+  {
+    *y_sign = 1;
+    *x_sign = -1;
+  }
+  else if (GRTEQL(phi,M_PI) && LSSEQL(phi,3*M_PI/2))
+  {
+    *y_sign = -1;
+    *x_sign = -1;
+  }
+  else if (GRTEQL(phi,3*M_PI/2) && LSS(phi,2*M_PI))
+  {
+    *y_sign = -1;
+    *x_sign = 1;
+  }
+  else
+    abortEr(NO_OPTION);
+    
+}
