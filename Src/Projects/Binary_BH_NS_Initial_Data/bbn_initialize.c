@@ -2023,7 +2023,7 @@ static void NS_BH_surface_CubedSpherical_grid(Grid_T *const grid,struct Grid_Par
 }
 
 /* given (X,Y,Z) in the specified slice of NS in cubed spherical coords
-// it finds the associated polar and azimuthal angels */
+// it finds the associated polar and azimuthal angels on the surface of NS */
 static void find_theta_phi_of_XYZ_NS_CS(double *const theta,double *const phi,const double *const X,const Flag_T side)
 {
   const double a = X[0];
