@@ -803,74 +803,91 @@ static Patch_T *find_patch_of_theta_phi_NS_CS(const double theta,const double ph
 // X,Y,Z coordinate. */
 static void find_XYZ_of_theta_phi_NS_CS(double *const X,const double theta,const double phi,Patch_T *const patch)
 {
-  struct Params_S
+  const Flag_T side = patch->CoordSysInfo->CubedSphericalCoord->side;
+  const double tgphi    = tan(phi);
+  const double costheta = cos(theta);
+  double a,b;
+  double a_sign,b_sign,c_sign;
+  X[2] = 1;/* since we are on NS surface */
+  
+  switch (side)
   {
-    Patch_T *patch;
-    const double *N;
-    const double *c;
-    double R0;
-  }par[1];
-  Root_Finder_T *root   = init_root_finder(1);
-  const double *const c = patch->c;
-  const double R0   = 0.5*patch->CoordSysInfo->CubedSphericalCoord->R2_f->v[0];
-  const double gss  = 0.1*R0;
-  const double N[3] = {sin(theta)*cos(phi),sin(theta)*sin(phi),cos(theta)};
-  double *dr,x[3];
+    case UP:
+      a = Sqrt(1 - Power(costheta,2))/
+          Sqrt(Power(costheta,2) + Power(costheta,2)*Power(tgphi,2));
+      b = (Sqrt(1 - Power(costheta,2))*tgphi)/
+          Sqrt(Power(costheta,2)*(1 + Power(tgphi,2)));   
+    break;
+    case DOWN:
+      b = Sqrt(1 - Power(costheta,2))/
+          Sqrt(Power(costheta,2) + Power(costheta,2)*Power(tgphi,2));
+      a = (Sqrt(1 - Power(costheta,2))*tgphi)/
+          Sqrt(Power(costheta,2)*(1 + Power(tgphi,2)));
+    break;
+    case LEFT:
+      a = 1/tgphi;
+      b = Sqrt((-Power(costheta,2) - Power(costheta,2)*Power(tgphi,2))/
+          ((-1 + Power(costheta,2))*Power(tgphi,2)));
+    break;
+    case RIGHT:
+      b = 1/tgphi;
+      a = Sqrt((-Power(costheta,2) - Power(costheta,2)*Power(tgphi,2))/
+          ((-1 + Power(costheta,2))*Power(tgphi,2)));
+    break;
+    case BACK:
+      a = Sqrt(-Power(costheta,2) - Power(costheta,2)*Power(tgphi,2))/
+          Sqrt(-1 + Power(costheta,2));
+      b = tgphi;
+    break;
+    case FRONT:
+      b = Sqrt(-Power(costheta,2) - Power(costheta,2)*Power(tgphi,2))/
+          Sqrt(-1 + Power(costheta,2));
+      a = tgphi;
+    break;
+    default:
+      abortEr(NO_OPTION);
+  }
   
-  par->patch = patch;
-  par->N     = N;
-  par->R0    = R0;
-  par->c     = c;
-  root->type        = GetParameterS_E("RootFinder_Method");
-  root->description = "(X,Y,Z) of theta and phi at NS surface";
-  plan_root_finder(root);
-  root->tolerance = GetParameterD_E("RootFinder_Tolerance");
-  root->MaxIter   = (unsigned)GetParameterI_E("RootFinder_Max_Number_of_Iteration");
-  root->x_gss     = &gss;
-  root->params    = par;
-  root->f[0]      = XYZ_of_theta_phi_NS_CS_RT_EQ;
-  root->FD_Left  = 1;
-  dr = execute_root_finder(root);
-  
-  x[0] = N[0]*(R0+dr[0])+c[0];
-  x[1] = N[1]*(R0+dr[0])+c[1];
-  x[2] = N[2]*(R0+dr[0])+c[2];
-        
-  free_root_finder(root);
-  free(dr);
-  
-  X_of_x(X,x,patch);
-  
-  assert(EQL(X[2],1));/* since it is on NS surface */
-}
-
-/* root finder equation to finding where a line with specific angles
-// intercept NS surface to find (X,Y,Z) of given theta and phi angel */
-static double XYZ_of_theta_phi_NS_CS_RT_EQ(void *params,const double *const dr)
-{
-  struct Params_S
+  /* having found the magnitude of a and b, we need to find out the sign of them.
+  // this is done by pay attention to side, signum(costheta) and range of tanphi */
+  switch (side)
   {
-    Patch_T *patch;
-    const double *N;
-    const double *c;
-    double R0;
-  }*par;
+    case UP:
+      arctan_argument_signum(&b_sign,&a_sign,phi);
+    break;
+    case DOWN:
+      arctan_argument_signum(&a_sign,&b_sign,phi);
+    break;
+    case LEFT:
+      arctan_argument_signum(&c_sign,&a_sign,phi);
+      assert(c_sign < 0);
+      if (costheta > 0) b_sign = 1;
+      else		b_sign = -1;
+    break;
+    case RIGHT:
+      arctan_argument_signum(&c_sign,&b_sign,phi);
+      assert(c_sign > 0);
+      if (costheta > 0) a_sign = 1;
+      else		a_sign = -1;
+    break;
+    case BACK:
+      arctan_argument_signum(&b_sign,&c_sign,phi);
+      assert(c_sign < 0);
+      if (costheta > 0) a_sign = 1;
+      else		a_sign = -1;
+    break;
+    case FRONT:
+      arctan_argument_signum(&a_sign,&c_sign,phi);
+      assert(c_sign > 0);
+      if (costheta > 0) b_sign = 1;
+      else		b_sign = -1;
+    break;
+    default:
+      abortEr(NO_OPTION);
+  }
   
-  par = params;
-  Patch_T *patch  = par->patch;
-  const double *N = par->N;
-  const double *c = par->c;
-  double R0       = par->R0;
-  double X[3],x[3];
-  
-  x[0] = N[0]*(R0+dr[0])+c[0];
-  x[1] = N[1]*(R0+dr[0])+c[1];
-  x[2] = N[2]*(R0+dr[0])+c[2];
-  
-  X_of_x(X,x,patch);
-  
-  return X[2]-1;
-  
+  X[0] = fabs(a)*a_sign;
+  X[1] = fabs(b)*b_sign;
 }
 
 /* extrapolating phi, dphi and W in NS surrounding coords 
@@ -1679,7 +1696,7 @@ static void NS_BH_surface_CubedSpherical_grid(Grid_T *const grid,struct Grid_Par
   unsigned N[3],n,i,j,k,N_total;
   Patch_T patch[1] = {0};
   struct Collocation_s coll_s[2] = {0};
-  double X[2],r;
+  double X[3],r;
   
   /* left NS */
   
@@ -1723,6 +1740,8 @@ static void NS_BH_surface_CubedSpherical_grid(Grid_T *const grid,struct Grid_Par
     const unsigned Lmax   = GridParams->NS_R_Ylm->Lmax;
     double theta,phi;
     
+    X[3] = 1;/* since we are on the NS surface */
+    
     /* filling min */
     patch->min[0] = -1;
     patch->min[1] = -1;
@@ -1757,9 +1776,8 @@ static void NS_BH_surface_CubedSpherical_grid(Grid_T *const grid,struct Grid_Par
       for (j = 0; j < N[1]; ++j)
       {
         X[1] = point_value(j,&coll_s[1]);
-        theta =; 
-        phi   =;
-        r     = interpolation_Ylm(realClm,imagClm,Lmax,theta,phi);
+        find_theta_phi_of_XYZ_NS_CS(&theta,&phi,X,UP);
+        r = interpolation_Ylm(realClm,imagClm,Lmax,theta,phi);
         for (k = 0; k < N[2]; ++k)
           R[L(N,i,j,k)] = r;
       }
@@ -1774,9 +1792,8 @@ static void NS_BH_surface_CubedSpherical_grid(Grid_T *const grid,struct Grid_Par
       for (j = 0; j < N[1]; ++j)
       {
         X[1] = point_value(j,&coll_s[1]);
-        theta = ;
-        phi   = ;
-        r     = interpolation_Ylm(realClm,imagClm,Lmax,theta,phi);
+        find_theta_phi_of_XYZ_NS_CS(&theta,&phi,X,DOWN);
+        r = interpolation_Ylm(realClm,imagClm,Lmax,theta,phi);
         for (k = 0; k < N[2]; ++k)
           R[L(N,i,j,k)] = r;
       }
@@ -1791,9 +1808,8 @@ static void NS_BH_surface_CubedSpherical_grid(Grid_T *const grid,struct Grid_Par
       for (j = 0; j < N[1]; ++j)
       {
         X[1] = point_value(j,&coll_s[1]);
-        theta = ;
-        phi   = ;
-        r     = interpolation_Ylm(realClm,imagClm,Lmax,theta,phi);
+        find_theta_phi_of_XYZ_NS_CS(&theta,&phi,X,BACK);
+        r = interpolation_Ylm(realClm,imagClm,Lmax,theta,phi);
         for (k = 0; k < N[2]; ++k)
           R[L(N,i,j,k)] = r;
       }
@@ -1808,9 +1824,8 @@ static void NS_BH_surface_CubedSpherical_grid(Grid_T *const grid,struct Grid_Par
       for (j = 0; j < N[1]; ++j)
       {
         X[1] = point_value(j,&coll_s[1]);
-        theta = ;
-        phi   = ;
-        r     = interpolation_Ylm(realClm,imagClm,Lmax,theta,phi);
+        find_theta_phi_of_XYZ_NS_CS(&theta,&phi,X,FRONT);
+        r = interpolation_Ylm(realClm,imagClm,Lmax,theta,phi);
         for (k = 0; k < N[2]; ++k)
           R[L(N,i,j,k)] = r;
       }
@@ -1825,9 +1840,8 @@ static void NS_BH_surface_CubedSpherical_grid(Grid_T *const grid,struct Grid_Par
       for (j = 0; j < N[1]; ++j)
       {
         X[1] = point_value(j,&coll_s[1]);
-        theta = ;
-        phi   = ;
-        r     = interpolation_Ylm(realClm,imagClm,Lmax,theta,phi);
+        find_theta_phi_of_XYZ_NS_CS(&theta,&phi,X,LEFT);
+        r = interpolation_Ylm(realClm,imagClm,Lmax,theta,phi);
         for (k = 0; k < N[2]; ++k)
           R[L(N,i,j,k)] = r;
       }
@@ -1842,9 +1856,8 @@ static void NS_BH_surface_CubedSpherical_grid(Grid_T *const grid,struct Grid_Par
       for (j = 0; j < N[1]; ++j)
       {
         X[1] = point_value(j,&coll_s[1]);
-        theta = ;
-        phi   = ;
-        r     = interpolation_Ylm(realClm,imagClm,Lmax,theta,phi);
+        find_theta_phi_of_XYZ_NS_CS(&theta,&phi,X,RIGHT);
+        r = interpolation_Ylm(realClm,imagClm,Lmax,theta,phi);
         for (k = 0; k < N[2]; ++k)
           R[L(N,i,j,k)] = r;
       }
@@ -2009,3 +2022,42 @@ static void NS_BH_surface_CubedSpherical_grid(Grid_T *const grid,struct Grid_Par
   free(R);
 }
 
+/* given (X,Y,Z) in the specified slice of NS in cubed spherical coords
+// it finds the associated polar and azimuthal angels */
+static void find_theta_phi_of_XYZ_NS_CS(double *const theta,double *const phi,const double *const X,const Flag_T side)
+{
+  const double a = X[0];
+  const double b = X[1];
+  const double d = sqrt(1+SQR(a)+SQR(b));
+  
+  switch (side)
+  {
+    case UP:
+      *phi   = arctan(b,a);
+      *theta = acos(1/d);
+    break;
+    case DOWN:
+      *phi   = arctan(a,b);
+      *theta = acos(-1/d);
+    break;
+    case LEFT:
+      *phi   = arctan(-1,a);
+      *theta = acos(b/d);
+    break;
+    case RIGHT:
+      *phi   = arctan(1,b);
+      *theta = acos(a/d);
+    break;
+    case BACK:
+      *phi   = arctan(b,-1);
+      *theta = acos(a/d);
+    break;
+    case FRONT:
+      *phi   = arctan(a,1);
+      *theta = acos(b/d);
+    break;
+    default:
+      abortEr(NO_OPTION);
+  }
+  
+}
