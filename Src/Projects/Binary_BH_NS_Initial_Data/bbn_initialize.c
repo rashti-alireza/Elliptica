@@ -608,6 +608,7 @@ static void find_NS_surface_Ylm_method_CS(Grid_T *const grid,struct Grid_Params_
   double theta,phi;
   double *Rnew_NS = 0;/* new R for NS */
   double Max_R_NS = 0;/* maximum radius of NS */
+  const double guess = 1E-3;
   double X[3],x[3],N[3];
   char stem[1000],*affix;
   Flag_T NS_patch_flg = NONE;
@@ -648,6 +649,7 @@ static void find_NS_surface_Ylm_method_CS(Grid_T *const grid,struct Grid_Params_
       
       /* finding x */
       x_of_X(x,X,patch);
+      /* y is where the previous radius was located */
       y[0] = x[0]-patch->c[0];
       y[1] = x[1]-patch->c[2];
       y[2] = x[2]-patch->c[1];
@@ -666,8 +668,8 @@ static void find_NS_surface_Ylm_method_CS(Grid_T *const grid,struct Grid_Params_
         
         if (LSS(h,1))
         {
-          h_patch      = patch;
           NS_patch_flg = YES;
+          h_patch      = patch;
         }
         else/* which means h = 1 occures in neighboring patch */
         {
@@ -675,7 +677,7 @@ static void find_NS_surface_Ylm_method_CS(Grid_T *const grid,struct Grid_Params_
           /* finding the side of the patch */
           affix = regex_find("_[[:alpha:]]{2,5}$",patch->name);
           assert(affix);
-          sprintf(stem,"left_NS_surrounding_%s",affix);
+          sprintf(stem,"left_NS_surrounding%s",affix);
           free(affix);
           h_patch = GetPatch(stem,grid);
         }
@@ -699,7 +701,7 @@ static void find_NS_surface_Ylm_method_CS(Grid_T *const grid,struct Grid_Params_
         plan_root_finder(root);
         root->tolerance = GetParameterD_E("RootFinder_Tolerance");
         root->MaxIter   = (unsigned)GetParameterI_E("RootFinder_Max_Number_of_Iteration");
-        root->x_gss     = &R0_NS;
+        root->x_gss     = &guess;
         root->params    = par;
         root->f[0]      = bbn_NS_surface_enthalpy_eq;
         
@@ -725,7 +727,7 @@ static void find_NS_surface_Ylm_method_CS(Grid_T *const grid,struct Grid_Params_
         
       }/* end of else */
       
-    }
+    }/* end of for (j = 0; j < Nphi; ++j) */
   }
   
   /* adding maximum radius of NS to grid parameters */
@@ -734,8 +736,6 @@ static void find_NS_surface_Ylm_method_CS(Grid_T *const grid,struct Grid_Params_
   /* making radius of NS parameter at each patch using Ylm interpolation */
   double *realClm = alloc_ClmYlm(lmax);
   double *imagClm = alloc_ClmYlm(lmax);
-  
-  init_Ylm();
   
   /* calculating coeffs */
   get_Ylm_coeffs(realClm,imagClm,Rnew_NS,Ntheta,Nphi,lmax);
