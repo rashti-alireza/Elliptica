@@ -1047,7 +1047,7 @@ static Grid_T *TOV_KerrShild_approximation(void)
   GridParams->Max_R_NS_l = ns_R;
   GridParams->R_BH_r     = bh_R;
   GridParams->a_BH       = bh_chi*bh_mass;
-  GridParams->NS_R_type  = "PefectSphere";
+  GridParams->NS_R_type  = "PerfectSphere";
   grid = creat_bbn_grid_CS(GridParams);
   
   /* creating all of the fields needed for construction of Initial Data */
@@ -1715,19 +1715,32 @@ static void NS_BH_surface_CubedSpherical_grid(Grid_T *const grid,struct Grid_Par
   /* surface */
   R = alloc_double(N_total);
   /* if NS is perfect sphere like TOV*/
-  if (strcmp_i(GridParams->NS_R_type,"PrefectSphere"))
+  if (strcmp_i(GridParams->NS_R_type,"PerfectSphere"))
   {
     for (i = 0; i < N[0]; ++i)
       for (j = 0; j < N[1]; ++j)
         for (k = 0; k < N[2]; ++k)
           R[L(N,i,j,k)] = Max_R_NS_l;
+    
+    sprintf(par,"grid%u_left_NS_surface_function_up",grid->gn);
+    add_parameter_array(par,R,N_total);
+    sprintf(par,"grid%u_left_NS_surface_function_down",grid->gn);
+    add_parameter_array(par,R,N_total);
+    sprintf(par,"grid%u_left_NS_surface_function_back",grid->gn);
+    add_parameter_array(par,R,N_total);
+    sprintf(par,"grid%u_left_NS_surface_function_front",grid->gn);
+    add_parameter_array(par,R,N_total);
+    sprintf(par,"grid%u_left_NS_surface_function_left",grid->gn);
+    add_parameter_array(par,R,N_total);
+    sprintf(par,"grid%u_left_NS_surface_function_right",grid->gn);
+    add_parameter_array(par,R,N_total);
   }
   /* if NS radius is varied and we know its expansion in Ylm bases */
   else if (strcmp_i(GridParams->NS_R_type,"SphericalHarmonic"))
   {
     /* we need interpolation */
-    double *const realClm = GridParams->NS_R_Ylm->realClm;
-    double *const imagClm = GridParams->NS_R_Ylm->imagClm;
+    const double *const realClm = GridParams->NS_R_Ylm->realClm;
+    const double *const imagClm = GridParams->NS_R_Ylm->imagClm;
     const unsigned Lmax   = GridParams->NS_R_Ylm->Lmax;
     double theta,phi;
     
