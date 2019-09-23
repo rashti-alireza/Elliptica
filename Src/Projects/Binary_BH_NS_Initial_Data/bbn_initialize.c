@@ -887,7 +887,8 @@ static void find_XYZ_and_patch_of_theta_phi_NS_CS(double *const X,Patch_T **cons
 // note: f(r) = 0, for r >= r2 */
 static void extrapolate_fluid_fields_outsideNS_CS(Grid_T *const grid)
 {
-  const double BN_NS_d = GetParameterD_E("BH_NS_separation");
+  const double half_BN_NS_d = 0.5*GetParameterD_E("BH_NS_separation");
+  const double R2_FACTOR = 2;
   unsigned p;
   
   FOR_ALL_PATCHES(p,grid)
@@ -958,10 +959,17 @@ static void extrapolate_fluid_fields_outsideNS_CS(Grid_T *const grid)
       for (j = 0; j < n[1]; ++j)
       {
         ijk = L(n,i,j,k);
-        /* find the value of phi at NS surface */
+        /* find the value of phi and W^{i} at NS surface */
         X_of_x(X,patch->node[ijk]->x,NS_patch);
-        interp_phi->X = X[0];
-        interp_phi->Y = X[1];
+        interp_phi->X  = X[0];
+        interp_phi->Y  = X[1];
+        interp_W_U0->X = X[0];
+        interp_W_U0->Y = X[1];
+        interp_W_U1->X = X[0];
+        interp_W_U1->Y = X[1];
+        interp_W_U2->X = X[0];
+        interp_W_U2->Y = X[1];
+        
         phi[ijk]  = execute_interpolation(interp_phi);
         W_U0[ijk] = execute_interpolation(interp_W_U0);
         W_U1[ijk] = execute_interpolation(interp_W_U1);
@@ -985,27 +993,27 @@ static void extrapolate_fluid_fields_outsideNS_CS(Grid_T *const grid)
         double W0_U1 = W_U1[ijk];
         double W0_U2 = W_U2[ijk];
         double r1 = rms(3,x,0);
-        double r2 = 2*r1;
-        assert(LSS(r2,BN_NS_d));
+        double r2 = R2_FACTOR*r1;
+        assert(LSS(r2,half_BN_NS_d));
         
         for (k = 1; k < n[2]; ++k)
         {
-         double r,fac;
-         ijk = L(n,i,j,k);
-         x[0] = patch->node[ijk]->x[0]-patch->c[0];
-         x[1] = patch->node[ijk]->x[1]-patch->c[1];
-         x[2] = patch->node[ijk]->x[2]-patch->c[2];
-         r    = rms(3,x,0);
-         
-         if (GRTEQL(r,r2))
-           fac     = 0;
-         else
-           fac     = (exp(-r/r1)-exp(-r2/r1))/(1./M_E-exp(-r2/r1));
+           double r,fac;
+           unsigned ijk2 = L(n,i,j,k);
+           x[0] = patch->node[ijk2]->x[0]-patch->c[0];
+           x[1] = patch->node[ijk2]->x[1]-patch->c[1];
+           x[2] = patch->node[ijk2]->x[2]-patch->c[2];
+           r    = rms(3,x,0);
            
-         phi[ijk]  = phi0*fac;
-         W_U0[ijk] = W0_U0*fac;
-         W_U1[ijk] = W0_U1*fac;
-         W_U2[ijk] = W0_U2*fac;
+           if (GRTEQL(r,r2))
+             fac     = 0;
+           else
+             fac     = (exp(-r/r1)-exp(-r2/r1))/(1./M_E-exp(-r2/r1));
+             
+           phi[ijk2]  = phi0*fac;
+           W_U0[ijk2] = W0_U0*fac;
+           W_U1[ijk2] = W0_U1*fac;
+           W_U2[ijk2] = W0_U2*fac;
         }
       }
     }
@@ -1015,6 +1023,7 @@ static void extrapolate_fluid_fields_outsideNS_CS(Grid_T *const grid)
     dphi_D0->v = Partial_Derivative(phi_field,"x");
   }
 }
+
 /* use TOV and Kerr-Schil black hole approximation.
 // ->return value: resultant grid from this approximation */
 static Grid_T *TOV_KerrShild_approximation(void)
