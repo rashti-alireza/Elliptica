@@ -49,3 +49,5 @@ static void find_NS_surface_CS_method_CS(Grid_T *const grid,struct Grid_Params_S
 static void find_NS_surface_Ylm_method_CS(Grid_T *const grid,struct Grid_Params_S *const GridParams);
 static void find_XYZ_and_patch_of_theta_phi_NS_CS(double *const X,Patch_T **const ppatch,const double theta,const double phi,Grid_T *const grid);
 static void find_theta_phi_of_XYZ_NS_CS(double *const theta,double *const phi,const double *const X,const Flag_T side);
+static void free_Grid_Params_S(struct Grid_Params_S *par);
+struct Grid_Params_S *init_GridParams(void);

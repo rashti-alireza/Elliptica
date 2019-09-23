@@ -33,7 +33,7 @@ static Grid_T *make_next_grid_using_previous_grid(Grid_T *const grid_prev)
 {
   abortEr(NO_JOB);
   Grid_T *grid_next = 0;
-  struct Grid_Params_S GridParams[1] = {0};/* adjust some pars for construction of next grid */
+  struct Grid_Params_S *GridParams = init_GridParams();/* adjust some pars for construction of next grid */
   
   /* find Euler equation constant to meet NS baryonic mass */
   find_Euler_eq_const(grid_prev);
@@ -93,6 +93,9 @@ static Grid_T *make_next_grid_using_previous_grid(Grid_T *const grid_prev)
   
   /* make normal vectorn on BH horizon */
   make_normal_vector_on_BH_horizon(grid_next);
+  
+  /* freeing */
+  free_Grid_Params_S(GridParams);
   
   return grid_next;
 }
@@ -1017,7 +1020,7 @@ static void extrapolate_fluid_fields_outsideNS_CS(Grid_T *const grid)
 static Grid_T *TOV_KerrShild_approximation(void)
 {
   Grid_T *grid = 0;
-  struct Grid_Params_S GridParams[1] = {0};/* adjust some pars for construction of grid */
+  struct Grid_Params_S *GridParams = init_GridParams();/* adjust some pars for construction of grid */
   
   /* solve fields for a TOV star located at left side of y axis */
   TOV_T *tov = TOV_init();
@@ -1072,6 +1075,9 @@ static Grid_T *TOV_KerrShild_approximation(void)
   /* find Euler equation const using enthalpy of TOV star and other fields */
   find_Euler_eq_const_TOV_KerrSchild(grid);
   
+  /* freeing */
+  free_Grid_Params_S(GridParams);
+
   TOV_free(tov);
   
   return grid;
@@ -1849,10 +1855,6 @@ static void NS_BH_surface_CubedSpherical_grid(Grid_T *const grid,struct Grid_Par
     }
     sprintf(par,"grid%u_left_NS_surface_function_right",grid->gn);
     add_parameter_array(par,R,N_total);
-    
-    /* free coeffs */
-    free(realClm);
-    free(imagClm);
   }
   else
     abortEr(NO_OPTION);
@@ -2046,3 +2048,19 @@ static void find_theta_phi_of_XYZ_NS_CS(double *const theta,double *const phi,co
   }
   
 }
+
+/* initialize Grid_Params struct */
+struct Grid_Params_S *init_GridParams(void)
+{
+  struct Grid_Params_S *par = calloc(1,sizeof(*par));
+  return par;
+}
+
+/* free Grid_Params struct */
+static void free_Grid_Params_S(struct Grid_Params_S *par)
+{
+  _free(par->NS_R_Ylm->realClm);
+  _free(par->NS_R_Ylm->imagClm);
+  _free(par);
+}
+
