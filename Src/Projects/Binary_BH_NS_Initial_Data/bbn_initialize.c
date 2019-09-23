@@ -580,7 +580,8 @@ static void find_NS_surface_CS_method_CS(Grid_T *const grid,struct Grid_Params_S
 }
 
 #define ij(i,j) (j)+Nphi*(i)
-/* given the grid, find the NS surface on Ylm points (Legendre,EquiSpaced)
+/* given the grid, find the NS surface on Ylm points 
+// i.e (theta,phi) collocations are = (Legendre,EquiSpaced),
 // using the fact that at the surface enthalpy = 1.
 // it fills also NS radius attributes:
 //   GridParams->Max_R_NS_l;
@@ -752,14 +753,18 @@ static void find_NS_surface_Ylm_method_CS(Grid_T *const grid,struct Grid_Params_
 #undef ij
 #endif
 
-/* given theta, phi and the patch, it finds the corresponding
-// patch and X,Y,Z coordinate. */
+/* given theta, phi and knowing the fact that they are on NS surface, 
+// it finds the corresponding patch and X,Y,Z coordinate. */
 static void find_XYZ_and_patch_of_theta_phi_NS_CS(double *const X,Patch_T **const ppatch,const double theta,const double phi,Grid_T *const grid)
 {
-  const double tgphi    = tan(phi);
-  const double costheta = cos(theta);
+  const double tan_phi    = tan(phi);
+  const double cos_theta  = cos(theta);
+  const double tan_phi2   = SQR(tan_phi);
+  const double cos_theta2 = SQR(cos_theta);
   Flag_T found_flg = NO;
   unsigned p;
+  
+  X[2] = 1;/* since we are on NS surface */
   
   /* check all of NS patches in which (x,y,z) and 
   // (X,Y,Z) and (theta,phi) are consistence */
@@ -778,48 +783,50 @@ static void find_XYZ_and_patch_of_theta_phi_NS_CS(double *const X,Patch_T **cons
     double a_sign,b_sign,c_sign;
     double x[3],phi2,theta2,r;
     
-    X[2] = 1;/* since we are on NS surface */
+    /* we know that theta = 0 or Pi occures only at UP or DOWN patches
+    // so don't bother to follow algorithm all the way down.
+    // furthermore, this prevent 0 in denominator of unrelated patches. */
+    if (EQL(theta,0) || EQL(theta,M_PI))
+    {
+      if (side == LEFT || side == RIGHT || 
+          side == BACK || side == FRONT   )
+        continue;
+    }
     
+    /* first calculate the magnetitude of a and b 
+    // which are related to X[0] and X[1] with a sign */
     switch (side)
     {
       case UP:
-        a = Sqrt(1 - Power(costheta,2))/
-            Sqrt(Power(costheta,2) + Power(costheta,2)*Power(tgphi,2));
-        b = (Sqrt(1 - Power(costheta,2))*tgphi)/
-            Sqrt(Power(costheta,2)*(1 + Power(tgphi,2)));   
+        a = Sqrt((1 - cos_theta2)/(cos_theta2 + cos_theta2*tan_phi2));
+        b = tan_phi*Sqrt((1 - cos_theta2)/(cos_theta2*(1 + tan_phi2)));
       break;
       case DOWN:
-        b = Sqrt(1 - Power(costheta,2))/
-            Sqrt(Power(costheta,2) + Power(costheta,2)*Power(tgphi,2));
-        a = (Sqrt(1 - Power(costheta,2))*tgphi)/
-            Sqrt(Power(costheta,2)*(1 + Power(tgphi,2)));
+        b = Sqrt((1 - cos_theta2)/(cos_theta2 + cos_theta2*tan_phi2));
+        a = tan_phi*Sqrt((1 - cos_theta2)/(cos_theta2*(1 + tan_phi2)));
       break;
       case LEFT:
-        a = 1/tgphi;
-        b = Sqrt((-Power(costheta,2) - Power(costheta,2)*Power(tgphi,2))/
-            ((-1 + Power(costheta,2))*Power(tgphi,2)));
+        a = 1/tan_phi;
+        b = Sqrt((cos_theta2 + cos_theta2*tan_phi2)/((1. - cos_theta2)*tan_phi2));
       break;
       case RIGHT:
-        b = 1/tgphi;
-        a = Sqrt((-Power(costheta,2) - Power(costheta,2)*Power(tgphi,2))/
-            ((-1 + Power(costheta,2))*Power(tgphi,2)));
+        b = 1/tan_phi;
+        a = Sqrt((cos_theta2 + cos_theta2*tan_phi2)/((1. - cos_theta2)*tan_phi2));
       break;
       case BACK:
-        a = Sqrt(-Power(costheta,2) - Power(costheta,2)*Power(tgphi,2))/
-            Sqrt(-1 + Power(costheta,2));
-        b = tgphi;
+        a = Sqrt((cos_theta2 + cos_theta2*tan_phi2)/(1 - cos_theta2));
+        b = tan_phi;
       break;
       case FRONT:
-        b = Sqrt(-Power(costheta,2) - Power(costheta,2)*Power(tgphi,2))/
-            Sqrt(-1 + Power(costheta,2));
-        a = tgphi;
+        b = Sqrt((cos_theta2 + cos_theta2*tan_phi2)/(1 - cos_theta2));
+        a = tan_phi;
       break;
       default:
         abortEr(NO_OPTION);
     }
     
     /* having found the magnitude of a and b, we need to find out the sign of them.
-    // this is done by pay attention to side, signum(costheta) and range of tanphi */
+    // this is done by paying attention to side, signum(cos_theta) and range of tanphi */
     switch (side)
     {
       case UP:
@@ -830,27 +837,23 @@ static void find_XYZ_and_patch_of_theta_phi_NS_CS(double *const X,Patch_T **cons
       break;
       case LEFT:
         arctan_argument_signum(&c_sign,&a_sign,phi);
-        assert(c_sign < 0);
-        if (costheta > 0) b_sign = 1;
-        else		b_sign = -1;
+        if (cos_theta > 0) b_sign = 1;
+        else		   b_sign = -1;
       break;
       case RIGHT:
         arctan_argument_signum(&c_sign,&b_sign,phi);
-        assert(c_sign > 0);
-        if (costheta > 0) a_sign = 1;
-        else		a_sign = -1;
+        if (cos_theta > 0) a_sign = 1;
+        else		   a_sign = -1;
       break;
       case BACK:
         arctan_argument_signum(&b_sign,&c_sign,phi);
-        assert(c_sign < 0);
-        if (costheta > 0) a_sign = 1;
-        else		a_sign = -1;
+        if (cos_theta > 0) a_sign = 1;
+        else		   a_sign = -1;
       break;
       case FRONT:
         arctan_argument_signum(&a_sign,&c_sign,phi);
-        assert(c_sign > 0);
-        if (costheta > 0) b_sign = 1;
-        else		b_sign = -1;
+        if (cos_theta > 0) b_sign = 1;
+        else		   b_sign = -1;
       break;
       default:
         abortEr(NO_OPTION);
