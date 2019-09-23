@@ -33,6 +33,7 @@ static Grid_T *make_next_grid_using_previous_grid(Grid_T *const grid_prev)
 {
   abortEr(NO_JOB);
   Grid_T *grid_next = 0;
+  struct Grid_Params_S GridParams[1] = {0};/* adjust some pars for construction of next grid */
   
   /* find Euler equation constant to meet NS baryonic mass */
   find_Euler_eq_const(grid_prev);
@@ -41,20 +42,33 @@ static Grid_T *make_next_grid_using_previous_grid(Grid_T *const grid_prev)
   /* find the Omega_BH to acquire the desired BH spin */
   /* find y_CM using force balance equation */
   
-  
   if (!strcmp_i(grid_prev->kind,"BBN_CubedSpherical_grid"))
   {
     /* extrapolate fluid fields outside of NS in case their value needed. */
     extrapolate_fluid_fields_outsideNS_CS(grid_prev);
-    /* find NS surface over all surface points */
-    find_NS_surface_all_points_CS(grid_prev);
-    /* find NS surface using Ylm expansion */
-    find_NS_surface_Ylm_points_CS(grid_prev);
+    
+    GridParams->NS_R_type = GetParameterS_E("NS_surface_collocation");
+    
+    /* find NS surface using cubed spherical points */
+    if (strstr_i(GridParams->NS_R_type,"CubedSpherical"))
+      find_NS_surface_CS_method_CS(grid_prev,GridParams);
+      
+    /* find NS surface using spherical harmonic points */
+    else if (strstr_i(GridParams->NS_R_type,"SphericalHarmonic"))
+      find_NS_surface_Ylm_method_CS(grid_prev,GridParams);
+    else
+      abortEr(NO_OPTION);
   }
   else
     abortEr(NO_OPTION);
     
   /* make new grid with new parameters */
+  const double bh_chi  = GetParameterD_E("BH_X_U2");
+  const double bh_mass = GetParameterD_E("BH_mass");
+  const double bh_R    = bh_mass*(1+sqrt(1-SQR(bh_chi)));
+  GridParams->R_BH_r = bh_R;
+  GridParams->a_BH   = bh_chi*bh_mass;
+  grid_next = creat_grid_CS(GridParams);
   
   /* fields: */
   /* creating all of the fields needed for construction of Initial Data */
@@ -393,13 +407,19 @@ static void find_Xp_and_patchp(const double *const x,const char *const hint,Grid
   free_needle(needle);
 }
 
-/* given the grid, find the NS surface on all surface points 
-// using the fact that at the surface enthalpy = 1. 
+/* given the grid, find the NS surface on all cubed spherical points 
+// using the fact that at the surface enthalpy = 1.
+// it fills also NS radius attributes:
+//   GridParams->Max_R_NS_l;
+//
 // we assumed cubed spherical grid */
-static void find_NS_surface_all_points_CS(Grid_T *const grid)
+static void find_NS_surface_CS_method_CS(Grid_T *const grid,struct Grid_Params_S *const GridParams)
 {
   pr_line_custom('=');
-  printf("Finding the surface of NS over all surface points ...\n");
+  printf("Finding the surface of NS, cubed spherical ...\n");
+  
+  UNUSED(GridParams);
+  abortEr("setup R_max and etc. in GridParams");
   
   /* the stucture for the root finder */
   struct Params_S
@@ -551,19 +571,25 @@ static void find_NS_surface_all_points_CS(Grid_T *const grid)
     free(R_NS);
   }/* end of FOR_ALL_PATCHES(p,grid) */
   
-  printf("Finding the surface of NS over all surface points ==> Done.\n");
+  printf("Finding the surface of NS, cubed spherical method ==> Done.\n");
   pr_clock();
   pr_line_custom('=');
 }
 
 #define ij(i,j) (j)+Nphi*(i)
 /* given the grid, find the NS surface on Ylm points (Legendre,EquiSpaced)
-// using the fact that at the surface enthalpy = 1. 
+// using the fact that at the surface enthalpy = 1.
+// it fills also NS radius attributes:
+//   GridParams->Max_R_NS_l;
+//   GridParams->NS_R_Ylm->realClm;
+//   GridParams->NS_R_Ylm->imagClm;
+//   GridParams->NS_R_Ylm->Lmax;
+//
 // we assumed cubed spherical grid */
-static void find_NS_surface_Ylm_points_CS(Grid_T *const grid)
+static void find_NS_surface_Ylm_method_CS(Grid_T *const grid,struct Grid_Params_S *const GridParams)
 {
   pr_line_custom('=');
-  printf("Finding the surface of NS at Ylm points ...\n");
+  printf("Finding the surface of NS, Ylm method ...\n");
   
   /* the stucture for the root finder */
   struct Params_S
@@ -577,8 +603,9 @@ static void find_NS_surface_Ylm_points_CS(Grid_T *const grid)
   const unsigned lmax = (unsigned)GetParameterI_E("NS_surface_Ylm_expansion_max_l");
   double theta,phi;
   double *Rnew_NS = 0;/* new R for NS */
+  double Max_R_NS = 0;/* maximum radius of NS */
   double X[3],x[3],N[3];
-  char par_str[1000],stem[1000],*affix;
+  char stem[1000],*affix;
   Flag_T NS_patch_flg = NONE;
   unsigned i,j;
   
@@ -688,6 +715,9 @@ static void find_NS_surface_Ylm_points_CS(Grid_T *const grid)
         y[2] += N[2]*dr[0];
         
         Rnew_NS[ij(i,j)] = rms(3,y,0);
+        if (Rnew_NS[ij(i,j)] > Max_R_NS)
+          Max_R_NS = Rnew_NS[ij(i,j)];
+          
         free_root_finder(root);
         free(dr);
         
@@ -696,11 +726,24 @@ static void find_NS_surface_Ylm_points_CS(Grid_T *const grid)
     }
   }
   
-  sprintf(par_str,"grid%u_NS_surface_h=1_Ylm_points",grid->gn);
-  add_parameter_array(par_str,Rnew_NS,Ntheta*Nphi);
+  /* adding maximum radius of NS to grid parameters */
+  GridParams->Max_R_NS_l = Max_R_NS;
+  
+  /* making radius of NS parameter at each patch using Ylm interpolation */
+  double *realClm = alloc_ClmYlm(lmax);
+  double *imagClm = alloc_ClmYlm(lmax);
+  
+  init_Ylm();
+  
+  /* calculating coeffs */
+  get_Ylm_coeffs(realClm,imagClm,Rnew_NS,Ntheta,Nphi,lmax);
+  GridParams->NS_R_Ylm->realClm = realClm;
+  GridParams->NS_R_Ylm->realClm = imagClm;
+  GridParams->NS_R_Ylm->Lmax    = lmax;
+  
   free(Rnew_NS);
   
-  printf("Finding the surface of NS at Ylm points ==> Done.\n");
+  printf("Finding the surface of NS, Ylm method ==> Done.\n");
   pr_clock();
   pr_line_custom('=');
 }
@@ -972,6 +1015,7 @@ static void extrapolate_fluid_fields_outsideNS_CS(Grid_T *const grid)
 static Grid_T *TOV_KerrShild_approximation(void)
 {
   Grid_T *grid = 0;
+  struct Grid_Params_S GridParams[1] = {0};/* adjust some pars for construction of grid */
   
   /* solve fields for a TOV star located at left side of y axis */
   TOV_T *tov = TOV_init();
@@ -995,7 +1039,11 @@ static Grid_T *TOV_KerrShild_approximation(void)
   pr_line_custom('=');
  
   /* combining these two geometry to create the grid */
-  grid = creat_grid_TOV_KerrShild_CS(ns_R,bh_R,bh_chi*bh_mass/* a = chi*M */);
+  GridParams->Max_R_NS_l = ns_R;
+  GridParams->R_BH_r     = bh_R;
+  GridParams->a_BH       = bh_chi*bh_mass;
+  GridParams->NS_R_type  = "PefectSphere";
+  grid = creat_grid_CS(GridParams);
   
   /* creating all of the fields needed for construction of Initial Data */
   bbn_allocate_fields(grid);
@@ -1466,14 +1514,16 @@ KSbeta_D2[ijk]*_gammaI_U2U2[ijk];
 
 }
 
-/* given the radius of NS and BH and their separation,
-// create a grid with these properties.
+/* given the max of radius of NS, radius of BH and their separation,
+// and BH spin as the parameters, create a grid with these properties.
 // NOTE: WE assume we are using cubed spherical grid.
 // ->return value: grid of NS and BH in which inside of the BH excised. */
-static Grid_T *creat_grid_TOV_KerrShild_CS(const double R_NS_l,const double R_BH_r,const double a_BH)
+static Grid_T *creat_grid_CS(struct Grid_Params_S *const GridParams)
 {
   Grid_T *grid = alloc_grid();/* adding a new grid */
   /* calculate the characteristics of this grid */
+  const double Max_R_NS_l = GridParams->Max_R_NS_l;/* maximum radius of NS */
+  const double R_BH_r     = GridParams->R_BH_r;
   const unsigned gn = grid->gn;
   const double C    = GetParameterD_E("BH_NS_separation");
   const unsigned N_Outermost_Split = (unsigned)GetParameterI_E("Number_of_Outermost_Split"); 
@@ -1494,15 +1544,15 @@ static Grid_T *creat_grid_TOV_KerrShild_CS(const double R_NS_l,const double R_BH
   grid->kind = dup_s(kind);
   
   assert(GRT(C,0));
-  assert(GRT(R_NS_l,0));
+  assert(GRT(Max_R_NS_l,0));
   assert(GRT(R_BH_r,0));
-  assert(LSS(2*R_NS_l,C));
+  assert(LSS(2*Max_R_NS_l,C));
   assert(LSS(2*R_BH_r,C));
   
   /* making NS and BH surfaces function */
-  NS_BH_surface_CubedSpherical_grid(grid,R_NS_l,R_BH_r,a_BH);
+  NS_BH_surface_CubedSpherical_grid(grid,GridParams);
   
-  box_size_l = GetParameterD_E("left_central_box_length_ratio")*R_NS_l;
+  box_size_l = GetParameterD_E("left_central_box_length_ratio")*Max_R_NS_l;
   
   for (i = 0; i < N_Outermost_Split; i++)
   {
@@ -1619,10 +1669,13 @@ static Grid_T *creat_grid_TOV_KerrShild_CS(const double R_NS_l,const double R_BH
 }
 
 /* making  NS and BH surfaces function */
-static void NS_BH_surface_CubedSpherical_grid(Grid_T *const grid,const double R_NS_l,const double R_BH_r,const double a_BH)
+static void NS_BH_surface_CubedSpherical_grid(Grid_T *const grid,struct Grid_Params_S *const GridParams)
 {
+  const double Max_R_NS_l = GridParams->Max_R_NS_l;/* maximum radius of NS */
+  const double R_BH_r     = GridParams->R_BH_r;
+  const double a_BH       = GridParams->a_BH;
   double *R;
-  char par[100] = {'\0'};
+  char par[1000] = {'\0'};
   unsigned N[3],n,i,j,k,N_total;
   Patch_T patch[1] = {0};
   struct Collocation_s coll_s[2] = {0};
@@ -1653,27 +1706,162 @@ static void NS_BH_surface_CubedSpherical_grid(Grid_T *const grid,const double R_
   
   /* surface */
   R = alloc_double(N_total);
-  for (i = 0; i < N[0]; ++i)
-    for (j = 0; j < N[1]; ++j)
-      for (k = 0; k < N[2]; ++k)
-        R[L(N,i,j,k)] = R_NS_l;
+  /* if NS is perfect sphere like TOV*/
+  if (strcmp_i(GridParams->NS_R_type,"PrefectSphere"))
+  {
+    for (i = 0; i < N[0]; ++i)
+      for (j = 0; j < N[1]; ++j)
+        for (k = 0; k < N[2]; ++k)
+          R[L(N,i,j,k)] = Max_R_NS_l;
+  }
+  /* if NS radius is varied and we know its expansion in Ylm bases */
+  else if (strcmp_i(GridParams->NS_R_type,"SphericalHarmonic"))
+  {
+    /* we need interpolation */
+    double *const realClm = GridParams->NS_R_Ylm->realClm;
+    double *const imagClm = GridParams->NS_R_Ylm->imagClm;
+    const unsigned Lmax   = GridParams->NS_R_Ylm->Lmax;
+    double theta,phi;
+    
+    /* filling min */
+    patch->min[0] = -1;
+    patch->min[1] = -1;
+    patch->min[2] = 0;
+
+    /* filling max */
+    patch->max[0] = 1;
+    patch->max[1] = 1;
+    patch->max[2] = 1;
+    
+    /* collocation */
+    patch->collocation[0] = Chebyshev_Extrema;
+    patch->collocation[1] = Chebyshev_Extrema;
+    patch->collocation[2] = Chebyshev_Extrema;
+
+    /* basis */
+    patch->basis[0] = Chebyshev_Tn_BASIS;
+    patch->basis[1] = Chebyshev_Tn_BASIS;
+    patch->basis[2] = Chebyshev_Tn_BASIS;
       
-  sprintf(par,"grid%u_left_NS_surface_function_up",grid->gn);
-  add_parameter_array(par,R,N_total);
-  sprintf(par,"grid%u_left_NS_surface_function_down",grid->gn);
-  add_parameter_array(par,R,N_total);
-  sprintf(par,"grid%u_left_NS_surface_function_back",grid->gn);
-  add_parameter_array(par,R,N_total);
-  sprintf(par,"grid%u_left_NS_surface_function_front",grid->gn);
-  add_parameter_array(par,R,N_total);
-  sprintf(par,"grid%u_left_NS_surface_function_left",grid->gn);
-  add_parameter_array(par,R,N_total);
-  sprintf(par,"grid%u_left_NS_surface_function_right",grid->gn);
-  add_parameter_array(par,R,N_total);
+    patch->n[0] = N[0];
+    patch->n[1] = N[1];
+    patch->n[2] = N[2];
+  
+    initialize_collocation_struct(patch,&coll_s[0],0);
+    initialize_collocation_struct(patch,&coll_s[1],1);
+    
+    /* surface up */
+    for (i = 0; i < N[0]; ++i)
+    {
+      X[0] = point_value(i,&coll_s[0]);
+      for (j = 0; j < N[1]; ++j)
+      {
+        X[1] = point_value(j,&coll_s[1]);
+        theta =; 
+        phi   =;
+        r     = interpolation_Ylm(realClm,imagClm,Lmax,theta,phi);
+        for (k = 0; k < N[2]; ++k)
+          R[L(N,i,j,k)] = r;
+      }
+    }
+    sprintf(par,"grid%u_left_NS_surface_function_up",grid->gn);
+    add_parameter_array(par,R,N_total);
+    
+    /* surface down */
+    for (i = 0; i < N[0]; ++i)
+    {
+      X[0] = point_value(i,&coll_s[0]);
+      for (j = 0; j < N[1]; ++j)
+      {
+        X[1] = point_value(j,&coll_s[1]);
+        theta = ;
+        phi   = ;
+        r     = interpolation_Ylm(realClm,imagClm,Lmax,theta,phi);
+        for (k = 0; k < N[2]; ++k)
+          R[L(N,i,j,k)] = r;
+      }
+    }
+    sprintf(par,"grid%u_left_NS_surface_function_down",grid->gn);
+    add_parameter_array(par,R,N_total);
+    
+    /* surface back */
+    for (i = 0; i < N[0]; ++i)
+    {
+      X[0] = point_value(i,&coll_s[0]);
+      for (j = 0; j < N[1]; ++j)
+      {
+        X[1] = point_value(j,&coll_s[1]);
+        theta = ;
+        phi   = ;
+        r     = interpolation_Ylm(realClm,imagClm,Lmax,theta,phi);
+        for (k = 0; k < N[2]; ++k)
+          R[L(N,i,j,k)] = r;
+      }
+    }
+    sprintf(par,"grid%u_left_NS_surface_function_back",grid->gn);
+    add_parameter_array(par,R,N_total);
+    
+    /* surface front */
+    for (i = 0; i < N[0]; ++i)
+    {
+      X[0] = point_value(i,&coll_s[0]);
+      for (j = 0; j < N[1]; ++j)
+      {
+        X[1] = point_value(j,&coll_s[1]);
+        theta = ;
+        phi   = ;
+        r     = interpolation_Ylm(realClm,imagClm,Lmax,theta,phi);
+        for (k = 0; k < N[2]; ++k)
+          R[L(N,i,j,k)] = r;
+      }
+    }
+    sprintf(par,"grid%u_left_NS_surface_function_front",grid->gn);
+    add_parameter_array(par,R,N_total);
+    
+    /* surface left */
+    for (i = 0; i < N[0]; ++i)
+    {
+      X[0] = point_value(i,&coll_s[0]);
+      for (j = 0; j < N[1]; ++j)
+      {
+        X[1] = point_value(j,&coll_s[1]);
+        theta = ;
+        phi   = ;
+        r     = interpolation_Ylm(realClm,imagClm,Lmax,theta,phi);
+        for (k = 0; k < N[2]; ++k)
+          R[L(N,i,j,k)] = r;
+      }
+    }
+    sprintf(par,"grid%u_left_NS_surface_function_left",grid->gn);
+    add_parameter_array(par,R,N_total);
+    
+    /* surface right */
+    for (i = 0; i < N[0]; ++i)
+    {
+      X[0] = point_value(i,&coll_s[0]);
+      for (j = 0; j < N[1]; ++j)
+      {
+        X[1] = point_value(j,&coll_s[1]);
+        theta = ;
+        phi   = ;
+        r     = interpolation_Ylm(realClm,imagClm,Lmax,theta,phi);
+        for (k = 0; k < N[2]; ++k)
+          R[L(N,i,j,k)] = r;
+      }
+    }
+    sprintf(par,"grid%u_left_NS_surface_function_right",grid->gn);
+    add_parameter_array(par,R,N_total);
+    
+    /* free coeffs */
+    free(realClm);
+    free(imagClm);
+  }
+  else
+    abortEr(NO_OPTION);
   
   free(R);
   
-  /* right BH */
+  /* right BH: */
   
   /* filling min */
   patch->min[0] = -1;
