@@ -7,11 +7,14 @@
 #define Power(a,b) pow(a,b)
 #define Sqrt(a) sqrt(a)
 
+/* this struct is adjustments and requirements for making of a new grid */
 struct Grid_Params_S
 {
   double Max_R_NS_l;/* max of NS radius */
   double R_BH_r;/* BH radius */
   double a_BH;/* BH spin */
+  double BH_r_center;/* center of right BH */
+  double NS_l_center;/* center of left NS */
   const char *NS_R_type;/* type of NS which determines how to fill the radius field
                         // PerfectSphere
                         // SphericalHarmonic. 

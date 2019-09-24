@@ -35,12 +35,27 @@ static Grid_T *make_next_grid_using_previous_grid(Grid_T *const grid_prev)
   Grid_T *grid_next = 0;
   struct Grid_Params_S *GridParams = init_GridParams();/* adjust some pars for construction of next grid */
   
+  /* first find the values of the following parameters:
+  // 1. Euler equation constant.
+  // 2. center of rotation (center of mass)
+  // 3. BH_radius
+  // 4. Omega_BH
+  */
+  
   /* find Euler equation constant to meet NS baryonic mass */
   find_Euler_eq_const(grid_prev);
-  /* find BH center to make P_ADM zero */
+  
+  /* find y_CM by demanding P_ADM = 0 */
+  //find_center_of_mass(grid_prev);
+  
+  /* find BH_NS_orbital_angular_velocity using force balance equation */
+  //find_BH_NS_omega_force_balance_eq(grid_prev);
+  
   /* find the BH radius to acquire the desired BH mass */
+  //find_BH_radius(grid_prev);
+  
   /* find the Omega_BH to acquire the desired BH spin */
-  /* find y_CM using force balance equation */
+  //find_BH_Omega(grid_prev);
   
   if (!strcmp_i(grid_prev->kind,"BBN_CubedSpherical_grid"))
   {
@@ -131,6 +146,18 @@ static void find_Euler_eq_const(Grid_T *const grid)
   free(Euler_const);
   free_root_finder(root);
 }
+
+/* find y_CM by demanding P_ADM = 0 */
+//static void find_center_of_mass(Grid_T *const grid);
+
+/* find BH_NS_orbital_angular_velocity using force balance equation */
+// static void find_BH_NS_Omega_force_balance_eq(grid_prev);
+  
+/* find the BH radius to acquire the desired BH mass */
+//static void find_BH_radius(Grid_T *const grid)
+
+/* find the Omega_BH to acquire the desired BH spin */
+//static void find_BH_Omega(Grid_T *const grid);
 
 /* root finder eqution for Euler equation constant */
 static double Euler_eq_const_rootfinder_eq(void *params,const double *const x)
