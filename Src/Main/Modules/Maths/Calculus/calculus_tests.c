@@ -38,16 +38,16 @@ int integration_tests(Grid_T *const grid)
   }
   if (DO)
   {
-    printf("\nIntegration test: Integral{f(x)dA}, Spectral method: \n\n");
-    fdA_spectral(grid);
+    printf("\nIntegration test: Integral{f(x)dS}, Spectral method: \n\n");
+    fdS_spectral(grid);
   }
   
   return EXIT_SUCCESS;
 }
 
-/* testing Integral{fdA}, Spectral method.
+/* testing Integral{fdS}, Spectral method.
 // ->return value: TEST_SUCCESSFUL */
-static int fdA_spectral(Grid_T *const grid)
+static int fdS_spectral(Grid_T *const grid)
 {
   Integration_T *I;
   Field_T *f;
@@ -66,7 +66,7 @@ static int fdA_spectral(Grid_T *const grid)
     {
       patch   = grid->patch[p];
       I       = init_integration();
-      I->type = "Integral{f(x)dA},Spectral";
+      I->type = "Integral{f(x)dS},Spectral";
       nn      = patch->nn;
       n       = patch->n;
       f       = add_field("int f",0,patch,YES);
@@ -162,7 +162,7 @@ static int fdA_spectral(Grid_T *const grid)
     printf("BBN_CubedSpherical_grid:\n");
     
     /* testing NS sphere surface: */
-    printf("\n--> Integral{f(x)dA}|at NS surface section:\n");
+    printf("\n--> Integral{f(x)dS}|at NS surface section:\n");
     
     r = GetParameterD_E("NS_radius");
     analytic = 4*M_PI*pow(r,2);
@@ -177,7 +177,7 @@ static int fdA_spectral(Grid_T *const grid)
         continue;
 
       I  = init_integration();
-      I->type = "Integral{f(x)dA},Spectral";
+      I->type = "Integral{f(x)dS},Spectral";
       f  = add_field("int f",0,patch,YES);
       n  = patch->n;
       nn = patch->nn;
@@ -209,7 +209,7 @@ static int fdA_spectral(Grid_T *const grid)
       plan_integration(I);
       
       double s0 = execute_integration(I);
-      printf("... Integral{f(x)dA}|%s: %e\n",patch->name,s0);
+      printf("... Integral{f(x)dS}|%s: %e\n",patch->name,s0);
       numeric += s0;
       
       remove_field(f);
@@ -225,7 +225,7 @@ static int fdA_spectral(Grid_T *const grid)
            numeric,analytic,numeric-analytic);
            
     /* testing outermost0 sphere surface: */
-    printf("\n--> Integral{f(x)dA}|at sphere surface of outermost0 section:\n");
+    printf("\n--> Integral{f(x)dS}|at sphere surface of outermost0 section:\n");
     
     r = GetParameterD_E("Outermost0_radius");
     analytic = 4*M_PI*pow(r,2);
@@ -238,7 +238,7 @@ static int fdA_spectral(Grid_T *const grid)
         continue;
       
       I  = init_integration();
-      I->type = "Integral{f(x)dA},Spectral";
+      I->type = "Integral{f(x)dS},Spectral";
       f  = add_field("int f",0,patch,YES);
       n  = patch->n;
       nn = patch->nn;
@@ -270,7 +270,7 @@ static int fdA_spectral(Grid_T *const grid)
       plan_integration(I);
       
       double s0 = execute_integration(I);
-      printf("... Integral{f(x)dA}|%s: %e\n",patch->name,s0);
+      printf("... Integral{f(x)dS}|%s: %e\n",patch->name,s0);
       numeric += s0;
       
       remove_field(f);
@@ -286,7 +286,7 @@ static int fdA_spectral(Grid_T *const grid)
            numeric,analytic,numeric-analytic);
            
     /* testing outermost0 cube surface: */
-    printf("\n--> Integral{f(x)dA}|at plane surface of outermost0 section:\n");
+    printf("\n--> Integral{f(x)dS}|at plane surface of outermost0 section:\n");
     
     r = 2*GetParameterD_E("BH_NS_separation");
     analytic = 6*SQR(r);
@@ -299,7 +299,7 @@ static int fdA_spectral(Grid_T *const grid)
         continue;
       
       I  = init_integration();
-      I->type = "Integral{f(x)dA},Spectral";
+      I->type = "Integral{f(x)dS},Spectral";
       f  = add_field("int f",0,patch,YES);
       n  = patch->n;
       nn = patch->nn;
@@ -331,7 +331,7 @@ static int fdA_spectral(Grid_T *const grid)
       plan_integration(I);
       
       double s0 = execute_integration(I);
-      printf("... Integral{f(x)dA}|%s: %e\n",patch->name,s0);
+      printf("... Integral{f(x)dS}|%s: %e\n",patch->name,s0);
       numeric += s0;
       
       remove_field(f);
@@ -471,7 +471,7 @@ static int fdV_spectral(Grid_T *const grid)
       plan_integration(I);
       
       double s0 = execute_integration(I);
-      printf("... Integral{f(x)dA}|%s: %e\n",patch->name,s0);
+      printf("... Integral{f(x)dS}|%s: %e\n",patch->name,s0);
       numeric += s0;
       
       remove_field(f);
@@ -529,7 +529,7 @@ static int fdV_spectral(Grid_T *const grid)
       plan_integration(I);
       
       double s0 = execute_integration(I);
-      printf("... Integral{f(x)dA}|%s: %e\n",patch->name,s0);
+      printf("... Integral{f(x)dS}|%s: %e\n",patch->name,s0);
       numeric += s0;
       
       remove_field(f);
@@ -587,7 +587,7 @@ static int fdV_spectral(Grid_T *const grid)
       plan_integration(I);
       
       double s0 = execute_integration(I);
-      printf("... Integral{f(x)dA}|%s: %e\n",patch->name,s0);
+      printf("... Integral{f(x)dS}|%s: %e\n",patch->name,s0);
       numeric += s0;
       
       remove_field(f);

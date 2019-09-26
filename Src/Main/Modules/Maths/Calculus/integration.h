@@ -19,5 +19,5 @@ static double GaussQuadrature_Lobatto(Integration_T *const I);
 static double GaussQuadrature_Legendre(Integration_T *const I);
 static double J_xyzN0N1N2(Patch_T *const patch,const unsigned ijk);
 static double f_xyz_dV_Cheb_Ext_Spec(Integration_T *const I);
-static double f_xyz_dA_Cheb_Ext_Spec(Integration_T *const I);
+static double f_xyz_dS_Cheb_Ext_Spec(Integration_T *const I);
 static double Int_ChebTn_OPTM(const unsigned n,const unsigned N);

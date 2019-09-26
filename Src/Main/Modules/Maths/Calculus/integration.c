@@ -28,12 +28,12 @@
 // I->g22 = gamma_D2D2;
 
 // SURFACE integration:
-// *** for integrating {fdA} over a whole physical hypersurface: ***
-// Note: dA is made automatically using the given metric, however,
+// *** for integrating {fdS} over a whole physical hypersurface: ***
+// Note: dS is made automatically using the given metric, however,
 // the integrand f(x) must be provided fully by the user.
-// I->type = "Integral{f(x)dA},Spectral"; # dA is sqrt(det(g_{ij} dx^i/dY dx^j/dZ))dYdZ for hypersurface X = const.
-//                                        # dA is sqrt(det(g_{ij} dx^i/dX dx^j/dZ))dXdZ for hypersurface Y = const.
-//                                        # dA is sqrt(det(g_{ij} dx^i/dX dx^j/dY))dXdY for hypersurface Z = const.
+// I->type = "Integral{f(x)dS},Spectral"; # dS is sqrt(det(g_{ij} dx^i/dY dx^j/dZ))dYdZ for hypersurface X = const.
+//                                        # dS is sqrt(det(g_{ij} dx^i/dX dx^j/dZ))dXdZ for hypersurface Y = const.
+//                                        # dS is sqrt(det(g_{ij} dx^i/dX dx^j/dY))dXdY for hypersurface Z = const.
 // I->Spectral->f = field;# this is the Field f(x)
 // # selecting the hypersurface for example:
 // I->Spectral->X_surface = 1; # for hypersurface X = const.
@@ -149,7 +149,7 @@ void plan_integration(Integration_T *const I)
       abortEr(NO_OPTION);
 
   }
-  else if (strcmp_i(I->type,"Integral{f(x)dA},Spectral"))/* means over the whole specified slice in physical area in the patch */
+  else if (strcmp_i(I->type,"Integral{f(x)dS},Spectral"))/* means over the whole specified slice in physical area in the patch */
   {
     patch = I->Spectral->f->patch;
     coordsys = patch->coordsys;
@@ -159,7 +159,7 @@ void plan_integration(Integration_T *const I)
     if (I->Spectral->Y_surface) count++;
     if (I->Spectral->Z_surface) count++;
     if (count > 1)
-      abortEr("At 'Integral{f(x)dA},Spectral' more than one hypersurface was flagged.\n");
+      abortEr("At 'Integral{f(x)dS},Spectral' more than one hypersurface was flagged.\n");
     
     if (coordsys == Cartesian || coordsys == CubedSpherical)
     {
@@ -168,7 +168,7 @@ void plan_integration(Integration_T *const I)
         if (patch->basis[i]       == Chebyshev_Tn_BASIS &&
             patch->collocation[i] == Chebyshev_Extrema    )
         {
-          I->integration_func = f_xyz_dA_Cheb_Ext_Spec;
+          I->integration_func = f_xyz_dS_Cheb_Ext_Spec;
         }
         else
           abortEr(INCOMPLETE_FUNC);
@@ -384,7 +384,7 @@ static double f_xyz_dV_Cheb_Ext_Spec(Integration_T *const I)
 // hypersurface of the patch that has collocation points of Chebyshev extrema and
 // bases of Chebyshev, USING CARTESIAN COORDINATES.
 // Thread Safe */
-static double f_xyz_dA_Cheb_Ext_Spec(Integration_T *const I)
+static double f_xyz_dS_Cheb_Ext_Spec(Integration_T *const I)
 {
   const Field_T *const f = I->Spectral->f;
   Patch_T patch = make_temp_patch(f->patch);
