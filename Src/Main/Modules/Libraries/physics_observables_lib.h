@@ -24,9 +24,9 @@ typedef struct OBSERVABLE_T
                                         // on this patch as well, 
                                         // 0 means, no need */
     /* which hypersurface the surface integral is carried out */
-    unsigned X_surface;
-    unsigned Y_surface;
-    unsigned Z_surface;
+    unsigned X_surface: 1;
+    unsigned Y_surface: 1;
+    unsigned Z_surface: 1;
     /* index of hypersurface for each X,Y and Z respectively */
     unsigned I;
     unsigned J;
@@ -36,9 +36,9 @@ typedef struct OBSERVABLE_T
   unsigned N_ADM;/* number of ADM struct */
   /* functions to calculate ADM momentums in each direction */
   
-  double (*ADM_momentum_x)(struct OBSERVABLE_T *obs);
-  double (*ADM_momentum_y)(struct OBSERVABLE_T *obs);
-  double (*ADM_momentum_z)(struct OBSERVABLE_T *obs);
+  double (*Px_ADM)(struct OBSERVABLE_T *const obs);
+  double (*Py_ADM)(struct OBSERVABLE_T *const obs);
+  double (*Pz_ADM)(struct OBSERVABLE_T *const obs);
   /* function to calculate masses */
   double (*ADM_mass)(struct OBSERVABLE_T *obs);
   double (*Komar_mass)(struct OBSERVABLE_T *obs);
