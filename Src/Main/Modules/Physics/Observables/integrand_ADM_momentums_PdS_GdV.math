@@ -20,7 +20,7 @@ C_macro2 = add_and_get_field(name);
 `#include "maths_calculus_lib.h"`
 ``
 `#define add_and_get_field(name) \`
-         `  if (_Ind(#name) > 0)\`# means if it exists already
+         `  if (_Ind(#name) >= 0)\`# means if it exists already
          `  {DECLARE_FIELD(name);REMOVE_FIELD(name);}\`
          `  ADD_FIELD(name);GET_FIELD(name);`
 ``

@@ -13,7 +13,7 @@
 #include "maths_calculus_lib.h"
 
 #define add_and_get_field(name) \
-  if (_Ind(#name) > 0)\
+  if (_Ind(#name) >= 0)\
   {DECLARE_FIELD(name);REMOVE_FIELD(name);}\
   ADD_FIELD(name);GET_FIELD(name);
 
