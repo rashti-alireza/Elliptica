@@ -11,3 +11,6 @@ void plan_observable(Observable_T *const obs);
 static void populate_observable_BBN_CS(Observable_T *const obs);
 void free_observable(Observable_T *obs);
 void populate_ADM_momentums_integrand_PdS_GdV(const Observable_T *const obs);
+static double ADM_momentum_x_BBN_CS(Observable_T *const obs);
+static double ADM_momentum_y_BBN_CS(Observable_T *const obs);
+static double ADM_momentum_z_BBN_CS(Observable_T *const obs);
