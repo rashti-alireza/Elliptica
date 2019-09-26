@@ -57,7 +57,7 @@ Ccode["    unsigned ijk;"];
 Ccode["    for(ijk = 0; ijk < nn; ++ijk)"];
 Ccode["    {"];
 
-# _A^{ij} calculation (NOTE _u&{ij} ASSUEMD 0) :
+# _A^{ij} calculation (NOTE _u^{ij} ASSUEMD 0) :
   alphabar     = eta*psi**(-7);# alpha * psi^-6
   _DB_UU(i,j)  = _gammaI(i,-l)*(dBeta(j,l)+_Gamma(j,l,m)*Beta(-m));# _D^i(B^j)
   _LV_UU(i,j)  = _DB_UU(i,j)+_DB_UU(j,i)-2/3*_gammaI(i,j)*_gamma(-l,-m)*_DB_UU(l,m);
