@@ -18,5 +18,6 @@ modules_path += $(TOP)/Src/Main/Modules/Maths/Analytic
 modules_path += $(TOP)/Src/Main/Modules/Maths/Calculus
 modules_path += $(TOP)/Src/Main/Modules/Physics/StressEnergy_Tensor
 modules_path += $(TOP)/Src/Main/Modules/Physics/EoS
+modules_path += $(TOP)/Src/Main/Modules/Physics/Observables
 
 
