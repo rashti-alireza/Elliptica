@@ -9,6 +9,15 @@
 #include "physics_EoS_lib.h"
 #include "physics_StressEnergyTensor_lib.h"
 
+/* root finder struct for NS surface eq */
+struct NS_surface_RootFinder_S
+{
+  Patch_T *patch;
+  double x0[3];/* (x,y,z) at the surface */
+  double *N;/* the direction of increasing or decreasing of x = x0+N*d */
+  double Euler_C;/* Euler equation const. */
+};
+
 void bbn_study_initial_data(Grid_T *const grid);
 void bbn_print_fields(Grid_T *const grid,const unsigned iteration, const char *const folder);
 void bbn_update_psi10A_UiUj(Patch_T *const patch);
