@@ -35,11 +35,14 @@ static Grid_T *make_next_grid_using_previous_grid(Grid_T *const grid_prev)
   Grid_T *grid_next = 0;
   struct Grid_Params_S *GridParams = init_GridParams();/* adjust some pars for construction of next grid */
   
-  /* first find the values of the following parameters:
+  /* first find the values of the following parameters and some adjustment:
   // 1. Euler equation constant.
   // 2. center of rotation (center of mass)
-  // 3. BH_radius
-  // 4. Omega_BH
+  // 3. NS center
+  // 4. orbital angular velocity
+  // 5. drag NS to the center
+  // . BH_radius
+  // . Omega_BH
   */
   
   /* find Euler equation constant to meet NS baryonic mass */
@@ -52,7 +55,7 @@ static Grid_T *make_next_grid_using_previous_grid(Grid_T *const grid_prev)
   find_NS_center(grid_prev);
   
   /* find BH_NS_orbital_angular_velocity using force balance equation */
-  //find_BH_NS_Omega_force_balance_eq(grid_prev);
+  find_BH_NS_Omega_force_balance_eq(grid_prev);
   
   /* adjust the center of NS */
   //shift_NS_center(grid_prev);
@@ -122,7 +125,55 @@ static Grid_T *make_next_grid_using_previous_grid(Grid_T *const grid_prev)
 }
 
 /* find BH_NS_orbital_angular_velocity using force balance equation */
-//static void find_BH_NS_Omega_force_balance_eq(Grid_T *const grid)
+static void find_BH_NS_Omega_force_balance_eq(Grid_T *const grid)
+{
+  char par_name[1000];
+  const char *stem;
+  const double *NS_center;
+  double *Omega_BH_NS;
+  double guess[1],X[3];
+  struct Force_Balance_RootFinder_S params[1];
+  Patch_T *patch;
+  
+  sprintf(par_name,"grid%u_NS_center_x",grid->gn);
+  NS_center = GetParameterArrayF_E(par_name);
+  
+  sprintf(par_name,"grid%u_NS_center_patch",grid->gn);
+  stem  = GetParameterS_E(par_name);
+  patch = GetPatch(stem,grid);
+  
+  X_of_x(X,NS_center,patch);
+  
+  Root_Finder_T *root = init_root_finder(1);
+  guess[0] = GetParameterD_E("BH_NS_orbital_angular_velocity");
+  
+  //params->root_finder = root;
+  params->patch       = patch;
+  params->X           = X;
+  params->y_CM        = GetParameterD_E("y_CM");
+  params->Vr          = GetParameterD_E("BH_NS_infall_velocity");
+  params->D           = GetParameterD_E("BH_NS_separation");
+  root->description   = "Solving Force Balance Equation:";
+  root->verbose       = 1;
+  root->type          = GetParameterS_E("RootFinder_Method");
+  root->tolerance     = GetParameterD_E("RootFinder_Tolerance");
+  root->MaxIter       = (unsigned)GetParameterI_E("RootFinder_Max_Number_of_Iteration");
+  root->x_gss         = guess;
+  root->params        = params;
+  root->f[0]          = force_balance_root_finder_eq;
+  plan_root_finder(root);
+  
+  Omega_BH_NS         = execute_root_finder(root);
+  
+  if (root->exit_status != ROOT_FINDER_OK)
+  {
+    print_root_finder_exit_status(root);
+  }
+  update_parameter_double_format("BH_NS_orbital_angular_velocity",Omega_BH_NS[0]);
+  
+  free_root_finder(root);
+  free(Omega_BH_NS);
+}
 
 /* find the NS center using d(enthalpy)/dx^i = 0 */
 static void find_NS_center(Grid_T *const grid)
@@ -335,6 +386,7 @@ static void find_center_of_mass(Grid_T *const grid)
   double guess[1];/* initial guess for y_CM */
   const double Omega_BHNS = GetParameterD_E("BH_NS_orbital_angular_velocity");
   const double Vr   = GetParameterD_E("BH_NS_infall_velocity");
+  const double D    = GetParameterD_E("BH_NS_separation");
   struct CM_RootFinder_S params[1];
   
   obs->quantity = "ADM_momentums";
@@ -343,6 +395,7 @@ static void find_center_of_mass(Grid_T *const grid)
   params->obs  = obs;
   params->grid = grid;
   params->Vr   = Vr;
+  params->D    = D;
   params->Omega_BHNS = Omega_BHNS;
   guess[0] = GetParameterD_E("y_CM");
   

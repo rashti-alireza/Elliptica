@@ -85,3 +85,4 @@ static void find_NS_center(Grid_T *const grid);
 static double dh_dx0_root_finder_eq(void *params,const double *const x);
 static double dh_dx1_root_finder_eq(void *params,const double *const x);
 static double dh_dx2_root_finder_eq(void *params,const double *const x);
+static void find_BH_NS_Omega_force_balance_eq(Grid_T *const grid);

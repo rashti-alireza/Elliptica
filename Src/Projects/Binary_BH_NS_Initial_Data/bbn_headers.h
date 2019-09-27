@@ -18,6 +18,17 @@ struct NS_surface_RootFinder_S
   double Euler_C;/* Euler equation const. */
 };
 
+/* root finder struc for force balance equation */  
+struct Force_Balance_RootFinder_S
+{
+  Patch_T *patch;
+  //Root_Finder_T *root_finder;
+  double y_CM;
+  double Vr;
+  double D;
+  const double *X;
+};
+
 void bbn_study_initial_data(Grid_T *const grid);
 void bbn_print_fields(Grid_T *const grid,const unsigned iteration, const char *const folder);
 void bbn_update_psi10A_UiUj(Patch_T *const patch);
@@ -48,3 +59,4 @@ void bbn_update_Beta_U1(Patch_T *const patch);
 void bbn_update_Beta_U2(Patch_T *const patch);
 double bbn_NS_baryonic_mass(Grid_T *const grid,const double Euler_C);
 double bbn_NS_surface_enthalpy_eq(void *params,const double *const x);
+double force_balance_root_finder_eq(void *params,const double *const x);
