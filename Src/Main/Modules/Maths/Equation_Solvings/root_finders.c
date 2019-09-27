@@ -31,11 +31,11 @@
 // double *x_sol     = execute_root_finder(root);
 // # some checks:
 // * to check the exit status of root finder do: *
-// if (root->exit_status == ROOT_FINDE_OK)
-// if (root->exit_status == ROOT_FINDER_FAILED)
+// print_root_finder_exit_status(root);
 // * to find out the residual *
 // printf("%e",root->residual);
-// * note one can interrupt the root finder by setting root->interupt = 1 *
+// * note one can interrupt the root finder by setting 
+//   root->interupt = 1 inside the params of equation. *
 // free_root_finder(root); # free struct root
 // free(x_sol);
 */

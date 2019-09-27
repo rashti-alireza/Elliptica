@@ -41,6 +41,7 @@ static int root_finder_SteepestDescent(Grid_T *const grid)
   
   /* testing with the derivatives are given: */
   root = init_root_finder(3);
+  root->verbose       = 1;
   root->type          = "Steepest_Descent";
   plan_root_finder(root);
   root->description = "solving f = 0, knowing df_dx";
@@ -53,6 +54,7 @@ static int root_finder_SteepestDescent(Grid_T *const grid)
   root->df_dx[1]    = df1_dx;
   root->df_dx[2]    = df2_dx;
   x_sol             = execute_root_finder(root);
+  print_root_finder_exit_status(root);
   
   /* printing solutions: */
   printf("->Steepest Descent Method root finder found (derivatives were given):\n");
@@ -65,6 +67,7 @@ static int root_finder_SteepestDescent(Grid_T *const grid)
   
   /* testing without the derivatives are given: */
   root = init_root_finder(3);
+  root->verbose       = 1;
   root->type          = "Steepest_Descent";
   plan_root_finder(root);
   root->description = "solving f = 0, df_dx is calculated by finite difference";
