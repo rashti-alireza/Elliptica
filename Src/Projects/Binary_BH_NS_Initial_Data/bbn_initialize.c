@@ -52,7 +52,7 @@ static Grid_T *make_next_grid_using_previous_grid(Grid_T *const grid_prev)
   find_NS_center(grid_prev);
   
   /* find BH_NS_orbital_angular_velocity using force balance equation */
-  //find_BH_NS_omega_force_balance_eq(grid_prev);
+  //find_BH_NS_Omega_force_balance_eq(grid_prev);
   
   /* adjust the center of NS */
   //shift_NS_center(grid_prev);
@@ -122,7 +122,7 @@ static Grid_T *make_next_grid_using_previous_grid(Grid_T *const grid_prev)
 }
 
 /* find BH_NS_orbital_angular_velocity using force balance equation */
-//static void find_BH_NS_omega_force_balance_eq(Grid_T *const grid)
+//static void find_BH_NS_Omega_force_balance_eq(Grid_T *const grid)
 
 /* find the NS center using d(enthalpy)/dx^i = 0 */
 static void find_NS_center(Grid_T *const grid)
@@ -158,7 +158,19 @@ static void find_NS_center(Grid_T *const grid)
     
     /* if root finder was successful */
     if (root->exit_status == ROOT_FINDER_OK)
+    {
+      /* save the position of NS center */
+      sprintf(par_name,"grid%u_NS_center_x",grid->gn);
+      add_parameter_array(par_name,NS_center,3);
+      /* save the patch stem where the NS center takes place */
+      sprintf(par_name,"grid%u_NS_center_patch",grid->gn);
+      char *stem = strstr(patch->name,"_");
+      assert(stem);
+      stem++;
+      add_parameter(par_name,stem);
+      free(NS_center);
       break;
+    }
     free(NS_center);
   }
   if (root->exit_status != ROOT_FINDER_OK)
@@ -166,10 +178,6 @@ static void find_NS_center(Grid_T *const grid)
     print_root_finder_exit_status(root);
     abortEr("NS center could not be found.\n");
   }
-    
-  sprintf(par_name,"grid%u_NS_center",grid->gn);
-  add_parameter_array(par_name,NS_center,3);
-  free(NS_center);
   free_root_finder(root);
 }
 
@@ -399,9 +407,6 @@ static double CenterOfMass_for_P_ADM_root_finder_eq(void *params,const double *c
   return (obs->Px_ADM(obs));
 }
 
-/* find BH_NS_orbital_angular_velocity using force balance equation */
-// static void find_BH_NS_Omega_force_balance_eq(grid_prev);
-  
 /* find the BH radius to acquire the desired BH mass */
 //static void find_BH_radius(Grid_T *const grid)
 
