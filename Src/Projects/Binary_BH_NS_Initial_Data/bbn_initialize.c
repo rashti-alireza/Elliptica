@@ -48,8 +48,14 @@ static Grid_T *make_next_grid_using_previous_grid(Grid_T *const grid_prev)
   /* find y_CM by demanding P_ADM = 0 */
   find_center_of_mass(grid_prev);
   
+  /* find the NS center */
+  find_NS_center(grid_prev);
+  
   /* find BH_NS_orbital_angular_velocity using force balance equation */
   //find_BH_NS_omega_force_balance_eq(grid_prev);
+  
+  /* adjust the center of NS */
+  //shift_NS_center(grid_prev);
   
   /* find the BH radius to acquire the desired BH mass */
   //find_BH_radius(grid_prev);
@@ -115,6 +121,175 @@ static Grid_T *make_next_grid_using_previous_grid(Grid_T *const grid_prev)
   return grid_next;
 }
 
+/* find BH_NS_orbital_angular_velocity using force balance equation */
+//static void find_BH_NS_omega_force_balance_eq(Grid_T *const grid)
+
+/* find the NS center using d(enthalpy)/dx^i = 0 */
+static void find_NS_center(Grid_T *const grid)
+{
+  double *NS_center;
+  Root_Finder_T *root = init_root_finder(3);
+  struct NC_Center_RootFinder_S params[1];
+  double guess[3];/* initial guess for root finder */
+  char par_name[1000];
+  unsigned p;
+  
+  guess[0] = guess[2] = 0;
+  guess[1] = -0.5*GetParameterD_E("BH_NS_separation");
+  params->root_finder = root;
+  root->description = "Finding NS center:";
+  root->type        = GetParameterS_E("RootFinder_Method");
+  root->tolerance   = GetParameterD_E("RootFinder_Tolerance");
+  root->MaxIter     = (unsigned)GetParameterI_E("RootFinder_Max_Number_of_Iteration");
+  root->x_gss       = guess;
+  root->params      = params;
+  root->f[0]        = dh_dx0_root_finder_eq;
+  root->f[1]        = dh_dx1_root_finder_eq;
+  root->f[2]        = dh_dx2_root_finder_eq;    
+  
+  FOR_ALL_PATCHES(p,grid)
+  {
+    Patch_T *patch = grid->patch[p];
+    
+    root->interrupt = 0;
+    params->patch = patch;
+    plan_root_finder(root);
+    NS_center     = execute_root_finder(root);
+    
+    /* if root finder was successful */
+    if (root->exit_status == ROOT_FINDER_OK)
+      break;
+    free(NS_center);
+  }
+  if (root->exit_status != ROOT_FINDER_OK)
+  {
+    print_root_finder_exit_status(root);
+    abortEr("NS center could not be found.\n");
+  }
+    
+  sprintf(par_name,"grid%u_NS_center",grid->gn);
+  add_parameter_array(par_name,NS_center,3);
+  free(NS_center);
+  free_root_finder(root);
+}
+
+/* dh/dx^0 = 0 */
+static double dh_dx0_root_finder_eq(void *params,const double *const x)
+{
+  struct NC_Center_RootFinder_S *const par = params;
+  Patch_T *const patch = par->patch;
+  DECLARE_FIELD(denthalpy_D0);
+  Interpolation_T *interp_s;
+  Needle_T *needle = alloc_needle();
+  unsigned flg;
+  double interp,X[3];
+  
+  needle->grid = patch->grid;
+  needle->x    = x;
+  needle_in(needle,patch);
+  point_finder(needle);
+  flg = needle->Nans;
+  free_needle(needle);
+  
+  /* if this point is out of this patch, exit */
+  if (flg == 0)
+  {
+    par->root_finder->interrupt = 1;
+    return 0;
+  }
+  
+  X_of_x(X,x,patch);
+  interp_s = init_interpolation();
+  interp_s->field = denthalpy_D0;
+  interp_s->X = X[0];
+  interp_s->Y = X[1];
+  interp_s->Z = X[2];
+  interp_s->XYZ_dir_flag = 1;
+  plan_interpolation(interp_s);
+  interp = execute_interpolation(interp_s);
+  free_interpolation(interp_s);
+  
+  return interp;
+}
+
+/* dh/dx^1 = 0 */
+static double dh_dx1_root_finder_eq(void *params,const double *const x)
+{
+  struct NC_Center_RootFinder_S *const par = params;
+  Patch_T *const patch = par->patch;
+  DECLARE_FIELD(denthalpy_D1);
+  Interpolation_T *interp_s;
+  Needle_T *needle = alloc_needle();
+  unsigned flg;
+  double interp,X[3];
+  
+  needle->grid = patch->grid;
+  needle->x    = x;
+  needle_in(needle,patch);
+  point_finder(needle);
+  flg = needle->Nans;
+  free_needle(needle);
+  
+  /* if this point is out of this patch, exit */
+  if (flg == 0)
+  {
+    par->root_finder->interrupt = 1;
+    return 0;
+  }
+  
+  X_of_x(X,x,patch);
+  interp_s = init_interpolation();
+  interp_s->field = denthalpy_D1;
+  interp_s->X = X[0];
+  interp_s->Y = X[1];
+  interp_s->Z = X[2];
+  interp_s->XYZ_dir_flag = 1;
+  plan_interpolation(interp_s);
+  interp = execute_interpolation(interp_s);
+  free_interpolation(interp_s);
+  
+  return interp;
+}
+
+/* dh/dx^2 = 0 */
+static double dh_dx2_root_finder_eq(void *params,const double *const x)
+{
+  struct NC_Center_RootFinder_S *const par = params;
+  Patch_T *const patch = par->patch;
+  DECLARE_FIELD(denthalpy_D2);
+  Interpolation_T *interp_s;
+  Needle_T *needle = alloc_needle();
+  unsigned flg;
+  double interp,X[3];
+  
+  needle->grid = patch->grid;
+  needle->x    = x;
+  needle_in(needle,patch);
+  point_finder(needle);
+  flg = needle->Nans;
+  free_needle(needle);
+  
+  /* if this point is out of this patch, exit */
+  if (flg == 0)
+  {
+    par->root_finder->interrupt = 1;
+    return 0;
+  }
+  
+  X_of_x(X,x,patch);
+  interp_s = init_interpolation();
+  interp_s->field = denthalpy_D2;
+  interp_s->X = X[0];
+  interp_s->Y = X[1];
+  interp_s->Z = X[2];
+  interp_s->XYZ_dir_flag = 1;
+  plan_interpolation(interp_s);
+  interp = execute_interpolation(interp_s);
+  free_interpolation(interp_s);
+  
+  return interp;
+}
+
 /* find Euler equation constant to meet NS baryonic mass */
 static void find_Euler_eq_const(Grid_T *const grid)
 {
@@ -167,7 +342,7 @@ static void find_center_of_mass(Grid_T *const grid)
   params->Omega_BHNS = Omega_BHNS;
   guess[0] = GetParameterD_E("y_CM");
   
-  root->description = "Finding center of mas:";
+  root->description = "Finding the center of mass:";
   root->type        = GetParameterS_E("RootFinder_Method");
   root->tolerance   = GetParameterD_E("RootFinder_Tolerance");
   root->MaxIter     = (unsigned)GetParameterI_E("RootFinder_Max_Number_of_Iteration");
