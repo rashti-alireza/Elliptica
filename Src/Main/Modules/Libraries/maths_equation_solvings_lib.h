@@ -1,3 +1,13 @@
+enum ROOT_FINDER_enum
+{
+  ROOT_FINDER_UNDEF/* undefined */,
+  ROOT_FINDER_OK/* root was found successfully */,
+  ROOT_FINDER_EXTREMA/* it stuch in an extrema */,
+  ROOT_FINDER_MAX_ITER/* exceeds from maximum number of iteration */,
+  ROOT_FINDER_NO_IMPROVEMENT/* it could not improve it more */,
+  ROOT_FINDER_INTERRUPTED/* it was interrupted by a condition by user */
+};
+
 /* struct for root finder routine */
 typedef struct ROOT_FINDER_T
 {
@@ -21,6 +31,12 @@ typedef struct ROOT_FINDER_T
   // x is the dependent variables and dir is the direction of derivative */
   double (**df_dx)(void *params,const double *const x,const unsigned dir);
   double *(*root_finder_func)(struct ROOT_FINDER_T *const root);
+  enum ROOT_FINDER_enum exit_status;/* exit status of root finder */
+  int interrupt;/* if interrupt != 0, the root finder is interrupted.
+                // for example, this controls if during search of root, 
+                // root finder exceeds the domain of function. note, this 
+                // must be set by the user at the equation function f(x). */
+  unsigned verbose: 1;/* if 1, prints every step of root finding */
 }Root_Finder_T;
 
 /* solve equation struct that is passed to the solver.
@@ -70,6 +86,7 @@ typedef struct SOLVE_EQUATIONS_T
   
 }Solve_Equations_T;
 
+void print_root_finder_exit_status(const Root_Finder_T *const root);
 Root_Finder_T *init_root_finder(const unsigned n);
 double *execute_root_finder(Root_Finder_T *const root);
 void plan_root_finder(Root_Finder_T *const root);

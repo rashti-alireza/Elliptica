@@ -13,6 +13,7 @@
 // root->type          = "Steepest_Descent";
 // plan_root_finder(root);
 // root->description = "solving f = 0";
+// root->verbose     = 1;# to prints every steps of solution
 // root->tolerance   = 10E-10;
 // root->MaxIter     = 10;
 // root->x_gss       = x0; # initial guess (OPTIONAL)
@@ -28,6 +29,13 @@
 // # or
 // root->FD_Left  = 1; # left side f.d. method
 // double *x_sol     = execute_root_finder(root);
+// # some checks:
+// * to check the exit status of root finder do: *
+// if (root->exit_status == ROOT_FINDE_OK)
+// if (root->exit_status == ROOT_FINDER_FAILED)
+// * to find out the residual *
+// printf("%e",root->residual);
+// * note one can interrupt the root finder by setting root->interupt = 1 *
 // free_root_finder(root); # free struct root
 // free(x_sol);
 */
@@ -85,36 +93,9 @@ void free_root_finder(Root_Finder_T *root)
   free(root);
 }
 
-
 /* using steepest descent method, find the root of function f(x)
 // and then return the solution.
 // note: it allocates memory for the solution.
-//
-// synopsis:
-// =========
-//
-// Root_Finder_T *root = init_root_finder(n); # n is number of equations or (equivalently variables)
-// root->type          = "Steepest_Descent";
-// plan_root_finder(root);
-// root->description = "solving f = 0";
-// root->tolerance   = 10E-10;
-// root->MaxIter     = 10;
-// root->x_gss       = x0; # initial guess (OPTIONAL)
-// root->params      = params; # parameters used for evaluation of fs
-// root->f[0]        = f0; # f0 = 0 equation
-// root->f[1]        = f1; # f1 = 0 equation
-// # also if df_dx's are available (OPTIONAL):
-// # note if df_dx's not specified it automatically uses finite difference method
-// root->df_dx[0]    = df0_dx;
-// root->df_dx[1]    = df1_dx;
-// # to force use right side ot left side finite difference:
-// root->FD_Right = 1; # right side f.d. method
-// # or
-// root->FD_Left  = 1; # left side f.d. method
-// double *x_sol     = execute_root_finder(root);
-// free_root_finder(root); # free struct root
-// free(x_sol);
-//
 // ->return value: x solution that makes f(x) = 0 */
 static double *root_finder_steepest_descent(Root_Finder_T *const root)
 {
@@ -138,9 +119,11 @@ static double *root_finder_steepest_descent(Root_Finder_T *const root)
   
   if (desc)
     printf("%s:\n",desc);
-  else
+  if (root->verbose)
+  {
     printf("Finding root of {f(x) = 0}:\n");
-  printf("Num. of Eqs. = %u, Tolerance = %e, Max. Num. of Iter. = %u\n",n,TOL,MaxIter);
+    printf("Num. of Eqs. = %u, Tolerance = %e, Max. Num. of Iter. = %u\n",n,TOL,MaxIter);
+  }
   
   /* setup differentials */
   if (df_dx[0])/* if differentials are given */
@@ -155,12 +138,25 @@ static double *root_finder_steepest_descent(Root_Finder_T *const root)
   if (x_gss)/* if no guess is given, x has been initialized to 0 */
     for (i = 0; i < n; ++i)
       x[i] = x_gss[i];
-    
+  
+  root->exit_status = ROOT_FINDER_UNDEF;
   k = 1;
   while (k <= MaxIter)
   {
     g1 = g_SD(f,params,x);
-    printf(".. Step[%02u]: Residual{f(x) = 0} = %+e\n",k-1,sqrt(g1));
+    if (root->interrupt != 0)
+    {
+      root->exit_status = ROOT_FINDER_INTERRUPTED;
+      if (root->verbose)
+      {
+        printf(".. Root finder was interrupted!\n");
+      }
+      return 0;
+    }
+    if (root->verbose)
+    {
+      printf(".. Step[%02u]: Residual{f(x) = 0} = %+e\n",k-1,sqrt(g1));
+    }
     
     for (i = 0; i < n; i++)
       z[i] = dg_dx(params,x,i,f,df_dx);
@@ -168,9 +164,13 @@ static double *root_finder_steepest_descent(Root_Finder_T *const root)
     z0 = L2_norm(n,z,0);
     if (EQL(z0,0.))
     {
+      root->exit_status = ROOT_FINDER_EXTREMA;
       root->residual = sqrt(g1);
-      printf("Root Finder -> Steepest Descent Method:\n"
-             "Zero gradient thus an extrema; Residual = %e\n",root->residual);
+      if (root->verbose)
+      {
+        printf("Root Finder -> Steepest Descent Method:\n"
+               "Zero gradient thus an extrema; Residual = %e\n",root->residual);
+      }
       break;
     }
     
@@ -180,6 +180,15 @@ static double *root_finder_steepest_descent(Root_Finder_T *const root)
     for (i = 0; i < n; i++)
       y[i] = x[i] - alpha3*z[i];
     g3 = g_SD(f,params,y);
+    if (root->interrupt != 0)
+    {
+      root->exit_status = ROOT_FINDER_INTERRUPTED;
+      if (root->verbose)
+      {
+        printf(".. Root finder was interrupted!\n");
+      }
+      return 0;
+    }
     
     while (g3 >= g1)
     {
@@ -187,12 +196,25 @@ static double *root_finder_steepest_descent(Root_Finder_T *const root)
       for (i = 0; i < n; i++)
         y[i] = x[i] - alpha3*z[i];
       g3 = g_SD(f,params,y);
+      if (root->interrupt != 0)
+      {
+        root->exit_status = ROOT_FINDER_INTERRUPTED;
+        if (root->verbose)
+        {
+          printf(".. Root finder was interrupted!\n");
+        }
+        return 0;
+      }
       
       if(alpha3 < 0.5*TOL)
       {
+        root->exit_status = ROOT_FINDER_NO_IMPROVEMENT;
         root->residual = sqrt(g3);
-        printf("Root Finder -> Steepest Descent Method:\n"
-             "No likely improvement; Residual = %e\n",root->residual);
+        if (root->verbose)
+        {
+          printf("Root Finder -> Steepest Descent Method:\n"
+                 "No likely improvement; Residual = %e\n",root->residual);
+        }
         
         for (i = 0; i < n; i++)
           x[i] = y[i];
@@ -208,6 +230,15 @@ static double *root_finder_steepest_descent(Root_Finder_T *const root)
     for (i = 0; i < n; i++)
       y[i] = x[i] - alpha2*z[i];
     g2 = g_SD(f,params,y);
+    if (root->interrupt != 0)
+    {
+      root->exit_status = ROOT_FINDER_INTERRUPTED;
+      if (root->verbose)
+      {
+        printf(".. Root finder was interrupted!\n");
+      }
+      return 0;
+    }
     h1 = (g2-g1)/alpha2;
     h2 = (g3-g2)/(alpha3-alpha2);
     h3 = (h2-h1)/alpha3;
@@ -215,6 +246,15 @@ static double *root_finder_steepest_descent(Root_Finder_T *const root)
     for (i = 0; i < n; i++)
       y[i] = x[i] - alpha0*z[i];
     g0 = g_SD(f,params,y);
+    if (root->interrupt != 0)
+    {
+      root->exit_status = ROOT_FINDER_INTERRUPTED;
+      if (root->verbose)
+      {
+        printf(".. Root finder was interrupted!\n");
+      }
+      return 0;
+    }
     
     alpha = g0 < g3 ? alpha0 : alpha3;
     
@@ -225,18 +265,26 @@ static double *root_finder_steepest_descent(Root_Finder_T *const root)
     root->residual = sqrt(g);
     if (fabs(g-g1) < TOL)
     { 
-      printf(".. Step[%02u]: Residual[f(x) = 0] = %+e\n",k,root->residual);
-      printf("Root Finder -> Steepest Descent Method:\n"
-             "The root(s) are found => Residual = %e\n",root->residual);
+      root->exit_status = ROOT_FINDER_OK;
+      if (root->verbose)
+      {
+        printf(".. Step[%02u]: Residual[f(x) = 0] = %+e\n",k,root->residual);
+        printf("Root Finder -> Steepest Descent Method:\n"
+               "The root(s) are found => Residual = %e\n",root->residual);
+      }
       break;
     }
     
     k++;
     if (k == MaxIter+1)
-    {  
-      printf(".. Step[%02u]: Residual[f(x) = 0] = %+e\n",k-1,root->residual);
-      printf("Root Finder -> Steepest Descent Method:\n"
-             "Exceeds maximum number of iterations => Residual = %e\n",root->residual);
+    { 
+      root->exit_status = ROOT_FINDER_MAX_ITER; 
+      if (root->verbose)
+      {
+        printf(".. Step[%02u]: Residual[f(x) = 0] = %+e\n",k-1,root->residual);
+        printf("Root Finder -> Steepest Descent Method:\n"
+               "Exceeds maximum number of iterations => Residual = %e\n",root->residual);
+      }
       break;
     }
   }
@@ -244,6 +292,33 @@ static double *root_finder_steepest_descent(Root_Finder_T *const root)
   fflush(stdout);
   root->x_sol = x;
   return x;
+}
+
+/* printing the status of root finder */
+void print_root_finder_exit_status(const Root_Finder_T *const root)
+{
+  switch(root->exit_status)
+  {
+    case ROOT_FINDER_OK:
+      printf("Root finder found the root(s) up to the specified tolerance.\n");
+    break;
+    case ROOT_FINDER_EXTREMA:
+      printf("Root finder hit an extrema.\n");
+    break;
+    case ROOT_FINDER_MAX_ITER:
+      printf("Root finder exceeded the maximum number of iteration.\n");
+    break;
+    case ROOT_FINDER_NO_IMPROVEMENT:
+      printf("Root finder cannot improve the solution further.\n");
+    break;
+    case ROOT_FINDER_INTERRUPTED:
+      printf("Root finder was interrupted by a condition by the user.\n");
+    break;
+    default:
+      printf("The status is not defined.\n");
+  }
+  
+  fflush(stdout);
 }
 
 /* ->return value: f0^2(params,x)+f1^2(params,x) + ... */
