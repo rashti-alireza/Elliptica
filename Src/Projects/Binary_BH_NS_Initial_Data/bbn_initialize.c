@@ -296,11 +296,7 @@ static void find_Euler_eq_const(Grid_T *const grid)
   Root_Finder_T *root = init_root_finder(1);
   double *Euler_const = 0;
   double guess[1];/* initial guess for Euler const */
-  struct Params_S
-  {
-    Grid_T *grid;
-    double NS_baryonic_mass;
-  }params[1];
+  struct Euler_eq_const_RootFinder_S params[1];
   
   params->grid = grid;
   params->NS_baryonic_mass = GetParameterD_E("NS_baryonic_mass");
@@ -415,11 +411,7 @@ static double CenterOfMass_for_P_ADM_root_finder_eq(void *params,const double *c
 /* root finder eqution for Euler equation constant */
 static double Euler_eq_const_rootfinder_eq(void *params,const double *const x)
 {
-  struct Params_S
-  {
-    Grid_T *grid;
-    double NS_baryonic_mass;
-  }*par = params;
+  struct Euler_eq_const_RootFinder_S *const par = params;
   
   return bbn_NS_baryonic_mass(par->grid,x[0]) - par->NS_baryonic_mass;
 }
@@ -707,13 +699,7 @@ static void find_NS_surface_Ylm_method_CS(Grid_T *const grid,struct Grid_Params_
   printf("Finding the surface of NS, Ylm method ...\n");
   
   /* the stucture for the root finder */
-  struct Params_S
-  {
-    Patch_T *patch;
-    double x0[3];/* (x,y,z) at the surface */
-    double *N;/* the direction of increasing or decreasing of x = x0+N*d */
-    double Euler_C;/* Euler equation const. */
-  } par[1];
+  struct NS_surface_RootFinder_S par[1];
   unsigned Ntheta,Nphi;/* total number of theta and phi points */
   const unsigned lmax = (unsigned)GetParameterI_E("NS_surface_Ylm_expansion_max_l");
   double theta,phi;

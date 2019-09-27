@@ -46,7 +46,14 @@ struct NC_Center_RootFinder_S
   Patch_T *patch;
   Root_Finder_T *root_finder;
 };
-  
+
+/* root finder struc for Euler eq const */  
+struct Euler_eq_const_RootFinder_S
+{
+  Grid_T *grid;
+  double NS_baryonic_mass;
+};
+
 Grid_T *bbn_initialize_next_grid(Grid_T *const grid_prev);
 static Grid_T *make_next_grid_using_previous_grid(Grid_T *const grid_prev);
 static Grid_T *TOV_KerrShild_approximation(void);
