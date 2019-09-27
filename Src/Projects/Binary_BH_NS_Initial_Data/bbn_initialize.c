@@ -46,7 +46,7 @@ static Grid_T *make_next_grid_using_previous_grid(Grid_T *const grid_prev)
   find_Euler_eq_const(grid_prev);
   
   /* find y_CM by demanding P_ADM = 0 */
-  //find_center_of_mass(grid_prev);
+  find_center_of_mass(grid_prev);
   
   /* find BH_NS_orbital_angular_velocity using force balance equation */
   //find_BH_NS_omega_force_balance_eq(grid_prev);
@@ -148,7 +148,85 @@ static void find_Euler_eq_const(Grid_T *const grid)
 }
 
 /* find y_CM by demanding P_ADM = 0 */
-//static void find_center_of_mass(Grid_T *const grid);
+static void find_center_of_mass(Grid_T *const grid)
+{
+  Root_Finder_T *root = init_root_finder(1);
+  Observable_T *obs   = init_observable(grid);
+  double  *y_CM = 0;
+  double guess[1];/* initial guess for y_CM */
+  const double Omega_BHNS = GetParameterD_E("BH_NS_orbital_angular_velocity");
+  const double Vr   = GetParameterD_E("BH_NS_infall_velocity");
+  struct CM_RootFinder_S params[1];
+  
+  obs->quantity = "ADM_momentums";
+  plan_observable(obs);
+  
+  params->obs  = obs;
+  params->grid = grid;
+  params->Vr   = Vr;
+  params->Omega_BHNS = Omega_BHNS;
+  guess[0] = GetParameterD_E("y_CM");
+  
+  root->description = "Finding center of mas:";
+  root->type        = GetParameterS_E("RootFinder_Method");
+  root->tolerance   = GetParameterD_E("RootFinder_Tolerance");
+  root->MaxIter     = (unsigned)GetParameterI_E("RootFinder_Max_Number_of_Iteration");
+  root->x_gss       = guess;
+  root->params      = params;
+  root->f[0]        = CenterOfMass_for_P_ADM_root_finder_eq;
+  plan_root_finder(root);
+  y_CM              = execute_root_finder(root);
+  
+  update_parameter_double_format("y_CM",y_CM[0]);
+  
+  free(y_CM);
+  free_root_finder(root);
+  free_observable(obs);
+}
+
+/* root finder equation for center of mass */
+static double CenterOfMass_for_P_ADM_root_finder_eq(void *params,const double *const x)
+{
+  struct CM_RootFinder_S *par = params;
+  Grid_T *grid = par->grid;
+  Observable_T *obs = par->obs;
+  const double Omega_BHNS = par->Omega_BHNS;
+  const double Vr         = par->Vr;
+  const double D          = par->D;
+  const double y_CM       = x[0];
+  unsigned p,nn,ijk;
+  
+  /* update Beta */
+  FOR_ALL_PATCHES(p,grid)
+  {
+    Patch_T *patch = grid->patch[p];
+    nn = patch->nn;
+    
+    /* B^1 */
+    PREP_FIELD(B1_U0)
+    PREP_FIELD(B1_U1)
+    PREP_FIELD(B1_U2)
+    for (ijk = 0; ijk < nn; ++ijk)
+    {
+      double x0     = patch->node[ijk]->x[0];
+      double y0     = patch->node[ijk]->x[1];
+      
+      B1_U0[ijk] = Omega_BHNS*(-y0+y_CM)+Vr*x0/D;
+      B1_U1[ijk] = Omega_BHNS*x0+Vr*(y0-y_CM)/D;
+      B1_U2[ijk] = 0;
+    }
+    bbn_update_Beta_U0(patch);
+    bbn_update_Beta_U1(patch);
+    bbn_update_Beta_U2(patch);
+    bbn_update_derivative_Beta_U0(patch);
+    bbn_update_derivative_Beta_U1(patch);
+    bbn_update_derivative_Beta_U2(patch);
+    /* update A^{ijk} */
+    bbn_update_psi10A_UiUj(patch);
+  }
+  
+  return (obs->Px_ADM(obs));
+}
 
 /* find BH_NS_orbital_angular_velocity using force balance equation */
 // static void find_BH_NS_Omega_force_balance_eq(grid_prev);

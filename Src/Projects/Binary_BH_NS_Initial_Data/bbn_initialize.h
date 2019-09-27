@@ -3,6 +3,7 @@
 #include "maths_equation_solvings_lib.h"
 #include "maths_approximation_lib.h"
 #include "maths_analytic_lib.h"
+#include "physics_observables_lib.h"
 
 #define Power(a,b) pow(a,b)
 #define Sqrt(a) sqrt(a)
@@ -27,6 +28,16 @@ struct Grid_Params_S
     unsigned Lmax;
   }NS_R_Ylm[1];
   
+};
+
+/* root finder struct for finding center of mass */
+struct CM_RootFinder_S
+{
+  Grid_T *grid;
+  Observable_T *obs;
+  double Omega_BHNS;
+  double Vr;
+  double D;
 };
 
 Grid_T *bbn_initialize_next_grid(Grid_T *const grid_prev);
@@ -54,3 +65,5 @@ static void find_XYZ_and_patch_of_theta_phi_NS_CS(double *const X,Patch_T **cons
 static void find_theta_phi_of_XYZ_NS_CS(double *const theta,double *const phi,const double *const X,const Flag_T side);
 static void free_Grid_Params_S(struct Grid_Params_S *par);
 struct Grid_Params_S *init_GridParams(void);
+static double CenterOfMass_for_P_ADM_root_finder_eq(void *params,const double *const x);
+static void find_center_of_mass(Grid_T *const grid);
