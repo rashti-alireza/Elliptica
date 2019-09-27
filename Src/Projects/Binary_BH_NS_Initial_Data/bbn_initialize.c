@@ -40,7 +40,8 @@ static Grid_T *make_next_grid_using_previous_grid(Grid_T *const grid_prev)
   // 2. center of rotation (center of mass)
   // 3. NS center
   // 4. orbital angular velocity
-  // 5. drag NS to the center
+  // 5. find NS surface
+  // 6. drag NS to the center
   // . BH_radius
   // . Omega_BH
   */
@@ -56,9 +57,6 @@ static Grid_T *make_next_grid_using_previous_grid(Grid_T *const grid_prev)
   
   /* find BH_NS_orbital_angular_velocity using force balance equation */
   find_BH_NS_Omega_force_balance_eq(grid_prev);
-  
-  /* adjust the center of NS */
-  //shift_NS_center(grid_prev);
   
   /* find the BH radius to acquire the desired BH mass */
   //find_BH_radius(grid_prev);
@@ -85,6 +83,9 @@ static Grid_T *make_next_grid_using_previous_grid(Grid_T *const grid_prev)
   }
   else
     abortEr(NO_OPTION);
+    
+  /* adjust the center of NS */
+  adjust_NS_center(grid_prev);
     
   /* make new grid with new parameters */
   const double bh_chi  = GetParameterD_E("BH_X_U2");
@@ -122,6 +123,64 @@ static Grid_T *make_next_grid_using_previous_grid(Grid_T *const grid_prev)
   free_Grid_Params_S(GridParams);
   
   return grid_next;
+}
+
+/* adjust the center of NS at the designated point, in case it moved.
+// we need only to draw enthalpy to (0,-D/2,0), D is BH and NS separation.
+// to do so, we demand shifted_enthalpy(r) = enthalpy(R+r), in which R 
+// is the amount the center is dislocated from (0,-D/2,0) */
+static void adjust_NS_center(Grid_T *const grid)
+{
+  char par_name[1000];
+  double *NS_center = 0;
+  const double C    = -0.5*GetParameterD_E("BH_NS_separation");
+  sprintf(par_name,"grid%u_NS_center_x",grid->gn);
+  NS_center = GetParameterArrayF_E(par_name);
+  const double R[3] = {NS_center[0],NS_center[1]-C,NS_center[2]};
+  unsigned p,ijk;
+  
+  /* if it is already located at the designted point */
+  if (EQL(0,R[0]) && EQL(0,R[1]) && EQL(0,R[2]))
+    return;
+  
+  FOR_ALL_PATCHES(p,grid)
+  {
+    Patch_T *patch = grid->patch[p];
+    
+    if (!IsItNSPatch(patch))
+      continue;
+    
+    /* now shift enthalpy */
+    Patch_T *patchp = 0;
+    char *stem, hint[1000];
+    DECLARE_FIELD(enthalpy);
+    ADD_FIELD(shifted_enthalpy);
+    DECLARE_FIELD(shifted_enthalpy);
+    
+    make_coeffs_3d(enthalpy);
+    
+    stem = strstr(patch->name,"_");/* the patch->name convention is grid\d?_root */
+    assert(stem);
+    stem++;
+    sprintf(hint,"%s",stem);
+    unsigned nn = patch->nn;
+    double x[3],Xp[3];
+    for (ijk = 0; ijk < nn; ++ijk)
+    {
+      x[0] = patch->node[ijk]->x[0]+R[0];
+      x[1] = patch->node[ijk]->x[1]+R[1];
+      x[2] = patch->node[ijk]->x[2]+R[2];
+      find_Xp_and_patchp(x,hint,grid,Xp,&patchp);
+      shifted_enthalpy->v[ijk] = interpolate_from_patch_prim("enthalpy",Xp,patchp);
+    }
+    /* now clean enthalpy and copy new value and remove extras */
+    free_coeffs(enthalpy);
+    free(enthalpy->v);
+    enthalpy->v = shifted_enthalpy->v;
+    shifted_enthalpy->v = 0;
+    REMOVE_FIELD(shifted_enthalpy);
+  }
+  
 }
 
 /* find BH_NS_orbital_angular_velocity using force balance equation */
@@ -181,7 +240,7 @@ static void find_BH_NS_Omega_force_balance_eq(Grid_T *const grid)
   bbn_update_derivative_Beta_U0(patch);
   bbn_update_derivative_Beta_U1(patch);
   bbn_update_derivative_Beta_U2(patch);
-  bbn_update_Aij(patch);
+  //bbn_update_Aij(patch); Do we need this??
 }
 
 /* find the NS center using d(enthalpy)/dx^i = 0 */
@@ -541,6 +600,7 @@ static void interpolate_and_initialize_to_next_grid(Grid_T *const grid_next,Grid
     
     root_name = strstr(patch->name,"_");/* the patch->name convention is grid\d?_root */
     assert(root_name);
+    root_name++;
     sprintf(hint,"%s",root_name);
     
     PREP_FIELD(B0_U0)
@@ -564,13 +624,13 @@ static void interpolate_and_initialize_to_next_grid(Grid_T *const grid_next,Grid
         /* finding X and patch in grid_prev, associated to x */
         find_Xp_and_patchp(x,hint,grid_prev,Xp,&patchp);
         
-        B0_U0[ijk]    = interpolate_from_prev_grid("B0_U0",Xp,patchp);
-        B0_U1[ijk]    = interpolate_from_prev_grid("B0_U1",Xp,patchp);
-        B0_U2[ijk]    = interpolate_from_prev_grid("B0_U2",Xp,patchp);
-        psi[ijk]      = interpolate_from_prev_grid("psi",Xp,patchp);
-        eta[ijk]      = interpolate_from_prev_grid("eta",Xp,patchp);
-        phi[ijk]      = interpolate_from_prev_grid("phi",Xp,patchp);
-        enthalpy[ijk] = interpolate_from_prev_grid("enthalpy",Xp,patchp);
+        B0_U0[ijk]    = interpolate_from_patch_prim("B0_U0",Xp,patchp);
+        B0_U1[ijk]    = interpolate_from_patch_prim("B0_U1",Xp,patchp);
+        B0_U2[ijk]    = interpolate_from_patch_prim("B0_U2",Xp,patchp);
+        psi[ijk]      = interpolate_from_patch_prim("psi",Xp,patchp);
+        eta[ijk]      = interpolate_from_patch_prim("eta",Xp,patchp);
+        phi[ijk]      = interpolate_from_patch_prim("phi",Xp,patchp);
+        enthalpy[ijk] = interpolate_from_patch_prim("enthalpy",Xp,patchp);
       }
     }
     else
@@ -586,11 +646,11 @@ static void interpolate_and_initialize_to_next_grid(Grid_T *const grid_next,Grid
         /* finding X and patch in grid_prev, associated to x */
         find_Xp_and_patchp(x,hint,grid_prev,Xp,&patchp);
         
-        B0_U0[ijk] = interpolate_from_prev_grid("B0_U0",Xp,patchp);
-        B0_U1[ijk] = interpolate_from_prev_grid("B0_U1",Xp,patchp);
-        B0_U2[ijk] = interpolate_from_prev_grid("B0_U2",Xp,patchp);
-        psi[ijk]   = interpolate_from_prev_grid("psi",Xp,patchp);
-        eta[ijk]   = interpolate_from_prev_grid("eta",Xp,patchp);
+        B0_U0[ijk] = interpolate_from_patch_prim("B0_U0",Xp,patchp);
+        B0_U1[ijk] = interpolate_from_patch_prim("B0_U1",Xp,patchp);
+        B0_U2[ijk] = interpolate_from_patch_prim("B0_U2",Xp,patchp);
+        psi[ijk]   = interpolate_from_patch_prim("psi",Xp,patchp);
+        eta[ijk]   = interpolate_from_patch_prim("eta",Xp,patchp);
       }
     }
   }/* end of FOR_ALL_PATCHES(p,grid_next) */
@@ -673,7 +733,7 @@ static void interpolate_and_initialize_to_next_grid(Grid_T *const grid_next,Grid
 /* given field name, X and patch, finds the value of the field in X  
 // using interpolation.
 // ->return value: f(X) */
-static double interpolate_from_prev_grid(const char *const field,const double *const X,Patch_T *const patch)
+static double interpolate_from_patch_prim(const char *const field,const double *const X,Patch_T *const patch)
 {
   double interp;
   Interpolation_T *interp_s = init_interpolation();
