@@ -204,6 +204,7 @@ void bbn_SolveEqs_FieldUpdate(Patch_T *const patch,const char *const name)
   {
     bbn_update_derivative_phi(patch);
     Tij_IF_CTS_enthalpy(patch);
+    bbn_update_derivative_enthalpy(patch);
   }
   else if (!strcmp(name,"psi"))
   {
