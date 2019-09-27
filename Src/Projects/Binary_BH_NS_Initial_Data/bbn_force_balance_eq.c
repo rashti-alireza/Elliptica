@@ -9,7 +9,7 @@
 double force_balance_root_finder_eq(void *params,const double *const x);
 double force_balance_root_finder_eq(void *params,const double *const x)
 {
-struct Force_Balance_RootFinder_S *const par = params;
+const struct Force_Balance_RootFinder_S *const par = params;
 Patch_T *const patch = par->patch;
 const unsigned  nn   = patch->nn;
 const double Omega_BHNS = x[0];
@@ -90,7 +90,7 @@ alpha2 - t2;
 
   double v = 
 (pow(alpha, 2)*enthalpy[ijk]*u0[ijk]*(dphi_D0[ijk]*t_U0 + dphi_D1[ijk]*
-t_U1 + dphi_D2[ijk]*t_U2) - alpha2*psi4*(pow(W_U0[ijk], 2)*
+t_U1 + dphi_D2[ijk]*t_U2) + alpha2*psi4*(pow(W_U0[ijk], 2)*
 _gamma_D0D0[ijk] + 2.0*W_U0[ijk]*W_U1[ijk]*_gamma_D0D1[ijk] + 2.0*
 W_U0[ijk]*W_U2[ijk]*_gamma_D0D2[ijk] + pow(W_U1[ijk], 2)*
 _gamma_D1D1[ijk] + 2.0*W_U1[ijk]*W_U2[ijk]*_gamma_D1D2[ijk] +
@@ -98,11 +98,12 @@ pow(W_U2[ijk], 2)*_gamma_D2D2[ijk]))/(pow(alpha, 2)*alpha2*
 pow(enthalpy[ijk], 2)*pow(u0[ijk], 2));
 
   double G = 
-alpha*u0[ijk]*v*pow((alpha2 - t2)/alpha2, -0.5);
+-alpha*u0[ijk]*pow((alpha2 - t2)/alpha2, -0.5)*(v -
+1);
 
 
-GAMMAt_rf->v[ijk] = Gtilda;
 GAMMA_rf->v[ijk]  = G;
+GAMMAt_rf->v[ijk] = Gtilda;
 }
 dGAMMA_D1_rf->v  = Partial_Derivative(GAMMA_rf,"y");
 dGAMMAt_D1_rf->v = Partial_Derivative(GAMMAt_rf,"y");

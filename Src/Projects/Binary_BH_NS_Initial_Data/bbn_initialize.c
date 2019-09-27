@@ -173,6 +173,15 @@ static void find_BH_NS_Omega_force_balance_eq(Grid_T *const grid)
   
   free_root_finder(root);
   free(Omega_BH_NS);
+  
+  /* since Beta has been changed let's update the pertinent fields */
+  bbn_update_Beta_U0(patch);
+  bbn_update_Beta_U1(patch);
+  bbn_update_Beta_U2(patch);
+  bbn_update_derivative_Beta_U0(patch);
+  bbn_update_derivative_Beta_U1(patch);
+  bbn_update_derivative_Beta_U2(patch);
+  bbn_update_Aij(patch);
 }
 
 /* find the NS center using d(enthalpy)/dx^i = 0 */

@@ -13,7 +13,7 @@ C_macro = GET_FIELD(name);
 `double force_balance_root_finder_eq(void *params,const double *const x);`
 `double force_balance_root_finder_eq(void *params,const double *const x)`
 `{`
-`struct Force_Balance_RootFinder_S *const par = params;`
+`const struct Force_Balance_RootFinder_S *const par = params;`
 `Patch_T *const patch = par->patch;`
 `const unsigned  nn   = patch->nn;`
 `const double Omega_BHNS = x[0];`
@@ -89,13 +89,13 @@ Symm[_gamma(i,j)   = _gamma(j,i)];
     t(i)   = Beta(i)+W(i)/(enthalpy*u0);
     t2     = psi4*t(-i)*t(-j)*_gamma(i,j);
     Gtilda = alpha2-t2;
-    v      = t(i)*dphi(-i)/(alpha2*enthalpy*u0) - \
+    v      = t(i)*dphi(-i)/(alpha2*enthalpy*u0) + \
              psi4*_gamma(i,j)*W(-i)*W(-j)/((alpha*enthalpy*u0)**2);
-    G      = alpha*u0*v/((1-t2/alpha2)**(0.5));
+    G      = alpha*u0*(1-v)/((1-t2/alpha2)**(0.5));
 
     ``
-    `GAMMAt_rf->v[ijk] = Gtilda;`
     `GAMMA_rf->v[ijk]  = G;`
+    `GAMMAt_rf->v[ijk] = Gtilda;`
 `}`
 
 `dGAMMA_D1_rf->v  = Partial_Derivative(GAMMA_rf,"y");`
