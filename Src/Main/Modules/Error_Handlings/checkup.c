@@ -16,6 +16,7 @@ void checkup_pointer_error(const void *const p, const char *const file, const in
     fprintf(stderr,ERROR_MASSAGE
       "\"Pointer allocation was failed.\"\n"
         "File: %s\nLine:%d\n",file,line);
+    fflush(stderr);
     abort();
   }
 }
@@ -26,6 +27,7 @@ void bad_input_error(const char *const file, const int line)
     fprintf(stderr,ERROR_MASSAGE
       "\"There is no such input for the function.\"\n"
         "File: %s\nLine:%d\n",file,line);
+    fflush(stderr);
     abort();
 }
 
@@ -37,6 +39,7 @@ void null_path_error(const void *const path,const char *const file, const int li
     fprintf(stderr,ERROR_MASSAGE
       "\"The directory path is null.\"\n"
         "File: %s\nLine:%d\n",file,line);
+    fflush(stderr);
     abort();
   }
 }
@@ -47,6 +50,7 @@ void abort_error(const char *const massage,const char *const file, const int lin
   
   fprintf(stderr,ERROR_MASSAGE"\"%s\""
         "File: %s\nLine:%d\n",massage,file,line);
+  fflush(stderr);
   abort();
 }
 
@@ -59,6 +63,7 @@ void abort_error_string(const char *const massage,const char *const detail,const
   
   fprintf(stderr,ERROR_MASSAGE"%s"
       "File: %s\nLine:%d\n",msg,file,line);
+  fflush(stderr);
   abort();
 }
 
@@ -70,6 +75,7 @@ void check_parameter(const Flag_T flg,const char *const file, const int line)
     fprintf(stderr,ERROR_MASSAGE
       "\"Parameter was not found.\"\n"
         "File: %s\nLine:%d\n",file,line);
+    fflush(stderr);
     abort();
   }
   
