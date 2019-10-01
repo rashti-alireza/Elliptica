@@ -1,7 +1,7 @@
 #include "core_lib.h"
 #include "error_handling_lib.h"
 #include "memory_managing_lib.h"
-#include <suitesparse/umfpack.h>
+#include <umfpack.h>
 #include "maths_linear_algebra_lib.h"
 
 Matrix_T *invert_matrix(Matrix_T *const M);

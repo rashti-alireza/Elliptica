@@ -1,6 +1,6 @@
 #include "core_lib.h"
 #include "error_handling_lib.h"
-#include <suitesparse/umfpack.h>
+#include <umfpack.h>
 #include "maths_linear_algebra_lib.h"
 #include "maths_matrix_solvers_lib.h"
 
