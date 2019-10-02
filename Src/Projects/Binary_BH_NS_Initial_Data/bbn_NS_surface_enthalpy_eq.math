@@ -9,7 +9,7 @@ C_macro  = define_variable(name);
 Ccode["#include "bbn_headers.h""];
 
 `#define define_variable(xNAME) \`
-`  DECLARE_FIELD(field_##xNAME) \`
+`  Field_T *const field_##xNAME = patch->pool[Ind(#xNAME)]; \`
 `  Interpolation_T *interp_##xNAME = init_interpolation(); \`
 `  interp_##xNAME->field = field_##xNAME; \`
 `  interp_##xNAME->XYZ_dir_flag = 1; \`
