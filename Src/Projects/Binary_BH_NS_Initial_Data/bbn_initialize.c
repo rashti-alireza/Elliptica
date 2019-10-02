@@ -991,7 +991,7 @@ static void find_XYZ_and_patch_of_theta_phi_NS_CS(double *const X,Patch_T **cons
   X[2] = 1;/* since we are on NS surface */
   
   /* check all of NS patches in which (x,y,z) and 
-  // (X,Y,Z) and (theta,phi) are consistence */
+  // (X,Y,Z) and (theta,phi) are consistent */
   FOR_ALL_PATCHES(p,grid)
   {
     Patch_T *patch = grid->patch[p];
