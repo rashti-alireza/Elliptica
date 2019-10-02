@@ -64,7 +64,7 @@ static Grid_T *make_next_grid_using_previous_grid(Grid_T *const grid_prev)
   /* find the Omega_BH to acquire the desired BH spin */
   //find_BH_Omega(grid_prev);
   
-  if (!strcmp_i(grid_prev->kind,"BBN_CubedSpherical_grid"))
+  if (strcmp_i(grid_prev->kind,"BBN_CubedSpherical_grid"))
   {
     /* extrapolate fluid fields outside of NS in case their value needed. */
     extrapolate_fluid_fields_outsideNS_CS(grid_prev);
