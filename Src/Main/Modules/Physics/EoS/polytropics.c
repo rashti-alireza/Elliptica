@@ -153,7 +153,7 @@ static unsigned find_threshold_number_h(const EoS_T *const eos)
   unsigned i;
   Flag_T flg = NONE;
   
-  if (LSS(eos->h,1))
+  if (eos->enthalpy_fatal && LSS(eos->h,1))
     abortEr("The value of the enthalpy is not set correctly.\n");
   
   if (LSSEQL(eos->h,eos->h_th[1]))
