@@ -16,6 +16,7 @@ struct NS_surface_RootFinder_S
   double x0[3];/* (x,y,z) at the surface */
   double *N;/* the direction of increasing or decreasing of x = x0+N*d */
   double Euler_C;/* Euler equation const. */
+  double scale;/* to avoid long step in root finder */
 };
 
 /* root finder struc for force balance equation */  

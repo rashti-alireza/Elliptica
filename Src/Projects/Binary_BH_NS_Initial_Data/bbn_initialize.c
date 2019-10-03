@@ -839,7 +839,7 @@ static void find_NS_surface_Ylm_method_CS(Grid_T *const grid,struct Grid_Params_
   unsigned i,j;
   
   par->Euler_C = GetParameterD_E("Euler_equation_constant");
-  
+  par->scale   = 1E-2;
   /* initialize tables */
   init_Legendre_root_function();
   
@@ -882,6 +882,8 @@ static void find_NS_surface_Ylm_method_CS(Grid_T *const grid,struct Grid_Params_
       if(EQL(h,1))/* if it takes place on the current NS surface */
       {
         Rnew_NS[ij(i,j)] = R0_NS;
+        if (Rnew_NS[ij(i,j)] > Max_R_NS)
+          Max_R_NS = Rnew_NS[ij(i,j)];
       }
       else/* if NS surface is displaced */
       {
@@ -938,9 +940,9 @@ static void find_NS_surface_Ylm_method_CS(Grid_T *const grid,struct Grid_Params_
         
         dr    = execute_root_finder(root);
         /*  new coords of R respect to the center of NS */
-        y[0] += N[0]*dr[0];
-        y[1] += N[1]*dr[0];
-        y[2] += N[2]*dr[0];
+        y[0] += N[0]*dr[0]*par->scale;
+        y[1] += N[1]*dr[0]*par->scale;
+        y[2] += N[2]*dr[0]*par->scale;
         
         Rnew_NS[ij(i,j)] = rms(3,y,0);
         if (Rnew_NS[ij(i,j)] > Max_R_NS)

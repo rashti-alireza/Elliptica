@@ -22,14 +22,13 @@ double bbn_NS_surface_enthalpy_eq(void *params,const double *const x)
 {
   /* the stucture for the root finder */
   const struct NS_surface_RootFinder_S *const pars = params;
-  const double dx = x[0];
+  const double dx = x[0]*pars->scale;
   Patch_T *const patch   = pars->patch;
   const double *const x0 = pars->x0;
   const double *const N  = pars->N;
   const double Euler_C   = pars->Euler_C;
   const double y[3]      = {x0[0]+dx*N[0],x0[1]+dx*N[1],x0[2]+dx*N[2]};
   double X[3];
-
 
   X_of_x(X,y,patch);
 
