@@ -875,8 +875,8 @@ static void find_NS_surface_Ylm_method_CS(Grid_T *const grid,struct Grid_Params_
       x_of_X(x,X,patch);
       /* y is where the previous radius was located */
       y[0] = x[0]-patch->c[0];
-      y[1] = x[1]-patch->c[2];
-      y[2] = x[2]-patch->c[1];
+      y[1] = x[1]-patch->c[1];
+      y[2] = x[2]-patch->c[2];
       R0_NS = rms(3,y,0);
       
       if(EQL(h,1))/* if it takes place on the current NS surface */
