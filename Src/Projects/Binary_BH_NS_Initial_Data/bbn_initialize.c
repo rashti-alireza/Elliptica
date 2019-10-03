@@ -966,7 +966,7 @@ static void find_NS_surface_Ylm_method_CS(Grid_T *const grid,struct Grid_Params_
   /* calculating coeffs */
   get_Ylm_coeffs(realClm,imagClm,Rnew_NS,Ntheta,Nphi,lmax);
   GridParams->NS_R_Ylm->realClm = realClm;
-  GridParams->NS_R_Ylm->realClm = imagClm;
+  GridParams->NS_R_Ylm->imagClm = imagClm;
   GridParams->NS_R_Ylm->Lmax    = lmax;
   
   free(Rnew_NS);
