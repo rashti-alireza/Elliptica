@@ -354,7 +354,7 @@ void print_root_finder_exit_status(const Root_Finder_T *const root)
       printf("Root finder was interrupted by a condition by the user.\n");
     break;
     case ROOT_FINDER_NAN:
-      printf("Root finder faild with an abnormal residual.\n");
+      printf("Root finder failed with an abnormal residual.\n");
     break;
     default:
       printf("The status is not defined.\n");
