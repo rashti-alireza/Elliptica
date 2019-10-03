@@ -151,7 +151,7 @@ static double *root_finder_steepest_descent(Root_Finder_T *const root)
       {
         printf(".. Root finder was interrupted!\n");
       }
-      return 0;
+      break;
     }
     if (root->verbose)
     {
@@ -164,13 +164,26 @@ static double *root_finder_steepest_descent(Root_Finder_T *const root)
     z0 = L2_norm(n,z,0);
     if (EQL(z0,0.))
     {
-      root->exit_status = ROOT_FINDER_EXTREMA;
       root->residual = sqrt(g1);
+      if (!isfinite(root->residual))
+        root->exit_status = ROOT_FINDER_NAN;
+      else
+        root->exit_status = ROOT_FINDER_EXTREMA;
+        
       if (root->verbose)
       {
-        printf("Root Finder -> Steepest Descent Method:\n"
-               "Zero gradient thus an extrema; Residual = %e\n",root->residual);
+        if (root->exit_status == ROOT_FINDER_NAN)
+        {
+          printf("Root Finder -> Steepest Descent Method:\n"
+                 "Residual is abnormal; Residual = %e\n",root->residual);
+        }
+        else
+        {
+          printf("Root Finder -> Steepest Descent Method:\n"
+                 "Zero gradient, it hit an extrema; Residual = %e\n",root->residual);
+        }
       }
+      
       break;
     }
     
@@ -187,7 +200,7 @@ static double *root_finder_steepest_descent(Root_Finder_T *const root)
       {
         printf(".. Root finder was interrupted!\n");
       }
-      return 0;
+      break;
     }
     
     while (g3 >= g1)
@@ -203,17 +216,29 @@ static double *root_finder_steepest_descent(Root_Finder_T *const root)
         {
           printf(".. Root finder was interrupted!\n");
         }
-        return 0;
+        break;
       }
       
       if(alpha3 < 0.5*TOL)
       {
-        root->exit_status = ROOT_FINDER_NO_IMPROVEMENT;
         root->residual = sqrt(g3);
+        if (!isfinite(root->residual))
+          root->exit_status = ROOT_FINDER_NAN;
+        else
+          root->exit_status = ROOT_FINDER_NO_IMPROVEMENT;
+        
         if (root->verbose)
         {
-          printf("Root Finder -> Steepest Descent Method:\n"
-                 "No likely improvement; Residual = %e\n",root->residual);
+          if (root->exit_status == ROOT_FINDER_NAN)
+          {
+            printf("Root Finder -> Steepest Descent Method:\n"
+                   "Residual is abnormal; Residual = %e\n",root->residual);
+          }
+          else
+          {
+            printf("Root Finder -> Steepest Descent Method:\n"
+                   "No likely improvement; Residual = %e\n",root->residual);
+          }
         }
         
         for (i = 0; i < n; i++)
@@ -237,7 +262,7 @@ static double *root_finder_steepest_descent(Root_Finder_T *const root)
       {
         printf(".. Root finder was interrupted!\n");
       }
-      return 0;
+      break;
     }
     h1 = (g2-g1)/alpha2;
     h2 = (g3-g2)/(alpha3-alpha2);
@@ -253,7 +278,7 @@ static double *root_finder_steepest_descent(Root_Finder_T *const root)
       {
         printf(".. Root finder was interrupted!\n");
       }
-      return 0;
+      break;
     }
     
     alpha = g0 < g3 ? alpha0 : alpha3;
@@ -263,9 +288,20 @@ static double *root_finder_steepest_descent(Root_Finder_T *const root)
     
     g = g0 < g3 ? g0 : g3;
     root->residual = sqrt(g);
+    if (!isfinite(root->residual))
+    {
+      root->exit_status = ROOT_FINDER_NAN;
+      if (root->verbose)
+      {
+        printf("Root Finder -> Steepest Descent Method:\n"
+               "Residual is abnormal; Residual = %e\n",root->residual);
+      }
+      break;
+    }
     if (fabs(g-g1) < TOL)
     { 
       root->exit_status = ROOT_FINDER_OK;
+      
       if (root->verbose)
       {
         printf(".. Step[%02u]: Residual[f(x) = 0] = %+e\n",k,root->residual);
@@ -316,6 +352,9 @@ void print_root_finder_exit_status(const Root_Finder_T *const root)
     break;
     case ROOT_FINDER_INTERRUPTED:
       printf("Root finder was interrupted by a condition by the user.\n");
+    break;
+    case ROOT_FINDER_NAN:
+      printf("Root finder faild with an abnormal residual.\n");
     break;
     default:
       printf("The status is not defined.\n");
