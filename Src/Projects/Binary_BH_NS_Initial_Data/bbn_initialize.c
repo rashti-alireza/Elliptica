@@ -1111,21 +1111,33 @@ static void find_XYZ_and_patch_of_theta_phi_NS_CS(double *const X,Patch_T **cons
 // in case they are needed for interpolation to the next grid
 // or in calculation of enthalpy at NS surrounding patches.
 // for extrapolation we demand:
-// f(r) = f(r1)*(e^{-r/r1}-e^{-r2/r1})/(e^{-1}-e^{-r2/r1}), 
-// where r1 is radius of NS surface and r2 is twice of r1
-// note: f(r) = 0, for r >= r2 */
+// the fields spread out in the same fashion as it is changing toward 
+// the NS sarface. what we have :
+// f(r_out) = f(r_in) + df, in which df is f(r2)-f(r1), r1 = FACTOR*r2
+// and r2 is the radius of NS surface.
+// a = (r_max-r2)/(r2-r1)
+// b = (r1*r_max-SQR(r2))/(r1-r2)
+// r_out = a*r_in + b, where (r_in) r_out is r (inside)outside NS and
+// r_max is the max radius in NS surrounding patch.
+// in effect, it means we emulate the trend of the fields inside of NS
+// from r1 to r2 in NS surrounding, from r2 to r_max. */
 static void extrapolate_fluid_fields_outsideNS_CS(Grid_T *const grid)
 {
-  const double half_BN_NS_d = 0.5*GetParameterD_E("BH_NS_separation");
-  const double R2_FACTOR = 2;
+  const double FACTOR = 0.8;
   unsigned p;
   
   FOR_ALL_PATCHES(p,grid)
   {
+    /* surrounding patch */
     Patch_T *patch = grid->patch[p];
     if (!IsItNSSurroundingPatch(patch))
       continue;
      
+    /* add fields: */
+    /* enthalpy */
+    ADD_FIELD(enthalpy)
+    GET_FIELD(enthalpy)
+    
     /* irrotational part of fluid */
     ADD_FIELD(phi)
     GET_FIELD(phi)
@@ -1144,113 +1156,189 @@ static void extrapolate_fluid_fields_outsideNS_CS(Grid_T *const grid)
     GET_FIELD(W_U1)
     GET_FIELD(W_U2)
     
-    /* find the corresponding NS patch to be used for extrapolation */
     Patch_T *NS_patch;/* corresponding NS patch, to extrapolate out */
+    const unsigned *n = patch->n;
+    unsigned nn       = patch->nn;
+    double r1,r2,r_max,r_in,r_out,a,b;
+    double phii,W_U0i,W_U1i,W_U2i;/* fields at r1 */
+    double phif,W_U0f,W_U1f,W_U2f;/* fields at r2 */
+    double dphi,dW_U0,dW_U1,dW_U2;
+    double x[3],X[3];
+    double THETA,PHI;
+    unsigned ijk,i,j,k;
+
+    /* populating enthalpy in NS surroundings */
+    printf("extrapolate enthalpy using the main enthalpy function!!!!!!!!\n");
+    for (ijk = 0; ijk < nn; ++ijk)
+      enthalpy[ijk] = 1;
+
+    /* find the corresponding NS patch to be used for extrapolation */
     char stem[1000];
     char *affix = regex_find("_[[:alpha:]]{2,5}$",patch->name);/* finding the side of the patch */
-    
     assert(affix);
     sprintf(stem,"left_NS%s",affix);
     free(affix);
     NS_patch = GetPatch(stem,grid);
     
-    /* populating phi and W fields */
+    /* prepare interpolation arguments */
     Interpolation_T *interp_phi = init_interpolation();
     interp_phi->field = NS_patch->pool[LookUpField_E("phi",NS_patch)];
-    interp_phi->XY_dir_flag = 1;
-    interp_phi->K     = NS_patch->n[2]-1;
+    interp_phi->XYZ_dir_flag = 1;
     plan_interpolation(interp_phi);
-    
+
     Interpolation_T *interp_W_U0 = init_interpolation();
     interp_W_U0->field = NS_patch->pool[LookUpField_E("W_U0",NS_patch)];
-    interp_W_U0->XY_dir_flag = 1;
-    interp_W_U0->K     = NS_patch->n[2]-1;
+    interp_W_U0->XYZ_dir_flag = 1;
     plan_interpolation(interp_W_U0);
-    
+
     Interpolation_T *interp_W_U1 = init_interpolation();
     interp_W_U1->field = NS_patch->pool[LookUpField_E("W_U1",NS_patch)];
-    interp_W_U1->XY_dir_flag = 1;
-    interp_W_U1->K     = NS_patch->n[2]-1;
+    interp_W_U1->XYZ_dir_flag = 1;
     plan_interpolation(interp_W_U1);
-    
+
     Interpolation_T *interp_W_U2 = init_interpolation();
     interp_W_U2->field = NS_patch->pool[LookUpField_E("W_U2",NS_patch)];
-    interp_W_U2->XY_dir_flag = 1;
-    interp_W_U2->K     = NS_patch->n[2]-1;
+    interp_W_U2->XYZ_dir_flag = 1;
     plan_interpolation(interp_W_U2);
-    
-    const unsigned *n = patch->n;
-    unsigned ijk,i,j,k;
-    double x[3],X[3];
-    k = 0;/* at the surface of NS surface */
+
+    /* spreading out the fields value using interpolation */
     for (i = 0; i < n[0]; ++i)
     {
       for (j = 0; j < n[1]; ++j)
       {
-        ijk = L(n,i,j,k);
-        /* find the value of phi and W^{i} at NS surface */
-        X_of_x(X,patch->node[ijk]->x,NS_patch);
-        interp_phi->X  = X[0];
-        interp_phi->Y  = X[1];
-        interp_W_U0->X = X[0];
-        interp_W_U0->Y = X[1];
-        interp_W_U1->X = X[0];
-        interp_W_U1->Y = X[1];
-        interp_W_U2->X = X[0];
-        interp_W_U2->Y = X[1];
-        
-        phi[ijk]  = execute_interpolation(interp_phi);
-        W_U0[ijk] = execute_interpolation(interp_W_U0);
-        W_U1[ijk] = execute_interpolation(interp_W_U1);
-        W_U2[ijk] = execute_interpolation(interp_W_U2);
-      }
-    }
-    
-    /* since cubed spherical coords are radial in Z direction
-    // and angular in X and Y direction we have: */
-    for (i = 0; i < n[0]; ++i)
-    {
-      for (j = 0; j < n[1]; ++j)
-      {
+        /* calculate r_max at NS surrounding patch */
+        ijk = L(n,i,j,n[2]-1);
+        x[0] = patch->node[ijk]->x[0]-patch->c[0];
+        x[1] = patch->node[ijk]->x[1]-patch->c[1];
+        x[2] = patch->node[ijk]->x[2]-patch->c[2]; 
+        r_max = rms(3,x,0);
+
+        /* calculate r2 at NS surface */
         ijk = L(n,i,j,0);
         x[0] = patch->node[ijk]->x[0]-patch->c[0];
         x[1] = patch->node[ijk]->x[1]-patch->c[1];
         x[2] = patch->node[ijk]->x[2]-patch->c[2];
+        r2   = rms(3,x,0);
+
+        /* calulate r1,a,b */
+        r1 = FACTOR*r2;/* small scale to define r1 */
+        a  = (r_max-r2)/(r2-r1);
+        b  = (r1*r_max-SQR(r2))/(r1-r2);
+
+        /* find the value of phi and W^{i} at r2 */
+        THETA = acos(x[2]/r2);
+        PHI   = arctan(x[1],x[0]);
+
+        x[0] = r2*sin(THETA)*cos(PHI)+NS_patch->c[0];
+        x[1] = r2*sin(THETA)*sin(PHI)+NS_patch->c[1];
+        x[2] = r2*cos(THETA)+NS_patch->c[2];
+
+        X_of_x(X,x,NS_patch);
+
+        interp_phi->X  = X[0];
+        interp_phi->Y  = X[1];
+        interp_phi->Z  = X[2];
+
+        interp_W_U0->X = X[0];
+        interp_W_U0->Y = X[1];
+        interp_W_U0->Z = X[2];
+
+        interp_W_U1->X = X[0];
+        interp_W_U1->Y = X[1];
+        interp_W_U1->Z = X[2];
+
+        interp_W_U2->X = X[0];
+        interp_W_U2->Y = X[1];
+        interp_W_U2->Z = X[2];
+
+        phif  = execute_interpolation(interp_phi);
+        W_U0f = execute_interpolation(interp_W_U0);
+        W_U1f = execute_interpolation(interp_W_U1);
+        W_U2f = execute_interpolation(interp_W_U2);
+
+        /* find the value of phi and W^{i} at r1 */
+        x[0] = r1*sin(THETA)*cos(PHI)+NS_patch->c[0];
+        x[1] = r1*sin(THETA)*sin(PHI)+NS_patch->c[1];
+        x[2] = r1*cos(THETA)+NS_patch->c[2];
+
+        X_of_x(X,x,NS_patch);
         
-        double phi0  = phi[ijk];
-        double W0_U0 = W_U0[ijk];
-        double W0_U1 = W_U1[ijk];
-        double W0_U2 = W_U2[ijk];
-        double r1 = rms(3,x,0);
-        double r2 = R2_FACTOR*r1;
-        assert(LSS(r2,half_BN_NS_d));
+        interp_phi->X  = X[0];
+        interp_phi->Y  = X[1];
+        interp_phi->Z  = X[2];
+
+        interp_W_U0->X = X[0];
+        interp_W_U0->Y = X[1];
+        interp_W_U0->Z = X[2];
+
+        interp_W_U1->X = X[0];
+        interp_W_U1->Y = X[1];
+        interp_W_U1->Z = X[2];
+
+        interp_W_U2->X = X[0];
+        interp_W_U2->Y = X[1];
+        interp_W_U2->Z = X[2];
+
+        phii  = execute_interpolation(interp_phi);
+        W_U0i = execute_interpolation(interp_W_U0);
+        W_U1i = execute_interpolation(interp_W_U1);
+        W_U2i = execute_interpolation(interp_W_U2);
+
+        dphi  = phif  - phii;
+        dW_U0 = W_U0f - W_U0i;
+        dW_U1 = W_U1f - W_U1i;
+        dW_U2 = W_U2f - W_U2i;
         
-        for (k = 1; k < n[2]; ++k)
+        for (k = 0; k < n[2]; ++k)
         {
-           double r,fac;
-           unsigned ijk2 = L(n,i,j,k);
-           x[0] = patch->node[ijk2]->x[0]-patch->c[0];
-           x[1] = patch->node[ijk2]->x[1]-patch->c[1];
-           x[2] = patch->node[ijk2]->x[2]-patch->c[2];
-           r    = rms(3,x,0);
-           
-           if (GRTEQL(r,r2))
-             fac     = 0;
-           else
-             fac     = (exp(-r/r1)-exp(-r2/r1))/(1./M_E-exp(-r2/r1));
-             
-           phi[ijk2]  = phi0*fac;
-           W_U0[ijk2] = W0_U0*fac;
-           W_U1[ijk2] = W0_U1*fac;
-           W_U2[ijk2] = W0_U2*fac;
-        }
-      }
-    }
+          ijk = L(n,i,j,k);
+          x[0] = patch->node[ijk]->x[0]-patch->c[0];
+          x[1] = patch->node[ijk]->x[1]-patch->c[1];
+          x[2] = patch->node[ijk]->x[2]-patch->c[2];
+          
+          r_out = rms(3,x,0);
+          r_in  = (r_out-b)/a;
+
+          x[0] = r_in*sin(THETA)*cos(PHI)+NS_patch->c[0];
+          x[1] = r_in*sin(THETA)*sin(PHI)+NS_patch->c[1];
+          x[2] = r_in*cos(THETA)+NS_patch->c[2];
+
+          /* find the value of phi and W^{i} at NS surface */
+          X_of_x(X,x,NS_patch);
+
+          interp_phi->X  = X[0];
+          interp_phi->Y  = X[1];
+          interp_phi->Z  = X[2];
+
+          interp_W_U0->X = X[0];
+          interp_W_U0->Y = X[1];
+          interp_W_U0->Z = X[2];
+
+          interp_W_U1->X = X[0];
+          interp_W_U1->Y = X[1];
+          interp_W_U1->Z = X[2];
+
+          interp_W_U2->X = X[0];
+          interp_W_U2->Y = X[1];
+          interp_W_U2->Z = X[2];
+          
+          phi[ijk]  = execute_interpolation(interp_phi)+dphi;
+          W_U0[ijk] = execute_interpolation(interp_W_U0)+dW_U0;
+          W_U1[ijk] = execute_interpolation(interp_W_U1)+dW_U1;
+          W_U2[ijk] = execute_interpolation(interp_W_U2)+dW_U2;
+        }/* end of for (k = 0 ; k < n[2]; ++k) */
+      }/* end of for (j = 0; j < n[1]; ++j) */
+    }/* end of for (i = 0; i < n[0]; ++i) */
+    free_interpolation(interp_phi);
+    free_interpolation(interp_W_U0);
+    free_interpolation(interp_W_U1);
+    free_interpolation(interp_W_U2);
+
     Field_T *phi_field = patch->pool[Ind("phi")];
     dphi_D2->v = Partial_Derivative(phi_field,"z");
     dphi_D1->v = Partial_Derivative(phi_field,"y");
     dphi_D0->v = Partial_Derivative(phi_field,"x");
-  }
+  }/* end of FOR_ALL_PATCHES(p,grid) */
 }
 
 /* use TOV and Kerr-Schil black hole approximation.
