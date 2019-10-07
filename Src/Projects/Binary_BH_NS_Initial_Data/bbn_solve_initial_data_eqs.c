@@ -190,11 +190,22 @@ static void bbn_backtrack(Grid_T *const grid,const char *const name)
 /* updating sources after field is solved */
 void bbn_SolveEqs_SourceUpdate(Grid_T *const grid,const char *const name)
 {
-  UNUSED(name);
+  unsigned p;
+  
   //if (!strcmp(name,"phi"))
-  //{
-    Tij_IF_CTS_psi6Sources(grid);
-  //}
+  FOR_ALL_PATCHES(p,grid)
+  {
+    Patch_T *patch = grid->patch[p];
+
+    Tij_IF_CTS_enthalpy(patch);
+    bbn_update_derivative_enthalpy(patch);
+    bbn_update_rho0(patch);
+    bbn_update_derivative_rho0(patch);
+  }
+
+  Tij_IF_CTS_psi6Sources(grid);
+  
+  UNUSED(name);
 }
 
 /* updating field after they were solved */
