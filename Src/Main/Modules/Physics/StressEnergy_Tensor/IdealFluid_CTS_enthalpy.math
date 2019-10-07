@@ -16,8 +16,6 @@ C_macro2 = PREP_FIELD(name);
 Ccode["#include "IdealFluid_CTS_lib.h"\n\n"];
 Ccode["void Tij_IF_CTS_enthalpy(Patch_T *const patch)"];
 Ccode["{"];
-Ccode["  if (!IsItNSPatch(patch))"];
-Ccode["    return;"];
 Ccode["  const unsigned nn = patch->nn;"];
 Ccode["  unsigned ijk;"];
 
