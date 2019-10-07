@@ -151,6 +151,7 @@ double EoS_e_h_p(EoS_T *const eos)
 static unsigned find_threshold_number_h(const EoS_T *const eos)
 {
   unsigned i;
+  char str[1000];
   Flag_T flg = NONE;
   
   if (eos->enthalpy_fatal && LSS(eos->h,1))
@@ -172,7 +173,10 @@ static unsigned find_threshold_number_h(const EoS_T *const eos)
   }
   
   if (flg == NONE)
-    abortEr("Threshold number could not be found.\n");
+  {
+    sprintf(str,"%e",eos->h);
+    abortEr_s("Threshold number could not be found for enthalpy = %s.\n",str);
+  }
   
   return i;
 }
