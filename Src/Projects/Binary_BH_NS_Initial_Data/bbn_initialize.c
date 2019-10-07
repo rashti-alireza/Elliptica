@@ -797,7 +797,7 @@ static void find_Xp_and_patchp(const double *const x,const char *const hint,Grid
   free_needle(needle);
 }
 
-#define ij(i,j) (j)+Nphi*(i)
+#define ij(i,j) ((j)+Nphi*(i))
 /* given the grid, find the NS surface on Ylm points 
 // i.e (theta,phi) collocations are = (Legendre,EquiSpaced),
 // using the fact that at the surface enthalpy = 1.
