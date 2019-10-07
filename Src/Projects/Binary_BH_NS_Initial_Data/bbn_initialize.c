@@ -548,9 +548,6 @@ static void interpolate_and_initialize_to_next_grid(Grid_T *const grid_next,Grid
   const unsigned np = grid_next->np;
   unsigned p;
  
-  /* test for race condition, test for residual after interpolation in grid_next */
-  printf("THIS function has not been tested deeply %s,%d\n",__FILE__,__LINE__);
-  
   /* the following fields are interpolated: */
   /* B0_U[0-2],psi,eta,phi,enthalpy */
   
@@ -565,29 +562,19 @@ static void interpolate_and_initialize_to_next_grid(Grid_T *const grid_next,Grid
     DECLARE_FIELD(B0_U2)
     DECLARE_FIELD(psi)
     DECLARE_FIELD(eta)
+    make_coeffs_3d(B0_U0);
+    make_coeffs_3d(B0_U1);
+    make_coeffs_3d(B0_U2);
+    make_coeffs_3d(psi);
+    make_coeffs_3d(eta);
     
     if (IsItNSPatch(patch))
     {
       DECLARE_FIELD(phi)
       DECLARE_FIELD(enthalpy)
-      
-      make_coeffs_3d(B0_U0);
-      make_coeffs_3d(B0_U1);
-      make_coeffs_3d(B0_U2);
-      make_coeffs_3d(psi);
-      make_coeffs_3d(eta);
       make_coeffs_3d(phi);
       make_coeffs_3d(enthalpy);
     }
-    else
-    {
-      make_coeffs_3d(B0_U0);
-      make_coeffs_3d(B0_U1);
-      make_coeffs_3d(B0_U2);
-      make_coeffs_3d(psi);
-      make_coeffs_3d(eta);
-    }
-    
   }
   
   OpenMP_Patch_Pragma(omp parallel for)
@@ -653,7 +640,7 @@ static void interpolate_and_initialize_to_next_grid(Grid_T *const grid_next,Grid
         eta[ijk]   = interpolate_from_patch_prim("eta",Xp,patchp);
       }
     }
-  }/* end of FOR_ALL_PATCHES(p,grid_next) */
+  }/* end of for (p = 0; p < np; ++p) */
   
   /* initializing some other fields: */
   /* rho0,W_U[0-2],Beta_U[0-2],B1_U[0-2] */
@@ -662,11 +649,12 @@ static void interpolate_and_initialize_to_next_grid(Grid_T *const grid_next,Grid
   const double Omega_NS_y = GetParameterD_E("NS_Omega_U1");
   const double Omega_NS_z = GetParameterD_E("NS_Omega_U2");
   const double Vr   = GetParameterD_E("BH_NS_infall_velocity");
-  const double y_CM = GetParameterDoubleF_E("y_CM");  
+  const double y_CM = GetParameterD_E("y_CM");  
   const double D    = GetParameterD_E("BH_NS_separation");
-  const double C_NS = GetParameterDoubleF_E("NS_Center");
+  const double C_NS = GetParameterD_E("NS_Center");
   
-  FOR_ALL_PATCHES(p,grid_next)
+  OpenMP_Patch_Pragma(omp parallel for)
+  for (p = 0; p < np; ++p)
   {
     Patch_T *patch = grid_next->patch[p];
     unsigned nn = patch->nn;
@@ -684,8 +672,8 @@ static void interpolate_and_initialize_to_next_grid(Grid_T *const grid_next,Grid
     
     for (ijk = 0; ijk < nn; ++ijk)
     {
-      double x     = patch->node[ijk]->x[0];
-      double y     = patch->node[ijk]->x[1];
+      double x = patch->node[ijk]->x[0];
+      double y = patch->node[ijk]->x[1];
        
       /* B1 */
       B1_U0[ijk] = Omega_BHNS*(-y+y_CM)+Vr*x/D;
@@ -726,7 +714,7 @@ static void interpolate_and_initialize_to_next_grid(Grid_T *const grid_next,Grid
       free_EoS(eos);
     }/* end of if (IsItNSPatch(patch)) */
     
-  }/* end of FOR_ALL_PATCHES(p,grid_next) */
+  }/* end of for (p = 0; p < np; ++p) */
   
 }
 
