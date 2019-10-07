@@ -1124,7 +1124,6 @@ static void extrapolate_fluid_fields_outsideNS_CS(Grid_T *const grid)
     /* add fields: */
     /* enthalpy */
     ADD_FIELD(enthalpy)
-    GET_FIELD(enthalpy)
     
     /* irrotational part of fluid */
     ADD_FIELD(phi)
@@ -1146,7 +1145,6 @@ static void extrapolate_fluid_fields_outsideNS_CS(Grid_T *const grid)
     
     Patch_T *NS_patch;/* corresponding NS patch, to extrapolate out */
     const unsigned *n = patch->n;
-    unsigned nn       = patch->nn;
     double r1,r2,r_max,r_in,r_out,a,b;
     double phii,W_U0i,W_U1i,W_U2i;/* fields at r1 */
     double phif,W_U0f,W_U1f,W_U2f;/* fields at r2 */
@@ -1154,11 +1152,6 @@ static void extrapolate_fluid_fields_outsideNS_CS(Grid_T *const grid)
     double x[3],X[3];
     double THETA,PHI;
     unsigned ijk,i,j,k;
-
-    /* populating enthalpy in NS surroundings */
-    printf("extrapolate enthalpy using the main enthalpy function!!!!!!!!\n");
-    for (ijk = 0; ijk < nn; ++ijk)
-      enthalpy[ijk] = 1;
 
     /* find the corresponding NS patch to be used for extrapolation */
     char stem[1000];
@@ -1326,6 +1319,10 @@ static void extrapolate_fluid_fields_outsideNS_CS(Grid_T *const grid)
     dphi_D2->v = Partial_Derivative(phi_field,"z");
     dphi_D1->v = Partial_Derivative(phi_field,"y");
     dphi_D0->v = Partial_Derivative(phi_field,"x");
+    
+    /* populating enthalpy in NS surroundings */
+    Tij_IF_CTS_enthalpy(patch);
+    
   }/* end of FOR_ALL_PATCHES(p,grid) */
 }
 
