@@ -87,6 +87,10 @@ L2 - P2;
   double h = 
 sqrt(h2);
 
+
+  if (!isnormal(h) || LSS(h,1))
+    h = 1;
+
   enthalpy[ijk] = h;
   }
 }

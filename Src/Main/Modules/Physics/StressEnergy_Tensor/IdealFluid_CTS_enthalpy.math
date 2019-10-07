@@ -72,6 +72,13 @@ Ccode["  {"];
      L2    = (b+(b**2-4*(alpha**4)*(uW**2))**(0.5))/(2*alpha**2);
      h2    = L2-P2;
      h     = (h2)**(0.5);
+``
+# if h < 1 or some abnormal number due to cude approximation
+# in the fields that compose the enthalpy, put h = 1. This choice
+# keeps the the iterative solver on track.
+     `  if (!isnormal(h) || LSS(h,1))`
+     `    h = 1;`
+``
      Ccode["  enthalpy[ijk] = h;"];
 Ccode["  }"];
 
