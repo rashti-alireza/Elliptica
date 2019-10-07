@@ -10,7 +10,7 @@ void bbn_study_initial_data(Grid_T *const grid)
 {
   pr_clock();
   pr_line_custom('=');
-  printf("{ Studing Initial Data for Binary BH and NS ...\n");
+  printf("{ Studying Initial Data for Binary BH and NS ...\n");
 
   /* print fields */
   const char *path_par = GetParameterS_E("iteration_output");
@@ -18,7 +18,7 @@ void bbn_study_initial_data(Grid_T *const grid)
   bbn_print_fields(grid,(unsigned)GetParameterI_E("iteration_number"),folder);
   free(folder);
   
-  printf("} Studing Initial Data for Binary BH and NS ==> Done.\n");
+  printf("} Studying Initial Data for Binary BH and NS ==> Done.\n");
   pr_clock();
   pr_line_custom('=');
   
