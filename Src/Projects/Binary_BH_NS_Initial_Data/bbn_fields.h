@@ -5,6 +5,7 @@ void bbn_partial_derivatives_fields(Grid_T *const grid);
 void bbn_update_derivative_phi(Patch_T *const patch);
 void bbn_update_derivative_enthalpy(Patch_T *const patch);
 void bbn_update_derivative_phi(Patch_T *const patch);
+void bbn_update_rho0(Patch_T *const patch);
 void bbn_update_derivative_rho0(Patch_T *const patch);
 void bbn_update_derivative_u0(Patch_T *const patch);
 void bbn_update_derivative_HS(Patch_T *const patch);

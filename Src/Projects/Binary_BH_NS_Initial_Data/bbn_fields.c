@@ -472,6 +472,27 @@ void bbn_update_derivative_enthalpy(Patch_T *const patch)
   }
 }
 
+/* update rho0 */
+void bbn_update_rho0(Patch_T *const patch)
+{
+  /* only if the patch covers a part of the NS add the following fields */
+  if (IsItNSPatch(patch))
+  {
+    EoS_T *eos = initialize_EoS();
+    GET_FIELD(enthalpy)
+    PREP_FIELD(rho0)
+    const unsigned nn = patch->nn;
+    unsigned ijk;
+
+    for (ijk = 0; ijk < nn; ++ijk)
+    {
+      eos->h    = enthalpy[ijk];
+      rho0[ijk] = eos->rest_mass_density(eos);
+    }
+    free_EoS(eos);
+  }
+}
+
 /* updating derivative */
 void bbn_update_derivative_rho0(Patch_T *const patch)
 {
