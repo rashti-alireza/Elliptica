@@ -2,7 +2,7 @@ enum ROOT_FINDER_enum
 {
   ROOT_FINDER_UNDEF/* undefined */,
   ROOT_FINDER_OK/* root was found successfully */,
-  ROOT_FINDER_EXTREMA/* it stuch in an extrema */,
+  ROOT_FINDER_EXTREMA/* it stuck in an extrema */,
   ROOT_FINDER_MAX_ITER/* exceeds from maximum number of iteration */,
   ROOT_FINDER_NO_IMPROVEMENT/* it could not improve it more */,
   ROOT_FINDER_INTERRUPTED/* it was interrupted by a condition by user */,
