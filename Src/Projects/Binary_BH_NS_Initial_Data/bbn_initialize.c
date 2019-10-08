@@ -31,7 +31,6 @@ Grid_T *bbn_initialize_next_grid(Grid_T *const grid_prev)
 // ->return value: the next grid called 'grid_next' */
 static Grid_T *make_next_grid_using_previous_grid(Grid_T *const grid_prev)
 {
-  abortEr(NO_JOB);
   Grid_T *grid_next = 0;
   struct Grid_Params_S *GridParams = init_GridParams();/* adjust some pars for construction of next grid */
   
@@ -1321,13 +1320,13 @@ static void extrapolate_fluid_fields_outsideNS_CS(Grid_T *const grid)
           e0 = pow(r_out/r2,EXP);
           
           phi[ijk]  = execute_interpolation(interp_phi)+dphi;
-          phi[ijk] *= exp(sphi*e0);
+          phi[ijk] *= exp(sphi*e0)*pow(r_out/r2,sphi);
           W_U0[ijk] = execute_interpolation(interp_W_U0)+dW_U0;
-          W_U0[ijk] *= exp(sW_U0*e0);
+          W_U0[ijk] *= exp(sW_U0*e0)*pow(r_out/r2,sW_U0);
           W_U1[ijk] = execute_interpolation(interp_W_U1)+dW_U1;
-          W_U1[ijk] *= exp(sW_U1*e0);
+          W_U1[ijk] *= exp(sW_U1*e0)*pow(r_out/r2,sW_U1);
           W_U2[ijk] = execute_interpolation(interp_W_U2)+dW_U2;
-          W_U2[ijk] *= exp(sW_U2*e0);
+          W_U2[ijk] *= exp(sW_U2*e0)*pow(r_out/r2,sW_U2);
           
         }/* end of for (k = 0 ; k < n[2]; ++k) */
       }/* end of for (j = 0; j < n[1]; ++j) */
