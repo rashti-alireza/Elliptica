@@ -1101,8 +1101,9 @@ static void find_XYZ_and_patch_of_theta_phi_NS_CS(double *const X,Patch_T **cons
 // for extrapolation we demand:
 // the fields spread out in the same fashion as it is changing toward 
 // the NS sarface. what we have :
-// f(r_out) = f(r_in) + df, in which df is f(r2)-f(r1), r1 = FACTOR*r2
-// and r2 is the radius of NS surface.
+// f(r_out) = (f(r_in) + df)*exp(g(r)), in which df is f(r2)-f(r1), 
+// r1 = FACTOR*r2 and r2 is the radius of NS surface, and g(r) is 
+// a function of r_out/r2 to control the radial trend of fieldd.
 // a = (r_max-r2)/(r2-r1)
 // b = (r1*r_max-SQR(r2))/(r1-r2)
 // r_out = a*r_in + b, where (r_in) r_out is r (inside)outside NS and
@@ -1111,7 +1112,8 @@ static void find_XYZ_and_patch_of_theta_phi_NS_CS(double *const X,Patch_T **cons
 // from r1 to r2 in NS surrounding, from r2 to r_max. */
 static void extrapolate_fluid_fields_outsideNS_CS(Grid_T *const grid)
 {
-  const double FACTOR = 0.8;
+  const double FACTOR = 0.8;/* r1 = FACTOR*r2 */
+  const double EXP    = 1;/* (r_out/r2)^EXP */
   unsigned p;
   
   FOR_ALL_PATCHES(p,grid)
@@ -1149,7 +1151,8 @@ static void extrapolate_fluid_fields_outsideNS_CS(Grid_T *const grid)
     double phii,W_U0i,W_U1i,W_U2i;/* fields at r1 */
     double phif,W_U0f,W_U1f,W_U2f;/* fields at r2 */
     double dphi,dW_U0,dW_U1,dW_U2;
-    double x[3],X[3];
+    double sphi,sW_U0,sW_U1,sW_U2;/* signs */
+    double x[3],X[3],e0;
     double THETA,PHI;
     unsigned ijk,i,j,k;
 
@@ -1269,6 +1272,10 @@ static void extrapolate_fluid_fields_outsideNS_CS(Grid_T *const grid)
         dW_U0 = W_U0f - W_U0i;
         dW_U1 = W_U1f - W_U1i;
         dW_U2 = W_U2f - W_U2i;
+        sphi  = dphi  > 0 ?  -1 : 1;
+        sW_U0 = dW_U0 > 0 ?  -1 : 1;
+        sW_U1 = dW_U1 > 0 ?  -1 : 1;
+        sW_U2 = dW_U2 > 0 ?  -1 : 1;
         
         for (k = 0; k < n[2]; ++k)
         {
@@ -1303,10 +1310,17 @@ static void extrapolate_fluid_fields_outsideNS_CS(Grid_T *const grid)
           interp_W_U2->Y = X[1];
           interp_W_U2->Z = X[2];
           
+          e0 = pow(r_out/r2,EXP);
+          
           phi[ijk]  = execute_interpolation(interp_phi)+dphi;
+          phi[ijk] *= exp(sphi*e0);
           W_U0[ijk] = execute_interpolation(interp_W_U0)+dW_U0;
+          W_U0[ijk] *= exp(sW_U0*e0);
           W_U1[ijk] = execute_interpolation(interp_W_U1)+dW_U1;
+          W_U1[ijk] *= exp(sW_U1*e0);
           W_U2[ijk] = execute_interpolation(interp_W_U2)+dW_U2;
+          W_U2[ijk] *= exp(sW_U2*e0);
+          
         }/* end of for (k = 0 ; k < n[2]; ++k) */
       }/* end of for (j = 0; j < n[1]; ++j) */
     }/* end of for (i = 0; i < n[0]; ++i) */
