@@ -105,5 +105,8 @@ L2 - P2;
   double h = 
 sqrt(h2);
 
+  if(!isnormal(h))
+    root_finder->interrupt = 1;
+
   return h-1;
 }

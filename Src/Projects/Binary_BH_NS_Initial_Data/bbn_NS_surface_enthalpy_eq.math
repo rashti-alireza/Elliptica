@@ -38,7 +38,7 @@ Ccode["double bbn_NS_surface_enthalpy_eq(void *params,const double *const x)"];
 `  double X[3],R;`
 ``
 `  R = rms(3,yp,0);`
-`  if (GRT(R,pars->maxR))` # it means it passes the determined radius at NS surrounding patch
+`  if (GRT(R,pars->maxR))` # it means it passes the determined radius at the patch
 `    root_finder->interrupt = 1;`
 
 `  X_of_x(X,y,patch);`
@@ -90,7 +90,9 @@ b     = (Bdphi-Euler_C)**2 + 2*(alpha**2)*uW;
 L2    = (b+(b**2-4*(alpha**4)*(uW**2))**(0.5))/(2*alpha**2);
 h2    = L2-P2;
 h     = (h2)**(0.5);
-     
+`  if(!isnormal(h))`     
+`    root_finder->interrupt = 1;`
+``
 `  return h-1;`
 
 `}`
