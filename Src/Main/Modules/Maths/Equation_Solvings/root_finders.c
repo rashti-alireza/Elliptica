@@ -140,6 +140,7 @@ static double *root_finder_steepest_descent(Root_Finder_T *const root)
       x[i] = x_gss[i];
   
   root->exit_status = ROOT_FINDER_UNDEF;
+  root->residual    = DBL_MAX;
   k = 1;
   while (k <= MaxIter)
   {
