@@ -13,10 +13,12 @@
 struct NS_surface_RootFinder_S
 {
   Patch_T *patch;
+  void *root_finder;
   double x0[3];/* (x,y,z) at the surface */
   double *N;/* the direction of increasing or decreasing of x = x0+N*d */
   double Euler_C;/* Euler equation const. */
   double scale;/* to avoid long step in root finder */
+  double maxR;/* max R allowed for NS surrounding */
 };
 
 /* root finder struc for force balance equation */  

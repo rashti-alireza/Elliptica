@@ -828,6 +828,7 @@ static void find_NS_surface_Ylm_method_CS(Grid_T *const grid,struct Grid_Params_
   
   par->Euler_C = GetParameterD_E("Euler_equation_constant");
   par->scale   = 1E-2;
+  par->maxR    = (1./3.)*GetParameterD_E("BH_NS_separation");
   /* initialize tables */
   init_Legendre_root_function();
   
@@ -927,7 +928,13 @@ static void find_NS_surface_Ylm_method_CS(Grid_T *const grid,struct Grid_Params_
         else
           root->FD_Right = 1;
         
-        dr    = execute_root_finder(root);
+        dr = execute_root_finder(root);
+        
+        if (root->interrupt || root->exit_status == ROOT_FINDER_NAN)
+        {
+          print_root_finder_exit_status(root);
+          abortEr("What to do?");
+        }
         /*  new coords of R respect to the center of NS */
         y[0] += N[0]*dr[0]*par->scale;
         y[1] += N[1]*dr[0]*par->scale;

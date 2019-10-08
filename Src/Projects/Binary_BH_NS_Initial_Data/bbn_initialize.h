@@ -1,9 +1,9 @@
 #include "bbn_headers.h"
 #include "utilities_lib.h"
-#include "maths_equation_solvings_lib.h"
 #include "maths_approximation_lib.h"
 #include "maths_analytic_lib.h"
 #include "physics_observables_lib.h"
+#include "maths_equation_solvings_lib.h"
 
 #define Power(a,b) pow(a,b)
 #define Sqrt(a) sqrt(a)

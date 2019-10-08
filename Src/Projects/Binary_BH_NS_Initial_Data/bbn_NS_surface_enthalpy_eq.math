@@ -7,7 +7,8 @@ Point = ijk;
 C_arg    =;
 C_macro  = define_variable(name);
 Ccode["#include "bbn_headers.h""];
-
+`#include "maths_equation_solvings_lib.h"`
+``
 `#define define_variable(xNAME) \`
 `  Field_T *const field_##xNAME = patch->pool[Ind(#xNAME)]; \`
 `  Interpolation_T *interp_##xNAME = init_interpolation(); \`
@@ -18,8 +19,8 @@ Ccode["#include "bbn_headers.h""];
 `  interp_##xNAME->Z = X[2]; \`
 `  plan_interpolation(interp_##xNAME); \`
 `  const double xNAME = execute_interpolation(interp_##xNAME); \`
-`  free_interpolation(interp_##xNAME);\n`
-
+`  free_interpolation(interp_##xNAME);`
+``
 Ccode["double bbn_NS_surface_enthalpy_eq(void *params,const double *const x);"];
 # equation: f(x) = h-1
 Ccode["double bbn_NS_surface_enthalpy_eq(void *params,const double *const x)"];
@@ -28,12 +29,18 @@ Ccode["double bbn_NS_surface_enthalpy_eq(void *params,const double *const x)"];
 `  const struct NS_surface_RootFinder_S *const pars = params;`
 `  const double dx = x[0]*pars->scale;`
 `  Patch_T *const patch   = pars->patch;`
+`  Root_Finder_T *const root_finder = pars->root_finder;`
 `  const double *const x0 = pars->x0;`
 `  const double *const N  = pars->N;`
 `  const double Euler_C   = pars->Euler_C;`
 `  const double y[3]      = {x0[0]+dx*N[0],x0[1]+dx*N[1],x0[2]+dx*N[2]};`
-`  double X[3];`
+`  const double yp[3]     = {y[0]-patch->c[0],y[1]-patch->c[1],y[2]-patch->c[2]};`
+`  double X[3],R;`
 ``
+`  R = rms(3,yp,0);`
+`  if (GRT(R,pars->maxR))` # it means it passes the determined radius at NS surrounding patch
+`    root_finder->interrupt = 1;`
+
 `  X_of_x(X,y,patch);`
 
 Declare = 
