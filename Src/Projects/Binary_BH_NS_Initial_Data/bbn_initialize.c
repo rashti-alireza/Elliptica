@@ -822,7 +822,11 @@ static void find_NS_surface_Ylm_method_CS(Grid_T *const grid,struct Grid_Params_
   const double guess        = 1E-3;
   const double maxR_out     = (1./3.)*GetParameterD_E("BH_NS_separation");
   const double SMALL_FACTOR = 0.7;/* initial r = SMALL_FACTOR*R0_NS */
-  const double RESIDUAL     = 10E3*GetParameterD_E("RootFinder_Tolerance");
+  const double RESIDUAL     = 1E3*GetParameterD_E("RootFinder_Tolerance");
+  const double HowBigFac    = 1.5;
+  const double HowSmallFac  = 0.5;
+  const double INCREMENT    = 1.2;/* %20 increase */
+  const double DECREMENT    = 0.8;/* %20 decrease */
   double X[3],x[3],N[3];
   char stem[1000],*affix;
   //Flag_T NS_patch_flg = NONE;
@@ -936,7 +940,7 @@ static void find_NS_surface_Ylm_method_CS(Grid_T *const grid,struct Grid_Params_
       /* if root finder went wrong for some reason */
       if (root->interrupt || GRT(root->residual,RESIDUAL))
       {
-        print_root_finder_exit_status(root);
+        //print_root_finder_exit_status(root);
         Rnew_NS[ij(i,j)] = R0_NS;
       }
       else/* if root finder was successful */
@@ -947,6 +951,12 @@ static void find_NS_surface_Ylm_method_CS(Grid_T *const grid,struct Grid_Params_
         y2[2] += N[2]*dr[0]*par->scale;
         Rnew_NS[ij(i,j)] = rms(3,y2,0);
       }
+      
+      /* if we have big difference in NS radius, ameliorate it */
+      if (GRTEQL(Rnew_NS[ij(i,j)],HowBigFac*R0_NS))
+        Rnew_NS[ij(i,j)] = R0_NS*INCREMENT;
+      else if (LSSEQL(Rnew_NS[ij(i,j)],HowSmallFac*R0_NS))
+        Rnew_NS[ij(i,j)] = R0_NS*DECREMENT;
       
       if (Rnew_NS[ij(i,j)] > Max_R_NS)
         Max_R_NS = Rnew_NS[ij(i,j)];
