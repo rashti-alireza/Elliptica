@@ -351,7 +351,7 @@ void print_root_finder_exit_status(const Root_Finder_T *const root)
       printf("Root finder cannot improve the solution further.\n");
     break;
     case ROOT_FINDER_INTERRUPTED:
-      printf("Root finder was interrupted by a condition by the user.\n");
+      printf("Root finder was interrupted.\n");
     break;
     case ROOT_FINDER_NAN:
       printf("Root finder failed with an abnormal residual.\n");
