@@ -16,6 +16,7 @@ C_macro2 = PREP_FIELD(name);
 Ccode["#include "IdealFluid_CTS_lib.h"\n\n"];
 Ccode["void Tij_IF_CTS_enthalpy(Patch_T *const patch)"];
 Ccode["{"];
+`  const double R_MAX = 1E2;`
 Ccode["  const unsigned nn = patch->nn;"];
 Ccode["  unsigned ijk;"];
 
@@ -74,10 +75,18 @@ Ccode["  {"];
      h     = (h2)**(0.5);
 ``
 # if h < 1 or some abnormal number due to cude approximation
-# in the fields that compose the enthalpy, put h = 1. This choice
-# keeps the the iterative solver on track.
+# in the fields that compose the enthalpy, put h to a well defined
+# function. This choice keeps the the iterative solver on track.
      `  if (!isnormal(h) || LSS(h,1))`
-     `    h = 1;`
+     `  {`
+     `    double x[3] = {0},r;`
+     `    x[0] = patch->node[ijk]->x[0]-patch->c[0];`
+     `    x[1] = patch->node[ijk]->x[1]-patch->c[1];`
+     `    x[2] = patch->node[ijk]->x[2]-patch->c[2];`
+     `    r = rms(3,x,0);`
+     `    assert(r < R_MAX);`
+     `    h = 1-r/R_MAX;`
+     `  }`
 ``
      Ccode["  enthalpy[ijk] = h;"];
 Ccode["  }"];

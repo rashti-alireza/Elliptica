@@ -9,6 +9,7 @@
 
 void Tij_IF_CTS_enthalpy(Patch_T *const patch)
 {
+  const double R_MAX = 1E2;
   const unsigned nn = patch->nn;
   unsigned ijk;
 
@@ -89,7 +90,15 @@ sqrt(h2);
 
 
   if (!isnormal(h) || LSS(h,1))
-    h = 1;
+  {
+    double x[3] = {0},r;
+    x[0] = patch->node[ijk]->x[0]-patch->c[0];
+    x[1] = patch->node[ijk]->x[1]-patch->c[1];
+    x[2] = patch->node[ijk]->x[2]-patch->c[2];
+    r = rms(3,x,0);
+    assert(r < R_MAX);
+    h = 1-r/R_MAX;
+  }
 
   enthalpy[ijk] = h;
   }
