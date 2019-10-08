@@ -851,10 +851,10 @@ static void find_NS_surface_Ylm_method_CS(Grid_T *const grid,struct Grid_Params_
       /* find enthalpy at the (X,Y,Z) */
       Interpolation_T *interp_h = init_interpolation();
       interp_h->field = patch->pool[Ind("enthalpy")];
-      interp_h->XYZ_dir_flag = 1;
+      interp_h->XY_dir_flag  = 1;
       interp_h->X            = X[0];
       interp_h->Y            = X[1];
-      interp_h->Z            = X[2];
+      interp_h->K            = patch->n[2]-1;
       plan_interpolation(interp_h);
       h = execute_interpolation(interp_h);/* enthalpy */
       free_interpolation(interp_h);
@@ -867,6 +867,7 @@ static void find_NS_surface_Ylm_method_CS(Grid_T *const grid,struct Grid_Params_
       y[2] = x[2]-patch->c[2];
       R0_NS = rms(3,y,0);
       
+      assert(h > 0);
       if(EQL(h,1))/* if it takes place on the current NS surface */
       {
         Rnew_NS[ij(i,j)] = R0_NS;
