@@ -488,6 +488,8 @@ void bbn_update_rho0(Patch_T *const patch)
     {
       eos->h    = enthalpy[ijk];
       rho0[ijk] = eos->rest_mass_density(eos);
+      if (!isnormal(rho0[ijk]))
+        abortEr("rho0 update went wrong due to bad enthalpy.\n");
     }
     free_EoS(eos);
   }
