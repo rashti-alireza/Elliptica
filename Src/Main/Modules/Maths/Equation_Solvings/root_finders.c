@@ -139,8 +139,11 @@ static double *root_finder_steepest_descent(Root_Finder_T *const root)
     for (i = 0; i < n; ++i)
       x[i] = x_gss[i];
   
+  /* initialize */
   root->exit_status = ROOT_FINDER_UNDEF;
   root->residual    = DBL_MAX;
+  root->interrupt   = 0;
+  
   k = 1;
   while (k <= MaxIter)
   {
