@@ -21,3 +21,4 @@ void free_patch_interface(Patch_T *const patch);
 void free_patch_SolMan_jacobian(Patch_T *const patch);
 void free_patch_SolMan_method_Schur(Patch_T *const patch);
 void _free(void *p);
+void free_grid(Grid_T *grid);

@@ -406,3 +406,47 @@ void _free(void *p)
   if (p)
     free(p);
 }
+
+/* free the given grid completely */
+void free_grid(Grid_T *grid)
+{
+  unsigned p,ijk,nn,f;
+  
+  if (!grid)
+    return;
+  
+  FOR_ALL_PATCHES(p,grid)
+  {
+    Patch_T *patch = grid->patch[p];
+    nn             = patch->nn;
+    
+    _free(patch->name);
+    
+    if (patch->coordsys != Cartesian)
+      for (ijk = 0; ijk < nn; ++ijk)
+        _free(patch->node[ijk]->X);
+    
+    if (patch->node)    
+      free_2d_mem(patch->node,nn);
+    
+    for (f = 0; f < patch->nfld; ++f)
+    {
+      Field_T *field = patch->pool[f];
+      free_field(field);
+    }
+    _free(patch->pool);
+    _free(patch->JacobianT);
+    free_patch_interface(patch);
+    free_patch_SolMan_jacobian(patch);
+    free_patch_SolMan_method_Schur(patch);
+    _free(patch->solving_man->field_eq);
+    _free(patch->solving_man->bc_eq);
+    _free(patch->solving_man->jacobian_field_eq);
+    _free(patch->solving_man->jacobian_bc_eq);
+    free_2d_mem(patch->solving_man->field_name,patch->solving_man->nf);
+    free(patch->solving_man);
+  }
+  free_2d_mem(grid->patch,grid->np);
+  _free(grid->kind);
+  free(grid);
+}
