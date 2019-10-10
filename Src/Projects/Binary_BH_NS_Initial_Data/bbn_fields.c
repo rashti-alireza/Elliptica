@@ -488,7 +488,7 @@ void bbn_update_rho0(Patch_T *const patch)
     {
       eos->h    = enthalpy[ijk];
       rho0[ijk] = eos->rest_mass_density(eos);
-      if (!isnormal(rho0[ijk]))
+      if (!isfinite(rho0[ijk]))
         abortEr("rho0 update went wrong due to bad enthalpy.\n");
     }
     free_EoS(eos);
@@ -810,4 +810,50 @@ void bbn_update_derivative_Beta_U2(Patch_T *const patch)
   ddBeta_U2D2D2->v = Partial_Derivative(dBeta_U2D2,"z");
   ddBeta_U2D0D2->v = Partial_Derivative(dBeta_U2D0,"z");
   
+}
+
+/* updating enthalpy and its derivative */
+void bbn_update_enthalpy_and_denthalpy(Grid_T *const grid)
+{
+  unsigned p;
+  
+  FOR_ALL_PATCHES(p,grid)
+  {
+    Patch_T *patch = grid->patch[p];
+    
+    if(!IsItNSPatch(patch))
+      continue;
+      
+    Tij_IF_CTS_enthalpy(patch);
+    bbn_update_derivative_enthalpy(patch);  
+  }
+
+}
+
+/* update enthalpy,denthalpy,rho0, drho0, u0, _J^i, _E and _S */
+void bbn_update_matter_fields(Grid_T *const grid)
+{
+  pr_line_custom('=');
+  printf("Updating enthalpy, rest-mass density and their derivatives ...\n");
+  
+  unsigned p;
+  
+  bbn_update_enthalpy_and_denthalpy(grid);
+  
+  FOR_ALL_PATCHES(p,grid)
+  {
+    Patch_T *patch = grid->patch[p];
+    
+    if(!IsItNSPatch(patch))
+      continue;
+    
+    bbn_update_rho0(patch);
+    bbn_update_derivative_rho0(patch);
+  
+  }
+  printf("Updating enthalpy, rest-mass density and their derivatives ==> Done.\n");
+  pr_clock();
+  pr_line_custom('=');
+
+  Tij_IF_CTS_psi6Sources(grid);
 }

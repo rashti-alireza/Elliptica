@@ -21,3 +21,5 @@ void bbn_update_derivative_Beta_U2(Patch_T *const patch);
 void bbn_update_Beta_U0(Patch_T *const patch);
 void bbn_update_Beta_U1(Patch_T *const patch);
 void bbn_update_Beta_U2(Patch_T *const patch);
+void bbn_update_enthalpy_and_denthalpy(Grid_T *const grid);
+void bbn_update_matter_fields(Grid_T *const grid);
