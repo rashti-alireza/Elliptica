@@ -92,15 +92,6 @@ deta_D0[ijk]/eta[ijk] - dpsi_D0[ijk]/psi[ijk];
     double dLn_of_alpha_U1 = 
 deta_D1[ijk]/eta[ijk] - dpsi_D1[ijk]/psi[ijk];
 
-    double dLn_of_rho0_U0 = 
-drho0_D0[ijk]/rho0[ijk];
-
-    double dLn_of_rho0_U1 = 
-drho0_D1[ijk]/rho0[ijk];
-
-    double dLn_of_rho0_U2 = 
-drho0_D2[ijk]/rho0[ijk];
-
     double dLn_of_enthalpy_U0 = 
 denthalpy_D0[ijk]/enthalpy[ijk];
 
@@ -120,22 +111,22 @@ du0_D0[ijk]/u0[ijk];
 du0_D1[ijk]/u0[ijk];
 
     double dLns0_U1 = 
-dLn_of_alpha_U1 - dLn_of_enthalpy_U1 + dLn_of_rho0_U1;
+drho0_D1[ijk] + rho0[ijk]*(dLn_of_alpha_U1 - dLn_of_enthalpy_U1);
 
     double dLns0_U0 = 
-dLn_of_alpha_U0 - dLn_of_enthalpy_U0 + dLn_of_rho0_U0;
+drho0_D0[ijk] + rho0[ijk]*(dLn_of_alpha_U0 - dLn_of_enthalpy_U0);
 
     double dLns0_U2 = 
-dLn_of_alpha_U2 - dLn_of_enthalpy_U2 + dLn_of_rho0_U2;
+drho0_D2[ijk] + rho0[ijk]*(dLn_of_alpha_U2 - dLn_of_enthalpy_U2);
 
     double dLns1_U2 = 
-dLn_of_alpha_U2 + dLn_of_rho0_U2 + dLn_of_u0_U2;
+drho0_D2[ijk] + rho0[ijk]*(dLn_of_alpha_U2 + dLn_of_u0_U2);
 
     double dLns1_U0 = 
-dLn_of_alpha_U0 + dLn_of_rho0_U0 + dLn_of_u0_U0;
+drho0_D0[ijk] + rho0[ijk]*(dLn_of_alpha_U0 + dLn_of_u0_U0);
 
     double dLns1_U1 = 
-dLn_of_alpha_U1 + dLn_of_rho0_U1 + dLn_of_u0_U1;
+drho0_D1[ijk] + rho0[ijk]*(dLn_of_alpha_U1 + dLn_of_u0_U1);
 
     double alpha = 
 eta[ijk]/psi[ijk];
@@ -188,10 +179,10 @@ psi[ijk];
 Beta_U2[ijk]*dLns1_U2);
 
     double t6 = 
--K[ijk]*alpha*enthalpy[ijk]*u0[ijk];
+-K[ijk]*alpha*enthalpy[ijk]*rho0[ijk]*u0[ijk];
 
     double F_eq = 
-t1 + t2 + t3 + t4 + t5 + t6;
+rho0[ijk]*(t2 + t3 + t4) + t1 + t5 + t6;
 
     F[n] = F_eq;
 

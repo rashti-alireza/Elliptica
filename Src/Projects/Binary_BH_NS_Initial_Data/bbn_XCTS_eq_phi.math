@@ -108,22 +108,24 @@ Symm[ddphi(i,j)     = ddphi(j,i)];
 # write the equation below at ijk point:
 
 dLn_of_alpha(i) = deta(i)/eta - dpsi(i)/psi;
-dLn_of_rho0(i)  = drho0(i)/rho0;
+#dLn_of_rho0(i)  = drho0(i)/rho0;
 dLn_of_enthalpy(i)  = denthalpy(i)/enthalpy;
 dLn_of_u0(i)  = du0(i)/u0;
-dLns0(i) = dLn_of_alpha(i) + dLn_of_rho0(i) - dLn_of_enthalpy(i);
-dLns1(i) = dLn_of_alpha(i) + dLn_of_rho0(i) + dLn_of_u0(i);
+#dLns0(i) = dLn_of_alpha(i) + dLn_of_rho0(i) - dLn_of_enthalpy(i);
+#dLns1(i) = dLn_of_alpha(i) + dLn_of_rho0(i) + dLn_of_u0(i);
+dLns0(i) = drho0(i)+rho0*(dLn_of_alpha(i)- dLn_of_enthalpy(i));
+dLns1(i) = drho0(i)+rho0*(dLn_of_alpha(i) + dLn_of_u0(i));
 alpha = eta/psi;
 
 t1 = dLns0(-i)*((psi**-4)*_gammaI(i,l)*dphi(-l)+W(i));
-t2 = 2*(psi**-5)*dpsi(-i)*_gammaI(i,l)*dphi(-l);
-t3 = (psi**-4)*_gammaI(-i,-l)*(ddphi(i,l)-_Gamma(n,i,l)*dphi(-n));
-t4 = 6*dpsi(i)*W(-i)/psi + _Gamma(i,ip,l)*W(-l)*KD(-i,-ip);
+t2 = (2*(psi**-5)*dpsi(-i)*_gammaI(i,l)*dphi(-l));
+t3 = ((psi**-4)*_gammaI(-i,-l)*(ddphi(i,l)-_Gamma(n,i,l)*dphi(-n)));
+t4 = (6*dpsi(i)*W(-i)/psi + _Gamma(i,ip,l)*W(-l)*KD(-i,-ip));
 #t5 = -enthalpy*u0*(dLns1(i)*Beta(-i)+alpha*K);
 t5 = -enthalpy*u0*dLns1(i)*Beta(-i);
-t6 = -enthalpy*u0*alpha*K;
+t6 = -rho0*enthalpy*u0*alpha*K;
 
-F_eq = t1+t2+t3+t4+t5+t6;
+F_eq = t1+rho0*(t2+t3+t4)+t5+t6;
 
 `    F[n] = F_eq;\n`;# Jx = -F in Newton-Raphson scheme
 `  }`;

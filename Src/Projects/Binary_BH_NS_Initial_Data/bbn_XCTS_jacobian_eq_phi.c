@@ -82,15 +82,6 @@ deta_D0[ijk]/eta[ijk] - dpsi_D0[ijk]/psi[ijk];
       double dLn_of_alpha_b_U2 = 
 deta_D2[ijk]/eta[ijk] - dpsi_D2[ijk]/psi[ijk];
 
-      double dLn_of_rho0_b_U2 = 
-drho0_D2[ijk]/rho0[ijk];
-
-      double dLn_of_rho0_b_U1 = 
-drho0_D1[ijk]/rho0[ijk];
-
-      double dLn_of_rho0_b_U0 = 
-drho0_D0[ijk]/rho0[ijk];
-
       double dLn_of_enthalpy_b_U2 = 
 denthalpy_D2[ijk]/enthalpy[ijk];
 
@@ -101,13 +92,13 @@ denthalpy_D1[ijk]/enthalpy[ijk];
 denthalpy_D0[ijk]/enthalpy[ijk];
 
       double dLns0_b_U2 = 
-dLn_of_alpha_b_U2 - dLn_of_enthalpy_b_U2 + dLn_of_rho0_b_U2;
+drho0_D2[ijk] + rho0[ijk]*(dLn_of_alpha_b_U2 - dLn_of_enthalpy_b_U2);
 
       double dLns0_b_U0 = 
-dLn_of_alpha_b_U0 - dLn_of_enthalpy_b_U0 + dLn_of_rho0_b_U0;
+drho0_D0[ijk] + rho0[ijk]*(dLn_of_alpha_b_U0 - dLn_of_enthalpy_b_U0);
 
       double dLns0_b_U1 = 
-dLn_of_alpha_b_U1 - dLn_of_enthalpy_b_U1 + dLn_of_rho0_b_U1;
+drho0_D1[ijk] + rho0[ijk]*(dLn_of_alpha_b_U1 - dLn_of_enthalpy_b_U1);
 
       double t1_b = 
 1.0*(Jphi_D0(j_Jphi_D0,ijk,lmn)*_gammaI_U0U0[ijk]*dLns0_b_U0 +
@@ -155,7 +146,7 @@ _Gamma_U1D2D2[ijk] + Jphi_D2(j_Jphi_D2,ijk,lmn)*_Gamma_U2D2D2[ijk]))/
 pow(psi[ijk], 4);
 
       double Bpart = 
-t1_b + t2_b + t3_b;
+rho0[ijk]*(t2_b + t3_b) + t1_b;
 
   B[i][j] = Bpart;
 
@@ -180,15 +171,6 @@ deta_D1[ijk]/eta[ijk] - dpsi_D1[ijk]/psi[ijk];
         double dLn_of_alpha_e_U2 = 
 deta_D2[ijk]/eta[ijk] - dpsi_D2[ijk]/psi[ijk];
 
-        double dLn_of_rho0_e_U2 = 
-drho0_D2[ijk]/rho0[ijk];
-
-        double dLn_of_rho0_e_U0 = 
-drho0_D0[ijk]/rho0[ijk];
-
-        double dLn_of_rho0_e_U1 = 
-drho0_D1[ijk]/rho0[ijk];
-
         double dLn_of_enthalpy_e_U2 = 
 denthalpy_D2[ijk]/enthalpy[ijk];
 
@@ -199,13 +181,13 @@ denthalpy_D0[ijk]/enthalpy[ijk];
 denthalpy_D1[ijk]/enthalpy[ijk];
 
         double dLns0_e_U2 = 
-dLn_of_alpha_e_U2 - dLn_of_enthalpy_e_U2 + dLn_of_rho0_e_U2;
+drho0_D2[ijk] + rho0[ijk]*(dLn_of_alpha_e_U2 - dLn_of_enthalpy_e_U2);
 
         double dLns0_e_U1 = 
-dLn_of_alpha_e_U1 - dLn_of_enthalpy_e_U1 + dLn_of_rho0_e_U1;
+drho0_D1[ijk] + rho0[ijk]*(dLn_of_alpha_e_U1 - dLn_of_enthalpy_e_U1);
 
         double dLns0_e_U0 = 
-dLn_of_alpha_e_U0 - dLn_of_enthalpy_e_U0 + dLn_of_rho0_e_U0;
+drho0_D0[ijk] + rho0[ijk]*(dLn_of_alpha_e_U0 - dLn_of_enthalpy_e_U0);
 
         double t1_e = 
 1.0*(Jphi_D0(j_Jphi_D0,ijk,lmn)*_gammaI_U0U0[ijk]*dLns0_e_U0 +
@@ -253,7 +235,7 @@ _Gamma_U1D2D2[ijk] + Jphi_D2(j_Jphi_D2,ijk,lmn)*_Gamma_U2D2D2[ijk]))/
 pow(psi[ijk], 4);
 
         double Epart = 
-t1_e + t2_e + t3_e;
+rho0[ijk]*(t2_e + t3_e) + t1_e;
 
   E_Trans[j][i] = Epart;
 

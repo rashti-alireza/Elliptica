@@ -117,15 +117,16 @@ Symm[_Gamma(i,j,k)  = _Gamma(i,k,j)];
 
 
 dLn_of_alpha_b(i) = deta(i)/eta - dpsi(i)/psi;
-dLn_of_rho0_b(i)  = drho0(i)/rho0;
+#dLn_of_rho0_b(i)  = drho0(i)/rho0;
 dLn_of_enthalpy_b(i)  = denthalpy(i)/enthalpy;
-dLns0_b(i) = dLn_of_alpha_b(i) + dLn_of_rho0_b(i) - dLn_of_enthalpy_b(i);
+#dLns0_b(i) = dLn_of_alpha_b(i) + dLn_of_rho0_b(i) - dLn_of_enthalpy_b(i);
+dLns0_b(i) = drho0(i)+rho0*(dLn_of_alpha_b(i) - dLn_of_enthalpy_b(i));
 
 t1_b = dLns0_b(-i)*(psi**-4)*_gammaI(i,l)*Jphi(-l);
 t2_b = 2*(psi**-5)*dpsi(-i)*_gammaI(i,l)*Jphi(-l);
 t3_b = (psi**-4)*_gammaI(-i,-l)*(JJphi(i,l)-_Gamma(n,i,l)*Jphi(-n));
 
-Bpart = t1_b+t2_b+t3_b;
+Bpart = t1_b+rho0*(t2_b+t3_b);
 
 
 `  B[i][j] = Bpart;\n`;
@@ -150,15 +151,16 @@ Bpart = t1_b+t2_b+t3_b;
 
 
 dLn_of_alpha_e(i) = deta(i)/eta - dpsi(i)/psi;
-dLn_of_rho0_e(i)  = drho0(i)/rho0;
+#dLn_of_rho0_e(i)  = drho0(i)/rho0;
 dLn_of_enthalpy_e(i)  = denthalpy(i)/enthalpy;
-dLns0_e(i) = dLn_of_alpha_e(i) + dLn_of_rho0_e(i) - dLn_of_enthalpy_e(i);
+#dLns0_e(i) = dLn_of_alpha_e(i) + dLn_of_rho0_e(i) - dLn_of_enthalpy_e(i);
+dLns0_e(i) = drho0(i)+rho0*(dLn_of_alpha_e(i) - dLn_of_enthalpy_e(i));
 
 t1_e = dLns0_e(-i)*(psi**-4)*_gammaI(i,l)*Jphi(-l);
 t2_e = 2*(psi**-5)*dpsi(-i)*_gammaI(i,l)*Jphi(-l);
 t3_e = (psi**-4)*_gammaI(-i,-l)*(JJphi(i,l)-_Gamma(n,i,l)*Jphi(-n));
 
-Epart = t1_e+t2_e+t3_e;
+Epart = t1_e+rho0*(t2_e+t3_e);
 
 `  E_Trans[j][i] = Epart;\n`;
 `  DDM_SCHUR_JACOBIAN_EQ_Epart_CLOSE\n`;
