@@ -51,6 +51,10 @@ void bbn_solve_initial_data_eqs(Grid_T *const grid)
   }
   pr_line_custom('=');
   
+  /* updating enthalpy so one can find the new NS surface 
+  // for the next iteration */
+  bbn_update_enthalpy_and_denthalpy(grid);
+  
   /* free SolveEqs and phi grid */
   free_solve_equations(SolveEqs);
   bbn_free_phi_grid(phi_grid);
