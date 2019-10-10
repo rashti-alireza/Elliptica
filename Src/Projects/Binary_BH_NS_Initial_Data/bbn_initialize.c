@@ -46,16 +46,16 @@ static Grid_T *make_next_grid_using_previous_grid(Grid_T *const grid_prev)
   */
   
   /* find Euler equation constant to meet NS baryonic mass */
-  find_Euler_eq_const(grid_prev);
+  //find_Euler_eq_const(grid_prev);
   
   /* find y_CM by demanding P_ADM = 0 */
-  find_center_of_mass(grid_prev);
+  //find_center_of_mass(grid_prev);
   
   /* find the NS center */
-  find_NS_center(grid_prev);
+  //find_NS_center(grid_prev);
   
   /* find BH_NS_orbital_angular_velocity using force balance equation */
-  find_BH_NS_Omega_force_balance_eq(grid_prev);
+  //find_BH_NS_Omega_force_balance_eq(grid_prev);
   
   /* find the BH radius to acquire the desired BH mass */
   //find_BH_radius(grid_prev);
@@ -84,7 +84,7 @@ static Grid_T *make_next_grid_using_previous_grid(Grid_T *const grid_prev)
     abortEr(NO_OPTION);
     
   /* adjust the center of NS */
-  adjust_NS_center(grid_prev);
+  //adjust_NS_center(grid_prev);
     
   /* make new grid with new parameters */
   const double bh_chi  = GetParameterD_E("BH_X_U2");
@@ -108,8 +108,8 @@ static Grid_T *make_next_grid_using_previous_grid(Grid_T *const grid_prev)
   /* taking partial derivatives of the fields needed for equations */
   bbn_partial_derivatives_fields(grid_next);
   
-  /* update u0, _J^i, _E and _S */
-  Tij_IF_CTS_psi6Sources(grid_next);
+  /* update enthalpy,denthalpy,rho0, drho0, u0, _J^i, _E and _S */
+  bbn_update_matter_fields(grid_next);
   
   /* update _Aij in K^{ij} = A^{ij}+1/3*gamma^{ij}*K and 
   // _A^{ij} = gamma^10*A^{ij} and _dA^{ij} */
@@ -123,6 +123,7 @@ static Grid_T *make_next_grid_using_previous_grid(Grid_T *const grid_prev)
   
   return grid_next;
 }
+
 
 /* adjust the center of NS at the designated point, in case it moved.
 // we need only to draw enthalpy to (0,-D/2,0), D is BH and NS separation.
@@ -642,7 +643,7 @@ static void interpolate_and_initialize_to_next_grid(Grid_T *const grid_next,Grid
   }/* end of for (p = 0; p < np; ++p) */
   
   /* initializing some other fields: */
-  /* rho0,W_U[0-2],Beta_U[0-2],B1_U[0-2] */
+  /* W_U[0-2],Beta_U[0-2],B1_U[0-2] */
   const double Omega_BHNS = GetParameterD_E("BH_NS_orbital_angular_velocity");
   const double Omega_NS_x = GetParameterD_E("NS_Omega_U0");
   const double Omega_NS_y = GetParameterD_E("NS_Omega_U1");
@@ -687,10 +688,7 @@ static void interpolate_and_initialize_to_next_grid(Grid_T *const grid_next,Grid
     
     if (IsItNSPatch(patch))
     {
-      EoS_T *eos = initialize_EoS();
       
-      GET_FIELD(enthalpy)
-      PREP_FIELD(rho0)
       PREP_FIELD(W_U0)
       PREP_FIELD(W_U1)
       PREP_FIELD(W_U2)
@@ -701,16 +699,11 @@ static void interpolate_and_initialize_to_next_grid(Grid_T *const grid_next,Grid
         double y = patch->node[ijk]->x[1]-C_NS;
         double z = patch->node[ijk]->x[2];
         
-        /* rho0 */
-        eos->h    = enthalpy[ijk];
-        rho0[ijk] = eos->rest_mass_density(eos);
-        
         /* spin part */
         W_U0[ijk] = Omega_NS_y*z-Omega_NS_z*y;
         W_U1[ijk] = Omega_NS_z*x-Omega_NS_x*z;
         W_U2[ijk] = Omega_NS_x*y-Omega_NS_y*x;
       }
-      free_EoS(eos);
     }/* end of if (IsItNSPatch(patch)) */
     
   }/* end of for (p = 0; p < np; ++p) */
