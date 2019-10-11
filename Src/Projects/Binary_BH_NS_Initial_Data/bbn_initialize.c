@@ -1129,7 +1129,7 @@ static void find_XYZ_and_patch_of_theta_phi_NS_CS(double *const X,Patch_T **cons
 static void extrapolate_fluid_fields_outsideNS_CS(Grid_T *const grid)
 {
   const double FACTOR = 0.8;/* r1 = FACTOR*r2 */
-  const double EXP    = 1;/* (r_out/r2)^EXP */
+  //const double EXP    = 1;/* (r_out/r2)^EXP */
   unsigned p;
   
   FOR_ALL_PATCHES(p,grid)
@@ -1168,7 +1168,7 @@ static void extrapolate_fluid_fields_outsideNS_CS(Grid_T *const grid)
     double phif,W_U0f,W_U1f,W_U2f;/* fields at r2 */
     double dphi,dW_U0,dW_U1,dW_U2;
     double sphi,sW_U0,sW_U1,sW_U2;/* signs */
-    double x[3],X[3],e0;
+    double x[3],X[3];
     double THETA,PHI;
     unsigned ijk,i,j,k;
 
@@ -1326,16 +1326,16 @@ static void extrapolate_fluid_fields_outsideNS_CS(Grid_T *const grid)
           interp_W_U2->Y = X[1];
           interp_W_U2->Z = X[2];
           
-          e0 = pow(r_out/r2,EXP);
+          //double e0 = pow(r_out/r2,EXP);
           
           phi[ijk]  = execute_interpolation(interp_phi)+dphi;
-          phi[ijk] *= exp(sphi*e0)*pow(r_out/r2,sphi);
+          //phi[ijk] *= exp(sphi*e0)*pow(r_out/r2,sphi);
           W_U0[ijk] = execute_interpolation(interp_W_U0)+dW_U0;
-          W_U0[ijk] *= exp(sW_U0*e0)*pow(r_out/r2,sW_U0);
+          //W_U0[ijk] *= exp(sW_U0*e0)*pow(r_out/r2,sW_U0);
           W_U1[ijk] = execute_interpolation(interp_W_U1)+dW_U1;
-          W_U1[ijk] *= exp(sW_U1*e0)*pow(r_out/r2,sW_U1);
+          //W_U1[ijk] *= exp(sW_U1*e0)*pow(r_out/r2,sW_U1);
           W_U2[ijk] = execute_interpolation(interp_W_U2)+dW_U2;
-          W_U2[ijk] *= exp(sW_U2*e0)*pow(r_out/r2,sW_U2);
+          //W_U2[ijk] *= exp(sW_U2*e0)*pow(r_out/r2,sW_U2);
           
         }/* end of for (k = 0 ; k < n[2]; ++k) */
       }/* end of for (j = 0; j < n[1]; ++j) */
