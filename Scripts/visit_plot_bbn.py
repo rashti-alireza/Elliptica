@@ -3,10 +3,10 @@
 # How to invoke the script:
 #
 # 1. with windows:
-# $ visit -cli -s visit_plot_CS.py field_name field_type grid_section data_directory
+# $ visit -cli -s visit_plot_bbn.py field_name field_type grid_section data_directory
 # 
 # 2. without windows: 
-# $ visit -nowin -cli -s visit_plot_CS.py field_name field_type grid_section data_directory
+# $ visit -nowin -cli -s visit_plot_bbn.py field_name field_type grid_section data_directory
 
 # import packages:
 from __future__ import division
