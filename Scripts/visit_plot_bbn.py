@@ -8,7 +8,7 @@
 # 2. without windows: 
 # $ visit -nowin -cli -s visit_plot_CS.py field_name field_type grid_section data_directory
 
-# Adding packages:
+# import packages:
 from __future__ import division
 import re
 import os
