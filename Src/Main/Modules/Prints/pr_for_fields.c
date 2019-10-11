@@ -667,7 +667,7 @@ static void read_parameter_4d(const char *const par,Pr_Field_T *const pr)
       Pinfo->comp[0] = dup_s(ss);
       ss = tok_s(0,DL_C,&savess); /* => ss = fy, savess = fz) */
       Pinfo->comp[1] = dup_s(ss);
-      ss = tok_s(0,DL_CP,&dump); /* => ss = fz */
+      ss = tok_s(0,DL_CP,&savess); /* => ss = fz */
       Pinfo->comp[2] = dup_s(ss);
       Pinfo->vec_flg = 1;
     }
