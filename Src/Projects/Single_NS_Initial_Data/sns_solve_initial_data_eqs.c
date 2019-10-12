@@ -363,7 +363,7 @@ static void sns_XCTS_fill_db_eqs(sEquation_T ***const field_eq,
   add_eq(field_eq,eq_phi,"eq_phi");
   add_eq(bc_eq   ,bc_phi,"bc_phi");
   add_eq(jacobian_field_eq,jacobian_eq_phi,"jacobian_eq_phi");
-  add_eq(jacobian_bc_eq   ,jacobian_bc_phi,"jacobian_bc_phi");
+  add_eq(jacobian_bc_eq   ,sns_jacobian_bc_phi,"sns_jacobian_bc_phi");
   
   /* psi equations */
   add_eq(field_eq,eq_psi,"eq_psi");
