@@ -1154,15 +1154,15 @@ static void init_field_TOV(Grid_T *const grid,const TOV_T *const tov)
         double y    = patch->node[ijk]->x[1]-C_NS;
         double z    = patch->node[ijk]->x[2];
         double r = sqrt(SQR(x)+SQR(y)+SQR(z));
-        double alpha;
+        //double alpha;
         
         /* psi */
         psi[ijk] = 1+0.5*M_NS/r;
-        /* + 1 for KS but we won't add and so we won't subtrac 1 either */
         
         /* eta */
-        alpha = (1-0.5*M_NS/r)/(1+0.5*M_NS/r);
-        eta[ijk] = psi[ijk]*alpha;
+        //alpha    = (1-0.5*M_NS/r)/(1+0.5*M_NS/r);
+        eta[ijk] = (1-0.5*M_NS/r);
+        //eta[ijk] = psi[ijk]*alpha;
         
       }
     }
