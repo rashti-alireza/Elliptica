@@ -253,6 +253,81 @@ void populate_left_NS_central_box(Grid_T *const grid,const unsigned pn)
     
 }
 
+/* populating properties of right box in for single neutron star */
+void populate_right_box_sns(Grid_T *const grid,const unsigned pn)
+{
+  Patch_T *const patch = grid->patch[pn];
+  char name[100] = {'\0'};
+  char var[100] = {'\0'};
+  
+  /* filling grid */
+  patch->grid = grid;
+  
+  /* filling patch number */
+  patch->pn = pn;
+  
+  /* filling inner boundary */
+  patch->innerB = 0;
+  
+  /* filling name */
+  sprintf(name,"grid%u_right_box",grid->gn);
+  patch->name = dup_s(name);
+  
+  /* filling n */
+  sprintf(var,"grid%u_right_box_n_a",grid->gn);
+  patch->n[0] = (unsigned)GetParameterI_E(var);
+  
+  sprintf(var,"grid%u_right_box_n_b",grid->gn);
+  patch->n[1] = (unsigned)GetParameterI_E(var);
+  
+  sprintf(var,"grid%u_right_box_n_c",grid->gn);
+  patch->n[2] = (unsigned)GetParameterI_E(var);
+  
+  /* filling nn */
+  patch->nn = total_nodes_patch(patch);
+  
+  /* filling center */
+  sprintf(var,"grid%u_right_box_center_a",grid->gn);
+  patch->c[0] = GetParameterDoubleF_E(var);
+  sprintf(var,"grid%u_right_box_center_b",grid->gn);
+  patch->c[1] = GetParameterDoubleF_E(var);
+  sprintf(var,"grid%u_right_box_center_c",grid->gn);
+  patch->c[2] = GetParameterDoubleF_E(var);
+  
+  /* filling size */
+  sprintf(var,"grid%u_right_box_size_a",grid->gn);
+  patch->s[0] = GetParameterDoubleF_E(var);
+  sprintf(var,"grid%u_right_box_size_b",grid->gn);
+  patch->s[1] = GetParameterDoubleF_E(var);
+  sprintf(var,"grid%u_right_box_size_c",grid->gn);
+  patch->s[2] = GetParameterDoubleF_E(var);
+  
+  /* filling min: min = center-l/2 */
+  patch->min[0] = patch->c[0]-patch->s[0]/2;
+  patch->min[1] = patch->c[1]-patch->s[1]/2;
+  patch->min[2] = patch->c[2]-patch->s[2]/2;
+  
+  /* filling max: max = center+l/2 */
+  patch->max[0] = patch->c[0]+patch->s[0]/2;
+  patch->max[1] = patch->c[1]+patch->s[1]/2;
+  patch->max[2] = patch->c[2]+patch->s[2]/2;
+  
+  /* filling flags */
+  patch->coordsys = Cartesian;
+  
+ /* collocation */
+  patch->collocation[0] = Chebyshev_Extrema;
+  patch->collocation[1] = Chebyshev_Extrema;
+  patch->collocation[2] = Chebyshev_Extrema;
+  
+  /* basis */
+  patch->basis[0] = Chebyshev_Tn_BASIS;
+  patch->basis[1] = Chebyshev_Tn_BASIS;
+  patch->basis[2] = Chebyshev_Tn_BASIS;
+    
+}
+
+
 /* populating properties of the filling box in cubed spherical grid */
 void populate_filling_box_CubedSpherical(Grid_T *const grid,const unsigned pn,const Flag_T side)
 {

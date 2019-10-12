@@ -8,3 +8,4 @@ void populate_filling_box_CubedSpherical(Grid_T *const grid,const unsigned pn,co
 void alloc_patches_Cartesian_grid(Grid_T *const grid);
 double JT_Cartesian_patch(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const unsigned p);
 void fill_patches_Cartesian_grid(Grid_T *const grid);
+void populate_right_box_sns(Grid_T *const grid,const unsigned pn);

@@ -10,6 +10,7 @@ void fill_patches_Cartesian_grid(Grid_T *const grid);
 void fill_patches_BNS_CubedSpherical_grid(Grid_T *const grid);
 void fill_patches_BBN_CubedSpherical_grid(Grid_T *const grid);
 void fill_patches_BNS_Spherical_grid(Grid_T *const grid);
+void fill_patches_SNS_CubedSpherical_Box_grid(Grid_T *const grid);
 int make_nodes(Grid_T *const grid);
 int make_JacobianT(Grid_T *const grid);
 void check_houseK(Patch_T *const patch);

@@ -5,6 +5,34 @@
 
 #include "cubed_spherical_coordinate.h"
 
+/* filling cubed spherical + box coordinate patches for SNS grid */
+void fill_patches_SNS_CubedSpherical_Box_grid(Grid_T *const grid)
+{
+  const unsigned N_outermost_split = (unsigned) GetParameterI_E("Number_of_Outermost_Split");
+  unsigned i,pn;
+  
+  pn = 0; /* patch number */
+  populate_left_NS_central_box(grid,pn++);/* +1 */
+  populate_left_NS(grid,pn);
+  pn += 6; /* +6 cubed sphere */
+  populate_left_NS_surrounding(grid,pn);
+  pn += 6; /* +6 cubed sphere */
+  populate_right_box_sns(grid,pn);
+  pn += 1; /* +1 box */
+  populate_filling_box_CubedSpherical(grid,pn++,UP);
+  populate_filling_box_CubedSpherical(grid,pn++,DOWN);
+  populate_filling_box_CubedSpherical(grid,pn++,BACK);
+  populate_filling_box_CubedSpherical(grid,pn++,FRONT);
+  
+  for (i = 0; i < N_outermost_split; i++)
+  {
+    populate_outermost(grid,pn,i);
+    pn += 6; /* +6 cubed sphere */
+  }
+
+}
+
+
 /* filling cubed spherical coordinate patches for BNS grid */
 void fill_patches_BNS_CubedSpherical_grid(Grid_T *const grid)
 {
@@ -61,7 +89,6 @@ void fill_patches_BBN_CubedSpherical_grid(Grid_T *const grid)
   }
 
 }
-
 
 /* making value of coords. it is a general function for cubed spherical type */
 void make_nodes_CubedSpherical_coord(Patch_T *const patch)
@@ -1581,8 +1608,33 @@ void alloc_patches_BBN_CubedSpherical_grid(Grid_T *const grid)
 {
   unsigned Np = 23;/* number of patches without outermost's 
                    3 sets of cubed sphere = 3*6
-                   4 filling box
+                   4 filling boxex
                    1 central box */
+  unsigned outermost;
+  unsigned i;
+  
+  outermost = (unsigned) GetParameterI("Number_of_Outermost_Split");
+  if (outermost != (unsigned)INT_MAX)
+    Np += 6*outermost;
+  
+  grid->patch = calloc((Np+1),sizeof(*grid->patch));
+  pointerEr(grid->patch);
+  
+  for (i = 0; i < Np; i++)
+  {
+    grid->patch[i] = calloc(1,sizeof(*grid->patch[i]));
+    pointerEr(grid->patch[i]);
+  }
+  
+}
+
+/* memory alloc patches for single neutron star using cubed spherical + box grid */
+void alloc_patches_SNS_CubedSpherical_Box_grid(Grid_T *const grid)
+{
+  unsigned Np = 18;/* number of patches without outermost's 
+                   2 sets of cubed sphere = 2*6
+                   4 filling boxes
+                   2 central boxes */
   unsigned outermost;
   unsigned i;
   

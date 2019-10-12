@@ -275,6 +275,15 @@ static Grid_T *sns_phi_grid(Grid_T *const grid)
     phi_grid->np = 7;
     sns_phi_grid_CS(phi_grid,grid);
   }
+  else if (strcmp_i(grid->kind,"SNS_CubedSpherical+Box_grid"))
+  {
+    phi_grid       = alloc_grid();
+    phi_grid->kind = grid->kind;
+    phi_grid->gn   = grid->gn;
+    /* NS at left composed of 6 cubed spherical + 1 Cartesian: */
+    phi_grid->np = 7;
+    sns_phi_grid_CS(phi_grid,grid);
+  }
   else
     abortEr(NO_JOB);
   

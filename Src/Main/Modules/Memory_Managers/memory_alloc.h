@@ -20,6 +20,7 @@ void alloc_patches_Cartesian_grid(Grid_T *const grid);
 void alloc_patches_BNS_Spherical_grid(Grid_T *const grid);
 void alloc_patches_BNS_CubedSpherical_grid(Grid_T *const grid);
 void alloc_patches_BBN_CubedSpherical_grid(Grid_T *const grid);
+void alloc_patches_SNS_CubedSpherical_Box_grid(Grid_T *const grid);
 Parameter_T *get_parameter(const char *const par_name);
 double *alloc_double(const unsigned N);
 void *alloc_double_complex(const unsigned N);

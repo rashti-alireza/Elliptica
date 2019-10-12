@@ -450,6 +450,10 @@ unsigned IsItHorizonPatch(const Patch_T *const patch)
     if (regex_search("_right_BH_surrounding_.+",patch->name))
       return 1;
   }
+  else if (strcmp_i(patch->grid->kind,"SNS_CubedSpherical+Box_grid"))
+  {
+    return 0;
+  }
   else
     abortEr(NO_JOB);
   
@@ -501,6 +505,19 @@ unsigned IsItNSPatch(const Patch_T *const patch)
        )
        ret = 1;
   }
+  else if (strcmp_i(patch->grid->kind,"SNS_CubedSpherical+Box_grid"))
+  {
+    /* it could have used regex, but need extra attention to NS surrounding case */
+    if (strstr(patch->name,"left_centeral_box") || 
+        strstr(patch->name,"left_NS_up")        ||
+        strstr(patch->name,"left_NS_down")      ||
+        strstr(patch->name,"left_NS_back")      ||
+        strstr(patch->name,"left_NS_front")     ||
+        strstr(patch->name,"left_NS_left")      ||
+        strstr(patch->name,"left_NS_right")     
+       )
+       ret = 1;
+  }
   else
     abortEr(NO_JOB);
     
@@ -513,6 +530,17 @@ unsigned IsItNSSurroundingPatch(const Patch_T *const patch)
   unsigned ret = 0;
   
   if (strcmp_i(patch->grid->kind,"BBN_CubedSpherical_grid"))
+  {
+    if (strstr(patch->name,"left_NS_surrounding_up")        ||
+        strstr(patch->name,"left_NS_surrounding_down")      ||
+        strstr(patch->name,"left_NS_surrounding_back")      ||
+        strstr(patch->name,"left_NS_surrounding_front")     ||
+        strstr(patch->name,"left_NS_surrounding_left")      ||
+        strstr(patch->name,"left_NS_surrounding_right")     
+       )
+       ret = 1;
+  }
+  else if (strcmp_i(patch->grid->kind,"SNS_CubedSpherical+Box_grid"))
   {
     if (strstr(patch->name,"left_NS_surrounding_up")        ||
         strstr(patch->name,"left_NS_surrounding_down")      ||

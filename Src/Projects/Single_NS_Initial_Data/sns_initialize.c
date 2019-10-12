@@ -1237,8 +1237,8 @@ static Grid_T *creat_sns_grid_CS(struct Grid_Params_S *const GridParams)
   
   /* finding the kind of grid */
   kind = GetParameterS_E("grid_kind");
-  if (!strcmp_i(kind,"SNS_CubedSpherical_grid"))
-    abortEr("This function only works with cubed spherical grid.\n");
+  if (!strcmp_i(kind,"SNS_CubedSpherical+Box_grid"))
+    abortEr("This function only works with cubed spherical + box grid.\n");
     
   grid->kind = dup_s(kind);
   
@@ -1302,6 +1302,38 @@ static Grid_T *creat_sns_grid_CS(struct Grid_Params_S *const GridParams)
   sprintf(val,"%u",nlb[2]);
   add_parameter_string(par,val);
   
+  /* right box */
+  
+  nlb[0] = (unsigned)GetParameterI("n_a");
+  nlb[1] = (unsigned)GetParameterI("n_b");
+  nlb[2] = (unsigned)GetParameterI("n_c");
+  /* check for override */
+  n = (unsigned)GetParameterI("right_box_n_a");
+  if (n != INT_MAX)   nlb[0] = n;
+  n = (unsigned)GetParameterI("right_box_n_b");
+  if (n != INT_MAX)   nlb[1] = n;
+  n = (unsigned)GetParameterI("right_box_n_c");
+  if (n != INT_MAX)   nlb[2] = n;
+    
+  if(nlb[0] == INT_MAX)
+    abortEr("n_a could not be set.\n");
+  if(nlb[1] == INT_MAX)
+    abortEr("n_b could not be set.\n");
+  if(nlb[2] == INT_MAX)
+    abortEr("n_c could not be set.\n");
+  
+  sprintf(par,"grid%u_right_box_n_a",gn);
+  sprintf(val,"%u",nlb[0]);
+  add_parameter_string(par,val);
+  
+  sprintf(par,"grid%u_right_box_n_b",gn);
+  sprintf(val,"%u",nlb[1]);
+  add_parameter_string(par,val);
+  
+  sprintf(par,"grid%u_right_box_n_c",gn);
+  sprintf(val,"%u",nlb[2]);
+  add_parameter_string(par,val);
+  
   /* size a,b,c */
   sprintf(par,"grid%u_left_centeral_box_size_a",gn);
   add_parameter_double(par,box_size_l);
@@ -1311,6 +1343,15 @@ static Grid_T *creat_sns_grid_CS(struct Grid_Params_S *const GridParams)
   
   sprintf(par,"grid%u_left_centeral_box_size_c",gn);
   add_parameter_double(par,box_size_l);
+  
+  sprintf(par,"grid%u_right_box_size_a",gn);
+  add_parameter_double(par,C);
+  
+  sprintf(par,"grid%u_right_box_size_b",gn);
+  add_parameter_double(par,C);
+  
+  sprintf(par,"grid%u_right_box_size_c",gn);
+  add_parameter_double(par,C);
   
   /* surrounding box length */
   sprintf(par,"grid%u_surrounding_box_length",gn);
