@@ -2404,7 +2404,7 @@ static void find_theta_phi_of_XYZ_NS_CS(double *const theta,double *const phi,co
 }
 
 /* initialize Grid_Params struct */
-struct Grid_Params_S *init_GridParams(void)
+static struct Grid_Params_S *init_GridParams(void)
 {
   struct Grid_Params_S *par = calloc(1,sizeof(*par));
   return par;
