@@ -9,7 +9,7 @@
 #include "sns_XCTS_equations_lib.h"
 
 
-void *bc_Beta_U2(void *vp1,void *vp2)
+void *sns_bc_Beta_U2(void *vp1,void *vp2)
 {
   DDM_SCHUR_BC_DECLARE
   unsigned ijk;/* node index */

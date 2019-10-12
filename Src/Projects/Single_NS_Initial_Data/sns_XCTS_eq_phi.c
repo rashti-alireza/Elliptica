@@ -9,7 +9,7 @@
 #include "sns_XCTS_equations_lib.h"
 
 
-void *eq_phi(void *vp1,void *vp2)
+void *sns_eq_phi(void *vp1,void *vp2)
 {
   DDM_SCHUR_EQ_DECLARE
   unsigned ijk;/* node index */

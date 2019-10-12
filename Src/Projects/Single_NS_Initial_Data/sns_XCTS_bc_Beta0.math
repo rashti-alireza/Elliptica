@@ -15,7 +15,7 @@ C_macro3 = GET_FIELD_IF_ON_HORIZON(name);
 `#include "maths_equation_solvings_lib.h"`;
 `#include "sns_XCTS_equations_lib.h"\n\n`;
 
-`void *bc_Beta_U0(void *vp1,void *vp2)\n{`;
+`void *sns_bc_Beta_U0(void *vp1,void *vp2)\n{`;
 
 # NOTE: THE FOLLOWING MACRO DECLARES AND DEFINES THE FOLLOWING VARIABLES:
 # patch, S, map, F, node, N, n.

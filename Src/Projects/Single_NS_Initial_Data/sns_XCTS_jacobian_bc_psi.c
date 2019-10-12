@@ -9,7 +9,7 @@
 #include "sns_XCTS_equations_lib.h"
 
 
-void *jacobian_bc_psi(void *vp1,void *vp2)
+void *sns_jacobian_bc_psi(void *vp1,void *vp2)
 {
   DDM_SCHUR_JACOBIAN_BC_DECLARE
   unsigned ijk,lmn;/* for Jacobian entries J[ijk][lmn] */
