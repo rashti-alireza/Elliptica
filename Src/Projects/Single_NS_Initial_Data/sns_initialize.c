@@ -15,7 +15,7 @@ Grid_T *sns_initialize_next_grid(Grid_T *const grid_prev)
   {
     /* if we use TOV and Kerr-Schil black hole approximation */
     if (strcmp_i(GetParameterS_E("NS_initialization"),"TOV"))
-      grid_next = TOV_KerrShild_approximation();
+      grid_next = TOV_approximation();
     else
       abortEr(NO_OPTION);
   }
@@ -206,8 +206,6 @@ static void interpolate_and_initialize_to_next_grid(Grid_T *const grid_next,Grid
     
     for (ijk = 0; ijk < nn; ++ijk)
     {
-      double x = patch->node[ijk]->x[0];
-      double y = patch->node[ijk]->x[1];
        
       /* B1 */
       B1_U0[ijk] = 0;
@@ -701,7 +699,7 @@ static void extrapolate_fluid_fields_outsideNS_CS(Grid_T *const grid)
     double phii,W_U0i,W_U1i,W_U2i;/* fields at r1 */
     double phif,W_U0f,W_U1f,W_U2f;/* fields at r2 */
     double dphi,dW_U0,dW_U1,dW_U2;
-    double sphi,sW_U0,sW_U1,sW_U2;/* signs */
+    //double sphi,sW_U0,sW_U1,sW_U2;/* signs */
     double x[3],X[3];
     double THETA,PHI;
     unsigned ijk,i,j,k;
@@ -822,10 +820,10 @@ static void extrapolate_fluid_fields_outsideNS_CS(Grid_T *const grid)
         dW_U0 = W_U0f - W_U0i;
         dW_U1 = W_U1f - W_U1i;
         dW_U2 = W_U2f - W_U2i;
-        sphi  = dphi  > 0 ?  -1 : 1;
-        sW_U0 = dW_U0 > 0 ?  -1 : 1;
-        sW_U1 = dW_U1 > 0 ?  -1 : 1;
-        sW_U2 = dW_U2 > 0 ?  -1 : 1;
+        //sphi  = dphi  > 0 ?  -1 : 1;
+        //sW_U0 = dW_U0 > 0 ?  -1 : 1;
+        //sW_U1 = dW_U1 > 0 ?  -1 : 1;
+        //sW_U2 = dW_U2 > 0 ?  -1 : 1;
         
         for (k = 0; k < n[2]; ++k)
         {
@@ -916,7 +914,7 @@ static Grid_T *TOV_approximation(void)
   sns_populate_free_data(grid);
   
   /* initialize the fields using TOV solution */
-  init_field_TOV(grid,tov,bh_chi*bh_mass,bh_mass);
+  init_field_TOV(grid,tov);
   
   /* taking partial derivatives of the fields needed for equations */
   sns_partial_derivatives_fields(grid);
@@ -1190,8 +1188,6 @@ static void init_field_TOV(Grid_T *const grid,const TOV_T *const tov)
     
      for (ijk = 0; ijk < nn; ++ijk)
      {
-       double x   = patch->node[ijk]->x[0];
-       double y   = patch->node[ijk]->x[1];
        
        /* Beta */
        Beta_U0[ijk] = 0;

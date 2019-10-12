@@ -16,9 +16,9 @@ C_arg = (j_name,ijk,lmn);
 C_arg2 = [ijk == lmn]; # for kd
 
 # main function:
-`#include "bbn_headers.h"`;
+`#include "sns_headers.h"`;
 `#include "maths_equation_solvings_lib.h"`;
-`#include "bbn_XCTS_equations_lib.h"\n\n`;
+`#include "sns_XCTS_equations_lib.h"\n\n`;
 
 `void *jacobian_bc_Beta_U0(void *vp1,void *vp2)\n{`;
 

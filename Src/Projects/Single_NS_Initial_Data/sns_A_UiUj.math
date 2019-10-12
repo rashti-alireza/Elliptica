@@ -9,8 +9,8 @@ C_macro2 = PREP_FIELD(name);
 C_macro3 = DECLARE_AND_EMPTY_FIELD(name);
 
 # main function:
-Ccode["#include "bbn_headers.h"\n\n"];
-Ccode["void bbn_update_psi10A_UiUj(Patch_T *const patch)\n{"];
+Ccode["#include "sns_headers.h"\n\n"];
+Ccode["void sns_update_psi10A_UiUj(Patch_T *const patch)\n{"];
 
 Declare = 
 {
@@ -98,4 +98,4 @@ Ccode["    }/*end of for(ijk = 0; ijk < nn; ++ijk)*/"];
 `  _dA_UiUj_U0U2D2->v = Partial_Derivative(f_A_UiUj_U0U2,"z");`;
 
 
-Ccode["}"]; # end of bbn_update_psi10A_UiUj function
+Ccode["}"]; # end of sns_update_psi10A_UiUj function

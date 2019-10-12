@@ -4,9 +4,9 @@
 */
 
 
-#include "bbn_headers.h"
+#include "sns_headers.h"
 #include "maths_equation_solvings_lib.h"
-#include "bbn_XCTS_equations_lib.h"
+#include "sns_XCTS_equations_lib.h"
 
 
 void *eq_phi(void *vp1,void *vp2)

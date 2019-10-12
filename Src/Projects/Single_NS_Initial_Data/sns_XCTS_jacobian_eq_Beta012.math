@@ -18,9 +18,9 @@ C_arg2 = [ijk == lmn]; # for kd
 C_arg3 = [0]; # for U
 
 # main function:
-`#include "bbn_headers.h"`;
+`#include "sns_headers.h"`;
 `#include "maths_equation_solvings_lib.h"`;
-`#include "bbn_XCTS_equations_lib.h"\n\n`;
+`#include "sns_XCTS_equations_lib.h"\n\n`;
 
 `void *jacobian_eq_?(void *vp1,void *vp2)\n{`;
 

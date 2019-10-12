@@ -22,6 +22,8 @@ struct NS_surface_RootFinder_S
 };
 
 
+void sns_partial_derivatives_fields(Grid_T *const grid);
+void sns_allocate_fields(Grid_T *const grid);
 void sns_study_initial_data(Grid_T *const grid);
 void sns_print_fields(Grid_T *const grid,const unsigned iteration, const char *const folder);
 void sns_update_psi10A_UiUj(Patch_T *const patch);
@@ -31,7 +33,6 @@ void sns_free_conformal_metric_derivatives(Patch_T *const patch);
 void sns_preparing_conformal_metric_derivatives(Patch_T *const patch);
 void sns_free_data_Gamma(Grid_T *const grid);
 void sns_free_data_Ricci(Grid_T *const grid);
-void sns_free_data_KS_trKij(Patch_T *const patch);
 void sns_update_derivative_phi(Patch_T *const patch);
 void sns_update_derivative_enthalpy(Patch_T *const patch);
 void sns_update_derivative_phi(Patch_T *const patch);

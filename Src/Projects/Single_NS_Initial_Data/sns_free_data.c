@@ -299,6 +299,7 @@ void sns_free_conformal_metric_derivatives(Patch_T *const patch)
 /* populate conformal metric and its inverse */
 void sns_free_data_gammas(Grid_T *const grid)
 {
+  unsigned p,ijk,nn;
   
   FOR_ALL_PATCHES(p,grid)
   {

@@ -19,11 +19,17 @@ int projects_data_base(void)
   
   add_project(Laplace_Inhom,"Laplace_Inhom",
     "Solving a Laplace eq with a source for testing purposes");
+    
   add_project(Fundamental_Tests,"Fundamental_Tests",
     "Testing fundamentals routines and codes of abc");
+    
   add_project(Binary_BH_NS_Initial_Data,"Binary_BH_NS_Initial_Data",
   "Constructing Initial Data for Binary Black Hole Neutron Star");
+  
   add_project(TOV_star,"TOV_Star","guessing initial data for a NS");
+  
+  add_project(Single_NS_Initial_Data,"Single_NS_Initial_Data",
+  "Constructing Initial Data for Single Neutron Star");
   
   return EXIT_SUCCESS;
 }

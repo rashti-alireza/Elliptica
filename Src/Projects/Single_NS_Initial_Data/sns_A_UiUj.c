@@ -4,10 +4,10 @@
 */
 
 
-#include "bbn_headers.h"
+#include "sns_headers.h"
 
 
-void bbn_update_psi10A_UiUj(Patch_T *const patch)
+void sns_update_psi10A_UiUj(Patch_T *const patch)
 {
 
   /* declaring: */

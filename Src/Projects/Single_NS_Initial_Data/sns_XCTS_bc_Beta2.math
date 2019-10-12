@@ -11,9 +11,9 @@ C_macro2 = PREP_FIELD(name);
 C_macro3 = GET_FIELD_IF_ON_HORIZON(name);
 
 # main function:
-`#include "bbn_headers.h"`;
+`#include "sns_headers.h"`;
 `#include "maths_equation_solvings_lib.h"`;
-`#include "bbn_XCTS_equations_lib.h"\n\n`;
+`#include "sns_XCTS_equations_lib.h"\n\n`;
 
 `void *bc_Beta_U2(void *vp1,void *vp2)\n{`;
 
