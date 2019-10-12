@@ -64,7 +64,7 @@ Declare =
 #`  const double C_BH = 0.5*GetParameterD_E("BH_NS_separation");`;
 #`  const double BH_Omega_U0 = GetParameterD_E("BH_Omega_U0");`;
 #`  const double BH_Omega_U1 = GetParameterD_E("BH_Omega_U1");`;
-`  const double BH_Omega_U2 = GetParameterD_E("BH_Omega_U2");`;
+`  const double BH_Omega_U2 = 0;#GetParameterD_E("BH_Omega_U2");`;
 
 `  if (patch->outerB)/* at outer boundary */`;
 `  {`;

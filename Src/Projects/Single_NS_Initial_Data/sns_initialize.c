@@ -34,7 +34,7 @@ static Grid_T *make_next_grid_using_previous_grid(Grid_T *const grid_prev)
   Grid_T *grid_next = 0;
   struct Grid_Params_S *GridParams = init_GridParams();/* adjust some pars for construction of next grid */
   
-  if (strcmp_i(grid_prev->kind,"SNS_CubedSpherical_grid"))
+  if (strcmp_i(grid_prev->kind,"SNS_CubedSpherical+Box_grid"))
   {
     /* extrapolate fluid fields outside of NS in case their value needed. */
     extrapolate_fluid_fields_outsideNS_CS(grid_prev);
@@ -345,7 +345,7 @@ static void find_NS_surface_Ylm_method_CS(Grid_T *const grid,struct Grid_Params_
   double *Rnew_NS = 0;/* new R for NS */
   double Max_R_NS = 0;/* maximum radius of NS */
   const double guess        = 1E-3;
-  const double maxR_out     = (1./3.)*GetParameterD_E("BH_NS_separation");
+  const double maxR_out     = (1./3.)*(-2*GetParameterD_E("NS_center_-y_axis"));
   const double SMALL_FACTOR = 0.7;/* initial r = SMALL_FACTOR*R0_NS */
   const double RESIDUAL     = 1E3*GetParameterD_E("RootFinder_Tolerance");
   const double HowBigFac    = 1.5;
