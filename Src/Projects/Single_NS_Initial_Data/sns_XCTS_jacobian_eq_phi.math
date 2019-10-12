@@ -1,0 +1,171 @@
+# Jacobian equation for phi:
+
+# Manifold or grid Dimension
+Dimension = 3;
+
+# point on manifold shown by:
+Point = ijk;
+
+# C macors
+C_macro  = GET_FIELD(name);
+C_macro2 = PREP_FIELD(name);
+C_macro3 = JACOBIAN_DERIVATIVE(name);
+C_macro4 = GET_FIELD_IF_IN_NS(name);
+
+# C arguments for jacobian of derivative
+C_arg = (j_name,ijk,lmn);
+C_arg2 = [ijk == lmn]; # for kd
+
+# main function:
+`#include "bbn_headers.h"`;
+`#include "maths_equation_solvings_lib.h"`;
+`#include "bbn_XCTS_equations_lib.h"\n\n`;
+
+`void *jacobian_eq_phi(void *vp1,void *vp2)\n{`;
+
+# NOTE: THE FOLLOWING MACRO DECLARES OR DEFINES THE FOLLOWING VARIABLES:
+# patch, S, B, E_Trans, node, Ni, Nj, K0, Nk, i,j,k
+# THUS, DO NOT DEFINE THEM AGAIN.
+`  DDM_SCHUR_JACOBIAN_EQ_DECLARE`;
+`  unsigned ijk,lmn;/* for Jacobian entries J[ijk][lmn] */`;
+#`  const double kd[2] = {0.,1.};/* Kronecker delta */`;
+
+# declare for cpi
+Declare = 
+{
+  # Kroneker delta
+  #(obj = field, name = kd, rank = 0, none,C_arg2); 
+
+ # Jphi 1st derivative
+ (obj = Field,name = Jphi, rank = D, C_macro3,C_arg);
+
+ # JJphi 2nd derivative
+ (obj = Field,name = JJphi, rank = DD, C_macro3,C_arg);
+
+ # enthalpy
+ (obj = Field,name = enthalpy, rank = 0, C_macro4);
+
+ # enthalpy 1st derivative
+ (obj = Field,name = denthalpy, rank = D, C_macro4);
+
+ # rest mass density
+ (obj = Field,name = rho0, rank = 0, C_macro4);
+
+ # rest mass density 1st derivative
+ (obj = Field,name = drho0, rank = D, C_macro4);
+
+ # eta
+ (obj = Field,name = eta, rank = 0, C_macro);
+
+ # eta first derivative 
+ (obj = Field,name = deta, rank = D, C_macro);
+
+ # conformal factor
+ (obj = Field,name = psi, rank = 0, C_macro);
+
+ # conformal factor 1st derivative
+ (obj = Field,name = dpsi, rank = D, C_macro);
+
+ # conformal metric inverse
+ (obj = Field,name = _gammaI, rank = UU, C_macro);
+
+ # conformal connections
+ (obj = Field,name = _Gamma, rank = UDD, C_macro);
+
+}
+
+# symmetries for cpi
+Symm[JJphi(i,j)      = JJphi(j,i)];
+Symm[_gammaI(i,j)   = _gammaI(j,i)];
+Symm[_Gamma(i,j,k)  = _Gamma(i,k,j)];
+
+##########################################################################
+#    NOTE1: There are different calculation parts, in each part use 
+# different names for new variables.
+#
+#    NOTE2: In Schur domain decomposition method we need two types of
+# matrices for Jacobian of Newton-Raphson scheme, matrix B and matrix E. 
+# Let's say Jx = -F in Newton-Raphson scheme; then,
+# B[i][j] = d[F(f(ijk))]/df(lmn), where i = map[ijk], and j = map[lmn] and
+# ijk takes their values ON INNER POINTS
+# of a patch, namley those collocated points that don't reach boundary of
+# the patch, and lmn runs over ALL BUT the interface points (interface
+# points are those located between two patches).
+# E[i][j] = d[F(f(ijk))]/df(lmn), where i = map[ijk], and j = map[lmn] and
+# ijk takes their values ON INNER POINTS and lmn runs over INTERFACE points.
+#
+#    PRAGMATICALLY:
+# Fill both B matrix and E matrix part WITH THE SAME EQUATION, you just
+# need to write two duplicated equations for each part, 
+# and if you're using interim variables use different names for each part.
+#
+#    NOTE3: For each part which doesn't exist, let it be 0.
+##########################################################################
+
+
+###############################################
+####### B matrix: J[ijk][lmn] in Jx = -F ###### 
+###############################################
+
+`  B[0][0] = 1;` # for eq: phi = 0
+`  for (i = 1; i < Ni; ++i)`
+`  {`
+`    ijk = node[i];`
+`    for (j = 0; j < Nj; ++j)`
+`    {`
+`      lmn = node[j];`
+
+
+dLn_of_alpha_b(i) = deta(i)/eta - dpsi(i)/psi;
+#dLn_of_rho0_b(i)  = drho0(i)/rho0;
+dLn_of_enthalpy_b(i)  = denthalpy(i)/enthalpy;
+#dLns0_b(i) = dLn_of_alpha_b(i) + dLn_of_rho0_b(i) - dLn_of_enthalpy_b(i);
+dLns0_b(i) = drho0(i)+rho0*(dLn_of_alpha_b(i) - dLn_of_enthalpy_b(i));
+
+t1_b = dLns0_b(-i)*(psi**-4)*_gammaI(i,l)*Jphi(-l);
+t2_b = 2*(psi**-5)*dpsi(-i)*_gammaI(i,l)*Jphi(-l);
+t3_b = (psi**-4)*_gammaI(-i,-l)*(JJphi(i,l)-_Gamma(n,i,l)*Jphi(-n));
+
+Bpart = t1_b+rho0*(t2_b+t3_b);
+
+
+`  B[i][j] = Bpart;\n`;
+`  DDM_SCHUR_JACOBIAN_EQ_Bpart_CLOSE\n`;
+###############################################
+
+
+###############################################
+###### E matrix: J[ijk][lmn] in Jx = -F #######
+###############################################
+
+` if (S->NI)`;
+` {`;
+`    E_Trans = S->E_Trans->reg->A;`;
+`    for (k = K0; k < Nk; ++k)`;
+`    {`;
+`      lmn = node[k];`;
+`      j = k-K0;`;
+`      for (i = 1; i < Ni; ++i)`; # since phi = 0, it started form i = 1
+`      {`;
+`        ijk = node[i];`;
+
+
+dLn_of_alpha_e(i) = deta(i)/eta - dpsi(i)/psi;
+#dLn_of_rho0_e(i)  = drho0(i)/rho0;
+dLn_of_enthalpy_e(i)  = denthalpy(i)/enthalpy;
+#dLns0_e(i) = dLn_of_alpha_e(i) + dLn_of_rho0_e(i) - dLn_of_enthalpy_e(i);
+dLns0_e(i) = drho0(i)+rho0*(dLn_of_alpha_e(i) - dLn_of_enthalpy_e(i));
+
+t1_e = dLns0_e(-i)*(psi**-4)*_gammaI(i,l)*Jphi(-l);
+t2_e = 2*(psi**-5)*dpsi(-i)*_gammaI(i,l)*Jphi(-l);
+t3_e = (psi**-4)*_gammaI(-i,-l)*(JJphi(i,l)-_Gamma(n,i,l)*Jphi(-n));
+
+Epart = t1_e+rho0*(t2_e+t3_e);
+
+`  E_Trans[j][i] = Epart;\n`;
+`  DDM_SCHUR_JACOBIAN_EQ_Epart_CLOSE\n`;
+###############################################
+
+`  return 0;`;
+`}`;
+

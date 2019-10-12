@@ -1,0 +1,98 @@
+# Manifold or grid Dimension
+Dimension = 3;
+
+# point on manifold shown by:
+Point = ijk;
+
+C_arg    =;
+C_macro  = define_variable(name);
+Ccode["#include "sns_headers.h""];
+`#include "maths_equation_solvings_lib.h"`
+``
+`#define define_variable(xNAME) \`
+`  Field_T *const field_##xNAME = patch->pool[Ind(#xNAME)]; \`
+`  Interpolation_T *interp_##xNAME = init_interpolation(); \`
+`  interp_##xNAME->field = field_##xNAME; \`
+`  interp_##xNAME->XYZ_dir_flag = 1; \`
+`  interp_##xNAME->X = X[0]; \`
+`  interp_##xNAME->Y = X[1]; \`
+`  interp_##xNAME->Z = X[2]; \`
+`  plan_interpolation(interp_##xNAME); \`
+`  const double xNAME = execute_interpolation(interp_##xNAME); \`
+`  free_interpolation(interp_##xNAME);`
+``
+Ccode["double sns_NS_surface_enthalpy_eq(void *params,const double *const x);"];
+# equation: f(x) = h-1
+Ccode["double sns_NS_surface_enthalpy_eq(void *params,const double *const x)"];
+`{`
+`  /* the stucture for the root finder */`
+`  const struct NS_surface_RootFinder_S *const pars = params;`
+`  const double dx = x[0]*pars->scale;`
+`  Patch_T *const patch   = pars->patch;`
+`  Root_Finder_T *const root_finder = pars->root_finder;`
+`  const double *const x0 = pars->x0;`
+`  const double *const N  = pars->N;`
+`  const double Euler_C   = pars->Euler_C;`
+`  const double y[3]      = {x0[0]+dx*N[0],x0[1]+dx*N[1],x0[2]+dx*N[2]};`
+`  const double yp[3]     = {y[0]-patch->c[0],y[1]-patch->c[1],y[2]-patch->c[2]};`
+`  double X[3],R;`
+``
+`  R = rms(3,yp,0);`
+`  if (GRT(R,pars->maxR))` # it means it passes the determined radius at the patch
+`    root_finder->interrupt = 1;`
+
+`  X_of_x(X,y,patch);`
+
+Declare = 
+{
+
+ # conformal metric 
+ (obj = Field,name = _gamma, rank = DD, C_macro,C_arg);
+
+ # conformal metric inverse
+ (obj = Field,name = _gammaI, rank = UU, C_macro,C_arg);
+
+ # spin part of fluid
+ (obj = Field,name = W, rank = U, C_macro,C_arg);
+
+ # d(phi)/d? for irrotional part of fluid
+ (obj = Field,name = dphi, rank = D, C_macro,C_arg);
+
+ # eta
+ (obj = Field,name = eta, rank = 0, C_macro,C_arg);
+
+ # Beta
+ (obj = Field,name = Beta, rank = U, C_macro,C_arg);
+
+ # Killing vector xi^i, assumed 0
+ #(obj = Field,name = xi, rank = U, C_macro,C_arg);
+
+ # conformal factor
+ (obj = Field,name = psi, rank = 0, C_macro,C_arg);
+
+ # Euler equation constant
+ (obj = variable,name = Euler_C, none);
+
+}
+# symmetries:
+Symm[_gammaI(i,j)  = _gammaI(j,i)];
+Symm[_gamma(i,j)   = _gamma(j,i)];
+
+# calculate enthalpy:
+
+alpha = eta/psi;
+psim4 = psi**(-4);
+psi4  = psi**(4);
+P2    = psim4*_gammaI(i,j)*dphi(-i)*dphi(-j)+2*dphi(-i)*W(i)+psi4*_gamma(-i,-j)*W(i)*W(j);
+uW    = dphi(-i)*W(i)+psi4*_gamma(-i,-j)*W(i)*W(j);
+Bdphi = Beta(i)*dphi(-i);
+b     = (Bdphi-Euler_C)**2 + 2*(alpha**2)*uW;
+L2    = (b+(b**2-4*(alpha**4)*(uW**2))**(0.5))/(2*alpha**2);
+h2    = L2-P2;
+h     = (h2)**(0.5);
+`  if(!isnormal(h))`     
+`    root_finder->interrupt = 1;`
+``
+`  return h-1;`
+
+`}`
