@@ -65,4 +65,4 @@ double bbn_NS_baryonic_mass(Grid_T *const grid,const double Euler_C);
 double bbn_NS_surface_enthalpy_eq(void *params,const double *const x);
 double force_balance_root_finder_eq(void *params,const double *const x);
 void bbn_update_enthalpy_and_denthalpy(Grid_T *const grid);
-void bbn_update_matter_fields(Grid_T *const grid);
+void bbn_update_stress_energy_tensor(Grid_T *const grid);
