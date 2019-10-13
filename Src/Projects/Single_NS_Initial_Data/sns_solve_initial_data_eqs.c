@@ -35,7 +35,7 @@ void sns_solve_initial_data_eqs(Grid_T *const grid)
   const int max_iter = GetParameterI_E("Solving_Max_Number_of_Iteration");
   int iter = 0;
   
-  sns_study_initial_data(grid);
+  //sns_study_initial_data(grid);
   while (iter < max_iter)
   {
     /* some prints */
@@ -56,7 +56,7 @@ void sns_solve_initial_data_eqs(Grid_T *const grid)
   /* updating enthalpy so one can find the new NS surface 
   // for the next iteration */
   //sns_update_enthalpy_and_denthalpy(grid);
-  sns_study_initial_data(grid);
+  //sns_study_initial_data(grid);
   
   /* free SolveEqs and phi grid */
   free_solve_equations(SolveEqs);

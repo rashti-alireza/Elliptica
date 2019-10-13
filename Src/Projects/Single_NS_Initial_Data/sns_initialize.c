@@ -104,11 +104,16 @@ static void find_Euler_eq_const(Grid_T *const grid)
   root->x_gss       = guess;
   root->params      = params;
   root->f[0]        = Euler_eq_const_rootfinder_eq;
+  //test
+  root->verbose      = 1;
+  //end
   plan_root_finder(root);
   Euler_const       = execute_root_finder(root);
   
   update_parameter_double_format("Euler_equation_constant",Euler_const[0]);
-  
+  //test
+  printf("Euler: %g->%g\n",guess[0],Euler_const[0]);
+  //end
   free(Euler_const);
   free_root_finder(root);
 }
@@ -196,6 +201,7 @@ static void interpolate_and_initialize_to_next_grid(Grid_T *const grid_next,Grid
         psi[ijk]      = interpolate_from_patch_prim("psi",Xp,patchp);
         eta[ijk]      = interpolate_from_patch_prim("eta",Xp,patchp);
         phi[ijk]      = interpolate_from_patch_prim("phi",Xp,patchp);
+        }
         enthalpy[ijk] = interpolate_from_patch_prim("enthalpy",Xp,patchp);
       }
     }
@@ -968,8 +974,11 @@ static Grid_T *TOV_approximation(void)
   sns_update_Aij(grid);
   
   /* find Euler equation const using enthalpy of TOV star and other fields */
+  //sns_study_initial_data(grid);
   find_Euler_eq_const_TOV(grid);
-  
+  //sns_update_matter_fields(grid);
+  //sns_study_initial_data(grid);
+
   /* freeing */
   free_Grid_Params_S(GridParams);
 
