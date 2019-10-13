@@ -34,6 +34,8 @@ void sns_solve_initial_data_eqs(Grid_T *const grid)
   
   const int max_iter = GetParameterI_E("Solving_Max_Number_of_Iteration");
   int iter = 0;
+  
+  sns_study_initial_data(grid);
   while (iter < max_iter)
   {
     /* some prints */
@@ -53,7 +55,8 @@ void sns_solve_initial_data_eqs(Grid_T *const grid)
   
   /* updating enthalpy so one can find the new NS surface 
   // for the next iteration */
-  sns_update_enthalpy_and_denthalpy(grid);
+  //sns_update_enthalpy_and_denthalpy(grid);
+  sns_study_initial_data(grid);
   
   /* free SolveEqs and phi grid */
   free_solve_equations(SolveEqs);
@@ -369,22 +372,22 @@ static void sns_XCTS_fill_db_eqs(sEquation_T ***const field_eq,
   *jacobian_bc_eq      = init_eq();
 
  /* phi equations */
-  add_eq(field_eq,sns_eq_phi,"sns_eq_phi");
-  add_eq(bc_eq   ,sns_bc_phi,"sns_bc_phi");
-  add_eq(jacobian_field_eq,sns_jacobian_eq_phi,"sns_jacobian_eq_phi");
-  add_eq(jacobian_bc_eq   ,sns_jacobian_bc_phi,"sns_jacobian_bc_phi");
+  add_eq(field_eq,sns_eq_phi,"eq_phi");
+  add_eq(bc_eq   ,sns_bc_phi,"bc_phi");
+  add_eq(jacobian_field_eq,sns_jacobian_eq_phi,"jacobian_eq_phi");
+  add_eq(jacobian_bc_eq   ,sns_jacobian_bc_phi,"jacobian_bc_phi");
   
   /* psi equations */
-  add_eq(field_eq,sns_eq_psi,"sns_eq_psi");
-  add_eq(bc_eq   ,sns_bc_psi,"sns_bc_psi");
-  add_eq(jacobian_field_eq,sns_jacobian_eq_psi,"sns_jacobian_eq_psi");
-  add_eq(jacobian_bc_eq   ,sns_jacobian_bc_psi,"sns_jacobian_bc_psi");
+  add_eq(field_eq,sns_eq_psi,"eq_psi");
+  add_eq(bc_eq   ,sns_bc_psi,"bc_psi");
+  add_eq(jacobian_field_eq,sns_jacobian_eq_psi,"jacobian_eq_psi");
+  add_eq(jacobian_bc_eq   ,sns_jacobian_bc_psi,"jacobian_bc_psi");
   
   /* eta equations */
-  add_eq(field_eq,sns_eq_eta,"sns_eq_eta");
-  add_eq(bc_eq   ,sns_bc_eta,"sns_bc_eta");
-  add_eq(jacobian_field_eq,sns_jacobian_eq_eta,"sns_jacobian_eq_eta");
-  add_eq(jacobian_bc_eq   ,sns_jacobian_bc_eta,"sns_jacobian_bc_eta");
+  add_eq(field_eq,sns_eq_eta,"eq_eta");
+  add_eq(bc_eq   ,sns_bc_eta,"bc_eta");
+  add_eq(jacobian_field_eq,sns_jacobian_eq_eta,"jacobian_eq_eta");
+  add_eq(jacobian_bc_eq   ,sns_jacobian_bc_eta,"jacobian_bc_eta");
   
   /* shift equations, remember we solve for B0_U? rather than Beta_U? */
   /* Beta_U0 equations */
