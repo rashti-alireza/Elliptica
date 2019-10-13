@@ -400,6 +400,17 @@ static int X_of_x_CS_coord(double *const X,const double *const cart,const Patch_
       abortEr(NO_OPTION);
   }
   
+  /* adujusting boundary number to avoid some unexpeted behavior
+  // due to round off error. */
+  if (EQL(X[0],1))  X[0] = 1;
+  if (EQL(X[0],-1)) X[0] = -1;
+  
+  if (EQL(X[1],1))  X[1] = 1;
+  if (EQL(X[1],-1)) X[1] = -1;
+  
+  if (EQL(X[2],1))  X[2] = 1;
+  if (EQL(X[2],0))  X[2] = 0;
+  
   return 1;
 }
 
