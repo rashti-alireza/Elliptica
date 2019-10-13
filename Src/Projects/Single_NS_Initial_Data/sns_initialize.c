@@ -201,7 +201,6 @@ static void interpolate_and_initialize_to_next_grid(Grid_T *const grid_next,Grid
         psi[ijk]      = interpolate_from_patch_prim("psi",Xp,patchp);
         eta[ijk]      = interpolate_from_patch_prim("eta",Xp,patchp);
         phi[ijk]      = interpolate_from_patch_prim("phi",Xp,patchp);
-        }
         enthalpy[ijk] = interpolate_from_patch_prim("enthalpy",Xp,patchp);
       }
     }
