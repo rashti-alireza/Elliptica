@@ -22,6 +22,7 @@ struct NS_surface_RootFinder_S
 };
 
 
+double sns_NS_baryonic_mass(Grid_T *const grid,const double Euler_C);
 void sns_partial_derivatives_fields(Grid_T *const grid);
 void sns_allocate_fields(Grid_T *const grid);
 void sns_study_initial_data(Grid_T *const grid);

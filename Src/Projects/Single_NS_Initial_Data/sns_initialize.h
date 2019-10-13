@@ -30,6 +30,13 @@ struct Grid_Params_S
   
 };
 
+/* root finder struc for Euler eq const */  
+struct Euler_eq_const_RootFinder_S
+{
+  Grid_T *grid;
+  double NS_baryonic_mass;
+};
+
 Grid_T *sns_initialize_next_grid(Grid_T *const grid_prev);
 static Grid_T *make_next_grid_using_previous_grid(Grid_T *const grid_prev);
 static Grid_T *TOV_approximation(void);
@@ -40,6 +47,8 @@ static void interpolate_and_initialize_to_next_grid(Grid_T *const grid_next,Grid
 static void find_Xp_and_patchp(const double *const x,const char *const hint,Grid_T *const grid,double *const X,Patch_T **const ppatch);
 static double interpolate_from_patch_prim(const char *const field,const double *const X,Patch_T *const patch);
 static void find_Euler_eq_const_TOV(Grid_T *const grid);
+static void find_Euler_eq_const(Grid_T *const grid);
+static double Euler_eq_const_rootfinder_eq(void *params,const double *const x);
 static void extrapolate_fluid_fields_outsideNS_CS(Grid_T *const grid);
 static void find_NS_surface_Ylm_method_CS(Grid_T *const grid,struct Grid_Params_S *const GridParams);
 static void find_XYZ_and_patch_of_theta_phi_NS_CS(double *const X,Patch_T **const ppatch,const double theta,const double phi,Grid_T *const grid);
