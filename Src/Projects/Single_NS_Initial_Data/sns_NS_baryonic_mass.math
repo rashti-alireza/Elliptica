@@ -81,11 +81,12 @@ Ccode["  {"];
      u0    = (L2)**(0.5)/(h*alpha);
   `  eos->h = h;`
   `  rho0  = eos->rest_mass_density(eos);`
-  `  if (!isfinite(rho0))`
+  `  if(!isfinite(rho0))`
   `    rho0 = 0;`
   `  baryonic_mass_integrand->v[ijk]  = rho0*u0*alpha*psi6;`
 Ccode["  }"];
 Ccode["  free_EoS(eos);"];
+``
 `  Integration_T *I = init_integration();`
 `  I->type = "Integral{f(x)dV},Spectral";`
 `  I->Spectral->f = baryonic_mass_integrand;`
@@ -97,6 +98,7 @@ Ccode["  free_EoS(eos);"];
 `  I->g22 = _gamma_D2D2;`
 `  plan_integration(I);`
 `  NS_baryonic_mass += execute_integration(I);`
+``
 `  free_integration(I);`
 `  REMOVE_FIELD(baryonic_mass_integrand)`
 `  }`#end of FOR_ALL_PATCHES
