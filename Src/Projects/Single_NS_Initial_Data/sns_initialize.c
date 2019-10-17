@@ -34,15 +34,35 @@ static Grid_T *make_next_grid_using_previous_grid(Grid_T *const grid_prev)
   Grid_T *grid_next = 0;
   struct Grid_Params_S *GridParams = init_GridParams();/* adjust some pars for construction of next grid */
   
-  /* find Euler equation constant to meet NS baryonic mass */
-  find_Euler_eq_const(grid_prev);
-  
   sns_update_enthalpy_and_denthalpy(grid_prev);
+  
+  /* find Euler equation constant to meet NS baryonic mass */
+  //find_Euler_eq_const(grid_prev);
+  
+  /* find the NS center */
+  find_NS_center(grid_prev);
+  
+  //sns_update_enthalpy_and_denthalpy(grid_prev);
   
   if (strcmp_i(grid_prev->kind,"SNS_CubedSpherical+Box_grid"))
   {
     /* extrapolate fluid fields outside of NS in case their value needed. */
     extrapolate_fluid_fields_outsideNS_CS(grid_prev);
+    
+    adjust_NS_center(grid_prev);
+    unsigned p;
+    
+    FOR_ALL_PATCHES(p,grid_prev)
+    {
+      Patch_T *patch = grid_prev->patch[p];
+      if(!IsItNSPatch(patch))
+        continue;
+        
+      sns_update_derivative_enthalpy(patch);  
+    }
+  
+    //find_NS_center(grid_prev);
+    sns_study_initial_data(grid_prev);
     
     GridParams->NS_R_type = GetParameterS_E("NS_surface_finder_method");
     
@@ -71,6 +91,7 @@ static Grid_T *make_next_grid_using_previous_grid(Grid_T *const grid_prev)
   
   /* taking partial derivatives of the fields needed for equations */
   sns_partial_derivatives_fields(grid_next);
+  //sns_study_initial_data(grid_next);
   
   /* update enthalpy,denthalpy,rho0, drho0, u0, _J^i, _E and _S */
   sns_update_matter_fields(grid_next);
@@ -357,13 +378,29 @@ static void find_Xp_and_patchp(const double *const x,const char *const hint,Grid
   found = needle->ans;
   
   /* if it could not find X in neither the given hint patch nor its neighbors, raise a flag! */
-  if (!needle->Nans)
-    abortEr("It could not find the x at the given patches!\n");
-  
-  *ppatch = grid->patch[found[0]];
-  
-  X_of_x(X,x,*ppatch);
-  
+  if (needle->Nans)
+  {
+    *ppatch = grid->patch[found[0]];
+    X_of_x(X,x,*ppatch);
+  }
+  else/* if no patch found let's find it in the other patches */
+  {
+    needle->grid = grid;
+    needle->x    = x;
+    needle->ex   = needle->in;
+    needle->Nex  = needle->Nin;
+    needle->in   = 0;
+    needle->Nin  = 0;
+    
+    point_finder(needle);
+    found = needle->ans;
+    
+    if (!needle->Nans)
+      abortEr("It could not find the x at the given patches!\n");
+      
+    *ppatch = grid->patch[found[0]];
+    X_of_x(X,x,*ppatch);
+  }
   free_needle(needle);
 }
 
@@ -390,9 +427,9 @@ static void find_NS_surface_Ylm_method_CS(Grid_T *const grid,struct Grid_Params_
   double theta,phi;
   double *Rnew_NS = 0;/* new R for NS */
   double Max_R_NS = 0;/* maximum radius of NS */
-  const double guess        = 1E-3;
+  double guess        = 0;
   const double maxR_out     = (1./3.)*(-2*GetParameterD_E("NS_center_-y_axis"));
-  const double SMALL_FACTOR = 0.7;/* initial r = SMALL_FACTOR*R0_NS */
+  const double SMALL_FACTOR = 0.8;/* initial r = SMALL_FACTOR*R0_NS */
   const double RESIDUAL     = 1E3*GetParameterD_E("RootFinder_Tolerance");
   const double HowBigFac    = 1.5;
   const double HowSmallFac  = 0.5;
@@ -416,6 +453,7 @@ static void find_NS_surface_Ylm_method_CS(Grid_T *const grid,struct Grid_Params_
   root->params    = par;
   root->f[0]      = sns_NS_surface_enthalpy_eq;
   root->FD_Right = 1;
+  //root->verbose  = 1;
   par->root_finder = root;
   
   /* initialize tables */
@@ -501,18 +539,22 @@ static void find_NS_surface_Ylm_method_CS(Grid_T *const grid,struct Grid_Params_
         par->x0[1] = x[1];
         par->x0[2] = x[2];
         par->maxR = maxR_out;
+        guess = 1;
       }
       /* having found h_patch, now find the the position of h = 1 */
       par->patch = h_patch;
       par->N     = N;
       
       dr = execute_root_finder(root);
-      
+      //printf("---- %s\n",h_patch->name);
+      //print_root_finder_exit_status(root);
       /* if root finder went wrong for some reason */
       if (root->interrupt || GRT(root->residual,RESIDUAL))
       {
         //print_root_finder_exit_status(root);
         Rnew_NS[ij(i,j)] = R0_NS;
+        printf("---- %s\n",h_patch->name);
+        print_root_finder_exit_status(root);
       }
       else/* if root finder was successful */
       {
@@ -977,6 +1019,7 @@ static Grid_T *TOV_approximation(void)
   find_Euler_eq_const_TOV(grid);
   //sns_update_matter_fields(grid);
   //sns_study_initial_data(grid);
+  //abort();
 
   /* freeing */
   free_Grid_Params_S(GridParams);
@@ -1125,6 +1168,7 @@ static void init_field_TOV(Grid_T *const grid,const TOV_T *const tov)
     
     PREP_FIELD(psi)
     PREP_FIELD(eta)
+    PREP_FIELD(ETA)
     
     if (IsItNSPatch(patch))
     {
@@ -1171,8 +1215,8 @@ static void init_field_TOV(Grid_T *const grid,const TOV_T *const tov)
         
         /* eta */
         enthalpy_h = execute_interpolation(interp_h);
-        alpha = sqrt(1-0.5*M_NS/R_Schwar)/enthalpy_h; 
-        eta[ijk] = psi[ijk]*alpha;
+        alpha = sqrt(1-2*M_NS/R_Schwar)/enthalpy_h; 
+        ETA[ijk] = eta[ijk] = psi[ijk]*alpha;
         
         /* enthalpy */
         enthalpy[ijk] = enthalpy_h;
@@ -1706,3 +1750,243 @@ static void free_Grid_Params_S(struct Grid_Params_S *par)
   _free(par);
 }
 
+/* find the NS center using d(enthalpy)/dx^i = 0 */
+static void find_NS_center(Grid_T *const grid)
+{
+  double *NS_center;
+  Root_Finder_T *root = init_root_finder(3);
+  struct NC_Center_RootFinder_S params[1];
+  double guess[3];/* initial guess for root finder */
+  char par_name[1000];
+  unsigned p;
+  
+  guess[0] = guess[2] = 0;
+  guess[1] = GetParameterD_E("NS_center_-y_axis");
+  params->root_finder = root;
+  root->description = "Finding NS center:";
+  root->type        = GetParameterS_E("RootFinder_Method");
+  root->tolerance   = GetParameterD_E("RootFinder_Tolerance");
+  root->MaxIter     = (unsigned)GetParameterI_E("RootFinder_Max_Number_of_Iteration");
+  root->x_gss       = guess;
+  root->params      = params;
+  root->verbose     = 1;
+  root->f[0]        = dh_dx0_root_finder_eq;
+  root->f[1]        = dh_dx1_root_finder_eq;
+  root->f[2]        = dh_dx2_root_finder_eq;    
+  
+  FOR_ALL_PATCHES(p,grid)
+  {
+    Patch_T *patch = grid->patch[p];
+    
+    if (!IsItNSPatch(patch))
+      continue;
+
+    root->interrupt = 0;
+    params->patch = patch;
+    plan_root_finder(root);
+    NS_center     = execute_root_finder(root);
+    
+    /* if root finder was successful */
+    if (root->residual < 1E-6)
+    {
+      //test
+      printf("(%f,%f,%f)\n",NS_center[0],NS_center[1],NS_center[2]);
+      //end
+      
+      /* save the position of NS center */
+      sprintf(par_name,"grid%u_NS_center_x",grid->gn);
+      add_parameter_array(par_name,NS_center,3);
+      
+      /* save the patch stem where the NS center takes place */
+      sprintf(par_name,"grid%u_NS_center_patch",grid->gn);
+      char *stem = strstr(patch->name,"_");
+      assert(stem);
+      stem++;
+      add_parameter(par_name,stem);
+      free(NS_center);
+      break;
+    }
+    free(NS_center);
+  }
+  if (root->exit_status != ROOT_FINDER_OK)
+  {
+    print_root_finder_exit_status(root);
+    abortEr("NS center could not be found.\n");
+  }
+  free_root_finder(root);
+}
+
+/* dh/dx^0 = 0 */
+static double dh_dx0_root_finder_eq(void *params,const double *const x)
+{
+  struct NC_Center_RootFinder_S *const par = params;
+  Patch_T *const patch = par->patch;
+  DECLARE_FIELD(denthalpy_D0);
+  Interpolation_T *interp_s;
+  Needle_T *needle = alloc_needle();
+  unsigned flg;
+  double interp,X[3];
+  
+  needle->grid = patch->grid;
+  needle->x    = x;
+  needle_in(needle,patch);
+  point_finder(needle);
+  flg = needle->Nans;
+  free_needle(needle);
+  
+  /* if this point is out of this patch, exit */
+  if (flg == 0)
+  {
+    par->root_finder->interrupt = 1;
+    return 0;
+  }
+  
+  X_of_x(X,x,patch);
+  interp_s = init_interpolation();
+  interp_s->field = denthalpy_D0;
+  interp_s->X = X[0];
+  interp_s->Y = X[1];
+  interp_s->Z = X[2];
+  interp_s->XYZ_dir_flag = 1;
+  plan_interpolation(interp_s);
+  interp = execute_interpolation(interp_s);
+  free_interpolation(interp_s);
+  
+  return interp;
+}
+
+/* dh/dx^1 = 0 */
+static double dh_dx1_root_finder_eq(void *params,const double *const x)
+{
+  struct NC_Center_RootFinder_S *const par = params;
+  Patch_T *const patch = par->patch;
+  DECLARE_FIELD(denthalpy_D1);
+  Interpolation_T *interp_s;
+  Needle_T *needle = alloc_needle();
+  unsigned flg;
+  double interp,X[3];
+  
+  needle->grid = patch->grid;
+  needle->x    = x;
+  needle_in(needle,patch);
+  point_finder(needle);
+  flg = needle->Nans;
+  free_needle(needle);
+  
+  /* if this point is out of this patch, exit */
+  if (flg == 0)
+  {
+    par->root_finder->interrupt = 1;
+    return 0;
+  }
+  
+  X_of_x(X,x,patch);
+  interp_s = init_interpolation();
+  interp_s->field = denthalpy_D1;
+  interp_s->X = X[0];
+  interp_s->Y = X[1];
+  interp_s->Z = X[2];
+  interp_s->XYZ_dir_flag = 1;
+  plan_interpolation(interp_s);
+  interp = execute_interpolation(interp_s);
+  free_interpolation(interp_s);
+  
+  return interp;
+}
+
+/* dh/dx^2 = 0 */
+static double dh_dx2_root_finder_eq(void *params,const double *const x)
+{
+  struct NC_Center_RootFinder_S *const par = params;
+  Patch_T *const patch = par->patch;
+  DECLARE_FIELD(denthalpy_D2);
+  Interpolation_T *interp_s;
+  Needle_T *needle = alloc_needle();
+  unsigned flg;
+  double interp,X[3];
+  
+  needle->grid = patch->grid;
+  needle->x    = x;
+  needle_in(needle,patch);
+  point_finder(needle);
+  flg = needle->Nans;
+  free_needle(needle);
+  
+  /* if this point is out of this patch, exit */
+  if (flg == 0)
+  {
+    par->root_finder->interrupt = 1;
+    return 0;
+  }
+  
+  X_of_x(X,x,patch);
+  interp_s = init_interpolation();
+  interp_s->field = denthalpy_D2;
+  interp_s->X = X[0];
+  interp_s->Y = X[1];
+  interp_s->Z = X[2];
+  interp_s->XYZ_dir_flag = 1;
+  plan_interpolation(interp_s);
+  interp = execute_interpolation(interp_s);
+  free_interpolation(interp_s);
+  
+  return interp;
+}
+
+/* adjust the center of NS at the designated point, in case it moved.
+// we need only to draw enthalpy to (0,NS_C,0).
+// to do so, we demand shifted_enthalpy(r) = enthalpy(R+r), in which R 
+// is the amount the center is displaced from (0,-D/2,0) */
+static void adjust_NS_center(Grid_T *const grid)
+{
+  char par_name[1000];
+  double *NS_center = 0;
+  const double C    = GetParameterD_E("NS_center_-y_axis");
+  sprintf(par_name,"grid%u_NS_center_x",grid->gn);
+  NS_center = GetParameterArrayF_E(par_name);
+  const double R[3] = {NS_center[0],NS_center[1]-C,NS_center[2]};
+  unsigned p,ijk;
+  
+  /* if it is already located at the designted point */
+  if (EQL(0,R[0]) && EQL(0,R[1]) && EQL(0,R[2]))
+    return;
+  
+  FOR_ALL_PATCHES(p,grid)
+  {
+    Patch_T *patch = grid->patch[p];
+    
+    if (!IsItNSPatch(patch))
+      continue;
+    
+    /* now shift enthalpy */
+    Patch_T *patchp = 0;
+    char *stem, hint[1000];
+    DECLARE_FIELD(enthalpy);
+    ADD_FIELD(shifted_enthalpy);
+    DECLARE_FIELD(shifted_enthalpy);
+    
+    make_coeffs_3d(enthalpy);
+    
+    stem = strstr(patch->name,"_");/* the patch->name convention is grid\d?_root */
+    assert(stem);
+    stem++;
+    sprintf(hint,"%s",stem);
+    unsigned nn = patch->nn;
+    double x[3],Xp[3];
+    for (ijk = 0; ijk < nn; ++ijk)
+    {
+      x[0] = patch->node[ijk]->x[0]+R[0];
+      x[1] = patch->node[ijk]->x[1]+R[1];
+      x[2] = patch->node[ijk]->x[2]+R[2];
+      find_Xp_and_patchp(x,hint,grid,Xp,&patchp);
+      shifted_enthalpy->v[ijk] = interpolate_from_patch_prim("enthalpy",Xp,patchp);
+    }
+    /* now clean enthalpy and copy new value and remove extras */
+    free_coeffs(enthalpy);
+    free(enthalpy->v);
+    enthalpy->v = shifted_enthalpy->v;
+    shifted_enthalpy->v = 0;
+    REMOVE_FIELD(shifted_enthalpy);
+  }
+  
+}

@@ -37,6 +37,13 @@ struct Euler_eq_const_RootFinder_S
   double NS_baryonic_mass;
 };
 
+/* root finder structure for NS center */
+struct NC_Center_RootFinder_S
+{
+  Patch_T *patch;
+  Root_Finder_T *root_finder;
+};
+
 Grid_T *sns_initialize_next_grid(Grid_T *const grid_prev);
 static Grid_T *make_next_grid_using_previous_grid(Grid_T *const grid_prev);
 static Grid_T *TOV_approximation(void);
@@ -56,3 +63,9 @@ static void find_theta_phi_of_XYZ_NS_CS(double *const theta,double *const phi,co
 static void free_Grid_Params_S(struct Grid_Params_S *par);
 static struct Grid_Params_S *init_GridParams(void);
 static void sns_update_Aij(Grid_T *const grid);
+static void find_NS_center(Grid_T *const grid);
+static double dh_dx0_root_finder_eq(void *params,const double *const x);
+static double dh_dx1_root_finder_eq(void *params,const double *const x);
+static double dh_dx2_root_finder_eq(void *params,const double *const x);
+static void adjust_NS_center(Grid_T *const grid);
+
