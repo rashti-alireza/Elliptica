@@ -1991,13 +1991,13 @@ static void adjust_NS_center(Grid_T *const grid)
     par->root_finder = root_finder;
     
     printf("dh/dx(%g,%g,%g)|NS center = %g\n",
-      dh_dx0_root_finder_eq(par,NS_center),
-      NS_center[0],NS_center[1],NS_center[2]);
+      NS_center[0],NS_center[1],NS_center[2],
+      dh_dx0_root_finder_eq(par,NS_center));
     printf("dh/dy(%g,%g,%g)|NS center = %g\n",
-      dh_dx1_root_finder_eq(par,NS_center),
-      NS_center[0],NS_center[1],NS_center[2]);
+      NS_center[0],NS_center[1],NS_center[2],
+      dh_dx1_root_finder_eq(par,NS_center));
     printf("dh/dz(%g,%g,%g)|NS center = %g\n",
-      dh_dx2_root_finder_eq(par,NS_center),
-      NS_center[0],NS_center[1],NS_center[2]);
+      NS_center[0],NS_center[1],NS_center[2],
+      dh_dx2_root_finder_eq(par,NS_center));
   }
 }
