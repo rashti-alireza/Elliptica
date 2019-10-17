@@ -60,10 +60,10 @@ void *sns_jacobian_eq_eta(void *vp1,void *vp2)
   DDM_SCHUR_JACOBIAN_EQ_Bpart_OPEN
 
   double Bpart = 
-(1.0/8.0)*(16*M_PI*kd[ijk==lmn]*pow(psi[ijk], 6)*(_E[ijk] + 2*
-_S[ijk]) - kd[ijk==lmn]*(7.0*_Aij2[ijk] + pow(psi[ijk], 8)*
-(3.3333333333333335*pow(K[ijk], 2)*pow(psi[ijk], 4) + _R[ijk])) -
-pow(psi[ijk], 8)*(8.0*_gammaI_U0U0[ijk]*(-JJeta_D0D0(j_JJeta_D0D0,ijk,lmn) +
+-1.0/8.0*(16*M_PI*kd[ijk==lmn]*pow(psi[ijk], 6)*(_E[ijk] + 2*_S[ijk]) +
+kd[ijk==lmn]*(7.0*_Aij2[ijk] + pow(psi[ijk], 8)*(3.3333333333333335*
+pow(K[ijk], 2)*pow(psi[ijk], 4) + _R[ijk])) + pow(psi[ijk], 8)*(8.0*
+_gammaI_U0U0[ijk]*(-JJeta_D0D0(j_JJeta_D0D0,ijk,lmn) +
 Jeta_D0(j_Jeta_D0,ijk,lmn)*_Gamma_U0D0D0[ijk] + Jeta_D1(j_Jeta_D1,ijk,lmn)*
 _Gamma_U1D0D0[ijk] + Jeta_D2(j_Jeta_D2,ijk,lmn)*_Gamma_U2D0D0[ijk]) +
 16.0*_gammaI_U0U1[ijk]*(-JJeta_D0D1(j_JJeta_D0D1,ijk,lmn) +
@@ -90,10 +90,10 @@ pow(psi[ijk], 8);
   DDM_SCHUR_JACOBIAN_EQ_Epart_OPEN
 
   double Epart = 
-(1.0/8.0)*(16*M_PI*kd[ijk==lmn]*pow(psi[ijk], 6)*(_E[ijk] + 2*
-_S[ijk]) - kd[ijk==lmn]*(7.0*_Aij2[ijk] + pow(psi[ijk], 8)*
-(3.3333333333333335*pow(K[ijk], 2)*pow(psi[ijk], 4) + _R[ijk])) -
-pow(psi[ijk], 8)*(8.0*_gammaI_U0U0[ijk]*(-JJeta_D0D0(j_JJeta_D0D0,ijk,lmn) +
+-1.0/8.0*(16*M_PI*kd[ijk==lmn]*pow(psi[ijk], 6)*(_E[ijk] + 2*_S[ijk]) +
+kd[ijk==lmn]*(7.0*_Aij2[ijk] + pow(psi[ijk], 8)*(3.3333333333333335*
+pow(K[ijk], 2)*pow(psi[ijk], 4) + _R[ijk])) + pow(psi[ijk], 8)*(8.0*
+_gammaI_U0U0[ijk]*(-JJeta_D0D0(j_JJeta_D0D0,ijk,lmn) +
 Jeta_D0(j_Jeta_D0,ijk,lmn)*_Gamma_U0D0D0[ijk] + Jeta_D1(j_Jeta_D1,ijk,lmn)*
 _Gamma_U1D0D0[ijk] + Jeta_D2(j_Jeta_D2,ijk,lmn)*_Gamma_U2D0D0[ijk]) +
 16.0*_gammaI_U0U1[ijk]*(-JJeta_D0D1(j_JJeta_D0D1,ijk,lmn) +

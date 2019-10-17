@@ -87,7 +87,7 @@ Symm[_Gamma(i,j,k)  = _Gamma(i,k,j)];
 F_eq = \
  _gammaI(-i,-j)*(ddeta(i,j) - _Gamma(l,i,j)*deta(-l))\
  - eta*(_R/8+(5/12)*(psi**4)*(K**2)+(7/8)*(psi**-8)*_Aij2)\
- - Beta(i)*dK(-i)*(psi**5)+2*pi*eta*(psi**-2)*(_E+2*_S);
+ - Beta(i)*dK(-i)*(psi**5)-2*pi*eta*(psi**-2)*(_E+2*_S);
 
 
 `  F[n] = F_eq;\n`;# Jx = -F in Newton-Raphson scheme

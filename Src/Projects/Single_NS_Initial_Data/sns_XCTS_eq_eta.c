@@ -66,9 +66,9 @@ void *sns_eq_eta(void *vp1,void *vp2)
   DDM_SCHUR_EQ_OPEN
 
   double F_eq = 
-(1.0/8.0)*(16*M_PI*eta[ijk]*pow(psi[ijk], 6)*(_E[ijk] + 2*_S[ijk]) -
+-1.0/8.0*(16*M_PI*eta[ijk]*pow(psi[ijk], 6)*(_E[ijk] + 2*_S[ijk]) +
 eta[ijk]*(7.0*_Aij2[ijk] + pow(psi[ijk], 8)*(3.3333333333333335*
-pow(K[ijk], 2)*pow(psi[ijk], 4) + _R[ijk])) - pow(psi[ijk], 8)*(8.0*
+pow(K[ijk], 2)*pow(psi[ijk], 4) + _R[ijk])) + pow(psi[ijk], 8)*(8.0*
 _gammaI_U0U0[ijk]*(_Gamma_U0D0D0[ijk]*deta_D0[ijk] +
 _Gamma_U1D0D0[ijk]*deta_D1[ijk] + _Gamma_U2D0D0[ijk]*deta_D2[ijk] -
 ddeta_D0D0[ijk]) + 16.0*_gammaI_U0U1[ijk]*(_Gamma_U0D0D1[ijk]*
