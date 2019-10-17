@@ -1150,7 +1150,6 @@ static void init_field_TOV(Grid_T *const grid,const TOV_T *const tov)
     
     PREP_FIELD(psi)
     PREP_FIELD(eta)
-    PREP_FIELD(ETA)
     
     if (IsItNSPatch(patch))
     {
@@ -1198,7 +1197,7 @@ static void init_field_TOV(Grid_T *const grid,const TOV_T *const tov)
         /* eta */
         enthalpy_h = execute_interpolation(interp_h);
         alpha = sqrt(1-2*M_NS/R_Schwar)/enthalpy_h; 
-        ETA[ijk] = eta[ijk] = psi[ijk]*alpha;
+        eta[ijk] = psi[ijk]*alpha;
         
         /* enthalpy */
         enthalpy[ijk] = enthalpy_h;
