@@ -68,4 +68,5 @@ static double dh_dx0_root_finder_eq(void *params,const double *const x);
 static double dh_dx1_root_finder_eq(void *params,const double *const x);
 static double dh_dx2_root_finder_eq(void *params,const double *const x);
 static void adjust_NS_center(Grid_T *const grid);
+static double sns_NS_surface_enthalpy_eq(void *params,const double *const x);
 

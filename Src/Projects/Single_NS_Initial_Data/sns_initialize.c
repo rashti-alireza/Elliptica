@@ -57,7 +57,6 @@ static Grid_T *make_next_grid_using_previous_grid(Grid_T *const grid_prev)
   /* find NS surface */
   if (strcmp_i(grid_prev->kind,"SNS_CubedSpherical+Box_grid"))
   {
-    
     GridParams->NS_R_type = GetParameterS_E("NS_surface_finder_method");
     /* find NS surface using spherical harmonic points */
     if (strstr_i(GridParams->NS_R_type,"SphericalHarmonic"))
@@ -303,9 +302,13 @@ static void interpolate_and_initialize_to_next_grid(Grid_T *const grid_next,Grid
 static double interpolate_from_patch_prim(const char *const field,const double *const X,Patch_T *const patch)
 {
   double interp;
-  Interpolation_T *interp_s = init_interpolation();
+  const int field_ind = _Ind(field);
   
-  interp_s->field = patch->pool[Ind(field)];
+  if (field_ind < 0)
+    return 0;
+    
+  Interpolation_T *interp_s = init_interpolation(); 
+  interp_s->field = patch->pool[field_ind];
   interp_s->X = X[0];
   interp_s->Y = X[1];
   interp_s->Z = X[2];
@@ -1961,7 +1964,7 @@ static void adjust_NS_center(Grid_T *const grid)
   {
     Patch_T *patch = grid->patch[p];
     
-    if (!IsItNSPatch(patch))
+    if (!IsItNSPatch(patch) && !IsItNSSurroundingPatch(patch))
       continue;
     
     /* now shift enthalpy */
@@ -1999,7 +2002,7 @@ static void adjust_NS_center(Grid_T *const grid)
   FOR_ALL_PATCHES(p,grid)
   {
     Patch_T *patch = grid->patch[p];
-    if(!IsItNSPatch(patch))
+    if(!IsItNSPatch(patch) && !IsItNSSurroundingPatch(patch))
       continue;
       
     sns_update_derivative_enthalpy(patch);  
@@ -2029,4 +2032,36 @@ static void adjust_NS_center(Grid_T *const grid)
       x_center[0],x_center[1],x_center[2],
       dh_dx2_root_finder_eq(par,x_center));
   }
+}
+/* find r such that f(h(r)) = h(r)-1 = 0 */
+static double sns_NS_surface_enthalpy_eq(void *params,const double *const x)
+{
+  const struct NS_surface_RootFinder_S *const pars = params;
+  const double dx = x[0]*pars->scale;
+  Patch_T *const patch   = pars->patch;
+  Root_Finder_T *const root_finder = pars->root_finder;
+  const double *const x0 = pars->x0;
+  const double *const N  = pars->N;
+  const double Euler_C   = pars->Euler_C;
+  const double y[3]      = {x0[0]+dx*N[0],x0[1]+dx*N[1],x0[2]+dx*N[2]};
+  const double yp[3]     = {y[0]-patch->c[0],y[1]-patch->c[1],y[2]-patch->c[2]};
+  double X[3],R,h;
+
+  R = rms(3,yp,0);
+  if (GRT(R,pars->maxR))
+    root_finder->interrupt = 1;
+  X_of_x(X,y,patch);
+  
+  /* find enthalpy at the (X,Y,Z) */
+  Interpolation_T *interp_h = init_interpolation();
+  interp_h->field = patch->pool[Ind("enthalpy")];
+  interp_h->XYZ_dir_flag  = 1;
+  interp_h->X            = X[0];
+  interp_h->Y            = X[1];
+  interp_h->Z            = X[2];
+  plan_interpolation(interp_h);
+  h = execute_interpolation(interp_h);/* enthalpy */
+  free_interpolation(interp_h);
+    
+  return h-1;
 }
