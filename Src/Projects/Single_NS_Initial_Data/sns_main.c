@@ -17,7 +17,7 @@ int Single_NS_Initial_Data(void)
   /* adding some parameters that are used in different parts: */
   
   /* -> the Constant of the integration of Euler equation */
-  AddParameterDoubleF("Euler_equation_constant",0);
+  AddParameterDoubleF("Euler_equation_constant",-1);
   
   /***********************************************************/
   /* the outer most main algorithm: */
