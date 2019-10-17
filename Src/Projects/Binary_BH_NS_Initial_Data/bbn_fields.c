@@ -492,7 +492,7 @@ void bbn_update_rho0(Patch_T *const patch)
       if (1)/* make sure h won't get too less than 1 */
       {
         if (!isfinite(rho0[ijk]))
-           printf("rho0(h = %g) = %g\n",enthalpy[ijk],rho0[ijk]);
+           printf("put rho0(h = %g) = 0.0.\n",enthalpy[ijk]);
           //abortEr("rho0 update went wrong due to bad enthalpy.\n");
       }
       

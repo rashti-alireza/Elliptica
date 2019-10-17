@@ -2033,13 +2033,14 @@ static void adjust_NS_center(Grid_T *const grid)
       dh_dx2_root_finder_eq(par,x_center));
   }
 }
+
 /* find r such that f(h(r)) = h(r)-1 = 0 */
 static double sns_NS_surface_enthalpy_eq(void *params,const double *const x)
 {
   const struct NS_surface_RootFinder_S *const pars = params;
-  const double dx = x[0]*pars->scale;
-  Patch_T *const patch   = pars->patch;
   Root_Finder_T *const root_finder = pars->root_finder;
+  Patch_T *const patch   = pars->patch;
+  const double dx        = x[0]*pars->scale;
   const double *const x0 = pars->x0;
   const double *const N  = pars->N;
   const double Euler_C   = pars->Euler_C;
