@@ -74,11 +74,11 @@ Ccode["  {"];
      h2    = L2-P2;
      h     = (h2)**(0.5);
 ``
-# if h < 1 or some abnormal number due to cude approximation
+# if h  is some abnormal number due to cude approximation
 # in the fields that compose the enthalpy, put h to a well defined
 # function. This choice keeps the the iterative solver on track and
 # avoid nan in rho0.
-     `  if (!isnormal(h) || LSS(h,1))`
+     `  if (!isfinite(h))`
      `  {`
      `    h = 1;`
      `  }`

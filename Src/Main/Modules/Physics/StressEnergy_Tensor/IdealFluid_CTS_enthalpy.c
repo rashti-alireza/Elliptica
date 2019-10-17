@@ -88,7 +88,7 @@ L2 - P2;
 sqrt(h2);
 
 
-  if (!isnormal(h) || LSS(h,1))
+  if (!isfinite(h))
   {
     h = 1;
   }
