@@ -373,8 +373,6 @@ static void find_Xp_and_patchp(const double *const x,const char *const hint,Grid
   }
   else/* if no patch found let's find it in the other patches */
   {
-    needle->grid = grid;
-    needle->x    = x;
     needle->ex   = needle->in;
     needle->Nex  = needle->Nin;
     needle->in   = 0;
@@ -415,7 +413,7 @@ static void find_NS_surface_Ylm_method_CS(Grid_T *const grid,struct Grid_Params_
   double theta,phi;
   double *Rnew_NS = 0;/* new R for NS */
   double Max_R_NS = 0;/* maximum radius of NS */
-  double guess        = 0;
+  double guess    = 0;
   const double maxR_out     = (1./3.)*(-2*GetParameterD_E("NS_center_-y_axis"));
   const double SMALL_FACTOR = 0.8;/* initial r = SMALL_FACTOR*R0_NS */
   const double RESIDUAL     = 1E3*GetParameterD_E("RootFinder_Tolerance");
@@ -440,7 +438,7 @@ static void find_NS_surface_Ylm_method_CS(Grid_T *const grid,struct Grid_Params_
   root->x_gss     = &guess;
   root->params    = par;
   root->f[0]      = sns_NS_surface_enthalpy_eq;
-  root->FD_Right = 1;
+  root->FD_Right  = 1;
   //root->verbose  = 1;
   par->root_finder = root;
   
@@ -1003,11 +1001,7 @@ static Grid_T *TOV_approximation(void)
   sns_update_Aij(grid);
   
   /* find Euler equation const using enthalpy of TOV star and other fields */
-  //sns_study_initial_data(grid);
   find_Euler_eq_const_TOV(grid);
-  //sns_update_matter_fields(grid);
-  //sns_study_initial_data(grid);
-  //abort();
 
   /* freeing */
   free_Grid_Params_S(GridParams);
@@ -1997,9 +1991,14 @@ static void adjust_NS_center(Grid_T *const grid)
     par->patch = GetPatch("left_centeral_box",grid);
     par->root_finder = root_finder;
     
-    printf("dh/dx(%g,%g,%g)|NS center = %g\n",dh_dx0_root_finder_eq(par,NS_center));
-    printf("dh/dy(%g,%g,%g)|NS center = %g\n",dh_dx1_root_finder_eq(par,NS_center));
-    printf("dh/dz(%g,%g,%g)|NS center = %g\n",dh_dx2_root_finder_eq(par,NS_center));
-    
+    printf("dh/dx(%g,%g,%g)|NS center = %g\n",
+      dh_dx0_root_finder_eq(par,NS_center),
+      NS_center[0],NS_center[1],NS_center[2]);
+    printf("dh/dy(%g,%g,%g)|NS center = %g\n",
+      dh_dx1_root_finder_eq(par,NS_center),
+      NS_center[0],NS_center[1],NS_center[2]);
+    printf("dh/dz(%g,%g,%g)|NS center = %g\n",
+      dh_dx2_root_finder_eq(par,NS_center),
+      NS_center[0],NS_center[1],NS_center[2]);
   }
 }
