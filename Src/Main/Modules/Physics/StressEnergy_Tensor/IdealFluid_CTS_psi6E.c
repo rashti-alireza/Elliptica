@@ -35,8 +35,8 @@ eta[ijk]/psi[ijk];
 pow(psi[ijk], 6);
 
     double Ebar = 
-pow(alpha, 2)*enthalpy[ijk]*psi6*rho0[ijk]*pow(u0[ijk], 2) -
-p;
+psi6*(pow(alpha, 2)*enthalpy[ijk]*rho0[ijk]*pow(u0[ijk], 2) -
+p);
 
   _E[ijk] = Ebar;
   }
