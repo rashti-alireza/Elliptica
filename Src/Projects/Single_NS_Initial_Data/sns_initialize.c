@@ -52,7 +52,7 @@ static Grid_T *make_next_grid_using_previous_grid(Grid_T *const grid_prev)
   adjust_NS_center(grid_prev);
   
   /* find Euler equation constant to meet NS baryonic mass */
-  find_Euler_eq_const(grid_prev);
+  //find_Euler_eq_const(grid_prev);
     
   /* find NS surface */
   if (strcmp_i(grid_prev->kind,"SNS_CubedSpherical+Box_grid"))
@@ -1936,6 +1936,8 @@ static void adjust_NS_center(Grid_T *const grid)
   /* check the initial values before adjustments */
   if(1)
   {
+    printf("dh/dx before adjustment:\n");
+    
     struct NC_Center_RootFinder_S par[1] = {0};
     Root_Finder_T root_finder[1] = {0};
     const double x_center[3] = {0,C,0};
@@ -2006,6 +2008,8 @@ static void adjust_NS_center(Grid_T *const grid)
   /* check if it works */
   if(1)
   {
+    printf("dh/dx after adjustment:\n");
+    
     struct NC_Center_RootFinder_S par[1] = {0};
     Root_Finder_T root_finder[1] = {0};
     const double x_center[3] = {0,C,0};
