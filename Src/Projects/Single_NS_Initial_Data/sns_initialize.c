@@ -50,17 +50,7 @@ static Grid_T *make_next_grid_using_previous_grid(Grid_T *const grid_prev)
     extrapolate_fluid_fields_outsideNS_CS(grid_prev);
     
     adjust_NS_center(grid_prev);
-    unsigned p;
     
-    FOR_ALL_PATCHES(p,grid_prev)
-    {
-      Patch_T *patch = grid_prev->patch[p];
-      if(!IsItNSPatch(patch))
-        continue;
-        
-      sns_update_derivative_enthalpy(patch);  
-    }
-  
     //find_NS_center(grid_prev);
     sns_study_initial_data(grid_prev);
     
@@ -1936,7 +1926,8 @@ static double dh_dx2_root_finder_eq(void *params,const double *const x)
 /* adjust the center of NS at the designated point, in case it moved.
 // we need only to draw enthalpy to (0,NS_C,0).
 // to do so, we demand shifted_enthalpy(r) = enthalpy(R+r), in which R 
-// is the amount the center is displaced from (0,-D/2,0) */
+// is the amount the center is displaced from (0,-D/2,0);
+// and finally update the enthalpy and its derivatives. */
 static void adjust_NS_center(Grid_T *const grid)
 {
   char par_name[1000];
@@ -1989,4 +1980,28 @@ static void adjust_NS_center(Grid_T *const grid)
     REMOVE_FIELD(shifted_enthalpy);
   }
   
+  /* update enthalpy derivatives */
+  FOR_ALL_PATCHES(p,grid)
+  {
+    Patch_T *patch = grid->patch[p];
+    if(!IsItNSPatch(patch))
+      continue;
+      
+    sns_update_derivative_enthalpy(patch);  
+  }
+  
+  /* check if it works */
+  if(1)
+  {
+    struct NC_Center_RootFinder_S par[1] = {0};
+    Root_Finder_T root_finder[1] = {0};
+    
+    par->patch = GetPatch("left_centeral_box",grid);
+    par->root_finder = root_finder;
+    
+    printf("dh/dx(%g,%g,%g)|NS center = %g\n",dh_dx0_root_finder_eq(par,NS_center));
+    printf("dh/dy(%g,%g,%g)|NS center = %g\n",dh_dx1_root_finder_eq(par,NS_center));
+    printf("dh/dz(%g,%g,%g)|NS center = %g\n",dh_dx2_root_finder_eq(par,NS_center));
+    
+  }
 }
