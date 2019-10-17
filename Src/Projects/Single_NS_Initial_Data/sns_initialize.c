@@ -34,28 +34,31 @@ static Grid_T *make_next_grid_using_previous_grid(Grid_T *const grid_prev)
   Grid_T *grid_next = 0;
   struct Grid_Params_S *GridParams = init_GridParams();/* adjust some pars for construction of next grid */
   
+  /* updating enthalpy */
   sns_update_enthalpy_and_denthalpy(grid_prev);
-  
-  /* find Euler equation constant to meet NS baryonic mass */
-  //find_Euler_eq_const(grid_prev);
-  
-  /* find the NS center */
-  find_NS_center(grid_prev);
-  
-  //sns_update_enthalpy_and_denthalpy(grid_prev);
   
   if (strcmp_i(grid_prev->kind,"SNS_CubedSpherical+Box_grid"))
   {
     /* extrapolate fluid fields outside of NS in case their value needed. */
     extrapolate_fluid_fields_outsideNS_CS(grid_prev);
+  }
+  else
+    abortEr(NO_OPTION);
     
-    adjust_NS_center(grid_prev);
+  /* find the NS center */
+  find_NS_center(grid_prev);
+  
+  /* if needed, drag the NS to its designated point */
+  adjust_NS_center(grid_prev);
+  
+  /* find Euler equation constant to meet NS baryonic mass */
+  find_Euler_eq_const(grid_prev);
     
-    //find_NS_center(grid_prev);
-    sns_study_initial_data(grid_prev);
+  /* find NS surface */
+  if (strcmp_i(grid_prev->kind,"SNS_CubedSpherical+Box_grid"))
+  {
     
     GridParams->NS_R_type = GetParameterS_E("NS_surface_finder_method");
-    
     /* find NS surface using spherical harmonic points */
     if (strstr_i(GridParams->NS_R_type,"SphericalHarmonic"))
       find_NS_surface_Ylm_method_CS(grid_prev,GridParams);
@@ -65,7 +68,7 @@ static Grid_T *make_next_grid_using_previous_grid(Grid_T *const grid_prev)
   else
     abortEr(NO_OPTION);
     
-    
+  /* make new grid */  
   grid_next = creat_sns_grid_CS(GridParams);
   
   /* fields: */
@@ -115,16 +118,11 @@ static void find_Euler_eq_const(Grid_T *const grid)
   root->x_gss       = guess;
   root->params      = params;
   root->f[0]        = Euler_eq_const_rootfinder_eq;
-  //test
-  root->verbose      = 1;
-  //end
+  root->verbose     = 1;
   plan_root_finder(root);
   Euler_const       = execute_root_finder(root);
-  
   update_parameter_double_format("Euler_equation_constant",Euler_const[0]);
-  //test
-  printf("Euler: %g->%g\n",guess[0],Euler_const[0]);
-  //end
+  printf("Euler Equation const. updated: %g -> %g\n",guess[0],Euler_const[0]);
   free(Euler_const);
   free_root_finder(root);
 }
