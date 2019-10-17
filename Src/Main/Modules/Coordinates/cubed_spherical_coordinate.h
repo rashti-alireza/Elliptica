@@ -5,6 +5,7 @@
 #define Power3(a) (a)*SQR(a)
 
 void populate_right_box_sns(Grid_T *const grid,const unsigned pn);
+void fill_patches_SNS_CubedSpherical_Box_grid(Grid_T *const grid);
 void fill_patches_BNS_CubedSpherical_grid(Grid_T *const grid);
 void fill_patches_BBN_CubedSpherical_grid(Grid_T *const grid);
 void SignAndIndex_permutation_CubedSphere(const Flag_T side,unsigned *const a,unsigned *const b,unsigned *const c,double *const s);
