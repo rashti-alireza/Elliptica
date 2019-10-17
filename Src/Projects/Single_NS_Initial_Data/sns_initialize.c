@@ -1933,6 +1933,28 @@ static void adjust_NS_center(Grid_T *const grid)
   if (EQL(0,R[0]) && EQL(0,R[1]) && EQL(0,R[2]))
     return;
   
+  /* check the initial values before adjustments */
+  if(1)
+  {
+    struct NC_Center_RootFinder_S par[1] = {0};
+    Root_Finder_T root_finder[1] = {0};
+    const double x_center[3] = {0,C,0};
+    par->patch = GetPatch("left_centeral_box",grid);
+    par->root_finder = root_finder;
+    
+    printf("dh/dx(%g,%g,%g)|NS center = %g\n",
+      x_center[0],x_center[1],x_center[2],
+      dh_dx0_root_finder_eq(par,x_center));
+      
+    printf("dh/dy(%g,%g,%g)|NS center = %g\n",
+      x_center[0],x_center[1],x_center[2],
+      dh_dx1_root_finder_eq(par,x_center));
+      
+    printf("dh/dz(%g,%g,%g)|NS center = %g\n",
+      x_center[0],x_center[1],x_center[2],
+      dh_dx2_root_finder_eq(par,x_center));
+  }
+  
   FOR_ALL_PATCHES(p,grid)
   {
     Patch_T *patch = grid->patch[p];
@@ -1986,18 +2008,21 @@ static void adjust_NS_center(Grid_T *const grid)
   {
     struct NC_Center_RootFinder_S par[1] = {0};
     Root_Finder_T root_finder[1] = {0};
+    const double x_center[3] = {0,C,0};
     
     par->patch = GetPatch("left_centeral_box",grid);
     par->root_finder = root_finder;
     
     printf("dh/dx(%g,%g,%g)|NS center = %g\n",
-      NS_center[0],NS_center[1],NS_center[2],
-      dh_dx0_root_finder_eq(par,NS_center));
+      x_center[0],x_center[1],x_center[2],
+      dh_dx0_root_finder_eq(par,x_center));
+      
     printf("dh/dy(%g,%g,%g)|NS center = %g\n",
-      NS_center[0],NS_center[1],NS_center[2],
-      dh_dx1_root_finder_eq(par,NS_center));
+      x_center[0],x_center[1],x_center[2],
+      dh_dx1_root_finder_eq(par,x_center));
+      
     printf("dh/dz(%g,%g,%g)|NS center = %g\n",
-      NS_center[0],NS_center[1],NS_center[2],
-      dh_dx2_root_finder_eq(par,NS_center));
+      x_center[0],x_center[1],x_center[2],
+      dh_dx2_root_finder_eq(par,x_center));
   }
 }
