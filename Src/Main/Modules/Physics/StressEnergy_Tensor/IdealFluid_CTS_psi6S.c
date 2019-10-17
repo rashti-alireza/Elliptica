@@ -66,7 +66,7 @@ _gammaI_U1U2[ijk]*dphi_D1[ijk]*dphi_D2[ijk] + _gammaI_U2U2[ijk]*
 pow(dphi_D2[ijk], 2));
 
     double Sbar = 
-P2*psi6*rho0[ijk]/enthalpy[ijk] + 3*p;
+psi6*(P2*rho0[ijk] + 3*enthalpy[ijk]*p)/enthalpy[ijk];
 
   _S[ijk] = Sbar;
   }
