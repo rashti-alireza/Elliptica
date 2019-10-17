@@ -467,8 +467,15 @@ void sns_update_rho0(Patch_T *const patch)
     {
       eos->h    = enthalpy[ijk];
       rho0[ijk] = eos->rest_mass_density(eos);
+      
+      if (1)/* make sure h won't get too less than 1 */
+      {
+        if (!isfinite(rho0[ijk]))
+           printf("rho0(h = %g) = %g\n",enthalpy[ijk],rho0[ijk]);
+          //abortEr("rho0 update went wrong due to bad enthalpy.\n");
+      }
       if (!isfinite(rho0[ijk]))
-        abortEr("rho0 update went wrong due to bad enthalpy.\n");
+        rho0[ijk] = 0;
     }
     free_EoS(eos);
   }
