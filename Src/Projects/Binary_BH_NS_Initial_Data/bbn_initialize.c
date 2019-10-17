@@ -46,16 +46,16 @@ static Grid_T *make_next_grid_using_previous_grid(Grid_T *const grid_prev)
   */
   
   /* find Euler equation constant to meet NS baryonic mass */
-  //find_Euler_eq_const(grid_prev);
+  find_Euler_eq_const(grid_prev);
   
   /* find y_CM by demanding P_ADM = 0 */
-  //find_center_of_mass(grid_prev);
+  find_center_of_mass(grid_prev);
   
   /* find the NS center */
-  //find_NS_center(grid_prev);
+  find_NS_center(grid_prev);
   
   /* find BH_NS_orbital_angular_velocity using force balance equation */
-  //find_BH_NS_Omega_force_balance_eq(grid_prev);
+  find_BH_NS_Omega_force_balance_eq(grid_prev);
   
   /* find the BH radius to acquire the desired BH mass */
   //find_BH_radius(grid_prev);
@@ -84,7 +84,7 @@ static Grid_T *make_next_grid_using_previous_grid(Grid_T *const grid_prev)
     abortEr(NO_OPTION);
     
   /* adjust the center of NS */
-  //adjust_NS_center(grid_prev);
+  adjust_NS_center(grid_prev);
     
   /* make new grid with new parameters */
   const double bh_chi  = GetParameterD_E("BH_X_U2");
