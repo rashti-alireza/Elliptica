@@ -9,19 +9,6 @@
 #include "physics_EoS_lib.h"
 #include "physics_StressEnergyTensor_lib.h"
 
-/* root finder struct for NS surface eq */
-struct NS_surface_RootFinder_S
-{
-  Patch_T *patch;
-  void *root_finder;
-  double x0[3];/* (x,y,z) at the surface */
-  double *N;/* the direction of increasing or decreasing of x = x0+N*d */
-  double Euler_C;/* Euler equation const. */
-  double scale;/* to avoid long step in root finder */
-  double maxR;/* max R allowed for NS surrounding */
-};
-
-
 double sns_NS_baryonic_mass(Grid_T *const grid,const double Euler_C);
 void sns_partial_derivatives_fields(Grid_T *const grid);
 void sns_allocate_fields(Grid_T *const grid);

@@ -44,6 +44,19 @@ struct NC_Center_RootFinder_S
   Root_Finder_T *root_finder;
 };
 
+/* root finder struct for NS surface eq */
+struct NS_surface_RootFinder_S
+{
+  Patch_T *patch;
+  void *root_finder;
+  double x0[3];/* (x,y,z) at the surface */
+  double *N;/* the direction of increasing or decreasing of x = x0+N*d */
+  //double Euler_C;/* Euler equation const. */
+  //double scale;/* to avoid long step in root finder */
+  //double maxR;/* max R allowed for NS surrounding */
+};
+
+
 Grid_T *sns_initialize_next_grid(Grid_T *const grid_prev);
 static Grid_T *make_next_grid_using_previous_grid(Grid_T *const grid_prev);
 static Grid_T *TOV_approximation(void);
@@ -69,4 +82,4 @@ static double dh_dx1_root_finder_eq(void *params,const double *const x);
 static double dh_dx2_root_finder_eq(void *params,const double *const x);
 static void adjust_NS_center(Grid_T *const grid);
 static double sns_NS_surface_enthalpy_eq(void *params,const double *const x);
-
+static double sns_NS_surface_denthalpy_dr(void *params,const double *const x,const unsigned dir);

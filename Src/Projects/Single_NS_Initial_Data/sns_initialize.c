@@ -419,6 +419,7 @@ static void find_NS_surface_Ylm_method_CS(Grid_T *const grid,struct Grid_Params_
   struct NS_surface_RootFinder_S par[1];
   unsigned Ntheta,Nphi;/* total number of theta and phi points */
   const unsigned lmax = (unsigned)GetParameterI_E("NS_surface_Ylm_expansion_max_l");
+  const double RESIDUAL = sqrt(GetParameterD_E("RootFinder_Tolerance"));
   double theta,phi;
   double *Rnew_NS = 0;/* new R for NS */
   double Max_R_NS = 0;/* maximum radius of NS */
@@ -435,11 +436,13 @@ static void find_NS_surface_Ylm_method_CS(Grid_T *const grid,struct Grid_Params_
   root->x_gss     = &guess;
   root->params    = par;
   root->f[0]      = sns_NS_surface_enthalpy_eq;
+  root->df_dx[0]  = sns_NS_surface_denthalpy_dr;
+  //root->verbose   = 1;
+  //root->FD_Right  = 1;
   plan_root_finder(root);
   
   /* parameters for root finder */
   par->root_finder = root;
-  par->scale   = 1E-2;
   
   /* initialize tables */
   init_Legendre_root_function();
@@ -504,10 +507,9 @@ static void find_NS_surface_Ylm_method_CS(Grid_T *const grid,struct Grid_Params_
       par->x0[2] = x[2];
       par->patch = h_patch;
       par->N     = N;
-      
       dr = execute_root_finder(root);
       /* if root finder is not OK for some reason */
-      if (root->exit_status != ROOT_FINDER_OK)
+      if (GRT(root->residual,RESIDUAL))
       {
         printf(". Root finder for NS surface at %s:\n.. ",h_patch->name);
         print_root_finder_exit_status(root);
@@ -515,9 +517,9 @@ static void find_NS_surface_Ylm_method_CS(Grid_T *const grid,struct Grid_Params_
       }
       
       /*  new coords of R respect to the center of NS */
-      y2[0] += N[0]*dr[0]*par->scale;
-      y2[1] += N[1]*dr[0]*par->scale;
-      y2[2] += N[2]*dr[0]*par->scale;
+      y2[0] += N[0]*dr[0];
+      y2[1] += N[1]*dr[0];
+      y2[2] += N[2]*dr[0];
       Rnew_NS[ij(i,j)] = rms(3,y2,0);
       
       /* find the max NS radius */
@@ -712,6 +714,9 @@ static void extrapolate_fluid_fields_outsideNS_CS(Grid_T *const grid)
     /* add fields: */
     /* enthalpy */
     ADD_FIELD(enthalpy)
+    ADD_FIELD_NoMem(denthalpy_D0)
+    ADD_FIELD_NoMem(denthalpy_D1)
+    ADD_FIELD_NoMem(denthalpy_D2)
     
     /* irrotational part of fluid */
     ADD_FIELD(phi)
@@ -922,6 +927,13 @@ static void extrapolate_fluid_fields_outsideNS_CS(Grid_T *const grid)
     
     /* populating enthalpy in NS surroundings */
     Tij_IF_CTS_enthalpy(patch);
+    Field_T *enthalpy = patch->pool[Ind("enthalpy")];
+    DECLARE_AND_EMPTY_FIELD(denthalpy_D2)
+    DECLARE_AND_EMPTY_FIELD(denthalpy_D1)
+    DECLARE_AND_EMPTY_FIELD(denthalpy_D0)
+    denthalpy_D2->v = Partial_Derivative(enthalpy,"z");
+    denthalpy_D1->v = Partial_Derivative(enthalpy,"y");
+    denthalpy_D0->v = Partial_Derivative(enthalpy,"x");
     
   }/* end of FOR_ALL_PATCHES(p,grid) */
 }
@@ -2013,7 +2025,7 @@ static double sns_NS_surface_enthalpy_eq(void *params,const double *const x)
 {
   const struct NS_surface_RootFinder_S *const pars = params;
   Patch_T *const patch0  = pars->patch;/* supposed to find in this patch */
-  const double dx        = x[0]*pars->scale;
+  const double dx        = x[0];
   const double *const x0 = pars->x0;
   const double *const N  = pars->N;
   const double y[3]      = {x0[0]+dx*N[0],x0[1]+dx*N[1],x0[2]+dx*N[2]};
@@ -2045,4 +2057,74 @@ static double sns_NS_surface_enthalpy_eq(void *params,const double *const x)
   free_interpolation(interp_h);
   
   return h-1;
+}
+
+/* denthalpy(r)/dr for NS surface root finder */
+static double sns_NS_surface_denthalpy_dr(void *params,const double *const x,const unsigned dir)
+{
+  assert(dir == 0);
+  const struct NS_surface_RootFinder_S *const pars = params;
+  Patch_T *const patch0  = pars->patch;/* supposed to find in this patch */
+  const double dx        = x[0];
+  const double *const x0 = pars->x0;
+  const double *const N  = pars->N;
+  const double y[3]      = {x0[0]+dx*N[0],x0[1]+dx*N[1],x0[2]+dx*N[2]};
+  Patch_T *patch = 0;
+  double X[3],dh_dr,dh_dx,dh_dy,dh_dz;
+  int dh_dx_ind,dh_dy_ind,dh_dz_ind;
+  Interpolation_T *interp_dh_dx = 0,
+                  *interp_dh_dy = 0,
+                  *interp_dh_dz = 0;
+  char hint[1000],*root_name;
+  
+  root_name = strstr(patch0->name,"_");/* the patch->name convention is grid\d?_root */
+  assert(root_name);
+  root_name++;
+  sprintf(hint,"%s",root_name);
+    
+  find_Xp_and_patchp(y,hint,patch0->grid,X,&patch);
+  
+  /* find denthalpy/dr at the (X,Y,Z): */
+  
+  dh_dx_ind = _Ind("denthalpy_D0");
+  if (dh_dx_ind < 0)/* if there is no enthalpy defined in the patch */
+    return 1;
+  interp_dh_dx = init_interpolation();
+  interp_dh_dx->field = patch->pool[dh_dx_ind];
+  interp_dh_dx->X = X[0];
+  interp_dh_dx->Y = X[1];
+  interp_dh_dx->Z = X[2];
+  interp_dh_dx->XYZ_dir_flag = 1;
+  plan_interpolation(interp_dh_dx);
+  dh_dx = execute_interpolation(interp_dh_dx);
+  free_interpolation(interp_dh_dx);
+  
+  dh_dy_ind = _Ind("denthalpy_D1");
+  if (dh_dy_ind < 0)/* if there is no enthalpy defined in the patch */
+    return 1;
+  interp_dh_dy = init_interpolation();
+  interp_dh_dy->field = patch->pool[dh_dy_ind];
+  interp_dh_dy->X = X[0];
+  interp_dh_dy->Y = X[1];
+  interp_dh_dy->Z = X[2];
+  interp_dh_dy->XYZ_dir_flag = 1;
+  plan_interpolation(interp_dh_dy);
+  dh_dy = execute_interpolation(interp_dh_dy);
+  free_interpolation(interp_dh_dy);
+  
+  dh_dz_ind = _Ind("denthalpy_D2");
+  if (dh_dz_ind < 0)/* if there is no enthalpy defined in the patch */
+    return 1;
+  interp_dh_dz = init_interpolation();
+  interp_dh_dz->field = patch->pool[dh_dz_ind];
+  interp_dh_dz->X = X[0];
+  interp_dh_dz->Y = X[1];
+  interp_dh_dz->Z = X[2];
+  interp_dh_dz->XYZ_dir_flag = 1;
+  plan_interpolation(interp_dh_dz);
+  dh_dz = execute_interpolation(interp_dh_dz);
+  free_interpolation(interp_dh_dz);
+  
+  /* Grad h . r^ = dh/dr */
+  return N[0]*dh_dx+N[1]*dh_dy+N[2]*dh_dz;
 }
