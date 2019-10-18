@@ -21,6 +21,20 @@ void sns_solve_initial_data_eqs(Grid_T *const grid)
   
   /* populating solution managment */
   initialize_solving_man(grid,field_eq,bc_eq,jacobian_field_eq,jacobian_bc_eq);
+
+  const char *path_par = GetParameterS_E("iteration_output");
+  char *folder;
+  char par[100];
+  
+  sprintf(par,"solve_eta_grid%u",grid->gn);
+  folder = make_directory(path_par,par);
+  add_parameter(par,folder);
+  free(folder);
+  
+  sprintf(par,"solve_psi_grid%u",grid->gn);
+  folder = make_directory(path_par,par);
+  add_parameter(par,folder);
+  free(folder);
   
   /* solving equation(s) */
   Solve_Equations_T *SolveEqs = init_solve_equations(grid);
@@ -190,6 +204,37 @@ static void sns_backtrack(Grid_T *const grid,const char *const name)
 void sns_SolveEqs_SourceUpdate(Grid_T *const grid,const char *const name)
 {
   Tij_IF_CTS_psi6Sources(grid);
+  char par[1000];
+  sprintf(par,"solve_ets_grid%u",grid->gn);
+  
+  if (!strcmp(name,"eta"))
+  {
+    static int cycle = 0;
+    sprintf(par,"solve_eta_grid%u",grid->gn);
+  
+    Pr_Field_T *pr  = init_PrField(grid);
+    pr->folder = GetParameterS_E(par);
+    pr->par    = "print_fields_4d";
+    pr->cycle  = cycle;
+    pr_fields(pr);
+    free_PrField(pr);
+    
+    cycle++;
+  }
+  else if (!strcmp(name,"psi"))
+  {
+    static int cycle = 0;
+    
+    sprintf(par,"solve_psi_grid%u",grid->gn);
+    Pr_Field_T *pr  = init_PrField(grid);
+    pr->folder = GetParameterS_E(par);
+    pr->par    = "print_fields_4d";
+    pr->cycle  = cycle;
+    pr_fields(pr);
+    free_PrField(pr);
+    
+    cycle++;
+  }
   
   /*if (!strcmp(name,"phi"))
   {
