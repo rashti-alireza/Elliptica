@@ -104,7 +104,7 @@ int sns_stop_criteria(Grid_T *const grid,const char *const name)
     
     /* if residual increased stop */
     res_last = patch->solving_man->settings->HFrms[solver_step-1];
-    if (res > res_last*(1. + res_bckt) && LSSEQL(res,1E-10))
+    if (res > res_last*(1. + res_bckt) && GRTEQL(res,1E-10))
     {
       stop_backtrack = 0;
       break;
