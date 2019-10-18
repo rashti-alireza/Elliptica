@@ -2010,7 +2010,19 @@ static void adjust_NS_center(Grid_T *const grid)
       find_Xp_and_patchp(x,hint,grid,Xp,&patchp);
       shifted_enthalpy->v[ijk] = interpolate_from_patch_prim("enthalpy",Xp,patchp);
     }
-    /* now clean enthalpy and copy new value and remove extras */
+    
+  }
+  
+  /* now clean enthalpy and copy new value and remove extras */
+  FOR_ALL_PATCHES(p,grid)
+  {
+    Patch_T *patch = grid->patch[p];
+    
+    if (!IsItNSPatch(patch) && !IsItNSSurroundingPatch(patch))
+      continue;
+    
+    DECLARE_FIELD(enthalpy);
+    DECLARE_FIELD(shifted_enthalpy);
     free_coeffs(enthalpy);
     free(enthalpy->v);
     enthalpy->v = shifted_enthalpy->v;
