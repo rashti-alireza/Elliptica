@@ -37,6 +37,8 @@ static Grid_T *make_next_grid_using_previous_grid(Grid_T *const grid_prev)
   /* updating enthalpy */
   sns_update_enthalpy_and_denthalpy(grid_prev);
   
+  sns_study_initial_data(grid_prev);
+  
   if (strcmp_i(grid_prev->kind,"SNS_CubedSpherical+Box_grid"))
   {
     /* extrapolate fluid fields outside of NS in case their value needed. */
@@ -66,6 +68,8 @@ static Grid_T *make_next_grid_using_previous_grid(Grid_T *const grid_prev)
   }
   else
     abortEr(NO_OPTION);
+  
+  sns_study_initial_data(grid_prev);
     
   /* make new grid */  
   grid_next = creat_sns_grid_CS(GridParams);
@@ -174,7 +178,7 @@ static void interpolate_and_initialize_to_next_grid(Grid_T *const grid_next,Grid
   {
     Patch_T *patch = grid_next->patch[p];
     unsigned nn = patch->nn;
-    char hint[100],*root_name;
+    char hint[1000],*root_name;
     unsigned ijk;
     
     root_name = strstr(patch->name,"_");/* the patch->name convention is grid\d?_root */
@@ -441,7 +445,7 @@ static void find_NS_surface_Ylm_method_CS(Grid_T *const grid,struct Grid_Params_
   root->x_gss     = &guess;
   root->params    = par;
   root->f[0]      = sns_NS_surface_enthalpy_eq;
-  root->FD_Right  = 1;
+  //root->FD_Right  = 1;
   //root->verbose  = 1;
   par->root_finder = root;
   
@@ -538,27 +542,41 @@ static void find_NS_surface_Ylm_method_CS(Grid_T *const grid,struct Grid_Params_
       //printf("---- %s\n",h_patch->name);
       //print_root_finder_exit_status(root);
       /* if root finder went wrong for some reason */
-      if (root->interrupt || GRT(root->residual,RESIDUAL))
+      if (GRT(root->residual,1E-2))
       {
         //print_root_finder_exit_status(root);
-        Rnew_NS[ij(i,j)] = R0_NS;
+        //Rnew_NS[ij(i,j)] = R0_NS;
+        //y2[0] += N[0]*dr[0]*par->scale;
+        //y2[1] += N[1]*dr[0]*par->scale;
+        //y2[2] += N[2]*dr[0]*par->scale;
+        //Rnew_NS[ij(i,j)] = rms(3,y2,0);
         printf("---- %s\n",h_patch->name);
         print_root_finder_exit_status(root);
+        printf("redo the root finder:\n");
+        root->verbose = 1;
+        double *temp = execute_root_finder(root);
+        root->verbose = 0;
+        free(temp);
       }
-      else/* if root finder was successful */
-      {
+      //else/* if root finder was successful */
+      //{
         /*  new coords of R respect to the center of NS */
-        y2[0] += N[0]*dr[0]*par->scale;
-        y2[1] += N[1]*dr[0]*par->scale;
-        y2[2] += N[2]*dr[0]*par->scale;
-        Rnew_NS[ij(i,j)] = rms(3,y2,0);
-      }
+        //y2[0] += N[0]*dr[0]*par->scale;
+        //y2[1] += N[1]*dr[0]*par->scale;
+        //y2[2] += N[2]*dr[0]*par->scale;
+        //Rnew_NS[ij(i,j)] = rms(3,y2,0);
+      //}
+      
+      y2[0] += N[0]*dr[0]*par->scale;
+      y2[1] += N[1]*dr[0]*par->scale;
+      y2[2] += N[2]*dr[0]*par->scale;
+      Rnew_NS[ij(i,j)] = rms(3,y2,0);
       
       /* if we have big difference in NS radius, ameliorate it */
-      if (GRTEQL(Rnew_NS[ij(i,j)],HowBigFac*R0_NS))
-        Rnew_NS[ij(i,j)] = R0_NS*INCREMENT;
-      else if (LSSEQL(Rnew_NS[ij(i,j)],HowSmallFac*R0_NS))
-        Rnew_NS[ij(i,j)] = R0_NS*DECREMENT;
+      //if (GRTEQL(Rnew_NS[ij(i,j)],HowBigFac*R0_NS))
+        //Rnew_NS[ij(i,j)] = R0_NS*INCREMENT;
+      //else if (LSSEQL(Rnew_NS[ij(i,j)],HowSmallFac*R0_NS))
+        //Rnew_NS[ij(i,j)] = R0_NS*DECREMENT;
       
       if (Rnew_NS[ij(i,j)] > Max_R_NS)
         Max_R_NS = Rnew_NS[ij(i,j)];
@@ -1771,7 +1789,7 @@ static void find_NS_center(Grid_T *const grid)
     NS_center     = execute_root_finder(root);
     
     /* if root finder was successful */
-    if (root->residual < 1E-6)
+    if (root->exit_status == ROOT_FINDER_OK)
     {
       //test
       printf("(%f,%f,%f)\n",NS_center[0],NS_center[1],NS_center[2]);
@@ -2039,23 +2057,31 @@ static double sns_NS_surface_enthalpy_eq(void *params,const double *const x)
 {
   const struct NS_surface_RootFinder_S *const pars = params;
   Root_Finder_T *const root_finder = pars->root_finder;
-  Patch_T *const patch   = pars->patch;
+  Patch_T *const patch0  = pars->patch;
   const double dx        = x[0]*pars->scale;
   const double *const x0 = pars->x0;
   const double *const N  = pars->N;
   const double Euler_C   = pars->Euler_C;
   const double y[3]      = {x0[0]+dx*N[0],x0[1]+dx*N[1],x0[2]+dx*N[2]};
-  const double yp[3]     = {y[0]-patch->c[0],y[1]-patch->c[1],y[2]-patch->c[2]};
-  double X[3],R,h;
-
-  R = rms(3,yp,0);
-  if (GRT(R,pars->maxR))
-    root_finder->interrupt = 1;
-  X_of_x(X,y,patch);
+  Patch_T *patch = 0;
+  double X[3],h;
+  int field_ind;
+  char hint[1000],*root_name;
+  
+  root_name = strstr(patch0->name,"_");/* the patch->name convention is grid\d?_root */
+  assert(root_name);
+  root_name++;
+  sprintf(hint,"%s",root_name);
+    
+  find_Xp_and_patchp(y,hint,patch0->grid,X,&patch);
   
   /* find enthalpy at the (X,Y,Z) */
+  field_ind = _Ind("enthalpy");
+  if (field_ind < 0)/* if there is no enthalpy defined in the patch */
+    return -1;
+    
   Interpolation_T *interp_h = init_interpolation();
-  interp_h->field = patch->pool[Ind("enthalpy")];
+  interp_h->field = patch->pool[field_ind];
   interp_h->XYZ_dir_flag  = 1;
   interp_h->X            = X[0];
   interp_h->Y            = X[1];
@@ -2063,6 +2089,14 @@ static double sns_NS_surface_enthalpy_eq(void *params,const double *const x)
   plan_interpolation(interp_h);
   h = execute_interpolation(interp_h);/* enthalpy */
   free_interpolation(interp_h);
-    
+  
+  /*if (root_finder->interrupt)
+    printf("dx = %g, R= %g, h-1 = %g\n",dx,R,h-1);
+  if (root_finder->interrupt)
+  {  
+    root_finder->interrupt = 0;
+    return dx;
+  }*/
+  
   return h-1;
 }
