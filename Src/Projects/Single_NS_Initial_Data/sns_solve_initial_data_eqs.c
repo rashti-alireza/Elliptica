@@ -4,6 +4,8 @@
 */
 
 #include "sns_solve_initial_data_eqs.h"
+unsigned cycle_psi;
+unsigned cycle_eta;
 
 /* solving initial data equations for the given grid */
 void sns_solve_initial_data_eqs(Grid_T *const grid)
@@ -35,6 +37,8 @@ void sns_solve_initial_data_eqs(Grid_T *const grid)
   folder = make_directory(path_par,par);
   add_parameter(par,folder);
   free(folder);
+  cycle_eta = 0;
+  cycle_psi = 0;
   
   /* solving equation(s) */
   Solve_Equations_T *SolveEqs = init_solve_equations(grid);
@@ -209,31 +213,28 @@ void sns_SolveEqs_SourceUpdate(Grid_T *const grid,const char *const name)
   
   if (!strcmp(name,"eta"))
   {
-    static int cycle = 0;
     sprintf(par,"solve_eta_grid%u",grid->gn);
   
     Pr_Field_T *pr  = init_PrField(grid);
     pr->folder = GetParameterS_E(par);
     pr->par    = "print_fields_4d";
-    pr->cycle  = cycle;
+    pr->cycle  = cycle_eta;
     pr_fields(pr);
     free_PrField(pr);
     
-    cycle++;
+    cycle_eta++;
   }
   else if (!strcmp(name,"psi"))
   {
-    static int cycle = 0;
-    
     sprintf(par,"solve_psi_grid%u",grid->gn);
     Pr_Field_T *pr  = init_PrField(grid);
     pr->folder = GetParameterS_E(par);
     pr->par    = "print_fields_4d";
-    pr->cycle  = cycle;
+    pr->cycle  = cycle_psi;
     pr_fields(pr);
     free_PrField(pr);
     
-    cycle++;
+    cycle_psi++;
   }
   
   /*if (!strcmp(name,"phi"))
