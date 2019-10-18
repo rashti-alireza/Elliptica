@@ -99,6 +99,8 @@ static Grid_T *make_next_grid_using_previous_grid(Grid_T *const grid_prev)
   /* freeing */
   free_Grid_Params_S(GridParams);
   
+  sns_study_initial_data(grid_next);
+  
   return grid_next;
 }
 
