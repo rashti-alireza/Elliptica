@@ -8,6 +8,18 @@
 #define Power(a,b) pow(a,b)
 #define Sqrt(a) sqrt(a)
 
+/* root finder struct for NS surface eq */
+struct NS_surface_RootFinder_S
+{
+  Patch_T *patch;
+  void *root_finder;
+  double x0[3];/* (x,y,z) at the surface */
+  double *N;/* the direction of increasing or decreasing of x = x0+N*d */
+  //double Euler_C;/* Euler equation const. */
+  //double scale;/* to avoid long step in root finder */
+  //double maxR;/* max R allowed for NS surrounding */
+};
+
 /* this struct is adjustments and requirements for making of a new grid */
 struct Grid_Params_S
 {
@@ -87,3 +99,5 @@ static double dh_dx1_root_finder_eq(void *params,const double *const x);
 static double dh_dx2_root_finder_eq(void *params,const double *const x);
 static void find_BH_NS_Omega_force_balance_eq(Grid_T *const grid);
 static void adjust_NS_center(Grid_T *const grid);
+static double bbn_NS_surface_enthalpy_eq(void *params,const double *const x);
+static double bbn_NS_surface_denthalpy_dr(void *params,const double *const x,const unsigned dir);

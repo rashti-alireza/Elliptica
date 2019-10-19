@@ -803,41 +803,35 @@ static void find_Xp_and_patchp(const double *const x,const char *const hint,Grid
 static void find_NS_surface_Ylm_method_CS(Grid_T *const grid,struct Grid_Params_S *const GridParams)
 {
   pr_line_custom('=');
-  printf("Finding the surface of NS, Ylm method ...\n");
+  printf("{ Finding the surface of NS, Ylm method ...\n");
   
   /* the stucture for the root finder */
   struct NS_surface_RootFinder_S par[1];
   unsigned Ntheta,Nphi;/* total number of theta and phi points */
   const unsigned lmax = (unsigned)GetParameterI_E("NS_surface_Ylm_expansion_max_l");
+  const double RESIDUAL = sqrt(GetParameterD_E("RootFinder_Tolerance"));
   double theta,phi;
   double *Rnew_NS = 0;/* new R for NS */
   double Max_R_NS = 0;/* maximum radius of NS */
-  const double guess        = 1E-3;
-  const double maxR_out     = (1./3.)*GetParameterD_E("BH_NS_separation");
-  const double SMALL_FACTOR = 0.7;/* initial r = SMALL_FACTOR*R0_NS */
-  const double RESIDUAL     = 1E3*GetParameterD_E("RootFinder_Tolerance");
-  const double HowBigFac    = 1.5;
-  const double HowSmallFac  = 0.5;
-  const double INCREMENT    = 1.2;/* %20 increase */
-  const double DECREMENT    = 0.8;/* %20 decrease */
+  double guess    = 0;
   double X[3],x[3],N[3];
   char stem[1000],*affix;
-  //Flag_T NS_patch_flg = NONE;
   unsigned i,j;
-  
-  par->Euler_C = GetParameterD_E("Euler_equation_constant");
-  par->scale   = 1E-2;
   
   /* populate root finder */
   Root_Finder_T *root = init_root_finder(1);
   root->type      = GetParameterS_E("RootFinder_Method");
-  plan_root_finder(root);
   root->tolerance = GetParameterD_E("RootFinder_Tolerance");
   root->MaxIter   = (unsigned)GetParameterI_E("RootFinder_Max_Number_of_Iteration");
   root->x_gss     = &guess;
   root->params    = par;
   root->f[0]      = bbn_NS_surface_enthalpy_eq;
-  root->FD_Right = 1;
+  root->df_dx[0]  = bbn_NS_surface_denthalpy_dr;
+  //root->verbose   = 1;
+  //root->FD_Right  = 1;
+  plan_root_finder(root);
+  
+  /* parameters for root finder */
   par->root_finder = root;
   
   /* initialize tables */
@@ -854,10 +848,9 @@ static void find_NS_surface_Ylm_method_CS(Grid_T *const grid,struct Grid_Params_
     {
       phi = j*2*M_PI/Nphi;
       
-      //NS_patch_flg = NONE;
       Patch_T *h_patch = 0,*patch = 0;
-      double y1[3] = {0},y2[3] = {0};
-      double h,R0_NS,*dr;
+      double y2[3] = {0};
+      double h,*dr;
       
       /* find patch and X,Y,Z at NS surface in which theta and phi take place */
       find_XYZ_and_patch_of_theta_phi_NS_CS(X,&patch,theta,phi,grid);
@@ -871,86 +864,55 @@ static void find_NS_surface_Ylm_method_CS(Grid_T *const grid,struct Grid_Params_
       interp_h->K            = patch->n[2]-1;
       plan_interpolation(interp_h);
       h = execute_interpolation(interp_h);/* enthalpy */
+      assert(h > 0);
       free_interpolation(interp_h);
       
       /* finding x */
       x_of_X(x,X,patch);
       
       /* r^ = sin(theta)cos(phi)x^+sin(theta)sin(phi)y^+cos(theta)z^ */
-      N[0] = sin(theta)*cos(phi);
-      N[1] = sin(theta)*sin(phi);
-      N[2] = cos(theta);
-        
-      /* y is where the previous radius was located */
-      y1[0] = x[0]-patch->c[0];
-      y1[1] = x[1]-patch->c[1];
-      y1[2] = x[2]-patch->c[2];
-      R0_NS = rms(3,y1,0);
+      N[0]  = sin(theta)*cos(phi);
+      N[1]  = sin(theta)*sin(phi);
+      N[2]  = cos(theta);
+      y2[0] = x[0]-patch->c[0];
+      y2[1] = x[1]-patch->c[1];
+      y2[2] = x[2]-patch->c[2];  
       
-      assert(h > 0);
-      root->interrupt = 0;
       if(LSSEQL(h,1))/* if it takes place at NS patch */
       {
-        //NS_patch_flg = YES;
-        h_patch      = patch;
-        
-        y2[0] = SMALL_FACTOR*R0_NS*N[0];
-        y2[1] = SMALL_FACTOR*R0_NS*N[1];
-        y2[2] = SMALL_FACTOR*R0_NS*N[2];
-        
-        par->x0[0] = y2[0]+h_patch->c[0];
-        par->x0[1] = y2[1]+h_patch->c[1];
-        par->x0[2] = y2[2]+h_patch->c[2];
-        par->maxR = R0_NS;
-        
+        h_patch = patch;
       }
       else/* which means h = 1 occures in neighboring patch */
       {
-        //NS_patch_flg = NO;
         /* finding the juxtapose patch of this NS patch */
         affix = regex_find("_[[:alpha:]]{2,5}$",patch->name);
         assert(affix);
         sprintf(stem,"left_NS_surrounding%s",affix);
         free(affix);
-        
         h_patch = GetPatch(stem,grid);
-        
-        y2[0] = x[0]-patch->c[0];
-        y2[1] = x[1]-patch->c[1];
-        y2[2] = x[2]-patch->c[2];
-        
-        par->x0[0] = x[0];
-        par->x0[1] = x[1];
-        par->x0[2] = x[2];
-        par->maxR = maxR_out;
       }
       /* having found h_patch, now find the the position of h = 1 */
+      par->x0[0] = x[0];
+      par->x0[1] = x[1];
+      par->x0[2] = x[2];
       par->patch = h_patch;
       par->N     = N;
-      
       dr = execute_root_finder(root);
-      
-      /* if root finder went wrong for some reason */
-      if (root->interrupt || GRT(root->residual,RESIDUAL))
+      /* if root finder is not OK for some reason */
+      if (GRT(root->residual,RESIDUAL))
       {
-        //print_root_finder_exit_status(root);
-        Rnew_NS[ij(i,j)] = R0_NS;
-      }
-      else/* if root finder was successful */
-      {
-        /*  new coords of R respect to the center of NS */
-        y2[0] += N[0]*dr[0]*par->scale;
-        y2[1] += N[1]*dr[0]*par->scale;
-        y2[2] += N[2]*dr[0]*par->scale;
-        Rnew_NS[ij(i,j)] = rms(3,y2,0);
+        printf(". Root finder for NS surface at %s:\n.. ",h_patch->name);
+        print_root_finder_exit_status(root);
+        printf(".. Residual = %g\n",root->residual);
       }
       
-      /* if we have big difference in NS radius, ameliorate it */
-      if (GRTEQL(Rnew_NS[ij(i,j)],HowBigFac*R0_NS))
-        Rnew_NS[ij(i,j)] = R0_NS*INCREMENT;
-      else if (LSSEQL(Rnew_NS[ij(i,j)],HowSmallFac*R0_NS))
-        Rnew_NS[ij(i,j)] = R0_NS*DECREMENT;
+      /*  new coords of R respect to the center of NS */
+      y2[0] += N[0]*dr[0];
+      y2[1] += N[1]*dr[0];
+      y2[2] += N[2]*dr[0];
+      Rnew_NS[ij(i,j)] = rms(3,y2,0);
       
+      /* find the max NS radius */
       if (Rnew_NS[ij(i,j)] > Max_R_NS)
         Max_R_NS = Rnew_NS[ij(i,j)];
         
@@ -975,7 +937,7 @@ static void find_NS_surface_Ylm_method_CS(Grid_T *const grid,struct Grid_Params_
   free(Rnew_NS);
   free_root_finder(root);
   
-  printf("Finding the surface of NS, Ylm method ==> Done.\n");
+  printf("} Finding the surface of NS, Ylm method ==> Done.\n");
   pr_clock();
   pr_line_custom('=');
 }
@@ -2418,3 +2380,112 @@ static void free_Grid_Params_S(struct Grid_Params_S *par)
   _free(par);
 }
 
+/* find r such that f(h(r)) = h(r)-1 = 0.
+// the root finder moving along the r and it seeks for h = 1. */
+static double bbn_NS_surface_enthalpy_eq(void *params,const double *const x)
+{
+  const struct NS_surface_RootFinder_S *const pars = params;
+  Patch_T *const patch0  = pars->patch;/* supposed to find in this patch */
+  const double dx        = x[0];
+  const double *const x0 = pars->x0;
+  const double *const N  = pars->N;
+  const double y[3]      = {x0[0]+dx*N[0],x0[1]+dx*N[1],x0[2]+dx*N[2]};
+  Patch_T *patch = 0;
+  double X[3],h;
+  int h_ind;
+  char hint[1000],*root_name;
+  
+  root_name = strstr(patch0->name,"_");/* the patch->name convention is grid\d?_root */
+  assert(root_name);
+  root_name++;
+  sprintf(hint,"%s",root_name);
+    
+  find_Xp_and_patchp(y,hint,patch0->grid,X,&patch);
+  
+  /* find enthalpy at the (X,Y,Z) */
+  h_ind = _Ind("enthalpy");
+  if (h_ind < 0)/* if there is no enthalpy defined in the patch */
+    return -1;
+    
+  Interpolation_T *interp_h = init_interpolation();
+  interp_h->field = patch->pool[h_ind];
+  interp_h->XYZ_dir_flag  = 1;
+  interp_h->X            = X[0];
+  interp_h->Y            = X[1];
+  interp_h->Z            = X[2];
+  plan_interpolation(interp_h);
+  h = execute_interpolation(interp_h);/* enthalpy */
+  free_interpolation(interp_h);
+  
+  return h-1;
+}
+
+/* denthalpy(r)/dr for NS surface root finder */
+static double bbn_NS_surface_denthalpy_dr(void *params,const double *const x,const unsigned dir)
+{
+  assert(dir == 0);
+  const struct NS_surface_RootFinder_S *const pars = params;
+  Patch_T *const patch0  = pars->patch;/* supposed to find in this patch */
+  const double dx        = x[0];
+  const double *const x0 = pars->x0;
+  const double *const N  = pars->N;
+  const double y[3]      = {x0[0]+dx*N[0],x0[1]+dx*N[1],x0[2]+dx*N[2]};
+  Patch_T *patch = 0;
+  double X[3],dh_dx,dh_dy,dh_dz;
+  int dh_dx_ind,dh_dy_ind,dh_dz_ind;
+  Interpolation_T *interp_dh_dx = 0,
+                  *interp_dh_dy = 0,
+                  *interp_dh_dz = 0;
+  char hint[1000],*root_name;
+  
+  root_name = strstr(patch0->name,"_");/* the patch->name convention is grid\d?_root */
+  assert(root_name);
+  root_name++;
+  sprintf(hint,"%s",root_name);
+    
+  find_Xp_and_patchp(y,hint,patch0->grid,X,&patch);
+  
+  /* find denthalpy/dr at the (X,Y,Z): */
+  
+  dh_dx_ind = _Ind("denthalpy_D0");
+  if (dh_dx_ind < 0)/* if there is no enthalpy defined in the patch */
+    return 1;
+  interp_dh_dx = init_interpolation();
+  interp_dh_dx->field = patch->pool[dh_dx_ind];
+  interp_dh_dx->X = X[0];
+  interp_dh_dx->Y = X[1];
+  interp_dh_dx->Z = X[2];
+  interp_dh_dx->XYZ_dir_flag = 1;
+  plan_interpolation(interp_dh_dx);
+  dh_dx = execute_interpolation(interp_dh_dx);
+  free_interpolation(interp_dh_dx);
+  
+  dh_dy_ind = _Ind("denthalpy_D1");
+  if (dh_dy_ind < 0)/* if there is no enthalpy defined in the patch */
+    return 1;
+  interp_dh_dy = init_interpolation();
+  interp_dh_dy->field = patch->pool[dh_dy_ind];
+  interp_dh_dy->X = X[0];
+  interp_dh_dy->Y = X[1];
+  interp_dh_dy->Z = X[2];
+  interp_dh_dy->XYZ_dir_flag = 1;
+  plan_interpolation(interp_dh_dy);
+  dh_dy = execute_interpolation(interp_dh_dy);
+  free_interpolation(interp_dh_dy);
+  
+  dh_dz_ind = _Ind("denthalpy_D2");
+  if (dh_dz_ind < 0)/* if there is no enthalpy defined in the patch */
+    return 1;
+  interp_dh_dz = init_interpolation();
+  interp_dh_dz->field = patch->pool[dh_dz_ind];
+  interp_dh_dz->X = X[0];
+  interp_dh_dz->Y = X[1];
+  interp_dh_dz->Z = X[2];
+  interp_dh_dz->XYZ_dir_flag = 1;
+  plan_interpolation(interp_dh_dz);
+  dh_dz = execute_interpolation(interp_dh_dz);
+  free_interpolation(interp_dh_dz);
+  
+  /* Grad h . r^ = dh/dr */
+  return N[0]*dh_dx+N[1]*dh_dy+N[2]*dh_dz;
+}

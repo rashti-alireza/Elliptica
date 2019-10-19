@@ -9,18 +9,6 @@
 #include "physics_EoS_lib.h"
 #include "physics_StressEnergyTensor_lib.h"
 
-/* root finder struct for NS surface eq */
-struct NS_surface_RootFinder_S
-{
-  Patch_T *patch;
-  void *root_finder;
-  double x0[3];/* (x,y,z) at the surface */
-  double *N;/* the direction of increasing or decreasing of x = x0+N*d */
-  double Euler_C;/* Euler equation const. */
-  double scale;/* to avoid long step in root finder */
-  double maxR;/* max R allowed for NS surrounding */
-};
-
 /* root finder struc for force balance equation */  
 struct Force_Balance_RootFinder_S
 {
@@ -62,7 +50,6 @@ void bbn_update_Beta_U0(Patch_T *const patch);
 void bbn_update_Beta_U1(Patch_T *const patch);
 void bbn_update_Beta_U2(Patch_T *const patch);
 double bbn_NS_baryonic_mass(Grid_T *const grid,const double Euler_C);
-double bbn_NS_surface_enthalpy_eq(void *params,const double *const x);
 double force_balance_root_finder_eq(void *params,const double *const x);
 void bbn_update_enthalpy_and_denthalpy(Grid_T *const grid);
 void bbn_update_stress_energy_tensor(Grid_T *const grid);
