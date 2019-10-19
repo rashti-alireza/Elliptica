@@ -4,8 +4,8 @@
 */
 
 #include "sns_solve_initial_data_eqs.h"
-unsigned cycle_psi;
-unsigned cycle_eta;
+int cycle_psi;
+int cycle_eta;
 
 /* solving initial data equations for the given grid */
 void sns_solve_initial_data_eqs(Grid_T *const grid)

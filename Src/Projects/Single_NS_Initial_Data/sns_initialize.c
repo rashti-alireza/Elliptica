@@ -48,13 +48,13 @@ static Grid_T *make_next_grid_using_previous_grid(Grid_T *const grid_prev)
     abortEr(NO_OPTION);
     
   /* find the NS center */
-  //find_NS_center(grid_prev);
+  find_NS_center(grid_prev);
   
   /* if needed, drag the NS to its designated point */
-  //adjust_NS_center(grid_prev);
+  adjust_NS_center(grid_prev);
   
   /* find Euler equation constant to meet NS baryonic mass */
-  //find_Euler_eq_const(grid_prev);
+  find_Euler_eq_const(grid_prev);
     
   /* find NS surface */
   if (strcmp_i(grid_prev->kind,"SNS_CubedSpherical+Box_grid"))
@@ -2070,7 +2070,7 @@ static double sns_NS_surface_denthalpy_dr(void *params,const double *const x,con
   const double *const N  = pars->N;
   const double y[3]      = {x0[0]+dx*N[0],x0[1]+dx*N[1],x0[2]+dx*N[2]};
   Patch_T *patch = 0;
-  double X[3],dh_dr,dh_dx,dh_dy,dh_dz;
+  double X[3],dh_dx,dh_dy,dh_dz;
   int dh_dx_ind,dh_dy_ind,dh_dz_ind;
   Interpolation_T *interp_dh_dx = 0,
                   *interp_dh_dy = 0,
