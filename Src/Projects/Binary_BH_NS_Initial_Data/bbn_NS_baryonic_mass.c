@@ -51,21 +51,21 @@ double bbn_NS_baryonic_mass(Grid_T *const grid,const double Euler_C)
     unsigned nn = patch->nn;
     unsigned ijk;
     double rho0;
-    for(ijk = 0; ijk < nn; ++ijk)
-    {
-    double alpha = 
+  for(ijk = 0; ijk < nn; ++ijk)
+  {
+  double alpha = 
 eta[ijk]/psi[ijk];
 
-    double psim4 = 
+  double psim4 = 
 pow(psi[ijk], -4);
 
-    double psi4 = 
+  double psi4 = 
 pow(psi[ijk], 4);
 
-    double psi6 = 
+  double psi6 = 
 pow(psi[ijk], 6);
 
-    double P2 = 
+  double P2 = 
 2.0*W_U0[ijk]*dphi_D0[ijk] + 2.0*W_U1[ijk]*dphi_D1[ijk] + 2.0*
 W_U2[ijk]*dphi_D2[ijk] + psi4*(pow(W_U0[ijk], 2)*_gamma_D0D0[ijk] +
 2.0*W_U0[ijk]*W_U1[ijk]*_gamma_D0D1[ijk] + 2.0*W_U0[ijk]*W_U2[ijk]*
@@ -77,36 +77,38 @@ dphi_D2[ijk] + _gammaI_U1U1[ijk]*pow(dphi_D1[ijk], 2) + 2.0*
 _gammaI_U1U2[ijk]*dphi_D1[ijk]*dphi_D2[ijk] + _gammaI_U2U2[ijk]*
 pow(dphi_D2[ijk], 2));
 
-    double uW = 
+  double uW = 
 W_U0[ijk]*dphi_D0[ijk] + W_U1[ijk]*dphi_D1[ijk] + W_U2[ijk]*
 dphi_D2[ijk] + psi4*(pow(W_U0[ijk], 2)*_gamma_D0D0[ijk] + 2.0*
 W_U0[ijk]*W_U1[ijk]*_gamma_D0D1[ijk] + 2.0*W_U0[ijk]*W_U2[ijk]*
 _gamma_D0D2[ijk] + pow(W_U1[ijk], 2)*_gamma_D1D1[ijk] + 2.0*W_U1[ijk]*
 W_U2[ijk]*_gamma_D1D2[ijk] + pow(W_U2[ijk], 2)*_gamma_D2D2[ijk]);
 
-    double Bdphi = 
+  double Bdphi = 
 Beta_U0[ijk]*dphi_D0[ijk] + Beta_U1[ijk]*dphi_D1[ijk] + Beta_U2[ijk]*
 dphi_D2[ijk];
 
-    double b = 
+  double b = 
 2*pow(alpha, 2)*uW + pow(Bdphi - Euler_C, 2);
 
-    double L2 = 
+  double L2 = 
 (1.0/2.0)*(b + sqrt(-4*pow(alpha, 4)*pow(uW, 2) + pow(b, 2)))/
 pow(alpha, 2);
 
-    double h2 = 
+  double h2 = 
 L2 - P2;
 
-    double h = 
+  double h = 
 sqrt(h2);
 
-    double u0 = 
+  double u0 = 
 sqrt(L2)/(alpha*h);
 
-eos->h = h;
-rho0  = eos->rest_mass_density(eos);
-baryonic_mass_integrand->v[ijk]  = rho0*u0*alpha*psi6;
+  eos->h = h;
+  rho0   = eos->rest_mass_density(eos);
+  baryonic_mass_integrand->v[ijk]  = rho0*u0*alpha*psi6;
+  if(!isfinite(rho0))
+    rho0 = 0;
   }
   free_EoS(eos);
   Integration_T *I = init_integration();

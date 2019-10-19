@@ -65,8 +65,8 @@ Symm[_gamma(i,j)   = _gamma(j,i)];
 `    unsigned nn = patch->nn;`
 `    unsigned ijk;`
 `    double rho0;`
-Ccode["    for(ijk = 0; ijk < nn; ++ijk)"];
-Ccode["    {"];
+Ccode["  for(ijk = 0; ijk < nn; ++ijk)"];
+Ccode["  {"];
      alpha = eta/psi;
      psim4 = psi**(-4);
      psi4  = psi**(4);
@@ -79,9 +79,11 @@ Ccode["    {"];
      h2    = L2-P2;
      h     = (h2)**(0.5);
      u0    = (L2)**(0.5)/(h*alpha);
-     `eos->h = h;`
-     `rho0  = eos->rest_mass_density(eos);`
-     `baryonic_mass_integrand->v[ijk]  = rho0*u0*alpha*psi6;`
+  `  eos->h = h;`
+  `  rho0   = eos->rest_mass_density(eos);`
+  `  baryonic_mass_integrand->v[ijk]  = rho0*u0*alpha*psi6;`
+  `  if(!isfinite(rho0))`
+  `    rho0 = 0;`
 Ccode["  }"];
 Ccode["  free_EoS(eos);"];
 `  Integration_T *I = init_integration();`

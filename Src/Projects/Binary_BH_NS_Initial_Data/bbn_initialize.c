@@ -429,18 +429,19 @@ static void find_Euler_eq_const(Grid_T *const grid)
   params->NS_baryonic_mass = GetParameterD_E("NS_baryonic_mass");
   guess[0] = GetParameterD_E("Euler_equation_constant");
   
-  root->description = "Finding Euler equation constant using NS baryonic mass:";
+  root->description = "Finding Euler equation constant using NS baryonic mass";
   root->type        = GetParameterS_E("RootFinder_Method");
   root->tolerance   = GetParameterD_E("RootFinder_Tolerance");
   root->MaxIter     = (unsigned)GetParameterI_E("RootFinder_Max_Number_of_Iteration");
   root->x_gss       = guess;
   root->params      = params;
   root->f[0]        = Euler_eq_const_rootfinder_eq;
+  root->verbose     = 1;
   plan_root_finder(root);
   Euler_const       = execute_root_finder(root);
-  
   update_parameter_double_format("Euler_equation_constant",Euler_const[0]);
-  
+  printf("Euler Equation const. updated: %g -> %g\n",guess[0],Euler_const[0]);
+  free(Euler_const);
   free(Euler_const);
   free_root_finder(root);
 }
