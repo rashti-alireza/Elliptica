@@ -101,3 +101,5 @@ static void find_BH_NS_Omega_force_balance_eq(Grid_T *const grid);
 static void adjust_NS_center(Grid_T *const grid);
 static double bbn_NS_surface_enthalpy_eq(void *params,const double *const x);
 static double bbn_NS_surface_denthalpy_dr(void *params,const double *const x,const unsigned dir);
+static void extrapolate_fluid_fields_outsideNS(Grid_T *const grid);
+static void find_NS_surface(Grid_T *const grid,struct Grid_Params_S *const GridParams);

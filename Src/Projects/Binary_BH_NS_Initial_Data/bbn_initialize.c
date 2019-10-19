@@ -63,26 +63,12 @@ static Grid_T *make_next_grid_using_previous_grid(Grid_T *const grid_prev)
   /* find the Omega_BH to acquire the desired BH spin */
   //find_BH_Omega(grid_prev);
   
-  if (strcmp_i(grid_prev->kind,"BBN_CubedSpherical_grid"))
-  {
-    /* extrapolate fluid fields outside of NS in case their value needed. */
-    extrapolate_fluid_fields_outsideNS_CS(grid_prev);
-    
-    GridParams->NS_R_type = GetParameterS_E("NS_surface_finder_method");
-    
-    /* find NS surface using cubed spherical points */
-    //if (strstr_i(GridParams->NS_R_type,"CubedSpherical"))
-      //find_NS_surface_CS_method_CS(grid_prev,GridParams);
-      
-    /* find NS surface using spherical harmonic points */
-    if (strstr_i(GridParams->NS_R_type,"SphericalHarmonic"))
-      find_NS_surface_Ylm_method_CS(grid_prev,GridParams);
-    else
-      abortEr(NO_OPTION);
-  }
-  else
-    abortEr(NO_OPTION);
-    
+  /* extrapolate fluid fields outside NS */
+  extrapolate_fluid_fields_outsideNS(grid_prev);
+  
+  /* find NS surface using h = 1 */
+  find_NS_surface(grid_prev,GridParams);
+  
   /* adjust the center of NS */
   adjust_NS_center(grid_prev);
     
@@ -2586,4 +2572,33 @@ static double bbn_NS_surface_denthalpy_dr(void *params,const double *const x,con
   
   /* Grad h . r^ = dh/dr */
   return N[0]*dh_dx+N[1]*dh_dy+N[2]*dh_dz;
+}
+
+/* find NS surface using h = 1 */
+static void find_NS_surface(Grid_T *const grid,struct Grid_Params_S *const GridParams)
+{
+  GridParams->NS_R_type = GetParameterS_E("NS_surface_finder_method");
+  
+  /* find NS surface using cubed spherical points */
+  //if (strstr_i(GridParams->NS_R_type,"CubedSpherical"))
+    //find_NS_surface_CS_method_CS(grid,GridParams);
+    
+  /* find NS surface using spherical harmonic points */
+  if (strstr_i(GridParams->NS_R_type,"SphericalHarmonic"))
+    find_NS_surface_Ylm_method_CS(grid,GridParams);
+  else
+    abortEr(NO_OPTION);
+}
+
+/* extrapolate fluid fields outside NS */
+static void extrapolate_fluid_fields_outsideNS(Grid_T *const grid)
+{
+  if (strcmp_i(grid->kind,"BBN_CubedSpherical_grid"))
+  {
+    /* extrapolate fluid fields outside of NS in case their value needed. */
+    extrapolate_fluid_fields_outsideNS_CS(grid);
+  }
+  else
+    abortEr(NO_OPTION);
+  
 }
