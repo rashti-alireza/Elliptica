@@ -48,13 +48,13 @@ static Grid_T *make_next_grid_using_previous_grid(Grid_T *const grid_prev)
     abortEr(NO_OPTION);
     
   /* find the NS center */
-  find_NS_center(grid_prev);
+  //find_NS_center(grid_prev);
   
   /* if needed, drag the NS to its designated point */
-  adjust_NS_center(grid_prev);
+  //adjust_NS_center(grid_prev);
   
   /* find Euler equation constant to meet NS baryonic mass */
-  find_Euler_eq_const(grid_prev);
+  //find_Euler_eq_const(grid_prev);
     
   /* find NS surface */
   if (strcmp_i(grid_prev->kind,"SNS_CubedSpherical+Box_grid"))
