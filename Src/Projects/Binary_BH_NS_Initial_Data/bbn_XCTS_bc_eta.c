@@ -9,7 +9,7 @@
 #include "bbn_XCTS_equations_lib.h"
 
 
-void *bc_eta(void *vp1,void *vp2)
+void *bbn_bc_eta(void *vp1,void *vp2)
 {
   DDM_SCHUR_BC_DECLARE
   unsigned ijk;/* node index */

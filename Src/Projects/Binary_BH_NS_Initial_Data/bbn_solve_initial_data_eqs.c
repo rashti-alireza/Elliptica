@@ -360,40 +360,40 @@ static void bbn_XCTS_fill_db_eqs(sEquation_T ***const field_eq,
   *jacobian_bc_eq      = init_eq();
 
  /* phi equations */
-  add_eq(field_eq,eq_phi,"eq_phi");
-  add_eq(bc_eq   ,bc_phi,"bc_phi");
-  add_eq(jacobian_field_eq,jacobian_eq_phi,"jacobian_eq_phi");
-  add_eq(jacobian_bc_eq   ,jacobian_bc_phi,"jacobian_bc_phi");
+  add_eq(field_eq,bbn_eq_phi,"eq_phi");
+  add_eq(bc_eq   ,bbn_bc_phi,"bc_phi");
+  add_eq(jacobian_field_eq,bbn_jacobian_eq_phi,"jacobian_eq_phi");
+  add_eq(jacobian_bc_eq   ,bbn_jacobian_bc_phi,"jacobian_bc_phi");
   
   /* psi equations */
-  add_eq(field_eq,eq_psi,"eq_psi");
-  add_eq(bc_eq   ,bc_psi,"bc_psi");
-  add_eq(jacobian_field_eq,jacobian_eq_psi,"jacobian_eq_psi");
-  add_eq(jacobian_bc_eq   ,jacobian_bc_psi,"jacobian_bc_psi");
+  add_eq(field_eq,bbn_eq_psi,"eq_psi");
+  add_eq(bc_eq   ,bbn_bc_psi,"bc_psi");
+  add_eq(jacobian_field_eq,bbn_jacobian_eq_psi,"jacobian_eq_psi");
+  add_eq(jacobian_bc_eq   ,bbn_jacobian_bc_psi,"jacobian_bc_psi");
   
   /* eta equations */
-  add_eq(field_eq,eq_eta,"eq_eta");
-  add_eq(bc_eq   ,bc_eta,"bc_eta");
-  add_eq(jacobian_field_eq,jacobian_eq_eta,"jacobian_eq_eta");
-  add_eq(jacobian_bc_eq   ,jacobian_bc_eta,"jacobian_bc_eta");
+  add_eq(field_eq,bbn_eq_eta,"eq_eta");
+  add_eq(bc_eq   ,bbn_bc_eta,"bc_eta");
+  add_eq(jacobian_field_eq,bbn_jacobian_eq_eta,"jacobian_eq_eta");
+  add_eq(jacobian_bc_eq   ,bbn_jacobian_bc_eta,"jacobian_bc_eta");
   
   /* shift equations, remember we solve for B0_U? rather than Beta_U? */
   /* Beta_U0 equations */
-  add_eq(field_eq,eq_Beta_U0,"eq_B0_U0");
-  add_eq(bc_eq   ,bc_Beta_U0,"bc_B0_U0");
-  add_eq(jacobian_field_eq,jacobian_eq_Beta_U0,"jacobian_eq_B0_U0");
-  add_eq(jacobian_bc_eq   ,jacobian_bc_Beta_U0,"jacobian_bc_B0_U0");
+  add_eq(field_eq,bbn_eq_Beta_U0,"eq_B0_U0");
+  add_eq(bc_eq   ,bbn_bc_Beta_U0,"bc_B0_U0");
+  add_eq(jacobian_field_eq,bbn_jacobian_eq_Beta_U0,"jacobian_eq_B0_U0");
+  add_eq(jacobian_bc_eq   ,bbn_jacobian_bc_Beta_U0,"jacobian_bc_B0_U0");
   
   /* Beta_U1 equations */
-  add_eq(field_eq,eq_Beta_U1,"eq_B0_U1");
-  add_eq(bc_eq   ,bc_Beta_U1,"bc_B0_U1");
-  add_eq(jacobian_field_eq,jacobian_eq_Beta_U1,"jacobian_eq_B0_U1");
-  add_eq(jacobian_bc_eq   ,jacobian_bc_Beta_U1,"jacobian_bc_B0_U1");
+  add_eq(field_eq,bbn_eq_Beta_U1,"eq_B0_U1");
+  add_eq(bc_eq   ,bbn_bc_Beta_U1,"bc_B0_U1");
+  add_eq(jacobian_field_eq,bbn_jacobian_eq_Beta_U1,"jacobian_eq_B0_U1");
+  add_eq(jacobian_bc_eq   ,bbn_jacobian_bc_Beta_U1,"jacobian_bc_B0_U1");
   
   /* Beta_U2 equations */
-  add_eq(field_eq,eq_Beta_U2,"eq_B0_U2");
-  add_eq(bc_eq   ,bc_Beta_U2,"bc_B0_U2");
-  add_eq(jacobian_field_eq,jacobian_eq_Beta_U2,"jacobian_eq_B0_U2");
-  add_eq(jacobian_bc_eq   ,jacobian_bc_Beta_U2,"jacobian_bc_B0_U2");
+  add_eq(field_eq,bbn_eq_Beta_U2,"eq_B0_U2");
+  add_eq(bc_eq   ,bbn_bc_Beta_U2,"bc_B0_U2");
+  add_eq(jacobian_field_eq,bbn_jacobian_eq_Beta_U2,"jacobian_eq_B0_U2");
+  add_eq(jacobian_bc_eq   ,bbn_jacobian_bc_Beta_U2,"jacobian_bc_B0_U2");
   
 }

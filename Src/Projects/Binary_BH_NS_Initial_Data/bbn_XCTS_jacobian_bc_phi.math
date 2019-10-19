@@ -21,7 +21,7 @@ C_arg2 = [ijk == lmn]; # for kd
 `#include "maths_equation_solvings_lib.h"`;
 `#include "bbn_XCTS_equations_lib.h"\n\n`;
 
-`void *jacobian_bc_phi(void *vp1,void *vp2)\n{`;
+`void *bbn_jacobian_bc_phi(void *vp1,void *vp2)\n{`;
 
 # NOTE: THE FOLLOWING MACRO DECLARES AND DEFINES THE FOLLOWING VARIABLES:
 # patch, S, B, E_Trans, node, I0, Ni, Nj, K0, Nk, i,j,k.

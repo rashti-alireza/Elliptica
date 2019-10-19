@@ -9,7 +9,7 @@
 #include "bbn_XCTS_equations_lib.h"
 
 
-void *eq_Beta_U0(void *vp1,void *vp2)
+void *bbn_eq_Beta_U0(void *vp1,void *vp2)
 {
   DDM_SCHUR_EQ_DECLARE
   unsigned ijk;/* node index */
