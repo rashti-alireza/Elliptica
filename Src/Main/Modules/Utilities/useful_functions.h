@@ -34,5 +34,4 @@ unsigned IsItNSPatch(const Patch_T *const patch);
 unsigned IsItNSSurroundingPatch(const Patch_T *const patch);
 void dbprint(const double *v,const unsigned n,const char *const desc);
 Patch_T *GetPatch(const char *const stem,const Grid_T *const grid);
-
-
+unsigned IsItNSSurface(const Patch_T *const patch);
