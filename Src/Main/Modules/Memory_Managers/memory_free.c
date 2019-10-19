@@ -440,14 +440,17 @@ void free_grid(Grid_T *grid)
     _free(patch->pool);
     _free(patch->JacobianT);
     free_patch_interface(patch);
-    free_patch_SolMan_jacobian(patch);
-    free_patch_SolMan_method_Schur(patch);
-    _free(patch->solving_man->field_eq);
-    _free(patch->solving_man->bc_eq);
-    _free(patch->solving_man->jacobian_field_eq);
-    _free(patch->solving_man->jacobian_bc_eq);
-    free_2d_mem(patch->solving_man->field_name,patch->solving_man->nf);
-    free(patch->solving_man);
+    if (patch->solving_man)
+    {
+      free_patch_SolMan_jacobian(patch);
+      free_patch_SolMan_method_Schur(patch);
+      _free(patch->solving_man->field_eq);
+      _free(patch->solving_man->bc_eq);
+      _free(patch->solving_man->jacobian_field_eq);
+      _free(patch->solving_man->jacobian_bc_eq);
+      free_2d_mem(patch->solving_man->field_name,patch->solving_man->nf);
+      free(patch->solving_man);
+    }
   }
   free_2d_mem(grid->patch,grid->np);
   _free(grid->kind);
