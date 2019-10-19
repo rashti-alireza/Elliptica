@@ -827,22 +827,46 @@ void sns_update_matter_fields(Grid_T *const grid)
   
   unsigned p;
   
-  sns_update_enthalpy_and_denthalpy(grid);
-  
   FOR_ALL_PATCHES(p,grid)
   {
     Patch_T *patch = grid->patch[p];
     
     if(!IsItNSPatch(patch))
       continue;
-    
+      
+    Tij_IF_CTS_enthalpy(patch);
+    cleaning_enthalpy(patch);
+    sns_update_derivative_enthalpy(patch);
     sns_update_rho0(patch);
     sns_update_derivative_rho0(patch);
-  
   }
+  
   printf("Updating enthalpy, rest-mass density and their derivatives ==> Done.\n");
   pr_clock();
   pr_line_custom('=');
 
   Tij_IF_CTS_psi6Sources(grid);
+}
+
+/* after finding new NS surface, root finder might find h ~ 1
+// so put it h = 1, to prevent nan in matter fields  */
+static void cleaning_enthalpy(Patch_T *const patch)
+{
+  if(!IsItNSSurface(patch))
+    return;
+    
+  GET_FIELD(enthalpy)
+  const unsigned *const n = patch->n;
+  unsigned ijk,i,j;
+
+  for (i = 0; i < n[0]; ++i)
+  {
+    for (j = 0; j < n[1]; ++j)
+    {
+      /* go over the NS surface */
+      ijk = L(n,i,j,n[2]-1);
+      enthalpy[ijk] = 1;
+    }
+  }
+
 }
