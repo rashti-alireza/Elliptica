@@ -1795,7 +1795,7 @@ KSbeta_D2[ijk]*_gammaI_U2U2[ijk];
         
         /* eta */
         enthalpy_h = execute_interpolation(interp_h);
-        alpha = sqrt(1-0.5*M_NS/R_Schwar)/enthalpy_h/* NS part */ + 
+        alpha = sqrt(1-2*M_NS/R_Schwar)/enthalpy_h/* NS part */ + 
                 KSalpha[ijk]/* BH part */ - 1./* supper-position */;
         eta[ijk] = psi[ijk]*alpha;
         
