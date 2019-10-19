@@ -79,6 +79,7 @@ int bbn_stop_criteria(Grid_T *const grid,const char *const name)
   int stop_max = 1;
   int stop_res = 0;
   int stop_backtrack = 1;
+  const double res_TOLERANCE = 1E-10;/* this is the tolerance that solver allowed to increase residual */
   const double res_bckt = GetParameterD_E("Solving_Allowed_Relative_Residual_Backtrack_Tolerance");
   const double res_d    = GetParameterD_E("Solving_Residual");/* desired residual */
   const int max_step    = GetParameterI_E("Solving_Max_Number_of_Newton_Step");
@@ -110,7 +111,7 @@ int bbn_stop_criteria(Grid_T *const grid,const char *const name)
     
     /* if residual increased stop */
     res_last = patch->solving_man->settings->HFrms[solver_step-1];
-    if (res > res_last*(1. + res_bckt))
+    if (res > res_last*(1. + res_bckt) && GRT(res,res_TOLERANCE))
     {
       stop_backtrack = 0;
       break;
