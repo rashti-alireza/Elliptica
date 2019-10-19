@@ -948,7 +948,7 @@ static Grid_T *TOV_approximation(void)
   /* solve fields for a TOV star located at left side of y axis */
   TOV_T *tov = TOV_init();
   tov->bar_m = GetParameterD_E("NS_baryonic_mass");
-  tov->description = "Make a TOV Neutron Star";
+  tov->description = "test!";
   tov = TOV_solution(tov);
   const double ns_R = tov->rbar[tov->N-1];
   
