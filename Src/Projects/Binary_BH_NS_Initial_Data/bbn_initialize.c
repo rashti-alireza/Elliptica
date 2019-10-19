@@ -194,7 +194,7 @@ static void adjust_NS_center(Grid_T *const grid)
       x[0] = patch->node[ijk]->x[0]+R[0];
       x[1] = patch->node[ijk]->x[1]+R[1];
       x[2] = patch->node[ijk]->x[2]+R[2];
-      find_Xp_and_patchp(x,hint,grid,Xp,&patchp);
+      find_X_and_patch(x,hint,grid,Xp,&patchp);
       shifted_enthalpy->v[ijk] = interpolate_from_patch_prim("enthalpy",Xp,patchp);
     }
     
@@ -683,7 +683,7 @@ static void interpolate_and_initialize_to_next_grid(Grid_T *const grid_next,Grid
         Patch_T *patchp = 0;/* patch in grid_prev contains (x,y,z) */
         
         /* finding X and patch in grid_prev, associated to x */
-        find_Xp_and_patchp(x,hint,grid_prev,Xp,&patchp);
+        find_X_and_patch(x,hint,grid_prev,Xp,&patchp);
         
         B0_U0[ijk]    = interpolate_from_patch_prim("B0_U0",Xp,patchp);
         B0_U1[ijk]    = interpolate_from_patch_prim("B0_U1",Xp,patchp);
@@ -705,7 +705,7 @@ static void interpolate_and_initialize_to_next_grid(Grid_T *const grid_next,Grid
         Patch_T *patchp = 0;/* patch in grid_prev contains (x,y,z) */
         
         /* finding X and patch in grid_prev, associated to x */
-        find_Xp_and_patchp(x,hint,grid_prev,Xp,&patchp);
+        find_X_and_patch(x,hint,grid_prev,Xp,&patchp);
         
         B0_U0[ijk] = interpolate_from_patch_prim("B0_U0",Xp,patchp);
         B0_U1[ijk] = interpolate_from_patch_prim("B0_U1",Xp,patchp);
@@ -807,7 +807,7 @@ static double interpolate_from_patch_prim(const char *const field,const double *
 /* given a cartesian point x on the grid, it finds the corresponding X and patch 
 // on which this x takes place. 
 // hint, is the name of the patch that potentially has the given x */
-static void find_Xp_and_patchp(const double *const x,const char *const hint,Grid_T *const grid,double *const X,Patch_T **const ppatch)
+static void find_X_and_patch(const double *const x,const char *const hint,Grid_T *const grid,double *const X,Patch_T **const ppatch)
 {
   Interface_T **face;
   SubFace_T *subf;
@@ -852,14 +852,28 @@ static void find_Xp_and_patchp(const double *const x,const char *const hint,Grid
   point_finder(needle);
   found = needle->ans;
   
-  /* if it could not find X in neither the given hint patch nor its neighbors, raise a flag! */
+  /* if it could not find X in neither the given hint patch nor its neighbors */
   if (!needle->Nans)
-    abortEr("It could not find the x at the given patches!\n");
-  
-  *ppatch = grid->patch[found[0]];
-  
-  X_of_x(X,x,*ppatch);
-  
+  {
+    *ppatch = grid->patch[found[0]];
+    X_of_x(X,x,*ppatch);
+  }
+  else/* if no patch found let's find it in the other patches */
+  {
+    needle->ex   = needle->in;
+    needle->Nex  = needle->Nin;
+    needle->in   = 0;
+    needle->Nin  = 0;
+    
+    point_finder(needle);
+    found = needle->ans;
+    
+    if (!needle->Nans)
+      abortEr("It could not find the x at the given patches!\n");
+      
+    *ppatch = grid->patch[found[0]];
+    X_of_x(X,x,*ppatch);
+  }
   free_needle(needle);
 }
 
@@ -1178,6 +1192,9 @@ static void extrapolate_fluid_fields_outsideNS_CS(Grid_T *const grid)
     /* add fields: */
     /* enthalpy */
     ADD_FIELD(enthalpy)
+    ADD_FIELD_NoMem(denthalpy_D0)
+    ADD_FIELD_NoMem(denthalpy_D1)
+    ADD_FIELD_NoMem(denthalpy_D2)
     
     /* irrotational part of fluid */
     ADD_FIELD(phi)
@@ -1386,8 +1403,15 @@ static void extrapolate_fluid_fields_outsideNS_CS(Grid_T *const grid)
     dphi_D1->v = Partial_Derivative(phi_field,"y");
     dphi_D0->v = Partial_Derivative(phi_field,"x");
     
-    /* populating enthalpy in NS surroundings */
+    /* populating enthalpy and its derivatives in NS surroundings */
     Tij_IF_CTS_enthalpy(patch);
+    Field_T *enthalpy = patch->pool[Ind("enthalpy")];
+    DECLARE_AND_EMPTY_FIELD(denthalpy_D2)
+    DECLARE_AND_EMPTY_FIELD(denthalpy_D1)
+    DECLARE_AND_EMPTY_FIELD(denthalpy_D0)
+    denthalpy_D2->v = Partial_Derivative(enthalpy,"z");
+    denthalpy_D1->v = Partial_Derivative(enthalpy,"y");
+    denthalpy_D0->v = Partial_Derivative(enthalpy,"x");
     
   }/* end of FOR_ALL_PATCHES(p,grid) */
 }
@@ -2474,7 +2498,7 @@ static double bbn_NS_surface_enthalpy_eq(void *params,const double *const x)
   root_name++;
   sprintf(hint,"%s",root_name);
     
-  find_Xp_and_patchp(y,hint,patch0->grid,X,&patch);
+  find_X_and_patch(y,hint,patch0->grid,X,&patch);
   
   /* find enthalpy at the (X,Y,Z) */
   h_ind = _Ind("enthalpy");
@@ -2517,7 +2541,7 @@ static double bbn_NS_surface_denthalpy_dr(void *params,const double *const x,con
   root_name++;
   sprintf(hint,"%s",root_name);
     
-  find_Xp_and_patchp(y,hint,patch0->grid,X,&patch);
+  find_X_and_patch(y,hint,patch0->grid,X,&patch);
   
   /* find denthalpy/dr at the (X,Y,Z): */
   
