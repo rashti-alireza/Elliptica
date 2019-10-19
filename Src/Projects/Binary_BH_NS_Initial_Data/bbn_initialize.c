@@ -124,11 +124,11 @@ static Grid_T *make_next_grid_using_previous_grid(Grid_T *const grid_prev)
   return grid_next;
 }
 
-
 /* adjust the center of NS at the designated point, in case it moved.
-// we need only to draw enthalpy to (0,-D/2,0), D is BH and NS separation.
+// we need only to draw enthalpy to (0,NS_C,0).
 // to do so, we demand shifted_enthalpy(r) = enthalpy(R+r), in which R 
-// is the amount the center is dislocated from (0,-D/2,0) */
+// is the amount the center is displaced from (0,-D/2,0);
+// and finally update the enthalpy and its derivatives. */
 static void adjust_NS_center(Grid_T *const grid)
 {
   char par_name[1000];
@@ -142,12 +142,36 @@ static void adjust_NS_center(Grid_T *const grid)
   /* if it is already located at the designted point */
   if (EQL(0,R[0]) && EQL(0,R[1]) && EQL(0,R[2]))
     return;
+    
+  /* check the initial values before adjustments */
+  if(1)
+  {
+    printf("dh/dx before adjustment:\n");
+    
+    struct NC_Center_RootFinder_S par[1] = {0};
+    Root_Finder_T root_finder[1] = {0};
+    const double x_center[3] = {0,C,0};
+    par->patch = GetPatch("left_centeral_box",grid);
+    par->root_finder = root_finder;
+    
+    printf("dh/dx(%g,%g,%g)|NS center = %g\n",
+      x_center[0],x_center[1],x_center[2],
+      dh_dx0_root_finder_eq(par,x_center));
+      
+    printf("dh/dy(%g,%g,%g)|NS center = %g\n",
+      x_center[0],x_center[1],x_center[2],
+      dh_dx1_root_finder_eq(par,x_center));
+      
+    printf("dh/dz(%g,%g,%g)|NS center = %g\n",
+      x_center[0],x_center[1],x_center[2],
+      dh_dx2_root_finder_eq(par,x_center));
+  }
   
   FOR_ALL_PATCHES(p,grid)
   {
     Patch_T *patch = grid->patch[p];
     
-    if (!IsItNSPatch(patch))
+    if (!IsItNSPatch(patch) && !IsItNSSurroundingPatch(patch))
       continue;
     
     /* now shift enthalpy */
@@ -173,7 +197,19 @@ static void adjust_NS_center(Grid_T *const grid)
       find_Xp_and_patchp(x,hint,grid,Xp,&patchp);
       shifted_enthalpy->v[ijk] = interpolate_from_patch_prim("enthalpy",Xp,patchp);
     }
-    /* now clean enthalpy and copy new value and remove extras */
+    
+  }
+  
+  /* now clean enthalpy and copy new value and remove extras */
+  FOR_ALL_PATCHES(p,grid)
+  {
+    Patch_T *patch = grid->patch[p];
+    
+    if (!IsItNSPatch(patch) && !IsItNSSurroundingPatch(patch))
+      continue;
+    
+    DECLARE_FIELD(enthalpy);
+    DECLARE_FIELD(shifted_enthalpy);
     free_coeffs(enthalpy);
     free(enthalpy->v);
     enthalpy->v = shifted_enthalpy->v;
@@ -181,6 +217,40 @@ static void adjust_NS_center(Grid_T *const grid)
     REMOVE_FIELD(shifted_enthalpy);
   }
   
+  /* update enthalpy derivatives */
+  FOR_ALL_PATCHES(p,grid)
+  {
+    Patch_T *patch = grid->patch[p];
+    if(!IsItNSPatch(patch) && !IsItNSSurroundingPatch(patch))
+      continue;
+      
+    bbn_update_derivative_enthalpy(patch);  
+  }
+  
+  /* check if it works */
+  if(1)
+  {
+    printf("dh/dx after adjustment:\n");
+    
+    struct NC_Center_RootFinder_S par[1] = {0};
+    Root_Finder_T root_finder[1] = {0};
+    const double x_center[3] = {0,C,0};
+    
+    par->patch = GetPatch("left_centeral_box",grid);
+    par->root_finder = root_finder;
+    
+    printf("dh/dx(%g,%g,%g)|NS center = %g\n",
+      x_center[0],x_center[1],x_center[2],
+      dh_dx0_root_finder_eq(par,x_center));
+      
+    printf("dh/dy(%g,%g,%g)|NS center = %g\n",
+      x_center[0],x_center[1],x_center[2],
+      dh_dx1_root_finder_eq(par,x_center));
+      
+    printf("dh/dz(%g,%g,%g)|NS center = %g\n",
+      x_center[0],x_center[1],x_center[2],
+      dh_dx2_root_finder_eq(par,x_center));
+  }
 }
 
 /* find BH_NS_orbital_angular_velocity using force balance equation */
@@ -270,6 +340,9 @@ static void find_NS_center(Grid_T *const grid)
   {
     Patch_T *patch = grid->patch[p];
     
+    if (!IsItNSPatch(patch))
+      continue;
+
     root->interrupt = 0;
     params->patch = patch;
     plan_root_finder(root);
