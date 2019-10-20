@@ -90,7 +90,7 @@ static Grid_T *make_next_grid_using_previous_grid(Grid_T *const grid_prev)
   //sns_study_initial_data(grid_next);
   
   /* update enthalpy,denthalpy,rho0, drho0, u0, _J^i, _E and _S */
-  sns_update_matter_fields(grid_next);
+  sns_update_stress_energy_tensor(grid_next);
   
   /* update _Aij in K^{ij} = A^{ij}+1/3*gamma^{ij}*K and 
   // _A^{ij} = gamma^10*A^{ij} and _dA^{ij} */

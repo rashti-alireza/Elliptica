@@ -830,16 +830,20 @@ static void cleaning_enthalpy(Patch_T *const patch)
   GET_FIELD(enthalpy)
   const unsigned *const n = patch->n;
   unsigned ijk,i,j;
-
-  for (i = 0; i < n[0]; ++i)
+  
+  /* for cubed spherical we know k = n[2]-1 is on the surface */
+  if (patch->coordsys == CubedSpherical)
   {
-    for (j = 0; j < n[1]; ++j)
-    {
-      /* go over the NS surface */
-      ijk = L(n,i,j,n[2]-1);
-      enthalpy[ijk] = 1;
-    }
+    for (i = 0; i < n[0]; ++i)
+      for (j = 0; j < n[1]; ++j)
+      {
+        /* go over the NS surface */
+        ijk = L(n,i,j,n[2]-1);
+        enthalpy[ijk] = 1;
+      }
   }
+  else
+    abortEr(NO_OPTION);
 
 }
 

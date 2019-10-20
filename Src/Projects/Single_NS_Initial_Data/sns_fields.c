@@ -820,7 +820,7 @@ void sns_update_enthalpy_and_denthalpy(Grid_T *const grid)
 }
 
 /* update enthalpy,denthalpy,rho0, drho0, u0, _J^i, _E and _S */
-void sns_update_matter_fields(Grid_T *const grid)
+void sns_update_stress_energy_tensor(Grid_T *const grid)
 {
   pr_line_custom('=');
   printf("Updating enthalpy, rest-mass density and their derivatives ...\n");
@@ -859,14 +859,18 @@ static void cleaning_enthalpy(Patch_T *const patch)
   const unsigned *const n = patch->n;
   unsigned ijk,i,j;
 
-  for (i = 0; i < n[0]; ++i)
+  /* for cubed spherical we know k = n[2]-1 is on the surface */
+  if (patch->coordsys == CubedSpherical)
   {
-    for (j = 0; j < n[1]; ++j)
-    {
-      /* go over the NS surface */
-      ijk = L(n,i,j,n[2]-1);
-      enthalpy[ijk] = 1;
-    }
+    for (i = 0; i < n[0]; ++i)
+      for (j = 0; j < n[1]; ++j)
+      {
+        /* go over the NS surface */
+        ijk = L(n,i,j,n[2]-1);
+        enthalpy[ijk] = 1;
+      }
   }
+  else
+    abortEr(NO_OPTION);
 
 }
