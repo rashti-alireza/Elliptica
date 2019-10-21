@@ -1038,9 +1038,7 @@ static void find_XYZ_and_patch_of_theta_phi_NS_CS(double *const X,Patch_T **cons
   {
     Patch_T *patch = grid->patch[p];
     
-    if (!IsItNSPatch(patch))
-      continue;
-    if (strstr(patch->name,"left_centeral_box"))
+    if (!IsItNSSurface(patch))
       continue;
 
     Flag_T side = patch->CoordSysInfo->CubedSphericalCoord->side;
