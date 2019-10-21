@@ -65,7 +65,7 @@ int Single_NS_Initial_Data(void)
     sns_solve_initial_data_eqs(grid_next);
     
     /* study and analyse the new grid */
-    //sns_study_initial_data(grid_next);
+    sns_study_initial_data(grid_next);
     
     grid_prev = grid_next;
     

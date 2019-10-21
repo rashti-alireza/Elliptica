@@ -4,8 +4,12 @@
 
 #define Power3(a) (a)*SQR(a)
 
+static void populate_central_NS(Grid_T *const grid,const unsigned pn);
+static void populate_central_NS_surrounding(Grid_T *const grid,const unsigned pn);
+void populate_central_NS_central_box(Grid_T *const grid,const unsigned pn);
 void populate_right_box_sns(Grid_T *const grid,const unsigned pn);
 void fill_patches_SNS_CubedSpherical_Box_grid(Grid_T *const grid);
+void fill_patches_SNS_CubedSpherical_grid(Grid_T *const grid);
 void fill_patches_BNS_CubedSpherical_grid(Grid_T *const grid);
 void fill_patches_BBN_CubedSpherical_grid(Grid_T *const grid);
 void SignAndIndex_permutation_CubedSphere(const Flag_T side,unsigned *const a,unsigned *const b,unsigned *const c,double *const s);
@@ -53,4 +57,5 @@ static void R2_derivative(Patch_T *const patch);
 double R_interpolation_CS(Field_T *const R,const double *const X);
 int x_of_X(double *const x,const double *const X,const Patch_T *const patch);
 void test_CubedSpherical_Coordinates(Grid_T *const grid);
+void alloc_patches_SNS_CubedSpherical_grid(Grid_T *const grid);
 

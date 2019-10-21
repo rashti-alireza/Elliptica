@@ -454,6 +454,10 @@ unsigned IsItHorizonPatch(const Patch_T *const patch)
   {
     return 0;
   }
+  else if (strcmp_i(patch->grid->kind,"SNS_CubedSpherical_grid"))
+  {
+    return 0;
+  }
   else
     abortEr(NO_JOB);
   
@@ -518,6 +522,19 @@ unsigned IsItNSPatch(const Patch_T *const patch)
        )
        ret = 1;
   }
+  else if (strcmp_i(patch->grid->kind,"SNS_CubedSpherical_grid"))
+  {
+    /* it could have used regex, but need extra attention to NS surrounding case */
+    if (strstr(patch->name,"centeral_box") || 
+        strstr(patch->name,"NS_up")        ||
+        strstr(patch->name,"NS_down")      ||
+        strstr(patch->name,"NS_back")      ||
+        strstr(patch->name,"NS_front")     ||
+        strstr(patch->name,"NS_left")      ||
+        strstr(patch->name,"NS_right")     
+       )
+       ret = 1;
+  }
   else
     abortEr(NO_JOB);
     
@@ -553,6 +570,18 @@ unsigned IsItNSSurface(const Patch_T *const patch)
        )
        ret = 1;
   }
+  else if (strcmp_i(patch->grid->kind,"SNS_CubedSpherical_grid"))
+  {
+    /* it could have used regex, but need extra attention to NS surrounding case */
+    if (strstr(patch->name,"NS_up")        ||
+        strstr(patch->name,"NS_down")      ||
+        strstr(patch->name,"NS_back")      ||
+        strstr(patch->name,"NS_front")     ||
+        strstr(patch->name,"NS_left")      ||
+        strstr(patch->name,"NS_right")     
+       )
+       ret = 1;
+  }
   else
     abortEr(NO_JOB);
     
@@ -583,6 +612,17 @@ unsigned IsItNSSurroundingPatch(const Patch_T *const patch)
         strstr(patch->name,"left_NS_surrounding_front")     ||
         strstr(patch->name,"left_NS_surrounding_left")      ||
         strstr(patch->name,"left_NS_surrounding_right")     
+       )
+       ret = 1;
+  }
+  else if (strcmp_i(patch->grid->kind,"SNS_CubedSpherical_grid"))
+  {
+    if (strstr(patch->name,"NS_surrounding_up")        ||
+        strstr(patch->name,"NS_surrounding_down")      ||
+        strstr(patch->name,"NS_surrounding_back")      ||
+        strstr(patch->name,"NS_surrounding_front")     ||
+        strstr(patch->name,"NS_surrounding_left")      ||
+        strstr(patch->name,"NS_surrounding_right")     
        )
        ret = 1;
   }

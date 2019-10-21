@@ -6,6 +6,7 @@
 
 int make_patches(Grid_T *const grid);
 static void fill_patches(Grid_T *const grid);
+void fill_patches_SNS_CubedSpherical_grid(Grid_T *const grid);
 void fill_patches_Cartesian_grid(Grid_T *const grid);
 void fill_patches_BNS_CubedSpherical_grid(Grid_T *const grid);
 void fill_patches_BBN_CubedSpherical_grid(Grid_T *const grid);

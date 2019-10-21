@@ -39,14 +39,9 @@ static Grid_T *make_next_grid_using_previous_grid(Grid_T *const grid_prev)
   
   sns_study_initial_data(grid_prev);
   
-  if (strcmp_i(grid_prev->kind,"SNS_CubedSpherical+Box_grid"))
-  {
-    /* extrapolate fluid fields outside of NS in case their value needed. */
-    extrapolate_fluid_fields_outsideNS_CS(grid_prev);
-  }
-  else
-    abortEr(NO_OPTION);
-    
+  /* extrapolate fluid fields outside NS */
+  extrapolate_fluid_fields_outsideNS(grid_prev);
+  
   /* find the NS center */
   find_NS_center(grid_prev);
   
@@ -54,20 +49,10 @@ static Grid_T *make_next_grid_using_previous_grid(Grid_T *const grid_prev)
   adjust_NS_center(grid_prev);
   
   /* find Euler equation constant to meet NS baryonic mass */
-  //find_Euler_eq_const(grid_prev);
+  find_Euler_eq_const(grid_prev);
     
   /* find NS surface */
-  if (strcmp_i(grid_prev->kind,"SNS_CubedSpherical+Box_grid"))
-  {
-    GridParams->NS_R_type = GetParameterS_E("NS_surface_finder_method");
-    /* find NS surface using spherical harmonic points */
-    if (strstr_i(GridParams->NS_R_type,"SphericalHarmonic"))
-      find_NS_surface_Ylm_method_CS(grid_prev,GridParams);
-    else
-      abortEr(NO_OPTION);
-  }
-  else
-    abortEr(NO_OPTION);
+  find_NS_surface(grid_prev,GridParams);
   
   sns_study_initial_data(grid_prev);
     
@@ -102,6 +87,42 @@ static Grid_T *make_next_grid_using_previous_grid(Grid_T *const grid_prev)
   sns_study_initial_data(grid_next);
   
   return grid_next;
+}
+
+/* extrapolate fluid fields outside NS */
+static void extrapolate_fluid_fields_outsideNS(Grid_T *const grid)
+{
+  if (strcmp_i(grid->kind,"SNS_CubedSpherical+Box_grid"))
+  {
+    /* extrapolate fluid fields outside of NS in case their value needed. */
+    extrapolate_fluid_fields_outsideNS_CS(grid,"left_NS");
+  }
+  else if (strcmp_i(grid->kind,"SNS_CubedSpherical_grid"))
+  {
+    /* extrapolate fluid fields outside of NS in case their value needed. */
+    extrapolate_fluid_fields_outsideNS_CS(grid,"NS");
+  }
+  else
+    abortEr(NO_OPTION);
+}
+
+/* find NS surface using h = 1 */
+static void find_NS_surface(Grid_T *const grid,struct Grid_Params_S *const GridParams)
+{
+  GridParams->NS_R_type = GetParameterS_E("NS_surface_finder_method");
+    
+  /* find NS surface using spherical harmonic points */
+  if (strstr_i(GridParams->NS_R_type,"SphericalHarmonic"))
+  {
+    if (strcmp_i(grid->kind,"SNS_CubedSpherical+Box_grid"))
+      find_NS_surface_Ylm_method_CS(grid,GridParams,"left_NS_surrounding");
+    else if (strcmp_i(grid->kind,"SNS_CubedSpherical_grid"))
+      find_NS_surface_Ylm_method_CS(grid,GridParams,"NS_surrounding");
+    else
+      abortEr(NO_OPTION);
+  }
+  else
+    abortEr(NO_OPTION);
 }
 
 /* find Euler equation constant to meet NS baryonic mass */
@@ -404,13 +425,13 @@ static void find_Xp_and_patchp(const double *const x,const char *const hint,Grid
 // i.e (theta,phi) collocations are = (Legendre,EquiSpaced),
 // using the fact that at the surface enthalpy = 1.
 // it fills also NS radius attributes:
-//   GridParams->Max_R_NS_l;
+//   GridParams->Max_R_NS;
 //   GridParams->NS_R_Ylm->realClm;
 //   GridParams->NS_R_Ylm->imagClm;
 //   GridParams->NS_R_Ylm->Lmax;
 //
 // we assumed cubed spherical grid */
-static void find_NS_surface_Ylm_method_CS(Grid_T *const grid,struct Grid_Params_S *const GridParams)
+static void find_NS_surface_Ylm_method_CS(Grid_T *const grid,struct Grid_Params_S *const GridParams,const char *const prefix)
 {
   pr_line_custom('=');
   printf("{ Finding the surface of NS, Ylm method ...\n");
@@ -497,9 +518,10 @@ static void find_NS_surface_Ylm_method_CS(Grid_T *const grid,struct Grid_Params_
         /* finding the juxtapose patch of this NS patch */
         affix = regex_find("_[[:alpha:]]{2,5}$",patch->name);
         assert(affix);
-        sprintf(stem,"left_NS_surrounding%s",affix);
+        sprintf(stem,"%s%s",prefix,affix);
         free(affix);
         h_patch = GetPatch(stem,grid);
+        assert(h_patch);
       }
       /* having found h_patch, now find the the position of h = 1 */
       par->x0[0] = x[0];
@@ -532,7 +554,7 @@ static void find_NS_surface_Ylm_method_CS(Grid_T *const grid,struct Grid_Params_
   }/* end of for (i = 0; i < Ntheta; ++i) */
   
   /* adding maximum radius of NS to grid parameters */
-  GridParams->Max_R_NS_l = Max_R_NS;
+  GridParams->Max_R_NS = Max_R_NS;
   
   /* making radius of NS parameter at each patch using Ylm interpolation */
   double *realClm = alloc_ClmYlm(lmax);
@@ -574,9 +596,7 @@ static void find_XYZ_and_patch_of_theta_phi_NS_CS(double *const X,Patch_T **cons
   {
     Patch_T *patch = grid->patch[p];
     
-    if (!IsItNSPatch(patch))
-      continue;
-    if (strstr(patch->name,"left_centeral_box"))
+    if (!IsItNSSurface(patch))
       continue;
 
     Flag_T side = patch->CoordSysInfo->CubedSphericalCoord->side;
@@ -698,7 +718,7 @@ static void find_XYZ_and_patch_of_theta_phi_NS_CS(double *const X,Patch_T **cons
 // r_max is the max radius in NS surrounding patch.
 // in effect, it means we emulate the trend of the fields inside of NS
 // from r1 to r2 in NS surrounding, from r2 to r_max. */
-static void extrapolate_fluid_fields_outsideNS_CS(Grid_T *const grid)
+static void extrapolate_fluid_fields_outsideNS_CS(Grid_T *const grid,const char *const prefix)
 {
   const double FACTOR = 0.8;/* r1 = FACTOR*r2 */
   //const double EXP    = 1;/* (r_out/r2)^EXP */
@@ -751,9 +771,10 @@ static void extrapolate_fluid_fields_outsideNS_CS(Grid_T *const grid)
     char stem[1000];
     char *affix = regex_find("_[[:alpha:]]{2,5}$",patch->name);/* finding the side of the patch */
     assert(affix);
-    sprintf(stem,"left_NS%s",affix);
+    sprintf(stem,"%s%s",prefix,affix);
     free(affix);
     NS_patch = GetPatch(stem,grid);
+    assert(NS_patch);
     
     /* prepare interpolation arguments */
     Interpolation_T *interp_phi = init_interpolation();
@@ -953,7 +974,7 @@ static Grid_T *TOV_approximation(void)
   const double ns_R = tov->rbar[tov->N-1];
   
   /* combining these two geometry to create the grid */
-  GridParams->Max_R_NS_l = ns_R;
+  GridParams->Max_R_NS = ns_R;
   GridParams->NS_R_type  = "PerfectSphere";
   grid = creat_sns_grid_CS(GridParams);
   
@@ -1108,15 +1129,21 @@ static void init_field_TOV(Grid_T *const grid,const TOV_T *const tov)
   printf("Initializing the fields using TOV solution ...\n");
 
   const double M_NS = tov->ADM_m;/* NS adm mass */
-  const double C_NS = GetParameterD_E("NS_center_-y_axis");/* center of NS it's on -y axis*/
+  double C_NS;/* center of NS */
   const double R_Schwar = tov->r[tov->N-1];/* NS's Schwarzchild radius */
   const double Omega_NS_x = GetParameterD_E("NS_Omega_U0");
   const double Omega_NS_y = GetParameterD_E("NS_Omega_U1");
   const double Omega_NS_z = GetParameterD_E("NS_Omega_U2");
   unsigned p;
   
+  if (strcmp_i(grid->kind,"SNS_CubedSpherical_grid"))
+    C_NS = 0;
+  else if (strcmp_i(grid->kind,"SNS_CubedSpherical+Box_grid"))
+    C_NS = GetParameterD_E("NS_center_-y_axis");
+  else
+    abortEr(NO_OPTION);
+    
   add_parameter_double("NS_Center",C_NS);
-  
   /* initialization psi, eta and matter fields: */
   FOR_ALL_PATCHES(p,grid)
   {
@@ -1268,9 +1295,167 @@ static void init_field_TOV(Grid_T *const grid,const TOV_T *const tov)
 // ->return value: grid for single NS. */
 static Grid_T *creat_sns_grid_CS(struct Grid_Params_S *const GridParams)
 {
+  Grid_T *grid = 0;
+  /* finding the kind of grid */
+  const char *const kind = GetParameterS_E("grid_kind");
+  
+  if (strcmp_i(kind,"SNS_CubedSpherical+Box_grid"))
+    grid = creat_sns_grid_CS_box(GridParams);
+  else if (strcmp_i(kind,"SNS_CubedSpherical_grid"))
+    grid = creat_sns_grid_CS_center(GridParams);
+  else
+    abortEr(NO_OPTION);
+      
+  return grid;
+}
+
+/* given the max of radius of NS and its ceneter,
+// create a grid with these properties.
+// NOTE: WE assume we are using cubed spherical grid 
+// at the center of our coordinates
+// ->return value: grid for single NS. */
+static Grid_T *creat_sns_grid_CS_center(struct Grid_Params_S *const GridParams)
+{
   Grid_T *grid = alloc_grid();/* adding a new grid */
   /* calculate the characteristics of this grid */
-  const double Max_R_NS_l = GridParams->Max_R_NS_l;/* maximum radius of NS */
+  const double Max_R_NS = GridParams->Max_R_NS;/* maximum radius of NS */
+  const unsigned gn = grid->gn;
+  const unsigned N_Outermost_Split = (unsigned)GetParameterI_E("Number_of_Outermost_Split"); 
+  double *R_outermost = alloc_double(N_Outermost_Split);
+  double box_size_l;
+  unsigned nlb[3]/* central box*/,n;
+  char var[100] = {'\0'};
+  char par[100] = {'\0'};
+  char val[100] = {'\0'};
+  const char *kind;
+  unsigned i;
+  
+  /* finding the kind of grid */
+  kind = GetParameterS_E("grid_kind");
+  if (!strcmp_i(kind,"SNS_CubedSpherical_grid"))
+    abortEr("This only works when star is at the center with cubed spherical coords.\n");
+    
+  grid->kind = dup_s(kind);
+  
+  assert(GRT(Max_R_NS,0));
+  
+  /* making NS surface function */
+  NS_surface_center_CS(grid,GridParams);
+  
+  box_size_l = GetParameterD_E("central_box_length_ratio")*Max_R_NS;
+  
+  for (i = 0; i < N_Outermost_Split; i++)
+  {
+    sprintf(var,"Outermost%u_radius",i);
+    R_outermost[i] = GetParameterD_E(var);
+    
+    if (LSS(R_outermost[i],0))
+      abortEr("the radius of outermost patches must be greater than twice of NS center.");
+    
+    if (i > 0)
+      if (LSSEQL(R_outermost[i],R_outermost[i-1]))
+        abortEr("The radius of outermost must be increasing.");
+    
+  }
+  
+  /* filling n */
+  
+  /* central box */
+  nlb[0] = (unsigned)GetParameterI("n_a");
+  nlb[1] = (unsigned)GetParameterI("n_b");
+  nlb[2] = (unsigned)GetParameterI("n_c");
+  /* check for override */
+  n = (unsigned)GetParameterI("NS_n_a");
+  if (n != INT_MAX)   nlb[0] = n;
+  n = (unsigned)GetParameterI("NS_n_b");
+  if (n != INT_MAX)   nlb[1] = n;
+  n = (unsigned)GetParameterI("NS_n_c");
+  if (n != INT_MAX)   nlb[2] = n;
+    
+  if(nlb[0] == INT_MAX)
+    abortEr("n_a could not be set.\n");
+  if(nlb[1] == INT_MAX)
+    abortEr("n_b could not be set.\n");
+  if(nlb[2] == INT_MAX)
+    abortEr("n_c could not be set.\n");
+  
+  /* adding the results to the parameter data base */
+  
+  /* n_a, n_b, n_c */
+  /* central box */
+  sprintf(par,"grid%u_centeral_box_n_a",gn);
+  sprintf(val,"%u",nlb[0]);
+  add_parameter_string(par,val);
+  
+  sprintf(par,"grid%u_centeral_box_n_b",gn);
+  sprintf(val,"%u",nlb[1]);
+  add_parameter_string(par,val);
+  
+  sprintf(par,"grid%u_centeral_box_n_c",gn);
+  sprintf(val,"%u",nlb[2]);
+  add_parameter_string(par,val);
+  
+  
+  /* size a,b,c */
+  sprintf(par,"grid%u_centeral_box_size_a",gn);
+  add_parameter_double(par,box_size_l);
+  
+  sprintf(par,"grid%u_centeral_box_size_b",gn);
+  add_parameter_double(par,box_size_l);
+  
+  sprintf(par,"grid%u_centeral_box_size_c",gn);
+  add_parameter_double(par,box_size_l);
+  
+    /* surrounding box length */
+  sprintf(par,"grid%u_surrounding_box_length",gn);
+  add_parameter_double(par,2*Max_R_NS);
+
+  /* R1 and R2 outermost */
+  sprintf(par,"grid%u_outermost%u_R2",gn,0);
+  add_parameter_double(par,R_outermost[0]);
+    
+  for (i = 1; i < N_Outermost_Split; i++)
+  {
+    /* R1: */
+    sprintf(par,"grid%u_outermost%u_R1",gn,i);
+    add_parameter_double(par,R_outermost[i-1]);
+    
+    /* R2: */
+    sprintf(par,"grid%u_outermost%u_R2",gn,i);
+    add_parameter_double(par,R_outermost[i]);
+    
+  }
+  
+  /* assuming the center of NS at (0,0,0) */
+  sprintf(par,"grid%u_NS_center_a",gn);
+  add_parameter_double(par,0.0);
+  
+  sprintf(par,"grid%u_NS_center_b",gn);
+  add_parameter_double(par,0.0);
+  
+  sprintf(par,"grid%u_NS_center_c",gn);
+  add_parameter_double(par,0.0);
+  
+  free(R_outermost);
+
+  make_patches(grid);/* making patch(es) to cover the grid */
+  realize_geometry(grid);/* realizing the geometry of whole grid
+                     // including the way patches have been sewed,
+                     // normal to the boundary, 
+                     // outer-boundary, inner boundary and etc. */
+  
+  return grid;
+}
+
+// create a grid with these properties.
+// NOTE: WE assume we are using cubed spherical grid 
+// for the star and a box at the right hand side of our coordinates.
+// ->return value: grid for single NS. */
+static Grid_T *creat_sns_grid_CS_box(struct Grid_Params_S *const GridParams)
+{
+  Grid_T *grid = alloc_grid();/* adding a new grid */
+  /* calculate the characteristics of this grid */
+  const double Max_R_NS = GridParams->Max_R_NS;/* maximum radius of NS */
   const unsigned gn = grid->gn;
   const double NS_C = GetParameterD_E("NS_center_-y_axis");
   const double C    = -2*NS_C;
@@ -1292,13 +1477,13 @@ static Grid_T *creat_sns_grid_CS(struct Grid_Params_S *const GridParams)
   grid->kind = dup_s(kind);
   
   assert(GRT(C,0));
-  assert(GRT(Max_R_NS_l,0));
-  assert(LSS(2*Max_R_NS_l,C));
+  assert(GRT(Max_R_NS,0));
+  assert(LSS(2*Max_R_NS,C));
   
   /* making NS surface function */
-  NS_surface_CubedSpherical_grid(grid,GridParams);
+  NS_surface_left_CS(grid,GridParams);
   
-  box_size_l = GetParameterD_E("left_central_box_length_ratio")*Max_R_NS_l;
+  box_size_l = GetParameterD_E("left_central_box_length_ratio")*Max_R_NS;
   
   for (i = 0; i < N_Outermost_Split; i++)
   {
@@ -1455,10 +1640,207 @@ static Grid_T *creat_sns_grid_CS(struct Grid_Params_S *const GridParams)
   
 }
 
-/* making NS surfaces function */
-static void NS_surface_CubedSpherical_grid(Grid_T *const grid,struct Grid_Params_S *const GridParams)
+/* making NS surfaces function for a NS at center with CS*/
+static void NS_surface_center_CS(Grid_T *const grid,struct Grid_Params_S *const GridParams)
 {
-  const double Max_R_NS_l = GridParams->Max_R_NS_l;/* maximum radius of NS */
+  const double Max_R_NS = GridParams->Max_R_NS;/* maximum radius of NS */
+  double *R;
+  char par[1000] = {'\0'};
+  unsigned N[3],n,i,j,k,N_total;
+  Patch_T patch[1] = {0};
+  struct Collocation_s coll_s[2] = {0};
+  double X[3],r;
+  
+  /* left NS */
+  
+  /* filling N */
+  N[0] = (unsigned)GetParameterI("n_a");
+  N[1] = (unsigned)GetParameterI("n_b");
+  N[2] = (unsigned)GetParameterI("n_c");
+  /* check for override */
+  n = (unsigned)GetParameterI("NS_n_a");
+  if (n != INT_MAX)     N[0] = n;
+  n = (unsigned)GetParameterI("NS_n_b");
+  if (n != INT_MAX)     N[1] = n;
+  n = (unsigned)GetParameterI("NS_n_c");
+  if (n != INT_MAX)     N[2] = n;
+  
+  if(N[0] == INT_MAX)
+    abortEr("n_a could not be set.\n");
+  if(N[1] == INT_MAX)
+    abortEr("n_b could not be set.\n");
+  if(N[2] == INT_MAX)
+    abortEr("n_c could not be set.\n");
+    
+  N_total = N[0]*N[1]*N[2];
+  
+  /* surface */
+  R = alloc_double(N_total);
+  /* if NS is perfect sphere like TOV*/
+  if (strcmp_i(GridParams->NS_R_type,"PerfectSphere"))
+  {
+    for (i = 0; i < N[0]; ++i)
+      for (j = 0; j < N[1]; ++j)
+        for (k = 0; k < N[2]; ++k)
+          R[L(N,i,j,k)] = Max_R_NS;
+    
+    sprintf(par,"grid%u_NS_surface_function_up",grid->gn);
+    add_parameter_array(par,R,N_total);
+    sprintf(par,"grid%u_NS_surface_function_down",grid->gn);
+    add_parameter_array(par,R,N_total);
+    sprintf(par,"grid%u_NS_surface_function_back",grid->gn);
+    add_parameter_array(par,R,N_total);
+    sprintf(par,"grid%u_NS_surface_function_front",grid->gn);
+    add_parameter_array(par,R,N_total);
+    sprintf(par,"grid%u_NS_surface_function_left",grid->gn);
+    add_parameter_array(par,R,N_total);
+    sprintf(par,"grid%u_NS_surface_function_right",grid->gn);
+    add_parameter_array(par,R,N_total);
+  }
+  /* if NS radius is varied and we know its expansion in Ylm bases */
+  else if (strcmp_i(GridParams->NS_R_type,"SphericalHarmonic"))
+  {
+    /* we need interpolation */
+    const double *const realClm = GridParams->NS_R_Ylm->realClm;
+    const double *const imagClm = GridParams->NS_R_Ylm->imagClm;
+    const unsigned Lmax   = GridParams->NS_R_Ylm->Lmax;
+    double theta,phi;
+    
+    X[3] = 1;/* since we are on the NS surface */
+    
+    /* filling min */
+    patch->min[0] = -1;
+    patch->min[1] = -1;
+    patch->min[2] = 0;
+
+    /* filling max */
+    patch->max[0] = 1;
+    patch->max[1] = 1;
+    patch->max[2] = 1;
+    
+    /* collocation */
+    patch->collocation[0] = Chebyshev_Extrema;
+    patch->collocation[1] = Chebyshev_Extrema;
+    patch->collocation[2] = Chebyshev_Extrema;
+
+    /* basis */
+    patch->basis[0] = Chebyshev_Tn_BASIS;
+    patch->basis[1] = Chebyshev_Tn_BASIS;
+    patch->basis[2] = Chebyshev_Tn_BASIS;
+      
+    patch->n[0] = N[0];
+    patch->n[1] = N[1];
+    patch->n[2] = N[2];
+  
+    initialize_collocation_struct(patch,&coll_s[0],0);
+    initialize_collocation_struct(patch,&coll_s[1],1);
+    
+    /* surface up */
+    for (i = 0; i < N[0]; ++i)
+    {
+      X[0] = point_value(i,&coll_s[0]);
+      for (j = 0; j < N[1]; ++j)
+      {
+        X[1] = point_value(j,&coll_s[1]);
+        find_theta_phi_of_XYZ_NS_CS(&theta,&phi,X,UP);
+        r = interpolation_Ylm(realClm,imagClm,Lmax,theta,phi);
+        for (k = 0; k < N[2]; ++k)
+          R[L(N,i,j,k)] = r;
+      }
+    }
+    sprintf(par,"grid%u_NS_surface_function_up",grid->gn);
+    add_parameter_array(par,R,N_total);
+    
+    /* surface down */
+    for (i = 0; i < N[0]; ++i)
+    {
+      X[0] = point_value(i,&coll_s[0]);
+      for (j = 0; j < N[1]; ++j)
+      {
+        X[1] = point_value(j,&coll_s[1]);
+        find_theta_phi_of_XYZ_NS_CS(&theta,&phi,X,DOWN);
+        r = interpolation_Ylm(realClm,imagClm,Lmax,theta,phi);
+        for (k = 0; k < N[2]; ++k)
+          R[L(N,i,j,k)] = r;
+      }
+    }
+    sprintf(par,"grid%u_NS_surface_function_down",grid->gn);
+    add_parameter_array(par,R,N_total);
+    
+    /* surface back */
+    for (i = 0; i < N[0]; ++i)
+    {
+      X[0] = point_value(i,&coll_s[0]);
+      for (j = 0; j < N[1]; ++j)
+      {
+        X[1] = point_value(j,&coll_s[1]);
+        find_theta_phi_of_XYZ_NS_CS(&theta,&phi,X,BACK);
+        r = interpolation_Ylm(realClm,imagClm,Lmax,theta,phi);
+        for (k = 0; k < N[2]; ++k)
+          R[L(N,i,j,k)] = r;
+      }
+    }
+    sprintf(par,"grid%u_NS_surface_function_back",grid->gn);
+    add_parameter_array(par,R,N_total);
+    
+    /* surface front */
+    for (i = 0; i < N[0]; ++i)
+    {
+      X[0] = point_value(i,&coll_s[0]);
+      for (j = 0; j < N[1]; ++j)
+      {
+        X[1] = point_value(j,&coll_s[1]);
+        find_theta_phi_of_XYZ_NS_CS(&theta,&phi,X,FRONT);
+        r = interpolation_Ylm(realClm,imagClm,Lmax,theta,phi);
+        for (k = 0; k < N[2]; ++k)
+          R[L(N,i,j,k)] = r;
+      }
+    }
+    sprintf(par,"grid%u_NS_surface_function_front",grid->gn);
+    add_parameter_array(par,R,N_total);
+    
+    /* surface left */
+    for (i = 0; i < N[0]; ++i)
+    {
+      X[0] = point_value(i,&coll_s[0]);
+      for (j = 0; j < N[1]; ++j)
+      {
+        X[1] = point_value(j,&coll_s[1]);
+        find_theta_phi_of_XYZ_NS_CS(&theta,&phi,X,LEFT);
+        r = interpolation_Ylm(realClm,imagClm,Lmax,theta,phi);
+        for (k = 0; k < N[2]; ++k)
+          R[L(N,i,j,k)] = r;
+      }
+    }
+    sprintf(par,"grid%u_NS_surface_function_left",grid->gn);
+    add_parameter_array(par,R,N_total);
+    
+    /* surface right */
+    for (i = 0; i < N[0]; ++i)
+    {
+      X[0] = point_value(i,&coll_s[0]);
+      for (j = 0; j < N[1]; ++j)
+      {
+        X[1] = point_value(j,&coll_s[1]);
+        find_theta_phi_of_XYZ_NS_CS(&theta,&phi,X,RIGHT);
+        r = interpolation_Ylm(realClm,imagClm,Lmax,theta,phi);
+        for (k = 0; k < N[2]; ++k)
+          R[L(N,i,j,k)] = r;
+      }
+    }
+    sprintf(par,"grid%u_NS_surface_function_right",grid->gn);
+    add_parameter_array(par,R,N_total);
+  }
+  else
+    abortEr(NO_OPTION);
+  
+  free(R);
+}
+
+/* making NS surfaces function for a NS at left side with CS coords */
+static void NS_surface_left_CS(Grid_T *const grid,struct Grid_Params_S *const GridParams)
+{
+  const double Max_R_NS = GridParams->Max_R_NS;/* maximum radius of NS */
   double *R;
   char par[1000] = {'\0'};
   unsigned N[3],n,i,j,k,N_total;
@@ -1497,7 +1879,7 @@ static void NS_surface_CubedSpherical_grid(Grid_T *const grid,struct Grid_Params
     for (i = 0; i < N[0]; ++i)
       for (j = 0; j < N[1]; ++j)
         for (k = 0; k < N[2]; ++k)
-          R[L(N,i,j,k)] = Max_R_NS_l;
+          R[L(N,i,j,k)] = Max_R_NS;
     
     sprintf(par,"grid%u_left_NS_surface_function_up",grid->gn);
     add_parameter_array(par,R,N_total);
@@ -1715,12 +2097,20 @@ static void find_NS_center(Grid_T *const grid)
   struct NC_Center_RootFinder_S params[1];
   double guess[3];/* initial guess for root finder */
   char par_name[1000];
+  const double RESIDUAL = sqrt(GetParameterD_E("RootFinder_Tolerance"));
+  Flag_T success_f = NONE;
   unsigned p;
   
   guess[0] = guess[2] = 0;
-  guess[1] = GetParameterD_E("NS_center_-y_axis");
+  if (strcmp_i(grid->kind,"SNS_CubedSpherical+Box_grid"))
+    guess[1] = GetParameterD_E("NS_center_-y_axis");
+  else if (strcmp_i(grid->kind,"SNS_CubedSpherical_grid"))
+    guess[1] = 0;
+  else
+    abortEr(NO_OPTION);
+    
   params->root_finder = root;
-  root->description = "Finding NS center:";
+  root->description = "Finding NS center";
   root->type        = GetParameterS_E("RootFinder_Method");
   root->tolerance   = GetParameterD_E("RootFinder_Tolerance");
   root->MaxIter     = (unsigned)GetParameterI_E("RootFinder_Max_Number_of_Iteration");
@@ -1744,8 +2134,9 @@ static void find_NS_center(Grid_T *const grid)
     NS_center     = execute_root_finder(root);
     
     /* if root finder was successful */
-    if (root->exit_status == ROOT_FINDER_OK)
+    if (root->exit_status == ROOT_FINDER_OK || GRT(root->residual,RESIDUAL))
     {
+      success_f = YES;
       //test
       printf("(%f,%f,%f)\n",NS_center[0],NS_center[1],NS_center[2]);
       //end
@@ -1765,7 +2156,7 @@ static void find_NS_center(Grid_T *const grid)
     }
     free(NS_center);
   }
-  if (root->exit_status != ROOT_FINDER_OK)
+  if (success_f != YES)
   {
     print_root_finder_exit_status(root);
     abortEr("NS center could not be found.\n");
@@ -1899,9 +2290,17 @@ static void adjust_NS_center(Grid_T *const grid)
 {
   char par_name[1000];
   double *NS_center = 0;
-  const double C    = GetParameterD_E("NS_center_-y_axis");
+  double C;
   sprintf(par_name,"grid%u_NS_center_x",grid->gn);
   NS_center = GetParameterArrayF_E(par_name);
+  
+  if (strcmp_i(grid->kind,"SNS_CubedSpherical_grid"))
+    C = 0;
+  else if (strcmp_i(grid->kind,"SNS_CubedSpherical+Box_grid"))
+    C = GetParameterD_E("NS_center_-y_axis");
+  else
+    abortEr(NO_OPTION);
+  
   const double R[3] = {NS_center[0],NS_center[1]-C,NS_center[2]};
   unsigned p,ijk;
   
@@ -1910,7 +2309,7 @@ static void adjust_NS_center(Grid_T *const grid)
     return;
   
   /* check the initial values before adjustments */
-  if(1)
+  if(0)
   {
     printf("dh/dx before adjustment:\n");
     
@@ -1994,7 +2393,7 @@ static void adjust_NS_center(Grid_T *const grid)
   }
   
   /* check if it works */
-  if(1)
+  if(0)
   {
     printf("dh/dx after adjustment:\n");
     

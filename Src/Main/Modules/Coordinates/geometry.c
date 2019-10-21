@@ -1822,6 +1822,17 @@ static void FindInnerB_CS_coord(Patch_T *const patch)
       }
     }
   }
+  else if (strcmp_i(patch->grid->kind,"SNS_CubedSpherical_grid"))
+  {
+    FOR_ALL(f,interface)
+    {
+      Point_T **point = interface[f]->point;
+      FOR_ALL(i,point)
+      {
+        point[i]->innerB = 0;
+      }
+    }
+  }
   else
     abortEr(INCOMPLETE_FUNC);
 }
@@ -1855,6 +1866,17 @@ static void FindExterF_CS_coord(Patch_T *const patch)
     }
   }
   else if (strcmp_i(patch->grid->kind,"SNS_CubedSpherical+Box_grid"))
+  {
+    FOR_ALL(f,interface)
+    {
+      Point_T **point = interface[f]->point;
+      FOR_ALL(i,point)
+      {
+        point[i]->exterF = 1;
+      }
+    }
+  }
+  else if (strcmp_i(patch->grid->kind,"SNS_CubedSpherical_grid"))
   {
     FOR_ALL(f,interface)
     {
