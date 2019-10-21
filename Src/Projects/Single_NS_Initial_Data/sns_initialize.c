@@ -1349,8 +1349,8 @@ static Grid_T *creat_sns_grid_CS_center(struct Grid_Params_S *const GridParams)
     sprintf(var,"Outermost%u_radius",i);
     R_outermost[i] = GetParameterD_E(var);
     
-    if (LSS(R_outermost[i],0))
-      abortEr("the radius of outermost patches must be greater than twice of NS center.");
+    if (LSS(R_outermost[i],4*Max_R_NS))
+      abortEr("the radius of outermost patches must be greater than fourth times of NS radius.");
     
     if (i > 0)
       if (LSSEQL(R_outermost[i],R_outermost[i-1]))
