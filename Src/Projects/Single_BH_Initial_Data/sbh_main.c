@@ -5,13 +5,13 @@
 
 #include "sbh_main.h"
 
-/* constructing initial data for system of binary black hole neutron star */
+/* constructing initial data for system of single black hole */
 int Single_BH_Initial_Data(void)
 {
   /* print some description */
   pr_clock();
   pr_line_custom('=');
-  printf("Constructing Initial Data for Binary BH and NS ...\n");
+  printf("Constructing Initial Data for Single BH ...\n");
   
   /***********************************************************/
   /* adding some parameters that are used in different parts: */
@@ -25,9 +25,6 @@ int Single_BH_Initial_Data(void)
   const double BH_X_U2 = GetParameterD_E("BH_X_U2");
   const double BH_mass = GetParameterD_E("BH_mass");
   AddParameterDoubleF("BH_Omega_U2",BH_X_U2/(4*BH_mass));
-  
-  /* -> the Constant of the integration of Euler equation */
-  AddParameterDoubleF("Euler_equation_constant",0);
   
   /***********************************************************/
   /* the outer most main algorithm: */
@@ -50,7 +47,7 @@ int Single_BH_Initial_Data(void)
     update_parameter_integer("iteration_number",(int)iter);
     
     /* making a directory for this iteration and save the path */
-    sprintf(folder_name,"BBN_Iteration_%02d",iter);
+    sprintf(folder_name,"SBH_Iteration_%02d",iter);
     folder_path = make_directory(path_par,folder_name);
     update_parameter_string("iteration_output",folder_path);
     free(folder_path);
@@ -90,7 +87,7 @@ int Single_BH_Initial_Data(void)
   free_grid(grid);
     
   /* print some description */
-  printf("Constructing Initial Data for Binary BH and NS ==> Done. :)\n");
+  printf("Constructing Initial Data for Single BH ==> Done. :)\n");
   pr_clock();
   pr_line_custom('=');
 
