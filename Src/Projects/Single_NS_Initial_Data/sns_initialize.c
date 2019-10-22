@@ -34,6 +34,9 @@ static Grid_T *make_next_grid_using_previous_grid(Grid_T *const grid_prev)
   Grid_T *grid_next = 0;
   struct Grid_Params_S *GridParams = init_GridParams();/* adjust some pars for construction of next grid */
   
+  /* find Euler equation constant to meet NS baryonic mass */
+  find_Euler_eq_const(grid_prev);
+  
   /* updating enthalpy */
   sns_update_enthalpy_and_denthalpy(grid_prev);
   
@@ -47,9 +50,6 @@ static Grid_T *make_next_grid_using_previous_grid(Grid_T *const grid_prev)
   
   /* if needed, drag the NS to its designated point */
   adjust_NS_center(grid_prev);
-  
-  /* find Euler equation constant to meet NS baryonic mass */
-  find_Euler_eq_const(grid_prev);
     
   /* find NS surface */
   find_NS_surface(grid_prev,GridParams);

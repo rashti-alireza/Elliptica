@@ -208,6 +208,7 @@ static void sns_backtrack(Grid_T *const grid,const char *const name)
 void sns_SolveEqs_SourceUpdate(Grid_T *const grid,const char *const name)
 {
   Tij_IF_CTS_psi6Sources(grid);
+  
   char par[1000];
   sprintf(par,"solve_ets_grid%u",grid->gn);
   
