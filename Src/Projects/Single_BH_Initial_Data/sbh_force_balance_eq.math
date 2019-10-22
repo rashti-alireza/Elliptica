@@ -1,0 +1,157 @@
+# forece balance eqution for root finder
+
+# Manifold or grid Dimension
+Dimension = 3;
+
+# point on manifold shown by:
+Point = ijk;
+
+C_macro = GET_FIELD(name);
+
+`#include "sbh_headers.h"`
+``
+`double force_balance_root_finder_eq(void *params,const double *const x);`
+`double force_balance_root_finder_eq(void *params,const double *const x)`
+`{`
+`const struct Force_Balance_RootFinder_S *const par = params;`
+`Patch_T *const patch = par->patch;`
+`const unsigned  nn   = patch->nn;`
+`const double Omega_BHNS = x[0];`
+`const double Vr         = par->Vr;`
+`const double D          = par->D;`
+`const double y_CM       = par->y_CM;`
+`const double *const X   = par->X; `
+`unsigned ijk;`  
+
+`/* B^1 */`
+`PREP_FIELD(B1_U0)`
+`PREP_FIELD(B1_U1)`
+`PREP_FIELD(B1_U2)`
+`for (ijk = 0; ijk < nn; ++ijk)`
+`{`
+  `double x0     = patch->node[ijk]->x[0];`
+  `double y0     = patch->node[ijk]->x[1];`
+  
+  `B1_U0[ijk] = Omega_BHNS*(-y0+y_CM)+Vr*x0/D;`
+  `B1_U1[ijk] = Omega_BHNS*x0+Vr*(y0-y_CM)/D;`
+  `B1_U2[ijk] = 0;`
+`}`
+
+`sbh_update_Beta_U0(patch);`
+`sbh_update_Beta_U1(patch);`
+`sbh_update_Beta_U2(patch);`
+
+Declare = 
+{
+
+ # conformal metric 
+ (obj = Field,name = _gamma, rank = DD, C_macro);
+
+ # spin part of fluid
+ (obj = Field,name = W, rank = U, C_macro);
+
+ # d(phi)/d? for irrotional part of fluid
+ (obj = Field,name = dphi, rank = D, C_macro);
+
+ # eta
+ (obj = Field,name = eta, rank = 0, C_macro);
+
+ # Beta
+ (obj = Field,name = Beta, rank = U, C_macro);
+
+ # Killing vector xi^i, assumed 0
+ #(obj = Field,name = xi, rank = U, C_macro);
+
+ # conformal factor
+ (obj = Field,name = psi, rank = 0, C_macro);
+
+ # enthalpy
+ (obj = Field,name = enthalpy, rank = 0, C_macro);
+
+ # u^0
+ (obj = Field,name = u0, rank = 0, C_macro);
+
+}
+# symmetries:
+Symm[_gamma(i,j)   = _gamma(j,i)];
+
+`DECLARE_FIELD(GAMMA_rf);`
+`DECLARE_FIELD(GAMMAt_rf);`
+`DECLARE_FIELD(dGAMMA_D1_rf);`
+`DECLARE_FIELD(dGAMMAt_D1_rf);`
+
+# calculating Gammas represented by G and Gtilda
+`for (ijk = 0; ijk < nn; ++ijk)`
+`{`
+    alpha  = eta/psi;
+    alpha2 = alpha**2;
+    psi4   = psi**4;
+    t(i)   = Beta(i)+W(i)/(enthalpy*u0);
+    t2     = psi4*t(-i)*t(-j)*_gamma(i,j);
+    Gtilda = alpha2-t2;
+    v      = t(i)*dphi(-i)/(alpha2*enthalpy*u0) + \
+             psi4*_gamma(i,j)*W(-i)*W(-j)/((alpha*enthalpy*u0)**2);
+    G      = alpha*u0*(1-v)/((1-t2/alpha2)**(0.5));
+
+    ``
+    `GAMMA_rf->v[ijk]  = G;`
+    `GAMMAt_rf->v[ijk] = Gtilda;`
+`}`
+
+`dGAMMA_D1_rf->v  = Partial_Derivative(GAMMA_rf,"y");`
+`dGAMMAt_D1_rf->v = Partial_Derivative(GAMMAt_rf,"y");`
+
+`Interpolation_T *interp_GAMMA   = init_interpolation();`
+`Interpolation_T *interp_GAMMAt  = init_interpolation();`
+`Interpolation_T *interp_dGAMMA  = init_interpolation();`
+`Interpolation_T *interp_dGAMMAt = init_interpolation();`
+``
+`interp_GAMMA->field   = GAMMA_rf;`
+`interp_GAMMAt->field  = GAMMAt_rf;`
+`interp_dGAMMA->field  = dGAMMA_D1_rf;`
+`interp_dGAMMAt->field = dGAMMAt_D1_rf;`
+``
+`interp_GAMMA->X = X[0];`
+`interp_GAMMA->Y = X[1];`
+`interp_GAMMA->Z = X[2];`
+`interp_GAMMA->XYZ_dir_flag = 1;`
+``
+`interp_GAMMAt->X = X[0];`
+`interp_GAMMAt->Y = X[1];`
+`interp_GAMMAt->Z = X[2];`
+`interp_GAMMAt->XYZ_dir_flag = 1;`
+``
+`interp_dGAMMA->X = X[0];`
+`interp_dGAMMA->Y = X[1];`
+`interp_dGAMMA->Z = X[2];`
+`interp_dGAMMA->XYZ_dir_flag = 1;`
+``
+`interp_dGAMMAt->X = X[0];`
+`interp_dGAMMAt->Y = X[1];`
+`interp_dGAMMAt->Z = X[2];`
+`interp_dGAMMAt->XYZ_dir_flag = 1;`
+``
+`plan_interpolation(interp_GAMMA);`
+`plan_interpolation(interp_dGAMMA);`
+`plan_interpolation(interp_GAMMAt);`
+`plan_interpolation(interp_dGAMMAt);`
+`const double g   = execute_interpolation(interp_GAMMA);`
+`const double gt  = execute_interpolation(interp_GAMMAt);`
+`const double dg  = execute_interpolation(interp_dGAMMA);`
+`const double dgt = execute_interpolation(interp_dGAMMAt);`
+``
+`free_interpolation(interp_GAMMA);`
+`free_interpolation(interp_GAMMAt);`
+`free_interpolation(interp_dGAMMA);`
+`free_interpolation(interp_dGAMMAt);`
+``
+`const double f = dgt/gt+2*dg/g;`
+`assert(!isfinite(f));`
+``
+`REMOVE_FIELD(GAMMA_rf);`
+`REMOVE_FIELD(GAMMAt_rf);`
+`REMOVE_FIELD(dGAMMA_D1_rf);`
+`REMOVE_FIELD(dGAMMAt_D1_rf);`
+
+`return f;`
+`}`

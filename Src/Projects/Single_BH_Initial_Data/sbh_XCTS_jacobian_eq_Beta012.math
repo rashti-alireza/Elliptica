@@ -1,0 +1,188 @@
+# Jacobian equation for Beta_U0, Beta_U1, Beta_U2 (all components of shift):
+
+# Manifold or grid Dimension
+Dimension = 3;
+
+# point on manifold shown by:
+Point = ijk;
+
+# C macors
+C_macro  = GET_FIELD(name);
+C_macro2 = PREP_FIELD(name);
+C_macro3 = JACOBIAN_DERIVATIVE(name);
+C_macro4 = GET_FIELD_UNUSED(name);
+
+# C arguments for jacobian of derivative
+C_arg = (j_name,ijk,lmn);
+C_arg2 = [ijk == lmn]; # for kd
+C_arg3 = [0]; # for U
+
+# main function:
+`#include "sbh_headers.h"`;
+`#include "maths_equation_solvings_lib.h"`;
+`#include "sbh_XCTS_equations_lib.h"\n\n`;
+
+`void *jacobian_eq_?(void *vp1,void *vp2)\n{`;
+
+# NOTE: THE FOLLOWING MACRO DECLARES OR DEFINES THE FOLLOWING VARIABLES:
+# patch, S, B, E_Trans, node, Ni, Nj, K0, Nk, i,j,k
+# THUS, DO NOT DEFINE THEM AGAIN.
+`  DDM_SCHUR_JACOBIAN_EQ_DECLARE`;
+`  unsigned ijk,lmn;/* for Jacobian entries J[ijk][lmn] */`;
+`  const double kd[2] = {0.,1.};/* Kronecker delta */`;
+`  const double U_U0[1] = {1.};`;
+`  const double U_U1[1] = {1.};`;
+`  const double U_U2[1] = {1.};`;
+
+# declare for cpi
+Declare = 
+{
+ # Kroneker delta
+ (obj = field, name = kd, rank = 0, none,C_arg2); 
+
+ # Jacobian: 1st derivative
+ (obj = Field,name = JB0, rank = D, C_macro3,C_arg);
+ 
+ # Jacobian: 2nd derivative
+ (obj = Field,name = JJB0, rank = DD, C_macro3,C_arg);
+ 
+ # conformal factor
+ (obj = Field,name = psi, rank = 0, C_macro);
+ 
+ # conformal factor pd
+ (obj = Field,name = dpsi, rank = D, C_macro4);
+ 
+ # eta = alpha*psi
+ (obj = Field,name = eta, rank = 0, C_macro);
+
+ # eta pd
+ (obj = Field,name = deta, rank = D, C_macro4);
+
+ # conformal metric inverse
+ (obj = Field,name = _gammaI, rank = UU, C_macro4);
+
+ # conformal connections
+ (obj = Field,name = _Gamma, rank = UDD, C_macro4);
+
+ # conformal connections 1st derivative
+ (obj = Field,name = _dGamma, rank = UDDD, C_macro4);
+
+ # unit vector
+ (obj = Field,name = U, rank = U, none,C_arg3);
+
+}
+
+# symmetries for Cpi:
+Symm[JJB0(j,k)         = JJB0(k,j)];
+Symm[_gammaI(i,j)      = _gammaI(j,i)];
+Symm[_Gamma(i,j,k)     = _Gamma(i,k,j)];
+Symm[_dGamma(i,j,k,l)  = _dGamma(i,k,j,l)];
+
+##########################################################################
+#    NOTE1: There are different calculation parts, in each part use 
+# different names for new variables.
+#
+#    NOTE2: In Schur domain decomposition method we need two types of
+# matrices for Jacobian of Newton-Raphson scheme, matrix B and matrix E. 
+# Let's say Jx = -F in Newton-Raphson scheme; then,
+# B[i][j] = d[F(f(ijk))]/df(lmn), where i = map[ijk], and j = map[lmn] and
+# ijk takes their values ON INNER POINTS
+# of a patch, namley those collocated points that don't reach boundary of
+# the patch, and lmn runs over ALL BUT the interface points (interface
+# points are those located between two patches).
+# E[i][j] = d[F(f(ijk))]/df(lmn), where i = map[ijk], and j = map[lmn] and
+# ijk takes their values ON INNER POINTS and lmn runs over INTERFACE points.
+#
+#    PRAGMATICALLY:
+# Fill both B matrix and E matrix part WITH THE SAME EQUATION, you just
+# need to write two duplicated equations for each part, 
+# and if you're using interim variables use different names for each part.
+#
+#    NOTE3: For each part which doesn't exist, let it be 0.
+##########################################################################
+
+
+###############################################
+####### B matrix: J[ijk][lmn] in Jx = -F ###### 
+###############################################
+`  DDM_SCHUR_JACOBIAN_EQ_Bpart_OPEN\n`;
+
+dLnOf_alpha_B(i) = deta(i)/eta -7*dpsi(i)/psi;
+
+t1_B(i) =  _gammaI(-j,-m)*(U(i)*JJB0(j,m) + _dGamma(i,m,l,j)*kd*U(-l));
+
+t2_B(i) =  _gammaI(-j,-m)*( _Gamma(i,m,l)*U(-l)*JB0(j) + _Gamma(i,j,n)*U(-n)*JB0(m));
+
+t3_B(i) =  _gammaI(-j,-m)*_Gamma(i,j,n)*KD(-n,-np)*_Gamma(np,m,l)*U(-l)*kd;
+ 
+t4_B(i) = -_gammaI(-j,-m)*(_Gamma(n,m,j)*U(i)*JB0(-n)+_Gamma(n,m,j)*KD(-n,-np)*_Gamma(i,np,l)*U(-l)*kd);
+
+t5_B(i) =  _gammaI(-i,-m)*(U(jp)*JJB0(j,m)*KD(-jp,-j) + KD(-jp,-j)*_dGamma(jp,m,l,j)*U(-l)*kd);
+
+t6_B(i) =  _gammaI(-i,-m)*(_Gamma(j,m,l)*U(-l)*JB0(-j) + KD(-jp,-j)*_Gamma(jp,j,n)*U(-n)*JB0(m));
+
+t7_B(i) =  _gammaI(-i,-m)*KD(-jp,-j)*_Gamma(jp,j,n)*KD(-n,-np)*_Gamma(np,m,l)*U(-l)*kd;
+
+t8_B(i) = -_gammaI(-i,-m)*(_Gamma(n,m,j)*U(-j)*JB0(-n) + _Gamma(n,m,j)*KD(-n,-np)*KD(-jp,-j)*_Gamma(jp,np,l)*U(-l)*kd);
+
+t9_B(i)  = -2/3*_gammaI(-i,-j)*( U(l)*JJB0(lp,j)*KD(-l,-lp) + KD(-l,-lp)*_Gamma(l,lp,m)*U(-m)*JB0(j) );
+
+t10_B(i) = -2/3*_gammaI(-i,-j)*_dGamma(l,lp,m,j)*KD(-l,-lp)*U(-m)*kd;
+
+t11_B(i) = -dLnOf_alpha_B(-j)*( \
+_gammaI(j,-m)*(U(i)*JB0(m)+_Gamma(i,m,l)*U(-l)*kd)+ \
+_gammaI(i,-m)*(U(j)*JB0(m)+_Gamma(j,m,l)*U(-l)*kd)- \
+2/3*_gammaI(i,j)*(U(-m)*JB0(m)+KD(-mp,-m)*_Gamma(mp,m,l)*U(-l)*kd)\
+);
+
+Bpart(i) = t1_B(i)+t2_B(i)+t3_B(i)+t4_B(i)+t5_B(i)+t6_B(i)+t7_B(i)+t8_B(i)+t9_B(i)+t10_B(i)+t11_B(i);
+
+
+`  B[i][j] = Bpart_U?;\n`;
+`  DDM_SCHUR_JACOBIAN_EQ_Bpart_CLOSE\n`;
+###############################################
+
+
+###############################################
+###### E matrix: J[ijk][lmn] in Jx = -F #######
+###############################################
+`  DDM_SCHUR_JACOBIAN_EQ_Epart_OPEN\n`;
+
+dLnOf_alpha_E(i) = deta(i)/eta -7*dpsi(i)/psi;
+
+t1_E(i) =  _gammaI(-j,-m)*(U(i)*JJB0(j,m) + _dGamma(i,m,l,j)*kd*U(-l));
+
+t2_E(i) =  _gammaI(-j,-m)*( _Gamma(i,m,l)*U(-l)*JB0(j)+_Gamma(i,j,n)*U(-n)*JB0(m));
+
+t3_E(i) =  _gammaI(-j,-m)*_Gamma(i,j,n)*KD(-n,-np)*_Gamma(np,m,l)*U(-l)*kd;
+ 
+t4_E(i) = -_gammaI(-j,-m)*(_Gamma(n,m,j)*U(i)*JB0(-n)+_Gamma(n,m,j)*KD(-n,-np)*_Gamma(i,np,l)*U(-l)*kd);
+
+t5_E(i) =  _gammaI(-i,-m)*(U(jp)*JJB0(j,m)*KD(-jp,-j) + KD(-jp,-j)*_dGamma(jp,m,l,j)*U(-l)*kd);
+
+t6_E(i) =  _gammaI(-i,-m)*(_Gamma(j,m,l)*U(-l)*JB0(-j) + KD(-jp,-j)*_Gamma(jp,j,n)*U(-n)*JB0(m));
+
+t7_E(i) =  _gammaI(-i,-m)*KD(-jp,-j)*_Gamma(jp,j,n)*KD(-n,-np)*_Gamma(np,m,l)*U(-l)*kd;
+
+t8_E(i) = -_gammaI(-i,-m)*(_Gamma(n,m,j)*U(-j)*JB0(-n) + _Gamma(n,m,j)*KD(-n,-np)*KD(-jp,-j)*_Gamma(jp,np,l)*U(-l)*kd);
+
+t9_E(i)  = -2/3*_gammaI(-i,-j)*( U(l)*JJB0(lp,j)*KD(-l,-lp) + KD(-l,-lp)*_Gamma(l,lp,m)*U(-m)*JB0(j) );
+
+t10_E(i) = -2/3*_gammaI(-i,-j)*_dGamma(l,lp,m,j)*KD(-l,-lp)*U(-m)*kd;
+
+t11_E(i) = -dLnOf_alpha_E(-j)*( \
+_gammaI(j,-m)*(U(i)*JB0(m)+_Gamma(i,m,l)*U(-l)*kd)+ \
+_gammaI(i,-m)*(U(j)*JB0(m)+_Gamma(j,m,l)*U(-l)*kd)- \
+2/3*_gammaI(i,j)*(U(-m)*JB0(m)+KD(-mp,-m)*_Gamma(mp,m,l)*U(-l)*kd)\
+);
+
+Epart(i) = t1_E(i)+t2_E(i)+t3_E(i)+t4_E(i)+t5_E(i)+t6_E(i)+t7_E(i)+t8_E(i)+t9_E(i)+t10_E(i)+t11_E(i);
+
+
+`  E_Trans[j][i] = Epart_U?;\n`;
+`  DDM_SCHUR_JACOBIAN_EQ_Epart_CLOSE\n`;
+###############################################
+
+`  return 0;`;
+`}`;
+
