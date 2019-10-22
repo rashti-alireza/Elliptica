@@ -450,6 +450,11 @@ unsigned IsItHorizonPatch(const Patch_T *const patch)
     if (regex_search("_right_BH_surrounding_.+",patch->name))
       return 1;
   }
+  else if (strcmp_i(patch->grid->kind,"SBH_CubedSpherical_grid"))
+  {
+    if (regex_search("BH_surrounding_.+",patch->name))
+      return 1;
+  }
   else if (strcmp_i(patch->grid->kind,"SNS_CubedSpherical+Box_grid"))
   {
     return 0;

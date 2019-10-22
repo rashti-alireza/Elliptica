@@ -9,7 +9,7 @@
 void sbh_solve_initial_data_eqs(Grid_T *const grid)
 {
   pr_line_custom('='); 
-  printf("{ Solving initial data equations for Binary BH and NS ...\n");
+  printf("{ Solving initial data equations for Single BH ...\n");
   
   sEquation_T **field_eq/* field equation */,
               **bc_eq/* B.C. for the field */,
@@ -26,11 +26,7 @@ void sbh_solve_initial_data_eqs(Grid_T *const grid)
   Solve_Equations_T *SolveEqs = init_solve_equations(grid);
   SolveEqs->solving_order = GetParameterS_E("Solving_Order");
   SolveEqs->FieldUpdate  = sbh_SolveEqs_FieldUpdate;
-  SolveEqs->SourceUpdate = sbh_SolveEqs_SourceUpdate;
   SolveEqs->StopCriteria = sbh_stop_criteria;
-  
-  Grid_T *phi_grid = sbh_phi_grid(grid);/* phi needed to be solved only in NS */
-  add_special_grid_solve_equations(phi_grid,"phi",SolveEqs);
   
   const int max_iter = GetParameterI_E("Solving_Max_Number_of_Iteration");
   int iter = 0;
@@ -51,13 +47,8 @@ void sbh_solve_initial_data_eqs(Grid_T *const grid)
   }
   pr_line_custom('=');
   
-  /* updating enthalpy so one can find the new NS surface 
-  // for the next iteration */
-  sbh_update_enthalpy_and_denthalpy(grid);
-  
-  /* free SolveEqs and phi grid */
+  /* free SolveEqs */
   free_solve_equations(SolveEqs);
-  sbh_free_phi_grid(phi_grid);
   
   /* free data base of equations */
   free_db_eqs(field_eq);
@@ -65,7 +56,7 @@ void sbh_solve_initial_data_eqs(Grid_T *const grid)
   free_db_eqs(jacobian_field_eq);
   free_db_eqs(jacobian_bc_eq);
   
-  printf("} Solving initial data equations for Binary BH and NS ==> Done.\n");
+  printf("} Solving initial data equations for Single BH ==> Done.\n");
   pr_clock();
   pr_line_custom('='); 
 }
@@ -193,41 +184,10 @@ static void sbh_backtrack(Grid_T *const grid,const char *const name)
   
 }
 
-/* updating sources after field is solved */
-void sbh_SolveEqs_SourceUpdate(Grid_T *const grid,const char *const name)
-{
-  Tij_IF_CTS_psi6Sources(grid);
-  
-  /*if (!strcmp(name,"phi"))
-  {
-    unsigned p;
-    FOR_ALL_PATCHES(p,grid)
-    {
-      Patch_T *patch = grid->patch[p];
-      
-      if (!IsItNSPatch(patch))
-        continue;
-        
-      Tij_IF_CTS_enthalpy(patch);
-      sbh_update_derivative_enthalpy(patch);
-      sbh_update_rho0(patch);
-      sbh_update_derivative_rho0(patch);
-    }
-  }*/
-  
-  UNUSED(name);
-}
-
 /* updating field after they were solved */
 void sbh_SolveEqs_FieldUpdate(Patch_T *const patch,const char *const name)
 {
-  if (!strcmp(name,"phi"))
-  {
-    sbh_update_derivative_phi(patch);
-    //Tij_IF_CTS_enthalpy(patch);
-    //sbh_update_derivative_enthalpy(patch);
-  }
-  else if (!strcmp(name,"psi"))
+  if (!strcmp(name,"psi"))
   {
     sbh_update_derivative_psi(patch);
   }
@@ -256,99 +216,6 @@ void sbh_SolveEqs_FieldUpdate(Patch_T *const patch,const char *const name)
   
 }
 
-/* at Euler's equation for phi field we need to confine the grid 
-// to only NS patches. this function collect all of NS patches and
-// make a new grid out of them and return it.
-// NOTE, WE ARE NOT ALLOWED TO ADD FIELD TO THIS GRID, generally
-// since, we want to keep track of the value of field, we do not
-// deep copy in structures.
-// ->return value: set of all NS patches as a separate grid */
-static Grid_T *sbh_phi_grid(Grid_T *const grid)
-{
-  Grid_T *phi_grid = 0;
-  
-  if (strcmp_i(grid->kind,"BBN_CubedSpherical_grid"))
-  {
-    phi_grid       = alloc_grid();
-    phi_grid->kind = grid->kind;
-    phi_grid->gn   = grid->gn;
-    /* NS at left composed of 6 cubed spherical + 1 Cartesian: */
-    phi_grid->np = 7;
-    sbh_phi_grid_CS(phi_grid,grid);
-  }
-  else
-    abortEr(NO_JOB);
-  
-  return phi_grid;
-}
-
-/* free only those thing we allocate for this particular grid */
-static void sbh_free_phi_grid(Grid_T *grid)
-{
-  if (!grid)
-    return;
-  
-  unsigned p;
-  
-  FOR_ALL_PATCHES(p,grid)
-  {
-    Patch_T *patch = grid->patch[p];
-    
-    free_patch_interface(patch);
-    free_patch_SolMan_jacobian(patch);
-    free_patch_SolMan_method_Schur(patch);
-    free(patch->solving_man);
-  }
-  free_2d_mem(grid->patch,grid->np);
-  free(grid);
-}
-
-/* confining the whole grid to only NS grid for phi in cubed spherical coords. */
-static void sbh_phi_grid_CS(Grid_T *const phi_grid,Grid_T *const grid)
-{
-  unsigned p,i;
-  
-  /* NS at left composed of 6 cubed spherical + 1 Cartesian,
-  // and 1 more to be Null = 8 */
-  phi_grid->patch = calloc(8,sizeof(*phi_grid->patch));
-  pointerEr(phi_grid->patch);
-  
-  i = 0;
-  FOR_ALL_PATCHES(p,grid)
-  {
-    Patch_T *patch = grid->patch[p];
-    
-    if (IsItNSPatch(patch))/* since we have only one NS we can use IsItNSPatch */
-    {
-      phi_grid->patch[i] = calloc(1,sizeof(*phi_grid->patch[i]));
-      pointerEr(phi_grid->patch[i]);
-      /* note, for the following all of the pointers inside the structures 
-      // will be equal, since this is not a deep copy. */
-      phi_grid->patch[i][0]    = patch[0];
-      phi_grid->patch[i]->pn   = i;
-      phi_grid->patch[i]->grid = phi_grid;
-      phi_grid->nn            += patch->nn;
-      /* the following needs to be constructed from scratch */
-      phi_grid->patch[i]->interface = 0;
-      phi_grid->patch[i]->solving_man = calloc(1,sizeof(*phi_grid->patch[i]->solving_man));
-      pointerEr(phi_grid->patch[i]->solving_man);
-      phi_grid->patch[i]->solving_man[0] = patch->solving_man[0];
-      phi_grid->patch[i]->solving_man->patch = phi_grid->patch[i];
-      phi_grid->patch[i]->solving_man->jacobian = 0;
-      phi_grid->patch[i]->solving_man->nj       = 0;
-      phi_grid->patch[i]->solving_man->method->Schur_Complement = 0;
-      phi_grid->patch[i]->solving_man->method->SchurC = 0;
-      
-      ++i;
-    }
-  }
-  
-  assert(i==7);
-  
-  /* no let's fill up phi_grid->patch[?]->interface */
-  realize_geometry(phi_grid);      
-}
-
 static void sbh_XCTS_fill_db_eqs(sEquation_T ***const field_eq, 
                           sEquation_T ***const bc_eq, 
                           sEquation_T ***const jacobian_field_eq,
@@ -360,12 +227,6 @@ static void sbh_XCTS_fill_db_eqs(sEquation_T ***const field_eq,
   *jacobian_field_eq   = init_eq();
   *jacobian_bc_eq      = init_eq();
 
- /* phi equations */
-  add_eq(field_eq,sbh_eq_phi,"eq_phi");
-  add_eq(bc_eq   ,sbh_bc_phi,"bc_phi");
-  add_eq(jacobian_field_eq,sbh_jacobian_eq_phi,"jacobian_eq_phi");
-  add_eq(jacobian_bc_eq   ,sbh_jacobian_bc_phi,"jacobian_bc_phi");
-  
   /* psi equations */
   add_eq(field_eq,sbh_eq_psi,"eq_psi");
   add_eq(bc_eq   ,sbh_bc_psi,"bc_psi");

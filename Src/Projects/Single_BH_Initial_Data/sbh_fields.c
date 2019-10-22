@@ -15,49 +15,6 @@ void sbh_allocate_fields(Grid_T *const grid)
   {
     Patch_T *patch = grid->patch[p];
     
-    /* only if the patch covers a part of the NS add the following fields */
-    if (IsItNSPatch(patch))
-    {
-      /* scalar for the irrotational part of fluid i.e h*u = dphi+W in NS and 
-      // its partial derivatives*/
-      add_field("phi",0,patch,YES);
-      ADD_FIELD_NoMem(dphi_D2)
-      ADD_FIELD_NoMem(dphi_D1)
-      ADD_FIELD_NoMem(dphi_D0)
-      
-      ADD_FIELD_NoMem(ddphi_D2D2)
-      ADD_FIELD_NoMem(ddphi_D1D2)
-      ADD_FIELD_NoMem(ddphi_D1D1)
-      ADD_FIELD_NoMem(ddphi_D0D2)
-      ADD_FIELD_NoMem(ddphi_D0D0)
-      ADD_FIELD_NoMem(ddphi_D0D1)
-
-      /* enthalpy in NS and its partial derivatives */
-      add_field("enthalpy",0,patch,YES);
-      ADD_FIELD_NoMem(denthalpy_D2)
-      ADD_FIELD_NoMem(denthalpy_D1)
-      ADD_FIELD_NoMem(denthalpy_D0)
-  
-      /* rest mass density in NS and its partial derivatives */
-      add_field("rho0",0,patch,YES);
-      ADD_FIELD_NoMem(drho0_D2)
-      ADD_FIELD_NoMem(drho0_D1)
-      ADD_FIELD_NoMem(drho0_D0)
-      
-      /* the first component of fluid four velocity, i.e. 
-      // u_mu = (u_U0,u_U1,u_U2,u_U3) and its partial derivatives */
-      add_field("u0",0,patch,YES);
-      ADD_FIELD_NoMem(du0_D2)
-      ADD_FIELD_NoMem(du0_D1)
-      ADD_FIELD_NoMem(du0_D0)
-      
-      /* spin part of fluid W^i */
-      add_field("W_U0",0,patch,YES);
-      add_field("W_U1",0,patch,YES);
-      add_field("W_U2",0,patch,YES);
-      
-    }
-    
     /* only if patch covers horzion */
     if (IsItHorizonPatch(patch))
     {
@@ -75,17 +32,6 @@ void sbh_allocate_fields(Grid_T *const grid)
       ADD_FIELD_NoMem(_dHS_U2D1)
       ADD_FIELD_NoMem(_dHS_U2D0)
     }
-    
-    /* conformal total energy density */
-    add_field("_E",0,patch,YES);
-    
-    /* conformal trace of stress tensor */
-    add_field("_S",0,patch,YES);
-    
-    /* conformal momentum current */
-    add_field("_J_U0",0,patch,YES);
-    add_field("_J_U1",0,patch,YES);
-    add_field("_J_U2",0,patch,YES);
     
     /* conformal factor and its derivative */
     add_field("psi",0,patch,YES);
@@ -333,18 +279,6 @@ void sbh_partial_derivatives_fields(Grid_T *const grid)
   {
     Patch_T *patch = grid->patch[p];
     
-    /* phi derivatives */
-    sbh_update_derivative_phi(patch);
-    
-    /* enthalpy derivatives */
-    sbh_update_derivative_enthalpy(patch);
-    
-    /* rho0 derivatives */
-    sbh_update_derivative_rho0(patch);
-    
-    /* u0 derivatives */
-    sbh_update_derivative_u0(patch);
-    
     /* normal vector on Horizon derivatives */
     sbh_update_derivative_HS(patch);
     
@@ -419,129 +353,6 @@ void sbh_update_Beta_U2(Patch_T *const patch)
   
 }
 
-/* updating derivative */
-void sbh_update_derivative_phi(Patch_T *const patch)
-{
-  /* only if the patch covers a part of the NS add the following fields */
-  if (IsItNSPatch(patch))
-  {
-    /* phi's derivatives */
-    DECLARE_FIELD(phi)
-
-    DECLARE_AND_EMPTY_FIELD(dphi_D2)
-    DECLARE_AND_EMPTY_FIELD(dphi_D1)
-    DECLARE_AND_EMPTY_FIELD(dphi_D0)
-    
-    DECLARE_AND_EMPTY_FIELD(ddphi_D2D2)
-    DECLARE_AND_EMPTY_FIELD(ddphi_D1D2)
-    DECLARE_AND_EMPTY_FIELD(ddphi_D1D1)
-    DECLARE_AND_EMPTY_FIELD(ddphi_D0D2)
-    DECLARE_AND_EMPTY_FIELD(ddphi_D0D0)
-    DECLARE_AND_EMPTY_FIELD(ddphi_D0D1)
-
-    dphi_D2->v = Partial_Derivative(phi,"z");
-    dphi_D1->v = Partial_Derivative(phi,"y");
-    dphi_D0->v = Partial_Derivative(phi,"x");
-    
-    ddphi_D2D2->v = Partial_Derivative(dphi_D2,"z");
-    ddphi_D1D2->v = Partial_Derivative(dphi_D1,"z");
-    ddphi_D1D1->v = Partial_Derivative(dphi_D1,"y");
-    ddphi_D0D2->v = Partial_Derivative(dphi_D0,"z");
-    ddphi_D0D0->v = Partial_Derivative(dphi_D0,"x");
-    ddphi_D0D1->v = Partial_Derivative(dphi_D0,"y");
-  }
-}
-
-
-/* updating derivative */
-void sbh_update_derivative_enthalpy(Patch_T *const patch)
-{
-  /* only if the patch covers a part of the NS add the following fields */
-  if (IsItNSPatch(patch))
-  {
-    /* enthalpy derivatives */
-    DECLARE_FIELD(enthalpy)
-
-    DECLARE_AND_EMPTY_FIELD(denthalpy_D2)
-    DECLARE_AND_EMPTY_FIELD(denthalpy_D1)
-    DECLARE_AND_EMPTY_FIELD(denthalpy_D0)
-    
-    denthalpy_D2->v = Partial_Derivative(enthalpy,"z");
-    denthalpy_D1->v = Partial_Derivative(enthalpy,"y");
-    denthalpy_D0->v = Partial_Derivative(enthalpy,"x");
-  }
-}
-
-/* update rho0 */
-void sbh_update_rho0(Patch_T *const patch)
-{
-  /* only if the patch covers a part of the NS add the following fields */
-  if (IsItNSPatch(patch))
-  {
-    EoS_T *eos = initialize_EoS();
-    GET_FIELD(enthalpy)
-    PREP_FIELD(rho0)
-    const unsigned nn = patch->nn;
-    unsigned ijk;
-
-    for (ijk = 0; ijk < nn; ++ijk)
-    {
-      eos->h    = enthalpy[ijk];
-      rho0[ijk] = eos->rest_mass_density(eos);
-      
-      if (1)/* make sure h won't get too less than 1 */
-      {
-        if (!isfinite(rho0[ijk]))
-           printf("put rho0(h = %g) = 0.0.\n",enthalpy[ijk]);
-          //abortEr("rho0 update went wrong due to bad enthalpy.\n");
-      }
-      
-      if (!isfinite(rho0[ijk]))
-        rho0[ijk] = 0;
-    }
-    free_EoS(eos);
-  }
-}
-
-/* updating derivative */
-void sbh_update_derivative_rho0(Patch_T *const patch)
-{
-  /* only if the patch covers a part of the NS add the following fields */
-  if (IsItNSPatch(patch))
-  {
-    /* rho0 derivatives */
-    DECLARE_FIELD(rho0)
-
-    DECLARE_AND_EMPTY_FIELD(drho0_D2)
-    DECLARE_AND_EMPTY_FIELD(drho0_D1)
-    DECLARE_AND_EMPTY_FIELD(drho0_D0)
-    
-    drho0_D2->v = Partial_Derivative(rho0,"z");
-    drho0_D1->v = Partial_Derivative(rho0,"y");
-    drho0_D0->v = Partial_Derivative(rho0,"x");
-  }    
-
-}
-
-/* updating derivative */
-void sbh_update_derivative_u0(Patch_T *const patch)
-{
-  /* only if the patch covers a part of the NS add the following fields */
-  if (IsItNSPatch(patch))
-  {
-    /* u0 derivatives */
-    DECLARE_FIELD(u0)
-
-    DECLARE_AND_EMPTY_FIELD(du0_D2)
-    DECLARE_AND_EMPTY_FIELD(du0_D1)
-    DECLARE_AND_EMPTY_FIELD(du0_D0)
-    
-    du0_D2->v = Partial_Derivative(u0,"z");
-    du0_D1->v = Partial_Derivative(u0,"y");
-    du0_D0->v = Partial_Derivative(u0,"x");
-  }
-  
-}
 /* updating derivative */
 void sbh_update_derivative_HS(Patch_T *const patch)
 {
@@ -820,77 +631,3 @@ void sbh_update_derivative_Beta_U2(Patch_T *const patch)
   
 }
 
-/* after finding new NS surface, root finder might find h ~ 1
-// so put it h = 1, to prevent nan in matter fields  */
-static void cleaning_enthalpy(Patch_T *const patch)
-{
-  if(!IsItNSSurface(patch))
-    return;
-    
-  GET_FIELD(enthalpy)
-  const unsigned *const n = patch->n;
-  unsigned ijk,i,j;
-  
-  /* for cubed spherical we know k = n[2]-1 is on the surface */
-  if (patch->coordsys == CubedSpherical)
-  {
-    for (i = 0; i < n[0]; ++i)
-      for (j = 0; j < n[1]; ++j)
-      {
-        /* go over the NS surface */
-        ijk = L(n,i,j,n[2]-1);
-        enthalpy[ijk] = 1;
-      }
-  }
-  else
-    abortEr(NO_OPTION);
-
-}
-
-/* updating enthalpy and its derivative */
-void sbh_update_enthalpy_and_denthalpy(Grid_T *const grid)
-{
-  unsigned p;
-  
-  FOR_ALL_PATCHES(p,grid)
-  {
-    Patch_T *patch = grid->patch[p];
-    
-    if(!IsItNSPatch(patch))
-      continue;
-      
-    Tij_IF_CTS_enthalpy(patch);
-    sbh_update_derivative_enthalpy(patch);  
-  }
-
-}
-
-/* update enthalpy,denthalpy,rho0, drho0, u0, _J^i, _E and _S
-// which used in stress energy tensor. note: dphi^i and W^i are assumed ready. */
-void sbh_update_stress_energy_tensor(Grid_T *const grid)
-{
-  pr_line_custom('=');
-  printf("Updating enthalpy, rest-mass density and their derivatives ...\n");
-  
-  unsigned p;
-  
-  FOR_ALL_PATCHES(p,grid)
-  {
-    Patch_T *patch = grid->patch[p];
-    
-    if(!IsItNSPatch(patch))
-      continue;
-    
-    Tij_IF_CTS_enthalpy(patch);
-    cleaning_enthalpy(patch);
-    sbh_update_derivative_enthalpy(patch);
-    sbh_update_rho0(patch);
-    sbh_update_derivative_rho0(patch);
-  
-  }
-  printf("Updating enthalpy, rest-mass density and their derivatives ==> Done.\n");
-  pr_clock();
-  pr_line_custom('=');
-
-  Tij_IF_CTS_psi6Sources(grid);
-}
