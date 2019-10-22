@@ -5,6 +5,24 @@
 
 #include "cubed_spherical_coordinate.h"
 
+/* filling with cubed spherical coordinate patches for SBH grid */
+void fill_patches_SBH_CubedSpherical_grid(Grid_T *const grid)
+{
+  const unsigned N_outermost_split = (unsigned) GetParameterI_E("Number_of_Outermost_Split");
+  unsigned i,pn;
+  
+  pn = 0;
+  populate_central_BH_surrounding(grid,pn);
+  pn += 6; /* +6 cubed sphere */
+  
+  for (i = 0; i < N_outermost_split; i++)
+  {
+    populate_outermost(grid,pn,i);
+    pn += 6; /* +6 cubed sphere */
+  }
+
+}
+
 /* filling with cubed spherical coordinate patches for SNS grid */
 void fill_patches_SNS_CubedSpherical_grid(Grid_T *const grid)
 {
@@ -1618,6 +1636,200 @@ static void populate_left_NS_surrounding(Grid_T *const grid,const unsigned pn)
   }
 }
 
+/* populating properties of patch for central BH surrounding */
+static void populate_central_BH_surrounding(Grid_T *const grid,const unsigned pn)
+{
+  unsigned p;/* patch */
+  
+  for (p = pn; p < pn+6; p++)
+  {
+    Patch_T *const patch = grid->patch[p];
+    Field_T *R1 = add_field("surface_function",0,patch,NO);
+    double *R1_array;
+    Flag_T side = p-pn;
+    char name[100] = {'\0'};
+    char var[100] = {'\0'};
+    struct Ret_S ret;
+    unsigned n,ijk;
+    
+    /* filling flags */
+    patch->CoordSysInfo->CubedSphericalCoord->side = side;
+    patch->CoordSysInfo->CubedSphericalCoord->type = SR_T_CS;
+    
+    /* filling grid */
+    patch->grid = grid;
+    
+    /* filling patch number */
+    patch->pn = p;
+    
+    /* filling inner boundary */
+    patch->innerB = 1;
+    
+    /* filling n */
+    patch->n[0] = (unsigned)GetParameterI("n_a");
+    patch->n[1] = (unsigned)GetParameterI("n_b");
+    patch->n[2] = (unsigned)GetParameterI("n_c");
+    /* check for override */
+    sprintf(var,"BH");
+    make_keyword_parameter(&ret,var,"n");
+    n = (unsigned)GetParameterI(ret.s0);
+    if (n != INT_MAX)	patch->n[0] = n;
+    n = (unsigned)GetParameterI(ret.s1);
+    if (n != INT_MAX)	patch->n[1] = n;
+    n = (unsigned)GetParameterI(ret.s2);
+    if (n != INT_MAX)	patch->n[2] = n;
+      
+    if(patch->n[0] == INT_MAX)
+      abortEr("n_a could not be set.\n");
+    if(patch->n[1] == INT_MAX)
+      abortEr("n_b could not be set.\n");
+    if(patch->n[2] == INT_MAX)
+      abortEr("n_c could not be set.\n");
+    
+    /* filling nn */
+    patch->nn = total_nodes_patch(patch);
+    
+    switch(side)
+    {
+      case UP:
+        /* filling name */
+        sprintf(name,"grid%u_BH_surrounding_up",grid->gn);
+        patch->name = dup_s(name);
+        
+        /* filling Rs */
+        sprintf(var,"grid%u_BH_surface_function_up",grid->gn);
+        R1_array = GetParameterArrayF_E(var);
+        patch->CoordSysInfo->CubedSphericalCoord->R1_f = R1;
+        sprintf(var,"grid%u_surrounding_box_length",grid->gn);
+        patch->CoordSysInfo->CubedSphericalCoord->xc2 = GetParameterDoubleF_E(var);
+        R1->v = alloc_double(patch->nn);
+        
+        for (ijk = 0; ijk < patch->nn; ++ijk)
+          R1->v[ijk] = R1_array[ijk];
+      
+      break;
+      case DOWN:
+        /* filling name */
+        sprintf(name,"grid%u_BH_surrounding_down",grid->gn);
+        patch->name = dup_s(name);
+        
+        /* filling Rs */
+        sprintf(var,"grid%u_BH_surface_function_down",grid->gn);
+        R1_array = GetParameterArrayF_E(var);
+        patch->CoordSysInfo->CubedSphericalCoord->R1_f = R1;
+        sprintf(var,"grid%u_surrounding_box_length",grid->gn);
+        patch->CoordSysInfo->CubedSphericalCoord->xc2 = -GetParameterDoubleF_E(var);
+        R1->v = alloc_double(patch->nn);
+        
+        for (ijk = 0; ijk < patch->nn; ++ijk)
+          R1->v[ijk] = R1_array[ijk];
+      
+      break;
+      case LEFT:
+        /* filling name */
+        sprintf(name,"grid%u_BH_surrounding_left",grid->gn);
+        patch->name = dup_s(name);
+        
+        /* filling Rs */
+        sprintf(var,"grid%u_BH_surface_function_left",grid->gn);
+        R1_array = GetParameterArrayF_E(var);
+        patch->CoordSysInfo->CubedSphericalCoord->R1_f = R1;
+        sprintf(var,"grid%u_surrounding_box_length",grid->gn);
+        patch->CoordSysInfo->CubedSphericalCoord->xc2 = -GetParameterDoubleF_E(var);
+        R1->v = alloc_double(patch->nn);
+        
+        for (ijk = 0; ijk < patch->nn; ++ijk)
+          R1->v[ijk] = R1_array[ijk];
+      
+      break;
+      case RIGHT:
+        /* filling name */
+        sprintf(name,"grid%u_BH_surrounding_right",grid->gn);
+        patch->name = dup_s(name);
+        
+        /* filling Rs */
+        sprintf(var,"grid%u_BH_surface_function_right",grid->gn);
+        R1_array = GetParameterArrayF_E(var);
+        patch->CoordSysInfo->CubedSphericalCoord->R1_f = R1;
+        sprintf(var,"grid%u_surrounding_box_length",grid->gn);
+        patch->CoordSysInfo->CubedSphericalCoord->xc2 = GetParameterDoubleF_E(var);
+        R1->v = alloc_double(patch->nn);
+        
+        for (ijk = 0; ijk < patch->nn; ++ijk)
+          R1->v[ijk] = R1_array[ijk];
+      
+      break;
+      case BACK:
+        /* filling name */
+        sprintf(name,"grid%u_BH_surrounding_back",grid->gn);
+        patch->name = dup_s(name);
+        
+        /* filling Rs */
+        sprintf(var,"grid%u_BH_surface_function_back",grid->gn);
+        R1_array = GetParameterArrayF_E(var);
+        patch->CoordSysInfo->CubedSphericalCoord->R1_f = R1;
+        sprintf(var,"grid%u_surrounding_box_length",grid->gn);
+        patch->CoordSysInfo->CubedSphericalCoord->xc2 = -GetParameterDoubleF_E(var);
+        R1->v = alloc_double(patch->nn);
+        
+        for (ijk = 0; ijk < patch->nn; ++ijk)
+          R1->v[ijk] = R1_array[ijk];
+      
+      break;
+      case FRONT:
+        /* filling name */
+        sprintf(name,"grid%u_BH_surrounding_front",grid->gn);
+        patch->name = dup_s(name);
+        
+        /* filling Rs */
+        sprintf(var,"grid%u_BH_surface_function_front",grid->gn);
+        R1_array = GetParameterArrayF_E(var);
+        patch->CoordSysInfo->CubedSphericalCoord->R1_f = R1;
+        sprintf(var,"grid%u_surrounding_box_length",grid->gn);
+        patch->CoordSysInfo->CubedSphericalCoord->xc2 = GetParameterDoubleF_E(var);
+        R1->v = alloc_double(patch->nn);
+        
+        for (ijk = 0; ijk < patch->nn; ++ijk)
+          R1->v[ijk] = R1_array[ijk];
+      
+      break;
+      default:
+        abortEr(NO_OPTION);
+    }
+    
+    /* filling center */
+    sprintf(var,"grid%u_BH_center_a",grid->gn);
+    patch->c[0] = GetParameterDoubleF_E(var);
+    sprintf(var,"grid%u_BH_center_b",grid->gn);
+    patch->c[1] = GetParameterDoubleF_E(var);
+    sprintf(var,"grid%u_BH_center_c",grid->gn);
+    patch->c[2] = GetParameterDoubleF_E(var);
+    
+    /* filling min */
+    patch->min[0] = -1;
+    patch->min[1] = -1;
+    patch->min[2] = 0;
+    
+    /* filling max */
+    patch->max[0] = 1;
+    patch->max[1] = 1;
+    patch->max[2] = 1;
+    
+    /* filling flags */
+    patch->coordsys = CubedSpherical;
+    
+    /* collocation */
+    patch->collocation[0] = Chebyshev_Extrema;
+    patch->collocation[1] = Chebyshev_Extrema;
+    patch->collocation[2] = Chebyshev_Extrema;
+    
+    /* basis */
+    patch->basis[0] = Chebyshev_Tn_BASIS;
+    patch->basis[1] = Chebyshev_Tn_BASIS;
+    patch->basis[2] = Chebyshev_Tn_BASIS;
+  }
+}
+
 /* populating properties of patch for central NS surrounding */
 static void populate_central_NS_surrounding(Grid_T *const grid,const unsigned pn)
 {
@@ -2068,6 +2280,29 @@ void alloc_patches_SNS_CubedSpherical_grid(Grid_T *const grid)
   unsigned Np = 13;/* number of patches without outermost's 
                    2 sets of cubed sphere = 2*6
                    1 central boxes */
+  unsigned outermost;
+  unsigned i;
+  
+  outermost = (unsigned) GetParameterI("Number_of_Outermost_Split");
+  if (outermost != (unsigned)INT_MAX)
+    Np += 6*outermost;
+  
+  grid->patch = calloc((Np+1),sizeof(*grid->patch));
+  pointerEr(grid->patch);
+  
+  for (i = 0; i < Np; i++)
+  {
+    grid->patch[i] = calloc(1,sizeof(*grid->patch[i]));
+    pointerEr(grid->patch[i]);
+  }
+  
+}
+
+/* memory alloc patches for single black hole using cubed spherical grid */
+void alloc_patches_SBH_CubedSpherical_grid(Grid_T *const grid)
+{
+  unsigned Np = 6;/* number of patches without outermost's 
+                   1 sets of cubed sphere = 1*6 */
   unsigned outermost;
   unsigned i;
   

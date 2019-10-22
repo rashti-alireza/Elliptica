@@ -60,6 +60,9 @@ static void fill_patches(Grid_T *const grid)
   else if (strcmp_i(grid->kind,"SNS_CubedSpherical_grid"))
     fill_patches_SNS_CubedSpherical_grid(grid); 
     
+  else if (strcmp_i(grid->kind,"SBH_CubedSpherical_grid"))
+    fill_patches_SBH_CubedSpherical_grid(grid); 
+    
   else
     abortEr_s("There is no such '%s' grid kind.\n",grid->kind);
 }

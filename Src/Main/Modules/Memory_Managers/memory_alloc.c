@@ -87,6 +87,8 @@ void alloc_patches(Grid_T *const grid)
     alloc_patches_SNS_CubedSpherical_Box_grid(grid);
   else if (strcmp_i(grid->kind,"SNS_CubedSpherical_grid"))
     alloc_patches_SNS_CubedSpherical_grid(grid);
+  else if (strcmp_i(grid->kind,"SBH_CubedSpherical_grid"))
+    alloc_patches_SBH_CubedSpherical_grid(grid);
   else
     abortEr_s("No such %s kind for grid.\n",grid->kind);
 }
