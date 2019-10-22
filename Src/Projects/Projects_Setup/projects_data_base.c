@@ -31,5 +31,8 @@ int projects_data_base(void)
   add_project(Single_NS_Initial_Data,"Single_NS_Initial_Data",
   "Constructing Initial Data for Single Neutron Star");
   
+  add_project(Single_BH_Initial_Data,"Single_BH_Initial_Data",
+  "Constructing Initial Data for Single Black-Hole");
+  
   return EXIT_SUCCESS;
 }

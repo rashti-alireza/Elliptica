@@ -13,3 +13,4 @@ int Fundamental_Tests(void);
 int Binary_BH_NS_Initial_Data(void);
 int TOV_star(void);
 int Single_NS_Initial_Data(void);
+int Single_BH_Initial_Data(void);

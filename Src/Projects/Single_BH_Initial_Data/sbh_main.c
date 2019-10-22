@@ -6,7 +6,7 @@
 #include "sbh_main.h"
 
 /* constructing initial data for system of binary black hole neutron star */
-int Binary_BH_NS_Initial_Data(void)
+int Single_BH_Initial_Data(void)
 {
   /* print some description */
   pr_clock();
