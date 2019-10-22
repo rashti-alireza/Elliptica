@@ -303,14 +303,11 @@ void sbh_free_conformal_metric_derivatives(Patch_T *const patch)
 /* populate conformal metric and its inverse */
 void sbh_free_data_gammas(Grid_T *const grid)
 {
-  /* roll off distance at exp(-(r/r0)^4)  */
-  const double r0   = GetParameterD_E("RollOff_distance");
   const double M_BH = GetParameterD_E("BH_mass");
   const double a    = GetParameterD_E("BH_X_U2")*M_BH;
   const double a2   = SQR(a);
-  double H,k0,k1,k2;/* in ds^2 = (eta_ij+2*H*ki*kj)dx^i*dx^j */
-  /* center of BH */
-  const double C_BH = 0.5*GetParameterD_E("BH_NS_separation");
+  const double C_BH = 0;
+  double H,k0,k1,k2;/* in ds^2 = (delta_ij+2*H*ki*kj)dx^i*dx^j */
   unsigned p,ijk,nn;
   
   FOR_ALL_PATCHES(p,grid)
@@ -337,10 +334,9 @@ void sbh_free_data_gammas(Grid_T *const grid)
       double y   = patch->node[ijk]->x[1]-C_BH;
       double z   = patch->node[ijk]->x[2];
       double r2 = SQR(x)+SQR(y)+SQR(z);
-      double r  = sqrt(r2);
       double rbar2  = 0.5*(r2-a2+sqrt(SQR(r2-a2)+4*a2*SQR(z)));
       double rbar   = sqrt(rbar2);
-      double e   = exp(-pow(r/r0,4));
+      double e   = 1;
       
       k0 = (rbar*x+a*y)/(rbar2+a2);
       k1 = (rbar*y-a*x)/(rbar2+a2);
@@ -621,7 +617,7 @@ static void populate_KSgammas_KSalpha_KSBeta(Patch_T *const patch)
   const double M_BH = GetParameterD_E("BH_mass");
   const double a    = GetParameterD_E("BH_X_U2")*M_BH;
   const double a2   = SQR(a);
-  const double C_BH = 0.5*GetParameterD_E("BH_NS_separation");
+  const double C_BH = 0;
   const unsigned nn = patch->nn;
   unsigned ijk;
   double H,k0,k1,k2;/* in ds^2 = (eta_ij+2*H*ki*kj)dx^i*dx^j */

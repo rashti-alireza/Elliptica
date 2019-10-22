@@ -308,7 +308,7 @@ void bbn_free_data_gammas(Grid_T *const grid)
   const double M_BH = GetParameterD_E("BH_mass");
   const double a    = GetParameterD_E("BH_X_U2")*M_BH;
   const double a2   = SQR(a);
-  double H,k0,k1,k2;/* in ds^2 = (eta_ij+2*H*ki*kj)dx^i*dx^j */
+  double H,k0,k1,k2;/* in ds^2 = (delta_ij+2*H*ki*kj)dx^i*dx^j */
   /* center of BH */
   const double C_BH = 0.5*GetParameterD_E("BH_NS_separation");
   unsigned p,ijk,nn;

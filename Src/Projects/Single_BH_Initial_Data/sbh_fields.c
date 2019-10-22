@@ -33,6 +33,17 @@ void sbh_allocate_fields(Grid_T *const grid)
       ADD_FIELD_NoMem(_dHS_U2D0)
     }
     
+    /* conformal total energy density */
+    add_field("_E",0,patch,YES);
+    
+    /* conformal trace of stress tensor */
+    add_field("_S",0,patch,YES);
+    
+    /* conformal momentum current */
+    add_field("_J_U0",0,patch,YES);
+    add_field("_J_U1",0,patch,YES);
+    add_field("_J_U2",0,patch,YES);
+    
     /* conformal factor and its derivative */
     add_field("psi",0,patch,YES);
     ADD_FIELD_NoMem(dpsi_D2)
