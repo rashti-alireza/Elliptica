@@ -51,6 +51,9 @@ static Grid_T *make_next_grid_using_previous_grid(Grid_T *const grid_prev)
   /* updating enthalpy */
   bbn_update_enthalpy_and_denthalpy(grid_prev);
   
+  /* extrapolate fluid fields outside NS */
+  extrapolate_fluid_fields_outsideNS(grid_prev);
+  
   /* find y_CM by demanding P_ADM = 0 */
   find_center_of_mass(grid_prev);
   
@@ -70,9 +73,6 @@ static Grid_T *make_next_grid_using_previous_grid(Grid_T *const grid_prev)
   
   /* find the Omega_BH to acquire the desired BH spin */
   //find_BH_Omega(grid_prev);
-  
-  /* extrapolate fluid fields outside NS */
-  extrapolate_fluid_fields_outsideNS(grid_prev);
   
   /* find NS surface using h = 1 */
   find_NS_surface(grid_prev,GridParams);
@@ -247,6 +247,8 @@ static void adjust_NS_center(Grid_T *const grid)
 /* find BH_NS_orbital_angular_velocity using force balance equation */
 static void find_BH_NS_Omega_force_balance_eq(Grid_T *const grid)
 {
+  printf("NOT TESTED");
+    return;
   char par_name[1000];
   const char *stem;
   const double *NS_center;
@@ -506,13 +508,14 @@ static void find_Euler_eq_const(Grid_T *const grid)
   update_parameter_double_format("Euler_equation_constant",Euler_const[0]);
   printf("Euler Equation const. updated: %g -> %g\n",guess[0],Euler_const[0]);
   free(Euler_const);
-  free(Euler_const);
   free_root_finder(root);
 }
 
 /* find y_CM by demanding P_ADM = 0 */
 static void find_center_of_mass(Grid_T *const grid)
 {
+  printf("NOT TESTED");
+  return;
   Root_Finder_T *root = init_root_finder(1);
   Observable_T *obs   = init_observable(grid);
   double  *y_CM = 0;
