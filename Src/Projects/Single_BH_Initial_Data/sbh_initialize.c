@@ -412,7 +412,7 @@ _gamma_D1D2[ijk] + pow(_HS_U2[ijk], 2)*_gamma_D2D2[ijk];
 static void init_field_KerrSchild(Grid_T *const grid,const double a_BH, const double M_BH)
 {
   pr_line_custom('=');
-  printf("Initializing the fields using TOV and Kerr-Schild solution ...\n");
+  printf("Initializing the fields using Kerr-Schild solution ...\n");
 
   const double C_BH  = 0;
   const double a2_BH = SQR(a_BH);/* spin vector of BH */
@@ -583,7 +583,7 @@ KSbeta_D2[ijk]*_gammaI_U2U2[ijk];
     REMOVE_FIELD(KSalpha)
   }
   
-  printf("Initializing the fields using TOV and Kerr-Schild solution ==> Done.\n");
+  printf("Initializing the fields using Kerr-Schild solution ==> Done.\n");
   pr_clock();
   pr_line_custom('=');
 
