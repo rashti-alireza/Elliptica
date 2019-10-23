@@ -34,6 +34,9 @@ static Grid_T *make_next_grid_using_previous_grid(Grid_T *const grid_prev)
   Grid_T *grid_next = 0;
   struct Grid_Params_S *GridParams = init_GridParams();/* adjust some pars for construction of next grid */
   
+  /* calculate ADM momenta */
+  calculate_P_ADMs(grid_prev);
+  
   /* find the BH radius to acquire the desired BH mass */
   //find_BH_radius(grid_prev);
   
@@ -848,5 +851,23 @@ static void free_Grid_Params_S(struct Grid_Params_S *par)
   //_free(par->NS_R_Ylm->realClm);
   //_free(par->NS_R_Ylm->imagClm);
   _free(par);
+}
+
+/* calculating ADM momenta */
+static void calculate_P_ADMs(Grid_T *const grid)
+{
+  Observable_T *obs   = init_observable(grid);
+  
+  obs->quantity = "ADM_momentums";
+  plan_observable(obs);
+  
+  const double Px_ADM = obs->Px_ADM(obs);
+  const double Py_ADM = obs->Py_ADM(obs);
+  const double Pz_ADM = obs->Pz_ADM(obs);
+  
+  printf("ADM momenta:\n"
+         "(Px,Py,Pz) = (%e,%e,%e)\n",Px_ADM,Py_ADM,Pz_ADM);
+  
+  free_observable(obs);
 }
 

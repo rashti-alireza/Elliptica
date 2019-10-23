@@ -46,6 +46,10 @@ void plan_observable(Observable_T *const obs)
   {
     populate_observable_BBN_CS(obs);
   }
+  else if (strcmp_i(grid->kind,"SBH_CubedSpherical_grid"))
+  {
+    populate_observable_BBN_CS(obs);/* works as well for SBH */
+  }
   else
     abortEr(NO_OPTION);
   

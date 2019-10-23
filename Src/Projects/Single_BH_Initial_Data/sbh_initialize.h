@@ -33,3 +33,4 @@ static void find_X_and_patch(const double *const x,const char *const hint,Grid_T
 static double interpolate_from_patch_prim(const char *const field,const double *const X,Patch_T *const patch);
 static void free_Grid_Params_S(struct Grid_Params_S *par);
 static struct Grid_Params_S *init_GridParams(void);
+static void calculate_P_ADMs(Grid_T *const grid);
