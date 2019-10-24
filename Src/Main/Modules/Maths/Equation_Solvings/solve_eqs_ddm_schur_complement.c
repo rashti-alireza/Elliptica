@@ -2349,6 +2349,69 @@ static void solve_Bx_f(Patch_T *const patch)
   Schur->x = x;
 }
 
+/* verifying the jacobian of equations, if they have been written correctly.
+// by jacobian we mean matrix J in Jx = -F in Newton method. */
+void verify_Jacobian_of_equations(Grid_T *const grid)
+{
+  int status;
+  Solve_Equations_T *SolveEqs = init_solve_equations(grid);
+  char **field_name = 0;/* name of all fields to be solved */
+  unsigned nf = 0;/* number of all fields */
+  unsigned f;/* dummy index */
+  
+  /* making up an example like the below */
+  
+  /* read order of fields to be solved from input */
+  SolveEqs->solving_order = GetParameterS_E("Solving_Order");
+  field_name = read_fields_in_order(SolveEqs,&nf);
+  
+  /* picking up labeling, mapping etc. */
+  preparing_ingredients(SolveEqs);
+  
+  /* solving fields in order */
+  for (f = 0; f < nf; ++f)
+  {
+    printf("Verifying the Jacobian of equation for '%s' ...\n",field_name[f]);
+    
+    /* set the name of the field we are solving it */
+    SolveEqs->field_name = field_name[f];
+
+    set_solving_man_cf(SolveEqs);/* solving_man->cf */
+    status = Jwritten_vs_Jequation(SolveEqs);
+    
+    printf("Verifying the Jacobian of equation for '%s' --> Done.\n",field_name[f]);
+    check_test_result(status);
+  }
+  
+  /* free */
+  free_2d_mem(field_name,nf);
+  free_solve_equations(SolveEqs);
+}
+
+/* compare J written by user and J computed from (eq(F+dF)-eq(F))/dF.
+// ->return value: status which is TEST_UNSUCCESSFUL or TEST_SUCCESSFUL */
+static int Jwritten_vs_Jequation(Grid_T *const grid)
+{
+  Matrix_T *J_Schur,*J_Reg;
+  int status;
+  
+  /* if number grid only has one patch */
+  if (grid->np == 1)
+    abortEr(INCOMPLETE_FUNC);
+  
+  J_Schur = making_J_Schur_Method(grid);
+  J_Reg   = making_J_Old_Fashion(grid);
+  
+  status = compare_Js(grid,J_Reg,J_Schur);
+  free_matrix(J_Reg);
+  free_matrix(J_Schur);
+  
+  return status;
+}
+
+
+
+
 /* testing ddm schur complement method.
 // matrix J in Jx = -F in Newton method is made by two methods of
 // schur complement and regular one and then they compared.
@@ -2409,6 +2472,7 @@ static int solve_field_test(Grid_T *const grid)
   
   return status;
 }
+
 
 /* comparing entries of J_Schur and J_Reg
 // ->return value: TEST_UNSUCCESSFUL or TEST_SUCCESSFUL */
