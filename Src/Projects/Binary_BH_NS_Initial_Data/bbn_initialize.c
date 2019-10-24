@@ -847,7 +847,7 @@ static void find_X_and_patch(const double *const x,const char *const hint,Grid_T
   found = needle->ans;
   
   /* if it could not find X in neither the given hint patch nor its neighbors */
-  if (!needle->Nans)
+  if (needle->Nans)
   {
     *ppatch = grid->patch[found[0]];
     X_of_x(X,x,*ppatch);
