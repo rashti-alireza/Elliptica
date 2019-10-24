@@ -10,8 +10,8 @@ EXEDIR = $(TOP)/Bin
 CC = gcc
 
 #gcc flags
-#GCCFLAGS = -fopenmp -O3 #-g3 #-O3 #-Wall -W # mild
-GCCFLAGS = -std=c11 -pedantic -Wextra -Werror -Wall -W \
+GCCFLAGS = -fopenmp -O3 #-g3 #-O3 #-Wall -W # mild
+#GCCFLAGS = -std=c11 -pedantic -Wextra -Werror -Wall -W \
   -Wmissing-prototypes -Wstrict-prototypes\
   -Wconversion -Wshadow -Wpointer-arith\
   -Wcast-qual -Wcast-align\
@@ -27,8 +27,8 @@ projects_path  = $(TOP)/Src/Projects/Projects_Setup
 projects_path += $(TOP)/Src/Projects/Poisson/Laplace_Inhom
 projects_path += $(TOP)/Src/Projects/Tests/Fundamentals
 projects_path += $(TOP)/Src/Projects/TOV_Stars
-#projects_path += $(TOP)/Src/Projects/Single_NS_Initial_Data
-#projects_path += $(TOP)/Src/Projects/Single_BH_Initial_Data
+projects_path += $(TOP)/Src/Projects/Single_NS_Initial_Data
+projects_path += $(TOP)/Src/Projects/Single_BH_Initial_Data
 projects_path += $(TOP)/Src/Projects/Binary_BH_NS_Initial_Data
 
 

@@ -109,7 +109,7 @@ Matrix_T *get_j_matrix(const Patch_T *const patch,const char *type);
 void prepare_Js_jacobian_eq(Patch_T *const patch,const char * const *types);
 double read_matrix_entry_ccs(Matrix_T *const m, const long r,const long c);
 fJs_T *get_j_reader(const Matrix_T *const m);
-void test_solve_ddm_schur_complement(Grid_T *const grid);
+void test_Jacobian_of_equations(Solve_Equations_T *const SolveEqs);
 void test_root_finders(Grid_T *const grid);
 
 /* defining some macros to improve the readability and simplicity */

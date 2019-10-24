@@ -19,7 +19,7 @@ typedef enum DDM_SCHUR_COMPLEMENT_FLAG_T
 }DDM_SC_Flag_T;
 
 int ddm_schur_complement(Solve_Equations_T *const SolveEqs);
-void test_solve_ddm_schur_complement(Grid_T *const grid);
+void test_Jacobian_of_equations(Solve_Equations_T *const SolveEqs);
 fJs_T *get_j_reader(const Matrix_T *const m);
 void prepare_Js_jacobian_eq(Patch_T *const patch,const char * const *types);
 Matrix_T *get_j_matrix(const Patch_T *const patch,const char *type);
@@ -75,13 +75,13 @@ static void making_B_single_patch(Patch_T *const patch);
 static void solve_Bx_f(Patch_T *const patch);
 static void update_field_single_patch(Patch_T *const patch);
 static void checks_and_constraints(const Grid_T *const grid);
-static Matrix_T *making_J_Schur_Method(Grid_T *const grid);
-static Matrix_T *making_J_Old_Fashion(Grid_T *const grid);
-static int solve_field_test(Grid_T *const grid);
+static Matrix_T *making_J_Schur_Method(Solve_Equations_T *const SolveEqs);
+static Matrix_T *making_J_Old_Fashion(Solve_Equations_T *const SolveEqs);
+static int Jwritten_vs_Jequation(Solve_Equations_T *const SolveEqs);
 static double *make_col_F(Grid_T *const grid);
-static Matrix_T *making_J_Old_Fashion(Grid_T *const grid);
 static int compare_Js(Grid_T *const grid,const Matrix_T *const J_Reg,const Matrix_T *const J_Schur);
 static void free_schur_f_g(Grid_T *const grid);
+static void making_F_and_C_Regular(Patch_T *const patch);
 
 
 

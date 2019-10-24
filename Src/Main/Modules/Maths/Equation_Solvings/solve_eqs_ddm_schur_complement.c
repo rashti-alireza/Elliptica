@@ -635,6 +635,52 @@ static void making_F_and_C(Patch_T *const patch)
   /* compress all of C matrices in each patch to ccs  */
   Schur->C_ccs = compress_stack2ccs(Schur->C,np,Schur->NI_p,Schur->NI_total,Schur->NI,YES);
   free(Schur->C);
+  Schur->C = 0;
+}
+
+/* making F and C parts. refer to the note on the very top. 
+// C kept in regular format. */
+static void making_F_and_C_Regular(Patch_T *const patch)
+{
+  DDM_Schur_Complement_T *const Schur = patch->solving_man->method->SchurC;
+  Sewing_T **const sewing = Schur->sewing;
+  const unsigned np = Schur->np;
+  unsigned p;
+  
+  /* allocation matrices */
+  Schur->F = calloc(np,sizeof(*Schur->F));
+  pointerEr(Schur->F);
+  Schur->C = calloc(np,sizeof(*Schur->C));
+  pointerEr(Schur->C);
+  
+  /* go thru all of sewings  */
+  for (p = 0; p < np; ++p)
+  {
+    unsigned pr;
+    unsigned rowF,colF,rowC,colC;
+    
+    /* if there is no connection bewteen the patches, skip */
+    if (!sewing[p])
+      continue;
+    
+    /* allocate F and C matrices */
+    rowF = sewing[p]->NI;/* must be number of interface point for patch[p] */
+    rowC = sewing[p]->NI;/* must be number of interface point for patch[p] */
+    colF = Schur->NS;/* must be number of subdomain point for patch */
+    colC = Schur->NI;/* must be number of interface point for patch */
+    
+    Schur->F[p] = alloc_matrix(REG_SF,rowF,colF);
+    Schur->C[p] = alloc_matrix(REG_SF,rowC,colC);
+    
+    /* go thru all of pairs in each sewings */
+    for (pr = 0; pr < sewing[p]->npair; ++pr)
+    {
+      Pair_T *const pair = sewing[p]->pair[pr];
+      
+      populate_F_and_C(patch,pair);/* filling F and C pertinent to this pair */
+    }
+  }
+  
 }
 
 /* filling F and C pertinent to this pair */
@@ -2349,39 +2395,50 @@ static void solve_Bx_f(Patch_T *const patch)
   Schur->x = x;
 }
 
-/* testing ddm schur complement method.
-// matrix J in Jx = -F in Newton method is made by two methods of
-// schur complement and regular one and then they compared.
-*/
-void test_solve_ddm_schur_complement(Grid_T *const grid)
+/* verifying the jacobian of equations, if they have been written correctly.
+// by jacobian we mean matrix J in Jx = -F in Newton method. 
+// it also could be used for testing of jacobian made by Shur method. */
+void test_Jacobian_of_equations(Solve_Equations_T *const SolveEqs)
 {
-  int status;
-  Solve_Equations_T *SolveEqs = init_solve_equations(grid);
   char **field_name = 0;/* name of all fields to be solved */
   unsigned nf = 0;/* number of all fields */
   unsigned f;/* dummy index */
-  
-  /* making up an example like the below */
+  char status_str[100];
+  int status;
   
   /* read order of fields to be solved from input */
-  SolveEqs->solving_order = GetParameterS_E("Solving_Order");
   field_name = read_fields_in_order(SolveEqs,&nf);
-  
-  /* picking up labeling, mapping etc. */
-  preparing_ingredients(SolveEqs);
   
   /* solving fields in order */
   for (f = 0; f < nf; ++f)
   {
-    printf("Testing Schur Complement Method:\n");
+    printf("Verifying the Jacobian of equation for '%s' ...\n",field_name[f]);
     
     /* set the name of the field we are solving it */
     SolveEqs->field_name = field_name[f];
+    
+    /* set solving_man->cf */
+    set_solving_man_cf(SolveEqs);
+    
+    /* set solving_man->settings */
+    set_solving_man_settings(SolveEqs);
+    
+    /* picking up labeling, mapping etc. */
+    preparing_ingredients(SolveEqs);
 
-    set_solving_man_cf(SolveEqs);/* solving_man->cf */
-    status = solve_field_test(grid);/* solve field[f] */
-    printf("Testing Schur Complement for %s: ",field_name[f]);
-    check_test_result(status);
+    /* set the name of the field we are solving it */
+    SolveEqs->field_name = field_name[f];
+
+    status = Jwritten_vs_Jequation(SolveEqs);
+    
+    if (status == TEST_SUCCESSFUL)
+      sprintf(status_str,":)");
+    else if (status == TEST_UNSUCCESSFUL)
+      sprintf(status_str,":(");
+    else
+      abortEr(NO_OPTION);
+      
+    printf("Verifying the Jacobian of equation for '%s' --> %s\n",field_name[f],status_str);
   }
   
   /* free */
@@ -2389,10 +2446,11 @@ void test_solve_ddm_schur_complement(Grid_T *const grid)
   free_solve_equations(SolveEqs);
 }
 
-/* function for testing of Schur complement algorithm purposes.
+/* compare J written by user and J computed from (eq(F+dF)-eq(F))/dF.
 // ->return value: status which is TEST_UNSUCCESSFUL or TEST_SUCCESSFUL */
-static int solve_field_test(Grid_T *const grid)
+static int Jwritten_vs_Jequation(Solve_Equations_T *const SolveEqs)
 {
+  Grid_T *const grid = get_grid_solve_equations(SolveEqs);
   Matrix_T *J_Schur,*J_Reg;
   int status;
   
@@ -2400,8 +2458,8 @@ static int solve_field_test(Grid_T *const grid)
   if (grid->np == 1)
     abortEr(INCOMPLETE_FUNC);
   
-  J_Schur = making_J_Schur_Method(grid);
-  J_Reg   = making_J_Old_Fashion(grid);
+  J_Schur = making_J_Schur_Method(SolveEqs);
+  J_Reg   = making_J_Old_Fashion( SolveEqs);
   
   status = compare_Js(grid,J_Reg,J_Schur);
   free_matrix(J_Reg);
@@ -2458,12 +2516,14 @@ static void free_schur_f_g(Grid_T *const grid)
 
 /* making J by varying of F in Jx = -F.
 // ->return value: J in regular order. */
-static Matrix_T *making_J_Old_Fashion(Grid_T *const grid)
+static Matrix_T *making_J_Old_Fashion(Solve_Equations_T *const SolveEqs)
 {
+  Grid_T *const grid = get_grid_solve_equations(SolveEqs);
   Matrix_T *J_Reg = alloc_matrix(REG_SF,grid->nn,grid->nn);
   double **const J = J_Reg->reg->A;
   const double CONST = 1.;
   const unsigned npatch = grid->np;
+   
   double *F1,*F2;
   unsigned R;/* reference */
   unsigned p,pn,ijk,df;
@@ -2485,13 +2545,16 @@ static Matrix_T *making_J_Old_Fashion(Grid_T *const grid)
   for (pn = 0; pn < npatch; ++pn)
   {
     Patch_T *patch2 = grid->patch[pn];
-    Field_T *f = patch2->pool[LookUpField("alpha",patch2)];
+    Field_T *f = patch2->pool[LookUpField(SolveEqs->field_name,patch2)];
     double EPS = CONST/patch2->nn;
     
     for (df = 0; df < patch2->nn; ++df)
     {
       f->v[df] += EPS;
       free_coeffs(f);
+      
+      if (SolveEqs->FieldUpdate)/* if any FieldUpdate set */
+        SolveEqs->FieldUpdate(patch2,SolveEqs->field_name);
       
       for (p = 0; p < npatch; ++p)
       {
@@ -2559,8 +2622,9 @@ static double *make_col_F(Grid_T *const grid)
 // also it returns it back to normal order not new labeled one which
 // used in Schur complement method.
 // ->return value: J in regular order. */
-static Matrix_T *making_J_Schur_Method(Grid_T *const grid)
+static Matrix_T *making_J_Schur_Method(Solve_Equations_T *const SolveEqs)
 {
+  Grid_T *const grid = get_grid_solve_equations(SolveEqs);
   Matrix_T *J_Schur = alloc_matrix(REG_SF,grid->nn,grid->nn);
   double **const J = J_Schur->reg->A; 
   DDM_Schur_Complement_T *Schur;
@@ -2576,7 +2640,7 @@ static Matrix_T *making_J_Schur_Method(Grid_T *const grid)
   {
     Patch_T *patch = grid->patch[p];
     making_B_and_E(patch);
-    making_F_and_C(patch);
+    making_F_and_C_Regular(patch);
   }
   
   R = 0;
@@ -2586,15 +2650,15 @@ static Matrix_T *making_J_Schur_Method(Grid_T *const grid)
     unsigned i,j,k;
     
     Schur = patch->solving_man->method->SchurC;
-    NS = Schur->NS;
-    NI = Schur->NI;
-    inv = Schur->inv;
-    Iinv = Schur->Iinv;
-    B = Schur->B;
-    Et = Schur->E_Trans;
-    F = Schur->F;
-    C = Schur->C;
-    NI_p = Schur->NI_p;
+    NS    = Schur->NS;
+    NI    = Schur->NI;
+    inv   = Schur->inv;
+    Iinv  = Schur->Iinv;
+    B     = Schur->B;
+    Et    = Schur->E_Trans;
+    F     = Schur->F;
+    C     = Schur->C;
+    NI_p  = Schur->NI_p;
     
     for (i = 0; i < NS; ++i)
       for (j = 0; j < NS; ++j)

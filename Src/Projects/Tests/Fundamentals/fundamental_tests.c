@@ -20,26 +20,6 @@ int Fundamental_Tests(void)
     test_EoS(grid);
   }
   
-  
-  if (strstr_i(GetParameterS("Test_Schur_Complement"),"yes"))
-  {
-     /* fill data base of equations */
-    fundamental_tests_fill_db_eqs(&field_eq,&bc_eq,&jacobian_field_eq,&jacobian_bc_eq);
-    /* initializing and solving */
-    initialize_solving_man(grid,field_eq,bc_eq,jacobian_field_eq,jacobian_bc_eq);/* populating solution_man */
-    /* allocating alpha field */
-    enable_fields(grid);
-    /* initial data for alpha field */
-    fundamental_test_initial_data_alpha(grid);
-    /* testing schur complement method */
-    test_solve_ddm_schur_complement(grid);
-    
-    free_db_eqs(field_eq);
-    free_db_eqs(bc_eq);
-    free_db_eqs(jacobian_field_eq);
-    free_db_eqs(jacobian_bc_eq);
-  }
-    
   if (strcmp_i(GetParameterS("Test_Jacobian_Elements_Js_Values"),"yes"))
   {
     test_dfs_df_values(grid);
