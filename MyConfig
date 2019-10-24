@@ -1,0 +1,37 @@
+#My Configurations:
+
+#Binary name
+EXE = abc
+
+#Binary output
+EXEDIR = $(TOP)/Bin
+
+#Compiler
+CC = gcc
+
+#gcc flags
+#GCCFLAGS = -fopenmp -O3 #-g3 #-O3 #-Wall -W # mild
+GCCFLAGS = -std=c11 -pedantic -Wextra -Werror -Wall -W \
+  -Wmissing-prototypes -Wstrict-prototypes\
+  -Wconversion -Wshadow -Wpointer-arith\
+  -Wcast-qual -Wcast-align\
+  -Wwrite-strings -Wnested-externs\
+  -fshort-enums -fno-common -Dinline= -fopenmp -g3 # -O3 #-O2 # aggressive reliable C 11
+
+DEFFLAGS = -DPragma_OpenMP_2d  -DPragma_OpenMP_ \
+	   -DPragma_OpenMP_1d -DPragma_OpenMP_Patch
+
+
+#Projects to be compiled
+projects_path  = $(TOP)/Src/Projects/Projects_Setup
+projects_path += $(TOP)/Src/Projects/Poisson/Laplace_Inhom
+projects_path += $(TOP)/Src/Projects/Tests/Fundamentals
+projects_path += $(TOP)/Src/Projects/TOV_Stars
+#projects_path += $(TOP)/Src/Projects/Single_NS_Initial_Data
+#projects_path += $(TOP)/Src/Projects/Single_BH_Initial_Data
+projects_path += $(TOP)/Src/Projects/Binary_BH_NS_Initial_Data
+
+
+
+
+
