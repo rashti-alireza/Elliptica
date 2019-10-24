@@ -76,6 +76,12 @@ void bbn_allocate_fields(Grid_T *const grid)
       ADD_FIELD_NoMem(_dHS_U2D0)
     }
     
+    /* Hamiltonian and Momentum constraints */
+    ADD_FIELD(ham_constraint);
+    ADD_FIELD(mom_constraint_U0);
+    ADD_FIELD(mom_constraint_U1);
+    ADD_FIELD(mom_constraint_U2);
+  
     /* conformal total energy density */
     add_field("_E",0,patch,YES);
     

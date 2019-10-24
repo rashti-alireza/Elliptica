@@ -51,5 +51,6 @@ void bbn_update_Beta_U1(Patch_T *const patch);
 void bbn_update_Beta_U2(Patch_T *const patch);
 double bbn_NS_baryonic_mass(Grid_T *const grid,const double Euler_C);
 double force_balance_root_finder_eq(void *params,const double *const x);
+void bbn_calculate_constraints(Grid_T *const grid);
 void bbn_update_enthalpy_and_denthalpy(Grid_T *const grid);
 void bbn_update_stress_energy_tensor(Grid_T *const grid);
