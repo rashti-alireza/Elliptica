@@ -99,11 +99,6 @@ static void populate_observable_BBN_CS(Observable_T *const obs)
     pointerEr(obs->ADM);
     obs->N_ADM = N;
     
-    //test
-    for (n = 0; n < N; ++n)
-      printf("%s added\n",patches[n]->name);
-    //end
-    
     /* fill ADM struct for each patch */
     for (n = 0; n < N; ++n)
     {
