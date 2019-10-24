@@ -186,7 +186,12 @@ static void adjust_NS_center(Grid_T *const grid)
       x[1] = patch->node[ijk]->x[1]+R[1];
       x[2] = patch->node[ijk]->x[2]+R[2];
       find_X_and_patch(x,hint,grid,Xp,&patchp);
-      shifted_enthalpy->v[ijk] = interpolate_from_patch_prim("enthalpy",Xp,patchp);
+      
+      /* if point x located outside of NS surrounding */
+      if (LookUpField("enthalpy",patchp) < 0)
+        shifted_enthalpy->v[ijk] = 1;
+      else
+        shifted_enthalpy->v[ijk] = interpolate_from_patch_prim("enthalpy",Xp,patchp);
     }
     
   }
@@ -247,7 +252,7 @@ static void adjust_NS_center(Grid_T *const grid)
 /* find BH_NS_orbital_angular_velocity using force balance equation */
 static void find_BH_NS_Omega_force_balance_eq(Grid_T *const grid)
 {
-  printf("NOT TESTED");
+  printf("NOT TESTED\n");
     return;
   char par_name[1000];
   const char *stem;
@@ -353,6 +358,7 @@ static void find_NS_center(Grid_T *const grid)
       assert(stem);
       stem++;
       add_parameter(par_name,stem);
+      printf("NS center found at (%g,%g,%g).\n",NS_center[0],NS_center[1],NS_center[2]);
       free(NS_center);
       break;
     }
@@ -514,7 +520,7 @@ static void find_Euler_eq_const(Grid_T *const grid)
 /* find y_CM by demanding P_ADM = 0 */
 static void find_center_of_mass(Grid_T *const grid)
 {
-  printf("NOT TESTED");
+  printf("NOT TESTED\n");
   return;
   Root_Finder_T *root = init_root_finder(1);
   Observable_T *obs   = init_observable(grid);

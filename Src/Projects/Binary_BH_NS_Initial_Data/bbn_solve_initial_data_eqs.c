@@ -42,7 +42,7 @@ void bbn_solve_initial_data_eqs(Grid_T *const grid)
     printf("        |---> %s Equations ...\n",SolveEqs->solving_order);
     
     /* test if jacobian of equations written correctly */
-    if (1) test_Jacobian_of_equations(SolveEqs);
+    if (0) test_Jacobian_of_equations(SolveEqs);
     
     /* solve equations */
     solve_eqs(SolveEqs);
