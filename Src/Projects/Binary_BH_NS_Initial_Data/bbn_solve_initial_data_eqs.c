@@ -41,6 +41,10 @@ void bbn_solve_initial_data_eqs(Grid_T *const grid)
     printf("{ Iteration %d For Solving XCTS Equations at a Fixed Resolution ...\n",iter);
     printf("        |---> %s Equations ...\n",SolveEqs->solving_order);
     
+    /* test if jacobian of equations written correctly */
+    if (1) test_Jacobian_of_equations(SolveEqs);
+    
+    /* solve equations */
     solve_eqs(SolveEqs);
     
     /* some prints */
