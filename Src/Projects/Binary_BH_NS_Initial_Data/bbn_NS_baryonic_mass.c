@@ -107,7 +107,10 @@ sqrt(L2)/(alpha*h);
   eos->h = h;
   rho0   = eos->rest_mass_density(eos);
   if(!isfinite(rho0))
+  {
     rho0 = 0;
+    u0   = 0;
+  }
   baryonic_mass_integrand->v[ijk] = rho0*u0*alpha*psi6;
   }
   free_EoS(eos);
