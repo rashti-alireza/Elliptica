@@ -317,6 +317,8 @@ static void find_NS_center(Grid_T *const grid)
   double *NS_center;
   Root_Finder_T *root = init_root_finder(3);
   struct NC_Center_RootFinder_S params[1];
+  const double RESIDUAL = sqrt(GetParameterD_E("RootFinder_Tolerance"));
+  Flag_T success_f = NONE;
   double guess[3];/* initial guess for root finder */
   char par_name[1000];
   unsigned p;
@@ -330,6 +332,7 @@ static void find_NS_center(Grid_T *const grid)
   root->MaxIter     = (unsigned)GetParameterI_E("RootFinder_Max_Number_of_Iteration");
   root->x_gss       = guess;
   root->params      = params;
+  root->verbose     = 1;
   root->f[0]        = dh_dx0_root_finder_eq;
   root->f[1]        = dh_dx1_root_finder_eq;
   root->f[2]        = dh_dx2_root_finder_eq;    
@@ -347,8 +350,9 @@ static void find_NS_center(Grid_T *const grid)
     NS_center     = execute_root_finder(root);
     
     /* if root finder was successful */
-    if (root->exit_status == ROOT_FINDER_OK)
+    if (root->exit_status == ROOT_FINDER_OK || LSS(root->residual,RESIDUAL))
     {
+      success_f = YES;
       /* save the position of NS center */
       sprintf(par_name,"grid%u_NS_center_x",grid->gn);
       add_parameter_array(par_name,NS_center,3);
@@ -364,7 +368,7 @@ static void find_NS_center(Grid_T *const grid)
     }
     free(NS_center);
   }
-  if (root->exit_status != ROOT_FINDER_OK)
+  if (success_f != YES)
   {
     print_root_finder_exit_status(root);
     abortEr("NS center could not be found.\n");
