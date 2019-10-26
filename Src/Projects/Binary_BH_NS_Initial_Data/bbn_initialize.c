@@ -816,6 +816,7 @@ static void find_X_and_patch(const double *const x,const char *const hint,Grid_T
   Interface_T **face;
   SubFace_T *subf;
   Needle_T *needle = alloc_needle();
+  const double LOW_RES_ERR = 1E-9;
   unsigned *found;
   unsigned p,f,sf;
   
@@ -872,11 +873,42 @@ static void find_X_and_patch(const double *const x,const char *const hint,Grid_T
     point_finder(needle);
     found = needle->ans;
     
+    /* if not found */
     if (!needle->Nans)
-      abortEr("It could not find the x at the given patches!\n");
-      
-    *ppatch = grid->patch[found[0]];
-    X_of_x(X,x,*ppatch);
+    {
+      /* at the horizon of BH at low resulotion some points 
+      // might not be found, let's fix this by hand. */
+      if (strstr(hint,"right_BH"))
+      {
+        *ppatch = GetPatch(hint,grid);
+        X_of_x(X,x,*ppatch);
+        
+        /* NOTE: This is assumed Cubed Spherical coords */
+        if (LSS(fabs(X[2]),LOW_RES_ERR))
+        {
+          X[2] = 0;/* the culprit is at low resolution, 
+                   // X[2] won't be found very close to 0! */
+          /* make sure the X falls in the interval */
+          assert(LSSEQL(X[0],1) && GRTEQL(X[0],-1));
+          assert(LSSEQL(X[1],1) && GRTEQL(X[1],-1));
+        }
+        else
+        {
+          fprintf(stderr,"The point (%g,%g,%g) could not be found!\n",x[0],x[1],x[2]);
+          abortEr("Point not found!\n");
+        }
+      }
+      else
+      {
+        fprintf(stderr,"The point (%g,%g,%g) could not be found!\n",x[0],x[1],x[2]);
+        abortEr("Point not found!\n");
+      }
+    }
+    else
+    {  
+      *ppatch = grid->patch[found[0]];
+      X_of_x(X,x,*ppatch);
+    }
   }
   free_needle(needle);
 }
