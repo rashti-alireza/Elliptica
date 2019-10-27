@@ -4051,11 +4051,10 @@ double JT_OT_T2_CS_up(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,cons
                        patch->node[p]->x[1]-C[1],
                        patch->node[p]->x[2]-C[2]};
   const double *const X = patch->node[p]->X;
-  double d1,d3;
+  double d1,d2;
   unsigned l;
-  double xc1,dxc1_dx,dxc1_dy,dxc1_dz,
-         xc2,dxc2_dx,dxc2_dy,dxc2_dz,
-         R1,R2;
+  double dd_dx,dd_dy,dd_dz,
+         R1,R2,dR;
   
   dA_da = get_dA_da(q2_e,q1_e);
   switch(dA_da)
@@ -4085,46 +4084,34 @@ double JT_OT_T2_CS_up(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,cons
       J = S*(K[j==l]-x[j]*K[k==l]/x[k])/x[k];
     break;
     case dc_dx:
-      l = 0;
-      d1 = sqrt(1+SQR(X[0])+SQR(X[1]));
-      d3 = Power3(d1);
-      R1  = patch->CoordSysInfo->CubedSphericalCoord->R1;
-      R2  = patch->CoordSysInfo->CubedSphericalCoord->R2;
-      xc1 = S*R1/d1;
-      xc2 = S*R2/d1;
-      dxc1_dx  = -R1*(X[0]*JT_OT_T2_CS_up(patch,_a_,_x_,p)+X[1]*JT_OT_T2_CS_up(patch,_b_,_x_,p))/d3;
-      dxc2_dx  = -R2*(X[0]*JT_OT_T2_CS_up(patch,_a_,_x_,p)+X[1]*JT_OT_T2_CS_up(patch,_b_,_x_,p))/d3;
-      dxc1_dx *= S;
-      dxc2_dx *= S;
-      J = (K[k==l]-dxc1_dx -(x[k]-xc1)*(dxc2_dx-dxc1_dx)/(xc2-xc1))/(xc2-xc1);
+      l  = 0;
+      R1 = patch->CoordSysInfo->CubedSphericalCoord->R1;
+      R2 = patch->CoordSysInfo->CubedSphericalCoord->R2;
+      dR = 1.-R1/R2;
+      d2 = 1+SQR(X[0])+SQR(X[1]);
+      d1 = sqrt(d2);
+      dd_dx = X[0]*JT_OT_T2_CS_up(patch,_a_,_x_,p)+X[1]*JT_OT_T2_CS_up(patch,_b_,_x_,p);
+      J     = (K[k==l]/x[k]+dd_dx/d2)*S*R1/(dR*x[k]*d1);
     break;
     case dc_dy:
       l  = 1;
-      d1 = sqrt(1+SQR(X[0])+SQR(X[1]));
-      d3 = Power3(d1);
-      R1  = patch->CoordSysInfo->CubedSphericalCoord->R1;
-      R2  = patch->CoordSysInfo->CubedSphericalCoord->R2;
-      xc1 = S*R1/d1;
-      xc2 = S*R2/d1;
-      dxc1_dy  = -R1*(X[0]*JT_OT_T2_CS_up(patch,_a_,_y_,p)+X[1]*JT_OT_T2_CS_up(patch,_b_,_y_,p))/d3;
-      dxc2_dy  = -R2*(X[0]*JT_OT_T2_CS_up(patch,_a_,_y_,p)+X[1]*JT_OT_T2_CS_up(patch,_b_,_y_,p))/d3;
-      dxc1_dy *= S;
-      dxc2_dy *= S;
-      J = (K[k==l]-dxc1_dy -(x[k]-xc1)*(dxc2_dy-dxc1_dy)/(xc2-xc1))/(xc2-xc1);
+      R1 = patch->CoordSysInfo->CubedSphericalCoord->R1;
+      R2 = patch->CoordSysInfo->CubedSphericalCoord->R2;
+      dR = 1.-R1/R2;
+      d2 = 1+SQR(X[0])+SQR(X[1]);
+      d1 = sqrt(d2);
+      dd_dy = X[0]*JT_OT_T2_CS_up(patch,_a_,_y_,p)+X[1]*JT_OT_T2_CS_up(patch,_b_,_y_,p);
+      J     = (K[k==l]/x[k]+dd_dy/d2)*S*R1/(dR*x[k]*d1);
     break;
     case dc_dz:
       l  = 2;
-      d1 = sqrt(1+SQR(X[0])+SQR(X[1]));
-      d3 = Power3(d1);
-      R1  = patch->CoordSysInfo->CubedSphericalCoord->R1;
-      R2  = patch->CoordSysInfo->CubedSphericalCoord->R2;
-      xc1 = S*R1/d1;
-      xc2 = S*R2/d1;
-      dxc1_dz  = -R1*(X[0]*JT_OT_T2_CS_up(patch,_a_,_z_,p)+X[1]*JT_OT_T2_CS_up(patch,_b_,_z_,p))/d3;
-      dxc2_dz  = -R2*(X[0]*JT_OT_T2_CS_up(patch,_a_,_z_,p)+X[1]*JT_OT_T2_CS_up(patch,_b_,_z_,p))/d3;
-      dxc1_dz *= S;
-      dxc2_dz *= S;
-      J = (K[k==l]-dxc1_dz -(x[k]-xc1)*(dxc2_dz-dxc1_dz)/(xc2-xc1))/(xc2-xc1);
+      R1 = patch->CoordSysInfo->CubedSphericalCoord->R1;
+      R2 = patch->CoordSysInfo->CubedSphericalCoord->R2;
+      dR = 1.-R1/R2;
+      d2 = 1+SQR(X[0])+SQR(X[1]);
+      d1 = sqrt(d2);
+      dd_dz = X[0]*JT_OT_T2_CS_up(patch,_a_,_z_,p)+X[1]*JT_OT_T2_CS_up(patch,_b_,_z_,p);
+      J     = (K[k==l]/x[k]+dd_dz/d2)*S*R1/(dR*x[k]*d1);
     break;
     default:
       abortEr("No such an enum!\n");
@@ -4153,12 +4140,11 @@ double JT_OT_T2_CS_down(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,co
                        patch->node[p]->x[1]-C[1],
                        patch->node[p]->x[2]-C[2]};
   const double *const X = patch->node[p]->X;
-  double d1,d3;
+  double d1,d2;
   unsigned l;
-  double xc1,dxc1_dx,dxc1_dy,dxc1_dz,
-         xc2,dxc2_dx,dxc2_dy,dxc2_dz,
-         R1,R2;
-  
+  double dd_dx,dd_dy,dd_dz,
+         R1,R2,dR;
+    
   dA_da = get_dA_da(q2_e,q1_e);
   switch(dA_da)
   {
@@ -4187,46 +4173,34 @@ double JT_OT_T2_CS_down(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,co
       J = S*(K[j==l]-x[j]*K[k==l]/x[k])/x[k];
     break;
     case dc_dx:
-      l = 0;
-      d1 = sqrt(1+SQR(X[0])+SQR(X[1]));
-      d3 = Power3(d1);
-      R1  = patch->CoordSysInfo->CubedSphericalCoord->R1;
-      R2  = patch->CoordSysInfo->CubedSphericalCoord->R2;
-      xc1 = S*R1/d1;
-      xc2 = S*R2/d1;
-      dxc1_dx  = -R1*(X[0]*JT_OT_T2_CS_down(patch,_a_,_x_,p)+X[1]*JT_OT_T2_CS_down(patch,_b_,_x_,p))/d3;
-      dxc2_dx  = -R2*(X[0]*JT_OT_T2_CS_down(patch,_a_,_x_,p)+X[1]*JT_OT_T2_CS_down(patch,_b_,_x_,p))/d3;
-      dxc1_dx *= S;
-      dxc2_dx *= S;
-      J = (K[k==l]-dxc1_dx -(x[k]-xc1)*(dxc2_dx-dxc1_dx)/(xc2-xc1))/(xc2-xc1);
+      l  = 0;
+      R1 = patch->CoordSysInfo->CubedSphericalCoord->R1;
+      R2 = patch->CoordSysInfo->CubedSphericalCoord->R2;
+      dR = 1.-R1/R2;
+      d2 = 1+SQR(X[0])+SQR(X[1]);
+      d1 = sqrt(d2);
+      dd_dx = X[0]*JT_OT_T2_CS_up(patch,_a_,_x_,p)+X[1]*JT_OT_T2_CS_up(patch,_b_,_x_,p);
+      J     = (K[k==l]/x[k]+dd_dx/d2)*S*R1/(dR*x[k]*d1);
     break;
     case dc_dy:
       l  = 1;
-      d1 = sqrt(1+SQR(X[0])+SQR(X[1]));
-      d3 = Power3(d1);
-      R1  = patch->CoordSysInfo->CubedSphericalCoord->R1;
-      R2  = patch->CoordSysInfo->CubedSphericalCoord->R2;
-      xc1 = S*R1/d1;
-      xc2 = S*R2/d1;
-      dxc1_dy  = -R1*(X[0]*JT_OT_T2_CS_down(patch,_a_,_y_,p)+X[1]*JT_OT_T2_CS_down(patch,_b_,_y_,p))/d3;
-      dxc2_dy  = -R2*(X[0]*JT_OT_T2_CS_down(patch,_a_,_y_,p)+X[1]*JT_OT_T2_CS_down(patch,_b_,_y_,p))/d3;
-      dxc1_dy *= S;
-      dxc2_dy *= S;
-      J = (K[k==l]-dxc1_dy -(x[k]-xc1)*(dxc2_dy-dxc1_dy)/(xc2-xc1))/(xc2-xc1);
+      R1 = patch->CoordSysInfo->CubedSphericalCoord->R1;
+      R2 = patch->CoordSysInfo->CubedSphericalCoord->R2;
+      dR = 1.-R1/R2;
+      d2 = 1+SQR(X[0])+SQR(X[1]);
+      d1 = sqrt(d2);
+      dd_dy = X[0]*JT_OT_T2_CS_up(patch,_a_,_y_,p)+X[1]*JT_OT_T2_CS_up(patch,_b_,_y_,p);
+      J     = (K[k==l]/x[k]+dd_dy/d2)*S*R1/(dR*x[k]*d1);
     break;
     case dc_dz:
       l  = 2;
-      d1 = sqrt(1+SQR(X[0])+SQR(X[1]));
-      d3 = Power3(d1);
-      R1  = patch->CoordSysInfo->CubedSphericalCoord->R1;
-      R2  = patch->CoordSysInfo->CubedSphericalCoord->R2;
-      xc1 = S*R1/d1;
-      xc2 = S*R2/d1;
-      dxc1_dz  = -R1*(X[0]*JT_OT_T2_CS_down(patch,_a_,_z_,p)+X[1]*JT_OT_T2_CS_down(patch,_b_,_z_,p))/d3;
-      dxc2_dz  = -R2*(X[0]*JT_OT_T2_CS_down(patch,_a_,_z_,p)+X[1]*JT_OT_T2_CS_down(patch,_b_,_z_,p))/d3;
-      dxc1_dz *= S;
-      dxc2_dz *= S;
-      J = (K[k==l]-dxc1_dz -(x[k]-xc1)*(dxc2_dz-dxc1_dz)/(xc2-xc1))/(xc2-xc1);
+      R1 = patch->CoordSysInfo->CubedSphericalCoord->R1;
+      R2 = patch->CoordSysInfo->CubedSphericalCoord->R2;
+      dR = 1.-R1/R2;
+      d2 = 1+SQR(X[0])+SQR(X[1]);
+      d1 = sqrt(d2);
+      dd_dz = X[0]*JT_OT_T2_CS_up(patch,_a_,_z_,p)+X[1]*JT_OT_T2_CS_up(patch,_b_,_z_,p);
+      J     = (K[k==l]/x[k]+dd_dz/d2)*S*R1/(dR*x[k]*d1);
     break;
     default:
       abortEr("No such an enum!\n");
@@ -4255,12 +4229,11 @@ double JT_OT_T2_CS_left(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,co
                        patch->node[p]->x[1]-C[1],
                        patch->node[p]->x[2]-C[2]};
   const double *const X = patch->node[p]->X;
-  double d1,d3;
+  double d1,d2;
   unsigned l;
-  double xc1,dxc1_dx,dxc1_dy,dxc1_dz,
-         xc2,dxc2_dx,dxc2_dy,dxc2_dz,
-         R1,R2;  
-         
+  double dd_dx,dd_dy,dd_dz,
+         R1,R2,dR;
+           
   dA_da = get_dA_da(q2_e,q1_e);
   switch(dA_da)
   {
@@ -4289,46 +4262,34 @@ double JT_OT_T2_CS_left(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,co
       J = S*(K[j==l]-x[j]*K[k==l]/x[k])/x[k];
     break;
     case dc_dx:
-      l = 0;
-      d1 = sqrt(1+SQR(X[0])+SQR(X[1]));
-      d3 = Power3(d1);
-      R1  = patch->CoordSysInfo->CubedSphericalCoord->R1;
-      R2  = patch->CoordSysInfo->CubedSphericalCoord->R2;
-      xc1 = S*R1/d1;
-      xc2 = S*R2/d1;
-      dxc1_dx  = -R1*(X[0]*JT_OT_T2_CS_left(patch,_a_,_x_,p)+X[1]*JT_OT_T2_CS_left(patch,_b_,_x_,p))/d3;
-      dxc2_dx  = -R2*(X[0]*JT_OT_T2_CS_left(patch,_a_,_x_,p)+X[1]*JT_OT_T2_CS_left(patch,_b_,_x_,p))/d3;
-      dxc1_dx *= S;
-      dxc2_dx *= S;
-      J = (K[k==l]-dxc1_dx -(x[k]-xc1)*(dxc2_dx-dxc1_dx)/(xc2-xc1))/(xc2-xc1);
+      l  = 0;
+      R1 = patch->CoordSysInfo->CubedSphericalCoord->R1;
+      R2 = patch->CoordSysInfo->CubedSphericalCoord->R2;
+      dR = 1.-R1/R2;
+      d2 = 1+SQR(X[0])+SQR(X[1]);
+      d1 = sqrt(d2);
+      dd_dx = X[0]*JT_OT_T2_CS_up(patch,_a_,_x_,p)+X[1]*JT_OT_T2_CS_up(patch,_b_,_x_,p);
+      J     = (K[k==l]/x[k]+dd_dx/d2)*S*R1/(dR*x[k]*d1);
     break;
     case dc_dy:
       l  = 1;
-      d1 = sqrt(1+SQR(X[0])+SQR(X[1]));
-      d3 = Power3(d1);
-      R1  = patch->CoordSysInfo->CubedSphericalCoord->R1;
-      R2  = patch->CoordSysInfo->CubedSphericalCoord->R2;
-      xc1 = S*R1/d1;
-      xc2 = S*R2/d1;
-      dxc1_dy  = -R1*(X[0]*JT_OT_T2_CS_left(patch,_a_,_y_,p)+X[1]*JT_OT_T2_CS_left(patch,_b_,_y_,p))/d3;
-      dxc2_dy  = -R2*(X[0]*JT_OT_T2_CS_left(patch,_a_,_y_,p)+X[1]*JT_OT_T2_CS_left(patch,_b_,_y_,p))/d3;
-      dxc1_dy *= S;
-      dxc2_dy *= S;
-      J = (K[k==l]-dxc1_dy -(x[k]-xc1)*(dxc2_dy-dxc1_dy)/(xc2-xc1))/(xc2-xc1);
+      R1 = patch->CoordSysInfo->CubedSphericalCoord->R1;
+      R2 = patch->CoordSysInfo->CubedSphericalCoord->R2;
+      dR = 1.-R1/R2;
+      d2 = 1+SQR(X[0])+SQR(X[1]);
+      d1 = sqrt(d2);
+      dd_dy = X[0]*JT_OT_T2_CS_up(patch,_a_,_y_,p)+X[1]*JT_OT_T2_CS_up(patch,_b_,_y_,p);
+      J     = (K[k==l]/x[k]+dd_dy/d2)*S*R1/(dR*x[k]*d1);
     break;
     case dc_dz:
       l  = 2;
-      d1 = sqrt(1+SQR(X[0])+SQR(X[1]));
-      d3 = Power3(d1);
-      R1  = patch->CoordSysInfo->CubedSphericalCoord->R1;
-      R2  = patch->CoordSysInfo->CubedSphericalCoord->R2;
-      xc1 = S*R1/d1;
-      xc2 = S*R2/d1;
-      dxc1_dz  = -R1*(X[0]*JT_OT_T2_CS_left(patch,_a_,_z_,p)+X[1]*JT_OT_T2_CS_left(patch,_b_,_z_,p))/d3;
-      dxc2_dz  = -R2*(X[0]*JT_OT_T2_CS_left(patch,_a_,_z_,p)+X[1]*JT_OT_T2_CS_left(patch,_b_,_z_,p))/d3;
-      dxc1_dz *= S;
-      dxc2_dz *= S;
-      J = (K[k==l]-dxc1_dz -(x[k]-xc1)*(dxc2_dz-dxc1_dz)/(xc2-xc1))/(xc2-xc1);
+      R1 = patch->CoordSysInfo->CubedSphericalCoord->R1;
+      R2 = patch->CoordSysInfo->CubedSphericalCoord->R2;
+      dR = 1.-R1/R2;
+      d2 = 1+SQR(X[0])+SQR(X[1]);
+      d1 = sqrt(d2);
+      dd_dz = X[0]*JT_OT_T2_CS_up(patch,_a_,_z_,p)+X[1]*JT_OT_T2_CS_up(patch,_b_,_z_,p);
+      J     = (K[k==l]/x[k]+dd_dz/d2)*S*R1/(dR*x[k]*d1);
     break;
     default:
       abortEr("No such an enum!\n");
@@ -4357,12 +4318,11 @@ double JT_OT_T2_CS_right(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,c
                        patch->node[p]->x[1]-C[1],
                        patch->node[p]->x[2]-C[2]};
   const double *const X = patch->node[p]->X;
-  double d1,d3;
+  double d1,d2;
   unsigned l;
-  double xc1,dxc1_dx,dxc1_dy,dxc1_dz,
-         xc2,dxc2_dx,dxc2_dy,dxc2_dz,
-         R1,R2;
-  
+  double dd_dx,dd_dy,dd_dz,
+         R1,R2,dR;
+    
   dA_da = get_dA_da(q2_e,q1_e);
   switch(dA_da)
   {
@@ -4391,46 +4351,34 @@ double JT_OT_T2_CS_right(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,c
       J = S*(K[j==l]-x[j]*K[k==l]/x[k])/x[k];
     break;
     case dc_dx:
-      l = 0;
-      d1 = sqrt(1+SQR(X[0])+SQR(X[1]));
-      d3 = Power3(d1);
-      R1  = patch->CoordSysInfo->CubedSphericalCoord->R1;
-      R2  = patch->CoordSysInfo->CubedSphericalCoord->R2;
-      xc1 = S*R1/d1;
-      xc2 = S*R2/d1;
-      dxc1_dx  = -R1*(X[0]*JT_OT_T2_CS_right(patch,_a_,_x_,p)+X[1]*JT_OT_T2_CS_right(patch,_b_,_x_,p))/d3;
-      dxc2_dx  = -R2*(X[0]*JT_OT_T2_CS_right(patch,_a_,_x_,p)+X[1]*JT_OT_T2_CS_right(patch,_b_,_x_,p))/d3;
-      dxc1_dx *= S;
-      dxc2_dx *= S;
-      J = (K[k==l]-dxc1_dx -(x[k]-xc1)*(dxc2_dx-dxc1_dx)/(xc2-xc1))/(xc2-xc1);
+      l  = 0;
+      R1 = patch->CoordSysInfo->CubedSphericalCoord->R1;
+      R2 = patch->CoordSysInfo->CubedSphericalCoord->R2;
+      dR = 1.-R1/R2;
+      d2 = 1+SQR(X[0])+SQR(X[1]);
+      d1 = sqrt(d2);
+      dd_dx = X[0]*JT_OT_T2_CS_up(patch,_a_,_x_,p)+X[1]*JT_OT_T2_CS_up(patch,_b_,_x_,p);
+      J     = (K[k==l]/x[k]+dd_dx/d2)*S*R1/(dR*x[k]*d1);
     break;
     case dc_dy:
       l  = 1;
-      d1 = sqrt(1+SQR(X[0])+SQR(X[1]));
-      d3 = Power3(d1);
-      R1  = patch->CoordSysInfo->CubedSphericalCoord->R1;
-      R2  = patch->CoordSysInfo->CubedSphericalCoord->R2;
-      xc1 = S*R1/d1;
-      xc2 = S*R2/d1;
-      dxc1_dy  = -R1*(X[0]*JT_OT_T2_CS_right(patch,_a_,_y_,p)+X[1]*JT_OT_T2_CS_right(patch,_b_,_y_,p))/d3;
-      dxc2_dy  = -R2*(X[0]*JT_OT_T2_CS_right(patch,_a_,_y_,p)+X[1]*JT_OT_T2_CS_right(patch,_b_,_y_,p))/d3;
-      dxc1_dy *= S;
-      dxc2_dy *= S;
-      J = (K[k==l]-dxc1_dy -(x[k]-xc1)*(dxc2_dy-dxc1_dy)/(xc2-xc1))/(xc2-xc1);
+      R1 = patch->CoordSysInfo->CubedSphericalCoord->R1;
+      R2 = patch->CoordSysInfo->CubedSphericalCoord->R2;
+      dR = 1.-R1/R2;
+      d2 = 1+SQR(X[0])+SQR(X[1]);
+      d1 = sqrt(d2);
+      dd_dy = X[0]*JT_OT_T2_CS_up(patch,_a_,_y_,p)+X[1]*JT_OT_T2_CS_up(patch,_b_,_y_,p);
+      J     = (K[k==l]/x[k]+dd_dy/d2)*S*R1/(dR*x[k]*d1);
     break;
     case dc_dz:
       l  = 2;
-      d1 = sqrt(1+SQR(X[0])+SQR(X[1]));
-      d3 = Power3(d1);
-      R1  = patch->CoordSysInfo->CubedSphericalCoord->R1;
-      R2  = patch->CoordSysInfo->CubedSphericalCoord->R2;
-      xc1 = S*R1/d1;
-      xc2 = S*R2/d1;
-      dxc1_dz  = -R1*(X[0]*JT_OT_T2_CS_right(patch,_a_,_z_,p)+X[1]*JT_OT_T2_CS_right(patch,_b_,_z_,p))/d3;
-      dxc2_dz  = -R2*(X[0]*JT_OT_T2_CS_right(patch,_a_,_z_,p)+X[1]*JT_OT_T2_CS_right(patch,_b_,_z_,p))/d3;
-      dxc1_dz *= S;
-      dxc2_dz *= S;
-      J = (K[k==l]-dxc1_dz -(x[k]-xc1)*(dxc2_dz-dxc1_dz)/(xc2-xc1))/(xc2-xc1);
+      R1 = patch->CoordSysInfo->CubedSphericalCoord->R1;
+      R2 = patch->CoordSysInfo->CubedSphericalCoord->R2;
+      dR = 1.-R1/R2;
+      d2 = 1+SQR(X[0])+SQR(X[1]);
+      d1 = sqrt(d2);
+      dd_dz = X[0]*JT_OT_T2_CS_up(patch,_a_,_z_,p)+X[1]*JT_OT_T2_CS_up(patch,_b_,_z_,p);
+      J     = (K[k==l]/x[k]+dd_dz/d2)*S*R1/(dR*x[k]*d1);
     break;
     default:
       abortEr("No such an enum!\n");
@@ -4459,12 +4407,11 @@ double JT_OT_T2_CS_back(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,co
                        patch->node[p]->x[1]-C[1],
                        patch->node[p]->x[2]-C[2]};
   const double *const X = patch->node[p]->X;
-  double d1,d3;
+  double d1,d2;
   unsigned l;
-  double xc1,dxc1_dx,dxc1_dy,dxc1_dz,
-         xc2,dxc2_dx,dxc2_dy,dxc2_dz,
-         R1,R2;
-  
+  double dd_dx,dd_dy,dd_dz,
+         R1,R2,dR;
+    
   dA_da = get_dA_da(q2_e,q1_e);
   switch(dA_da)
   {
@@ -4493,46 +4440,34 @@ double JT_OT_T2_CS_back(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,co
       J = S*(K[j==l]-x[j]*K[k==l]/x[k])/x[k];
     break;
     case dc_dx:
-      l = 0;
-      d1 = sqrt(1+SQR(X[0])+SQR(X[1]));
-      d3 = Power3(d1);
-      R1  = patch->CoordSysInfo->CubedSphericalCoord->R1;
-      R2  = patch->CoordSysInfo->CubedSphericalCoord->R2;
-      xc1 = S*R1/d1;
-      xc2 = S*R2/d1;
-      dxc1_dx  = -R1*(X[0]*JT_OT_T2_CS_back(patch,_a_,_x_,p)+X[1]*JT_OT_T2_CS_back(patch,_b_,_x_,p))/d3;
-      dxc2_dx  = -R2*(X[0]*JT_OT_T2_CS_back(patch,_a_,_x_,p)+X[1]*JT_OT_T2_CS_back(patch,_b_,_x_,p))/d3;
-      dxc1_dx *= S;
-      dxc2_dx *= S;
-      J = (K[k==l]-dxc1_dx -(x[k]-xc1)*(dxc2_dx-dxc1_dx)/(xc2-xc1))/(xc2-xc1);
+      l  = 0;
+      R1 = patch->CoordSysInfo->CubedSphericalCoord->R1;
+      R2 = patch->CoordSysInfo->CubedSphericalCoord->R2;
+      dR = 1.-R1/R2;
+      d2 = 1+SQR(X[0])+SQR(X[1]);
+      d1 = sqrt(d2);
+      dd_dx = X[0]*JT_OT_T2_CS_up(patch,_a_,_x_,p)+X[1]*JT_OT_T2_CS_up(patch,_b_,_x_,p);
+      J     = (K[k==l]/x[k]+dd_dx/d2)*S*R1/(dR*x[k]*d1);
     break;
     case dc_dy:
       l  = 1;
-      d1 = sqrt(1+SQR(X[0])+SQR(X[1]));
-      d3 = Power3(d1);
-      R1  = patch->CoordSysInfo->CubedSphericalCoord->R1;
-      R2  = patch->CoordSysInfo->CubedSphericalCoord->R2;
-      xc1 = S*R1/d1;
-      xc2 = S*R2/d1;
-      dxc1_dy  = -R1*(X[0]*JT_OT_T2_CS_back(patch,_a_,_y_,p)+X[1]*JT_OT_T2_CS_back(patch,_b_,_y_,p))/d3;
-      dxc2_dy  = -R2*(X[0]*JT_OT_T2_CS_back(patch,_a_,_y_,p)+X[1]*JT_OT_T2_CS_back(patch,_b_,_y_,p))/d3;
-      dxc1_dy *= S;
-      dxc2_dy *= S;
-      J = (K[k==l]-dxc1_dy -(x[k]-xc1)*(dxc2_dy-dxc1_dy)/(xc2-xc1))/(xc2-xc1);
+      R1 = patch->CoordSysInfo->CubedSphericalCoord->R1;
+      R2 = patch->CoordSysInfo->CubedSphericalCoord->R2;
+      dR = 1.-R1/R2;
+      d2 = 1+SQR(X[0])+SQR(X[1]);
+      d1 = sqrt(d2);
+      dd_dy = X[0]*JT_OT_T2_CS_up(patch,_a_,_y_,p)+X[1]*JT_OT_T2_CS_up(patch,_b_,_y_,p);
+      J     = (K[k==l]/x[k]+dd_dy/d2)*S*R1/(dR*x[k]*d1);
     break;
     case dc_dz:
       l  = 2;
-      d1 = sqrt(1+SQR(X[0])+SQR(X[1]));
-      d3 = Power3(d1);
-      R1  = patch->CoordSysInfo->CubedSphericalCoord->R1;
-      R2  = patch->CoordSysInfo->CubedSphericalCoord->R2;
-      xc1 = S*R1/d1;
-      xc2 = S*R2/d1;
-      dxc1_dz  = -R1*(X[0]*JT_OT_T2_CS_back(patch,_a_,_z_,p)+X[1]*JT_OT_T2_CS_back(patch,_b_,_z_,p))/d3;
-      dxc2_dz  = -R2*(X[0]*JT_OT_T2_CS_back(patch,_a_,_z_,p)+X[1]*JT_OT_T2_CS_back(patch,_b_,_z_,p))/d3;
-      dxc1_dz *= S;
-      dxc2_dz *= S;
-      J = (K[k==l]-dxc1_dz -(x[k]-xc1)*(dxc2_dz-dxc1_dz)/(xc2-xc1))/(xc2-xc1);
+      R1 = patch->CoordSysInfo->CubedSphericalCoord->R1;
+      R2 = patch->CoordSysInfo->CubedSphericalCoord->R2;
+      dR = 1.-R1/R2;
+      d2 = 1+SQR(X[0])+SQR(X[1]);
+      d1 = sqrt(d2);
+      dd_dz = X[0]*JT_OT_T2_CS_up(patch,_a_,_z_,p)+X[1]*JT_OT_T2_CS_up(patch,_b_,_z_,p);
+      J     = (K[k==l]/x[k]+dd_dz/d2)*S*R1/(dR*x[k]*d1);
     break;
     default:
       abortEr("No such an enum!\n");
@@ -4561,12 +4496,11 @@ double JT_OT_T2_CS_front(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,c
                        patch->node[p]->x[1]-C[1],
                        patch->node[p]->x[2]-C[2]};
   const double *const X = patch->node[p]->X;
-  double d1,d3;
+  double d1,d2;
   unsigned l;
-  double xc1,dxc1_dx,dxc1_dy,dxc1_dz,
-         xc2,dxc2_dx,dxc2_dy,dxc2_dz,
-         R1,R2;
-  
+  double dd_dx,dd_dy,dd_dz,
+         R1,R2,dR;
+    
   dA_da = get_dA_da(q2_e,q1_e);
   switch(dA_da)
   {
@@ -4595,46 +4529,34 @@ double JT_OT_T2_CS_front(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,c
       J = S*(K[j==l]-x[j]*K[k==l]/x[k])/x[k];
     break;
     case dc_dx:
-      l = 0;
-      d1 = sqrt(1+SQR(X[0])+SQR(X[1]));
-      d3 = Power3(d1);
-      R1  = patch->CoordSysInfo->CubedSphericalCoord->R1;
-      R2  = patch->CoordSysInfo->CubedSphericalCoord->R2;
-      xc1 = S*R1/d1;
-      xc2 = S*R2/d1;
-      dxc1_dx  = -R1*(X[0]*JT_OT_T2_CS_front(patch,_a_,_x_,p)+X[1]*JT_OT_T2_CS_front(patch,_b_,_x_,p))/d3;
-      dxc2_dx  = -R2*(X[0]*JT_OT_T2_CS_front(patch,_a_,_x_,p)+X[1]*JT_OT_T2_CS_front(patch,_b_,_x_,p))/d3;
-      dxc1_dx *= S;
-      dxc2_dx *= S;
-      J = (K[k==l]-dxc1_dx -(x[k]-xc1)*(dxc2_dx-dxc1_dx)/(xc2-xc1))/(xc2-xc1);
+      l  = 0;
+      R1 = patch->CoordSysInfo->CubedSphericalCoord->R1;
+      R2 = patch->CoordSysInfo->CubedSphericalCoord->R2;
+      dR = 1.-R1/R2;
+      d2 = 1+SQR(X[0])+SQR(X[1]);
+      d1 = sqrt(d2);
+      dd_dx = X[0]*JT_OT_T2_CS_up(patch,_a_,_x_,p)+X[1]*JT_OT_T2_CS_up(patch,_b_,_x_,p);
+      J     = (K[k==l]/x[k]+dd_dx/d2)*S*R1/(dR*x[k]*d1);
     break;
     case dc_dy:
       l  = 1;
-      d1 = sqrt(1+SQR(X[0])+SQR(X[1]));
-      d3 = Power3(d1);
-      R1  = patch->CoordSysInfo->CubedSphericalCoord->R1;
-      R2  = patch->CoordSysInfo->CubedSphericalCoord->R2;
-      xc1 = S*R1/d1;
-      xc2 = S*R2/d1;
-      dxc1_dy  = -R1*(X[0]*JT_OT_T2_CS_front(patch,_a_,_y_,p)+X[1]*JT_OT_T2_CS_front(patch,_b_,_y_,p))/d3;
-      dxc2_dy  = -R2*(X[0]*JT_OT_T2_CS_front(patch,_a_,_y_,p)+X[1]*JT_OT_T2_CS_front(patch,_b_,_y_,p))/d3;
-      dxc1_dy *= S;
-      dxc2_dy *= S;
-      J = (K[k==l]-dxc1_dy -(x[k]-xc1)*(dxc2_dy-dxc1_dy)/(xc2-xc1))/(xc2-xc1);
+      R1 = patch->CoordSysInfo->CubedSphericalCoord->R1;
+      R2 = patch->CoordSysInfo->CubedSphericalCoord->R2;
+      dR = 1.-R1/R2;
+      d2 = 1+SQR(X[0])+SQR(X[1]);
+      d1 = sqrt(d2);
+      dd_dy = X[0]*JT_OT_T2_CS_up(patch,_a_,_y_,p)+X[1]*JT_OT_T2_CS_up(patch,_b_,_y_,p);
+      J     = (K[k==l]/x[k]+dd_dy/d2)*S*R1/(dR*x[k]*d1);
     break;
     case dc_dz:
       l  = 2;
-      d1 = sqrt(1+SQR(X[0])+SQR(X[1]));
-      d3 = Power3(d1);
-      R1  = patch->CoordSysInfo->CubedSphericalCoord->R1;
-      R2  = patch->CoordSysInfo->CubedSphericalCoord->R2;
-      xc1 = S*R1/d1;
-      xc2 = S*R2/d1;
-      dxc1_dz  = -R1*(X[0]*JT_OT_T2_CS_front(patch,_a_,_z_,p)+X[1]*JT_OT_T2_CS_front(patch,_b_,_z_,p))/d3;
-      dxc2_dz  = -R2*(X[0]*JT_OT_T2_CS_front(patch,_a_,_z_,p)+X[1]*JT_OT_T2_CS_front(patch,_b_,_z_,p))/d3;
-      dxc1_dz *= S;
-      dxc2_dz *= S;
-      J = (K[k==l]-dxc1_dz -(x[k]-xc1)*(dxc2_dz-dxc1_dz)/(xc2-xc1))/(xc2-xc1);
+      R1 = patch->CoordSysInfo->CubedSphericalCoord->R1;
+      R2 = patch->CoordSysInfo->CubedSphericalCoord->R2;
+      dR = 1.-R1/R2;
+      d2 = 1+SQR(X[0])+SQR(X[1]);
+      d1 = sqrt(d2);
+      dd_dz = X[0]*JT_OT_T2_CS_up(patch,_a_,_z_,p)+X[1]*JT_OT_T2_CS_up(patch,_b_,_z_,p);
+      J     = (K[k==l]/x[k]+dd_dz/d2)*S*R1/(dR*x[k]*d1);
     break;
     default:
       abortEr("No such an enum!\n");
