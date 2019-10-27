@@ -237,7 +237,7 @@ void make_nodes_CubedSpherical_coord(Patch_T *const patch)
       {
         double *X = alloc_double(3);
         double *x = patch->node[l]->x;
-        double x1,x2,d;
+        double x1,L,d;
         
         IJK(l,n,&i,&j,&k);
         X[0] = point_value(i,&coll_s[0]);
@@ -245,10 +245,11 @@ void make_nodes_CubedSpherical_coord(Patch_T *const patch)
         X[2] = point_value(k,&coll_s[2]);
         d = sqrt(1+SQR(X[0])+SQR(X[1]));
         patch->node[l]->X = X;
-        x1 = S*R1/d;
-        x2 = S*R2/d;
         
-        x[c] = x1+(x2-x1)*X[2];
+        x1 = S*R1/d;
+        L  = 1.-R1/R2;
+        
+        x[c] = x1/(1.-L*X[2]);
         x[a] = S*x[c]*X[0];
         x[b] = S*x[c]*X[1];
         
