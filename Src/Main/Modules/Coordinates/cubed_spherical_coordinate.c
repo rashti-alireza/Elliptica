@@ -4180,7 +4180,7 @@ double JT_OT_T2_CS_down(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,co
       dR = 1.-R1/R2;
       d2 = 1+SQR(X[0])+SQR(X[1]);
       d1 = sqrt(d2);
-      dd_dx = X[0]*JT_OT_T2_CS_up(patch,_a_,_x_,p)+X[1]*JT_OT_T2_CS_up(patch,_b_,_x_,p);
+      dd_dx = X[0]*JT_OT_T2_CS_down(patch,_a_,_x_,p)+X[1]*JT_OT_T2_CS_down(patch,_b_,_x_,p);
       J     = (K[k==l]/x[k]+dd_dx/d2)*S*R1/(dR*x[k]*d1);
     break;
     case dc_dy:
@@ -4190,7 +4190,7 @@ double JT_OT_T2_CS_down(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,co
       dR = 1.-R1/R2;
       d2 = 1+SQR(X[0])+SQR(X[1]);
       d1 = sqrt(d2);
-      dd_dy = X[0]*JT_OT_T2_CS_up(patch,_a_,_y_,p)+X[1]*JT_OT_T2_CS_up(patch,_b_,_y_,p);
+      dd_dy = X[0]*JT_OT_T2_CS_down(patch,_a_,_y_,p)+X[1]*JT_OT_T2_CS_down(patch,_b_,_y_,p);
       J     = (K[k==l]/x[k]+dd_dy/d2)*S*R1/(dR*x[k]*d1);
     break;
     case dc_dz:
@@ -4200,7 +4200,7 @@ double JT_OT_T2_CS_down(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,co
       dR = 1.-R1/R2;
       d2 = 1+SQR(X[0])+SQR(X[1]);
       d1 = sqrt(d2);
-      dd_dz = X[0]*JT_OT_T2_CS_up(patch,_a_,_z_,p)+X[1]*JT_OT_T2_CS_up(patch,_b_,_z_,p);
+      dd_dz = X[0]*JT_OT_T2_CS_down(patch,_a_,_z_,p)+X[1]*JT_OT_T2_CS_down(patch,_b_,_z_,p);
       J     = (K[k==l]/x[k]+dd_dz/d2)*S*R1/(dR*x[k]*d1);
     break;
     default:
@@ -4269,7 +4269,7 @@ double JT_OT_T2_CS_left(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,co
       dR = 1.-R1/R2;
       d2 = 1+SQR(X[0])+SQR(X[1]);
       d1 = sqrt(d2);
-      dd_dx = X[0]*JT_OT_T2_CS_up(patch,_a_,_x_,p)+X[1]*JT_OT_T2_CS_up(patch,_b_,_x_,p);
+      dd_dx = X[0]*JT_OT_T2_CS_left(patch,_a_,_x_,p)+X[1]*JT_OT_T2_CS_left(patch,_b_,_x_,p);
       J     = (K[k==l]/x[k]+dd_dx/d2)*S*R1/(dR*x[k]*d1);
     break;
     case dc_dy:
@@ -4279,7 +4279,7 @@ double JT_OT_T2_CS_left(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,co
       dR = 1.-R1/R2;
       d2 = 1+SQR(X[0])+SQR(X[1]);
       d1 = sqrt(d2);
-      dd_dy = X[0]*JT_OT_T2_CS_up(patch,_a_,_y_,p)+X[1]*JT_OT_T2_CS_up(patch,_b_,_y_,p);
+      dd_dy = X[0]*JT_OT_T2_CS_left(patch,_a_,_y_,p)+X[1]*JT_OT_T2_CS_left(patch,_b_,_y_,p);
       J     = (K[k==l]/x[k]+dd_dy/d2)*S*R1/(dR*x[k]*d1);
     break;
     case dc_dz:
@@ -4289,7 +4289,7 @@ double JT_OT_T2_CS_left(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,co
       dR = 1.-R1/R2;
       d2 = 1+SQR(X[0])+SQR(X[1]);
       d1 = sqrt(d2);
-      dd_dz = X[0]*JT_OT_T2_CS_up(patch,_a_,_z_,p)+X[1]*JT_OT_T2_CS_up(patch,_b_,_z_,p);
+      dd_dz = X[0]*JT_OT_T2_CS_left(patch,_a_,_z_,p)+X[1]*JT_OT_T2_CS_left(patch,_b_,_z_,p);
       J     = (K[k==l]/x[k]+dd_dz/d2)*S*R1/(dR*x[k]*d1);
     break;
     default:
@@ -4358,7 +4358,7 @@ double JT_OT_T2_CS_right(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,c
       dR = 1.-R1/R2;
       d2 = 1+SQR(X[0])+SQR(X[1]);
       d1 = sqrt(d2);
-      dd_dx = X[0]*JT_OT_T2_CS_up(patch,_a_,_x_,p)+X[1]*JT_OT_T2_CS_up(patch,_b_,_x_,p);
+      dd_dx = X[0]*JT_OT_T2_CS_right(patch,_a_,_x_,p)+X[1]*JT_OT_T2_CS_right(patch,_b_,_x_,p);
       J     = (K[k==l]/x[k]+dd_dx/d2)*S*R1/(dR*x[k]*d1);
     break;
     case dc_dy:
@@ -4368,7 +4368,7 @@ double JT_OT_T2_CS_right(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,c
       dR = 1.-R1/R2;
       d2 = 1+SQR(X[0])+SQR(X[1]);
       d1 = sqrt(d2);
-      dd_dy = X[0]*JT_OT_T2_CS_up(patch,_a_,_y_,p)+X[1]*JT_OT_T2_CS_up(patch,_b_,_y_,p);
+      dd_dy = X[0]*JT_OT_T2_CS_right(patch,_a_,_y_,p)+X[1]*JT_OT_T2_CS_right(patch,_b_,_y_,p);
       J     = (K[k==l]/x[k]+dd_dy/d2)*S*R1/(dR*x[k]*d1);
     break;
     case dc_dz:
@@ -4378,7 +4378,7 @@ double JT_OT_T2_CS_right(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,c
       dR = 1.-R1/R2;
       d2 = 1+SQR(X[0])+SQR(X[1]);
       d1 = sqrt(d2);
-      dd_dz = X[0]*JT_OT_T2_CS_up(patch,_a_,_z_,p)+X[1]*JT_OT_T2_CS_up(patch,_b_,_z_,p);
+      dd_dz = X[0]*JT_OT_T2_CS_right(patch,_a_,_z_,p)+X[1]*JT_OT_T2_CS_right(patch,_b_,_z_,p);
       J     = (K[k==l]/x[k]+dd_dz/d2)*S*R1/(dR*x[k]*d1);
     break;
     default:
@@ -4447,7 +4447,7 @@ double JT_OT_T2_CS_back(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,co
       dR = 1.-R1/R2;
       d2 = 1+SQR(X[0])+SQR(X[1]);
       d1 = sqrt(d2);
-      dd_dx = X[0]*JT_OT_T2_CS_up(patch,_a_,_x_,p)+X[1]*JT_OT_T2_CS_up(patch,_b_,_x_,p);
+      dd_dx = X[0]*JT_OT_T2_CS_back(patch,_a_,_x_,p)+X[1]*JT_OT_T2_CS_back(patch,_b_,_x_,p);
       J     = (K[k==l]/x[k]+dd_dx/d2)*S*R1/(dR*x[k]*d1);
     break;
     case dc_dy:
@@ -4457,7 +4457,7 @@ double JT_OT_T2_CS_back(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,co
       dR = 1.-R1/R2;
       d2 = 1+SQR(X[0])+SQR(X[1]);
       d1 = sqrt(d2);
-      dd_dy = X[0]*JT_OT_T2_CS_up(patch,_a_,_y_,p)+X[1]*JT_OT_T2_CS_up(patch,_b_,_y_,p);
+      dd_dy = X[0]*JT_OT_T2_CS_back(patch,_a_,_y_,p)+X[1]*JT_OT_T2_CS_back(patch,_b_,_y_,p);
       J     = (K[k==l]/x[k]+dd_dy/d2)*S*R1/(dR*x[k]*d1);
     break;
     case dc_dz:
@@ -4467,7 +4467,7 @@ double JT_OT_T2_CS_back(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,co
       dR = 1.-R1/R2;
       d2 = 1+SQR(X[0])+SQR(X[1]);
       d1 = sqrt(d2);
-      dd_dz = X[0]*JT_OT_T2_CS_up(patch,_a_,_z_,p)+X[1]*JT_OT_T2_CS_up(patch,_b_,_z_,p);
+      dd_dz = X[0]*JT_OT_T2_CS_back(patch,_a_,_z_,p)+X[1]*JT_OT_T2_CS_back(patch,_b_,_z_,p);
       J     = (K[k==l]/x[k]+dd_dz/d2)*S*R1/(dR*x[k]*d1);
     break;
     default:
@@ -4536,7 +4536,7 @@ double JT_OT_T2_CS_front(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,c
       dR = 1.-R1/R2;
       d2 = 1+SQR(X[0])+SQR(X[1]);
       d1 = sqrt(d2);
-      dd_dx = X[0]*JT_OT_T2_CS_up(patch,_a_,_x_,p)+X[1]*JT_OT_T2_CS_up(patch,_b_,_x_,p);
+      dd_dx = X[0]*JT_OT_T2_CS_front(patch,_a_,_x_,p)+X[1]*JT_OT_T2_CS_front(patch,_b_,_x_,p);
       J     = (K[k==l]/x[k]+dd_dx/d2)*S*R1/(dR*x[k]*d1);
     break;
     case dc_dy:
@@ -4546,7 +4546,7 @@ double JT_OT_T2_CS_front(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,c
       dR = 1.-R1/R2;
       d2 = 1+SQR(X[0])+SQR(X[1]);
       d1 = sqrt(d2);
-      dd_dy = X[0]*JT_OT_T2_CS_up(patch,_a_,_y_,p)+X[1]*JT_OT_T2_CS_up(patch,_b_,_y_,p);
+      dd_dy = X[0]*JT_OT_T2_CS_front(patch,_a_,_y_,p)+X[1]*JT_OT_T2_CS_front(patch,_b_,_y_,p);
       J     = (K[k==l]/x[k]+dd_dy/d2)*S*R1/(dR*x[k]*d1);
     break;
     case dc_dz:
@@ -4556,7 +4556,7 @@ double JT_OT_T2_CS_front(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,c
       dR = 1.-R1/R2;
       d2 = 1+SQR(X[0])+SQR(X[1]);
       d1 = sqrt(d2);
-      dd_dz = X[0]*JT_OT_T2_CS_up(patch,_a_,_z_,p)+X[1]*JT_OT_T2_CS_up(patch,_b_,_z_,p);
+      dd_dz = X[0]*JT_OT_T2_CS_front(patch,_a_,_z_,p)+X[1]*JT_OT_T2_CS_front(patch,_b_,_z_,p);
       J     = (K[k==l]/x[k]+dd_dz/d2)*S*R1/(dR*x[k]*d1);
     break;
     default:
