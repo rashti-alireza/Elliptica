@@ -267,7 +267,7 @@ static int x_of_X_CS_coord(double *const x,const double *const X,const Patch_T *
                 R1 = patch->CoordSysInfo->CubedSphericalCoord->R1,
                 R2 = patch->CoordSysInfo->CubedSphericalCoord->R2;
   const double *const C = patch->c;/* center of origine translated */
-  double x1,x2,d;
+  double x1,x2,d,L;
   
   SignAndIndex_permutation_CubedSphere(side,&a,&b,&c,&S);
 
@@ -313,11 +313,11 @@ static int x_of_X_CS_coord(double *const x,const double *const X,const Patch_T *
       x[c]+= C[c];
     break;
     case OT_T2_CS:
+      L = 1.-R1/R2;
       d = sqrt(1+SQR(X[0])+SQR(X[1]));
       x1 = S*R1/d;
-      x2 = S*R2/d;
       
-      x[c] = x1+(x2-x1)*X[2];
+      x[c] = x1/(1.-L*X[2]);
       x[a] = S*x[c]*X[0];
       x[b] = S*x[c]*X[1];
       
@@ -363,7 +363,7 @@ static int X_of_x_CS_coord(double *const X,const double *const cart,const Patch_
                xc2 = patch->CoordSysInfo->CubedSphericalCoord->xc2,
                 R1 = patch->CoordSysInfo->CubedSphericalCoord->R1,
                 R2 = patch->CoordSysInfo->CubedSphericalCoord->R2;
-  double x1,x2,d;
+  double x1,x2,d,L;
   
   SignAndIndex_permutation_CubedSphere(side,&i,&j,&k,&S);
   
@@ -391,10 +391,10 @@ static int X_of_x_CS_coord(double *const X,const double *const cart,const Patch_
       X[2] = (x[k]-x1)/(x2-x1);
     break;
     case OT_T2_CS:
-      d = sqrt(1+SQR(X[0])+SQR(X[1]));
+      L = 1.-R1/R2;
+      d  = sqrt(1+SQR(X[0])+SQR(X[1]));
       x1 = S*R1/d;
-      x2 = S*R2/d;
-      X[2] = (x[k]-x1)/(x2-x1);
+      X[2] = (1-x1/x[k])/L;
     break;
     default:
       abortEr(NO_OPTION);
