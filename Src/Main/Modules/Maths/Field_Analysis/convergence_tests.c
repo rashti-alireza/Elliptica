@@ -47,7 +47,7 @@ int analytic_numeric_convergence_test(const Grid_T *const grid,const char *const
     L1   /= scale;
     
     printf("%s Linf L2 L1\n",patch->name);
-    printf("%u %g %g %g\n",nn,Linf,L2,L1);
+    printf("%u %0.15f %0.15f %0.15f\n",nn,Linf,L2,L1);
     
     free(diff);
   }
