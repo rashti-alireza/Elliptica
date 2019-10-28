@@ -83,6 +83,11 @@ void sbh_allocate_fields(Grid_T *const grid)
     add_field("Beta_U1",0,patch,YES);
     add_field("Beta_U2",0,patch,YES);
     
+    /* analytic fields for convergence test */
+    add_field("_Beta_U0",0,patch,YES);
+    add_field("_Beta_U1",0,patch,YES);
+    add_field("_Beta_U2",0,patch,YES);
+    
     ADD_FIELD_NoMem(dB0_U1D0)
     ADD_FIELD_NoMem(dB0_U1D1)
     ADD_FIELD_NoMem(dB0_U1D2)

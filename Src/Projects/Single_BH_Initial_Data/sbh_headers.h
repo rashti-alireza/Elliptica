@@ -32,3 +32,4 @@ void sbh_update_derivative_Beta_U2(Patch_T *const patch);
 void sbh_update_Beta_U0(Patch_T *const patch);
 void sbh_update_Beta_U1(Patch_T *const patch);
 void sbh_update_Beta_U2(Patch_T *const patch);
+void sbh_convergence_test(const Grid_T *const grid);

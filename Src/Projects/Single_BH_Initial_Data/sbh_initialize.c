@@ -435,6 +435,9 @@ static void init_field_KerrSchild(Grid_T *const grid,const double a_BH, const do
     PREP_FIELD(Beta_U0)
     PREP_FIELD(Beta_U1)
     PREP_FIELD(Beta_U2)
+    PREP_FIELD(_Beta_U0)
+    PREP_FIELD(_Beta_U1)
+    PREP_FIELD(_Beta_U2)
     PREP_FIELD(_gammaI_U0U2)
     PREP_FIELD(_gammaI_U0U0)
     PREP_FIELD(_gammaI_U0U1)
@@ -493,6 +496,10 @@ KSbeta_D2[ijk]*_gammaI_U2U2[ijk];
       Beta_U0[ijk] = shift_U0;
       Beta_U2[ijk] = shift_U2;
       
+      /* analytic field */
+      _Beta_U1[ijk] = shift_U1;
+      _Beta_U0[ijk] = shift_U0;
+      _Beta_U2[ijk] = shift_U2;
     }
     
   }/* end of black hole part */
