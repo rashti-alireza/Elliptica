@@ -87,6 +87,7 @@ typedef struct SOLVE_EQUATIONS_T
   
 }Solve_Equations_T;
 
+char **get_solving_field_name(const char *const solving_order,unsigned *const nf);
 void print_root_finder_exit_status(const Root_Finder_T *const root);
 Root_Finder_T *init_root_finder(const unsigned n);
 double *execute_root_finder(Root_Finder_T *const root);

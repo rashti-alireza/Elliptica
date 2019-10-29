@@ -47,7 +47,7 @@ int ddm_schur_complement(Solve_Equations_T *const SolveEqs)
   printf("{ Solving the Equations ...\n\n");
   
   /* read order of fields to be solved from input */
-  field_name = read_fields_in_order(SolveEqs,&nf);
+  field_name = get_solving_field_name(SolveEqs->solving_order,&nf);
   
   /* solving fields in order */
   for (f = 0; f < nf; ++f)
@@ -1739,19 +1739,19 @@ static void make_map_and_inv(Patch_T *const patch)
   free(flag_point);
 }
 
-/* read order of fields to be solved from inout file.
-// ->return value: name and number of fields.
-*/
-static char **read_fields_in_order(Solve_Equations_T *const SolveEqs,unsigned *const nf)
+/* read the names of the fields to be solved
+// in order given in the input file.
+// the parameter is called Solving_Order
+// ->return value: name and number of fields. */
+char **get_solving_field_name(const char *const solving_order,unsigned *const nf)
 {
   char COMMA = ',';
-  const char *par_f = SolveEqs->solving_order;  
   char *par;
   char **field_name = 0;
   char *tok,*save = 0;
   
   /* finding fields's name */
-  par = dup_s(par_f);/* par = f1,f2,... */
+  par = dup_s(solving_order);/* par = f1,f2,... */
   tok = tok_s(par,COMMA,&save);/* tok = f1 */
   while(tok)
   {
@@ -2407,7 +2407,7 @@ void test_Jacobian_of_equations(Solve_Equations_T *const SolveEqs)
   int status;
   
   /* read order of fields to be solved from input */
-  field_name = read_fields_in_order(SolveEqs,&nf);
+  field_name = get_solving_field_name(SolveEqs->solving_order,&nf);
   
   /* solving fields in order */
   for (f = 0; f < nf; ++f)

@@ -33,7 +33,7 @@ static void set_solving_man_settings_Frms_i_single_patch(Patch_T *const patch);
 static void set_solving_man_settings_solver_step(Grid_T *const grid,const int current_step);
 static void free_solving_man_settings(Grid_T *const grid);
 static void make_f(Patch_T *const patch);
-static char **read_fields_in_order(Solve_Equations_T *const SolveEqs,unsigned *const nf);
+char **get_solving_field_name(const char *const solving_order,unsigned *const nf);
 static int solve_field(Solve_Equations_T *const SolveEqs);
 static void set_solving_man_settings(Solve_Equations_T *const SolveEqs);
 static void set_solving_man_cf(Solve_Equations_T *const SolveEqs);
