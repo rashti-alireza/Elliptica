@@ -25,15 +25,18 @@ void bbn_solve_initial_data_eqs(Grid_T *const grid)
   /* solving equation(s) */
   Solve_Equations_T *SolveEqs = init_solve_equations(grid);
   SolveEqs->solving_order = GetParameterS_E("Solving_Order");
-  SolveEqs->FieldUpdate  = bbn_SolveEqs_FieldUpdate;
-  SolveEqs->SourceUpdate = bbn_SolveEqs_SourceUpdate;
-  SolveEqs->StopCriteria = bbn_stop_criteria;
+  SolveEqs->FieldUpdate   = bbn_SolveEqs_FieldUpdate;
+  SolveEqs->SourceUpdate  = bbn_SolveEqs_SourceUpdate;
+  SolveEqs->StopCriteria  = bbn_stop_criteria;
   
   Grid_T *phi_grid = bbn_phi_grid(grid);/* phi needed to be solved only in NS */
   add_special_grid_solve_equations(phi_grid,"phi",SolveEqs);
   
-  const int max_iter = GetParameterI_E("Solving_Max_Number_of_Iteration");
-  int iter = 0;
+  /* saving the field being solved for relaxation scheme purposes */
+  save_fields(grid);
+  
+  const unsigned max_iter = (unsigned)GetParameterI_E("Solving_Max_Number_of_Iteration");
+  unsigned iter = 0;
   while (iter < max_iter)
   {
     /* some prints */
@@ -59,6 +62,9 @@ void bbn_solve_initial_data_eqs(Grid_T *const grid)
   free_solve_equations(SolveEqs);
   bbn_free_phi_grid(phi_grid);
   
+  /* updating the fields using relaxed scheme */
+  update_fields_relaxed_scheme(grid);
+  
   /* free data base of equations */
   free_db_eqs(field_eq);
   free_db_eqs(bc_eq);
@@ -68,6 +74,97 @@ void bbn_solve_initial_data_eqs(Grid_T *const grid)
   printf("} Solving initial data equations for Binary BH and NS ==> Done.\n");
   pr_clock();
   pr_line_custom('='); 
+}
+
+/* using initial fields and solved fields update every thing 
+// using relaxed scheme, note, we also update source fields */ 
+static void update_fields_relaxed_scheme(Grid_T *const grid)
+{
+  const unsigned npatch = grid->np;
+  const char *const solving_order = GetParameterS_E("Solving_Order");
+  const double W1  = GetParameterD_E("Solving_Field_Update_Weight");
+  const double W2  = 1-W1;
+  char **field_name;
+  unsigned p,nf,f;
+  
+  /* no need to update it W1 = 1 */
+  if (EQL(W1,1))
+    return;
+  
+  field_name = get_solving_field_name(solving_order,&nf);
+  
+  /* update all of the fields were solved according to the given weight */
+  for (f = 0; f < nf; ++f)
+  {
+    const char *field_new = field_name[f];
+    char field_old[100];
+    sprintf(field_old,"OLD_%s",field_new);
+    
+    OpenMP_Patch_Pragma(omp parallel for)
+    for (p = 0; p < npatch; ++p)
+    {
+      Patch_T *patch = grid->patch[p];
+      unsigned nn    = patch->nn;
+      unsigned ijk;
+      
+      /* if the field is not defined in this patch */
+      if (_Ind(field_new) < 0)
+        continue;
+        
+      Field_T *f_old  = patch->pool[Ind(field_old)];
+      Field_T *f_new  = patch->pool[Ind(field_new)];
+      free_coeffs(f_new);
+      
+      for (ijk = 0; ijk < nn; ++ijk)
+        f_new->v[ijk] = W1*f_new->v[ijk]+W2*f_old->v[ijk];
+      
+      bbn_SolveEqs_FieldUpdate(patch,field_new);
+    }
+  }/* end of for (f = 0; f < nf; ++f) */
+  Tij_IF_CTS_psi6Sources(grid);
+  
+  /* free names */
+  free_2d_mem(field_name,nf);
+  
+}
+
+/* saving the field with the given name for iterative purposes. */
+static void save_fields(Grid_T *const grid)
+{
+  const unsigned npatch = grid->np;
+  const char *const solving_order = GetParameterS_E("Solving_Order");  
+  char **field_name;
+  unsigned p,nf,f;
+  
+  field_name = get_solving_field_name(solving_order,&nf);
+  
+  /* save all of the fields being solved */
+  for (f = 0; f < nf; ++f)
+  {
+    const char *fname0 = field_name[f];
+    char fname_old[100];
+    sprintf(fname_old,"OLD_%s",fname0);
+    
+    OpenMP_Patch_Pragma(omp parallel for)
+    for (p = 0; p < npatch; ++p)
+    {
+      Patch_T *patch = grid->patch[p];
+      unsigned nn    = patch->nn;
+      unsigned ijk;
+      
+      /* if no field defined in this patch */
+      if (_Ind(fname0) < 0)
+        continue;
+        
+      Field_T *f_old  = patch->pool[Ind(fname_old)];
+      Field_T *f0     = patch->pool[Ind(fname0)];
+      free_coeffs(f_old);
+      
+      for (ijk = 0; ijk < nn; ++ijk)
+        f_old->v[ijk] = f0->v[ijk];
+   
+    }
+  }/* end of for (f = 0; f < nf; ++f)*/
 }
 
 /* stop criteria for solver, namely, if some conditions satisfied, 

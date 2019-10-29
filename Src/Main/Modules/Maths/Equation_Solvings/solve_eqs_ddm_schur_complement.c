@@ -1749,6 +1749,7 @@ char **get_solving_field_name(const char *const solving_order,unsigned *const nf
   char *par;
   char **field_name = 0;
   char *tok,*save = 0;
+  *nf = 0;
   
   /* finding fields's name */
   par = dup_s(solving_order);/* par = f1,f2,... */

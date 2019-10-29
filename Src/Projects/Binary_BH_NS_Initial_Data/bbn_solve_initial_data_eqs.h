@@ -11,6 +11,8 @@ static void bbn_free_phi_grid(Grid_T *grid);
 void bbn_SolveEqs_SourceUpdate(Grid_T *const grid,const char *const name);
 int bbn_stop_criteria(Grid_T *const grid,const char *const name);
 static void bbn_backtrack(Grid_T *const grid,const char *const name);
+static void save_fields(Grid_T *const grid);
+static void update_fields_relaxed_scheme(Grid_T *const grid);
 
 
                           
