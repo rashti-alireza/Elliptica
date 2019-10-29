@@ -58,12 +58,12 @@ void bbn_solve_initial_data_eqs(Grid_T *const grid)
   }
   pr_line_custom('=');
   
+  /* updating the fields using relaxed scheme */
+  update_fields_relaxed_scheme(grid);
+
   /* free SolveEqs and phi grid */
   free_solve_equations(SolveEqs);
   bbn_free_phi_grid(phi_grid);
-  
-  /* updating the fields using relaxed scheme */
-  update_fields_relaxed_scheme(grid);
   
   /* free data base of equations */
   free_db_eqs(field_eq);
