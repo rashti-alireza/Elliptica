@@ -1913,10 +1913,11 @@ KSbeta_D2[ijk]*_gammaI_U2U2[ijk];
      {
        for (ijk = 0; ijk < nn; ++ijk)
        {
-         double x   = patch->node[ijk]->x[0];
-         double y   = patch->node[ijk]->x[1];
-         
-         psim4 = pow(psi[ijk],-4);
+         double x = patch->node[ijk]->x[0];
+         double y = patch->node[ijk]->x[1];
+         double z = patch->node[ijk]->x[2];
+         double r = sqrt(SQR(x)+SQR(y)+SQR(z));
+         psim4    = pow(psi[ijk],-4);
          
          /* Beta */
          Beta_U0[ijk] *= psim4;
@@ -1929,9 +1930,13 @@ KSbeta_D2[ijk]*_gammaI_U2U2[ijk];
          B1_U2[ijk] = 0;
          
          /* B0 */
-         B0_U0[ijk] = 0;
-         B0_U1[ijk] = 0;
-         B0_U2[ijk] = 0;
+         B0_U0[ijk] = Beta_U0[ijk]-B1_U0[ijk];
+         B0_U1[ijk] = Beta_U1[ijk]-B1_U1[ijk];
+         B0_U2[ijk] = Beta_U2[ijk]-B1_U2[ijk];
+         B0_U0[ijk] /= r;
+         B0_U1[ijk] /= r;
+         B0_U2[ijk] /= r;
+         
        }
      }
      else
