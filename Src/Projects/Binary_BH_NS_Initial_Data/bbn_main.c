@@ -73,6 +73,9 @@ int Binary_BH_NS_Initial_Data(void)
     /* constructing ID for the given grid */
     bbn_solve_initial_data_eqs(grid_next);
     
+    /* calculating the constraints */
+    bbn_calculate_constraints(grid_next);
+    
     /* study and analyse the new grid */
     bbn_study_initial_data(grid_next);
     
