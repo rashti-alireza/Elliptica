@@ -29,12 +29,12 @@ Grid_T *bbn_initialize_next_grid(Grid_T *const grid_prev)
 
 /* finding different quantities and then make the next grid using previous grid
 // first find the values of the following parameters and some adjustment:
-// 1. Euler equation constant.
-// 2. center of rotation (center of mass)
-// 3. NS center
-// 4. orbital angular velocity
-// 5. find NS surface
-// 6. drag NS to the center
+// . orbital angular velocity
+// . Euler equation constant.
+// . center of rotation (center of mass)
+// . NS center
+// . find NS surface
+// . drag NS to the center
 // . BH_radius
 // . Omega_BH
 // ->return value: the next grid called 'grid_next' */
@@ -42,6 +42,9 @@ static Grid_T *make_next_grid_using_previous_grid(Grid_T *const grid_prev)
 {
   Grid_T *grid_next = 0;
   struct Grid_Params_S *GridParams = init_GridParams();/* adjust some pars for construction of next grid */
+  
+  /* find BH_NS_orbital_angular_velocity using force balance equation */
+  find_BH_NS_Omega_force_balance_eq(grid_prev);
   
   /* find Euler equation constant to meet NS baryonic mass */
   find_Euler_eq_const(grid_prev);
@@ -60,9 +63,6 @@ static Grid_T *make_next_grid_using_previous_grid(Grid_T *const grid_prev)
   
   /* adjust the center of NS */
   adjust_NS_center(grid_prev);
-  
-  /* find BH_NS_orbital_angular_velocity using force balance equation */
-  find_BH_NS_Omega_force_balance_eq(grid_prev);
   
   printf("\nShould I update enthalpy agian? What is the order of adjustmetsn?\n");
   
@@ -250,35 +250,31 @@ static void adjust_NS_center(Grid_T *const grid)
 /* find BH_NS_orbital_angular_velocity using force balance equation */
 static void find_BH_NS_Omega_force_balance_eq(Grid_T *const grid)
 {
-  printf("NOT TESTED\n");
-    return;
-  char par_name[1000];
-  const char *stem;
-  const double *NS_center;
-  double *Omega_BH_NS;
+  const double D            = GetParameterD_E("BH_NS_separation");
+  const double Vr           = GetParameterD_E("BH_NS_infall_velocity");
+  const double y_CM         = GetParameterD_E("y_CM");
+  const double NS_center[3] = {0,-D/2,0};/* since we keep the NS center always here */
+  const double RESIDUAL     = sqrt(GetParameterD_E("RootFinder_Tolerance"));
+  const unsigned np         = grid->np;
+  double *Omega_BH_NS,Omega_BHNS;
   double guess[1],X[3];
   struct Force_Balance_RootFinder_S params[1];
-  Patch_T *patch;
+  Patch_T *patch0;
+  unsigned p;
   
-  sprintf(par_name,"grid%u_NS_center_x",grid->gn);
-  NS_center = GetParameterArrayF_E(par_name);
+  patch0 = GetPatch("left_centeral_box",grid);
   
-  sprintf(par_name,"grid%u_NS_center_patch",grid->gn);
-  stem  = GetParameterS_E(par_name);
-  patch = GetPatch(stem,grid);
-  
-  X_of_x(X,NS_center,patch);
+  X_of_x(X,NS_center,patch0);
   
   Root_Finder_T *root = init_root_finder(1);
   guess[0] = GetParameterD_E("BH_NS_orbital_angular_velocity");
   
-  //params->root_finder = root;
-  params->patch       = patch;
+  params->patch       = patch0;
   params->X           = X;
-  params->y_CM        = GetParameterD_E("y_CM");
-  params->Vr          = GetParameterD_E("BH_NS_infall_velocity");
-  params->D           = GetParameterD_E("BH_NS_separation");
-  root->description   = "Solving Force Balance Equation:";
+  params->y_CM        = y_CM;
+  params->Vr          = Vr;
+  params->D           = D;
+  root->description   = "Solving Force Balance Equation";
   root->verbose       = 1;
   root->type          = GetParameterS_E("RootFinder_Method");
   root->tolerance     = GetParameterD_E("RootFinder_Tolerance");
@@ -290,23 +286,50 @@ static void find_BH_NS_Omega_force_balance_eq(Grid_T *const grid)
   
   Omega_BH_NS         = execute_root_finder(root);
   
-  if (root->exit_status != ROOT_FINDER_OK)
+  if (root->exit_status != ROOT_FINDER_OK && GRT(root->residual,RESIDUAL))
   {
     print_root_finder_exit_status(root);
   }
   update_parameter_double_format("BH_NS_orbital_angular_velocity",Omega_BH_NS[0]);
+  printf("Updating BH_NS_orbital_angular_velocity: %g -> %g\n",guess[0],Omega_BH_NS[0]);
+  
+  Omega_BHNS = Omega_BH_NS[0];
   
   free_root_finder(root);
   free(Omega_BH_NS);
   
-  /* since Beta has been changed let's update the pertinent fields */
-  bbn_update_Beta_U0(patch);
-  bbn_update_Beta_U1(patch);
-  bbn_update_Beta_U2(patch);
-  bbn_update_derivative_Beta_U0(patch);
-  bbn_update_derivative_Beta_U1(patch);
-  bbn_update_derivative_Beta_U2(patch);
-  //bbn_update_Aij(patch); Do we need this??
+  /* since BH_NS_orbital_angular_velocity has been changed 
+  // let's update the pertinent fields */
+  OpenMP_Patch_Pragma(omp parallel for)
+  for (p = 0; p < np; ++p)
+  {
+    Patch_T *patch = grid->patch[p];
+    unsigned nn = patch->nn;
+    unsigned ijk;
+    
+    PREP_FIELD(B1_U0)
+    PREP_FIELD(B1_U1)
+    PREP_FIELD(B1_U2)
+    
+    for (ijk = 0; ijk < nn; ++ijk)
+    {
+      double x = patch->node[ijk]->x[0];
+      double y = patch->node[ijk]->x[1];
+     
+      /* B1 */
+      B1_U0[ijk] = Omega_BHNS*(-y+y_CM)+Vr*x/D;
+      B1_U1[ijk] = Omega_BHNS*x+Vr*(y-y_CM)/D;
+      B1_U2[ijk] = 0;
+    }
+   
+    bbn_update_Beta_U0(patch);
+    bbn_update_Beta_U1(patch);
+    bbn_update_Beta_U2(patch);
+    bbn_update_derivative_Beta_U0(patch);
+    bbn_update_derivative_Beta_U1(patch);
+    bbn_update_derivative_Beta_U2(patch);
+  }
+  //bbn_update_Aij(grid);
 }
 
 /* find the NS center using d(enthalpy)/dx^i = 0 */
