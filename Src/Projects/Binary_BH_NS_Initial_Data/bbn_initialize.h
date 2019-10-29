@@ -103,3 +103,4 @@ static double bbn_NS_surface_enthalpy_eq(void *params,const double *const x);
 static double bbn_NS_surface_denthalpy_dr(void *params,const double *const x,const unsigned dir);
 static void extrapolate_fluid_fields_outsideNS(Grid_T *const grid);
 static void find_NS_surface(Grid_T *const grid,struct Grid_Params_S *const GridParams);
+static void update_B1_then_Beta_and_Aij(Grid_T *const grid,const double Omega_BHNS,const double Vr,const double y_CM,const double D);

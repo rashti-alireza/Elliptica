@@ -253,21 +253,19 @@ static void find_BH_NS_Omega_force_balance_eq(Grid_T *const grid)
   const double y_CM         = GetParameterD_E("y_CM");
   const double NS_center[3] = {0,-D/2,0};/* since we keep the NS center always here */
   const double RESIDUAL     = sqrt(GetParameterD_E("RootFinder_Tolerance"));
-  const unsigned np         = grid->np;
   double *Omega_BH_NS,Omega_BHNS;
   double guess[1],X[3];
   struct Force_Balance_RootFinder_S params[1];
-  Patch_T *patch0;
-  unsigned p;
+  Patch_T *patch;
   
-  patch0 = GetPatch("left_centeral_box",grid);
+  patch = GetPatch("left_centeral_box",grid);
   
-  X_of_x(X,NS_center,patch0);
+  X_of_x(X,NS_center,patch);
   
   Root_Finder_T *root = init_root_finder(1);
   guess[0] = GetParameterD_E("BH_NS_orbital_angular_velocity");
   
-  params->patch       = patch0;
+  params->patch       = patch;
   params->X           = X;
   params->y_CM        = y_CM;
   params->Vr          = Vr;
@@ -298,36 +296,7 @@ static void find_BH_NS_Omega_force_balance_eq(Grid_T *const grid)
   
   /* since BH_NS_orbital_angular_velocity has been changed 
   // let's update the pertinent fields */
-  OpenMP_Patch_Pragma(omp parallel for)
-  for (p = 0; p < np; ++p)
-  {
-    Patch_T *patch = grid->patch[p];
-    unsigned nn = patch->nn;
-    unsigned ijk;
-    
-    PREP_FIELD(B1_U0)
-    PREP_FIELD(B1_U1)
-    PREP_FIELD(B1_U2)
-    
-    for (ijk = 0; ijk < nn; ++ijk)
-    {
-      double x = patch->node[ijk]->x[0];
-      double y = patch->node[ijk]->x[1];
-     
-      /* B1 */
-      B1_U0[ijk] = Omega_BHNS*(-y+y_CM)+Vr*x/D;
-      B1_U1[ijk] = Omega_BHNS*x+Vr*(y-y_CM)/D;
-      B1_U2[ijk] = 0;
-    }
-   
-    bbn_update_Beta_U0(patch);
-    bbn_update_Beta_U1(patch);
-    bbn_update_Beta_U2(patch);
-    bbn_update_derivative_Beta_U0(patch);
-    bbn_update_derivative_Beta_U1(patch);
-    bbn_update_derivative_Beta_U2(patch);
-    bbn_update_psi10A_UiUj(patch);
-  }
+  update_B1_then_Beta_and_Aij(grid,Omega_BHNS,Vr,y_CM,D);
 }
 
 /* find the NS center using d(enthalpy)/dx^i = 0 */
@@ -550,10 +519,15 @@ static void find_center_of_mass(Grid_T *const grid)
   const double Omega_BHNS = GetParameterD_E("BH_NS_orbital_angular_velocity");
   const double Vr   = GetParameterD_E("BH_NS_infall_velocity");
   const double D    = GetParameterD_E("BH_NS_separation");
+  const double RESIDUAL = sqrt(GetParameterD_E("RootFinder_Tolerance"));
   struct CM_RootFinder_S params[1];
   
   obs->quantity = "ADM_momentums";
   plan_observable(obs);
+  
+  printf("ADM momentums before center of mass update:\n");
+  printf("P_ADM = (%0.15f,%0.15f,%0.15f).\n",
+          obs->Px_ADM(obs),obs->Py_ADM(obs),obs->Pz_ADM(obs));
   
   params->obs  = obs;
   params->grid = grid;
@@ -562,7 +536,8 @@ static void find_center_of_mass(Grid_T *const grid)
   params->Omega_BHNS = Omega_BHNS;
   guess[0] = GetParameterD_E("y_CM");
   
-  root->description = "Finding the center of mass:";
+  root->description = "Finding the center of mass";
+  root->verbose     = 1;
   root->type        = GetParameterS_E("RootFinder_Method");
   root->tolerance   = GetParameterD_E("RootFinder_Tolerance");
   root->MaxIter     = (unsigned)GetParameterI_E("RootFinder_Max_Number_of_Iteration");
@@ -572,11 +547,62 @@ static void find_center_of_mass(Grid_T *const grid)
   plan_root_finder(root);
   y_CM              = execute_root_finder(root);
   
+  if (root->exit_status != ROOT_FINDER_OK && GRT(root->residual,RESIDUAL))
+  {
+    print_root_finder_exit_status(root);
+  }
+  
+  /* having found new y_CM now update */
   update_parameter_double_format("y_CM",y_CM[0]);
+  update_B1_then_Beta_and_Aij(grid,Omega_BHNS,Vr,y_CM[0],D);
+  
+  printf("Update Center of Rotation: %g -> %g.\n",guess[0],y_CM[0]);
+  
+  printf("ADM momentums after center of mass update:\n");
+  printf("P_ADM = (%0.15f,%0.15f,%0.15f).\n",
+          obs->Px_ADM(obs),obs->Py_ADM(obs),obs->Pz_ADM(obs));
   
   free(y_CM);
   free_root_finder(root);
   free_observable(obs);
+}
+
+/* given the components to construct B1, it makes B1 
+// and consequently update Beta and Aij's */
+static void update_B1_then_Beta_and_Aij(Grid_T *const grid,const double Omega_BHNS,const double Vr,const double y_CM,const double D)
+{
+  const unsigned np = grid->np;
+  unsigned p;
+  
+  OpenMP_Patch_Pragma(omp parallel for)
+  for (p = 0; p < np; ++p)
+  {
+    Patch_T *patch = grid->patch[p];
+    unsigned nn = patch->nn;
+    unsigned ijk;
+    
+    /* B^1 */
+    PREP_FIELD(B1_U0)
+    PREP_FIELD(B1_U1)
+    PREP_FIELD(B1_U2)
+    for (ijk = 0; ijk < nn; ++ijk)
+    {
+      double x     = patch->node[ijk]->x[0];
+      double y     = patch->node[ijk]->x[1];
+      
+      B1_U0[ijk] = Omega_BHNS*(-y+y_CM)+Vr*x/D;
+      B1_U1[ijk] = Omega_BHNS*x+Vr*(y-y_CM)/D;
+      B1_U2[ijk] = 0;
+    }
+    bbn_update_Beta_U0(patch);
+    bbn_update_Beta_U1(patch);
+    bbn_update_Beta_U2(patch);
+    bbn_update_derivative_Beta_U0(patch);
+    bbn_update_derivative_Beta_U1(patch);
+    bbn_update_derivative_Beta_U2(patch);
+    /* update A^{ijk} */
+    bbn_update_psi10A_UiUj(patch);
+  }
 }
 
 /* root finder equation for center of mass */
@@ -589,36 +615,8 @@ static double CenterOfMass_for_P_ADM_root_finder_eq(void *params,const double *c
   const double Vr         = par->Vr;
   const double D          = par->D;
   const double y_CM       = x[0];
-  unsigned p,nn,ijk;
   
-  /* update Beta */
-  FOR_ALL_PATCHES(p,grid)
-  {
-    Patch_T *patch = grid->patch[p];
-    nn = patch->nn;
-    
-    /* B^1 */
-    PREP_FIELD(B1_U0)
-    PREP_FIELD(B1_U1)
-    PREP_FIELD(B1_U2)
-    for (ijk = 0; ijk < nn; ++ijk)
-    {
-      double x0     = patch->node[ijk]->x[0];
-      double y0     = patch->node[ijk]->x[1];
-      
-      B1_U0[ijk] = Omega_BHNS*(-y0+y_CM)+Vr*x0/D;
-      B1_U1[ijk] = Omega_BHNS*x0+Vr*(y0-y_CM)/D;
-      B1_U2[ijk] = 0;
-    }
-    bbn_update_Beta_U0(patch);
-    bbn_update_Beta_U1(patch);
-    bbn_update_Beta_U2(patch);
-    bbn_update_derivative_Beta_U0(patch);
-    bbn_update_derivative_Beta_U1(patch);
-    bbn_update_derivative_Beta_U2(patch);
-    /* update A^{ijk} */
-    bbn_update_psi10A_UiUj(patch);
-  }
+  update_B1_then_Beta_and_Aij(grid,Omega_BHNS,Vr,y_CM,D);
   
   return (obs->Px_ADM(obs));
 }
