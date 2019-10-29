@@ -28,7 +28,7 @@ NS_initialization = TOV
 Solving_Order = eta,psi
 
 ### Solving:
-Solving_Relaxation_Factor         = 1
+Solving_Newton_Update_Weight         = 1
 Solving_Residual                  = 1E-3->1E-3->1E-3
 Solving_Residual_Factor           = 1E-2 
 Solving_Max_Number_of_Iteration   = 20

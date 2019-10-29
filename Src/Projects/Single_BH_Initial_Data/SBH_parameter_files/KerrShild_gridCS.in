@@ -14,7 +14,7 @@ BH_initialization = KerrShild
 Solving_Order = B0_U0,B0_U1,B0_U2 
 
 ### Solving:
-Solving_Relaxation_Factor         = 0.3
+Solving_Newton_Update_Weight         = 0.3
 Solving_Residual                  = 1E-4
 Solving_Residual_Factor           = 1E-1 
 Solving_Max_Number_of_Iteration   = 30

@@ -85,7 +85,7 @@ int default_stop_criteria_solve_equations(Grid_T *const grid,const char *const n
 double get_relaxation_factor_solve_equations(Solve_Equations_T *const solve)
 {
   const char *f_name = solve->field_name;
-  double factor = GetParameterD("Solving_Relaxation_Factor");/* relaxation factor */
+  double factor = GetParameterD("Solving_Newton_Update_Weight");/* relaxation factor */
   char par[400] = {'\0'};
   
   if (factor == DBL_MAX)/* if no such parameter defined */
@@ -93,7 +93,7 @@ double get_relaxation_factor_solve_equations(Solve_Equations_T *const solve)
   
   if (f_name)
   {
-    sprintf(par,"Solving_Relaxation_Factor_%s",f_name);
+    sprintf(par,"Solving_Newton_Update_Weight_%s",f_name);
     double factor2 = GetParameterD(par);
     if (factor2 != DBL_MAX)
       factor = factor2;
