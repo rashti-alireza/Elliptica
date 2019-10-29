@@ -543,8 +543,6 @@ static void find_Euler_eq_const(Grid_T *const grid)
 /* find y_CM by demanding P_ADM = 0 */
 static void find_center_of_mass(Grid_T *const grid)
 {
-  printf("NOT TESTED\n");
-  return;
   Root_Finder_T *root = init_root_finder(1);
   Observable_T *obs   = init_observable(grid);
   double  *y_CM = 0;
