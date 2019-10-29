@@ -1910,28 +1910,58 @@ KSbeta_D2[ijk]*_gammaI_U2U2[ijk];
      PREP_FIELD(Beta_U1)
      PREP_FIELD(Beta_U2)
     
-     for (ijk = 0; ijk < nn; ++ijk)
+     /* for outermost patches the better approximation is B0 = 0 */
+     if (IsItOutermostPatch(patch))
      {
-       double x   = patch->node[ijk]->x[0];
-       double y   = patch->node[ijk]->x[1];
-       
-       psim4 = pow(psi[ijk],-4);
-       
-       /* Beta */
-       Beta_U0[ijk] *= psim4;
-       Beta_U1[ijk] *= psim4;
-       Beta_U2[ijk] *= psim4;
-       
-       /* B1 */
-       B1_U0[ijk] = Omega_BHNS*(-y+y_CM)+Vr*x/D;
-       B1_U1[ijk] = Omega_BHNS*x+Vr*(y-y_CM)/D;
-       B1_U2[ijk] = 0;
-       
-       /* B0 */
-       B0_U0[ijk] = Beta_U0[ijk]-B1_U0[ijk];
-       B0_U1[ijk] = Beta_U1[ijk]-B1_U1[ijk];
-       B0_U2[ijk] = Beta_U2[ijk]-B1_U2[ijk];
-   }
+       for (ijk = 0; ijk < nn; ++ijk)
+       {
+         double x   = patch->node[ijk]->x[0];
+         double y   = patch->node[ijk]->x[1];
+         
+         psim4 = pow(psi[ijk],-4);
+         
+         /* Beta */
+         Beta_U0[ijk] *= psim4;
+         Beta_U1[ijk] *= psim4;
+         Beta_U2[ijk] *= psim4;
+         
+         /* B1 */
+         B1_U0[ijk] = Omega_BHNS*(-y+y_CM)+Vr*x/D;
+         B1_U1[ijk] = Omega_BHNS*x+Vr*(y-y_CM)/D;
+         B1_U2[ijk] = 0;
+         
+         /* B0 */
+         B0_U0[ijk] = 0;
+         B0_U1[ijk] = 0;
+         B0_U2[ijk] = 0;
+       }
+     }
+     else
+     {
+       for (ijk = 0; ijk < nn; ++ijk)
+       {
+         double x   = patch->node[ijk]->x[0];
+         double y   = patch->node[ijk]->x[1];
+         
+         psim4 = pow(psi[ijk],-4);
+         
+         /* Beta */
+         Beta_U0[ijk] *= psim4;
+         Beta_U1[ijk] *= psim4;
+         Beta_U2[ijk] *= psim4;
+         
+         /* B1 */
+         B1_U0[ijk] = Omega_BHNS*(-y+y_CM)+Vr*x/D;
+         B1_U1[ijk] = Omega_BHNS*x+Vr*(y-y_CM)/D;
+         B1_U2[ijk] = 0;
+         
+         /* B0 */
+         B0_U0[ijk] = Beta_U0[ijk]-B1_U0[ijk];
+         B0_U1[ijk] = Beta_U1[ijk]-B1_U1[ijk];
+         B0_U2[ijk] = Beta_U2[ijk]-B1_U2[ijk];
+         
+       }
+     }
       
   }/* end of * initializing Beta and B */
   
