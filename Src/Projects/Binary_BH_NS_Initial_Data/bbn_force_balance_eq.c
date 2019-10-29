@@ -56,6 +56,10 @@ bbn_update_Beta_U2(patch);
   GET_FIELD(u0)
 
 
+ADD_FIELD(GAMMA_rf);
+ADD_FIELD(GAMMAt_rf);
+ADD_FIELD_NoMem(dGAMMA_D1_rf);
+ADD_FIELD_NoMem(dGAMMAt_D1_rf);
 DECLARE_FIELD(GAMMA_rf);
 DECLARE_FIELD(GAMMAt_rf);
 DECLARE_FIELD(dGAMMA_D1_rf);
@@ -151,8 +155,9 @@ free_interpolation(interp_GAMMAt);
 free_interpolation(interp_dGAMMA);
 free_interpolation(interp_dGAMMAt);
 
-const double f = dgt/gt+2*dg/g;
-assert(!isfinite(f));
+double f = dgt/gt+2*dg/g;
+if(!isfinite(f))
+  f = 1;
 
 REMOVE_FIELD(GAMMA_rf);
 REMOVE_FIELD(GAMMAt_rf);
