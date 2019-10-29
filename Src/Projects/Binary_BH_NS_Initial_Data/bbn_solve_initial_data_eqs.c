@@ -208,7 +208,7 @@ int bbn_stop_criteria(Grid_T *const grid,const char *const name)
     
     /* if residual increased stop */
     res_last = patch->solving_man->settings->HFrms[solver_step-1];
-    if (res > res_last*(1. + res_bckt) && GRT(res,res_TOLERANCE))
+    if (res > res_last*(1. + res_bckt) && GRT(res,res_TOLERANCE) && !IsItOutermostPatch(patch))
     {
       stop_backtrack = 0;
       break;
