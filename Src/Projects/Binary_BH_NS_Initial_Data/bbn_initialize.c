@@ -328,7 +328,6 @@ static void find_BH_NS_Omega_force_balance_eq(Grid_T *const grid)
     bbn_update_derivative_Beta_U2(patch);
     bbn_update_psi10A_UiUj(patch);
   }
-  bbn_update_Aij(grid);
 }
 
 /* find the NS center using d(enthalpy)/dx^i = 0 */
