@@ -28,22 +28,20 @@ Grid_T *bbn_initialize_next_grid(Grid_T *const grid_prev)
 }
 
 /* finding different quantities and then make the next grid using previous grid
+// first find the values of the following parameters and some adjustment:
+// 1. Euler equation constant.
+// 2. center of rotation (center of mass)
+// 3. NS center
+// 4. orbital angular velocity
+// 5. find NS surface
+// 6. drag NS to the center
+// . BH_radius
+// . Omega_BH
 // ->return value: the next grid called 'grid_next' */
 static Grid_T *make_next_grid_using_previous_grid(Grid_T *const grid_prev)
 {
   Grid_T *grid_next = 0;
   struct Grid_Params_S *GridParams = init_GridParams();/* adjust some pars for construction of next grid */
-  
-  /* first find the values of the following parameters and some adjustment:
-  // 1. Euler equation constant.
-  // 2. center of rotation (center of mass)
-  // 3. NS center
-  // 4. orbital angular velocity
-  // 5. find NS surface
-  // 6. drag NS to the center
-  // . BH_radius
-  // . Omega_BH
-  */
   
   /* find Euler equation constant to meet NS baryonic mass */
   find_Euler_eq_const(grid_prev);
