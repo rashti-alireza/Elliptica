@@ -30,11 +30,11 @@ Grid_T *bbn_initialize_next_grid(Grid_T *const grid_prev)
 /* finding different quantities and then make the next grid using previous grid
 // first find the values of the following parameters and some adjustment:
 // . orbital angular velocity
-// . Euler equation constant.
 // . center of rotation (center of mass)
+// . Euler equation constant.
 // . NS center
-// . find NS surface
 // . drag NS to the center
+// . find NS surface
 // . BH_radius
 // . Omega_BH
 // ->return value: the next grid called 'grid_next' */
@@ -46,6 +46,9 @@ static Grid_T *make_next_grid_using_previous_grid(Grid_T *const grid_prev)
   /* find BH_NS_orbital_angular_velocity using force balance equation */
   find_BH_NS_Omega_force_balance_eq(grid_prev);
   
+  /* find y_CM by demanding P_ADM = 0 */
+  find_center_of_mass(grid_prev);
+  
   /* find Euler equation constant to meet NS baryonic mass */
   find_Euler_eq_const(grid_prev);
   
@@ -54,9 +57,6 @@ static Grid_T *make_next_grid_using_previous_grid(Grid_T *const grid_prev)
   
   /* extrapolate fluid fields outside NS */
   extrapolate_fluid_fields_outsideNS(grid_prev);
-  
-  /* find y_CM by demanding P_ADM = 0 */
-  find_center_of_mass(grid_prev);
   
   /* find the NS center */
   find_NS_center(grid_prev);
@@ -328,8 +328,9 @@ static void find_BH_NS_Omega_force_balance_eq(Grid_T *const grid)
     bbn_update_derivative_Beta_U0(patch);
     bbn_update_derivative_Beta_U1(patch);
     bbn_update_derivative_Beta_U2(patch);
+    bbn_update_psi10A_UiUj(patch);
   }
-  //bbn_update_Aij(grid);
+  bbn_update_Aij(grid);
 }
 
 /* find the NS center using d(enthalpy)/dx^i = 0 */
