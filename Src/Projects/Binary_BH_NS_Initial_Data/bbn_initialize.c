@@ -52,7 +52,7 @@ static Grid_T *make_next_grid_using_previous_grid(Grid_T *const grid_prev)
   /* find Euler equation constant to meet NS baryonic mass */
   find_Euler_eq_const(grid_prev);
   
-  /* updating enthalpy */
+  /* updating enthalpy using new Euler equation constant */
   bbn_update_enthalpy_and_denthalpy(grid_prev);
   
   /* extrapolate fluid fields outside NS */
@@ -61,10 +61,8 @@ static Grid_T *make_next_grid_using_previous_grid(Grid_T *const grid_prev)
   /* find the NS center */
   find_NS_center(grid_prev);
   
-  /* adjust the center of NS */
+  /* adjust the center of NS and drag enthalpy and update enthalpy */
   adjust_NS_center(grid_prev);
-  
-  printf("\nShould I update enthalpy agian? What is the order of adjustmetsn?\n");
   
   /* find the BH radius to acquire the desired BH mass */
   //find_BH_radius(grid_prev);
