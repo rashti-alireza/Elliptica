@@ -7,6 +7,8 @@ void bbn_preparing_conformal_metric_derivatives(Patch_T *const patch);
 void bbn_free_data_Gamma(Grid_T *const grid);
 void bbn_free_data_Ricci(Grid_T *const grid);
 void bbn_free_data_KS_trKij(Patch_T *const patch);
+double bbn_KerrSchild_H(const double M_BH,const double rbar,const double a,const double z);
+double bbn_KerrShcild_r(const double x,const double y,const double z,const double a);
 static void bbn_free_data_dGamma(Grid_T *const grid);
 static void populating_KSGamma(Patch_T *const patch);
 static void populate_KSgammas_KSalpha_KSBeta(Patch_T *const patch);

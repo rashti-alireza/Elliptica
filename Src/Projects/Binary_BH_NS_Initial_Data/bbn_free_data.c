@@ -303,32 +303,31 @@ void bbn_free_conformal_metric_derivatives(Patch_T *const patch)
 /* populate conformal metric and its inverse */
 void bbn_free_data_gammas(Grid_T *const grid)
 {
-  double lambda;
+  Transformation_T *t = initialize_transformation();
   /* roll off distance at exp(-(r/r0)^4)  */
   const double r0   = GetParameterD_E("RollOff_distance");
   const double M_BH = GetParameterD_E("BH_mass");
   const double a    = GetParameterD_E("BH_X_U2")*M_BH;
+  const double y_CM = GetParameterD_E("y_CM");
+  const double C_BH = 0.5*GetParameterD_E("BH_NS_separation");/* center of BH it's on +y axis */
+  const double Omega_BHNS = GetParameterD_E("BH_NS_orbital_angular_velocity");
   const double a2   = SQR(a);
   double H,k0,k1,k2;/* in ds^2 = (delta_ij+2*H*ki*kj)dx^i*dx^j */
-  /* center of BH */
-  const double C_BH = 0.5*GetParameterD_E("BH_NS_separation");
-  unsigned p,ijk,nn;
+  double Bx,By,Bz;/* B = v/c */
+  unsigned p;
   
-  /* which metric specified */
-  if (strcmp_i(GetParameterS_E("BH_NS_free_data_metric"),"conformally_flat_metric"))
-  {
-    lambda = 0;
-  }
-  else if (strcmp_i(GetParameterS_E("BH_NS_free_data_metric"),"Boosted_KerrSchild_metric"))
-  {
-    lambda = 1;
-  }
-  else
-    abortEr(NO_OPTION);
+  Bx = -Omega_BHNS*(C_BH-y_CM);
+  By = 0;
+  Bz = 0;
+  t->boost->Bx = Bx;
+  t->boost->By = By;
+  t->boost->Bz = Bz;
+  t->boost->B2 = SQR(Bx)+SQR(By)+SQR(Bz);
   
   FOR_ALL_PATCHES(p,grid)
   {
     Patch_T *patch = grid->patch[p];
+    unsigned nn,ijk;
     nn = patch->nn;
     
     PREP_FIELD(_gamma_D2D2)
@@ -346,19 +345,34 @@ void bbn_free_data_gammas(Grid_T *const grid)
     
     for (ijk = 0; ijk < nn; ++ijk)
     {
-      double x   = patch->node[ijk]->x[0];
-      double y   = patch->node[ijk]->x[1]-C_BH;
-      double z   = patch->node[ijk]->x[2];
-      double r2 = SQR(x)+SQR(y)+SQR(z);
-      double r  = sqrt(r2);
-      double rbar2  = 0.5*(r2-a2+sqrt(SQR(r2-a2)+4*a2*SQR(z)));
-      double rbar   = sqrt(rbar2);
-      double e   = lambda*exp(-pow(r/r0,4));
+      double x = patch->node[ijk]->x[0];
+      double y = patch->node[ijk]->x[1]-C_BH;
+      double z = patch->node[ijk]->x[2];
+      double x_mu[4] = {0/* time component */,x,y,z};/* x^mu in boost coords */
+      double Lm1_x_mu[4];/* Lorentz^-1 x^mu, inverse boost */
+      t->boost->inverse = 1;
+      Lorentz_boost(t,x_mu,Lm1_x_mu);
+      double _x    = Lm1_x_mu[1];
+      double _y    = Lm1_x_mu[2];
+      double _z    = Lm1_x_mu[3];
+      double rbar  = bbn_KerrShcild_r(_x,_y,_z,a);
+      double rbar2 = SQR(rbar);
+      double r2    = SQR(x)+SQR(y)+SQR(z);
+      double r     = sqrt(r2);
+      double _k0 = (rbar*_x+a*_y)/(rbar2+a2);
+      double _k1 = (rbar*_y-a*_x)/(rbar2+a2);
+      double _k2 = _z/rbar;
+      double _kt = 1;
+      double _k_mu[4] = {_kt,_k0,_k1,_k2};
+      double L_k_mu[4];/* Lorentz *k^mu */
+      t->boost->inverse = 0;
+      Lorentz_boost(t,_k_mu,L_k_mu);
+      k0 = L_k_mu[1];
+      k1 = L_k_mu[2];
+      k2 = L_k_mu[3];
+      H  = bbn_KerrSchild_H(M_BH,rbar,a,z);
       
-      k0 = (rbar*x+a*y)/(rbar2+a2);
-      k1 = (rbar*y-a*x)/(rbar2+a2);
-      k2 = z/rbar;
-      H  = M_BH*rbar/(rbar2+a2*SQR(k2));
+      double e = exp(-pow(r/r0,4));
       double C = 2.*H*e;
       double A = 1./(1+C*(SQR(k0)+SQR(k1)+SQR(k2)));
       
@@ -429,6 +443,7 @@ void bbn_free_data_gammas(Grid_T *const grid)
       
     }
   }
+  free_transformation(t);
 }
 
 /* trace of Kerr Schild extrinsic curvature */
@@ -1034,4 +1049,36 @@ dKSgamma_D0D2D1[ijk] - dKSgamma_D1D2D0[ijk]);
     KSGamma_U1D0D1[ijk] = GAMMA_U1D0D1;
     KSGamma_U1D1D1[ijk] = GAMMA_U1D1D1;
   }/*end of for(ijk = 0; ijk < nn; ++ijk)*/
+}
+
+/* ->return value: r funciont in Kerr-Schild coords */
+double bbn_KerrShcild_r(const double x,const double y,const double z,const double a)
+{
+  const double r2 = SQR(x)+SQR(y)+SQR(z);
+  const double a2 = SQR(a);
+  
+  return 0.5*(r2-a2+sqrt(SQR(r2-a2)+4*a2*SQR(z)));
+}
+
+/* ->return value: H function in Kerr-Schild coords */
+double bbn_KerrSchild_H(const double M_BH,const double rbar,const double a,const double z)
+{
+  double lambda;
+  const double k2    = z/rbar;
+  const double a2    = SQR(a);
+  const double rbar2 = SQR(rbar);
+  
+  /* which metric specified */
+  if (strcmp_i(GetParameterS_E("BH_NS_free_data_metric"),"conformally_flat_metric"))
+  {
+    lambda = 0;
+  }
+  else if (strcmp_i(GetParameterS_E("BH_NS_free_data_metric"),"Boosted_KerrSchild_metric"))
+  {
+    lambda = 1;
+  }
+  else
+    abortEr(NO_OPTION);
+
+  return lambda*M_BH*rbar/(rbar2+a2*SQR(k2));
 }
