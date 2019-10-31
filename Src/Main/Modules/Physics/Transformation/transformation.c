@@ -5,6 +5,25 @@
 
 #include "transformation.h"
 
+/* synopsis:
+// =========
+// 
+// ** initializing **
+// Transformation_T *t = initialize_transformation();
+//
+// ** populating **
+// t->boost->Bx = Bx;
+// t->boost->By = By;
+// t->boost->Bz = Bz;
+// t->boost->B  = sqrt(SQR(Bx)+SQR(By)+SQR(Bz)); # assumed Minkowski space-time
+//
+// ** transforming four vector u1 to u2 **
+// Lorentz_boost(t,u1,u2);
+//
+// ** freeing **
+// free_transformation(t);
+*/
+
 /* allocating memory and initializing Transformation_T structure
 // ->return value: initialized structure. */
 Transformation_T *initialize_transformation(void)
