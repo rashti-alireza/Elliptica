@@ -303,6 +303,7 @@ void bbn_free_conformal_metric_derivatives(Patch_T *const patch)
 /* populate conformal metric and its inverse */
 void bbn_free_data_gammas(Grid_T *const grid)
 {
+  double lambda;
   /* roll off distance at exp(-(r/r0)^4)  */
   const double r0   = GetParameterD_E("RollOff_distance");
   const double M_BH = GetParameterD_E("BH_mass");
@@ -312,6 +313,18 @@ void bbn_free_data_gammas(Grid_T *const grid)
   /* center of BH */
   const double C_BH = 0.5*GetParameterD_E("BH_NS_separation");
   unsigned p,ijk,nn;
+  
+  /* which metric specified */
+  if (strcmp_i(GetParameterS_E("BH_NS_free_data_metric"),"conformally_flat_metric"))
+  {
+    lambda = 0;
+  }
+  else if (strcmp_i(GetParameterS_E("BH_NS_free_data_metric"),"Boosted_KerrSchild_metric"))
+  {
+    lambda = 1;
+  }
+  else
+    abortEr(NO_OPTION);
   
   FOR_ALL_PATCHES(p,grid)
   {
@@ -340,7 +353,7 @@ void bbn_free_data_gammas(Grid_T *const grid)
       double r  = sqrt(r2);
       double rbar2  = 0.5*(r2-a2+sqrt(SQR(r2-a2)+4*a2*SQR(z)));
       double rbar   = sqrt(rbar2);
-      double e   = exp(-pow(r/r0,4));
+      double e   = lambda*exp(-pow(r/r0,4));
       
       k0 = (rbar*x+a*y)/(rbar2+a2);
       k1 = (rbar*y-a*x)/(rbar2+a2);
@@ -618,6 +631,7 @@ static void partial_derivative_KSBeta(Patch_T *const patch)
 /* populating Kerr Schild gammas , lapse and shift vector */
 static void populate_KSgammas_KSalpha_KSBeta(Patch_T *const patch)
 {
+  double lambda;
   const double M_BH = GetParameterD_E("BH_mass");
   const double a    = GetParameterD_E("BH_X_U2")*M_BH;
   const double a2   = SQR(a);
@@ -625,6 +639,18 @@ static void populate_KSgammas_KSalpha_KSBeta(Patch_T *const patch)
   const unsigned nn = patch->nn;
   unsigned ijk;
   double H,k0,k1,k2;/* in ds^2 = (eta_ij+2*H*ki*kj)dx^i*dx^j */
+  
+  /* which metric specified */
+  if (strcmp_i(GetParameterS_E("BH_NS_free_data_metric"),"conformally_flat_metric"))
+  {
+    lambda = 0;
+  }
+  else if (strcmp_i(GetParameterS_E("BH_NS_free_data_metric"),"Boosted_KerrSchild_metric"))
+  {
+    lambda = 1;
+  }
+  else
+    abortEr(NO_OPTION);
       
   /* add Kerr Schild gammas */
   ADD_FIELD(KSgamma_D2D2)
@@ -678,6 +704,7 @@ static void populate_KSgammas_KSalpha_KSBeta(Patch_T *const patch)
     k1 = (rbar*y-a*x)/(rbar2+a2);
     k2 = z/rbar;
     H  = M_BH*rbar/(rbar2+a2*SQR(k2));
+    H *= lambda;
     double C = 2.*H;
     double A = 1./(1+C*(SQR(k0)+SQR(k1)+SQR(k2)));
     

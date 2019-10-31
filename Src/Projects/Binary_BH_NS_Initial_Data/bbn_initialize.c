@@ -1712,7 +1712,8 @@ static void init_field_TOV_plus_KerrSchild(Grid_T *const grid,const TOV_T *const
 {
   pr_line_custom('=');
   printf("Initializing the fields using TOV and Kerr-Schild solution ...\n");
-
+  
+  double lambda;
   const double M_NS = tov->ADM_m;/* NS adm mass */
   const double D = GetParameterD_E("BH_NS_separation");
   const double C_BH = 0.5*GetParameterD_E("BH_NS_separation");/* center of BH it's on +y axis */
@@ -1730,6 +1731,18 @@ static void init_field_TOV_plus_KerrSchild(Grid_T *const grid,const TOV_T *const
   add_parameter_double("NS_Center",C_NS);
   add_parameter_double("y_CM",y_CM);
   
+  /* which metric specified */
+  if (strcmp_i(GetParameterS_E("BH_NS_free_data_metric"),"conformally_flat_metric"))
+  {
+    lambda = 0;
+  }
+  else if (strcmp_i(GetParameterS_E("BH_NS_free_data_metric"),"Boosted_KerrSchild_metric"))
+  {
+    lambda = 1;
+  }
+  else
+    abortEr(NO_OPTION);
+
   /* black hole parts */
   FOR_ALL_PATCHES(p,grid)
   {
@@ -1770,6 +1783,7 @@ static void init_field_TOV_plus_KerrSchild(Grid_T *const grid,const TOV_T *const
       double k1 = (rbar*y-a_BH*x)/(rbar2+a2_BH);
       double k2 = z/rbar;
       double H  = M_BH*rbar/(rbar2+a2_BH*SQR(k2));
+      H *= lambda;
       double C = 2.*H;
       
       KSalpha[ijk] = 1/sqrt(1+C);
