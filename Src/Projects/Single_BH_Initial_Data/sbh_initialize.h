@@ -18,7 +18,7 @@ struct Grid_Params_S
 
 Grid_T *sbh_initialize_next_grid(Grid_T *const grid_prev);
 static Grid_T *make_next_grid_using_previous_grid(Grid_T *const grid_prev);
-static Grid_T *KerrShild_approximation(void);
+static Grid_T *KerrSchild_approximation(void);
 static Grid_T *creat_sbh_grid_CS(struct Grid_Params_S *const GridParams);
 static void BH_surface_CubedSpherical_grid(Grid_T *const grid,struct Grid_Params_S *const GridParams);
 static void init_field_KerrSchild(Grid_T *const grid,const double a_BH, const double M_BH);

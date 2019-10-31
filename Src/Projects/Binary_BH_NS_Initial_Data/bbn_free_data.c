@@ -654,7 +654,7 @@ static void populate_KSgammas_KSalpha_KSBeta(Patch_T *const patch)
   GET_FIELD(KSgammaI_U1U1)
   GET_FIELD(KSgammaI_U2U2)
   
-  /* Kerr Shild lapse and shift*/
+  /* Kerr Schild lapse and shift*/
   ADD_FIELD(KSalpha)
   GET_FIELD(KSalpha)
   

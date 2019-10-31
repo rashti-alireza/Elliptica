@@ -7,7 +7,7 @@ BH_mass = 6
 BH_X_U2 = 0 # BH dimensionless spin z comp.
 
 #### initialization:
-BH_initialization = KerrShild
+BH_initialization = KerrSchild
 
 ####################### Solving_Settings #####################
 #### Order of equations to be solved:

@@ -14,8 +14,8 @@ Grid_T *sbh_initialize_next_grid(Grid_T *const grid_prev)
   if (!grid_prev)/* if grid is empty come up with an approximation */
   {
     /* if we use TOV and Kerr-Schil black hole approximation */
-    if (strcmp_i(GetParameterS_E("BH_initialization"),"KerrShild"))
-      grid_next = KerrShild_approximation();
+    if (strcmp_i(GetParameterS_E("BH_initialization"),"KerrSchild"))
+      grid_next = KerrSchild_approximation();
     else
       abortEr(NO_OPTION);
   }
@@ -283,12 +283,12 @@ static void find_X_and_patch(const double *const x,const char *const hint,Grid_T
 
 /* Kerr-Schild black hole approximation.
 // ->return value: resultant grid from this approximation */
-static Grid_T *KerrShild_approximation(void)
+static Grid_T *KerrSchild_approximation(void)
 {
   Grid_T *grid = 0;
   struct Grid_Params_S *GridParams = init_GridParams();/* adjust some pars for construction of grid */
   
-  /* basics of Kerr Shild black hole located at right side of y axis */
+  /* basics of Kerr Schild black hole located at right side of y axis */
   pr_line_custom('=');
   printf("Acquiring Black Hole properties ...\n");
   const double bh_chi  = GetParameterD_E("BH_X_U2");
@@ -313,7 +313,7 @@ static Grid_T *KerrShild_approximation(void)
   /* populating the free data part of initial data that we chose ourself */
   sbh_populate_free_data(grid);
   
-  /* initialize the fields using TOV and Kerr-Shild solution */
+  /* initialize the fields using TOV and Kerr-Schild solution */
   init_field_KerrSchild(grid,bh_chi*bh_mass,bh_mass);
   
   /* taking partial derivatives of the fields needed for equations */
@@ -410,7 +410,7 @@ _gamma_D1D2[ijk] + pow(_HS_U2[ijk], 2)*_gamma_D2D2[ijk];
   
 }
 
-/* initialize the fields using TOV and Kerr-Shild solution.
+/* initialize the fields using TOV and Kerr-Schild solution.
 // the idea is to superimpose two fields of each solutions. */
 static void init_field_KerrSchild(Grid_T *const grid,const double a_BH, const double M_BH)
 {

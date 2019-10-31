@@ -14,8 +14,8 @@ Grid_T *bbn_initialize_next_grid(Grid_T *const grid_prev)
   if (!grid_prev)/* if grid is empty come up with an approximation */
   {
     /* if we use TOV and Kerr-Schil black hole approximation */
-    if (strcmp_i(GetParameterS_E("BH_NS_initialization"),"TOV_KerrShild"))
-      grid_next = TOV_KerrShild_approximation();
+    if (strcmp_i(GetParameterS_E("BH_NS_initialization"),"TOV_KerrSchild"))
+      grid_next = TOV_KerrSchild_approximation();
     else
       abortEr(NO_OPTION);
   }
@@ -1467,7 +1467,7 @@ static void extrapolate_fluid_fields_outsideNS_CS(Grid_T *const grid)
 
 /* use TOV and Kerr-Schil black hole approximation.
 // ->return value: resultant grid from this approximation */
-static Grid_T *TOV_KerrShild_approximation(void)
+static Grid_T *TOV_KerrSchild_approximation(void)
 {
   Grid_T *grid = 0;
   struct Grid_Params_S *GridParams = init_GridParams();/* adjust some pars for construction of grid */
@@ -1479,7 +1479,7 @@ static Grid_T *TOV_KerrShild_approximation(void)
   tov = TOV_solution(tov);
   const double ns_R = tov->rbar[tov->N-1];
   
-  /* basics of Kerr Shild black hole located at right side of y axis */
+  /* basics of Kerr Schild black hole located at right side of y axis */
   pr_line_custom('=');
   printf("Acquiring Black Hole properties ...\n");
   const double bh_chi  = GetParameterD_E("BH_X_U2");
@@ -1506,7 +1506,7 @@ static Grid_T *TOV_KerrShild_approximation(void)
   /* populating the free data part of initial data that we chose ourself */
   bbn_populate_free_data(grid);
   
-  /* initialize the fields using TOV and Kerr-Shild solution */
+  /* initialize the fields using TOV and Kerr-Schild solution */
   init_field_TOV_plus_KerrSchild(grid,tov,bh_chi*bh_mass,bh_mass);
   
   /* taking partial derivatives of the fields needed for equations */
@@ -1706,7 +1706,7 @@ _gamma_D1D2[ijk] + pow(_HS_U2[ijk], 2)*_gamma_D2D2[ijk];
   
 }
 
-/* initialize the fields using TOV and Kerr-Shild solution.
+/* initialize the fields using TOV and Kerr-Schild solution.
 // the idea is to superimpose two fields of each solutions. */
 static void init_field_TOV_plus_KerrSchild(Grid_T *const grid,const TOV_T *const tov, const double a_BH, const double M_BH)
 {
