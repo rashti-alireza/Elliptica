@@ -1,0 +1,52 @@
+Dimension = 4;
+Point  =;
+C_arg1 =;
+
+`#include "transformation.h"`
+``
+`/* performing Lorentz boost in an arbitray direction.`
+`// the given four-vector is in and its boost transformed is out.`
+`// note: x^mu = (ct,x,y,z) so 0-component is t. */`
+`void Lorentz_boost(Transformation_T *const t,const double *const in,double *const out);`
+`void Lorentz_boost(Transformation_T *const t,const double *const in,double *const out)`
+`{`
+`  const double s  = (t->boost->inverse == 1) ? -1.: 1.;`
+`  const double Bx = s*t->boost->Bx;`
+`  const double By = s*t->boost->By;`
+`  const double Bz = s*t->boost->Bz;`
+`  const double B  = t->boost->B;`
+`  const double v_U0 = in[0];`
+`  const double v_U1 = in[1];`
+`  const double v_U2 = in[2];`
+`  const double v_U3 = in[3];`
+`  const double gamma  = 1/(sqrt(1-B));`
+`  const double G_D0D0 = gamma;`
+`  const double G_D0D1 = -gamma*Bx;`
+`  const double G_D0D2 = -gamma*By;`
+`  const double G_D0D3 = -gamma*Bz;`
+`  const double G_D1D1 = 1+(gamma-1)*SQR(Bx/B);`
+`  const double G_D1D2 = (gamma-1)*Bx*By/SQR(B);`
+`  const double G_D1D3 = (gamma-1)*Bx*Bz/SQR(B);`
+`  const double G_D2D2 = 1+(gamma-1)*SQR(By/B);`
+`  const double G_D2D3 = (gamma-1)*By*Bz/SQR(B);`
+`  const double G_D3D3 = 1+(gamma-1)*SQR(Bz/B);`
+Declare = 
+{
+ # lorentz metric
+ (obj = Field,name = G, rank = DD,none,C_arg1);
+
+ # four vector
+ (obj = Field,name = v, rank = U,none,C_arg1);
+}
+# symmetries:
+Symm[G(i,j) = G(j,i)];
+
+`/* multiply */`
+u(i) = G(i,j)*v(-j);
+
+`  out[0] = u_U0;`
+`  out[1] = u_U1;`
+`  out[2] = u_U2;`
+`  out[3] = u_U3;`
+
+`}`
