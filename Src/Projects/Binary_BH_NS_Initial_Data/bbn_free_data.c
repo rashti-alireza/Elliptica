@@ -646,7 +646,6 @@ static void partial_derivative_KSBeta(Patch_T *const patch)
 /* populating Kerr Schild gammas , lapse and shift vector */
 static void populate_KSgammas_KSalpha_KSBeta(Patch_T *const patch)
 {
-  double lambda;
   const double M_BH = GetParameterD_E("BH_mass");
   const double a    = GetParameterD_E("BH_X_U2")*M_BH;
   const double a2   = SQR(a);
@@ -654,18 +653,6 @@ static void populate_KSgammas_KSalpha_KSBeta(Patch_T *const patch)
   const unsigned nn = patch->nn;
   unsigned ijk;
   double H,k0,k1,k2;/* in ds^2 = (eta_ij+2*H*ki*kj)dx^i*dx^j */
-  
-  /* which metric specified */
-  if (strcmp_i(GetParameterS_E("BH_NS_free_data_metric"),"conformally_flat_metric"))
-  {
-    lambda = 0;
-  }
-  else if (strcmp_i(GetParameterS_E("BH_NS_free_data_metric"),"Boosted_KerrSchild_metric"))
-  {
-    lambda = 1;
-  }
-  else
-    abortEr(NO_OPTION);
       
   /* add Kerr Schild gammas */
   ADD_FIELD(KSgamma_D2D2)
@@ -718,8 +705,7 @@ static void populate_KSgammas_KSalpha_KSBeta(Patch_T *const patch)
     k0 = (rbar*x+a*y)/(rbar2+a2);
     k1 = (rbar*y-a*x)/(rbar2+a2);
     k2 = z/rbar;
-    H  = M_BH*rbar/(rbar2+a2*SQR(k2));
-    H *= lambda;
+    H  = bbn_KerrSchild_H(M_BH,rbar,a,z);
     double C = 2.*H;
     double A = 1./(1+C*(SQR(k0)+SQR(k1)+SQR(k2)));
     
