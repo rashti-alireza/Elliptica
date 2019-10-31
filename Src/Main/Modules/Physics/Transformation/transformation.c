@@ -15,7 +15,7 @@
 // t->boost->Bx = Bx;
 // t->boost->By = By;
 // t->boost->Bz = Bz;
-// t->boost->B  = sqrt(SQR(Bx)+SQR(By)+SQR(Bz)); # assumed Minkowski space-time
+// t->boost->B2 = SQR(Bx)+SQR(By)+SQR(Bz); # assumed Minkowski space-time
 //
 // ** transforming four vector u1 to u2 **
 // Lorentz_boost(t,u1,u2);
