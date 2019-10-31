@@ -7,7 +7,7 @@ typedef struct TRANSFORMATION_T
     double Bx;/* v_x/c in vector B */
     double By;/* v_y/c in vector B*/
     double Bz;/* v_z/c in vector B*/
-    double B;/* sqrt(B.B), this needs to be given by user b/c of dot product */
+    double B2;/* B.B, this needs to be given by user b/c of dot product */
     int inverse;/* if 1 it uses the INVERT of the Lorentz matrix transformation, 
                 // 0 uses the Lorentz matrix transformation*/
   }boost[1];
