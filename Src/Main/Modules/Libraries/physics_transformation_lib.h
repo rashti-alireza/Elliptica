@@ -14,3 +14,5 @@ typedef struct TRANSFORMATION_T
 }Transformation_T;
 
 void Lorentz_boost(Transformation_T *const t,const double *const in,double *const out);
+Transformation_T *initialize_transformation(void);
+void free_transformation(Transformation_T *t);
