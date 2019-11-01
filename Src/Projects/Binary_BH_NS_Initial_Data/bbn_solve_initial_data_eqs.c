@@ -165,6 +165,8 @@ static void save_fields(Grid_T *const grid)
    
     }
   }/* end of for (f = 0; f < nf; ++f)*/
+  
+  free_2d_mem(field_name,nf);
 }
 
 /* stop criteria for solver, namely, if some conditions satisfied, 
