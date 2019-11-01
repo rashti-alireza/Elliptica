@@ -49,6 +49,9 @@ static Grid_T *make_next_grid_using_previous_grid(Grid_T *const grid_prev)
   /* find y_CM by demanding P_ADM = 0 */
   find_center_of_mass(grid_prev);
   
+  /* adjust boot velocity to diminish P_ADM */
+  find_boost_velocity_at_outer_boundary(grid_prev);
+  
   /* find Euler equation constant to meet NS baryonic mass */
   find_Euler_eq_const(grid_prev);
   
@@ -110,6 +113,63 @@ static Grid_T *make_next_grid_using_previous_grid(Grid_T *const grid_prev)
   
   return grid_next;
 }
+
+/* adjust the boot velocity at the outer boundary to diminish P_ADM */
+static void find_boost_velocity_at_outer_boundary(Grid_T *const grid)
+{
+  Observable_T *obs   = init_observable(grid);
+  double p1_x,p1_y,p1_z;
+  double p2_x,p2_y,p2_z;
+  double v1_x,v1_y,v1_z;
+  double v2_x,v2_y,v2_z;
+  double v_x,v_y,v_z;
+  
+  obs->quantity = "ADM_momentums";
+  plan_observable(obs);
+  
+  /* get previous P_ADMs */
+  p1_x = GetParameterD_E("P_ADM_x");
+  p1_y = GetParameterD_E("P_ADM_y");
+  p1_z = GetParameterD_E("P_ADM_z");
+  
+  /* get the current P_ADMs */
+  p2_x = obs->Px_ADM(obs);
+  p2_y = obs->Py_ADM(obs);
+  p2_z = obs->Pz_ADM(obs);
+  
+  /* get the penultimate boost velocity */
+  v1_x = GetParameterD_E("v0_boost_x");
+  v1_y = GetParameterD_E("v0_boost_y");
+  v1_z = GetParameterD_E("v0_boost_z");
+  
+  /* get the ultimate boost velocity */
+  v2_x = GetParameterD_E("v*_boost_x");
+  v2_y = GetParameterD_E("v*_boost_y");
+  v2_z = GetParameterD_E("v*_boost_z");
+  
+  /* calculate the new boost velocity */
+  v_x = (v2_x*p1_x-v1_x*p2_x)/(p1_x-p2_x);
+  v_y = (v2_y*p1_y-v1_y*p2_y)/(p1_y-p2_y);
+  v_z = (v2_z*p1_z-v1_z*p2_z)/(p1_z-p2_z);
+  
+  printf("ADM momentums before boost velocity updated:\n");
+  printf("P_ADM = (%0.15f,%0.15f,%0.15f).\n",p2_x,p2_y,p2_z);
+ 
+  /* update parameters */
+  update_parameter_double_format("v0_boost_x",v2_x);
+  update_parameter_double_format("v0_boost_y",v2_y);
+  update_parameter_double_format("v0_boost_z",v2_z);
+  
+  update_parameter_double_format("v*_boost_x",v_x);
+  update_parameter_double_format("v*_boost_y",v_y);
+  update_parameter_double_format("v*_boost_z",v_z);
+  
+  update_parameter_double_format("P_ADM_x",p2_x);
+  update_parameter_double_format("P_ADM_y",p2_y);
+  update_parameter_double_format("P_ADM_z",p2_z);
+  
+  free_observable(obs);  
+} 
 
 /* adjust the center of NS at the designated point, in case it moved.
 // we need only to draw enthalpy to (0,NS_C,0).
@@ -1536,10 +1596,30 @@ static Grid_T *TOV_KerrSchild_approximation(void)
   /* find Euler equation const using enthalpy of TOV star and other fields */
   find_Euler_eq_const_TOV_KerrSchild(grid);
   
+  /* add some parameters for momentum and its adjustments */
+  Observable_T *obs = init_observable(grid);
+  obs->quantity     = "ADM_momentums";
+  plan_observable(obs);
+  double p_x,p_y,p_z;
+  const double SMALL_FAC = 1E-2;
+  p_x = obs->Px_ADM(obs);
+  p_y = obs->Py_ADM(obs);
+  p_z = obs->Pz_ADM(obs);
+  
+  update_parameter_double_format("v0_boost_x",0);
+  update_parameter_double_format("v0_boost_y",0);
+  update_parameter_double_format("v0_boost_z",0);
+  update_parameter_double_format("v*_boost_x",p_x*SMALL_FAC);
+  update_parameter_double_format("v*_boost_y",p_y*SMALL_FAC);
+  update_parameter_double_format("v*_boost_z",p_z*SMALL_FAC);
+  update_parameter_double_format("P_ADM_x",p_x);
+  update_parameter_double_format("P_ADM_y",p_y);
+  update_parameter_double_format("P_ADM_z",p_z);
+  
   /* freeing */
   free_Grid_Params_S(GridParams);
-
   TOV_free(tov);
+  free_observable(obs);
   
   return grid;
 }
