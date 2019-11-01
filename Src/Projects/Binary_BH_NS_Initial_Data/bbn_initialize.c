@@ -117,7 +117,8 @@ static Grid_T *make_next_grid_using_previous_grid(Grid_T *const grid_prev)
 /* adjust the boot velocity at the outer boundary to diminish P_ADM */
 static void find_boost_velocity_at_outer_boundary(Grid_T *const grid)
 {
-  Observable_T *obs   = init_observable(grid);
+  const double SMALL_FAC = 1E-2;
+  Observable_T *obs = init_observable(grid);
   double p1_x,p1_y,p1_z;
   double p2_x,p2_y,p2_z;
   double v1_x,v1_y,v1_z;
@@ -151,6 +152,11 @@ static void find_boost_velocity_at_outer_boundary(Grid_T *const grid)
   v_x = (v2_x*p1_x-v1_x*p2_x)/(p1_x-p2_x);
   v_y = (v2_y*p1_y-v1_y*p2_y)/(p1_y-p2_y);
   v_z = (v2_z*p1_z-v1_z*p2_z)/(p1_z-p2_z);
+  
+  /* if v1 and v2 are zero v is always 0 so prevent this */
+  if (EQL(v_x,0)) v_x = p2_x*SMALL_FAC;
+  if (EQL(v_y,0)) v_y = p2_y*SMALL_FAC;
+  if (EQL(v_z,0)) v_z = p2_z*SMALL_FAC;
   
   printf("ADM momentums before boost velocity updated:\n");
   printf("-->P_ADM = (%0.15f,%0.15f,%0.15f).\n",p2_x,p2_y,p2_z);
