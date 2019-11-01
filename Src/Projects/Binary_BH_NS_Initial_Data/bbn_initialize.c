@@ -117,6 +117,14 @@ static Grid_T *make_next_grid_using_previous_grid(Grid_T *const grid_prev)
 /* adjust the boot velocity at the outer boundary to diminish P_ADM */
 static void find_boost_velocity_at_outer_boundary(Grid_T *const grid)
 {
+  if (!strcmp_i(GetParameterS_E("P_ADM_control_method"),"BoostMethod"))
+  {
+    update_parameter_double_format("v*_boost_x",0);
+    update_parameter_double_format("v*_boost_y",0);
+    update_parameter_double_format("v*_boost_z",0);
+    return;
+  }
+  
   const double SMALL_FAC = 1E-2;
   const double dP        = 1E-1;
   Observable_T *obs = init_observable(grid);
@@ -170,10 +178,10 @@ static void find_boost_velocity_at_outer_boundary(Grid_T *const grid)
   if (EQL(v_z,0)) v_z = p2_z*SMALL_FAC;
   
   printf("ADM momentums before boost velocity updated:\n");
-  printf("-->P_ADM = (%0.15f,%0.15f,%0.15f).\n",p2_x,p2_y,p2_z);
+  printf("-->P_ADM = (%e,%e,%e).\n",p2_x,p2_y,p2_z);
  
-  printf("-->pre boost velocity = (%0.15f,%0.15f,%0.15f).\n",v2_x,v2_y,v2_z);
-  printf("-->new boost velocity = (%0.15f,%0.15f,%0.15f).\n",v_x,v_y,v_z); 
+  printf("-->pre boost velocity = (%e,%e,%e).\n",v2_x,v2_y,v2_z);
+  printf("-->new boost velocity = (%e,%e,%e).\n",v_x,v_y,v_z); 
   
   /* update parameters */
   update_parameter_double_format("v0_boost_x",v2_x);
@@ -612,7 +620,7 @@ static void find_center_of_mass(Grid_T *const grid)
   plan_observable(obs);
   
   printf("ADM momentums before center of mass update:\n");
-  printf("P_ADM = (%0.15f,%0.15f,%0.15f).\n",
+  printf("P_ADM = (%e,%e,%e).\n",
           obs->Px_ADM(obs),obs->Py_ADM(obs),obs->Pz_ADM(obs));
   
   params->obs  = obs;
@@ -645,7 +653,7 @@ static void find_center_of_mass(Grid_T *const grid)
   printf("Update Center of Rotation: %g -> %g.\n",guess[0],y_CM[0]);
   
   printf("ADM momentums after center of mass update:\n");
-  printf("P_ADM = (%0.15f,%0.15f,%0.15f).\n",
+  printf("P_ADM = (%e,%e,%e).\n",
           obs->Px_ADM(obs),obs->Py_ADM(obs),obs->Pz_ADM(obs));
   
   free(y_CM);
@@ -1626,21 +1634,37 @@ static Grid_T *TOV_KerrSchild_approximation(void)
   Observable_T *obs = init_observable(grid);
   obs->quantity     = "ADM_momentums";
   plan_observable(obs);
-  double p_x,p_y,p_z;
+  double p_x,p_y,p_z,v_x,v_y,v_z;
   const double SMALL_FAC = 1E-2;
   p_x = obs->Px_ADM(obs);
   p_y = obs->Py_ADM(obs);
   p_z = obs->Pz_ADM(obs);
   
+  if (strcmp_i(GetParameterS_E("P_ADM_control_method"),"BoostMethod"))
+  {
+    v_x = p_x*SMALL_FAC;
+    v_y = p_y*SMALL_FAC;
+    v_z = p_z*SMALL_FAC;
+  }
+  else
+  {
+    v_x = 0;
+    v_y = 0;
+    v_z = 0;
+  }
+  
   update_parameter_double_format("v0_boost_x",0);
   update_parameter_double_format("v0_boost_y",0);
   update_parameter_double_format("v0_boost_z",0);
-  update_parameter_double_format("v*_boost_x",p_x*SMALL_FAC);
-  update_parameter_double_format("v*_boost_y",p_y*SMALL_FAC);
-  update_parameter_double_format("v*_boost_z",p_z*SMALL_FAC);
+  update_parameter_double_format("v*_boost_x",v_x);
+  update_parameter_double_format("v*_boost_y",v_y);
+  update_parameter_double_format("v*_boost_z",v_z);
   update_parameter_double_format("P_ADM_x",p_x);
   update_parameter_double_format("P_ADM_y",p_y);
   update_parameter_double_format("P_ADM_z",p_z);
+  
+  printf("ADM momentums initials:\n");
+  printf("-->P_ADM = (%e,%e,%e).\n",p_x,p_y,p_z);
   
   /* freeing */
   free_Grid_Params_S(GridParams);
