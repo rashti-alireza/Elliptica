@@ -646,14 +646,26 @@ static void partial_derivative_KSBeta(Patch_T *const patch)
 /* populating Kerr Schild gammas , lapse and shift vector */
 static void populate_KSgammas_KSalpha_KSBeta(Patch_T *const patch)
 {
+  Transformation_T *t = initialize_transformation();
   const double M_BH = GetParameterD_E("BH_mass");
   const double a    = GetParameterD_E("BH_X_U2")*M_BH;
   const double a2   = SQR(a);
+  const double y_CM = GetParameterD_E("y_CM");
   const double C_BH = 0.5*GetParameterD_E("BH_NS_separation");
+  const double Omega_BHNS = GetParameterD_E("BH_NS_orbital_angular_velocity");
   const unsigned nn = patch->nn;
   unsigned ijk;
-  double H,k0,k1,k2;/* in ds^2 = (eta_ij+2*H*ki*kj)dx^i*dx^j */
+  double H,k0,k1,k2,kt;/* in ds^2 = (eta_ij+2*H*ki*kj)dx^i*dx^j */
+  double Bx,By,Bz;/* B = v/c */
       
+  Bx = -Omega_BHNS*(C_BH-y_CM);
+  By = 0;
+  Bz = 0;
+  t->boost->Bx = Bx;
+  t->boost->By = By;
+  t->boost->Bz = Bz;
+  t->boost->B2 = SQR(Bx)+SQR(By)+SQR(Bz);
+  
   /* add Kerr Schild gammas */
   ADD_FIELD(KSgamma_D2D2)
   ADD_FIELD(KSgamma_D0D2)
@@ -695,24 +707,39 @@ static void populate_KSgammas_KSalpha_KSBeta(Patch_T *const patch)
   
   for (ijk = 0; ijk < nn; ++ijk)
   {
-    double x   = patch->node[ijk]->x[0];
-    double y   = patch->node[ijk]->x[1]-C_BH;
-    double z   = patch->node[ijk]->x[2];
-    double r2 = SQR(x)+SQR(y)+SQR(z);
-    double rbar2  = 0.5*(r2-a2+sqrt(SQR(r2-a2)+4*a2*SQR(z)));
-    double rbar   = sqrt(rbar2);
-    
-    k0 = (rbar*x+a*y)/(rbar2+a2);
-    k1 = (rbar*y-a*x)/(rbar2+a2);
-    k2 = z/rbar;
+    double x = patch->node[ijk]->x[0];
+    double y = patch->node[ijk]->x[1]-C_BH;
+    double z = patch->node[ijk]->x[2];
+    double x_mu[4] = {0/* time component */,x,y,z};/* x^mu in boost coords */
+    double Lm1_x_mu[4];/* Lorentz^-1 x^mu, inverse boost */
+    t->boost->inverse = 1;
+    Lorentz_boost(t,x_mu,Lm1_x_mu);
+    double _x    = Lm1_x_mu[1];
+    double _y    = Lm1_x_mu[2];
+    double _z    = Lm1_x_mu[3];
+    double rbar  = bbn_KerrShcild_r(_x,_y,_z,a);
+    double rbar2 = SQR(rbar);
+    double _k0 = (rbar*_x+a*_y)/(rbar2+a2);
+    double _k1 = (rbar*_y-a*_x)/(rbar2+a2);
+    double _k2 = _z/rbar;
+    double _kt = 1;
+    double _k_mu[4] = {_kt,_k0,_k1,_k2};
+    double L_k_mu[4];/* Lorentz *k^mu */
+    t->boost->inverse = 0;
+    Lorentz_boost(t,_k_mu,L_k_mu);
+    kt = L_k_mu[0];
+    k0 = L_k_mu[1];
+    k1 = L_k_mu[2];
+    k2 = L_k_mu[3];
     H  = bbn_KerrSchild_H(M_BH,rbar,a,z);
+    
     double C = 2.*H;
     double A = 1./(1+C*(SQR(k0)+SQR(k1)+SQR(k2)));
     
-    KSalpha[ijk] = 1/sqrt(1+C);
-    KSB_D0[ijk]  = C*k0;
-    KSB_D1[ijk]  = C*k1;
-    KSB_D2[ijk]  = C*k2;
+    KSalpha[ijk] = 1/sqrt(1+C*kt*kt);
+    KSB_D0[ijk]  = C*k0*kt;
+    KSB_D1[ijk]  = C*k1*kt;
+    KSB_D2[ijk]  = C*k2*kt;
     
     KSgamma_D0D0[ijk] = 1.+C*k0*k0;
     KSgamma_D0D1[ijk] = C*k0*k1;
