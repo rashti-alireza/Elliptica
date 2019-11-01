@@ -153,8 +153,11 @@ static void find_boost_velocity_at_outer_boundary(Grid_T *const grid)
   v_z = (v2_z*p1_z-v1_z*p2_z)/(p1_z-p2_z);
   
   printf("ADM momentums before boost velocity updated:\n");
-  printf("P_ADM = (%0.15f,%0.15f,%0.15f).\n",p2_x,p2_y,p2_z);
+  printf("-->P_ADM = (%0.15f,%0.15f,%0.15f).\n",p2_x,p2_y,p2_z);
  
+  printf("-->pre boost velocity = (%0.15f,%0.15f,%0.15f).\n",v2_x,v2_y,v2_z);
+  printf("-->new boost velocity = (%0.15f,%0.15f,%0.15f).\n",v_x,v_y,v_z); 
+  
   /* update parameters */
   update_parameter_double_format("v0_boost_x",v2_x);
   update_parameter_double_format("v0_boost_y",v2_y);
