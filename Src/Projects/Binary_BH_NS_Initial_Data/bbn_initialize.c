@@ -308,6 +308,9 @@ static void adjust_NS_center(Grid_T *const grid)
 /* find BH_NS_orbital_angular_velocity using force balance equation */
 static void find_BH_NS_Omega_force_balance_eq(Grid_T *const grid)
 {
+  printf("find_BH_NS_Omega_force_balance_eq ---> return\n");
+  return;
+  
   const double D            = GetParameterD_E("BH_NS_separation");
   const double Vr           = GetParameterD_E("BH_NS_infall_velocity");
   const double y_CM         = GetParameterD_E("y_CM");
@@ -572,6 +575,9 @@ static void find_Euler_eq_const(Grid_T *const grid)
 /* find y_CM by demanding P_ADM = 0 */
 static void find_center_of_mass(Grid_T *const grid)
 {
+  printf("find_center_of_mass -->return;\n");
+  return;
+  
   Root_Finder_T *root = init_root_finder(1);
   Observable_T *obs   = init_observable(grid);
   double  *y_CM = 0;
