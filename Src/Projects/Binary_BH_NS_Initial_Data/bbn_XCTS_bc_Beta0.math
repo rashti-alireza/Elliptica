@@ -50,6 +50,12 @@ Declare =
  #(obj = variable,name = BH_Omega_U0,none);
  #(obj = variable,name = BH_Omega_U1,none);
  (obj = variable,name = BH_Omega_U2,none);
+
+
+ # boost velocity
+ (obj = variable,name = v0_boost,none);
+ #(obj = variable,name = v1_boost,none);
+ #(obj = variable,name = v2_boost,none);
 }
 
 # symmetries for Cpi
@@ -65,14 +71,14 @@ Declare =
 #`  const double BH_Omega_U0 = GetParameterD_E("BH_Omega_U0");`;
 #`  const double BH_Omega_U1 = GetParameterD_E("BH_Omega_U1");`;
 `  const double BH_Omega_U2 = GetParameterD_E("BH_Omega_U2");`;
-
+`  const double v0_boost    = GetParameterD_E("v*_boost_x");`
 `  if (patch->outerB)/* at outer boundary */`;
 `  {`;
 `  DDM_SCHUR_BC_OPEN\n`;
 
 
 # bc equation for outer boundary at ijk point:
-outerB_F = B0_U0;
+outerB_F = B0_U0-v0_boost;
 
 
 `  F[map[ijk]] = outerB_F;\n`;

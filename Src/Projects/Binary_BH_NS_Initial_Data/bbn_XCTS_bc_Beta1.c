@@ -23,12 +23,13 @@ void *bbn_bc_Beta_U1(void *vp1,void *vp2)
 
 
   const double BH_Omega_U2 = GetParameterD_E("BH_Omega_U2");
+  const double v1_boost    = GetParameterD_E("v*_boost_y");
   if (patch->outerB)/* at outer boundary */
   {
   DDM_SCHUR_BC_OPEN
 
   double outerB_F = 
-B0_U1[ijk];
+B0_U1[ijk]-v1_boost;
 
   F[map[ijk]] = outerB_F;
 
