@@ -55,3 +55,5 @@ double force_balance_root_finder_eq(void *params,const double *const x);
 void bbn_calculate_constraints(Grid_T *const grid);
 void bbn_update_enthalpy_and_denthalpy(Grid_T *const grid);
 void bbn_update_stress_energy_tensor(Grid_T *const grid);
+double bbn_KerrSchild_H(const double M_BH,const double rbar,const double a,const double z);
+double bbn_KerrShcild_r(const double x,const double y,const double z,const double a);
