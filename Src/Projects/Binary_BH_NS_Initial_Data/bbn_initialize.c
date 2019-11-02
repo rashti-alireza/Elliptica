@@ -43,8 +43,8 @@ static Grid_T *make_next_grid_using_previous_grid(Grid_T *const grid_prev)
   Grid_T *grid_next = 0;
   struct Grid_Params_S *GridParams = init_GridParams();/* adjust some pars for construction of next grid */
   
-  /* find BH_NS_orbital_angular_velocity using force balance equation */
-  find_BH_NS_Omega_force_balance_eq(grid_prev);
+  /* find y_CM or orbital_angular_velocity using force balance equation */
+  force_balance_eq(grid_prev);
   
   /* find y_CM by demanding P_ADM = 0 */
   find_center_of_mass(grid_prev);
@@ -114,17 +114,26 @@ static Grid_T *make_next_grid_using_previous_grid(Grid_T *const grid_prev)
   return grid_next;
 }
 
+/* find BH_NS_orbital_angular_velocity using force balance equation */
+static void force_balance_eq(Grid_T *const grid)
+{
+  if (strcmp_i(GetParameterS_E("force_balance_equation"),"CenterOfMass"))
+  {
+    /* find center of mass at y axis using force balance equation */
+    find_yCM_force_balance_eq(grid);
+  }
+  else if (strcmp_i(GetParameterS_E("force_balance_equation"),"AngularVelocity"))
+  {
+    /* find BH_NS_orbital_angular_velocity using force balance equation */
+    find_BH_NS_Omega_force_balance_eq(grid);
+  }
+  else
+    abortEr(NO_OPTION);
+}
+
 /* adjust the boot velocity at the outer boundary to diminish P_ADM */
 static void find_boost_velocity_at_outer_boundary(Grid_T *const grid)
 {
-  if (!strcmp_i(GetParameterS_E("P_ADM_control_method"),"BoostMethod"))
-  {
-    update_parameter_double_format("v*_boost_x",0);
-    update_parameter_double_format("v*_boost_y",0);
-    update_parameter_double_format("v*_boost_z",0);
-    return;
-  }
-  
   const double SMALL_FAC = 1E-2;
   const double dP        = 1E-1;
   Observable_T *obs = init_observable(grid);
@@ -177,26 +186,35 @@ static void find_boost_velocity_at_outer_boundary(Grid_T *const grid)
   if (EQL(v_y,0)) v_y = p2_y*SMALL_FAC;
   if (EQL(v_z,0)) v_z = p2_z*SMALL_FAC;
   
-  printf("ADM momentums before boost velocity updated:\n");
+  printf("ADM momentums:\n");
   printf("-->P_ADM = (%e,%e,%e).\n",p2_x,p2_y,p2_z);
- 
-  printf("-->pre boost velocity = (%e,%e,%e).\n",v2_x,v2_y,v2_z);
-  printf("-->new boost velocity = (%e,%e,%e).\n",v_x,v_y,v_z); 
   
-  /* update parameters */
-  update_parameter_double_format("v0_boost_x",v2_x);
-  update_parameter_double_format("v0_boost_y",v2_y);
-  update_parameter_double_format("v0_boost_z",v2_z);
+  if (strcmp_i(GetParameterS_E("P_ADM_control_method"),"BoostMethod"))
+  {
+    printf("-->pre boost velocity = (%e,%e,%e).\n",v2_x,v2_y,v2_z);
+    printf("-->new boost velocity = (%e,%e,%e).\n",v_x,v_y,v_z);
+    
+    /* update parameters */
+    update_parameter_double_format("v0_boost_x",v2_x);
+    update_parameter_double_format("v0_boost_y",v2_y);
+    update_parameter_double_format("v0_boost_z",v2_z);
+    
+    update_parameter_double_format("v*_boost_x",v_x);
+    update_parameter_double_format("v*_boost_y",v_y);
+    update_parameter_double_format("v*_boost_z",v_z);
+    
+    update_parameter_double_format("P_ADM_x",p2_x);
+    update_parameter_double_format("P_ADM_y",p2_y);
+    update_parameter_double_format("P_ADM_z",p2_z);
+  }
+  else
+  {
+    update_parameter_double_format("v*_boost_x",0);
+    update_parameter_double_format("v*_boost_y",0);
+    update_parameter_double_format("v*_boost_z",0);
+  }
   
-  update_parameter_double_format("v*_boost_x",v_x);
-  update_parameter_double_format("v*_boost_y",v_y);
-  update_parameter_double_format("v*_boost_z",v_z);
-  
-  update_parameter_double_format("P_ADM_x",p2_x);
-  update_parameter_double_format("P_ADM_y",p2_y);
-  update_parameter_double_format("P_ADM_z",p2_z);
-  
-  free_observable(obs);  
+  free_observable(obs);
 } 
 
 /* adjust the center of NS at the designated point, in case it moved.
@@ -361,14 +379,14 @@ static void find_BH_NS_Omega_force_balance_eq(Grid_T *const grid)
   params->y_CM        = y_CM;
   params->Vr          = Vr;
   params->D           = D;
-  root->description   = "Solving Force Balance Equation";
+  root->description   = "Solving Force Balance Equation for Omega_BHNS";
   root->verbose       = 1;
   root->type          = GetParameterS_E("RootFinder_Method");
   root->tolerance     = GetParameterD_E("RootFinder_Tolerance");
   root->MaxIter       = (unsigned)GetParameterI_E("RootFinder_Max_Number_of_Iteration");
   root->x_gss         = guess;
   root->params        = params;
-  root->f[0]          = force_balance_root_finder_eq;
+  root->f[0]          = force_balance_Omega_root_finder_eq;
   plan_root_finder(root);
   
   Omega_BH_NS         = execute_root_finder(root);
@@ -388,6 +406,60 @@ static void find_BH_NS_Omega_force_balance_eq(Grid_T *const grid)
   /* since BH_NS_orbital_angular_velocity has been changed 
   // let's update the pertinent fields */
   update_B1_then_Beta_and_Aij(grid,Omega_BHNS,Vr,y_CM,D);
+}
+
+/* find center of mass at y axis using force balance equation */
+static void find_yCM_force_balance_eq(Grid_T *const grid)
+{
+  const double D            = GetParameterD_E("BH_NS_separation");
+  const double Vr           = GetParameterD_E("BH_NS_infall_velocity");
+  const double Omega_BHNS   = GetParameterD_E("BH_NS_orbital_angular_velocity");
+  const double NS_center[3] = {0,-D/2,0};/* since we keep the NS center always here */
+  const double RESIDUAL     = sqrt(GetParameterD_E("RootFinder_Tolerance"));
+  double y_CM               = GetParameterD_E("y_CM");
+  double *new_y_CM;
+  double guess[1],X[3];
+  struct Force_Balance_RootFinder_S params[1];
+  Patch_T *patch;
+  
+  patch = GetPatch("left_centeral_box",grid);
+  X_of_x(X,NS_center,patch);
+  
+  Root_Finder_T *root = init_root_finder(1);
+  guess[0] = y_CM;
+  
+  params->patch       = patch;
+  params->X           = X;
+  params->Omega_BHNS  = Omega_BHNS;
+  params->Vr          = Vr;
+  params->D           = D;
+  root->description   = "Solving Force Balance Equation for y_CM";
+  root->verbose       = 1;
+  root->type          = GetParameterS_E("RootFinder_Method");
+  root->tolerance     = GetParameterD_E("RootFinder_Tolerance");
+  root->MaxIter       = (unsigned)GetParameterI_E("RootFinder_Max_Number_of_Iteration");
+  root->x_gss         = guess;
+  root->params        = params;
+  root->f[0]          = force_balance_yCM_root_finder_eq;
+  plan_root_finder(root);
+  
+  new_y_CM = execute_root_finder(root);
+  
+  if (root->exit_status != ROOT_FINDER_OK && GRT(root->residual,RESIDUAL))
+  {
+    print_root_finder_exit_status(root);
+  }
+  update_parameter_double_format("y_CM",new_y_CM[0]);
+  printf("Updating y_CM: %g -> %g\n",y_CM,new_y_CM[0]);
+  
+  y_CM = new_y_CM[0];
+  /* since BH_NS_orbital_angular_velocity has been changed 
+  // let's update the pertinent fields */
+  update_B1_then_Beta_and_Aij(grid,Omega_BHNS,Vr,y_CM,D);
+  
+  free_root_finder(root);
+  free(new_y_CM);
+  
 }
 
 /* find the NS center using d(enthalpy)/dx^i = 0 */

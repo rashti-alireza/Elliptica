@@ -105,3 +105,5 @@ static void extrapolate_fluid_fields_outsideNS(Grid_T *const grid);
 static void find_NS_surface(Grid_T *const grid,struct Grid_Params_S *const GridParams);
 static void update_B1_then_Beta_and_Aij(Grid_T *const grid,const double Omega_BHNS,const double Vr,const double y_CM,const double D);
 static void find_boost_velocity_at_outer_boundary(Grid_T *const grid);
+static void force_balance_eq(Grid_T *const grid);
+static void find_yCM_force_balance_eq(Grid_T *const grid);

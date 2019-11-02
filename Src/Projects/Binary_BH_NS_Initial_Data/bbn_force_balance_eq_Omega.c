@@ -6,8 +6,8 @@
 
 #include "bbn_headers.h"
 
-double force_balance_root_finder_eq(void *params,const double *const x);
-double force_balance_root_finder_eq(void *params,const double *const x)
+double force_balance_Omega_root_finder_eq(void *params,const double *const x);
+double force_balance_Omega_root_finder_eq(void *params,const double *const x)
 {
 const struct Force_Balance_RootFinder_S *const par = params;
 Patch_T *const patch = par->patch;

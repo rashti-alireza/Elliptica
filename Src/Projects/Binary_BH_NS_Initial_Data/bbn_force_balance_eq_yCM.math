@@ -10,16 +10,16 @@ C_macro = GET_FIELD(name);
 
 `#include "bbn_headers.h"`
 ``
-`double force_balance_root_finder_eq(void *params,const double *const x);`
-`double force_balance_root_finder_eq(void *params,const double *const x)`
+`double force_balance_yCM_root_finder_eq(void *params,const double *const x);`
+`double force_balance_yCM_root_finder_eq(void *params,const double *const x)`
 `{`
 `const struct Force_Balance_RootFinder_S *const par = params;`
 `Patch_T *const patch = par->patch;`
 `const unsigned  nn   = patch->nn;`
-`const double Omega_BHNS = x[0];`
+`const double Omega_BHNS = par->Omega_BHNS;`
 `const double Vr         = par->Vr;`
 `const double D          = par->D;`
-`const double y_CM       = par->y_CM;`
+`double y_CM             = x[0];`
 `const double *const X   = par->X; `
 `unsigned ijk;`  
 
