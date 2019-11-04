@@ -91,7 +91,6 @@ static void find_XYZ_and_patch_of_theta_phi_NS_CS(double *const X,Patch_T **cons
 static void find_theta_phi_of_XYZ_NS_CS(double *const theta,double *const phi,const double *const X,const Flag_T side);
 static void free_Grid_Params_S(struct Grid_Params_S *par);
 static struct Grid_Params_S *init_GridParams(void);
-static double CenterOfMass_for_P_ADM_root_finder_eq(void *params,const double *const x);
 static void find_center_of_mass(Grid_T *const grid);
 static void find_NS_center(Grid_T *const grid);
 static double dh_dx0_root_finder_eq(void *params,const double *const x);

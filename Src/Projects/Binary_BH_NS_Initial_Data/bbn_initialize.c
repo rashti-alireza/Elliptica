@@ -117,6 +117,9 @@ static Grid_T *make_next_grid_using_previous_grid(Grid_T *const grid_prev)
 /* find BH_NS_orbital_angular_velocity using force balance equation */
 static void force_balance_eq(Grid_T *const grid)
 {
+  printf("---> returning force balace\n");
+  return;
+  
   if (strcmp_i(GetParameterS_E("force_balance_equation"),"CenterOfMass"))
   {
     /* find center of mass at y axis using force balance equation */
@@ -675,61 +678,33 @@ static void find_Euler_eq_const(Grid_T *const grid)
 /* find y_CM by demanding P_ADM = 0 */
 static void find_center_of_mass(Grid_T *const grid)
 {
-  printf("find_center_of_mass -->return;\n");
-  return;
-  
-  Root_Finder_T *root = init_root_finder(1);
   Observable_T *obs   = init_observable(grid);
-  double  *y_CM = 0;
-  double guess[1];/* initial guess for y_CM */
+  double  dy_CM = 0,px,y_CM_new;
   const double Omega_BHNS = GetParameterD_E("BH_NS_orbital_angular_velocity");
   const double Vr   = GetParameterD_E("BH_NS_infall_velocity");
   const double D    = GetParameterD_E("BH_NS_separation");
-  const double RESIDUAL = sqrt(GetParameterD_E("RootFinder_Tolerance"));
-  struct CM_RootFinder_S params[1];
+  const double y_CM = GetParameterD_E("y_CM");
+  const double M_NS = GetParameterD_E("NS_mass");
+  const double M_BH = GetParameterD_E("BH_mass");
   
+  /* calculate P_ADM */
   obs->quantity = "ADM_momentums";
   plan_observable(obs);
-  
+  px = obs->Px_ADM(obs);
   printf("ADM momentums before center of mass update:\n");
   printf("P_ADM = (%e,%e,%e).\n",
-          obs->Px_ADM(obs),obs->Py_ADM(obs),obs->Pz_ADM(obs));
+          px,obs->Py_ADM(obs),obs->Pz_ADM(obs));
   
-  params->obs  = obs;
-  params->grid = grid;
-  params->Vr   = Vr;
-  params->D    = D;
-  params->Omega_BHNS = Omega_BHNS;
-  guess[0] = GetParameterD_E("y_CM");
-  
-  root->description = "Finding the center of mass";
-  root->verbose     = 1;
-  root->type        = GetParameterS_E("RootFinder_Method");
-  root->tolerance   = GetParameterD_E("RootFinder_Tolerance");
-  root->MaxIter     = (unsigned)GetParameterI_E("RootFinder_Max_Number_of_Iteration");
-  root->x_gss       = guess;
-  root->params      = params;
-  root->f[0]        = CenterOfMass_for_P_ADM_root_finder_eq;
-  plan_root_finder(root);
-  y_CM              = execute_root_finder(root);
-  
-  if (root->exit_status != ROOT_FINDER_OK && GRT(root->residual,RESIDUAL))
-  {
-    print_root_finder_exit_status(root);
-  }
+  /* changing center of mass */
+  dy_CM    = -px/(Omega_BHNS*(M_NS+M_BH));
+  y_CM_new = y_CM+dy_CM;
   
   /* having found new y_CM now update */
-  update_parameter_double_format("y_CM",y_CM[0]);
-  update_B1_then_Beta_and_Aij(grid,Omega_BHNS,Vr,y_CM[0],D);
+  update_parameter_double_format("y_CM",y_CM_new);
+  update_B1_then_Beta_and_Aij(grid,Omega_BHNS,Vr,y_CM_new,D);
   
-  printf("Update Center of Rotation: %g -> %g.\n",guess[0],y_CM[0]);
+  printf("Update Center of Rotation: %g -> %g.\n",y_CM,y_CM_new);
   
-  printf("ADM momentums after center of mass update:\n");
-  printf("P_ADM = (%e,%e,%e).\n",
-          obs->Px_ADM(obs),obs->Py_ADM(obs),obs->Pz_ADM(obs));
-  
-  free(y_CM);
-  free_root_finder(root);
   free_observable(obs);
 }
 
@@ -769,22 +744,6 @@ static void update_B1_then_Beta_and_Aij(Grid_T *const grid,const double Omega_BH
     /* update A^{ijk} */
     bbn_update_psi10A_UiUj(patch);
   }
-}
-
-/* root finder equation for center of mass */
-static double CenterOfMass_for_P_ADM_root_finder_eq(void *params,const double *const x)
-{
-  struct CM_RootFinder_S *par = params;
-  Grid_T *grid = par->grid;
-  Observable_T *obs = par->obs;
-  const double Omega_BHNS = par->Omega_BHNS;
-  const double Vr         = par->Vr;
-  const double D          = par->D;
-  const double y_CM       = x[0];
-  
-  update_B1_then_Beta_and_Aij(grid,Omega_BHNS,Vr,y_CM,D);
-  
-  return (obs->Px_ADM(obs));
 }
 
 /* find the BH radius to acquire the desired BH mass */
@@ -1668,7 +1627,8 @@ static Grid_T *TOV_KerrSchild_approximation(void)
   const double ns_mass = tov->ADM_m;/* NS adm mass */
   const double y_CM = (ns_mass*C_NS+bh_mass*C_BH)/(ns_mass+bh_mass);
   add_parameter_double("y_CM",y_CM);
-  add_parameter_double("NS_Center",ns_mass);
+  add_parameter_double("NS_mass",ns_mass);
+  add_parameter_double("NS_center",C_NS);
   
   /* combining these two geometry to create the grid */
   GridParams->Max_R_NS_l = ns_R;
