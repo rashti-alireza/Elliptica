@@ -546,6 +546,30 @@ unsigned IsItNSPatch(const Patch_T *const patch)
   return ret;
 }
 
+/* ->return value: if the patch covers a part of the excision region 1, otherwise 0 */
+unsigned IsItInsideBHPatch(const Patch_T *const patch)
+{
+  unsigned ret = 0;
+  
+  if (strcmp_i(patch->grid->kind,"BBN_CubedSpherical_grid"))
+  {
+    /* it could have used regex, but need extra attention to NS surrounding case */
+    if (strstr(patch->name,"right_centeral_box") || 
+        strstr(patch->name,"right_BH_up")        ||
+        strstr(patch->name,"right_BH_down")      ||
+        strstr(patch->name,"right_BH_back")      ||
+        strstr(patch->name,"right_BH_front")     ||
+        strstr(patch->name,"right_BH_left")      ||
+        strstr(patch->name,"right_BH_right")     
+       )
+       ret = 1;
+  }
+  else
+    abortEr(NO_JOB);
+    
+  return ret;
+}
+
 /* ->return value: if the patch covers a part of outermost patches 1, otherwise 0 */
 unsigned IsItOutermostPatch(const Patch_T *const patch)
 {

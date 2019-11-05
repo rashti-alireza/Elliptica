@@ -36,3 +36,4 @@ void dbprint(const double *v,const unsigned n,const char *const desc);
 Patch_T *GetPatch(const char *const stem,const Grid_T *const grid);
 unsigned IsItNSSurface(const Patch_T *const patch);
 unsigned IsItOutermostPatch(const Patch_T *const patch);
+unsigned IsItInsideBHPatch(const Patch_T *const patch);

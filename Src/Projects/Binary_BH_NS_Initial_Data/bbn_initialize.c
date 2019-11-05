@@ -1403,11 +1403,150 @@ static void add_patches_insideBH(Grid_T *const grid)
   /* test printing coords */
   if (test_print(PRINT_COORDS))
     pr_coords(grid);
+    
+  free(bh_grid);
 }
 
-/* extrapolate the fields inside the BH */
+/* extrapolate the fields B0,eta and psi inside the BH.
+// we assume they exponentially decreasing from BH horizon
+// such that at center of BH the fields are all zero. 
+// formula we use: f(r) = fi*exp(-atten(rh-r)), 
+// fi = f(at bh horizon), rh = r at horizon, r = r inside the BH
+// a = attenuation factor. */
 static void extrapolate_insideBH(Grid_T *const grid)
 {
+  unsigned p;
+  const double atten = 5E1;
+  
+  FOR_ALL_PATCHES(p,grid)
+  {
+    /* surrounding patch */
+    Patch_T *patch = grid->patch[p];
+    if (!IsItInsideBHPatch(patch))
+      continue;
+     
+    /* add fields: */
+    ADD_FIELD(B0_U0)
+    ADD_FIELD(B0_U1)
+    ADD_FIELD(B0_U2)
+    ADD_FIELD(psi)
+    ADD_FIELD(eta)
+    
+    GET_FIELD(B0_U0)
+    GET_FIELD(B0_U1)
+    GET_FIELD(B0_U2)
+    GET_FIELD(psi)
+    GET_FIELD(eta)
+    
+    /* for the centeral box we demand the field values be 0. */
+    if (strstr(patch->name,"right_centeral_box"))
+      continue;
+    
+    Patch_T *BHsur_patch;/* corresponding bh surrounding patch */
+    const unsigned *n = patch->n;
+    double x[3],X[3];
+    double rh,r,e;
+    unsigned ijk,i,j,k;
+
+    /* find the corresponding BH surrounding patch to be used for extrapolation */
+    char stem[1000];
+    char *affix = regex_find("_[[:alpha:]]{2,5}$",patch->name);/* finding the side of the patch */
+    assert(affix);
+    sprintf(stem,"right_BH_surrounding%s",affix);
+    free(affix);
+    BHsur_patch = GetPatch(stem,grid);
+    
+    /* prepare interpolation arguments */
+    Interpolation_T *interp_eta = init_interpolation();
+    interp_eta->field = BHsur_patch->pool[LookUpField_E("eta",BHsur_patch)];
+    interp_eta->XYZ_dir_flag = 1;
+    plan_interpolation(interp_eta);
+
+    Interpolation_T *interp_psi = init_interpolation();
+    interp_psi->field = BHsur_patch->pool[LookUpField_E("psi",BHsur_patch)];
+    interp_psi->XYZ_dir_flag = 1;
+    plan_interpolation(interp_psi);
+
+    Interpolation_T *interp_B0_U0 = init_interpolation();
+    interp_B0_U0->field = BHsur_patch->pool[LookUpField_E("B0_U0",BHsur_patch)];
+    interp_B0_U0->XYZ_dir_flag = 1;
+    plan_interpolation(interp_B0_U0);
+
+    Interpolation_T *interp_B0_U1 = init_interpolation();
+    interp_B0_U1->field = BHsur_patch->pool[LookUpField_E("B0_U1",BHsur_patch)];
+    interp_B0_U1->XYZ_dir_flag = 1;
+    plan_interpolation(interp_B0_U1);
+
+    Interpolation_T *interp_B0_U2 = init_interpolation();
+    interp_B0_U2->field = BHsur_patch->pool[LookUpField_E("B0_U2",BHsur_patch)];
+    interp_B0_U2->XYZ_dir_flag = 1;
+    plan_interpolation(interp_B0_U2);
+
+    /* smearing the fields exponentially */
+    for (i = 0; i < n[0]; ++i)
+    {
+      for (j = 0; j < n[1]; ++j)
+      {
+        /* calculate rh at hotizon patch */
+        ijk = L(n,i,j,n[2]-1);
+        x[0] = patch->node[ijk]->x[0]-patch->c[0];
+        x[1] = patch->node[ijk]->x[1]-patch->c[1];
+        x[2] = patch->node[ijk]->x[2]-patch->c[2]; 
+        rh   = rms(3,x,0);
+        
+        X_of_x(X,patch->node[ijk]->x,BHsur_patch);
+
+        interp_eta->X  = X[0];
+        interp_eta->Y  = X[1];
+        interp_eta->Z  = X[2];
+
+        interp_psi->X  = X[0];
+        interp_psi->Y  = X[1];
+        interp_psi->Z  = X[2];
+
+        interp_B0_U0->X = X[0];
+        interp_B0_U0->Y = X[1];
+        interp_B0_U0->Z = X[2];
+
+        interp_B0_U1->X = X[0];
+        interp_B0_U1->Y = X[1];
+        interp_B0_U1->Z = X[2];
+
+        interp_B0_U2->X = X[0];
+        interp_B0_U2->Y = X[1];
+        interp_B0_U2->Z = X[2];
+
+        double eta_i   = execute_interpolation(interp_eta);
+        double psi_i   = execute_interpolation(interp_psi);
+        double B0_U0_i = execute_interpolation(interp_B0_U0);
+        double B0_U1_i = execute_interpolation(interp_B0_U1);
+        double B0_U2_i = execute_interpolation(interp_B0_U2);
+
+        for (k = 0; k < n[2]; ++k)
+        {
+          ijk = L(n,i,j,k);
+          x[0] = patch->node[ijk]->x[0]-patch->c[0];
+          x[1] = patch->node[ijk]->x[1]-patch->c[1];
+          x[2] = patch->node[ijk]->x[2]-patch->c[2];
+          
+          r = rms(3,x,0);
+          e = exp(-atten*(rh-r));
+          eta[ijk]   = eta_i*e;
+          psi[ijk]   = psi_i*e;
+          B0_U0[ijk] = B0_U0_i*e;
+          B0_U1[ijk] = B0_U1_i*e;
+          B0_U2[ijk] = B0_U2_i*e;
+          
+        }/* end of for (k = 0 ; k < n[2]; ++k) */
+      }/* end of for (j = 0; j < n[1]; ++j) */
+    }/* end of for (i = 0; i < n[0]; ++i) */
+    free_interpolation(interp_eta);
+    free_interpolation(interp_psi);
+    free_interpolation(interp_B0_U0);
+    free_interpolation(interp_B0_U1);
+    free_interpolation(interp_B0_U2);
+  }/* end of FOR_ALL_PATCHES(p,grid) */
+  
 }
 
 /* extrapolating phi, dphi and W in NS surrounding coords 
