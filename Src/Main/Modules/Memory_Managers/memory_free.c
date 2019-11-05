@@ -298,7 +298,8 @@ void free_patch_interface(Patch_T *const patch)
   Interface_T **face = patch->interface;
   SubFace_T **subface = 0;
   unsigned f,i;
-    
+  
+  if (face)
   FOR_ALL(f,face)
   {
     /* free point */

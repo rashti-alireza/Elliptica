@@ -2549,11 +2549,6 @@ static Grid_T *creat_bbn_grid_CS(struct Grid_Params_S *const GridParams)
   sprintf(par,"grid%u_right_centeral_box_size_c",gn);
   add_parameter_double(par,box_size_l);
   
-  /* surrounding box length */
-  sprintf(par,"grid%u_surrounding_box_length",gn);
-  add_parameter_double(par,C);
-  
-  
   /* R1 and R2 outermost */
   sprintf(par,"grid%u_outermost%u_R2",gn,0);
   add_parameter_double(par,R_outermost[0]);
