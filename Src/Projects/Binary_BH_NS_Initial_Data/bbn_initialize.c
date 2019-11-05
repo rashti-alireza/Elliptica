@@ -61,6 +61,9 @@ static Grid_T *make_next_grid_using_previous_grid(Grid_T *const grid_prev)
   /* extrapolate fluid fields outside NS */
   extrapolate_fluid_fields_outsideNS(grid_prev);
   
+  /* extrapolate metric fields inside */
+  extrapolate_metric_fields_insideBH(grid_prev);
+  
   /* find the NS center */
   find_NS_center(grid_prev);
   
@@ -217,6 +220,8 @@ static void find_boost_velocity_at_outer_boundary(Grid_T *const grid)
     update_parameter_double_format("v2_boost_z",v[2]);
     
     const double changeP = L2_norm(3,p2,p1)/L2_norm(3,p2,0);
+    printf("dP/P = %e\n",changeP);
+    
     /* if change in momentum is big */
     if (GRT(changeP,dP))
     {
@@ -1350,6 +1355,61 @@ static void find_XYZ_and_patch_of_theta_phi_NS_CS(double *const X,Patch_T **cons
     abortEr("(X,Y,Z) or patch could not be found.\n");
 }
 
+/* make patches inside the excision region of BH and and extrapolate
+// metric fields i.e. beta,eta and psi inside this region */
+void extrapolate_metric_fields_insideBH(Grid_T *const grid)
+{
+  /* add patches in side the excision region */
+  add_patches_insideBH(grid);
+  
+  /* extrapolate the fields inside the BH */
+  extrapolate_insideBH(grid);
+} 
+
+/* add patches inside the excision region */
+static void add_patches_insideBH(Grid_T *const grid)
+{
+  if (!strcmp_i(grid->kind,"BBN_CubedSpherical_grid"))
+    abortEr(NO_OPTION);
+    
+  const unsigned np1 = grid->np;
+  const unsigned np2 = np1+7;/* 6 cubed spherical + 1 box */
+  Grid_T *bh_grid = 0;
+  unsigned i;
+  
+  /* allocating */
+  grid->patch = realloc(grid->patch,(np2+1)*sizeof(*grid->patch));
+  pointerEr(grid->patch);
+  grid->patch[np2] = 0;
+  
+  for (i = np1; i < np2; i++)
+  {
+    grid->patch[i] = calloc(1,sizeof(*grid->patch[i]));
+    pointerEr(grid->patch[i]);
+  }
+  grid->np = np2;
+  
+  /* populate the patches */
+  populate_right_BH_central_box(grid,np1);
+  populate_right_BH(grid,np1+1);
+  
+  bh_grid = calloc(1,sizeof(*bh_grid));
+  pointerEr(bh_grid);
+  
+  bh_grid->patch = &grid->patch[np1];
+  alloc_nodes(bh_grid);
+  make_nodes(bh_grid);
+  
+  /* test printing coords */
+  if (test_print(PRINT_COORDS))
+    pr_coords(grid);
+}
+
+/* extrapolate the fields inside the BH */
+static void extrapolate_insideBH(Grid_T *const grid)
+{
+}
+
 /* extrapolating phi, dphi and W in NS surrounding coords 
 // in case they are needed for interpolation to the next grid
 // or in calculation of enthalpy at NS surrounding patches.
@@ -2304,6 +2364,56 @@ static Grid_T *creat_bbn_grid_CS(struct Grid_Params_S *const GridParams)
   /* surrounding box length */
   sprintf(par,"grid%u_surrounding_box_length",gn);
   add_parameter_double(par,C);
+  
+  /* right box. NOTE: this is needed when we fill the excision region */
+  nlb[0] = (unsigned)GetParameterI("n_a");
+  nlb[1] = (unsigned)GetParameterI("n_b");
+  nlb[2] = (unsigned)GetParameterI("n_c");
+  /* check for override */
+  n = (unsigned)GetParameterI("right_BH_n_a");
+  if (n != INT_MAX)   nlb[0] = n;
+  n = (unsigned)GetParameterI("right_BH_n_b");
+  if (n != INT_MAX)   nlb[1] = n;
+  n = (unsigned)GetParameterI("right_BH_n_c");
+  if (n != INT_MAX)   nlb[2] = n;
+    
+  if(nlb[0] == INT_MAX)
+    abortEr("n_a could not be set.\n");
+  if(nlb[1] == INT_MAX)
+    abortEr("n_b could not be set.\n");
+  if(nlb[2] == INT_MAX)
+    abortEr("n_c could not be set.\n");
+  
+  /* adding the results to the parameter data base */
+  
+  /* n_a, n_b, n_c */
+  /* right box */
+  sprintf(par,"grid%u_right_centeral_box_n_a",gn);
+  sprintf(val,"%u",nlb[0]);
+  add_parameter_string(par,val);
+  
+  sprintf(par,"grid%u_right_centeral_box_n_b",gn);
+  sprintf(val,"%u",nlb[1]);
+  add_parameter_string(par,val);
+  
+  sprintf(par,"grid%u_right_centeral_box_n_c",gn);
+  sprintf(val,"%u",nlb[2]);
+  add_parameter_string(par,val);
+  
+  /* size a,b,c we take it the same as left box. no biggie! */
+  sprintf(par,"grid%u_right_centeral_box_size_a",gn);
+  add_parameter_double(par,box_size_l);
+  
+  sprintf(par,"grid%u_right_centeral_box_size_b",gn);
+  add_parameter_double(par,box_size_l);
+  
+  sprintf(par,"grid%u_right_centeral_box_size_c",gn);
+  add_parameter_double(par,box_size_l);
+  
+  /* surrounding box length */
+  sprintf(par,"grid%u_surrounding_box_length",gn);
+  add_parameter_double(par,C);
+  
   
   /* R1 and R2 outermost */
   sprintf(par,"grid%u_outermost%u_R2",gn,0);

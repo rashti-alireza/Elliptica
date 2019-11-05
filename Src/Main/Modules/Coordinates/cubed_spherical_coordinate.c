@@ -667,6 +667,200 @@ static void populate_left_NS(Grid_T *const grid,const unsigned pn)
   }
 }
 
+/* populating properties of patch for right BH */
+void populate_right_BH(Grid_T *const grid,const unsigned pn)
+{
+  unsigned p;/* patch */
+  
+  for (p = pn; p < pn+6; p++)
+  {
+    Patch_T *const patch = grid->patch[p];
+    Field_T *R2 = add_field("surface_function",0,patch,NO);
+    double *R2_array;
+    Flag_T side = p-pn;
+    char name[100] = {'\0'};
+    char var[100] = {'\0'};
+    struct Ret_S ret;
+    unsigned n,ijk;
+    
+    /* filling flags */
+    patch->CoordSysInfo->CubedSphericalCoord->side = side;
+    patch->CoordSysInfo->CubedSphericalCoord->type = NS_T_CS;
+    
+    /* filling grid */
+    patch->grid = grid;
+    
+    /* filling patch number */
+    patch->pn = p;
+    
+    /* filling inner boundary */
+    patch->innerB = 0;
+    
+    /* filling n */
+    patch->n[0] = (unsigned)GetParameterI("n_a");
+    patch->n[1] = (unsigned)GetParameterI("n_b");
+    patch->n[2] = (unsigned)GetParameterI("n_c");
+    /* check for override */
+    sprintf(var,"right_BH");
+    make_keyword_parameter(&ret,var,"n");
+    n = (unsigned)GetParameterI(ret.s0);
+    if (n != INT_MAX)	patch->n[0] = n;
+    n = (unsigned)GetParameterI(ret.s1);
+    if (n != INT_MAX)	patch->n[1] = n;
+    n = (unsigned)GetParameterI(ret.s2);
+    if (n != INT_MAX)	patch->n[2] = n;
+      
+    if(patch->n[0] == INT_MAX)
+      abortEr("n_a could not be set.\n");
+    if(patch->n[1] == INT_MAX)
+      abortEr("n_b could not be set.\n");
+    if(patch->n[2] == INT_MAX)
+      abortEr("n_c could not be set.\n");
+    
+    /* filling nn */
+    patch->nn = total_nodes_patch(patch);
+    
+    switch(side)
+    {
+      case UP:
+        /* filling name */
+        sprintf(name,"grid%u_right_BH_up",grid->gn);
+        patch->name = dup_s(name);
+        
+        /* filling Rs */
+        sprintf(var,"grid%u_right_BH_surface_function_up",grid->gn);
+        R2_array = GetParameterArrayF_E(var);
+        patch->CoordSysInfo->CubedSphericalCoord->R2_f = R2;
+        sprintf(var,"grid%u_right_centeral_box_size_c",grid->gn);
+        patch->CoordSysInfo->CubedSphericalCoord->xc1 = GetParameterDoubleF_E(var)/2.;
+        R2->v = alloc_double(patch->nn);
+        
+        for (ijk = 0; ijk < patch->nn; ++ijk)
+          R2->v[ijk] = R2_array[ijk];
+      
+      break;
+      case DOWN:
+        /* filling name */
+        sprintf(name,"grid%u_right_BH_down",grid->gn);
+        patch->name = dup_s(name);
+        
+        /* filling Rs */
+        sprintf(var,"grid%u_right_BH_surface_function_down",grid->gn);
+        R2_array = GetParameterArrayF_E(var);
+        patch->CoordSysInfo->CubedSphericalCoord->R2_f = R2;
+        sprintf(var,"grid%u_right_centeral_box_size_c",grid->gn);
+        patch->CoordSysInfo->CubedSphericalCoord->xc1 = -GetParameterDoubleF_E(var)/2.;
+        R2->v = alloc_double(patch->nn);
+        
+        for (ijk = 0; ijk < patch->nn; ++ijk)
+          R2->v[ijk] = R2_array[ijk];
+      
+      break;
+      case LEFT:
+        /* filling name */
+        sprintf(name,"grid%u_right_BH_left",grid->gn);
+        patch->name = dup_s(name);
+        
+        /* filling Rs */
+        sprintf(var,"grid%u_right_BH_surface_function_left",grid->gn);
+        R2_array = GetParameterArrayF_E(var);
+        patch->CoordSysInfo->CubedSphericalCoord->R2_f = R2;
+        sprintf(var,"grid%u_right_centeral_box_size_b",grid->gn);
+        patch->CoordSysInfo->CubedSphericalCoord->xc1 = -GetParameterDoubleF_E(var)/2.;
+        R2->v = alloc_double(patch->nn);
+        
+        for (ijk = 0; ijk < patch->nn; ++ijk)
+          R2->v[ijk] = R2_array[ijk];
+
+      break;
+      case RIGHT:
+        /* filling name */
+        sprintf(name,"grid%u_right_BH_right",grid->gn);
+        patch->name = dup_s(name);
+        
+        /* filling Rs */
+        sprintf(var,"grid%u_right_BH_surface_function_right",grid->gn);
+        R2_array = GetParameterArrayF_E(var);
+        patch->CoordSysInfo->CubedSphericalCoord->R2_f = R2;
+        sprintf(var,"grid%u_right_centeral_box_size_b",grid->gn);
+        patch->CoordSysInfo->CubedSphericalCoord->xc1 = GetParameterDoubleF_E(var)/2.;
+        R2->v = alloc_double(patch->nn);
+        
+        for (ijk = 0; ijk < patch->nn; ++ijk)
+          R2->v[ijk] = R2_array[ijk];
+      
+      break;
+      case BACK:
+        /* filling name */
+        sprintf(name,"grid%u_right_BH_back",grid->gn);
+        patch->name = dup_s(name);
+        
+        /* filling Rs */
+        sprintf(var,"grid%u_right_BH_surface_function_back",grid->gn);
+        R2_array = GetParameterArrayF_E(var);
+        patch->CoordSysInfo->CubedSphericalCoord->R2_f = R2;
+        sprintf(var,"grid%u_right_centeral_box_size_a",grid->gn);
+        patch->CoordSysInfo->CubedSphericalCoord->xc1 = -GetParameterDoubleF_E(var)/2.;
+        R2->v = alloc_double(patch->nn);
+        
+        for (ijk = 0; ijk < patch->nn; ++ijk)
+          R2->v[ijk] = R2_array[ijk];
+      
+      break;
+      case FRONT:
+        /* filling name */
+        sprintf(name,"grid%u_right_BH_front",grid->gn);
+        patch->name = dup_s(name);
+        
+        /* filling Rs */
+        sprintf(var,"grid%u_right_BH_surface_function_front",grid->gn);
+        R2_array = GetParameterArrayF_E(var);
+        patch->CoordSysInfo->CubedSphericalCoord->R2_f = R2;
+        sprintf(var,"grid%u_right_centeral_box_size_a",grid->gn);
+        patch->CoordSysInfo->CubedSphericalCoord->xc1 = GetParameterDoubleF_E(var)/2.;
+        R2->v = alloc_double(patch->nn);
+        
+        for (ijk = 0; ijk < patch->nn; ++ijk)
+          R2->v[ijk] = R2_array[ijk];
+      
+      break;
+      default:
+        abortEr(NO_OPTION);
+    }
+    
+    /* filling center */
+    sprintf(var,"grid%u_right_BH_center_a",grid->gn);
+    patch->c[0] = GetParameterDoubleF_E(var);
+    sprintf(var,"grid%u_right_BH_center_b",grid->gn);
+    patch->c[1] = GetParameterDoubleF_E(var);
+    sprintf(var,"grid%u_right_BH_center_c",grid->gn);
+    patch->c[2] = GetParameterDoubleF_E(var);
+    
+    /* filling min */
+    patch->min[0] = -1;
+    patch->min[1] = -1;
+    patch->min[2] = 0;
+    
+    /* filling max */
+    patch->max[0] = 1;
+    patch->max[1] = 1;
+    patch->max[2] = 1;
+    
+    /* filling flags */
+    patch->coordsys = CubedSpherical;
+    
+    /* collocation */
+    patch->collocation[0] = Chebyshev_Extrema;
+    patch->collocation[1] = Chebyshev_Extrema;
+    patch->collocation[2] = Chebyshev_Extrema;
+    
+    /* basis */
+    patch->basis[0] = Chebyshev_Tn_BASIS;
+    patch->basis[1] = Chebyshev_Tn_BASIS;
+    patch->basis[2] = Chebyshev_Tn_BASIS;
+  }
+}
+
 /* populating properties of patch for central NS */
 static void populate_central_NS(Grid_T *const grid,const unsigned pn)
 {

@@ -54,6 +54,8 @@ static void populate_outermost(Grid_T *const grid,const unsigned pn,const unsign
 static void populate_central_NS(Grid_T *const grid,const unsigned pn);
 static void populate_central_NS_surrounding(Grid_T *const grid,const unsigned pn);
 static void populate_central_BH_surrounding(Grid_T *const grid,const unsigned pn);
+void populate_right_BH(Grid_T *const grid,const unsigned pn);
+void populate_right_BH_central_box(Grid_T *const grid,const unsigned pn);
 void populate_filling_box(Grid_T *const grid,const unsigned pn);
 static void R1_derivative(Patch_T *const patch);
 static void R2_derivative(Patch_T *const patch);  

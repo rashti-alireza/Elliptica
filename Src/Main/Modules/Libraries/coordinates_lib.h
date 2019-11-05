@@ -33,3 +33,6 @@ void test_dq_dN(Grid_T *const grid);
 void needle_ex(Needle_T *const needle,const Patch_T *const patch);
 void needle_in(Needle_T *const needle,const Patch_T *const patch);
 void point_finder(Needle_T *const needle);
+void populate_right_BH(Grid_T *const grid,const unsigned pn);
+void populate_right_BH_central_box(Grid_T *const grid,const unsigned pn);
+int make_nodes(Grid_T *const grid);
