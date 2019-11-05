@@ -138,86 +138,98 @@ static void force_balance_eq(Grid_T *const grid)
 static void find_boost_velocity_at_outer_boundary(Grid_T *const grid)
 {
   const double SMALL_FAC = 1E-2;
-  const double dP        = 1E-1;
+  const double dP   = GetParameterD_E("P_ADM_control_tolerance");
   Observable_T *obs = init_observable(grid);
-  double p1_x,p1_y,p1_z;
-  double p2_x,p2_y,p2_z;
-  double v1_x,v1_y,v1_z;
-  double v2_x,v2_y,v2_z;
-  double v_x,v_y,v_z;
+  double p1[3] = {0};
+  double p2[3] = {0};
+  double v1[3] = {0};
+  double v2[3] = {0};
+  double  v[3] = {0};
+  static unsigned iter = 0;
   
   obs->quantity = "ADM_momentums";
   plan_observable(obs);
   
   /* get previous P_ADMs */
-  p1_x = GetParameterD_E("P_ADM_x");
-  p1_y = GetParameterD_E("P_ADM_y");
-  p1_z = GetParameterD_E("P_ADM_z");
+  p1[0] = GetParameterD_E("P_ADM_x");
+  p1[1] = GetParameterD_E("P_ADM_y");
+  p1[2] = GetParameterD_E("P_ADM_z");
   
   /* get the current P_ADMs */
-  p2_x = obs->Px_ADM(obs);
-  p2_y = obs->Py_ADM(obs);
-  p2_z = obs->Pz_ADM(obs);
+  p2[0] = obs->Px_ADM(obs);
+  p2[1] = obs->Py_ADM(obs);
+  p2[2] = obs->Pz_ADM(obs);
   
-  /* get the penultimate boost velocity */
-  v1_x = GetParameterD_E("v0_boost_x");
-  v1_y = GetParameterD_E("v0_boost_y");
-  v1_z = GetParameterD_E("v0_boost_z");
-  
-  /* get the ultimate boost velocity */
-  v2_x = GetParameterD_E("v*_boost_x");
-  v2_y = GetParameterD_E("v*_boost_y");
-  v2_z = GetParameterD_E("v*_boost_z");
-  
-  /* calculate the new boost velocity */
-  if (GRT(fabs(p1_x-p2_x),dP))
-    v_x = (v2_x*p1_x-v1_x*p2_x)/(p1_x-p2_x);
-    
-  if (GRT(fabs(p1_y-p2_y),dP))
-    v_y = (v2_y*p1_y-v1_y*p2_y)/(p1_y-p2_y);
-    
-  if (GRT(fabs(p1_z-p2_z),dP))
-    v_z = (v2_z*p1_z-v1_z*p2_z)/(p1_z-p2_z);
-  
-  /* if v1 and v2 are zero v is always 0 so prevent this */
-  if (EQL(v_x,0)) v_x = p2_x*SMALL_FAC;
-  if (EQL(v_y,0)) v_y = p2_y*SMALL_FAC;
-  if (EQL(v_z,0)) v_z = p2_z*SMALL_FAC;
-  
-  /* if v1 and v2 are zero v is always 0 so prevent this */
-  if (EQL(v_x,0)) v_x = p2_x*SMALL_FAC;
-  if (EQL(v_y,0)) v_y = p2_y*SMALL_FAC;
-  if (EQL(v_z,0)) v_z = p2_z*SMALL_FAC;
+  update_parameter_double_format("P_ADM_x",p2[0]);
+  update_parameter_double_format("P_ADM_y",p2[1]);
+  update_parameter_double_format("P_ADM_z",p2[2]);
   
   printf("ADM momentums:\n");
-  printf("-->P_ADM = (%e,%e,%e).\n",p2_x,p2_y,p2_z);
+  printf("-->P_ADM = (%e,%e,%e).\n",p2[0],p2[1],p2[2]);
   
-  if (strcmp_i(GetParameterS_E("P_ADM_control_method"),"BoostMethod"))
+  if (!strcmp_i(GetParameterS_E("P_ADM_control_method"),"BoostMethod"))
   {
-    printf("-->pre boost velocity = (%e,%e,%e).\n",v2_x,v2_y,v2_z);
-    printf("-->new boost velocity = (%e,%e,%e).\n",v_x,v_y,v_z);
+    free_observable(obs);
+    return;
+  }
+
+  if (iter == 0)
+  {
+    update_parameter_double_format("v1_boost_x",p2[0]*SMALL_FAC);
+    update_parameter_double_format("v1_boost_y",p2[1]*SMALL_FAC);
+    update_parameter_double_format("v1_boost_z",p2[2]*SMALL_FAC);
+  }
+  else if (iter == 1)
+  {
+    update_parameter_double_format("v2_boost_x",p2[0]*SMALL_FAC);
+    update_parameter_double_format("v2_boost_y",p2[1]*SMALL_FAC);
+    update_parameter_double_format("v2_boost_z",p2[2]*SMALL_FAC);
+  }
+  else if (iter > 1)
+  {
+    /* get the penultimate boost velocity */
+    v1[0] = GetParameterD_E("v1_boost_x");
+    v1[1] = GetParameterD_E("v1_boost_y");
+    v1[2] = GetParameterD_E("v1_boost_z");
+    
+    /* get the ultimate boost velocity */
+    v2[0] = GetParameterD_E("v2_boost_x");
+    v2[1] = GetParameterD_E("v2_boost_y");
+    v2[2] = GetParameterD_E("v2_boost_z");
+    
+    /* calculate the new boost velocity */
+    v[0] = (v2[0]*p1[0]-v1[0]*p2[0])/(p1[0]-p2[0]);
+    v[1] = (v2[1]*p1[1]-v1[1]*p2[1])/(p1[1]-p2[1]);
+    v[2] = (v2[2]*p1[2]-v1[2]*p2[2])/(p1[2]-p2[2]);
+    
+    /* take cure of 0 denominator */
+    if (EQL(p1[0],p2[0])) v[0] = 0;
+    if (EQL(p1[1],p2[1])) v[1] = 0;
+    if (EQL(p1[2],p2[2])) v[2] = 0;
     
     /* update parameters */
-    update_parameter_double_format("v0_boost_x",v2_x);
-    update_parameter_double_format("v0_boost_y",v2_y);
-    update_parameter_double_format("v0_boost_z",v2_z);
+    update_parameter_double_format("v1_boost_x",v2[0]);
+    update_parameter_double_format("v1_boost_y",v2[1]);
+    update_parameter_double_format("v1_boost_z",v2[2]);
     
-    update_parameter_double_format("v*_boost_x",v_x);
-    update_parameter_double_format("v*_boost_y",v_y);
-    update_parameter_double_format("v*_boost_z",v_z);
+    update_parameter_double_format("v2_boost_x",v[0]);
+    update_parameter_double_format("v2_boost_y",v[1]);
+    update_parameter_double_format("v2_boost_z",v[2]);
     
-    update_parameter_double_format("P_ADM_x",p2_x);
-    update_parameter_double_format("P_ADM_y",p2_y);
-    update_parameter_double_format("P_ADM_z",p2_z);
-  }
-  else
-  {
-    update_parameter_double_format("v*_boost_x",0);
-    update_parameter_double_format("v*_boost_y",0);
-    update_parameter_double_format("v*_boost_z",0);
+    const double changeP = L2_norm(3,p2,p1)/L2_norm(3,p2,0);
+    /* if change in momentum is big */
+    if (GRT(changeP,dP))
+    {
+      update_parameter_double_format("v*_boost_x",v[0]);
+      update_parameter_double_format("v*_boost_y",v[1]);
+      update_parameter_double_format("v*_boost_z",v[2]);
+      printf("-->pre boost velocity = (%e,%e,%e).\n",v2[0],v2[1],v2[2]);
+      printf("-->new boost velocity = (%e,%e,%e).\n",v[0],v[1],v[2]);
+    }
   }
   
   free_observable(obs);
+  iter++;
 } 
 
 /* adjust the center of NS at the designated point, in case it moved.
@@ -678,6 +690,9 @@ static void find_Euler_eq_const(Grid_T *const grid)
 /* find y_CM by demanding P_ADM = 0 */
 static void find_center_of_mass(Grid_T *const grid)
 {
+  printf("returning center of mass finder\n");
+  return;
+  
   Observable_T *obs   = init_observable(grid);
   double  dy_CM = 0,px,y_CM_new;
   const double Omega_BHNS = GetParameterD_E("BH_NS_orbital_angular_velocity");
@@ -1666,34 +1681,16 @@ static Grid_T *TOV_KerrSchild_approximation(void)
   Observable_T *obs = init_observable(grid);
   obs->quantity     = "ADM_momentums";
   plan_observable(obs);
-  double p_x,p_y,p_z,v_x,v_y,v_z;
-  const double SMALL_FAC = 1E-2;
+  double p_x,p_y,p_z;
   p_x = obs->Px_ADM(obs);
   p_y = obs->Py_ADM(obs);
   p_z = obs->Pz_ADM(obs);
-  
-  if (strcmp_i(GetParameterS_E("P_ADM_control_method"),"BoostMethod"))
-  {
-    v_x = p_x*SMALL_FAC;
-    v_y = p_y*SMALL_FAC;
-    v_z = p_z*SMALL_FAC;
-  }
-  else
-  {
-    v_x = 0;
-    v_y = 0;
-    v_z = 0;
-  }
-  
-  update_parameter_double_format("v0_boost_x",0);
-  update_parameter_double_format("v0_boost_y",0);
-  update_parameter_double_format("v0_boost_z",0);
-  update_parameter_double_format("v*_boost_x",v_x);
-  update_parameter_double_format("v*_boost_y",v_y);
-  update_parameter_double_format("v*_boost_z",v_z);
   update_parameter_double_format("P_ADM_x",p_x);
   update_parameter_double_format("P_ADM_y",p_y);
   update_parameter_double_format("P_ADM_z",p_z);
+  update_parameter_double_format("v*_boost_x",0);
+  update_parameter_double_format("v*_boost_y",0);
+  update_parameter_double_format("v*_boost_z",0);
   
   printf("ADM momentums initials:\n");
   printf("-->P_ADM = (%e,%e,%e).\n",p_x,p_y,p_z);
