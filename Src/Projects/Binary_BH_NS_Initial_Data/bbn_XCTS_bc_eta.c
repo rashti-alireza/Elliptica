@@ -34,27 +34,56 @@ eta[ijk] - 1;
   {
   const double r02   = SQR(GetParameterD_E("RollOff_distance"));
   const double M_BH  = GetParameterD_E("BH_mass");
-  const double a_BH  = GetParameterD_E("BH_X_U2")*M_BH;
-  const double a2_BH = SQR(a_BH);
+  const double a  = GetParameterD_E("BH_X_U2")*M_BH;
+  const double a2 = SQR(a);
   const double C_BH  = 0.5*GetParameterD_E("BH_NS_separation");
+  const double Omega_BHNS = GetParameterD_E("BH_NS_orbital_angular_velocity");
+  const double y_CM = GetParameterD_E("y_CM");
+  Transformation_T *t = initialize_transformation();
+  double Bx,By,Bz;/* B = v/c */
+  double H,kt;/* in ds^2 = (delta_ij+2*H*ki*kj)dx^i*dx^j */
+  Bx = -Omega_BHNS*(C_BH-y_CM);
+  By = 0;
+  Bz = 0;
+  t->boost->Bx = Bx;
+  t->boost->By = By;
+  t->boost->Bz = Bz;
+  t->boost->B2 = SQR(Bx)+SQR(By)+SQR(Bz);
   DDM_SCHUR_BC_OPEN
 
-   double x   = patch->node[ijk]->x[0];
-   double y   = patch->node[ijk]->x[1]-C_BH;
-   double z   = patch->node[ijk]->x[2];
-   double r2  = SQR(x)+SQR(y)+SQR(z);
-   double rbar2  = 0.5*(r2-a2_BH+sqrt(SQR(r2-a2_BH)+4*a2_BH*SQR(z)));
-   double rbar   = sqrt(rbar2);
-   double k2 = z/rbar;
-   double H  = M_BH*rbar/(rbar2+a2_BH*SQR(k2));
-   double C  = 2.*H;
-   double KS_alpha = 1/sqrt(1+C);
-   double innerB_F = 
+  double x = patch->node[ijk]->x[0];
+  double y = patch->node[ijk]->x[1]-C_BH;
+  double z = patch->node[ijk]->x[2];
+  double x_mu[4] = {0/* time component */,x,y,z};/* x^mu in boost coords */
+  double Lm1_x_mu[4];/* Lorentz^-1 x^mu, inverse boost */
+  t->boost->inverse = 1;
+  Lorentz_boost(t,x_mu,Lm1_x_mu);
+  double _x    = Lm1_x_mu[1];
+  double _y    = Lm1_x_mu[2];
+  double _z    = Lm1_x_mu[3];
+  double rbar  = bbn_KerrShcild_r(_x,_y,_z,a);
+  double rbar2 = SQR(rbar);
+  double r2    = SQR(x)+SQR(y)+SQR(z);
+  double _k0 = (rbar*_x+a*_y)/(rbar2+a2);
+  double _k1 = (rbar*_y-a*_x)/(rbar2+a2);
+  double _k2 = _z/rbar;
+  double _kt = 1;
+  double _k_mu[4] = {_kt,_k0,_k1,_k2};
+  double L_k_mu[4];/* Lorentz *k^mu */
+  t->boost->inverse = 0;
+  Lorentz_boost(t,_k_mu,L_k_mu);
+  kt = L_k_mu[0];
+  H  = bbn_KerrSchild_H(M_BH,rbar,a,z);
+  double C = 2.*H;
+  double KS_alpha = 1/sqrt(1+C*kt*kt);
+
+  double innerB_F = 
 -KS_alpha*psi[ijk]*exp(-pow(r2, 2)/pow(r02, 2)) + eta[ijk];
 
   F[map[ijk]] = innerB_F;
 
   DDM_SCHUR_BC_CLOSE
+  free_transformation(t);
   }/* end of else if (patch->innerB) */
   return 0;
 }
