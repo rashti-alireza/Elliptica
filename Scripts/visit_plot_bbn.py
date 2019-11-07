@@ -98,33 +98,33 @@ def collect_files(data_path,section):
   
   if ('NS' == section):
     for f in allfiles:
-      if re.search(r'grid\d+_left_NS_(up|down|left|right|back|front)_\w*\.silo$',f) or \
-         re.search(r'grid\d+_left_centeral_box_\w*\.silo$',f):
+      if re.search(r'left_NS_(up|down|left|right|back|front)_\w*\.silo$',f) or \
+         re.search(r'left_centeral_box_\w*\.silo$',f):
         files_name.append(f)
   
   elif ('NS_surrounding' == section):
     for f in allfiles:
-      if re.search(r'grid\d+_left_NS_surrounding_(up|down|left|right|back|front)_\w*\.silo$',f):
+      if re.search(r'left_NS_surrounding_(up|down|left|right|back|front)_\w*\.silo$',f):
         files_name.append(f)
         
   elif ('BH_surrounding' == section):
     for f in allfiles:
-      if re.search(r'grid\d+_right_BH_surrounding_(up|down|left|right|back|front)_\w*\.silo$',f):
+      if re.search(r'right_BH_surrounding_(up|down|left|right|back|front)_\w*\.silo$',f):
         files_name.append(f)
         
   elif ('outermost0' == section):
     for f in allfiles:
-      if re.search(r'grid\d+_outermost0_(up|down|left|right|back|front)_\w*\.silo$',f):
+      if re.search(r'outermost0_(up|down|left|right|back|front)_\w*\.silo$',f):
         files_name.append(f)
         
   elif ('outermost1' == section):
     for f in allfiles:
-      if re.search(r'grid\d+_outermost0_(up|down|left|right|back|front)_\w*\.silo$',f):
+      if re.search(r'outermost0_(up|down|left|right|back|front)_\w*\.silo$',f):
         files_name.append(f)
   
   elif ('outermost' == section):
     for f in allfiles:
-      if re.search(r'grid\d+_outermost[0-9]+_(up|down|left|right|back|front)_\w*\.silo$',f):
+      if re.search(r'outermost[0-9]+_(up|down|left|right|back|front)_\w*\.silo$',f):
         files_name.append(f)
   
   else:
