@@ -5,7 +5,8 @@
 
 #include "bbn_study_bbn.h"
 
-/* study and analyze initial data */
+/* study and analyze initial data. whenever it is called, 
+// it increments the solving_iteration_number by 1. */
 void bbn_study_initial_data(Grid_T *const grid)
 {
   pr_clock();
@@ -13,12 +14,14 @@ void bbn_study_initial_data(Grid_T *const grid)
   printf("{ Studying Initial Data for Binary BH and NS ...\n");
   
   const char *const folder = GetParameterS_E("Diagnostics");
-  unsigned solving_iter    = (unsigned)GetParameterI("solving_iteration_number");
+  int solving_iter         = GetParameterI("solving_iteration_number");
   
   /* calculating the constraints */
   bbn_calculate_constraints(grid);
-  bbn_print_fields(grid,solving_iter,folder);
+  bbn_print_fields(grid,(unsigned)solving_iter,folder);
   
+  update_parameter_integer("solving_iteration_number",solving_iter++);
+
   printf("} Studying Initial Data for Binary BH and NS ==> Done.\n");
   pr_clock();
   pr_line_custom('=');

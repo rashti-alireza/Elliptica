@@ -78,8 +78,6 @@ int Binary_BH_NS_Initial_Data(void)
     bbn_study_initial_data(grid_next);
     
     grid_prev = grid_next;
-    solving_iter++;
-    update_parameter_integer("solving_iteration_number",(int)solving_iter);
     
     printf("} Iteration %u for the parameter(s) below is done.\n",iter);
     for (i = 0; i < N_iter_par; ++i)
