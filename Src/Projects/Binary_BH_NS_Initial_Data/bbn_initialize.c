@@ -234,7 +234,7 @@ static void find_boost_velocity_at_outer_boundary(Grid_T *const grid)
     }
     else
       printf("-->boost velocity_x = %e -> no update.\n",
-        GetParameterD_E("v*_boost_x"););
+        GetParameterD_E("v*_boost_x"));
       
     if (GRT(dPy_Py,dP))
     {
@@ -243,7 +243,7 @@ static void find_boost_velocity_at_outer_boundary(Grid_T *const grid)
     }
     else
       printf("-->boost velocity_y = %e -> no update.\n",
-        GetParameterD_E("v*_boost_y"););
+        GetParameterD_E("v*_boost_y"));
       
     if (GRT(dPz_Pz,dP))
     {
@@ -252,7 +252,7 @@ static void find_boost_velocity_at_outer_boundary(Grid_T *const grid)
     }
     else
       printf("-->boost velocity_z = %e -> no update.\n",
-        GetParameterD_E("v*_boost_z"););
+        GetParameterD_E("v*_boost_z"));
   }
   
   free_observable(obs);
