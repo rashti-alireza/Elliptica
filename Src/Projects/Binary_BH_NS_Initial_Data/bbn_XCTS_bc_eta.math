@@ -103,7 +103,7 @@ outerB_F = eta - 1;
 `  t->boost->inverse = 0;`
 `  Lorentz_boost(t,_k_mu,L_k_mu);`
 `  kt = L_k_mu[0];`
-`  H  = bbn_KerrSchild_H(M_BH,rbar,a,z);`
+`  H  = bbn_KerrSchild_H(M_BH,rbar,a,_z);`
 `  double C = 2.*H;`
 `  double KS_alpha = 1/sqrt(1+C*kt*kt);`
 ``

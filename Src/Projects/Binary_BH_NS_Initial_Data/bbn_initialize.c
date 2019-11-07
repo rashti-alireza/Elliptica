@@ -2194,7 +2194,7 @@ static void init_field_TOV_plus_KerrSchild(Grid_T *const grid,const TOV_T *const
       double k0 = L_k_mu[1];
       double k1 = L_k_mu[2];
       double k2 = L_k_mu[3];
-      double H  = bbn_KerrSchild_H(M_BH,rbar,a_BH,z);
+      double H  = bbn_KerrSchild_H(M_BH,rbar,a_BH,_z);
       double C = 2.*H;
       
       KSalpha[ijk] = 1/sqrt(1+C*kt*kt);

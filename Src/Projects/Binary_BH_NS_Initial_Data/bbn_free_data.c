@@ -370,7 +370,7 @@ void bbn_free_data_gammas(Grid_T *const grid)
       k0 = L_k_mu[1];
       k1 = L_k_mu[2];
       k2 = L_k_mu[3];
-      H  = bbn_KerrSchild_H(M_BH,rbar,a,z);
+      H  = bbn_KerrSchild_H(M_BH,rbar,a,_z);
       
       double e = exp(-pow(r/r0,4));
       double C = 2.*H*e;
@@ -731,7 +731,7 @@ static void populate_KSgammas_KSalpha_KSBeta(Patch_T *const patch)
     k0 = L_k_mu[1];
     k1 = L_k_mu[2];
     k2 = L_k_mu[3];
-    H  = bbn_KerrSchild_H(M_BH,rbar,a,z);
+    H  = bbn_KerrSchild_H(M_BH,rbar,a,_z);
     
     double C = 2.*H;
     double A = 1./(1+C*(SQR(k0)+SQR(k1)+SQR(k2)));
