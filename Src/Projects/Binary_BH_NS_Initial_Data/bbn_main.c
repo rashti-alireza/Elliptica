@@ -45,8 +45,10 @@ int Binary_BH_NS_Initial_Data(void)
     sprintf(folder_name_next,"BBN_Iteration_%ux%ux%u",n[0],n[1],n[2]);
     if (strcmp(folder_name_next,folder_name_prev))/* if n is updated */
     {
-      sprintf(folder_name_next,"BBN_Iteration_%ux%ux%u",n[0],n[1],n[2]);
-      sprintf(folder_name_prev,"BBN_Iteration_%ux%ux%u",n[0],n[1],n[2]);
+      /* iteration number used in solving, reset this for each resolution */
+      update_parameter_integer("solving_iteration_number",0);
+      sprintf(folder_name_next,"BBN_%ux%ux%u",n[0],n[1],n[2]);
+      sprintf(folder_name_prev,"BBN_%ux%ux%u",n[0],n[1],n[2]);
       folder_path = make_directory(path_par,folder_name_next);
       update_parameter_string("iteration_output",folder_path);
       free(folder_path);
