@@ -25,7 +25,6 @@ void bbn_study_initial_data(Grid_T *const grid)
   printf("} Studying Initial Data for Binary BH and NS ==> Done.\n");
   pr_clock();
   pr_line_custom('=');
-  
 }
 
 /* printing fields determined in parameter file */
