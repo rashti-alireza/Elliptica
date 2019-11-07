@@ -142,11 +142,13 @@ static void find_boost_velocity_at_outer_boundary(Grid_T *const grid)
 {
   const double SMALL_FAC = 1E-2;
   const double dP   = GetParameterD_E("P_ADM_control_tolerance");
+  const double W    = GetParameterD_E("Solving_Field_Update_Weight");
   Observable_T *obs = init_observable(grid);
   double p1[3] = {0};
   double p2[3] = {0};
   double v1[3] = {0};
   double v2[3] = {0};
+  double v0[3] = {0};
   double  v[3] = {0};
   static unsigned iter = 0;
   
@@ -200,6 +202,11 @@ static void find_boost_velocity_at_outer_boundary(Grid_T *const grid)
     v2[1] = GetParameterD_E("v2_boost_y");
     v2[2] = GetParameterD_E("v2_boost_z");
     
+    /* get the boost velocity */
+    v0[0] = GetParameterD_E("v*_boost_x");
+    v0[1] = GetParameterD_E("v*_boost_y");
+    v0[2] = GetParameterD_E("v*_boost_z");
+    
     /* calculate the new boost velocity */
     v[0] = (v2[0]*p1[0]-v1[0]*p2[0])/(p1[0]-p2[0]);
     v[1] = (v2[1]*p1[1]-v1[1]*p2[1])/(p1[1]-p2[1]);
@@ -209,6 +216,11 @@ static void find_boost_velocity_at_outer_boundary(Grid_T *const grid)
     if (EQL(p1[0],p2[0])) v[0] = 0;
     if (EQL(p1[1],p2[1])) v[1] = 0;
     if (EQL(p1[2],p2[2])) v[2] = 0;
+    
+    /* change the boost velocity relaxed */
+    v[0] = W*v[0]+(1-W)*v0[0];
+    v[1] = W*v[1]+(1-W)*v0[1];
+    v[2] = W*v[2]+(1-W)*v0[2];
     
     /* update parameters */
     update_parameter_double_format("v1_boost_x",v2[0]);
