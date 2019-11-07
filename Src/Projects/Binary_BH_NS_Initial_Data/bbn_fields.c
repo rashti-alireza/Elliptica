@@ -21,6 +21,8 @@ void bbn_allocate_fields(Grid_T *const grid)
       /* scalar for the irrotational part of fluid i.e h*u = dphi+W in NS and 
       // its partial derivatives*/
       add_field("phi",0,patch,YES);
+      add_field("phi_residual",0,patch,YES);
+      
       add_field("OLD_phi",0,patch,YES);
       ADD_FIELD_NoMem(dphi_D2)
       ADD_FIELD_NoMem(dphi_D1)
@@ -96,6 +98,7 @@ void bbn_allocate_fields(Grid_T *const grid)
     
     /* conformal factor and its derivative */
     add_field("psi",0,patch,YES);
+    add_field("psi_residual",0,patch,YES);
     add_field("OLD_psi",0,patch,YES);
     ADD_FIELD_NoMem(dpsi_D2)
     ADD_FIELD_NoMem(dpsi_D1)
@@ -110,6 +113,8 @@ void bbn_allocate_fields(Grid_T *const grid)
 
     /* eta = lapse * psi and its partial derivatives */
     add_field("eta",0,patch,YES);
+    add_field("eta_residual",0,patch,YES);
+    
     add_field("OLD_eta",0,patch,YES);
     
     ADD_FIELD_NoMem(deta_D2)
@@ -128,6 +133,10 @@ void bbn_allocate_fields(Grid_T *const grid)
     add_field("B0_U0",0,patch,YES);
     add_field("B0_U1",0,patch,YES);
     add_field("B0_U2",0,patch,YES);
+    add_field("B0_U0_residual",0,patch,YES);
+    add_field("B0_U1_residual",0,patch,YES);
+    add_field("B0_U2_residual",0,patch,YES);
+    
     add_field("B1_U0",0,patch,YES);
     add_field("B1_U1",0,patch,YES);
     add_field("B1_U2",0,patch,YES);

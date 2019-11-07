@@ -35,6 +35,10 @@ void bbn_solve_initial_data_eqs(Grid_T *const grid)
   /* saving the field being solved for relaxation scheme purposes */
   save_fields(grid);
   
+  /* calculate the field residual for diagnostic purposes */
+  calculate_equation_residual(SolveEqs);
+  bbn_study_initial_data(grid);
+  
   const unsigned max_iter = (unsigned)GetParameterI_E("Solving_Max_Number_of_Iteration");
   unsigned iter = 0;
   while (iter < max_iter)
@@ -60,7 +64,10 @@ void bbn_solve_initial_data_eqs(Grid_T *const grid)
   
   /* updating the fields using relaxed scheme */
   update_fields_relaxed_scheme(grid);
-
+  
+  /* calculate the field residual for diagnostic purposes */
+  calculate_equation_residual(SolveEqs);
+  
   /* free SolveEqs and phi grid */
   free_solve_equations(SolveEqs);
   bbn_free_phi_grid(phi_grid);
