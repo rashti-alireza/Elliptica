@@ -385,11 +385,15 @@ static void *make_structured_mesh_3d_xyz(Pr_Field_T *const pr,const Patch_T *con
          *y = alloc_double(nn),
          *z = alloc_double(nn);
   char *label[3];
+  const char *stem = strstr(patch->name,"_");/* grid\d?_ */
+  assert(stem);
+  stem++;
+  
   prepare_node_structured_mesh_3d_silo("Cartesian",patch,x,y,z);
   
   /* opening a file to write in for Cartesian */
   sprintf(file_name,"%s/%s_xyz_%04d.silo",
-    pr->folder,patch->name,pr->cycle);
+    pr->folder,stem,pr->cycle);
   dbfile = DBCreate(file_name,DB_CLOBBER,DB_LOCAL,
     "3D mesh in Cartesian values with HDF5 format using silo library",
     DB_HDF5);
