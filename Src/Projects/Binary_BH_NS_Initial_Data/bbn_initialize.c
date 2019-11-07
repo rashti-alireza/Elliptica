@@ -219,18 +219,40 @@ static void find_boost_velocity_at_outer_boundary(Grid_T *const grid)
     update_parameter_double_format("v2_boost_y",v[1]);
     update_parameter_double_format("v2_boost_z",v[2]);
     
-    const double changeP = L2_norm(3,p2,p1)/L2_norm(3,p2,0);
-    printf("dP/P = %e\n",changeP);
+    const double dPx_Px = L2_norm(1,&p2[0],&p1[0])/L2_norm(1,&p2[0],0);
+    const double dPy_Py = L2_norm(1,&p2[1],&p1[1])/L2_norm(1,&p2[1],0);
+    const double dPz_Pz = L2_norm(1,&p2[2],&p1[2])/L2_norm(1,&p2[2],0);
+    printf("dPx/Px = %e\n",dPx_Px);
+    printf("dPy/Py = %e\n",dPy_Py);
+    printf("dPz/Pz = %e\n",dPz_Pz);
     
     /* if change in momentum is big */
-    if (GRT(changeP,dP))
+    if (GRT(dPx_Px,dP))
     {
       update_parameter_double_format("v*_boost_x",v[0]);
-      update_parameter_double_format("v*_boost_y",v[1]);
-      update_parameter_double_format("v*_boost_z",v[2]);
-      printf("-->pre boost velocity = (%e,%e,%e).\n",v2[0],v2[1],v2[2]);
-      printf("-->new boost velocity = (%e,%e,%e).\n",v[0],v[1],v[2]);
+      printf("-->boost velocity_x = %e -> %e \n",v2[0],v[0]);
     }
+    else
+      printf("-->boost velocity_x = %e -> no update.\n",
+        GetParameterD_E("v*_boost_x"););
+      
+    if (GRT(dPy_Py,dP))
+    {
+      update_parameter_double_format("v*_boost_y",v[1]);
+      printf("-->boost velocity_y = %e -> %e \n",v2[1],v[1]);
+    }
+    else
+      printf("-->boost velocity_y = %e -> no update.\n",
+        GetParameterD_E("v*_boost_y"););
+      
+    if (GRT(dPz_Pz,dP))
+    {
+      update_parameter_double_format("v*_boost_z",v[2]);
+      printf("-->boost velocity_z = %e -> %e \n",v2[2],v[2]);
+    }
+    else
+      printf("-->boost velocity_z = %e -> no update.\n",
+        GetParameterD_E("v*_boost_z"););
   }
   
   free_observable(obs);
