@@ -23,8 +23,8 @@ int Binary_BH_NS_Initial_Data(void)
   const char *path_par = GetParameterS("output_directory_path");
   char folder_name_next[1000] = {'\0'},
        folder_name_prev[1000] = {'\0'};
-  char *folder_path;
-  unsigned iter;
+  char *folder_path,*folder_path2;
+  unsigned iter,solving_iter = 0;
   
   /* iterate over all parameters specified in parameter file */
   for (iter = 0; iter < N_iter; ++iter)
@@ -46,12 +46,16 @@ int Binary_BH_NS_Initial_Data(void)
     if (strcmp(folder_name_next,folder_name_prev))/* if n is updated */
     {
       /* iteration number used in solving, reset this for each resolution */
-      update_parameter_integer("solving_iteration_number",0);
+      solving_iter = 0;
+      update_parameter_integer("solving_iteration_number",(int)solving_iter);
       sprintf(folder_name_next,"BBN_%ux%ux%u",n[0],n[1],n[2]);
       sprintf(folder_name_prev,"BBN_%ux%ux%u",n[0],n[1],n[2]);
       folder_path = make_directory(path_par,folder_name_next);
       update_parameter_string("iteration_output",folder_path);
+      folder_path2 = make_directory(folder_path,"Diagnostics");
+      update_parameter_string("Diagnostics",folder_path2);
       free(folder_path);
+      free(folder_path2);
     }
     
     printf("{ Iteration %u for the parameter(s) below:\n",iter);
@@ -70,13 +74,12 @@ int Binary_BH_NS_Initial_Data(void)
     /* constructing ID for the given grid */
     bbn_solve_initial_data_eqs(grid_next);
     
-    /* calculating the constraints */
-    bbn_calculate_constraints(grid_next);
-    
     /* study and analyse the new grid */
     bbn_study_initial_data(grid_next);
     
     grid_prev = grid_next;
+    solving_iter++;
+    update_parameter_integer("solving_iteration_number",(int)solving_iter);
     
     printf("} Iteration %u for the parameter(s) below is done.\n",iter);
     for (i = 0; i < N_iter_par; ++i)

@@ -11,12 +11,13 @@ void bbn_study_initial_data(Grid_T *const grid)
   pr_clock();
   pr_line_custom('=');
   printf("{ Studying Initial Data for Binary BH and NS ...\n");
-
-  /* print fields */
-  const char *path_par = GetParameterS_E("iteration_output");
-  char *folder         = make_directory(path_par,"output_4d");
-  bbn_print_fields(grid,(unsigned)GetParameterI_E("iteration_number"),folder);
-  free(folder);
+  
+  const char *const folder = GetParameterS_E("Diagnostics");
+  unsigned solving_iter    = (unsigned)GetParameterI("solving_iteration_number");
+  
+  /* calculating the constraints */
+  bbn_calculate_constraints(grid);
+  bbn_print_fields(grid,solving_iter,folder);
   
   printf("} Studying Initial Data for Binary BH and NS ==> Done.\n");
   pr_clock();
