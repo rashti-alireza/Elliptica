@@ -2705,3 +2705,108 @@ static Matrix_T *making_J_Schur_Method(Solve_Equations_T *const SolveEqs)
   return J_Schur;
 }
 
+/* given the grid and the name of the field being solved,
+// calculate the residual of the equation on the grid 
+// and save it in the the field whose name is save_name.
+// it assumes the Schur struct and equation structs are filled. */
+void calculate_equation_residual(Solve_Equations_T *const SolveEqs)
+{
+  Grid_T *grid;
+  char **field_name = 0;/* name of all fields to be solved */
+  unsigned nf = 0;/* number of all fields */
+  unsigned f;/* dummy index */
+  
+  pr_line_custom('=');
+  printf("{ Solving the Equations ...\n\n");
+  
+  /* read order of fields to be solved from input */
+  field_name = get_solving_field_name(SolveEqs->solving_order,&nf);
+  
+  /* solving fields in order */
+  for (f = 0; f < nf; ++f)
+  {
+    /* set the name of the field we are solving it */
+    SolveEqs->field_name = field_name[f];
+    
+    /* get the computational grid */
+    grid = get_grid_solve_equations(SolveEqs);
+    
+    /* set solving_man->cf */
+    set_solving_man_cf(SolveEqs);
+    
+    /* set solving_man->settings */
+    set_solving_man_settings(SolveEqs);
+    
+    /* picking up labeling, mapping etc. */
+    preparing_ingredients(SolveEqs);
+    
+    /* if number grid only has one patch */
+    if (grid->np == 1)
+    {
+      Patch_T *patch = grid->patch[0];
+      DDM_Schur_Complement_T *Schur = patch->solving_man->method->SchurC;
+      char field_res[1000];
+      sprintf(field_res,"%s_residual",field_name[f]);
+      
+      free_coeffs(patch->pool[Ind(field_res)]);
+      double *const res = patch->pool[Ind(field_res)]->v;
+      const unsigned NS = Schur->NS;
+      const unsigned *const inv = Schur->inv;
+      unsigned s,s_node;
+      
+      make_f(patch);/* making f */
+      for (s = 0; s < NS; ++s)
+      {
+        s_node = inv[s];
+        res[s_node] = Schur->f[s];
+      }
+      free(Schur->f);/* free{f} */
+    }
+    else/* multi-domains grid */
+    {
+      const unsigned npatch = grid->np;
+      unsigned p;
+      
+      DDM_SCHUR_COMPLEMENT_OpenMP(omp parallel for)
+      for (p = 0; p < npatch; ++p)
+      {
+        Patch_T *patch = grid->patch[p];
+        make_f(patch);
+        make_partial_g(patch);
+      }
+      make_g(grid);/* free pg */
+      
+      DDM_SCHUR_COMPLEMENT_OpenMP(omp parallel for)
+      for (p = 0; p < npatch; ++p)
+      {
+        Patch_T *patch = grid->patch[p];
+        DDM_Schur_Complement_T *Schur = patch->solving_man->method->SchurC;
+        char field_res[1000];
+        sprintf(field_res,"%s_residual",field_name[f]);
+      
+        free_coeffs(patch->pool[Ind(field_res)]);
+        double *const res = patch->pool[Ind(field_res)]->v;
+        const unsigned NS = Schur->NS;
+        const unsigned NI = Schur->NI;
+        const unsigned *const inv  = Schur->inv;
+        const unsigned *const Iinv = Schur->Iinv;
+        unsigned s,s_node,i,i_node;
+        
+        for (s = 0; s < NS; ++s)
+        {
+          s_node      = inv[s];
+          res[s_node] = Schur->f[s];
+        }
+        for (i = 0; i < NI; ++i)
+        {
+          i_node      = Iinv[i];
+          res[i_node] = Schur->g[i];
+        }
+      }
+      free_schur_f_g(grid);/* free {f,g} */
+    }
+  }/* end of for (f = 0; f < nf; ++f) */
+  
+  /* free names */
+  free_2d_mem(field_name,nf);
+}
