@@ -13,24 +13,7 @@ int Binary_BH_NS_Initial_Data(void)
   pr_line_custom('=');
   printf("Constructing Initial Data for Binary BH and NS ...\n");
   
-  /***********************************************************/
-  /* adding some parameters that are used in different parts: */
-  
-  /* -> BH_Omega, the angular frequency of the horizon,
-  // is a free vector that determines the spin of BH
-  // and it is related to the dimensionless spin by:
-  // BH_X = 4*BH_mass*BH_Omega .
-  // we only use U2 component, since we assume BH only has spin 
-  // in +/- of z direction (PRD 86 084033) */
-  const double BH_X_U2 = GetParameterD_E("BH_X_U2");
-  const double BH_mass = GetParameterD_E("BH_mass");
-  AddParameterDoubleF("BH_Omega_U2",BH_X_U2/(4*BH_mass));
-  
-  /* -> the Constant of the integration of Euler equation */
-  AddParameterDoubleF("Euler_equation_constant",0);
-  
-  /***********************************************************/
-  /* the outer most main algorithm: */
+  /* the outer most iteration algorithm: */
   Grid_T *grid_prev = 0, 
          *grid_next = 0, 
          *grid = 0;

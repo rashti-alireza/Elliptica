@@ -1877,6 +1877,17 @@ static Grid_T *TOV_KerrSchild_approximation(void)
   add_parameter_double("y_CM",y_CM);
   add_parameter_double("NS_mass",ns_mass);
   add_parameter_double("NS_center",C_NS);
+    
+  /* -> BH_Omega, the angular frequency of the horizon,
+  // is a free vector that determines the spin of BH
+  // and it is related to the dimensionless spin by:
+  // BH_X = 4*BH_mass*BH_Omega .
+  // we only use U2 component, since we assume BH only has spin 
+  // in +/- of z direction (PRD 86 084033) */
+  AddParameterDoubleF("BH_Omega_U2",bh_chi/(4*bh_mass));
+
+  /* -> the Constant of the integration of Euler equation */
+  AddParameterDoubleF("Euler_equation_constant",0);
   
   /* combining these two geometry to create the grid */
   GridParams->Max_R_NS_l = ns_R;
