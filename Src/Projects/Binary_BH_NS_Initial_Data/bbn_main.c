@@ -36,8 +36,10 @@ int Binary_BH_NS_Initial_Data(void)
          *grid = 0;
   const unsigned N_iter     = total_iterations_ip();
   const unsigned N_iter_par = total_iterative_parameters_ip();
+  unsigned n[3];/* number of points */
   const char *path_par = GetParameterS("output_directory_path");
-  char folder_name[100] = {'\0'};
+  char folder_name_next[1000] = {'\0'},
+       folder_name_prev[1000] = {'\0'};
   char *folder_path;
   unsigned iter;
   
@@ -49,14 +51,24 @@ int Binary_BH_NS_Initial_Data(void)
     /* updating some parameters for the new round of iteration */
     update_parameter_integer("iteration_number",(int)iter);
     
-    /* making a directory for this iteration and save the path */
-    sprintf(folder_name,"BBN_Iteration_%02d",iter);
-    folder_path = make_directory(path_par,folder_name);
-    update_parameter_string("iteration_output",folder_path);
-    free(folder_path);
-    
     /* update the parameter accoding to the iteration number */
     update_iterative_parameter_ip(iter);
+    
+    /* making a directory for this iteration and save the path */
+    n[0] = (unsigned)GetParameterI("n_a");
+    n[1] = (unsigned)GetParameterI("n_b");
+    n[2] = (unsigned)GetParameterI("n_c");
+    
+    sprintf(folder_name_next,"BBN_Iteration_%ux%ux%u",n[0],n[1],n[2]);
+    if (strcmp(folder_name_next,folder_name_prev))/* if n is updated */
+    {
+      sprintf(folder_name_next,"BBN_Iteration_%ux%ux%u",n[0],n[1],n[2]);
+      sprintf(folder_name_prev,"BBN_Iteration_%ux%ux%u",n[0],n[1],n[2]);
+      folder_path = make_directory(path_par,folder_name_next);
+      update_parameter_string("iteration_output",folder_path);
+      free(folder_path);
+    }
+    
     printf("{ Iteration %u for the parameter(s) below:\n",iter);
     pr_parameters();/* printing in the folder */
     for (i = 0; i < N_iter_par; ++i)
