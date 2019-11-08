@@ -55,7 +55,7 @@ void bbn_print_residual_norms(Grid_T *const grid,const unsigned iteration, const
       unsigned nn    = patch->nn;
       Field_T *field;
       int field_ind = _Ind(f[i]);
-      double scale,Linf,L2,L1;
+      double Linf,L2,L1;
       FILE *file_Linf,*file_L1,*file_L2;
       char file_name_Linf[1000];
       char file_name_L1[1000];
@@ -107,14 +107,9 @@ void bbn_print_residual_norms(Grid_T *const grid,const unsigned iteration, const
       }
         
       field = patch->pool[field_ind];
-      Linf = scale = L_inf(nn,field->v);
-
-      if (EQL(scale,0)) scale = 1;
-      
-      L2  = L2_norm(nn,field->v,0);
-      L2 /= scale;
-      L1  = L1_norm(nn,field->v,0);
-      L1 /= scale;
+      Linf  = L_inf(nn,field->v);
+      L2    = L2_norm(nn,field->v,0);
+      L1    = L1_norm(nn,field->v,0);
       
       fprintf(file_Linf,"%-11u %0.15f\n",iteration,Linf);
       fprintf(file_L1,  "%-11u %0.15f\n",iteration,L1);
