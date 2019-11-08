@@ -71,8 +71,8 @@ void pr_interfaces(const Grid_T *const grid)
   }
   
   
-  if (get_parameter("iteration_output"))
-    path_par = GetParameterS("iteration_output");
+  if (get_parameter("Diagnostics"))
+    path_par = GetParameterS("Diagnostics");
   else
     path_par = GetParameterS("output_directory_path");
   
@@ -379,8 +379,8 @@ void pr_parameters(void)
   int i = 0;
   
   
-  if (get_parameter("iteration_output"))
-    path = GetParameterS("iteration_output");
+  if (get_parameter("Diagnostics"))
+    path = GetParameterS("Diagnostics");
   else
     path = GetParameterS("output_directory_path");
   
@@ -407,8 +407,8 @@ void pr_coords(const Grid_T *const grid)
   const char *path_par;
   unsigned i = 0;
   
-  if (get_parameter("iteration_output"))
-    path_par = GetParameterS("iteration_output");
+  if (get_parameter("Diagnostics"))
+    path_par = GetParameterS("Diagnostics");
   else
     path_par = GetParameterS("output_directory_path");
     
