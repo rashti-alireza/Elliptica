@@ -18,13 +18,114 @@ void bbn_study_initial_data(Grid_T *const grid)
   
   /* calculating the constraints */
   bbn_calculate_constraints(grid);
+  /* prints */
   bbn_print_fields(grid,(unsigned)solving_iter,folder);
+  bbn_print_residual_norms(grid,(unsigned)solving_iter,folder);
   
-  update_parameter_integer("solving_iteration_number",solving_iter++);
+  update_parameter_integer("solving_iteration_number",++solving_iter);
 
   printf("} Studying Initial Data for Binary BH and NS ==> Done.\n");
   pr_clock();
   pr_line_custom('=');
+}
+
+/* print residual norms L2, L1 and L_inf of the specified fields. */
+void bbn_print_residual_norms(Grid_T *const grid,const unsigned iteration, const char *const folder)
+{
+  /* list of the fields to be printed out */
+  const char *f[] = {"ham_constraint",
+                     "mom_constraint_U0",
+                     "mom_constraint_U1",
+                     "mom_constraint_U2",
+                     "B0_U0_residual",
+                     "B0_U1_residual",
+                     "B0_U2_residual",
+                     "psi_residual",
+                     "eta_residual",
+                     "phi_residual",
+                     0};
+  unsigned i,p;
+                     
+  for (i = 0; f[i]; ++i)
+  {
+    
+    FOR_ALL_PATCHES(p,grid)
+    {
+      Patch_T *patch = grid->patch[p];
+      unsigned nn    = patch->nn;
+      Field_T *field;
+      int field_ind = _Ind(f[i]);
+      double scale,Linf,L2,L1;
+      FILE *file_Linf,*file_L1,*file_L2;
+      char file_name_Linf[1000];
+      char file_name_L1[1000];
+      char file_name_L2[1000];
+      char *stem = strstr(patch->name,"_");
+      stem++;
+      
+      if (field_ind < 0)
+        continue;
+      
+      sprintf(file_name_Linf,"%s/%s_Linf_%s.table",folder,f[i],stem);
+      sprintf(file_name_L1,  "%s/%s_L1_%s.table",folder,f[i],stem);
+      sprintf(file_name_L2,  "%s/%s_L2_%s.table",folder,f[i],stem);
+      
+      if (access(file_name_Linf,F_OK) != -1)/* if file exists */
+      {
+        file_Linf = fopen(file_name_Linf,"a");
+        pointerEr(file_Linf);
+      }
+      else
+      {
+        file_Linf = fopen(file_name_Linf,"w");
+        pointerEr(file_Linf);
+        fprintf(file_Linf,"#iteration  %s\n",f[i]);
+      }
+      
+      if (access(file_name_L1,F_OK) != -1)
+      {
+        file_L1 = fopen(file_name_L1,"a");
+        pointerEr(file_L1);
+      }
+      else
+      {
+        file_L1 = fopen(file_name_L1,"w");
+        pointerEr(file_L1);
+        fprintf(file_L1,"#iteration  %s\n",f[i]);
+      }
+      
+      if (access(file_name_L2,F_OK) != -1)
+      {
+        file_L2 = fopen(file_name_L2,"a");
+        pointerEr(file_L2);
+      }
+      else
+      {
+        file_L2 = fopen(file_name_L2,"w");
+        pointerEr(file_L2);
+        fprintf(file_L2,"#iteration  %s\n",f[i]);
+      }
+        
+      field = patch->pool[field_ind];
+      Linf = scale = L_inf(nn,field->v);
+
+      if (EQL(scale,0)) scale = 1;
+      
+      L2  = L2_norm(nn,field->v,0);
+      L2 /= scale;
+      L1  = L1_norm(nn,field->v,0);
+      L1 /= scale;
+      
+      fprintf(file_Linf,"%-11u %0.15f\n",iteration,Linf);
+      fprintf(file_L1,  "%-11u %0.15f\n",iteration,L1);
+      fprintf(file_L2,  "%-11u %0.15f\n",iteration,L2);
+      
+      fclose(file_Linf);
+      fclose(file_L1);
+      fclose(file_L2);
+    }
+  }
+  
 }
 
 /* printing fields determined in parameter file */
