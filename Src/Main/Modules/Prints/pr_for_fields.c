@@ -385,15 +385,15 @@ static void *make_structured_mesh_3d_xyz(Pr_Field_T *const pr,const Patch_T *con
          *y = alloc_double(nn),
          *z = alloc_double(nn);
   char *label[3];
-  const char *stem = strstr(patch->name,"_");/* grid\d?_ */
-  assert(stem);
-  stem++;
+  const char *mesh_name = strstr(patch->name,"_");/* grid\d?_ */
+  assert(mesh_name);
+  mesh_name++;
   
   prepare_node_structured_mesh_3d_silo("Cartesian",patch,x,y,z);
   
   /* opening a file to write in for Cartesian */
   sprintf(file_name,"%s/%s_xyz_%04d.silo",
-    pr->folder,stem,pr->cycle);
+    pr->folder,mesh_name,pr->cycle);
   dbfile = DBCreate(file_name,DB_CLOBBER,DB_LOCAL,
     "3D mesh in Cartesian values with HDF5 format using silo library",
     DB_HDF5);
@@ -445,11 +445,15 @@ static void *make_structured_mesh_3d_abc(Pr_Field_T *const pr,const Patch_T *con
          *y = alloc_double(nn),
          *z = alloc_double(nn);
   char *label[3];
+  const char *mesh_name = strstr(patch->name,"_");/* grid\d?_ */
+  assert(mesh_name);
+  mesh_name++;
+  
   prepare_node_structured_mesh_3d_silo("Curvilinear",patch,x,y,z);
   
   /* opening a file to write in for Cartesian */
   sprintf(file_name,"%s/%s_abc_%04d.silo",
-    pr->folder,patch->name,pr->cycle);
+    pr->folder,mesh_name,pr->cycle);
   dbfile = DBCreate(file_name,DB_CLOBBER,DB_LOCAL,
     "3D Curvilinear mesh with HDF5 format using silo library",
     DB_HDF5);
@@ -503,14 +507,17 @@ static void pr_scalar_on_structured_mesh_3d_silo(const Pr_Field_T *const pr)
   const int ndims = 3;
   const int v_ind = _Ind(subg->field);
   int DB_ret;
-  
+  const char *mesh_name = strstr(pr->patch->name,"_");/* grid\d?_ */
+  assert(mesh_name);
+  mesh_name++;
+
   if (v_ind < 0)
     return;
   
   /* fields value */
   data = patch->pool[v_ind]->v;
    
-  DB_ret = DBPutQuadvar1(dbfile,subg->field,pr->patch->name,
+  DB_ret = DBPutQuadvar1(dbfile,subg->field,mesh_name,
     data,dims,ndims,0,0,DB_DOUBLE,DB_NODECENT,0);
   if (DB_ret == -1)
     abortEr("Silo library failed to print.\n");
@@ -518,7 +525,7 @@ static void pr_scalar_on_structured_mesh_3d_silo(const Pr_Field_T *const pr)
   /* if there is another file that the field needs to be printed */
   if (pr->file2)
   {
-    DB_ret = DBPutQuadvar1(pr->file2,subg->field,pr->patch->name,
+    DB_ret = DBPutQuadvar1(pr->file2,subg->field,mesh_name,
       data,dims,ndims,0,0,DB_DOUBLE,DB_NODECENT,0);
     if (DB_ret == -1)
       abortEr("Silo library failed to print.\n");
@@ -544,6 +551,9 @@ static void pr_vector_on_structured_mesh_3d_silo(const Pr_Field_T *const pr)
   char *varnames[] = {subg->comp[0],subg->comp[1],subg->comp[2]};
   char desc[MAX_STR_LEN];
   int DB_ret;
+  const char *mesh_name = strstr(pr->patch->name,"_");/* grid\d?_ */
+  assert(mesh_name);
+  mesh_name++;
   
   if (v_ind0 < 0 || v_ind1 < 0 || v_ind2 < 0)
     return;
@@ -555,7 +565,7 @@ static void pr_vector_on_structured_mesh_3d_silo(const Pr_Field_T *const pr)
   sprintf(desc,"Vector_%s_%s_%s",
     subg->comp[0],subg->comp[1],subg->comp[2]);
   
-  DB_ret = DBPutQuadvar(dbfile,desc,pr->patch->name,3,
+  DB_ret = DBPutQuadvar(dbfile,desc,mesh_name,3,
     varnames,comp,dims,ndims,0,0,DB_DOUBLE,DB_NODECENT,0);
   if (DB_ret == -1)
     abortEr("Silo library failed to print.\n");
@@ -563,7 +573,7 @@ static void pr_vector_on_structured_mesh_3d_silo(const Pr_Field_T *const pr)
   /* if there is another file that the field needs to be printed */
   if (pr->file2)
   {
-    DB_ret = DBPutQuadvar(pr->file2,desc,pr->patch->name,3,
+    DB_ret = DBPutQuadvar(pr->file2,desc,mesh_name,3,
       varnames,comp,dims,ndims,0,0,DB_DOUBLE,DB_NODECENT,0);
     if (DB_ret == -1)
       abortEr("Silo library failed to print.\n");
@@ -580,8 +590,11 @@ static void pr_structured_mesh_3d_silo(const Pr_Field_T *const pr)
     {(int)pr->patch->n[0],(int)pr->patch->n[1],(int)pr->patch->n[2]};
   const int ndims = 3;
   int DB_ret;
+  const char *mesh_name = strstr(pr->patch->name,"_");/* grid\d?_ */
+  assert(mesh_name);
+  mesh_name++;
   
-  DB_ret = DBPutQuadmesh(dbfile,pr->patch->name,0,coords,dims,ndims,
+  DB_ret = DBPutQuadmesh(dbfile,mesh_name,0,coords,dims,ndims,
       DB_DOUBLE,DB_NONCOLLINEAR,pr->opt_patch);
       
   if (DB_ret == -1)
