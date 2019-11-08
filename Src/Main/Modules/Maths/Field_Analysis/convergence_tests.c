@@ -40,7 +40,6 @@ int analytic_numeric_convergence_test(const Grid_T *const grid,const char *const
       diff[i] = f_analytic->v[i]-f_numeric->v[i];
       
     Linf  = L_inf(nn,diff);
-    Linf /= scale;
     L2    = L2_norm(nn,f_analytic->v,f_numeric->v);
     L2   /= scale;
     L1    = L1_norm(nn,f_analytic->v,f_numeric->v);
