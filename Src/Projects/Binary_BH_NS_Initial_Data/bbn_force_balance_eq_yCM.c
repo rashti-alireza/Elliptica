@@ -17,6 +17,7 @@ const double Vr         = par->Vr;
 const double D          = par->D;
 double y_CM             = x[0];
 const double *const X   = par->X; 
+const double dyLnGamma  = par->dyLnGamma;
 unsigned ijk;
 /* B^1 */
 PREP_FIELD(B1_U0)
@@ -44,9 +45,6 @@ bbn_update_Beta_U2(patch);
   GET_FIELD(W_U1)
   GET_FIELD(W_U0)
   GET_FIELD(W_U2)
-  GET_FIELD(dphi_D2)
-  GET_FIELD(dphi_D1)
-  GET_FIELD(dphi_D0)
   GET_FIELD(eta)
   GET_FIELD(Beta_U1)
   GET_FIELD(Beta_U0)
@@ -56,14 +54,10 @@ bbn_update_Beta_U2(patch);
   GET_FIELD(u0)
 
 
-ADD_FIELD(GAMMA_rf);
-ADD_FIELD(GAMMAt_rf);
-ADD_FIELD_NoMem(dGAMMA_D1_rf);
-ADD_FIELD_NoMem(dGAMMAt_D1_rf);
-DECLARE_FIELD(GAMMA_rf);
-DECLARE_FIELD(GAMMAt_rf);
-DECLARE_FIELD(dGAMMA_D1_rf);
-DECLARE_FIELD(dGAMMAt_D1_rf);
+ADD_FIELD(Gtilda_rf);
+ADD_FIELD_NoMem(dGtilda_D1_rf);
+DECLARE_FIELD(Gtilda_rf);
+DECLARE_FIELD(dGtilda_D1_rf);
 for (ijk = 0; ijk < nn; ++ijk)
 {
   double alpha = 
@@ -92,76 +86,38 @@ _gamma_D1D2[ijk]*t_U1*t_U2 + _gamma_D2D2[ijk]*pow(t_U2, 2));
   double Gtilda = 
 alpha2 - t2;
 
-  double v = 
-(pow(alpha, 2)*enthalpy[ijk]*u0[ijk]*(dphi_D0[ijk]*t_U0 + dphi_D1[ijk]*
-t_U1 + dphi_D2[ijk]*t_U2) + alpha2*psi4*(pow(W_U0[ijk], 2)*
-_gamma_D0D0[ijk] + 2.0*W_U0[ijk]*W_U1[ijk]*_gamma_D0D1[ijk] + 2.0*
-W_U0[ijk]*W_U2[ijk]*_gamma_D0D2[ijk] + pow(W_U1[ijk], 2)*
-_gamma_D1D1[ijk] + 2.0*W_U1[ijk]*W_U2[ijk]*_gamma_D1D2[ijk] +
-pow(W_U2[ijk], 2)*_gamma_D2D2[ijk]))/(pow(alpha, 2)*alpha2*
-pow(enthalpy[ijk], 2)*pow(u0[ijk], 2));
 
-  double G = 
--alpha*u0[ijk]*pow((alpha2 - t2)/alpha2, -0.5)*(v -
-1);
-
-
-GAMMA_rf->v[ijk]  = G;
-GAMMAt_rf->v[ijk] = Gtilda;
+Gtilda_rf->v[ijk] = Gtilda;
 }
-dGAMMA_D1_rf->v  = Partial_Derivative(GAMMA_rf,"y");
-dGAMMAt_D1_rf->v = Partial_Derivative(GAMMAt_rf,"y");
-Interpolation_T *interp_GAMMA   = init_interpolation();
-Interpolation_T *interp_GAMMAt  = init_interpolation();
-Interpolation_T *interp_dGAMMA  = init_interpolation();
-Interpolation_T *interp_dGAMMAt = init_interpolation();
+dGtilda_D1_rf->v = Partial_Derivative(Gtilda_rf,"y");
+Interpolation_T *interp_Gtilda  = init_interpolation();
+Interpolation_T *interp_dGtilda = init_interpolation();
 
-interp_GAMMA->field   = GAMMA_rf;
-interp_GAMMAt->field  = GAMMAt_rf;
-interp_dGAMMA->field  = dGAMMA_D1_rf;
-interp_dGAMMAt->field = dGAMMAt_D1_rf;
+interp_Gtilda->field  = Gtilda_rf;
+interp_dGtilda->field = dGtilda_D1_rf;
 
-interp_GAMMA->X = X[0];
-interp_GAMMA->Y = X[1];
-interp_GAMMA->Z = X[2];
-interp_GAMMA->XYZ_dir_flag = 1;
+interp_Gtilda->X = X[0];
+interp_Gtilda->Y = X[1];
+interp_Gtilda->Z = X[2];
+interp_Gtilda->XYZ_dir_flag = 1;
 
-interp_GAMMAt->X = X[0];
-interp_GAMMAt->Y = X[1];
-interp_GAMMAt->Z = X[2];
-interp_GAMMAt->XYZ_dir_flag = 1;
+interp_dGtilda->X = X[0];
+interp_dGtilda->Y = X[1];
+interp_dGtilda->Z = X[2];
+interp_dGtilda->XYZ_dir_flag = 1;
 
-interp_dGAMMA->X = X[0];
-interp_dGAMMA->Y = X[1];
-interp_dGAMMA->Z = X[2];
-interp_dGAMMA->XYZ_dir_flag = 1;
+plan_interpolation(interp_Gtilda);
+plan_interpolation(interp_dGtilda);
+const double gt  = execute_interpolation(interp_Gtilda);
+const double dgt = execute_interpolation(interp_dGtilda);
 
-interp_dGAMMAt->X = X[0];
-interp_dGAMMAt->Y = X[1];
-interp_dGAMMAt->Z = X[2];
-interp_dGAMMAt->XYZ_dir_flag = 1;
+free_interpolation(interp_Gtilda);
+free_interpolation(interp_dGtilda);
 
-plan_interpolation(interp_GAMMA);
-plan_interpolation(interp_dGAMMA);
-plan_interpolation(interp_GAMMAt);
-plan_interpolation(interp_dGAMMAt);
-const double g   = execute_interpolation(interp_GAMMA);
-const double gt  = execute_interpolation(interp_GAMMAt);
-const double dg  = execute_interpolation(interp_dGAMMA);
-const double dgt = execute_interpolation(interp_dGAMMAt);
+const double f = dgt/gt+2*dyLnGamma;
+assert(isfinite(f));
 
-free_interpolation(interp_GAMMA);
-free_interpolation(interp_GAMMAt);
-free_interpolation(interp_dGAMMA);
-free_interpolation(interp_dGAMMAt);
-
-double f = dgt/gt+2*dg/g;
-if(!isfinite(f))
-  f = 1;
-
-REMOVE_FIELD(GAMMA_rf);
-REMOVE_FIELD(GAMMAt_rf);
-REMOVE_FIELD(dGAMMA_D1_rf);
-REMOVE_FIELD(dGAMMAt_D1_rf);
+REMOVE_FIELD(Gtilda_rf);
+REMOVE_FIELD(dGtilda_D1_rf);
 return f;
 }
