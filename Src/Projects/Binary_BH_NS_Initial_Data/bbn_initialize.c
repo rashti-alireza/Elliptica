@@ -1182,7 +1182,11 @@ static void find_NS_surface_Ylm_method_CS(Grid_T *const grid,struct Grid_Params_
       interp_h->K            = patch->n[2]-1;
       plan_interpolation(interp_h);
       h = execute_interpolation(interp_h);/* enthalpy */
-      assert(h > 0);
+      
+      if (h <= 0)
+        printf("WARNING: enthalpy = %g\n",h);
+      //assert(h > 0);
+      
       free_interpolation(interp_h);
       
       /* finding x */
