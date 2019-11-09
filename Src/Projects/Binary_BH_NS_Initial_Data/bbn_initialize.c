@@ -120,9 +120,6 @@ static Grid_T *make_next_grid_using_previous_grid(Grid_T *const grid_prev)
 /* find BH_NS_orbital_angular_velocity using force balance equation */
 static void force_balance_eq(Grid_T *const grid)
 {
-  printf("---> returning force balace\n");
-  return;
-  
   if (strcmp_i(GetParameterS_E("force_balance_equation"),"CenterOfMass"))
   {
     /* find center of mass at y axis using force balance equation */
@@ -131,7 +128,11 @@ static void force_balance_eq(Grid_T *const grid)
   else if (strcmp_i(GetParameterS_E("force_balance_equation"),"AngularVelocity"))
   {
     /* find BH_NS_orbital_angular_velocity using force balance equation */
-    find_BH_NS_Omega_force_balance_eq(grid);
+    find_OmegaBHNS_force_balance_eq(grid);
+  }
+  else if (strcmp_i(GetParameterS_E("force_balance_equation"),"none"))
+  {
+    return;/* does nothing */
   }
   else
     abortEr(NO_OPTION);
@@ -406,11 +407,8 @@ static void adjust_NS_center(Grid_T *const grid)
 }
 
 /* find BH_NS_orbital_angular_velocity using force balance equation */
-static void find_BH_NS_Omega_force_balance_eq(Grid_T *const grid)
+static void find_OmegaBHNS_force_balance_eq(Grid_T *const grid)
 {
-  printf("find_BH_NS_Omega_force_balance_eq ---> return\n");
-  return;
-  
   const double D            = GetParameterD_E("BH_NS_separation");
   const double Vr           = GetParameterD_E("BH_NS_infall_velocity");
   const double y_CM         = GetParameterD_E("y_CM");
@@ -433,6 +431,7 @@ static void find_BH_NS_Omega_force_balance_eq(Grid_T *const grid)
   params->y_CM        = y_CM;
   params->Vr          = Vr;
   params->D           = D;
+  params->dyLnGamma   = dyLnGamma_in_force_balance_eq(patch,X);
   root->description   = "Solving Force Balance Equation for Omega_BHNS";
   root->verbose       = 1;
   root->type          = GetParameterS_E("RootFinder_Method");
@@ -487,6 +486,7 @@ static void find_yCM_force_balance_eq(Grid_T *const grid)
   params->Omega_BHNS  = Omega_BHNS;
   params->Vr          = Vr;
   params->D           = D;
+  params->dyLnGamma   = dyLnGamma_in_force_balance_eq(patch,X);
   root->description   = "Solving Force Balance Equation for y_CM";
   root->verbose       = 1;
   root->type          = GetParameterS_E("RootFinder_Method");

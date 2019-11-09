@@ -15,6 +15,7 @@ struct Force_Balance_RootFinder_S
 {
   Patch_T *patch;
   //Root_Finder_T *root_finder;
+  double dyLnGamma;
   double y_CM;
   double Vr;
   double D;
