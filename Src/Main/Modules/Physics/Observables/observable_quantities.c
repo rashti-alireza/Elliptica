@@ -19,6 +19,7 @@
 // double Px_ADM = obs->Px_ADM(obs);# x component
 // double Py_ADM = obs->Py_ADM(obs);# y component
 // double Pz_ADM = obs->Pz_ADM(obs);# z component
+// double Jz_ADM = obs->Jz_ADM(obs);# z component of angular momentum
 //
 // *free*
 // free_observable(obs);
@@ -183,6 +184,7 @@ n_U2[ijk] + _gamma_D2D2[ijk]*pow(n_U2[ijk], 2));
     obs->Px_ADM = ADM_momentum_x_BBN_CS;
     obs->Py_ADM = ADM_momentum_y_BBN_CS;
     obs->Pz_ADM = ADM_momentum_z_BBN_CS;
+    obs->Jz_ADM = ADM_angular_momentum_z_BBN_CS;
     
     free(patches);
   }/* end of if (strcmp_i(obs->quantity,"ADM_momentums") || strcmp_i(obs->quantity,"ADM_momentum")) */
@@ -434,4 +436,116 @@ static double ADM_momentum_z_BBN_CS(Observable_T *const obs)
   
   Pz /= (8*M_PI);
   return Pz;
+}
+
+/* calculating ADM angular momentum in z component */
+static double ADM_angular_momentum_z_BBN_CS(Observable_T *const obs)
+{
+  double Jz = 0;
+  const unsigned N = obs->N_ADM;
+  double y_CM = 0;
+  Integration_T *I;
+  unsigned p;
+  assert(N);
+  
+  populate_ADM_momentums_integrand_PdS_GdV(obs);
+  
+  if (get_parameter("y_CM"))
+    y_CM = GetParameterD_E("y_CM");
+  
+  /* surface integration */
+  for(p = 0; p < N; ++p)
+  {
+    Patch_T *patch = obs->ADM[p]->patch;
+    unsigned nn = patch->nn;
+    unsigned ijk;
+    
+    if (!obs->ADM[p]->surface_integration_flg)
+      continue;
+    
+    Field_T *Py = patch->pool[Ind("ADM_integrand_P_U1")];
+    Field_T *Px = patch->pool[Ind("ADM_integrand_P_U0")];
+    ADD_FIELD(xPy_adm_integrand);
+    ADD_FIELD(yPx_adm_integrand);
+    DECLARE_FIELD(xPy_adm_integrand);
+    DECLARE_FIELD(yPx_adm_integrand);
+    
+    for (ijk = 0; ijk < nn; ++ijk)
+    {
+      double x = patch->node[ijk]->x[0];
+      double y = patch->node[ijk]->x[1]-y_CM;
+      xPy_adm_integrand->v[ijk] = x*Py->v[ijk];
+      yPx_adm_integrand->v[ijk] = y*Px->v[ijk];
+    }
+    
+    I  = init_integration();
+    I->type = "Integral{f(x)dS},Spectral";
+    I->g00 = obs->ADM[p]->g00;
+    I->g01 = obs->ADM[p]->g01;
+    I->g02 = obs->ADM[p]->g02;
+    I->g11 = obs->ADM[p]->g11;
+    I->g12 = obs->ADM[p]->g12;
+    I->g22 = obs->ADM[p]->g22;
+    I->Spectral->Z_surface = obs->ADM[p]->Z_surface;
+    I->Spectral->K         = obs->ADM[p]->K;
+    
+    I->Spectral->f = xPy_adm_integrand;
+    plan_integration(I);
+    Jz += execute_integration(I);
+    
+    I->Spectral->f = yPx_adm_integrand;
+    plan_integration(I);
+    Jz -= execute_integration(I);
+    
+    free_integration(I);
+    REMOVE_FIELD(xPy_adm_integrand);
+    REMOVE_FIELD(yPx_adm_integrand);
+  }
+  
+  /* volume integration */
+  for(p = 0; p < N; ++p)
+  {
+    Patch_T *patch = obs->ADM[p]->patch;
+    unsigned nn = patch->nn;
+    unsigned ijk;
+    
+    Field_T *Gy = patch->pool[Ind("ADM_integrand_G_U1")];
+    Field_T *Gx = patch->pool[Ind("ADM_integrand_G_U0")];
+    ADD_FIELD(xGy_adm_integrand);
+    ADD_FIELD(yGx_adm_integrand);
+    DECLARE_FIELD(xGy_adm_integrand);
+    DECLARE_FIELD(yGx_adm_integrand);
+    
+    for (ijk = 0; ijk < nn; ++ijk)
+    {
+      double x = patch->node[ijk]->x[0];
+      double y = patch->node[ijk]->x[1]-y_CM;
+      xGy_adm_integrand->v[ijk] = x*Gy->v[ijk];
+      yGx_adm_integrand->v[ijk] = y*Gx->v[ijk];
+    }
+    
+    I  = init_integration();
+    I->type = "Integral{f(x)dV},Spectral";
+    I->g00 = obs->ADM[p]->g00;
+    I->g01 = obs->ADM[p]->g01;
+    I->g02 = obs->ADM[p]->g02;
+    I->g11 = obs->ADM[p]->g11;
+    I->g12 = obs->ADM[p]->g12;
+    I->g22 = obs->ADM[p]->g22;
+    
+    I->Spectral->f = xGy_adm_integrand;
+    plan_integration(I);
+    Jz -= execute_integration(I);
+    
+    I->Spectral->f = yGx_adm_integrand;
+    plan_integration(I);
+    Jz += execute_integration(I);
+    
+    free_integration(I);
+    REMOVE_FIELD(xGy_adm_integrand);
+    REMOVE_FIELD(yGx_adm_integrand);
+  }
+  
+  Jz /= (8*M_PI);
+  return Jz;
 }

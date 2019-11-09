@@ -14,3 +14,4 @@ void populate_ADM_momentums_integrand_PdS_GdV(const Observable_T *const obs);
 static double ADM_momentum_x_BBN_CS(Observable_T *const obs);
 static double ADM_momentum_y_BBN_CS(Observable_T *const obs);
 static double ADM_momentum_z_BBN_CS(Observable_T *const obs);
+static double ADM_angular_momentum_z_BBN_CS(Observable_T *const obs);

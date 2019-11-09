@@ -39,6 +39,8 @@ typedef struct OBSERVABLE_T
   double (*Px_ADM)(struct OBSERVABLE_T *const obs);
   double (*Py_ADM)(struct OBSERVABLE_T *const obs);
   double (*Pz_ADM)(struct OBSERVABLE_T *const obs);
+  double (*Jz_ADM)(struct OBSERVABLE_T *const obs);
+  
   /* function to calculate masses */
   double (*ADM_mass)(struct OBSERVABLE_T *obs);
   double (*Komar_mass)(struct OBSERVABLE_T *obs);
