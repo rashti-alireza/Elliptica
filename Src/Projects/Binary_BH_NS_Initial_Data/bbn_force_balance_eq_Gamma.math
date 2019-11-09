@@ -1,0 +1,108 @@
+# forece balance eqution for root finder
+
+# Manifold or grid Dimension
+Dimension = 3;
+
+# point on manifold shown by:
+Point = ijk;
+
+C_macro = GET_FIELD(name);
+
+`#include "bbn_headers.h"`
+``
+# calculate d(Ln(Gamma))/dy used in force balance eq.
+`double dyLnGamma_in_force_balance_eq(Patch_T *const patch,const double *const NS_centerX);`
+`double dyLnGamma_in_force_balance_eq(Patch_T *const patch,const double *const NS_centerX)`
+`{`
+
+Declare = 
+{
+
+ # conformal metric 
+ (obj = Field,name = _gamma, rank = DD, C_macro);
+
+ # spin part of fluid
+ (obj = Field,name = W, rank = U, C_macro);
+
+ # d(phi)/d? for irrotional part of fluid
+ (obj = Field,name = dphi, rank = D, C_macro);
+
+ # eta
+ (obj = Field,name = eta, rank = 0, C_macro);
+
+ # Beta
+ (obj = Field,name = Beta, rank = U, C_macro);
+
+ # Killing vector xi^i, assumed 0
+ #(obj = Field,name = xi, rank = U, C_macro);
+
+ # conformal factor
+ (obj = Field,name = psi, rank = 0, C_macro);
+
+ # enthalpy
+ (obj = Field,name = enthalpy, rank = 0, C_macro);
+
+ # u^0
+ (obj = Field,name = u0, rank = 0, C_macro);
+
+}
+# symmetries:
+Symm[_gamma(i,j)   = _gamma(j,i)];
+
+`ADD_FIELD(GAMMA_fb);`
+`ADD_FIELD_NoMem(dGAMMA_D1_fb);`
+
+`DECLARE_FIELD(GAMMA_fb);`
+`DECLARE_FIELD(dGAMMA_D1_fb);`
+
+# calculating Gamma
+`const unsigned nn = patch->nn;`
+`unsigned ijk;`  
+`for (ijk = 0; ijk < nn; ++ijk)`
+`{`
+    alpha  = eta/psi;
+    alpha2 = alpha**2;
+    psi4   = psi**4;
+    t(i)   = Beta(i)+W(i)/(enthalpy*u0);
+    t2     = psi4*t(-i)*t(-j)*_gamma(i,j);
+    v      = t(i)*dphi(-i)/(alpha2*enthalpy*u0) + \
+             psi4*_gamma(i,j)*W(-i)*W(-j)/((alpha*enthalpy*u0)**2);
+    G      = alpha*u0*(1-v)/((1-t2/alpha2)**(0.5));
+
+    ``
+    `GAMMA_fb->v[ijk]  = G;`
+`}`
+
+`dGAMMA_D1_fb->v  = Partial_Derivative(GAMMA_fb,"y");`
+
+`Interpolation_T *interp_GAMMA   = init_interpolation();`
+`Interpolation_T *interp_dGAMMA  = init_interpolation();`
+``
+`interp_GAMMA->field   = GAMMA_fb;`
+`interp_dGAMMA->field  = dGAMMA_D1_fb;`
+``
+`interp_GAMMA->X = NS_centerX[0];`
+`interp_GAMMA->Y = NS_centerX[1];`
+`interp_GAMMA->Z = NS_centerX[2];`
+`interp_GAMMA->XYZ_dir_flag = 1;`
+``
+`interp_dGAMMA->X = NS_centerX[0];`
+`interp_dGAMMA->Y = NS_centerX[1];`
+`interp_dGAMMA->Z = NS_centerX[2];`
+`interp_dGAMMA->XYZ_dir_flag = 1;`
+``
+`plan_interpolation(interp_GAMMA);`
+`plan_interpolation(interp_dGAMMA);`
+``
+`const double g  = execute_interpolation(interp_GAMMA);`
+`const double dg = execute_interpolation(interp_dGAMMA);`
+`const double f  = dg/g;`
+`assert(isfinite(f));` # if f goes banana!
+``
+`REMOVE_FIELD(GAMMA_fb);`
+`REMOVE_FIELD(dGAMMA_D1_fb);`
+`free_interpolation(interp_GAMMA);`
+`free_interpolation(interp_dGAMMA);`
+``
+`return f;`
+`}`
