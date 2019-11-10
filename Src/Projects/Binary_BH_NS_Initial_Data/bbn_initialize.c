@@ -171,7 +171,9 @@ static void find_boost_velocity_at_outer_boundary(Grid_T *const grid)
   update_parameter_double_format("P_ADM_z",p2[2]);
   
   printf("ADM momentums:\n");
-  printf("-->P_ADM = (%e,%e,%e).\n",p2[0],p2[1],p2[2]);
+  printf("-->P_ADM  = (%e,%e,%e).\n",p2[0],p2[1],p2[2]);
+  printf("-->J_ADM  = (%e,%e,%e).\n",
+      obs->Jx_ADM(obs),obs->Jy_ADM(obs),obs->Jz_ADM(obs));
   
   if (!strcmp_i(GetParameterS_E("P_ADM_control_method"),"BoostMethod"))
   {
