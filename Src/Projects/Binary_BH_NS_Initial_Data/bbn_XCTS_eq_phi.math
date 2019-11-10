@@ -22,7 +22,10 @@ C_macro3 = GET_FIELD_IF_IN_NS(name);
 # THUS, DO NOT DEFINE THEM AGAIN.
 `  DDM_SCHUR_EQ_DECLARE`;
 `  unsigned ijk;/* node index */`;
-
+``
+`  if (!strcmp_i(GetParameterS_E("grid_kind"),"BBN_CubedSpherical_grid"))`
+`    abortEr("For this grid you need to figure out where to set phi = 0.\n");`
+`  `
 # declare for Cpi:
 Declare = 
 {
@@ -99,11 +102,14 @@ Symm[ddphi(i,j)     = ddphi(j,i)];
 # NOTE, since I wanna solve phi = 0 at only one point, I need to change 
 # some of the default settings.
 
-`  ijk  = node[0];`;
-`  F[0] = phi[ijk];`; # phi = 0
-`  for (n = 1; n < N; ++n)`;
-`  {`;
-`    ijk  = node[n];`;
+`  if(strstr(patch->name,"left_centeral_box"))`
+`  {`
+
+`    ijk  = node[0];`;
+`    F[0] = phi[ijk];`; # phi = 0
+`    for (n = 1; n < N; ++n)`;
+`    {`;
+`      ijk  = node[n];`;
 
 # write the equation below at ijk point:
 
@@ -127,9 +133,40 @@ t6 = -rho0*enthalpy*u0*alpha*K;
 
 F_eq = t1+rho0*(t2+t3+t4)+t5+t6;
 
-`    F[n] = F_eq;\n`;# Jx = -F in Newton-Raphson scheme
-`  }`;
+`      F[n] = F_eq;\n`;# Jx = -F in Newton-Raphson scheme
+`    }`;
+`  }/* left centeral box */`
 
+`  else`
+`  {`
+`    DDM_SCHUR_EQ_OPEN\n`
+# write the equation below at ijk point:
+# I add underscore at the end of the variables to void cpi error for
+# duplicated variables.
+
+dLn_of_alpha_(i) = deta(i)/eta - dpsi(i)/psi;
+#dLn_of_rho0_(i)  = drho0(i)/rho0;
+dLn_of_enthalpy_(i)  = denthalpy(i)/enthalpy;
+dLn_of_u0_(i)  = du0(i)/u0;
+#dLns0_(i) = dLn_of_alpha_(i) + dLn_of_rho0(i) - dLn_of_enthalpy_(i);
+#dLns1_(i) = dLn_of_alpha_(i) + dLn_of_rho0(i) + dLn_of_u0_(i);
+dLns0_(i) = drho0(i)+rho0*(dLn_of_alpha_(i)- dLn_of_enthalpy_(i));
+dLns1_(i) = drho0(i)+rho0*(dLn_of_alpha_(i) + dLn_of_u0_(i));
+alpha_ = eta/psi;
+
+t1_ = dLns0_(-i)*((psi**-4)*_gammaI(i,l)*dphi(-l)+W(i));
+t2_ = (2*(psi**-5)*dpsi(-i)*_gammaI(i,l)*dphi(-l));
+t3_ = ((psi**-4)*_gammaI(-i,-l)*(ddphi(i,l)-_Gamma(n,i,l)*dphi(-n)));
+t4_ = (6*dpsi(i)*W(-i)/psi + _Gamma(i,ip,l)*W(-l)*KD(-i,-ip));
+#t5_ = -enthalpy*u0*(dLns1_(i)*Beta(-i)+alpha_*K);
+t5_ = -enthalpy*u0*dLns1_(i)*Beta(-i);
+t6_ = -rho0*enthalpy*u0*alpha_*K;
+
+F_eq_ = t1_+rho0*(t2_+t3_+t4_)+t5_+t6_;
+
+`    F[n] = F_eq_;\n`;# Jx = -F in Newton-Raphson scheme
+`    DDM_SCHUR_EQ_CLOSE\n`
+`  }/* other patches of NS */`;
 `  return 0;`;
 `}`;
 
