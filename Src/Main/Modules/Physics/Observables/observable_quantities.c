@@ -19,6 +19,8 @@
 // double Px_ADM = obs->Px_ADM(obs);# x component
 // double Py_ADM = obs->Py_ADM(obs);# y component
 // double Pz_ADM = obs->Pz_ADM(obs);# z component
+// double Jx_ADM = obs->Jx_ADM(obs);# x component of angular momentum
+// double Jy_ADM = obs->Jy_ADM(obs);# y component of angular momentum
 // double Jz_ADM = obs->Jz_ADM(obs);# z component of angular momentum
 //
 // *free*
