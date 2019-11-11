@@ -44,6 +44,9 @@ void bbn_solve_initial_data_eqs(Grid_T *const grid)
     printf("{ Iteration %d For Solving XCTS Equations at a Fixed Resolution ...\n",iter);
     printf("        |---> %s Equations ...\n",SolveEqs->solving_order);
     
+    /* updating patch->pool of phi_grid */
+    update_phi_grid(phi_grid,grid);
+    
     /* test if jacobian of equations written correctly */
     if (0) test_Jacobian_of_equations(SolveEqs);
     
@@ -77,6 +80,38 @@ void bbn_solve_initial_data_eqs(Grid_T *const grid)
   printf("} Solving initial data equations for Binary BH and NS ==> Done.\n");
   pr_clock();
   pr_line_custom('='); 
+}
+
+/* updating patch->pool of phi_grid. sometimes other equations might add
+// and delete some fields and as a result the pool pointer which is shared
+// between grid and phi_grid become different, this function sync the pool. */
+static void update_phi_grid(Grid_T *const phi_grid,Grid_T *const grid)
+{
+  unsigned p,p2,i;
+  
+  i = 0;
+  FOR_ALL_PATCHES(p2,phi_grid)
+  {
+    Patch_T *patch2   = phi_grid->patch[p2];
+    const char *name2 = strstr(patch2->name,"_");
+    name2++;
+    
+    FOR_ALL_PATCHES(p,grid)
+    {
+      Patch_T *patch = grid->patch[p];
+      const char *name = strstr(patch->name,"_");
+      name++;
+  
+      if (!strcmp(name2,name))
+      {
+        patch2->pool = patch->pool;
+        i++;
+        break;
+      }
+    }/* FOR_ALL_PATCHES(p,grid) */
+  }/* FOR_ALL_PATCHES(p2,phi_grid) */
+  
+  assert(i == 7);
 }
 
 /* using initial fields and solved fields update every thing 

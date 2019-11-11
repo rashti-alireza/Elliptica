@@ -13,6 +13,7 @@ int bbn_stop_criteria(Grid_T *const grid,const char *const name);
 static void bbn_backtrack(Grid_T *const grid,const char *const name);
 static void save_fields(Grid_T *const grid);
 static void update_fields_relaxed_scheme(Grid_T *const grid);
+static void update_phi_grid(Grid_T *const phi_grid,Grid_T *const grid);
 
 
                           
