@@ -40,6 +40,7 @@ void *bbn_eq_Beta_U2(void *vp1,void *vp2)
   GET_FIELD_UNUSED(_dA_UiUj_U0U2D1)
   GET_FIELD_UNUSED(_dA_UiUj_U0U2D2)
   GET_FIELD(psi)
+  GET_FIELD(eta)
   GET_FIELD(dK_D2)
   GET_FIELD(dK_D1)
   GET_FIELD(dK_D0)
@@ -74,6 +75,9 @@ void *bbn_eq_Beta_U2(void *vp1,void *vp2)
 
   DDM_SCHUR_EQ_OPEN
 
+  double alphabar = 
+eta[ijk]/pow(psi[ijk], 7);
+
   double F_eq_U2 = 
 _A_UiUj_U0U0[ijk]*_Gamma_U2D0D0[ijk] + 2.0*_A_UiUj_U0U1[ijk]*
 _Gamma_U2D0D1[ijk] + _A_UiUj_U0U2[ijk]*_Gamma_U0D0D0[ijk] + 
@@ -88,7 +92,7 @@ _dA_UiUj_U1U2D1[ijk] + _dA_UiUj_U2U2D2[ijk] - 0.66666666666666663*
 pow(psi[ijk], 6)*(_gammaI_U0U2[ijk]*dK_D0[ijk] + _gammaI_U1U2[ijk]*
 dK_D1[ijk] + _gammaI_U2U2[ijk]*dK_D2[ijk]);
 
-  F[n] = F_eq_U2;
+  F[n] = 2.*alphabar*F_eq_U2;
 
   DDM_SCHUR_EQ_CLOSE
 
