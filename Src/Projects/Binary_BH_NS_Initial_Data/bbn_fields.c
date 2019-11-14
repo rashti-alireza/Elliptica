@@ -176,34 +176,63 @@ void bbn_allocate_fields(Grid_T *const grid)
     ADD_FIELD_NoMem(ddB0_U2D0D2)
     ADD_FIELD_NoMem(ddB0_U0D0D0)
 
-    ADD_FIELD_NoMem(dBeta_U1D0)
-    ADD_FIELD_NoMem(dBeta_U1D1)
-    ADD_FIELD_NoMem(dBeta_U1D2)
-    ADD_FIELD_NoMem(dBeta_U0D1)
-    ADD_FIELD_NoMem(dBeta_U0D0)
-    ADD_FIELD_NoMem(dBeta_U0D2)
-    ADD_FIELD_NoMem(dBeta_U2D2)
-    ADD_FIELD_NoMem(dBeta_U2D1)
-    ADD_FIELD_NoMem(dBeta_U2D0)
+    ADD_FIELD(dBeta_U1D0)
+    ADD_FIELD(dBeta_U1D1)
+    ADD_FIELD(dBeta_U1D2)
+    ADD_FIELD(dBeta_U0D1)
+    ADD_FIELD(dBeta_U0D0)
+    ADD_FIELD(dBeta_U0D2)
+    ADD_FIELD(dBeta_U2D2)
+    ADD_FIELD(dBeta_U2D1)
+    ADD_FIELD(dBeta_U2D0)
 
-    ADD_FIELD_NoMem(ddBeta_U1D2D2)
-    ADD_FIELD_NoMem(ddBeta_U1D0D0)
-    ADD_FIELD_NoMem(ddBeta_U1D0D1)
-    ADD_FIELD_NoMem(ddBeta_U1D0D2)
-    ADD_FIELD_NoMem(ddBeta_U1D1D2)
-    ADD_FIELD_NoMem(ddBeta_U2D0D0)
-    ADD_FIELD_NoMem(ddBeta_U2D1D2)
-    ADD_FIELD_NoMem(ddBeta_U0D2D2)
-    ADD_FIELD_NoMem(ddBeta_U2D1D1)
-    ADD_FIELD_NoMem(ddBeta_U0D0D1)
-    ADD_FIELD_NoMem(ddBeta_U0D1D1)
-    ADD_FIELD_NoMem(ddBeta_U0D1D2)
-    ADD_FIELD_NoMem(ddBeta_U0D0D2)
-    ADD_FIELD_NoMem(ddBeta_U1D1D1)
-    ADD_FIELD_NoMem(ddBeta_U2D0D1)
-    ADD_FIELD_NoMem(ddBeta_U2D2D2)
-    ADD_FIELD_NoMem(ddBeta_U2D0D2)
-    ADD_FIELD_NoMem(ddBeta_U0D0D0)
+    ADD_FIELD(ddBeta_U1D2D2)
+    ADD_FIELD(ddBeta_U1D0D0)
+    ADD_FIELD(ddBeta_U1D0D1)
+    ADD_FIELD(ddBeta_U1D0D2)
+    ADD_FIELD(ddBeta_U1D1D2)
+    ADD_FIELD(ddBeta_U2D0D0)
+    ADD_FIELD(ddBeta_U2D1D2)
+    ADD_FIELD(ddBeta_U0D2D2)
+    ADD_FIELD(ddBeta_U2D1D1)
+    ADD_FIELD(ddBeta_U0D0D1)
+    ADD_FIELD(ddBeta_U0D1D1)
+    ADD_FIELD(ddBeta_U0D1D2)
+    ADD_FIELD(ddBeta_U0D0D2)
+    ADD_FIELD(ddBeta_U1D1D1)
+    ADD_FIELD(ddBeta_U2D0D1)
+    ADD_FIELD(ddBeta_U2D2D2)
+    ADD_FIELD(ddBeta_U2D0D2)
+    ADD_FIELD(ddBeta_U0D0D0)
+  
+    ADD_FIELD(dB1_U1D0)
+    ADD_FIELD(dB1_U1D1)
+    ADD_FIELD(dB1_U1D2)
+    ADD_FIELD(dB1_U0D1)
+    ADD_FIELD(dB1_U0D0)
+    ADD_FIELD(dB1_U0D2)
+    ADD_FIELD(dB1_U2D2)
+    ADD_FIELD(dB1_U2D1)
+    ADD_FIELD(dB1_U2D0)
+
+    ADD_FIELD(ddB1_U1D2D2)
+    ADD_FIELD(ddB1_U1D0D0)
+    ADD_FIELD(ddB1_U1D0D1)
+    ADD_FIELD(ddB1_U1D0D2)
+    ADD_FIELD(ddB1_U1D1D2)
+    ADD_FIELD(ddB1_U2D0D0)
+    ADD_FIELD(ddB1_U2D1D2)
+    ADD_FIELD(ddB1_U0D2D2)
+    ADD_FIELD(ddB1_U2D1D1)
+    ADD_FIELD(ddB1_U0D0D1)
+    ADD_FIELD(ddB1_U0D1D1)
+    ADD_FIELD(ddB1_U0D1D2)
+    ADD_FIELD(ddB1_U0D0D2)
+    ADD_FIELD(ddB1_U1D1D1)
+    ADD_FIELD(ddB1_U2D0D1)
+    ADD_FIELD(ddB1_U2D2D2)
+    ADD_FIELD(ddB1_U2D0D2)
+    ADD_FIELD(ddB1_U0D0D0)
   
     /* conformal metric: _gamma_DiDj */
     ADD_FIELD(_gamma_D2D2)
@@ -388,6 +417,11 @@ void bbn_partial_derivatives_fields(Grid_T *const grid)
     bbn_update_derivative_B0_U0(patch);
     bbn_update_derivative_B0_U1(patch);
     bbn_update_derivative_B0_U2(patch);
+    
+    /* B1^i*/
+    bbn_update_derivative_B1_U0(patch);
+    bbn_update_derivative_B1_U1(patch);
+    bbn_update_derivative_B1_U2(patch);
         
     /* Beta^i*/
     bbn_update_derivative_Beta_U0(patch);
@@ -569,6 +603,7 @@ void bbn_update_derivative_u0(Patch_T *const patch)
   }
   
 }
+
 /* updating derivative */
 void bbn_update_derivative_HS(Patch_T *const patch)
 {
@@ -762,89 +797,269 @@ void bbn_update_derivative_B0_U2(Patch_T *const patch)
 }
 
 /* updating derivative */
+void bbn_update_derivative_B1_U2(Patch_T *const patch)
+{
+  //const double D          = GetParameterD_E("BH_NS_separation");
+  //const double Vr         = GetParameterD_E("BH_NS_infall_velocity");
+  //const double Omega_BHNS = GetParameterD_E("BH_NS_orbital_angular_velocity"); 
+  const unsigned nn = patch->nn;
+  unsigned ijk;
+  
+  PREP_FIELD(dB1_U2D2)
+  PREP_FIELD(dB1_U2D1)
+  PREP_FIELD(dB1_U2D0)
+  
+  for (ijk = 0; ijk < nn; ++ijk)
+  {
+    dB1_U2D2[ijk] = 0;
+    dB1_U2D1[ijk] = 0;
+    dB1_U2D0[ijk] = 0;
+  }
+  
+  DECLARE_AND_EMPTY_FIELD(ddB1_U2D0D0)
+  DECLARE_AND_EMPTY_FIELD(ddB1_U2D1D2)
+  DECLARE_AND_EMPTY_FIELD(ddB1_U2D1D1)
+  DECLARE_AND_EMPTY_FIELD(ddB1_U2D0D1)
+  DECLARE_AND_EMPTY_FIELD(ddB1_U2D2D2)
+  DECLARE_AND_EMPTY_FIELD(ddB1_U2D0D2)
+  
+  /* since the second derivative is zero */
+  ddB1_U2D0D0->v = alloc_double(nn);
+  ddB1_U2D1D2->v = alloc_double(nn);
+  ddB1_U2D1D1->v = alloc_double(nn);
+  ddB1_U2D0D1->v = alloc_double(nn);
+  ddB1_U2D2D2->v = alloc_double(nn);
+  ddB1_U2D0D2->v = alloc_double(nn);
+}
+
+/* updating derivative */
+void bbn_update_derivative_B1_U1(Patch_T *const patch)
+{
+  const double D          = GetParameterD_E("BH_NS_separation");
+  const double Vr         = GetParameterD_E("BH_NS_infall_velocity");
+  const double Omega_BHNS = GetParameterD_E("BH_NS_orbital_angular_velocity"); 
+  const unsigned nn = patch->nn;
+  unsigned ijk;
+  
+  PREP_FIELD(dB1_U1D2)
+  PREP_FIELD(dB1_U1D1)
+  PREP_FIELD(dB1_U1D0)
+  
+  for (ijk = 0; ijk < nn; ++ijk)
+  {
+    dB1_U1D2[ijk] = 0;
+    dB1_U1D1[ijk] = Vr/D;
+    dB1_U1D0[ijk] = Omega_BHNS;
+  }
+  
+  DECLARE_AND_EMPTY_FIELD(ddB1_U1D0D0)
+  DECLARE_AND_EMPTY_FIELD(ddB1_U1D1D2)
+  DECLARE_AND_EMPTY_FIELD(ddB1_U1D1D1)
+  DECLARE_AND_EMPTY_FIELD(ddB1_U1D0D1)
+  DECLARE_AND_EMPTY_FIELD(ddB1_U1D2D2)
+  DECLARE_AND_EMPTY_FIELD(ddB1_U1D0D2)
+  
+  /* since the second derivative is zero */
+  ddB1_U1D0D0->v = alloc_double(nn);
+  ddB1_U1D1D2->v = alloc_double(nn);
+  ddB1_U1D1D1->v = alloc_double(nn);
+  ddB1_U1D0D1->v = alloc_double(nn);
+  ddB1_U1D2D2->v = alloc_double(nn);
+  ddB1_U1D0D2->v = alloc_double(nn);
+}
+
+/* updating derivative */
+void bbn_update_derivative_B1_U0(Patch_T *const patch)
+{
+  const double D          = GetParameterD_E("BH_NS_separation");
+  const double Vr         = GetParameterD_E("BH_NS_infall_velocity");
+  const double Omega_BHNS = GetParameterD_E("BH_NS_orbital_angular_velocity"); 
+  const unsigned nn = patch->nn;
+  unsigned ijk;
+  
+  PREP_FIELD(dB1_U0D2)
+  PREP_FIELD(dB1_U0D1)
+  PREP_FIELD(dB1_U0D0)
+  
+  for (ijk = 0; ijk < nn; ++ijk)
+  {
+    dB1_U0D2[ijk] = 0;
+    dB1_U0D1[ijk] = -Omega_BHNS;
+    dB1_U0D0[ijk] = Vr/D;
+  }
+  
+  DECLARE_AND_EMPTY_FIELD(ddB1_U0D0D0)
+  DECLARE_AND_EMPTY_FIELD(ddB1_U0D1D2)
+  DECLARE_AND_EMPTY_FIELD(ddB1_U0D1D1)
+  DECLARE_AND_EMPTY_FIELD(ddB1_U0D0D1)
+  DECLARE_AND_EMPTY_FIELD(ddB1_U0D2D2)
+  DECLARE_AND_EMPTY_FIELD(ddB1_U0D0D2)
+  
+  /* since the second derivative is zero */
+  ddB1_U0D0D0->v = alloc_double(nn);
+  ddB1_U0D1D2->v = alloc_double(nn);
+  ddB1_U0D1D1->v = alloc_double(nn);
+  ddB1_U0D0D1->v = alloc_double(nn);
+  ddB1_U0D2D2->v = alloc_double(nn);
+  ddB1_U0D0D2->v = alloc_double(nn);
+}
+
+
+/* updating derivative. 
+// NOTE: make sure dB0,ddB0,dB1,ddB1 are already updated.*/
 void bbn_update_derivative_Beta_U0(Patch_T *const patch)
 {
-  DECLARE_FIELD(Beta_U0)
+  const unsigned nn = patch->nn;
+  unsigned ijk;
   
-  DECLARE_AND_EMPTY_FIELD(dBeta_U0D1)
-  DECLARE_AND_EMPTY_FIELD(dBeta_U0D0)
-  DECLARE_AND_EMPTY_FIELD(dBeta_U0D2)
-  DECLARE_AND_EMPTY_FIELD(ddBeta_U0D2D2)
-  DECLARE_AND_EMPTY_FIELD(ddBeta_U0D0D1)
-  DECLARE_AND_EMPTY_FIELD(ddBeta_U0D1D1)
-  DECLARE_AND_EMPTY_FIELD(ddBeta_U0D1D2)
-  DECLARE_AND_EMPTY_FIELD(ddBeta_U0D0D2)
-  DECLARE_AND_EMPTY_FIELD(ddBeta_U0D0D0)
+  GET_FIELD(dB0_U0D1)
+  GET_FIELD(dB0_U0D0)
+  GET_FIELD(dB0_U0D2)
+  GET_FIELD(ddB0_U0D2D2)
+  GET_FIELD(ddB0_U0D0D1)
+  GET_FIELD(ddB0_U0D1D1)
+  GET_FIELD(ddB0_U0D1D2)
+  GET_FIELD(ddB0_U0D0D2)
+  GET_FIELD(ddB0_U0D0D0)
 
-  dBeta_U0D1->v = Partial_Derivative(Beta_U0,"y");
-  dBeta_U0D0->v = Partial_Derivative(Beta_U0,"x");
-  dBeta_U0D2->v = Partial_Derivative(Beta_U0,"z");
-  ddBeta_U0D2D2->v = Partial_Derivative(dBeta_U0D2,"z");
-  ddBeta_U0D0D1->v = Partial_Derivative(dBeta_U0D0,"y");
-  ddBeta_U0D1D1->v = Partial_Derivative(dBeta_U0D1,"y");
-  ddBeta_U0D1D2->v = Partial_Derivative(dBeta_U0D1,"z");
-  ddBeta_U0D0D2->v = Partial_Derivative(dBeta_U0D0,"z");
-  ddBeta_U0D0D0->v = Partial_Derivative(dBeta_U0D0,"x");
+  GET_FIELD(dB1_U0D1)
+  GET_FIELD(dB1_U0D0)
+  GET_FIELD(dB1_U0D2)
+  GET_FIELD(ddB1_U0D2D2)
+  GET_FIELD(ddB1_U0D0D1)
+  GET_FIELD(ddB1_U0D1D1)
+  GET_FIELD(ddB1_U0D1D2)
+  GET_FIELD(ddB1_U0D0D2)
+  GET_FIELD(ddB1_U0D0D0)
+    
+  PREP_FIELD(dBeta_U0D1)
+  PREP_FIELD(dBeta_U0D0)
+  PREP_FIELD(dBeta_U0D2)
+  PREP_FIELD(ddBeta_U0D2D2)
+  PREP_FIELD(ddBeta_U0D0D1)
+  PREP_FIELD(ddBeta_U0D1D1)
+  PREP_FIELD(ddBeta_U0D1D2)
+  PREP_FIELD(ddBeta_U0D0D2)
+  PREP_FIELD(ddBeta_U0D0D0)
+
+  for (ijk = 0; ijk < nn; ++ijk)
+  {
+    dBeta_U0D1[ijk]    = dB0_U0D1[ijk]+dB1_U0D1[ijk];
+    dBeta_U0D0[ijk]    = dB0_U0D0[ijk]+dB1_U0D0[ijk];
+    dBeta_U0D2[ijk]    = dB0_U0D2[ijk]+dB1_U0D2[ijk];
+    ddBeta_U0D2D2[ijk] = ddB0_U0D2D2[ijk]+ddB1_U0D2D2[ijk];
+    ddBeta_U0D0D1[ijk] = ddB0_U0D0D1[ijk]+ddB1_U0D0D1[ijk];
+    ddBeta_U0D1D1[ijk] = ddB0_U0D1D1[ijk]+ddB1_U0D1D1[ijk];
+    ddBeta_U0D1D2[ijk] = ddB0_U0D1D2[ijk]+ddB1_U0D1D2[ijk];
+    ddBeta_U0D0D2[ijk] = ddB0_U0D0D2[ijk]+ddB1_U0D0D2[ijk];
+    ddBeta_U0D0D0[ijk] = ddB0_U0D0D0[ijk]+ddB1_U0D0D0[ijk];
+  }
 
 }
 
-/* updating derivative */
+/* updating derivative. 
+// NOTE: make sure dB0,ddB0,dB1,ddB1 are already updated.*/
 void bbn_update_derivative_Beta_U1(Patch_T *const patch)
 {
+  const unsigned nn = patch->nn;
+  unsigned ijk;
   
-  DECLARE_FIELD(Beta_U1)
-  
-  DECLARE_AND_EMPTY_FIELD(dBeta_U1D0)
-  DECLARE_AND_EMPTY_FIELD(dBeta_U1D1)
-  DECLARE_AND_EMPTY_FIELD(dBeta_U1D2)
- 
-  DECLARE_AND_EMPTY_FIELD(ddBeta_U1D2D2)
-  DECLARE_AND_EMPTY_FIELD(ddBeta_U1D0D0)
-  DECLARE_AND_EMPTY_FIELD(ddBeta_U1D0D1)
-  DECLARE_AND_EMPTY_FIELD(ddBeta_U1D0D2)
-  DECLARE_AND_EMPTY_FIELD(ddBeta_U1D1D2)
-  DECLARE_AND_EMPTY_FIELD(ddBeta_U1D1D1)
+  GET_FIELD(dB0_U1D1)
+  GET_FIELD(dB0_U1D0)
+  GET_FIELD(dB0_U1D2)
+  GET_FIELD(ddB0_U1D2D2)
+  GET_FIELD(ddB0_U1D0D1)
+  GET_FIELD(ddB0_U1D1D1)
+  GET_FIELD(ddB0_U1D1D2)
+  GET_FIELD(ddB0_U1D0D2)
+  GET_FIELD(ddB0_U1D0D0)
 
-  dBeta_U1D0->v = Partial_Derivative(Beta_U1,"x");
-  dBeta_U1D1->v = Partial_Derivative(Beta_U1,"y");
-  dBeta_U1D2->v = Partial_Derivative(Beta_U1,"z");
+  GET_FIELD(dB1_U1D1)
+  GET_FIELD(dB1_U1D0)
+  GET_FIELD(dB1_U1D2)
+  GET_FIELD(ddB1_U1D2D2)
+  GET_FIELD(ddB1_U1D0D1)
+  GET_FIELD(ddB1_U1D1D1)
+  GET_FIELD(ddB1_U1D1D2)
+  GET_FIELD(ddB1_U1D0D2)
+  GET_FIELD(ddB1_U1D0D0)
+    
+  PREP_FIELD(dBeta_U1D1)
+  PREP_FIELD(dBeta_U1D0)
+  PREP_FIELD(dBeta_U1D2)
+  PREP_FIELD(ddBeta_U1D2D2)
+  PREP_FIELD(ddBeta_U1D0D1)
+  PREP_FIELD(ddBeta_U1D1D1)
+  PREP_FIELD(ddBeta_U1D1D2)
+  PREP_FIELD(ddBeta_U1D0D2)
+  PREP_FIELD(ddBeta_U1D0D0)
 
-  ddBeta_U1D2D2->v = Partial_Derivative(dBeta_U1D2,"z");
-  ddBeta_U1D0D0->v = Partial_Derivative(dBeta_U1D0,"x");
-  ddBeta_U1D0D1->v = Partial_Derivative(dBeta_U1D0,"y");
-  ddBeta_U1D0D2->v = Partial_Derivative(dBeta_U1D0,"z");
-  ddBeta_U1D1D2->v = Partial_Derivative(dBeta_U1D1,"z");
-  ddBeta_U1D1D1->v = Partial_Derivative(dBeta_U1D1,"y");
+  for (ijk = 0; ijk < nn; ++ijk)
+  {
+    dBeta_U1D1[ijk]    = dB0_U1D1[ijk]+dB1_U1D1[ijk];
+    dBeta_U1D0[ijk]    = dB0_U1D0[ijk]+dB1_U1D0[ijk];
+    dBeta_U1D2[ijk]    = dB0_U1D2[ijk]+dB1_U1D2[ijk];
+    ddBeta_U1D2D2[ijk] = ddB0_U1D2D2[ijk]+ddB1_U1D2D2[ijk];
+    ddBeta_U1D0D1[ijk] = ddB0_U1D0D1[ijk]+ddB1_U1D0D1[ijk];
+    ddBeta_U1D1D1[ijk] = ddB0_U1D1D1[ijk]+ddB1_U1D1D1[ijk];
+    ddBeta_U1D1D2[ijk] = ddB0_U1D1D2[ijk]+ddB1_U1D1D2[ijk];
+    ddBeta_U1D0D2[ijk] = ddB0_U1D0D2[ijk]+ddB1_U1D0D2[ijk];
+    ddBeta_U1D0D0[ijk] = ddB0_U1D0D0[ijk]+ddB1_U1D0D0[ijk];
+  }
 
 }
 
-/* updating derivative */
+
+/* updating derivative. 
+// NOTE: make sure dB0,ddB0,dB1,ddB1 are already updated.*/
 void bbn_update_derivative_Beta_U2(Patch_T *const patch)
 {
-  DECLARE_FIELD(Beta_U2)
+  const unsigned nn = patch->nn;
+  unsigned ijk;
   
-  DECLARE_AND_EMPTY_FIELD(dBeta_U2D2)
-  DECLARE_AND_EMPTY_FIELD(dBeta_U2D1)
-  DECLARE_AND_EMPTY_FIELD(dBeta_U2D0)
- 
-  DECLARE_AND_EMPTY_FIELD(ddBeta_U2D0D0)
-  DECLARE_AND_EMPTY_FIELD(ddBeta_U2D1D2)
-  DECLARE_AND_EMPTY_FIELD(ddBeta_U2D1D1)
-  DECLARE_AND_EMPTY_FIELD(ddBeta_U2D0D1)
-  DECLARE_AND_EMPTY_FIELD(ddBeta_U2D2D2)
-  DECLARE_AND_EMPTY_FIELD(ddBeta_U2D0D2)
+  GET_FIELD(dB0_U2D1)
+  GET_FIELD(dB0_U2D0)
+  GET_FIELD(dB0_U2D2)
+  GET_FIELD(ddB0_U2D2D2)
+  GET_FIELD(ddB0_U2D0D1)
+  GET_FIELD(ddB0_U2D1D1)
+  GET_FIELD(ddB0_U2D1D2)
+  GET_FIELD(ddB0_U2D0D2)
+  GET_FIELD(ddB0_U2D0D0)
 
-  dBeta_U2D2->v = Partial_Derivative(Beta_U2,"z");
-  dBeta_U2D1->v = Partial_Derivative(Beta_U2,"y");
-  dBeta_U2D0->v = Partial_Derivative(Beta_U2,"x");
+  GET_FIELD(dB1_U2D1)
+  GET_FIELD(dB1_U2D0)
+  GET_FIELD(dB1_U2D2)
+  GET_FIELD(ddB1_U2D2D2)
+  GET_FIELD(ddB1_U2D0D1)
+  GET_FIELD(ddB1_U2D1D1)
+  GET_FIELD(ddB1_U2D1D2)
+  GET_FIELD(ddB1_U2D0D2)
+  GET_FIELD(ddB1_U2D0D0)
+    
+  PREP_FIELD(dBeta_U2D1)
+  PREP_FIELD(dBeta_U2D0)
+  PREP_FIELD(dBeta_U2D2)
+  PREP_FIELD(ddBeta_U2D2D2)
+  PREP_FIELD(ddBeta_U2D0D1)
+  PREP_FIELD(ddBeta_U2D1D1)
+  PREP_FIELD(ddBeta_U2D1D2)
+  PREP_FIELD(ddBeta_U2D0D2)
+  PREP_FIELD(ddBeta_U2D0D0)
 
-  ddBeta_U2D0D0->v = Partial_Derivative(dBeta_U2D0,"x");
-  ddBeta_U2D1D2->v = Partial_Derivative(dBeta_U2D1,"z");
-  ddBeta_U2D1D1->v = Partial_Derivative(dBeta_U2D1,"y");
-  ddBeta_U2D0D1->v = Partial_Derivative(dBeta_U2D0,"y");
-  ddBeta_U2D2D2->v = Partial_Derivative(dBeta_U2D2,"z");
-  ddBeta_U2D0D2->v = Partial_Derivative(dBeta_U2D0,"z");
-  
+  for (ijk = 0; ijk < nn; ++ijk)
+  {
+    dBeta_U2D1[ijk]    = dB0_U2D1[ijk]+dB1_U2D1[ijk];
+    dBeta_U2D0[ijk]    = dB0_U2D0[ijk]+dB1_U2D0[ijk];
+    dBeta_U2D2[ijk]    = dB0_U2D2[ijk]+dB1_U2D2[ijk];
+    ddBeta_U2D2D2[ijk] = ddB0_U2D2D2[ijk]+ddB1_U2D2D2[ijk];
+    ddBeta_U2D0D1[ijk] = ddB0_U2D0D1[ijk]+ddB1_U2D0D1[ijk];
+    ddBeta_U2D1D1[ijk] = ddB0_U2D1D1[ijk]+ddB1_U2D1D1[ijk];
+    ddBeta_U2D1D2[ijk] = ddB0_U2D1D2[ijk]+ddB1_U2D1D2[ijk];
+    ddBeta_U2D0D2[ijk] = ddB0_U2D0D2[ijk]+ddB1_U2D0D2[ijk];
+    ddBeta_U2D0D0[ijk] = ddB0_U2D0D0[ijk]+ddB1_U2D0D0[ijk];
+  }
+
 }
 
 /* after finding new NS surface, root finder might find h ~ 1
