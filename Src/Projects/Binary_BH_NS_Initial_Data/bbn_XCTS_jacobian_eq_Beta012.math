@@ -74,7 +74,7 @@ Declare =
  (obj = Field,name = deta, rank = D, C_macro4);
 
  # Ricc
- (obj = Field,name = _RicUD, rank = UD, C_macro4);
+ (obj = Field,name = _Ric, rank = DD, C_macro4);
 
  # conformal metric inverse
  (obj = Field,name = _gammaI, rank = UU, C_macro4);
@@ -93,7 +93,7 @@ Declare =
 # symmetries for Cpi:
 Symm[JJB0(j,k)         = JJB0(k,j)];
 Symm[_gammaI(i,j)      = _gammaI(j,i)];
-Symm[_RicUD(i,j)       = _RicUD(j,i)];
+Symm[_Ric(i,j)         = _Ric(j,i)];
 Symm[_Gamma(i,j,k)     = _Gamma(i,k,j)];
 Symm[_dGamma(i,j,k,l)  = _dGamma(i,k,j,l)];
 
@@ -144,7 +144,7 @@ t7_B(i) =  1/3*_gammaI(-i,-m)*KD(-jp,-j)*_Gamma(jp,j,n)*KD(-n,-np)*_Gamma(np,m,l
 
 t8_B(i) = -1/3*_gammaI(-i,-m)*(_Gamma(n,m,j)*U(-j)*JB0(-n) + _Gamma(n,m,j)*KD(-n,-np)*KD(-jp,-j)*_Gamma(jp,np,l)*U(-l)*kd);
 
-t9_B(i) = 2/3*_RicUD(i,l)*U(-l)*kd;
+t9_B(i) = 2/3*_gammaI(i,-m)*_Ric(m,l)*U(-l)*kd;
 
 t10_B(i) = -dLnOf_alpha_B(-j)*( \
 _gammaI(j,-m)*(U(i)*JB0(m)+_Gamma(i,m,l)*U(-l)*kd)+ \
@@ -183,7 +183,7 @@ t7_E(i) =  1/3*_gammaI(-i,-m)*KD(-jp,-j)*_Gamma(jp,j,n)*KD(-n,-np)*_Gamma(np,m,l
 
 t8_E(i) = -1/3*_gammaI(-i,-m)*(_Gamma(n,m,j)*U(-j)*JB0(-n) + _Gamma(n,m,j)*KD(-n,-np)*KD(-jp,-j)*_Gamma(jp,np,l)*U(-l)*kd);
 
-t9_E(i) = 2/3*_RicUD(i,l)*U(-l)*kd;
+t9_E(i) = 2/3*_gammaI(i,-m)*_Ric(m,l)*U(-l)*kd;
 
 t10_E(i) = -dLnOf_alpha_E(-j)*( \
 _gammaI(j,-m)*(U(i)*JB0(m)+_Gamma(i,m,l)*U(-l)*kd)+ \

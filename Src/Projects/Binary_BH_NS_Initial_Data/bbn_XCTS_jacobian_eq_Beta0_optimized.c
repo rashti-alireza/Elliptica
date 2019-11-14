@@ -10,9 +10,9 @@
 
 
 
-#define U_U0 1.
-#define U_U1 0.
-#define U_U2 0.
+#define U_U0 1.0
+#define U_U1 0.0
+#define U_U2 0.0
 
 void *bbn_jacobian_eq_Beta_U0(void *vp1,void *vp2)
 {
@@ -38,12 +38,12 @@ void *bbn_jacobian_eq_Beta_U0(void *vp1,void *vp2)
   GET_FIELD_UNUSED(deta_D0)
   GET_FIELD_UNUSED(deta_D1)
   GET_FIELD_UNUSED(deta_D2)
-  GET_FIELD_UNUSED(_RicUD_U1D2)
-  GET_FIELD_UNUSED(_RicUD_U2D2)
-  GET_FIELD_UNUSED(_RicUD_U0D2)
-  GET_FIELD_UNUSED(_RicUD_U0D1)
-  GET_FIELD_UNUSED(_RicUD_U0D0)
-  GET_FIELD_UNUSED(_RicUD_U1D1)
+  GET_FIELD_UNUSED(_Ric_D2D2)
+  GET_FIELD_UNUSED(_Ric_D1D2)
+  GET_FIELD_UNUSED(_Ric_D1D1)
+  GET_FIELD_UNUSED(_Ric_D0D2)
+  GET_FIELD_UNUSED(_Ric_D0D1)
+  GET_FIELD_UNUSED(_Ric_D0D0)
   GET_FIELD_UNUSED(_gammaI_U0U2)
   GET_FIELD_UNUSED(_gammaI_U0U0)
   GET_FIELD_UNUSED(_gammaI_U0U1)
@@ -576,8 +576,13 @@ pow(_Gamma_U2D2D2[ijk], 2)));
 
 
   double t9_B_U0 = 
-0.66666666666666663*kd[ijk==lmn]*(U_U0*_RicUD_U0D0[ijk] + U_U1*
-_RicUD_U0D1[ijk] + U_U2*_RicUD_U0D2[ijk]);
+0.66666666666666663*kd[ijk==lmn]*(U_U0*_Ric_D0D0[ijk]*
+_gammaI_U0U0[ijk] + U_U0*_Ric_D0D1[ijk]*_gammaI_U0U1[ijk] + U_U0*
+_Ric_D0D2[ijk]*_gammaI_U0U2[ijk] + U_U1*_Ric_D0D1[ijk]*
+_gammaI_U0U0[ijk] + U_U1*_Ric_D1D1[ijk]*_gammaI_U0U1[ijk] + U_U1*
+_Ric_D1D2[ijk]*_gammaI_U0U2[ijk] + U_U2*_Ric_D0D2[ijk]*
+_gammaI_U0U0[ijk] + U_U2*_Ric_D1D2[ijk]*_gammaI_U0U1[ijk] + U_U2*
+_Ric_D2D2[ijk]*_gammaI_U0U2[ijk]);
 
 
   double t10_B_U0 = 
@@ -1104,8 +1109,13 @@ _Gamma_U0D2D2[ijk]*_Gamma_U2D0D2[ijk] + U_U2*pow(_Gamma_U1D1D2[ijk], 2) +
 pow(_Gamma_U2D2D2[ijk], 2)));
 
   double t9_E_U0 = 
-0.66666666666666663*kd[ijk==lmn]*(U_U0*_RicUD_U0D0[ijk] + U_U1*
-_RicUD_U0D1[ijk] + U_U2*_RicUD_U0D2[ijk]);
+0.66666666666666663*kd[ijk==lmn]*(U_U0*_Ric_D0D0[ijk]*
+_gammaI_U0U0[ijk] + U_U0*_Ric_D0D1[ijk]*_gammaI_U0U1[ijk] + U_U0*
+_Ric_D0D2[ijk]*_gammaI_U0U2[ijk] + U_U1*_Ric_D0D1[ijk]*
+_gammaI_U0U0[ijk] + U_U1*_Ric_D1D1[ijk]*_gammaI_U0U1[ijk] + U_U1*
+_Ric_D1D2[ijk]*_gammaI_U0U2[ijk] + U_U2*_Ric_D0D2[ijk]*
+_gammaI_U0U0[ijk] + U_U2*_Ric_D1D2[ijk]*_gammaI_U0U1[ijk] + U_U2*
+_Ric_D2D2[ijk]*_gammaI_U0U2[ijk]);
 
 
 
