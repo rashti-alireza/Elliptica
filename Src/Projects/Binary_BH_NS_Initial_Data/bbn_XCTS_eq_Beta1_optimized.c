@@ -28,22 +28,22 @@ void *bbn_eq_Beta_U1(void *vp1,void *vp2)
   GET_FIELD_UNUSED(dB0_U1D1)
   GET_FIELD_UNUSED(dB0_U1D0)
   GET_FIELD_UNUSED(ddB0_U1D2D2)
-  GET_FIELD_UNUSED(ddB0_U1D1D1)
-  GET_FIELD_UNUSED(ddB0_U1D1D0)
+  GET_FIELD_UNUSED(ddB0_U1D0D0)
+  GET_FIELD_UNUSED(ddB0_U1D0D1)
+  GET_FIELD_UNUSED(ddB0_U1D0D2)
   GET_FIELD_UNUSED(ddB0_U1D1D2)
-  GET_FIELD_UNUSED(ddB0_U1D2D1)
+  GET_FIELD_UNUSED(ddB0_U2D0D0)
+  GET_FIELD_UNUSED(ddB0_U2D1D2)
   GET_FIELD_UNUSED(ddB0_U0D2D2)
-  GET_FIELD_UNUSED(ddB0_U0D2D1)
-  GET_FIELD_UNUSED(ddB0_U0D2D0)
-  GET_FIELD_UNUSED(ddB0_U2D2D0)
-  GET_FIELD_UNUSED(ddB0_U0D1D0)
+  GET_FIELD_UNUSED(ddB0_U2D1D1)
+  GET_FIELD_UNUSED(ddB0_U0D0D1)
   GET_FIELD_UNUSED(ddB0_U0D1D1)
   GET_FIELD_UNUSED(ddB0_U0D1D2)
   GET_FIELD_UNUSED(ddB0_U0D0D2)
-  GET_FIELD_UNUSED(ddB0_U0D0D1)
+  GET_FIELD_UNUSED(ddB0_U1D1D1)
+  GET_FIELD_UNUSED(ddB0_U2D0D1)
   GET_FIELD_UNUSED(ddB0_U2D2D2)
-  GET_FIELD_UNUSED(ddB0_U2D2D1)
-  GET_FIELD_UNUSED(ddB0_U1D2D0)
+  GET_FIELD_UNUSED(ddB0_U2D0D2)
   GET_FIELD_UNUSED(ddB0_U0D0D0)
   GET_FIELD_UNUSED(B1_U0)
   GET_FIELD_UNUSED(B1_U1)
@@ -57,24 +57,24 @@ void *bbn_eq_Beta_U1(void *vp1,void *vp2)
   GET_FIELD_UNUSED(dB1_U1D0)
   GET_FIELD_UNUSED(dB1_U1D1)
   GET_FIELD_UNUSED(dB1_U1D2)
-  GET_FIELD_UNUSED(ddB1_U0D2D0)
-  GET_FIELD_UNUSED(ddB1_U0D2D1)
+  GET_FIELD_UNUSED(ddB1_U2D1D1)
+  GET_FIELD_UNUSED(ddB1_U1D0D2)
   GET_FIELD_UNUSED(ddB1_U0D2D2)
-  GET_FIELD_UNUSED(ddB1_U1D1D1)
-  GET_FIELD_UNUSED(ddB1_U2D2D0)
+  GET_FIELD_UNUSED(ddB1_U1D0D0)
+  GET_FIELD_UNUSED(ddB1_U2D1D2)
+  GET_FIELD_UNUSED(ddB1_U2D2D2)
+  GET_FIELD_UNUSED(ddB1_U1D0D1)
   GET_FIELD_UNUSED(ddB1_U0D0D2)
-  GET_FIELD_UNUSED(ddB1_U1D2D1)
+  GET_FIELD_UNUSED(ddB1_U2D0D1)
   GET_FIELD_UNUSED(ddB1_U0D0D0)
   GET_FIELD_UNUSED(ddB1_U0D0D1)
   GET_FIELD_UNUSED(ddB1_U1D2D2)
-  GET_FIELD_UNUSED(ddB1_U1D2D0)
+  GET_FIELD_UNUSED(ddB1_U2D0D0)
   GET_FIELD_UNUSED(ddB1_U1D1D2)
   GET_FIELD_UNUSED(ddB1_U0D1D2)
   GET_FIELD_UNUSED(ddB1_U0D1D1)
-  GET_FIELD_UNUSED(ddB1_U0D1D0)
-  GET_FIELD_UNUSED(ddB1_U2D2D1)
-  GET_FIELD_UNUSED(ddB1_U1D1D0)
-  GET_FIELD_UNUSED(ddB1_U2D2D2)
+  GET_FIELD_UNUSED(ddB1_U1D1D1)
+  GET_FIELD_UNUSED(ddB1_U2D0D2)
   GET_FIELD_UNUSED(_Ric_D2D2)
   GET_FIELD_UNUSED(_Ric_D1D2)
   GET_FIELD_UNUSED(_Ric_D1D1)
@@ -283,7 +283,7 @@ DB0_U1D0*_Gamma_U0D0D1[ijk] + DB0_U1D0*_Gamma_U1D1D1[ijk] - DB0_U1D1*
 _Gamma_U1D0D1[ijk] - DB0_U1D2*_Gamma_U2D0D1[ijk] + DB0_U2D0*
 _Gamma_U1D1D2[ijk] + _Gamma_U1D0D0[ijk]*dB0_U0D1[ijk] + 
 _Gamma_U1D0D1[ijk]*dB0_U1D1[ijk] + _Gamma_U1D0D2[ijk]*dB0_U2D1[ijk] + 
-ddB0_U0D1D1[ijk];
+ddB0_U1D0D1[ijk];
 
   double DDB0_U1D0D2 = 
 B0_U0[ijk]*_dGamma_U2D0D0D1[ijk] + B0_U1[ijk]*_dGamma_U2D0D1D1[ijk] + 
@@ -292,7 +292,7 @@ DB0_U1D0*_Gamma_U2D1D1[ijk] - DB0_U2D0*_Gamma_U0D0D1[ijk] + DB0_U2D0*
 _Gamma_U2D1D2[ijk] - DB0_U2D1*_Gamma_U1D0D1[ijk] - DB0_U2D2*
 _Gamma_U2D0D1[ijk] + _Gamma_U2D0D0[ijk]*dB0_U0D1[ijk] + 
 _Gamma_U2D0D1[ijk]*dB0_U1D1[ijk] + _Gamma_U2D0D2[ijk]*dB0_U2D1[ijk] + 
-ddB0_U0D2D1[ijk];
+ddB0_U2D0D1[ijk];
 
   double DDB0_U0D1D0 = 
 B0_U0[ijk]*_dGamma_U0D0D1D0[ijk] + B0_U1[ijk]*_dGamma_U0D1D1D0[ijk] + 
@@ -301,7 +301,7 @@ DB0_U0D1*_Gamma_U0D0D0[ijk] - DB0_U0D1*_Gamma_U1D0D1[ijk] - DB0_U0D2*
 _Gamma_U2D0D1[ijk] + DB0_U1D1*_Gamma_U0D0D1[ijk] + DB0_U2D1*
 _Gamma_U0D0D2[ijk] + _Gamma_U0D0D1[ijk]*dB0_U0D0[ijk] + 
 _Gamma_U0D1D1[ijk]*dB0_U1D0[ijk] + _Gamma_U0D1D2[ijk]*dB0_U2D0[ijk] + 
-ddB0_U0D1D0[ijk];
+ddB0_U0D0D1[ijk];
 
   double DDB0_U0D1D1 = 
 B0_U0[ijk]*_dGamma_U1D0D1D0[ijk] + B0_U1[ijk]*_dGamma_U1D1D1D0[ijk] + 
@@ -309,7 +309,7 @@ B0_U2[ijk]*_dGamma_U1D1D2D0[ijk] + DB0_U0D1*_Gamma_U1D0D0[ijk] -
 DB0_U1D0*_Gamma_U0D0D1[ijk] - DB0_U1D2*_Gamma_U2D0D1[ijk] + DB0_U2D1*
 _Gamma_U1D0D2[ijk] + _Gamma_U1D0D1[ijk]*dB0_U0D0[ijk] + 
 _Gamma_U1D1D1[ijk]*dB0_U1D0[ijk] + _Gamma_U1D1D2[ijk]*dB0_U2D0[ijk] + 
-ddB0_U1D1D0[ijk];
+ddB0_U1D0D1[ijk];
 
   double DDB0_U0D1D2 = 
 B0_U0[ijk]*_dGamma_U2D0D1D0[ijk] + B0_U1[ijk]*_dGamma_U2D1D1D0[ijk] + 
@@ -318,7 +318,7 @@ DB0_U1D1*_Gamma_U2D0D1[ijk] - DB0_U2D0*_Gamma_U0D0D1[ijk] - DB0_U2D1*
 _Gamma_U1D0D1[ijk] + DB0_U2D1*_Gamma_U2D0D2[ijk] - DB0_U2D2*
 _Gamma_U2D0D1[ijk] + _Gamma_U2D0D1[ijk]*dB0_U0D0[ijk] + 
 _Gamma_U2D1D1[ijk]*dB0_U1D0[ijk] + _Gamma_U2D1D2[ijk]*dB0_U2D0[ijk] + 
-ddB0_U1D2D0[ijk];
+ddB0_U2D0D1[ijk];
 
   double DDB0_U1D2D1 = 
 B0_U0[ijk]*_dGamma_U1D0D2D1[ijk] + B0_U1[ijk]*_dGamma_U1D1D2D1[ijk] + 
@@ -327,7 +327,7 @@ DB0_U1D0*_Gamma_U0D1D2[ijk] - DB0_U1D1*_Gamma_U1D1D2[ijk] + DB0_U1D2*
 _Gamma_U1D1D1[ijk] - DB0_U1D2*_Gamma_U2D1D2[ijk] + DB0_U2D2*
 _Gamma_U1D1D2[ijk] + _Gamma_U1D0D2[ijk]*dB0_U0D1[ijk] + 
 _Gamma_U1D1D2[ijk]*dB0_U1D1[ijk] + _Gamma_U1D2D2[ijk]*dB0_U2D1[ijk] + 
-ddB0_U1D2D1[ijk];
+ddB0_U1D1D2[ijk];
 
   double DDB0_U1D2D2 = 
 B0_U0[ijk]*_dGamma_U2D0D2D1[ijk] + B0_U1[ijk]*_dGamma_U2D1D2D1[ijk] + 
@@ -335,7 +335,7 @@ B0_U2[ijk]*_dGamma_U2D2D2D1[ijk] + DB0_U0D2*_Gamma_U2D0D1[ijk] +
 DB0_U1D2*_Gamma_U2D1D1[ijk] - DB0_U2D0*_Gamma_U0D1D2[ijk] - DB0_U2D1*
 _Gamma_U1D1D2[ijk] + _Gamma_U2D0D2[ijk]*dB0_U0D1[ijk] + 
 _Gamma_U2D1D2[ijk]*dB0_U1D1[ijk] + _Gamma_U2D2D2[ijk]*dB0_U2D1[ijk] + 
-ddB0_U2D2D1[ijk];
+ddB0_U2D1D2[ijk];
 
   double DDB0_U1D1D1 = 
 B0_U0[ijk]*_dGamma_U1D0D1D1[ijk] + B0_U1[ijk]*_dGamma_U1D1D1D1[ijk] + 
@@ -352,7 +352,7 @@ DB0_U0D1*_Gamma_U1D1D2[ijk] + DB0_U0D2*_Gamma_U0D0D1[ijk] - DB0_U0D2*
 _Gamma_U2D1D2[ijk] + DB0_U1D2*_Gamma_U0D1D1[ijk] + DB0_U2D2*
 _Gamma_U0D1D2[ijk] + _Gamma_U0D0D2[ijk]*dB0_U0D1[ijk] + 
 _Gamma_U0D1D2[ijk]*dB0_U1D1[ijk] + _Gamma_U0D2D2[ijk]*dB0_U2D1[ijk] + 
-ddB0_U0D2D1[ijk];
+ddB0_U0D1D2[ijk];
 
   double DDB0_U1D1D2 = 
 B0_U0[ijk]*_dGamma_U2D0D1D1[ijk] + B0_U1[ijk]*_dGamma_U2D1D1D1[ijk] + 
@@ -361,7 +361,7 @@ DB0_U1D1*_Gamma_U2D1D1[ijk] - DB0_U2D0*_Gamma_U0D1D1[ijk] - DB0_U2D1*
 _Gamma_U1D1D1[ijk] + DB0_U2D1*_Gamma_U2D1D2[ijk] - DB0_U2D2*
 _Gamma_U2D1D1[ijk] + _Gamma_U2D0D1[ijk]*dB0_U0D1[ijk] + 
 _Gamma_U2D1D1[ijk]*dB0_U1D1[ijk] + _Gamma_U2D1D2[ijk]*dB0_U2D1[ijk] + 
-ddB0_U1D2D1[ijk];
+ddB0_U2D1D1[ijk];
 
   double DDB0_U0D2D2 = 
 B0_U0[ijk]*_dGamma_U2D0D2D0[ijk] + B0_U1[ijk]*_dGamma_U2D1D2D0[ijk] + 
@@ -369,7 +369,7 @@ B0_U2[ijk]*_dGamma_U2D2D2D0[ijk] + DB0_U0D2*_Gamma_U2D0D0[ijk] +
 DB0_U1D2*_Gamma_U2D0D1[ijk] - DB0_U2D0*_Gamma_U0D0D2[ijk] - DB0_U2D1*
 _Gamma_U1D0D2[ijk] + _Gamma_U2D0D2[ijk]*dB0_U0D0[ijk] + 
 _Gamma_U2D1D2[ijk]*dB0_U1D0[ijk] + _Gamma_U2D2D2[ijk]*dB0_U2D0[ijk] + 
-ddB0_U2D2D0[ijk];
+ddB0_U2D0D2[ijk];
 
   double DDB0_U0D2D1 = 
 B0_U0[ijk]*_dGamma_U1D0D2D0[ijk] + B0_U1[ijk]*_dGamma_U1D1D2D0[ijk] + 
@@ -378,7 +378,7 @@ DB0_U1D0*_Gamma_U0D0D2[ijk] - DB0_U1D1*_Gamma_U1D0D2[ijk] + DB0_U1D2*
 _Gamma_U1D0D1[ijk] - DB0_U1D2*_Gamma_U2D0D2[ijk] + DB0_U2D2*
 _Gamma_U1D0D2[ijk] + _Gamma_U1D0D2[ijk]*dB0_U0D0[ijk] + 
 _Gamma_U1D1D2[ijk]*dB0_U1D0[ijk] + _Gamma_U1D2D2[ijk]*dB0_U2D0[ijk] + 
-ddB0_U1D2D0[ijk];
+ddB0_U1D0D2[ijk];
 
   double DDB0_U0D2D0 = 
 B0_U0[ijk]*_dGamma_U0D0D2D0[ijk] + B0_U1[ijk]*_dGamma_U0D1D2D0[ijk] + 
@@ -387,7 +387,7 @@ DB0_U0D1*_Gamma_U1D0D2[ijk] + DB0_U0D2*_Gamma_U0D0D0[ijk] - DB0_U0D2*
 _Gamma_U2D0D2[ijk] + DB0_U1D2*_Gamma_U0D0D1[ijk] + DB0_U2D2*
 _Gamma_U0D0D2[ijk] + _Gamma_U0D0D2[ijk]*dB0_U0D0[ijk] + 
 _Gamma_U0D1D2[ijk]*dB0_U1D0[ijk] + _Gamma_U0D2D2[ijk]*dB0_U2D0[ijk] + 
-ddB0_U0D2D0[ijk];
+ddB0_U0D0D2[ijk];
 
   double DDB0_U0D0D1 = 
 B0_U0[ijk]*_dGamma_U1D0D0D0[ijk] + B0_U1[ijk]*_dGamma_U1D0D1D0[ijk] + 
@@ -396,7 +396,7 @@ DB0_U1D0*_Gamma_U0D0D0[ijk] + DB0_U1D0*_Gamma_U1D0D1[ijk] - DB0_U1D1*
 _Gamma_U1D0D0[ijk] - DB0_U1D2*_Gamma_U2D0D0[ijk] + DB0_U2D0*
 _Gamma_U1D0D2[ijk] + _Gamma_U1D0D0[ijk]*dB0_U0D0[ijk] + 
 _Gamma_U1D0D1[ijk]*dB0_U1D0[ijk] + _Gamma_U1D0D2[ijk]*dB0_U2D0[ijk] + 
-ddB0_U0D1D0[ijk];
+ddB0_U1D0D0[ijk];
 
   double DDB0_U0D0D0 = 
 B0_U0[ijk]*_dGamma_U0D0D0D0[ijk] + B0_U1[ijk]*_dGamma_U0D0D1D0[ijk] + 
@@ -413,7 +413,7 @@ DB0_U1D0*_Gamma_U2D0D1[ijk] - DB0_U2D0*_Gamma_U0D0D0[ijk] + DB0_U2D0*
 _Gamma_U2D0D2[ijk] - DB0_U2D1*_Gamma_U1D0D0[ijk] - DB0_U2D2*
 _Gamma_U2D0D0[ijk] + _Gamma_U2D0D0[ijk]*dB0_U0D0[ijk] + 
 _Gamma_U2D0D1[ijk]*dB0_U1D0[ijk] + _Gamma_U2D0D2[ijk]*dB0_U2D0[ijk] + 
-ddB0_U0D2D0[ijk];
+ddB0_U2D0D0[ijk];
 
   double DDB0_U2D1D2 = 
 B0_U0[ijk]*_dGamma_U2D0D1D2[ijk] + B0_U1[ijk]*_dGamma_U2D1D1D2[ijk] + 
@@ -422,7 +422,7 @@ DB0_U1D1*_Gamma_U2D1D2[ijk] - DB0_U2D0*_Gamma_U0D1D2[ijk] - DB0_U2D1*
 _Gamma_U1D1D2[ijk] + DB0_U2D1*_Gamma_U2D2D2[ijk] - DB0_U2D2*
 _Gamma_U2D1D2[ijk] + _Gamma_U2D0D1[ijk]*dB0_U0D2[ijk] + 
 _Gamma_U2D1D1[ijk]*dB0_U1D2[ijk] + _Gamma_U2D1D2[ijk]*dB0_U2D2[ijk] + 
-ddB0_U1D2D2[ijk];
+ddB0_U2D1D2[ijk];
 
   double DDB0_U2D1D0 = 
 B0_U0[ijk]*_dGamma_U0D0D1D2[ijk] + B0_U1[ijk]*_dGamma_U0D1D1D2[ijk] + 
@@ -448,7 +448,7 @@ DB0_U1D0*_Gamma_U2D1D2[ijk] - DB0_U2D0*_Gamma_U0D0D2[ijk] + DB0_U2D0*
 _Gamma_U2D2D2[ijk] - DB0_U2D1*_Gamma_U1D0D2[ijk] - DB0_U2D2*
 _Gamma_U2D0D2[ijk] + _Gamma_U2D0D0[ijk]*dB0_U0D2[ijk] + 
 _Gamma_U2D0D1[ijk]*dB0_U1D2[ijk] + _Gamma_U2D0D2[ijk]*dB0_U2D2[ijk] + 
-ddB0_U0D2D2[ijk];
+ddB0_U2D0D2[ijk];
 
   double DDB0_U2D0D1 = 
 B0_U0[ijk]*_dGamma_U1D0D0D2[ijk] + B0_U1[ijk]*_dGamma_U1D0D1D2[ijk] + 
@@ -457,7 +457,7 @@ DB0_U1D0*_Gamma_U0D0D2[ijk] + DB0_U1D0*_Gamma_U1D1D2[ijk] - DB0_U1D1*
 _Gamma_U1D0D2[ijk] - DB0_U1D2*_Gamma_U2D0D2[ijk] + DB0_U2D0*
 _Gamma_U1D2D2[ijk] + _Gamma_U1D0D0[ijk]*dB0_U0D2[ijk] + 
 _Gamma_U1D0D1[ijk]*dB0_U1D2[ijk] + _Gamma_U1D0D2[ijk]*dB0_U2D2[ijk] + 
-ddB0_U0D1D2[ijk];
+ddB0_U1D0D2[ijk];
 
   double DDB0_U2D0D0 = 
 B0_U0[ijk]*_dGamma_U0D0D0D2[ijk] + B0_U1[ijk]*_dGamma_U0D0D1D2[ijk] + 
@@ -570,7 +570,7 @@ DB1_U0D1*_Gamma_U1D0D2[ijk] + DB1_U0D2*_Gamma_U0D0D0[ijk] - DB1_U0D2*
 _Gamma_U2D0D2[ijk] + DB1_U1D2*_Gamma_U0D0D1[ijk] + DB1_U2D2*
 _Gamma_U0D0D2[ijk] + _Gamma_U0D0D2[ijk]*dB1_U0D0[ijk] + 
 _Gamma_U0D1D2[ijk]*dB1_U1D0[ijk] + _Gamma_U0D2D2[ijk]*dB1_U2D0[ijk] + 
-ddB1_U0D2D0[ijk];
+ddB1_U0D0D2[ijk];
 
   double DDB1_U0D2D1 = 
 B1_U0[ijk]*_dGamma_U1D0D2D0[ijk] + B1_U1[ijk]*_dGamma_U1D1D2D0[ijk] + 
@@ -579,7 +579,7 @@ DB1_U1D0*_Gamma_U0D0D2[ijk] - DB1_U1D1*_Gamma_U1D0D2[ijk] + DB1_U1D2*
 _Gamma_U1D0D1[ijk] - DB1_U1D2*_Gamma_U2D0D2[ijk] + DB1_U2D2*
 _Gamma_U1D0D2[ijk] + _Gamma_U1D0D2[ijk]*dB1_U0D0[ijk] + 
 _Gamma_U1D1D2[ijk]*dB1_U1D0[ijk] + _Gamma_U1D2D2[ijk]*dB1_U2D0[ijk] + 
-ddB1_U1D2D0[ijk];
+ddB1_U1D0D2[ijk];
 
   double DDB1_U1D1D2 = 
 B1_U0[ijk]*_dGamma_U2D0D1D1[ijk] + B1_U1[ijk]*_dGamma_U2D1D1D1[ijk] + 
@@ -588,7 +588,7 @@ DB1_U1D1*_Gamma_U2D1D1[ijk] - DB1_U2D0*_Gamma_U0D1D1[ijk] - DB1_U2D1*
 _Gamma_U1D1D1[ijk] + DB1_U2D1*_Gamma_U2D1D2[ijk] - DB1_U2D2*
 _Gamma_U2D1D1[ijk] + _Gamma_U2D0D1[ijk]*dB1_U0D1[ijk] + 
 _Gamma_U2D1D1[ijk]*dB1_U1D1[ijk] + _Gamma_U2D1D2[ijk]*dB1_U2D1[ijk] + 
-ddB1_U1D2D1[ijk];
+ddB1_U2D1D1[ijk];
 
   double DDB1_U1D1D0 = 
 B1_U0[ijk]*_dGamma_U0D0D1D1[ijk] + B1_U1[ijk]*_dGamma_U0D1D1D1[ijk] + 
@@ -614,7 +614,7 @@ DB1_U1D0*_Gamma_U2D1D1[ijk] - DB1_U2D0*_Gamma_U0D0D1[ijk] + DB1_U2D0*
 _Gamma_U2D1D2[ijk] - DB1_U2D1*_Gamma_U1D0D1[ijk] - DB1_U2D2*
 _Gamma_U2D0D1[ijk] + _Gamma_U2D0D0[ijk]*dB1_U0D1[ijk] + 
 _Gamma_U2D0D1[ijk]*dB1_U1D1[ijk] + _Gamma_U2D0D2[ijk]*dB1_U2D1[ijk] + 
-ddB1_U0D2D1[ijk];
+ddB1_U2D0D1[ijk];
 
   double DDB1_U1D0D1 = 
 B1_U0[ijk]*_dGamma_U1D0D0D1[ijk] + B1_U1[ijk]*_dGamma_U1D0D1D1[ijk] + 
@@ -623,7 +623,7 @@ DB1_U1D0*_Gamma_U0D0D1[ijk] + DB1_U1D0*_Gamma_U1D1D1[ijk] - DB1_U1D1*
 _Gamma_U1D0D1[ijk] - DB1_U1D2*_Gamma_U2D0D1[ijk] + DB1_U2D0*
 _Gamma_U1D1D2[ijk] + _Gamma_U1D0D0[ijk]*dB1_U0D1[ijk] + 
 _Gamma_U1D0D1[ijk]*dB1_U1D1[ijk] + _Gamma_U1D0D2[ijk]*dB1_U2D1[ijk] + 
-ddB1_U0D1D1[ijk];
+ddB1_U1D0D1[ijk];
 
   double DDB1_U1D0D0 = 
 B1_U0[ijk]*_dGamma_U0D0D0D1[ijk] + B1_U1[ijk]*_dGamma_U0D0D1D1[ijk] + 
@@ -656,7 +656,7 @@ B1_U2[ijk]*_dGamma_U2D2D2D0[ijk] + DB1_U0D2*_Gamma_U2D0D0[ijk] +
 DB1_U1D2*_Gamma_U2D0D1[ijk] - DB1_U2D0*_Gamma_U0D0D2[ijk] - DB1_U2D1*
 _Gamma_U1D0D2[ijk] + _Gamma_U2D0D2[ijk]*dB1_U0D0[ijk] + 
 _Gamma_U2D1D2[ijk]*dB1_U1D0[ijk] + _Gamma_U2D2D2[ijk]*dB1_U2D0[ijk] + 
-ddB1_U2D2D0[ijk];
+ddB1_U2D0D2[ijk];
 
   double DDB1_U2D1D2 = 
 B1_U0[ijk]*_dGamma_U2D0D1D2[ijk] + B1_U1[ijk]*_dGamma_U2D1D1D2[ijk] + 
@@ -665,7 +665,7 @@ DB1_U1D1*_Gamma_U2D1D2[ijk] - DB1_U2D0*_Gamma_U0D1D2[ijk] - DB1_U2D1*
 _Gamma_U1D1D2[ijk] + DB1_U2D1*_Gamma_U2D2D2[ijk] - DB1_U2D2*
 _Gamma_U2D1D2[ijk] + _Gamma_U2D0D1[ijk]*dB1_U0D2[ijk] + 
 _Gamma_U2D1D1[ijk]*dB1_U1D2[ijk] + _Gamma_U2D1D2[ijk]*dB1_U2D2[ijk] + 
-ddB1_U1D2D2[ijk];
+ddB1_U2D1D2[ijk];
 
   double DDB1_U0D0D2 = 
 B1_U0[ijk]*_dGamma_U2D0D0D0[ijk] + B1_U1[ijk]*_dGamma_U2D0D1D0[ijk] + 
@@ -674,7 +674,7 @@ DB1_U1D0*_Gamma_U2D0D1[ijk] - DB1_U2D0*_Gamma_U0D0D0[ijk] + DB1_U2D0*
 _Gamma_U2D0D2[ijk] - DB1_U2D1*_Gamma_U1D0D0[ijk] - DB1_U2D2*
 _Gamma_U2D0D0[ijk] + _Gamma_U2D0D0[ijk]*dB1_U0D0[ijk] + 
 _Gamma_U2D0D1[ijk]*dB1_U1D0[ijk] + _Gamma_U2D0D2[ijk]*dB1_U2D0[ijk] + 
-ddB1_U0D2D0[ijk];
+ddB1_U2D0D0[ijk];
 
   double DDB1_U2D0D1 = 
 B1_U0[ijk]*_dGamma_U1D0D0D2[ijk] + B1_U1[ijk]*_dGamma_U1D0D1D2[ijk] + 
@@ -683,7 +683,7 @@ DB1_U1D0*_Gamma_U0D0D2[ijk] + DB1_U1D0*_Gamma_U1D1D2[ijk] - DB1_U1D1*
 _Gamma_U1D0D2[ijk] - DB1_U1D2*_Gamma_U2D0D2[ijk] + DB1_U2D0*
 _Gamma_U1D2D2[ijk] + _Gamma_U1D0D0[ijk]*dB1_U0D2[ijk] + 
 _Gamma_U1D0D1[ijk]*dB1_U1D2[ijk] + _Gamma_U1D0D2[ijk]*dB1_U2D2[ijk] + 
-ddB1_U0D1D2[ijk];
+ddB1_U1D0D2[ijk];
 
   double DDB1_U2D0D2 = 
 B1_U0[ijk]*_dGamma_U2D0D0D2[ijk] + B1_U1[ijk]*_dGamma_U2D0D1D2[ijk] + 
@@ -692,7 +692,7 @@ DB1_U1D0*_Gamma_U2D1D2[ijk] - DB1_U2D0*_Gamma_U0D0D2[ijk] + DB1_U2D0*
 _Gamma_U2D2D2[ijk] - DB1_U2D1*_Gamma_U1D0D2[ijk] - DB1_U2D2*
 _Gamma_U2D0D2[ijk] + _Gamma_U2D0D0[ijk]*dB1_U0D2[ijk] + 
 _Gamma_U2D0D1[ijk]*dB1_U1D2[ijk] + _Gamma_U2D0D2[ijk]*dB1_U2D2[ijk] + 
-ddB1_U0D2D2[ijk];
+ddB1_U2D0D2[ijk];
 
   double DDB1_U0D0D1 = 
 B1_U0[ijk]*_dGamma_U1D0D0D0[ijk] + B1_U1[ijk]*_dGamma_U1D0D1D0[ijk] + 
@@ -701,7 +701,7 @@ DB1_U1D0*_Gamma_U0D0D0[ijk] + DB1_U1D0*_Gamma_U1D0D1[ijk] - DB1_U1D1*
 _Gamma_U1D0D0[ijk] - DB1_U1D2*_Gamma_U2D0D0[ijk] + DB1_U2D0*
 _Gamma_U1D0D2[ijk] + _Gamma_U1D0D0[ijk]*dB1_U0D0[ijk] + 
 _Gamma_U1D0D1[ijk]*dB1_U1D0[ijk] + _Gamma_U1D0D2[ijk]*dB1_U2D0[ijk] + 
-ddB1_U0D1D0[ijk];
+ddB1_U1D0D0[ijk];
 
   double DDB1_U0D1D2 = 
 B1_U0[ijk]*_dGamma_U2D0D1D0[ijk] + B1_U1[ijk]*_dGamma_U2D1D1D0[ijk] + 
@@ -710,7 +710,7 @@ DB1_U1D1*_Gamma_U2D0D1[ijk] - DB1_U2D0*_Gamma_U0D0D1[ijk] - DB1_U2D1*
 _Gamma_U1D0D1[ijk] + DB1_U2D1*_Gamma_U2D0D2[ijk] - DB1_U2D2*
 _Gamma_U2D0D1[ijk] + _Gamma_U2D0D1[ijk]*dB1_U0D0[ijk] + 
 _Gamma_U2D1D1[ijk]*dB1_U1D0[ijk] + _Gamma_U2D1D2[ijk]*dB1_U2D0[ijk] + 
-ddB1_U1D2D0[ijk];
+ddB1_U2D0D1[ijk];
 
   double DDB1_U0D1D1 = 
 B1_U0[ijk]*_dGamma_U1D0D1D0[ijk] + B1_U1[ijk]*_dGamma_U1D1D1D0[ijk] + 
@@ -718,7 +718,7 @@ B1_U2[ijk]*_dGamma_U1D1D2D0[ijk] + DB1_U0D1*_Gamma_U1D0D0[ijk] -
 DB1_U1D0*_Gamma_U0D0D1[ijk] - DB1_U1D2*_Gamma_U2D0D1[ijk] + DB1_U2D1*
 _Gamma_U1D0D2[ijk] + _Gamma_U1D0D1[ijk]*dB1_U0D0[ijk] + 
 _Gamma_U1D1D1[ijk]*dB1_U1D0[ijk] + _Gamma_U1D1D2[ijk]*dB1_U2D0[ijk] + 
-ddB1_U1D1D0[ijk];
+ddB1_U1D0D1[ijk];
 
   double DDB1_U0D1D0 = 
 B1_U0[ijk]*_dGamma_U0D0D1D0[ijk] + B1_U1[ijk]*_dGamma_U0D1D1D0[ijk] + 
@@ -727,7 +727,7 @@ DB1_U0D1*_Gamma_U0D0D0[ijk] - DB1_U0D1*_Gamma_U1D0D1[ijk] - DB1_U0D2*
 _Gamma_U2D0D1[ijk] + DB1_U1D1*_Gamma_U0D0D1[ijk] + DB1_U2D1*
 _Gamma_U0D0D2[ijk] + _Gamma_U0D0D1[ijk]*dB1_U0D0[ijk] + 
 _Gamma_U0D1D1[ijk]*dB1_U1D0[ijk] + _Gamma_U0D1D2[ijk]*dB1_U2D0[ijk] + 
-ddB1_U0D1D0[ijk];
+ddB1_U0D0D1[ijk];
 
   double DDB1_U2D2D2 = 
 B1_U0[ijk]*_dGamma_U2D0D2D2[ijk] + B1_U1[ijk]*_dGamma_U2D1D2D2[ijk] + 
@@ -778,7 +778,7 @@ DB1_U1D0*_Gamma_U0D1D2[ijk] - DB1_U1D1*_Gamma_U1D1D2[ijk] + DB1_U1D2*
 _Gamma_U1D1D1[ijk] - DB1_U1D2*_Gamma_U2D1D2[ijk] + DB1_U2D2*
 _Gamma_U1D1D2[ijk] + _Gamma_U1D0D2[ijk]*dB1_U0D1[ijk] + 
 _Gamma_U1D1D2[ijk]*dB1_U1D1[ijk] + _Gamma_U1D2D2[ijk]*dB1_U2D1[ijk] + 
-ddB1_U1D2D1[ijk];
+ddB1_U1D1D2[ijk];
 
   double DDB1_U1D2D0 = 
 B1_U0[ijk]*_dGamma_U0D0D2D1[ijk] + B1_U1[ijk]*_dGamma_U0D1D2D1[ijk] + 
@@ -787,7 +787,7 @@ DB1_U0D1*_Gamma_U1D1D2[ijk] + DB1_U0D2*_Gamma_U0D0D1[ijk] - DB1_U0D2*
 _Gamma_U2D1D2[ijk] + DB1_U1D2*_Gamma_U0D1D1[ijk] + DB1_U2D2*
 _Gamma_U0D1D2[ijk] + _Gamma_U0D0D2[ijk]*dB1_U0D1[ijk] + 
 _Gamma_U0D1D2[ijk]*dB1_U1D1[ijk] + _Gamma_U0D2D2[ijk]*dB1_U2D1[ijk] + 
-ddB1_U0D2D1[ijk];
+ddB1_U0D1D2[ijk];
 
   double DDB1_U1D2D2 = 
 B1_U0[ijk]*_dGamma_U2D0D2D1[ijk] + B1_U1[ijk]*_dGamma_U2D1D2D1[ijk] + 
@@ -795,7 +795,7 @@ B1_U2[ijk]*_dGamma_U2D2D2D1[ijk] + DB1_U0D2*_Gamma_U2D0D1[ijk] +
 DB1_U1D2*_Gamma_U2D1D1[ijk] - DB1_U2D0*_Gamma_U0D1D2[ijk] - DB1_U2D1*
 _Gamma_U1D1D2[ijk] + _Gamma_U2D0D2[ijk]*dB1_U0D1[ijk] + 
 _Gamma_U2D1D2[ijk]*dB1_U1D1[ijk] + _Gamma_U2D2D2[ijk]*dB1_U2D1[ijk] + 
-ddB1_U2D2D1[ijk];
+ddB1_U2D1D2[ijk];
 
 
   double f1_U1 = 
