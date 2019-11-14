@@ -1,5 +1,16 @@
 # equation: Beta_U012 (shift) for all components
-
+# one needs to fill place holder shown by ? in C file for each component.
+####################################################################
+# TO OPTIMIZE the function one can trim off all redunted components;
+# Issue the following commond for the output C file (example below):
+# $sed -E '/^\s{2}double [(LB)fF]\w+_U[12] =/,/;$/d' \
+# bbn_XCTS_eq_Beta012.c > bbn_XCTS_eq_Beta0_optimized.c
+# then:
+# $sed -i -E '/^\s{2}double [(DDB[01]_)]_U([12])D\d+D[^(\2)] =/,/;$/d'
+# the above command delete all of U1 and U2 components which
+# are redundent for equation of B0_U0. In the same vain one can 
+# do for the other components.
+####################################################################
 # Manifold or grid Dimension
 Dimension = 3;
 
@@ -26,20 +37,42 @@ C_macro4 = GET_FIELD_UNUSED(name);
 # declare for Cpi:
 Declare = 
 {
- # _A^{ij}
- (obj = Field,name = _A_UiUj, rank = UU, C_macro4);
 
- # partial derivative of _A^{ij}
- (obj = Field,name = _dA_UiUj, rank = UUD, C_macro4);
+ # shift
+ (obj = Field,name = B0, rank = U, C_macro4);
+
+ # d(shift)/d?
+ (obj = Field,name = dB0, rank = UD, C_macro4);
+
+ # dd(shift)/d^2?
+ (obj = Field,name = ddB0, rank = UDD, C_macro4);
+
+ # shift
+ (obj = Field,name = B1, rank = U, C_macro4);
+
+ # d(shift)/d?
+ (obj = Field,name = dB1, rank = UD, C_macro4);
+
+ # dd(shift)/d^2?
+ (obj = Field,name = ddB1, rank = UDD, C_macro4);
+
+ # Ricc
+ (obj = Field,name = _Ric, rank = DD, C_macro4);
 
  # conformal factor
- (obj = Field,name = psi, rank = 0, C_macro);
+ (obj = Field,name = psi, rank = 0, C_macro4);
 
+ # d conformal factor
+ (obj = Field,name = dpsi, rank = D, C_macro4);
+
+ # d alpha*psi
+ (obj = Field,name = eta, rank = 0, C_macro4);
+ 
  # alpha*psi
- (obj = Field,name = eta, rank = 0, C_macro);
+ (obj = Field,name = deta, rank = D, C_macro4);
  
  # trKij first derivative
- (obj = Field,name = dK, rank = D, C_macro);
+ (obj = Field,name = dK, rank = D, C_macro4);
 
  # conformal metric inverse
  (obj = Field,name = _gammaI, rank = UU, C_macro4);
@@ -47,16 +80,20 @@ Declare =
  # conformal connections
  (obj = Field,name = _Gamma, rank = UDD, C_macro4);
 
+ # conformal connections 1st derivative
+ (obj = Field,name = _dGamma, rank = UDDD, C_macro4);
+
  # conformal momentum current
  (obj = Field,name = _J, rank = U, C_macro4);
-
 }
 
 # symmetries for Cpi:
-Symm[_dA_UiUj(i,j,k) = _dA_UiUj(j,i,k)];
-Symm[_A_UiUj(i,j)    = _A_UiUj(j,i)];
-Symm[_gammaI(i,j)    = _gammaI(j,i)];
-Symm[_Gamma(i,j,k)   = _Gamma(i,k,j)];
+Symm[ddB0(j,k)        = ddB0(k,j)];
+Symm[ddB1(j,k)        = ddB1(k,j)];
+Symm[_Ric(i,j)        = _Ric(j,i)];
+Symm[_gammaI(i,j)     = _gammaI(j,i)];
+Symm[_Gamma(i,j,k)    = _Gamma(i,k,j)];
+Symm[_dGamma(i,j,k,l) = _dGamma(i,k,j,l)];
 
 
 ##########################################################################
@@ -70,11 +107,49 @@ Symm[_Gamma(i,j,k)   = _Gamma(i,k,j)];
 `  DDM_SCHUR_EQ_OPEN\n`;
 
 alphabar = eta*psi**(-7);# alpha * psi^-6
-F_eq(i) = \
- _dA_UiUj(i,j,jp)*KD(-j,-jp)+_Gamma(i,j,l)*_A_UiUj(-l,-j)+_Gamma(j,jp,l)*_A_UiUj(i,-l)*KD(-j,-jp)\
--2*_gammaI(i,j)*dK(-j)*(psi**6)/3 -8*pi*(psi**4)*_J(i);
+dLnOf_alphabar(i) = deta(i)/eta -7*dpsi(i)/psi;
 
-`  F[n] = 2.*alphabar*F_eq_U?;\n`;# Jx = -F in Newton-Raphson scheme
+DB0(i,-j) = \
+  dB0(i,j)+_Gamma(i,j,m)*B0(-m);# _D_j(B0^i)
+
+LB0(i,j)  = \
+_gammaI(j,-m)*DB0(i,m)+_gammaI(i,-m)*DB0(j,m)-2/3*_gammaI(i,j)*DB0(m,-m);#(_LB0)^(ij)
+Symm[LB0(i,j) = LB0(j,i)];
+
+DDB0(i,-j,-m) = \
+ddB0(i,j,m)+_dGamma(i,j,k,m)*B0(-k)+_Gamma(i,j,k)*dB0(-k,m)+\
+_Gamma(i,m,k)*DB0(-k,j)-_Gamma(k,m,j)*DB0(i,-k);
+
+DB1(i,-j) = \
+  dB1(i,j)+_Gamma(i,j,m)*B1(-m);# _D_j(B1^i)
+
+LB1(i,j)  = \
+_gammaI(j,-m)*DB1(i,m)+_gammaI(i,-m)*DB1(j,m)-2/3*_gammaI(i,j)*DB1(m,-m);#(_LB1)^(ij)
+Symm[LB1(i,j) = LB1(j,i)];
+
+DDB1(i,-j,-m) = \
+ddB1(i,j,m)+_dGamma(i,j,k,m)*B1(-k)+_Gamma(i,j,k)*dB1(-k,m)+\
+_Gamma(i,m,k)*DB1(-k,j)-_Gamma(k,m,j)*DB1(i,-k);
+
+f1(i) = \
+  _gammaI(-j,-m)*DDB0(i,m,j)+1/3*_gammaI(i,-m)*DDB0(j,m,jp)*KD(-j,-jp);
+
+f2(i) = \
+  2/3*_gammaI(i,m)*_Ric(-m,l)*B0(-l)-dLnOf_alphabar(-j)*LB0(i,j);
+
+f3(i) = \
+  _gammaI(-j,-m)*DDB1(i,m,j)+1/3*_gammaI(i,-m)*DDB1(j,m,jp)*KD(-j,-jp);
+
+f4(i) = \
+  2/3*_gammaI(i,m)*_Ric(-m,l)*B1(-l)-dLnOf_alphabar(-j)*LB1(i,j);
+
+f5(i) = \
+  -2*alphabar*(psi**4)*(2/3*(psi**2)*_gammaI(i,j)*dK(-j)+8*pi*_J(i));
+
+F_eq(i) = \
+  f1(i)+f2(i)+f3(i)+f4(i)+f5(i);
+
+`  F[n] = F_eq_U?;\n`;# Jx = -F in Newton-Raphson scheme
 `  DDM_SCHUR_EQ_CLOSE\n`;
 
 `  return 0;`;
