@@ -18,7 +18,7 @@ Declare =
  (obj = Field,name = _A_UiUj, rank = UU, C_macro2);
 
  # partial derivative of _A^{ij}
- (obj = Field,name = _dA_UiUj, rank = UUD, C_macro3);
+ #(obj = Field,name = _dA_UiUj, rank = UUD, C_macro3);
 
  # _A^{ij}*_A_{ij}
  (obj = Field,name = _Aij2, rank = 0, C_macro2);
@@ -47,7 +47,7 @@ Declare =
 
 # symmetries:
 Symm[_A_UiUj(i,j)      = _A_UiUj(j,i)];
-Symm[_dA_UiUj(i,j,l)   = _dA_UiUj(j,i,l)];
+#Symm[_dA_UiUj(i,j,l)   = _dA_UiUj(j,i,l)];
 Symm[_gamma(i,j)    = _gamma(j,i)];
 Symm[_gammaI(i,j)   = _gammaI(j,i)];
 Symm[_Gamma(i,j,k)  = _Gamma(i,k,j)];
@@ -71,31 +71,31 @@ Ccode["    {"];
 
 Ccode["    }/*end of for(ijk = 0; ijk < nn; ++ijk)*/"];
 
-`  Field_T *f_A_UiUj_U2U2 = patch->pool[Ind("_A_UiUj_U2U2")];`;
-`  Field_T *f_A_UiUj_U1U2 = patch->pool[Ind("_A_UiUj_U1U2")];`;
-`  Field_T *f_A_UiUj_U1U1 = patch->pool[Ind("_A_UiUj_U1U1")];`;
-`  Field_T *f_A_UiUj_U0U2 = patch->pool[Ind("_A_UiUj_U0U2")];`;
-`  Field_T *f_A_UiUj_U0U1 = patch->pool[Ind("_A_UiUj_U0U1")];`;
-`  Field_T *f_A_UiUj_U0U0 = patch->pool[Ind("_A_UiUj_U0U0")];`;  
+#`  Field_T *f_A_UiUj_U2U2 = patch->pool[Ind("_A_UiUj_U2U2")];`;
+#`  Field_T *f_A_UiUj_U1U2 = patch->pool[Ind("_A_UiUj_U1U2")];`;
+#`  Field_T *f_A_UiUj_U1U1 = patch->pool[Ind("_A_UiUj_U1U1")];`;
+#`  Field_T *f_A_UiUj_U0U2 = patch->pool[Ind("_A_UiUj_U0U2")];`;
+#`  Field_T *f_A_UiUj_U0U1 = patch->pool[Ind("_A_UiUj_U0U1")];`;
+#`  Field_T *f_A_UiUj_U0U0 = patch->pool[Ind("_A_UiUj_U0U0")];`;  
 
-`  _dA_UiUj_U2U2D2->v = Partial_Derivative(f_A_UiUj_U2U2,"z");`;
-`  _dA_UiUj_U2U2D0->v = Partial_Derivative(f_A_UiUj_U2U2,"x");`;
-`  _dA_UiUj_U2U2D1->v = Partial_Derivative(f_A_UiUj_U2U2,"y");`;
-`  _dA_UiUj_U1U1D2->v = Partial_Derivative(f_A_UiUj_U1U1,"z");`;
-`  _dA_UiUj_U1U1D0->v = Partial_Derivative(f_A_UiUj_U1U1,"x");`;
-`  _dA_UiUj_U1U1D1->v = Partial_Derivative(f_A_UiUj_U1U1,"y");`;
-`  _dA_UiUj_U0U0D2->v = Partial_Derivative(f_A_UiUj_U0U0,"z");`;
-`  _dA_UiUj_U0U0D0->v = Partial_Derivative(f_A_UiUj_U0U0,"x");`;
-`  _dA_UiUj_U0U0D1->v = Partial_Derivative(f_A_UiUj_U0U0,"y");`;
-`  _dA_UiUj_U0U1D2->v = Partial_Derivative(f_A_UiUj_U0U1,"z");`;
-`  _dA_UiUj_U0U1D1->v = Partial_Derivative(f_A_UiUj_U0U1,"y");`;
-`  _dA_UiUj_U0U1D0->v = Partial_Derivative(f_A_UiUj_U0U1,"x");`;
-`  _dA_UiUj_U1U2D1->v = Partial_Derivative(f_A_UiUj_U1U2,"y");`;
-`  _dA_UiUj_U1U2D0->v = Partial_Derivative(f_A_UiUj_U1U2,"x");`;
-`  _dA_UiUj_U1U2D2->v = Partial_Derivative(f_A_UiUj_U1U2,"z");`;
-`  _dA_UiUj_U0U2D0->v = Partial_Derivative(f_A_UiUj_U0U2,"x");`;
-`  _dA_UiUj_U0U2D1->v = Partial_Derivative(f_A_UiUj_U0U2,"y");`;
-`  _dA_UiUj_U0U2D2->v = Partial_Derivative(f_A_UiUj_U0U2,"z");`;
+#`  _dA_UiUj_U2U2D2->v = Partial_Derivative(f_A_UiUj_U2U2,"z");`;
+#`  _dA_UiUj_U2U2D0->v = Partial_Derivative(f_A_UiUj_U2U2,"x");`;
+#`  _dA_UiUj_U2U2D1->v = Partial_Derivative(f_A_UiUj_U2U2,"y");`;
+#`  _dA_UiUj_U1U1D2->v = Partial_Derivative(f_A_UiUj_U1U1,"z");`;
+#`  _dA_UiUj_U1U1D0->v = Partial_Derivative(f_A_UiUj_U1U1,"x");`;
+#`  _dA_UiUj_U1U1D1->v = Partial_Derivative(f_A_UiUj_U1U1,"y");`;
+#`  _dA_UiUj_U0U0D2->v = Partial_Derivative(f_A_UiUj_U0U0,"z");`;
+#`  _dA_UiUj_U0U0D0->v = Partial_Derivative(f_A_UiUj_U0U0,"x");`;
+#`  _dA_UiUj_U0U0D1->v = Partial_Derivative(f_A_UiUj_U0U0,"y");`;
+#`  _dA_UiUj_U0U1D2->v = Partial_Derivative(f_A_UiUj_U0U1,"z");`;
+#`  _dA_UiUj_U0U1D1->v = Partial_Derivative(f_A_UiUj_U0U1,"y");`;
+#`  _dA_UiUj_U0U1D0->v = Partial_Derivative(f_A_UiUj_U0U1,"x");`;
+#`  _dA_UiUj_U1U2D1->v = Partial_Derivative(f_A_UiUj_U1U2,"y");`;
+#`  _dA_UiUj_U1U2D0->v = Partial_Derivative(f_A_UiUj_U1U2,"x");`;
+#`  _dA_UiUj_U1U2D2->v = Partial_Derivative(f_A_UiUj_U1U2,"z");`;
+#`  _dA_UiUj_U0U2D0->v = Partial_Derivative(f_A_UiUj_U0U2,"x");`;
+#`  _dA_UiUj_U0U2D1->v = Partial_Derivative(f_A_UiUj_U0U2,"y");`;
+#`  _dA_UiUj_U0U2D2->v = Partial_Derivative(f_A_UiUj_U0U2,"z");`;
 
 
 Ccode["}"]; # end of bbn_update_psi10A_UiUj function
