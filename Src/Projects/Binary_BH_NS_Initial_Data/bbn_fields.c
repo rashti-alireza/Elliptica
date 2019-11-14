@@ -299,12 +299,12 @@ void bbn_allocate_fields(Grid_T *const grid)
 
     /* Ricci made up of conformal metric _gamma */
     add_field("_R",0,patch,YES);
-    ADD_FIELD(_RicUD_U1D2)
-    ADD_FIELD(_RicUD_U2D2)
-    ADD_FIELD(_RicUD_U0D2)
-    ADD_FIELD(_RicUD_U0D1)
-    ADD_FIELD(_RicUD_U0D0)
-    ADD_FIELD(_RicUD_U1D1)
+    ADD_FIELD(_Ric_D1D2)
+    ADD_FIELD(_Ric_D2D2)
+    ADD_FIELD(_Ric_D0D2)
+    ADD_FIELD(_Ric_D0D1)
+    ADD_FIELD(_Ric_D0D0)
+    ADD_FIELD(_Ric_D1D1)
 
     /* extrinsic curvature */
     add_field("K",0,patch,YES);

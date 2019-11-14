@@ -96,12 +96,12 @@ void bbn_free_data_Ricci(Grid_T *const grid)
     GET_FIELD_UNUSED(_Gamma_U1D0D0)
     GET_FIELD_UNUSED(_Gamma_U1D0D1)
     GET_FIELD_UNUSED(_Gamma_U1D1D1)
-    PREP_FIELD(_RicUD_U1D2)
-    PREP_FIELD(_RicUD_U2D2)
-    PREP_FIELD(_RicUD_U0D2)
-    PREP_FIELD(_RicUD_U0D1)
-    PREP_FIELD(_RicUD_U0D0)
-    PREP_FIELD(_RicUD_U1D1)
+    PREP_FIELD(_Ric_D2D2)
+    PREP_FIELD(_Ric_D1D2)
+    PREP_FIELD(_Ric_D1D1)
+    PREP_FIELD(_Ric_D0D2)
+    PREP_FIELD(_Ric_D0D1)
+    PREP_FIELD(_Ric_D0D0)
 
 
     unsigned nn = patch->nn;
@@ -258,39 +258,15 @@ Ric_D0D0*_gammaI_U0U0[ijk] + 2.0*Ric_D0D1*_gammaI_U0U1[ijk] + 2.0*
 Ric_D0D2*_gammaI_U0U2[ijk] + Ric_D1D1*_gammaI_U1U1[ijk] + 2.0*Ric_D1D2*
 _gammaI_U1U2[ijk] + Ric_D2D2*_gammaI_U2U2[ijk];
 
-    double RIC_U0D2 = 
-Ric_D0D2*_gammaI_U0U0[ijk] + Ric_D1D2*_gammaI_U0U1[ijk] + Ric_D2D2*
-_gammaI_U0U2[ijk];
-
-    double RIC_U0D0 = 
-Ric_D0D0*_gammaI_U0U0[ijk] + Ric_D0D1*_gammaI_U0U1[ijk] + Ric_D0D2*
-_gammaI_U0U2[ijk];
-
-    double RIC_U0D1 = 
-Ric_D0D1*_gammaI_U0U0[ijk] + Ric_D1D1*_gammaI_U0U1[ijk] + Ric_D1D2*
-_gammaI_U0U2[ijk];
-
-    double RIC_U2D2 = 
-Ric_D0D2*_gammaI_U0U2[ijk] + Ric_D1D2*_gammaI_U1U2[ijk] + Ric_D2D2*
-_gammaI_U2U2[ijk];
-
-    double RIC_U1D2 = 
-Ric_D0D2*_gammaI_U0U1[ijk] + Ric_D1D2*_gammaI_U1U1[ijk] + Ric_D2D2*
-_gammaI_U1U2[ijk];
-
-    double RIC_U1D1 = 
-Ric_D0D1*_gammaI_U0U1[ijk] + Ric_D1D1*_gammaI_U1U1[ijk] + Ric_D1D2*
-_gammaI_U1U2[ijk];
-
       _R[ijk] = R;
 
       /* populating: */
-      _RicUD_U1D2[ijk] = RIC_U1D2;
-      _RicUD_U2D2[ijk] = RIC_U2D2;
-      _RicUD_U0D2[ijk] = RIC_U0D2;
-      _RicUD_U0D1[ijk] = RIC_U0D1;
-      _RicUD_U0D0[ijk] = RIC_U0D0;
-      _RicUD_U1D1[ijk] = RIC_U1D1;
+      _Ric_D2D2[ijk] = Ric_D2D2;
+      _Ric_D1D2[ijk] = Ric_D1D2;
+      _Ric_D1D1[ijk] = Ric_D1D1;
+      _Ric_D0D2[ijk] = Ric_D0D2;
+      _Ric_D0D1[ijk] = Ric_D0D1;
+      _Ric_D0D0[ijk] = Ric_D0D0;
     }/*end of for(ijk = 0; ijk < nn; ++ijk)*/
   }
 }

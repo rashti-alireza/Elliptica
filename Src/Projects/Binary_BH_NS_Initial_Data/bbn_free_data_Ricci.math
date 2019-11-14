@@ -29,14 +29,14 @@ Declare =
  # Christoffer symbol value
  (obj = Field,name = _Gamma, rank = UDD, C_macro);
  # Ricci tensor
- (obj = Field,name = _RicUD, rank = UD, C_macro2);
+ (obj = Field,name = _Ric, rank = DD, C_macro2);
 }
 
 # symmetries:
 Symm[_gammaI(i,j)     = _gammaI(j,i)];
 Symm[_dGamma(i,j,k,l) = _dGamma(i,k,j,l)];
 Symm[_Gamma(i,j,k)    = _Gamma(i,k,j)];
-Symm[_RicUD(i,j)      = _RicUD(j,i)];
+Symm[_Ric(i,j)        = _Ric(j,i)];
 
 Ccode["    unsigned nn = patch->nn;"];
 Ccode["    unsigned ijk;"];
@@ -66,11 +66,8 @@ Symm[Ric(i,j)  = Ric(j,i)];
 
 R              = _gammaI(a,b)*Ric(-a,-b);
 
-RIC(a,-b)      = _gammaI(a,i)*Ric(-i,-b);
-Symm[RIC(i,j)  = RIC(j,i)];
-
 Ccode["      _R[ijk] = R;"];
-Cpopulate[_RicUD     = RIC];
+Cpopulate[_Ric       = Ric];
 
 Ccode["    }/*end of for(ijk = 0; ijk < nn; ++ijk)*/"];
 Ccode["  }"];
