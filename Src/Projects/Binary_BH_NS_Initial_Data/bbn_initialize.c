@@ -2425,6 +2425,16 @@ KSbeta_D2[ijk]*_gammaI_U2U2[ijk];
          
        }
      }
+     /* new initial guess */
+     for (ijk = 0; ijk < nn; ++ijk)
+     {
+       B0_U0[ijk] = 0;
+       B0_U1[ijk] = 0;
+       B0_U2[ijk] = 0;
+       Beta_U0[ijk] = B1_U0[ijk];
+       Beta_U1[ijk] = B1_U1[ijk];
+       Beta_U2[ijk] = B1_U2[ijk];
+     }
       
   }/* end of * initializing Beta and B */
   
