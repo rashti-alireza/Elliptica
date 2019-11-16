@@ -644,8 +644,7 @@ _Gamma_U0D2D2[ijk])));
 
 
 
-  double Bpart_U0 = 
-t10_B_U0 + t1_B_U0 + t2_B_U0 + t3_B_U0 + t4_B_U0 + t5_B_U0 + t6_B_U0 + 
+  double Bpart_U0 = t1_B_U0 + t2_B_U0 + t3_B_U0 + t4_B_U0 + t5_B_U0 + t6_B_U0 + 
 t7_B_U0 + t8_B_U0 + t9_B_U0;
 
   B[i][j] = Bpart_U0;
@@ -1172,7 +1171,7 @@ _Gamma_U0D2D2[ijk])));
 
 
   double Epart_U0 = 
-t10_E_U0 + t1_E_U0 + t2_E_U0 + t3_E_U0 + t4_E_U0 + t5_E_U0 + t6_E_U0 + 
+t1_E_U0 + t2_E_U0 + t3_E_U0 + t4_E_U0 + t5_E_U0 + t6_E_U0 + 
 t7_E_U0 + t8_E_U0 + t9_E_U0;
 
 

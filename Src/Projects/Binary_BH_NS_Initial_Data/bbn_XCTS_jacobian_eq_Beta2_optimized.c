@@ -642,7 +642,7 @@ _Gamma_U2D1D2[ijk] + U_U2*_Gamma_U0D0D2[ijk] + U_U2*
 _Gamma_U1D1D2[ijk] + U_U2*_Gamma_U2D2D2[ijk])));
 
   double Bpart_U2 = 
-t10_B_U2 + t1_B_U2 + t2_B_U2 + t3_B_U2 + t4_B_U2 + t5_B_U2 + t6_B_U2 + 
+t1_B_U2 + t2_B_U2 + t3_B_U2 + t4_B_U2 + t5_B_U2 + t6_B_U2 + 
 t7_B_U2 + t8_B_U2 + t9_B_U2;
 
 
@@ -1169,7 +1169,7 @@ _Gamma_U2D1D2[ijk] + U_U2*_Gamma_U0D0D2[ijk] + U_U2*
 _Gamma_U1D1D2[ijk] + U_U2*_Gamma_U2D2D2[ijk])));
 
   double Epart_U2 = 
-t10_E_U2 + t1_E_U2 + t2_E_U2 + t3_E_U2 + t4_E_U2 + t5_E_U2 + t6_E_U2 + 
+t1_E_U2 + t2_E_U2 + t3_E_U2 + t4_E_U2 + t5_E_U2 + t6_E_U2 + 
 t7_E_U2 + t8_E_U2 + t9_E_U2;
 
 
