@@ -7,6 +7,9 @@
 #include "bbn_headers.h"
 
 
+#define add_and_get_field(name) ADD_FIELD(name) GET_FIELD(name)
+#define add_NoMem_declare_field(name) ADD_FIELD_NoMem(name)\
+                                      Field_T *const f_##name = patch->pool[Ind(#name)];
 void bbn_update_psi10A_UiUj(Patch_T *const patch)
 {
 
@@ -17,24 +20,24 @@ void bbn_update_psi10A_UiUj(Patch_T *const patch)
   PREP_FIELD(_A_UiUj_U0U2)
   PREP_FIELD(_A_UiUj_U0U1)
   PREP_FIELD(_A_UiUj_U0U0)
-  DECLARE_AND_EMPTY_FIELD(_dA_UiUj_U2U2D2)
-  DECLARE_AND_EMPTY_FIELD(_dA_UiUj_U2U2D0)
-  DECLARE_AND_EMPTY_FIELD(_dA_UiUj_U2U2D1)
-  DECLARE_AND_EMPTY_FIELD(_dA_UiUj_U1U1D2)
-  DECLARE_AND_EMPTY_FIELD(_dA_UiUj_U1U1D0)
-  DECLARE_AND_EMPTY_FIELD(_dA_UiUj_U1U1D1)
-  DECLARE_AND_EMPTY_FIELD(_dA_UiUj_U0U0D2)
-  DECLARE_AND_EMPTY_FIELD(_dA_UiUj_U0U0D0)
-  DECLARE_AND_EMPTY_FIELD(_dA_UiUj_U0U0D1)
-  DECLARE_AND_EMPTY_FIELD(_dA_UiUj_U0U1D2)
-  DECLARE_AND_EMPTY_FIELD(_dA_UiUj_U0U1D1)
-  DECLARE_AND_EMPTY_FIELD(_dA_UiUj_U0U1D0)
-  DECLARE_AND_EMPTY_FIELD(_dA_UiUj_U1U2D1)
-  DECLARE_AND_EMPTY_FIELD(_dA_UiUj_U1U2D0)
-  DECLARE_AND_EMPTY_FIELD(_dA_UiUj_U1U2D2)
-  DECLARE_AND_EMPTY_FIELD(_dA_UiUj_U0U2D0)
-  DECLARE_AND_EMPTY_FIELD(_dA_UiUj_U0U2D1)
-  DECLARE_AND_EMPTY_FIELD(_dA_UiUj_U0U2D2)
+  PREP_FIELD(_dA_UiUj_U2U2D2)
+  PREP_FIELD(_dA_UiUj_U2U2D0)
+  PREP_FIELD(_dA_UiUj_U2U2D1)
+  PREP_FIELD(_dA_UiUj_U1U1D2)
+  PREP_FIELD(_dA_UiUj_U1U1D0)
+  PREP_FIELD(_dA_UiUj_U1U1D1)
+  PREP_FIELD(_dA_UiUj_U0U0D2)
+  PREP_FIELD(_dA_UiUj_U0U0D0)
+  PREP_FIELD(_dA_UiUj_U0U0D1)
+  PREP_FIELD(_dA_UiUj_U0U1D2)
+  PREP_FIELD(_dA_UiUj_U0U1D1)
+  PREP_FIELD(_dA_UiUj_U0U1D0)
+  PREP_FIELD(_dA_UiUj_U1U2D1)
+  PREP_FIELD(_dA_UiUj_U1U2D0)
+  PREP_FIELD(_dA_UiUj_U1U2D2)
+  PREP_FIELD(_dA_UiUj_U0U2D0)
+  PREP_FIELD(_dA_UiUj_U0U2D1)
+  PREP_FIELD(_dA_UiUj_U0U2D2)
   PREP_FIELD(_Aij2)
   GET_FIELD(Beta_U1)
   GET_FIELD(Beta_U0)
@@ -49,7 +52,13 @@ void bbn_update_psi10A_UiUj(Patch_T *const patch)
   GET_FIELD(dBeta_U1D2)
   GET_FIELD(dBeta_U1D0)
   GET_FIELD(psi)
+  GET_FIELD(dpsi_D0)
+  GET_FIELD(dpsi_D1)
+  GET_FIELD(dpsi_D2)
   GET_FIELD(eta)
+  GET_FIELD(deta_D0)
+  GET_FIELD(deta_D1)
+  GET_FIELD(deta_D2)
   GET_FIELD(_gamma_D2D2)
   GET_FIELD(_gamma_D0D2)
   GET_FIELD(_gamma_D0D0)
@@ -62,6 +71,12 @@ void bbn_update_psi10A_UiUj(Patch_T *const patch)
   GET_FIELD(_gammaI_U1U2)
   GET_FIELD(_gammaI_U1U1)
   GET_FIELD(_gammaI_U2U2)
+  add_and_get_field(_LBij_U0U1)
+  add_and_get_field(_LBij_U0U0)
+  add_and_get_field(_LBij_U0U2)
+  add_and_get_field(_LBij_U1U1)
+  add_and_get_field(_LBij_U1U2)
+  add_and_get_field(_LBij_U2U2)
   GET_FIELD(_Gamma_U2D1D1)
   GET_FIELD(_Gamma_U2D1D2)
   GET_FIELD(_Gamma_U0D1D1)
@@ -295,30 +310,205 @@ pow(_A_UUij_U2U2, 2)*pow(_gamma_D2D2[ijk], 2);
     _A_UiUj_U0U2[ijk] = _A_UUij_U0U2;
     _A_UiUj_U0U1[ijk] = _A_UUij_U0U1;
     _A_UiUj_U0U0[ijk] = _A_UUij_U0U0;
+
+    /* populating: */
+    _LBij_U0U1[ijk] = _LV_UU_U0U1;
+    _LBij_U0U0[ijk] = _LV_UU_U0U0;
+    _LBij_U0U2[ijk] = _LV_UU_U0U2;
+    _LBij_U1U1[ijk] = _LV_UU_U1U1;
+    _LBij_U1U2[ijk] = _LV_UU_U1U2;
+    _LBij_U2U2[ijk] = _LV_UU_U2U2;
     _Aij2[ijk] = _AijAij;
     }/*end of for(ijk = 0; ijk < nn; ++ijk)*/
-  Field_T *f_A_UiUj_U2U2 = patch->pool[Ind("_A_UiUj_U2U2")];
-  Field_T *f_A_UiUj_U1U2 = patch->pool[Ind("_A_UiUj_U1U2")];
-  Field_T *f_A_UiUj_U1U1 = patch->pool[Ind("_A_UiUj_U1U1")];
-  Field_T *f_A_UiUj_U0U2 = patch->pool[Ind("_A_UiUj_U0U2")];
-  Field_T *f_A_UiUj_U0U1 = patch->pool[Ind("_A_UiUj_U0U1")];
-  Field_T *f_A_UiUj_U0U0 = patch->pool[Ind("_A_UiUj_U0U0")];
-  _dA_UiUj_U2U2D2->v = Partial_Derivative(f_A_UiUj_U2U2,"z");
-  _dA_UiUj_U2U2D0->v = Partial_Derivative(f_A_UiUj_U2U2,"x");
-  _dA_UiUj_U2U2D1->v = Partial_Derivative(f_A_UiUj_U2U2,"y");
-  _dA_UiUj_U1U1D2->v = Partial_Derivative(f_A_UiUj_U1U1,"z");
-  _dA_UiUj_U1U1D0->v = Partial_Derivative(f_A_UiUj_U1U1,"x");
-  _dA_UiUj_U1U1D1->v = Partial_Derivative(f_A_UiUj_U1U1,"y");
-  _dA_UiUj_U0U0D2->v = Partial_Derivative(f_A_UiUj_U0U0,"z");
-  _dA_UiUj_U0U0D0->v = Partial_Derivative(f_A_UiUj_U0U0,"x");
-  _dA_UiUj_U0U0D1->v = Partial_Derivative(f_A_UiUj_U0U0,"y");
-  _dA_UiUj_U0U1D2->v = Partial_Derivative(f_A_UiUj_U0U1,"z");
-  _dA_UiUj_U0U1D1->v = Partial_Derivative(f_A_UiUj_U0U1,"y");
-  _dA_UiUj_U0U1D0->v = Partial_Derivative(f_A_UiUj_U0U1,"x");
-  _dA_UiUj_U1U2D1->v = Partial_Derivative(f_A_UiUj_U1U2,"y");
-  _dA_UiUj_U1U2D0->v = Partial_Derivative(f_A_UiUj_U1U2,"x");
-  _dA_UiUj_U1U2D2->v = Partial_Derivative(f_A_UiUj_U1U2,"z");
-  _dA_UiUj_U0U2D0->v = Partial_Derivative(f_A_UiUj_U0U2,"x");
-  _dA_UiUj_U0U2D1->v = Partial_Derivative(f_A_UiUj_U0U2,"y");
-  _dA_UiUj_U0U2D2->v = Partial_Derivative(f_A_UiUj_U0U2,"z");
+  add_NoMem_declare_field(_dLBij_U2U2D2)
+  add_NoMem_declare_field(_dLBij_U2U2D0)
+  add_NoMem_declare_field(_dLBij_U2U2D1)
+  add_NoMem_declare_field(_dLBij_U1U1D2)
+  add_NoMem_declare_field(_dLBij_U1U1D0)
+  add_NoMem_declare_field(_dLBij_U1U1D1)
+  add_NoMem_declare_field(_dLBij_U0U0D2)
+  add_NoMem_declare_field(_dLBij_U0U0D0)
+  add_NoMem_declare_field(_dLBij_U0U0D1)
+  add_NoMem_declare_field(_dLBij_U0U1D2)
+  add_NoMem_declare_field(_dLBij_U0U1D1)
+  add_NoMem_declare_field(_dLBij_U0U1D0)
+  add_NoMem_declare_field(_dLBij_U1U2D1)
+  add_NoMem_declare_field(_dLBij_U1U2D0)
+  add_NoMem_declare_field(_dLBij_U1U2D2)
+  add_NoMem_declare_field(_dLBij_U0U2D0)
+  add_NoMem_declare_field(_dLBij_U0U2D1)
+  add_NoMem_declare_field(_dLBij_U0U2D2)
+  Field_T *f_LBij_U2U2 = patch->pool[Ind("_LBij_U2U2")];
+  Field_T *f_LBij_U1U2 = patch->pool[Ind("_LBij_U1U2")];
+  Field_T *f_LBij_U1U1 = patch->pool[Ind("_LBij_U1U1")];
+  Field_T *f_LBij_U0U2 = patch->pool[Ind("_LBij_U0U2")];
+  Field_T *f_LBij_U0U1 = patch->pool[Ind("_LBij_U0U1")];
+  Field_T *f_LBij_U0U0 = patch->pool[Ind("_LBij_U0U0")];
+  f__dLBij_U2U2D2->v = Partial_Derivative(f_LBij_U2U2,"z");
+  f__dLBij_U2U2D0->v = Partial_Derivative(f_LBij_U2U2,"x");
+  f__dLBij_U2U2D1->v = Partial_Derivative(f_LBij_U2U2,"y");
+  f__dLBij_U1U1D2->v = Partial_Derivative(f_LBij_U1U1,"z");
+  f__dLBij_U1U1D0->v = Partial_Derivative(f_LBij_U1U1,"x");
+  f__dLBij_U1U1D1->v = Partial_Derivative(f_LBij_U1U1,"y");
+  f__dLBij_U0U0D2->v = Partial_Derivative(f_LBij_U0U0,"z");
+  f__dLBij_U0U0D0->v = Partial_Derivative(f_LBij_U0U0,"x");
+  f__dLBij_U0U0D1->v = Partial_Derivative(f_LBij_U0U0,"y");
+  f__dLBij_U0U1D2->v = Partial_Derivative(f_LBij_U0U1,"z");
+  f__dLBij_U0U1D1->v = Partial_Derivative(f_LBij_U0U1,"y");
+  f__dLBij_U0U1D0->v = Partial_Derivative(f_LBij_U0U1,"x");
+  f__dLBij_U1U2D1->v = Partial_Derivative(f_LBij_U1U2,"y");
+  f__dLBij_U1U2D0->v = Partial_Derivative(f_LBij_U1U2,"x");
+  f__dLBij_U1U2D2->v = Partial_Derivative(f_LBij_U1U2,"z");
+  f__dLBij_U0U2D0->v = Partial_Derivative(f_LBij_U0U2,"x");
+  f__dLBij_U0U2D1->v = Partial_Derivative(f_LBij_U0U2,"y");
+  f__dLBij_U0U2D2->v = Partial_Derivative(f_LBij_U0U2,"z");
+  GET_FIELD(_dLBij_U2U2D2)
+  GET_FIELD(_dLBij_U2U2D0)
+  GET_FIELD(_dLBij_U2U2D1)
+  GET_FIELD(_dLBij_U1U1D2)
+  GET_FIELD(_dLBij_U1U1D0)
+  GET_FIELD(_dLBij_U1U1D1)
+  GET_FIELD(_dLBij_U0U0D2)
+  GET_FIELD(_dLBij_U0U0D0)
+  GET_FIELD(_dLBij_U0U0D1)
+  GET_FIELD(_dLBij_U0U1D2)
+  GET_FIELD(_dLBij_U0U1D1)
+  GET_FIELD(_dLBij_U0U1D0)
+  GET_FIELD(_dLBij_U1U2D1)
+  GET_FIELD(_dLBij_U1U2D0)
+  GET_FIELD(_dLBij_U1U2D2)
+  GET_FIELD(_dLBij_U0U2D0)
+  GET_FIELD(_dLBij_U0U2D1)
+  GET_FIELD(_dLBij_U0U2D2)
+    for(ijk = 0; ijk < nn; ++ijk)
+    {
+    double alphab = 
+eta[ijk]/pow(psi[ijk], 7);
+
+    double dLnOf_alphabar_U0 = 
+deta_D0[ijk]/eta[ijk] - 7*dpsi_D0[ijk]/psi[ijk];
+
+    double dLnOf_alphabar_U1 = 
+deta_D1[ijk]/eta[ijk] - 7*dpsi_D1[ijk]/psi[ijk];
+
+    double dLnOf_alphabar_U2 = 
+deta_D2[ijk]/eta[ijk] - 7*dpsi_D2[ijk]/psi[ijk];
+
+    double dlAij_U0U1D2 = 
+(1.0/2.0)*(-_LBij_U0U1[ijk]*dLnOf_alphabar_U2 + _dLBij_U0U1D2[ijk])/
+alphab;
+
+    double dlAij_U0U0D2 = 
+(1.0/2.0)*(-_LBij_U0U0[ijk]*dLnOf_alphabar_U2 + _dLBij_U0U0D2[ijk])/
+alphab;
+
+    double dlAij_U0U0D1 = 
+(1.0/2.0)*(-_LBij_U0U0[ijk]*dLnOf_alphabar_U1 + _dLBij_U0U0D1[ijk])/
+alphab;
+
+    double dlAij_U0U1D1 = 
+(1.0/2.0)*(-_LBij_U0U1[ijk]*dLnOf_alphabar_U1 + _dLBij_U0U1D1[ijk])/
+alphab;
+
+    double dlAij_U0U0D0 = 
+(1.0/2.0)*(-_LBij_U0U0[ijk]*dLnOf_alphabar_U0 + _dLBij_U0U0D0[ijk])/
+alphab;
+
+    double dlAij_U1U2D0 = 
+(1.0/2.0)*(-_LBij_U1U2[ijk]*dLnOf_alphabar_U0 + _dLBij_U1U2D0[ijk])/
+alphab;
+
+    double dlAij_U0U1D0 = 
+(1.0/2.0)*(-_LBij_U0U1[ijk]*dLnOf_alphabar_U0 + _dLBij_U0U1D0[ijk])/
+alphab;
+
+    double dlAij_U1U2D2 = 
+(1.0/2.0)*(-_LBij_U1U2[ijk]*dLnOf_alphabar_U2 + _dLBij_U1U2D2[ijk])/
+alphab;
+
+    double dlAij_U1U2D1 = 
+(1.0/2.0)*(-_LBij_U1U2[ijk]*dLnOf_alphabar_U1 + _dLBij_U1U2D1[ijk])/
+alphab;
+
+    double dlAij_U0U2D1 = 
+(1.0/2.0)*(-_LBij_U0U2[ijk]*dLnOf_alphabar_U1 + _dLBij_U0U2D1[ijk])/
+alphab;
+
+    double dlAij_U0U2D0 = 
+(1.0/2.0)*(-_LBij_U0U2[ijk]*dLnOf_alphabar_U0 + _dLBij_U0U2D0[ijk])/
+alphab;
+
+    double dlAij_U0U2D2 = 
+(1.0/2.0)*(-_LBij_U0U2[ijk]*dLnOf_alphabar_U2 + _dLBij_U0U2D2[ijk])/
+alphab;
+
+    double dlAij_U2U2D2 = 
+(1.0/2.0)*(-_LBij_U2U2[ijk]*dLnOf_alphabar_U2 + _dLBij_U2U2D2[ijk])/
+alphab;
+
+    double dlAij_U1U1D2 = 
+(1.0/2.0)*(-_LBij_U1U1[ijk]*dLnOf_alphabar_U2 + _dLBij_U1U1D2[ijk])/
+alphab;
+
+    double dlAij_U1U1D1 = 
+(1.0/2.0)*(-_LBij_U1U1[ijk]*dLnOf_alphabar_U1 + _dLBij_U1U1D1[ijk])/
+alphab;
+
+    double dlAij_U1U1D0 = 
+(1.0/2.0)*(-_LBij_U1U1[ijk]*dLnOf_alphabar_U0 + _dLBij_U1U1D0[ijk])/
+alphab;
+
+    double dlAij_U2U2D0 = 
+(1.0/2.0)*(-_LBij_U2U2[ijk]*dLnOf_alphabar_U0 + _dLBij_U2U2D0[ijk])/
+alphab;
+
+    double dlAij_U2U2D1 = 
+(1.0/2.0)*(-_LBij_U2U2[ijk]*dLnOf_alphabar_U1 + _dLBij_U2U2D1[ijk])/
+alphab;
+
+
+    /* populating: */
+    _dA_UiUj_U2U2D2[ijk] = dlAij_U2U2D2;
+    _dA_UiUj_U2U2D0[ijk] = dlAij_U2U2D0;
+    _dA_UiUj_U2U2D1[ijk] = dlAij_U2U2D1;
+    _dA_UiUj_U1U1D2[ijk] = dlAij_U1U1D2;
+    _dA_UiUj_U1U1D0[ijk] = dlAij_U1U1D0;
+    _dA_UiUj_U1U1D1[ijk] = dlAij_U1U1D1;
+    _dA_UiUj_U0U0D2[ijk] = dlAij_U0U0D2;
+    _dA_UiUj_U0U0D0[ijk] = dlAij_U0U0D0;
+    _dA_UiUj_U0U0D1[ijk] = dlAij_U0U0D1;
+    _dA_UiUj_U0U1D2[ijk] = dlAij_U0U1D2;
+    _dA_UiUj_U0U1D1[ijk] = dlAij_U0U1D1;
+    _dA_UiUj_U0U1D0[ijk] = dlAij_U0U1D0;
+    _dA_UiUj_U1U2D1[ijk] = dlAij_U1U2D1;
+    _dA_UiUj_U1U2D0[ijk] = dlAij_U1U2D0;
+    _dA_UiUj_U1U2D2[ijk] = dlAij_U1U2D2;
+    _dA_UiUj_U0U2D0[ijk] = dlAij_U0U2D0;
+    _dA_UiUj_U0U2D1[ijk] = dlAij_U0U2D1;
+    _dA_UiUj_U0U2D2[ijk] = dlAij_U0U2D2;
+    }
+  REMOVE_FIELD(f_LBij_U0U1)
+  REMOVE_FIELD(f_LBij_U0U0)
+  REMOVE_FIELD(f_LBij_U0U2)
+  REMOVE_FIELD(f_LBij_U1U1)
+  REMOVE_FIELD(f_LBij_U1U2)
+  REMOVE_FIELD(f_LBij_U2U2)
+  REMOVE_FIELD(f__dLBij_U2U2D2)
+  REMOVE_FIELD(f__dLBij_U2U2D0)
+  REMOVE_FIELD(f__dLBij_U2U2D1)
+  REMOVE_FIELD(f__dLBij_U1U1D2)
+  REMOVE_FIELD(f__dLBij_U1U1D0)
+  REMOVE_FIELD(f__dLBij_U1U1D1)
+  REMOVE_FIELD(f__dLBij_U0U0D2)
+  REMOVE_FIELD(f__dLBij_U0U0D0)
+  REMOVE_FIELD(f__dLBij_U0U0D1)
+  REMOVE_FIELD(f__dLBij_U0U1D2)
+  REMOVE_FIELD(f__dLBij_U0U1D1)
+  REMOVE_FIELD(f__dLBij_U0U1D0)
+  REMOVE_FIELD(f__dLBij_U1U2D1)
+  REMOVE_FIELD(f__dLBij_U1U2D0)
+  REMOVE_FIELD(f__dLBij_U1U2D2)
+  REMOVE_FIELD(f__dLBij_U0U2D0)
+  REMOVE_FIELD(f__dLBij_U0U2D1)
+  REMOVE_FIELD(f__dLBij_U0U2D2)
 }
