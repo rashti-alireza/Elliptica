@@ -332,24 +332,24 @@ _Gamma_U1D2D2[ijk]*_Gamma_U2D2D2[ijk]));
 0.33333333333333331*_gammaI_U0U1[ijk]*(JJB0_D0D0(j_JJB0_D0D0,ijk,lmn)*
 U_U0 + JJB0_D0D1(j_JJB0_D0D1,ijk,lmn)*U_U1 + JJB0_D0D2(j_JJB0_D0D2,ijk,lmn)*
 U_U2 + kd[ijk==lmn]*(U_U0*_dGamma_U0D0D0D0[ijk] + U_U0*
-_dGamma_U1D0D0D1[ijk] + U_U0*_dGamma_U2D0D0D2[ijk] + U_U1*
-_dGamma_U0D0D1D0[ijk] + U_U1*_dGamma_U1D0D1D1[ijk] + U_U1*
-_dGamma_U2D0D1D2[ijk] + U_U2*_dGamma_U0D0D2D0[ijk] + U_U2*
-_dGamma_U1D0D2D1[ijk] + U_U2*_dGamma_U2D0D2D2[ijk])) + 
+_dGamma_U1D0D1D0[ijk] + U_U0*_dGamma_U2D0D2D0[ijk] + U_U1*
+_dGamma_U0D0D1D0[ijk] + U_U1*_dGamma_U1D1D1D0[ijk] + U_U1*
+_dGamma_U2D1D2D0[ijk] + U_U2*_dGamma_U0D0D2D0[ijk] + U_U2*
+_dGamma_U1D1D2D0[ijk] + U_U2*_dGamma_U2D2D2D0[ijk])) + 
 0.33333333333333331*_gammaI_U1U1[ijk]*(JJB0_D0D1(j_JJB0_D0D1,ijk,lmn)*
 U_U0 + JJB0_D1D1(j_JJB0_D1D1,ijk,lmn)*U_U1 + JJB0_D1D2(j_JJB0_D1D2,ijk,lmn)*
-U_U2 + kd[ijk==lmn]*(U_U0*_dGamma_U0D0D1D0[ijk] + U_U0*
-_dGamma_U1D0D1D1[ijk] + U_U0*_dGamma_U2D0D1D2[ijk] + U_U1*
-_dGamma_U0D1D1D0[ijk] + U_U1*_dGamma_U1D1D1D1[ijk] + U_U1*
-_dGamma_U2D1D1D2[ijk] + U_U2*_dGamma_U0D1D2D0[ijk] + U_U2*
-_dGamma_U1D1D2D1[ijk] + U_U2*_dGamma_U2D1D2D2[ijk])) + 
+U_U2 + kd[ijk==lmn]*(U_U0*_dGamma_U0D0D0D1[ijk] + U_U0*
+_dGamma_U1D0D1D1[ijk] + U_U0*_dGamma_U2D0D2D1[ijk] + U_U1*
+_dGamma_U0D0D1D1[ijk] + U_U1*_dGamma_U1D1D1D1[ijk] + U_U1*
+_dGamma_U2D1D2D1[ijk] + U_U2*_dGamma_U0D0D2D1[ijk] + U_U2*
+_dGamma_U1D1D2D1[ijk] + U_U2*_dGamma_U2D2D2D1[ijk])) + 
 0.33333333333333331*_gammaI_U1U2[ijk]*(JJB0_D0D2(j_JJB0_D0D2,ijk,lmn)*
 U_U0 + JJB0_D1D2(j_JJB0_D1D2,ijk,lmn)*U_U1 + JJB0_D2D2(j_JJB0_D2D2,ijk,lmn)*
-U_U2 + kd[ijk==lmn]*(U_U0*_dGamma_U0D0D2D0[ijk] + U_U0*
-_dGamma_U1D0D2D1[ijk] + U_U0*_dGamma_U2D0D2D2[ijk] + U_U1*
-_dGamma_U0D1D2D0[ijk] + U_U1*_dGamma_U1D1D2D1[ijk] + U_U1*
-_dGamma_U2D1D2D2[ijk] + U_U2*_dGamma_U0D2D2D0[ijk] + U_U2*
-_dGamma_U1D2D2D1[ijk] + U_U2*_dGamma_U2D2D2D2[ijk]));
+U_U2 + kd[ijk==lmn]*(U_U0*_dGamma_U0D0D0D2[ijk] + U_U0*
+_dGamma_U1D0D1D2[ijk] + U_U0*_dGamma_U2D0D2D2[ijk] + U_U1*
+_dGamma_U0D0D1D2[ijk] + U_U1*_dGamma_U1D1D1D2[ijk] + U_U1*
+_dGamma_U2D1D2D2[ijk] + U_U2*_dGamma_U0D0D2D2[ijk] + U_U2*
+_dGamma_U1D1D2D2[ijk] + U_U2*_dGamma_U2D2D2D2[ijk]));
 
 
 
@@ -402,97 +402,91 @@ kd[ijk==lmn]*(0.33333333333333331*U_U0*pow(_Gamma_U0D0D0[ijk], 2)*
 _gammaI_U0U1[ijk] + 0.33333333333333331*U_U0*_Gamma_U0D0D0[ijk]*
 _Gamma_U0D0D1[ijk]*_gammaI_U1U1[ijk] + 0.33333333333333331*U_U0*
 _Gamma_U0D0D0[ijk]*_Gamma_U0D0D2[ijk]*_gammaI_U1U2[ijk] + 
-0.33333333333333331*U_U0*_Gamma_U0D0D0[ijk]*_Gamma_U1D0D1[ijk]*
-_gammaI_U0U1[ijk] + 0.33333333333333331*U_U0*_Gamma_U0D0D0[ijk]*
-_Gamma_U2D0D2[ijk]*_gammaI_U0U1[ijk] + 0.33333333333333331*U_U0*
-_Gamma_U0D0D1[ijk]*_Gamma_U1D0D0[ijk]*_gammaI_U0U1[ijk] + 
-0.66666666666666663*U_U0*_Gamma_U0D0D1[ijk]*_Gamma_U1D0D1[ijk]*
-_gammaI_U1U1[ijk] + 0.33333333333333331*U_U0*_Gamma_U0D0D1[ijk]*
-_Gamma_U1D0D2[ijk]*_gammaI_U1U2[ijk] + 0.33333333333333331*U_U0*
-_Gamma_U0D0D1[ijk]*_Gamma_U2D0D2[ijk]*_gammaI_U1U1[ijk] + 
-0.33333333333333331*U_U0*_Gamma_U0D0D2[ijk]*_Gamma_U1D0D1[ijk]*
-_gammaI_U1U2[ijk] + 0.33333333333333331*U_U0*_Gamma_U0D0D2[ijk]*
-_Gamma_U2D0D0[ijk]*_gammaI_U0U1[ijk] + 0.33333333333333331*U_U0*
-_Gamma_U0D0D2[ijk]*_Gamma_U2D0D1[ijk]*_gammaI_U1U1[ijk] + 
-0.66666666666666663*U_U0*_Gamma_U0D0D2[ijk]*_Gamma_U2D0D2[ijk]*
-_gammaI_U1U2[ijk] + 0.33333333333333331*U_U0*_Gamma_U1D0D0[ijk]*
-_Gamma_U1D1D1[ijk]*_gammaI_U0U1[ijk] + 0.33333333333333331*U_U0*
-_Gamma_U1D0D0[ijk]*_Gamma_U2D1D2[ijk]*_gammaI_U0U1[ijk] + 
-0.33333333333333331*U_U0*_Gamma_U1D0D1[ijk]*_Gamma_U1D1D1[ijk]*
-_gammaI_U1U1[ijk] + 0.33333333333333331*U_U0*_Gamma_U1D0D1[ijk]*
-_Gamma_U2D1D2[ijk]*_gammaI_U1U1[ijk] + 0.33333333333333331*U_U0*
-_Gamma_U1D0D2[ijk]*_Gamma_U1D1D1[ijk]*_gammaI_U1U2[ijk] + 
-0.33333333333333331*U_U0*_Gamma_U1D0D2[ijk]*_Gamma_U2D1D2[ijk]*
-_gammaI_U1U2[ijk] + 0.33333333333333331*U_U0*_Gamma_U1D1D2[ijk]*
-_Gamma_U2D0D0[ijk]*_gammaI_U0U1[ijk] + 0.33333333333333331*U_U0*
-_Gamma_U1D1D2[ijk]*_Gamma_U2D0D1[ijk]*_gammaI_U1U1[ijk] + 
-0.33333333333333331*U_U0*_Gamma_U1D1D2[ijk]*_Gamma_U2D0D2[ijk]*
-_gammaI_U1U2[ijk] + 0.33333333333333331*U_U0*_Gamma_U2D0D0[ijk]*
-_Gamma_U2D2D2[ijk]*_gammaI_U0U1[ijk] + 0.33333333333333331*U_U0*
-_Gamma_U2D0D1[ijk]*_Gamma_U2D2D2[ijk]*_gammaI_U1U1[ijk] + 
+0.66666666666666663*U_U0*_Gamma_U0D0D1[ijk]*_Gamma_U1D0D0[ijk]*
+_gammaI_U0U1[ijk] + 0.33333333333333331*U_U0*_Gamma_U0D0D1[ijk]*
+_Gamma_U1D0D1[ijk]*_gammaI_U1U1[ijk] + 0.33333333333333331*U_U0*
+_Gamma_U0D0D1[ijk]*_Gamma_U1D0D2[ijk]*_gammaI_U1U2[ijk] + 
+0.66666666666666663*U_U0*_Gamma_U0D0D2[ijk]*_Gamma_U2D0D0[ijk]*
+_gammaI_U0U1[ijk] + 0.33333333333333331*U_U0*_Gamma_U0D0D2[ijk]*
+_Gamma_U2D0D1[ijk]*_gammaI_U1U1[ijk] + 0.33333333333333331*U_U0*
+_Gamma_U0D0D2[ijk]*_Gamma_U2D0D2[ijk]*_gammaI_U1U2[ijk] + 
+0.33333333333333331*U_U0*_Gamma_U0D1D1[ijk]*_Gamma_U1D0D0[ijk]*
+_gammaI_U1U1[ijk] + 0.33333333333333331*U_U0*_Gamma_U0D1D2[ijk]*
+_Gamma_U1D0D0[ijk]*_gammaI_U1U2[ijk] + 0.33333333333333331*U_U0*
+_Gamma_U0D1D2[ijk]*_Gamma_U2D0D0[ijk]*_gammaI_U1U1[ijk] + 
+0.33333333333333331*U_U0*_Gamma_U0D2D2[ijk]*_Gamma_U2D0D0[ijk]*
+_gammaI_U1U2[ijk] + 0.33333333333333331*U_U0*pow(_Gamma_U1D0D1[ijk], 2)*
+_gammaI_U0U1[ijk] + 0.33333333333333331*U_U0*_Gamma_U1D0D1[ijk]*
+_Gamma_U1D1D1[ijk]*_gammaI_U1U1[ijk] + 0.33333333333333331*U_U0*
+_Gamma_U1D0D1[ijk]*_Gamma_U1D1D2[ijk]*_gammaI_U1U2[ijk] + 
+0.66666666666666663*U_U0*_Gamma_U1D0D2[ijk]*_Gamma_U2D0D1[ijk]*
+_gammaI_U0U1[ijk] + 0.33333333333333331*U_U0*_Gamma_U1D0D2[ijk]*
+_Gamma_U2D1D1[ijk]*_gammaI_U1U1[ijk] + 0.33333333333333331*U_U0*
+_Gamma_U1D0D2[ijk]*_Gamma_U2D1D2[ijk]*_gammaI_U1U2[ijk] + 
+0.33333333333333331*U_U0*_Gamma_U1D1D2[ijk]*_Gamma_U2D0D1[ijk]*
+_gammaI_U1U1[ijk] + 0.33333333333333331*U_U0*_Gamma_U1D2D2[ijk]*
+_Gamma_U2D0D1[ijk]*_gammaI_U1U2[ijk] + 0.33333333333333331*U_U0*
+pow(_Gamma_U2D0D2[ijk], 2)*_gammaI_U0U1[ijk] + 0.33333333333333331*
+U_U0*_Gamma_U2D0D2[ijk]*_Gamma_U2D1D2[ijk]*_gammaI_U1U1[ijk] + 
 0.33333333333333331*U_U0*_Gamma_U2D0D2[ijk]*_Gamma_U2D2D2[ijk]*
 _gammaI_U1U2[ijk] + 0.33333333333333331*U_U1*_Gamma_U0D0D0[ijk]*
 _Gamma_U0D0D1[ijk]*_gammaI_U0U1[ijk] + 0.33333333333333331*U_U1*
-_Gamma_U0D0D0[ijk]*_Gamma_U0D1D1[ijk]*_gammaI_U1U1[ijk] + 
-0.33333333333333331*U_U1*_Gamma_U0D0D0[ijk]*_Gamma_U0D1D2[ijk]*
-_gammaI_U1U2[ijk] + 0.66666666666666663*U_U1*_Gamma_U0D0D1[ijk]*
-_Gamma_U1D0D1[ijk]*_gammaI_U0U1[ijk] + 0.33333333333333331*U_U1*
-_Gamma_U0D0D1[ijk]*_Gamma_U1D1D1[ijk]*_gammaI_U1U1[ijk] + 
-0.33333333333333331*U_U1*_Gamma_U0D0D1[ijk]*_Gamma_U1D1D2[ijk]*
-_gammaI_U1U2[ijk] + 0.33333333333333331*U_U1*_Gamma_U0D0D1[ijk]*
-_Gamma_U2D0D2[ijk]*_gammaI_U0U1[ijk] + 0.33333333333333331*U_U1*
-_Gamma_U0D0D2[ijk]*_Gamma_U2D0D1[ijk]*_gammaI_U0U1[ijk] + 
-0.33333333333333331*U_U1*_Gamma_U0D0D2[ijk]*_Gamma_U2D1D1[ijk]*
-_gammaI_U1U1[ijk] + 0.33333333333333331*U_U1*_Gamma_U0D0D2[ijk]*
-_Gamma_U2D1D2[ijk]*_gammaI_U1U2[ijk] + 0.33333333333333331*U_U1*
-_Gamma_U0D1D1[ijk]*_Gamma_U1D0D1[ijk]*_gammaI_U1U1[ijk] + 
-0.33333333333333331*U_U1*_Gamma_U0D1D1[ijk]*_Gamma_U2D0D2[ijk]*
-_gammaI_U1U1[ijk] + 0.33333333333333331*U_U1*_Gamma_U0D1D2[ijk]*
-_Gamma_U1D0D1[ijk]*_gammaI_U1U2[ijk] + 0.33333333333333331*U_U1*
-_Gamma_U0D1D2[ijk]*_Gamma_U2D0D2[ijk]*_gammaI_U1U2[ijk] + 
-0.33333333333333331*U_U1*_Gamma_U1D0D1[ijk]*_Gamma_U1D1D1[ijk]*
-_gammaI_U0U1[ijk] + 0.33333333333333331*U_U1*_Gamma_U1D0D1[ijk]*
-_Gamma_U2D1D2[ijk]*_gammaI_U0U1[ijk] + 0.33333333333333331*U_U1*
-pow(_Gamma_U1D1D1[ijk], 2)*_gammaI_U1U1[ijk] + 0.33333333333333331*
-U_U1*_Gamma_U1D1D1[ijk]*_Gamma_U1D1D2[ijk]*_gammaI_U1U2[ijk] + 
-0.33333333333333331*U_U1*_Gamma_U1D1D1[ijk]*_Gamma_U2D1D2[ijk]*
-_gammaI_U1U1[ijk] + 0.33333333333333331*U_U1*_Gamma_U1D1D2[ijk]*
+pow(_Gamma_U0D0D1[ijk], 2)*_gammaI_U1U1[ijk] + 0.33333333333333331*
+U_U1*_Gamma_U0D0D1[ijk]*_Gamma_U0D0D2[ijk]*_gammaI_U1U2[ijk] + 
+0.33333333333333331*U_U1*_Gamma_U0D0D1[ijk]*_Gamma_U1D0D1[ijk]*
+_gammaI_U0U1[ijk] + 0.33333333333333331*U_U1*_Gamma_U0D0D2[ijk]*
 _Gamma_U2D0D1[ijk]*_gammaI_U0U1[ijk] + 0.33333333333333331*U_U1*
+_Gamma_U0D1D1[ijk]*_Gamma_U1D0D0[ijk]*_gammaI_U0U1[ijk] + 
+0.66666666666666663*U_U1*_Gamma_U0D1D1[ijk]*_Gamma_U1D0D1[ijk]*
+_gammaI_U1U1[ijk] + 0.33333333333333331*U_U1*_Gamma_U0D1D1[ijk]*
+_Gamma_U1D0D2[ijk]*_gammaI_U1U2[ijk] + 0.33333333333333331*U_U1*
+_Gamma_U0D1D2[ijk]*_Gamma_U1D0D1[ijk]*_gammaI_U1U2[ijk] + 
+0.33333333333333331*U_U1*_Gamma_U0D1D2[ijk]*_Gamma_U2D0D0[ijk]*
+_gammaI_U0U1[ijk] + 0.66666666666666663*U_U1*_Gamma_U0D1D2[ijk]*
+_Gamma_U2D0D1[ijk]*_gammaI_U1U1[ijk] + 0.33333333333333331*U_U1*
+_Gamma_U0D1D2[ijk]*_Gamma_U2D0D2[ijk]*_gammaI_U1U2[ijk] + 
+0.33333333333333331*U_U1*_Gamma_U0D2D2[ijk]*_Gamma_U2D0D1[ijk]*
+_gammaI_U1U2[ijk] + 0.33333333333333331*U_U1*_Gamma_U1D0D1[ijk]*
+_Gamma_U1D1D1[ijk]*_gammaI_U0U1[ijk] + 0.33333333333333331*U_U1*
+_Gamma_U1D0D2[ijk]*_Gamma_U2D1D1[ijk]*_gammaI_U0U1[ijk] + 
+0.33333333333333331*U_U1*pow(_Gamma_U1D1D1[ijk], 2)*_gammaI_U1U1[ijk] + 
+0.33333333333333331*U_U1*_Gamma_U1D1D1[ijk]*_Gamma_U1D1D2[ijk]*
+_gammaI_U1U2[ijk] + 0.33333333333333331*U_U1*_Gamma_U1D1D2[ijk]*
+_Gamma_U2D0D1[ijk]*_gammaI_U0U1[ijk] + 0.66666666666666663*U_U1*
 _Gamma_U1D1D2[ijk]*_Gamma_U2D1D1[ijk]*_gammaI_U1U1[ijk] + 
-0.66666666666666663*U_U1*_Gamma_U1D1D2[ijk]*_Gamma_U2D1D2[ijk]*
-_gammaI_U1U2[ijk] + 0.33333333333333331*U_U1*_Gamma_U2D0D1[ijk]*
-_Gamma_U2D2D2[ijk]*_gammaI_U0U1[ijk] + 0.33333333333333331*U_U1*
-_Gamma_U2D1D1[ijk]*_Gamma_U2D2D2[ijk]*_gammaI_U1U1[ijk] + 
+0.33333333333333331*U_U1*_Gamma_U1D1D2[ijk]*_Gamma_U2D1D2[ijk]*
+_gammaI_U1U2[ijk] + 0.33333333333333331*U_U1*_Gamma_U1D2D2[ijk]*
+_Gamma_U2D1D1[ijk]*_gammaI_U1U2[ijk] + 0.33333333333333331*U_U1*
+_Gamma_U2D0D2[ijk]*_Gamma_U2D1D2[ijk]*_gammaI_U0U1[ijk] + 
+0.33333333333333331*U_U1*pow(_Gamma_U2D1D2[ijk], 2)*_gammaI_U1U1[ijk] + 
 0.33333333333333331*U_U1*_Gamma_U2D1D2[ijk]*_Gamma_U2D2D2[ijk]*
 _gammaI_U1U2[ijk] + 0.33333333333333331*U_U2*_Gamma_U0D0D0[ijk]*
 _Gamma_U0D0D2[ijk]*_gammaI_U0U1[ijk] + 0.33333333333333331*U_U2*
-_Gamma_U0D0D0[ijk]*_Gamma_U0D1D2[ijk]*_gammaI_U1U1[ijk] + 
-0.33333333333333331*U_U2*_Gamma_U0D0D0[ijk]*_Gamma_U0D2D2[ijk]*
-_gammaI_U1U2[ijk] + 0.33333333333333331*U_U2*_Gamma_U0D0D1[ijk]*
-_Gamma_U1D0D2[ijk]*_gammaI_U0U1[ijk] + 0.33333333333333331*U_U2*
-_Gamma_U0D0D1[ijk]*_Gamma_U1D1D2[ijk]*_gammaI_U1U1[ijk] + 
-0.33333333333333331*U_U2*_Gamma_U0D0D1[ijk]*_Gamma_U1D2D2[ijk]*
+_Gamma_U0D0D1[ijk]*_Gamma_U0D0D2[ijk]*_gammaI_U1U1[ijk] + 
+0.33333333333333331*U_U2*_Gamma_U0D0D1[ijk]*_Gamma_U1D0D2[ijk]*
+_gammaI_U0U1[ijk] + 0.33333333333333331*U_U2*pow(_Gamma_U0D0D2[ijk], 2)*
 _gammaI_U1U2[ijk] + 0.33333333333333331*U_U2*_Gamma_U0D0D2[ijk]*
-_Gamma_U1D0D1[ijk]*_gammaI_U0U1[ijk] + 0.66666666666666663*U_U2*
-_Gamma_U0D0D2[ijk]*_Gamma_U2D0D2[ijk]*_gammaI_U0U1[ijk] + 
-0.33333333333333331*U_U2*_Gamma_U0D0D2[ijk]*_Gamma_U2D1D2[ijk]*
-_gammaI_U1U1[ijk] + 0.33333333333333331*U_U2*_Gamma_U0D0D2[ijk]*
-_Gamma_U2D2D2[ijk]*_gammaI_U1U2[ijk] + 0.33333333333333331*U_U2*
-_Gamma_U0D1D2[ijk]*_Gamma_U1D0D1[ijk]*_gammaI_U1U1[ijk] + 
+_Gamma_U2D0D2[ijk]*_gammaI_U0U1[ijk] + 0.33333333333333331*U_U2*
+_Gamma_U0D1D1[ijk]*_Gamma_U1D0D2[ijk]*_gammaI_U1U1[ijk] + 
+0.33333333333333331*U_U2*_Gamma_U0D1D2[ijk]*_Gamma_U1D0D0[ijk]*
+_gammaI_U0U1[ijk] + 0.33333333333333331*U_U2*_Gamma_U0D1D2[ijk]*
+_Gamma_U1D0D1[ijk]*_gammaI_U1U1[ijk] + 0.66666666666666663*U_U2*
+_Gamma_U0D1D2[ijk]*_Gamma_U1D0D2[ijk]*_gammaI_U1U2[ijk] + 
 0.33333333333333331*U_U2*_Gamma_U0D1D2[ijk]*_Gamma_U2D0D2[ijk]*
 _gammaI_U1U1[ijk] + 0.33333333333333331*U_U2*_Gamma_U0D2D2[ijk]*
-_Gamma_U1D0D1[ijk]*_gammaI_U1U2[ijk] + 0.33333333333333331*U_U2*
-_Gamma_U0D2D2[ijk]*_Gamma_U2D0D2[ijk]*_gammaI_U1U2[ijk] + 
-0.33333333333333331*U_U2*_Gamma_U1D0D2[ijk]*_Gamma_U1D1D1[ijk]*
-_gammaI_U0U1[ijk] + 0.33333333333333331*U_U2*_Gamma_U1D0D2[ijk]*
-_Gamma_U2D1D2[ijk]*_gammaI_U0U1[ijk] + 0.33333333333333331*U_U2*
-_Gamma_U1D1D1[ijk]*_Gamma_U1D1D2[ijk]*_gammaI_U1U1[ijk] + 
-0.33333333333333331*U_U2*_Gamma_U1D1D1[ijk]*_Gamma_U1D2D2[ijk]*
+_Gamma_U2D0D0[ijk]*_gammaI_U0U1[ijk] + 0.33333333333333331*U_U2*
+_Gamma_U0D2D2[ijk]*_Gamma_U2D0D1[ijk]*_gammaI_U1U1[ijk] + 
+0.66666666666666663*U_U2*_Gamma_U0D2D2[ijk]*_Gamma_U2D0D2[ijk]*
+_gammaI_U1U2[ijk] + 0.33333333333333331*U_U2*_Gamma_U1D0D1[ijk]*
+_Gamma_U1D1D2[ijk]*_gammaI_U0U1[ijk] + 0.33333333333333331*U_U2*
+_Gamma_U1D0D2[ijk]*_Gamma_U2D1D2[ijk]*_gammaI_U0U1[ijk] + 
+0.33333333333333331*U_U2*_Gamma_U1D1D1[ijk]*_Gamma_U1D1D2[ijk]*
+_gammaI_U1U1[ijk] + 0.33333333333333331*U_U2*pow(_Gamma_U1D1D2[ijk], 2)*
 _gammaI_U1U2[ijk] + 0.33333333333333331*U_U2*_Gamma_U1D1D2[ijk]*
-_Gamma_U2D0D2[ijk]*_gammaI_U0U1[ijk] + 0.66666666666666663*U_U2*
-_Gamma_U1D1D2[ijk]*_Gamma_U2D1D2[ijk]*_gammaI_U1U1[ijk] + 
-0.33333333333333331*U_U2*_Gamma_U1D1D2[ijk]*_Gamma_U2D2D2[ijk]*
-_gammaI_U1U2[ijk] + 0.33333333333333331*U_U2*_Gamma_U1D2D2[ijk]*
+_Gamma_U2D1D2[ijk]*_gammaI_U1U1[ijk] + 0.33333333333333331*U_U2*
+_Gamma_U1D2D2[ijk]*_Gamma_U2D0D1[ijk]*_gammaI_U0U1[ijk] + 
+0.33333333333333331*U_U2*_Gamma_U1D2D2[ijk]*_Gamma_U2D1D1[ijk]*
+_gammaI_U1U1[ijk] + 0.66666666666666663*U_U2*_Gamma_U1D2D2[ijk]*
 _Gamma_U2D1D2[ijk]*_gammaI_U1U2[ijk] + 0.33333333333333331*U_U2*
 _Gamma_U2D0D2[ijk]*_Gamma_U2D2D2[ijk]*_gammaI_U0U1[ijk] + 
 0.33333333333333331*U_U2*_Gamma_U2D1D2[ijk]*_Gamma_U2D2D2[ijk]*
@@ -576,13 +570,13 @@ _Gamma_U0D2D2[ijk]*_Gamma_U2D0D2[ijk] + U_U2*pow(_Gamma_U1D1D2[ijk], 2) +
 pow(_Gamma_U2D2D2[ijk], 2)));
 
   double t9_B_U1 = 
-0.66666666666666663*kd[ijk==lmn]*(U_U0*_Ric_D0D0[ijk]*
-_gammaI_U0U1[ijk] + U_U0*_Ric_D0D1[ijk]*_gammaI_U1U1[ijk] + U_U0*
-_Ric_D0D2[ijk]*_gammaI_U1U2[ijk] + U_U1*_Ric_D0D1[ijk]*
-_gammaI_U0U1[ijk] + U_U1*_Ric_D1D1[ijk]*_gammaI_U1U1[ijk] + U_U1*
-_Ric_D1D2[ijk]*_gammaI_U1U2[ijk] + U_U2*_Ric_D0D2[ijk]*
-_gammaI_U0U1[ijk] + U_U2*_Ric_D1D2[ijk]*_gammaI_U1U1[ijk] + U_U2*
-_Ric_D2D2[ijk]*_gammaI_U1U2[ijk]);
+kd[ijk==lmn]*(U_U0*_Ric_D0D0[ijk]*_gammaI_U0U1[ijk] + U_U0*
+_Ric_D0D1[ijk]*_gammaI_U1U1[ijk] + U_U0*_Ric_D0D2[ijk]*
+_gammaI_U1U2[ijk] + U_U1*_Ric_D0D1[ijk]*_gammaI_U0U1[ijk] + U_U1*
+_Ric_D1D1[ijk]*_gammaI_U1U1[ijk] + U_U1*_Ric_D1D2[ijk]*
+_gammaI_U1U2[ijk] + U_U2*_Ric_D0D2[ijk]*_gammaI_U0U1[ijk] + U_U2*
+_Ric_D1D2[ijk]*_gammaI_U1U1[ijk] + U_U2*_Ric_D2D2[ijk]*
+_gammaI_U1U2[ijk]);
 
 
 
@@ -867,24 +861,24 @@ _Gamma_U1D2D2[ijk]*_Gamma_U2D2D2[ijk]));
 0.33333333333333331*_gammaI_U0U1[ijk]*(JJB0_D0D0(j_JJB0_D0D0,ijk,lmn)*
 U_U0 + JJB0_D0D1(j_JJB0_D0D1,ijk,lmn)*U_U1 + JJB0_D0D2(j_JJB0_D0D2,ijk,lmn)*
 U_U2 + kd[ijk==lmn]*(U_U0*_dGamma_U0D0D0D0[ijk] + U_U0*
-_dGamma_U1D0D0D1[ijk] + U_U0*_dGamma_U2D0D0D2[ijk] + U_U1*
-_dGamma_U0D0D1D0[ijk] + U_U1*_dGamma_U1D0D1D1[ijk] + U_U1*
-_dGamma_U2D0D1D2[ijk] + U_U2*_dGamma_U0D0D2D0[ijk] + U_U2*
-_dGamma_U1D0D2D1[ijk] + U_U2*_dGamma_U2D0D2D2[ijk])) + 
+_dGamma_U1D0D1D0[ijk] + U_U0*_dGamma_U2D0D2D0[ijk] + U_U1*
+_dGamma_U0D0D1D0[ijk] + U_U1*_dGamma_U1D1D1D0[ijk] + U_U1*
+_dGamma_U2D1D2D0[ijk] + U_U2*_dGamma_U0D0D2D0[ijk] + U_U2*
+_dGamma_U1D1D2D0[ijk] + U_U2*_dGamma_U2D2D2D0[ijk])) + 
 0.33333333333333331*_gammaI_U1U1[ijk]*(JJB0_D0D1(j_JJB0_D0D1,ijk,lmn)*
 U_U0 + JJB0_D1D1(j_JJB0_D1D1,ijk,lmn)*U_U1 + JJB0_D1D2(j_JJB0_D1D2,ijk,lmn)*
-U_U2 + kd[ijk==lmn]*(U_U0*_dGamma_U0D0D1D0[ijk] + U_U0*
-_dGamma_U1D0D1D1[ijk] + U_U0*_dGamma_U2D0D1D2[ijk] + U_U1*
-_dGamma_U0D1D1D0[ijk] + U_U1*_dGamma_U1D1D1D1[ijk] + U_U1*
-_dGamma_U2D1D1D2[ijk] + U_U2*_dGamma_U0D1D2D0[ijk] + U_U2*
-_dGamma_U1D1D2D1[ijk] + U_U2*_dGamma_U2D1D2D2[ijk])) + 
+U_U2 + kd[ijk==lmn]*(U_U0*_dGamma_U0D0D0D1[ijk] + U_U0*
+_dGamma_U1D0D1D1[ijk] + U_U0*_dGamma_U2D0D2D1[ijk] + U_U1*
+_dGamma_U0D0D1D1[ijk] + U_U1*_dGamma_U1D1D1D1[ijk] + U_U1*
+_dGamma_U2D1D2D1[ijk] + U_U2*_dGamma_U0D0D2D1[ijk] + U_U2*
+_dGamma_U1D1D2D1[ijk] + U_U2*_dGamma_U2D2D2D1[ijk])) + 
 0.33333333333333331*_gammaI_U1U2[ijk]*(JJB0_D0D2(j_JJB0_D0D2,ijk,lmn)*
 U_U0 + JJB0_D1D2(j_JJB0_D1D2,ijk,lmn)*U_U1 + JJB0_D2D2(j_JJB0_D2D2,ijk,lmn)*
-U_U2 + kd[ijk==lmn]*(U_U0*_dGamma_U0D0D2D0[ijk] + U_U0*
-_dGamma_U1D0D2D1[ijk] + U_U0*_dGamma_U2D0D2D2[ijk] + U_U1*
-_dGamma_U0D1D2D0[ijk] + U_U1*_dGamma_U1D1D2D1[ijk] + U_U1*
-_dGamma_U2D1D2D2[ijk] + U_U2*_dGamma_U0D2D2D0[ijk] + U_U2*
-_dGamma_U1D2D2D1[ijk] + U_U2*_dGamma_U2D2D2D2[ijk]));
+U_U2 + kd[ijk==lmn]*(U_U0*_dGamma_U0D0D0D2[ijk] + U_U0*
+_dGamma_U1D0D1D2[ijk] + U_U0*_dGamma_U2D0D2D2[ijk] + U_U1*
+_dGamma_U0D0D1D2[ijk] + U_U1*_dGamma_U1D1D1D2[ijk] + U_U1*
+_dGamma_U2D1D2D2[ijk] + U_U2*_dGamma_U0D0D2D2[ijk] + U_U2*
+_dGamma_U1D1D2D2[ijk] + U_U2*_dGamma_U2D2D2D2[ijk]));
 
 
   double t6_E_U1 = 
@@ -937,97 +931,91 @@ kd[ijk==lmn]*(0.33333333333333331*U_U0*pow(_Gamma_U0D0D0[ijk], 2)*
 _gammaI_U0U1[ijk] + 0.33333333333333331*U_U0*_Gamma_U0D0D0[ijk]*
 _Gamma_U0D0D1[ijk]*_gammaI_U1U1[ijk] + 0.33333333333333331*U_U0*
 _Gamma_U0D0D0[ijk]*_Gamma_U0D0D2[ijk]*_gammaI_U1U2[ijk] + 
-0.33333333333333331*U_U0*_Gamma_U0D0D0[ijk]*_Gamma_U1D0D1[ijk]*
-_gammaI_U0U1[ijk] + 0.33333333333333331*U_U0*_Gamma_U0D0D0[ijk]*
-_Gamma_U2D0D2[ijk]*_gammaI_U0U1[ijk] + 0.33333333333333331*U_U0*
-_Gamma_U0D0D1[ijk]*_Gamma_U1D0D0[ijk]*_gammaI_U0U1[ijk] + 
-0.66666666666666663*U_U0*_Gamma_U0D0D1[ijk]*_Gamma_U1D0D1[ijk]*
-_gammaI_U1U1[ijk] + 0.33333333333333331*U_U0*_Gamma_U0D0D1[ijk]*
-_Gamma_U1D0D2[ijk]*_gammaI_U1U2[ijk] + 0.33333333333333331*U_U0*
-_Gamma_U0D0D1[ijk]*_Gamma_U2D0D2[ijk]*_gammaI_U1U1[ijk] + 
-0.33333333333333331*U_U0*_Gamma_U0D0D2[ijk]*_Gamma_U1D0D1[ijk]*
-_gammaI_U1U2[ijk] + 0.33333333333333331*U_U0*_Gamma_U0D0D2[ijk]*
-_Gamma_U2D0D0[ijk]*_gammaI_U0U1[ijk] + 0.33333333333333331*U_U0*
-_Gamma_U0D0D2[ijk]*_Gamma_U2D0D1[ijk]*_gammaI_U1U1[ijk] + 
-0.66666666666666663*U_U0*_Gamma_U0D0D2[ijk]*_Gamma_U2D0D2[ijk]*
-_gammaI_U1U2[ijk] + 0.33333333333333331*U_U0*_Gamma_U1D0D0[ijk]*
-_Gamma_U1D1D1[ijk]*_gammaI_U0U1[ijk] + 0.33333333333333331*U_U0*
-_Gamma_U1D0D0[ijk]*_Gamma_U2D1D2[ijk]*_gammaI_U0U1[ijk] + 
-0.33333333333333331*U_U0*_Gamma_U1D0D1[ijk]*_Gamma_U1D1D1[ijk]*
-_gammaI_U1U1[ijk] + 0.33333333333333331*U_U0*_Gamma_U1D0D1[ijk]*
-_Gamma_U2D1D2[ijk]*_gammaI_U1U1[ijk] + 0.33333333333333331*U_U0*
-_Gamma_U1D0D2[ijk]*_Gamma_U1D1D1[ijk]*_gammaI_U1U2[ijk] + 
-0.33333333333333331*U_U0*_Gamma_U1D0D2[ijk]*_Gamma_U2D1D2[ijk]*
-_gammaI_U1U2[ijk] + 0.33333333333333331*U_U0*_Gamma_U1D1D2[ijk]*
-_Gamma_U2D0D0[ijk]*_gammaI_U0U1[ijk] + 0.33333333333333331*U_U0*
-_Gamma_U1D1D2[ijk]*_Gamma_U2D0D1[ijk]*_gammaI_U1U1[ijk] + 
-0.33333333333333331*U_U0*_Gamma_U1D1D2[ijk]*_Gamma_U2D0D2[ijk]*
-_gammaI_U1U2[ijk] + 0.33333333333333331*U_U0*_Gamma_U2D0D0[ijk]*
-_Gamma_U2D2D2[ijk]*_gammaI_U0U1[ijk] + 0.33333333333333331*U_U0*
-_Gamma_U2D0D1[ijk]*_Gamma_U2D2D2[ijk]*_gammaI_U1U1[ijk] + 
+0.66666666666666663*U_U0*_Gamma_U0D0D1[ijk]*_Gamma_U1D0D0[ijk]*
+_gammaI_U0U1[ijk] + 0.33333333333333331*U_U0*_Gamma_U0D0D1[ijk]*
+_Gamma_U1D0D1[ijk]*_gammaI_U1U1[ijk] + 0.33333333333333331*U_U0*
+_Gamma_U0D0D1[ijk]*_Gamma_U1D0D2[ijk]*_gammaI_U1U2[ijk] + 
+0.66666666666666663*U_U0*_Gamma_U0D0D2[ijk]*_Gamma_U2D0D0[ijk]*
+_gammaI_U0U1[ijk] + 0.33333333333333331*U_U0*_Gamma_U0D0D2[ijk]*
+_Gamma_U2D0D1[ijk]*_gammaI_U1U1[ijk] + 0.33333333333333331*U_U0*
+_Gamma_U0D0D2[ijk]*_Gamma_U2D0D2[ijk]*_gammaI_U1U2[ijk] + 
+0.33333333333333331*U_U0*_Gamma_U0D1D1[ijk]*_Gamma_U1D0D0[ijk]*
+_gammaI_U1U1[ijk] + 0.33333333333333331*U_U0*_Gamma_U0D1D2[ijk]*
+_Gamma_U1D0D0[ijk]*_gammaI_U1U2[ijk] + 0.33333333333333331*U_U0*
+_Gamma_U0D1D2[ijk]*_Gamma_U2D0D0[ijk]*_gammaI_U1U1[ijk] + 
+0.33333333333333331*U_U0*_Gamma_U0D2D2[ijk]*_Gamma_U2D0D0[ijk]*
+_gammaI_U1U2[ijk] + 0.33333333333333331*U_U0*pow(_Gamma_U1D0D1[ijk], 2)*
+_gammaI_U0U1[ijk] + 0.33333333333333331*U_U0*_Gamma_U1D0D1[ijk]*
+_Gamma_U1D1D1[ijk]*_gammaI_U1U1[ijk] + 0.33333333333333331*U_U0*
+_Gamma_U1D0D1[ijk]*_Gamma_U1D1D2[ijk]*_gammaI_U1U2[ijk] + 
+0.66666666666666663*U_U0*_Gamma_U1D0D2[ijk]*_Gamma_U2D0D1[ijk]*
+_gammaI_U0U1[ijk] + 0.33333333333333331*U_U0*_Gamma_U1D0D2[ijk]*
+_Gamma_U2D1D1[ijk]*_gammaI_U1U1[ijk] + 0.33333333333333331*U_U0*
+_Gamma_U1D0D2[ijk]*_Gamma_U2D1D2[ijk]*_gammaI_U1U2[ijk] + 
+0.33333333333333331*U_U0*_Gamma_U1D1D2[ijk]*_Gamma_U2D0D1[ijk]*
+_gammaI_U1U1[ijk] + 0.33333333333333331*U_U0*_Gamma_U1D2D2[ijk]*
+_Gamma_U2D0D1[ijk]*_gammaI_U1U2[ijk] + 0.33333333333333331*U_U0*
+pow(_Gamma_U2D0D2[ijk], 2)*_gammaI_U0U1[ijk] + 0.33333333333333331*
+U_U0*_Gamma_U2D0D2[ijk]*_Gamma_U2D1D2[ijk]*_gammaI_U1U1[ijk] + 
 0.33333333333333331*U_U0*_Gamma_U2D0D2[ijk]*_Gamma_U2D2D2[ijk]*
 _gammaI_U1U2[ijk] + 0.33333333333333331*U_U1*_Gamma_U0D0D0[ijk]*
 _Gamma_U0D0D1[ijk]*_gammaI_U0U1[ijk] + 0.33333333333333331*U_U1*
-_Gamma_U0D0D0[ijk]*_Gamma_U0D1D1[ijk]*_gammaI_U1U1[ijk] + 
-0.33333333333333331*U_U1*_Gamma_U0D0D0[ijk]*_Gamma_U0D1D2[ijk]*
-_gammaI_U1U2[ijk] + 0.66666666666666663*U_U1*_Gamma_U0D0D1[ijk]*
-_Gamma_U1D0D1[ijk]*_gammaI_U0U1[ijk] + 0.33333333333333331*U_U1*
-_Gamma_U0D0D1[ijk]*_Gamma_U1D1D1[ijk]*_gammaI_U1U1[ijk] + 
-0.33333333333333331*U_U1*_Gamma_U0D0D1[ijk]*_Gamma_U1D1D2[ijk]*
-_gammaI_U1U2[ijk] + 0.33333333333333331*U_U1*_Gamma_U0D0D1[ijk]*
-_Gamma_U2D0D2[ijk]*_gammaI_U0U1[ijk] + 0.33333333333333331*U_U1*
-_Gamma_U0D0D2[ijk]*_Gamma_U2D0D1[ijk]*_gammaI_U0U1[ijk] + 
-0.33333333333333331*U_U1*_Gamma_U0D0D2[ijk]*_Gamma_U2D1D1[ijk]*
-_gammaI_U1U1[ijk] + 0.33333333333333331*U_U1*_Gamma_U0D0D2[ijk]*
-_Gamma_U2D1D2[ijk]*_gammaI_U1U2[ijk] + 0.33333333333333331*U_U1*
-_Gamma_U0D1D1[ijk]*_Gamma_U1D0D1[ijk]*_gammaI_U1U1[ijk] + 
-0.33333333333333331*U_U1*_Gamma_U0D1D1[ijk]*_Gamma_U2D0D2[ijk]*
-_gammaI_U1U1[ijk] + 0.33333333333333331*U_U1*_Gamma_U0D1D2[ijk]*
-_Gamma_U1D0D1[ijk]*_gammaI_U1U2[ijk] + 0.33333333333333331*U_U1*
-_Gamma_U0D1D2[ijk]*_Gamma_U2D0D2[ijk]*_gammaI_U1U2[ijk] + 
-0.33333333333333331*U_U1*_Gamma_U1D0D1[ijk]*_Gamma_U1D1D1[ijk]*
-_gammaI_U0U1[ijk] + 0.33333333333333331*U_U1*_Gamma_U1D0D1[ijk]*
-_Gamma_U2D1D2[ijk]*_gammaI_U0U1[ijk] + 0.33333333333333331*U_U1*
-pow(_Gamma_U1D1D1[ijk], 2)*_gammaI_U1U1[ijk] + 0.33333333333333331*
-U_U1*_Gamma_U1D1D1[ijk]*_Gamma_U1D1D2[ijk]*_gammaI_U1U2[ijk] + 
-0.33333333333333331*U_U1*_Gamma_U1D1D1[ijk]*_Gamma_U2D1D2[ijk]*
-_gammaI_U1U1[ijk] + 0.33333333333333331*U_U1*_Gamma_U1D1D2[ijk]*
+pow(_Gamma_U0D0D1[ijk], 2)*_gammaI_U1U1[ijk] + 0.33333333333333331*
+U_U1*_Gamma_U0D0D1[ijk]*_Gamma_U0D0D2[ijk]*_gammaI_U1U2[ijk] + 
+0.33333333333333331*U_U1*_Gamma_U0D0D1[ijk]*_Gamma_U1D0D1[ijk]*
+_gammaI_U0U1[ijk] + 0.33333333333333331*U_U1*_Gamma_U0D0D2[ijk]*
 _Gamma_U2D0D1[ijk]*_gammaI_U0U1[ijk] + 0.33333333333333331*U_U1*
+_Gamma_U0D1D1[ijk]*_Gamma_U1D0D0[ijk]*_gammaI_U0U1[ijk] + 
+0.66666666666666663*U_U1*_Gamma_U0D1D1[ijk]*_Gamma_U1D0D1[ijk]*
+_gammaI_U1U1[ijk] + 0.33333333333333331*U_U1*_Gamma_U0D1D1[ijk]*
+_Gamma_U1D0D2[ijk]*_gammaI_U1U2[ijk] + 0.33333333333333331*U_U1*
+_Gamma_U0D1D2[ijk]*_Gamma_U1D0D1[ijk]*_gammaI_U1U2[ijk] + 
+0.33333333333333331*U_U1*_Gamma_U0D1D2[ijk]*_Gamma_U2D0D0[ijk]*
+_gammaI_U0U1[ijk] + 0.66666666666666663*U_U1*_Gamma_U0D1D2[ijk]*
+_Gamma_U2D0D1[ijk]*_gammaI_U1U1[ijk] + 0.33333333333333331*U_U1*
+_Gamma_U0D1D2[ijk]*_Gamma_U2D0D2[ijk]*_gammaI_U1U2[ijk] + 
+0.33333333333333331*U_U1*_Gamma_U0D2D2[ijk]*_Gamma_U2D0D1[ijk]*
+_gammaI_U1U2[ijk] + 0.33333333333333331*U_U1*_Gamma_U1D0D1[ijk]*
+_Gamma_U1D1D1[ijk]*_gammaI_U0U1[ijk] + 0.33333333333333331*U_U1*
+_Gamma_U1D0D2[ijk]*_Gamma_U2D1D1[ijk]*_gammaI_U0U1[ijk] + 
+0.33333333333333331*U_U1*pow(_Gamma_U1D1D1[ijk], 2)*_gammaI_U1U1[ijk] + 
+0.33333333333333331*U_U1*_Gamma_U1D1D1[ijk]*_Gamma_U1D1D2[ijk]*
+_gammaI_U1U2[ijk] + 0.33333333333333331*U_U1*_Gamma_U1D1D2[ijk]*
+_Gamma_U2D0D1[ijk]*_gammaI_U0U1[ijk] + 0.66666666666666663*U_U1*
 _Gamma_U1D1D2[ijk]*_Gamma_U2D1D1[ijk]*_gammaI_U1U1[ijk] + 
-0.66666666666666663*U_U1*_Gamma_U1D1D2[ijk]*_Gamma_U2D1D2[ijk]*
-_gammaI_U1U2[ijk] + 0.33333333333333331*U_U1*_Gamma_U2D0D1[ijk]*
-_Gamma_U2D2D2[ijk]*_gammaI_U0U1[ijk] + 0.33333333333333331*U_U1*
-_Gamma_U2D1D1[ijk]*_Gamma_U2D2D2[ijk]*_gammaI_U1U1[ijk] + 
+0.33333333333333331*U_U1*_Gamma_U1D1D2[ijk]*_Gamma_U2D1D2[ijk]*
+_gammaI_U1U2[ijk] + 0.33333333333333331*U_U1*_Gamma_U1D2D2[ijk]*
+_Gamma_U2D1D1[ijk]*_gammaI_U1U2[ijk] + 0.33333333333333331*U_U1*
+_Gamma_U2D0D2[ijk]*_Gamma_U2D1D2[ijk]*_gammaI_U0U1[ijk] + 
+0.33333333333333331*U_U1*pow(_Gamma_U2D1D2[ijk], 2)*_gammaI_U1U1[ijk] + 
 0.33333333333333331*U_U1*_Gamma_U2D1D2[ijk]*_Gamma_U2D2D2[ijk]*
 _gammaI_U1U2[ijk] + 0.33333333333333331*U_U2*_Gamma_U0D0D0[ijk]*
 _Gamma_U0D0D2[ijk]*_gammaI_U0U1[ijk] + 0.33333333333333331*U_U2*
-_Gamma_U0D0D0[ijk]*_Gamma_U0D1D2[ijk]*_gammaI_U1U1[ijk] + 
-0.33333333333333331*U_U2*_Gamma_U0D0D0[ijk]*_Gamma_U0D2D2[ijk]*
-_gammaI_U1U2[ijk] + 0.33333333333333331*U_U2*_Gamma_U0D0D1[ijk]*
-_Gamma_U1D0D2[ijk]*_gammaI_U0U1[ijk] + 0.33333333333333331*U_U2*
-_Gamma_U0D0D1[ijk]*_Gamma_U1D1D2[ijk]*_gammaI_U1U1[ijk] + 
-0.33333333333333331*U_U2*_Gamma_U0D0D1[ijk]*_Gamma_U1D2D2[ijk]*
+_Gamma_U0D0D1[ijk]*_Gamma_U0D0D2[ijk]*_gammaI_U1U1[ijk] + 
+0.33333333333333331*U_U2*_Gamma_U0D0D1[ijk]*_Gamma_U1D0D2[ijk]*
+_gammaI_U0U1[ijk] + 0.33333333333333331*U_U2*pow(_Gamma_U0D0D2[ijk], 2)*
 _gammaI_U1U2[ijk] + 0.33333333333333331*U_U2*_Gamma_U0D0D2[ijk]*
-_Gamma_U1D0D1[ijk]*_gammaI_U0U1[ijk] + 0.66666666666666663*U_U2*
-_Gamma_U0D0D2[ijk]*_Gamma_U2D0D2[ijk]*_gammaI_U0U1[ijk] + 
-0.33333333333333331*U_U2*_Gamma_U0D0D2[ijk]*_Gamma_U2D1D2[ijk]*
-_gammaI_U1U1[ijk] + 0.33333333333333331*U_U2*_Gamma_U0D0D2[ijk]*
-_Gamma_U2D2D2[ijk]*_gammaI_U1U2[ijk] + 0.33333333333333331*U_U2*
-_Gamma_U0D1D2[ijk]*_Gamma_U1D0D1[ijk]*_gammaI_U1U1[ijk] + 
+_Gamma_U2D0D2[ijk]*_gammaI_U0U1[ijk] + 0.33333333333333331*U_U2*
+_Gamma_U0D1D1[ijk]*_Gamma_U1D0D2[ijk]*_gammaI_U1U1[ijk] + 
+0.33333333333333331*U_U2*_Gamma_U0D1D2[ijk]*_Gamma_U1D0D0[ijk]*
+_gammaI_U0U1[ijk] + 0.33333333333333331*U_U2*_Gamma_U0D1D2[ijk]*
+_Gamma_U1D0D1[ijk]*_gammaI_U1U1[ijk] + 0.66666666666666663*U_U2*
+_Gamma_U0D1D2[ijk]*_Gamma_U1D0D2[ijk]*_gammaI_U1U2[ijk] + 
 0.33333333333333331*U_U2*_Gamma_U0D1D2[ijk]*_Gamma_U2D0D2[ijk]*
 _gammaI_U1U1[ijk] + 0.33333333333333331*U_U2*_Gamma_U0D2D2[ijk]*
-_Gamma_U1D0D1[ijk]*_gammaI_U1U2[ijk] + 0.33333333333333331*U_U2*
-_Gamma_U0D2D2[ijk]*_Gamma_U2D0D2[ijk]*_gammaI_U1U2[ijk] + 
-0.33333333333333331*U_U2*_Gamma_U1D0D2[ijk]*_Gamma_U1D1D1[ijk]*
-_gammaI_U0U1[ijk] + 0.33333333333333331*U_U2*_Gamma_U1D0D2[ijk]*
-_Gamma_U2D1D2[ijk]*_gammaI_U0U1[ijk] + 0.33333333333333331*U_U2*
-_Gamma_U1D1D1[ijk]*_Gamma_U1D1D2[ijk]*_gammaI_U1U1[ijk] + 
-0.33333333333333331*U_U2*_Gamma_U1D1D1[ijk]*_Gamma_U1D2D2[ijk]*
+_Gamma_U2D0D0[ijk]*_gammaI_U0U1[ijk] + 0.33333333333333331*U_U2*
+_Gamma_U0D2D2[ijk]*_Gamma_U2D0D1[ijk]*_gammaI_U1U1[ijk] + 
+0.66666666666666663*U_U2*_Gamma_U0D2D2[ijk]*_Gamma_U2D0D2[ijk]*
+_gammaI_U1U2[ijk] + 0.33333333333333331*U_U2*_Gamma_U1D0D1[ijk]*
+_Gamma_U1D1D2[ijk]*_gammaI_U0U1[ijk] + 0.33333333333333331*U_U2*
+_Gamma_U1D0D2[ijk]*_Gamma_U2D1D2[ijk]*_gammaI_U0U1[ijk] + 
+0.33333333333333331*U_U2*_Gamma_U1D1D1[ijk]*_Gamma_U1D1D2[ijk]*
+_gammaI_U1U1[ijk] + 0.33333333333333331*U_U2*pow(_Gamma_U1D1D2[ijk], 2)*
 _gammaI_U1U2[ijk] + 0.33333333333333331*U_U2*_Gamma_U1D1D2[ijk]*
-_Gamma_U2D0D2[ijk]*_gammaI_U0U1[ijk] + 0.66666666666666663*U_U2*
-_Gamma_U1D1D2[ijk]*_Gamma_U2D1D2[ijk]*_gammaI_U1U1[ijk] + 
-0.33333333333333331*U_U2*_Gamma_U1D1D2[ijk]*_Gamma_U2D2D2[ijk]*
-_gammaI_U1U2[ijk] + 0.33333333333333331*U_U2*_Gamma_U1D2D2[ijk]*
+_Gamma_U2D1D2[ijk]*_gammaI_U1U1[ijk] + 0.33333333333333331*U_U2*
+_Gamma_U1D2D2[ijk]*_Gamma_U2D0D1[ijk]*_gammaI_U0U1[ijk] + 
+0.33333333333333331*U_U2*_Gamma_U1D2D2[ijk]*_Gamma_U2D1D1[ijk]*
+_gammaI_U1U1[ijk] + 0.66666666666666663*U_U2*_Gamma_U1D2D2[ijk]*
 _Gamma_U2D1D2[ijk]*_gammaI_U1U2[ijk] + 0.33333333333333331*U_U2*
 _Gamma_U2D0D2[ijk]*_Gamma_U2D2D2[ijk]*_gammaI_U0U1[ijk] + 
 0.33333333333333331*U_U2*_Gamma_U2D1D2[ijk]*_Gamma_U2D2D2[ijk]*
@@ -1111,13 +1099,13 @@ pow(_Gamma_U2D2D2[ijk], 2)));
 
 
   double t9_E_U1 = 
-0.66666666666666663*kd[ijk==lmn]*(U_U0*_Ric_D0D0[ijk]*
-_gammaI_U0U1[ijk] + U_U0*_Ric_D0D1[ijk]*_gammaI_U1U1[ijk] + U_U0*
-_Ric_D0D2[ijk]*_gammaI_U1U2[ijk] + U_U1*_Ric_D0D1[ijk]*
-_gammaI_U0U1[ijk] + U_U1*_Ric_D1D1[ijk]*_gammaI_U1U1[ijk] + U_U1*
-_Ric_D1D2[ijk]*_gammaI_U1U2[ijk] + U_U2*_Ric_D0D2[ijk]*
-_gammaI_U0U1[ijk] + U_U2*_Ric_D1D2[ijk]*_gammaI_U1U1[ijk] + U_U2*
-_Ric_D2D2[ijk]*_gammaI_U1U2[ijk]);
+kd[ijk==lmn]*(U_U0*_Ric_D0D0[ijk]*_gammaI_U0U1[ijk] + U_U0*
+_Ric_D0D1[ijk]*_gammaI_U1U1[ijk] + U_U0*_Ric_D0D2[ijk]*
+_gammaI_U1U2[ijk] + U_U1*_Ric_D0D1[ijk]*_gammaI_U0U1[ijk] + U_U1*
+_Ric_D1D1[ijk]*_gammaI_U1U1[ijk] + U_U1*_Ric_D1D2[ijk]*
+_gammaI_U1U2[ijk] + U_U2*_Ric_D0D2[ijk]*_gammaI_U0U1[ijk] + U_U2*
+_Ric_D1D2[ijk]*_gammaI_U1U1[ijk] + U_U2*_Ric_D2D2[ijk]*
+_gammaI_U1U2[ijk]);
 
 
   double t10_E_U1 = 

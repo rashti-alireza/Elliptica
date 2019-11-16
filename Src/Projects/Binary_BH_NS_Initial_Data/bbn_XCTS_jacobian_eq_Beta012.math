@@ -36,9 +36,9 @@ C_arg3 =;# no argument for U
 `#include "maths_equation_solvings_lib.h"`;
 `#include "bbn_XCTS_equations_lib.h"\n\n`;
 ``
-`#define U_U0 ?`
-`#define U_U1 ?`
-`#define U_U2 ?`
+`#define U_U0 ?.0`
+`#define U_U1 ?.0`
+`#define U_U2 ?.0`
 ``
 `void *bbn_jacobian_eq_Beta_U?(void *vp1,void *vp2)\n{`;
 
@@ -136,15 +136,15 @@ t3_B(i) =  _gammaI(-j,-m)*_Gamma(i,j,n)*KD(-n,-np)*_Gamma(np,m,l)*U(-l)*kd;
  
 t4_B(i) = -_gammaI(-j,-m)*(_Gamma(n,m,j)*U(i)*JB0(-n)+_Gamma(n,m,j)*KD(-n,-np)*_Gamma(i,np,l)*U(-l)*kd);
 
-t5_B(i) =  1/3*_gammaI(-i,-m)*(U(jp)*JJB0(j,m)*KD(-jp,-j) + KD(-jp,-j)*_dGamma(jp,m,l,j)*U(-l)*kd);
+t5_B(i) =  1/3*_gammaI(i,-m)*(U(jp)*JJB0(j,m)*KD(-jp,-j) + KD(-jp,-j)*_dGamma(jp,j,l,m)*U(-l)*kd);
 
-t6_B(i) =  1/3*_gammaI(-i,-m)*(_Gamma(j,m,l)*U(-l)*JB0(-j) + KD(-jp,-j)*_Gamma(jp,j,n)*U(-n)*JB0(m));
+t6_B(i) =  1/3*_gammaI(i,-m)*(_Gamma(j,m,l)*U(-l)*JB0(-j) + KD(-jp,-j)*_Gamma(jp,j,n)*U(-n)*JB0(m));
 
-t7_B(i) =  1/3*_gammaI(-i,-m)*KD(-jp,-j)*_Gamma(jp,j,n)*KD(-n,-np)*_Gamma(np,m,l)*U(-l)*kd;
+t7_B(i) =  1/3*_gammaI(i,-m)*KD(-j,-jp)*KD(-l,-lp)*_Gamma(j,m,l)*_Gamma(lp,jp,n)*U(-n)*kd;
 
-t8_B(i) = -1/3*_gammaI(-i,-m)*(_Gamma(n,m,j)*U(-j)*JB0(-n) + _Gamma(n,m,j)*KD(-n,-np)*KD(-jp,-j)*_Gamma(jp,np,l)*U(-l)*kd);
+t8_B(i) = -1/3*_gammaI(i,-m)*(_Gamma(n,m,j)*U(-j)*JB0(-n)+KD(-l,-lp)*KD(-j,-jp)*_Gamma(l,m,j)*_Gamma(jp,lp,n)*U(-n)*kd);
 
-t9_B(i) = 2/3*_gammaI(i,-m)*_Ric(m,l)*U(-l)*kd;
+t9_B(i) = _gammaI(i,-m)*_Ric(m,l)*U(-l)*kd;
 
 t10_B(i) = -dLnOf_alpha_B(-j)*( \
 _gammaI(j,-m)*(U(i)*JB0(m)+_Gamma(i,m,l)*U(-l)*kd)+ \
@@ -175,15 +175,15 @@ t3_E(i) =  _gammaI(-j,-m)*_Gamma(i,j,n)*KD(-n,-np)*_Gamma(np,m,l)*U(-l)*kd;
  
 t4_E(i) = -_gammaI(-j,-m)*(_Gamma(n,m,j)*U(i)*JB0(-n)+_Gamma(n,m,j)*KD(-n,-np)*_Gamma(i,np,l)*U(-l)*kd);
 
-t5_E(i) =  1/3*_gammaI(-i,-m)*(U(jp)*JJB0(j,m)*KD(-jp,-j) + KD(-jp,-j)*_dGamma(jp,m,l,j)*U(-l)*kd);
+t5_E(i) =  1/3*_gammaI(i,-m)*(U(jp)*JJB0(j,m)*KD(-jp,-j) + KD(-jp,-j)*_dGamma(jp,j,l,m)*U(-l)*kd);
 
-t6_E(i) =  1/3*_gammaI(-i,-m)*(_Gamma(j,m,l)*U(-l)*JB0(-j) + KD(-jp,-j)*_Gamma(jp,j,n)*U(-n)*JB0(m));
+t6_E(i) =  1/3*_gammaI(i,-m)*(_Gamma(j,m,l)*U(-l)*JB0(-j) + KD(-jp,-j)*_Gamma(jp,j,n)*U(-n)*JB0(m));
 
-t7_E(i) =  1/3*_gammaI(-i,-m)*KD(-jp,-j)*_Gamma(jp,j,n)*KD(-n,-np)*_Gamma(np,m,l)*U(-l)*kd;
+t7_E(i) =  1/3*_gammaI(i,-m)*KD(-j,-jp)*KD(-l,-lp)*_Gamma(j,m,l)*_Gamma(lp,jp,n)*U(-n)*kd;
 
-t8_E(i) = -1/3*_gammaI(-i,-m)*(_Gamma(n,m,j)*U(-j)*JB0(-n) + _Gamma(n,m,j)*KD(-n,-np)*KD(-jp,-j)*_Gamma(jp,np,l)*U(-l)*kd);
+t8_E(i) = -1/3*_gammaI(i,-m)*(_Gamma(n,m,j)*U(-j)*JB0(-n)+KD(-l,-lp)*KD(-j,-jp)*_Gamma(l,m,j)*_Gamma(jp,lp,n)*U(-n)*kd);
 
-t9_E(i) = 2/3*_gammaI(i,-m)*_Ric(m,l)*U(-l)*kd;
+t9_E(i) = _gammaI(i,-m)*_Ric(m,l)*U(-l)*kd;
 
 t10_E(i) = -dLnOf_alpha_E(-j)*( \
 _gammaI(j,-m)*(U(i)*JB0(m)+_Gamma(i,m,l)*U(-l)*kd)+ \
