@@ -26,7 +26,7 @@ void bbn_solve_initial_data_eqs(Grid_T *const grid)
   Solve_Equations_T *SolveEqs = init_solve_equations(grid);
   SolveEqs->solving_order = GetParameterS_E("Solving_Order");
   SolveEqs->FieldUpdate   = bbn_SolveEqs_FieldUpdate;
-  SolveEqs->SourceUpdate  = bbn_SolveEqs_SourceUpdate;
+  SolveEqs->SourceUpdate  = 0;//bbn_SolveEqs_SourceUpdate;
   SolveEqs->StopCriteria  = bbn_stop_criteria;
   
   Grid_T *phi_grid = bbn_phi_grid(grid);/* phi needed to be solved only in NS */
@@ -52,6 +52,25 @@ void bbn_solve_initial_data_eqs(Grid_T *const grid)
     
     /* solve equations */
     solve_eqs(SolveEqs);
+    
+    Observable_T *obs = init_observable(grid);
+    obs->quantity = "ADM_momentums";
+    plan_observable(obs);
+    /* get the current P_ADMs */
+    double p2[3];
+    p2[0] = obs->Px_ADM(obs);
+    p2[1] = obs->Py_ADM(obs);
+    p2[2] = obs->Pz_ADM(obs);
+    printf("ADM momentums:\n");
+    printf("-->P_ADM  = (%e,%e,%e).\n",p2[0],p2[1],p2[2]);
+    printf("-->J_ADM  = (%e,%e,%e).\n",
+      obs->Jx_ADM(obs),obs->Jy_ADM(obs),obs->Jz_ADM(obs));
+    free_observable(obs);
+    
+    bbn_SolveEqs_SourceUpdate(grid,0);
+    
+    calculate_equation_residual(SolveEqs);
+    bbn_study_initial_data(grid);
     
     /* some prints */
     printf("} Iteration %d For Solving XCTS Equations at a Fixed Resolution ==> Done.\n",iter);
@@ -335,22 +354,23 @@ void bbn_SolveEqs_SourceUpdate(Grid_T *const grid,const char *const name)
 {
   Tij_IF_CTS_psi6Sources(grid);
   
-  /*if (!strcmp(name,"phi"))
-  {
+  //if (!strcmp(name,"phi"))
+  //{
     unsigned p;
     FOR_ALL_PATCHES(p,grid)
     {
       Patch_T *patch = grid->patch[p];
       
-      if (!IsItNSPatch(patch))
-        continue;
+      bbn_update_psi10A_UiUj(patch);
+      //if (!IsItNSPatch(patch))
+        //continue;
         
-      Tij_IF_CTS_enthalpy(patch);
-      bbn_update_derivative_enthalpy(patch);
-      bbn_update_rho0(patch);
-      bbn_update_derivative_rho0(patch);
+      //Tij_IF_CTS_enthalpy(patch);
+      //bbn_update_derivative_enthalpy(patch);
+      //bbn_update_rho0(patch);
+      //bbn_update_derivative_rho0(patch);
     }
-  }*/
+  //}*/
   
   UNUSED(name);
 }
