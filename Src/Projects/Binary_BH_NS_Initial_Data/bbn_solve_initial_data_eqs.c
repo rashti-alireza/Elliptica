@@ -387,12 +387,12 @@ void bbn_SolveEqs_FieldUpdate(Patch_T *const patch,const char *const name)
   else if (!strcmp(name,"psi"))
   {
     bbn_update_derivative_psi(patch);
-    //bbn_update_psi10A_UiUj(patch);
+    bbn_update_psi10A_UiUj(patch);
   }
   else if (!strcmp(name,"eta"))
   {
     bbn_update_derivative_eta(patch);
-    //bbn_update_psi10A_UiUj(patch);
+    bbn_update_psi10A_UiUj(patch);
   }
   else if (!strcmp(name,"B0_U0"))
   {
