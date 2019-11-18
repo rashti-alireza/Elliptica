@@ -37,6 +37,8 @@ void bbn_solve_initial_data_eqs(Grid_T *const grid)
   
   const unsigned max_iter = (unsigned)GetParameterI_E("Solving_Max_Number_of_Iteration");
   unsigned iter = 0;
+  bbn_study_initial_data(grid);
+    
   while (iter < max_iter)
   {
     /* some prints */
