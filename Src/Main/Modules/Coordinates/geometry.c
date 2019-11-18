@@ -22,10 +22,17 @@ int realize_geometry(Grid_T *const grid)
   
   pr_line_custom('=');
   printf("Realizing boundary conditions for each patch ...\n");
- 
+  
+  /* keep track of counted points; 1 means counted, 0 means not. */
+  unsigned **point_flag = calloc(grid->np,sizeof(*point_flag));
+  pointerEr(point_flag);
+  
   FOR_ALL(i,grid->patch)
   {
     Patch_T *const patch = grid->patch[i];
+    
+    point_flag[i] = calloc(patch->nn,sizeof(*point_flag[i]));
+    pointerEr(point_flag[i]);
     
     alloc_interface(patch);/* allocating interfaces */
     fill_basics(patch);/* filling basic elements */
@@ -34,7 +41,7 @@ int realize_geometry(Grid_T *const grid)
   }
   
   /* find various geometry of each point */
-  fill_geometry(grid);
+  fill_geometry(grid,point_flag);
   
   /* freeing Point_T */
   free_points(grid);
@@ -52,6 +59,9 @@ int realize_geometry(Grid_T *const grid)
   if(test_print(PRINT_INTERFACES))
     pr_interfaces(grid);
  
+  /* freeing */
+  free_2d_mem(point_flag,grid->np);
+  
   printf("Realizing boundary conditions for each patch ==> Done.\n");
   pr_clock();
   pr_line_custom('=');
@@ -801,7 +811,7 @@ static char *inspect_flags(const Point_T *const pnt)
 }
 
 /* filling the geometry of point struct */
-static void fill_geometry(Grid_T *const grid)
+static void fill_geometry(Grid_T *const grid,unsigned **const point_flag)
 {
   sFunc_PtoV_T **func;
   unsigned i;
@@ -828,7 +838,7 @@ static void fill_geometry(Grid_T *const grid)
   
   /* realize neighbor properties */
   FOR_ALL(i,grid->patch)
-    realize_neighbor(grid->patch[i]);
+    realize_neighbor(grid->patch[i],point_flag);
   
 }
 
@@ -843,7 +853,7 @@ static void fill_geometry(Grid_T *const grid)
 // use different algorithm, since edge points need be treated specially
 // ->return value-> EXIT_SUCCESS
 */
-static int realize_neighbor(Patch_T *const patch)
+static int realize_neighbor(Patch_T *const patch,unsigned **const point_flag)
 {
   const unsigned nf = countf(patch->interface);
   unsigned f;
@@ -854,25 +864,28 @@ static int realize_neighbor(Patch_T *const patch)
     PointSet_T **innerP, **edgeP;
     init_Points(interface,&innerP,&edgeP);/* initializing inner and 
                                           // edge points */
-    realize_adj(innerP);/* first, realizing the adjacency, INNER one */
-    realize_adj(edgeP);/* second, realizing the adjacency, EDGE one */
+    realize_adj(innerP,point_flag);/* first, realizing the adjacency, INNER one */
+    realize_adj(edgeP,point_flag);/* second, realizing the adjacency, EDGE one */
     
     free_PointSet(innerP);
     free_PointSet(edgeP);
   }
+  
   return EXIT_SUCCESS;
 }
 
 /* realizing adjacency of given points
 // ->return value: EXIT_SUCCESS.
 */
-static int realize_adj(PointSet_T **const Pnt)
+static int realize_adj(PointSet_T **const Pnt,unsigned **const point_flag)
 {
   unsigned p;
   char *lead;
   
   FOR_ALL(p,Pnt)
   {
+    Point_T *const pnt = Pnt[p]->Pnt;
+    
     /* first take care of non external faces */
     if (Pnt[p]->Pnt->exterF == 0)
     {
@@ -880,6 +893,7 @@ static int realize_adj(PointSet_T **const Pnt)
       add_to_subface(Pnt[p]->Pnt,lead);
       free(lead);
       Pnt[p]->Pnt->houseK = 1;
+      point_flag[pnt->patch->pn][pnt->ind] = 1;
     }
     /* second take care of inner boundary */
     if (Pnt[p]->Pnt->innerB == 1)
@@ -888,11 +902,19 @@ static int realize_adj(PointSet_T **const Pnt)
       add_to_subface(Pnt[p]->Pnt,lead);
       free(lead);
       Pnt[p]->Pnt->houseK = 1;
+      point_flag[pnt->patch->pn][pnt->ind] = 1;
     }
-    if (Pnt[p]->Pnt->houseK == 1) continue;
+    /* if this point on this face is already considered. */
+    if (pnt->houseK)
+      continue;
+    /* although this point on face has not been considered, it might
+    // be already considered for other faces, so let's skip this
+    // inorder to have only one BC for each edge points at the solver. */
+    if (point_flag[pnt->patch->pn][pnt->ind]) 
+      continue;
     
     find_adjPnt(Pnt[p]);
-    analyze_adjPnt(Pnt[p]);
+    analyze_adjPnt(Pnt[p],point_flag);
   }
   
   return EXIT_SUCCESS;
@@ -901,7 +923,7 @@ static int realize_adj(PointSet_T **const Pnt)
 /* analyzing the adjacent point of point pnt; 
 // see which one best describe the adjacent boundary of the interface
 // and then fill the flags of Point_T. */
-static void analyze_adjPnt(PointSet_T *const Pnt)
+static void analyze_adjPnt(PointSet_T *const Pnt,unsigned **const point_flag)
 {
   Point_T *const p1 = Pnt->Pnt;
   Point_T *p2;
@@ -939,7 +961,7 @@ static void analyze_adjPnt(PointSet_T *const Pnt)
     add_to_subface(p1,lead);
   }
   /* if this point can be matched with the susbface made by inner points.
-  // this helps setting of B.C. between patches and lowe the condition number. */
+  // this helps setting of B.C. between patches and low the condition number. */
   else if (IsMatchedOtherInnerSubface(Pnt))
   {
     return;
@@ -965,7 +987,7 @@ static void analyze_adjPnt(PointSet_T *const Pnt)
       p2->adjFace  = p1->face;
       p2->adjPoint = p1;
       p2->houseK = 1;
-      
+      point_flag[p2->patch->pn][p2->ind] = 1;
       lead = inspect_flags(p2);
       add_to_subface(p2,lead);
       free(lead);
@@ -1023,6 +1045,7 @@ static void analyze_adjPnt(PointSet_T *const Pnt)
     abortEr("Incomplete function.\n");
   }
   p1->houseK = 1;
+  point_flag[p1->patch->pn][p1->ind] = 1;
   
   if (lead) free(lead);
 }
@@ -1043,6 +1066,9 @@ static void analyze_adjPnt(PointSet_T *const Pnt)
 */
 static int IsMatchedOtherInnerSubface(PointSet_T *const Pnt)
 {
+  /* this doesn't work for cubed spherical, investigate later. */
+  return 0;
+  
   if (!Pnt->NadjPnt) return 0;
   
   if (strcmp_i(GetParameterS("Interface_BC_Maximum_Face_Match"),"no"))
