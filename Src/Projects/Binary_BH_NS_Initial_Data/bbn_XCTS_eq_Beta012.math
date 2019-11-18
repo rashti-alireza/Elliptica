@@ -71,8 +71,10 @@ Symm[_Gamma(i,j,k)   = _Gamma(i,k,j)];
 
 alphabar = eta*psi**(-7);# alpha * psi^-6
 F_eq(i) = \
- _dA_UiUj(i,j,jp)*KD(-j,-jp)+_Gamma(i,j,l)*_A_UiUj(-l,-j)+_Gamma(j,jp,l)*_A_UiUj(i,-l)*KD(-j,-jp)\
--2*_gammaI(i,j)*dK(-j)*(psi**6)/3 -8*pi*(psi**4)*_J(i);
+ _dA_UiUj(i,j,jp)*KD(-j,-jp)+\
+_Gamma(i,j,l)*_A_UiUj(-l,-j)+\
+_Gamma(j,jp,l)*_A_UiUj(i,-l)*KD(-j,-jp)\
+-2/3*(psi**6)*_gammaI(i,j)*dK(-j) -8*pi*(psi**4)*_J(i);
 
 `  F[n] = 2.*alphabar*F_eq_U?;\n`;# Jx = -F in Newton-Raphson scheme
 `  DDM_SCHUR_EQ_CLOSE\n`;

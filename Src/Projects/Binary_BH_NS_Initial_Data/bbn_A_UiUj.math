@@ -159,10 +159,10 @@ Ccode["    }/*end of for(ijk = 0; ijk < nn; ++ijk)*/"];
 
 Ccode["    for(ijk = 0; ijk < nn; ++ijk)"];
 Ccode["    {"];
-alphab   = eta*psi**(-7);# alpha * psi^-6
-dLnOf_alphabar(i) = deta(i)/eta -7*dpsi(i)/psi; 
+alpha_   = eta*psi**(-7);# alpha * psi^-6
+dLnOf_alpha_(i) = deta(i)/eta -7*dpsi(i)/psi; 
 
-dlAij(i,j,-l) = (-_LBij(i,j)*dLnOf_alphabar(l)+_dLBij(i,j,l))/(2*alphab);
+dlAij(i,j,-l) = (-_LBij(i,j)*dLnOf_alpha_(l)+_dLBij(i,j,l))/(2*alpha_);
 Symm[dlAij(i,j,l)  = dlAij(j,i,l)];
 
 Cpopulate[_dA_UiUj = dlAij];
