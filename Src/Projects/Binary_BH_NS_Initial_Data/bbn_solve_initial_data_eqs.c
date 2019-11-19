@@ -28,6 +28,7 @@ void bbn_solve_initial_data_eqs(Grid_T *const grid)
   SolveEqs->FieldUpdate   = bbn_SolveEqs_FieldUpdate;
   SolveEqs->SourceUpdate  = bbn_SolveEqs_SourceUpdate;
   SolveEqs->StopCriteria  = bbn_stop_criteria;
+  SolveEqs->SgridUpdate   = bbn_update_grid;
   
   Grid_T *phi_grid = bbn_phi_grid(grid);/* phi needed to be solved only in NS */
   add_special_grid_solve_equations(phi_grid,"phi",SolveEqs);
@@ -37,7 +38,7 @@ void bbn_solve_initial_data_eqs(Grid_T *const grid)
   
   const unsigned max_iter = (unsigned)GetParameterI_E("Solving_Max_Number_of_Iteration");
   unsigned iter = 0;
-  bbn_study_initial_data(grid);
+  //bbn_study_initial_data(grid);
     
   while (iter < max_iter)
   {
@@ -46,33 +47,27 @@ void bbn_solve_initial_data_eqs(Grid_T *const grid)
     printf("{ Iteration %d For Solving XCTS Equations at a Fixed Resolution ...\n",iter);
     printf("        |---> %s Equations ...\n",SolveEqs->solving_order);
     
-    /* updating patch->pool of phi_grid */
-    update_phi_grid(phi_grid,grid);
-    
     /* solve equations */
     solve_eqs(SolveEqs);
     
-    Observable_T *obs = init_observable(grid);
-    obs->quantity = "ADM_momentums";
-    plan_observable(obs);
+    //Observable_T *obs = init_observable(grid);
+    //obs->quantity = "ADM_momentums";
+    //plan_observable(obs);
     /* get the current P_ADMs */
-    double p2[3];
-    p2[0] = obs->Px_ADM(obs);
-    p2[1] = obs->Py_ADM(obs);
-    p2[2] = obs->Pz_ADM(obs);
-    printf("ADM momentums:\n");
-    printf("-->P_ADM  = (%e,%e,%e).\n",p2[0],p2[1],p2[2]);
-    printf("-->J_ADM  = (%e,%e,%e).\n",
-      obs->Jx_ADM(obs),obs->Jy_ADM(obs),obs->Jz_ADM(obs));
-    free_observable(obs);
+    //double p2[3];
+    //p2[0] = obs->Px_ADM(obs);
+    //p2[1] = obs->Py_ADM(obs);
+    //p2[2] = obs->Pz_ADM(obs);
+    //printf("ADM momentums:\n");
+    //printf("-->P_ADM  = (%e,%e,%e).\n",p2[0],p2[1],p2[2]);
+    //printf("-->J_ADM  = (%e,%e,%e).\n",
+      //obs->Jx_ADM(obs),obs->Jy_ADM(obs),obs->Jz_ADM(obs));
+    //free_observable(obs);
     
     //bbn_SolveEqs_SourceUpdate(grid,0);
     
-    calculate_equation_residual(SolveEqs);
-    bbn_study_initial_data(grid);
-    
-    /* updating patch->pool of phi_grid */
-    update_phi_grid(phi_grid,grid);
+    //calculate_equation_residual(SolveEqs);
+    //bbn_study_initial_data(grid);
     
     /* some prints */
     printf("} Iteration %d For Solving XCTS Equations at a Fixed Resolution ==> Done.\n",iter);
@@ -103,10 +98,20 @@ void bbn_solve_initial_data_eqs(Grid_T *const grid)
   pr_line_custom('='); 
 }
 
+/* update Special grid Sgrid, this is needed since the patch->pool 
+// is updated thus, Sgrid needs to be updated too. */
+void bbn_update_grid(Grid_T *const Sgrid,Grid_T *const grid,const char *const name)
+{
+  if (!strcmp(name,"phi"))
+  {
+    update_phi_grid(Sgrid,grid);
+  }
+}
+
 /* updating patch->pool of phi_grid. sometimes other equations might add
 // and delete some fields and as a result the pool pointer which is shared
 // between grid and phi_grid become different, this function sync the pool. */
-static void update_phi_grid(Grid_T *const phi_grid,Grid_T *const grid)
+static void update_phi_grid(Grid_T *const phi_grid,const Grid_T *const grid)
 {
   unsigned p,p2,i;
   
