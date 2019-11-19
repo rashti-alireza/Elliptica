@@ -46,11 +46,11 @@ void bbn_solve_initial_data_eqs(Grid_T *const grid)
     printf("{ Iteration %d For Solving XCTS Equations at a Fixed Resolution ...\n",iter);
     printf("        |---> %s Equations ...\n",SolveEqs->solving_order);
     
-    /* updating patch->pool of phi_grid */
-    update_phi_grid(phi_grid,grid);
-    
     /* test if jacobian of equations written correctly */
     if (0) test_Jacobian_of_equations(SolveEqs);
+    
+    /* updating patch->pool of phi_grid */
+    update_phi_grid(phi_grid,grid);
     
     /* solve equations */
     solve_eqs(SolveEqs);
@@ -73,6 +73,9 @@ void bbn_solve_initial_data_eqs(Grid_T *const grid)
     
     calculate_equation_residual(SolveEqs);
     bbn_study_initial_data(grid);
+    
+    /* updating patch->pool of phi_grid */
+    update_phi_grid(phi_grid,grid);
     
     /* some prints */
     printf("} Iteration %d For Solving XCTS Equations at a Fixed Resolution ==> Done.\n",iter);
@@ -126,6 +129,7 @@ static void update_phi_grid(Grid_T *const phi_grid,Grid_T *const grid)
       if (!strcmp(name2,name))
       {
         patch2->pool = patch->pool;
+        patch2->nfld = patch->nfld;
         i++;
         break;
       }
