@@ -26,7 +26,7 @@ void bbn_solve_initial_data_eqs(Grid_T *const grid)
   Solve_Equations_T *SolveEqs = init_solve_equations(grid);
   SolveEqs->solving_order = GetParameterS_E("Solving_Order");
   SolveEqs->FieldUpdate   = bbn_SolveEqs_FieldUpdate;
-  SolveEqs->SourceUpdate  = 0;//bbn_SolveEqs_SourceUpdate;
+  SolveEqs->SourceUpdate  = bbn_SolveEqs_SourceUpdate;
   SolveEqs->StopCriteria  = bbn_stop_criteria;
   
   Grid_T *phi_grid = bbn_phi_grid(grid);/* phi needed to be solved only in NS */
@@ -69,7 +69,7 @@ void bbn_solve_initial_data_eqs(Grid_T *const grid)
       obs->Jx_ADM(obs),obs->Jy_ADM(obs),obs->Jz_ADM(obs));
     free_observable(obs);
     
-    bbn_SolveEqs_SourceUpdate(grid,0);
+    //bbn_SolveEqs_SourceUpdate(grid,0);
     
     calculate_equation_residual(SolveEqs);
     bbn_study_initial_data(grid);
@@ -184,7 +184,7 @@ static void update_fields_relaxed_scheme(Grid_T *const grid)
       bbn_SolveEqs_FieldUpdate(patch,field_new);
     }
   }/* end of for (f = 0; f < nf; ++f) */
-  Tij_IF_CTS_psi6Sources(grid);
+  bbn_SolveEqs_SourceUpdate(grid,0);
   
   /* free names */
   free_2d_mem(field_name,nf);
@@ -358,25 +358,14 @@ static void bbn_backtrack(Grid_T *const grid,const char *const name)
 /* updating sources after field is solved */
 void bbn_SolveEqs_SourceUpdate(Grid_T *const grid,const char *const name)
 {
-  Tij_IF_CTS_psi6Sources(grid);
+  unsigned p;
   
-  //if (!strcmp(name,"phi"))
-  //{
-    //unsigned p;
-    //FOR_ALL_PATCHES(p,grid)
-    //{
-      //Patch_T *patch = grid->patch[p];
-      
-      //bbn_update_psi10A_UiUj(patch);
-      //if (!IsItNSPatch(patch))
-        //continue;
-        
-      //Tij_IF_CTS_enthalpy(patch);
-      //bbn_update_derivative_enthalpy(patch);
-      //bbn_update_rho0(patch);
-      //bbn_update_derivative_rho0(patch);
-    //}
-  //}*/
+  FOR_ALL_PATCHES(p,grid)
+  {
+    Patch_T *patch = grid->patch[p];
+    bbn_update_psi10A_UiUj(patch);
+  }
+  Tij_IF_CTS_psi6Sources(grid);
   
   UNUSED(name);
 }
@@ -391,12 +380,12 @@ void bbn_SolveEqs_FieldUpdate(Patch_T *const patch,const char *const name)
   else if (!strcmp(name,"psi"))
   {
     bbn_update_derivative_psi(patch);
-    bbn_update_psi10A_UiUj(patch);
+    //bbn_update_psi10A_UiUj(patch);
   }
   else if (!strcmp(name,"eta"))
   {
     bbn_update_derivative_eta(patch);
-    bbn_update_psi10A_UiUj(patch);
+    //bbn_update_psi10A_UiUj(patch);
   }
   else if (!strcmp(name,"B0_U0"))
   {
@@ -404,7 +393,7 @@ void bbn_SolveEqs_FieldUpdate(Patch_T *const patch,const char *const name)
     bbn_update_derivative_B0_U0(patch);
     bbn_update_derivative_B1_U0(patch);
     bbn_update_derivative_Beta_U0(patch);
-    bbn_update_psi10A_UiUj(patch);
+    //bbn_update_psi10A_UiUj(patch);
   }
   else if (!strcmp(name,"B0_U1"))
   {
@@ -412,7 +401,7 @@ void bbn_SolveEqs_FieldUpdate(Patch_T *const patch,const char *const name)
     bbn_update_derivative_B0_U1(patch);
     bbn_update_derivative_B1_U1(patch);
     bbn_update_derivative_Beta_U1(patch);
-    bbn_update_psi10A_UiUj(patch);
+    //bbn_update_psi10A_UiUj(patch);
   }
   else if (!strcmp(name,"B0_U2"))
   {
@@ -420,7 +409,7 @@ void bbn_SolveEqs_FieldUpdate(Patch_T *const patch,const char *const name)
     bbn_update_derivative_B0_U2(patch);
     bbn_update_derivative_B1_U2(patch);
     bbn_update_derivative_Beta_U2(patch);
-    bbn_update_psi10A_UiUj(patch);
+    //bbn_update_psi10A_UiUj(patch);
   }
   
 }
