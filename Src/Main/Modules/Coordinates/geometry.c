@@ -775,7 +775,7 @@ static char *inspect_flags(const Point_T *const pnt)
     if (pnt->sameY == 1)  strcat(str,"sameY:1,");
     else		  strcat(str,"sameY:0,");
     /* sameZ */
-    if (pnt->sameZ == 1)  strcat(str,"sameZ:1");
+    if (pnt->sameZ == 1)  strcat(str,"sameZ:1,");
     else		  strcat(str,"sameZ:0,");
     
   }
@@ -803,8 +803,8 @@ static char *inspect_flags(const Point_T *const pnt)
   else 			strcat(str,"innerB:0,");
   
   /* exterF */
-  if (pnt->exterF == 1) strcat(str,"exterF:1");
-  else 			strcat(str,"exterF:0");
+  if (pnt->exterF == 1) strcat(str,"exterF:1,");
+  else 			strcat(str,"exterF:0,");
   
   ret = dup_s(str);  
   return ret;
