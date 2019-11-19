@@ -855,10 +855,12 @@ static void fill_geometry(Grid_T *const grid,unsigned **const point_flag)
 */
 static int realize_neighbor(Patch_T *const patch,unsigned **const point_flag)
 {
-  const unsigned nf = countf(patch->interface);
-  unsigned f;
+  const int nf = (int)countf(patch->interface);
+  int f;
   
-  for (f = 0; f < nf; f++)
+  /* to maximize the outer/inner boundary subfaces 
+  // ,good for elliptic solver, start with max f */
+  for (f = nf-1; f >= 0 ; f--)
   {
     Interface_T *interface = patch->interface[f];
     PointSet_T **innerP, **edgeP;
