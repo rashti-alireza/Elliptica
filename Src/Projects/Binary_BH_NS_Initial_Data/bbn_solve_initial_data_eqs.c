@@ -362,12 +362,12 @@ void bbn_SolveEqs_SourceUpdate(Grid_T *const grid,const char *const name)
   
   //if (!strcmp(name,"phi"))
   //{
-    unsigned p;
-    FOR_ALL_PATCHES(p,grid)
-    {
-      Patch_T *patch = grid->patch[p];
+    //unsigned p;
+    //FOR_ALL_PATCHES(p,grid)
+    //{
+      //Patch_T *patch = grid->patch[p];
       
-      bbn_update_psi10A_UiUj(patch);
+      //bbn_update_psi10A_UiUj(patch);
       //if (!IsItNSPatch(patch))
         //continue;
         
@@ -375,7 +375,7 @@ void bbn_SolveEqs_SourceUpdate(Grid_T *const grid,const char *const name)
       //bbn_update_derivative_enthalpy(patch);
       //bbn_update_rho0(patch);
       //bbn_update_derivative_rho0(patch);
-    }
+    //}
   //}*/
   
   UNUSED(name);
@@ -387,8 +387,6 @@ void bbn_SolveEqs_FieldUpdate(Patch_T *const patch,const char *const name)
   if (!strcmp(name,"phi"))
   {
     bbn_update_derivative_phi(patch);
-    //Tij_IF_CTS_enthalpy(patch);
-    //bbn_update_derivative_enthalpy(patch);
   }
   else if (!strcmp(name,"psi"))
   {
@@ -406,7 +404,7 @@ void bbn_SolveEqs_FieldUpdate(Patch_T *const patch,const char *const name)
     bbn_update_derivative_B0_U0(patch);
     bbn_update_derivative_B1_U0(patch);
     bbn_update_derivative_Beta_U0(patch);
-    //bbn_update_psi10A_UiUj(patch);
+    bbn_update_psi10A_UiUj(patch);
   }
   else if (!strcmp(name,"B0_U1"))
   {
@@ -414,7 +412,7 @@ void bbn_SolveEqs_FieldUpdate(Patch_T *const patch,const char *const name)
     bbn_update_derivative_B0_U1(patch);
     bbn_update_derivative_B1_U1(patch);
     bbn_update_derivative_Beta_U1(patch);
-    //bbn_update_psi10A_UiUj(patch);
+    bbn_update_psi10A_UiUj(patch);
   }
   else if (!strcmp(name,"B0_U2"))
   {
@@ -422,7 +420,7 @@ void bbn_SolveEqs_FieldUpdate(Patch_T *const patch,const char *const name)
     bbn_update_derivative_B0_U2(patch);
     bbn_update_derivative_B1_U2(patch);
     bbn_update_derivative_Beta_U2(patch);
-    //bbn_update_psi10A_UiUj(patch);
+    bbn_update_psi10A_UiUj(patch);
   }
   
 }
