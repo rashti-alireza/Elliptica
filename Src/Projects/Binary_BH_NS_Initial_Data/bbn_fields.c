@@ -966,7 +966,7 @@ void bbn_update_derivative_Beta_U1(Patch_T *const patch)
 {
   const unsigned nn = patch->nn;
   unsigned ijk;
-  bn_update_derivative_B0_U1(patch);
+  bbn_update_derivative_B0_U1(patch);
   bbn_update_derivative_B1_U1(patch);
       
   GET_FIELD(dB0_U1D1)
