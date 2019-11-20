@@ -83,6 +83,7 @@ static int compare_Js(Grid_T *const grid,const Matrix_T *const J_Reg,const Matri
 static void free_schur_f_g(Grid_T *const grid);
 static void making_F_and_C_Regular(Patch_T *const patch);
 void calculate_equation_residual(Solve_Equations_T *const SolveEqs);
+void sync_patch_pools(const Grid_T*const latest_grid,Solve_Equations_T *const solve);
 
 
 

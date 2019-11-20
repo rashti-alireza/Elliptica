@@ -50,6 +50,9 @@ int ddm_schur_complement(Solve_Equations_T *const SolveEqs)
   /* read order of fields to be solved from input */
   field_name = get_solving_field_name(SolveEqs->solving_order,&nf);
   
+  /* syncronize pools with the default grid */
+  sync_patch_pools(SolveEqs->grid,SolveEqs);
+  
   /* solving fields in order */
   for (f = 0; f < nf; ++f)
   {
@@ -62,10 +65,6 @@ int ddm_schur_complement(Solve_Equations_T *const SolveEqs)
     
     /* get the computational grid */
     grid = get_grid_solve_equations(SolveEqs);
-    
-    /* if computational grid needs update */
-    if (SolveEqs->SgridUpdate)
-      SolveEqs->SgridUpdate(grid,SolveEqs->grid,field_name[f]);
     
     /* set solving_man->cf */
     set_solving_man_cf(SolveEqs);
@@ -81,7 +80,9 @@ int ddm_schur_complement(Solve_Equations_T *const SolveEqs)
     
     /* updating source if any has been set */
     if (SolveEqs->SourceUpdate)
-      SolveEqs->SourceUpdate(SolveEqs->grid,field_name[f]);
+      SolveEqs->SourceUpdate(grid,field_name[f]);
+    
+    sync_patch_pools(grid,SolveEqs);
       
     printf("\n");
     pr_half_line_custom('-');
@@ -2727,6 +2728,9 @@ void calculate_equation_residual(Solve_Equations_T *const SolveEqs)
   /* read order of fields to be solved from input */
   field_name = get_solving_field_name(SolveEqs->solving_order,&nf);
   
+  /* syncronize pools with the default grid */
+  sync_patch_pools(SolveEqs->grid,SolveEqs);
+  
   /* solving fields in order */
   for (f = 0; f < nf; ++f)
   {
@@ -2736,10 +2740,6 @@ void calculate_equation_residual(Solve_Equations_T *const SolveEqs)
     /* get the computational grid */
     grid = get_grid_solve_equations(SolveEqs);
     
-    /* if computational grid needs update */
-    if (SolveEqs->SgridUpdate)
-      SolveEqs->SgridUpdate(grid,SolveEqs->grid,field_name[f]);
-
     /* set solving_man->cf */
     set_solving_man_cf(SolveEqs);
     
@@ -2814,6 +2814,7 @@ void calculate_equation_residual(Solve_Equations_T *const SolveEqs)
       }
       free_schur_f_g(grid);/* free {f,g} */
     }
+    sync_patch_pools(grid,SolveEqs);
   }/* end of for (f = 0; f < nf; ++f) */
   
   /* free names */

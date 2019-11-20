@@ -171,3 +171,67 @@ void add_special_grid_solve_equations(Grid_T *const grid,const char *const name,
   solve->Sgrid[N]->sgrid = grid;
   solve->Sgrid[N]->name  = dup_s(name);
 }
+
+/* since each field might be solved in a special grid 
+// so each patch of the grid shares the same pool but different
+// interface structure; however, pointer to pool might get changes
+// due to free or add field while solving and calculating some equations.
+// these changes must be considered while moving to the next spcial gird. 
+// this function sync all of the pool according to the latest grid. */
+void sync_patch_pools(const Grid_T*const latest_grid,Solve_Equations_T *const solve)
+{
+  /* if there is no special grid so don't bother */
+  if (!solve->Sgrid)
+    return;
+    
+  unsigned p1;
+  
+  FOR_ALL_PATCHES(p1,latest_grid)
+  {
+    const Patch_T *patch1 = latest_grid->patch[p1];
+    const char *name1 = strstr(patch1->name,"_");
+    Grid_T *outdated_grid;
+    Patch_T *patch2;
+    const char *name2;
+    unsigned i,p2;
+    name1++;
+    
+    outdated_grid = solve->grid;/* default grid */
+    FOR_ALL_PATCHES(p2,outdated_grid)
+    {
+      patch2 = outdated_grid->patch[p2];
+      name2  = strstr(patch2->name,"_");
+      name2++;
+  
+      if (!strcmp(name2,name1))
+      {
+        patch2->pool = patch1->pool;
+        patch2->nfld = patch1->nfld;
+        break;
+      }
+    }/* FOR_ALL_PATCHES(p2,outdated_grid) */
+    
+    /* for other special grid */
+    i = 0;
+    while (solve->Sgrid[i])
+    {
+      outdated_grid = solve->Sgrid[i]->sgrid;
+      FOR_ALL_PATCHES(p2,outdated_grid)
+      {
+        patch2 = outdated_grid->patch[p2];
+        name2  = strstr(patch2->name,"_");
+        name2++;
+    
+        if (!strcmp(name2,name1))
+        {
+          patch2->pool = patch1->pool;
+          patch2->nfld = patch1->nfld;
+          break;
+        }
+      }/* FOR_ALL_PATCHES(p2,outdated_grid) */
+      i++;
+    }/* end of while (solve->Sgrid[i]) */
+    
+  }/* FOR_ALL_PATCHES(p1,latest_grid) */
+  
+}
