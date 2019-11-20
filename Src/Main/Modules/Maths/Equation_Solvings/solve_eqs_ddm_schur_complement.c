@@ -33,8 +33,9 @@
 */
 
 /* using Schur Complement domain decomposition method
-// to solve equation. This method is capable of using direct solver
-// like UMFPACK and also it is parallelizable.
+// to solve equation. This method is using direct solver
+// ,like UMFPACK solver, in parallel fashion to solve 
+// the whole systme of equations Ax=B; it's fast and robust.
 */
 int ddm_schur_complement(Solve_Equations_T *const SolveEqs)
 {
