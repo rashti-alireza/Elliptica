@@ -328,24 +328,24 @@ void bbn_SolveEqs_FieldUpdate(Patch_T *const patch,const char *const name)
   else if (!strcmp(name,"B0_U0"))
   {
     bbn_update_Beta_U0(patch);
-    bbn_update_derivative_B0_U0(patch);
-    bbn_update_derivative_B1_U0(patch);
+    //bbn_update_derivative_B0_U0(patch);
+    //bbn_update_derivative_B1_U0(patch);
     bbn_update_derivative_Beta_U0(patch);
     //bbn_update_psi10A_UiUj(patch);
   }
   else if (!strcmp(name,"B0_U1"))
   {
     bbn_update_Beta_U1(patch);
-    bbn_update_derivative_B0_U1(patch);
-    bbn_update_derivative_B1_U1(patch);
+    //bbn_update_derivative_B0_U1(patch);
+    //bbn_update_derivative_B1_U1(patch);
     bbn_update_derivative_Beta_U1(patch);
     //bbn_update_psi10A_UiUj(patch);
   }
   else if (!strcmp(name,"B0_U2"))
   {
     bbn_update_Beta_U2(patch);
-    bbn_update_derivative_B0_U2(patch);
-    bbn_update_derivative_B1_U2(patch);
+    //bbn_update_derivative_B0_U2(patch);
+    //bbn_update_derivative_B1_U2(patch);
     bbn_update_derivative_Beta_U2(patch);
     //bbn_update_psi10A_UiUj(patch);
   }

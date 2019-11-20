@@ -912,6 +912,9 @@ void bbn_update_derivative_Beta_U0(Patch_T *const patch)
   const unsigned nn = patch->nn;
   unsigned ijk;
   
+  bbn_update_derivative_B0_U0(patch);
+  bbn_update_derivative_B1_U0(patch);  
+  
   GET_FIELD(dB0_U0D1)
   GET_FIELD(dB0_U0D0)
   GET_FIELD(dB0_U0D2)
@@ -963,7 +966,9 @@ void bbn_update_derivative_Beta_U1(Patch_T *const patch)
 {
   const unsigned nn = patch->nn;
   unsigned ijk;
-  
+  bn_update_derivative_B0_U1(patch);
+  bbn_update_derivative_B1_U1(patch);
+      
   GET_FIELD(dB0_U1D1)
   GET_FIELD(dB0_U1D0)
   GET_FIELD(dB0_U1D2)
@@ -1016,6 +1021,9 @@ void bbn_update_derivative_Beta_U2(Patch_T *const patch)
 {
   const unsigned nn = patch->nn;
   unsigned ijk;
+  
+  bbn_update_derivative_B0_U2(patch);
+  bbn_update_derivative_B1_U2(patch);
   
   GET_FIELD(dB0_U2D1)
   GET_FIELD(dB0_U2D0)
