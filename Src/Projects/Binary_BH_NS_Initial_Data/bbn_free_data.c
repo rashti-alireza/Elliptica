@@ -807,7 +807,7 @@ static void populate_KSgammas_KSalpha_KSBeta(Patch_T *const patch)
     }/* end of if(0 or 1) */
     
   }/* end of for (ijk = 0; ijk < nn; ++ijk) */
-  
+  free_transformation(t);
 }
 
 /* populating Kerr Schild Chirstoffer symbols */
