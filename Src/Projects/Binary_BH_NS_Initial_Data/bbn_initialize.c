@@ -85,6 +85,7 @@ static Grid_T *make_next_grid_using_previous_grid(Grid_T *const grid_prev)
   const double bh_R    = bh_mass*(1+sqrt(1-SQR(bh_chi)));
   GridParams->R_BH_r = bh_R;
   GridParams->a_BH   = bh_chi*bh_mass;
+  GridParams->BH_R_type = "PerfectSphere";
   grid_next = creat_bbn_grid_CS(GridParams);
   
   /* fields: */
@@ -1900,6 +1901,7 @@ static Grid_T *TOV_KerrSchild_approximation(void)
   GridParams->R_BH_r     = bh_R;
   GridParams->a_BH       = bh_chi*bh_mass;
   GridParams->NS_R_type  = "PerfectSphere";
+  GridParams->BH_R_type  = "PerfectSphere";
   grid = creat_bbn_grid_CS(GridParams);
   
   /* creating all of the fields needed for construction of Initial Data */
@@ -2914,113 +2916,139 @@ static void NS_BH_surface_CubedSpherical_grid(Grid_T *const grid,struct Grid_Par
   
   R = alloc_double(N_total);
   
-  /* surface up */
-  for (i = 0; i < N[0]; ++i)
+  /* Boosted_Kerr-Schild radius */
+  if (strcmp_i(GridParams->BH_R_type,"Boosted_Kerr-Schild"))
   {
-    X[0] = point_value(i,&coll_s[0]);
-    for (j = 0; j < N[1]; ++j)
+    /* surface up */
+    for (i = 0; i < N[0]; ++i)
     {
-      X[1] = point_value(j,&coll_s[1]);
-      r = sqrt(
-               (1+SQR(X[0])+SQR(X[1]))/
-               ((g2*SQR(X[0])+SQR(X[1]))/(SQR(R_BH_r)+SQR(a_BH)) + 1/SQR(R_BH_r))
-              );
-      for (k = 0; k < N[2]; ++k)
-        R[L(N,i,j,k)] = r;
+      X[0] = point_value(i,&coll_s[0]);
+      for (j = 0; j < N[1]; ++j)
+      {
+        X[1] = point_value(j,&coll_s[1]);
+        r = sqrt(
+                 (1+SQR(X[0])+SQR(X[1]))/
+                 ((g2*SQR(X[0])+SQR(X[1]))/(SQR(R_BH_r)+SQR(a_BH)) + 1/SQR(R_BH_r))
+                );
+        for (k = 0; k < N[2]; ++k)
+          R[L(N,i,j,k)] = r;
+      }
     }
+    sprintf(par,"grid%u_right_BH_surface_function_up",grid->gn);
+    add_parameter_array(par,R,N_total);
+    
+    /* surface down */
+    for (i = 0; i < N[0]; ++i)
+    {
+      X[0] = point_value(i,&coll_s[0]);
+      for (j = 0; j < N[1]; ++j)
+      {
+        X[1] = point_value(j,&coll_s[1]);
+        r = sqrt(
+                 (1+SQR(X[0])+SQR(X[1]))/
+                 ((SQR(X[0])+g2*SQR(X[1]))/(SQR(R_BH_r)+SQR(a_BH)) + 1/SQR(R_BH_r))
+                );
+        for (k = 0; k < N[2]; ++k)
+          R[L(N,i,j,k)] = r;
+      }
+    }
+    sprintf(par,"grid%u_right_BH_surface_function_down",grid->gn);
+    add_parameter_array(par,R,N_total);
+    
+    /* surface back */
+    for (i = 0; i < N[0]; ++i)
+    {
+      X[0] = point_value(i,&coll_s[0]);/* a = z/x */
+      for (j = 0; j < N[1]; ++j)
+      {
+        X[1] = point_value(j,&coll_s[1]);/* b = y/x */
+        r = sqrt(
+                 (1+SQR(X[0])+SQR(X[1]))/
+                 (((g2+SQR(X[1])))/(SQR(R_BH_r)+SQR(a_BH)) + SQR(X[0])/SQR(R_BH_r))
+                );
+        for (k = 0; k < N[2]; ++k)
+          R[L(N,i,j,k)] = r;
+      }
+    }
+    sprintf(par,"grid%u_right_BH_surface_function_back",grid->gn);
+    add_parameter_array(par,R,N_total);
+    
+    /* surface front */
+    for (i = 0; i < N[0]; ++i)
+    {
+      X[0] = point_value(i,&coll_s[0]);/* a = y/x */
+      for (j = 0; j < N[1]; ++j)
+      {
+        X[1] = point_value(j,&coll_s[1]);/* b = z/x */
+        r = sqrt(
+                 (1+SQR(X[0])+SQR(X[1]))/
+                 (((g2+SQR(X[0])))/(SQR(R_BH_r)+SQR(a_BH)) + SQR(X[1])/SQR(R_BH_r))
+                );
+        for (k = 0; k < N[2]; ++k)
+          R[L(N,i,j,k)] = r;
+      }
+    }
+    sprintf(par,"grid%u_right_BH_surface_function_front",grid->gn);
+    add_parameter_array(par,R,N_total);
+    
+    /* surface left */
+    for (i = 0; i < N[0]; ++i)
+    {
+      X[0] = point_value(i,&coll_s[0]);/* a = x/y */
+      for (j = 0; j < N[1]; ++j)
+      {
+        X[1] = point_value(j,&coll_s[1]);/* b = z/y */
+        r = sqrt(
+                 (1+SQR(X[0])+SQR(X[1]))/
+                 (((1+g2*SQR(X[0])))/(SQR(R_BH_r)+SQR(a_BH)) + SQR(X[1])/SQR(R_BH_r))
+                );
+        for (k = 0; k < N[2]; ++k)
+          R[L(N,i,j,k)] = r;
+      }
+    }
+    sprintf(par,"grid%u_right_BH_surface_function_left",grid->gn);
+    add_parameter_array(par,R,N_total);
+    
+    /* surface right */
+    for (i = 0; i < N[0]; ++i)
+    {
+      X[0] = point_value(i,&coll_s[0]);/* a = z/y */
+      for (j = 0; j < N[1]; ++j)
+      {
+        X[1] = point_value(j,&coll_s[1]);/* b = x/y */
+        r = sqrt(
+                 (1+SQR(X[0])+SQR(X[1]))/
+                 (((1+g2*SQR(X[1])))/(SQR(R_BH_r)+SQR(a_BH)) + SQR(X[0])/SQR(R_BH_r))
+                );
+        for (k = 0; k < N[2]; ++k)
+          R[L(N,i,j,k)] = r;
+      }
+    }
+    sprintf(par,"grid%u_right_BH_surface_function_right",grid->gn);
+    add_parameter_array(par,R,N_total);
   }
-  sprintf(par,"grid%u_right_BH_surface_function_up",grid->gn);
-  add_parameter_array(par,R,N_total);
-  
-  /* surface down */
-  for (i = 0; i < N[0]; ++i)
+  else if (strcmp_i(GridParams->BH_R_type,"PerfectSphere"))
   {
-    X[0] = point_value(i,&coll_s[0]);
-    for (j = 0; j < N[1]; ++j)
-    {
-      X[1] = point_value(j,&coll_s[1]);
-      r = sqrt(
-               (1+SQR(X[0])+SQR(X[1]))/
-               ((SQR(X[0])+g2*SQR(X[1]))/(SQR(R_BH_r)+SQR(a_BH)) + 1/SQR(R_BH_r))
-              );
-      for (k = 0; k < N[2]; ++k)
-        R[L(N,i,j,k)] = r;
-    }
+    for (i = 0; i < N[0]; ++i)
+      for (j = 0; j < N[1]; ++j)
+        for (k = 0; k < N[2]; ++k)
+          R[L(N,i,j,k)] = R_BH_r;
+    
+    sprintf(par,"grid%u_right_BH_surface_function_up",grid->gn);
+    add_parameter_array(par,R,N_total);
+    sprintf(par,"grid%u_right_BH_surface_function_down",grid->gn);
+    add_parameter_array(par,R,N_total);
+    sprintf(par,"grid%u_right_BH_surface_function_back",grid->gn);
+    add_parameter_array(par,R,N_total);
+    sprintf(par,"grid%u_right_BH_surface_function_front",grid->gn);
+    add_parameter_array(par,R,N_total);
+    sprintf(par,"grid%u_right_BH_surface_function_left",grid->gn);
+    add_parameter_array(par,R,N_total);
+    sprintf(par,"grid%u_right_BH_surface_function_right",grid->gn);
+    add_parameter_array(par,R,N_total);
   }
-  sprintf(par,"grid%u_right_BH_surface_function_down",grid->gn);
-  add_parameter_array(par,R,N_total);
-  
-  /* surface back */
-  for (i = 0; i < N[0]; ++i)
-  {
-    X[0] = point_value(i,&coll_s[0]);/* a = z/x */
-    for (j = 0; j < N[1]; ++j)
-    {
-      X[1] = point_value(j,&coll_s[1]);/* b = y/x */
-      r = sqrt(
-               (1+SQR(X[0])+SQR(X[1]))/
-               (((g2+SQR(X[1])))/(SQR(R_BH_r)+SQR(a_BH)) + SQR(X[0])/SQR(R_BH_r))
-              );
-      for (k = 0; k < N[2]; ++k)
-        R[L(N,i,j,k)] = r;
-    }
-  }
-  sprintf(par,"grid%u_right_BH_surface_function_back",grid->gn);
-  add_parameter_array(par,R,N_total);
-  
-  /* surface front */
-  for (i = 0; i < N[0]; ++i)
-  {
-    X[0] = point_value(i,&coll_s[0]);/* a = y/x */
-    for (j = 0; j < N[1]; ++j)
-    {
-      X[1] = point_value(j,&coll_s[1]);/* b = z/x */
-      r = sqrt(
-               (1+SQR(X[0])+SQR(X[1]))/
-               (((g2+SQR(X[0])))/(SQR(R_BH_r)+SQR(a_BH)) + SQR(X[1])/SQR(R_BH_r))
-              );
-      for (k = 0; k < N[2]; ++k)
-        R[L(N,i,j,k)] = r;
-    }
-  }
-  sprintf(par,"grid%u_right_BH_surface_function_front",grid->gn);
-  add_parameter_array(par,R,N_total);
-  
-  /* surface left */
-  for (i = 0; i < N[0]; ++i)
-  {
-    X[0] = point_value(i,&coll_s[0]);/* a = x/y */
-    for (j = 0; j < N[1]; ++j)
-    {
-      X[1] = point_value(j,&coll_s[1]);/* b = z/y */
-      r = sqrt(
-               (1+SQR(X[0])+SQR(X[1]))/
-               (((1+g2*SQR(X[0])))/(SQR(R_BH_r)+SQR(a_BH)) + SQR(X[1])/SQR(R_BH_r))
-              );
-      for (k = 0; k < N[2]; ++k)
-        R[L(N,i,j,k)] = r;
-    }
-  }
-  sprintf(par,"grid%u_right_BH_surface_function_left",grid->gn);
-  add_parameter_array(par,R,N_total);
-  
-  /* surface right */
-  for (i = 0; i < N[0]; ++i)
-  {
-    X[0] = point_value(i,&coll_s[0]);/* a = z/y */
-    for (j = 0; j < N[1]; ++j)
-    {
-      X[1] = point_value(j,&coll_s[1]);/* b = x/y */
-      r = sqrt(
-               (1+SQR(X[0])+SQR(X[1]))/
-               (((1+g2*SQR(X[1])))/(SQR(R_BH_r)+SQR(a_BH)) + SQR(X[0])/SQR(R_BH_r))
-              );
-      for (k = 0; k < N[2]; ++k)
-        R[L(N,i,j,k)] = r;
-    }
-  }
-  sprintf(par,"grid%u_right_BH_surface_function_right",grid->gn);
-  add_parameter_array(par,R,N_total);
+  else
+    abortEr(NO_OPTION);
   
   free(R);
 }

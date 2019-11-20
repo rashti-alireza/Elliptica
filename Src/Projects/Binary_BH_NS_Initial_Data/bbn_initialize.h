@@ -31,7 +31,11 @@ struct Grid_Params_S
   const char *NS_R_type;/* type of NS which determines how to fill the radius field
                         // PerfectSphere
                         // SphericalHarmonic. 
-                        // CubedSpherical*/
+                        // CubedSpherical. */
+  const char *BH_R_type;/* type of BH which determines how to fill the radius field
+                        // this gives you the shape of excision region (apparent horizon).
+                        // PerfectSphere
+                        // Boosted_Kerr-Schild. */
   /* if NS radius Ylm expanded */
   struct
   {
