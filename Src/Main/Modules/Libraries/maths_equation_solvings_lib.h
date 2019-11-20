@@ -79,10 +79,6 @@ typedef struct SOLVE_EQUATIONS_T
   // note, if it has not been assigned it won't be executed.*/
   void (*SourceUpdate)(Grid_T *const grid,const char *const name);
   
-  /* update Special grid Sgrid, this is needed since the patch->pool 
-  // is updated thus, Sgrid needs to be updated too. */
-  void (*SgridUpdate)(Grid_T *const Sgrid,Grid_T *const grid,const char *const name);
-  
   /* this is the function specifies the stop criteria of the solver
   // if 1 it means continue, 0 means stop. if no function defined 
   // the default function is made using 
