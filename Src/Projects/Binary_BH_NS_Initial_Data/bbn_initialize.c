@@ -43,12 +43,6 @@ static Grid_T *make_next_grid_using_previous_grid(Grid_T *const grid_prev)
   Grid_T *grid_next = 0;
   struct Grid_Params_S *GridParams = init_GridParams();/* adjust some pars for construction of next grid */
   
-  /* find y_CM or orbital_angular_velocity using force balance equation */
-  force_balance_eq(grid_prev);
-  
-  /* find y_CM by demanding P_ADM = 0 */
-  find_center_of_mass(grid_prev);
-  
   /* adjust boot velocity to diminish P_ADM */
   find_boost_velocity_at_outer_boundary(grid_prev);
   
@@ -78,6 +72,12 @@ static Grid_T *make_next_grid_using_previous_grid(Grid_T *const grid_prev)
   
   /* find NS surface using h = 1 */
   find_NS_surface(grid_prev,GridParams);
+  
+  /* find y_CM or orbital_angular_velocity using force balance equation */
+  force_balance_eq(grid_prev);
+  
+  /* find y_CM by demanding P_ADM = 0 */
+  find_center_of_mass(grid_prev);
   
   /* make new grid with new parameters */
   const double bh_chi  = GetParameterD_E("BH_X_U2");
