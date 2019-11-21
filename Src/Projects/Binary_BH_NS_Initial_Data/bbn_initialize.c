@@ -1480,6 +1480,8 @@ static void extrapolate_insideBH(Grid_T *const grid)
     GET_FIELD(psi)
     GET_FIELD(eta)
     
+    bbn_update_B1_U012(patch);
+    
     /* for the centeral box we demand the field values be 0. */
     if (strstr(patch->name,"right_centeral_box"))
       continue;

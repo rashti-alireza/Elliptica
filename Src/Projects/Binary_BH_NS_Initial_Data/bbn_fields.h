@@ -27,6 +27,7 @@ static void cleaning_enthalpy(Patch_T *const patch);
 void bbn_update_derivative_B1_U0(Patch_T *const patch);
 void bbn_update_derivative_B1_U1(Patch_T *const patch);
 void bbn_update_derivative_B1_U2(Patch_T *const patch);
+void bbn_update_B1_U012(Patch_T *const patch);
 
 
 
