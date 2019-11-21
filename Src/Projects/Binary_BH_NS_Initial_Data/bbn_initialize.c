@@ -775,10 +775,6 @@ static void update_B1_then_Beta_and_Aij(Grid_T *const grid,const double Omega_BH
   for (p = 0; p < np; ++p)
   {
     Patch_T *patch = grid->patch[p];
-    
-    if (IsItInsideBHPatch(patch))
-      continue;
-    
     unsigned nn = patch->nn;
     unsigned ijk;
     
@@ -795,6 +791,9 @@ static void update_B1_then_Beta_and_Aij(Grid_T *const grid,const double Omega_BH
       B1_U1[ijk] = Omega_BHNS*x+Vr*(y-y_CM)/D;
       B1_U2[ijk] = 0;
     }
+    if (IsItInsideBHPatch(patch))
+      continue;
+    
     bbn_update_Beta_U0(patch);
     bbn_update_Beta_U1(patch);
     bbn_update_Beta_U2(patch);
