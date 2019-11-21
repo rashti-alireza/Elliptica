@@ -55,6 +55,7 @@ void bbn_update_derivative_Beta_U2(Patch_T *const patch);
 void bbn_update_Beta_U0(Patch_T *const patch);
 void bbn_update_Beta_U1(Patch_T *const patch);
 void bbn_update_Beta_U2(Patch_T *const patch);
+void bbn_update_B1_U012(Patch_T *const patch);
 double bbn_NS_baryonic_mass(Grid_T *const grid,const double Euler_C);
 double force_balance_Omega_root_finder_eq(void *params,const double *const x);
 double force_balance_yCM_root_finder_eq(void *params,const double *const x);
