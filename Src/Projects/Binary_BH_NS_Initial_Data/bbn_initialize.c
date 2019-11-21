@@ -72,9 +72,6 @@ static Grid_T *make_next_grid_using_previous_grid(Grid_T *const grid_prev)
   /* find y_CM by demanding P_ADM = 0 */
   find_center_of_mass(grid_prev);
   
-  /* extrapolate metric fields inside */
-  extrapolate_metric_fields_insideBH(grid_prev);
-  
   /* find the BH radius to acquire the desired BH mass */
   //find_BH_radius(grid_prev);
   
@@ -1400,7 +1397,7 @@ static void find_XYZ_and_patch_of_theta_phi_NS_CS(double *const X,Patch_T **cons
 
 /* make patches inside the excision region of BH and and extrapolate
 // metric fields i.e. beta,eta and psi inside this region */
-void extrapolate_metric_fields_insideBH(Grid_T *const grid)
+void bbn_extrapolate_metric_fields_insideBH(Grid_T *const grid)
 {
   /* add patches in side the excision region */
   add_patches_insideBH(grid);
@@ -1471,6 +1468,9 @@ static void extrapolate_insideBH(Grid_T *const grid)
     ADD_FIELD(B0_U0)
     ADD_FIELD(B0_U1)
     ADD_FIELD(B0_U2)
+    ADD_FIELD(B1_U0)
+    ADD_FIELD(B1_U1)
+    ADD_FIELD(B1_U2)
     ADD_FIELD(psi)
     ADD_FIELD(eta)
     
