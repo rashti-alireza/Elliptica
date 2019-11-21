@@ -830,7 +830,7 @@ static void interpolate_and_initialize_to_next_grid(Grid_T *const grid_next,Grid
   
   /* to avoid race condition between threads write all coeffs */
   OpenMP_Patch_Pragma(omp parallel for)
-  for (p = 0; p < np; ++p)
+  for (p = 0; p < grid_prev->np; ++p)/* note: grid_prev has more patches! */
   {
     Patch_T *patch = grid_prev->patch[p];
     
