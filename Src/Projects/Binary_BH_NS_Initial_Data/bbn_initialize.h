@@ -110,6 +110,6 @@ static void update_B1_then_Beta_and_Aij(Grid_T *const grid,const double Omega_BH
 static void find_boost_velocity_at_outer_boundary(Grid_T *const grid);
 static void force_balance_eq(Grid_T *const grid);
 static void find_yCM_force_balance_eq(Grid_T *const grid);
-void extrapolate_metric_fields_insideBH(Grid_T *const grid);
+void bbn_extrapolate_metric_fields_insideBH(Grid_T *const grid);
 static void add_patches_insideBH(Grid_T *const grid);
 static void extrapolate_insideBH(Grid_T *const grid);

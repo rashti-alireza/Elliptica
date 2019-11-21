@@ -1144,3 +1144,30 @@ void bbn_update_stress_energy_tensor(Grid_T *const grid)
 
   Tij_IF_CTS_psi6Sources(grid);
 }
+
+/* updaing B1 */
+void bbn_update_B1_U012(Patch_T *const patch)
+{
+  const double Omega_BHNS = GetParameterD_E("BH_NS_orbital_angular_velocity");
+  const double Vr   = GetParameterD_E("BH_NS_infall_velocity");
+  const double D    = GetParameterD_E("BH_NS_separation");
+  const double y_CM = GetParameterD_E("y_CM");
+  const unsigned nn = patch->nn;
+  unsigned ijk;
+    
+  /* B^1 */
+  PREP_FIELD(B1_U0)
+  PREP_FIELD(B1_U1)
+  PREP_FIELD(B1_U2)
+  
+  for (ijk = 0; ijk < nn; ++ijk)
+  {
+    double x     = patch->node[ijk]->x[0];
+    double y     = patch->node[ijk]->x[1];
+    
+    B1_U0[ijk] = Omega_BHNS*(-y+y_CM)+Vr*x/D;
+    B1_U1[ijk] = Omega_BHNS*x+Vr*(y-y_CM)/D;
+    B1_U2[ijk] = 0;
+  }
+
+}

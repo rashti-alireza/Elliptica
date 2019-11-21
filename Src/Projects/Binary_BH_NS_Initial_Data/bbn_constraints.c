@@ -17,6 +17,9 @@ void bbn_calculate_constraints(Grid_T *const grid)
   for(p = 0; p < np; ++p)
   {
     Patch_T *patch = grid->patch[p];
+    if (IsItInsideBHPatch(patch))
+      continue;
+    
     unsigned nn = patch->nn;
     unsigned ijk;
   {
