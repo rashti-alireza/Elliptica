@@ -17,7 +17,7 @@ void bbn_populate_free_data(Grid_T *const grid)
   
   /* Christoffer symbols made up of conformal metric */
   bbn_free_data_Gamma(grid);
-  printf("Christoffer symbols (_Gamma)     ~> Done.\n");
+  printf("Christoffel symbols (_Gamma)     ~> Done.\n");
   
   /* partial derivtive of _Gamma, used in covariant derivative and _R */
   bbn_free_data_dGamma(grid);
