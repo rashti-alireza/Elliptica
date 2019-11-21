@@ -43,8 +43,7 @@ static Grid_T *make_next_grid_using_previous_grid(Grid_T *const grid_prev)
   Grid_T *grid_next = 0;
   struct Grid_Params_S *GridParams = init_GridParams();/* adjust some pars for construction of next grid */
   
-  /* adjust boot velocity to diminish P_ADM */
-  find_boost_velocity_at_outer_boundary(grid_prev);
+  /* NOTE: the order of function calls are important */
   
   /* find Euler equation constant to meet NS baryonic mass */
   find_Euler_eq_const(grid_prev);
@@ -55,29 +54,32 @@ static Grid_T *make_next_grid_using_previous_grid(Grid_T *const grid_prev)
   /* extrapolate fluid fields outside NS */
   extrapolate_fluid_fields_outsideNS(grid_prev);
   
-  /* extrapolate metric fields inside */
-  extrapolate_metric_fields_insideBH(grid_prev);
-  
   /* find the NS center */
   find_NS_center(grid_prev);
   
   /* adjust the center of NS and drag enthalpy and update enthalpy */
   adjust_NS_center(grid_prev);
   
-  /* find the BH radius to acquire the desired BH mass */
-  //find_BH_radius(grid_prev);
-  
-  /* find the Omega_BH to acquire the desired BH spin */
-  //find_BH_Omega(grid_prev);
-  
   /* find NS surface using h = 1 */
   find_NS_surface(grid_prev,GridParams);
+  
+  /* adjust boot velocity to diminish P_ADM */
+  find_boost_velocity_at_outer_boundary(grid_prev);
   
   /* find y_CM or orbital_angular_velocity using force balance equation */
   force_balance_eq(grid_prev);
   
   /* find y_CM by demanding P_ADM = 0 */
   find_center_of_mass(grid_prev);
+  
+  /* extrapolate metric fields inside */
+  extrapolate_metric_fields_insideBH(grid_prev);
+  
+  /* find the BH radius to acquire the desired BH mass */
+  //find_BH_radius(grid_prev);
+  
+  /* find the Omega_BH to acquire the desired BH spin */
+  //find_BH_Omega(grid_prev);
   
   /* make new grid with new parameters */
   const double bh_chi  = GetParameterD_E("BH_X_U2");
