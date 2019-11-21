@@ -1463,7 +1463,6 @@ static void extrapolate_insideBH(Grid_T *const grid)
   
   FOR_ALL_PATCHES(p,grid)
   {
-    /* surrounding patch */
     Patch_T *patch = grid->patch[p];
     if (!IsItInsideBHPatch(patch))
       continue;
