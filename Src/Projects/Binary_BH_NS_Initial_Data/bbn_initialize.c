@@ -1451,7 +1451,7 @@ static void add_patches_insideBH(Grid_T *const grid)
   free(bh_grid);
 }
 
-/* extrapolate the fields B0,eta and psi inside the BH.
+/* extrapolate the fields B0,B1,eta and psi inside the BH.
 // we assume they exponentially decreasing from BH horizon
 // such that at center of BH the fields are all zero. 
 // formula we use: f(r) = fi*exp(-atten(rh-r)), 
