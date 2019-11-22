@@ -170,7 +170,7 @@ void add_parameter(const char *const lv, const char *const rv)
 static char *parse_multiplicity_of_iterative_parameter(const char *const rv)
 {
   char *ret_str = 0;
-  const char *str   = rv;
+  char *str = dup_s(rv);
   
   char *m_str = regex_find("\\(x[[:digit:]]+\\)",rv);
   while (m_str)
@@ -178,7 +178,7 @@ static char *parse_multiplicity_of_iterative_parameter(const char *const rv)
     /* reference: 1->2(x2)->5(x3)->8 */
     unsigned len = (unsigned)strlen(m_str);/* (x2) => 4 */
     const char *l_str = strstr(str,m_str);/*    => (x2)->5(x3)->8 */
-    const char *r_str = strstr(str,m_str+len);/* => ->5(x3)->8 */
+    const char *r_str = strlen(l_str) > len ? strstr(str,l_str+len): "\0";/* => ->5(x3)->8 */
     
     const char *b_str = l_str;
     while (b_str != str && *b_str != '>')
@@ -203,10 +203,12 @@ static char *parse_multiplicity_of_iterative_parameter(const char *const rv)
     unsigned mult   = (unsigned)atoi(mult_str);
     
     if (mult == UINT_MAX)
-      abortEr_s("Wrong syntax for '%s'.\n",rv);
+      abortEr_s("Wrong syntax for '%s'; negative multiplicity.\n",rv);
+    if (mult == 0)
+      abortEr_s("Wrong syntax for '%s'; zero multiplicity.\n",rv);
     
-    unsigned n_mult = mult*2*(n-1);/* for each '->' 2 Byte,
-                                   // for each v_str n-1 */
+    unsigned n_mult = (mult-1)*2+mult*(n-1)+1;/* for each '->' 2 Byte,
+                                    // for each v_str n-1 */
     char *inter_str = calloc(n_mult,1); 
     pointerEr(inter_str);
     
@@ -219,23 +221,30 @@ static char *parse_multiplicity_of_iterative_parameter(const char *const rv)
     }
     strcat(inter_str,v_str);/* => itner_str = 2->2*/
     
-    unsigned n_ret_str = (unsigned)(strlen(b_str)+strlen(inter_str)+strlen(r_str));
-    _free(ret_str);
-    ret_str = calloc(n_ret_str,1);
-    pointerEr(ret_str);
+    char *i_str = calloc(strlen(str)-strlen(b_str)+2,1);
+    pointerEr(i_str);
+    snprintf(i_str,strlen(str)-strlen(b_str)+1,"%s",str);
     
-    strcat(ret_str,b_str);
-    strcat(ret_str,inter_str);
-    strcat(ret_str,r_str);
+    char *new_str = 0;
+    unsigned n_new_str = (unsigned)(strlen(i_str)+strlen(inter_str)+strlen(r_str))+1;
+    new_str = calloc(n_new_str,1);
+    pointerEr(new_str);
+    
+    strcat(new_str,i_str);
+    strcat(new_str,inter_str);
+    strcat(new_str,r_str);
     
     free(v_str);
     free(mult_str);
     free(m_str);
     free(inter_str);
+    free(i_str);
+    free(str);
     
-    str = ret_str;
+    str = new_str;
     m_str = regex_find("\\(x[[:digit:]]+\\)",str);
   }
+  ret_str = str;
   
   return ret_str;
 }
