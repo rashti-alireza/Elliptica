@@ -328,8 +328,10 @@ char *regex_find(const char *const regex_pattern,const char *const str)
   
   status = regexec(&regex,str,n_matches,match,0);
   if (status)/* if no match is found */
+  {
+    regfree(&regex);
     return 0;
-
+  }
   
   regfree(&regex);
   
