@@ -143,10 +143,15 @@ void add_parameter(const char *const lv, const char *const rv)
   else
   {
     /* study if this is an iterative parameter */
-    if (strstr(rv,"->"))
+    if (strstr(rv,"->") || regex_search("\\(x[[:digit:]]+\\)",rv))
     {
       par->iterative = 1;
-      par->rv_ip = dup_s(rv);
+      /* if it has multiplicity */
+      if (regex_search("\\(x[[:digit:]]+\\)",rv))
+        par->rv_ip = parse_multiplicity_of_iterative_parameter(rv);
+      else
+        par->rv_ip = dup_s(rv);
+        
       par->rv = get_n_value_str_ip(par,0);/* setting the first value of the iterative parameter */
     }
     else
@@ -155,6 +160,84 @@ void add_parameter(const char *const lv, const char *const rv)
       par->rv = dup_s(rv);
     }
   }
+}
+
+/* some iterative parameter may have multiplicity with (x?), e.g:
+// par = 1->2(x2)->5(x3)->8
+// this function parse it and return it in regular format, i.e:
+// par = 1->2->2->5->5->5->8
+// ->return value: an iterative parameter with regular format */
+static char *parse_multiplicity_of_iterative_parameter(const char *const rv)
+{
+  char *ret_str = 0;
+  const char *str   = rv;
+  
+  char *m_str = regex_find("\\(x[[:digit:]]+\\)",rv);
+  while (m_str)
+  {
+    /* reference: 1->2(x2)->5(x3)->8 */
+    unsigned len = (unsigned)strlen(m_str);/* (x2) => 4 */
+    const char *l_str = strstr(str,m_str);/*    => (x2)->5(x3)->8 */
+    const char *r_str = strstr(str,m_str+len);/* => ->5(x3)->8 */
+    
+    const char *b_str = l_str;
+    while (b_str != str && *b_str != '>')
+      b_str--;
+    /* b_str => >2 */  
+    if (*b_str == '>')
+      b_str++;/* b_str => 2 */
+    
+    unsigned n = (unsigned)(l_str-b_str+1);  
+    char *v_str = calloc(n,1);
+    pointerEr(v_str);
+    
+    unsigned i = 0;
+    while (i < n-1)
+    {
+      v_str[i] = b_str[i];
+      i++;
+    }/* =? v_str = 2 */
+    v_str[n-1] = '\0';
+    
+    char *mult_str  = regex_find("[[:digit:]]+",m_str);
+    unsigned mult   = (unsigned)atoi(mult_str);
+    
+    if (mult == UINT_MAX)
+      abortEr_s("Wrong syntax for '%s'.\n",rv);
+    
+    unsigned n_mult = mult*2*(n-1);/* for each '->' 2 Byte,
+                                   // for each v_str n-1 */
+    char *inter_str = calloc(n_mult,1); 
+    pointerEr(inter_str);
+    
+    i = 0;
+    while (i < mult-1)
+    {
+      strcat(inter_str,v_str);
+      strcat(inter_str,"->");
+      i++;
+    }
+    strcat(inter_str,v_str);/* => itner_str = 2->2*/
+    
+    unsigned n_ret_str = (unsigned)(strlen(b_str)+strlen(inter_str)+strlen(r_str));
+    _free(ret_str);
+    ret_str = calloc(n_ret_str,1);
+    pointerEr(ret_str);
+    
+    strcat(ret_str,b_str);
+    strcat(ret_str,inter_str);
+    strcat(ret_str,r_str);
+    
+    free(v_str);
+    free(mult_str);
+    free(m_str);
+    free(inter_str);
+    
+    str = ret_str;
+    m_str = regex_find("\\(x[[:digit:]]+\\)",str);
+  }
+  
+  return ret_str;
 }
 
 /* having parameter name, it returns a pointer to 
@@ -382,7 +465,7 @@ unsigned total_iterations_ip(void)
       {
         subs += 2;/* move forward */
         if (subs[0]=='\0')/* if after -> is empty */
-          abortEr_s("No value is specified after -> in parameter %s.\n",parameters_global[i]->lv);
+          abortEr_s("No value is specified after '->' in parameter %s.\n",parameters_global[i]->lv);
         subs = strstr(subs,"->");
         if (subs)
           l++;

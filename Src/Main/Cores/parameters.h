@@ -30,4 +30,5 @@ char *get_n_value_str_ip(const Parameter_T *const par,const unsigned n);
 void update_iterative_parameter_ip(const unsigned iter);
 unsigned total_iterative_parameters_ip(void);
 unsigned total_iterations_ip(void);
+static char *parse_multiplicity_of_iterative_parameter(const char *const rv);
 
