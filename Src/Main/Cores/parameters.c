@@ -169,6 +169,9 @@ void add_parameter(const char *const lv, const char *const rv)
 // ->return value: an iterative parameter with regular format */
 static char *parse_multiplicity_of_iterative_parameter(const char *const rv)
 {
+  if (regex_search("->$",rv))
+    abortEr_s("Wrong syntax for '%s'; '->' at the end of the line.",rv);
+    
   char *ret_str = 0;
   char *str = dup_s(rv);
   
