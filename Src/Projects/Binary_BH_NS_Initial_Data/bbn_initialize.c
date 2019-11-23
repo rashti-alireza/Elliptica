@@ -122,25 +122,23 @@ static void P_ADM_control(Grid_T *const grid)
   
   parse_adjust_parameter(par,adjust);
   
-  fAdjustment_t *P_ADM_adjust[3] = {
-                               func_P_ADM_adjustment(adjust[0]),
-                               func_P_ADM_adjustment(adjust[1]),
-                               func_P_ADM_adjustment(adjust[2])};
+  void (*P_ADM_control_0)(Grid_T *const grid) =
+                              get_func_P_ADM_adjustment(adjust[0]);
   
-  if (P_ADM_adjust[0])
-    P_ADM_adjust[0](grid);
+  void (*P_ADM_control_1)(Grid_T *const grid) =
+                              get_func_P_ADM_adjustment(adjust[1]);
+                              
+  void (*P_ADM_control_2)(Grid_T *const grid) =
+                              get_func_P_ADM_adjustment(adjust[2]);
   
-  if (P_ADM_adjust[1])
-    P_ADM_adjust[1](grid);
+  if (P_ADM_control_0)
+    P_ADM_control_0(grid);
+  
+  if (P_ADM_control_1)
+    P_ADM_control_1(grid);
     
-  if (P_ADM_adjust[2])
-    P_ADM_adjust[2](grid);
-    
-  /* adjust boot velocity to diminish P_ADM */
-  find_boost_velocity_at_outer_boundary(grid);
-  
-  /* find y_CM by demanding P_ADM = 0 */
-  find_center_of_mass(grid);
+  if (P_ADM_control_2)
+    P_ADM_control_2(grid);
     
   _free(adjust[0]);
   _free(adjust[1]);
@@ -148,7 +146,7 @@ static void P_ADM_control(Grid_T *const grid)
 }
 
 /* getting adjustment str, returns the relevant function. */
-fAdjustment_t *func_P_ADM_adjustment(const char *const adjust)
+fAdjustment_t *get_func_P_ADM_adjustment(const char *const adjust)
 {
   fAdjustment_t *f = 0;
   
@@ -158,23 +156,23 @@ fAdjustment_t *func_P_ADM_adjustment(const char *const adjust)
   }
   else if (strcmp_i(adjust,"x_CM"))
   {
-    f = P_ADM_x_CM;
+    f = Py_ADM_is0_by_x_CM;
   }
   else if (strcmp_i(adjust,"y_CM"))
   {
-    f = P_ADM_y_CM;
+    f = Px_ADM_is0_by_y_CM;
   }
-  else if (strcmp_i(adjust,"Boost_Vx"))
+  else if (strcmp_i(adjust,"boost_Vx"))
   {
-    f = P_ADM_Boost_Vx;
+    f = Px_ADM_is0_by_x_boost;
   }
-  else if (strcmp_i(adjust,"Boost_Vy"))
+  else if (strcmp_i(adjust,"boost_Vy"))
   {
-    f = P_ADM_Boost_Vy;
+    f = Py_ADM_is0_by_y_boost;
   }
-  else if (strcmp_i(adjust,"Boost_Vz"))
+  else if (strcmp_i(adjust,"boost_Vz"))
   {
-    f = P_ADM_Boost_Vz;
+    f = Pz_ADM_is0_by_z_boost;
   }
   else
     abortEr(NO_OPTION);
@@ -183,7 +181,7 @@ fAdjustment_t *func_P_ADM_adjustment(const char *const adjust)
 }
 
 /* getting adjustment str, returns the relevant function. */
-fAdjustment_t *func_force_balance_adjustment(const char *const adjust)
+fAdjustment_t *get_func_force_balance_adjustment(const char *const adjust)
 {
   fAdjustment_t *f = 0;
   
@@ -244,7 +242,8 @@ static void parse_adjust_parameter(const char *const par,char *adjust[3])
   free(str);
 }
 
-/* find BH_NS_orbital_angular_velocity using force balance equation */
+/* adjust various quantities according to parameter:
+// "force_balance_equation" */
 static void force_balance_eq(Grid_T *const grid)
 {
   char *adjust[3];
@@ -252,19 +251,24 @@ static void force_balance_eq(Grid_T *const grid)
   
   parse_adjust_parameter(par,adjust);
   
-  fAdjustment_t *force_balance_adjust[3] = {
-                               func_force_balance_adjustment(adjust[0]),
-                               func_force_balance_adjustment(adjust[1]),
-                               func_force_balance_adjustment(adjust[2])};
+  void (*force_balance_0)(Grid_T *const grid) = 
+            get_func_force_balance_adjustment(adjust[0]);
+            
+  void (*force_balance_1)(Grid_T *const grid) = 
+            get_func_force_balance_adjustment(adjust[1]);
+            
+  void (*force_balance_2)(Grid_T *const grid) = 
+            get_func_force_balance_adjustment(adjust[2]);
   
-  if (force_balance_adjust[0])
-    force_balance_adjust[0](grid);
   
-  if (force_balance_adjust[1])
-    force_balance_adjust[1](grid);
+  if (force_balance_0)
+    force_balance_0(grid);
+  
+  if (force_balance_1)
+    force_balance_1(grid);
     
-  if (force_balance_adjust[2])
-    force_balance_adjust[2](grid);
+  if (force_balance_2)
+    force_balance_2(grid);
     
   _free(adjust[0]);
   _free(adjust[1]);
@@ -290,7 +294,7 @@ static void force_balance_eq(Grid_T *const grid)
 
 /* adjust the boot velocity at the outer boundary to diminish P_ADM
 // it only makes changes in the specified direction x. */
-static void P_ADM_Boost_Vx(Grid_T *const grid)
+static void Px_ADM_is0_by_x_boost(Grid_T *const grid)
 {
   const double SMALL_FAC = 1E-2;
   const double dP   = GetParameterD_E("P_ADM_control_tolerance");
@@ -371,7 +375,7 @@ static void P_ADM_Boost_Vx(Grid_T *const grid)
 
 /* adjust the boot velocity at the outer boundary to diminish P_ADM
 // it only makes changes in the specified direction y. */
-static void P_ADM_Boost_Vy(Grid_T *const grid)
+static void Py_ADM_is0_by_y_boost(Grid_T *const grid)
 {
   const double SMALL_FAC = 1E-2;
   const double dP   = GetParameterD_E("P_ADM_control_tolerance");
@@ -449,7 +453,7 @@ static void P_ADM_Boost_Vy(Grid_T *const grid)
 
 /* adjust the boot velocity at the outer boundary to diminish P_ADM
 // it only makes changes in the specified direction z. */
-static void P_ADM_Boost_Vz(Grid_T *const grid)
+static void Pz_ADM_is0_by_z_boost(Grid_T *const grid)
 {
   const double SMALL_FAC = 1E-2;
   const double dP   = GetParameterD_E("P_ADM_control_tolerance");
@@ -978,20 +982,18 @@ static void find_Euler_eq_const(Grid_T *const grid)
   free_root_finder(root);
 }
 
-/* find y_CM by demanding P_ADM = 0 */
-static void find_center_of_mass(Grid_T *const grid)
+/* find y_CM by demanding Px_ADM = 0 */
+static void Px_ADM_is0_by_y_CM(Grid_T *const grid)
 {
-  printf("returning center of mass finder\n");
-  return;
-  
   Observable_T *obs   = init_observable(grid);
   double  dy_CM = 0,px,y_CM_new;
   const double Omega_BHNS = GetParameterD_E("BH_NS_orbital_angular_velocity");
   const double Vr   = GetParameterD_E("BH_NS_infall_velocity");
   const double D    = GetParameterD_E("BH_NS_separation");
-  const double y_CM = GetParameterD_E("y_CM");
-  const double M_NS = GetParameterD_E("NS_mass");
-  const double M_BH = GetParameterD_E("BH_mass");
+  const double y_CM0 = GetParameterD_E("y_CM0");
+  const double y_CM  = GetParameterD_E("y_CM");
+  const double M_NS  = GetParameterD_E("NS_mass");
+  const double M_BH  = GetParameterD_E("BH_mass");
   
   /* calculate P_ADM */
   obs->quantity = "ADM_momentums";
@@ -1003,13 +1005,47 @@ static void find_center_of_mass(Grid_T *const grid)
   
   /* changing center of mass */
   dy_CM    = -px/(Omega_BHNS*(M_NS+M_BH));
-  y_CM_new = y_CM+dy_CM;
+  y_CM_new = y_CM0+dy_CM;
   
   /* having found new y_CM now update */
   update_parameter_double_format("y_CM",y_CM_new);
   update_B1_then_Beta_and_Aij(grid,Omega_BHNS,Vr,y_CM_new,D);
   
   printf("Update Center of Rotation: %g -> %g.\n",y_CM,y_CM_new);
+  
+  free_observable(obs);
+}
+
+/* find x_CM by demanding Py_ADM = 0 */
+static void Py_ADM_is0_by_x_CM(Grid_T *const grid)
+{
+  Observable_T *obs   = init_observable(grid);
+  double  dx_CM = 0,py,x_CM_new;
+  const double Omega_BHNS = GetParameterD_E("BH_NS_orbital_angular_velocity");
+  const double Vr   = GetParameterD_E("BH_NS_infall_velocity");
+  const double D    = GetParameterD_E("BH_NS_separation");
+  const double x_CM0 = GetParameterD_E("x_CM0");
+  const double x_CM  = GetParameterD_E("x_CM");
+  const double M_NS  = GetParameterD_E("NS_mass");
+  const double M_BH  = GetParameterD_E("BH_mass");
+  
+  /* calculate P_ADM */
+  obs->quantity = "ADM_momentums";
+  plan_observable(obs);
+  py = obs->Py_ADM(obs);
+  printf("ADM momentums before center of mass update:\n");
+  printf("P_ADM = (%e,%e,%e).\n",
+          py,obs->Py_ADM(obs),obs->Pz_ADM(obs));
+  
+  /* changing center of mass */
+  dx_CM    = py/(Omega_BHNS*(M_NS+M_BH));
+  x_CM_new = x_CM0+dx_CM;
+  
+  /* having found new x_CM now update */
+  update_parameter_double_format("x_CM",x_CM_new);
+  update_B1_then_Beta_and_Aij(grid,Omega_BHNS,Vr,y_CM_new,D);
+  
+  printf("Update Center of Rotation: %g -> %g.\n",x_CM,x_CM_new);
   
   free_observable(obs);
 }
