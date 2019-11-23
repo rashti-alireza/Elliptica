@@ -154,6 +154,10 @@ fAdjustment_t *get_func_P_ADM_adjustment(const char *const adjust)
   {
     f = 0;
   }
+  else if (strcmp_i(adjust,"none"))
+  {
+    f = 0;
+  }
   else if (strcmp_i(adjust,"x_CM"))
   {
     f = Py_ADM_is0_by_x_CM;
@@ -189,21 +193,45 @@ fAdjustment_t *get_func_force_balance_adjustment(const char *const adjust)
   {
     f = 0;
   }
-  else if (strcmp_i(adjust,"x_CM"))
+  else if (strcmp_i(adjust,"none"))
   {
-    f = force_balance_x_CM;
+    f = 0;
   }
-  else if (strcmp_i(adjust,"y_CM"))
+  else if (strcmp_i(adjust,"d/dx:x_CM"))
   {
-    f = force_balance_y_CM;
+    f = force_balance_ddx_x_CM;
   }
-  else if (strcmp_i(adjust,"z_CM"))
+  else if (strcmp_i(adjust,"d/dy:x_CM"))
   {
-    f = force_balance_z_CM;
+    f = force_balance_ddy_x_CM;
   }
-  else if (strcmp_i(adjust,"Omega"))
+  else if (strcmp_i(adjust,"d/dz:x_CM"))
   {
-    f = force_balance_Omega;
+    f = force_balance_ddz_x_CM;
+  }
+  else if (strcmp_i(adjust,"d/dx:y_CM"))
+  {
+    f = force_balance_ddx_y_CM;
+  }
+  else if (strcmp_i(adjust,"d/dy:y_CM"))
+  {
+    f = force_balance_ddy_y_CM;
+  }
+  else if (strcmp_i(adjust,"d/dz:y_CM"))
+  {
+    f = force_balance_ddz_y_CM;
+  }
+  else if (strcmp_i(adjust,"d/dx:Omega"))
+  {
+    f = force_balance_ddx_Omega;
+  }
+  else if (strcmp_i(adjust,"d/dy:Omega"))
+  {
+    f = force_balance_ddy_Omega;
+  }
+  else if (strcmp_i(adjust,"d/dz:Omega"))
+  {
+    f = force_balance_ddz_Omega;
   }
   else
     abortEr(NO_OPTION);
@@ -273,23 +301,6 @@ static void force_balance_eq(Grid_T *const grid)
   _free(adjust[0]);
   _free(adjust[1]);
   _free(adjust[2]);
-  
-  if (strcmp_i(GetParameterS_E("force_balance_equation"),"CenterOfMass"))
-  {
-    /* find center of mass at y axis using force balance equation */
-    find_yCM_force_balance_eq(grid);
-  }
-  else if (strcmp_i(GetParameterS_E("force_balance_equation"),"AngularVelocity"))
-  {
-    /* find BH_NS_orbital_angular_velocity using force balance equation */
-    find_OmegaBHNS_force_balance_eq(grid);
-  }
-  else if (strcmp_i(GetParameterS_E("force_balance_equation"),"none"))
-  {
-    return;/* does nothing */
-  }
-  else
-    abortEr(NO_OPTION);
 }
 
 /* adjust the boot velocity at the outer boundary to diminish P_ADM
@@ -662,114 +673,161 @@ static void adjust_NS_center(Grid_T *const grid)
   }
 }
 
-/* find BH_NS_orbital_angular_velocity using force balance equation */
-static void find_OmegaBHNS_force_balance_eq(Grid_T *const grid)
+/* force_balance_equation : adjust x_CM at direction d/dx */
+static void force_balance_ddx_x_CM(Grid_T *const grid)
 {
-  const double D            = GetParameterD_E("BH_NS_separation");
-  const double Vr           = GetParameterD_E("BH_NS_infall_velocity");
-  const double y_CM         = GetParameterD_E("y_CM");
-  const double NS_center[3] = {0,-D/2,0};/* since we keep the NS center always here */
-  const double RESIDUAL     = sqrt(GetParameterD_E("RootFinder_Tolerance"));
-  double *Omega_BH_NS,Omega_BHNS;
-  double guess[1],X[3];
-  struct Force_Balance_RootFinder_S params[1];
-  Patch_T *patch;
-  
-  patch = GetPatch("left_centeral_box",grid);
-  
-  X_of_x(X,NS_center,patch);
-  
-  Root_Finder_T *root = init_root_finder(1);
-  guess[0] = GetParameterD_E("BH_NS_orbital_angular_velocity");
-  
-  params->patch       = patch;
-  params->X           = X;
-  params->y_CM        = y_CM;
-  params->Vr          = Vr;
-  params->D           = D;
-  params->dyLnGamma   = dyLnGamma_in_force_balance_eq(patch,X);
-  root->description   = "Solving Force Balance Equation for Omega_BHNS";
-  root->verbose       = 1;
-  root->type          = GetParameterS_E("RootFinder_Method");
-  root->tolerance     = GetParameterD_E("RootFinder_Tolerance");
-  root->MaxIter       = (unsigned)GetParameterI_E("RootFinder_Max_Number_of_Iteration");
-  root->x_gss         = guess;
-  root->params        = params;
-  root->f[0]          = force_balance_Omega_root_finder_eq;
-  plan_root_finder(root);
-  
-  Omega_BH_NS         = execute_root_finder(root);
-  
-  if (root->exit_status != ROOT_FINDER_OK && GRT(root->residual,RESIDUAL))
-  {
-    print_root_finder_exit_status(root);
-  }
-  update_parameter_double_format("BH_NS_orbital_angular_velocity",Omega_BH_NS[0]);
-  printf("Updating BH_NS_orbital_angular_velocity: %g -> %g\n",guess[0],Omega_BH_NS[0]);
-  
-  Omega_BHNS = Omega_BH_NS[0];
-  
-  free_root_finder(root);
-  free(Omega_BH_NS);
-  
-  /* since BH_NS_orbital_angular_velocity has been changed 
-  // let's update the pertinent fields */
-  update_B1_dB1_Beta_dBete_Aij_dAij(grid);
+  force_balance_eq_root_finders(grid,0,"x_CM");
 }
 
-/* find center of mass at y axis using force balance equation */
-static void find_yCM_force_balance_eq(Grid_T *const grid)
+/* force_balance_equation : adjust x_CM at direction d/dy */
+static void force_balance_ddy_x_CM(Grid_T *const grid)
+{
+  force_balance_eq_root_finders(grid,1,"x_CM");
+}
+
+/* force_balance_equation : adjust x_CM at direction d/dz */
+static void force_balance_ddz_x_CM(Grid_T *const grid)
+{
+  force_balance_eq_root_finders(grid,2,"x_CM");
+}
+
+/* force_balance_equation : adjust y_CM at direction d/dx */
+static void force_balance_ddx_y_CM(Grid_T *const grid)
+{
+  force_balance_eq_root_finders(grid,0,"y_CM");
+}
+
+/* force_balance_equation : adjust y_CM at direction d/dy */
+static void force_balance_ddy_y_CM(Grid_T *const grid)
+{
+  force_balance_eq_root_finders(grid,1,"y_CM");
+}
+
+/* force_balance_equation : adjust y_CM at direction d/dz */
+static void force_balance_ddz_y_CM(Grid_T *const grid)
+{
+  force_balance_eq_root_finders(grid,2,"y_CM");
+}
+
+/* force_balance_equation : adjust Omega at direction d/dx */
+static void force_balance_ddx_Omega(Grid_T *const grid)
+{
+  force_balance_eq_root_finders(grid,0,"BH_NS_orbital_angular_velocity");
+}
+
+/* force_balance_equation : adjust Omega at direction d/dy */
+static void force_balance_ddy_Omega(Grid_T *const grid)
+{
+  force_balance_eq_root_finders(grid,1,"BH_NS_orbital_angular_velocity");
+}
+
+/* force_balance_equation : adjust Omega at direction d/dz */
+static void force_balance_ddz_Omega(Grid_T *const grid)
+{
+  force_balance_eq_root_finders(grid,2,"BH_NS_orbital_angular_velocity");
+}
+
+/* find parameter par using force balance equation in direction dir */
+static void force_balance_eq_root_finders(Grid_T *const grid,const int dir, const char *const par)
 {
   const double D            = GetParameterD_E("BH_NS_separation");
   const double Vr           = GetParameterD_E("BH_NS_infall_velocity");
-  const double Omega_BHNS   = GetParameterD_E("BH_NS_orbital_angular_velocity");
   const double NS_center[3] = {0,-D/2,0};/* since we keep the NS center always here */
   const double RESIDUAL     = sqrt(GetParameterD_E("RootFinder_Tolerance"));
-  double y_CM               = GetParameterD_E("y_CM");
-  double *new_y_CM;
+  const double Omega_BHNS   = GetParameterD_E("BH_NS_orbital_angular_velocity");
+  const double y_CM         = GetParameterD_E("y_CM");
+  const double x_CM         = GetParameterD_E("x_CM");
+  double *new_par,old_par;
   double guess[1],X[3];
   struct Force_Balance_RootFinder_S params[1];
   Patch_T *patch;
+  char desc[1000] = {'\0'};
   
   patch = GetPatch("left_centeral_box",grid);
   X_of_x(X,NS_center,patch);
   
-  Root_Finder_T *root = init_root_finder(1);
-  guess[0] = y_CM;
+  params->patch      = patch;
+  params->X          = X;
+  params->Vr         = Vr;
+  params->D          = D;
+  params->find_x_CM  = 0;
+  params->find_y_CM  = 0;
+  params->find_Omega = 0;
+  params->dir        = dir;
   
-  params->patch       = patch;
-  params->X           = X;
-  params->Omega_BHNS  = Omega_BHNS;
-  params->Vr          = Vr;
-  params->D           = D;
-  params->dyLnGamma   = dyLnGamma_in_force_balance_eq(patch,X);
-  root->description   = "Solving Force Balance Equation for y_CM";
+  /* which par */
+  if (strcmp_i("BH_NS_orbital_angular_velocity",par))
+  {
+    params->find_Omega = 1;
+    params->x_CM       = x_CM;
+    params->y_CM       = y_CM;
+    guess[0]           = Omega_BHNS;
+    old_par            = Omega_BHNS;
+    
+  }
+  else if (strcmp_i("x_CM",par))
+  {
+    params->find_x_CM  = 1;
+    params->Omega_BHNS = Omega_BHNS;
+    params->y_CM       = y_CM;
+    guess[0]           = x_CM;
+    old_par            = x_CM;
+  }
+  else if (strcmp_i("y_CM",par))
+  {
+    params->find_y_CM  = 1;
+    params->Omega_BHNS = Omega_BHNS;
+    params->x_CM       = x_CM;
+    guess[0]           = y_CM;
+    old_par            = y_CM;
+  }
+  else
+    abortEr(NO_OPTION);
+  
+  /* which direction */
+  if (dir == 0)
+  {
+    params->dLnGamma = dLnGamma_in_force_balance_eq(patch,X,0);
+  }
+  else if (dir == 1)
+  {
+    params->dLnGamma = dLnGamma_in_force_balance_eq(patch,X,1);
+  }
+  else if (dir == 2)
+  {
+    params->dLnGamma = dLnGamma_in_force_balance_eq(patch,X,2);
+  }
+  else
+    abortEr(NO_OPTION);
+  
+  sprintf(desc,"Solving Force Balance Equation for '%s' at direction 'x^%d'",par,dir);
+  
+  Root_Finder_T *root = init_root_finder(1);
+  root->description   = desc;
   root->verbose       = 1;
   root->type          = GetParameterS_E("RootFinder_Method");
   root->tolerance     = GetParameterD_E("RootFinder_Tolerance");
   root->MaxIter       = (unsigned)GetParameterI_E("RootFinder_Max_Number_of_Iteration");
   root->x_gss         = guess;
   root->params        = params;
-  root->f[0]          = force_balance_yCM_root_finder_eq;
+  root->f[0]          = force_balance_root_finder_eq;
   plan_root_finder(root);
   
-  new_y_CM = execute_root_finder(root);
+  new_par = execute_root_finder(root);
   
   if (root->exit_status != ROOT_FINDER_OK && GRT(root->residual,RESIDUAL))
   {
     print_root_finder_exit_status(root);
   }
-  update_parameter_double_format("y_CM",new_y_CM[0]);
-  printf("Updating y_CM: %g -> %g\n",y_CM,new_y_CM[0]);
   
-  y_CM = new_y_CM[0];
-  /* since BH_NS_orbital_angular_velocity has been changed 
-  // let's update the pertinent fields */
+  update_parameter_double_format(par,new_par[0]);
+  printf("Updating %s: %g -> %g\n",par,old_par,new_par[0]);
+  
+  /* since B1 has been changed let's update the pertinent fields */
   update_B1_dB1_Beta_dBete_Aij_dAij(grid);
   
   free_root_finder(root);
-  free(new_y_CM);
-  
+  free(new_par);
 }
 
 /* find the NS center using d(enthalpy)/dx^i = 0 */
