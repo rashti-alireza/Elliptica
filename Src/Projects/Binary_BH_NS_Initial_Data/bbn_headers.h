@@ -15,12 +15,17 @@ struct Force_Balance_RootFinder_S
 {
   Patch_T *patch;
   //Root_Finder_T *root_finder;
-  double dyLnGamma;
+  double dLnGamma;
   double y_CM;
+  double x_CM;
   double Vr;
   double D;
   double Omega_BHNS;
   const double *X;
+  unsigned find_y_CM: 1;
+  unsigned find_x_CM: 1;
+  unsigned find_Omega: 1;
+  int dir;/* direction of derivative */
 };
 
 void bbn_study_initial_data(Grid_T *const grid);
@@ -57,9 +62,8 @@ void bbn_update_Beta_U1(Patch_T *const patch);
 void bbn_update_Beta_U2(Patch_T *const patch);
 void bbn_update_B1_U012(Patch_T *const patch);
 double bbn_NS_baryonic_mass(Grid_T *const grid,const double Euler_C);
-double force_balance_Omega_root_finder_eq(void *params,const double *const x);
-double force_balance_yCM_root_finder_eq(void *params,const double *const x);
-double dyLnGamma_in_force_balance_eq(Patch_T *const patch,const double *const NS_centerX);
+double force_balance_root_finder_eq(void *params,const double *const x);
+double dLnGamma_in_force_balance_eq(Patch_T *const patch,const double *const NS_centerX,const int dir);
 void bbn_calculate_constraints(Grid_T *const grid);
 void bbn_update_enthalpy_and_denthalpy(Grid_T *const grid);
 void bbn_update_stress_energy_tensor(Grid_T *const grid);

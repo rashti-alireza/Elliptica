@@ -6,8 +6,8 @@
 
 #include "bbn_headers.h"
 
-double dyLnGamma_in_force_balance_eq(Patch_T *const patch,const double *const NS_centerX);
-double dyLnGamma_in_force_balance_eq(Patch_T *const patch,const double *const NS_centerX)
+double dLnGamma_in_force_balance_eq(Patch_T *const patch,const double *const NS_centerX,const int dir);
+double dLnGamma_in_force_balance_eq(Patch_T *const patch,const double *const NS_centerX,const int dir)
 {
 
   /* declaring: */
@@ -33,9 +33,9 @@ double dyLnGamma_in_force_balance_eq(Patch_T *const patch,const double *const NS
 
 
 ADD_FIELD(GAMMA_fb);
-ADD_FIELD_NoMem(dGAMMA_D1_fb);
+ADD_FIELD_NoMem(dGAMMA_fb);
 DECLARE_FIELD(GAMMA_fb);
-DECLARE_FIELD(dGAMMA_D1_fb);
+DECLARE_FIELD(dGAMMA_fb);
 const unsigned nn = patch->nn;
 unsigned ijk;
 for (ijk = 0; ijk < nn; ++ijk)
@@ -64,13 +64,12 @@ psi4*(_gamma_D0D0[ijk]*pow(t_U0, 2) + 2.0*_gamma_D0D1[ijk]*t_U0*t_U1 +
 _gamma_D1D2[ijk]*t_U1*t_U2 + _gamma_D2D2[ijk]*pow(t_U2, 2));
 
   double v = 
-(pow(alpha, 2)*enthalpy[ijk]*u0[ijk]*(dphi_D0[ijk]*t_U0 + dphi_D1[ijk]*
-t_U1 + dphi_D2[ijk]*t_U2) + alpha2*psi4*(pow(W_U0[ijk], 2)*
-_gamma_D0D0[ijk] + 2.0*W_U0[ijk]*W_U1[ijk]*_gamma_D0D1[ijk] + 2.0*
-W_U0[ijk]*W_U2[ijk]*_gamma_D0D2[ijk] + pow(W_U1[ijk], 2)*
-_gamma_D1D1[ijk] + 2.0*W_U1[ijk]*W_U2[ijk]*_gamma_D1D2[ijk] +
-pow(W_U2[ijk], 2)*_gamma_D2D2[ijk]))/(pow(alpha, 2)*alpha2*
-pow(enthalpy[ijk], 2)*pow(u0[ijk], 2));
+(dphi_D0[ijk]*t_U0 + dphi_D1[ijk]*t_U1 + dphi_D2[ijk]*t_U2)/(alpha2*
+enthalpy[ijk]*u0[ijk]) + psi4*(pow(W_U0[ijk], 2)*_gamma_D0D0[ijk] +
+2.0*W_U0[ijk]*W_U1[ijk]*_gamma_D0D1[ijk] + 2.0*W_U0[ijk]*W_U2[ijk]*
+_gamma_D0D2[ijk] + pow(W_U1[ijk], 2)*_gamma_D1D1[ijk] + 2.0*W_U1[ijk]*
+W_U2[ijk]*_gamma_D1D2[ijk] + pow(W_U2[ijk], 2)*_gamma_D2D2[ijk])/
+(pow(alpha, 2)*pow(enthalpy[ijk], 2)*pow(u0[ijk], 2));
 
   double G = 
 -alpha*u0[ijk]*pow((alpha2 - t2)/alpha2, -0.5)*(v -
@@ -79,12 +78,20 @@ pow(enthalpy[ijk], 2)*pow(u0[ijk], 2));
 
 GAMMA_fb->v[ijk]  = G;
 }
-dGAMMA_D1_fb->v  = Partial_Derivative(GAMMA_fb,"y");
+if (dir == 0)
+  dGAMMA_fb->v  = Partial_Derivative(GAMMA_fb,"x");
+else if (dir == 1)
+  dGAMMA_fb->v  = Partial_Derivative(GAMMA_fb,"y");
+else if (dir == 2)
+  dGAMMA_fb->v  = Partial_Derivative(GAMMA_fb,"z");
+else
+  abortEr(NO_OPTION);
+
 Interpolation_T *interp_GAMMA   = init_interpolation();
 Interpolation_T *interp_dGAMMA  = init_interpolation();
 
 interp_GAMMA->field   = GAMMA_fb;
-interp_dGAMMA->field  = dGAMMA_D1_fb;
+interp_dGAMMA->field  = dGAMMA_fb;
 
 interp_GAMMA->X = NS_centerX[0];
 interp_GAMMA->Y = NS_centerX[1];
@@ -105,7 +112,7 @@ const double f  = dg/g;
 assert(isfinite(f));
 
 REMOVE_FIELD(GAMMA_fb);
-REMOVE_FIELD(dGAMMA_D1_fb);
+REMOVE_FIELD(dGAMMA_fb);
 free_interpolation(interp_GAMMA);
 free_interpolation(interp_dGAMMA);
 

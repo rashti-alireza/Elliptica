@@ -10,9 +10,9 @@ C_macro = GET_FIELD(name);
 
 `#include "bbn_headers.h"`
 ``
-# calculate d(Ln(Gamma))/dy used in force balance eq.
-`double dyLnGamma_in_force_balance_eq(Patch_T *const patch,const double *const NS_centerX);`
-`double dyLnGamma_in_force_balance_eq(Patch_T *const patch,const double *const NS_centerX)`
+# calculate d(Ln(Gamma))/d(x^dir) used in force balance eq.
+`double dLnGamma_in_force_balance_eq(Patch_T *const patch,const double *const NS_centerX,const int dir);`
+`double dLnGamma_in_force_balance_eq(Patch_T *const patch,const double *const NS_centerX,const int dir)`
 `{`
 
 Declare = 
@@ -50,10 +50,10 @@ Declare =
 Symm[_gamma(i,j)   = _gamma(j,i)];
 
 `ADD_FIELD(GAMMA_fb);`
-`ADD_FIELD_NoMem(dGAMMA_D1_fb);`
+`ADD_FIELD_NoMem(dGAMMA_fb);`
 
 `DECLARE_FIELD(GAMMA_fb);`
-`DECLARE_FIELD(dGAMMA_D1_fb);`
+`DECLARE_FIELD(dGAMMA_fb);`
 
 # calculating Gamma
 `const unsigned nn = patch->nn;`
@@ -73,13 +73,20 @@ Symm[_gamma(i,j)   = _gamma(j,i)];
     `GAMMA_fb->v[ijk]  = G;`
 `}`
 
-`dGAMMA_D1_fb->v  = Partial_Derivative(GAMMA_fb,"y");`
-
+`if (dir == 0)`
+`  dGAMMA_fb->v  = Partial_Derivative(GAMMA_fb,"x");`
+`else if (dir == 1)`
+`  dGAMMA_fb->v  = Partial_Derivative(GAMMA_fb,"y");`
+`else if (dir == 2)`
+`  dGAMMA_fb->v  = Partial_Derivative(GAMMA_fb,"z");`
+`else`
+`  abortEr(NO_OPTION);`
+``
 `Interpolation_T *interp_GAMMA   = init_interpolation();`
 `Interpolation_T *interp_dGAMMA  = init_interpolation();`
 ``
 `interp_GAMMA->field   = GAMMA_fb;`
-`interp_dGAMMA->field  = dGAMMA_D1_fb;`
+`interp_dGAMMA->field  = dGAMMA_fb;`
 ``
 `interp_GAMMA->X = NS_centerX[0];`
 `interp_GAMMA->Y = NS_centerX[1];`
@@ -100,7 +107,7 @@ Symm[_gamma(i,j)   = _gamma(j,i)];
 `assert(isfinite(f));` # if f goes banana!
 ``
 `REMOVE_FIELD(GAMMA_fb);`
-`REMOVE_FIELD(dGAMMA_D1_fb);`
+`REMOVE_FIELD(dGAMMA_fb);`
 `free_interpolation(interp_GAMMA);`
 `free_interpolation(interp_dGAMMA);`
 ``
