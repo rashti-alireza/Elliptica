@@ -1152,6 +1152,7 @@ void bbn_update_B1_U012(Patch_T *const patch)
   const double Vr   = GetParameterD_E("BH_NS_infall_velocity");
   const double D    = GetParameterD_E("BH_NS_separation");
   const double y_CM = GetParameterD_E("y_CM");
+  const double x_CM = GetParameterD_E("x_CM");
   const unsigned nn = patch->nn;
   unsigned ijk;
     
@@ -1165,8 +1166,8 @@ void bbn_update_B1_U012(Patch_T *const patch)
     double x     = patch->node[ijk]->x[0];
     double y     = patch->node[ijk]->x[1];
     
-    B1_U0[ijk] = Omega_BHNS*(-y+y_CM)+Vr*x/D;
-    B1_U1[ijk] = Omega_BHNS*x+Vr*(y-y_CM)/D;
+    B1_U0[ijk] = Omega_BHNS*(-y+y_CM)+Vr*(x-x_CM)/D;
+    B1_U1[ijk] = Omega_BHNS*(x-x_CM)+Vr*(y-y_CM)/D;
     B1_U2[ijk] = 0;
   }
 
