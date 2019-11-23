@@ -8,6 +8,8 @@
 #define Power(a,b) pow(a,b)
 #define Sqrt(a) sqrt(a)
 
+typedef void fAdjustment_t (Grid_T *const grid);
+
 /* root finder struct for NS surface eq */
 struct NS_surface_RootFinder_S
 {
@@ -107,9 +109,15 @@ static double bbn_NS_surface_denthalpy_dr(void *params,const double *const x,con
 static void extrapolate_fluid_fields_outsideNS(Grid_T *const grid);
 static void find_NS_surface(Grid_T *const grid,struct Grid_Params_S *const GridParams);
 static void update_B1_then_Beta_and_Aij(Grid_T *const grid,const double Omega_BHNS,const double Vr,const double y_CM,const double D);
-static void find_boost_velocity_at_outer_boundary(Grid_T *const grid);
 static void force_balance_eq(Grid_T *const grid);
 static void find_yCM_force_balance_eq(Grid_T *const grid);
 void bbn_extrapolate_metric_fields_insideBH(Grid_T *const grid);
 static void add_patches_insideBH(Grid_T *const grid);
 static void extrapolate_insideBH(Grid_T *const grid);
+static void parse_adjust_parameter(const char *const par,char *adjust[3]);
+static void P_ADM_control(Grid_T *const grid);
+fAdjustment_t *func_force_balance_adjustment(const char *const adjust);
+fAdjustment_t *func_P_ADM_adjustment(const char *const adjust);
+static void P_ADM_Boost_Vx(Grid_T *const grid);
+static void P_ADM_Boost_Vy(Grid_T *const grid);
+static void P_ADM_Boost_Vz(Grid_T *const grid);

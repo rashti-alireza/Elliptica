@@ -63,14 +63,11 @@ static Grid_T *make_next_grid_using_previous_grid(Grid_T *const grid_prev)
   /* find NS surface using h = 1 */
   find_NS_surface(grid_prev,GridParams);
   
-  /* adjust boot velocity to diminish P_ADM */
-  find_boost_velocity_at_outer_boundary(grid_prev);
-  
   /* find y_CM or orbital_angular_velocity using force balance equation */
   force_balance_eq(grid_prev);
   
-  /* find y_CM by demanding P_ADM = 0 */
-  find_center_of_mass(grid_prev);
+  /* P_ADM control */
+  P_ADM_control(grid_prev);
   
   /* find the BH radius to acquire the desired BH mass */
   //find_BH_radius(grid_prev);
@@ -117,9 +114,162 @@ static Grid_T *make_next_grid_using_previous_grid(Grid_T *const grid_prev)
   return grid_next;
 }
 
+/* controlling P_ADM */
+static void P_ADM_control(Grid_T *const grid)
+{
+  char *adjust[3];
+  const char *const par = GetParameterS_E("P_ADM_control_method");
+  
+  parse_adjust_parameter(par,adjust);
+  
+  fAdjustment_t *P_ADM_adjust[3] = {
+                               func_P_ADM_adjustment(adjust[0]),
+                               func_P_ADM_adjustment(adjust[1]),
+                               func_P_ADM_adjustment(adjust[2])};
+  
+  if (P_ADM_adjust[0])
+    P_ADM_adjust[0](grid);
+  
+  if (P_ADM_adjust[1])
+    P_ADM_adjust[1](grid);
+    
+  if (P_ADM_adjust[2])
+    P_ADM_adjust[2](grid);
+    
+  /* adjust boot velocity to diminish P_ADM */
+  find_boost_velocity_at_outer_boundary(grid);
+  
+  /* find y_CM by demanding P_ADM = 0 */
+  find_center_of_mass(grid);
+    
+  _free(adjust[0]);
+  _free(adjust[1]);
+  _free(adjust[2]);
+}
+
+/* getting adjustment str, returns the relevant function. */
+fAdjustment_t *func_P_ADM_adjustment(const char *const adjust)
+{
+  fAdjustment_t *f = 0;
+  
+  if (!adjust)
+  {
+    f = 0;
+  }
+  else if (strcmp_i(adjust,"x_CM"))
+  {
+    f = P_ADM_x_CM;
+  }
+  else if (strcmp_i(adjust,"y_CM"))
+  {
+    f = P_ADM_y_CM;
+  }
+  else if (strcmp_i(adjust,"Boost_Vx"))
+  {
+    f = P_ADM_Boost_Vx;
+  }
+  else if (strcmp_i(adjust,"Boost_Vy"))
+  {
+    f = P_ADM_Boost_Vy;
+  }
+  else if (strcmp_i(adjust,"Boost_Vz"))
+  {
+    f = P_ADM_Boost_Vz;
+  }
+  else
+    abortEr(NO_OPTION);
+  
+  return f;
+}
+
+/* getting adjustment str, returns the relevant function. */
+fAdjustment_t *func_force_balance_adjustment(const char *const adjust)
+{
+  fAdjustment_t *f = 0;
+  
+  if (!adjust)
+  {
+    f = 0;
+  }
+  else if (strcmp_i(adjust,"x_CM"))
+  {
+    f = force_balance_x_CM;
+  }
+  else if (strcmp_i(adjust,"y_CM"))
+  {
+    f = force_balance_y_CM;
+  }
+  else if (strcmp_i(adjust,"z_CM"))
+  {
+    f = force_balance_z_CM;
+  }
+  else if (strcmp_i(adjust,"Omega"))
+  {
+    f = force_balance_Omega;
+  }
+  else
+    abortEr(NO_OPTION);
+  
+  return f;
+}
+
+/* parsing adjust parameter value and fill components consequently */
+static void parse_adjust_parameter(const char *const par,char *adjust[3])
+{
+  if (!strstr_i(par,"adjust(") && !strstr_i(par,"none"))
+    abortEr_s("Syntax error for '%s'.\n",par);
+  
+  /* if it is none */  
+  if (strstr_i(par,"none"))
+  {
+    adjust[0] = 0;
+    adjust[1] = 0;
+    adjust[2] = 0;
+    
+    return;
+  }
+  
+  /* parse if not none */
+  char *str = dup_s(par);
+  char *save;
+  char *main_str = sub_s(str,'(',')',&save);
+  char *tok  = tok_s(main_str,',',&save);
+  
+  adjust[0] = dup_s(tok);
+  tok = tok_s(0,',',&save);
+  adjust[1] = dup_s(tok);
+  tok = tok_s(0,',',&save);
+  adjust[2] = dup_s(tok);
+  
+  free(str);
+}
+
 /* find BH_NS_orbital_angular_velocity using force balance equation */
 static void force_balance_eq(Grid_T *const grid)
 {
+  char *adjust[3];
+  const char *const par = GetParameterS_E("force_balance_equation");
+  
+  parse_adjust_parameter(par,adjust);
+  
+  fAdjustment_t *force_balance_adjust[3] = {
+                               func_force_balance_adjustment(adjust[0]),
+                               func_force_balance_adjustment(adjust[1]),
+                               func_force_balance_adjustment(adjust[2])};
+  
+  if (force_balance_adjust[0])
+    force_balance_adjust[0](grid);
+  
+  if (force_balance_adjust[1])
+    force_balance_adjust[1](grid);
+    
+  if (force_balance_adjust[2])
+    force_balance_adjust[2](grid);
+    
+  _free(adjust[0]);
+  _free(adjust[1]);
+  _free(adjust[2]);
+  
   if (strcmp_i(GetParameterS_E("force_balance_equation"),"CenterOfMass"))
   {
     /* find center of mass at y axis using force balance equation */
@@ -138,8 +288,9 @@ static void force_balance_eq(Grid_T *const grid)
     abortEr(NO_OPTION);
 }
 
-/* adjust the boot velocity at the outer boundary to diminish P_ADM */
-static void find_boost_velocity_at_outer_boundary(Grid_T *const grid)
+/* adjust the boot velocity at the outer boundary to diminish P_ADM
+// it only makes changes in the specified direction x. */
+static void P_ADM_Boost_Vx(Grid_T *const grid)
 {
   const double SMALL_FAC = 1E-2;
   const double dP   = GetParameterD_E("P_ADM_control_tolerance");
@@ -158,62 +309,33 @@ static void find_boost_velocity_at_outer_boundary(Grid_T *const grid)
   
   /* get previous P_ADMs */
   p1[0] = GetParameterD_E("P_ADM_x");
-  p1[1] = GetParameterD_E("P_ADM_y");
-  p1[2] = GetParameterD_E("P_ADM_z");
   
   /* get the current P_ADMs */
   p2[0] = obs->Px_ADM(obs);
-  p2[1] = obs->Py_ADM(obs);
-  p2[2] = obs->Pz_ADM(obs);
   
   update_parameter_double_format("P_ADM_x",p2[0]);
-  update_parameter_double_format("P_ADM_y",p2[1]);
-  update_parameter_double_format("P_ADM_z",p2[2]);
   
-  printf("ADM momentums:\n");
-  printf("-->P_ADM  = (%e,%e,%e).\n",p2[0],p2[1],p2[2]);
-  printf("-->J_ADM  = (%e,%e,%e).\n",
-      obs->Jx_ADM(obs),obs->Jy_ADM(obs),obs->Jz_ADM(obs));
-  
-  if (!strcmp_i(GetParameterS_E("P_ADM_control_method"),"BoostMethod"))
-  {
-    free_observable(obs);
-    return;
-  }
-
   if (iter == 0)
   {
     update_parameter_double_format("v1_boost_x",p2[0]*SMALL_FAC);
-    update_parameter_double_format("v1_boost_y",p2[1]*SMALL_FAC);
-    update_parameter_double_format("v1_boost_z",p2[2]*SMALL_FAC);
   }
   else if (iter == 1)
   {
     update_parameter_double_format("v2_boost_x",p2[0]*SMALL_FAC);
-    update_parameter_double_format("v2_boost_y",p2[1]*SMALL_FAC);
-    update_parameter_double_format("v2_boost_z",p2[2]*SMALL_FAC);
   }
   else if (iter > 1)
   {
     /* get the penultimate boost velocity */
     v1[0] = GetParameterD_E("v1_boost_x");
-    v1[1] = GetParameterD_E("v1_boost_y");
-    v1[2] = GetParameterD_E("v1_boost_z");
     
     /* get the ultimate boost velocity */
     v2[0] = GetParameterD_E("v2_boost_x");
-    v2[1] = GetParameterD_E("v2_boost_y");
-    v2[2] = GetParameterD_E("v2_boost_z");
     
     /* get the boost velocity */
     v0[0] = GetParameterD_E("v*_boost_x");
-    v0[1] = GetParameterD_E("v*_boost_y");
-    v0[2] = GetParameterD_E("v*_boost_z");
     
     /* calculate the new boost velocity */
     v[0] = (v2[0]*p1[0]-v1[0]*p2[0])/(p1[0]-p2[0]);
-    v[1] = (v2[1]*p1[1]-v1[1]*p2[1])/(p1[1]-p2[1]);
-    v[2] = (v2[2]*p1[2]-v1[2]*p2[2])/(p1[2]-p2[2]);
     
     /* take cure of 0 denominator */
     if (EQL(p1[0],p2[0])) v[0] = 0;
@@ -222,24 +344,14 @@ static void find_boost_velocity_at_outer_boundary(Grid_T *const grid)
     
     /* change the boost velocity relaxed */
     v[0] = W*v[0]+(1-W)*v0[0];
-    v[1] = W*v[1]+(1-W)*v0[1];
-    v[2] = W*v[2]+(1-W)*v0[2];
     
     /* update parameters */
     update_parameter_double_format("v1_boost_x",v2[0]);
-    update_parameter_double_format("v1_boost_y",v2[1]);
-    update_parameter_double_format("v1_boost_z",v2[2]);
     
     update_parameter_double_format("v2_boost_x",v[0]);
-    update_parameter_double_format("v2_boost_y",v[1]);
-    update_parameter_double_format("v2_boost_z",v[2]);
     
     const double dPx_Px = L2_norm(1,&p2[0],&p1[0])/L2_norm(1,&p2[0],0);
-    const double dPy_Py = L2_norm(1,&p2[1],&p1[1])/L2_norm(1,&p2[1],0);
-    const double dPz_Pz = L2_norm(1,&p2[2],&p1[2])/L2_norm(1,&p2[2],0);
     printf("dPx/Px = %e\n",dPx_Px);
-    printf("dPy/Py = %e\n",dPy_Py);
-    printf("dPz/Pz = %e\n",dPz_Pz);
     
     /* if change in momentum is big */
     if (GRT(dPx_Px,dP))
@@ -251,7 +363,76 @@ static void find_boost_velocity_at_outer_boundary(Grid_T *const grid)
       printf("-->boost velocity_x = %e -> no update.\n",
         GetParameterD_E("v*_boost_x"));
       
-    if (GRT(dPy_Py,dP))
+  }
+  
+  free_observable(obs);
+  iter++;
+} 
+
+/* adjust the boot velocity at the outer boundary to diminish P_ADM
+// it only makes changes in the specified direction y. */
+static void P_ADM_Boost_Vy(Grid_T *const grid)
+{
+  const double SMALL_FAC = 1E-2;
+  const double dP   = GetParameterD_E("P_ADM_control_tolerance");
+  const double W    = GetParameterD_E("Solving_Field_Update_Weight");
+  Observable_T *obs = init_observable(grid);
+  double p1[3] = {0};
+  double p2[3] = {0};
+  double v1[3] = {0};
+  double v2[3] = {0};
+  double v0[3] = {0};
+  double  v[3] = {0};
+  static unsigned iter = 0;
+  
+  obs->quantity = "ADM_momentums";
+  plan_observable(obs);
+  
+  /* get previous P_ADMs */
+  p1[1] = GetParameterD_E("P_ADM_y");
+  
+  /* get the current P_ADMs */
+  p2[1] = obs->Py_ADM(obs);
+  
+  update_parameter_double_format("P_ADM_y",p2[1]);
+  
+  if (iter == 0)
+  {
+    update_parameter_double_format("v1_boost_y",p2[1]*SMALL_FAC);
+  }
+  else if (iter == 1)
+  {
+    update_parameter_double_format("v2_boost_y",p2[1]*SMALL_FAC);
+  }
+  else if (iter > 1)
+  {
+    /* get the penultimate boost velocity */
+    v1[1] = GetParameterD_E("v1_boost_y");
+    
+    /* get the ultimate boost velocity */
+    v2[1] = GetParameterD_E("v2_boost_y");
+    
+    /* get the boost velocity */
+    v0[1] = GetParameterD_E("v*_boost_y");
+    
+    /* calculate the new boost velocity */
+    v[1] = (v2[1]*p1[1]-v1[1]*p2[1])/(p1[1]-p2[1]);
+    
+    /* take cure of 0 denominator */
+    if (EQL(p1[1],p2[1])) v[1] = 0;
+    
+    /* change the boost velocity relaxed */
+    v[1] = W*v[1]+(1-W)*v0[1];
+    
+    /* update parameters */
+    update_parameter_double_format("v1_boost_y",v2[1]);
+    
+    update_parameter_double_format("v2_boost_y",v[1]);
+    
+    const double dPy_Py = L2_norm(1,&p2[1],&p1[1])/L2_norm(1,&p2[1],0);
+    printf("dPy/Py = %e\n",dPy_Py);
+    
+    if (GRT(dPy_Py,dP) && dir == 1)
     {
       update_parameter_double_format("v*_boost_y",v[1]);
       printf("-->boost velocity_y = %e -> %e \n",v2[1],v[1]);
@@ -259,6 +440,75 @@ static void find_boost_velocity_at_outer_boundary(Grid_T *const grid)
     else
       printf("-->boost velocity_y = %e -> no update.\n",
         GetParameterD_E("v*_boost_y"));
+      
+  }
+  
+  free_observable(obs);
+  iter++;
+} 
+
+/* adjust the boot velocity at the outer boundary to diminish P_ADM
+// it only makes changes in the specified direction z. */
+static void P_ADM_Boost_Vz(Grid_T *const grid)
+{
+  const double SMALL_FAC = 1E-2;
+  const double dP   = GetParameterD_E("P_ADM_control_tolerance");
+  const double W    = GetParameterD_E("Solving_Field_Update_Weight");
+  Observable_T *obs = init_observable(grid);
+  double p1[3] = {0};
+  double p2[3] = {0};
+  double v1[3] = {0};
+  double v2[3] = {0};
+  double v0[3] = {0};
+  double  v[3] = {0};
+  static unsigned iter = 0;
+  
+  obs->quantity = "ADM_momentums";
+  plan_observable(obs);
+  
+  /* get previous P_ADMs */
+  p1[2] = GetParameterD_E("P_ADM_z");
+  
+  /* get the current P_ADMs */
+  p2[2] = obs->Pz_ADM(obs);
+  
+  update_parameter_double_format("P_ADM_z",p2[2]);
+  
+  if (iter == 0)
+  {
+    update_parameter_double_format("v1_boost_z",p2[2]*SMALL_FAC);
+  }
+  else if (iter == 1)
+  {
+    update_parameter_double_format("v2_boost_z",p2[2]*SMALL_FAC);
+  }
+  else if (iter > 1)
+  {
+    /* get the penultimate boost velocity */
+    v1[2] = GetParameterD_E("v1_boost_z");
+    
+    /* get the ultimate boost velocity */
+    v2[2] = GetParameterD_E("v2_boost_z");
+    
+    /* get the boost velocity */
+    v0[2] = GetParameterD_E("v*_boost_z");
+    
+    /* calculate the new boost velocity */
+    v[2] = (v2[2]*p1[2]-v1[2]*p2[2])/(p1[2]-p2[2]);
+    
+    /* take cure of 0 denominator */
+    if (EQL(p1[2],p2[2])) v[2] = 0;
+    
+    /* change the boost velocity relaxed */
+    v[2] = W*v[2]+(1-W)*v0[2];
+    
+    /* update parameters */
+    update_parameter_double_format("v1_boost_z",v2[2]);
+    
+    update_parameter_double_format("v2_boost_z",v[2]);
+    
+    const double dPz_Pz = L2_norm(1,&p2[2],&p1[2])/L2_norm(1,&p2[2],0);
+    printf("dPz/Pz = %e\n",dPz_Pz);
       
     if (GRT(dPz_Pz,dP))
     {
