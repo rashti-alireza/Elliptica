@@ -1052,7 +1052,7 @@ static void Px_ADM_is0_by_y_CM(Grid_T *const grid)
   obs->quantity = "ADM_momentums";
   plan_observable(obs);
   px = obs->Px_ADM(obs);
-  printf("ADM momentums before center of mass update:\n");
+  printf("ADM momentums before y_CM update:\n");
   printf("P_ADM = (%e,%e,%e).\n",
           px,obs->Py_ADM(obs),obs->Pz_ADM(obs));
   
@@ -1085,7 +1085,7 @@ static void Py_ADM_is0_by_x_CM(Grid_T *const grid)
   obs->quantity = "ADM_momentums";
   plan_observable(obs);
   py = obs->Py_ADM(obs);
-  printf("ADM momentums before center of mass update:\n");
+  printf("ADM momentums before x_CM update:\n");
   printf("P_ADM = (%e,%e,%e).\n",
           py,obs->Py_ADM(obs),obs->Pz_ADM(obs));
   
