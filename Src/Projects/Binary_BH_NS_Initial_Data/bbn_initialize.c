@@ -246,7 +246,7 @@ static void parse_adjust_parameter(const char *const par,char *adjust[3])
     abortEr_s("Syntax error for '%s'.\n",par);
   
   /* if it is none */  
-  if (strstr_i(par,"none"))
+  if (strcmp_i(par,"none"))
   {
     adjust[0] = 0;
     adjust[1] = 0;
