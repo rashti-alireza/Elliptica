@@ -17,8 +17,7 @@ const double dLnGamma = par->dLnGamma;
 const int dir         = par->dir;
 const double Vr       = par->Vr;
 const double D        = par->D;
-double Omega_BHNS;
-double y_CM;
+double Omega_BHNS,y_CM,x_CM;
 unsigned ijk;
 
 if(par->find_y_CM)
