@@ -128,7 +128,8 @@ void bbn_allocate_fields(Grid_T *const grid)
     ADD_FIELD_NoMem(ddeta_D0D0)
     ADD_FIELD_NoMem(ddeta_D0D1)    
     
-    /* shift, Beta^i = B0^i+B1^i, B1^i = Omega_BHNS*(-y+y_CM,x,0)+v_r/D*(x,y-y_CM) 
+    /* shift, Beta^i = B0^i+B1^i, 
+    // B1^i = Omega_BHNS*(-y+y_CM,x-x_CM,0)+v_r/D*(x-x_CM,y-y_CM) 
     // and its partial derivative */
     add_field("B0_U0",0,patch,YES);
     add_field("B0_U1",0,patch,YES);
