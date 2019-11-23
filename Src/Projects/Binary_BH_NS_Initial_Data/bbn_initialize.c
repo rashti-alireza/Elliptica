@@ -436,7 +436,7 @@ static void Py_ADM_is0_by_y_boost(Grid_T *const grid)
     const double dPy_Py = L2_norm(1,&p2[1],&p1[1])/L2_norm(1,&p2[1],0);
     printf("dPy/Py = %e\n",dPy_Py);
     
-    if (GRT(dPy_Py,dP) && dir == 1)
+    if (GRT(dPy_Py,dP))
     {
       update_parameter_double_format("v*_boost_y",v[1]);
       printf("-->boost velocity_y = %e -> %e \n",v2[1],v[1]);
@@ -714,7 +714,7 @@ static void find_OmegaBHNS_force_balance_eq(Grid_T *const grid)
   
   /* since BH_NS_orbital_angular_velocity has been changed 
   // let's update the pertinent fields */
-  update_B1_then_Beta_and_Aij(grid,Omega_BHNS,Vr,y_CM,D);
+  update_B1_dB1_Beta_dBete_Aij_dAij(grid);
 }
 
 /* find center of mass at y axis using force balance equation */
@@ -765,7 +765,7 @@ static void find_yCM_force_balance_eq(Grid_T *const grid)
   y_CM = new_y_CM[0];
   /* since BH_NS_orbital_angular_velocity has been changed 
   // let's update the pertinent fields */
-  update_B1_then_Beta_and_Aij(grid,Omega_BHNS,Vr,y_CM,D);
+  update_B1_dB1_Beta_dBete_Aij_dAij(grid);
   
   free_root_finder(root);
   free(new_y_CM);
@@ -988,8 +988,6 @@ static void Px_ADM_is0_by_y_CM(Grid_T *const grid)
   Observable_T *obs   = init_observable(grid);
   double  dy_CM = 0,px,y_CM_new;
   const double Omega_BHNS = GetParameterD_E("BH_NS_orbital_angular_velocity");
-  const double Vr   = GetParameterD_E("BH_NS_infall_velocity");
-  const double D    = GetParameterD_E("BH_NS_separation");
   const double y_CM0 = GetParameterD_E("y_CM0");
   const double y_CM  = GetParameterD_E("y_CM");
   const double M_NS  = GetParameterD_E("NS_mass");
@@ -1009,7 +1007,8 @@ static void Px_ADM_is0_by_y_CM(Grid_T *const grid)
   
   /* having found new y_CM now update */
   update_parameter_double_format("y_CM",y_CM_new);
-  update_B1_then_Beta_and_Aij(grid,Omega_BHNS,Vr,y_CM_new,D);
+  
+  update_B1_dB1_Beta_dBete_Aij_dAij(grid);
   
   printf("Update Center of Rotation: %g -> %g.\n",y_CM,y_CM_new);
   
@@ -1022,8 +1021,6 @@ static void Py_ADM_is0_by_x_CM(Grid_T *const grid)
   Observable_T *obs   = init_observable(grid);
   double  dx_CM = 0,py,x_CM_new;
   const double Omega_BHNS = GetParameterD_E("BH_NS_orbital_angular_velocity");
-  const double Vr   = GetParameterD_E("BH_NS_infall_velocity");
-  const double D    = GetParameterD_E("BH_NS_separation");
   const double x_CM0 = GetParameterD_E("x_CM0");
   const double x_CM  = GetParameterD_E("x_CM");
   const double M_NS  = GetParameterD_E("NS_mass");
@@ -1043,16 +1040,16 @@ static void Py_ADM_is0_by_x_CM(Grid_T *const grid)
   
   /* having found new x_CM now update */
   update_parameter_double_format("x_CM",x_CM_new);
-  update_B1_then_Beta_and_Aij(grid,Omega_BHNS,Vr,y_CM_new,D);
+  update_B1_dB1_Beta_dBete_Aij_dAij(grid);
   
   printf("Update Center of Rotation: %g -> %g.\n",x_CM,x_CM_new);
   
   free_observable(obs);
 }
 
-/* given the components to construct B1, it makes B1 
-// and consequently update Beta and Aij's */
-static void update_B1_then_Beta_and_Aij(Grid_T *const grid,const double Omega_BHNS,const double Vr,const double y_CM,const double D)
+/* update: (B1, dB1),(Beta,dBeta),(Aij and dAij)
+// over the whole grid excluding inside of BH */
+static void update_B1_dB1_Beta_dBete_Aij_dAij(Grid_T *const grid)
 {
   const unsigned np = grid->np;
   unsigned p;
@@ -1061,32 +1058,23 @@ static void update_B1_then_Beta_and_Aij(Grid_T *const grid,const double Omega_BH
   for (p = 0; p < np; ++p)
   {
     Patch_T *patch = grid->patch[p];
-    unsigned nn = patch->nn;
-    unsigned ijk;
     
-    /* B^1 */
-    PREP_FIELD(B1_U0)
-    PREP_FIELD(B1_U1)
-    PREP_FIELD(B1_U2)
-    for (ijk = 0; ijk < nn; ++ijk)
-    {
-      double x     = patch->node[ijk]->x[0];
-      double y     = patch->node[ijk]->x[1];
-      
-      B1_U0[ijk] = Omega_BHNS*(-y+y_CM)+Vr*x/D;
-      B1_U1[ijk] = Omega_BHNS*x+Vr*(y-y_CM)/D;
-      B1_U2[ijk] = 0;
-    }
     if (IsItInsideBHPatch(patch))
       continue;
+    
+    bbn_update_B1_U012(patch);
+    bbn_update_derivative_B1_U0(patch);
+    bbn_update_derivative_B1_U1(patch);
+    bbn_update_derivative_B1_U2(patch);
     
     bbn_update_Beta_U0(patch);
     bbn_update_Beta_U1(patch);
     bbn_update_Beta_U2(patch);
+    
     bbn_update_derivative_Beta_U0(patch);
     bbn_update_derivative_Beta_U1(patch);
     bbn_update_derivative_Beta_U2(patch);
-    /* update A^{ijk} */
+    
     bbn_update_psi10A_UiUj(patch);
   }
 }
@@ -1207,13 +1195,9 @@ static void interpolate_and_initialize_to_next_grid(Grid_T *const grid_next,Grid
   
   /* initializing some other fields: */
   /* W_U[0-2],Beta_U[0-2],B1_U[0-2] */
-  const double Omega_BHNS = GetParameterD_E("BH_NS_orbital_angular_velocity");
   const double Omega_NS_x = GetParameterD_E("NS_Omega_U0");
   const double Omega_NS_y = GetParameterD_E("NS_Omega_U1");
   const double Omega_NS_z = GetParameterD_E("NS_Omega_U2");
-  const double Vr   = GetParameterD_E("BH_NS_infall_velocity");
-  const double y_CM = GetParameterD_E("y_CM");  
-  const double D    = GetParameterD_E("BH_NS_separation");
   const double C_NS = GetParameterD_E("NS_Center");
   
   OpenMP_Patch_Pragma(omp parallel for)
@@ -1223,35 +1207,13 @@ static void interpolate_and_initialize_to_next_grid(Grid_T *const grid_next,Grid
     unsigned nn = patch->nn;
     unsigned ijk;
     
-    GET_FIELD(B0_U0)
-    GET_FIELD(B0_U1)
-    GET_FIELD(B0_U2)
-    PREP_FIELD(B1_U0)
-    PREP_FIELD(B1_U1)
-    PREP_FIELD(B1_U2)
-    PREP_FIELD(Beta_U0)
-    PREP_FIELD(Beta_U1)
-    PREP_FIELD(Beta_U2)
-    
-    for (ijk = 0; ijk < nn; ++ijk)
-    {
-      double x = patch->node[ijk]->x[0];
-      double y = patch->node[ijk]->x[1];
-       
-      /* B1 */
-      B1_U0[ijk] = Omega_BHNS*(-y+y_CM)+Vr*x/D;
-      B1_U1[ijk] = Omega_BHNS*x+Vr*(y-y_CM)/D;
-      B1_U2[ijk] = 0;
-       
-      /* Beta */
-      Beta_U0[ijk] = B0_U0[ijk]+B1_U0[ijk];
-      Beta_U1[ijk] = B0_U1[ijk]+B1_U1[ijk];
-      Beta_U2[ijk] = B0_U2[ijk]+B1_U2[ijk];
-    }
+    bbn_update_B1_U012(patch);
+    bbn_update_Beta_U0(patch);
+    bbn_update_Beta_U1(patch);
+    bbn_update_Beta_U2(patch);
     
     if (IsItNSPatch(patch))
     {
-      
       PREP_FIELD(W_U0)
       PREP_FIELD(W_U1)
       PREP_FIELD(W_U2)
@@ -2174,6 +2136,9 @@ static Grid_T *TOV_KerrSchild_approximation(void)
   const double ns_mass = tov->ADM_m;/* NS adm mass */
   const double y_CM = (ns_mass*C_NS+bh_mass*C_BH)/(ns_mass+bh_mass);
   add_parameter_double("y_CM",y_CM);
+  add_parameter_double("x_CM",0);
+  add_parameter_double("y_CM0",y_CM);
+  add_parameter_double("x_CM0",0);
   add_parameter_double("NS_mass",ns_mass);
   add_parameter_double("NS_center",C_NS);
     
@@ -2439,7 +2404,6 @@ static void init_field_TOV_plus_KerrSchild(Grid_T *const grid,const TOV_T *const
   const double Omega_NS_x = GetParameterD_E("NS_Omega_U0");
   const double Omega_NS_y = GetParameterD_E("NS_Omega_U1");
   const double Omega_NS_z = GetParameterD_E("NS_Omega_U2");
-  const double Vr = GetParameterD_E("BH_NS_infall_velocity");
   double Bx,By,Bz;/* B = v/c */
   unsigned p;
   
@@ -2650,18 +2614,22 @@ KSbeta_D2[ijk]*_gammaI_U2U2[ijk];
      unsigned nn = patch->nn;
      unsigned ijk;
      double psim4;/* psi^-4 */
+     
+     bbn_update_B1_U012(patch);
       
-     PREP_FIELD(psi)
      PREP_FIELD(B0_U0)
      PREP_FIELD(B0_U1)
      PREP_FIELD(B0_U2)
-     PREP_FIELD(B1_U0)
-     PREP_FIELD(B1_U1)
-     PREP_FIELD(B1_U2)
+     
      PREP_FIELD(Beta_U0)
      PREP_FIELD(Beta_U1)
      PREP_FIELD(Beta_U2)
-    
+     
+     GET_FIELD(B1_U0)
+     GET_FIELD(B1_U1)
+     GET_FIELD(B1_U2)
+     GET_FIELD(psi)
+     
      /* for outermost patches the better approximation is B0 = 0 */
      if (IsItOutermostPatch(patch))
      {
@@ -2678,11 +2646,6 @@ KSbeta_D2[ijk]*_gammaI_U2U2[ijk];
          Beta_U1[ijk] *= psim4;
          Beta_U2[ijk] *= psim4;
          
-         /* B1 */
-         B1_U0[ijk] = Omega_BHNS*(-y+y_CM)+Vr*x/D;
-         B1_U1[ijk] = Omega_BHNS*x+Vr*(y-y_CM)/D;
-         B1_U2[ijk] = 0;
-         
          /* B0 */
          B0_U0[ijk] = Beta_U0[ijk]-B1_U0[ijk];
          B0_U1[ijk] = Beta_U1[ijk]-B1_U1[ijk];
@@ -2690,27 +2653,18 @@ KSbeta_D2[ijk]*_gammaI_U2U2[ijk];
          B0_U0[ijk] /= r;
          B0_U1[ijk] /= r;
          B0_U2[ijk] /= r;
-         
        }
      }
      else
      {
        for (ijk = 0; ijk < nn; ++ijk)
        {
-         double x   = patch->node[ijk]->x[0];
-         double y   = patch->node[ijk]->x[1];
-         
          psim4 = pow(psi[ijk],-4);
          
          /* Beta */
          Beta_U0[ijk] *= psim4;
          Beta_U1[ijk] *= psim4;
          Beta_U2[ijk] *= psim4;
-         
-         /* B1 */
-         B1_U0[ijk] = Omega_BHNS*(-y+y_CM)+Vr*x/D;
-         B1_U1[ijk] = Omega_BHNS*x+Vr*(y-y_CM)/D;
-         B1_U2[ijk] = 0;
          
          /* B0 */
          B0_U0[ijk] = Beta_U0[ijk]-B1_U0[ijk];
@@ -2719,17 +2673,6 @@ KSbeta_D2[ijk]*_gammaI_U2U2[ijk];
          
        }
      }
-     /* new initial guess */
-     //for (ijk = 0; ijk < nn; ++ijk)
-     /*{
-       B0_U0[ijk] = 0;
-       B0_U1[ijk] = 0;
-       B0_U2[ijk] = 0;
-       Beta_U0[ijk] = B1_U0[ijk];
-       Beta_U1[ijk] = B1_U1[ijk];
-       Beta_U2[ijk] = B1_U2[ijk];
-     }*/
-      
   }/* end of * initializing Beta and B */
   
   /* freeing */
