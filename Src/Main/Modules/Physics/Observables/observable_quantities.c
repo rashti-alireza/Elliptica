@@ -448,6 +448,7 @@ static double ADM_angular_momentum_z_BBN_CS(Observable_T *const obs)
   double Jz = 0;
   const unsigned N = obs->N_ADM;
   double y_CM = 0;
+  double x_CM = 0;
   Integration_T *I;
   unsigned p;
   assert(N);
@@ -456,6 +457,9 @@ static double ADM_angular_momentum_z_BBN_CS(Observable_T *const obs)
   
   if (get_parameter("y_CM"))
     y_CM = GetParameterD_E("y_CM");
+    
+  if (get_parameter("x_CM"))
+    x_CM = GetParameterD_E("x_CM");
   
   /* surface integration */
   for(p = 0; p < N; ++p)
@@ -476,7 +480,7 @@ static double ADM_angular_momentum_z_BBN_CS(Observable_T *const obs)
     
     for (ijk = 0; ijk < nn; ++ijk)
     {
-      double x = patch->node[ijk]->x[0];
+      double x = patch->node[ijk]->x[0]-x_CM;
       double y = patch->node[ijk]->x[1]-y_CM;
       xPy_adm_integrand->v[ijk] = x*Py->v[ijk];
       yPx_adm_integrand->v[ijk] = y*Px->v[ijk];
@@ -522,7 +526,7 @@ static double ADM_angular_momentum_z_BBN_CS(Observable_T *const obs)
     
     for (ijk = 0; ijk < nn; ++ijk)
     {
-      double x = patch->node[ijk]->x[0];
+      double x = patch->node[ijk]->x[0]-x_CM;
       double y = patch->node[ijk]->x[1]-y_CM;
       xGy_adm_integrand->v[ijk] = x*Gy->v[ijk];
       yGx_adm_integrand->v[ijk] = y*Gx->v[ijk];
@@ -568,7 +572,7 @@ static double ADM_angular_momentum_x_BBN_CS(Observable_T *const obs)
   
   if (get_parameter("y_CM"))
     y_CM = GetParameterD_E("y_CM");
-  
+    
   /* surface integration */
   for(p = 0; p < N; ++p)
   {
@@ -671,12 +675,16 @@ static double ADM_angular_momentum_y_BBN_CS(Observable_T *const obs)
 {
   double Jy = 0;
   const unsigned N = obs->N_ADM;
+  double x_CM = 0;
   Integration_T *I;
   unsigned p;
   assert(N);
   
   populate_ADM_momentums_integrand_PdS_GdV(obs);
   
+  if (get_parameter("x_CM"))
+    x_CM = GetParameterD_E("x_CM");
+    
   /* surface integration */
   for(p = 0; p < N; ++p)
   {
@@ -697,7 +705,7 @@ static double ADM_angular_momentum_y_BBN_CS(Observable_T *const obs)
     for (ijk = 0; ijk < nn; ++ijk)
     {
       double z = patch->node[ijk]->x[2];
-      double x = patch->node[ijk]->x[0];
+      double x = patch->node[ijk]->x[0]-x_CM;
       zPx_adm_integrand->v[ijk] = z*Px->v[ijk];
       xPz_adm_integrand->v[ijk] = x*Pz->v[ijk];
     }
@@ -743,7 +751,7 @@ static double ADM_angular_momentum_y_BBN_CS(Observable_T *const obs)
     for (ijk = 0; ijk < nn; ++ijk)
     {
       double z = patch->node[ijk]->x[2];
-      double x = patch->node[ijk]->x[0];
+      double x = patch->node[ijk]->x[0]-x_CM;
       zGx_adm_integrand->v[ijk] = z*Gx->v[ijk];
       xGz_adm_integrand->v[ijk] = x*Gz->v[ijk];
     }
