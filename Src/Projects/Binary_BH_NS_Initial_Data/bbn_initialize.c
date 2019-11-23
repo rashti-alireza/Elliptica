@@ -354,8 +354,6 @@ static void Px_ADM_is0_by_x_boost(Grid_T *const grid)
     
     /* take cure of 0 denominator */
     if (EQL(p1[0],p2[0])) v[0] = 0;
-    if (EQL(p1[1],p2[1])) v[1] = 0;
-    if (EQL(p1[2],p2[2])) v[2] = 0;
     
     /* change the boost velocity relaxed */
     v[0] = W*v[0]+(1-W)*v0[0];
@@ -763,7 +761,6 @@ static void force_balance_eq_root_finders(Grid_T *const grid,const int dir, cons
     params->y_CM       = y_CM;
     guess[0]           = Omega_BHNS;
     old_par            = Omega_BHNS;
-    
   }
   else if (strcmp_i("x_CM",par))
   {
@@ -800,7 +797,7 @@ static void force_balance_eq_root_finders(Grid_T *const grid,const int dir, cons
   else
     abortEr(NO_OPTION);
   
-  sprintf(desc,"Solving Force Balance Equation for '%s' at direction 'x^%d'",par,dir);
+  sprintf(desc,"Solving Force Balance Eq. for '%s' at direction 'x^%d'",par,dir);
   
   Root_Finder_T *root = init_root_finder(1);
   root->description   = desc;
