@@ -23,6 +23,27 @@ void bbn_study_initial_data(Grid_T *const grid)
   bbn_print_residual_norms(grid,(unsigned)solving_iter,folder);
   
   update_parameter_integer("solving_iteration_number",++solving_iter);
+  
+  /* Observables */
+  Observable_T *obs = init_observable(grid);
+  obs->quantity = "ADM_momentums";
+  plan_observable(obs);
+  double P_ADM[3];
+  double J_ADM[3];
+  
+  P_ADM[0] = obs->Px_ADM(obs);
+  P_ADM[1] = obs->Py_ADM(obs);
+  P_ADM[2] = obs->Pz_ADM(obs);
+  
+  J_ADM[0] = obs->Jx_ADM(obs);
+  J_ADM[1] = obs->Jy_ADM(obs);
+  J_ADM[2] = obs->Jz_ADM(obs);
+  
+  printf("ADM momentums:\n");
+  printf("P_ADM = (%e,%e,%e).\n",P_ADM[0],P_ADM[1],P_ADM[2]);
+  printf("J_ADM = (%e,%e,%e).\n",J_ADM[0],J_ADM[1],J_ADM[2]);
+  
+  free_observable(obs);
 
   printf("} Studying Initial Data for Binary BH and NS ==> Done.\n");
   pr_clock();
