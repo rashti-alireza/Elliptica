@@ -54,11 +54,8 @@ static Grid_T *make_next_grid_using_previous_grid(Grid_T *const grid_prev)
   /* extrapolate fluid fields outside NS */
   extrapolate_fluid_fields_outsideNS(grid_prev);
   
-  /* find the NS center */
-  find_NS_center(grid_prev);
-  
-  /* adjust the center of NS and drag enthalpy and update enthalpy */
-  adjust_NS_center(grid_prev);
+  /* keep NS center fixed at (0,C,0) by adjusting enthalpy */
+  keep_NS_center_fixed(grid_prev);
   
   /* find NS surface using h = 1 */
   find_NS_surface(grid_prev,GridParams);
@@ -112,6 +109,53 @@ static Grid_T *make_next_grid_using_previous_grid(Grid_T *const grid_prev)
   free_Grid_Params_S(GridParams);
   
   return grid_next;
+}
+
+/* keep NS center fixed at (0,C,0) by adjusting enthalpy */
+static void keep_NS_center_fixed(Grid_T *const grid)
+{
+  const double C    = -0.5*GetParameterD_E("BH_NS_separation");
+  struct NC_Center_RootFinder_S par[1] = {0};
+  Root_Finder_T root_finder[1] = {0};
+  const double x_center[3] = {0,C,0};
+  
+  par->patch = GetPatch("left_centeral_box",grid);
+  par->root_finder = root_finder;
+  
+  /* print initial values before adjustments */
+  printf("dh/dx before adjustment:\n");
+  printf("dh/dx(%g,%g,%g)|NS center = %g\n",
+    x_center[0],x_center[1],x_center[2],
+    dh_dx0_root_finder_eq(par,x_center));
+  printf("dh/dy(%g,%g,%g)|NS center = %g\n",
+    x_center[0],x_center[1],x_center[2],
+    dh_dx1_root_finder_eq(par,x_center));
+  printf("dh/dz(%g,%g,%g)|NS center = %g\n",
+    x_center[0],x_center[1],x_center[2],
+    dh_dx2_root_finder_eq(par,x_center));
+  
+  if (strcmp_i(GetParameterS_E("NS_adjust_center_method"),"draw_enthalpy"))
+  {
+    adjust_NS_center_draw_enthalpy(grid);
+  }
+  else if (strcmp_i(GetParameterS_E("NS_adjust_center_method"),"tune_enthalpy"))
+  {
+    adjust_NS_center_tune_enthalpy(grid);
+  }
+  else
+    abortEr(NO_OPTION);
+  
+  /* print initial values after adjustments */
+  printf("dh/dx after adjustment:\n");
+  printf("dh/dx(%g,%g,%g)|NS center = %g\n",
+    x_center[0],x_center[1],x_center[2],
+    dh_dx0_root_finder_eq(par,x_center));
+  printf("dh/dy(%g,%g,%g)|NS center = %g\n",
+    x_center[0],x_center[1],x_center[2],
+    dh_dx1_root_finder_eq(par,x_center));
+  printf("dh/dz(%g,%g,%g)|NS center = %g\n",
+    x_center[0],x_center[1],x_center[2],
+    dh_dx2_root_finder_eq(par,x_center));
 }
 
 /* controlling P_ADM */
@@ -546,13 +590,60 @@ static void Pz_ADM_is0_by_z_boost(Grid_T *const grid)
   UNUSED(grid);
 } 
 
+/* adjust the center of NS at the designated point, in case it moved. 
+// in this method, we tune enthalpy values such that the derivative of 
+// the enthalpy be 0 at (0,NS_C,0). */
+static void adjust_NS_center_tune_enthalpy(Grid_T *const grid)
+{
+  unsigned p;
+  
+  FOR_ALL_PATCHES(p,grid)
+  {
+    Patch_T *patch = grid->patch[p];
+    unsigned nn    = patch->nn;
+    unsigned ijk;
+    
+    if (!IsItNSPatch(patch) && !IsItNSSurroundingPatch(patch))
+      continue;
+    
+    {/* local variables */
+      PREP_FIELD(enthalpy)
+      GET_FIELD(denthalpy_D2)
+      GET_FIELD(denthalpy_D0)
+    
+      for (ijk = 0; ijk < nn; ++ijk)
+      {
+        double x = patch->node[ijk]->x[0];
+        double z = patch->node[ijk]->x[2];
+        
+        enthalpy[ijk] = enthalpy[ijk]*(1-denthalpy_D0[ijk]*x-denthalpy_D2[ijk]*z);
+      }
+    }
+    {/* local variables */
+      DECLARE_FIELD(enthalpy)
+
+      DECLARE_AND_EMPTY_FIELD(denthalpy_D2)
+      DECLARE_AND_EMPTY_FIELD(denthalpy_D1)
+      DECLARE_AND_EMPTY_FIELD(denthalpy_D0)
+      
+      denthalpy_D2->v = Partial_Derivative(enthalpy,"z");
+      denthalpy_D1->v = Partial_Derivative(enthalpy,"y");
+      denthalpy_D0->v = Partial_Derivative(enthalpy,"x");
+    }
+  }
+  
+}
+
 /* adjust the center of NS at the designated point, in case it moved.
 // we need only to draw enthalpy to (0,NS_C,0).
 // to do so, we demand shifted_enthalpy(r) = enthalpy(R+r), in which R 
 // is the amount the center is displaced from (0,-D/2,0);
 // and finally update the enthalpy and its derivatives. */
-static void adjust_NS_center(Grid_T *const grid)
+static void adjust_NS_center_draw_enthalpy(Grid_T *const grid)
 {
+  /* find the NS center */
+  find_NS_center(grid);
+  
   char par_name[1000];
   double *NS_center = 0;
   const double C    = -0.5*GetParameterD_E("BH_NS_separation");
@@ -565,30 +656,6 @@ static void adjust_NS_center(Grid_T *const grid)
   if (EQL(0,R[0]) && EQL(0,R[1]) && EQL(0,R[2]))
     return;
     
-  /* check the initial values before adjustments */
-  if(1)
-  {
-    printf("dh/dx before adjustment:\n");
-    
-    struct NC_Center_RootFinder_S par[1] = {0};
-    Root_Finder_T root_finder[1] = {0};
-    const double x_center[3] = {0,C,0};
-    par->patch = GetPatch("left_centeral_box",grid);
-    par->root_finder = root_finder;
-    
-    printf("dh/dx(%g,%g,%g)|NS center = %g\n",
-      x_center[0],x_center[1],x_center[2],
-      dh_dx0_root_finder_eq(par,x_center));
-      
-    printf("dh/dy(%g,%g,%g)|NS center = %g\n",
-      x_center[0],x_center[1],x_center[2],
-      dh_dx1_root_finder_eq(par,x_center));
-      
-    printf("dh/dz(%g,%g,%g)|NS center = %g\n",
-      x_center[0],x_center[1],x_center[2],
-      dh_dx2_root_finder_eq(par,x_center));
-  }
-  
   FOR_ALL_PATCHES(p,grid)
   {
     Patch_T *patch = grid->patch[p];
@@ -651,33 +718,17 @@ static void adjust_NS_center(Grid_T *const grid)
     if(!IsItNSPatch(patch) && !IsItNSSurroundingPatch(patch))
       continue;
       
-    bbn_update_derivative_enthalpy(patch);  
+    DECLARE_FIELD(enthalpy)
+
+    DECLARE_AND_EMPTY_FIELD(denthalpy_D2)
+    DECLARE_AND_EMPTY_FIELD(denthalpy_D1)
+    DECLARE_AND_EMPTY_FIELD(denthalpy_D0)
+    
+    denthalpy_D2->v = Partial_Derivative(enthalpy,"z");
+    denthalpy_D1->v = Partial_Derivative(enthalpy,"y");
+    denthalpy_D0->v = Partial_Derivative(enthalpy,"x");
   }
   
-  /* check if it works */
-  if(1)
-  {
-    printf("dh/dx after adjustment:\n");
-    
-    struct NC_Center_RootFinder_S par[1] = {0};
-    Root_Finder_T root_finder[1] = {0};
-    const double x_center[3] = {0,C,0};
-    
-    par->patch = GetPatch("left_centeral_box",grid);
-    par->root_finder = root_finder;
-    
-    printf("dh/dx(%g,%g,%g)|NS center = %g\n",
-      x_center[0],x_center[1],x_center[2],
-      dh_dx0_root_finder_eq(par,x_center));
-      
-    printf("dh/dy(%g,%g,%g)|NS center = %g\n",
-      x_center[0],x_center[1],x_center[2],
-      dh_dx1_root_finder_eq(par,x_center));
-      
-    printf("dh/dz(%g,%g,%g)|NS center = %g\n",
-      x_center[0],x_center[1],x_center[2],
-      dh_dx2_root_finder_eq(par,x_center));
-  }
 }
 
 /* force_balance_equation : adjust x_CM at direction d/dx */

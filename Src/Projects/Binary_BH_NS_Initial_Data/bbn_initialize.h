@@ -98,10 +98,12 @@ static void find_theta_phi_of_XYZ_NS_CS(double *const theta,double *const phi,co
 static void free_Grid_Params_S(struct Grid_Params_S *par);
 static struct Grid_Params_S *init_GridParams(void);
 static void find_NS_center(Grid_T *const grid);
+static void adjust_NS_center_draw_enthalpy(Grid_T *const grid);
+static void adjust_NS_center_tune_enthalpy(Grid_T *const grid);
+static void keep_NS_center_fixed(Grid_T *const grid);
 static double dh_dx0_root_finder_eq(void *params,const double *const x);
 static double dh_dx1_root_finder_eq(void *params,const double *const x);
 static double dh_dx2_root_finder_eq(void *params,const double *const x);
-static void adjust_NS_center(Grid_T *const grid);
 static double bbn_NS_surface_enthalpy_eq(void *params,const double *const x);
 static double bbn_NS_surface_denthalpy_dr(void *params,const double *const x,const unsigned dir);
 static void extrapolate_fluid_fields_outsideNS(Grid_T *const grid);
