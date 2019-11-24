@@ -48,7 +48,10 @@ static Grid_T *make_next_grid_using_previous_grid(Grid_T *const grid_prev)
   /* find Euler equation constant to meet NS baryonic mass */
   find_Euler_eq_const(grid_prev);
   
-  /* updating enthalpy using new Euler equation constant */
+  /* find y_CM or orbital_angular_velocity using force balance equation */
+  force_balance_eq(grid_prev);
+  
+  /* updating enthalpy and its derivative */
   bbn_update_enthalpy_and_denthalpy(grid_prev);
   
   /* extrapolate fluid fields outside NS */
@@ -59,9 +62,6 @@ static Grid_T *make_next_grid_using_previous_grid(Grid_T *const grid_prev)
   
   /* find NS surface using h = 1 */
   find_NS_surface(grid_prev,GridParams);
-  
-  /* find y_CM or orbital_angular_velocity using force balance equation */
-  force_balance_eq(grid_prev);
   
   /* P_ADM control */
   P_ADM_control(grid_prev);
