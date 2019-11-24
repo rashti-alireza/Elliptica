@@ -1049,66 +1049,79 @@ static void find_Euler_eq_const(Grid_T *const grid)
 /* find y_CM by demanding Px_ADM = 0 */
 static void Px_ADM_is0_by_y_CM(Grid_T *const grid)
 {
-  Observable_T *obs   = init_observable(grid);
-  double  dy_CM = 0,px,y_CM_new;
+  double dy_CM = 0,px0,y_CM_new,p[3]={0};
+  const double dP   = GetParameterD_E("P_ADM_control_tolerance");
   const double Omega_BHNS = GetParameterD_E("BH_NS_orbital_angular_velocity");
   const double y_CM0 = GetParameterD_E("y_CM0");
   const double y_CM  = GetParameterD_E("y_CM");
   const double M_NS  = GetParameterD_E("NS_mass");
   const double M_BH  = GetParameterD_E("BH_mass");
   
-  /* calculate P_ADM */
-  obs->quantity = "ADM_momentums";
-  plan_observable(obs);
-  px = obs->Px_ADM(obs);
+  /* get P_ADM */
+  p[0] = GetParameterD_E("P_ADM_x");
+  p[1] = GetParameterD_E("P_ADM_y");
+  p[2] = GetParameterD_E("P_ADM_z");
+  px0  = GetParameterD_E("P_ADM_x_prev");
+  
   printf("ADM momentums before y_CM update:\n");
-  printf("P_ADM = (%e,%e,%e).\n",
-          px,obs->Py_ADM(obs),obs->Pz_ADM(obs));
+  printf("P_ADM = (%e,%e,%e).\n",p[0],p[1],p[2]);
   
   /* changing center of mass */
-  dy_CM    = -px/(Omega_BHNS*(M_NS+M_BH));
+  dy_CM    = -p[0]/(Omega_BHNS*(M_NS+M_BH));
   y_CM_new = y_CM0+dy_CM;
   
-  /* having found new y_CM now update */
-  update_parameter_double_format("y_CM",y_CM_new);
+  const double dPx_Px = fabs(px0-p[0])/p[0];
+  printf("dPx/Px = %e\n",dPx_Px);
   
-  update_B1_dB1_Beta_dBete_Aij_dAij(grid);
-  
-  printf("Update Center of Rotation: %g -> %g.\n",y_CM,y_CM_new);
-  
-  free_observable(obs);
+  /* having found new x_CM now update */
+  if (GRT(dPx_Px,dP))
+  {
+    update_parameter_double_format("y_CM",y_CM_new);
+    update_B1_dB1_Beta_dBete_Aij_dAij(grid);
+    printf("Update Center of Rotation: %g -> %g.\n",y_CM,y_CM_new);
+  }
+  else
+    printf("Update Center of Rotation: no update.\n");
+    
 }
 
 /* find x_CM by demanding Py_ADM = 0 */
 static void Py_ADM_is0_by_x_CM(Grid_T *const grid)
 {
-  Observable_T *obs   = init_observable(grid);
-  double  dx_CM = 0,py,x_CM_new;
+  double  dx_CM = 0,py0,x_CM_new,p[3]={0};
+  const double dP   = GetParameterD_E("P_ADM_control_tolerance");
   const double Omega_BHNS = GetParameterD_E("BH_NS_orbital_angular_velocity");
   const double x_CM0 = GetParameterD_E("x_CM0");
   const double x_CM  = GetParameterD_E("x_CM");
   const double M_NS  = GetParameterD_E("NS_mass");
   const double M_BH  = GetParameterD_E("BH_mass");
   
-  /* calculate P_ADM */
-  obs->quantity = "ADM_momentums";
-  plan_observable(obs);
-  py = obs->Py_ADM(obs);
+  /* get P_ADM */
+  p[0] = GetParameterD_E("P_ADM_x");
+  p[1] = GetParameterD_E("P_ADM_y");
+  p[2] = GetParameterD_E("P_ADM_z");
+  py0  = GetParameterD_E("P_ADM_y_prev");
+  
   printf("ADM momentums before x_CM update:\n");
-  printf("P_ADM = (%e,%e,%e).\n",
-          py,obs->Py_ADM(obs),obs->Pz_ADM(obs));
+  printf("P_ADM = (%e,%e,%e).\n",p[0],p[1],p[2]);
   
   /* changing center of mass */
-  dx_CM    = py/(Omega_BHNS*(M_NS+M_BH));
+  dx_CM    = p[1]/(Omega_BHNS*(M_NS+M_BH));
   x_CM_new = x_CM0+dx_CM;
   
+  const double dPy_Py = fabs(py0-p[1])/p[1];
+  printf("dPy/Py = %e\n",dPy_Py);
+  
   /* having found new x_CM now update */
-  update_parameter_double_format("x_CM",x_CM_new);
-  update_B1_dB1_Beta_dBete_Aij_dAij(grid);
-  
-  printf("Update Center of Rotation: %g -> %g.\n",x_CM,x_CM_new);
-  
-  free_observable(obs);
+  if (GRT(dPy_Py,dP))
+  {
+    update_parameter_double_format("x_CM",x_CM_new);
+    update_B1_dB1_Beta_dBete_Aij_dAij(grid);
+    printf("Update Center of Rotation: %g -> %g.\n",x_CM,x_CM_new);
+  }
+  else
+    printf("Update Center of Rotation: no update.\n");
+    
 }
 
 /* update: (B1, dB1),(Beta,dBeta),(Aij and dAij)
