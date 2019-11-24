@@ -131,6 +131,33 @@ static void P_ADM_control(Grid_T *const grid)
   void (*P_ADM_control_2)(Grid_T *const grid) =
                               get_func_P_ADM_adjustment(adjust[2]);
   
+  /* update P_ADM momentum parameters */
+  Observable_T *obs = init_observable(grid);
+  double p1[3] = {0};
+  double p2[3] = {0};
+  obs->quantity = "ADM_momentums";
+  plan_observable(obs);
+  
+  /* get previous P_ADMs */
+  p1[0] = GetParameterD_E("P_ADM_x");
+  p1[1] = GetParameterD_E("P_ADM_y");
+  p1[2] = GetParameterD_E("P_ADM_z");
+  
+  /* get the current P_ADMs */
+  p2[0] = obs->Px_ADM(obs);
+  p2[1] = obs->Py_ADM(obs);
+  p2[2] = obs->Pz_ADM(obs);
+  
+  update_parameter_double_format("P_ADM_x",p2[0]);
+  update_parameter_double_format("P_ADM_y",p2[1]);
+  update_parameter_double_format("P_ADM_z",p2[2]);
+  
+  update_parameter_double_format("P_ADM_x_prev",p1[0]);
+  update_parameter_double_format("P_ADM_y_prev",p1[1]);
+  update_parameter_double_format("P_ADM_z_prev",p1[2]);
+  
+  free_observable(obs);
+  
   if (P_ADM_control_0)
     P_ADM_control_0(grid);
   
@@ -310,7 +337,6 @@ static void Px_ADM_is0_by_x_boost(Grid_T *const grid)
   const double SMALL_FAC = 1E-2;
   const double dP   = GetParameterD_E("P_ADM_control_tolerance");
   const double W    = GetParameterD_E("Solving_Field_Update_Weight");
-  Observable_T *obs = init_observable(grid);
   double p1[3] = {0};
   double p2[3] = {0};
   double v1[3] = {0};
@@ -319,16 +345,11 @@ static void Px_ADM_is0_by_x_boost(Grid_T *const grid)
   double  v[3] = {0};
   static unsigned iter = 0;
   
-  obs->quantity = "ADM_momentums";
-  plan_observable(obs);
-  
   /* get previous P_ADMs */
-  p1[0] = GetParameterD_E("P_ADM_x");
+  p1[0] = GetParameterD_E("P_ADM_x_prev");
   
   /* get the current P_ADMs */
-  p2[0] = obs->Px_ADM(obs);
-  
-  update_parameter_double_format("P_ADM_x",p2[0]);
+  p2[0] = GetParameterD_E("P_ADM_x");
   
   if (iter == 0)
   {
@@ -378,8 +399,8 @@ static void Px_ADM_is0_by_x_boost(Grid_T *const grid)
       
   }
   
-  free_observable(obs);
   iter++;
+  UNUSED(grid);
 } 
 
 /* adjust the boot velocity at the outer boundary to diminish P_ADM
@@ -389,7 +410,6 @@ static void Py_ADM_is0_by_y_boost(Grid_T *const grid)
   const double SMALL_FAC = 1E-2;
   const double dP   = GetParameterD_E("P_ADM_control_tolerance");
   const double W    = GetParameterD_E("Solving_Field_Update_Weight");
-  Observable_T *obs = init_observable(grid);
   double p1[3] = {0};
   double p2[3] = {0};
   double v1[3] = {0};
@@ -398,16 +418,11 @@ static void Py_ADM_is0_by_y_boost(Grid_T *const grid)
   double  v[3] = {0};
   static unsigned iter = 0;
   
-  obs->quantity = "ADM_momentums";
-  plan_observable(obs);
-  
   /* get previous P_ADMs */
-  p1[1] = GetParameterD_E("P_ADM_y");
+  p1[1] = GetParameterD_E("P_ADM_y_prev");
   
   /* get the current P_ADMs */
-  p2[1] = obs->Py_ADM(obs);
-  
-  update_parameter_double_format("P_ADM_y",p2[1]);
+  p2[1] = GetParameterD_E("P_ADM_y");
   
   if (iter == 0)
   {
@@ -456,8 +471,8 @@ static void Py_ADM_is0_by_y_boost(Grid_T *const grid)
       
   }
   
-  free_observable(obs);
   iter++;
+  UNUSED(grid);
 } 
 
 /* adjust the boot velocity at the outer boundary to diminish P_ADM
@@ -467,7 +482,6 @@ static void Pz_ADM_is0_by_z_boost(Grid_T *const grid)
   const double SMALL_FAC = 1E-2;
   const double dP   = GetParameterD_E("P_ADM_control_tolerance");
   const double W    = GetParameterD_E("Solving_Field_Update_Weight");
-  Observable_T *obs = init_observable(grid);
   double p1[3] = {0};
   double p2[3] = {0};
   double v1[3] = {0};
@@ -476,16 +490,11 @@ static void Pz_ADM_is0_by_z_boost(Grid_T *const grid)
   double  v[3] = {0};
   static unsigned iter = 0;
   
-  obs->quantity = "ADM_momentums";
-  plan_observable(obs);
-  
   /* get previous P_ADMs */
-  p1[2] = GetParameterD_E("P_ADM_z");
+  p1[2] = GetParameterD_E("P_ADM_z_prev");
   
   /* get the current P_ADMs */
-  p2[2] = obs->Pz_ADM(obs);
-  
-  update_parameter_double_format("P_ADM_z",p2[2]);
+  p2[2] = GetParameterD_E("P_ADM_z");
   
   if (iter == 0)
   {
@@ -533,8 +542,8 @@ static void Pz_ADM_is0_by_z_boost(Grid_T *const grid)
         GetParameterD_E("v*_boost_z"));
   }
   
-  free_observable(obs);
   iter++;
+  UNUSED(grid);
 } 
 
 /* adjust the center of NS at the designated point, in case it moved.
