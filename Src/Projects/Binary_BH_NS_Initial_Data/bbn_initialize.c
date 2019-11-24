@@ -1070,7 +1070,7 @@ static void Px_ADM_is0_by_y_CM(Grid_T *const grid)
   dy_CM    = -p[0]/(Omega_BHNS*(M_NS+M_BH));
   y_CM_new = y_CM0+dy_CM;
   
-  const double dPx_Px = fabs(px0-p[0])/p[0];
+  const double dPx_Px = fabs(px0-p[0])/fabs(p[0]);
   printf("dPx/Px = %e\n",dPx_Px);
   
   /* having found new x_CM now update */
@@ -1109,7 +1109,7 @@ static void Py_ADM_is0_by_x_CM(Grid_T *const grid)
   dx_CM    = p[1]/(Omega_BHNS*(M_NS+M_BH));
   x_CM_new = x_CM0+dx_CM;
   
-  const double dPy_Py = fabs(py0-p[1])/p[1];
+  const double dPy_Py = fabs(py0-p[1])/fabs(p[1]);
   printf("dPy/Py = %e\n",dPy_Py);
   
   /* having found new x_CM now update */
