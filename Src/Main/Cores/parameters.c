@@ -181,7 +181,7 @@ static char *parse_multiplicity_of_iterative_parameter(const char *const rv)
     /* reference: 1->2(x2)->5(x3)->8 */
     unsigned len = (unsigned)strlen(m_str);/* (x2) => 4 */
     const char *l_str = strstr(str,m_str);/*    => (x2)->5(x3)->8 */
-    const char *r_str = strlen(l_str) > len ? strstr(str,l_str+len): "\0";/* => ->5(x3)->8 */
+    const char *r_str = strlen(l_str) > len ? l_str+len: "\0";/* => ->5(x3)->8 */
     
     const char *b_str = l_str;
     while (b_str != str && *b_str != '>')
