@@ -1515,6 +1515,8 @@ static void find_NS_surface_Ylm_method_CS(Grid_T *const grid,struct Grid_Params_
   unsigned Ntheta,Nphi;/* total number of theta and phi points */
   const unsigned lmax = (unsigned)GetParameterI_E("NS_surface_Ylm_expansion_max_l");
   const double RESIDUAL = sqrt(GetParameterD_E("RootFinder_Tolerance"));
+  //const double W1  = GetParameterD_E("Solving_Field_Update_Weight");
+  //const double W2  = 1-W1;
   double theta,phi;
   double *Rnew_NS = 0;/* new R for NS */
   double Max_R_NS = 0;/* maximum radius of NS */
@@ -1570,9 +1572,9 @@ static void find_NS_surface_Ylm_method_CS(Grid_T *const grid,struct Grid_Params_
       plan_interpolation(interp_h);
       h = execute_interpolation(interp_h);/* enthalpy */
       
-      if (h <= 0)
-        printf("WARNING: enthalpy = %g\n",h);
-      //assert(h > 0);
+      //if (h <= 0)
+        //printf("WARNING: enthalpy = %g\n",h);
+      assert(h > 0);
       
       free_interpolation(interp_h);
       
@@ -1642,6 +1644,20 @@ static void find_NS_surface_Ylm_method_CS(Grid_T *const grid,struct Grid_Params_
   GridParams->NS_R_Ylm->realClm = realClm;
   GridParams->NS_R_Ylm->imagClm = imagClm;
   GridParams->NS_R_Ylm->Lmax    = lmax;
+  
+  /* if some day you wanna filter Clm's */
+  if (0)
+  {
+    const double e = 0.1;
+    unsigned l,m
+    for (l = 0; l <= lmax; ++l)
+      for (m = 0; m <= l; ++m)
+      {
+        unsigned lm = lm2n(l,m);
+        realClm[lm] /= (1+e*SQR(l)*SQR(l+1));
+        imagClm[lm] /= (1+e*SQR(l)*SQR(l+1));
+      }
+  }
   
   free(Rnew_NS);
   free_root_finder(root);
