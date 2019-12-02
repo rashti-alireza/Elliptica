@@ -2303,6 +2303,9 @@ static Grid_T *TOV_KerrSchild_approximation(void)
   /* -> the Constant of the integration of Euler equation */
   AddParameterDoubleF("Euler_equation_constant",0);
   
+  /* -> centeral rho0 */
+  AddParameterDoubleF("rho_center",1E-3);
+  
   /* combining these two geometry to create the grid */
   GridParams->Max_R_NS_l = ns_R;
   GridParams->R_BH_r     = bh_R;
