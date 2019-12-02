@@ -37,6 +37,7 @@ void bbn_allocate_fields(Grid_T *const grid)
 
       /* enthalpy in NS and its partial derivatives */
       add_field("enthalpy",0,patch,YES);
+      add_field("OLD_enthalpy",0,patch,YES);
       ADD_FIELD_NoMem(denthalpy_D2)
       ADD_FIELD_NoMem(denthalpy_D1)
       ADD_FIELD_NoMem(denthalpy_D0)
@@ -551,15 +552,13 @@ void bbn_update_rho0(Patch_T *const patch)
       eos->h    = enthalpy[ijk];
       rho0[ijk] = eos->rest_mass_density(eos);
       
-      if (1)/* make sure h won't get too less than 1 */
-      {
-        if (!isfinite(rho0[ijk]))
-           printf("put rho0(h = %g) = 0.0.\n",enthalpy[ijk]);
-          //abortEr("rho0 update went wrong due to bad enthalpy.\n");
-      }
-      
+      /* make sure rho0 won't get nan due to Gibbs phenomena or 
+      // when finding NS surface. */
       if (!isfinite(rho0[ijk]))
+      {
+        printf("Put rho0(h = %g) = 0.\n",enthalpy[ijk]);
         rho0[ijk] = 0;
+      }
     }
     free_EoS(eos);
   }
@@ -1079,22 +1078,15 @@ static void cleaning_enthalpy(Patch_T *const patch)
     return;
     
   GET_FIELD(enthalpy)
-  const unsigned *const n = patch->n;
-  unsigned ijk,i,j;
   
-  /* for cubed spherical we know k = n[2]-1 is on the surface */
-  if (patch->coordsys == CubedSpherical)
+  const unsigned nn = patch->nn;
+  unsigned ijk;
+  
+  for (ijk = 0; ijk < nn; ++ijk)
   {
-    for (i = 0; i < n[0]; ++i)
-      for (j = 0; j < n[1]; ++j)
-      {
-        /* go over the NS surface */
-        ijk = L(n,i,j,n[2]-1);
-        enthalpy[ijk] = 1;
-      }
+    if (LSSEQL(enthalpy[ijk],1))
+      enthalpy[ijk] = 1;
   }
-  else
-    abortEr(NO_OPTION);
 
 }
 
@@ -1117,28 +1109,74 @@ void bbn_update_enthalpy_and_denthalpy(Grid_T *const grid)
 }
 
 /* update enthalpy,denthalpy,rho0, drho0, u0, _J^i, _E and _S
-// which used in stress energy tensor. note: dphi^i and W^i are assumed ready. */
-void bbn_update_stress_energy_tensor(Grid_T *const grid)
+// which used in stress energy tensor in relaxed fashion.
+// furthermore, it updates the central density parameter. 
+// flag = 1 puts enthalpy = 1 if it is less than 1.
+// note: dphi^i and W^i are assumed ready. */
+void bbn_update_stress_energy_tensor(Grid_T *const grid,const int flag)
 {
+  assert(grid);
+  
   pr_line_custom('=');
   printf("Updating enthalpy, rest-mass density and their derivatives ...\n");
   
+  const double W1  = GetParameterD_E("Solving_Field_Update_Weight");
+  const double W2  = 1-W1;
   unsigned p;
   
   FOR_ALL_PATCHES(p,grid)
   {
     Patch_T *patch = grid->patch[p];
+    unsigned nn = patch->nn;
+    unsigned ijk;
     
     if(!IsItNSPatch(patch))
       continue;
+      
+    DECLARE_FIELD(enthalpy)
+    DECLARE_FIELD(OLD_enthalpy)
+    free_coeffs(enthalpy);
+    free_coeffs(OLD_enthalpy);
     
+    /* swapping pointers */
+    void *tmp       = OLD_enthalpy->v;
+    OLD_enthalpy->v = enthalpy->v;
+    enthalpy->v     = tmp;
+    
+    /* update enthalpy */
     Tij_IF_CTS_enthalpy(patch);
-    cleaning_enthalpy(patch);
+    for (ijk = 0; ijk < nn; ++ijk)
+      enthalpy->v[ijk] = W1*enthalpy->v[ijk]+W2*OLD_enthalpy->v[ijk];
+
+    if (flag == 1)
+      cleaning_enthalpy(patch);
+      
     bbn_update_derivative_enthalpy(patch);
     bbn_update_rho0(patch);
     bbn_update_derivative_rho0(patch);
   
   }
+  
+  /* update central density parameter */
+  Patch_T *patch = GetPatch("left_centeral_box",grid);
+  DECLARE_FIELD(rho0);
+  double rho_center;
+  const const *x = patch->c;/* NS center */
+  double X[3] = {0};
+  
+  X_of_x(X,x,patch);
+  Interpolation_T *interp_s = init_interpolation();
+  interp_s->field = rho0;
+  interp_s->X = X[0];
+  interp_s->Y = X[1];
+  interp_s->Z = X[2];
+  interp_s->XYZ_dir_flag = 1;
+  plan_interpolation(interp_s);
+  rho_center = execute_interpolation(interp_s);
+  free_interpolation(interp_s);
+  
+  update_parameter_double_format("rho_center",rho_center);
+  
   printf("Updating enthalpy, rest-mass density and their derivatives ==> Done.\n");
   pr_clock();
   pr_line_custom('=');

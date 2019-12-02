@@ -22,7 +22,7 @@ void bbn_update_Beta_U0(Patch_T *const patch);
 void bbn_update_Beta_U1(Patch_T *const patch);
 void bbn_update_Beta_U2(Patch_T *const patch);
 void bbn_update_enthalpy_and_denthalpy(Grid_T *const grid);
-void bbn_update_stress_energy_tensor(Grid_T *const grid);
+void bbn_update_stress_energy_tensor(Grid_T *const grid,const int flag);
 static void cleaning_enthalpy(Patch_T *const patch);
 void bbn_update_derivative_B1_U0(Patch_T *const patch);
 void bbn_update_derivative_B1_U1(Patch_T *const patch);
