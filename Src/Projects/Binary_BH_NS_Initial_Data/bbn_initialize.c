@@ -1649,7 +1649,8 @@ static void find_NS_surface_Ylm_method_CS(Grid_T *const grid,struct Grid_Params_
   if (0)
   {
     const double e = 0.1;
-    unsigned l,m
+    unsigned l,m;
+    
     for (l = 0; l <= lmax; ++l)
       for (m = 0; m <= l; ++m)
       {

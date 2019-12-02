@@ -1161,7 +1161,7 @@ void bbn_update_stress_energy_tensor(Grid_T *const grid,const int flag)
   Patch_T *patch = GetPatch("left_centeral_box",grid);
   DECLARE_FIELD(rho0);
   double rho_center;
-  const const *x = patch->c;/* NS center */
+  const double *x = patch->c;/* NS center */
   double X[3] = {0};
   
   X_of_x(X,x,patch);
