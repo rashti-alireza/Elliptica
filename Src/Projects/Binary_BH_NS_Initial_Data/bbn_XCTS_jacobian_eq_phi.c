@@ -69,6 +69,9 @@ void *bbn_jacobian_eq_phi(void *vp1,void *vp2)
   GET_FIELD(_Gamma_U1D1D1)
 
 
+  const double rhoc = GetParameterD_E("rho_center");
+  const double e    = 0.1;
+  const double att  = e*rhoc;
   if(strstr(patch->name,"left_centeral_box"))
   {
     B[0][0] = 1;
@@ -151,7 +154,8 @@ _Gamma_U1D2D2[ijk] + Jphi_D2(j_Jphi_D2,ijk,lmn)*_Gamma_U2D2D2[ijk]))/
 pow(psi[ijk], 4);
 
         double Bpart = 
-rho0[ijk]*(t2_b + t3_b) + t1_b;
+att*t3_b*pow(rho0[ijk]/rhoc - 1, 4) + rho0[ijk]*(t2_b + t3_b) +
+t1_b;
 
         B[i][j] = Bpart;
 
@@ -240,7 +244,8 @@ _Gamma_U1D2D2[ijk] + Jphi_D2(j_Jphi_D2,ijk,lmn)*_Gamma_U2D2D2[ijk]))/
 pow(psi[ijk], 4);
 
           double Epart = 
-rho0[ijk]*(t2_e + t3_e) + t1_e;
+att*t3_e*pow(rho0[ijk]/rhoc - 1, 4) + rho0[ijk]*(t2_e + t3_e) +
+t1_e;
 
           E_Trans[j][i] = Epart;
 
@@ -324,7 +329,8 @@ _Gamma_U1D2D2[ijk] + Jphi_D2(j_Jphi_D2,ijk,lmn)*_Gamma_U2D2D2[ijk]))/
 pow(psi[ijk], 4);
 
   double Bpart_ = 
-rho0[ijk]*(t2_b_ + t3_b_) + t1_b_;
+att*t3_b_*pow(rho0[ijk]/rhoc - 1, 4) + rho0[ijk]*(t2_b_ + t3_b_) +
+t1_b_;
 
   B[i][j] = Bpart_;
 
@@ -405,7 +411,8 @@ _Gamma_U1D2D2[ijk] + Jphi_D2(j_Jphi_D2,ijk,lmn)*_Gamma_U2D2D2[ijk]))/
 pow(psi[ijk], 4);
 
   double Epart_ = 
-rho0[ijk]*(t2_e_ + t3_e_) + t1_e_;
+att*t3_e_*pow(rho0[ijk]/rhoc - 1, 4) + rho0[ijk]*(t2_e_ + t3_e_) +
+t1_e_;
 
   E_Trans[j][i] = Epart_;
 

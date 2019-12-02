@@ -75,6 +75,15 @@ Declare =
  # conformal connections
  (obj = Field,name = _Gamma, rank = UDD, C_macro);
 
+ # rho_center
+ (obj = variable,name = rhoc, rank = 0, none);
+
+ # small factor
+ (obj = variable,name = e, rank = 0, none);
+
+ # small factor2
+ (obj = variable,name = att, rank = 0, none);
+
 }
 
 # symmetries for cpi
@@ -82,6 +91,9 @@ Symm[JJphi(i,j)      = JJphi(j,i)];
 Symm[_gammaI(i,j)   = _gammaI(j,i)];
 Symm[_Gamma(i,j,k)  = _Gamma(i,k,j)];
 
+`  const double rhoc = GetParameterD_E("rho_center");`
+`  const double e    = 0.1;`
+`  const double att  = e*rhoc;`
 ##########################################################################
 #    NOTE1: There are different calculation parts, in each part use 
 # different names for new variables.
@@ -132,7 +144,7 @@ t1_b = dLns0_b(-i)*(psi**-4)*_gammaI(i,l)*Jphi(-l);
 t2_b = 2*(psi**-5)*dpsi(-i)*_gammaI(i,l)*Jphi(-l);
 t3_b = (psi**-4)*_gammaI(-i,-l)*(JJphi(i,l)-_Gamma(n,i,l)*Jphi(-n));
 
-Bpart = t1_b+rho0*(t2_b+t3_b);
+Bpart = t1_b+rho0*(t2_b+t3_b)+att*((1-rho0/rhoc)**4)*t3_b;
 
 
 `        B[i][j] = Bpart;\n`;
@@ -166,7 +178,7 @@ t1_e = dLns0_e(-i)*(psi**-4)*_gammaI(i,l)*Jphi(-l);
 t2_e = 2*(psi**-5)*dpsi(-i)*_gammaI(i,l)*Jphi(-l);
 t3_e = (psi**-4)*_gammaI(-i,-l)*(JJphi(i,l)-_Gamma(n,i,l)*Jphi(-n));
 
-Epart = t1_e+rho0*(t2_e+t3_e);
+Epart = t1_e+rho0*(t2_e+t3_e)+att*((1-rho0/rhoc)**4)*t3_e;
 
 `          E_Trans[j][i] = Epart;\n`;
 `        DDM_SCHUR_JACOBIAN_EQ_Epart_CLOSE\n`;
@@ -189,7 +201,7 @@ t1_b_ = dLns0_b_(-i)*(psi**-4)*_gammaI(i,l)*Jphi(-l);
 t2_b_ = 2*(psi**-5)*dpsi(-i)*_gammaI(i,l)*Jphi(-l);
 t3_b_ = (psi**-4)*_gammaI(-i,-l)*(JJphi(i,l)-_Gamma(n,i,l)*Jphi(-n));
 
-Bpart_ = t1_b_+rho0*(t2_b_+t3_b_);
+Bpart_ = t1_b_+rho0*(t2_b_+t3_b_)+att*((1-rho0/rhoc)**4)*t3_b_;
 
 `  B[i][j] = Bpart_;\n`;
 `  DDM_SCHUR_JACOBIAN_EQ_Bpart_CLOSE\n`;
@@ -209,7 +221,7 @@ t1_e_ = dLns0_e_(-i)*(psi**-4)*_gammaI(i,l)*Jphi(-l);
 t2_e_ = 2*(psi**-5)*dpsi(-i)*_gammaI(i,l)*Jphi(-l);
 t3_e_ = (psi**-4)*_gammaI(-i,-l)*(JJphi(i,l)-_Gamma(n,i,l)*Jphi(-n));
 
-Epart_ = t1_e_+rho0*(t2_e_+t3_e_);
+Epart_ = t1_e_+rho0*(t2_e_+t3_e_)+att*((1-rho0/rhoc)**4)*t3_e_;
 
 `  E_Trans[j][i] = Epart_;\n`;
 `  DDM_SCHUR_JACOBIAN_EQ_Epart_CLOSE\n`;
