@@ -349,6 +349,8 @@ void bbn_SolveEqs_FieldUpdate(Patch_T *const patch,const char *const name)
     bbn_update_derivative_Beta_U2(patch);
     //bbn_update_psi10A_UiUj(patch);
   }
+  else
+    abortEr(NO_OPTION);
   
 }
 
