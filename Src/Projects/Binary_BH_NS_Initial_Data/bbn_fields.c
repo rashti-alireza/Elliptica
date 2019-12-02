@@ -556,7 +556,7 @@ void bbn_update_rho0(Patch_T *const patch)
       // when finding NS surface. */
       if (!isfinite(rho0[ijk]))
       {
-        printf("Put rho0(h = %g) = 0.\n",enthalpy[ijk]);
+        //printf("Put rho0(h = %g) = 0.\n",enthalpy[ijk]);
         rho0[ijk] = 0;
       }
     }
