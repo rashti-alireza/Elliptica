@@ -19,7 +19,6 @@ void *bbn_jacobian_eq_psi(void *vp1,void *vp2)
   GET_FIELD(psi)
   GET_FIELD(_R)
   GET_FIELD(K)
-  GET_FIELD(_Aij2)
   GET_FIELD(_E)
   GET_FIELD(_gammaI_U0U2)
   GET_FIELD(_gammaI_U0U0)
@@ -59,34 +58,32 @@ void *bbn_jacobian_eq_psi(void *vp1,void *vp2)
   DDM_SCHUR_JACOBIAN_EQ_Bpart_OPEN
 
   double Bpart = 
-(1.0/24.0)*(-kd[ijk==lmn]*(21*_Aij2[ijk] + 48*M_PI*_E[ijk]*
-pow(psi[ijk], 6) + pow(psi[ijk], 8)*(10*pow(K[ijk], 2)*
-pow(psi[ijk], 4) + 3*_R[ijk])) + pow(psi[ijk], 8)*(24.0*
-JJpsi_D0D0(j_JJpsi_D0D0,ijk,lmn)*_gammaI_U0U0[ijk] + 48.0*
-JJpsi_D0D1(j_JJpsi_D0D1,ijk,lmn)*_gammaI_U0U1[ijk] + 48.0*
-JJpsi_D0D2(j_JJpsi_D0D2,ijk,lmn)*_gammaI_U0U2[ijk] + 24.0*
-JJpsi_D1D1(j_JJpsi_D1D1,ijk,lmn)*_gammaI_U1U1[ijk] + 48.0*
-JJpsi_D1D2(j_JJpsi_D1D2,ijk,lmn)*_gammaI_U1U2[ijk] + 24.0*
-JJpsi_D2D2(j_JJpsi_D2D2,ijk,lmn)*_gammaI_U2U2[ijk] - 24.0*
-Jpsi_D0(j_Jpsi_D0,ijk,lmn)*_Gamma_U0D0D0[ijk]*_gammaI_U0U0[ijk] - 48.0*
-Jpsi_D0(j_Jpsi_D0,ijk,lmn)*_Gamma_U0D0D1[ijk]*_gammaI_U0U1[ijk] - 48.0*
-Jpsi_D0(j_Jpsi_D0,ijk,lmn)*_Gamma_U0D0D2[ijk]*_gammaI_U0U2[ijk] - 24.0*
-Jpsi_D0(j_Jpsi_D0,ijk,lmn)*_Gamma_U0D1D1[ijk]*_gammaI_U1U1[ijk] - 48.0*
-Jpsi_D0(j_Jpsi_D0,ijk,lmn)*_Gamma_U0D1D2[ijk]*_gammaI_U1U2[ijk] - 24.0*
-Jpsi_D0(j_Jpsi_D0,ijk,lmn)*_Gamma_U0D2D2[ijk]*_gammaI_U2U2[ijk] - 24.0*
-Jpsi_D1(j_Jpsi_D1,ijk,lmn)*_Gamma_U1D0D0[ijk]*_gammaI_U0U0[ijk] - 48.0*
-Jpsi_D1(j_Jpsi_D1,ijk,lmn)*_Gamma_U1D0D1[ijk]*_gammaI_U0U1[ijk] - 48.0*
-Jpsi_D1(j_Jpsi_D1,ijk,lmn)*_Gamma_U1D0D2[ijk]*_gammaI_U0U2[ijk] - 24.0*
-Jpsi_D1(j_Jpsi_D1,ijk,lmn)*_Gamma_U1D1D1[ijk]*_gammaI_U1U1[ijk] - 48.0*
-Jpsi_D1(j_Jpsi_D1,ijk,lmn)*_Gamma_U1D1D2[ijk]*_gammaI_U1U2[ijk] - 24.0*
-Jpsi_D1(j_Jpsi_D1,ijk,lmn)*_Gamma_U1D2D2[ijk]*_gammaI_U2U2[ijk] - 24.0*
-Jpsi_D2(j_Jpsi_D2,ijk,lmn)*_Gamma_U2D0D0[ijk]*_gammaI_U0U0[ijk] - 48.0*
-Jpsi_D2(j_Jpsi_D2,ijk,lmn)*_Gamma_U2D0D1[ijk]*_gammaI_U0U1[ijk] - 48.0*
-Jpsi_D2(j_Jpsi_D2,ijk,lmn)*_Gamma_U2D0D2[ijk]*_gammaI_U0U2[ijk] - 24.0*
-Jpsi_D2(j_Jpsi_D2,ijk,lmn)*_Gamma_U2D1D1[ijk]*_gammaI_U1U1[ijk] - 48.0*
-Jpsi_D2(j_Jpsi_D2,ijk,lmn)*_Gamma_U2D1D2[ijk]*_gammaI_U1U2[ijk] - 24.0*
-Jpsi_D2(j_Jpsi_D2,ijk,lmn)*_Gamma_U2D2D2[ijk]*_gammaI_U2U2[ijk]))/
-pow(psi[ijk], 8);
+JJpsi_D0D0(j_JJpsi_D0D0,ijk,lmn)*_gammaI_U0U0[ijk] + 2.0*
+JJpsi_D0D1(j_JJpsi_D0D1,ijk,lmn)*_gammaI_U0U1[ijk] + 2.0*
+JJpsi_D0D2(j_JJpsi_D0D2,ijk,lmn)*_gammaI_U0U2[ijk] +
+JJpsi_D1D1(j_JJpsi_D1D1,ijk,lmn)*_gammaI_U1U1[ijk] + 2.0*
+JJpsi_D1D2(j_JJpsi_D1D2,ijk,lmn)*_gammaI_U1U2[ijk] +
+JJpsi_D2D2(j_JJpsi_D2D2,ijk,lmn)*_gammaI_U2U2[ijk] -
+Jpsi_D0(j_Jpsi_D0,ijk,lmn)*_Gamma_U0D0D0[ijk]*_gammaI_U0U0[ijk] - 2.0*
+Jpsi_D0(j_Jpsi_D0,ijk,lmn)*_Gamma_U0D0D1[ijk]*_gammaI_U0U1[ijk] - 2.0*
+Jpsi_D0(j_Jpsi_D0,ijk,lmn)*_Gamma_U0D0D2[ijk]*_gammaI_U0U2[ijk] -
+Jpsi_D0(j_Jpsi_D0,ijk,lmn)*_Gamma_U0D1D1[ijk]*_gammaI_U1U1[ijk] - 2.0*
+Jpsi_D0(j_Jpsi_D0,ijk,lmn)*_Gamma_U0D1D2[ijk]*_gammaI_U1U2[ijk] -
+Jpsi_D0(j_Jpsi_D0,ijk,lmn)*_Gamma_U0D2D2[ijk]*_gammaI_U2U2[ijk] -
+Jpsi_D1(j_Jpsi_D1,ijk,lmn)*_Gamma_U1D0D0[ijk]*_gammaI_U0U0[ijk] - 2.0*
+Jpsi_D1(j_Jpsi_D1,ijk,lmn)*_Gamma_U1D0D1[ijk]*_gammaI_U0U1[ijk] - 2.0*
+Jpsi_D1(j_Jpsi_D1,ijk,lmn)*_Gamma_U1D0D2[ijk]*_gammaI_U0U2[ijk] -
+Jpsi_D1(j_Jpsi_D1,ijk,lmn)*_Gamma_U1D1D1[ijk]*_gammaI_U1U1[ijk] - 2.0*
+Jpsi_D1(j_Jpsi_D1,ijk,lmn)*_Gamma_U1D1D2[ijk]*_gammaI_U1U2[ijk] -
+Jpsi_D1(j_Jpsi_D1,ijk,lmn)*_Gamma_U1D2D2[ijk]*_gammaI_U2U2[ijk] -
+Jpsi_D2(j_Jpsi_D2,ijk,lmn)*_Gamma_U2D0D0[ijk]*_gammaI_U0U0[ijk] - 2.0*
+Jpsi_D2(j_Jpsi_D2,ijk,lmn)*_Gamma_U2D0D1[ijk]*_gammaI_U0U1[ijk] - 2.0*
+Jpsi_D2(j_Jpsi_D2,ijk,lmn)*_Gamma_U2D0D2[ijk]*_gammaI_U0U2[ijk] -
+Jpsi_D2(j_Jpsi_D2,ijk,lmn)*_Gamma_U2D1D1[ijk]*_gammaI_U1U1[ijk] - 2.0*
+Jpsi_D2(j_Jpsi_D2,ijk,lmn)*_Gamma_U2D1D2[ijk]*_gammaI_U1U2[ijk] -
+Jpsi_D2(j_Jpsi_D2,ijk,lmn)*_Gamma_U2D2D2[ijk]*_gammaI_U2U2[ijk] -
+kd[ijk==lmn]*((5.0/12.0)*pow(K[ijk], 2)*pow(psi[ijk], 4) + 2*M_PI*
+_E[ijk]/pow(psi[ijk], 2) + (1.0/8.0)*_R[ijk]);
 
   B[i][j] = Bpart;
 
@@ -95,34 +92,32 @@ pow(psi[ijk], 8);
   DDM_SCHUR_JACOBIAN_EQ_Epart_OPEN
 
   double Epart = 
-(1.0/24.0)*(-kd[ijk==lmn]*(21*_Aij2[ijk] + 48*M_PI*_E[ijk]*
-pow(psi[ijk], 6) + pow(psi[ijk], 8)*(10*pow(K[ijk], 2)*
-pow(psi[ijk], 4) + 3*_R[ijk])) + pow(psi[ijk], 8)*(24.0*
-JJpsi_D0D0(j_JJpsi_D0D0,ijk,lmn)*_gammaI_U0U0[ijk] + 48.0*
-JJpsi_D0D1(j_JJpsi_D0D1,ijk,lmn)*_gammaI_U0U1[ijk] + 48.0*
-JJpsi_D0D2(j_JJpsi_D0D2,ijk,lmn)*_gammaI_U0U2[ijk] + 24.0*
-JJpsi_D1D1(j_JJpsi_D1D1,ijk,lmn)*_gammaI_U1U1[ijk] + 48.0*
-JJpsi_D1D2(j_JJpsi_D1D2,ijk,lmn)*_gammaI_U1U2[ijk] + 24.0*
-JJpsi_D2D2(j_JJpsi_D2D2,ijk,lmn)*_gammaI_U2U2[ijk] - 24.0*
-Jpsi_D0(j_Jpsi_D0,ijk,lmn)*_Gamma_U0D0D0[ijk]*_gammaI_U0U0[ijk] - 48.0*
-Jpsi_D0(j_Jpsi_D0,ijk,lmn)*_Gamma_U0D0D1[ijk]*_gammaI_U0U1[ijk] - 48.0*
-Jpsi_D0(j_Jpsi_D0,ijk,lmn)*_Gamma_U0D0D2[ijk]*_gammaI_U0U2[ijk] - 24.0*
-Jpsi_D0(j_Jpsi_D0,ijk,lmn)*_Gamma_U0D1D1[ijk]*_gammaI_U1U1[ijk] - 48.0*
-Jpsi_D0(j_Jpsi_D0,ijk,lmn)*_Gamma_U0D1D2[ijk]*_gammaI_U1U2[ijk] - 24.0*
-Jpsi_D0(j_Jpsi_D0,ijk,lmn)*_Gamma_U0D2D2[ijk]*_gammaI_U2U2[ijk] - 24.0*
-Jpsi_D1(j_Jpsi_D1,ijk,lmn)*_Gamma_U1D0D0[ijk]*_gammaI_U0U0[ijk] - 48.0*
-Jpsi_D1(j_Jpsi_D1,ijk,lmn)*_Gamma_U1D0D1[ijk]*_gammaI_U0U1[ijk] - 48.0*
-Jpsi_D1(j_Jpsi_D1,ijk,lmn)*_Gamma_U1D0D2[ijk]*_gammaI_U0U2[ijk] - 24.0*
-Jpsi_D1(j_Jpsi_D1,ijk,lmn)*_Gamma_U1D1D1[ijk]*_gammaI_U1U1[ijk] - 48.0*
-Jpsi_D1(j_Jpsi_D1,ijk,lmn)*_Gamma_U1D1D2[ijk]*_gammaI_U1U2[ijk] - 24.0*
-Jpsi_D1(j_Jpsi_D1,ijk,lmn)*_Gamma_U1D2D2[ijk]*_gammaI_U2U2[ijk] - 24.0*
-Jpsi_D2(j_Jpsi_D2,ijk,lmn)*_Gamma_U2D0D0[ijk]*_gammaI_U0U0[ijk] - 48.0*
-Jpsi_D2(j_Jpsi_D2,ijk,lmn)*_Gamma_U2D0D1[ijk]*_gammaI_U0U1[ijk] - 48.0*
-Jpsi_D2(j_Jpsi_D2,ijk,lmn)*_Gamma_U2D0D2[ijk]*_gammaI_U0U2[ijk] - 24.0*
-Jpsi_D2(j_Jpsi_D2,ijk,lmn)*_Gamma_U2D1D1[ijk]*_gammaI_U1U1[ijk] - 48.0*
-Jpsi_D2(j_Jpsi_D2,ijk,lmn)*_Gamma_U2D1D2[ijk]*_gammaI_U1U2[ijk] - 24.0*
-Jpsi_D2(j_Jpsi_D2,ijk,lmn)*_Gamma_U2D2D2[ijk]*_gammaI_U2U2[ijk]))/
-pow(psi[ijk], 8);
+JJpsi_D0D0(j_JJpsi_D0D0,ijk,lmn)*_gammaI_U0U0[ijk] + 2.0*
+JJpsi_D0D1(j_JJpsi_D0D1,ijk,lmn)*_gammaI_U0U1[ijk] + 2.0*
+JJpsi_D0D2(j_JJpsi_D0D2,ijk,lmn)*_gammaI_U0U2[ijk] +
+JJpsi_D1D1(j_JJpsi_D1D1,ijk,lmn)*_gammaI_U1U1[ijk] + 2.0*
+JJpsi_D1D2(j_JJpsi_D1D2,ijk,lmn)*_gammaI_U1U2[ijk] +
+JJpsi_D2D2(j_JJpsi_D2D2,ijk,lmn)*_gammaI_U2U2[ijk] -
+Jpsi_D0(j_Jpsi_D0,ijk,lmn)*_Gamma_U0D0D0[ijk]*_gammaI_U0U0[ijk] - 2.0*
+Jpsi_D0(j_Jpsi_D0,ijk,lmn)*_Gamma_U0D0D1[ijk]*_gammaI_U0U1[ijk] - 2.0*
+Jpsi_D0(j_Jpsi_D0,ijk,lmn)*_Gamma_U0D0D2[ijk]*_gammaI_U0U2[ijk] -
+Jpsi_D0(j_Jpsi_D0,ijk,lmn)*_Gamma_U0D1D1[ijk]*_gammaI_U1U1[ijk] - 2.0*
+Jpsi_D0(j_Jpsi_D0,ijk,lmn)*_Gamma_U0D1D2[ijk]*_gammaI_U1U2[ijk] -
+Jpsi_D0(j_Jpsi_D0,ijk,lmn)*_Gamma_U0D2D2[ijk]*_gammaI_U2U2[ijk] -
+Jpsi_D1(j_Jpsi_D1,ijk,lmn)*_Gamma_U1D0D0[ijk]*_gammaI_U0U0[ijk] - 2.0*
+Jpsi_D1(j_Jpsi_D1,ijk,lmn)*_Gamma_U1D0D1[ijk]*_gammaI_U0U1[ijk] - 2.0*
+Jpsi_D1(j_Jpsi_D1,ijk,lmn)*_Gamma_U1D0D2[ijk]*_gammaI_U0U2[ijk] -
+Jpsi_D1(j_Jpsi_D1,ijk,lmn)*_Gamma_U1D1D1[ijk]*_gammaI_U1U1[ijk] - 2.0*
+Jpsi_D1(j_Jpsi_D1,ijk,lmn)*_Gamma_U1D1D2[ijk]*_gammaI_U1U2[ijk] -
+Jpsi_D1(j_Jpsi_D1,ijk,lmn)*_Gamma_U1D2D2[ijk]*_gammaI_U2U2[ijk] -
+Jpsi_D2(j_Jpsi_D2,ijk,lmn)*_Gamma_U2D0D0[ijk]*_gammaI_U0U0[ijk] - 2.0*
+Jpsi_D2(j_Jpsi_D2,ijk,lmn)*_Gamma_U2D0D1[ijk]*_gammaI_U0U1[ijk] - 2.0*
+Jpsi_D2(j_Jpsi_D2,ijk,lmn)*_Gamma_U2D0D2[ijk]*_gammaI_U0U2[ijk] -
+Jpsi_D2(j_Jpsi_D2,ijk,lmn)*_Gamma_U2D1D1[ijk]*_gammaI_U1U1[ijk] - 2.0*
+Jpsi_D2(j_Jpsi_D2,ijk,lmn)*_Gamma_U2D1D2[ijk]*_gammaI_U1U2[ijk] -
+Jpsi_D2(j_Jpsi_D2,ijk,lmn)*_Gamma_U2D2D2[ijk]*_gammaI_U2U2[ijk] -
+kd[ijk==lmn]*((5.0/12.0)*pow(K[ijk], 2)*pow(psi[ijk], 4) + 2*M_PI*
+_E[ijk]/pow(psi[ijk], 2) + (1.0/8.0)*_R[ijk]);
 
   E_Trans[j][i] = Epart;
 

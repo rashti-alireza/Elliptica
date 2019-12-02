@@ -45,7 +45,7 @@ Declare =
  (obj = Field,name = K, rank = 0, C_macro);
 
  # _A_{ij}*_A^{ij}
- (obj = Field,name = _Aij2, rank = 0, C_macro);
+ #(obj = Field,name = _Aij2, rank = 0, C_macro);
 
  # total conformal energy density
  (obj = Field,name = _E, rank = 0, C_macro);
@@ -100,10 +100,16 @@ Symm[JJpsi(i,j)   = JJpsi(j,i)];
 
 
 
+#Bpart =  _gammaI(i,j)*JJpsi(-i,-j) - _gammaI(-i,-j)*_Gamma(l,i,j)*Jpsi(-l)\
+#- kd*(\
+#       _R/8 + 5*(psi**4)*(K**2)/12 + 7*_Aij2*(psi**-8)/8 + 2*pi*_E*(psi**-2)\
+#     );
+
 Bpart =  _gammaI(i,j)*JJpsi(-i,-j) - _gammaI(-i,-j)*_Gamma(l,i,j)*Jpsi(-l)\
 - kd*(\
-       _R/8 + 5*(psi**4)*(K**2)/12 + 7*_Aij2*(psi**-8)/8 + 2*pi*_E*(psi**-2)\
+       _R/8 + 5*(psi**4)*(K**2)/12 + 2*pi*_E*(psi**-2)\
      );
+
 
 
 `  B[i][j] = Bpart;\n`;
@@ -117,9 +123,14 @@ Bpart =  _gammaI(i,j)*JJpsi(-i,-j) - _gammaI(-i,-j)*_Gamma(l,i,j)*Jpsi(-l)\
 `  DDM_SCHUR_JACOBIAN_EQ_Epart_OPEN\n`;
 
 
+#Epart =  _gammaI(i,j)*JJpsi(-i,-j) - _gammaI(-i,-j)*_Gamma(l,i,j)*Jpsi(-l)\
+#- kd*(\
+#       _R/8 + 5*(psi**4)*(K**2)/12 + 7*_Aij2*(psi**-8)/8 + 2*pi*_E*(psi**-2)\
+#     );
+
 Epart =  _gammaI(i,j)*JJpsi(-i,-j) - _gammaI(-i,-j)*_Gamma(l,i,j)*Jpsi(-l)\
 - kd*(\
-       _R/8 + 5*(psi**4)*(K**2)/12 + 7*_Aij2*(psi**-8)/8 + 2*pi*_E*(psi**-2)\
+       _R/8 + 5*(psi**4)*(K**2)/12 + 2*pi*_E*(psi**-2)\
      );
 
 
