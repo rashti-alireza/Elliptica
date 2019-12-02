@@ -115,6 +115,33 @@ void add_parameter_array(const char *const lv, const double *const rv,const unsi
   
 }
 
+/* update parameter array format. */
+void update_parameter_array(const char *const lv, const double *const rv,const unsigned n)
+{
+  pointerEr(lv);
+  pointerEr(rv);
+  
+  Parameter_T *par;
+  unsigned i;
+  
+  par = get_parameter(lv);
+  
+  if (par)
+  {
+    _free(par->rv_array);
+  }
+  else
+  {  
+    par = alloc_parameter(&parameters_global);
+    par->lv = dup_s(lv);
+  }
+  
+  par->rv_array = alloc_double(n);
+  par->rv_n = n;
+  for (i = 0; i < n; ++i)
+    par->rv_array[i] = rv[i];
+}
+
 /* adding left value and right value to parameter data base 
 // string format */
 void add_parameter_string(const char *const lv, const char *const rv)

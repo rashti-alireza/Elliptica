@@ -26,6 +26,7 @@
 void update_parameter_double_format(const char *const lv, const double rv);
 void update_parameter_integer(const char *const lv, const int rv);
 void update_parameter_string(const char *const lv, const char *const rv);
+void update_parameter_array(const char *const lv, const double *const rv,const unsigned n);
 void add_parameter(const char *const lv, const char *const rv);
 void add_parameter_string(const char *const lv, const char *const rv);
 void add_parameter_double(const char *const lv, const double rv);
