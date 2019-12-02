@@ -44,15 +44,21 @@ static Grid_T *make_next_grid_using_previous_grid(Grid_T *const grid_prev)
   struct Grid_Params_S *GridParams = init_GridParams();/* adjust some pars for construction of next grid */
   
   /* NOTE: the order of function calls are important */
+
+  /* update enthalpy,denthalpy,rho0, drho0, u0, _J^i, _E and _S */
+  bbn_update_stress_energy_tensor(grid_prev,0);
   
   /* find Euler equation constant to meet NS baryonic mass */
   find_Euler_eq_const(grid_prev);
   
+  /* update enthalpy,denthalpy,rho0, drho0, u0, _J^i, _E and _S */
+  bbn_update_stress_energy_tensor(grid_prev,0);
+  
   /* find y_CM or orbital_angular_velocity using force balance equation */
   force_balance_eq(grid_prev);
   
-  /* updating enthalpy and its derivative */
-  bbn_update_enthalpy_and_denthalpy(grid_prev);
+  /* update enthalpy,denthalpy,rho0, drho0, u0, _J^i, _E and _S */
+  bbn_update_stress_energy_tensor(grid_prev,0);
   
   /* extrapolate fluid fields outside NS */
   extrapolate_fluid_fields_outsideNS(grid_prev);
@@ -96,7 +102,7 @@ static Grid_T *make_next_grid_using_previous_grid(Grid_T *const grid_prev)
   bbn_partial_derivatives_fields(grid_next);
   
   /* update enthalpy,denthalpy,rho0, drho0, u0, _J^i, _E and _S */
-  bbn_update_stress_energy_tensor(grid_next);
+  bbn_update_stress_energy_tensor(grid_next,1);
   
   /* update _Aij in K^{ij} = A^{ij}+1/3*gamma^{ij}*K and 
   // _A^{ij} = gamma^10*A^{ij} and _dA^{ij} */
