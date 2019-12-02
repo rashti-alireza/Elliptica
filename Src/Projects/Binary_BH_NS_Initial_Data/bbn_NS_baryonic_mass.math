@@ -79,13 +79,18 @@ Ccode["  {"];
      h2    = L2-P2;
      h     = (h2)**(0.5);
      u0    = (L2)**(0.5)/(h*alpha);
-  `  eos->h = h;`
-  `  rho0   = eos->rest_mass_density(eos);`
-  `  if(!isfinite(rho0))`# rho0 is anyway 0 so lets avoid having nan
+  ``
+  `  if(!isfinite(h) || LSSEQL(h,1))`
   `  {`
   `    rho0 = 0;`
   `    u0   = 0;`
   `  }`
+  `  else`
+  `  {`
+  `    eos->h = h;`
+  `    rho0   = eos->rest_mass_density(eos);`
+  `  }`
+  ``
   `  baryonic_mass_integrand->v[ijk] = rho0*u0*alpha*psi6;`
 Ccode["  }"];
 Ccode["  free_EoS(eos);"];
