@@ -801,6 +801,8 @@ static void force_balance_eq_root_finders(Grid_T *const grid,const int dir, cons
   const double Omega_BHNS   = GetParameterD_E("BH_NS_orbital_angular_velocity");
   const double y_CM         = GetParameterD_E("y_CM");
   const double x_CM         = GetParameterD_E("x_CM");
+  const double W1  = GetParameterD_E("Solving_Field_Update_Weight");
+  const double W2  = 1-W1;
   double *new_par,old_par;
   double guess[1],X[3];
   struct Force_Balance_RootFinder_S params[1];
@@ -883,6 +885,7 @@ static void force_balance_eq_root_finders(Grid_T *const grid,const int dir, cons
     print_root_finder_exit_status(root);
   }
   
+  new_par[0] = W1*new_par[0]+W2*old_par;
   update_parameter_double_format(par,new_par[0]);
   printf("Updating %s: %g -> %g\n",par,old_par,new_par[0]);
   
