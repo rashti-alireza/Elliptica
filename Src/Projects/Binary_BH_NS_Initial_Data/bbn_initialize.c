@@ -1130,11 +1130,11 @@ static void Px_ADM_is0_by_y_CM(Grid_T *const grid)
   dy_CM    = -p[0]/(Omega_BHNS*(M_NS+M_BH));
   y_CM_new = y_CM0+dy_CM;
   
-  const double dPx_Px = fabs(px0-p[0])/fabs(p[0]);
-  printf("dPx/Px = %e\n",dPx_Px);
+  const double dPx_Px = (px0-p[0])/fabs(p[0]);
+  printf("dPx/|Px| = %+e\n",dPx_Px);
   
   /* having found new x_CM now update */
-  if (GRT(dPx_Px,dP))
+  if (GRT(fabs(dPx_Px),dP))
   {
     update_parameter_double_format("y_CM",y_CM_new);
     update_B1_dB1_Beta_dBete_Aij_dAij(grid);
@@ -1169,11 +1169,11 @@ static void Py_ADM_is0_by_x_CM(Grid_T *const grid)
   dx_CM    = p[1]/(Omega_BHNS*(M_NS+M_BH));
   x_CM_new = x_CM0+dx_CM;
   
-  const double dPy_Py = fabs(py0-p[1])/fabs(p[1]);
-  printf("dPy/Py = %e\n",dPy_Py);
+  const double dPy_Py = (py0-p[1])/fabs(p[1]);
+  printf("dPy/|Py| = %+e\n",dPy_Py);
   
   /* having found new x_CM now update */
-  if (GRT(dPy_Py,dP))
+  if (GRT(fabs(dPy_Py),dP))
   {
     update_parameter_double_format("x_CM",x_CM_new);
     update_B1_dB1_Beta_dBete_Aij_dAij(grid);
