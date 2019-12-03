@@ -60,6 +60,8 @@ static void making_F_by_f_prime(Patch_T *const patch);
 static void making_F_by_E_prime(Patch_T *const patch);
 static double *compute_g_prime(Grid_T *const grid);
 static Matrix_T *compute_S(Grid_T *const grid);
+static Matrix_T *compute_S_CCS_long(Grid_T *const grid);
+static Matrix_T *compute_S_CCS(Grid_T *const grid);
 static void compute_x(Patch_T *const patch);
 static void solve_Sy_g_prime(Matrix_T *const S,double *const g_prime,Grid_T *const grid);
 static void populate_F_and_C(Patch_T *const patch, Pair_T *const pair);
