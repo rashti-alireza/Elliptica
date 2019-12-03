@@ -192,7 +192,8 @@ rho0[ijk]*(t2 + t3 + t4) + t1 + t5 + t6;
   if(strstr(patch->name,"left_centeral_box"))
   {
     ijk  = node[0];
-    F[0] += phi[ijk];
+    for (n = 0; n < N; ++n)
+    	F[n] += phi[ijk];
   }
   return 0;
 }

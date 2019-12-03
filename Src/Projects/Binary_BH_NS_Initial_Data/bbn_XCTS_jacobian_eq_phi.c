@@ -237,6 +237,9 @@ t1_e_;
   DDM_SCHUR_JACOBIAN_EQ_Epart_CLOSE
 
   if(strstr(patch->name,"left_centeral_box"))
-    B[0][0] += 1;
+  {
+    for (i = 0; i < Ni; ++i)
+      B[i][0] += 1;
+  }
   return 0;
 }
