@@ -82,71 +82,66 @@ void *bbn_eq_phi(void *vp1,void *vp2)
   GET_FIELD(_Gamma_U1D1D1)
 
 
-  if(strstr(patch->name,"left_centeral_box"))
-  {
-    ijk  = node[0];
-    F[0] = phi[ijk];
-    for (n = 1; n < N; ++n)
-    {
-      ijk  = node[n];
-      double dLn_of_alpha_U2 = 
+  DDM_SCHUR_EQ_OPEN
+
+  double dLn_of_alpha_U2 = 
 deta_D2[ijk]/eta[ijk] - dpsi_D2[ijk]/psi[ijk];
 
-      double dLn_of_alpha_U0 = 
+  double dLn_of_alpha_U0 = 
 deta_D0[ijk]/eta[ijk] - dpsi_D0[ijk]/psi[ijk];
 
-      double dLn_of_alpha_U1 = 
+  double dLn_of_alpha_U1 = 
 deta_D1[ijk]/eta[ijk] - dpsi_D1[ijk]/psi[ijk];
 
-      double dLn_of_enthalpy_U0 = 
+  double dLn_of_enthalpy_U0 = 
 denthalpy_D0[ijk]/enthalpy[ijk];
 
-      double dLn_of_enthalpy_U1 = 
+  double dLn_of_enthalpy_U1 = 
 denthalpy_D1[ijk]/enthalpy[ijk];
 
-      double dLn_of_enthalpy_U2 = 
+  double dLn_of_enthalpy_U2 = 
 denthalpy_D2[ijk]/enthalpy[ijk];
 
-      double dLn_of_u0_U2 = 
+  double dLn_of_u0_U2 = 
 du0_D2[ijk]/u0[ijk];
 
-      double dLn_of_u0_U0 = 
+  double dLn_of_u0_U0 = 
 du0_D0[ijk]/u0[ijk];
 
-      double dLn_of_u0_U1 = 
+  double dLn_of_u0_U1 = 
 du0_D1[ijk]/u0[ijk];
 
-      double dLns0_U1 = 
+  double dLns0_U1 = 
 drho0_D1[ijk] + rho0[ijk]*(dLn_of_alpha_U1 - dLn_of_enthalpy_U1);
 
-      double dLns0_U0 = 
+  double dLns0_U0 = 
 drho0_D0[ijk] + rho0[ijk]*(dLn_of_alpha_U0 - dLn_of_enthalpy_U0);
 
-      double dLns0_U2 = 
+  double dLns0_U2 = 
 drho0_D2[ijk] + rho0[ijk]*(dLn_of_alpha_U2 - dLn_of_enthalpy_U2);
 
-      double dLns1_U2 = 
+  double dLns1_U2 = 
 drho0_D2[ijk] + rho0[ijk]*(dLn_of_alpha_U2 + dLn_of_u0_U2);
 
-      double dLns1_U0 = 
+  double dLns1_U0 = 
 drho0_D0[ijk] + rho0[ijk]*(dLn_of_alpha_U0 + dLn_of_u0_U0);
 
-      double dLns1_U1 = 
+  double dLns1_U1 = 
 drho0_D1[ijk] + rho0[ijk]*(dLn_of_alpha_U1 + dLn_of_u0_U1);
 
-      double alpha = 
+  double alpha = 
 eta[ijk]/psi[ijk];
 
-      double t1 = 
-1.0*(dLns0_U0*(W_U0[ijk]*pow(psi[ijk], 4) + _gammaI_U0U0[ijk]*
-dphi_D0[ijk] + _gammaI_U0U1[ijk]*dphi_D1[ijk] + _gammaI_U0U2[ijk]*
-dphi_D2[ijk]) + dLns0_U1*(W_U1[ijk]*pow(psi[ijk], 4) +
-_gammaI_U0U1[ijk]*dphi_D0[ijk] + _gammaI_U1U1[ijk]*dphi_D1[ijk] +
-_gammaI_U1U2[ijk]*dphi_D2[ijk]) + dLns0_U2*(W_U2[ijk]*
-pow(psi[ijk], 4) + _gammaI_U0U2[ijk]*dphi_D0[ijk] + _gammaI_U1U2[ijk]*
-dphi_D1[ijk] + _gammaI_U2U2[ijk]*dphi_D2[ijk]))/pow(psi[ijk], 4);
+  double t1 = 
+dLns0_U0*(W_U0[ijk] + (_gammaI_U0U0[ijk]*dphi_D0[ijk] +
+_gammaI_U0U1[ijk]*dphi_D1[ijk] + _gammaI_U0U2[ijk]*dphi_D2[ijk])/
+pow(psi[ijk], 4)) + dLns0_U1*(W_U1[ijk] + (_gammaI_U0U1[ijk]*
+dphi_D0[ijk] + _gammaI_U1U1[ijk]*dphi_D1[ijk] + _gammaI_U1U2[ijk]*
+dphi_D2[ijk])/pow(psi[ijk], 4)) + dLns0_U2*(W_U2[ijk] +
+(_gammaI_U0U2[ijk]*dphi_D0[ijk] + _gammaI_U1U2[ijk]*dphi_D1[ijk] +
+_gammaI_U2U2[ijk]*dphi_D2[ijk])/pow(psi[ijk], 4));
 
-      double t2 = 
+  double t2 = 
 2.0*(_gammaI_U0U0[ijk]*dphi_D0[ijk]*dpsi_D0[ijk] + _gammaI_U0U1[ijk]*
 dphi_D0[ijk]*dpsi_D1[ijk] + _gammaI_U0U1[ijk]*dphi_D1[ijk]*
 dpsi_D0[ijk] + _gammaI_U0U2[ijk]*dphi_D0[ijk]*dpsi_D2[ijk] +
@@ -155,7 +150,7 @@ dphi_D1[ijk]*dpsi_D1[ijk] + _gammaI_U1U2[ijk]*dphi_D1[ijk]*
 dpsi_D2[ijk] + _gammaI_U1U2[ijk]*dphi_D2[ijk]*dpsi_D1[ijk] +
 _gammaI_U2U2[ijk]*dphi_D2[ijk]*dpsi_D2[ijk])/pow(psi[ijk], 5);
 
-      double t3 = 
+  double t3 = 
 -(_gammaI_U0U0[ijk]*(_Gamma_U0D0D0[ijk]*dphi_D0[ijk] +
 _Gamma_U1D0D0[ijk]*dphi_D1[ijk] + _Gamma_U2D0D0[ijk]*dphi_D2[ijk] -
 ddphi_D0D0[ijk]) + 2.0*_gammaI_U0U1[ijk]*(_Gamma_U0D0D1[ijk]*
@@ -171,7 +166,7 @@ ddphi_D1D2[ijk]) + _gammaI_U2U2[ijk]*(_Gamma_U0D2D2[ijk]*dphi_D0[ijk] +
 _Gamma_U1D2D2[ijk]*dphi_D1[ijk] + _Gamma_U2D2D2[ijk]*dphi_D2[ijk] -
 ddphi_D2D2[ijk]))/pow(psi[ijk], 4);
 
-      double t4 = 
+  double t4 = 
 (6.0*W_U0[ijk]*dpsi_D0[ijk] + 6.0*W_U1[ijk]*dpsi_D1[ijk] + 6.0*
 W_U2[ijk]*dpsi_D2[ijk] + psi[ijk]*(W_U0[ijk]*_Gamma_U0D0D0[ijk] +
 W_U0[ijk]*_Gamma_U1D0D1[ijk] + W_U0[ijk]*_Gamma_U2D0D2[ijk] +
@@ -180,129 +175,24 @@ W_U1[ijk]*_Gamma_U2D1D2[ijk] + W_U2[ijk]*_Gamma_U0D0D2[ijk] +
 W_U2[ijk]*_Gamma_U1D1D2[ijk] + W_U2[ijk]*_Gamma_U2D2D2[ijk]))/
 psi[ijk];
 
-      double t5 = 
+  double t5 = 
 -enthalpy[ijk]*u0[ijk]*(Beta_U0[ijk]*dLns1_U0 + Beta_U1[ijk]*dLns1_U1 +
 Beta_U2[ijk]*dLns1_U2);
 
-      double t6 = 
+  double t6 = 
 -K[ijk]*alpha*enthalpy[ijk]*rho0[ijk]*u0[ijk];
 
-      double F_eq = 
+  double F_eq = 
 rho0[ijk]*(t2 + t3 + t4) + t1 + t5 + t6;
 
-      F[n] = F_eq;
+  F[n] = F_eq;
 
-    }
-  }/* left centeral box */
-  else
+  DDM_SCHUR_EQ_CLOSE
+
+  if(strstr(patch->name,"left_centeral_box"))
   {
-    DDM_SCHUR_EQ_OPEN
-
-    double dLn_of_alpha__U2 = 
-deta_D2[ijk]/eta[ijk] - dpsi_D2[ijk]/psi[ijk];
-
-    double dLn_of_alpha__U0 = 
-deta_D0[ijk]/eta[ijk] - dpsi_D0[ijk]/psi[ijk];
-
-    double dLn_of_alpha__U1 = 
-deta_D1[ijk]/eta[ijk] - dpsi_D1[ijk]/psi[ijk];
-
-    double dLn_of_enthalpy__U0 = 
-denthalpy_D0[ijk]/enthalpy[ijk];
-
-    double dLn_of_enthalpy__U1 = 
-denthalpy_D1[ijk]/enthalpy[ijk];
-
-    double dLn_of_enthalpy__U2 = 
-denthalpy_D2[ijk]/enthalpy[ijk];
-
-    double dLn_of_u0__U2 = 
-du0_D2[ijk]/u0[ijk];
-
-    double dLn_of_u0__U0 = 
-du0_D0[ijk]/u0[ijk];
-
-    double dLn_of_u0__U1 = 
-du0_D1[ijk]/u0[ijk];
-
-    double dLns0__U2 = 
-drho0_D2[ijk] + rho0[ijk]*(dLn_of_alpha__U2 - dLn_of_enthalpy__U2);
-
-    double dLns0__U1 = 
-drho0_D1[ijk] + rho0[ijk]*(dLn_of_alpha__U1 - dLn_of_enthalpy__U1);
-
-    double dLns0__U0 = 
-drho0_D0[ijk] + rho0[ijk]*(dLn_of_alpha__U0 - dLn_of_enthalpy__U0);
-
-    double dLns1__U2 = 
-drho0_D2[ijk] + rho0[ijk]*(dLn_of_alpha__U2 + dLn_of_u0__U2);
-
-    double dLns1__U0 = 
-drho0_D0[ijk] + rho0[ijk]*(dLn_of_alpha__U0 + dLn_of_u0__U0);
-
-    double dLns1__U1 = 
-drho0_D1[ijk] + rho0[ijk]*(dLn_of_alpha__U1 + dLn_of_u0__U1);
-
-    double alpha_ = 
-eta[ijk]/psi[ijk];
-
-    double t1_ = 
-1.0*(dLns0__U0*(W_U0[ijk]*pow(psi[ijk], 4) + _gammaI_U0U0[ijk]*
-dphi_D0[ijk] + _gammaI_U0U1[ijk]*dphi_D1[ijk] + _gammaI_U0U2[ijk]*
-dphi_D2[ijk]) + dLns0__U1*(W_U1[ijk]*pow(psi[ijk], 4) +
-_gammaI_U0U1[ijk]*dphi_D0[ijk] + _gammaI_U1U1[ijk]*dphi_D1[ijk] +
-_gammaI_U1U2[ijk]*dphi_D2[ijk]) + dLns0__U2*(W_U2[ijk]*
-pow(psi[ijk], 4) + _gammaI_U0U2[ijk]*dphi_D0[ijk] + _gammaI_U1U2[ijk]*
-dphi_D1[ijk] + _gammaI_U2U2[ijk]*dphi_D2[ijk]))/pow(psi[ijk], 4);
-
-    double t2_ = 
-2.0*(_gammaI_U0U0[ijk]*dphi_D0[ijk]*dpsi_D0[ijk] + _gammaI_U0U1[ijk]*
-dphi_D0[ijk]*dpsi_D1[ijk] + _gammaI_U0U1[ijk]*dphi_D1[ijk]*
-dpsi_D0[ijk] + _gammaI_U0U2[ijk]*dphi_D0[ijk]*dpsi_D2[ijk] +
-_gammaI_U0U2[ijk]*dphi_D2[ijk]*dpsi_D0[ijk] + _gammaI_U1U1[ijk]*
-dphi_D1[ijk]*dpsi_D1[ijk] + _gammaI_U1U2[ijk]*dphi_D1[ijk]*
-dpsi_D2[ijk] + _gammaI_U1U2[ijk]*dphi_D2[ijk]*dpsi_D1[ijk] +
-_gammaI_U2U2[ijk]*dphi_D2[ijk]*dpsi_D2[ijk])/pow(psi[ijk], 5);
-
-    double t3_ = 
--(_gammaI_U0U0[ijk]*(_Gamma_U0D0D0[ijk]*dphi_D0[ijk] +
-_Gamma_U1D0D0[ijk]*dphi_D1[ijk] + _Gamma_U2D0D0[ijk]*dphi_D2[ijk] -
-ddphi_D0D0[ijk]) + 2.0*_gammaI_U0U1[ijk]*(_Gamma_U0D0D1[ijk]*
-dphi_D0[ijk] + _Gamma_U1D0D1[ijk]*dphi_D1[ijk] + _Gamma_U2D0D1[ijk]*
-dphi_D2[ijk] - ddphi_D0D1[ijk]) + 2.0*_gammaI_U0U2[ijk]*
-(_Gamma_U0D0D2[ijk]*dphi_D0[ijk] + _Gamma_U1D0D2[ijk]*dphi_D1[ijk] +
-_Gamma_U2D0D2[ijk]*dphi_D2[ijk] - ddphi_D0D2[ijk]) + _gammaI_U1U1[ijk]*
-(_Gamma_U0D1D1[ijk]*dphi_D0[ijk] + _Gamma_U1D1D1[ijk]*dphi_D1[ijk] +
-_Gamma_U2D1D1[ijk]*dphi_D2[ijk] - ddphi_D1D1[ijk]) + 2.0*
-_gammaI_U1U2[ijk]*(_Gamma_U0D1D2[ijk]*dphi_D0[ijk] +
-_Gamma_U1D1D2[ijk]*dphi_D1[ijk] + _Gamma_U2D1D2[ijk]*dphi_D2[ijk] -
-ddphi_D1D2[ijk]) + _gammaI_U2U2[ijk]*(_Gamma_U0D2D2[ijk]*dphi_D0[ijk] +
-_Gamma_U1D2D2[ijk]*dphi_D1[ijk] + _Gamma_U2D2D2[ijk]*dphi_D2[ijk] -
-ddphi_D2D2[ijk]))/pow(psi[ijk], 4);
-
-    double t4_ = 
-(6.0*W_U0[ijk]*dpsi_D0[ijk] + 6.0*W_U1[ijk]*dpsi_D1[ijk] + 6.0*
-W_U2[ijk]*dpsi_D2[ijk] + psi[ijk]*(W_U0[ijk]*_Gamma_U0D0D0[ijk] +
-W_U0[ijk]*_Gamma_U1D0D1[ijk] + W_U0[ijk]*_Gamma_U2D0D2[ijk] +
-W_U1[ijk]*_Gamma_U0D0D1[ijk] + W_U1[ijk]*_Gamma_U1D1D1[ijk] +
-W_U1[ijk]*_Gamma_U2D1D2[ijk] + W_U2[ijk]*_Gamma_U0D0D2[ijk] +
-W_U2[ijk]*_Gamma_U1D1D2[ijk] + W_U2[ijk]*_Gamma_U2D2D2[ijk]))/
-psi[ijk];
-
-    double t5_ = 
--enthalpy[ijk]*u0[ijk]*(Beta_U0[ijk]*dLns1__U0 + Beta_U1[ijk]*
-dLns1__U1 + Beta_U2[ijk]*dLns1__U2);
-
-    double t6_ = 
--K[ijk]*alpha_*enthalpy[ijk]*rho0[ijk]*u0[ijk];
-
-    double F_eq_ = 
-rho0[ijk]*(t2_ + t3_ + t4_) + t1_ + t5_ + t6_;
-
-    F[n] = F_eq_;
-
-    DDM_SCHUR_EQ_CLOSE
-
-  }/* other patches of NS */
+    ijk  = node[0];
+    F[0] += phi[ijk];
+  }
   return 0;
 }
