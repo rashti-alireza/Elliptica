@@ -6,36 +6,37 @@ Project = Binary_BH_NS_Initial_Data  #executing this project
 NS_baryonic_mass   = 1# adm mass = 0.96
 NS_Omega_U0        = 0#.001 # NS spin vector x comp. in W = NS_Omega*r
 NS_Omega_U1        = 0#.002 # NS spin vector y comp. in W = NS_Omega*r
-NS_Omega_U2        = 0.001#.003 # NS spin vector z comp. in W = NS_Omega*r
+NS_Omega_U2        = 0.01#0.01#.003 # NS spin vector z comp. in W = NS_Omega*r
 
 #### NS EoS:
-EoS_description = K123
-EoS_type        = polytropic
-EoS_unit   	= geo
-EoS_K      	= [123.6489]    
-EoS_Gamma  	= [2]
+EoS_description = Sly
+EoS_type        = piecewise_polytropic
+EoS_unit        = geo
+EoS_K           = [8.9493e-02, 8.4581e+04, 7.4943e+04, 3.1074e+04]
+EoS_rho_th      = [0, 2.3674e-04, 8.1147e-04, 1.6191e-03]
+EoS_Gamma       = [1.3569e+00, 3.0050e+00, 2.9880e+00, 2.8510e+00]
 
 #### BH:
 BH_mass = 3 
-BH_X_U2 = 0.003
+BH_X_U2 = 0.006
 
 #### Orbits:
-BH_NS_separation 	       = 60
-BH_NS_orbital_angular_velocity = 0.003
+BH_NS_separation 	       = 40
+BH_NS_orbital_angular_velocity = 0.006
 BH_NS_infall_velocity          = 0
 
 #### adjustments and tunings:
-RollOff_distance               = 25
+RollOff_distance               = 15
 NS_surface_finder_method       = SphericalHarmonic #CubedSpherical
-NS_surface_Ylm_expansion_max_l = 11
-NS_adjust_center_method        = draw_enthalpy#tune_enthalpy
-P_ADM_control_method           = adjust(boost_Vx,boost_Vy,boost_Vz)#adjust(x_CM,y_CM,boost_Vz)
-P_ADM_control_tolerance        = 0.01
-force_balance_equation         = adjust(d/dy:Omega)(x2)->none(x50)
+NS_surface_Ylm_expansion_max_l = 5
+NS_adjust_center_method        = draw_enthalpy
+P_ADM_control_method           = adjust(y_CM,none,none)
+P_ADM_control_tolerance        = 0.001
+force_balance_equation         = adjust(d/dy:Omega)
 
 #### initialization:
 BH_NS_initialization = TOV_KerrSchild
-BH_NS_free_data_metric = Boosted_KerrSchild_metric
+BH_NS_free_data_metric = boosted_KerrSchild_metric#conformally_flat_metric
 
 ####################### Solving_Settings #####################
 #### Order of equations to be solved:
@@ -47,10 +48,10 @@ Solving_Field_Update_Weight = 0.3 # like in the relaxation factor for last updat
 
 
 ### Solving:
-Solving_Residual = 1E-15(x200)
-Solving_Residual_Factor = 1E-10# -> 0.01 -> 0.0001 # this factor multiplied by initial residual.
-Solving_Max_Number_of_Iteration = 1# -> 15 #2 -> 15 -> 20
-Solving_Max_Number_of_Newton_Step = 1#2
+Solving_Residual = 1E-15(x300)
+Solving_Residual_Factor = 1E-10
+Solving_Max_Number_of_Iteration = 1
+Solving_Max_Number_of_Newton_Step = 1
 Solving_Allowed_Relative_Residual_Backtrack_Tolerance = 1E30
 Solving_Method = DDM_Schur_Complement # Parallel_Patch_Method # threads are sprawned over patches and each solves equations in their region (patch)
 #Solving_Interpolation_Normal = Cartesian_Normal
@@ -74,9 +75,9 @@ Number_of_Outermost_Split = 2
 # the basis and collocation points in this coord. sys. are predefined.
 
 # iteration over a parameter is determined by ->
-n_a = 10#5 #-> 7 -> 10
-n_b = 10#5 #-> 7 -> 10
-n_c = 10#5 #-> 7 -> 10
+n_a = 8#10(x200)->14(x200)#5 #-> 7 -> 10
+n_b = 8#10(x200)->14(x200)#5 #-> 7 -> 10
+n_c = 8#10(x200)->14(x200)#5 #-> 7 -> 10
 
 ### ratio of box length divided by the max of radius of the compact object
 left_central_box_length_ratio  = 0.5
@@ -84,22 +85,6 @@ left_central_box_length_ratio  = 0.5
 Outermost0_radius = 1E3
 Outermost1_radius = 1E5
 
-# n's
-#left_NS_n_a = 6
-#left_NS_n_b = 6
-#left_NS_n_c = 6
-
-#right_BH_n_a = 7
-#right_BH_n_b = 7
-#right_BH_n_c = 7
-
-#Outermost0_n_a = 9
-#Outermost0_n_b = 9
-#Outermost0_n_c = 9
-
-#Outermost1_n_a = 7
-#Outermost1_n_b = 7
-#Outermost1_n_c = 7
 
 ######################## Methods #############################
 Derivative_Method = Spectral
@@ -111,7 +96,7 @@ Making_Jacobian_For_Newton_Method = Spectral #Finite_Difference
 
 ######################## Prints ##############################
 
-#print_parameters = yes
+print_parameters = yes
 #print_coords     = yes
 #print_interfaces = yes
 print_fields_4d  = yes,Format:HDF5,\
@@ -119,8 +104,8 @@ print_fields_4d  = yes,Format:HDF5,\
 ham_constraint,mom_constraint_U0,mom_constraint_U1,mom_constraint_U2,\
 surface_function,\
 phi,phi_residual,\
-enthalpy,\
-psi,psi_residual,\
+enthalpy,denthalpy_D1,denthalpy_D2,denthalpy_D0,\
+psi,dpsi_D0,dpsi_D1,dpsi_D2,psi_residual,\
 eta,eta_residual,\
 _R,\
 K,\
@@ -132,4 +117,28 @@ rho0,u0,_E,_S,(_J_U0,_J_U1,_J_U2),_J_U0,_J_U1,_J_U2,\
 (B1_U0,B1_U1,B1_U2),\
 B0_U0_residual,B0_U1_residual,B0_U2_residual,\
 (Beta_U0,Beta_U1,Beta_U2),\
+_A_UiUj_U2U2,\
+_A_UiUj_U1U2,\
+_A_UiUj_U1U1,\
+_A_UiUj_U0U2,\
+_A_UiUj_U0U1,\
+_A_UiUj_U0U0,\
+_dA_UiUj_U2U2D2,\
+_dA_UiUj_U2U2D0,\
+_dA_UiUj_U2U2D1,\
+_dA_UiUj_U1U1D2,\
+_dA_UiUj_U1U1D0,\
+_dA_UiUj_U1U1D1,\
+_dA_UiUj_U0U0D2,\
+_dA_UiUj_U0U0D0,\
+_dA_UiUj_U0U0D1,\
+_dA_UiUj_U0U1D2,\
+_dA_UiUj_U0U1D1,\
+_dA_UiUj_U0U1D0,\
+_dA_UiUj_U1U2D1,\
+_dA_UiUj_U1U2D0,\
+_dA_UiUj_U1U2D2,\
+_dA_UiUj_U0U2D0,\
+_dA_UiUj_U0U2D1,\
+_dA_UiUj_U0U2D2,\
 }
