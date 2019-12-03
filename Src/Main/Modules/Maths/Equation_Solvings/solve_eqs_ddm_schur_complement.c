@@ -534,7 +534,6 @@ static Matrix_T *compute_S_CCS(Grid_T *const grid)
     free_matrix(Schur->F_by_E_prime);
   }
   
-  /* to be safe we used long format data type */
   Ap = calloc(NI_total+1,sizeof(*Ap));
   pointerEr(Ap);
   R = nnz = 0;
