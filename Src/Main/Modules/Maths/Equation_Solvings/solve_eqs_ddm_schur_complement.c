@@ -398,7 +398,15 @@ static void solve_Sy_g_prime(Matrix_T *const S,double *const g_prime,Grid_T *con
   umfpack->a = S;
   umfpack->b = g_prime;
   umfpack->x = y;
-  direct_solver_umfpack_dl(umfpack);
+  
+  if (S->ccs_f)
+    direct_solver_umfpack_di(umfpack);
+  
+  else if (S->ccs_l_f)
+    direct_solver_umfpack_dl(umfpack);
+    
+  else
+    abortEr(NO_OPTION);
 
   /* populate SchurC->y */
   FOR_ALL_PATCHES(p,grid)
@@ -413,10 +421,22 @@ static void solve_Sy_g_prime(Matrix_T *const S,double *const g_prime,Grid_T *con
   free(g_prime);
 }
 
-/* allocate and compute S
+/* allocate and compute S in either ccs or ccs long format.
 // note: it frees C_ccs's and F_by_E_primes.
 // ->return value: S matrix. */
 static Matrix_T *compute_S(Grid_T *const grid)
+{
+  return compute_S_CCS(grid);
+  
+  if (0)/* if the S matrix gets very hug then use this */
+    return compute_S_CCS_long(grid);
+  
+}
+
+/* allocate and compute S ccs long format storage
+// note: it frees C_ccs's and F_by_E_primes.
+// ->return value: S matrix. */
+static Matrix_T *compute_S_CCS_long(Grid_T *const grid)
 {
   /* since NI_total and NI_p are unique we pick one of them from patch[0] */
   const unsigned NI_total    = 
@@ -479,6 +499,77 @@ static Matrix_T *compute_S(Grid_T *const grid)
   S->ccs_long->Ap = Ap;
   S->ccs_long->Ai = Ai;
   S->ccs_long->Ax = Ax;
+  
+  return S;
+}
+
+/* allocate and compute S ccs format storage
+// note: it frees C_ccs's and F_by_E_primes.
+// ->return value: S matrix. */
+static Matrix_T *compute_S_CCS(Grid_T *const grid)
+{
+  /* since NI_total and NI_p are unique we pick one of them from patch[0] */
+  const unsigned NI_total    = 
+                  grid->patch[0]->solving_man->method->SchurC->NI_total;
+  const unsigned npatch = grid->np;
+  Matrix_T *S = alloc_matrix(CCS_SF,NI_total,NI_total);
+  Matrix_T **subS;
+  int *Ap = 0;
+  int *Ai = 0;
+  double *Ax = 0;
+  int nnz;
+  long i,j,R;
+  unsigned p;
+  
+  subS = calloc(npatch,sizeof(*subS));
+  pointerEr(subS);
+  
+  DDM_SCHUR_COMPLEMENT_OpenMP(omp parallel for)
+  for (p = 0; p < npatch; ++p)
+  {
+    Patch_T *patch = grid->patch[p];
+    DDM_Schur_Complement_T *Schur = patch->solving_man->method->SchurC;
+    subS[p] = CCSOpCCS(Schur->C_ccs,Schur->F_by_E_prime,'-');
+    free_matrix(Schur->C_ccs);
+    free_matrix(Schur->F_by_E_prime);
+  }
+  
+  /* to be safe we used long format data type */
+  Ap = calloc(NI_total+1,sizeof(*Ap));
+  pointerEr(Ap);
+  R = nnz = 0;
+  for (p = 0; p < npatch; ++p)
+  {
+    int *Ap1    = subS[p]->ccs->Ap;
+    int *Ai1    = subS[p]->ccs->Ai;
+    double *Ax1 = subS[p]->ccs->Ax;
+    long Nc1    = subS[p]->col;
+    
+    Ai = realloc(Ai,(long unsigned)(Ap[R]+Ap1[Nc1])*sizeof(*Ai));
+    pointerEr(Ai);
+    Ax = realloc(Ax,(long unsigned)(Ap[R]+Ap1[Nc1])*sizeof(*Ax));
+    pointerEr(Ax);
+    
+    for (i = 0; i < Nc1; ++i)
+    {
+      Ap[i+R] = Ap1[i]+nnz;
+      for (j = Ap1[i]; j < Ap1[i+1]; ++j)
+      {
+        Ai[nnz+j] = Ai1[j];
+        Ax[nnz+j] = Ax1[j];
+      }
+    }
+    R    += Nc1;
+    nnz  += Ap1[Nc1];
+    Ap[R] = nnz;
+    
+    free_matrix(subS[p]);
+  }
+  free(subS);
+  
+  S->ccs->Ap = Ap;
+  S->ccs->Ai = Ai;
+  S->ccs->Ax = Ax;
   
   return S;
 }
