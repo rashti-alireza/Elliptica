@@ -434,11 +434,11 @@ static void Px_ADM_is0_by_x_boost(Grid_T *const grid)
     
     update_parameter_double_format("v2_boost_x",v[0]);
     
-    const double dPx_Px = L2_norm(1,&p2[0],&p1[0])/L2_norm(1,&p2[0],0);
-    printf("dPx/Px = %e\n",dPx_Px);
+    const double dPx_Px = (p2[0]-p1[0])/fabs(p2[0]);
+    printf("dPx/|Px| = %+e\n",dPx_Px);
     
     /* if change in momentum is big */
-    if (GRT(dPx_Px,dP))
+    if (GRT(fabs(dPx_Px),dP))
     {
       update_parameter_double_format("v*_boost_x",v[0]);
       printf("-->boost velocity_x = %e -> %e \n",v2[0],v[0]);
@@ -507,10 +507,10 @@ static void Py_ADM_is0_by_y_boost(Grid_T *const grid)
     
     update_parameter_double_format("v2_boost_y",v[1]);
     
-    const double dPy_Py = L2_norm(1,&p2[1],&p1[1])/L2_norm(1,&p2[1],0);
-    printf("dPy/Py = %e\n",dPy_Py);
+    const double dPy_Py = (p2[1]-p1[1])/fabs(p2[1]);
+    printf("dPy/|Py| = %+e\n",dPy_Py);
     
-    if (GRT(dPy_Py,dP))
+    if (GRT(fabs(dPy_Py),dP))
     {
       update_parameter_double_format("v*_boost_y",v[1]);
       printf("-->boost velocity_y = %e -> %e \n",v2[1],v[1]);
@@ -579,10 +579,10 @@ static void Pz_ADM_is0_by_z_boost(Grid_T *const grid)
     
     update_parameter_double_format("v2_boost_z",v[2]);
     
-    const double dPz_Pz = L2_norm(1,&p2[2],&p1[2])/L2_norm(1,&p2[2],0);
-    printf("dPz/Pz = %e\n",dPz_Pz);
+    const double dPz_Pz = (p2[2]-p1[2])/fabs(p2[2]);
+    printf("dPz/|Pz| = %+e\n",dPz_Pz);
       
-    if (GRT(dPz_Pz,dP))
+    if (GRT(fabs(dPz_Pz),dP))
     {
       update_parameter_double_format("v*_boost_z",v[2]);
       printf("-->boost velocity_z = %e -> %e \n",v2[2],v[2]);
