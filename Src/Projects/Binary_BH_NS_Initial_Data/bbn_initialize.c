@@ -2052,6 +2052,7 @@ static void extrapolate_insideBH(Grid_T *const grid)
 static void extrapolate_fluid_fields_outsideNS_CS(Grid_T *const grid)
 {
   const double FACTOR = 0.8;/* r1 = FACTOR*r2 */
+  const double att    = 0.1;/* exp(-att*(r2-r1)) */
   //const double EXP    = 1;/* (r_out/r2)^EXP */
   unsigned p;
   
@@ -2277,7 +2278,65 @@ static void extrapolate_fluid_fields_outsideNS_CS(Grid_T *const grid)
     dphi_D0->v = Partial_Derivative(phi_field,"x");
     
     /* populating enthalpy and its derivatives in NS surroundings */
-    Tij_IF_CTS_enthalpy(patch);
+    if (1)/* decrease enthalpy exponentially from the NS surface */
+    {
+      /* note: patch refers to NS_surrounding patch */
+      
+      GET_FIELD(enthalpy)
+      /* find the corresponding NS patch to be used for extrapolation */
+      affix = regex_find("_[[:alpha:]]{2,5}$",patch->name);/* finding the side of the patch */
+      assert(affix);
+      sprintf(stem,"left_NS%s",affix);
+      free(affix);
+      NS_patch = GetPatch(stem,grid);
+      
+      /* prepare interpolation arguments */
+      Interpolation_T *interp_h = init_interpolation();
+      interp_h->field = NS_patch->pool[LookUpField_E("enthalpy",NS_patch)];
+      interp_h->XYZ_dir_flag = 1;
+      plan_interpolation(interp_h);
+
+      /* smearing the fields exponentially */
+      for (i = 0; i < n[0]; ++i)
+      {
+        for (j = 0; j < n[1]; ++j)
+        {
+          /* calculate r at the NS surface */
+          ijk = L(n,i,j,0);
+          x[0] = patch->node[ijk]->x[0]-patch->c[0];
+          x[1] = patch->node[ijk]->x[1]-patch->c[1];
+          x[2] = patch->node[ijk]->x[2]-patch->c[2]; 
+          r1   = rms(3,x,0);
+          
+          X_of_x(X,patch->node[ijk]->x,NS_patch);
+
+          interp_h->X  = X[0];
+          interp_h->Y  = X[1];
+          interp_h->Z  = X[2];
+
+          double h_i   = execute_interpolation(interp_h);
+
+          for (k = 0; k < n[2]; ++k)
+          {
+            ijk = L(n,i,j,k);
+            x[0] = patch->node[ijk]->x[0]-patch->c[0];
+            x[1] = patch->node[ijk]->x[1]-patch->c[1];
+            x[2] = patch->node[ijk]->x[2]-patch->c[2];
+            
+            r2 = rms(3,x,0);
+            double e = exp(-att*(r2-r1));
+            enthalpy[ijk] = h_i*e;
+            
+          }/* end of for (k = 0 ; k < n[2]; ++k) */
+        }/* end of for (j = 0; j < n[1]; ++j) */
+      }/* end of for (i = 0; i < n[0]; ++i) */
+      free_interpolation(interp_h);
+    }
+    else if (0)/* use metric and matter fields to make enthalpy */
+      Tij_IF_CTS_enthalpy(patch);
+    else
+      abortEr(NO_OPTION);
+      
     Field_T *enthalpy = patch->pool[Ind("enthalpy")];
     DECLARE_AND_EMPTY_FIELD(denthalpy_D2)
     DECLARE_AND_EMPTY_FIELD(denthalpy_D1)
