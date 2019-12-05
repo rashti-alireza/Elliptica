@@ -33,7 +33,7 @@
 // the integrand f(x) must be provided fully by the user.
 // for example: if we have intergral f(i)*dS(-i) one needs to
 // do the contraction of f^i and normal vector on the surface
-//but the element dS is made automatically out of the given metric.
+// BUT the element dS is made automatically out of the given metric.
 //
 // I->type = "Integral{f(x)dS},Spectral"; # dS is sqrt(det(g_{ij} dx^i/dY dx^j/dZ))dYdZ for hypersurface X = const.
 //                                        # dS is sqrt(det(g_{ij} dx^i/dX dx^j/dZ))dXdZ for hypersurface Y = const.
