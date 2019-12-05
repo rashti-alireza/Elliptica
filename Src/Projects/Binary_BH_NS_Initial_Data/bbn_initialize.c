@@ -1876,14 +1876,20 @@ static void add_patches_insideBH(Grid_T *const grid)
 static void extrapolate_insideBH(Grid_T *const grid)
 {
   unsigned p;
-  const double atten = 5E1;
+  const double atten = 5;
   
   FOR_ALL_PATCHES(p,grid)
   {
     Patch_T *patch = grid->patch[p];
     if (!IsItInsideBHPatch(patch))
       continue;
-     
+      
+    Patch_T *BHsur_patch;/* corresponding bh surrounding patch */
+    const unsigned *n = patch->n;
+    double x[3],X[3];
+    double rh,r,e;
+    unsigned ijk,i,j,k;
+ 
     /* add fields: */
     ADD_FIELD(B0_U0)
     ADD_FIELD(B0_U1)
@@ -1902,16 +1908,20 @@ static void extrapolate_insideBH(Grid_T *const grid)
     
     bbn_update_B1_U012(patch);
     
-    /* for the centeral box we demand the field values be 0. */
+    /* for the centeral box we have: */
     if (strstr(patch->name,"right_centeral_box"))
+    {
+      unsigned nn = patch->nn;
+      for (ijk = 0; ijk < nn; ++ijk)
+      {
+        psi[ijk] = 1;
+        eta[ijk] = 1;
+        B0_U0[ijk] = B0_U1[ijk] = B0_U2[ijk] = 0;
+      }
       continue;
+    }
     
-    Patch_T *BHsur_patch;/* corresponding bh surrounding patch */
-    const unsigned *n = patch->n;
-    double x[3],X[3];
-    double rh,r,e;
-    unsigned ijk,i,j,k;
-
+    
     /* find the corresponding BH surrounding patch to be used for extrapolation */
     char stem[1000];
     char *affix = regex_find("_[[:alpha:]]{2,5}$",patch->name);/* finding the side of the patch */
@@ -1995,8 +2005,8 @@ static void extrapolate_insideBH(Grid_T *const grid)
           
           r = rms(3,x,0);
           e = exp(-atten*(rh-r));
-          eta[ijk]   = eta_i*e;
-          psi[ijk]   = psi_i*e;
+          eta[ijk]   = eta_i*e+1;
+          psi[ijk]   = psi_i*e+1;
           B0_U0[ijk] = B0_U0_i*e;
           B0_U1[ijk] = B0_U1_i*e;
           B0_U2[ijk] = B0_U2_i*e;
