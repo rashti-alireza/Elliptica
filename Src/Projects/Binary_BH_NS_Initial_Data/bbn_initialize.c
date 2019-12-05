@@ -72,17 +72,17 @@ static Grid_T *make_next_grid_using_previous_grid(Grid_T *const grid_prev)
   /* P_ADM control */
   P_ADM_control(grid_prev);
   
-  /* find the BH radius to acquire the desired BH mass */
-  //find_BH_radius(grid_prev);
+  /* find the apparent horizon radius to acquire the desired BH mass */
+  find_AH_radius(grid_prev,GridParams);
   
   /* find the Omega_BH to acquire the desired BH spin */
-  //find_BH_Omega(grid_prev);
+  //find_BH_Omega(grid_prev,GridParams);
   
   /* make new grid with new parameters */
   const double bh_chi  = GetParameterD_E("BH_X_U2");
   const double bh_mass = GetParameterD_E("BH_mass");
-  const double bh_R    = bh_mass*(1+sqrt(1-SQR(bh_chi)));
-  GridParams->R_BH_r = bh_R;
+  //const double bh_R    = bh_mass*(1+sqrt(1-SQR(bh_chi)));
+  //GridParams->R_BH_r = bh_R;
   GridParams->a_BH   = bh_chi*bh_mass;
   GridParams->BH_R_type = "PerfectSphere";
   grid_next = creat_bbn_grid_CS(GridParams);
@@ -1216,11 +1216,26 @@ static void update_B1_dB1_Beta_dBete_Aij_dAij(Grid_T *const grid)
   }
 }
 
-/* find the BH radius to acquire the desired BH mass */
-//static void find_BH_radius(Grid_T *const grid)
+/* find the apparent horizon radius to acquire the desired BH mass */
+static void find_AH_radius(Grid_T *const grid,struct Grid_Params_S *const GridParams)
+{
+  const double target_bh_mass  = GetParameterD_E("BH_mass");
+  const double current_bh_mass = bbn_BH_Kommar_mass(grid);
+  const double current_r_excision = GetParameterD_E("r_excision");
+  const double W1  = GetParameterD_E("Solving_Field_Update_Weight");
+  //const double W2  = 1-W1;
+  const double dr  = -current_r_excision*(current_bh_mass/target_bh_mass-1);
+  const double r_excision = current_r_excision + W1*dr;
+  
+  GridParams->R_BH_r = r_excision;
+  update_parameter_double_format("r_excision",r_excision);
+  
+  printf("-->BH Kommar's mass = %e\n",current_bh_mass);
+  printf("-->r_excision = %e -> %e \n",current_r_excision,r_excision);
+}
 
 /* find the Omega_BH to acquire the desired BH spin */
-//static void find_BH_Omega(Grid_T *const grid);
+//static void find_BH_Omega(Grid_T *const grid,struct Grid_Params_S *const GridParams);
 
 /* root finder eqution for Euler equation constant */
 static double Euler_eq_const_rootfinder_eq(void *params,const double *const x)
@@ -2295,6 +2310,8 @@ static Grid_T *TOV_KerrSchild_approximation(void)
   add_parameter_double("x_CM0",0);
   add_parameter_double("NS_mass",ns_mass);
   add_parameter_double("NS_center",C_NS);
+  add_parameter_double("r_excision",bh_R);
+  
     
   /* -> BH_Omega, the angular frequency of the horizon,
   // is a free vector that determines the spin of BH
