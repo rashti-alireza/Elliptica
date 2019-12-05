@@ -76,15 +76,16 @@ static Grid_T *make_next_grid_using_previous_grid(Grid_T *const grid_prev)
   find_AH_radius(grid_prev,GridParams);
   
   /* find the Omega_BH to acquire the desired BH spin */
-  //find_BH_Omega(grid_prev,GridParams);
+  find_BH_Omega(grid_prev,GridParams);
   
   /* make new grid with new parameters */
-  const double bh_chi  = GetParameterD_E("BH_X_U2");
-  const double bh_mass = GetParameterD_E("BH_mass");
+  //const double bh_chi  = GetParameterD_E("BH_X_U2");
+  //const double bh_mass = GetParameterD_E("BH_mass");
   //const double bh_R    = bh_mass*(1+sqrt(1-SQR(bh_chi)));
   //GridParams->R_BH_r = bh_R;
-  GridParams->a_BH   = bh_chi*bh_mass;
+  //GridParams->a_BH   = bh_chi*bh_mass;
   //GridParams->BH_R_type = "PerfectSphere";
+  
   grid_next = creat_bbn_grid_CS(GridParams);
   
   /* fields: */
@@ -1237,7 +1238,15 @@ static void find_AH_radius(Grid_T *const grid,struct Grid_Params_S *const GridPa
 }
 
 /* find the Omega_BH to acquire the desired BH spin */
-//static void find_BH_Omega(Grid_T *const grid,struct Grid_Params_S *const GridParams);
+static void find_BH_Omega(Grid_T *const grid,struct Grid_Params_S *const GridParams)
+{
+  UNUSED(grid);
+  
+  const double bh_chi  = GetParameterD_E("BH_X_U2");
+  const double bh_mass = GetParameterD_E("BH_mass");
+  
+  GridParams->a_BH   = bh_chi*bh_mass;
+}
 
 /* root finder eqution for Euler equation constant */
 static double Euler_eq_const_rootfinder_eq(void *params,const double *const x)
