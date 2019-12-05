@@ -54,6 +54,9 @@ static Grid_T *make_next_grid_using_previous_grid(Grid_T *const grid_prev)
   /* update enthalpy,denthalpy,rho0, drho0, u0, _J^i, _E and _S */
   bbn_update_stress_energy_tensor(grid_prev,0);
   
+   /* find the apparent horizon radius to acquire the desired BH mass */
+  find_AH_radius(grid_prev,GridParams);
+ 
   /* find y_CM or orbital_angular_velocity using force balance equation */
   force_balance_eq(grid_prev);
   
@@ -71,9 +74,6 @@ static Grid_T *make_next_grid_using_previous_grid(Grid_T *const grid_prev)
   
   /* P_ADM control */
   P_ADM_control(grid_prev);
-  
-  /* find the apparent horizon radius to acquire the desired BH mass */
-  find_AH_radius(grid_prev,GridParams);
   
   /* find the Omega_BH to acquire the desired BH spin */
   find_BH_Omega(grid_prev,GridParams);
@@ -1221,12 +1221,13 @@ static void update_B1_dB1_Beta_dBete_Aij_dAij(Grid_T *const grid)
 static void find_AH_radius(Grid_T *const grid,struct Grid_Params_S *const GridParams)
 {
   const double target_bh_mass  = GetParameterD_E("BH_mass");
-  const double current_bh_mass = bbn_BH_Kommar_mass(grid);
+  double current_bh_mass = bbn_BH_Kommar_mass(grid);
   const double current_r_excision = GetParameterD_E("r_excision");
-  const double W1  = 0.1;//*GetParameterD_E("Solving_Field_Update_Weight");
-  //const double W2  = 1-W1;
+  const double W  = 0.1;//*GetParameterD_E("Solving_Field_Update_Weight");
+  if (current_bh_mass < 0)
+    current_bh_mass = 0;
   const double dr  = -current_r_excision*(current_bh_mass/target_bh_mass-1);
-  const double r_excision = current_r_excision + W1*dr;
+  const double r_excision = current_r_excision + W*dr;
   
   GridParams->R_BH_r = r_excision;
   GridParams->BH_R_type = "PerfectSphere";
@@ -1887,7 +1888,7 @@ static void add_patches_insideBH(Grid_T *const grid)
 static void extrapolate_insideBH(Grid_T *const grid)
 {
   unsigned p;
-  const double atten = 1;
+  const double atten = 5;
   
   FOR_ALL_PATCHES(p,grid)
   {
@@ -2015,8 +2016,8 @@ static void extrapolate_insideBH(Grid_T *const grid)
           
           r = rms(3,x,0);
           e = exp(-atten*(rh-r));
-          eta[ijk]   = eta_i*e+1;
-          psi[ijk]   = psi_i*e+1;
+          eta[ijk]   = eta_i*e*0+1;
+          psi[ijk]   = psi_i*e*0+1;
           B0_U0[ijk] = B0_U0_i*e;
           B0_U1[ijk] = B0_U1_i*e;
           B0_U2[ijk] = B0_U2_i*e;
