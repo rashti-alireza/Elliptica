@@ -194,5 +194,6 @@ dalpha_U2);
   free(g22);
   }
 
+  BH_Kommar_mass /= (4*M_PI);
   return BH_Kommar_mass;
 }

@@ -131,6 +131,7 @@ Symm[_gamma(i,j)   = _gamma(j,i)];
 
 `  }`# end of FOR_ALL_PATCHES
 ``
+`  BH_Kommar_mass /= (4*M_PI);`
 `  return BH_Kommar_mass;`
 
 `}`
