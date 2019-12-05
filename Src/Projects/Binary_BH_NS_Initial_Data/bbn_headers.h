@@ -71,3 +71,4 @@ double bbn_KerrSchild_H(const double M_BH,const double rbar,const double a,const
 double bbn_KerrShcild_r(const double x,const double y,const double z,const double a);
 void bbn_extrapolate_metric_fields_insideBH(Grid_T *const grid);
 double bbn_BH_Kommar_mass(Grid_T *const grid);
+double bbn_BH_irreducible_mass(Grid_T *const grid);
