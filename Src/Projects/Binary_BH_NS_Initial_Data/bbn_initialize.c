@@ -1222,18 +1222,21 @@ static void find_AH_radius(Grid_T *const grid,struct Grid_Params_S *const GridPa
 {
   const double target_bh_mass  = GetParameterD_E("BH_mass");
   const double current_r_excision = GetParameterD_E("r_excision");
+  const double irr_mass    = bbn_BH_irreducible_mass(grid);
+  const double kommar_mass = bbn_BH_Kommar_mass(grid);
   const double W  = 0.1;//*GetParameterD_E("Solving_Field_Update_Weight");
   double dr, r_excision, current_bh_mass;
   
+  printf("--> BH Kommar's mass = %e\n",kommar_mass);
+  printf("--> BH irreducible mass = %e\n",irr_mass);
+  
   if (0)
   {
-    current_bh_mass = bbn_BH_Kommar_mass(grid);
-    printf("-->BH Kommar's mass = %e\n",current_bh_mass);
+    current_bh_mass = kommar_mass;
   }
   if (1)
   {
-    current_bh_mass = bbn_BH_irreducible_mass(grid);
-    printf("-->BH irreducible mass = %e\n",current_bh_mass);
+    current_bh_mass = irr_mass;
   }
     
   if (current_bh_mass < 0)
