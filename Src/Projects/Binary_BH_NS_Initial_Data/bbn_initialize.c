@@ -84,7 +84,7 @@ static Grid_T *make_next_grid_using_previous_grid(Grid_T *const grid_prev)
   //const double bh_R    = bh_mass*(1+sqrt(1-SQR(bh_chi)));
   //GridParams->R_BH_r = bh_R;
   GridParams->a_BH   = bh_chi*bh_mass;
-  GridParams->BH_R_type = "PerfectSphere";
+  //GridParams->BH_R_type = "PerfectSphere";
   grid_next = creat_bbn_grid_CS(GridParams);
   
   /* fields: */
@@ -1228,6 +1228,8 @@ static void find_AH_radius(Grid_T *const grid,struct Grid_Params_S *const GridPa
   const double r_excision = current_r_excision + W1*dr;
   
   GridParams->R_BH_r = r_excision;
+  GridParams->BH_R_type = "PerfectSphere";
+  
   update_parameter_double_format("r_excision",r_excision);
   
   printf("-->BH Kommar's mass = %e\n",current_bh_mass);
