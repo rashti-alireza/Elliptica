@@ -25,7 +25,6 @@ C_macro  = GET_FIELD(name);
 `      continue;`
 
 `    ADD_FIELD(BH_Kommar_mass_integrand)`
-
 ``
 `    double *g00 = alloc_double(nn);`
 `    double *g01 = alloc_double(nn);`
@@ -80,18 +79,19 @@ Symm[_gamma(i,j)   = _gamma(j,i)];
 
 `{`# make it local variables
 `    GET_FIELD(BH_Kommar_mass_integrand)`
-# populate inegrand and metric for integration
+
+# populate inegrand and physical metric for the integration
 `    for(ijk = 0; ijk < nn; ++ijk)`
 `    {`
        psim2 = psi**-2;
        psi2  = psi**2;
        psi4  = psi**4;
-       s(i) = psim2*_HS(i);
+       s(i)  = psim2*_HS(i);
        dalpha(i) = deta(i)/psi-eta*dpsi(i)/psi2;
-       psi8K(-i,-j) = psim2*_A_UiUj(ip,jp)*_gamma(i,-ip)*_gamma(j,-jp)+\
+       K_DD(-i,-j) = psim2*_A_UiUj(ip,jp)*_gamma(i,-ip)*_gamma(j,-jp)+\
 		    1/3*K*psi4*_gamma(i,j);
-       Symm[psi8K(i,j) = psi8K(j,i)];
-       integrand = s(-i)*(dalpha(i)-psi8K(i,j)*Beta(-j));
+       Symm[K_DD(i,j) = K_DD(j,i)];
+       integrand = s(-i)*(dalpha(i)-K_DD(i,j)*Beta(-j));
 ``
 `      BH_Kommar_mass_integrand[ijk] = integrand;`
 `      /* metric */`

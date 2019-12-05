@@ -90,7 +90,7 @@ deta_D0[ijk]/psi[ijk] - dpsi_D0[ijk]*eta[ijk]/psi2;
     double dalpha_U2 = 
 deta_D2[ijk]/psi[ijk] - dpsi_D2[ijk]*eta[ijk]/psi2;
 
-    double psi8K_D1D1 = 
+    double K_DD_D1D1 = 
 0.33333333333333331*K[ijk]*_gamma_D1D1[ijk]*psi4 + psim2*
 (_A_UiUj_U0U0[ijk]*pow(_gamma_D0D1[ijk], 2) + 2.0*_A_UiUj_U0U1[ijk]*
 _gamma_D0D1[ijk]*_gamma_D1D1[ijk] + 2.0*_A_UiUj_U0U2[ijk]*
@@ -98,47 +98,7 @@ _gamma_D0D1[ijk]*_gamma_D1D2[ijk] + _A_UiUj_U1U1[ijk]*
 pow(_gamma_D1D1[ijk], 2) + 2.0*_A_UiUj_U1U2[ijk]*_gamma_D1D1[ijk]*
 _gamma_D1D2[ijk] + _A_UiUj_U2U2[ijk]*pow(_gamma_D1D2[ijk], 2));
 
-    double psi8K_D2D2 = 
-0.33333333333333331*K[ijk]*_gamma_D2D2[ijk]*psi4 + psim2*
-(_A_UiUj_U0U0[ijk]*pow(_gamma_D0D2[ijk], 2) + 2.0*_A_UiUj_U0U1[ijk]*
-_gamma_D0D2[ijk]*_gamma_D1D2[ijk] + 2.0*_A_UiUj_U0U2[ijk]*
-_gamma_D0D2[ijk]*_gamma_D2D2[ijk] + _A_UiUj_U1U1[ijk]*
-pow(_gamma_D1D2[ijk], 2) + 2.0*_A_UiUj_U1U2[ijk]*_gamma_D1D2[ijk]*
-_gamma_D2D2[ijk] + _A_UiUj_U2U2[ijk]*pow(_gamma_D2D2[ijk], 2));
-
-    double psi8K_D0D0 = 
-0.33333333333333331*K[ijk]*_gamma_D0D0[ijk]*psi4 + psim2*
-(_A_UiUj_U0U0[ijk]*pow(_gamma_D0D0[ijk], 2) + 2.0*_A_UiUj_U0U1[ijk]*
-_gamma_D0D0[ijk]*_gamma_D0D1[ijk] + 2.0*_A_UiUj_U0U2[ijk]*
-_gamma_D0D0[ijk]*_gamma_D0D2[ijk] + _A_UiUj_U1U1[ijk]*
-pow(_gamma_D0D1[ijk], 2) + 2.0*_A_UiUj_U1U2[ijk]*_gamma_D0D1[ijk]*
-_gamma_D0D2[ijk] + _A_UiUj_U2U2[ijk]*pow(_gamma_D0D2[ijk], 2));
-
-    double psi8K_D0D1 = 
-0.33333333333333331*K[ijk]*_gamma_D0D1[ijk]*psi4 + psim2*
-(_A_UiUj_U0U0[ijk]*_gamma_D0D0[ijk]*_gamma_D0D1[ijk] + 
-_A_UiUj_U0U1[ijk]*_gamma_D0D0[ijk]*_gamma_D1D1[ijk] + 
-_A_UiUj_U0U1[ijk]*pow(_gamma_D0D1[ijk], 2) + _A_UiUj_U0U2[ijk]*
-_gamma_D0D0[ijk]*_gamma_D1D2[ijk] + _A_UiUj_U0U2[ijk]*_gamma_D0D1[ijk]*
-_gamma_D0D2[ijk] + _A_UiUj_U1U1[ijk]*_gamma_D0D1[ijk]*
-_gamma_D1D1[ijk] + _A_UiUj_U1U2[ijk]*_gamma_D0D1[ijk]*
-_gamma_D1D2[ijk] + _A_UiUj_U1U2[ijk]*_gamma_D0D2[ijk]*
-_gamma_D1D1[ijk] + _A_UiUj_U2U2[ijk]*_gamma_D0D2[ijk]*
-_gamma_D1D2[ijk]);
-
-    double psi8K_D0D2 = 
-0.33333333333333331*K[ijk]*_gamma_D0D2[ijk]*psi4 + psim2*
-(_A_UiUj_U0U0[ijk]*_gamma_D0D0[ijk]*_gamma_D0D2[ijk] + 
-_A_UiUj_U0U1[ijk]*_gamma_D0D0[ijk]*_gamma_D1D2[ijk] + 
-_A_UiUj_U0U1[ijk]*_gamma_D0D1[ijk]*_gamma_D0D2[ijk] + 
-_A_UiUj_U0U2[ijk]*_gamma_D0D0[ijk]*_gamma_D2D2[ijk] + 
-_A_UiUj_U0U2[ijk]*pow(_gamma_D0D2[ijk], 2) + _A_UiUj_U1U1[ijk]*
-_gamma_D0D1[ijk]*_gamma_D1D2[ijk] + _A_UiUj_U1U2[ijk]*_gamma_D0D1[ijk]*
-_gamma_D2D2[ijk] + _A_UiUj_U1U2[ijk]*_gamma_D0D2[ijk]*
-_gamma_D1D2[ijk] + _A_UiUj_U2U2[ijk]*_gamma_D0D2[ijk]*
-_gamma_D2D2[ijk]);
-
-    double psi8K_D1D2 = 
+    double K_DD_D1D2 = 
 0.33333333333333331*K[ijk]*_gamma_D1D2[ijk]*psi4 + psim2*
 (_A_UiUj_U0U0[ijk]*_gamma_D0D1[ijk]*_gamma_D0D2[ijk] + 
 _A_UiUj_U0U1[ijk]*_gamma_D0D1[ijk]*_gamma_D1D2[ijk] + 
@@ -150,12 +110,52 @@ _A_UiUj_U1U2[ijk]*_gamma_D1D1[ijk]*_gamma_D2D2[ijk] +
 _A_UiUj_U1U2[ijk]*pow(_gamma_D1D2[ijk], 2) + _A_UiUj_U2U2[ijk]*
 _gamma_D1D2[ijk]*_gamma_D2D2[ijk]);
 
+    double K_DD_D2D2 = 
+0.33333333333333331*K[ijk]*_gamma_D2D2[ijk]*psi4 + psim2*
+(_A_UiUj_U0U0[ijk]*pow(_gamma_D0D2[ijk], 2) + 2.0*_A_UiUj_U0U1[ijk]*
+_gamma_D0D2[ijk]*_gamma_D1D2[ijk] + 2.0*_A_UiUj_U0U2[ijk]*
+_gamma_D0D2[ijk]*_gamma_D2D2[ijk] + _A_UiUj_U1U1[ijk]*
+pow(_gamma_D1D2[ijk], 2) + 2.0*_A_UiUj_U1U2[ijk]*_gamma_D1D2[ijk]*
+_gamma_D2D2[ijk] + _A_UiUj_U2U2[ijk]*pow(_gamma_D2D2[ijk], 2));
+
+    double K_DD_D0D0 = 
+0.33333333333333331*K[ijk]*_gamma_D0D0[ijk]*psi4 + psim2*
+(_A_UiUj_U0U0[ijk]*pow(_gamma_D0D0[ijk], 2) + 2.0*_A_UiUj_U0U1[ijk]*
+_gamma_D0D0[ijk]*_gamma_D0D1[ijk] + 2.0*_A_UiUj_U0U2[ijk]*
+_gamma_D0D0[ijk]*_gamma_D0D2[ijk] + _A_UiUj_U1U1[ijk]*
+pow(_gamma_D0D1[ijk], 2) + 2.0*_A_UiUj_U1U2[ijk]*_gamma_D0D1[ijk]*
+_gamma_D0D2[ijk] + _A_UiUj_U2U2[ijk]*pow(_gamma_D0D2[ijk], 2));
+
+    double K_DD_D0D1 = 
+0.33333333333333331*K[ijk]*_gamma_D0D1[ijk]*psi4 + psim2*
+(_A_UiUj_U0U0[ijk]*_gamma_D0D0[ijk]*_gamma_D0D1[ijk] + 
+_A_UiUj_U0U1[ijk]*_gamma_D0D0[ijk]*_gamma_D1D1[ijk] + 
+_A_UiUj_U0U1[ijk]*pow(_gamma_D0D1[ijk], 2) + _A_UiUj_U0U2[ijk]*
+_gamma_D0D0[ijk]*_gamma_D1D2[ijk] + _A_UiUj_U0U2[ijk]*_gamma_D0D1[ijk]*
+_gamma_D0D2[ijk] + _A_UiUj_U1U1[ijk]*_gamma_D0D1[ijk]*
+_gamma_D1D1[ijk] + _A_UiUj_U1U2[ijk]*_gamma_D0D1[ijk]*
+_gamma_D1D2[ijk] + _A_UiUj_U1U2[ijk]*_gamma_D0D2[ijk]*
+_gamma_D1D1[ijk] + _A_UiUj_U2U2[ijk]*_gamma_D0D2[ijk]*
+_gamma_D1D2[ijk]);
+
+    double K_DD_D0D2 = 
+0.33333333333333331*K[ijk]*_gamma_D0D2[ijk]*psi4 + psim2*
+(_A_UiUj_U0U0[ijk]*_gamma_D0D0[ijk]*_gamma_D0D2[ijk] + 
+_A_UiUj_U0U1[ijk]*_gamma_D0D0[ijk]*_gamma_D1D2[ijk] + 
+_A_UiUj_U0U1[ijk]*_gamma_D0D1[ijk]*_gamma_D0D2[ijk] + 
+_A_UiUj_U0U2[ijk]*_gamma_D0D0[ijk]*_gamma_D2D2[ijk] + 
+_A_UiUj_U0U2[ijk]*pow(_gamma_D0D2[ijk], 2) + _A_UiUj_U1U1[ijk]*
+_gamma_D0D1[ijk]*_gamma_D1D2[ijk] + _A_UiUj_U1U2[ijk]*_gamma_D0D1[ijk]*
+_gamma_D2D2[ijk] + _A_UiUj_U1U2[ijk]*_gamma_D0D2[ijk]*
+_gamma_D1D2[ijk] + _A_UiUj_U2U2[ijk]*_gamma_D0D2[ijk]*
+_gamma_D2D2[ijk]);
+
     double integrand = 
--s_U0*(Beta_U0[ijk]*psi8K_D0D0 + Beta_U1[ijk]*psi8K_D0D1 +
-Beta_U2[ijk]*psi8K_D0D2 - dalpha_U0) - s_U1*(Beta_U0[ijk]*psi8K_D0D1 +
-Beta_U1[ijk]*psi8K_D1D1 + Beta_U2[ijk]*psi8K_D1D2 - dalpha_U1) - s_U2*
-(Beta_U0[ijk]*psi8K_D0D2 + Beta_U1[ijk]*psi8K_D1D2 + Beta_U2[ijk]*
-psi8K_D2D2 - dalpha_U2);
+-s_U0*(Beta_U0[ijk]*K_DD_D0D0 + Beta_U1[ijk]*K_DD_D0D1 + Beta_U2[ijk]*
+K_DD_D0D2 - dalpha_U0) - s_U1*(Beta_U0[ijk]*K_DD_D0D1 + Beta_U1[ijk]*
+K_DD_D1D1 + Beta_U2[ijk]*K_DD_D1D2 - dalpha_U1) - s_U2*(Beta_U0[ijk]*
+K_DD_D0D2 + Beta_U1[ijk]*K_DD_D1D2 + Beta_U2[ijk]*K_DD_D2D2 -
+dalpha_U2);
 
 
       BH_Kommar_mass_integrand[ijk] = integrand;
