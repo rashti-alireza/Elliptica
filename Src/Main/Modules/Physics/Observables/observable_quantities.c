@@ -189,6 +189,7 @@ n_U2[ijk] + _gamma_D2D2[ijk]*pow(n_U2[ijk], 2));
     obs->Jx_ADM = ADM_angular_momentum_x_BBN_CS;
     obs->Jy_ADM = ADM_angular_momentum_y_BBN_CS;
     obs->Jz_ADM = ADM_angular_momentum_z_BBN_CS;
+    populate_ADM_momentums_integrand_PdS_GdV(obs);
     
     free(patches);
   }/* end of if (strcmp_i(obs->quantity,"ADM_momentums") || strcmp_i(obs->quantity,"ADM_momentum")) */
@@ -268,7 +269,7 @@ static double ADM_momentum_x_BBN_CS(Observable_T *const obs)
   unsigned p;
   assert(N);
   
-  populate_ADM_momentums_integrand_PdS_GdV(obs);
+  //populate_ADM_momentums_integrand_PdS_GdV(obs);
   
   /* surface integration */
   for(p = 0; p < N; ++p)
@@ -329,7 +330,7 @@ static double ADM_momentum_y_BBN_CS(Observable_T *const obs)
   unsigned p;
   assert(N);
   
-  populate_ADM_momentums_integrand_PdS_GdV(obs);
+  //populate_ADM_momentums_integrand_PdS_GdV(obs);
   
   /* surface integration */
   for(p = 0; p < N; ++p)
@@ -390,7 +391,7 @@ static double ADM_momentum_z_BBN_CS(Observable_T *const obs)
   unsigned p;
   assert(N);
   
-  populate_ADM_momentums_integrand_PdS_GdV(obs);
+  //populate_ADM_momentums_integrand_PdS_GdV(obs);
   
   /* surface integration */
   for(p = 0; p < N; ++p)
@@ -453,7 +454,7 @@ static double ADM_angular_momentum_z_BBN_CS(Observable_T *const obs)
   unsigned p;
   assert(N);
   
-  populate_ADM_momentums_integrand_PdS_GdV(obs);
+  //populate_ADM_momentums_integrand_PdS_GdV(obs);
   
   if (get_parameter("y_CM"))
     y_CM = GetParameterD_E("y_CM");
@@ -568,7 +569,7 @@ static double ADM_angular_momentum_x_BBN_CS(Observable_T *const obs)
   unsigned p;
   assert(N);
   
-  populate_ADM_momentums_integrand_PdS_GdV(obs);
+  //populate_ADM_momentums_integrand_PdS_GdV(obs);
   
   if (get_parameter("y_CM"))
     y_CM = GetParameterD_E("y_CM");
@@ -680,7 +681,7 @@ static double ADM_angular_momentum_y_BBN_CS(Observable_T *const obs)
   unsigned p;
   assert(N);
   
-  populate_ADM_momentums_integrand_PdS_GdV(obs);
+  //populate_ADM_momentums_integrand_PdS_GdV(obs);
   
   if (get_parameter("x_CM"))
     x_CM = GetParameterD_E("x_CM");
