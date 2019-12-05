@@ -1221,13 +1221,20 @@ static void update_B1_dB1_Beta_dBete_Aij_dAij(Grid_T *const grid)
 static void find_AH_radius(Grid_T *const grid,struct Grid_Params_S *const GridParams)
 {
   const double target_bh_mass  = GetParameterD_E("BH_mass");
-  double current_bh_mass = bbn_BH_Kommar_mass(grid);
   const double current_r_excision = GetParameterD_E("r_excision");
   const double W  = 0.1;//*GetParameterD_E("Solving_Field_Update_Weight");
+  double dr, r_excision, current_bh_mass;
+  
+  if (0)
+    current_bh_mass = bbn_BH_Kommar_mass(grid);
+  if (1)
+    current_bh_mass = bbn_BH_irreducible_mass(grid);
+    
   if (current_bh_mass < 0)
     current_bh_mass = 0;
-  const double dr  = -current_r_excision*(current_bh_mass/target_bh_mass-1);
-  const double r_excision = current_r_excision + W*dr;
+    
+  dr  = -current_r_excision*(current_bh_mass/target_bh_mass-1);
+  r_excision = current_r_excision + W*dr;
   
   GridParams->R_BH_r = r_excision;
   GridParams->BH_R_type = "PerfectSphere";
