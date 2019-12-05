@@ -1223,7 +1223,7 @@ static void find_AH_radius(Grid_T *const grid,struct Grid_Params_S *const GridPa
   const double target_bh_mass  = GetParameterD_E("BH_mass");
   const double current_bh_mass = bbn_BH_Kommar_mass(grid);
   const double current_r_excision = GetParameterD_E("r_excision");
-  const double W1  = 0.1*GetParameterD_E("Solving_Field_Update_Weight");
+  const double W1  = 0.1;//*GetParameterD_E("Solving_Field_Update_Weight");
   //const double W2  = 1-W1;
   const double dr  = -current_r_excision*(current_bh_mass/target_bh_mass-1);
   const double r_excision = current_r_excision + W1*dr;
