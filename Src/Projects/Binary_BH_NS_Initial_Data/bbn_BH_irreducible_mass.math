@@ -123,5 +123,5 @@ Symm[_gamma(i,j)   = _gamma(j,i)];
 
 `  }`# end of FOR_ALL_PATCHES
 ``
-`  return sqrt(A_AH/(4*M_PI));`
+`  return sqrt(A_AH/(16*M_PI));`
 `}`

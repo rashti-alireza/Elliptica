@@ -82,5 +82,5 @@ pow(psi[ijk], 4);
   free(g22);
   }
 
-  return sqrt(A_AH/(4*M_PI));
+  return sqrt(A_AH/(16*M_PI));
 }
