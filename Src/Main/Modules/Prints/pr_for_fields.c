@@ -15,6 +15,8 @@
 /* Print Fields:
 // note: in Silo language, I'm using curvilinear format for both mesh and data (fields)
 // regardless of the patch is Cartesian or not.
+// note: data and mesh in Silo must be written in column major order,
+//       otherwise for inhomogeneous resolutions you get a scrambled mesh.
 //
 // usage examples:
 // ===============
@@ -28,7 +30,7 @@
 // pr->par         = "print_fields_4d";
 // pr->cycle       = iteration_number;// if you wanna plot data at each iteration
 //
-// # the following options and flag are not necessary, their default value is 0
+// # the following options and flag are not necessary, their default value is 0.
 // pr->multimesh_f = 1; # if you wanna make a master file for all patches as a whole grid
 // pr->multivar_f  = 1; # if you wanna make a master file for all fields. This, option seems not working with VisIt.
 // pr->abc_f       = 1; # if you wanna have the patches and fields in (X,Y,Z) corods or (a,b,c) coords.
@@ -39,6 +41,9 @@
 // # free
 // free_PrField(pr);
 */
+
+/* row major to column major order */
+#define row2col(i,j,k) (i+n[0]*(j+n[1]*k))
 
 /* given print parameter related to fields, the folder, and time = cycle,
 // it reads the parameter and the fields indicated there 
@@ -500,14 +505,18 @@ static void pr_scalar_on_structured_mesh_3d_silo(const Pr_Field_T *const pr)
   
   DBfile *const dbfile = pr->file; 
   const Patch_T *const patch = pr->patch;
+  const unsigned nn = patch->nn;
+  const unsigned *const n = patch->n;
   struct Info_S *subg = pr->vptr;
-  double *data;
+  double *data = 0;
   int dims[] = 
     {(int)pr->patch->n[0],(int)pr->patch->n[1],(int)pr->patch->n[2]};
   const int ndims = 3;
   const int v_ind = _Ind(subg->field);
   int DB_ret;
   const char *mesh_name = strstr(pr->patch->name,"_");/* grid\d?_ */
+  unsigned ijk,i,j,k;
+  
   assert(mesh_name);
   mesh_name++;
 
@@ -515,7 +524,12 @@ static void pr_scalar_on_structured_mesh_3d_silo(const Pr_Field_T *const pr)
     return;
   
   /* fields value */
-  data = patch->pool[v_ind]->v;
+  data = alloc_double(nn);
+  for (ijk = 0; ijk < nn; ++ijk)
+  {
+    IJK(ijk,n,&i,&j,&k);
+    data[row2col(i,j,k)] = patch->pool[v_ind]->v[ijk];
+  }
    
   DB_ret = DBPutQuadvar1(dbfile,subg->field,mesh_name,
     data,dims,ndims,0,0,DB_DOUBLE,DB_NODECENT,0);
@@ -531,6 +545,7 @@ static void pr_scalar_on_structured_mesh_3d_silo(const Pr_Field_T *const pr)
       abortEr("Silo library failed to print.\n");
   }
   
+  _free(data);
 }
 
 /* printing vector field on structured 3d mesh with node centered format. */
@@ -540,8 +555,10 @@ static void pr_vector_on_structured_mesh_3d_silo(const Pr_Field_T *const pr)
   
   DBfile *const dbfile = pr->file; 
   const Patch_T *const patch = pr->patch;
+  const unsigned nn = patch->nn;
+  const unsigned *const n = patch->n;
   struct Info_S *subg = pr->vptr;
-  double *comp[3];
+  double *comp[3] = {0};
   int dims[] = 
     {(int)pr->patch->n[0],(int)pr->patch->n[1],(int)pr->patch->n[2]};
   const int ndims = 3;
@@ -552,15 +569,26 @@ static void pr_vector_on_structured_mesh_3d_silo(const Pr_Field_T *const pr)
   char desc[MAX_STR_LEN];
   int DB_ret;
   const char *mesh_name = strstr(pr->patch->name,"_");/* grid\d?_ */
+  unsigned ijk,i,j,k;
+  
   assert(mesh_name);
   mesh_name++;
   
   if (v_ind0 < 0 || v_ind1 < 0 || v_ind2 < 0)
     return;
   
-  comp[0] = patch->pool[v_ind0]->v;
-  comp[1] = patch->pool[v_ind1]->v;
-  comp[2] = patch->pool[v_ind2]->v;
+  comp[0] = alloc_double(nn);
+  comp[1] = alloc_double(nn);
+  comp[2] = alloc_double(nn);
+  
+  /* change the order from row major to column major order */
+  for (ijk = 0; ijk < nn; ++ijk)
+  {
+    IJK(ijk,n,&i,&j,&k);
+    comp[0][row2col(i,j,k)] = patch->pool[v_ind0]->v[ijk];
+    comp[1][row2col(i,j,k)] = patch->pool[v_ind1]->v[ijk];
+    comp[2][row2col(i,j,k)] = patch->pool[v_ind2]->v[ijk];
+  }
   
   sprintf(desc,"Vector_%s_%s_%s",
     subg->comp[0],subg->comp[1],subg->comp[2]);
@@ -578,6 +606,10 @@ static void pr_vector_on_structured_mesh_3d_silo(const Pr_Field_T *const pr)
     if (DB_ret == -1)
       abortEr("Silo library failed to print.\n");
   }
+  
+  _free(comp[0]);
+  _free(comp[1]);
+  _free(comp[2]);
   
 }
 
@@ -607,24 +639,29 @@ static void pr_structured_mesh_3d_silo(const Pr_Field_T *const pr)
 static void prepare_node_structured_mesh_3d_silo(const char *const type,const Patch_T *const patch,double *const x,double *const y,double *const z)
 {
   const unsigned nn = patch->nn;
-  unsigned ijk;
+  const unsigned *const n = patch->n;
+  unsigned ijk,i,j,k;
   
   if (strcmp_i(type,"Cartesian"))
   {
     for (ijk = 0; ijk < nn; ++ijk)
     {
-      x[ijk] = patch->node[ijk]->x[0];
-      y[ijk] = patch->node[ijk]->x[1];
-      z[ijk] = patch->node[ijk]->x[2];
+      IJK(ijk,patch->n,&i,&j,&k);
+      
+      x[row2col(i,j,k)] = patch->node[ijk]->x[0];
+      y[row2col(i,j,k)] = patch->node[ijk]->x[1];
+      z[row2col(i,j,k)] = patch->node[ijk]->x[2];
     }
   }
   else if (strcmp_i(type,"Curvilinear"))
   {
     for (ijk = 0; ijk < nn; ++ijk)
     {
-      x[ijk] = patch->node[ijk]->X[0];
-      y[ijk] = patch->node[ijk]->X[1];
-      z[ijk] = patch->node[ijk]->X[2];
+      IJK(ijk,patch->n,&i,&j,&k);
+      
+      x[row2col(i,j,k)] = patch->node[ijk]->X[0];
+      y[row2col(i,j,k)] = patch->node[ijk]->X[1];
+      z[row2col(i,j,k)] = patch->node[ijk]->X[2];
     }
   }
   else
