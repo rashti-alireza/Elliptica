@@ -28,6 +28,7 @@
 */
 
 #include "observable_quantities.h"
+#define VOLUME_INTEGRAL 0 /* put it to 1 if you want \int{Gdv} */
 
 /* initialzing stuct Observable_T */
 Observable_T *init_observable(void *grid)
@@ -298,6 +299,7 @@ static double ADM_momentum_x_BBN_CS(Observable_T *const obs)
   }
   
   /* volume integration */
+  if (VOLUME_INTEGRAL)
   for(p = 0; p < N; ++p)
   {
     Patch_T *patch = obs->ADM[p]->patch;
@@ -359,6 +361,7 @@ static double ADM_momentum_y_BBN_CS(Observable_T *const obs)
   }
   
   /* volume integration */
+  if (VOLUME_INTEGRAL)
   for(p = 0; p < N; ++p)
   {
     Patch_T *patch = obs->ADM[p]->patch;
@@ -420,6 +423,7 @@ static double ADM_momentum_z_BBN_CS(Observable_T *const obs)
   }
   
   /* volume integration */
+  if (VOLUME_INTEGRAL)
   for(p = 0; p < N; ++p)
   {
     Patch_T *patch = obs->ADM[p]->patch;
@@ -512,6 +516,7 @@ static double ADM_angular_momentum_z_BBN_CS(Observable_T *const obs)
   }
   
   /* volume integration */
+  if (VOLUME_INTEGRAL)
   for(p = 0; p < N; ++p)
   {
     Patch_T *patch = obs->ADM[p]->patch;
@@ -624,6 +629,7 @@ static double ADM_angular_momentum_x_BBN_CS(Observable_T *const obs)
   }
   
   /* volume integration */
+  if (VOLUME_INTEGRAL)
   for(p = 0; p < N; ++p)
   {
     Patch_T *patch = obs->ADM[p]->patch;
@@ -736,6 +742,7 @@ static double ADM_angular_momentum_y_BBN_CS(Observable_T *const obs)
   }
   
   /* volume integration */
+  if (VOLUME_INTEGRAL)
   for(p = 0; p < N; ++p)
   {
     Patch_T *patch = obs->ADM[p]->patch;
