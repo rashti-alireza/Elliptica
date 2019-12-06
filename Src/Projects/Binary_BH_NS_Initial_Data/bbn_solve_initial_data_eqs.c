@@ -367,7 +367,8 @@ static Grid_T *bbn_phi_grid(Grid_T *const grid)
   
   if (strcmp_i(grid->kind,"BBN_CubedSpherical_grid"))
   {
-    phi_grid       = alloc_grid();
+    phi_grid       = calloc(1,sizeof(*phi_grid));
+    pointerEr(phi_grid);
     phi_grid->kind = grid->kind;
     phi_grid->gn   = grid->gn;
     /* NS at left composed of 6 cubed spherical + 1 Cartesian: */
