@@ -51,17 +51,11 @@ static Grid_T *make_next_grid_using_previous_grid(Grid_T *const grid_prev)
   /* find Euler equation constant to meet NS baryonic mass */
   find_Euler_eq_const(grid_prev);
   
-  /* update enthalpy,denthalpy,rho0, drho0, u0, _J^i, _E and _S */
-  bbn_update_stress_energy_tensor(grid_prev,0);
-  
    /* find the apparent horizon radius to acquire the desired BH mass */
   find_AH_radius(grid_prev,GridParams);
  
   /* find y_CM or orbital_angular_velocity using force balance equation */
   force_balance_eq(grid_prev);
-  
-  /* update enthalpy,denthalpy,rho0, drho0, u0, _J^i, _E and _S */
-  bbn_update_stress_energy_tensor(grid_prev,0);
   
   /* extrapolate fluid fields outside NS */
   extrapolate_fluid_fields_outsideNS(grid_prev);
@@ -379,6 +373,9 @@ static void force_balance_eq(Grid_T *const grid)
   _free(adjust[0]);
   _free(adjust[1]);
   _free(adjust[2]);
+  
+  /* update enthalpy,denthalpy,rho0, drho0, u0, _J^i, _E and _S */
+  bbn_update_stress_energy_tensor(grid,0);
 }
 
 /* adjust the boot velocity at the outer boundary to diminish P_ADM
@@ -1105,6 +1102,9 @@ static void find_Euler_eq_const(Grid_T *const grid)
   printf("Euler Equation const. updated: %g -> %g\n",guess[0],Euler_const[0]);
   free(Euler_const);
   free_root_finder(root);
+  
+  /* update enthalpy,denthalpy,rho0, drho0, u0, _J^i, _E and _S */
+  bbn_update_stress_energy_tensor(grid,0);
 }
 
 /* find y_CM by demanding Px_ADM = 0 */
@@ -2062,7 +2062,7 @@ static void extrapolate_insideBH(Grid_T *const grid)
 // the NS sarface. what we have :
 // f(r_out) = (f(r_in) + df)*exp(g(r)), in which df is f(r2)-f(r1), 
 // r1 = FACTOR*r2 and r2 is the radius of NS surface, and g(r) is 
-// a function of r_out/r2 to control the radial trend of fieldd.
+// a function of r_out/r2 to control the radial trend of field.
 // a = (r_max-r2)/(r2-r1)
 // b = (r1*r_max-SQR(r2))/(r1-r2)
 // r_out = a*r_in + b, where (r_in) r_out is r (inside)outside NS and
