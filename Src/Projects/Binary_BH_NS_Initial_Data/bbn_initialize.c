@@ -57,6 +57,9 @@ static Grid_T *make_next_grid_using_previous_grid(Grid_T *const grid_prev)
   /* find y_CM or orbital_angular_velocity using force balance equation */
   force_balance_eq(grid_prev);
   
+  /* P_ADM control */
+  P_ADM_control(grid_prev);
+  
   /* extrapolate fluid fields outside NS */
   extrapolate_fluid_fields_outsideNS(grid_prev);
   
@@ -66,20 +69,10 @@ static Grid_T *make_next_grid_using_previous_grid(Grid_T *const grid_prev)
   /* find NS surface using h = 1 */
   find_NS_surface(grid_prev,GridParams);
   
-  /* P_ADM control */
-  P_ADM_control(grid_prev);
-  
   /* find the Omega_BH to acquire the desired BH spin */
   find_BH_Omega(grid_prev,GridParams);
   
   /* make new grid with new parameters */
-  //const double bh_chi  = GetParameterD_E("BH_X_U2");
-  //const double bh_mass = GetParameterD_E("BH_mass");
-  //const double bh_R    = bh_mass*(1+sqrt(1-SQR(bh_chi)));
-  //GridParams->R_BH_r = bh_R;
-  //GridParams->a_BH   = bh_chi*bh_mass;
-  //GridParams->BH_R_type = "PerfectSphere";
-  
   grid_next = creat_bbn_grid_CS(GridParams);
   
   /* fields: */
@@ -219,6 +212,9 @@ static void P_ADM_control(Grid_T *const grid)
   _free(adjust[0]);
   _free(adjust[1]);
   _free(adjust[2]);
+  
+  /* update enthalpy,denthalpy,rho0, drho0, u0, _J^i, _E and _S */
+  bbn_update_stress_energy_tensor(grid,0);
 }
 
 /* getting adjustment str, returns the relevant function. */
