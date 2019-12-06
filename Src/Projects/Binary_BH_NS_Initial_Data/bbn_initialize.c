@@ -2085,7 +2085,7 @@ static void extrapolate_insideBH(Grid_T *const grid)
 // from r1 to r2 in NS surrounding, from r2 to r_max. */
 static void extrapolate_fluid_fields_outsideNS_CS(Grid_T *const grid)
 {
-  const double FACTOR = 0.8;/* r1 = FACTOR*r2 */
+  const double FACTOR = 0.9;/* r1 = FACTOR*r2 */
   const double att    = 0.1;/* exp(-att*(r2-r1)) */
   //const double EXP    = 1;/* (r_out/r2)^EXP */
   unsigned p;
@@ -2189,7 +2189,24 @@ static void extrapolate_fluid_fields_outsideNS_CS(Grid_T *const grid)
         /* find the value of phi and W^{i} at r2 */
         THETA = acos(x[2]/r2);
         PHI   = arctan(x[1],x[0]);
-
+        
+        /* check of r1 is inside NS */
+        double x1[3];
+        x1[0] = r1*sin(THETA)*cos(PHI)+NS_patch->c[0];
+        x1[1] = r1*sin(THETA)*sin(PHI)+NS_patch->c[1];
+        x1[2] = r1*cos(THETA)+NS_patch->c[2];
+        Needle_T *needle = alloc_needle();
+        needle->grid = grid;
+        needle->x    = x1;
+        needle_in(needle,NS_patch);
+        point_finder(needle);
+        if (!needle->Nans)
+        {
+          abortEr("The FACTOR is too larg for extrapolation.\n");
+        }
+        free_needle(needle);
+        /* end of check */
+        
         x[0] = r2*sin(THETA)*cos(PHI)+NS_patch->c[0];
         x[1] = r2*sin(THETA)*sin(PHI)+NS_patch->c[1];
         x[2] = r2*cos(THETA)+NS_patch->c[2];
