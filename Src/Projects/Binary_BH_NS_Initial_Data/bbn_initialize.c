@@ -1084,6 +1084,8 @@ static double dh_dx2_root_finder_eq(void *params,const double *const x)
 static void find_Euler_eq_const(Grid_T *const grid)
 {
   Root_Finder_T *root = init_root_finder(1);
+  const double W1  = GetParameterD_E("Solving_Field_Update_Weight");
+  const double W2  = 1-W1;
   double *Euler_const = 0;
   double guess[1];/* initial guess for Euler const */
   struct Euler_eq_const_RootFinder_S params[1];
@@ -1101,7 +1103,10 @@ static void find_Euler_eq_const(Grid_T *const grid)
   root->f[0]        = Euler_eq_const_rootfinder_eq;
   root->verbose     = 1;
   plan_root_finder(root);
+  
   Euler_const       = execute_root_finder(root);
+  Euler_const[0]    = W1*Euler_const[0]+W2*guess[0];
+  
   update_parameter_double_format("Euler_equation_constant",Euler_const[0]);
   printf("Euler Equation const. updated: %g -> %g\n",guess[0],Euler_const[0]);
   free(Euler_const);
@@ -1115,6 +1120,7 @@ static void find_Euler_eq_const(Grid_T *const grid)
 static void Px_ADM_is0_by_y_CM(Grid_T *const grid)
 {
   double dy_CM = 0,px0,y_CM_new,p[3]={0};
+  const double W    = GetParameterD_E("Solving_Field_Update_Weight");
   const double dP   = GetParameterD_E("P_ADM_control_tolerance");
   const double Omega_BHNS = GetParameterD_E("BH_NS_orbital_angular_velocity");
   const double y_CM0 = GetParameterD_E("y_CM0");
@@ -1133,7 +1139,7 @@ static void Px_ADM_is0_by_y_CM(Grid_T *const grid)
   
   /* changing center of mass */
   dy_CM    = -p[0]/(Omega_BHNS*(M_NS+M_BH));
-  y_CM_new = y_CM0+dy_CM;
+  y_CM_new = y_CM0+dy_CM*W;
   
   const double dPx_Px = (px0-p[0])/fabs(p[0]);
   printf("dPx/|Px| = %+e\n",dPx_Px);
@@ -1154,6 +1160,7 @@ static void Px_ADM_is0_by_y_CM(Grid_T *const grid)
 static void Py_ADM_is0_by_x_CM(Grid_T *const grid)
 {
   double  dx_CM = 0,py0,x_CM_new,p[3]={0};
+  const double W    = GetParameterD_E("Solving_Field_Update_Weight");
   const double dP   = GetParameterD_E("P_ADM_control_tolerance");
   const double Omega_BHNS = GetParameterD_E("BH_NS_orbital_angular_velocity");
   const double x_CM0 = GetParameterD_E("x_CM0");
@@ -1172,7 +1179,7 @@ static void Py_ADM_is0_by_x_CM(Grid_T *const grid)
   
   /* changing center of mass */
   dx_CM    = p[1]/(Omega_BHNS*(M_NS+M_BH));
-  x_CM_new = x_CM0+dx_CM;
+  x_CM_new = x_CM0+dx_CM*W;
   
   const double dPy_Py = (py0-p[1])/fabs(p[1]);
   printf("dPy/|Py| = %+e\n",dPy_Py);
