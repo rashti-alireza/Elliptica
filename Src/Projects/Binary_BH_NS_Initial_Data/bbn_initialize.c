@@ -1250,7 +1250,7 @@ static void find_AH_radius(Grid_T *const grid,struct Grid_Params_S *const GridPa
   
   update_parameter_double_format("r_excision",r_excision);
   
-  printf("-->r_excision = %e -> %e \n",current_r_excision,r_excision);
+  printf("--> r_excision = %e -> %e \n",current_r_excision,r_excision);
 }
 
 /* find the Omega_BH to acquire the desired BH spin */
@@ -2977,7 +2977,7 @@ static Grid_T *creat_bbn_grid_CS(struct Grid_Params_S *const GridParams)
   const double Max_R_NS_l = GridParams->Max_R_NS_l;/* maximum radius of NS */
   const double R_BH_r     = GridParams->R_BH_r;
   const unsigned gn = grid->gn;
-  const double C    = GetParameterD_E("BH_NS_separation");
+  const double S    = GetParameterD_E("BH_NS_separation");
   const unsigned N_Outermost_Split = (unsigned)GetParameterI_E("Number_of_Outermost_Split"); 
   double *R_outermost = alloc_double(N_Outermost_Split);
   double box_size_l,box_size_r;
@@ -2990,17 +2990,22 @@ static Grid_T *creat_bbn_grid_CS(struct Grid_Params_S *const GridParams)
   
   /* finding the kind of grid */
   kind = GetParameterS_E("grid_kind");
+  
+  /* some checks */
   if (!strcmp_i(kind,"BBN_CubedSpherical_grid"))
     abortEr("This function only works with cubed spherical grid.\n");
-    
-  grid->kind = dup_s(kind);
+  if(!GRT(S,0))
+    abortEr("The distance between the two compact objects must be positive.\n");
+  if(!GRT(Max_R_NS_l,0))
+    abortEr("Neutron star must have positive radius.\n");
+  if(!GRT(R_BH_r,0))
+    abortEr("Black hole must have positive radius.\n");
+  if(!LSS(2*Max_R_NS_l,S))
+    abortEr("The neutron star radius is too big.\n");
+  if(!LSS(2*R_BH_r,S))
+    abortEr("The black hole radius is too big.\n");
   
-  assert(GRT(C,0));
-  assert(GRT(Max_R_NS_l,0));
-  assert(GRT(R_BH_r,0));
-  assert(LSS(2*Max_R_NS_l,C));
-  assert(LSS(2*R_BH_r,C));
-  
+  grid->kind = dup_s(kind);  
   /* making NS and BH surfaces function */
   NS_BH_surface_CubedSpherical_grid(grid,GridParams);
   
@@ -3012,8 +3017,8 @@ static Grid_T *creat_bbn_grid_CS(struct Grid_Params_S *const GridParams)
     sprintf(var,"Outermost%u_radius",i);
     R_outermost[i] = GetParameterD_E(var);
     
-    if (LSS(R_outermost[i],2*C))
-      abortEr("the radius of outermost patches must be greater than twice of BBN distance.");
+    if (LSS(R_outermost[i],2*S))
+      abortEr("The radius of outermost patches must be greater than twice of BBN distance.");
     
     if (i > 0)
       if (LSSEQL(R_outermost[i],R_outermost[i-1]))
@@ -3070,7 +3075,7 @@ static Grid_T *creat_bbn_grid_CS(struct Grid_Params_S *const GridParams)
   
   /* surrounding box length */
   sprintf(par,"grid%u_surrounding_box_length",gn);
-  add_parameter_double(par,C);
+  add_parameter_double(par,S);
   
   /* right box. NOTE: this is needed when we fill the excision region */
   nlb[0] = (unsigned)GetParameterI("n_a");
@@ -3133,22 +3138,22 @@ static Grid_T *creat_bbn_grid_CS(struct Grid_Params_S *const GridParams)
     
   }
   
-  /* assuming the center of left NS at (0,-C/2,0) */
+  /* assuming the center of left NS at (0,-S/2,0) */
   sprintf(par,"grid%u_left_NS_center_a",gn);
   add_parameter_double(par,0.0);
   
   sprintf(par,"grid%u_left_NS_center_b",gn);
-  add_parameter_double(par,-C/2);
+  add_parameter_double(par,-S/2);
   
   sprintf(par,"grid%u_left_NS_center_c",gn);
   add_parameter_double(par,0.0);
   
-  /* assuming the center of right BH at (0,C/2,0) */
+  /* assuming the center of right BH at (0,S/2,0) */
   sprintf(par,"grid%u_right_BH_center_a",gn);
   add_parameter_double(par,0.0);
   
   sprintf(par,"grid%u_right_BH_center_b",gn);
-  add_parameter_double(par,C/2);
+  add_parameter_double(par,S/2);
   
   sprintf(par,"grid%u_right_BH_center_c",gn);
   add_parameter_double(par,0.0);
