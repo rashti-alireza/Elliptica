@@ -119,21 +119,25 @@ static void keep_NS_center_fixed(Grid_T *const grid)
   struct NC_Center_RootFinder_S par[1] = {0};
   Root_Finder_T root_finder[1] = {0};
   const double x_center[3] = {0,C,0};
+  double dhx0,dhz0;
   
   par->patch = GetPatch("left_centeral_box",grid);
   par->root_finder = root_finder;
+  
+  dhx0 = dh_dx0_root_finder_eq(par,x_center);
+  dhz0 = dh_dx2_root_finder_eq(par,x_center);
   
   /* print initial values before adjustments */
   printf("dh/dx before adjustment:\n");
   printf("dh/dx(%g,%g,%g)|NS center = %g\n",
     x_center[0],x_center[1],x_center[2],
-    dh_dx0_root_finder_eq(par,x_center));
+    dhx0);
   printf("dh/dy(%g,%g,%g)|NS center = %g\n",
     x_center[0],x_center[1],x_center[2],
     dh_dx1_root_finder_eq(par,x_center));
   printf("dh/dz(%g,%g,%g)|NS center = %g\n",
     x_center[0],x_center[1],x_center[2],
-    dh_dx2_root_finder_eq(par,x_center));
+    dhz0);
   
   if (strcmp_i(GetParameterS_E("NS_adjust_center_method"),"draw_enthalpy"))
   {
@@ -141,7 +145,7 @@ static void keep_NS_center_fixed(Grid_T *const grid)
   }
   else if (strcmp_i(GetParameterS_E("NS_adjust_center_method"),"tune_enthalpy"))
   {
-    adjust_NS_center_tune_enthalpy(grid);
+    adjust_NS_center_tune_enthalpy(grid,dhx0,dhz0);
   }
   else
     abortEr(NO_OPTION);
@@ -597,7 +601,7 @@ static void Pz_ADM_is0_by_z_boost(Grid_T *const grid)
 /* adjust the center of NS at the designated point, in case it moved. 
 // in this method, we tune enthalpy values such that the derivative of 
 // the enthalpy be 0 at (0,NS_C,0). */
-static void adjust_NS_center_tune_enthalpy(Grid_T *const grid)
+static void adjust_NS_center_tune_enthalpy(Grid_T *const grid,const double dhx0,const double dhz0)
 {
   unsigned p;
   
@@ -612,15 +616,15 @@ static void adjust_NS_center_tune_enthalpy(Grid_T *const grid)
     
     {/* local variables */
       PREP_FIELD(enthalpy)
-      GET_FIELD(denthalpy_D2)
-      GET_FIELD(denthalpy_D0)
+      //GET_FIELD(denthalpy_D2)
+      //GET_FIELD(denthalpy_D0)
     
       for (ijk = 0; ijk < nn; ++ijk)
       {
         double x = patch->node[ijk]->x[0];
         double z = patch->node[ijk]->x[2];
         
-        enthalpy[ijk] = enthalpy[ijk]*(1-denthalpy_D0[ijk]*x-denthalpy_D2[ijk]*z);
+        enthalpy[ijk] = enthalpy[ijk]-dhx0*x-dhz0*z;
       }
     }
     {/* local variables */

@@ -99,7 +99,7 @@ static void free_Grid_Params_S(struct Grid_Params_S *par);
 static struct Grid_Params_S *init_GridParams(void);
 static void find_NS_center(Grid_T *const grid);
 static void adjust_NS_center_draw_enthalpy(Grid_T *const grid);
-static void adjust_NS_center_tune_enthalpy(Grid_T *const grid);
+static void adjust_NS_center_tune_enthalpy(Grid_T *const grid,const double dhx0,const double dhz0);
 static void keep_NS_center_fixed(Grid_T *const grid);
 static double dh_dx0_root_finder_eq(void *params,const double *const x);
 static double dh_dx1_root_finder_eq(void *params,const double *const x);
