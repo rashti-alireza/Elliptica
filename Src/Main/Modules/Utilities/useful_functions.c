@@ -404,6 +404,55 @@ double max_Jacobian_dX_dx(Patch_T *const patch)
   return max;
 }
 
+/* calculating the maximum error of spectral expansion using the last
+// coefficient of the expansion for the given field f.
+// ->return value: spectral expansion error */
+double spectral_expansion_truncation_error(Field_T *const f)
+{
+  double *const Cijk = make_coeffs_3d(f);
+  const unsigned *const n = f->patch->n;
+  
+  return fabs(Cijk[L(n,n[0]-1,n[1]-1,n[2]-1)]);
+}
+
+/* go over all of the fields in the grid and print 
+// the maximum truncation error in this patch.*/
+void print_spectral_expansion_truncation_error(Grid_T *const grid)
+{
+  const unsigned np = grid->np;
+  unsigned p;
+  
+  UF_OpenMP(omp parallel for)
+  for (p = 0; p < np; ++p)
+  {
+    Patch_T *patch = grid->patch[p];
+    unsigned nfld  = patch->nfld;
+    double max_err = 0;
+    const char *max_err_field_name = 0;
+    const char *max_err_patch_name = 0;
+    
+    unsigned f;
+    
+    for (f = 0; f < nfld; ++f)
+    {
+      Field_T *field = patch->pool[f];
+      double err     = spectral_expansion_truncation_error(field);
+      
+      if (err > max_err)
+      {
+        max_err = err;
+        max_err_field_name = field->name;
+        max_err_patch_name = patch->name;
+      }
+    }
+    printf("Maximum Trunc. Err(f(%s)|%s) = %e\n",
+              max_err_field_name,
+              max_err_patch_name,
+              max_err);
+  }/* end of for (p = 0; p < np; ++p) */
+  
+}
+
 /* calculating the maximum error of spectral derivative using the fact 
 // that computer is using finite number of digits.
 // f : given field

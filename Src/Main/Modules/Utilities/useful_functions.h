@@ -5,6 +5,7 @@
 #include "maths_general_lib.h"
 
 #define EPS 1E-11
+#define UF_OpenMP(x) _Pragma(#x)
 
 void test_start(const char *const file,const int line);
 unsigned countf(void *const p);
@@ -37,3 +38,5 @@ Patch_T *GetPatch(const char *const stem,const Grid_T *const grid);
 unsigned IsItNSSurface(const Patch_T *const patch);
 unsigned IsItOutermostPatch(const Patch_T *const patch);
 unsigned IsItInsideBHPatch(const Patch_T *const patch);
+double spectral_expansion_truncation_error(Field_T *const f);
+void print_spectral_expansion_truncation_error(Grid_T *const grid);
