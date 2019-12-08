@@ -1995,7 +1995,7 @@ static void extrapolate_insideBH(Grid_T *const grid)
       
     Patch_T *BHsur_patch;/* corresponding bh surrounding patch */
     const unsigned *n = patch->n;
-    double x[3],X[3],N[3],Norm;
+    double x[3],X[3],N[3];
     double rh,r,R;
     double a_BU0,b_BU0,
            a_BU1,b_BU1,
@@ -2056,13 +2056,9 @@ static void extrapolate_insideBH(Grid_T *const grid)
         x[2] = patch->node[ijk]->x[2]-patch->c[2]; 
         rh   = rms(3,x,0);
         
-        N[0] = dq2_dq1(patch,_c_,_x_,ijk);
-        N[1] = dq2_dq1(patch,_c_,_y_,ijk);
-        N[2] = dq2_dq1(patch,_c_,_z_,ijk);        
-        Norm = rms(3,N,0);
-        N[0] /= Norm;
-        N[1] /= Norm;
-        N[2] /= Norm;
+        N[0] = interpolate_from_patch_prim("_HS_U0",X,BHsur_patch);
+        N[1] = interpolate_from_patch_prim("_HS_U1",X,BHsur_patch);
+        N[2] = interpolate_from_patch_prim("_HS_U2",X,BHsur_patch);
         
         X_of_x(X,patch->node[ijk]->x,BHsur_patch);
 
