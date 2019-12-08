@@ -441,7 +441,7 @@ void print_spectral_expansion_truncation_error(Grid_T *const grid)
       Field_T *field = patch->pool[f];
       double err     = spectral_expansion_truncation_error(field);
       
-      if (err > max_err)
+      if (err >= max_err)
       {
         max_err = err;
         max_err_field_name = field->name;
