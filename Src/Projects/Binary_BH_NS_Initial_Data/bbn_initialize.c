@@ -1755,7 +1755,7 @@ static void find_NS_surface_Ylm_method_CS(Grid_T *const grid,struct Grid_Params_
   
   /* debugging */
   if(1)
-  if (debug_flg == YES||1)
+  if (debug_flg == YES)
   {
     unsigned l,m;
     
