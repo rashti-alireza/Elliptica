@@ -1604,6 +1604,7 @@ static void find_NS_surface_Ylm_method_CS(Grid_T *const grid,struct Grid_Params_
   double *Rnew_NS = 0;/* new R for NS */
   double Max_R_NS = 0;/* maximum radius of NS */
   double guess    = 0;
+  double *h_res  = 0;/* residual of h */
   double X[3],x[3],N[3];
   char stem[1000],*affix;
   unsigned i,j;
@@ -1630,7 +1631,7 @@ static void find_NS_surface_Ylm_method_CS(Grid_T *const grid,struct Grid_Params_
   
   Ntheta  = Nphi = 2*lmax+1;
   Rnew_NS = alloc_double(Ntheta*Nphi);
-  
+  h_res   = alloc_double(Ntheta*Nphi);
   /* for each points of Ylm find the surface of NS */
   for (i = 0; i < Ntheta; ++i)
   {
@@ -1693,6 +1694,7 @@ static void find_NS_surface_Ylm_method_CS(Grid_T *const grid,struct Grid_Params_
       par->patch = h_patch;
       par->N     = N;
       dr = execute_root_finder(root);
+      h_res[ij(i,j)] = root->residual;
       /* if root finder is not OK for some reason */
       if (GRT(root->residual,RESIDUAL))
       {
@@ -1717,14 +1719,6 @@ static void find_NS_surface_Ylm_method_CS(Grid_T *const grid,struct Grid_Params_
     }/* end of for (j = 0; j < Nphi; ++j) */
   }/* end of for (i = 0; i < Ntheta; ++i) */
   
-  /* debugging */
-  if(1)
-  if (debug_flg == YES)
-  {
-    print_spectral_expansion_truncation_error(grid);
-    bbn_study_initial_data(grid);
-  }
-  
   printf("--> Max NS radius:%e\n",Max_R_NS);
   
   /* adding maximum radius of NS to grid parameters */
@@ -1739,6 +1733,26 @@ static void find_NS_surface_Ylm_method_CS(Grid_T *const grid,struct Grid_Params_
   GridParams->NS_R_Ylm->realClm = realClm;
   GridParams->NS_R_Ylm->imagClm = imagClm;
   GridParams->NS_R_Ylm->Lmax    = lmax;
+  
+  /* debugging */
+  if(1)
+  if (debug_flg == YES||1)
+  {
+    unsigned l,m;
+    
+    printf("L2 norm of enthalpy = %e\n",L2_norm(Ntheta*Nphi,h_res,0));
+    printf("Truncation error for spherical harmonic expansion of the surface:\n");
+    l = lmax;
+    for (m = 0; m <= l; ++m)
+    {
+      unsigned lm = lm2n(l,m);
+      printf("Real(C[%u][%u]) = %e\n",l,m,realClm[lm]);
+      printf("Imag(C[%u][%u]) = %e\n",l,m,imagClm[lm]);
+    }
+    
+    print_spectral_expansion_truncation_error(grid);
+    bbn_study_initial_data(grid);
+  }
   
   /* if some day you wanna filter Clm's */
   if (0)
@@ -1756,6 +1770,7 @@ static void find_NS_surface_Ylm_method_CS(Grid_T *const grid,struct Grid_Params_
   }
   
   free(Rnew_NS);
+  free(h_res);
   free_root_finder(root);
   
   printf("} Finding the surface of NS, Ylm method ==> Done.\n");
