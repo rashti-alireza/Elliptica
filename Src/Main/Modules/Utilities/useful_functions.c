@@ -444,7 +444,7 @@ void print_spectral_expansion_truncation_error(Grid_T *const grid)
       if (strstr(field->name,"_residual"))
         continue;
         
-      double err     = spectral_expansion_truncation_error(field);
+      double err  = spectral_expansion_truncation_error(field);
       
       if (err >= max_err)
       {
