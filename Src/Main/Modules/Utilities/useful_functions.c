@@ -453,6 +453,8 @@ void print_spectral_expansion_truncation_error(Grid_T *const grid)
         max_err_patch_name = patch->name;
       }
     }
+    if (!max_err_field_name || !max_err_patch_name)
+      continue;
     len = 25-(int)strlen(max_err_field_name);
     printf("%s:\n",max_err_patch_name);
     printf("--> truncation error[%s] %*s %e\n",
