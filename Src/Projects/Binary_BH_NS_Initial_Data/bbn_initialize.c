@@ -121,7 +121,7 @@ static void keep_NS_center_fixed(Grid_T *const grid)
   dhz0 = dh_dx2_root_finder_eq(par,x_center);
   
   /* print initial values before adjustments */
-  printf("dh/dx before adjustment:\n");
+  printf("dh/d? before NS center adjustment:\n");
   printf("dh/dx(%g,%g,%g)|NS center = %g\n",
     x_center[0],x_center[1],x_center[2],
     dhx0);
@@ -144,7 +144,7 @@ static void keep_NS_center_fixed(Grid_T *const grid)
     abortEr(NO_OPTION);
   
   /* print initial values after adjustments */
-  printf("dh/dx after adjustment:\n");
+  printf("dh/d? after NS center adjustment:\n");
   printf("dh/dx(%g,%g,%g)|NS center = %g\n",
     x_center[0],x_center[1],x_center[2],
     dh_dx0_root_finder_eq(par,x_center));
@@ -346,8 +346,27 @@ static void parse_adjust_parameter(const char *const par,char *adjust[3])
 // "force_balance_equation" */
 static void force_balance_eq(Grid_T *const grid)
 {
+  struct NC_Center_RootFinder_S dh_par[1] = {0};
+  Root_Finder_T root_finder[1]            = {0};
+  const double D            = GetParameterD_E("BH_NS_separation");
+  const double NS_center[3] = {0,-D/2,0};/* since we keep the NS center always here */
   char *adjust[3];
   const char *const par = GetParameterS_E("force_balance_equation");
+  
+  dh_par->patch = GetPatch("left_centeral_box",grid);
+  dh_par->root_finder = root_finder;
+  
+  /* print initial values before adjustments */
+  printf("dh/d? before force balance adjustment:\n");
+  printf("dh/dx(%g,%g,%g)|NS center = %g\n",
+    NS_center[0],NS_center[1],NS_center[2],
+    dh_dx0_root_finder_eq(dh_par,NS_center));
+  printf("dh/dy(%g,%g,%g)|NS center = %g\n",
+    NS_center[0],NS_center[1],NS_center[2],
+    dh_dx1_root_finder_eq(dh_par,NS_center));
+  printf("dh/dz(%g,%g,%g)|NS center = %g\n",
+    NS_center[0],NS_center[1],NS_center[2],
+    dh_dx2_root_finder_eq(dh_par,NS_center));
   
   parse_adjust_parameter(par,adjust);
   
@@ -359,7 +378,6 @@ static void force_balance_eq(Grid_T *const grid)
             
   void (*force_balance_2)(Grid_T *const grid) = 
             get_func_force_balance_adjustment(adjust[2]);
-  
   
   if (force_balance_0)
     force_balance_0(grid);
@@ -376,9 +394,22 @@ static void force_balance_eq(Grid_T *const grid)
   
   /* update enthalpy,denthalpy,rho0, drho0, u0, _J^i, _E and _S */
   bbn_update_stress_energy_tensor(grid,0);
+  
+  /* print initial values after adjustments */
+  printf("dh/d? after force balance adjustment:\n");
+  printf("dh/dx(%g,%g,%g)|NS center = %g\n",
+    NS_center[0],NS_center[1],NS_center[2],
+    dh_dx0_root_finder_eq(dh_par,NS_center));
+  printf("dh/dy(%g,%g,%g)|NS center = %g\n",
+    NS_center[0],NS_center[1],NS_center[2],
+    dh_dx1_root_finder_eq(dh_par,NS_center));
+  printf("dh/dz(%g,%g,%g)|NS center = %g\n",
+    NS_center[0],NS_center[1],NS_center[2],
+    dh_dx2_root_finder_eq(dh_par,NS_center));
+  
 }
 
-/* adjust the boot velocity at the outer boundary to diminish P_ADM
+/* adjust the boost velocity at the outer boundary to diminish P_ADM
 // it only makes changes in the specified direction x. */
 static void Px_ADM_is0_by_x_boost(Grid_T *const grid)
 {
@@ -451,7 +482,7 @@ static void Px_ADM_is0_by_x_boost(Grid_T *const grid)
   UNUSED(grid);
 } 
 
-/* adjust the boot velocity at the outer boundary to diminish P_ADM
+/* adjust the boost velocity at the outer boundary to diminish P_ADM
 // it only makes changes in the specified direction y. */
 static void Py_ADM_is0_by_y_boost(Grid_T *const grid)
 {
@@ -523,7 +554,7 @@ static void Py_ADM_is0_by_y_boost(Grid_T *const grid)
   UNUSED(grid);
 } 
 
-/* adjust the boot velocity at the outer boundary to diminish P_ADM
+/* adjust the boost velocity at the outer boundary to diminish P_ADM
 // it only makes changes in the specified direction z. */
 static void Pz_ADM_is0_by_z_boost(Grid_T *const grid)
 {
