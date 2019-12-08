@@ -1576,7 +1576,7 @@ static void find_NS_surface_Ylm_method_CS(Grid_T *const grid,struct Grid_Params_
   double X[3],x[3],N[3];
   char stem[1000],*affix;
   unsigned i,j;
-  Flag_T print_flg = NONE;
+  Flag_T debug_flg = NONE;
   
   /* populate root finder */
   Root_Finder_T *root = init_root_finder(1);
@@ -1668,7 +1668,7 @@ static void find_NS_surface_Ylm_method_CS(Grid_T *const grid,struct Grid_Params_
         printf(". Root finder for NS surface at %s:\n.. ",h_patch->name);
         print_root_finder_exit_status(root);
         printf(".. Residual = %g\n",root->residual);
-        print_flg = YES;
+        debug_flg = YES;
       }
       
       /*  new coords of R respect to the center of NS */
@@ -1686,8 +1686,13 @@ static void find_NS_surface_Ylm_method_CS(Grid_T *const grid,struct Grid_Params_
     }/* end of for (j = 0; j < Nphi; ++j) */
   }/* end of for (i = 0; i < Ntheta; ++i) */
   
-  if (print_flg == YES)
+  /* debugging */
+  if(1)
+  if (debug_flg == YES)
+  {
+    print_spectral_expansion_truncation_error(grid);
     bbn_study_initial_data(grid);
+  }
   
   printf("--> Max NS radius:%e\n",Max_R_NS);
   
