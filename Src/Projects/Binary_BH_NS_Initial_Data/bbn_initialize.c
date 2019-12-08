@@ -1324,7 +1324,26 @@ static void interpolate_and_initialize_to_next_grid(Grid_T *const grid_next,Grid
   for (p = 0; p < grid_prev->np; ++p)/* note: grid_prev has more patches! */
   {
     Patch_T *patch = grid_prev->patch[p];
+    Field_T *R1_f  = 0;
+    Field_T *R2_f  = 0;
     
+    /* surface fields also are used for the interpolation in X_of_x function */
+    if (patch->coordsys == CubedSpherical)
+    {
+      R1_f = patch->CoordSysInfo->CubedSphericalCoord->R1_f;
+      R2_f = patch->CoordSysInfo->CubedSphericalCoord->R2_f;
+      if (R1_f)
+        make_coeffs_2d(R1_f,0,1);/* X and Y direction */
+      if (R2_f)
+        make_coeffs_2d(R2_f,0,1);/* X and Y direction */
+    }
+    else if (patch->coordsys == Cartesian)
+    {
+      R1_f  = R2_f = 0;
+    }
+    else
+      abortEr(NO_OPTION);
+      
     DECLARE_FIELD(B0_U0)
     DECLARE_FIELD(B0_U1)
     DECLARE_FIELD(B0_U2)
