@@ -2943,11 +2943,14 @@ static void init_field_TOV_plus_KerrSchild(Grid_T *const grid,const TOV_T *const
   Transformation_T *t = initialize_transformation();
   const double M_NS = tov->ADM_m;/* NS adm mass */
   const double D = GetParameterD_E("BH_NS_separation");
-  const double C_BH = 0.5*D;/* center of BH it's on +y axis */
-  const double C_NS = -C_BH;/* center of NS it's on -y axis*/
+  const double BH_center_x = GetParameterD_E("BH_center_x");
+  const double BH_center_y = GetParameterD_E("BH_center_y");
+  const double BH_center_z = GetParameterD_E("BH_center_z");
+  const double C_NS = -0.5*D;/* center of NS it's on -y axis*/
   const double R_Schwar = tov->r[tov->N-1];/* NS's Schwarzchild radius */
   const double a2_BH = SQR(a_BH);/* spin vector of BH */
   const double y_CM = GetParameterD_E("y_CM");
+  const double x_CM = GetParameterD_E("x_CM");
   const double Omega_BHNS = GetParameterD_E("BH_NS_orbital_angular_velocity");
   const double Omega_NS_x = GetParameterD_E("NS_Omega_U0");
   const double Omega_NS_y = GetParameterD_E("NS_Omega_U1");
@@ -2955,8 +2958,8 @@ static void init_field_TOV_plus_KerrSchild(Grid_T *const grid,const TOV_T *const
   double Bx,By,Bz;/* B = v/c */
   unsigned p;
   
-  Bx = -Omega_BHNS*(C_BH-y_CM);
-  By = 0;
+  Bx = -Omega_BHNS*(BH_center_y-y_CM);
+  By = Omega_BHNS*(BH_center_x-x_CM);
   Bz = 0;
   t->boost->Bx = Bx;
   t->boost->By = By;
@@ -2993,9 +2996,9 @@ static void init_field_TOV_plus_KerrSchild(Grid_T *const grid,const TOV_T *const
     /* beta and alpha needed */
     for (ijk = 0; ijk < nn; ++ijk)
     {
-      double x = patch->node[ijk]->x[0];
-      double y = patch->node[ijk]->x[1]-C_BH;
-      double z = patch->node[ijk]->x[2];
+      double x = patch->node[ijk]->x[0]-BH_center_x;
+      double y = patch->node[ijk]->x[1]-BH_center_y;
+      double z = patch->node[ijk]->x[2]-BH_center_z;
       double x_mu[4] = {0/* time component */,x,y,z};/* x^mu in boost coords */
       double Lm1_x_mu[4];/* Lorentz^-1 x^mu, inverse boost */
       t->boost->inverse = 1;
@@ -3456,7 +3459,7 @@ static void NS_BH_surface_CubedSpherical_grid(Grid_T *const grid,struct Grid_Par
   const double R_BH_r     = GridParams->R_BH_r;
   const double a_BH       = GridParams->a_BH;
   const double y_CM       = GetParameterD_E("y_CM");
-  const double C_BH       = 0.5*GetParameterD_E("BH_NS_separation");/* center of BH it's on +y axis */
+  const double C_BH       = 0.5*GetParameterD_E("BH_NS_separation");/* center of BH patch it's on +y axis */
   const double Omega_BHNS = GetParameterD_E("BH_NS_orbital_angular_velocity");
   const double g2         = 1-SQR(-Omega_BHNS*(C_BH-y_CM));/* inverse square of Lorentz factor  */
   const double BH_center[3] = {GetParameterD_E("BH_center_x"),GetParameterD_E("BH_center_y")-C_BH,GetParameterD_E("BH_center_z")};
@@ -3708,6 +3711,8 @@ static void NS_BH_surface_CubedSpherical_grid(Grid_T *const grid,struct Grid_Par
   /* Boosted_Kerr-Schild radius */
   if (strcmp_i(GridParams->BH_R_type,"Boosted_Kerr-Schild"))
   {
+    abortEr("This surface function is incomplete;\n"
+            "One needs to incorporate changes in BH center and in center of mass of the system.\n");
     /* surface up */
     for (i = 0; i < N[0]; ++i)
     {
