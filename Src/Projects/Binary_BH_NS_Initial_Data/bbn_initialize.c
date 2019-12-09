@@ -3454,6 +3454,7 @@ static void NS_BH_surface_CubedSpherical_grid(Grid_T *const grid,struct Grid_Par
   const double C_BH       = 0.5*GetParameterD_E("BH_NS_separation");/* center of BH it's on +y axis */
   const double Omega_BHNS = GetParameterD_E("BH_NS_orbital_angular_velocity");
   const double g2         = 1-SQR(-Omega_BHNS*(C_BH-y_CM));/* inverse square of Lorentz factor  */
+  const double BH_center[3] = {GetParameterD_E("BH_center_x"),GetParameterD_E("BH_center_y")-C_BH,GetParameterD_E("BH_center_z")};
   double *R;
   char par[1000] = {'\0'};
   unsigned N[3],n,i,j,k,N_total;
@@ -3812,21 +3813,93 @@ static void NS_BH_surface_CubedSpherical_grid(Grid_T *const grid,struct Grid_Par
   }
   else if (strcmp_i(GridParams->BH_R_type,"PerfectSphere"))
   {
+    /* surface up */
     for (i = 0; i < N[0]; ++i)
+    {
+      X[0] = point_value(i,&coll_s[0]);
       for (j = 0; j < N[1]; ++j)
+      {
+        X[1] = point_value(j,&coll_s[1]);
+        r = AH_surface_function_PerfectSphere(X[0],X[1],R_BH_r,BH_center,UP);
         for (k = 0; k < N[2]; ++k)
-          R[L(N,i,j,k)] = R_BH_r;
-    
+          R[L(N,i,j,k)] = r;
+      }
+    }
     sprintf(par,"grid%u_right_BH_surface_function_up",grid->gn);
     add_parameter_array(par,R,N_total);
+    
+    /* surface down */
+    for (i = 0; i < N[0]; ++i)
+    {
+      X[0] = point_value(i,&coll_s[0]);
+      for (j = 0; j < N[1]; ++j)
+      {
+        X[1] = point_value(j,&coll_s[1]);
+        r = AH_surface_function_PerfectSphere(X[0],X[1],R_BH_r,BH_center,DOWN);
+        for (k = 0; k < N[2]; ++k)
+          R[L(N,i,j,k)] = r;
+      }
+    }
     sprintf(par,"grid%u_right_BH_surface_function_down",grid->gn);
     add_parameter_array(par,R,N_total);
+    
+    /* surface back */
+    for (i = 0; i < N[0]; ++i)
+    {
+      X[0] = point_value(i,&coll_s[0]);
+      for (j = 0; j < N[1]; ++j)
+      {
+        X[1] = point_value(j,&coll_s[1]);
+        r = AH_surface_function_PerfectSphere(X[0],X[1],R_BH_r,BH_center,BACK);
+        for (k = 0; k < N[2]; ++k)
+          R[L(N,i,j,k)] = r;
+      }
+    }
     sprintf(par,"grid%u_right_BH_surface_function_back",grid->gn);
     add_parameter_array(par,R,N_total);
+    
+    /* surface front */
+    for (i = 0; i < N[0]; ++i)
+    {
+      X[0] = point_value(i,&coll_s[0]);
+      for (j = 0; j < N[1]; ++j)
+      {
+        X[1] = point_value(j,&coll_s[1]);
+        r = AH_surface_function_PerfectSphere(X[0],X[1],R_BH_r,BH_center,FRONT);
+        for (k = 0; k < N[2]; ++k)
+          R[L(N,i,j,k)] = r;
+      }
+    }
     sprintf(par,"grid%u_right_BH_surface_function_front",grid->gn);
     add_parameter_array(par,R,N_total);
+    
+    /* surface left */
+    for (i = 0; i < N[0]; ++i)
+    {
+      X[0] = point_value(i,&coll_s[0]);
+      for (j = 0; j < N[1]; ++j)
+      {
+        X[1] = point_value(j,&coll_s[1]);
+        r = AH_surface_function_PerfectSphere(X[0],X[1],R_BH_r,BH_center,LEFT);
+        for (k = 0; k < N[2]; ++k)
+          R[L(N,i,j,k)] = r;
+      }
+    }
     sprintf(par,"grid%u_right_BH_surface_function_left",grid->gn);
     add_parameter_array(par,R,N_total);
+    
+    /* surface right */
+    for (i = 0; i < N[0]; ++i)
+    {
+      X[0] = point_value(i,&coll_s[0]);
+      for (j = 0; j < N[1]; ++j)
+      {
+        X[1] = point_value(j,&coll_s[1]);
+        r = AH_surface_function_PerfectSphere(X[0],X[1],R_BH_r,BH_center,RIGHT);
+        for (k = 0; k < N[2]; ++k)
+          R[L(N,i,j,k)] = r;
+      }
+    }
     sprintf(par,"grid%u_right_BH_surface_function_right",grid->gn);
     add_parameter_array(par,R,N_total);
   }
@@ -4031,4 +4104,53 @@ static void extrapolate_fluid_fields_outsideNS(Grid_T *const grid)
   else
     abortEr(NO_OPTION);
   
+}
+
+/* populating surface function of the apparent horizon for
+// perfect sphere with radius R and arbitrary center. 
+// ->return value: surface function value at the give specific (a,b) coords. */
+static double AH_surface_function_PerfectSphere(const double a,const double b,const double R,const double *const c,const Flag_T side)
+{
+  const double x0 = c[0];
+  const double y0 = c[1];
+  const double z0 = c[2];
+  double S = 0;
+  
+  switch (side)
+  {
+    case UP:
+      S = a*x0 + b*y0 + z0 + Sqrt(Power(a*x0 + b*y0 + z0,2) - 
+     (1 + Power(a,2) + Power(b,2))*
+      (-Power(R,2) + Power(x0,2) + Power(y0,2) + Power(z0,2)));
+    break;
+    case DOWN:
+      S = -(b*x0) - a*y0 + z0 - Sqrt(Power(b*x0 + a*y0 - z0,2) - 
+     (1 + Power(a,2) + Power(b,2))*
+      (-Power(R,2) + Power(x0,2) + Power(y0,2) + Power(z0,2)));
+    break;
+    case LEFT:
+      S = -(a*x0) + y0 - b*z0 - Sqrt(Power(a*x0 - y0 + b*z0,2) - 
+     (1 + Power(a,2) + Power(b,2))*
+      (-Power(R,2) + Power(x0,2) + Power(y0,2) + Power(z0,2)));
+    break;
+    case RIGHT:
+      S = b*x0 + y0 + a*z0 + Sqrt(Power(b*x0 + y0 + a*z0,2) - 
+     (1 + Power(a,2) + Power(b,2))*
+      (-Power(R,2) + Power(x0,2) + Power(y0,2) + Power(z0,2)));
+    break;
+    case BACK:
+      S = x0 - b*y0 - a*z0 - Sqrt(Power(-x0 + b*y0 + a*z0,2) - 
+     (1 + Power(a,2) + Power(b,2))*
+      (-Power(R,2) + Power(x0,2) + Power(y0,2) + Power(z0,2)));
+    break;
+    case FRONT:
+      S = x0 + a*y0 + b*z0 + Sqrt(Power(x0 + a*y0 + b*z0,2) - 
+     (1 + Power(a,2) + Power(b,2))*
+      (-Power(R,2) + Power(x0,2) + Power(y0,2) + Power(z0,2)));
+    break;
+    default:
+      abortEr(NO_JOB);
+  }/* end of switch */
+
+  return fabs(S)/sqrt(SQR(a)+SQR(b)+1);
 }
