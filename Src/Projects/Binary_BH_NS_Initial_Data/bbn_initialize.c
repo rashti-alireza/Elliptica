@@ -2681,7 +2681,12 @@ static Grid_T *TOV_KerrSchild_approximation(void)
   add_parameter_double("NS_center",C_NS);
   add_parameter_double("r_excision",bh_R);
   
-    
+  
+  /* BH center */  
+  add_parameter_double("BH_center_x",0);
+  add_parameter_double("BH_center_y",C_BH);
+  add_parameter_double("BH_center_z",0);
+  
   /* -> BH_Omega, the angular frequency of the horizon,
   // is a free vector that determines the spin of BH
   // and it is related to the dimensionless spin by:
