@@ -3820,7 +3820,7 @@ static void NS_BH_surface_CubedSpherical_grid(Grid_T *const grid,struct Grid_Par
       for (j = 0; j < N[1]; ++j)
       {
         X[1] = point_value(j,&coll_s[1]);
-        r = AH_surface_function_PerfectSphere(X[0],X[1],R_BH_r,BH_center,UP);
+        r = AH_surface_function_PerfectSphere_CS(X[0],X[1],R_BH_r,BH_center,UP);
         for (k = 0; k < N[2]; ++k)
           R[L(N,i,j,k)] = r;
       }
@@ -3835,7 +3835,7 @@ static void NS_BH_surface_CubedSpherical_grid(Grid_T *const grid,struct Grid_Par
       for (j = 0; j < N[1]; ++j)
       {
         X[1] = point_value(j,&coll_s[1]);
-        r = AH_surface_function_PerfectSphere(X[0],X[1],R_BH_r,BH_center,DOWN);
+        r = AH_surface_function_PerfectSphere_CS(X[0],X[1],R_BH_r,BH_center,DOWN);
         for (k = 0; k < N[2]; ++k)
           R[L(N,i,j,k)] = r;
       }
@@ -3850,7 +3850,7 @@ static void NS_BH_surface_CubedSpherical_grid(Grid_T *const grid,struct Grid_Par
       for (j = 0; j < N[1]; ++j)
       {
         X[1] = point_value(j,&coll_s[1]);
-        r = AH_surface_function_PerfectSphere(X[0],X[1],R_BH_r,BH_center,BACK);
+        r = AH_surface_function_PerfectSphere_CS(X[0],X[1],R_BH_r,BH_center,BACK);
         for (k = 0; k < N[2]; ++k)
           R[L(N,i,j,k)] = r;
       }
@@ -3865,7 +3865,7 @@ static void NS_BH_surface_CubedSpherical_grid(Grid_T *const grid,struct Grid_Par
       for (j = 0; j < N[1]; ++j)
       {
         X[1] = point_value(j,&coll_s[1]);
-        r = AH_surface_function_PerfectSphere(X[0],X[1],R_BH_r,BH_center,FRONT);
+        r = AH_surface_function_PerfectSphere_CS(X[0],X[1],R_BH_r,BH_center,FRONT);
         for (k = 0; k < N[2]; ++k)
           R[L(N,i,j,k)] = r;
       }
@@ -3880,7 +3880,7 @@ static void NS_BH_surface_CubedSpherical_grid(Grid_T *const grid,struct Grid_Par
       for (j = 0; j < N[1]; ++j)
       {
         X[1] = point_value(j,&coll_s[1]);
-        r = AH_surface_function_PerfectSphere(X[0],X[1],R_BH_r,BH_center,LEFT);
+        r = AH_surface_function_PerfectSphere_CS(X[0],X[1],R_BH_r,BH_center,LEFT);
         for (k = 0; k < N[2]; ++k)
           R[L(N,i,j,k)] = r;
       }
@@ -3895,7 +3895,7 @@ static void NS_BH_surface_CubedSpherical_grid(Grid_T *const grid,struct Grid_Par
       for (j = 0; j < N[1]; ++j)
       {
         X[1] = point_value(j,&coll_s[1]);
-        r = AH_surface_function_PerfectSphere(X[0],X[1],R_BH_r,BH_center,RIGHT);
+        r = AH_surface_function_PerfectSphere_CS(X[0],X[1],R_BH_r,BH_center,RIGHT);
         for (k = 0; k < N[2]; ++k)
           R[L(N,i,j,k)] = r;
       }
@@ -4108,8 +4108,10 @@ static void extrapolate_fluid_fields_outsideNS(Grid_T *const grid)
 
 /* populating surface function of the apparent horizon for
 // perfect sphere with radius R and arbitrary center. 
-// ->return value: surface function value at the give specific (a,b) coords. */
-static double AH_surface_function_PerfectSphere(const double a,const double b,const double R,const double *const c,const Flag_T side)
+// note: it assumes the origin of the coordinate system is at (0,0,0):
+// (x-c[0])^2+(y-c[1])^2+(z-c[2])^2 = R^2.
+// ->return value: surface function value at the give specific (a,b) cubed spherical coords. */
+static double AH_surface_function_PerfectSphere_CS(const double a,const double b,const double R,const double *const c,const Flag_T side)
 {
   const double x0 = c[0];
   const double y0 = c[1];
