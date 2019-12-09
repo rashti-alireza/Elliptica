@@ -308,16 +308,20 @@ void bbn_free_data_gammas(Grid_T *const grid)
   const double r0   = GetParameterD_E("RollOff_distance");
   const double M_BH = GetParameterD_E("BH_mass");
   const double a    = GetParameterD_E("BH_X_U2")*M_BH;
+  const double BH_center_x = GetParameterD_E("BH_center_x");
+  const double BH_center_y = GetParameterD_E("BH_center_y");
+  const double BH_center_z = GetParameterD_E("BH_center_z");
   const double y_CM = GetParameterD_E("y_CM");
-  const double C_BH = 0.5*GetParameterD_E("BH_NS_separation");/* center of BH it's on +y axis */
+  const double x_CM = GetParameterD_E("x_CM");
+  //const double C_BH = 0.5*GetParameterD_E("BH_NS_separation");/* center of BH it's on +y axis */
   const double Omega_BHNS = GetParameterD_E("BH_NS_orbital_angular_velocity");
   const double a2   = SQR(a);
   double H,k0,k1,k2;/* in ds^2 = (delta_ij+2*H*ki*kj)dx^i*dx^j */
   double Bx,By,Bz;/* B = v/c */
   unsigned p;
   
-  Bx = -Omega_BHNS*(C_BH-y_CM);
-  By = 0;
+  Bx = -Omega_BHNS*(BH_center_y-y_CM);
+  By =  Omega_BHNS*(BH_center_x-x_CM);
   Bz = 0;
   t->boost->Bx = Bx;
   t->boost->By = By;
@@ -345,9 +349,9 @@ void bbn_free_data_gammas(Grid_T *const grid)
     
     for (ijk = 0; ijk < nn; ++ijk)
     {
-      double x = patch->node[ijk]->x[0];
-      double y = patch->node[ijk]->x[1]-C_BH;
-      double z = patch->node[ijk]->x[2];
+      double x = patch->node[ijk]->x[0]-BH_center_x;
+      double y = patch->node[ijk]->x[1]-BH_center_y;
+      double z = patch->node[ijk]->x[2]-BH_center_z;
       double x_mu[4] = {0/* time component */,x,y,z};/* x^mu in boost coords */
       double Lm1_x_mu[4];/* Lorentz^-1 x^mu, inverse boost */
       t->boost->inverse = 1;
@@ -650,16 +654,20 @@ static void populate_KSgammas_KSalpha_KSBeta(Patch_T *const patch)
   const double M_BH = GetParameterD_E("BH_mass");
   const double a    = GetParameterD_E("BH_X_U2")*M_BH;
   const double a2   = SQR(a);
+  const double BH_center_x = GetParameterD_E("BH_center_x");
+  const double BH_center_y = GetParameterD_E("BH_center_y");
+  const double BH_center_z = GetParameterD_E("BH_center_z");
   const double y_CM = GetParameterD_E("y_CM");
-  const double C_BH = 0.5*GetParameterD_E("BH_NS_separation");
+  const double x_CM = GetParameterD_E("x_CM");
+  //const double C_BH = 0.5*GetParameterD_E("BH_NS_separation");
   const double Omega_BHNS = GetParameterD_E("BH_NS_orbital_angular_velocity");
   const unsigned nn = patch->nn;
   unsigned ijk;
   double H,k0,k1,k2,kt;/* in ds^2 = (eta_ij+2*H*ki*kj)dx^i*dx^j */
   double Bx,By,Bz;/* B = v/c */
       
-  Bx = -Omega_BHNS*(C_BH-y_CM);
-  By = 0;
+  Bx = -Omega_BHNS*(BH_center_y-y_CM);
+  By =  Omega_BHNS*(BH_center_x-x_CM);
   Bz = 0;
   t->boost->Bx = Bx;
   t->boost->By = By;
@@ -707,9 +715,9 @@ static void populate_KSgammas_KSalpha_KSBeta(Patch_T *const patch)
   
   for (ijk = 0; ijk < nn; ++ijk)
   {
-    double x = patch->node[ijk]->x[0];
-    double y = patch->node[ijk]->x[1]-C_BH;
-    double z = patch->node[ijk]->x[2];
+    double x = patch->node[ijk]->x[0]-BH_center_x;
+    double y = patch->node[ijk]->x[1]-BH_center_y;
+    double z = patch->node[ijk]->x[2]-BH_center_z;
     double x_mu[4] = {0/* time component */,x,y,z};/* x^mu in boost coords */
     double Lm1_x_mu[4];/* Lorentz^-1 x^mu, inverse boost */
     t->boost->inverse = 1;
