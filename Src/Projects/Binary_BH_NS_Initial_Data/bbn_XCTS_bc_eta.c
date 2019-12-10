@@ -36,14 +36,17 @@ eta[ijk] - 1;
   const double M_BH  = GetParameterD_E("BH_mass");
   const double a  = GetParameterD_E("BH_X_U2")*M_BH;
   const double a2 = SQR(a);
-  const double C_BH  = 0.5*GetParameterD_E("BH_NS_separation");
+  const double BH_center_x = GetParameterD_E("BH_center_x");
+  const double BH_center_y = GetParameterD_E("BH_center_y");
+  const double BH_center_z = GetParameterD_E("BH_center_z");
   const double Omega_BHNS = GetParameterD_E("BH_NS_orbital_angular_velocity");
   const double y_CM = GetParameterD_E("y_CM");
+  const double x_CM = GetParameterD_E("x_CM");
   Transformation_T *t = initialize_transformation();
   double Bx,By,Bz;/* B = v/c */
   double H,kt;/* in ds^2 = (delta_ij+2*H*ki*kj)dx^i*dx^j */
-  Bx = -Omega_BHNS*(C_BH-y_CM);
-  By = 0;
+  Bx = -Omega_BHNS*(BH_center_y-y_CM);
+  By =  Omega_BHNS*(BH_center_x-x_CM);
   Bz = 0;
   t->boost->Bx = Bx;
   t->boost->By = By;
@@ -51,9 +54,9 @@ eta[ijk] - 1;
   t->boost->B2 = SQR(Bx)+SQR(By)+SQR(Bz);
   DDM_SCHUR_BC_OPEN
 
-  double x = patch->node[ijk]->x[0];
-  double y = patch->node[ijk]->x[1]-C_BH;
-  double z = patch->node[ijk]->x[2];
+  double x = patch->node[ijk]->x[0]-BH_center_x;
+  double y = patch->node[ijk]->x[1]-BH_center_y;
+  double z = patch->node[ijk]->x[2]-BH_center_z;
   double x_mu[4] = {0/* time component */,x,y,z};/* x^mu in boost coords */
   double Lm1_x_mu[4];/* Lorentz^-1 x^mu, inverse boost */
   t->boost->inverse = 1;
