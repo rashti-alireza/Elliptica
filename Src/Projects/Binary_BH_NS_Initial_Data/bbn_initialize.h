@@ -123,6 +123,8 @@ static void Py_ADM_is0_by_y_boost(Grid_T *const grid);
 static void Pz_ADM_is0_by_z_boost(Grid_T *const grid);
 static void Py_ADM_is0_by_x_CM(Grid_T *const grid);
 static void Px_ADM_is0_by_y_CM(Grid_T *const grid);
+static void Px_ADM_is0_by_BH_center_y(Grid_T *const grid);
+static void Py_ADM_is0_by_BH_center_x(Grid_T *const grid);
 static void force_balance_eq_root_finders(Grid_T *const grid,const int dir, const char *const par);
 static void force_balance_eq(Grid_T *const grid);
 static void force_balance_ddx_x_CM(Grid_T *const grid);

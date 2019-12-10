@@ -238,6 +238,14 @@ fAdjustment_t *get_func_P_ADM_adjustment(const char *const adjust)
   {
     f = Px_ADM_is0_by_y_CM;
   }
+  else if (strcmp_i(adjust,"Px_BH_center"))
+  {
+    f = Px_ADM_is0_by_BH_center_y;
+  }
+  else if (strcmp_i(adjust,"Py_BH_center"))
+  {
+    f = Py_ADM_is0_by_BH_center_x;
+  }
   else if (strcmp_i(adjust,"boost_Vx"))
   {
     f = Px_ADM_is0_by_x_boost;
@@ -407,6 +415,93 @@ static void force_balance_eq(Grid_T *const grid)
     NS_center[0],NS_center[1],NS_center[2],
     dh_dx2_root_finder_eq(dh_par,NS_center));
   
+}
+
+/* adjust Px ADM by changing the center of BH. */
+static void Px_ADM_is0_by_BH_center_y(Grid_T *const grid)
+{
+  const double W1 = GetParameterD_E("Solving_Field_Update_Weight");
+  const double W2 = 1-W1;
+  const double dP = GetParameterD_E("P_ADM_control_tolerance");
+  const double Omega_BHNS = GetParameterD_E("BH_NS_orbital_angular_velocity");
+  const double BH_center_y = GetParameterD_E("BH_center_y");
+  double px0,p[3]={0},BH_center_y_new,dy;
+  
+  /* get P_ADM */
+  p[0] = GetParameterD_E("P_ADM_x");
+  p[1] = GetParameterD_E("P_ADM_y");
+  p[2] = GetParameterD_E("P_ADM_z");
+  px0  = GetParameterD_E("P_ADM_x_prev");
+  
+  printf("ADM momentums before BH center y update:\n");
+  printf("P_ADM = (%e,%e,%e).\n",p[0],p[1],p[2]);
+  
+  /* changing center of mass */
+  dy              = p[0]/Omega_BHNS;
+  BH_center_y_new = W2*BH_center_y+dy*W1;
+  
+  const double dPx_Px = (px0-p[0])/fabs(p[0]);
+  printf("dPx/|Px| = %+e\n",dPx_Px);
+  
+  /* having found new x_CM now update */
+  if (GRT(fabs(dPx_Px),dP))
+  {
+    update_parameter_double_format("BH_center_y",BH_center_y_new);
+    printf("Update Center of BH y-axis: %g -> %g.\n",BH_center_y,BH_center_y_new);
+  }
+  else
+    printf("Update Center of BH y-axis: no update.\n");
+  
+  printf("BH center is at (%g,%g,%g)\n",
+        GetParameterD_E("BH_center_x"),
+        GetParameterD_E("BH_center_y"),
+        GetParameterD_E("BH_center_z"));
+  
+  UNUSED(grid);
+}
+
+/* adjust Py ADM by changing the center of BH. */
+static void Py_ADM_is0_by_BH_center_x(Grid_T *const grid)
+{
+  const double W1 = GetParameterD_E("Solving_Field_Update_Weight");
+  const double W2 = 1-W1;
+  const double dP = GetParameterD_E("P_ADM_control_tolerance");
+  const double Omega_BHNS = GetParameterD_E("BH_NS_orbital_angular_velocity");
+  const double BH_center_x = GetParameterD_E("BH_center_x");
+  double py0,p[3]={0},BH_center_x_new,dx;
+  
+  /* get P_ADM */
+  p[0] = GetParameterD_E("P_ADM_x");
+  p[1] = GetParameterD_E("P_ADM_y");
+  p[2] = GetParameterD_E("P_ADM_z");
+  py0  = GetParameterD_E("P_ADM_y_prev");
+  
+  printf("ADM momentums before BH center x update:\n");
+  printf("P_ADM = (%e,%e,%e).\n",p[0],p[1],p[2]);
+  
+  /* changing center of mass */
+  dx              = -p[1]/Omega_BHNS;
+  BH_center_x_new = W2*BH_center_x+dx*W1;
+  
+  const double dPy_Py = (py0-p[1])/fabs(p[1]);
+  printf("dPy/|Py| = %+e\n",dPy_Py);
+  
+  /* having found new x_CM now update */
+  if (GRT(fabs(dPy_Py),dP))
+  {
+    update_parameter_double_format("BH_center_x",BH_center_x_new);
+    printf("Update Center of BH x-axis: %g -> %g.\n",BH_center_x,BH_center_x_new);
+  }
+  else
+    printf("Update Center of BH x-axis: no update.\n");
+  
+  
+  printf("BH center is at (%g,%g,%g)\n",
+        GetParameterD_E("BH_center_x"),
+        GetParameterD_E("BH_center_y"),
+        GetParameterD_E("BH_center_z"));
+        
+  UNUSED(grid);
 }
 
 /* adjust the boost velocity at the outer boundary to diminish P_ADM
