@@ -54,11 +54,11 @@ static Grid_T *make_next_grid_using_previous_grid(Grid_T *const grid_prev)
    /* find the apparent horizon radius to acquire the desired BH mass */
   find_AH_radius(grid_prev,GridParams);
  
-  /* find y_CM or orbital_angular_velocity using force balance equation */
-  force_balance_eq(grid_prev);
-  
   /* P_ADM control */
   P_ADM_control(grid_prev);
+  
+  /* find y_CM or orbital_angular_velocity using force balance equation */
+  force_balance_eq(grid_prev);
   
   /* extrapolate fluid fields outside NS */
   extrapolate_fluid_fields_outsideNS(grid_prev);
