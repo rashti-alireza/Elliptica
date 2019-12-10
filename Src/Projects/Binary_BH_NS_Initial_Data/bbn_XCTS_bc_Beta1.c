@@ -22,6 +22,7 @@ void *bbn_bc_Beta_U1(void *vp1,void *vp2)
   GET_FIELD_IF_ON_HORIZON(_HS_U1)
 
 
+  const double BH_center_x = GetParameterD_E("BH_center_x");
   const double BH_Omega_U2 = GetParameterD_E("BH_Omega_U2");
   const double v1_boost    = GetParameterD_E("v*_boost_y");
   if (patch->outerB)/* at outer boundary */
@@ -29,7 +30,7 @@ void *bbn_bc_Beta_U1(void *vp1,void *vp2)
   DDM_SCHUR_BC_OPEN
 
   double outerB_F = 
-B0_U1[ijk]-v1_boost;
+B0_U1[ijk] - v1_boost;
 
   F[map[ijk]] = outerB_F;
 
@@ -45,7 +46,7 @@ eta[ijk]/psi[ijk];
   double S_U1 = 
 _HS_U1[ijk]/pow(psi[ijk], 2);
 
-  double x = patch->node[ijk]->x[0];
+  double x = patch->node[ijk]->x[0]-BH_center_x;
   double OmegaXr_U1 = 
 BH_Omega_U2*x;
 

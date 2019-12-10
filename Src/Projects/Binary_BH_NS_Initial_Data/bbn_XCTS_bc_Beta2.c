@@ -21,13 +21,14 @@ void *bbn_bc_Beta_U2(void *vp1,void *vp2)
   GET_FIELD(eta)
   GET_FIELD_IF_ON_HORIZON(_HS_U2)
 
+
   const double v2_boost = GetParameterD_E("v*_boost_z");
   if (patch->outerB)/* at outer boundary */
   {
   DDM_SCHUR_BC_OPEN
 
   double outerB_F = 
-B0_U2[ijk]-v2_boost;
+B0_U2[ijk] - v2_boost;
 
   F[map[ijk]] = outerB_F;
 

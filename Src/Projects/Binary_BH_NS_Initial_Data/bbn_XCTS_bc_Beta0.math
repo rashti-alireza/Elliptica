@@ -67,7 +67,11 @@ Declare =
 
 # OUTER BOUNDARY LIKE INFINITY #
 
-`  const double C_BH = 0.5*GetParameterD_E("BH_NS_separation");`;
+
+#`  const double BH_center_x = GetParameterD_E("BH_center_x");`
+`  const double BH_center_y = GetParameterD_E("BH_center_y");`
+#`  const double BH_center_z = GetParameterD_E("BH_center_z");`
+#`  const double C_BH = 0.5*GetParameterD_E("BH_NS_separation");`;
 #`  const double BH_Omega_U0 = GetParameterD_E("BH_Omega_U0");`;
 #`  const double BH_Omega_U1 = GetParameterD_E("BH_Omega_U1");`;
 `  const double BH_Omega_U2 = GetParameterD_E("BH_Omega_U2");`;
@@ -95,9 +99,9 @@ outerB_F = B0_U0-v0_boost;
 
 alpha = eta/psi;
 S_U0  = _HS_U0/(psi**2);
-#` double x = patch->node[ijk]->x[0];`;
-`  double y = patch->node[ijk]->x[1]-C_BH;`;
-#`  double z = patch->node[ijk]->x[2];`;
+#` double x = patch->node[ijk]->x[0]-BH_center_x;`;
+`  double y = patch->node[ijk]->x[1]-BH_center_y;`;
+#`  double z = patch->node[ijk]->x[2]-BH_center_z;`;
 #OmegaXr_U0 = BH_Omega_U1*z-BH_Omega_U2*y;
 OmegaXr_U0 = -BH_Omega_U2*y;
 
