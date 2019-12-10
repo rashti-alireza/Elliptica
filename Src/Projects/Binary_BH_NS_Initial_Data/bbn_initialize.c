@@ -2669,7 +2669,7 @@ static Grid_T *TOV_KerrSchild_approximation(void)
   
   /* center of rotation (approx. Center of Mass) */
   const double D = GetParameterD_E("BH_NS_separation");
-  const double C_BH = 0.5*D;/* center of BH it's on +y axis */
+  const double C_BH = 0.5*D;/* center of BH patch, it's on +y axis */
   const double C_NS = -C_BH;/* center of NS it's on -y axis*/
   const double ns_mass = tov->ADM_m;/* NS adm mass */
   const double y_CM = (ns_mass*C_NS+bh_mass*C_BH)/(ns_mass+bh_mass);
