@@ -627,7 +627,7 @@ static void Pz_ADM_is0_by_z_boost(Grid_T *const grid)
 
 /* adjust the center of NS at the designated point, in case it moved. 
 // in this method, we tune enthalpy values such that the derivative of 
-// the enthalpy be 0 at (0,NS_C,0). */
+// the enthalpy be 0 at (0,NS_C,0), using Taylor expansion, assuming dh/dy|center = 0. */
 static void adjust_NS_center_tune_enthalpy(Grid_T *const grid,const double dhx0,const double dhz0)
 {
   unsigned p;
