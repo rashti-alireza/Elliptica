@@ -420,6 +420,7 @@ static void force_balance_eq(Grid_T *const grid)
 /* adjust Px ADM by changing the center of BH. */
 static void Px_ADM_is0_by_BH_center_y(Grid_T *const grid)
 {
+  abortEr("NO TESTED!\n");
   const double W1 = GetParameterD_E("Solving_Field_Update_Weight");
   const double W2 = 1-W1;
   const double dP = GetParameterD_E("P_ADM_control_tolerance");
@@ -463,6 +464,7 @@ static void Px_ADM_is0_by_BH_center_y(Grid_T *const grid)
 /* adjust Py ADM by changing the center of BH. */
 static void Py_ADM_is0_by_BH_center_x(Grid_T *const grid)
 {
+  abortEr("NO TESTED!\n");
   const double W1 = GetParameterD_E("Solving_Field_Update_Weight");
   const double W2 = 1-W1;
   const double dP = GetParameterD_E("P_ADM_control_tolerance");
