@@ -101,7 +101,7 @@ Symm[JJpsi(i,j)   = JJpsi(j,i)];
 # with _Aij^2:
 Bpart =  _gammaI(i,j)*JJpsi(-i,-j) - _gammaI(-i,-j)*_Gamma(l,i,j)*Jpsi(-l)\
  -kd*(\
-       _R/8 + 5*(psi**4)*(K**2)/12 + 7*_Aij2*(psi**-8)/8 + 2*pi*_E*(psi**-2)\
+       -_R/8 + 5*(psi**4)*(K**2)/12 + 7*_Aij2*(psi**-8)/8 + 2*pi*_E*(psi**-2)\
      );
 
 # no _Aij^2:
@@ -125,7 +125,7 @@ Bpart =  _gammaI(i,j)*JJpsi(-i,-j) - _gammaI(-i,-j)*_Gamma(l,i,j)*Jpsi(-l)\
 # with _Aij^2:
 Epart =  _gammaI(i,j)*JJpsi(-i,-j) - _gammaI(-i,-j)*_Gamma(l,i,j)*Jpsi(-l)\
  -kd*(\
-       _R/8 + 5*(psi**4)*(K**2)/12 + 7*_Aij2*(psi**-8)/8 + 2*pi*_E*(psi**-2)\
+       -_R/8 + 5*(psi**4)*(K**2)/12 + 7*_Aij2*(psi**-8)/8 + 2*pi*_E*(psi**-2)\
      );
 
 # no _Aij^2:

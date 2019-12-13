@@ -84,8 +84,8 @@ Jpsi_D2(j_Jpsi_D2,ijk,lmn)*_Gamma_U2D1D1[ijk]*_gammaI_U1U1[ijk] - 2.0*
 Jpsi_D2(j_Jpsi_D2,ijk,lmn)*_Gamma_U2D1D2[ijk]*_gammaI_U1U2[ijk] -
 Jpsi_D2(j_Jpsi_D2,ijk,lmn)*_Gamma_U2D2D2[ijk]*_gammaI_U2U2[ijk] -
 kd[ijk==lmn]*((5.0/12.0)*pow(K[ijk], 2)*pow(psi[ijk], 4) + (7.0/8.0)*
-_Aij2[ijk]/pow(psi[ijk], 8) + 2*M_PI*_E[ijk]/pow(psi[ijk], 2) + (1.0/
-8.0)*_R[ijk]);
+_Aij2[ijk]/pow(psi[ijk], 8) + 2*M_PI*_E[ijk]/pow(psi[ijk], 2) - 1.0/
+8.0*_R[ijk]);
 
   B[i][j] = Bpart;
 
@@ -119,8 +119,8 @@ Jpsi_D2(j_Jpsi_D2,ijk,lmn)*_Gamma_U2D1D1[ijk]*_gammaI_U1U1[ijk] - 2.0*
 Jpsi_D2(j_Jpsi_D2,ijk,lmn)*_Gamma_U2D1D2[ijk]*_gammaI_U1U2[ijk] -
 Jpsi_D2(j_Jpsi_D2,ijk,lmn)*_Gamma_U2D2D2[ijk]*_gammaI_U2U2[ijk] -
 kd[ijk==lmn]*((5.0/12.0)*pow(K[ijk], 2)*pow(psi[ijk], 4) + (7.0/8.0)*
-_Aij2[ijk]/pow(psi[ijk], 8) + 2*M_PI*_E[ijk]/pow(psi[ijk], 2) + (1.0/
-8.0)*_R[ijk]);
+_Aij2[ijk]/pow(psi[ijk], 8) + 2*M_PI*_E[ijk]/pow(psi[ijk], 2) - 1.0/
+8.0*_R[ijk]);
 
   E_Trans[j][i] = Epart;
 
