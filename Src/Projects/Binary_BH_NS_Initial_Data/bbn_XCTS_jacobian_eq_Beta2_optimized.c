@@ -13,6 +13,7 @@
 #define U_U0 0.0
 #define U_U1 0.0
 #define U_U2 1.0
+#define SIGN(x) ((x) > 0 ? -(x) : (x))
 
 void *bbn_jacobian_eq_Beta_U2(void *vp1,void *vp2)
 {
@@ -647,7 +648,7 @@ t7_B_U2 + t8_B_U2 + t9_B_U2;
 
 
 
-  B[i][j] = Bpart_U2;
+  B[i][j] = Bpart_U2+SIGN(t9_B_U2);
 
   DDM_SCHUR_JACOBIAN_EQ_Bpart_CLOSE
 
@@ -1174,7 +1175,7 @@ t7_E_U2 + t8_E_U2 + t9_E_U2;
 
 
 
-  E_Trans[j][i] = Epart_U2;
+  E_Trans[j][i] = Epart_U2+SIGN(t9_E_U2);
 
   DDM_SCHUR_JACOBIAN_EQ_Epart_CLOSE
 
