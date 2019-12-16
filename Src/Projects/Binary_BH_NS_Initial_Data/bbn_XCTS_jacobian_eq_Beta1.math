@@ -1,12 +1,4 @@
 # Jacobian equation for Beta_U1
-####################################################################
-# TO OPTIMIZE the function one can trim off all redunted components;
-# Issue the following commond for the output C file:
-# $sed -i -E '/^\s{2}double [^(dLnOf_alpha)]\w+_U[02] =/,/;$/d' \
-# $bbn_XCTS_jacobian_eq_Beta1.c
-# the above command delete all of U0 and U2 components which
-# are redundent for Jacobian of B0_U1.
-####################################################################
 
 # Manifold or grid Dimension
 Dimension = 3;
@@ -199,4 +191,7 @@ Epart(i) = t1_E(i)+t2_E(i)+t3_E(i)+t4_E(i)+t5_E(i)+t6_E(i)+t7_E(i)+t8_E(i)+t9_E(
 
 `  return 0;`;
 `}`;
+
+# TO OPTIMIZE the function one can trim off all redunted components:
+Command["sed -i -E '/^\s{2}double [^(dLnOf_alpha)]\w+_U[02] =/,/;$/d'"];
 
