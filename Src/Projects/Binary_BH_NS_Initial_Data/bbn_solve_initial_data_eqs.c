@@ -48,6 +48,13 @@ void bbn_solve_initial_data_eqs(Grid_T *const grid)
     /* solve equations */
     solve_eqs(SolveEqs);
     
+    /* study the solution */
+    if (strcmp_i(GetParameterS("Elliptic_Convergence_Test"),"yes"))
+    {
+      calculate_equation_residual(SolveEqs);
+      bbn_study_initial_data(grid);
+    }
+    
     /* some prints */
     printf("} Iteration %d For Solving XCTS Equations at a Fixed Resolution ==> Done.\n",iter);
     pr_clock();
