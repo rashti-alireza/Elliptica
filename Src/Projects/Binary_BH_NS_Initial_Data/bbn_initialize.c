@@ -2770,19 +2770,19 @@ static Grid_T *TOV_KerrSchild_approximation(void)
   const double C_NS = -C_BH;/* center of NS it's on -y axis*/
   const double ns_mass = tov->ADM_m;/* NS adm mass */
   const double y_CM = (ns_mass*C_NS+bh_mass*C_BH)/(ns_mass+bh_mass);
-  add_parameter_double("y_CM",y_CM);
-  add_parameter_double("x_CM",0);
-  add_parameter_double("y_CM0",y_CM);
-  add_parameter_double("x_CM0",0);
-  add_parameter_double("NS_mass",ns_mass);
-  add_parameter_double("NS_center",C_NS);
-  add_parameter_double("r_excision",bh_R);
+  update_parameter_double_format("y_CM",y_CM);
+  update_parameter_double_format("x_CM",0);
+  update_parameter_double_format("y_CM0",y_CM);
+  update_parameter_double_format("x_CM0",0);
+  update_parameter_double_format("NS_mass",ns_mass);
+  update_parameter_double_format("NS_center",C_NS);
+  update_parameter_double_format("r_excision",bh_R);
   
   
   /* BH center */  
-  add_parameter_double("BH_center_x",0);
-  add_parameter_double("BH_center_y",C_BH);
-  add_parameter_double("BH_center_z",0);
+  update_parameter_double_format("BH_center_x",0);
+  update_parameter_double_format("BH_center_y",C_BH);
+  update_parameter_double_format("BH_center_z",0);
   
   /* -> BH_Omega, the angular frequency of the horizon,
   // is a free vector that determines the spin of BH
@@ -2790,13 +2790,13 @@ static Grid_T *TOV_KerrSchild_approximation(void)
   // BH_X = 4*BH_mass*BH_Omega .
   // we only use U2 component, since we assume BH only has spin 
   // in +/- of z direction (PRD 86 084033) */
-  AddParameterDoubleF("BH_Omega_U2",bh_chi/(4*bh_mass));
+  update_parameter_double_format("BH_Omega_U2",bh_chi/(4*bh_mass));
 
   /* -> the Constant of the integration of Euler equation */
-  AddParameterDoubleF("Euler_equation_constant",0);
+  update_parameter_double_format("Euler_equation_constant",0);
   
   /* -> centeral rho0 */
-  AddParameterDoubleF("rho_center",1E-3);
+  update_parameter_double_format("rho_center",1E-3);
   
   /* combining these two geometry to create the grid */
   GridParams->Max_R_NS_l = ns_R;
@@ -3444,17 +3444,17 @@ static Grid_T *creat_bbn_grid_CS(struct Grid_Params_S *const GridParams)
   
   /* size a,b,c */
   sprintf(par,"grid%u_left_centeral_box_size_a",gn);
-  add_parameter_double(par,box_size_l);
+  update_parameter_double_format(par,box_size_l);
   
   sprintf(par,"grid%u_left_centeral_box_size_b",gn);
-  add_parameter_double(par,box_size_l);
+  update_parameter_double_format(par,box_size_l);
   
   sprintf(par,"grid%u_left_centeral_box_size_c",gn);
-  add_parameter_double(par,box_size_l);
+  update_parameter_double_format(par,box_size_l);
   
   /* surrounding box length */
   sprintf(par,"grid%u_surrounding_box_length",gn);
-  add_parameter_double(par,S);
+  update_parameter_double_format(par,S);
   
   /* right box. NOTE: this is needed when we fill the excision region */
   nlb[0] = (unsigned)GetParameterI("n_a");
@@ -3493,49 +3493,49 @@ static Grid_T *creat_bbn_grid_CS(struct Grid_Params_S *const GridParams)
   
   /* size a,b,c we take it the same as left box. no biggie! */
   sprintf(par,"grid%u_right_centeral_box_size_a",gn);
-  add_parameter_double(par,box_size_r);
+  update_parameter_double_format(par,box_size_r);
   
   sprintf(par,"grid%u_right_centeral_box_size_b",gn);
-  add_parameter_double(par,box_size_r);
+  update_parameter_double_format(par,box_size_r);
   
   sprintf(par,"grid%u_right_centeral_box_size_c",gn);
-  add_parameter_double(par,box_size_r);
+  update_parameter_double_format(par,box_size_r);
   
   /* R1 and R2 outermost */
   sprintf(par,"grid%u_outermost%u_R2",gn,0);
-  add_parameter_double(par,R_outermost[0]);
+  update_parameter_double_format(par,R_outermost[0]);
     
   for (i = 1; i < N_Outermost_Split; i++)
   {
     /* R1: */
     sprintf(par,"grid%u_outermost%u_R1",gn,i);
-    add_parameter_double(par,R_outermost[i-1]);
+    update_parameter_double_format(par,R_outermost[i-1]);
     
     /* R2: */
     sprintf(par,"grid%u_outermost%u_R2",gn,i);
-    add_parameter_double(par,R_outermost[i]);
+    update_parameter_double_format(par,R_outermost[i]);
     
   }
   
   /* assuming the center of left NS at (0,-S/2,0) */
   sprintf(par,"grid%u_left_NS_center_a",gn);
-  add_parameter_double(par,0.0);
+  update_parameter_double_format(par,0.0);
   
   sprintf(par,"grid%u_left_NS_center_b",gn);
-  add_parameter_double(par,-S/2);
+  update_parameter_double_format(par,-S/2);
   
   sprintf(par,"grid%u_left_NS_center_c",gn);
-  add_parameter_double(par,0.0);
+  update_parameter_double_format(par,0.0);
   
   /* assuming the center of right BH at (0,S/2,0) */
   sprintf(par,"grid%u_right_BH_center_a",gn);
-  add_parameter_double(par,0.0);
+  update_parameter_double_format(par,0.0);
   
   sprintf(par,"grid%u_right_BH_center_b",gn);
-  add_parameter_double(par,S/2);
+  update_parameter_double_format(par,S/2);
   
   sprintf(par,"grid%u_right_BH_center_c",gn);
-  add_parameter_double(par,0.0);
+  update_parameter_double_format(par,0.0);
   
   free(R_outermost);
 
