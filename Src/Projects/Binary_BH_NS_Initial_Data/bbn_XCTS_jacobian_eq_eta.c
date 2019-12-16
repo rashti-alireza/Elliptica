@@ -26,7 +26,6 @@ void *bbn_jacobian_eq_eta(void *vp1,void *vp2)
   JACOBIAN_DERIVATIVE(JJeta_D0D0)
   JACOBIAN_DERIVATIVE(JJeta_D0D2)
   GET_FIELD(psi)
-  GET_FIELD(_R)
   GET_FIELD(K)
   GET_FIELD(_E)
   GET_FIELD(_S)
@@ -79,8 +78,8 @@ _gammaI_U2U2[ijk]*(-JJeta_D2D2(j_JJeta_D2D2,ijk,lmn) +
 Jeta_D0(j_Jeta_D0,ijk,lmn)*_Gamma_U0D2D2[ijk] + Jeta_D1(j_Jeta_D1,ijk,lmn)*
 _Gamma_U1D2D2[ijk] + Jeta_D2(j_Jeta_D2,ijk,lmn)*_Gamma_U2D2D2[ijk]) -
 kd[ijk==lmn]*(0.41666666666666669*pow(K[ijk], 2)*pow(psi[ijk], 4) +
-0.875*_Aij2[ijk]/pow(psi[ijk], 8) - 1.0/8.0*_R[ijk]) - 2*M_PI*
-kd[ijk==lmn]*(_E[ijk] + 2*_S[ijk])/pow(psi[ijk], 2);
+0.875*_Aij2[ijk]/pow(psi[ijk], 8)) - 2*M_PI*kd[ijk==lmn]*(_E[ijk] + 2*
+_S[ijk])/pow(psi[ijk], 2);
 
   B[i][j] = Bpart;
 
@@ -108,8 +107,8 @@ _gammaI_U2U2[ijk]*(-JJeta_D2D2(j_JJeta_D2D2,ijk,lmn) +
 Jeta_D0(j_Jeta_D0,ijk,lmn)*_Gamma_U0D2D2[ijk] + Jeta_D1(j_Jeta_D1,ijk,lmn)*
 _Gamma_U1D2D2[ijk] + Jeta_D2(j_Jeta_D2,ijk,lmn)*_Gamma_U2D2D2[ijk]) -
 kd[ijk==lmn]*(0.41666666666666669*pow(K[ijk], 2)*pow(psi[ijk], 4) +
-0.875*_Aij2[ijk]/pow(psi[ijk], 8) - 1.0/8.0*_R[ijk]) - 2*M_PI*
-kd[ijk==lmn]*(_E[ijk] + 2*_S[ijk])/pow(psi[ijk], 2);
+0.875*_Aij2[ijk]/pow(psi[ijk], 8)) - 2*M_PI*kd[ijk==lmn]*(_E[ijk] + 2*
+_S[ijk])/pow(psi[ijk], 2);
 
   E_Trans[j][i] = Epart;
 

@@ -34,12 +34,6 @@ void *bbn_jacobian_eq_Beta_U0(void *vp1,void *vp2)
   GET_FIELD_UNUSED(deta_D0)
   GET_FIELD_UNUSED(deta_D1)
   GET_FIELD_UNUSED(deta_D2)
-  GET_FIELD_UNUSED(_Ric_D2D2)
-  GET_FIELD_UNUSED(_Ric_D1D2)
-  GET_FIELD_UNUSED(_Ric_D1D1)
-  GET_FIELD_UNUSED(_Ric_D0D2)
-  GET_FIELD_UNUSED(_Ric_D0D1)
-  GET_FIELD_UNUSED(_Ric_D0D0)
   GET_FIELD_UNUSED(_gammaI_U0U2)
   GET_FIELD_UNUSED(_gammaI_U0U0)
   GET_FIELD_UNUSED(_gammaI_U0U1)
@@ -313,12 +307,6 @@ _Gamma_U1D0D2[ijk]*_Gamma_U2D1D2[ijk] + _Gamma_U1D2D2[ijk]*
 _Gamma_U2D0D1[ijk] + _Gamma_U2D0D2[ijk]*_Gamma_U2D2D2[ijk]));
 
 
-
-  double t9_B_U0 = 
-kd[ijk==lmn]*(_Ric_D0D0[ijk]*_gammaI_U0U0[ijk] + _Ric_D0D1[ijk]*
-_gammaI_U0U1[ijk] + _Ric_D0D2[ijk]*_gammaI_U0U2[ijk]);
-
-
   double t10_B_U0 = 
 -dLnOf_alpha_B_U0*(2.0*_gammaI_U0U0[ijk]*(JB0_D0(j_JB0_D0,ijk,lmn) + 
 _Gamma_U0D0D0[ijk]*kd[ijk==lmn]) - 0.66666666666666663*
@@ -352,7 +340,7 @@ _Gamma_U0D0D1[ijk]*kd[ijk==lmn]) + _gammaI_U2U2[ijk]*
 
   double Bpart_U0 = 
 t10_B_U0 + t1_B_U0 + t2_B_U0 + t3_B_U0 + t4_B_U0 + t5_B_U0 + t6_B_U0 + 
-t7_B_U0 + t8_B_U0 + t9_B_U0;
+t7_B_U0 + t8_B_U0;
 
   B[i][j] = Bpart_U0;
 
@@ -551,12 +539,6 @@ _Gamma_U2D0D0[ijk] + _Gamma_U1D0D1[ijk]*_Gamma_U1D1D2[ijk] +
 _Gamma_U1D0D2[ijk]*_Gamma_U2D1D2[ijk] + _Gamma_U1D2D2[ijk]*
 _Gamma_U2D0D1[ijk] + _Gamma_U2D0D2[ijk]*_Gamma_U2D2D2[ijk]));
 
-  double t9_E_U0 = 
-kd[ijk==lmn]*(_Ric_D0D0[ijk]*_gammaI_U0U0[ijk] + _Ric_D0D1[ijk]*
-_gammaI_U0U1[ijk] + _Ric_D0D2[ijk]*_gammaI_U0U2[ijk]);
-
-
-
 
   double t10_E_U0 = 
 -dLnOf_alpha_E_U0*(2.0*_gammaI_U0U0[ijk]*(JB0_D0(j_JB0_D0,ijk,lmn) + 
@@ -589,7 +571,7 @@ _Gamma_U0D0D1[ijk]*kd[ijk==lmn]) + _gammaI_U2U2[ijk]*
 
   double Epart_U0 = 
 t10_E_U0 + t1_E_U0 + t2_E_U0 + t3_E_U0 + t4_E_U0 + t5_E_U0 + t6_E_U0 + 
-t7_E_U0 + t8_E_U0 + t9_E_U0;
+t7_E_U0 + t8_E_U0;
 
 
   E_Trans[j][i] = Epart_U0;

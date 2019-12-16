@@ -46,7 +46,7 @@ Declare =
  (obj = Field,name = psi, rank = 0, C_macro);
 
  # Ricci
- (obj = Field,name = _R, rank = 0, C_macro);
+ #(obj = Field,name = _R, rank = 0, C_macro);
 
  # trKij
  (obj = Field,name = K, rank = 0, C_macro);
@@ -104,9 +104,15 @@ Symm[_Gamma(i,j,k)  = _Gamma(i,k,j)];
 `  DDM_SCHUR_JACOBIAN_EQ_Bpart_OPEN\n`;
 
 # with _Aij and adjustment for _R sign:
+#Bpart = \
+# _gammaI(-i,-j)*(JJeta(i,j) - _Gamma(l,i,j)*Jeta(-l))\
+# - kd*(-_R/8+(5/12)*(psi**4)*(K**2)+(7/8)*(psi**-8)*_Aij2)\
+# -2*pi*kd*(psi**-2)*(_E+2*_S);
+
+# with _Aij no _R:
 Bpart = \
  _gammaI(-i,-j)*(JJeta(i,j) - _Gamma(l,i,j)*Jeta(-l))\
- - kd*(-_R/8+(5/12)*(psi**4)*(K**2)+(7/8)*(psi**-8)*_Aij2)\
+ - kd*((5/12)*(psi**4)*(K**2)+(7/8)*(psi**-8)*_Aij2)\
  -2*pi*kd*(psi**-2)*(_E+2*_S);
 
 # with no _Aij and no adjustment for _R sign:
@@ -127,9 +133,15 @@ Bpart = \
 `  DDM_SCHUR_JACOBIAN_EQ_Epart_OPEN\n`;
 
 # with _Aij and adjustment for _R sign:
+#Epart = \
+# _gammaI(-i,-j)*(JJeta(i,j) - _Gamma(l,i,j)*Jeta(-l))\
+# - kd*(-_R/8+(5/12)*(psi**4)*(K**2)+(7/8)*(psi**-8)*_Aij2)\
+# -2*pi*kd*(psi**-2)*(_E+2*_S);
+
+# with _Aij and no _R:
 Epart = \
  _gammaI(-i,-j)*(JJeta(i,j) - _Gamma(l,i,j)*Jeta(-l))\
- - kd*(-_R/8+(5/12)*(psi**4)*(K**2)+(7/8)*(psi**-8)*_Aij2)\
+ - kd*((5/12)*(psi**4)*(K**2)+(7/8)*(psi**-8)*_Aij2)\
  -2*pi*kd*(psi**-2)*(_E+2*_S);
 
 # with no _Aij and no adjustment for _R sign:
