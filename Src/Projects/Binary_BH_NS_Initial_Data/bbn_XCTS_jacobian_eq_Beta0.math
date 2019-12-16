@@ -1,17 +1,11 @@
-# Jacobian equation for Beta_U0, Beta_U1, Beta_U2 (all components of shift):
-# one needs to fill place holder shown by ? in C file for each component as follow:
-# 1. U_U[012] macros: ? for the i-th component correspond to i-th equation
-#    becomes 1 and the others become 0.
-# 2. _U? : ? for the i-th equation correspond to the i-th comonent
-#    becomes i.
+# Jacobian equation for Beta_U0
 ####################################################################
 # TO OPTIMIZE the function one can trim off all redunted components;
-# Issue the following commond for the output C file (example below):
-# $sed -E '/^\s{2}double [^(dLnOf_alpha)]\w+_U[12] =/,/;$/d' \
-# bbn_XCTS_jacobian_eq_Beta012.c > bbn_XCTS_jacobian_eq_Beta0_optimized.c
+# Issue the following commond for the output C file:
+# $sed -i -E '/^\s{2}double [^(dLnOf_alpha)]\w+_U[12] =/,/;$/d' \
+# $bbn_XCTS_jacobian_eq_Beta0.c
 # the above command delete all of U1 and U2 components which
-# are redundent for Jacobian of B0_U0. In the same vain one can 
-# do for the other components.
+# are redundent for Jacobian of B0_U0. 
 ####################################################################
 
 # Manifold or grid Dimension
@@ -36,11 +30,7 @@ C_arg3 =;# no argument for U
 `#include "maths_equation_solvings_lib.h"`;
 `#include "bbn_XCTS_equations_lib.h"\n\n`;
 ``
-`#define U_U0 ?.0`
-`#define U_U1 ?.0`
-`#define U_U2 ?.0`
-``
-`void *bbn_jacobian_eq_Beta_U?(void *vp1,void *vp2)\n{`;
+`void *bbn_jacobian_eq_Beta_U0(void *vp1,void *vp2)\n{`;
 
 # NOTE: THE FOLLOWING MACRO DECLARES OR DEFINES THE FOLLOWING VARIABLES:
 # patch, S, B, E_Trans, node, Ni, Nj, K0, Nk, i,j,k
@@ -85,9 +75,6 @@ Declare =
  # conformal connections 1st derivative
  (obj = Field,name = _dGamma, rank = UDDD, C_macro4);
 
- # unit vector in direction of the interesting component of B
- (obj = Field,name = U, rank = U, none,C_arg3);
-
 }
 
 # symmetries for Cpi:
@@ -129,29 +116,29 @@ Symm[_dGamma(i,j,k,l)  = _dGamma(i,k,j,l)];
 # with _Aij
 dLnOf_alpha_B(i) = deta(i)/eta -7*dpsi(i)/psi;
 
-t1_B(i) =  _gammaI(-j,-m)*(U(i)*JJB0(j,m) + _dGamma(i,m,l,j)*kd*U(-l));
+t1_B(i) =  _gammaI(-j,-m)*(KD0i(i)*JJB0(j,m) + _dGamma(i,m,l,j)*kd*KD0i(-l));
 
-t2_B(i) =  _gammaI(-j,-m)*( _Gamma(i,m,l)*U(-l)*JB0(j) + _Gamma(i,j,n)*U(-n)*JB0(m));
+t2_B(i) =  _gammaI(-j,-m)*( _Gamma(i,m,l)*KD0i(-l)*JB0(j) + _Gamma(i,j,n)*KD0i(-n)*JB0(m));
 
-t3_B(i) =  _gammaI(-j,-m)*_Gamma(i,j,n)*KD(-n,-np)*_Gamma(np,m,l)*U(-l)*kd;
+t3_B(i) =  _gammaI(-j,-m)*_Gamma(i,j,n)*KD(-n,-np)*_Gamma(np,m,l)*KD0i(-l)*kd;
  
-t4_B(i) = -_gammaI(-j,-m)*(_Gamma(n,m,j)*U(i)*JB0(-n)+_Gamma(n,m,j)*KD(-n,-np)*_Gamma(i,np,l)*U(-l)*kd);
+t4_B(i) = -_gammaI(-j,-m)*(_Gamma(n,m,j)*KD0i(i)*JB0(-n)+_Gamma(n,m,j)*KD(-n,-np)*_Gamma(i,np,l)*KD0i(-l)*kd);
 
-t5_B(i) =  1/3*_gammaI(i,-m)*(U(-j)*JJB0(j,m) + KD(-jp,-j)*_dGamma(jp,j,l,m)*U(-l)*kd);
+t5_B(i) =  1/3*_gammaI(i,-m)*(KD0i(-j)*JJB0(j,m) + KD(-jp,-j)*_dGamma(jp,j,l,m)*KD0i(-l)*kd);
 
-t6_B(i) =  1/3*_gammaI(i,-m)*(_Gamma(j,m,l)*U(-l)*JB0(-j) + KD(-jp,-j)*_Gamma(jp,j,n)*U(-n)*JB0(m));
+t6_B(i) =  1/3*_gammaI(i,-m)*(_Gamma(j,m,l)*KD0i(-l)*JB0(-j) + KD(-jp,-j)*_Gamma(jp,j,n)*KD0i(-n)*JB0(m));
 
-t7_B(i) =  1/3*_gammaI(i,-m)*KD(-j,-jp)*KD(-l,-lp)*_Gamma(j,m,l)*_Gamma(lp,jp,n)*U(-n)*kd;
+t7_B(i) =  1/3*_gammaI(i,-m)*KD(-j,-jp)*KD(-l,-lp)*_Gamma(j,m,l)*_Gamma(lp,jp,n)*KD0i(-n)*kd;
 
-t8_B(i) = -1/3*_gammaI(i,-m)*(_Gamma(n,m,j)*U(-j)*JB0(-n)+KD(-l,-lp)*KD(-j,-jp)*_Gamma(l,m,j)*_Gamma(jp,lp,n)*U(-n)*kd);
+t8_B(i) = -1/3*_gammaI(i,-m)*(_Gamma(n,m,j)*KD0i(-j)*JB0(-n)+KD(-l,-lp)*KD(-j,-jp)*_Gamma(l,m,j)*_Gamma(jp,lp,n)*KD0i(-n)*kd);
 
-t9_B(i) = _gammaI(i,-m)*_Ric(m,l)*U(-l)*kd;
+t9_B(i) = _gammaI(i,-m)*_Ric(m,l)*KD0i(-l)*kd;
 
 # with _Aij
 t10_B(i) = -dLnOf_alpha_B(-j)*( \
-_gammaI(j,-m)*(U(i)*JB0(m)+_Gamma(i,m,l)*U(-l)*kd)+ \
-_gammaI(i,-m)*(U(j)*JB0(m)+_Gamma(j,m,l)*U(-l)*kd)- \
-2/3*_gammaI(i,j)*(U(-m)*JB0(m)+KD(-mp,-m)*_Gamma(mp,m,l)*U(-l)*kd)\
+_gammaI(j,-m)*(KD0i(i)*JB0(m)+_Gamma(i,m,l)*KD0i(-l)*kd)+ \
+_gammaI(i,-m)*(KD0i(j)*JB0(m)+_Gamma(j,m,l)*KD0i(-l)*kd)- \
+2/3*_gammaI(i,j)*(KD0i(-m)*JB0(m)+KD(-mp,-m)*_Gamma(mp,m,l)*KD0i(-l)*kd)\
 );
 
 # with _Aij
@@ -161,7 +148,7 @@ Bpart(i) = t1_B(i)+t2_B(i)+t3_B(i)+t4_B(i)+t5_B(i)+t6_B(i)+t7_B(i)+t8_B(i)+t9_B(
 #Bpart(i) = t1_B(i)+t2_B(i)+t3_B(i)+t4_B(i)+t5_B(i)+t6_B(i)+t7_B(i)+t8_B(i)+t9_B(i);
 
 
-`  B[i][j] = Bpart_U?;\n`;
+`  B[i][j] = Bpart_U0;\n`;
 `  DDM_SCHUR_JACOBIAN_EQ_Bpart_CLOSE\n`;
 ###############################################
 
@@ -174,29 +161,29 @@ Bpart(i) = t1_B(i)+t2_B(i)+t3_B(i)+t4_B(i)+t5_B(i)+t6_B(i)+t7_B(i)+t8_B(i)+t9_B(
 # with _Aij
 dLnOf_alpha_E(i) = deta(i)/eta -7*dpsi(i)/psi;
 
-t1_E(i) =  _gammaI(-j,-m)*(U(i)*JJB0(j,m) + _dGamma(i,m,l,j)*kd*U(-l));
+t1_E(i) =  _gammaI(-j,-m)*(KD0i(i)*JJB0(j,m) + _dGamma(i,m,l,j)*kd*KD0i(-l));
 
-t2_E(i) =  _gammaI(-j,-m)*( _Gamma(i,m,l)*U(-l)*JB0(j)+_Gamma(i,j,n)*U(-n)*JB0(m));
+t2_E(i) =  _gammaI(-j,-m)*( _Gamma(i,m,l)*KD0i(-l)*JB0(j)+_Gamma(i,j,n)*KD0i(-n)*JB0(m));
 
-t3_E(i) =  _gammaI(-j,-m)*_Gamma(i,j,n)*KD(-n,-np)*_Gamma(np,m,l)*U(-l)*kd;
+t3_E(i) =  _gammaI(-j,-m)*_Gamma(i,j,n)*KD(-n,-np)*_Gamma(np,m,l)*KD0i(-l)*kd;
  
-t4_E(i) = -_gammaI(-j,-m)*(_Gamma(n,m,j)*U(i)*JB0(-n)+_Gamma(n,m,j)*KD(-n,-np)*_Gamma(i,np,l)*U(-l)*kd);
+t4_E(i) = -_gammaI(-j,-m)*(_Gamma(n,m,j)*KD0i(i)*JB0(-n)+_Gamma(n,m,j)*KD(-n,-np)*_Gamma(i,np,l)*KD0i(-l)*kd);
 
-t5_E(i) =  1/3*_gammaI(i,-m)*(U(-j)*JJB0(j,m) + KD(-jp,-j)*_dGamma(jp,j,l,m)*U(-l)*kd);
+t5_E(i) =  1/3*_gammaI(i,-m)*(KD0i(-j)*JJB0(j,m) + KD(-jp,-j)*_dGamma(jp,j,l,m)*KD0i(-l)*kd);
 
-t6_E(i) =  1/3*_gammaI(i,-m)*(_Gamma(j,m,l)*U(-l)*JB0(-j) + KD(-jp,-j)*_Gamma(jp,j,n)*U(-n)*JB0(m));
+t6_E(i) =  1/3*_gammaI(i,-m)*(_Gamma(j,m,l)*KD0i(-l)*JB0(-j) + KD(-jp,-j)*_Gamma(jp,j,n)*KD0i(-n)*JB0(m));
 
-t7_E(i) =  1/3*_gammaI(i,-m)*KD(-j,-jp)*KD(-l,-lp)*_Gamma(j,m,l)*_Gamma(lp,jp,n)*U(-n)*kd;
+t7_E(i) =  1/3*_gammaI(i,-m)*KD(-j,-jp)*KD(-l,-lp)*_Gamma(j,m,l)*_Gamma(lp,jp,n)*KD0i(-n)*kd;
 
-t8_E(i) = -1/3*_gammaI(i,-m)*(_Gamma(n,m,j)*U(-j)*JB0(-n)+KD(-l,-lp)*KD(-j,-jp)*_Gamma(l,m,j)*_Gamma(jp,lp,n)*U(-n)*kd);
+t8_E(i) = -1/3*_gammaI(i,-m)*(_Gamma(n,m,j)*KD0i(-j)*JB0(-n)+KD(-l,-lp)*KD(-j,-jp)*_Gamma(l,m,j)*_Gamma(jp,lp,n)*KD0i(-n)*kd);
 
-t9_E(i) = _gammaI(i,-m)*_Ric(m,l)*U(-l)*kd;
+t9_E(i) = _gammaI(i,-m)*_Ric(m,l)*KD0i(-l)*kd;
 
 # with _Aij
 t10_E(i) = -dLnOf_alpha_E(-j)*( \
-_gammaI(j,-m)*(U(i)*JB0(m)+_Gamma(i,m,l)*U(-l)*kd)+ \
-_gammaI(i,-m)*(U(j)*JB0(m)+_Gamma(j,m,l)*U(-l)*kd)- \
-2/3*_gammaI(i,j)*(U(-m)*JB0(m)+KD(-mp,-m)*_Gamma(mp,m,l)*U(-l)*kd)\
+_gammaI(j,-m)*(KD0i(i)*JB0(m)+_Gamma(i,m,l)*KD0i(-l)*kd)+ \
+_gammaI(i,-m)*(KD0i(j)*JB0(m)+_Gamma(j,m,l)*KD0i(-l)*kd)- \
+2/3*_gammaI(i,j)*(KD0i(-m)*JB0(m)+KD(-mp,-m)*_Gamma(mp,m,l)*KD0i(-l)*kd)\
 );
 
 # with _Aij
@@ -206,7 +193,7 @@ Epart(i) = t1_E(i)+t2_E(i)+t3_E(i)+t4_E(i)+t5_E(i)+t6_E(i)+t7_E(i)+t8_E(i)+t9_E(
 #Epart(i) = t1_E(i)+t2_E(i)+t3_E(i)+t4_E(i)+t5_E(i)+t6_E(i)+t7_E(i)+t8_E(i)+t9_E(i);
 
 
-`  E_Trans[j][i] = Epart_U?;\n`;
+`  E_Trans[j][i] = Epart_U0;\n`;
 `  DDM_SCHUR_JACOBIAN_EQ_Epart_CLOSE\n`;
 ###############################################
 
