@@ -3622,7 +3622,7 @@ static void NS_BH_surface_CubedSpherical_grid(Grid_T *const grid,struct Grid_Par
     const unsigned Lmax   = GridParams->NS_R_Ylm->Lmax;
     double theta,phi;
     
-    X[3] = 1;/* since we are on the NS surface */
+    X[2] = 1;/* since we are on the NS surface */
     
     /* filling min */
     patch->min[0] = -1;
