@@ -1,0 +1,25 @@
+##Sources to be compiled
+
+modules_path  = $(TOP)/Src/Main/Cores
+modules_path += $(TOP)/Src/Main/Modules/Coordinates
+modules_path += $(TOP)/Src/Main/Modules/Error_Handlings
+modules_path += $(TOP)/Src/Main/Modules/Text_and_File_Tools
+modules_path += $(TOP)/Src/Main/Modules/Libraries
+modules_path += $(TOP)/Src/Main/Modules/Memory_Managers
+modules_path += $(TOP)/Src/Main/Modules/Prints
+modules_path += $(TOP)/Src/Main/Modules/Utilities
+modules_path += $(TOP)/Src/Main/Modules/Maths/Linear_Algebra
+modules_path += $(TOP)/Src/Main/Modules/Maths/Field_Analysis
+modules_path += $(TOP)/Src/Main/Modules/Maths/Equation_Solvings
+modules_path += $(TOP)/Src/Main/Modules/Maths/Matrix_Solvers
+modules_path += $(TOP)/Src/Main/Modules/Maths/General
+modules_path += $(TOP)/Src/Main/Modules/Maths/Approximation
+modules_path += $(TOP)/Src/Main/Modules/Maths/Analytic
+modules_path += $(TOP)/Src/Main/Modules/Maths/Calculus
+modules_path += $(TOP)/Src/Main/Modules/Physics/StressEnergy_Tensor
+modules_path += $(TOP)/Src/Main/Modules/Physics/EoS
+modules_path += $(TOP)/Src/Main/Modules/Physics/Observables
+modules_path += $(TOP)/Src/Main/Modules/Physics/Transformation
+
+
+
