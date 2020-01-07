@@ -140,12 +140,14 @@ outerB_Epart = 0;
 `  DDM_SCHUR_JACOBIAN_BC_Bpart_OPEN\n`;
 
 _DiHSi_b     = (_dHS(j,i) + _Gamma(j,i,l)*_HS(-l))*KD(-j,-i);
-B_t1         = 0;#3/4*(psi**-4)*_A_UiUj(i,j)*_gamma(-i,-l)*_gamma(-j,-m)*_HS(l)*_HS(m);
-innerB_Bpart = _HS(i)*Jpsi(-i) -kd*(-_DiHSi_b/4+K*(psi**2)/2+B_t1);
 
-#B_t1         = (psi**-5)*_A_UiUj(i,j)*_gamma(-i,-l)*_gamma(-j,-m)*_HS(l)*_HS(m);
-#innerB_Bpart = _HS(i)*Jpsi(-i)/psi - _HS(i)*dpsi(-i)*kd/(psi**2) - kd*(K*psi/3+B_t1);
-#innerB_Bpart = _HS(i)*Jpsi(-i)/psi - _HS(i)*dpsi(-i)*kd/(psi**2) - kd*(K*psi/3);
+# with _Aij
+# B_t1         = 3/4*(psi**-4)*_A_UiUj(i,j)*_gamma(-i,-l)*_gamma(-j,-m)*_HS(l)*_HS(m);
+
+# with no _Aij
+B_t1         = 0;
+
+innerB_Bpart = _HS(i)*Jpsi(-i) -kd*(-_DiHSi_b/4+K*(psi**2)/2+B_t1);
 
 
 `  B[i][j] = innerB_Bpart;\n`;
@@ -159,12 +161,14 @@ innerB_Bpart = _HS(i)*Jpsi(-i) -kd*(-_DiHSi_b/4+K*(psi**2)/2+B_t1);
 `  DDM_SCHUR_JACOBIAN_BC_Epart_OPEN\n`;
 
 _DiHSi_e    = (_dHS(j,i) + _Gamma(j,i,l)*_HS(-l))*KD(-j,-i);
-E_t1         = 0;#3/4*(psi**-4)*_A_UiUj(i,j)*_gamma(-i,-l)*_gamma(-j,-m)*_HS(l)*_HS(m);
-innerB_Epart = _HS(i)*Jpsi(-i) -kd*(-_DiHSi_e/4+K*(psi**2)/2+E_t1);
 
-#E_t1 = (psi**-5)*_A_UiUj(i,j)*_gamma(-i,-l)*_gamma(-j,-m)*_HS(l)*_HS(m);
-#innerB_Epart = _HS(i)*Jpsi(-i)/psi - _HS(i)*dpsi(-i)*kd/(psi**2) - kd*(K*psi/3+E_t1);
-#innerB_Epart = _HS(i)*Jpsi(-i)/psi - _HS(i)*dpsi(-i)*kd/(psi**2) - kd*(K*psi/3);
+# with _Aij
+# E_t1 = 3/4*(psi**-4)*_A_UiUj(i,j)*_gamma(-i,-l)*_gamma(-j,-m)*_HS(l)*_HS(m);
+
+# with no _Aij
+E_t1 = 0;
+
+innerB_Epart = _HS(i)*Jpsi(-i) -kd*(-_DiHSi_e/4+K*(psi**2)/2+E_t1);
 
 `  E_Trans[j][i] = innerB_Epart;\n`;
 `  DDM_SCHUR_JACOBIAN_BC_Epart_CLOSE\n`;
