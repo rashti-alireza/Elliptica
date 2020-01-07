@@ -99,7 +99,7 @@ Symm[JJpsi(i,j)   = JJpsi(j,i)];
 `  DDM_SCHUR_JACOBIAN_EQ_Bpart_OPEN\n`;
 
 # with _Aij^2 and adjustment for _R sign:
-#Bpart =  _gammaI(i,j)*JJpsi(-i,-j) - _gammaI(-i,-j)*_Gamma(l,i,j)*Jpsi(-l)\
+# Bpart =  _gammaI(i,j)*JJpsi(-i,-j) - _gammaI(-i,-j)*_Gamma(l,i,j)*Jpsi(-l)\
 # -kd*(\
 #       -_R/8 + 5*(psi**4)*(K**2)/12 + 7*_Aij2*(psi**-8)/8 + 2*pi*_E*(psi**-2)\
 #     );
@@ -111,7 +111,7 @@ Bpart =  _gammaI(i,j)*JJpsi(-i,-j) - _gammaI(-i,-j)*_Gamma(l,i,j)*Jpsi(-l)\
      );
 
 # no _Aij^2 and no adjsustment for _R sign:
-#Bpart =  _gammaI(i,j)*JJpsi(-i,-j) - _gammaI(-i,-j)*_Gamma(l,i,j)*Jpsi(-l)\
+# Bpart =  _gammaI(i,j)*JJpsi(-i,-j) - _gammaI(-i,-j)*_Gamma(l,i,j)*Jpsi(-l)\
 # -kd*(\
 #       _R/8 + 5*(psi**4)*(K**2)/12 + 2*pi*_E*(psi**-2)\
 #     );
@@ -127,7 +127,7 @@ Bpart =  _gammaI(i,j)*JJpsi(-i,-j) - _gammaI(-i,-j)*_Gamma(l,i,j)*Jpsi(-l)\
 `  DDM_SCHUR_JACOBIAN_EQ_Epart_OPEN\n`;
 
 # with _Aij^2 and adjusted sign for _R:
-#Epart =  _gammaI(i,j)*JJpsi(-i,-j) - _gammaI(-i,-j)*_Gamma(l,i,j)*Jpsi(-l)\
+# Epart =  _gammaI(i,j)*JJpsi(-i,-j) - _gammaI(-i,-j)*_Gamma(l,i,j)*Jpsi(-l)\
 # -kd*(\
 #       -_R/8 + 5*(psi**4)*(K**2)/12 + 7*_Aij2*(psi**-8)/8 + 2*pi*_E*(psi**-2)\
 #     );
@@ -139,7 +139,7 @@ Epart =  _gammaI(i,j)*JJpsi(-i,-j) - _gammaI(-i,-j)*_Gamma(l,i,j)*Jpsi(-l)\
      );
 
 # no _Aij^2 and no adjsustment for _R sign:
-#Epart =  _gammaI(i,j)*JJpsi(-i,-j) - _gammaI(-i,-j)*_Gamma(l,i,j)*Jpsi(-l)\
+# Epart =  _gammaI(i,j)*JJpsi(-i,-j) - _gammaI(-i,-j)*_Gamma(l,i,j)*Jpsi(-l)\
 # -kd*(\
 #       _R/8 + 5*(psi**4)*(K**2)/12 + 2*pi*_E*(psi**-2)\
 #     );
