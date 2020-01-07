@@ -105,7 +105,7 @@ Symm[_dGamma(i,j,k,l)  = _dGamma(i,k,j,l)];
 ###############################################
 `  DDM_SCHUR_JACOBIAN_EQ_Bpart_OPEN\n`;
 
-# with _Aij
+# for _Aij
 dLnOf_alpha_B(i) = deta(i)/eta -7*dpsi(i)/psi;
 
 t1_B(i) =  _gammaI(-j,-m)*(KD1i(i)*JJB0(j,m) + _dGamma(i,m,l,j)*kd*KD1i(-l));
@@ -126,21 +126,21 @@ t8_B(i) = -1/3*_gammaI(i,-m)*(_Gamma(n,m,j)*KD1i(-j)*JB0(-n)+KD(-l,-lp)*KD(-j,-j
 
 #t9_B(i) = _gammaI(i,-m)*_Ric(m,l)*KD1i(-l)*kd;
 
-# with _Aij
+# for _Aij
 t10_B(i) = -dLnOf_alpha_B(-j)*( \
 _gammaI(j,-m)*(KD1i(i)*JB0(m)+_Gamma(i,m,l)*KD1i(-l)*kd)+ \
 _gammaI(i,-m)*(KD1i(j)*JB0(m)+_Gamma(j,m,l)*KD1i(-l)*kd)- \
 2/3*_gammaI(i,j)*(KD1i(-m)*JB0(m)+KD(-mp,-m)*_Gamma(mp,m,l)*KD1i(-l)*kd)\
 );
 
-# with _Aij
-#Bpart(i) = t1_B(i)+t2_B(i)+t3_B(i)+t4_B(i)+t5_B(i)+t6_B(i)+t7_B(i)+t8_B(i)+t9_B(i)+t10_B(i);
+# with _Aij and _Ric
+# Bpart(i) = t1_B(i)+t2_B(i)+t3_B(i)+t4_B(i)+t5_B(i)+t6_B(i)+t7_B(i)+t8_B(i)+t9_B(i)+t10_B(i);
 
-# with _Aij no _Ric
+# with _Aij and no _Ric
 Bpart(i) = t1_B(i)+t2_B(i)+t3_B(i)+t4_B(i)+t5_B(i)+t6_B(i)+t7_B(i)+t8_B(i)+t10_B(i);
 
-# with no _Aij
-#Bpart(i) = t1_B(i)+t2_B(i)+t3_B(i)+t4_B(i)+t5_B(i)+t6_B(i)+t7_B(i)+t8_B(i)+t9_B(i);
+# with _Ric and no _Aij
+# Bpart(i) = t1_B(i)+t2_B(i)+t3_B(i)+t4_B(i)+t5_B(i)+t6_B(i)+t7_B(i)+t8_B(i)+t9_B(i);
 
 
 `  B[i][j] = Bpart_U1;\n`;
@@ -153,7 +153,7 @@ Bpart(i) = t1_B(i)+t2_B(i)+t3_B(i)+t4_B(i)+t5_B(i)+t6_B(i)+t7_B(i)+t8_B(i)+t10_B
 ###############################################
 `  DDM_SCHUR_JACOBIAN_EQ_Epart_OPEN\n`;
 
-# with _Aij
+# for _Aij
 dLnOf_alpha_E(i) = deta(i)/eta -7*dpsi(i)/psi;
 
 t1_E(i) =  _gammaI(-j,-m)*(KD1i(i)*JJB0(j,m) + _dGamma(i,m,l,j)*kd*KD1i(-l));
@@ -174,21 +174,21 @@ t8_E(i) = -1/3*_gammaI(i,-m)*(_Gamma(n,m,j)*KD1i(-j)*JB0(-n)+KD(-l,-lp)*KD(-j,-j
 
 #t9_E(i) = _gammaI(i,-m)*_Ric(m,l)*KD1i(-l)*kd;
 
-# with _Aij
+# for _Aij
 t10_E(i) = -dLnOf_alpha_E(-j)*( \
 _gammaI(j,-m)*(KD1i(i)*JB0(m)+_Gamma(i,m,l)*KD1i(-l)*kd)+ \
 _gammaI(i,-m)*(KD1i(j)*JB0(m)+_Gamma(j,m,l)*KD1i(-l)*kd)- \
 2/3*_gammaI(i,j)*(KD1i(-m)*JB0(m)+KD(-mp,-m)*_Gamma(mp,m,l)*KD1i(-l)*kd)\
 );
 
-# with _Aij
-#Epart(i) = t1_E(i)+t2_E(i)+t3_E(i)+t4_E(i)+t5_E(i)+t6_E(i)+t7_E(i)+t8_E(i)+t9_E(i)+t10_E(i);
+# with _Aij and _Ric
+# Epart(i) = t1_E(i)+t2_E(i)+t3_E(i)+t4_E(i)+t5_E(i)+t6_E(i)+t7_E(i)+t8_E(i)+t9_E(i)+t10_E(i);
 
-# with _Aij no _Ric
+# with Aij and no _Ric
 Epart(i) = t1_E(i)+t2_E(i)+t3_E(i)+t4_E(i)+t5_E(i)+t6_E(i)+t7_E(i)+t8_E(i)+t10_E(i);
 
-# with no _Aij
-#Epart(i) = t1_E(i)+t2_E(i)+t3_E(i)+t4_E(i)+t5_E(i)+t6_E(i)+t7_E(i)+t8_E(i)+t9_E(i);
+# with _Ric and no _Aij
+# Epart(i) = t1_E(i)+t2_E(i)+t3_E(i)+t4_E(i)+t5_E(i)+t6_E(i)+t7_E(i)+t8_E(i)+t9_E(i);
 
 
 `  E_Trans[j][i] = Epart_U1;\n`;
