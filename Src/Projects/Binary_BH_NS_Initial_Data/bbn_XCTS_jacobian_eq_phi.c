@@ -70,7 +70,7 @@ void *bbn_jacobian_eq_phi(void *vp1,void *vp2)
 
 
   const double rhoc = GetParameterD_E("rho_center");
-  const double e    = 0.1;
+  const double e    = GetParameterD_E("Solving_phi_Jacobian_smoothness");
   const double att  = e*rhoc;
   DDM_SCHUR_JACOBIAN_EQ_Bpart_OPEN
 
