@@ -84,12 +84,25 @@ Declare =
  # conformal connections
  (obj = Field,name = _Gamma, rank = UDD, C_macro);
 
+ # rho_center
+ (obj = variable,name = rhoc, rank = 0, none);
+
+ # small factor
+ (obj = variable,name = e, rank = 0, none);
+
+ # small factor2
+ (obj = variable,name = att, rank = 0, none);
+
 }
 
 # symmetries for Cpi:
 Symm[_gammaI(i,j)   = _gammaI(j,i)];
 Symm[_Gamma(i,j,k)  = _Gamma(i,k,j)];
 Symm[ddphi(i,j)     = ddphi(j,i)];
+
+`  const double rhoc = GetParameterD_E("rho_center");`
+`  const double e    = GetParameterD_E("Solving_phi_Jacobian_smoothness");`
+`  const double att  = e*rhoc;`
 
 ##########################################################################
 # NOTE: In domain decomposition method n is relabed from point ijk.
@@ -121,7 +134,7 @@ t4 = (6*dpsi(i)*W(-i)/psi + _Gamma(i,ip,l)*W(-l)*KD(-i,-ip));
 t5 = -enthalpy*u0*dLns1(i)*Beta(-i);
 t6 = -rho0*enthalpy*u0*alpha*K;
 
-F_eq = t1+rho0*(t2+t3+t4)+t5+t6;
+F_eq = t1+rho0*(t2+t3+t4)+t5+t6+att*((1-rho0/rhoc)**4)*t3;
 
 `  F[n] = F_eq;\n`;# Jx = -F in Newton-Raphson scheme
 `  DDM_SCHUR_EQ_CLOSE\n`;

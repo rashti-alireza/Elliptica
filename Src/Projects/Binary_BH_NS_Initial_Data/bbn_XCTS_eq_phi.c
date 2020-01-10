@@ -82,6 +82,9 @@ void *bbn_eq_phi(void *vp1,void *vp2)
   GET_FIELD(_Gamma_U1D1D1)
 
 
+  const double rhoc = GetParameterD_E("rho_center");
+  const double e    = GetParameterD_E("Solving_phi_Jacobian_smoothness");
+  const double att  = e*rhoc;
   DDM_SCHUR_EQ_OPEN
 
   double dLn_of_alpha_U2 = 
@@ -183,7 +186,8 @@ Beta_U2[ijk]*dLns1_U2);
 -K[ijk]*alpha*enthalpy[ijk]*rho0[ijk]*u0[ijk];
 
   double F_eq = 
-rho0[ijk]*(t2 + t3 + t4) + t1 + t5 + t6;
+att*t3*pow(rho0[ijk]/rhoc - 1, 4) + rho0[ijk]*(t2 + t3 + t4) + t1 +
+t5 + t6;
 
   F[n] = F_eq;
 
