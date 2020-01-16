@@ -1,0 +1,197 @@
+# calculating extrinsic curvature and its partial derivatives:
+
+# Manifold or grid Dimension
+Dimension = 3;
+
+# point on manifold shown by:
+Point = ijk;
+
+C_macro  = GET_FIELD(name);
+C_macro2 = add_field_and_get_field(name);
+C_macro3 = ADD_FIELD_NoMem(name);
+
+# main function:
+Ccode["#include "bbn_headers.h""];
+`static void dK_UiUj(Grid_T *const grid);`
+``
+`#define add_field_and_get_field(name) ADD_FIELD(name) GET_FIELD(name)`
+``
+Ccode["void bbn_make_K_UiUj_and_dK_UiUj(Grid_T *const grid)"];
+`{`
+
+`  const unsigned np = grid->np;`
+`  unsigned p;`
+``
+`  OpenMP_Patch_Pragma(omp parallel for)`
+`  for(p = 0; p < np; ++p)`
+`  {`
+`    Patch_T *patch = grid->patch[p];`
+`    unsigned nn = patch->nn;`
+`    unsigned ijk;`
+
+Declare = 
+{
+
+ # K^{ij}
+ (obj = Field,name = K_UiUj, rank = UU, C_macro2);
+
+ # dK^{ij}
+ (obj = Field,name = dK_UiUj, rank = UUD, C_macro3);
+
+ # _A^{ij}
+ (obj = Field,name = _A_UiUj, rank = UU, C_macro);
+
+ # psi
+ (obj = Field,name = psi, rank = 0, C_macro);
+
+ # confromal metric inverse
+ (obj = Field,name = _gammaI, rank = UU, C_macro);
+
+ # trKij
+ (obj = Field,name = K, rank = 0, C_macro);
+
+}
+# symmetries:
+Symm[K_UiUj(i,j)     = K_UiUj(j,i)];
+Symm[dK_UiUj(i,j,l)  = dK_UiUj(j,i,l)];
+Symm[_A_UiUj(i,j) = _A_UiUj(j,i)];
+Symm[_gammaI(i,j) = _gammaI(j,i)];
+
+Ccode["  for(ijk = 0; ijk < nn; ++ijk)"];
+Ccode["  {"];
+psim4  = psi**(-4);
+psim10 = psi**(-10);
+
+Kij(i,j) = psim10*_A_UiUj(i,j)+K*psim4*_gammaI(i,j)/3;
+Symm[Kij(i,j) = Kij(j,i)];
+
+Cpopulate[K_UiUj = Kij];
+Ccode["  }"];
+`  }`
+`  dK_UiUj(grid);`
+`}`
+``
+`/* calculating the partial derivatives of K_UiUj */`
+`static void dK_UiUj(Grid_T *const grid)`
+`{`
+`  const unsigned np = grid->np;`
+`  unsigned p;`
+``
+`  OpenMP_Patch_Pragma(omp parallel for)`
+`  for(p = 0; p < np; ++p)`
+`  {`
+`    Patch_T *patch = grid->patch[p];`
+``
+`    DECLARE_AND_EMPTY_FIELD(dK_UiUj_U0U0D2)`
+`    DECLARE_AND_EMPTY_FIELD(dK_UiUj_U0U0D0)`
+`    DECLARE_AND_EMPTY_FIELD(dK_UiUj_U0U0D1)`
+`    DECLARE_AND_EMPTY_FIELD(dK_UiUj_U1U1D2)`
+`    DECLARE_AND_EMPTY_FIELD(dK_UiUj_U1U1D0)`
+`    DECLARE_AND_EMPTY_FIELD(dK_UiUj_U1U1D1)`
+`    DECLARE_AND_EMPTY_FIELD(dK_UiUj_U0U2D0)`
+`    DECLARE_AND_EMPTY_FIELD(dK_UiUj_U0U2D1)`
+`    DECLARE_AND_EMPTY_FIELD(dK_UiUj_U0U2D2)`
+`    DECLARE_AND_EMPTY_FIELD(dK_UiUj_U1U2D1)`
+`    DECLARE_AND_EMPTY_FIELD(dK_UiUj_U1U2D0)`
+`    DECLARE_AND_EMPTY_FIELD(dK_UiUj_U2U2D0)`
+`    DECLARE_AND_EMPTY_FIELD(dK_UiUj_U1U2D2)`
+`    DECLARE_AND_EMPTY_FIELD(dK_UiUj_U2U2D1)`
+`    DECLARE_AND_EMPTY_FIELD(dK_UiUj_U2U2D2)`
+`    DECLARE_AND_EMPTY_FIELD(dK_UiUj_U0U1D2)`
+`    DECLARE_AND_EMPTY_FIELD(dK_UiUj_U0U1D1)`
+`    DECLARE_AND_EMPTY_FIELD(dK_UiUj_U0U1D0)`
+``
+`    DECLARE_FIELD(K_UiUj_U2U2)`
+`    DECLARE_FIELD(K_UiUj_U1U2)`
+`    DECLARE_FIELD(K_UiUj_U1U1)`
+`    DECLARE_FIELD(K_UiUj_U0U2)`
+`    DECLARE_FIELD(K_UiUj_U0U1)`
+`    DECLARE_FIELD(K_UiUj_U0U0)`
+``
+`    dK_UiUj_U0U0D2->v = Partial_Derivative(K_UiUj_U0U0,"z");`
+`    dK_UiUj_U0U0D0->v = Partial_Derivative(K_UiUj_U0U0,"x");`
+`    dK_UiUj_U0U0D1->v = Partial_Derivative(K_UiUj_U0U0,"y");`
+`    dK_UiUj_U1U1D2->v = Partial_Derivative(K_UiUj_U1U1,"z");`
+`    dK_UiUj_U1U1D0->v = Partial_Derivative(K_UiUj_U1U1,"x");`
+`    dK_UiUj_U1U1D1->v = Partial_Derivative(K_UiUj_U1U1,"y");`
+`    dK_UiUj_U0U2D0->v = Partial_Derivative(K_UiUj_U0U2,"x");`
+`    dK_UiUj_U0U2D1->v = Partial_Derivative(K_UiUj_U0U2,"y");`
+`    dK_UiUj_U0U2D2->v = Partial_Derivative(K_UiUj_U0U2,"z");`
+`    dK_UiUj_U1U2D1->v = Partial_Derivative(K_UiUj_U1U2,"y");`
+`    dK_UiUj_U1U2D0->v = Partial_Derivative(K_UiUj_U1U2,"x");`
+`    dK_UiUj_U2U2D0->v = Partial_Derivative(K_UiUj_U2U2,"x");`
+`    dK_UiUj_U1U2D2->v = Partial_Derivative(K_UiUj_U1U2,"z");`
+`    dK_UiUj_U2U2D1->v = Partial_Derivative(K_UiUj_U2U2,"y");`
+`    dK_UiUj_U2U2D2->v = Partial_Derivative(K_UiUj_U2U2,"z");`
+`    dK_UiUj_U0U1D2->v = Partial_Derivative(K_UiUj_U0U1,"z");`
+`    dK_UiUj_U0U1D1->v = Partial_Derivative(K_UiUj_U0U1,"y");`
+`    dK_UiUj_U0U1D0->v = Partial_Derivative(K_UiUj_U0U1,"x");`
+``
+`  }`
+`}`
+``
+`/* free K_UiUj and dK_UiUj */`
+`void bbn_free_K_UiUj_and_dK_UiUj(Grid_T *const grid)`
+`{`
+`  const unsigned np = grid->np;`
+`  unsigned p;`
+``
+`  OpenMP_Patch_Pragma(omp parallel for)`
+`  for(p = 0; p < np; ++p)`
+`  {`
+`    Patch_T *patch = grid->patch[p];`
+``
+`    DECLARE_FIELD(dK_UiUj_U0U0D2)`
+`    DECLARE_FIELD(dK_UiUj_U0U0D0)`
+`    DECLARE_FIELD(dK_UiUj_U0U0D1)`
+`    DECLARE_FIELD(dK_UiUj_U1U1D2)`
+`    DECLARE_FIELD(dK_UiUj_U1U1D0)`
+`    DECLARE_FIELD(dK_UiUj_U1U1D1)`
+`    DECLARE_FIELD(dK_UiUj_U0U2D0)`
+`    DECLARE_FIELD(dK_UiUj_U0U2D1)`
+`    DECLARE_FIELD(dK_UiUj_U0U2D2)`
+`    DECLARE_FIELD(dK_UiUj_U1U2D1)`
+`    DECLARE_FIELD(dK_UiUj_U1U2D0)`
+`    DECLARE_FIELD(dK_UiUj_U2U2D0)`
+`    DECLARE_FIELD(dK_UiUj_U1U2D2)`
+`    DECLARE_FIELD(dK_UiUj_U2U2D1)`
+`    DECLARE_FIELD(dK_UiUj_U2U2D2)`
+`    DECLARE_FIELD(dK_UiUj_U0U1D2)`
+`    DECLARE_FIELD(dK_UiUj_U0U1D1)`
+`    DECLARE_FIELD(dK_UiUj_U0U1D0)`
+``
+`    DECLARE_FIELD(K_UiUj_U2U2)`
+`    DECLARE_FIELD(K_UiUj_U1U2)`
+`    DECLARE_FIELD(K_UiUj_U1U1)`
+`    DECLARE_FIELD(K_UiUj_U0U2)`
+`    DECLARE_FIELD(K_UiUj_U0U1)`
+`    DECLARE_FIELD(K_UiUj_U0U0)`
+``
+`    REMOVE_FIELD(dK_UiUj_U0U0D2)`
+`    REMOVE_FIELD(dK_UiUj_U0U0D0)`
+`    REMOVE_FIELD(dK_UiUj_U0U0D1)`
+`    REMOVE_FIELD(dK_UiUj_U1U1D2)`
+`    REMOVE_FIELD(dK_UiUj_U1U1D0)`
+`    REMOVE_FIELD(dK_UiUj_U1U1D1)`
+`    REMOVE_FIELD(dK_UiUj_U0U2D0)`
+`    REMOVE_FIELD(dK_UiUj_U0U2D1)`
+`    REMOVE_FIELD(dK_UiUj_U0U2D2)`
+`    REMOVE_FIELD(dK_UiUj_U1U2D1)`
+`    REMOVE_FIELD(dK_UiUj_U1U2D0)`
+`    REMOVE_FIELD(dK_UiUj_U2U2D0)`
+`    REMOVE_FIELD(dK_UiUj_U1U2D2)`
+`    REMOVE_FIELD(dK_UiUj_U2U2D1)`
+`    REMOVE_FIELD(dK_UiUj_U2U2D2)`
+`    REMOVE_FIELD(dK_UiUj_U0U1D2)`
+`    REMOVE_FIELD(dK_UiUj_U0U1D1)`
+`    REMOVE_FIELD(dK_UiUj_U0U1D0)`
+``
+`    REMOVE_FIELD(K_UiUj_U2U2)`
+`    REMOVE_FIELD(K_UiUj_U1U2)`
+`    REMOVE_FIELD(K_UiUj_U1U1)`
+`    REMOVE_FIELD(K_UiUj_U0U2)`
+`    REMOVE_FIELD(K_UiUj_U0U1)`
+`    REMOVE_FIELD(K_UiUj_U0U0)`
+``
+`  }`
+`}`
