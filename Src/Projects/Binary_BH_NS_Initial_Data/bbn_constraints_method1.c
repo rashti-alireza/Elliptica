@@ -7,8 +7,8 @@
 #include "bbn_headers.h"
 
 
-void bbn_calculate_constraints(Grid_T *const grid);
-void bbn_calculate_constraints(Grid_T *const grid)
+void bbn_calculate_constraints_1st(Grid_T *const grid);
+void bbn_calculate_constraints_1st(Grid_T *const grid)
 {
   const unsigned np = grid->np;
   unsigned p;
@@ -17,9 +17,6 @@ void bbn_calculate_constraints(Grid_T *const grid)
   for(p = 0; p < np; ++p)
   {
     Patch_T *patch = grid->patch[p];
-    if (IsItInsideBHPatch(patch))
-      continue;
-    
     unsigned nn = patch->nn;
     unsigned ijk;
   {
@@ -75,10 +72,10 @@ void bbn_calculate_constraints(Grid_T *const grid)
   {
 
   /* declaring: */
-  PREP_FIELD(ham_constraint)
-  PREP_FIELD(mom_constraint_U2)
-  PREP_FIELD(mom_constraint_U0)
-  PREP_FIELD(mom_constraint_U1)
+  PREP_FIELD(ham_constraint_1st)
+  PREP_FIELD(mom_constraint_1st_U1)
+  PREP_FIELD(mom_constraint_1st_U0)
+  PREP_FIELD(mom_constraint_1st_U2)
   GET_FIELD(_A_UiUj_U2U2)
   GET_FIELD(_A_UiUj_U1U2)
   GET_FIELD(_A_UiUj_U1U1)
@@ -189,7 +186,7 @@ _J_U0[ijk]*psim6;
   double J_U1 = 
 _J_U1[ijk]*psim6;
 
-  double En = 
+  double E = 
 _E[ijk]*psim6;
 
   double dLnpsi_D0 = 
@@ -277,7 +274,7 @@ pow(_gamma_D1D2[ijk], 2) + 4.0*Kbar_U1U2*Kbar_U2U2*_gamma_D1D2[ijk]*
 _gamma_D2D2[ijk] + pow(Kbar_U2U2, 2)*pow(_gamma_D2D2[ijk], 2);
 
   double Ham_Constraint = 
--16*M_PI*En + pow(K[ijk], 2) - KijKij + R;
+-16*M_PI*E + pow(K[ijk], 2) - KijKij + R;
 
   double c_U2U2U2 = 
 -2.0*_gammaI_U0U2[ijk]*_gamma_D2D2[ijk]*dLnpsi_D0 - 2.0*
@@ -470,10 +467,10 @@ _gammaI_U1U1[ijk]*dK_D1[ijk] + _gammaI_U1U2[ijk]*dK_D2[ijk]);
 
 
   /* populating: */
-  mom_constraint_U2[ijk] = Mom_constraint_U2;
-  mom_constraint_U0[ijk] = Mom_constraint_U0;
-  mom_constraint_U1[ijk] = Mom_constraint_U1;
-  ham_constraint[ijk] = Ham_Constraint;
+  mom_constraint_1st_U1[ijk] = Mom_constraint_U1;
+  mom_constraint_1st_U0[ijk] = Mom_constraint_U0;
+  mom_constraint_1st_U2[ijk] = Mom_constraint_U2;
+  ham_constraint_1st[ijk] = Ham_Constraint;
   }
   }
   DECLARE_FIELD(_dgammaI_U0U0D1)

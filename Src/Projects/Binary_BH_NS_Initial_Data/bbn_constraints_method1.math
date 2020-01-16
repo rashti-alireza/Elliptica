@@ -1,4 +1,4 @@
-# calculating hamiltonian and momentum constraints:
+# calculating hamiltonian and momentum constraints first method:
 
 # Manifold or grid Dimension
 Dimension = 3;
@@ -12,8 +12,8 @@ C_macro3 = GET_FIELD_UNUSED(name);
 
 # main function:
 Ccode["#include "bbn_headers.h"\n\n"];
-Ccode["void bbn_calculate_constraints(Grid_T *const grid);"];
-Ccode["void bbn_calculate_constraints(Grid_T *const grid)"];
+Ccode["void bbn_calculate_constraints_1st(Grid_T *const grid);"];
+Ccode["void bbn_calculate_constraints_1st(Grid_T *const grid)"];
 `{`
 `  const unsigned np = grid->np;`
 `  unsigned p;`
@@ -111,10 +111,10 @@ Ccode["void bbn_calculate_constraints(Grid_T *const grid)"];
 Declare = 
 {
  # Hamiltonian constraint
- (obj = Field,name = ham_constraint, rank = 0, C_macro2);
+ (obj = Field,name = ham_constraint_1st, rank = 0, C_macro2);
 
  # Momentum constraints
- (obj = Field,name = mom_constraint, rank = U, C_macro2);
+ (obj = Field,name = mom_constraint_1st, rank = U, C_macro2);
 
  # _A^{ij}
  (obj = Field,name = _A_UiUj, rank = UU, C_macro);
@@ -177,7 +177,7 @@ Ccode["  {"];
 psim4     = psi**(-4);
 psim6     = psi**(-6);
 J(i)      = psim6*_J(i);
-En        = psim6*_E;
+E         = psim6*_E;
 dLnpsi(-i)= dpsi(i)/psi;
 
 DDpsi =  _gammaI(i,j)*ddpsi(-i,-j) \
@@ -190,7 +190,7 @@ Symm[Kbar(i,j) = Kbar(j,i)];
 KijKij    = Kbar(i,j)*Kbar(l,m)*_gamma(-i,-l)*_gamma(-j,-m);
 
 #### Hamiltonian:
-Ham_Constraint =  R-KijKij+K**2-16*pi*En;
+Ham_Constraint =  R-KijKij+K**2-16*pi*E;
 
 
 c(i,j,k)  =\
@@ -212,8 +212,8 @@ Dk(i)    =  DbarjKj(i)+CKbar(i)*psim4;
 Mom_constraint(i) = Dk(i)-psim4*_gammaI(i,j)*dK(-j)-8*pi*J(i);
 
 ### populate ###
-Cpopulate[mom_constraint = Mom_constraint];
-`  ham_constraint[ijk] = Ham_Constraint;`
+Cpopulate[mom_constraint_1st = Mom_constraint];
+`  ham_constraint_1st[ijk] = Ham_Constraint;`
 
 #################################################################
 Ccode["  }"];
