@@ -64,7 +64,8 @@ void bbn_update_B1_U012(Patch_T *const patch);
 double bbn_NS_baryonic_mass(Grid_T *const grid,const double Euler_C);
 double force_balance_root_finder_eq(void *params,const double *const x);
 double dLnGamma_in_force_balance_eq(Patch_T *const patch,const double *const NS_centerX,const int dir);
-void bbn_calculate_constraints(Grid_T *const grid);
+void bbn_calculate_constraints_1st(Grid_T *const grid);
+void bbn_calculate_constraints_2nd(Grid_T *const grid);
 void bbn_update_enthalpy_and_denthalpy(Grid_T *const grid);
 void bbn_update_stress_energy_tensor(Grid_T *const grid,const int flag);
 double bbn_KerrSchild_H(const double M_BH,const double rbar,const double a,const double z);
@@ -72,3 +73,8 @@ double bbn_KerrShcild_r(const double x,const double y,const double z,const doubl
 void bbn_extrapolate_metric_fields_insideBH(Grid_T *const grid);
 double bbn_BH_Kommar_mass(Grid_T *const grid);
 double bbn_BH_irreducible_mass(Grid_T *const grid);
+void bbn_free_metric_and_Gamma_and_derivatives(Grid_T *const grid);
+void bbn_make_metric_and_Gamma_and_derivatives(Grid_T *const grid);
+void bbn_make_K_UiUj_and_dK_UiUj(Grid_T *const grid);
+void bbn_free_K_UiUj_and_dK_UiUj(Grid_T *const grid);
+
