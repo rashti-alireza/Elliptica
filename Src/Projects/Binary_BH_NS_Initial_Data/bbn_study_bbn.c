@@ -17,7 +17,9 @@ void bbn_study_initial_data(Grid_T *const grid)
   int solving_iter         = GetParameterI("solving_iteration_number");
   
   /* calculating the constraints */
-  bbn_calculate_constraints(grid);
+  bbn_calculate_constraints_1st(grid);
+  bbn_calculate_constraints_2nd(grid);
+  
   /* prints */
   bbn_print_fields(grid,(unsigned)solving_iter,folder);
   bbn_print_residual_norms(grid,(unsigned)solving_iter,folder);
@@ -54,10 +56,14 @@ void bbn_study_initial_data(Grid_T *const grid)
 void bbn_print_residual_norms(Grid_T *const grid,const unsigned iteration, const char *const folder)
 {
   /* list of the fields to be printed out */
-  const char *f[] = {"ham_constraint",
-                     "mom_constraint_U0",
-                     "mom_constraint_U1",
-                     "mom_constraint_U2",
+  const char *f[] = {"ham_constraint_1st",
+                     "mom_constraint_1st_U0",
+                     "mom_constraint_1st_U1",
+                     "mom_constraint_1st_U2",
+                     "ham_constraint_2nd",
+                     "mom_constraint_2nd_U0",
+                     "mom_constraint_2nd_U1",
+                     "mom_constraint_2nd_U2",
                      "B0_U0_residual",
                      "B0_U1_residual",
                      "B0_U2_residual",
