@@ -91,32 +91,6 @@ void bbn_allocate_fields(Grid_T *const grid)
     ADD_FIELD(mom_constraint_2nd_U1);
     ADD_FIELD(mom_constraint_2nd_U2);
     
-    /* K^ij and dK^ij (extrinsic curvature) */
-    ADD_FIELD(K_UiUj_U2U2)
-    ADD_FIELD(K_UiUj_U1U2)
-    ADD_FIELD(K_UiUj_U1U1)
-    ADD_FIELD(K_UiUj_U0U2)
-    ADD_FIELD(K_UiUj_U0U1)
-    ADD_FIELD(K_UiUj_U0U0)
-    ADD_FIELD(dK_UiUj_U0U0D2)
-    ADD_FIELD(dK_UiUj_U0U0D0)
-    ADD_FIELD(dK_UiUj_U0U0D1)
-    ADD_FIELD(dK_UiUj_U1U1D2)
-    ADD_FIELD(dK_UiUj_U1U1D0)
-    ADD_FIELD(dK_UiUj_U1U1D1)
-    ADD_FIELD(dK_UiUj_U0U2D0)
-    ADD_FIELD(dK_UiUj_U0U2D1)
-    ADD_FIELD(dK_UiUj_U0U2D2)
-    ADD_FIELD(dK_UiUj_U1U2D1)
-    ADD_FIELD(dK_UiUj_U1U2D0)
-    ADD_FIELD(dK_UiUj_U2U2D0)
-    ADD_FIELD(dK_UiUj_U1U2D2)
-    ADD_FIELD(dK_UiUj_U2U2D1)
-    ADD_FIELD(dK_UiUj_U2U2D2)
-    ADD_FIELD(dK_UiUj_U0U1D2)
-    ADD_FIELD(dK_UiUj_U0U1D1)
-    ADD_FIELD(dK_UiUj_U0U1D0)
-
     /* conformal total energy density */
     add_field("_E",0,patch,YES);
     
