@@ -1,0 +1,582 @@
+# metric gamma and its inverse and Christoffer symbol Gamma compatible with gamma
+
+# Manifold or grid Dimension
+Dimension = 3;
+
+# point on manifold shown by:
+Point = ijk;
+
+C_macro  = GET_FIELD(name);
+C_macro1 = PREP_FIELD(name);
+C_macro2 = add_field_and_get_field(name);
+C_macro3 = ADD_FIELD_NoMem(name);
+
+# main function:
+Ccode["#include "bbn_headers.h""];
+``
+`static void build_metric_and_metric_inverse(Patch_T *const patch);`
+`static void build_metric_derivatives(Patch_T *const patch);`
+`static void build_Gamma_derivatives(Patch_T *const patch);`
+``
+`#define add_field_and_get_field(name) ADD_FIELD(name) GET_FIELD(name)`
+``
+Ccode["void bbn_make_metric_and_Gamma_and_derivatives(Grid_T *const grid)\n{"];
+Ccode["  const unsigned np = grid->np;"];
+Ccode["  unsigned p;\n"];
+Ccode["  OpenMP_1d_Pragma(omp parallel for)"];
+Ccode["  for(p = 0; p < np; ++p)"];
+Ccode["  {"];
+Ccode["    Patch_T *patch = grid->patch[p];"];
+Ccode["    build_metric_and_metric_inverse(patch);"];
+Ccode["    build_metric_derivatives(patch);"];
+
+Declare = 
+{
+ # metric inverse
+ (obj = Field,name = gammaI, rank = UU, C_macro);
+
+ # partial derivative of metric
+ (obj = Field,name = dgamma, rank = DDD, C_macro);
+
+ # Christoffer symbol value
+ (obj = Field,name = Gamma, rank = UDD, C_macro2);
+
+ # Christoffer symbol value partial derivatives
+ (obj = Field,name = dGamma, rank = UDDD, C_macro3);
+}
+
+# symmetries:
+Symm[gammaI(i,j)   = gammaI(j,i)];
+Symm[dgamma(i,j,k) = dgamma(j,i,k)];
+Symm[Gamma(i,j,k)  = Gamma(i,k,j)];
+Symm[dGamma(i,j,k,l) = dGamma(i,k,j,l)];
+
+Ccode["    unsigned nn = patch->nn;"];
+Ccode["    unsigned ijk;"];
+Ccode["    for(ijk = 0; ijk < nn; ++ijk)"];
+Ccode["    {"];
+
+# Gamma calculation:
+####################
+
+GAMMA(i,-k,-l) = 1/2*gammaI(i,-m)*(dgamma(m,k,l)+dgamma(m,l,k)-dgamma(k,l,m));
+Symm[GAMMA(i,j,k) = GAMMA(i,k,j)];
+Cpopulate[Gamma = GAMMA];
+
+Ccode["    }/*end of for(ijk = 0; ijk < nn; ++ijk)*/"];
+Ccode["    build_Gamma_derivatives(patch);"];
+Ccode["  }"];
+Ccode["}"];
+``
+`/* partial derivtive of Gamma, used in covariant derivative and R */`
+`static void build_Gamma_derivatives(Patch_T *const patch)`
+`{`
+``
+`  /* partial derivative of _Gamma */`
+`  DECLARE_AND_EMPTY_FIELD(dGamma_U2D2D2D2)`
+`  DECLARE_AND_EMPTY_FIELD(dGamma_U2D2D2D0)`
+`  DECLARE_AND_EMPTY_FIELD(dGamma_U2D2D2D1)`
+`  DECLARE_AND_EMPTY_FIELD(dGamma_U2D0D0D2)`
+`  DECLARE_AND_EMPTY_FIELD(dGamma_U1D1D2D2)`
+`  DECLARE_AND_EMPTY_FIELD(dGamma_U2D0D0D0)`
+`  DECLARE_AND_EMPTY_FIELD(dGamma_U1D1D2D0)`
+`  DECLARE_AND_EMPTY_FIELD(dGamma_U1D1D2D1)`
+`  DECLARE_AND_EMPTY_FIELD(dGamma_U2D1D1D0)`
+`  DECLARE_AND_EMPTY_FIELD(dGamma_U2D0D0D1)`
+`  DECLARE_AND_EMPTY_FIELD(dGamma_U2D0D2D1)`
+`  DECLARE_AND_EMPTY_FIELD(dGamma_U1D0D1D0)`
+`  DECLARE_AND_EMPTY_FIELD(dGamma_U1D0D1D1)`
+`  DECLARE_AND_EMPTY_FIELD(dGamma_U1D0D1D2)`
+`  DECLARE_AND_EMPTY_FIELD(dGamma_U1D2D2D1)`
+`  DECLARE_AND_EMPTY_FIELD(dGamma_U1D0D0D1)`
+`  DECLARE_AND_EMPTY_FIELD(dGamma_U1D0D0D0)`
+`  DECLARE_AND_EMPTY_FIELD(dGamma_U1D0D0D2)`
+`  DECLARE_AND_EMPTY_FIELD(dGamma_U0D1D2D2)`
+`  DECLARE_AND_EMPTY_FIELD(dGamma_U0D1D2D1)`
+`  DECLARE_AND_EMPTY_FIELD(dGamma_U0D1D2D0)`
+`  DECLARE_AND_EMPTY_FIELD(dGamma_U2D0D2D0)`
+`  DECLARE_AND_EMPTY_FIELD(dGamma_U1D0D2D2)`
+`  DECLARE_AND_EMPTY_FIELD(dGamma_U1D0D2D1)`
+`  DECLARE_AND_EMPTY_FIELD(dGamma_U1D0D2D0)`
+`  DECLARE_AND_EMPTY_FIELD(dGamma_U2D1D1D2)`
+`  DECLARE_AND_EMPTY_FIELD(dGamma_U2D0D2D2)`
+`  DECLARE_AND_EMPTY_FIELD(dGamma_U0D0D1D0)`
+`  DECLARE_AND_EMPTY_FIELD(dGamma_U1D2D2D0)`
+`  DECLARE_AND_EMPTY_FIELD(dGamma_U2D1D2D1)`
+`  DECLARE_AND_EMPTY_FIELD(dGamma_U2D0D1D2)`
+`  DECLARE_AND_EMPTY_FIELD(dGamma_U2D0D1D1)`
+`  DECLARE_AND_EMPTY_FIELD(dGamma_U2D0D1D0)`
+`  DECLARE_AND_EMPTY_FIELD(dGamma_U2D1D2D2)`
+`  DECLARE_AND_EMPTY_FIELD(dGamma_U0D1D1D0)`
+`  DECLARE_AND_EMPTY_FIELD(dGamma_U0D1D1D1)`
+`  DECLARE_AND_EMPTY_FIELD(dGamma_U0D1D1D2)`
+`  DECLARE_AND_EMPTY_FIELD(dGamma_U1D2D2D2)`
+`  DECLARE_AND_EMPTY_FIELD(dGamma_U1D1D1D1)`
+`  DECLARE_AND_EMPTY_FIELD(dGamma_U1D1D1D0)`
+`  DECLARE_AND_EMPTY_FIELD(dGamma_U1D1D1D2)`
+`  DECLARE_AND_EMPTY_FIELD(dGamma_U0D0D1D1)`
+`  DECLARE_AND_EMPTY_FIELD(dGamma_U0D0D2D2)`
+`  DECLARE_AND_EMPTY_FIELD(dGamma_U0D0D2D0)`
+`  DECLARE_AND_EMPTY_FIELD(dGamma_U0D0D2D1)`
+`  DECLARE_AND_EMPTY_FIELD(dGamma_U2D1D2D0)`
+`  DECLARE_AND_EMPTY_FIELD(dGamma_U0D0D0D0)`
+`  DECLARE_AND_EMPTY_FIELD(dGamma_U0D0D0D1)`
+`  DECLARE_AND_EMPTY_FIELD(dGamma_U0D0D0D2)`
+`  DECLARE_AND_EMPTY_FIELD(dGamma_U2D1D1D1)`
+`  DECLARE_AND_EMPTY_FIELD(dGamma_U0D2D2D0)`
+`  DECLARE_AND_EMPTY_FIELD(dGamma_U0D2D2D1)`
+`  DECLARE_AND_EMPTY_FIELD(dGamma_U0D2D2D2)`
+`  DECLARE_AND_EMPTY_FIELD(dGamma_U0D0D1D2)`
+`  `
+`  /* _Gamma */`
+`  DECLARE_FIELD(Gamma_U2D1D1)`
+`  DECLARE_FIELD(Gamma_U2D1D2)`
+`  DECLARE_FIELD(Gamma_U0D1D1)`
+`  DECLARE_FIELD(Gamma_U2D0D2)`
+`  DECLARE_FIELD(Gamma_U2D2D2)`
+`  DECLARE_FIELD(Gamma_U0D1D2)`
+`  DECLARE_FIELD(Gamma_U0D0D2)`
+`  DECLARE_FIELD(Gamma_U0D0D1)`
+`  DECLARE_FIELD(Gamma_U0D0D0)`
+`  DECLARE_FIELD(Gamma_U1D2D2)`
+`  DECLARE_FIELD(Gamma_U2D0D1)`
+`  DECLARE_FIELD(Gamma_U0D2D2)`
+`  DECLARE_FIELD(Gamma_U2D0D0)`
+`  DECLARE_FIELD(Gamma_U1D0D2)`
+`  DECLARE_FIELD(Gamma_U1D1D2)`
+`  DECLARE_FIELD(Gamma_U1D0D0)`
+`  DECLARE_FIELD(Gamma_U1D0D1)`
+`  DECLARE_FIELD(Gamma_U1D1D1)`
+``
+`  /* populating partial derivative of _Gamma */`
+`  dGamma_U2D2D2D2->v = Partial_Derivative(Gamma_U2D2D2,"z");`
+`  dGamma_U2D2D2D0->v = Partial_Derivative(Gamma_U2D2D2,"x");`
+`  dGamma_U2D2D2D1->v = Partial_Derivative(Gamma_U2D2D2,"y");`
+`  dGamma_U2D0D0D2->v = Partial_Derivative(Gamma_U2D0D0,"z");`
+`  dGamma_U1D1D2D2->v = Partial_Derivative(Gamma_U1D1D2,"z");`
+`  dGamma_U2D0D0D0->v = Partial_Derivative(Gamma_U2D0D0,"x");`
+`  dGamma_U1D1D2D0->v = Partial_Derivative(Gamma_U1D1D2,"x");`
+`  dGamma_U1D1D2D1->v = Partial_Derivative(Gamma_U1D1D2,"y");`
+`  dGamma_U2D1D1D0->v = Partial_Derivative(Gamma_U2D1D1,"x");`
+`  dGamma_U2D0D0D1->v = Partial_Derivative(Gamma_U2D0D0,"y");`
+`  dGamma_U2D0D2D1->v = Partial_Derivative(Gamma_U2D0D2,"y");`
+`  dGamma_U1D0D1D0->v = Partial_Derivative(Gamma_U1D0D1,"x");`
+`  dGamma_U1D0D1D1->v = Partial_Derivative(Gamma_U1D0D1,"y");`
+`  dGamma_U1D0D1D2->v = Partial_Derivative(Gamma_U1D0D1,"z");`
+`  dGamma_U1D2D2D1->v = Partial_Derivative(Gamma_U1D2D2,"y");`
+`  dGamma_U1D0D0D1->v = Partial_Derivative(Gamma_U1D0D0,"y");`
+`  dGamma_U1D0D0D0->v = Partial_Derivative(Gamma_U1D0D0,"x");`
+`  dGamma_U1D0D0D2->v = Partial_Derivative(Gamma_U1D0D0,"z");`
+`  dGamma_U0D1D2D2->v = Partial_Derivative(Gamma_U0D1D2,"z");`
+`  dGamma_U0D1D2D1->v = Partial_Derivative(Gamma_U0D1D2,"y");`
+`  dGamma_U0D1D2D0->v = Partial_Derivative(Gamma_U0D1D2,"x");`
+`  dGamma_U2D0D2D0->v = Partial_Derivative(Gamma_U2D0D2,"x");`
+`  dGamma_U1D0D2D2->v = Partial_Derivative(Gamma_U1D0D2,"z");`
+`  dGamma_U1D0D2D1->v = Partial_Derivative(Gamma_U1D0D2,"y");`
+`  dGamma_U1D0D2D0->v = Partial_Derivative(Gamma_U1D0D2,"x");`
+`  dGamma_U2D1D1D2->v = Partial_Derivative(Gamma_U2D1D1,"z");`
+`  dGamma_U2D0D2D2->v = Partial_Derivative(Gamma_U2D0D2,"z");`
+`  dGamma_U0D0D1D0->v = Partial_Derivative(Gamma_U0D0D1,"x");`
+`  dGamma_U1D2D2D0->v = Partial_Derivative(Gamma_U1D2D2,"x");`
+`  dGamma_U2D1D2D1->v = Partial_Derivative(Gamma_U2D1D2,"y");`
+`  dGamma_U2D0D1D2->v = Partial_Derivative(Gamma_U2D0D1,"z");`
+`  dGamma_U2D0D1D1->v = Partial_Derivative(Gamma_U2D0D1,"y");`
+`  dGamma_U2D0D1D0->v = Partial_Derivative(Gamma_U2D0D1,"x");`
+`  dGamma_U2D1D2D2->v = Partial_Derivative(Gamma_U2D1D2,"z");`
+`  dGamma_U0D1D1D0->v = Partial_Derivative(Gamma_U0D1D1,"x");`
+`  dGamma_U0D1D1D1->v = Partial_Derivative(Gamma_U0D1D1,"y");`
+`  dGamma_U0D1D1D2->v = Partial_Derivative(Gamma_U0D1D1,"z");`
+`  dGamma_U1D2D2D2->v = Partial_Derivative(Gamma_U1D2D2,"z");`
+`  dGamma_U1D1D1D1->v = Partial_Derivative(Gamma_U1D1D1,"y");`
+`  dGamma_U1D1D1D0->v = Partial_Derivative(Gamma_U1D1D1,"x");`
+`  dGamma_U1D1D1D2->v = Partial_Derivative(Gamma_U1D1D1,"z");`
+`  dGamma_U0D0D1D1->v = Partial_Derivative(Gamma_U0D0D1,"y");`
+`  dGamma_U0D0D2D2->v = Partial_Derivative(Gamma_U0D0D2,"z");`
+`  dGamma_U0D0D2D0->v = Partial_Derivative(Gamma_U0D0D2,"x");`
+`  dGamma_U0D0D2D1->v = Partial_Derivative(Gamma_U0D0D2,"y");`
+`  dGamma_U2D1D2D0->v = Partial_Derivative(Gamma_U2D1D2,"x");`
+`  dGamma_U0D0D0D0->v = Partial_Derivative(Gamma_U0D0D0,"x");`
+`  dGamma_U0D0D0D1->v = Partial_Derivative(Gamma_U0D0D0,"y");`
+`  dGamma_U0D0D0D2->v = Partial_Derivative(Gamma_U0D0D0,"z");`
+`  dGamma_U2D1D1D1->v = Partial_Derivative(Gamma_U2D1D1,"y");`
+`  dGamma_U0D2D2D0->v = Partial_Derivative(Gamma_U0D2D2,"x");`
+`  dGamma_U0D2D2D1->v = Partial_Derivative(Gamma_U0D2D2,"y");`
+`  dGamma_U0D2D2D2->v = Partial_Derivative(Gamma_U0D2D2,"z");`
+`  dGamma_U0D0D1D2->v = Partial_Derivative(Gamma_U0D0D1,"z");`
+`}`
+``
+`/* to make christoffer symbol we need derivative of the metric, `
+`// this function does that. */`
+`static void build_metric_and_metric_inverse(Patch_T *const patch)`
+`{`
+`  const unsigned nn = patch->nn;`
+`  unsigned ijk;`
+``
+`  GET_FIELD(_gamma_D2D2)`
+`  GET_FIELD(_gamma_D0D2)`
+`  GET_FIELD(_gamma_D0D0)`
+`  GET_FIELD(_gamma_D0D1)`
+`  GET_FIELD(_gamma_D1D2)`
+`  GET_FIELD(_gamma_D1D1)`
+`  GET_FIELD(_gammaI_U0U2)`
+`  GET_FIELD(_gammaI_U0U0)`
+`  GET_FIELD(_gammaI_U0U1)`
+`  GET_FIELD(_gammaI_U1U2)`
+`  GET_FIELD(_gammaI_U1U1)`
+`  GET_FIELD(_gammaI_U2U2)`
+``
+`  ADD_FIELD(gamma_D2D2)`
+`  ADD_FIELD(gamma_D0D2)`
+`  ADD_FIELD(gamma_D0D0)`
+`  ADD_FIELD(gamma_D0D1)`
+`  ADD_FIELD(gamma_D1D2)`
+`  ADD_FIELD(gamma_D1D1)`
+`  ADD_FIELD(gammaI_U0U2)`
+`  ADD_FIELD(gammaI_U0U0)`
+`  ADD_FIELD(gammaI_U0U1)`
+`  ADD_FIELD(gammaI_U1U2)`
+`  ADD_FIELD(gammaI_U1U1)`
+`  ADD_FIELD(gammaI_U2U2)`
+``
+`  PREP_FIELD(gamma_D2D2)`
+`  PREP_FIELD(gamma_D0D2)`
+`  PREP_FIELD(gamma_D0D0)`
+`  PREP_FIELD(gamma_D0D1)`
+`  PREP_FIELD(gamma_D1D2)`
+`  PREP_FIELD(gamma_D1D1)`
+``
+`  PREP_FIELD(gammaI_U0U2)`
+`  PREP_FIELD(gammaI_U0U0)`
+`  PREP_FIELD(gammaI_U0U1)`
+`  PREP_FIELD(gammaI_U1U2)`
+`  PREP_FIELD(gammaI_U1U1)`
+`  PREP_FIELD(gammaI_U2U2)`
+`  `
+`  GET_FIELD(psi)`
+`  for (ijk = 0; ijk < nn; ++ijk)`
+`  {`
+`    double psi4  = pow(psi[ijk],4);`
+`    double psim4 = pow(psi[ijk],-4);`
+``
+`    gamma_D0D0[ijk] = psi4*_gamma_D0D0[ijk];`
+`    gamma_D0D1[ijk] = psi4*_gamma_D0D1[ijk];`
+`    gamma_D0D2[ijk] = psi4*_gamma_D0D2[ijk];`
+`    gamma_D1D1[ijk] = psi4*_gamma_D1D1[ijk];`
+`    gamma_D1D2[ijk] = psi4*_gamma_D1D2[ijk];`
+`    gamma_D2D2[ijk] = psi4*_gamma_D2D2[ijk];`
+`    `
+`    gammaI_U0U0[ijk] = psim4*_gammaI_U0U0[ijk];`
+`    gammaI_U0U1[ijk] = psim4*_gammaI_U0U1[ijk];`
+`    gammaI_U0U2[ijk] = psim4*_gammaI_U0U2[ijk];`
+`    gammaI_U1U1[ijk] = psim4*_gammaI_U1U1[ijk];`
+`    gammaI_U1U2[ijk] = psim4*_gammaI_U1U2[ijk];`
+`    gammaI_U2U2[ijk] = psim4*_gammaI_U2U2[ijk];`
+``
+`  }`
+`  `
+`}`
+``
+`/* to make christoffer symbol we need derivative of the metric, `
+`// this function does that. */`
+`static void build_metric_derivatives(Patch_T *const patch)`
+`{`
+`  /* declaring metric */`
+`  DECLARE_FIELD(gamma_D2D2)`
+`  DECLARE_FIELD(gamma_D0D2)`
+`  DECLARE_FIELD(gamma_D0D0)`
+`  DECLARE_FIELD(gamma_D0D1)`
+`  DECLARE_FIELD(gamma_D1D2)`
+`  DECLARE_FIELD(gamma_D1D1)`
+``
+`  /* add fields for derivative of the metric */`
+`  ADD_FIELD_NoMem(dgamma_D0D0D1)`
+`  ADD_FIELD_NoMem(dgamma_D0D0D0)`
+`  ADD_FIELD_NoMem(dgamma_D2D2D2)`
+`  ADD_FIELD_NoMem(dgamma_D0D0D2)`
+`  ADD_FIELD_NoMem(dgamma_D0D2D1)`
+`  ADD_FIELD_NoMem(dgamma_D1D1D0)`
+`  ADD_FIELD_NoMem(dgamma_D1D1D2)`
+`  ADD_FIELD_NoMem(dgamma_D2D2D0)`
+`  ADD_FIELD_NoMem(dgamma_D2D2D1)`
+`  ADD_FIELD_NoMem(dgamma_D0D1D0)`
+`  ADD_FIELD_NoMem(dgamma_D0D1D1)`
+`  ADD_FIELD_NoMem(dgamma_D0D1D2)`
+`  ADD_FIELD_NoMem(dgamma_D0D2D0)`
+`  ADD_FIELD_NoMem(dgamma_D1D1D1)`
+`  ADD_FIELD_NoMem(dgamma_D1D2D1)`
+`  ADD_FIELD_NoMem(dgamma_D1D2D2)`
+`  ADD_FIELD_NoMem(dgamma_D1D2D0)`
+`  ADD_FIELD_NoMem(dgamma_D0D2D2)`
+``
+`  DECLARE_FIELD(dgamma_D0D0D1)`
+`  DECLARE_FIELD(dgamma_D0D0D0)`
+`  DECLARE_FIELD(dgamma_D2D2D2)`
+`  DECLARE_FIELD(dgamma_D0D0D2)`
+`  DECLARE_FIELD(dgamma_D0D2D1)`
+`  DECLARE_FIELD(dgamma_D1D1D0)`
+`  DECLARE_FIELD(dgamma_D1D1D2)`
+`  DECLARE_FIELD(dgamma_D2D2D0)`
+`  DECLARE_FIELD(dgamma_D2D2D1)`
+`  DECLARE_FIELD(dgamma_D0D1D0)`
+`  DECLARE_FIELD(dgamma_D0D1D1)`
+`  DECLARE_FIELD(dgamma_D0D1D2)`
+`  DECLARE_FIELD(dgamma_D0D2D0)`
+`  DECLARE_FIELD(dgamma_D1D1D1)`
+`  DECLARE_FIELD(dgamma_D1D2D1)`
+`  DECLARE_FIELD(dgamma_D1D2D2)`
+`  DECLARE_FIELD(dgamma_D1D2D0)`
+`  DECLARE_FIELD(dgamma_D0D2D2)`
+``
+`  /* filling the values */`
+`  dgamma_D0D0D0->v = Partial_Derivative(gamma_D0D0,"x");`
+`  dgamma_D0D0D1->v = Partial_Derivative(gamma_D0D0,"y");`
+`  dgamma_D0D0D2->v = Partial_Derivative(gamma_D0D0,"z");`
+`  dgamma_D1D2D2->v = Partial_Derivative(gamma_D1D2,"z");`
+`  dgamma_D1D1D0->v = Partial_Derivative(gamma_D1D1,"x");`
+`  dgamma_D0D1D1->v = Partial_Derivative(gamma_D0D1,"y");`
+`  dgamma_D0D1D0->v = Partial_Derivative(gamma_D0D1,"x");`
+`  dgamma_D1D1D2->v = Partial_Derivative(gamma_D1D1,"z");`
+`  dgamma_D0D1D2->v = Partial_Derivative(gamma_D0D1,"z");`
+`  dgamma_D0D2D2->v = Partial_Derivative(gamma_D0D2,"z");`
+`  dgamma_D1D2D1->v = Partial_Derivative(gamma_D1D2,"y");`
+`  dgamma_D0D2D0->v = Partial_Derivative(gamma_D0D2,"x");`
+`  dgamma_D0D2D1->v = Partial_Derivative(gamma_D0D2,"y");`
+`  dgamma_D2D2D2->v = Partial_Derivative(gamma_D2D2,"z");`
+`  dgamma_D2D2D0->v = Partial_Derivative(gamma_D2D2,"x");`
+`  dgamma_D1D2D0->v = Partial_Derivative(gamma_D1D2,"x");`
+`  dgamma_D1D1D1->v = Partial_Derivative(gamma_D1D1,"y");`
+`  dgamma_D2D2D1->v = Partial_Derivative(gamma_D2D2,"y");`
+``
+`}`
+``
+`/* freeing metric derivatives */`
+`void bbn_free_metric_and_Gamma_and_derivatives(Grid_T *const grid)`
+`{`
+Ccode["  const unsigned np = grid->np;"];
+Ccode["  unsigned p;\n"];
+Ccode["  OpenMP_1d_Pragma(omp parallel for)"];
+Ccode["  for(p = 0; p < np; ++p)"];
+Ccode["  {"];
+Ccode["  Patch_T *patch = grid->patch[p];"];
+
+`  /* declare */`
+`  DECLARE_FIELD(gamma_D2D2)`
+`  DECLARE_FIELD(gamma_D0D2)`
+`  DECLARE_FIELD(gamma_D0D0)`
+`  DECLARE_FIELD(gamma_D0D1)`
+`  DECLARE_FIELD(gamma_D1D2)`
+`  DECLARE_FIELD(gamma_D1D1)`
+``
+`  DECLARE_FIELD(gammaI_U0U2)`
+`  DECLARE_FIELD(gammaI_U0U0)`
+`  DECLARE_FIELD(gammaI_U0U1)`
+`  DECLARE_FIELD(gammaI_U1U2)`
+`  DECLARE_FIELD(gammaI_U1U1)`
+`  DECLARE_FIELD(gammaI_U2U2)`
+``
+`  REMOVE_FIELD(gamma_D2D2)`
+`  REMOVE_FIELD(gamma_D0D2)`
+`  REMOVE_FIELD(gamma_D0D0)`
+`  REMOVE_FIELD(gamma_D0D1)`
+`  REMOVE_FIELD(gamma_D1D2)`
+`  REMOVE_FIELD(gamma_D1D1)`
+``
+`  REMOVE_FIELD(gammaI_U0U2)`
+`  REMOVE_FIELD(gammaI_U0U0)`
+`  REMOVE_FIELD(gammaI_U0U1)`
+`  REMOVE_FIELD(gammaI_U1U2)`
+`  REMOVE_FIELD(gammaI_U1U1)`
+`  REMOVE_FIELD(gammaI_U2U2)`
+``
+
+`  /* declare _dgamma */`
+`  DECLARE_FIELD(dgamma_D0D0D1)`
+`  DECLARE_FIELD(dgamma_D0D0D0)`
+`  DECLARE_FIELD(dgamma_D2D2D2)`
+`  DECLARE_FIELD(dgamma_D0D0D2)`
+`  DECLARE_FIELD(dgamma_D0D2D1)`
+`  DECLARE_FIELD(dgamma_D1D1D0)`
+`  DECLARE_FIELD(dgamma_D1D1D2)`
+`  DECLARE_FIELD(dgamma_D2D2D0)`
+`  DECLARE_FIELD(dgamma_D2D2D1)`
+`  DECLARE_FIELD(dgamma_D0D1D0)`
+`  DECLARE_FIELD(dgamma_D0D1D1)`
+`  DECLARE_FIELD(dgamma_D0D1D2)`
+`  DECLARE_FIELD(dgamma_D0D2D0)`
+`  DECLARE_FIELD(dgamma_D1D1D1)`
+`  DECLARE_FIELD(dgamma_D1D2D1)`
+`  DECLARE_FIELD(dgamma_D1D2D2)`
+`  DECLARE_FIELD(dgamma_D1D2D0)`
+`  DECLARE_FIELD(dgamma_D0D2D2)`
+``
+`  /* removing fields */`
+`  REMOVE_FIELD(dgamma_D0D0D1)`
+`  REMOVE_FIELD(dgamma_D0D0D0)`
+`  REMOVE_FIELD(dgamma_D2D2D2)`
+`  REMOVE_FIELD(dgamma_D0D0D2)`
+`  REMOVE_FIELD(dgamma_D0D2D1)`
+`  REMOVE_FIELD(dgamma_D1D1D0)`
+`  REMOVE_FIELD(dgamma_D1D1D2)`
+`  REMOVE_FIELD(dgamma_D2D2D0)`
+`  REMOVE_FIELD(dgamma_D2D2D1)`
+`  REMOVE_FIELD(dgamma_D0D1D0)`
+`  REMOVE_FIELD(dgamma_D0D1D1)`
+`  REMOVE_FIELD(dgamma_D0D1D2)`
+`  REMOVE_FIELD(dgamma_D0D2D0)`
+`  REMOVE_FIELD(dgamma_D1D1D1)`
+`  REMOVE_FIELD(dgamma_D1D2D1)`
+`  REMOVE_FIELD(dgamma_D1D2D2)`
+`  REMOVE_FIELD(dgamma_D1D2D0)`
+`  REMOVE_FIELD(dgamma_D0D2D2)`
+``
+`  DECLARE_FIELD(Gamma_U1D0D0)`
+`  DECLARE_FIELD(Gamma_U0D2D2)`
+`  DECLARE_FIELD(Gamma_U1D0D2)`
+`  DECLARE_FIELD(Gamma_U2D1D2)`
+`  DECLARE_FIELD(Gamma_U1D0D1)`
+`  DECLARE_FIELD(Gamma_U1D2D2)`
+`  DECLARE_FIELD(Gamma_U2D0D2)`
+`  DECLARE_FIELD(Gamma_U2D0D0)`
+`  DECLARE_FIELD(Gamma_U0D0D1)`
+`  DECLARE_FIELD(Gamma_U0D0D0)`
+`  DECLARE_FIELD(Gamma_U2D0D1)`
+`  DECLARE_FIELD(Gamma_U0D0D2)`
+`  DECLARE_FIELD(Gamma_U2D2D2)`
+`  DECLARE_FIELD(Gamma_U1D1D1)`
+`  DECLARE_FIELD(Gamma_U0D1D1)`
+`  DECLARE_FIELD(Gamma_U0D1D2)`
+`  DECLARE_FIELD(Gamma_U1D1D2)`
+`  DECLARE_FIELD(Gamma_U2D1D1)`
+``
+`  REMOVE_FIELD(Gamma_U1D0D0)`
+`  REMOVE_FIELD(Gamma_U0D2D2)`
+`  REMOVE_FIELD(Gamma_U1D0D2)`
+`  REMOVE_FIELD(Gamma_U2D1D2)`
+`  REMOVE_FIELD(Gamma_U1D0D1)`
+`  REMOVE_FIELD(Gamma_U1D2D2)`
+`  REMOVE_FIELD(Gamma_U2D0D2)`
+`  REMOVE_FIELD(Gamma_U2D0D0)`
+`  REMOVE_FIELD(Gamma_U0D0D1)`
+`  REMOVE_FIELD(Gamma_U0D0D0)`
+`  REMOVE_FIELD(Gamma_U2D0D1)`
+`  REMOVE_FIELD(Gamma_U0D0D2)`
+`  REMOVE_FIELD(Gamma_U2D2D2)`
+`  REMOVE_FIELD(Gamma_U1D1D1)`
+`  REMOVE_FIELD(Gamma_U0D1D1)`
+`  REMOVE_FIELD(Gamma_U0D1D2)`
+`  REMOVE_FIELD(Gamma_U1D1D2)`
+`  REMOVE_FIELD(Gamma_U2D1D1)`
+``
+`  DECLARE_FIELD(dGamma_U2D2D2D2)`
+`  DECLARE_FIELD(dGamma_U2D2D2D0)`
+`  DECLARE_FIELD(dGamma_U2D2D2D1)`
+`  DECLARE_FIELD(dGamma_U2D0D0D2)`
+`  DECLARE_FIELD(dGamma_U1D1D2D2)`
+`  DECLARE_FIELD(dGamma_U2D0D0D0)`
+`  DECLARE_FIELD(dGamma_U1D1D2D0)`
+`  DECLARE_FIELD(dGamma_U1D1D2D1)`
+`  DECLARE_FIELD(dGamma_U2D1D1D0)`
+`  DECLARE_FIELD(dGamma_U2D0D0D1)`
+`  DECLARE_FIELD(dGamma_U2D0D2D1)`
+`  DECLARE_FIELD(dGamma_U1D0D1D0)`
+`  DECLARE_FIELD(dGamma_U1D0D1D1)`
+`  DECLARE_FIELD(dGamma_U1D0D1D2)`
+`  DECLARE_FIELD(dGamma_U1D2D2D1)`
+`  DECLARE_FIELD(dGamma_U1D0D0D1)`
+`  DECLARE_FIELD(dGamma_U1D0D0D0)`
+`  DECLARE_FIELD(dGamma_U1D0D0D2)`
+`  DECLARE_FIELD(dGamma_U0D1D2D2)`
+`  DECLARE_FIELD(dGamma_U0D1D2D1)`
+`  DECLARE_FIELD(dGamma_U0D1D2D0)`
+`  DECLARE_FIELD(dGamma_U2D0D2D0)`
+`  DECLARE_FIELD(dGamma_U1D0D2D2)`
+`  DECLARE_FIELD(dGamma_U1D0D2D1)`
+`  DECLARE_FIELD(dGamma_U1D0D2D0)`
+`  DECLARE_FIELD(dGamma_U2D1D1D2)`
+`  DECLARE_FIELD(dGamma_U2D0D2D2)`
+`  DECLARE_FIELD(dGamma_U0D0D1D0)`
+`  DECLARE_FIELD(dGamma_U1D2D2D0)`
+`  DECLARE_FIELD(dGamma_U2D1D2D1)`
+`  DECLARE_FIELD(dGamma_U2D0D1D2)`
+`  DECLARE_FIELD(dGamma_U2D0D1D1)`
+`  DECLARE_FIELD(dGamma_U2D0D1D0)`
+`  DECLARE_FIELD(dGamma_U2D1D2D2)`
+`  DECLARE_FIELD(dGamma_U0D1D1D0)`
+`  DECLARE_FIELD(dGamma_U0D1D1D1)`
+`  DECLARE_FIELD(dGamma_U0D1D1D2)`
+`  DECLARE_FIELD(dGamma_U1D2D2D2)`
+`  DECLARE_FIELD(dGamma_U1D1D1D1)`
+`  DECLARE_FIELD(dGamma_U1D1D1D0)`
+`  DECLARE_FIELD(dGamma_U1D1D1D2)`
+`  DECLARE_FIELD(dGamma_U0D0D1D1)`
+`  DECLARE_FIELD(dGamma_U0D0D2D2)`
+`  DECLARE_FIELD(dGamma_U0D0D2D0)`
+`  DECLARE_FIELD(dGamma_U0D0D2D1)`
+`  DECLARE_FIELD(dGamma_U2D1D2D0)`
+`  DECLARE_FIELD(dGamma_U0D0D0D0)`
+`  DECLARE_FIELD(dGamma_U0D0D0D1)`
+`  DECLARE_FIELD(dGamma_U0D0D0D2)`
+`  DECLARE_FIELD(dGamma_U2D1D1D1)`
+`  DECLARE_FIELD(dGamma_U0D2D2D0)`
+`  DECLARE_FIELD(dGamma_U0D2D2D1)`
+`  DECLARE_FIELD(dGamma_U0D2D2D2)`
+`  DECLARE_FIELD(dGamma_U0D0D1D2)`
+
+
+`  REMOVE_FIELD(dGamma_U2D2D2D2)`
+`  REMOVE_FIELD(dGamma_U2D2D2D0)`
+`  REMOVE_FIELD(dGamma_U2D2D2D1)`
+`  REMOVE_FIELD(dGamma_U2D0D0D2)`
+`  REMOVE_FIELD(dGamma_U1D1D2D2)`
+`  REMOVE_FIELD(dGamma_U2D0D0D0)`
+`  REMOVE_FIELD(dGamma_U1D1D2D0)`
+`  REMOVE_FIELD(dGamma_U1D1D2D1)`
+`  REMOVE_FIELD(dGamma_U2D1D1D0)`
+`  REMOVE_FIELD(dGamma_U2D0D0D1)`
+`  REMOVE_FIELD(dGamma_U2D0D2D1)`
+`  REMOVE_FIELD(dGamma_U1D0D1D0)`
+`  REMOVE_FIELD(dGamma_U1D0D1D1)`
+`  REMOVE_FIELD(dGamma_U1D0D1D2)`
+`  REMOVE_FIELD(dGamma_U1D2D2D1)`
+`  REMOVE_FIELD(dGamma_U1D0D0D1)`
+`  REMOVE_FIELD(dGamma_U1D0D0D0)`
+`  REMOVE_FIELD(dGamma_U1D0D0D2)`
+`  REMOVE_FIELD(dGamma_U0D1D2D2)`
+`  REMOVE_FIELD(dGamma_U0D1D2D1)`
+`  REMOVE_FIELD(dGamma_U0D1D2D0)`
+`  REMOVE_FIELD(dGamma_U2D0D2D0)`
+`  REMOVE_FIELD(dGamma_U1D0D2D2)`
+`  REMOVE_FIELD(dGamma_U1D0D2D1)`
+`  REMOVE_FIELD(dGamma_U1D0D2D0)`
+`  REMOVE_FIELD(dGamma_U2D1D1D2)`
+`  REMOVE_FIELD(dGamma_U2D0D2D2)`
+`  REMOVE_FIELD(dGamma_U0D0D1D0)`
+`  REMOVE_FIELD(dGamma_U1D2D2D0)`
+`  REMOVE_FIELD(dGamma_U2D1D2D1)`
+`  REMOVE_FIELD(dGamma_U2D0D1D2)`
+`  REMOVE_FIELD(dGamma_U2D0D1D1)`
+`  REMOVE_FIELD(dGamma_U2D0D1D0)`
+`  REMOVE_FIELD(dGamma_U2D1D2D2)`
+`  REMOVE_FIELD(dGamma_U0D1D1D0)`
+`  REMOVE_FIELD(dGamma_U0D1D1D1)`
+`  REMOVE_FIELD(dGamma_U0D1D1D2)`
+`  REMOVE_FIELD(dGamma_U1D2D2D2)`
+`  REMOVE_FIELD(dGamma_U1D1D1D1)`
+`  REMOVE_FIELD(dGamma_U1D1D1D0)`
+`  REMOVE_FIELD(dGamma_U1D1D1D2)`
+`  REMOVE_FIELD(dGamma_U0D0D1D1)`
+`  REMOVE_FIELD(dGamma_U0D0D2D2)`
+`  REMOVE_FIELD(dGamma_U0D0D2D0)`
+`  REMOVE_FIELD(dGamma_U0D0D2D1)`
+`  REMOVE_FIELD(dGamma_U2D1D2D0)`
+`  REMOVE_FIELD(dGamma_U0D0D0D0)`
+`  REMOVE_FIELD(dGamma_U0D0D0D1)`
+`  REMOVE_FIELD(dGamma_U0D0D0D2)`
+`  REMOVE_FIELD(dGamma_U2D1D1D1)`
+`  REMOVE_FIELD(dGamma_U0D2D2D0)`
+`  REMOVE_FIELD(dGamma_U0D2D2D1)`
+`  REMOVE_FIELD(dGamma_U0D2D2D2)`
+`  REMOVE_FIELD(dGamma_U0D0D1D2)`
+
+Ccode["  }"];
+`}`
