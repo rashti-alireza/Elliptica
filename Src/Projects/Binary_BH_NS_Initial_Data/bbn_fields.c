@@ -81,11 +81,42 @@ void bbn_allocate_fields(Grid_T *const grid)
     }
     
     /* Hamiltonian and Momentum constraints */
-    ADD_FIELD(ham_constraint);
-    ADD_FIELD(mom_constraint_U0);
-    ADD_FIELD(mom_constraint_U1);
-    ADD_FIELD(mom_constraint_U2);
+    ADD_FIELD(ham_constraint_1st);
+    ADD_FIELD(mom_constraint_1st_U0);
+    ADD_FIELD(mom_constraint_1st_U1);
+    ADD_FIELD(mom_constraint_1st_U2);
   
+    ADD_FIELD(ham_constraint_2nd);
+    ADD_FIELD(mom_constraint_2nd_U0);
+    ADD_FIELD(mom_constraint_2nd_U1);
+    ADD_FIELD(mom_constraint_2nd_U2);
+    
+    /* K^ij and dK^ij (extrinsic curvature) */
+    ADD_FIELD(K_UiUj_U2U2)
+    ADD_FIELD(K_UiUj_U1U2)
+    ADD_FIELD(K_UiUj_U1U1)
+    ADD_FIELD(K_UiUj_U0U2)
+    ADD_FIELD(K_UiUj_U0U1)
+    ADD_FIELD(K_UiUj_U0U0)
+    ADD_FIELD(dK_UiUj_U0U0D2)
+    ADD_FIELD(dK_UiUj_U0U0D0)
+    ADD_FIELD(dK_UiUj_U0U0D1)
+    ADD_FIELD(dK_UiUj_U1U1D2)
+    ADD_FIELD(dK_UiUj_U1U1D0)
+    ADD_FIELD(dK_UiUj_U1U1D1)
+    ADD_FIELD(dK_UiUj_U0U2D0)
+    ADD_FIELD(dK_UiUj_U0U2D1)
+    ADD_FIELD(dK_UiUj_U0U2D2)
+    ADD_FIELD(dK_UiUj_U1U2D1)
+    ADD_FIELD(dK_UiUj_U1U2D0)
+    ADD_FIELD(dK_UiUj_U2U2D0)
+    ADD_FIELD(dK_UiUj_U1U2D2)
+    ADD_FIELD(dK_UiUj_U2U2D1)
+    ADD_FIELD(dK_UiUj_U2U2D2)
+    ADD_FIELD(dK_UiUj_U0U1D2)
+    ADD_FIELD(dK_UiUj_U0U1D1)
+    ADD_FIELD(dK_UiUj_U0U1D0)
+
     /* conformal total energy density */
     add_field("_E",0,patch,YES);
     
@@ -327,6 +358,118 @@ void bbn_allocate_fields(Grid_T *const grid)
     ADD_FIELD_NoMem(_dGamma_U0D2D2D1)
     ADD_FIELD_NoMem(_dGamma_U0D2D2D2)
     ADD_FIELD_NoMem(_dGamma_U0D0D1D2)
+
+    /* metric: gamma_DiDj */
+    ADD_FIELD(gamma_D2D2)
+    ADD_FIELD(gamma_D0D2)
+    ADD_FIELD(gamma_D0D0)
+    ADD_FIELD(gamma_D0D1)
+    ADD_FIELD(gamma_D1D2)
+    ADD_FIELD(gamma_D1D1)
+
+    /* inverse gammaI_UiUj I stands for inverse */
+    ADD_FIELD(gammaI_U0U2)
+    ADD_FIELD(gammaI_U0U0)
+    ADD_FIELD(gammaI_U0U1)
+    ADD_FIELD(gammaI_U1U2)
+    ADD_FIELD(gammaI_U1U1)
+    ADD_FIELD(gammaI_U2U2)
+    
+    /* gamma derivatives */
+    ADD_FIELD_NoMem(dgamma_D0D0D1)
+    ADD_FIELD_NoMem(dgamma_D0D0D0)
+    ADD_FIELD_NoMem(dgamma_D2D2D2)
+    ADD_FIELD_NoMem(dgamma_D0D0D2)
+    ADD_FIELD_NoMem(dgamma_D0D2D1)
+    ADD_FIELD_NoMem(dgamma_D1D1D0)
+    ADD_FIELD_NoMem(dgamma_D1D1D2)
+    ADD_FIELD_NoMem(dgamma_D2D2D0)
+    ADD_FIELD_NoMem(dgamma_D2D2D1)
+    ADD_FIELD_NoMem(dgamma_D0D1D0)
+    ADD_FIELD_NoMem(dgamma_D0D1D1)
+    ADD_FIELD_NoMem(dgamma_D0D1D2)
+    ADD_FIELD_NoMem(dgamma_D0D2D0)
+    ADD_FIELD_NoMem(dgamma_D1D1D1)
+    ADD_FIELD_NoMem(dgamma_D1D2D1)
+    ADD_FIELD_NoMem(dgamma_D1D2D2)
+    ADD_FIELD_NoMem(dgamma_D1D2D0)
+    ADD_FIELD_NoMem(dgamma_D0D2D2)
+    
+    /* Christoffer symbols made up of metric */
+    ADD_FIELD(Gamma_U2D1D1)
+    ADD_FIELD(Gamma_U2D1D2)
+    ADD_FIELD(Gamma_U0D1D1)
+    ADD_FIELD(Gamma_U2D0D2)
+    ADD_FIELD(Gamma_U2D2D2)
+    ADD_FIELD(Gamma_U0D1D2)
+    ADD_FIELD(Gamma_U0D0D2)
+    ADD_FIELD(Gamma_U0D0D1)
+    ADD_FIELD(Gamma_U0D0D0)
+    ADD_FIELD(Gamma_U1D2D2)
+    ADD_FIELD(Gamma_U2D0D1)
+    ADD_FIELD(Gamma_U0D2D2)
+    ADD_FIELD(Gamma_U2D0D0)
+    ADD_FIELD(Gamma_U1D0D2)
+    ADD_FIELD(Gamma_U1D1D2)
+    ADD_FIELD(Gamma_U1D0D0)
+    ADD_FIELD(Gamma_U1D0D1)
+    ADD_FIELD(Gamma_U1D1D1)
+    
+    /* partial derivative of Christoffer symbols */
+    ADD_FIELD_NoMem(dGamma_U2D2D2D2)
+    ADD_FIELD_NoMem(dGamma_U2D2D2D0)
+    ADD_FIELD_NoMem(dGamma_U2D2D2D1)
+    ADD_FIELD_NoMem(dGamma_U2D0D0D2)
+    ADD_FIELD_NoMem(dGamma_U1D1D2D2)
+    ADD_FIELD_NoMem(dGamma_U2D0D0D0)
+    ADD_FIELD_NoMem(dGamma_U1D1D2D0)
+    ADD_FIELD_NoMem(dGamma_U1D1D2D1)
+    ADD_FIELD_NoMem(dGamma_U2D1D1D0)
+    ADD_FIELD_NoMem(dGamma_U2D0D0D1)
+    ADD_FIELD_NoMem(dGamma_U2D0D2D1)
+    ADD_FIELD_NoMem(dGamma_U1D0D1D0)
+    ADD_FIELD_NoMem(dGamma_U1D0D1D1)
+    ADD_FIELD_NoMem(dGamma_U1D0D1D2)
+    ADD_FIELD_NoMem(dGamma_U1D2D2D1)
+    ADD_FIELD_NoMem(dGamma_U1D0D0D1)
+    ADD_FIELD_NoMem(dGamma_U1D0D0D0)
+    ADD_FIELD_NoMem(dGamma_U1D0D0D2)
+    ADD_FIELD_NoMem(dGamma_U0D1D2D2)
+    ADD_FIELD_NoMem(dGamma_U0D1D2D1)
+    ADD_FIELD_NoMem(dGamma_U0D1D2D0)
+    ADD_FIELD_NoMem(dGamma_U2D0D2D0)
+    ADD_FIELD_NoMem(dGamma_U1D0D2D2)
+    ADD_FIELD_NoMem(dGamma_U1D0D2D1)
+    ADD_FIELD_NoMem(dGamma_U1D0D2D0)
+    ADD_FIELD_NoMem(dGamma_U2D1D1D2)
+    ADD_FIELD_NoMem(dGamma_U2D0D2D2)
+    ADD_FIELD_NoMem(dGamma_U0D0D1D0)
+    ADD_FIELD_NoMem(dGamma_U1D2D2D0)
+    ADD_FIELD_NoMem(dGamma_U2D1D2D1)
+    ADD_FIELD_NoMem(dGamma_U2D0D1D2)
+    ADD_FIELD_NoMem(dGamma_U2D0D1D1)
+    ADD_FIELD_NoMem(dGamma_U2D0D1D0)
+    ADD_FIELD_NoMem(dGamma_U2D1D2D2)
+    ADD_FIELD_NoMem(dGamma_U0D1D1D0)
+    ADD_FIELD_NoMem(dGamma_U0D1D1D1)
+    ADD_FIELD_NoMem(dGamma_U0D1D1D2)
+    ADD_FIELD_NoMem(dGamma_U1D2D2D2)
+    ADD_FIELD_NoMem(dGamma_U1D1D1D1)
+    ADD_FIELD_NoMem(dGamma_U1D1D1D0)
+    ADD_FIELD_NoMem(dGamma_U1D1D1D2)
+    ADD_FIELD_NoMem(dGamma_U0D0D1D1)
+    ADD_FIELD_NoMem(dGamma_U0D0D2D2)
+    ADD_FIELD_NoMem(dGamma_U0D0D2D0)
+    ADD_FIELD_NoMem(dGamma_U0D0D2D1)
+    ADD_FIELD_NoMem(dGamma_U2D1D2D0)
+    ADD_FIELD_NoMem(dGamma_U0D0D0D0)
+    ADD_FIELD_NoMem(dGamma_U0D0D0D1)
+    ADD_FIELD_NoMem(dGamma_U0D0D0D2)
+    ADD_FIELD_NoMem(dGamma_U2D1D1D1)
+    ADD_FIELD_NoMem(dGamma_U0D2D2D0)
+    ADD_FIELD_NoMem(dGamma_U0D2D2D1)
+    ADD_FIELD_NoMem(dGamma_U0D2D2D2)
+    ADD_FIELD_NoMem(dGamma_U0D0D1D2)
 
     /* Ricci made up of conformal metric _gamma */
     add_field("_R",0,patch,YES);
