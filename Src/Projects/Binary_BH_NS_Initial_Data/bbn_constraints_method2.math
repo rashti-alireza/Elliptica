@@ -43,7 +43,7 @@ Declare =
  (obj = Field,name = K_UiUj, rank = UU, C_macro);
 
  # K^{ij}
- (obj = Field,name = dK_UiUj, rank = UUD, C_macro);
+ (obj = Field,name = dK_UiUj, rank = UUD, C_macro3);
 
  # psi
  (obj = Field,name = psi, rank = 0, C_macro);
@@ -67,7 +67,7 @@ Declare =
  (obj = Field,name = Gamma, rank = UDD, C_macro);
 
  # Christoffer symbol derivatives
- (obj = Field,name = dGamma, rank = UDDD, C_macro);
+ (obj = Field,name = dGamma, rank = UDDD, C_macro3);
 
  # _E
  (obj = Field,name = _E, rank = 0, C_macro);
