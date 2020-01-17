@@ -24,12 +24,13 @@ C_arg1 =;
 `  const double G_D0D1 = -gamma*Bx;`
 `  const double G_D0D2 = -gamma*By;`
 `  const double G_D0D3 = -gamma*Bz;`
-`  const double G_D1D1 = 1+(gamma-1)*SQR(Bx)/B2;`
-`  const double G_D1D2 = (gamma-1)*Bx*By/B2;`
-`  const double G_D1D3 = (gamma-1)*Bx*Bz/B2;`
-`  const double G_D2D2 = 1+(gamma-1)*SQR(By)/B2;`
-`  const double G_D2D3 = (gamma-1)*By*Bz/B2;`
-`  const double G_D3D3 = 1+(gamma-1)*SQR(Bz)/B2;`
+`  const double G_D1D1 = EQL(B2,0) ? 1 : 1+(gamma-1)*SQR(Bx)/B2;`
+`  const double G_D1D2 = EQL(B2,0) ? 0 : (gamma-1)*Bx*By/B2;`
+`  const double G_D1D3 = EQL(B2,0) ? 0 : (gamma-1)*Bx*Bz/B2;`
+`  const double G_D2D2 = EQL(B2,0) ? 1 : 1+(gamma-1)*SQR(By)/B2;`
+`  const double G_D2D3 = EQL(B2,0) ? 0 : (gamma-1)*By*Bz/B2;`
+`  const double G_D3D3 = EQL(B2,0) ? 1 : 1+(gamma-1)*SQR(Bz)/B2;`
+
 Declare = 
 {
  # lorentz metric
