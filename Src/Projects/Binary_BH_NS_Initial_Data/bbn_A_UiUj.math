@@ -76,11 +76,12 @@ Ccode["    for(ijk = 0; ijk < nn; ++ijk)"];
 Ccode["    {"];
 
 # _A^{ij} calculation (NOTE _u^{ij} ASSUEMD 0) :
-  alphabar     = eta*psi**(-7);# alpha * psi^-6
+  psi7 = psi**7;
+  #alphabar     = eta*psi**(-7);# alpha * psi^-6 => large numerical error for psi < 1
   _DB_UU(i,j)  = _gammaI(i,-l)*(dBeta(j,l)+_Gamma(j,l,m)*Beta(-m));# _D^i(B^j)
   _LV_UU(i,j)  = _DB_UU(i,j)+_DB_UU(j,i)-2/3*_gammaI(i,j)*_gamma(-l,-m)*_DB_UU(l,m);
   Symm[_LV_UU(i,j)   = _LV_UU(j,i)];
-  _A_UUij(i,j) = _LV_UU(i,j)/(2*alphabar);
+  _A_UUij(i,j) = psi7*_LV_UU(i,j)/(2*eta);
   Symm[_A_UUij(i,j)   = _A_UUij(j,i)];
   _AijAij      = _A_UUij(i,j)*_A_UUij(l,m)*_gamma(-i,-l)*_gamma(-j,-m);
   
@@ -159,10 +160,11 @@ Ccode["    }/*end of for(ijk = 0; ijk < nn; ++ijk)*/"];
 
 Ccode["    for(ijk = 0; ijk < nn; ++ijk)"];
 Ccode["    {"];
-alpha_   = eta*psi**(-7);# alpha * psi^-6
+psi7_     = psi**7;
+#alpha_   = eta*psi**(-7);# alpha * psi^-6 => large numerical error for psi < 1
 dLnOf_alpha_(i) = deta(i)/eta -7*dpsi(i)/psi; 
 
-dlAij(i,j,-l) = (-_LBij(i,j)*dLnOf_alpha_(l)+_dLBij(i,j,l))/(2*alpha_);
+dlAij(i,j,-l) = psi7_*(-_LBij(i,j)*dLnOf_alpha_(l)+_dLBij(i,j,l))/(2*eta);
 Symm[dlAij(i,j,l)  = dlAij(j,i,l)];
 
 Cpopulate[_dA_UiUj = dlAij];

@@ -101,8 +101,8 @@ void bbn_update_psi10A_UiUj(Patch_T *const patch)
     unsigned ijk;
     for(ijk = 0; ijk < nn; ++ijk)
     {
-    double alphabar = 
-eta[ijk]/pow(psi[ijk], 7);
+    double psi7 = 
+pow(psi[ijk], 7);
 
     double _DB_UU_U1U2 = 
 _gammaI_U0U1[ijk]*(Beta_U0[ijk]*_Gamma_U2D0D0[ijk] + Beta_U1[ijk]*
@@ -258,22 +258,22 @@ _gamma_D1D2[ijk] - 0.66666666666666663*_DB_UU_U2U2*_gammaI_U1U1[ijk]*
 _gamma_D2D2[ijk];
 
     double _A_UUij_U2U2 = 
-(1.0/2.0)*_LV_UU_U2U2/alphabar;
+(1.0/2.0)*_LV_UU_U2U2*psi7/eta[ijk];
 
     double _A_UUij_U1U2 = 
-(1.0/2.0)*_LV_UU_U1U2/alphabar;
+(1.0/2.0)*_LV_UU_U1U2*psi7/eta[ijk];
 
     double _A_UUij_U1U1 = 
-(1.0/2.0)*_LV_UU_U1U1/alphabar;
+(1.0/2.0)*_LV_UU_U1U1*psi7/eta[ijk];
 
     double _A_UUij_U0U2 = 
-(1.0/2.0)*_LV_UU_U0U2/alphabar;
+(1.0/2.0)*_LV_UU_U0U2*psi7/eta[ijk];
 
     double _A_UUij_U0U1 = 
-(1.0/2.0)*_LV_UU_U0U1/alphabar;
+(1.0/2.0)*_LV_UU_U0U1*psi7/eta[ijk];
 
     double _A_UUij_U0U0 = 
-(1.0/2.0)*_LV_UU_U0U0/alphabar;
+(1.0/2.0)*_LV_UU_U0U0*psi7/eta[ijk];
 
     double _AijAij = 
 pow(_A_UUij_U0U0, 2)*pow(_gamma_D0D0[ijk], 2) + 4.0*_A_UUij_U0U0*
@@ -382,8 +382,8 @@ pow(_A_UUij_U2U2, 2)*pow(_gamma_D2D2[ijk], 2);
   GET_FIELD(_dLBij_U0U2D2)
     for(ijk = 0; ijk < nn; ++ijk)
     {
-    double alpha_ = 
-eta[ijk]/pow(psi[ijk], 7);
+    double psi7_ = 
+pow(psi[ijk], 7);
 
     double dLnOf_alpha__U2 = 
 deta_D2[ijk]/eta[ijk] - 7*dpsi_D2[ijk]/psi[ijk];
@@ -395,76 +395,76 @@ deta_D0[ijk]/eta[ijk] - 7*dpsi_D0[ijk]/psi[ijk];
 deta_D1[ijk]/eta[ijk] - 7*dpsi_D1[ijk]/psi[ijk];
 
     double dlAij_U0U1D2 = 
-(1.0/2.0)*(-_LBij_U0U1[ijk]*dLnOf_alpha__U2 + _dLBij_U0U1D2[ijk])/
-alpha_;
+-1.0/2.0*psi7_*(_LBij_U0U1[ijk]*dLnOf_alpha__U2 - _dLBij_U0U1D2[ijk])/
+eta[ijk];
 
     double dlAij_U0U0D2 = 
-(1.0/2.0)*(-_LBij_U0U0[ijk]*dLnOf_alpha__U2 + _dLBij_U0U0D2[ijk])/
-alpha_;
+-1.0/2.0*psi7_*(_LBij_U0U0[ijk]*dLnOf_alpha__U2 - _dLBij_U0U0D2[ijk])/
+eta[ijk];
 
     double dlAij_U0U0D1 = 
-(1.0/2.0)*(-_LBij_U0U0[ijk]*dLnOf_alpha__U1 + _dLBij_U0U0D1[ijk])/
-alpha_;
+-1.0/2.0*psi7_*(_LBij_U0U0[ijk]*dLnOf_alpha__U1 - _dLBij_U0U0D1[ijk])/
+eta[ijk];
 
     double dlAij_U0U1D1 = 
-(1.0/2.0)*(-_LBij_U0U1[ijk]*dLnOf_alpha__U1 + _dLBij_U0U1D1[ijk])/
-alpha_;
+-1.0/2.0*psi7_*(_LBij_U0U1[ijk]*dLnOf_alpha__U1 - _dLBij_U0U1D1[ijk])/
+eta[ijk];
 
     double dlAij_U0U0D0 = 
-(1.0/2.0)*(-_LBij_U0U0[ijk]*dLnOf_alpha__U0 + _dLBij_U0U0D0[ijk])/
-alpha_;
+-1.0/2.0*psi7_*(_LBij_U0U0[ijk]*dLnOf_alpha__U0 - _dLBij_U0U0D0[ijk])/
+eta[ijk];
 
     double dlAij_U1U2D0 = 
-(1.0/2.0)*(-_LBij_U1U2[ijk]*dLnOf_alpha__U0 + _dLBij_U1U2D0[ijk])/
-alpha_;
+-1.0/2.0*psi7_*(_LBij_U1U2[ijk]*dLnOf_alpha__U0 - _dLBij_U1U2D0[ijk])/
+eta[ijk];
 
     double dlAij_U0U1D0 = 
-(1.0/2.0)*(-_LBij_U0U1[ijk]*dLnOf_alpha__U0 + _dLBij_U0U1D0[ijk])/
-alpha_;
+-1.0/2.0*psi7_*(_LBij_U0U1[ijk]*dLnOf_alpha__U0 - _dLBij_U0U1D0[ijk])/
+eta[ijk];
 
     double dlAij_U1U2D2 = 
-(1.0/2.0)*(-_LBij_U1U2[ijk]*dLnOf_alpha__U2 + _dLBij_U1U2D2[ijk])/
-alpha_;
+-1.0/2.0*psi7_*(_LBij_U1U2[ijk]*dLnOf_alpha__U2 - _dLBij_U1U2D2[ijk])/
+eta[ijk];
 
     double dlAij_U1U2D1 = 
-(1.0/2.0)*(-_LBij_U1U2[ijk]*dLnOf_alpha__U1 + _dLBij_U1U2D1[ijk])/
-alpha_;
+-1.0/2.0*psi7_*(_LBij_U1U2[ijk]*dLnOf_alpha__U1 - _dLBij_U1U2D1[ijk])/
+eta[ijk];
 
     double dlAij_U0U2D1 = 
-(1.0/2.0)*(-_LBij_U0U2[ijk]*dLnOf_alpha__U1 + _dLBij_U0U2D1[ijk])/
-alpha_;
+-1.0/2.0*psi7_*(_LBij_U0U2[ijk]*dLnOf_alpha__U1 - _dLBij_U0U2D1[ijk])/
+eta[ijk];
 
     double dlAij_U0U2D0 = 
-(1.0/2.0)*(-_LBij_U0U2[ijk]*dLnOf_alpha__U0 + _dLBij_U0U2D0[ijk])/
-alpha_;
+-1.0/2.0*psi7_*(_LBij_U0U2[ijk]*dLnOf_alpha__U0 - _dLBij_U0U2D0[ijk])/
+eta[ijk];
 
     double dlAij_U0U2D2 = 
-(1.0/2.0)*(-_LBij_U0U2[ijk]*dLnOf_alpha__U2 + _dLBij_U0U2D2[ijk])/
-alpha_;
+-1.0/2.0*psi7_*(_LBij_U0U2[ijk]*dLnOf_alpha__U2 - _dLBij_U0U2D2[ijk])/
+eta[ijk];
 
     double dlAij_U2U2D2 = 
-(1.0/2.0)*(-_LBij_U2U2[ijk]*dLnOf_alpha__U2 + _dLBij_U2U2D2[ijk])/
-alpha_;
+-1.0/2.0*psi7_*(_LBij_U2U2[ijk]*dLnOf_alpha__U2 - _dLBij_U2U2D2[ijk])/
+eta[ijk];
 
     double dlAij_U1U1D2 = 
-(1.0/2.0)*(-_LBij_U1U1[ijk]*dLnOf_alpha__U2 + _dLBij_U1U1D2[ijk])/
-alpha_;
+-1.0/2.0*psi7_*(_LBij_U1U1[ijk]*dLnOf_alpha__U2 - _dLBij_U1U1D2[ijk])/
+eta[ijk];
 
     double dlAij_U1U1D1 = 
-(1.0/2.0)*(-_LBij_U1U1[ijk]*dLnOf_alpha__U1 + _dLBij_U1U1D1[ijk])/
-alpha_;
+-1.0/2.0*psi7_*(_LBij_U1U1[ijk]*dLnOf_alpha__U1 - _dLBij_U1U1D1[ijk])/
+eta[ijk];
 
     double dlAij_U1U1D0 = 
-(1.0/2.0)*(-_LBij_U1U1[ijk]*dLnOf_alpha__U0 + _dLBij_U1U1D0[ijk])/
-alpha_;
+-1.0/2.0*psi7_*(_LBij_U1U1[ijk]*dLnOf_alpha__U0 - _dLBij_U1U1D0[ijk])/
+eta[ijk];
 
     double dlAij_U2U2D0 = 
-(1.0/2.0)*(-_LBij_U2U2[ijk]*dLnOf_alpha__U0 + _dLBij_U2U2D0[ijk])/
-alpha_;
+-1.0/2.0*psi7_*(_LBij_U2U2[ijk]*dLnOf_alpha__U0 - _dLBij_U2U2D0[ijk])/
+eta[ijk];
 
     double dlAij_U2U2D1 = 
-(1.0/2.0)*(-_LBij_U2U2[ijk]*dLnOf_alpha__U1 + _dLBij_U2U2D1[ijk])/
-alpha_;
+-1.0/2.0*psi7_*(_LBij_U2U2[ijk]*dLnOf_alpha__U1 - _dLBij_U2U2D1[ijk])/
+eta[ijk];
 
 
     /* populating: */
