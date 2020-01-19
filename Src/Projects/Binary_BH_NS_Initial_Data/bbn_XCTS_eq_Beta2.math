@@ -1,4 +1,4 @@
-# equation: Beta_U012 (shift) for all components
+# equation: Beta_U2
 
 # Manifold or grid Dimension
 Dimension = 3;
@@ -15,7 +15,7 @@ C_macro4 = GET_FIELD_UNUSED(name);
 `#include "maths_equation_solvings_lib.h"`;
 `#include "bbn_XCTS_equations_lib.h"\n\n`;
 
-`void *bbn_eq_Beta_U?(void *vp1,void *vp2)\n{`;
+`void *bbn_eq_Beta_U2(void *vp1,void *vp2)\n{`;
 
 # NOTE: THE FOLLOWING MACRO DECLARES AND DEFINES THE FOLLOWING VARIABLES:
 # patch, S, F, node, N, n.
@@ -69,16 +69,24 @@ Symm[_Gamma(i,j,k)   = _Gamma(i,k,j)];
 
 `  DDM_SCHUR_EQ_OPEN\n`;
 
-alphabar = eta*psi**(-7);# alpha * psi^-6
-F_eq(i) = \
+#alphabar = eta*psi**(-7);# alpha * psi^-6 => large error for psi < 1
+
+F00(i) = psi**(-3)*(\
  _dA_UiUj(i,j,jp)*KD(-j,-jp)+\
 _Gamma(i,j,l)*_A_UiUj(-l,-j)+\
-_Gamma(j,jp,l)*_A_UiUj(i,-l)*KD(-j,-jp)\
--2/3*(psi**6)*_gammaI(i,j)*dK(-j) -8*pi*(psi**4)*_J(i);
+_Gamma(j,jp,l)*_A_UiUj(i,-l)*KD(-j,-jp));
 
-`  F[n] = 2.*alphabar*F_eq_U?;\n`;# Jx = -F in Newton-Raphson scheme
+F0(i) = psi**(-4)*F00(i);
+
+F1(i) = -2/3*_gammaI(i,j)*dK(-j)/psi -8*pi*(psi**-3)*_J(i);
+
+F_eq(i) = 2*eta*(F0(i)+F1(i));
+
+`  F[n] = F_eq_U2;\n`;# Jx = -F in Newton-Raphson scheme
 `  DDM_SCHUR_EQ_CLOSE\n`;
 
 `  return 0;`;
 `}`;
 
+# TO OPTIMIZE the function one can trim off all redunted components:
+Command["sed -i -E '/^\s{2}double \w+_U[01] =/,/;$/d'"];

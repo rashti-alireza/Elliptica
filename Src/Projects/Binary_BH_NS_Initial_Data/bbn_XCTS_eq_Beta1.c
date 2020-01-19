@@ -75,24 +75,38 @@ void *bbn_eq_Beta_U1(void *vp1,void *vp2)
 
   DDM_SCHUR_EQ_OPEN
 
-  double alphabar = 
-eta[ijk]/pow(psi[ijk], 7);
 
-  double F_eq_U1 = 
-_A_UiUj_U0U0[ijk]*_Gamma_U1D0D0[ijk] + _A_UiUj_U0U1[ijk]*
+  double F00_U1 = 
+(_A_UiUj_U0U0[ijk]*_Gamma_U1D0D0[ijk] + _A_UiUj_U0U1[ijk]*
 _Gamma_U0D0D0[ijk] + 3.0*_A_UiUj_U0U1[ijk]*_Gamma_U1D0D1[ijk] + 
 _A_UiUj_U0U1[ijk]*_Gamma_U2D0D2[ijk] + 2.0*_A_UiUj_U0U2[ijk]*
 _Gamma_U1D0D2[ijk] + _A_UiUj_U1U1[ijk]*_Gamma_U0D0D1[ijk] + 2.0*
 _A_UiUj_U1U1[ijk]*_Gamma_U1D1D1[ijk] + _A_UiUj_U1U1[ijk]*
 _Gamma_U2D1D2[ijk] + _A_UiUj_U1U2[ijk]*_Gamma_U0D0D2[ijk] + 3.0*
 _A_UiUj_U1U2[ijk]*_Gamma_U1D1D2[ijk] + _A_UiUj_U1U2[ijk]*
-_Gamma_U2D2D2[ijk] + _A_UiUj_U2U2[ijk]*_Gamma_U1D2D2[ijk] - 8*M_PI*
-_J_U1[ijk]*pow(psi[ijk], 4) + _dA_UiUj_U0U1D0[ijk] + 
-_dA_UiUj_U1U1D1[ijk] + _dA_UiUj_U1U2D2[ijk] - 0.66666666666666663*
-pow(psi[ijk], 6)*(_gammaI_U0U1[ijk]*dK_D0[ijk] + _gammaI_U1U1[ijk]*
-dK_D1[ijk] + _gammaI_U1U2[ijk]*dK_D2[ijk]);
+_Gamma_U2D2D2[ijk] + _A_UiUj_U2U2[ijk]*_Gamma_U1D2D2[ijk] + 
+_dA_UiUj_U0U1D0[ijk] + _dA_UiUj_U1U1D1[ijk] + _dA_UiUj_U1U2D2[ijk])/
+pow(psi[ijk], 3);
 
-  F[n] = 2.*alphabar*F_eq_U1;
+
+
+  double F0_U1 = 
+F00_U1/pow(psi[ijk], 4);
+
+
+
+  double F1_U1 = 
+-(8*M_PI*_J_U1[ijk] + 0.66666666666666663*pow(psi[ijk], 2)*
+(_gammaI_U0U1[ijk]*dK_D0[ijk] + _gammaI_U1U1[ijk]*dK_D1[ijk] + 
+_gammaI_U1U2[ijk]*dK_D2[ijk]))/pow(psi[ijk], 3);
+
+
+
+
+  double F_eq_U1 = 
+2*eta[ijk]*(F0_U1 + F1_U1);
+
+  F[n] = F_eq_U1;
 
   DDM_SCHUR_EQ_CLOSE
 
