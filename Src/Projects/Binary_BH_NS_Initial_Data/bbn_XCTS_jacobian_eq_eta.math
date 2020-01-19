@@ -103,22 +103,25 @@ Symm[_Gamma(i,j,k)  = _Gamma(i,k,j)];
 ###############################################
 `  DDM_SCHUR_JACOBIAN_EQ_Bpart_OPEN\n`;
 
+psi4_B = psi**4;
+aij2_B = _Aij2/psi4_B;
+
 # with _Aij and adjustment for _R sign:
 # Bpart = \
 # _gammaI(-i,-j)*(JJeta(i,j) - _Gamma(l,i,j)*Jeta(-l))\
-# - kd*(-_R/8+(5/12)*(psi**4)*(K**2)+(7/8)*(psi**-8)*_Aij2)\
+# - kd*(-_R/8+(5/12)*psi4_B*(K**2)+(7/8)*aij2_B/psi4_B)\
 # -2*pi*kd*(psi**-2)*(_E+2*_S);
 
 # with _Aij no _R:
 Bpart = \
  _gammaI(-i,-j)*(JJeta(i,j) - _Gamma(l,i,j)*Jeta(-l))\
- - kd*((5/12)*(psi**4)*(K**2)+(7/8)*(psi**-8)*_Aij2)\
+ - kd*((5/12)*psi4_B*(K**2)+(7/8)*aij2_B/psi4_B)\
  -2*pi*kd*(psi**-2)*(_E+2*_S);
 
 # with no _Aij and no adjustment for _R sign:
 # Bpart = \
 # _gammaI(-i,-j)*(JJeta(i,j) - _Gamma(l,i,j)*Jeta(-l))\
-# - kd*(_R/8+(5/12)*(psi**4)*(K**2))\
+# - kd*(_R/8+(5/12)*psi4_B*(K**2))\
 # -2*pi*kd*(psi**-2)*(_E+2*_S);
 
 
@@ -132,22 +135,25 @@ Bpart = \
 ###############################################
 `  DDM_SCHUR_JACOBIAN_EQ_Epart_OPEN\n`;
 
+psi4_E = psi**4;
+aij2_E = _Aij2/psi4_E;
+
 # with _Aij and adjustment for _R sign:
 # Epart = \
 # _gammaI(-i,-j)*(JJeta(i,j) - _Gamma(l,i,j)*Jeta(-l))\
-# - kd*(-_R/8+(5/12)*(psi**4)*(K**2)+(7/8)*(psi**-8)*_Aij2)\
+# - kd*(-_R/8+(5/12)*psi4_E*(K**2)+(7/8)*aij2_E/psi4_E)\
 # -2*pi*kd*(psi**-2)*(_E+2*_S);
 
 # with _Aij and no _R:
 Epart = \
  _gammaI(-i,-j)*(JJeta(i,j) - _Gamma(l,i,j)*Jeta(-l))\
- - kd*((5/12)*(psi**4)*(K**2)+(7/8)*(psi**-8)*_Aij2)\
+ - kd*((5/12)*psi4_E*(K**2)+(7/8)*aij2_E/psi4_E)\
  -2*pi*kd*(psi**-2)*(_E+2*_S);
 
 # with no _Aij and no adjustment for _R sign:
 # Epart = \
 # _gammaI(-i,-j)*(JJeta(i,j) - _Gamma(l,i,j)*Jeta(-l))\
-# - kd*(_R/8+(5/12)*(psi**4)*(K**2))\
+# - kd*(_R/8+(5/12)*psi4_E*(K**2))\
 # -2*pi*kd*(psi**-2)*(_E+2*_S);
 
 

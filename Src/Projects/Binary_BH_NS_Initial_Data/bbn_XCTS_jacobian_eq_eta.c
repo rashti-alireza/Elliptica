@@ -58,6 +58,12 @@ void *bbn_jacobian_eq_eta(void *vp1,void *vp2)
 
   DDM_SCHUR_JACOBIAN_EQ_Bpart_OPEN
 
+  double psi4_B = 
+pow(psi[ijk], 4);
+
+  double aij2_B = 
+_Aij2[ijk]/psi4_B;
+
   double Bpart = 
 -_gammaI_U0U0[ijk]*(-JJeta_D0D0(j_JJeta_D0D0,ijk,lmn) +
 Jeta_D0(j_Jeta_D0,ijk,lmn)*_Gamma_U0D0D0[ijk] + Jeta_D1(j_Jeta_D1,ijk,lmn)*
@@ -77,15 +83,21 @@ _Gamma_U1D1D2[ijk] + Jeta_D2(j_Jeta_D2,ijk,lmn)*_Gamma_U2D1D2[ijk]) -
 _gammaI_U2U2[ijk]*(-JJeta_D2D2(j_JJeta_D2D2,ijk,lmn) +
 Jeta_D0(j_Jeta_D0,ijk,lmn)*_Gamma_U0D2D2[ijk] + Jeta_D1(j_Jeta_D1,ijk,lmn)*
 _Gamma_U1D2D2[ijk] + Jeta_D2(j_Jeta_D2,ijk,lmn)*_Gamma_U2D2D2[ijk]) -
-kd[ijk==lmn]*(0.41666666666666669*pow(K[ijk], 2)*pow(psi[ijk], 4) +
-0.875*_Aij2[ijk]/pow(psi[ijk], 8)) - 2*M_PI*kd[ijk==lmn]*(_E[ijk] + 2*
-_S[ijk])/pow(psi[ijk], 2);
+kd[ijk==lmn]*(0.41666666666666669*pow(K[ijk], 2)*psi4_B + 0.875*aij2_B/
+psi4_B) - 2*M_PI*kd[ijk==lmn]*(_E[ijk] + 2*_S[ijk])/
+pow(psi[ijk], 2);
 
   B[i][j] = Bpart;
 
   DDM_SCHUR_JACOBIAN_EQ_Bpart_CLOSE
 
   DDM_SCHUR_JACOBIAN_EQ_Epart_OPEN
+
+  double psi4_E = 
+pow(psi[ijk], 4);
+
+  double aij2_E = 
+_Aij2[ijk]/psi4_E;
 
   double Epart = 
 -_gammaI_U0U0[ijk]*(-JJeta_D0D0(j_JJeta_D0D0,ijk,lmn) +
@@ -106,9 +118,9 @@ _Gamma_U1D1D2[ijk] + Jeta_D2(j_Jeta_D2,ijk,lmn)*_Gamma_U2D1D2[ijk]) -
 _gammaI_U2U2[ijk]*(-JJeta_D2D2(j_JJeta_D2D2,ijk,lmn) +
 Jeta_D0(j_Jeta_D0,ijk,lmn)*_Gamma_U0D2D2[ijk] + Jeta_D1(j_Jeta_D1,ijk,lmn)*
 _Gamma_U1D2D2[ijk] + Jeta_D2(j_Jeta_D2,ijk,lmn)*_Gamma_U2D2D2[ijk]) -
-kd[ijk==lmn]*(0.41666666666666669*pow(K[ijk], 2)*pow(psi[ijk], 4) +
-0.875*_Aij2[ijk]/pow(psi[ijk], 8)) - 2*M_PI*kd[ijk==lmn]*(_E[ijk] + 2*
-_S[ijk])/pow(psi[ijk], 2);
+kd[ijk==lmn]*(0.41666666666666669*pow(K[ijk], 2)*psi4_E + 0.875*aij2_E/
+psi4_E) - 2*M_PI*kd[ijk==lmn]*(_E[ijk] + 2*_S[ijk])/
+pow(psi[ijk], 2);
 
   E_Trans[j][i] = Epart;
 
