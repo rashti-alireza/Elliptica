@@ -57,6 +57,12 @@ void *bbn_jacobian_eq_psi(void *vp1,void *vp2)
 
   DDM_SCHUR_JACOBIAN_EQ_Bpart_OPEN
 
+  double psi4_B = 
+pow(psi[ijk], 4);
+
+  double aij2_B = 
+_Aij2[ijk]/psi4_B;
+
   double Bpart = 
 JJpsi_D0D0(j_JJpsi_D0D0,ijk,lmn)*_gammaI_U0U0[ijk] + 2.0*
 JJpsi_D0D1(j_JJpsi_D0D1,ijk,lmn)*_gammaI_U0U1[ijk] + 2.0*
@@ -82,14 +88,20 @@ Jpsi_D2(j_Jpsi_D2,ijk,lmn)*_Gamma_U2D0D2[ijk]*_gammaI_U0U2[ijk] -
 Jpsi_D2(j_Jpsi_D2,ijk,lmn)*_Gamma_U2D1D1[ijk]*_gammaI_U1U1[ijk] - 2.0*
 Jpsi_D2(j_Jpsi_D2,ijk,lmn)*_Gamma_U2D1D2[ijk]*_gammaI_U1U2[ijk] -
 Jpsi_D2(j_Jpsi_D2,ijk,lmn)*_Gamma_U2D2D2[ijk]*_gammaI_U2U2[ijk] -
-kd[ijk==lmn]*((5.0/12.0)*pow(K[ijk], 2)*pow(psi[ijk], 4) + (7.0/8.0)*
-_Aij2[ijk]/pow(psi[ijk], 8) + 2*M_PI*_E[ijk]/pow(psi[ijk], 2));
+kd[ijk==lmn]*((5.0/12.0)*pow(K[ijk], 2)*psi4_B + 2*M_PI*_E[ijk]/
+pow(psi[ijk], 2) + 0.875*aij2_B/psi4_B);
 
   B[i][j] = Bpart;
 
   DDM_SCHUR_JACOBIAN_EQ_Bpart_CLOSE
 
   DDM_SCHUR_JACOBIAN_EQ_Epart_OPEN
+
+  double psi4_E = 
+pow(psi[ijk], 4);
+
+  double aij2_E = 
+_Aij2[ijk]/psi4_E;
 
   double Epart = 
 JJpsi_D0D0(j_JJpsi_D0D0,ijk,lmn)*_gammaI_U0U0[ijk] + 2.0*
@@ -116,8 +128,8 @@ Jpsi_D2(j_Jpsi_D2,ijk,lmn)*_Gamma_U2D0D2[ijk]*_gammaI_U0U2[ijk] -
 Jpsi_D2(j_Jpsi_D2,ijk,lmn)*_Gamma_U2D1D1[ijk]*_gammaI_U1U1[ijk] - 2.0*
 Jpsi_D2(j_Jpsi_D2,ijk,lmn)*_Gamma_U2D1D2[ijk]*_gammaI_U1U2[ijk] -
 Jpsi_D2(j_Jpsi_D2,ijk,lmn)*_Gamma_U2D2D2[ijk]*_gammaI_U2U2[ijk] -
-kd[ijk==lmn]*((5.0/12.0)*pow(K[ijk], 2)*pow(psi[ijk], 4) + (7.0/8.0)*
-_Aij2[ijk]/pow(psi[ijk], 8) + 2*M_PI*_E[ijk]/pow(psi[ijk], 2));
+kd[ijk==lmn]*((5.0/12.0)*pow(K[ijk], 2)*psi4_E + 2*M_PI*_E[ijk]/
+pow(psi[ijk], 2) + 0.875*aij2_E/psi4_E);
 
   E_Trans[j][i] = Epart;
 

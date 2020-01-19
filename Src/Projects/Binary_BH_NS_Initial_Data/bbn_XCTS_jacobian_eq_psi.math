@@ -98,22 +98,25 @@ Symm[JJpsi(i,j)   = JJpsi(j,i)];
 ###############################################
 `  DDM_SCHUR_JACOBIAN_EQ_Bpart_OPEN\n`;
 
+psi4_B = psi**4;
+aij2_B = _Aij2/psi4_B;
+
 # with _Aij^2 and adjustment for _R sign:
 # Bpart =  _gammaI(i,j)*JJpsi(-i,-j) - _gammaI(-i,-j)*_Gamma(l,i,j)*Jpsi(-l)\
 # -kd*(\
-#       -_R/8 + 5*(psi**4)*(K**2)/12 + 7*_Aij2*(psi**-8)/8 + 2*pi*_E*(psi**-2)\
+#       -_R/8 + 5*psi4_B*(K**2)/12 + (7/8)*aij2_B/psi4_B + 2*pi*_E*(psi**-2)\
 #     );
 
 # with _Aij^2 and no _R:
 Bpart =  _gammaI(i,j)*JJpsi(-i,-j) - _gammaI(-i,-j)*_Gamma(l,i,j)*Jpsi(-l)\
  -kd*(\
-       5*(psi**4)*(K**2)/12 + 7*_Aij2*(psi**-8)/8 + 2*pi*_E*(psi**-2)\
+       5*psi4_B*(K**2)/12 + (7/8)*aij2_B/psi4_B + 2*pi*_E*(psi**-2)\
      );
 
 # no _Aij^2 and no adjsustment for _R sign:
 # Bpart =  _gammaI(i,j)*JJpsi(-i,-j) - _gammaI(-i,-j)*_Gamma(l,i,j)*Jpsi(-l)\
 # -kd*(\
-#       _R/8 + 5*(psi**4)*(K**2)/12 + 2*pi*_E*(psi**-2)\
+#       _R/8 + 5*psi4_B*(K**2)/12 + 2*pi*_E*(psi**-2)\
 #     );
 
 `  B[i][j] = Bpart;\n`;
@@ -126,22 +129,25 @@ Bpart =  _gammaI(i,j)*JJpsi(-i,-j) - _gammaI(-i,-j)*_Gamma(l,i,j)*Jpsi(-l)\
 ###############################################
 `  DDM_SCHUR_JACOBIAN_EQ_Epart_OPEN\n`;
 
+psi4_E = psi**4;
+aij2_E = _Aij2/psi4_E;
+
 # with _Aij^2 and adjusted sign for _R:
 # Epart =  _gammaI(i,j)*JJpsi(-i,-j) - _gammaI(-i,-j)*_Gamma(l,i,j)*Jpsi(-l)\
 # -kd*(\
-#       -_R/8 + 5*(psi**4)*(K**2)/12 + 7*_Aij2*(psi**-8)/8 + 2*pi*_E*(psi**-2)\
+#       -_R/8 + 5*psi4_E*(K**2)/12 + (7/8)*aij2_E/psi4_E + 2*pi*_E*(psi**-2)\
 #     );
 
 # with _Aij^2 and no _R:
 Epart =  _gammaI(i,j)*JJpsi(-i,-j) - _gammaI(-i,-j)*_Gamma(l,i,j)*Jpsi(-l)\
  -kd*(\
-       5*(psi**4)*(K**2)/12 + 7*_Aij2*(psi**-8)/8 + 2*pi*_E*(psi**-2)\
+        5*psi4_E*(K**2)/12 + (7/8)*aij2_E/psi4_E + 2*pi*_E*(psi**-2)\
      );
 
 # no _Aij^2 and no adjsustment for _R sign:
 # Epart =  _gammaI(i,j)*JJpsi(-i,-j) - _gammaI(-i,-j)*_Gamma(l,i,j)*Jpsi(-l)\
 # -kd*(\
-#       _R/8 + 5*(psi**4)*(K**2)/12 + 2*pi*_E*(psi**-2)\
+#       _R/8 + 5*psi4_E*(K**2)/12 + 2*pi*_E*(psi**-2)\
 #     );
 
 
