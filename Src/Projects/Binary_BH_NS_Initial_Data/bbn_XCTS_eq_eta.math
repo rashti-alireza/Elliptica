@@ -84,10 +84,12 @@ Symm[_Gamma(i,j,k)  = _Gamma(i,k,j)];
 
 # write the equation below at ijk point:
 
+psi4 = psi**4;
+aij2 = _Aij2/psi4;
 F_eq = \
  _gammaI(-i,-j)*(ddeta(i,j) - _Gamma(l,i,j)*deta(-l))\
- - eta*(_R/8+(5/12)*(psi**4)*(K**2)+(7/8)*(psi**-8)*_Aij2)\
- - Beta(i)*dK(-i)*(psi**5)-2*pi*eta*(psi**-2)*(_E+2*_S);
+ - eta*(_R/8+(5/12)*(psi4)*(K**2)+(7/8)*aij2/psi4)\
+ - Beta(i)*dK(-i)*(psi4)*psi-2*pi*eta*(psi**-2)*(_E+2*_S);
 
 
 `  F[n] = F_eq;\n`;# Jx = -F in Newton-Raphson scheme
