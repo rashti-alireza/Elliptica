@@ -70,11 +70,12 @@ Symm[_Gamma(i,j,k)  = _Gamma(i,k,j)];
 
 `  DDM_SCHUR_EQ_OPEN\n`;
 
-
 # write the equation below at ijk point:
+psi4 = psi**4;
+aij2 = _Aij2/psi4;
 F_eq = _gammaI(i,j)*ddpsi(-i,-j) \
      - _gammaI(-i,-j)*_Gamma(l,i,j)*dpsi(-l)\
-     - psi*_R/8 - (psi**5)*(K**2)/12 + (psi**-7)*_Aij2/8 + 2*pi*_E/psi;
+     - psi*_R/8 - psi4*psi*(K**2)/12 + aij2/(8*psi**3) + 2*pi*_E/psi;
 
 `  F[n] = F_eq;\n`;# Jx = -F in Newton-Raphson scheme
 `  DDM_SCHUR_EQ_CLOSE\n`;

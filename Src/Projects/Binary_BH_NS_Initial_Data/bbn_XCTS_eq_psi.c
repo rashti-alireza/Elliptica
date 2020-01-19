@@ -57,28 +57,34 @@ void *bbn_eq_psi(void *vp1,void *vp2)
 
   DDM_SCHUR_EQ_OPEN
 
+  double psi4 = 
+pow(psi[ijk], 4);
+
+  double aij2 = 
+_Aij2[ijk]/psi4;
+
   double F_eq = 
--1.0/12.0*pow(K[ijk], 2)*pow(psi[ijk], 5) + (1.0/8.0)*_Aij2[ijk]/
-pow(psi[ijk], 7) + 2*M_PI*_E[ijk]/psi[ijk] - _Gamma_U0D0D0[ijk]*
-_gammaI_U0U0[ijk]*dpsi_D0[ijk] - 2.0*_Gamma_U0D0D1[ijk]*
-_gammaI_U0U1[ijk]*dpsi_D0[ijk] - 2.0*_Gamma_U0D0D2[ijk]*
-_gammaI_U0U2[ijk]*dpsi_D0[ijk] - _Gamma_U0D1D1[ijk]*_gammaI_U1U1[ijk]*
-dpsi_D0[ijk] - 2.0*_Gamma_U0D1D2[ijk]*_gammaI_U1U2[ijk]*dpsi_D0[ijk] -
-_Gamma_U0D2D2[ijk]*_gammaI_U2U2[ijk]*dpsi_D0[ijk] - _Gamma_U1D0D0[ijk]*
-_gammaI_U0U0[ijk]*dpsi_D1[ijk] - 2.0*_Gamma_U1D0D1[ijk]*
-_gammaI_U0U1[ijk]*dpsi_D1[ijk] - 2.0*_Gamma_U1D0D2[ijk]*
-_gammaI_U0U2[ijk]*dpsi_D1[ijk] - _Gamma_U1D1D1[ijk]*_gammaI_U1U1[ijk]*
-dpsi_D1[ijk] - 2.0*_Gamma_U1D1D2[ijk]*_gammaI_U1U2[ijk]*dpsi_D1[ijk] -
-_Gamma_U1D2D2[ijk]*_gammaI_U2U2[ijk]*dpsi_D1[ijk] - _Gamma_U2D0D0[ijk]*
-_gammaI_U0U0[ijk]*dpsi_D2[ijk] - 2.0*_Gamma_U2D0D1[ijk]*
-_gammaI_U0U1[ijk]*dpsi_D2[ijk] - 2.0*_Gamma_U2D0D2[ijk]*
-_gammaI_U0U2[ijk]*dpsi_D2[ijk] - _Gamma_U2D1D1[ijk]*_gammaI_U1U1[ijk]*
-dpsi_D2[ijk] - 2.0*_Gamma_U2D1D2[ijk]*_gammaI_U1U2[ijk]*dpsi_D2[ijk] -
-_Gamma_U2D2D2[ijk]*_gammaI_U2U2[ijk]*dpsi_D2[ijk] - 1.0/8.0*_R[ijk]*
-psi[ijk] + _gammaI_U0U0[ijk]*ddpsi_D0D0[ijk] + 2.0*_gammaI_U0U1[ijk]*
-ddpsi_D0D1[ijk] + 2.0*_gammaI_U0U2[ijk]*ddpsi_D0D2[ijk] +
-_gammaI_U1U1[ijk]*ddpsi_D1D1[ijk] + 2.0*_gammaI_U1U2[ijk]*
-ddpsi_D1D2[ijk] + _gammaI_U2U2[ijk]*ddpsi_D2D2[ijk];
+-1.0/12.0*pow(K[ijk], 2)*psi[ijk]*psi4 + 2*M_PI*_E[ijk]/psi[ijk] -
+_Gamma_U0D0D0[ijk]*_gammaI_U0U0[ijk]*dpsi_D0[ijk] - 2.0*
+_Gamma_U0D0D1[ijk]*_gammaI_U0U1[ijk]*dpsi_D0[ijk] - 2.0*
+_Gamma_U0D0D2[ijk]*_gammaI_U0U2[ijk]*dpsi_D0[ijk] - _Gamma_U0D1D1[ijk]*
+_gammaI_U1U1[ijk]*dpsi_D0[ijk] - 2.0*_Gamma_U0D1D2[ijk]*
+_gammaI_U1U2[ijk]*dpsi_D0[ijk] - _Gamma_U0D2D2[ijk]*_gammaI_U2U2[ijk]*
+dpsi_D0[ijk] - _Gamma_U1D0D0[ijk]*_gammaI_U0U0[ijk]*dpsi_D1[ijk] - 2.0*
+_Gamma_U1D0D1[ijk]*_gammaI_U0U1[ijk]*dpsi_D1[ijk] - 2.0*
+_Gamma_U1D0D2[ijk]*_gammaI_U0U2[ijk]*dpsi_D1[ijk] - _Gamma_U1D1D1[ijk]*
+_gammaI_U1U1[ijk]*dpsi_D1[ijk] - 2.0*_Gamma_U1D1D2[ijk]*
+_gammaI_U1U2[ijk]*dpsi_D1[ijk] - _Gamma_U1D2D2[ijk]*_gammaI_U2U2[ijk]*
+dpsi_D1[ijk] - _Gamma_U2D0D0[ijk]*_gammaI_U0U0[ijk]*dpsi_D2[ijk] - 2.0*
+_Gamma_U2D0D1[ijk]*_gammaI_U0U1[ijk]*dpsi_D2[ijk] - 2.0*
+_Gamma_U2D0D2[ijk]*_gammaI_U0U2[ijk]*dpsi_D2[ijk] - _Gamma_U2D1D1[ijk]*
+_gammaI_U1U1[ijk]*dpsi_D2[ijk] - 2.0*_Gamma_U2D1D2[ijk]*
+_gammaI_U1U2[ijk]*dpsi_D2[ijk] - _Gamma_U2D2D2[ijk]*_gammaI_U2U2[ijk]*
+dpsi_D2[ijk] - 1.0/8.0*_R[ijk]*psi[ijk] + _gammaI_U0U0[ijk]*
+ddpsi_D0D0[ijk] + 2.0*_gammaI_U0U1[ijk]*ddpsi_D0D1[ijk] + 2.0*
+_gammaI_U0U2[ijk]*ddpsi_D0D2[ijk] + _gammaI_U1U1[ijk]*ddpsi_D1D1[ijk] +
+2.0*_gammaI_U1U2[ijk]*ddpsi_D1D2[ijk] + _gammaI_U2U2[ijk]*
+ddpsi_D2D2[ijk] + (1.0/8.0)*aij2/pow(psi[ijk], 3);
 
   F[n] = F_eq;
 
