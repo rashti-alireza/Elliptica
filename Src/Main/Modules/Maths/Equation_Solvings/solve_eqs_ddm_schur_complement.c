@@ -426,9 +426,10 @@ static void solve_Sy_g_prime(Matrix_T *const S,double *const g_prime,Grid_T *con
 // ->return value: S matrix. */
 static Matrix_T *compute_S(Grid_T *const grid)
 {
-  return compute_S_CCS(grid);
+  if (0)
+    return compute_S_CCS(grid);
   
-  if (0)/* if the S matrix gets very hug then use this */
+  if (1)/* if the S matrix gets very hug then use this */
     return compute_S_CCS_long(grid);
   
 }
