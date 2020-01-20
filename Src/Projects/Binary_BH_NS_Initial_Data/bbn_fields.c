@@ -81,11 +81,12 @@ void bbn_allocate_fields(Grid_T *const grid)
     }
     
     /* Hamiltonian and Momentum constraints */
-    ADD_FIELD(ham_constraint_1st);
-    ADD_FIELD(mom_constraint_1st_U0);
-    ADD_FIELD(mom_constraint_1st_U1);
-    ADD_FIELD(mom_constraint_1st_U2);
+    ADD_FIELD(ham_constraint);
+    ADD_FIELD(mom_constraint);
+    ADD_FIELD(mom_constraint);
+    ADD_FIELD(mom_constraint);
   
+    /* Hamiltonian and Momentum constraints for second method of calculations */ 
     ADD_FIELD(ham_constraint_2nd);
     ADD_FIELD(mom_constraint_2nd_U0);
     ADD_FIELD(mom_constraint_2nd_U1);
