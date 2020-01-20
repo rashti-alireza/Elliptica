@@ -899,7 +899,16 @@ fdInterp_dfs_T *get_dInterp_df(const Patch_T *const patch,const SubFace_T *const
   
   if (!strcmp(type,"Tn_Extrema,Tn_Extrema,Tn_Extrema,"))
   {
-    if (sf->sameX)
+    if (!sf)/* if no subface is involved */
+    {
+      if      (!strcmp("x derivative",dir)) Func = dInterp_x_df_XYZ_Tn_Ex;
+      else if (!strcmp("y derivative",dir)) Func = dInterp_y_df_XYZ_Tn_Ex;
+      else if (!strcmp("z derivative",dir)) Func = dInterp_z_df_XYZ_Tn_Ex;
+      else if (!strcmp("none",dir))	    Func = dInterp_df_XYZ_Tn_Ex;
+      else
+        abortEr("No such directive defined for this function.\n");
+    }
+    else if (sf->sameX)
     {
       if      (!strcmp("x derivative",dir)) Func = dInterp_x_df_YZ_Tn_Ex;
       else if (!strcmp("y derivative",dir)) Func = dInterp_y_df_YZ_Tn_Ex;
