@@ -56,10 +56,10 @@ void bbn_study_initial_data(Grid_T *const grid)
 void bbn_print_residual_norms(Grid_T *const grid,const unsigned iteration, const char *const folder)
 {
   /* list of the fields to be printed out */
-  const char *f[] = {"ham_constraint_1st",
-                     "mom_constraint_1st_U0",
-                     "mom_constraint_1st_U1",
-                     "mom_constraint_1st_U2",
+  const char *f[] = {"ham_constraint",
+                     "mom_constraint_U0",
+                     "mom_constraint_U1",
+                     "mom_constraint_U2",
                      "ham_constraint_2nd",
                      "mom_constraint_2nd_U0",
                      "mom_constraint_2nd_U1",
