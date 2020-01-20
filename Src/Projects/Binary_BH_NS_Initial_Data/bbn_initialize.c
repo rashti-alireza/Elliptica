@@ -1867,7 +1867,7 @@ static void find_NS_surface_Ylm_method_CS(Grid_T *const grid,struct Grid_Params_
     }
     
     //print_spectral_expansion_truncation_error(grid);
-    bbn_study_initial_data(grid);
+    //bbn_study_initial_data(grid);
   }
   
   /* if some day you wanna filter Clm's */
