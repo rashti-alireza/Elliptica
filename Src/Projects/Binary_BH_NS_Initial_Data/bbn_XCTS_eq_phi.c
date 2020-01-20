@@ -19,7 +19,6 @@ void *bbn_eq_phi(void *vp1,void *vp2)
   
 
   /* declaring: */
-  GET_FIELD_IF_IN_NS(phi)
   GET_FIELD_IF_IN_NS(dphi_D2)
   GET_FIELD_IF_IN_NS(dphi_D1)
   GET_FIELD_IF_IN_NS(dphi_D0)
@@ -195,9 +194,24 @@ t5 + t6;
 
   if(strstr(patch->name,"left_centeral_box"))
   {
-    ijk  = node[0];
+    const double NS_center[3] = {0,GetParameterD_E("NS_center"),0};
+    Interpolation_T *interp_phi0 = init_interpolation();
+    double interp;
+    double X[3] = {0};
+
+    X_of_x(X,NS_center,patch);
+    interp_phi0->field = patch->pool[Ind("phi")];
+    interp_phi0->X = X[0];
+    interp_phi0->Y = X[1];
+    interp_phi0->Z = X[2];
+    interp_phi0->XYZ_dir_flag = 1;
+    plan_interpolation(interp_phi0);
+    interp = execute_interpolation(interp_phi0);
+    free_interpolation(interp_phi0);
+
     for (n = 0; n < N; ++n)
-    	F[n] += phi[ijk];
+    	F[n] += interp;
+   
   }
   return 0;
 }
