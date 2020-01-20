@@ -72,10 +72,10 @@ void bbn_calculate_constraints_1st(Grid_T *const grid)
   {
 
   /* declaring: */
-  PREP_FIELD(ham_constraint_1st)
-  PREP_FIELD(mom_constraint_1st_U1)
-  PREP_FIELD(mom_constraint_1st_U0)
-  PREP_FIELD(mom_constraint_1st_U2)
+  PREP_FIELD(ham_constraint)
+  PREP_FIELD(mom_constraint_U2)
+  PREP_FIELD(mom_constraint_U0)
+  PREP_FIELD(mom_constraint_U1)
   GET_FIELD(_A_UiUj_U2U2)
   GET_FIELD(_A_UiUj_U1U2)
   GET_FIELD(_A_UiUj_U1U1)
@@ -174,20 +174,17 @@ void bbn_calculate_constraints_1st(Grid_T *const grid)
   double psim4 = 
 pow(psi[ijk], -4);
 
-  double psim6 = 
-pow(psi[ijk], -6);
+  double psi2 = 
+pow(psi[ijk], 2);
 
-  double J_U2 = 
-_J_U2[ijk]*psim6;
+  double psi3 = 
+psi[ijk]*psi2;
 
-  double J_U0 = 
-_J_U0[ijk]*psim6;
+  double psi6 = 
+pow(psi3, 2);
 
-  double J_U1 = 
-_J_U1[ijk]*psim6;
-
-  double E = 
-_E[ijk]*psim6;
+  double psim3 = 
+1.0/psi3;
 
   double dLnpsi_D0 = 
 dpsi_D0[ijk]/psi[ijk];
@@ -220,34 +217,34 @@ ddpsi_D0D2[ijk] + _gammaI_U1U1[ijk]*ddpsi_D1D1[ijk] + 2.0*
 _gammaI_U1U2[ijk]*ddpsi_D1D2[ijk] + _gammaI_U2U2[ijk]*
 ddpsi_D2D2[ijk];
 
-  double R = 
--8*DDpsi*psim4/psi[ijk] + _R[ijk]*psim4;
+  double psi6R = 
+-8*DDpsi*psi[ijk] + _R[ijk]*psi2;
 
   double Kbar_U0U0 = 
-(1.0/3.0)*K[ijk]*_gammaI_U0U0[ijk] + _A_UiUj_U0U0[ijk]*
-psim6;
+(1.0/3.0)*K[ijk]*_gammaI_U0U0[ijk]*psi3 + _A_UiUj_U0U0[ijk]*
+psim3;
 
   double Kbar_U0U1 = 
-(1.0/3.0)*K[ijk]*_gammaI_U0U1[ijk] + _A_UiUj_U0U1[ijk]*
-psim6;
+(1.0/3.0)*K[ijk]*_gammaI_U0U1[ijk]*psi3 + _A_UiUj_U0U1[ijk]*
+psim3;
 
   double Kbar_U0U2 = 
-(1.0/3.0)*K[ijk]*_gammaI_U0U2[ijk] + _A_UiUj_U0U2[ijk]*
-psim6;
+(1.0/3.0)*K[ijk]*_gammaI_U0U2[ijk]*psi3 + _A_UiUj_U0U2[ijk]*
+psim3;
 
   double Kbar_U2U2 = 
-(1.0/3.0)*K[ijk]*_gammaI_U2U2[ijk] + _A_UiUj_U2U2[ijk]*
-psim6;
+(1.0/3.0)*K[ijk]*_gammaI_U2U2[ijk]*psi3 + _A_UiUj_U2U2[ijk]*
+psim3;
 
   double Kbar_U1U1 = 
-(1.0/3.0)*K[ijk]*_gammaI_U1U1[ijk] + _A_UiUj_U1U1[ijk]*
-psim6;
+(1.0/3.0)*K[ijk]*_gammaI_U1U1[ijk]*psi3 + _A_UiUj_U1U1[ijk]*
+psim3;
 
   double Kbar_U1U2 = 
-(1.0/3.0)*K[ijk]*_gammaI_U1U2[ijk] + _A_UiUj_U1U2[ijk]*
-psim6;
+(1.0/3.0)*K[ijk]*_gammaI_U1U2[ijk]*psi3 + _A_UiUj_U1U2[ijk]*
+psim3;
 
-  double KijKij = 
+  double psi6KijKij = 
 pow(Kbar_U0U0, 2)*pow(_gamma_D0D0[ijk], 2) + 4.0*Kbar_U0U0*Kbar_U0U1*
 _gamma_D0D0[ijk]*_gamma_D0D1[ijk] + 4.0*Kbar_U0U0*Kbar_U0U2*
 _gamma_D0D0[ijk]*_gamma_D0D2[ijk] + 2.0*Kbar_U0U0*Kbar_U1U1*
@@ -274,7 +271,8 @@ pow(_gamma_D1D2[ijk], 2) + 4.0*Kbar_U1U2*Kbar_U2U2*_gamma_D1D2[ijk]*
 _gamma_D2D2[ijk] + pow(Kbar_U2U2, 2)*pow(_gamma_D2D2[ijk], 2);
 
   double Ham_Constraint = 
--16*M_PI*E + pow(K[ijk], 2) - KijKij + R;
+pow(K[ijk], 2)*psi6 - 16*M_PI*_E[ijk] - psi6KijKij +
+psi6R;
 
   double c_U2U2U2 = 
 -2.0*_gammaI_U0U2[ijk]*_gamma_D2D2[ijk]*dLnpsi_D0 - 2.0*
@@ -360,35 +358,35 @@ _gamma_D1D2[ijk]*dLnpsi_D2 + 2.0*dLnpsi_D2;
 -2.0*_gamma_D2D2[ijk]*(_gammaI_U0U0[ijk]*dLnpsi_D0 + _gammaI_U0U1[ijk]*
 dLnpsi_D1 + _gammaI_U0U2[ijk]*dLnpsi_D2);
 
-  double djKj_U0 = 
-(1.0/3.0)*psim4*(K[ijk]*(_dgammaI_U0U0D0[ijk] + _dgammaI_U0U1D1[ijk] + 
-_dgammaI_U0U2D2[ijk]) - 4.0*K[ijk]*(_gammaI_U0U0[ijk]*dLnpsi_D0 + 
-_gammaI_U0U1[ijk]*dLnpsi_D1 + _gammaI_U0U2[ijk]*dLnpsi_D2) + 
-_gammaI_U0U0[ijk]*dK_D0[ijk] + _gammaI_U0U1[ijk]*dK_D1[ijk] + 
-_gammaI_U0U2[ijk]*dK_D2[ijk] - 3*psim6*(10.0*_A_UiUj_U0U0[ijk]*
-dLnpsi_D0 + 10.0*_A_UiUj_U0U1[ijk]*dLnpsi_D1 + 10.0*_A_UiUj_U0U2[ijk]*
-dLnpsi_D2 - _dA_UiUj_U0U0D0[ijk] - _dA_UiUj_U0U1D1[ijk] - 
-_dA_UiUj_U0U2D2[ijk]));
-
-  double djKj_U1 = 
-(1.0/3.0)*psim4*(K[ijk]*(_dgammaI_U0U1D0[ijk] + _dgammaI_U1U1D1[ijk] + 
-_dgammaI_U1U2D2[ijk]) - 4.0*K[ijk]*(_gammaI_U0U1[ijk]*dLnpsi_D0 + 
-_gammaI_U1U1[ijk]*dLnpsi_D1 + _gammaI_U1U2[ijk]*dLnpsi_D2) + 
-_gammaI_U0U1[ijk]*dK_D0[ijk] + _gammaI_U1U1[ijk]*dK_D1[ijk] + 
-_gammaI_U1U2[ijk]*dK_D2[ijk] - 3*psim6*(10.0*_A_UiUj_U0U1[ijk]*
-dLnpsi_D0 + 10.0*_A_UiUj_U1U1[ijk]*dLnpsi_D1 + 10.0*_A_UiUj_U1U2[ijk]*
-dLnpsi_D2 - _dA_UiUj_U0U1D0[ijk] - _dA_UiUj_U1U1D1[ijk] - 
-_dA_UiUj_U1U2D2[ijk]));
-
-  double djKj_U2 = 
-(1.0/3.0)*psim4*(K[ijk]*(_dgammaI_U0U2D0[ijk] + _dgammaI_U1U2D1[ijk] + 
+  double psi6djKj_U2 = 
+(1.0/3.0)*psi2*(K[ijk]*(_dgammaI_U0U2D0[ijk] + _dgammaI_U1U2D1[ijk] + 
 _dgammaI_U2U2D2[ijk]) - 4.0*K[ijk]*(_gammaI_U0U2[ijk]*dLnpsi_D0 + 
 _gammaI_U1U2[ijk]*dLnpsi_D1 + _gammaI_U2U2[ijk]*dLnpsi_D2) + 
 _gammaI_U0U2[ijk]*dK_D0[ijk] + _gammaI_U1U2[ijk]*dK_D1[ijk] + 
-_gammaI_U2U2[ijk]*dK_D2[ijk] - 3*psim6*(10.0*_A_UiUj_U0U2[ijk]*
+_gammaI_U2U2[ijk]*dK_D2[ijk]) - psim4*(10.0*_A_UiUj_U0U2[ijk]*
 dLnpsi_D0 + 10.0*_A_UiUj_U1U2[ijk]*dLnpsi_D1 + 10.0*_A_UiUj_U2U2[ijk]*
 dLnpsi_D2 - _dA_UiUj_U0U2D0[ijk] - _dA_UiUj_U1U2D1[ijk] - 
-_dA_UiUj_U2U2D2[ijk]));
+_dA_UiUj_U2U2D2[ijk]);
+
+  double psi6djKj_U0 = 
+(1.0/3.0)*psi2*(K[ijk]*(_dgammaI_U0U0D0[ijk] + _dgammaI_U0U1D1[ijk] + 
+_dgammaI_U0U2D2[ijk]) - 4.0*K[ijk]*(_gammaI_U0U0[ijk]*dLnpsi_D0 + 
+_gammaI_U0U1[ijk]*dLnpsi_D1 + _gammaI_U0U2[ijk]*dLnpsi_D2) + 
+_gammaI_U0U0[ijk]*dK_D0[ijk] + _gammaI_U0U1[ijk]*dK_D1[ijk] + 
+_gammaI_U0U2[ijk]*dK_D2[ijk]) - psim4*(10.0*_A_UiUj_U0U0[ijk]*
+dLnpsi_D0 + 10.0*_A_UiUj_U0U1[ijk]*dLnpsi_D1 + 10.0*_A_UiUj_U0U2[ijk]*
+dLnpsi_D2 - _dA_UiUj_U0U0D0[ijk] - _dA_UiUj_U0U1D1[ijk] - 
+_dA_UiUj_U0U2D2[ijk]);
+
+  double psi6djKj_U1 = 
+(1.0/3.0)*psi2*(K[ijk]*(_dgammaI_U0U1D0[ijk] + _dgammaI_U1U1D1[ijk] + 
+_dgammaI_U1U2D2[ijk]) - 4.0*K[ijk]*(_gammaI_U0U1[ijk]*dLnpsi_D0 + 
+_gammaI_U1U1[ijk]*dLnpsi_D1 + _gammaI_U1U2[ijk]*dLnpsi_D2) + 
+_gammaI_U0U1[ijk]*dK_D0[ijk] + _gammaI_U1U1[ijk]*dK_D1[ijk] + 
+_gammaI_U1U2[ijk]*dK_D2[ijk]) - psim4*(10.0*_A_UiUj_U0U1[ijk]*
+dLnpsi_D0 + 10.0*_A_UiUj_U1U1[ijk]*dLnpsi_D1 + 10.0*_A_UiUj_U1U2[ijk]*
+dLnpsi_D2 - _dA_UiUj_U0U1D0[ijk] - _dA_UiUj_U1U1D1[ijk] - 
+_dA_UiUj_U1U2D2[ijk]);
 
   double GammaKbar_U2 = 
 Kbar_U0U0*_Gamma_U2D0D0[ijk] + 2.0*Kbar_U0U1*_Gamma_U2D0D1[ijk] + 
@@ -414,14 +412,14 @@ Kbar_U0U2*_Gamma_U0D0D2[ijk] + Kbar_U0U2*_Gamma_U1D1D2[ijk] +
 Kbar_U0U2*_Gamma_U2D2D2[ijk] + Kbar_U1U1*_Gamma_U0D1D1[ijk] + 2.0*
 Kbar_U1U2*_Gamma_U0D1D2[ijk] + Kbar_U2U2*_Gamma_U0D2D2[ijk];
 
-  double DbarjKj_U2 = 
-GammaKbar_U2*psim4 + djKj_U2;
+  double psi6DbarjKj_U0 = 
+GammaKbar_U0/psi[ijk] + psi6djKj_U0;
 
-  double DbarjKj_U0 = 
-GammaKbar_U0*psim4 + djKj_U0;
+  double psi6DbarjKj_U1 = 
+GammaKbar_U1/psi[ijk] + psi6djKj_U1;
 
-  double DbarjKj_U1 = 
-GammaKbar_U1*psim4 + djKj_U1;
+  double psi6DbarjKj_U2 = 
+GammaKbar_U2/psi[ijk] + psi6djKj_U2;
 
   double CKbar_U2 = 
 Kbar_U0U0*c_U2U0U0 + 2.0*Kbar_U0U1*c_U2U0U1 + Kbar_U0U2*c_U0U0U0 + 
@@ -444,33 +442,36 @@ Kbar_U0U2*c_U0U0U2 + Kbar_U0U2*c_U1U1U2 + Kbar_U0U2*c_U2U2U2 +
 Kbar_U1U1*c_U0U1U1 + 2.0*Kbar_U1U2*c_U0U1U2 + Kbar_U2U2*
 c_U0U2U2;
 
-  double Dk_U0 = 
-CKbar_U0*psim4 + DbarjKj_U0;
+  double psi6Dk_U2 = 
+CKbar_U2/psi[ijk] + psi6DbarjKj_U2;
 
-  double Dk_U1 = 
-CKbar_U1*psim4 + DbarjKj_U1;
+  double psi6Dk_U0 = 
+CKbar_U0/psi[ijk] + psi6DbarjKj_U0;
 
-  double Dk_U2 = 
-CKbar_U2*psim4 + DbarjKj_U2;
+  double psi6Dk_U1 = 
+CKbar_U1/psi[ijk] + psi6DbarjKj_U1;
 
   double Mom_constraint_U2 = 
-Dk_U2 - 8*M_PI*J_U2 - psim4*(_gammaI_U0U2[ijk]*dK_D0[ijk] + 
-_gammaI_U1U2[ijk]*dK_D1[ijk] + _gammaI_U2U2[ijk]*dK_D2[ijk]);
+-8*M_PI*_J_U2[ijk] - psi2*(_gammaI_U0U2[ijk]*dK_D0[ijk] + 
+_gammaI_U1U2[ijk]*dK_D1[ijk] + _gammaI_U2U2[ijk]*dK_D2[ijk]) + 
+psi6Dk_U2;
 
   double Mom_constraint_U0 = 
-Dk_U0 - 8*M_PI*J_U0 - psim4*(_gammaI_U0U0[ijk]*dK_D0[ijk] + 
-_gammaI_U0U1[ijk]*dK_D1[ijk] + _gammaI_U0U2[ijk]*dK_D2[ijk]);
+-8*M_PI*_J_U0[ijk] - psi2*(_gammaI_U0U0[ijk]*dK_D0[ijk] + 
+_gammaI_U0U1[ijk]*dK_D1[ijk] + _gammaI_U0U2[ijk]*dK_D2[ijk]) + 
+psi6Dk_U0;
 
   double Mom_constraint_U1 = 
-Dk_U1 - 8*M_PI*J_U1 - psim4*(_gammaI_U0U1[ijk]*dK_D0[ijk] + 
-_gammaI_U1U1[ijk]*dK_D1[ijk] + _gammaI_U1U2[ijk]*dK_D2[ijk]);
+-8*M_PI*_J_U1[ijk] - psi2*(_gammaI_U0U1[ijk]*dK_D0[ijk] + 
+_gammaI_U1U1[ijk]*dK_D1[ijk] + _gammaI_U1U2[ijk]*dK_D2[ijk]) + 
+psi6Dk_U1;
 
 
   /* populating: */
-  mom_constraint_1st_U1[ijk] = Mom_constraint_U1;
-  mom_constraint_1st_U0[ijk] = Mom_constraint_U0;
-  mom_constraint_1st_U2[ijk] = Mom_constraint_U2;
-  ham_constraint_1st[ijk] = Ham_Constraint;
+  mom_constraint_U2[ijk] = Mom_constraint_U2;
+  mom_constraint_U0[ijk] = Mom_constraint_U0;
+  mom_constraint_U1[ijk] = Mom_constraint_U1;
+  ham_constraint[ijk] = Ham_Constraint;
   }
   }
   DECLARE_FIELD(_dgammaI_U0U0D1)
