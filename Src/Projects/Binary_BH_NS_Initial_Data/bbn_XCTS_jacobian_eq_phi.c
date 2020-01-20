@@ -238,8 +238,39 @@ t1_e_;
 
   if(strstr(patch->name,"left_centeral_box"))
   {
-    for (i = 0; i < Ni; ++i)
-      B[i][0] += 1;
+   fdInterp_dfs_T *const dInterp_df = get_dInterp_df(patch,0,"none");
+   const double NS_center[3] = {0,GetParameterD_E("NS_center"),0};
+   const unsigned nn = patch->nn;
+   double *d_df = alloc_double(nn);
+   double X[3];
+
+   X_of_x(X,NS_center,patch);
+   for (ijk = 0; ijk < nn; ++ijk)
+    d_df[ijk] = dInterp_df(patch,X,ijk,0);
+
+   for (i = 0; i < Ni; ++i)
+   {
+    for (j = 0; j < Nj; ++j)
+    {
+     lmn = node[j];
+     B[i][j] += d_df[lmn];
+    }
+   }
+
+   if (S->NI)/* if there is any interface points then E is needed */
+   {
+    E_Trans = S->E_Trans->reg->A;
+    for (k = K0; k < Nk; ++k)
+    {
+     lmn = node[k];
+     j = k-K0;
+     for (i = 0; i < Ni; ++i)
+     {
+      E_Trans[j][i] += d_df[lmn];
+     }
+    }
+   }/* end of if (S->NI) */
+   free(d_df);
   }
   return 0;
 }
