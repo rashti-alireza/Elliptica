@@ -3274,30 +3274,6 @@ KSbeta_D2[ijk]*_gammaI_U2U2[ijk];
     
   }/* end of initialization psi, eta and matter fields */
   
-  /* improve initialization for phi by adding a const to phi */
-  Patch_T *patch_left_centeral_box = GetPatch("left_centeral_box",grid);
-  const int phi_ind = LookUpField_E("phi",patch_left_centeral_box);
-  const Field_T *const phi_field = patch_left_centeral_box->pool[phi_ind];
-  /* since we require phi at point (1,1,1) be zero as one the
-  // conditions we have: */
-  const double phi_const = phi_field->v[L(patch_left_centeral_box->n,1,1,1)];
-  
-  FOR_ALL_PATCHES(p,grid)
-  {
-     Patch_T *patch = grid->patch[p];
-     unsigned nn = patch->nn;
-     unsigned ijk;
-     
-     if (!IsItNSPatch(patch))
-       continue;
-    
-     PREP_FIELD(phi)
-     
-     for (ijk = 0; ijk < nn; ++ijk)
-       phi[ijk] -= phi_const;
-     
-  }
-  
   /* initializing Beta and B's */
   FOR_ALL_PATCHES(p,grid)
   {
