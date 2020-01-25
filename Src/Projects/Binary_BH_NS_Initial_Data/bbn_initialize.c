@@ -86,6 +86,10 @@ static Grid_T *make_next_grid_using_previous_grid(Grid_T *const grid_prev)
   // the next grid  and initialzing some other fields */
   interpolate_and_initialize_to_next_grid(grid_next,grid_prev);
   
+  /* make normal vectorn on BH horizon 
+  // note: this MUST be before "bbn_partial_derivatives_fields" */
+  make_normal_vector_on_BH_horizon(grid_next,GridParams);
+  
   /* taking partial derivatives of the fields needed for equations */
   bbn_partial_derivatives_fields(grid_next);
   
@@ -95,9 +99,6 @@ static Grid_T *make_next_grid_using_previous_grid(Grid_T *const grid_prev)
   /* update _Aij in K^{ij} = A^{ij}+1/3*gamma^{ij}*K and 
   // _A^{ij} = gamma^10*A^{ij} and _dA^{ij} */
   bbn_update_Aij(grid_next);
-  
-  /* make normal vectorn on BH horizon */
-  make_normal_vector_on_BH_horizon(grid_next,GridParams);
   
   /* freeing */
   free_Grid_Params_S(GridParams);
@@ -2815,6 +2816,10 @@ static Grid_T *TOV_KerrSchild_approximation(void)
   /* initialize the fields using TOV and Kerr-Schild solution */
   init_field_TOV_plus_KerrSchild(grid,tov,bh_chi*bh_mass,bh_mass);
   
+  /* make normal vectorn on BH horizon 
+  // note: this MUST be before "bbn_partial_derivatives_fields" */
+  make_normal_vector_on_BH_horizon(grid,GridParams);
+  
   /* taking partial derivatives of the fields needed for equations */
   bbn_partial_derivatives_fields(grid);
   
@@ -2824,9 +2829,6 @@ static Grid_T *TOV_KerrSchild_approximation(void)
   /* update _Aij in K^{ij} = A^{ij}+1/3*gamma^{ij}*K and 
   // _A^{ij} = gamma^10*A^{ij} and _dA^{ij} */
   bbn_update_Aij(grid);
-  
-  /* make normal vectorn on BH horizon */
-  make_normal_vector_on_BH_horizon(grid,GridParams);
   
   /* find Euler equation const using enthalpy of TOV star and other fields */
   find_Euler_eq_const_TOV_KerrSchild(grid);
