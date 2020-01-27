@@ -51,7 +51,7 @@ int direct_solver_umfpack_di(void *vp)
   {
     printf("%s\n",umf->description);
     printf("o.  Matrix Dimension = %dx%d\n", row,col);
-    printf("o.  Condition Number = %g\n", 1/Info[UMFPACK_RCOND]);
+    printf("o.  Condition Number = %e\n", 1/Info[UMFPACK_RCOND]);
     printf("o.  Elapsed Second(s)= %g\n",get_time_sec()-time1);
     fflush(stdout);
   }
@@ -105,7 +105,7 @@ int direct_solver_umfpack_dl(void *vp)
   {
     printf("%s\n",umf->description);
     printf("o.  Matrix Dimension = %dx%d\n", row,col);
-    printf("o.  Condition Number = %g\n", 1/Info[UMFPACK_RCOND]);
+    printf("o.  Condition Number = %e\n", 1/Info[UMFPACK_RCOND]);
     printf("o.  Elapsed Second(s)= %g\n",get_time_sec()-time1);
     fflush(stdout);
   }
@@ -180,7 +180,7 @@ int direct_solver_series_umfpack_di(void *vp)
   {
     printf("%s\n",umf->description);
     printf("o.  Matrix Dimension = %dx%d\n", row,col);
-    printf("o.  Condition Number = %g\n", 1/Info[UMFPACK_RCOND]);
+    printf("o.  Condition Number = %e\n", 1/Info[UMFPACK_RCOND]);
     printf("o.  Elapsed Second(s)= %g\n",get_time_sec()-time1);
     fflush(stdout);
   }
@@ -241,7 +241,7 @@ int direct_solver_series_umfpack_dl(void *vp)
   {
     printf("%s\n",umf->description);
     printf("o.  Matrix Dimension = %dx%d\n", row,col);
-    printf("o.  Condition Number = %g\n", 1/Info[UMFPACK_RCOND]);
+    printf("o.  Condition Number = %e\n", 1/Info[UMFPACK_RCOND]);
     printf("o.  Elapsed Second(s)= %g\n",get_time_sec()-time1);
     fflush(stdout);
   }
