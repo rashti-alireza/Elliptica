@@ -41,11 +41,16 @@ int ddm_schur_complement(Solve_Equations_T *const SolveEqs)
 {
   Grid_T *grid;
   char **field_name = 0;/* name of all fields to be solved */
+  static unsigned pr_flg = 0;
   unsigned nf = 0;/* number of all fields */
   unsigned f;/* dummy index */
   
   pr_line_custom('=');
-  printf("{ Solving the Equations ...\n\n");
+  
+  printf("{ Solve Equations by Schur Complement Domain Decomposition Method ...\n\n");
+  if (!pr_flg)
+    pr_intro_ddm_schur_complement();
+  pr_flg++;
   
   /* read order of fields to be solved from input */
   field_name = get_solving_field_name(SolveEqs->solving_order,&nf);
@@ -94,7 +99,7 @@ int ddm_schur_complement(Solve_Equations_T *const SolveEqs)
   /* free names */
   free_2d_mem(field_name,nf);
   
-  printf("\n} Solving the Equations ==> Done.\n");
+  printf("\n} Solve Equations by Schur Complement Domain Decomposition Method ==> Done.\n\n");
   pr_clock();
   pr_line_custom('=');
   
@@ -2910,4 +2915,41 @@ void calculate_equation_residual(Solve_Equations_T *const SolveEqs)
   
   /* free names */
   free_2d_mem(field_name,nf);
+}
+
+/* print an introcuction to Schur complement method */
+static void pr_intro_ddm_schur_complement(void)
+{
+  pr_line_custom('*');
+  const char *const pr_message =
+  
+  "\n* Quick Introduction to Schur Complement Domain Decomposition Method *\n\n"
+
+  "  We want to solve system of equations A z = b on the given grid,\n"
+  "for example, Jx = -F at Newton-Raphson method.\n"
+  "The system of equations A z = b are reordered as follows:\n\n"
+
+
+  "               --  --\n"
+  "              | B  E |  |x|   |f|\n"
+  "  A z = b =>  |      |  | | = | |\n"
+  "              | F  C |  |y|   |g|\n"
+  "               --  --\n"
+  "\n"   
+  "          =>  B x + E y = f\n"
+  "          =>  F x + C y = g\n"
+  "\n"
+  "          =>                      x = B^-1 * ( f - E y )\n"
+  "          =>  ( C - F * B^-1* E ) y = g - F * B^-1 *f\n"
+  "\n"
+  "  Algorithm:\n"
+  "\n" 
+  "  1. Solve BE'  = E and Bf'= f\n"
+  "  2. Compute g' = g - Ff'\n"
+  "  3. Compute S  = C - FE'\n"
+  "  4. Solve Sy   = g'\n"
+  "  5. Compute x  = f'-E'y\n";
+
+  printf("%s\n",pr_message);
+  pr_line_custom('*');
 }
