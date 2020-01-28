@@ -17,7 +17,7 @@
    
    Algorithm:
    
-   1. solve BE'= E and Bf'= f
+   1. solve BE'  = E and Bf'= f where E' = B^(-1)*E and f' = B^(-1)*f
    2. compute g' = g - Ff'
    3. compute S  = C - FE'
    4. solve Sy = g'
@@ -41,16 +41,13 @@ int ddm_schur_complement(Solve_Equations_T *const SolveEqs)
 {
   Grid_T *grid;
   char **field_name = 0;/* name of all fields to be solved */
-  static unsigned pr_flg = 0;
   unsigned nf = 0;/* number of all fields */
   unsigned f;/* dummy index */
   
   pr_line_custom('=');
   
   printf("{ Solve Equations by Schur Complement Domain Decomposition Method ...\n\n");
-  if (!pr_flg)
-    pr_intro_ddm_schur_complement();
-  pr_flg++;
+  pr_intro_ddm_schur_complement();
   
   /* read order of fields to be solved from input */
   field_name = get_solving_field_name(SolveEqs->solving_order,&nf);
@@ -173,11 +170,15 @@ static int solve_field(Solve_Equations_T *const SolveEqs)
       double *g_prime = 0;
       Matrix_T *S;
       double time1 = get_time_sec();
+      double time_temp;
+      char *pr_msg = 0;
       unsigned p;
       
       /* set current step */
       set_solving_man_settings_solver_step(grid,step);
       
+      printf("{ Compute f and g ...\n");
+      time_temp = get_time_sec();
       DDM_SCHUR_COMPLEMENT_OpenMP(omp parallel for)
       for (p = 0; p < npatch; ++p)
       {
@@ -186,7 +187,9 @@ static int solve_field(Solve_Equations_T *const SolveEqs)
         make_partial_g(patch);
       }
       make_g(grid);/* free pg */
-      
+      printf("} Compute f and g --> Done. ( Wall-Clock = %.0fs )\n",
+              get_time_sec()-time_temp);
+      fflush(stdout);
       if (!step)/* only at first step */
         set_solving_man_settings_Frms_i(grid);
       
@@ -211,18 +214,62 @@ static int solve_field(Solve_Equations_T *const SolveEqs)
       for (p = 0; p < npatch; ++p)
       {
         Patch_T *patch = grid->patch[p];
-        making_B_and_E(patch);
-        making_E_prime_and_f_prime(patch);/* free{B,E} */
-        making_F_and_C(patch);/* free C and save C_ccs */
-        making_F_by_f_prime(patch);
-        making_F_by_E_prime(patch);/* free {F} */
+        double tic = get_time_sec();
+        char *msg  = calloc(10000,1); 
+        pointerEr(msg);
+        
+        char *msg1 = making_B_and_E(patch);
+        char *msg2 = making_E_prime_and_f_prime(patch);/* free{B,E} */
+        char *msg3 = making_F_and_C(patch);/* free C and save C_ccs */
+        char *msg4 = making_F_by_f_prime(patch);
+        char *msg5 = making_F_by_E_prime(patch);/* free {F} */
+        
+        sprintf(msg,"{ %s ...\n\n"
+                    "%s\n"
+                    "%s\n"
+                    "%s\n"
+                    "%s\n"
+                    "%s\n"
+                    "} %s --> Done. ( Wall-Clock = %.0fs )\n",
+                patch->name,
+                msg1,msg2,msg3,msg4,msg5,
+                patch->name,
+                get_time_sec()-tic);
+                
+        printf("%s\n",msg);
+        fflush(stdout);
+        
+        free(msg1);
+        free(msg2);
+        free(msg3);
+        free(msg4);
+        free(msg5);
+        free(msg);
       }
       
+      /* compute g' */
+      printf("{ Compute g' ...\n");
+      time_temp = get_time_sec();
       g_prime = compute_g_prime(grid);/* free {g,Ff'} */
+      printf("} Compute g' --> Done. ( Wall-Clock = %.0fs )\n\n",
+              get_time_sec()-time_temp);
+      fflush(stdout);
+      
+      /* compute S */
+      printf("{ Compute S ...\n");
+      time_temp = get_time_sec();
       S = compute_S(grid);/* free {C_ccs,FE'} */
+      printf("} Compute S --> Done. ( Wall-Clock = %.0f]\n\n",get_time_sec()-time_temp);
+      fflush(stdout);
       
       /* solve Sy = g' */
-      solve_Sy_g_prime(S,g_prime,grid);/* free{S,g'} */
+      printf("{ Solve S y = g' ...\n");
+      time_temp = get_time_sec();
+      pr_msg = solve_Sy_g_prime(S,g_prime,grid);/* free{S,g'} */
+      printf("%s",pr_msg);
+      printf("} Solve S y = g' --> Done. ( Wall-Clock = %.0fs )\n\n",get_time_sec()-time_temp);
+      fflush(stdout);
+      free(pr_msg);
       
       DDM_SCHUR_COMPLEMENT_OpenMP(omp parallel for)
       for (p = 0; p < npatch; ++p)
@@ -230,28 +277,54 @@ static int solve_field(Solve_Equations_T *const SolveEqs)
         Patch_T *patch    = grid->patch[p];
         Solving_Man_T *SM = patch->solving_man;
         char *field_name  = SM->field_name[SM->cf];
+        char msg1[1000],msg2[1000],msg3[1000],msg4[1000],msg5[1000];
+        double tic;
+        double w_lambda = patch->solving_man->settings->relaxation_factor;
+        
+        sprintf(msg1,"{ %s ...\n",patch->name);
+        sprintf(msg4,"} %s --> Done.\n",patch->name);
         
         /* x = f'-E'y */
+        tic = get_time_sec();
         compute_x(patch);
+        
+        sprintf(msg2,"  --> Compute x. ( Wall-Clock = %.0fs )\n",
+                get_time_sec()-tic);
+        
         free_E_Trans_prime(patch);/* free{E^T'} */
+        
+        /* update field */
+        tic = get_time_sec();
         update_field(patch);
+        sprintf(msg3,"  --> Update '%s', weight = %g. ( Wall-Clock = %.0fs )\n",
+                field_name,w_lambda,get_time_sec()-tic);
+        
         free_x(patch);/* free{x} */
         
-        /* updating fields and their derivative and related */
+        msg5[0] = '\0';
+        /* updating fields and their derivatives and related */
         if (SolveEqs->FieldUpdate)/* if defined any FieldUpdate function */
+        {
+          tic = get_time_sec();
           SolveEqs->FieldUpdate(patch,field_name);
+          sprintf(msg5,"  --> Update '%s' derivatives. ( Wall-Clock = %.0fs )\n",
+                  field_name,get_time_sec()-tic);
+        }
+        
+        printf("%s%s%s%s%s\n",msg1,msg2,msg3,msg5,msg4);
+        fflush(stdout);
       }
       free_y(grid);/* free{y} */
       
       pr_line_custom('~');
       printf("}---> %s equation:\n",SolveEqs->field_name);
-      printf("      |---> Newton step '%d' is done.\n",step+1);
-      printf("            |---> Elapsed seconds = %.0f .\n",get_time_sec()-time1);
+      printf("      |---> Newton step '%d' is done .\n",step+1);
+      printf("            |---> Wall-Clock = %.0fs .\n",get_time_sec()-time1);
       pr_clock();
       pr_line_custom('~');
       
       step++;
-    }/* end of while (IsItSolved == NO && iter < NumIter) */
+    }/* end of while (CONTINUE) */
   }/* end of else */
   
   return EXIT_SUCCESS;
@@ -375,9 +448,8 @@ static void compute_x(Patch_T *const patch)
 }
 
 /* allocate y and solve Sy = g' and then populate SchurC->y;
-// note: it frees S and g_prime too.
-// ->return value: y. */
-static void solve_Sy_g_prime(Matrix_T *const S,double *const g_prime,Grid_T *const grid)
+// note: it frees S and g_prime too. */
+static char *solve_Sy_g_prime(Matrix_T *const S,double *const g_prime,Grid_T *const grid)
 {
   /* since NI_total and NI_p are unique we pick one of them from patch[0] */
   const unsigned NI_total    = 
@@ -387,19 +459,11 @@ static void solve_Sy_g_prime(Matrix_T *const S,double *const g_prime,Grid_T *con
   double *y = alloc_double(NI_total);
   UmfPack_T umfpack[1] = {0};
   DDM_Schur_Complement_T *Schur;
-  const unsigned cf = grid->patch[0]->solving_man->cf;
-  const char *field_name = grid->patch[0]->solving_man->field_name[cf];
-  const int step = grid->patch[0]->solving_man->settings->solver_step;
-  char desc[400] = {'\0'};
   unsigned R = 0;
   unsigned p;
+  char *msg = calloc(1000,1);
+  pointerEr(msg);
   
-  sprintf(desc,"\n. %s equation:\n"
-               ". . Newton step %d:\n"
-               ". . . Interface Equations:\n"
-               ". . . . Solving Sy = g':"
-               ,field_name,step);
-  umfpack->description = desc;
   umfpack->a = S;
   umfpack->b = g_prime;
   umfpack->x = y;
@@ -424,6 +488,10 @@ static void solve_Sy_g_prime(Matrix_T *const S,double *const g_prime,Grid_T *con
   
   free_matrix(S);
   free(g_prime);
+  
+  sprintf(msg,"%s",umfpack->description);
+  
+  return msg;
 }
 
 /* allocate and compute S in either ccs or ccs long format.
@@ -632,9 +700,11 @@ static double *compute_g_prime(Grid_T *const grid)
 }
 
 /* computing matrix multiplication: F[p][j]xE'[p].
-// it also frees Fs. */
-static void making_F_by_E_prime(Patch_T *const patch)
+// it also frees Fs. 
+// ->return value: some info */
+static char *making_F_by_E_prime(Patch_T *const patch)
 {
+  const double time1 = get_time_sec();
   DDM_Schur_Complement_T *const Schur = patch->solving_man->method->SchurC;
   const unsigned np = Schur->np;
   const unsigned *const NI_p = Schur->NI_p;
@@ -644,6 +714,8 @@ static void making_F_by_E_prime(Patch_T *const patch)
   const Matrix_T *const E_Trans_prime = Schur->E_Trans_prime;
   Matrix_T *MxM;
   unsigned p;
+  char *msg = calloc(1000,1);
+  pointerEr(msg);
   
   for (p = 0; p < np; ++p)
   {
@@ -660,6 +732,11 @@ static void making_F_by_E_prime(Patch_T *const patch)
   
   Schur->F_by_E_prime = compress_stack2ccs(stack,np,NI_p,NI_total,NI,YES);
   free(stack);
+  
+  sprintf(msg,"{ Make F*E' ...\n"
+              "} Make F*E' --> Done. ( Wall-Clock = %.0fs )\n",
+              get_time_sec()-time1);
+  return msg;
 }
 
 /* computing:
@@ -667,9 +744,11 @@ static void making_F_by_E_prime(Patch_T *const patch)
   |F[1][p]f'[p]|
   |F[2][p]f'[p]|
   |...         |
-*/
-static void making_F_by_f_prime(Patch_T *const patch)
+
+// ->return value: some info */
+static char *making_F_by_f_prime(Patch_T *const patch)
 {
+  const double time1 = get_time_sec();
   DDM_Schur_Complement_T *const Schur = patch->solving_man->method->SchurC;
   const unsigned np = Schur->np;
   const unsigned *const NI_p = Schur->NI_p;
@@ -677,6 +756,8 @@ static void making_F_by_f_prime(Patch_T *const patch)
   const double *const f_prime = Schur->f_prime;
   double *const F_by_f_prime = alloc_double(Schur->NI_total);
   unsigned p;
+  char *msg = calloc(1000,1);
+  pointerEr(msg);
   
   for (p = 0; p < np; ++p)
   {
@@ -690,15 +771,24 @@ static void making_F_by_f_prime(Patch_T *const patch)
   }
   
   Schur->F_by_f_prime = F_by_f_prime;
+  
+  sprintf(msg,"{ Make F*f' ...\n"
+              "} Make F*f' --> Done. ( Wall-Clock = %.0fs )\n",
+              get_time_sec()-time1);
+  return msg;
 }
 
-/* making F and C parts. refer to the note on the very top */
-static void making_F_and_C(Patch_T *const patch)
+/* making F and C parts. refer to the note on the very top.
+// ->return value: some info */
+static char *making_F_and_C(Patch_T *const patch)
 {
+  const double time1 = get_time_sec();
   DDM_Schur_Complement_T *const Schur = patch->solving_man->method->SchurC;
   Sewing_T **const sewing = Schur->sewing;
   const unsigned np = Schur->np;
   unsigned p;
+  char *msg = calloc(1000,1);
+  pointerEr(msg);
   
   /* allocation matrices */
   Schur->F = calloc(np,sizeof(*Schur->F));
@@ -738,6 +828,11 @@ static void making_F_and_C(Patch_T *const patch)
   Schur->C_ccs = compress_stack2ccs(Schur->C,np,Schur->NI_p,Schur->NI_total,Schur->NI,YES);
   free(Schur->C);
   Schur->C = 0;
+  
+  sprintf(msg,"{ Populate F and C ...\n"
+              "} Populate F and C --> Done. ( Wall-Clock = %.0fs )\n",
+              get_time_sec()-time1);
+  return msg;
 }
 
 /* making F and C parts. refer to the note on the very top. 
@@ -1125,22 +1220,22 @@ static void fill_C_F_collocation(Patch_T *const patch, Pair_T *const pair)
   }
 }
 
-/* making E prime and f prime. refer to the note on the very top */
-static void making_E_prime_and_f_prime(Patch_T *const patch)
+/* making E prime and f prime. refer to the note on the very top
+// ->return value: some info */
+static char *making_E_prime_and_f_prime(Patch_T *const patch)
 {
+  const double time1 = get_time_sec();
   DDM_Schur_Complement_T *const S = patch->solving_man->method->SchurC;
-  const unsigned cf = patch->solving_man->cf;
-  const char *field_name = patch->solving_man->field_name[cf];
-  const int step = patch->solving_man->settings->solver_step;
   double **E_Trans;
   Matrix_T *const a = cast_matrix_ccs(S->B);
   double *const f = S->f;
   double **xs,**bs;
   Matrix_T *E_prime;
   UmfPack_T umfpack[1] = {0};
-  char desc[400] = {'\0'};
   unsigned ns = 1;
   unsigned i;
+  char *msg = calloc(1000,1);
+  pointerEr(msg);
   
   /* free unwanted memories */
   free_matrix(S->B);
@@ -1166,12 +1261,6 @@ static void making_E_prime_and_f_prime(Patch_T *const patch)
   xs[ns-1] = calloc(S->NS,sizeof(*xs[ns-1]));
   pointerEr(xs[ns-1]);
   
-  sprintf(desc,"\n. %s equation:\n"
-               ". . Newton step %d:\n"
-               ". . . %s:\n"
-               ". . . . Solving BE' = E and Bf' = f:"
-               ,field_name,step,patch->name);
-  umfpack->description = desc;
   umfpack->a = a;
   umfpack->bs = bs;
   umfpack->xs = xs;
@@ -1191,11 +1280,20 @@ static void making_E_prime_and_f_prime(Patch_T *const patch)
   free_matrix(a);
   free(S->f);
   free(bs);
+  
+  sprintf(msg,"{ Solve BE' = E and Bf' = f ...\n"
+              "%s"
+              "} Solve BE' = E and Bf' = f --> Done. ( Wall-Clock = %.0fs )\n",
+              umfpack->description,
+              get_time_sec()-time1);
+  return msg;
 }
 
-/* making B and E matrices. refer to the note on the very top */
-static void making_B_and_E(Patch_T *const patch)
+/* making B and E matrices. refer to the note on the very top.
+// ->return value: some info */
+static char *making_B_and_E(Patch_T *const patch)
 {
+  const double time1 = get_time_sec();
   Solving_Man_T *const S      = patch->solving_man;
   const unsigned cf           = S->cf;
   fEquation_T *const jacobian_field_eq = S->jacobian_field_eq[cf];
@@ -1204,6 +1302,8 @@ static void making_B_and_E(Patch_T *const patch)
   const long Bcol = (long)S->method->SchurC->NS;
   const long Erow = (long)S->method->SchurC->NS;
   const long Ecol = (long)S->method->SchurC->NI;
+  char *msg = calloc(1000,1);
+  pointerEr(msg);
   
   S->method->SchurC->B       = alloc_matrix(REG_SF,Brow,Bcol);
   S->method->SchurC->E_Trans = alloc_matrix(REG_SF,Ecol,Erow);
@@ -1211,6 +1311,10 @@ static void making_B_and_E(Patch_T *const patch)
   jacobian_field_eq(patch,S->method->SchurC);
   jacobian_bc_eq(patch,S->method->SchurC);
   
+  sprintf(msg,"{ Populate B and E ...\n"
+              "} Populate B and E --> Done. ( Wall-Clock = %.0fs )\n",
+                get_time_sec()-time1);
+  return msg;
 }
 
 /* making B when the grid only has one patch.
@@ -2486,7 +2590,6 @@ static void solve_Bx_f(Patch_T *const patch)
   
   free_matrix(B);
   
-  umfpack->description = "Solving Bx = f";
   umfpack->a = B_ccs;
   umfpack->b = f;
   umfpack->x = x;
@@ -2931,24 +3034,24 @@ static void pr_intro_ddm_schur_complement(void)
 
 
   "               --  --\n"
-  "              | B  E |  |x|   |f|\n"
-  "  A z = b =>  |      |  | | = | |\n"
-  "              | F  C |  |y|   |g|\n"
+  "              | B  E |  |x|   |f| -> x's are inner points of a patch    \n"
+  "  A z = b =>  |      |  | | = | |                                       \n"
+  "              | F  C |  |y|   |g| -> y's are interface points of a patch\n"
   "               --  --\n"
   "\n"   
   "          =>  B x + E y = f\n"
   "          =>  F x + C y = g\n"
   "\n"
-  "          =>                      x = B^-1 * ( f - E y )\n"
-  "          =>  ( C - F * B^-1* E ) y = g - F * B^-1 *f\n"
+  "          =>                        x = B^(-1) * ( f - E y )\n"
+  "          =>  ( C - F * B^(-1)* E ) y = g - F * B^(-1) * f\n"
   "\n"
   "  Algorithm:\n"
   "\n" 
-  "  1. Solve BE'  = E and Bf'= f\n"
-  "  2. Compute g' = g - Ff'\n"
-  "  3. Compute S  = C - FE'\n"
-  "  4. Solve Sy   = g'\n"
-  "  5. Compute x  = f'-E'y\n";
+  "  1. Solve:   BE'= E and Bf'= f where E' = B^(-1)*E and f' = B^(-1)*f\n"
+  "  2. Compute: g' = g - Ff'\n"
+  "  3. Compute: S  = C - FE'\n"
+  "  4. Solve:   Sy = g'\n"
+  "  5. Compute: x  = f'-E'y\n";
 
   printf("%s\n",pr_message);
   pr_line_custom('*');
