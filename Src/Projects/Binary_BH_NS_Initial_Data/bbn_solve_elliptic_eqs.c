@@ -3,10 +3,10 @@
 // August 2019
 */
 
-#include "bbn_solve_initial_data_eqs.h"
+#include "bbn_solve_elliptic_eqs.h"
 
 /* solving initial data equations for the given grid */
-void bbn_solve_initial_data_eqs(Grid_T *const grid)
+void bbn_solve_elliptic_eqs(Grid_T *const grid)
 {
   pr_line_custom('='); 
   printf("{ Solving initial data equations for Binary BH and NS ...\n");

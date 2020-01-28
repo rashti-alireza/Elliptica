@@ -3,7 +3,7 @@
 #include "bbn_XCTS_equations_lib.h"
 #include "physics_observables_lib.h"
 
-void bbn_solve_initial_data_eqs(Grid_T *const grid);
+void bbn_solve_elliptic_eqs(Grid_T *const grid);
 static void bbn_XCTS_fill_db_eqs(sEquation_T ***const field_eq,sEquation_T ***const bc_eq, sEquation_T ***const jacobian_field_eq,sEquation_T ***const jacobian_bc_eq);
 static Grid_T *bbn_phi_grid(Grid_T *const grid);
 static void bbn_phi_grid_CS(Grid_T *const phi_grid,Grid_T *const grid);

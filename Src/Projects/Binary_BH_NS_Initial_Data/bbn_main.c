@@ -40,8 +40,8 @@ int Binary_BH_NS_Initial_Data(void)
     /* free previous grid completely */
     free_grid(grid_prev);
     
-    /* constructing ID for the given grid */
-    bbn_solve_initial_data_eqs(grid_next);
+    /* solve the elliptic equations for the given grid */
+    bbn_solve_elliptic_eqs(grid_next);
     
     /* study and analyse the new grid */
     bbn_study_initial_data(grid_next);
@@ -98,9 +98,9 @@ static void Elliptic_Eqs_Convergence_Test_BBN(void)
     /* free previous grid completely */
     free_grid(grid_prev);
     
-    /* constructing ID for the given grid */
-    bbn_solve_initial_data_eqs(grid_next);
-    
+    /* solve the elliptic equations for the given grid */
+    bbn_solve_elliptic_eqs(grid_next);
+        
     /* study and analyse the new grid */
     bbn_study_initial_data(grid_next);
     
