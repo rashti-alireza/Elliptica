@@ -29,7 +29,7 @@ int Binary_BH_NS_Initial_Data(void)
   /* iterate over all iterative parameters specified in parameter file */
   for (iter = 0; iter < N_iter; ++iter)
   {
-    printf("{ Outermost iteration %u ...\n\n",iter);
+    printf("{ Outermost Iteration %u ...\n\n",iter);
     
     /* update iterative parameters and directories */
     update_parameters_and_directories(iter);
@@ -51,7 +51,7 @@ int Binary_BH_NS_Initial_Data(void)
     
     grid_prev = grid_next;
     
-    printf("} Outermost iteration %u --> Done.\n",iter);
+    printf("} Outermost Iteration %u --> Done.\n",iter);
   }
   grid = grid_next;/* final grid */
   
@@ -75,7 +75,7 @@ static void Elliptic_Eqs_Convergence_Test_BBN(void)
   /* print some description */
   pr_clock();
   pr_line_custom('=');
-  printf("Convergence test of elliptic equations for binary BH-NS ...\n\n");
+  printf("Convergence Test of Elliptic Equations for Binary BH-NS ...\n\n");
   
   /* the outer most iteration algorithm: */
   const unsigned N_iter = total_iterations_ip();
@@ -87,7 +87,7 @@ static void Elliptic_Eqs_Convergence_Test_BBN(void)
   /* iterate over all parameters specified in parameter file */
   for (iter = 0; iter < N_iter; ++iter)
   {
-    printf("{ Outermost iteration %u ...\n\n",iter);
+    printf("{ Outermost Iteration %u ...\n\n",iter);
     
     /* update iterative parameters and directories */
     update_parameters_and_directories(iter);
@@ -106,7 +106,7 @@ static void Elliptic_Eqs_Convergence_Test_BBN(void)
     
     grid_prev = 0;
   
-    printf("} Outermost iteration %u --> Done.\n",iter);  
+    printf("} Outermost Iteration %u --> Done.\n",iter);  
   }
   grid = grid_next;/* final grid */
   
@@ -114,7 +114,7 @@ static void Elliptic_Eqs_Convergence_Test_BBN(void)
   free_grid(grid);
     
   /* print some description */
-  printf("\nConvergence test of elliptic equations for binary BH-NS ==> Done. :)\n");
+  printf("\nConvergence Test of Elliptic Equations for Binary BH-NS ==> Done. :)\n");
   pr_clock();
   pr_line_custom('=');
 }

@@ -9,7 +9,7 @@
 void bbn_solve_elliptic_eqs(Grid_T *const grid)
 {
   pr_line_custom('='); 
-  printf("{ Solving elliptic equations for Binary BH and NS ...\n");
+  printf("{ Solving Elliptic Equations for Binary BH-NS ...\n");
   
   sEquation_T **field_eq/* field equation */,
               **bc_eq/* B.C. for the field */,
@@ -79,7 +79,7 @@ void bbn_solve_elliptic_eqs(Grid_T *const grid)
   free_db_eqs(jacobian_field_eq);
   free_db_eqs(jacobian_bc_eq);
   
-  printf("} Solving elliptic equations for Binary BH and NS ==> Done.\n");
+  printf("} Solving Elliptic Equations for Binary BH-NS ==> Done.\n");
   pr_clock();
   pr_line_custom('='); 
 }
