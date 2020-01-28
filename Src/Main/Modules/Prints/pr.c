@@ -70,9 +70,13 @@ void pr_clock(void)
 {
   time_t now = time(0);
   double t = difftime(now,initial_time_global);
-  printf("\nCLOCK: [%.0f Second(s)] = [%.1f Minute(s)]\n\n",t,t/60.);
+  int d,h,m,s;
+  d = (int)(t/(24*60*60));
+  h = (int)(t-d*(24*60*60))/(60*60);
+  m = (int)(t-d*(24*60*60)-(h*60*60))/60;
+  s = (int)(t-d*(24*60*60)-(h*60*60)-m*60);
+  printf("\nWALL-TIME: %02dd:%02dh:%02dm:%02ds = %.0fs\n\n",d,h,m,s,t);
   fflush(stdout);
-  
 }
 
 /* giving the current time in second.
