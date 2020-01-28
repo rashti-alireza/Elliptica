@@ -28,6 +28,8 @@ char *make_directory(const char *const path,const char *const name)
   
   }while(stat(dir, &st) != -1);
   
+  printf("shell command:\n$ mkdir %s\n\n",dir);
+  fflush(stdout);
   sprintf(command,"mkdir %s",dir);
   system(command);
   
