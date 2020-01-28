@@ -674,26 +674,26 @@ static void characteristics_BBN_CS_grid_eg(Grid_T *const grid)
   
   /* n_a, n_b, n_c */
   /* left box */
-  sprintf(par,"grid%u_left_centeral_box_n_a",gn);
+  sprintf(par,"grid%u_left_central_box_n_a",gn);
   sprintf(val,"%u",nlb[0]);
   add_parameter_string(par,val);
   
-  sprintf(par,"grid%u_left_centeral_box_n_b",gn);
+  sprintf(par,"grid%u_left_central_box_n_b",gn);
   sprintf(val,"%u",nlb[1]);
   add_parameter_string(par,val);
   
-  sprintf(par,"grid%u_left_centeral_box_n_c",gn);
+  sprintf(par,"grid%u_left_central_box_n_c",gn);
   sprintf(val,"%u",nlb[2]);
   add_parameter_string(par,val);
   
   /* size a,b,c */
-  sprintf(par,"grid%u_left_centeral_box_size_a",gn);
+  sprintf(par,"grid%u_left_central_box_size_a",gn);
   add_parameter_double(par,box_size_l);
   
-  sprintf(par,"grid%u_left_centeral_box_size_b",gn);
+  sprintf(par,"grid%u_left_central_box_size_b",gn);
   add_parameter_double(par,box_size_l);
   
-  sprintf(par,"grid%u_left_centeral_box_size_c",gn);
+  sprintf(par,"grid%u_left_central_box_size_c",gn);
   add_parameter_double(par,box_size_l);
   
   /* surrounding box length */
@@ -1038,48 +1038,48 @@ static void characteristics_BNS_CS_grid_eg(Grid_T *const grid)
   
   /* n_a, n_b, n_c */
   /* left box */
-  sprintf(par,"grid%u_left_centeral_box_n_a",nlb[0]);
+  sprintf(par,"grid%u_left_central_box_n_a",nlb[0]);
   sprintf(val,"%u",nlb[0]);
   add_parameter_string(par,val);
   
-  sprintf(par,"grid%u_left_centeral_box_n_b",nlb[1]);
+  sprintf(par,"grid%u_left_central_box_n_b",nlb[1]);
   sprintf(val,"%u",nlb[1]);
   add_parameter_string(par,val);
   
-  sprintf(par,"grid%u_left_centeral_box_n_c",nlb[2]);
+  sprintf(par,"grid%u_left_central_box_n_c",nlb[2]);
   sprintf(val,"%u",nlb[2]);
   add_parameter_string(par,val);
   
   /* right box */
-  sprintf(par,"grid%u_right_centeral_box_n_a",nrb[0]);
+  sprintf(par,"grid%u_right_central_box_n_a",nrb[0]);
   sprintf(val,"%u",nrb[0]);
   add_parameter_string(par,val);
   
-  sprintf(par,"grid%u_right_centeral_box_n_b",nrb[1]);
+  sprintf(par,"grid%u_right_central_box_n_b",nrb[1]);
   sprintf(val,"%u",nrb[1]);
   add_parameter_string(par,val);
   
-  sprintf(par,"grid%u_right_centeral_box_n_c",nrb[2]);
+  sprintf(par,"grid%u_right_central_box_n_c",nrb[2]);
   sprintf(val,"%u",nrb[2]);
   add_parameter_string(par,val);
   
   /* size a,b,c */
-  sprintf(par,"grid%u_left_centeral_box_size_a",gn);
+  sprintf(par,"grid%u_left_central_box_size_a",gn);
   add_parameter_double(par,box_size_l);
   
-  sprintf(par,"grid%u_left_centeral_box_size_b",gn);
+  sprintf(par,"grid%u_left_central_box_size_b",gn);
   add_parameter_double(par,box_size_l);
   
-  sprintf(par,"grid%u_left_centeral_box_size_c",gn);
+  sprintf(par,"grid%u_left_central_box_size_c",gn);
   add_parameter_double(par,box_size_l);
   
-  sprintf(par,"grid%u_right_centeral_box_size_a",gn);
+  sprintf(par,"grid%u_right_central_box_size_a",gn);
   add_parameter_double(par,box_size_r);
   
-  sprintf(par,"grid%u_right_centeral_box_size_b",gn);
+  sprintf(par,"grid%u_right_central_box_size_b",gn);
   add_parameter_double(par,box_size_r);
   
-  sprintf(par,"grid%u_right_centeral_box_size_c",gn);
+  sprintf(par,"grid%u_right_central_box_size_c",gn);
   add_parameter_double(par,box_size_r);
   
   /* surrounding box length */

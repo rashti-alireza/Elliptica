@@ -1383,27 +1383,27 @@ static Grid_T *creat_sns_grid_CS_center(struct Grid_Params_S *const GridParams)
   
   /* n_a, n_b, n_c */
   /* central box */
-  sprintf(par,"grid%u_centeral_box_n_a",gn);
+  sprintf(par,"grid%u_central_box_n_a",gn);
   sprintf(val,"%u",nlb[0]);
   add_parameter_string(par,val);
   
-  sprintf(par,"grid%u_centeral_box_n_b",gn);
+  sprintf(par,"grid%u_central_box_n_b",gn);
   sprintf(val,"%u",nlb[1]);
   add_parameter_string(par,val);
   
-  sprintf(par,"grid%u_centeral_box_n_c",gn);
+  sprintf(par,"grid%u_central_box_n_c",gn);
   sprintf(val,"%u",nlb[2]);
   add_parameter_string(par,val);
   
   
   /* size a,b,c */
-  sprintf(par,"grid%u_centeral_box_size_a",gn);
+  sprintf(par,"grid%u_central_box_size_a",gn);
   add_parameter_double(par,box_size_l);
   
-  sprintf(par,"grid%u_centeral_box_size_b",gn);
+  sprintf(par,"grid%u_central_box_size_b",gn);
   add_parameter_double(par,box_size_l);
   
-  sprintf(par,"grid%u_centeral_box_size_c",gn);
+  sprintf(par,"grid%u_central_box_size_c",gn);
   add_parameter_double(par,box_size_l);
   
     /* surrounding box length */
@@ -1524,15 +1524,15 @@ static Grid_T *creat_sns_grid_CS_box(struct Grid_Params_S *const GridParams)
   
   /* n_a, n_b, n_c */
   /* left box */
-  sprintf(par,"grid%u_left_centeral_box_n_a",gn);
+  sprintf(par,"grid%u_left_central_box_n_a",gn);
   sprintf(val,"%u",nlb[0]);
   add_parameter_string(par,val);
   
-  sprintf(par,"grid%u_left_centeral_box_n_b",gn);
+  sprintf(par,"grid%u_left_central_box_n_b",gn);
   sprintf(val,"%u",nlb[1]);
   add_parameter_string(par,val);
   
-  sprintf(par,"grid%u_left_centeral_box_n_c",gn);
+  sprintf(par,"grid%u_left_central_box_n_c",gn);
   sprintf(val,"%u",nlb[2]);
   add_parameter_string(par,val);
   
@@ -1569,13 +1569,13 @@ static Grid_T *creat_sns_grid_CS_box(struct Grid_Params_S *const GridParams)
   add_parameter_string(par,val);
   
   /* size a,b,c */
-  sprintf(par,"grid%u_left_centeral_box_size_a",gn);
+  sprintf(par,"grid%u_left_central_box_size_a",gn);
   add_parameter_double(par,box_size_l);
   
-  sprintf(par,"grid%u_left_centeral_box_size_b",gn);
+  sprintf(par,"grid%u_left_central_box_size_b",gn);
   add_parameter_double(par,box_size_l);
   
-  sprintf(par,"grid%u_left_centeral_box_size_c",gn);
+  sprintf(par,"grid%u_left_central_box_size_c",gn);
   add_parameter_double(par,box_size_l);
   
   sprintf(par,"grid%u_right_box_size_a",gn);
@@ -2316,7 +2316,7 @@ static void adjust_NS_center(Grid_T *const grid)
     struct NC_Center_RootFinder_S par[1] = {0};
     Root_Finder_T root_finder[1] = {0};
     const double x_center[3] = {0,C,0};
-    par->patch = GetPatch("left_centeral_box",grid);
+    par->patch = GetPatch("left_central_box",grid);
     par->root_finder = root_finder;
     
     printf("dh/dx(%g,%g,%g)|NS center = %g\n",
@@ -2401,7 +2401,7 @@ static void adjust_NS_center(Grid_T *const grid)
     Root_Finder_T root_finder[1] = {0};
     const double x_center[3] = {0,C,0};
     
-    par->patch = GetPatch("left_centeral_box",grid);
+    par->patch = GetPatch("left_central_box",grid);
     par->root_finder = root_finder;
     
     printf("dh/dx(%g,%g,%g)|NS center = %g\n",

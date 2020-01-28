@@ -236,7 +236,7 @@ t1_e_;
 
   DDM_SCHUR_JACOBIAN_EQ_Epart_CLOSE
 
-  if(strstr(patch->name,"left_centeral_box"))
+  if(strstr(patch->name,"left_central_box"))
   {
    fdInterp_dfs_T *const dInterp_df = get_dInterp_df(patch,0,"none");
    const double NS_center[3] = {0,GetParameterD_E("NS_center"),0};

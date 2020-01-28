@@ -568,7 +568,7 @@ unsigned IsItNSPatch(const Patch_T *const patch)
   if (strcmp_i(patch->grid->kind,"BBN_CubedSpherical_grid"))
   {
     /* it could have used regex, but need extra attention to NS surrounding case */
-    if (strstr(patch->name,"left_centeral_box") || 
+    if (strstr(patch->name,"left_central_box") || 
         strstr(patch->name,"left_NS_up")        ||
         strstr(patch->name,"left_NS_down")      ||
         strstr(patch->name,"left_NS_back")      ||
@@ -581,7 +581,7 @@ unsigned IsItNSPatch(const Patch_T *const patch)
   else if (strcmp_i(patch->grid->kind,"SNS_CubedSpherical+Box_grid"))
   {
     /* it could have used regex, but need extra attention to NS surrounding case */
-    if (strstr(patch->name,"left_centeral_box") || 
+    if (strstr(patch->name,"left_central_box") || 
         strstr(patch->name,"left_NS_up")        ||
         strstr(patch->name,"left_NS_down")      ||
         strstr(patch->name,"left_NS_back")      ||
@@ -594,7 +594,7 @@ unsigned IsItNSPatch(const Patch_T *const patch)
   else if (strcmp_i(patch->grid->kind,"SNS_CubedSpherical_grid"))
   {
     /* it could have used regex, but need extra attention to NS surrounding case */
-    if (strstr(patch->name,"centeral_box") || 
+    if (strstr(patch->name,"central_box") || 
         strstr(patch->name,"NS_up")        ||
         strstr(patch->name,"NS_down")      ||
         strstr(patch->name,"NS_back")      ||
@@ -618,7 +618,7 @@ unsigned IsItInsideBHPatch(const Patch_T *const patch)
   if (strcmp_i(patch->grid->kind,"BBN_CubedSpherical_grid"))
   {
     /* it could have used regex, but need extra attention to NS surrounding case */
-    if (strstr(patch->name,"right_centeral_box") || 
+    if (strstr(patch->name,"right_central_box") || 
         strstr(patch->name,"right_BH_up")        ||
         strstr(patch->name,"right_BH_down")      ||
         strstr(patch->name,"right_BH_back")      ||

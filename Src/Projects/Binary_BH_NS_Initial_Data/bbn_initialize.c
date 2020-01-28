@@ -115,7 +115,7 @@ static void keep_NS_center_fixed(Grid_T *const grid)
   const double x_center[3] = {0,C,0};
   double dhx0,dhz0;
   
-  par->patch = GetPatch("left_centeral_box",grid);
+  par->patch = GetPatch("left_central_box",grid);
   par->root_finder = root_finder;
   
   dhx0 = dh_dx0_root_finder_eq(par,x_center);
@@ -362,7 +362,7 @@ static void force_balance_eq(Grid_T *const grid)
   char *adjust[3];
   const char *const par = GetParameterS_E("force_balance_equation");
   
-  dh_par->patch = GetPatch("left_centeral_box",grid);
+  dh_par->patch = GetPatch("left_central_box",grid);
   dh_par->root_finder = root_finder;
   
   /* print initial values before adjustments */
@@ -936,7 +936,7 @@ static void force_balance_eq_root_finders(Grid_T *const grid,const int dir, cons
   Patch_T *patch;
   char desc[1000] = {'\0'};
   
-  patch = GetPatch("left_centeral_box",grid);
+  patch = GetPatch("left_central_box",grid);
   X_of_x(X,NS_center,patch);
   
   params->patch      = patch;
@@ -2079,7 +2079,7 @@ static void add_patches_insideBH(Grid_T *const grid)
 /* extrapolate the fields B0,B1,eta and psi inside the BH.
 // we demand the fields have C^1 continuity across the apparent horizon.
 // we assume: f = a*(r-rh)+b, r is coordinate distance to the center of BH. 
-// note: at the centeral box, we put B0 to 0 and psi and eta to 1 and
+// note: at the central box, we put B0 to 0 and psi and eta to 1 and
 // B1 is calculated fromm its formula "Omega cross r". */
 static void extrapolate_insideBH(Grid_T *const grid)
 {
@@ -2121,8 +2121,8 @@ static void extrapolate_insideBH(Grid_T *const grid)
     /* making B1 */
     bbn_update_B1_U012(patch);
     
-    /* for the centeral box we have: */
-    if (strstr(patch->name,"right_centeral_box"))
+    /* for the central box we have: */
+    if (strstr(patch->name,"right_central_box"))
     {
       unsigned nn = patch->nn;
       for (ijk = 0; ijk < nn; ++ijk)
@@ -2796,7 +2796,7 @@ static Grid_T *TOV_KerrSchild_approximation(void)
   /* -> the Constant of the integration of Euler equation */
   update_parameter_double_format("Euler_equation_constant",0);
   
-  /* -> centeral rho0 */
+  /* -> central rho0 */
   update_parameter_double_format("rho_center",1E-3);
   
   /* combining these two geometry to create the grid */
@@ -3451,26 +3451,26 @@ static Grid_T *creat_bbn_grid_CS(struct Grid_Params_S *const GridParams)
   
   /* n_a, n_b, n_c */
   /* left box */
-  sprintf(par,"grid%u_left_centeral_box_n_a",gn);
+  sprintf(par,"grid%u_left_central_box_n_a",gn);
   sprintf(val,"%u",nlb[0]);
   add_parameter_string(par,val);
   
-  sprintf(par,"grid%u_left_centeral_box_n_b",gn);
+  sprintf(par,"grid%u_left_central_box_n_b",gn);
   sprintf(val,"%u",nlb[1]);
   add_parameter_string(par,val);
   
-  sprintf(par,"grid%u_left_centeral_box_n_c",gn);
+  sprintf(par,"grid%u_left_central_box_n_c",gn);
   sprintf(val,"%u",nlb[2]);
   add_parameter_string(par,val);
   
   /* size a,b,c */
-  sprintf(par,"grid%u_left_centeral_box_size_a",gn);
+  sprintf(par,"grid%u_left_central_box_size_a",gn);
   update_parameter_double_format(par,box_size_l);
   
-  sprintf(par,"grid%u_left_centeral_box_size_b",gn);
+  sprintf(par,"grid%u_left_central_box_size_b",gn);
   update_parameter_double_format(par,box_size_l);
   
-  sprintf(par,"grid%u_left_centeral_box_size_c",gn);
+  sprintf(par,"grid%u_left_central_box_size_c",gn);
   update_parameter_double_format(par,box_size_l);
   
   /* surrounding box length */
@@ -3500,26 +3500,26 @@ static Grid_T *creat_bbn_grid_CS(struct Grid_Params_S *const GridParams)
   
   /* n_a, n_b, n_c */
   /* right box */
-  sprintf(par,"grid%u_right_centeral_box_n_a",gn);
+  sprintf(par,"grid%u_right_central_box_n_a",gn);
   sprintf(val,"%u",nlb[0]);
   add_parameter_string(par,val);
   
-  sprintf(par,"grid%u_right_centeral_box_n_b",gn);
+  sprintf(par,"grid%u_right_central_box_n_b",gn);
   sprintf(val,"%u",nlb[1]);
   add_parameter_string(par,val);
   
-  sprintf(par,"grid%u_right_centeral_box_n_c",gn);
+  sprintf(par,"grid%u_right_central_box_n_c",gn);
   sprintf(val,"%u",nlb[2]);
   add_parameter_string(par,val);
   
   /* size a,b,c we take it the same as left box. no biggie! */
-  sprintf(par,"grid%u_right_centeral_box_size_a",gn);
+  sprintf(par,"grid%u_right_central_box_size_a",gn);
   update_parameter_double_format(par,box_size_r);
   
-  sprintf(par,"grid%u_right_centeral_box_size_b",gn);
+  sprintf(par,"grid%u_right_central_box_size_b",gn);
   update_parameter_double_format(par,box_size_r);
   
-  sprintf(par,"grid%u_right_centeral_box_size_c",gn);
+  sprintf(par,"grid%u_right_central_box_size_c",gn);
   update_parameter_double_format(par,box_size_r);
   
   /* R1 and R2 outermost */

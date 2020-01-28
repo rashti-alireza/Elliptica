@@ -192,7 +192,7 @@ t5 + t6;
 
   DDM_SCHUR_EQ_CLOSE
 
-  if(strstr(patch->name,"left_centeral_box"))
+  if(strstr(patch->name,"left_central_box"))
   {
     const double NS_center[3] = {0,GetParameterD_E("NS_center"),0};
     Interpolation_T *interp_phi0 = init_interpolation();

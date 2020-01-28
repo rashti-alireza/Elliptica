@@ -1164,7 +1164,7 @@ void bbn_update_stress_energy_tensor(Grid_T *const grid,const int flag)
   }
   
   /* update central density parameter */
-  Patch_T *patch = GetPatch("left_centeral_box",grid);
+  Patch_T *patch = GetPatch("left_central_box",grid);
   DECLARE_FIELD(rho0);
   double rho_center;
   const double *x = patch->c;/* NS center */

@@ -537,7 +537,7 @@ static void populate_left_NS(Grid_T *const grid,const unsigned pn)
         sprintf(var,"grid%u_left_NS_surface_function_up",grid->gn);
         R2_array = GetParameterArrayF_E(var);
         patch->CoordSysInfo->CubedSphericalCoord->R2_f = R2;
-        sprintf(var,"grid%u_left_centeral_box_size_c",grid->gn);
+        sprintf(var,"grid%u_left_central_box_size_c",grid->gn);
         patch->CoordSysInfo->CubedSphericalCoord->xc1 = GetParameterDoubleF_E(var)/2.;
         R2->v = alloc_double(patch->nn);
         
@@ -554,7 +554,7 @@ static void populate_left_NS(Grid_T *const grid,const unsigned pn)
         sprintf(var,"grid%u_left_NS_surface_function_down",grid->gn);
         R2_array = GetParameterArrayF_E(var);
         patch->CoordSysInfo->CubedSphericalCoord->R2_f = R2;
-        sprintf(var,"grid%u_left_centeral_box_size_c",grid->gn);
+        sprintf(var,"grid%u_left_central_box_size_c",grid->gn);
         patch->CoordSysInfo->CubedSphericalCoord->xc1 = -GetParameterDoubleF_E(var)/2.;
         R2->v = alloc_double(patch->nn);
         
@@ -571,7 +571,7 @@ static void populate_left_NS(Grid_T *const grid,const unsigned pn)
         sprintf(var,"grid%u_left_NS_surface_function_left",grid->gn);
         R2_array = GetParameterArrayF_E(var);
         patch->CoordSysInfo->CubedSphericalCoord->R2_f = R2;
-        sprintf(var,"grid%u_left_centeral_box_size_b",grid->gn);
+        sprintf(var,"grid%u_left_central_box_size_b",grid->gn);
         patch->CoordSysInfo->CubedSphericalCoord->xc1 = -GetParameterDoubleF_E(var)/2.;
         R2->v = alloc_double(patch->nn);
         
@@ -588,7 +588,7 @@ static void populate_left_NS(Grid_T *const grid,const unsigned pn)
         sprintf(var,"grid%u_left_NS_surface_function_right",grid->gn);
         R2_array = GetParameterArrayF_E(var);
         patch->CoordSysInfo->CubedSphericalCoord->R2_f = R2;
-        sprintf(var,"grid%u_left_centeral_box_size_b",grid->gn);
+        sprintf(var,"grid%u_left_central_box_size_b",grid->gn);
         patch->CoordSysInfo->CubedSphericalCoord->xc1 = GetParameterDoubleF_E(var)/2.;
         R2->v = alloc_double(patch->nn);
         
@@ -605,7 +605,7 @@ static void populate_left_NS(Grid_T *const grid,const unsigned pn)
         sprintf(var,"grid%u_left_NS_surface_function_back",grid->gn);
         R2_array = GetParameterArrayF_E(var);
         patch->CoordSysInfo->CubedSphericalCoord->R2_f = R2;
-        sprintf(var,"grid%u_left_centeral_box_size_a",grid->gn);
+        sprintf(var,"grid%u_left_central_box_size_a",grid->gn);
         patch->CoordSysInfo->CubedSphericalCoord->xc1 = -GetParameterDoubleF_E(var)/2.;
         R2->v = alloc_double(patch->nn);
         
@@ -622,7 +622,7 @@ static void populate_left_NS(Grid_T *const grid,const unsigned pn)
         sprintf(var,"grid%u_left_NS_surface_function_front",grid->gn);
         R2_array = GetParameterArrayF_E(var);
         patch->CoordSysInfo->CubedSphericalCoord->R2_f = R2;
-        sprintf(var,"grid%u_left_centeral_box_size_a",grid->gn);
+        sprintf(var,"grid%u_left_central_box_size_a",grid->gn);
         patch->CoordSysInfo->CubedSphericalCoord->xc1 = GetParameterDoubleF_E(var)/2.;
         R2->v = alloc_double(patch->nn);
         
@@ -731,7 +731,7 @@ void populate_right_BH(Grid_T *const grid,const unsigned pn)
         sprintf(var,"grid%u_right_BH_surface_function_up",grid->gn);
         R2_array = GetParameterArrayF_E(var);
         patch->CoordSysInfo->CubedSphericalCoord->R2_f = R2;
-        sprintf(var,"grid%u_right_centeral_box_size_c",grid->gn);
+        sprintf(var,"grid%u_right_central_box_size_c",grid->gn);
         patch->CoordSysInfo->CubedSphericalCoord->xc1 = GetParameterDoubleF_E(var)/2.;
         R2->v = alloc_double(patch->nn);
         
@@ -748,7 +748,7 @@ void populate_right_BH(Grid_T *const grid,const unsigned pn)
         sprintf(var,"grid%u_right_BH_surface_function_down",grid->gn);
         R2_array = GetParameterArrayF_E(var);
         patch->CoordSysInfo->CubedSphericalCoord->R2_f = R2;
-        sprintf(var,"grid%u_right_centeral_box_size_c",grid->gn);
+        sprintf(var,"grid%u_right_central_box_size_c",grid->gn);
         patch->CoordSysInfo->CubedSphericalCoord->xc1 = -GetParameterDoubleF_E(var)/2.;
         R2->v = alloc_double(patch->nn);
         
@@ -765,7 +765,7 @@ void populate_right_BH(Grid_T *const grid,const unsigned pn)
         sprintf(var,"grid%u_right_BH_surface_function_left",grid->gn);
         R2_array = GetParameterArrayF_E(var);
         patch->CoordSysInfo->CubedSphericalCoord->R2_f = R2;
-        sprintf(var,"grid%u_right_centeral_box_size_b",grid->gn);
+        sprintf(var,"grid%u_right_central_box_size_b",grid->gn);
         patch->CoordSysInfo->CubedSphericalCoord->xc1 = -GetParameterDoubleF_E(var)/2.;
         R2->v = alloc_double(patch->nn);
         
@@ -782,7 +782,7 @@ void populate_right_BH(Grid_T *const grid,const unsigned pn)
         sprintf(var,"grid%u_right_BH_surface_function_right",grid->gn);
         R2_array = GetParameterArrayF_E(var);
         patch->CoordSysInfo->CubedSphericalCoord->R2_f = R2;
-        sprintf(var,"grid%u_right_centeral_box_size_b",grid->gn);
+        sprintf(var,"grid%u_right_central_box_size_b",grid->gn);
         patch->CoordSysInfo->CubedSphericalCoord->xc1 = GetParameterDoubleF_E(var)/2.;
         R2->v = alloc_double(patch->nn);
         
@@ -799,7 +799,7 @@ void populate_right_BH(Grid_T *const grid,const unsigned pn)
         sprintf(var,"grid%u_right_BH_surface_function_back",grid->gn);
         R2_array = GetParameterArrayF_E(var);
         patch->CoordSysInfo->CubedSphericalCoord->R2_f = R2;
-        sprintf(var,"grid%u_right_centeral_box_size_a",grid->gn);
+        sprintf(var,"grid%u_right_central_box_size_a",grid->gn);
         patch->CoordSysInfo->CubedSphericalCoord->xc1 = -GetParameterDoubleF_E(var)/2.;
         R2->v = alloc_double(patch->nn);
         
@@ -816,7 +816,7 @@ void populate_right_BH(Grid_T *const grid,const unsigned pn)
         sprintf(var,"grid%u_right_BH_surface_function_front",grid->gn);
         R2_array = GetParameterArrayF_E(var);
         patch->CoordSysInfo->CubedSphericalCoord->R2_f = R2;
-        sprintf(var,"grid%u_right_centeral_box_size_a",grid->gn);
+        sprintf(var,"grid%u_right_central_box_size_a",grid->gn);
         patch->CoordSysInfo->CubedSphericalCoord->xc1 = GetParameterDoubleF_E(var)/2.;
         R2->v = alloc_double(patch->nn);
         
@@ -925,7 +925,7 @@ static void populate_central_NS(Grid_T *const grid,const unsigned pn)
         sprintf(var,"grid%u_NS_surface_function_up",grid->gn);
         R2_array = GetParameterArrayF_E(var);
         patch->CoordSysInfo->CubedSphericalCoord->R2_f = R2;
-        sprintf(var,"grid%u_centeral_box_size_c",grid->gn);
+        sprintf(var,"grid%u_central_box_size_c",grid->gn);
         patch->CoordSysInfo->CubedSphericalCoord->xc1 = GetParameterDoubleF_E(var)/2.;
         R2->v = alloc_double(patch->nn);
         
@@ -942,7 +942,7 @@ static void populate_central_NS(Grid_T *const grid,const unsigned pn)
         sprintf(var,"grid%u_NS_surface_function_down",grid->gn);
         R2_array = GetParameterArrayF_E(var);
         patch->CoordSysInfo->CubedSphericalCoord->R2_f = R2;
-        sprintf(var,"grid%u_centeral_box_size_c",grid->gn);
+        sprintf(var,"grid%u_central_box_size_c",grid->gn);
         patch->CoordSysInfo->CubedSphericalCoord->xc1 = -GetParameterDoubleF_E(var)/2.;
         R2->v = alloc_double(patch->nn);
         
@@ -959,7 +959,7 @@ static void populate_central_NS(Grid_T *const grid,const unsigned pn)
         sprintf(var,"grid%u_NS_surface_function_left",grid->gn);
         R2_array = GetParameterArrayF_E(var);
         patch->CoordSysInfo->CubedSphericalCoord->R2_f = R2;
-        sprintf(var,"grid%u_centeral_box_size_b",grid->gn);
+        sprintf(var,"grid%u_central_box_size_b",grid->gn);
         patch->CoordSysInfo->CubedSphericalCoord->xc1 = -GetParameterDoubleF_E(var)/2.;
         R2->v = alloc_double(patch->nn);
         
@@ -976,7 +976,7 @@ static void populate_central_NS(Grid_T *const grid,const unsigned pn)
         sprintf(var,"grid%u_NS_surface_function_right",grid->gn);
         R2_array = GetParameterArrayF_E(var);
         patch->CoordSysInfo->CubedSphericalCoord->R2_f = R2;
-        sprintf(var,"grid%u_centeral_box_size_b",grid->gn);
+        sprintf(var,"grid%u_central_box_size_b",grid->gn);
         patch->CoordSysInfo->CubedSphericalCoord->xc1 = GetParameterDoubleF_E(var)/2.;
         R2->v = alloc_double(patch->nn);
         
@@ -993,7 +993,7 @@ static void populate_central_NS(Grid_T *const grid,const unsigned pn)
         sprintf(var,"grid%u_NS_surface_function_back",grid->gn);
         R2_array = GetParameterArrayF_E(var);
         patch->CoordSysInfo->CubedSphericalCoord->R2_f = R2;
-        sprintf(var,"grid%u_centeral_box_size_a",grid->gn);
+        sprintf(var,"grid%u_central_box_size_a",grid->gn);
         patch->CoordSysInfo->CubedSphericalCoord->xc1 = -GetParameterDoubleF_E(var)/2.;
         R2->v = alloc_double(patch->nn);
         
@@ -1010,7 +1010,7 @@ static void populate_central_NS(Grid_T *const grid,const unsigned pn)
         sprintf(var,"grid%u_NS_surface_function_front",grid->gn);
         R2_array = GetParameterArrayF_E(var);
         patch->CoordSysInfo->CubedSphericalCoord->R2_f = R2;
-        sprintf(var,"grid%u_centeral_box_size_a",grid->gn);
+        sprintf(var,"grid%u_central_box_size_a",grid->gn);
         patch->CoordSysInfo->CubedSphericalCoord->xc1 = GetParameterDoubleF_E(var)/2.;
         R2->v = alloc_double(patch->nn);
         
@@ -1119,7 +1119,7 @@ static void populate_right_NS(Grid_T *const grid,const unsigned pn)
         sprintf(var,"grid%u_right_NS_surface_function_up",grid->gn);
         R2_array = GetParameterArrayF_E(var);
         patch->CoordSysInfo->CubedSphericalCoord->R2_f = R2;
-        sprintf(var,"grid%u_right_centeral_box_size_c",grid->gn);
+        sprintf(var,"grid%u_right_central_box_size_c",grid->gn);
         patch->CoordSysInfo->CubedSphericalCoord->xc1 = GetParameterDoubleF_E(var)/2.;
         R2->v = alloc_double(patch->nn);
         
@@ -1136,7 +1136,7 @@ static void populate_right_NS(Grid_T *const grid,const unsigned pn)
         sprintf(var,"grid%u_right_NS_surface_function_down",grid->gn);
         R2_array = GetParameterArrayF_E(var);
         patch->CoordSysInfo->CubedSphericalCoord->R2_f = R2;
-        sprintf(var,"grid%u_right_centeral_box_size_c",grid->gn);
+        sprintf(var,"grid%u_right_central_box_size_c",grid->gn);
         patch->CoordSysInfo->CubedSphericalCoord->xc1 = -GetParameterDoubleF_E(var)/2.;
         R2->v = alloc_double(patch->nn);
         
@@ -1153,7 +1153,7 @@ static void populate_right_NS(Grid_T *const grid,const unsigned pn)
         sprintf(var,"grid%u_right_NS_surface_function_left",grid->gn);
         R2_array = GetParameterArrayF_E(var);
         patch->CoordSysInfo->CubedSphericalCoord->R2_f = R2;
-        sprintf(var,"grid%u_right_centeral_box_size_b",grid->gn);
+        sprintf(var,"grid%u_right_central_box_size_b",grid->gn);
         patch->CoordSysInfo->CubedSphericalCoord->xc1 = -GetParameterDoubleF_E(var)/2.;
         R2->v = alloc_double(patch->nn);
         
@@ -1170,7 +1170,7 @@ static void populate_right_NS(Grid_T *const grid,const unsigned pn)
         sprintf(var,"grid%u_right_NS_surface_function_right",grid->gn);
         R2_array = GetParameterArrayF_E(var);
         patch->CoordSysInfo->CubedSphericalCoord->R2_f = R2;
-        sprintf(var,"grid%u_right_centeral_box_size_b",grid->gn);
+        sprintf(var,"grid%u_right_central_box_size_b",grid->gn);
         patch->CoordSysInfo->CubedSphericalCoord->xc1 = GetParameterDoubleF_E(var)/2.;
         R2->v = alloc_double(patch->nn);
         
@@ -1187,7 +1187,7 @@ static void populate_right_NS(Grid_T *const grid,const unsigned pn)
         sprintf(var,"grid%u_right_NS_surface_function_back",grid->gn);
         R2_array = GetParameterArrayF_E(var);
         patch->CoordSysInfo->CubedSphericalCoord->R2_f = R2;
-        sprintf(var,"grid%u_right_centeral_box_size_a",grid->gn);
+        sprintf(var,"grid%u_right_central_box_size_a",grid->gn);
         patch->CoordSysInfo->CubedSphericalCoord->xc1 = -GetParameterDoubleF_E(var)/2.;
         R2->v = alloc_double(patch->nn);
         
@@ -1204,7 +1204,7 @@ static void populate_right_NS(Grid_T *const grid,const unsigned pn)
         sprintf(var,"grid%u_right_NS_surface_function_front",grid->gn);
         R2_array = GetParameterArrayF_E(var);
         patch->CoordSysInfo->CubedSphericalCoord->R2_f = R2;
-        sprintf(var,"grid%u_right_centeral_box_size_a",grid->gn);
+        sprintf(var,"grid%u_right_central_box_size_a",grid->gn);
         patch->CoordSysInfo->CubedSphericalCoord->xc1 = GetParameterDoubleF_E(var)/2.;
         R2->v = alloc_double(patch->nn);
         

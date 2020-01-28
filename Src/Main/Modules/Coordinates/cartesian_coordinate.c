@@ -196,17 +196,17 @@ void populate_left_NS_central_box(Grid_T *const grid,const unsigned pn)
   patch->innerB = 0;
   
   /* filling name */
-  sprintf(name,"grid%u_left_centeral_box",grid->gn);
+  sprintf(name,"grid%u_left_central_box",grid->gn);
   patch->name = dup_s(name);
   
   /* filling n */
-  sprintf(var,"grid%u_left_centeral_box_n_a",grid->gn);
+  sprintf(var,"grid%u_left_central_box_n_a",grid->gn);
   patch->n[0] = (unsigned)GetParameterI_E(var);
   
-  sprintf(var,"grid%u_left_centeral_box_n_b",grid->gn);
+  sprintf(var,"grid%u_left_central_box_n_b",grid->gn);
   patch->n[1] = (unsigned)GetParameterI_E(var);
   
-  sprintf(var,"grid%u_left_centeral_box_n_c",grid->gn);
+  sprintf(var,"grid%u_left_central_box_n_c",grid->gn);
   patch->n[2] = (unsigned)GetParameterI_E(var);
   
   /* filling nn */
@@ -221,11 +221,11 @@ void populate_left_NS_central_box(Grid_T *const grid,const unsigned pn)
   patch->c[2] = GetParameterDoubleF_E(var);
   
   /* filling size */
-  sprintf(var,"grid%u_left_centeral_box_size_a",grid->gn);
+  sprintf(var,"grid%u_left_central_box_size_a",grid->gn);
   patch->s[0] = GetParameterDoubleF_E(var);
-  sprintf(var,"grid%u_left_centeral_box_size_b",grid->gn);
+  sprintf(var,"grid%u_left_central_box_size_b",grid->gn);
   patch->s[1] = GetParameterDoubleF_E(var);
-  sprintf(var,"grid%u_left_centeral_box_size_c",grid->gn);
+  sprintf(var,"grid%u_left_central_box_size_c",grid->gn);
   patch->s[2] = GetParameterDoubleF_E(var);
   
   /* filling min: min = center-l/2 */
@@ -270,17 +270,17 @@ void populate_right_BH_central_box(Grid_T *const grid,const unsigned pn)
   patch->innerB = 0;
   
   /* filling name */
-  sprintf(name,"grid%u_right_centeral_box",grid->gn);
+  sprintf(name,"grid%u_right_central_box",grid->gn);
   patch->name = dup_s(name);
   
   /* filling n */
-  sprintf(var,"grid%u_right_centeral_box_n_a",grid->gn);
+  sprintf(var,"grid%u_right_central_box_n_a",grid->gn);
   patch->n[0] = (unsigned)GetParameterI_E(var);
   
-  sprintf(var,"grid%u_right_centeral_box_n_b",grid->gn);
+  sprintf(var,"grid%u_right_central_box_n_b",grid->gn);
   patch->n[1] = (unsigned)GetParameterI_E(var);
   
-  sprintf(var,"grid%u_right_centeral_box_n_c",grid->gn);
+  sprintf(var,"grid%u_right_central_box_n_c",grid->gn);
   patch->n[2] = (unsigned)GetParameterI_E(var);
   
   /* filling nn */
@@ -295,11 +295,11 @@ void populate_right_BH_central_box(Grid_T *const grid,const unsigned pn)
   patch->c[2] = GetParameterDoubleF_E(var);
   
   /* filling size */
-  sprintf(var,"grid%u_right_centeral_box_size_a",grid->gn);
+  sprintf(var,"grid%u_right_central_box_size_a",grid->gn);
   patch->s[0] = GetParameterDoubleF_E(var);
-  sprintf(var,"grid%u_right_centeral_box_size_b",grid->gn);
+  sprintf(var,"grid%u_right_central_box_size_b",grid->gn);
   patch->s[1] = GetParameterDoubleF_E(var);
-  sprintf(var,"grid%u_right_centeral_box_size_c",grid->gn);
+  sprintf(var,"grid%u_right_central_box_size_c",grid->gn);
   patch->s[2] = GetParameterDoubleF_E(var);
   
   /* filling min: min = center-l/2 */
@@ -328,7 +328,7 @@ void populate_right_BH_central_box(Grid_T *const grid,const unsigned pn)
 }
 
 
-/* populating properties of the box at the middle of centeral NS */
+/* populating properties of the box at the middle of central NS */
 void populate_central_NS_central_box(Grid_T *const grid,const unsigned pn)
 {
   Patch_T *const patch = grid->patch[pn];
@@ -345,17 +345,17 @@ void populate_central_NS_central_box(Grid_T *const grid,const unsigned pn)
   patch->innerB = 0;
   
   /* filling name */
-  sprintf(name,"grid%u_centeral_box",grid->gn);
+  sprintf(name,"grid%u_central_box",grid->gn);
   patch->name = dup_s(name);
   
   /* filling n */
-  sprintf(var,"grid%u_centeral_box_n_a",grid->gn);
+  sprintf(var,"grid%u_central_box_n_a",grid->gn);
   patch->n[0] = (unsigned)GetParameterI_E(var);
   
-  sprintf(var,"grid%u_centeral_box_n_b",grid->gn);
+  sprintf(var,"grid%u_central_box_n_b",grid->gn);
   patch->n[1] = (unsigned)GetParameterI_E(var);
   
-  sprintf(var,"grid%u_centeral_box_n_c",grid->gn);
+  sprintf(var,"grid%u_central_box_n_c",grid->gn);
   patch->n[2] = (unsigned)GetParameterI_E(var);
   
   /* filling nn */
@@ -370,11 +370,11 @@ void populate_central_NS_central_box(Grid_T *const grid,const unsigned pn)
   patch->c[2] = GetParameterDoubleF_E(var);
   
   /* filling size */
-  sprintf(var,"grid%u_centeral_box_size_a",grid->gn);
+  sprintf(var,"grid%u_central_box_size_a",grid->gn);
   patch->s[0] = GetParameterDoubleF_E(var);
-  sprintf(var,"grid%u_centeral_box_size_b",grid->gn);
+  sprintf(var,"grid%u_central_box_size_b",grid->gn);
   patch->s[1] = GetParameterDoubleF_E(var);
-  sprintf(var,"grid%u_centeral_box_size_c",grid->gn);
+  sprintf(var,"grid%u_central_box_size_c",grid->gn);
   patch->s[2] = GetParameterDoubleF_E(var);
   
   /* filling min: min = center-l/2 */
@@ -668,17 +668,17 @@ void populate_right_NS_central_box(Grid_T *const grid,const unsigned pn)
   patch->innerB = 0;
   
   /* filling name */
-  sprintf(name,"grid%u_right_centeral_box",grid->gn);
+  sprintf(name,"grid%u_right_central_box",grid->gn);
   patch->name = dup_s(name);
   
   /* filling n */
-  sprintf(var,"grid%u_right_centeral_box_n_a",grid->gn);
+  sprintf(var,"grid%u_right_central_box_n_a",grid->gn);
   patch->n[0] = (unsigned)GetParameterI_E(var);
   
-  sprintf(var,"grid%u_right_centeral_box_n_b",grid->gn);
+  sprintf(var,"grid%u_right_central_box_n_b",grid->gn);
   patch->n[1] = (unsigned)GetParameterI_E(var);
   
-  sprintf(var,"grid%u_right_centeral_box_n_c",grid->gn);
+  sprintf(var,"grid%u_right_central_box_n_c",grid->gn);
   patch->n[2] = (unsigned)GetParameterI_E(var);
   
   /* filling nn */
@@ -693,11 +693,11 @@ void populate_right_NS_central_box(Grid_T *const grid,const unsigned pn)
   patch->c[2] = GetParameterDoubleF_E(var);
   
   /* filling size */
-  sprintf(var,"grid%u_right_centeral_box_size_a",grid->gn);
+  sprintf(var,"grid%u_right_central_box_size_a",grid->gn);
   patch->s[0] = GetParameterDoubleF_E(var);
-  sprintf(var,"grid%u_right_centeral_box_size_b",grid->gn);
+  sprintf(var,"grid%u_right_central_box_size_b",grid->gn);
   patch->s[1] = GetParameterDoubleF_E(var);
-  sprintf(var,"grid%u_right_centeral_box_size_c",grid->gn);
+  sprintf(var,"grid%u_right_central_box_size_c",grid->gn);
   patch->s[2] = GetParameterDoubleF_E(var);
   
   /* filling min: min = center-l/2 */

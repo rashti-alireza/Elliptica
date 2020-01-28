@@ -162,7 +162,7 @@ Epart_ = t1_e_+rho0*(t2_e_+t3_e_)+att*((1-rho0/rhoc)**4)*t3_e_;
 
 ## demanding phi = 0 at the center of NS
 
-`  if(strstr(patch->name,"left_centeral_box"))`
+`  if(strstr(patch->name,"left_central_box"))`
 `  {`
 `   fdInterp_dfs_T *const dInterp_df = get_dInterp_df(patch,0,"none");`
 `   const double NS_center[3] = {0,GetParameterD_E("NS_center"),0};`

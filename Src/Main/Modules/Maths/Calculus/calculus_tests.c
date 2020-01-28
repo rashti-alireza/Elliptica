@@ -173,7 +173,7 @@ static int fdS_spectral(Grid_T *const grid)
       patch   = grid->patch[p];
       if (!IsItNSPatch(patch))
         continue;
-      if (strstr(patch->name,"left_centeral_box"))
+      if (strstr(patch->name,"left_central_box"))
         continue;
 
       I  = init_integration();
