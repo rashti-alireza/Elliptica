@@ -46,7 +46,7 @@ int ddm_schur_complement(Solve_Equations_T *const SolveEqs)
   
   pr_line_custom('=');
   
-  printf("{ Solve Equations by Schur Complement Domain Decomposition Method ...\n\n");
+  printf("{ Solve Equation by Schur Complement Domain Decomposition Method ...\n\n");
   pr_intro_ddm_schur_complement();
   
   /* read order of fields to be solved from input */
@@ -96,7 +96,7 @@ int ddm_schur_complement(Solve_Equations_T *const SolveEqs)
   /* free names */
   free_2d_mem(field_name,nf);
   
-  printf("\n} Solve Equations by Schur Complement Domain Decomposition Method ==> Done.\n\n");
+  printf("\n} Solve Equation by Schur Complement Domain Decomposition Method ==> Done.\n\n");
   pr_clock();
   pr_line_custom('=');
   
@@ -2922,7 +2922,6 @@ void calculate_equation_residual(Solve_Equations_T *const SolveEqs)
   unsigned f;/* dummy index */
   
   pr_line_custom('=');
-  printf("{ Solving the Equations ...\n\n");
   
   /* read order of fields to be solved from input */
   field_name = get_solving_field_name(SolveEqs->solving_order,&nf);
