@@ -32,7 +32,7 @@ int Binary_BH_NS_Initial_Data(void)
   char *folder_path,*folder_path2;
   unsigned iter,solving_iter = 0;
   
-  /* iterate over all parameters specified in parameter file */
+  /* iterate over all iterative parameters specified in parameter file */
   for (iter = 0; iter < N_iter; ++iter)
   {
     unsigned i;
