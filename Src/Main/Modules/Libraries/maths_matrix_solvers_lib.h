@@ -1,7 +1,7 @@
 /* umfpack direct solver */
 typedef struct UMFPACK_T
 {
-  const char *description;
+  char description[9000];
   Matrix_T *a;/* a in a.x = b */
   double *b;/* in ax=b */
   double *x;/* in ax=b */
