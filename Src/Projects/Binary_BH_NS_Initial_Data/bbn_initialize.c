@@ -2102,11 +2102,18 @@ static void find_XYZ_and_patch_of_theta_phi_NS_CS(double *const X,Patch_T **cons
 // metric fields i.e. beta,eta and psi inside this region */
 void bbn_extrapolate_metric_fields_insideBH(Grid_T *const grid)
 {
+  pr_line_custom('=');
+  printf("{ Extrapolating metric fields inside the BH ...\n\n");
+  
   /* add patches in side the excision region */
   add_patches_insideBH(grid);
   
   /* extrapolate the fields inside the BH */
   extrapolate_insideBH(grid);
+  
+  printf("} Extrapolating metric fields inside the BH ==> Done.\n");
+  pr_clock();
+  pr_line_custom('=');
 } 
 
 /* add patches inside the excision region */
