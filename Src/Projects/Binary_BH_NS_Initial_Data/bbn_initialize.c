@@ -1461,7 +1461,7 @@ static double Euler_eq_const_rootfinder_eq(void *params,const double *const x)
 static void interpolate_and_initialize_to_next_grid(Grid_T *const grid_next,Grid_T *const grid_prev)
 {
   pr_line_custom('=');
-  printf("{ Interpolating & initializing to the next grid ...\n");
+  printf("{ Interpolating & initializing to the next grid ...\n\n");
   
   const unsigned np = grid_next->np;
   unsigned p;
@@ -1556,6 +1556,17 @@ static void interpolate_and_initialize_to_next_grid(Grid_T *const grid_next,Grid
         phi[ijk]      = interpolate_from_patch_prim("phi",Xp,patchp);
         enthalpy[ijk] = interpolate_from_patch_prim("enthalpy",Xp,patchp);
       }
+      
+      printf("|--> %s:\n"
+             "     |--> interpolating B0_U0    ~> Done.\n"
+             "     |--> interpolating B0_U1    ~> Done.\n"
+             "     |--> interpolating B0_U2    ~> Done.\n"
+             "     |--> interpolating psi      ~> Done.\n"
+             "     |--> interpolating eta      ~> Done.\n"
+             "     |--> interpolating phi      ~> Done.\n"
+             "     |--> interpolating enthalpy ~> Done.\n"
+             ,patch->name);
+      fflush(stdout);
     }
     else
     {
@@ -1576,6 +1587,15 @@ static void interpolate_and_initialize_to_next_grid(Grid_T *const grid_next,Grid
         psi[ijk]   = interpolate_from_patch_prim("psi",Xp,patchp);
         eta[ijk]   = interpolate_from_patch_prim("eta",Xp,patchp);
       }
+      
+      printf("|--> %s:\n"
+             "     |--> interpolating B0_U0    ~> Done.\n"
+             "     |--> interpolating B0_U1    ~> Done.\n"
+             "     |--> interpolating B0_U2    ~> Done.\n"
+             "     |--> interpolating psi      ~> Done.\n"
+             "     |--> interpolating eta      ~> Done.\n"
+             ,patch->name);
+      fflush(stdout);
     }
   }/* end of for (p = 0; p < np; ++p) */
   
@@ -1619,7 +1639,19 @@ static void interpolate_and_initialize_to_next_grid(Grid_T *const grid_next,Grid
     
   }/* end of for (p = 0; p < np; ++p) */
   
-  printf("} Interpolating & initializing to the next grid ==> Done.\n");
+  printf(
+         "\n|--> initializing W_U0    ~> Done.\n"
+         "|--> initializing W_U1    ~> Done.\n"
+         "|--> initializing W_U2    ~> Done.\n"
+         "|--> initializing Beta_U0 ~> Done.\n"
+         "|--> initializing Beta_U1 ~> Done.\n"
+         "|--> initializing Beta_U2 ~> Done.\n"
+         "|--> initializing B1_U2   ~> Done.\n"
+         "|--> initializing B1_U2   ~> Done.\n"
+         "|--> initializing B1_U2   ~> Done.\n");
+  fflush(stdout);
+    
+  printf("\n} Interpolating & initializing to the next grid ==> Done.\n");
   pr_clock();
   pr_line_custom('=');
 }
