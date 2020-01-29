@@ -57,8 +57,8 @@ static Grid_T *make_next_grid_using_previous_grid(Grid_T *const grid_prev)
   /* update enthalpy,denthalpy,rho0, drho0, u0, _J^i, _E and _S */
   bbn_update_stress_energy_tensor(grid_prev,0);
   
-   /* find the apparent horizon radius to acquire the desired BH mass */
-  find_AH_radius(grid_prev,GridParams);
+   /* adjust the apparent horizon radius to acquire the desired BH mass */
+  adjust_AH_radius(grid_prev,GridParams);
  
   /* P_ADM control */
   P_ADM_control(grid_prev);
@@ -1364,9 +1364,12 @@ static void update_B1_dB1_Beta_dBete_Aij_dAij(Grid_T *const grid)
   }
 }
 
-/* find the apparent horizon radius to acquire the desired BH mass */
-static void find_AH_radius(Grid_T *const grid,struct Grid_Params_S *const GridParams)
+/* adjust the apparent horizon radius to acquire the desired BH mass */
+static void adjust_AH_radius(Grid_T *const grid,struct Grid_Params_S *const GridParams)
 {
+  pr_line_custom('=');
+  printf("{ Adjusting apparent horizon radius to meet BH mass ...\n\n");
+  
   const double target_bh_mass  = GetParameterD_E("BH_mass");
   const double current_r_excision = GetParameterD_E("r_excision");
   const double irr_mass    = bbn_BH_irreducible_mass(grid);
@@ -1374,8 +1377,8 @@ static void find_AH_radius(Grid_T *const grid,struct Grid_Params_S *const GridPa
   const double W  = 0;//*GetParameterD_E("Solving_Field_Update_Weight");
   double dr, r_excision, current_bh_mass;
   
-  printf("--> BH Kommar's mass = %e\n",kommar_mass);
-  printf("--> BH irreducible mass = %e\n",irr_mass);
+  printf("|--> current BH Kommar's mass    = %e\n",kommar_mass);
+  printf("|--> current BH irreducible mass = %e\n",irr_mass);
   
   if (0)
   {
@@ -1397,7 +1400,9 @@ static void find_AH_radius(Grid_T *const grid,struct Grid_Params_S *const GridPa
   
   update_parameter_double_format("r_excision",r_excision);
   
-  printf("--> r_excision = %e -> %e \n",current_r_excision,r_excision);
+  printf("} Adjusting apparent horizon radius to meet BH mass --> Done.\n");
+  pr_clock();
+  pr_line_custom('=');
 }
 
 /* find the Omega_BH to acquire the desired BH spin */
