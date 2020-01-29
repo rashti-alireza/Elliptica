@@ -54,6 +54,9 @@ static Grid_T *make_next_grid_using_previous_grid(Grid_T *const grid_prev)
   /* find Euler equation constant to meet NS baryonic mass */
   find_Euler_eq_const(grid_prev);
   
+  /* update enthalpy,denthalpy,rho0, drho0, u0, _J^i, _E and _S */
+  bbn_update_stress_energy_tensor(grid_prev,0);
+  
    /* find the apparent horizon radius to acquire the desired BH mass */
   find_AH_radius(grid_prev,GridParams);
  
@@ -1248,9 +1251,6 @@ static void find_Euler_eq_const(Grid_T *const grid)
   printf("} Finding Euler equation constant using NS baryonic mass --> Done.\n");
   pr_clock();
   pr_line_custom('=');
-  
-  /* update enthalpy,denthalpy,rho0, drho0, u0, _J^i, _E and _S */
-  bbn_update_stress_energy_tensor(grid,0);
 }
 
 /* find y_CM by demanding Px_ADM = 0 */
