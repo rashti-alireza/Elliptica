@@ -78,8 +78,8 @@ static Grid_T *make_next_grid_using_previous_grid(Grid_T *const grid_prev)
   /* find NS surface using h = 1 */
   find_NS_surface(grid_prev,GridParams);
   
-  /* find the Omega_BH to acquire the desired BH spin */
-  find_BH_Omega(grid_prev,GridParams);
+  /* adjust the Omega_BH to acquire the desired BH spin */
+  adjust_BH_Omega(grid_prev,GridParams);
   
   /* make new grid with new parameters */
   grid_next = creat_bbn_grid_CS(GridParams);
@@ -1432,15 +1432,21 @@ static void adjust_AH_radius(Grid_T *const grid,struct Grid_Params_S *const Grid
   pr_line_custom('=');
 }
 
-/* find the Omega_BH to acquire the desired BH spin */
-static void find_BH_Omega(Grid_T *const grid,struct Grid_Params_S *const GridParams)
+/* adjust the Omega_BH to acquire the desired BH spin */
+static void adjust_BH_Omega(Grid_T *const grid,struct Grid_Params_S *const GridParams)
 {
+  pr_line_custom('=');
+  printf("{ Adjusting BH Omega ...\n");
   UNUSED(grid);
   
   const double bh_chi  = GetParameterD_E("BH_X_U2");
   const double bh_mass = GetParameterD_E("BH_mass");
   
   GridParams->a_BH   = bh_chi*bh_mass;
+  
+  printf("} Adjusting BH Omega ==> Done.\n");
+  pr_clock();
+  pr_line_custom('=');
 }
 
 /* root finder eqution for Euler equation constant */
@@ -1751,7 +1757,7 @@ static void find_X_and_patch(const double *const x,const char *const hint,Grid_T
 static void find_NS_surface_Ylm_method_CS(Grid_T *const grid,struct Grid_Params_S *const GridParams)
 {
   pr_line_custom('=');
-  printf("{ Finding the surface of NS, Ylm method ...\n");
+  printf("{ Finding the surface of NS, Ylm method ...\n\n");
   
   /* the stucture for the root finder */
   struct NS_surface_RootFinder_S par[1];
@@ -1768,7 +1774,7 @@ static void find_NS_surface_Ylm_method_CS(Grid_T *const grid,struct Grid_Params_
   double X[3],x[3],N[3];
   char stem[1000],*affix;
   unsigned i,j;
-  Flag_T debug_flg = NONE;
+  unsigned l,m;
   
   /* populate root finder */
   Root_Finder_T *root = init_root_finder(1);
@@ -1861,7 +1867,6 @@ static void find_NS_surface_Ylm_method_CS(Grid_T *const grid,struct Grid_Params_
         printf(". Root finder for NS surface at %s:\n.. ",h_patch->name);
         print_root_finder_exit_status(root);
         printf(".. Residual = %g\n",root->residual);
-        debug_flg = YES;
       }
       
       /*  new coords of R respect to the center of NS */
@@ -1879,8 +1884,6 @@ static void find_NS_surface_Ylm_method_CS(Grid_T *const grid,struct Grid_Params_
     }/* end of for (j = 0; j < Nphi; ++j) */
   }/* end of for (i = 0; i < Ntheta; ++i) */
   
-  printf("--> Max NS radius:%e\n",Max_R_NS);
-  
   /* adding maximum radius of NS to grid parameters */
   GridParams->Max_R_NS_l = Max_R_NS;
   
@@ -1894,32 +1897,22 @@ static void find_NS_surface_Ylm_method_CS(Grid_T *const grid,struct Grid_Params_
   GridParams->NS_R_Ylm->imagClm = imagClm;
   GridParams->NS_R_Ylm->Lmax    = lmax;
   
-  /* debugging */
-  if(1)
-  if (debug_flg == YES)
+  /* printing */
+  
+  printf("|--> Max NS radius       = %e\n",Max_R_NS);
+  printf("|--> L2 norm of enthalpy = %e\n",L2_norm(Ntheta*Nphi,h_res,0));
+  l = lmax;
+  for (m = 0; m <= l; ++m)
   {
-    unsigned l,m;
-    
-    printf("L2 norm of enthalpy = %e\n",L2_norm(Ntheta*Nphi,h_res,0));
-    printf("Truncation error for spherical harmonic expansion of the surface:\n");
-    l = lmax;
-    for (m = 0; m <= l; ++m)
-    {
-      unsigned lm = lm2n(l,m);
-      printf("Real(C[%u][%u]) = %e\n",l,m,realClm[lm]);
-      printf("Imag(C[%u][%u]) = %e\n",l,m,imagClm[lm]);
-    }
-    
-    //print_spectral_expansion_truncation_error(grid);
-    //bbn_study_initial_data(grid);
+    unsigned lm = lm2n(l,m);
+    printf("|--> Truncation error [Real(C[%u][%u])] = %e\n",l,m,realClm[lm]);
+    printf("|--> Truncation error [Imag(C[%u][%u])] = %e\n",l,m,imagClm[lm]);
   }
   
   /* if some day you wanna filter Clm's */
   if (0)
   {
     const double e = 0.1;
-    unsigned l,m;
-    
     for (l = 0; l <= lmax; ++l)
       for (m = 0; m <= l; ++m)
       {
@@ -1933,7 +1926,7 @@ static void find_NS_surface_Ylm_method_CS(Grid_T *const grid,struct Grid_Params_
   free(h_res);
   free_root_finder(root);
   
-  printf("} Finding the surface of NS, Ylm method ==> Done.\n");
+  printf("\n} Finding the surface of NS, Ylm method ==> Done.\n");
   pr_clock();
   pr_line_custom('=');
 }
