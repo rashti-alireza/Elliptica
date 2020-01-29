@@ -121,29 +121,25 @@ static Grid_T *make_next_grid_using_previous_grid(Grid_T *const grid_prev)
 /* keep NS center fixed at (0,C,0) by adjusting enthalpy */
 static void keep_NS_center_fixed(Grid_T *const grid)
 {
+  pr_line_custom('=');
+  printf("{ Adjusting NS center ...\n\n");
+  
   const double C    = -0.5*GetParameterD_E("BH_NS_separation");
   struct NC_Center_RootFinder_S par[1] = {0};
   Root_Finder_T root_finder[1] = {0};
   const double x_center[3] = {0,C,0};
   double dhx0,dhz0;
+  double dh1[3] = {0},dh2[3] = {0};
   
   par->patch = GetPatch("left_central_box",grid);
   par->root_finder = root_finder;
   
-  dhx0 = dh_dx0_root_finder_eq(par,x_center);
-  dhz0 = dh_dx2_root_finder_eq(par,x_center);
-  
-  /* print initial values before adjustments */
-  printf("dh/d? before NS center adjustment:\n");
-  printf("dh/dx(%g,%g,%g)|NS center = %g\n",
-    x_center[0],x_center[1],x_center[2],
-    dhx0);
-  printf("dh/dy(%g,%g,%g)|NS center = %g\n",
-    x_center[0],x_center[1],x_center[2],
-    dh_dx1_root_finder_eq(par,x_center));
-  printf("dh/dz(%g,%g,%g)|NS center = %g\n",
-    x_center[0],x_center[1],x_center[2],
-    dhz0);
+  dh1[0] = dh_dx0_root_finder_eq(par,x_center);
+  dh1[1] = dh_dx1_root_finder_eq(par,x_center);
+  dh1[2] = dh_dx2_root_finder_eq(par,x_center);
+
+  dhx0 = dh1[0];
+  dhz0 = dh1[2];;
   
   if (strcmp_i(GetParameterS_E("NS_adjust_center_method"),"draw_enthalpy"))
   {
@@ -156,17 +152,28 @@ static void keep_NS_center_fixed(Grid_T *const grid)
   else
     abortEr(NO_OPTION);
   
+  dh2[0] = dh_dx0_root_finder_eq(par,x_center);
+  dh2[1] = dh_dx1_root_finder_eq(par,x_center);
+  dh2[2] = dh_dx2_root_finder_eq(par,x_center);
+  
   /* print initial values after adjustments */
-  printf("dh/d? after NS center adjustment:\n");
-  printf("dh/dx(%g,%g,%g)|NS center = %g\n",
-    x_center[0],x_center[1],x_center[2],
-    dh_dx0_root_finder_eq(par,x_center));
-  printf("dh/dy(%g,%g,%g)|NS center = %g\n",
-    x_center[0],x_center[1],x_center[2],
-    dh_dx1_root_finder_eq(par,x_center));
-  printf("dh/dz(%g,%g,%g)|NS center = %g\n",
-    x_center[0],x_center[1],x_center[2],
-    dh_dx2_root_finder_eq(par,x_center));
+  printf("Enthalpy derivatives at NS center after NS center adjustment:\n");
+  
+  printf("|--> dh(%g,%g,%g)/dx = %+g\n",
+    x_center[0],x_center[1],x_center[2],dh2[0]);
+  printf("|--> dh(%g,%g,%g)/dy = %+g\n",
+    x_center[0],x_center[1],x_center[2],dh2[1]);
+  printf("|--> dh(%g,%g,%g)/dz = %+g\n",
+    x_center[0],x_center[1],x_center[2],dh2[2]);
+    
+  printf("\nChanges in enthalpy derivatives after NS center adjustment:\n");
+  printf("|--> dh2/dx-dh1/dx = %+g\n",dh2[0]-dh1[0]);
+  printf("|--> dh2/dy-dh1/dy = %+g\n",dh2[1]-dh1[1]);
+  printf("|--> dh2/dz-dh1/dz = %+g\n",dh2[2]-dh1[2]);
+  
+  printf("\n} Adjusting NS center  ==> Done.\n");
+  pr_clock();
+  pr_line_custom('=');
 }
 
 /* controlling P_ADM */
@@ -1047,6 +1054,8 @@ static void force_balance_eq_root_finders(Grid_T *const grid,const int dir, cons
 /* find the NS center using d(enthalpy)/dx^i = 0 */
 static void find_NS_center(Grid_T *const grid)
 {
+  printf("{ Finding NS center ...\n");
+  
   double *NS_center;
   Root_Finder_T *root = init_root_finder(3);
   struct NC_Center_RootFinder_S params[1];
@@ -1059,7 +1068,6 @@ static void find_NS_center(Grid_T *const grid)
   guess[0] = guess[2] = 0;
   guess[1] = -0.5*GetParameterD_E("BH_NS_separation");
   params->root_finder = root;
-  root->description = "Finding NS center:";
   root->type        = GetParameterS_E("RootFinder_Method");
   root->tolerance   = GetParameterD_E("RootFinder_Tolerance");
   root->MaxIter     = (unsigned)GetParameterI_E("RootFinder_Max_Number_of_Iteration");
@@ -1095,7 +1103,12 @@ static void find_NS_center(Grid_T *const grid)
       assert(stem);
       stem++;
       add_parameter(par_name,stem);
-      printf("NS center found at (%g,%g,%g).\n",NS_center[0],NS_center[1],NS_center[2]);
+      
+      printf("|--> Current NS center found at (%g,%g,%g)\n",NS_center[0],NS_center[1],NS_center[2]);
+      printf("|--> Change in x direction = %+g\n",NS_center[0]-guess[0]);
+      printf("|--> Change in y direction = %+g\n",NS_center[1]-guess[1]);
+      printf("|--> Change in z direction = %+g\n",NS_center[2]-guess[2]);
+      
       free(NS_center);
       break;
     }
@@ -1107,6 +1120,8 @@ static void find_NS_center(Grid_T *const grid)
     abortEr("NS center could not be found.\n");
   }
   free_root_finder(root);
+  
+  printf("\n} Finding NS center ==> Done.\n\n");  
 }
 
 /* dh/dx^0 = 0 */
