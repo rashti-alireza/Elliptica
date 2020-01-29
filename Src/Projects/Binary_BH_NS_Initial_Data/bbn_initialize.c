@@ -1214,6 +1214,9 @@ static double dh_dx2_root_finder_eq(void *params,const double *const x)
 /* find Euler equation constant to meet NS baryonic mass */
 static void find_Euler_eq_const(Grid_T *const grid)
 {
+  pr_line_custom('=');
+  printf("{ Finding Euler equation constant using NS baryonic mass ...\n");
+  
   Root_Finder_T *root = init_root_finder(1);
   const double W1  = GetParameterD_E("Solving_Field_Update_Weight");
   const double W2  = 1-W1;
@@ -1225,7 +1228,6 @@ static void find_Euler_eq_const(Grid_T *const grid)
   params->NS_baryonic_mass = GetParameterD_E("NS_baryonic_mass");
   guess[0] = GetParameterD_E("Euler_equation_constant");
   
-  root->description = "Finding Euler equation constant using NS baryonic mass";
   root->type        = GetParameterS_E("RootFinder_Method");
   root->tolerance   = GetParameterD_E("RootFinder_Tolerance");
   root->MaxIter     = (unsigned)GetParameterI_E("RootFinder_Max_Number_of_Iteration");
@@ -1242,6 +1244,10 @@ static void find_Euler_eq_const(Grid_T *const grid)
   printf("Euler Equation const. updated: %g -> %g\n",guess[0],Euler_const[0]);
   free(Euler_const);
   free_root_finder(root);
+  
+  printf("} Finding Euler equation constant using NS baryonic mass --> Done.\n");
+  pr_clock();
+  pr_line_custom('=');
   
   /* update enthalpy,denthalpy,rho0, drho0, u0, _J^i, _E and _S */
   bbn_update_stress_energy_tensor(grid,0);
