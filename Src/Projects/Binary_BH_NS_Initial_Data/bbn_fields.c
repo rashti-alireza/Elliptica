@@ -1124,7 +1124,7 @@ void bbn_update_stress_energy_tensor(Grid_T *const grid,const int flag)
   assert(grid);
   
   pr_line_custom('=');
-  printf("Updating enthalpy, rest-mass density and their derivatives ...\n");
+  printf("{ Updating enthalpy, rest-mass density and their derivatives ...\n");
   
   const double W1  = GetParameterD_E("Solving_Field_Update_Weight");
   const double W2  = 1-W1;
@@ -1183,7 +1183,7 @@ void bbn_update_stress_energy_tensor(Grid_T *const grid,const int flag)
   
   update_parameter_double_format("rho_center",rho_center);
   
-  printf("Updating enthalpy, rest-mass density and their derivatives ==> Done.\n");
+  printf("} Updating enthalpy, rest-mass density and their derivatives ==> Done.\n");
   pr_clock();
   pr_line_custom('=');
 
