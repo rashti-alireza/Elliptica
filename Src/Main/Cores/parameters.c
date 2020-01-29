@@ -95,6 +95,10 @@ void add_parameter_double(const char *const lv, const double rv)
   par->rv = dup_s(str_rv);
   par->lv = dup_s(lv);
   par->rv_double = rv;
+  
+  printf("\nAdding Parameter:\n");
+  printf("       |--> parameter = %s\n",lv);
+  printf("       |--> value     = %+g\n",rv);
 }
 
 /* adding left value and right value to parameter data base 
