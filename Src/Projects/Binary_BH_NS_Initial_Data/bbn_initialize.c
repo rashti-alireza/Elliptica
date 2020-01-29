@@ -1244,7 +1244,6 @@ static void find_Euler_eq_const(Grid_T *const grid)
   Euler_const[0]    = W1*Euler_const[0]+W2*guess[0];
   
   update_parameter_double_format("Euler_equation_constant",Euler_const[0]);
-  printf("Euler Equation const. updated: %g -> %g\n",guess[0],Euler_const[0]);
   free(Euler_const);
   free_root_finder(root);
   
