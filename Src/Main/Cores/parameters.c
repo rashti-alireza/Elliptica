@@ -59,6 +59,12 @@ void update_parameter_double_format(const char *const lv, const double rv)
   par = get_parameter(lv);
   if (par)/* if this parameter exists update it */
   {
+    printf("\nUpdating Parameter:\n");
+    printf("         |--> parameter     = %s\n",lv);
+    printf("         |--> new value     = %+g\n",rv);
+    printf("         |--> old value     = %+g\n",par->rv_double);
+    printf("         |--> v_new - v_old = %+g\n\n",rv-par->rv_double);
+    
     sprintf(str_rv,"%15.18f",rv);
     _free(par->rv);
     par->rv        = dup_s(str_rv);
