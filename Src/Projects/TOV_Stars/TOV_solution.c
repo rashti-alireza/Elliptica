@@ -28,7 +28,7 @@ TOV_T *TOV_solution(TOV_T *const TOV)
   unsigned i,iter;
  
   pr_line_custom('=');
-  printf("Solving TOV equations for %s ...\n",TOV->description);
+  printf("{ Solving TOV equations for %s ...\n",TOV->description);
   
   /* some initialization and preparation */
   iter = 0;
@@ -122,7 +122,7 @@ TOV_T *TOV_solution(TOV_T *const TOV)
   
   free_EoS(eos);
   
-  printf("Solving TOV equations for %s ==> Done.\n",TOV->description);
+  printf("} Solving TOV equations for %s ==> Done.\n",TOV->description);
   pr_clock();
   pr_line_custom('=');
   

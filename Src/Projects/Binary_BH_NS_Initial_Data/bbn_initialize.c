@@ -40,6 +40,9 @@ Grid_T *bbn_initialize_next_grid(Grid_T *const grid_prev)
 // ->return value: the next grid called 'grid_next' */
 static Grid_T *make_next_grid_using_previous_grid(Grid_T *const grid_prev)
 {
+  pr_line_custom('=');
+  printf("{ Initializing the Fields Using Previous Solutions ...\n");
+  
   Grid_T *grid_next = 0;
   struct Grid_Params_S *GridParams = init_GridParams();/* adjust some pars for construction of next grid */
   
@@ -102,6 +105,9 @@ static Grid_T *make_next_grid_using_previous_grid(Grid_T *const grid_prev)
   
   /* freeing */
   free_Grid_Params_S(GridParams);
+  
+  printf("} Initializing the Fields Using Previous Solutions --> Done.\n");
+  pr_line_custom('=');
   
   return grid_next;
 }
@@ -2739,6 +2745,9 @@ static void extrapolate_outsideNS_CS_slop_method(Grid_T *const grid)
 // ->return value: resultant grid from this approximation */
 static Grid_T *TOV_KerrSchild_approximation(void)
 {
+  pr_line_custom('=');
+  printf("{ Initializing the Fields Using TOV and Kerr-Schild Solutions ...\n");
+  
   Grid_T *grid = 0;
   struct Grid_Params_S *GridParams = init_GridParams();/* adjust some pars for construction of grid */
   
@@ -2751,7 +2760,7 @@ static Grid_T *TOV_KerrSchild_approximation(void)
   
   /* basics of Kerr Schild black hole located at right side of y axis */
   pr_line_custom('=');
-  printf("Acquiring Black Hole properties ...\n");
+  printf("{ Acquiring Black Hole properties ...\n");
   const double bh_chi  = GetParameterD_E("BH_X_U2");
   const double bh_mass = GetParameterD_E("BH_mass");
   const double bh_R    = bh_mass*(1+sqrt(1-SQR(bh_chi)));
@@ -2759,7 +2768,7 @@ static Grid_T *TOV_KerrSchild_approximation(void)
   printf("--> BH radius (Kerr-Schild Coords.) = %e\n",bh_R);
   printf("--> BH dimensionless spin (z comp.) = %e\n",bh_chi);
   printf("--> BH ADM mass                     = %e\n",bh_mass);
-  printf("Acquiring Black Hole properties ==> Done.\n");
+  printf("} Acquiring Black Hole properties ==> Done.\n");
   pr_clock();
   pr_line_custom('=');
  
@@ -2855,6 +2864,9 @@ static Grid_T *TOV_KerrSchild_approximation(void)
   free_Grid_Params_S(GridParams);
   TOV_free(tov);
   free_observable(obs);
+  
+  printf("} Initializing the Fields Using TOV and Kerr-Schild Solutions --> Done.\n");
+  pr_line_custom('=');
   
   return grid;
 }
