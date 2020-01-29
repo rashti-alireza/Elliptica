@@ -1460,6 +1460,9 @@ static double Euler_eq_const_rootfinder_eq(void *params,const double *const x)
 /* use previous grid to interpolate values of the fields that will be solved for the next grid */
 static void interpolate_and_initialize_to_next_grid(Grid_T *const grid_next,Grid_T *const grid_prev)
 {
+  pr_line_custom('=');
+  printf("{ Interpolating & initializing to the next grid ...\n");
+  
   const unsigned np = grid_next->np;
   unsigned p;
  
@@ -1616,6 +1619,9 @@ static void interpolate_and_initialize_to_next_grid(Grid_T *const grid_next,Grid
     
   }/* end of for (p = 0; p < np; ++p) */
   
+  printf("} Interpolating & initializing to the next grid ==> Done.\n");
+  pr_clock();
+  pr_line_custom('=');
 }
 
 /* given field name, X and patch, finds the value of the field in X  
