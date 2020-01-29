@@ -51,7 +51,7 @@ int Binary_BH_NS_Initial_Data(void)
     
     grid_prev = grid_next;
     
-    printf("} Outermost Iteration %u --> Done.\n",iter+1);
+    printf("} Outermost Iteration %u ==> Done.\n",iter+1);
   }
   grid = grid_next;/* final grid */
   
@@ -106,7 +106,7 @@ static void Elliptic_Eqs_Convergence_Test_BBN(void)
     
     grid_prev = 0;
   
-    printf("} Outermost Iteration %u --> Done.\n",iter);  
+    printf("} Outermost Iteration %u ==> Done.\n",iter);  
   }
   grid = grid_next;/* final grid */
   

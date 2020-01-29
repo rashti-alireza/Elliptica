@@ -112,7 +112,7 @@ static Grid_T *make_next_grid_using_previous_grid(Grid_T *const grid_prev)
   /* freeing */
   free_Grid_Params_S(GridParams);
   
-  printf("} Initializing the Fields Using Previous Solutions --> Done.\n");
+  printf("} Initializing the Fields Using Previous Solutions ==> Done.\n");
   pr_line_custom('=');
   
   return grid_next;
@@ -229,7 +229,7 @@ static void P_ADM_control(Grid_T *const grid)
   _free(adjust[1]);
   _free(adjust[2]);
   
-  printf("\n} Adjusting ADM momentums --> Done.\n");
+  printf("\n} Adjusting ADM momentums ==> Done.\n");
   pr_clock();
   pr_line_custom('=');
 }
@@ -435,7 +435,7 @@ static void force_balance_eq(Grid_T *const grid)
   printf("|--> dh2/dy-dh1/dy = %+g\n",dh2[1]-dh1[1]);
   printf("|--> dh2/dz-dh1/dz = %+g\n",dh2[2]-dh1[2]);
   
-  printf("\n} Applying force balance equation --> Done.\n");
+  printf("\n} Applying force balance equation ==> Done.\n");
   pr_clock();
   pr_line_custom('=');
 }
@@ -1259,7 +1259,7 @@ static void find_Euler_eq_const(Grid_T *const grid)
   free(Euler_const);
   free_root_finder(root);
   
-  printf("} Finding Euler equation constant using NS baryonic mass --> Done.\n");
+  printf("} Finding Euler equation constant using NS baryonic mass ==> Done.\n");
   pr_clock();
   pr_line_custom('=');
 }
@@ -1412,7 +1412,7 @@ static void adjust_AH_radius(Grid_T *const grid,struct Grid_Params_S *const Grid
   
   update_parameter_double_format("r_excision",r_excision);
   
-  printf("} Adjusting apparent horizon radius to meet BH mass --> Done.\n");
+  printf("} Adjusting apparent horizon radius to meet BH mass ==> Done.\n");
   pr_clock();
   pr_line_custom('=');
 }
@@ -2887,7 +2887,7 @@ static Grid_T *TOV_KerrSchild_approximation(void)
   TOV_free(tov);
   free_observable(obs);
   
-  printf("} Initializing the Fields Using TOV and Kerr-Schild Solutions --> Done.\n");
+  printf("} Initializing the Fields Using TOV and Kerr-Schild Solutions ==> Done.\n");
   pr_line_custom('=');
   
   return grid;
@@ -4269,7 +4269,7 @@ static void extrapolate_fluid_fields_outsideNS(Grid_T *const grid)
   else
     abortEr(NO_OPTION);
   
-  printf("} Extrapolating fluid fields outside NS --> Done.\n");
+  printf("} Extrapolating fluid fields outside NS ==> Done.\n");
   pr_clock();
   pr_line_custom('=');
 }
