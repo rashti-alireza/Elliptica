@@ -119,7 +119,13 @@ void alloc_nodes(Grid_T *const grid)
       pointerEr(node[j]);
     }
     
+    printf("|--> %s:\n",grid->patch[i]->name);
+    printf("     |--> n_a = %u\n",n[0]);
+    printf("     |--> n_b = %u\n",n[1]);
+    printf("     |--> n_c = %u\n\n",n[2]);
+    
   }
+  fflush(stdout);
 }
 
 /* memory allocation for interface struct */
