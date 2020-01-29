@@ -4255,6 +4255,9 @@ static void find_NS_surface(Grid_T *const grid,struct Grid_Params_S *const GridP
 /* extrapolate fluid fields outside NS */
 static void extrapolate_fluid_fields_outsideNS(Grid_T *const grid)
 {
+  pr_line_custom('=');
+  printf("{ Extrapolating fluid fields outside NS ...\n");
+  
   if (strcmp_i(grid->kind,"BBN_CubedSpherical_grid"))
   {
     extrapolate_outsideNS_CS_continuity_method(grid);
@@ -4266,6 +4269,9 @@ static void extrapolate_fluid_fields_outsideNS(Grid_T *const grid)
   else
     abortEr(NO_OPTION);
   
+  printf("} Extrapolating fluid fields outside NS --> Done.\n");
+  pr_clock();
+  pr_line_custom('=');
 }
 
 /* populating surface function of the apparent horizon for
