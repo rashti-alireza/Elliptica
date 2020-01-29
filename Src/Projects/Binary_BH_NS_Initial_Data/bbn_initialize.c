@@ -371,27 +371,23 @@ static void parse_adjust_parameter(const char *const par,char *adjust[3])
 // "force_balance_equation" */
 static void force_balance_eq(Grid_T *const grid)
 {
+  pr_line_custom('=');
+  printf("{ Applying force balance equation ...\n\n");
+
   struct NC_Center_RootFinder_S dh_par[1] = {0};
   Root_Finder_T root_finder[1]            = {0};
   const double D            = GetParameterD_E("BH_NS_separation");
   const double NS_center[3] = {0,-D/2,0};/* since we keep the NS center always here */
   char *adjust[3];
   const char *const par = GetParameterS_E("force_balance_equation");
-  
+  double dh1[3] = {0},dh2[3] = {0};
   dh_par->patch = GetPatch("left_central_box",grid);
   dh_par->root_finder = root_finder;
   
-  /* print initial values before adjustments */
-  printf("dh/d? before force balance adjustment:\n");
-  printf("dh/dx(%g,%g,%g)|NS center = %g\n",
-    NS_center[0],NS_center[1],NS_center[2],
-    dh_dx0_root_finder_eq(dh_par,NS_center));
-  printf("dh/dy(%g,%g,%g)|NS center = %g\n",
-    NS_center[0],NS_center[1],NS_center[2],
-    dh_dx1_root_finder_eq(dh_par,NS_center));
-  printf("dh/dz(%g,%g,%g)|NS center = %g\n",
-    NS_center[0],NS_center[1],NS_center[2],
-    dh_dx2_root_finder_eq(dh_par,NS_center));
+  /* initial values before adjustments */
+  dh1[0] = dh_dx0_root_finder_eq(dh_par,NS_center);
+  dh1[1] = dh_dx1_root_finder_eq(dh_par,NS_center);
+  dh1[2] = dh_dx2_root_finder_eq(dh_par,NS_center);
   
   parse_adjust_parameter(par,adjust);
   
@@ -420,18 +416,28 @@ static void force_balance_eq(Grid_T *const grid)
   /* update enthalpy,denthalpy,rho0, drho0, u0, _J^i, _E and _S */
   bbn_update_stress_energy_tensor(grid,0);
   
-  /* print initial values after adjustments */
-  printf("dh/d? after force balance adjustment:\n");
-  printf("dh/dx(%g,%g,%g)|NS center = %g\n",
-    NS_center[0],NS_center[1],NS_center[2],
-    dh_dx0_root_finder_eq(dh_par,NS_center));
-  printf("dh/dy(%g,%g,%g)|NS center = %g\n",
-    NS_center[0],NS_center[1],NS_center[2],
-    dh_dx1_root_finder_eq(dh_par,NS_center));
-  printf("dh/dz(%g,%g,%g)|NS center = %g\n",
-    NS_center[0],NS_center[1],NS_center[2],
-    dh_dx2_root_finder_eq(dh_par,NS_center));
+  dh2[0] = dh_dx0_root_finder_eq(dh_par,NS_center);
+  dh2[1] = dh_dx1_root_finder_eq(dh_par,NS_center);
+  dh2[2] = dh_dx2_root_finder_eq(dh_par,NS_center);
   
+  /* print initial values after adjustments */
+  printf("Enthalpy derivatives at NS center after force balance eq.:\n");
+  
+  printf("|--> dh(%g,%g,%g)/dx = %+g\n",
+    NS_center[0],NS_center[1],NS_center[2],dh2[0]);
+  printf("|--> dh(%g,%g,%g)/dy = %+g\n",
+    NS_center[0],NS_center[1],NS_center[2],dh2[1]);
+  printf("|--> dh(%g,%g,%g)/dz = %+g\n",
+    NS_center[0],NS_center[1],NS_center[2],dh2[2]);
+    
+  printf("\nChanges in enthalpy derivatives after force balance eq.:\n");
+  printf("|--> dh2/dx-dh1/dx = %+g\n",dh2[0]-dh1[0]);
+  printf("|--> dh2/dy-dh1/dy = %+g\n",dh2[1]-dh1[1]);
+  printf("|--> dh2/dz-dh1/dz = %+g\n",dh2[2]-dh1[2]);
+  
+  printf("\n} Applying force balance equation --> Done.\n");
+  pr_clock();
+  pr_line_custom('=');
 }
 
 /* adjust Px ADM by changing the center of BH. */
@@ -1030,7 +1036,6 @@ static void force_balance_eq_root_finders(Grid_T *const grid,const int dir, cons
   
   new_par[0] = W1*new_par[0]+W2*old_par;
   update_parameter_double_format(par,new_par[0]);
-  printf("Updating %s: %g -> %g\n",par,old_par,new_par[0]);
   
   /* since B1 has been changed let's update the pertinent fields */
   update_B1_dB1_Beta_dBete_Aij_dAij(grid);
