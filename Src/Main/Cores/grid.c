@@ -9,7 +9,7 @@
 int make_patches(Grid_T *const grid)
 {
   pr_line_custom('=');
-  printf("Making the patches ...\n");
+  printf("{ Making the patches ...\n");
   
   /* allocating and filling basics of patches */
   alloc_patches(grid);
@@ -32,7 +32,7 @@ int make_patches(Grid_T *const grid)
     pr_coords(grid);
   
   
-  printf("Making the patches ==> Done.\n");
+  printf("} Making the patches ==> Done.\n");
   pr_clock();
   pr_line_custom('=');
   

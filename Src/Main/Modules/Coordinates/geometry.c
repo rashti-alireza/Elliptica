@@ -21,7 +21,7 @@ int realize_geometry(Grid_T *const grid)
   unsigned i;
   
   pr_line_custom('=');
-  printf("Realizing boundary conditions for each patch ...\n");
+  printf("{ Realizing boundary conditions for each patch ...\n");
   
   /* keep track of counted points; 1 means counted, 0 means not. */
   unsigned **point_flag = calloc(grid->np,sizeof(*point_flag));
@@ -62,7 +62,7 @@ int realize_geometry(Grid_T *const grid)
   /* freeing */
   free_2d_mem(point_flag,grid->np);
   
-  printf("Realizing boundary conditions for each patch ==> Done.\n");
+  printf("} Realizing boundary conditions for each patch ==> Done.\n");
   pr_clock();
   pr_line_custom('=');
  
