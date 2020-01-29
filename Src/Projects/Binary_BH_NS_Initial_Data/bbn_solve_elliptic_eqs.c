@@ -36,14 +36,18 @@ void bbn_solve_elliptic_eqs(Grid_T *const grid)
   save_fields(grid);
   
   const unsigned max_iter = (unsigned)GetParameterI_E("Solving_Max_Number_of_Iteration");
+  const int max_newton_step = GetParameterI_E("Solving_Max_Number_of_Newton_Step");
   unsigned iter = 0;
   
   while (iter < max_iter)
   {
     /* some prints */
     pr_line_custom('=');
-    printf("{ Iteration %d For Solving XCTS Equations at a Fixed Resolution ...\n",iter);
-    printf("        |---> %s Equations ...\n",SolveEqs->solving_order);
+    printf("{ Solving XCTS Equations at a Fixed Resolution ...\n");
+    printf("  |---> Iteration      = %d / %d\n",iter+1,max_iter);
+    printf("  |---> Equation(s)    = %s\n",SolveEqs->solving_order);
+    printf("  |---> Newton step(s) = %d\n",max_newton_step);
+    fflush(stdout);
     
     /* solve equations */
     solve_eqs(SolveEqs);
@@ -56,7 +60,8 @@ void bbn_solve_elliptic_eqs(Grid_T *const grid)
     }
     
     /* some prints */
-    printf("} Iteration %d For Solving XCTS Equations at a Fixed Resolution ==> Done.\n",iter);
+    
+    printf("} Solving XCTS Equations at a Fixed Resolution ==> Done.\n ");
     pr_clock();
     
     ++iter;

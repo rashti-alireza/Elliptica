@@ -29,7 +29,7 @@ int Binary_BH_NS_Initial_Data(void)
   /* iterate over all iterative parameters specified in parameter file */
   for (iter = 0; iter < N_iter; ++iter)
   {
-    printf("{ Outermost Iteration %u ...\n\n",iter);
+    printf("{ Outermost Iteration %u ...\n\n",iter+1);
     
     /* update iterative parameters and directories */
     update_parameters_and_directories(iter);
@@ -51,7 +51,7 @@ int Binary_BH_NS_Initial_Data(void)
     
     grid_prev = grid_next;
     
-    printf("} Outermost Iteration %u --> Done.\n",iter);
+    printf("} Outermost Iteration %u --> Done.\n",iter+1);
   }
   grid = grid_next;/* final grid */
   
