@@ -259,7 +259,7 @@ static int solve_field(Solve_Equations_T *const SolveEqs)
       printf("{ Compute S ...\n");
       time_temp = get_time_sec();
       S = compute_S(grid);/* free {C_ccs,FE'} */
-      printf("} Compute S --> Done. ( Wall-Clock = %.0f]\n\n",get_time_sec()-time_temp);
+      printf("} Compute S --> Done. ( Wall-Clock = %.0fs )\n\n",get_time_sec()-time_temp);
       fflush(stdout);
       
       /* solve Sy = g' */
