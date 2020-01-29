@@ -3414,6 +3414,9 @@ KSbeta_D2[ijk]*_gammaI_U2U2[ijk];
 // ->return value: grid of NS and BH in which inside of the BH excised. */
 static Grid_T *creat_bbn_grid_CS(struct Grid_Params_S *const GridParams)
 {
+  pr_line_custom('=');
+  printf("{ Creating grid ...\n\n");
+  
   Grid_T *grid = alloc_grid();/* adding a new grid */
   /* calculate the characteristics of this grid */
   const double Max_R_NS_l = GridParams->Max_R_NS_l;/* maximum radius of NS */
@@ -3608,13 +3611,18 @@ static Grid_T *creat_bbn_grid_CS(struct Grid_Params_S *const GridParams)
                      // normal to the boundary, 
                      // outer-boundary, inner boundary and etc. */
   
-  return grid;
+  printf("} Creating grid ==> Done.\n");
+  pr_clock();
+  pr_line_custom('=');
   
+  return grid;
 }
 
 /* making  NS and BH surfaces function */
 static void NS_BH_surface_CubedSpherical_grid(Grid_T *const grid,struct Grid_Params_S *const GridParams)
 {
+  printf("{ Populating surface function for NS and BH ...\n");
+  
   const double Max_R_NS_l = GridParams->Max_R_NS_l;/* maximum radius of NS */
   const double R_BH_r     = GridParams->R_BH_r;
   const double a_BH       = GridParams->a_BH;
@@ -4077,6 +4085,8 @@ static void NS_BH_surface_CubedSpherical_grid(Grid_T *const grid,struct Grid_Par
     abortEr(NO_OPTION);
   
   free(R);
+  
+  printf("} Populating surface function for NS and BH ==> Done.\n");
 }
 
 /* given (X,Y,Z) in the specified slice of NS in cubed spherical coords
