@@ -99,6 +99,7 @@ void free_root_finder(Root_Finder_T *root)
 // ->return value: x solution that makes f(x) = 0 */
 static double *root_finder_steepest_descent(Root_Finder_T *const root)
 {
+  const double tic = get_time_sec();
   const unsigned MaxIter = root->MaxIter;
   const unsigned n = root->n;
   void *params     = root->params;
@@ -118,11 +119,15 @@ static double *root_finder_steepest_descent(Root_Finder_T *const root)
     abortEr("No equation has been given.\n");
   
   if (desc)
-    printf("%s:\n",desc);
+    printf("%s\n",desc);
   if (root->verbose)
   {
-    printf("Finding root of {f(x) = 0}:\n");
-    printf("Num. of Eqs. = %u, Tolerance = %e, Max. Num. of Iter. = %u\n",n,TOL,MaxIter);
+    printf("\n{ Root finder ...\n\n");
+    printf("|--> Root Finder  = Steepst Descent Method\n");
+    printf("|--> Num. of Eqs. = %u\n"
+           "|--> Tolerance    = %e\n"
+           "|--> Max. Iter.   = %u\n",
+            n,TOL,MaxIter);
   }
   
   /* setup differentials */
@@ -153,13 +158,13 @@ static double *root_finder_steepest_descent(Root_Finder_T *const root)
       root->exit_status = ROOT_FINDER_INTERRUPTED;
       if (root->verbose)
       {
-        printf(".. Root finder was interrupted!\n");
+        printf("|--> Root finder was interrupted!\n");
       }
       break;
     }
     if (root->verbose)
     {
-      printf(".. Step[%02u]: Residual{f(x) = 0} = %+e\n",k-1,sqrt(g1));
+      printf("|--> Step[%02u]: Residual{f(x) = 0} = %+e\n",k-1,sqrt(g1));
     }
     
     for (i = 0; i < n; i++)
@@ -178,13 +183,11 @@ static double *root_finder_steepest_descent(Root_Finder_T *const root)
       {
         if (root->exit_status == ROOT_FINDER_NAN)
         {
-          printf("Root Finder -> Steepest Descent Method:\n"
-                 "Residual is abnormal; Residual = %e\n",root->residual);
+          printf("\nResidual is abnormal; Residual = %e\n",root->residual);
         }
         else
         {
-          printf("Root Finder -> Steepest Descent Method:\n"
-                 "Zero gradient, it hit an extrema; Residual = %e\n",root->residual);
+          printf("\nZero gradient, it hit an extrema; Residual = %e\n",root->residual);
         }
       }
       
@@ -202,7 +205,7 @@ static double *root_finder_steepest_descent(Root_Finder_T *const root)
       root->exit_status = ROOT_FINDER_INTERRUPTED;
       if (root->verbose)
       {
-        printf(".. Root finder was interrupted!\n");
+        printf("|--> Root finder was interrupted!\n");
       }
       break;
     }
@@ -218,7 +221,7 @@ static double *root_finder_steepest_descent(Root_Finder_T *const root)
         root->exit_status = ROOT_FINDER_INTERRUPTED;
         if (root->verbose)
         {
-          printf(".. Root finder was interrupted!\n");
+          printf("|--> Root finder was interrupted!\n");
         }
         break;
       }
@@ -235,13 +238,11 @@ static double *root_finder_steepest_descent(Root_Finder_T *const root)
         {
           if (root->exit_status == ROOT_FINDER_NAN)
           {
-            printf("Root Finder -> Steepest Descent Method:\n"
-                   "Residual is abnormal; Residual = %e\n",root->residual);
+            printf("\nResidual is abnormal; Residual = %e\n",root->residual);
           }
           else
           {
-            printf("Root Finder -> Steepest Descent Method:\n"
-                   "No likely improvement; Residual = %e\n",root->residual);
+            printf("\nNo likely improvement; Residual = %e\n",root->residual);
           }
         }
         
@@ -264,7 +265,7 @@ static double *root_finder_steepest_descent(Root_Finder_T *const root)
       root->exit_status = ROOT_FINDER_INTERRUPTED;
       if (root->verbose)
       {
-        printf(".. Root finder was interrupted!\n");
+        printf("|--> Root finder was interrupted!\n");
       }
       break;
     }
@@ -280,7 +281,7 @@ static double *root_finder_steepest_descent(Root_Finder_T *const root)
       root->exit_status = ROOT_FINDER_INTERRUPTED;
       if (root->verbose)
       {
-        printf(".. Root finder was interrupted!\n");
+        printf("|--> Root finder was interrupted!\n");
       }
       break;
     }
@@ -297,8 +298,7 @@ static double *root_finder_steepest_descent(Root_Finder_T *const root)
       root->exit_status = ROOT_FINDER_NAN;
       if (root->verbose)
       {
-        printf("Root Finder -> Steepest Descent Method:\n"
-               "Residual is abnormal; Residual = %e\n",root->residual);
+        printf("\nResidual is abnormal; Residual = %e\n",root->residual);
       }
       break;
     }
@@ -308,9 +308,8 @@ static double *root_finder_steepest_descent(Root_Finder_T *const root)
       
       if (root->verbose)
       {
-        printf(".. Step[%02u]: Residual[f(x) = 0] = %+e\n",k,root->residual);
-        printf("Root Finder -> Steepest Descent Method:\n"
-               "The root(s) are found => Residual = %e\n",root->residual);
+        printf("|--> Step[%02u]: Residual[f(x) = 0] = %+e\n",k,root->residual);
+        printf("\nThe root(s) are found => Residual = %e\n",root->residual);
       }
       break;
     }
@@ -321,9 +320,8 @@ static double *root_finder_steepest_descent(Root_Finder_T *const root)
       root->exit_status = ROOT_FINDER_MAX_ITER; 
       if (root->verbose)
       {
-        printf(".. Step[%02u]: Residual[f(x) = 0] = %+e\n",k-1,root->residual);
-        printf("Root Finder -> Steepest Descent Method:\n"
-               "Exceeds maximum number of iterations => Residual = %e\n",root->residual);
+        printf("|--> Step[%02u]: Residual[f(x) = 0] = %+e\n",k-1,root->residual);
+        printf("\nExceeds maximum number of iterations => Residual = %e\n",root->residual);
       }
       break;
     }
@@ -331,6 +329,11 @@ static double *root_finder_steepest_descent(Root_Finder_T *const root)
   
   fflush(stdout);
   root->x_sol = x;
+  
+  if (root->verbose)
+    printf("\n} Root finder --> Done. ( Wall-Clock = %.2fs )\n\n",
+           get_time_sec()-tic);
+  
   return x;
 }
 
