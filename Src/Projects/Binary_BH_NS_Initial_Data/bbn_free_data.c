@@ -9,7 +9,7 @@
 void bbn_populate_free_data(Grid_T *const grid)
 {
   pr_line_custom('=');
-  printf("Populating free data and related ...\n");
+  printf("{ Populating free data and related ...\n");
   
   /* populate conformal metric and its inverse */
   bbn_free_data_gammas(grid);
@@ -31,7 +31,7 @@ void bbn_populate_free_data(Grid_T *const grid)
   bbn_free_data_tr_KSKij(grid);
   printf("Trace of Kerr Schild BH:tr(K_ij) ~> Done.\n");
   
-  printf("Populating free data and related ==> Done.\n");
+  printf("} Populating free data and related ==> Done.\n");
   pr_clock();
   pr_line_custom('=');
 }

@@ -41,7 +41,7 @@ Grid_T *bbn_initialize_next_grid(Grid_T *const grid_prev)
 static Grid_T *make_next_grid_using_previous_grid(Grid_T *const grid_prev)
 {
   pr_line_custom('=');
-  printf("{ Initializing the Fields Using Previous Solutions ...\n");
+  printf("{ Initializing the Fields and Grid Using Previous Solutions ...\n");
   
   Grid_T *grid_next = 0;
   struct Grid_Params_S *GridParams = init_GridParams();/* adjust some pars for construction of next grid */
@@ -112,7 +112,7 @@ static Grid_T *make_next_grid_using_previous_grid(Grid_T *const grid_prev)
   /* freeing */
   free_Grid_Params_S(GridParams);
   
-  printf("} Initializing the Fields Using Previous Solutions ==> Done.\n");
+  printf("} Initializing the Fields and Grid Using Previous Solutions ==> Done.\n");
   pr_line_custom('=');
   
   return grid_next;
@@ -2776,7 +2776,7 @@ static void extrapolate_outsideNS_CS_slop_method(Grid_T *const grid)
 static Grid_T *TOV_KerrSchild_approximation(void)
 {
   pr_line_custom('=');
-  printf("{ Initializing the Fields Using TOV and Kerr-Schild Solutions ...\n");
+  printf("{ Initializing Fields & Grid Using TOV & Kerr-Schild Solutions ...\n");
   
   Grid_T *grid = 0;
   struct Grid_Params_S *GridParams = init_GridParams();/* adjust some pars for construction of grid */
@@ -2895,7 +2895,7 @@ static Grid_T *TOV_KerrSchild_approximation(void)
   TOV_free(tov);
   free_observable(obs);
   
-  printf("} Initializing the Fields Using TOV and Kerr-Schild Solutions ==> Done.\n");
+  printf("{ Initializing Fields & Grid Using TOV & Kerr-Schild Solutions ==> Done.\n");
   pr_line_custom('=');
   
   return grid;
@@ -3001,7 +3001,7 @@ dphi_D0[ijk] + Beta_U1[ijk]*dphi_D1[ijk] + Beta_U2[ijk]*dphi_D2[ijk]))/
 static void bbn_update_Aij(Grid_T *const grid)
 {
   pr_line_custom('=');
-  printf("Updating _A^{ij}, _dA^{ij} and _A^{ij}*A_{ij} ...\n");
+  printf("{ Updating _A^{ij}, _dA^{ij} and _A^{ij}*A_{ij} ...\n");
   unsigned p;
 
   FOR_ALL_PATCHES(p,grid)
@@ -3010,7 +3010,7 @@ static void bbn_update_Aij(Grid_T *const grid)
     bbn_update_psi10A_UiUj(patch);
   }
   
-  printf("Updating _A^{ij}, _dA^{ij} and _A^{ij}*A_{ij} ==> Done.\n");
+  printf("} Updating _A^{ij}, _dA^{ij} and _A^{ij}*A_{ij} ==> Done.\n");
   pr_clock();
   pr_line_custom('=');
 }
@@ -3019,7 +3019,7 @@ static void bbn_update_Aij(Grid_T *const grid)
 static void make_normal_vector_on_BH_horizon(Grid_T *const grid,struct Grid_Params_S *const GridParams)
 {
   pr_line_custom('=');
-  printf("Making normal vector on BH horizon ...\n");
+  printf("{ Making normal vector on BH horizon ...\n");
   
   const double BH_center_x = GetParameterD_E("BH_center_x");
   const double BH_center_y = GetParameterD_E("BH_center_y");
@@ -3087,7 +3087,7 @@ static void make_normal_vector_on_BH_horizon(Grid_T *const grid,struct Grid_Para
   else
     abortEr(NO_OPTION);
     
-  printf("Making normal vector on BH horizon ==> Done.\n");
+  printf("} Making normal vector on BH horizon ==> Done.\n");
   pr_clock();
   pr_line_custom('=');
   
@@ -3098,7 +3098,7 @@ static void make_normal_vector_on_BH_horizon(Grid_T *const grid,struct Grid_Para
 static void init_field_TOV_plus_KerrSchild(Grid_T *const grid,const TOV_T *const tov, const double a_BH, const double M_BH)
 {
   pr_line_custom('=');
-  printf("Initializing the fields using TOV and Kerr-Schild solution ...\n");
+  printf("{ Superimposing TOV and Kerr-Schild solution ...\n");
   
   Transformation_T *t = initialize_transformation();
   const double M_NS = tov->ADM_m;/* NS adm mass */
@@ -3402,7 +3402,7 @@ KSbeta_D2[ijk]*_gammaI_U2U2[ijk];
     REMOVE_FIELD(KSalpha)
   }
   
-  printf("Initializing the fields using TOV and Kerr-Schild solution ==> Done.\n");
+  printf("} Superimposing TOV and Kerr-Schild solution ==> Done.\n");
   pr_clock();
   pr_line_custom('=');
 

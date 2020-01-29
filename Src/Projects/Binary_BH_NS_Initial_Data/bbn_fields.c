@@ -9,6 +9,9 @@
 /* allocating all of the fields needed for construction of Initial Data */
 void bbn_allocate_fields(Grid_T *const grid)
 {
+  pr_line_custom('=');
+  printf("{ Adding fields ...\n");
+  
   unsigned p;
   
   FOR_ALL_PATCHES(p,grid)
@@ -381,13 +384,17 @@ void bbn_allocate_fields(Grid_T *const grid)
     ADD_FIELD(_dA_UiUj_U0U2D2)
     
   }
+  
+  printf("} Adding fields ==> Done.\n");
+  pr_clock();
+  pr_line_custom('=');
 }
 
 /* taking partial derivatives of fields needed in equations */
 void bbn_partial_derivatives_fields(Grid_T *const grid)
 {
   pr_line_custom('=');
-  printf("Taking partial derivatives of fields ...\n");
+  printf("{ Taking partial derivatives of fields ...\n");
   
   const unsigned np = grid->np;
   unsigned p;
@@ -438,7 +445,7 @@ void bbn_partial_derivatives_fields(Grid_T *const grid)
 
   }
   
-  printf("Taking partial derivatives of fields ==> Done.\n");
+  printf("} Taking partial derivatives of fields ==> Done.\n");
   pr_clock();
   pr_line_custom('=');
 }
