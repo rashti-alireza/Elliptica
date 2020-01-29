@@ -172,6 +172,9 @@ static void keep_NS_center_fixed(Grid_T *const grid)
 /* controlling P_ADM */
 static void P_ADM_control(Grid_T *const grid)
 {
+  pr_line_custom('=');
+  printf("{ Adjusting ADM momentums ...\n");
+  
   char *adjust[3];
   const char *const par = GetParameterS_E("P_ADM_control_method");
   
@@ -226,6 +229,9 @@ static void P_ADM_control(Grid_T *const grid)
   _free(adjust[1]);
   _free(adjust[2]);
   
+  printf("\n} Adjusting ADM momentums --> Done.\n");
+  pr_clock();
+  pr_line_custom('=');
 }
 
 /* getting adjustment str, returns the relevant function. */
