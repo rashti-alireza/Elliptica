@@ -1,7 +1,4 @@
-# calculating scaled hamiltonian and momentum constraints first method:
-# Note: we scaled them by psi^6:
-# ham_constraint = psi^6*H
-# mom_constraint = psi^6*M
+# calculating hamiltonian and momentum constraints first method:
 
 # Manifold or grid Dimension
 Dimension = 3;
@@ -178,49 +175,45 @@ Ccode["  {"];
 ## Calculate Hamiltonian and Momentum constraints:
 #################################################################
 psim4     = psi**(-4);
-#psim6     = psi**(-6);
-#J(i)      = psim6*_J(i);
-#E         = psim6*_E;
-psi2       = psi**2;
-psi3       = psi*psi2;
-psi6       = psi3*psi3;
-psim3      = 1/psi3;
+psim6     = psi**(-6);
+J(i)      = psim6*_J(i);
+E         = psim6*_E;
 dLnpsi(-i)= dpsi(i)/psi;
 
 DDpsi =  _gammaI(i,j)*ddpsi(-i,-j) \
        - _gammaI(-i,-j)*_Gamma(l,i,j)*dpsi(-l);
-psi6R = psi2*_R-8*DDpsi*psi;
+R     = psim4*(_R-8*DDpsi/psi);
 
-Kbar(i,j)      = psim3*_A_UiUj(i,j)+psi3*K*_gammaI(i,j)/3;
+Kbar(i,j) = psim6*_A_UiUj(i,j)+K*_gammaI(i,j)/3;
 Symm[Kbar(i,j) = Kbar(j,i)];
 
-psi6KijKij = Kbar(i,j)*Kbar(l,m)*_gamma(-i,-l)*_gamma(-j,-m);
+KijKij    = Kbar(i,j)*Kbar(l,m)*_gamma(-i,-l)*_gamma(-j,-m);
 
 #### Hamiltonian:
-Ham_Constraint =  psi6R-psi6KijKij+psi6*K**2-16*pi*_E;
+Ham_Constraint =  R-KijKij+K**2-16*pi*E;
 
 
-c(i,j,k)       =\
+c(i,j,k)  =\
 2*(dLnpsi(k)*KD(i,j)+dLnpsi(j)*KD(i,k)-dLnpsi(-l)*_gammaI(i,l)*_gamma(j,k));
-Symm[c(i,j,k)  = c(i,k,j)];
+Symm[c(i,j,k) = c(i,k,j)];
 
-psi6djKj(i)    = psim4*(-10*dLnpsi(-j)*_A_UiUj(i,j)+_dA_UiUj(i,j,jp)*KD(-jp,-j))\
-+psi2*(\
+djKj(i)     = psim4*\
+(psim6*(-10*dLnpsi(-j)*_A_UiUj(i,j)+_dA_UiUj(i,j,jp)*KD(-jp,-j))\
 +dK(-j)*_gammaI(i,j)/3 - 4*K*dLnpsi(-j)*_gammaI(i,j)/3 \
 +K*_dgammaI(i,j,jp)*KD(-j,-jp)/3);
 
-GammaKbar(i)   = _Gamma(i,j,l)*Kbar(-l,-j)+_Gamma(j,jp,l)*Kbar(i,-l)*KD(-j,-jp);
-psi6DbarjKj(i) = psi6djKj(i)+GammaKbar(i)/psi;
+GammaKbar(i) = _Gamma(i,j,l)*Kbar(-l,-j)+_Gamma(j,jp,l)*Kbar(i,-l)*KD(-j,-jp);
+DbarjKj(i)   = djKj(i)+GammaKbar(i)*psim4;
 
 CKbar(i) = c(i,j,l)*Kbar(-l,-j)+c(j,jp,l)*Kbar(i,-l)*KD(-j,-jp);
-psi6Dk(i)      =  psi6DbarjKj(i)+CKbar(i)/psi;
+Dk(i)    =  DbarjKj(i)+CKbar(i)*psim4;
 
 #### Momentum:
-Mom_constraint(i) = psi6Dk(i)-psi2*_gammaI(i,j)*dK(-j)-8*pi*_J(i);
+Mom_constraint(i) = Dk(i)-psim4*_gammaI(i,j)*dK(-j)-8*pi*J(i);
 
 ### populate ###
 Cpopulate[mom_constraint = Mom_constraint];
-`  ham_constraint[ijk] = Ham_Constraint;`
+  `  ham_constraint[ijk] = Ham_Constraint;`
 
 #################################################################
 Ccode["  }"];
