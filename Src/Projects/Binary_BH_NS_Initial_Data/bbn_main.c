@@ -119,7 +119,8 @@ static void Elliptic_Eqs_Convergence_Test_BBN(void)
   pr_line_custom('=');
 }
 
-/* updating iterative parametes and output directories */
+/* updating iterative parametes and output directories.
+// new output directory is made based on changing of resolution. */
 static void update_parameters_and_directories(const unsigned iter)
 {
   const unsigned N_iter_par = total_iterative_parameters_ip();
@@ -129,7 +130,13 @@ static void update_parameters_and_directories(const unsigned iter)
        folder_name_prev[1000] = {'\0'};
   char *folder_path,*folder_path2;
   unsigned i;
-    
+  
+  /* find the previous folder name */
+  n[0] = (unsigned)GetParameterI("n_a");
+  n[1] = (unsigned)GetParameterI("n_b");
+  n[2] = (unsigned)GetParameterI("n_c");
+  sprintf(folder_name_prev,"BBN_%ux%ux%u",n[0],n[1],n[2]);  
+  
   /* updating some parameters for the new round of iteration */
   update_parameter_integer("iteration_number",(int)iter);
   
@@ -145,18 +152,18 @@ static void update_parameters_and_directories(const unsigned iter)
     printf("\n");
   }
   
-  /* making a directory for this iteration and save the path */
+  /* find the name of next folder */
   n[0] = (unsigned)GetParameterI("n_a");
   n[1] = (unsigned)GetParameterI("n_b");
   n[2] = (unsigned)GetParameterI("n_c");
-  
   sprintf(folder_name_next,"BBN_%ux%ux%u",n[0],n[1],n[2]);
-  if (strcmp(folder_name_next,folder_name_prev))/* if n is updated */
+  
+  /* if the resolution isn't the same or it is the first iteration */
+  if (strcmp(folder_name_next,folder_name_prev) || iter == 0)/* if n is updated */
   {
     /* iteration number used in solving, reset this for each resolution */
     update_parameter_integer("solving_iteration_number",0);
     sprintf(folder_name_next,"BBN_%ux%ux%u",n[0],n[1],n[2]);
-    sprintf(folder_name_prev,"BBN_%ux%ux%u",n[0],n[1],n[2]);
     folder_path = make_directory(path_par,folder_name_next);
     update_parameter_string("iteration_output",folder_path);
     folder_path2 = make_directory(folder_path,"Diagnostics");
