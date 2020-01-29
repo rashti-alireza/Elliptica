@@ -186,6 +186,7 @@ int bbn_stop_criteria(Grid_T *const grid,const char *const name)
   int stop_max = 1;
   int stop_res = 0;
   int stop_backtrack = 1;
+  int stop_abnormal  = 1;
   const double res_TOLERANCE = 1E-10;/* this is the tolerance that solver allowed to increase residual */
   const double res_bckt = GetParameterD_E("Solving_Allowed_Relative_Residual_Backtrack_Tolerance");
   const double res_d    = GetParameterD_E("Solving_Residual");/* desired residual */
@@ -212,6 +213,13 @@ int bbn_stop_criteria(Grid_T *const grid,const char *const name)
     double res_last;
     int solver_step = patch->solving_man->settings->solver_step;/* iteration number */
     
+    /* if nan or inf */
+    if (!isfinite(res))
+    {
+      stop_abnormal = 0;
+      break;
+    }
+    
     /* if this is the very first step, don't check the following */
     if (solver_step  == 0)
       continue;
@@ -232,9 +240,16 @@ int bbn_stop_criteria(Grid_T *const grid,const char *const name)
     }
   }
   
+  if (!stop_abnormal)
+  {
+    printf("%s equation:\n"
+           "---> Newton solver got abnormal residual so exit ...\n",name);
+    fflush(stdout);
+    return stop_abnormal;
+  }
+  
   if (!stop_backtrack)
   {
-    /* get the value of last solution */
     printf("%s equation:\n"
            "---> Newton solver increased the residual so backtrack and exist ...\n",name);
     fflush(stdout);
