@@ -45,6 +45,7 @@ static Grid_T *make_next_grid_using_previous_grid(Grid_T *const grid_prev)
   
   Grid_T *grid_next = 0;
   struct Grid_Params_S *GridParams = init_GridParams();/* adjust some pars for construction of next grid */
+  GridParams->grid_prev = grid_prev;
   
   /* NOTE: the order of function calls are important */
 
@@ -2237,12 +2238,12 @@ static void extrapolate_insideBH(Grid_T *const grid)
         x[2] = patch->node[ijk]->x[2]-patch->c[2]; 
         rh   = rms(3,x,0);
         
+        X_of_x(X,patch->node[ijk]->x,BHsur_patch);
+        
         N[0] = interpolate_from_patch_prim("_HS_U0",X,BHsur_patch);
         N[1] = interpolate_from_patch_prim("_HS_U1",X,BHsur_patch);
         N[2] = interpolate_from_patch_prim("_HS_U2",X,BHsur_patch);
         
-        X_of_x(X,patch->node[ijk]->x,BHsur_patch);
-
         double B0_U0_i    = interpolate_from_patch_prim("B0_U0",X,BHsur_patch);
         double dB0_U0D0_i = interpolate_from_patch_prim("dB0_U0D0",X,BHsur_patch);
         double dB0_U0D1_i = interpolate_from_patch_prim("dB0_U0D1",X,BHsur_patch);
@@ -2827,7 +2828,8 @@ static Grid_T *TOV_KerrSchild_approximation(void)
   
   Grid_T *grid = 0;
   struct Grid_Params_S *GridParams = init_GridParams();/* adjust some pars for construction of grid */
-  
+  GridParams->grid_prev = 0;
+   
   /* solve fields for a TOV star located at left side of y axis */
   TOV_T *tov = TOV_init();
   tov->bar_m = GetParameterD_E("NS_baryonic_mass");
@@ -3668,7 +3670,7 @@ static Grid_T *creat_bbn_grid_CS(struct Grid_Params_S *const GridParams)
 /* making  NS and BH surfaces function */
 static void NS_BH_surface_CubedSpherical_grid(Grid_T *const grid,struct Grid_Params_S *const GridParams)
 {
-  printf("{ Populating surface function for NS and BH ...\n");
+  printf("{ Populating surface function for NS and BH ...\n\n");
   
   const double Max_R_NS_l = GridParams->Max_R_NS_l;/* maximum radius of NS */
   const double R_BH_r     = GridParams->R_BH_r;
@@ -3684,6 +3686,8 @@ static void NS_BH_surface_CubedSpherical_grid(Grid_T *const grid,struct Grid_Par
   Patch_T patch[1] = {0};
   struct Collocation_s coll_s[2] = {0};
   double X[3],r;
+  Flag_T same_res_flag = NONE;
+  double dR_sum_square = 0;
   
   /* left NS */
   
@@ -3707,6 +3711,8 @@ static void NS_BH_surface_CubedSpherical_grid(Grid_T *const grid,struct Grid_Par
     abortEr("n_c could not be set.\n");
     
   N_total = N[0]*N[1]*N[2];
+  
+  same_res_flag = DoesNextNSPatchHaveSameResolution(N,GridParams);
   
   /* surface */
   R = alloc_double(N_total);
@@ -3785,6 +3791,22 @@ static void NS_BH_surface_CubedSpherical_grid(Grid_T *const grid,struct Grid_Par
     sprintf(par,"grid%u_left_NS_surface_function_up",grid->gn);
     add_parameter_array(par,R,N_total);
     
+    if (same_res_flag == YES)
+    {
+      Grid_T *grid_prev      = GridParams->grid_prev;
+      Patch_T *patch_prev    = GetPatch("left_NS_up",grid_prev);
+      const int R0_ind       = LookUpField_E("surface_function",patch_prev);
+      const double *const R0 = patch_prev->pool[R0_ind]->v;
+      
+      for (i = 0; i < N[0]; ++i)
+        for (j = 0; j < N[1]; ++j)
+        {
+          unsigned ijk = L(N,i,j,0);
+          dR_sum_square += SQR(1-R[ijk]/R0[ijk]);
+        }
+      
+    }/* end of if (same_res_flag == YES) */
+
     /* surface down */
     for (i = 0; i < N[0]; ++i)
     {
@@ -3801,6 +3823,22 @@ static void NS_BH_surface_CubedSpherical_grid(Grid_T *const grid,struct Grid_Par
     sprintf(par,"grid%u_left_NS_surface_function_down",grid->gn);
     add_parameter_array(par,R,N_total);
     
+    if (same_res_flag == YES)
+    {
+      Grid_T *grid_prev      = GridParams->grid_prev;
+      Patch_T *patch_prev    = GetPatch("left_NS_down",grid_prev);
+      const int R0_ind       = LookUpField_E("surface_function",patch_prev);
+      const double *const R0 = patch_prev->pool[R0_ind]->v;
+      
+      for (i = 0; i < N[0]; ++i)
+        for (j = 0; j < N[1]; ++j)
+        {
+          unsigned ijk = L(N,i,j,0);
+          dR_sum_square += SQR(1-R[ijk]/R0[ijk]);
+        }
+      
+    }/* end of if (same_res_flag == YES) */
+
     /* surface back */
     for (i = 0; i < N[0]; ++i)
     {
@@ -3817,6 +3855,22 @@ static void NS_BH_surface_CubedSpherical_grid(Grid_T *const grid,struct Grid_Par
     sprintf(par,"grid%u_left_NS_surface_function_back",grid->gn);
     add_parameter_array(par,R,N_total);
     
+    if (same_res_flag == YES)
+    {
+      Grid_T *grid_prev      = GridParams->grid_prev;
+      Patch_T *patch_prev    = GetPatch("left_NS_back",grid_prev);
+      const int R0_ind       = LookUpField_E("surface_function",patch_prev);
+      const double *const R0 = patch_prev->pool[R0_ind]->v;
+      
+      for (i = 0; i < N[0]; ++i)
+        for (j = 0; j < N[1]; ++j)
+        {
+          unsigned ijk = L(N,i,j,0);
+          dR_sum_square += SQR(1-R[ijk]/R0[ijk]);
+        }
+      
+    }/* end of if (same_res_flag == YES) */
+
     /* surface front */
     for (i = 0; i < N[0]; ++i)
     {
@@ -3833,6 +3887,22 @@ static void NS_BH_surface_CubedSpherical_grid(Grid_T *const grid,struct Grid_Par
     sprintf(par,"grid%u_left_NS_surface_function_front",grid->gn);
     add_parameter_array(par,R,N_total);
     
+    if (same_res_flag == YES)
+    {
+      Grid_T *grid_prev      = GridParams->grid_prev;
+      Patch_T *patch_prev    = GetPatch("left_NS_front",grid_prev);
+      const int R0_ind       = LookUpField_E("surface_function",patch_prev);
+      const double *const R0 = patch_prev->pool[R0_ind]->v;
+      
+      for (i = 0; i < N[0]; ++i)
+        for (j = 0; j < N[1]; ++j)
+        {
+          unsigned ijk = L(N,i,j,0);
+          dR_sum_square += SQR(1-R[ijk]/R0[ijk]);
+        }
+      
+    }/* end of if (same_res_flag == YES) */
+
     /* surface left */
     for (i = 0; i < N[0]; ++i)
     {
@@ -3849,6 +3919,23 @@ static void NS_BH_surface_CubedSpherical_grid(Grid_T *const grid,struct Grid_Par
     sprintf(par,"grid%u_left_NS_surface_function_left",grid->gn);
     add_parameter_array(par,R,N_total);
     
+    if (same_res_flag == YES)
+    {
+      Grid_T *grid_prev      = GridParams->grid_prev;
+      Patch_T *patch_prev    = GetPatch("left_NS_left",grid_prev);
+      const int R0_ind       = LookUpField_E("surface_function",patch_prev);
+      const double *const R0 = patch_prev->pool[R0_ind]->v;
+      
+      for (i = 0; i < N[0]; ++i)
+        for (j = 0; j < N[1]; ++j)
+        {
+          unsigned ijk = L(N,i,j,0);
+          dR_sum_square += SQR(1-R[ijk]/R0[ijk]);
+        }
+      
+    }/* end of if (same_res_flag == YES) */
+
+    
     /* surface right */
     for (i = 0; i < N[0]; ++i)
     {
@@ -3864,12 +3951,81 @@ static void NS_BH_surface_CubedSpherical_grid(Grid_T *const grid,struct Grid_Par
     }
     sprintf(par,"grid%u_left_NS_surface_function_right",grid->gn);
     add_parameter_array(par,R,N_total);
+    
+    if (same_res_flag == YES)
+    {
+      Grid_T *grid_prev      = GridParams->grid_prev;
+      Patch_T *patch_prev    = GetPatch("left_NS_right",grid_prev);
+      const int R0_ind       = LookUpField_E("surface_function",patch_prev);
+      const double *const R0 = patch_prev->pool[R0_ind]->v;
+      
+      for (i = 0; i < N[0]; ++i)
+        for (j = 0; j < N[1]; ++j)
+        {
+          unsigned ijk = L(N,i,j,0);
+          dR_sum_square += SQR(1-R[ijk]/R0[ijk]);
+        }
+      
+    }/* end of if (same_res_flag == YES) */
+
   }
   else
     abortEr(NO_OPTION);
   
   free(R);
   
+  /* should we change the NS surface */
+  const double NS_surf_tolerance = GetParameterD_E("NS_surface_tolerance");
+  const double dR_rms = sqrt(dR_sum_square);
+  
+  /* if dR_rms is small do not change the NS surface function */
+  if (dR_rms < NS_surf_tolerance && GridParams->grid_prev)
+  {
+    printf("~> |R_2 - R1|/|R_1| = %g < Tolerance = %g\n",dR_rms,NS_surf_tolerance);
+    printf("~> No changes in NS surface\n");
+
+    /* update the surface function accordingly: */
+    sprintf(par,"grid%u_left_NS_surface_function_up",grid->gn-1);
+    R = GetParameterArrayF_E(par);
+    sprintf(par,"grid%u_left_NS_surface_function_up",grid->gn);
+    update_parameter_array(par,R,N_total);
+    
+    sprintf(par,"grid%u_left_NS_surface_function_down",grid->gn-1);
+    R = GetParameterArrayF_E(par);
+    sprintf(par,"grid%u_left_NS_surface_function_down",grid->gn);
+    update_parameter_array(par,R,N_total);
+    
+    sprintf(par,"grid%u_left_NS_surface_function_back",grid->gn-1);
+    R = GetParameterArrayF_E(par);
+    sprintf(par,"grid%u_left_NS_surface_function_back",grid->gn);
+    update_parameter_array(par,R,N_total);
+    
+    sprintf(par,"grid%u_left_NS_surface_function_front",grid->gn-1);
+    R = GetParameterArrayF_E(par);
+    sprintf(par,"grid%u_left_NS_surface_function_front",grid->gn);
+    update_parameter_array(par,R,N_total);
+    
+    sprintf(par,"grid%u_left_NS_surface_function_left",grid->gn-1);
+    R = GetParameterArrayF_E(par);
+    sprintf(par,"grid%u_left_NS_surface_function_left",grid->gn);
+    update_parameter_array(par,R,N_total);
+    
+    sprintf(par,"grid%u_left_NS_surface_function_right",grid->gn-1);
+    R = GetParameterArrayF_E(par);
+    sprintf(par,"grid%u_left_NS_surface_function_right",grid->gn);
+    update_parameter_array(par,R,N_total);
+    
+  }
+  /* else it is changed */
+  else
+  {
+    if (GridParams->grid_prev)
+      printf("~> |R_2 - R1|/|R_1| = %g >= Tolerance = %g\n",dR_rms,NS_surf_tolerance);
+    printf("~> Update NS surface\n");
+  }
+
+  
+  R = 0;
   /* right BH: */
   
   /* filling min */
@@ -4133,7 +4289,30 @@ static void NS_BH_surface_CubedSpherical_grid(Grid_T *const grid,struct Grid_Par
   
   free(R);
   
-  printf("} Populating surface function for NS and BH ==> Done.\n");
+  printf("\n} Populating surface function for NS and BH ==> Done.\n");
+}
+
+/* ->return value: if the next grid has same given resolution N 
+// for NS patch YES, otherwise NO. */
+static Flag_T DoesNextNSPatchHaveSameResolution(const unsigned N[3],struct Grid_Params_S *const GridParams)
+{
+  Grid_T *const grid_prev = GridParams->grid_prev;
+  Flag_T flg = NO;
+  
+  if (!grid_prev)
+    return flg;
+  
+  if (!strcmp_i(grid_prev->kind,"BBN_CubedSpherical_grid"))
+    abortEr(NO_OPTION);
+ 
+  /* note: all of NS patches have same resolution */
+  Patch_T *const NS_Patch_prev = GetPatch("left_NS_up",grid_prev);
+  const unsigned *const n = NS_Patch_prev->n;
+  
+  if (n[0] == N[0] && n[1] == N[1] && n[2] == N[2])
+    flg = YES;
+  
+  return flg; 
 }
 
 /* given (X,Y,Z) in the specified slice of NS in cubed spherical coords

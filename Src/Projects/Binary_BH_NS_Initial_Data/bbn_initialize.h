@@ -25,6 +25,7 @@ struct NS_surface_RootFinder_S
 /* this struct is adjustments and requirements for making of a new grid */
 struct Grid_Params_S
 {
+  Grid_T *grid_prev;/* previous grid */
   double Max_R_NS_l;/* max of NS radius */
   double R_BH_r;/* BH radius */
   double a_BH;/* BH spin */
@@ -139,3 +140,4 @@ static void force_balance_ddz_Omega(Grid_T *const grid);
 static void adjust_AH_radius(Grid_T *const grid,struct Grid_Params_S *const GridParams);
 static void adjust_BH_Omega(Grid_T *const grid,struct Grid_Params_S *const GridParams);
 static double AH_surface_function_PerfectSphere_CS(const double a,const double b,const double R,const double *const c,const Flag_T side);
+static Flag_T DoesNextNSPatchHaveSameResolution(const unsigned N[3],struct Grid_Params_S *const GridParams);
