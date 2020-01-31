@@ -116,7 +116,7 @@ static double *root_finder_steepest_descent(Root_Finder_T *const root)
   unsigned i,k;
   
   if (!f)
-    abortEr("No equation has been given.\n");
+    abortEr("\n~> No equation has been given.\n");
   
   if (desc)
     printf("%s\n",desc);
@@ -158,7 +158,7 @@ static double *root_finder_steepest_descent(Root_Finder_T *const root)
       root->exit_status = ROOT_FINDER_INTERRUPTED;
       if (root->verbose)
       {
-        printf("|--> Root finder was interrupted!\n");
+        printf("\n~> Root finder was interrupted!\n");
       }
       break;
     }
@@ -183,11 +183,11 @@ static double *root_finder_steepest_descent(Root_Finder_T *const root)
       {
         if (root->exit_status == ROOT_FINDER_NAN)
         {
-          printf("\nResidual is abnormal; Residual = %e\n",root->residual);
+          printf("\n~> Residual is abnormal; Residual = %e\n",root->residual);
         }
         else
         {
-          printf("\nZero gradient, it hit an extrema; Residual = %e\n",root->residual);
+          printf("\n~> Zero gradient, it hit an extrema; Residual = %e\n",root->residual);
         }
       }
       
@@ -205,7 +205,7 @@ static double *root_finder_steepest_descent(Root_Finder_T *const root)
       root->exit_status = ROOT_FINDER_INTERRUPTED;
       if (root->verbose)
       {
-        printf("|--> Root finder was interrupted!\n");
+        printf("\n~> Root finder was interrupted!\n");
       }
       break;
     }
@@ -221,7 +221,7 @@ static double *root_finder_steepest_descent(Root_Finder_T *const root)
         root->exit_status = ROOT_FINDER_INTERRUPTED;
         if (root->verbose)
         {
-          printf("|--> Root finder was interrupted!\n");
+          printf("\n~> Root finder was interrupted!\n");
         }
         break;
       }
@@ -238,11 +238,11 @@ static double *root_finder_steepest_descent(Root_Finder_T *const root)
         {
           if (root->exit_status == ROOT_FINDER_NAN)
           {
-            printf("\nResidual is abnormal; Residual = %e\n",root->residual);
+            printf("\n~> Residual is abnormal; Residual = %e\n",root->residual);
           }
           else
           {
-            printf("\nNo likely improvement; Residual = %e\n",root->residual);
+            printf("\n~> No likely improvement; Residual = %e\n",root->residual);
           }
         }
         
@@ -265,7 +265,7 @@ static double *root_finder_steepest_descent(Root_Finder_T *const root)
       root->exit_status = ROOT_FINDER_INTERRUPTED;
       if (root->verbose)
       {
-        printf("|--> Root finder was interrupted!\n");
+        printf("\n~> Root finder was interrupted!\n");
       }
       break;
     }
@@ -281,7 +281,7 @@ static double *root_finder_steepest_descent(Root_Finder_T *const root)
       root->exit_status = ROOT_FINDER_INTERRUPTED;
       if (root->verbose)
       {
-        printf("|--> Root finder was interrupted!\n");
+        printf("\n~> Root finder was interrupted!\n");
       }
       break;
     }
@@ -298,7 +298,7 @@ static double *root_finder_steepest_descent(Root_Finder_T *const root)
       root->exit_status = ROOT_FINDER_NAN;
       if (root->verbose)
       {
-        printf("\nResidual is abnormal; Residual = %e\n",root->residual);
+        printf("\n~> Residual is abnormal; Residual = %e\n",root->residual);
       }
       break;
     }
@@ -309,7 +309,7 @@ static double *root_finder_steepest_descent(Root_Finder_T *const root)
       if (root->verbose)
       {
         printf("|--> Step[%02u]: Residual[f(x) = 0] = %+e\n",k,root->residual);
-        printf("\nThe root(s) are found => Residual = %e\n",root->residual);
+        printf("\n~> The root(s) are found => Residual = %e\n",root->residual);
       }
       break;
     }
@@ -321,7 +321,7 @@ static double *root_finder_steepest_descent(Root_Finder_T *const root)
       if (root->verbose)
       {
         printf("|--> Step[%02u]: Residual[f(x) = 0] = %+e\n",k-1,root->residual);
-        printf("\nExceeds maximum number of iterations => Residual = %e\n",root->residual);
+        printf("\n~> Exceeds maximum number of iterations => Residual = %e\n",root->residual);
       }
       break;
     }
