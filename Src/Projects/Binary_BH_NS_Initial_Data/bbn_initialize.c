@@ -181,10 +181,12 @@ static void keep_NS_center_fixed(Grid_T *const grid)
 static void P_ADM_control(Grid_T *const grid)
 {
   pr_line_custom('=');
-  printf("{ Adjusting ADM momentums ...\n");
+  printf("{ Adjusting ADM momentums ...\n\n");
   
   char *adjust[3];
   const char *const par = GetParameterS_E("P_ADM_control_method");
+  
+  printf("|--> %s\n",par);
   
   parse_adjust_parameter(par,adjust);
   
@@ -213,6 +215,8 @@ static void P_ADM_control(Grid_T *const grid)
   p2[0] = obs->Px_ADM(obs);
   p2[1] = obs->Py_ADM(obs);
   p2[2] = obs->Pz_ADM(obs);
+  
+  printf("|--> Current P_ADM = (%e,%e,%e)\n",p2[0],p2[1],p2[2]);
   
   update_parameter_double_format("P_ADM_x",p2[0]);
   update_parameter_double_format("P_ADM_y",p2[1]);
@@ -1285,80 +1289,71 @@ static void find_Euler_eq_const(Grid_T *const grid)
 /* find y_CM by demanding Px_ADM = 0 */
 static void Px_ADM_is0_by_y_CM(Grid_T *const grid)
 {
-  double dy_CM = 0,px0,y_CM_new,p[3]={0};
+  double dy_CM = 0,px0,y_CM_new,px;
   const double W    = GetParameterD_E("Solving_Field_Update_Weight");
   const double dP   = GetParameterD_E("P_ADM_control_tolerance");
   const double Omega_BHNS = GetParameterD_E("BH_NS_orbital_angular_velocity");
   const double y_CM0 = GetParameterD_E("y_CM0");
-  const double y_CM  = GetParameterD_E("y_CM");
   const double M_NS  = GetParameterD_E("NS_mass");
   const double M_BH  = GetParameterD_E("BH_mass");
   
   /* get P_ADM */
-  p[0] = GetParameterD_E("P_ADM_x");
-  p[1] = GetParameterD_E("P_ADM_y");
-  p[2] = GetParameterD_E("P_ADM_z");
-  px0  = GetParameterD_E("P_ADM_x_prev");
-  
-  printf("ADM momentums before y_CM update:\n");
-  printf("P_ADM = (%e,%e,%e).\n",p[0],p[1],p[2]);
+  px  = GetParameterD_E("P_ADM_x");
+  px0 = GetParameterD_E("P_ADM_x_prev");
   
   /* changing center of mass */
-  dy_CM    = -p[0]/(Omega_BHNS*(M_NS+M_BH));
+  dy_CM    = -px/(Omega_BHNS*(M_NS+M_BH));
   y_CM_new = y_CM0+dy_CM*W;
   
-  const double dPx_Px = (px0-p[0])/fabs(p[0]);
-  printf("dPx/|Px| = %+e\n",dPx_Px);
+  const double dPx_Px = fabs(px0-px)/fabs(px);
   
   /* having found new x_CM now update */
-  if (GRT(fabs(dPx_Px),dP))
+  if (GRT(dPx_Px,dP))
   {
+    printf("\n|--> |Px_ADM2-Px_ADM1|/|Px_ADM2| = %g > %g\n",dPx_Px,dP);
     update_parameter_double_format("y_CM",y_CM_new);
     update_B1_dB1_Beta_dBete_Aij_dAij(grid);
-    printf("Update Center of Rotation: %g -> %g.\n",y_CM,y_CM_new);
   }
   else
-    printf("Update Center of Rotation: no update.\n");
+  {
+    printf("\n|--> |Px_ADM2 - Px_ADM1|/|Px_ADM2| = %g <= %g\n"
+           "     |--> no y_CM update.\n",dPx_Px,dP);
+  }
     
 }
 
 /* find x_CM by demanding Py_ADM = 0 */
 static void Py_ADM_is0_by_x_CM(Grid_T *const grid)
 {
-  double  dx_CM = 0,py0,x_CM_new,p[3]={0};
+  double  dx_CM = 0,py0,x_CM_new,py;
   const double W    = GetParameterD_E("Solving_Field_Update_Weight");
   const double dP   = GetParameterD_E("P_ADM_control_tolerance");
   const double Omega_BHNS = GetParameterD_E("BH_NS_orbital_angular_velocity");
   const double x_CM0 = GetParameterD_E("x_CM0");
-  const double x_CM  = GetParameterD_E("x_CM");
   const double M_NS  = GetParameterD_E("NS_mass");
   const double M_BH  = GetParameterD_E("BH_mass");
   
   /* get P_ADM */
-  p[0] = GetParameterD_E("P_ADM_x");
-  p[1] = GetParameterD_E("P_ADM_y");
-  p[2] = GetParameterD_E("P_ADM_z");
-  py0  = GetParameterD_E("P_ADM_y_prev");
-  
-  printf("ADM momentums before x_CM update:\n");
-  printf("P_ADM = (%e,%e,%e).\n",p[0],p[1],p[2]);
+  py  = GetParameterD_E("P_ADM_y");
+  py0 = GetParameterD_E("P_ADM_y_prev");
   
   /* changing center of mass */
-  dx_CM    = p[1]/(Omega_BHNS*(M_NS+M_BH));
+  dx_CM    = py/(Omega_BHNS*(M_NS+M_BH));
   x_CM_new = x_CM0+dx_CM*W;
   
-  const double dPy_Py = (py0-p[1])/fabs(p[1]);
-  printf("dPy/|Py| = %+e\n",dPy_Py);
-  
+  const double dPy_Py = fabs(py0-py)/fabs(py);
   /* having found new x_CM now update */
-  if (GRT(fabs(dPy_Py),dP))
+  if (GRT(dPy_Py,dP))
   {
+    printf("\n|--> |Py_ADM2 - Py_ADM1|/|Py_ADM2| = %g > %g\n",dPy_Py,dP);
     update_parameter_double_format("x_CM",x_CM_new);
     update_B1_dB1_Beta_dBete_Aij_dAij(grid);
-    printf("Update Center of Rotation: %g -> %g.\n",x_CM,x_CM_new);
   }
   else
-    printf("Update Center of Rotation: no update.\n");
+  {
+    printf("\n|--> |Py_ADM2 - Py_ADM1|/|Py_ADM2| = %g <= %g\n"
+           "     |--> no x_CM update.\n",dPy_Py,dP);
+  }
     
 }
 
