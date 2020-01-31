@@ -19,6 +19,10 @@ void read_input_file(const char *const path)
   /* parsing and reading input file and making buffer */
   buff = make_buffer(input);
   
+  /* is file empty? */
+  if (strlen(buff) < 2)
+    abortEr("The parameter file is empty.\n");
+  
   //TEST_START
     //printf("buff:\n%s\n",buff);
   //end
@@ -122,7 +126,7 @@ static void *make_buffer(FILE *const input)
     {
       c = fgetc(input);
       if (c != ENTER)/* if after \ is not enter */
-        abortEr("No enter aftre '\\'. Broken line is incorrect.\n");
+        abortEr("No enter after '\\'. Broken line is incorrect.\n");
         
       c = fgetc(input);/* skip enter */
       while (c != ENTER && c != EOF)
@@ -136,7 +140,7 @@ static void *make_buffer(FILE *const input)
         {
           c = fgetc(input);
           if (c != ENTER)/* if after \ is not enter */
-            abortEr("No enter aftre '\\'. Broken line is incorrect.\n");
+            abortEr("No enter after '\\'. Broken line is incorrect.\n");
           c = fgetc(input);/* skip enter */
           continue;
         }
