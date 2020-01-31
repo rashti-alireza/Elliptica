@@ -476,7 +476,7 @@ static void Px_ADM_is0_by_BH_center_y(Grid_T *const grid)
   /* having found new x_CM now update */
   if (GRT(dPx_Px,dP))
   {
-    printf("\n|--> |Px_ADM2-Px_ADM1|/|Px_ADM2| = %g > %g\n",dPx_Px,dP);
+    printf("\n|--> |Px_ADM2 - Px_ADM1|/|Px_ADM2| = %g > %g\n",dPx_Px,dP);
     update_parameter_double_format("BH_center_y",BH_center_y_new);
   }
   else
@@ -508,7 +508,7 @@ static void Py_ADM_is0_by_BH_center_x(Grid_T *const grid)
   
   const double dPy_Py = fabs(py0-py)/fabs(py);
   /* having found new x_CM now update */
-  if (GRT(fabs(dPy_Py),dP))
+  if (GRT(dPy_Py,dP))
   {
     printf("\n|--> |Py_ADM2 - Py_ADM1|/|Py_ADM2| = %g > %g\n",dPy_Py,dP);
     update_parameter_double_format("BH_center_x",BH_center_x_new);
@@ -573,21 +573,20 @@ static void Px_ADM_is0_by_x_boost(Grid_T *const grid)
     
     /* update parameters */
     update_parameter_double_format("v1_boost_x",v2[0]);
-    
     update_parameter_double_format("v2_boost_x",v[0]);
     
-    const double dPx_Px = (p2[0]-p1[0])/fabs(p2[0]);
-    printf("dPx/|Px| = %+e\n",dPx_Px);
-    
+    const double dPx_Px = fabs(p2[0]-p1[0])/fabs(p2[0]);
     /* if change in momentum is big */
-    if (GRT(fabs(dPx_Px),dP))
+    if (GRT(dPx_Px,dP))
     {
+      printf("\n|--> |Px_ADM2 - Px_ADM1|/|Px_ADM2| = %g > %g\n",dPx_Px,dP);
       update_parameter_double_format("v*_boost_x",v[0]);
-      printf("-->boost velocity_x = %e -> %e \n",v2[0],v[0]);
     }
     else
-      printf("-->boost velocity_x = %e -> no update.\n",
-        GetParameterD_E("v*_boost_x"));
+    {
+      printf("\n|--> |Px_ADM2 - Px_ADM1|/|Px_ADM2| = %g <= %g\n"
+             "     |--> no v*_boost_x update.\n",dPx_Px,dP);
+    }
       
   }
   
@@ -646,20 +645,19 @@ static void Py_ADM_is0_by_y_boost(Grid_T *const grid)
     
     /* update parameters */
     update_parameter_double_format("v1_boost_y",v2[1]);
-    
     update_parameter_double_format("v2_boost_y",v[1]);
     
-    const double dPy_Py = (p2[1]-p1[1])/fabs(p2[1]);
-    printf("dPy/|Py| = %+e\n",dPy_Py);
-    
-    if (GRT(fabs(dPy_Py),dP))
+    const double dPy_Py = fabs(p2[1]-p1[1])/fabs(p2[1]);
+    if (GRT(dPy_Py,dP))
     {
+      printf("\n|--> |Py_ADM2 - Py_ADM1|/|Py_ADM2| = %g > %g\n",dPy_Py,dP);
       update_parameter_double_format("v*_boost_y",v[1]);
-      printf("-->boost velocity_y = %e -> %e \n",v2[1],v[1]);
     }
     else
-      printf("-->boost velocity_y = %e -> no update.\n",
-        GetParameterD_E("v*_boost_y"));
+    {
+      printf("\n|--> |Py_ADM2 - Py_ADM1|/|Py_ADM2| = %g <= %g\n"
+           "     |--> no v*_boost_y update.\n",dPy_Py,dP);
+    }
       
   }
   
@@ -718,20 +716,19 @@ static void Pz_ADM_is0_by_z_boost(Grid_T *const grid)
     
     /* update parameters */
     update_parameter_double_format("v1_boost_z",v2[2]);
-    
     update_parameter_double_format("v2_boost_z",v[2]);
     
-    const double dPz_Pz = (p2[2]-p1[2])/fabs(p2[2]);
-    printf("dPz/|Pz| = %+e\n",dPz_Pz);
-      
-    if (GRT(fabs(dPz_Pz),dP))
+    const double dPz_Pz = fabs(p2[2]-p1[2])/fabs(p2[2]);
+    if (GRT(dPz_Pz,dP))
     {
+      printf("\n|--> |Pz_ADM2 - Pz_ADM1|/|Pz_ADM2| = %g > %g\n",dPz_Pz,dP);
       update_parameter_double_format("v*_boost_z",v[2]);
-      printf("-->boost velocity_z = %e -> %e \n",v2[2],v[2]);
     }
     else
-      printf("-->boost velocity_z = %e -> no update.\n",
-        GetParameterD_E("v*_boost_z"));
+    {
+      printf("\n|--> |Pz_ADM2 - Pz_ADM1|/|Pz_ADM2| = %g <= %g\n"
+           "     |--> no v*_boost_z update.\n",dPz_Pz,dP);
+    }
   }
   
   iter++;
@@ -1289,7 +1286,7 @@ static void Px_ADM_is0_by_y_CM(Grid_T *const grid)
   /* having found new x_CM now update */
   if (GRT(dPx_Px,dP))
   {
-    printf("\n|--> |Px_ADM2-Px_ADM1|/|Px_ADM2| = %g > %g\n",dPx_Px,dP);
+    printf("\n|--> |Px_ADM2 - Px_ADM1|/|Px_ADM2| = %g > %g\n",dPx_Px,dP);
     update_parameter_double_format("y_CM",y_CM_new);
     update_B1_dB1_Beta_dBete_Aij_dAij(grid);
   }
