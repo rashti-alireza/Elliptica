@@ -11,6 +11,8 @@ int make_patches(Grid_T *const grid)
   pr_line_custom('=');
   printf("{ Making the patches ...\n\n");
   
+  unsigned p;
+  
   /* allocating and filling basics of patches */
   alloc_patches(grid);
   fill_patches(grid);
@@ -30,13 +32,95 @@ int make_patches(Grid_T *const grid)
   /* test printing coords */
   if (test_print(PRINT_COORDS))
     pr_coords(grid);
-  
-  
+ 
+  /* print some info */
+  for (p = 0; p < grid->np; ++p)
+  {
+    const Patch_T *patch = grid->patch[p];
+    char str[1000];
+    
+    printf("|--> %s:\n",patch->name);
+    printf("     |--> Resolution  = %ux%ux%u\n",patch->n[0],patch->n[1],patch->n[2]);
+    printf("     |--> Coord. Sys. = %s\n",coord_sys_str(patch,str));
+    printf("     |--> Collocation = %s\n",collocation_str(patch,str));
+    printf("     |--> Bases       = %s\n",bases_str(patch,str));
+    
+  }
   printf("} Making the patches ==> Done.\n");
   pr_clock();
   pr_line_custom('=');
   
   return EXIT_SUCCESS;
+}
+
+/* ->return value: string contains info about the coord sys of this patch */
+static char *coord_sys_str(const Patch_T *const patch,char *const str)
+{
+  assert(patch);
+  assert(str);
+  
+  if (patch->coordsys == Cartesian)
+    sprintf(str,"Cartesian");
+  else if (patch->coordsys == Spherical)
+    sprintf(str,"Spherical");
+  else if (patch->coordsys == CubedSpherical)
+    sprintf(str,"Cubed Spherical");
+  else
+    sprintf(str,"Not defined!");
+    
+  return str;  
+}
+
+/* ->return value: string contains info about the bases of this patch */
+static char *bases_str(const Patch_T *const patch,char *const str)
+{
+  assert(patch);
+  assert(str);
+  unsigned i,l;
+  
+  str[0] = '\0';
+  for (i = 0; i < 3; ++i)
+  {
+    if (patch->basis[i] == Chebyshev_Tn_BASIS)
+      strcat(str,"Cheb. Tn(x), ");
+    else
+      strcat(str,"Not defined!");
+  }
+  
+  l = (unsigned)strlen(str);
+  str[l]   = '\0';
+  str[l-1] = '\0';
+  str[l-2] = '\0';
+  
+  return str;  
+}
+
+/* ->return value: string contains info about collocation points of this patch */
+static char *collocation_str(const Patch_T *const patch,char *const str)
+{
+  assert(patch);
+  assert(str);
+  unsigned i,l;
+  
+  str[0] = '\0';
+  for (i = 0; i < 3; ++i)
+  {
+    if (patch->collocation[i] == EquiSpaced)
+      strcat(str,"EquiSpaced, ");
+    else if (patch->collocation[i] == Chebyshev_Extrema)
+      strcat(str,"Cheb. Extrema, ");
+    else if (patch->collocation[i] == Chebyshev_Nodes)
+      strcat(str,"Cheb. Nodes, ");
+    else
+      strcat(str,"Not defined!");
+  }
+  
+  l = (unsigned)strlen(str);
+  str[l]   = '\0';
+  str[l-1] = '\0';
+  str[l-2] = '\0';
+  
+  return str;  
 }
 
 /* filling patch struct */

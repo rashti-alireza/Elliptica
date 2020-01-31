@@ -19,3 +19,6 @@ void check_houseK(Patch_T *const patch);
 void flush_houseK(Patch_T *const patch);
 Patch_T make_temp_patch(const Patch_T *const patch);
 void free_temp_patch(Patch_T *const patch);
+static char *coord_sys_str(const Patch_T *const patch,char *const str);
+static char *bases_str(const Patch_T *const patch,char *const str);
+static char *collocation_str(const Patch_T *const patch,char *const str);
