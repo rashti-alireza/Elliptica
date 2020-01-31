@@ -26,12 +26,15 @@ static void find_inputfile_name(const char *const path)
   char name[MAX_ARR] = {'\0'};
   int i;
   
-  last = strrchr(path,'.');
+  /* does the file exist */
+  FILE *f_par = fopen(path,"r");
+  if (!f_par)
+    abortEr("The parameter file does not exist.\n");
+  fclose(f_par);
   
+  last = strrchr(path,'.');
   if (!last)
-  {
     abortEr("The name of the input file must have some extension.\n");
-  }
   
   i = 0;
   for (p = path; p != last; p++)
