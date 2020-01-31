@@ -28,9 +28,9 @@ static void find_inputfile_name(const char *const path)
   
   last = strrchr(path,'.');
   
-  if (strstr(path,EXTENSION) == 0)
+  if (!last)
   {
-    abortEr_s("The name of input file must have extension\"%s\".\n",EXTENSION);
+    abortEr("The name of the input file must have some extension.\n");
   }
   
   i = 0;
