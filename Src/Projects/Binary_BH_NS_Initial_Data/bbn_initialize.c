@@ -396,6 +396,8 @@ static void force_balance_eq(Grid_T *const grid)
   dh1[1] = dh_dx1_root_finder_eq(dh_par,NS_center);
   dh1[2] = dh_dx2_root_finder_eq(dh_par,NS_center);
   
+  printf("%s\n",par);
+  
   parse_adjust_parameter(par,adjust);
   
   void (*force_balance_0)(Grid_T *const grid) = 
