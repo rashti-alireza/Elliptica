@@ -8,10 +8,17 @@
 int main(int argn, char **argv)
 {
   pr_logo();
+  /* if no parameter file is given */
+  if (argn == 1)
+  {
+    pr_info();
+    return EXIT_SUCCESS;
+  }
   
+  /* run the project */
   const char *proj_name;
   Project_T *proj;
-  
+    
   global_variables_init(argv[argn-1]);/* initiating global variables */
   make_parameters(argv[argn-1]);/* reading input file 
                                 // and making parameters */
@@ -59,4 +66,15 @@ static void pr_logo(void)
   printf("%s\n",logo);
   pr_line_custom('*');
 
+}
+
+/* some info about the Elliptica */
+static void pr_info(void)
+{
+  printf("\n"
+    "  Elliptica is an infrastructure to solve boundary value problems in\n"
+    "general relativity to construct initial data for compact objects.\n\n"
+    "Usage:\n$ ./elliptica parameter_file.par\n\n");
+
+ fflush(stdout);
 }
