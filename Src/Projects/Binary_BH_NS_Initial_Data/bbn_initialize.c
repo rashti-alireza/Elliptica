@@ -29,14 +29,17 @@ Grid_T *bbn_initialize_next_grid(Grid_T *const grid_prev)
 
 /* finding different quantities and then make the next grid using previous grid
 // first find the values of the following parameters and some adjustment:
+// the followings are not in order!
+//
+// . Euler equation constant.
 // . orbital angular velocity
 // . center of rotation (center of mass)
-// . Euler equation constant.
 // . NS center
 // . drag NS to the center
 // . find NS surface
 // . BH_radius
 // . Omega_BH
+//
 // ->return value: the next grid called 'grid_next' */
 static Grid_T *make_next_grid_using_previous_grid(Grid_T *const grid_prev)
 {
