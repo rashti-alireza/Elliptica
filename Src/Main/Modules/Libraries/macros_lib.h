@@ -1,4 +1,3 @@
-#define ERROR_LINE "x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x"
 #define INCOMPLETE_FUNC "Other options have not been developed yet for this part!\n"
 #define NO_JOB "No job has been defined for this case."
 #define NO_OPTION "No such option has been defined."
@@ -7,8 +6,8 @@
 #define bad_inputEr()  bad_input_error(__FILE__,__LINE__)
 #define null_pathEr(x) null_path_error(x,__FILE__,__LINE__)
 #define abortEr(x)     abort_error(x,__FILE__,__LINE__)
-#define abortEr_s(x,y)     abort_error_string(x,y,__FILE__,__LINE__)
-#define ERROR_MASSAGE       "\n"ERROR_LINE"\nERROR and ABORT:\n"
+#define abortEr_s(x,y) abort_error_string(x,y,__FILE__,__LINE__)
+#define ERROR_MASSAGE  ":(\n\nERROR and EXIT:\n"
 #define Ind(x)  LookUpField_E(x,patch)/* gives error if field is not found */
 #define _Ind(x) LookUpField(x,patch)/* gives minus if field is not found */
 #define FOR_ALL_PATCHES(n,grid) for ((n) = 0; (n) < grid->np; ++(n))/* loop over all patches of the given grid */
