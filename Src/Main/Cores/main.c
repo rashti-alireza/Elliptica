@@ -64,8 +64,8 @@ static void pr_logo(void)
 
   pr_line_custom('*');
   printf("%s\n",logo);
+  printf("\nBug reports and feedback to: rashti.alireza@gmail.com\n");
   pr_line_custom('*');
-
 }
 
 /* some info about the Elliptica */
