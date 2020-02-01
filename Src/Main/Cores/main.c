@@ -74,7 +74,7 @@ static void pr_info(void)
   printf("\n"
     "  Elliptica is an infrastructure to solve boundary value problems in\n"
     "general relativity to construct initial data for compact objects.\n\n"
-    "Usage:\n$ ./elliptica parameter_file.par\n\n");
+    "usage:\n$ ./elliptica parameter_file.par\n\n");
 
  fflush(stdout);
 }
