@@ -1378,7 +1378,7 @@ static void adjust_AH_radius(Grid_T *const grid,struct Grid_Params_S *const Grid
   const double current_r_excision = GetParameterD_E("r_excision");
   const double irr_mass    = bbn_BH_irreducible_mass(grid);
   const double kommar_mass = bbn_BH_Kommar_mass(grid);
-  const double W  = 0;//*GetParameterD_E("Solving_Field_Update_Weight");
+  const double W  = GetParameterD_E("BH_AH_change_weight");
   double dr, r_excision, current_bh_mass;
   
   printf("|--> current BH Kommar's mass    = %e\n",kommar_mass);
@@ -1403,6 +1403,11 @@ static void adjust_AH_radius(Grid_T *const grid,struct Grid_Params_S *const Grid
   GridParams->BH_R_type = "PerfectSphere";
   
   update_parameter_double_format("r_excision",r_excision);
+  
+  if (EQL(dr,0))/* => no change in AH surface */
+    update_parameter_string("did_AH_surfacce_change?","no");
+  else          /* => change in AH surface */
+    update_parameter_string("did_AH_surfacce_change?","yes");
   
   printf("} Adjusting apparent horizon radius to meet BH mass ==> Done.\n");
   pr_clock();
@@ -3958,6 +3963,8 @@ static void NS_BH_surface_CubedSpherical_grid(Grid_T *const grid,struct Grid_Par
     printf("~> |R_2 - R1|/|R_1| = %g < Tolerance = %g\n",dR_rms,NS_surf_tolerance);
     printf("~> No changes in NS surface\n");
 
+    update_parameter_string("did_NS_surfacce_change?","no");
+    
     /* update the surface function accordingly: */
     sprintf(par,"grid%u_left_NS_surface_function_up",grid->gn-1);
     R = GetParameterArrayF_E(par);
@@ -3993,11 +4000,12 @@ static void NS_BH_surface_CubedSpherical_grid(Grid_T *const grid,struct Grid_Par
   /* else it is changed */
   else
   {
+    update_parameter_string("did_NS_surfacce_change?","yes");
+    
     if (GridParams->grid_prev)
       printf("~> |R_2 - R1|/|R_1| = %g >= Tolerance = %g\n",dR_rms,NS_surf_tolerance);
     printf("~> Update NS surface\n");
   }
-
   
   R = 0;
   /* right BH: */
