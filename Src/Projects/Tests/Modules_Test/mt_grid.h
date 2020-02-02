@@ -5,4 +5,4 @@
 #include "utilities_lib.h"
 #include "maths_general_lib.h"
 
-Grid_T *fundamental_tests_make_grid(void);
+Grid_T *mt_make_grid(void);

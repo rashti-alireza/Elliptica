@@ -3,12 +3,12 @@
 // August 2018
 */
 
-#include "fundamental_tests_grid.h"
+#include "mt_grid.h"
 
-/* making grid for fundamental_tests project.
+/* making grid for mt project.
 // ->return value: made grid.
 */
-Grid_T *fundamental_tests_make_grid(void)
+Grid_T *mt_make_grid(void)
 {
   Grid_T *grid = alloc_grid();/* adding a new grid */
   grid_characteristics_example(grid);

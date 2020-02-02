@@ -9,7 +9,7 @@ int projects_data_base(void);
 */
 
 int Laplace_Inhom (void);
-int Fundamental_Tests(void);
+int Modules_Test(void);
 int Binary_BH_NS_Initial_Data(void);
 int TOV_star(void);
 int Single_NS_Initial_Data(void);

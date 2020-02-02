@@ -13,7 +13,7 @@
 
 #define FT_OpenMP(x) _Pragma(#x)
 
-int Fundamental_Tests(void);
-Grid_T *fundamental_tests_make_grid(void);
-void fundamental_tests_fill_db_eqs(sEquation_T ***const field_eq,sEquation_T ***const bc_eq,sEquation_T ***const jacobian_field_eq,sEquation_T ***const jacobian_bc_eq);
-int fundamental_test_initial_data_alpha(Grid_T *const grid);
+int Modules_Test(void);
+Grid_T *mt_make_grid(void);
+void mt_fill_db_eqs(sEquation_T ***const field_eq,sEquation_T ***const bc_eq,sEquation_T ***const jacobian_field_eq,sEquation_T ***const jacobian_bc_eq);
+int mt_initial_data_alpha(Grid_T *const grid);

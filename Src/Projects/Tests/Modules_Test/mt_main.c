@@ -3,15 +3,15 @@
 // August 2018
 */
 
-#include "fundamental_tests.h"
+#include "mt_main.h"
 
 /* make sure different routines and algorithms are properly works.
 // tests will be done according to input file.
 // ->return value: EXIT_SUCCESS
 */
-int Fundamental_Tests(void)
+int Modules_Test(void)
 {
-  Grid_T *grid = fundamental_tests_make_grid();/* making grid */
+  Grid_T *grid = mt_make_grid();/* making grid */
   sEquation_T **field_eq,**bc_eq,
               **jacobian_field_eq,**jacobian_bc_eq;/* data base of equations */
   
@@ -54,7 +54,7 @@ int Fundamental_Tests(void)
     unsigned p;
     
     /* fill data base of equations */
-    fundamental_tests_fill_db_eqs(&field_eq,&bc_eq,&jacobian_field_eq,&jacobian_bc_eq);
+    mt_fill_db_eqs(&field_eq,&bc_eq,&jacobian_field_eq,&jacobian_bc_eq);
 
     /* initializing and solving */
     initialize_solving_man(grid,field_eq,bc_eq,jacobian_field_eq,jacobian_bc_eq);/* populating solution_man */

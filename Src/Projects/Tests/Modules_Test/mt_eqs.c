@@ -3,10 +3,10 @@
 // August 2018
 */
 
-#include "fundamental_tests_eqs.h"
+#include "mt_eqs.h"
 
-/* adding fundamental_tests equations to data base */
-void fundamental_tests_fill_db_eqs(sEquation_T ***const field_eq,sEquation_T ***const bc_eq,sEquation_T ***const jacobian_field_eq,sEquation_T ***const jacobian_bc_eq)
+/* adding mt equations to data base */
+void mt_fill_db_eqs(sEquation_T ***const field_eq,sEquation_T ***const bc_eq,sEquation_T ***const jacobian_field_eq,sEquation_T ***const jacobian_bc_eq)
 {
   /* adding field and boundary condition equations */
   *field_eq      = init_eq();
@@ -23,7 +23,7 @@ void fundamental_tests_fill_db_eqs(sEquation_T ***const field_eq,sEquation_T ***
 /* initial data for field alpha
 // ->return value: EXIT_SUCCESS
 */
-int fundamental_test_initial_data_alpha(Grid_T *const grid)
+int mt_initial_data_alpha(Grid_T *const grid)
 {
   unsigned p;
   
