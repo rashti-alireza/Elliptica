@@ -1689,6 +1689,10 @@ static void find_X_and_patch(const double *const x,const char *const hint,Grid_T
       
       /* find all neighbors of this patch */
       face = patch->interface;
+      
+      assert(face);/* if face == 0, it means it should've not reached 
+                   // here. it got face = 0 when we used previous grid 
+                   // to construct the next grid. */
       /* for all faces */
       FOR_ALL(f,face)
       {
@@ -3651,7 +3655,7 @@ static Grid_T *creat_bbn_grid_CS(struct Grid_Params_S *const GridParams)
   /* either the resolution is changed or it is the first grid */
   if (change_res_flg || !grid_prev)/* make geometry from scratch */
   {
-    printf("\n~> Making patches from scratch.\n");
+    printf("\n~> Making patches from scratch ...\n");
     
     make_patches(grid_next);/* making patch(es) to cover the grid */
     realize_geometry(grid_next);/* realizing the geometry of whole grid
@@ -3666,7 +3670,7 @@ static Grid_T *creat_bbn_grid_CS(struct Grid_Params_S *const GridParams)
     if (!strcmp_i(kind,"BBN_CubedSpherical_grid"))
       abortEr(NO_OPTION);
     
-    printf("\n~> Using BH, NS, filling_box and outermost of previous patches.\n");
+    printf("\n~> Using BH, NS, filling_box and outermost of previous patches ...\n");
     
     free_grid(grid_next);
     grid_next = grid_prev;
@@ -3703,7 +3707,7 @@ static Grid_T *creat_bbn_grid_CS(struct Grid_Params_S *const GridParams)
   /* only NS surface is not changed */
   else if (!change_NS_flg)
   {
-    printf("\n~> Using NS, filling_box and outermost of previous patches.\n");
+    printf("\n~> Using NS, filling_box and outermost of previous patches ...\n");
     
     make_patches(grid_next);/* making patch(es) to cover the grid */
     /* since the resolution is not changed copy the geometry */
@@ -3736,7 +3740,7 @@ static Grid_T *creat_bbn_grid_CS(struct Grid_Params_S *const GridParams)
   /* only BH surface is not changed */
   else if (!change_AH_flg)
   {
-    printf("\n~> Using BH, filling_box and outermost of previous patches.\n");
+    printf("\n~> Using BH, filling_box and outermost of previous patches ...\n");
    
     make_patches(grid_next);/* making patch(es) to cover the grid */
     /* since the resolution is not changed copy the geometry */
@@ -3767,7 +3771,7 @@ static Grid_T *creat_bbn_grid_CS(struct Grid_Params_S *const GridParams)
   }
   else/* if both NS and AH are changed but the resolution */
   {
-    printf("\n~> Using filling_box and outermost of previous patches.\n");
+    printf("\n~> Using filling_box and outermost of previous patches ...\n");
 
     make_patches(grid_next);/* making patch(es) to cover the grid */
     /* since the resolution is not changed copy the geometry */
