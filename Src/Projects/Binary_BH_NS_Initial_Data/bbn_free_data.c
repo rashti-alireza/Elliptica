@@ -11,6 +11,16 @@ void bbn_populate_free_data(Grid_T *const grid)
   pr_line_custom('=');
   printf("{ Populating free data and related ...\n");
   
+  /* if it is ready */
+  if (GetParameterI_E("use_previous_data"))
+  {
+    printf("~> Using the free data of the previous grid.\n");
+    printf("} Populating free data and related ==> Done.\n");
+    pr_clock();
+    pr_line_custom('=');
+    return;
+  }
+  
   /* populate conformal metric and its inverse */
   bbn_free_data_gammas(grid);
   printf("Conformal metric and its inverse ~> Done.\n");
