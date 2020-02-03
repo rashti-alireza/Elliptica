@@ -651,6 +651,22 @@ unsigned IsItOutermostPatch(const Patch_T *const patch)
   return ret;
 }
 
+/* ->return value: if the patch is a filling box patch, 1, otherwise, 0 */
+unsigned IsItFillingBoxPatch(const Patch_T *const patch)
+{
+  unsigned ret = 0;
+  
+  if (strcmp_i(patch->grid->kind,"BBN_CubedSpherical_grid"))
+  {
+    if (strstr(patch->name,"filling_box"))
+       ret = 1;
+  }
+  else
+    abortEr(NO_JOB);
+    
+  return ret;
+}
+
 /* ->return value: if the patch covers a part of the NS surface 1, otherwise 0 */
 unsigned IsItNSSurface(const Patch_T *const patch)
 {
