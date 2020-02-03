@@ -1447,6 +1447,16 @@ static void interpolate_and_initialize_to_next_grid(Grid_T *const grid_next,Grid
   pr_line_custom('=');
   printf("{ Interpolating & initializing to the next grid ...\n\n");
   
+  /* if it is ready */
+  if (GetParameterI_E("use_previous_data"))
+  {
+    printf("~> Using the fields of the previous grid.\n");
+    printf("\n} Interpolating & initializing to the next grid ==> Done.\n");
+    pr_clock();
+    pr_line_custom('=');
+    return;
+  }
+  
   const unsigned np = grid_next->np;
   unsigned p;
  
@@ -2840,7 +2850,8 @@ static Grid_T *TOV_KerrSchild_approximation(void)
   update_parameter_integer("did_resolution_change?",1);
   update_parameter_integer("did_NS_surface_change?",1);
   update_parameter_integer("did_AH_surface_change?",1);
-   
+  update_parameter_integer("use_previous_data",0);
+  
   /* center of rotation (approx. Center of Mass) */
   const double D = GetParameterD_E("BH_NS_separation");
   const double C_BH = 0.5*D;/* center of BH patch, it's on +y axis */
@@ -3645,13 +3656,13 @@ static Grid_T *creat_bbn_grid_CS(struct Grid_Params_S *const GridParams)
   free(R_outermost);
   
   /* make new patches: */
-  
   /* to optimize the routine check if we can use some of the
   // previous grid data for the next grid */
   const int change_res_flg = GetParameterI_E("did_resolution_change?");
   const int change_NS_flg  = GetParameterI_E("did_NS_surface_change?");
   const int change_AH_flg  = GetParameterI_E("did_AH_surface_change?");
   
+  update_parameter_integer("use_previous_data",0);
   /* either the resolution is changed or it is the first grid */
   if (change_res_flg || !grid_prev)/* make geometry from scratch */
   {
@@ -3703,6 +3714,8 @@ static Grid_T *creat_bbn_grid_CS(struct Grid_Params_S *const GridParams)
     grid_next->patch  = 
         realloc(grid_next->patch,(np+1)*sizeof(*grid_next->patch));
     grid_next->patch[np] = 0;
+    
+    update_parameter_integer("use_previous_data",1);
   }
   /* only NS surface is not changed */
   else if (!change_NS_flg)
