@@ -158,7 +158,7 @@ static void update_parameters_and_directories(const unsigned iter)
   n[2] = (unsigned)GetParameterI("n_c");
   
   /* this parameter helps to use some of the previous grid data */
-  update_parameter_string("did_resolution_change?","no");
+  update_parameter_integer("did_resolution_change?",0);
   
   sprintf(folder_name_next,"BBN_%ux%ux%u",n[0],n[1],n[2]);
   /* if the resolution isn't the same or it is the first iteration */
@@ -175,6 +175,6 @@ static void update_parameters_and_directories(const unsigned iter)
     free(folder_path2);
     
     /* => resolution changed */
-    update_parameter_string("did_Resolution_change?","yes");
+    update_parameter_integer("did_resolution_change?",1);
   }
 }
