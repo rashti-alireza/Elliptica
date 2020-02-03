@@ -14,6 +14,16 @@ void bbn_allocate_fields(Grid_T *const grid)
   
   unsigned p;
   
+  /* if it is ready */
+  if (GetParameterI_E("use_previous_data"))
+  {
+    printf("~> Using the fields of the previous grid.\n");
+    printf("} Adding fields ==> Done.\n");
+    pr_clock();
+    pr_line_custom('=');
+    return;
+  }
+  
   FOR_ALL_PATCHES(p,grid)
   {
     Patch_T *patch = grid->patch[p];
