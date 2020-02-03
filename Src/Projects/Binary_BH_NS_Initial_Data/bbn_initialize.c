@@ -1397,17 +1397,19 @@ static void adjust_AH_radius(Grid_T *const grid,struct Grid_Params_S *const Grid
     current_bh_mass = 0;
     
   dr  = -current_r_excision*(current_bh_mass/target_bh_mass-1);
+  if (EQL(dr,0)) 
+    dr = 0;
   r_excision = current_r_excision + W*dr;
   
-  GridParams->R_BH_r = r_excision;
+  GridParams->R_BH_r    = r_excision;
   GridParams->BH_R_type = "PerfectSphere";
   
   update_parameter_double_format("r_excision",r_excision);
   
   if (EQL(dr,0))/* => no change in AH surface */
-    update_parameter_string("did_AH_surfacce_change?","no");
+    update_parameter_integer("did_AH_surface_change?",0);
   else          /* => change in AH surface */
-    update_parameter_string("did_AH_surfacce_change?","yes");
+    update_parameter_integer("did_AH_surface_change?",1);
   
   printf("} Adjusting apparent horizon radius to meet BH mass ==> Done.\n");
   pr_clock();
@@ -2831,7 +2833,10 @@ static Grid_T *TOV_KerrSchild_approximation(void)
   pr_line_custom('=');
  
   /* adding some parameters: */
-  
+  update_parameter_integer("did_resolution_change?",1);
+  update_parameter_integer("did_NS_surface_change?",1);
+  update_parameter_integer("did_AH_surface_change?",1);
+   
   /* center of rotation (approx. Center of Mass) */
   const double D = GetParameterD_E("BH_NS_separation");
   const double C_BH = 0.5*D;/* center of BH patch, it's on +y axis */
@@ -3445,11 +3450,13 @@ static Grid_T *creat_bbn_grid_CS(struct Grid_Params_S *const GridParams)
   pr_line_custom('=');
   printf("{ Creating grid ...\n\n");
   
-  Grid_T *grid = alloc_grid();/* adding a new grid */
+  Grid_T *grid_next = alloc_grid();/* adding a new grid */
+  Grid_T *grid_prev = GridParams->grid_prev;
+  
   /* calculate the characteristics of this grid */
   const double Max_R_NS_l = GridParams->Max_R_NS_l;/* maximum radius of NS */
   const double R_BH_r     = GridParams->R_BH_r;
-  const unsigned gn = grid->gn;
+  const unsigned gn = grid_next->gn;
   const double S    = GetParameterD_E("BH_NS_separation");
   const unsigned N_Outermost_Split = (unsigned)GetParameterI_E("Number_of_Outermost_Split"); 
   double *R_outermost = alloc_double(N_Outermost_Split);
@@ -3459,7 +3466,7 @@ static Grid_T *creat_bbn_grid_CS(struct Grid_Params_S *const GridParams)
   char par[100] = {'\0'};
   char val[100] = {'\0'};
   const char *kind;
-  unsigned i;
+  unsigned i,p;
   
   /* finding the kind of grid */
   kind = GetParameterS_E("grid_kind");
@@ -3478,9 +3485,9 @@ static Grid_T *creat_bbn_grid_CS(struct Grid_Params_S *const GridParams)
   if(!LSS(2*R_BH_r,S))
     abortEr("The black hole radius is too big.\n");
   
-  grid->kind = dup_s(kind);  
+  grid_next->kind = dup_s(kind);  
   /* making NS and BH surfaces function */
-  NS_BH_surface_CubedSpherical_grid(grid,GridParams);
+  NS_BH_surface_CubedSpherical_grid(grid_next,GridParams);
   
   box_size_l = GetParameterD_E("left_central_box_length_ratio")*Max_R_NS_l;
   box_size_r = GetParameterD_E("left_central_box_length_ratio")*R_BH_r;/* use same ratio as NS */
@@ -3632,18 +3639,234 @@ static Grid_T *creat_bbn_grid_CS(struct Grid_Params_S *const GridParams)
   update_parameter_double_format(par,0.0);
   
   free(R_outermost);
-
-  make_patches(grid);/* making patch(es) to cover the grid */
-  realize_geometry(grid);/* realizing the geometry of whole grid
+  
+  /* make new patches: */
+  
+  /* to optimize the routine check if we can use some of the
+  // previous grid data for the next grid */
+  const int change_res_flg = GetParameterI_E("did_resolution_change?");
+  const int change_NS_flg  = GetParameterI_E("did_NS_surface_change?");
+  const int change_AH_flg  = GetParameterI_E("did_AH_surface_change?");
+  
+  /* either the resolution is changed or it is the first grid */
+  if (change_res_flg || !grid_prev)/* make geometry from scratch */
+  {
+    make_patches(grid_next);/* making patch(es) to cover the grid */
+    realize_geometry(grid_next);/* realizing the geometry of whole grid
                      // including the way patches have been sewed,
                      // normal to the boundary, 
                      // outer-boundary, inner boundary and etc. */
-  
+  }
+  /* NS surface and AH surface are not changed 
+  // so let's use the previous grid */
+  else if (!change_NS_flg && !change_AH_flg)
+  {
+    if (!strcmp_i(kind,"BBN_CubedSpherical_grid"))
+      abortEr(NO_OPTION);
+    
+    free_grid(grid_next);
+    grid_next = grid_prev;
+    grid_prev = 0;
+    
+    /* update the patches name */
+    FOR_ALL_PATCHES(p,grid_next)
+    {
+      Patch_T *patch2 = grid_next->patch[p];
+      char *name      = strstr(patch2->name,"_");/* name = "_*" */
+      char name2[1000];
+      
+      sprintf(name2,"grid%u%s",gn,name);
+      free(patch2->name);
+      patch2->name = dup_s(name2);
+    }
+    
+    /* remove the patches inside the BH */
+    FOR_ALL_PATCHES(p,grid_next)
+    {
+      Patch_T *patch2 = grid_next->patch[p];
+      
+      if (!IsItInsideBHPatch(patch2))
+        continue;
+      
+      free_patch(patch2);
+    }
+    grid_next->np    -= 7;/* 6 cubed spherical + 1 box */
+    const unsigned np = grid_next->np;
+    grid_next->patch  = 
+        realloc(grid_next->patch,(np+1)*sizeof(*grid_next->patch));
+    grid_next->patch[np] = 0;
+  }
+  /* only NS surface is not changed */
+  else if (!change_NS_flg)
+  {
+    make_patches(grid_next);/* making patch(es) to cover the grid */
+    
+    /* since the resolution is not changed copy the geometry */
+    move_geometry(grid_next,grid_prev);
+    
+    /* since the geometry NS patches are pristine
+    // move patch->solving_man->jacobian */
+    FOR_ALL_PATCHES(p,grid_next)
+    {
+      Patch_T *patch2 = grid_next->patch[p];
+      Patch_T *patch1 = 0;
+      char *stem      = 0;
+      
+      if (
+          !IsItNSPatch(patch2)            && 
+          !IsItNSSurroundingPatch(patch2) &&
+          !IsItOutermostPatch(patch2)     &&/* outermost patches are always pristine */
+          !IsItFillingBoxPatch(patch2)      /* filling box patches are always pristine */
+          )
+        continue;
+    
+      stem   = strstr(patch2->name,"_");
+      stem++;
+      patch1 = GetPatch(stem,grid_prev);
+      
+      move_solve_man_jacobian(patch2,patch1);
+    }
+    
+  }
+  /* only BH surface is not changed */
+  else if (!change_AH_flg)
+  {
+    make_patches(grid_next);/* making patch(es) to cover the grid */
+    
+    /* since the resolution is not changed copy the geometry */
+    move_geometry(grid_next,grid_prev);
+    
+    /* since the geometry BH surrounding patches are pristine
+    // move patch->solving_man->jacobian */
+    FOR_ALL_PATCHES(p,grid_next)
+    {
+      Patch_T *patch2 = grid_next->patch[p];
+      Patch_T *patch1 = 0;
+      char *stem      = 0;
+      
+      if (
+          !IsItHorizonPatch(patch2)    &&
+          !IsItOutermostPatch(patch2)  &&/* outermost patches are always pristine */
+          !IsItFillingBoxPatch(patch2)   /* filling box patches are always pristine */
+         )
+        continue;
+    
+      stem   = strstr(patch2->name,"_");
+      stem++;
+      patch1 = GetPatch(stem,grid_prev);
+      
+      move_solve_man_jacobian(patch2,patch1);
+    }
+    
+  }
+  else/* if both NS and AH are changed but the resolution */
+  {
+    make_patches(grid_next);/* making patch(es) to cover the grid */
+    
+    /* since the resolution is not changed copy the geometry */
+    move_geometry(grid_next,grid_prev);
+    
+    /* since the geometry of filling box and outermost patches are pristine
+    // move patch->solving_man->jacobian */
+    FOR_ALL_PATCHES(p,grid_next)
+    {
+      Patch_T *patch2 = grid_next->patch[p];
+      Patch_T *patch1 = 0;
+      char *stem      = 0;
+      
+      if (
+          !IsItOutermostPatch(patch2)  &&/* outermost patches are always pristine */
+          !IsItFillingBoxPatch(patch2)   /* filling box patches are always pristine */
+         )
+        continue;
+    
+      stem   = strstr(patch2->name,"_");
+      stem++;
+      patch1 = GetPatch(stem,grid_prev);
+      
+      move_solve_man_jacobian(patch2,patch1);
+    }
+  }
+    
   printf("} Creating grid ==> Done.\n");
   pr_clock();
   pr_line_custom('=');
   
-  return grid;
+  return grid_next;
+}
+
+/* move the patch1->solving_man->jacobian to 
+// patch2->solving_man->jacobian and put patch1->solving_man->jacobian = 0 */
+static void move_solve_man_jacobian(Patch_T *const patch2,Patch_T *const patch1)
+{
+  assert(patch2);
+  
+  if (!patch2->solving_man)
+  {
+    patch2->solving_man = calloc(1,sizeof(*patch2->solving_man));
+    pointerEr(patch2->solving_man);
+  }
+  
+  patch2->solving_man->jacobian = patch1->solving_man->jacobian;
+  patch2->solving_man->nj       = patch1->solving_man->nj;
+  patch1->solving_man->jacobian = 0;
+  patch1->solving_man->nj       = 0;
+}
+
+/* move the geometry from previous grid to the next one and empty 
+// the previous geometry, i.e. put its interface pointer to 0 */
+static void move_geometry(Grid_T *const grid_next,Grid_T *const grid_prev)
+{
+  unsigned p2,p1;
+  unsigned f,sf;
+  
+  assert(grid_next);
+  
+  FOR_ALL_PATCHES(p2,grid_next)
+  {
+    Patch_T *patch1 = 0;
+    Patch_T *patch2 = grid_next->patch[p2];
+    char *name2     = strstr(patch2->name,"_");
+    
+    /* find the corresponding patch */
+    FOR_ALL_PATCHES(p1,grid_prev)
+    {
+      patch1 = grid_prev->patch[p1];
+      char *name1  = strstr(patch1->name,"_");
+  
+      if (!strcmp(name2,name1))
+        break;
+    }/* FOR_ALL_PATCHES(p2,grid_prev) */
+    assert(patch1);
+    
+    /* move geometry */
+    patch2->interface   = patch1->interface;
+    patch2->innerB      = patch1->innerB;
+    patch2->outerB      = patch1->outerB;
+    patch2->is_a_closed = patch1->is_a_closed;
+    patch2->is_b_closed = patch1->is_b_closed;
+    patch2->is_c_closed = patch1->is_c_closed;
+    patch1->interface   = 0;
+                          
+    /* update the internal pointers */
+    
+    Interface_T **face = patch2->interface;
+    /* for all interfaces */
+    FOR_ALL(f,face)
+    {
+      face[f]->patch = patch2;
+      
+      assert(!face[f]->point);/* why is it not empty??? */
+      
+      /* for all subfaces */
+      for (sf = 0; sf < face[f]->ns; ++sf)
+      {
+        SubFace_T *subf = face[f]->subface[sf];
+        subf->patch = patch2;
+      }
+    }
+
+  }/* end of FOR_ALL_PATCHES(p2,grid_next) */
 }
 
 /* making  NS and BH surfaces function */
@@ -3963,7 +4186,7 @@ static void NS_BH_surface_CubedSpherical_grid(Grid_T *const grid,struct Grid_Par
     printf("~> |R_2 - R1|/|R_1| = %g < Tolerance = %g\n",dR_rms,NS_surf_tolerance);
     printf("~> No changes in NS surface\n");
 
-    update_parameter_string("did_NS_surfacce_change?","no");
+    update_parameter_integer("did_NS_surface_change?",0);
     
     /* update the surface function accordingly: */
     sprintf(par,"grid%u_left_NS_surface_function_up",grid->gn-1);
@@ -4000,7 +4223,7 @@ static void NS_BH_surface_CubedSpherical_grid(Grid_T *const grid,struct Grid_Par
   /* else it is changed */
   else
   {
-    update_parameter_string("did_NS_surfacce_change?","yes");
+    update_parameter_integer("did_NS_surface_change?",1);
     
     if (GridParams->grid_prev)
       printf("~> |R_2 - R1|/|R_1| = %g >= Tolerance = %g\n",dR_rms,NS_surf_tolerance);
