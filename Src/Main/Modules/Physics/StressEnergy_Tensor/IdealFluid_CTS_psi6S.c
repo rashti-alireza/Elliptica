@@ -10,7 +10,14 @@
 void Tij_IF_CTS_psi6S(Patch_T *const patch)
 {
   if (!IsItNSPatch(patch))
+  {
+    if (_Ind("_S") >= 0)
+    {
+      PREP_FIELD(_S)
+      UNUSED(_S)
+    }
     return;
+  }
   const unsigned nn = patch->nn;
   unsigned ijk;
 
@@ -66,7 +73,7 @@ _gammaI_U1U2[ijk]*dphi_D1[ijk]*dphi_D2[ijk] + _gammaI_U2U2[ijk]*
 pow(dphi_D2[ijk], 2));
 
     double Sbar = 
-psi6*(P2*rho0[ijk] + 3*enthalpy[ijk]*p)/enthalpy[ijk];
+psi6*(P2*rho0[ijk]/enthalpy[ijk] + 3*p);
 
   _S[ijk] = Sbar;
   }

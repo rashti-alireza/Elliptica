@@ -19,8 +19,17 @@ C_macro2 = PREP_FIELD(name);
 Ccode["#include "IdealFluid_CTS_lib.h"\n\n"];
 Ccode["void Tij_IF_CTS_psi6S(Patch_T *const patch)"];
 Ccode["{"];
-Ccode["  if (!IsItNSPatch(patch))"];
-Ccode["    return;"];
+
+`  if (!IsItNSPatch(patch))`
+`  {`
+`    if (_Ind("_S") >= 0)`
+`    {`
+`      PREP_FIELD(_S)`
+`      UNUSED(_S)`
+`    }`
+`    return;`
+`  }`
+
 Ccode["  const unsigned nn = patch->nn;"];
 Ccode["  unsigned ijk;"];
 

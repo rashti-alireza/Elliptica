@@ -10,7 +10,14 @@
 void Tij_IF_CTS_psi6E(Patch_T *const patch)
 {
   if (!IsItNSPatch(patch))
+  {
+    if (_Ind("_E") >= 0)
+    {
+      PREP_FIELD(_E)
+      UNUSED(_E)
+    }
     return;
+  }
   const unsigned nn = patch->nn;
   unsigned ijk;
 
