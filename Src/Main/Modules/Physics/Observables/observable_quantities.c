@@ -478,8 +478,8 @@ static double ADM_angular_momentum_z_BBN_CS(Observable_T *const obs)
     
     Field_T *Py = patch->pool[Ind("ADM_integrand_P_U1")];
     Field_T *Px = patch->pool[Ind("ADM_integrand_P_U0")];
-    ADD_FIELD(xPy_adm_integrand);
-    ADD_FIELD(yPx_adm_integrand);
+    ADD_AND_ALLOC_FIELD(xPy_adm_integrand);
+    ADD_AND_ALLOC_FIELD(yPx_adm_integrand);
     DECLARE_FIELD(xPy_adm_integrand);
     DECLARE_FIELD(yPx_adm_integrand);
     
@@ -525,8 +525,8 @@ static double ADM_angular_momentum_z_BBN_CS(Observable_T *const obs)
     
     Field_T *Gy = patch->pool[Ind("ADM_integrand_G_U1")];
     Field_T *Gx = patch->pool[Ind("ADM_integrand_G_U0")];
-    ADD_FIELD(xGy_adm_integrand);
-    ADD_FIELD(yGx_adm_integrand);
+    ADD_AND_ALLOC_FIELD(xGy_adm_integrand);
+    ADD_AND_ALLOC_FIELD(yGx_adm_integrand);
     DECLARE_FIELD(xGy_adm_integrand);
     DECLARE_FIELD(yGx_adm_integrand);
     
@@ -591,8 +591,9 @@ static double ADM_angular_momentum_x_BBN_CS(Observable_T *const obs)
     
     Field_T *Py = patch->pool[Ind("ADM_integrand_P_U1")];
     Field_T *Pz = patch->pool[Ind("ADM_integrand_P_U2")];
-    ADD_FIELD(zPy_adm_integrand);
-    ADD_FIELD(yPz_adm_integrand);
+    
+    ADD_AND_ALLOC_FIELD(zPy_adm_integrand);
+    ADD_AND_ALLOC_FIELD(yPz_adm_integrand);
     DECLARE_FIELD(zPy_adm_integrand);
     DECLARE_FIELD(yPz_adm_integrand);
     
@@ -638,8 +639,8 @@ static double ADM_angular_momentum_x_BBN_CS(Observable_T *const obs)
     
     Field_T *Gy = patch->pool[Ind("ADM_integrand_G_U1")];
     Field_T *Gz = patch->pool[Ind("ADM_integrand_G_U2")];
-    ADD_FIELD(zGy_adm_integrand);
-    ADD_FIELD(yGz_adm_integrand);
+    ADD_AND_ALLOC_FIELD(zGy_adm_integrand);
+    ADD_AND_ALLOC_FIELD(yGz_adm_integrand);
     DECLARE_FIELD(zGy_adm_integrand);
     DECLARE_FIELD(yGz_adm_integrand);
     
@@ -704,8 +705,8 @@ static double ADM_angular_momentum_y_BBN_CS(Observable_T *const obs)
     
     Field_T *Px = patch->pool[Ind("ADM_integrand_P_U0")];
     Field_T *Pz = patch->pool[Ind("ADM_integrand_P_U2")];
-    ADD_FIELD(zPx_adm_integrand);
-    ADD_FIELD(xPz_adm_integrand);
+    ADD_AND_ALLOC_FIELD(zPx_adm_integrand);
+    ADD_AND_ALLOC_FIELD(xPz_adm_integrand);
     DECLARE_FIELD(zPx_adm_integrand);
     DECLARE_FIELD(xPz_adm_integrand);
     
@@ -751,8 +752,8 @@ static double ADM_angular_momentum_y_BBN_CS(Observable_T *const obs)
     
     Field_T *Gx = patch->pool[Ind("ADM_integrand_G_U0")];
     Field_T *Gz = patch->pool[Ind("ADM_integrand_G_U2")];
-    ADD_FIELD(zGx_adm_integrand);
-    ADD_FIELD(xGz_adm_integrand);
+    ADD_AND_ALLOC_FIELD(zGx_adm_integrand);
+    ADD_AND_ALLOC_FIELD(xGz_adm_integrand);
     DECLARE_FIELD(zGx_adm_integrand);
     DECLARE_FIELD(xGz_adm_integrand);
     
