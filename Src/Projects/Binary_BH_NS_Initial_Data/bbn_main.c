@@ -96,7 +96,7 @@ static void Elliptic_Eqs_Convergence_Test_BBN(void)
     grid_next = bbn_initialize_next_grid(grid_prev);
     
     /* free previous grid completely */
-    free_grid(grid_prev);
+    bbn_free_previous_grid(grid_prev);
     
     /* solve the elliptic equations for the given grid */
     bbn_solve_elliptic_eqs(grid_next);
