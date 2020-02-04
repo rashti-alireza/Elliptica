@@ -14,7 +14,7 @@ C_macro3 = ADD_FIELD_NoMem(name);
 Ccode["#include "bbn_headers.h""];
 `static void dK_UiUj(Grid_T *const grid);`
 ``
-`#define add_field_and_get_field(name) ADD_FIELD(name) GET_FIELD(name)`
+`#define add_field_and_get_field(name) ADD_FIELD(name) PREP_FIELD(name)`
 ``
 Ccode["void bbn_make_K_UiUj_and_dK_UiUj(Grid_T *const grid)"];
 `{`
