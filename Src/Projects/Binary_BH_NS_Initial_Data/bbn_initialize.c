@@ -5083,3 +5083,26 @@ static double AH_surface_function_PerfectSphere_CS(const double a,const double b
 
   return fabs(S)/sqrt(SQR(a)+SQR(b)+1);
 }
+
+/* free previous grid such that the shared pointers
+// between the next and the previous grid won't be emptied. */
+void bbn_free_previous_grid(Grid_T *grid)
+{
+  const int change_res_flg = GetParameterI_E("did_resolution_change?");  
+  unsigned p;
+  
+  if (!grid)/* if grid is empty do nothing */
+    return;
+  
+  /* if the geometry is moved, don't free interfaces
+  // this occcurs when the resolution is not changed */
+  if (!change_res_flg)
+  {
+    FOR_ALL_PATCHES(p,grid)
+    {
+      Patch_T *patch   = grid->patch[p];
+      patch->interface = 0;
+    }
+  }  
+  free_grid(grid); 
+}
