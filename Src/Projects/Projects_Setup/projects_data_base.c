@@ -28,11 +28,11 @@ int projects_data_base(void)
   
   add_project(TOV_star,"TOV_Star","guessing initial data for a NS");
   
-  add_project(Single_NS_Initial_Data,"Single_NS_Initial_Data",
-  "Constructing Initial Data for Single Neutron Star");
+  //add_project(Single_NS_Initial_Data,"Single_NS_Initial_Data",
+  //"Constructing Initial Data for Single Neutron Star");
   
-  add_project(Single_BH_Initial_Data,"Single_BH_Initial_Data",
-  "Constructing Initial Data for Single Black-Hole");
+  //add_project(Single_BH_Initial_Data,"Single_BH_Initial_Data",
+  //"Constructing Initial Data for Single Black-Hole");
   
   return EXIT_SUCCESS;
 }
