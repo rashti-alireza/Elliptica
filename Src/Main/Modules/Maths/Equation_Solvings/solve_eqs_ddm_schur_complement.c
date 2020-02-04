@@ -52,7 +52,7 @@ int ddm_schur_complement(Solve_Equations_T *const SolveEqs)
   /* read order of fields to be solved from input */
   field_name = get_solving_field_name(SolveEqs->solving_order,&nf);
   
-  /* syncronize pools with the default grid */
+  /* synchronize pools with the default grid */
   sync_patch_pools(SolveEqs->grid,SolveEqs);
   
   /* solving fields in order */
@@ -2926,7 +2926,7 @@ void calculate_equation_residual(Solve_Equations_T *const SolveEqs)
   /* read order of fields to be solved from input */
   field_name = get_solving_field_name(SolveEqs->solving_order,&nf);
   
-  /* syncronize pools with the default grid */
+  /* synchronize pools with the default grid */
   sync_patch_pools(SolveEqs->grid,SolveEqs);
   
   /* solving fields in order */
