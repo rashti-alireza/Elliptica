@@ -816,7 +816,7 @@ static void adjust_NS_center_draw_enthalpy(Grid_T *const grid)
     char *stem, hint[1000];
     DECLARE_FIELD(enthalpy);
     ADD_FIELD(shifted_enthalpy);
-    DECLARE_FIELD(shifted_enthalpy);
+    PREP_FIELD(shifted_enthalpy);
     
     make_coeffs_3d(enthalpy);
     
@@ -834,10 +834,10 @@ static void adjust_NS_center_draw_enthalpy(Grid_T *const grid)
       find_X_and_patch(x,hint,grid,Xp,&patchp);
       
       /* if point x located outside of NS surrounding */
-      if (LookUpField("enthalpy",patchp) < 0)
-        shifted_enthalpy->v[ijk] = 1;
+      if (!IsItNSPatch(patchp) && !IsItNSSurroundingPatch(patchp))
+        shifted_enthalpy[ijk] = 1;
       else
-        shifted_enthalpy->v[ijk] = interpolate_from_patch_prim("enthalpy",Xp,patchp);
+        shifted_enthalpy[ijk] = interpolate_from_patch_prim("enthalpy",Xp,patchp);
     }
     
   }
@@ -4859,7 +4859,7 @@ static double bbn_NS_surface_enthalpy_eq(void *params,const double *const x)
   
   /* find enthalpy at the (X,Y,Z) */
   h_ind = _Ind("enthalpy");
-  if (h_ind < 0)/* if there is no enthalpy defined in the patch */
+  if (!patch->pool[h_ind]->v)/* if there is no enthalpy defined in the patch */
     return -1;
     
   Interpolation_T *interp_h = init_interpolation();
