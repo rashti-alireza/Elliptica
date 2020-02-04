@@ -13,17 +13,19 @@
 #define FOR_ALL_PATCHES(n,grid) for ((n) = 0; (n) < grid->np; ++(n))/* loop over all patches of the given grid */
 #define FOR_ALL_POINTS(n,patch) for ((n) = 0; (n) < patch->nn; ++(n))/* loop over all points of the given patch */
 #define FOR_ALL(x,y) for((x) = 0; y[(x)] != 0; (x)++)
-#define ADD_FIELD(xNAME)      add_field(#xNAME,0,patch,YES);/* add field to patch->pool and alloc memory */
-#define ADD_FIELD_NoMem(xNAME)      add_field(#xNAME,0,patch,NO);/* add field to patch->pool BUT not alloc memory */
+#define ADD_FIELD(xNAME)        add_field(#xNAME,0,patch,YES);/* add field to patch->pool and alloc memory */
+#define ADD_FIELD_NoMem(xNAME)  add_field(#xNAME,0,patch,NO);/* add field to patch->pool BUT not alloc memory */
 #define REMOVE_FIELD(xNAME)   remove_field(xNAME);/* remove the field utterly */
 #define DECLARE_FIELD(xNAME)  Field_T *const xNAME = patch->pool[Ind(#xNAME)];/* access to the whole field */
-#define GET_FIELD(xNAME)      double *const xNAME = patch->pool[Ind(#xNAME)]->v;/* access to the memory values */
-#define GET_FIELD_UNUSED(xNAME)      double *const xNAME = patch->pool[Ind(#xNAME)]->v;\
-                                     UNUSED(xNAME);/* access to the memory values and unuse it in case if it isn't needed to avoid gcc warning */
-/* it frees f->v2,f->info and gets f->v. it is used to update value of a field and frees the left over of previous values */
-#define PREP_FIELD(xNAME)    Field_T *const _F_##xNAME = patch->pool[Ind(#xNAME)];\
-                             free_coeffs(_F_##xNAME);\
-                             double *const xNAME = patch->pool[Ind(#xNAME)]->v;
+#define GET_FIELD(xNAME)         const double *const xNAME = patch->pool[Ind(#xNAME)]->v;/* access to the memory values */
+#define GET_FIELD_UNUSED(xNAME)  const double *const xNAME = patch->pool[Ind(#xNAME)]->v;\
+                                 UNUSED(xNAME);/* access to the memory values and unuse it in case if it isn't needed to avoid gcc warning */
+/* it frees f->v2,f->info f->v and gets f->v. it is used to update value of a field and frees the left over of previous values */
+#define PREP_FIELD(xNAME)    const int _field_index_of_##xNAME = Ind(#xNAME);\
+                             Field_T *const _F_##xNAME         = patch->pool[_field_index_of_##xNAME];\
+                             empty_field(_F_##xNAME);\
+                             _F_##xNAME->v       = alloc_double(patch->nn);\
+                             double *const xNAME = patch->pool[_field_index_of_##xNAME]->v;
                              
 #define DECLARE_AND_EMPTY_FIELD(xNAME)  DECLARE_FIELD(xNAME)/* declare field */\
                                         empty_field(xNAME);/* free v,v2 and info of field */
