@@ -5066,7 +5066,6 @@ static double AH_surface_function_PerfectSphere_CS(const double a,const double b
 void bbn_free_previous_grid(Grid_T *grid)
 {
   const int keep_grid = GetParameterI_E("use_previous_data");
-  unsigned p;
   
   if (!grid)/* if grid is empty do nothing */
     return;
