@@ -5,6 +5,7 @@ Dimension = 3;
 Point = ijk;
 
 C_macro  = GET_FIELD(name);
+C_macro2 = PREP_FIELD(name);
 
 `#include "bbn_headers.h"\n`
 
@@ -79,7 +80,7 @@ Declare =
 Symm[_gamma(i,j)   = _gamma(j,i)];
 
 `{`# make it local variables
-`    GET_FIELD(A_AH_integrand)`
+`    PREP_FIELD(A_AH_integrand)`
 
 # populate inegrand and physical metric for the integration
 `    for(ijk = 0; ijk < nn; ++ijk)`

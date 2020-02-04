@@ -18,7 +18,7 @@ double bbn_NS_baryonic_mass(Grid_T *const grid,const double Euler_C)
     if (!IsItNSPatch(patch))
       continue;
 
-    ADD_FIELD(baryonic_mass_integrand)
+    ADD_AND_ALLOC_FIELD(baryonic_mass_integrand)
     DECLARE_FIELD(baryonic_mass_integrand)
 
     /* declaring: */

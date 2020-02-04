@@ -78,7 +78,7 @@ Symm[_A_UiUj(i,j)  = _A_UiUj(j,i)];
 Symm[_gamma(i,j)   = _gamma(j,i)];
 
 `{`# make it local variables
-`    GET_FIELD(BH_Kommar_mass_integrand)`
+`    PREP_FIELD(BH_Kommar_mass_integrand)`
 
 # populate inegrand and physical metric for the integration
 `    for(ijk = 0; ijk < nn; ++ijk)`

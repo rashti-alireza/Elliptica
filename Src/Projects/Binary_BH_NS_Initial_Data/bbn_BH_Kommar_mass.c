@@ -60,7 +60,7 @@ double bbn_BH_Kommar_mass(Grid_T *const grid)
 
 
 {
-    GET_FIELD(BH_Kommar_mass_integrand)
+    PREP_FIELD(BH_Kommar_mass_integrand)
     for(ijk = 0; ijk < nn; ++ijk)
     {
     double psim2 = 

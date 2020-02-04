@@ -21,7 +21,7 @@ C_macro  = GET_FIELD(name);
 Ccode["    if (!IsItNSPatch(patch))"];
 Ccode["      continue;\n"];
 
-`    ADD_FIELD(baryonic_mass_integrand)`
+`    ADD_AND_ALLOC_FIELD(baryonic_mass_integrand)`
 `    DECLARE_FIELD(baryonic_mass_integrand)`
 
 Declare = 
