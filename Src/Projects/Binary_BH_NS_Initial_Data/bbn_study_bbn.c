@@ -93,6 +93,10 @@ void bbn_print_residual_norms(Grid_T *const grid,const unsigned iteration, const
       if (field_ind < 0)
         continue;
       
+      field = patch->pool[field_ind];
+      if (!field->v)/* if field empty */
+        continue;
+      
       sprintf(file_name_Linf,"%s/%s_Linf_%s.table",folder,f[i],stem);
       sprintf(file_name_L1,  "%s/%s_L1_%s.table",folder,f[i],stem);
       sprintf(file_name_L2,  "%s/%s_L2_%s.table",folder,f[i],stem);
@@ -133,7 +137,6 @@ void bbn_print_residual_norms(Grid_T *const grid,const unsigned iteration, const
         fprintf(file_L2,"#iteration  %s\n",f[i]);
       }
         
-      field = patch->pool[field_ind];
       Linf  = L_inf(nn,field->v);
       L2    = L2_norm(nn,field->v,0);
       L1    = L1_norm(nn,field->v,0);
