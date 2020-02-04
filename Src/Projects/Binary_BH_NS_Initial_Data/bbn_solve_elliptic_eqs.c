@@ -171,7 +171,9 @@ static void save_fields(Grid_T *const grid)
         
       Field_T *f_old  = patch->pool[Ind(fname_old)];
       Field_T *f0     = patch->pool[Ind(fname0)];
-      free_coeffs(f_old);
+      
+      empty_field(f_old);
+      f_old->v = alloc_double(nn);
       
       for (ijk = 0; ijk < nn; ++ijk)
         f_old->v[ijk] = f0->v[ijk];
