@@ -1458,6 +1458,10 @@ static void interpolate_and_initialize_to_next_grid(Grid_T *const grid_next,Grid
   }
   
   const unsigned np = grid_next->np;
+  const int change_res_flg = GetParameterI_E("did_resolution_change?");
+  const int change_NS_flg  = GetParameterI_E("did_NS_surface_change?");
+  const int change_AH_flg  = GetParameterI_E("did_AH_surface_change?");
+ 
   unsigned p;
  
   /* the following fields are interpolated: */
@@ -1508,62 +1512,104 @@ static void interpolate_and_initialize_to_next_grid(Grid_T *const grid_next,Grid
     }
   }
   
-  OpenMP_Patch_Pragma(omp parallel for)
-  for (p = 0; p < np; ++p)
+  if (!change_NS_flg)/* only NS, filling box and outermost are reusable */
   {
-    Patch_T *patch = grid_next->patch[p];
-    unsigned nn = patch->nn;
-    char hint[100],*root_name;
-    unsigned ijk;
-    
-    root_name = strstr(patch->name,"_");/* the patch->name convention is grid\d?_root */
-    assert(root_name);
-    root_name++;
-    sprintf(hint,"%s",root_name);
-    
-    PREP_FIELD(B0_U0)
-    PREP_FIELD(B0_U1)
-    PREP_FIELD(B0_U2)
-    PREP_FIELD(psi)
-    PREP_FIELD(eta)
-    
-    if (IsItNSPatch(patch))
+    OpenMP_Patch_Pragma(omp parallel for)
+    for (p = 0; p < np; ++p)
     {
-      PREP_FIELD(phi)
-      PREP_FIELD(enthalpy)
-      for (ijk = 0; ijk < nn; ++ijk)
-      {
-        double x[3] = { patch->node[ijk]->x[0],
-                        patch->node[ijk]->x[1],
-                        patch->node[ijk]->x[2] };
-        double Xp[3] = {0};/* (X,Y,Z)(x,y,z) in grid_prev */
-        Patch_T *patchp = 0;/* patch in grid_prev contains (x,y,z) */
-        
-        /* finding X and patch in grid_prev, associated to x */
-        find_X_and_patch(x,hint,grid_prev,Xp,&patchp);
-        
-        B0_U0[ijk]    = interpolate_from_patch_prim("B0_U0",Xp,patchp);
-        B0_U1[ijk]    = interpolate_from_patch_prim("B0_U1",Xp,patchp);
-        B0_U2[ijk]    = interpolate_from_patch_prim("B0_U2",Xp,patchp);
-        psi[ijk]      = interpolate_from_patch_prim("psi",Xp,patchp);
-        eta[ijk]      = interpolate_from_patch_prim("eta",Xp,patchp);
-        phi[ijk]      = interpolate_from_patch_prim("phi",Xp,patchp);
-        enthalpy[ijk] = interpolate_from_patch_prim("enthalpy",Xp,patchp);
-      }
+      Patch_T *patch = grid_next->patch[p];
+      char *root_name;
       
-      printf("|--> %s:\n"
-             "     |--> interpolating B0_U0    ~> Done.\n"
-             "     |--> interpolating B0_U1    ~> Done.\n"
-             "     |--> interpolating B0_U2    ~> Done.\n"
-             "     |--> interpolating psi      ~> Done.\n"
-             "     |--> interpolating eta      ~> Done.\n"
-             "     |--> interpolating phi      ~> Done.\n"
-             "     |--> interpolating enthalpy ~> Done.\n"
-             ,patch->name);
-      fflush(stdout);
-    }
-    else
+      root_name = strstr(patch->name,"_");/* the patch->name convention is grid\d?_root */
+      assert(root_name);
+      root_name++;
+      
+      if (IsItNSPatch(patch))
+      {
+        Patch_T *patchp = GetPatch(root_name,grid_prev);
+        
+        move_field_values(phi)
+        move_field_values(enthalpy)
+        move_field_values(B0_U0)
+        move_field_values(B0_U1)
+        move_field_values(B0_U2)
+        move_field_values(psi)
+        move_field_values(eta)
+        
+        printf("|--> %s:\n"
+               "     |--> copying B0_U0    ~> Done.\n"
+               "     |--> copying B0_U1    ~> Done.\n"
+               "     |--> copying B0_U2    ~> Done.\n"
+               "     |--> copying psi      ~> Done.\n"
+               "     |--> copying eta      ~> Done.\n"
+               "     |--> copying phi      ~> Done.\n"
+               "     |--> copying enthalpy ~> Done.\n"
+               ,patch->name);
+        fflush(stdout);
+        
+      }
+      else if (
+               IsItNSSurroundingPatch(patch) ||
+               IsItOutermostPatch(patch)     ||
+               IsItFillingBoxPatch(patch)
+               )
+      {
+        Patch_T *patchp = GetPatch(root_name,grid_prev);
+        
+        move_field_values(B0_U0)
+        move_field_values(B0_U1)
+        move_field_values(B0_U2)
+        move_field_values(psi)
+        move_field_values(eta)
+        
+        printf("|--> %s:\n"
+               "     |--> copying B0_U0    ~> Done.\n"
+               "     |--> copying B0_U1    ~> Done.\n"
+               "     |--> copying B0_U2    ~> Done.\n"
+               "     |--> copying psi      ~> Done.\n"
+               "     |--> copying eta      ~> Done.\n"
+               ,patch->name);
+        fflush(stdout);
+         
+      }
+      else
+      {
+        continue;
+      }
+    }/* end of for (p = 0; p < np; ++p) */
+    
+    Patch_T *BH_patches[6] = {0};/* 6 cubed spherical */
+    unsigned count = 0;
+    for (p = 0; p < np; ++p)
     {
+      Patch_T *patch = grid_next->patch[p];
+      if (IsItHorizonPatch(patch))
+      {
+        BH_patches[count] = patch;
+        count++;
+      }
+    }
+    assert(count == 6);
+    
+    OpenMP_Patch_Pragma(omp parallel for)
+    for (p = 0; p < 6; ++p)
+    {
+      Patch_T *patch = BH_patches[p];
+      unsigned nn = patch->nn;
+      char hint[100],*root_name;
+      unsigned ijk;
+      
+      root_name = strstr(patch->name,"_");/* the patch->name convention is grid\d?_root */
+      assert(root_name);
+      root_name++;
+      sprintf(hint,"%s",root_name);
+      
+      PREP_FIELD(B0_U0)
+      PREP_FIELD(B0_U1)
+      PREP_FIELD(B0_U2)
+      PREP_FIELD(psi)
+      PREP_FIELD(eta)
+      
       for (ijk = 0; ijk < nn; ++ijk)
       {
         double x[3] = { patch->node[ijk]->x[0],
@@ -1590,8 +1636,242 @@ static void interpolate_and_initialize_to_next_grid(Grid_T *const grid_next,Grid
              "     |--> interpolating eta      ~> Done.\n"
              ,patch->name);
       fflush(stdout);
+    
+    }/* end of for (p = 0; p < 6; ++p) */
+  }/* end of else if (!change_NS_flg) */
+  else if (!change_AH_flg)/* only BH, filling box and outermost are reusable */
+  {
+    OpenMP_Patch_Pragma(omp parallel for)
+    for (p = 0; p < np; ++p)
+    {
+      Patch_T *patch = grid_next->patch[p];
+      char *root_name;
+      
+      root_name = strstr(patch->name,"_");/* the patch->name convention is grid\d?_root */
+      assert(root_name);
+      root_name++;
+      
+      if (
+          IsItHorizonPatch(patch)    ||
+          IsItOutermostPatch(patch)  ||
+          IsItFillingBoxPatch(patch)
+         )
+      {
+        Patch_T *patchp = GetPatch(root_name,grid_prev);
+        
+        move_field_values(B0_U0)
+        move_field_values(B0_U1)
+        move_field_values(B0_U2)
+        move_field_values(psi)
+        move_field_values(eta)
+        
+        printf("|--> %s:\n"
+               "     |--> copying B0_U0    ~> Done.\n"
+               "     |--> copying B0_U1    ~> Done.\n"
+               "     |--> copying B0_U2    ~> Done.\n"
+               "     |--> copying psi      ~> Done.\n"
+               "     |--> copying eta      ~> Done.\n"
+               ,patch->name);
+        fflush(stdout);
+         
+      }
+      else
+      {
+        continue;
+      }
+    }/* end of for (p = 0; p < np; ++p) */
+    
+    /* interpolating from the NS and surrounding patches: */
+    Patch_T *NS_patches[13] = {0};/* 2*6 cubed spherical + 1 box*/
+    unsigned count = 0;
+    for (p = 0; p < np; ++p)
+    {
+      Patch_T *patch = grid_next->patch[p];
+      if (
+          IsItNSPatch(patch)           ||
+          IsItNSSurroundingPatch(patch)
+          )
+      {
+        NS_patches[count] = patch;
+        count++;
+      }
     }
-  }/* end of for (p = 0; p < np; ++p) */
+    assert(count == 13);
+    
+    OpenMP_Patch_Pragma(omp parallel for)
+    for (p = 0; p < 13; ++p)
+    {
+      Patch_T *patch = NS_patches[p];
+      unsigned nn = patch->nn;
+      char hint[100],*root_name;
+      unsigned ijk;
+      
+      root_name = strstr(patch->name,"_");/* the patch->name convention is grid\d?_root */
+      assert(root_name);
+      root_name++;
+      sprintf(hint,"%s",root_name);
+      
+      PREP_FIELD(B0_U0)
+      PREP_FIELD(B0_U1)
+      PREP_FIELD(B0_U2)
+      PREP_FIELD(psi)
+      PREP_FIELD(eta)
+      
+      if (IsItNSPatch(patch))
+      {
+        PREP_FIELD(phi)
+        PREP_FIELD(enthalpy)
+        for (ijk = 0; ijk < nn; ++ijk)
+        {
+          double x[3] = { patch->node[ijk]->x[0],
+                          patch->node[ijk]->x[1],
+                          patch->node[ijk]->x[2] };
+          double Xp[3] = {0};/* (X,Y,Z)(x,y,z) in grid_prev */
+          Patch_T *patchp = 0;/* patch in grid_prev contains (x,y,z) */
+          
+          /* finding X and patch in grid_prev, associated to x */
+          find_X_and_patch(x,hint,grid_prev,Xp,&patchp);
+          
+          B0_U0[ijk]    = interpolate_from_patch_prim("B0_U0",Xp,patchp);
+          B0_U1[ijk]    = interpolate_from_patch_prim("B0_U1",Xp,patchp);
+          B0_U2[ijk]    = interpolate_from_patch_prim("B0_U2",Xp,patchp);
+          psi[ijk]      = interpolate_from_patch_prim("psi",Xp,patchp);
+          eta[ijk]      = interpolate_from_patch_prim("eta",Xp,patchp);
+          phi[ijk]      = interpolate_from_patch_prim("phi",Xp,patchp);
+          enthalpy[ijk] = interpolate_from_patch_prim("enthalpy",Xp,patchp);
+        }
+        
+        printf("|--> %s:\n"
+               "     |--> interpolating B0_U0    ~> Done.\n"
+               "     |--> interpolating B0_U1    ~> Done.\n"
+               "     |--> interpolating B0_U2    ~> Done.\n"
+               "     |--> interpolating psi      ~> Done.\n"
+               "     |--> interpolating eta      ~> Done.\n"
+               "     |--> interpolating phi      ~> Done.\n"
+               "     |--> interpolating enthalpy ~> Done.\n"
+               ,patch->name);
+        fflush(stdout);
+      }
+      else
+      {
+        for (ijk = 0; ijk < nn; ++ijk)
+        {
+          double x[3] = { patch->node[ijk]->x[0],
+                          patch->node[ijk]->x[1],
+                          patch->node[ijk]->x[2] };
+          double Xp[3] = {0};/* (X,Y,Z)(x,y,z) in grid_prev */
+          Patch_T *patchp = 0;/* patch in grid_prev contains (x,y,z) */
+          
+          /* finding X and patch in grid_prev, associated to x */
+          find_X_and_patch(x,hint,grid_prev,Xp,&patchp);
+          
+          B0_U0[ijk] = interpolate_from_patch_prim("B0_U0",Xp,patchp);
+          B0_U1[ijk] = interpolate_from_patch_prim("B0_U1",Xp,patchp);
+          B0_U2[ijk] = interpolate_from_patch_prim("B0_U2",Xp,patchp);
+          psi[ijk]   = interpolate_from_patch_prim("psi",Xp,patchp);
+          eta[ijk]   = interpolate_from_patch_prim("eta",Xp,patchp);
+        }
+        
+        printf("|--> %s:\n"
+               "     |--> interpolating B0_U0    ~> Done.\n"
+               "     |--> interpolating B0_U1    ~> Done.\n"
+               "     |--> interpolating B0_U2    ~> Done.\n"
+               "     |--> interpolating psi      ~> Done.\n"
+               "     |--> interpolating eta      ~> Done.\n"
+               ,patch->name);
+        fflush(stdout);
+      }
+    }/* end of for (p = 0; p < 6; ++p) */
+  }/* end of else if (!change_AH_flg) */
+  else if (change_res_flg)/* make from scratch */
+  {
+    OpenMP_Patch_Pragma(omp parallel for)
+    for (p = 0; p < np; ++p)
+    {
+      Patch_T *patch = grid_next->patch[p];
+      unsigned nn = patch->nn;
+      char hint[100],*root_name;
+      unsigned ijk;
+      
+      root_name = strstr(patch->name,"_");/* the patch->name convention is grid\d?_root */
+      assert(root_name);
+      root_name++;
+      sprintf(hint,"%s",root_name);
+      
+      PREP_FIELD(B0_U0)
+      PREP_FIELD(B0_U1)
+      PREP_FIELD(B0_U2)
+      PREP_FIELD(psi)
+      PREP_FIELD(eta)
+      
+      if (IsItNSPatch(patch))
+      {
+        PREP_FIELD(phi)
+        PREP_FIELD(enthalpy)
+        for (ijk = 0; ijk < nn; ++ijk)
+        {
+          double x[3] = { patch->node[ijk]->x[0],
+                          patch->node[ijk]->x[1],
+                          patch->node[ijk]->x[2] };
+          double Xp[3] = {0};/* (X,Y,Z)(x,y,z) in grid_prev */
+          Patch_T *patchp = 0;/* patch in grid_prev contains (x,y,z) */
+          
+          /* finding X and patch in grid_prev, associated to x */
+          find_X_and_patch(x,hint,grid_prev,Xp,&patchp);
+          
+          B0_U0[ijk]    = interpolate_from_patch_prim("B0_U0",Xp,patchp);
+          B0_U1[ijk]    = interpolate_from_patch_prim("B0_U1",Xp,patchp);
+          B0_U2[ijk]    = interpolate_from_patch_prim("B0_U2",Xp,patchp);
+          psi[ijk]      = interpolate_from_patch_prim("psi",Xp,patchp);
+          eta[ijk]      = interpolate_from_patch_prim("eta",Xp,patchp);
+          phi[ijk]      = interpolate_from_patch_prim("phi",Xp,patchp);
+          enthalpy[ijk] = interpolate_from_patch_prim("enthalpy",Xp,patchp);
+        }
+        
+        printf("|--> %s:\n"
+               "     |--> interpolating B0_U0    ~> Done.\n"
+               "     |--> interpolating B0_U1    ~> Done.\n"
+               "     |--> interpolating B0_U2    ~> Done.\n"
+               "     |--> interpolating psi      ~> Done.\n"
+               "     |--> interpolating eta      ~> Done.\n"
+               "     |--> interpolating phi      ~> Done.\n"
+               "     |--> interpolating enthalpy ~> Done.\n"
+               ,patch->name);
+        fflush(stdout);
+      }
+      else
+      {
+        for (ijk = 0; ijk < nn; ++ijk)
+        {
+          double x[3] = { patch->node[ijk]->x[0],
+                          patch->node[ijk]->x[1],
+                          patch->node[ijk]->x[2] };
+          double Xp[3] = {0};/* (X,Y,Z)(x,y,z) in grid_prev */
+          Patch_T *patchp = 0;/* patch in grid_prev contains (x,y,z) */
+          
+          /* finding X and patch in grid_prev, associated to x */
+          find_X_and_patch(x,hint,grid_prev,Xp,&patchp);
+          
+          B0_U0[ijk] = interpolate_from_patch_prim("B0_U0",Xp,patchp);
+          B0_U1[ijk] = interpolate_from_patch_prim("B0_U1",Xp,patchp);
+          B0_U2[ijk] = interpolate_from_patch_prim("B0_U2",Xp,patchp);
+          psi[ijk]   = interpolate_from_patch_prim("psi",Xp,patchp);
+          eta[ijk]   = interpolate_from_patch_prim("eta",Xp,patchp);
+        }
+        
+        printf("|--> %s:\n"
+               "     |--> interpolating B0_U0    ~> Done.\n"
+               "     |--> interpolating B0_U1    ~> Done.\n"
+               "     |--> interpolating B0_U2    ~> Done.\n"
+               "     |--> interpolating psi      ~> Done.\n"
+               "     |--> interpolating eta      ~> Done.\n"
+               ,patch->name);
+        fflush(stdout);
+      }
+    }/* end of for (p = 0; p < np; ++p) */
+  }/* end of else if (change_res_flg) */
+  else
+    abortEr(NO_OPTION);
   
   /* initializing some other fields: */
   /* W_U[0-2],Beta_U[0-2],B1_U[0-2] */
@@ -3870,11 +4150,11 @@ static void move_geometry(Grid_T *const grid_next,Grid_T *const grid_prev)
     patch2->is_a_closed = patch1->is_a_closed;
     patch2->is_b_closed = patch1->is_b_closed;
     patch2->is_c_closed = patch1->is_c_closed;
-    patch1->interface   = 0;
+    //patch1->interface   = 0;
                           
     /* update the internal pointers */
-    
     Interface_T **face = patch2->interface;
+    
     /* for all interfaces */
     FOR_ALL(f,face)
     {
