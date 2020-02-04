@@ -10,7 +10,7 @@ static void build_metric_and_metric_inverse(Patch_T *const patch);
 static void build_metric_derivatives(Patch_T *const patch);
 static void build_Gamma_derivatives(Patch_T *const patch);
 
-#define add_field_and_get_field(name) ADD_FIELD(name) GET_FIELD(name)
+#define add_field_and_get_field(name) ADD_FIELD(name) PREP_FIELD(name)
 
 void bbn_make_metric_and_Gamma_and_derivatives(Grid_T *const grid)
 {
