@@ -519,8 +519,9 @@ static void pr_scalar_on_structured_mesh_3d_silo(const Pr_Field_T *const pr)
   
   assert(mesh_name);
   mesh_name++;
-
-  if (v_ind < 0)
+  
+  /* if field does not exists or empty */
+  if (v_ind < 0 || !patch->pool[v_ind]->v)
     return;
   
   /* fields value */
@@ -574,7 +575,15 @@ static void pr_vector_on_structured_mesh_3d_silo(const Pr_Field_T *const pr)
   assert(mesh_name);
   mesh_name++;
   
-  if (v_ind0 < 0 || v_ind1 < 0 || v_ind2 < 0)
+  /* if field does not exists or empty */
+  if (
+      v_ind0 < 0 || 
+      v_ind1 < 0 || 
+      v_ind2 < 0 ||
+      !patch->pool[v_ind0]->v ||
+      !patch->pool[v_ind1]->v || 
+      !patch->pool[v_ind2]->v
+      )
     return;
   
   comp[0] = alloc_double(nn);
