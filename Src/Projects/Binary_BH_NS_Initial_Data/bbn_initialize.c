@@ -2449,11 +2449,11 @@ static void extrapolate_insideBH(Grid_T *const grid)
     ADD_FIELD(psi)
     ADD_FIELD(eta)
     
-    GET_FIELD(B0_U0)
-    GET_FIELD(B0_U1)
-    GET_FIELD(B0_U2)
-    GET_FIELD(psi)
-    GET_FIELD(eta)
+    PREP_FIELD(B0_U0)
+    PREP_FIELD(B0_U1)
+    PREP_FIELD(B0_U2)
+    PREP_FIELD(psi)
+    PREP_FIELD(eta)
     
     /* making B1 */
     bbn_update_B1_U012(patch);
@@ -2585,30 +2585,16 @@ static void extrapolate_outsideNS_CS_continuity_method(Grid_T *const grid)
     if (!IsItNSSurroundingPatch(patch))
       continue;
      
-    /* add fields: */
-    /* enthalpy */
-    ADD_FIELD(enthalpy)
-    ADD_FIELD_NoMem(denthalpy_D0)
-    ADD_FIELD_NoMem(denthalpy_D1)
-    ADD_FIELD_NoMem(denthalpy_D2)
-    
     /* irrotational part of fluid */
-    ADD_FIELD(phi)
-    GET_FIELD(phi)
-    ADD_FIELD_NoMem(dphi_D2)
-    ADD_FIELD_NoMem(dphi_D1)
-    ADD_FIELD_NoMem(dphi_D0)
+    PREP_FIELD(phi)
     DECLARE_AND_EMPTY_FIELD(dphi_D2)
     DECLARE_AND_EMPTY_FIELD(dphi_D1)
     DECLARE_AND_EMPTY_FIELD(dphi_D0)
     
     /* spin part of fluid W^i */
-    ADD_FIELD(W_U0)
-    ADD_FIELD(W_U1)
-    ADD_FIELD(W_U2)
-    GET_FIELD(W_U0)
-    GET_FIELD(W_U1)
-    GET_FIELD(W_U2)
+    PREP_FIELD(W_U0)
+    PREP_FIELD(W_U1)
+    PREP_FIELD(W_U2)
     
     /* populate the spin part */
     for (ijk = 0; ijk < nn; ++ijk)
@@ -2770,30 +2756,16 @@ static void extrapolate_outsideNS_CS_slop_method(Grid_T *const grid)
     if (!IsItNSSurroundingPatch(patch))
       continue;
      
-    /* add fields: */
-    /* enthalpy */
-    ADD_FIELD(enthalpy)
-    ADD_FIELD_NoMem(denthalpy_D0)
-    ADD_FIELD_NoMem(denthalpy_D1)
-    ADD_FIELD_NoMem(denthalpy_D2)
-    
     /* irrotational part of fluid */
-    ADD_FIELD(phi)
-    GET_FIELD(phi)
-    ADD_FIELD_NoMem(dphi_D2)
-    ADD_FIELD_NoMem(dphi_D1)
-    ADD_FIELD_NoMem(dphi_D0)
+    PREP_FIELD(phi)
     DECLARE_AND_EMPTY_FIELD(dphi_D2)
     DECLARE_AND_EMPTY_FIELD(dphi_D1)
     DECLARE_AND_EMPTY_FIELD(dphi_D0)
     
     /* spin part of fluid W^i */
-    ADD_FIELD(W_U0)
-    ADD_FIELD(W_U1)
-    ADD_FIELD(W_U2)
-    GET_FIELD(W_U0)
-    GET_FIELD(W_U1)
-    GET_FIELD(W_U2)
+    PREP_FIELD(W_U0)
+    PREP_FIELD(W_U1)
+    PREP_FIELD(W_U2)
     
     Patch_T *NS_patch;/* corresponding NS patch, to extrapolate out */
     const unsigned *n = patch->n;
@@ -3006,7 +2978,7 @@ static void extrapolate_outsideNS_CS_slop_method(Grid_T *const grid)
     {
       /* note: patch refers to NS_surrounding patch */
       
-      GET_FIELD(enthalpy)
+      PREP_FIELD(enthalpy)
       /* find the corresponding NS patch to be used for extrapolation */
       affix = regex_find("_[[:alpha:]]{2,5}$",patch->name);/* finding the side of the patch */
       assert(affix);
@@ -3442,22 +3414,23 @@ static void init_field_TOV_plus_KerrSchild(Grid_T *const grid,const TOV_T *const
     PREP_FIELD(Beta_U0)
     PREP_FIELD(Beta_U1)
     PREP_FIELD(Beta_U2)
-    PREP_FIELD(_gammaI_U0U2)
-    PREP_FIELD(_gammaI_U0U0)
-    PREP_FIELD(_gammaI_U0U1)
-    PREP_FIELD(_gammaI_U1U2)
-    PREP_FIELD(_gammaI_U1U1)
-    PREP_FIELD(_gammaI_U2U2)
+    
+    GET_FIELD(_gammaI_U0U2)
+    GET_FIELD(_gammaI_U0U0)
+    GET_FIELD(_gammaI_U0U1)
+    GET_FIELD(_gammaI_U1U2)
+    GET_FIELD(_gammaI_U1U1)
+    GET_FIELD(_gammaI_U2U2)
 
     ADD_FIELD(KSbeta_D0)
     ADD_FIELD(KSbeta_D1)
     ADD_FIELD(KSbeta_D2)
-    GET_FIELD(KSbeta_D0)
-    GET_FIELD(KSbeta_D1)
-    GET_FIELD(KSbeta_D2)
+    PREP_FIELD(KSbeta_D0)
+    PREP_FIELD(KSbeta_D1)
+    PREP_FIELD(KSbeta_D2)
     
     ADD_FIELD(KSalpha)
-    GET_FIELD(KSalpha)
+    PREP_FIELD(KSalpha)
     
     /* beta and alpha needed */
     for (ijk = 0; ijk < nn; ++ijk)
@@ -3529,7 +3502,7 @@ KSbeta_D2[ijk]*_gammaI_U2U2[ijk];
     
     PREP_FIELD(psi)
     PREP_FIELD(eta)
-    PREP_FIELD(KSalpha)
+    GET_FIELD(KSalpha)
     
     if (IsItNSPatch(patch))
     {
@@ -3638,9 +3611,9 @@ KSbeta_D2[ijk]*_gammaI_U2U2[ijk];
      PREP_FIELD(B0_U1)
      PREP_FIELD(B0_U2)
      
-     PREP_FIELD(Beta_U0)
-     PREP_FIELD(Beta_U1)
-     PREP_FIELD(Beta_U2)
+     MODIFY_FIELD(Beta_U0)
+     MODIFY_FIELD(Beta_U1)
+     MODIFY_FIELD(Beta_U2)
      
      GET_FIELD(B1_U0)
      GET_FIELD(B1_U1)
