@@ -1961,49 +1961,21 @@ static double interpolate_from_patch_prim(const char *const field,const double *
 // hint, is the name of the patch that potentially has the given x */
 static void find_X_and_patch(const double *const x,const char *const hint,Grid_T *const grid,double *const X,Patch_T **const ppatch)
 {
-  Interface_T **face;
-  SubFace_T *subf;
   Needle_T *needle = alloc_needle();
   const double LOW_RES_ERR = 1E-9;
   unsigned *found;
-  unsigned p,f,sf;
+  unsigned p;
   
   needle->grid = grid;
   needle->x    = x;
   
+  /* find this point everywhere */
   FOR_ALL_PATCHES(p,grid)
   {
     Patch_T *patch = grid->patch[p];
     
-    if (!strstr(patch->name,hint))
-    {
-      continue;
-    }
-    else
-    {
-      needle_in(needle,patch);
+    needle_in(needle,patch);
       
-      /* find all neighbors of this patch */
-      face = patch->interface;
-      
-      assert(face);/* if face == 0, it means it should've not reached 
-                   // here. it got face = 0 when we used previous grid 
-                   // to construct the next grid. */
-      /* for all faces */
-      FOR_ALL(f,face)
-      {
-        /* for all subfaces */
-        for (sf = 0; sf < face[f]->ns; ++sf)
-        {
-          subf = face[f]->subface[sf];
-          if (subf->outerB || subf->innerB)
-            continue;
-            
-          needle_in(needle,grid->patch[subf->adjPatch]);
-        }
-      }
-      break;
-    }/* end of else */
   }/* end of FOR_ALL_PATCHES(p,grid) */
   
   point_finder(needle);
@@ -3970,8 +3942,10 @@ static Grid_T *creat_bbn_grid_CS(struct Grid_Params_S *const GridParams)
     printf("\n~> Using BH, NS, filling_box and outermost of previous patches ...\n");
     
     free_grid(grid_next);
-    grid_next = grid_prev;
-    grid_prev = 0;
+    grid_next     = grid_prev;
+    grid_next->gn = gn;
+    grid_prev     = 0;
+    GridParams->grid_prev = 0;
     
     /* update the patches name */
     FOR_ALL_PATCHES(p,grid_next)
@@ -4132,6 +4106,9 @@ static void move_geometry(Grid_T *const grid_next,Grid_T *const grid_prev)
   
   assert(grid_next);
   
+  if (!strcmp_i(grid_prev->kind,"BBN_CubedSpherical_grid"))
+    abortEr("This algorithm only works for BBN cubed spherical grid!\n");
+  
   FOR_ALL_PATCHES(p2,grid_next)
   {
     Patch_T *patch1 = 0;
@@ -4156,7 +4133,7 @@ static void move_geometry(Grid_T *const grid_next,Grid_T *const grid_prev)
     patch2->is_a_closed = patch1->is_a_closed;
     patch2->is_b_closed = patch1->is_b_closed;
     patch2->is_c_closed = patch1->is_c_closed;
-    //patch1->interface   = 0;
+    patch1->interface   = 0;
                           
     /* update the internal pointers */
     Interface_T **face = patch2->interface;
@@ -5088,21 +5065,13 @@ static double AH_surface_function_PerfectSphere_CS(const double a,const double b
 // between the next and the previous grid won't be emptied. */
 void bbn_free_previous_grid(Grid_T *grid)
 {
-  const int change_res_flg = GetParameterI_E("did_resolution_change?");  
+  const int keep_grid = GetParameterI_E("use_previous_data");
   unsigned p;
   
   if (!grid)/* if grid is empty do nothing */
     return;
   
-  /* if the geometry is moved, don't free interfaces
-  // this occcurs when the resolution is not changed */
-  if (!change_res_flg)
-  {
-    FOR_ALL_PATCHES(p,grid)
-    {
-      Patch_T *patch   = grid->patch[p];
-      patch->interface = 0;
-    }
-  }  
-  free_grid(grid); 
+  if (!keep_grid)
+    free_grid(grid); 
+    
 }
