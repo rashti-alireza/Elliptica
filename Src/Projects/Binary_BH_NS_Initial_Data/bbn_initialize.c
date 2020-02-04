@@ -1514,6 +1514,8 @@ static void interpolate_and_initialize_to_next_grid(Grid_T *const grid_next,Grid
   
   if (!change_NS_flg)/* only NS, filling box and outermost are reusable */
   {
+    printf("~> NS, filling box and outermost patches are the same:\n");
+    
     OpenMP_Patch_Pragma(omp parallel for)
     for (p = 0; p < np; ++p)
     {
@@ -1641,6 +1643,8 @@ static void interpolate_and_initialize_to_next_grid(Grid_T *const grid_next,Grid
   }/* end of else if (!change_NS_flg) */
   else if (!change_AH_flg)/* only BH, filling box and outermost are reusable */
   {
+    printf("~> BH, filling box and outermost patches are the same:\n");
+    
     OpenMP_Patch_Pragma(omp parallel for)
     for (p = 0; p < np; ++p)
     {
@@ -1785,6 +1789,8 @@ static void interpolate_and_initialize_to_next_grid(Grid_T *const grid_next,Grid
   }/* end of else if (!change_AH_flg) */
   else if (change_res_flg)/* make from scratch */
   {
+    printf("~> resolution is changed:\n");
+    
     OpenMP_Patch_Pragma(omp parallel for)
     for (p = 0; p < np; ++p)
     {
