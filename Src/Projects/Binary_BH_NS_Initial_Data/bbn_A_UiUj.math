@@ -7,7 +7,7 @@ Point = ijk;
 C_macro  = GET_FIELD(name);
 C_macro2 = PREP_FIELD(name);
 C_macro3 = DECLARE_AND_EMPTY_FIELD(name);
-C_macro4 = add_field_and_get_field(name);
+C_macro4 = add_field_and_prep_field(name);
 
 # main function:
 Ccode["#include "bbn_headers.h"\n\n"];
