@@ -74,8 +74,11 @@ void initialize_solving_man(Grid_T *const grid,sEquation_T **const field_eq,sEqu
     Patch_T *patch = grid->patch[p];
     
     /* allocations */
-    patch->solving_man = calloc(1,sizeof(*patch->solving_man));
-    pointerEr(patch->solving_man);
+    if (!patch->solving_man)
+    {
+      patch->solving_man = calloc(1,sizeof(*patch->solving_man));
+      pointerEr(patch->solving_man);
+    }
     patch->solving_man->field_name = 
         calloc(nf,sizeof(*patch->solving_man->field_name));
     pointerEr(patch->solving_man->field_name);
