@@ -755,7 +755,7 @@ static void adjust_NS_center_tune_enthalpy(Grid_T *const grid,const double dhx0,
       continue;
     
     {/* local variables */
-      PREP_FIELD(enthalpy)
+      MODIFY_FIELD(enthalpy)
       //GET_FIELD(denthalpy_D2)
       //GET_FIELD(denthalpy_D0)
     
@@ -3143,6 +3143,14 @@ static Grid_T *TOV_KerrSchild_approximation(void)
   /* update u0, _J^i, _E and _S */
   Tij_IF_CTS_psi6Sources(grid);
   
+  /* update u0 derivatives */
+  unsigned p;
+  for (p = 0; p < grid->np; ++p)
+  {
+    Patch_T *patch = grid->patch[p];
+    bbn_update_derivative_u0(patch);
+  }
+  
   /* update _Aij in K^{ij} = A^{ij}+1/3*gamma^{ij}*K and 
   // _A^{ij} = gamma^10*A^{ij} and _dA^{ij} */
   bbn_update_Aij(grid);
@@ -3894,6 +3902,7 @@ static Grid_T *creat_bbn_grid_CS(struct Grid_Params_S *const GridParams)
   const int change_AH_flg  = GetParameterI_E("did_AH_surface_change?");
   
   update_parameter_integer("use_previous_data",0);
+  
   /* either the resolution is changed or it is the first grid */
   if (change_res_flg || !grid_prev)/* make geometry from scratch */
   {
