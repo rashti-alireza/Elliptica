@@ -13,6 +13,15 @@ void bbn_study_initial_data(Grid_T *const grid)
   pr_line_custom('=');
   printf("{ Studying Initial Data for Binary BH and NS ...\n");
   
+  if (!grid)
+  {
+    printf("~> grid is empty.\n");
+    printf("} Studying Initial Data for Binary BH and NS ==> Done.\n");
+    pr_clock();
+    pr_line_custom('=');
+    return;
+  }
+  
   const char *const folder = GetParameterS_E("Diagnostics");
   int solving_iter         = GetParameterI("solving_iteration_number");
   
