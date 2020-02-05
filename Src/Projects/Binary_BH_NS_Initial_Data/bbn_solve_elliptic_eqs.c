@@ -126,6 +126,11 @@ static void update_fields_relaxed_scheme(Grid_T *const grid)
         
       Field_T *f_old  = patch->pool[Ind(field_old)];
       Field_T *f_new  = patch->pool[Ind(field_new)];
+      
+      /* if the field is not defined in this patch */
+      if (!f_new->v)
+        continue;
+        
       free_coeffs(f_new);
       
       for (ijk = 0; ijk < nn; ++ijk)
@@ -166,12 +171,14 @@ static void save_fields(Grid_T *const grid)
       unsigned ijk;
       
       /* if no field defined in this patch */
-      if (_Ind(fname0) < 0)
-        continue;
+      if (_Ind(fname0) < 0) continue;
         
       Field_T *f_old  = patch->pool[Ind(fname_old)];
       Field_T *f0     = patch->pool[Ind(fname0)];
       
+      /* if no field defined in this patch */
+      if (!f0->v) continue;
+        
       empty_field(f_old);
       f_old->v = alloc_double(nn);
       
@@ -332,7 +339,18 @@ void bbn_SolveEqs_SourceUpdate(Grid_T *const grid,const char *const name)
     Patch_T *patch = grid->patch[p];
     bbn_update_psi10A_UiUj(patch);
   }
-  Tij_IF_CTS_psi6Sources(grid);
+  /* update matter terms due to change of the fields being solved */
+  if (1)
+  {
+    Tij_IF_CTS_psi6Sources(grid);
+    
+    /* update u0 derivatives */
+    FOR_ALL_PATCHES(p,grid)
+    {
+      Patch_T *patch = grid->patch[p];
+      bbn_update_derivative_u0(patch);
+    }
+  }
   
   UNUSED(name);
 }
