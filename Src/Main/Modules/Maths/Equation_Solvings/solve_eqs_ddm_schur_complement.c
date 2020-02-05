@@ -2955,7 +2955,9 @@ void calculate_equation_residual(Solve_Equations_T *const SolveEqs)
       char field_res[1000];
       sprintf(field_res,"%s_residual",field_name[f]);
       
-      free_coeffs(patch->pool[Ind(field_res)]);
+      empty_field(patch->pool[Ind(field_res)]);
+      patch->pool[Ind(field_res)]->v = alloc_double(patch->nn);
+        
       double *const res = patch->pool[Ind(field_res)]->v;
       const unsigned NS = Schur->NS;
       const unsigned *const inv = Schur->inv;
@@ -2991,7 +2993,9 @@ void calculate_equation_residual(Solve_Equations_T *const SolveEqs)
         char field_res[1000];
         sprintf(field_res,"%s_residual",field_name[f]);
       
-        free_coeffs(patch->pool[Ind(field_res)]);
+        empty_field(patch->pool[Ind(field_res)]);
+        patch->pool[Ind(field_res)]->v = alloc_double(patch->nn);
+        
         double *const res = patch->pool[Ind(field_res)]->v;
         const unsigned NS = Schur->NS;
         const unsigned NI = Schur->NI;
