@@ -499,3 +499,45 @@ void free_patch(Patch_T *patch)
   
   free(patch);
 }
+
+/* given the parameter name, free the parameter data base from it 
+// and shrink the data base and put the last parameter in place of
+// the deleted parameter. */
+void free_parameter(const char *const par_name)
+{
+  Parameter_T *last_par = 0;
+  unsigned np,i;
+  
+  /* count total number of parameters */
+  np = 0;
+  while (parameters_global != 0 && parameters_global[np] != 0)
+    np++;
+  
+  if (np == 0)
+    return;
+    
+  for (i = 0; i < np; ++i)
+  {
+    if (strcmp_i(parameters_global[i]->lv,par_name))
+    {
+      last_par = parameters_global[np-1];
+      
+      _free(parameters_global[i]->lv);
+      _free(parameters_global[i]->rv);
+      _free(parameters_global[i]->rv_ip);
+      _free(parameters_global[i]->rv_array);
+      free(parameters_global[i]);
+      
+      parameters_global[i] = last_par;
+      
+      parameters_global = 
+        realloc(parameters_global,np*sizeof(*parameters_global));
+      pointerEr(parameters_global);
+      
+      parameters_global[np-1] = 0;
+      break;
+    }
+  }
+  
+}
+

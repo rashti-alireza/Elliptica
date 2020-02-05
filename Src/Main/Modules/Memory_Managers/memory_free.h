@@ -1,6 +1,7 @@
 #include "core_lib.h"
 #include "error_handling_lib.h"
 
+extern Parameter_T **parameters_global;
 void free_2d(void *mem0);
 void free_2d_mem(void *mem0, const unsigned long c);
 void free_needle(Needle_T *needle);
@@ -23,3 +24,4 @@ void free_patch_SolMan_method_Schur(Patch_T *const patch);
 void _free(void *p);
 void free_grid(Grid_T *grid);
 void free_patch(Patch_T *patch);
+void free_parameter(const char *const par_name);
