@@ -24,6 +24,9 @@ Ccode["void bbn_calculate_constraints_1st(Grid_T *const grid)"];
 `    Patch_T *patch = grid->patch[p];`
 `    unsigned nn = patch->nn;`
 `    unsigned ijk;`
+``
+`    if(IsItInsideBHPatch(patch))`
+`       continue;`
 
 ## calculating derivatives of _gammaI:
 ################################

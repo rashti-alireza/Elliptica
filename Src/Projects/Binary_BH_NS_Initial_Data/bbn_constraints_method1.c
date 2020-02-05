@@ -19,6 +19,9 @@ void bbn_calculate_constraints_1st(Grid_T *const grid)
     Patch_T *patch = grid->patch[p];
     unsigned nn = patch->nn;
     unsigned ijk;
+
+    if(IsItInsideBHPatch(patch))
+       continue;
   {
   /* add fields for derivative of the conformal metric */
   DECLARE_FIELD(_gammaI_U2U2)
