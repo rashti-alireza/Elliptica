@@ -7,7 +7,7 @@
 #include "bbn_headers.h"
 
 
-#define add_field_and_get_field(name) ADD_FIELD(name) PREP_FIELD(name)
+#define add_field_and_prep_field(name) ADD_FIELD(name) PREP_FIELD(name)
 #define add_field_NoMem_and_declare_field(name) ADD_FIELD_NoMem(name)\
                                       Field_T *const f##name = patch->pool[Ind(#name)];
 void bbn_update_psi10A_UiUj(Patch_T *const patch)
