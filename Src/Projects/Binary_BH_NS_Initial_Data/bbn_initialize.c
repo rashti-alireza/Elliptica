@@ -5043,16 +5043,35 @@ static double AH_surface_function_PerfectSphere_CS(const double a,const double b
   return fabs(S)/sqrt(SQR(a)+SQR(b)+1);
 }
 
-/* free previous grid such that the shared pointers
-// between the next and the previous grid won't be emptied. */
-void bbn_free_previous_grid(Grid_T *grid)
+/* free given grid and parameters related to the given grid */
+extern Parameter_T **parameters_global;
+void bbn_free_grid_and_its_parameters(Grid_T *grid)
 {
-  const int keep_grid = GetParameterI_E("use_previous_data");
-  
   if (!grid)/* if grid is empty do nothing */
     return;
+    
+  const int keep_grid = GetParameterI_E("use_previous_data");
+  char suffix[100] = {'\0'};
+  unsigned i,np;
+  
+  np = 0;
+  while (parameters_global != 0 && parameters_global[np] != 0)
+    np++;
+  
+  sprintf(suffix,"grid%u_",grid->gn);/* parameters related to this grid */
+  for (i = 0; i < np;)/* no increment */
+  {
+    if (strstr(parameters_global[i]->lv,suffix))
+    {
+      /* note: the last par is put in palce of removed par
+      // so don't increment i */
+      free_parameter(parameters_global[i]->lv);
+      np--;
+    }
+    else
+      i++;
+  }
   
   if (!keep_grid)
     free_grid(grid); 
-    
 }

@@ -37,8 +37,8 @@ int Binary_BH_NS_Initial_Data(void)
     /* preparing fields and grid according to the given previous grid */
     grid_next = bbn_initialize_next_grid(grid_prev);
     
-    /* free previous grid completely */
-    bbn_free_previous_grid(grid_prev);
+    /* free previous grid and related parameters */
+    bbn_free_grid_and_its_parameters(grid_prev);
     
     /* solve the elliptic equations for the given grid */
     bbn_solve_elliptic_eqs(grid_next);
@@ -96,7 +96,7 @@ static void Elliptic_Eqs_Convergence_Test_BBN(void)
     grid_next = bbn_initialize_next_grid(grid_prev);
     
     /* free previous grid completely */
-    bbn_free_previous_grid(grid_prev);
+    bbn_free_grid_and_its_parameters(grid_prev);
     
     /* solve the elliptic equations for the given grid */
     bbn_solve_elliptic_eqs(grid_next);

@@ -84,7 +84,6 @@ static Grid_T *creat_bbn_grid_CS(struct Grid_Params_S *const GridParams);
 static void NS_BH_surface_CubedSpherical_grid(Grid_T *const grid,struct Grid_Params_S *const GridParams);
 static void init_field_TOV_plus_KerrSchild(Grid_T *const grid,const TOV_T *const tov, const double a_BH, const double M_BH);
 static void make_normal_vector_on_BH_horizon(Grid_T *const grid,struct Grid_Params_S *const GridParams);
-void bbn_free_previous_grid(Grid_T *grid);
 void bbn_allocate_fields(Grid_T *const grid);
 void bbn_partial_derivatives_fields(Grid_T *const grid);
 void bbn_populate_free_data(Grid_T *const grid);
@@ -148,4 +147,5 @@ static double AH_surface_function_PerfectSphere_CS(const double a,const double b
 static Flag_T DoesNextNSPatchHaveSameResolution(const unsigned N[3],struct Grid_Params_S *const GridParams);
 static void move_geometry(Grid_T *const grid_next,Grid_T *const grid_prev);
 static void move_solve_man_jacobian(Patch_T *const patch2,Patch_T *const patch1);
+void bbn_free_grid_and_its_parameters(Grid_T *grid);
 
