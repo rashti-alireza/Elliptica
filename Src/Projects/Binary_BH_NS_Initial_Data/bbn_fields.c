@@ -586,7 +586,8 @@ void bbn_update_derivative_rho0(Patch_T *const patch)
   {
     /* rho0 derivatives */
     DECLARE_FIELD(rho0)
-
+    if (!rho0->v) return;/* if rho0 has not been set yet */
+    
     DECLARE_AND_EMPTY_FIELD(drho0_D2)
     DECLARE_AND_EMPTY_FIELD(drho0_D1)
     DECLARE_AND_EMPTY_FIELD(drho0_D0)
