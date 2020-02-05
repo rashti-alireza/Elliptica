@@ -1512,7 +1512,97 @@ static void interpolate_and_initialize_to_next_grid(Grid_T *const grid_next,Grid
     }
   }
   
-  if (!change_NS_flg)/* only NS, filling box and outermost are reusable */
+  /* ORDER IS IMPORTANT */
+  if (change_res_flg)/* make from scratch */
+  {
+    printf("~> resolution is changed:\n");
+    
+    OpenMP_Patch_Pragma(omp parallel for)
+    for (p = 0; p < np; ++p)
+    {
+      Patch_T *patch = grid_next->patch[p];
+      unsigned nn = patch->nn;
+      char hint[100],*root_name;
+      unsigned ijk;
+      
+      root_name = strstr(patch->name,"_");/* the patch->name convention is grid\d?_root */
+      assert(root_name);
+      root_name++;
+      sprintf(hint,"%s",root_name);
+      
+      PREP_FIELD(B0_U0)
+      PREP_FIELD(B0_U1)
+      PREP_FIELD(B0_U2)
+      PREP_FIELD(psi)
+      PREP_FIELD(eta)
+      
+      if (IsItNSPatch(patch))
+      {
+        PREP_FIELD(phi)
+        PREP_FIELD(enthalpy)
+        for (ijk = 0; ijk < nn; ++ijk)
+        {
+          double x[3] = { patch->node[ijk]->x[0],
+                          patch->node[ijk]->x[1],
+                          patch->node[ijk]->x[2] };
+          double Xp[3] = {0};/* (X,Y,Z)(x,y,z) in grid_prev */
+          Patch_T *patchp = 0;/* patch in grid_prev contains (x,y,z) */
+          
+          /* finding X and patch in grid_prev, associated to x */
+          find_X_and_patch(x,hint,grid_prev,Xp,&patchp);
+          
+          B0_U0[ijk]    = interpolate_from_patch_prim("B0_U0",Xp,patchp);
+          B0_U1[ijk]    = interpolate_from_patch_prim("B0_U1",Xp,patchp);
+          B0_U2[ijk]    = interpolate_from_patch_prim("B0_U2",Xp,patchp);
+          psi[ijk]      = interpolate_from_patch_prim("psi",Xp,patchp);
+          eta[ijk]      = interpolate_from_patch_prim("eta",Xp,patchp);
+          phi[ijk]      = interpolate_from_patch_prim("phi",Xp,patchp);
+          enthalpy[ijk] = interpolate_from_patch_prim("enthalpy",Xp,patchp);
+        }
+        
+        printf("|--> %s:\n"
+               "     |--> interpolating B0_U0    ~> Done.\n"
+               "     |--> interpolating B0_U1    ~> Done.\n"
+               "     |--> interpolating B0_U2    ~> Done.\n"
+               "     |--> interpolating psi      ~> Done.\n"
+               "     |--> interpolating eta      ~> Done.\n"
+               "     |--> interpolating phi      ~> Done.\n"
+               "     |--> interpolating enthalpy ~> Done.\n"
+               ,patch->name);
+        fflush(stdout);
+      }
+      else
+      {
+        for (ijk = 0; ijk < nn; ++ijk)
+        {
+          double x[3] = { patch->node[ijk]->x[0],
+                          patch->node[ijk]->x[1],
+                          patch->node[ijk]->x[2] };
+          double Xp[3] = {0};/* (X,Y,Z)(x,y,z) in grid_prev */
+          Patch_T *patchp = 0;/* patch in grid_prev contains (x,y,z) */
+          
+          /* finding X and patch in grid_prev, associated to x */
+          find_X_and_patch(x,hint,grid_prev,Xp,&patchp);
+          
+          B0_U0[ijk] = interpolate_from_patch_prim("B0_U0",Xp,patchp);
+          B0_U1[ijk] = interpolate_from_patch_prim("B0_U1",Xp,patchp);
+          B0_U2[ijk] = interpolate_from_patch_prim("B0_U2",Xp,patchp);
+          psi[ijk]   = interpolate_from_patch_prim("psi",Xp,patchp);
+          eta[ijk]   = interpolate_from_patch_prim("eta",Xp,patchp);
+        }
+        
+        printf("|--> %s:\n"
+               "     |--> interpolating B0_U0    ~> Done.\n"
+               "     |--> interpolating B0_U1    ~> Done.\n"
+               "     |--> interpolating B0_U2    ~> Done.\n"
+               "     |--> interpolating psi      ~> Done.\n"
+               "     |--> interpolating eta      ~> Done.\n"
+               ,patch->name);
+        fflush(stdout);
+      }
+    }/* end of for (p = 0; p < np; ++p) */
+  }/* end of else if (change_res_flg) */
+  else if (!change_NS_flg)/* only NS, filling box and outermost are reusable */
   {
     printf("~> NS, filling box and outermost patches are the same:\n");
     
@@ -3293,6 +3383,10 @@ static void bbn_update_Aij(Grid_T *const grid)
   FOR_ALL_PATCHES(p,grid)
   {
     Patch_T *patch = grid->patch[p];
+    
+    if (IsItInsideBHPatch(patch))
+      continue;
+      
     bbn_update_psi10A_UiUj(patch);
   }
   
@@ -4157,7 +4251,7 @@ static void NS_BH_surface_CubedSpherical_grid(Grid_T *const grid,struct Grid_Par
   Patch_T patch[1] = {0};
   struct Collocation_s coll_s[2] = {0};
   double X[3],r;
-  Flag_T same_res_flag = NONE;
+  const int same_res_flag = !GetParameterI_E("did_resolution_change?");
   double dR_sum_square = 0;
   
   /* left NS */
@@ -4182,8 +4276,6 @@ static void NS_BH_surface_CubedSpherical_grid(Grid_T *const grid,struct Grid_Par
     abortEr("n_c could not be set.\n");
     
   N_total = N[0]*N[1]*N[2];
-  
-  same_res_flag = DoesNextNSPatchHaveSameResolution(N,GridParams);
   
   /* surface */
   R = alloc_double(N_total);
@@ -4262,7 +4354,7 @@ static void NS_BH_surface_CubedSpherical_grid(Grid_T *const grid,struct Grid_Par
     sprintf(par,"grid%u_left_NS_surface_function_up",grid->gn);
     add_parameter_array(par,R,N_total);
     
-    if (same_res_flag == YES)
+    if (same_res_flag)
     {
       Grid_T *grid_prev      = GridParams->grid_prev;
       Patch_T *patch_prev    = GetPatch("left_NS_up",grid_prev);
@@ -4276,7 +4368,7 @@ static void NS_BH_surface_CubedSpherical_grid(Grid_T *const grid,struct Grid_Par
           dR_sum_square += SQR(1-R[ijk]/R0[ijk]);
         }
       
-    }/* end of if (same_res_flag == YES) */
+    }/* end of if (same_res_flag) */
 
     /* surface down */
     for (i = 0; i < N[0]; ++i)
@@ -4294,7 +4386,7 @@ static void NS_BH_surface_CubedSpherical_grid(Grid_T *const grid,struct Grid_Par
     sprintf(par,"grid%u_left_NS_surface_function_down",grid->gn);
     add_parameter_array(par,R,N_total);
     
-    if (same_res_flag == YES)
+    if (same_res_flag)
     {
       Grid_T *grid_prev      = GridParams->grid_prev;
       Patch_T *patch_prev    = GetPatch("left_NS_down",grid_prev);
@@ -4308,7 +4400,7 @@ static void NS_BH_surface_CubedSpherical_grid(Grid_T *const grid,struct Grid_Par
           dR_sum_square += SQR(1-R[ijk]/R0[ijk]);
         }
       
-    }/* end of if (same_res_flag == YES) */
+    }/* end of if (same_res_flag) */
 
     /* surface back */
     for (i = 0; i < N[0]; ++i)
@@ -4326,7 +4418,7 @@ static void NS_BH_surface_CubedSpherical_grid(Grid_T *const grid,struct Grid_Par
     sprintf(par,"grid%u_left_NS_surface_function_back",grid->gn);
     add_parameter_array(par,R,N_total);
     
-    if (same_res_flag == YES)
+    if (same_res_flag)
     {
       Grid_T *grid_prev      = GridParams->grid_prev;
       Patch_T *patch_prev    = GetPatch("left_NS_back",grid_prev);
@@ -4340,7 +4432,7 @@ static void NS_BH_surface_CubedSpherical_grid(Grid_T *const grid,struct Grid_Par
           dR_sum_square += SQR(1-R[ijk]/R0[ijk]);
         }
       
-    }/* end of if (same_res_flag == YES) */
+    }/* end of if (same_res_flag) */
 
     /* surface front */
     for (i = 0; i < N[0]; ++i)
@@ -4358,7 +4450,7 @@ static void NS_BH_surface_CubedSpherical_grid(Grid_T *const grid,struct Grid_Par
     sprintf(par,"grid%u_left_NS_surface_function_front",grid->gn);
     add_parameter_array(par,R,N_total);
     
-    if (same_res_flag == YES)
+    if (same_res_flag)
     {
       Grid_T *grid_prev      = GridParams->grid_prev;
       Patch_T *patch_prev    = GetPatch("left_NS_front",grid_prev);
@@ -4372,7 +4464,7 @@ static void NS_BH_surface_CubedSpherical_grid(Grid_T *const grid,struct Grid_Par
           dR_sum_square += SQR(1-R[ijk]/R0[ijk]);
         }
       
-    }/* end of if (same_res_flag == YES) */
+    }/* end of if (same_res_flag) */
 
     /* surface left */
     for (i = 0; i < N[0]; ++i)
@@ -4390,7 +4482,7 @@ static void NS_BH_surface_CubedSpherical_grid(Grid_T *const grid,struct Grid_Par
     sprintf(par,"grid%u_left_NS_surface_function_left",grid->gn);
     add_parameter_array(par,R,N_total);
     
-    if (same_res_flag == YES)
+    if (same_res_flag)
     {
       Grid_T *grid_prev      = GridParams->grid_prev;
       Patch_T *patch_prev    = GetPatch("left_NS_left",grid_prev);
@@ -4404,7 +4496,7 @@ static void NS_BH_surface_CubedSpherical_grid(Grid_T *const grid,struct Grid_Par
           dR_sum_square += SQR(1-R[ijk]/R0[ijk]);
         }
       
-    }/* end of if (same_res_flag == YES) */
+    }/* end of if (same_res_flag) */
 
     
     /* surface right */
@@ -4423,7 +4515,7 @@ static void NS_BH_surface_CubedSpherical_grid(Grid_T *const grid,struct Grid_Par
     sprintf(par,"grid%u_left_NS_surface_function_right",grid->gn);
     add_parameter_array(par,R,N_total);
     
-    if (same_res_flag == YES)
+    if (same_res_flag)
     {
       Grid_T *grid_prev      = GridParams->grid_prev;
       Patch_T *patch_prev    = GetPatch("left_NS_right",grid_prev);
@@ -4437,7 +4529,7 @@ static void NS_BH_surface_CubedSpherical_grid(Grid_T *const grid,struct Grid_Par
           dR_sum_square += SQR(1-R[ijk]/R0[ijk]);
         }
       
-    }/* end of if (same_res_flag == YES) */
+    }/* end of if (same_res_flag) */
 
   }
   else
@@ -4450,7 +4542,11 @@ static void NS_BH_surface_CubedSpherical_grid(Grid_T *const grid,struct Grid_Par
   const double dR_rms = sqrt(dR_sum_square);
   
   /* if dR_rms is small do not change the NS surface function */
-  if (dR_rms < NS_surf_tolerance && GridParams->grid_prev)
+  if (
+      same_res_flag              && 
+      dR_rms < NS_surf_tolerance && 
+      GridParams->grid_prev
+     )
   {
     printf("~> |R_2 - R1|/|R_1| = %g < Tolerance = %g\n",dR_rms,NS_surf_tolerance);
     printf("~> No changes in NS surface\n");
@@ -4764,29 +4860,6 @@ static void NS_BH_surface_CubedSpherical_grid(Grid_T *const grid,struct Grid_Par
   free(R);
   
   printf("\n} Populating surface function for NS and BH ==> Done.\n");
-}
-
-/* ->return value: if the next grid has same given resolution N 
-// for NS patch YES, otherwise NO. */
-static Flag_T DoesNextNSPatchHaveSameResolution(const unsigned N[3],struct Grid_Params_S *const GridParams)
-{
-  Grid_T *const grid_prev = GridParams->grid_prev;
-  Flag_T flg = NO;
-  
-  if (!grid_prev)
-    return flg;
-  
-  if (!strcmp_i(grid_prev->kind,"BBN_CubedSpherical_grid"))
-    abortEr(NO_OPTION);
- 
-  /* note: all of NS patches have same resolution */
-  Patch_T *const NS_Patch_prev = GetPatch("left_NS_up",grid_prev);
-  const unsigned *const n = NS_Patch_prev->n;
-  
-  if (n[0] == N[0] && n[1] == N[1] && n[2] == N[2])
-    flg = YES;
-  
-  return flg; 
 }
 
 /* given (X,Y,Z) in the specified slice of NS in cubed spherical coords

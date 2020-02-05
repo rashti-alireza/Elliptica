@@ -144,7 +144,6 @@ static void force_balance_ddz_Omega(Grid_T *const grid);
 static void adjust_AH_radius(Grid_T *const grid,struct Grid_Params_S *const GridParams);
 static void adjust_BH_Omega(Grid_T *const grid,struct Grid_Params_S *const GridParams);
 static double AH_surface_function_PerfectSphere_CS(const double a,const double b,const double R,const double *const c,const Flag_T side);
-static Flag_T DoesNextNSPatchHaveSameResolution(const unsigned N[3],struct Grid_Params_S *const GridParams);
 static void move_geometry(Grid_T *const grid_next,Grid_T *const grid_prev);
 static void move_solve_man_jacobian(Patch_T *const patch2,Patch_T *const patch1);
 void bbn_free_grid_and_its_parameters(Grid_T *grid);
