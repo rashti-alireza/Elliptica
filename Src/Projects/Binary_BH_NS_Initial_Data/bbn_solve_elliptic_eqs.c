@@ -441,7 +441,7 @@ static void bbn_free_phi_grid(Grid_T *grid)
     Patch_T *patch = grid->patch[p];
     
     free_patch_interface(patch);
-    free_patch_SolMan_jacobian(patch);
+    //free_patch_SolMan_jacobian(patch);
     free_patch_SolMan_method_Schur(patch);
     free(patch->solving_man);
   }
