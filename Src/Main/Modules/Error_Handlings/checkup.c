@@ -90,6 +90,7 @@ static void pr_line_stderr(const char c)
 {
   int i;
   
+  fflush(stdout);
   for (i = 0; i < MAX_WIDTH; i++)
     fprintf(stderr,"%c",c);
   fprintf(stderr,"\n");
