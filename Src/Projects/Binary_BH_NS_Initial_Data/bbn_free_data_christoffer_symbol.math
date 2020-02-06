@@ -11,11 +11,14 @@ C_macro1 = ADD_FIELD(name);
 C_macro2 = PREP_FIELD(name);
 
 # main function:
-Ccode["#include "bbn_headers.h"\n\n"];
+Ccode["#include "bbn_headers.h""];
+`#define FREE_DATA_OpenMP(x)  _Pragma ( #x )`
+``
+
 Ccode["void bbn_free_data_Gamma(Grid_T *const grid)\n{"];
 Ccode["  const unsigned np = grid->np;"];
 Ccode["  unsigned p;\n"];
-Ccode["  OpenMP_1d_Pragma(omp parallel for)"];
+      `  FREE_DATA_OpenMP(omp parallel for)`
 Ccode["  for(p = 0; p < np; ++p)"];
 Ccode["  {"];
 Ccode["    Patch_T *patch = grid->patch[p];"];
