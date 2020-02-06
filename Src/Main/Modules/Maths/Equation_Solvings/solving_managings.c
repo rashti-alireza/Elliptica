@@ -80,7 +80,10 @@ void initialize_solving_man(Grid_T *const grid,sEquation_T **const field_eq,sEqu
       pointerEr(patch->solving_man);
     }
     
-    _free(patch->solving_man->field_name);
+    if (patch->solving_man->field_name)
+    {
+      free_2d_mem(patch->solving_man->field_name,patch->solving_man->nf);
+    }
     patch->solving_man->field_name = calloc(nf,sizeof(*patch->solving_man->field_name));
     pointerEr(patch->solving_man->field_name);
     
