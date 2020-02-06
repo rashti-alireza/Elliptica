@@ -1503,7 +1503,7 @@ static void interpolate_and_initialize_to_next_grid(Grid_T *const grid_next,Grid
     make_coeffs_3d(psi);
     make_coeffs_3d(eta);
     
-    if (IsItNSPatch(patch))
+    if (IsItNSPatch(patch) || IsItNSSurroundingPatch(patch))
     {
       DECLARE_FIELD(phi)
       DECLARE_FIELD(enthalpy)
