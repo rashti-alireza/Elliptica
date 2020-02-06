@@ -79,15 +79,24 @@ void initialize_solving_man(Grid_T *const grid,sEquation_T **const field_eq,sEqu
       patch->solving_man = calloc(1,sizeof(*patch->solving_man));
       pointerEr(patch->solving_man);
     }
-    patch->solving_man->field_name = 
-        calloc(nf,sizeof(*patch->solving_man->field_name));
+    
+    _free(patch->solving_man->field_name);
+    patch->solving_man->field_name = calloc(nf,sizeof(*patch->solving_man->field_name));
     pointerEr(patch->solving_man->field_name);
+    
+    _free(patch->solving_man->field_eq);
     patch->solving_man->field_eq = calloc(nf,sizeof(*patch->solving_man->field_eq));
     pointerEr(patch->solving_man->field_eq);
+    
+    _free(patch->solving_man->bc_eq);
     patch->solving_man->bc_eq = calloc(nf,sizeof(*patch->solving_man->bc_eq));
     pointerEr(patch->solving_man->bc_eq);
+    
+    _free(patch->solving_man->jacobian_field_eq);
     patch->solving_man->jacobian_field_eq = calloc(nf,sizeof(*patch->solving_man->jacobian_field_eq));
     pointerEr(patch->solving_man->jacobian_field_eq);
+    
+    _free(patch->solving_man->jacobian_bc_eq);
     patch->solving_man->jacobian_bc_eq = calloc(nf,sizeof(*patch->solving_man->jacobian_bc_eq));
     pointerEr(patch->solving_man->jacobian_bc_eq);
     
