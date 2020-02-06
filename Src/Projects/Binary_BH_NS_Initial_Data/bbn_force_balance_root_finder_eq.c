@@ -76,8 +76,8 @@ bbn_update_Beta_U2(patch);
   GET_FIELD(u0)
 
 
-ADD_FIELD(Gtilda_rf);
-ADD_FIELD_NoMem(dGtilda_rf);
+ADD_AND_ALLOC_FIELD(Gtilda_rf);
+ADD_FIELD(dGtilda_rf);
 DECLARE_FIELD(Gtilda_rf);
 DECLARE_FIELD(dGtilda_rf);
 for (ijk = 0; ijk < nn; ++ijk)

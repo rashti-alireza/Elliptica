@@ -49,8 +49,8 @@ Declare =
 # symmetries:
 Symm[_gamma(i,j)   = _gamma(j,i)];
 
-`ADD_FIELD(GAMMA_fb);`
-`ADD_FIELD_NoMem(dGAMMA_fb);`
+`ADD_AND_ALLOC_FIELD(GAMMA_fb);`
+`ADD_FIELD(dGAMMA_fb);`
 
 `DECLARE_FIELD(GAMMA_fb);`
 `DECLARE_FIELD(dGAMMA_fb);`

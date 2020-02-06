@@ -32,8 +32,8 @@ double dLnGamma_in_force_balance_eq(Patch_T *const patch,const double *const NS_
   GET_FIELD(u0)
 
 
-ADD_FIELD(GAMMA_fb);
-ADD_FIELD_NoMem(dGAMMA_fb);
+ADD_AND_ALLOC_FIELD(GAMMA_fb);
+ADD_FIELD(dGAMMA_fb);
 DECLARE_FIELD(GAMMA_fb);
 DECLARE_FIELD(dGAMMA_fb);
 const unsigned nn = patch->nn;
