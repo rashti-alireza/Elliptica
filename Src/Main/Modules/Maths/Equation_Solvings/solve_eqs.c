@@ -207,6 +207,20 @@ void sync_patch_pools(const Grid_T*const latest_grid,Solve_Equations_T *const so
       {
         patch2->pool = patch1->pool;
         patch2->nfld = patch1->nfld;
+        
+        /* if patch1 has any jacobians */
+        if (patch1->solving_man)
+        {
+          /* if patch2 need memory */
+          if (!patch2->solving_man)
+          {
+            patch2->solving_man = calloc(1,sizeof(*patch2->solving_man));
+            pointerEr(patch2->solving_man);
+          }
+          patch2->solving_man->jacobian = patch1->solving_man->jacobian;
+          patch2->solving_man->nj       = patch1->solving_man->nj;
+        }
+        
         break;
       }
     }/* FOR_ALL_PATCHES(p2,outdated_grid) */
@@ -226,6 +240,18 @@ void sync_patch_pools(const Grid_T*const latest_grid,Solve_Equations_T *const so
         {
           patch2->pool = patch1->pool;
           patch2->nfld = patch1->nfld;
+          /* if patch1 has any jacobians */
+          if (patch1->solving_man)
+          {
+            /* if patch2 need memory */
+            if (!patch2->solving_man)
+            {
+              patch2->solving_man = calloc(1,sizeof(*patch2->solving_man));
+              pointerEr(patch2->solving_man);
+            }
+            patch2->solving_man->jacobian = patch1->solving_man->jacobian;
+            patch2->solving_man->nj       = patch1->solving_man->nj;
+          }
           break;
         }
       }/* FOR_ALL_PATCHES(p2,outdated_grid) */
