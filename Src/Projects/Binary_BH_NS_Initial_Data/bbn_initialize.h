@@ -7,10 +7,9 @@
 
 #define Power(a,b) pow(a,b)
 #define Sqrt(a) sqrt(a)
-#define move_field_values(x) DECLARE_AND_EMPTY_FIELD(x)\
-                             int f_ind_##x = LookUpField_E(#x,patchp);\
-                             x->v = patchp->pool[f_ind_##x]->v;\
-                             patchp->pool[f_ind_##x]->v = 0;
+#define prep_and_call(x) PREP_FIELD(x)\
+                         const double *const other_##x = patchp->pool[LookUpField_E(#x,patchp)]->v;
+#define copy_values(x)   x[ijk] = other_##x[ijk];
 
 typedef void fAdjustment_t (Grid_T *const grid);
 

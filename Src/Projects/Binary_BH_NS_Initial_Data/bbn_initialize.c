@@ -1610,6 +1610,7 @@ static void interpolate_and_initialize_to_next_grid(Grid_T *const grid_next,Grid
     for (p = 0; p < np; ++p)
     {
       Patch_T *patch = grid_next->patch[p];
+      unsigned nn    = patch->nn;
       char *root_name;
       
       root_name = strstr(patch->name,"_");/* the patch->name convention is grid\d?_root */
@@ -1619,14 +1620,26 @@ static void interpolate_and_initialize_to_next_grid(Grid_T *const grid_next,Grid
       if (IsItNSPatch(patch))
       {
         Patch_T *patchp = GetPatch(root_name,grid_prev);
+        unsigned ijk;
         
-        move_field_values(phi)
-        move_field_values(enthalpy)
-        move_field_values(B0_U0)
-        move_field_values(B0_U1)
-        move_field_values(B0_U2)
-        move_field_values(psi)
-        move_field_values(eta)
+        prep_and_call(phi)
+        prep_and_call(enthalpy)
+        prep_and_call(B0_U0)
+        prep_and_call(B0_U1)
+        prep_and_call(B0_U2)
+        prep_and_call(psi)
+        prep_and_call(eta)
+        
+        for (ijk = 0; ijk < nn; ++ijk)
+        {
+          copy_values(phi)
+          copy_values(enthalpy)
+          copy_values(B0_U0)
+          copy_values(B0_U1)
+          copy_values(B0_U2)
+          copy_values(psi)
+          copy_values(eta)
+        }
         
         printf("|--> %s:\n"
                "     |--> copying B0_U0    ~> Done.\n"
@@ -1647,13 +1660,22 @@ static void interpolate_and_initialize_to_next_grid(Grid_T *const grid_next,Grid
                )
       {
         Patch_T *patchp = GetPatch(root_name,grid_prev);
+        unsigned ijk;
         
-        move_field_values(B0_U0)
-        move_field_values(B0_U1)
-        move_field_values(B0_U2)
-        move_field_values(psi)
-        move_field_values(eta)
+        prep_and_call(B0_U0)
+        prep_and_call(B0_U1)
+        prep_and_call(B0_U2)
+        prep_and_call(psi)
+        prep_and_call(eta)
         
+        for (ijk = 0; ijk < nn; ++ijk)
+        {
+          copy_values(B0_U0)
+          copy_values(B0_U1)
+          copy_values(B0_U2)
+          copy_values(psi)
+          copy_values(eta)
+        }
         printf("|--> %s:\n"
                "     |--> copying B0_U0    ~> Done.\n"
                "     |--> copying B0_U1    ~> Done.\n"
@@ -1739,6 +1761,7 @@ static void interpolate_and_initialize_to_next_grid(Grid_T *const grid_next,Grid
     for (p = 0; p < np; ++p)
     {
       Patch_T *patch = grid_next->patch[p];
+      unsigned nn    = patch->nn;
       char *root_name;
       
       root_name = strstr(patch->name,"_");/* the patch->name convention is grid\d?_root */
@@ -1752,13 +1775,22 @@ static void interpolate_and_initialize_to_next_grid(Grid_T *const grid_next,Grid
          )
       {
         Patch_T *patchp = GetPatch(root_name,grid_prev);
+        unsigned ijk;
         
-        move_field_values(B0_U0)
-        move_field_values(B0_U1)
-        move_field_values(B0_U2)
-        move_field_values(psi)
-        move_field_values(eta)
+        prep_and_call(B0_U0)
+        prep_and_call(B0_U1)
+        prep_and_call(B0_U2)
+        prep_and_call(psi)
+        prep_and_call(eta)
         
+        for (ijk = 0; ijk < nn; ++ijk)
+        {
+          copy_values(B0_U0)
+          copy_values(B0_U1)
+          copy_values(B0_U2)
+          copy_values(psi)
+          copy_values(eta)
+        }
         printf("|--> %s:\n"
                "     |--> copying B0_U0    ~> Done.\n"
                "     |--> copying B0_U1    ~> Done.\n"
@@ -1885,6 +1917,7 @@ static void interpolate_and_initialize_to_next_grid(Grid_T *const grid_next,Grid
     for (p = 0; p < np; ++p)
     {
       Patch_T *patch = grid_next->patch[p];
+      unsigned nn    = patch->nn;
       char *root_name;
       
       root_name = strstr(patch->name,"_");/* the patch->name convention is grid\d?_root */
@@ -1897,13 +1930,22 @@ static void interpolate_and_initialize_to_next_grid(Grid_T *const grid_next,Grid
          )
       {
         Patch_T *patchp = GetPatch(root_name,grid_prev);
+        unsigned ijk;
+      
+        prep_and_call(B0_U0)
+        prep_and_call(B0_U1)
+        prep_and_call(B0_U2)
+        prep_and_call(psi)
+        prep_and_call(eta)
         
-        move_field_values(B0_U0)
-        move_field_values(B0_U1)
-        move_field_values(B0_U2)
-        move_field_values(psi)
-        move_field_values(eta)
-        
+        for (ijk = 0; ijk < nn; ++ijk)
+        {
+          copy_values(B0_U0)
+          copy_values(B0_U1)
+          copy_values(B0_U2)
+          copy_values(psi)
+          copy_values(eta)
+        }
         printf("|--> %s:\n"
                "     |--> copying B0_U0    ~> Done.\n"
                "     |--> copying B0_U1    ~> Done.\n"
