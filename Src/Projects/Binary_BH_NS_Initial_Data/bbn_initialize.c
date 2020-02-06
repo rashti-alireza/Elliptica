@@ -5224,13 +5224,24 @@ void bbn_free_grid_and_its_parameters(Grid_T *grid)
     
   const int keep_grid = GetParameterI_E("use_previous_data");
   char suffix[100] = {'\0'};
-  unsigned i,np;
+  unsigned i,np,gn;
   
+  if (!keep_grid)
+  {
+    gn = grid->gn;
+    free_grid(grid);
+  }
+  else
+  {
+    gn   = grid->gn-1;
+    grid = 0;
+  }
+    
   np = 0;
   while (parameters_global != 0 && parameters_global[np] != 0)
     np++;
   
-  sprintf(suffix,"grid%u_",grid->gn);/* parameters related to this grid */
+  sprintf(suffix,"grid%u_",gn);/* parameters related to this grid */
   for (i = 0; i < np;)/* no increment */
   {
     if (strstr(parameters_global[i]->lv,suffix))
@@ -5244,6 +5255,4 @@ void bbn_free_grid_and_its_parameters(Grid_T *grid)
       i++;
   }
   
-  if (!keep_grid)
-    free_grid(grid); 
 }
