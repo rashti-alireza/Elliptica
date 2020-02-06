@@ -47,7 +47,6 @@ void bbn_allocate_fields(Grid_T *const grid)
 
     /* enthalpy in NS and its partial derivatives */
     ADD_FIELD_NoMem(enthalpy);
-    ADD_FIELD_NoMem(OLD_enthalpy);
     ADD_FIELD_NoMem(denthalpy_D2)
     ADD_FIELD_NoMem(denthalpy_D1)
     ADD_FIELD_NoMem(denthalpy_D0)
@@ -1150,19 +1149,26 @@ void bbn_update_stress_energy_tensor(Grid_T *const grid,const int flag)
       continue;
       
     DECLARE_FIELD(enthalpy)
-    DECLARE_FIELD(OLD_enthalpy)
     free_coeffs(enthalpy);
-    free_coeffs(OLD_enthalpy);
     
-    /* swapping pointers */
-    void *tmp       = OLD_enthalpy->v;
-    OLD_enthalpy->v = enthalpy->v;
-    enthalpy->v     = tmp;
-    
-    /* update enthalpy */
-    Tij_IF_CTS_enthalpy(patch);
-    for (ijk = 0; ijk < nn; ++ijk)
-      enthalpy->v[ijk] = W1*enthalpy->v[ijk]+W2*OLD_enthalpy->v[ijk];
+    /* if there is any enthalpy it is legitimate for relaxed update */
+    if (enthalpy->v)
+    {
+      double *old_value = enthalpy->v;
+      enthalpy->v       = 0;
+      
+      /* update enthalpy */
+      Tij_IF_CTS_enthalpy(patch);
+      for (ijk = 0; ijk < nn; ++ijk)
+        enthalpy->v[ijk] = W1*enthalpy->v[ijk]+W2*old_value[ijk];
+      
+      free(old_value);
+    }
+    else/* if there is no previous enthalpy */
+    {
+      /* update enthalpy */
+      Tij_IF_CTS_enthalpy(patch);
+    }
 
     if (flag == 1)
       cleaning_enthalpy(patch);
