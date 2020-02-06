@@ -2090,7 +2090,6 @@ static double interpolate_from_patch_prim(const char *const field,const double *
   double interp;
   Interpolation_T *interp_s = init_interpolation();
   Field_T *const F_field    = patch->pool[Ind(field)];
-  assert(F_field->v);
   
   interp_s->field = F_field;
   interp_s->X = X[0];
