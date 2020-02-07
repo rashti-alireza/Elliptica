@@ -95,7 +95,7 @@ static void update_fields_relaxed_scheme(Grid_T *const grid)
 {
   const unsigned npatch = grid->np;
   const char *const solving_order = Pgets_E("Solving_Order");
-  const double W1  = GetParameterD_E("Solving_Field_Update_Weight");
+  const double W1  = Pgetd_E("Solving_Field_Update_Weight");
   const double W2  = 1-W1;
   char **field_name;
   unsigned p,nf,f;
@@ -202,10 +202,10 @@ int bbn_stop_criteria(Grid_T *const grid,const char *const name)
   int stop_backtrack = 1;
   int stop_abnormal  = 1;
   const double res_TOLERANCE = 1E-10;/* this is the tolerance that solver allowed to increase residual */
-  const double res_bckt = GetParameterD_E("Solving_Allowed_Relative_Residual_Backtrack_Tolerance");
-  const double res_d    = GetParameterD_E("Solving_Residual");/* desired residual */
+  const double res_bckt = Pgetd_E("Solving_Allowed_Relative_Residual_Backtrack_Tolerance");
+  const double res_d    = Pgetd_E("Solving_Residual");/* desired residual */
   const int max_step    = Pgeti_E("Solving_Max_Number_of_Newton_Step");
-  const double res_fac  = GetParameterD_E("Solving_Residual_Factor");
+  const double res_fac  = Pgetd_E("Solving_Residual_Factor");
   const unsigned npatch = grid->np;
   unsigned p;
   

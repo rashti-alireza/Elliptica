@@ -22,9 +22,9 @@ void *bbn_bc_Beta_U1(void *vp1,void *vp2)
   READ_v_IF_ON_HORIZON(_HS_U1)
 
 
-  const double BH_center_x = GetParameterD_E("BH_center_x");
-  const double BH_Omega_U2 = GetParameterD_E("BH_Omega_U2");
-  const double v1_boost    = GetParameterD_E("v*_boost_y");
+  const double BH_center_x = Pgetd_E("BH_center_x");
+  const double BH_Omega_U2 = Pgetd_E("BH_Omega_U2");
+  const double v1_boost    = Pgetd_E("v*_boost_y");
   if (patch->outerB)/* at outer boundary */
   {
   DDM_SCHUR_BC_OPEN

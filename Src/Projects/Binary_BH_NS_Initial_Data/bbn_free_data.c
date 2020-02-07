@@ -315,16 +315,16 @@ void bbn_free_data_gammas(Grid_T *const grid)
 {
   Transformation_T *t = initialize_transformation();
   /* roll off distance at exp(-(r/r0)^4)  */
-  const double r0   = GetParameterD_E("RollOff_distance");
-  const double M_BH = GetParameterD_E("BH_mass");
-  const double a    = GetParameterD_E("BH_X_U2")*M_BH;
-  const double BH_center_x = GetParameterD_E("BH_center_x");
-  const double BH_center_y = GetParameterD_E("BH_center_y");
-  const double BH_center_z = GetParameterD_E("BH_center_z");
-  const double y_CM = GetParameterD_E("y_CM");
-  const double x_CM = GetParameterD_E("x_CM");
-  //const double C_BH = 0.5*GetParameterD_E("BH_NS_separation");/* center of BH it's on +y axis */
-  const double Omega_BHNS = GetParameterD_E("BH_NS_orbital_angular_velocity");
+  const double r0   = Pgetd_E("RollOff_distance");
+  const double M_BH = Pgetd_E("BH_mass");
+  const double a    = Pgetd_E("BH_X_U2")*M_BH;
+  const double BH_center_x = Pgetd_E("BH_center_x");
+  const double BH_center_y = Pgetd_E("BH_center_y");
+  const double BH_center_z = Pgetd_E("BH_center_z");
+  const double y_CM = Pgetd_E("y_CM");
+  const double x_CM = Pgetd_E("x_CM");
+  //const double C_BH = 0.5*Pgetd_E("BH_NS_separation");/* center of BH it's on +y axis */
+  const double Omega_BHNS = Pgetd_E("BH_NS_orbital_angular_velocity");
   const double a2   = SQR(a);
   double H,k0,k1,k2;/* in ds^2 = (delta_ij+2*H*ki*kj)dx^i*dx^j */
   double Bx,By,Bz;/* B = v/c */
@@ -661,16 +661,16 @@ static void partial_derivative_KSBeta(Patch_T *const patch)
 static void populate_KSgammas_KSalpha_KSBeta(Patch_T *const patch)
 {
   Transformation_T *t = initialize_transformation();
-  const double M_BH = GetParameterD_E("BH_mass");
-  const double a    = GetParameterD_E("BH_X_U2")*M_BH;
+  const double M_BH = Pgetd_E("BH_mass");
+  const double a    = Pgetd_E("BH_X_U2")*M_BH;
   const double a2   = SQR(a);
-  const double BH_center_x = GetParameterD_E("BH_center_x");
-  const double BH_center_y = GetParameterD_E("BH_center_y");
-  const double BH_center_z = GetParameterD_E("BH_center_z");
-  const double y_CM = GetParameterD_E("y_CM");
-  const double x_CM = GetParameterD_E("x_CM");
-  //const double C_BH = 0.5*GetParameterD_E("BH_NS_separation");
-  const double Omega_BHNS = GetParameterD_E("BH_NS_orbital_angular_velocity");
+  const double BH_center_x = Pgetd_E("BH_center_x");
+  const double BH_center_y = Pgetd_E("BH_center_y");
+  const double BH_center_z = Pgetd_E("BH_center_z");
+  const double y_CM = Pgetd_E("y_CM");
+  const double x_CM = Pgetd_E("x_CM");
+  //const double C_BH = 0.5*Pgetd_E("BH_NS_separation");
+  const double Omega_BHNS = Pgetd_E("BH_NS_orbital_angular_velocity");
   const unsigned nn = patch->nn;
   unsigned ijk;
   double H,k0,k1,k2,kt;/* in ds^2 = (eta_ij+2*H*ki*kj)dx^i*dx^j */

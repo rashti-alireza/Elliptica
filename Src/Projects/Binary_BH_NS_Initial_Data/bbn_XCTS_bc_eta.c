@@ -32,16 +32,16 @@ eta[ijk] - 1;
   }/* end of if (patch->outerB) */
   else if (patch->innerB)/* at inner boundary */
   {
-  const double r02   = SQR(GetParameterD_E("RollOff_distance"));
-  const double M_BH  = GetParameterD_E("BH_mass");
-  const double a  = GetParameterD_E("BH_X_U2")*M_BH;
+  const double r02   = SQR(Pgetd_E("RollOff_distance"));
+  const double M_BH  = Pgetd_E("BH_mass");
+  const double a  = Pgetd_E("BH_X_U2")*M_BH;
   const double a2 = SQR(a);
-  const double BH_center_x = GetParameterD_E("BH_center_x");
-  const double BH_center_y = GetParameterD_E("BH_center_y");
-  const double BH_center_z = GetParameterD_E("BH_center_z");
-  const double Omega_BHNS = GetParameterD_E("BH_NS_orbital_angular_velocity");
-  const double y_CM = GetParameterD_E("y_CM");
-  const double x_CM = GetParameterD_E("x_CM");
+  const double BH_center_x = Pgetd_E("BH_center_x");
+  const double BH_center_y = Pgetd_E("BH_center_y");
+  const double BH_center_z = Pgetd_E("BH_center_z");
+  const double Omega_BHNS = Pgetd_E("BH_NS_orbital_angular_velocity");
+  const double y_CM = Pgetd_E("y_CM");
+  const double x_CM = Pgetd_E("x_CM");
   Transformation_T *t = initialize_transformation();
   double Bx,By,Bz;/* B = v/c */
   double H,kt;/* in ds^2 = (delta_ij+2*H*ki*kj)dx^i*dx^j */

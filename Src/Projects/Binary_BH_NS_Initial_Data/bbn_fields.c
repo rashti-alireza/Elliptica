@@ -814,9 +814,9 @@ void bbn_update_derivative_B0_U2(Patch_T *const patch)
 /* updating derivative */
 void bbn_update_derivative_B1_U2(Patch_T *const patch)
 {
-  //const double D          = GetParameterD_E("BH_NS_separation");
-  //const double Vr         = GetParameterD_E("BH_NS_infall_velocity");
-  //const double Omega_BHNS = GetParameterD_E("BH_NS_orbital_angular_velocity"); 
+  //const double D          = Pgetd_E("BH_NS_separation");
+  //const double Vr         = Pgetd_E("BH_NS_infall_velocity");
+  //const double Omega_BHNS = Pgetd_E("BH_NS_orbital_angular_velocity"); 
   const unsigned nn = patch->nn;
   unsigned ijk;
   
@@ -850,9 +850,9 @@ void bbn_update_derivative_B1_U2(Patch_T *const patch)
 /* updating derivative */
 void bbn_update_derivative_B1_U1(Patch_T *const patch)
 {
-  const double D          = GetParameterD_E("BH_NS_separation");
-  const double Vr         = GetParameterD_E("BH_NS_infall_velocity");
-  const double Omega_BHNS = GetParameterD_E("BH_NS_orbital_angular_velocity"); 
+  const double D          = Pgetd_E("BH_NS_separation");
+  const double Vr         = Pgetd_E("BH_NS_infall_velocity");
+  const double Omega_BHNS = Pgetd_E("BH_NS_orbital_angular_velocity"); 
   const unsigned nn = patch->nn;
   unsigned ijk;
   
@@ -886,9 +886,9 @@ void bbn_update_derivative_B1_U1(Patch_T *const patch)
 /* updating derivative */
 void bbn_update_derivative_B1_U0(Patch_T *const patch)
 {
-  const double D          = GetParameterD_E("BH_NS_separation");
-  const double Vr         = GetParameterD_E("BH_NS_infall_velocity");
-  const double Omega_BHNS = GetParameterD_E("BH_NS_orbital_angular_velocity"); 
+  const double D          = Pgetd_E("BH_NS_separation");
+  const double Vr         = Pgetd_E("BH_NS_infall_velocity");
+  const double Omega_BHNS = Pgetd_E("BH_NS_orbital_angular_velocity"); 
   const unsigned nn = patch->nn;
   unsigned ijk;
   
@@ -1135,7 +1135,7 @@ void bbn_update_stress_energy_tensor(Grid_T *const grid,const int flag)
   pr_line_custom('=');
   printf("{ Updating enthalpy, rest-mass density and their derivatives ...\n");
   
-  const double W1  = GetParameterD_E("Solving_Field_Update_Weight");
+  const double W1  = Pgetd_E("Solving_Field_Update_Weight");
   const double W2  = 1-W1;
   unsigned p;
   
@@ -1217,11 +1217,11 @@ void bbn_update_stress_energy_tensor(Grid_T *const grid,const int flag)
 /* updaing B1 */
 void bbn_update_B1_U012(Patch_T *const patch)
 {
-  const double Omega_BHNS = GetParameterD_E("BH_NS_orbital_angular_velocity");
-  const double Vr   = GetParameterD_E("BH_NS_infall_velocity");
-  const double D    = GetParameterD_E("BH_NS_separation");
-  const double y_CM = GetParameterD_E("y_CM");
-  const double x_CM = GetParameterD_E("x_CM");
+  const double Omega_BHNS = Pgetd_E("BH_NS_orbital_angular_velocity");
+  const double Vr   = Pgetd_E("BH_NS_infall_velocity");
+  const double D    = Pgetd_E("BH_NS_separation");
+  const double y_CM = Pgetd_E("y_CM");
+  const double x_CM = Pgetd_E("x_CM");
   const unsigned nn = patch->nn;
   unsigned ijk;
     

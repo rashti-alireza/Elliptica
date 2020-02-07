@@ -31,7 +31,7 @@ int default_stop_criteria_solve_equations(Grid_T *const grid,const char *const n
   int stop = 1;
   int stop_max = 1;
   int stop_res = 0;
-  const double res_d    = GetParameterD_E("Solving_Residual");/* desired residual */
+  const double res_d    = Pgetd_E("Solving_Residual");/* desired residual */
   const int max_step    = Pgeti_E("Solving_Max_Number_of_Newton_Step");
   const unsigned npatch = grid->np;
   unsigned p;
@@ -85,7 +85,7 @@ int default_stop_criteria_solve_equations(Grid_T *const grid,const char *const n
 double get_relaxation_factor_solve_equations(Solve_Equations_T *const solve)
 {
   const char *f_name = solve->field_name;
-  double factor = GetParameterD("Solving_Newton_Update_Weight");/* relaxation factor */
+  double factor = Pgetd("Solving_Newton_Update_Weight");/* relaxation factor */
   char par[400] = {'\0'};
   
   if (factor == DBL_MAX)/* if no such parameter defined */
@@ -94,7 +94,7 @@ double get_relaxation_factor_solve_equations(Solve_Equations_T *const solve)
   if (f_name)
   {
     sprintf(par,"Solving_Newton_Update_Weight_%s",f_name);
-    double factor2 = GetParameterD(par);
+    double factor2 = Pgetd(par);
     if (factor2 != DBL_MAX)
       factor = factor2;
   }

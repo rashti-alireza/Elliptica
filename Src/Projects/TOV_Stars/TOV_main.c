@@ -23,7 +23,7 @@ int TOV_star(void)
     N += 1;
     
   tov->N = N;
-  tov->bar_m = GetParameterD_E("TOV_star_baryonic_mass");
+  tov->bar_m = Pgetd_E("TOV_star_baryonic_mass");
   tov->description = "A TOV star";
   tov = TOV_solution(tov);
   r = tov->r;

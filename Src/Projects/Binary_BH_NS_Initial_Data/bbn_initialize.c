@@ -128,7 +128,7 @@ static void keep_NS_center_fixed(Grid_T *const grid)
   pr_line_custom('=');
   printf("{ Adjusting NS center ...\n\n");
   
-  const double C    = -0.5*GetParameterD_E("BH_NS_separation");
+  const double C    = -0.5*Pgetd_E("BH_NS_separation");
   struct NC_Center_RootFinder_S par[1] = {0};
   Root_Finder_T root_finder[1] = {0};
   const double x_center[3] = {0,C,0};
@@ -210,9 +210,9 @@ static void P_ADM_control(Grid_T *const grid)
   plan_observable(obs);
   
   /* get previous P_ADMs */
-  p1[0] = GetParameterD_E("P_ADM_x");
-  p1[1] = GetParameterD_E("P_ADM_y");
-  p1[2] = GetParameterD_E("P_ADM_z");
+  p1[0] = Pgetd_E("P_ADM_x");
+  p1[1] = Pgetd_E("P_ADM_y");
+  p1[2] = Pgetd_E("P_ADM_z");
   
   /* get the current P_ADMs */
   p2[0] = obs->Px_ADM(obs);
@@ -391,7 +391,7 @@ static void force_balance_eq(Grid_T *const grid)
 
   struct NC_Center_RootFinder_S dh_par[1] = {0};
   Root_Finder_T root_finder[1]            = {0};
-  const double D            = GetParameterD_E("BH_NS_separation");
+  const double D            = Pgetd_E("BH_NS_separation");
   const double NS_center[3] = {0,-D/2,0};/* since we keep the NS center always here */
   char *adjust[3];
   const char *const par = Pgets_E("force_balance_equation");
@@ -460,16 +460,16 @@ static void force_balance_eq(Grid_T *const grid)
 /* adjust Px ADM by changing the center of BH. */
 static void Px_ADM_is0_by_BH_center_y(Grid_T *const grid)
 {
-  const double W1 = GetParameterD_E("Solving_Field_Update_Weight");
+  const double W1 = Pgetd_E("Solving_Field_Update_Weight");
   const double W2 = 1-W1;
-  const double dP = GetParameterD_E("P_ADM_control_tolerance");
-  const double Omega_BHNS = GetParameterD_E("BH_NS_orbital_angular_velocity");
-  const double BH_center_y = GetParameterD_E("BH_center_y");
+  const double dP = Pgetd_E("P_ADM_control_tolerance");
+  const double Omega_BHNS = Pgetd_E("BH_NS_orbital_angular_velocity");
+  const double BH_center_y = Pgetd_E("BH_center_y");
   double px0,px,BH_center_y_new,dy;
   
   /* get P_ADM */
-  px = GetParameterD_E("P_ADM_x");
-  px0  = GetParameterD_E("P_ADM_x_prev");
+  px = Pgetd_E("P_ADM_x");
+  px0  = Pgetd_E("P_ADM_x_prev");
   
   /* changing center of mass */
   dy              = px/Omega_BHNS;
@@ -494,16 +494,16 @@ static void Px_ADM_is0_by_BH_center_y(Grid_T *const grid)
 /* adjust Py ADM by changing the center of BH. */
 static void Py_ADM_is0_by_BH_center_x(Grid_T *const grid)
 {
-  const double W1 = GetParameterD_E("Solving_Field_Update_Weight");
+  const double W1 = Pgetd_E("Solving_Field_Update_Weight");
   const double W2 = 1-W1;
-  const double dP = GetParameterD_E("P_ADM_control_tolerance");
-  const double Omega_BHNS = GetParameterD_E("BH_NS_orbital_angular_velocity");
-  const double BH_center_x = GetParameterD_E("BH_center_x");
+  const double dP = Pgetd_E("P_ADM_control_tolerance");
+  const double Omega_BHNS = Pgetd_E("BH_NS_orbital_angular_velocity");
+  const double BH_center_x = Pgetd_E("BH_center_x");
   double py0,py,BH_center_x_new,dx;
   
   /* get P_ADM */
-  py = GetParameterD_E("P_ADM_y");
-  py0  = GetParameterD_E("P_ADM_y_prev");
+  py = Pgetd_E("P_ADM_y");
+  py0  = Pgetd_E("P_ADM_y_prev");
   
   /* changing center of mass */
   dx              = -py/Omega_BHNS;
@@ -530,8 +530,8 @@ static void Py_ADM_is0_by_BH_center_x(Grid_T *const grid)
 static void Px_ADM_is0_by_x_boost(Grid_T *const grid)
 {
   const double SMALL_FAC = 1E-2;
-  const double dP   = GetParameterD_E("P_ADM_control_tolerance");
-  const double W    = GetParameterD_E("Solving_Field_Update_Weight");
+  const double dP   = Pgetd_E("P_ADM_control_tolerance");
+  const double W    = Pgetd_E("Solving_Field_Update_Weight");
   double p1[3] = {0};
   double p2[3] = {0};
   double v1[3] = {0};
@@ -541,10 +541,10 @@ static void Px_ADM_is0_by_x_boost(Grid_T *const grid)
   static unsigned iter = 0;
   
   /* get previous P_ADMs */
-  p1[0] = GetParameterD_E("P_ADM_x_prev");
+  p1[0] = Pgetd_E("P_ADM_x_prev");
   
   /* get the current P_ADMs */
-  p2[0] = GetParameterD_E("P_ADM_x");
+  p2[0] = Pgetd_E("P_ADM_x");
   
   if (iter == 0)
   {
@@ -557,13 +557,13 @@ static void Px_ADM_is0_by_x_boost(Grid_T *const grid)
   else if (iter > 1)
   {
     /* get the penultimate boost velocity */
-    v1[0] = GetParameterD_E("v1_boost_x");
+    v1[0] = Pgetd_E("v1_boost_x");
     
     /* get the ultimate boost velocity */
-    v2[0] = GetParameterD_E("v2_boost_x");
+    v2[0] = Pgetd_E("v2_boost_x");
     
     /* get the boost velocity */
-    v0[0] = GetParameterD_E("v*_boost_x");
+    v0[0] = Pgetd_E("v*_boost_x");
     
     /* calculate the new boost velocity */
     v[0] = (v2[0]*p1[0]-v1[0]*p2[0])/(p1[0]-p2[0]);
@@ -602,8 +602,8 @@ static void Px_ADM_is0_by_x_boost(Grid_T *const grid)
 static void Py_ADM_is0_by_y_boost(Grid_T *const grid)
 {
   const double SMALL_FAC = 1E-2;
-  const double dP   = GetParameterD_E("P_ADM_control_tolerance");
-  const double W    = GetParameterD_E("Solving_Field_Update_Weight");
+  const double dP   = Pgetd_E("P_ADM_control_tolerance");
+  const double W    = Pgetd_E("Solving_Field_Update_Weight");
   double p1[3] = {0};
   double p2[3] = {0};
   double v1[3] = {0};
@@ -613,10 +613,10 @@ static void Py_ADM_is0_by_y_boost(Grid_T *const grid)
   static unsigned iter = 0;
   
   /* get previous P_ADMs */
-  p1[1] = GetParameterD_E("P_ADM_y_prev");
+  p1[1] = Pgetd_E("P_ADM_y_prev");
   
   /* get the current P_ADMs */
-  p2[1] = GetParameterD_E("P_ADM_y");
+  p2[1] = Pgetd_E("P_ADM_y");
   
   if (iter == 0)
   {
@@ -629,13 +629,13 @@ static void Py_ADM_is0_by_y_boost(Grid_T *const grid)
   else if (iter > 1)
   {
     /* get the penultimate boost velocity */
-    v1[1] = GetParameterD_E("v1_boost_y");
+    v1[1] = Pgetd_E("v1_boost_y");
     
     /* get the ultimate boost velocity */
-    v2[1] = GetParameterD_E("v2_boost_y");
+    v2[1] = Pgetd_E("v2_boost_y");
     
     /* get the boost velocity */
-    v0[1] = GetParameterD_E("v*_boost_y");
+    v0[1] = Pgetd_E("v*_boost_y");
     
     /* calculate the new boost velocity */
     v[1] = (v2[1]*p1[1]-v1[1]*p2[1])/(p1[1]-p2[1]);
@@ -673,8 +673,8 @@ static void Py_ADM_is0_by_y_boost(Grid_T *const grid)
 static void Pz_ADM_is0_by_z_boost(Grid_T *const grid)
 {
   const double SMALL_FAC = 1E-2;
-  const double dP   = GetParameterD_E("P_ADM_control_tolerance");
-  const double W    = GetParameterD_E("Solving_Field_Update_Weight");
+  const double dP   = Pgetd_E("P_ADM_control_tolerance");
+  const double W    = Pgetd_E("Solving_Field_Update_Weight");
   double p1[3] = {0};
   double p2[3] = {0};
   double v1[3] = {0};
@@ -684,10 +684,10 @@ static void Pz_ADM_is0_by_z_boost(Grid_T *const grid)
   static unsigned iter = 0;
   
   /* get previous P_ADMs */
-  p1[2] = GetParameterD_E("P_ADM_z_prev");
+  p1[2] = Pgetd_E("P_ADM_z_prev");
   
   /* get the current P_ADMs */
-  p2[2] = GetParameterD_E("P_ADM_z");
+  p2[2] = Pgetd_E("P_ADM_z");
   
   if (iter == 0)
   {
@@ -700,13 +700,13 @@ static void Pz_ADM_is0_by_z_boost(Grid_T *const grid)
   else if (iter > 1)
   {
     /* get the penultimate boost velocity */
-    v1[2] = GetParameterD_E("v1_boost_z");
+    v1[2] = Pgetd_E("v1_boost_z");
     
     /* get the ultimate boost velocity */
-    v2[2] = GetParameterD_E("v2_boost_z");
+    v2[2] = Pgetd_E("v2_boost_z");
     
     /* get the boost velocity */
-    v0[2] = GetParameterD_E("v*_boost_z");
+    v0[2] = Pgetd_E("v*_boost_z");
     
     /* calculate the new boost velocity */
     v[2] = (v2[2]*p1[2]-v1[2]*p2[2])/(p1[2]-p2[2]);
@@ -794,7 +794,7 @@ static void adjust_NS_center_draw_enthalpy(Grid_T *const grid)
   
   char par_name[1000];
   double *NS_center = 0;
-  const double C    = -0.5*GetParameterD_E("BH_NS_separation");
+  const double C    = -0.5*Pgetd_E("BH_NS_separation");
   sprintf(par_name,"grid%u_NS_center_x",grid->gn);
   NS_center = GetParameterArrayF_E(par_name);
   const double R[3] = {NS_center[0],NS_center[1]-C,NS_center[2]};
@@ -936,14 +936,14 @@ static void force_balance_ddz_Omega(Grid_T *const grid)
 /* find parameter par using force balance equation in direction dir */
 static void force_balance_eq_root_finders(Grid_T *const grid,const int dir, const char *const par)
 {
-  const double D            = GetParameterD_E("BH_NS_separation");
-  const double Vr           = GetParameterD_E("BH_NS_infall_velocity");
+  const double D            = Pgetd_E("BH_NS_separation");
+  const double Vr           = Pgetd_E("BH_NS_infall_velocity");
   const double NS_center[3] = {0,-D/2,0};/* since we keep the NS center always here */
-  const double RESIDUAL     = sqrt(GetParameterD_E("RootFinder_Tolerance"));
-  const double Omega_BHNS   = GetParameterD_E("BH_NS_orbital_angular_velocity");
-  const double y_CM         = GetParameterD_E("y_CM");
-  const double x_CM         = GetParameterD_E("x_CM");
-  const double W1  = GetParameterD_E("Solving_Field_Update_Weight");
+  const double RESIDUAL     = sqrt(Pgetd_E("RootFinder_Tolerance"));
+  const double Omega_BHNS   = Pgetd_E("BH_NS_orbital_angular_velocity");
+  const double y_CM         = Pgetd_E("y_CM");
+  const double x_CM         = Pgetd_E("x_CM");
+  const double W1  = Pgetd_E("Solving_Field_Update_Weight");
   const double W2  = 1-W1;
   double *new_par,old_par;
   double guess[1],X[3];
@@ -1013,7 +1013,7 @@ static void force_balance_eq_root_finders(Grid_T *const grid,const int dir, cons
   root->description   = desc;
   root->verbose       = 1;
   root->type          = Pgets_E("RootFinder_Method");
-  root->tolerance     = GetParameterD_E("RootFinder_Tolerance");
+  root->tolerance     = Pgetd_E("RootFinder_Tolerance");
   root->MaxIter       = (unsigned)Pgeti_E("RootFinder_Max_Number_of_Iteration");
   root->x_gss         = guess;
   root->params        = params;
@@ -1045,17 +1045,17 @@ static void find_NS_center(Grid_T *const grid)
   double *NS_center;
   Root_Finder_T *root = init_root_finder(3);
   struct NC_Center_RootFinder_S params[1];
-  const double RESIDUAL = sqrt(GetParameterD_E("RootFinder_Tolerance"));
+  const double RESIDUAL = sqrt(Pgetd_E("RootFinder_Tolerance"));
   Flag_T success_f = NONE;
   double guess[3];/* initial guess for root finder */
   char par_name[1000];
   unsigned p;
   
   guess[0] = guess[2] = 0;
-  guess[1] = -0.5*GetParameterD_E("BH_NS_separation");
+  guess[1] = -0.5*Pgetd_E("BH_NS_separation");
   params->root_finder = root;
   root->type        = Pgets_E("RootFinder_Method");
-  root->tolerance   = GetParameterD_E("RootFinder_Tolerance");
+  root->tolerance   = Pgetd_E("RootFinder_Tolerance");
   root->MaxIter     = (unsigned)Pgeti_E("RootFinder_Max_Number_of_Iteration");
   root->x_gss       = guess;
   root->params      = params;
@@ -1234,18 +1234,18 @@ static void find_Euler_eq_const(Grid_T *const grid)
   printf("{ Finding Euler equation constant using NS baryonic mass ...\n");
   
   Root_Finder_T *root = init_root_finder(1);
-  const double W1  = GetParameterD_E("Solving_Field_Update_Weight");
+  const double W1  = Pgetd_E("Solving_Field_Update_Weight");
   const double W2  = 1-W1;
   double *Euler_const = 0;
   double guess[1];/* initial guess for Euler const */
   struct Euler_eq_const_RootFinder_S params[1];
   
   params->grid = grid;
-  params->NS_baryonic_mass = GetParameterD_E("NS_baryonic_mass");
-  guess[0] = GetParameterD_E("Euler_equation_constant");
+  params->NS_baryonic_mass = Pgetd_E("NS_baryonic_mass");
+  guess[0] = Pgetd_E("Euler_equation_constant");
   
   root->type        = Pgets_E("RootFinder_Method");
-  root->tolerance   = GetParameterD_E("RootFinder_Tolerance");
+  root->tolerance   = Pgetd_E("RootFinder_Tolerance");
   root->MaxIter     = (unsigned)Pgeti_E("RootFinder_Max_Number_of_Iteration");
   root->x_gss       = guess;
   root->params      = params;
@@ -1269,16 +1269,16 @@ static void find_Euler_eq_const(Grid_T *const grid)
 static void Px_ADM_is0_by_y_CM(Grid_T *const grid)
 {
   double dy_CM = 0,px0,y_CM_new,px;
-  const double W    = GetParameterD_E("Solving_Field_Update_Weight");
-  const double dP   = GetParameterD_E("P_ADM_control_tolerance");
-  const double Omega_BHNS = GetParameterD_E("BH_NS_orbital_angular_velocity");
-  const double y_CM0 = GetParameterD_E("y_CM0");
-  const double M_NS  = GetParameterD_E("NS_mass");
-  const double M_BH  = GetParameterD_E("BH_mass");
+  const double W    = Pgetd_E("Solving_Field_Update_Weight");
+  const double dP   = Pgetd_E("P_ADM_control_tolerance");
+  const double Omega_BHNS = Pgetd_E("BH_NS_orbital_angular_velocity");
+  const double y_CM0 = Pgetd_E("y_CM0");
+  const double M_NS  = Pgetd_E("NS_mass");
+  const double M_BH  = Pgetd_E("BH_mass");
   
   /* get P_ADM */
-  px  = GetParameterD_E("P_ADM_x");
-  px0 = GetParameterD_E("P_ADM_x_prev");
+  px  = Pgetd_E("P_ADM_x");
+  px0 = Pgetd_E("P_ADM_x_prev");
   
   /* changing center of mass */
   dy_CM    = -px/(Omega_BHNS*(M_NS+M_BH));
@@ -1305,16 +1305,16 @@ static void Px_ADM_is0_by_y_CM(Grid_T *const grid)
 static void Py_ADM_is0_by_x_CM(Grid_T *const grid)
 {
   double  dx_CM = 0,py0,x_CM_new,py;
-  const double W    = GetParameterD_E("Solving_Field_Update_Weight");
-  const double dP   = GetParameterD_E("P_ADM_control_tolerance");
-  const double Omega_BHNS = GetParameterD_E("BH_NS_orbital_angular_velocity");
-  const double x_CM0 = GetParameterD_E("x_CM0");
-  const double M_NS  = GetParameterD_E("NS_mass");
-  const double M_BH  = GetParameterD_E("BH_mass");
+  const double W    = Pgetd_E("Solving_Field_Update_Weight");
+  const double dP   = Pgetd_E("P_ADM_control_tolerance");
+  const double Omega_BHNS = Pgetd_E("BH_NS_orbital_angular_velocity");
+  const double x_CM0 = Pgetd_E("x_CM0");
+  const double M_NS  = Pgetd_E("NS_mass");
+  const double M_BH  = Pgetd_E("BH_mass");
   
   /* get P_ADM */
-  py  = GetParameterD_E("P_ADM_y");
-  py0 = GetParameterD_E("P_ADM_y_prev");
+  py  = Pgetd_E("P_ADM_y");
+  py0 = Pgetd_E("P_ADM_y_prev");
   
   /* changing center of mass */
   dx_CM    = py/(Omega_BHNS*(M_NS+M_BH));
@@ -1374,11 +1374,11 @@ static void adjust_AH_radius(Grid_T *const grid,struct Grid_Params_S *const Grid
   pr_line_custom('=');
   printf("{ Adjusting apparent horizon radius to meet BH mass ...\n\n");
   
-  const double target_bh_mass  = GetParameterD_E("BH_mass");
-  const double current_r_excision = GetParameterD_E("r_excision");
+  const double target_bh_mass  = Pgetd_E("BH_mass");
+  const double current_r_excision = Pgetd_E("r_excision");
   const double irr_mass    = bbn_BH_irreducible_mass(grid);
   const double kommar_mass = bbn_BH_Kommar_mass(grid);
-  const double W  = GetParameterD_E("BH_AH_change_weight");
+  const double W  = Pgetd_E("BH_AH_change_weight");
   double dr, r_excision, current_bh_mass;
   
   printf("|--> current BH Kommar's mass    = %e\n",kommar_mass);
@@ -1423,8 +1423,8 @@ static void adjust_BH_Omega(Grid_T *const grid,struct Grid_Params_S *const GridP
   printf("{ Adjusting BH Omega ...\n");
   UNUSED(grid);
   
-  const double bh_chi  = GetParameterD_E("BH_X_U2");
-  const double bh_mass = GetParameterD_E("BH_mass");
+  const double bh_chi  = Pgetd_E("BH_X_U2");
+  const double bh_mass = Pgetd_E("BH_mass");
   
   GridParams->a_BH   = bh_chi*bh_mass;
   
@@ -2069,10 +2069,10 @@ static void interpolate_and_initialize_to_next_grid(Grid_T *const grid_next,Grid
   
   /* initializing some other fields: */
   /* W_U[0-2],Beta_U[0-2],B1_U[0-2] */
-  const double Omega_NS_x = GetParameterD_E("NS_Omega_U0");
-  const double Omega_NS_y = GetParameterD_E("NS_Omega_U1");
-  const double Omega_NS_z = GetParameterD_E("NS_Omega_U2");
-  const double C_NS = GetParameterD_E("NS_Center");
+  const double Omega_NS_x = Pgetd_E("NS_Omega_U0");
+  const double Omega_NS_y = Pgetd_E("NS_Omega_U1");
+  const double Omega_NS_z = Pgetd_E("NS_Omega_U2");
+  const double C_NS = Pgetd_E("NS_Center");
   
   OpenMP_Patch_Pragma(omp parallel for)
   for (p = 0; p < np; ++p)
@@ -2246,8 +2246,8 @@ static void find_NS_surface_Ylm_method_CS(Grid_T *const grid,struct Grid_Params_
   struct NS_surface_RootFinder_S par[1];
   unsigned Ntheta,Nphi;/* total number of theta and phi points */
   const unsigned lmax = (unsigned)Pgeti_E("NS_surface_Ylm_expansion_max_l");
-  const double RESIDUAL = sqrt(GetParameterD_E("RootFinder_Tolerance"));
-  //const double W1  = GetParameterD_E("Solving_Field_Update_Weight");
+  const double RESIDUAL = sqrt(Pgetd_E("RootFinder_Tolerance"));
+  //const double W1  = Pgetd_E("Solving_Field_Update_Weight");
   //const double W2  = 1-W1;
   double theta,phi;
   double *Rnew_NS = 0;/* new R for NS */
@@ -2262,7 +2262,7 @@ static void find_NS_surface_Ylm_method_CS(Grid_T *const grid,struct Grid_Params_
   /* populate root finder */
   Root_Finder_T *root = init_root_finder(1);
   root->type      = Pgets_E("RootFinder_Method");
-  root->tolerance = GetParameterD_E("RootFinder_Tolerance");
+  root->tolerance = Pgetd_E("RootFinder_Tolerance");
   root->MaxIter   = (unsigned)Pgeti_E("RootFinder_Max_Number_of_Iteration");
   root->x_gss     = &guess;
   root->params    = par;
@@ -2757,9 +2757,9 @@ static void extrapolate_insideBH(Grid_T *const grid)
 // W fields keep their forms and enthalpy is made using the general formula. */
 static void extrapolate_outsideNS_CS_continuity_method(Grid_T *const grid)
 {
-  const double Omega_NS_x = GetParameterD_E("NS_Omega_U0");
-  const double Omega_NS_y = GetParameterD_E("NS_Omega_U1");
-  const double Omega_NS_z = GetParameterD_E("NS_Omega_U2");
+  const double Omega_NS_x = Pgetd_E("NS_Omega_U0");
+  const double Omega_NS_y = Pgetd_E("NS_Omega_U1");
+  const double Omega_NS_z = Pgetd_E("NS_Omega_U2");
   const double att = 0.1;/* exp(-att*(r2-r1)) */
   unsigned p;
   
@@ -3246,7 +3246,7 @@ static Grid_T *TOV_KerrSchild_approximation(void)
    
   /* solve fields for a TOV star located at left side of y axis */
   TOV_T *tov = TOV_init();
-  tov->bar_m = GetParameterD_E("NS_baryonic_mass");
+  tov->bar_m = Pgetd_E("NS_baryonic_mass");
   tov->description = "Estimating NS";
   tov = TOV_solution(tov);
   const double ns_R = tov->rbar[tov->N-1];
@@ -3254,8 +3254,8 @@ static Grid_T *TOV_KerrSchild_approximation(void)
   /* basics of Kerr Schild black hole located at right side of y axis */
   pr_line_custom('=');
   printf("{ Acquiring Black Hole properties ...\n");
-  const double bh_chi  = GetParameterD_E("BH_X_U2");
-  const double bh_mass = GetParameterD_E("BH_mass");
+  const double bh_chi  = Pgetd_E("BH_X_U2");
+  const double bh_mass = Pgetd_E("BH_mass");
   const double bh_R    = bh_mass*(1+sqrt(1-SQR(bh_chi)));
   printf("BH properties:\n");
   printf("--> BH radius (Kerr-Schild Coords.) = %e\n",bh_R);
@@ -3272,7 +3272,7 @@ static Grid_T *TOV_KerrSchild_approximation(void)
   update_parameter_integer("use_previous_data",0);
   
   /* center of rotation (approx. Center of Mass) */
-  const double D = GetParameterD_E("BH_NS_separation");
+  const double D = Pgetd_E("BH_NS_separation");
   const double C_BH = 0.5*D;/* center of BH patch, it's on +y axis */
   const double C_NS = -C_BH;/* center of NS it's on -y axis*/
   const double ns_mass = tov->ADM_m;/* NS adm mass */
@@ -3500,9 +3500,9 @@ static void make_normal_vector_on_BH_horizon(Grid_T *const grid,struct Grid_Para
   pr_line_custom('=');
   printf("{ Making normal vector on BH horizon ...\n");
   
-  const double BH_center_x = GetParameterD_E("BH_center_x");
-  const double BH_center_y = GetParameterD_E("BH_center_y");
-  const double BH_center_z = GetParameterD_E("BH_center_z");
+  const double BH_center_x = Pgetd_E("BH_center_x");
+  const double BH_center_y = Pgetd_E("BH_center_y");
+  const double BH_center_z = Pgetd_E("BH_center_z");
   unsigned p,nn,ijk;
   
   if (strcmp_i(GridParams->BH_R_type,"PerfectSphere"))
@@ -3581,19 +3581,19 @@ static void init_field_TOV_plus_KerrSchild(Grid_T *const grid,const TOV_T *const
   
   Transformation_T *t = initialize_transformation();
   const double M_NS = tov->ADM_m;/* NS adm mass */
-  const double D = GetParameterD_E("BH_NS_separation");
-  const double BH_center_x = GetParameterD_E("BH_center_x");
-  const double BH_center_y = GetParameterD_E("BH_center_y");
-  const double BH_center_z = GetParameterD_E("BH_center_z");
+  const double D = Pgetd_E("BH_NS_separation");
+  const double BH_center_x = Pgetd_E("BH_center_x");
+  const double BH_center_y = Pgetd_E("BH_center_y");
+  const double BH_center_z = Pgetd_E("BH_center_z");
   const double C_NS = -0.5*D;/* center of NS it's on -y axis*/
   const double R_Schwar = tov->r[tov->N-1];/* NS's Schwarzchild radius */
   const double a2_BH = SQR(a_BH);/* spin vector of BH */
-  const double y_CM = GetParameterD_E("y_CM");
-  const double x_CM = GetParameterD_E("x_CM");
-  const double Omega_BHNS = GetParameterD_E("BH_NS_orbital_angular_velocity");
-  const double Omega_NS_x = GetParameterD_E("NS_Omega_U0");
-  const double Omega_NS_y = GetParameterD_E("NS_Omega_U1");
-  const double Omega_NS_z = GetParameterD_E("NS_Omega_U2");
+  const double y_CM = Pgetd_E("y_CM");
+  const double x_CM = Pgetd_E("x_CM");
+  const double Omega_BHNS = Pgetd_E("BH_NS_orbital_angular_velocity");
+  const double Omega_NS_x = Pgetd_E("NS_Omega_U0");
+  const double Omega_NS_y = Pgetd_E("NS_Omega_U1");
+  const double Omega_NS_z = Pgetd_E("NS_Omega_U2");
   double Bx,By,Bz;/* B = v/c */
   unsigned p;
   
@@ -3904,7 +3904,7 @@ static Grid_T *creat_bbn_grid_CS(struct Grid_Params_S *const GridParams)
   const double Max_R_NS_l = GridParams->Max_R_NS_l;/* maximum radius of NS */
   const double R_BH_r     = GridParams->R_BH_r;
   const unsigned gn = grid_next->gn;
-  const double S    = GetParameterD_E("BH_NS_separation");
+  const double S    = Pgetd_E("BH_NS_separation");
   const unsigned N_Outermost_Split = (unsigned)Pgeti_E("Number_of_Outermost_Split"); 
   double *R_outermost = alloc_double(N_Outermost_Split);
   double box_size_l,box_size_r;
@@ -3936,13 +3936,13 @@ static Grid_T *creat_bbn_grid_CS(struct Grid_Params_S *const GridParams)
   /* making NS and BH surfaces function */
   NS_BH_surface_CubedSpherical_grid(grid_next,GridParams);
   
-  box_size_l = GetParameterD_E("left_central_box_length_ratio")*Max_R_NS_l;
-  box_size_r = GetParameterD_E("left_central_box_length_ratio")*R_BH_r;/* use same ratio as NS */
+  box_size_l = Pgetd_E("left_central_box_length_ratio")*Max_R_NS_l;
+  box_size_r = Pgetd_E("left_central_box_length_ratio")*R_BH_r;/* use same ratio as NS */
   
   for (i = 0; i < N_Outermost_Split; i++)
   {
     sprintf(var,"Outermost%u_radius",i);
-    R_outermost[i] = GetParameterD_E(var);
+    R_outermost[i] = Pgetd_E(var);
     
     if (LSS(R_outermost[i],2*S))
       abortEr("The radius of outermost patches must be greater than twice of BBN distance.");
@@ -4339,11 +4339,11 @@ static void NS_BH_surface_CubedSpherical_grid(Grid_T *const grid,struct Grid_Par
   const double Max_R_NS_l = GridParams->Max_R_NS_l;/* maximum radius of NS */
   const double R_BH_r     = GridParams->R_BH_r;
   const double a_BH       = GridParams->a_BH;
-  const double y_CM       = GetParameterD_E("y_CM");
-  const double C_BH       = 0.5*GetParameterD_E("BH_NS_separation");/* center of BH patch it's on +y axis */
-  const double Omega_BHNS = GetParameterD_E("BH_NS_orbital_angular_velocity");
+  const double y_CM       = Pgetd_E("y_CM");
+  const double C_BH       = 0.5*Pgetd_E("BH_NS_separation");/* center of BH patch it's on +y axis */
+  const double Omega_BHNS = Pgetd_E("BH_NS_orbital_angular_velocity");
   const double g2         = 1-SQR(-Omega_BHNS*(C_BH-y_CM));/* inverse square of Lorentz factor  */
-  const double BH_center[3] = {GetParameterD_E("BH_center_x"),GetParameterD_E("BH_center_y")-C_BH,GetParameterD_E("BH_center_z")};
+  const double BH_center[3] = {Pgetd_E("BH_center_x"),Pgetd_E("BH_center_y")-C_BH,Pgetd_E("BH_center_z")};
   double *R;
   char par[1000] = {'\0'};
   unsigned N[3],n,i,j,k,N_total;
@@ -4637,7 +4637,7 @@ static void NS_BH_surface_CubedSpherical_grid(Grid_T *const grid,struct Grid_Par
   free(R);
   
   /* should we change the NS surface */
-  const double NS_surf_tolerance = GetParameterD_E("NS_surface_tolerance");
+  const double NS_surf_tolerance = Pgetd_E("NS_surface_tolerance");
   const double dR_rms = sqrt(dR_sum_square);
   
   /* if dR_rms is small do not change the NS surface function */

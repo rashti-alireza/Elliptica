@@ -604,10 +604,10 @@ static void characteristics_BBN_CS_grid_eg(Grid_T *const grid)
 {
   /* calculate the characteristics of this grid */
   const unsigned gn   = grid->gn;
-  const double C      = GetParameterD_E("BH_NS_separation");
-  const double R_NS_l = GetParameterD_E("NS_radius"),
-               bh_m   = GetParameterD_E("BH_mass"),
-               bh_chi = GetParameterD_E("BH_dimensionless_spin"),
+  const double C      = Pgetd_E("BH_NS_separation");
+  const double R_NS_l = Pgetd_E("NS_radius"),
+               bh_m   = Pgetd_E("BH_mass"),
+               bh_chi = Pgetd_E("BH_dimensionless_spin"),
                R_BH_r = bh_m*(1+sqrt(1-SQR(bh_chi)));
                
   double box_size_l;
@@ -633,12 +633,12 @@ static void characteristics_BBN_CS_grid_eg(Grid_T *const grid)
   /* making NS and BH surfaces function */
   NS_BH_surface_CS_grid_eg(grid,R_NS_l,R_BH_r,bh_m*bh_chi);
   
-  box_size_l = GetParameterD_E("left_central_box_length_ratio")*R_NS_l;
+  box_size_l = Pgetd_E("left_central_box_length_ratio")*R_NS_l;
   
   for (i = 0; i < N_Outermost_Split; i++)
   {
     sprintf(var,"Outermost%u_radius",i);
-    R_outermost[i] = GetParameterD_E(var);
+    R_outermost[i] = Pgetd_E(var);
     
     if (LSS(R_outermost[i],2*C))
       abortEr("the radius of outermost patches must be greater than twice of BNS distance.");
@@ -956,9 +956,9 @@ static void NS_BH_surface_CS_grid_eg(Grid_T *const grid,const double R_NS_l,cons
 static void characteristics_BNS_CS_grid_eg(Grid_T *const grid)
 {
   const unsigned gn   = grid->gn;
-  const double C      = GetParameterD_E("BNS_Distance");
-  const double R_NS_l = GetParameterD_E("left_NS_radius");/* assuming perfect sphere */
-  const double R_NS_r = GetParameterD_E("right_NS_radius");/* assuming perfect sphere */
+  const double C      = Pgetd_E("BNS_Distance");
+  const double R_NS_l = Pgetd_E("left_NS_radius");/* assuming perfect sphere */
+  const double R_NS_r = Pgetd_E("right_NS_radius");/* assuming perfect sphere */
   double box_size_l,box_size_r;
   const unsigned N_Outermost_Split = (unsigned)Pgeti_E("Number_of_Outermost_Split"); 
   double *R_outermost = calloc(N_Outermost_Split,sizeof(*R_outermost));
@@ -977,13 +977,13 @@ static void characteristics_BNS_CS_grid_eg(Grid_T *const grid)
   /* making NS's surface function */
   NS_surface_BNS_CS_grid_eg(grid);
   
-  box_size_l = GetParameterD_E("left_central_box_length_ratio")*R_NS_l;
-  box_size_r = GetParameterD_E("right_central_box_length_ratio")*R_NS_r;
+  box_size_l = Pgetd_E("left_central_box_length_ratio")*R_NS_l;
+  box_size_r = Pgetd_E("right_central_box_length_ratio")*R_NS_r;
   
   for (i = 0; i < N_Outermost_Split; i++)
   {
     sprintf(var,"Outermost%u_radius",i);
-    R_outermost[i] = GetParameterD_E(var);
+    R_outermost[i] = Pgetd_E(var);
     
     if (LSS(R_outermost[i],2*C))
       abortEr("the radius of outermost patches must be greater than twice of BNS distance.");
@@ -1129,9 +1129,9 @@ static void characteristics_BNS_CS_grid_eg(Grid_T *const grid)
 static void characteristics_BNS_Spherical_grid_eg(Grid_T *const grid)
 {
   const unsigned gn   = grid->gn;
-  const double C      = GetParameterD_E("BNS_Distance");
-  const double R_NS_l = GetParameterD_E("left_NS_radius");/* assuming perfect sphere */
-  const double R_NS_r = GetParameterD_E("right_NS_radius");/* assuming perfect sphere */
+  const double C      = Pgetd_E("BNS_Distance");
+  const double R_NS_l = Pgetd_E("left_NS_radius");/* assuming perfect sphere */
+  const double R_NS_r = Pgetd_E("right_NS_radius");/* assuming perfect sphere */
   const unsigned N_Outermost_Split = (unsigned)Pgeti_E("Number_of_Outermost_Split"); 
   double O,O_l,O_r,
          R_Surr_l,R_Surr_r,
@@ -1168,7 +1168,7 @@ static void characteristics_BNS_Spherical_grid_eg(Grid_T *const grid)
   for (i = 0; i < N_Outermost_Split; i++)
   {
     sprintf(var,"Outermost%u_radius",i);
-    R0[i] = GetParameterD_E(var);
+    R0[i] = Pgetd_E(var);
     
     assert(GRT(R0[i],s));/* => R2_outermost <= R2_Surr */
     
@@ -1251,8 +1251,8 @@ static void characteristics_BNS_Spherical_grid_eg(Grid_T *const grid)
 // finding the max distance from the center of the star */
 static void NS_radii_BNS_Spherical_grid_eg(Grid_T *const grid,void *vp)
 {
-  const double R_NS_l = GetParameterD_E("left_NS_radius");/* assuming perfect sphere */
-  const double R_NS_r = GetParameterD_E("right_NS_radius");/* assuming perfect sphere */
+  const double R_NS_l = Pgetd_E("left_NS_radius");/* assuming perfect sphere */
+  const double R_NS_r = Pgetd_E("right_NS_radius");/* assuming perfect sphere */
   double *R1,*R2;
   char par[100] = {'\0'};
   unsigned N[3],n,ijk,N_total;
@@ -1345,8 +1345,8 @@ static void NS_radii_BNS_Spherical_grid_eg(Grid_T *const grid,void *vp)
 /* making  NS's surface function */
 static void NS_surface_BNS_CS_grid_eg(Grid_T *const grid)
 {
-  const double R_NS_l = GetParameterD_E("left_NS_radius");/* assuming perfect sphere */
-  const double R_NS_r = GetParameterD_E("right_NS_radius");/* assuming perfect sphere */
+  const double R_NS_l = Pgetd_E("left_NS_radius");/* assuming perfect sphere */
+  const double R_NS_r = Pgetd_E("right_NS_radius");/* assuming perfect sphere */
   double *R;
   char par[100] = {'\0'};
   unsigned N[3],n,i,j,k,N_total;
