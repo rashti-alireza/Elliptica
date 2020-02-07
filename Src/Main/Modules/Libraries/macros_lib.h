@@ -41,7 +41,7 @@
                                        empty_field(xNAME);/* free v,v2 and info of field */
                                        
 /* access to the memory values to modify */
-#define CALL_v(xNAME)   const int _field_index_of_##xNAME = Ind(#xNAME);\
+#define WRITE_v(xNAME)   const int _field_index_of_##xNAME = Ind(#xNAME);\
                         free_coeffs(patch->pool[_field_index_of_##xNAME]);\
                         double *const xNAME = patch->pool[_field_index_of_##xNAME]->v;
                         
@@ -49,7 +49,7 @@
 #define READ_v(xNAME)   const double *const xNAME = patch->pool[Ind(#xNAME)]->v;
 
 /* it frees v,v2,info of field and alloc memory for v */
-#define REALLOC_v_CALL_v(xNAME)    const int _field_index_of_##xNAME = Ind(#xNAME);\
+#define REALLOC_v_WRITE_v(xNAME)    const int _field_index_of_##xNAME = Ind(#xNAME);\
                                    Field_T *const _F_##xNAME         = patch->pool[_field_index_of_##xNAME];\
                                    empty_field(_F_##xNAME);\
                                    _F_##xNAME->v                     = alloc_double(patch->nn);\
@@ -59,9 +59,9 @@
 #define READ_v_UNUSED(xNAME)  READ_v(xNAME)\
                               UNUSED(xNAME);
 
-//#define CALL_v ->MODIFY_FIELD
+//#define WRITE_v ->MODIFY_FIELD
 //#define READ_v ->GET_FIELD
-//#define REALLOC_v_CALL_v ->PREP_FIELD
+//#define REALLOC_v_WRITE_v ->PREP_FIELD
 
                                         
 /* it compactifies the prepration of Jacobian of derivatives */

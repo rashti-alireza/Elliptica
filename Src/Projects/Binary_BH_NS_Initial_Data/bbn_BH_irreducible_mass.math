@@ -5,7 +5,7 @@ Dimension = 3;
 Point = ijk;
 
 C_macro  = READ_v(name);
-C_macro2 = REALLOC_v_CALL_v(name);
+C_macro2 = REALLOC_v_WRITE_v(name);
 
 `#include "bbn_headers.h"\n`
 
@@ -80,7 +80,7 @@ Declare =
 Symm[_gamma(i,j)   = _gamma(j,i)];
 
 `{`# make it local variables
-`    REALLOC_v_CALL_v(A_AH_integrand)`
+`    REALLOC_v_WRITE_v(A_AH_integrand)`
 
 # populate inegrand and physical metric for the integration
 `    for(ijk = 0; ijk < nn; ++ijk)`

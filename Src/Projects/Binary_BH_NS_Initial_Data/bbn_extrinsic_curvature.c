@@ -7,7 +7,7 @@
 #include "bbn_headers.h"
 static void dK_UiUj(Grid_T *const grid);
 
-#define add_field_and_get_field(name) ADD_FIELD(name) REALLOC_v_CALL_v(name)
+#define add_field_and_get_field(name) ADD_FIELD(name) REALLOC_v_WRITE_v(name)
 
 void bbn_make_K_UiUj_and_dK_UiUj(Grid_T *const grid)
 {

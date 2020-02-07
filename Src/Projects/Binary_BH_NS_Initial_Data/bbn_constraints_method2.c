@@ -27,10 +27,10 @@ void bbn_calculate_constraints_2nd(Grid_T *const grid)
        continue;
 
        /* declaring: */
-       REALLOC_v_CALL_v(ham_constraint_2nd)
-       REALLOC_v_CALL_v(mom_constraint_2nd_U1)
-       REALLOC_v_CALL_v(mom_constraint_2nd_U0)
-       REALLOC_v_CALL_v(mom_constraint_2nd_U2)
+       REALLOC_v_WRITE_v(ham_constraint_2nd)
+       REALLOC_v_WRITE_v(mom_constraint_2nd_U1)
+       REALLOC_v_WRITE_v(mom_constraint_2nd_U0)
+       REALLOC_v_WRITE_v(mom_constraint_2nd_U2)
        READ_v(K_UiUj_U2U2)
        READ_v(K_UiUj_U1U2)
        READ_v(K_UiUj_U1U1)

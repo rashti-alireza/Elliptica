@@ -13,7 +13,7 @@ void Tij_IF_CTS_psi6E(Patch_T *const patch)
   {
     if (_Ind("_E") >= 0)
     {
-      REALLOC_v_CALL_v(_E)
+      REALLOC_v_WRITE_v(_E)
       UNUSED(_E)
     }
     return;
@@ -27,7 +27,7 @@ void Tij_IF_CTS_psi6E(Patch_T *const patch)
   READ_v(u0)
   READ_v(psi)
   READ_v(rho0)
-  REALLOC_v_CALL_v(_E)
+  REALLOC_v_WRITE_v(_E)
 
 
   EoS_T *eos = initialize_EoS();

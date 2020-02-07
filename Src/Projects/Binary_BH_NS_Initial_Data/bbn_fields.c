@@ -453,7 +453,7 @@ void bbn_partial_derivatives_fields(Grid_T *const grid)
 /* updating Beta_U0 */
 void bbn_update_Beta_U0(Patch_T *const patch)
 {
-  REALLOC_v_CALL_v(Beta_U0)
+  REALLOC_v_WRITE_v(Beta_U0)
   READ_v(B0_U0)
   READ_v(B1_U0)
   
@@ -468,7 +468,7 @@ void bbn_update_Beta_U0(Patch_T *const patch)
 /* updating Beta_U1 */
 void bbn_update_Beta_U1(Patch_T *const patch)
 {
-  REALLOC_v_CALL_v(Beta_U1)
+  REALLOC_v_WRITE_v(Beta_U1)
   READ_v(B0_U1)
   READ_v(B1_U1)
   
@@ -483,7 +483,7 @@ void bbn_update_Beta_U1(Patch_T *const patch)
 /* updating Beta_U2 */
 void bbn_update_Beta_U2(Patch_T *const patch)
 {
-  REALLOC_v_CALL_v(Beta_U2)
+  REALLOC_v_WRITE_v(Beta_U2)
   READ_v(B0_U2)
   READ_v(B1_U2)
   
@@ -556,7 +556,7 @@ void bbn_update_rho0(Patch_T *const patch)
   {
     EoS_T *eos = initialize_EoS();
     READ_v(enthalpy)
-    REALLOC_v_CALL_v(rho0)
+    REALLOC_v_WRITE_v(rho0)
     const unsigned nn = patch->nn;
     unsigned ijk;
 
@@ -820,9 +820,9 @@ void bbn_update_derivative_B1_U2(Patch_T *const patch)
   const unsigned nn = patch->nn;
   unsigned ijk;
   
-  REALLOC_v_CALL_v(dB1_U2D2)
-  REALLOC_v_CALL_v(dB1_U2D1)
-  REALLOC_v_CALL_v(dB1_U2D0)
+  REALLOC_v_WRITE_v(dB1_U2D2)
+  REALLOC_v_WRITE_v(dB1_U2D1)
+  REALLOC_v_WRITE_v(dB1_U2D0)
   
   for (ijk = 0; ijk < nn; ++ijk)
   {
@@ -856,9 +856,9 @@ void bbn_update_derivative_B1_U1(Patch_T *const patch)
   const unsigned nn = patch->nn;
   unsigned ijk;
   
-  REALLOC_v_CALL_v(dB1_U1D2)
-  REALLOC_v_CALL_v(dB1_U1D1)
-  REALLOC_v_CALL_v(dB1_U1D0)
+  REALLOC_v_WRITE_v(dB1_U1D2)
+  REALLOC_v_WRITE_v(dB1_U1D1)
+  REALLOC_v_WRITE_v(dB1_U1D0)
   
   for (ijk = 0; ijk < nn; ++ijk)
   {
@@ -892,9 +892,9 @@ void bbn_update_derivative_B1_U0(Patch_T *const patch)
   const unsigned nn = patch->nn;
   unsigned ijk;
   
-  REALLOC_v_CALL_v(dB1_U0D2)
-  REALLOC_v_CALL_v(dB1_U0D1)
-  REALLOC_v_CALL_v(dB1_U0D0)
+  REALLOC_v_WRITE_v(dB1_U0D2)
+  REALLOC_v_WRITE_v(dB1_U0D1)
+  REALLOC_v_WRITE_v(dB1_U0D0)
   
   for (ijk = 0; ijk < nn; ++ijk)
   {
@@ -950,15 +950,15 @@ void bbn_update_derivative_Beta_U0(Patch_T *const patch)
   READ_v(ddB1_U0D0D2)
   READ_v(ddB1_U0D0D0)
     
-  REALLOC_v_CALL_v(dBeta_U0D1)
-  REALLOC_v_CALL_v(dBeta_U0D0)
-  REALLOC_v_CALL_v(dBeta_U0D2)
-  REALLOC_v_CALL_v(ddBeta_U0D2D2)
-  REALLOC_v_CALL_v(ddBeta_U0D0D1)
-  REALLOC_v_CALL_v(ddBeta_U0D1D1)
-  REALLOC_v_CALL_v(ddBeta_U0D1D2)
-  REALLOC_v_CALL_v(ddBeta_U0D0D2)
-  REALLOC_v_CALL_v(ddBeta_U0D0D0)
+  REALLOC_v_WRITE_v(dBeta_U0D1)
+  REALLOC_v_WRITE_v(dBeta_U0D0)
+  REALLOC_v_WRITE_v(dBeta_U0D2)
+  REALLOC_v_WRITE_v(ddBeta_U0D2D2)
+  REALLOC_v_WRITE_v(ddBeta_U0D0D1)
+  REALLOC_v_WRITE_v(ddBeta_U0D1D1)
+  REALLOC_v_WRITE_v(ddBeta_U0D1D2)
+  REALLOC_v_WRITE_v(ddBeta_U0D0D2)
+  REALLOC_v_WRITE_v(ddBeta_U0D0D0)
 
   for (ijk = 0; ijk < nn; ++ijk)
   {
@@ -1004,15 +1004,15 @@ void bbn_update_derivative_Beta_U1(Patch_T *const patch)
   READ_v(ddB1_U1D0D2)
   READ_v(ddB1_U1D0D0)
     
-  REALLOC_v_CALL_v(dBeta_U1D1)
-  REALLOC_v_CALL_v(dBeta_U1D0)
-  REALLOC_v_CALL_v(dBeta_U1D2)
-  REALLOC_v_CALL_v(ddBeta_U1D2D2)
-  REALLOC_v_CALL_v(ddBeta_U1D0D1)
-  REALLOC_v_CALL_v(ddBeta_U1D1D1)
-  REALLOC_v_CALL_v(ddBeta_U1D1D2)
-  REALLOC_v_CALL_v(ddBeta_U1D0D2)
-  REALLOC_v_CALL_v(ddBeta_U1D0D0)
+  REALLOC_v_WRITE_v(dBeta_U1D1)
+  REALLOC_v_WRITE_v(dBeta_U1D0)
+  REALLOC_v_WRITE_v(dBeta_U1D2)
+  REALLOC_v_WRITE_v(ddBeta_U1D2D2)
+  REALLOC_v_WRITE_v(ddBeta_U1D0D1)
+  REALLOC_v_WRITE_v(ddBeta_U1D1D1)
+  REALLOC_v_WRITE_v(ddBeta_U1D1D2)
+  REALLOC_v_WRITE_v(ddBeta_U1D0D2)
+  REALLOC_v_WRITE_v(ddBeta_U1D0D0)
 
   for (ijk = 0; ijk < nn; ++ijk)
   {
@@ -1060,15 +1060,15 @@ void bbn_update_derivative_Beta_U2(Patch_T *const patch)
   READ_v(ddB1_U2D0D2)
   READ_v(ddB1_U2D0D0)
     
-  REALLOC_v_CALL_v(dBeta_U2D1)
-  REALLOC_v_CALL_v(dBeta_U2D0)
-  REALLOC_v_CALL_v(dBeta_U2D2)
-  REALLOC_v_CALL_v(ddBeta_U2D2D2)
-  REALLOC_v_CALL_v(ddBeta_U2D0D1)
-  REALLOC_v_CALL_v(ddBeta_U2D1D1)
-  REALLOC_v_CALL_v(ddBeta_U2D1D2)
-  REALLOC_v_CALL_v(ddBeta_U2D0D2)
-  REALLOC_v_CALL_v(ddBeta_U2D0D0)
+  REALLOC_v_WRITE_v(dBeta_U2D1)
+  REALLOC_v_WRITE_v(dBeta_U2D0)
+  REALLOC_v_WRITE_v(dBeta_U2D2)
+  REALLOC_v_WRITE_v(ddBeta_U2D2D2)
+  REALLOC_v_WRITE_v(ddBeta_U2D0D1)
+  REALLOC_v_WRITE_v(ddBeta_U2D1D1)
+  REALLOC_v_WRITE_v(ddBeta_U2D1D2)
+  REALLOC_v_WRITE_v(ddBeta_U2D0D2)
+  REALLOC_v_WRITE_v(ddBeta_U2D0D0)
 
   for (ijk = 0; ijk < nn; ++ijk)
   {
@@ -1092,7 +1092,7 @@ static void cleaning_enthalpy(Patch_T *const patch)
   if(!IsItNSSurface(patch))
     return;
     
-  CALL_v(enthalpy)
+  WRITE_v(enthalpy)
   
   const unsigned nn = patch->nn;
   unsigned ijk;
@@ -1226,9 +1226,9 @@ void bbn_update_B1_U012(Patch_T *const patch)
   unsigned ijk;
     
   /* B^1 */
-  REALLOC_v_CALL_v(B1_U0)
-  REALLOC_v_CALL_v(B1_U1)
-  REALLOC_v_CALL_v(B1_U2)
+  REALLOC_v_WRITE_v(B1_U0)
+  REALLOC_v_WRITE_v(B1_U1)
+  REALLOC_v_WRITE_v(B1_U2)
   
   for (ijk = 0; ijk < nn; ++ijk)
   {

@@ -10,7 +10,7 @@ static void build_metric_and_metric_inverse(Patch_T *const patch);
 static void build_metric_derivatives(Patch_T *const patch);
 static void build_Gamma_derivatives(Patch_T *const patch);
 
-#define add_field_and_get_field(name) ADD_FIELD(name) REALLOC_v_CALL_v(name)
+#define add_field_and_get_field(name) ADD_FIELD(name) REALLOC_v_WRITE_v(name)
 
 void bbn_make_metric_and_Gamma_and_derivatives(Grid_T *const grid)
 {
@@ -412,19 +412,19 @@ static void build_metric_and_metric_inverse(Patch_T *const patch)
   ADD_FIELD(gammaI_U1U1)
   ADD_FIELD(gammaI_U2U2)
 
-  REALLOC_v_CALL_v(gamma_D2D2)
-  REALLOC_v_CALL_v(gamma_D0D2)
-  REALLOC_v_CALL_v(gamma_D0D0)
-  REALLOC_v_CALL_v(gamma_D0D1)
-  REALLOC_v_CALL_v(gamma_D1D2)
-  REALLOC_v_CALL_v(gamma_D1D1)
+  REALLOC_v_WRITE_v(gamma_D2D2)
+  REALLOC_v_WRITE_v(gamma_D0D2)
+  REALLOC_v_WRITE_v(gamma_D0D0)
+  REALLOC_v_WRITE_v(gamma_D0D1)
+  REALLOC_v_WRITE_v(gamma_D1D2)
+  REALLOC_v_WRITE_v(gamma_D1D1)
 
-  REALLOC_v_CALL_v(gammaI_U0U2)
-  REALLOC_v_CALL_v(gammaI_U0U0)
-  REALLOC_v_CALL_v(gammaI_U0U1)
-  REALLOC_v_CALL_v(gammaI_U1U2)
-  REALLOC_v_CALL_v(gammaI_U1U1)
-  REALLOC_v_CALL_v(gammaI_U2U2)
+  REALLOC_v_WRITE_v(gammaI_U0U2)
+  REALLOC_v_WRITE_v(gammaI_U0U0)
+  REALLOC_v_WRITE_v(gammaI_U0U1)
+  REALLOC_v_WRITE_v(gammaI_U1U2)
+  REALLOC_v_WRITE_v(gammaI_U1U1)
+  REALLOC_v_WRITE_v(gammaI_U2U2)
   
   READ_v(psi)
   for (ijk = 0; ijk < nn; ++ijk)

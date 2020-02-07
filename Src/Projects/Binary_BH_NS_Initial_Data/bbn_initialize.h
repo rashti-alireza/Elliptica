@@ -7,7 +7,7 @@
 
 #define Power(a,b) pow(a,b)
 #define Sqrt(a) sqrt(a)
-#define prep_and_call(x) REALLOC_v_CALL_v(x)\
+#define prep_and_call(x) REALLOC_v_WRITE_v(x)\
                          const double *const other_##x = patchp->pool[LookUpField_E(#x,patchp)]->v;
 #define copy_values(x)   x[ijk] = other_##x[ijk];
 

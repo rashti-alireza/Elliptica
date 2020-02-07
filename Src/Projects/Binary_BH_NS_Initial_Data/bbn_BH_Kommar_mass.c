@@ -60,7 +60,7 @@ double bbn_BH_Kommar_mass(Grid_T *const grid)
 
 
 {
-    REALLOC_v_CALL_v(BH_Kommar_mass_integrand)
+    REALLOC_v_WRITE_v(BH_Kommar_mass_integrand)
     for(ijk = 0; ijk < nn; ++ijk)
     {
     double psim2 = 
