@@ -138,9 +138,9 @@ static void update_parameters_and_directories(const unsigned iter)
   unsigned i;
   
   /* find the previous folder name */
-  n[0] = (unsigned)Pgeti("n_a");
-  n[1] = (unsigned)Pgeti("n_b");
-  n[2] = (unsigned)Pgeti("n_c");
+  n[0] = (unsigned)PgetiEZ("n_a");
+  n[1] = (unsigned)PgetiEZ("n_b");
+  n[2] = (unsigned)PgetiEZ("n_c");
   sprintf(folder_name_prev,"BBN_%ux%ux%u",n[0],n[1],n[2]);  
   
   /* updating some parameters for the new round of iteration */
@@ -159,9 +159,9 @@ static void update_parameters_and_directories(const unsigned iter)
   }
   
   /* find the name of next folder */
-  n[0] = (unsigned)Pgeti("n_a");
-  n[1] = (unsigned)Pgeti("n_b");
-  n[2] = (unsigned)Pgeti("n_c");
+  n[0] = (unsigned)PgetiEZ("n_a");
+  n[1] = (unsigned)PgetiEZ("n_b");
+  n[2] = (unsigned)PgetiEZ("n_c");
   
   /* this parameter helps to use some of the previous grid data */
   update_parameter_integer("did_resolution_change?",0);

@@ -23,7 +23,7 @@ void bbn_study_initial_data(Grid_T *const grid)
   }
   
   const char *const folder = Pgets("Diagnostics");
-  int solving_iter         = Pgeti("solving_iteration_number");
+  int solving_iter         = PgetiEZ("solving_iteration_number");
   
   /* calculating the constraints */
   bbn_calculate_constraints_1st(grid);

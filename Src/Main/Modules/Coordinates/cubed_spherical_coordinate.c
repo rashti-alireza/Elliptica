@@ -503,17 +503,17 @@ static void populate_left_NS(Grid_T *const grid,const unsigned pn)
     patch->innerB = 0;
     
     /* filling n */
-    patch->n[0] = (unsigned)Pgeti("n_a");
-    patch->n[1] = (unsigned)Pgeti("n_b");
-    patch->n[2] = (unsigned)Pgeti("n_c");
+    patch->n[0] = (unsigned)PgetiEZ("n_a");
+    patch->n[1] = (unsigned)PgetiEZ("n_b");
+    patch->n[2] = (unsigned)PgetiEZ("n_c");
     /* check for override */
     sprintf(var,"left_NS");
     make_keyword_parameter(&ret,var,"n");
-    n = (unsigned)Pgeti(ret.s0);
+    n = (unsigned)PgetiEZ(ret.s0);
     if (n != INT_MAX)	patch->n[0] = n;
-    n = (unsigned)Pgeti(ret.s1);
+    n = (unsigned)PgetiEZ(ret.s1);
     if (n != INT_MAX)	patch->n[1] = n;
-    n = (unsigned)Pgeti(ret.s2);
+    n = (unsigned)PgetiEZ(ret.s2);
     if (n != INT_MAX)	patch->n[2] = n;
       
     if(patch->n[0] == INT_MAX)
@@ -697,17 +697,17 @@ void populate_right_BH(Grid_T *const grid,const unsigned pn)
     patch->innerB = 0;
     
     /* filling n */
-    patch->n[0] = (unsigned)Pgeti("n_a");
-    patch->n[1] = (unsigned)Pgeti("n_b");
-    patch->n[2] = (unsigned)Pgeti("n_c");
+    patch->n[0] = (unsigned)PgetiEZ("n_a");
+    patch->n[1] = (unsigned)PgetiEZ("n_b");
+    patch->n[2] = (unsigned)PgetiEZ("n_c");
     /* check for override */
     sprintf(var,"right_BH");
     make_keyword_parameter(&ret,var,"n");
-    n = (unsigned)Pgeti(ret.s0);
+    n = (unsigned)PgetiEZ(ret.s0);
     if (n != INT_MAX)	patch->n[0] = n;
-    n = (unsigned)Pgeti(ret.s1);
+    n = (unsigned)PgetiEZ(ret.s1);
     if (n != INT_MAX)	patch->n[1] = n;
-    n = (unsigned)Pgeti(ret.s2);
+    n = (unsigned)PgetiEZ(ret.s2);
     if (n != INT_MAX)	patch->n[2] = n;
       
     if(patch->n[0] == INT_MAX)
@@ -891,17 +891,17 @@ static void populate_central_NS(Grid_T *const grid,const unsigned pn)
     patch->innerB = 0;
     
     /* filling n */
-    patch->n[0] = (unsigned)Pgeti("n_a");
-    patch->n[1] = (unsigned)Pgeti("n_b");
-    patch->n[2] = (unsigned)Pgeti("n_c");
+    patch->n[0] = (unsigned)PgetiEZ("n_a");
+    patch->n[1] = (unsigned)PgetiEZ("n_b");
+    patch->n[2] = (unsigned)PgetiEZ("n_c");
     /* check for override */
     sprintf(var,"NS");
     make_keyword_parameter(&ret,var,"n");
-    n = (unsigned)Pgeti(ret.s0);
+    n = (unsigned)PgetiEZ(ret.s0);
     if (n != INT_MAX)	patch->n[0] = n;
-    n = (unsigned)Pgeti(ret.s1);
+    n = (unsigned)PgetiEZ(ret.s1);
     if (n != INT_MAX)	patch->n[1] = n;
-    n = (unsigned)Pgeti(ret.s2);
+    n = (unsigned)PgetiEZ(ret.s2);
     if (n != INT_MAX)	patch->n[2] = n;
       
     if(patch->n[0] == INT_MAX)
@@ -1085,17 +1085,17 @@ static void populate_right_NS(Grid_T *const grid,const unsigned pn)
     patch->innerB = 0;
     
     /* filling n */
-    patch->n[0] = (unsigned)Pgeti("n_a");
-    patch->n[1] = (unsigned)Pgeti("n_b");
-    patch->n[2] = (unsigned)Pgeti("n_c");
+    patch->n[0] = (unsigned)PgetiEZ("n_a");
+    patch->n[1] = (unsigned)PgetiEZ("n_b");
+    patch->n[2] = (unsigned)PgetiEZ("n_c");
     /* check for override */
     sprintf(var,"right_NS");
     make_keyword_parameter(&ret,var,"n");
-    n = (unsigned)Pgeti(ret.s0);
+    n = (unsigned)PgetiEZ(ret.s0);
     if (n != INT_MAX)	patch->n[0] = n;
-    n = (unsigned)Pgeti(ret.s1);
+    n = (unsigned)PgetiEZ(ret.s1);
     if (n != INT_MAX)	patch->n[1] = n;
-    n = (unsigned)Pgeti(ret.s2);
+    n = (unsigned)PgetiEZ(ret.s2);
     if (n != INT_MAX)	patch->n[2] = n;
       
     if(patch->n[0] == INT_MAX)
@@ -1279,17 +1279,17 @@ static void populate_right_NS_surrounding(Grid_T *const grid,const unsigned pn)
     patch->innerB = 0;
     
     /* filling n */
-    patch->n[0] = (unsigned)Pgeti("n_a");
-    patch->n[1] = (unsigned)Pgeti("n_b");
-    patch->n[2] = (unsigned)Pgeti("n_c");
+    patch->n[0] = (unsigned)PgetiEZ("n_a");
+    patch->n[1] = (unsigned)PgetiEZ("n_b");
+    patch->n[2] = (unsigned)PgetiEZ("n_c");
     /* check for override */
     sprintf(var,"right_NS");
     make_keyword_parameter(&ret,var,"n");
-    n = (unsigned)Pgeti(ret.s0);
+    n = (unsigned)PgetiEZ(ret.s0);
     if (n != INT_MAX)	patch->n[0] = n;
-    n = (unsigned)Pgeti(ret.s1);
+    n = (unsigned)PgetiEZ(ret.s1);
     if (n != INT_MAX)	patch->n[1] = n;
-    n = (unsigned)Pgeti(ret.s2);
+    n = (unsigned)PgetiEZ(ret.s2);
     if (n != INT_MAX)	patch->n[2] = n;
       
     if(patch->n[0] == INT_MAX)
@@ -1473,17 +1473,17 @@ static void populate_right_BH_surrounding(Grid_T *const grid,const unsigned pn)
     patch->innerB = 1;
     
     /* filling n */
-    patch->n[0] = (unsigned)Pgeti("n_a");
-    patch->n[1] = (unsigned)Pgeti("n_b");
-    patch->n[2] = (unsigned)Pgeti("n_c");
+    patch->n[0] = (unsigned)PgetiEZ("n_a");
+    patch->n[1] = (unsigned)PgetiEZ("n_b");
+    patch->n[2] = (unsigned)PgetiEZ("n_c");
     /* check for override */
     sprintf(var,"right_BH");
     make_keyword_parameter(&ret,var,"n");
-    n = (unsigned)Pgeti(ret.s0);
+    n = (unsigned)PgetiEZ(ret.s0);
     if (n != INT_MAX)	patch->n[0] = n;
-    n = (unsigned)Pgeti(ret.s1);
+    n = (unsigned)PgetiEZ(ret.s1);
     if (n != INT_MAX)	patch->n[1] = n;
-    n = (unsigned)Pgeti(ret.s2);
+    n = (unsigned)PgetiEZ(ret.s2);
     if (n != INT_MAX)	patch->n[2] = n;
       
     if(patch->n[0] == INT_MAX)
@@ -1667,17 +1667,17 @@ static void populate_left_NS_surrounding(Grid_T *const grid,const unsigned pn)
     patch->innerB = 0;
     
     /* filling n */
-    patch->n[0] = (unsigned)Pgeti("n_a");
-    patch->n[1] = (unsigned)Pgeti("n_b");
-    patch->n[2] = (unsigned)Pgeti("n_c");
+    patch->n[0] = (unsigned)PgetiEZ("n_a");
+    patch->n[1] = (unsigned)PgetiEZ("n_b");
+    patch->n[2] = (unsigned)PgetiEZ("n_c");
     /* check for override */
     sprintf(var,"left_NS");
     make_keyword_parameter(&ret,var,"n");
-    n = (unsigned)Pgeti(ret.s0);
+    n = (unsigned)PgetiEZ(ret.s0);
     if (n != INT_MAX)	patch->n[0] = n;
-    n = (unsigned)Pgeti(ret.s1);
+    n = (unsigned)PgetiEZ(ret.s1);
     if (n != INT_MAX)	patch->n[1] = n;
-    n = (unsigned)Pgeti(ret.s2);
+    n = (unsigned)PgetiEZ(ret.s2);
     if (n != INT_MAX)	patch->n[2] = n;
       
     if(patch->n[0] == INT_MAX)
@@ -1861,17 +1861,17 @@ static void populate_central_BH_surrounding(Grid_T *const grid,const unsigned pn
     patch->innerB = 1;
     
     /* filling n */
-    patch->n[0] = (unsigned)Pgeti("n_a");
-    patch->n[1] = (unsigned)Pgeti("n_b");
-    patch->n[2] = (unsigned)Pgeti("n_c");
+    patch->n[0] = (unsigned)PgetiEZ("n_a");
+    patch->n[1] = (unsigned)PgetiEZ("n_b");
+    patch->n[2] = (unsigned)PgetiEZ("n_c");
     /* check for override */
     sprintf(var,"BH");
     make_keyword_parameter(&ret,var,"n");
-    n = (unsigned)Pgeti(ret.s0);
+    n = (unsigned)PgetiEZ(ret.s0);
     if (n != INT_MAX)	patch->n[0] = n;
-    n = (unsigned)Pgeti(ret.s1);
+    n = (unsigned)PgetiEZ(ret.s1);
     if (n != INT_MAX)	patch->n[1] = n;
-    n = (unsigned)Pgeti(ret.s2);
+    n = (unsigned)PgetiEZ(ret.s2);
     if (n != INT_MAX)	patch->n[2] = n;
       
     if(patch->n[0] == INT_MAX)
@@ -2055,17 +2055,17 @@ static void populate_central_NS_surrounding(Grid_T *const grid,const unsigned pn
     patch->innerB = 0;
     
     /* filling n */
-    patch->n[0] = (unsigned)Pgeti("n_a");
-    patch->n[1] = (unsigned)Pgeti("n_b");
-    patch->n[2] = (unsigned)Pgeti("n_c");
+    patch->n[0] = (unsigned)PgetiEZ("n_a");
+    patch->n[1] = (unsigned)PgetiEZ("n_b");
+    patch->n[2] = (unsigned)PgetiEZ("n_c");
     /* check for override */
     sprintf(var,"NS");
     make_keyword_parameter(&ret,var,"n");
-    n = (unsigned)Pgeti(ret.s0);
+    n = (unsigned)PgetiEZ(ret.s0);
     if (n != INT_MAX)	patch->n[0] = n;
-    n = (unsigned)Pgeti(ret.s1);
+    n = (unsigned)PgetiEZ(ret.s1);
     if (n != INT_MAX)	patch->n[1] = n;
-    n = (unsigned)Pgeti(ret.s2);
+    n = (unsigned)PgetiEZ(ret.s2);
     if (n != INT_MAX)	patch->n[2] = n;
       
     if(patch->n[0] == INT_MAX)
@@ -2341,17 +2341,17 @@ static void populate_outermost(Grid_T *const grid,const unsigned pn,const unsign
     }
 
     /* filling n */
-    patch->n[0] = (unsigned)Pgeti("n_a");
-    patch->n[1] = (unsigned)Pgeti("n_b");
-    patch->n[2] = (unsigned)Pgeti("n_c");
+    patch->n[0] = (unsigned)PgetiEZ("n_a");
+    patch->n[1] = (unsigned)PgetiEZ("n_b");
+    patch->n[2] = (unsigned)PgetiEZ("n_c");
     /* check for override */
     sprintf(var,"Outermost%u",o);
     make_keyword_parameter(&ret,var,"n");
-    n = (unsigned)Pgeti(ret.s0);
+    n = (unsigned)PgetiEZ(ret.s0);
     if (n != INT_MAX)	patch->n[0] = n;
-    n = (unsigned)Pgeti(ret.s1);
+    n = (unsigned)PgetiEZ(ret.s1);
     if (n != INT_MAX)	patch->n[1] = n;
-    n = (unsigned)Pgeti(ret.s2);
+    n = (unsigned)PgetiEZ(ret.s2);
     if (n != INT_MAX)	patch->n[2] = n;
       
     if(patch->n[0] == INT_MAX)
@@ -2404,7 +2404,7 @@ void alloc_patches_BNS_CubedSpherical_grid(Grid_T *const grid)
   unsigned outermost;
   unsigned i;
   
-  outermost = (unsigned) Pgeti("Number_of_Outermost_Split");
+  outermost = (unsigned) PgetiEZ("Number_of_Outermost_Split");
   if (outermost != (unsigned)INT_MAX)
     Np += 6*outermost;
   
@@ -2429,7 +2429,7 @@ void alloc_patches_BBN_CubedSpherical_grid(Grid_T *const grid)
   unsigned outermost;
   unsigned i;
   
-  outermost = (unsigned) Pgeti("Number_of_Outermost_Split");
+  outermost = (unsigned) PgetiEZ("Number_of_Outermost_Split");
   if (outermost != (unsigned)INT_MAX)
     Np += 6*outermost;
   
@@ -2454,7 +2454,7 @@ void alloc_patches_SNS_CubedSpherical_Box_grid(Grid_T *const grid)
   unsigned outermost;
   unsigned i;
   
-  outermost = (unsigned) Pgeti("Number_of_Outermost_Split");
+  outermost = (unsigned) PgetiEZ("Number_of_Outermost_Split");
   if (outermost != (unsigned)INT_MAX)
     Np += 6*outermost;
   
@@ -2478,7 +2478,7 @@ void alloc_patches_SNS_CubedSpherical_grid(Grid_T *const grid)
   unsigned outermost;
   unsigned i;
   
-  outermost = (unsigned) Pgeti("Number_of_Outermost_Split");
+  outermost = (unsigned) PgetiEZ("Number_of_Outermost_Split");
   if (outermost != (unsigned)INT_MAX)
     Np += 6*outermost;
   
@@ -2501,7 +2501,7 @@ void alloc_patches_SBH_CubedSpherical_grid(Grid_T *const grid)
   unsigned outermost;
   unsigned i;
   
-  outermost = (unsigned) Pgeti("Number_of_Outermost_Split");
+  outermost = (unsigned) PgetiEZ("Number_of_Outermost_Split");
   if (outermost != (unsigned)INT_MAX)
     Np += 6*outermost;
   

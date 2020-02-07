@@ -3956,15 +3956,15 @@ static Grid_T *creat_bbn_grid_CS(struct Grid_Params_S *const GridParams)
   /* filling n */
   
   /* left box */
-  nlb[0] = (unsigned)Pgeti("n_a");
-  nlb[1] = (unsigned)Pgeti("n_b");
-  nlb[2] = (unsigned)Pgeti("n_c");
+  nlb[0] = (unsigned)PgetiEZ("n_a");
+  nlb[1] = (unsigned)PgetiEZ("n_b");
+  nlb[2] = (unsigned)PgetiEZ("n_c");
   /* check for override */
-  n = (unsigned)Pgeti("left_NS_n_a");
+  n = (unsigned)PgetiEZ("left_NS_n_a");
   if (n != INT_MAX)   nlb[0] = n;
-  n = (unsigned)Pgeti("left_NS_n_b");
+  n = (unsigned)PgetiEZ("left_NS_n_b");
   if (n != INT_MAX)   nlb[1] = n;
-  n = (unsigned)Pgeti("left_NS_n_c");
+  n = (unsigned)PgetiEZ("left_NS_n_c");
   if (n != INT_MAX)   nlb[2] = n;
     
   if(nlb[0] == INT_MAX)
@@ -4005,15 +4005,15 @@ static Grid_T *creat_bbn_grid_CS(struct Grid_Params_S *const GridParams)
   update_parameter_double_format(par,S);
   
   /* right box. NOTE: this is needed when we fill the excision region */
-  nlb[0] = (unsigned)Pgeti("n_a");
-  nlb[1] = (unsigned)Pgeti("n_b");
-  nlb[2] = (unsigned)Pgeti("n_c");
+  nlb[0] = (unsigned)PgetiEZ("n_a");
+  nlb[1] = (unsigned)PgetiEZ("n_b");
+  nlb[2] = (unsigned)PgetiEZ("n_c");
   /* check for override */
-  n = (unsigned)Pgeti("right_BH_n_a");
+  n = (unsigned)PgetiEZ("right_BH_n_a");
   if (n != INT_MAX)   nlb[0] = n;
-  n = (unsigned)Pgeti("right_BH_n_b");
+  n = (unsigned)PgetiEZ("right_BH_n_b");
   if (n != INT_MAX)   nlb[1] = n;
-  n = (unsigned)Pgeti("right_BH_n_c");
+  n = (unsigned)PgetiEZ("right_BH_n_c");
   if (n != INT_MAX)   nlb[2] = n;
     
   if(nlb[0] == INT_MAX)
@@ -4356,15 +4356,15 @@ static void NS_BH_surface_CubedSpherical_grid(Grid_T *const grid,struct Grid_Par
   /* left NS */
   
   /* filling N */
-  N[0] = (unsigned)Pgeti("n_a");
-  N[1] = (unsigned)Pgeti("n_b");
-  N[2] = (unsigned)Pgeti("n_c");
+  N[0] = (unsigned)PgetiEZ("n_a");
+  N[1] = (unsigned)PgetiEZ("n_b");
+  N[2] = (unsigned)PgetiEZ("n_c");
   /* check for override */
-  n = (unsigned)Pgeti("left_NS_n_a");
+  n = (unsigned)PgetiEZ("left_NS_n_a");
   if (n != INT_MAX)     N[0] = n;
-  n = (unsigned)Pgeti("left_NS_n_b");
+  n = (unsigned)PgetiEZ("left_NS_n_b");
   if (n != INT_MAX)     N[1] = n;
-  n = (unsigned)Pgeti("left_NS_n_c");
+  n = (unsigned)PgetiEZ("left_NS_n_c");
   if (n != INT_MAX)     N[2] = n;
   
   if(N[0] == INT_MAX)
@@ -4718,16 +4718,16 @@ static void NS_BH_surface_CubedSpherical_grid(Grid_T *const grid,struct Grid_Par
   patch->basis[2] = Chebyshev_Tn_BASIS;
     
   /* filling N */
-  N[0] = (unsigned)Pgeti("n_a");
-  N[1] = (unsigned)Pgeti("n_b");
-  N[2] = (unsigned)Pgeti("n_c");
+  N[0] = (unsigned)PgetiEZ("n_a");
+  N[1] = (unsigned)PgetiEZ("n_b");
+  N[2] = (unsigned)PgetiEZ("n_c");
   
   /* check for override */
-  n = (unsigned)Pgeti("right_BH_n_a");
+  n = (unsigned)PgetiEZ("right_BH_n_a");
   if (n != INT_MAX)     N[0] = n;
-  n = (unsigned)Pgeti("right_BH_n_b");
+  n = (unsigned)PgetiEZ("right_BH_n_b");
   if (n != INT_MAX)     N[1] = n;
-  n = (unsigned)Pgeti("right_BH_n_c");
+  n = (unsigned)PgetiEZ("right_BH_n_c");
   if (n != INT_MAX)     N[2] = n;
   
   if(N[0] == INT_MAX)

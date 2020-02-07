@@ -652,15 +652,15 @@ static void characteristics_BBN_CS_grid_eg(Grid_T *const grid)
   /* filling n */
   
   /* left box */
-  nlb[0] = (unsigned)Pgeti("n_a");
-  nlb[1] = (unsigned)Pgeti("n_b");
-  nlb[2] = (unsigned)Pgeti("n_c");
+  nlb[0] = (unsigned)PgetiEZ("n_a");
+  nlb[1] = (unsigned)PgetiEZ("n_b");
+  nlb[2] = (unsigned)PgetiEZ("n_c");
   /* check for override */
-  n = (unsigned)Pgeti("left_NS_n_a");
+  n = (unsigned)PgetiEZ("left_NS_n_a");
   if (n != INT_MAX)   nlb[0] = n;
-  n = (unsigned)Pgeti("left_NS_n_b");
+  n = (unsigned)PgetiEZ("left_NS_n_b");
   if (n != INT_MAX)   nlb[1] = n;
-  n = (unsigned)Pgeti("left_NS_n_c");
+  n = (unsigned)PgetiEZ("left_NS_n_c");
   if (n != INT_MAX)   nlb[2] = n;
     
   if(nlb[0] == INT_MAX)
@@ -774,15 +774,15 @@ static void NS_BH_surface_CS_grid_eg(Grid_T *const grid,const double R_NS_l,cons
   /* left NS */
   
   /* filling N */
-  N[0] = (unsigned)Pgeti("n_a");
-  N[1] = (unsigned)Pgeti("n_b");
-  N[2] = (unsigned)Pgeti("n_c");
+  N[0] = (unsigned)PgetiEZ("n_a");
+  N[1] = (unsigned)PgetiEZ("n_b");
+  N[2] = (unsigned)PgetiEZ("n_c");
   /* check for override */
-  n = (unsigned)Pgeti("left_NS_n_a");
+  n = (unsigned)PgetiEZ("left_NS_n_a");
   if (n != INT_MAX)     N[0] = n;
-  n = (unsigned)Pgeti("left_NS_n_b");
+  n = (unsigned)PgetiEZ("left_NS_n_b");
   if (n != INT_MAX)     N[1] = n;
-  n = (unsigned)Pgeti("left_NS_n_c");
+  n = (unsigned)PgetiEZ("left_NS_n_c");
   if (n != INT_MAX)     N[2] = n;
   
   if(N[0] == INT_MAX)
@@ -827,16 +827,16 @@ static void NS_BH_surface_CS_grid_eg(Grid_T *const grid,const double R_NS_l,cons
   /* right BH */
   
   /* filling N */
-  N[0] = (unsigned)Pgeti("n_a");
-  N[1] = (unsigned)Pgeti("n_b");
-  N[2] = (unsigned)Pgeti("n_c");
+  N[0] = (unsigned)PgetiEZ("n_a");
+  N[1] = (unsigned)PgetiEZ("n_b");
+  N[2] = (unsigned)PgetiEZ("n_c");
   
   /* check for override */
-  n = (unsigned)Pgeti("right_BH_n_a");
+  n = (unsigned)PgetiEZ("right_BH_n_a");
   if (n != INT_MAX)     N[0] = n;
-  n = (unsigned)Pgeti("right_BH_n_b");
+  n = (unsigned)PgetiEZ("right_BH_n_b");
   if (n != INT_MAX)     N[1] = n;
-  n = (unsigned)Pgeti("right_BH_n_c");
+  n = (unsigned)PgetiEZ("right_BH_n_c");
   if (n != INT_MAX)     N[2] = n;
   
   if(N[0] == INT_MAX)
@@ -997,15 +997,15 @@ static void characteristics_BNS_CS_grid_eg(Grid_T *const grid)
   /* filling n */
   
   /* left box */
-  nlb[0] = (unsigned)Pgeti("n_a");
-  nlb[1] = (unsigned)Pgeti("n_b");
-  nlb[2] = (unsigned)Pgeti("n_c");
+  nlb[0] = (unsigned)PgetiEZ("n_a");
+  nlb[1] = (unsigned)PgetiEZ("n_b");
+  nlb[2] = (unsigned)PgetiEZ("n_c");
   /* check for override */
-  n = (unsigned)Pgeti("left_NS_n_a");
+  n = (unsigned)PgetiEZ("left_NS_n_a");
   if (n != INT_MAX)   nlb[0] = n;
-  n = (unsigned)Pgeti("left_NS_n_b");
+  n = (unsigned)PgetiEZ("left_NS_n_b");
   if (n != INT_MAX)   nlb[1] = n;
-  n = (unsigned)Pgeti("left_NS_n_c");
+  n = (unsigned)PgetiEZ("left_NS_n_c");
   if (n != INT_MAX)   nlb[2] = n;
     
   if(nlb[0] == INT_MAX)
@@ -1016,15 +1016,15 @@ static void characteristics_BNS_CS_grid_eg(Grid_T *const grid)
     abortEr("n_c could not be set.\n");
   
   /* right box */
-  nrb[0] = (unsigned)Pgeti("n_a");
-  nrb[1] = (unsigned)Pgeti("n_b");
-  nrb[2] = (unsigned)Pgeti("n_c");
+  nrb[0] = (unsigned)PgetiEZ("n_a");
+  nrb[1] = (unsigned)PgetiEZ("n_b");
+  nrb[2] = (unsigned)PgetiEZ("n_c");
   /* check for override */
-  n = (unsigned)Pgeti("right_NS_n_a");
+  n = (unsigned)PgetiEZ("right_NS_n_a");
   if (n != INT_MAX)   nrb[0] = n;
-  n = (unsigned)Pgeti("right_NS_n_b");
+  n = (unsigned)PgetiEZ("right_NS_n_b");
   if (n != INT_MAX)   nrb[1] = n;
-  n = (unsigned)Pgeti("right_NS_n_c");
+  n = (unsigned)PgetiEZ("right_NS_n_c");
   if (n != INT_MAX)   nrb[2] = n;
     
   if(nrb[0] == INT_MAX)
@@ -1262,15 +1262,15 @@ static void NS_radii_BNS_Spherical_grid_eg(Grid_T *const grid,void *vp)
   /* left NS */
   
   /* filling N */
-  N[0] = (unsigned)Pgeti("n_a");
-  N[1] = (unsigned)Pgeti("n_b");
-  N[2] = (unsigned)Pgeti("n_c");
+  N[0] = (unsigned)PgetiEZ("n_a");
+  N[1] = (unsigned)PgetiEZ("n_b");
+  N[2] = (unsigned)PgetiEZ("n_c");
   /* check for override */
-  n = (unsigned)Pgeti("left_NS_n_a");
+  n = (unsigned)PgetiEZ("left_NS_n_a");
   if (n != INT_MAX)     N[0] = n;
-  n = (unsigned)Pgeti("left_NS_n_b");
+  n = (unsigned)PgetiEZ("left_NS_n_b");
   if (n != INT_MAX)     N[1] = n;
-  n = (unsigned)Pgeti("left_NS_n_c");
+  n = (unsigned)PgetiEZ("left_NS_n_c");
   if (n != INT_MAX)     N[2] = n;
   
   if(N[0] == INT_MAX)
@@ -1303,15 +1303,15 @@ static void NS_radii_BNS_Spherical_grid_eg(Grid_T *const grid,void *vp)
   /* right NS */
   
   /* filling N */
-  N[0] = (unsigned)Pgeti("n_a");
-  N[1] = (unsigned)Pgeti("n_b");
-  N[2] = (unsigned)Pgeti("n_c");
+  N[0] = (unsigned)PgetiEZ("n_a");
+  N[1] = (unsigned)PgetiEZ("n_b");
+  N[2] = (unsigned)PgetiEZ("n_c");
   /* check for override */
-  n = (unsigned)Pgeti("right_NS_n_a");
+  n = (unsigned)PgetiEZ("right_NS_n_a");
   if (n != INT_MAX)     N[0] = n;
-  n = (unsigned)Pgeti("right_NS_n_b");
+  n = (unsigned)PgetiEZ("right_NS_n_b");
   if (n != INT_MAX)     N[1] = n;
-  n = (unsigned)Pgeti("right_NS_n_c");
+  n = (unsigned)PgetiEZ("right_NS_n_c");
   if (n != INT_MAX)     N[2] = n;
   
   if(N[0] == INT_MAX)
@@ -1354,15 +1354,15 @@ static void NS_surface_BNS_CS_grid_eg(Grid_T *const grid)
   /* left NS */
   
   /* filling N */
-  N[0] = (unsigned)Pgeti("n_a");
-  N[1] = (unsigned)Pgeti("n_b");
-  N[2] = (unsigned)Pgeti("n_c");
+  N[0] = (unsigned)PgetiEZ("n_a");
+  N[1] = (unsigned)PgetiEZ("n_b");
+  N[2] = (unsigned)PgetiEZ("n_c");
   /* check for override */
-  n = (unsigned)Pgeti("left_NS_n_a");
+  n = (unsigned)PgetiEZ("left_NS_n_a");
   if (n != INT_MAX)     N[0] = n;
-  n = (unsigned)Pgeti("left_NS_n_b");
+  n = (unsigned)PgetiEZ("left_NS_n_b");
   if (n != INT_MAX)     N[1] = n;
-  n = (unsigned)Pgeti("left_NS_n_c");
+  n = (unsigned)PgetiEZ("left_NS_n_c");
   if (n != INT_MAX)     N[2] = n;
   
   if(N[0] == INT_MAX)
@@ -1399,15 +1399,15 @@ static void NS_surface_BNS_CS_grid_eg(Grid_T *const grid)
   /* right NS */
   
   /* filling N */
-  N[0] = (unsigned)Pgeti("n_a");
-  N[1] = (unsigned)Pgeti("n_b");
-  N[2] = (unsigned)Pgeti("n_c");
+  N[0] = (unsigned)PgetiEZ("n_a");
+  N[1] = (unsigned)PgetiEZ("n_b");
+  N[2] = (unsigned)PgetiEZ("n_c");
   /* check for override */
-  n = (unsigned)Pgeti("right_NS_n_a");
+  n = (unsigned)PgetiEZ("right_NS_n_a");
   if (n != INT_MAX)     N[0] = n;
-  n = (unsigned)Pgeti("right_NS_n_b");
+  n = (unsigned)PgetiEZ("right_NS_n_b");
   if (n != INT_MAX)     N[1] = n;
-  n = (unsigned)Pgeti("right_NS_n_c");
+  n = (unsigned)PgetiEZ("right_NS_n_c");
   if (n != INT_MAX)     N[2] = n;
   
   if(N[0] == INT_MAX)

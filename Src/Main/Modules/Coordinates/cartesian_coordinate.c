@@ -85,17 +85,17 @@ void fill_patches_Cartesian_grid(Grid_T *const grid)
     patch->name = dup_s(name);
     
     /* filling n */
-    patch->n[0] = (unsigned)Pgeti("n_a");
-    patch->n[1] = (unsigned)Pgeti("n_b");
-    patch->n[2] = (unsigned)Pgeti("n_c");
+    patch->n[0] = (unsigned)PgetiEZ("n_a");
+    patch->n[1] = (unsigned)PgetiEZ("n_b");
+    patch->n[2] = (unsigned)PgetiEZ("n_c");
     
     /* check for override */
     make_keyword_parameter(&ret,name,"n");
-    n = (unsigned)Pgeti(ret.s0);
+    n = (unsigned)PgetiEZ(ret.s0);
     if (n != INT_MAX)	patch->n[0] = n;
-    n = (unsigned)Pgeti(ret.s1);
+    n = (unsigned)PgetiEZ(ret.s1);
     if (n != INT_MAX)	patch->n[1] = n;
-    n = (unsigned)Pgeti(ret.s2);
+    n = (unsigned)PgetiEZ(ret.s2);
     if (n != INT_MAX)	patch->n[2] = n;
 
     if(patch->n[0] == INT_MAX)
@@ -497,9 +497,9 @@ void populate_filling_box_CubedSpherical(Grid_T *const grid,const unsigned pn,co
   patch->innerB = 0;
   
   /* filling n */
-  patch->n[0] = (unsigned)Pgeti("n_a");
-  patch->n[1] = (unsigned)Pgeti("n_b");
-  patch->n[2] = (unsigned)Pgeti("n_c");
+  patch->n[0] = (unsigned)PgetiEZ("n_a");
+  patch->n[1] = (unsigned)PgetiEZ("n_b");
+  patch->n[2] = (unsigned)PgetiEZ("n_c");
   
   switch(side)
   {
@@ -524,11 +524,11 @@ void populate_filling_box_CubedSpherical(Grid_T *const grid,const unsigned pn,co
     /* check for override n*/
     sprintf(var,"Outermost0");
     make_keyword_parameter(&ret,var,"n");
-    n = (unsigned)Pgeti(ret.s0);
+    n = (unsigned)PgetiEZ(ret.s0);
     if (n != INT_MAX)   patch->n[0] = n;
-    n = (unsigned)Pgeti(ret.s1);
+    n = (unsigned)PgetiEZ(ret.s1);
     if (n != INT_MAX)   patch->n[1] = n;
-    n = (unsigned)Pgeti(ret.s2);
+    n = (unsigned)PgetiEZ(ret.s2);
     if (n != INT_MAX)   patch->n[2] = n/2;
     
     break;
@@ -553,11 +553,11 @@ void populate_filling_box_CubedSpherical(Grid_T *const grid,const unsigned pn,co
     /* check for override n*/
     sprintf(var,"Outermost0");
     make_keyword_parameter(&ret,var,"n");
-    n = (unsigned)Pgeti(ret.s0);
+    n = (unsigned)PgetiEZ(ret.s0);
     if (n != INT_MAX)   patch->n[0] = n;
-    n = (unsigned)Pgeti(ret.s1);
+    n = (unsigned)PgetiEZ(ret.s1);
     if (n != INT_MAX)   patch->n[1] = n;
-    n = (unsigned)Pgeti(ret.s2);
+    n = (unsigned)PgetiEZ(ret.s2);
     if (n != INT_MAX)   patch->n[2] = n/2;
     
     break;
@@ -582,11 +582,11 @@ void populate_filling_box_CubedSpherical(Grid_T *const grid,const unsigned pn,co
     /* check for override n*/
     sprintf(var,"Outermost0");
     make_keyword_parameter(&ret,var,"n");
-    n = (unsigned)Pgeti(ret.s0);
+    n = (unsigned)PgetiEZ(ret.s0);
     if (n != INT_MAX)   patch->n[0] = n/2;
-    n = (unsigned)Pgeti(ret.s1);
+    n = (unsigned)PgetiEZ(ret.s1);
     if (n != INT_MAX)   patch->n[1] = n;
-    n = (unsigned)Pgeti(ret.s2);
+    n = (unsigned)PgetiEZ(ret.s2);
     if (n != INT_MAX)   patch->n[2] = n;
     
     break;
@@ -611,11 +611,11 @@ void populate_filling_box_CubedSpherical(Grid_T *const grid,const unsigned pn,co
     /* check for override n*/
     sprintf(var,"Outermost0");
     make_keyword_parameter(&ret,var,"n");
-    n = (unsigned)Pgeti(ret.s0);
+    n = (unsigned)PgetiEZ(ret.s0);
     if (n != INT_MAX)   patch->n[0] = n/2;
-    n = (unsigned)Pgeti(ret.s1);
+    n = (unsigned)PgetiEZ(ret.s1);
     if (n != INT_MAX)   patch->n[1] = n;
-    n = (unsigned)Pgeti(ret.s2);
+    n = (unsigned)PgetiEZ(ret.s2);
     if (n != INT_MAX)   patch->n[2] = n;
     
     break;
