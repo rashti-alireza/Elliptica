@@ -35,8 +35,8 @@ int main(int argn, char **argv)
   
   project_execute(proj);
   
-  /*project_cleanup(proj1);
-  //data_base_cleanup();*/
+  /* free the data base of project */
+  free_db_project();
   
   return EXIT_SUCCESS;
 }

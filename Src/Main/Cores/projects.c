@@ -43,6 +43,23 @@ void add_project(ProjFunc *const projfunc, const char *const name, const char *c
 
 }
 
+/* free the whole data base of project */
+void free_db_project(void)
+{
+  unsigned np;
+  
+  np = 0;
+  while (projects_global != 0 && projects_global[np] != 0)
+  {
+    _free(projects_global[np]->name);
+    _free(projects_global[np]->des);
+    free(projects_global[np]);
+    np++;
+  }
+  _free(projects_global);
+  
+}
+
 /* having project name, it returns a pointer to 
 // the corresponding project func
 */
