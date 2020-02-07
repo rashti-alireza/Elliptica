@@ -14,19 +14,19 @@ int test_print(const Print_T f)
   switch(f)
   {
     case PRINT_PARAMETERS:
-      on = Pgets("print_parameters");
+      on = PgetsEZ("print_parameters");
       if (on == 0) return 0;
       if (strcmp_i(on,"yes")|| strcmp_i(on,"y"))
         return 1;
       break;
     case PRINT_COORDS:
-      on = Pgets("print_coords");
+      on = PgetsEZ("print_coords");
       if (on == 0) return 0;
       if (strcmp_i(on,"yes")|| strcmp_i(on,"y"))
         return 1;
       break;
     case PRINT_INTERFACES:
-      on = Pgets("print_interfaces");
+      on = PgetsEZ("print_interfaces");
       if (on == 0) return 0;
       if (strcmp_i(on,"yes")|| strcmp_i(on,"y"))
         return 1;
@@ -72,9 +72,9 @@ void pr_interfaces(const Grid_T *const grid)
   
   
   if (get_parameter("Diagnostics"))
-    path_par = Pgets("Diagnostics");
+    path_par = PgetsEZ("Diagnostics");
   else
-    path_par = Pgets("output_directory_path");
+    path_par = PgetsEZ("output_directory_path");
   
   path = make_directory(path_par,"InterfaceInfo");
   
@@ -380,9 +380,9 @@ void pr_parameters(void)
   
   
   if (get_parameter("Diagnostics"))
-    path = Pgets("Diagnostics");
+    path = PgetsEZ("Diagnostics");
   else
-    path = Pgets("output_directory_path");
+    path = PgetsEZ("output_directory_path");
   
   sprintf(dir,"%s/parameters.out",path);
   f = fopen(dir,"w");
@@ -408,9 +408,9 @@ void pr_coords(const Grid_T *const grid)
   unsigned i = 0;
   
   if (get_parameter("Diagnostics"))
-    path_par = Pgets("Diagnostics");
+    path_par = PgetsEZ("Diagnostics");
   else
-    path_par = Pgets("output_directory_path");
+    path_par = PgetsEZ("output_directory_path");
     
   path = make_directory(path_par,"Patches");
   

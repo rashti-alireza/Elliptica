@@ -68,7 +68,7 @@
 
 /* parameters */                                  
 //#define Pgeti(x) these are all fatal unlsess EZ be added
-//#define Pgets(x)
+//#define PgetsEZ(x)
 //#define Pgetd(x)
 //#define Pgeta(x)
 //#define Pcmps(x)
@@ -82,7 +82,7 @@
 
 
 
-#define Pgets(x)   get_parameter_value_S(x,__FILE__,__LINE__,NONE)
+#define PgetsEZ(x)   get_parameter_value_S(x,__FILE__,__LINE__,NONE)
 #define Pgeti(x)   get_parameter_value_I(x,__FILE__,__LINE__,NONE)
 #define Pgetd(x)   get_parameter_value_D(x,__FILE__,__LINE__,NONE)
 #define AddParameterDoubleF(x,y)    update_parameter_double_format(x,y)

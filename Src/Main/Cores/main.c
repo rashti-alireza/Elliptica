@@ -26,7 +26,7 @@ int main(int argn, char **argv)
   create_db_projects();/* add all of the desired projects 
                        // to the project data base */
   
-  proj_name = Pgets("Project");
+  proj_name = PgetsEZ("Project");
   proj      = get_project(proj_name);
   
   /* check if the parameter file is correct and this project exists */

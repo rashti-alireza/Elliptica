@@ -17,7 +17,7 @@ int solve_eqs(Solve_Equations_T *const SolveEqs)
     fsolve = ddm_schur_complement;
   else
     abortEr_s("No such method \"%s\" defined for this function.\n",
-      Pgets("Solving_Method"));
+      PgetsEZ("Solving_Method"));
   
   /* call the specific solving method */
   fsolve(SolveEqs);

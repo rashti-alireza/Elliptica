@@ -53,7 +53,7 @@ void bbn_solve_elliptic_eqs(Grid_T *const grid)
     solve_eqs(SolveEqs);
     
     /* study the solution */
-    if (strcmp_i(Pgets("Elliptic_Convergence_Test"),"yes"))
+    if (strcmp_i(PgetsEZ("Elliptic_Convergence_Test"),"yes"))
     {
       calculate_equation_residual(SolveEqs);
       bbn_study_initial_data(grid);

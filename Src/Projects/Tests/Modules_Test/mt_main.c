@@ -15,40 +15,40 @@ int Modules_Test(void)
   sEquation_T **field_eq,**bc_eq,
               **jacobian_field_eq,**jacobian_bc_eq;/* data base of equations */
   
-  if (strstr_i(Pgets("Test_EoS"),"yes"))
+  if (strstr_i(PgetsEZ("Test_EoS"),"yes"))
   {
     test_EoS(grid);
   }
   
-  if (strcmp_i(Pgets("Test_Jacobian_Elements_Js_Values"),"yes"))
+  if (strcmp_i(PgetsEZ("Test_Jacobian_Elements_Js_Values"),"yes"))
   {
     test_dfs_df_values(grid);
   }
   
-  if (strcmp_i(Pgets("Test_d(interp_a)/df"),"yes"))
+  if (strcmp_i(PgetsEZ("Test_d(interp_a)/df"),"yes"))
   {
     test_dInterp_a_df(grid);
   }
   
-  if (strstr_i(Pgets("Test_RootFinders"),"yes"))
+  if (strstr_i(PgetsEZ("Test_RootFinders"),"yes"))
     test_root_finders(grid);
   
-  if (strstr_i(Pgets("Test_Derivative"),"yes"))
+  if (strstr_i(PgetsEZ("Test_Derivative"),"yes"))
     derivative_tests(grid);
   
-  if (strstr_i(Pgets("Test_FourierTransformation"),"yes"))
+  if (strstr_i(PgetsEZ("Test_FourierTransformation"),"yes"))
     fourier_transformation_tests(grid);
     
-  if (strstr_i(Pgets("Test_Ylm_Transformation"),"yes"))
+  if (strstr_i(PgetsEZ("Test_Ylm_Transformation"),"yes"))
      Ylm_transformation_tests(grid);
     
-  if (strstr_i(Pgets("Test_Integration"),"yes"))
+  if (strstr_i(PgetsEZ("Test_Integration"),"yes"))
     integration_tests(grid);
   
-  if (strstr_i(Pgets("Test_CubedSpherical_Coordinates"),"yes"))
+  if (strstr_i(PgetsEZ("Test_CubedSpherical_Coordinates"),"yes"))
     test_CubedSpherical_Coordinates(grid);
   
-  if (strcmp_i(Pgets("Test_Jacobian_Elements_Js_Consistency"),"yes"))
+  if (strcmp_i(PgetsEZ("Test_Jacobian_Elements_Js_Consistency"),"yes"))
   {
     const char *types[] = {"dfx_df","dfy_df",0};
     unsigned p;
@@ -84,22 +84,22 @@ int Modules_Test(void)
     free_db_eqs(jacobian_bc_eq);
   }
   
-  if (strcmp_i(Pgets("Test_Matrix_Consistency"),"yes"))
+  if (strcmp_i(PgetsEZ("Test_Matrix_Consistency"),"yes"))
   {
     matrix_tests();
   }
   
-  if (strcmp_i(Pgets("Test_Solver_Consistency"),"yes"))
+  if (strcmp_i(PgetsEZ("Test_Solver_Consistency"),"yes"))
   {
     solver_tests();
   }
   
-  if (strstr_i(Pgets("Test_Interpolation"),"yes"))
+  if (strstr_i(PgetsEZ("Test_Interpolation"),"yes"))
   {
     interpolation_tests(grid);
   }
   
-  if (strstr_i(Pgets("Test_Math_General"),"yes"))
+  if (strstr_i(PgetsEZ("Test_Math_General"),"yes"))
   {
     summation_tests();
   }

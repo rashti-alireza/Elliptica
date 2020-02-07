@@ -134,19 +134,19 @@ void fill_patches_Cartesian_grid(Grid_T *const grid)
     patch->coordsys = Cartesian;
     
     /* collocation */
-    patch->collocation[0] = get_collocation(Pgets("collocation_a"));
-    patch->collocation[1] = get_collocation(Pgets("collocation_b"));
-    patch->collocation[2] = get_collocation(Pgets("collocation_c"));
+    patch->collocation[0] = get_collocation(PgetsEZ("collocation_a"));
+    patch->collocation[1] = get_collocation(PgetsEZ("collocation_b"));
+    patch->collocation[2] = get_collocation(PgetsEZ("collocation_c"));
   
     /* check for override */
     make_keyword_parameter(&ret,name,"collocation");
-    c = get_collocation(Pgets(ret.s0));
+    c = get_collocation(PgetsEZ(ret.s0));
     if (c != UNDEFINED_COLLOCATION)
       patch->collocation[0] = c;
-    c = get_collocation(Pgets(ret.s1));
+    c = get_collocation(PgetsEZ(ret.s1));
     if (c != UNDEFINED_COLLOCATION)
       patch->collocation[1] = c;
-    c = get_collocation(Pgets(ret.s2));
+    c = get_collocation(PgetsEZ(ret.s2));
     if (c != UNDEFINED_COLLOCATION)
       patch->collocation[2] = c;
     
@@ -155,19 +155,19 @@ void fill_patches_Cartesian_grid(Grid_T *const grid)
     assert(patch->collocation[2] != UNDEFINED_COLLOCATION);
     
     /* basis */
-    patch->basis[0] = get_basis(Pgets("basis_a"));
-    patch->basis[1] = get_basis(Pgets("basis_b"));
-    patch->basis[2] = get_basis(Pgets("basis_c"));
+    patch->basis[0] = get_basis(PgetsEZ("basis_a"));
+    patch->basis[1] = get_basis(PgetsEZ("basis_b"));
+    patch->basis[2] = get_basis(PgetsEZ("basis_c"));
   
     /* check for override */
     make_keyword_parameter(&ret,name,"basis");
-    b = get_basis(Pgets(ret.s0));
+    b = get_basis(PgetsEZ(ret.s0));
     if ( b != UNDEFINED_BASIS)
       patch->basis[0] = b;
-    b = get_basis(Pgets(ret.s1));
+    b = get_basis(PgetsEZ(ret.s1));
     if ( b != UNDEFINED_BASIS)
       patch->basis[1] = b;
-    b = get_basis(Pgets(ret.s2));
+    b = get_basis(PgetsEZ(ret.s2));
     if ( b != UNDEFINED_BASIS)
       patch->basis[2] = b;
     
