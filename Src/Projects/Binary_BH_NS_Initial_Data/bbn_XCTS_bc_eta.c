@@ -15,8 +15,8 @@ void *bbn_bc_eta(void *vp1,void *vp2)
   unsigned ijk;/* node index */
 
   /* declaring: */
-  GET_FIELD(eta)
-  GET_FIELD(psi)
+  READ_v(eta)
+  READ_v(psi)
 
 
   if (patch->outerB)/* at outer boundary */

@@ -4,7 +4,7 @@ Dimension = 3;
 # point on manifold shown by:
 Point = ijk;
 
-C_macro  = GET_FIELD(name);
+C_macro  = READ_v(name);
 C_macro2 = PREP_FIELD(name);
 C_macro3 = DECLARE_AND_EMPTY_FIELD(name);
 C_macro4 = add_field_and_prep_field(name);
@@ -138,24 +138,24 @@ Ccode["    }/*end of for(ijk = 0; ijk < nn; ++ijk)*/"];
 `  f_dLBij_U0U2D1->v = Partial_Derivative(f_LBij_U0U2,"y");`;
 `  f_dLBij_U0U2D2->v = Partial_Derivative(f_LBij_U0U2,"z");`;
 
-`  GET_FIELD(_dLBij_U2U2D2)`
-`  GET_FIELD(_dLBij_U2U2D0)`
-`  GET_FIELD(_dLBij_U2U2D1)`
-`  GET_FIELD(_dLBij_U1U1D2)`
-`  GET_FIELD(_dLBij_U1U1D0)`
-`  GET_FIELD(_dLBij_U1U1D1)`
-`  GET_FIELD(_dLBij_U0U0D2)`
-`  GET_FIELD(_dLBij_U0U0D0)`
-`  GET_FIELD(_dLBij_U0U0D1)`
-`  GET_FIELD(_dLBij_U0U1D2)`
-`  GET_FIELD(_dLBij_U0U1D1)`
-`  GET_FIELD(_dLBij_U0U1D0)`
-`  GET_FIELD(_dLBij_U1U2D1)`
-`  GET_FIELD(_dLBij_U1U2D0)`
-`  GET_FIELD(_dLBij_U1U2D2)`
-`  GET_FIELD(_dLBij_U0U2D0)`
-`  GET_FIELD(_dLBij_U0U2D1)`
-`  GET_FIELD(_dLBij_U0U2D2)`
+`  READ_v(_dLBij_U2U2D2)`
+`  READ_v(_dLBij_U2U2D0)`
+`  READ_v(_dLBij_U2U2D1)`
+`  READ_v(_dLBij_U1U1D2)`
+`  READ_v(_dLBij_U1U1D0)`
+`  READ_v(_dLBij_U1U1D1)`
+`  READ_v(_dLBij_U0U0D2)`
+`  READ_v(_dLBij_U0U0D0)`
+`  READ_v(_dLBij_U0U0D1)`
+`  READ_v(_dLBij_U0U1D2)`
+`  READ_v(_dLBij_U0U1D1)`
+`  READ_v(_dLBij_U0U1D0)`
+`  READ_v(_dLBij_U1U2D1)`
+`  READ_v(_dLBij_U1U2D0)`
+`  READ_v(_dLBij_U1U2D2)`
+`  READ_v(_dLBij_U0U2D0)`
+`  READ_v(_dLBij_U0U2D1)`
+`  READ_v(_dLBij_U0U2D2)`
 
 
 Ccode["    for(ijk = 0; ijk < nn; ++ijk)"];

@@ -58,22 +58,22 @@ bbn_update_Beta_U1(patch);
 bbn_update_Beta_U2(patch);
 
   /* declaring: */
-  GET_FIELD(_gamma_D2D2)
-  GET_FIELD(_gamma_D0D2)
-  GET_FIELD(_gamma_D0D0)
-  GET_FIELD(_gamma_D0D1)
-  GET_FIELD(_gamma_D1D2)
-  GET_FIELD(_gamma_D1D1)
-  GET_FIELD(W_U1)
-  GET_FIELD(W_U0)
-  GET_FIELD(W_U2)
-  GET_FIELD(eta)
-  GET_FIELD(Beta_U1)
-  GET_FIELD(Beta_U0)
-  GET_FIELD(Beta_U2)
-  GET_FIELD(psi)
-  GET_FIELD(enthalpy)
-  GET_FIELD(u0)
+  READ_v(_gamma_D2D2)
+  READ_v(_gamma_D0D2)
+  READ_v(_gamma_D0D0)
+  READ_v(_gamma_D0D1)
+  READ_v(_gamma_D1D2)
+  READ_v(_gamma_D1D1)
+  READ_v(W_U1)
+  READ_v(W_U0)
+  READ_v(W_U2)
+  READ_v(eta)
+  READ_v(Beta_U1)
+  READ_v(Beta_U0)
+  READ_v(Beta_U2)
+  READ_v(psi)
+  READ_v(enthalpy)
+  READ_v(u0)
 
 
 ADD_AND_ALLOC_FIELD(Gtilda_rf);

@@ -6,9 +6,9 @@ Dimension = 3;
 # point on manifold shown by:
 Point = ijk;
 
-C_macro  = GET_FIELD(name);
+C_macro  = READ_v(name);
 C_macro2 = PREP_FIELD(name);
-C_macro4 = GET_FIELD_UNUSED(name);
+C_macro4 = READ_v_UNUSED(name);
 
 # main function:
 `#include "bbn_headers.h"`;

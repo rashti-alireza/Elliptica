@@ -6,7 +6,7 @@ Dimension = 3;
 # point on manifold shown by:
 Point = ijk;
 
-C_macro = GET_FIELD(name);
+C_macro = READ_v(name);
 C_macro1 = ADD_FIELD(name);
 C_macro2 = PREP_FIELD(name);
 

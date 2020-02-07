@@ -13,7 +13,7 @@ Dimension = 3;
 # point on manifold shown by:
 Point = ijk;
 
-C_macro = GET_FIELD(name);
+C_macro = READ_v(name);
 C_macro2 = PREP_FIELD(name);
 Ccode["#include "IdealFluid_CTS_lib.h"\n\n"];
 Ccode["void Tij_IF_CTS_psi6J_Ui(Patch_T *const patch)"];

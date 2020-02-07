@@ -7,10 +7,10 @@ Dimension = 3;
 Point = ijk;
 
 # C macors
-C_macro  = GET_FIELD(name);
+C_macro  = READ_v(name);
 C_macro2 = PREP_FIELD(name);
 C_macro3 = JACOBIAN_DERIVATIVE(name);
-C_macro4 = GET_FIELD_IF_IN_NS(name);
+C_macro4 = READ_v_IF_IN_NS(name);
 
 # C arguments for jacobian of derivatives
 C_arg = (j_name,ijk,lmn);

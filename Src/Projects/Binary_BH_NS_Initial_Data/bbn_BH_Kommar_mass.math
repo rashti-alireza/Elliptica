@@ -4,7 +4,7 @@ Dimension = 3;
 # point on manifold shown by:
 Point = ijk;
 
-C_macro  = GET_FIELD(name);
+C_macro  = READ_v(name);
 
 `#include "bbn_headers.h"\n`
 

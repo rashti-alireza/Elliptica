@@ -756,8 +756,8 @@ static void adjust_NS_center_tune_enthalpy(Grid_T *const grid,const double dhx0,
     
     {/* local variables */
       CALL_v(enthalpy)
-      //GET_FIELD(denthalpy_D2)
-      //GET_FIELD(denthalpy_D0)
+      //READ_v(denthalpy_D2)
+      //READ_v(denthalpy_D0)
     
       for (ijk = 0; ijk < nn; ++ijk)
       {
@@ -3431,24 +3431,24 @@ static void find_Euler_eq_const_TOV_KerrSchild(Grid_T *const grid)
       continue;
     
     ijk = 0;/* for an arbitrary point */
-    GET_FIELD(enthalpy)
-    GET_FIELD(_gammaI_U0U2)
-    GET_FIELD(_gammaI_U0U0)
-    GET_FIELD(_gammaI_U0U1)
-    GET_FIELD(_gammaI_U1U2)
-    GET_FIELD(_gammaI_U1U1)
-    GET_FIELD(_gammaI_U2U2)
-    GET_FIELD(W_U1)
-    GET_FIELD(W_U0)
-    GET_FIELD(W_U2)
-    GET_FIELD(dphi_D2)
-    GET_FIELD(dphi_D1)
-    GET_FIELD(dphi_D0)
-    GET_FIELD(Beta_U1)
-    GET_FIELD(Beta_U0)
-    GET_FIELD(Beta_U2)
-    GET_FIELD(psi)
-    GET_FIELD(u0)
+    READ_v(enthalpy)
+    READ_v(_gammaI_U0U2)
+    READ_v(_gammaI_U0U0)
+    READ_v(_gammaI_U0U1)
+    READ_v(_gammaI_U1U2)
+    READ_v(_gammaI_U1U1)
+    READ_v(_gammaI_U2U2)
+    READ_v(W_U1)
+    READ_v(W_U0)
+    READ_v(W_U2)
+    READ_v(dphi_D2)
+    READ_v(dphi_D1)
+    READ_v(dphi_D0)
+    READ_v(Beta_U1)
+    READ_v(Beta_U0)
+    READ_v(Beta_U2)
+    READ_v(psi)
+    READ_v(u0)
 
     double psim4 = 
 pow(psi[ijk], -4);
@@ -3516,12 +3516,12 @@ static void make_normal_vector_on_BH_horizon(Grid_T *const grid,struct Grid_Para
         
       nn = patch->nn;
       
-      GET_FIELD(_gamma_D2D2)
-      GET_FIELD(_gamma_D0D2)
-      GET_FIELD(_gamma_D0D0)
-      GET_FIELD(_gamma_D0D1)
-      GET_FIELD(_gamma_D1D2)
-      GET_FIELD(_gamma_D1D1)
+      READ_v(_gamma_D2D2)
+      READ_v(_gamma_D0D2)
+      READ_v(_gamma_D0D0)
+      READ_v(_gamma_D0D1)
+      READ_v(_gamma_D1D2)
+      READ_v(_gamma_D1D1)
       
       /* normal vector on horizon */
       PREP_FIELD(_HS_U0);
@@ -3616,12 +3616,12 @@ static void init_field_TOV_plus_KerrSchild(Grid_T *const grid,const TOV_T *const
     PREP_FIELD(Beta_U1)
     PREP_FIELD(Beta_U2)
     
-    GET_FIELD(_gammaI_U0U2)
-    GET_FIELD(_gammaI_U0U0)
-    GET_FIELD(_gammaI_U0U1)
-    GET_FIELD(_gammaI_U1U2)
-    GET_FIELD(_gammaI_U1U1)
-    GET_FIELD(_gammaI_U2U2)
+    READ_v(_gammaI_U0U2)
+    READ_v(_gammaI_U0U0)
+    READ_v(_gammaI_U0U1)
+    READ_v(_gammaI_U1U2)
+    READ_v(_gammaI_U1U1)
+    READ_v(_gammaI_U2U2)
 
     ADD_FIELD(KSbeta_D0)
     ADD_FIELD(KSbeta_D1)
@@ -3703,7 +3703,7 @@ KSbeta_D2[ijk]*_gammaI_U2U2[ijk];
     
     PREP_FIELD(psi)
     PREP_FIELD(eta)
-    GET_FIELD(KSalpha)
+    READ_v(KSalpha)
     
     if (IsItNSPatch(patch))
     {
@@ -3816,10 +3816,10 @@ KSbeta_D2[ijk]*_gammaI_U2U2[ijk];
      CALL_v(Beta_U1)
      CALL_v(Beta_U2)
      
-     GET_FIELD(B1_U0)
-     GET_FIELD(B1_U1)
-     GET_FIELD(B1_U2)
-     GET_FIELD(psi)
+     READ_v(B1_U0)
+     READ_v(B1_U1)
+     READ_v(B1_U2)
+     READ_v(psi)
      
      /* for outermost patches the better approximation is B0 = 0 */
      if (IsItOutermostPatch(patch))

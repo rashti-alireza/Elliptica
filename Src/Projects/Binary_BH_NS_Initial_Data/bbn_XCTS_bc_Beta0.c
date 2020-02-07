@@ -15,11 +15,11 @@ void *bbn_bc_Beta_U0(void *vp1,void *vp2)
   unsigned ijk;/* node index */
 
   /* declaring: */
-  GET_FIELD(B0_U0)
-  GET_FIELD(B1_U0)
-  GET_FIELD(psi)
-  GET_FIELD(eta)
-  GET_FIELD_IF_ON_HORIZON(_HS_U0)
+  READ_v(B0_U0)
+  READ_v(B1_U0)
+  READ_v(psi)
+  READ_v(eta)
+  READ_v_IF_ON_HORIZON(_HS_U0)
 
 
   const double BH_center_y = GetParameterD_E("BH_center_y");

@@ -15,7 +15,7 @@ void *bc_alpha(void *vp1,void *vp2)
   unsigned ijk;/* node index */
 
   /* declaring: */
-  GET_FIELD(alpha)
+  READ_v(alpha)
 
 
   if (patch->outerB)/* at outer boundary */

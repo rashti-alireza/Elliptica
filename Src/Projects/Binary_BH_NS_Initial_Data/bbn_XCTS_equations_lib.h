@@ -1,12 +1,12 @@
 /* defining macro such that only gets the field value if the patch covers the BH horizon. */
-#define GET_FIELD_IF_ON_HORIZON(xNAME) \
+#define READ_v_IF_ON_HORIZON(xNAME) \
  double *xNAME = 0;/* so it gets segfault if mistakenly the value is acquired. */\
  if (IsItHorizonPatch(patch))\
    xNAME = patch->pool[Ind(#xNAME)]->v;\
  UNUSED(xNAME);
 
 /* defining macro such that only gets the field value if the patch covers the NS. */
-#define GET_FIELD_IF_IN_NS(xNAME) \
+#define READ_v_IF_IN_NS(xNAME) \
  double *xNAME = 0;/* so it gets segfault if mistakenly the value is acquired. */\
  if (IsItNSPatch(patch))\
    xNAME = patch->pool[Ind(#xNAME)]->v;

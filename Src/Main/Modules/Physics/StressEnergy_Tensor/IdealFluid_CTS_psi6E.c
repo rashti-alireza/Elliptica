@@ -22,11 +22,11 @@ void Tij_IF_CTS_psi6E(Patch_T *const patch)
   unsigned ijk;
 
   /* declaring: */
-  GET_FIELD(enthalpy)
-  GET_FIELD(eta)
-  GET_FIELD(u0)
-  GET_FIELD(psi)
-  GET_FIELD(rho0)
+  READ_v(enthalpy)
+  READ_v(eta)
+  READ_v(u0)
+  READ_v(psi)
+  READ_v(rho0)
   PREP_FIELD(_E)
 
 

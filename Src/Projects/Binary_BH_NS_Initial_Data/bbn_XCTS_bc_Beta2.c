@@ -15,11 +15,11 @@ void *bbn_bc_Beta_U2(void *vp1,void *vp2)
   unsigned ijk;/* node index */
 
   /* declaring: */
-  GET_FIELD(B0_U2)
-  GET_FIELD(B1_U2)
-  GET_FIELD(psi)
-  GET_FIELD(eta)
-  GET_FIELD_IF_ON_HORIZON(_HS_U2)
+  READ_v(B0_U2)
+  READ_v(B1_U2)
+  READ_v(psi)
+  READ_v(eta)
+  READ_v_IF_ON_HORIZON(_HS_U2)
 
 
   const double v2_boost = GetParameterD_E("v*_boost_z");

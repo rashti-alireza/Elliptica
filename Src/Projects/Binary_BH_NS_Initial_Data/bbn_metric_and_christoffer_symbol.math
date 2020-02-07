@@ -6,7 +6,7 @@ Dimension = 3;
 # point on manifold shown by:
 Point = ijk;
 
-C_macro  = GET_FIELD(name);
+C_macro  = READ_v(name);
 C_macro1 = PREP_FIELD(name);
 C_macro2 = add_field_and_get_field(name);
 C_macro3 = ADD_FIELD(name);
@@ -212,18 +212,18 @@ Ccode["}"];
 `  const unsigned nn = patch->nn;`
 `  unsigned ijk;`
 ``
-`  GET_FIELD(_gamma_D2D2)`
-`  GET_FIELD(_gamma_D0D2)`
-`  GET_FIELD(_gamma_D0D0)`
-`  GET_FIELD(_gamma_D0D1)`
-`  GET_FIELD(_gamma_D1D2)`
-`  GET_FIELD(_gamma_D1D1)`
-`  GET_FIELD(_gammaI_U0U2)`
-`  GET_FIELD(_gammaI_U0U0)`
-`  GET_FIELD(_gammaI_U0U1)`
-`  GET_FIELD(_gammaI_U1U2)`
-`  GET_FIELD(_gammaI_U1U1)`
-`  GET_FIELD(_gammaI_U2U2)`
+`  READ_v(_gamma_D2D2)`
+`  READ_v(_gamma_D0D2)`
+`  READ_v(_gamma_D0D0)`
+`  READ_v(_gamma_D0D1)`
+`  READ_v(_gamma_D1D2)`
+`  READ_v(_gamma_D1D1)`
+`  READ_v(_gammaI_U0U2)`
+`  READ_v(_gammaI_U0U0)`
+`  READ_v(_gammaI_U0U1)`
+`  READ_v(_gammaI_U1U2)`
+`  READ_v(_gammaI_U1U1)`
+`  READ_v(_gammaI_U2U2)`
 ``
 `  ADD_FIELD(gamma_D2D2)`
 `  ADD_FIELD(gamma_D0D2)`
@@ -252,7 +252,7 @@ Ccode["}"];
 `  PREP_FIELD(gammaI_U1U1)`
 `  PREP_FIELD(gammaI_U2U2)`
 `  `
-`  GET_FIELD(psi)`
+`  READ_v(psi)`
 `  for (ijk = 0; ijk < nn; ++ijk)`
 `  {`
 `    double psi4  = pow(psi[ijk],4);`

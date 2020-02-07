@@ -118,13 +118,13 @@ static void populate_observable_BBN_CS(Observable_T *const obs)
       double *g12 = alloc_double(nn);
       double *g22 = alloc_double(nn);
       
-      GET_FIELD(_gamma_D2D2)
-      GET_FIELD(_gamma_D0D2)
-      GET_FIELD(_gamma_D0D0)
-      GET_FIELD(_gamma_D0D1)
-      GET_FIELD(_gamma_D1D2)
-      GET_FIELD(_gamma_D1D1)
-      GET_FIELD(psi);
+      READ_v(_gamma_D2D2)
+      READ_v(_gamma_D0D2)
+      READ_v(_gamma_D0D0)
+      READ_v(_gamma_D0D1)
+      READ_v(_gamma_D1D2)
+      READ_v(_gamma_D1D1)
+      READ_v(psi);
       
       obs->ADM[n]->patch = patch;
       /* populate metric components */ 
