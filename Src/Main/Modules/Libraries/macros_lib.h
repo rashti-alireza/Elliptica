@@ -97,6 +97,9 @@
 /* add or update a string type parameter */
 #define Psets(x,y)  update_parameter_string(x,y)
 
+/* set default parameter */
+#define Pset_default(x,y) set_default_parameter(x,y)
+
 /* OpenMP for 2 dimension */
 #ifdef Pragma_OpenMP_2d
 #define OpenMP_2d_Pragma(x) _Pragma ( #x )

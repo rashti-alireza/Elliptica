@@ -45,6 +45,7 @@ char *get_n_value_str_ip(const Parameter_T *const par,const unsigned n);
 void update_iterative_parameter_ip(const unsigned iter);
 unsigned total_iterative_parameters_ip(void);
 unsigned total_iterations_ip(void);
+void set_default_parameter(const char *const lhs,const char *const rhs);
 
 /* fields */
 Field_T *add_field(const char *const name,const char *attribute,Patch_T *const patch,const Flag_T alloc_flg);

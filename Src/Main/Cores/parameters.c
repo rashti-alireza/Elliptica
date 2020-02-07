@@ -497,9 +497,8 @@ int make_parameters(const char *const path)
   
   read_input_file(path);
   
-  /* setting the default value of parameters if they are needed and
-  not provided by the inputfile */
-  set_default_parameter();
+  /* set default value */
+  Pset_default("output_directory_name",inputfile_name_global);
   
   /* making a folder at the directory of 
   // input file with the name of "inputfile_output"
@@ -704,4 +703,26 @@ char *par_value_str_ip(const unsigned n)
     abortEr("The total number of iterative parameters is fewer.\n");
   
   return ret;
+}
+
+/* set the parameter unless it has already been set */
+void set_default_parameter(const char *const lhs,const char *const rhs)
+{
+  const char *v;
+  Parameter_T *par;
+  
+  par = get_parameter(lhs);
+  if (par == 0)
+    add_parameter(lhs,rhs);
+  else
+  {
+    v = PgetsEZ(lhs);
+    if (v == 0)
+      par->rv = dup_s(rhs);
+    else if (v[0] == '\0' || strcmp_i(v,"default"))
+    {
+      free(par->rv);
+      par->rv = dup_s(rhs);
+    }
+  }
 }
