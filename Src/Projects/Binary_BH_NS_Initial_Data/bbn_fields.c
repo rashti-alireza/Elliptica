@@ -1092,7 +1092,7 @@ static void cleaning_enthalpy(Patch_T *const patch)
   if(!IsItNSSurface(patch))
     return;
     
-  MODIFY_FIELD(enthalpy)
+  CALL_v(enthalpy)
   
   const unsigned nn = patch->nn;
   unsigned ijk;

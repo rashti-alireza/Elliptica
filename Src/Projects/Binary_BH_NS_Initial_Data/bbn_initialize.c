@@ -755,7 +755,7 @@ static void adjust_NS_center_tune_enthalpy(Grid_T *const grid,const double dhx0,
       continue;
     
     {/* local variables */
-      MODIFY_FIELD(enthalpy)
+      CALL_v(enthalpy)
       //GET_FIELD(denthalpy_D2)
       //GET_FIELD(denthalpy_D0)
     
@@ -3812,9 +3812,9 @@ KSbeta_D2[ijk]*_gammaI_U2U2[ijk];
      PREP_FIELD(B0_U1)
      PREP_FIELD(B0_U2)
      
-     MODIFY_FIELD(Beta_U0)
-     MODIFY_FIELD(Beta_U1)
-     MODIFY_FIELD(Beta_U2)
+     CALL_v(Beta_U0)
+     CALL_v(Beta_U1)
+     CALL_v(Beta_U2)
      
      GET_FIELD(B1_U0)
      GET_FIELD(B1_U1)
