@@ -50,24 +50,24 @@ Ccode["void bbn_calculate_constraints_1st(Grid_T *const grid)"];
     #_dgammaI_U0U1D2
     #_dgammaI_U2U2D0
 
-`  ADD_FIELD_NoMem(_dgammaI_U0U0D1)`
-`  ADD_FIELD_NoMem(_dgammaI_U0U0D0)`
-`  ADD_FIELD_NoMem(_dgammaI_U2U2D2)`
-`  ADD_FIELD_NoMem(_dgammaI_U0U0D2)`
-`  ADD_FIELD_NoMem(_dgammaI_U0U2D1)`
-`  ADD_FIELD_NoMem(_dgammaI_U1U1D0)`
-`  ADD_FIELD_NoMem(_dgammaI_U1U1D2)`
-`  ADD_FIELD_NoMem(_dgammaI_U2U2D0)`
-`  ADD_FIELD_NoMem(_dgammaI_U2U2D1)`
-`  ADD_FIELD_NoMem(_dgammaI_U0U1D0)`
-`  ADD_FIELD_NoMem(_dgammaI_U0U1D1)`
-`  ADD_FIELD_NoMem(_dgammaI_U0U1D2)`
-`  ADD_FIELD_NoMem(_dgammaI_U0U2D0)`
-`  ADD_FIELD_NoMem(_dgammaI_U1U1D1)`
-`  ADD_FIELD_NoMem(_dgammaI_U1U2D1)`
-`  ADD_FIELD_NoMem(_dgammaI_U1U2D2)`
-`  ADD_FIELD_NoMem(_dgammaI_U1U2D0)`
-`  ADD_FIELD_NoMem(_dgammaI_U0U2D2)`
+`  ADD_FIELD(_dgammaI_U0U0D1)`
+`  ADD_FIELD(_dgammaI_U0U0D0)`
+`  ADD_FIELD(_dgammaI_U2U2D2)`
+`  ADD_FIELD(_dgammaI_U0U0D2)`
+`  ADD_FIELD(_dgammaI_U0U2D1)`
+`  ADD_FIELD(_dgammaI_U1U1D0)`
+`  ADD_FIELD(_dgammaI_U1U1D2)`
+`  ADD_FIELD(_dgammaI_U2U2D0)`
+`  ADD_FIELD(_dgammaI_U2U2D1)`
+`  ADD_FIELD(_dgammaI_U0U1D0)`
+`  ADD_FIELD(_dgammaI_U0U1D1)`
+`  ADD_FIELD(_dgammaI_U0U1D2)`
+`  ADD_FIELD(_dgammaI_U0U2D0)`
+`  ADD_FIELD(_dgammaI_U1U1D1)`
+`  ADD_FIELD(_dgammaI_U1U2D1)`
+`  ADD_FIELD(_dgammaI_U1U2D2)`
+`  ADD_FIELD(_dgammaI_U1U2D0)`
+`  ADD_FIELD(_dgammaI_U0U2D2)`
 ``
 #`  DECLARE_FIELD(_dgammaI_U0U0D1)`
 `  DECLARE_FIELD(_dgammaI_U0U0D0)`

@@ -8,7 +8,7 @@ Point = ijk;
 
 C_macro  = GET_FIELD(name);
 C_macro2 = add_field_and_get_field(name);
-C_macro3 = ADD_FIELD_NoMem(name);
+C_macro3 = ADD_FIELD(name);
 
 # main function:
 Ccode["#include "bbn_headers.h""];

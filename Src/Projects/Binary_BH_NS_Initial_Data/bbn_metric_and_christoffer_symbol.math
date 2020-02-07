@@ -9,7 +9,7 @@ Point = ijk;
 C_macro  = GET_FIELD(name);
 C_macro1 = PREP_FIELD(name);
 C_macro2 = add_field_and_get_field(name);
-C_macro3 = ADD_FIELD_NoMem(name);
+C_macro3 = ADD_FIELD(name);
 
 # main function:
 Ccode["#include "bbn_headers.h""];
@@ -289,24 +289,24 @@ Ccode["}"];
 `  DECLARE_FIELD(gamma_D1D1)`
 ``
 `  /* add fields for derivative of the metric */`
-`  ADD_FIELD_NoMem(dgamma_D0D0D1)`
-`  ADD_FIELD_NoMem(dgamma_D0D0D0)`
-`  ADD_FIELD_NoMem(dgamma_D2D2D2)`
-`  ADD_FIELD_NoMem(dgamma_D0D0D2)`
-`  ADD_FIELD_NoMem(dgamma_D0D2D1)`
-`  ADD_FIELD_NoMem(dgamma_D1D1D0)`
-`  ADD_FIELD_NoMem(dgamma_D1D1D2)`
-`  ADD_FIELD_NoMem(dgamma_D2D2D0)`
-`  ADD_FIELD_NoMem(dgamma_D2D2D1)`
-`  ADD_FIELD_NoMem(dgamma_D0D1D0)`
-`  ADD_FIELD_NoMem(dgamma_D0D1D1)`
-`  ADD_FIELD_NoMem(dgamma_D0D1D2)`
-`  ADD_FIELD_NoMem(dgamma_D0D2D0)`
-`  ADD_FIELD_NoMem(dgamma_D1D1D1)`
-`  ADD_FIELD_NoMem(dgamma_D1D2D1)`
-`  ADD_FIELD_NoMem(dgamma_D1D2D2)`
-`  ADD_FIELD_NoMem(dgamma_D1D2D0)`
-`  ADD_FIELD_NoMem(dgamma_D0D2D2)`
+`  ADD_FIELD(dgamma_D0D0D1)`
+`  ADD_FIELD(dgamma_D0D0D0)`
+`  ADD_FIELD(dgamma_D2D2D2)`
+`  ADD_FIELD(dgamma_D0D0D2)`
+`  ADD_FIELD(dgamma_D0D2D1)`
+`  ADD_FIELD(dgamma_D1D1D0)`
+`  ADD_FIELD(dgamma_D1D1D2)`
+`  ADD_FIELD(dgamma_D2D2D0)`
+`  ADD_FIELD(dgamma_D2D2D1)`
+`  ADD_FIELD(dgamma_D0D1D0)`
+`  ADD_FIELD(dgamma_D0D1D1)`
+`  ADD_FIELD(dgamma_D0D1D2)`
+`  ADD_FIELD(dgamma_D0D2D0)`
+`  ADD_FIELD(dgamma_D1D1D1)`
+`  ADD_FIELD(dgamma_D1D2D1)`
+`  ADD_FIELD(dgamma_D1D2D2)`
+`  ADD_FIELD(dgamma_D1D2D0)`
+`  ADD_FIELD(dgamma_D0D2D2)`
 ``
 `  DECLARE_FIELD(dgamma_D0D0D1)`
 `  DECLARE_FIELD(dgamma_D0D0D0)`
