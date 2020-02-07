@@ -81,8 +81,8 @@ void *bbn_eq_phi(void *vp1,void *vp2)
   READ_v(_Gamma_U1D1D1)
 
 
-  const double rhoc = Pgetd_E("rho_center");
-  const double e    = Pgetd_E("Solving_phi_Jacobian_smoothness");
+  const double rhoc = Pgetd("rho_center");
+  const double e    = Pgetd("Solving_phi_Jacobian_smoothness");
   const double att  = e*rhoc;
   DDM_SCHUR_EQ_OPEN
 
@@ -194,7 +194,7 @@ t5 + t6;
 
   if(strstr(patch->name,"left_central_box"))
   {
-    const double NS_center[3] = {0,Pgetd_E("NS_center"),0};
+    const double NS_center[3] = {0,Pgetd("NS_center"),0};
     Interpolation_T *interp_phi0 = init_interpolation();
     double interp;
     double X[3] = {0};

@@ -66,14 +66,14 @@ Declare =
 
 # OUTER BOUNDARY LIKE INFINITY #
 
-#`  const double BH_center_x = Pgetd_E("BH_center_x");`
-#`  const double BH_center_y = Pgetd_E("BH_center_y");`
-#`  const double BH_center_z = Pgetd_E("BH_center_z");`
-#`  const double C_BH = 0.5*Pgetd_E("BH_NS_separation");`;
-#`  const double BH_Omega_U0 = Pgetd_E("BH_Omega_U0");`;
-#`  const double BH_Omega_U1 = Pgetd_E("BH_Omega_U1");`;
-#`  const double BH_Omega_U2 = Pgetd_E("BH_Omega_U2");`;
-`  const double v2_boost = Pgetd_E("v*_boost_z");`
+#`  const double BH_center_x = Pgetd("BH_center_x");`
+#`  const double BH_center_y = Pgetd("BH_center_y");`
+#`  const double BH_center_z = Pgetd("BH_center_z");`
+#`  const double C_BH = 0.5*Pgetd("BH_NS_separation");`;
+#`  const double BH_Omega_U0 = Pgetd("BH_Omega_U0");`;
+#`  const double BH_Omega_U1 = Pgetd("BH_Omega_U1");`;
+#`  const double BH_Omega_U2 = Pgetd("BH_Omega_U2");`;
+`  const double v2_boost = Pgetd("v*_boost_z");`
 `  if (patch->outerB)/* at outer boundary */`;
 `  {`;
 `  DDM_SCHUR_BC_OPEN\n`;

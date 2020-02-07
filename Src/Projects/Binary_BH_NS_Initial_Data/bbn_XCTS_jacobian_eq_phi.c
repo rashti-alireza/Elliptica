@@ -69,8 +69,8 @@ void *bbn_jacobian_eq_phi(void *vp1,void *vp2)
   READ_v(_Gamma_U1D1D1)
 
 
-  const double rhoc = Pgetd_E("rho_center");
-  const double e    = Pgetd_E("Solving_phi_Jacobian_smoothness");
+  const double rhoc = Pgetd("rho_center");
+  const double e    = Pgetd("Solving_phi_Jacobian_smoothness");
   const double att  = e*rhoc;
   DDM_SCHUR_JACOBIAN_EQ_Bpart_OPEN
 
@@ -239,7 +239,7 @@ t1_e_;
   if(strstr(patch->name,"left_central_box"))
   {
    fdInterp_dfs_T *const dInterp_df = get_dInterp_df(patch,0,"none");
-   const double NS_center[3] = {0,Pgetd_E("NS_center"),0};
+   const double NS_center[3] = {0,Pgetd("NS_center"),0};
    const unsigned nn = patch->nn;
    double *d_df = alloc_double(nn);
    double X[3];

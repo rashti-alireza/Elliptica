@@ -461,10 +461,10 @@ static double ADM_angular_momentum_z_BBN_CS(Observable_T *const obs)
   //populate_ADM_momentums_integrand_PdS_GdV(obs);
   
   if (get_parameter("y_CM"))
-    y_CM = Pgetd_E("y_CM");
+    y_CM = Pgetd("y_CM");
     
   if (get_parameter("x_CM"))
-    x_CM = Pgetd_E("x_CM");
+    x_CM = Pgetd("x_CM");
   
   /* surface integration */
   for(p = 0; p < N; ++p)
@@ -577,7 +577,7 @@ static double ADM_angular_momentum_x_BBN_CS(Observable_T *const obs)
   //populate_ADM_momentums_integrand_PdS_GdV(obs);
   
   if (get_parameter("y_CM"))
-    y_CM = Pgetd_E("y_CM");
+    y_CM = Pgetd("y_CM");
     
   /* surface integration */
   for(p = 0; p < N; ++p)
@@ -691,7 +691,7 @@ static double ADM_angular_momentum_y_BBN_CS(Observable_T *const obs)
   //populate_ADM_momentums_integrand_PdS_GdV(obs);
   
   if (get_parameter("x_CM"))
-    x_CM = Pgetd_E("x_CM");
+    x_CM = Pgetd("x_CM");
     
   /* surface integration */
   for(p = 0; p < N; ++p)

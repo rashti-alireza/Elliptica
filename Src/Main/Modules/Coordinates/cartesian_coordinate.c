@@ -110,15 +110,15 @@ void fill_patches_Cartesian_grid(Grid_T *const grid)
     
     /* filling center */
     make_keyword_parameter(&ret,name,"center");
-    patch->c[0] = Pgetd_E(ret.s0);
-    patch->c[1] = Pgetd_E(ret.s1);
-    patch->c[2] = Pgetd_E(ret.s2);
+    patch->c[0] = Pgetd(ret.s0);
+    patch->c[1] = Pgetd(ret.s1);
+    patch->c[2] = Pgetd(ret.s2);
     
     /* filling size */
     make_keyword_parameter(&ret,name,"size");
-    patch->s[0] = Pgetd_E(ret.s0);
-    patch->s[1] = Pgetd_E(ret.s1);
-    patch->s[2] = Pgetd_E(ret.s2);
+    patch->s[0] = Pgetd(ret.s0);
+    patch->s[1] = Pgetd(ret.s1);
+    patch->s[2] = Pgetd(ret.s2);
     
     /* filling min: min = center-l/2 */
     patch->min[0] = patch->c[0]-patch->s[0]/2;

@@ -164,7 +164,7 @@ static int fdS_spectral(Grid_T *const grid)
     /* testing NS sphere surface: */
     printf("\n--> Integral{f(x)dS}|at NS surface section:\n");
     
-    r = Pgetd_E("NS_radius");
+    r = Pgetd("NS_radius");
     analytic = 4*M_PI*pow(r,2);
     numeric  = 0;
     /* go over all patches */
@@ -227,7 +227,7 @@ static int fdS_spectral(Grid_T *const grid)
     /* testing outermost0 sphere surface: */
     printf("\n--> Integral{f(x)dS}|at sphere surface of outermost0 section:\n");
     
-    r = Pgetd_E("Outermost0_radius");
+    r = Pgetd("Outermost0_radius");
     analytic = 4*M_PI*pow(r,2);
     numeric  = 0;
     /* go over all patches */
@@ -288,7 +288,7 @@ static int fdS_spectral(Grid_T *const grid)
     /* testing outermost0 cube surface: */
     printf("\n--> Integral{f(x)dS}|at plane surface of outermost0 section:\n");
     
-    r = 2*Pgetd_E("BH_NS_separation");
+    r = 2*Pgetd("BH_NS_separation");
     analytic = 6*SQR(r);
     numeric  = 0;
     /* go over all patches */
@@ -431,8 +431,8 @@ static int fdV_spectral(Grid_T *const grid)
     /* testing outermost0: */
     printf("\n--> Integral{f(x)dV}|at outermost0 section:\n");
     
-    r = Pgetd_E("Outermost0_radius");
-    analytic = 4./3.*M_PI*pow(r,3)-pow(2*Pgetd_E("BH_NS_separation"),3);
+    r = Pgetd("Outermost0_radius");
+    analytic = 4./3.*M_PI*pow(r,3)-pow(2*Pgetd("BH_NS_separation"),3);
     numeric  = 0;
     
     /* go over all patches */
@@ -489,7 +489,7 @@ static int fdV_spectral(Grid_T *const grid)
     /* testing NS: */
     printf("\n--> Integral{f(x)dV}|at NS section:\n");
     
-    r = Pgetd_E("NS_radius");
+    r = Pgetd("NS_radius");
     analytic = 4./3.*M_PI*pow(r,3);
     numeric  = 0;
     
@@ -547,8 +547,8 @@ static int fdV_spectral(Grid_T *const grid)
     /* testing NS surrounding: */
     printf("\n--> Integral{f(x)dV}|at NS surrounding ection:\n");
     
-    r = Pgetd_E("NS_radius");
-    analytic = pow(Pgetd_E("BH_NS_separation"),3)-4./3.*M_PI*pow(r,3);
+    r = Pgetd("NS_radius");
+    analytic = pow(Pgetd("BH_NS_separation"),3)-4./3.*M_PI*pow(r,3);
     numeric  = 0;
     
     /* go over all patches */

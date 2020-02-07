@@ -31,7 +31,7 @@ int default_stop_criteria_solve_equations(Grid_T *const grid,const char *const n
   int stop = 1;
   int stop_max = 1;
   int stop_res = 0;
-  const double res_d    = Pgetd_E("Solving_Residual");/* desired residual */
+  const double res_d    = Pgetd("Solving_Residual");/* desired residual */
   const int max_step    = Pgeti("Solving_Max_Number_of_Newton_Step");
   const unsigned npatch = grid->np;
   unsigned p;

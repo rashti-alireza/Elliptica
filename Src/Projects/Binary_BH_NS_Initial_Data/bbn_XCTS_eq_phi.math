@@ -100,8 +100,8 @@ Symm[_gammaI(i,j)   = _gammaI(j,i)];
 Symm[_Gamma(i,j,k)  = _Gamma(i,k,j)];
 Symm[ddphi(i,j)     = ddphi(j,i)];
 
-`  const double rhoc = Pgetd_E("rho_center");`
-`  const double e    = Pgetd_E("Solving_phi_Jacobian_smoothness");`
+`  const double rhoc = Pgetd("rho_center");`
+`  const double e    = Pgetd("Solving_phi_Jacobian_smoothness");`
 `  const double att  = e*rhoc;`
 
 ##########################################################################
@@ -142,7 +142,7 @@ F_eq = t1+rho0*(t2+t3+t4)+t5+t6+att*((1-rho0/rhoc)**4)*t3;
 ## put phi zero at a point in the center of NS
 `  if(strstr(patch->name,"left_central_box"))`
 `  {`
-`    const double NS_center[3] = {0,Pgetd_E("NS_center"),0};`
+`    const double NS_center[3] = {0,Pgetd("NS_center"),0};`
 `    Interpolation_T *interp_phi0 = init_interpolation();`
 `    double interp;`
 `    double X[3] = {0};`
