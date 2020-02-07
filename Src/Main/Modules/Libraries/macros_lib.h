@@ -87,13 +87,13 @@
 #define Pgetd(x)   get_parameter_value_D(x,__FILE__,__LINE__,NONE)
 #define AddParameterDoubleF(x,y)    update_parameter_double_format(x,y)
 #define UpdateParameterDoubleF(x,y) update_parameter_double_format(x,y)
-#define GetParameterArrayF(x)  get_parameter_array_format(x,__FILE__,__LINE__,NONE)
+#define Pgetdd(x)  get_parameter_array_format(x,__FILE__,__LINE__,NONE)
 #define PgetdoubleF(x) get_parameter_double_format(x,__FILE__,__LINE__,NONE)
 #define PgetdoubleF_E(x) get_parameter_double_format(x,__FILE__,__LINE__,FATAL)
 #define Pgets_E(x) get_parameter_value_S(x,__FILE__,__LINE__,FATAL)
 #define Pgeti_E(x) get_parameter_value_I(x,__FILE__,__LINE__,FATAL)
 #define Pgetd_E(x) get_parameter_value_D(x,__FILE__,__LINE__,FATAL)
-#define GetParameterArrayF_E(x)  get_parameter_array_format(x,__FILE__,__LINE__,FATAL)
+#define Pgetdd_E(x)  get_parameter_array_format(x,__FILE__,__LINE__,FATAL)
 
 
 /* OpenMP for 2 dimension */

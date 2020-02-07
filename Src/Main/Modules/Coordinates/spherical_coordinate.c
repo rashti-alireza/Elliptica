@@ -129,9 +129,9 @@ static void populate_left_NS_sphere(Grid_T *const grid,const unsigned pn)
   
   /* filling Rs */
   sprintf(var,"grid%u_left_NS_R1",grid->gn);
-  R1_array = GetParameterArrayF_E(var);
+  R1_array = Pgetdd_E(var);
   sprintf(var,"grid%u_left_NS_R2",grid->gn);
-  R2_array = GetParameterArrayF_E(var);
+  R2_array = Pgetdd_E(var);
   
   R1->v = alloc_double(patch->nn);
   R2->v = alloc_double(patch->nn);
@@ -261,9 +261,9 @@ static void populate_right_NS_sphere(Grid_T *const grid,const unsigned pn)
   
   /* filling Rs */
   sprintf(var,"grid%u_right_NS_R1",grid->gn);
-  R1_array = GetParameterArrayF_E(var);
+  R1_array = Pgetdd_E(var);
   sprintf(var,"grid%u_right_NS_R2",grid->gn);
-  R2_array = GetParameterArrayF_E(var);
+  R2_array = Pgetdd_E(var);
   
   R1->v = alloc_double(patch->nn);
   R2->v = alloc_double(patch->nn);
@@ -395,7 +395,7 @@ static void populate_left_NS_surrounding_sphere(Grid_T *const grid,const unsigne
   sprintf(var,"grid%u_left_NS_Surrounding_R2",grid->gn);
   R2_const = PgetdoubleF_E(var);
   sprintf(var,"grid%u_left_NS_R2",grid->gn);
-  R1_array = GetParameterArrayF_E(var);
+  R1_array = Pgetdd_E(var);
   
   R1->v = alloc_double(patch->nn);
   R2->v = alloc_double(patch->nn);
@@ -527,7 +527,7 @@ static void populate_right_NS_surrounding_sphere(Grid_T *const grid,const unsign
   sprintf(var,"grid%u_right_NS_Surrounding_R2",grid->gn);
   R2_const = PgetdoubleF_E(var);
   sprintf(var,"grid%u_right_NS_R2",grid->gn);
-  R1_array = GetParameterArrayF_E(var);
+  R1_array = Pgetdd_E(var);
   
   R1->v = alloc_double(patch->nn);
   R2->v = alloc_double(patch->nn);
