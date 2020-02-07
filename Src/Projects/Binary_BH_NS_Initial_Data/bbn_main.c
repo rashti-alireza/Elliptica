@@ -174,9 +174,9 @@ static void update_parameters_and_directories(const unsigned iter)
     Pseti("solving_iteration_number",0);
     sprintf(folder_name_next,"BBN_%ux%ux%u",n[0],n[1],n[2]);
     folder_path = make_directory(path_par,folder_name_next);
-    update_parameter_string("iteration_output",folder_path);
+    Psets("iteration_output",folder_path);
     folder_path2 = make_directory(folder_path,"Diagnostics");
-    update_parameter_string("Diagnostics",folder_path2);
+    Psets("Diagnostics",folder_path2);
     free(folder_path);
     free(folder_path2);
     
