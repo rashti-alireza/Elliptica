@@ -6,7 +6,7 @@
 #include "projects_data_base.h"
 
 /* add all of the projects you demand to run */
-int projects_data_base(void)
+int create_db_projects(void)
 {
   /* add all project you want with the syntax of example below:
   // example:

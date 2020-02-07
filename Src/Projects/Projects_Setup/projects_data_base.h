@@ -1,7 +1,7 @@
 #include "core_lib.h"
 
 void add_project(ProjFunc *const projfunc, const char *const name, const char *const des);
-int projects_data_base(void);
+int create_db_projects(void);
 
 /* below here should be written the deceleration of project functions 
 // example:

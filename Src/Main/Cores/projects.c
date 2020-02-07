@@ -6,7 +6,7 @@
 #include "projects.h"
 
 /* executing the project */
-int project_execute(Project_T *const proj)
+int execute_project(Project_T *const proj)
 {
   int ret;
   
