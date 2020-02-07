@@ -796,7 +796,7 @@ static void adjust_NS_center_draw_enthalpy(Grid_T *const grid)
   double *NS_center = 0;
   const double C    = -0.5*Pgetd("BH_NS_separation");
   sprintf(par_name,"grid%u_NS_center_x",grid->gn);
-  NS_center = Pgetdd_E(par_name);
+  NS_center = Pgetdd(par_name);
   const double R[3] = {NS_center[0],NS_center[1]-C,NS_center[2]};
   unsigned p,ijk;
   
@@ -4654,32 +4654,32 @@ static void NS_BH_surface_CubedSpherical_grid(Grid_T *const grid,struct Grid_Par
     
     /* update the surface function accordingly: */
     sprintf(par,"grid%u_left_NS_surface_function_up",grid->gn-1);
-    R = Pgetdd_E(par);
+    R = Pgetdd(par);
     sprintf(par,"grid%u_left_NS_surface_function_up",grid->gn);
     update_parameter_array(par,R,N_total);
     
     sprintf(par,"grid%u_left_NS_surface_function_down",grid->gn-1);
-    R = Pgetdd_E(par);
+    R = Pgetdd(par);
     sprintf(par,"grid%u_left_NS_surface_function_down",grid->gn);
     update_parameter_array(par,R,N_total);
     
     sprintf(par,"grid%u_left_NS_surface_function_back",grid->gn-1);
-    R = Pgetdd_E(par);
+    R = Pgetdd(par);
     sprintf(par,"grid%u_left_NS_surface_function_back",grid->gn);
     update_parameter_array(par,R,N_total);
     
     sprintf(par,"grid%u_left_NS_surface_function_front",grid->gn-1);
-    R = Pgetdd_E(par);
+    R = Pgetdd(par);
     sprintf(par,"grid%u_left_NS_surface_function_front",grid->gn);
     update_parameter_array(par,R,N_total);
     
     sprintf(par,"grid%u_left_NS_surface_function_left",grid->gn-1);
-    R = Pgetdd_E(par);
+    R = Pgetdd(par);
     sprintf(par,"grid%u_left_NS_surface_function_left",grid->gn);
     update_parameter_array(par,R,N_total);
     
     sprintf(par,"grid%u_left_NS_surface_function_right",grid->gn-1);
-    R = Pgetdd_E(par);
+    R = Pgetdd(par);
     sprintf(par,"grid%u_left_NS_surface_function_right",grid->gn);
     update_parameter_array(par,R,N_total);
     
