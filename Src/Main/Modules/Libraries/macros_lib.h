@@ -72,7 +72,8 @@
 //#define Psets(x)
 //#define Paddg(x)
 
-
+/* comparing value of the parameter x with y using strcmp_i */
+#define Pcmps(x,y) strcmp_i(Pgets(x),y)
 
 /* get value of a string parameter */
 #define Pgets(x)   get_parameter_value_S(x,__FILE__,__LINE__,FATAL)/* if not exists give error */
