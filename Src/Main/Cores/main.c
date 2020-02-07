@@ -19,21 +19,21 @@ int main(int argn, char **argv)
   const char *proj_name;
   Project_T *proj;
     
-  global_variables_init(argv[argn-1]);/* initiating global variables */
+  init_global_variables(argv[argn-1]);/* initiating global variables */
   make_parameters(argv[argn-1]);/* reading input file 
                                 // and making parameters */
   
-  projects_data_base();/* add all of the desired projects 
+  create_db_projects();/* add all of the desired projects 
                        // to the project data base */
   
   proj_name = GetParameterS("Project");
-  proj = get_project(proj_name);
+  proj      = get_project(proj_name);
   
   /* check if the parameter file is correct and this project exists */
   if (!proj)
     abortEr_s("There is no such %s project!\n",proj_name);
   
-  project_execute(proj);
+  execute_project(proj);
   
   /* free the data base of project */
   free_db_project();
