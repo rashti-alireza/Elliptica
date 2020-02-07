@@ -33,7 +33,7 @@ void bbn_study_initial_data(Grid_T *const grid)
   bbn_print_fields(grid,(unsigned)solving_iter,folder);
   bbn_print_residual_norms(grid,(unsigned)solving_iter,folder);
   
-  update_parameter_integer("solving_iteration_number",++solving_iter);
+  Pseti("solving_iteration_number",++solving_iter);
   
   /* Observables */
   Observable_T *obs = init_observable(grid);

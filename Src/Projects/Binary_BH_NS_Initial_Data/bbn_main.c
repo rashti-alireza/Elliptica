@@ -144,7 +144,7 @@ static void update_parameters_and_directories(const unsigned iter)
   sprintf(folder_name_prev,"BBN_%ux%ux%u",n[0],n[1],n[2]);  
   
   /* updating some parameters for the new round of iteration */
-  update_parameter_integer("iteration_number",(int)iter);
+  Pseti("iteration_number",(int)iter);
   
   /* update the parameter accoding to the iteration number */
   update_iterative_parameter_ip(iter);
@@ -164,14 +164,14 @@ static void update_parameters_and_directories(const unsigned iter)
   n[2] = (unsigned)PgetiEZ("n_c");
   
   /* this parameter helps to use some of the previous grid data */
-  update_parameter_integer("did_resolution_change?",0);
+  Pseti("did_resolution_change?",0);
   
   sprintf(folder_name_next,"BBN_%ux%ux%u",n[0],n[1],n[2]);
   /* if the resolution isn't the same or it is the first iteration */
   if (strcmp(folder_name_next,folder_name_prev) || iter == 0)/* if n is updated */
   {
     /* iteration number used in solving, reset this for each resolution */
-    update_parameter_integer("solving_iteration_number",0);
+    Pseti("solving_iteration_number",0);
     sprintf(folder_name_next,"BBN_%ux%ux%u",n[0],n[1],n[2]);
     folder_path = make_directory(path_par,folder_name_next);
     update_parameter_string("iteration_output",folder_path);
@@ -181,6 +181,6 @@ static void update_parameters_and_directories(const unsigned iter)
     free(folder_path2);
     
     /* => resolution changed */
-    update_parameter_integer("did_resolution_change?",1);
+    Pseti("did_resolution_change?",1);
   }
 }

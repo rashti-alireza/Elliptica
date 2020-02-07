@@ -1407,9 +1407,9 @@ static void adjust_AH_radius(Grid_T *const grid,struct Grid_Params_S *const Grid
   Psetd("r_excision",r_excision);
   
   if (EQL(W*dr,0))/* => no change in AH surface */
-    update_parameter_integer("did_AH_surface_change?",0);
+    Pseti("did_AH_surface_change?",0);
   else          /* => change in AH surface */
-    update_parameter_integer("did_AH_surface_change?",1);
+    Pseti("did_AH_surface_change?",1);
   
   printf("} Adjusting apparent horizon radius to meet BH mass ==> Done.\n");
   pr_clock();
@@ -3266,10 +3266,10 @@ static Grid_T *TOV_KerrSchild_approximation(void)
   pr_line_custom('=');
  
   /* adding some parameters: */
-  update_parameter_integer("did_resolution_change?",1);
-  update_parameter_integer("did_NS_surface_change?",1);
-  update_parameter_integer("did_AH_surface_change?",1);
-  update_parameter_integer("use_previous_data",0);
+  Pseti("did_resolution_change?",1);
+  Pseti("did_NS_surface_change?",1);
+  Pseti("did_AH_surface_change?",1);
+  Pseti("use_previous_data",0);
   
   /* center of rotation (approx. Center of Mass) */
   const double D = Pgetd("BH_NS_separation");
@@ -4094,7 +4094,7 @@ static Grid_T *creat_bbn_grid_CS(struct Grid_Params_S *const GridParams)
   const int change_NS_flg  = Pgeti("did_NS_surface_change?");
   const int change_AH_flg  = Pgeti("did_AH_surface_change?");
   
-  update_parameter_integer("use_previous_data",0);
+  Pseti("use_previous_data",0);
   
   /* either the resolution is changed or it is the first grid */
   if (change_res_flg || !grid_prev)/* make geometry from scratch */
@@ -4150,7 +4150,7 @@ static Grid_T *creat_bbn_grid_CS(struct Grid_Params_S *const GridParams)
         realloc(grid_next->patch,(np+1)*sizeof(*grid_next->patch));
     grid_next->patch[np] = 0;
     
-    update_parameter_integer("use_previous_data",1);
+    Pseti("use_previous_data",1);
   }
   /* only NS surface is not changed */
   else if (!change_NS_flg)
@@ -4650,7 +4650,7 @@ static void NS_BH_surface_CubedSpherical_grid(Grid_T *const grid,struct Grid_Par
     printf("~> |R_2 - R1|/|R_1| = %g < Tolerance = %g\n",dR_rms,NS_surf_tolerance);
     printf("~> No changes in NS surface\n");
 
-    update_parameter_integer("did_NS_surface_change?",0);
+    Pseti("did_NS_surface_change?",0);
     
     /* update the surface function accordingly: */
     sprintf(par,"grid%u_left_NS_surface_function_up",grid->gn-1);
@@ -4687,7 +4687,7 @@ static void NS_BH_surface_CubedSpherical_grid(Grid_T *const grid,struct Grid_Par
   /* else it is changed */
   else
   {
-    update_parameter_integer("did_NS_surface_change?",1);
+    Pseti("did_NS_surface_change?",1);
     
     if (GridParams->grid_prev)
       printf("~> |R_2 - R1|/|R_1| = %g >= Tolerance = %g\n",dR_rms,NS_surf_tolerance);
