@@ -13,11 +13,11 @@ int solve_eqs(Solve_Equations_T *const SolveEqs)
   fSolve_T *fsolve = 0;
   
   /* choosing solving method */
-  if (strcmp_i(GetParameterS_E("Solving_Method"),"DDM_Schur_Complement"))
+  if (strcmp_i(Pgets_E("Solving_Method"),"DDM_Schur_Complement"))
     fsolve = ddm_schur_complement;
   else
     abortEr_s("No such method \"%s\" defined for this function.\n",
-      GetParameterS("Solving_Method"));
+      Pgets("Solving_Method"));
   
   /* call the specific solving method */
   fsolve(SolveEqs);

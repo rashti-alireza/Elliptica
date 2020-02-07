@@ -61,7 +61,7 @@ void plan_interpolation(Interpolation_T *const interp_s)
     interp_s->interpolation_func = interpolation_natural_cubic_spline_1d;
   }
   else if ( strstr_i(interp_s->method,"Spectral") || 
-       strstr_i(GetParameterS("Interpolation_Method"),"Spectral"))
+       strstr_i(Pgets("Interpolation_Method"),"Spectral"))
   {
     fPick_Func_T *func = 0;
     patch = interp_s->field->patch;

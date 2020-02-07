@@ -14,7 +14,7 @@ Grid_T *bbn_initialize_next_grid(Grid_T *const grid_prev)
   if (!grid_prev)/* if grid is empty come up with an approximation */
   {
     /* if we use TOV and Kerr-Schil black hole approximation */
-    if (strcmp_i(GetParameterS_E("BH_NS_initialization"),"TOV_KerrSchild"))
+    if (strcmp_i(Pgets_E("BH_NS_initialization"),"TOV_KerrSchild"))
       grid_next = TOV_KerrSchild_approximation();
     else
       abortEr(NO_OPTION);
@@ -145,11 +145,11 @@ static void keep_NS_center_fixed(Grid_T *const grid)
   dhx0 = dh1[0];
   dhz0 = dh1[2];;
   
-  if (strcmp_i(GetParameterS_E("NS_adjust_center_method"),"draw_enthalpy"))
+  if (strcmp_i(Pgets_E("NS_adjust_center_method"),"draw_enthalpy"))
   {
     adjust_NS_center_draw_enthalpy(grid);
   }
-  else if (strcmp_i(GetParameterS_E("NS_adjust_center_method"),"tune_enthalpy"))
+  else if (strcmp_i(Pgets_E("NS_adjust_center_method"),"tune_enthalpy"))
   {
     adjust_NS_center_tune_enthalpy(grid,dhx0,dhz0);
   }
@@ -187,7 +187,7 @@ static void P_ADM_control(Grid_T *const grid)
   printf("{ Adjusting ADM momentums ...\n\n");
   
   char *adjust[3];
-  const char *const par = GetParameterS_E("P_ADM_control_method");
+  const char *const par = Pgets_E("P_ADM_control_method");
   
   printf("|--> %s\n",par);
   
@@ -394,7 +394,7 @@ static void force_balance_eq(Grid_T *const grid)
   const double D            = GetParameterD_E("BH_NS_separation");
   const double NS_center[3] = {0,-D/2,0};/* since we keep the NS center always here */
   char *adjust[3];
-  const char *const par = GetParameterS_E("force_balance_equation");
+  const char *const par = Pgets_E("force_balance_equation");
   double dh1[3] = {0},dh2[3] = {0};
   dh_par->patch = GetPatch("left_central_box",grid);
   dh_par->root_finder = root_finder;
@@ -1012,7 +1012,7 @@ static void force_balance_eq_root_finders(Grid_T *const grid,const int dir, cons
   Root_Finder_T *root = init_root_finder(1);
   root->description   = desc;
   root->verbose       = 1;
-  root->type          = GetParameterS_E("RootFinder_Method");
+  root->type          = Pgets_E("RootFinder_Method");
   root->tolerance     = GetParameterD_E("RootFinder_Tolerance");
   root->MaxIter       = (unsigned)GetParameterI_E("RootFinder_Max_Number_of_Iteration");
   root->x_gss         = guess;
@@ -1054,7 +1054,7 @@ static void find_NS_center(Grid_T *const grid)
   guess[0] = guess[2] = 0;
   guess[1] = -0.5*GetParameterD_E("BH_NS_separation");
   params->root_finder = root;
-  root->type        = GetParameterS_E("RootFinder_Method");
+  root->type        = Pgets_E("RootFinder_Method");
   root->tolerance   = GetParameterD_E("RootFinder_Tolerance");
   root->MaxIter     = (unsigned)GetParameterI_E("RootFinder_Max_Number_of_Iteration");
   root->x_gss       = guess;
@@ -1244,7 +1244,7 @@ static void find_Euler_eq_const(Grid_T *const grid)
   params->NS_baryonic_mass = GetParameterD_E("NS_baryonic_mass");
   guess[0] = GetParameterD_E("Euler_equation_constant");
   
-  root->type        = GetParameterS_E("RootFinder_Method");
+  root->type        = Pgets_E("RootFinder_Method");
   root->tolerance   = GetParameterD_E("RootFinder_Tolerance");
   root->MaxIter     = (unsigned)GetParameterI_E("RootFinder_Max_Number_of_Iteration");
   root->x_gss       = guess;
@@ -2261,7 +2261,7 @@ static void find_NS_surface_Ylm_method_CS(Grid_T *const grid,struct Grid_Params_
   
   /* populate root finder */
   Root_Finder_T *root = init_root_finder(1);
-  root->type      = GetParameterS_E("RootFinder_Method");
+  root->type      = Pgets_E("RootFinder_Method");
   root->tolerance = GetParameterD_E("RootFinder_Tolerance");
   root->MaxIter   = (unsigned)GetParameterI_E("RootFinder_Max_Number_of_Iteration");
   root->x_gss     = &guess;
@@ -3916,7 +3916,7 @@ static Grid_T *creat_bbn_grid_CS(struct Grid_Params_S *const GridParams)
   unsigned i,p;
   
   /* finding the kind of grid */
-  kind = GetParameterS_E("grid_kind");
+  kind = Pgets_E("grid_kind");
   
   /* some checks */
   if (!strcmp_i(kind,"BBN_CubedSpherical_grid"))
@@ -5129,7 +5129,7 @@ static double bbn_NS_surface_denthalpy_dr(void *params,const double *const x,con
 /* find NS surface using h = 1 */
 static void find_NS_surface(Grid_T *const grid,struct Grid_Params_S *const GridParams)
 {
-  GridParams->NS_R_type = GetParameterS_E("NS_surface_finder_method");
+  GridParams->NS_R_type = Pgets_E("NS_surface_finder_method");
   
   /* find NS surface using cubed spherical points */
   //if (strstr_i(GridParams->NS_R_type,"CubedSpherical"))

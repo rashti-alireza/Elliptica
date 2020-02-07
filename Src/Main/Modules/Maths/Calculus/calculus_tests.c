@@ -613,7 +613,7 @@ static int GQ_ChebExtrema(Grid_T *const grid)
 {
   unsigned N = 0;
   Integration_T *I = init_integration();
-  const char *const par = GetParameterS_E("Test_Integration");
+  const char *const par = Pgets_E("Test_Integration");
   double *f;
   double sf,an;/* resultant */
   double t0,x;
@@ -662,7 +662,7 @@ static int GQ_Lobatto(Grid_T *const grid)
 {
   unsigned N = 0;
   Integration_T *I = init_integration();
-  const char *const par = GetParameterS_E("Test_Integration");
+  const char *const par = Pgets_E("Test_Integration");
   double *f;
   double sf,an;/* resultant */
   double x;
@@ -713,7 +713,7 @@ static int GQ_Legendre(Grid_T *const grid)
 {
   unsigned N = 0;
   Integration_T *I = init_integration();
-  const char *const par = GetParameterS_E("Test_Integration");
+  const char *const par = Pgets_E("Test_Integration");
   double *f;
   double sf,an;/* resultant */
   double x;
@@ -764,7 +764,7 @@ static int csr_1d(Grid_T *const grid)
   const double a = M_PI;
   const double b = 3./2.*M_PI;
   Integration_T *I = init_integration();
-  const char *const par = GetParameterS_E("Test_Integration");
+  const char *const par = Pgets_E("Test_Integration");
   double *f;/* integrant */
   double sf,an;/* resultant */
   double dx;

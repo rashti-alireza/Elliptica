@@ -58,15 +58,15 @@ static void populate_EoS(EoS_T *const eos)
   const char *par;
   
   /* populate eos struct */
-  par = GetParameterS("EoS_description");
+  par = Pgets("EoS_description");
   if (par)
     strcpy(eos->description,par);
-  strcpy(eos->type,GetParameterS_E("EoS_type")); 
-  strcpy(eos->unit,GetParameterS_E("EoS_unit"));
+  strcpy(eos->type,Pgets_E("EoS_type")); 
+  strcpy(eos->unit,Pgets_E("EoS_unit"));
   
-  K      = read_EoS_in_parameter_file(GetParameterS_E("EoS_K"),&N);
-  rho_th = read_EoS_in_parameter_file(GetParameterS("EoS_rho_th"),0);
-  gamma  = read_EoS_in_parameter_file(GetParameterS_E("EoS_Gamma"),0);
+  K      = read_EoS_in_parameter_file(Pgets_E("EoS_K"),&N);
+  rho_th = read_EoS_in_parameter_file(Pgets("EoS_rho_th"),0);
+  gamma  = read_EoS_in_parameter_file(Pgets_E("EoS_Gamma"),0);
 
   /* if the units are geometrised units */
   if (strcmp_i(eos->unit,"geo"))

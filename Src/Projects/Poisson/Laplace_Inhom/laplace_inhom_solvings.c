@@ -24,7 +24,7 @@ int Laplace_Inhom_solve_eq(Grid_T *const grid)
   enable_fields(grid);/* allocating required fields in patch->pool */
   Laplace_Inhom_initial_data_alpha(grid);/* initial data for field alpha */
   
-  SolveEqs->solving_order = GetParameterS_E("Solving_Order");
+  SolveEqs->solving_order = Pgets_E("Solving_Order");
   solve_eqs(SolveEqs);/* solving equation(s) */
   
   /* freeing */

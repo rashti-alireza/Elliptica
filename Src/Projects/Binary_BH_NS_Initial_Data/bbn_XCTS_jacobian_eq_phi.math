@@ -30,7 +30,7 @@ C_arg2 = [ijk == lmn]; # for kd
 `  unsigned ijk,lmn;/* for Jacobian entries J[ijk][lmn] */`;
 #`  const double kd[2] = {0.,1.};/* Kronecker delta */`;
 
-`  if (!strcmp_i(GetParameterS_E("grid_kind"),"BBN_CubedSpherical_grid"))`
+`  if (!strcmp_i(Pgets_E("grid_kind"),"BBN_CubedSpherical_grid"))`
 `    abortEr("For this grid you need to figure out where to set phi = 0.\n");`
 `  `
 # declare for cpi

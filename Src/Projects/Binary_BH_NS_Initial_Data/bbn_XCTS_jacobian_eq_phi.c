@@ -13,7 +13,7 @@ void *bbn_jacobian_eq_phi(void *vp1,void *vp2)
 {
   DDM_SCHUR_JACOBIAN_EQ_DECLARE
   unsigned ijk,lmn;/* for Jacobian entries J[ijk][lmn] */
-  if (!strcmp_i(GetParameterS_E("grid_kind"),"BBN_CubedSpherical_grid"))
+  if (!strcmp_i(Pgets_E("grid_kind"),"BBN_CubedSpherical_grid"))
     abortEr("For this grid you need to figure out where to set phi = 0.\n");
   
 

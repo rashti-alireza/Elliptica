@@ -29,7 +29,7 @@ static int root_finder_SteepestDescent(Grid_T *const grid)
   Root_Finder_T *root;
   const double x_analytic[3] = {0.,0.1,1.};
   double *x_sol;
-  const char *const par = GetParameterS_E("Test_RootFinders");
+  const char *const par = Pgets_E("Test_RootFinders");
   unsigned MaxIter = 20;
   
   if (regex_search("[[:digit:]]+",par))

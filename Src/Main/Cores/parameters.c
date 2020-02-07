@@ -479,7 +479,7 @@ int make_parameters(const char *const path)
   // or with the given name in input file 
   // and rewriting global_path with new directory path 
   */
-  name = GetParameterS_E("output_directory_name");
+  name = Pgets_E("output_directory_name");
   sprintf(folder,"%s_output",name);
   new_path = make_directory(path_global,folder);
   free(path_global);

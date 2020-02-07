@@ -50,9 +50,9 @@
 // and prints the whole grid and fields in the specified folder. */
 void pr_fields(Pr_Field_T *const pr)
 {
-  const char *par4 = GetParameterS(pr->par);/* print_fields_4d */
-  const char *par3 = GetParameterS(pr->par);/* print_fields_3d */
-  const char *par2 = GetParameterS(pr->par);/* print_fields_2d */
+  const char *par4 = Pgets(pr->par);/* print_fields_4d */
+  const char *par3 = Pgets(pr->par);/* print_fields_3d */
+  const char *par2 = Pgets(pr->par);/* print_fields_2d */
   
   /* 4d prints, i.e. field versus a,b,c */
   if (strstr_i(par4,"yes"))

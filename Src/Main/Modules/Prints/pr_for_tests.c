@@ -14,19 +14,19 @@ int test_print(const Print_T f)
   switch(f)
   {
     case PRINT_PARAMETERS:
-      on = GetParameterS("print_parameters");
+      on = Pgets("print_parameters");
       if (on == 0) return 0;
       if (strcmp_i(on,"yes")|| strcmp_i(on,"y"))
         return 1;
       break;
     case PRINT_COORDS:
-      on = GetParameterS("print_coords");
+      on = Pgets("print_coords");
       if (on == 0) return 0;
       if (strcmp_i(on,"yes")|| strcmp_i(on,"y"))
         return 1;
       break;
     case PRINT_INTERFACES:
-      on = GetParameterS("print_interfaces");
+      on = Pgets("print_interfaces");
       if (on == 0) return 0;
       if (strcmp_i(on,"yes")|| strcmp_i(on,"y"))
         return 1;
@@ -72,9 +72,9 @@ void pr_interfaces(const Grid_T *const grid)
   
   
   if (get_parameter("Diagnostics"))
-    path_par = GetParameterS("Diagnostics");
+    path_par = Pgets("Diagnostics");
   else
-    path_par = GetParameterS("output_directory_path");
+    path_par = Pgets("output_directory_path");
   
   path = make_directory(path_par,"InterfaceInfo");
   
@@ -380,9 +380,9 @@ void pr_parameters(void)
   
   
   if (get_parameter("Diagnostics"))
-    path = GetParameterS("Diagnostics");
+    path = Pgets("Diagnostics");
   else
-    path = GetParameterS("output_directory_path");
+    path = Pgets("output_directory_path");
   
   sprintf(dir,"%s/parameters.out",path);
   f = fopen(dir,"w");
@@ -408,9 +408,9 @@ void pr_coords(const Grid_T *const grid)
   unsigned i = 0;
   
   if (get_parameter("Diagnostics"))
-    path_par = GetParameterS("Diagnostics");
+    path_par = Pgets("Diagnostics");
   else
-    path_par = GetParameterS("output_directory_path");
+    path_par = Pgets("output_directory_path");
     
   path = make_directory(path_par,"Patches");
   
@@ -445,7 +445,7 @@ void pr_field_difference(const Grid_T *const grid,const char *const fld1,const c
   const char *path_par;
   unsigned l,i,R;
   
-  path_par = GetParameterS_E("output_directory_path");
+  path_par = Pgets_E("output_directory_path");
   path = make_directory(path_par,"Fields");
   
   sprintf(dir,"%s/%s-%s.grid",path,fld1,fld2);

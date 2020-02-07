@@ -481,7 +481,7 @@ double spectral_derivative_max_error(const Field_T *const f,const unsigned o)
          max_j;
   unsigned max_n;
   const unsigned *const n = f->patch->n;
-  const char *der_par = GetParameterS("Derivative_Method");
+  const char *der_par = Pgets("Derivative_Method");
   
   if (strstr_i(der_par,"Spectral"))
   {

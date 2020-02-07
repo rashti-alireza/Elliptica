@@ -591,7 +591,7 @@ static void coeffs_patch_Tn_Extrema_1d(Field_T *const f,const unsigned dir)
   out = alloc_double(n[dir]);
   in = alloc_double(n[dir]);
   
-  if (strstr_i(GetParameterS("Fourier_Transformation_Method"),"RFT"))
+  if (strstr_i(Pgets("Fourier_Transformation_Method"),"RFT"))
     FourierTrans = rft_1d_ChebyshevExtrema_coeffs;
   else
     abortEr("No such Fourier_Transformation_Method defined for this function.\n");
@@ -688,7 +688,7 @@ static void coeffs_patch_Tn_Nodes_1d(Field_T *const f,const unsigned dir)
   out = alloc_double(n[dir]);
   in = alloc_double(n[dir]);
   
-  if (strstr_i(GetParameterS("Fourier_Transformation_Method"),"RFT"))
+  if (strstr_i(Pgets("Fourier_Transformation_Method"),"RFT"))
     FourierTrans = rft_1d_ChebyshevNodes_coeffs;
   else
     abortEr("No such Fourier_Transformation_Method defined for this function.\n");

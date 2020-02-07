@@ -8,7 +8,7 @@
 void test_EoS(Grid_T *const grid)
 {
   EoS_T *eos = initialize_EoS();
-  const char *const path_par = GetParameterS_E("output_directory_path");
+  const char *const path_par = Pgets_E("output_directory_path");
   char *path,file_name[400];
   FILE *file = 0;
   unsigned N = 100;

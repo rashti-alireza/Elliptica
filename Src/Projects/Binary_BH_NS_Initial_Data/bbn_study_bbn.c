@@ -22,7 +22,7 @@ void bbn_study_initial_data(Grid_T *const grid)
     return;
   }
   
-  const char *const folder = GetParameterS_E("Diagnostics");
+  const char *const folder = Pgets_E("Diagnostics");
   int solving_iter         = GetParameterI("solving_iteration_number");
   
   /* calculating the constraints */

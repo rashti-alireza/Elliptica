@@ -1073,7 +1073,7 @@ static int IsMatchedOtherInnerSubface(PointSet_T *const Pnt)
   
   if (!Pnt->NadjPnt) return 0;
   
-  if (strcmp_i(GetParameterS("Interface_BC_Maximum_Face_Match"),"no"))
+  if (strcmp_i(Pgets("Interface_BC_Maximum_Face_Match"),"no"))
     return 0;
   
   if (Pnt->type == INNER)

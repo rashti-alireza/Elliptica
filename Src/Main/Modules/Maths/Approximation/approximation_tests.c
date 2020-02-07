@@ -44,7 +44,7 @@ int Ylm_transformation_tests(Grid_T *const grid)
 // ->return value: TEST_SUCCESSFUL */
 static int Ylm_trans_test(Grid_T *const grid)
 {
-  const char *const par = GetParameterS_E("Test_Ylm_Transformation");
+  const char *const par = Pgets_E("Test_Ylm_Transformation");
   const double sign[2] = {1.,-1.};
   unsigned Ntheta = 0;
   unsigned Nphi   = 0;
@@ -139,7 +139,7 @@ static int Ylm_trans_test(Grid_T *const grid)
 // ->return value: TEST_SUCCESSFUL */
 static int Ylm_derivatives_test(Grid_T *const grid)
 {
-  const char *const par = GetParameterS_E("Test_Ylm_Transformation");
+  const char *const par = Pgets_E("Test_Ylm_Transformation");
   unsigned Ntheta = 0;
   unsigned Nphi   = 0;
   unsigned lmax   = 0;
@@ -249,7 +249,7 @@ static int Ylm_derivatives_test(Grid_T *const grid)
 static int cft_c2r_r2c_1d_EquiSpaced_test(Grid_T *const grid)
 {
   unsigned N = 0;
-  const char *const par = GetParameterS_E("Test_FourierTransformation");
+  const char *const par = Pgets_E("Test_FourierTransformation");
   double *f;/* f(x) x = [0,2pi] */
   double complex *c;/* f(x) = c_i*exp(I*i*x) */
   double x;
@@ -1018,7 +1018,7 @@ int derivative_tests(Grid_T *const grid)
   unsigned fi;
   Flag_T flg;
   
-  path_par = GetParameterS_E("output_directory_path");
+  path_par = Pgets_E("output_directory_path");
   path = make_directory(path_par,"Derivative_Tests");
 
   
