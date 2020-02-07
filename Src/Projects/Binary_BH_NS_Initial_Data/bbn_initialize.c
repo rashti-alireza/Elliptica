@@ -221,13 +221,13 @@ static void P_ADM_control(Grid_T *const grid)
   
   printf("|--> Current P_ADM = (%e,%e,%e)\n",p2[0],p2[1],p2[2]);
   
-  update_parameter_double_format("P_ADM_x",p2[0]);
-  update_parameter_double_format("P_ADM_y",p2[1]);
-  update_parameter_double_format("P_ADM_z",p2[2]);
+  Psetd("P_ADM_x",p2[0]);
+  Psetd("P_ADM_y",p2[1]);
+  Psetd("P_ADM_z",p2[2]);
   
-  update_parameter_double_format("P_ADM_x_prev",p1[0]);
-  update_parameter_double_format("P_ADM_y_prev",p1[1]);
-  update_parameter_double_format("P_ADM_z_prev",p1[2]);
+  Psetd("P_ADM_x_prev",p1[0]);
+  Psetd("P_ADM_y_prev",p1[1]);
+  Psetd("P_ADM_z_prev",p1[2]);
   
   free_observable(obs);
   
@@ -480,7 +480,7 @@ static void Px_ADM_is0_by_BH_center_y(Grid_T *const grid)
   if (GRT(dPx_Px,dP))
   {
     printf("\n|--> |Px_ADM2 - Px_ADM1|/|Px_ADM2| = %g > %g\n",dPx_Px,dP);
-    update_parameter_double_format("BH_center_y",BH_center_y_new);
+    Psetd("BH_center_y",BH_center_y_new);
   }
   else
   {
@@ -514,7 +514,7 @@ static void Py_ADM_is0_by_BH_center_x(Grid_T *const grid)
   if (GRT(dPy_Py,dP))
   {
     printf("\n|--> |Py_ADM2 - Py_ADM1|/|Py_ADM2| = %g > %g\n",dPy_Py,dP);
-    update_parameter_double_format("BH_center_x",BH_center_x_new);
+    Psetd("BH_center_x",BH_center_x_new);
   }
   else
   {
@@ -548,11 +548,11 @@ static void Px_ADM_is0_by_x_boost(Grid_T *const grid)
   
   if (iter == 0)
   {
-    update_parameter_double_format("v1_boost_x",p2[0]*SMALL_FAC);
+    Psetd("v1_boost_x",p2[0]*SMALL_FAC);
   }
   else if (iter == 1)
   {
-    update_parameter_double_format("v2_boost_x",p2[0]*SMALL_FAC);
+    Psetd("v2_boost_x",p2[0]*SMALL_FAC);
   }
   else if (iter > 1)
   {
@@ -575,15 +575,15 @@ static void Px_ADM_is0_by_x_boost(Grid_T *const grid)
     v[0] = W*v[0]+(1-W)*v0[0];
     
     /* update parameters */
-    update_parameter_double_format("v1_boost_x",v2[0]);
-    update_parameter_double_format("v2_boost_x",v[0]);
+    Psetd("v1_boost_x",v2[0]);
+    Psetd("v2_boost_x",v[0]);
     
     const double dPx_Px = fabs(p2[0]-p1[0])/fabs(p2[0]);
     /* if change in momentum is big */
     if (GRT(dPx_Px,dP))
     {
       printf("\n|--> |Px_ADM2 - Px_ADM1|/|Px_ADM2| = %g > %g\n",dPx_Px,dP);
-      update_parameter_double_format("v*_boost_x",v[0]);
+      Psetd("v*_boost_x",v[0]);
     }
     else
     {
@@ -620,11 +620,11 @@ static void Py_ADM_is0_by_y_boost(Grid_T *const grid)
   
   if (iter == 0)
   {
-    update_parameter_double_format("v1_boost_y",p2[1]*SMALL_FAC);
+    Psetd("v1_boost_y",p2[1]*SMALL_FAC);
   }
   else if (iter == 1)
   {
-    update_parameter_double_format("v2_boost_y",p2[1]*SMALL_FAC);
+    Psetd("v2_boost_y",p2[1]*SMALL_FAC);
   }
   else if (iter > 1)
   {
@@ -647,14 +647,14 @@ static void Py_ADM_is0_by_y_boost(Grid_T *const grid)
     v[1] = W*v[1]+(1-W)*v0[1];
     
     /* update parameters */
-    update_parameter_double_format("v1_boost_y",v2[1]);
-    update_parameter_double_format("v2_boost_y",v[1]);
+    Psetd("v1_boost_y",v2[1]);
+    Psetd("v2_boost_y",v[1]);
     
     const double dPy_Py = fabs(p2[1]-p1[1])/fabs(p2[1]);
     if (GRT(dPy_Py,dP))
     {
       printf("\n|--> |Py_ADM2 - Py_ADM1|/|Py_ADM2| = %g > %g\n",dPy_Py,dP);
-      update_parameter_double_format("v*_boost_y",v[1]);
+      Psetd("v*_boost_y",v[1]);
     }
     else
     {
@@ -691,11 +691,11 @@ static void Pz_ADM_is0_by_z_boost(Grid_T *const grid)
   
   if (iter == 0)
   {
-    update_parameter_double_format("v1_boost_z",p2[2]*SMALL_FAC);
+    Psetd("v1_boost_z",p2[2]*SMALL_FAC);
   }
   else if (iter == 1)
   {
-    update_parameter_double_format("v2_boost_z",p2[2]*SMALL_FAC);
+    Psetd("v2_boost_z",p2[2]*SMALL_FAC);
   }
   else if (iter > 1)
   {
@@ -718,14 +718,14 @@ static void Pz_ADM_is0_by_z_boost(Grid_T *const grid)
     v[2] = W*v[2]+(1-W)*v0[2];
     
     /* update parameters */
-    update_parameter_double_format("v1_boost_z",v2[2]);
-    update_parameter_double_format("v2_boost_z",v[2]);
+    Psetd("v1_boost_z",v2[2]);
+    Psetd("v2_boost_z",v[2]);
     
     const double dPz_Pz = fabs(p2[2]-p1[2])/fabs(p2[2]);
     if (GRT(dPz_Pz,dP))
     {
       printf("\n|--> |Pz_ADM2 - Pz_ADM1|/|Pz_ADM2| = %g > %g\n",dPz_Pz,dP);
-      update_parameter_double_format("v*_boost_z",v[2]);
+      Psetd("v*_boost_z",v[2]);
     }
     else
     {
@@ -1028,7 +1028,7 @@ static void force_balance_eq_root_finders(Grid_T *const grid,const int dir, cons
   }
   
   new_par[0] = W1*new_par[0]+W2*old_par;
-  update_parameter_double_format(par,new_par[0]);
+  Psetd(par,new_par[0]);
   
   /* since B1 has been changed let's update the pertinent fields */
   update_B1_dB1_Beta_dBete_Aij_dAij(grid);
@@ -1256,7 +1256,7 @@ static void find_Euler_eq_const(Grid_T *const grid)
   Euler_const       = execute_root_finder(root);
   Euler_const[0]    = W1*Euler_const[0]+W2*guess[0];
   
-  update_parameter_double_format("Euler_equation_constant",Euler_const[0]);
+  Psetd("Euler_equation_constant",Euler_const[0]);
   free(Euler_const);
   free_root_finder(root);
   
@@ -1290,7 +1290,7 @@ static void Px_ADM_is0_by_y_CM(Grid_T *const grid)
   if (GRT(dPx_Px,dP))
   {
     printf("\n|--> |Px_ADM2 - Px_ADM1|/|Px_ADM2| = %g > %g\n",dPx_Px,dP);
-    update_parameter_double_format("y_CM",y_CM_new);
+    Psetd("y_CM",y_CM_new);
     update_B1_dB1_Beta_dBete_Aij_dAij(grid);
   }
   else
@@ -1325,7 +1325,7 @@ static void Py_ADM_is0_by_x_CM(Grid_T *const grid)
   if (GRT(dPy_Py,dP))
   {
     printf("\n|--> |Py_ADM2 - Py_ADM1|/|Py_ADM2| = %g > %g\n",dPy_Py,dP);
-    update_parameter_double_format("x_CM",x_CM_new);
+    Psetd("x_CM",x_CM_new);
     update_B1_dB1_Beta_dBete_Aij_dAij(grid);
   }
   else
@@ -1404,7 +1404,7 @@ static void adjust_AH_radius(Grid_T *const grid,struct Grid_Params_S *const Grid
   GridParams->R_BH_r    = r_excision;
   GridParams->BH_R_type = "PerfectSphere";
   
-  update_parameter_double_format("r_excision",r_excision);
+  Psetd("r_excision",r_excision);
   
   if (EQL(W*dr,0))/* => no change in AH surface */
     update_parameter_integer("did_AH_surface_change?",0);
@@ -3277,19 +3277,19 @@ static Grid_T *TOV_KerrSchild_approximation(void)
   const double C_NS = -C_BH;/* center of NS it's on -y axis*/
   const double ns_mass = tov->ADM_m;/* NS adm mass */
   const double y_CM = (ns_mass*C_NS+bh_mass*C_BH)/(ns_mass+bh_mass);
-  update_parameter_double_format("y_CM",y_CM);
-  update_parameter_double_format("x_CM",0);
-  update_parameter_double_format("y_CM0",y_CM);
-  update_parameter_double_format("x_CM0",0);
-  update_parameter_double_format("NS_mass",ns_mass);
-  update_parameter_double_format("NS_center",C_NS);
-  update_parameter_double_format("r_excision",bh_R);
+  Psetd("y_CM",y_CM);
+  Psetd("x_CM",0);
+  Psetd("y_CM0",y_CM);
+  Psetd("x_CM0",0);
+  Psetd("NS_mass",ns_mass);
+  Psetd("NS_center",C_NS);
+  Psetd("r_excision",bh_R);
   
   
   /* BH center */  
-  update_parameter_double_format("BH_center_x",0);
-  update_parameter_double_format("BH_center_y",C_BH);
-  update_parameter_double_format("BH_center_z",0);
+  Psetd("BH_center_x",0);
+  Psetd("BH_center_y",C_BH);
+  Psetd("BH_center_z",0);
   
   /* -> BH_Omega, the angular frequency of the horizon,
   // is a free vector that determines the spin of BH
@@ -3297,13 +3297,13 @@ static Grid_T *TOV_KerrSchild_approximation(void)
   // BH_X = 4*BH_mass*BH_Omega .
   // we only use U2 component, since we assume BH only has spin 
   // in +/- of z direction (PRD 86 084033) */
-  update_parameter_double_format("BH_Omega_U2",bh_chi/(4*bh_mass));
+  Psetd("BH_Omega_U2",bh_chi/(4*bh_mass));
 
   /* -> the Constant of the integration of Euler equation */
-  update_parameter_double_format("Euler_equation_constant",0);
+  Psetd("Euler_equation_constant",0);
   
   /* -> central rho0 */
-  update_parameter_double_format("rho_center",1E-3);
+  Psetd("rho_center",1E-3);
   
   /* combining these two geometry to create the grid */
   GridParams->Max_R_NS_l = ns_R;
@@ -3355,12 +3355,12 @@ static Grid_T *TOV_KerrSchild_approximation(void)
   p_x = obs->Px_ADM(obs);
   p_y = obs->Py_ADM(obs);
   p_z = obs->Pz_ADM(obs);
-  update_parameter_double_format("P_ADM_x",p_x);
-  update_parameter_double_format("P_ADM_y",p_y);
-  update_parameter_double_format("P_ADM_z",p_z);
-  update_parameter_double_format("v*_boost_x",0);
-  update_parameter_double_format("v*_boost_y",0);
-  update_parameter_double_format("v*_boost_z",0);
+  Psetd("P_ADM_x",p_x);
+  Psetd("P_ADM_y",p_y);
+  Psetd("P_ADM_z",p_z);
+  Psetd("v*_boost_x",0);
+  Psetd("v*_boost_y",0);
+  Psetd("v*_boost_z",0);
   
   printf("ADM momentums initials:\n");
   printf("-->P_ADM = (%e,%e,%e).\n",p_x,p_y,p_z);
@@ -3468,7 +3468,7 @@ dphi_D0[ijk] + Beta_U1[ijk]*dphi_D1[ijk] + Beta_U2[ijk]*dphi_D2[ijk]))/
     
     break;/* only for 1 patch we find Euler constant */
   }
-  update_parameter_double_format("Euler_equation_constant",Euler_C);
+  Psetd("Euler_equation_constant",Euler_C);
 }
 
 /* update _Aij in K^{ij} = A^{ij}+1/3*gamma^{ij}*K and 
@@ -3992,17 +3992,17 @@ static Grid_T *creat_bbn_grid_CS(struct Grid_Params_S *const GridParams)
   
   /* size a,b,c */
   sprintf(par,"grid%u_left_central_box_size_a",gn);
-  update_parameter_double_format(par,box_size_l);
+  Psetd(par,box_size_l);
   
   sprintf(par,"grid%u_left_central_box_size_b",gn);
-  update_parameter_double_format(par,box_size_l);
+  Psetd(par,box_size_l);
   
   sprintf(par,"grid%u_left_central_box_size_c",gn);
-  update_parameter_double_format(par,box_size_l);
+  Psetd(par,box_size_l);
   
   /* surrounding box length */
   sprintf(par,"grid%u_surrounding_box_length",gn);
-  update_parameter_double_format(par,S);
+  Psetd(par,S);
   
   /* right box. NOTE: this is needed when we fill the excision region */
   nlb[0] = (unsigned)PgetiEZ("n_a");
@@ -4041,49 +4041,49 @@ static Grid_T *creat_bbn_grid_CS(struct Grid_Params_S *const GridParams)
   
   /* size a,b,c we take it the same as left box. no biggie! */
   sprintf(par,"grid%u_right_central_box_size_a",gn);
-  update_parameter_double_format(par,box_size_r);
+  Psetd(par,box_size_r);
   
   sprintf(par,"grid%u_right_central_box_size_b",gn);
-  update_parameter_double_format(par,box_size_r);
+  Psetd(par,box_size_r);
   
   sprintf(par,"grid%u_right_central_box_size_c",gn);
-  update_parameter_double_format(par,box_size_r);
+  Psetd(par,box_size_r);
   
   /* R1 and R2 outermost */
   sprintf(par,"grid%u_outermost%u_R2",gn,0);
-  update_parameter_double_format(par,R_outermost[0]);
+  Psetd(par,R_outermost[0]);
     
   for (i = 1; i < N_Outermost_Split; i++)
   {
     /* R1: */
     sprintf(par,"grid%u_outermost%u_R1",gn,i);
-    update_parameter_double_format(par,R_outermost[i-1]);
+    Psetd(par,R_outermost[i-1]);
     
     /* R2: */
     sprintf(par,"grid%u_outermost%u_R2",gn,i);
-    update_parameter_double_format(par,R_outermost[i]);
+    Psetd(par,R_outermost[i]);
     
   }
   
   /* assuming the center of left NS at (0,-S/2,0) */
   sprintf(par,"grid%u_left_NS_center_a",gn);
-  update_parameter_double_format(par,0.0);
+  Psetd(par,0.0);
   
   sprintf(par,"grid%u_left_NS_center_b",gn);
-  update_parameter_double_format(par,-S/2);
+  Psetd(par,-S/2);
   
   sprintf(par,"grid%u_left_NS_center_c",gn);
-  update_parameter_double_format(par,0.0);
+  Psetd(par,0.0);
   
   /* assuming the center of right BH at (0,S/2,0) */
   sprintf(par,"grid%u_right_BH_center_a",gn);
-  update_parameter_double_format(par,0.0);
+  Psetd(par,0.0);
   
   sprintf(par,"grid%u_right_BH_center_b",gn);
-  update_parameter_double_format(par,S/2);
+  Psetd(par,S/2);
   
   sprintf(par,"grid%u_right_BH_center_c",gn);
-  update_parameter_double_format(par,0.0);
+  Psetd(par,0.0);
   
   free(R_outermost);
   

@@ -1197,7 +1197,7 @@ void bbn_update_stress_energy_tensor(Grid_T *const grid,const int flag)
   rho_center = execute_interpolation(interp_s);
   free_interpolation(interp_s);
   
-  update_parameter_double_format("rho_center",rho_center);
+  Psetd("rho_center",rho_center);
   
   printf("} Updating enthalpy, rest-mass density and their derivatives ==> Done.\n");
   pr_clock();
