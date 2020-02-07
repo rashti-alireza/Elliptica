@@ -39,3 +39,4 @@ void _free(void *p);
 void free_grid(Grid_T *grid);
 void free_patch(Patch_T *patch);
 void free_parameter(const char *const par_name);
+void free_parameter_db(void);

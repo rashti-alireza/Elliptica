@@ -541,3 +541,23 @@ void free_parameter(const char *const par_name)
   
 }
 
+/* free the whole parameter data base */
+void free_parameter_db(void)
+{
+  unsigned np;
+  
+  np = 0;
+  while (parameters_global != 0 && parameters_global[np] != 0)
+  {
+  
+    _free(parameters_global[np]->lv);
+    _free(parameters_global[np]->rv);
+    _free(parameters_global[np]->rv_ip);
+    _free(parameters_global[np]->rv_array);
+    free(parameters_global[np]);
+    np++;
+  }
+  
+  _free(parameters_global);
+}
+
