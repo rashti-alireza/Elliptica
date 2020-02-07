@@ -332,7 +332,7 @@ double get_parameter_double_format(const char *const par_name,const char *const 
   
   if (flg == FATAL && f != FOUND)
   {
-    abort_error_string("Parameter %s couldn't be found.\n",par_name,file,line);
+    abort_error_string("Parameter '%s' couldn't be found.\n",par_name,file,line);
   }
 
   return v;
@@ -362,7 +362,7 @@ double *get_parameter_array_format(const char *const par_name,const char *const 
   
   if (flg == FATAL && f != FOUND)
   {
-    abort_error_string("Parameter %s couldn't be found.\n",par_name,file,line);
+    abort_error_string("Parameter '%s' couldn't be found.\n",par_name,file,line);
   }
 
   return v;
@@ -393,7 +393,7 @@ int get_parameter_value_I(const char *const par_name,const char *const file, con
   
   if (flg == FATAL && f != FOUND)
   {
-    abort_error_string("Parameter %s couldn't be found.\n",par_name,file,line);
+    abort_error_string("Parameter '%s' couldn't be found.\n",par_name,file,line);
   }
 
   return v;
@@ -423,7 +423,7 @@ double get_parameter_value_D(const char *const par_name,const char *const file, 
   
   if (flg == FATAL && f != FOUND)
   {
-    abort_error_string("Parameter %s couldn't be found.\n",par_name,file,line);
+    abort_error_string("Parameter '%s' couldn't be found.\n",par_name,file,line);
   }
 
   return v;
@@ -453,7 +453,7 @@ const char *get_parameter_value_S(const char *const par_name,const char *const f
   
   if (flg == FATAL && f != FOUND)
   {
-    abort_error_string("Parameter %s couldn't be found.\n",par_name,file,line);
+    abort_error_string("Parameter '%s' couldn't be found.\n",par_name,file,line);
   }
       
   return v;
