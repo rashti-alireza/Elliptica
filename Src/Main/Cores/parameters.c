@@ -326,6 +326,7 @@ double get_parameter_double_format(const char *const par_name,const char *const 
     {
       v = parameters_global[i]->rv_double;
       f = FOUND;
+      break;
     }
     i++;
   }
@@ -356,6 +357,7 @@ double *get_parameter_array_format(const char *const par_name,const char *const 
     {
       v = parameters_global[i]->rv_array;
       f = FOUND;
+      break;
     }
     i++;
   }
@@ -387,6 +389,7 @@ int get_parameter_value_I(const char *const par_name,const char *const file, con
     {
       v = atoi(parameters_global[i]->rv);
       f = FOUND;
+      break;
     }
     i++;
   }
@@ -417,6 +420,7 @@ double get_parameter_value_D(const char *const par_name,const char *const file, 
     {
       v = strtod(parameters_global[i]->rv,0);
       f = FOUND;
+      break;
     }
     i++;
   }
@@ -447,6 +451,7 @@ const char *get_parameter_value_S(const char *const par_name,const char *const f
     {
       v = parameters_global[i]->rv;
       f = FOUND;
+      break;
     }
     i++;
   }
