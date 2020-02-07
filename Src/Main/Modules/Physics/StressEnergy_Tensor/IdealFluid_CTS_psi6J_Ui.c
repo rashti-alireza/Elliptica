@@ -13,17 +13,17 @@ void Tij_IF_CTS_psi6J_Ui(Patch_T *const patch)
   {
     if (_Ind("_J_U0") >= 0)
     {
-      PREP_FIELD(_J_U0)
+      REALLOC_v_CALL_v(_J_U0)
       UNUSED(_J_U0)
     }
     if (_Ind("_J_U1") >= 0)
     {
-      PREP_FIELD(_J_U1)
+      REALLOC_v_CALL_v(_J_U1)
       UNUSED(_J_U1)
     }
     if (_Ind("_J_U2") >= 0)
     {
-      PREP_FIELD(_J_U2)
+      REALLOC_v_CALL_v(_J_U2)
       UNUSED(_J_U2)
     }
     return;
@@ -45,9 +45,9 @@ void Tij_IF_CTS_psi6J_Ui(Patch_T *const patch)
   READ_v(dphi_D2)
   READ_v(dphi_D1)
   READ_v(dphi_D0)
-  PREP_FIELD(_J_U0)
-  PREP_FIELD(_J_U1)
-  PREP_FIELD(_J_U2)
+  REALLOC_v_CALL_v(_J_U0)
+  REALLOC_v_CALL_v(_J_U1)
+  REALLOC_v_CALL_v(_J_U2)
   READ_v(eta)
   READ_v(psi)
   READ_v(u0)

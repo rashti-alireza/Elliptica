@@ -42,9 +42,9 @@ else
   abortEr(NO_OPTION);
 
 /* B^1 */
-PREP_FIELD(B1_U0)
-PREP_FIELD(B1_U1)
-PREP_FIELD(B1_U2)
+REALLOC_v_CALL_v(B1_U0)
+REALLOC_v_CALL_v(B1_U1)
+REALLOC_v_CALL_v(B1_U2)
 for (ijk = 0; ijk < nn; ++ijk)
 {
 double x0     = patch->node[ijk]->x[0];

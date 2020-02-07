@@ -816,7 +816,7 @@ static void adjust_NS_center_draw_enthalpy(Grid_T *const grid)
     char *stem, hint[1000];
     DECLARE_FIELD(enthalpy);
     ADD_FIELD(shifted_enthalpy);
-    PREP_FIELD(shifted_enthalpy);
+    REALLOC_v_CALL_v(shifted_enthalpy);
     
     make_coeffs_3d(enthalpy);
     
@@ -1530,16 +1530,16 @@ static void interpolate_and_initialize_to_next_grid(Grid_T *const grid_next,Grid
       root_name++;
       sprintf(hint,"%s",root_name);
       
-      PREP_FIELD(B0_U0)
-      PREP_FIELD(B0_U1)
-      PREP_FIELD(B0_U2)
-      PREP_FIELD(psi)
-      PREP_FIELD(eta)
+      REALLOC_v_CALL_v(B0_U0)
+      REALLOC_v_CALL_v(B0_U1)
+      REALLOC_v_CALL_v(B0_U2)
+      REALLOC_v_CALL_v(psi)
+      REALLOC_v_CALL_v(eta)
       
       if (IsItNSPatch(patch))
       {
-        PREP_FIELD(phi)
-        PREP_FIELD(enthalpy)
+        REALLOC_v_CALL_v(phi)
+        REALLOC_v_CALL_v(enthalpy)
         for (ijk = 0; ijk < nn; ++ijk)
         {
           double x[3] = { patch->node[ijk]->x[0],
@@ -1718,11 +1718,11 @@ static void interpolate_and_initialize_to_next_grid(Grid_T *const grid_next,Grid
       root_name++;
       sprintf(hint,"%s",root_name);
       
-      PREP_FIELD(B0_U0)
-      PREP_FIELD(B0_U1)
-      PREP_FIELD(B0_U2)
-      PREP_FIELD(psi)
-      PREP_FIELD(eta)
+      REALLOC_v_CALL_v(B0_U0)
+      REALLOC_v_CALL_v(B0_U1)
+      REALLOC_v_CALL_v(B0_U2)
+      REALLOC_v_CALL_v(psi)
+      REALLOC_v_CALL_v(eta)
       
       for (ijk = 0; ijk < nn; ++ijk)
       {
@@ -1837,16 +1837,16 @@ static void interpolate_and_initialize_to_next_grid(Grid_T *const grid_next,Grid
       root_name++;
       sprintf(hint,"%s",root_name);
       
-      PREP_FIELD(B0_U0)
-      PREP_FIELD(B0_U1)
-      PREP_FIELD(B0_U2)
-      PREP_FIELD(psi)
-      PREP_FIELD(eta)
+      REALLOC_v_CALL_v(B0_U0)
+      REALLOC_v_CALL_v(B0_U1)
+      REALLOC_v_CALL_v(B0_U2)
+      REALLOC_v_CALL_v(psi)
+      REALLOC_v_CALL_v(eta)
       
       if (IsItNSPatch(patch))
       {
-        PREP_FIELD(phi)
-        PREP_FIELD(enthalpy)
+        REALLOC_v_CALL_v(phi)
+        REALLOC_v_CALL_v(enthalpy)
         for (ijk = 0; ijk < nn; ++ijk)
         {
           double x[3] = { patch->node[ijk]->x[0],
@@ -1994,16 +1994,16 @@ static void interpolate_and_initialize_to_next_grid(Grid_T *const grid_next,Grid
       root_name++;
       sprintf(hint,"%s",root_name);
       
-      PREP_FIELD(B0_U0)
-      PREP_FIELD(B0_U1)
-      PREP_FIELD(B0_U2)
-      PREP_FIELD(psi)
-      PREP_FIELD(eta)
+      REALLOC_v_CALL_v(B0_U0)
+      REALLOC_v_CALL_v(B0_U1)
+      REALLOC_v_CALL_v(B0_U2)
+      REALLOC_v_CALL_v(psi)
+      REALLOC_v_CALL_v(eta)
       
       if (IsItNSPatch(patch))
       {
-        PREP_FIELD(phi)
-        PREP_FIELD(enthalpy)
+        REALLOC_v_CALL_v(phi)
+        REALLOC_v_CALL_v(enthalpy)
         for (ijk = 0; ijk < nn; ++ijk)
         {
           double x[3] = { patch->node[ijk]->x[0],
@@ -2088,9 +2088,9 @@ static void interpolate_and_initialize_to_next_grid(Grid_T *const grid_next,Grid
     
     if (IsItNSPatch(patch))
     {
-      PREP_FIELD(W_U0)
-      PREP_FIELD(W_U1)
-      PREP_FIELD(W_U2)
+      REALLOC_v_CALL_v(W_U0)
+      REALLOC_v_CALL_v(W_U1)
+      REALLOC_v_CALL_v(W_U2)
       
       for (ijk = 0; ijk < nn; ++ijk)
       {
@@ -2638,11 +2638,11 @@ static void extrapolate_insideBH(Grid_T *const grid)
     ADD_FIELD(psi)
     ADD_FIELD(eta)
     
-    PREP_FIELD(B0_U0)
-    PREP_FIELD(B0_U1)
-    PREP_FIELD(B0_U2)
-    PREP_FIELD(psi)
-    PREP_FIELD(eta)
+    REALLOC_v_CALL_v(B0_U0)
+    REALLOC_v_CALL_v(B0_U1)
+    REALLOC_v_CALL_v(B0_U2)
+    REALLOC_v_CALL_v(psi)
+    REALLOC_v_CALL_v(eta)
     
     /* making B1 */
     bbn_update_B1_U012(patch);
@@ -2775,15 +2775,15 @@ static void extrapolate_outsideNS_CS_continuity_method(Grid_T *const grid)
       continue;
      
     /* irrotational part of fluid */
-    PREP_FIELD(phi)
+    REALLOC_v_CALL_v(phi)
     DECLARE_AND_EMPTY_FIELD(dphi_D2)
     DECLARE_AND_EMPTY_FIELD(dphi_D1)
     DECLARE_AND_EMPTY_FIELD(dphi_D0)
     
     /* spin part of fluid W^i */
-    PREP_FIELD(W_U0)
-    PREP_FIELD(W_U1)
-    PREP_FIELD(W_U2)
+    REALLOC_v_CALL_v(W_U0)
+    REALLOC_v_CALL_v(W_U1)
+    REALLOC_v_CALL_v(W_U2)
     
     /* populate the spin part */
     for (ijk = 0; ijk < nn; ++ijk)
@@ -2946,15 +2946,15 @@ static void extrapolate_outsideNS_CS_slop_method(Grid_T *const grid)
       continue;
      
     /* irrotational part of fluid */
-    PREP_FIELD(phi)
+    REALLOC_v_CALL_v(phi)
     DECLARE_AND_EMPTY_FIELD(dphi_D2)
     DECLARE_AND_EMPTY_FIELD(dphi_D1)
     DECLARE_AND_EMPTY_FIELD(dphi_D0)
     
     /* spin part of fluid W^i */
-    PREP_FIELD(W_U0)
-    PREP_FIELD(W_U1)
-    PREP_FIELD(W_U2)
+    REALLOC_v_CALL_v(W_U0)
+    REALLOC_v_CALL_v(W_U1)
+    REALLOC_v_CALL_v(W_U2)
     
     Patch_T *NS_patch;/* corresponding NS patch, to extrapolate out */
     const unsigned *n = patch->n;
@@ -3167,7 +3167,7 @@ static void extrapolate_outsideNS_CS_slop_method(Grid_T *const grid)
     {
       /* note: patch refers to NS_surrounding patch */
       
-      PREP_FIELD(enthalpy)
+      REALLOC_v_CALL_v(enthalpy)
       /* find the corresponding NS patch to be used for extrapolation */
       affix = regex_find("_[[:alpha:]]{2,5}$",patch->name);/* finding the side of the patch */
       assert(affix);
@@ -3524,9 +3524,9 @@ static void make_normal_vector_on_BH_horizon(Grid_T *const grid,struct Grid_Para
       READ_v(_gamma_D1D1)
       
       /* normal vector on horizon */
-      PREP_FIELD(_HS_U0);
-      PREP_FIELD(_HS_U1);
-      PREP_FIELD(_HS_U2);
+      REALLOC_v_CALL_v(_HS_U0);
+      REALLOC_v_CALL_v(_HS_U1);
+      REALLOC_v_CALL_v(_HS_U2);
       
       for (ijk = 0; ijk < nn; ++ijk)
       {
@@ -3612,9 +3612,9 @@ static void init_field_TOV_plus_KerrSchild(Grid_T *const grid,const TOV_T *const
     unsigned nn = patch->nn;
     unsigned ijk;
     
-    PREP_FIELD(Beta_U0)
-    PREP_FIELD(Beta_U1)
-    PREP_FIELD(Beta_U2)
+    REALLOC_v_CALL_v(Beta_U0)
+    REALLOC_v_CALL_v(Beta_U1)
+    REALLOC_v_CALL_v(Beta_U2)
     
     READ_v(_gammaI_U0U2)
     READ_v(_gammaI_U0U0)
@@ -3626,12 +3626,12 @@ static void init_field_TOV_plus_KerrSchild(Grid_T *const grid,const TOV_T *const
     ADD_FIELD(KSbeta_D0)
     ADD_FIELD(KSbeta_D1)
     ADD_FIELD(KSbeta_D2)
-    PREP_FIELD(KSbeta_D0)
-    PREP_FIELD(KSbeta_D1)
-    PREP_FIELD(KSbeta_D2)
+    REALLOC_v_CALL_v(KSbeta_D0)
+    REALLOC_v_CALL_v(KSbeta_D1)
+    REALLOC_v_CALL_v(KSbeta_D2)
     
     ADD_FIELD(KSalpha)
-    PREP_FIELD(KSalpha)
+    REALLOC_v_CALL_v(KSalpha)
     
     /* beta and alpha needed */
     for (ijk = 0; ijk < nn; ++ijk)
@@ -3701,8 +3701,8 @@ KSbeta_D2[ijk]*_gammaI_U2U2[ijk];
     unsigned nn = patch->nn;
     unsigned ijk;
     
-    PREP_FIELD(psi)
-    PREP_FIELD(eta)
+    REALLOC_v_CALL_v(psi)
+    REALLOC_v_CALL_v(eta)
     READ_v(KSalpha)
     
     if (IsItNSPatch(patch))
@@ -3723,12 +3723,12 @@ KSbeta_D2[ijk]*_gammaI_U2U2[ijk];
 
       EoS_T *eos = initialize_EoS();
       
-      PREP_FIELD(enthalpy)
-      PREP_FIELD(rho0)
-      PREP_FIELD(phi)
-      PREP_FIELD(W_U0)
-      PREP_FIELD(W_U1)
-      PREP_FIELD(W_U2)
+      REALLOC_v_CALL_v(enthalpy)
+      REALLOC_v_CALL_v(rho0)
+      REALLOC_v_CALL_v(phi)
+      REALLOC_v_CALL_v(W_U0)
+      REALLOC_v_CALL_v(W_U1)
+      REALLOC_v_CALL_v(W_U2)
       
       for (ijk = 0; ijk < nn; ++ijk)
       {
@@ -3808,9 +3808,9 @@ KSbeta_D2[ijk]*_gammaI_U2U2[ijk];
      
      bbn_update_B1_U012(patch);
       
-     PREP_FIELD(B0_U0)
-     PREP_FIELD(B0_U1)
-     PREP_FIELD(B0_U2)
+     REALLOC_v_CALL_v(B0_U0)
+     REALLOC_v_CALL_v(B0_U1)
+     REALLOC_v_CALL_v(B0_U2)
      
      CALL_v(Beta_U0)
      CALL_v(Beta_U1)

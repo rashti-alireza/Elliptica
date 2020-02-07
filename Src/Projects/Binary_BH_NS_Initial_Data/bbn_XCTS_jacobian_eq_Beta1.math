@@ -8,7 +8,7 @@ Point = ijk;
 
 # C macors
 C_macro  = READ_v(name);
-C_macro2 = PREP_FIELD(name);
+C_macro2 = REALLOC_v_CALL_v(name);
 C_macro3 = JACOBIAN_DERIVATIVE(name);
 C_macro4 = READ_v_UNUSED(name);
 

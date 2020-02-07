@@ -96,17 +96,17 @@ void bbn_free_data_Ricci(Grid_T *const grid)
     READ_v_UNUSED(_Gamma_U1D0D0)
     READ_v_UNUSED(_Gamma_U1D0D1)
     READ_v_UNUSED(_Gamma_U1D1D1)
-    PREP_FIELD(_Ric_D2D2)
-    PREP_FIELD(_Ric_D1D2)
-    PREP_FIELD(_Ric_D1D1)
-    PREP_FIELD(_Ric_D0D2)
-    PREP_FIELD(_Ric_D0D1)
-    PREP_FIELD(_Ric_D0D0)
+    REALLOC_v_CALL_v(_Ric_D2D2)
+    REALLOC_v_CALL_v(_Ric_D1D2)
+    REALLOC_v_CALL_v(_Ric_D1D1)
+    REALLOC_v_CALL_v(_Ric_D0D2)
+    REALLOC_v_CALL_v(_Ric_D0D1)
+    REALLOC_v_CALL_v(_Ric_D0D0)
 
 
     unsigned nn = patch->nn;
     unsigned ijk;
-    PREP_FIELD(_R)
+    REALLOC_v_CALL_v(_R)
     for(ijk = 0; ijk < nn; ++ijk)
     {
     double Ric1_D0D0 = 

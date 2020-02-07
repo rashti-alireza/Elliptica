@@ -40,7 +40,7 @@ double bbn_BH_irreducible_mass(Grid_T *const grid)
 
 
 {
-    PREP_FIELD(A_AH_integrand)
+    REALLOC_v_CALL_v(A_AH_integrand)
     for(ijk = 0; ijk < nn; ++ijk)
     {
     double psi4 = 

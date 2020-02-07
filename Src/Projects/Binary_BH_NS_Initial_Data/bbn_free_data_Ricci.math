@@ -8,7 +8,7 @@ Point = ijk;
 
 C_macro = READ_v_UNUSED(name);
 C_macro1 = ADD_FIELD(name);
-C_macro2 = PREP_FIELD(name);
+C_macro2 = REALLOC_v_CALL_v(name);
 
 # main function:
 Ccode["#include "bbn_headers.h"\n\n"];
@@ -40,7 +40,7 @@ Symm[_Ric(i,j)        = _Ric(j,i)];
 
 Ccode["    unsigned nn = patch->nn;"];
 Ccode["    unsigned ijk;"];
-Ccode["    PREP_FIELD(_R)"];
+Ccode["    REALLOC_v_CALL_v(_R)"];
 Ccode["    for(ijk = 0; ijk < nn; ++ijk)"];
 Ccode["    {"];
 

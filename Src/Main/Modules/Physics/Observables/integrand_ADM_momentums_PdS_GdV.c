@@ -15,7 +15,7 @@
 #define add_and_get_field(name) \
   if (_Ind(#name) >= 0)\
   {DECLARE_FIELD(name);REMOVE_FIELD(name);}\
-  ADD_FIELD(name);PREP_FIELD(name);
+  ADD_FIELD(name);REALLOC_v_CALL_v(name);
 
 
 void populate_ADM_momentums_integrand_PdS_GdV(const Observable_T *const obs);

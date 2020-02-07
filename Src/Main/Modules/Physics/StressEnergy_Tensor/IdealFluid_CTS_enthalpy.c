@@ -13,7 +13,7 @@ void Tij_IF_CTS_enthalpy(Patch_T *const patch)
   unsigned ijk;
 
   /* declaring: */
-  PREP_FIELD(enthalpy)
+  REALLOC_v_CALL_v(enthalpy)
   READ_v(_gamma_D2D2)
   READ_v(_gamma_D0D2)
   READ_v(_gamma_D0D0)

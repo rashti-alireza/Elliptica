@@ -36,7 +36,7 @@ void Tij_IF_CTS_u0(Patch_T *const patch)
   READ_v(dphi_D0)
   READ_v(eta)
   READ_v(psi)
-  PREP_FIELD(u0)
+  REALLOC_v_CALL_v(u0)
 
 
   for(ijk = 0; ijk < nn; ++ijk)
