@@ -67,8 +67,6 @@
                                    fJs_T *xNAME        = get_j_reader(j_##xNAME);
 
 /* parameters */                                  
-//#define Pseti(x)
-//#define Psets(x)
 //#define Paddg(x)
 
 /* comparing value of the parameter x with y using strcmp_i */
@@ -90,8 +88,15 @@
 #define Pgetdd(x)   get_parameter_array_format(x,__FILE__,__LINE__,FATAL)/* if not exists give error */
 #define PgetddEZ(x) get_parameter_array_format(x,__FILE__,__LINE__,NONE)/* if not exist go easy */
 
-/* add a double type parameter */
+/* add or update a double type parameter */
 #define Psetd(x,y)  update_parameter_double_format(x,y)
+
+/* add or update an integer type parameter */
+#define Pseti(x,y)  update_parameter_integer(x,y)
+
+/* add or update a string type parameter */
+#define Psets(x,y)  update_parameter_string(x,y)
+
 
 /* OpenMP for 2 dimension */
 #ifdef Pragma_OpenMP_2d
