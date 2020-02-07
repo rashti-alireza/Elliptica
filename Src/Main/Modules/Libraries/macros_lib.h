@@ -66,8 +66,8 @@
                                    Matrix_T *j_##xNAME = get_j_matrix(patch,#xNAME);\
                                    fJs_T *xNAME        = get_j_reader(j_##xNAME);
 
-/* parameters */                                  
-//#define Paddg(x)
+/* add a general parameter */
+#define Paddg(x,y) add_parameter(x,y)
 
 /* comparing value of the parameter x with y using strcmp_i */
 #define Pcmps(x,y) strcmp_i(Pgets(x),y)
@@ -89,10 +89,10 @@
 #define PgetddEZ(x) get_parameter_array_format(x,__FILE__,__LINE__,NONE)/* if not exist go easy */
 
 /* add or update a double type parameter */
-#define Psetd(x,y)  update_parameter_double_format(x,y)
+#define Psetd(x,y)  update_parameter_double_format(x,(y))
 
 /* add or update an integer type parameter */
-#define Pseti(x,y)  update_parameter_integer(x,y)
+#define Pseti(x,y)  update_parameter_integer(x,(y))
 
 /* add or update a string type parameter */
 #define Psets(x,y)  update_parameter_string(x,y)
