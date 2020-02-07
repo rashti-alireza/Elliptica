@@ -27,7 +27,7 @@ void prepare_Js_jacobian_eq(Patch_T *const patch,const char * const *types)
   unsigned i;
   
   if (get_parameter("Maximum_Size_of_J_Kept_in_Mb"))
-    max_j_size = Pgetd("Maximum_Size_of_J_Kept_in_Mb");
+    max_j_size = PgetdEZ("Maximum_Size_of_J_Kept_in_Mb");
   
   /* selecting Jacobian method for making of jacobian equation */
   if (strcmp_i(Pgets("dF/du_for_Newton_Method"),"Spectral"))

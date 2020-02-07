@@ -106,7 +106,7 @@ Matrix_T *cast_matrix_ccs(Matrix_T *const m)
   {
     double DropLimit = 0;
     if (get_parameter("Ignore_Number_Less_Than_in_CCS_format"))	
-      DropLimit = Pgetd("Ignore_Number_Less_Than_in_CCS_format");
+      DropLimit = PgetdEZ("Ignore_Number_Less_Than_in_CCS_format");
       
     convert_reg2ccs(m,ccs,DropLimit);
   }
@@ -162,7 +162,7 @@ Matrix_T *cast_matrix_ccs_long(Matrix_T *const m)
   {
     double DropLimit = 0;
     if (get_parameter("Ignore_Number_Less_Than_in_CCS_format"))	
-      DropLimit = Pgetd("Ignore_Number_Less_Than_in_CCS_format");
+      DropLimit = PgetdEZ("Ignore_Number_Less_Than_in_CCS_format");
       
     convert_reg2ccs_long(m,ccs_l,DropLimit);
   }
