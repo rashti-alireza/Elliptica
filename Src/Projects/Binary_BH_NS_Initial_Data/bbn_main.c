@@ -57,7 +57,10 @@ int Binary_BH_NS_Initial_Data(void)
   
   /* free grid */
   free_grid(grid);
-    
+  
+  /* free parameter data base */  
+  free_parameter_db();
+  
   /* print some description */
   printf("} Constructing Initial Data for Binary BH and NS ==> Done. :)\n");
   pr_clock();
@@ -112,7 +115,10 @@ static void Elliptic_Eqs_Convergence_Test_BBN(void)
   
   /* free grid */
   free_grid(grid);
-    
+  
+  /* free parameter data base */  
+  free_parameter_db();
+  
   /* print some description */
   printf("\nConvergence Test of Elliptic Equations for Binary BH-NS ==> Done. :)\n");
   pr_clock();
