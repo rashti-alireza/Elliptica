@@ -60,7 +60,7 @@ Symm[_gammaI(i,j)  = _gammaI(j,i)];
 Symm[_gamma(i,j)   = _gamma(j,i)];
 
 # calculate enthalpy:
-`  const double Euler_C = PgetdoubleF_E("Euler_equation_constant");`
+`  const double Euler_C = Pgetd("Euler_equation_constant");`
 Ccode["  for(ijk = 0; ijk < nn; ++ijk)"];
 Ccode["  {"];
      alpha = eta/psi;

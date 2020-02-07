@@ -39,7 +39,7 @@ void Tij_IF_CTS_enthalpy(Patch_T *const patch)
   READ_v(psi)
 
 
-  const double Euler_C = PgetdoubleF_E("Euler_equation_constant");
+  const double Euler_C = Pgetd("Euler_equation_constant");
   for(ijk = 0; ijk < nn; ++ijk)
   {
   double alpha = 

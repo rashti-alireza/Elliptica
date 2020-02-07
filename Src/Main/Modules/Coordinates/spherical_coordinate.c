@@ -121,11 +121,11 @@ static void populate_left_NS_sphere(Grid_T *const grid,const unsigned pn)
   
   /* filling center */
   sprintf(var,"grid%u_left_NS_center_a",grid->gn);
-  patch->c[0] = PgetdoubleF_E(var);
+  patch->c[0] = Pgetd(var);
   sprintf(var,"grid%u_left_NS_center_b",grid->gn);
-  patch->c[1] = PgetdoubleF_E(var);
+  patch->c[1] = Pgetd(var);
   sprintf(var,"grid%u_left_NS_center_c",grid->gn);
-  patch->c[2] = PgetdoubleF_E(var);
+  patch->c[2] = Pgetd(var);
   
   /* filling Rs */
   sprintf(var,"grid%u_left_NS_R1",grid->gn);
@@ -253,11 +253,11 @@ static void populate_right_NS_sphere(Grid_T *const grid,const unsigned pn)
   
   /* filling center */
   sprintf(var,"grid%u_right_NS_center_a",grid->gn);
-  patch->c[0] = PgetdoubleF_E(var);
+  patch->c[0] = Pgetd(var);
   sprintf(var,"grid%u_right_NS_center_b",grid->gn);
-  patch->c[1] = PgetdoubleF_E(var);
+  patch->c[1] = Pgetd(var);
   sprintf(var,"grid%u_right_NS_center_c",grid->gn);
-  patch->c[2] = PgetdoubleF_E(var);
+  patch->c[2] = Pgetd(var);
   
   /* filling Rs */
   sprintf(var,"grid%u_right_NS_R1",grid->gn);
@@ -385,15 +385,15 @@ static void populate_left_NS_surrounding_sphere(Grid_T *const grid,const unsigne
   
   /* filling center */
   sprintf(var,"grid%u_left_NS_center_a",grid->gn);
-  patch->c[0] = PgetdoubleF_E(var);
+  patch->c[0] = Pgetd(var);
   sprintf(var,"grid%u_left_NS_center_b",grid->gn);
-  patch->c[1] = PgetdoubleF_E(var);
+  patch->c[1] = Pgetd(var);
   sprintf(var,"grid%u_left_NS_center_c",grid->gn);
-  patch->c[2] = PgetdoubleF_E(var);
+  patch->c[2] = Pgetd(var);
   
   /* filling Rs */
   sprintf(var,"grid%u_left_NS_Surrounding_R2",grid->gn);
-  R2_const = PgetdoubleF_E(var);
+  R2_const = Pgetd(var);
   sprintf(var,"grid%u_left_NS_R2",grid->gn);
   R1_array = Pgetdd(var);
   
@@ -517,15 +517,15 @@ static void populate_right_NS_surrounding_sphere(Grid_T *const grid,const unsign
   
   /* filling center */
   sprintf(var,"grid%u_right_NS_center_a",grid->gn);
-  patch->c[0] = PgetdoubleF_E(var);
+  patch->c[0] = Pgetd(var);
   sprintf(var,"grid%u_right_NS_center_b",grid->gn);
-  patch->c[1] = PgetdoubleF_E(var);
+  patch->c[1] = Pgetd(var);
   sprintf(var,"grid%u_right_NS_center_c",grid->gn);
-  patch->c[2] = PgetdoubleF_E(var);
+  patch->c[2] = Pgetd(var);
   
   /* filling Rs */
   sprintf(var,"grid%u_right_NS_Surrounding_R2",grid->gn);
-  R2_const = PgetdoubleF_E(var);
+  R2_const = Pgetd(var);
   sprintf(var,"grid%u_right_NS_R2",grid->gn);
   R1_array = Pgetdd(var);
   
