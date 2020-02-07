@@ -41,7 +41,7 @@
                                        empty_field(xNAME);/* free v,v2 and info of field */
                                        
 /* access to the memory values to modify */
-#define WRITE_v(xNAME)   const int _field_index_of_##xNAME = Ind(#xNAME);\
+#define WRITE_v(xNAME)  const int _field_index_of_##xNAME = Ind(#xNAME);\
                         free_coeffs(patch->pool[_field_index_of_##xNAME]);\
                         double *const xNAME = patch->pool[_field_index_of_##xNAME]->v;
                         
