@@ -157,9 +157,9 @@ static void populate_left_NS_sphere(Grid_T *const grid,const unsigned pn)
   patch->coordsys = Spherical;
   
   /* collocation */
-  patch->collocation[0] = get_collocation(Pgets_E("collocation_a"));
-  patch->collocation[1] = get_collocation(Pgets_E("collocation_b"));
-  patch->collocation[2] = get_collocation(Pgets_E("collocation_c"));
+  patch->collocation[0] = get_collocation(Pgets("collocation_a"));
+  patch->collocation[1] = get_collocation(Pgets("collocation_b"));
+  patch->collocation[2] = get_collocation(Pgets("collocation_c"));
 
   /* check for override */
   make_keyword_parameter(&ret,name,"collocation");
@@ -178,9 +178,9 @@ static void populate_left_NS_sphere(Grid_T *const grid,const unsigned pn)
   assert(patch->collocation[2] != UNDEFINED_COLLOCATION);
   
   /* basis */
-  patch->basis[0] = get_basis(Pgets_E("basis_a"));
-  patch->basis[1] = get_basis(Pgets_E("basis_b"));
-  patch->basis[2] = get_basis(Pgets_E("basis_c"));
+  patch->basis[0] = get_basis(Pgets("basis_a"));
+  patch->basis[1] = get_basis(Pgets("basis_b"));
+  patch->basis[2] = get_basis(Pgets("basis_c"));
 
   /* check for override */
   make_keyword_parameter(&ret,name,"basis");
@@ -289,9 +289,9 @@ static void populate_right_NS_sphere(Grid_T *const grid,const unsigned pn)
   patch->coordsys = Spherical;
   
   /* collocation */
-  patch->collocation[0] = get_collocation(Pgets_E("collocation_a"));
-  patch->collocation[1] = get_collocation(Pgets_E("collocation_b"));
-  patch->collocation[2] = get_collocation(Pgets_E("collocation_c"));
+  patch->collocation[0] = get_collocation(Pgets("collocation_a"));
+  patch->collocation[1] = get_collocation(Pgets("collocation_b"));
+  patch->collocation[2] = get_collocation(Pgets("collocation_c"));
 
   /* check for override */
   make_keyword_parameter(&ret,name,"collocation");
@@ -310,9 +310,9 @@ static void populate_right_NS_sphere(Grid_T *const grid,const unsigned pn)
   assert(patch->collocation[2] != UNDEFINED_COLLOCATION);
   
   /* basis */
-  patch->basis[0] = get_basis(Pgets_E("basis_a"));
-  patch->basis[1] = get_basis(Pgets_E("basis_b"));
-  patch->basis[2] = get_basis(Pgets_E("basis_c"));
+  patch->basis[0] = get_basis(Pgets("basis_a"));
+  patch->basis[1] = get_basis(Pgets("basis_b"));
+  patch->basis[2] = get_basis(Pgets("basis_c"));
 
   /* check for override */
   make_keyword_parameter(&ret,name,"basis");
@@ -421,9 +421,9 @@ static void populate_left_NS_surrounding_sphere(Grid_T *const grid,const unsigne
   patch->coordsys = Spherical;
   
   /* collocation */
-  patch->collocation[0] = get_collocation(Pgets_E("collocation_a"));
-  patch->collocation[1] = get_collocation(Pgets_E("collocation_b"));
-  patch->collocation[2] = get_collocation(Pgets_E("collocation_c"));
+  patch->collocation[0] = get_collocation(Pgets("collocation_a"));
+  patch->collocation[1] = get_collocation(Pgets("collocation_b"));
+  patch->collocation[2] = get_collocation(Pgets("collocation_c"));
 
   /* check for override */
   make_keyword_parameter(&ret,name,"collocation");
@@ -442,9 +442,9 @@ static void populate_left_NS_surrounding_sphere(Grid_T *const grid,const unsigne
   assert(patch->collocation[2] != UNDEFINED_COLLOCATION);
   
   /* basis */
-  patch->basis[0] = get_basis(Pgets_E("basis_a"));
-  patch->basis[1] = get_basis(Pgets_E("basis_b"));
-  patch->basis[2] = get_basis(Pgets_E("basis_c"));
+  patch->basis[0] = get_basis(Pgets("basis_a"));
+  patch->basis[1] = get_basis(Pgets("basis_b"));
+  patch->basis[2] = get_basis(Pgets("basis_c"));
 
   /* check for override */
   make_keyword_parameter(&ret,name,"basis");
@@ -553,9 +553,9 @@ static void populate_right_NS_surrounding_sphere(Grid_T *const grid,const unsign
   patch->coordsys = Spherical;
     
   /* collocation */
-  patch->collocation[0] = get_collocation(Pgets_E("collocation_a"));
-  patch->collocation[1] = get_collocation(Pgets_E("collocation_b"));
-  patch->collocation[2] = get_collocation(Pgets_E("collocation_c"));
+  patch->collocation[0] = get_collocation(Pgets("collocation_a"));
+  patch->collocation[1] = get_collocation(Pgets("collocation_b"));
+  patch->collocation[2] = get_collocation(Pgets("collocation_c"));
 
   /* check for override */
   make_keyword_parameter(&ret,name,"collocation");
@@ -574,9 +574,9 @@ static void populate_right_NS_surrounding_sphere(Grid_T *const grid,const unsign
   assert(patch->collocation[2] != UNDEFINED_COLLOCATION);
   
   /* basis */
-  patch->basis[0] = get_basis(Pgets_E("basis_a"));
-  patch->basis[1] = get_basis(Pgets_E("basis_b"));
-  patch->basis[2] = get_basis(Pgets_E("basis_c"));
+  patch->basis[0] = get_basis(Pgets("basis_a"));
+  patch->basis[1] = get_basis(Pgets("basis_b"));
+  patch->basis[2] = get_basis(Pgets("basis_c"));
 
   /* check for override */
   make_keyword_parameter(&ret,name,"basis");

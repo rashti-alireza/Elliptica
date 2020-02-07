@@ -21,7 +21,7 @@ int Laplace_Inhom(void)
   
   /* print */
   Pr_Field_T *pr  = init_PrField(grid);
-  const char *path_par = Pgets_E("output_directory_path");
+  const char *path_par = Pgets("output_directory_path");
   char *folder = make_directory(path_par,"output_4d");
   pr->folder = folder;
   pr->par    = "print_fields_4d";

@@ -30,9 +30,9 @@ void prepare_Js_jacobian_eq(Patch_T *const patch,const char * const *types)
     max_j_size = Pgetd("Maximum_Size_of_J_Kept_in_Mb");
   
   /* selecting Jacobian method for making of jacobian equation */
-  if (strcmp_i(Pgets_E("dF/du_for_Newton_Method"),"Spectral"))
+  if (strcmp_i(Pgets("dF/du_for_Newton_Method"),"Spectral"))
     Jacobian = make_jacobian_spectral_method;
-  else if (strcmp_i(Pgets_E("dF/du_for_Newton_Method"),"Finite_Difference"))
+  else if (strcmp_i(Pgets("dF/du_for_Newton_Method"),"Finite_Difference"))
     Jacobian = make_jacobian_direct_method;
   else
     abortEr(INCOMPLETE_FUNC);
@@ -140,9 +140,9 @@ void make_Js_jacobian_eq(Grid_T *const grid, const char * const* types)
   unsigned i,p,nn;
   
   /* selecting Jacobian method for making of jacobian equation */
-  if (strcmp_i(Pgets_E("Making_Jacobian_Eq_Method"),"spectral"))
+  if (strcmp_i(Pgets("Making_Jacobian_Eq_Method"),"spectral"))
     Jacobian = make_jacobian_spectral_method;
-  else if (strcmp_i(Pgets_E("Making_Jacobian_Eq_Method"),"direct"))
+  else if (strcmp_i(Pgets("Making_Jacobian_Eq_Method"),"direct"))
     Jacobian = make_jacobian_direct_method;
   else
     abortEr(INCOMPLETE_FUNC);
@@ -177,7 +177,7 @@ void test_make_Js_jacobian_eq(Grid_T *const grid, const char * const* types)
       {make_jacobian_spectral_method,make_jacobian_direct_method};
   double **cmp[N_Method_E];
   Matrix_T *J = 0;
-  const char *path_par = Pgets_E("output_directory_path");
+  const char *path_par = Pgets("output_directory_path");
   char *path = make_directory(path_par,"Test_Jacobian_Eq");
   char file_name[MAX_STR_LEN];
   char line[MAX_STR_LEN]={'\0'};

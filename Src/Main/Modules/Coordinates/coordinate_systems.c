@@ -573,7 +573,7 @@ void grid_characteristics_example(Grid_T *const grid)
   const char *kind;
   
   /* finding the kind of grid */
-  kind = Pgets_E("grid_kind");
+  kind = Pgets("grid_kind");
   
   if (strcmp_i(kind,"Cartesian_grid"))
     characteristics_Cartesian_grid_eg(grid);
@@ -596,7 +596,7 @@ void grid_characteristics_example(Grid_T *const grid)
 static void characteristics_Cartesian_grid_eg(Grid_T *const grid)
 {
   /* this type of grid is so simple; nothing to calculate. */
-  grid->kind = dup_s(Pgets_E("grid_kind"));
+  grid->kind = dup_s(Pgets("grid_kind"));
 }
 
 /* calculating the main characteristic of grid for BBN_CubedSpherical grid */
@@ -621,7 +621,7 @@ static void characteristics_BBN_CS_grid_eg(Grid_T *const grid)
   unsigned i;
   
   /* finding the kind of grid */
-  kind = Pgets_E("grid_kind");
+  kind = Pgets("grid_kind");
   grid->kind = dup_s(kind);
   
   assert(GRT(C,0));

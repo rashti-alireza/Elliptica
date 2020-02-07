@@ -48,7 +48,7 @@ void add_eq(sEquation_T ***const data_base, fEquation_T *const eq,const char *co
 /* initializing Solving_Man_T struct and its elements */
 void initialize_solving_man(Grid_T *const grid,sEquation_T **const field_eq,sEquation_T **const bc_eq,sEquation_T **const jacobian_field_eq,sEquation_T **const jacobian_bc_eq)
 {
-  const char *par_f = Pgets_E("Solving_Order");
+  const char *par_f = Pgets("Solving_Order");
   char *par;
   char **field_name = 0;
   unsigned nf = 0;

@@ -11,7 +11,7 @@
 int TOV_star(void)
 {
   TOV_T *tov = TOV_init();
-  const char *const path_par = Pgets_E("output_directory_path");
+  const char *const path_par = Pgets("output_directory_path");
   char *path =  make_directory(path_par,"TOV_Star");
   char file_name[MAXSTR];
   FILE *file;

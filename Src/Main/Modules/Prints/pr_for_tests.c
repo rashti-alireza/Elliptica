@@ -445,7 +445,7 @@ void pr_field_difference(const Grid_T *const grid,const char *const fld1,const c
   const char *path_par;
   unsigned l,i,R;
   
-  path_par = Pgets_E("output_directory_path");
+  path_par = Pgets("output_directory_path");
   path = make_directory(path_par,"Fields");
   
   sprintf(dir,"%s/%s-%s.grid",path,fld1,fld2);

@@ -14,7 +14,7 @@ void *bbn_eq_phi(void *vp1,void *vp2)
   DDM_SCHUR_EQ_DECLARE
   unsigned ijk;/* node index */
 
-  if (!strcmp_i(Pgets_E("grid_kind"),"BBN_CubedSpherical_grid"))
+  if (!strcmp_i(Pgets("grid_kind"),"BBN_CubedSpherical_grid"))
     abortEr("For this grid you need to figure out where to set phi = 0.\n");
   
 

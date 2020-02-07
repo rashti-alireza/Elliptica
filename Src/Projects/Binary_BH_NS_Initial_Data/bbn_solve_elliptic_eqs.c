@@ -24,7 +24,7 @@ void bbn_solve_elliptic_eqs(Grid_T *const grid)
   
   /* solving equation(s) */
   Solve_Equations_T *SolveEqs = init_solve_equations(grid);
-  SolveEqs->solving_order = Pgets_E("Solving_Order");
+  SolveEqs->solving_order = Pgets("Solving_Order");
   SolveEqs->FieldUpdate   = bbn_SolveEqs_FieldUpdate;
   SolveEqs->SourceUpdate  = bbn_SolveEqs_SourceUpdate;
   SolveEqs->StopCriteria  = bbn_stop_criteria;
@@ -94,7 +94,7 @@ void bbn_solve_elliptic_eqs(Grid_T *const grid)
 static void update_fields_relaxed_scheme(Grid_T *const grid)
 {
   const unsigned npatch = grid->np;
-  const char *const solving_order = Pgets_E("Solving_Order");
+  const char *const solving_order = Pgets("Solving_Order");
   const double W1  = Pgetd_E("Solving_Field_Update_Weight");
   const double W2  = 1-W1;
   char **field_name;
@@ -150,7 +150,7 @@ static void update_fields_relaxed_scheme(Grid_T *const grid)
 static void save_fields(Grid_T *const grid)
 {
   const unsigned npatch = grid->np;
-  const char *const solving_order = Pgets_E("Solving_Order");  
+  const char *const solving_order = Pgets("Solving_Order");  
   char **field_name;
   unsigned p,nf,f;
   
