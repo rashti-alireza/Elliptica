@@ -49,7 +49,7 @@
 #define READ_v(xNAME)   const double *const xNAME = patch->pool[Ind(#xNAME)]->v;
 
 /* it frees v,v2,info of field and alloc memory for v */
-#define REALLOC_v_WRITE_v(xNAME)    const int _field_index_of_##xNAME = Ind(#xNAME);\
+#define REALLOC_v_WRITE_v(xNAME)   const int _field_index_of_##xNAME = Ind(#xNAME);\
                                    Field_T *const _F_##xNAME         = patch->pool[_field_index_of_##xNAME];\
                                    empty_field(_F_##xNAME);\
                                    _F_##xNAME->v                     = alloc_double(patch->nn);\
@@ -59,16 +59,12 @@
 #define READ_v_UNUSED(xNAME)  READ_v(xNAME)\
                               UNUSED(xNAME);
 
-//#define WRITE_v ->MODIFY_FIELD
-//#define READ_v ->GET_FIELD
-//#define REALLOC_v_WRITE_v ->PREP_FIELD
-
                                         
 /* it compactifies the prepration of Jacobian of derivatives */
 #define JACOBIAN_DERIVATIVE(xNAME) const char *types_##xNAME[] = {#xNAME,0};\
-                                  prepare_Js_jacobian_eq(patch,types_##xNAME);\
-                                  Matrix_T *j_##xNAME = get_j_matrix(patch,#xNAME);\
-                                  fJs_T *xNAME        = get_j_reader(j_##xNAME);
+                                   prepare_Js_jacobian_eq(patch,types_##xNAME);\
+                                   Matrix_T *j_##xNAME = get_j_matrix(patch,#xNAME);\
+                                   fJs_T *xNAME        = get_j_reader(j_##xNAME);
 
 /* parameters */                                  
 #define GetParameterS(x)   get_parameter_value_S(x,__FILE__,__LINE__,NONE)
