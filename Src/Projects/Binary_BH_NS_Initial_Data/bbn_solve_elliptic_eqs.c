@@ -35,8 +35,8 @@ void bbn_solve_elliptic_eqs(Grid_T *const grid)
   /* saving the field being solved for relaxation scheme purposes */
   save_fields(grid);
   
-  const unsigned max_iter = (unsigned)GetParameterI_E("Solving_Max_Number_of_Iteration");
-  const int max_newton_step = GetParameterI_E("Solving_Max_Number_of_Newton_Step");
+  const unsigned max_iter = (unsigned)Pgeti_E("Solving_Max_Number_of_Iteration");
+  const int max_newton_step = Pgeti_E("Solving_Max_Number_of_Newton_Step");
   unsigned iter = 0;
   
   while (iter < max_iter)
@@ -204,7 +204,7 @@ int bbn_stop_criteria(Grid_T *const grid,const char *const name)
   const double res_TOLERANCE = 1E-10;/* this is the tolerance that solver allowed to increase residual */
   const double res_bckt = GetParameterD_E("Solving_Allowed_Relative_Residual_Backtrack_Tolerance");
   const double res_d    = GetParameterD_E("Solving_Residual");/* desired residual */
-  const int max_step    = GetParameterI_E("Solving_Max_Number_of_Newton_Step");
+  const int max_step    = Pgeti_E("Solving_Max_Number_of_Newton_Step");
   const double res_fac  = GetParameterD_E("Solving_Residual_Factor");
   const unsigned npatch = grid->np;
   unsigned p;

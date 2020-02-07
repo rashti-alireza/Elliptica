@@ -611,7 +611,7 @@ static void characteristics_BBN_CS_grid_eg(Grid_T *const grid)
                R_BH_r = bh_m*(1+sqrt(1-SQR(bh_chi)));
                
   double box_size_l;
-  const unsigned N_Outermost_Split = (unsigned)GetParameterI_E("Number_of_Outermost_Split"); 
+  const unsigned N_Outermost_Split = (unsigned)Pgeti_E("Number_of_Outermost_Split"); 
   double *R_outermost = calloc(N_Outermost_Split,sizeof(*R_outermost));
   unsigned nlb[3]/*left box*/,n;
   char var[100] = {'\0'};
@@ -652,15 +652,15 @@ static void characteristics_BBN_CS_grid_eg(Grid_T *const grid)
   /* filling n */
   
   /* left box */
-  nlb[0] = (unsigned)GetParameterI("n_a");
-  nlb[1] = (unsigned)GetParameterI("n_b");
-  nlb[2] = (unsigned)GetParameterI("n_c");
+  nlb[0] = (unsigned)Pgeti("n_a");
+  nlb[1] = (unsigned)Pgeti("n_b");
+  nlb[2] = (unsigned)Pgeti("n_c");
   /* check for override */
-  n = (unsigned)GetParameterI("left_NS_n_a");
+  n = (unsigned)Pgeti("left_NS_n_a");
   if (n != INT_MAX)   nlb[0] = n;
-  n = (unsigned)GetParameterI("left_NS_n_b");
+  n = (unsigned)Pgeti("left_NS_n_b");
   if (n != INT_MAX)   nlb[1] = n;
-  n = (unsigned)GetParameterI("left_NS_n_c");
+  n = (unsigned)Pgeti("left_NS_n_c");
   if (n != INT_MAX)   nlb[2] = n;
     
   if(nlb[0] == INT_MAX)
@@ -774,15 +774,15 @@ static void NS_BH_surface_CS_grid_eg(Grid_T *const grid,const double R_NS_l,cons
   /* left NS */
   
   /* filling N */
-  N[0] = (unsigned)GetParameterI("n_a");
-  N[1] = (unsigned)GetParameterI("n_b");
-  N[2] = (unsigned)GetParameterI("n_c");
+  N[0] = (unsigned)Pgeti("n_a");
+  N[1] = (unsigned)Pgeti("n_b");
+  N[2] = (unsigned)Pgeti("n_c");
   /* check for override */
-  n = (unsigned)GetParameterI("left_NS_n_a");
+  n = (unsigned)Pgeti("left_NS_n_a");
   if (n != INT_MAX)     N[0] = n;
-  n = (unsigned)GetParameterI("left_NS_n_b");
+  n = (unsigned)Pgeti("left_NS_n_b");
   if (n != INT_MAX)     N[1] = n;
-  n = (unsigned)GetParameterI("left_NS_n_c");
+  n = (unsigned)Pgeti("left_NS_n_c");
   if (n != INT_MAX)     N[2] = n;
   
   if(N[0] == INT_MAX)
@@ -827,16 +827,16 @@ static void NS_BH_surface_CS_grid_eg(Grid_T *const grid,const double R_NS_l,cons
   /* right BH */
   
   /* filling N */
-  N[0] = (unsigned)GetParameterI("n_a");
-  N[1] = (unsigned)GetParameterI("n_b");
-  N[2] = (unsigned)GetParameterI("n_c");
+  N[0] = (unsigned)Pgeti("n_a");
+  N[1] = (unsigned)Pgeti("n_b");
+  N[2] = (unsigned)Pgeti("n_c");
   
   /* check for override */
-  n = (unsigned)GetParameterI("right_BH_n_a");
+  n = (unsigned)Pgeti("right_BH_n_a");
   if (n != INT_MAX)     N[0] = n;
-  n = (unsigned)GetParameterI("right_BH_n_b");
+  n = (unsigned)Pgeti("right_BH_n_b");
   if (n != INT_MAX)     N[1] = n;
-  n = (unsigned)GetParameterI("right_BH_n_c");
+  n = (unsigned)Pgeti("right_BH_n_c");
   if (n != INT_MAX)     N[2] = n;
   
   if(N[0] == INT_MAX)
@@ -960,7 +960,7 @@ static void characteristics_BNS_CS_grid_eg(Grid_T *const grid)
   const double R_NS_l = GetParameterD_E("left_NS_radius");/* assuming perfect sphere */
   const double R_NS_r = GetParameterD_E("right_NS_radius");/* assuming perfect sphere */
   double box_size_l,box_size_r;
-  const unsigned N_Outermost_Split = (unsigned)GetParameterI_E("Number_of_Outermost_Split"); 
+  const unsigned N_Outermost_Split = (unsigned)Pgeti_E("Number_of_Outermost_Split"); 
   double *R_outermost = calloc(N_Outermost_Split,sizeof(*R_outermost));
   unsigned nlb[3]/*left box*/, nrb[3]/*right box*/,n;
   char var[100] = {'\0'};
@@ -997,15 +997,15 @@ static void characteristics_BNS_CS_grid_eg(Grid_T *const grid)
   /* filling n */
   
   /* left box */
-  nlb[0] = (unsigned)GetParameterI("n_a");
-  nlb[1] = (unsigned)GetParameterI("n_b");
-  nlb[2] = (unsigned)GetParameterI("n_c");
+  nlb[0] = (unsigned)Pgeti("n_a");
+  nlb[1] = (unsigned)Pgeti("n_b");
+  nlb[2] = (unsigned)Pgeti("n_c");
   /* check for override */
-  n = (unsigned)GetParameterI("left_NS_n_a");
+  n = (unsigned)Pgeti("left_NS_n_a");
   if (n != INT_MAX)   nlb[0] = n;
-  n = (unsigned)GetParameterI("left_NS_n_b");
+  n = (unsigned)Pgeti("left_NS_n_b");
   if (n != INT_MAX)   nlb[1] = n;
-  n = (unsigned)GetParameterI("left_NS_n_c");
+  n = (unsigned)Pgeti("left_NS_n_c");
   if (n != INT_MAX)   nlb[2] = n;
     
   if(nlb[0] == INT_MAX)
@@ -1016,15 +1016,15 @@ static void characteristics_BNS_CS_grid_eg(Grid_T *const grid)
     abortEr("n_c could not be set.\n");
   
   /* right box */
-  nrb[0] = (unsigned)GetParameterI("n_a");
-  nrb[1] = (unsigned)GetParameterI("n_b");
-  nrb[2] = (unsigned)GetParameterI("n_c");
+  nrb[0] = (unsigned)Pgeti("n_a");
+  nrb[1] = (unsigned)Pgeti("n_b");
+  nrb[2] = (unsigned)Pgeti("n_c");
   /* check for override */
-  n = (unsigned)GetParameterI("right_NS_n_a");
+  n = (unsigned)Pgeti("right_NS_n_a");
   if (n != INT_MAX)   nrb[0] = n;
-  n = (unsigned)GetParameterI("right_NS_n_b");
+  n = (unsigned)Pgeti("right_NS_n_b");
   if (n != INT_MAX)   nrb[1] = n;
-  n = (unsigned)GetParameterI("right_NS_n_c");
+  n = (unsigned)Pgeti("right_NS_n_c");
   if (n != INT_MAX)   nrb[2] = n;
     
   if(nrb[0] == INT_MAX)
@@ -1132,7 +1132,7 @@ static void characteristics_BNS_Spherical_grid_eg(Grid_T *const grid)
   const double C      = GetParameterD_E("BNS_Distance");
   const double R_NS_l = GetParameterD_E("left_NS_radius");/* assuming perfect sphere */
   const double R_NS_r = GetParameterD_E("right_NS_radius");/* assuming perfect sphere */
-  const unsigned N_Outermost_Split = (unsigned)GetParameterI_E("Number_of_Outermost_Split"); 
+  const unsigned N_Outermost_Split = (unsigned)Pgeti_E("Number_of_Outermost_Split"); 
   double O,O_l,O_r,
          R_Surr_l,R_Surr_r,
          *R_outmost_l = alloc_double(N_Outermost_Split),
@@ -1262,15 +1262,15 @@ static void NS_radii_BNS_Spherical_grid_eg(Grid_T *const grid,void *vp)
   /* left NS */
   
   /* filling N */
-  N[0] = (unsigned)GetParameterI("n_a");
-  N[1] = (unsigned)GetParameterI("n_b");
-  N[2] = (unsigned)GetParameterI("n_c");
+  N[0] = (unsigned)Pgeti("n_a");
+  N[1] = (unsigned)Pgeti("n_b");
+  N[2] = (unsigned)Pgeti("n_c");
   /* check for override */
-  n = (unsigned)GetParameterI("left_NS_n_a");
+  n = (unsigned)Pgeti("left_NS_n_a");
   if (n != INT_MAX)     N[0] = n;
-  n = (unsigned)GetParameterI("left_NS_n_b");
+  n = (unsigned)Pgeti("left_NS_n_b");
   if (n != INT_MAX)     N[1] = n;
-  n = (unsigned)GetParameterI("left_NS_n_c");
+  n = (unsigned)Pgeti("left_NS_n_c");
   if (n != INT_MAX)     N[2] = n;
   
   if(N[0] == INT_MAX)
@@ -1303,15 +1303,15 @@ static void NS_radii_BNS_Spherical_grid_eg(Grid_T *const grid,void *vp)
   /* right NS */
   
   /* filling N */
-  N[0] = (unsigned)GetParameterI("n_a");
-  N[1] = (unsigned)GetParameterI("n_b");
-  N[2] = (unsigned)GetParameterI("n_c");
+  N[0] = (unsigned)Pgeti("n_a");
+  N[1] = (unsigned)Pgeti("n_b");
+  N[2] = (unsigned)Pgeti("n_c");
   /* check for override */
-  n = (unsigned)GetParameterI("right_NS_n_a");
+  n = (unsigned)Pgeti("right_NS_n_a");
   if (n != INT_MAX)     N[0] = n;
-  n = (unsigned)GetParameterI("right_NS_n_b");
+  n = (unsigned)Pgeti("right_NS_n_b");
   if (n != INT_MAX)     N[1] = n;
-  n = (unsigned)GetParameterI("right_NS_n_c");
+  n = (unsigned)Pgeti("right_NS_n_c");
   if (n != INT_MAX)     N[2] = n;
   
   if(N[0] == INT_MAX)
@@ -1354,15 +1354,15 @@ static void NS_surface_BNS_CS_grid_eg(Grid_T *const grid)
   /* left NS */
   
   /* filling N */
-  N[0] = (unsigned)GetParameterI("n_a");
-  N[1] = (unsigned)GetParameterI("n_b");
-  N[2] = (unsigned)GetParameterI("n_c");
+  N[0] = (unsigned)Pgeti("n_a");
+  N[1] = (unsigned)Pgeti("n_b");
+  N[2] = (unsigned)Pgeti("n_c");
   /* check for override */
-  n = (unsigned)GetParameterI("left_NS_n_a");
+  n = (unsigned)Pgeti("left_NS_n_a");
   if (n != INT_MAX)     N[0] = n;
-  n = (unsigned)GetParameterI("left_NS_n_b");
+  n = (unsigned)Pgeti("left_NS_n_b");
   if (n != INT_MAX)     N[1] = n;
-  n = (unsigned)GetParameterI("left_NS_n_c");
+  n = (unsigned)Pgeti("left_NS_n_c");
   if (n != INT_MAX)     N[2] = n;
   
   if(N[0] == INT_MAX)
@@ -1399,15 +1399,15 @@ static void NS_surface_BNS_CS_grid_eg(Grid_T *const grid)
   /* right NS */
   
   /* filling N */
-  N[0] = (unsigned)GetParameterI("n_a");
-  N[1] = (unsigned)GetParameterI("n_b");
-  N[2] = (unsigned)GetParameterI("n_c");
+  N[0] = (unsigned)Pgeti("n_a");
+  N[1] = (unsigned)Pgeti("n_b");
+  N[2] = (unsigned)Pgeti("n_c");
   /* check for override */
-  n = (unsigned)GetParameterI("right_NS_n_a");
+  n = (unsigned)Pgeti("right_NS_n_a");
   if (n != INT_MAX)     N[0] = n;
-  n = (unsigned)GetParameterI("right_NS_n_b");
+  n = (unsigned)Pgeti("right_NS_n_b");
   if (n != INT_MAX)     N[1] = n;
-  n = (unsigned)GetParameterI("right_NS_n_c");
+  n = (unsigned)Pgeti("right_NS_n_c");
   if (n != INT_MAX)     N[2] = n;
   
   if(N[0] == INT_MAX)

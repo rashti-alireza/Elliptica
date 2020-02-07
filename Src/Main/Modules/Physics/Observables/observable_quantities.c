@@ -63,7 +63,7 @@ void plan_observable(Observable_T *const obs)
 static void populate_observable_BBN_CS(Observable_T *const obs)
 {
   Grid_T *const grid = obs->grid;
-  const unsigned N_outermost = (unsigned) GetParameterI_E("Number_of_Outermost_Split");
+  const unsigned N_outermost = (unsigned) Pgeti_E("Number_of_Outermost_Split");
   Patch_T **patches = 0,*patch = 0;
   char stem[1000];
   unsigned n,N,ijk,nn;

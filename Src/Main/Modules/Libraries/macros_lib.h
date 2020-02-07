@@ -83,7 +83,7 @@
 
 
 #define Pgets(x)   get_parameter_value_S(x,__FILE__,__LINE__,NONE)
-#define GetParameterI(x)   get_parameter_value_I(x,__FILE__,__LINE__,NONE)
+#define Pgeti(x)   get_parameter_value_I(x,__FILE__,__LINE__,NONE)
 #define GetParameterD(x)   get_parameter_value_D(x,__FILE__,__LINE__,NONE)
 #define AddParameterDoubleF(x,y)    update_parameter_double_format(x,y)
 #define UpdateParameterDoubleF(x,y) update_parameter_double_format(x,y)
@@ -91,7 +91,7 @@
 #define GetParameterDoubleF(x) get_parameter_double_format(x,__FILE__,__LINE__,NONE)
 #define GetParameterDoubleF_E(x) get_parameter_double_format(x,__FILE__,__LINE__,FATAL)
 #define Pgets_E(x) get_parameter_value_S(x,__FILE__,__LINE__,FATAL)
-#define GetParameterI_E(x) get_parameter_value_I(x,__FILE__,__LINE__,FATAL)
+#define Pgeti_E(x) get_parameter_value_I(x,__FILE__,__LINE__,FATAL)
 #define GetParameterD_E(x) get_parameter_value_D(x,__FILE__,__LINE__,FATAL)
 #define GetParameterArrayF_E(x)  get_parameter_array_format(x,__FILE__,__LINE__,FATAL)
 

@@ -423,7 +423,7 @@ int interpolation_tests(Grid_T *const grid)
 static int interpolation_tests_N_cubic_spline_1d(void)
 {
   Interpolation_T *interp_s = init_interpolation();
-  const unsigned N = (unsigned)GetParameterI_E("n_a");
+  const unsigned N = (unsigned)Pgeti_E("n_a");
   double *f = alloc_double(N);
   double *x = alloc_double(N);
   const double a = -M_PI, b = 3/4*M_PI;/* an arbitrary interval  */
@@ -510,7 +510,7 @@ static int interpolation_tests_N_cubic_spline_1d(void)
 static int interpolation_tests_Neville_1d(void)
 {
   Interpolation_T *interp_s = init_interpolation();
-  const unsigned N = (unsigned)GetParameterI_E("n_a");
+  const unsigned N = (unsigned)Pgeti_E("n_a");
   double *f = alloc_double(N);
   double *x = alloc_double(N);
   const double a = -M_PI, b = 3/4*M_PI;/* an arbitrary interval  */

@@ -51,7 +51,7 @@ void make_nodes_Spherical_coord(Patch_T *const patch)
 /* filling patch struct for BNS_Spherical_grid */
 void fill_patches_BNS_Spherical_grid(Grid_T *const grid)
 {
-  const unsigned N_outermost_split = (unsigned) GetParameterI_E("Number_of_Outermost_Split");
+  const unsigned N_outermost_split = (unsigned) Pgeti_E("Number_of_Outermost_Split");
   unsigned pn,i;
   
   pn = 0;
@@ -96,17 +96,17 @@ static void populate_left_NS_sphere(Grid_T *const grid,const unsigned pn)
   patch->name = dup_s(name);
   
   /* filling n */
-  patch->n[0] = (unsigned)GetParameterI("n_a");
-  patch->n[1] = (unsigned)GetParameterI("n_b");
-  patch->n[2] = (unsigned)GetParameterI("n_c");
+  patch->n[0] = (unsigned)Pgeti("n_a");
+  patch->n[1] = (unsigned)Pgeti("n_b");
+  patch->n[2] = (unsigned)Pgeti("n_c");
   /* check for override */
   sprintf(var,"left_NS");
   make_keyword_parameter(&ret,var,"n");
-  n = (unsigned)GetParameterI(ret.s0);
+  n = (unsigned)Pgeti(ret.s0);
   if (n != INT_MAX)	patch->n[0] = n;
-  n = (unsigned)GetParameterI(ret.s1);
+  n = (unsigned)Pgeti(ret.s1);
   if (n != INT_MAX)	patch->n[1] = n;
-  n = (unsigned)GetParameterI(ret.s2);
+  n = (unsigned)Pgeti(ret.s2);
   if (n != INT_MAX)	patch->n[2] = n;
     
   if(patch->n[0] == INT_MAX)
@@ -228,17 +228,17 @@ static void populate_right_NS_sphere(Grid_T *const grid,const unsigned pn)
   patch->name = dup_s(name);
   
   /* filling n */
-  patch->n[0] = (unsigned)GetParameterI("n_a");
-  patch->n[1] = (unsigned)GetParameterI("n_b");
-  patch->n[2] = (unsigned)GetParameterI("n_c");
+  patch->n[0] = (unsigned)Pgeti("n_a");
+  patch->n[1] = (unsigned)Pgeti("n_b");
+  patch->n[2] = (unsigned)Pgeti("n_c");
   /* check for override */
   sprintf(var,"right_NS");
   make_keyword_parameter(&ret,var,"n");
-  n = (unsigned)GetParameterI(ret.s0);
+  n = (unsigned)Pgeti(ret.s0);
   if (n != INT_MAX)	patch->n[0] = n;
-  n = (unsigned)GetParameterI(ret.s1);
+  n = (unsigned)Pgeti(ret.s1);
   if (n != INT_MAX)	patch->n[1] = n;
-  n = (unsigned)GetParameterI(ret.s2);
+  n = (unsigned)Pgeti(ret.s2);
   if (n != INT_MAX)	patch->n[2] = n;
     
   if(patch->n[0] == INT_MAX)
@@ -360,17 +360,17 @@ static void populate_left_NS_surrounding_sphere(Grid_T *const grid,const unsigne
   patch->name = dup_s(name);
   
   /* filling n */
-  patch->n[0] = (unsigned)GetParameterI("n_a");
-  patch->n[1] = (unsigned)GetParameterI("n_b");
-  patch->n[2] = (unsigned)GetParameterI("n_c");
+  patch->n[0] = (unsigned)Pgeti("n_a");
+  patch->n[1] = (unsigned)Pgeti("n_b");
+  patch->n[2] = (unsigned)Pgeti("n_c");
   /* check for override */
   sprintf(var,"left_NS");
   make_keyword_parameter(&ret,var,"n");
-  n = (unsigned)GetParameterI(ret.s0);
+  n = (unsigned)Pgeti(ret.s0);
   if (n != INT_MAX)	patch->n[0] = n;
-  n = (unsigned)GetParameterI(ret.s1);
+  n = (unsigned)Pgeti(ret.s1);
   if (n != INT_MAX)	patch->n[1] = n;
-  n = (unsigned)GetParameterI(ret.s2);
+  n = (unsigned)Pgeti(ret.s2);
   if (n != INT_MAX)	patch->n[2] = n;
     
   if(patch->n[0] == INT_MAX)
@@ -492,17 +492,17 @@ static void populate_right_NS_surrounding_sphere(Grid_T *const grid,const unsign
   patch->name = dup_s(name);
   
   /* filling n */
-  patch->n[0] = (unsigned)GetParameterI("n_a");
-  patch->n[1] = (unsigned)GetParameterI("n_b");
-  patch->n[2] = (unsigned)GetParameterI("n_c");
+  patch->n[0] = (unsigned)Pgeti("n_a");
+  patch->n[1] = (unsigned)Pgeti("n_b");
+  patch->n[2] = (unsigned)Pgeti("n_c");
   /* check for override */
   sprintf(var,"right_NS");
   make_keyword_parameter(&ret,var,"n");
-  n = (unsigned)GetParameterI(ret.s0);
+  n = (unsigned)Pgeti(ret.s0);
   if (n != INT_MAX)	patch->n[0] = n;
-  n = (unsigned)GetParameterI(ret.s1);
+  n = (unsigned)Pgeti(ret.s1);
   if (n != INT_MAX)	patch->n[1] = n;
-  n = (unsigned)GetParameterI(ret.s2);
+  n = (unsigned)Pgeti(ret.s2);
   if (n != INT_MAX)	patch->n[2] = n;
     
   if(patch->n[0] == INT_MAX)
@@ -603,7 +603,7 @@ void alloc_patches_BNS_Spherical_grid(Grid_T *const grid)
   unsigned outermost;
   unsigned i;
   
-  outermost = (unsigned) GetParameterI("Number_of_Outermost_Split");
+  outermost = (unsigned) Pgeti("Number_of_Outermost_Split");
   if (outermost != (unsigned)INT_MAX)
     Np += 2*outermost;
   

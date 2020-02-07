@@ -85,17 +85,17 @@ void fill_patches_Cartesian_grid(Grid_T *const grid)
     patch->name = dup_s(name);
     
     /* filling n */
-    patch->n[0] = (unsigned)GetParameterI("n_a");
-    patch->n[1] = (unsigned)GetParameterI("n_b");
-    patch->n[2] = (unsigned)GetParameterI("n_c");
+    patch->n[0] = (unsigned)Pgeti("n_a");
+    patch->n[1] = (unsigned)Pgeti("n_b");
+    patch->n[2] = (unsigned)Pgeti("n_c");
     
     /* check for override */
     make_keyword_parameter(&ret,name,"n");
-    n = (unsigned)GetParameterI(ret.s0);
+    n = (unsigned)Pgeti(ret.s0);
     if (n != INT_MAX)	patch->n[0] = n;
-    n = (unsigned)GetParameterI(ret.s1);
+    n = (unsigned)Pgeti(ret.s1);
     if (n != INT_MAX)	patch->n[1] = n;
-    n = (unsigned)GetParameterI(ret.s2);
+    n = (unsigned)Pgeti(ret.s2);
     if (n != INT_MAX)	patch->n[2] = n;
 
     if(patch->n[0] == INT_MAX)
@@ -201,13 +201,13 @@ void populate_left_NS_central_box(Grid_T *const grid,const unsigned pn)
   
   /* filling n */
   sprintf(var,"grid%u_left_central_box_n_a",grid->gn);
-  patch->n[0] = (unsigned)GetParameterI_E(var);
+  patch->n[0] = (unsigned)Pgeti_E(var);
   
   sprintf(var,"grid%u_left_central_box_n_b",grid->gn);
-  patch->n[1] = (unsigned)GetParameterI_E(var);
+  patch->n[1] = (unsigned)Pgeti_E(var);
   
   sprintf(var,"grid%u_left_central_box_n_c",grid->gn);
-  patch->n[2] = (unsigned)GetParameterI_E(var);
+  patch->n[2] = (unsigned)Pgeti_E(var);
   
   /* filling nn */
   patch->nn = total_nodes_patch(patch);
@@ -275,13 +275,13 @@ void populate_right_BH_central_box(Grid_T *const grid,const unsigned pn)
   
   /* filling n */
   sprintf(var,"grid%u_right_central_box_n_a",grid->gn);
-  patch->n[0] = (unsigned)GetParameterI_E(var);
+  patch->n[0] = (unsigned)Pgeti_E(var);
   
   sprintf(var,"grid%u_right_central_box_n_b",grid->gn);
-  patch->n[1] = (unsigned)GetParameterI_E(var);
+  patch->n[1] = (unsigned)Pgeti_E(var);
   
   sprintf(var,"grid%u_right_central_box_n_c",grid->gn);
-  patch->n[2] = (unsigned)GetParameterI_E(var);
+  patch->n[2] = (unsigned)Pgeti_E(var);
   
   /* filling nn */
   patch->nn = total_nodes_patch(patch);
@@ -350,13 +350,13 @@ void populate_central_NS_central_box(Grid_T *const grid,const unsigned pn)
   
   /* filling n */
   sprintf(var,"grid%u_central_box_n_a",grid->gn);
-  patch->n[0] = (unsigned)GetParameterI_E(var);
+  patch->n[0] = (unsigned)Pgeti_E(var);
   
   sprintf(var,"grid%u_central_box_n_b",grid->gn);
-  patch->n[1] = (unsigned)GetParameterI_E(var);
+  patch->n[1] = (unsigned)Pgeti_E(var);
   
   sprintf(var,"grid%u_central_box_n_c",grid->gn);
-  patch->n[2] = (unsigned)GetParameterI_E(var);
+  patch->n[2] = (unsigned)Pgeti_E(var);
   
   /* filling nn */
   patch->nn = total_nodes_patch(patch);
@@ -424,13 +424,13 @@ void populate_right_box_sns(Grid_T *const grid,const unsigned pn)
   
   /* filling n */
   sprintf(var,"grid%u_right_box_n_a",grid->gn);
-  patch->n[0] = (unsigned)GetParameterI_E(var);
+  patch->n[0] = (unsigned)Pgeti_E(var);
   
   sprintf(var,"grid%u_right_box_n_b",grid->gn);
-  patch->n[1] = (unsigned)GetParameterI_E(var);
+  patch->n[1] = (unsigned)Pgeti_E(var);
   
   sprintf(var,"grid%u_right_box_n_c",grid->gn);
-  patch->n[2] = (unsigned)GetParameterI_E(var);
+  patch->n[2] = (unsigned)Pgeti_E(var);
   
   /* filling nn */
   patch->nn = total_nodes_patch(patch);
@@ -497,9 +497,9 @@ void populate_filling_box_CubedSpherical(Grid_T *const grid,const unsigned pn,co
   patch->innerB = 0;
   
   /* filling n */
-  patch->n[0] = (unsigned)GetParameterI("n_a");
-  patch->n[1] = (unsigned)GetParameterI("n_b");
-  patch->n[2] = (unsigned)GetParameterI("n_c");
+  patch->n[0] = (unsigned)Pgeti("n_a");
+  patch->n[1] = (unsigned)Pgeti("n_b");
+  patch->n[2] = (unsigned)Pgeti("n_c");
   
   switch(side)
   {
@@ -524,11 +524,11 @@ void populate_filling_box_CubedSpherical(Grid_T *const grid,const unsigned pn,co
     /* check for override n*/
     sprintf(var,"Outermost0");
     make_keyword_parameter(&ret,var,"n");
-    n = (unsigned)GetParameterI(ret.s0);
+    n = (unsigned)Pgeti(ret.s0);
     if (n != INT_MAX)   patch->n[0] = n;
-    n = (unsigned)GetParameterI(ret.s1);
+    n = (unsigned)Pgeti(ret.s1);
     if (n != INT_MAX)   patch->n[1] = n;
-    n = (unsigned)GetParameterI(ret.s2);
+    n = (unsigned)Pgeti(ret.s2);
     if (n != INT_MAX)   patch->n[2] = n/2;
     
     break;
@@ -553,11 +553,11 @@ void populate_filling_box_CubedSpherical(Grid_T *const grid,const unsigned pn,co
     /* check for override n*/
     sprintf(var,"Outermost0");
     make_keyword_parameter(&ret,var,"n");
-    n = (unsigned)GetParameterI(ret.s0);
+    n = (unsigned)Pgeti(ret.s0);
     if (n != INT_MAX)   patch->n[0] = n;
-    n = (unsigned)GetParameterI(ret.s1);
+    n = (unsigned)Pgeti(ret.s1);
     if (n != INT_MAX)   patch->n[1] = n;
-    n = (unsigned)GetParameterI(ret.s2);
+    n = (unsigned)Pgeti(ret.s2);
     if (n != INT_MAX)   patch->n[2] = n/2;
     
     break;
@@ -582,11 +582,11 @@ void populate_filling_box_CubedSpherical(Grid_T *const grid,const unsigned pn,co
     /* check for override n*/
     sprintf(var,"Outermost0");
     make_keyword_parameter(&ret,var,"n");
-    n = (unsigned)GetParameterI(ret.s0);
+    n = (unsigned)Pgeti(ret.s0);
     if (n != INT_MAX)   patch->n[0] = n/2;
-    n = (unsigned)GetParameterI(ret.s1);
+    n = (unsigned)Pgeti(ret.s1);
     if (n != INT_MAX)   patch->n[1] = n;
-    n = (unsigned)GetParameterI(ret.s2);
+    n = (unsigned)Pgeti(ret.s2);
     if (n != INT_MAX)   patch->n[2] = n;
     
     break;
@@ -611,11 +611,11 @@ void populate_filling_box_CubedSpherical(Grid_T *const grid,const unsigned pn,co
     /* check for override n*/
     sprintf(var,"Outermost0");
     make_keyword_parameter(&ret,var,"n");
-    n = (unsigned)GetParameterI(ret.s0);
+    n = (unsigned)Pgeti(ret.s0);
     if (n != INT_MAX)   patch->n[0] = n/2;
-    n = (unsigned)GetParameterI(ret.s1);
+    n = (unsigned)Pgeti(ret.s1);
     if (n != INT_MAX)   patch->n[1] = n;
-    n = (unsigned)GetParameterI(ret.s2);
+    n = (unsigned)Pgeti(ret.s2);
     if (n != INT_MAX)   patch->n[2] = n;
     
     break;
@@ -673,13 +673,13 @@ void populate_right_NS_central_box(Grid_T *const grid,const unsigned pn)
   
   /* filling n */
   sprintf(var,"grid%u_right_central_box_n_a",grid->gn);
-  patch->n[0] = (unsigned)GetParameterI_E(var);
+  patch->n[0] = (unsigned)Pgeti_E(var);
   
   sprintf(var,"grid%u_right_central_box_n_b",grid->gn);
-  patch->n[1] = (unsigned)GetParameterI_E(var);
+  patch->n[1] = (unsigned)Pgeti_E(var);
   
   sprintf(var,"grid%u_right_central_box_n_c",grid->gn);
-  patch->n[2] = (unsigned)GetParameterI_E(var);
+  patch->n[2] = (unsigned)Pgeti_E(var);
   
   /* filling nn */
   patch->nn = total_nodes_patch(patch);
@@ -734,7 +734,7 @@ void alloc_patches_Cartesian_grid(Grid_T *const grid)
   if (get_parameter("number_of_boxes") == 0)
     abortEr("\"number_of_boxes\" parameter is not defined!\n");
     
-  Nboxes = (unsigned) GetParameterI_E("number_of_boxes");
+  Nboxes = (unsigned) Pgeti_E("number_of_boxes");
   
   grid->patch = calloc((Nboxes+1),sizeof(*grid->patch));
   pointerEr(grid->patch);
