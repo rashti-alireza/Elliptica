@@ -14,7 +14,7 @@ Grid_T *bbn_initialize_next_grid(Grid_T *const grid_prev)
   if (!grid_prev)/* if grid is empty come up with an approximation */
   {
     /* if we use TOV and Kerr-Schil black hole approximation */
-    if (strcmp_i(Pgets("BH_NS_initialization"),"TOV_KerrSchild"))
+    if (Pcmps("BH_NS_initialization","TOV_KerrSchild"))
       grid_next = TOV_KerrSchild_approximation();
     else
       abortEr(NO_OPTION);
@@ -145,11 +145,11 @@ static void keep_NS_center_fixed(Grid_T *const grid)
   dhx0 = dh1[0];
   dhz0 = dh1[2];;
   
-  if (strcmp_i(Pgets("NS_adjust_center_method"),"draw_enthalpy"))
+  if (Pcmps("NS_adjust_center_method","draw_enthalpy"))
   {
     adjust_NS_center_draw_enthalpy(grid);
   }
-  else if (strcmp_i(Pgets("NS_adjust_center_method"),"tune_enthalpy"))
+  else if (Pcmps("NS_adjust_center_method","tune_enthalpy"))
   {
     adjust_NS_center_tune_enthalpy(grid,dhx0,dhz0);
   }

@@ -1100,11 +1100,11 @@ double bbn_KerrSchild_H(const double M_BH,const double rbar,const double a,const
   const double rbar2 = SQR(rbar);
   
   /* which metric specified */
-  if (strcmp_i(Pgets("BH_NS_free_data_metric"),"conformally_flat_metric"))
+  if (Pcmps("BH_NS_free_data_metric","conformally_flat_metric"))
   {
     lambda = 0;
   }
-  else if (strcmp_i(Pgets("BH_NS_free_data_metric"),"Boosted_KerrSchild_metric"))
+  else if (Pcmps("BH_NS_free_data_metric","Boosted_KerrSchild_metric"))
   {
     lambda = 1;
   }
