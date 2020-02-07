@@ -8,7 +8,7 @@
 /* filling with cubed spherical coordinate patches for SBH grid */
 void fill_patches_SBH_CubedSpherical_grid(Grid_T *const grid)
 {
-  const unsigned N_outermost_split = (unsigned) Pgeti_E("Number_of_Outermost_Split");
+  const unsigned N_outermost_split = (unsigned) Pgeti("Number_of_Outermost_Split");
   unsigned i,pn;
   
   pn = 0;
@@ -26,7 +26,7 @@ void fill_patches_SBH_CubedSpherical_grid(Grid_T *const grid)
 /* filling with cubed spherical coordinate patches for SNS grid */
 void fill_patches_SNS_CubedSpherical_grid(Grid_T *const grid)
 {
-  const unsigned N_outermost_split = (unsigned) Pgeti_E("Number_of_Outermost_Split");
+  const unsigned N_outermost_split = (unsigned) Pgeti("Number_of_Outermost_Split");
   unsigned i,pn;
   
   pn = 0; /* patch number */
@@ -47,7 +47,7 @@ void fill_patches_SNS_CubedSpherical_grid(Grid_T *const grid)
 /* filling with cubed spherical + box coordinate patches for SNS grid */
 void fill_patches_SNS_CubedSpherical_Box_grid(Grid_T *const grid)
 {
-  const unsigned N_outermost_split = (unsigned) Pgeti_E("Number_of_Outermost_Split");
+  const unsigned N_outermost_split = (unsigned) Pgeti("Number_of_Outermost_Split");
   unsigned i,pn;
   
   pn = 0; /* patch number */
@@ -74,7 +74,7 @@ void fill_patches_SNS_CubedSpherical_Box_grid(Grid_T *const grid)
 /* filling cubed spherical coordinate patches for BNS grid */
 void fill_patches_BNS_CubedSpherical_grid(Grid_T *const grid)
 {
-  const unsigned N_outermost_split = (unsigned) Pgeti_E("Number_of_Outermost_Split");
+  const unsigned N_outermost_split = (unsigned) Pgeti("Number_of_Outermost_Split");
   unsigned i,pn;
   
   pn = 0; /* patch number */
@@ -104,7 +104,7 @@ void fill_patches_BNS_CubedSpherical_grid(Grid_T *const grid)
 /* filling cubed spherical coordinate patches for BBN grid */
 void fill_patches_BBN_CubedSpherical_grid(Grid_T *const grid)
 {
-  const unsigned N_outermost_split = (unsigned) Pgeti_E("Number_of_Outermost_Split");
+  const unsigned N_outermost_split = (unsigned) Pgeti("Number_of_Outermost_Split");
   unsigned i,pn;
   
   pn = 0; /* patch number */

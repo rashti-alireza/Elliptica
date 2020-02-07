@@ -201,13 +201,13 @@ void populate_left_NS_central_box(Grid_T *const grid,const unsigned pn)
   
   /* filling n */
   sprintf(var,"grid%u_left_central_box_n_a",grid->gn);
-  patch->n[0] = (unsigned)Pgeti_E(var);
+  patch->n[0] = (unsigned)Pgeti(var);
   
   sprintf(var,"grid%u_left_central_box_n_b",grid->gn);
-  patch->n[1] = (unsigned)Pgeti_E(var);
+  patch->n[1] = (unsigned)Pgeti(var);
   
   sprintf(var,"grid%u_left_central_box_n_c",grid->gn);
-  patch->n[2] = (unsigned)Pgeti_E(var);
+  patch->n[2] = (unsigned)Pgeti(var);
   
   /* filling nn */
   patch->nn = total_nodes_patch(patch);
@@ -275,13 +275,13 @@ void populate_right_BH_central_box(Grid_T *const grid,const unsigned pn)
   
   /* filling n */
   sprintf(var,"grid%u_right_central_box_n_a",grid->gn);
-  patch->n[0] = (unsigned)Pgeti_E(var);
+  patch->n[0] = (unsigned)Pgeti(var);
   
   sprintf(var,"grid%u_right_central_box_n_b",grid->gn);
-  patch->n[1] = (unsigned)Pgeti_E(var);
+  patch->n[1] = (unsigned)Pgeti(var);
   
   sprintf(var,"grid%u_right_central_box_n_c",grid->gn);
-  patch->n[2] = (unsigned)Pgeti_E(var);
+  patch->n[2] = (unsigned)Pgeti(var);
   
   /* filling nn */
   patch->nn = total_nodes_patch(patch);
@@ -350,13 +350,13 @@ void populate_central_NS_central_box(Grid_T *const grid,const unsigned pn)
   
   /* filling n */
   sprintf(var,"grid%u_central_box_n_a",grid->gn);
-  patch->n[0] = (unsigned)Pgeti_E(var);
+  patch->n[0] = (unsigned)Pgeti(var);
   
   sprintf(var,"grid%u_central_box_n_b",grid->gn);
-  patch->n[1] = (unsigned)Pgeti_E(var);
+  patch->n[1] = (unsigned)Pgeti(var);
   
   sprintf(var,"grid%u_central_box_n_c",grid->gn);
-  patch->n[2] = (unsigned)Pgeti_E(var);
+  patch->n[2] = (unsigned)Pgeti(var);
   
   /* filling nn */
   patch->nn = total_nodes_patch(patch);
@@ -424,13 +424,13 @@ void populate_right_box_sns(Grid_T *const grid,const unsigned pn)
   
   /* filling n */
   sprintf(var,"grid%u_right_box_n_a",grid->gn);
-  patch->n[0] = (unsigned)Pgeti_E(var);
+  patch->n[0] = (unsigned)Pgeti(var);
   
   sprintf(var,"grid%u_right_box_n_b",grid->gn);
-  patch->n[1] = (unsigned)Pgeti_E(var);
+  patch->n[1] = (unsigned)Pgeti(var);
   
   sprintf(var,"grid%u_right_box_n_c",grid->gn);
-  patch->n[2] = (unsigned)Pgeti_E(var);
+  patch->n[2] = (unsigned)Pgeti(var);
   
   /* filling nn */
   patch->nn = total_nodes_patch(patch);
@@ -673,13 +673,13 @@ void populate_right_NS_central_box(Grid_T *const grid,const unsigned pn)
   
   /* filling n */
   sprintf(var,"grid%u_right_central_box_n_a",grid->gn);
-  patch->n[0] = (unsigned)Pgeti_E(var);
+  patch->n[0] = (unsigned)Pgeti(var);
   
   sprintf(var,"grid%u_right_central_box_n_b",grid->gn);
-  patch->n[1] = (unsigned)Pgeti_E(var);
+  patch->n[1] = (unsigned)Pgeti(var);
   
   sprintf(var,"grid%u_right_central_box_n_c",grid->gn);
-  patch->n[2] = (unsigned)Pgeti_E(var);
+  patch->n[2] = (unsigned)Pgeti(var);
   
   /* filling nn */
   patch->nn = total_nodes_patch(patch);
@@ -734,7 +734,7 @@ void alloc_patches_Cartesian_grid(Grid_T *const grid)
   if (get_parameter("number_of_boxes") == 0)
     abortEr("\"number_of_boxes\" parameter is not defined!\n");
     
-  Nboxes = (unsigned) Pgeti_E("number_of_boxes");
+  Nboxes = (unsigned) Pgeti("number_of_boxes");
   
   grid->patch = calloc((Nboxes+1),sizeof(*grid->patch));
   pointerEr(grid->patch);

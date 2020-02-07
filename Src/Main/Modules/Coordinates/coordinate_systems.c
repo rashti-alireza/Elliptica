@@ -611,7 +611,7 @@ static void characteristics_BBN_CS_grid_eg(Grid_T *const grid)
                R_BH_r = bh_m*(1+sqrt(1-SQR(bh_chi)));
                
   double box_size_l;
-  const unsigned N_Outermost_Split = (unsigned)Pgeti_E("Number_of_Outermost_Split"); 
+  const unsigned N_Outermost_Split = (unsigned)Pgeti("Number_of_Outermost_Split"); 
   double *R_outermost = calloc(N_Outermost_Split,sizeof(*R_outermost));
   unsigned nlb[3]/*left box*/,n;
   char var[100] = {'\0'};
@@ -960,7 +960,7 @@ static void characteristics_BNS_CS_grid_eg(Grid_T *const grid)
   const double R_NS_l = Pgetd_E("left_NS_radius");/* assuming perfect sphere */
   const double R_NS_r = Pgetd_E("right_NS_radius");/* assuming perfect sphere */
   double box_size_l,box_size_r;
-  const unsigned N_Outermost_Split = (unsigned)Pgeti_E("Number_of_Outermost_Split"); 
+  const unsigned N_Outermost_Split = (unsigned)Pgeti("Number_of_Outermost_Split"); 
   double *R_outermost = calloc(N_Outermost_Split,sizeof(*R_outermost));
   unsigned nlb[3]/*left box*/, nrb[3]/*right box*/,n;
   char var[100] = {'\0'};
@@ -1132,7 +1132,7 @@ static void characteristics_BNS_Spherical_grid_eg(Grid_T *const grid)
   const double C      = Pgetd_E("BNS_Distance");
   const double R_NS_l = Pgetd_E("left_NS_radius");/* assuming perfect sphere */
   const double R_NS_r = Pgetd_E("right_NS_radius");/* assuming perfect sphere */
-  const unsigned N_Outermost_Split = (unsigned)Pgeti_E("Number_of_Outermost_Split"); 
+  const unsigned N_Outermost_Split = (unsigned)Pgeti("Number_of_Outermost_Split"); 
   double O,O_l,O_r,
          R_Surr_l,R_Surr_r,
          *R_outmost_l = alloc_double(N_Outermost_Split),

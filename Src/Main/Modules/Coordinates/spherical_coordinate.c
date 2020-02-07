@@ -51,7 +51,7 @@ void make_nodes_Spherical_coord(Patch_T *const patch)
 /* filling patch struct for BNS_Spherical_grid */
 void fill_patches_BNS_Spherical_grid(Grid_T *const grid)
 {
-  const unsigned N_outermost_split = (unsigned) Pgeti_E("Number_of_Outermost_Split");
+  const unsigned N_outermost_split = (unsigned) Pgeti("Number_of_Outermost_Split");
   unsigned pn,i;
   
   pn = 0;

@@ -1014,7 +1014,7 @@ static void force_balance_eq_root_finders(Grid_T *const grid,const int dir, cons
   root->verbose       = 1;
   root->type          = Pgets("RootFinder_Method");
   root->tolerance     = Pgetd_E("RootFinder_Tolerance");
-  root->MaxIter       = (unsigned)Pgeti_E("RootFinder_Max_Number_of_Iteration");
+  root->MaxIter       = (unsigned)Pgeti("RootFinder_Max_Number_of_Iteration");
   root->x_gss         = guess;
   root->params        = params;
   root->f[0]          = force_balance_root_finder_eq;
@@ -1056,7 +1056,7 @@ static void find_NS_center(Grid_T *const grid)
   params->root_finder = root;
   root->type        = Pgets("RootFinder_Method");
   root->tolerance   = Pgetd_E("RootFinder_Tolerance");
-  root->MaxIter     = (unsigned)Pgeti_E("RootFinder_Max_Number_of_Iteration");
+  root->MaxIter     = (unsigned)Pgeti("RootFinder_Max_Number_of_Iteration");
   root->x_gss       = guess;
   root->params      = params;
   root->verbose     = 1;
@@ -1246,7 +1246,7 @@ static void find_Euler_eq_const(Grid_T *const grid)
   
   root->type        = Pgets("RootFinder_Method");
   root->tolerance   = Pgetd_E("RootFinder_Tolerance");
-  root->MaxIter     = (unsigned)Pgeti_E("RootFinder_Max_Number_of_Iteration");
+  root->MaxIter     = (unsigned)Pgeti("RootFinder_Max_Number_of_Iteration");
   root->x_gss       = guess;
   root->params      = params;
   root->f[0]        = Euler_eq_const_rootfinder_eq;
@@ -1448,7 +1448,7 @@ static void interpolate_and_initialize_to_next_grid(Grid_T *const grid_next,Grid
   printf("{ Interpolating & initializing to the next grid ...\n\n");
   
   /* if it is ready */
-  if (Pgeti_E("use_previous_data"))
+  if (Pgeti("use_previous_data"))
   {
     printf("~> Using the fields of the previous grid.\n");
     printf("\n} Interpolating & initializing to the next grid ==> Done.\n");
@@ -1458,9 +1458,9 @@ static void interpolate_and_initialize_to_next_grid(Grid_T *const grid_next,Grid
   }
   
   const unsigned np = grid_next->np;
-  const int change_res_flg = Pgeti_E("did_resolution_change?");
-  const int change_NS_flg  = Pgeti_E("did_NS_surface_change?");
-  const int change_AH_flg  = Pgeti_E("did_AH_surface_change?");
+  const int change_res_flg = Pgeti("did_resolution_change?");
+  const int change_NS_flg  = Pgeti("did_NS_surface_change?");
+  const int change_AH_flg  = Pgeti("did_AH_surface_change?");
  
   unsigned p;
  
@@ -2245,7 +2245,7 @@ static void find_NS_surface_Ylm_method_CS(Grid_T *const grid,struct Grid_Params_
   /* the stucture for the root finder */
   struct NS_surface_RootFinder_S par[1];
   unsigned Ntheta,Nphi;/* total number of theta and phi points */
-  const unsigned lmax = (unsigned)Pgeti_E("NS_surface_Ylm_expansion_max_l");
+  const unsigned lmax = (unsigned)Pgeti("NS_surface_Ylm_expansion_max_l");
   const double RESIDUAL = sqrt(Pgetd_E("RootFinder_Tolerance"));
   //const double W1  = Pgetd_E("Solving_Field_Update_Weight");
   //const double W2  = 1-W1;
@@ -2263,7 +2263,7 @@ static void find_NS_surface_Ylm_method_CS(Grid_T *const grid,struct Grid_Params_
   Root_Finder_T *root = init_root_finder(1);
   root->type      = Pgets("RootFinder_Method");
   root->tolerance = Pgetd_E("RootFinder_Tolerance");
-  root->MaxIter   = (unsigned)Pgeti_E("RootFinder_Max_Number_of_Iteration");
+  root->MaxIter   = (unsigned)Pgeti("RootFinder_Max_Number_of_Iteration");
   root->x_gss     = &guess;
   root->params    = par;
   root->f[0]      = bbn_NS_surface_enthalpy_eq;
@@ -3905,7 +3905,7 @@ static Grid_T *creat_bbn_grid_CS(struct Grid_Params_S *const GridParams)
   const double R_BH_r     = GridParams->R_BH_r;
   const unsigned gn = grid_next->gn;
   const double S    = Pgetd_E("BH_NS_separation");
-  const unsigned N_Outermost_Split = (unsigned)Pgeti_E("Number_of_Outermost_Split"); 
+  const unsigned N_Outermost_Split = (unsigned)Pgeti("Number_of_Outermost_Split"); 
   double *R_outermost = alloc_double(N_Outermost_Split);
   double box_size_l,box_size_r;
   unsigned nlb[3]/*left box*/,n;
@@ -4090,9 +4090,9 @@ static Grid_T *creat_bbn_grid_CS(struct Grid_Params_S *const GridParams)
   /* make new patches: */
   /* to optimize the routine check if we can use some of the
   // previous grid data for the next grid */
-  const int change_res_flg = Pgeti_E("did_resolution_change?");
-  const int change_NS_flg  = Pgeti_E("did_NS_surface_change?");
-  const int change_AH_flg  = Pgeti_E("did_AH_surface_change?");
+  const int change_res_flg = Pgeti("did_resolution_change?");
+  const int change_NS_flg  = Pgeti("did_NS_surface_change?");
+  const int change_AH_flg  = Pgeti("did_AH_surface_change?");
   
   update_parameter_integer("use_previous_data",0);
   
@@ -4350,7 +4350,7 @@ static void NS_BH_surface_CubedSpherical_grid(Grid_T *const grid,struct Grid_Par
   Patch_T patch[1] = {0};
   struct Collocation_s coll_s[2] = {0};
   double X[3],r;
-  const int same_res_flag = !Pgeti_E("did_resolution_change?");
+  const int same_res_flag = !Pgeti("did_resolution_change?");
   double dR_sum_square = 0;
   
   /* left NS */
@@ -5222,7 +5222,7 @@ void bbn_free_grid_and_its_parameters(Grid_T *grid)
   if (!grid)/* if grid is empty do nothing */
     return;
     
-  const int keep_grid = Pgeti_E("use_previous_data");
+  const int keep_grid = Pgeti("use_previous_data");
   char suffix[100] = {'\0'};
   unsigned i,np,gn;
   

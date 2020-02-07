@@ -12,7 +12,7 @@ void bbn_populate_free_data(Grid_T *const grid)
   printf("{ Populating free data and related ...\n");
   
   /* if it is ready */
-  if (Pgeti_E("use_previous_data"))
+  if (Pgeti("use_previous_data"))
   {
     printf("~> Using the free data of the previous grid.\n");
     printf("} Populating free data and related ==> Done.\n");

@@ -16,7 +16,7 @@ int TOV_star(void)
   char file_name[MAXSTR];
   FILE *file;
   const double *p,*m,*r,*rbar;
-  unsigned N = (unsigned)Pgeti_E("TOV_star_n");
+  unsigned N = (unsigned)Pgeti("TOV_star_n");
   unsigned i;
   
   if (N %2 == 0)/* the method need odd number */
