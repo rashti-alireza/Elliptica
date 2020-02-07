@@ -19,11 +19,12 @@ int Binary_BH_NS_Initial_Data(void)
   pr_line_custom('=');
   printf("{ Constructing Initial Data for Binary BH and NS ...\n\n");
   
+  /* setting the default parameters */
+  bbn_set_default_parameters();
+  
   /* the outer most iteration algorithm: */
   const unsigned N_iter = total_iterations_ip();
-  Grid_T *grid_prev = 0, 
-         *grid_next = 0, 
-         *grid = 0;
+  Grid_T *grid_prev = 0, *grid_next = 0, *grid = 0;
   unsigned iter;
   
   /* iterate over all iterative parameters specified in parameter file */
@@ -80,11 +81,12 @@ static void Elliptic_Eqs_Convergence_Test_BBN(void)
   pr_line_custom('=');
   printf("Convergence Test of Elliptic Equations for Binary BH-NS ...\n\n");
   
+  /* setting the default parameters */
+  bbn_set_default_parameters();
+  
   /* the outer most iteration algorithm: */
   const unsigned N_iter = total_iterations_ip();
-  Grid_T *grid_prev = 0, 
-         *grid_next = 0, 
-         *grid = 0;
+  Grid_T *grid_prev = 0, *grid_next = 0, *grid = 0;
   unsigned iter;
   
   /* iterate over all parameters specified in parameter file */
