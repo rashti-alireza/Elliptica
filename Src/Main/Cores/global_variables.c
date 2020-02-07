@@ -6,7 +6,7 @@
 #include "global_variables.h"
 
 /* initiate global variables */
-int global_variables_init(const char *const path)
+int init_global_variables(const char *const path)
 {
   initial_time_global = time(0);
   grids_global        = 0;
