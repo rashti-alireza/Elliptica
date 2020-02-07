@@ -89,8 +89,8 @@ static Grid_T *make_next_grid_using_previous_grid(Grid_T *const grid_prev)
   grid_next = creat_bbn_grid_CS(GridParams);
   
   /* fields: */
-  /* creating all of the fields needed for construction of Initial Data */
-  bbn_allocate_fields(grid_next);
+  /* adding all of the fields needed for construction of Initial Data */
+  bbn_add_fields(grid_next);
   
   /* populating the free data part of initial data that we chose ourself */
   bbn_populate_free_data(grid_next);
@@ -3313,8 +3313,8 @@ static Grid_T *TOV_KerrSchild_approximation(void)
   GridParams->BH_R_type  = "PerfectSphere";
   grid = creat_bbn_grid_CS(GridParams);
   
-  /* creating all of the fields needed for construction of Initial Data */
-  bbn_allocate_fields(grid);
+  /* adding all of the fields needed for construction of Initial Data */
+  bbn_add_fields(grid);
   
   /* populating the free data part of initial data that we chose ourself */
   bbn_populate_free_data(grid);

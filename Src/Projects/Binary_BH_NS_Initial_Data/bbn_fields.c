@@ -7,7 +7,7 @@
 #include "bbn_fields.h"
 
 /* allocating all of the fields needed for construction of Initial Data */
-void bbn_allocate_fields(Grid_T *const grid)
+void bbn_add_fields(Grid_T *const grid)
 {
   pr_line_custom('=');
   printf("{ Adding fields ...\n");
