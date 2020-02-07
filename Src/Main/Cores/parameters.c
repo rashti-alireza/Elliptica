@@ -18,6 +18,7 @@ void update_parameter_string(const char *const lv, const char *const rv)
   {
     _free(par->rv);
     par->rv = dup_s(rv);
+    par->double_flg = 0;
   }
   else/* since it does not exist */
     add_parameter(lv,rv);
@@ -39,6 +40,7 @@ void update_parameter_integer(const char *const lv, const int rv)
   {
     _free(par->rv);
     par->rv = dup_s(str_rv);
+    par->double_flg = 0;
   }
   else/* since it does not exist */
   {
@@ -67,8 +69,9 @@ void update_parameter_double_format(const char *const lv, const double rv)
     
     sprintf(str_rv,"%15.18f",rv);
     _free(par->rv);
-    par->rv        = dup_s(str_rv);
-    par->rv_double = rv;
+    par->rv         = dup_s(str_rv);
+    par->rv_double  = rv;
+    par->double_flg = 1;
   }
   else/* since it does not exist */
   {
@@ -94,7 +97,8 @@ void add_parameter_double(const char *const lv, const double rv)
   par = alloc_parameter(&parameters_global);
   par->rv = dup_s(str_rv);
   par->lv = dup_s(lv);
-  par->rv_double = rv;
+  par->rv_double  = rv;
+  par->double_flg = 1;
   
   printf("\nAdding Parameter:\n");
   printf("       |--> parameter = %s\n",lv);
@@ -113,7 +117,7 @@ void add_parameter_array(const char *const lv, const double *const rv,const unsi
   
   par = get_parameter(lv);
   if (par)
-    abortEr_s("This parameter \"%s\" has already been added!\n",lv);
+    abortEr_s("This parameter '%s' has already been added!\n",lv);
     
   par = alloc_parameter(&parameters_global);
   par->lv = dup_s(lv);
@@ -138,6 +142,11 @@ void update_parameter_array(const char *const lv, const double *const rv,const u
   
   if (par)
   {
+    if (par->iterative)
+      abortEr_s("Wrong update: parameter '%s' is iterative.\n",lv);
+    
+    par->double_flg = 0;
+      
     _free(par->rv_array);
   }
   else
@@ -324,6 +333,10 @@ double get_parameter_double_format(const char *const par_name,const char *const 
   {
     if (strcmp_i(parameters_global[i]->lv,par_name))
     {
+      if (!parameters_global[i]->double_flg)
+        abortEr_s("Flag of parameter '%s' has not been set correctly.\n"
+                  ,par_name);
+        
       v = parameters_global[i]->rv_double;
       f = FOUND;
       break;
@@ -418,7 +431,16 @@ double get_parameter_value_D(const char *const par_name,const char *const file, 
   {
     if (strcmp_i(parameters_global[i]->lv,par_name))
     {
-      v = strtod(parameters_global[i]->rv,0);
+      if (parameters_global[i]->double_flg)
+      {
+        v = parameters_global[i]->rv_double;
+      }
+      else
+      {
+        v = strtod(parameters_global[i]->rv,0);
+        parameters_global[i]->double_flg = 1;/* now we know this is double */
+        parameters_global[i]->rv_double  = v;
+      }
       f = FOUND;
       break;
     }
