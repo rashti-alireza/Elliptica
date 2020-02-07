@@ -67,10 +67,6 @@
                                    fJs_T *xNAME        = get_j_reader(j_##xNAME);
 
 /* parameters */                                  
-//#define PgetiEZ(x) these are all fatal unlsess EZ be added
-//#define PgetsEZ(x)
-//#define PgetdEZ(x)
-//#define Pgeta(x)
 //#define Pcmps(x)
 //#define Pseti(x)
 //#define Psets(x)
@@ -78,22 +74,28 @@
 
 
 
+/* get value of a string parameter */
+#define Pgets(x)   get_parameter_value_S(x,__FILE__,__LINE__,FATAL)/* if not exists give error */
+#define PgetsEZ(x) get_parameter_value_S(x,__FILE__,__LINE__,NONE)/* if not exist go easy */
 
+/* get value of an integer parameter */
+#define Pgeti(x)   get_parameter_value_I(x,__FILE__,__LINE__,FATAL)/* if not exists give error */
+#define PgetiEZ(x) get_parameter_value_I(x,__FILE__,__LINE__,NONE)/* if not exist go easy */
 
+/* get value of a double parameter */
+#define Pgetd(x)   get_parameter_value_D(x,__FILE__,__LINE__,FATAL)/* if not exists give error */
+#define PgetdEZ(x) get_parameter_value_D(x,__FILE__,__LINE__,NONE)/* if not exist go easy */
 
+/* get value of an array of parameter in double */
+#define Pgetdd(x)   get_parameter_array_format(x,__FILE__,__LINE__,FATAL)/* if not exists give error */
+#define PgetddEZ(x) get_parameter_array_format(x,__FILE__,__LINE__,NONE)/* if not exist go easy */
 
-#define PgetsEZ(x)   get_parameter_value_S(x,__FILE__,__LINE__,NONE)
-#define PgetiEZ(x)   get_parameter_value_I(x,__FILE__,__LINE__,NONE)
-#define PgetdEZ(x)   get_parameter_value_D(x,__FILE__,__LINE__,NONE)
 #define AddParameterDoubleF(x,y)    update_parameter_double_format(x,y)
 #define UpdateParameterDoubleF(x,y) update_parameter_double_format(x,y)
-#define PgetddEZ(x)  get_parameter_array_format(x,__FILE__,__LINE__,NONE)
-#define PgetdoubleF(x) get_parameter_double_format(x,__FILE__,__LINE__,NONE)
-#define PgetdoubleF_E(x) get_parameter_double_format(x,__FILE__,__LINE__,FATAL)
-#define Pgets(x) get_parameter_value_S(x,__FILE__,__LINE__,FATAL)
-#define Pgeti(x) get_parameter_value_I(x,__FILE__,__LINE__,FATAL)
-#define Pgetd(x) get_parameter_value_D(x,__FILE__,__LINE__,FATAL)
-#define Pgetdd(x)  get_parameter_array_format(x,__FILE__,__LINE__,FATAL)
+
+#define PgetdoubleF_E(x) get_parameter_double_format(x,__FILE__,__LINE__,FATAL)/* if not exists give error */
+#define PgetdoubleF(x) get_parameter_double_format(x,__FILE__,__LINE__,NONE)/* if not exist go easy */
+
 
 
 /* OpenMP for 2 dimension */
