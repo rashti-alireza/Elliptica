@@ -67,7 +67,6 @@
                                    fJs_T *xNAME        = get_j_reader(j_##xNAME);
 
 /* parameters */                                  
-//#define Pcmps(x)
 //#define Pseti(x)
 //#define Psets(x)
 //#define Paddg(x)
@@ -91,8 +90,8 @@
 #define Pgetdd(x)   get_parameter_array_format(x,__FILE__,__LINE__,FATAL)/* if not exists give error */
 #define PgetddEZ(x) get_parameter_array_format(x,__FILE__,__LINE__,NONE)/* if not exist go easy */
 
-#define AddParameterDoubleF(x,y)    update_parameter_double_format(x,y)
-#define UpdateParameterDoubleF(x,y) update_parameter_double_format(x,y)
+/* add a double type parameter */
+#define Psetd(x,y)  update_parameter_double_format(x,y)
 
 #define PgetdoubleF_E(x) get_parameter_double_format(x,__FILE__,__LINE__,FATAL)/* if not exists give error */
 #define PgetdoubleF(x) get_parameter_double_format(x,__FILE__,__LINE__,NONE)/* if not exist go easy */
