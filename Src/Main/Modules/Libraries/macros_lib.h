@@ -93,11 +93,6 @@
 /* add a double type parameter */
 #define Psetd(x,y)  update_parameter_double_format(x,y)
 
-#define PgetdoubleF_E(x) get_parameter_double_format(x,__FILE__,__LINE__,FATAL)/* if not exists give error */
-#define PgetdoubleF(x) get_parameter_double_format(x,__FILE__,__LINE__,NONE)/* if not exist go easy */
-
-
-
 /* OpenMP for 2 dimension */
 #ifdef Pragma_OpenMP_2d
 #define OpenMP_2d_Pragma(x) _Pragma ( #x )
