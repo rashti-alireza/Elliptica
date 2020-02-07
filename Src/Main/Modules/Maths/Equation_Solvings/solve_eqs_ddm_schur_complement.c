@@ -46,7 +46,7 @@ int ddm_schur_complement(Solve_Equations_T *const SolveEqs)
   
   pr_line_custom('=');
   
-  printf("{ Solve Equation by Schur Complement Domain Decomposition Method ...\n\n");
+  printf("{ Solve equation by Schur Complement Domain Decomposition Method ...\n\n");
   pr_intro_ddm_schur_complement();
   
   /* read order of fields to be solved from input */
@@ -59,7 +59,7 @@ int ddm_schur_complement(Solve_Equations_T *const SolveEqs)
   for (f = 0; f < nf; ++f)
   {
     pr_half_line_custom('-');
-    printf("{ Solving Equation for field: \"%s\" ...\n",field_name[f]);
+    printf("{ Solving equation for field: \"%s\" ...\n",field_name[f]);
     pr_half_line_custom('-');
     
     /* set the name of the field we are solving it */
@@ -88,7 +88,7 @@ int ddm_schur_complement(Solve_Equations_T *const SolveEqs)
       
     printf("\n");
     pr_half_line_custom('-');
-    printf("} Solving Equation for field: \"%s\" ==> Done.\n",field_name[f]);
+    printf("} Solving equation for field: \"%s\" ==> Done.\n",field_name[f]);
     pr_half_line_custom('-');
     pr_clock();
   }
@@ -96,7 +96,7 @@ int ddm_schur_complement(Solve_Equations_T *const SolveEqs)
   /* free names */
   free_2d_mem(field_name,nf);
   
-  printf("\n} Solve Equation by Schur Complement Domain Decomposition Method ==> Done.\n\n");
+  printf("\n} Solve equation by Schur Complement Domain Decomposition Method ==> Done.\n\n");
   pr_clock();
   pr_line_custom('=');
   

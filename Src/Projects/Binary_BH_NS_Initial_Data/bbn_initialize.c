@@ -3238,7 +3238,7 @@ static void extrapolate_outsideNS_CS_slop_method(Grid_T *const grid)
 static Grid_T *TOV_KerrSchild_approximation(void)
 {
   pr_line_custom('=');
-  printf("{ Initializing Fields & Grid Using TOV & Kerr-Schild Solutions ...\n");
+  printf("{ Initializing fields & grid using TOV & Kerr-Schild solutions ...\n");
   
   Grid_T *grid = 0;
   struct Grid_Params_S *GridParams = init_GridParams();/* adjust some pars for construction of grid */
@@ -3247,7 +3247,7 @@ static Grid_T *TOV_KerrSchild_approximation(void)
   /* solve fields for a TOV star located at left side of y axis */
   TOV_T *tov = TOV_init();
   tov->bar_m = Pgetd("NS_baryonic_mass");
-  tov->description = "Estimating NS";
+  tov->description = "estimating NS";
   tov = TOV_solution(tov);
   const double ns_R = tov->rbar[tov->N-1];
   
@@ -3362,15 +3362,12 @@ static Grid_T *TOV_KerrSchild_approximation(void)
   Psetd("v*_boost_y",0);
   Psetd("v*_boost_z",0);
   
-  printf("ADM momentums initials:\n");
-  printf("-->P_ADM = (%e,%e,%e).\n",p_x,p_y,p_z);
-  
   /* freeing */
   free_Grid_Params_S(GridParams);
   TOV_free(tov);
   free_observable(obs);
   
-  printf("{ Initializing Fields & Grid Using TOV & Kerr-Schild Solutions ==> Done.\n");
+  printf("{ Initializing fields & grid using TOV & Kerr-Schild solutions ==> Done.\n");
   pr_line_custom('=');
   
   return grid;

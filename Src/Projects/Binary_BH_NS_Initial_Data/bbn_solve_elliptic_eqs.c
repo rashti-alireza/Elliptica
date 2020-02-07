@@ -9,7 +9,7 @@
 void bbn_solve_elliptic_eqs(Grid_T *const grid)
 {
   pr_line_custom('='); 
-  printf("{ Solving Elliptic Equations for Binary BH-NS ...\n");
+  printf("{ Solving elliptic equations for binary BH-NS ...\n");
   
   sEquation_T **field_eq/* field equation */,
               **bc_eq/* B.C. for the field */,
@@ -43,7 +43,7 @@ void bbn_solve_elliptic_eqs(Grid_T *const grid)
   {
     /* some prints */
     pr_line_custom('=');
-    printf("{ Solving XCTS Equations at a Fixed Resolution ...\n");
+    printf("{ Solving XCTS equations at a fixed resolution ...\n");
     printf("  |---> Iteration      = %d / %d\n",iter+1,max_iter);
     printf("  |---> Equation(s)    = %s\n",SolveEqs->solving_order);
     printf("  |---> Newton step(s) = %d\n",max_newton_step);
@@ -61,7 +61,7 @@ void bbn_solve_elliptic_eqs(Grid_T *const grid)
     
     /* some prints */
     
-    printf("} Solving XCTS Equations at a Fixed Resolution ==> Done.\n ");
+    printf("} Solving XCTS equations at a fixed resolution ==> Done.\n ");
     pr_clock();
     
     ++iter;
@@ -84,7 +84,7 @@ void bbn_solve_elliptic_eqs(Grid_T *const grid)
   free_db_eqs(jacobian_field_eq);
   free_db_eqs(jacobian_bc_eq);
   
-  printf("} Solving Elliptic Equations for Binary BH-NS ==> Done.\n");
+  printf("} Solving elliptic equations for binary BH-NS ==> Done.\n");
   pr_clock();
   pr_line_custom('='); 
 }

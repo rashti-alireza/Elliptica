@@ -11,12 +11,12 @@ void bbn_study_initial_data(Grid_T *const grid)
 {
   pr_clock();
   pr_line_custom('=');
-  printf("{ Studying Initial Data for Binary BH and NS ...\n");
+  printf("{ Studying initial data for binary BH and NS ...\n");
   
   if (!grid)
   {
     printf("~> grid is empty.\n");
-    printf("} Studying Initial Data for Binary BH and NS ==> Done.\n");
+    printf("} Studying initial data for binary BH and NS ==> Done.\n");
     pr_clock();
     pr_line_custom('=');
     return;
@@ -56,7 +56,7 @@ void bbn_study_initial_data(Grid_T *const grid)
   
   free_observable(obs);
 
-  printf("} Studying Initial Data for Binary BH and NS ==> Done.\n");
+  printf("} Studying initial data for binary BH and NS ==> Done.\n");
   pr_clock();
   pr_line_custom('=');
 }
