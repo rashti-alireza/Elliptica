@@ -38,6 +38,9 @@ int main(int argn, char **argv)
   /* free the data base of project */
   free_db_project();
   
+  /* free parameter data base */  
+  free_parameter_db();
+  
   return EXIT_SUCCESS;
 }
 

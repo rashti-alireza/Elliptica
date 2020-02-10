@@ -7,5 +7,6 @@ int create_db_projects(void);
 void *get_project(const char *const proj_name);
 int execute_project(Project_T *const proj);
 void free_db_project(void);
+void free_parameter_db(void);
 static void pr_logo(void);
 static void pr_info(void);
