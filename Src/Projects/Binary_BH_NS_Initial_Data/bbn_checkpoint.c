@@ -12,8 +12,7 @@ void bbn_write_checkpoint(const Grid_T *const grid)
   pr_line_custom('=');
   printf("{ Writing checkpoint ...\n");
   
-  const char *const checkpoint_file_name = "checkpoint.dat"
-  FILE *checkpoint_file = 0;
+  const char *const checkpoint_file_name = "checkpoint.dat";
   const double dt  = Pgetd("checkpoint_dt_hours");
   const double now = get_time_sec()/(3600);
   static double last_checkpoint_was = 0;/* the time where the last 
@@ -51,7 +50,7 @@ void bbn_write_checkpoint(const Grid_T *const grid)
   write_fields(grid,checkpoint_file_name);
   
   /* replace checkpoint file with the previous */
-  move_binary_file(checkpoint_file_name);
+  move_checkpoint_file(checkpoint_file_name);
   
   printf("} Writing checkpoint ==> Done.\n");
   pr_clock();
@@ -61,6 +60,8 @@ void bbn_write_checkpoint(const Grid_T *const grid)
 /* replace checkpoint file with the previous one */
 static void move_checkpoint_file(const char *const file_name)
 {
+  return;
+  
   const char *const folder = Pgets("iteration_output");
   char file_path[MAX_ARR];
   char command[2*MAX_ARR];
@@ -74,14 +75,14 @@ static void move_checkpoint_file(const char *const file_name)
 }
 
 /* write all of the pertinent parameters in the checkpoint file */
-static void write_parameters(const Grid_T *const grid,FILE *const file)
+static void write_parameters(const Grid_T *const grid,const char *const file_name)
 {
   printf ("~> Writing all parameters in the checkpoint file ...\n");
   FILE *file = 0;
   const char *const folder = Pgets("iteration_output");
   char file_path[MAX_ARR];
   
-  sprintf(file_path,"%s/%s_temp",folder,fname);
+  sprintf(file_path,"%s/%s_temp",folder,file_name);
   if (access(file_path,F_OK) != -1)/* if file exists */
     abortEr("File already exists.\n");
     
@@ -99,17 +100,22 @@ static void write_parameters(const Grid_T *const grid,FILE *const file)
   }
   
   fclose(file);
+  
+  UNUSED(grid);
 }
 
 /* write all of the fields in the checkpoint file */
-static void write_fields(const Grid_T *const grid,FILE *const file)
+static void write_fields(const Grid_T *const grid,const char *const file_name)
 {
+  return;
+  UNUSED(grid);
+  
   printf ("~> Writing all fields in the checkpoint file ...\n");
   FILE *file = 0;
   const char *const folder = Pgets("iteration_output");
   char file_path[MAX_ARR];
   
-  sprintf(file_path,"%s/%s_temp",folder,fname);
+  sprintf(file_path,"%s/%s_temp",folder,file_name);
   if (access(file_path,F_OK) != -1)/* if file exists */
   {
     file = fopen(file_path,"w");
