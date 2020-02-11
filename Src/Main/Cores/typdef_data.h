@@ -149,8 +149,8 @@ typedef struct PARAMETER_T
   double rv_double;/* right value double */
   double *rv_array;/* right value array */
   unsigned rv_n;/* right value unsigned or size of the rv_array */
-  unsigned iterative:1;/* if this is an iterative par 1, otherwise 0. */
-  unsigned double_flg:1;/* if this is double 1, otherwise 0 */
+  unsigned iterative;/* if this is an iterative par 1, otherwise 0. */
+  unsigned double_flg;/* if this is double 1, otherwise 0 */
 }Parameter_T;
 
 /* *******************************************
