@@ -41,6 +41,9 @@ int Binary_BH_NS_Initial_Data(void)
     /* free previous grid and related parameters */
     bbn_free_grid_and_its_parameters(grid_prev);
     
+    /* writing checkpoints */
+    bbn_write_checkpoint(grid_next);
+    
     /* solve the elliptic equations for the given grid */
     bbn_solve_elliptic_eqs(grid_next);
     
