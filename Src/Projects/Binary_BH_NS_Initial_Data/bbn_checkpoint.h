@@ -6,18 +6,26 @@
 
 #define MAX_ARR 500
 #define checkpoint_file_name "checkpoint.dat"
-#define HEADER_DONE "#header_done#"
+#define ALLOC_HEADER "#{ALLOCATION#"
+#define ALLOC_FOOTER "#}ALLOCATION#"
+#define PARAM_HEADER "#{PARAM#"
+#define PARAM_FOOTER "#}PARAM#"
+#define FIELD_HEADER "#{FIELD#"
+#define FIELD_FOOTER "#}FIELD#"
 
-/* write macro: if the quantity exists put its size first and then the content otherwise put its size zero */
-#define Write(x,y) if (x) {size_t size = y; fwrite(&size,sizeof(size),1,file);fwrite(x,sizeof(*x),size,file);}\
-                   else   {size_t size = 0; fwrite(&size,sizeof(size),1,file);}
+/* this is how we write binary data: first write size and then value. 
+// thus, when we wanna read the data the first one gives of the memory allocation and the next gives us value */
+#define Write(x,y) if (x) {unsigned SIZE_ = y; fwrite(&SIZE_,sizeof(SIZE_),1,file);fwrite(x,sizeof(*x),SIZE_,file);}\
+                   else   {unsigned SIZE_ = 0; fwrite(&SIZE_,sizeof(SIZE_),1,file);}
 
-/* read variable if any */ 
-#define Read(x,y)   {unsigned Exsits = 0;\
-                     fread(&Exsits, sizeof(exsits),1,file);\
-                     if (Exsits){fread(&x,Exsits,1,file);}\
-                     else       {x = 0;}}
+/* read pointer */
+#define ReadP(x,y)  {unsigned SIZE_ = 0; fread(&SIZE_, sizeof(SIZE_),1,file); y = SIZE_;\
+                     x = calloc(SIZE_,sizeof(*x)); fread(x,sizeof(*x),SIZE_,file);{if (!y) x = 0;}}
 
+/* read variable */
+#define ReadV(x,y)  {unsigned SIZE_ = 0; fread(&SIZE_, sizeof(SIZE_),1,file); y = SIZE_;\
+                     fread(x,sizeof(*x),SIZE_,file);}
+                     
 extern Grid_T **grids_global;
 extern Parameter_T **parameters_global;
 
