@@ -119,7 +119,13 @@ static void write_parameters(const Grid_T *const grid)
     np++;
     
   /* NOTE the order is crucial for reading part */
+  //
+  printf("ftell b = %d\n",ftell(file));
+  //
   Write(&PARAM_HEADER,strlen(PARAM_HEADER)+1);
+  //
+  printf("ftell a = %d\n",ftell(file));
+  //
   for (i = 0; i < np; ++i)
   {
     Parameter_T *p = parameters_global[i];
@@ -243,6 +249,7 @@ Grid_T *bbn_read_checkpoint(void)
   }
   
   /* allocate grid */
+  grids_global = 0;
   grid       = alloc_grid();
   grid->gn   = grid_number;
   grid->np   = npatch;
@@ -263,13 +270,20 @@ Grid_T *bbn_read_checkpoint(void)
   /* read parameter contents */
   printf("~> Reading parameters content ...\n");
   
+  //
+  printf("ftell b = %d\n",ftell(file));
+  //
+  
   /* is the cursor matched? */
-  Read(header,header_s,1);
+  Read1(header,header_s);
   if (strcmp(header,PARAM_HEADER))
     abortEr("It could not find the parameter header.\n");
   _free(header);
-  
-  //fseek(file,ftell(file)+1,SEEK_SET);
+  //
+  printf("ftell a = %d\n",ftell(file));
+  //
+  return 0;
+  //fseek(file,256,SEEK_SET);
   
   /* start reading one by one */
   for (i = 0; i < npar; ++i)
@@ -277,14 +291,14 @@ Grid_T *bbn_read_checkpoint(void)
     Parameter_T *p = parameters_global[i];
     unsigned mem_size;
     
-    Read(p->lv,          mem_size,1);
-    Read(p->rv,          mem_size,1);
-    Read(p->rv_ip,       mem_size,1);
-    //Read(&p->rv_double,  mem_size,0);
-    Read(p->rv_array,    mem_size,1);
-    //Read(&p->rv_n,       mem_size,0);
-    //Read(&p->iterative,  mem_size,0);
-    //Read(&p->double_flg, mem_size,0);
+    Read1(p->lv,          mem_size);
+    Read1(p->rv,          mem_size);
+    Read1(p->rv_ip,       mem_size);
+    Read2(&p->rv_double,  mem_size);
+    Read1(p->rv_array,    mem_size);
+    Read2(&p->rv_n,       mem_size);
+    Read2(&p->iterative,  mem_size);
+    Read2(&p->double_flg, mem_size);
     
     //test
     printf("%s = %s\n",p->lv,p->rv);
@@ -295,7 +309,7 @@ Grid_T *bbn_read_checkpoint(void)
     printf("iterative = %u\n",p->iterative);
     printf("double_flg = %u\n\n\n",p->double_flg);
     //end
-    break;
+    //break;
   }
 
   /* read field contents */
