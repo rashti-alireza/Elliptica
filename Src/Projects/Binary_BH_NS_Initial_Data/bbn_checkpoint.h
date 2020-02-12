@@ -15,12 +15,13 @@
 
 /* this is how we write binary data: first write size and then value. 
 // thus, when we wanna read the data the first one gives of the memory allocation and the next gives us value */
-#define Write(x,y) if (x) {unsigned SIZE_ = y; fwrite(&SIZE_,sizeof(SIZE_),1,file);fwrite(x,sizeof(*x),SIZE_,file);}\
+#define Write(x,y) if (x) {unsigned SIZE_ = (unsigned)y; fwrite(&SIZE_,sizeof(SIZE_),1,file);fwrite(x,sizeof(*x),SIZE_,file);}\
                    else   {unsigned SIZE_ = 0; fwrite(&SIZE_,sizeof(SIZE_),1,file);}
 
 /* read pointer */
 #define ReadP(x,y)  {unsigned SIZE_ = 0; fread(&SIZE_, sizeof(SIZE_),1,file); y = SIZE_;\
-                     x = calloc(SIZE_,sizeof(*x)); fread(x,sizeof(*x),SIZE_,file);{if (!y) x = 0;}}
+                     if (SIZE_) {x = calloc(SIZE_,sizeof(*x)),pointerEr(x); fread(x,sizeof(*x),SIZE_,file);}\
+                     else       {x = 0;}}
 
 /* read variable */
 #define ReadV(x,y)  {unsigned SIZE_ = 0; fread(&SIZE_, sizeof(SIZE_),1,file); y = SIZE_;\
@@ -29,9 +30,22 @@
 extern Grid_T **grids_global;
 extern Parameter_T **parameters_global;
 
+struct checkpoint_header
+{
+ Grid_T *grid;
+ unsigned npatch;
+ unsigned npar;
+ unsigned grid_number;
+ char *grid_kind;
+};
+
 void bbn_write_checkpoint(const Grid_T *const grid);
 Grid_T *bbn_read_checkpoint(void);
 static void move_checkpoint_file(void);
 static void write_parameters(const Grid_T *const grid);
 static void write_fields(const Grid_T *const grid);
 static void write_header(const Grid_T *const grid);
+static void read_parameters(struct checkpoint_header *const alloc_info,FILE *const file);
+static void read_fields(struct checkpoint_header *const alloc_info,FILE *const file);
+static void read_header(struct checkpoint_header *const alloc_info,FILE *const file);
+static void alloc_db(struct checkpoint_header *const alloc_info);
