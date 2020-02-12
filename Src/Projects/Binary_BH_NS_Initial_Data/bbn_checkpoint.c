@@ -39,6 +39,8 @@ void bbn_write_checkpoint(const Grid_T *const grid)
   
   last_checkpoint_was = now;
   
+  /* NOTE: the order of writing is crucial */
+  
   /* write header */
   write_header(grid);
   
@@ -80,7 +82,7 @@ static void write_header(const Grid_T *const grid)
   fprintf(file,"number_of_patches=%u\n",grid->np);
   fprintf(file,"grid_number=%u\n",grid->gn);
   fprintf(file,"grid_kind=%s\n",grid->kind);
-  fprintf(file,HEADER_DONE);
+  fprintf(file,"%s\n",HEADER_DONE);
   fclose(file);
 }
 
@@ -117,7 +119,7 @@ static void write_parameters(const Grid_T *const grid)
     np++;
     
   /* NOTE the order is crucial for reading part */
-  Write(&"#parameters#",strlen("#parameters#")+1);
+  Write(&PARAM_HEADER,strlen(PARAM_HEADER)+1);
   for (i = 0; i < np; ++i)
   {
     Parameter_T *p = parameters_global[i];
@@ -150,7 +152,7 @@ static void write_fields(const Grid_T *const grid)
   pointerEr(file);
   
   /* NOTE the order is crucial for reading part */
-  Write(&"#fields#",strlen("#fields#")+1);
+  Write(&FIELD_HEADER,strlen(FIELD_HEADER)+1);
   FOR_ALL_PATCHES(p,grid)
   {
     Patch_T *patch = grid->patch[p];
@@ -184,7 +186,9 @@ Grid_T *bbn_read_checkpoint(void)
   char line[MAX_ARR] = {'\0'};
   char *grid_kind = 0;
   unsigned npatch,grid_number,npar,i;
-  long cursor;
+  long cursor;/* current positon of file reader  */
+  char *header;
+  unsigned header_s;
   
   sprintf(file_path,"%s/%s",folder,checkpoint_file_name);
   if (!(access(file_path,F_OK) != -1))/* if file dosn't exist */
@@ -225,7 +229,6 @@ Grid_T *bbn_read_checkpoint(void)
       abortEr(NO_OPTION);
   }
   cursor = ftell(file);
-  fclose(file);
   
   printf("~> Allocating parameters and patches ...\n");
   
@@ -234,7 +237,10 @@ Grid_T *bbn_read_checkpoint(void)
   parameters_global = calloc(npar+1,sizeof(*parameters_global));
   pointerEr(parameters_global);
   for (i = 0; i < npar; ++i)
-    parameters_global = alloc_parameter(&parameters_global);
+  {
+    parameters_global[i] = calloc(1,sizeof(*parameters_global[i]));
+    pointerEr(parameters_global[i]);
+  }
   
   /* allocate grid */
   grid       = alloc_grid();
@@ -251,6 +257,59 @@ Grid_T *bbn_read_checkpoint(void)
     pointerEr(grid->patch[i]);
   }
   
+  /* read the binary parts */
+  fseek(file,cursor+1,SEEK_SET);
+  
+  /* read parameter contents */
+  printf("~> Reading parameters content ...\n");
+  
+  /* is the cursor matched? */
+  Read(header,header_s,1);
+  if (strcmp(header,PARAM_HEADER))
+    abortEr("It could not find the parameter header.\n");
+  _free(header);
+  
+  //fseek(file,ftell(file)+1,SEEK_SET);
+  
+  /* start reading one by one */
+  for (i = 0; i < npar; ++i)
+  {
+    Parameter_T *p = parameters_global[i];
+    unsigned mem_size;
+    
+    Read(p->lv,          mem_size,1);
+    Read(p->rv,          mem_size,1);
+    Read(p->rv_ip,       mem_size,1);
+    //Read(&p->rv_double,  mem_size,0);
+    Read(p->rv_array,    mem_size,1);
+    //Read(&p->rv_n,       mem_size,0);
+    //Read(&p->iterative,  mem_size,0);
+    //Read(&p->double_flg, mem_size,0);
+    
+    //test
+    printf("%s = %s\n",p->lv,p->rv);
+    printf("rv_ip = %s\n",p->rv_ip);
+    printf("rv_double = %f\n",p->rv_double);
+    printf("rv_array = %x\n",p->rv_array);
+    printf("rv_n = %u\n",p->rv_n);
+    printf("iterative = %u\n",p->iterative);
+    printf("double_flg = %u\n\n\n",p->double_flg);
+    //end
+    break;
+  }
+
+  /* read field contents */
+  printf("~> Reading fields content ...\n");
+  
+  /* is the cursor matched? */
+  /*Read(header,header_s);
+  if (strcmp(header,FIELD_HEADER))
+    abortEr("It could not find the field header.\n");
+  _free(header);*/
+  
+    
+  fclose(file);
+
   printf("} Reading checkpoint file ==> Done.\n");
   pr_clock();
   pr_line_custom('=');
