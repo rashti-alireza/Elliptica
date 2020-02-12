@@ -65,7 +65,11 @@ void *alloc_grid(void)
   grids_global[i] = calloc(1,sizeof(*grids_global[i]));
   pointerEr(grids_global[i]);
   /* set grid number */
-  grids_global[i]->gn = i;
+  if (i == 0)
+    grids_global[i]->gn = i;
+  else
+    grids_global[i]->gn = grids_global[i-1]->gn;
+    
   /* determine the last grid */
   grids_global[i+1] = 0;
   
