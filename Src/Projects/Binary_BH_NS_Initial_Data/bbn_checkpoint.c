@@ -78,11 +78,12 @@ static void write_header(const Grid_T *const grid)
     np++;
     
   /* NO white spaces since I'll use fscanf */
+  fprintf(file,"%s\n",ALLOC_HEADER);
   fprintf(file,"number_of_parameters=%u\n",np);
   fprintf(file,"number_of_patches=%u\n",grid->np);
   fprintf(file,"grid_number=%u\n",grid->gn);
   fprintf(file,"grid_kind=%s\n",grid->kind);
-  fprintf(file,"%s\n",HEADER_DONE);
+  fprintf(file,"%s\n",ALLOC_FOOTER);
   fclose(file);
 }
 
@@ -108,6 +109,7 @@ static void write_parameters(const Grid_T *const grid)
   FILE *file = 0;
   const char *const folder = Pgets("iteration_output");
   char file_path[MAX_ARR];
+  char title_line[MAX_ARR];
   unsigned i,np;
 
   sprintf(file_path,"%s/%s_temp",folder,checkpoint_file_name);
@@ -119,13 +121,8 @@ static void write_parameters(const Grid_T *const grid)
     np++;
     
   /* NOTE the order is crucial for reading part */
-  //
-  printf("ftell b = %d\n",ftell(file));
-  //
-  Write(&PARAM_HEADER,strlen(PARAM_HEADER)+1);
-  //
-  printf("ftell a = %d\n",ftell(file));
-  //
+  sprintf(title_line,"%s",PARAM_HEADER);
+  Write(title_line,strlen(title_line)+1);
   for (i = 0; i < np; ++i)
   {
     Parameter_T *p = parameters_global[i];
@@ -139,6 +136,8 @@ static void write_parameters(const Grid_T *const grid)
     Write(&p->iterative,1);
     Write(&p->double_flg,1);
   }
+  sprintf(title_line,"%s",PARAM_FOOTER);
+  Write(title_line,strlen(title_line)+1);
   fclose(file);
   
   UNUSED(grid);
@@ -151,6 +150,7 @@ static void write_fields(const Grid_T *const grid)
   FILE *file = 0;
   const char *const folder = Pgets("iteration_output");
   char file_path[MAX_ARR];
+  char title_line[MAX_ARR];
   unsigned p;
   
   sprintf(file_path,"%s/%s_temp",folder,checkpoint_file_name);
@@ -158,7 +158,11 @@ static void write_fields(const Grid_T *const grid)
   pointerEr(file);
   
   /* NOTE the order is crucial for reading part */
-  Write(&FIELD_HEADER,strlen(FIELD_HEADER)+1);
+  
+  sprintf(title_line,"%s",FIELD_HEADER);
+  Write(title_line,strlen(title_line)+1);
+  
+  //Write(&FIELD_HEADER,strlen(FIELD_HEADER)+1);
   FOR_ALL_PATCHES(p,grid)
   {
     Patch_T *patch = grid->patch[p];
@@ -175,6 +179,8 @@ static void write_fields(const Grid_T *const grid)
       Write(field->attr,strlen(field->attr)+1);
     }
   }
+  sprintf(title_line,"%s",FIELD_HEADER);
+  Write(title_line,strlen(title_line)+1);
   fclose(file);  
 }
 
@@ -193,8 +199,8 @@ Grid_T *bbn_read_checkpoint(void)
   char *grid_kind = 0;
   unsigned npatch,grid_number,npar,i;
   long cursor;/* current positon of file reader  */
-  char *header;
-  unsigned header_s;
+  char *match_str;
+  unsigned match_str_s;
   
   sprintf(file_path,"%s/%s",folder,checkpoint_file_name);
   if (!(access(file_path,F_OK) != -1))/* if file dosn't exist */
@@ -203,11 +209,16 @@ Grid_T *bbn_read_checkpoint(void)
   file = fopen(file_path,"r");
   pointerEr(file);
   
-  /* read headers */
-  while (strcmp(line,HEADER_DONE))
+  /* check the header */
+  fscanf(file,"%s",line);
+  if (strcmp(line,ALLOC_HEADER))
+      abortEr("No header found. Checkpoint file got a problem.\n");
+    
+  /* read match_strs */
+  while (strcmp(line,ALLOC_FOOTER))
   {
     fscanf(file,"%s",line);
-    if (!strcmp(line,HEADER_DONE))
+    if (!strcmp(line,ALLOC_FOOTER))
       break;
       
     char *v = strstr(line,"=");/* v -> "=..." */
@@ -265,25 +276,16 @@ Grid_T *bbn_read_checkpoint(void)
   }
   
   /* read the binary parts */
-  fseek(file,cursor+1,SEEK_SET);
+  fseek(file,cursor+1,SEEK_SET);/* +1 since fscanf won't read \n */
   
   /* read parameter contents */
   printf("~> Reading parameters content ...\n");
   
-  //
-  printf("ftell b = %d\n",ftell(file));
-  //
-  
   /* is the cursor matched? */
-  Read1(header,header_s);
-  if (strcmp(header,PARAM_HEADER))
+  ReadP(match_str,match_str_s);
+  if (strcmp(match_str,PARAM_HEADER))
     abortEr("It could not find the parameter header.\n");
-  _free(header);
-  //
-  printf("ftell a = %d\n",ftell(file));
-  //
-  return 0;
-  //fseek(file,256,SEEK_SET);
+  _free(match_str);
   
   /* start reading one by one */
   for (i = 0; i < npar; ++i)
@@ -291,14 +293,14 @@ Grid_T *bbn_read_checkpoint(void)
     Parameter_T *p = parameters_global[i];
     unsigned mem_size;
     
-    Read1(p->lv,          mem_size);
-    Read1(p->rv,          mem_size);
-    Read1(p->rv_ip,       mem_size);
-    Read2(&p->rv_double,  mem_size);
-    Read1(p->rv_array,    mem_size);
-    Read2(&p->rv_n,       mem_size);
-    Read2(&p->iterative,  mem_size);
-    Read2(&p->double_flg, mem_size);
+    ReadP(p->lv,          mem_size);
+    ReadP(p->rv,          mem_size);
+    ReadP(p->rv_ip,       mem_size);
+    ReadV(&p->rv_double,  mem_size);
+    ReadP(p->rv_array,    mem_size);
+    ReadV(&p->rv_n,       mem_size);
+    ReadV(&p->iterative,  mem_size);
+    ReadV(&p->double_flg, mem_size);
     
     //test
     printf("%s = %s\n",p->lv,p->rv);
@@ -311,15 +313,20 @@ Grid_T *bbn_read_checkpoint(void)
     //end
     //break;
   }
-
+  /* is the cursor matched? */
+  ReadP(match_str,match_str_s);
+  if (strcmp(match_str,PARAM_FOOTER))
+    abortEr("It could not find the parameter footer.\n");
+  _free(match_str);
+  
   /* read field contents */
   printf("~> Reading fields content ...\n");
   
   /* is the cursor matched? */
-  /*Read(header,header_s);
-  if (strcmp(header,FIELD_HEADER))
+  /*Read(match_str,match_str_s);
+  if (strcmp(match_str,FIELD_HEADER))
     abortEr("It could not find the field header.\n");
-  _free(header);*/
+  _free(match_str);*/
   
     
   fclose(file);
