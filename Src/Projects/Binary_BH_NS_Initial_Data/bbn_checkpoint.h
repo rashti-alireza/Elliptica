@@ -1,4 +1,5 @@
 #include "core_lib.h"
+#include "memory_managing_lib.h"
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
@@ -17,6 +18,7 @@
                      if (Exsits){fread(&x,Exsits,1,file);}\
                      else       {x = 0;}}
 
+extern Grid_T **grids_global;
 extern Parameter_T **parameters_global;
 
 void bbn_write_checkpoint(const Grid_T *const grid);

@@ -74,15 +74,12 @@ static void write_header(const Grid_T *const grid)
   np = 0;
   while (parameters_global != 0 && parameters_global[np] != 0)
     np++;
-  /* no white spaces */
+    
+  /* NO white spaces since I'll use fscanf */
   fprintf(file,"number_of_parameters=%u\n",np);
   fprintf(file,"number_of_patches=%u\n",grid->np);
-  FOR_ALL_PATCHES(p,grid)
-  {
-    Patch_T *patch = grid->patch[p];
-    fprintf(file,"patch=%s\n",patch->name);
-    fprintf(file,"number_of_field=%u\n",patch->nfld);
-  }
+  fprintf(file,"grid_number=%u\n",grid->gn);
+  fprintf(file,"grid_kind=%s\n",grid->kind);
   fprintf(file,HEADER_DONE);
   fclose(file);
 }
@@ -159,6 +156,8 @@ static void write_fields(const Grid_T *const grid)
     Patch_T *patch = grid->patch[p];
     unsigned nn = patch->nn;
     unsigned f;
+    Write(patch->name,strlen(patch->name)+1);
+    Write(&patch->nfld,sizeof(patch->nfld));
     
     for (f = 0; f < patch->nfld; ++f)
     {
@@ -183,7 +182,9 @@ Grid_T *bbn_read_checkpoint(void)
   const char *const folder = Pgets("iteration_output");
   char file_path[MAX_ARR];
   char line[MAX_ARR] = {'\0'};
-  unsigned p;
+  char *grid_kind = 0;
+  unsigned npatch,grid_number,npar,i;
+  long cursor;
   
   sprintf(file_path,"%s/%s",folder,checkpoint_file_name);
   if (!(access(file_path,F_OK) != -1))/* if file dosn't exist */
@@ -193,10 +194,61 @@ Grid_T *bbn_read_checkpoint(void)
   pointerEr(file);
   
   /* read headers */
-  while (!strcmp(line,HEADER_DONE))
+  while (strcmp(line,HEADER_DONE))
   {
-    fscanf(file,"%[^\n]",line);
-    printf("%s",line);
+    fscanf(file,"%s",line);
+    if (!strcmp(line,HEADER_DONE))
+      break;
+      
+    char *v = strstr(line,"=");/* v -> "=..." */
+    if (!v)
+      abortEr("No value found. Checkpoint file got a problem.\n");
+    v++;
+    
+    if (strstr(line,"number_of_parameters"))
+    {
+      npar = (unsigned)atoi(v);
+    }
+    else if (strstr(line,"number_of_patches"))
+    {
+      npatch = (unsigned)atoi(v);
+    }
+    else if (strstr(line,"grid_number"))
+    {
+      grid_number = (unsigned)atoi(v);
+    }
+    else if (strstr(line,"grid_kind"))
+    {
+      grid_kind = dup_s(v);
+    }
+    else
+      abortEr(NO_OPTION);
+  }
+  cursor = ftell(file);
+  fclose(file);
+  
+  printf("~> Allocating parameters and patches ...\n");
+  
+  /* allocate parameters */
+  free_parameter_db();
+  parameters_global = calloc(npar+1,sizeof(*parameters_global));
+  pointerEr(parameters_global);
+  for (i = 0; i < npar; ++i)
+    parameters_global = alloc_parameter(&parameters_global);
+  
+  /* allocate grid */
+  grid       = alloc_grid();
+  grid->gn   = grid_number;
+  grid->np   = npatch;
+  grid->kind = grid_kind;
+  
+  /* allocate patches */
+  grid->patch = calloc(npatch+1,sizeof(*grid->patch));
+  pointerEr(grid->patch);
+  for (i = 0; i < npatch; ++i)
+  {
+    grid->patch[i] = calloc(1,sizeof(*grid->patch[i]));
+    pointerEr(grid->patch[i]);
   }
   
   printf("} Reading checkpoint file ==> Done.\n");
