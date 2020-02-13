@@ -5,7 +5,10 @@
 #include "physics_observables_lib.h"
 #include "maths_equation_solvings_lib.h"
 #include <unistd.h>
+#include <dirent.h>
+#include <sys/stat.h>
 
+#define MAX_ARR 400
 #define Power(a,b) pow(a,b)
 #define Sqrt(a) sqrt(a)
 #define prep_and_call(x) REALLOC_v_WRITE_v(x)\

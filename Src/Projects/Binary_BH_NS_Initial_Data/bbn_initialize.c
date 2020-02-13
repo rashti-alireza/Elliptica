@@ -71,8 +71,108 @@ static Grid_T *load_checkpoint_file(void)
 static int IsThereAnyUsefulCheckpointFile(void)
 {
   int ret = 0;
+  const int FOLDER_TYPE   = 4;
+  const unsigned MAX_LIST_NUM = 10;
+  DIR *prev_dir;
+  struct dirent *ent;
+  struct stat st = {0};/* status of files */
+  const char *const cur_out_dir = Pgets("output_directory_path");
+  const char *const cur_folder_name  = strrchr(cur_out_dir,'/')+1;
+  const char *const cur_folder_affix = strrchr(cur_folder_name,'_')+1;
+  int cur_folder_index = atoi(cur_folder_affix);
+  char prev_out_dir[MAX_ARR];
+  char prev_folder_name[MAX_ARR];
+  char prev_data_folder[MAX_ARR];
+  char folder_stem[MAX_ARR];
+  char out_dir_stem[MAX_ARR];
+  char *prev_data_folder_list[MAX_LIST_NUM];
+  char prev_data_file_path[MAX_ARR];
+  char *aux,str[MAX_ARR];
+  double latest_mtime = 0;
+  unsigned count,i;
   
-  //Psets("checkpoint_file_path",?);
+  //test
+  cur_folder_index = 1;
+  //end
+  /* if there is no previous folder */
+  if (!cur_folder_index)
+    return 0;
+  
+  /* if there is a previous folder check the contents
+  // see if there is any useful checkpoint file and finally 
+  // find the latest one. */
+  
+  sprintf(out_dir_stem,"%s",cur_out_dir);
+  aux    = strrchr(out_dir_stem,'/');
+  aux[0] = '\0';
+  
+  sprintf(folder_stem,"%s",cur_folder_name);
+  aux    = strrchr(folder_stem,'_');
+  aux[0] = '\0';
+  
+  sprintf(prev_folder_name,"%s"FOLDER_AFFIX,
+          folder_stem,cur_folder_index-1);
+  
+  sprintf(prev_out_dir,"%s/%s",out_dir_stem,prev_folder_name);
+  
+  /* open previous directory */        
+  prev_dir = opendir(prev_out_dir);
+  if (!prev_dir)/* if cannot be opened */
+    return 0;
+  
+  count = 0;  
+  ent = readdir(prev_dir);
+  while (ent)
+  {
+    if (ent->d_type == FOLDER_TYPE)/* if this a folder */
+    {
+      if (!strcmp(ent->d_name,".") || !strcmp(ent->d_name,".."))
+      {
+        ent = readdir(prev_dir);
+        continue;
+      }
+      assert(count < MAX_LIST_NUM);/* if it grater increase MAX_LIST_NUM */
+      prev_data_folder_list[count] = dup_s(ent->d_name);
+      count++;
+    }
+    ent = readdir(prev_dir);
+  }
+  
+  closedir(prev_dir);  
+  
+  /* having found the data folder, find the latest checkpoint file */
+  latest_mtime = 0;
+  for (i = 0; i < count; ++i)
+  {
+    sprintf(str,"%s/%s/%s",prev_out_dir,
+       prev_data_folder_list[i],CHECKPOINT_FILE_NAME);
+    
+    /* if the file exists */
+    if(!stat(str, &st))
+    {
+      /* if it is later */
+      if (GRT(st.st_mtime,latest_mtime))
+      {
+        sprintf(prev_data_file_path,"%s",str);
+        latest_mtime = st.st_mtime;
+        ret = 1;
+      }
+    
+    }/* end of if(!stat(str, &st)) */
+  }
+  
+  /* free  */
+  for (i  = 0; i < count; ++i)
+    free(prev_data_folder_list[i]);
+  
+  /* some checks to make sure the checkpoint file is valid */
+  /* NS & BH masses, NS & BH spins, EoS, separation, RollOff_distance */
+  
+  /* set the path to checkpoint file */
+  if (ret)
+    Psets("checkpoint_file_path",prev_data_file_path);
+  
+  /* remove the current directory */
   
   return ret;
 }
