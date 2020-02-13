@@ -59,6 +59,9 @@ int Binary_BH_NS_Initial_Data(void)
   }
   grid = grid_next;/* final grid */
   
+  /* writing checkpoints */
+  bbn_write_checkpoint(grid);
+    
   /* free grid */
   free_grid(grid);
   
