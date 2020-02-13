@@ -20,13 +20,9 @@ char *make_directory(const char *const path,const char *const name)
   i = 0;
   do 
   {
-    if (i == 0)
-      sprintf(dir,"%s/%s",path,name);
-    else/* append number to folder name if already exists */
-      sprintf(dir,"%s/%s_%02d",path,name,i);
+    sprintf(dir,"%s/%s"FOLDER_AFFIX,path,name,i);
     i++;
-  
-  }while(stat(dir, &st) != -1);
+  }while(!stat(dir, &st));
   
   printf("shell command:\n$ mkdir %s\n\n",dir);
   fflush(stdout);
