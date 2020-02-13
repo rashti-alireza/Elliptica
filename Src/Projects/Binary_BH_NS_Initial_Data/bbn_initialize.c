@@ -101,7 +101,7 @@ static Grid_T *make_next_grid_using_previous_grid(Grid_T *const grid_prev)
   
   /* make normal vectorn on BH horizon 
   // note: this MUST be before "bbn_partial_derivatives_fields" */
-  make_normal_vector_on_BH_horizon(grid_next,GridParams);
+  bbn_make_normal_vector_on_BH_horizon(grid_next);
   
   /* taking partial derivatives of the fields needed for equations */
   bbn_partial_derivatives_fields(grid_next);
@@ -3324,7 +3324,7 @@ static Grid_T *TOV_KerrSchild_approximation(void)
   
   /* make normal vectorn on BH horizon 
   // note: this MUST be before "bbn_partial_derivatives_fields" */
-  make_normal_vector_on_BH_horizon(grid,GridParams);
+  bbn_make_normal_vector_on_BH_horizon(grid);
   
   /* taking partial derivatives of the fields needed for equations */
   bbn_partial_derivatives_fields(grid);
@@ -3468,31 +3468,8 @@ dphi_D0[ijk] + Beta_U1[ijk]*dphi_D1[ijk] + Beta_U2[ijk]*dphi_D2[ijk]))/
   Psetd("Euler_equation_constant",Euler_C);
 }
 
-/* update _Aij in K^{ij} = A^{ij}+1/3*gamma^{ij}*K and 
-// _A^{ij} = gamma^10*A^{ij} and _dA^{ij} */
-static void bbn_update_Aij(Grid_T *const grid)
-{
-  pr_line_custom('=');
-  printf("{ Updating _A^{ij}, _dA^{ij} and _A^{ij}*A_{ij} ...\n");
-  unsigned p;
-
-  FOR_ALL_PATCHES(p,grid)
-  {
-    Patch_T *patch = grid->patch[p];
-    
-    if (IsItInsideBHPatch(patch))
-      continue;
-      
-    bbn_update_psi10A_UiUj(patch);
-  }
-  
-  printf("} Updating _A^{ij}, _dA^{ij} and _A^{ij}*A_{ij} ==> Done.\n");
-  pr_clock();
-  pr_line_custom('=');
-}
-
 /* make normal vectorn on BH horizon */
-static void make_normal_vector_on_BH_horizon(Grid_T *const grid,struct Grid_Params_S *const GridParams)
+void bbn_make_normal_vector_on_BH_horizon(Grid_T *const grid)
 {
   pr_line_custom('=');
   printf("{ Making normal vector on BH horizon ...\n");
@@ -3502,71 +3479,65 @@ static void make_normal_vector_on_BH_horizon(Grid_T *const grid,struct Grid_Para
   const double BH_center_z = Pgetd("BH_center_z");
   unsigned p,nn,ijk;
   
-  if (strcmp_i(GridParams->BH_R_type,"PerfectSphere"))
+  FOR_ALL_PATCHES(p,grid)
   {
-    FOR_ALL_PATCHES(p,grid)
-    {
-      Patch_T *patch = grid->patch[p];
-      
-      if (!IsItHorizonPatch(patch))
-        continue;
-        
-      nn = patch->nn;
-      
-      READ_v(_gamma_D2D2)
-      READ_v(_gamma_D0D2)
-      READ_v(_gamma_D0D0)
-      READ_v(_gamma_D0D1)
-      READ_v(_gamma_D1D2)
-      READ_v(_gamma_D1D1)
-      
-      /* normal vector on horizon */
-      REALLOC_v_WRITE_v(_HS_U0);
-      REALLOC_v_WRITE_v(_HS_U1);
-      REALLOC_v_WRITE_v(_HS_U2);
-      
-      for (ijk = 0; ijk < nn; ++ijk)
-      {
-        double x = patch->node[ijk]->x[0]-BH_center_x;
-        double y = patch->node[ijk]->x[1]-BH_center_y; 
-        double z = patch->node[ijk]->x[2]-BH_center_z;
-        double r = sqrt(SQR(x)+SQR(y)+SQR(z));
-        
-        /* minus sign to point outside the black hole */
-        //_HS_U0[ijk] = dq2_dq1(patch,_c_,_x_,ijk);
-        //_HS_U1[ijk] = dq2_dq1(patch,_c_,_y_,ijk);
-        //_HS_U2[ijk] = dq2_dq1(patch,_c_,_z_,ijk);
-        
-        /* the jacobian method (above) has discontinuity at the plane
-        // away from the horizon due to cubed spherical setup. */
-        _HS_U0[ijk] = x/r;
-        _HS_U1[ijk] = y/r;
-        _HS_U2[ijk] = z/r;
-        
-        double N2 = 
-  pow(_HS_U0[ijk], 2)*_gamma_D0D0[ijk] + 2.0*_HS_U0[ijk]*_HS_U1[ijk]*
-  _gamma_D0D1[ijk] + 2.0*_HS_U0[ijk]*_HS_U2[ijk]*_gamma_D0D2[ijk] +
-  pow(_HS_U1[ijk], 2)*_gamma_D1D1[ijk] + 2.0*_HS_U1[ijk]*_HS_U2[ijk]*
-  _gamma_D1D2[ijk] + pow(_HS_U2[ijk], 2)*_gamma_D2D2[ijk];
-          
-        double N = sqrt(N2);
-        
-        /* normalizing */
-        _HS_U0[ijk] /= N;
-        _HS_U1[ijk] /= N;
-        _HS_U2[ijk] /= N;
-        
-      }
-       
-    }/* end of FOR_ALL_PATCHES(p,grid) */
-  }/* end of if (strcmp_i(GridParams->BH_R_type,"PerfectSphere")) */
-  else
-    abortEr(NO_OPTION);
+    Patch_T *patch = grid->patch[p];
     
+    if (!IsItHorizonPatch(patch))
+      continue;
+      
+    nn = patch->nn;
+    
+    READ_v(_gamma_D2D2)
+    READ_v(_gamma_D0D2)
+    READ_v(_gamma_D0D0)
+    READ_v(_gamma_D0D1)
+    READ_v(_gamma_D1D2)
+    READ_v(_gamma_D1D1)
+    
+    /* normal vector on horizon */
+    REALLOC_v_WRITE_v(_HS_U0);
+    REALLOC_v_WRITE_v(_HS_U1);
+    REALLOC_v_WRITE_v(_HS_U2);
+    
+    for (ijk = 0; ijk < nn; ++ijk)
+    {
+      double x = patch->node[ijk]->x[0]-BH_center_x;
+      double y = patch->node[ijk]->x[1]-BH_center_y; 
+      double z = patch->node[ijk]->x[2]-BH_center_z;
+      double r = sqrt(SQR(x)+SQR(y)+SQR(z));
+      
+      /* minus sign to point outside the black hole */
+      //_HS_U0[ijk] = dq2_dq1(patch,_c_,_x_,ijk);
+      //_HS_U1[ijk] = dq2_dq1(patch,_c_,_y_,ijk);
+      //_HS_U2[ijk] = dq2_dq1(patch,_c_,_z_,ijk);
+      
+      /* the jacobian method (above) has discontinuity at the plane
+      // away from the horizon due to cubed spherical setup. */
+      _HS_U0[ijk] = x/r;
+      _HS_U1[ijk] = y/r;
+      _HS_U2[ijk] = z/r;
+      
+      double N2 = 
+pow(_HS_U0[ijk], 2)*_gamma_D0D0[ijk] + 2.0*_HS_U0[ijk]*_HS_U1[ijk]*
+_gamma_D0D1[ijk] + 2.0*_HS_U0[ijk]*_HS_U2[ijk]*_gamma_D0D2[ijk] +
+pow(_HS_U1[ijk], 2)*_gamma_D1D1[ijk] + 2.0*_HS_U1[ijk]*_HS_U2[ijk]*
+_gamma_D1D2[ijk] + pow(_HS_U2[ijk], 2)*_gamma_D2D2[ijk];
+        
+      double N = sqrt(N2);
+      
+      /* normalizing */
+      _HS_U0[ijk] /= N;
+      _HS_U1[ijk] /= N;
+      _HS_U2[ijk] /= N;
+      
+    }
+     
+  }/* end of FOR_ALL_PATCHES(p,grid) */
+  
   printf("} Making normal vector on BH horizon ==> Done.\n");
   pr_clock();
   pr_line_custom('=');
-  
 }
 
 /* initialize the fields using TOV and Kerr-Schild solution.

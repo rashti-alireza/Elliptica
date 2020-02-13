@@ -1241,3 +1241,26 @@ void bbn_update_B1_U012(Patch_T *const patch)
   }
 
 }
+
+/* update _Aij in K^{ij} = A^{ij}+1/3*gamma^{ij}*K and 
+// _A^{ij} = gamma^10*A^{ij} and _dA^{ij} */
+void bbn_update_Aij(Grid_T *const grid)
+{
+  pr_line_custom('=');
+  printf("{ Updating _A^{ij}, _dA^{ij} and _A^{ij}*A_{ij} ...\n");
+  unsigned p;
+
+  FOR_ALL_PATCHES(p,grid)
+  {
+    Patch_T *patch = grid->patch[p];
+    
+    if (IsItInsideBHPatch(patch))
+      continue;
+      
+    bbn_update_psi10A_UiUj(patch);
+  }
+  
+  printf("} Updating _A^{ij}, _dA^{ij} and _A^{ij}*A_{ij} ==> Done.\n");
+  pr_clock();
+  pr_line_custom('=');
+}
