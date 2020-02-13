@@ -130,7 +130,7 @@ static void update_parameters_and_directories(const unsigned iter)
 {
   const unsigned N_iter_par = total_iterative_parameters_ip();
   unsigned n[3];/* number of points */
-  const char *path_par = PgetsEZ("output_directory_path");
+  const char *path_par = Pgets("output_directory_path");
   char folder_name_next[1000] = {'\0'},
        folder_name_prev[1000] = {'\0'};
   char *folder_path,*folder_path2;
