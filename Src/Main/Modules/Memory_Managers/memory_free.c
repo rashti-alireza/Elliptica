@@ -414,7 +414,7 @@ void _free(void *p)
 /* free the given grid completely */
 void free_grid(Grid_T *grid)
 {
-  unsigned p,ijk,nn,f;
+  unsigned p,ijk,nn,f,i,ng;
   
   if (!grid)
     return;
@@ -455,6 +455,27 @@ void free_grid(Grid_T *grid)
   }
   free_2d_mem(grid->patch,grid->np);
   _free(grid->kind);
+  
+  /* shrink the grids_global */
+  Grid_T *last_grid = 0;
+  
+  for (ng = 0; grids_global != 0 && grids_global[ng] != 0; ng++);
+  
+  for (i = 0; i < ng; ++i)
+  {
+    if (grid == grids_global[i])
+    {
+      last_grid       = grids_global[ng-1];
+      assert(last_grid);
+      grids_global[i] = last_grid;
+      
+      grids_global = realloc(grids_global,ng*sizeof(*grids_global));
+      pointerEr(grids_global);
+      grids_global[ng-1] = 0;
+      
+      break;
+    }
+  }
   free(grid);
 }
 

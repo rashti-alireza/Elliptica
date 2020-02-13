@@ -2,6 +2,8 @@
 #include "error_handling_lib.h"
 
 extern Parameter_T **parameters_global;
+extern Grid_T **grids_global;
+
 void free_2d(void *mem0);
 void free_2d_mem(void *mem0, const unsigned long c);
 void free_needle(Needle_T *needle);
