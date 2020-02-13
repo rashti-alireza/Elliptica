@@ -78,3 +78,4 @@ void bbn_make_metric_and_Gamma_and_derivatives(Grid_T *const grid);
 void bbn_make_K_UiUj_and_dK_UiUj(Grid_T *const grid);
 void bbn_free_K_UiUj_and_dK_UiUj(Grid_T *const grid);
 void bbn_make_normal_vector_on_BH_horizon(Grid_T *const grid);
+Grid_T *bbn_init_from_checkpoint(void);
