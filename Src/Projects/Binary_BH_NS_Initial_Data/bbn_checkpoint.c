@@ -12,13 +12,13 @@ void bbn_write_checkpoint(const Grid_T *const grid)
   pr_line_custom('=');
   printf("{ Writing checkpoint file ...\n");
   
-  const double dt  = Pgetd("write_checkpoint_every");
+  const double dt  = Pgetd("write_checkpoint_every");/* unit is hour */
   const double now = get_time_sec()/(3600);
   static double last_checkpoint_was = 0;/* the time where the last 
                                         // checkpoint happened in hours */
   
   /* some checks */
-  /*if (dt+last_checkpoint_was < now)
+  /*if (LSS(dt+last_checkpoint_was,now))
   {
     printf("~> It's early for writing checkpoint.\n");
     printf("} Writing checkpoint ==> Done.\n");
