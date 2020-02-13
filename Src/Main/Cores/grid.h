@@ -4,7 +4,10 @@
 #include "utilities_lib.h"
 #include "maths_general_lib.h"
 
+extern Grid_T **grids_global;
+
 int make_patches(Grid_T *const grid);
+void free_grid_db(void);
 static void fill_patches(Grid_T *const grid);
 void fill_patches_SNS_CubedSpherical_grid(Grid_T *const grid);
 void fill_patches_Cartesian_grid(Grid_T *const grid);

@@ -208,3 +208,19 @@ void free_temp_patch(Patch_T *const patch)
     free(patch->pool);
 }
 
+/* free the whole date base of grid */
+void free_grid_db(void)
+{
+  unsigned i;
+  
+  i = 0;
+  while (grids_global != 0 && grids_global[i] != 0)
+  {
+    Grid_T *grid = grids_global[i];
+    free_grid(grid);/* since the last grid goes to i = 0, 
+                    // don't increament i */          
+  }
+  
+  free_2d(grids_global);
+  grids_global = 0;
+}
