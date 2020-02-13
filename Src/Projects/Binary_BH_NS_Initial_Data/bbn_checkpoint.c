@@ -235,25 +235,10 @@ static int DoSaveField(const Field_T *const field)
 }
 
 /* read checkpoint file and creat grid and parameters accordingly */
-Grid_T *bbn_init_from_checkpoint(void)
+Grid_T *bbn_init_from_checkpoint(FILE *const file)
 {
-  /* print some descriptions */
-  pr_line_custom('=');
-  printf("{ Initializing from checkpoint file ...\n");
-  fflush(stdout);
-  
   Grid_T *grid = 0;
-  FILE *file = 0;
   struct checkpoint_header alloc_info[1] = {0};
-  const char *const folder = Pgets("iteration_output");
-  char file_path[MAX_ARR];
-  
-  sprintf(file_path,"%s/%s",folder,checkpoint_file_name);
-  if (!(access(file_path,F_OK) != -1))/* if file dosn't exist */
-    abortEr("File does not exist.\n");
-  
-  file = fopen(file_path,"r");
-  pointerEr(file);
   
   /* reading the header for allocations */
   read_header(alloc_info,file);
@@ -281,9 +266,6 @@ Grid_T *bbn_init_from_checkpoint(void)
   /* read fields content from the checkpoint file */
   read_fields(alloc_info,file);
   
-  /* close checkpoint */
-  fclose(file);
- 
   /* initialzing some mediate field */
   init_mediate_field(grid);
   
@@ -300,10 +282,6 @@ Grid_T *bbn_init_from_checkpoint(void)
   /* update _Aij in K^{ij} = A^{ij}+1/3*gamma^{ij}*K and 
   // _A^{ij} = gamma^10*A^{ij} and _dA^{ij} */
   bbn_update_Aij(grid);
-  
-  printf("} Initializing from checkpoint file ==> Done.\n");
-  pr_clock();
-  pr_line_custom('=');
   
   return grid;
 }
