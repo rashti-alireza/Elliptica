@@ -4,6 +4,7 @@
 #include "maths_analytic_lib.h"
 #include "physics_observables_lib.h"
 #include "maths_equation_solvings_lib.h"
+#include <unistd.h>
 
 #define Power(a,b) pow(a,b)
 #define Sqrt(a) sqrt(a)
@@ -146,4 +147,6 @@ static double AH_surface_function_PerfectSphere_CS(const double a,const double b
 static void move_geometry(Grid_T *const grid_next,Grid_T *const grid_prev);
 static void move_solve_man_jacobian(Patch_T *const patch2,Patch_T *const patch1);
 void bbn_free_grid_and_its_parameters(Grid_T *grid);
+static Grid_T *load_checkpoint_file(void);
+static int IsThereAnyUsefulCheckpointFile(void);
 

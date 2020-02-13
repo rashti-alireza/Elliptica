@@ -11,11 +11,20 @@ Grid_T *bbn_initialize_next_grid(Grid_T *const grid_prev)
 {
   Grid_T *grid_next = 0;
   
-  if (!grid_prev)/* if grid is empty come up with an approximation */
+  if (!grid_prev)/* if grid is empty come up with an initialization */
   {
+    /* can we resume from a useful checkpoint file */
+    if (IsThereAnyUsefulCheckpointFile())
+      grid_next = load_checkpoint_file();
+      
+    /* if we wanna use checkpoint file */
+    else if (Pcmps("BH_NS_initialization","checkpoint_file"))
+      grid_next = load_checkpoint_file();
+      
     /* if we use TOV and Kerr-Schil black hole approximation */
-    if (Pcmps("BH_NS_initialization","TOV_KerrSchild"))
+    else if (Pcmps("BH_NS_initialization","TOV_KerrSchild"))
       grid_next = TOV_KerrSchild_approximation();
+      
     else
       abortEr(NO_OPTION);
   }
@@ -25,6 +34,47 @@ Grid_T *bbn_initialize_next_grid(Grid_T *const grid_prev)
   }
   
   return grid_next;   
+}
+
+/* loading the grid and parameters from checkpoint file.
+// there is no check at this stage, we assume every thing is consistence */
+static Grid_T *load_checkpoint_file(void)
+{
+  /* print some descriptions */
+  pr_line_custom('=');
+  printf("{ Initializing from checkpoint file ...\n");
+  
+  Grid_T *grid = 0;
+  FILE *file   = 0;
+  const char *const checkpoint_file_path = Pgets("checkpoint_file_path");
+  
+  if (access(checkpoint_file_path,F_OK))/* if file does not exist */
+    abortEr_s("Checkpoint file does not exist at\n%s\n",checkpoint_file_path);
+    
+  file = fopen(checkpoint_file_path,"r");
+  pointerEr(file);
+  
+  grid = bbn_init_from_checkpoint(file);
+  
+  fclose(file);
+  
+  printf("} Initializing from checkpoint file ==> Done.\n");
+  pr_clock();
+  pr_line_custom('=');
+  
+  return grid;
+}
+
+/* check if there is a consistence checkpoint file to be used 
+// for initialization.
+// -> return value : 1 if exists, 0 otherwise. */
+static int IsThereAnyUsefulCheckpointFile(void)
+{
+  int ret = 0;
+  
+  //Psets("checkpoint_file_path",?);
+  
+  return ret;
 }
 
 /* finding different quantities and then make the next grid using previous grid
