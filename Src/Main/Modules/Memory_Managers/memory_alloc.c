@@ -68,7 +68,7 @@ void *alloc_grid(void)
   if (i == 0)
     grids_global[i]->gn = i;
   else
-    grids_global[i]->gn = grids_global[i-1]->gn;
+    grids_global[i]->gn = grids_global[i-1]->gn+1;
     
   /* determine the last grid */
   grids_global[i+1] = 0;
