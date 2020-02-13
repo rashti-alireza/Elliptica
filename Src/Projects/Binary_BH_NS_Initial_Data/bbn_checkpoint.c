@@ -105,7 +105,7 @@ static void move_checkpoint_file(void)
 /* write all of the pertinent parameters in the checkpoint file */
 static void write_parameters(const Grid_T *const grid)
 {
-  printf ("~> Writing all parameters in the checkpoint file ...\n");
+  printf ("~> Writing parameters in checkpoint file ...\n");
   
   FILE *file = 0;
   const char *const folder = Pgets("iteration_output");
@@ -151,7 +151,7 @@ static void write_parameters(const Grid_T *const grid)
 /* write all of the fields in the checkpoint file */
 static void write_fields(const Grid_T *const grid)
 {
-  printf("~> Writing the fields in the checkpoint file ...\n");
+  printf("~> Writing fields in checkpoint file ...\n");
   
   FILE *file = 0;
   const char *const folder = Pgets("iteration_output");
@@ -430,7 +430,7 @@ static void alloc_db(struct checkpoint_header *const alloc_info)
 static void read_parameters(struct checkpoint_header *const alloc_info,FILE *const file)
 {
   /* read parameter contents */
-  printf("~> Reading parameters content ...\n");
+  printf("~> Reading parameters from checkpoint file ...\n");
   
   const unsigned npar = alloc_info->npar;
   char *match_str;
@@ -476,10 +476,10 @@ static void read_parameters(struct checkpoint_header *const alloc_info,FILE *con
   _free(match_str);
 }
  
-/* read fields content */
+/* read fields from the checkpoint file */
 static void read_fields(struct checkpoint_header *const alloc_info,FILE *const file)
 {  
-  printf("~> Reading fields content ...\n");
+  printf("~> Reading fields from checkpoint file ...\n");
   Grid_T *const grid = alloc_info->grid;
   char *match_str;
   unsigned p;
