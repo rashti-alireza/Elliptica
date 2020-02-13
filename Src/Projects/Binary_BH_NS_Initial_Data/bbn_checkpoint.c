@@ -272,7 +272,7 @@ Grid_T *bbn_init_from_checkpoint(void)
   /* populating the free data part of initial data that we chose ourself */
   bbn_populate_free_data(grid);
   
-  /* read fields content */
+  /* read fields content from the checkpoint file */
   read_fields(alloc_info,file);
   
   /* close checkpoint */
