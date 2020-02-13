@@ -3367,7 +3367,7 @@ static Grid_T *TOV_KerrSchild_approximation(void)
   TOV_free(tov);
   free_observable(obs);
   
-  printf("{ Initializing fields & grid using TOV & Kerr-Schild solutions ==> Done.\n");
+  printf("} Initializing fields & grid using TOV & Kerr-Schild solutions ==> Done.\n");
   pr_line_custom('=');
   
   return grid;
