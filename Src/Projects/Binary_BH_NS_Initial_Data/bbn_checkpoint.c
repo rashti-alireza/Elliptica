@@ -70,7 +70,7 @@ static void write_header(const Grid_T *const grid)
   if (access(file_path,F_OK) != -1)/* if file exists */
     abortEr("File already exists.\n");
   
-  printf("checkpoint file path:\n%s\n",file_patch);
+  printf("checkpoint file path:\n%s\n",file_path);
   fflush(stdout);
     
   file = fopen(file_path,"w");
