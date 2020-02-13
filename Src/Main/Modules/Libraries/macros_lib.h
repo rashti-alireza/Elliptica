@@ -4,6 +4,10 @@
 #define NO_OPTION "No such option has been defined."
 #define ERROR_MASSAGE  ":(\n\nERROR and EXIT:\n"
 
+/* some general macros */
+#define FOLDER_AFFIX "_%02d"/* that's how folders are named */
+#define CHECKPOINT_FILE_NAME "checkpoint.dat"
+
 /* some useful functions and commands */
 #define UNUSED(x) (void)(x);
 #define pointerEr(x)   checkup_pointer_error(x,__FILE__,__LINE__)
