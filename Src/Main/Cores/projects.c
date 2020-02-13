@@ -44,7 +44,7 @@ void add_project(ProjFunc *const projfunc, const char *const name, const char *c
 }
 
 /* free the whole data base of project */
-void free_db_project(void)
+void free_project_db(void)
 {
   unsigned np;
   
