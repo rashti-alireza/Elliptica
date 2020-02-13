@@ -4,7 +4,6 @@
 #include <unistd.h>
 
 #define MAX_ARR 500
-#define checkpoint_file_name "checkpoint.dat"
 #define ALLOC_HEADER "#{ALLOCATION#"
 #define ALLOC_FOOTER "#}ALLOCATION#"
 #define PARAM_HEADER "#{PARAM#"

@@ -66,8 +66,8 @@ static void write_header(const Grid_T *const grid)
   char file_path[MAX_ARR];
   unsigned np;
 
-  sprintf(file_path,"%s/%s_temp",folder,checkpoint_file_name);
-  if (access(file_path,F_OK) != -1)/* if file exists */
+  sprintf(file_path,"%s/%s_temp",folder,CHECKPOINT_FILE_NAME);
+  if (!access(file_path,F_OK))/* if file exists */
     abortEr("File already exists.\n");
   
   printf("checkpoint file path:\n%s\n",file_path);
@@ -97,10 +97,10 @@ static void move_checkpoint_file(void)
   char file_path[MAX_ARR];
   char command[2*MAX_ARR];
   
-  sprintf(file_path,"%s/%s",folder,checkpoint_file_name);
+  sprintf(file_path,"%s/%s",folder,CHECKPOINT_FILE_NAME);
   sprintf(command,"mv %s/%s_temp %s/%s",
-          folder,checkpoint_file_name,folder,checkpoint_file_name);
-  printf("shell command:\n$ mv %s_temp %s\n",checkpoint_file_name,checkpoint_file_name);
+          folder,CHECKPOINT_FILE_NAME,folder,CHECKPOINT_FILE_NAME);
+  printf("shell command:\n$ mv %s_temp %s\n",CHECKPOINT_FILE_NAME,CHECKPOINT_FILE_NAME);
   fflush(stdout);
   system(command);
 }
@@ -118,7 +118,7 @@ static void write_parameters(const Grid_T *const grid)
   char *const p_title_line = title_line;/* defined to avoid warning */
   unsigned i,np;
 
-  sprintf(file_path,"%s/%s_temp",folder,checkpoint_file_name);
+  sprintf(file_path,"%s/%s_temp",folder,CHECKPOINT_FILE_NAME);
   file = fopen(file_path,"ab");
   pointerEr(file);
   
@@ -165,7 +165,7 @@ static void write_fields(const Grid_T *const grid)
   char *const p_title_line = title_line;/* defined to avoid warning */
   unsigned p;
   
-  sprintf(file_path,"%s/%s_temp",folder,checkpoint_file_name);
+  sprintf(file_path,"%s/%s_temp",folder,CHECKPOINT_FILE_NAME);
   file = fopen(file_path,"ab");
   pointerEr(file);
   
