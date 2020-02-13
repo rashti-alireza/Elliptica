@@ -174,6 +174,7 @@ static void write_fields(const Grid_T *const grid)
     Patch_T *patch = grid->patch[p];
     unsigned nn = patch->nn;
     unsigned f,count_nfld;
+    unsigned *const p_count_nfld = &count_nfld;/* defined to avoid warning */
     //Write(patch->name,strlen(patch->name)+1);
     //Write(&patch->nn,sizeof(patch->nn));
     //Write(&patch->nfld,sizeof(patch->nfld));
@@ -186,7 +187,7 @@ static void write_fields(const Grid_T *const grid)
       if (DoSaveField(field))
         count_nfld++;
     }
-    Write(&count_nfld,1);
+    Write(p_count_nfld,1);
     
     for (f = 0; f < patch->nfld; ++f)
     {
@@ -433,10 +434,10 @@ static void read_parameters(struct checkpoint_header *const alloc_info,FILE *con
   
   const unsigned npar = alloc_info->npar;
   char *match_str;
-  unsigned match_str_s,i;
+  unsigned i;
 
   /* is the cursor matched? */
-  ReadP(match_str,match_str_s);
+  ReadP(match_str);
   if (strcmp(match_str,PARAM_HEADER))
     abortEr("It could not find the parameter header.\n");
   _free(match_str);
@@ -445,16 +446,15 @@ static void read_parameters(struct checkpoint_header *const alloc_info,FILE *con
   for (i = 0; i < npar; ++i)
   {
     Parameter_T *p = parameters_global[i];
-    unsigned mem_size;
     
-    ReadP(p->lv,          mem_size);
-    ReadP(p->rv,          mem_size);
-    ReadP(p->rv_ip,       mem_size);
-    ReadV(&p->rv_double,  mem_size);
-    ReadP(p->rv_array,    mem_size);
-    ReadV(&p->rv_n,       mem_size);
-    ReadV(&p->iterative,  mem_size);
-    ReadV(&p->double_flg, mem_size);
+    ReadP(p->lv);
+    ReadP(p->rv);
+    ReadP(p->rv_ip);
+    ReadV(&p->rv_double);
+    ReadP(p->rv_array);
+    ReadV(&p->rv_n);
+    ReadV(&p->iterative);
+    ReadV(&p->double_flg);
     
     //test
     if (0)
@@ -470,7 +470,7 @@ static void read_parameters(struct checkpoint_header *const alloc_info,FILE *con
     //end
   }
   /* is the cursor matched? */
-  ReadP(match_str,match_str_s);
+  ReadP(match_str);
   if (strcmp(match_str,PARAM_FOOTER))
     abortEr("It could not find the parameter footer.\n");
   _free(match_str);
@@ -482,11 +482,10 @@ static void read_fields(struct checkpoint_header *const alloc_info,FILE *const f
   printf("~> Reading fields content ...\n");
   Grid_T *const grid = alloc_info->grid;
   char *match_str;
-  unsigned match_str_s;
   unsigned p;
   
   /* is the cursor matched? */
-  ReadP(match_str,match_str_s);
+  ReadP(match_str);
   if (strcmp(match_str,FIELD_HEADER))
     abortEr("It could not find the field header.\n");
   _free(match_str);
@@ -495,12 +494,11 @@ static void read_fields(struct checkpoint_header *const alloc_info,FILE *const f
   {
     Patch_T *patch = grid->patch[p];
     unsigned f,count_nfld;
-    unsigned mem_size;
-    //ReadP(patch->name,mem_size);
-    //ReadV(&patch->nn,mem_size);
-    //ReadV(&patch->nfld,mem_size);
+    //ReadP(patch->name);
+    //ReadV(&patch->nn);
+    //ReadV(&patch->nfld);
     
-    ReadV(&count_nfld,mem_size);
+    ReadV(&count_nfld);
     assert(count_nfld);
     
     for (f = 0; f < count_nfld; ++f)
@@ -509,9 +507,9 @@ static void read_fields(struct checkpoint_header *const alloc_info,FILE *const f
       char *name = 0;
       double *v  = 0;
       
-      ReadP(name,mem_size);
-      ReadP(v,mem_size);
-      //ReadP(attr,mem_size);
+      ReadP(name);
+      ReadP(v);
+      //ReadP(attr);
       
       field = patch->pool[Ind(name)];
       _free(name);
@@ -521,7 +519,7 @@ static void read_fields(struct checkpoint_header *const alloc_info,FILE *const f
   }
 
   /* is the cursor matched? */
-  ReadP(match_str,match_str_s);
+  ReadP(match_str);
   if (strcmp(match_str,FIELD_FOOTER))
     abortEr("It could not find the field footer.\n");
   _free(match_str);
