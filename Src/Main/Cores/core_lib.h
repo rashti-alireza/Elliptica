@@ -16,9 +16,9 @@
 #include "text_and_file_tools_lib.h"
 
 #define ROUND_OFF_ERR 1E-12
-#define LSS(x,y) (x < y-ROUND_OFF_ERR)
-#define GRT(x,y) (x > y+ROUND_OFF_ERR)
-#define EQL(x,y) (x < y+ROUND_OFF_ERR && x > y-ROUND_OFF_ERR)
+#define LSS(x,y) ((x) < (y)-ROUND_OFF_ERR)
+#define GRT(x,y) ((x) > (y)+ROUND_OFF_ERR)
+#define EQL(x,y) ((x) < (y)+ROUND_OFF_ERR && (x) > (y)-ROUND_OFF_ERR)
 #define LSSEQL(x,y) (LSS(x,y) || EQL(x,y))
 #define GRTEQL(x,y) (GRT(x,y) || EQL(x,y))
 
