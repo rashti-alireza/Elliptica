@@ -36,10 +36,13 @@ int main(int argn, char **argv)
   execute_project(proj);
   
   /* free the data base of project */
-  free_db_project();
+  free_project_db();
   
   /* free parameter data base */  
   free_parameter_db();
+  
+  /* free grid data base */
+  free_grid_db();
   
   return EXIT_SUCCESS;
 }
