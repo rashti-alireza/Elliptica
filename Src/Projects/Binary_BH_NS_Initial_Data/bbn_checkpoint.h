@@ -1,5 +1,4 @@
-#include "core_lib.h"
-#include "memory_managing_lib.h"
+#include "bbn_fields.h"
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
@@ -33,14 +32,14 @@ extern Parameter_T **parameters_global;
 struct checkpoint_header
 {
  Grid_T *grid;
- unsigned npatch;
+ //unsigned npatch;
  unsigned npar;
  unsigned grid_number;
  char *grid_kind;
 };
 
 void bbn_write_checkpoint(const Grid_T *const grid);
-Grid_T *bbn_read_checkpoint(void);
+Grid_T *bbn_initi_from_checkpoint(void);
 static void move_checkpoint_file(void);
 static void write_parameters(const Grid_T *const grid);
 static void write_fields(const Grid_T *const grid);
@@ -49,3 +48,5 @@ static void read_parameters(struct checkpoint_header *const alloc_info,FILE *con
 static void read_fields(struct checkpoint_header *const alloc_info,FILE *const file);
 static void read_header(struct checkpoint_header *const alloc_info,FILE *const file);
 static void alloc_db(struct checkpoint_header *const alloc_info);
+static int DoSaveField(const Field_T *const field);
+static void init_mediate_field(Grid_T *const grid);
