@@ -12,7 +12,7 @@ void bbn_write_checkpoint(const Grid_T *const grid)
   pr_line_custom('=');
   printf("{ Writing checkpoint file ...\n");
   
-  const double dt  = Pgetd("checkpoint_dt_hours");
+  const double dt  = Pgetd("write_checkpoint_every");
   const double now = get_time_sec()/(3600);
   static double last_checkpoint_was = 0;/* the time where the last 
                                         // checkpoint happened in hours */
@@ -39,7 +39,7 @@ void bbn_write_checkpoint(const Grid_T *const grid)
   
   last_checkpoint_was = now;
   
-  /* NOTE: the order of writing is crucial */
+  /* NOTE: the order of writing is super crucial for reading */
   
   /* write header */
   write_header(grid);
@@ -80,7 +80,7 @@ static void write_header(const Grid_T *const grid)
   /* NO white spaces since I'll use fscanf */
   fprintf(file,"%s\n",ALLOC_HEADER);
   fprintf(file,"number_of_parameters=%u\n",np);
-  fprintf(file,"number_of_patches=%u\n",grid->np);
+  //fprintf(file,"number_of_patches=%u\n",grid->np);
   fprintf(file,"grid_number=%u\n",grid->gn);
   fprintf(file,"grid_kind=%s\n",grid->kind);
   fprintf(file,"%s\n",ALLOC_FOOTER);
@@ -106,10 +106,11 @@ static void move_checkpoint_file(void)
 static void write_parameters(const Grid_T *const grid)
 {
   printf ("~> Writing all parameters in the checkpoint file ...\n");
+  
   FILE *file = 0;
   const char *const folder = Pgets("iteration_output");
   char file_path[MAX_ARR];
-  char title_line[MAX_ARR];
+  char title_line[MAX_ARR] = {'\0'};
   char *const p_title_line = title_line;/* defined to avoid warning */
   unsigned i,np;
 
@@ -121,9 +122,10 @@ static void write_parameters(const Grid_T *const grid)
   while (parameters_global != 0 && parameters_global[np] != 0)
     np++;
     
-  /* NOTE the order is crucial for reading part */
+  /* NOTE the order is super crucial for reading part */
   sprintf(title_line,"%s",PARAM_HEADER);
   Write(p_title_line,strlen(title_line)+1);
+  
   for (i = 0; i < np; ++i)
   {
     Parameter_T *p = parameters_global[i];
@@ -137,8 +139,10 @@ static void write_parameters(const Grid_T *const grid)
     Write(&p->iterative,1);
     Write(&p->double_flg,1);
   }
+  
   sprintf(title_line,"%s",PARAM_FOOTER);
   Write(p_title_line,strlen(title_line)+1);
+  
   fclose(file);
   
   UNUSED(grid);
@@ -147,11 +151,12 @@ static void write_parameters(const Grid_T *const grid)
 /* write all of the fields in the checkpoint file */
 static void write_fields(const Grid_T *const grid)
 {
-  printf("~> Writing all fields in the checkpoint file ...\n");
+  printf("~> Writing the fields in the checkpoint file ...\n");
+  
   FILE *file = 0;
   const char *const folder = Pgets("iteration_output");
   char file_path[MAX_ARR];
-  char title_line[MAX_ARR];
+  char title_line[MAX_ARR] = {'\0'};
   char *const p_title_line = title_line;/* defined to avoid warning */
   unsigned p;
   
@@ -163,34 +168,72 @@ static void write_fields(const Grid_T *const grid)
   
   sprintf(title_line,"%s",FIELD_HEADER);
   Write(p_title_line,strlen(title_line)+1);
+  
   FOR_ALL_PATCHES(p,grid)
   {
     Patch_T *patch = grid->patch[p];
     unsigned nn = patch->nn;
-    unsigned f;
-    Write(patch->name,strlen(patch->name)+1);
-    Write(&patch->nn,sizeof(patch->nn));
-    Write(&patch->nfld,sizeof(patch->nfld));
+    unsigned f,count_nfld;
+    //Write(patch->name,strlen(patch->name)+1);
+    //Write(&patch->nn,sizeof(patch->nn));
+    //Write(&patch->nfld,sizeof(patch->nfld));
+    
+    /* count number fields we want to save */
+    count_nfld = 0;
+    for (f = 0; f < patch->nfld; ++f)
+    {
+      Field_T *field = patch->pool[f];
+      if (DoSaveField(field))
+        count_nfld++;
+    }
+    Write(&count_nfld,1);
     
     for (f = 0; f < patch->nfld; ++f)
     {
       Field_T *field = patch->pool[f];
-      Write(field->name,strlen(field->name)+1);
-      Write(field->v,nn);
-      Write(field->attr,strlen(field->attr)+1);
+      if (DoSaveField(field))
+      {
+        Write(field->name,strlen(field->name)+1);
+        Write(field->v,nn);
+      }
     }
   }
+  
   sprintf(title_line,"%s",FIELD_FOOTER);
   Write(p_title_line,strlen(title_line)+1);
+  
   fclose(file);  
 }
 
+/* ->return value: if field->name matches 1, otherwise 0 */
+static int DoSaveField(const Field_T *const field)
+{
+  int ret = 0;
+  const char *const kind = field->patch->grid->kind;
+  const char *const name = field->name;
+  
+  if (strcmp_i(kind,"BBN_CubedSpherical_grid"))
+  {
+    if (
+        !strcmp(name,"phi")   ||
+        !strcmp(name,"psi")   ||
+        !strcmp(name,"eta")   ||
+        !strcmp(name,"B0_U0") ||
+        !strcmp(name,"B0_U1") ||
+        !strcmp(name,"B0_U2") ||
+        !strcmp(name,"enthalpy")
+        )
+      ret = 1;
+  }
+  return ret;
+}
+
 /* read checkpoint file and creat grid and parameters accordingly */
-Grid_T *bbn_read_checkpoint(void)
+Grid_T *bbn_init_from_checkpoint(void)
 {
   /* print some descriptions */
   pr_line_custom('=');
-  printf("{ Reading checkpoint file ...\n");
+  printf("{ Initializing from checkpoint file ...\n");
   
   Grid_T *grid = 0;
   FILE *file = 0;
@@ -208,22 +251,101 @@ Grid_T *bbn_read_checkpoint(void)
   /* reading the header for allocations */
   read_header(alloc_info,file);
   
-  /* alloc grid, patches and parameters */
+  /* alloc grid and parameters */
   alloc_db(alloc_info);
- 
+  
   /* read parameters */
   read_parameters(alloc_info,file);
+  
+  grid = alloc_info->grid;
+  
+  /* make the patches */
+  make_patches(grid);
+  
+  /* realizing the geometry */
+  realize_geometry(grid);
+  
+  /* adding all of the fields needed for construction of Initial Data */
+  bbn_add_fields(grid);
+  
+  /* populating the free data part of initial data that we chose ourself */
+  bbn_populate_free_data(grid);
   
   /* read fields content */
   read_fields(alloc_info,file);
   
+  /* close checkpoint */
   fclose(file);
+ 
+  /* initialzing some mediate field */
+  init_mediate_field(grid);
+  
+  /* make normal vectorn on BH horizon 
+  // note: this MUST be before "bbn_partial_derivatives_fields" */
+  bbn_make_normal_vector_on_BH_horizon(grid);
+  
+  /* taking partial derivatives of the fields needed for equations */
+  bbn_partial_derivatives_fields(grid);
 
-  printf("} Reading checkpoint file ==> Done.\n");
+  /* update enthalpy,denthalpy,rho0, drho0, u0, _J^i, _E and _S */
+  bbn_update_stress_energy_tensor(grid,1);
+  
+  /* update _Aij in K^{ij} = A^{ij}+1/3*gamma^{ij}*K and 
+  // _A^{ij} = gamma^10*A^{ij} and _dA^{ij} */
+  bbn_update_Aij(grid);
+  
+  printf("} Initializing from checkpoint file ==> Done.\n");
   pr_clock();
   pr_line_custom('=');
   
   return grid;
+}
+
+/* initialzing some mediate field */
+static void init_mediate_field(Grid_T *const grid)
+{
+  const unsigned np = grid->np;
+  unsigned p;
+  
+  /* W_U[0-2],Beta_U[0-2],B1_U[0-2] */
+  const double Omega_NS_x = Pgetd("NS_Omega_U0");
+  const double Omega_NS_y = Pgetd("NS_Omega_U1");
+  const double Omega_NS_z = Pgetd("NS_Omega_U2");
+  const double C_NS = Pgetd("NS_Center");
+  
+  OpenMP_Patch_Pragma(omp parallel for)
+  for (p = 0; p < np; ++p)
+  {
+    Patch_T *patch = grid->patch[p];
+    unsigned nn = patch->nn;
+    unsigned ijk;
+    
+    bbn_update_B1_U012(patch);
+    bbn_update_Beta_U0(patch);
+    bbn_update_Beta_U1(patch);
+    bbn_update_Beta_U2(patch);
+    
+    if (IsItNSPatch(patch))
+    {
+      REALLOC_v_WRITE_v(W_U0)
+      REALLOC_v_WRITE_v(W_U1)
+      REALLOC_v_WRITE_v(W_U2)
+      
+      for (ijk = 0; ijk < nn; ++ijk)
+      {
+        double x = patch->node[ijk]->x[0];
+        double y = patch->node[ijk]->x[1]-C_NS;
+        double z = patch->node[ijk]->x[2];
+        
+        /* spin part */
+        W_U0[ijk] = Omega_NS_y*z-Omega_NS_z*y;
+        W_U1[ijk] = Omega_NS_z*x-Omega_NS_x*z;
+        W_U2[ijk] = Omega_NS_x*y-Omega_NS_y*x;
+      }
+    }/* end of if (IsItNSPatch(patch)) */
+    
+  }/* end of for (p = 0; p < np; ++p) */
+
 }
 
 /* reading the header for allocations */
@@ -254,10 +376,10 @@ static void read_header(struct checkpoint_header *const alloc_info,FILE *const f
     {
       alloc_info->npar = (unsigned)atoi(v);
     }
-    else if (strstr(line,"number_of_patches"))
-    {
-      alloc_info->npatch = (unsigned)atoi(v);
-    }
+    //else if (strstr(line,"number_of_patches"))
+    //{
+      //alloc_info->npatch = (unsigned)atoi(v);
+    //}
     else if (strstr(line,"grid_number"))
     {
       alloc_info->grid_number = (unsigned)atoi(v);
@@ -273,14 +395,13 @@ static void read_header(struct checkpoint_header *const alloc_info,FILE *const f
   fseek(file,ftell(file)+1,SEEK_SET);/* +1 since fscanf won't read \n */
 }
 
-/* alloc grid, patches and parameters */
+/* alloc parameters and grid */
 static void alloc_db(struct checkpoint_header *const alloc_info)
 {
   printf("~> Allocating parameters and patches ...\n");
   
-  const unsigned npatch = alloc_info->npatch,
-            grid_number = alloc_info->grid_number,
-            npar        = alloc_info->npar;
+  const unsigned grid_number = alloc_info->grid_number,
+                 npar        = alloc_info->npar;
   Grid_T *grid = 0;
   unsigned i;
   
@@ -295,21 +416,12 @@ static void alloc_db(struct checkpoint_header *const alloc_info)
   }
   
   /* allocate grid */
-  grids_global  = 0;
+  free_grid_db();
   grid       = alloc_grid();
   grid->gn   = grid_number;
-  grid->np   = npatch;
+  //grid->np   = npatch;
   grid->kind = alloc_info->grid_kind;
   
-  /* allocate patches */
-  grid->patch = calloc(npatch+1,sizeof(*grid->patch));
-  pointerEr(grid->patch);
-  for (i = 0; i < npatch; ++i)
-  {
-    grid->patch[i] = calloc(1,sizeof(*grid->patch[i]));
-    pointerEr(grid->patch[i]);
-  }
- 
   alloc_info->grid = grid;
 }
 
@@ -345,13 +457,16 @@ static void read_parameters(struct checkpoint_header *const alloc_info,FILE *con
     ReadV(&p->double_flg, mem_size);
     
     //test
-    printf("%s         = %s\n",p->lv,p->rv);
-    printf("rv_ip      = %s\n",p->rv_ip);
-    printf("rv_double  = %f\n",p->rv_double);
-    printf("rv_array   = %p\n",(void *)p->rv_array);
-    printf("rv_n       = %u\n",p->rv_n);
-    printf("iterative  = %u\n",p->iterative);
-    printf("double_flg = %u\n\n\n",p->double_flg);
+    if (0)
+    {
+      printf("%s         = %s\n",p->lv,p->rv);
+      printf("rv_ip      = %s\n",p->rv_ip);
+      printf("rv_double  = %f\n",p->rv_double);
+      printf("rv_array   = %p\n",(void *)p->rv_array);
+      printf("rv_n       = %u\n",p->rv_n);
+      printf("iterative  = %u\n",p->iterative);
+      printf("double_flg = %u\n\n\n",p->double_flg);
+    }
     //end
   }
   /* is the cursor matched? */
@@ -379,29 +494,29 @@ static void read_fields(struct checkpoint_header *const alloc_info,FILE *const f
   FOR_ALL_PATCHES(p,grid)
   {
     Patch_T *patch = grid->patch[p];
-    unsigned f;
+    unsigned f,count_nfld;
     unsigned mem_size;
-    ReadP(patch->name,mem_size);
-    ReadV(&patch->nn,mem_size);
-    ReadV(&patch->nfld,mem_size);
+    //ReadP(patch->name,mem_size);
+    //ReadV(&patch->nn,mem_size);
+    //ReadV(&patch->nfld,mem_size);
     
-    /* allocate fields */
-    assert(patch->nfld);
-    patch->pool = calloc(patch->nfld,sizeof(*patch->pool));
-    pointerEr(patch->pool);
+    ReadV(&count_nfld,mem_size);
+    assert(count_nfld);
     
-    for (f = 0; f < patch->nfld; ++f)
+    for (f = 0; f < count_nfld; ++f)
     {
-      patch->pool[f] = calloc(1,sizeof(*patch->pool[f]));
-      pointerEr(patch->pool[f]);
+      Field_T *field = 0;
+      char *name = 0;
+      double *v  = 0;
       
-      Field_T *field = patch->pool[f];
-      ReadP(field->name,mem_size);
-      ReadP(field->v,mem_size);
-      ReadP(field->attr,mem_size);
-      //test
-      printf("field = %s, attr = %s\n",field->name,field->attr);
-      //end
+      ReadP(name,mem_size);
+      ReadP(v,mem_size);
+      //ReadP(attr,mem_size);
+      
+      field = patch->pool[Ind(name)];
+      _free(name);
+      field->v = v;
+      v = 0;
     }
   }
 
