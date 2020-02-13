@@ -62,5 +62,6 @@ void enable_fields(Grid_T *const grid);
 Patch_T make_temp_patch(const Patch_T *const patch);
 void free_temp_patch(Patch_T *const patch);
 int make_patches(Grid_T *const grid);
+void free_grid_db(void);
 
 

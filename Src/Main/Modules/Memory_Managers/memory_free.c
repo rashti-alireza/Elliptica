@@ -580,5 +580,7 @@ void free_parameter_db(void)
   }
   
   _free(parameters_global);
+  
+  parameters_global = 0;
 }
 
