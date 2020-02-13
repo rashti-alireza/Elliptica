@@ -69,6 +69,9 @@ static void write_header(const Grid_T *const grid)
   sprintf(file_path,"%s/%s_temp",folder,checkpoint_file_name);
   if (access(file_path,F_OK) != -1)/* if file exists */
     abortEr("File already exists.\n");
+  
+  printf("checkpoint file path:\n%s\n",file_patch);
+  fflush(stdout);
     
   file = fopen(file_path,"w");
   pointerEr(file);
@@ -106,6 +109,7 @@ static void move_checkpoint_file(void)
 static void write_parameters(const Grid_T *const grid)
 {
   printf ("~> Writing parameters in checkpoint file ...\n");
+  fflush(stdout);
   
   FILE *file = 0;
   const char *const folder = Pgets("iteration_output");
@@ -152,6 +156,7 @@ static void write_parameters(const Grid_T *const grid)
 static void write_fields(const Grid_T *const grid)
 {
   printf("~> Writing fields in checkpoint file ...\n");
+  fflush(stdout);
   
   FILE *file = 0;
   const char *const folder = Pgets("iteration_output");
@@ -235,6 +240,7 @@ Grid_T *bbn_init_from_checkpoint(void)
   /* print some descriptions */
   pr_line_custom('=');
   printf("{ Initializing from checkpoint file ...\n");
+  fflush(stdout);
   
   Grid_T *grid = 0;
   FILE *file = 0;
@@ -353,6 +359,7 @@ static void init_mediate_field(Grid_T *const grid)
 static void read_header(struct checkpoint_header *const alloc_info,FILE *const file)
 {  
   printf("~> Reading checkpoint file header ...\n");
+  fflush(stdout);
   
   char line[MAX_ARR] = {'\0'};
 
@@ -400,6 +407,7 @@ static void read_header(struct checkpoint_header *const alloc_info,FILE *const f
 static void alloc_db(struct checkpoint_header *const alloc_info)
 {
   printf("~> Allocating parameters and patches ...\n");
+  fflush(stdout);
   
   const unsigned grid_number = alloc_info->grid_number,
                  npar        = alloc_info->npar;
@@ -431,6 +439,7 @@ static void read_parameters(struct checkpoint_header *const alloc_info,FILE *con
 {
   /* read parameter contents */
   printf("~> Reading parameters from checkpoint file ...\n");
+  fflush(stdout);
   
   const unsigned npar = alloc_info->npar;
   char *match_str;
@@ -480,6 +489,8 @@ static void read_parameters(struct checkpoint_header *const alloc_info,FILE *con
 static void read_fields(struct checkpoint_header *const alloc_info,FILE *const file)
 {  
   printf("~> Reading fields from checkpoint file ...\n");
+  fflush(stdout);
+  
   Grid_T *const grid = alloc_info->grid;
   char *match_str;
   unsigned p;
