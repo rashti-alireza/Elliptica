@@ -562,6 +562,20 @@ void free_parameter(const char *const par_name)
   
 }
 
+/* given the parameter, free its content and itself. 
+// Note: it won't affect the parameter data base. */
+void free_given_parameter(Parameter_T *par)
+{
+  if (!par)
+    return;
+    
+  _free(par->lv);
+  _free(par->rv);
+  _free(par->rv_ip);
+  _free(par->rv_array);
+  free(par);
+}
+
 /* free the whole parameter data base */
 void free_parameter_db(void)
 {

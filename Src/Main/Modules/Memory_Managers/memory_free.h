@@ -28,3 +28,4 @@ void free_grid(Grid_T *grid);
 void free_patch(Patch_T *patch);
 void free_parameter(const char *const par_name);
 void free_parameter_db(void);
+void free_given_parameter(Parameter_T *par);
