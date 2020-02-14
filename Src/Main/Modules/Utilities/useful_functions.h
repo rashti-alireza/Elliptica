@@ -41,3 +41,4 @@ unsigned IsItFillingBoxPatch(const Patch_T *const patch);
 unsigned IsItInsideBHPatch(const Patch_T *const patch);
 double spectral_expansion_truncation_error(Field_T *const f);
 void print_spectral_expansion_truncation_error(Grid_T *const grid);
+void shell_command(const char *const cmd);

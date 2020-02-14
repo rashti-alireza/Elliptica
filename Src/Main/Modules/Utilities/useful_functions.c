@@ -775,3 +775,12 @@ void dbprint(const double *v,const unsigned n,const char *const desc)
   
   pr_line();
 }
+
+/* issue a shell command using system */
+void shell_command(const char *const cmd)
+{
+  printf("shell command:\n");
+  printf("$ %s\n",cmd);
+  fflush(stdout);
+  system(cmd);
+}
