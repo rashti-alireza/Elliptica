@@ -5,7 +5,8 @@
 
 #include "bbn_checkpoint.h"
 
-/* write checkpoint for the given grid */
+/* write checkpoint for the given grid 
+// NOTE: the order of writing and reading is crucial */
 void bbn_write_checkpoint(const Grid_T *const grid)
 {
   /* print some descriptions */
@@ -628,4 +629,3 @@ static void read_fields(struct checkpoint_header *const alloc_info,FILE *const f
     abortEr("It could not find the field footer.\n");
   _free(match_str);
 }
- 
