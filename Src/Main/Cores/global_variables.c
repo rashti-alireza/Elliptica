@@ -36,14 +36,16 @@ static void find_inputfile_name(const char *const path)
   if (!last)
     abortEr("The name of the input file must have some extension.\n");
   
+  p = strrchr(path,'/');
+  if (p) p++;
+  else   p = path;
+  
   i = 0;
-  for (p = path; p != last; p++)
+  while(p && p != last)
   {
-    if (*p == '.' || *p == '/')
-      continue;
-      
     name[i] = *p;
     i++;
+    p++;
   }
   
   inputfile_name_global = dup_s(name);
