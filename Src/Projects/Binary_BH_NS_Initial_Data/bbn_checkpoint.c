@@ -12,6 +12,9 @@ void bbn_write_checkpoint(const Grid_T *const grid)
   pr_line_custom('=');
   printf("{ Writing checkpoint file ...\n");
   
+  FILE *file = 0;
+  const char *const out_dir = Pgets("iteration_output");
+  char file_path[MAX_ARR];
   const double dt  = Pgetd("write_checkpoint_every");/* unit is hour */
   const double now = get_time_sec()/(3600);
   static double last_checkpoint_was = 0;/* the time where the last 
@@ -49,6 +52,13 @@ void bbn_write_checkpoint(const Grid_T *const grid)
   
   /* write all fields value in the checkpoint file */
   write_fields(grid);
+  
+  /* successful message */
+  sprintf(file_path,"%s/%s_temp",out_dir,CHECKPOINT_FILE_NAME);
+  file = fopen(file_path,"a");
+  pointerEr(file);
+  fprintf(file,"\n\n\n#checkpoint_file_completed#");
+  fclose(file);
   
   /* replace checkpoint file with the previous */
   move_checkpoint_file();
