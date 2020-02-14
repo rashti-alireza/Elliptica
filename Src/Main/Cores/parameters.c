@@ -69,6 +69,8 @@ void update_parameter_double_format(const char *const lv, const double rv)
     
     sprintf(str_rv,"%15.18f",rv);
     _free(par->rv);
+    
+    /* NOTE:crucial to write in str format for checkpoint file purposes */
     par->rv         = dup_s(str_rv);
     par->rv_double  = rv;
     par->double_flg = 1;
