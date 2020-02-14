@@ -341,6 +341,8 @@ static void read_header(struct checkpoint_header *const alloc_info,FILE *const f
   
   char line[MAX_ARR] = {'\0'};
 
+  fseek(file,0,SEEK_SET);
+  
   /* check the header */
   fscanf(file,"%s",line);
   if (strcmp(line,ALLOC_HEADER))
@@ -410,6 +412,89 @@ static void alloc_db(struct checkpoint_header *const alloc_info)
   grid->kind = alloc_info->grid_kind;
   
   alloc_info->grid = grid;
+}
+
+/* given the name of the checkpoint file, and the checkpoint file. 
+// -> return value: a parameter read from the given checpoint file */
+Parameter_T *parameter_query_from_checkpoint_file(const char *const par_name,FILE *const file)
+{
+  Parameter_T *par = 0;
+  char line[MAX_ARR] = {'\0'};
+  char *match_str = 0;
+  unsigned i,npar;
+  int found;
+  
+  fseek(file,0,SEEK_SET);
+  
+  /* check the header */
+  fscanf(file,"%s",line);
+  if (strcmp(line,ALLOC_HEADER))
+      abortEr("No header found. Checkpoint file got a problem.\n");
+    
+  /* read allocations */
+  while (strcmp(line,ALLOC_FOOTER))
+  {
+    fscanf(file,"%s",line);
+    if (!strcmp(line,ALLOC_FOOTER))
+      break;
+      
+    char *v = strstr(line,"=");/* v -> "=..." */
+    if (!v)
+      abortEr("No value found. Checkpoint file got a problem.\n");
+    v++;
+    
+    if (strstr(line,"number_of_parameters"))
+    {
+      npar = (unsigned)atoi(v);
+    }
+  }
+    
+  /* read the binary parts */
+  fseek(file,ftell(file)+1,SEEK_SET);/* +1 since fscanf won't read \n */
+  
+  /* is the cursor matched? */
+  ReadP(match_str);
+  if (strcmp(match_str,PARAM_HEADER))
+    abortEr("It could not find the parameter header.\n");
+  _free(match_str);
+  
+  found = 0;
+  /* start reading one by one */
+  for (i = 0; i < npar; ++i)
+  {
+    Parameter_T *p = calloc(1,sizeof(*p));
+    pointerEr(p);
+    
+    ReadP(p->lv);
+    ReadP(p->rv);
+    ReadP(p->rv_ip);
+    ReadV(&p->rv_double);
+    ReadP(p->rv_array);
+    ReadV(&p->rv_n);
+    ReadV(&p->iterative);
+    ReadV(&p->double_flg);
+    
+    if (strcmp_i(p->lv,par_name))
+    {
+      par   = p;
+      found = 1;
+      break;
+    }
+    free_given_parameter(p);
+  }
+  
+  if (!found)
+  {
+    free_given_parameter(par);
+    
+    /* is the cursor matched? */
+    ReadP(match_str);
+    if (strcmp(match_str,PARAM_FOOTER))
+      abortEr("It could not find the parameter footer.\n");
+    _free(match_str);
+  }
+ 
+  return par;
 }
 
 /* read parameters */

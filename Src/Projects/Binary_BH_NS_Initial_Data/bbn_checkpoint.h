@@ -49,3 +49,4 @@ static void read_header(struct checkpoint_header *const alloc_info,FILE *const f
 static void alloc_db(struct checkpoint_header *const alloc_info);
 static int DoSaveField(const Field_T *const field);
 static void init_mediate_field(Grid_T *const grid);
+Parameter_T *parameter_query_from_checkpoint_file(const char *const par_name,FILE *const file);
