@@ -57,7 +57,7 @@ void bbn_write_checkpoint(const Grid_T *const grid)
   sprintf(file_path,"%s/%s_temp",out_dir,CHECKPOINT_FILE_NAME);
   file = fopen(file_path,"a");
   pointerEr(file);
-  fprintf(file,"\n\n\n#checkpoint_file_completed#");
+  fprintf(file,"\n\n\n%s",END_MSG);
   fclose(file);
   
   /* replace checkpoint file with the previous */
@@ -66,6 +66,30 @@ void bbn_write_checkpoint(const Grid_T *const grid)
   printf("} Writing checkpoint file ==> Done.\n");
   pr_clock();
   pr_line_custom('=');
+}
+
+/* ->return value: if the chekpoint is completed 1, otherwise 0. */
+int bbn_IsCheckpointFileCompleted(const char *const file_path)
+{
+  int ret = 0;
+  FILE *file;
+  char msg[MAX_ARR];
+  int msg_len = (int)strlen(END_MSG)+1;
+  
+  file = fopen(file_path,"r");
+  pointerEr(file);
+  
+  fseek(file,-msg_len,SEEK_END);
+  fread(msg,msg_len,1,file);
+  
+  if (strstr(msg,END_MSG))
+    ret = 1;
+  else
+    ret = 0;
+      
+  fclose(file);
+  
+  return ret;
 }
 
 /* write header of checkpoint file */
@@ -422,7 +446,7 @@ static void alloc_db(struct checkpoint_header *const alloc_info)
 
 /* given the name of the checkpoint file, and the checkpoint file. 
 // -> return value: a parameter read from the given checpoint file */
-Parameter_T *parameter_query_from_checkpoint_file(const char *const par_name,FILE *const file)
+Parameter_T *bbn_parameter_query_from_checkpoint_file(const char *const par_name,FILE *const file)
 {
   Parameter_T *par = 0;
   char line[MAX_ARR] = {'\0'};

@@ -10,6 +10,7 @@
 #define PARAM_FOOTER "#}PARAM#"
 #define FIELD_HEADER "#{FIELD#"
 #define FIELD_FOOTER "#}FIELD#"
+#define END_MSG      "#checkpoint_file_completed#"
 
 /* this is how we write binary data: first write size and then value. 
 // thus, when we wanna read the data the first one gives of the memory allocation and the next gives us value */
@@ -49,4 +50,5 @@ static void read_header(struct checkpoint_header *const alloc_info,FILE *const f
 static void alloc_db(struct checkpoint_header *const alloc_info);
 static int DoSaveField(const Field_T *const field);
 static void init_mediate_field(Grid_T *const grid);
-Parameter_T *parameter_query_from_checkpoint_file(const char *const par_name,FILE *const file);
+Parameter_T *bbn_parameter_query_from_checkpoint_file(const char *const par_name,FILE *const file);
+int bbn_IsCheckpointFileCompleted(const char *const file_path);
