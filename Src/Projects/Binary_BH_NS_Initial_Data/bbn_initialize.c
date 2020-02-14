@@ -84,13 +84,12 @@ static int IsThereAnyUsefulCheckpointFile(void)
   int cur_folder_index = atoi(cur_folder_affix);
   char prev_out_dir[MAX_ARR];
   char prev_folder_name[MAX_ARR];
-  char prev_data_folder[MAX_ARR];
   char folder_stem[MAX_ARR];
   char out_dir_stem[MAX_ARR];
   char *prev_data_folder_list[MAX_LIST_NUM];
   char prev_data_file_path[MAX_ARR];
   char *aux,str[MAX_ARR];
-  double latest_mtime = 0;
+  long latest_mtime = 0;
   unsigned count,i;
   
   /* if there is no previous folder */
@@ -149,7 +148,7 @@ static int IsThereAnyUsefulCheckpointFile(void)
     if(!stat(str, &st))
     {
       /* if it is later */
-      if (GRT(st.st_mtime,latest_mtime))
+      if (st.st_mtime > latest_mtime)
       {
         /* if the checkpoint file written completely */
         if (bbn_IsCheckpointFileCompleted(str))

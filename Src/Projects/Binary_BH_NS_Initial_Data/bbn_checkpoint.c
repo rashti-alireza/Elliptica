@@ -80,7 +80,7 @@ int bbn_IsCheckpointFileCompleted(const char *const file_path)
   pointerEr(file);
   
   fseek(file,-msg_len,SEEK_END);
-  fread(msg,msg_len,1,file);
+  fread(msg,(unsigned)msg_len,1,file);
   
   if (strstr(msg,END_MSG))
     ret = 1;
