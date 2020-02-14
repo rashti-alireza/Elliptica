@@ -196,7 +196,6 @@ static int IsThereAnyUsefulCheckpointFile(void)
     free_given_parameter(par);
     i++;
   }
-  
   fclose(checkpoint_file);
   
   /* set the path to checkpoint file */
@@ -204,6 +203,8 @@ static int IsThereAnyUsefulCheckpointFile(void)
     Psets("checkpoint_file_path",prev_data_file_path);
   
   /* remove the current directory */
+  sprintf(str,"rm -rf %s",cur_out_dir);
+  shell_command(str);
   
   return ret;
 }
