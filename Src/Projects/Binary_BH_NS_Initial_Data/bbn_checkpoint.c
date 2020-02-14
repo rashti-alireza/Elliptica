@@ -14,7 +14,7 @@ void bbn_write_checkpoint(const Grid_T *const grid)
     
   /* print some descriptions */
   pr_line_custom('=');
-  printf("{ Writing checkpoint file ...\n");
+  printf("{ Writing checkpoint file ...\n\n");
   
   FILE *file = 0;
   const char *const out_dir = Pgets("iteration_output");
@@ -108,8 +108,6 @@ static void write_header(const Grid_T *const grid)
   if (!access(file_path,F_OK))/* if file exists */
     abortEr("File already exists.\n");
   
-  printf("checkpoint file path:\n%s\n",file_path);
-  fflush(stdout);
     
   file = fopen(file_path,"w");
   pointerEr(file);
@@ -137,12 +135,15 @@ static void move_checkpoint_file(void)
   sprintf(command,"mv %s/%s_temp %s/%s",
           folder,CHECKPOINT_FILE_NAME,folder,CHECKPOINT_FILE_NAME);
   shell_command(command);
+  
+  printf("checkpoint file path:\n%s/%s\n\n",folder,CHECKPOINT_FILE_NAME);
+  fflush(stdout);
 }
 
 /* write all of the pertinent parameters in the checkpoint file */
 static void write_parameters(const Grid_T *const grid)
 {
-  printf ("~> Writing parameters in checkpoint file ...\n");
+  printf ("~> Writing parameters in checkpoint file ...\n\n");
   fflush(stdout);
   
   FILE *file = 0;
@@ -189,7 +190,7 @@ static void write_parameters(const Grid_T *const grid)
 /* write all of the fields in the checkpoint file */
 static void write_fields(const Grid_T *const grid)
 {
-  printf("~> Writing fields in checkpoint file ...\n");
+  printf("~> Writing fields in checkpoint file ...\n\n");
   fflush(stdout);
   
   FILE *file = 0;
