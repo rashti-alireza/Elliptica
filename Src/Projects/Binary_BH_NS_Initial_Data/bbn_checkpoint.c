@@ -9,9 +9,6 @@
 // NOTE: the order of writing and reading is crucial */
 void bbn_write_checkpoint(const Grid_T *const grid)
 {
-  if(Pgeti("STOP"))
-    return;
-    
   /* print some descriptions */
   pr_line_custom('=');
   printf("{ Writing checkpoint file ...\n\n");
@@ -25,7 +22,7 @@ void bbn_write_checkpoint(const Grid_T *const grid)
                                         // checkpoint happened in hours */
   
   /* some checks */
-  /*if (LSS(dt+last_checkpoint_was,now))
+  /*if (LSS(dt+last_checkpoint_was,now) && !Pgeti("STOP"))
   {
     printf("~> It's early for writing checkpoint.\n");
     printf("} Writing checkpoint ==> Done.\n");
@@ -219,6 +216,9 @@ static void write_fields(const Grid_T *const grid)
     //Write(&patch->nn,sizeof(patch->nn));
     //Write(&patch->nfld,sizeof(patch->nfld));
     
+    if (IsItInsideBHPatch(patch))
+      continue;
+      
     /* count number fields we want to save */
     count_nfld = 0;
     for (f = 0; f < patch->nfld; ++f)
@@ -606,6 +606,9 @@ static void read_fields(struct checkpoint_header *const alloc_info,FILE *const f
     //ReadP(patch->name);
     //ReadV(&patch->nn);
     //ReadV(&patch->nfld);
+    
+    if (IsItInsideBHPatch(patch))
+      continue;
     
     ReadV(&count_nfld);
     assert(count_nfld);
