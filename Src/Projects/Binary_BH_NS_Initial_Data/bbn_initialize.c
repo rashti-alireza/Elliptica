@@ -13,12 +13,12 @@ Grid_T *bbn_initialize_next_grid(Grid_T *const grid_prev)
   
   if (!grid_prev)/* if grid is empty come up with an initialization */
   {
-    /* can we resume from a useful checkpoint file */
-    if (IsThereAnyUsefulCheckpointFile())
-      grid_next = load_checkpoint_file();
-      
     /* if we wanna use checkpoint file */
-    else if (Pcmps("BH_NS_initialization","checkpoint_file"))
+    if (Pcmps("BH_NS_initialization","checkpoint_file"))
+      grid_next = load_checkpoint_file();
+    
+    /* can we resume from a useful checkpoint file */
+    else if (IsThereAnyUsefulCheckpointFile())
       grid_next = load_checkpoint_file();
       
     /* if we use TOV and Kerr-Schil black hole approximation */
