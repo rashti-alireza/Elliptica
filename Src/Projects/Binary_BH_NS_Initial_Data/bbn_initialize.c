@@ -93,9 +93,6 @@ static int IsThereAnyUsefulCheckpointFile(void)
   double latest_mtime = 0;
   unsigned count,i;
   
-  //test
-  cur_folder_index = 1;
-  //end
   /* if there is no previous folder */
   if (!cur_folder_index)
     return 0;
@@ -139,7 +136,6 @@ static int IsThereAnyUsefulCheckpointFile(void)
     }
     ent = readdir(prev_dir);
   }
-  
   closedir(prev_dir);  
   
   /* having found the data folder, find the latest checkpoint file */
@@ -155,11 +151,14 @@ static int IsThereAnyUsefulCheckpointFile(void)
       /* if it is later */
       if (GRT(st.st_mtime,latest_mtime))
       {
-        sprintf(prev_data_file_path,"%s",str);
-        latest_mtime = st.st_mtime;
-        ret = 1;/* ---> where we set ret = 1 */
+        /* if the checkpoint file written completely */
+        if (bbn_IsCheckpointFileCompleted(str))
+        {
+          sprintf(prev_data_file_path,"%s",str);
+          latest_mtime = st.st_mtime;
+          ret = 1;/* ---> where we set ret = 1 */
+        }
       }
-    
     }/* end of if(!stat(str, &st)) */
   }
   
@@ -169,42 +168,49 @@ static int IsThereAnyUsefulCheckpointFile(void)
   
   /* some checks to make sure the checkpoint file is valid */
   /* NS & BH masses, NS & BH spins, EoS, separation, RollOff_distance */
-  checkpoint_file = fopen(prev_data_file_path,"r");
-  pointerEr(checkpoint_file);
-  const char *check_quantities[] = {"NS_baryonic_mass",
-                                    "NS_Omega_U0",
-                                    "NS_Omega_U1",
-                                    "NS_Omega_U2",
-                                    "EoS_K",
-                                    "BH_mass",
-                                    "BH_X_U2",
-                                    "BH_NS_separation",
-                                    "RollOff_distance",
-                                    0};
-  i = 0;
-  while (check_quantities[i])
-  {
-    par = parameter_query_from_checkpoint_file(check_quantities[i],checkpoint_file);
-    if (!Pcmps(check_quantities[i],par->rv)) 
-    {
-      printf("~> checkpoint file is not matched for %s\n",check_quantities[i]);
-      fflush(stdout);
-      ret = 0;
-      free_given_parameter(par);
-      break;
-    }
-    free_given_parameter(par);
-    i++;
-  }
-  fclose(checkpoint_file);
-  
-  /* set the path to checkpoint file */
   if (ret)
-    Psets("checkpoint_file_path",prev_data_file_path);
+  {
+    checkpoint_file = fopen(prev_data_file_path,"r");
+    pointerEr(checkpoint_file);
+    const char *check_quantities[] = {"NS_baryonic_mass",
+                                      "NS_Omega_U0",
+                                      "NS_Omega_U1",
+                                      "NS_Omega_U2",
+                                      "EoS_K",
+                                      "BH_mass",
+                                      "BH_X_U2",
+                                      "BH_NS_separation",
+                                      "RollOff_distance",
+                                      0};
+    i = 0;
+    while (check_quantities[i])
+    {
+      par = bbn_parameter_query_from_checkpoint_file(check_quantities[i],checkpoint_file);
+      if (!Pcmps(check_quantities[i],par->rv)) 
+      {
+        printf("~> checkpoint file is not matched for %s\n",check_quantities[i]);
+        fflush(stdout);
+        ret = 0;/* --> set ret = 0 */
+        free_given_parameter(par);
+        break;
+      }
+      free_given_parameter(par);
+      i++;
+    }
+    fclose(checkpoint_file);
+  }
   
-  /* remove the current directory */
-  sprintf(str,"rm -rf %s",cur_out_dir);
-  shell_command(str);
+  /* set the path of checkpoint file and some preparation */
+  if (ret)
+  {
+    Psets("checkpoint_file_path",prev_data_file_path);
+    
+    printf("\n~> checkpoint file found at:\n%s\n\n",prev_data_file_path);
+    
+    /* remove the current directory */
+    sprintf(str,"rm -rf %s",cur_out_dir);
+    shell_command(str);
+  }
   
   return ret;
 }
