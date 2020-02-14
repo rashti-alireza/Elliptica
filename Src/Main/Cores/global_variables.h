@@ -15,5 +15,5 @@ char *path_global;/* path of a directory where input file is */
 char *inputfile_name_global;/* name of inputfile */
 
 int init_global_variables(const char *const path);
-static void make_path_global(void);
+static void make_path_global(const char *const path);
 static void find_inputfile_name(const char *const path);

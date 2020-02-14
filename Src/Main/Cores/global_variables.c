@@ -12,7 +12,7 @@ int init_global_variables(const char *const path)
   grids_global        = 0;
   parameters_global   = 0;
   projects_global     = 0;
-  make_path_global();
+  make_path_global(path);
   find_inputfile_name(path);
   
   return EXIT_SUCCESS;
@@ -48,26 +48,23 @@ static void find_inputfile_name(const char *const path)
   
   inputfile_name_global = dup_s(name);
   
-  /*TEST_START
-    //printf("globale_inputfile_name = %s\n",global_inputfile_name);
-  end */
-  
 }
 
-/* making global_path which shows the location of input file */
-static void make_path_global(void)
+/* making global_path where the location of input file is. */
+static void make_path_global(const char *const path)
 {
   char dir[MAX_ARR] = {'\0'};
   char *p;
   
-  p = getcwd(dir,sizeof(dir));
-  pointerEr(p);
+  sprintf(dir,"%s",path);
+  p = strrchr(dir,'/');
+  
+  if (p) 
+    p[0] = '\0';
+  else
+    sprintf(dir,".");
   
   path_global = dup_s(dir);
   
-  /*TEST_START
-    //printf("globale_path = %s\n",global_path);
-  end */
- 
 }
 
