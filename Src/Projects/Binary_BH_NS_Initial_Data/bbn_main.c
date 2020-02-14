@@ -41,14 +41,14 @@ int Binary_BH_NS_Initial_Data(void)
     /* free previous grid and related parameters */
     bbn_free_grid_and_its_parameters(grid_prev);
     
-    /* writing checkpoints */
-    bbn_write_checkpoint(grid_next);
-    
     /* solve the elliptic equations for the given grid */
     bbn_solve_elliptic_eqs(grid_next);
     
     /* study and analyse the new grid */
     bbn_study_initial_data(grid_next);
+    
+    /* writing checkpoints */
+    bbn_write_checkpoint(grid_next);
     
     /* extrapolate metric fields inside the BH */
     bbn_extrapolate_metric_fields_insideBH(grid_next);
@@ -59,9 +59,6 @@ int Binary_BH_NS_Initial_Data(void)
   }
   grid = grid_next;/* final grid */
   
-  /* writing checkpoints */
-  bbn_write_checkpoint(grid);
-    
   /* free grid */
   free_grid(grid);
   
