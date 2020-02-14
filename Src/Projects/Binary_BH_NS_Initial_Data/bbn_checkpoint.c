@@ -9,6 +9,9 @@
 // NOTE: the order of writing and reading is crucial */
 void bbn_write_checkpoint(const Grid_T *const grid)
 {
+  if(Pgeti("STOP"))
+    return;
+    
   /* print some descriptions */
   pr_line_custom('=');
   printf("{ Writing checkpoint file ...\n");

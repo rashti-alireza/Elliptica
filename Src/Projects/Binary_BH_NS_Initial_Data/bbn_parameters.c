@@ -37,5 +37,7 @@ void bbn_set_default_parameters(void)
   
   /* stopping criteria for the root finder */
   Pset_default("RootFinder_Tolerance","10E-10");
-  
+ 
+  /* if stop = 1, the main iteration loop is halted */
+  Pseti("STOP",0);
 }

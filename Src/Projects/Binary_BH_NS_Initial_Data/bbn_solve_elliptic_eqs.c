@@ -8,6 +8,9 @@
 /* solving initial data equations for the given grid */
 void bbn_solve_elliptic_eqs(Grid_T *const grid)
 {
+  if (Pgeti("STOP"))
+    return;
+    
   pr_line_custom('='); 
   printf("{ Solving elliptic equations for binary BH-NS ...\n");
   

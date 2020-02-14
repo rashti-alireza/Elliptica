@@ -9,6 +9,9 @@
 // it increments the solving_iteration_number by 1. */
 void bbn_study_initial_data(Grid_T *const grid)
 {
+  if (Pgeti("STOP"))
+    return;
+    
   pr_clock();
   pr_line_custom('=');
   printf("{ Studying initial data for binary BH and NS ...\n");
