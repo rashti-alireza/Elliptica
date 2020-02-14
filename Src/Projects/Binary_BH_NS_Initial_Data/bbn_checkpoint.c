@@ -94,15 +94,11 @@ static void write_header(const Grid_T *const grid)
 static void move_checkpoint_file(void)
 {
   const char *const folder = Pgets("iteration_output");
-  char file_path[MAX_ARR];
   char command[2*MAX_ARR];
   
-  sprintf(file_path,"%s/%s",folder,CHECKPOINT_FILE_NAME);
   sprintf(command,"mv %s/%s_temp %s/%s",
           folder,CHECKPOINT_FILE_NAME,folder,CHECKPOINT_FILE_NAME);
-  printf("shell command:\n$ mv %s_temp %s\n",CHECKPOINT_FILE_NAME,CHECKPOINT_FILE_NAME);
-  fflush(stdout);
-  system(command);
+  shell_command(command);
 }
 
 /* write all of the pertinent parameters in the checkpoint file */

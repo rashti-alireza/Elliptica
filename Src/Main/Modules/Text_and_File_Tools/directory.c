@@ -24,10 +24,8 @@ char *make_directory(const char *const path,const char *const name)
     i++;
   }while(!stat(dir, &st));
   
-  printf("shell command:\n$ mkdir %s\n\n",dir);
-  fflush(stdout);
   sprintf(command,"mkdir %s",dir);
-  system(command);
+  shell_command(command);
   
   folder = dup_s(dir);
   

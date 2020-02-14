@@ -3,6 +3,7 @@
 #include <sys/stat.h>
 #include <unistd.h>
 #include "error_handling_lib.h"
+#include "utilities_lib.h"
 
 #define MAX_ARR 400
 
