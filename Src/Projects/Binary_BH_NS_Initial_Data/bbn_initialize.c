@@ -9,6 +9,9 @@
 // ->return value: the next grid as a result of this initialization. */
 Grid_T *bbn_initialize_next_grid(Grid_T *const grid_prev)
 {
+  if(Pgeti("STOP"))
+    return 0;
+    
   Grid_T *grid_next = 0;
   
   if (!grid_prev)/* if grid is empty come up with an initialization */
