@@ -21,8 +21,7 @@ void bbn_write_checkpoint(const Grid_T *const grid)
   static double last_checkpoint_was = 0;/* the time where the last 
                                         // checkpoint happened in hours */
   
-  /* some checks */
-  /*if (LSS(dt+last_checkpoint_was,now) && !Pgeti("STOP"))
+  /*if (dt+last_checkpoint_was < now && !Pgeti("STOP"))
   {
     printf("~> It's early for writing checkpoint.\n");
     printf("} Writing checkpoint ==> Done.\n");
@@ -31,7 +30,6 @@ void bbn_write_checkpoint(const Grid_T *const grid)
     return;
   }*/
   
-  /* some checks */
   if (!grid)
   {
     printf("~> The given grid is empty.\n");
@@ -54,7 +52,7 @@ void bbn_write_checkpoint(const Grid_T *const grid)
   /* write all fields value in the checkpoint file */
   write_fields(grid);
   
-  /* successful message */
+  /* successful message at the end of the checkpoint file */
   sprintf(file_path,"%s/%s_temp",out_dir,CHECKPOINT_FILE_NAME);
   file = fopen(file_path,"a");
   pointerEr(file);
