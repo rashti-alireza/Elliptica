@@ -526,9 +526,12 @@ int make_parameters(const char *const path)
 /* ->return value: count the total number of iterations */
 unsigned total_iterations_ip(void)
 {
-  unsigned max = 0;
+  unsigned max = (unsigned)PgetiEZ("total_iterations_ip");
   char *subs = 0;
   unsigned l = 0,i;
+  
+  if (max != INT_MAX)/* if "total_iterations_ip" par is set */
+    return max;
   
   i = 0;
   while (parameters_global != 0 && parameters_global[i] != 0)
@@ -552,6 +555,8 @@ unsigned total_iterations_ip(void)
     }
     i++;
   }
+  
+  Pseti("total_iterations_ip",max+1);
   
   return max+1;/* +1 since the last value also is counted */
 }
