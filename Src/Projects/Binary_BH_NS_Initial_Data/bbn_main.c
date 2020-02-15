@@ -25,14 +25,17 @@ int Binary_BH_NS_Initial_Data(void)
   /* the outer most iteration algorithm: */
   Grid_T *grid_prev = 0, *grid_next = 0, *grid = 0;
   unsigned iter = 0;
-  
-  /* update parameters and directories */
-  update_parameters_and_directories(iter);
     
   /* main iteration loop */
   while(!Pgeti("STOP"))
   {
-    printf("{ Outermost iteration %u ...\n",iter+1);
+    printf("{ Outermost iteration %u ...\n",iter);
+    
+    /* update parameters and directories */
+    update_parameters_and_directories(iter);
+  
+    /* writing checkpoints */
+    bbn_write_checkpoint(grid_prev);
     
     /* preparing fields and grid according to the given previous grid */
     grid_next = bbn_initialize_next_grid(grid_prev);
@@ -46,9 +49,6 @@ int Binary_BH_NS_Initial_Data(void)
     /* study and analyse the new grid */
     bbn_study_initial_data(grid_next);
     
-    /* writing checkpoints */
-    bbn_write_checkpoint(grid_next);
-    
     /* extrapolate metric fields inside the BH */
     bbn_extrapolate_metric_fields_insideBH(grid_next);
     
@@ -57,12 +57,9 @@ int Binary_BH_NS_Initial_Data(void)
     iter++;
     
     printf("} Outermost iteration %u ==> Done.\n",iter);
-    
-    /* update parameters and directories */
-    update_parameters_and_directories(iter);
   }
   grid = grid_next;/* final grid */
-  
+    
   /* free grid */
   free_grid(grid);
   
@@ -132,7 +129,8 @@ static void Elliptic_Eqs_Convergence_Test_BBN(void)
 // new output directory is made based on changing of resolution. */
 static void update_parameters_and_directories(const unsigned iter)
 {
-  const unsigned N_iter_par = total_iterative_parameters_ip();
+  const unsigned N_iter_main_loop = total_iterations_ip();
+  const unsigned N_iter_par       = total_iterative_parameters_ip();
   unsigned n[3];/* number of points */
   const char *path_par = Pgets("output_directory_path");
   char folder_name_next[1000] = {'\0'},
@@ -140,13 +138,13 @@ static void update_parameters_and_directories(const unsigned iter)
   char *folder_path,*folder_path2;
   unsigned i;
   
-  /* if total iteration is finished, stop */
-  if (iter >= total_iterations_ip())
+  /* if exceeds total iteration => stop */
+  if (iter >= N_iter_main_loop || Pgeti("STOP"))
   {
     Pseti("STOP",1);
     return;
-  }
-    
+  } 
+  
   /* find the previous folder name */
   n[0] = (unsigned)PgetiEZ("n_a");
   n[1] = (unsigned)PgetiEZ("n_b");
