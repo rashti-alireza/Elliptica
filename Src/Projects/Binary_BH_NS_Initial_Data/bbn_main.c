@@ -33,12 +33,12 @@ int Binary_BH_NS_Initial_Data(void)
     
     /* update parameters and directories */
     update_parameters_and_directories(iter);
-  
-    /* writing checkpoints */
-    bbn_write_checkpoint(grid_prev);
     
     /* preparing fields and grid according to the given previous grid */
     grid_next = bbn_initialize_next_grid(grid_prev);
+    
+    /* write checkpoint before updating the params for the next grid */
+    bbn_write_checkpoint(grid_next);
     
     /* free previous grid and related parameters */
     bbn_free_grid_and_its_parameters(grid_prev);
@@ -127,10 +127,12 @@ static void Elliptic_Eqs_Convergence_Test_BBN(void)
 
 /* updating iterative parameters, STOP parameter and output directories.
 // new output directory is made based on changing of resolution. */
-static void update_parameters_and_directories(const unsigned iter)
+static void update_parameters_and_directories(const unsigned main_loop_iter)
 {
-  const unsigned N_iter_main_loop = total_iterations_ip();
-  const unsigned N_iter_par       = total_iterative_parameters_ip();
+  const unsigned total_iters = total_iterations_ip();
+  const unsigned total_ipars = total_iterative_parameters_ip();
+  const unsigned iter_n = (unsigned)Pgeti("iteration_number");
+  unsigned iter;/* number of iterations have been performed for the simulation */
   unsigned n[3];/* number of points */
   const char *path_par = Pgets("output_directory_path");
   char folder_name_next[1000] = {'\0'},
@@ -138,10 +140,26 @@ static void update_parameters_and_directories(const unsigned iter)
   char *folder_path,*folder_path2;
   unsigned i;
   
+  /* when starting from checkpoint, iter_n > main_loop_iter 
+  // so to avoid redo the simulations we set iter to the largest. */
+  if (iter_n > main_loop_iter)
+  {
+    iter = iter_n;
+    /* updating iterative parameters for the new round of iteration */
+    Pseti("iteration_number",(int)iter+1);/* +1 is crucial */
+  }
+  else
+  {
+    iter = main_loop_iter;
+    /* updating iterative parameters for the new round of iteration */
+    Pseti("iteration_number",(int)iter);
+  }
+  
   /* if exceeds total iteration => stop */
-  if (iter >= N_iter_main_loop || Pgeti("STOP"))
+  if (iter >= total_iters)
   {
     Pseti("STOP",1);
+    Pseti("iteration_number",(int)iter);
     return;
   } 
   
@@ -151,17 +169,14 @@ static void update_parameters_and_directories(const unsigned iter)
   n[2] = (unsigned)PgetiEZ("n_c");
   sprintf(folder_name_prev,"BBN_%ux%ux%u",n[0],n[1],n[2]);  
   
-  /* updating some parameters for the new round of iteration */
-  Pseti("iteration_number",(int)iter);
-  
   /* update the parameter accoding to the iteration number */
   update_iterative_parameter_ip(iter);
   
   /* print the iterative parameters */
-  if (N_iter_par)
+  if (total_ipars && main_loop_iter)
   {
     printf("Iterative parameters:\n");
-    for (i = 0; i < N_iter_par; ++i)
+    for (i = 0; i < total_ipars; ++i)
       printf("|--> %-30s = %-15s\n",par_name_ip(i),par_value_str_ip(i));
     printf("\n");
   }
