@@ -937,9 +937,9 @@ static void get_dp_1stOrder(const Patch_T *const patch,SpecDerivative_Func_T **f
     if (depend[i])/* if this direction depends on _a_,_b_,_c_ */
     {
       if (func[i] == derivative_ChebyshevExtrema_Tn_1stOrder)
-        dp[i] = i;/* means _N0_or _N1_or _N2_ */
+        dp[i] = (Dd_T)i;/* means _N0_or _N1_or _N2_ */
       else if (func[i] == derivative_ChebyshevNodes_Tn_1stOrder)
-        dp[i] = i;/* means _N0_or _N1_or _N2_ */
+        dp[i] = (Dd_T)i;/* means _N0_or _N1_or _N2_ */
       else
         abortEr("There is no such derivative function defined for this function.\n");
 

@@ -1145,7 +1145,7 @@ int derivative_tests(Grid_T *const grid)
     }
     
     /* read F from data base */
-    flg = read_F(F,DataBase_func,(FUNC_E)fi);
+    flg = read_F(F,DataBase_func,(enum FUNC_E)fi);
     
     /* if the is no derivative for this function it continues */
     if (flg == NO) continue;
