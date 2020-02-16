@@ -410,7 +410,7 @@ static unsigned IsAvailable_2d(Field_T *const f,const unsigned dir1,const unsign
   basis[dir2]       = patch->basis[dir2];
   
   /* finding the unrelated directions */
-  for (e = 0 ; e < 3; ++e)
+  for (e = _N0_; e <= _N2_; ++e)
   {
     if (e == dir1 || e == dir2)
     {
@@ -433,7 +433,7 @@ static unsigned IsAvailable_2d(Field_T *const f,const unsigned dir1,const unsign
   else
   {
     /* check the coeffs be pristine */
-    for (e = 0 ; e < 3; ++e)
+    for (e = _N0_; e <= _N2_; ++e)
     {
       /* for unrelated */
       if (DIR[e])
