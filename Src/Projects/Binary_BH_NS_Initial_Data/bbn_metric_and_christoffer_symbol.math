@@ -23,7 +23,7 @@ Ccode["#include "bbn_headers.h""];
 Ccode["void bbn_make_metric_and_Gamma_and_derivatives(Grid_T *const grid)\n{"];
 Ccode["  const unsigned np = grid->np;"];
 Ccode["  unsigned p;\n"];
-Ccode["  OpenMP_1d_Pragma(omp parallel for)"];
+Ccode["  OpenMP_Patch_Pragma(omp parallel for)"];
 Ccode["  for(p = 0; p < np; ++p)"];
 Ccode["  {"];
 Ccode["    Patch_T *patch = grid->patch[p];"];
@@ -354,7 +354,7 @@ Ccode["}"];
 `{`
 Ccode["  const unsigned np = grid->np;"];
 Ccode["  unsigned p;\n"];
-Ccode["  OpenMP_1d_Pragma(omp parallel for)"];
+Ccode["  OpenMP_Patch_Pragma(omp parallel for)"];
 Ccode["  for(p = 0; p < np; ++p)"];
 Ccode["  {"];
 Ccode["  Patch_T *patch = grid->patch[p];"];

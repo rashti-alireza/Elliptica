@@ -12,7 +12,7 @@ void bbn_free_data_Ricci(Grid_T *const grid)
   const unsigned np = grid->np;
   unsigned p;
 
-  OpenMP_1d_Pragma(omp parallel for)
+  OpenMP_Patch_Pragma(omp parallel for)
   for(p = 0; p < np; ++p)
   {
     Patch_T *patch = grid->patch[p];

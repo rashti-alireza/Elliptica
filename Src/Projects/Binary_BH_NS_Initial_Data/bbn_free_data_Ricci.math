@@ -15,7 +15,7 @@ Ccode["#include "bbn_headers.h"\n\n"];
 Ccode["void bbn_free_data_Ricci(Grid_T *const grid)\n{"];
 Ccode["  const unsigned np = grid->np;"];
 Ccode["  unsigned p;\n"];
-Ccode["  OpenMP_1d_Pragma(omp parallel for)"];
+Ccode["  OpenMP_Patch_Pragma(omp parallel for)"];
 Ccode["  for(p = 0; p < np; ++p)"];
 Ccode["  {"];
 Ccode["    Patch_T *patch = grid->patch[p];"];

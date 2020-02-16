@@ -17,7 +17,7 @@ void bbn_make_metric_and_Gamma_and_derivatives(Grid_T *const grid)
   const unsigned np = grid->np;
   unsigned p;
 
-  OpenMP_1d_Pragma(omp parallel for)
+  OpenMP_Patch_Pragma(omp parallel for)
   for(p = 0; p < np; ++p)
   {
     Patch_T *patch = grid->patch[p];
@@ -529,7 +529,7 @@ void bbn_free_metric_and_Gamma_and_derivatives(Grid_T *const grid)
   const unsigned np = grid->np;
   unsigned p;
 
-  OpenMP_1d_Pragma(omp parallel for)
+  OpenMP_Patch_Pragma(omp parallel for)
   for(p = 0; p < np; ++p)
   {
   Patch_T *patch = grid->patch[p];
