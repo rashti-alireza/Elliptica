@@ -13,9 +13,20 @@ void bbn_write_checkpoint(const Grid_T *const grid)
   pr_line_custom('=');
   printf("{ Writing checkpoint file ...\n\n");
   
+  if (!grid)
+  {
+    printf("~> The given grid is empty.\n");
+    printf("} Writing checkpoint ==> Done.\n");
+    pr_clock();
+    pr_line_custom('=');
+    return;
+  }
+  
   FILE *file = 0;
   const char *const out_dir = Pgets("iteration_output");
   char file_path[MAX_ARR];
+  char msg[MAX_ARR];
+  char *const p_msg = msg;/* defined to avoid gcc warning */
   const double dt  = Pgetd("write_checkpoint_every");/* unit is hour */
   const double now = get_time_sec()/(3600);
   static double last_checkpoint_was = 0;/* the time where the last 
@@ -29,15 +40,6 @@ void bbn_write_checkpoint(const Grid_T *const grid)
     pr_line_custom('=');
     return;
   }*/
-  
-  if (!grid)
-  {
-    printf("~> The given grid is empty.\n");
-    printf("} Writing checkpoint ==> Done.\n");
-    pr_clock();
-    pr_line_custom('=');
-    return;
-  }
   
   last_checkpoint_was = now;
   
@@ -56,7 +58,8 @@ void bbn_write_checkpoint(const Grid_T *const grid)
   sprintf(file_path,"%s/%s_temp",out_dir,CHECKPOINT_FILE_NAME);
   file = fopen(file_path,"a");
   pointerEr(file);
-  fprintf(file,"\n\n\n%s",END_MSG);
+  sprintf(msg,"%s",END_MSG);
+  Write(p_msg,strlen(msg)+1);
   fclose(file);
   
   /* replace checkpoint file with the previous */
@@ -79,7 +82,7 @@ int bbn_IsCheckpointFileCompleted(const char *const file_path)
   pointerEr(file);
   
   fseek(file,-msg_len,SEEK_END);
-  fread(msg,(unsigned)msg_len,1,file);
+  assert(fread(msg,(unsigned)msg_len,1,file));
   
   if (strstr(msg,END_MSG))
     ret = 1;
