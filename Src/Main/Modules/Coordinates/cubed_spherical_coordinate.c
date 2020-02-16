@@ -483,7 +483,7 @@ static void populate_left_NS(Grid_T *const grid,const unsigned pn)
     Patch_T *const patch = grid->patch[p];
     Field_T *R2 = add_field("surface_function",0,patch,NO);
     double *R2_array;
-    Flag_T side = p-pn;
+    Flag_T side = (Flag_T)(p-pn);
     char name[100] = {'\0'};
     char var[100] = {'\0'};
     struct Ret_S ret;
@@ -677,7 +677,7 @@ void populate_right_BH(Grid_T *const grid,const unsigned pn)
     Patch_T *const patch = grid->patch[p];
     Field_T *R2 = add_field("surface_function",0,patch,NO);
     double *R2_array;
-    Flag_T side = p-pn;
+    Flag_T side = (Flag_T)(p-pn);
     char name[100] = {'\0'};
     char var[100] = {'\0'};
     struct Ret_S ret;
@@ -871,7 +871,7 @@ static void populate_central_NS(Grid_T *const grid,const unsigned pn)
     Patch_T *const patch = grid->patch[p];
     Field_T *R2 = add_field("surface_function",0,patch,NO);
     double *R2_array;
-    Flag_T side = p-pn;
+    Flag_T side = (Flag_T)(p-pn);
     char name[100] = {'\0'};
     char var[100] = {'\0'};
     struct Ret_S ret;
@@ -1065,7 +1065,7 @@ static void populate_right_NS(Grid_T *const grid,const unsigned pn)
     Patch_T *const patch = grid->patch[p];
     Field_T *R2 = add_field("surface_function",0,patch,NO);
     double *R2_array;
-    Flag_T side = p-pn;
+    Flag_T side = (Flag_T)(p-pn);
     char name[100] = {'\0'};
     char var[100] = {'\0'};
     struct Ret_S ret;
@@ -1259,7 +1259,7 @@ static void populate_right_NS_surrounding(Grid_T *const grid,const unsigned pn)
     Patch_T *const patch = grid->patch[p];
     Field_T *R1 = add_field("surface_function",0,patch,NO);
     double *R1_array;
-    Flag_T side = p-pn;
+    Flag_T side = (Flag_T)(p-pn);
     char name[100] = {'\0'};
     char var[100] = {'\0'};
     struct Ret_S ret;
@@ -1453,7 +1453,7 @@ static void populate_right_BH_surrounding(Grid_T *const grid,const unsigned pn)
     Patch_T *const patch = grid->patch[p];
     Field_T *R1 = add_field("surface_function",0,patch,NO);
     double *R1_array;
-    Flag_T side = p-pn;
+    Flag_T side = (Flag_T)(p-pn);
     char name[100] = {'\0'};
     char var[100] = {'\0'};
     struct Ret_S ret;
@@ -1647,7 +1647,7 @@ static void populate_left_NS_surrounding(Grid_T *const grid,const unsigned pn)
     Patch_T *const patch = grid->patch[p];
     Field_T *R1 = add_field("surface_function",0,patch,NO);
     double *R1_array;
-    Flag_T side = p-pn;
+    Flag_T side = (Flag_T)(p-pn);
     char name[100] = {'\0'};
     char var[100] = {'\0'};
     struct Ret_S ret;
@@ -1841,7 +1841,7 @@ static void populate_central_BH_surrounding(Grid_T *const grid,const unsigned pn
     Patch_T *const patch = grid->patch[p];
     Field_T *R1 = add_field("surface_function",0,patch,NO);
     double *R1_array;
-    Flag_T side = p-pn;
+    Flag_T side = (Flag_T)(p-pn);
     char name[100] = {'\0'};
     char var[100] = {'\0'};
     struct Ret_S ret;
@@ -2035,7 +2035,7 @@ static void populate_central_NS_surrounding(Grid_T *const grid,const unsigned pn
     Patch_T *const patch = grid->patch[p];
     Field_T *R1 = add_field("surface_function",0,patch,NO);
     double *R1_array;
-    Flag_T side = p-pn;
+    Flag_T side = (Flag_T)(p-pn);
     char name[100] = {'\0'};
     char var[100] = {'\0'};
     struct Ret_S ret;
@@ -2228,7 +2228,7 @@ static void populate_outermost(Grid_T *const grid,const unsigned pn,const unsign
   for (p = pn; p < pn+6; p++)
   {
     Patch_T *const patch = grid->patch[p];
-    Flag_T side = p-pn;
+    Flag_T side = (Flag_T)(p-pn);
     char name[100] = {'\0'};
     char var[100] = {'\0'};
     struct Ret_S ret;
