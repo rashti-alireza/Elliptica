@@ -40,4 +40,7 @@ void bbn_set_default_parameters(void)
  
   /* if stop = 1, the main iteration loop is halted */
   Pseti("STOP",0);
+  
+  /* total number of iterations that have been executed */
+  Pseti("iteration_number",0);
 }
