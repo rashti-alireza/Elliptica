@@ -45,7 +45,7 @@ double Legendre_weight_function(const double x, const unsigned n)
 {
   if (EQL(x,1.) || EQL(x,-1.))
     abortEr("Bad argument for Legendre weight function.\n");
-  return 2./((1-SQR(x))*SQR(dLegendre_dx(n,x)));
+  return 2./((1-Pow2(x))*Pow2(dLegendre_dx(n,x)));
 }
 
 /* ->return value: d(Pn(x))/dx, Pn is legendre(n,x) polynomial */

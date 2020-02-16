@@ -329,7 +329,7 @@ static double *spectral_derivative_2ndOrder(Field_T *const f,const Dd_T dir_e)
     for (i = 0; i < nn; ++i)
     {
       double j = dq2_dq1(patch,dp[0],dir_e,i);
-      der[i] = df_dp[0][i]*SQR(j);
+      der[i] = df_dp[0][i]*Pow2(j);
     }
   }
   else if (flg[1] == YES)
@@ -338,7 +338,7 @@ static double *spectral_derivative_2ndOrder(Field_T *const f,const Dd_T dir_e)
     for (i = 0; i < nn; ++i)
     {
       double j = dq2_dq1(patch,dp[1],dir_e,i);
-      der[i] = df_dp[1][i]*SQR(j);
+      der[i] = df_dp[1][i]*Pow2(j);
     }
   }
   else if (flg[2] == YES)
@@ -347,7 +347,7 @@ static double *spectral_derivative_2ndOrder(Field_T *const f,const Dd_T dir_e)
     for (i = 0; i < nn; ++i)
     {
       double j = dq2_dq1(patch,dp[2],dir_e,i);
-      der[i] = df_dp[2][i]*SQR(j); 
+      der[i] = df_dp[2][i]*Pow2(j); 
     }
   }
 

@@ -15,7 +15,7 @@
 // t->boost->Bx = Bx;
 // t->boost->By = By;
 // t->boost->Bz = Bz;
-// t->boost->B2 = SQR(Bx)+SQR(By)+SQR(Bz); # assumed Minkowski space-time
+// t->boost->B2 = Pow2(Bx)+Pow2(By)+Pow2(Bz); # assumed Minkowski space-time
 //
 // ** if you wanna inverse transformation **
 // t->boost->inverse = 1;

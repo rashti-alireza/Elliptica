@@ -274,7 +274,7 @@ static int x_of_X_CS_coord(double *const x,const double *const X,const Patch_T *
   switch (type)
   {
     case NS_T_CS:
-      d = sqrt(1+SQR(X[0])+SQR(X[1]));
+      d = sqrt(1+Pow2(X[0])+Pow2(X[1]));
       x1 = xc1;
       x2 = S*R_interpolation_CS(R2_f,X)/d;
       
@@ -287,7 +287,7 @@ static int x_of_X_CS_coord(double *const x,const double *const X,const Patch_T *
       x[c]+= C[c];
     break;
     case SR_T_CS:
-      d = sqrt(1+SQR(X[0])+SQR(X[1]));
+      d = sqrt(1+Pow2(X[0])+Pow2(X[1]));
       x2 = xc2;
       x1 = S*R_interpolation_CS(R1_f,X)/d;
       
@@ -300,7 +300,7 @@ static int x_of_X_CS_coord(double *const x,const double *const X,const Patch_T *
       x[c]+= C[c];
     break;
     case OT_T1_CS:
-      d  = sqrt(1+SQR(X[0])+SQR(X[1]));
+      d  = sqrt(1+Pow2(X[0])+Pow2(X[1]));
       x1 = xc1;
       L  = 1.-S*d*xc1/R2;
       
@@ -314,7 +314,7 @@ static int x_of_X_CS_coord(double *const x,const double *const X,const Patch_T *
     break;
     case OT_T2_CS:
       L = 1.-R1/R2;
-      d = sqrt(1+SQR(X[0])+SQR(X[1]));
+      d = sqrt(1+Pow2(X[0])+Pow2(X[1]));
       x1 = S*R1/d;
       
       x[c] = x1/(1.-L*X[2]);
@@ -373,25 +373,25 @@ static int X_of_x_CS_coord(double *const X,const double *const cart,const Patch_
   switch (type)
   {
     case NS_T_CS:
-      d = sqrt(1+SQR(X[0])+SQR(X[1]));
+      d = sqrt(1+Pow2(X[0])+Pow2(X[1]));
       x1 = xc1;
       x2 = S*R_interpolation_CS(R2_f,X)/d;
       X[2] = (x[k]-x1)/(x2-x1);
     break;
     case SR_T_CS:
-      d = sqrt(1+SQR(X[0])+SQR(X[1]));
+      d = sqrt(1+Pow2(X[0])+Pow2(X[1]));
       x2 = xc2;
       x1 = S*R_interpolation_CS(R1_f,X)/d;
       X[2] = (x[k]-x1)/(x2-x1);
     break;
     case OT_T1_CS:
-      d = sqrt(1+SQR(X[0])+SQR(X[1]));
+      d = sqrt(1+Pow2(X[0])+Pow2(X[1]));
       L = 1.-S*d*xc1/R2;
       X[2] = (1-xc1/x[k])/L;
     break;
     case OT_T2_CS:
       L = 1.-R1/R2;
-      d  = sqrt(1+SQR(X[0])+SQR(X[1]));
+      d  = sqrt(1+Pow2(X[0])+Pow2(X[1]));
       x1 = S*R1/d;
       X[2] = (1-x1/x[k])/L;
     break;

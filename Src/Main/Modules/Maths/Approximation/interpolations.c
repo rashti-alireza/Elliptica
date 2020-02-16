@@ -231,7 +231,7 @@ static double interpolation_natural_cubic_spline_1d(Interpolation_T *const inter
   }
   else
   {
-    ret = a[i]+b[i]*(h-x[i])+c[i]*SQR(h-x[i])+d[i]*CUB(h-x[i]);
+    ret = a[i]+b[i]*(h-x[i])+c[i]*Pow2(h-x[i])+d[i]*Pow3(h-x[i]);
   }
   
   return ret; 

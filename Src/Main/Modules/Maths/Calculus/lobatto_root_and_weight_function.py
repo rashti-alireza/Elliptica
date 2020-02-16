@@ -24,7 +24,7 @@ print ('{')
 print ('  double fac = 2./(n*(n-1));')
 print ('  if (EQL(x,1.) || EQL(x,-1.))')
 print ('    return fac;')
-print ('  return 2./(n*(n-1)*SQR(associated_legendre((int)n-1,0,x)));')
+print ('  return 2./(n*(n-1)*Pow2(associated_legendre((int)n-1,0,x)));')
 print ('}')
 
 print ('/* rootN is the n-th root of diff(legendere(N,x)). the following is like a table.')

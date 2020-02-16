@@ -130,7 +130,7 @@ static void populate_observable_BBN_CS(Observable_T *const obs)
       /* populate metric components */ 
       for (ijk = 0; ijk < nn; ++ijk)
       {
-        double psi4 = SQR(psi[ijk])*SQR(psi[ijk]);
+        double psi4 = Pow2(psi[ijk])*Pow2(psi[ijk]);
         g00[ijk] = psi4*_gamma_D0D0[ijk];
         g01[ijk] = psi4*_gamma_D0D1[ijk];
         g02[ijk] = psi4*_gamma_D0D2[ijk];
@@ -164,7 +164,7 @@ static void populate_observable_BBN_CS(Observable_T *const obs)
           n_U2[ijk] = dq2_dq1(patch,_c_,_z_,ijk);
           
           /* normalization */
-          double psi4 = SQR(psi[ijk])*SQR(psi[ijk]);
+          double psi4 = Pow2(psi[ijk])*Pow2(psi[ijk]);
           double Norm2 = 
 psi4*(_gamma_D0D0[ijk]*pow(n_U0[ijk], 2) + 2.0*_gamma_D0D1[ijk]*
 n_U0[ijk]*n_U1[ijk] + 2.0*_gamma_D0D2[ijk]*n_U0[ijk]*n_U2[ijk] +

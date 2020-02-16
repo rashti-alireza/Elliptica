@@ -325,7 +325,7 @@ void bbn_free_data_gammas(Grid_T *const grid)
   const double x_CM = Pgetd("x_CM");
   //const double C_BH = 0.5*Pgetd("BH_NS_separation");/* center of BH it's on +y axis */
   const double Omega_BHNS = Pgetd("BH_NS_orbital_angular_velocity");
-  const double a2   = SQR(a);
+  const double a2   = Pow2(a);
   double H,k0,k1,k2;/* in ds^2 = (delta_ij+2*H*ki*kj)dx^i*dx^j */
   double Bx,By,Bz;/* B = v/c */
   unsigned p;
@@ -336,7 +336,7 @@ void bbn_free_data_gammas(Grid_T *const grid)
   t->boost->Bx = Bx;
   t->boost->By = By;
   t->boost->Bz = Bz;
-  t->boost->B2 = SQR(Bx)+SQR(By)+SQR(Bz);
+  t->boost->B2 = Pow2(Bx)+Pow2(By)+Pow2(Bz);
   
   FOR_ALL_PATCHES(p,grid)
   {
@@ -370,8 +370,8 @@ void bbn_free_data_gammas(Grid_T *const grid)
       double _y    = Lm1_x_mu[2];
       double _z    = Lm1_x_mu[3];
       double rbar  = bbn_KerrShcild_r(_x,_y,_z,a);
-      double rbar2 = SQR(rbar);
-      double r2    = SQR(x)+SQR(y)+SQR(z);
+      double rbar2 = Pow2(rbar);
+      double r2    = Pow2(x)+Pow2(y)+Pow2(z);
       double r     = sqrt(r2);
       double _k0 = (rbar*_x+a*_y)/(rbar2+a2);
       double _k1 = (rbar*_y-a*_x)/(rbar2+a2);
@@ -388,7 +388,7 @@ void bbn_free_data_gammas(Grid_T *const grid)
       
       double e = exp(-pow(r/r0,4));
       double C = 2.*H*e;
-      double A = 1./(1+C*(SQR(k0)+SQR(k1)+SQR(k2)));
+      double A = 1./(1+C*(Pow2(k0)+Pow2(k1)+Pow2(k2)));
       
       _gamma_D0D0[ijk] = 1.+C*k0*k0;
       _gamma_D0D1[ijk] = C*k0*k1;
@@ -397,12 +397,12 @@ void bbn_free_data_gammas(Grid_T *const grid)
       _gamma_D1D2[ijk] = C*k1*k2;
       _gamma_D2D2[ijk] = 1+C*k2*k2;
       
-      _gammaI_U0U0[ijk] = A*(1+C*(SQR(k1)+SQR(k2)));
+      _gammaI_U0U0[ijk] = A*(1+C*(Pow2(k1)+Pow2(k2)));
       _gammaI_U0U1[ijk] = -A*C*k0*k1;
       _gammaI_U0U2[ijk] = -A*C*k0*k2;
-      _gammaI_U1U1[ijk] = A*(1+C*(SQR(k0)+SQR(k2)));
+      _gammaI_U1U1[ijk] = A*(1+C*(Pow2(k0)+Pow2(k2)));
       _gammaI_U1U2[ijk] = -A*C*k1*k2;
-      _gammaI_U2U2[ijk] = A*(1+C*(SQR(k0)+SQR(k1)));
+      _gammaI_U2U2[ijk] = A*(1+C*(Pow2(k0)+Pow2(k1)));
       
       /* quick test check _gamma * _gammaI = delta */
       if (0)
@@ -663,7 +663,7 @@ static void populate_KSgammas_KSalpha_KSBeta(Patch_T *const patch)
   Transformation_T *t = initialize_transformation();
   const double M_BH = Pgetd("BH_mass");
   const double a    = Pgetd("BH_X_U2")*M_BH;
-  const double a2   = SQR(a);
+  const double a2   = Pow2(a);
   const double BH_center_x = Pgetd("BH_center_x");
   const double BH_center_y = Pgetd("BH_center_y");
   const double BH_center_z = Pgetd("BH_center_z");
@@ -682,7 +682,7 @@ static void populate_KSgammas_KSalpha_KSBeta(Patch_T *const patch)
   t->boost->Bx = Bx;
   t->boost->By = By;
   t->boost->Bz = Bz;
-  t->boost->B2 = SQR(Bx)+SQR(By)+SQR(Bz);
+  t->boost->B2 = Pow2(Bx)+Pow2(By)+Pow2(Bz);
   
   /* add Kerr Schild gammas */
   ADD_FIELD(KSgamma_D2D2)
@@ -736,7 +736,7 @@ static void populate_KSgammas_KSalpha_KSBeta(Patch_T *const patch)
     double _y    = Lm1_x_mu[2];
     double _z    = Lm1_x_mu[3];
     double rbar  = bbn_KerrShcild_r(_x,_y,_z,a);
-    double rbar2 = SQR(rbar);
+    double rbar2 = Pow2(rbar);
     double _k0 = (rbar*_x+a*_y)/(rbar2+a2);
     double _k1 = (rbar*_y-a*_x)/(rbar2+a2);
     double _k2 = _z/rbar;
@@ -752,7 +752,7 @@ static void populate_KSgammas_KSalpha_KSBeta(Patch_T *const patch)
     H  = bbn_KerrSchild_H(M_BH,rbar,a,_z);
     
     double C = 2.*H;
-    double A = 1./(1+C*(SQR(k0)+SQR(k1)+SQR(k2)));
+    double A = 1./(1+C*(Pow2(k0)+Pow2(k1)+Pow2(k2)));
     
     KSalpha[ijk] = 1/sqrt(1+C*kt*kt);
     KSB_D0[ijk]  = C*k0*kt;
@@ -766,12 +766,12 @@ static void populate_KSgammas_KSalpha_KSBeta(Patch_T *const patch)
     KSgamma_D1D2[ijk] = C*k1*k2;
     KSgamma_D2D2[ijk] = 1+C*k2*k2;
     
-    KSgammaI_U0U0[ijk] = A*(1+C*(SQR(k1)+SQR(k2)));
+    KSgammaI_U0U0[ijk] = A*(1+C*(Pow2(k1)+Pow2(k2)));
     KSgammaI_U0U1[ijk] = -A*C*k0*k1;
     KSgammaI_U0U2[ijk] = -A*C*k0*k2;
-    KSgammaI_U1U1[ijk] = A*(1+C*(SQR(k0)+SQR(k2)));
+    KSgammaI_U1U1[ijk] = A*(1+C*(Pow2(k0)+Pow2(k2)));
     KSgammaI_U1U2[ijk] = -A*C*k1*k2;
-    KSgammaI_U2U2[ijk] = A*(1+C*(SQR(k0)+SQR(k1)));
+    KSgammaI_U2U2[ijk] = A*(1+C*(Pow2(k0)+Pow2(k1)));
     
     /* quick test check KSgamma * KSgammaI = delta */
     if (0)
@@ -1085,10 +1085,10 @@ dKSgamma_D0D2D1[ijk] - dKSgamma_D1D2D0[ijk]);
 /* ->return value: r funciont in Kerr-Schild coords */
 double bbn_KerrShcild_r(const double x,const double y,const double z,const double a)
 {
-  const double r2 = SQR(x)+SQR(y)+SQR(z);
-  const double a2 = SQR(a);
+  const double r2 = Pow2(x)+Pow2(y)+Pow2(z);
+  const double a2 = Pow2(a);
   
-  return 0.5*(r2-a2+sqrt(SQR(r2-a2)+4*a2*SQR(z)));
+  return 0.5*(r2-a2+sqrt(Pow2(r2-a2)+4*a2*Pow2(z)));
 }
 
 /* ->return value: H function in Kerr-Schild coords */
@@ -1096,8 +1096,8 @@ double bbn_KerrSchild_H(const double M_BH,const double rbar,const double a,const
 {
   double lambda      = 0;
   const double k2    = z/rbar;
-  const double a2    = SQR(a);
-  const double rbar2 = SQR(rbar);
+  const double a2    = Pow2(a);
+  const double rbar2 = Pow2(rbar);
   
   /* which metric specified */
   if (Pcmps("BH_NS_free_data_metric","conformally_flat_metric"))
@@ -1111,5 +1111,5 @@ double bbn_KerrSchild_H(const double M_BH,const double rbar,const double a,const
   else
     abortEr(NO_OPTION);
 
-  return lambda*M_BH*rbar/(rbar2+a2*SQR(k2));
+  return lambda*M_BH*rbar/(rbar2+a2*Pow2(k2));
 }

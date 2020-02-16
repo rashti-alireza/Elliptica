@@ -2,7 +2,7 @@
 #include "maths_calculus_lib.h"
 #include "maths_approximation_lib.h"
 
-#define Power3(a) (a)*SQR(a)
+#define Power3(a) (a)*Pow2(a)
 
 void populate_central_NS_central_box(Grid_T *const grid,const unsigned pn);
 void populate_right_box_sns(Grid_T *const grid,const unsigned pn); 

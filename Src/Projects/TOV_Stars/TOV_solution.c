@@ -163,7 +163,7 @@ static void isotropic_coords_transformation(TOV_T *const TOV)
   /* initialization */
   rbar[0] = 0;/* rabr(h=h_cent) */
   rbar[1] = r_approx(TOV->h[1],TOV->h[0])*exp(-c);/* rabr(h=h_cent-s) */
-  rbar[TOV->N-1] = 0.5*(R-M+sqrt(SQR(R)-2*M*R));/* rbar(h=1) */
+  rbar[TOV->N-1] = 0.5*(R-M+sqrt(Pow2(R)-2*M*R));/* rbar(h=1) */
   t = TOV->h[TOV->N-1];/* t = 1 */
   
   /* for all points */
@@ -232,7 +232,7 @@ static double c_rbar(TOV_T *const TOV)
   I->Composite_Simpson_1D->f = f;
   plan_integration(I);
   c = execute_integration(I);
-  c -= log(0.5*(R-M+sqrt(SQR(R)-2*M*R))/R);
+  c -= log(0.5*(R-M+sqrt(Pow2(R)-2*M*R))/R);
   
   free(f);
   free_integration(I);
@@ -304,7 +304,7 @@ static double *Komar_mass_integrand(const TOV_T *const TOV)
   {
     eos->h = h[i];
     f[i] = 4*M_PI*(eos->energy_density(eos)+3*eos->pressure(eos))*
-            exp(phi[i])/sqrt(1-2*m[i]/r[i])*SQR(r[i])*dr_dh(h[i],r[i],m[i]);
+            exp(phi[i])/sqrt(1-2*m[i]/r[i])*Pow2(r[i])*dr_dh(h[i],r[i],m[i]);
   }
   
   free_EoS(eos);
@@ -327,7 +327,7 @@ static double *ADM_mass_integrand(const TOV_T *const TOV)
   for (i = 1; i < TOV->N; ++i)
   {
     eos->h = h[i];
-    f[i] = 4*M_PI*eos->energy_density(eos)*SQR(r[i])*dr_dh(h[i],r[i],m[i]);
+    f[i] = 4*M_PI*eos->energy_density(eos)*Pow2(r[i])*dr_dh(h[i],r[i],m[i]);
   }
   
   free_EoS(eos);
@@ -376,7 +376,7 @@ static double *baryonic_mass_integrand(const TOV_T *const TOV)
     eos->h = h[i];
     rho = (eos->energy_density(eos)+eos->pressure(eos))/h[i];
     s = 1-2*m[i]/r[i];
-    f[i] = 4*M_PI*rho/sqrt(s)*SQR(r[i])*dr_dh(h[i],r[i],m[i]);
+    f[i] = 4*M_PI*rho/sqrt(s)*Pow2(r[i])*dr_dh(h[i],r[i],m[i]);
   }
   
   free_EoS(eos);

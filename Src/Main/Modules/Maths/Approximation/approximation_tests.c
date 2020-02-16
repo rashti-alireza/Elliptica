@@ -268,7 +268,7 @@ static int cft_c2r_r2c_1d_EquiSpaced_test(Grid_T *const grid)
   for (i = 0; i < N; ++i)
   {
     x    = 2.*i*M_PI/N;
-    f[i] = sin(2*x)*cos(x)+SQR(sin(4*x));
+    f[i] = sin(2*x)*cos(x)+Pow2(sin(4*x));
   }
   /* calculating coeffs */
   c = r2cft_1d_EquiSpaced_coeffs(f,N);
@@ -293,7 +293,7 @@ static int cft_c2r_r2c_1d_EquiSpaced_test(Grid_T *const grid)
   {
     x = rand[i];
     double complex fi = 0;
-    double fr = sin(2*x)*cos(x)+SQR(sin(4*x));
+    double fr = sin(2*x)*cos(x)+Pow2(sin(4*x));
     fi = c[0];
     for (j = 1; j < N/2+1; ++j)
       fi += c[j]*cexp(I*(double)j*x)+conj(c[j])*cexp(-I*(double)j*x);

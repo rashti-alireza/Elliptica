@@ -21,7 +21,7 @@ int Laplace_Inhom_analyze_answer(const Grid_T *const grid)
     alpha_real = add_field("alpha_real",0,patch,YES);
     
     FOR_ALL_POINTS(n,patch)
-      alpha_real->v[n] = SQR(x_(n))+SQR(y_(n))+SQR(z_(n));
+      alpha_real->v[n] = Pow2(x_(n))+Pow2(y_(n))+Pow2(z_(n));
   }
   
   pr_field_difference(grid,"alpha","alpha_real");

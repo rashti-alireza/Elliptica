@@ -289,7 +289,7 @@ static int fdS_spectral(Grid_T *const grid)
     printf("\n--> Integral{f(x)dS}|at plane surface of outermost0 section:\n");
     
     r = 2*Pgetd("BH_NS_separation");
-    analytic = 6*SQR(r);
+    analytic = 6*Pow2(r);
     numeric  = 0;
     /* go over all patches */
     FOR_ALL_PATCHES(p,grid)

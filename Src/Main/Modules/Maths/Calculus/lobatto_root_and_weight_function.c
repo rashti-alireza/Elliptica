@@ -17,7 +17,7 @@ double Lobatto_weight_function(const double x, const unsigned n)
   double fac = 2./(n*(n-1));
   if (EQL(x,1.) || EQL(x,-1.))
     return fac;
-  return 2./(n*(n-1)*SQR(associated_legendre((int)n-1,0,x)));
+  return 2./(n*(n-1)*Pow2(associated_legendre((int)n-1,0,x)));
 }
 /* rootN is the n-th root of diff(legendere(N,x)). the following is like a table.
 // note: rootN starts from 0. */

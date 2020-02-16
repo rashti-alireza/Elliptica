@@ -31,7 +31,7 @@ print ('double Legendre_weight_function(const double x, const unsigned n)')
 print ('{')
 print ('  if (EQL(x,1.) || EQL(x,-1.))')
 print ('    abortEr("Bad argument for Legendre weight function.\\n");')
-print ('  return 2./((1-SQR(x))*SQR(dLegendre_dx(n,x)));')
+print ('  return 2./((1-Pow2(x))*Pow2(dLegendre_dx(n,x)));')
 print ('}')
 
 # dPn/dx

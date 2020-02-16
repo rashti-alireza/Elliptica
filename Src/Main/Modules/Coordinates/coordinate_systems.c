@@ -608,7 +608,7 @@ static void characteristics_BBN_CS_grid_eg(Grid_T *const grid)
   const double R_NS_l = Pgetd("NS_radius"),
                bh_m   = Pgetd("BH_mass"),
                bh_chi = Pgetd("BH_dimensionless_spin"),
-               R_BH_r = bh_m*(1+sqrt(1-SQR(bh_chi)));
+               R_BH_r = bh_m*(1+sqrt(1-Pow2(bh_chi)));
                
   double box_size_l;
   const unsigned N_Outermost_Split = (unsigned)Pgeti("Number_of_Outermost_Split"); 
@@ -865,8 +865,8 @@ static void NS_BH_surface_CS_grid_eg(Grid_T *const grid,const double R_NS_l,cons
     {
       X[1] = point_value(j,&coll_s[1]);
       r = sqrt(
-               (1+SQR(X[0])+SQR(X[1]))/
-               ((SQR(X[0])+SQR(X[1]))/(SQR(R_BH_r)+SQR(a_BH)) + 1/SQR(R_BH_r))
+               (1+Pow2(X[0])+Pow2(X[1]))/
+               ((Pow2(X[0])+Pow2(X[1]))/(Pow2(R_BH_r)+Pow2(a_BH)) + 1/Pow2(R_BH_r))
               );
       for (k = 0; k < N[2]; ++k)
         R[L(N,i,j,k)] = r;
@@ -885,8 +885,8 @@ static void NS_BH_surface_CS_grid_eg(Grid_T *const grid,const double R_NS_l,cons
     {
       X[1] = point_value(j,&coll_s[1]);/* b = y/x */
       r = sqrt(
-               (1+SQR(X[0])+SQR(X[1]))/
-               (((1+SQR(X[1])))/(SQR(R_BH_r)+SQR(a_BH)) + SQR(X[0])/SQR(R_BH_r))
+               (1+Pow2(X[0])+Pow2(X[1]))/
+               (((1+Pow2(X[1])))/(Pow2(R_BH_r)+Pow2(a_BH)) + Pow2(X[0])/Pow2(R_BH_r))
               );
       for (k = 0; k < N[2]; ++k)
         R[L(N,i,j,k)] = r;
@@ -903,8 +903,8 @@ static void NS_BH_surface_CS_grid_eg(Grid_T *const grid,const double R_NS_l,cons
     {
       X[1] = point_value(j,&coll_s[1]);/* b = z/x */
       r = sqrt(
-               (1+SQR(X[0])+SQR(X[1]))/
-               (((1+SQR(X[0])))/(SQR(R_BH_r)+SQR(a_BH)) + SQR(X[1])/SQR(R_BH_r))
+               (1+Pow2(X[0])+Pow2(X[1]))/
+               (((1+Pow2(X[0])))/(Pow2(R_BH_r)+Pow2(a_BH)) + Pow2(X[1])/Pow2(R_BH_r))
               );
       for (k = 0; k < N[2]; ++k)
         R[L(N,i,j,k)] = r;
@@ -921,8 +921,8 @@ static void NS_BH_surface_CS_grid_eg(Grid_T *const grid,const double R_NS_l,cons
     {
       X[1] = point_value(j,&coll_s[1]);/* b = z/y */
       r = sqrt(
-               (1+SQR(X[0])+SQR(X[1]))/
-               (((1+SQR(X[0])))/(SQR(R_BH_r)+SQR(a_BH)) + SQR(X[1])/SQR(R_BH_r))
+               (1+Pow2(X[0])+Pow2(X[1]))/
+               (((1+Pow2(X[0])))/(Pow2(R_BH_r)+Pow2(a_BH)) + Pow2(X[1])/Pow2(R_BH_r))
               );
       for (k = 0; k < N[2]; ++k)
         R[L(N,i,j,k)] = r;
@@ -939,8 +939,8 @@ static void NS_BH_surface_CS_grid_eg(Grid_T *const grid,const double R_NS_l,cons
     {
       X[1] = point_value(j,&coll_s[1]);/* b = x/y */
       r = sqrt(
-               (1+SQR(X[0])+SQR(X[1]))/
-               (((1+SQR(X[1])))/(SQR(R_BH_r)+SQR(a_BH)) + SQR(X[0])/SQR(R_BH_r))
+               (1+Pow2(X[0])+Pow2(X[1]))/
+               (((1+Pow2(X[1])))/(Pow2(R_BH_r)+Pow2(a_BH)) + Pow2(X[0])/Pow2(R_BH_r))
               );
       for (k = 0; k < N[2]; ++k)
         R[L(N,i,j,k)] = r;
@@ -1160,8 +1160,8 @@ static void characteristics_BNS_Spherical_grid_eg(Grid_T *const grid)
   
   M = GRT(O_l,O_r) ? O_l : O_r;
   s = O/M/2;
-  R_Surr_l = sqrt(SQR(O_l)+s);
-  R_Surr_r = sqrt(SQR(O_r)+s);
+  R_Surr_l = sqrt(Pow2(O_l)+s);
+  R_Surr_r = sqrt(Pow2(O_r)+s);
   assert(LSS(R_Surr_l-O_l,O/2));
   assert(LSS(R_Surr_r-O_r,O/2));
   
@@ -1179,8 +1179,8 @@ static void characteristics_BNS_Spherical_grid_eg(Grid_T *const grid)
       if (LSSEQL(R0[i],R0[i-1]))
         abortEr("The radius of outermost must be increasing.");
         
-    R_outmost_l[i] = sqrt(SQR(O_l)+SQR(R0[i]));
-    R_outmost_r[i] = sqrt(SQR(O_r)+SQR(R0[i]));
+    R_outmost_l[i] = sqrt(Pow2(O_l)+Pow2(R0[i]));
+    R_outmost_r[i] = sqrt(Pow2(O_r)+Pow2(R0[i]));
     
   }
   

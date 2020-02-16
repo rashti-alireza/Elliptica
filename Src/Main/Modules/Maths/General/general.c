@@ -18,13 +18,13 @@ double rms(const unsigned n, const double *const v2,const double *const v1)
   if (v2 == 0 && v1 == 0) return 0;
   else if (v1 == 0)    	  
     for(i = 0; i < n; i++)
-      sum += SQR(v2[i]);
+      sum += Pow2(v2[i]);
   else if (v2 == 0)       
     for(i = 0; i < n; i++)
-      sum += SQR(v1[i]);
+      sum += Pow2(v1[i]);
   else
     for(i = 0; i < n; i++)
-      sum += SQR(v2[i]-v1[i]);
+      sum += Pow2(v2[i]-v1[i]);
     
   sum = sqrt(sum);
   
@@ -77,13 +77,13 @@ long double rmsL(const long unsigned n, const double *const v2, const double *co
   if (v2 == 0 && v1 == 0) return 0;
   else if (v1 == 0)    	  
     for(i = 0; i < n; i++)
-      sum += SQR(v2[i]);
+      sum += Pow2(v2[i]);
   else if (v2 == 0)       
     for(i = 0; i < n; i++)
-      sum += SQR(v1[i]);
+      sum += Pow2(v1[i]);
   else
     for(i = 0; i < n; i++)
-      sum += SQR(v2[i]-v1[i]);
+      sum += Pow2(v2[i]-v1[i]);
     
   sum = sqrtl(sum);
   
@@ -310,11 +310,11 @@ double d_dq_sum_1_N_cos_ixb_cos_ixa(const int N, const double b,const double a)
       sum = (
               Power(Csc(b/2.0),3)
               *
-              (SQR(1 + N)*Sin((0.5 - N)*b) 
+              (Pow2(1 + N)*Sin((0.5 - N)*b) 
               + 
-              (-1 + 2*N + 2*SQR(N))*Sin((0.5 + N)*b) 
+              (-1 + 2*N + 2*Pow2(N))*Sin((0.5 + N)*b) 
               - 
-              SQR(N)*Sin((1.5 + N)*b))
+              Pow2(N)*Sin((1.5 + N)*b))
             )/8.0;
     }
   }
@@ -327,12 +327,12 @@ double d_dq_sum_1_N_cos_ixb_cos_ixa(const int N, const double b,const double a)
       if (N%2 == 0)
       {
         k = N/2.;
-        sum = -(2*SQR(k)+k);
+        sum = -(2*Pow2(k)+k);
       }
       else
       {
         k = (N-1)/2.;
-        sum = 2*SQR(k)+3*k+1;
+        sum = 2*Pow2(k)+3*k+1;
       }
     }
     else if (EQL(b,M_PI))
@@ -346,21 +346,21 @@ double d_dq_sum_1_N_cos_ixb_cos_ixa(const int N, const double b,const double a)
       sum = (
               Power(Csc(g1/2.0),3)
               *
-              (SQR(1 + N)*Sin((0.5 - N)*g1) 
+              (Pow2(1 + N)*Sin((0.5 - N)*g1) 
               + 
-              (-1 + 2*N + 2*SQR(N))*Sin((0.5 + N)*g1) 
+              (-1 + 2*N + 2*Pow2(N))*Sin((0.5 + N)*g1) 
               - 
-              SQR(N)*Sin((1.5 + N)*g1))
+              Pow2(N)*Sin((1.5 + N)*g1))
             )/8.0 
             +
             (
               Power(Csc(g2/2.0),3)
               *
-              (SQR(1 + N)*Sin((0.5 - N)*g2) 
+              (Pow2(1 + N)*Sin((0.5 - N)*g2) 
               + 
-              (-1 + 2*N + 2*SQR(N))*Sin((0.5 + N)*g2) 
+              (-1 + 2*N + 2*Pow2(N))*Sin((0.5 + N)*g2) 
               - 
-              SQR(N)*Sin((1.5 + N)*g2))
+              Pow2(N)*Sin((1.5 + N)*g2))
             )/8.0;
       sum /= -2;
     }

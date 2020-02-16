@@ -61,10 +61,10 @@ outerB_F = eta - 1;
 # INNER BOUNDARY LIKE BLACK HOLE HORIZON #
 `  else if (patch->innerB)/* at inner boundary */`;
 `  {`;
-`  const double r02   = SQR(Pgetd("RollOff_distance"));`;
+`  const double r02   = Pow2(Pgetd("RollOff_distance"));`;
 `  const double M_BH  = Pgetd("BH_mass");`;
 `  const double a  = Pgetd("BH_X_U2")*M_BH;`;
-`  const double a2 = SQR(a);`;
+`  const double a2 = Pow2(a);`;
 `  const double BH_center_x = Pgetd("BH_center_x");`
 `  const double BH_center_y = Pgetd("BH_center_y");`
 `  const double BH_center_z = Pgetd("BH_center_z");`
@@ -80,7 +80,7 @@ outerB_F = eta - 1;
 `  t->boost->Bx = Bx;`
 `  t->boost->By = By;`
 `  t->boost->Bz = Bz;`
-`  t->boost->B2 = SQR(Bx)+SQR(By)+SQR(Bz);`
+`  t->boost->B2 = Pow2(Bx)+Pow2(By)+Pow2(Bz);`
 
 `  DDM_SCHUR_BC_OPEN\n`;
 
@@ -95,8 +95,8 @@ outerB_F = eta - 1;
 `  double _y    = Lm1_x_mu[2];`
 `  double _z    = Lm1_x_mu[3];`
 `  double rbar  = bbn_KerrShcild_r(_x,_y,_z,a);`
-`  double rbar2 = SQR(rbar);`
-`  double r2    = SQR(x)+SQR(y)+SQR(z);`
+`  double rbar2 = Pow2(rbar);`
+`  double r2    = Pow2(x)+Pow2(y)+Pow2(z);`
 `  double _k0 = (rbar*_x+a*_y)/(rbar2+a2);`
 `  double _k1 = (rbar*_y-a*_x)/(rbar2+a2);`
 `  double _k2 = _z/rbar;`

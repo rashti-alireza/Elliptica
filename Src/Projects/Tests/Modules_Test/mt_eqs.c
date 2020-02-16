@@ -34,7 +34,7 @@ int mt_initial_data_alpha(Grid_T *const grid)
     unsigned n;
     
     FOR_ALL_POINTS(n,patch)
-      alpha[n] = SQR(x_(n))+SQR(y_(n))+SQR(z_(n))+0.3+sin(x_(n));
+      alpha[n] = Pow2(x_(n))+Pow2(y_(n))+Pow2(z_(n))+0.3+sin(x_(n));
   }
   
   return EXIT_SUCCESS;
@@ -91,7 +91,7 @@ static void *bc_alpha(void *vp1,void *vp2)
   for (n = 0; n < N; ++n)
   {
     ijk = node[n];
-    F[map[ijk]] = alpha[ijk]-SQR(x_(ijk))-SQR(y_(ijk))-SQR(z_(ijk));/* note: for each new equation, only this line is changed */
+    F[map[ijk]] = alpha[ijk]-Pow2(x_(ijk))-Pow2(y_(ijk))-Pow2(z_(ijk));/* note: for each new equation, only this line is changed */
   }
       
   return 0;

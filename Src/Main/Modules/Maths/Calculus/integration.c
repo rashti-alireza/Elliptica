@@ -485,7 +485,7 @@ double Integrate_ChebTn(const unsigned n,const double xi,const double xf)
   else
     Int = (-cos(f)*cos(f*n) + cos(i)*cos(i*n) -
            n*sin(f)*sin(f*n) + n*sin(i)*sin(i*n))/
-           (SQR(n)-1.);
+           (Pow2(n)-1.);
      
   return Int;
 }
@@ -500,9 +500,9 @@ static double Int_ChebTn_OPTM(const unsigned n,const unsigned N)
   if (n == 0)
     return 2.;
   else if (n == N-1)
-    return -2./(SQR(n)-1.);
+    return -2./(Pow2(n)-1.);
   else
-    return -4./(SQR(n)-1.);
+    return -4./(Pow2(n)-1.);
   
   return DBL_MAX; 
 }

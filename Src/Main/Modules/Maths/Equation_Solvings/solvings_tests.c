@@ -172,14 +172,14 @@ static double root_finder_f0_eq(void *params,const double *const x)
 /* ->return value: (1-x0)^(1/4) + x1 + 0.05*x2^2-0.15*x2-1 */
 static double root_finder_f1_eq(void *params,const double *const x)
 {
-  return pow(1-x[0],0.25)+x[1]+0.05*SQR(x[2])-0.15*x[2]-1;
+  return pow(1-x[0],0.25)+x[1]+0.05*Pow2(x[2])-0.15*x[2]-1;
   UNUSED(params);
 }
 
 /* ->return value: -x0^2-0.1 x1^2 + 0.01 x1 + x2 -1 */
 static double root_finder_f2_eq(void *params,const double *const x)
 {
-  return -SQR(x[0])-0.1*SQR(x[1])+0.01*x[1]+x[2]-1;
+  return -Pow2(x[0])-0.1*Pow2(x[1])+0.01*x[1]+x[2]-1;
   UNUSED(params);
 }
 
@@ -210,7 +210,7 @@ void test_dInterp_a_df(Grid_T *const grid)
     
     /* initialize phi */
     FOR_ALL_POINTS(i,patch)
-      phi[i] = sin(y_(i))*SQR(x_(i))+cos(z_(i))*SQR(y_(i))+SQR(z_(i))*SQR(y_(i));
+      phi[i] = sin(y_(i))*Pow2(x_(i))+cos(z_(i))*Pow2(y_(i))+Pow2(z_(i))*Pow2(y_(i));
     
     /* to test differet random points the tests placed in a loop */
     for (i = 0; i < Num_Tests; ++i)

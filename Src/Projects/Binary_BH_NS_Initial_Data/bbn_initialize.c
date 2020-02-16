@@ -2587,8 +2587,8 @@ static void find_NS_surface_Ylm_method_CS(Grid_T *const grid,struct Grid_Params_
       for (m = 0; m <= l; ++m)
       {
         unsigned lm = lm2n(l,m);
-        realClm[lm] /= (1+e*SQR(l)*SQR(l+1));
-        imagClm[lm] /= (1+e*SQR(l)*SQR(l+1));
+        realClm[lm] /= (1+e*Pow2(l)*Pow2(l+1));
+        imagClm[lm] /= (1+e*Pow2(l)*Pow2(l+1));
       }
   }
   
@@ -2610,8 +2610,8 @@ static void find_XYZ_and_patch_of_theta_phi_NS_CS(double *const X,Patch_T **cons
 {
   const double tan_phi    = tan(phi);
   const double cos_theta  = cos(theta);
-  const double tan_phi2   = SQR(tan_phi);
-  const double cos_theta2 = SQR(cos_theta);
+  const double tan_phi2   = Pow2(tan_phi);
+  const double cos_theta2 = Pow2(cos_theta);
   Flag_T found_flg = NO;
   unsigned p;
   
@@ -3116,7 +3116,7 @@ static void extrapolate_outsideNS_CS_continuity_method(Grid_T *const grid)
 // r1 = FACTOR*r2 and r2 is the radius of NS surface, and g(r) is 
 // a function of r_out/r2 to control the radial trend of field.
 // a = (r_max-r2)/(r2-r1)
-// b = (r1*r_max-SQR(r2))/(r1-r2)
+// b = (r1*r_max-Pow2(r2))/(r1-r2)
 // r_out = a*r_in + b, where (r_in) r_out is r (inside)outside NS and
 // r_max is the max radius in NS surrounding patch.
 // in effect, it means we emulate the trend of the fields inside of NS
@@ -3208,7 +3208,7 @@ static void extrapolate_outsideNS_CS_slop_method(Grid_T *const grid)
         /* calulate r1,a,b */
         r1 = FACTOR*r2;/* small scale to define r1 */
         a  = (r_max-r2)/(r2-r1);
-        b  = (r1*r_max-SQR(r2))/(r1-r2);
+        b  = (r1*r_max-Pow2(r2))/(r1-r2);
 
         /* find the value of phi and W^{i} at r2 */
         THETA = acos(x[2]/r2);
@@ -3446,7 +3446,7 @@ static Grid_T *TOV_KerrSchild_approximation(void)
   printf("{ Acquiring Black Hole properties ...\n");
   const double bh_chi  = Pgetd("BH_X_U2");
   const double bh_mass = Pgetd("BH_mass");
-  const double bh_R    = bh_mass*(1+sqrt(1-SQR(bh_chi)));
+  const double bh_R    = bh_mass*(1+sqrt(1-Pow2(bh_chi)));
   printf("BH properties:\n");
   printf("--> BH radius (Kerr-Schild Coords.) = %e\n",bh_R);
   printf("--> BH dimensionless spin (z comp.) = %e\n",bh_chi);
@@ -3695,7 +3695,7 @@ void bbn_make_normal_vector_on_BH_horizon(Grid_T *const grid)
       double x = patch->node[ijk]->x[0]-BH_center_x;
       double y = patch->node[ijk]->x[1]-BH_center_y; 
       double z = patch->node[ijk]->x[2]-BH_center_z;
-      double r = sqrt(SQR(x)+SQR(y)+SQR(z));
+      double r = sqrt(Pow2(x)+Pow2(y)+Pow2(z));
       
       /* minus sign to point outside the black hole */
       //_HS_U0[ijk] = dq2_dq1(patch,_c_,_x_,ijk);
@@ -3745,7 +3745,7 @@ static void init_field_TOV_plus_KerrSchild(Grid_T *const grid,const TOV_T *const
   const double BH_center_z = Pgetd("BH_center_z");
   const double C_NS = -0.5*D;/* center of NS it's on -y axis*/
   const double R_Schwar = tov->r[tov->N-1];/* NS's Schwarzchild radius */
-  const double a2_BH = SQR(a_BH);/* spin vector of BH */
+  const double a2_BH = Pow2(a_BH);/* spin vector of BH */
   const double y_CM = Pgetd("y_CM");
   const double x_CM = Pgetd("x_CM");
   const double Omega_BHNS = Pgetd("BH_NS_orbital_angular_velocity");
@@ -3761,7 +3761,7 @@ static void init_field_TOV_plus_KerrSchild(Grid_T *const grid,const TOV_T *const
   t->boost->Bx = Bx;
   t->boost->By = By;
   t->boost->Bz = Bz;
-  t->boost->B2 = SQR(Bx)+SQR(By)+SQR(Bz);
+  t->boost->B2 = Pow2(Bx)+Pow2(By)+Pow2(Bz);
 
   /* black hole parts */
   FOR_ALL_PATCHES(p,grid)
@@ -3805,7 +3805,7 @@ static void init_field_TOV_plus_KerrSchild(Grid_T *const grid,const TOV_T *const
       double _y    = Lm1_x_mu[2];
       double _z    = Lm1_x_mu[3];
       double rbar  = bbn_KerrShcild_r(_x,_y,_z,a_BH);
-      double rbar2 = SQR(rbar);
+      double rbar2 = Pow2(rbar);
       double _k0 = (rbar*_x+a_BH*_y)/(rbar2+a2_BH);
       double _k1 = (rbar*_y-a_BH*_x)/(rbar2+a2_BH);
       double _k2 = _z/rbar;
@@ -3895,7 +3895,7 @@ KSbeta_D2[ijk]*_gammaI_U2U2[ijk];
         double x = patch->node[ijk]->x[0];
         double y = patch->node[ijk]->x[1]-C_NS;
         double z = patch->node[ijk]->x[2];
-        double r = sqrt(SQR(x)+SQR(y)+SQR(z));
+        double r = sqrt(Pow2(x)+Pow2(y)+Pow2(z));
         double alpha;
         double enthalpy_h;
         
@@ -3940,7 +3940,7 @@ KSbeta_D2[ijk]*_gammaI_U2U2[ijk];
         double x    = patch->node[ijk]->x[0];
         double y    = patch->node[ijk]->x[1]-C_NS;
         double z    = patch->node[ijk]->x[2];
-        double r = sqrt(SQR(x)+SQR(y)+SQR(z));
+        double r = sqrt(Pow2(x)+Pow2(y)+Pow2(z));
         double alpha;
         
         /* psi */
@@ -3987,7 +3987,7 @@ KSbeta_D2[ijk]*_gammaI_U2U2[ijk];
          double x = patch->node[ijk]->x[0];
          double y = patch->node[ijk]->x[1];
          double z = patch->node[ijk]->x[2];
-         double r = sqrt(SQR(x)+SQR(y)+SQR(z));
+         double r = sqrt(Pow2(x)+Pow2(y)+Pow2(z));
          psim4    = pow(psi[ijk],-4);
          
          /* Beta */
@@ -4500,7 +4500,7 @@ static void NS_BH_surface_CubedSpherical_grid(Grid_T *const grid,struct Grid_Par
   const double y_CM       = Pgetd("y_CM");
   const double C_BH       = 0.5*Pgetd("BH_NS_separation");/* center of BH patch it's on +y axis */
   const double Omega_BHNS = Pgetd("BH_NS_orbital_angular_velocity");
-  const double g2         = 1-SQR(-Omega_BHNS*(C_BH-y_CM));/* inverse square of Lorentz factor  */
+  const double g2         = 1-Pow2(-Omega_BHNS*(C_BH-y_CM));/* inverse square of Lorentz factor  */
   const double BH_center[3] = {Pgetd("BH_center_x"),Pgetd("BH_center_y")-C_BH,Pgetd("BH_center_z")};
   double *R;
   char par[1000] = {'\0'};
@@ -4622,7 +4622,7 @@ static void NS_BH_surface_CubedSpherical_grid(Grid_T *const grid,struct Grid_Par
         for (j = 0; j < N[1]; ++j)
         {
           unsigned ijk = L(N,i,j,0);
-          dR_sum_square += SQR(1-R[ijk]/R0[ijk]);
+          dR_sum_square += Pow2(1-R[ijk]/R0[ijk]);
         }
       
     }/* end of if (same_res_flag) */
@@ -4654,7 +4654,7 @@ static void NS_BH_surface_CubedSpherical_grid(Grid_T *const grid,struct Grid_Par
         for (j = 0; j < N[1]; ++j)
         {
           unsigned ijk = L(N,i,j,0);
-          dR_sum_square += SQR(1-R[ijk]/R0[ijk]);
+          dR_sum_square += Pow2(1-R[ijk]/R0[ijk]);
         }
       
     }/* end of if (same_res_flag) */
@@ -4686,7 +4686,7 @@ static void NS_BH_surface_CubedSpherical_grid(Grid_T *const grid,struct Grid_Par
         for (j = 0; j < N[1]; ++j)
         {
           unsigned ijk = L(N,i,j,0);
-          dR_sum_square += SQR(1-R[ijk]/R0[ijk]);
+          dR_sum_square += Pow2(1-R[ijk]/R0[ijk]);
         }
       
     }/* end of if (same_res_flag) */
@@ -4718,7 +4718,7 @@ static void NS_BH_surface_CubedSpherical_grid(Grid_T *const grid,struct Grid_Par
         for (j = 0; j < N[1]; ++j)
         {
           unsigned ijk = L(N,i,j,0);
-          dR_sum_square += SQR(1-R[ijk]/R0[ijk]);
+          dR_sum_square += Pow2(1-R[ijk]/R0[ijk]);
         }
       
     }/* end of if (same_res_flag) */
@@ -4750,7 +4750,7 @@ static void NS_BH_surface_CubedSpherical_grid(Grid_T *const grid,struct Grid_Par
         for (j = 0; j < N[1]; ++j)
         {
           unsigned ijk = L(N,i,j,0);
-          dR_sum_square += SQR(1-R[ijk]/R0[ijk]);
+          dR_sum_square += Pow2(1-R[ijk]/R0[ijk]);
         }
       
     }/* end of if (same_res_flag) */
@@ -4783,7 +4783,7 @@ static void NS_BH_surface_CubedSpherical_grid(Grid_T *const grid,struct Grid_Par
         for (j = 0; j < N[1]; ++j)
         {
           unsigned ijk = L(N,i,j,0);
-          dR_sum_square += SQR(1-R[ijk]/R0[ijk]);
+          dR_sum_square += Pow2(1-R[ijk]/R0[ijk]);
         }
       
     }/* end of if (same_res_flag) */
@@ -4919,8 +4919,8 @@ static void NS_BH_surface_CubedSpherical_grid(Grid_T *const grid,struct Grid_Par
       {
         X[1] = point_value(j,&coll_s[1]);
         r = sqrt(
-                 (1+SQR(X[0])+SQR(X[1]))/
-                 ((g2*SQR(X[0])+SQR(X[1]))/(SQR(R_BH_r)+SQR(a_BH)) + 1/SQR(R_BH_r))
+                 (1+Pow2(X[0])+Pow2(X[1]))/
+                 ((g2*Pow2(X[0])+Pow2(X[1]))/(Pow2(R_BH_r)+Pow2(a_BH)) + 1/Pow2(R_BH_r))
                 );
         for (k = 0; k < N[2]; ++k)
           R[L(N,i,j,k)] = r;
@@ -4937,8 +4937,8 @@ static void NS_BH_surface_CubedSpherical_grid(Grid_T *const grid,struct Grid_Par
       {
         X[1] = point_value(j,&coll_s[1]);
         r = sqrt(
-                 (1+SQR(X[0])+SQR(X[1]))/
-                 ((SQR(X[0])+g2*SQR(X[1]))/(SQR(R_BH_r)+SQR(a_BH)) + 1/SQR(R_BH_r))
+                 (1+Pow2(X[0])+Pow2(X[1]))/
+                 ((Pow2(X[0])+g2*Pow2(X[1]))/(Pow2(R_BH_r)+Pow2(a_BH)) + 1/Pow2(R_BH_r))
                 );
         for (k = 0; k < N[2]; ++k)
           R[L(N,i,j,k)] = r;
@@ -4955,8 +4955,8 @@ static void NS_BH_surface_CubedSpherical_grid(Grid_T *const grid,struct Grid_Par
       {
         X[1] = point_value(j,&coll_s[1]);/* b = y/x */
         r = sqrt(
-                 (1+SQR(X[0])+SQR(X[1]))/
-                 (((g2+SQR(X[1])))/(SQR(R_BH_r)+SQR(a_BH)) + SQR(X[0])/SQR(R_BH_r))
+                 (1+Pow2(X[0])+Pow2(X[1]))/
+                 (((g2+Pow2(X[1])))/(Pow2(R_BH_r)+Pow2(a_BH)) + Pow2(X[0])/Pow2(R_BH_r))
                 );
         for (k = 0; k < N[2]; ++k)
           R[L(N,i,j,k)] = r;
@@ -4973,8 +4973,8 @@ static void NS_BH_surface_CubedSpherical_grid(Grid_T *const grid,struct Grid_Par
       {
         X[1] = point_value(j,&coll_s[1]);/* b = z/x */
         r = sqrt(
-                 (1+SQR(X[0])+SQR(X[1]))/
-                 (((g2+SQR(X[0])))/(SQR(R_BH_r)+SQR(a_BH)) + SQR(X[1])/SQR(R_BH_r))
+                 (1+Pow2(X[0])+Pow2(X[1]))/
+                 (((g2+Pow2(X[0])))/(Pow2(R_BH_r)+Pow2(a_BH)) + Pow2(X[1])/Pow2(R_BH_r))
                 );
         for (k = 0; k < N[2]; ++k)
           R[L(N,i,j,k)] = r;
@@ -4991,8 +4991,8 @@ static void NS_BH_surface_CubedSpherical_grid(Grid_T *const grid,struct Grid_Par
       {
         X[1] = point_value(j,&coll_s[1]);/* b = z/y */
         r = sqrt(
-                 (1+SQR(X[0])+SQR(X[1]))/
-                 (((1+g2*SQR(X[0])))/(SQR(R_BH_r)+SQR(a_BH)) + SQR(X[1])/SQR(R_BH_r))
+                 (1+Pow2(X[0])+Pow2(X[1]))/
+                 (((1+g2*Pow2(X[0])))/(Pow2(R_BH_r)+Pow2(a_BH)) + Pow2(X[1])/Pow2(R_BH_r))
                 );
         for (k = 0; k < N[2]; ++k)
           R[L(N,i,j,k)] = r;
@@ -5009,8 +5009,8 @@ static void NS_BH_surface_CubedSpherical_grid(Grid_T *const grid,struct Grid_Par
       {
         X[1] = point_value(j,&coll_s[1]);/* b = x/y */
         r = sqrt(
-                 (1+SQR(X[0])+SQR(X[1]))/
-                 (((1+g2*SQR(X[1])))/(SQR(R_BH_r)+SQR(a_BH)) + SQR(X[0])/SQR(R_BH_r))
+                 (1+Pow2(X[0])+Pow2(X[1]))/
+                 (((1+g2*Pow2(X[1])))/(Pow2(R_BH_r)+Pow2(a_BH)) + Pow2(X[0])/Pow2(R_BH_r))
                 );
         for (k = 0; k < N[2]; ++k)
           R[L(N,i,j,k)] = r;
@@ -5125,7 +5125,7 @@ static void find_theta_phi_of_XYZ_NS_CS(double *const theta,double *const phi,co
 {
   const double a = X[0];
   const double b = X[1];
-  const double d = sqrt(1+SQR(a)+SQR(b));
+  const double d = sqrt(1+Pow2(a)+Pow2(b));
   
   switch (side)
   {
@@ -5370,7 +5370,7 @@ static double AH_surface_function_PerfectSphere_CS(const double a,const double b
       abortEr(NO_JOB);
   }/* end of switch */
 
-  return fabs(S)/sqrt(SQR(a)+SQR(b)+1);
+  return fabs(S)/sqrt(Pow2(a)+Pow2(b)+1);
 }
 
 /* free given grid and parameters related to the given grid */
