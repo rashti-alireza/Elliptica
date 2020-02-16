@@ -11,7 +11,7 @@ void bbn_write_checkpoint(const Grid_T *const grid)
 {
   /* print some descriptions */
   pr_line_custom('=');
-  printf("{ Writing checkpoint file ...\n\n");
+  printf("{ Writing checkpoint file ...\n");
   
   if (!grid)
   {
@@ -134,14 +134,14 @@ static void move_checkpoint_file(void)
           folder,CHECKPOINT_FILE_NAME,folder,CHECKPOINT_FILE_NAME);
   shell_command(command);
   
-  printf("checkpoint file path:\n%s/%s\n\n",folder,CHECKPOINT_FILE_NAME);
+  printf("checkpoint file path:\n%s/%s\n",folder,CHECKPOINT_FILE_NAME);
   fflush(stdout);
 }
 
 /* write all of the pertinent parameters in the checkpoint file */
 static void write_parameters(const Grid_T *const grid)
 {
-  printf ("~> Writing parameters in checkpoint file ...\n\n");
+  printf ("~> Writing parameters in checkpoint file ...\n");
   fflush(stdout);
   
   FILE *file = 0;
@@ -188,7 +188,7 @@ static void write_parameters(const Grid_T *const grid)
 /* write all of the fields in the checkpoint file */
 static void write_fields(const Grid_T *const grid)
 {
-  printf("~> Writing fields in checkpoint file ...\n\n");
+  printf("~> Writing fields in checkpoint file ...\n");
   fflush(stdout);
   
   FILE *file = 0;
@@ -573,7 +573,7 @@ static void read_parameters(struct checkpoint_header *const alloc_info,FILE *con
       printf("rv_array   = %p\n",(void *)p->rv_array);
       printf("rv_n       = %u\n",p->rv_n);
       printf("iterative  = %u\n",p->iterative);
-      printf("double_flg = %u\n\n\n",p->double_flg);
+      printf("double_flg = %u\n",p->double_flg);
     }
     //end
   }

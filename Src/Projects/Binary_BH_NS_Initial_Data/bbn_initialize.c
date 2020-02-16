@@ -204,7 +204,7 @@ static int IsThereAnyUsefulCheckpointFile(void)
   {
     Psets("checkpoint_file_path",prev_data_file_path);
     
-    printf("\n~> checkpoint file found at:\n%s\n\n",prev_data_file_path);
+    printf("\n~> checkpoint file found at:\n%s\n",prev_data_file_path);
     
     /* remove the current directory */
     sprintf(str,"rm -rf %s",cur_out_dir);
@@ -313,7 +313,7 @@ static Grid_T *make_next_grid_using_previous_grid(Grid_T *const grid_prev)
 static void keep_NS_center_fixed(Grid_T *const grid)
 {
   pr_line_custom('=');
-  printf("{ Adjusting NS center ...\n\n");
+  printf("{ Adjusting NS center ...\n");
   
   const double C    = -0.5*Pgetd("BH_NS_separation");
   struct NC_Center_RootFinder_S par[1] = {0};
@@ -371,7 +371,7 @@ static void keep_NS_center_fixed(Grid_T *const grid)
 static void P_ADM_control(Grid_T *const grid)
 {
   pr_line_custom('=');
-  printf("{ Adjusting ADM momentums ...\n\n");
+  printf("{ Adjusting ADM momentums ...\n");
   
   char *adjust[3];
   const char *const par = Pgets("P_ADM_control_method");
@@ -574,7 +574,7 @@ static void parse_adjust_parameter(const char *const par,char *adjust[3])
 static void force_balance_eq(Grid_T *const grid)
 {
   pr_line_custom('=');
-  printf("{ Applying force balance equation ...\n\n");
+  printf("{ Applying force balance equation ...\n");
 
   struct NC_Center_RootFinder_S dh_par[1] = {0};
   Root_Finder_T root_finder[1]            = {0};
@@ -1294,7 +1294,7 @@ static void find_NS_center(Grid_T *const grid)
   }
   free_root_finder(root);
   
-  printf("\n} Finding NS center ==> Done.\n\n");  
+  printf("\n} Finding NS center ==> Done.\n");  
 }
 
 /* dh/dx^0 = 0 */
@@ -1559,7 +1559,7 @@ static void update_B1_dB1_Beta_dBete_Aij_dAij(Grid_T *const grid)
 static void adjust_AH_radius(Grid_T *const grid,struct Grid_Params_S *const GridParams)
 {
   pr_line_custom('=');
-  printf("{ Adjusting apparent horizon radius to meet BH mass ...\n\n");
+  printf("{ Adjusting apparent horizon radius to meet BH mass ...\n");
   
   const double target_bh_mass  = Pgetd("BH_mass");
   const double current_r_excision = Pgetd("r_excision");
@@ -1632,7 +1632,7 @@ static double Euler_eq_const_rootfinder_eq(void *params,const double *const x)
 static void interpolate_and_initialize_to_next_grid(Grid_T *const grid_next,Grid_T *const grid_prev)
 {
   pr_line_custom('=');
-  printf("{ Interpolating & initializing to the next grid ...\n\n");
+  printf("{ Interpolating & initializing to the next grid ...\n");
   
   /* if it is ready */
   if (Pgeti("use_previous_data"))
@@ -2427,7 +2427,7 @@ static void find_X_and_patch(const double *const x,const char *const hint,Grid_T
 static void find_NS_surface_Ylm_method_CS(Grid_T *const grid,struct Grid_Params_S *const GridParams)
 {
   pr_line_custom('=');
-  printf("{ Finding the surface of NS, Ylm method ...\n\n");
+  printf("{ Finding the surface of NS, Ylm method ...\n");
   
   /* the stucture for the root finder */
   struct NS_surface_RootFinder_S par[1];
@@ -2738,7 +2738,7 @@ void bbn_extrapolate_metric_fields_insideBH(Grid_T *const grid)
     return;
     
   pr_line_custom('=');
-  printf("{ Extrapolating metric fields inside the BH ...\n\n");
+  printf("{ Extrapolating metric fields inside the BH ...\n");
   
   /* add patches in side the excision region */
   add_patches_insideBH(grid);
@@ -4053,7 +4053,7 @@ KSbeta_D2[ijk]*_gammaI_U2U2[ijk];
 static Grid_T *creat_bbn_grid_CS(struct Grid_Params_S *const GridParams)
 {
   pr_line_custom('=');
-  printf("{ Creating grid ...\n\n");
+  printf("{ Creating grid ...\n");
   
   Grid_T *grid_next = alloc_grid();/* adding a new grid */
   Grid_T *grid_prev = GridParams->grid_prev;
@@ -4492,7 +4492,7 @@ static void move_geometry(Grid_T *const grid_next,Grid_T *const grid_prev)
 /* making  NS and BH surfaces function */
 static void NS_BH_surface_CubedSpherical_grid(Grid_T *const grid,struct Grid_Params_S *const GridParams)
 {
-  printf("{ Populating surface function for NS and BH ...\n\n");
+  printf("{ Populating surface function for NS and BH ...\n");
   
   const double Max_R_NS_l = GridParams->Max_R_NS_l;/* maximum radius of NS */
   const double R_BH_r     = GridParams->R_BH_r;
