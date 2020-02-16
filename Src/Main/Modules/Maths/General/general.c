@@ -425,10 +425,10 @@ double MaxMag_d(const double a,const double b)
   return ABS(a) > ABS(b) ? ABS(a) : ABS(b);
 }
 
-/* given adouble array and its dimension N, 
+/* given a double array and its dimension N, 
 // it finds the maximum magnitude of the elements, i.e. L infinity norm
 // ->return value: maximum magnitude of a double array (L infinity). */
-double L_inf(const double N,const double *const v)
+double L_inf(const unsigned N,const double *const v)
 {
   if (!v || !N)
     abortEr("The given array is empty.");

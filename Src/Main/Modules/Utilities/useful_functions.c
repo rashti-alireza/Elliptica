@@ -263,7 +263,7 @@ unsigned total_nodes_patch(const Patch_T *const patch)
 */
 Coord_T find_coord(const char *const coordsys)
 {
-  Coord_T coord;
+  Coord_T coord = UNDEFINED_COORD;
   
   if(strcmp_i(coordsys,"Cartesian"))
     coord = Cartesian;

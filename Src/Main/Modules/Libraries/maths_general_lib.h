@@ -23,7 +23,7 @@ double sum_0_N_dCi_dfj_by_dTi_dq(const unsigned N,const unsigned j,const double 
 double d_dq_sum_1_N_cos_ixb_cos_ixa(const int N, const double b,const double a);
 void summation_tests(void);
 double MaxMag_d(const double a,const double b);
-double L_inf(const double n,const double *const v);
+double L_inf(const unsigned n,const double *const v);
 double L1_norm(const unsigned n, const double *const v2,const double *const v1);
 double L2_norm(const unsigned n, const double *const v2,const double *const v1);
 double arctan(const double y,const double x);
