@@ -346,7 +346,7 @@ static unsigned IsAvailable_1d(Field_T *const f,const unsigned dir)
   const Basis_T basis = patch->basis[dir];
   unsigned r = 0;
   const unsigned pn = patch->pn;
-  char needle[3][MAX_STR] = {'\0'};
+  char needle[3][MAX_STR] = {{'\0'}};
   Flag_T flg = CLEAN;
   
   sprintf(needle[0],PR_FORMAT,pn,dir,collocation,basis);
@@ -398,7 +398,7 @@ static unsigned IsAvailable_2d(Field_T *const f,const unsigned dir1,const unsign
   Basis_T basis[3];
   unsigned r = 0;
   unsigned pn = f->patch->pn;
-  char needle[3][MAX_STR] = {'\0'};
+  char needle[3][MAX_STR] = {{'\0'}};
   unsigned DIR[3];
   Dd_T e;
   Flag_T flg = CLEAN, pristine = YES;
@@ -498,7 +498,7 @@ static unsigned IsAvailable_3d(Field_T *const f)
   Basis_T basis[3];
   unsigned r = 0;
   unsigned pn = patch->pn;
-  char needle[3][MAX_STR] = {'\0'};
+  char needle[3][MAX_STR] = {{'\0'}};
   Flag_T flg = CLEAN;
   
   collocation[0] = patch->collocation[0];
@@ -552,12 +552,12 @@ static double *find_1d_coeffs_in_patch(Field_T *const f,const unsigned dir)
     if (collocation == Chebyshev_Extrema)
     {
       coeffs_patch_Tn_Extrema_1d(f,dir);
-      add_Tinfo(f,dir,Chebyshev_Tn_BASIS,Chebyshev_Extrema);
+      add_Tinfo(f,dir,Chebyshev_Extrema,Chebyshev_Tn_BASIS);
     }
     else if (collocation == Chebyshev_Nodes)
     {
       coeffs_patch_Tn_Nodes_1d(f,dir);
-      add_Tinfo(f,dir,Chebyshev_Tn_BASIS,Chebyshev_Nodes);
+      add_Tinfo(f,dir,Chebyshev_Nodes,Chebyshev_Tn_BASIS);
     }
     else
       abortEr("There is no such COLLOCATION defined for this function.\n");
