@@ -582,6 +582,12 @@ static void read_parameters(struct checkpoint_header *const alloc_info,FILE *con
   if (strcmp(match_str,PARAM_FOOTER))
     abortEr("It could not find the parameter footer.\n");
   _free(match_str);
+  
+  /* set the following parameters to default value */
+  Pseti("did_resolution_change?",1);
+  Pseti("did_NS_surface_change?",1);
+  Pseti("did_AH_surface_change?",1);
+  Pseti("use_previous_data",0);
 }
  
 /* read fields from the checkpoint file */
