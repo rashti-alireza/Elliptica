@@ -533,7 +533,8 @@ unsigned total_iterations_ip(void)
   if (max != INT_MAX)/* if "total_iterations_ip" par is set */
     return max;
   
-  i = 0;
+  i   = 0;
+  max = 0;
   while (parameters_global != 0 && parameters_global[i] != 0)
   {
     if (parameters_global[i]->iterative)
@@ -556,7 +557,7 @@ unsigned total_iterations_ip(void)
     i++;
   }
   
-  Pseti("total_iterations_ip",max+1);
+  Pseti("total_iterations_ip",(int)max+1);
   
   return max+1;/* +1 since the last value also is counted */
 }
