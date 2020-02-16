@@ -124,7 +124,7 @@ static void Elliptic_Eqs_Convergence_Test_BBN(void)
   free_grid(grid);
   
   /* print some description */
-  printf("\nConvergence Test of Elliptic Equations for Binary BH-NS ==> Done. :)\n");
+  printf("Convergence Test of Elliptic Equations for Binary BH-NS ==> Done. :)\n");
   pr_clock();
   pr_line_custom('=');
 }
@@ -182,7 +182,6 @@ static void update_parameters_and_directories(const unsigned main_loop_iter)
     printf("Iterative parameters:\n");
     for (i = 0; i < total_ipars; ++i)
       printf("|--> %-30s = %-15s\n",par_name_ip(i),par_value_str_ip(i));
-    printf("\n");
   }
   
   /* find the name of next folder */

@@ -75,7 +75,7 @@ void pr_clock(void)
   h = (int)(t-d*(24*60*60))/(60*60);
   m = (int)(t-d*(24*60*60)-(h*60*60))/60;
   s = (int)(t-d*(24*60*60)-(h*60*60)-m*60);
-  printf("\nWALL-TIME: %02dd:%02dh:%02dm:%02ds = %.0fs\n\n",d,h,m,s,t);
+  printf("\nWALL-TIME: %02dd:%02dh:%02dm:%02ds = %.0fs\n",d,h,m,s,t);
   fflush(stdout);
 }
 

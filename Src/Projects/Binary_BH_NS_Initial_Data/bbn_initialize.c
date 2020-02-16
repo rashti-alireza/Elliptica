@@ -204,7 +204,7 @@ static int IsThereAnyUsefulCheckpointFile(void)
   {
     Psets("checkpoint_file_path",prev_data_file_path);
     
-    printf("\n~> checkpoint file found at:\n%s\n",prev_data_file_path);
+    printf("~> checkpoint file found at:\n%s\n",prev_data_file_path);
     
     /* remove the current directory */
     sprintf(str,"rm -rf %s",cur_out_dir);
@@ -357,12 +357,12 @@ static void keep_NS_center_fixed(Grid_T *const grid)
   printf("|--> dh(%g,%g,%g)/dz = %+g\n",
     x_center[0],x_center[1],x_center[2],dh2[2]);
     
-  printf("\nChanges in enthalpy derivatives after NS center adjustment:\n");
+  printf("Changes in enthalpy derivatives after NS center adjustment:\n");
   printf("|--> dh2/dx-dh1/dx = %+g\n",dh2[0]-dh1[0]);
   printf("|--> dh2/dy-dh1/dy = %+g\n",dh2[1]-dh1[1]);
   printf("|--> dh2/dz-dh1/dz = %+g\n",dh2[2]-dh1[2]);
   
-  printf("\n} Adjusting NS center  ==> Done.\n");
+  printf("} Adjusting NS center  ==> Done.\n");
   pr_clock();
   pr_line_custom('=');
 }
@@ -431,7 +431,7 @@ static void P_ADM_control(Grid_T *const grid)
   _free(adjust[1]);
   _free(adjust[2]);
   
-  printf("\n} Adjusting ADM momentums ==> Done.\n");
+  printf("} Adjusting ADM momentums ==> Done.\n");
   pr_clock();
   pr_line_custom('=');
 }
@@ -634,12 +634,12 @@ static void force_balance_eq(Grid_T *const grid)
   printf("|--> dh(%g,%g,%g)/dz = %+g\n",
     NS_center[0],NS_center[1],NS_center[2],dh2[2]);
     
-  printf("\nChanges in enthalpy derivatives after force balance eq.:\n");
+  printf("Changes in enthalpy derivatives after force balance eq.:\n");
   printf("|--> dh2/dx-dh1/dx = %+g\n",dh2[0]-dh1[0]);
   printf("|--> dh2/dy-dh1/dy = %+g\n",dh2[1]-dh1[1]);
   printf("|--> dh2/dz-dh1/dz = %+g\n",dh2[2]-dh1[2]);
   
-  printf("\n} Applying force balance equation ==> Done.\n");
+  printf("} Applying force balance equation ==> Done.\n");
   pr_clock();
   pr_line_custom('=');
 }
@@ -666,12 +666,12 @@ static void Px_ADM_is0_by_BH_center_y(Grid_T *const grid)
   /* having found new x_CM now update */
   if (GRT(dPx_Px,dP))
   {
-    printf("\n|--> |Px_ADM2 - Px_ADM1|/|Px_ADM2| = %g > %g\n",dPx_Px,dP);
+    printf("|--> |Px_ADM2 - Px_ADM1|/|Px_ADM2| = %g > %g\n",dPx_Px,dP);
     Psetd("BH_center_y",BH_center_y_new);
   }
   else
   {
-    printf("\n|--> |Px_ADM2 - Px_ADM1|/|Px_ADM2| = %g <= %g\n"
+    printf("|--> |Px_ADM2 - Px_ADM1|/|Px_ADM2| = %g <= %g\n"
            "     |--> no BH center y-axis update.\n",dPx_Px,dP);
   }
   
@@ -700,12 +700,12 @@ static void Py_ADM_is0_by_BH_center_x(Grid_T *const grid)
   /* having found new x_CM now update */
   if (GRT(dPy_Py,dP))
   {
-    printf("\n|--> |Py_ADM2 - Py_ADM1|/|Py_ADM2| = %g > %g\n",dPy_Py,dP);
+    printf("|--> |Py_ADM2 - Py_ADM1|/|Py_ADM2| = %g > %g\n",dPy_Py,dP);
     Psetd("BH_center_x",BH_center_x_new);
   }
   else
   {
-    printf("\n|--> |Py_ADM2 - Py_ADM1|/|Py_ADM2| = %g <= %g\n"
+    printf("|--> |Py_ADM2 - Py_ADM1|/|Py_ADM2| = %g <= %g\n"
            "     |--> no BH center x-axis update.\n",dPy_Py,dP);
   }
   
@@ -769,12 +769,12 @@ static void Px_ADM_is0_by_x_boost(Grid_T *const grid)
     /* if change in momentum is big */
     if (GRT(dPx_Px,dP))
     {
-      printf("\n|--> |Px_ADM2 - Px_ADM1|/|Px_ADM2| = %g > %g\n",dPx_Px,dP);
+      printf("|--> |Px_ADM2 - Px_ADM1|/|Px_ADM2| = %g > %g\n",dPx_Px,dP);
       Psetd("v*_boost_x",v[0]);
     }
     else
     {
-      printf("\n|--> |Px_ADM2 - Px_ADM1|/|Px_ADM2| = %g <= %g\n"
+      printf("|--> |Px_ADM2 - Px_ADM1|/|Px_ADM2| = %g <= %g\n"
              "     |--> no v*_boost_x update.\n",dPx_Px,dP);
     }
       
@@ -840,12 +840,12 @@ static void Py_ADM_is0_by_y_boost(Grid_T *const grid)
     const double dPy_Py = fabs(p2[1]-p1[1])/fabs(p2[1]);
     if (GRT(dPy_Py,dP))
     {
-      printf("\n|--> |Py_ADM2 - Py_ADM1|/|Py_ADM2| = %g > %g\n",dPy_Py,dP);
+      printf("|--> |Py_ADM2 - Py_ADM1|/|Py_ADM2| = %g > %g\n",dPy_Py,dP);
       Psetd("v*_boost_y",v[1]);
     }
     else
     {
-      printf("\n|--> |Py_ADM2 - Py_ADM1|/|Py_ADM2| = %g <= %g\n"
+      printf("|--> |Py_ADM2 - Py_ADM1|/|Py_ADM2| = %g <= %g\n"
            "     |--> no v*_boost_y update.\n",dPy_Py,dP);
     }
       
@@ -911,12 +911,12 @@ static void Pz_ADM_is0_by_z_boost(Grid_T *const grid)
     const double dPz_Pz = fabs(p2[2]-p1[2])/fabs(p2[2]);
     if (GRT(dPz_Pz,dP))
     {
-      printf("\n|--> |Pz_ADM2 - Pz_ADM1|/|Pz_ADM2| = %g > %g\n",dPz_Pz,dP);
+      printf("|--> |Pz_ADM2 - Pz_ADM1|/|Pz_ADM2| = %g > %g\n",dPz_Pz,dP);
       Psetd("v*_boost_z",v[2]);
     }
     else
     {
-      printf("\n|--> |Pz_ADM2 - Pz_ADM1|/|Pz_ADM2| = %g <= %g\n"
+      printf("|--> |Pz_ADM2 - Pz_ADM1|/|Pz_ADM2| = %g <= %g\n"
            "     |--> no v*_boost_z update.\n",dPz_Pz,dP);
     }
   }
@@ -1294,7 +1294,7 @@ static void find_NS_center(Grid_T *const grid)
   }
   free_root_finder(root);
   
-  printf("\n} Finding NS center ==> Done.\n");  
+  printf("} Finding NS center ==> Done.\n");  
 }
 
 /* dh/dx^0 = 0 */
@@ -1476,13 +1476,13 @@ static void Px_ADM_is0_by_y_CM(Grid_T *const grid)
   /* having found new x_CM now update */
   if (GRT(dPx_Px,dP))
   {
-    printf("\n|--> |Px_ADM2 - Px_ADM1|/|Px_ADM2| = %g > %g\n",dPx_Px,dP);
+    printf("|--> |Px_ADM2 - Px_ADM1|/|Px_ADM2| = %g > %g\n",dPx_Px,dP);
     Psetd("y_CM",y_CM_new);
     update_B1_dB1_Beta_dBete_Aij_dAij(grid);
   }
   else
   {
-    printf("\n|--> |Px_ADM2 - Px_ADM1|/|Px_ADM2| = %g <= %g\n"
+    printf("|--> |Px_ADM2 - Px_ADM1|/|Px_ADM2| = %g <= %g\n"
            "     |--> no y_CM update.\n",dPx_Px,dP);
   }
     
@@ -1511,13 +1511,13 @@ static void Py_ADM_is0_by_x_CM(Grid_T *const grid)
   /* having found new x_CM now update */
   if (GRT(dPy_Py,dP))
   {
-    printf("\n|--> |Py_ADM2 - Py_ADM1|/|Py_ADM2| = %g > %g\n",dPy_Py,dP);
+    printf("|--> |Py_ADM2 - Py_ADM1|/|Py_ADM2| = %g > %g\n",dPy_Py,dP);
     Psetd("x_CM",x_CM_new);
     update_B1_dB1_Beta_dBete_Aij_dAij(grid);
   }
   else
   {
-    printf("\n|--> |Py_ADM2 - Py_ADM1|/|Py_ADM2| = %g <= %g\n"
+    printf("|--> |Py_ADM2 - Py_ADM1|/|Py_ADM2| = %g <= %g\n"
            "     |--> no x_CM update.\n",dPy_Py,dP);
   }
     
@@ -1638,7 +1638,7 @@ static void interpolate_and_initialize_to_next_grid(Grid_T *const grid_next,Grid
   if (Pgeti("use_previous_data"))
   {
     printf("~> Using the fields of the previous grid.\n");
-    printf("\n} Interpolating & initializing to the next grid ==> Done.\n");
+    printf("} Interpolating & initializing to the next grid ==> Done.\n");
     pr_clock();
     pr_line_custom('=');
     return;
@@ -2295,7 +2295,7 @@ static void interpolate_and_initialize_to_next_grid(Grid_T *const grid_next,Grid
   }/* end of for (p = 0; p < np; ++p) */
   
   printf(
-         "\n|--> initializing W_U0    ~> Done.\n"
+         "|--> initializing W_U0    ~> Done.\n"
          "|--> initializing W_U1    ~> Done.\n"
          "|--> initializing W_U2    ~> Done.\n"
          "|--> initializing Beta_U0 ~> Done.\n"
@@ -2306,7 +2306,7 @@ static void interpolate_and_initialize_to_next_grid(Grid_T *const grid_next,Grid
          "|--> initializing B1_U2   ~> Done.\n");
   fflush(stdout);
     
-  printf("\n} Interpolating & initializing to the next grid ==> Done.\n");
+  printf("} Interpolating & initializing to the next grid ==> Done.\n");
   pr_clock();
   pr_line_custom('=');
 }
@@ -2596,7 +2596,7 @@ static void find_NS_surface_Ylm_method_CS(Grid_T *const grid,struct Grid_Params_
   free(h_res);
   free_root_finder(root);
   
-  printf("\n} Finding the surface of NS, Ylm method ==> Done.\n");
+  printf("} Finding the surface of NS, Ylm method ==> Done.\n");
   pr_clock();
   pr_line_custom('=');
 }
@@ -4257,7 +4257,7 @@ static Grid_T *creat_bbn_grid_CS(struct Grid_Params_S *const GridParams)
   /* either the resolution is changed or it is the first grid */
   if (change_res_flg || !grid_prev)/* make geometry from scratch */
   {
-    printf("\n~> Making patches from scratch ...\n");
+    printf("~> Making patches from scratch ...\n");
     
     make_patches(grid_next);/* making patch(es) to cover the grid */
     realize_geometry(grid_next);/* realizing the geometry of whole grid
@@ -4272,7 +4272,7 @@ static Grid_T *creat_bbn_grid_CS(struct Grid_Params_S *const GridParams)
     if (!strcmp_i(kind,"BBN_CubedSpherical_grid"))
       abortEr(NO_OPTION);
     
-    printf("\n~> Using BH, NS, filling_box and outermost of previous patches ...\n");
+    printf("~> Using BH, NS, filling_box and outermost of previous patches ...\n");
     
     free_grid(grid_next);
     grid_next     = grid_prev;
@@ -4313,7 +4313,7 @@ static Grid_T *creat_bbn_grid_CS(struct Grid_Params_S *const GridParams)
   /* only NS surface is not changed */
   else if (!change_NS_flg)
   {
-    printf("\n~> Using NS, filling_box and outermost of previous patches ...\n");
+    printf("~> Using NS, filling_box and outermost of previous patches ...\n");
     
     make_patches(grid_next);/* making patch(es) to cover the grid */
     /* since the resolution is not changed copy the geometry */
@@ -4346,7 +4346,7 @@ static Grid_T *creat_bbn_grid_CS(struct Grid_Params_S *const GridParams)
   /* only BH surface is not changed */
   else if (!change_AH_flg)
   {
-    printf("\n~> Using BH, filling_box and outermost of previous patches ...\n");
+    printf("~> Using BH, filling_box and outermost of previous patches ...\n");
    
     make_patches(grid_next);/* making patch(es) to cover the grid */
     /* since the resolution is not changed copy the geometry */
@@ -4377,7 +4377,7 @@ static Grid_T *creat_bbn_grid_CS(struct Grid_Params_S *const GridParams)
   }
   else/* if both NS and AH are changed but the resolution */
   {
-    printf("\n~> Using filling_box and outermost of previous patches ...\n");
+    printf("~> Using filling_box and outermost of previous patches ...\n");
 
     make_patches(grid_next);/* making patch(es) to cover the grid */
     /* since the resolution is not changed copy the geometry */
@@ -5116,7 +5116,7 @@ static void NS_BH_surface_CubedSpherical_grid(Grid_T *const grid,struct Grid_Par
   
   free(R);
   
-  printf("\n} Populating surface function for NS and BH ==> Done.\n");
+  printf("} Populating surface function for NS and BH ==> Done.\n");
 }
 
 /* given (X,Y,Z) in the specified slice of NS in cubed spherical coords

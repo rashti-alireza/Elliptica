@@ -9,7 +9,7 @@
 int make_patches(Grid_T *const grid)
 {
   pr_line_custom('=');
-  printf("{ Making the patches ...\n\n");
+  printf("{ Making the patches ...\n");
   
   unsigned p;
   

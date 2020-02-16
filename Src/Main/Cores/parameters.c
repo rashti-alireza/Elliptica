@@ -61,7 +61,7 @@ void update_parameter_double_format(const char *const lv, const double rv)
   par = get_parameter(lv);
   if (par)/* if this parameter exists update it */
   {
-    printf("\nUpdating Parameter:\n");
+    printf("Updating Parameter:\n");
     printf("         |--> parameter     = %s\n",lv);
     printf("         |--> new value     = %+g\n",rv);
     printf("         |--> old value     = %+g\n",par->rv_double);
@@ -102,7 +102,7 @@ void add_parameter_double(const char *const lv, const double rv)
   par->rv_double  = rv;
   par->double_flg = 1;
   
-  printf("\nAdding Parameter:\n");
+  printf("Adding Parameter:\n");
   printf("       |--> parameter = %s\n",lv);
   printf("       |--> value     = %+g\n",rv);
 }
