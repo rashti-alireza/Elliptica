@@ -2629,7 +2629,7 @@ static void find_XYZ_and_patch_of_theta_phi_NS_CS(double *const X,Patch_T **cons
     Flag_T side = patch->CoordSysInfo->CubedSphericalCoord->side;
     const double *c = patch->c;
     double a = 0, b = 0;
-    double a_sign,b_sign,c_sign;
+    double a_sign = 0,b_sign = 0,c_sign = 0;
     double x[3],phi2,theta2,r;
     
     /* we know that theta = 0 or Pi occures only at UP or DOWN patches

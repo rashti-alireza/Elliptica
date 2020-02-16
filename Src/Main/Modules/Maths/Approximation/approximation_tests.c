@@ -1145,7 +1145,7 @@ int derivative_tests(Grid_T *const grid)
     }
     
     /* read F from data base */
-    flg = read_F(F,DataBase_func,fi);
+    flg = read_F(F,DataBase_func,(FUNC_E)fi);
     
     /* if the is no derivative for this function it continues */
     if (flg == NO) continue;
@@ -1347,7 +1347,7 @@ static double calculate_expected_precision_for_derivative(const Field_T *const f
 /* ->retun value: order of derivative according to fn */
 static unsigned order_of_derivative(const enum FUNC_E fn)
 {
-  unsigned o;
+  unsigned o = 0;
   
   switch (fn)
   {

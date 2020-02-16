@@ -261,12 +261,12 @@ static int get_dp_2ndOrder(const Patch_T *const patch,SpecDerivative_Func_T **fu
     {
       if (func[i] == derivative_ChebyshevExtrema_Tn_2ndOrder)
       {
-        dp[i] = i;/* means _N0_or _N1_or _N2_ */
+        dp[i] = (Dd_T)i;/* means _N0_or _N1_or _N2_ */
         cnt++;
       }
       else if (func[i] == derivative_ChebyshevNodes_Tn_2ndOrder)
       {
-        dp[i] = i;/* means _N0_or _N1_or _N2_ */
+        dp[i] = (Dd_T)i;/* means _N0_or _N1_or _N2_ */
         cnt++;
       }
       else
