@@ -308,7 +308,7 @@ static double *spectral_derivative_2ndOrder(Field_T *const f,const Dd_T dir_e)
   get_dp_2ndOrder(patch,df,dir_e,dp);
   
   c = 0;
-  for (d = 0; d < 3; ++d)
+  for (d = _N0_; d <= _N2_; ++d)
   {
     flg[d] = NO;
     df_dp[d] = 0;
@@ -352,7 +352,7 @@ static double *spectral_derivative_2ndOrder(Field_T *const f,const Dd_T dir_e)
   }
 
 
-  for (d = 0; d < 3; ++d)
+  for (d = _N0_; d <= _N2_; ++d)
     if (df_dp[d])
       free(df_dp[d]);
   
@@ -482,7 +482,7 @@ static double *spectral_derivative_1stOrder(Field_T *const f,const Dd_T dir_e)
   get_SpecDerivative_func_1stOrder(patch,df);
   get_dp_1stOrder(patch,df,dir_e,dp);
   
-  for (d = 0; d < 3; ++d)
+  for (d = _N0_; d <= _N2_; ++d)
   {
     flg[d] = NO;
     df_dp[d] = 0;
@@ -535,7 +535,7 @@ static double *spectral_derivative_1stOrder(Field_T *const f,const Dd_T dir_e)
   }
 
 
-  for (d = 0; d < 3; ++d)
+  for (d = _N0_; d <= _N2_; ++d)
     if (df_dp[d])
       free(df_dp[d]);
   
