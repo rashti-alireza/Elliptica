@@ -32,14 +32,14 @@ void bbn_write_checkpoint(const Grid_T *const grid)
   static double last_checkpoint_was = 0;/* the time where the last 
                                         // checkpoint happened in hours */
   
-  /*if (dt+last_checkpoint_was < now && !Pgeti("STOP"))
+  if (dt+last_checkpoint_was < now && !Pgeti("STOP"))
   {
     printf("~> It's early for writing checkpoint.\n");
     printf("} Writing checkpoint ==> Done.\n");
     pr_clock();
     pr_line_custom('=');
     return;
-  }*/
+  }
   
   last_checkpoint_was = now;
   
