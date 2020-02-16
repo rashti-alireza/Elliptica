@@ -86,36 +86,40 @@ static void Elliptic_Eqs_Convergence_Test_BBN(void)
   bbn_set_default_parameters();
   
   /* the outer most iteration algorithm: */
-  const unsigned N_iter = total_iterations_ip();
   Grid_T *grid_prev = 0, *grid_next = 0, *grid = 0;
-  unsigned iter;
-  
-  /* iterate over all parameters specified in parameter file */
-  for (iter = 0; iter < N_iter; ++iter)
-  {
-    printf("{ Outermost Iteration %u ...\n\n",iter);
+  unsigned iter = 0;
     
-    /* update iterative parameters and directories */
+  /* main iteration loop */
+  while(!Pgeti("STOP"))
+  {
+    printf("{ Outermost iteration %u ...\n",iter);
+    
+    /* update parameters and directories */
     update_parameters_and_directories(iter);
     
     /* preparing fields and grid according to the given previous grid */
     grid_next = bbn_initialize_next_grid(grid_prev);
+    
+    /* write checkpoint before updating the params for the next grid */
+    bbn_write_checkpoint(grid_next);
     
     /* free previous grid completely */
     bbn_free_grid_and_its_parameters(grid_prev);
     
     /* solve the elliptic equations for the given grid */
     bbn_solve_elliptic_eqs(grid_next);
-        
+    
     /* study and analyse the new grid */
     bbn_study_initial_data(grid_next);
     
     grid_prev = 0;
-  
-    printf("} Outermost Iteration %u ==> Done.\n",iter);  
+    
+    iter++;
+    
+    printf("} Outermost iteration %u ==> Done.\n",iter);
   }
   grid = grid_next;/* final grid */
-  
+    
   /* free grid */
   free_grid(grid);
   
