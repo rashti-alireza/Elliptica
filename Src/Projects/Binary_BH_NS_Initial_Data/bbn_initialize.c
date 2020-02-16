@@ -1132,7 +1132,7 @@ static void force_balance_eq_root_finders(Grid_T *const grid,const int dir, cons
   const double x_CM         = Pgetd("x_CM");
   const double W1  = Pgetd("Solving_Field_Update_Weight");
   const double W2  = 1-W1;
-  double *new_par,old_par;
+  double *new_par,old_par = 0;
   double guess[1],X[3];
   struct Force_Balance_RootFinder_S params[1];
   Patch_T *patch;
@@ -2628,7 +2628,7 @@ static void find_XYZ_and_patch_of_theta_phi_NS_CS(double *const X,Patch_T **cons
 
     Flag_T side = patch->CoordSysInfo->CubedSphericalCoord->side;
     const double *c = patch->c;
-    double a,b;
+    double a = 0, b = 0;
     double a_sign,b_sign,c_sign;
     double x[3],phi2,theta2,r;
     
@@ -3608,7 +3608,7 @@ Euler_C = -enthalpy/u0 - dphiP/(enthalpy*u0) + Beta(i)*dphi(-i);
 static void find_Euler_eq_const_TOV_KerrSchild(Grid_T *const grid)
 {
   unsigned p,ijk;
-  double Euler_C;
+  double Euler_C = 0;
   
   FOR_ALL_PATCHES(p,grid)
   {

@@ -134,8 +134,8 @@ void make_nodes_CubedSpherical_coord(Patch_T *const patch)
   struct Collocation_s coll_s[3] = {0};
   const Flag_T side = patch->CoordSysInfo->CubedSphericalCoord->side;
   const Flag_T type = patch->CoordSysInfo->CubedSphericalCoord->type;
-  double S; /* sign */
-  unsigned a,b,c;/* permuted indices */
+  double S = 0; /* sign */
+  unsigned a = 0, b = 0, c = 0;/* permuted indices */
   const unsigned nn = patch->nn;
   const unsigned *const n = patch->n;
   const Field_T *const R1_f = patch->CoordSysInfo->CubedSphericalCoord->R1_f,

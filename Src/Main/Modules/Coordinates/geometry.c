@@ -343,7 +343,7 @@ static void set_one_Dirichlet_BC(Interface_T **const face)
   unsigned nc;/* number of chain */
   SubFace_T *subf;
   unsigned sf,f; 
-  Flag_T flg;
+  Flag_T flg = NONE;
   
   FOR_ALL(f,face)
   {

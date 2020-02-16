@@ -1094,7 +1094,7 @@ double bbn_KerrShcild_r(const double x,const double y,const double z,const doubl
 /* ->return value: H function in Kerr-Schild coords */
 double bbn_KerrSchild_H(const double M_BH,const double rbar,const double a,const double z)
 {
-  double lambda;
+  double lambda      = 0;
   const double k2    = z/rbar;
   const double a2    = SQR(a);
   const double rbar2 = SQR(rbar);
