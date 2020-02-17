@@ -183,24 +183,5 @@ void free_db_eqs(sEquation_T **db)
   free(db);
 }
 
-/* free thoroughly patch->interface */
-void free_patch_SolMan_jacobian(Patch_T *const patch)
-{
-  Solving_Man_T *const SolMan = patch->solving_man;
-  unsigned i;
-  
-  if (!SolMan)
-    return;
-  
-  for (i = 0; i < SolMan->nj; ++i)
-  {
-    free_matrix(SolMan->jacobian[i]->J);
-    _free(SolMan->jacobian[i]);
-  }
-  _free(SolMan->jacobian);
-  
-  SolMan->jacobian = 0;
-  
-}
 
 

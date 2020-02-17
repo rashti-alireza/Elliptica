@@ -28,6 +28,7 @@ typedef enum JTYPE_E
 /* Jacobain for equation */
 typedef void Js_Jacobian_eq_F(double **const J,Patch_T *const patch,JType_E jt_e);
 
+void free_patch_SolMan_jacobian(Patch_T *const patch);
 void prepare_Js_jacobian_eq(Patch_T *const patch,const char * const *types);
 void make_Js_jacobian_eq(Grid_T *const grid, const char * const* types);
 void test_make_Js_jacobian_eq(Grid_T *const grid, const char * const* types);
