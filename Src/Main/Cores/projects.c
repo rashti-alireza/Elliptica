@@ -78,3 +78,26 @@ Project_T *get_project(const char *const proj_name)
   return 0;
 }
 
+/* adding 2 block of memory for project data base 
+// and putting the last block to null and 
+// returning pointer to one before the last block
+*/
+void *alloc_project(Project_T ***const mem)
+{
+  unsigned i;
+  
+  for (i = 0; (*mem) != 0 && (*mem)[i] != 0 ; i++);
+  
+  (*mem) = realloc((*mem),(i+2)*sizeof(*(*mem)));
+  pointerEr((*mem));
+  
+  (*mem)[i] = malloc(sizeof(*(*mem)[i]));
+  pointerEr((*mem)[i]);
+  
+  (*mem)[i+1] = 0;
+  
+  return (*mem)[i];
+}
+
+
+
