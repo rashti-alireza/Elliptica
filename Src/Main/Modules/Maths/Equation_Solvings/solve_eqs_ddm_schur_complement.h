@@ -87,6 +87,8 @@ static void making_F_and_C_Regular(Patch_T *const patch);
 static void pr_intro_ddm_schur_complement(void);
 void calculate_equation_residual(Solve_Equations_T *const SolveEqs);
 void sync_patch_pools(const Grid_T*const latest_grid,Solve_Equations_T *const solve);
+void free_patch_SolMan_method_Schur(Patch_T *const patch);
+Sewing_T *alloc_sewing(void);
 
 
 

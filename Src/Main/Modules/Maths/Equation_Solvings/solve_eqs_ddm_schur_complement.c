@@ -3059,3 +3059,74 @@ static void pr_intro_ddm_schur_complement(void)
   printf("%s\n",pr_message);
   pr_line_custom('*');
 }
+
+/* calloc one sewing.
+// ->return value = memory for 1 sewing struct. */
+Sewing_T *alloc_sewing(void)
+{
+  Sewing_T *sewing = calloc(1, sizeof(*sewing));
+  pointerEr(sewing);
+  
+  return sewing;
+}
+
+/* free thoroughly patch->interface */
+void free_patch_SolMan_method_Schur(Patch_T *const patch)
+{
+  DDM_Schur_Complement_T *s = patch->solving_man->method->SchurC;
+  if (!s)
+    return;
+    
+  Sewing_T **se             = s->sewing;
+  Pair_T **p                = 0;
+  unsigned i,j;
+  
+  /* note, those matrices and double populated during solver
+  // won't needed to be freed */
+  _free(s->map);
+  _free(s->inv);
+  _free(s->Imap);
+  _free(s->Iinv);
+  _free(s->NS_p);
+  _free(s->NI_p);
+  
+  for (i = 0; i < s->nsewing; ++i)
+  {
+    p = 0;
+    if (se[i])
+    {
+      if (se[i]->patchN != patch->pn)
+      {
+        _free(se[i]->map);
+        _free(se[i]->inv);
+        _free(se[i]->Imap);
+        _free(se[i]->Iinv);
+      }
+      p = se[i]->pair;
+      for (j = 0; j < se[i]->npair; ++j)
+      {
+        _free(p[j]->ip);
+        _free(p[j]->nv);
+        
+        /* because only for the following patches we allocate memory */
+        if (se[i]->patchN != patch->pn)
+        {
+          _free(p[j]->subface->flags_str);
+          _free(p[j]->subface->id);
+          _free(p[j]->subface->adjid);
+          _free(p[j]->subface);  
+          p[j]->subface = 0;
+        }
+        free(p[j]);
+      }
+      _free(p);
+    }
+    _free(se[i]);
+  }
+  _free(se);
+  _free(s);
+  
+  patch->solving_man->method->SchurC = 0;
+}
+
+
