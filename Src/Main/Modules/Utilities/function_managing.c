@@ -84,3 +84,39 @@ sFunc_Patch2Pdouble_T *get_func_Patch2Pdouble(const char *const name,
   
   return 0;
 }
+
+/* allocating 2 block of memory for sFunc_Patch2Pdouble_T 
+// and putting the last block to NULL and returning
+// the new available pointer.
+// ->return value: a pointer to a ready sFunc_Patch2Pdouble
+*/
+void *alloc_sFunc_Patch2Pdouble(sFunc_Patch2Pdouble_T ***const mem)
+{
+  unsigned i;
+  
+  for (i = 0; (*mem) != 0 && (*mem)[i] != 0 ; i++);
+  
+  (*mem) = realloc((*mem),(i+2)*sizeof(*(*mem)));
+  pointerEr((*mem));
+  
+  (*mem)[i] = calloc(1,sizeof(*(*mem)[i]));
+  pointerEr((*mem)[i]);
+  
+  (*mem)[i+1] = 0;
+  
+  return (*mem)[i];
+}
+
+/* free function structure form patch to void */
+void free_func_PtoV(sFunc_PtoV_T **func)
+{
+  unsigned i;
+  
+  for (i = 0; func[i] != 0; ++i)
+  {
+    free(func[i]->task);
+    free(func[i]);
+  }
+  
+  free(func);
+}
