@@ -224,3 +224,166 @@ void free_grid_db(void)
   free_2d(grids_global);
   grids_global = 0;
 }
+
+/* allocating memory for grid structure.
+// this function add grid to grids_global; 
+// furthermore, the end of grids_global is determined by NULL.
+// ->return value: a new grid
+*/
+void *alloc_grid(void)
+{
+  unsigned i;
+  
+  for (i = 0; grids_global != 0 && grids_global[i] != 0; i++);
+  
+  grids_global = realloc(grids_global,(i+2)*sizeof(*grids_global));
+  pointerEr(grids_global);
+  
+  /* allocate new grid */
+  grids_global[i] = calloc(1,sizeof(*grids_global[i]));
+  pointerEr(grids_global[i]);
+  /* set grid number */
+  if (i == 0)
+    grids_global[i]->gn = i;
+  else
+    grids_global[i]->gn = grids_global[i-1]->gn+1;
+    
+  /* determine the last grid */
+  grids_global[i+1] = 0;
+  
+  return grids_global[i];
+}
+
+/* allocating memory for patches based on type of coord sys */
+void alloc_patches(Grid_T *const grid)
+{
+  if (strcmp_i(grid->kind,"Cartesian_grid"))
+    alloc_patches_Cartesian_grid(grid);
+  else if (strcmp_i(grid->kind,"BNS_Spherical_grid"))
+    alloc_patches_BNS_Spherical_grid(grid);
+  else if (strcmp_i(grid->kind,"BNS_CubedSpherical_grid"))
+    alloc_patches_BNS_CubedSpherical_grid(grid);
+  else if (strcmp_i(grid->kind,"BBN_CubedSpherical_grid"))
+    alloc_patches_BBN_CubedSpherical_grid(grid);
+  else if (strcmp_i(grid->kind,"SNS_CubedSpherical+Box_grid"))
+    alloc_patches_SNS_CubedSpherical_Box_grid(grid);
+  else if (strcmp_i(grid->kind,"SNS_CubedSpherical_grid"))
+    alloc_patches_SNS_CubedSpherical_grid(grid);
+  else if (strcmp_i(grid->kind,"SBH_CubedSpherical_grid"))
+    alloc_patches_SBH_CubedSpherical_grid(grid);
+  else
+    abortEr_s("No such %s kind for grid.\n",grid->kind);
+}
+
+/* free the given grid completely */
+void free_grid(Grid_T *grid)
+{
+  unsigned p,ijk,nn,f,i,ng;
+  
+  if (!grid)
+    return;
+  
+  FOR_ALL_PATCHES(p,grid)
+  {
+    Patch_T *patch = grid->patch[p];
+    nn             = patch->nn;
+    
+    _free(patch->name);
+    
+    if (patch->coordsys != Cartesian)
+      for (ijk = 0; ijk < nn; ++ijk)
+        _free(patch->node[ijk]->X);
+    
+    if (patch->node)    
+      free_2d_mem(patch->node,nn);
+    
+    for (f = 0; f < patch->nfld; ++f)
+    {
+      Field_T *field = patch->pool[f];
+      free_field(field);
+    }
+    _free(patch->pool);
+    _free(patch->JacobianT);
+    free_patch_interface(patch);
+    if (patch->solving_man)
+    {
+      free_patch_SolMan_jacobian(patch);
+      free_patch_SolMan_method_Schur(patch);
+      _free(patch->solving_man->field_eq);
+      _free(patch->solving_man->bc_eq);
+      _free(patch->solving_man->jacobian_field_eq);
+      _free(patch->solving_man->jacobian_bc_eq);
+      free_2d_mem(patch->solving_man->field_name,patch->solving_man->nf);
+      free(patch->solving_man);
+    }
+  }
+  free_2d_mem(grid->patch,grid->np);
+  _free(grid->kind);
+  
+  /* shrink the grids_global */
+  Grid_T *last_grid = 0;
+  
+  for (ng = 0; grids_global != 0 && grids_global[ng] != 0; ng++);
+  
+  for (i = 0; i < ng; ++i)
+  {
+    if (grid == grids_global[i])
+    {
+      last_grid       = grids_global[ng-1];
+      assert(last_grid);
+      grids_global[i] = last_grid;
+      
+      grids_global = realloc(grids_global,ng*sizeof(*grids_global));
+      pointerEr(grids_global);
+      grids_global[ng-1] = 0;
+      
+      break;
+    }
+  }
+  free(grid);
+}
+
+/* free the patch completely */
+void free_patch(Patch_T *patch)
+{
+  unsigned ijk,nn,f;
+  
+  if (!patch)
+    return;
+  
+  nn = patch->nn;
+  
+  _free(patch->name);
+  
+  if (patch->coordsys != Cartesian)
+    for (ijk = 0; ijk < nn; ++ijk)
+      _free(patch->node[ijk]->X);
+  
+  if (patch->node)    
+    free_2d_mem(patch->node,nn);
+  
+  for (f = 0; f < patch->nfld; ++f)
+  {
+    Field_T *field = patch->pool[f];
+    free_field(field);
+  }
+  _free(patch->pool);
+  _free(patch->JacobianT);
+  free_patch_interface(patch);
+  if (patch->solving_man)
+  {
+    free_patch_SolMan_jacobian(patch);
+    free_patch_SolMan_method_Schur(patch);
+    _free(patch->solving_man->field_eq);
+    _free(patch->solving_man->bc_eq);
+    _free(patch->solving_man->jacobian_field_eq);
+    _free(patch->solving_man->jacobian_bc_eq);
+    free_2d_mem(patch->solving_man->field_name,patch->solving_man->nf);
+    free(patch->solving_man);
+  }
+  
+  free(patch);
+}
+
+
+
