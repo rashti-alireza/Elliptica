@@ -3,7 +3,7 @@
 // June 2018
 */
 
-#include "useful_functions.h"
+#include "coordinate_utilities.h"
 
 #define RES_EPS 1E-11
 
@@ -508,3 +508,34 @@ double Z_coord(const unsigned i,const Patch_T *const patch)
 {
   return patch->node[i]->X[2];
 }
+
+/* make an empty needle 
+// ->return value: pointer to new needle
+*/
+void *alloc_needle(void)
+{
+  Needle_T *needle;
+  
+  needle = calloc(1,sizeof(*needle));
+  pointerEr(needle);
+
+  return needle;
+}
+
+/* free needle */
+void free_needle(Needle_T *needle)
+{
+  if (needle == 0) return;
+  
+  else
+  {
+    if (needle->Nin  != 0) free (needle->in);
+    if (needle->Nex  != 0) free (needle->ex);
+    if (needle->Ng   != 0) free (needle->guess);
+    if (needle->Nans != 0) free (needle->ans);
+    
+  }
+  
+  free(needle);
+}
+

@@ -41,4 +41,9 @@ void alloc_interface(Patch_T *const patch);
 void *alloc_point(const unsigned s);
 void free_points(Grid_T *const grid);
 void free_patch_interface(Patch_T *const patch);
+void free_needle(Needle_T *needle);
+void *alloc_needle(void);
+
+
+
 

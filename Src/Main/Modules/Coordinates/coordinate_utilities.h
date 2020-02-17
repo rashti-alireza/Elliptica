@@ -42,4 +42,7 @@ int x_of_X(double *const x,const double *const X,const Patch_T *const patch);
 static int x_of_X_CS_coord(double *const x,const double *const X,const Patch_T *const patch);
 static int X_of_x_CS_coord(double *const X,const double *const cart,const Patch_T *const patch);
 static int x_of_X_Cartesian_coord(double *const x,const double *const X,const Patch_T *const patch);
+void free_needle(Needle_T *needle);
+void *alloc_needle(void);
+
 
