@@ -30,6 +30,7 @@ static double interpolation_Chebyshev_Tn_XY(Interpolation_T *const interp_s);
 static double interpolation_Chebyshev_Tn_XZ(Interpolation_T *const interp_s);
 static double interpolation_Chebyshev_Tn_YZ(Interpolation_T *const interp_s);
 static double interpolation_Chebyshev_Tn_XYZ(Interpolation_T *const interp_s);
+void free_interpolation(Interpolation_T *interp_s);
 
 
 

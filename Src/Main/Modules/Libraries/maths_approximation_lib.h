@@ -15,5 +15,6 @@ double *df_dphi_Ylm(const double *const realClm,const double *const imagClm,cons
 double *df_dtheta_Ylm(const double *const realClm,const double *const imagClm,const unsigned Ntheta, const unsigned Nphi,const unsigned Lmax);
 unsigned lm2n(const unsigned l, const unsigned m);
 double *alloc_ClmYlm(unsigned Lmax);
+void free_interpolation(Interpolation_T *interp_s);
 
 

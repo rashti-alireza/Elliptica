@@ -550,3 +550,26 @@ static double T(const unsigned n,const unsigned i,const double x)
   
   return t;
 }
+
+/* freeing interpolation structure. */
+void free_interpolation(Interpolation_T *interp_s)
+{
+  if (!interp_s)
+    return;
+  if (strstr_i(interp_s->method,"Natural_Cubic_Spline_1D"))
+  {
+    if (interp_s->N_cubic_spline_1d->b)
+      free(interp_s->N_cubic_spline_1d->b);
+    if (interp_s->N_cubic_spline_1d->c)
+      free(interp_s->N_cubic_spline_1d->c);
+    if (interp_s->N_cubic_spline_1d->d)
+      free(interp_s->N_cubic_spline_1d->d);
+    if (interp_s->N_cubic_spline_1d->Alloc_Mem)
+    {
+      free(interp_s->N_cubic_spline_1d->x);
+      free(interp_s->N_cubic_spline_1d->f);
+    }
+  }
+  free(interp_s);
+}
+
