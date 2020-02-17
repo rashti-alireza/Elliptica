@@ -809,3 +809,83 @@ void enable_fields(Grid_T *const grid)
       add_field(field_name[i],"(3dim)",patch,YES);
   }
 }
+
+/* freeing v2 of field and put it to 0 */
+void free_v2(Field_T *f)
+{
+  if (f->v2)
+    free(f->v2);
+  f->v2 = 0;
+}
+
+/* freeing attr of field and put it to 0 */
+void free_attr(Field_T *f)
+{
+  if (f->attr)
+    free(f->attr);
+  f->attr = 0;
+}
+
+/* freeing v of field and put it to 0 */
+void free_v(Field_T *f)
+{
+  if (f->v)
+    free(f->v);
+  f->v = 0;
+}
+
+
+/* freeing info of field and put it to 0 */
+void free_info(Field_T *f)
+{
+  if (f->info)
+    free(f->info);
+  f->info = 0;
+}
+
+/* freeing field */
+void free_field(Field_T *fld)
+{
+  if (!fld)
+    return;
+  
+  if (fld->name)
+    free(fld->name);
+  if (fld->v)
+    free(fld->v);
+  if (fld->v2)
+    free(fld->v2);
+  if (fld->attr)
+    free(fld->attr);
+  if (fld->info)
+    free(fld->info);
+    
+  free(fld);
+}
+
+/* free v, v2 and info to update values of a field */
+void empty_field(Field_T *fld)
+{
+  if (!fld)
+    return;
+  
+  if (fld->v)
+    free(fld->v);
+  if (fld->v2)
+    free(fld->v2);
+  if (fld->info)
+    free(fld->info);
+  
+  fld->v    = 0;
+  fld->v2   = 0;
+  fld->info = 0; 
+}
+
+/* freeing v2 and info of a field */
+void free_coeffs(Field_T *fld)
+{
+  free_info(fld);
+  free_v2(fld);
+}
+
+
