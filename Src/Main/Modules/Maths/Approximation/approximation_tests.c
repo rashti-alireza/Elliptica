@@ -1405,3 +1405,18 @@ static double *make_random_number(const unsigned N,const double min,const double
   
   return x;
 }
+
+/* free function structure form grid to pointer to double */
+static void free_func_Patch2Pdouble(sFunc_Patch2Pdouble_T **func)
+{
+  unsigned i;
+  
+  for (i = 0; func[i] != 0; ++i)
+  {
+    free(func[i]->name);
+    free(func[i]);
+  }
+  
+  free(func);
+}
+
