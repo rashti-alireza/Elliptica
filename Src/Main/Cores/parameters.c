@@ -734,3 +734,102 @@ void set_default_parameter(const char *const lhs,const char *const rhs)
     }
   }
 }
+
+/* adding 2 block of memory for parameter data base 
+// and putting the last block to null and 
+// returning pointer to one before the last block
+*/
+void *alloc_parameter(Parameter_T ***const mem)
+{
+  unsigned i;
+  
+  for (i = 0; (*mem) != 0 && (*mem)[i] != 0 ; i++);
+  
+  (*mem) = realloc((*mem),(i+2)*sizeof(*(*mem)));
+  pointerEr((*mem));
+  
+  (*mem)[i] = calloc(1,sizeof(*(*mem)[i]));
+  pointerEr((*mem)[i]);
+  
+  (*mem)[i+1] = 0;
+  
+  return (*mem)[i];
+}
+
+/* given the parameter name, free the parameter data base from it 
+// and shrink the data base and put the last parameter in place of
+// the deleted parameter. */
+void free_parameter(const char *const par_name)
+{
+  Parameter_T *last_par = 0;
+  unsigned np,i;
+  
+  /* count total number of parameters */
+  np = 0;
+  while (parameters_global != 0 && parameters_global[np] != 0)
+    np++;
+  
+  if (np == 0)
+    return;
+    
+  for (i = 0; i < np; ++i)
+  {
+    if (strcmp_i(parameters_global[i]->lv,par_name))
+    {
+      last_par = parameters_global[np-1];
+      
+      _free(parameters_global[i]->lv);
+      _free(parameters_global[i]->rv);
+      _free(parameters_global[i]->rv_ip);
+      _free(parameters_global[i]->rv_array);
+      free(parameters_global[i]);
+      
+      parameters_global[i] = last_par;
+      
+      parameters_global = 
+        realloc(parameters_global,np*sizeof(*parameters_global));
+      pointerEr(parameters_global);
+      
+      parameters_global[np-1] = 0;
+      break;
+    }
+  }
+  
+}
+
+/* given the parameter, free its content and itself. 
+// Note: it won't affect the parameter data base. */
+void free_given_parameter(Parameter_T *par)
+{
+  if (!par)
+    return;
+    
+  _free(par->lv);
+  _free(par->rv);
+  _free(par->rv_ip);
+  _free(par->rv_array);
+  free(par);
+}
+
+/* free the whole parameter data base */
+void free_parameter_db(void)
+{
+  unsigned np;
+  
+  np = 0;
+  while (parameters_global != 0 && parameters_global[np] != 0)
+  {
+  
+    _free(parameters_global[np]->lv);
+    _free(parameters_global[np]->rv);
+    _free(parameters_global[np]->rv_ip);
+    _free(parameters_global[np]->rv_array);
+    free(parameters_global[np]);
+    np++;
+  }
+  
+  _free(parameters_global);
+  
+  parameters_global = 0;
+}
+

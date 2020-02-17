@@ -46,6 +46,11 @@ void update_iterative_parameter_ip(const unsigned iter);
 unsigned total_iterative_parameters_ip(void);
 unsigned total_iterations_ip(void);
 void set_default_parameter(const char *const lhs,const char *const rhs);
+void *alloc_parameter(Parameter_T ***const mem);
+void free_parameter(const char *const par_name);
+void free_given_parameter(Parameter_T *par);
+void free_parameter_db(void);
+
 
 /* fields */
 Field_T *add_field(const char *const name,const char *attribute,Patch_T *const patch,const Flag_T alloc_flg);
@@ -64,6 +69,7 @@ void free_info(Field_T *f);
 void free_field(Field_T *fld);
 void empty_field(Field_T *fld);
 void free_coeffs(Field_T *fld);
+
 
 /* grid */
 Patch_T make_temp_patch(const Patch_T *const patch);

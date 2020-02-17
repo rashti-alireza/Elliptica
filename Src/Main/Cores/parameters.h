@@ -33,4 +33,11 @@ unsigned total_iterative_parameters_ip(void);
 unsigned total_iterations_ip(void);
 static char *parse_multiplicity_of_iterative_parameter(const char *const rv);
 void set_default_parameter(const char *const lhs,const char *const rhs);
+void *alloc_parameter(Parameter_T ***const mem);
+void free_parameter(const char *const par_name);
+void free_given_parameter(Parameter_T *par);
+void free_parameter_db(void);
+
+
+
 
