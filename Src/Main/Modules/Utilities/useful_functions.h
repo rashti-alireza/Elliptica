@@ -42,3 +42,7 @@ unsigned IsItInsideBHPatch(const Patch_T *const patch);
 double spectral_expansion_truncation_error(Field_T *const f);
 void print_spectral_expansion_truncation_error(Grid_T *const grid);
 void shell_command(const char *const cmd);
+void free_2d_mem(void *mem0, const unsigned long c);
+void free_2d(void *mem0);
+double **alloc_2D_double(const long unsigned R,const long unsigned C);
+double *alloc_double(const unsigned N);

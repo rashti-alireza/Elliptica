@@ -784,3 +784,77 @@ void shell_command(const char *const cmd)
   fflush(stdout);
   system(cmd);
 }
+
+/* return value-> N*sizeof(double), using calloc*/
+double *alloc_double(const unsigned N)
+{
+  double *d;
+  
+  d = calloc(N,sizeof(*d));
+  pointerEr(d);
+  
+  return d;
+}
+
+/* return value-> M[R][C] double type memory using calloc */
+double **alloc_2D_double(const long unsigned R,const long unsigned C)
+{
+  double **M;
+  long unsigned row;
+  
+  M = calloc(R,sizeof(*M));
+  pointerEr(M);
+  
+  for (row = 0; row < R; ++row)
+  {
+    M[row] = calloc(C,sizeof(*M[row]));
+    pointerEr(M[row]);
+  }
+  
+  return M;
+}
+
+/* freeing 2 dimensions block of memory
+// knowing the last column is pointing to null
+*/
+void free_2d(void *mem0)
+{
+  if (!mem0)
+    return;
+    
+  int i;
+  void **mem = mem0;
+    
+  for (i = 0; mem[i] != 0; i++)
+    free(mem[i]);
+    
+  free(mem);
+    
+}
+
+/* freeing 2 dimensions block of memory
+// knowing the number of rows is c
+*/
+void free_2d_mem(void *mem0, const unsigned long c)
+{
+  if (!mem0)
+    return;
+    
+  unsigned long i;
+  void **mem = mem0;
+  
+  for (i = 0; i < c; i++)
+    free(mem[i]);
+    
+  free(mem);
+    
+}
+
+/* free only if p != NULL */
+void _free(void *p)
+{
+  if (p)
+    free(p);
+}
+
+
