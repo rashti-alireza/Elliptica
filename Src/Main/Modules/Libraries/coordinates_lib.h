@@ -36,3 +36,9 @@ void point_finder(Needle_T *const needle);
 void populate_right_BH(Grid_T *const grid,const unsigned pn);
 void populate_right_BH_central_box(Grid_T *const grid,const unsigned pn);
 int make_nodes(Grid_T *const grid);
+void alloc_nodes(Grid_T *const grid);
+void alloc_interface(Patch_T *const patch);
+void *alloc_point(const unsigned s);
+void free_points(Grid_T *const grid);
+void free_patch_interface(Patch_T *const patch);
+

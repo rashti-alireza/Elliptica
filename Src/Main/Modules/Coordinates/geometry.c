@@ -2491,3 +2491,124 @@ static int IsOnSubface(const Point_T *const pnt, const char *const lead)
 
   return 0;
 }
+
+/* memory alloc nodes */
+void alloc_nodes(Grid_T *const grid)
+{
+  unsigned *n;
+  unsigned i;
+  
+  FOR_ALL(i,grid->patch)
+  {
+    unsigned j,U;
+    Node_T **node;
+    
+    n = grid->patch[i]->n;
+    grid->patch[i]->node = 
+      malloc((n[0]*n[1]*n[2]+1)*sizeof(*grid->patch[i]->node));
+    pointerEr(grid->patch[i]->node);
+    
+    node = grid->patch[i]->node;
+    node[n[0]*n[1]*n[2]] = 0;
+    
+    U = n[0]*n[1]*n[2];
+    for (j = 0; j < U; j++)
+    {
+      node[j] = calloc(1,sizeof(*node[j]));
+      pointerEr(node[j]);
+    }
+    
+  }
+}
+
+/* memory allocation for interface struct */
+void alloc_interface(Patch_T *const patch)
+{
+  unsigned i;
+  assert(patch);
+  
+  patch->interface = calloc(FACE_NUM+1,sizeof(*patch->interface));
+  pointerEr(patch->interface);
+  
+  for (i = 0; i < FACE_NUM; i++)
+  {
+    patch->interface[i] = calloc(1,sizeof(*patch->interface[i]));
+    pointerEr(patch->interface[i]);
+  }
+}
+
+/*
+// memory allocation for point struct;
+// s is the number of point which is demanded 
+// ->return value: pointer to new allocated memory
+*/
+void *alloc_point(const unsigned s)
+{
+  Point_T **point;
+  unsigned i;
+  
+  point = calloc(s+1,sizeof(*point));
+  pointerEr(point);
+  
+  for (i = 0; i < s; i++)
+  {
+    point[i] = calloc(1,sizeof(*point[i]));
+    pointerEr(point[i]);
+  }
+  
+  return point;
+}
+
+/* feeing memory of Point_T inside grid */
+void free_points(Grid_T *const grid)
+{
+  unsigned pa;
+  
+  FOR_ALL(pa,grid->patch)
+  {
+    Interface_T **face = grid->patch[pa]->interface;
+    unsigned f;
+    
+    FOR_ALL(f,face)
+    {
+      free_2d_mem(face[f]->point,face[f]->np);
+      face[f]->np = 0;
+      face[f]->point = 0;
+    }
+
+  }
+}
+
+/* free thoroughly patch->interface */
+void free_patch_interface(Patch_T *const patch)
+{
+  Interface_T **face = patch->interface;
+  SubFace_T **subface = 0;
+  unsigned f,i;
+  
+  if (face)
+  FOR_ALL(f,face)
+  {
+    /* free point */
+    free_2d_mem(face[f]->point,face[f]->np);
+    face[f]->np = 0;
+    
+    /* free subface */
+    subface = face[f]->subface;
+    for (i = 0; i < face[f]->ns; ++i)
+    {
+      _free(subface[i]->flags_str);
+      _free(subface[i]->id);
+      _free(subface[i]->adjid);
+      _free(subface[i]);
+    }
+    _free(subface);
+    
+    /* free face */
+    _free(face[f]);
+  }
+  _free(face);
+
+  patch->interface = 0;
+}
+

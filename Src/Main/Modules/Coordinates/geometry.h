@@ -114,4 +114,8 @@ static void set_df_dn_and_pair(Grid_T *const grid);
 static Subf_T *add_ring(Subf_T ***chain);
 static Subf_T **compose_the_chain(SubFace_T *const subf1);
 static void set_df_dn(Subf_T *const ring,const unsigned df_dn);
-
+void alloc_nodes(Grid_T *const grid);
+void alloc_interface(Patch_T *const patch);
+void *alloc_point(const unsigned s);
+void free_points(Grid_T *const grid);
+void free_patch_interface(Patch_T *const patch);
