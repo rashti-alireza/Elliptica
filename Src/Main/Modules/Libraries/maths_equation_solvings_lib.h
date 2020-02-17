@@ -114,6 +114,11 @@ fJs_T *get_j_reader(const Matrix_T *const m);
 void test_Jacobian_of_equations(Solve_Equations_T *const SolveEqs);
 void test_root_finders(Grid_T *const grid);
 fdInterp_dfs_T *get_dInterp_df(const Patch_T *const patch,const SubFace_T *const sf,const char *const dir);
+Sewing_T *alloc_sewing(void);
+void free_db_eqs(sEquation_T **db);
+void free_patch_SolMan_jacobian(Patch_T *const patch);
+void free_patch_SolMan_method_Schur(Patch_T *const patch);
+
 
 /* defining some macros to improve the readability and simplicity */
 

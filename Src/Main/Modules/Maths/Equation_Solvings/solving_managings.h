@@ -12,4 +12,8 @@ void initialize_solving_man(Grid_T *const grid,sEquation_T **const field_eq,sEqu
 void enable_fields(Grid_T *const grid);
 fEquation_T *get_field_eq(const char *const name, sEquation_T **const db);
 fEquation_Solver_T *get_solver_method(const char *const solver);
+Sewing_T *alloc_sewing(void);
+void free_db_eqs(sEquation_T **db);
+void free_patch_SolMan_jacobian(Patch_T *const patch);
+void free_patch_SolMan_method_Schur(Patch_T *const patch);
 
