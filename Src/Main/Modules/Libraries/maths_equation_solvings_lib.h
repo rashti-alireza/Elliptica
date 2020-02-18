@@ -3,7 +3,7 @@
 
 #include "maths_linear_algebra_lib.h"
 
-/* interrelation structures */
+/* forward declaration structures */
 struct FIELD_T;
 struct MATRIX_T;
 

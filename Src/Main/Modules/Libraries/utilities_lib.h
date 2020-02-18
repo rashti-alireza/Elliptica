@@ -6,7 +6,7 @@
 
 #define TEST_START test_start(__FILE__,__LINE__);
 
-/* interrelation structures */
+/* forward declaration structures */
 struct FIELD_T;
 
 /* general function patch to void */

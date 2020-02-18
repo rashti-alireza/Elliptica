@@ -2,7 +2,7 @@
 #define fields_LIB_H
 
 
-/* interrelation structures */
+/* forward declaration structures */
 struct GRID_T;
 struct PATCH_T;
 

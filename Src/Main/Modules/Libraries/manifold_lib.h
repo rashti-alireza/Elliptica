@@ -3,7 +3,7 @@
 
 
 
-/* interrelation structures */
+/* forward declaration structures */
 struct FIELD_T;
 struct SOLVING_MAN_T;
 

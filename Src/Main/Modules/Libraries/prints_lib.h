@@ -6,7 +6,7 @@
 #define SECTION "#######################"
 #define PR_LINE "--------------------------------------------------------------------------"
 
-/* interrelation structures */
+/* forward declaration structures */
 struct GRID_T;
 struct PATCH_T;
 struct MATRIX_T;
