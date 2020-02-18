@@ -1,3 +1,7 @@
+#ifndef TOV_LIB_H
+#define TOV_LIB_H
+
+
 /* struct for TOV stars */
 typedef struct TOV_PROJECT_T
 {
@@ -20,3 +24,9 @@ typedef struct TOV_PROJECT_T
 TOV_T *TOV_solution(TOV_T *const TOV);
 void TOV_free(TOV_T *TOV);
 TOV_T *TOV_init(void);
+
+
+#endif
+
+
+
