@@ -11,5 +11,6 @@ void add_func_Patch2Pdouble(sFunc_Patch2Pdouble_T ***const func,double *(*f)(Pat
 sFunc_Patch2Pdouble_T *get_func_Patch2Pdouble(const char *const name,sFunc_Patch2Pdouble_T **const func);
 void *alloc_sFunc_Patch2Pdouble(sFunc_Patch2Pdouble_T ***const mem);
 void free_func_PtoV(sFunc_PtoV_T **func);
+void *alloc_sFunc_PtoV(sFunc_PtoV_T ***const mem);
 
 

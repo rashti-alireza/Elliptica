@@ -120,3 +120,29 @@ void free_func_PtoV(sFunc_PtoV_T **func)
   
   free(func);
 }
+
+/* allocating 2 block of memory for sFunc_PtoV_T 
+// and putting the last block to NULL and returning
+// the new available pointer.
+// ->return value: a pointer to a ready sFunc_PtoV
+*/
+void *alloc_sFunc_PtoV(sFunc_PtoV_T ***const mem)
+{
+  unsigned i;
+  
+  for (i = 0; (*mem) != 0 && (*mem)[i] != 0 ; i++);
+  
+  (*mem) = realloc((*mem),(i+2)*sizeof(*(*mem)));
+  pointerEr((*mem));
+  
+  (*mem)[i] = malloc(sizeof(*(*mem)[i]));
+  pointerEr((*mem)[i]);
+  
+  (*mem)[i+1] = 0;
+  
+  return (*mem)[i];
+}
+
+
+
+

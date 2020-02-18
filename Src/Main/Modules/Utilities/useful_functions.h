@@ -46,3 +46,6 @@ void free_2d_mem(void *mem0, const unsigned long c);
 void free_2d(void *mem0);
 double **alloc_2D_double(const long unsigned R,const long unsigned C);
 double *alloc_double(const unsigned N);
+void _free(void *p);
+
+

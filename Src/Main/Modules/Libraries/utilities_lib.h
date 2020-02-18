@@ -45,6 +45,10 @@ double **alloc_2D_double(const long unsigned R,const long unsigned C);
 double *alloc_double(const unsigned N);
 void *alloc_sFunc_Patch2Pdouble(sFunc_Patch2Pdouble_T ***const mem);
 void free_func_PtoV(sFunc_PtoV_T **func);
+void _free(void *p);
+void *alloc_sFunc_PtoV(sFunc_PtoV_T ***const mem);
+
+
 
 
 

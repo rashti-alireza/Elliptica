@@ -6,6 +6,7 @@
 #include "geometry.h"
 
 #define EPS 1E-5
+#define FACE_NUM 6
 
 /* 
 // realizing the geometry of grid such as how patches are glued
