@@ -1,5 +1,5 @@
-#ifndef physics_StressEnergyTensor_lib
-#define physics_StressEnergyTensor_lib
+#ifndef physics_StressEnergyTensor_LIB_H
+#define physics_StressEnergyTensor_LIB_H
 
 
 void Tij_IF_CTS_u0(Patch_T *const patch);

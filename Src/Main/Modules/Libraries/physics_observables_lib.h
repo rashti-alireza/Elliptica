@@ -1,5 +1,5 @@
-#ifndef physics_observables_lib
-#define physics_observables_lib
+#ifndef physics_observables_LIB_H
+#define physics_observables_LIB_H
 
 
 /* struct for physics observables */

@@ -1,5 +1,5 @@
-#ifndef prints_lib
-#define prints_lib
+#ifndef prints_LIB_H
+#define prints_LIB_H
 
 
 

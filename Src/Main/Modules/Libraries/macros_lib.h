@@ -1,5 +1,5 @@
-#ifndef macros_lib
-#define macros_lib
+#ifndef macros_LIB_H
+#define macros_LIB_H
 
 
 /* some useful messages */

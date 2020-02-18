@@ -1,5 +1,5 @@
-#ifndef maths_equation_solvings_lib
-#define maths_equation_solvings_lib
+#ifndef maths_equation_solvings_LIB_H
+#define maths_equation_solvings_LIB_H
 
 #include "maths_linear_algebra_lib.h"
 

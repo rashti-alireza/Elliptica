@@ -1,5 +1,5 @@
-#ifndef maths_analytic_lib
-#define maths_analytic_lib
+#ifndef maths_analytic_LIB_H
+#define maths_analytic_LIB_H
 
 
 double *c_f(Patch_T *const patch);

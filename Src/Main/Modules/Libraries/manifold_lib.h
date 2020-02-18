@@ -1,5 +1,5 @@
-#ifndef manifold_lib
-#define manifold_lib
+#ifndef manifold_LIB_H
+#define manifold_LIB_H
 
 
 

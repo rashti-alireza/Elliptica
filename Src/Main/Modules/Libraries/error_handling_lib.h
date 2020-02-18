@@ -1,5 +1,5 @@
-#ifndef error_handling_lib
-#define error_handling_lib
+#ifndef error_handling_LIB_H
+#define error_handling_LIB_H
 
 
 void checkup_pointer_error(const void *const p, const char *const file, const int line);

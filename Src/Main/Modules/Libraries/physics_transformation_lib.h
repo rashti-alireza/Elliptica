@@ -1,5 +1,5 @@
-#ifndef physics_transformation_lib
-#define physics_transformation_lib
+#ifndef physics_transformation_LIB_H
+#define physics_transformation_LIB_H
 
 
 /* struct for transformation boost, rotation etc. */

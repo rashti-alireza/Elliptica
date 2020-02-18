@@ -1,5 +1,5 @@
-#ifndef maths_complex_numbers_lib
-#define maths_complex_numbers_lib
+#ifndef maths_complex_numbers_LIB_H
+#define maths_complex_numbers_LIB_H
 
 
 #include <complex.h>

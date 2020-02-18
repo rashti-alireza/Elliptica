@@ -1,5 +1,5 @@
-#ifndef maths_general_lib
-#define maths_general_lib
+#ifndef maths_general_LIB_H
+#define maths_general_LIB_H
 
 
 #define Pow2(x) ((x)*(x))

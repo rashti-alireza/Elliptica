@@ -1,5 +1,5 @@
-#ifndef physics_EoS_lib
-#define physics_EoS_lib
+#ifndef physics_EoS_LIB_H
+#define physics_EoS_LIB_H
 
 
 /* struct for equation of states */

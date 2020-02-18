@@ -1,5 +1,5 @@
-#ifndef fields_lib
-#define fields_lib
+#ifndef fields_LIB_H
+#define fields_LIB_H
 
 
 /* interrelation structures */

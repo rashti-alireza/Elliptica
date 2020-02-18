@@ -1,5 +1,5 @@
-#ifndef maths_linear_algebra_lib
-#define maths_linear_algebra_lib
+#ifndef maths_linear_algebra_LIB_H
+#define maths_linear_algebra_LIB_H
 
 
 /* matrix storage format */

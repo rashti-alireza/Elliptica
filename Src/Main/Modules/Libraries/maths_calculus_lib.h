@@ -1,5 +1,5 @@
-#ifndef maths_calculus_lib
-#define maths_calculus_lib
+#ifndef maths_calculus_LIB_H
+#define maths_calculus_LIB_H
 
 
 struct FIELD_T;

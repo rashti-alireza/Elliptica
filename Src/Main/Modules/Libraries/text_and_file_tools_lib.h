@@ -1,5 +1,5 @@
-#ifndef text_and_file_tools_lib
-#define text_and_file_tools_lib
+#ifndef text_and_file_tools_LIB_H
+#define text_and_file_tools_LIB_H
 
 
 int strcmp_i(const char *const s1, const char *const s2);

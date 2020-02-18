@@ -1,5 +1,5 @@
-#ifndef utilities_lib
-#define utilities_lib
+#ifndef utilities_LIB_H
+#define utilities_LIB_H
 
 
 #include "manifold_lib.h"
