@@ -12,6 +12,8 @@ void copy_ccs_long2ccs_long(const Matrix_T *const ccs_l1,Matrix_T *const ccs_l2)
 Matrix_T *compress_stack2ccs(Matrix_T **const S,const unsigned nm,const unsigned *const nr,const unsigned Nrow,const unsigned Ncol,const Flag_T flg);
 Matrix_T *CCSOpCCS(Matrix_T *const ccs2,Matrix_T *const ccs1,const char Op);
 int matrix_comparison(const Matrix_T *const M1,const Matrix_T *const M2);
+Matrix_T *alloc_matrix(const Matrix_SF_T type_e,const long row,const long col);
+void free_matrix(Matrix_T *m);
 
 
 
