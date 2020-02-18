@@ -268,6 +268,7 @@ static int x_of_X_CS_coord(double *const x,const double *const X,const Patch_T *
                 R2 = patch->CoordSysInfo->CubedSphericalCoord->R2;
   const double *const C = patch->c;/* center of origine translated */
   double x1,x2,d,L;
+  double x_test[3],X_test[3],dX;
   
   SignAndIndex_permutation_CubedSphere(side,&a,&b,&c,&S);
 
@@ -329,6 +330,15 @@ static int x_of_X_CS_coord(double *const x,const double *const X,const Patch_T *
       abortEr(NO_OPTION);
   }
   
+  /* test the solution */
+  x_test[0] = x[0];
+  x_test[1] = x[1];
+  x_test[2] = x[2];
+  X_of_x(X_test,x_test,patch);
+  dX = rms(3,X,X_test);
+  if (!EQL(dX,0))
+    return 0;
+    
   return 1;
 }
 
@@ -364,7 +374,8 @@ static int X_of_x_CS_coord(double *const X,const double *const cart,const Patch_
                 R1 = patch->CoordSysInfo->CubedSphericalCoord->R1,
                 R2 = patch->CoordSysInfo->CubedSphericalCoord->R2;
   double x1,x2,d,L;
-  
+  double x_test[3],X_test[3],dx;
+ 
   SignAndIndex_permutation_CubedSphere(side,&i,&j,&k,&S);
   
   X[0] = S*x[i]/x[k];
@@ -410,9 +421,17 @@ static int X_of_x_CS_coord(double *const X,const double *const cart,const Patch_
   if (EQL(X[2],1))  X[2] = 1;
   if (EQL(X[2],0))  X[2] = 0;
   
+  /* test the solution */
+  X_test[0] = X[0];
+  X_test[1] = X[1];
+  X_test[2] = X[2];
+  x_of_X(x_test,X_test,patch);
+  dx = rms(3,cart,x_test);
+  if (!EQL(dx,0))
+    return 0;
+
   return 1;
 }
-
 
 /* fill limits based on patch boundary */
 static void fill_limits(double *const lim, const Patch_T *const patch)
