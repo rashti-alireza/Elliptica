@@ -1,5 +1,4 @@
 #include "core_lib.h"
-#include "memory_managing_lib.h"
 #include "physics_EoS_lib.h"
 
 #define MAX_STR 400

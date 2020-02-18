@@ -1,6 +1,5 @@
 #include "core_lib.h"
 #include "maths_equation_solvings_lib.h"
-#include "memory_managing_lib.h"
 #include "laplace_inhom_equations_lib.h"
 #include "fields_lib.h"
 

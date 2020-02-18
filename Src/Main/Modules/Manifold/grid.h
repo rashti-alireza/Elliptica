@@ -1,8 +1,10 @@
 #include "core_lib.h"
 #include "error_handling_lib.h"
-#include "memory_managing_lib.h"
 #include "utilities_lib.h"
 #include "maths_general_lib.h"
+#include "manifold_lib.h"
+#include "fields_lib.h"
+#include "maths_equation_solvings_lib.h"
 
 extern Grid_T **grids_global;
 
@@ -36,3 +38,5 @@ void *alloc_grid(void);
 void alloc_patches(Grid_T *const grid);
 void free_grid(Grid_T *grid);
 void free_patch(Patch_T *patch);
+
+

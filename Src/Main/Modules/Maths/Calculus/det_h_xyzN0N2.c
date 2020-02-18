@@ -7,7 +7,7 @@
 /* det(g_{ij} dx^i/dN0 dx^j/dN2) */
 #include "core_lib.h"
 #include "maths_calculus_lib.h"
-#include "coordinates_lib.h"
+#include "manifold_lib.h"
 double det_h_xyzN0N2_Cheb_Ext(Patch_T *const patch,const Integration_T *const I,const unsigned ijk);
 double det_h_xyzN0N2_Cheb_Ext(Patch_T *const patch,const Integration_T *const I,const unsigned ijk)
 {

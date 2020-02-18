@@ -1,7 +1,6 @@
 #include "core_lib.h"
 #include "utilities_lib.h"
 #include "error_handling_lib.h"
-#include "memory_managing_lib.h"
 #include "maths_matrix_solvers_lib.h"
 
 #define FORMAT_ER_PAR "Each field(s) for Solving_Order parameter "\

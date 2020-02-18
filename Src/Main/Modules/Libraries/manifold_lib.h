@@ -43,6 +43,14 @@ void free_points(Grid_T *const grid);
 void free_patch_interface(Patch_T *const patch);
 void free_needle(Needle_T *needle);
 void *alloc_needle(void);
+Patch_T make_temp_patch(const Patch_T *const patch);
+void free_temp_patch(Patch_T *const patch);
+void *alloc_grid(void);
+void alloc_patches(Grid_T *const grid);
+void free_grid(Grid_T *grid);
+void free_patch(Patch_T *patch);
+void free_grid_db(void);
+
 
 
 

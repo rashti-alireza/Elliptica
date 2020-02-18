@@ -1,7 +1,6 @@
 #include "core_lib.h"
 #include "maths_equation_solvings_lib.h"
 #include "maths_general_lib.h"
-#include "memory_managing_lib.h"
 
 Root_Finder_T *init_root_finder(const unsigned n);
 double *execute_root_finder(Root_Finder_T *const root);

@@ -2,7 +2,6 @@
 #include "utilities_lib.h"
 #include "maths_general_lib.h"
 #include "maths_analytic_lib.h"
-#include "memory_managing_lib.h"
 #include "maths_calculus_lib.h"
 #include "maths_approximation_lib.h"
 #include "maths_complex_numbers_lib.h"

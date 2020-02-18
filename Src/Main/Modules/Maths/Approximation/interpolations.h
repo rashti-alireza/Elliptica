@@ -1,11 +1,11 @@
 #include "core_lib.h"
-#include "coordinates_lib.h"
+#include "manifold_lib.h"
 #include "macros_lib.h"
-#include "memory_managing_lib.h"
 #include "error_handling_lib.h"
 #include "utilities_lib.h"
 #include "maths_general_lib.h"
 #include "fields_lib.h"
+#include "maths_linear_algebra_lib.h"
 
 #define Tx(i,x) T(n[0],i,x)
 #define Ty(j,y) T(n[1],j,y)
