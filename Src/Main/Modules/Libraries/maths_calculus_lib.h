@@ -1,3 +1,9 @@
+#ifndef maths_calculus_lib
+#define maths_calculus_lib
+
+
+struct FIELD_T;
+
 /* struct fot integration */
 typedef struct INTEGRATION_T
 {
@@ -13,7 +19,7 @@ typedef struct INTEGRATION_T
  const double *g22;
  struct
  {
-  const Field_T *f;/* integrand */
+  const struct FIELD_T *f;/* integrand */
   unsigned X_surface : 1;/* integration on the hyper-surface X = const */
   unsigned Y_surface : 1;/* integration on the hyper-surface Y = const */
   unsigned Z_surface : 1;/* integration on the hyper-surface Z = const */
@@ -45,7 +51,7 @@ typedef struct INTEGRATION_T
  double (*integration_func)(struct INTEGRATION_T *const I);/* function that integrates */
 }Integration_T;
 
-double *Partial_Derivative(Field_T *const f,const char *task);
+double *Partial_Derivative(struct FIELD_T *const f,const char *task);
 void free_integration(Integration_T *I);
 void plan_integration(Integration_T *const I);
 double execute_integration(Integration_T *const I);
@@ -60,3 +66,8 @@ double dLegendre_dx(const unsigned n, const double x);
 void init_Legendre_root_function(void);
 void init_dLegendre_dx(void);
 double Integrate_ChebTn(const unsigned n,const double xi,const double xf);
+
+
+#endif
+
+

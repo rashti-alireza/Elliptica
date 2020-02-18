@@ -1,3 +1,186 @@
+#ifndef maths_equation_solvings_lib
+#define maths_equation_solvings_lib
+
+#include "maths_linear_algebra_lib.h"
+
+/* interrelation structures */
+struct FIELD_T;
+struct MATRIX_T;
+
+
+/* a general prototype to embrace various types of equations */
+typedef void *fEquation_T(void *vp1,void *vp2);
+
+/* elements of Jacobian for equations like dfxx_df etc. */
+typedef double fJs_T(struct MATRIX_T *const m,const long i,const long j);
+
+/* equation stucture */
+typedef struct sEQUATION_T
+{
+  char name[__1MAX_STR_LEN1__];
+  fEquation_T *eq;/* the equation needed to be satisfied */
+}sEquation_T;
+
+/* different quantities giving info abour pairing used in Schur complement */
+typedef struct PAIR_T
+{
+  struct SEWING_T *sewing;/* refers to its sewing */
+  double *pg;/* partial g that comping from this pair*/
+  SubFace_T *subface;/* differet subfaces due to patch[pn] that
+                     // is related to the current patch that equations
+                     // are being set up 
+                     */
+  struct PAIR_T *mirror;/* the pair that is mirror of itself but
+                        // from the other patch. */
+  unsigned patchN;/* patch number which is equal to its sewing number */
+  struct/* interpolation points;general coords of points
+        // needed for interpolation subfaces */
+  {
+    double X[3];
+  }*ip;
+  struct/* normal vector at the subface */
+  {
+    double N[3];
+  }*nv;
+  
+}Pair_T;
+
+/* boundary information and how different patches are sown.
+// this struct is made specially for having a good concurrency.
+*/
+typedef struct SEWING_T
+{
+  Pair_T **pair;
+  unsigned patchN;/* patch number which is equal to its sewing number */
+  unsigned npair;/* number of pairs */
+  /* the following are the quantities that 
+  // patch[patchN]->method->SchurC has.
+  // it's used for purpose of concurrency and avoing race condition
+  // bewteen pairs of different patches. more definition of each quantity
+  // refer to SchurC strcut. */
+  unsigned NS;
+  unsigned NI;
+  unsigned Oi;
+  unsigned *map;
+  unsigned *inv;
+  unsigned *Imap;
+  unsigned *Iinv;
+}Sewing_T;
+
+/* ingredients needed for mapping, labeling and etc for
+// domain decomposition schur complement method
+*/
+typedef struct DDM_SCHUR_COMPLEMENT_T
+{
+  struct PATCH_T *patch;/* refers to its patch itself */
+  /* regular means L(n,i,j,k) */
+  unsigned *map;/* map: regular -> relabeled. ex: map[2] = 5 */
+  unsigned *inv;/* inv: relabeled -> regular. ex: inv[5] = 2 */
+  unsigned *Imap;/* interface point map, if it is given a point
+                 // outside of its domain, it returns UINT_MAX. */
+  unsigned *Iinv;/* interface point inverse map */
+  unsigned NS;/* Number of subdomain points i.e. 
+              // number of inner points + outerboundar points (NO) =>
+              // total nodes - NS = number of interface points. Note:
+              // outerboundary points excluded from interface points.
+              */
+  unsigned NI;/* total number of interface points, if 0, it means there
+              // is no interface for this patch, for example when you
+              // only have one single patch, all sides of the patch
+              // are outerbounday so no interface with other patches. */
+  unsigned Oi;/* initial index of outer boundary points at new label.
+              // e.g. if NS = 10 and the last 3 points are 
+              // outer boundary points then Oi = 7. 
+              // furthermore, if there is no any outer boundary points 
+              // then Oi = NS. */
+  
+/* namings:
+   |B E||x|   |f|
+   |F C||y| = |g|
+*/
+  double *f;
+  double *f_prime;
+  double *F_by_f_prime;
+  double *g;
+  double *x;
+  double *y;
+  struct MATRIX_T *B;
+  struct MATRIX_T *E_Trans;/* NOE: this is TRANSPOSE of E */
+  struct MATRIX_T *E_Trans_prime;/* NOTE: it is E' of E_Trnas. */
+  struct MATRIX_T *F_by_E_prime;/* it is made in CCS format */
+  struct MATRIX_T **F;
+  struct MATRIX_T **C;
+  struct MATRIX_T *C_ccs;/* combining all of the C's into one CCS format matrix */
+  Sewing_T **sewing;/* sewing[patch_number] */
+  unsigned nsewing;/* number of sewings which is = number of patches */
+  unsigned np;/* total number of patches */
+  unsigned *NS_p;/* SchurC->NS for each patch p */
+  unsigned NS_total;/* summation of all NS_p */
+  unsigned *NI_p;/* SchurC->NI for each patch p */
+  unsigned NI_total;/* summation of all NI_p */
+  
+}DDM_Schur_Complement_T;
+
+/* solving management */
+typedef struct SOLVING_MAN_T
+{
+  struct PATCH_T *patch;/* refers to its patch itself */
+  char **field_name;/* field to be solved */
+  unsigned nf;/* number of fields */
+  unsigned cf;/* current field; index of the field the is being solved */
+  double Frms;/* the current residual(rms) of F in, Jx=-F for this field 
+              // at this patch. note: it's initialized to DBL_MAX. */
+  fEquation_T **field_eq;/* the equation needed to be satisfied */
+  fEquation_T **bc_eq;/* the B.C. needed to be satisfied */
+  fEquation_T **jacobian_field_eq;/* jacobian for field equations */
+  fEquation_T **jacobian_bc_eq;/* jacobian for B.C. equations */
+  struct/* jacobian elements */
+  {
+    char type[__1MAX_STR_LEN1__];
+    struct MATRIX_T *J;
+  }**jacobian;
+  unsigned nj;/* number of jacobian */
+  
+  struct/* various method to solve */
+  {
+    /* type of method */
+    unsigned Schur_Complement: 1;/*1 if schur complement, 0 otherwise*/
+    DDM_Schur_Complement_T *SchurC;
+  }method[1];
+  
+  struct/* settings and options for solver */
+  {
+    double relaxation_factor;/* relaxation factor in relaxation scheme */
+    double Frms_i;/* the very beginning Frms (see Frms above for definition)
+                 // which this field has at the its entrance to the solver. */
+    double *HFrms;/* history of all Frms start form 0 to NFrms */
+    double *last_sol;/* it is back up of last solution, 
+                     // so in case the residula goes up, it uses this value. */
+    unsigned NHFrms;/* number of HFrms */
+    int solver_step;/* number of steps have been taken by solver till now. starting from 0 */
+  }settings[1];
+}Solving_Man_T;
+
+/* equation solver */
+typedef int fEquation_Solver_T(void *vp);
+
+/* general function for variation of various kind of interpolation with 
+// respect to the field. */
+typedef double fdInterp_dfs_T(Patch_T *const patch,const double *const X,const unsigned df,const unsigned plane);
+
+
+/* boundary condition struct */
+typedef struct BOUNDARY_CONDITION_T
+{
+  Patch_T *patch;/* patch that has this boundary */
+  SubFace_T *subface;/* the subface located at interesting boundary */
+  struct FIELD_T *field;/* the field this B.C.s to be imposed */
+  unsigned cn;/* collection number */
+  unsigned *node;/* nodes's index at the boundary, i.e node[i] = node number used in the patch */
+  unsigned nn;/* number of nodes */
+}Boundary_Condition_T;
+
+
 enum ROOT_FINDER_enum
 {
   ROOT_FINDER_UNDEF/* undefined */,
@@ -107,10 +290,10 @@ void test_dInterp_a_df(Grid_T *const grid);
 void *init_eq(void);
 void add_eq(sEquation_T ***const data_base, fEquation_T *const eq,const char *const name);
 void initialize_solving_man(Grid_T *const grid,sEquation_T **const field_eq,sEquation_T **const bc_eq,sEquation_T **const jacobian_field_eq, sEquation_T **const jacobian_bc_eq);
-Matrix_T *get_j_matrix(const Patch_T *const patch,const char *type);
+struct MATRIX_T *get_j_matrix(const Patch_T *const patch,const char *type);
 void prepare_Js_jacobian_eq(Patch_T *const patch,const char * const *types);
-double read_matrix_entry_ccs(Matrix_T *const m, const long r,const long c);
-fJs_T *get_j_reader(const Matrix_T *const m);
+double read_matrix_entry_ccs(struct MATRIX_T *const m, const long r,const long c);
+fJs_T *get_j_reader(const struct MATRIX_T *const m);
 void test_Jacobian_of_equations(Solve_Equations_T *const SolveEqs);
 void test_root_finders(Grid_T *const grid);
 fdInterp_dfs_T *get_dInterp_df(const Patch_T *const patch,const SubFace_T *const sf,const char *const dir);
@@ -247,4 +430,9 @@ void free_patch_SolMan_method_Schur(Patch_T *const patch);
     ijk  = node[n];
     
 #define DDM_SCHUR_BC_CLOSE }
+
+
+#endif
+
+
 

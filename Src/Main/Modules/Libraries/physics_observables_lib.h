@@ -1,3 +1,7 @@
+#ifndef physics_observables_lib
+#define physics_observables_lib
+
+
 /* struct for physics observables */
 typedef struct OBSERVABLE_T
 {
@@ -51,3 +55,8 @@ typedef struct OBSERVABLE_T
 Observable_T *init_observable(void *grid);
 void plan_observable(Observable_T *const obs);
 void free_observable(Observable_T *obs);
+
+
+#endif
+
+

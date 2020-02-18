@@ -2,6 +2,7 @@
 #include "utilities_lib.h"
 #include "error_handling_lib.h"
 #include "maths_matrix_solvers_lib.h"
+#include "maths_equation_solvings_lib.h"
 
 #define FORMAT_ER_PAR "Each field(s) for Solving_Order parameter "\
                           "must be written in a curly brackets {}\n"

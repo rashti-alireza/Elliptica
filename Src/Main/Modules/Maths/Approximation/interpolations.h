@@ -6,6 +6,7 @@
 #include "maths_general_lib.h"
 #include "fields_lib.h"
 #include "maths_linear_algebra_lib.h"
+#include "maths_approximation_lib.h"
 
 #define Tx(i,x) T(n[0],i,x)
 #define Ty(j,y) T(n[1],j,y)

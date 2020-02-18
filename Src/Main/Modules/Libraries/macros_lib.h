@@ -1,3 +1,7 @@
+#ifndef macros_lib
+#define macros_lib
+
+
 /* some useful messages */
 #define INCOMPLETE_FUNC "Other options have not been developed yet for this part!\n"
 #define NO_JOB "No job has been defined for this case."
@@ -128,6 +132,10 @@
 /* some constants */
 #define TEST_SUCCESSFUL 0
 #define TEST_UNSUCCESSFUL 1
+
+
+#endif
+
 
 
 

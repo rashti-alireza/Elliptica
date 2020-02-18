@@ -1,4 +1,35 @@
+#ifndef utilities_lib
+#define utilities_lib
+
+
+#include "manifold_lib.h"
+
 #define TEST_START test_start(__FILE__,__LINE__);
+
+/* interrelation structures */
+struct FIELD_T;
+
+/* general function patch to void */
+typedef void fFunc_PtoV_T (Patch_T *const patch);
+
+/* general function grid to pointer to double */
+typedef double *fFunc_Patch2Pdouble_T(Patch_T *const patch);
+
+/* patch to void struct */
+typedef struct sFUNC_PtoV_T
+{
+  char *task;
+  Coord_T coord;
+  fFunc_PtoV_T *f;
+}sFunc_PtoV_T;
+
+/* grid to double struct */
+typedef struct sFUNC_PATCH2PDOUBLE_T
+{
+  char *name;
+  fFunc_Patch2Pdouble_T *func;
+  unsigned flg: 1;/* used for different purposes */
+}sFunc_Patch2Pdouble_T;
 
 void test_start(const char *const file,const int line);
 unsigned countf(void *const p);
@@ -26,7 +57,7 @@ void copy_subface(SubFace_T *const s2,const SubFace_T *const s1);
 unsigned subface_map_invers_id(const SubFace_T *const subface,const unsigned n);
 unsigned *dup_UINT(const unsigned *const s,const unsigned N);
 double max_Jacobian_dX_dx(Patch_T *const patch);
-double spectral_derivative_max_error(const Field_T *const f,const unsigned o);
+double spectral_derivative_max_error(const struct FIELD_T *const f,const unsigned o);
 unsigned IsItHorizonPatch(const Patch_T *const patch);
 unsigned IsItNSPatch(const Patch_T *const patch);
 unsigned IsItNSSurroundingPatch(const Patch_T *const patch);
@@ -35,7 +66,7 @@ unsigned IsItOutermostPatch(const Patch_T *const patch);
 void dbprint(const double *v,const unsigned n,const char *const desc);
 Patch_T *GetPatch(const char *const stem,const Grid_T *const grid);
 unsigned IsItInsideBHPatch(const Patch_T *const patch);
-double spectral_expansion_truncation_error(Field_T *const f);
+double spectral_expansion_truncation_error(struct FIELD_T *const f);
 void print_spectral_expansion_truncation_error(Grid_T *const grid);
 unsigned IsItFillingBoxPatch(const Patch_T *const patch);
 void shell_command(const char *const cmd);
@@ -49,7 +80,7 @@ void _free(void *p);
 void *alloc_sFunc_PtoV(sFunc_PtoV_T ***const mem);
 
 
-
+#endif
 
 
 

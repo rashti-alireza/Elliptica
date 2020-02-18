@@ -1,3 +1,7 @@
+#ifndef physics_transformation_lib
+#define physics_transformation_lib
+
+
 /* struct for transformation boost, rotation etc. */
 typedef struct TRANSFORMATION_T
 {
@@ -16,3 +20,8 @@ typedef struct TRANSFORMATION_T
 void Lorentz_boost(Transformation_T *const t,const double *const in,double *const out);
 Transformation_T *initialize_transformation(void);
 void free_transformation(Transformation_T *t);
+
+
+#endif
+
+

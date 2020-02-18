@@ -1,3 +1,7 @@
+#ifndef maths_analytic_lib
+#define maths_analytic_lib
+
+
 double *c_f(Patch_T *const patch);
 double *x_f(Patch_T *const patch);
 double *y_f(Patch_T *const patch);
@@ -104,3 +108,8 @@ void init_associated_legendre(void);
 void init_Ylm(void);
 void init_dYlm_dphi(void);
 void init_dYlm_dtheta(void);
+
+#endif
+
+
+

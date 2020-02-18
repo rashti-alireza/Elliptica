@@ -1,13 +1,29 @@
+#ifndef prints_lib
+#define prints_lib
+
+
+
 #define SECTION "#######################"
 #define PR_LINE "--------------------------------------------------------------------------"
 
-struct GIRD_T;
+/* interrelation structures */
+struct GRID_T;
 struct PATCH_T;
+struct MATRIX_T;
+
+/* print flags */
+typedef enum PRINT_T
+{
+  UNDEFINED_PRINT = 0,
+  PRINT_PARAMETERS,
+  PRINT_COORDS,
+  PRINT_INTERFACES
+}Print_T;
 
 /* print field */
 typedef struct PR_FIELD_T
 {
-  const struct GIRD_T *grid;
+  const struct GRID_T *grid;
   const struct PATCH_T *patch;
   const char *par;
   const char *folder;
@@ -43,18 +59,24 @@ typedef struct PR_FIELD_T
 
 int test_print(const Print_T f);
 void pr_parameters(void);
-void pr_coords(const Grid_T *const grid);
+void pr_coords(const struct GRID_T *const grid);
 void pr_line(void);
 void pr_line_custom(const char c);
 void pr_half_line_custom(const char c);
 void pr_comment(const char *const comment);
 void pr_clock(void);
-void pr_interfaces(const Grid_T *const grid);
+void pr_interfaces(const struct GRID_T *const grid);
 void pr_fields(Pr_Field_T *const pr);
 double get_time_sec(void);
 void pr_spent_time(const double start,const char *const event);
-Pr_Field_T *init_PrField(const Grid_T *const grid);
+Pr_Field_T *init_PrField(const struct GRID_T *const grid);
 void free_PrField(Pr_Field_T *pr);
-double pr_derivatives_DiffByNode(const double *const numc, const double *const anac,const Patch_T *const patch,const char *const prefix);
-void pr_matrix(const Matrix_T *const M,const char *const name);
-void pr_field_difference(const Grid_T *const grid,const char *const fld1,const char *const fld2);
+double pr_derivatives_DiffByNode(const double *const numc, const double *const anac,const struct PATCH_T *const patch,const char *const prefix);
+void pr_matrix(const struct MATRIX_T *const M,const char *const name);
+void pr_field_difference(const struct GRID_T *const grid,const char *const fld1,const char *const fld2);
+
+
+
+#endif
+
+

@@ -1,3 +1,7 @@
+#ifndef text_and_file_tools_lib
+#define text_and_file_tools_lib
+
+
 int strcmp_i(const char *const s1, const char *const s2);
 int strstr_i(const char *const s1, const char *const s2);
 char *dup_s(const char *const str);
@@ -10,4 +14,8 @@ char *open_folder(const char *const folder);
 unsigned find_index_string(char **const heystack,const unsigned N,const char *const needle);
 int regex_search(const char *const regex_pattern,const char *const str);
 char *regex_find(const char *const regex_pattern,const char *const str);
+
+#endif
+
+
 

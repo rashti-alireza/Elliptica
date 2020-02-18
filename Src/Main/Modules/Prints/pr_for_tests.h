@@ -3,6 +3,8 @@
 #include "utilities_lib.h"
 #include "macros_lib.h"
 #include "maths_general_lib.h"
+#include "maths_linear_algebra_lib.h"
+
 #include "manifold_lib.h"
 #include "fields_lib.h"
 
