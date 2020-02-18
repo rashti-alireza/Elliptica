@@ -1,13 +1,14 @@
 #ifndef physics_EoS_LIB_H
 #define physics_EoS_LIB_H
 
+#define MAX_STR 400
 
 /* struct for equation of states */
 typedef struct EquationOfState_T
 {
- char description[__1MAX_STR_LEN1__];
- char type[__1MAX_STR_LEN1__];
- char unit[__1MAX_STR_LEN1__];
+ char description[MAX_STR];
+ char type[MAX_STR];
+ char unit[MAX_STR];
  double *K;/* polytropic constant */
  double *rho_th;/* thresholds of rest mass density */
  double *h_th;/* enthalpy thresholds */

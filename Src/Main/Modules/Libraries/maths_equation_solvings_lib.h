@@ -3,6 +3,8 @@
 
 #include "maths_linear_algebra_lib.h"
 
+#define MAX_STR 400
+
 /* forward declaration structures */
 struct FIELD_T;
 struct MATRIX_T;
@@ -17,7 +19,7 @@ typedef double fJs_T(struct MATRIX_T *const m,const long i,const long j);
 /* equation stucture */
 typedef struct sEQUATION_T
 {
-  char name[__1MAX_STR_LEN1__];
+  char name[MAX_STR];
   fEquation_T *eq;/* the equation needed to be satisfied */
 }sEquation_T;
 
@@ -136,7 +138,7 @@ typedef struct SOLVING_MAN_T
   fEquation_T **jacobian_bc_eq;/* jacobian for B.C. equations */
   struct/* jacobian elements */
   {
-    char type[__1MAX_STR_LEN1__];
+    char type[MAX_STR];
     struct MATRIX_T *J;
   }**jacobian;
   unsigned nj;/* number of jacobian */

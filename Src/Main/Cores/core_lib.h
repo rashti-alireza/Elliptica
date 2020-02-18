@@ -9,7 +9,6 @@
 #include <time.h>
 #include <omp.h>
 #include "typdef_data.h"
-#include "typdef_functions.h"
 /* some handy libraries */
 #include "prints_lib.h"
 #include "error_handling_lib.h"
