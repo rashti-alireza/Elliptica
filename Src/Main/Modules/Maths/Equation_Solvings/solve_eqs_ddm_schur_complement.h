@@ -9,6 +9,7 @@
 #include "maths_general_lib.h"
 #include "maths_linear_algebra_lib.h"
 #include "maths_equation_solvings_lib.h"
+#include "fields_lib.h"
 
 #define DDM_SCHUR_COMPLEMENT_OpenMP(x) _Pragma ( #x )
 

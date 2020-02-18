@@ -11,6 +11,7 @@
 #include "coordinates_lib.h"
 #include "maths_general_lib.h"
 #include "maths_calculus_lib.h"
+#include "fields_lib.h"
 
 #define add_and_get_field(name) \
   if (_Ind(#name) >= 0)\

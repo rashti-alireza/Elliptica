@@ -2,6 +2,7 @@
 #include "maths_equation_solvings_lib.h"
 #include "memory_managing_lib.h"
 #include "laplace_inhom_equations_lib.h"
+#include "fields_lib.h"
 
 int Laplace_Inhom_solve_eq(Grid_T *const grid);
 int Laplace_Inhom_initial_data_alpha(Grid_T *const grid);

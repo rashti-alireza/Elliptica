@@ -10,11 +10,13 @@
 #include <omp.h>
 #include "typdef_data.h"
 #include "typdef_functions.h"
+/* some handy libraries */
 #include "prints_lib.h"
 #include "error_handling_lib.h"
 #include "macros_lib.h"
 #include "text_and_file_tools_lib.h"
 
+/* dealing with round off error */
 #define ROUND_OFF_ERR 1E-12
 #define LSS(x,y) ((x) < (y)-ROUND_OFF_ERR)
 #define GRT(x,y) ((x) > (y)+ROUND_OFF_ERR)
@@ -50,35 +52,5 @@ void *alloc_parameter(Parameter_T ***const mem);
 void free_parameter(const char *const par_name);
 void free_given_parameter(Parameter_T *par);
 void free_parameter_db(void);
-
-
-/* fields */
-Field_T *add_field(const char *const name,const char *attribute,Patch_T *const patch,const Flag_T alloc_flg);
-void remove_field(Field_T *f);
-void add_attribute(Field_T *const fld,const char *const attribute);
-int LookUpField(const char *const name,const Patch_T *const patch);
-int LookUpField_E(const char *const name,const Patch_T *const patch);
-double *make_coeffs_1d(Field_T *const f,const unsigned dir);
-double *make_coeffs_2d(Field_T *const f,const unsigned dir1,const unsigned dir2);
-double *make_coeffs_3d(Field_T *const f);
-void enable_fields(Grid_T *const grid);
-void free_v2(Field_T *f);
-void free_attr(Field_T *f);
-void free_v(Field_T *f);
-void free_info(Field_T *f);
-void free_field(Field_T *fld);
-void empty_field(Field_T *fld);
-void free_coeffs(Field_T *fld);
-
-
-/* grid */
-Patch_T make_temp_patch(const Patch_T *const patch);
-void free_temp_patch(Patch_T *const patch);
-int make_patches(Grid_T *const grid);
-void free_grid_db(void);
-void *alloc_grid(void);
-void alloc_patches(Grid_T *const grid);
-void free_grid(Grid_T *grid);
-void free_patch(Patch_T *patch);
 
 

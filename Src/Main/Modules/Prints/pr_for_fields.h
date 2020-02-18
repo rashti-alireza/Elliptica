@@ -6,6 +6,7 @@
 #include "maths_general_lib.h"
 #include "memory_managing_lib.h"
 #include "coordinates_lib.h"
+#include "fields_lib.h"
 
 #define MAX_STR_LEN 500
 #define FORMAT_ER_PAR "Incorrect parameter format.\n"\

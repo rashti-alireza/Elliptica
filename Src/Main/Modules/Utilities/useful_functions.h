@@ -3,6 +3,7 @@
 #include "coordinates_lib.h"
 #include "utilities_lib.h"
 #include "maths_general_lib.h"
+#include "fields_lib.h"
 
 #define EPS 1E-11
 #define UF_OpenMP(x) _Pragma(#x)

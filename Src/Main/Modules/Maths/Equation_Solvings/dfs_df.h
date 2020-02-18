@@ -7,6 +7,8 @@
 #include "maths_calculus_lib.h"
 #include "memory_managing_lib.h"
 #include "maths_linear_algebra_lib.h"
+#include "fields_lib.h"
+
 
 #define _MAX_STR_ 400
 

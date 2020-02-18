@@ -9,6 +9,8 @@
 #include "physics_EoS_lib.h"
 #include "physics_StressEnergyTensor_lib.h"
 #include "physics_transformation_lib.h"
+#include "fields_lib.h"
+
 
 /* root finder struc for force balance equation */  
 struct Force_Balance_RootFinder_S

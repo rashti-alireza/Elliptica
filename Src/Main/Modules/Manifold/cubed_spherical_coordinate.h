@@ -1,6 +1,7 @@
 #include "coordinate_shared_lib.h"
 #include "maths_calculus_lib.h"
 #include "maths_approximation_lib.h"
+#include "fields_lib.h"
 
 #define Power3(a) (a)*Pow2(a)
 

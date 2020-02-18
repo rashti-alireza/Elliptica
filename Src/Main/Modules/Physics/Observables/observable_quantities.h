@@ -5,6 +5,7 @@
 #include "coordinates_lib.h"
 #include "maths_general_lib.h"
 #include "maths_calculus_lib.h"
+#include "fields_lib.h"
 
 Observable_T *init_observable(void *grid);
 void plan_observable(Observable_T *const obs);

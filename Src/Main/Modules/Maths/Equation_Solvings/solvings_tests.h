@@ -8,6 +8,7 @@
 #include "maths_calculus_lib.h"
 #include "macros_lib.h"
 #include "coordinates_lib.h"
+#include "fields_lib.h"
 
 
 #define DO 1

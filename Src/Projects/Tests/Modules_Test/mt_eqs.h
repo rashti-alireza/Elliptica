@@ -6,6 +6,7 @@
 #include "maths_equation_solvings_lib.h"
 #include "maths_general_lib.h"
 #include "memory_managing_lib.h"
+#include "fields_lib.h"
 
 void mt_fill_db_eqs(sEquation_T ***const field_eq,sEquation_T ***const bc_eq,sEquation_T ***const jacobian_field_eq,sEquation_T ***const jacobian_bc_eq);
 int mt_initial_data_alpha(Grid_T *const grid);

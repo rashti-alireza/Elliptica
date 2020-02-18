@@ -4,6 +4,7 @@
 #include "maths_analytic_lib.h"
 #include "coordinates_lib.h"
 #include "utilities_lib.h"
+#include "fields_lib.h"
 
 void free_integration(Integration_T *I);
 void plan_integration(Integration_T *const I);

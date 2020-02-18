@@ -5,6 +5,7 @@
 #include "maths_analytic_lib.h"
 #include "utilities_lib.h"
 #include "coordinates_lib.h"
+#include "fields_lib.h"
 
 #define DO 1
 #define NOT_DO 0

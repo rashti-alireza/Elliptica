@@ -7,6 +7,7 @@
 #include "utilities_lib.h"
 #include "maths_general_lib.h"
 #include "maths_calculus_lib.h"
+#include "fields_lib.h"
 
 /* methods of derivative */
 typedef enum METHOD_T

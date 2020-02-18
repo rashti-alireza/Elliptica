@@ -4,6 +4,8 @@
 #include "macros_lib.h"
 #include "maths_general_lib.h"
 #include "coordinates_lib.h"
+#include "fields_lib.h"
+
 #define COMMA ','
 
 extern Parameter_T **parameters_global;

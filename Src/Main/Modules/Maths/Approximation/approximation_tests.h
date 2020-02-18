@@ -9,6 +9,7 @@
 #include "maths_calculus_lib.h"
 #include "maths_approximation_lib.h"
 #include "maths_complex_numbers_lib.h"
+#include "fields_lib.h"
 
 #define DO 1
 #define NOT_DO 0
