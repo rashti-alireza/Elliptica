@@ -1,3 +1,7 @@
+#ifndef core_LIB_H
+#define core_LIB_H
+
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -9,6 +13,7 @@
 #include <time.h>
 #include <omp.h>
 #include "typdef_data.h"
+
 /* some handy libraries */
 #include "prints_lib.h"
 #include "error_handling_lib.h"
@@ -52,5 +57,9 @@ void *alloc_parameter(Parameter_T ***const mem);
 void free_parameter(const char *const par_name);
 void free_given_parameter(Parameter_T *par);
 void free_parameter_db(void);
+
+#endif
+
+
 
 
