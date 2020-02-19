@@ -212,7 +212,7 @@ int X_of_x(double *const X,const double *const x,const Patch_T *const patch)
   if (patch->coordsys == Cartesian)
     r = X_of_x_Cartesian_coord(X,x);
   else if (patch->coordsys == CubedSpherical)
-    r = X_of_x_CS_coord(X,x,patch);
+    r = X_of_x_CS_coord(X,x,patch,1);
   else
       abortEr("No finder for this coordinate.\n");
  
@@ -230,7 +230,7 @@ int x_of_X(double *const x,const double *const X,const Patch_T *const patch)
   if (patch->coordsys == Cartesian)
     ret = x_of_X_Cartesian_coord(x,X,patch);
   else if (patch->coordsys == CubedSpherical)
-    ret = x_of_X_CS_coord(x,X,patch);
+    ret = x_of_X_CS_coord(x,X,patch,1);
   else
       abortEr(NO_JOB);
  
@@ -253,8 +253,9 @@ static int x_of_X_Cartesian_coord(double *const x,const double *const X,const Pa
 
 /* find x in cartesian coord correspond to X (general coords) 
 // for Cubed Spherical. Note: x reported with respect to the origin (0,0,0)
+// if check_flg = 1, it checks the solution.
 // ->return value 1 if it is successful, otherwise 0. */
-static int x_of_X_CS_coord(double *const x,const double *const X,const Patch_T *const patch)
+static int x_of_X_CS_coord(double *const x,const double *const X,const Patch_T *const patch,const int check_flg)
 {
   const Flag_T side = patch->CoordSysInfo->CubedSphericalCoord->side;
   const Flag_T type = patch->CoordSysInfo->CubedSphericalCoord->type;
@@ -331,21 +332,24 @@ static int x_of_X_CS_coord(double *const x,const double *const X,const Patch_T *
   }
   
   /* test the solution */
-  x_test[0] = x[0];
-  x_test[1] = x[1];
-  x_test[2] = x[2];
-  X_of_x(X_test,x_test,patch);
-  dX = rms(3,X,X_test);
-  if (!EQL(dX,0))
-    return 0;
-    
+  if (check_flg)
+  {
+    x_test[0] = x[0];
+    x_test[1] = x[1];
+    x_test[2] = x[2];
+    X_of_x_CS_coord(X_test,x_test,patch,0);
+    dX = rms(3,X,X_test);
+    if (!EQL(dX,0))
+      return 0;
+  }
+  
   return 1;
 }
 
 /* find point X correspond to x for patch with Cartesian coord.
 // ->return value: 1 if it is successful, otherwise 0.
 */
-int X_of_x_Cartesian_coord(double *const X,const double *const x)
+static int X_of_x_Cartesian_coord(double *const X,const double *const x)
 {
   X[0] = x[0];
   X[1] = x[1];
@@ -356,8 +360,9 @@ int X_of_x_Cartesian_coord(double *const X,const double *const x)
 
 /* find point X correspond to cart-coord for patch with cubed spherical coord.
 // it's a general algorithm and for even if the point is not collocated.
+// if check_flg = 1, it checks the solution.
 // ->return value: 1 if it is successful, otherwise 0. */
-static int X_of_x_CS_coord(double *const X,const double *const cart,const Patch_T *const patch)
+static int X_of_x_CS_coord(double *const X,const double *const cart,const Patch_T *const patch,const int check_flg)
 {
   const double *const C = patch->c;/* center of origine translated */
   const Flag_T side = patch->CoordSysInfo->CubedSphericalCoord->side;
@@ -422,14 +427,17 @@ static int X_of_x_CS_coord(double *const X,const double *const cart,const Patch_
   if (EQL(X[2],0))  X[2] = 0;
   
   /* test the solution */
-  X_test[0] = X[0];
-  X_test[1] = X[1];
-  X_test[2] = X[2];
-  x_of_X(x_test,X_test,patch);
-  dx = rms(3,cart,x_test);
-  if (!EQL(dx,0))
-    return 0;
-
+  if (check_flg)
+  {
+    X_test[0] = X[0];
+    X_test[1] = X[1];
+    X_test[2] = X[2];
+    x_of_X_CS_coord(x_test,X_test,patch,0);
+    dx = rms(3,cart,x_test);
+    if (!EQL(dx,0))
+      return 0;
+  }
+  
   return 1;
 }
 
