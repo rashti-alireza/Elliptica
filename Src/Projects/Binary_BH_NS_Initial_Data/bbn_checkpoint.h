@@ -18,7 +18,7 @@
 if (x){\
   unsigned SIZE_ = (unsigned)(y);\
   assert(fwrite(&SIZE_,sizeof(SIZE_),1,file));\
-  assert(fwrite(x,sizeof(*x),SIZE_,file));\
+  assert(fwrite(x,sizeof(*(x)),SIZE_,file));\
 }else{\
   unsigned SIZE_ = 0;\
   assert(fwrite(&SIZE_,sizeof(SIZE_),1,file));\
@@ -29,15 +29,15 @@ if (x){\
   unsigned SIZE_ = 0;\
   assert(fread(&SIZE_, sizeof(SIZE_),1,file));\
   if (SIZE_) {\
-    x = calloc(SIZE_,sizeof(*x)),pointerEr(x);\
-    assert(fread(x,sizeof(*x),SIZE_,file));}\
+    x = calloc(SIZE_,sizeof(*(x))),pointerEr(x);\
+    assert(fread(x,sizeof(*(x)),SIZE_,file));}\
   else { x = 0;}}
 
 /* read variable */
 #define ReadV(x) {\
   unsigned SIZE_ = 0;\
   assert(fread(&SIZE_, sizeof(SIZE_),1,file));\
-  assert(fread(x,sizeof(*x),SIZE_,file));}
+  assert(fread(x,sizeof(*(x)),SIZE_,file));}
                      
 extern Grid_T **grids_global;
 extern Parameter_T **parameters_global;
