@@ -26,6 +26,7 @@ void bbn_write_checkpoint(const Grid_T *const grid)
   const char *const out_dir = Pgets("iteration_output");
   char file_path[MAX_ARR];
   char msg[MAX_ARR];
+  char *const p_msg = msg;/* to avoid GCC warning for FWriteP_bin */
   const double dt  = Pgetd("write_checkpoint_every");/* unit is hour */
   const double now = get_time_sec()/(3600);
   static double last_checkpoint_was = 0;/* the time where the last 
@@ -58,7 +59,7 @@ void bbn_write_checkpoint(const Grid_T *const grid)
   file = fopen(file_path,"a");
   pointerEr(file);
   sprintf(msg,"%s",END_MSG);
-  FWriteP_bin(msg,strlen(msg)+1);
+  FWriteP_bin(p_msg,strlen(msg)+1);
   fclose(file);
   
   /* replace checkpoint file with the previous */
@@ -147,6 +148,7 @@ static void write_parameters(const Grid_T *const grid)
   const char *const folder = Pgets("iteration_output");
   char file_path[MAX_ARR];
   char title_line[MAX_ARR] = {'\0'};
+  char *const p_title_line = title_line;/* to avoid GCC warning for FWriteP_bin */
   unsigned i,np;
 
   sprintf(file_path,"%s/%s_temp",folder,CHECKPOINT_FILE_NAME);
@@ -159,7 +161,7 @@ static void write_parameters(const Grid_T *const grid)
     
   /* NOTE the order is super crucial for reading part */
   sprintf(title_line,"%s",PARAM_HEADER);
-  FWriteP_bin(title_line,strlen(title_line)+1);
+  FWriteP_bin(p_title_line,strlen(title_line)+1);
   
   for (i = 0; i < np; ++i)
   {
@@ -176,7 +178,7 @@ static void write_parameters(const Grid_T *const grid)
   }
   
   sprintf(title_line,"%s",PARAM_FOOTER);
-  FWriteP_bin(title_line,strlen(title_line)+1);
+  FWriteP_bin(p_title_line,strlen(title_line)+1);
   
   fclose(file);
   
@@ -193,6 +195,7 @@ static void write_fields(const Grid_T *const grid)
   const char *const folder = Pgets("iteration_output");
   char file_path[MAX_ARR];
   char title_line[MAX_ARR] = {'\0'};
+  char *const p_title_line = title_line;/* to avoid GCC warning for FWriteP_bin */
   unsigned p;
   
   sprintf(file_path,"%s/%s_temp",folder,CHECKPOINT_FILE_NAME);
@@ -202,7 +205,7 @@ static void write_fields(const Grid_T *const grid)
   /* NOTE the order is crucial for reading part */
   
   sprintf(title_line,"%s",FIELD_HEADER);
-  FWriteP_bin(title_line,strlen(title_line)+1);
+  FWriteP_bin(p_title_line,strlen(title_line)+1);
   
   FOR_ALL_PATCHES(p,grid)
   {
@@ -235,7 +238,7 @@ static void write_fields(const Grid_T *const grid)
   }
   
   sprintf(title_line,"%s",FIELD_FOOTER);
-  FWriteP_bin(title_line,strlen(title_line)+1);
+  FWriteP_bin(p_title_line,strlen(title_line)+1);
   
   fclose(file);  
 }
