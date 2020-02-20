@@ -1,6 +1,44 @@
 #ifndef text_and_file_tools_LIB_H
 #define text_and_file_tools_LIB_H
 
+/* this is how we write binary data: first write size and then value. 
+// thus, when we wanna read the data the first one gives of the memory allocation 
+// and the next gives us value: */
+
+/* write pointer: */
+#define FWriteP_bin(x,y) \
+if (x){\
+  unsigned SIZE_ = (unsigned)(y);\
+  assert(fwrite(&SIZE_,sizeof(SIZE_),1,file));\
+  assert(fwrite(x,sizeof(*(x)),SIZE_,file));\
+}else{\
+  unsigned SIZE_ = 0;\
+  assert(fwrite(&SIZE_,sizeof(SIZE_),1,file));\
+}
+
+/* write variable: */
+#define FWriteV_bin(x,y) \
+{\
+  unsigned SIZE_ = (unsigned)(y);\
+  assert(fwrite(&SIZE_,sizeof(SIZE_),1,file));\
+  assert(fwrite(&(x),sizeof(x),SIZE_,file));\
+}
+
+/* read pointer */
+#define FReadP_bin(x) {\
+  unsigned SIZE_ = 0;\
+  assert(fread(&SIZE_, sizeof(SIZE_),1,file));\
+  if (SIZE_) {\
+    x = calloc(SIZE_,sizeof(*(x))),pointerEr(x);\
+    assert(fread(x,sizeof(*(x)),SIZE_,file));}\
+  else { x = 0;}}
+
+/* read variable */
+#define FReadV_bin(x) {\
+  unsigned SIZE_ = 0;\
+  assert(fread(&SIZE_, sizeof(SIZE_),1,file));\
+  assert(fread(&(x),sizeof(x),SIZE_,file));}
+
 
 int strcmp_i(const char *const s1, const char *const s2);
 int strstr_i(const char *const s1, const char *const s2);

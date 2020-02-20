@@ -2,6 +2,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
+#include "text_and_file_tools_lib.h"
 
 #define MAX_ARR 500
 #define ALLOC_HEADER "#{ALLOCATION#"
@@ -12,32 +13,6 @@
 #define FIELD_FOOTER "#}FIELD#"
 #define END_MSG      "\n#checkpoint_file_completed#\n"
 
-/* this is how we write binary data: first write size and then value. 
-// thus, when we wanna read the data the first one gives of the memory allocation and the next gives us value */
-#define Write(x,y) \
-if (x){\
-  unsigned SIZE_ = (unsigned)(y);\
-  assert(fwrite(&SIZE_,sizeof(SIZE_),1,file));\
-  assert(fwrite(x,sizeof(*(x)),SIZE_,file));\
-}else{\
-  unsigned SIZE_ = 0;\
-  assert(fwrite(&SIZE_,sizeof(SIZE_),1,file));\
-}
-
-/* read pointer */
-#define ReadP(x) {\
-  unsigned SIZE_ = 0;\
-  assert(fread(&SIZE_, sizeof(SIZE_),1,file));\
-  if (SIZE_) {\
-    x = calloc(SIZE_,sizeof(*(x))),pointerEr(x);\
-    assert(fread(x,sizeof(*(x)),SIZE_,file));}\
-  else { x = 0;}}
-
-/* read variable */
-#define ReadV(x) {\
-  unsigned SIZE_ = 0;\
-  assert(fread(&SIZE_, sizeof(SIZE_),1,file));\
-  assert(fread(x,sizeof(*(x)),SIZE_,file));}
                      
 extern Grid_T **grids_global;
 extern Parameter_T **parameters_global;
@@ -65,3 +40,6 @@ static int DoSaveField(const Field_T *const field);
 static void init_mediate_field(Grid_T *const grid);
 Parameter_T *bbn_parameter_query_from_checkpoint_file(const char *const par_name,FILE *const file);
 int bbn_IsCheckpointFileCompleted(const char *const file_path);
+
+
+

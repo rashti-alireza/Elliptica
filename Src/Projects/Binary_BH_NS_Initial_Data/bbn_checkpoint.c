@@ -26,7 +26,6 @@ void bbn_write_checkpoint(const Grid_T *const grid)
   const char *const out_dir = Pgets("iteration_output");
   char file_path[MAX_ARR];
   char msg[MAX_ARR];
-  char *const p_msg = msg;/* defined to avoid gcc warning */
   const double dt  = Pgetd("write_checkpoint_every");/* unit is hour */
   const double now = get_time_sec()/(3600);
   static double last_checkpoint_was = 0;/* the time where the last 
@@ -59,7 +58,7 @@ void bbn_write_checkpoint(const Grid_T *const grid)
   file = fopen(file_path,"a");
   pointerEr(file);
   sprintf(msg,"%s",END_MSG);
-  Write(p_msg,strlen(msg)+1);
+  FWriteP_bin(msg,strlen(msg)+1);
   fclose(file);
   
   /* replace checkpoint file with the previous */
@@ -148,7 +147,6 @@ static void write_parameters(const Grid_T *const grid)
   const char *const folder = Pgets("iteration_output");
   char file_path[MAX_ARR];
   char title_line[MAX_ARR] = {'\0'};
-  char *const p_title_line = title_line;/* defined to avoid warning */
   unsigned i,np;
 
   sprintf(file_path,"%s/%s_temp",folder,CHECKPOINT_FILE_NAME);
@@ -161,24 +159,24 @@ static void write_parameters(const Grid_T *const grid)
     
   /* NOTE the order is super crucial for reading part */
   sprintf(title_line,"%s",PARAM_HEADER);
-  Write(p_title_line,strlen(title_line)+1);
+  FWriteP_bin(title_line,strlen(title_line)+1);
   
   for (i = 0; i < np; ++i)
   {
     Parameter_T *p = parameters_global[i];
     
-    Write(p->lv,strlen(p->lv)+1);
-    Write(p->rv,strlen(p->rv)+1);
-    Write(p->rv_ip,strlen(p->rv_ip)+1);
-    Write(&p->rv_double,1);
-    Write(p->rv_array,p->rv_n);
-    Write(&p->rv_n,1);
-    Write(&p->iterative,1);
-    Write(&p->double_flg,1);
+    FWriteP_bin(p->lv,strlen(p->lv)+1);
+    FWriteP_bin(p->rv,strlen(p->rv)+1);
+    FWriteP_bin(p->rv_ip,strlen(p->rv_ip)+1);
+    FWriteV_bin(p->rv_double,1);
+    FWriteP_bin(p->rv_array,p->rv_n);
+    FWriteV_bin(p->rv_n,1);
+    FWriteV_bin(p->iterative,1);
+    FWriteV_bin(p->double_flg,1);
   }
   
   sprintf(title_line,"%s",PARAM_FOOTER);
-  Write(p_title_line,strlen(title_line)+1);
+  FWriteP_bin(title_line,strlen(title_line)+1);
   
   fclose(file);
   
@@ -195,7 +193,6 @@ static void write_fields(const Grid_T *const grid)
   const char *const folder = Pgets("iteration_output");
   char file_path[MAX_ARR];
   char title_line[MAX_ARR] = {'\0'};
-  char *const p_title_line = title_line;/* defined to avoid warning */
   unsigned p;
   
   sprintf(file_path,"%s/%s_temp",folder,CHECKPOINT_FILE_NAME);
@@ -205,17 +202,13 @@ static void write_fields(const Grid_T *const grid)
   /* NOTE the order is crucial for reading part */
   
   sprintf(title_line,"%s",FIELD_HEADER);
-  Write(p_title_line,strlen(title_line)+1);
+  FWriteP_bin(title_line,strlen(title_line)+1);
   
   FOR_ALL_PATCHES(p,grid)
   {
     Patch_T *patch = grid->patch[p];
     unsigned nn = patch->nn;
     unsigned f,count_nfld;
-    unsigned *const p_count_nfld = &count_nfld;/* defined to avoid warning */
-    //Write(patch->name,strlen(patch->name)+1);
-    //Write(&patch->nn,sizeof(patch->nn));
-    //Write(&patch->nfld,sizeof(patch->nfld));
     
     if (IsItInsideBHPatch(patch))
       continue;
@@ -228,21 +221,21 @@ static void write_fields(const Grid_T *const grid)
       if (DoSaveField(field))
         count_nfld++;
     }
-    Write(p_count_nfld,1);
+    FWriteV_bin(count_nfld,1);
     
     for (f = 0; f < patch->nfld; ++f)
     {
       Field_T *field = patch->pool[f];
       if (DoSaveField(field))
       {
-        Write(field->name,strlen(field->name)+1);
-        Write(field->v,nn);
+        FWriteP_bin(field->name,strlen(field->name)+1);
+        FWriteP_bin(field->v,nn);
       }
     }
   }
   
   sprintf(title_line,"%s",FIELD_FOOTER);
-  Write(p_title_line,strlen(title_line)+1);
+  FWriteP_bin(title_line,strlen(title_line)+1);
   
   fclose(file);  
 }
@@ -489,7 +482,7 @@ Parameter_T *bbn_parameter_query_from_checkpoint_file(const char *const par_name
   fseek(file,ftell(file)+1,SEEK_SET);/* +1 since fscanf won't read \n */
   
   /* is the cursor matched? */
-  ReadP(match_str);
+  FReadP_bin(match_str);
   if (strcmp(match_str,PARAM_HEADER))
     abortEr("It could not find the parameter header.\n");
   _free(match_str);
@@ -501,14 +494,14 @@ Parameter_T *bbn_parameter_query_from_checkpoint_file(const char *const par_name
     Parameter_T *p = calloc(1,sizeof(*p));
     pointerEr(p);
     
-    ReadP(p->lv);
-    ReadP(p->rv);
-    ReadP(p->rv_ip);
-    ReadV(&p->rv_double);
-    ReadP(p->rv_array);
-    ReadV(&p->rv_n);
-    ReadV(&p->iterative);
-    ReadV(&p->double_flg);
+    FReadP_bin(p->lv);
+    FReadP_bin(p->rv);
+    FReadP_bin(p->rv_ip);
+    FReadV_bin(p->rv_double);
+    FReadP_bin(p->rv_array);
+    FReadV_bin(p->rv_n);
+    FReadV_bin(p->iterative);
+    FReadV_bin(p->double_flg);
     
     if (strcmp_i(p->lv,par_name))
     {
@@ -524,7 +517,7 @@ Parameter_T *bbn_parameter_query_from_checkpoint_file(const char *const par_name
     free_given_parameter(par);
     
     /* is the cursor matched? */
-    ReadP(match_str);
+    FReadP_bin(match_str);
     if (strcmp(match_str,PARAM_FOOTER))
       abortEr("It could not find the parameter footer.\n");
     _free(match_str);
@@ -545,7 +538,7 @@ static void read_parameters(struct checkpoint_header *const alloc_info,FILE *con
   unsigned i;
 
   /* is the cursor matched? */
-  ReadP(match_str);
+  FReadP_bin(match_str);
   if (strcmp(match_str,PARAM_HEADER))
     abortEr("It could not find the parameter header.\n");
   _free(match_str);
@@ -555,14 +548,14 @@ static void read_parameters(struct checkpoint_header *const alloc_info,FILE *con
   {
     Parameter_T *p = parameters_global[i];
     
-    ReadP(p->lv);
-    ReadP(p->rv);
-    ReadP(p->rv_ip);
-    ReadV(&p->rv_double);
-    ReadP(p->rv_array);
-    ReadV(&p->rv_n);
-    ReadV(&p->iterative);
-    ReadV(&p->double_flg);
+    FReadP_bin(p->lv);
+    FReadP_bin(p->rv);
+    FReadP_bin(p->rv_ip);
+    FReadV_bin(p->rv_double);
+    FReadP_bin(p->rv_array);
+    FReadV_bin(p->rv_n);
+    FReadV_bin(p->iterative);
+    FReadV_bin(p->double_flg);
     
     //test
     if (0)
@@ -578,7 +571,7 @@ static void read_parameters(struct checkpoint_header *const alloc_info,FILE *con
     //end
   }
   /* is the cursor matched? */
-  ReadP(match_str);
+  FReadP_bin(match_str);
   if (strcmp(match_str,PARAM_FOOTER))
     abortEr("It could not find the parameter footer.\n");
   _free(match_str);
@@ -601,7 +594,7 @@ static void read_fields(struct checkpoint_header *const alloc_info,FILE *const f
   unsigned p;
   
   /* is the cursor matched? */
-  ReadP(match_str);
+  FReadP_bin(match_str);
   if (strcmp(match_str,FIELD_HEADER))
     abortEr("It could not find the field header.\n");
   _free(match_str);
@@ -610,14 +603,11 @@ static void read_fields(struct checkpoint_header *const alloc_info,FILE *const f
   {
     Patch_T *patch = grid->patch[p];
     unsigned f,count_nfld;
-    //ReadP(patch->name);
-    //ReadV(&patch->nn);
-    //ReadV(&patch->nfld);
     
     if (IsItInsideBHPatch(patch))
       continue;
     
-    ReadV(&count_nfld);
+    FReadV_bin(count_nfld);
     assert(count_nfld);
     
     for (f = 0; f < count_nfld; ++f)
@@ -626,9 +616,9 @@ static void read_fields(struct checkpoint_header *const alloc_info,FILE *const f
       char *name = 0;
       double *v  = 0;
       
-      ReadP(name);
-      ReadP(v);
-      //ReadP(attr);
+      FReadP_bin(name);
+      FReadP_bin(v);
+      //FReadP_bin(attr);
       
       field = patch->pool[Ind(name)];
       _free(name);
@@ -638,7 +628,7 @@ static void read_fields(struct checkpoint_header *const alloc_info,FILE *const f
   }
 
   /* is the cursor matched? */
-  ReadP(match_str);
+  FReadP_bin(match_str);
   if (strcmp(match_str,FIELD_FOOTER))
     abortEr("It could not find the field footer.\n");
   _free(match_str);
