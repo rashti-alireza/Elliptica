@@ -34,10 +34,10 @@ void bbn_bam_export_id(void)
   load_coords_from_coords_file(points);
   
   /* load grid from the checkpoint file */
-  //grid = load_grid_from_checkpoint_file();
+  grid = load_grid_from_checkpoint_file();
   
   /* interpolate at the points and write into fields_file */
-  //interpolate_and_write(grid);
+  interpolate_and_write(grid,points);
   
   /* free */
   free_grid(grid);
@@ -55,10 +55,85 @@ void bbn_bam_export_id(void)
   pr_line_custom('=');
 }
 
+/* interpolate at the points and write into fields_file.
+// this file will be reading by BAM as the initilization its fields */
+static void interpolate_and_write(Grid_T *const grid,struct interpolation_points *const pnt)
+{
+  Needle_T *needle = alloc_needle();
+  const unsigned npoints = npoints;
+  double x[3],X[3];
+  unsigned p;
+  
+  /* populating (X,Y,Z) and patchn at pnt */
+  needle->grid = grid;
+  FOR_ALL_PATCHES(p,grid)
+  {
+    Patch_T *patch = grid->patch[p];
+    needle_in(needle,patch);
+  }
+  for (p = 0; p < npoints; ++p)
+  {
+    x[0] = pnt->x[p];
+    x[1] = pnt->y[p];
+    x[2] = pnt->z[p];
+    needle->Nans = 0;
+    needle->x    = x;
+    point_finder(needle);
+    if (!needle->Nans)
+    {
+      fprintf(stderr,"(%g,%g,%g) is troublesome!\n",x[0],x[1],x[2]);
+      abortEr("It could not find a point!\n");
+    }
+    else
+    {
+      pnt->patchn[p] = needle->ans[0];
+      free(needle->ans);
+      needle->ans = 0;
+      if(!X_of_x(X,x,grid->patch[pnt->patchn[p]]))
+        abortEr("It could not find X of x!\n");
+      pnt->X[p] = X[0];
+      pnt->Y[p] = X[1];
+      pnt->Z[p] = X[2];
+    }
+  }
+  free_needle(needle);
+  
+  /*FOR_ALL_PATCHES(p,grid)
+  {
+    Patch_T *patch = gr
+  }*/
+  
+}
+
+/* load grid from the checkpoint file */
+static Grid_T *load_grid_from_checkpoint_file(void)
+{
+  printf("~> Loading grid ...\n");
+  fflush(stdout);
+  
+  Grid_T *grid = 0;
+  FILE *file   = 0;
+  
+  /* open checkpoint file */
+  file = fopen(checkpoint_path,"r");
+  pointerEr(file);
+  grid = bbn_init_from_checkpoint(file);
+  fclose(file);
+  
+  /* extrapolate metric fields inside the BH */
+  Pseti("STOP",0);
+  bbn_extrapolate_metric_fields_insideBH(grid);
+  
+  return grid;
+}
+  
 /* read (x,y,x) points from bam file to be interpolated on them,
 // and then populate (x,y,z) part of for the interpolation */
 static void load_coords_from_coords_file(struct interpolation_points *const pnt)
 {
+  printf("~> Loading coordinates for interpolation ...\n");
+  fflush(stdout);
+  
   FILE *file = 0;
   unsigned npoints = 0;
   char *match_str  = 0;
