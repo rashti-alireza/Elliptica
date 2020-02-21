@@ -2,6 +2,8 @@
 #include "maths_approximation_lib.h"
 #include "maths_analytic_lib.h"
 
+#define STR_LEN_MAX 400
+
 int Laplace_Inhom(void);
 Grid_T *Laplace_Inhom_make_grid(void);
 int Laplace_Inhom_solve_eq(Grid_T *const grid);
