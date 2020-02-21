@@ -1,5 +1,7 @@
 #include "bbn_headers.h"
 
+#define STR_LEN_MAX 400
+
 Grid_T *bbn_initialize_next_grid(Grid_T *const grid_prev);
 void bbn_solve_elliptic_eqs(Grid_T *const grid);
 void bbn_free_grid_and_its_parameters(Grid_T *grid);
