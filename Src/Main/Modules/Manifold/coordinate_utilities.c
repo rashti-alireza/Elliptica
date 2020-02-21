@@ -434,7 +434,9 @@ static int X_of_x_CS_coord(double *const X,const double *const cart,const Patch_
     X_test[2] = X[2];
     x_of_X_CS_coord(x_test,X_test,patch,0);
     dx = rms(3,cart,x_test);
-    if (!EQL(dx,0))
+    double scale = MaxMag_d(rms(3,cart,0),rms(3,x_test,0));
+    scale = scale < 1 ? 1 : scale;
+    if (!EQL(dx/scale,0))
       return 0;
   }
   
