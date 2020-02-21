@@ -9,7 +9,7 @@
 static char coords_file_path[STR_LEN_MAX];
 static char fields_file_path[STR_LEN_MAX];
 static char checkpoint_path[STR_LEN_MAX];
-static char fields_name[STR_LEN_MAX];
+static char bam_fields_name[STR_LEN_MAX];
   
 /* exporting initial data for bam.
 // it writes the required fields into a file to be read by bam. */
@@ -59,12 +59,21 @@ void bbn_bam_export_id(void)
 // this file will be reading by BAM as the initilization its fields */
 static void interpolate_and_write(Grid_T *const grid,struct interpolation_points *const pnt)
 {
+  printf("~> Interpolating ...\n");
+  fflush(stdout);
+
+  FILE *file = 0;
   Needle_T *needle = alloc_needle();
   const unsigned npoints = npoints;
+  char **fields_name = 0;
+  char title_line[STR_LEN_MAX];
+  char *const p_title_line = title_line;/* to avoid GCC warning for FWriteP_bin */
+  Interpolation_T *interp_s = init_interpolation();
+  double *intep_v = 0;
   double x[3],X[3];
-  unsigned p,pn;
+  unsigned p,pn,f;
   
-  /* populating (X,Y,Z) and patchn at pnt */
+  /* populating pnt->(X,Y,Z) and pnt->patchn */
   needle->grid = grid;
   FOR_ALL_PATCHES(p,grid)
   {
@@ -99,10 +108,52 @@ static void interpolate_and_write(Grid_T *const grid,struct interpolation_points
   }
   free_needle(needle);
   
-  /*FOR_ALL_PATCHES(p,grid)
+  /* creating some fields which have not been exsited in Elliptica */
+  //bbn_create_alpha(grid);
+  //bbn_create_adm_gij(grid);
+  //bbn_create_adm_Kij(grid);
+  
+  /* translate fields from BAM notation to Elliptica notation */
+  field_names = translate_fields_name();
+  
+  /* open fields_file and start writing */
+  file = fopen(fields_file_path,"wb");
+  pointerEr(file);
+  fprintf(file,"# this file contains values of %s\n",bam_fields_name);
+  sprintf(title_line,"%s",HEADER);
+  FWriteP_bin(p_title_line,strlen(title_line)+1);
+  FWriteV_bin(level->npoints,1);
+  
+  interp_v = alloc_double(npoints);
+  f = 0;
+  while(field_names[f])
   {
-    Patch_T *patch = gr
-  }*/
+    /* interpolating each fields at the all given points */
+    for (p = 0; p < npoints; ++p)
+    {
+      Patch_T *patch   = grid->patch[pnt->patchn[p]];
+      Field_T *F_field = patch->pool[Ind(field_names[f])];
+      interp_s->field  = F_field;
+      interp_s->XYZ_dir_flag = 1;
+      interp_s->X = pnt->X[p];
+      interp_s->Y = pnt->Y[p];
+      interp_s->Z = pnt->Z[p];
+      plan_interpolation(interp_s);
+      interp_v[p] = execute_interpolation(interp_s);
+      
+      /* write it into the fields_file */
+      FWriteV_bin(interp_v[p],1);
+    }
+    
+    f++;
+  }
+  sprintf(title_line,"%s",FOOTER);
+  FWriteP_bin(p_title_line,strlen(title_line)+1);
+  fclose(file);
+  
+  free_interpolation(interp_s);
+  _free(interp_v);
+  free_2d(fields_names);
   
 }
 
