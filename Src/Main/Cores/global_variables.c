@@ -12,7 +12,7 @@ int init_global_variables(const char *const path)
   grids_global        = 0;
   parameters_global   = 0;
   projects_global     = 0;
-  make_path_global(path);
+  find_relative_root_path(path);
   find_inputfile_name(path);
   
   return EXIT_SUCCESS;
@@ -40,6 +40,8 @@ static void find_inputfile_name(const char *const path)
   if (p) p++;
   else   p = path;
   
+  Psets("parameter_file_name",p);
+  
   i = 0;
   while(p && p != last)
   {
@@ -48,12 +50,12 @@ static void find_inputfile_name(const char *const path)
     p++;
   }
   
-  Psets("parameter_file_name",name);
-  
+  Psets("parameter_file_name_stem",name);
 }
 
-/* making global_path where the location of input file is. */
-static void make_path_global(const char *const path)
+/* finding the relative root path i.e. 
+// where the location of input file is. */
+static void find_relative_root_path(const char *const path)
 {
   char dir[MAX_ARR] = {'\0'};
   char *p;
@@ -66,7 +68,6 @@ static void make_path_global(const char *const path)
   else
     sprintf(dir,".");
   
-  path_global = dup_s(dir);
-  
+  Psets("relative_root_path",dir);
 }
 

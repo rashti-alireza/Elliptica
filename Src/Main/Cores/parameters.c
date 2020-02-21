@@ -500,7 +500,7 @@ int make_parameters(const char *const path)
   read_input_file(path);
   
   /* set default value */
-  Pset_default("output_directory_name",Pgets("parameter_file_name"));
+  Pset_default("output_directory_name",Pgets("parameter_file_name_stem"));
   
   /* making a folder at the directory of 
   // input file with the name of "inputfile_output"
@@ -509,16 +509,13 @@ int make_parameters(const char *const path)
   */
   name = Pgets("output_directory_name");
   sprintf(folder,"%s_output",name);
-  new_path = make_directory(path_global,folder);
-  free(path_global);
-  path_global = dup_s(new_path);
+  new_path = make_directory(Pgets("relative_root_path"),folder);
   add_parameter("output_directory_path",new_path);
+  free(new_path);
   
   /* printing parameters */
   if (test_print(PRINT_PARAMETERS))
     pr_parameters();
-  
-  free(new_path);
   
   return EXIT_SUCCESS;
 }

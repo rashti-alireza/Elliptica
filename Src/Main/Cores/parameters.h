@@ -3,7 +3,6 @@
 
 /* global variables */
 extern Parameter_T **parameters_global;
-extern char *path_global;
 
 void update_parameter_double_format(const char *const lv, const double rv);
 void update_parameter_integer(const char *const lv, const int rv);
