@@ -48,7 +48,7 @@ static void find_inputfile_name(const char *const path)
     p++;
   }
   
-  inputfile_name_global = dup_s(name);
+  Psets("parameter_file_name",name);
   
 }
 

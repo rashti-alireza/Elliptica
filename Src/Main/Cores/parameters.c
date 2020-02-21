@@ -500,7 +500,7 @@ int make_parameters(const char *const path)
   read_input_file(path);
   
   /* set default value */
-  Pset_default("output_directory_name",inputfile_name_global);
+  Pset_default("output_directory_name",Pgets("parameter_file_name"));
   
   /* making a folder at the directory of 
   // input file with the name of "inputfile_output"

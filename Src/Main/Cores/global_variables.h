@@ -12,7 +12,6 @@ Parameter_T **parameters_global;/* parameters */
 Project_T   **projects_global;/* projects */
 time_t initial_time_global;/* initial time abc starts */
 char *path_global;/* path of a directory where input file is */
-char *inputfile_name_global;/* name of inputfile */
 
 int init_global_variables(const char *const path);
 static void make_path_global(const char *const path);
