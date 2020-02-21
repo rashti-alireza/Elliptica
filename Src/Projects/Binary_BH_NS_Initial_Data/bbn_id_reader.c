@@ -62,7 +62,7 @@ static void interpolate_and_write(Grid_T *const grid,struct interpolation_points
   Needle_T *needle = alloc_needle();
   const unsigned npoints = npoints;
   double x[3],X[3];
-  unsigned p;
+  unsigned p,pn;
   
   /* populating (X,Y,Z) and patchn at pnt */
   needle->grid = grid;
@@ -77,6 +77,8 @@ static void interpolate_and_write(Grid_T *const grid,struct interpolation_points
     x[1] = pnt->y[p];
     x[2] = pnt->z[p];
     needle->Nans = 0;
+    _free(needle->ans);
+    needle->ans  = 0;
     needle->x    = x;
     point_finder(needle);
     if (!needle->Nans)
@@ -86,10 +88,9 @@ static void interpolate_and_write(Grid_T *const grid,struct interpolation_points
     }
     else
     {
-      pnt->patchn[p] = needle->ans[0];
-      free(needle->ans);
-      needle->ans = 0;
-      if(!X_of_x(X,x,grid->patch[pnt->patchn[p]]))
+      pn = needle->ans[0];
+      pnt->patchn[p] = pn;
+      if(!X_of_x(X,x,grid->patch[pn]))
         abortEr("It could not find X of x!\n");
       pnt->X[p] = X[0];
       pnt->Y[p] = X[1];
