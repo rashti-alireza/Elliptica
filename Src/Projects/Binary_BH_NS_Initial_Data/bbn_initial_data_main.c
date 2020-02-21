@@ -13,6 +13,14 @@ void bbn_construct_id(void)
   pr_line_custom('=');
   printf("{ Constructing Initial Data for Binary BH and NS ...\n");
   
+  /* making output directory for this project */
+  char folder[STR_LEN_MAX] = {'\0'};
+  char *outdir = 0;
+  sprintf(folder,"%s",Pgets("parameter_file_name_stem"));
+  outdir = make_directory(Pgets("relative_root_path"),folder);
+  add_parameter("output_directory_path",outdir);
+  free(outdir);
+
   /* setting the default parameters */
   bbn_set_default_parameters();
   
@@ -74,6 +82,14 @@ void bbn_elliptic_eqs_convergence_test(void)
   pr_line_custom('=');
   printf("Convergence Test of Elliptic Equations for Binary BH-NS ...\n");
   
+  /* making output directory for this project */
+  char folder[STR_LEN_MAX] = {'\0'};
+  char *outdir = 0;
+  sprintf(folder,"%s",Pgets("parameter_file_name_stem"));
+  outdir = make_directory(Pgets("relative_root_path"),folder);
+  add_parameter("output_directory_path",outdir);
+  free(outdir);
+
   /* setting the default parameters */
   bbn_set_default_parameters();
   

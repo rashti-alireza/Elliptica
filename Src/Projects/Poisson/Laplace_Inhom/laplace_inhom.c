@@ -13,6 +13,15 @@ int Laplace_Inhom(void)
   /* print clock */
   pr_clock();
   
+  /* making output directory for this project */
+  char folder[STR_LEN_MAX] = {'\0'};
+  char *outdir = 0;
+  sprintf(folder,"%s",Pgets("parameter_file_name_stem"));
+  outdir = make_directory(Pgets("relative_root_path"),folder);
+  add_parameter("output_directory_path",outdir);
+  free(outdir);
+
+  
   grid = Laplace_Inhom_make_grid();/* making grid */
   Laplace_Inhom_solve_eq(grid);/* solving laplace eq */
   Laplace_Inhom_analyze_answer(grid);/* analyze the found answer */

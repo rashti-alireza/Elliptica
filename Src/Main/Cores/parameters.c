@@ -493,25 +493,7 @@ const char *get_parameter_value_S(const char *const par_name,const char *const f
 */
 int make_parameters(const char *const path)
 {
-  char folder[100]={'\0'};
-  const char *name;
-  char *new_path;
-  
   read_input_file(path);
-  
-  /* set default value */
-  Pset_default("output_directory_name",Pgets("parameter_file_name_stem"));
-  
-  /* making a folder at the directory of 
-  // input file with the name of "inputfile_output"
-  // or with the given name in input file 
-  // and rewriting global_path with new directory path 
-  */
-  name = Pgets("output_directory_name");
-  sprintf(folder,"%s_output",name);
-  new_path = make_directory(Pgets("relative_root_path"),folder);
-  add_parameter("output_directory_path",new_path);
-  free(new_path);
   
   /* printing parameters */
   if (test_print(PRINT_PARAMETERS))
