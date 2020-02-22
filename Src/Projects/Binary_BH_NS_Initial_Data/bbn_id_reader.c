@@ -59,12 +59,9 @@ void bbn_bam_export_id(void)
 // this file will be reading by BAM as the initilization its fields */
 static void interpolate_and_write(Grid_T *const grid,struct interpolation_points *const pnt)
 {
-  printf("~> Interpolating ...\n");
-  fflush(stdout);
-
   FILE *file = 0;
   Needle_T *needle = alloc_needle();
-  const unsigned npoints = npoints;
+  const unsigned npoints = pnt->npoints;
   char **fields_name = 0;
   char title_line[STR_LEN_MAX];
   char *const p_title_line = title_line;/* to avoid GCC warning for FWriteP_bin */
@@ -74,6 +71,8 @@ static void interpolate_and_write(Grid_T *const grid,struct interpolation_points
   unsigned p,pn,f;
   
   /* populating pnt->(X,Y,Z) and pnt->patchn */
+  printf("~> Preparing points for the interpolation ...\n");
+  fflush(stdout);
   needle->grid = grid;
   FOR_ALL_PATCHES(p,grid)
   {
@@ -117,6 +116,8 @@ static void interpolate_and_write(Grid_T *const grid,struct interpolation_points
   fields_name = translate_fields_name();
   
   /* open fields_file and start interpolating and writing */
+  printf("~> Interpolating and writing into disk ...\n");
+  fflush(stdout);
   file = fopen(fields_file_path,"wb");
   pointerEr(file);
   fprintf(file,"# this file contains values of %s\n",bam_fields_name);
@@ -253,6 +254,7 @@ static char **translate_fields_name(void)
     }
     else
       abortEr_s("No option has not been defined for %s.\n",bam_fields[nf]);
+    //printf("bam = %s --> ell = %s\n",bam_fields[nf],fields_name[nf]);
     nf++;
   }
   free_2d(bam_fields);
