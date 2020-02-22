@@ -64,6 +64,8 @@ void plan_interpolation(Interpolation_T *const interp_s)
        strstr_i(PgetsEZ("Interpolation_Method"),"Spectral"))
   {
     fPick_Func_T *func = 0;
+    if (!interp_s->field)
+      abortEr("Bad argument:No field specified for the interpolation.\n");
     patch = interp_s->field->patch;
   
     for (i = 0; i < 3; ++i)
