@@ -52,6 +52,8 @@ char *open_folder(const char *const folder);
 unsigned find_index_string(char **const heystack,const unsigned N,const char *const needle);
 int regex_search(const char *const regex_pattern,const char *const str);
 char *regex_find(const char *const regex_pattern,const char *const str);
+char **read_separated_items_in_string(const char *const string,const char delimiter);
+
 
 #endif
 

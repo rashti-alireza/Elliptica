@@ -347,3 +347,30 @@ char *regex_find(const char *const regex_pattern,const char *const str)
   
   return ret;
 }
+
+/* parsing a string contains items separated with delimiter and return
+// all items separately. note: the last pointer is null so one can count
+// the number of items.
+// ->return value: array of pointers to items,the last pointer is null. */
+char **read_separated_items_in_string(const char *const string,const char delimiter)
+{
+  char *str = dup_s(string);/* str = f1,f2,... */
+  char **items = 0;
+  unsigned ni  = 0;/* number of items */
+  char *tok,*save = 0;
+
+  tok = tok_s(str,delimiter,&save);/* tok = f1 */
+  while(tok)
+  {
+    items = realloc(items,(ni+2)*sizeof(*items));
+    pointerEr(items);
+    items[ni]   = dup_s(tok);
+    items[ni+1] = 0;
+    tok = tok_s(0,delimiter,&save);/* tok = f2 */
+    ni++;
+  }
+  free(str);
+  
+  return items;
+}
+
