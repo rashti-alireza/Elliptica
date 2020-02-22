@@ -50,7 +50,7 @@ void bbn_bam_export_id(void)
   _free(points->patchn);
   
   /* print some description */
-  printf("} Exporting initial data for BAM ==> Done. :)\n");
+  printf("} Exporting initial data for BAM ==> Done.\n");
   pr_clock();
   pr_line_custom('=');
 }
@@ -240,6 +240,10 @@ static char **translate_fields_name(void)
     {
       add2fieldsname_0ind_M("alpha");
     }
+    elseifcmpM("psi")
+    {
+      add2fieldsname_0ind_M("psi");
+    }
     elseifcmpM("beta")
     {
       add2fieldsname_1ind_M("beta","Beta","U");
@@ -254,7 +258,7 @@ static char **translate_fields_name(void)
     }
     else
       abortEr_s("No option has not been defined for %s.\n",bam_fields[nf]);
-    printf("bam = %s --> ell = %s\n",bam_fields[nf],fields_name[nf]);
+    printf("~> Translating %s --> %s\n",bam_fields[nf],fields_name[nf]);
     nf++;
   }
   free_2d(bam_fields);
