@@ -116,8 +116,6 @@ static void interpolate_and_write(Grid_T *const grid,struct interpolation_points
   //bbn_create_adm_Kij(grid);
   
   /* open fields_file and start interpolating and writing */
-  printf("~> Interpolating and writing into disk ...\n");
-  fflush(stdout);
   file = fopen(fields_file_path,"wb");
   pointerEr(file);
   fprintf(file,"# this file contains values of %s\n",bam_fields_name);
@@ -128,6 +126,8 @@ static void interpolate_and_write(Grid_T *const grid,struct interpolation_points
   f = 0;
   while(fields_name[f])
   {
+    printf("~> Interpolating and writing into disk: %s\n",fields_name[f]);
+    fflush(stdout);
     /* interpolating each fields at the all given points */
     for (p = 0; p < npoints; ++p)
     {
