@@ -31,6 +31,7 @@ int default_stop_criteria_solve_equations(Grid_T *const grid,const char *const n
   int stop = 1;
   int stop_max = 1;
   int stop_res = 0;
+  int stop_abnormal = 1;
   const double res_d    = Pgetd("Solving_Residual");/* desired residual */
   const int max_step    = Pgeti("Solving_Max_Number_of_Newton_Step");
   const unsigned npatch = grid->np;
@@ -44,6 +45,13 @@ int default_stop_criteria_solve_equations(Grid_T *const grid,const char *const n
 
     /* NOTE: due to the break command, the order of ifs are important */
     
+    /* if nan or inf */
+    if (!isfinite(res))
+    {
+      stop_abnormal = 0;
+      break;
+    }
+
     /* note: all patches have same solver_step */
     if (solver_step >= max_step)
     {
@@ -57,6 +65,14 @@ int default_stop_criteria_solve_equations(Grid_T *const grid,const char *const n
       stop_res = 1;
       break;
     }
+  }
+
+  if (!stop_abnormal)
+  {
+    printf("%s equation:\n"
+           "---> Newton solver got abnormal residual so exit ...\n",name);
+    fflush(stdout);
+    return stop_abnormal;
   }
 
   if (!stop_max)
