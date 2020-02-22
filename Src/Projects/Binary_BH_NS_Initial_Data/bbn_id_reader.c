@@ -227,9 +227,36 @@ static void load_coords_from_coords_file(struct interpolation_points *const pnt)
 /* translating fields name from BAM to Elliptica */
 static char **translate_fields_name(void)
 {
-  char **bam_field = 0;
-  bam_fields = read_separated_items_in_string(bam_fields_name,',');
+  char **bam_fields  = 0;
+  char **fields_name = 0;
+  unsigned nf = 0;
   
-  return bam_fields;
+  bam_fields = read_separated_items_in_string(bam_fields_name,',');
+  nf = 0;
+  while (bam_fields[nf])
+  {
+    ifcmpM("alpha")
+    {
+      add2fieldsname_0ind_M("alpha");
+    }
+    elseifcmpM("beta")
+    {
+      add2fieldsname_1ind_M("beta","Beta","U");
+    }
+    elseifcmpM("adm_g")
+    {
+      add2fieldsname_2ind_M("adm_g","adm_g","D","D");
+    }
+    elseifcmpM("adm_K")
+    {
+      add2fieldsname_2ind_M("adm_K","adm_K","D","D");
+    }
+    else
+      abortEr_s("No option has not been defined for %s.\n",bam_fields[nf]);
+    nf++;
+  }
+  free_2d(bam_fields);
+  
+  return fields_name;
 }
 
