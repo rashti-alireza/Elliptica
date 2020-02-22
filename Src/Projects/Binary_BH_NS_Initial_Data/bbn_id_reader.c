@@ -27,7 +27,7 @@ void bbn_bam_export_id(void)
   // when checkpoint file is loaded */
   sprintf(coords_file_path,"%s",Pgets("bam_bbn_coords_file_path"));
   sprintf(fields_file_path,"%s",Pgets("bam_bbn_fields_file_path"));
-  sprintf(fields_name,     "%s",Pgets("bam_bbn_fields_name"));
+  sprintf(bam_fields_name, "%s",Pgets("bam_bbn_fields_name"));
   sprintf(checkpoint_path, "%s",Pgets("bam_bbn_checkpoint_path"));
   
   /* read (x,y,x) points from bam file to be interpolated on them */
@@ -69,7 +69,7 @@ static void interpolate_and_write(Grid_T *const grid,struct interpolation_points
   char title_line[STR_LEN_MAX];
   char *const p_title_line = title_line;/* to avoid GCC warning for FWriteP_bin */
   Interpolation_T *interp_s = init_interpolation();
-  double *intep_v = 0;
+  double *interp_v = 0;
   double x[3],X[3];
   unsigned p,pn,f;
   
@@ -114,37 +114,33 @@ static void interpolate_and_write(Grid_T *const grid,struct interpolation_points
   //bbn_create_adm_Kij(grid);
   
   /* translate fields from BAM notation to Elliptica notation */
-  field_names = translate_fields_name();
+  fields_name = translate_fields_name();
   
-  /* open fields_file and start writing */
+  /* open fields_file and start interpolating and writing */
   file = fopen(fields_file_path,"wb");
   pointerEr(file);
   fprintf(file,"# this file contains values of %s\n",bam_fields_name);
   sprintf(title_line,"%s",HEADER);
   FWriteP_bin(p_title_line,strlen(title_line)+1);
-  FWriteV_bin(level->npoints,1);
   
   interp_v = alloc_double(npoints);
   f = 0;
-  while(field_names[f])
+  while(fields_name[f])
   {
     /* interpolating each fields at the all given points */
     for (p = 0; p < npoints; ++p)
     {
-      Patch_T *patch   = grid->patch[pnt->patchn[p]];
-      Field_T *F_field = patch->pool[Ind(field_names[f])];
-      interp_s->field  = F_field;
+      Patch_T *patch  = grid->patch[pnt->patchn[p]];
+      interp_s->field = patch->pool[Ind(fields_name[f])];
       interp_s->XYZ_dir_flag = 1;
       interp_s->X = pnt->X[p];
       interp_s->Y = pnt->Y[p];
       interp_s->Z = pnt->Z[p];
       plan_interpolation(interp_s);
       interp_v[p] = execute_interpolation(interp_s);
-      
-      /* write it into the fields_file */
-      FWriteV_bin(interp_v[p],1);
     }
-    
+    /* write it into the fields_file */
+    FWriteP_bin(interp_v,npoints);
     f++;
   }
   sprintf(title_line,"%s",FOOTER);
@@ -153,8 +149,7 @@ static void interpolate_and_write(Grid_T *const grid,struct interpolation_points
   
   free_interpolation(interp_s);
   _free(interp_v);
-  free_2d(fields_names);
-  
+  free_2d(fields_name);
 }
 
 /* load grid from the checkpoint file */
@@ -229,4 +224,12 @@ static void load_coords_from_coords_file(struct interpolation_points *const pnt)
   fclose(file);
 }
 
+/* translating fields name from BAM to Elliptica */
+static char **translate_fields_name(void)
+{
+  char **bam_field = 0;
+  bam_fields = read_separated_items_in_string(bam_fields_name,',');
+  
+  return bam_fields;
+}
 
