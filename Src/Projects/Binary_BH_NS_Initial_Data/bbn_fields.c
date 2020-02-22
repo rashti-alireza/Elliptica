@@ -28,8 +28,8 @@ void bbn_add_fields(Grid_T *const grid)
   {
     Patch_T *patch = grid->patch[p];
     
-    /* scalar for the irrotational part of fluid i.e h*u = dphi+W in NS and 
-    // its partial derivatives*/
+    /* scalar for the irrotational part of fluid i.e h*u = dphi+W 
+    // in NS and its partial derivatives*/
     ADD_FIELD(phi);
     ADD_FIELD(phi_residual);
     
@@ -89,7 +89,8 @@ void bbn_add_fields(Grid_T *const grid)
     ADD_FIELD(mom_constraint_U1);
     ADD_FIELD(mom_constraint_U2);
   
-    /* Hamiltonian and Momentum constraints for second method of calculations */ 
+    /* Hamiltonian and Momentum constraints for 
+    // second method of calculations */ 
     ADD_FIELD(ham_constraint_2nd);
     ADD_FIELD(mom_constraint_2nd_U0);
     ADD_FIELD(mom_constraint_2nd_U1);
