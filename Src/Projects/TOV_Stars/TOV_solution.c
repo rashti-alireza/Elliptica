@@ -4,18 +4,12 @@
 */
 
 #include "TOV_solution.h"
-#define N_STEPS 91 /* it should relativity big and odd number 
-                   // because we are using composite Simpson's rule integral
-                   // and for accuracy we choose large number and the method
-                   // requires odd number */
 
 /* solving TOV equations. it approximates the properties of a NS.
 // it only deals with inside of the star, since the outside is analytic.
 // ->return value: solution of TOV equations for inside of a star with give EoS */
 TOV_T *TOV_solution(TOV_T *const TOV)
 {
-  if (!TOV->N)/* if N is not determined */
-    TOV->N = N_STEPS;
   const double Fac = 0.25;
   const unsigned MAX_iter = 1000;
   double h_cent_prev = 1;
@@ -26,13 +20,21 @@ TOV_T *TOV_solution(TOV_T *const TOV)
   Flag_T bisection = NO;
   EoS_T *eos = 0;
   unsigned i,iter;
- 
+  
   pr_line_custom('=');
   printf("{ Solving TOV equations for %s ...\n",TOV->description);
+  
+  /* set some default parameters: */
+  
+  /* number of points for composite Simpson's rule integral.
+  // for accuracy we choose large number and the method
+  // requires the number be an odd number. */
+  Pset_default("TOV_Star_n","91");
   
   /* some initialization and preparation */
   iter = 0;
   h_cent_new = 1.5;
+  TOV->N = (unsigned)Pgeti("TOV_Star_n");
   TOV->m = alloc_double(TOV->N);
   TOV->r = alloc_double(TOV->N);
   TOV->h = alloc_double(TOV->N);

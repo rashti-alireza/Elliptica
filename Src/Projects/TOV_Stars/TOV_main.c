@@ -4,25 +4,41 @@
 */
 
 #include "TOV_main.h"
-#define MAXSTR 400
+#define STR_LEN_MAX 900
 
 /* solving the problem of TOV stars
 // ->return value: if succeeds EXIT_SUCCESS */
 int TOV_star(void)
 {
+  /* print some description */
+  pr_clock();
+  pr_line_custom('=');
+  printf("Solving TOV star ...\n");
+
+  /* making output directory for this project */
+  char folder[STR_LEN_MAX] = {'\0'};
+  char *outdir = 0;
+  sprintf(folder,"%s",Pgets("parameter_file_name_stem"));
+  outdir = make_directory(Pgets("relative_root_path"),folder);
+  add_parameter("output_directory_path",outdir);
+  free(outdir);
+
+  /* set some default parameters: */
+  
+  /* number of points for composite Simpson's rule integral.
+  // for accuracy we choose large number and the method
+  // requires the number be an odd number. */
+  Pset_default("TOV_Star_n","91");
+  
   TOV_T *tov = TOV_init();
   const char *const path_par = Pgets("output_directory_path");
   char *path =  make_directory(path_par,"TOV_Star");
-  char file_name[MAXSTR];
+  char file_name[STR_LEN_MAX];
   FILE *file;
   const double *p,*m,*r,*rbar;
-  unsigned N = (unsigned)Pgeti("TOV_star_n");
+  const unsigned N = (unsigned)Pgeti("TOV_Star_n");
   unsigned i;
   
-  if (N %2 == 0)/* the method need odd number */
-    N += 1;
-    
-  tov->N = N;
   tov->bar_m = Pgetd("TOV_star_baryonic_mass");
   tov->description = "A TOV star";
   tov = TOV_solution(tov);
@@ -66,6 +82,11 @@ int TOV_star(void)
   
   TOV_free(tov);
   free(path);
+  
+  /* print some description */
+  printf("Solving TOV star ==> Done. :)\n");
+  pr_clock();
+  pr_line_custom('=');
   
   return EXIT_SUCCESS;
 }
