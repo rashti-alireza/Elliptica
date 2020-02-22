@@ -107,13 +107,13 @@ static void interpolate_and_write(Grid_T *const grid,struct interpolation_points
   }
   free_needle(needle);
   
+  /* translate fields from BAM notation to Elliptica notation */
+  fields_name = translate_fields_name();
+  
   /* creating some fields which have not been exsited in Elliptica */
   //bbn_create_alpha(grid);
   //bbn_create_adm_gij(grid);
   //bbn_create_adm_Kij(grid);
-  
-  /* translate fields from BAM notation to Elliptica notation */
-  fields_name = translate_fields_name();
   
   /* open fields_file and start interpolating and writing */
   printf("~> Interpolating and writing into disk ...\n");
@@ -254,7 +254,7 @@ static char **translate_fields_name(void)
     }
     else
       abortEr_s("No option has not been defined for %s.\n",bam_fields[nf]);
-    //printf("bam = %s --> ell = %s\n",bam_fields[nf],fields_name[nf]);
+    printf("bam = %s --> ell = %s\n",bam_fields[nf],fields_name[nf]);
     nf++;
   }
   free_2d(bam_fields);
