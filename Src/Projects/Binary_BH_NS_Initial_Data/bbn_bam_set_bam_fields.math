@@ -11,13 +11,12 @@ Point = ijk;
 C_macro  = READ_v(name);
 C_macro2 = REALLOC_v_WRITE_v(name);
 C_macro3 = DECLARE_AND_EMPTY_FIELD(name);
-C_macro4 = add_field_and_prep_field(name);
+C_macro4 = add_field_and_alloc_field(name);
 
 # main function:
-Ccode["#include "bbn_headers.h"\n\n"];
-`#define add_field_and_prep_field(name) ADD_FIELD(name) REALLOC_v_WRITE_v(name)`
-`#define add_field_NoMem_and_declare_field(name) \`
-` ADD_FIELD(name)  Field_T *const f##name = patch->pool[Ind(#name)];`
+`#include "bbn_headers.h"`
+``
+`#define add_field_and_alloc_field(name) ADD_FIELD(name) REALLOC_v_WRITE_v(name)`
 ``
 `void bbn_bam_set_bam_fields(Grid_T *const grid);`
 `void bbn_bam_set_bam_fields(Grid_T *const grid)`
@@ -43,7 +42,7 @@ Declare =
  (obj = Field,name = bam_adm_K, rank = DD, C_macro4);
 
  # add: bam_grhd_v^i
-# (obj = Field,name = bam_grhd_v, rank = U, C_macro4);
+ (obj = Field,name = bam_grhd_v, rank = U, C_macro4);
 
  # _A^{ij}
  (obj = Field,name = _A_UiUj, rank = UU, C_macro);
@@ -63,6 +62,18 @@ Declare =
  # trKij
  (obj = Field,name = K, rank = 0, C_macro);
 
+ # enthalpy
+ (obj = Field,name = enthalpy, rank = 0, C_macro);
+
+ # spin part of fluid
+ (obj = Field,name = W, rank = U, C_macro);
+
+ # d(phi)/d? for irrotional part of fluid
+ (obj = Field,name = dphi, rank = D, C_macro);
+
+ # u0
+ (obj = Field,name = u0, rank = 0, C_macro);
+
  # conformal metric 
  (obj = Field,name = _gamma, rank = DD, C_macro);
 
@@ -80,12 +91,13 @@ Symm[_gammaI(i,j)   = _gammaI(j,i)];
 `  if (!IsItInsideBHPatch(patch))`
 `  for(ijk = 0; ijk < nn; ++ijk)`
 `  {`
+
    psi4   = psi**4;
    psim4  = psi**(-4);
    psim10 = psim4*psim4/(psi**2);
 
 # alpha:
-`  bam_alpha[ijk] = eta[ijk]/psi[ijk];`
+`   bam_alpha[ijk] = eta[ijk]/psi[ijk];`
 
 # beta:
 `   bam_Beta_U0[ijk] = Beta_U0[ijk];`
@@ -107,11 +119,15 @@ Symm[_gammaI(i,j)   = _gammaI(j,i)];
 `  }`# end of for(ijk = 0; ijk < nn; ++ijk)
 
 # grhd_v^i:
-`   if (!IsItInsideBHPatch(patch))`
-#`  for(ijk = 0; ijk < nn; ++ijk)`
-#`  {`
+`  if (IsItNSPatch(patch))` # otherwise grhd_v^i set zero by calloc
+`  for(ijk = 0; ijk < nn; ++ijk)`
+`  {`
 
-#`  }`# end of for(ijk = 0; ijk < nn; ++ijk)
+   psim4_ = psi**(-4);
+   grhd_v(i) = (psim4_*_gammaI(i,j)*dphi(-j)+W(i))/(bam_alpha*enthalpy*u0);
+   Cpopulate[bam_grhd_v = grhd_v];
+
+`  }`# end of for(ijk = 0; ijk < nn; ++ijk)
 
 
 ############################### {

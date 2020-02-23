@@ -6,10 +6,7 @@
 
 #include "bbn_headers.h"
 
-
-#define add_field_and_prep_field(name) ADD_FIELD(name) REALLOC_v_WRITE_v(name)
-#define add_field_NoMem_and_declare_field(name) \
- ADD_FIELD(name)  Field_T *const f##name = patch->pool[Ind(#name)];
+#define add_field_and_alloc_field(name) ADD_FIELD(name) REALLOC_v_WRITE_v(name)
 
 void bbn_bam_set_bam_fields(Grid_T *const grid);
 void bbn_bam_set_bam_fields(Grid_T *const grid)
@@ -22,22 +19,25 @@ void bbn_bam_set_bam_fields(Grid_T *const grid)
   unsigned ijk;
 
   /* declaring: */
-  add_field_and_prep_field(bam_alpha)
-  add_field_and_prep_field(bam_Beta_U0)
-  add_field_and_prep_field(bam_Beta_U1)
-  add_field_and_prep_field(bam_Beta_U2)
-  add_field_and_prep_field(bam_adm_g_D0D0)
-  add_field_and_prep_field(bam_adm_g_D0D1)
-  add_field_and_prep_field(bam_adm_g_D0D2)
-  add_field_and_prep_field(bam_adm_g_D2D2)
-  add_field_and_prep_field(bam_adm_g_D1D1)
-  add_field_and_prep_field(bam_adm_g_D1D2)
-  add_field_and_prep_field(bam_adm_K_D1D1)
-  add_field_and_prep_field(bam_adm_K_D2D2)
-  add_field_and_prep_field(bam_adm_K_D0D0)
-  add_field_and_prep_field(bam_adm_K_D0D1)
-  add_field_and_prep_field(bam_adm_K_D0D2)
-  add_field_and_prep_field(bam_adm_K_D1D2)
+  add_field_and_alloc_field(bam_alpha)
+  add_field_and_alloc_field(bam_Beta_U0)
+  add_field_and_alloc_field(bam_Beta_U1)
+  add_field_and_alloc_field(bam_Beta_U2)
+  add_field_and_alloc_field(bam_adm_g_D0D0)
+  add_field_and_alloc_field(bam_adm_g_D0D1)
+  add_field_and_alloc_field(bam_adm_g_D0D2)
+  add_field_and_alloc_field(bam_adm_g_D2D2)
+  add_field_and_alloc_field(bam_adm_g_D1D1)
+  add_field_and_alloc_field(bam_adm_g_D1D2)
+  add_field_and_alloc_field(bam_adm_K_D1D1)
+  add_field_and_alloc_field(bam_adm_K_D2D2)
+  add_field_and_alloc_field(bam_adm_K_D0D0)
+  add_field_and_alloc_field(bam_adm_K_D0D1)
+  add_field_and_alloc_field(bam_adm_K_D0D2)
+  add_field_and_alloc_field(bam_adm_K_D1D2)
+  add_field_and_alloc_field(bam_grhd_v_U0)
+  add_field_and_alloc_field(bam_grhd_v_U1)
+  add_field_and_alloc_field(bam_grhd_v_U2)
   READ_v(_A_UiUj_U2U2)
   READ_v(_A_UiUj_U1U2)
   READ_v(_A_UiUj_U1U1)
@@ -53,6 +53,14 @@ void bbn_bam_set_bam_fields(Grid_T *const grid)
   READ_v(psi)
   READ_v(eta)
   READ_v(K)
+  READ_v(enthalpy)
+  READ_v(W_U1)
+  READ_v(W_U0)
+  READ_v(W_U2)
+  READ_v(dphi_D2)
+  READ_v(dphi_D1)
+  READ_v(dphi_D0)
+  READ_v(u0)
   READ_v(_gamma_D2D2)
   READ_v(_gamma_D0D2)
   READ_v(_gamma_D0D0)
@@ -79,7 +87,7 @@ pow(psi[ijk], -4);
   double psim10 = 
 pow(psim4, 2)/pow(psi[ijk], 2);
 
-  bam_alpha[ijk] = eta[ijk]/psi[ijk];
+   bam_alpha[ijk] = eta[ijk]/psi[ijk];
    bam_Beta_U0[ijk] = Beta_U0[ijk];
    bam_Beta_U1[ijk] = Beta_U1[ijk];
    bam_Beta_U2[ijk] = Beta_U2[ijk];
@@ -184,7 +192,33 @@ adm_Kuu_U2U2*pow(adm_g_D2D2, 2);
    bam_adm_K_D0D2[ijk] = adm_Kdd_D0D2;
    bam_adm_K_D1D2[ijk] = adm_Kdd_D1D2;
   }
-   if (!IsItInsideBHPatch(patch))
+  if (IsItNSPatch(patch))
+  for(ijk = 0; ijk < nn; ++ijk)
+  {
+  double psim4_ = 
+pow(psi[ijk], -4);
+
+  double grhd_v_U1 = 
+(W_U1[ijk] + psim4_*(_gammaI_U0U1[ijk]*dphi_D0[ijk] + 
+_gammaI_U1U1[ijk]*dphi_D1[ijk] + _gammaI_U1U2[ijk]*dphi_D2[ijk]))/
+(bam_alpha[ijk]*enthalpy[ijk]*u0[ijk]);
+
+  double grhd_v_U0 = 
+(W_U0[ijk] + psim4_*(_gammaI_U0U0[ijk]*dphi_D0[ijk] + 
+_gammaI_U0U1[ijk]*dphi_D1[ijk] + _gammaI_U0U2[ijk]*dphi_D2[ijk]))/
+(bam_alpha[ijk]*enthalpy[ijk]*u0[ijk]);
+
+  double grhd_v_U2 = 
+(W_U2[ijk] + psim4_*(_gammaI_U0U2[ijk]*dphi_D0[ijk] + 
+_gammaI_U1U2[ijk]*dphi_D1[ijk] + _gammaI_U2U2[ijk]*dphi_D2[ijk]))/
+(bam_alpha[ijk]*enthalpy[ijk]*u0[ijk]);
+
+
+  /* populating: */
+  bam_grhd_v_U0[ijk] = grhd_v_U0;
+  bam_grhd_v_U1[ijk] = grhd_v_U1;
+  bam_grhd_v_U2[ijk] = grhd_v_U2;
+  }
   for(ijk = 0; ijk < nn; ++ijk)
   {
   double temp_bh2_D0D0 = 
