@@ -1,0 +1,136 @@
+# adding bam fields into grid and compute them, 
+# the fields are as follows:
+# bam_alpha,bam_Beta^i,bam_adm_g_ij,bam_adm_K_ij,bam_grhd_v^i
+
+# Manifold or grid Dimension
+Dimension = 3;
+
+# point on manifold shown by:
+Point = ijk;
+
+C_macro  = READ_v(name);
+C_macro2 = REALLOC_v_WRITE_v(name);
+C_macro3 = DECLARE_AND_EMPTY_FIELD(name);
+C_macro4 = add_field_and_prep_field(name);
+
+# main function:
+Ccode["#include "bbn_headers.h"\n\n"];
+`#define add_field_and_prep_field(name) ADD_FIELD(name) REALLOC_v_WRITE_v(name)`
+`#define add_field_NoMem_and_declare_field(name) \`
+` ADD_FIELD(name)  Field_T *const f##name = patch->pool[Ind(#name)];`
+Ccode["void bbn_create_bam_fields(Grid_T *const grid)\n{"];
+`  unsigned p;`
+`  FOR_ALL_PATCHES(p,grid)`
+`  {`
+`  Patch_T *patch = grid->patch[p];`
+`  unsigned nn    = patch->nn;`
+`  unsigned ijk;`
+Declare = 
+{
+ # add: bam_alpha
+ (obj = Field,name = bam_alpha, rank = 0, C_macro4);
+
+ # add: bam_Beta^i
+ (obj = Field,name = bam_Beta, rank = U, C_macro4);
+
+ # add: bam_adm_g_ij
+ (obj = Field,name = bam_adm_g, rank = DD, C_macro4);
+
+ # add: bam_adm_K_ij
+ (obj = Field,name = bam_adm_K, rank = DD, C_macro4);
+
+ # add: bam_grhd_v^i
+ (obj = Field,name = bam_grhd_v, rank = U, C_macro4);
+
+ # _A^{ij}
+ (obj = Field,name = _A_UiUj, rank = UU, C_macro);
+
+ # shift
+ (obj = Field,name = Beta, rank = U, C_macro);
+
+ # B1 in Beta = B0+B1
+ (obj = Field,name = B1, rank = U, C_macro);
+
+ # psi
+ (obj = Field,name = psi, rank = 0, C_macro);
+
+ # eta
+ (obj = Field,name = eta, rank = 0, C_macro);
+
+ # trKij
+ (obj = Field,name = K, rank = 0, C_macro);
+
+ # conformal metric 
+ (obj = Field,name = _gamma, rank = DD, C_macro);
+
+ # conformal metric inverse
+ (obj = Field,name = _gammaI, rank = UU, C_macro);
+}
+
+# symmetries:
+Symm[_A_UiUj(i,j)   = _A_UiUj(j,i)];
+Symm[bam_adm_K(i,j) = bam_adm_K(j,i)];
+Symm[bam_adm_g(i,j) = bam_adm_g(j,i)];
+Symm[_gamma(i,j)    = _gamma(j,i)];
+Symm[_gammaI(i,j)   = _gammaI(j,i)];
+
+############################### {
+### temp: I don't have the appropriate form of the fields inside BH
+### so for now, let's fill them with some junk values
+
+`  for(ijk = 0; ijk < nn; ++ijk)`
+`  {`
+
+temp_bh2(-i,-j) = KD(i,j);
+Symm[temp_bh2(i,j) = temp_bh2(j,i)];
+temp_bh1(i) = B1(i);
+
+`  bam_alpha[ijk] = eta[ijk]/psi[ijk];`
+   Cpopulate[bam_Beta = temp_bh1];
+   Cpopulate[bam_adm_g = temp_bh2];
+   Cpopulate[bam_adm_K = temp_bh2];
+
+`  }`# end of for(ijk = 0; ijk < nn; ++ijk)
+
+
+### temp: inside BH ends
+############################### }
+
+`  for(ijk = 0; ijk < nn; ++ijk)`
+`  {`
+   psi4   = psi**4;
+   psim4  = psi**(-4);
+   psim10 = psim4*psim4/(psi**2);
+
+# alpha:
+`  bam_alpha[ijk] = eta[ijk]/psi[ijk];`
+
+# beta:
+`   bam_Beta_U0[ijk] = Beta_U0[ijk];`
+`   bam_Beta_U1[ijk] = Beta_U1[ijk];`
+`   bam_Beta_U2[ijk] = Beta_U2[ijk];`
+
+# g_ij:
+   adm_g(-i,-j) = psi4*_gamma(i,j);
+   Symm[adm_g(i,j) = adm_g(j,i)];
+   Cpopulate[bam_adm_g = adm_g];
+
+# K_ij:
+   adm_Kuu(i,j) = psim10*_A_UiUj(i,j)+psim4*K*_gammaI(i,j)/3;
+   Symm[adm_Kuu(i,j) = adm_Kuu(j,i)];
+   adm_Kdd(-i,-j) = adm_g(-i,-ip)*adm_g(-j,-jp)*adm_Kuu(ip,jp);
+   Symm[adm_Kdd(i,j) = adm_Kdd(j,i)];
+   Cpopulate[bam_adm_K = adm_Kdd];
+
+`  }`# end of for(ijk = 0; ijk < nn; ++ijk)
+
+# grhd_v^i:
+`  for(ijk = 0; ijk < nn; ++ijk)`
+`  {`
+
+`  }`# end of for(ijk = 0; ijk < nn; ++ijk)
+
+
+`  }`# end of FOR_ALL_PATCHES
+
+Ccode["}"]; # end of function
