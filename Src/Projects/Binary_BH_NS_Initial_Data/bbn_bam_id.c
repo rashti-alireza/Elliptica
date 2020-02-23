@@ -110,8 +110,8 @@ static void interpolate_and_write(Grid_T *const grid,struct interpolation_points
   /* translate fields from BAM notation to Elliptica notation */
   fields_name = translate_fields_name();
   
-  /* creating some fields which have not been exsited in Elliptica */
-  bbn_create_bam_fields(grid);
+  /* set bam fields based on initial data to be usable for bam */
+  bbn_bam_set_bam_fields(grid);
   
   /* open fields_file and start interpolating and writing */
   file = fopen(fields_file_path,"wb");

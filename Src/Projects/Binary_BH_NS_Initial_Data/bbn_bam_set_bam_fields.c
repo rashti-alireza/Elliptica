@@ -10,6 +10,8 @@
 #define add_field_and_prep_field(name) ADD_FIELD(name) REALLOC_v_WRITE_v(name)
 #define add_field_NoMem_and_declare_field(name) \
  ADD_FIELD(name)  Field_T *const f##name = patch->pool[Ind(#name)];
+
+void bbn_bam_set_bam_fields(Grid_T *const grid);
 void bbn_bam_set_bam_fields(Grid_T *const grid)
 {
   unsigned p;
