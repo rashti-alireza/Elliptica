@@ -65,6 +65,8 @@ static void interpolate_and_write(Grid_T *const grid,struct interpolation_points
   char **fields_name = 0,**bam_fields = 0;
   char title_line[STR_LEN_MAX];
   char *const p_title_line = title_line;/* to avoid GCC warning for FWriteP_bin */
+  char msg[STR_LEN_MAX];
+  char *const p_msg = msg;/* to avoid GCC warning for FWriteP_bin */
   Interpolation_T *interp_s = init_interpolation();
   double *interp_v = 0;
   double x[3],X[3];
@@ -126,6 +128,8 @@ static void interpolate_and_write(Grid_T *const grid,struct interpolation_points
   {
     printf("~> Interpolating and writing into disk: %s\n",fields_name[f]);
     fflush(stdout);
+    /* write it into the fields_file */
+    FWriteP_bin(bam_fields[f],strlen(bam_fields[f])+1);
     /* interpolating each fields at the all given points */
     for (p = 0; p < npoints; ++p)
     {
@@ -137,14 +141,15 @@ static void interpolate_and_write(Grid_T *const grid,struct interpolation_points
       interp_s->Z = pnt->Z[p];
       plan_interpolation(interp_s);
       interp_v[p] = execute_interpolation(interp_s);
+      /* write it into the fields_file */
+      FWriteV_bin(interp_v[p],1);
     }
-    /* write it into the fields_file */
-    FWriteP_bin(bam_fields[f],strlen(bam_fields[f])+1);
-    FWriteP_bin(interp_v,npoints);
     f++;
   }
   sprintf(title_line,"%s",FOOTER);
   FWriteP_bin(p_title_line,strlen(title_line)+1);
+  sprintf(msg,"%s",END_MSG);
+  FWriteP_bin(p_msg,strlen(msg)+1);
   fclose(file);
   
   free_interpolation(interp_s);
