@@ -2819,14 +2819,7 @@ static void extrapolate_insideBH(Grid_T *const grid)
     unsigned ijk,i,j,k;
  
     /* add fields: */
-    ADD_FIELD(B0_U0)
-    ADD_FIELD(B0_U1)
-    ADD_FIELD(B0_U2)
-    ADD_FIELD(B1_U0)
-    ADD_FIELD(B1_U1)
-    ADD_FIELD(B1_U2)
-    ADD_FIELD(psi)
-    ADD_FIELD(eta)
+    bbn_add_fields_in_patch(patch);
     
     REALLOC_v_WRITE_v(B0_U0)
     REALLOC_v_WRITE_v(B0_U1)
