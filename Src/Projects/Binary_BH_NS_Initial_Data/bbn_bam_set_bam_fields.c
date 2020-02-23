@@ -38,9 +38,6 @@ void bbn_bam_set_bam_fields(Grid_T *const grid)
   add_field_and_prep_field(bam_adm_K_D0D1)
   add_field_and_prep_field(bam_adm_K_D0D2)
   add_field_and_prep_field(bam_adm_K_D1D2)
-  add_field_and_prep_field(bam_grhd_v_U0)
-  add_field_and_prep_field(bam_grhd_v_U1)
-  add_field_and_prep_field(bam_grhd_v_U2)
   READ_v(_A_UiUj_U2U2)
   READ_v(_A_UiUj_U1U2)
   READ_v(_A_UiUj_U1U1)
@@ -70,58 +67,6 @@ void bbn_bam_set_bam_fields(Grid_T *const grid)
   READ_v(_gammaI_U2U2)
 
 
-  for(ijk = 0; ijk < nn; ++ijk)
-  {
-  double temp_bh2_D0D0 = 
-1.0;
-
-  double temp_bh2_D2D2 = 
-1.0;
-
-  double temp_bh2_D1D2 = 
-0;
-
-  double temp_bh2_D0D2 = 
-0;
-
-  double temp_bh2_D0D1 = 
-0;
-
-  double temp_bh2_D1D1 = 
-1.0;
-
-  double temp_bh1_U2 = 
-B1_U2[ijk];
-
-  double temp_bh1_U1 = 
-B1_U1[ijk];
-
-  double temp_bh1_U0 = 
-B1_U0[ijk];
-
-  bam_alpha[ijk] = eta[ijk]/psi[ijk];
-
-  /* populating: */
-  bam_Beta_U0[ijk] = temp_bh1_U0;
-  bam_Beta_U1[ijk] = temp_bh1_U1;
-  bam_Beta_U2[ijk] = temp_bh1_U2;
-
-  /* populating: */
-  bam_adm_g_D0D0[ijk] = temp_bh2_D0D0;
-  bam_adm_g_D0D1[ijk] = temp_bh2_D0D1;
-  bam_adm_g_D0D2[ijk] = temp_bh2_D0D2;
-  bam_adm_g_D2D2[ijk] = temp_bh2_D2D2;
-  bam_adm_g_D1D1[ijk] = temp_bh2_D1D1;
-  bam_adm_g_D1D2[ijk] = temp_bh2_D1D2;
-
-  /* populating: */
-  bam_adm_K_D1D1[ijk] = temp_bh2_D1D1;
-  bam_adm_K_D2D2[ijk] = temp_bh2_D2D2;
-  bam_adm_K_D0D0[ijk] = temp_bh2_D0D0;
-  bam_adm_K_D0D1[ijk] = temp_bh2_D0D1;
-  bam_adm_K_D0D2[ijk] = temp_bh2_D0D2;
-  bam_adm_K_D1D2[ijk] = temp_bh2_D1D2;
-  }
   for(ijk = 0; ijk < nn; ++ijk)
   {
   double psi4 = 
@@ -240,6 +185,55 @@ adm_Kuu_U2U2*pow(adm_g_D2D2, 2);
   }
   for(ijk = 0; ijk < nn; ++ijk)
   {
+  double temp_bh2_D0D0 = 
+1.0;
+
+  double temp_bh2_D2D2 = 
+1.0;
+
+  double temp_bh2_D1D2 = 
+0;
+
+  double temp_bh2_D0D2 = 
+0;
+
+  double temp_bh2_D0D1 = 
+0;
+
+  double temp_bh2_D1D1 = 
+1.0;
+
+  double temp_bh1_U2 = 
+B1_U2[ijk];
+
+  double temp_bh1_U1 = 
+B1_U1[ijk];
+
+  double temp_bh1_U0 = 
+B1_U0[ijk];
+
+  bam_alpha[ijk] = eta[ijk]/psi[ijk];
+
+  /* populating: */
+  bam_Beta_U0[ijk] = temp_bh1_U0;
+  bam_Beta_U1[ijk] = temp_bh1_U1;
+  bam_Beta_U2[ijk] = temp_bh1_U2;
+
+  /* populating: */
+  bam_adm_g_D0D0[ijk] = temp_bh2_D0D0;
+  bam_adm_g_D0D1[ijk] = temp_bh2_D0D1;
+  bam_adm_g_D0D2[ijk] = temp_bh2_D0D2;
+  bam_adm_g_D2D2[ijk] = temp_bh2_D2D2;
+  bam_adm_g_D1D1[ijk] = temp_bh2_D1D1;
+  bam_adm_g_D1D2[ijk] = temp_bh2_D1D2;
+
+  /* populating: */
+  bam_adm_K_D1D1[ijk] = temp_bh2_D1D1;
+  bam_adm_K_D2D2[ijk] = temp_bh2_D2D2;
+  bam_adm_K_D0D0[ijk] = temp_bh2_D0D0;
+  bam_adm_K_D0D1[ijk] = temp_bh2_D0D1;
+  bam_adm_K_D0D2[ijk] = temp_bh2_D0D2;
+  bam_adm_K_D1D2[ijk] = temp_bh2_D1D2;
   }
   }
 }

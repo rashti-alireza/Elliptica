@@ -43,7 +43,7 @@ Declare =
  (obj = Field,name = bam_adm_K, rank = DD, C_macro4);
 
  # add: bam_grhd_v^i
- (obj = Field,name = bam_grhd_v, rank = U, C_macro4);
+# (obj = Field,name = bam_grhd_v, rank = U, C_macro4);
 
  # _A^{ij}
  (obj = Field,name = _A_UiUj, rank = UU, C_macro);
@@ -77,27 +77,6 @@ Symm[bam_adm_g(i,j) = bam_adm_g(j,i)];
 Symm[_gamma(i,j)    = _gamma(j,i)];
 Symm[_gammaI(i,j)   = _gammaI(j,i)];
 
-############################### {
-### temp: I don't have the appropriate form of the fields inside BH
-### so for now, let's fill them with some junk values
-
-`  for(ijk = 0; ijk < nn; ++ijk)`
-`  {`
-
-temp_bh2(-i,-j) = KD(i,j);
-Symm[temp_bh2(i,j) = temp_bh2(j,i)];
-temp_bh1(i) = B1(i);
-
-`  bam_alpha[ijk] = eta[ijk]/psi[ijk];`
-   Cpopulate[bam_Beta = temp_bh1];
-   Cpopulate[bam_adm_g = temp_bh2];
-   Cpopulate[bam_adm_K = temp_bh2];
-
-`  }`# end of for(ijk = 0; ijk < nn; ++ijk)
-
-
-### temp: inside BH ends
-############################### }
 
 `  for(ijk = 0; ijk < nn; ++ijk)`
 `  {`
@@ -128,12 +107,35 @@ temp_bh1(i) = B1(i);
 `  }`# end of for(ijk = 0; ijk < nn; ++ijk)
 
 # grhd_v^i:
+#`  for(ijk = 0; ijk < nn; ++ijk)`
+#`  {`
+
+#`  }`# end of for(ijk = 0; ijk < nn; ++ijk)
+
+
+############################### {
+### temp: I don't have the appropriate form of the fields inside BH
+### so for now, let's fill them with some junk values
+
 `  for(ijk = 0; ijk < nn; ++ijk)`
 `  {`
+
+temp_bh2(-i,-j) = KD(i,j);
+Symm[temp_bh2(i,j) = temp_bh2(j,i)];
+temp_bh1(i) = B1(i);
+
+`  bam_alpha[ijk] = eta[ijk]/psi[ijk];`
+   Cpopulate[bam_Beta = temp_bh1];
+   Cpopulate[bam_adm_g = temp_bh2];
+   Cpopulate[bam_adm_K = temp_bh2];
 
 `  }`# end of for(ijk = 0; ijk < nn; ++ijk)
 
 
+### temp: inside BH ends
+############################### }
+
 `  }`# end of FOR_ALL_PATCHES
+
 
 `}` # end of function
