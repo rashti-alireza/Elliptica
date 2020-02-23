@@ -25,10 +25,10 @@ void bbn_bam_export_id(void)
   
   /* write parameters b/c they'll be overridden 
   // when checkpoint file is loaded */
-  sprintf(coords_file_path,"%s",Pgets("bam_bbn_coords_file_path"));
-  sprintf(fields_file_path,"%s",Pgets("bam_bbn_fields_file_path"));
-  sprintf(bam_fields_name, "%s",Pgets("bam_bbn_fields_name"));
-  sprintf(checkpoint_path, "%s",Pgets("bam_bbn_checkpoint_path"));
+  sprintf(coords_file_path,"%s",Pgets("bbn_bam_coords_file_path"));
+  sprintf(fields_file_path,"%s",Pgets("bbn_bam_fields_file_path"));
+  sprintf(bam_fields_name, "%s",Pgets("bbn_bam_fields_name"));
+  sprintf(checkpoint_path, "%s",Pgets("bbn_bam_checkpoint_path"));
   
   /* read (x,y,x) points from bam file to be interpolated on them */
   load_coords_from_coords_file(points);
