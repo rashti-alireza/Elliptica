@@ -6,13 +6,12 @@
 
 #include "bbn_fields.h"
 
-/* allocating all of the fields needed for construction of Initial Data */
+/* declaring all of the fields needed for construction of Initial Data
+// in the given grid */
 void bbn_add_fields(Grid_T *const grid)
 {
   pr_line_custom('=');
   printf("{ Adding fields ...\n");
-  
-  unsigned p;
   
   /* if it is ready */
   if (Pgeti("use_previous_data"))
@@ -24,371 +23,375 @@ void bbn_add_fields(Grid_T *const grid)
     return;
   }
   
+  unsigned p;
   FOR_ALL_PATCHES(p,grid)
   {
     Patch_T *patch = grid->patch[p];
-    
-    /* scalar for the irrotational part of fluid i.e h*u = dphi+W 
-    // in NS and its partial derivatives*/
-    ADD_FIELD(phi);
-    ADD_FIELD(phi_residual);
-    
-    ADD_FIELD(OLD_phi);
-    ADD_FIELD(dphi_D2)
-    ADD_FIELD(dphi_D1)
-    ADD_FIELD(dphi_D0)
-    
-    ADD_FIELD(ddphi_D2D2)
-    ADD_FIELD(ddphi_D1D2)
-    ADD_FIELD(ddphi_D1D1)
-    ADD_FIELD(ddphi_D0D2)
-    ADD_FIELD(ddphi_D0D0)
-    ADD_FIELD(ddphi_D0D1)
-
-    /* enthalpy in NS and its partial derivatives */
-    ADD_FIELD(enthalpy);
-    ADD_FIELD(denthalpy_D2)
-    ADD_FIELD(denthalpy_D1)
-    ADD_FIELD(denthalpy_D0)
-
-    /* rest mass density in NS and its partial derivatives */
-    ADD_FIELD(rho0);
-    ADD_FIELD(drho0_D2)
-    ADD_FIELD(drho0_D1)
-    ADD_FIELD(drho0_D0)
-    
-    /* the first component of fluid four velocity, i.e. 
-    // u_mu = (u_U0,u_U1,u_U2,u_U3) and its partial derivatives */
-    ADD_FIELD(u0);
-    ADD_FIELD(du0_D2)
-    ADD_FIELD(du0_D1)
-    ADD_FIELD(du0_D0)
-    
-    /* spin part of fluid W^i */
-    ADD_FIELD(W_U0);
-    ADD_FIELD(W_U1);
-    ADD_FIELD(W_U2);
-      
-    /* normal vector on horizon */
-    ADD_FIELD(_HS_U0);
-    ADD_FIELD(_HS_U1);
-    ADD_FIELD(_HS_U2);
-    ADD_FIELD(_dHS_U1D0)
-    ADD_FIELD(_dHS_U1D1)
-    ADD_FIELD(_dHS_U1D2)
-    ADD_FIELD(_dHS_U0D1)
-    ADD_FIELD(_dHS_U0D0)
-    ADD_FIELD(_dHS_U0D2)
-    ADD_FIELD(_dHS_U2D2)
-    ADD_FIELD(_dHS_U2D1)
-    ADD_FIELD(_dHS_U2D0)
-    
-    /* Hamiltonian and Momentum constraints */
-    ADD_FIELD(ham_constraint);
-    ADD_FIELD(mom_constraint_U0);
-    ADD_FIELD(mom_constraint_U1);
-    ADD_FIELD(mom_constraint_U2);
-  
-    /* Hamiltonian and Momentum constraints for 
-    // second method of calculations */ 
-    ADD_FIELD(ham_constraint_2nd);
-    ADD_FIELD(mom_constraint_2nd_U0);
-    ADD_FIELD(mom_constraint_2nd_U1);
-    ADD_FIELD(mom_constraint_2nd_U2);
-    
-    /* conformal total energy density */
-    ADD_FIELD(_E);
-    
-    /* conformal trace of stress tensor */
-    ADD_FIELD(_S);
-    
-    /* conformal momentum current */
-    ADD_FIELD(_J_U0);
-    ADD_FIELD(_J_U1);
-    ADD_FIELD(_J_U2);
-    
-    /* conformal factor and its derivative */
-    ADD_FIELD(psi);
-    ADD_FIELD(psi_residual);
-    ADD_FIELD(OLD_psi);
-    ADD_FIELD(dpsi_D2)
-    ADD_FIELD(dpsi_D1)
-    ADD_FIELD(dpsi_D0)
-    
-    ADD_FIELD(ddpsi_D2D2)
-    ADD_FIELD(ddpsi_D1D2)
-    ADD_FIELD(ddpsi_D1D1)
-    ADD_FIELD(ddpsi_D0D2)
-    ADD_FIELD(ddpsi_D0D0)
-    ADD_FIELD(ddpsi_D0D1)
-
-    /* eta = lapse * psi and its partial derivatives */
-    ADD_FIELD(eta);
-    ADD_FIELD(eta_residual);
-    
-    ADD_FIELD(OLD_eta)
-    
-    ADD_FIELD(deta_D2)
-    ADD_FIELD(deta_D1)
-    ADD_FIELD(deta_D0)
-
-    ADD_FIELD(ddeta_D2D2)
-    ADD_FIELD(ddeta_D1D2)
-    ADD_FIELD(ddeta_D1D1)
-    ADD_FIELD(ddeta_D0D2)
-    ADD_FIELD(ddeta_D0D0)
-    ADD_FIELD(ddeta_D0D1)    
-    
-    /* shift, Beta^i = B0^i+B1^i, 
-    // B1^i = Omega_BHNS*(-y+y_CM,x-x_CM,0)+v_r/D*(x-x_CM,y-y_CM) 
-    // and its partial derivative */
-    ADD_FIELD(B0_U0);
-    ADD_FIELD(B0_U1);
-    ADD_FIELD(B0_U2);
-    ADD_FIELD(B0_U0_residual);
-    ADD_FIELD(B0_U1_residual);
-    ADD_FIELD(B0_U2_residual);
-    
-    ADD_FIELD(B1_U0);
-    ADD_FIELD(B1_U1);
-    ADD_FIELD(B1_U2);
-    ADD_FIELD(Beta_U0);
-    ADD_FIELD(Beta_U1);
-    ADD_FIELD(Beta_U2);
-    ADD_FIELD(OLD_B0_U0);
-    ADD_FIELD(OLD_B0_U1);
-    ADD_FIELD(OLD_B0_U2);
-    
-    ADD_FIELD(dB0_U1D0)
-    ADD_FIELD(dB0_U1D1)
-    ADD_FIELD(dB0_U1D2)
-    ADD_FIELD(dB0_U0D1)
-    ADD_FIELD(dB0_U0D0)
-    ADD_FIELD(dB0_U0D2)
-    ADD_FIELD(dB0_U2D2)
-    ADD_FIELD(dB0_U2D1)
-    ADD_FIELD(dB0_U2D0)
-
-    ADD_FIELD(ddB0_U1D2D2)
-    ADD_FIELD(ddB0_U1D0D0)
-    ADD_FIELD(ddB0_U1D0D1)
-    ADD_FIELD(ddB0_U1D0D2)
-    ADD_FIELD(ddB0_U1D1D2)
-    ADD_FIELD(ddB0_U2D0D0)
-    ADD_FIELD(ddB0_U2D1D2)
-    ADD_FIELD(ddB0_U0D2D2)
-    ADD_FIELD(ddB0_U2D1D1)
-    ADD_FIELD(ddB0_U0D0D1)
-    ADD_FIELD(ddB0_U0D1D1)
-    ADD_FIELD(ddB0_U0D1D2)
-    ADD_FIELD(ddB0_U0D0D2)
-    ADD_FIELD(ddB0_U1D1D1)
-    ADD_FIELD(ddB0_U2D0D1)
-    ADD_FIELD(ddB0_U2D2D2)
-    ADD_FIELD(ddB0_U2D0D2)
-    ADD_FIELD(ddB0_U0D0D0)
-
-    ADD_FIELD(dBeta_U1D0)
-    ADD_FIELD(dBeta_U1D1)
-    ADD_FIELD(dBeta_U1D2)
-    ADD_FIELD(dBeta_U0D1)
-    ADD_FIELD(dBeta_U0D0)
-    ADD_FIELD(dBeta_U0D2)
-    ADD_FIELD(dBeta_U2D2)
-    ADD_FIELD(dBeta_U2D1)
-    ADD_FIELD(dBeta_U2D0)
-
-    ADD_FIELD(ddBeta_U1D2D2)
-    ADD_FIELD(ddBeta_U1D0D0)
-    ADD_FIELD(ddBeta_U1D0D1)
-    ADD_FIELD(ddBeta_U1D0D2)
-    ADD_FIELD(ddBeta_U1D1D2)
-    ADD_FIELD(ddBeta_U2D0D0)
-    ADD_FIELD(ddBeta_U2D1D2)
-    ADD_FIELD(ddBeta_U0D2D2)
-    ADD_FIELD(ddBeta_U2D1D1)
-    ADD_FIELD(ddBeta_U0D0D1)
-    ADD_FIELD(ddBeta_U0D1D1)
-    ADD_FIELD(ddBeta_U0D1D2)
-    ADD_FIELD(ddBeta_U0D0D2)
-    ADD_FIELD(ddBeta_U1D1D1)
-    ADD_FIELD(ddBeta_U2D0D1)
-    ADD_FIELD(ddBeta_U2D2D2)
-    ADD_FIELD(ddBeta_U2D0D2)
-    ADD_FIELD(ddBeta_U0D0D0)
-  
-    ADD_FIELD(dB1_U1D0)
-    ADD_FIELD(dB1_U1D1)
-    ADD_FIELD(dB1_U1D2)
-    ADD_FIELD(dB1_U0D1)
-    ADD_FIELD(dB1_U0D0)
-    ADD_FIELD(dB1_U0D2)
-    ADD_FIELD(dB1_U2D2)
-    ADD_FIELD(dB1_U2D1)
-    ADD_FIELD(dB1_U2D0)
-
-    ADD_FIELD(ddB1_U1D2D2)
-    ADD_FIELD(ddB1_U1D0D0)
-    ADD_FIELD(ddB1_U1D0D1)
-    ADD_FIELD(ddB1_U1D0D2)
-    ADD_FIELD(ddB1_U1D1D2)
-    ADD_FIELD(ddB1_U2D0D0)
-    ADD_FIELD(ddB1_U2D1D2)
-    ADD_FIELD(ddB1_U0D2D2)
-    ADD_FIELD(ddB1_U2D1D1)
-    ADD_FIELD(ddB1_U0D0D1)
-    ADD_FIELD(ddB1_U0D1D1)
-    ADD_FIELD(ddB1_U0D1D2)
-    ADD_FIELD(ddB1_U0D0D2)
-    ADD_FIELD(ddB1_U1D1D1)
-    ADD_FIELD(ddB1_U2D0D1)
-    ADD_FIELD(ddB1_U2D2D2)
-    ADD_FIELD(ddB1_U2D0D2)
-    ADD_FIELD(ddB1_U0D0D0)
-  
-    /* conformal metric: _gamma_DiDj */
-    ADD_FIELD(_gamma_D2D2)
-    ADD_FIELD(_gamma_D0D2)
-    ADD_FIELD(_gamma_D0D0)
-    ADD_FIELD(_gamma_D0D1)
-    ADD_FIELD(_gamma_D1D2)
-    ADD_FIELD(_gamma_D1D1)
-
-    /* conformal metric inverse _gammaI_UiUj I stands for inverse */
-    ADD_FIELD(_gammaI_U0U2)
-    ADD_FIELD(_gammaI_U0U0)
-    ADD_FIELD(_gammaI_U0U1)
-    ADD_FIELD(_gammaI_U1U2)
-    ADD_FIELD(_gammaI_U1U1)
-    ADD_FIELD(_gammaI_U2U2)
-
-    /* Christoffer symbols made up of conformal metric */
-    ADD_FIELD(_Gamma_U2D1D1)
-    ADD_FIELD(_Gamma_U2D1D2)
-    ADD_FIELD(_Gamma_U0D1D1)
-    ADD_FIELD(_Gamma_U2D0D2)
-    ADD_FIELD(_Gamma_U2D2D2)
-    ADD_FIELD(_Gamma_U0D1D2)
-    ADD_FIELD(_Gamma_U0D0D2)
-    ADD_FIELD(_Gamma_U0D0D1)
-    ADD_FIELD(_Gamma_U0D0D0)
-    ADD_FIELD(_Gamma_U1D2D2)
-    ADD_FIELD(_Gamma_U2D0D1)
-    ADD_FIELD(_Gamma_U0D2D2)
-    ADD_FIELD(_Gamma_U2D0D0)
-    ADD_FIELD(_Gamma_U1D0D2)
-    ADD_FIELD(_Gamma_U1D1D2)
-    ADD_FIELD(_Gamma_U1D0D0)
-    ADD_FIELD(_Gamma_U1D0D1)
-    ADD_FIELD(_Gamma_U1D1D1)
-    
-    /* partial derivative of Christoffer symbols */
-    ADD_FIELD(_dGamma_U2D2D2D2)
-    ADD_FIELD(_dGamma_U2D2D2D0)
-    ADD_FIELD(_dGamma_U2D2D2D1)
-    ADD_FIELD(_dGamma_U2D0D0D2)
-    ADD_FIELD(_dGamma_U1D1D2D2)
-    ADD_FIELD(_dGamma_U2D0D0D0)
-    ADD_FIELD(_dGamma_U1D1D2D0)
-    ADD_FIELD(_dGamma_U1D1D2D1)
-    ADD_FIELD(_dGamma_U2D1D1D0)
-    ADD_FIELD(_dGamma_U2D0D0D1)
-    ADD_FIELD(_dGamma_U2D0D2D1)
-    ADD_FIELD(_dGamma_U1D0D1D0)
-    ADD_FIELD(_dGamma_U1D0D1D1)
-    ADD_FIELD(_dGamma_U1D0D1D2)
-    ADD_FIELD(_dGamma_U1D2D2D1)
-    ADD_FIELD(_dGamma_U1D0D0D1)
-    ADD_FIELD(_dGamma_U1D0D0D0)
-    ADD_FIELD(_dGamma_U1D0D0D2)
-    ADD_FIELD(_dGamma_U0D1D2D2)
-    ADD_FIELD(_dGamma_U0D1D2D1)
-    ADD_FIELD(_dGamma_U0D1D2D0)
-    ADD_FIELD(_dGamma_U2D0D2D0)
-    ADD_FIELD(_dGamma_U1D0D2D2)
-    ADD_FIELD(_dGamma_U1D0D2D1)
-    ADD_FIELD(_dGamma_U1D0D2D0)
-    ADD_FIELD(_dGamma_U2D1D1D2)
-    ADD_FIELD(_dGamma_U2D0D2D2)
-    ADD_FIELD(_dGamma_U0D0D1D0)
-    ADD_FIELD(_dGamma_U1D2D2D0)
-    ADD_FIELD(_dGamma_U2D1D2D1)
-    ADD_FIELD(_dGamma_U2D0D1D2)
-    ADD_FIELD(_dGamma_U2D0D1D1)
-    ADD_FIELD(_dGamma_U2D0D1D0)
-    ADD_FIELD(_dGamma_U2D1D2D2)
-    ADD_FIELD(_dGamma_U0D1D1D0)
-    ADD_FIELD(_dGamma_U0D1D1D1)
-    ADD_FIELD(_dGamma_U0D1D1D2)
-    ADD_FIELD(_dGamma_U1D2D2D2)
-    ADD_FIELD(_dGamma_U1D1D1D1)
-    ADD_FIELD(_dGamma_U1D1D1D0)
-    ADD_FIELD(_dGamma_U1D1D1D2)
-    ADD_FIELD(_dGamma_U0D0D1D1)
-    ADD_FIELD(_dGamma_U0D0D2D2)
-    ADD_FIELD(_dGamma_U0D0D2D0)
-    ADD_FIELD(_dGamma_U0D0D2D1)
-    ADD_FIELD(_dGamma_U2D1D2D0)
-    ADD_FIELD(_dGamma_U0D0D0D0)
-    ADD_FIELD(_dGamma_U0D0D0D1)
-    ADD_FIELD(_dGamma_U0D0D0D2)
-    ADD_FIELD(_dGamma_U2D1D1D1)
-    ADD_FIELD(_dGamma_U0D2D2D0)
-    ADD_FIELD(_dGamma_U0D2D2D1)
-    ADD_FIELD(_dGamma_U0D2D2D2)
-    ADD_FIELD(_dGamma_U0D0D1D2)
-
-    /* Ricci made up of conformal metric _gamma */
-    ADD_FIELD(_R);
-    ADD_FIELD(_Ric_D1D2)
-    ADD_FIELD(_Ric_D2D2)
-    ADD_FIELD(_Ric_D0D2)
-    ADD_FIELD(_Ric_D0D1)
-    ADD_FIELD(_Ric_D0D0)
-    ADD_FIELD(_Ric_D1D1)
-
-    /* extrinsic curvature */
-    ADD_FIELD(K);
-    ADD_FIELD(dK_D2)
-    ADD_FIELD(dK_D1)
-    ADD_FIELD(dK_D0)
-
-    /*_A_UiUj psi^10*A^{ij}*/
-    ADD_FIELD(_A_UiUj_U2U2)
-    ADD_FIELD(_A_UiUj_U1U2)
-    ADD_FIELD(_A_UiUj_U1U1)
-    ADD_FIELD(_A_UiUj_U0U2)
-    ADD_FIELD(_A_UiUj_U0U1)
-    ADD_FIELD(_A_UiUj_U0U0)
-    
-    /* contraction _A_{ij}*_A^{ij} */
-    ADD_FIELD(_Aij2)
-    
-    /* derivatives of _A^{ij} */
-    ADD_FIELD(_dA_UiUj_U2U2D2)
-    ADD_FIELD(_dA_UiUj_U2U2D0)
-    ADD_FIELD(_dA_UiUj_U2U2D1)
-    ADD_FIELD(_dA_UiUj_U1U1D2)
-    ADD_FIELD(_dA_UiUj_U1U1D0)
-    ADD_FIELD(_dA_UiUj_U1U1D1)
-    ADD_FIELD(_dA_UiUj_U0U0D2)
-    ADD_FIELD(_dA_UiUj_U0U0D0)
-    ADD_FIELD(_dA_UiUj_U0U0D1)
-    ADD_FIELD(_dA_UiUj_U0U1D2)
-    ADD_FIELD(_dA_UiUj_U0U1D1)
-    ADD_FIELD(_dA_UiUj_U0U1D0)
-    ADD_FIELD(_dA_UiUj_U1U2D1)
-    ADD_FIELD(_dA_UiUj_U1U2D0)
-    ADD_FIELD(_dA_UiUj_U1U2D2)
-    ADD_FIELD(_dA_UiUj_U0U2D0)
-    ADD_FIELD(_dA_UiUj_U0U2D1)
-    ADD_FIELD(_dA_UiUj_U0U2D2)
-    
+    bbn_add_fields_in_patch(patch);
   }
   
-  printf("} Adding fields ==> Done.\n");
-  pr_clock();
-  pr_line_custom('=');
+}
+
+/* declaring all of the fields needed for construction of Initial Data
+// in the given patch */
+void bbn_add_fields_in_patch(Patch_T *const patch)
+{
+  /* scalar for the irrotational part of fluid i.e h*u = dphi+W 
+  // in NS and its partial derivatives*/
+  ADD_FIELD(phi);
+  ADD_FIELD(phi_residual);
+  
+  ADD_FIELD(OLD_phi);
+  ADD_FIELD(dphi_D2)
+  ADD_FIELD(dphi_D1)
+  ADD_FIELD(dphi_D0)
+  
+  ADD_FIELD(ddphi_D2D2)
+  ADD_FIELD(ddphi_D1D2)
+  ADD_FIELD(ddphi_D1D1)
+  ADD_FIELD(ddphi_D0D2)
+  ADD_FIELD(ddphi_D0D0)
+  ADD_FIELD(ddphi_D0D1)
+
+  /* enthalpy in NS and its partial derivatives */
+  ADD_FIELD(enthalpy);
+  ADD_FIELD(denthalpy_D2)
+  ADD_FIELD(denthalpy_D1)
+  ADD_FIELD(denthalpy_D0)
+
+  /* rest mass density in NS and its partial derivatives */
+  ADD_FIELD(rho0);
+  ADD_FIELD(drho0_D2)
+  ADD_FIELD(drho0_D1)
+  ADD_FIELD(drho0_D0)
+  
+  /* the first component of fluid four velocity, i.e. 
+  // u_mu = (u_U0,u_U1,u_U2,u_U3) and its partial derivatives */
+  ADD_FIELD(u0);
+  ADD_FIELD(du0_D2)
+  ADD_FIELD(du0_D1)
+  ADD_FIELD(du0_D0)
+  
+  /* spin part of fluid W^i */
+  ADD_FIELD(W_U0);
+  ADD_FIELD(W_U1);
+  ADD_FIELD(W_U2);
+    
+  /* normal vector on horizon */
+  ADD_FIELD(_HS_U0);
+  ADD_FIELD(_HS_U1);
+  ADD_FIELD(_HS_U2);
+  ADD_FIELD(_dHS_U1D0)
+  ADD_FIELD(_dHS_U1D1)
+  ADD_FIELD(_dHS_U1D2)
+  ADD_FIELD(_dHS_U0D1)
+  ADD_FIELD(_dHS_U0D0)
+  ADD_FIELD(_dHS_U0D2)
+  ADD_FIELD(_dHS_U2D2)
+  ADD_FIELD(_dHS_U2D1)
+  ADD_FIELD(_dHS_U2D0)
+  
+  /* Hamiltonian and Momentum constraints */
+  ADD_FIELD(ham_constraint);
+  ADD_FIELD(mom_constraint_U0);
+  ADD_FIELD(mom_constraint_U1);
+  ADD_FIELD(mom_constraint_U2);
+
+  /* Hamiltonian and Momentum constraints for 
+  // second method of calculations */ 
+  ADD_FIELD(ham_constraint_2nd);
+  ADD_FIELD(mom_constraint_2nd_U0);
+  ADD_FIELD(mom_constraint_2nd_U1);
+  ADD_FIELD(mom_constraint_2nd_U2);
+  
+  /* conformal total energy density */
+  ADD_FIELD(_E);
+  
+  /* conformal trace of stress tensor */
+  ADD_FIELD(_S);
+  
+  /* conformal momentum current */
+  ADD_FIELD(_J_U0);
+  ADD_FIELD(_J_U1);
+  ADD_FIELD(_J_U2);
+  
+  /* conformal factor and its derivative */
+  ADD_FIELD(psi);
+  ADD_FIELD(psi_residual);
+  ADD_FIELD(OLD_psi);
+  ADD_FIELD(dpsi_D2)
+  ADD_FIELD(dpsi_D1)
+  ADD_FIELD(dpsi_D0)
+  
+  ADD_FIELD(ddpsi_D2D2)
+  ADD_FIELD(ddpsi_D1D2)
+  ADD_FIELD(ddpsi_D1D1)
+  ADD_FIELD(ddpsi_D0D2)
+  ADD_FIELD(ddpsi_D0D0)
+  ADD_FIELD(ddpsi_D0D1)
+
+  /* eta = lapse * psi and its partial derivatives */
+  ADD_FIELD(eta);
+  ADD_FIELD(eta_residual);
+  
+  ADD_FIELD(OLD_eta)
+  
+  ADD_FIELD(deta_D2)
+  ADD_FIELD(deta_D1)
+  ADD_FIELD(deta_D0)
+
+  ADD_FIELD(ddeta_D2D2)
+  ADD_FIELD(ddeta_D1D2)
+  ADD_FIELD(ddeta_D1D1)
+  ADD_FIELD(ddeta_D0D2)
+  ADD_FIELD(ddeta_D0D0)
+  ADD_FIELD(ddeta_D0D1)    
+  
+  /* shift, Beta^i = B0^i+B1^i, 
+  // B1^i = Omega_BHNS*(-y+y_CM,x-x_CM,0)+v_r/D*(x-x_CM,y-y_CM) 
+  // and its partial derivative */
+  ADD_FIELD(B0_U0);
+  ADD_FIELD(B0_U1);
+  ADD_FIELD(B0_U2);
+  ADD_FIELD(B0_U0_residual);
+  ADD_FIELD(B0_U1_residual);
+  ADD_FIELD(B0_U2_residual);
+  
+  ADD_FIELD(B1_U0);
+  ADD_FIELD(B1_U1);
+  ADD_FIELD(B1_U2);
+  ADD_FIELD(Beta_U0);
+  ADD_FIELD(Beta_U1);
+  ADD_FIELD(Beta_U2);
+  ADD_FIELD(OLD_B0_U0);
+  ADD_FIELD(OLD_B0_U1);
+  ADD_FIELD(OLD_B0_U2);
+  
+  ADD_FIELD(dB0_U1D0)
+  ADD_FIELD(dB0_U1D1)
+  ADD_FIELD(dB0_U1D2)
+  ADD_FIELD(dB0_U0D1)
+  ADD_FIELD(dB0_U0D0)
+  ADD_FIELD(dB0_U0D2)
+  ADD_FIELD(dB0_U2D2)
+  ADD_FIELD(dB0_U2D1)
+  ADD_FIELD(dB0_U2D0)
+
+  ADD_FIELD(ddB0_U1D2D2)
+  ADD_FIELD(ddB0_U1D0D0)
+  ADD_FIELD(ddB0_U1D0D1)
+  ADD_FIELD(ddB0_U1D0D2)
+  ADD_FIELD(ddB0_U1D1D2)
+  ADD_FIELD(ddB0_U2D0D0)
+  ADD_FIELD(ddB0_U2D1D2)
+  ADD_FIELD(ddB0_U0D2D2)
+  ADD_FIELD(ddB0_U2D1D1)
+  ADD_FIELD(ddB0_U0D0D1)
+  ADD_FIELD(ddB0_U0D1D1)
+  ADD_FIELD(ddB0_U0D1D2)
+  ADD_FIELD(ddB0_U0D0D2)
+  ADD_FIELD(ddB0_U1D1D1)
+  ADD_FIELD(ddB0_U2D0D1)
+  ADD_FIELD(ddB0_U2D2D2)
+  ADD_FIELD(ddB0_U2D0D2)
+  ADD_FIELD(ddB0_U0D0D0)
+
+  ADD_FIELD(dBeta_U1D0)
+  ADD_FIELD(dBeta_U1D1)
+  ADD_FIELD(dBeta_U1D2)
+  ADD_FIELD(dBeta_U0D1)
+  ADD_FIELD(dBeta_U0D0)
+  ADD_FIELD(dBeta_U0D2)
+  ADD_FIELD(dBeta_U2D2)
+  ADD_FIELD(dBeta_U2D1)
+  ADD_FIELD(dBeta_U2D0)
+
+  ADD_FIELD(ddBeta_U1D2D2)
+  ADD_FIELD(ddBeta_U1D0D0)
+  ADD_FIELD(ddBeta_U1D0D1)
+  ADD_FIELD(ddBeta_U1D0D2)
+  ADD_FIELD(ddBeta_U1D1D2)
+  ADD_FIELD(ddBeta_U2D0D0)
+  ADD_FIELD(ddBeta_U2D1D2)
+  ADD_FIELD(ddBeta_U0D2D2)
+  ADD_FIELD(ddBeta_U2D1D1)
+  ADD_FIELD(ddBeta_U0D0D1)
+  ADD_FIELD(ddBeta_U0D1D1)
+  ADD_FIELD(ddBeta_U0D1D2)
+  ADD_FIELD(ddBeta_U0D0D2)
+  ADD_FIELD(ddBeta_U1D1D1)
+  ADD_FIELD(ddBeta_U2D0D1)
+  ADD_FIELD(ddBeta_U2D2D2)
+  ADD_FIELD(ddBeta_U2D0D2)
+  ADD_FIELD(ddBeta_U0D0D0)
+
+  ADD_FIELD(dB1_U1D0)
+  ADD_FIELD(dB1_U1D1)
+  ADD_FIELD(dB1_U1D2)
+  ADD_FIELD(dB1_U0D1)
+  ADD_FIELD(dB1_U0D0)
+  ADD_FIELD(dB1_U0D2)
+  ADD_FIELD(dB1_U2D2)
+  ADD_FIELD(dB1_U2D1)
+  ADD_FIELD(dB1_U2D0)
+
+  ADD_FIELD(ddB1_U1D2D2)
+  ADD_FIELD(ddB1_U1D0D0)
+  ADD_FIELD(ddB1_U1D0D1)
+  ADD_FIELD(ddB1_U1D0D2)
+  ADD_FIELD(ddB1_U1D1D2)
+  ADD_FIELD(ddB1_U2D0D0)
+  ADD_FIELD(ddB1_U2D1D2)
+  ADD_FIELD(ddB1_U0D2D2)
+  ADD_FIELD(ddB1_U2D1D1)
+  ADD_FIELD(ddB1_U0D0D1)
+  ADD_FIELD(ddB1_U0D1D1)
+  ADD_FIELD(ddB1_U0D1D2)
+  ADD_FIELD(ddB1_U0D0D2)
+  ADD_FIELD(ddB1_U1D1D1)
+  ADD_FIELD(ddB1_U2D0D1)
+  ADD_FIELD(ddB1_U2D2D2)
+  ADD_FIELD(ddB1_U2D0D2)
+  ADD_FIELD(ddB1_U0D0D0)
+
+  /* conformal metric: _gamma_DiDj */
+  ADD_FIELD(_gamma_D2D2)
+  ADD_FIELD(_gamma_D0D2)
+  ADD_FIELD(_gamma_D0D0)
+  ADD_FIELD(_gamma_D0D1)
+  ADD_FIELD(_gamma_D1D2)
+  ADD_FIELD(_gamma_D1D1)
+
+  /* conformal metric inverse _gammaI_UiUj I stands for inverse */
+  ADD_FIELD(_gammaI_U0U2)
+  ADD_FIELD(_gammaI_U0U0)
+  ADD_FIELD(_gammaI_U0U1)
+  ADD_FIELD(_gammaI_U1U2)
+  ADD_FIELD(_gammaI_U1U1)
+  ADD_FIELD(_gammaI_U2U2)
+
+  /* Christoffer symbols made up of conformal metric */
+  ADD_FIELD(_Gamma_U2D1D1)
+  ADD_FIELD(_Gamma_U2D1D2)
+  ADD_FIELD(_Gamma_U0D1D1)
+  ADD_FIELD(_Gamma_U2D0D2)
+  ADD_FIELD(_Gamma_U2D2D2)
+  ADD_FIELD(_Gamma_U0D1D2)
+  ADD_FIELD(_Gamma_U0D0D2)
+  ADD_FIELD(_Gamma_U0D0D1)
+  ADD_FIELD(_Gamma_U0D0D0)
+  ADD_FIELD(_Gamma_U1D2D2)
+  ADD_FIELD(_Gamma_U2D0D1)
+  ADD_FIELD(_Gamma_U0D2D2)
+  ADD_FIELD(_Gamma_U2D0D0)
+  ADD_FIELD(_Gamma_U1D0D2)
+  ADD_FIELD(_Gamma_U1D1D2)
+  ADD_FIELD(_Gamma_U1D0D0)
+  ADD_FIELD(_Gamma_U1D0D1)
+  ADD_FIELD(_Gamma_U1D1D1)
+  
+  /* partial derivative of Christoffer symbols */
+  ADD_FIELD(_dGamma_U2D2D2D2)
+  ADD_FIELD(_dGamma_U2D2D2D0)
+  ADD_FIELD(_dGamma_U2D2D2D1)
+  ADD_FIELD(_dGamma_U2D0D0D2)
+  ADD_FIELD(_dGamma_U1D1D2D2)
+  ADD_FIELD(_dGamma_U2D0D0D0)
+  ADD_FIELD(_dGamma_U1D1D2D0)
+  ADD_FIELD(_dGamma_U1D1D2D1)
+  ADD_FIELD(_dGamma_U2D1D1D0)
+  ADD_FIELD(_dGamma_U2D0D0D1)
+  ADD_FIELD(_dGamma_U2D0D2D1)
+  ADD_FIELD(_dGamma_U1D0D1D0)
+  ADD_FIELD(_dGamma_U1D0D1D1)
+  ADD_FIELD(_dGamma_U1D0D1D2)
+  ADD_FIELD(_dGamma_U1D2D2D1)
+  ADD_FIELD(_dGamma_U1D0D0D1)
+  ADD_FIELD(_dGamma_U1D0D0D0)
+  ADD_FIELD(_dGamma_U1D0D0D2)
+  ADD_FIELD(_dGamma_U0D1D2D2)
+  ADD_FIELD(_dGamma_U0D1D2D1)
+  ADD_FIELD(_dGamma_U0D1D2D0)
+  ADD_FIELD(_dGamma_U2D0D2D0)
+  ADD_FIELD(_dGamma_U1D0D2D2)
+  ADD_FIELD(_dGamma_U1D0D2D1)
+  ADD_FIELD(_dGamma_U1D0D2D0)
+  ADD_FIELD(_dGamma_U2D1D1D2)
+  ADD_FIELD(_dGamma_U2D0D2D2)
+  ADD_FIELD(_dGamma_U0D0D1D0)
+  ADD_FIELD(_dGamma_U1D2D2D0)
+  ADD_FIELD(_dGamma_U2D1D2D1)
+  ADD_FIELD(_dGamma_U2D0D1D2)
+  ADD_FIELD(_dGamma_U2D0D1D1)
+  ADD_FIELD(_dGamma_U2D0D1D0)
+  ADD_FIELD(_dGamma_U2D1D2D2)
+  ADD_FIELD(_dGamma_U0D1D1D0)
+  ADD_FIELD(_dGamma_U0D1D1D1)
+  ADD_FIELD(_dGamma_U0D1D1D2)
+  ADD_FIELD(_dGamma_U1D2D2D2)
+  ADD_FIELD(_dGamma_U1D1D1D1)
+  ADD_FIELD(_dGamma_U1D1D1D0)
+  ADD_FIELD(_dGamma_U1D1D1D2)
+  ADD_FIELD(_dGamma_U0D0D1D1)
+  ADD_FIELD(_dGamma_U0D0D2D2)
+  ADD_FIELD(_dGamma_U0D0D2D0)
+  ADD_FIELD(_dGamma_U0D0D2D1)
+  ADD_FIELD(_dGamma_U2D1D2D0)
+  ADD_FIELD(_dGamma_U0D0D0D0)
+  ADD_FIELD(_dGamma_U0D0D0D1)
+  ADD_FIELD(_dGamma_U0D0D0D2)
+  ADD_FIELD(_dGamma_U2D1D1D1)
+  ADD_FIELD(_dGamma_U0D2D2D0)
+  ADD_FIELD(_dGamma_U0D2D2D1)
+  ADD_FIELD(_dGamma_U0D2D2D2)
+  ADD_FIELD(_dGamma_U0D0D1D2)
+
+  /* Ricci made up of conformal metric _gamma */
+  ADD_FIELD(_R);
+  ADD_FIELD(_Ric_D1D2)
+  ADD_FIELD(_Ric_D2D2)
+  ADD_FIELD(_Ric_D0D2)
+  ADD_FIELD(_Ric_D0D1)
+  ADD_FIELD(_Ric_D0D0)
+  ADD_FIELD(_Ric_D1D1)
+
+  /* extrinsic curvature */
+  ADD_FIELD(K);
+  ADD_FIELD(dK_D2)
+  ADD_FIELD(dK_D1)
+  ADD_FIELD(dK_D0)
+
+  /*_A_UiUj psi^10*A^{ij}*/
+  ADD_FIELD(_A_UiUj_U2U2)
+  ADD_FIELD(_A_UiUj_U1U2)
+  ADD_FIELD(_A_UiUj_U1U1)
+  ADD_FIELD(_A_UiUj_U0U2)
+  ADD_FIELD(_A_UiUj_U0U1)
+  ADD_FIELD(_A_UiUj_U0U0)
+  
+  /* contraction _A_{ij}*_A^{ij} */
+  ADD_FIELD(_Aij2)
+  
+  /* derivatives of _A^{ij} */
+  ADD_FIELD(_dA_UiUj_U2U2D2)
+  ADD_FIELD(_dA_UiUj_U2U2D0)
+  ADD_FIELD(_dA_UiUj_U2U2D1)
+  ADD_FIELD(_dA_UiUj_U1U1D2)
+  ADD_FIELD(_dA_UiUj_U1U1D0)
+  ADD_FIELD(_dA_UiUj_U1U1D1)
+  ADD_FIELD(_dA_UiUj_U0U0D2)
+  ADD_FIELD(_dA_UiUj_U0U0D0)
+  ADD_FIELD(_dA_UiUj_U0U0D1)
+  ADD_FIELD(_dA_UiUj_U0U1D2)
+  ADD_FIELD(_dA_UiUj_U0U1D1)
+  ADD_FIELD(_dA_UiUj_U0U1D0)
+  ADD_FIELD(_dA_UiUj_U1U2D1)
+  ADD_FIELD(_dA_UiUj_U1U2D0)
+  ADD_FIELD(_dA_UiUj_U1U2D2)
+  ADD_FIELD(_dA_UiUj_U0U2D0)
+  ADD_FIELD(_dA_UiUj_U0U2D1)
+  ADD_FIELD(_dA_UiUj_U0U2D2)
+    
 }
 
 /* taking partial derivatives of fields needed in equations */

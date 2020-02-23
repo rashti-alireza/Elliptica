@@ -1,6 +1,7 @@
 #include "bbn_headers.h"
 
 void bbn_add_fields(Grid_T *const grid);
+void bbn_add_fields_in_patch(Patch_T *const patch);
 void bbn_partial_derivatives_fields(Grid_T *const grid);
 void bbn_update_derivative_phi(Patch_T *const patch);
 void bbn_update_derivative_enthalpy(Patch_T *const patch);
