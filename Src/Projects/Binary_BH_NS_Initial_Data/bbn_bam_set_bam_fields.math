@@ -77,7 +77,7 @@ Symm[bam_adm_g(i,j) = bam_adm_g(j,i)];
 Symm[_gamma(i,j)    = _gamma(j,i)];
 Symm[_gammaI(i,j)   = _gammaI(j,i)];
 
-
+`  if (!IsItInsideBHPatch(patch))`
 `  for(ijk = 0; ijk < nn; ++ijk)`
 `  {`
    psi4   = psi**4;
@@ -107,6 +107,7 @@ Symm[_gammaI(i,j)   = _gammaI(j,i)];
 `  }`# end of for(ijk = 0; ijk < nn; ++ijk)
 
 # grhd_v^i:
+`   if (!IsItInsideBHPatch(patch))`
 #`  for(ijk = 0; ijk < nn; ++ijk)`
 #`  {`
 

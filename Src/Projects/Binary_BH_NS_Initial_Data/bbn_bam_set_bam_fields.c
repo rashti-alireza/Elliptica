@@ -67,6 +67,7 @@ void bbn_bam_set_bam_fields(Grid_T *const grid)
   READ_v(_gammaI_U2U2)
 
 
+  if (!IsItInsideBHPatch(patch))
   for(ijk = 0; ijk < nn; ++ijk)
   {
   double psi4 = 
@@ -183,6 +184,7 @@ adm_Kuu_U2U2*pow(adm_g_D2D2, 2);
    bam_adm_K_D0D2[ijk] = adm_Kdd_D0D2;
    bam_adm_K_D1D2[ijk] = adm_Kdd_D1D2;
   }
+   if (!IsItInsideBHPatch(patch))
   for(ijk = 0; ijk < nn; ++ijk)
   {
   double temp_bh2_D0D0 = 
