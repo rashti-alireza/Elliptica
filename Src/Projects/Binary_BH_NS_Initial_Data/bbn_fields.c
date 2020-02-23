@@ -30,6 +30,9 @@ void bbn_add_fields(Grid_T *const grid)
     bbn_add_fields_in_patch(patch);
   }
   
+  printf("} Adding fields ==> Done.\n");
+  pr_clock();
+  pr_line_custom('=');
 }
 
 /* declaring all of the fields needed for construction of Initial Data
