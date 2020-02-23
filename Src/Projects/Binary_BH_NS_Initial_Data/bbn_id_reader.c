@@ -3,7 +3,7 @@
 // Feb 2019
 */
 
-#include "bbn_id_reader.h"
+#include "bbn_bam_id.h"
 
 /* local variables to this file */
 static char coords_file_path[STR_LEN_MAX];
@@ -111,9 +111,7 @@ static void interpolate_and_write(Grid_T *const grid,struct interpolation_points
   fields_name = translate_fields_name();
   
   /* creating some fields which have not been exsited in Elliptica */
-  //bbn_create_alpha(grid);
-  //bbn_create_adm_gij(grid);
-  //bbn_create_adm_Kij(grid);
+  bbn_create_bam_fields(grid);
   
   /* open fields_file and start interpolating and writing */
   file = fopen(fields_file_path,"wb");
@@ -238,23 +236,23 @@ static char **translate_fields_name(void)
   {
     ifcmpM("alpha")
     {
-      add2fieldsname_0ind_M("alpha");
-    }
-    elseifcmpM("psi")
-    {
-      add2fieldsname_0ind_M("psi");
+      add2fieldsname_0ind_M("bam_alpha");
     }
     elseifcmpM("beta")
     {
-      add2fieldsname_1ind_M("beta","Beta","U");
+      add2fieldsname_1ind_M("beta","bam_Beta","U");
+    }
+    elseifcmpM("grhd_v")
+    {
+      add2fieldsname_1ind_M("grhd_v","bam_grhd_v","U");
     }
     elseifcmpM("adm_g")
     {
-      add2fieldsname_2ind_M("adm_g","adm_g","D","D");
+      add2fieldsname_2ind_M("adm_g","bam_adm_g","D","D");
     }
     elseifcmpM("adm_K")
     {
-      add2fieldsname_2ind_M("adm_K","adm_K","D","D");
+      add2fieldsname_2ind_M("adm_K","bam_adm_K","D","D");
     }
     else
       abortEr_s("No option has not been defined for %s.\n",bam_fields[nf]);
