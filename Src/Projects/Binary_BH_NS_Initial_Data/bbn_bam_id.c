@@ -62,7 +62,7 @@ static void interpolate_and_write(Grid_T *const grid,struct interpolation_points
   FILE *file = 0;
   Needle_T *needle = alloc_needle();
   const unsigned npoints = pnt->npoints;
-  char **fields_name = 0;
+  char **fields_name = 0,**bam_fields = 0;
   char title_line[STR_LEN_MAX];
   char *const p_title_line = title_line;/* to avoid GCC warning for FWriteP_bin */
   Interpolation_T *interp_s = init_interpolation();
@@ -108,7 +108,7 @@ static void interpolate_and_write(Grid_T *const grid,struct interpolation_points
   free_needle(needle);
   
   /* translate fields from BAM notation to Elliptica notation */
-  fields_name = translate_fields_name();
+  fields_name = translate_fields_name(&bam_fields);
   
   /* set bam fields based on initial data to be usable for bam */
   bbn_bam_set_bam_fields(grid);
@@ -139,6 +139,7 @@ static void interpolate_and_write(Grid_T *const grid,struct interpolation_points
       interp_v[p] = execute_interpolation(interp_s);
     }
     /* write it into the fields_file */
+    FWriteP_bin(bam_fields[f],strlen(bam_fields[f])+1);
     FWriteP_bin(interp_v,npoints);
     f++;
   }
@@ -149,6 +150,7 @@ static void interpolate_and_write(Grid_T *const grid,struct interpolation_points
   free_interpolation(interp_s);
   _free(interp_v);
   free_2d(fields_name);
+  free_2d(bam_fields);
 }
 
 /* load grid from the checkpoint file */
@@ -224,10 +226,10 @@ static void load_coords_from_coords_file(struct interpolation_points *const pnt)
 }
 
 /* translating fields name from BAM to Elliptica */
-static char **translate_fields_name(void)
+static char **translate_fields_name(char ***const ptr_bam_fields)
 {
-  char **bam_fields  = 0;
   char **fields_name = 0;
+  char **bam_fields  = 0;
   unsigned nf = 0;
   
   bam_fields = read_separated_items_in_string(bam_fields_name,',');
@@ -259,8 +261,8 @@ static char **translate_fields_name(void)
     printf("~> Translating %s --> %s\n",bam_fields[nf],fields_name[nf]);
     nf++;
   }
-  free_2d(bam_fields);
   
+  (*ptr_bam_fields) = bam_fields;
   return fields_name;
 }
 
