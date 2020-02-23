@@ -60,36 +60,62 @@ void bbn_bam_export_id(void)
 static void interpolate_and_write(Grid_T *const grid,struct interpolation_points *const pnt)
 {
   FILE *file = 0;
-  Needle_T *needle = alloc_needle();
   const unsigned npoints = pnt->npoints;
   char **fields_name = 0,**bam_fields = 0;
   char title_line[STR_LEN_MAX];
   char *const p_title_line = title_line;/* to avoid GCC warning for FWriteP_bin */
   char msg[STR_LEN_MAX];
   char *const p_msg = msg;/* to avoid GCC warning for FWriteP_bin */
-  Interpolation_T *interp_s = init_interpolation();
   double *interp_v = 0;
-  double x[3],X[3];
-  unsigned p,pn,f;
+  unsigned p,f;
   
   /* populating pnt->(X,Y,Z) and pnt->patchn */
   printf("~> Preparing points for the interpolation ...\n");
   fflush(stdout);
-  needle->grid = grid;
-  FOR_ALL_PATCHES(p,grid)
+  
+  /* to avoid race condition between threads write all coeffs */
+  OpenMP_Patch_Pragma(omp parallel for)
+  for (p = 0; p < grid->np; ++p)
   {
     Patch_T *patch = grid->patch[p];
-    needle_in(needle,patch);
+    Field_T *R1_f  = 0;
+    Field_T *R2_f  = 0;
+    
+    /* surface fields also are used for the interpolation in X_of_x function */
+    if (patch->coordsys == CubedSpherical)
+    {
+      R1_f = patch->CoordSysInfo->CubedSphericalCoord->R1_f;
+      R2_f = patch->CoordSysInfo->CubedSphericalCoord->R2_f;
+      if (R1_f)
+        make_coeffs_2d(R1_f,0,1);/* X and Y direction */
+      if (R2_f)
+        make_coeffs_2d(R2_f,0,1);/* X and Y direction */
+    }
+    else if (patch->coordsys == Cartesian)
+    {
+      R1_f  = R2_f = 0;
+    }
+    else
+      abortEr(NO_OPTION);
   }
+  
+  OpenMP_1d_Pragma(omp parallel for)
   for (p = 0; p < npoints; ++p)
   {
+    Needle_T *needle = alloc_needle();
+    double x[3],X[3];
+    unsigned pn = 0;
+    
+    needle->grid = grid;
+    FOR_ALL_PATCHES(pn,grid)
+    {
+      Patch_T *patch = grid->patch[pn];
+      needle_in(needle,patch);
+    }
     x[0] = pnt->x[p];
     x[1] = pnt->y[p];
     x[2] = pnt->z[p];
-    needle->Nans = 0;
-    _free(needle->ans);
-    needle->ans  = 0;
-    needle->x    = x;
+    needle->x = x;
     point_finder(needle);
     if (!needle->Nans)
     {
@@ -106,14 +132,29 @@ static void interpolate_and_write(Grid_T *const grid,struct interpolation_points
       pnt->Y[p] = X[1];
       pnt->Z[p] = X[2];
     }
+    free_needle(needle);
   }
-  free_needle(needle);
   
   /* translate fields from BAM notation to Elliptica notation */
   fields_name = translate_fields_name(&bam_fields);
   
   /* set bam fields based on initial data to be usable for bam */
   bbn_bam_set_bam_fields(grid);
+  
+  /* to avoid race condition between threads write all coeffs */
+  OpenMP_Patch_Pragma(omp parallel for)
+  for (p = 0; p < grid->np; ++p)
+  {
+    Patch_T *patch = grid->patch[p];
+    unsigned fn = 0;
+    
+    while(fields_name[fn])
+    {
+      Field_T *field = patch->pool[Ind(fields_name[fn])];
+      make_coeffs_3d(field);
+      fn++;
+    }
+  }
   
   /* open fields_file and start interpolating and writing */
   file = fopen(fields_file_path,"wb");
@@ -131,9 +172,11 @@ static void interpolate_and_write(Grid_T *const grid,struct interpolation_points
     /* write it into the fields_file */
     FWriteP_bin(bam_fields[f],strlen(bam_fields[f])+1);
     /* interpolating each fields at the all given points */
+    OpenMP_1d_Pragma(omp parallel for)
     for (p = 0; p < npoints; ++p)
     {
       Patch_T *patch  = grid->patch[pnt->patchn[p]];
+      Interpolation_T *interp_s = init_interpolation();
       interp_s->field = patch->pool[Ind(fields_name[f])];
       interp_s->XYZ_dir_flag = 1;
       interp_s->X = pnt->X[p];
@@ -141,6 +184,11 @@ static void interpolate_and_write(Grid_T *const grid,struct interpolation_points
       interp_s->Z = pnt->Z[p];
       plan_interpolation(interp_s);
       interp_v[p] = execute_interpolation(interp_s);
+      free_interpolation(interp_s);
+    }
+    
+    for (p = 0; p < npoints; ++p)
+    {
       /* write it into the fields_file */
       FWriteV_bin(interp_v[p],1);
     }
@@ -152,7 +200,6 @@ static void interpolate_and_write(Grid_T *const grid,struct interpolation_points
   FWriteP_bin(p_msg,strlen(msg)+1);
   fclose(file);
   
-  free_interpolation(interp_s);
   _free(interp_v);
   free_2d(fields_name);
   free_2d(bam_fields);

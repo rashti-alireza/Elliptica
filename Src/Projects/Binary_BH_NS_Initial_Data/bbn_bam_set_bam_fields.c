@@ -12,7 +12,10 @@ void bbn_bam_set_bam_fields(Grid_T *const grid);
 void bbn_bam_set_bam_fields(Grid_T *const grid)
 {
   unsigned p;
-  FOR_ALL_PATCHES(p,grid)
+  const unsigned np = grid->np;
+
+  OpenMP_Patch_Pragma(omp parallel for)
+  for (p = 0; p < np; ++p)
   {
   Patch_T *patch = grid->patch[p];
   unsigned nn    = patch->nn;
