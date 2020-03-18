@@ -35,6 +35,15 @@ Declare =
  # add: bam_alpha
  (obj = Field,name = bam_alpha, rank = 0, C_macro4);
 
+ # add: bam_grhd_rho
+ (obj = Field,name = bam_grhd_rho, rank = 0, C_macro4);
+
+ # add: bam_grhd_p
+ (obj = Field,name = bam_grhd_p, rank = 0, C_macro4);
+
+ # add: bam_grhd_epsl
+ (obj = Field,name = bam_grhd_epsl, rank = 0, C_macro4);
+
  # add: bam_Beta^i
  (obj = Field,name = bam_Beta, rank = U, C_macro4);
 
@@ -121,17 +130,35 @@ Symm[_gammaI(i,j)   = _gammaI(j,i)];
 
 `  }`# end of for(ijk = 0; ijk < nn; ++ijk)
 
-# grhd_v^i:
-`  if (IsItNSPatch(patch))` # otherwise grhd_v^i set zero by calloc
+# otherwise grhd_v^i and metter fields set zero by calloc
+`  if (IsItNSPatch(patch))`
+`  {`
+`  EoS_T *eos = initialize_EoS();`
 `  for(ijk = 0; ijk < nn; ++ijk)`
 `  {`
 
+   # grhd_v^i:
    psim4_ = psi**(-4);
    grhd_v(i) = (psim4_*_gammaI(i,j)*dphi(-j)+W(i))/(bam_alpha*enthalpy*u0);
    Cpopulate[bam_grhd_v = grhd_v];
-
+``
+   # matter: total_energy_density = grhd_rho(1+grhd_epsl)
+`  eos->h = enthalpy[ijk];`
+`  if(!isfinite(eos->h) || LSSEQL(eos->h,1))`
+`  {`
+`    bam_grhd_rho[ijk]  = 0;`
+`    bam_grhd_p[ijk]    = 0;`
+`    bam_grhd_epsl[ijk] = 0;`
+`  }`
+`  else`
+`  {`
+`   bam_grhd_rho[ijk]  = eos->rest_mass_density(eos);`
+`   bam_grhd_p[ijk]    = eos->pressure(eos);`
+`   bam_grhd_epsl[ijk] = eos->energy_density(eos)/bam_grhd_rho[ijk]-1.0;`
+`  }`
 `  }`# end of for(ijk = 0; ijk < nn; ++ijk)
-
+`  free_EoS(eos);`
+`  }`# end of if (IsItNSPatch(patch))
 
 ############################### {
 ### temp: I don't have the appropriate form of the fields inside BH

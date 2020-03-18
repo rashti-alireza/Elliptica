@@ -23,6 +23,9 @@ void bbn_bam_set_bam_fields(Grid_T *const grid)
 
   /* declaring: */
   add_field_and_alloc_field(bam_alpha)
+  add_field_and_alloc_field(bam_grhd_rho)
+  add_field_and_alloc_field(bam_grhd_p)
+  add_field_and_alloc_field(bam_grhd_epsl)
   add_field_and_alloc_field(bam_Beta_U0)
   add_field_and_alloc_field(bam_Beta_U1)
   add_field_and_alloc_field(bam_Beta_U2)
@@ -196,6 +199,8 @@ adm_Kuu_U2U2*pow(adm_g_D2D2, 2);
    bam_adm_K_D1D2[ijk] = adm_Kdd_D1D2;
   }
   if (IsItNSPatch(patch))
+  {
+  EoS_T *eos = initialize_EoS();
   for(ijk = 0; ijk < nn; ++ijk)
   {
   double psim4_ = 
@@ -221,6 +226,22 @@ _gammaI_U1U2[ijk]*dphi_D1[ijk] + _gammaI_U2U2[ijk]*dphi_D2[ijk]))/
   bam_grhd_v_U0[ijk] = grhd_v_U0;
   bam_grhd_v_U1[ijk] = grhd_v_U1;
   bam_grhd_v_U2[ijk] = grhd_v_U2;
+  
+  eos->h = enthalpy[ijk];
+  if(!isfinite(eos->h) || LSSEQL(eos->h,1))
+  {
+    bam_grhd_rho[ijk]  = 0;
+    bam_grhd_p[ijk]    = 0;
+    bam_grhd_epsl[ijk] = 0;
+  }
+  else
+  {
+   bam_grhd_rho[ijk]  = eos->rest_mass_density(eos);
+   bam_grhd_p[ijk]    = eos->pressure(eos);
+   bam_grhd_epsl[ijk] = eos->energy_density(eos)/bam_grhd_rho[ijk]-1.0;
+  }
+  }
+  free_EoS(eos);
   }
   for(ijk = 0; ijk < nn; ++ijk)
   {
