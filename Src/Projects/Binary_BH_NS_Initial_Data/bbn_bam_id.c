@@ -292,6 +292,18 @@ static char **translate_fields_name(char ***const ptr_bam_fields)
     {
       add2fieldsname_0ind_M("bam_alpha");
     }
+    elseifcmpM("grhd_rho")
+    {
+      add2fieldsname_0ind_M("bam_grhd_rho");
+    }
+    elseifcmpM("grhd_p")
+    {
+      add2fieldsname_0ind_M("bam_grhd_p");
+    }
+    elseifcmpM("grhd_epsl")
+    {
+      add2fieldsname_0ind_M("bam_grhd_epsl");
+    }
     elseifcmpM("beta")
     {
       add2fieldsname_1ind_M("beta","bam_Beta","U");
