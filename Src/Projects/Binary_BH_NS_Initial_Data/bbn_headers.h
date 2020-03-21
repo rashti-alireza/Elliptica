@@ -89,6 +89,11 @@ Parameter_T *bbn_parameter_query_from_checkpoint_file(const char *const par_name
 int bbn_IsCheckpointFileCompleted(const char *const file_path);
 void bbn_add_fields_in_patch(Patch_T *const patch);
 void bbn_bam_set_bam_fields(Grid_T *const grid);
+void bbn_print_properties(Grid_T *const grid,const unsigned iteration, const char *const folder,const char *const open_file_mode,const int pr_flg);
+
+
+
+
 
 
 

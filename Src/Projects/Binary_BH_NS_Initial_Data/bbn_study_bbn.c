@@ -35,33 +35,79 @@ void bbn_study_initial_data(Grid_T *const grid)
   /* prints */
   bbn_print_fields(grid,(unsigned)solving_iter,folder);
   bbn_print_residual_norms(grid,(unsigned)solving_iter,folder);
+  bbn_print_properties(grid,(unsigned)solving_iter,folder,"a",1);
   
   Pseti("solving_iteration_number",++solving_iter);
   
-  /* Observables */
-  Observable_T *obs = init_observable(grid);
-  obs->quantity = "ADM_momentums";
-  plan_observable(obs);
-  double P_ADM[3];
-  double J_ADM[3];
-  
-  P_ADM[0] = obs->Px_ADM(obs);
-  P_ADM[1] = obs->Py_ADM(obs);
-  P_ADM[2] = obs->Pz_ADM(obs);
-  
-  J_ADM[0] = obs->Jx_ADM(obs);
-  J_ADM[1] = obs->Jy_ADM(obs);
-  J_ADM[2] = obs->Jz_ADM(obs);
-  
-  printf("ADM momentums:\n");
-  printf("P_ADM = (%e,%e,%e).\n",P_ADM[0],P_ADM[1],P_ADM[2]);
-  printf("J_ADM = (%e,%e,%e).\n",J_ADM[0],J_ADM[1],J_ADM[2]);
-  
-  free_observable(obs);
-
   printf("} Studying initial data for binary BH and NS ==> Done.\n");
   pr_clock();
   pr_line_custom('=');
+}
+
+/* print the properites of the system for instance:
+// mass, spin, momentum, distance and etc.
+// folder        : output directory 
+// open_file_mode: "a" for append and "w" for newfile
+// pr_flg        : if pr_flg = 1 it also prints them at stout otherwise none. */
+void bbn_print_properties(Grid_T *const grid,const unsigned iteration, const char *const folder,const char *const open_file_mode,const int pr_flg)
+{
+  const char *const file_name = "bbn_geometry_and_physics.txt";
+  FILE *file = 0;
+  char str[MAX_STR_LEN];
+  
+  /* open file */
+  sprintf(str,"%s/%s",folder,file_name);
+  file = fopen(str,open_file_mode);
+  pointerEr(file);
+  fprintf(file,"%s\n",LINE_STR);
+  fprintf(file,"#iteration = %u\n",iteration);
+  
+  if (pr_flg)
+  {
+    pr_line_custom('=');
+    printf("{ Geometry and physics of binary BH and NS ...\n");
+  }
+  
+  /* { geometry */
+  PR_PARAMETR_IN_FILE(NS_center_x)
+  PR_PARAMETR_IN_FILE(NS_center_y)
+  PR_PARAMETR_IN_FILE(NS_center_z)
+  
+  PR_PARAMETR_IN_FILE(BH_center_x)
+  PR_PARAMETR_IN_FILE(BH_center_y)
+  PR_PARAMETR_IN_FILE(BH_center_z)
+  
+  PR_PARAMETR_IN_FILE(x_CM)
+  PR_PARAMETR_IN_FILE(y_CM)
+  PR_PARAMETR_IN_FILE(z_CM)
+  
+  PR_PARAMETR_IN_FILE(r_excision)
+  /* } geometry */
+  
+  /* { physics */
+  PR_PARAMETR_IN_FILE(NS_baryonic_mass)
+  PR_PARAMETR_IN_FILE(BH_irreducible_mass)
+  
+  PR_PARAMETR_IN_FILE(P_ADM_x)
+  PR_PARAMETR_IN_FILE(P_ADM_y)
+  PR_PARAMETR_IN_FILE(P_ADM_z)
+  
+  PR_PARAMETR_IN_FILE(J_ADM_x)
+  PR_PARAMETR_IN_FILE(J_ADM_y)
+  PR_PARAMETR_IN_FILE(J_ADM_z)
+  /* } physics */
+  
+  fprintf(file,"%s\n",LINE_STR);
+  fclose(file);
+  
+  if (pr_flg)
+  {
+    printf("} Geometry and physics of binary BH and NS ==> Done.\n");
+    pr_clock();
+    pr_line_custom('=');
+  }
+  
+  UNUSED(grid);
 }
 
 /* print residual norms L2, L1 and L_inf of the specified fields. */
