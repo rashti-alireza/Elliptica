@@ -994,7 +994,7 @@ static void adjust_NS_center_draw_enthalpy(Grid_T *const grid)
   char par_name[1000];
   double *NS_center = 0;
   const double C    = -0.5*Pgetd("BH_NS_separation");
-  sprintf(par_name,"grid%u_NS_center_x",grid->gn);
+  sprintf(par_name,"grid%u_NS_center_xyz",grid->gn);
   NS_center = Pgetdd(par_name);
   const double R[3] = {NS_center[0],NS_center[1]-C,NS_center[2]};
   unsigned p,ijk;
@@ -1280,7 +1280,7 @@ static void find_NS_center(Grid_T *const grid)
     {
       success_f = YES;
       /* save the position of NS center */
-      sprintf(par_name,"grid%u_NS_center_x",grid->gn);
+      sprintf(par_name,"grid%u_NS_center_xyz",grid->gn);
       add_parameter_array(par_name,NS_center,3);
       /* save the patch stem where the NS center takes place */
       sprintf(par_name,"grid%u_NS_center_patch",grid->gn);
@@ -2273,7 +2273,7 @@ static void interpolate_and_initialize_to_next_grid(Grid_T *const grid_next,Grid
   const double Omega_NS_x = Pgetd("NS_Omega_U0");
   const double Omega_NS_y = Pgetd("NS_Omega_U1");
   const double Omega_NS_z = Pgetd("NS_Omega_U2");
-  const double C_NS = Pgetd("NS_Center");
+  const double C_NS = Pgetd("NS_Center_y");
   
   OpenMP_Patch_Pragma(omp parallel for)
   for (p = 0; p < np; ++p)
@@ -3462,31 +3462,38 @@ static Grid_T *TOV_KerrSchild_approximation(void)
   pr_clock();
   pr_line_custom('=');
  
-  /* adding some parameters: */
-  Pseti("did_resolution_change?",1);
-  Pseti("did_NS_surface_change?",1);
-  Pseti("did_AH_surface_change?",1);
-  Pseti("use_previous_data",0);
-  
   /* center of rotation (approx. Center of Mass) */
   const double D = Pgetd("BH_NS_separation");
   const double C_BH = 0.5*D;/* center of BH patch, it's on +y axis */
   const double C_NS = -C_BH;/* center of NS it's on -y axis*/
   const double ns_mass = tov->ADM_m;/* NS adm mass */
   const double y_CM = (ns_mass*C_NS+bh_mass*C_BH)/(ns_mass+bh_mass);
-  Psetd("y_CM",y_CM);
+  
+  /* adding some parameters: */
+  Pseti("did_resolution_change?",1);
+  Pseti("did_NS_surface_change?",1);
+  Pseti("did_AH_surface_change?",1);
+  Pseti("use_previous_data",0);
+  
+  /* center of mass */
   Psetd("x_CM",0);
+  Psetd("y_CM",y_CM);
   Psetd("z_CM",0);
   Psetd("y_CM0",y_CM);
   Psetd("x_CM0",0);
-  Psetd("NS_mass",ns_mass);
-  Psetd("NS_center",C_NS);
-  Psetd("r_excision",bh_R);
   
-  /* BH center */  
+  /* NS properties */
+  Psetd("NS_mass",ns_mass);
+  Psetd("NS_center_x",0);
+  Psetd("NS_center_y",C_NS);
+  Psetd("NS_center_z",0);
+  
+  /* BH properties */  
+  Psetd("r_excision",bh_R);
   Psetd("BH_center_x",0);
   Psetd("BH_center_y",C_BH);
   Psetd("BH_center_z",0);
+  Psetd("BH_irreducible_mass",0);
   
   /* -> BH_Omega, the angular frequency of the horizon,
   // is a free vector that determines the spin of BH
@@ -3745,11 +3752,10 @@ static void init_field_TOV_plus_KerrSchild(Grid_T *const grid,const TOV_T *const
   
   Transformation_T *t = initialize_transformation();
   const double M_NS = tov->ADM_m;/* NS adm mass */
-  const double D = Pgetd("BH_NS_separation");
   const double BH_center_x = Pgetd("BH_center_x");
   const double BH_center_y = Pgetd("BH_center_y");
   const double BH_center_z = Pgetd("BH_center_z");
-  const double C_NS = -0.5*D;/* center of NS it's on -y axis*/
+  const double C_NS = Pgetd("NS_center_y");/* center of NS it's on -y axis*/
   const double R_Schwar = tov->r[tov->N-1];/* NS's Schwarzchild radius */
   const double a2_BH = Pow2(a_BH);/* spin vector of BH */
   const double y_CM = Pgetd("y_CM");
