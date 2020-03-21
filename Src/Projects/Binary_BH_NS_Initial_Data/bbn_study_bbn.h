@@ -5,8 +5,8 @@
 #define MAX_STR_LEN 400
 #define LINE_STR    "-------------------------------------------------------------------------"    
 #define PR_PARAMETR_IN_FILE(x) \
-        fprintf(file,"%-11s = %+0.15f\n",#x,Pgetd(#x));\
-        if (pr_flg) printf("%-11s = %+0.15f\n",#x,Pgetd(#x));
+        fprintf(file,"%-30s = %+0.15f\n",#x,Pgetd(#x));\
+        if (pr_flg) printf("%-30s = %+0.15f\n",#x,Pgetd(#x));
         
 
 
