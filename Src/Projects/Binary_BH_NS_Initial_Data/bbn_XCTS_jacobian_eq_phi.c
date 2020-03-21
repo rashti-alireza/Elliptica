@@ -239,7 +239,7 @@ t1_e_;
   if(strstr(patch->name,"left_central_box"))
   {
    fdInterp_dfs_T *const dInterp_df = get_dInterp_df(patch,0,"none");
-   const double NS_center[3] = {0,Pgetd("NS_center"),0};
+   const double NS_center[3] = {Pgetd("NS_center_x"),Pgetd("NS_center_y"),Pgetd("NS_center_z")};
    const unsigned nn = patch->nn;
    double *d_df = alloc_double(nn);
    double X[3];

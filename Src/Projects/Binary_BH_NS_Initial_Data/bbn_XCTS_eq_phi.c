@@ -194,7 +194,7 @@ t5 + t6;
 
   if(strstr(patch->name,"left_central_box"))
   {
-    const double NS_center[3] = {0,Pgetd("NS_center"),0};
+    const double NS_center[3] = {Pgetd("NS_center_x"),Pgetd("NS_center_y"),Pgetd("NS_center_z")};
     Interpolation_T *interp_phi0 = init_interpolation();
     double interp;
     double X[3] = {0};
