@@ -389,10 +389,12 @@ static void P_ADM_control(Grid_T *const grid)
   void (*P_ADM_control_2)(Grid_T *const grid) =
                               get_func_P_ADM_adjustment(adjust[2]);
   
-  /* update P_ADM momentum parameters */
+  /* update P_ADM and J_ADM momentum parameters */
   Observable_T *obs = init_observable(grid);
   double p1[3] = {0};
   double p2[3] = {0};
+  double j_adm[3] = {0};
+  
   obs->quantity = "ADM_momentums";
   plan_observable(obs);
   
@@ -406,7 +408,13 @@ static void P_ADM_control(Grid_T *const grid)
   p2[1] = obs->Py_ADM(obs);
   p2[2] = obs->Pz_ADM(obs);
   
+  /* get the current J_ADMs  */
+  j_adm[0] = obs->Jx_ADM(obs);
+  j_adm[1] = obs->Jy_ADM(obs);
+  j_adm[2] = obs->Jz_ADM(obs);
+  
   printf("|--> Current P_ADM = (%e,%e,%e)\n",p2[0],p2[1],p2[2]);
+  printf("|--> Current J_ADM = (%e,%e,%e)\n",j_adm[0],j_adm[1],j_adm[2]);
   
   Psetd("P_ADM_x",p2[0]);
   Psetd("P_ADM_y",p2[1]);
@@ -415,6 +423,10 @@ static void P_ADM_control(Grid_T *const grid)
   Psetd("P_ADM_x_prev",p1[0]);
   Psetd("P_ADM_y_prev",p1[1]);
   Psetd("P_ADM_z_prev",p1[2]);
+  
+  Psetd("J_ADM_x",j_adm[0]);
+  Psetd("J_ADM_y",j_adm[1]);
+  Psetd("J_ADM_z",j_adm[2]);
   
   free_observable(obs);
   
@@ -1570,6 +1582,8 @@ static void adjust_AH_radius(Grid_T *const grid,struct Grid_Params_S *const Grid
   
   printf("|--> current BH Kommar's mass    = %e\n",kommar_mass);
   printf("|--> current BH irreducible mass = %e\n",irr_mass);
+  
+  Psetd("BH_irreducible_mass",irr_mass);
   
   if (0)
   {
@@ -3462,12 +3476,12 @@ static Grid_T *TOV_KerrSchild_approximation(void)
   const double y_CM = (ns_mass*C_NS+bh_mass*C_BH)/(ns_mass+bh_mass);
   Psetd("y_CM",y_CM);
   Psetd("x_CM",0);
+  Psetd("z_CM",0);
   Psetd("y_CM0",y_CM);
   Psetd("x_CM0",0);
   Psetd("NS_mass",ns_mass);
   Psetd("NS_center",C_NS);
   Psetd("r_excision",bh_R);
-  
   
   /* BH center */  
   Psetd("BH_center_x",0);
@@ -3534,13 +3548,12 @@ static Grid_T *TOV_KerrSchild_approximation(void)
   Observable_T *obs = init_observable(grid);
   obs->quantity     = "ADM_momentums";
   plan_observable(obs);
-  double p_x,p_y,p_z;
-  p_x = obs->Px_ADM(obs);
-  p_y = obs->Py_ADM(obs);
-  p_z = obs->Pz_ADM(obs);
-  Psetd("P_ADM_x",p_x);
-  Psetd("P_ADM_y",p_y);
-  Psetd("P_ADM_z",p_z);
+  Psetd("P_ADM_x",obs->Px_ADM(obs));
+  Psetd("P_ADM_y",obs->Py_ADM(obs));
+  Psetd("P_ADM_z",obs->Pz_ADM(obs));
+  Psetd("J_ADM_x",obs->Jx_ADM(obs));
+  Psetd("J_ADM_y",obs->Jy_ADM(obs));
+  Psetd("J_ADM_z",obs->Jz_ADM(obs));
   Psetd("v*_boost_x",0);
   Psetd("v*_boost_y",0);
   Psetd("v*_boost_z",0);
