@@ -26,7 +26,7 @@ struct checkpoint_header
  char *grid_kind;
 };
 
-void bbn_write_checkpoint(const Grid_T *const grid);
+void bbn_write_checkpoint(Grid_T *const grid);
 Grid_T *bbn_initi_from_checkpoint(FILE *const file);
 static void move_checkpoint_file(void);
 static void write_parameters(const Grid_T *const grid);

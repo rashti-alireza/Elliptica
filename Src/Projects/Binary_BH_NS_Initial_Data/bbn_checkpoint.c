@@ -7,7 +7,7 @@
 
 /* write checkpoint for the given grid 
 // NOTE: the order of writing and reading is crucial */
-void bbn_write_checkpoint(const Grid_T *const grid)
+void bbn_write_checkpoint(Grid_T *const grid)
 {
   /* print some descriptions */
   pr_line_custom('=');
@@ -24,6 +24,7 @@ void bbn_write_checkpoint(const Grid_T *const grid)
   
   FILE *file = 0;
   const char *const out_dir = Pgets("iteration_output");
+  const unsigned sol_it_n = (unsigned)PgetiEZ("solving_iteration_number");
   char file_path[MAX_ARR];
   char msg[MAX_ARR];
   char *const p_msg = msg;/* to avoid GCC warning for FWriteP_bin */
@@ -64,6 +65,9 @@ void bbn_write_checkpoint(const Grid_T *const grid)
   
   /* replace checkpoint file with the previous */
   move_checkpoint_file();
+  
+  /* write bbn properties mainly used for id reader */
+  bbn_print_properties(grid,sol_it_n,out_dir,"w",0);
   
   printf("} Writing checkpoint file ==> Done.\n");
   pr_clock();

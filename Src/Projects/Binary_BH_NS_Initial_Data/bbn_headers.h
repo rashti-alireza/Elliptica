@@ -84,7 +84,7 @@ void bbn_update_derivative_B1_U2(Patch_T *const patch);
 void bbn_update_B1_U012(Patch_T *const patch);
 void bbn_update_Aij(Grid_T *const grid);
 Grid_T *bbn_init_from_checkpoint(FILE *const file);
-void bbn_write_checkpoint(const Grid_T *const grid);
+void bbn_write_checkpoint(Grid_T *const grid);
 Parameter_T *bbn_parameter_query_from_checkpoint_file(const char *const par_name,FILE *const file);
 int bbn_IsCheckpointFileCompleted(const char *const file_path);
 void bbn_add_fields_in_patch(Patch_T *const patch);
