@@ -56,9 +56,9 @@ void bbn_construct_id(void)
     
     grid_prev = grid_next;
     
-    iter++;
-    
     printf("} Outermost iteration %u ==> Done.\n",iter);
+    
+    iter++;
   }
   grid = grid_next;/* final grid */
     
