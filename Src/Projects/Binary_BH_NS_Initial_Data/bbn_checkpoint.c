@@ -332,7 +332,7 @@ static void init_mediate_field(Grid_T *const grid)
   const double Omega_NS_x = Pgetd("NS_Omega_U0");
   const double Omega_NS_y = Pgetd("NS_Omega_U1");
   const double Omega_NS_z = Pgetd("NS_Omega_U2");
-  const double C_NS = Pgetd("NS_Center");
+  const double C_NS = Pgetd("NS_Center_y");
   
   OpenMP_Patch_Pragma(omp parallel for)
   for (p = 0; p < np; ++p)
