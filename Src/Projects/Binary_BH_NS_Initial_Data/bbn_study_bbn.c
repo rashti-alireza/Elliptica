@@ -60,8 +60,9 @@ void bbn_print_properties(Grid_T *const grid,const unsigned iteration, const cha
   file = fopen(str,open_file_mode);
   pointerEr(file);
   fprintf(file,"%s\n",LINE_STR);
-  fprintf(file,"#iteration = %u\n",iteration);
+  fprintf(file,"# iteration = %u\n",iteration);
   
+
   if (pr_flg)
   {
     pr_line_custom('=');
@@ -69,6 +70,9 @@ void bbn_print_properties(Grid_T *const grid,const unsigned iteration, const cha
   }
   
   /* { geometry */
+  fprintf(file,"\n############\n"
+               "# Geometry #\n"
+               "############\n");
   PR_PARAMETR_IN_FILE(NS_center_x)
   PR_PARAMETR_IN_FILE(NS_center_y)
   PR_PARAMETR_IN_FILE(NS_center_z)
@@ -85,6 +89,9 @@ void bbn_print_properties(Grid_T *const grid,const unsigned iteration, const cha
   /* } geometry */
   
   /* { physics */
+  fprintf(file,"\n###########\n"
+               "# Physics #\n"
+               "###########\n");
   PR_PARAMETR_IN_FILE(NS_baryonic_mass)
   PR_PARAMETR_IN_FILE(BH_irreducible_mass)
   
