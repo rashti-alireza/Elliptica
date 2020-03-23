@@ -496,8 +496,8 @@ int make_parameters(const char *const path)
   read_input_file(path);
   
   /* printing parameters */
-  if (test_print(PRINT_PARAMETERS))
-    pr_parameters();
+  //if (test_print(PRINT_PARAMETERS))
+    //pr_parameters();
   
   return EXIT_SUCCESS;
 }
