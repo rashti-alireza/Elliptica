@@ -4817,7 +4817,8 @@ static void NS_BH_surface_CubedSpherical_grid(Grid_T *const grid,struct Grid_Par
       GridParams->grid_prev
      )
   {
-    printf("~> |R_2 - R1|/|R_1| = %g < Tolerance = %g\n",dR_rms,NS_surf_tolerance);
+    if (dR_rms < NS_surf_tolerance)/* prints only if this is the case */
+      printf("~> |R_2 - R1|/|R_1| = %g < Tolerance = %g\n",dR_rms,NS_surf_tolerance);
     printf("~> No changes in NS surface\n");
 
     Pseti("did_NS_surface_change?",0);
