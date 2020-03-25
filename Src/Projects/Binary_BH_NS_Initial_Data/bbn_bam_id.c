@@ -266,8 +266,13 @@ static void load_coords_from_coords_file(struct interpolation_points *const pnt)
   for (i = 0; i < npoints; ++i)
   {
     FReadV_bin(pnt->x[i]);
+    assert(isfinite(pnt->x[i]));
+    
     FReadV_bin(pnt->y[i]);
+    assert(isfinite(pnt->y[i]));
+    
     FReadV_bin(pnt->z[i]);
+    assert(isfinite(pnt->z[i]));
   }
   FReadP_bin(match_str)
   if (strcmp(match_str,FOOTER))
