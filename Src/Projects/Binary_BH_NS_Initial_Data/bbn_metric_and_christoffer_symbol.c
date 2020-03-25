@@ -21,6 +21,9 @@ void bbn_make_metric_and_Gamma_and_derivatives(Grid_T *const grid)
   for(p = 0; p < np; ++p)
   {
     Patch_T *patch = grid->patch[p];
+
+    if(IsItInsideBHPatch(patch))
+       continue;
     build_metric_and_metric_inverse(patch);
     build_metric_derivatives(patch);
 
@@ -533,6 +536,10 @@ void bbn_free_metric_and_Gamma_and_derivatives(Grid_T *const grid)
   for(p = 0; p < np; ++p)
   {
   Patch_T *patch = grid->patch[p];
+
+  if(IsItInsideBHPatch(patch))
+    continue;
+
   /* declare */
   DECLARE_FIELD(gamma_D2D2)
   DECLARE_FIELD(gamma_D0D2)

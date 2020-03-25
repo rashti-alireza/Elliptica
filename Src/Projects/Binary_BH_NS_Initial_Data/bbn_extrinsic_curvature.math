@@ -28,6 +28,10 @@ Ccode["void bbn_make_K_UiUj_and_dK_UiUj(Grid_T *const grid)"];
 `    Patch_T *patch = grid->patch[p];`
 `    unsigned nn = patch->nn;`
 `    unsigned ijk;`
+``
+`    if(IsItInsideBHPatch(patch))`
+`       continue;`
+``
 
 Declare = 
 {
@@ -81,6 +85,9 @@ Ccode["  }"];
 `  for(p = 0; p < np; ++p)`
 `  {`
 `    Patch_T *patch = grid->patch[p];`
+``
+`    if(IsItInsideBHPatch(patch))`
+`       continue;`
 ``
 `    DECLARE_AND_EMPTY_FIELD(dK_UiUj_U0U0D2)`
 `    DECLARE_AND_EMPTY_FIELD(dK_UiUj_U0U0D0)`
@@ -140,6 +147,9 @@ Ccode["  }"];
 `  for(p = 0; p < np; ++p)`
 `  {`
 `    Patch_T *patch = grid->patch[p];`
+``
+`    if(IsItInsideBHPatch(patch))`
+`       continue;`
 ``
 `    DECLARE_FIELD(dK_UiUj_U0U0D2)`
 `    DECLARE_FIELD(dK_UiUj_U0U0D0)`

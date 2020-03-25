@@ -27,6 +27,10 @@ Ccode["  OpenMP_Patch_Pragma(omp parallel for)"];
 Ccode["  for(p = 0; p < np; ++p)"];
 Ccode["  {"];
 Ccode["    Patch_T *patch = grid->patch[p];"];
+``
+`    if(IsItInsideBHPatch(patch))`
+`       continue;`
+
 Ccode["    build_metric_and_metric_inverse(patch);"];
 Ccode["    build_metric_derivatives(patch);"];
 
@@ -358,7 +362,10 @@ Ccode["  OpenMP_Patch_Pragma(omp parallel for)"];
 Ccode["  for(p = 0; p < np; ++p)"];
 Ccode["  {"];
 Ccode["  Patch_T *patch = grid->patch[p];"];
-
+``
+`  if(IsItInsideBHPatch(patch))`
+`    continue;`
+``
 `  /* declare */`
 `  DECLARE_FIELD(gamma_D2D2)`
 `  DECLARE_FIELD(gamma_D0D2)`

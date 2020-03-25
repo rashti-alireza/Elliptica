@@ -30,7 +30,7 @@ Ccode["void bbn_calculate_constraints_2nd(Grid_T *const grid)"];
 ``
 `    if(IsItInsideBHPatch(patch))`
 `       continue;`
-
+``
 Declare = 
 {
  # Hamiltonian constraint
