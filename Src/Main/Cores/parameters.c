@@ -567,8 +567,15 @@ void update_iterative_parameter_ip(const unsigned iter)
   while (parameters_global != 0 && parameters_global[i] != 0)
   {
     if (parameters_global[i]->iterative)
+    {
       parameters_global[i]->rv = 
         get_n_value_str_ip(parameters_global[i],iter);
+      if (parameters_global[i]->double_flg)
+      {
+        parameters_global[i]->rv_double  = 
+          strtod(parameters_global[i]->rv,0);
+      }
+    }
     i++;
   }
     
