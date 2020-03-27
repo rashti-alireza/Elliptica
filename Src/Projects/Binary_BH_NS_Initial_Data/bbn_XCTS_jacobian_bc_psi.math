@@ -142,10 +142,10 @@ outerB_Epart = 0;
 _DiHSi_b     = (_dHS(j,i) + _Gamma(j,i,l)*_HS(-l))*KD(-j,-i);
 
 # with _Aij
-# B_t1         = 3/4*(psi**-4)*_A_UiUj(i,j)*_gamma(-i,-l)*_gamma(-j,-m)*_HS(l)*_HS(m);
+B_t1         = 3/4*(psi**-4)*_A_UiUj(i,j)*_gamma(-i,-l)*_gamma(-j,-m)*_HS(l)*_HS(m);
 
 # with no _Aij
-B_t1         = 0;
+#B_t1         = 0;
 
 innerB_Bpart = _HS(i)*Jpsi(-i) -kd*(-_DiHSi_b/4+K*(psi**2)/2+B_t1);
 
@@ -163,10 +163,10 @@ innerB_Bpart = _HS(i)*Jpsi(-i) -kd*(-_DiHSi_b/4+K*(psi**2)/2+B_t1);
 _DiHSi_e    = (_dHS(j,i) + _Gamma(j,i,l)*_HS(-l))*KD(-j,-i);
 
 # with _Aij
-# E_t1 = 3/4*(psi**-4)*_A_UiUj(i,j)*_gamma(-i,-l)*_gamma(-j,-m)*_HS(l)*_HS(m);
+E_t1 = 3/4*(psi**-4)*_A_UiUj(i,j)*_gamma(-i,-l)*_gamma(-j,-m)*_HS(l)*_HS(m);
 
 # with no _Aij
-E_t1 = 0;
+#E_t1 = 0;
 
 innerB_Epart = _HS(i)*Jpsi(-i) -kd*(-_DiHSi_e/4+K*(psi**2)/2+E_t1);
 
