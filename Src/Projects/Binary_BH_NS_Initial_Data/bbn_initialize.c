@@ -167,7 +167,7 @@ static int IsThereAnyUsefulCheckpointFile(void)
   
   /* some checks to make sure the checkpoint file is valid */
   /* NS & BH masses, NS & BH spins, EoS, separation, RollOff_distance */
-  if (ret)
+  if (ret && 0)
   {
     checkpoint_file = fopen(prev_data_file_path,"r");
     pointerEr(checkpoint_file);
