@@ -5,6 +5,12 @@
 
 #include "bbn_checkpoint.h"
 
+/* global variable for this file: */
+static unsigned n_modified_checkpoint_par;/* number of modify_checkpoint_par */
+static Parameter_T **modified_checkpoint_par;/* modified pars in par file
+                                           // to be used after loading of
+                                           // the checkpoint file. */
+
 /* write checkpoint for the given grid 
 // NOTE: the order of writing and reading is crucial */
 void bbn_write_checkpoint(Grid_T *const grid)
@@ -419,6 +425,50 @@ static void read_header(struct checkpoint_header *const alloc_info,FILE *const f
   fseek(file,ftell(file)+1,SEEK_SET);/* +1 since fscanf won't read \n */
 }
 
+/* find and save modified checkpoint pars specified at the par file
+// also delete these pars from the par db */
+static void find_and_save_modified_checkpoint_pars(void)
+{
+  modified_checkpoint_par   = 0;/* global var in this file */
+  n_modified_checkpoint_par = 0;/* global var in this file */
+  const char *const keyword_prefix = "modify_checkpoint_par:";
+  char str[MAX_ARR],*pstr;
+  unsigned np,nmpar;
+  
+  /* find the modified pars and save them */
+  np    = 0;
+  nmpar = 0;
+  while (parameters_global != 0 && parameters_global[np] != 0)
+  {
+    /* find */
+    if (strstr_i(parameters_global[np]->lv,keyword_prefix))
+    {
+      /* save */
+      modified_checkpoint_par = 
+        realloc(modified_checkpoint_par,(nmpar+1)*sizeof(*modified_checkpoint_par));
+      pointerEr(modified_checkpoint_par);
+      modified_checkpoint_par[nmpar] = parameters_global[np];
+      parameters_global[np] = 0;
+      parameters_global[np] = calloc(1,sizeof(*parameters_global[np]));
+      pointerEr(parameters_global[np]);
+      
+      /* trim the prefix */
+      pstr = strstr(modified_checkpoint_par[nmpar]->lv,":");/* ->: */
+      pstr++;
+      assert(pstr);
+      sprintf(str,"%s",pstr);
+      free(modified_checkpoint_par[nmpar]->lv);
+      modified_checkpoint_par[nmpar]->lv = dup_s(str);
+      
+      nmpar++;
+    }
+    
+    np++;
+  }
+  
+  n_modified_checkpoint_par = nmpar;
+}
+
 /* alloc parameters and grid */
 static void alloc_db(struct checkpoint_header *const alloc_info)
 {
@@ -429,6 +479,9 @@ static void alloc_db(struct checkpoint_header *const alloc_info)
                  npar        = alloc_info->npar;
   Grid_T *grid = 0;
   unsigned i;
+  
+  /* find and save modified checkpoint pars specified at the pars file */
+  find_and_save_modified_checkpoint_pars();
   
   /* allocate parameters */
   free_parameter_db();
@@ -583,11 +636,84 @@ static void read_parameters(struct checkpoint_header *const alloc_info,FILE *con
     abortEr("It could not find the parameter footer.\n");
   _free(match_str);
   
+  /* incorporate the modified parameter in the parameter file
+  // into parameter data base */
+  incorporate_modified_checkpoint_par();
+  
+  /* free modified_checkpoint_par */
+  free_modified_checkpoint_par();
+  
   /* set the following parameters to default value */
   Pseti("did_resolution_change?",1);
   Pseti("did_NS_surface_change?",1);
   Pseti("did_AH_surface_change?",1);
   Pseti("use_previous_data",0);
+}
+
+/* free modified_checkpoint_par */
+static void free_modified_checkpoint_par(void)
+{
+  unsigned i;
+  
+  for (i = 0; i < n_modified_checkpoint_par; i++)
+  {
+    _free(modified_checkpoint_par[i]->lv);
+    _free(modified_checkpoint_par[i]->rv);
+    _free(modified_checkpoint_par[i]->rv_ip);
+    _free(modified_checkpoint_par[i]->rv_array);
+    free(modified_checkpoint_par[i]);
+  }
+  _free(modified_checkpoint_par);
+}
+
+/* incorporate the modified parameter in the parameter file
+// into parameter data base */
+static void incorporate_modified_checkpoint_par(void)
+{
+  unsigned np,i,n_found;
+  
+  /* free par "total_iterations_ip" since the new par file 
+  // might have more iterations */
+  free_parameter("total_iterations_ip");
+  
+  /* find the modified pars and save them */
+  np    = 0;
+  n_found = 0;
+  while (parameters_global != 0 && parameters_global[np] != 0)
+  {
+    /* find */
+    if (n_found < n_modified_checkpoint_par)
+    {
+      for (i = 0; i < n_modified_checkpoint_par; i++)
+      {
+        if (strcmp_i(parameters_global[np]->lv,modified_checkpoint_par[i]->lv))
+        {
+          /* we must not have array type */
+          assert(!parameters_global[np]->rv_array);
+          
+          _free(parameters_global[np]->rv);
+          _free(parameters_global[np]->rv_ip);
+          
+          parameters_global[np]->rv         = modified_checkpoint_par[i]->rv;
+          modified_checkpoint_par[i]->rv    = 0;
+          parameters_global[np]->rv_double  = modified_checkpoint_par[i]->rv_double;
+          parameters_global[np]->rv_ip      = modified_checkpoint_par[i]->rv_ip;
+          modified_checkpoint_par[i]->rv_ip = 0;
+          parameters_global[np]->iterative  = modified_checkpoint_par[i]->iterative;
+            
+          n_found++;
+          break;
+        }
+      }
+    }
+    else
+      break;
+        
+    np++;
+  }
+  
+  /* update total iterations */
+  total_iterations_ip();
 }
  
 /* read fields from the checkpoint file */

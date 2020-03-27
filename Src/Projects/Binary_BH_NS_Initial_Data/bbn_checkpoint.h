@@ -40,6 +40,8 @@ static int DoSaveField(const Field_T *const field);
 static void init_mediate_field(Grid_T *const grid);
 Parameter_T *bbn_parameter_query_from_checkpoint_file(const char *const par_name,FILE *const file);
 int bbn_IsCheckpointFileCompleted(const char *const file_path);
-
+static void find_and_save_modified_checkpoint_pars(void);
+static void incorporate_modified_checkpoint_par(void);
+static void free_modified_checkpoint_par(void);
 
 
