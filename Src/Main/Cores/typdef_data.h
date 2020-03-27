@@ -53,7 +53,7 @@ typedef enum FLAG_T
 typedef struct PARAMETER_T
 {
   /* syntax is expected to be lv = rv */
-  char *lv;/* letf value its name*/
+  char *lv;/* left value its name*/
   char *rv;/* right value string */
   char *rv_ip;/* right value for iterative parameter */
   double rv_double;/* right value double */
