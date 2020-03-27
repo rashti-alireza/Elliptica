@@ -5,7 +5,12 @@
 
 #include "bbn_checkpoint.h"
 
-/* global variable for this file: */
+
+/* if you set a parameter as below in the par file it uses this parameter
+// and disregards its value obtained from the checkpoint:
+// e.g.
+// modify_checkpoint_par: n_a = 4(x6)
+// modify_checkpoint_par: Solving_Max_Number_of_Iteration = 0  */
 static unsigned n_modified_checkpoint_par;/* number of modify_checkpoint_par */
 static Parameter_T **modified_checkpoint_par;/* modified pars in par file
                                            // to be used after loading of
@@ -677,7 +682,7 @@ static void incorporate_modified_checkpoint_par(void)
   free_parameter("total_iterations_ip");
   
   /* find the modified pars and save them */
-  np    = 0;
+  np      = 0;
   n_found = 0;
   while (parameters_global != 0 && parameters_global[np] != 0)
   {
@@ -688,6 +693,8 @@ static void incorporate_modified_checkpoint_par(void)
       {
         if (strcmp_i(parameters_global[np]->lv,modified_checkpoint_par[i]->lv))
         {
+          printf("-> Modified parameter from checkpoint = %s\n",parameters_global[np]->lv);
+          
           /* we must not have array type */
           assert(!parameters_global[np]->rv_array);
           
