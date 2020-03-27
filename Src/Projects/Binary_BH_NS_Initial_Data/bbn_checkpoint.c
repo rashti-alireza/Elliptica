@@ -669,6 +669,8 @@ static void free_modified_checkpoint_par(void)
     free(modified_checkpoint_par[i]);
   }
   _free(modified_checkpoint_par);
+  modified_checkpoint_par   = 0;
+  n_modified_checkpoint_par = 0;
 }
 
 /* incorporate the modified parameter in the parameter file
