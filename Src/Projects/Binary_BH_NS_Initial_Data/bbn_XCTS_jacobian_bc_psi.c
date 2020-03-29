@@ -14,6 +14,8 @@ void *bbn_jacobian_bc_psi(void *vp1,void *vp2)
   DDM_SCHUR_JACOBIAN_BC_DECLARE
   unsigned ijk,lmn;/* for Jacobian entries J[ijk][lmn] */
   const double kd[2] = {0.,1.};/* Kronecker delta */
+  const double is_Aij_on = Pgetd("is_Aij_on_at_AH?");
+
 
   /* declaring: */
   READ_v(psi)
@@ -157,7 +159,8 @@ pow(_HS_U2[ijk], 2)*pow(_gamma_D2D2[ijk], 2))/pow(psi[ijk], 4);
   double innerB_Bpart = 
 Jpsi_D0(j_Jpsi_D0,ijk,lmn)*_HS_U0[ijk] + Jpsi_D1(j_Jpsi_D1,ijk,lmn)*
 _HS_U1[ijk] + Jpsi_D2(j_Jpsi_D2,ijk,lmn)*_HS_U2[ijk] - 1.0/4.0*
-kd[ijk==lmn]*(4*B_t1 + 2*K[ijk]*pow(psi[ijk], 2) - _DiHSi_b);
+kd[ijk==lmn]*(4*B_t1*is_Aij_on + 2*K[ijk]*pow(psi[ijk], 2) -
+_DiHSi_b);
 
   B[i][j] = innerB_Bpart;
 
@@ -233,7 +236,8 @@ pow(_HS_U2[ijk], 2)*pow(_gamma_D2D2[ijk], 2))/pow(psi[ijk], 4);
   double innerB_Epart = 
 Jpsi_D0(j_Jpsi_D0,ijk,lmn)*_HS_U0[ijk] + Jpsi_D1(j_Jpsi_D1,ijk,lmn)*
 _HS_U1[ijk] + Jpsi_D2(j_Jpsi_D2,ijk,lmn)*_HS_U2[ijk] - 1.0/4.0*
-kd[ijk==lmn]*(4*E_t1 + 2*K[ijk]*pow(psi[ijk], 2) - _DiHSi_e);
+kd[ijk==lmn]*(4*E_t1*is_Aij_on + 2*K[ijk]*pow(psi[ijk], 2) -
+_DiHSi_e);
 
   E_Trans[j][i] = innerB_Epart;
 

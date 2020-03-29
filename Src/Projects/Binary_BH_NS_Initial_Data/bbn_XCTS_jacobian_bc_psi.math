@@ -30,7 +30,8 @@ C_arg2 = [ijk == lmn]; # for kd
 `  DDM_SCHUR_JACOBIAN_BC_DECLARE`;
 `  unsigned ijk,lmn;/* for Jacobian entries J[ijk][lmn] */`;
 `  const double kd[2] = {0.,1.};/* Kronecker delta */`;
-
+`  const double is_Aij_on = Pgetd("is_Aij_on_at_AH?");`
+``
 # declare for Cpi
 Declare = 
 {
@@ -64,6 +65,8 @@ Declare =
  # conformal connections
  (obj = Field,name = _Gamma, rank = UDD, C_macro5);
 
+ # variable
+ (obj = Variable,name = is_Aij_on, none);
 }
 
 # symmetries for Cpi
@@ -147,7 +150,7 @@ B_t1         = 3/4*(psi**-4)*_A_UiUj(i,j)*_gamma(-i,-l)*_gamma(-j,-m)*_HS(l)*_HS
 # with no _Aij
 #B_t1         = 0;
 
-innerB_Bpart = _HS(i)*Jpsi(-i) -kd*(-_DiHSi_b/4+K*(psi**2)/2+B_t1);
+innerB_Bpart = _HS(i)*Jpsi(-i) -kd*(-_DiHSi_b/4+K*(psi**2)/2+is_Aij_on*B_t1);
 
 
 `  B[i][j] = innerB_Bpart;\n`;
@@ -168,7 +171,7 @@ E_t1 = 3/4*(psi**-4)*_A_UiUj(i,j)*_gamma(-i,-l)*_gamma(-j,-m)*_HS(l)*_HS(m);
 # with no _Aij
 #E_t1 = 0;
 
-innerB_Epart = _HS(i)*Jpsi(-i) -kd*(-_DiHSi_e/4+K*(psi**2)/2+E_t1);
+innerB_Epart = _HS(i)*Jpsi(-i) -kd*(-_DiHSi_e/4+K*(psi**2)/2+is_Aij_on*E_t1);
 
 `  E_Trans[j][i] = innerB_Epart;\n`;
 `  DDM_SCHUR_JACOBIAN_BC_Epart_CLOSE\n`;

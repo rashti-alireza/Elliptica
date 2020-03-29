@@ -43,4 +43,8 @@ void bbn_set_default_parameters(void)
   
   /* total number of iterations that have been executed */
   Pseti("iteration_number",0);
+  
+  /* if _Aij is active for jacobian of psi equation it is 1
+  // otherwise it is 0. the default is 0. */
+  Pset_default("is_Aij_on_at_AH?","0");
 }
