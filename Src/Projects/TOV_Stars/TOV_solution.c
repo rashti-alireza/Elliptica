@@ -113,7 +113,7 @@ TOV_T *TOV_solution(TOV_T *const TOV)
   /* print some informations about TOV */
   printf("TOV properties:\n");
   if (PgetsEZ("EoS_description"))
-    printf("--> NS equation of state              = %s\n",PgetsEz("EoS_description"));
+    printf("--> NS equation of state              = %s\n",PgetsEZ("EoS_description"));
   printf("--> NS radius (Schwarzschild Coords.) = %e\n",TOV->r[TOV->N-1]);
   printf("--> NS radius (Isotropic Coords.)     = %e\n",TOV->rbar[TOV->N-1]);
   printf("--> ADM mass                          = %e\n",TOV->ADM_m);
