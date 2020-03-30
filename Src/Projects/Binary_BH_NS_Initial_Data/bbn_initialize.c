@@ -2457,6 +2457,7 @@ static void find_NS_surface_Ylm_method_CS(Grid_T *const grid,struct Grid_Params_
   double *h_res  = 0;/* residual of h */
   double X[3],x[3],N[3];
   char stem[1000],*affix;
+  int NS_surface_finder_work_flg = 1;/* whether surface finder worked or not */
   unsigned i,j;
   unsigned l,m;
   
@@ -2551,6 +2552,7 @@ static void find_NS_surface_Ylm_method_CS(Grid_T *const grid,struct Grid_Params_
         printf(". Root finder for NS surface at %s:\n.. ",h_patch->name);
         print_root_finder_exit_status(root);
         printf(".. Residual = %g\n",root->residual);
+        NS_surface_finder_work_flg = 0;/* since the residual is large don't update */
       }
       
       /*  new coords of R respect to the center of NS */
@@ -2609,6 +2611,8 @@ static void find_NS_surface_Ylm_method_CS(Grid_T *const grid,struct Grid_Params_
   free(Rnew_NS);
   free(h_res);
   free_root_finder(root);
+  
+  Pseti("did_NS_surface_finder_work?",NS_surface_finder_work_flg);
   
   printf("} Finding the surface of NS, Ylm method ==> Done.\n");
   pr_clock();
@@ -3470,9 +3474,11 @@ static Grid_T *TOV_KerrSchild_approximation(void)
   const double y_CM = (ns_mass*C_NS+bh_mass*C_BH)/(ns_mass+bh_mass);
   
   /* adding some parameters: */
+  /* pars for adjusting NS surface and interpolation for the next grid */
   Pseti("did_resolution_change?",1);
   Pseti("did_NS_surface_change?",1);
   Pseti("did_AH_surface_change?",1);
+  Pseti("did_NS_surface_finder_work?",1);/* if surface finder was failed 0 */
   Pseti("use_previous_data",0);
   
   /* center of mass */
@@ -4809,16 +4815,26 @@ static void NS_BH_surface_CubedSpherical_grid(Grid_T *const grid,struct Grid_Par
   /* should we change the NS surface */
   const double NS_surf_tolerance = Pgetd("NS_surface_tolerance");
   const double dR_rms = sqrt(dR_sum_square);
-  
-  /* if dR_rms is small do not change the NS surface function */
+  const int    did_NS_surface_finder_work = Pgeti("did_NS_surface_finder_work?");
+  /* if dR_rms is small           or 
+  // if surface finder was failed 
+  // do not change the NS surface function */
   if (
-      same_res_flag              && 
-      dR_rms < NS_surf_tolerance && 
-      GridParams->grid_prev
+       (
+        same_res_flag                && 
+        dR_rms < NS_surf_tolerance   &&
+        GridParams->grid_prev
+        )
+                                     ||
+        (GridParams->grid_prev       &&
+         !did_NS_surface_finder_work
+        )
      )
   {
-    if (dR_rms < NS_surf_tolerance)/* prints only if this is the case */
-      printf("~> |R_2 - R1|/|R_1| = %g < Tolerance = %g\n",dR_rms,NS_surf_tolerance);
+    if (dR_rms < NS_surf_tolerance && did_NS_surface_finder_work)/* prints only if this is the case */
+      printf("~> |R_2 - R1|/|R_1| = %g < Tolerance = %g:\n",dR_rms,NS_surf_tolerance);
+    if (!did_NS_surface_finder_work)
+      printf("~> NS surface finder was failed:\n");
     printf("~> No changes in NS surface\n");
 
     Pseti("did_NS_surface_change?",0);
@@ -4861,7 +4877,7 @@ static void NS_BH_surface_CubedSpherical_grid(Grid_T *const grid,struct Grid_Par
     Pseti("did_NS_surface_change?",1);
     
     if (GridParams->grid_prev)
-      printf("~> |R_2 - R1|/|R_1| = %g >= Tolerance = %g\n",dR_rms,NS_surf_tolerance);
+      printf("~> |R_2 - R1|/|R_1| = %g >= Tolerance = %g:\n",dR_rms,NS_surf_tolerance);
     printf("~> Update NS surface\n");
   }
   
