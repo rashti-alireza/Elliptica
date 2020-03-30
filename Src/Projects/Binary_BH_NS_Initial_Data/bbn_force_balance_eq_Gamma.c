@@ -109,7 +109,10 @@ plan_interpolation(interp_dGAMMA);
 const double g  = execute_interpolation(interp_GAMMA);
 const double dg = execute_interpolation(interp_dGAMMA);
 const double f  = dg/g;
-assert(isfinite(f));
+if(!isfinite(f))
+{
+  abortEr("Force balance equation was failed.\n");
+}
 
 REMOVE_FIELD(GAMMA_fb);
 REMOVE_FIELD(dGAMMA_fb);
