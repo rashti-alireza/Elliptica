@@ -1578,7 +1578,8 @@ static void adjust_AH_radius(Grid_T *const grid,struct Grid_Params_S *const Grid
   const double irr_mass    = bbn_BH_irreducible_mass(grid);
   const double kommar_mass = bbn_BH_Kommar_mass(grid);
   const double W  = Pgetd("BH_AH_change_weight");
-  double dr, r_excision, current_bh_mass;
+  const double numeric_error = Pgetd("numeric_error");
+  double dr, r_excision, current_bh_mass,dM;
   
   printf("|--> current BH Kommar's mass    = %e\n",kommar_mass);
   printf("|--> current BH irreducible mass = %e\n",irr_mass);
@@ -1596,9 +1597,10 @@ static void adjust_AH_radius(Grid_T *const grid,struct Grid_Params_S *const Grid
     
   if (current_bh_mass < 0)
     current_bh_mass = 0;
-    
-  dr  = -current_r_excision*(current_bh_mass/target_bh_mass-1);
-  if (EQL(W*dr,0)) 
+  
+  dM = fabs(current_bh_mass-target_bh_mass);
+  dr = -current_r_excision*(current_bh_mass/target_bh_mass-1);
+  if (EQL(W*dr,0) || LSSEQL(dM,numeric_error)) 
     dr = 0;
   r_excision = current_r_excision + W*dr;
   
@@ -3475,27 +3477,27 @@ static Grid_T *TOV_KerrSchild_approximation(void)
   const double y_CM = (ns_mass*C_NS+bh_mass*C_BH)/(ns_mass+bh_mass);
   
   /* adding some parameters: */
-  /* pars for adjusting NS surface and interpolation for the next grid */
+  /* -> pars for adjusting NS surface and interpolation for the next grid */
   Pseti("did_resolution_change?",1);
   Pseti("did_NS_surface_change?",1);
   Pseti("did_AH_surface_change?",1);
   Pseti("did_NS_surface_finder_work?",1);/* if surface finder was failed 0 */
   Pseti("use_previous_data",0);
   
-  /* center of mass */
+  /* -> center of mass */
   Psetd("x_CM",0);
   Psetd("y_CM",y_CM);
   Psetd("z_CM",0);
   Psetd("y_CM0",y_CM);
   Psetd("x_CM0",0);
   
-  /* NS properties */
+  /* -> NS properties */
   Psetd("NS_mass",ns_mass);
   Psetd("NS_center_x",0);
   Psetd("NS_center_y",C_NS);
   Psetd("NS_center_z",0);
   
-  /* BH properties */  
+  /* -> BH properties */  
   Psetd("r_excision",bh_R);
   Psetd("BH_center_x",0);
   Psetd("BH_center_y",C_BH);
@@ -3515,6 +3517,10 @@ static Grid_T *TOV_KerrSchild_approximation(void)
   
   /* -> central rho0 */
   Psetd("rho_center",1E-3);
+  
+  /* -> errors: */
+  Psetd("numeric_error",1E-3);/* max error of all sorts, 
+                              // residual or constraint violation and etc. */
   
   /* combining these two geometry to create the grid */
   GridParams->Max_R_NS_l = ns_R;

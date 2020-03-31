@@ -136,6 +136,7 @@ void bbn_print_residual_norms(Grid_T *const grid,const unsigned iteration, const
                      "eta_residual",
                      "phi_residual",
                      0};
+  double numeric_error = 0;                   
   unsigned i,p;
                      
   for (i = 0; f[i]; ++i)
@@ -210,12 +211,16 @@ void bbn_print_residual_norms(Grid_T *const grid,const unsigned iteration, const
       fprintf(file_L1,  "%-11u %0.15f\n",iteration,L1/nn/* scaled */);
       fprintf(file_L2,  "%-11u %0.15f\n",iteration,L2/pow(nn,0.5)/* scaled */);
       
+      numeric_error = L2 > numeric_error ? L2 : numeric_error;
+      
       fclose(file_Linf);
       fclose(file_L1);
       fclose(file_L2);
     }
   }
   
+  /* update numeric error */
+  Psetd("numeric_error",numeric_error);
 }
 
 /* printing fields determined in parameter file */
