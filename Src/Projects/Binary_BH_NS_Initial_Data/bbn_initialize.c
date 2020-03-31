@@ -1578,7 +1578,7 @@ static void adjust_AH_radius(Grid_T *const grid,struct Grid_Params_S *const Grid
   const double irr_mass    = bbn_BH_irreducible_mass(grid);
   const double kommar_mass = bbn_BH_Kommar_mass(grid);
   const double W  = Pgetd("BH_AH_change_weight");
-  const double numeric_error = Pgetd("numeric_error");
+  const double numerical_error = Pgetd("numerical_error");
   double dr, r_excision, current_bh_mass,dM;
   
   printf("|--> current BH Kommar's mass    = %e\n",kommar_mass);
@@ -1605,7 +1605,7 @@ static void adjust_AH_radius(Grid_T *const grid,struct Grid_Params_S *const Grid
     dr = 0;
     printf("|--> weight factor is zero.\n");
   }
-  if (LSSEQL(dM,numeric_error)) 
+  if (LSSEQL(dM,numerical_error)) 
   {
     dr = 0;
     printf("|--> |current_BH_mass - target_BH_mass| < numerical error\n");
@@ -3528,7 +3528,7 @@ static Grid_T *TOV_KerrSchild_approximation(void)
   Psetd("rho_center",1E-3);
   
   /* -> errors: */
-  Psetd("numeric_error",1E-3);/* max error of all sorts, 
+  Psetd("numerical_error",1E-3);/* max error of all sorts, 
                               // residual or constraint violation and etc. */
   
   /* combining these two geometry to create the grid */
