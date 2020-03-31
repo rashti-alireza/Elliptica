@@ -2428,7 +2428,7 @@ static void calculate_residual_single_patch(Patch_T *const patch)
   double sqr = dot(S->NS,f,f);
   
   printf("\nResidual:\n");
-  patch->solving_man->Frms = sqrt(sqr);
+  patch->solving_man->Frms = sqrt(sqr/S->NS);
   printf("-------->%s = %e\n", patch->name,patch->solving_man->Frms);
 }
 
@@ -2441,7 +2441,7 @@ static void set_solving_man_settings_Frms_i_single_patch(Patch_T *const patch)
   double sqr = dot(S->NS,f,f);
   double *HFrms = alloc_double(1);
   
-  patch->solving_man->settings->Frms_i = sqrt(sqr);
+  patch->solving_man->settings->Frms_i = sqrt(sqr/S->NS);
   HFrms[0] = patch->solving_man->settings->Frms_i;
   patch->solving_man->settings->HFrms  = HFrms;
   patch->solving_man->settings->NHFrms = 1;
@@ -2464,7 +2464,7 @@ static void set_solving_man_settings_Frms_i(Grid_T *const grid)
     double sqr1 = dot(S->NS,f,f);
     double sqr2 = dot(S->NI,g,g);
     double sqrs = sqr1+sqr2;
-    patch->solving_man->settings->Frms_i = sqrt(sqrs);
+    patch->solving_man->settings->Frms_i = sqrt(sqrs/(S->NS+S->NI));
   }
 }
 
@@ -2502,7 +2502,7 @@ static void calculate_residual(Grid_T *const grid)
     double sqr1 = dot(S->NS,f,f);
     double sqr2 = dot(S->NI,g,g);
     double sqrs = sqr1+sqr2;
-    patch->solving_man->Frms = sqrt(sqrs);
+    patch->solving_man->Frms = sqrt(sqrs/(S->NS+S->NI));
     HFrms[p]                 = patch->solving_man->Frms;
   }
   
