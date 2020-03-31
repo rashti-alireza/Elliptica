@@ -1618,7 +1618,7 @@ static void adjust_AH_radius(Grid_T *const grid,struct Grid_Params_S *const Grid
   
   Psetd("r_excision",r_excision);
   
-  if (EQL(W*dr,0))/* => no change in AH surface */
+  if (EQL(dr,0))/* => no change in AH surface */
     Pseti("did_AH_surface_change?",0);
   else          /* => change in AH surface */
     Pseti("did_AH_surface_change?",1);
