@@ -170,7 +170,7 @@ static double *root_finder_steepest_descent(Root_Finder_T *const root)
     for (i = 0; i < n; i++)
       z[i] = dg_dx(params,x,i,f,df_dx);
       
-    z0 = L2_norm(n,z,0);
+    z0 = root_square(n,z,0);
     if (EQL(z0,0.))
     {
       root->residual = sqrt(g1);

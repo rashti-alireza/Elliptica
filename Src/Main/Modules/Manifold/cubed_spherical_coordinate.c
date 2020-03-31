@@ -4798,7 +4798,7 @@ void test_CubedSpherical_Coordinates(Grid_T *const grid)
       
       /* test x_of_X */
       x_of_X(xp,X,patch);
-      if (!EQL(L2_norm(3,xp,x),0))
+      if (!EQL(root_square(3,xp,x),0))
       {
         printf("x_of_X failed.\n");
         flg = FOUND;
@@ -4807,7 +4807,7 @@ void test_CubedSpherical_Coordinates(Grid_T *const grid)
       
       /* test X_of_x */
       X_of_x(Xp,x,patch);
-      if (!EQL(L2_norm(3,Xp,X),0))
+      if (!EQL(root_square(3,Xp,X),0))
       {
         printf("X_of_x failed.\n");
         flg = FOUND;
@@ -4819,7 +4819,7 @@ void test_CubedSpherical_Coordinates(Grid_T *const grid)
       {
         case NS_T_CS:
           R = R_interpolation_CS(R2_f,X);
-          if (!EQL(L2_norm(1,&R,&R2_f->v[n]),0))
+          if (!EQL(root_square(1,&R,&R2_f->v[n]),0))
           {
             printf("R interpolation failed.\n");
             flg = FOUND;
@@ -4829,7 +4829,7 @@ void test_CubedSpherical_Coordinates(Grid_T *const grid)
         break;
         case SR_T_CS:
           R = R_interpolation_CS(R1_f,X);
-          if (!EQL(L2_norm(1,&R,&R1_f->v[n]),0))
+          if (!EQL(root_square(1,&R,&R1_f->v[n]),0))
           {
             printf("R interpolation failed.\n");
             flg = FOUND;

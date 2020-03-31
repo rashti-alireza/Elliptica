@@ -5,10 +5,8 @@
 
 #include "general.h"
 
-/* taking square root of vector v2-v1 which has l double type components.
-// it is L2 norm basically.
-// ->return value: root mean square of v2-v1.
-*/
+/* taking square root of vector v2-v1 which has n double type components.
+// ->return value: root square of v2-v1; i.e. sqrt(sum{(v2[i]-v1[i])^2}) */
 double root_square(const unsigned n, const double *const v2,const double *const v1)
 {
   unsigned i;
@@ -32,18 +30,16 @@ double root_square(const unsigned n, const double *const v2,const double *const 
 }
 
 /* calculate the L2 norm of v2 - v1, i.e. :
-// L2Norm = sqrt(sum{(v2[i]-v1[i])^2})
-// ->return value: L2 norm.
-*/
+// L2Norm = sqrt(sum{(v2[i]-v1[i])^2}/n)
+// ->return value: L2 norm. */
 double L2_norm(const unsigned n, const double *const v2,const double *const v1)
 {
-  return root_square(n,v2,v1);
+  return root_square(n,v2,v1)/sqrt(n);
 }
 
 /* calculate the L1 norm of v2 - v1, i.e. :
-// L1Norm = sum{|v2[i]-v1[i]|}
-// ->return value: L1 norm.
-*/
+// L1Norm = sum{|v2[i]-v1[i]|}/n
+// ->return value: L1 norm. */
 double L1_norm(const unsigned n, const double *const v2,const double *const v1)
 {
   unsigned i;
@@ -61,7 +57,7 @@ double L1_norm(const unsigned n, const double *const v2,const double *const v1)
     for(i = 0; i < n; i++)
       sum += ABS(v2[i]-v1[i]);
     
-  return sum;
+  return sum/n;
 }
 
 /* taking root means square of vector v2-v1 which has l double type components
