@@ -1603,7 +1603,7 @@ static void adjust_AH_radius(Grid_T *const grid,struct Grid_Params_S *const Grid
   if (EQL(W,0))
   {
     dr = 0;
-    printf("|--> weight factor is zero.\n");
+    printf("|--> updating weight factor is zero.\n");
   }
   if (LSSEQL(dM,numerical_error)) 
   {
