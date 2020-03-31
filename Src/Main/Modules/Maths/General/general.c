@@ -26,7 +26,7 @@ double rms(const unsigned n, const double *const v2,const double *const v1)
     for(i = 0; i < n; i++)
       sum += Pow2(v2[i]-v1[i]);
     
-  sum = sqrt(sum);
+  sum = sqrt(sum/nn);
   
   return sum;
 }
@@ -60,7 +60,8 @@ double L1_norm(const unsigned n, const double *const v2,const double *const v1)
   else
     for(i = 0; i < n; i++)
       sum += ABS(v2[i]-v1[i]);
-    
+  
+  sum /= nn;  
   return sum;
 }
 
