@@ -338,7 +338,7 @@ static int x_of_X_CS_coord(double *const x,const double *const X,const Patch_T *
     x_test[1] = x[1];
     x_test[2] = x[2];
     X_of_x_CS_coord(X_test,x_test,patch,0);
-    dX = rms(3,X,X_test);
+    dX = root_square(3,X,X_test);
     if (!EQL(dX,0))
       return 0;
   }
@@ -433,8 +433,8 @@ static int X_of_x_CS_coord(double *const X,const double *const cart,const Patch_
     X_test[1] = X[1];
     X_test[2] = X[2];
     x_of_X_CS_coord(x_test,X_test,patch,0);
-    dx = rms(3,cart,x_test);
-    double scale = MaxMag_d(rms(3,cart,0),rms(3,x_test,0));
+    dx = root_square(3,cart,x_test);
+    double scale = MaxMag_d(root_square(3,cart,0),root_square(3,x_test,0));
     scale = scale < 1 ? 1 : scale;
     if (!EQL(dx/scale,0))
       return 0;
@@ -480,7 +480,7 @@ static int IsInside(const double *const x,const double *const lim)
 unsigned find_node(const double *const x, const Patch_T *const patch,Flag_T *const flg)
 {
   unsigned v = UINT_MAX;
-  double res = RES_EPS*rms(3,x,0);/* resolution */
+  double res = RES_EPS*root_square(3,x,0);/* resolution */
   unsigned i;
   double *y, nrm;
 
@@ -490,7 +490,7 @@ unsigned find_node(const double *const x, const Patch_T *const patch,Flag_T *con
   FOR_ALL(i,patch->node)
   {
     y = patch->node[i]->x;
-    nrm = rms(3,x,y);
+    nrm = root_square(3,x,y);
     if (LSSEQL(nrm,res))
     {
       v = i;

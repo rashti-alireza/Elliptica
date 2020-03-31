@@ -2561,7 +2561,7 @@ static void find_NS_surface_Ylm_method_CS(Grid_T *const grid,struct Grid_Params_
       y2[0] += N[0]*dr[0];
       y2[1] += N[1]*dr[0];
       y2[2] += N[2]*dr[0];
-      Rnew_NS[ij(i,j)] = rms(3,y2,0);
+      Rnew_NS[ij(i,j)] = root_square(3,y2,0);
       
       /* find the max NS radius */
       if (Rnew_NS[ij(i,j)] > Max_R_NS)
@@ -2736,7 +2736,7 @@ static void find_XYZ_and_patch_of_theta_phi_NS_CS(double *const X,Patch_T **cons
     x[0] -= c[0];
     x[1] -= c[1];
     x[2] -= c[2];
-    r = rms(3,x,0);
+    r = root_square(3,x,0);
     theta2 = acos(x[2]/r);
     phi2   = arctan(x[1],x[0]);
     if (EQL(theta2,theta) && EQL(phi2,phi))
@@ -2881,7 +2881,7 @@ static void extrapolate_insideBH(Grid_T *const grid)
         x[0] = patch->node[ijk]->x[0]-patch->c[0];
         x[1] = patch->node[ijk]->x[1]-patch->c[1];
         x[2] = patch->node[ijk]->x[2]-patch->c[2]; 
-        rh   = rms(3,x,0);
+        rh   = root_square(3,x,0);
         
         X_of_x(X,patch->node[ijk]->x,BHsur_patch);
         
@@ -2936,7 +2936,7 @@ static void extrapolate_insideBH(Grid_T *const grid)
           x[1] = patch->node[ijk]->x[1]-patch->c[1];
           x[2] = patch->node[ijk]->x[2]-patch->c[2];
           
-          r = rms(3,x,0);
+          r = root_square(3,x,0);
           R = r-rh;
           eta[ijk]   = a_eta*R+b_eta;
           psi[ijk]   = b_psi*exp(R/rh);/* "a_psi*R+b_psi" not good! */
@@ -3046,13 +3046,13 @@ static void extrapolate_outsideNS_CS_continuity_method(Grid_T *const grid)
         x[0] = patch->node[ijk]->x[0]-patch->c[0];
         x[1] = patch->node[ijk]->x[1]-patch->c[1];
         x[2] = patch->node[ijk]->x[2]-patch->c[2];
-        r0   = rms(3,x,0);
+        r0   = root_square(3,x,0);
 
         /* unit normal vector on NS surface pointing outward */
         N[0] = dq2_dq1(patch,_c_,_x_,ijk);
         N[1] = dq2_dq1(patch,_c_,_y_,ijk);
         N[2] = dq2_dq1(patch,_c_,_z_,ijk);        
-        Norm = rms(3,N,0);
+        Norm = root_square(3,N,0);
         N[0] /= Norm;
         N[1] /= Norm;
         N[2] /= Norm;
@@ -3090,7 +3090,7 @@ static void extrapolate_outsideNS_CS_continuity_method(Grid_T *const grid)
           x[1] = patch->node[ijk]->x[1]-patch->c[1];
           x[2] = patch->node[ijk]->x[2]-patch->c[2];
           
-          r = rms(3,x,0);
+          r = root_square(3,x,0);
           
           phi[ijk]  = a*exp(-att*(r-r0))+b;
           
@@ -3210,14 +3210,14 @@ static void extrapolate_outsideNS_CS_slop_method(Grid_T *const grid)
         x[0] = patch->node[ijk]->x[0]-patch->c[0];
         x[1] = patch->node[ijk]->x[1]-patch->c[1];
         x[2] = patch->node[ijk]->x[2]-patch->c[2]; 
-        r_max = rms(3,x,0);
+        r_max = root_square(3,x,0);
 
         /* calculate r2 at NS surface */
         ijk = L(n,i,j,0);
         x[0] = patch->node[ijk]->x[0]-patch->c[0];
         x[1] = patch->node[ijk]->x[1]-patch->c[1];
         x[2] = patch->node[ijk]->x[2]-patch->c[2];
-        r2   = rms(3,x,0);
+        r2   = root_square(3,x,0);
 
         /* calulate r1,a,b */
         r1 = FACTOR*r2;/* small scale to define r1 */
@@ -3316,7 +3316,7 @@ static void extrapolate_outsideNS_CS_slop_method(Grid_T *const grid)
           x[1] = patch->node[ijk]->x[1]-patch->c[1];
           x[2] = patch->node[ijk]->x[2]-patch->c[2];
           
-          r_out = rms(3,x,0);
+          r_out = root_square(3,x,0);
           r_in  = (r_out-b)/a;
 
           x[0] = r_in*sin(THETA)*cos(PHI)+NS_patch->c[0];
@@ -3395,7 +3395,7 @@ static void extrapolate_outsideNS_CS_slop_method(Grid_T *const grid)
           x[0] = patch->node[ijk]->x[0]-patch->c[0];
           x[1] = patch->node[ijk]->x[1]-patch->c[1];
           x[2] = patch->node[ijk]->x[2]-patch->c[2]; 
-          r1   = rms(3,x,0);
+          r1   = root_square(3,x,0);
           
           X_of_x(X,patch->node[ijk]->x,NS_patch);
 
@@ -3412,7 +3412,7 @@ static void extrapolate_outsideNS_CS_slop_method(Grid_T *const grid)
             x[1] = patch->node[ijk]->x[1]-patch->c[1];
             x[2] = patch->node[ijk]->x[2]-patch->c[2];
             
-            r2 = rms(3,x,0);
+            r2 = root_square(3,x,0);
             double e = exp(-att*(r2-r1));
             enthalpy[ijk] = h_i*e;
             

@@ -15,7 +15,7 @@
 #define Csc(a) 1/sin(a)
 #define Cot(a) 1/tan(a)
 
-double rms(const unsigned n, const double *const v2,const double *const v1);
+double root_square(const unsigned n, const double *const v2,const double *const v1);
 long double rmsL(const long unsigned n, const double *const v2, const double *const v1);
 double dot(const unsigned n, const double *const v2,const double *const v1);
 double ABS(const double v);

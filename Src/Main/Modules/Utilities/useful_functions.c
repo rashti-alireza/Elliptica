@@ -167,7 +167,7 @@ static unsigned check_interface(const double *const X, const Patch_T *const patc
 {
   
   const unsigned ind = patch->interface[u]->point[0]->ind;
-  double res = EPS*rms(3,X,0);
+  double res = EPS*root_square(3,X,0);
   double *Y;
   
   res = GRT(res,EPS) ? res: EPS;
@@ -215,7 +215,7 @@ unsigned node_onFace(const double *const x, const unsigned f,const Patch_T *cons
   FOR_ALL(i,face->point)
   {
     unsigned id = face->point[i]->ind;
-    nrm = rms(3,x,node[id]->x);
+    nrm = root_square(3,x,node[id]->x);
     if (LSS(nrm,s))
     {
       s = nrm;

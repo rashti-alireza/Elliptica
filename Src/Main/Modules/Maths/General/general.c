@@ -9,7 +9,7 @@
 // it is L2 norm basically.
 // ->return value: root mean square of v2-v1.
 */
-double rms(const unsigned n, const double *const v2,const double *const v1)
+double root_square(const unsigned n, const double *const v2,const double *const v1)
 {
   unsigned i;
   double sum;
@@ -37,7 +37,7 @@ double rms(const unsigned n, const double *const v2,const double *const v1)
 */
 double L2_norm(const unsigned n, const double *const v2,const double *const v1)
 {
-  return rms(n,v2,v1);
+  return root_square(n,v2,v1);
 }
 
 /* calculate the L1 norm of v2 - v1, i.e. :

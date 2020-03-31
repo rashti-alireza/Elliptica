@@ -652,7 +652,7 @@ static SubFace_T *find_subface(const SubFace_T *const sub)
         for (i = 0; i < sub3->np; ++i)
         {
           double *x = node[sub3->id[i]]->x;
-          double r = rms(3,x,0);
+          double r = root_square(3,x,0);
           
           if (LSS(r,dis))
           {
@@ -1339,7 +1339,7 @@ static int IsOutBndry(PointSet_T *const Pnt)
     Patch_T *const patch = Pnt->Pnt->patch;
     double *x = patch->node[node]->x;
     double *N1 = Pnt->Pnt->N;
-    double eps = rms(3,x,0)*EPS;
+    double eps = root_square(3,x,0)*EPS;
     double q[3];
     unsigned ans;
     
@@ -1353,7 +1353,7 @@ static int IsOutBndry(PointSet_T *const Pnt)
       double nrm;
       
       tangent(Pnt->Pnt,Ntan);
-      nrm = rms(3,Ntan,0);
+      nrm = root_square(3,Ntan,0);
       if (EQL(nrm,0))
         abortEr("Normal vector is null!");
         
@@ -1409,7 +1409,7 @@ static int IsInnBndry(PointSet_T *const Pnt)
     Patch_T *const patch = Pnt->Pnt->patch;
     double *x = patch->node[node]->x;
     double *N1 = Pnt->Pnt->N;
-    double eps = rms(3,x,0)*EPS;
+    double eps = root_square(3,x,0)*EPS;
     double q[3];
     unsigned ans;
     
@@ -1423,7 +1423,7 @@ static int IsInnBndry(PointSet_T *const Pnt)
       double nrm;
       
       tangent(Pnt->Pnt,Ntan);
-      nrm = rms(3,Ntan,0);
+      nrm = root_square(3,Ntan,0);
       if (EQL(nrm,0))
         abortEr("Normal vector is null!");
         
@@ -1535,7 +1535,7 @@ static int ReachBnd(PointSet_T *const Pnt,const unsigned p,const unsigned f)
   double *x = patch->node[node]->x;
   double *N1 = Pnt->Pnt->N;
   double *N2 = Pnt->adjPnt[p].fs[f].N2;
-  double eps = rms(3,x,0)*EPS;
+  double eps = root_square(3,x,0)*EPS;
   double q[3];
   unsigned ans;
   
@@ -2136,7 +2136,7 @@ void make_normal_outward(Point_T *const point)
 {
   const double *const x = point->patch->node[point->ind]->x;
   
-  double eps = rms(3,x,0)*EPS;
+  double eps = root_square(3,x,0)*EPS;
   Needle_T *needle = alloc_needle();
   const double *N = point->N;
   double q[3];/* q = pnt+eps*N */
@@ -2203,7 +2203,7 @@ static void normal_vec_CS_coord(Point_T *const point)
       abortEr("There is no such face.\n");
   }
   
-  N = rms(3,point->N,0);
+  N = root_square(3,point->N,0);
   if (EQL(N,0))
     abortEr("Normal vector is null!");
   
@@ -2413,7 +2413,7 @@ void tangent(const Point_T *const pnt,double *const N)
     if (!IsOnEdge(n,l))
     {
       y = pnt->patch->node[l]->x;
-      nrm = rms(3,x,y);
+      nrm = root_square(3,x,y);
       
       if (LSS(nrm,s_ds)) 
       {
