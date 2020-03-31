@@ -208,8 +208,8 @@ void bbn_print_residual_norms(Grid_T *const grid,const unsigned iteration, const
       L1    = L1_norm(nn,field->v,0);
       
       fprintf(file_Linf,"%-11u %0.15f\n",iteration,Linf);
-      fprintf(file_L1,  "%-11u %0.15f\n",iteration,L1/nn/* scaled */);
-      fprintf(file_L2,  "%-11u %0.15f\n",iteration,L2/pow(nn,0.5)/* scaled */);
+      fprintf(file_L1,  "%-11u %0.15f\n",iteration,L1);
+      fprintf(file_L2,  "%-11u %0.15f\n",iteration,L2);
       
       numeric_error = L2 > numeric_error ? L2 : numeric_error;
       
