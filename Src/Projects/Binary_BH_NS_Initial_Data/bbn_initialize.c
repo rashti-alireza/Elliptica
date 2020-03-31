@@ -2937,7 +2937,7 @@ static void extrapolate_insideBH(Grid_T *const grid)
           r = rms(3,x,0);
           R = r-rh;
           eta[ijk]   = a_eta*R+b_eta;
-          psi[ijk]   = b_psi*exp(R/rh);
+          psi[ijk]   = b_psi*exp(R/rh);/* "a_psi*R+b_psi" not good! */
           UNUSED(a_psi);
           B0_U0[ijk] = a_BU0*R+b_BU0;
           B0_U1[ijk] = a_BU1*R+b_BU1;
