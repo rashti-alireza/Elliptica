@@ -1600,8 +1600,17 @@ static void adjust_AH_radius(Grid_T *const grid,struct Grid_Params_S *const Grid
   
   dM = fabs(current_bh_mass-target_bh_mass);
   dr = -current_r_excision*(current_bh_mass/target_bh_mass-1);
-  if (EQL(W*dr,0) || LSSEQL(dM,numeric_error)) 
+  if (EQL(W,0))
+  {
     dr = 0;
+    printf("|--> weight factor is zero.\n");
+  }
+  if (LSSEQL(dM,numeric_error)) 
+  {
+    dr = 0;
+    printf("|--> |current_BH_mass - target_BH_mass| < numerical error\n");
+  }
+
   r_excision = current_r_excision + W*dr;
   
   GridParams->R_BH_r    = r_excision;
