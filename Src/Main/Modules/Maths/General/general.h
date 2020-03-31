@@ -16,7 +16,7 @@
 #define Cot(a) 1/tan(a)
 
 double root_square(const unsigned n, const double *const v2,const double *const v1);
-long double rmsL(const long unsigned n, const double *const v2, const double *const v1);
+long double root_square_long(const long unsigned n, const double *const v2, const double *const v1);
 double dot(const unsigned n, const double *const v2,const double *const v1);
 double ABS(const double v);
 double Cheb_U(const int n, const double x);

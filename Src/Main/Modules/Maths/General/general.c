@@ -60,11 +60,10 @@ double L1_norm(const unsigned n, const double *const v2,const double *const v1)
   return sum/n;
 }
 
-/* taking root means square of vector v2-v1 which has l double type components
-// and l is of order of long unsigned.
-// ->return value: root mean square of v2-v1
-*/
-long double rmsL(const long unsigned n, const double *const v2, const double *const v1)
+/* taking root square of vector v2-v1 which has n double type components
+// and n is long unsigned type.
+// ->return value: root square of v2-v1 */
+long double root_square_long(const long unsigned n, const double *const v2, const double *const v1)
 {
   unsigned long i;
   long double sum;
