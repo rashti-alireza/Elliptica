@@ -1608,7 +1608,7 @@ static void adjust_AH_radius(Grid_T *const grid,struct Grid_Params_S *const Grid
   if (LSSEQL(dM,numerical_error)) 
   {
     dr = 0;
-    printf("|--> |current_BH_mass - target_BH_mass| < numerical error\n");
+    printf("|--> |current_BH_mass - target_BH_mass| < numerical_error\n");
   }
 
   r_excision = current_r_excision + W*dr;
