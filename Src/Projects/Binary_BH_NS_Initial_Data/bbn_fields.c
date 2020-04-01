@@ -1142,7 +1142,7 @@ void bbn_update_stress_energy_tensor(Grid_T *const grid,const int flag)
   pr_line_custom('=');
   printf("{ Updating enthalpy, rest-mass density and their derivatives ...\n");
   
-  const double W1  = Pgetd("Solving_Field_Update_Weight");
+  const double W1  = Pgetd("enthalpy_update_weight");
   const double W2  = 1-W1;
   unsigned p;
   

@@ -1577,7 +1577,7 @@ static void adjust_AH_radius(Grid_T *const grid,struct Grid_Params_S *const Grid
   const double current_r_excision = Pgetd("r_excision");
   const double irr_mass    = bbn_BH_irreducible_mass(grid);
   const double kommar_mass = bbn_BH_Kommar_mass(grid);
-  const double W  = Pgetd("BH_AH_change_weight");
+  const double W  = Pgetd("BH_AH_change_update_weight");
   const double dM_tolerance = Pgetd("BH_mass_tolerance");
   double dr, r_excision, current_bh_mass,dM;
   
