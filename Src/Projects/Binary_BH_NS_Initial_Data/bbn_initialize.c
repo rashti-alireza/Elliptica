@@ -1578,7 +1578,7 @@ static void adjust_AH_radius(Grid_T *const grid,struct Grid_Params_S *const Grid
   const double irr_mass    = bbn_BH_irreducible_mass(grid);
   const double kommar_mass = bbn_BH_Kommar_mass(grid);
   const double W  = Pgetd("BH_AH_change_weight");
-  const double numerical_error = Pgetd("numerical_error");
+  const double dM_tolerance = Pgetd("BH_mass_tolerance");
   double dr, r_excision, current_bh_mass,dM;
   
   printf("|--> current BH Kommar's mass    = %e\n",kommar_mass);
@@ -1605,10 +1605,10 @@ static void adjust_AH_radius(Grid_T *const grid,struct Grid_Params_S *const Grid
     dr = 0;
     printf("|--> updating weight factor is zero.\n");
   }
-  if (LSSEQL(dM,numerical_error)) 
+  if (LSSEQL(dM,dM_tolerance)) 
   {
     dr = 0;
-    printf("|--> |current_BH_mass - target_BH_mass| < numerical_error\n");
+    printf("|--> |current_M-target_M| = %g < Tol. = %g\n",dM,dM_tolerance);
   }
 
   r_excision = current_r_excision + W*dr;
@@ -3528,8 +3528,8 @@ static Grid_T *TOV_KerrSchild_approximation(void)
   Psetd("rho_center",1E-3);
   
   /* -> errors: */
-  Psetd("numerical_error",1E-3);/* max error of all sorts, 
-                              // residual or constraint violation and etc. */
+  Psetd("largest_L2norm_error",0);/* max error of calculated L2norms, 
+                                  // residual or constraint violation and etc. */
   
   /* combining these two geometry to create the grid */
   GridParams->Max_R_NS_l = ns_R;

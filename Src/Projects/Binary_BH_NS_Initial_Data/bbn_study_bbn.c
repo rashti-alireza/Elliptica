@@ -54,6 +54,12 @@ void bbn_print_properties(Grid_T *const grid,const unsigned iteration, const cha
   const char *const file_name = "bbn_geometry_and_physics.txt";
   FILE *file = 0;
   char str[MAX_STR_LEN];
+  const char *const geometry_logo = "\n############\n"
+                                    "# Geometry #\n"
+                                    "############\n";
+  const char *const physics_logo = "\n###########\n"
+                                   "# Physics #\n"
+                                   "###########\n";
   
   /* open file */
   sprintf(str,"%s/%s",folder,file_name);
@@ -70,9 +76,11 @@ void bbn_print_properties(Grid_T *const grid,const unsigned iteration, const cha
   }
   
   /* { geometry */
-  fprintf(file,"\n############\n"
-               "# Geometry #\n"
-               "############\n");
+  if (pr_flg)
+    printf(geometry_logo);
+    
+  fprintf(file,geometry_logo);
+  
   PR_PARAMETR_IN_FILE(NS_center_x)
   PR_PARAMETR_IN_FILE(NS_center_y)
   PR_PARAMETR_IN_FILE(NS_center_z)
@@ -89,9 +97,11 @@ void bbn_print_properties(Grid_T *const grid,const unsigned iteration, const cha
   /* } geometry */
   
   /* { physics */
-  fprintf(file,"\n###########\n"
-               "# Physics #\n"
-               "###########\n");
+  if (pr_flg)
+    printf(physics_logo);
+  
+  fprintf(file,physics_logo);
+  
   PR_PARAMETR_IN_FILE(NS_baryonic_mass)
   PR_PARAMETR_IN_FILE(BH_irreducible_mass)
   
@@ -102,6 +112,7 @@ void bbn_print_properties(Grid_T *const grid,const unsigned iteration, const cha
   PR_PARAMETR_IN_FILE(J_ADM_x)
   PR_PARAMETR_IN_FILE(J_ADM_y)
   PR_PARAMETR_IN_FILE(J_ADM_z)
+  PR_PARAMETR_IN_FILE(largest_L2norm_error)
   /* } physics */
   
   fprintf(file,"%s\n",LINE_STR);
@@ -136,7 +147,7 @@ void bbn_print_residual_norms(Grid_T *const grid,const unsigned iteration, const
                      "eta_residual",
                      "phi_residual",
                      0};
-  double numerical_error = 0;                   
+  double largest_L2_error = 0;                   
   unsigned i,p;
                      
   for (i = 0; f[i]; ++i)
@@ -214,7 +225,7 @@ void bbn_print_residual_norms(Grid_T *const grid,const unsigned iteration, const
       /* since we do all sort of approx. inside the BH don't 
       // consider this as the numerical error. */
       if (!IsItInsideBHPatch(patch))
-        numerical_error = L2 > numerical_error ? L2 : numerical_error;
+        largest_L2_error = L2 > largest_L2_error ? L2 : largest_L2_error;
       
       fclose(file_Linf);
       fclose(file_L1);
@@ -223,7 +234,7 @@ void bbn_print_residual_norms(Grid_T *const grid,const unsigned iteration, const
   }
   
   /* update numeric error */
-  Psetd("numerical_error",numerical_error);
+  Psetd("largest_L2norm_error",largest_L2_error);
 }
 
 /* printing fields determined in parameter file */
