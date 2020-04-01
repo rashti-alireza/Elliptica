@@ -211,7 +211,10 @@ void bbn_print_residual_norms(Grid_T *const grid,const unsigned iteration, const
       fprintf(file_L1,  "%-11u %0.15f\n",iteration,L1);
       fprintf(file_L2,  "%-11u %0.15f\n",iteration,L2);
       
-      numerical_error = L2 > numerical_error ? L2 : numerical_error;
+      /* since we do all sort of approx. inside the BH don't 
+      // consider this as the numerical error. */
+      if (!IsItInsideBHPatch(patch))
+        numerical_error = L2 > numerical_error ? L2 : numerical_error;
       
       fclose(file_Linf);
       fclose(file_L1);
