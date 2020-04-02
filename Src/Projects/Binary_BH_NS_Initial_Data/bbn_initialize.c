@@ -260,6 +260,9 @@ static Grid_T *make_next_grid_using_previous_grid(Grid_T *const grid_prev)
   /* find y_CM or orbital_angular_velocity using force balance equation */
   force_balance_eq(grid_prev);
   
+  /* update enthalpy,denthalpy,rho0, drho0, u0, _J^i, _E and _S */
+  bbn_update_stress_energy_tensor(grid_prev,0);
+
   /* extrapolate fluid fields outside NS */
   extrapolate_fluid_fields_outsideNS(grid_prev);
   
