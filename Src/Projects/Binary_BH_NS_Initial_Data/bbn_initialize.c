@@ -4546,8 +4546,8 @@ static void NS_BH_surface_CubedSpherical_grid(Grid_T *const grid,struct Grid_Par
   const double BH_center[3] = {Pgetd("BH_center_x"),Pgetd("BH_center_y")-C_BH,Pgetd("BH_center_z")};
   const double W1         = Pgetd("NS_surface_update_weight");
   const double W2         = 1-W1;
-  double *R,*R_new;
-  const double *R_old;
+  double *R,*R_update;
+  const double *R_old,*R_new;
   char par[1000] = {'\0'};
   unsigned N[3],n,i,j,k,N_total,ijk;
   Patch_T patch[1] = {0};
@@ -4909,79 +4909,97 @@ static void NS_BH_surface_CubedSpherical_grid(Grid_T *const grid,struct Grid_Par
         R_old = Pgetdd(par);
         sprintf(par,"grid%u_left_NS_surface_function_up",grid->gn);
         R_new = Pgetdd(par);
+        R_update = alloc_double(N_total);
         for (i = 0; i < N[0]; ++i)
           for (j = 0; j < N[1]; ++j)
             for (k = 0; k < N[2]; ++k)
             {
               ijk = L(N,i,j,k);
-              R_new[ijk] = W1*R_new[ijk]+W2*R_old[ijk];
+              R_update[ijk] = W1*R_new[ijk]+W2*R_old[ijk];
             }
-        update_parameter_array(par,R_new,N_total);
+            
+        update_parameter_array(par,R_update,N_total);
+        free(R_update);
         
         sprintf(par,"grid%u_left_NS_surface_function_down",grid->gn-1);
         R_old = Pgetdd(par);
         sprintf(par,"grid%u_left_NS_surface_function_down",grid->gn);
         R_new = Pgetdd(par);
+        R_update = alloc_double(N_total);
         for (i = 0; i < N[0]; ++i)
           for (j = 0; j < N[1]; ++j)
             for (k = 0; k < N[2]; ++k)
             {
               ijk = L(N,i,j,k);
-              R_new[ijk] = W1*R_new[ijk]+W2*R_old[ijk];
+              R_update[ijk] = W1*R_new[ijk]+W2*R_old[ijk];
             }
-        update_parameter_array(par,R_new,N_total);
+            
+        update_parameter_array(par,R_update,N_total);
+        free(R_update);
                 
         sprintf(par,"grid%u_left_NS_surface_function_back",grid->gn-1);
         R_old = Pgetdd(par);
         sprintf(par,"grid%u_left_NS_surface_function_back",grid->gn);
         R_new = Pgetdd(par);
+        R_update = alloc_double(N_total);
         for (i = 0; i < N[0]; ++i)
           for (j = 0; j < N[1]; ++j)
             for (k = 0; k < N[2]; ++k)
             {
               ijk = L(N,i,j,k);
-              R_new[ijk] = W1*R_new[ijk]+W2*R_old[ijk];
+              R_update[ijk] = W1*R_new[ijk]+W2*R_old[ijk];
             }
-        update_parameter_array(par,R_new,N_total);
+            
+        update_parameter_array(par,R_update,N_total);
+        free(R_update);
                 
         sprintf(par,"grid%u_left_NS_surface_function_front",grid->gn-1);
         R_old = Pgetdd(par);
         sprintf(par,"grid%u_left_NS_surface_function_front",grid->gn);
         R_new = Pgetdd(par);
+        R_update = alloc_double(N_total);
         for (i = 0; i < N[0]; ++i)
           for (j = 0; j < N[1]; ++j)
             for (k = 0; k < N[2]; ++k)
             {
               ijk = L(N,i,j,k);
-              R_new[ijk] = W1*R_new[ijk]+W2*R_old[ijk];
+              R_update[ijk] = W1*R_new[ijk]+W2*R_old[ijk];
             }
-        update_parameter_array(par,R_new,N_total);
+            
+        update_parameter_array(par,R_update,N_total);
+        free(R_update);
                 
         sprintf(par,"grid%u_left_NS_surface_function_left",grid->gn-1);
         R_old = Pgetdd(par);
         sprintf(par,"grid%u_left_NS_surface_function_left",grid->gn);
         R_new = Pgetdd(par);
+        R_update = alloc_double(N_total);
         for (i = 0; i < N[0]; ++i)
           for (j = 0; j < N[1]; ++j)
             for (k = 0; k < N[2]; ++k)
             {
               ijk = L(N,i,j,k);
-              R_new[ijk] = W1*R_new[ijk]+W2*R_old[ijk];
+              R_update[ijk] = W1*R_new[ijk]+W2*R_old[ijk];
             }
-        update_parameter_array(par,R_new,N_total);
+            
+        update_parameter_array(par,R_update,N_total);
+        free(R_update);
                 
         sprintf(par,"grid%u_left_NS_surface_function_right",grid->gn-1);
         R_old = Pgetdd(par);
         sprintf(par,"grid%u_left_NS_surface_function_right",grid->gn);
         R_new = Pgetdd(par);
+        R_update = alloc_double(N_total);
         for (i = 0; i < N[0]; ++i)
           for (j = 0; j < N[1]; ++j)
             for (k = 0; k < N[2]; ++k)
             {
               ijk = L(N,i,j,k);
-              R_new[ijk] = W1*R_new[ijk]+W2*R_old[ijk];
+              R_update[ijk] = W1*R_new[ijk]+W2*R_old[ijk];
             }
-        update_parameter_array(par,R_new,N_total);
+            
+        update_parameter_array(par,R_update,N_total);
+        free(R_update);
         
       }
     }
