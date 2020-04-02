@@ -52,4 +52,13 @@ void bbn_set_default_parameters(void)
   /* the tolerance of BH mass while adjusting the AH excision radius to
   // meet the target BH mass */
   Pset_default("BH_mass_tolerance","1e-2");
+  
+  /* the weight we use to update enthalpy */
+  Pset_default("enthalpy_update_weight","1e-3");
+  
+  /* the weight we use to update NS surface */
+  Pset_default("NS_surface_update_weight","1e-3");
+  
+  /* the weight we use to update BH excision radius */
+  Pset_default("BH_r_excision_update_weight","1e-2");
 }
