@@ -4544,9 +4544,12 @@ static void NS_BH_surface_CubedSpherical_grid(Grid_T *const grid,struct Grid_Par
   const double Omega_BHNS = Pgetd("BH_NS_orbital_angular_velocity");
   const double g2         = 1-Pow2(-Omega_BHNS*(C_BH-y_CM));/* inverse square of Lorentz factor  */
   const double BH_center[3] = {Pgetd("BH_center_x"),Pgetd("BH_center_y")-C_BH,Pgetd("BH_center_z")};
-  double *R;
+  const double W1         = Pgetd("NS_surface_update_weight");
+  const double W2         = 1-W1;
+  double *R,*R_new;
+  const double *R_old;
   char par[1000] = {'\0'};
-  unsigned N[3],n,i,j,k,N_total;
+  unsigned N[3],n,i,j,k,N_total,ijk;
   Patch_T patch[1] = {0};
   struct Collocation_s coll_s[2] = {0};
   double X[3],r;
@@ -4663,7 +4666,7 @@ static void NS_BH_surface_CubedSpherical_grid(Grid_T *const grid,struct Grid_Par
       for (i = 0; i < N[0]; ++i)
         for (j = 0; j < N[1]; ++j)
         {
-          unsigned ijk = L(N,i,j,0);
+          ijk = L(N,i,j,0);
           dR_sum_square += Pow2(1-R[ijk]/R0[ijk]);
         }
       
@@ -4695,7 +4698,7 @@ static void NS_BH_surface_CubedSpherical_grid(Grid_T *const grid,struct Grid_Par
       for (i = 0; i < N[0]; ++i)
         for (j = 0; j < N[1]; ++j)
         {
-          unsigned ijk = L(N,i,j,0);
+          ijk = L(N,i,j,0);
           dR_sum_square += Pow2(1-R[ijk]/R0[ijk]);
         }
       
@@ -4727,7 +4730,7 @@ static void NS_BH_surface_CubedSpherical_grid(Grid_T *const grid,struct Grid_Par
       for (i = 0; i < N[0]; ++i)
         for (j = 0; j < N[1]; ++j)
         {
-          unsigned ijk = L(N,i,j,0);
+          ijk = L(N,i,j,0);
           dR_sum_square += Pow2(1-R[ijk]/R0[ijk]);
         }
       
@@ -4759,7 +4762,7 @@ static void NS_BH_surface_CubedSpherical_grid(Grid_T *const grid,struct Grid_Par
       for (i = 0; i < N[0]; ++i)
         for (j = 0; j < N[1]; ++j)
         {
-          unsigned ijk = L(N,i,j,0);
+          ijk = L(N,i,j,0);
           dR_sum_square += Pow2(1-R[ijk]/R0[ijk]);
         }
       
@@ -4791,7 +4794,7 @@ static void NS_BH_surface_CubedSpherical_grid(Grid_T *const grid,struct Grid_Par
       for (i = 0; i < N[0]; ++i)
         for (j = 0; j < N[1]; ++j)
         {
-          unsigned ijk = L(N,i,j,0);
+          ijk = L(N,i,j,0);
           dR_sum_square += Pow2(1-R[ijk]/R0[ijk]);
         }
       
@@ -4824,7 +4827,7 @@ static void NS_BH_surface_CubedSpherical_grid(Grid_T *const grid,struct Grid_Par
       for (i = 0; i < N[0]; ++i)
         for (j = 0; j < N[1]; ++j)
         {
-          unsigned ijk = L(N,i,j,0);
+          ijk = L(N,i,j,0);
           dR_sum_square += Pow2(1-R[ijk]/R0[ijk]);
         }
       
@@ -4895,7 +4898,93 @@ static void NS_BH_surface_CubedSpherical_grid(Grid_T *const grid,struct Grid_Par
     Pseti("did_NS_surface_change?",1);
     
     if (GridParams->grid_prev)
+    {
       printf("~> |R_2 - R1|/|R_1| = %g >= Tolerance = %g:\n",dR_rms,NS_surf_tolerance);
+      
+      /* update the surface in relaxed fashion */
+      if (same_res_flag && did_NS_surface_finder_work)
+      {
+        /* update the surface function accordingly: */
+        sprintf(par,"grid%u_left_NS_surface_function_up",grid->gn-1);
+        R_old = Pgetdd(par);
+        sprintf(par,"grid%u_left_NS_surface_function_up",grid->gn);
+        R_new = Pgetdd(par);
+        for (i = 0; i < N[0]; ++i)
+          for (j = 0; j < N[1]; ++j)
+            for (k = 0; k < N[2]; ++k)
+            {
+              ijk = L(N,i,j,k);
+              R_new[ijk] = W1*R_new[ijk]+W2*R_old[ijk];
+            }
+        update_parameter_array(par,R_new,N_total);
+        
+        sprintf(par,"grid%u_left_NS_surface_function_down",grid->gn-1);
+        R_old = Pgetdd(par);
+        sprintf(par,"grid%u_left_NS_surface_function_down",grid->gn);
+        R_new = Pgetdd(par);
+        for (i = 0; i < N[0]; ++i)
+          for (j = 0; j < N[1]; ++j)
+            for (k = 0; k < N[2]; ++k)
+            {
+              ijk = L(N,i,j,k);
+              R_new[ijk] = W1*R_new[ijk]+W2*R_old[ijk];
+            }
+        update_parameter_array(par,R_new,N_total);
+                
+        sprintf(par,"grid%u_left_NS_surface_function_back",grid->gn-1);
+        R_old = Pgetdd(par);
+        sprintf(par,"grid%u_left_NS_surface_function_back",grid->gn);
+        R_new = Pgetdd(par);
+        for (i = 0; i < N[0]; ++i)
+          for (j = 0; j < N[1]; ++j)
+            for (k = 0; k < N[2]; ++k)
+            {
+              ijk = L(N,i,j,k);
+              R_new[ijk] = W1*R_new[ijk]+W2*R_old[ijk];
+            }
+        update_parameter_array(par,R_new,N_total);
+                
+        sprintf(par,"grid%u_left_NS_surface_function_front",grid->gn-1);
+        R_old = Pgetdd(par);
+        sprintf(par,"grid%u_left_NS_surface_function_front",grid->gn);
+        R_new = Pgetdd(par);
+        for (i = 0; i < N[0]; ++i)
+          for (j = 0; j < N[1]; ++j)
+            for (k = 0; k < N[2]; ++k)
+            {
+              ijk = L(N,i,j,k);
+              R_new[ijk] = W1*R_new[ijk]+W2*R_old[ijk];
+            }
+        update_parameter_array(par,R_new,N_total);
+                
+        sprintf(par,"grid%u_left_NS_surface_function_left",grid->gn-1);
+        R_old = Pgetdd(par);
+        sprintf(par,"grid%u_left_NS_surface_function_left",grid->gn);
+        R_new = Pgetdd(par);
+        for (i = 0; i < N[0]; ++i)
+          for (j = 0; j < N[1]; ++j)
+            for (k = 0; k < N[2]; ++k)
+            {
+              ijk = L(N,i,j,k);
+              R_new[ijk] = W1*R_new[ijk]+W2*R_old[ijk];
+            }
+        update_parameter_array(par,R_new,N_total);
+                
+        sprintf(par,"grid%u_left_NS_surface_function_right",grid->gn-1);
+        R_old = Pgetdd(par);
+        sprintf(par,"grid%u_left_NS_surface_function_right",grid->gn);
+        R_new = Pgetdd(par);
+        for (i = 0; i < N[0]; ++i)
+          for (j = 0; j < N[1]; ++j)
+            for (k = 0; k < N[2]; ++k)
+            {
+              ijk = L(N,i,j,k);
+              R_new[ijk] = W1*R_new[ijk]+W2*R_old[ijk];
+            }
+        update_parameter_array(par,R_new,N_total);
+        
+      }
+    }
     printf("~> Update NS surface\n");
   }
   
