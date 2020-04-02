@@ -1440,6 +1440,7 @@ static void find_Euler_eq_const(Grid_T *const grid)
   const double W2  = 1-W1;
   double *Euler_const = 0;
   double guess[1];/* initial guess for Euler const */
+  const double RESIDUAL = sqrt(Pgetd("RootFinder_Tolerance"));
   struct Euler_eq_const_RootFinder_S params[1];
   
   params->grid = grid;
@@ -1456,7 +1457,11 @@ static void find_Euler_eq_const(Grid_T *const grid)
   plan_root_finder(root);
   
   Euler_const       = execute_root_finder(root);
-  Euler_const[0]    = W1*Euler_const[0]+W2*guess[0];
+  /* if root finder is not OK for some reason */
+  if (GRT(root->residual,RESIDUAL))
+    Euler_const[0] = guess[0];/* don't update */
+  else
+    Euler_const[0] = W1*Euler_const[0]+W2*guess[0];
   
   Psetd("Euler_equation_constant",Euler_const[0]);
   free(Euler_const);
