@@ -1102,26 +1102,14 @@ static void cleaning_enthalpy(Patch_T *const patch)
   WRITE_v(enthalpy)
   
   const unsigned nn = patch->nn;
-  const unsigned *const n = patch->n;
-  unsigned ijk,i,j,k;
+  unsigned ijk;
   
-  /* if enthalpy falls below 1 */
   for (ijk = 0; ijk < nn; ++ijk)
   {
     if (LSSEQL(enthalpy[ijk],1))
       enthalpy[ijk] = 1;
   }
-  
-  /* if enthalpy on the NS surface is bigger than 1 */
-  if (Pgeti("NS_surface_cleaning"))
-  {
-    FOR_SURFACE(i,j,k,n[0],n[1],n[2]-1)
-    {
-      ijk = L(n,i,j,k);
-      if (!EQL(enthalpy[ijk],1))
-        enthalpy[ijk] = 1;
-    }
-  }
+
 }
 
 /* updating enthalpy and its derivative */
