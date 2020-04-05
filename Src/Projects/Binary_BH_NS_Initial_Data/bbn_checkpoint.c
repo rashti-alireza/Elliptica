@@ -324,7 +324,7 @@ Grid_T *bbn_init_from_checkpoint(FILE *const file)
   bbn_partial_derivatives_fields(grid);
 
   /* update enthalpy,denthalpy,rho0, drho0, u0, _J^i, _E and _S */
-  //bbn_update_stress_energy_tensor(grid,1);
+  bbn_update_stress_energy_tensor(grid,1);
   
   /* update _Aij in K^{ij} = A^{ij}+1/3*gamma^{ij}*K and 
   // _A^{ij} = gamma^10*A^{ij} and _dA^{ij} */
