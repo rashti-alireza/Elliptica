@@ -3124,6 +3124,7 @@ static void extrapolate_outsideNS_CS_exp_continuity_method(Grid_T *const grid)
     dphi_D1->v = Partial_Derivative(phi_field,"y");
     dphi_D0->v = Partial_Derivative(phi_field,"x");
     
+    /*
     Tij_IF_CTS_enthalpy(patch);
       
     Field_T *enthalpy = patch->pool[Ind("enthalpy")];
@@ -3133,6 +3134,7 @@ static void extrapolate_outsideNS_CS_exp_continuity_method(Grid_T *const grid)
     denthalpy_D2->v = Partial_Derivative(enthalpy,"z");
     denthalpy_D1->v = Partial_Derivative(enthalpy,"y");
     denthalpy_D0->v = Partial_Derivative(enthalpy,"x");
+    */
     
   }/* end of FOR_ALL_PATCHES(p,grid) */
 }
@@ -5647,13 +5649,40 @@ static void extrapolate_fluid_fields_outsideNS(Grid_T *const grid)
 {
   pr_line_custom('=');
   printf("{ Extrapolating fluid fields outside NS ...\n");
+  unsigned p;
   
   if (strcmp_i(grid->kind,"BBN_CubedSpherical_grid"))
   {
-    extrapolate_outsideNS_CS_exp_continuity_method(grid);
-    extrapolate_outsideNS_CS_Ylm_method(grid,"enthalpy");
-    if (0)
-    extrapolate_outsideNS_CS_slop_method(grid);
+    if (Pcmps("extrapolate_fluid_fields_method","phi:exp_continuity,enthalpy:Ylm"))
+    {
+      /* extrapolate phi and W => but don't make enthalpy */
+      extrapolate_outsideNS_CS_exp_continuity_method(grid);
+      /* extrapolate enthalpy  */
+      extrapolate_outsideNS_CS_Ylm_method(grid,"enthalpy");
+      
+      /* calculating the derivatives of the enthalpy */
+      FOR_ALL_PATCHES(p,grid)
+      {
+        /* surrounding patch */
+        Patch_T *patch = grid->patch[p];
+        if (!IsItNSSurroundingPatch(patch))
+          continue;
+        
+        Field_T *enthalpy = patch->pool[Ind("enthalpy")];
+        DECLARE_AND_EMPTY_FIELD(denthalpy_D2)
+        DECLARE_AND_EMPTY_FIELD(denthalpy_D1)
+        DECLARE_AND_EMPTY_FIELD(denthalpy_D0)
+        denthalpy_D2->v = Partial_Derivative(enthalpy,"z");
+        denthalpy_D1->v = Partial_Derivative(enthalpy,"y");
+        denthalpy_D0->v = Partial_Derivative(enthalpy,"x");
+      }
+
+    }
+    else
+      abortEr(NO_OPTION);
+      
+    if (0)/* this method is sucks! */
+      extrapolate_outsideNS_CS_slop_method(grid);
  
   }
   else
