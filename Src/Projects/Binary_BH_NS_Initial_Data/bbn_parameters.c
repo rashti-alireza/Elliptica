@@ -61,4 +61,11 @@ void bbn_set_default_parameters(void)
   
   /* the weight we use to update BH excision radius */
   Pset_default("BH_r_excision_update_weight","1e-2");
+  
+  /* how to extrapolate fluid_fields outside the NS 
+  // options:
+  // "phi:exp_exp_continuity,enthalpy:Ylm" -->
+  // 	for phi requires to be exponentially decreasing and be C^2
+  //    and for enthalpy it requires to be sum{Clm * r^-(l+1) * Ylm}. */
+  Pset_default("extrapolate_fluid_fields_method","phi:exp_continuity,enthalpy:Ylm");
 }
