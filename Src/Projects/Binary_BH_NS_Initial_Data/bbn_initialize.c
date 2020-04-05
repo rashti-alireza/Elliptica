@@ -2976,7 +2976,7 @@ static void extrapolate_insideBH(Grid_T *const grid)
 // the phi field and its normal derivative at the NS surface be
 // continues and it decreases exponentially, i.e. phi = a*exp(-att*(r-r0))+b.
 // W fields keep their forms and enthalpy is made using the general formula. */
-static void extrapolate_outsideNS_CS_continuity_method(Grid_T *const grid)
+static void extrapolate_outsideNS_CS_exp_continuity_method(Grid_T *const grid)
 {
   const double Omega_NS_x = Pgetd("NS_Omega_U0");
   const double Omega_NS_y = Pgetd("NS_Omega_U1");
@@ -3135,6 +3135,194 @@ static void extrapolate_outsideNS_CS_continuity_method(Grid_T *const grid)
     denthalpy_D0->v = Partial_Derivative(enthalpy,"x");
     
   }/* end of FOR_ALL_PATCHES(p,grid) */
+}
+
+#define ij(i,j) ((j)+Nphi*(i))
+/* extrapolating the given field outside of NS using Ylm method.
+// field(r,theta,phi) = Sum{C_lm * r^-(l+1) * Ylm(theta,phi)} 
+//
+// in this method we:
+// first : find the minimum radius of NS R_min.
+// second: finding the coeffs Clm using:
+//         field(R_min,theta,phi) = Sum{Clm * r^-(l+1) * Ylm(theta,phi)}
+// third : we interpolate using the Ylm expansion. */
+static void extrapolate_outsideNS_CS_Ylm_method(Grid_T *const grid,const char *const field_name)
+{
+  const double FRACTION = 1.;/* if you wanna use R_min = FRACTION*R_min */
+  const unsigned lmax = (unsigned)Pgeti("NS_surface_Ylm_expansion_max_l");
+  unsigned Ntheta,Nphi;/* total number of theta and phi points */
+  double *field_R_min = 0;/* field(R_min,theta,phi) */
+  double *realClm,*imagClm;/* Clm coeffs */
+  double R_min = DBL_MAX;/* min radius of NS */
+  unsigned ijk,i,j,l,m,lm,p;
+  
+  /* initialize tables */
+  init_Legendre_root_function();
+  
+  Ntheta  = Nphi = 2*lmax+1;
+  field_R_min = alloc_double(Ntheta*Nphi);
+  
+  /* find the minimum radius of on the NS surface */
+  for (i = 0; i < Ntheta; ++i)
+  {
+    double theta = acos(-Legendre_root_function(i,Ntheta));
+    for (j = 0; j < Nphi; ++j)
+    {
+      double phi = j*2*M_PI/Nphi;
+      Patch_T *patch = 0;
+      double X[3],x[3],r;
+      
+      /* find patch and X,Y,Z at NS surface in which theta and phi take place */
+      find_XYZ_and_patch_of_theta_phi_NS_CS(X,&patch,theta,phi,grid);
+      
+      /* finding x */
+      assert(x_of_X(x,X,patch));
+      x[0] -= patch->c[0];
+      x[1] -= patch->c[1];
+      x[2] -= patch->c[2];  
+      r     = root_square(3,x,0);
+      if (r < R_min)
+      {
+        R_min = r;
+      }
+    }
+  }/* end of for (i = 0; i < Ntheta; ++i) */
+  
+  R_min = FRACTION*R_min;
+  
+  /* populate field(R_min,theta,phi) */
+  for (i = 0; i < Ntheta; ++i)
+  {
+    double theta = acos(-Legendre_root_function(i,Ntheta));
+    for (j = 0; j < Nphi; ++j)
+    {
+      double phi = j*2*M_PI/Nphi;
+      Patch_T *patch = 0;
+      double X[3],x[3];
+      
+      /* find patch for the given theta and phi */
+      find_XYZ_and_patch_of_theta_phi_NS_CS(X,&patch,theta,phi,grid);
+      
+      /* r = R_min(sin(theta)cos(phi)x^+sin(theta)sin(phi)y^+cos(theta)z^) */
+      x[0]  = R_min*sin(theta)*cos(phi);
+      x[1]  = R_min*sin(theta)*sin(phi);
+      x[2]  = R_min*cos(theta);
+      x[0] += patch->c[0];
+      x[1] += patch->c[1];
+      x[2] += patch->c[2];
+      
+      assert(X_of_x(X,x,patch));
+        
+      /* find field at the (X,Y,Z) */
+      Interpolation_T *interp = init_interpolation();
+      interp->field = patch->pool[Ind(field_name)];
+      interp->XYZ_dir_flag = 1;
+      interp->X            = X[0];
+      interp->Y            = X[1];
+      interp->Z            = X[2];
+      plan_interpolation(interp);
+      field_R_min[ij(i,j)] = execute_interpolation(interp);
+      
+      free_interpolation(interp);
+    }
+  }/* end of for (i = 0; i < Ntheta; ++i) */
+  
+  /* finding Clm in the expansion:
+  // field(r,theta,phi) = Sum{Clm * r^-(l+1) * Ylm(theta,phi)} 
+  // note: the coeffs need to be multiplied by R_min^(l+1) */
+  realClm = alloc_ClmYlm(lmax);
+  imagClm = alloc_ClmYlm(lmax);
+  get_Ylm_coeffs(realClm,imagClm,field_R_min,Ntheta,Nphi,lmax);
+  
+  /* multiplying coeff by R_min^(l+1) */
+  for (l = 0; l <= lmax; ++l)
+  {
+    double mult = pow(R_min,l+1);
+    for (m = 0; m <= l; ++m)
+    {
+      lm = lm2n(l,m);
+      realClm[lm] *= mult;
+      imagClm[lm] *= mult;
+    }
+  }
+  
+  /* having found Clm's we using Ylm interpolation
+  // field(r,theta,phi) = Sum{C_lm * r^-(l+1) * Ylm(theta,phi)} 
+  // to extrapolate the field outside the NS. */
+  FOR_ALL_PATCHES(p,grid)
+  {
+    /* surrounding patch */
+    Patch_T *patch = grid->patch[p];
+    const unsigned nn = patch->nn;
+    Field_T *field;
+    double *v;
+    double x[3],r,theta,phi;
+    
+    if (!IsItNSSurroundingPatch(patch))
+      continue;
+      
+    field = patch->pool[Ind(field_name)];
+    empty_field(field);
+    field->v = alloc_double(patch->nn);
+    v = field->v;
+    
+    /* interpolate */
+    for (ijk = 0; ijk < nn; ++ijk)
+    {
+      x[0]   = patch->node[ijk]->x[0]-patch->c[0];
+      x[1]   = patch->node[ijk]->x[1]-patch->c[1];
+      x[2]   = patch->node[ijk]->x[2]-patch->c[2];
+      r      = root_square(3,x,0);
+      theta  = acos(x[2]/r);
+      phi    = arctan(x[1],x[0]);
+      v[ijk] = interpolate_Clm_r_Ylm_3d(realClm,imagClm,lmax,r,theta,phi);
+    }
+  }/* end of FOR_ALL_PATCHES(p,grid) */
+  
+  /* free */
+  _free(field_R_min);
+  _free(realClm);
+  _free(imagClm);
+}
+#ifdef ij
+#undef ij
+#endif
+
+/* given r, theta, phi, it interpolates using:
+// field(r,theta,phi) = Sum{Clm * r^-(l+1) * Ylm(theta,phi)} */
+static double interpolate_Clm_r_Ylm_3d(double *const realClm,double *const imagClm,const unsigned lmax,const double r,const double theta,const double phi)
+{
+  double interp = 0;
+  unsigned l,m,lm;
+  double rpow;
+  
+  /* multiplying coeff by r^-(l+1) */
+  for (l = 0; l <= lmax; ++l)
+  {
+    rpow = pow(r,l+1);
+    for (m = 0; m <= l; ++m)
+    {
+      lm = lm2n(l,m);
+      realClm[lm] /= rpow;
+      imagClm[lm] /= rpow;
+    }
+  }
+  
+  interp = interpolation_Ylm(realClm,imagClm,lmax,theta,phi);
+  
+  /* retuning back the coeffs => multiplying coeff by r^(l+1) */
+  for (l = 0; l <= lmax; ++l)
+  {
+    rpow = pow(r,l+1);
+    for (m = 0; m <= l; ++m)
+    {
+      lm = lm2n(l,m);
+      realClm[lm] *= rpow;
+      imagClm[lm] *= rpow;
+    }
+  }
+  
+  return interp;
 }
 
 /* extrapolating phi, dphi and W in NS surrounding coords 
@@ -5462,8 +5650,8 @@ static void extrapolate_fluid_fields_outsideNS(Grid_T *const grid)
   
   if (strcmp_i(grid->kind,"BBN_CubedSpherical_grid"))
   {
-    extrapolate_outsideNS_CS_continuity_method(grid);
-  
+    extrapolate_outsideNS_CS_exp_continuity_method(grid);
+    extrapolate_outsideNS_CS_Ylm_method(grid,"enthalpy");
     if (0)
     extrapolate_outsideNS_CS_slop_method(grid);
  

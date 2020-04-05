@@ -98,10 +98,11 @@ static double interpolate_from_patch_prim(const char *const field,const double *
 static void find_Euler_eq_const_TOV_KerrSchild(Grid_T *const grid);
 static void find_Euler_eq_const(Grid_T *const grid);
 static double Euler_eq_const_rootfinder_eq(void *params,const double *const x);
-static void extrapolate_outsideNS_CS_continuity_method(Grid_T *const grid);
+static void extrapolate_outsideNS_CS_exp_continuity_method(Grid_T *const grid);
 static void extrapolate_outsideNS_CS_slop_method(Grid_T *const grid);
+static void extrapolate_outsideNS_CS_Ylm_method(Grid_T *const grid,const char *const field_name);
+static double interpolate_Clm_r_Ylm_3d(double *const realClm,double *const imagClm,const unsigned lmax,const double r,const double theta,const double phi);
 static void extrapolate_fluid_fields_outsideNS(Grid_T *const grid);
-//static void find_NS_surface_CS_method_CS(Grid_T *const grid,struct Grid_Params_S *const GridParams);
 static void find_NS_surface_Ylm_method_CS(Grid_T *const grid,struct Grid_Params_S *const GridParams);
 static void find_XYZ_and_patch_of_theta_phi_NS_CS(double *const X,Patch_T **const ppatch,const double theta,const double phi,Grid_T *const grid);
 static void find_theta_phi_of_XYZ_NS_CS(double *const theta,double *const phi,const double *const X,const Flag_T side);
@@ -152,4 +153,5 @@ static void move_solve_man_jacobian(Patch_T *const patch2,Patch_T *const patch1)
 void bbn_free_grid_and_its_parameters(Grid_T *grid);
 static Grid_T *load_checkpoint_file(void);
 static int IsThereAnyUsefulCheckpointFile(void);
+
 
