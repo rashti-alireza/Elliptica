@@ -120,7 +120,7 @@ const unsigned Lmax/* maximum l (inclusive) for the expansion */)
 }
 
 /* ->return value: given point (theta,phi) and Ylm coeffs, 
-// it interpolation to (theta,phi) */
+// it interpolates to (theta,phi) */
 double interpolation_Ylm(const double *const realClm,const double *const imagClm,const unsigned Lmax, const double theta, const double phi)
 {
   const double sign[2] = {1.,-1.};
