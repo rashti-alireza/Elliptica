@@ -2472,8 +2472,9 @@ static void find_NS_surface_Ylm_method_CS(Grid_T *const grid,struct Grid_Params_
   double theta,phi;
   double *Rnew_NS = 0;/* new R for NS */
   double Max_R_NS = 0;/* maximum radius of NS */
+  double Min_R_NS = DBL_MAX;/* minimum radius of NS */
   double guess    = 0;
-  double *h_res  = 0;/* residual of h */
+  double *h_res   = 0;/* residual of h */
   double X[3],x[3],N[3];
   char stem[1000],*affix;
   int NS_surface_finder_work_flg = 1;/* whether surface finder worked or not */
@@ -2579,13 +2580,14 @@ static void find_NS_surface_Ylm_method_CS(Grid_T *const grid,struct Grid_Params_
       y2[1] += N[1]*dr[0];
       y2[2] += N[2]*dr[0];
       Rnew_NS[ij(i,j)] = root_square(3,y2,0);
+      free(dr);
       
       /* find the max NS radius */
       if (Rnew_NS[ij(i,j)] > Max_R_NS)
         Max_R_NS = Rnew_NS[ij(i,j)];
-        
-      free(dr);
-        
+      /* find the min NS radius */
+      if (Rnew_NS[ij(i,j)] < Min_R_NS)
+        Min_R_NS = Rnew_NS[ij(i,j)];
     }/* end of for (j = 0; j < Nphi; ++j) */
   }/* end of for (i = 0; i < Ntheta; ++i) */
   
@@ -2605,6 +2607,7 @@ static void find_NS_surface_Ylm_method_CS(Grid_T *const grid,struct Grid_Params_
   /* printing */
   
   printf("|--> Max NS radius       = %e\n",Max_R_NS);
+  printf("|--> Min NS radius       = %e\n",Min_R_NS);
   printf("|--> L2 norm of enthalpy = %e\n",L2_norm(Ntheta*Nphi,h_res,0));
   l = lmax;
   for (m = 0; m <= l; ++m)
