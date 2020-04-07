@@ -1,34 +1,34 @@
 # My Configurations:
 
 # modules to be compiled:
-modules_path += $(TOP)/Src/Main/Modules/Manifold
-modules_path += $(TOP)/Src/Main/Modules/Fields
-modules_path += $(TOP)/Src/Main/Modules/Error_Handlings
-modules_path += $(TOP)/Src/Main/Modules/Text_and_File_Tools
-modules_path += $(TOP)/Src/Main/Modules/Includes
-modules_path += $(TOP)/Src/Main/Modules/Memory_Managers
-modules_path += $(TOP)/Src/Main/Modules/Prints
-modules_path += $(TOP)/Src/Main/Modules/Utilities
-modules_path += $(TOP)/Src/Main/Modules/Maths/Linear_Algebra
-modules_path += $(TOP)/Src/Main/Modules/Maths/Field_Analysis
-modules_path += $(TOP)/Src/Main/Modules/Maths/Equation_Solvings
-modules_path += $(TOP)/Src/Main/Modules/Maths/Matrix_Solvers
-modules_path += $(TOP)/Src/Main/Modules/Maths/General
-modules_path += $(TOP)/Src/Main/Modules/Maths/Approximation
-modules_path += $(TOP)/Src/Main/Modules/Maths/Analytic
-modules_path += $(TOP)/Src/Main/Modules/Maths/Calculus
-modules_path += $(TOP)/Src/Main/Modules/Maths/Complex_Numbers
-modules_path += $(TOP)/Src/Main/Modules/Physics/StressEnergy_Tensor
-modules_path += $(TOP)/Src/Main/Modules/Physics/EoS
-modules_path += $(TOP)/Src/Main/Modules/Physics/Observables
-modules_path += $(TOP)/Src/Main/Modules/Physics/Transformation
+#modules_path += $(MODULE_DIR)/Manifold
+#modules_path += $(MODULE_DIR)/Fields
+#modules_path += $(MODULE_DIR)/Error_Handlings
+#modules_path += $(MODULE_DIR)/Text_and_File_Tools
+#modules_path += $(MODULE_DIR)/Includes
+#modules_path += $(MODULE_DIR)/Memory_Managers
+#modules_path += $(MODULE_DIR)/Prints
+#modules_path += $(MODULE_DIR)/Utilities
+#modules_path += $(MODULE_DIR)/Maths/Linear_Algebra
+#modules_path += $(MODULE_DIR)/Maths/Field_Analysis
+#modules_path += $(MODULE_DIR)/Maths/Equation_Solvings
+#modules_path += $(MODULE_DIR)/Maths/Matrix_Solvers
+#modules_path += $(MODULE_DIR)/Maths/General
+#modules_path += $(MODULE_DIR)/Maths/Approximation
+#modules_path += $(MODULE_DIR)/Maths/Analytic
+#modules_path += $(MODULE_DIR)/Maths/Calculus
+#modules_path += $(MODULE_DIR)/Maths/Complex_Numbers
+#modules_path += $(MODULE_DIR)/Physics/StressEnergy_Tensor
+#modules_path += $(MODULE_DIR)/Physics/EoS
+#modules_path += $(MODULE_DIR)/Physics/Observables
+#modules_path += $(MODULE_DIR)/Physics/Transformation
 
 # Projects to be compiled:
-projects_path += $(TOP)/Src/Projects/Projects_Setup
-projects_path += $(TOP)/Src/Projects/Poisson/Laplace_Inhom
-projects_path += $(TOP)/Src/Projects/Tests/Modules_Test
-projects_path += $(TOP)/Src/Projects/TOV_Stars
-projects_path += $(TOP)/Src/Projects/Binary_BH_NS_Initial_Data
+#projects_path += $(PROJECT_DIR)/Projects_Setup
+#projects_path += $(PROJECT_DIR)/Poisson/Laplace_Inhom
+#projects_path += $(PROJECT_DIR)/Tests/Modules_Test
+#projects_path += $(PROJECT_DIR)/TOV_Stars
+#projects_path += $(PROJECT_DIR)/Binary_BH_NS_Initial_Data
 
 
 
