@@ -5,7 +5,7 @@ modules_path += $(TOP)/Src/Main/Modules/Manifold
 modules_path += $(TOP)/Src/Main/Modules/Fields
 modules_path += $(TOP)/Src/Main/Modules/Error_Handlings
 modules_path += $(TOP)/Src/Main/Modules/Text_and_File_Tools
-#modules_path += $(TOP)/Src/Main/Modules/Includes
+modules_path += $(TOP)/Src/Main/Modules/Includes
 modules_path += $(TOP)/Src/Main/Modules/Memory_Managers
 modules_path += $(TOP)/Src/Main/Modules/Prints
 modules_path += $(TOP)/Src/Main/Modules/Utilities
@@ -57,7 +57,7 @@ WARN =# no warnings
   -fshort-enums -fno-common -Dinline= # -O3 #-fmax-errors=1 #-O2 # aggressive reliable C 11
 
 # define flags for compiler
-DEFFLAGS = -DPragma_OpenMP_2d \
+DFLAGS = -DPragma_OpenMP_2d \
 	   -DPragma_OpenMP_1d -DPragma_OpenMP_Patch
 
 

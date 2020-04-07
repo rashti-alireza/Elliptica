@@ -1,65 +1,143 @@
-# Makefile
-# Alireza Rashti, May 2018
+##################
+# Alireza Rashti #
+#                #
+# April 2020     #
+##################
 
-# Makefile Directory
-TOP := $(shell pwd)
+# Using GNU make to compile a software written in C language.
+# It uses MyConfig file to get the source files and then 
+# detects the dependencies automatically and finally after constructing
+# the libraries (shared or static) it makes the exeutable output.
+#
+# The hierarchy of the source files and libraries are like the followings:
+#
+#
+#                                  TOP
+#                                   |
+#                     +-------------+-------------+
+#                     |             |             |
+#	             Exe(exe)      Src(*.c,*.h)  Lib(*.o,*.so)
+#	                            |
+#	              +-------------+-------------+
+#	              |                           |
+#	            Main/         	       Projects/  
+#	              |                           |
+#	       +------+------+                +---+-----+
+#	       |      |      |                |         |
+#	       |   Cores/  Includes/          |      Includes/
+#	       |                              |
+#	  +----+-----+-----------+            +-------+------+
+#	  |          |           |            |       |      |
+#      Module1/   Module2/    ...             P1/     P2/    ...
+#                                             |       |
+#                                             +       +
+#                                             |       |
+#                                         Makefile  Makefile
+#
+#
+#
+#
+# usage:
+# $ make target
+#
+# example:
+# --------
+# $ make         # make the default target
+# $ make install # it installs the software
+# $ make clean   # it cleans the libraries and exe and junks
+# $ make -f makefile_name # it uses makefile_name for make
+# $ make -k # it runs and ignores the errors
+# $ make -n # it only shows the sketch of make and doesn't make anything
 
-# Lib directory
-Lib := $(TOP)/Lib
+# Top directory. see the above sketch.
+TOP :=$(shell pwd)
+# if TOP does not exist
+ifeq ($(TOP),)
+$(error $(n)"Could not find the top level directory!"$(n))
+endif
 
-# Including MyConfig which has projects and gcc flags among others
+# program name
+EXEC := Elliptica
+
+# exe directory:
+EXEC_DIR := $(TOP)/Exe
+
+# projects dir
+PROJECT_DIR := $(TOP)/Src/Projects
+
+# modules dir
+MODULE_DIR := $(TOP)/Src/Main/Modules
+
+# C compiler
+CC = gcc
+
+# some default flags for the compiler
+OFLAGS = -g
+WARN   = -Wall
+DFLAGS =
+
+# ar command to archive the object files
+AR = ar
+
+# include path
+INCS  = -I$(MODULE_DIR)/Includes
+INCS += -I$(PROJECT_DIR)/Includes
+
+# special includes
+SPECIAL_INCS =
+
+# library path
+LIBS = -L$(TOP)/Lib
+
+# special libs
+SPECIAL_LIBS =
+
+# system library
+SYSTEM_LIBS = -lm
+
+# inlcude MyConfig for more options and c source files
+modules_path  =# to be determined in MyConfig
+projects_path =# to be determined in MyConfig
 include MyConfig
 
-# Searching path for module libraries
-INCLUDE  = -I$(TOP)/Src/Main/Modules/Includes
-INCLUDE += -I$(TOP)/Src/Main/Cores
-INCLUDE += -I$(TOP)/Src/Projects/Includes
-INCLUDE += -I/usr/include/suitesparse
-INCLUDE += -I/usr/lib/gcc/x86_64-linux-gnu/6/include
+# all c file directories
+c_dirs  = $(TOP)/Src/Main/Cores
+c_dirs += $(modules_path)
+c_dirs += $(projects_path)
 
-# Compiler flags
-CFLAGS = $(GCCFLAGS) #in MyConfig
+# all c files patch
+c_paths = $(foreach dir,$(c_dirs),$(wildcard $(dir)/*.c))
 
-# Definition flags
-DFLAGS = $(DEFFLAGS) #in MyConfig
+# all compiler flags
+CFLAGS = $(DFLAGS) $(OFLAGS) $(WARN) $(INCS) $(SPECIAL_INCS)
 
-# Linking Libraries
-LDFLAGS  = -lumfpack -lblas -lgfortran -llapack
-## LDFLAGS += -lfftw3_omp -lfftw3
-LDFLAGS += -lm
-LDFLAGS += -lsiloh5
 
-## Note: the following making object is very rudimentary
-## I need to work on it more later
-# Making Object files
-c_src += $(foreach dir,$(modules_path),$(wildcard $(dir)/*.c))
-c_src += $(foreach dir,$(projects_path),$(wildcard $(dir)/*.c))
-obj = $(c_src:.c=.o)
+include $(c_paths:.c=.d)
 
-.PHONY: test
-test:$(obj)
+%.d: %.c
+	@set -e; rm -f $@;\
+        $(CC) -M $(CFLAGS) $< > $@.$$$$; \
+	sed ’s,\($*\)\.o[ :]*,\1.o $@ : ,g’ < $@.$$$$ > $@; \
+	rm -f $@.$$$$
 
-$(obj): %.c
-	@echo #"target = $@\nprerequisite = $<"
-*.c:
-	if [[ -e %.c ]];\
-	then\
-		echo "yeaa";\
-	fi
+
+# figure out the dependencies
+
+
+# make the library
+
+# make the executable
+
+#####################
+# make it more general in case if I want to remove a module or project
+# deleted
+
+
+all:
+	@echo "Lib=" $(Lib)
 	
-### Targets###
+# new line variable
+define n
 
-# Compiling abc - default target
-.PHONY: abc
-$(EXE): $(c_src)
-	$(CC) $(CFLAGS) $(DFLAGS) $(INCLUDE) -o $(EXEDIR)/$(EXE) $? $(LDFLAGS)
 
-# Cleaning the whole object and binary files 
-.PHONY: clean
-clean:
-	-rm -rf $(TOP)/Bin/$(EXE) $(TOP)/$(Lib)/* $(TOP)/*~
-	$(foreach dir, $(modules_path), rm -rf $(dir)/*.o)
-	$(foreach dir, $(projects_path), rm -rf $(dir)/*.o)
-	$(foreach dir, $(modules_path), rm -rf $(dir)/*.*~)
-	$(foreach dir, $(projects_path), rm -rf $(dir)/*.*~)
-
+endef
