@@ -35,6 +35,17 @@ LDFLAGS += -lsiloh5
 c_src += $(foreach dir,$(modules_path),$(wildcard $(dir)/*.c))
 c_src += $(foreach dir,$(projects_path),$(wildcard $(dir)/*.c))
 obj = $(c_src:.c=.o)
+
+.PHONY: test
+test:$(obj)
+
+$(obj): %.c
+	@echo #"target = $@\nprerequisite = $<"
+*.c:
+	if [[ -e %.c ]];\
+	then\
+		echo "yeaa";\
+	fi
 	
 ### Targets###
 
