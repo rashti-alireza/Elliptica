@@ -113,16 +113,25 @@ c_paths = $(foreach dir,$(c_dirs),$(wildcard $(dir)/*.c))
 CFLAGS = $(DFLAGS) $(OFLAGS) $(WARN) $(INCS) $(SPECIAL_INCS)
 
 
-#include $(c_paths:.c=.d)
-dep = $(c_paths:.c=.d)
+# finding c files inter-dependencies using DEPFLAGS flag of the compiler
+DEPFLAGS = -M
+depend_paths = $(c_paths:.c=.depend)# this substitude .c with .depend
 
-all:$(dep)
-$(dep):%.d:%.c
+.PHONY: find_interdependency
+find_interdependency: $(depend_paths)
+$(depend_paths):%.depend:%.c MyConfig# should I use myconfig here????
 	@echo $@
 	@set -e; rm -f $@;\
-        $(CC) -M $(CFLAGS) $< > $@.$$$$; \
+	$(CC) $(DEPFLAGS) $(CFLAGS) $< > $@.$$$$; \
 	sed 's,\($*\)\.o[ :]*,\1.o $@ : ,g' < $@.$$$$ > $@; \
 	rm -f $@.$$$$
+	
+# if there is no MyConfig file, use the prototype
+MyConfig:
+	-if [[ ! -f MyConfig ]];\
+	then \
+        cp Doc/MyConfig.example MyConfig; \
+        fi
 
 
 # figure out the dependencies
