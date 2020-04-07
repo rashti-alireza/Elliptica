@@ -1,10 +1,15 @@
 ##################
 # Alireza Rashti #
+#                #
 # April 2020     #
 ##################
 
-# using GNU make to compile a software written in C language
-# the hierarchy of the source files and libraries are like the followings:
+# Using GNU make to compile a software written in C language.
+# It uses MyConfig file to get the source files and then 
+# detects the dependencies automatically and finally after constructing
+# the shared library objects it makes the exeutable output.
+#
+# The hierarchy of the source files and libraries are like the followings:
 #
 #
 #                                  TOP
@@ -31,75 +36,33 @@
 #
 #
 #
+#
+# usage:
+# $ make target
+#
+# example:
+# --------
+# $ make         # make the default target
+# $ make install # it installs the software
+# $ make clean   # it cleans the libraries and exe and junks
+# $ make -f makefile_name # it uses makefile_name for make
+# $ make -k # it runs and ignores the errors
+# $ make -n # it only shows the sketch of make and doesn't make anything
 
+# define variables:
+# new line variable
+define newline
+
+
+endef
 
 # Top directory see the above sketch
-TOP := $(shell pwd)
+TOP :=$(shell pwd)
+# if TOP is does not exist
+ifeq ($(LIB),)
+$(error $(newline)"Could not find the top level directory!"$(newline))
+endif
 
-# Lib directory see the above sketch
-Lib := $(TOP)/Lib
-
-# Bin directory see the above sketch
-Bin := $(TOP)/Bin
-
-# delete the target if any error happens, 
-# it helps to compile more accurate.
-.DELETE_ON_ERROR
-
-# Including MyConfig which has projects and gcc flags among others
-include MyConfig
-
-
-# Searching path for module libraries
-INCLUDE  = -I$(TOP)/Src/Main/Modules/Includes
-INCLUDE += -I$(TOP)/Src/Main/Cores
-INCLUDE += -I$(TOP)/Src/Projects/Includes
-INCLUDE += -I/usr/include/suitesparse
-INCLUDE += -I/usr/lib/gcc/x86_64-linux-gnu/6/include
-
-# Compiler flags
-CFLAGS = $(GCCFLAGS) #in MyConfig
-
-# Definition flags
-DFLAGS = $(DEFFLAGS) #in MyConfig
-
-# Linking Libraries
-LDFLAGS  = -lumfpack -lblas -lgfortran -llapack
-## LDFLAGS += -lfftw3_omp -lfftw3
-LDFLAGS += -lm
-LDFLAGS += -lsiloh5
-
-## Note: the following making object is very rudimentary
-## I need to work on it more later
-# Making Object files
-c_src += $(foreach dir,$(modules_path),$(wildcard $(dir)/*.c))
-c_src += $(foreach dir,$(projects_path),$(wildcard $(dir)/*.c))
-obj = $(c_src:.c=.o)
-
-.PHONY: test
-test:$(obj)
-
-$(obj): %.c
-	@echo #"target = $@\nprerequisite = $<"
-*.c:
-	if [[ -e %.c ]];\
-	then\
-		echo "yeaa";\
-	fi
+all:
+	@echo "Lib=" $(Lib)
 	
-### Targets###
-
-# Compiling abc - default target
-.PHONY: abc
-$(EXE): $(c_src)
-	$(CC) $(CFLAGS) $(DFLAGS) $(INCLUDE) -o $(EXEDIR)/$(EXE) $? $(LDFLAGS)
-
-# Cleaning the whole object and binary files 
-.PHONY: clean
-clean:
-	-rm -rf $(TOP)/Bin/$(EXE) $(TOP)/$(Lib)/* $(TOP)/*~
-	$(foreach dir, $(modules_path), rm -rf $(dir)/*.o)
-	$(foreach dir, $(projects_path), rm -rf $(dir)/*.o)
-	$(foreach dir, $(modules_path), rm -rf $(dir)/*.*~)
-	$(foreach dir, $(projects_path), rm -rf $(dir)/*.*~)
-
