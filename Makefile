@@ -82,6 +82,7 @@ AR = ar
 # include path
 INCS  = -I$(MODULE_DIR)/Includes
 INCS += -I$(PROJECT_DIR)/Includes
+INCS += -I$(TOP)/Src/Main/Cores
 
 # special includes
 SPECIAL_INCS =
@@ -112,12 +113,15 @@ c_paths = $(foreach dir,$(c_dirs),$(wildcard $(dir)/*.c))
 CFLAGS = $(DFLAGS) $(OFLAGS) $(WARN) $(INCS) $(SPECIAL_INCS)
 
 
-include $(c_paths:.c=.d)
+#include $(c_paths:.c=.d)
+dep = $(c_paths:.c=.d)
 
-%.d: %.c
+all:$(dep)
+$(dep):%.d:%.c
+	@echo $@
 	@set -e; rm -f $@;\
         $(CC) -M $(CFLAGS) $< > $@.$$$$; \
-	sed ’s,\($*\)\.o[ :]*,\1.o $@ : ,g’ < $@.$$$$ > $@; \
+	sed 's,\($*\)\.o[ :]*,\1.o $@ : ,g' < $@.$$$$ > $@; \
 	rm -f $@.$$$$
 
 
@@ -133,8 +137,8 @@ include $(c_paths:.c=.d)
 # deleted
 
 
-all:
-	@echo "Lib=" $(Lib)
+#all:
+#	@echo "Lib=" $(Lib)
 	
 # new line variable
 define n
