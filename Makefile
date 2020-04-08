@@ -168,14 +168,14 @@ all: $(EXEC)| $(EXEC_DIR)
 ## make the executable out of the object files
 $(EXEC): MyConfig | $(LIB_DIR)
 	for x in $(C_DIRS); do $(MAKE) -C $$x;echo $$x; done
-#	@echo $(pr_f1) $< $(pr_f2)
+#	@echo $(PR_F1) $< $(PR_F2)
 
 #%.o : %.c
 #$(C_DIRS)/%.o: 
-#	@echo $(pr_f1) $(C_DIRS) $(pr_f2)
-#	@echo $(pr_f1) $(C_FILES) $(pr_f2)
-#	@echo $(pr_f1) $(O_DIRS) $(pr_f2)
-#	@echo $(pr_f1) $@ $(pr_f2)
+#	@echo $(PR_F1) $(C_DIRS) $(PR_F2)
+#	@echo $(PR_F1) $(C_FILES) $(PR_F2)
+#	@echo $(PR_F1) $(O_DIRS) $(PR_F2)
+#	@echo $(PR_F1) $@ $(PR_F2)
 #	#
 #	#$(CC) $(CFLAGS) -o $@ -c $<
 
@@ -184,25 +184,25 @@ $(EXEC): MyConfig | $(LIB_DIR)
 ## make object file
 #.PHONY: $(compile.o)
 #%.c:
-#	@echo $(pr_f1) $*.o $(pr_f2)
+#	@echo $(PR_F1) $*.o $(PR_F2)
 #	
 #	$(CC) $(CFLAGS) -o $@ -c $<
 	
-#@echo $(pr_f1) %.c $(pr_f2)
+#@echo $(PR_F1) %.c $(PR_F2)
 #@echo $@
 ## if EXEC_DIR does not exist make it.	
 $(EXEC_DIR):
-	@echo $(pr_f0)" mkdir $@"
+	@echo $(PR_F0)" mkdir $@"
 	@mkdir -p $@
 
 ## if LIB_DIR does not exist make it.
 $(LIB_DIR): | $(O_DIRS)
-	@echo $(pr_f0)" mkdir $@"
+	@echo $(PR_F0)" mkdir $@"
 	@mkdir -p $@
 
 ## if O_DIRS does not exist make it.
 $(O_DIRS):
-	@echo $(pr_f0)" mkdir $@"
+	@echo $(PR_F0)" mkdir $@"
 	@mkdir -p $@
 	
 #.PHONY: compile
@@ -264,19 +264,19 @@ define PR_NL
 
 endef
 # print line with -
-define pr_l0
+define PR_L0
 "-------------------------------------------------------------------------"
 endef
 # print -->
-define pr_f0
+define PR_F0
 "-->"
 endef
 # print ==>
-define pr_f1
+define PR_F1
 "==>"
 endef
 # print <==
-define pr_f2
+define PR_F2
 "<=="
 endef
 #######################################################################

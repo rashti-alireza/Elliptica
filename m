@@ -22,7 +22,9 @@ c_files := $(wildcard $(top)/*.c)
 # make directory name correspond to this directory
 o_dir := $(notdir $(top))
 o_dir := $(O_TOP)/$(o_dir)
-# object all files related to all of the c files in this directory
+# library name for this directory
+lib_name := lib$(notdir $(top)).a
+# collect all o files related to all of the c files in this directory
 o_files:= \
        $(foreach f,$(c_files),\
          $(join\
@@ -32,11 +34,16 @@ o_files:= \
            $(notdir $(f:.c=.o))\
           )\
         )
+
 #######################################################################
 ###########
 ## targets:
 ###########
-# default target to make object files
+# default target to make libaries out of object files
+make_lib: compile_o
+	@echo $(PR_F1)arching:
+	$(AR) rcs $(LIB_DIR)/$(lib_name) $(o_files)
+	
 compile_o: $(o_files)
 	@echo $(pr_f1) "object files made" $(pr_f2)
 
