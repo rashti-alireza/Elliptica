@@ -165,10 +165,6 @@ $(EXEC): $(o_files)
 $(o_dirs)/%.o: $(c_dirs)/%.c | $(LIB_DIR)
 	@echo $(pr_f1) $(c_dirs)/$*.c $(pr_f2)
 	$(CC) $(CFLAGS) -o $@ -c $<
-<<<<<<< HEAD
-=======
-	@touch $@
->>>>>>> 5a314657337ef0c869f0422f96b052f6e80f077b
 
 #%.o:%.c
 	

@@ -1,27 +1,27 @@
 # My Configurations:
 
 # modules to be compiled:
-#module += $(MODULE_DIR)/Manifold
-#module += $(MODULE_DIR)/Fields
-#module += $(MODULE_DIR)/Error_Handlings
-#module += $(MODULE_DIR)/Text_and_File_Tools
-#module += $(MODULE_DIR)/Includes
-#module += $(MODULE_DIR)/Memory_Managers
-#module += $(MODULE_DIR)/Prints
-#module += $(MODULE_DIR)/Utilities
-#module += $(MODULE_DIR)/Maths/Linear_Algebra
-#module += $(MODULE_DIR)/Maths/Field_Analysis
-#module += $(MODULE_DIR)/Maths/Equation_Solvings
-#module += $(MODULE_DIR)/Maths/Matrix_Solvers
-#module += $(MODULE_DIR)/Maths/General
-#module += $(MODULE_DIR)/Maths/Approximation
-#module += $(MODULE_DIR)/Maths/Analytic
-#module += $(MODULE_DIR)/Maths/Calculus
-#module += $(MODULE_DIR)/Maths/Complex_Numbers
-#module += $(MODULE_DIR)/Physics/StressEnergy_Tensor
-#module += $(MODULE_DIR)/Physics/EoS
-#module += $(MODULE_DIR)/Physics/Observables
-#module += $(MODULE_DIR)/Physics/Transformation
+module += $(MODULE_DIR)/Manifold
+module += $(MODULE_DIR)/Fields
+module += $(MODULE_DIR)/Error_Handlings
+module += $(MODULE_DIR)/Text_and_File_Tools
+module += $(MODULE_DIR)/Includes
+module += $(MODULE_DIR)/Memory_Managers
+module += $(MODULE_DIR)/Prints
+module += $(MODULE_DIR)/Utilities
+module += $(MODULE_DIR)/Maths/Linear_Algebra
+module += $(MODULE_DIR)/Maths/Field_Analysis
+module += $(MODULE_DIR)/Maths/Equation_Solvings
+module += $(MODULE_DIR)/Maths/Matrix_Solvers
+module += $(MODULE_DIR)/Maths/General
+module += $(MODULE_DIR)/Maths/Approximation
+module += $(MODULE_DIR)/Maths/Analytic
+module += $(MODULE_DIR)/Maths/Calculus
+module += $(MODULE_DIR)/Maths/Complex_Numbers
+module += $(MODULE_DIR)/Physics/StressEnergy_Tensor
+module += $(MODULE_DIR)/Physics/EoS
+module += $(MODULE_DIR)/Physics/Observables
+module += $(MODULE_DIR)/Physics/Transformation
 
 # Projects to be compiled:
 #project += $(PROJECT_DIR)/Projects_Setup
