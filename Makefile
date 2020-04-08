@@ -51,109 +51,146 @@
 # $ make -k # it runs and ignores the errors
 # $ make -n # it only shows the sketch of make and doesn't make anything
 
+########################################################################
+################################
+## path and name configurations:
+################################
 # Top directory. see the above sketch.
 TOP :=$(shell pwd)
 # if TOP does not exist
 ifeq ($(TOP),)
 $(error $(pr_nl)"Could not find the top level directory!"$(pr_nl))
 endif
-
 # program name exe
 EXEC := Elliptica
-
 # exe directory:
 EXEC_DIR := $(TOP)/Exe
-
 # library directory, see the above sketch
 LIB_DIR := $(TOP)/Lib
-
 # projects dir
 PROJECT_DIR := $(TOP)/Src/Projects
-
 # modules dir
 MODULE_DIR := $(TOP)/Src/Main/Modules
-
-# C compiler
+########################################################################
+##############
+## C compiler:
+##############
 CC = gcc
-
 # some default flags for the compiler
 OFLAGS = -g
 WARN   = -Wall
 DFLAGS =
-
+# finding c files inter-dependencies using DEPFLAGS flag of the compiler
+DEPFLAGS = -M
 # ar command to archive the object files
 AR = ar
-
 # include path
 INCS  = -I$(MODULE_DIR)/Includes
 INCS += -I$(PROJECT_DIR)/Includes
 INCS += -I$(TOP)/Src/Main/Cores
-
 # special includes
 SPECIAL_INCS =
-
 # library path
 LIBS = -L$(TOP)/$(LIB_DIR)
-
 # special libs
 SPECIAL_LIBS =
-
 # system library
 SYSTEM_LIBS = -lm
-
+########################################################################
+############
+## MyConfig:
+############
 # inlcude MyConfig for more options and c source files
 module  =# to be determined in MyConfig
 project =# to be determined in MyConfig
 include MyConfig
-
+########################################################################
+###########################
+## c files and directories:
+###########################
 # all c file directories
 c_dirs  = $(TOP)/Src/Main/Cores
 c_dirs += $(module)
 c_dirs += $(project)
-
+c_dirs := $(strip $(c_dirs))# strip extra spaces
 # all c file paths
-c_files = $(foreach dir,$(c_dirs),$(wildcard $(dir)/*.c))
-
-# obj names: the convention is we take the name of each c_dir
-# (last directory name) as the obj name
-obj_names := $(notdir $(c_dirs))# extract the last directory name
-obj_top   := Obj# this is the name of folder where all of object folders are
+c_files = $(foreach d,$(c_dirs),$(wildcard $(d)/*.c))
+########################################################################
+################################
+## object files and directories:
+################################
+# obj directories:
+# the convention is we take the name of each dir in c_dirs 
+# (its last directory name) as the obj directory which contains 
+# the object files compiled from all of the c files in that c_dir.
+# this is the parent dir where all of o_dirs located
+o_parent := Obj
+# extract the last directory name
+o_dirs := $(notdir $(c_dirs))
 # make the full path for the object directories
-obj_dirs  := $(foreach x,$(obj_names),$(LIB_DIR)/$(obj_top)/$(x))
-
-# all compiler flags
+o_dirs := $(foreach d,$(o_dirs),$(LIB_DIR)/$(o_parent)/$(d))
+# strip extra spaces
+o_dirs := $(strip $(o_dirs))
+# making o_files corresponding to their c files mirror
+o_files:= \
+	$(foreach f,$(c_files),\
+	  $(join\
+	    $(addprefix \
+	      $(LIB_DIR)/$(o_parent)/, $(notdir $(c_dirs))\
+	     )/,\
+	    $(notdir $(f:.c=.o))\
+	   )\
+	 )
+########################################################################
+####################
+## summery of flags:
+####################
 CFLAGS = $(DFLAGS) $(OFLAGS) $(WARN) $(INCS) $(SPECIAL_INCS)
-
 # all linking flags:
 LDFLAGS = $(LIBS) $(SPECIAL_LIBS) $(SYSTEM_LIBS)
+########################################################################
+#####################
+## rules and targets:
+#####################
 
-# finding c files inter-dependencies using DEPFLAGS flag of the compiler
-DEPFLAGS = -M
-#depend_paths = $(c_files:.c=.depend)# this substitude .c with .depend
-#obj = $(c_files:.c=.o)# this substitude .c with .depend
-
-## Default rule executed
-all: $(EXEC) | $(EXEC_DIR) $(LIB_DIR)
+## default rule to construct EXEC
+all: $(EXEC)| $(EXEC_DIR) 
 	@true
 .PHONY: all
 
-# if EXEC_DIR does not exist make it.	
+## make the executable out of the object files
+$(EXEC): $(o_files)
+	@echo $(pr_f1) $(EXEC) $(pr_f2)
+
+$(o_dirs)/%.o: $(c_dirs)/%.c | $(LIB_DIR)
+	@echo $(pr_f1) $(c_dirs)/$*.c $(pr_f2)
+	$(CC) $(CFLAGS) -o $@ -c $<
+
+#%.o:%.c
+	
+## make object file
+#.PHONY: $(compile.o)
+#%.c:
+#	@echo $(pr_f1) $*.o $(pr_f2)
+#	
+#	$(CC) $(CFLAGS) -o $@ -c $<
+	
+#@echo $(pr_f1) %.c $(pr_f2)
+#@echo $@
+## if EXEC_DIR does not exist make it.	
 $(EXEC_DIR):
 	@echo $(pr_f0)" mkdir $@"
 	@mkdir -p $@
 
-# if LIB_DIR does not exist make it.
-$(LIB_DIR): | $(obj_dirs)
+## if LIB_DIR does not exist make it.
+$(LIB_DIR): | $(o_dirs)
 	@echo $(pr_f0)" mkdir $@"
 	@mkdir -p $@
 
-# if obj_dirs does not exist make it.
-$(obj_dirs):
+## if o_dirs does not exist make it.
+$(o_dirs):
 	@echo $(pr_f0)" mkdir $@"
 	@mkdir -p $@
-
-$(EXEC):
-	@echo $(pr_f1) $(EXEC) $(pr_f2)
 	
 #.PHONY: compile
 #%.o : %.c
@@ -203,8 +240,11 @@ MyConfig:
 
 #all:
 #	@echo "Lib=" $(Lib)
-	
-# some variable for nice print:
+
+#######################################################################
+################################	
+## some variable for nice print:
+################################
 # new line variable
 define pr_nl
 
@@ -226,4 +266,5 @@ endef
 define pr_f2
 "<=="
 endef
+#######################################################################
 

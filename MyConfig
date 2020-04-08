@@ -24,11 +24,11 @@ module += $(MODULE_DIR)/Physics/Observables
 module += $(MODULE_DIR)/Physics/Transformation
 
 # Projects to be compiled:
-project += $(PROJECT_DIR)/Projects_Setup
-project += $(PROJECT_DIR)/Poisson/Laplace_Inhom
-project += $(PROJECT_DIR)/Tests/Modules_Test
-project += $(PROJECT_DIR)/TOV_Stars
-project += $(PROJECT_DIR)/Binary_BH_NS_Initial_Data
+#project += $(PROJECT_DIR)/Projects_Setup
+#project += $(PROJECT_DIR)/Poisson/Laplace_Inhom
+#project += $(PROJECT_DIR)/Tests/Modules_Test
+#project += $(PROJECT_DIR)/TOV_Stars
+#project += $(PROJECT_DIR)/Binary_BH_NS_Initial_Data
 
 
 # compiler
