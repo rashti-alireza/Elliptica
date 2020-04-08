@@ -1,34 +1,34 @@
 # My Configurations:
 
 # modules to be compiled:
-module += $(MODULE_DIR)/Manifold
-module += $(MODULE_DIR)/Fields
-module += $(MODULE_DIR)/Error_Handlings
-module += $(MODULE_DIR)/Text_and_File_Tools
-module += $(MODULE_DIR)/Includes
-module += $(MODULE_DIR)/Memory_Managers
-module += $(MODULE_DIR)/Prints
-module += $(MODULE_DIR)/Utilities
-module += $(MODULE_DIR)/Maths/Linear_Algebra
-module += $(MODULE_DIR)/Maths/Field_Analysis
-module += $(MODULE_DIR)/Maths/Equation_Solvings
-module += $(MODULE_DIR)/Maths/Matrix_Solvers
-module += $(MODULE_DIR)/Maths/General
-module += $(MODULE_DIR)/Maths/Approximation
-module += $(MODULE_DIR)/Maths/Analytic
-module += $(MODULE_DIR)/Maths/Calculus
-module += $(MODULE_DIR)/Maths/Complex_Numbers
-module += $(MODULE_DIR)/Physics/StressEnergy_Tensor
-module += $(MODULE_DIR)/Physics/EoS
-module += $(MODULE_DIR)/Physics/Observables
-module += $(MODULE_DIR)/Physics/Transformation
+MODULE += $(MODULE_DIR)/Manifold
+#MODULE += $(MODULE_DIR)/Fields
+#MODULE += $(MODULE_DIR)/Error_Handlings
+#MODULE += $(MODULE_DIR)/Text_and_File_Tools
+#MODULE += $(MODULE_DIR)/Includes
+#MODULE += $(MODULE_DIR)/Memory_Managers
+#MODULE += $(MODULE_DIR)/Prints
+#MODULE += $(MODULE_DIR)/Utilities
+#MODULE += $(MODULE_DIR)/Maths/Linear_Algebra
+#MODULE += $(MODULE_DIR)/Maths/Field_Analysis
+#MODULE += $(MODULE_DIR)/Maths/Equation_Solvings
+#MODULE += $(MODULE_DIR)/Maths/Matrix_Solvers
+#MODULE += $(MODULE_DIR)/Maths/General
+#MODULE += $(MODULE_DIR)/Maths/Approximation
+#MODULE += $(MODULE_DIR)/Maths/Analytic
+#MODULE += $(MODULE_DIR)/Maths/Calculus
+#MODULE += $(MODULE_DIR)/Maths/Complex_Numbers
+#MODULE += $(MODULE_DIR)/Physics/StressEnergy_Tensor
+#MODULE += $(MODULE_DIR)/Physics/EoS
+#MODULE += $(MODULE_DIR)/Physics/Observables
+#MODULE += $(MODULE_DIR)/Physics/Transformation
 
 # Projects to be compiled:
-#project += $(PROJECT_DIR)/Projects_Setup
-#project += $(PROJECT_DIR)/Poisson/Laplace_Inhom
-#project += $(PROJECT_DIR)/Tests/Modules_Test
-#project += $(PROJECT_DIR)/TOV_Stars
-#project += $(PROJECT_DIR)/Binary_BH_NS_Initial_Data
+#PROJECT += $(PROJECT_DIR)/Projects_Setup
+#PROJECT += $(PROJECT_DIR)/Poisson/Laplace_Inhom
+#PROJECT += $(PROJECT_DIR)/Tests/Modules_Test
+#PROJECT += $(PROJECT_DIR)/TOV_Stars
+#PROJECT += $(PROJECT_DIR)/Binary_BH_NS_Initial_Data
 
 
 # compiler

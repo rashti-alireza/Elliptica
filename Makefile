@@ -31,8 +31,8 @@
 #	  +----+-----+-----------+            +-------+------+
 #	  |          |           |            |       |      |
 #      Module1/   Module2/    ...             P1/     P2/    ...
-#                                             |       |
-#                                             +       +
+#         |          |                        |       |
+#      Makefile   Makefile                    |       |
 #                                             |       |
 #                                         Makefile  Makefile
 #
@@ -50,16 +50,20 @@
 # $ make -f makefile_name # it uses makefile_name for make
 # $ make -k # it runs and ignores the errors
 # $ make -n # it only shows the sketch of make and doesn't make anything
-
+# $ make -C dir # means cd to dir and then invoke make
+#
+#
+# NOTE: in the following the capital words are exported and 
+# small words are local.
 ########################################################################
-################################
-## path and name configurations:
-################################
+#######################
+## paths and variables:
+#######################
 # Top directory. see the above sketch.
 TOP :=$(shell pwd)
 # if TOP does not exist
 ifeq ($(TOP),)
-$(error $(pr_nl)"Could not find the top level directory!"$(pr_nl))
+$(error $(PR_NL)"Could not find the top level directory!"$(PR_NL))
 endif
 # program name exe
 EXEC := Elliptica
@@ -101,46 +105,47 @@ SYSTEM_LIBS = -lm
 ## MyConfig:
 ############
 # inlcude MyConfig for more options and c source files
-module  =# to be determined in MyConfig
-project =# to be determined in MyConfig
+MODULE  =# to be determined in MyConfig
+PROJECT =# to be determined in MyConfig
 include MyConfig
 ########################################################################
 ###########################
 ## c files and directories:
 ###########################
 # all c file directories
-c_dirs  = $(TOP)/Src/Main/Cores
-c_dirs += $(module)
-c_dirs += $(project)
-c_dirs := $(strip $(c_dirs))# strip extra spaces
+C_DIRS  = $(TOP)/Src/Main/Cores
+C_DIRS += $(MODULE)
+C_DIRS += $(PROJECT)
+C_DIRS := $(strip $(C_DIRS))# strip extra spaces
 # all c file paths
-c_files = $(foreach d,$(c_dirs),$(wildcard $(d)/*.c))
+C_FILES = $(foreach d,$(C_DIRS),$(wildcard $(d)/*.c))
 ########################################################################
 ################################
 ## object files and directories:
 ################################
 # obj directories:
-# the convention is we take the name of each dir in c_dirs 
+# the convention is we take the name of each dir in C_DIRS 
 # (its last directory name) as the obj directory which contains 
 # the object files compiled from all of the c files in that c_dir.
-# this is the parent dir where all of o_dirs located
-o_parent := Obj
+# this is the parent dir where all of O_DIRS located
+O_TOP := $(LIB_DIR)/Obj
 # extract the last directory name
-o_dirs := $(notdir $(c_dirs))
+O_DIRS := $(notdir $(C_DIRS))
 # make the full path for the object directories
-o_dirs := $(foreach d,$(o_dirs),$(LIB_DIR)/$(o_parent)/$(d))
+O_DIRS := $(foreach d,$(O_DIRS),$(O_TOP)/$(d))
 # strip extra spaces
-o_dirs := $(strip $(o_dirs))
+O_DIRS := $(strip $(O_DIRS))
 # making o_files corresponding to their c files mirror
-o_files:= \
-	$(foreach f,$(c_files),\
-	  $(join\
-	    $(addprefix \
-	      $(LIB_DIR)/$(o_parent)/, $(notdir $(c_dirs))\
-	     )/,\
-	    $(notdir $(f:.c=.o))\
-	   )\
-	 )
+#o_files := $(C_FILES:%.c=%.o);
+#o_files:= \
+#	$(foreach f,$(C_FILES),\
+#	  $(join\
+#	    $(addprefix \
+#	      $(LIB_DIR)/$(O_DIR)/, $(notdir $(C_DIRS))\
+#	     )/,\
+#	    $(notdir $(f:.c=.o))\
+#	   )\
+#	 )
 ########################################################################
 ####################
 ## summery of flags:
@@ -153,18 +158,26 @@ LDFLAGS = $(LIBS) $(SPECIAL_LIBS) $(SYSTEM_LIBS)
 ## rules and targets:
 #####################
 
+export
+
 ## default rule to construct EXEC
 all: $(EXEC)| $(EXEC_DIR) 
 	@true
 .PHONY: all
 
 ## make the executable out of the object files
-$(EXEC): $(o_files)
-	@echo $(pr_f1) $(EXEC) $(pr_f2)
+$(EXEC): MyConfig | $(LIB_DIR)
+	for x in $(C_DIRS); do $(MAKE) -C $$x;echo $$x; done
+#	@echo $(pr_f1) $< $(pr_f2)
 
-$(o_dirs)/%.o: $(c_dirs)/%.c | $(LIB_DIR)
-	@echo $(pr_f1) $(c_dirs)/$*.c $(pr_f2)
-	$(CC) $(CFLAGS) -o $@ -c $<
+#%.o : %.c
+#$(C_DIRS)/%.o: 
+#	@echo $(pr_f1) $(C_DIRS) $(pr_f2)
+#	@echo $(pr_f1) $(C_FILES) $(pr_f2)
+#	@echo $(pr_f1) $(O_DIRS) $(pr_f2)
+#	@echo $(pr_f1) $@ $(pr_f2)
+#	#
+#	#$(CC) $(CFLAGS) -o $@ -c $<
 
 #%.o:%.c
 	
@@ -183,12 +196,12 @@ $(EXEC_DIR):
 	@mkdir -p $@
 
 ## if LIB_DIR does not exist make it.
-$(LIB_DIR): | $(o_dirs)
+$(LIB_DIR): | $(O_DIRS)
 	@echo $(pr_f0)" mkdir $@"
 	@mkdir -p $@
 
-## if o_dirs does not exist make it.
-$(o_dirs):
+## if O_DIRS does not exist make it.
+$(O_DIRS):
 	@echo $(pr_f0)" mkdir $@"
 	@mkdir -p $@
 	
@@ -246,7 +259,7 @@ MyConfig:
 ## some variable for nice print:
 ################################
 # new line variable
-define pr_nl
+define PR_NL
 
 
 endef
