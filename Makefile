@@ -55,14 +55,17 @@
 TOP :=$(shell pwd)
 # if TOP does not exist
 ifeq ($(TOP),)
-$(error $(n)"Could not find the top level directory!"$(n))
+$(error $(pr_nl)"Could not find the top level directory!"$(pr_nl))
 endif
 
-# program name
+# program name exe
 EXEC := Elliptica
 
 # exe directory:
 EXEC_DIR := $(TOP)/Exe
+
+# library directory, see the above sketch
+LIB_DIR := $(TOP)/Lib
 
 # projects dir
 PROJECT_DIR := $(TOP)/Src/Projects
@@ -90,7 +93,7 @@ INCS += -I$(TOP)/Src/Main/Cores
 SPECIAL_INCS =
 
 # library path
-LIBS = -L$(TOP)/Lib
+LIBS = -L$(TOP)/$(LIB_DIR)
 
 # special libs
 SPECIAL_LIBS =
@@ -99,17 +102,17 @@ SPECIAL_LIBS =
 SYSTEM_LIBS = -lm
 
 # inlcude MyConfig for more options and c source files
-modules_path  =# to be determined in MyConfig
-projects_path =# to be determined in MyConfig
+module  =# to be determined in MyConfig
+project =# to be determined in MyConfig
 include MyConfig
 
 # all c file directories
 c_dirs  = $(TOP)/Src/Main/Cores
-c_dirs += $(modules_path)
-c_dirs += $(projects_path)
+c_dirs += $(module)
+c_dirs += $(project)
 
-# all c files patch
-c_paths = $(foreach dir,$(c_dirs),$(wildcard $(dir)/*.c))
+# all c file paths
+c_files = $(foreach dir,$(c_dirs),$(wildcard $(dir)/*.c))
 
 # all compiler flags
 CFLAGS = $(DFLAGS) $(OFLAGS) $(WARN) $(INCS) $(SPECIAL_INCS)
@@ -119,31 +122,53 @@ LDFLAGS = $(LIBS) $(SPECIAL_LIBS) $(SYSTEM_LIBS)
 
 # finding c files inter-dependencies using DEPFLAGS flag of the compiler
 DEPFLAGS = -M
-depend_paths = $(c_paths:.c=.depend)# this substitude .c with .depend
-obj = $(c_paths:.c=.o)# this substitude .c with .depend
+#depend_paths = $(c_files:.c=.depend)# this substitude .c with .depend
+#obj = $(c_files:.c=.o)# this substitude .c with .depend
+
+## Default rule executed
+all: $(EXEC) | $(EXEC_DIR) $(LIB_DIR)
+	@true
+.PHONY: all
+
+# if EXEC_DIR does not exist make it.	
+$(EXEC_DIR):
+	@mkdir -p $@
+
+# if LIB_DIR does not exist make it.	
+$(LIB_DIR):
+	@echo $(pr_f0)" mkdir $@"
+	@mkdir -p $@
 
 
-
+$(EXEC):
+	@echo $(pr_l0)
+	@echo "hi"
+	
 #.PHONY: compile
-compile: find_interdependency $(obj)
-	$(CC) $(CFLAGS) -o $(EXEC_DIR)/$(EXEC) $(obj) $(LDFLAGS)
+#%.o : %.c
+#%.o: %.c
+#	$(CC) $(CFLAGS) -c $< -o $@
+	
+#compile: $(obj)
+#	$(CC) $(CFLAGS) -o $(EXEC_DIR)/$(EXEC) $(obj) $(LDFLAGS)
 
-.PHONY: find_interdependency
-find_interdependency: $(depend_paths)
-$(depend_paths):%.depend:%.c MyConfig# should I use myconfig here????
-	@echo $@
-	@set -e; rm -f $@;\
-	$(CC) $(DEPFLAGS) $(CFLAGS) $< > $@.$$$$; \
-	sed 's,\($*\)\.o[ :]*,\1.o $@ : ,g' < $@.$$$$ > $@; \
-	rm -f $@.$$$$
+#.PHONY: find_interdependency
+#find_interdependency: $(depend_paths)
+#$(depend_paths):%.depend:%.c MyConfig# should I use myconfig here????
+#	@echo $@
+#	@set -e; rm -f $@;\
+#	$(CC) $(DEPFLAGS) $(CFLAGS) $< > $@.$$$$; \
+#	sed 's,\($*\)\.o[ :]*,\1.o $@ : ,g' < $@.$$$$ > $@; \
+#	rm -f $@.$$$$
 
-.PHONY:print
-print:find_interdependency
-	@echo "starts here:\n"$(depend_paths) | tr " " "\n"
+#.PHONY:print
+#print:find_interdependency
+#	@echo "starts here:\n"$(depend_paths) | tr " " "\n"
 
 # now include all of the inter-dependency files
 #include $(depend_paths)
-include $(wildcard $(depend_paths))
+#$(depend_files):
+#include $(wildcard $(depend_paths))
 
 # if there is no MyConfig file, use the prototype
 MyConfig:
@@ -168,8 +193,26 @@ MyConfig:
 #all:
 #	@echo "Lib=" $(Lib)
 	
+# some variable for nice print:
 # new line variable
-define n
+define pr_nl
 
 
 endef
+# print line with -
+define pr_l0
+"-------------------------------------------------------------------------"
+endef
+# print -->
+define pr_f0
+"-->"
+endef
+# print ==>
+define pr_f1
+"==>"
+endef
+# print <==
+define pr_f2
+"<=="
+endef
+
