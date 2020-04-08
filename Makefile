@@ -8,6 +8,8 @@
 # It uses MyConfig file to get the source files and then 
 # detects the dependencies automatically and finally after constructing
 # the libraries (shared or static) it makes the exeutable output.
+# A complete documentation can be found:
+# https://www.gnu.org/software/make/manual/
 #
 # The hierarchy of the source files and libraries are like the followings:
 #
@@ -112,10 +114,19 @@ c_paths = $(foreach dir,$(c_dirs),$(wildcard $(dir)/*.c))
 # all compiler flags
 CFLAGS = $(DFLAGS) $(OFLAGS) $(WARN) $(INCS) $(SPECIAL_INCS)
 
+# all linking flags:
+LDFLAGS = $(LIBS) $(SPECIAL_LIBS) $(SYSTEM_LIBS)
 
 # finding c files inter-dependencies using DEPFLAGS flag of the compiler
 DEPFLAGS = -M
 depend_paths = $(c_paths:.c=.depend)# this substitude .c with .depend
+obj = $(c_paths:.c=.o)# this substitude .c with .depend
+
+
+
+#.PHONY: compile
+compile: find_interdependency $(obj)
+	$(CC) $(CFLAGS) -o $(EXEC_DIR)/$(EXEC) $(obj) $(LDFLAGS)
 
 .PHONY: find_interdependency
 find_interdependency: $(depend_paths)
@@ -125,7 +136,15 @@ $(depend_paths):%.depend:%.c MyConfig# should I use myconfig here????
 	$(CC) $(DEPFLAGS) $(CFLAGS) $< > $@.$$$$; \
 	sed 's,\($*\)\.o[ :]*,\1.o $@ : ,g' < $@.$$$$ > $@; \
 	rm -f $@.$$$$
-	
+
+.PHONY:print
+print:find_interdependency
+	@echo "starts here:\n"$(depend_paths) | tr " " "\n"
+
+# now include all of the inter-dependency files
+#include $(depend_paths)
+include $(wildcard $(depend_paths))
+
 # if there is no MyConfig file, use the prototype
 MyConfig:
 	-if [[ ! -f MyConfig ]];\

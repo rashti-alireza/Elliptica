@@ -5,30 +5,30 @@ modules_path += $(MODULE_DIR)/Manifold
 modules_path += $(MODULE_DIR)/Fields
 modules_path += $(MODULE_DIR)/Error_Handlings
 modules_path += $(MODULE_DIR)/Text_and_File_Tools
-#modules_path += $(MODULE_DIR)/Includes
-#modules_path += $(MODULE_DIR)/Memory_Managers
-#modules_path += $(MODULE_DIR)/Prints
-#modules_path += $(MODULE_DIR)/Utilities
-#modules_path += $(MODULE_DIR)/Maths/Linear_Algebra
-#modules_path += $(MODULE_DIR)/Maths/Field_Analysis
-#modules_path += $(MODULE_DIR)/Maths/Equation_Solvings
-#modules_path += $(MODULE_DIR)/Maths/Matrix_Solvers
-#modules_path += $(MODULE_DIR)/Maths/General
-#modules_path += $(MODULE_DIR)/Maths/Approximation
-#modules_path += $(MODULE_DIR)/Maths/Analytic
-#modules_path += $(MODULE_DIR)/Maths/Calculus
-#modules_path += $(MODULE_DIR)/Maths/Complex_Numbers
-#modules_path += $(MODULE_DIR)/Physics/StressEnergy_Tensor
-#modules_path += $(MODULE_DIR)/Physics/EoS
-#modules_path += $(MODULE_DIR)/Physics/Observables
+modules_path += $(MODULE_DIR)/Includes
+modules_path += $(MODULE_DIR)/Memory_Managers
+modules_path += $(MODULE_DIR)/Prints
+modules_path += $(MODULE_DIR)/Utilities
+modules_path += $(MODULE_DIR)/Maths/Linear_Algebra
+modules_path += $(MODULE_DIR)/Maths/Field_Analysis
+modules_path += $(MODULE_DIR)/Maths/Equation_Solvings
+modules_path += $(MODULE_DIR)/Maths/Matrix_Solvers
+modules_path += $(MODULE_DIR)/Maths/General
+modules_path += $(MODULE_DIR)/Maths/Approximation
+modules_path += $(MODULE_DIR)/Maths/Analytic
+modules_path += $(MODULE_DIR)/Maths/Calculus
+modules_path += $(MODULE_DIR)/Maths/Complex_Numbers
+modules_path += $(MODULE_DIR)/Physics/StressEnergy_Tensor
+modules_path += $(MODULE_DIR)/Physics/EoS
+modules_path += $(MODULE_DIR)/Physics/Observables
 modules_path += $(MODULE_DIR)/Physics/Transformation
 
 # Projects to be compiled:
-#projects_path += $(PROJECT_DIR)/Projects_Setup
-#projects_path += $(PROJECT_DIR)/Poisson/Laplace_Inhom
-#projects_path += $(PROJECT_DIR)/Tests/Modules_Test
-#projects_path += $(PROJECT_DIR)/TOV_Stars
-#projects_path += $(PROJECT_DIR)/Binary_BH_NS_Initial_Data
+projects_path += $(PROJECT_DIR)/Projects_Setup
+projects_path += $(PROJECT_DIR)/Poisson/Laplace_Inhom
+projects_path += $(PROJECT_DIR)/Tests/Modules_Test
+projects_path += $(PROJECT_DIR)/TOV_Stars
+projects_path += $(PROJECT_DIR)/Binary_BH_NS_Initial_Data
 
 
 # compiler
@@ -36,13 +36,13 @@ modules_path += $(MODULE_DIR)/Physics/Transformation
 CC = gcc
 
 # compiler flags
-OFLAGS = -fopenmp -g3
-#OFLAGS = -fopenmp -O3
-#OFLAGS = -fopenmp -g3 #-g3 #-O3 #-Wall -W # mild
+OFLAGS += -fopenmp -g3
+#OFLAGS += -fopenmp -O3
+#OFLAGS += -fopenmp -g3 #-g3 #-O3 #-Wall -W # mild
 
 # warninng flags for the compiler
-#WARN =# no warnings
-WARN = -std=c11 -pedantic -Wextra -Werror -Wall -W \
+#WARN +=# no warnings
+#WARN += -std=c11 -pedantic -Wextra -Werror -Wall -W \
   -Wmissing-prototypes -Wstrict-prototypes\
   -Wconversion -Wshadow -Wpointer-arith\
   -Wcast-qual -Wcast-align\
@@ -50,8 +50,7 @@ WARN = -std=c11 -pedantic -Wextra -Werror -Wall -W \
   -fshort-enums -fno-common -Dinline= # -O3 #-fmax-errors=1 #-O2 # aggressive reliable C 11
 
 # define flags for compiler
-DFLAGS = -DPragma_OpenMP_2d \
-	   -DPragma_OpenMP_1d -DPragma_OpenMP_Patch
+DFLAGS += -DPragma_OpenMP_2d -DPragma_OpenMP_1d -DPragma_OpenMP_Patch
 
 
 # special includes for suit-sparse and related
