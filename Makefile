@@ -114,6 +114,13 @@ c_dirs += $(project)
 # all c file paths
 c_files = $(foreach dir,$(c_dirs),$(wildcard $(dir)/*.c))
 
+# obj names: the convention is we take the name of each c_dir
+# (last directory name) as the obj name
+obj_names := $(notdir $(c_dirs))# extract the last directory name
+obj_top   := Obj# this is the name of folder where all of object folders are
+# make the full path for the object directories
+obj_dirs  := $(foreach x,$(obj_names),$(LIB_DIR)/$(obj_top)/$(x))
+
 # all compiler flags
 CFLAGS = $(DFLAGS) $(OFLAGS) $(WARN) $(INCS) $(SPECIAL_INCS)
 
@@ -132,17 +139,21 @@ all: $(EXEC) | $(EXEC_DIR) $(LIB_DIR)
 
 # if EXEC_DIR does not exist make it.	
 $(EXEC_DIR):
-	@mkdir -p $@
-
-# if LIB_DIR does not exist make it.	
-$(LIB_DIR):
 	@echo $(pr_f0)" mkdir $@"
 	@mkdir -p $@
 
+# if LIB_DIR does not exist make it.
+$(LIB_DIR): | $(obj_dirs)
+	@echo $(pr_f0)" mkdir $@"
+	@mkdir -p $@
+
+# if obj_dirs does not exist make it.
+$(obj_dirs):
+	@echo $(pr_f0)" mkdir $@"
+	@mkdir -p $@
 
 $(EXEC):
-	@echo $(pr_l0)
-	@echo "hi"
+	@echo $(pr_f1) $(EXEC) $(pr_f2)
 	
 #.PHONY: compile
 #%.o : %.c
