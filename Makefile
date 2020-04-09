@@ -83,7 +83,7 @@ CORE_DIR := Core
 ##############
 ## C compiler:
 ##############
-CC = gcc
+CC     = gcc
 # some default flags for the compiler
 OFLAGS = -g
 WARN   = -Wall
@@ -98,14 +98,14 @@ INCS += -I$(PROJECT_DIR)/Includes
 INCS += -I$(TOP)/Src/Main/$(CORE_DIR)
 # special includes
 SPECIAL_INCS =
-# library path
-C_LIB_PATH = -L$(LIB_DIR)
+# libs from compiling of c files of modules and projects
+C_LIBS=
+# search path for C_LIBS
+C_LIBS_PATH = -L$(LIB_DIR)
 # special libs
 SPECIAL_LIBS =
 # system library
 SYSTEM_LIBS = -lm
-# libs from compiling of c files of modules and projects
-C_LIBS=
 ########################################################################
 ############
 ## MyConfig:
@@ -123,8 +123,10 @@ C_DIRS  = $(TOP)/Src/Main/$(CORE_DIR)
 C_DIRS += $(MODULE)
 C_DIRS += $(PROJECT)
 C_DIRS := $(strip $(C_DIRS))# strip extra spaces
+# strip the last slash if any:
+C_DIRS := $(foreach d,$(C_DIRS),$(patsubst %/,%,$d))
 # all c file paths
-C_FILES = $(foreach d,$(C_DIRS),$(wildcard $(d)/*.c))
+C_FILES = $(foreach d,$(C_DIRS),$(wildcard $d/*.c))
 # obj directories:
 # the convention is we take the name of each dir in C_DIRS 
 # (its last directory name) as the obj directory which contains 
@@ -150,23 +152,25 @@ C_LIBS += $(C_LIBS)
 # compiler flags:
 CFLAGS = $(DFLAGS) $(OFLAGS) $(WARN) $(INCS) $(SPECIAL_INCS)
 # all linking flags, Note: the order matters!
-LDFLAGS = $(C_LIB_PATH) $(C_LIBS) $(SPECIAL_LIBS) $(SYSTEM_LIBS)
+LDFLAGS = $(C_LIBS_PATH) $(C_LIBS) $(SPECIAL_LIBS) $(SYSTEM_LIBS)
+
 # exporting to other submake
 export
 ########################################################################
 #####################
 ## rules and targets:
 #####################
-# main.o corresponds to main.c
+## main.o corresponds to main.c
 MAIN := $(O_TOP)/$(CORE_DIR)/main.o
+##
 ## default rule to construct EXEC
 all: $(EXEC)
 	@true
 .PHONY: all
-
+##
 ## make the executable out of the object files
-$(EXEC): MyConfig | $(LIB_DIR) $(EXEC_DIR)
-	for x in $(C_DIRS); do $(MAKE) -C $$x;echo $$x; done
+$(EXEC): MyConfig $(H_FILES) | $(LIB_DIR) $(EXEC_DIR)
+	@for d in $(C_DIRS); do $(MAKE) -C $$d; done
 	$(CC) $(CFLAGS) -o $(EXEC_DIR)/$@ $(MAIN) $(LDFLAGS)
 
 ## if EXEC_DIR does not exist make it.	
@@ -186,7 +190,7 @@ $(O_DIRS):
 	
 # if there is no MyConfig file, use the prototype
 MyConfig:
-	-if [[ ! -f MyConfig ]];\
+	-if [ ! -f MyConfig ];\
 	then \
         cp Doc/MyConfig.example MyConfig; \
         fi
