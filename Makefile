@@ -7,7 +7,7 @@
 # Using GNU make to compile a software written in C language.
 # It uses MyConfig file to get the source files and then 
 # detects the dependencies automatically and finally after constructing
-# the libraries (shared or static) it makes the exeutable output.
+# the libraries (shared or static) it makes the executable output.
 # A complete documentation can be found:
 # https://www.gnu.org/software/make/manual/
 #
@@ -26,15 +26,17 @@
 #	              |                           |
 #	       +------+------+                +---+-----+
 #	       |      |      |                |         |
-#	       |   Core/  Includes/          |      Includes/
+#	       |    Core/  Includes/          |      Includes/
+#              |      |                       |
+#              |    main.c,makefile,...       |
 #	       |                              |
 #	  +----+-----+-----------+            +-------+------+
 #	  |          |           |            |       |      |
 #      Module1/   Module2/    ...             P1/     P2/    ...
 #         |          |                        |       |
-#      Makefile   Makefile                    |       |
+#      makefile   makefile                    |       |
 #                                             |       |
-#                                         Makefile  Makefile
+#                                         makefile  makefile
 #
 #
 #
@@ -66,7 +68,7 @@ ifeq ($(TOP),)
 $(error $(PR_NL)"Could not find the top level directory!"$(PR_NL))
 endif
 # program name exe
-EXEC := Elliptica
+EXEC := elliptica
 # exe directory:
 EXEC_DIR := $(TOP)/Exe
 # library directory, see the above sketch
@@ -75,8 +77,8 @@ LIB_DIR := $(TOP)/Lib
 PROJECT_DIR := $(TOP)/Src/Projects
 # modules dir
 MODULE_DIR := $(TOP)/Src/Main/Modules
-# core directory:
-CORE_DIR := Cores
+# core directory, where main.c is, see the above sketch
+CORE_DIR := Core
 ########################################################################
 ##############
 ## C compiler:
@@ -117,7 +119,7 @@ include MyConfig
 ## c sources and object sources:
 ################################
 # all c file directories
-C_DIRS  = $(TOP)/Src/Main/Cores
+C_DIRS  = $(TOP)/Src/Main/$(CORE_DIR)
 C_DIRS += $(MODULE)
 C_DIRS += $(PROJECT)
 C_DIRS := $(strip $(C_DIRS))# strip extra spaces
@@ -147,8 +149,8 @@ C_LIBS += $(C_LIBS)
 C_LIBS += $(C_LIBS)
 # compiler flags:
 CFLAGS = $(DFLAGS) $(OFLAGS) $(WARN) $(INCS) $(SPECIAL_INCS)
-# all linking flags, 
-LDFLAGS = $(C_LIB_PATH) $(SPECIAL_LIBS) $(C_LIBS) $(SYSTEM_LIBS)
+# all linking flags, Note: the order matters!
+LDFLAGS = $(C_LIB_PATH) $(C_LIBS) $(SPECIAL_LIBS) $(SYSTEM_LIBS)
 # exporting to other submake
 export
 ########################################################################
