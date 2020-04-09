@@ -16,7 +16,9 @@
 ## variables:
 #############
 # where I am:
-top=$(shell pwd)
+top   := $(shell pwd)
+# c directory
+c_dir := $(top)
 # find all of c files to be compiled in this directory
 c_files := $(wildcard $(top)/*.c)
 # make directory name correspond to this directory
@@ -35,12 +37,12 @@ o_files:= \
           )\
         )
 # dependency directory
-dep_dir := $(top)/.dep
+d_dir := $(top)/.dep
 # dependency files
 d_files := \
        $(foreach f,$(c_files),\
          $(join\
-	   $(dep_dir)/,\
+	   $(d_dir)/,\
            $(notdir $(f:.c=.d))\
           )\
         )
@@ -55,29 +57,39 @@ make_lib: compile_o
 	$(AR) rcs $(LIB_DIR)/$(lib_name) $(o_files)
 	
 compile_o: $(o_files)
-	@echo $(pr_f1) "object files made" $(pr_f2)
+#	@echo $(PR_F1) $(c_dir) $(PR_F2)
+#	@echo $(PR_F1) $(c_files) $(PR_F2)
+	@echo $(PR_F1) $(o_files) $(PR_F2)
+#	@echo $(PR_F1) $(o_dir) $(PR_F2)
 
-# using string % to make the object file accoding to its c file.
+# using string % to make the object file according to its c file.
 # then put the resultant into $(o_dir)/$*.o.
-$(o_dir)/%.o: $(d_files) | $(dep_dir)
-#	@echo Making object file for :
-#	@echo $(pr_f1); echo $(top) | grep -o '/Src/*' $(pr_f2)
-#	@echo
+$(o_dir)/%.o :$(c_dir)/%.c  | $(d_files) 
 	$(CC) $(CFLAGS) -o $(o_dir)/$*.o -c $<
-
+#
+#
+#	@echo Making object file for :
+#	@echo $(PR_F1); echo $(top) | grep -o '/Src/*' $(PR_F2)
+#	@echo
+#	
 # figuring out the inter dependencies
 #%.o : %.c
-%.d:%.c
-	set -e; rm -f $@;\
-	$(CC) $(DEPFLAGS) $(CFLAGS) $< > $@.$$$$; \
-	sed 's,\($*\)\.o[ :]*,\1.o $@ : ,g' < $@.$$$$ > $@; \
-	rm -f $@.$$$$
+$(d_dir)/%.d : $(c_dir)/%.c | $(d_dir)
+	$(SHELL) -ec "cp -v $(c_dir)/$*.c  $@"
+#
+#	$(shell "cp -v $(c_dir)/$*.c  $@")
+
+##
+#	set -e; rm -f $@;\
+#	$(CC) $(DEPFLAGS) $(CFLAGS) $< > $@.$$$$; \
+#	sed 's,\($*\)\.o[ :]*,\1.o $@ : ,g' < $@.$$$$ > $@; \
+#	rm -f $@.$$$$
 
 # making dep_dir if does not exist
-$(dep_dir):
+$(d_dir):
 	@mkdir -p $@
 
-include $(wildcard $(dep_dir)/*.d)
+#include $(wildcard $(d_dir)/*.d)
 
-.PHONY: compile_o make_lib
+#.PHONY: compile_o make_lib
 ########################################################################
