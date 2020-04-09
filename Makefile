@@ -176,12 +176,13 @@ all: $(EXEC)
 ##
 ## make the executable out of the object files
 $(EXEC): MyConfig $(H_FILES) | $(LIB_DIR) $(EXEC_DIR)
+	@echo $(PR_F0) "compiling '$(EXEC)':"
 	@for d in $(C_DIRS); do $(MAKE) -C $$d; done
 	$(CC) $(CFLAGS) -o $(EXEC_DIR)/$@ $(MAIN) $(LDFLAGS)
 ##
 ## if EXEC_DIR does not exist make it.	
 $(EXEC_DIR):
-	@echo $(PR_F0)" mkdir $@"
+	@echo $(PR_F0) "mkdir" $(call GET_RELATIVE_PATH,$@)
 	@mkdir -p $@
 ##
 ## if LIB_DIR does not exist make it.
@@ -201,9 +202,10 @@ MyConfig:
         cp Doc/MyConfig.example MyConfig; \
         fi
 #######################################################################
-################################	
-## some variable for nice print:
-################################
+#############################
+## some tools for nice print:
+#############################
+SED := sed
 # new line variable
 define PR_NL
 
@@ -224,6 +226,11 @@ endef
 # print <==
 define PR_F2
 "<=="
+endef
+# get a directory and make it into relative path with respect to TOP
+define GET_RELATIVE_PATH
+"$(1)" | $(SED) 's,$(TOP),.,g' | $(SED) "s,\(.*\),'\1',g"
+
 endef
 #######################################################################
 
