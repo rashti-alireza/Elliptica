@@ -127,6 +127,9 @@ C_DIRS := $(strip $(C_DIRS))# strip extra spaces
 C_DIRS := $(foreach d,$(C_DIRS),$(patsubst %/,%,$d))
 # all c file paths
 C_FILES = $(foreach d,$(C_DIRS),$(wildcard $d/*.c))
+# all header files in INCLUDES directories
+H_FILES  = $(wildcard $(MODULE_DIR)/Includes/*.h)
+H_FILES += $(wildcard $(PROJECT_DIR)/Includes/*.h)
 # obj directories:
 # the convention is we take the name of each dir in C_DIRS 
 # (its last directory name) as the obj directory which contains 
@@ -165,6 +168,9 @@ MAIN := $(O_TOP)/$(CORE_DIR)/main.o
 ##
 ## default rule to construct EXEC
 all: $(EXEC)
+	@echo $(PR_L0)"\n\n"
+	@echo $(PR_F1) "successful compilation for '$(EXEC)'"
+	@echo $(PR_F1) "find '$(EXEC)' at '$(EXEC_DIR)'""\n\n"
 	@true
 .PHONY: all
 ##
@@ -172,23 +178,23 @@ all: $(EXEC)
 $(EXEC): MyConfig $(H_FILES) | $(LIB_DIR) $(EXEC_DIR)
 	@for d in $(C_DIRS); do $(MAKE) -C $$d; done
 	$(CC) $(CFLAGS) -o $(EXEC_DIR)/$@ $(MAIN) $(LDFLAGS)
-
+##
 ## if EXEC_DIR does not exist make it.	
 $(EXEC_DIR):
 	@echo $(PR_F0)" mkdir $@"
 	@mkdir -p $@
-
+##
 ## if LIB_DIR does not exist make it.
 $(LIB_DIR): | $(O_DIRS)
 	@echo $(PR_F0)" mkdir $@"
 	@mkdir -p $@
-
+##
 ## if O_DIRS does not exist make it.
 $(O_DIRS):
 	@echo $(PR_F0)" mkdir $@"
 	@mkdir -p $@
-	
-# if there is no MyConfig file, use the prototype
+##	
+## if there is no MyConfig file, use the prototype
 MyConfig:
 	-if [ ! -f MyConfig ];\
 	then \
@@ -205,7 +211,7 @@ define PR_NL
 endef
 # print line with -
 define PR_L0
-"-------------------------------------------------------------------------"
+"--------------------------------------------------------------------------"
 endef
 # print -->
 define PR_F0
