@@ -34,6 +34,16 @@ o_files:= \
            $(notdir $(f:.c=.o))\
           )\
         )
+# dependency directory
+dep_dir := $(top)/.dep
+# dependency files
+d_files := \
+       $(foreach f,$(c_files),\
+         $(join\
+	   $(dep_dir)/,\
+           $(notdir $(f:.c=.d))\
+          )\
+        )
 
 #######################################################################
 ###########
@@ -49,12 +59,25 @@ compile_o: $(o_files)
 
 # using string % to make the object file accoding to its c file.
 # then put the resultant into $(o_dir)/$*.o.
-$(o_dir)/%.o: $(top)/%.c
+$(o_dir)/%.o: $(d_files) | $(dep_dir)
 #	@echo Making object file for :
 #	@echo $(pr_f1); echo $(top) | grep -o '/Src/*' $(pr_f2)
 #	@echo
 	$(CC) $(CFLAGS) -o $(o_dir)/$*.o -c $<
-	
 
-.PHONY: compile_o
+# figuring out the inter dependencies
+#%.o : %.c
+%.d:%.c
+	set -e; rm -f $@;\
+	$(CC) $(DEPFLAGS) $(CFLAGS) $< > $@.$$$$; \
+	sed 's,\($*\)\.o[ :]*,\1.o $@ : ,g' < $@.$$$$ > $@; \
+	rm -f $@.$$$$
+
+# making dep_dir if does not exist
+$(dep_dir):
+	@mkdir -p $@
+
+include $(wildcard $(dep_dir)/*.d)
+
+.PHONY: compile_o make_lib
 ########################################################################
