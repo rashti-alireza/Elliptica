@@ -176,23 +176,23 @@ all: $(EXEC)
 ##
 ## make the executable out of the object files
 $(EXEC): MyConfig $(H_FILES) | $(LIB_DIR) $(EXEC_DIR)
-	@echo $(PR_F0) "build $(EXEC):"
+	@echo $(PR_F0) "build '$(EXEC)':"
 	@for d in $(C_DIRS); do $(MAKE) -C $$d; done
 	$(CC) $(CFLAGS) -o $(EXEC_DIR)/$@ $(MAIN) $(LDFLAGS)
 ##
 ## if EXEC_DIR does not exist make it.	
 $(EXEC_DIR):
-	@echo $(PR_F0) "mkdir" $(call GET_RELATIVE_PATH,$@)
+	@$(call PR_TASK_relPATH,"mkdir",$@)
 	@mkdir -p $@
 ##
 ## if LIB_DIR does not exist make it.
 $(LIB_DIR): | $(O_DIRS)
-	@echo $(PR_F0) "mkdir" $(call GET_RELATIVE_PATH,$@)
+	@$(call PR_TASK_relPATH,"mkdir",$@)
 	@mkdir -p $@
 ##
 ## if O_DIRS does not exist make it.
 $(O_DIRS):
-	@echo $(PR_F0) "mkdir" $(call GET_RELATIVE_PATH,$@)
+	@$(call PR_TASK_relPATH,"mkdir",$@)
 	@mkdir -p $@
 ##	
 ## if there is no MyConfig file, use the prototype
@@ -227,9 +227,16 @@ endef
 define PR_F2
 "<=="
 endef
-# get a directory and make it into relative path with respect to TOP
-define GET_RELATIVE_PATH
-"$(1)" | $(SED) 's,$(TOP),.,g'
+# get a string s1 and a path p1, it makes the p1 relative path and
+# then prints "s1 p1"
+define PR_TASK_relPATH
+p=$$(echo $(2) | $(SED) 's,$(TOP),.,g' | $(SED) "s,\(.*\),'\1',g");\
+if [ $$? -eq 0 ]; \
+then \
+echo $(PR_F0) $(1) $$p; \
+else  \
+echo $(PR_F0) $(1) $(2); \
+fi
 endef
 #######################################################################
 
