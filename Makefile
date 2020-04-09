@@ -176,7 +176,7 @@ all: $(EXEC)
 ##
 ## make the executable out of the object files
 $(EXEC): MyConfig $(H_FILES) | $(LIB_DIR) $(EXEC_DIR)
-	@echo $(PR_F0) "compiling '$(EXEC)':"
+	@echo $(PR_F0) "make $(EXEC):"
 	@for d in $(C_DIRS); do $(MAKE) -C $$d; done
 	$(CC) $(CFLAGS) -o $(EXEC_DIR)/$@ $(MAIN) $(LDFLAGS)
 ##
@@ -187,12 +187,12 @@ $(EXEC_DIR):
 ##
 ## if LIB_DIR does not exist make it.
 $(LIB_DIR): | $(O_DIRS)
-	@echo $(PR_F0)" mkdir $@"
+	@echo $(PR_F0) "mkdir" $(call GET_RELATIVE_PATH,$@)
 	@mkdir -p $@
 ##
 ## if O_DIRS does not exist make it.
 $(O_DIRS):
-	@echo $(PR_F0)" mkdir $@"
+	@echo $(PR_F0) "mkdir" $(call GET_RELATIVE_PATH,$@)
 	@mkdir -p $@
 ##	
 ## if there is no MyConfig file, use the prototype
@@ -229,8 +229,7 @@ define PR_F2
 endef
 # get a directory and make it into relative path with respect to TOP
 define GET_RELATIVE_PATH
-"$(1)" | $(SED) 's,$(TOP),.,g' | $(SED) "s,\(.*\),'\1',g"
-
+"$(1)" | $(SED) 's,$(TOP),.,g'
 endef
 #######################################################################
 
