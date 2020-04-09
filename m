@@ -52,8 +52,7 @@ d_files := \
 ## targets:
 ###########
 # default target to make libaries out of object files
-make_lib: compile_o
-	@echo $(PR_F1)arching:
+make_lib: $(o_files) $(d_files)
 	$(AR) rcs $(LIB_DIR)/$(lib_name) $(o_files)
 	
 compile_o: $(o_files)
@@ -64,7 +63,7 @@ compile_o: $(o_files)
 
 # using string % to make the object file according to its c file.
 # then put the resultant into $(o_dir)/$*.o.
-$(o_dir)/%.o :$(c_dir)/%.c  | $(d_files) 
+$(o_dir)/%.o :$(c_dir)/%.c  $(d_files) 
 	$(CC) $(CFLAGS) -o $(o_dir)/$*.o -c $<
 #
 #
@@ -75,21 +74,16 @@ $(o_dir)/%.o :$(c_dir)/%.c  | $(d_files)
 # figuring out the inter dependencies
 #%.o : %.c
 $(d_dir)/%.d : $(c_dir)/%.c | $(d_dir)
-	$(SHELL) -ec "cp -v $(c_dir)/$*.c  $@"
-#
-#	$(shell "cp -v $(c_dir)/$*.c  $@")
-
-##
-#	set -e; rm -f $@;\
-#	$(CC) $(DEPFLAGS) $(CFLAGS) $< > $@.$$$$; \
-#	sed 's,\($*\)\.o[ :]*,\1.o $@ : ,g' < $@.$$$$ > $@; \
-#	rm -f $@.$$$$
+	set -e; rm -f $@;\
+	$(CC) $(DEPFLAGS) $(CFLAGS) $< > $@.$$$$; \
+	sed 's,\($*\)\.o[ :]*,\1.o $@ : ,g' < $@.$$$$ > $@; \
+	rm -f $@.$$$$
 
 # making dep_dir if does not exist
 $(d_dir):
 	@mkdir -p $@
 
-#include $(wildcard $(d_dir)/*.d)
+include $(wildcard $(d_dir)/*.d)
 
 #.PHONY: compile_o make_lib
 ########################################################################
