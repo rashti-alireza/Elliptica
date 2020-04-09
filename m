@@ -72,7 +72,7 @@ $(o_dir)/%.o :$(c_dir)/%.c  $(d_files)
 #	@echo
 #	
 # figuring out the inter dependencies
-#%.o : %.c
+%.o : %.c
 $(d_dir)/%.d : $(c_dir)/%.c | $(d_dir)
 	set -e; rm -f $@;\
 	$(CC) $(DEPFLAGS) $(CFLAGS) $< > $@.$$$$; \
@@ -85,5 +85,5 @@ $(d_dir):
 
 include $(wildcard $(d_dir)/*.d)
 
-#.PHONY: compile_o make_lib
+.PHONY: compile_o make_lib
 ########################################################################
