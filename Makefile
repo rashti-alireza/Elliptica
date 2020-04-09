@@ -26,7 +26,7 @@
 #	              |                           |
 #	       +------+------+                +---+-----+
 #	       |      |      |                |         |
-#	       |   Cores/  Includes/          |      Includes/
+#	       |   Core/  Includes/          |      Includes/
 #	       |                              |
 #	  +----+-----+-----------+            +-------+------+
 #	  |          |           |            |       |      |
@@ -75,6 +75,8 @@ LIB_DIR := $(TOP)/Lib
 PROJECT_DIR := $(TOP)/Src/Projects
 # modules dir
 MODULE_DIR := $(TOP)/Src/Main/Modules
+# core directory:
+CORE_DIR := Cores
 ########################################################################
 ##############
 ## C compiler:
@@ -91,15 +93,17 @@ AR = ar
 # include path
 INCS  = -I$(MODULE_DIR)/Includes
 INCS += -I$(PROJECT_DIR)/Includes
-INCS += -I$(TOP)/Src/Main/Cores
+INCS += -I$(TOP)/Src/Main/$(CORE_DIR)
 # special includes
 SPECIAL_INCS =
 # library path
-LIBS = -L$(TOP)/$(LIB_DIR)
+C_LIB_PATH = -L$(LIB_DIR)
 # special libs
 SPECIAL_LIBS =
 # system library
 SYSTEM_LIBS = -lm
+# libs from compiling of c files of modules and projects
+C_LIBS=
 ########################################################################
 ############
 ## MyConfig:
@@ -109,9 +113,9 @@ MODULE  =# to be determined in MyConfig
 PROJECT =# to be determined in MyConfig
 include MyConfig
 ########################################################################
-###########################
-## c files and directories:
-###########################
+################################
+## c sources and object sources:
+################################
 # all c file directories
 C_DIRS  = $(TOP)/Src/Main/Cores
 C_DIRS += $(MODULE)
@@ -119,10 +123,6 @@ C_DIRS += $(PROJECT)
 C_DIRS := $(strip $(C_DIRS))# strip extra spaces
 # all c file paths
 C_FILES = $(foreach d,$(C_DIRS),$(wildcard $(d)/*.c))
-########################################################################
-################################
-## object files and directories:
-################################
 # obj directories:
 # the convention is we take the name of each dir in C_DIRS 
 # (its last directory name) as the obj directory which contains 
@@ -135,61 +135,38 @@ O_DIRS := $(notdir $(C_DIRS))
 O_DIRS := $(foreach d,$(O_DIRS),$(O_TOP)/$(d))
 # strip extra spaces
 O_DIRS := $(strip $(O_DIRS))
-# making o_files corresponding to their c files mirror
-#o_files := $(C_FILES:%.c=%.o);
-#o_files:= \
-#	$(foreach f,$(C_FILES),\
-#	  $(join\
-#	    $(addprefix \
-#	      $(LIB_DIR)/$(O_DIR)/, $(notdir $(C_DIRS))\
-#	     )/,\
-#	    $(notdir $(f:.c=.o))\
-#	   )\
-#	 )
 ########################################################################
-####################
-## summery of flags:
-####################
+########################################
+## recap flags and export all variables:
+########################################
+# making all C_LIBS strings:
+C_LIBS := $(foreach d,$(C_DIRS),$(addprefix -l, $(notdir $d)))
+# Note: to resolve inter library dependenciesI added C_LIBS few times.
+# you can add more if the linking at the last step fails.
+C_LIBS += $(C_LIBS)
+C_LIBS += $(C_LIBS)
+# compiler flags:
 CFLAGS = $(DFLAGS) $(OFLAGS) $(WARN) $(INCS) $(SPECIAL_INCS)
-# all linking flags:
-LDFLAGS = $(LIBS) $(SPECIAL_LIBS) $(SYSTEM_LIBS)
+# all linking flags, 
+LDFLAGS = $(C_LIB_PATH) $(SPECIAL_LIBS) $(C_LIBS) $(SYSTEM_LIBS)
+# exporting to other submake
+export
 ########################################################################
 #####################
 ## rules and targets:
 #####################
-
-export
-
+# main.o corresponds to main.c
+MAIN := $(O_TOP)/$(CORE_DIR)/main.o
 ## default rule to construct EXEC
-all: $(EXEC)| $(EXEC_DIR) 
+all: $(EXEC)
 	@true
 .PHONY: all
 
 ## make the executable out of the object files
-$(EXEC): MyConfig | $(LIB_DIR)
+$(EXEC): MyConfig | $(LIB_DIR) $(EXEC_DIR)
 	for x in $(C_DIRS); do $(MAKE) -C $$x;echo $$x; done
-#	@echo $(PR_F1) $< $(PR_F2)
+	$(CC) $(CFLAGS) -o $(EXEC_DIR)/$@ $(MAIN) $(LDFLAGS)
 
-#%.o : %.c
-#$(C_DIRS)/%.o: 
-#	@echo $(PR_F1) $(C_DIRS) $(PR_F2)
-#	@echo $(PR_F1) $(C_FILES) $(PR_F2)
-#	@echo $(PR_F1) $(O_DIRS) $(PR_F2)
-#	@echo $(PR_F1) $@ $(PR_F2)
-#	#
-#	#$(CC) $(CFLAGS) -o $@ -c $<
-
-#%.o:%.c
-	
-## make object file
-#.PHONY: $(compile.o)
-#%.c:
-#	@echo $(PR_F1) $*.o $(PR_F2)
-#	
-#	$(CC) $(CFLAGS) -o $@ -c $<
-	
-#@echo $(PR_F1) %.c $(PR_F2)
-#@echo $@
 ## if EXEC_DIR does not exist make it.	
 $(EXEC_DIR):
 	@echo $(PR_F0)" mkdir $@"
@@ -205,55 +182,12 @@ $(O_DIRS):
 	@echo $(PR_F0)" mkdir $@"
 	@mkdir -p $@
 	
-#.PHONY: compile
-#%.o : %.c
-#%.o: %.c
-#	$(CC) $(CFLAGS) -c $< -o $@
-	
-#compile: $(obj)
-#	$(CC) $(CFLAGS) -o $(EXEC_DIR)/$(EXEC) $(obj) $(LDFLAGS)
-
-#.PHONY: find_interdependency
-#find_interdependency: $(depend_paths)
-#$(depend_paths):%.depend:%.c MyConfig# should I use myconfig here????
-#	@echo $@
-#	@set -e; rm -f $@;\
-#	$(CC) $(DEPFLAGS) $(CFLAGS) $< > $@.$$$$; \
-#	sed 's,\($*\)\.o[ :]*,\1.o $@ : ,g' < $@.$$$$ > $@; \
-#	rm -f $@.$$$$
-
-#.PHONY:print
-#print:find_interdependency
-#	@echo "starts here:\n"$(depend_paths) | tr " " "\n"
-
-# now include all of the inter-dependency files
-#include $(depend_paths)
-#$(depend_files):
-#include $(wildcard $(depend_paths))
-
 # if there is no MyConfig file, use the prototype
 MyConfig:
 	-if [[ ! -f MyConfig ]];\
 	then \
         cp Doc/MyConfig.example MyConfig; \
         fi
-
-
-# figure out the dependencies
-
-
-# make the library
-
-# make the executable
-
-#####################
-# make it more general in case if I want to remove a module or project
-# deleted
-
-
-#all:
-#	@echo "Lib=" $(Lib)
-
 #######################################################################
 ################################	
 ## some variable for nice print:

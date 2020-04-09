@@ -26,6 +26,11 @@ o_dir := $(notdir $(top))
 o_dir := $(O_TOP)/$(o_dir)
 # library name for this directory
 lib_name := lib$(notdir $(top)).a
+unexport lib_name
+# library files
+#C_LIBS += $(lib_name)
+#export C_LIBS
+
 # collect all o files related to all of the c files in this directory
 o_files:= \
        $(foreach f,$(c_files),\
@@ -56,15 +61,21 @@ make_lib: $(o_files) $(d_files)
 	$(AR) rcs $(LIB_DIR)/$(lib_name) $(o_files)
 	
 compile_o: $(o_files)
+	@true
+#	echo $(PR_F1) $(C_LIBS) $(PR_F2)
+#	echo $(PR_F1) $(C_LIBS) $(PR_F2)
+#	echo $(PR_F1) $(C_LIBS) $(PR_F2)
+#	echo $(PR_F1) $(C_LIBS) $(PR_F2)
+
 #	@echo $(PR_F1) $(c_dir) $(PR_F2)
 #	@echo $(PR_F1) $(c_files) $(PR_F2)
-	@echo $(PR_F1) $(o_files) $(PR_F2)
 #	@echo $(PR_F1) $(o_dir) $(PR_F2)
 
 # using string % to make the object file according to its c file.
 # then put the resultant into $(o_dir)/$*.o.
 $(o_dir)/%.o :$(c_dir)/%.c  $(d_files) 
 	$(CC) $(CFLAGS) -o $(o_dir)/$*.o -c $<
+	@echo $(PR_F1) $(C_LIBS) $(PR_F2)
 #
 #
 #	@echo Making object file for :
@@ -74,7 +85,7 @@ $(o_dir)/%.o :$(c_dir)/%.c  $(d_files)
 # figuring out the inter dependencies
 %.o : %.c
 $(d_dir)/%.d : $(c_dir)/%.c | $(d_dir)
-	set -e; rm -f $@;\
+	@set -e; rm -f $@;\
 	$(CC) $(DEPFLAGS) $(CFLAGS) $< > $@.$$$$; \
 	sed 's,\($*\)\.o[ :]*,\1.o $@ : ,g' < $@.$$$$ > $@; \
 	rm -f $@.$$$$
