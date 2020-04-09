@@ -176,7 +176,7 @@ all: $(EXEC)
 ##
 ## make the executable out of the object files
 $(EXEC): MyConfig $(H_FILES) | $(LIB_DIR) $(EXEC_DIR)
-	@echo $(PR_F0) "make $(EXEC):"
+	@echo $(PR_F0) "build $(EXEC):"
 	@for d in $(C_DIRS); do $(MAKE) -C $$d; done
 	$(CC) $(CFLAGS) -o $(EXEC_DIR)/$@ $(MAIN) $(LDFLAGS)
 ##
