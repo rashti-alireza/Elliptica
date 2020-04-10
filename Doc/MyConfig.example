@@ -82,8 +82,12 @@ DFLAGS += -DPragma_OpenMP_2d -DPragma_OpenMP_1d -DPragma_OpenMP_Patch
 
 # special includes for suit-sparse and related
 SPECIAL_INCS += -I/usr/include/suitesparse
-SPECIAL_LIBS += -lumfpack -lblas -lgfortran -llapack
+SPECIAL_LIBS += -lblas -lgfortran -llapack -lumfpack
 
 # special libraries for plotting and data file
 SPECIAL_LIBS += -lsiloh5
+
+# special libraries for koko regarding plot and print
+#SPECIAL_INCS += -I/cm/shared/apps/silo/4.10.2/silo/include
+#SPECIAL_LIBS += -L/cm/shared/apps/silo/4.10.2/silo/lib -lsiloh5
 ########################################################################
