@@ -24,13 +24,8 @@ c_files := $(wildcard $(top)/*.c)
 # make directory name correspond to this directory
 o_dir := $(notdir $(top))
 o_dir := $(O_TOP)/$(o_dir)
-# library name for this directory
+# library name for this directory this is a standard name
 lib_name := lib$(notdir $(top)).a
-unexport lib_name
-# library files
-#C_LIBS += $(lib_name)
-#export C_LIBS
-
 # collect all o files related to all of the c files in this directory
 o_files:= \
        $(foreach f,$(c_files),\
@@ -51,33 +46,21 @@ d_files := \
            $(notdir $(f:.c=.d))\
           )\
         )
-
 #######################################################################
 ###########
 ## targets:
 ###########
-# default target to make libaries out of object files
-make_lib: $(o_files) $(d_files)
-#	$(AR) rcs $(LIB_DIR)/$(lib_name) $(o_files)
-#
-	@$(call build_and_print_func, $(AR) $(ARFLAGS) $(LIB_DIR)/$(lib_name) $(o_files), $(lib_name))
-	
-compile_o: $(o_files)
-	@true
 
-# using string % to make the object file according to its c file.
+## default target to make libaries out of object files
+make_lib: $(o_files) $(d_files)
+	@$(call build_and_print_func, $(AR) $(ARFLAGS) $(LIB_DIR)/$(lib_name) $(o_files), $(lib_name))
+
+## using string % to make the object file according to its c file.
 # then put the resultant into $(o_dir)/$*.o.
 $(o_dir)/%.o :$(c_dir)/%.c  $(d_files)
-	@$(call build_and_print_func, $(CC) $(CFLAGS) -o $(o_dir)/$*.o -c $<,$*.o)
-#	$(CC) $(CFLAGS) -o $(o_dir)/$*.o -c $<
-#	@echo $(PR_F1) $(C_LIBS) $(PR_F2)
-#
-#
-#	@echo Making object file for :
-#	@echo $(PR_F1); echo $(top) | grep -o '/Src/*' $(PR_F2)
-#	@echo
-#	
-# figuring out the inter dependencies
+	@$(call build_and_print_func, $(CC) $(CFLAGS) -o $(o_dir)/$*.o -c $<, $*.o)
+	
+## figuring out the inter dependencies
 %.o : %.c
 $(d_dir)/%.d : $(c_dir)/%.c | $(d_dir)
 	@set -e; rm -f $@;\
@@ -91,20 +74,32 @@ $(d_dir):
 
 include $(wildcard $(d_dir)/*.d)
 
-.PHONY: compile_o make_lib
+.PHONY: make_lib
 ########################################################################
+#############
+## functions:
+#############
 
 # build and print objects, if error happens it prints full info,
 # otherwise it prints succinctly.
+# useage:
+#
+# $(call build_and_print_func, command, print_this)
+# $(1) refers to command and $(2) refers to print_this.
 define build_and_print_func
-$(1) 2> $@.COMPILE_ERROR ; \
+$(strip $(1)) 2> $@.COMPILE_ERROR ; \
 ret=$$? ; \
 if [ $$ret -eq 0 ]; \
 then \
-echo $(PR_F0) "build" $(2) ; \
+printf "%s %s %-39s %s\n" $(PR_F0) "building" $(strip $(2)) "=> [SUCCESSFUL] <="; \
 else \
+echo $(PR_DIVIDER) ; \
+printf "%s %s %-39s %s\n" $(PR_F0) "building" $(strip $(2)) "=> [FAILED] <="; \
 cat $@.COMPILE_ERROR ; \
-exit $$ret ; \
 fi ; \
-rm -rf $@.COMPILE_ERROR;
+rm -rf $@.COMPILE_ERROR; \
+exit $$ret ;
 endef
+
+# no export 
+unexport
