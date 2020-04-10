@@ -81,6 +81,8 @@ PROJECT_DIR := $(TOP)/Src/Projects
 MODULE_DIR := $(TOP)/Src/Main/Modules
 # core directory, where main.c is, see the above sketch
 CORE_DIR := Core
+# sub-make file name
+SUB_MAKE_FILE_NAME := makefile
 ########################################################################
 ##############
 ## C compiler:
@@ -181,6 +183,13 @@ all: $(EXEC)
 ## make the executable out of the object files
 $(EXEC): MyConfig $(H_FILES) | $(LIB_DIR) $(EXEC_DIR)
 	@echo $(PR_F0) "compiling '$(EXEC)':"
+	@for d in $(C_DIRS); \
+	  do \
+	  if [ ! -f $(C_DIRS)/$(SUB_MAKE_FILE_NAME) ]; \
+	    then \
+	      cp Doc/SUB_MAKEFILE $(C_DIRS)/$(SUB_MAKE_FILE_NAME);\
+	  fi; \
+	  done;
 	@for d in $(C_DIRS); do $(MAKE) -C $$d; done
 	$(CC) $(CFLAGS) -o $(EXEC_DIR)/$@ $(MAIN) $(LDFLAGS)
 ##
