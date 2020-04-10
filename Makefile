@@ -11,6 +11,8 @@
 # A complete documentation can be found:
 # https://www.gnu.org/software/make/manual/
 #
+# To bug report or feedback email me at "rashti.alireza@gmail.com"
+#
 # The hierarchy of the source files and libraries are like the followings;
 # Thus, one can use this chart to adjust their project by the variables
 # are defined at this Makefile in the section "paths and variables".
@@ -180,6 +182,8 @@ install: $(EXEC)
 	@echo $(PR_L0)
 	@echo $(PR_F1) "successful compilation for '$(EXEC)'"
 	@echo $(PR_F1) "find '$(EXEC)' at '$(EXEC_DIR)'"
+	@echo $(PR_F1) "Enjoy!"
+	
 	@true
 .PHONY: install
 ##
