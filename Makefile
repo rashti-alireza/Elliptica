@@ -202,33 +202,39 @@ MyConfig:
         cp Doc/MyConfig.example MyConfig; \
         fi
 #######################################################################
-#############################
-## some tools for nice print:
-#############################
+####################################
+## some tools for print and compile:
+####################################
 SED := sed
+
 # new line variable
 define PR_NL
 
 
 endef
+
 # print line with -
 define PR_L0
 "--------------------------------------------------------------------------"
 endef
+
 # print -->
 define PR_F0
 "-->"
 endef
+
 # print ==>
 define PR_F1
 "==>"
 endef
+
 # print <==
 define PR_F2
 "<=="
 endef
+
 # get a string s1 and a path p1, it makes the p1 relative path and
-# then prints "s1 p1"
+# then prints --> "s1 p1"
 define PR_TASK_relPATH
 p=$$(echo $(2) | $(SED) 's,$(TOP),.,g' | $(SED) "s,\(.*\),'\1',g");\
 if [ $$? -eq 0 ]; \
