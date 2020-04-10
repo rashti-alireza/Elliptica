@@ -136,7 +136,8 @@ auto_gen_c_file_name := projects_data_base_MADE_BY_MAKE.c
 auto_gen_c_file := $(TOP)/Src/Main/$(CORE_DIR)/$(auto_gen_c_file_name)
 # project names added in MyConfig, NOTE: the name of the project function
 # and the name of the project directory assumed to be the same.
-PROJECT_NAMES := $(strip $(notdir $(PROJECT_DIR)))
+PROJECT_NAMES := $(foreach d,$(PROJECT),$(notdir $d))
+PROJECT_NAMES := $(strip $(PROJECT_NAMES))
 ########################################################################
 ################################
 ## c sources and object sources:
@@ -200,7 +201,7 @@ install: $(EXEC)
 .PHONY: install
 ##
 ## make the executable out of the object files
-$(EXEC): MyConfig $(H_FILES) $(AUTO_ADD_PROJECT) | $(LIB_DIR) $(EXEC_DIR)
+$(EXEC): MyConfig $(H_FILES) AUTO_ADD_PROJECT | $(LIB_DIR) $(EXEC_DIR)
 # --> print
 	@echo $(PR_F0) "compiling '$(EXEC)':"
 	@echo $(PR_L0)
@@ -224,13 +225,14 @@ $(EXEC): MyConfig $(H_FILES) $(AUTO_ADD_PROJECT) | $(LIB_DIR) $(EXEC_DIR)
 ## adding all of the determined projects at Myconfig 
 ## into a c file in Core to be compiled. 
 ## Note: this depends on how the automation is desinged for the code.
-$(AUTO_ADD_PROJECT): MyConfig $(H_FILES)
+AUTO_ADD_PROJECT: MyConfig $(H_FILES)
 # --> if file exists delete it:
-	-if [-d $(auto_gen_c_file) ];\
+	-if [ -f $(auto_gen_c_file) ];\
 	 then \
 	   rm -rf $(auto_gen_c_file); \
 	 fi
 # --> headers and declarations:
+	@echo "/* this is an generated code by make */" >> $(auto_gen_c_file)
 	@echo "#include \"core_lib.h\"" >> $(auto_gen_c_file)
 	@echo "void add_project(ProjFunc *const projfunc, const char *const name, const char *const des);" >> $(auto_gen_c_file)
 	@echo "int create_db_projects(void);" >> $(auto_gen_c_file)
@@ -242,9 +244,9 @@ $(AUTO_ADD_PROJECT): MyConfig $(H_FILES)
 	@echo "int create_db_projects(void){" >> $(auto_gen_c_file)
 	@for p in $(PROJECT_NAMES); \
 	  do \
-	    echo "add_project(" "$$p,""\"$$p\",0);" >> $(auto_gen_c_file) ;\
+	    echo "  add_project(" "$$p,""\"$$p\",0);" >> $(auto_gen_c_file) ;\
 	   done;
-	@echo "return EXIT_SUCCESS;" >> $(auto_gen_c_file)
+	@echo "  return EXIT_SUCCESS;" >> $(auto_gen_c_file)
 	@echo "}" >> $(auto_gen_c_file)
 	
 ##
