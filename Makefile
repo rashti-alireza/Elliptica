@@ -177,9 +177,9 @@ MAIN := $(O_TOP)/$(CORE_DIR)/main.o
 ##
 ## default rule to construct EXEC
 install: $(EXEC)
-	@echo $(PR_L0)"\n\n"
+	@echo $(PR_L0)
 	@echo $(PR_F1) "successful compilation for '$(EXEC)'"
-	@echo $(PR_F1) "find '$(EXEC)' at '$(EXEC_DIR)'""\n\n"
+	@echo $(PR_F1) "find '$(EXEC)' at '$(EXEC_DIR)'"
 	@true
 .PHONY: install
 ##
