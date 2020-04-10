@@ -60,7 +60,7 @@ d_files := \
 make_lib: $(o_files) $(d_files)
 #	$(AR) rcs $(LIB_DIR)/$(lib_name) $(o_files)
 #
-	@$(call build_and_print_func, $(AR) rcs $(LIB_DIR)/$(lib_name) $(o_files), $(lib_name))
+	@$(call build_and_print_func, $(AR) $(ARFLAGS) $(LIB_DIR)/$(lib_name) $(o_files), $(lib_name))
 	
 compile_o: $(o_files)
 	@true

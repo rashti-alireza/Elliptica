@@ -92,6 +92,8 @@ DFLAGS =
 DEPFLAGS = -M
 # ar command to archive the object files
 AR = ar
+# archive flags
+ARFLAGS = rcs
 # include path
 INCS  = -I$(MODULE_DIR)/Includes
 INCS += -I$(PROJECT_DIR)/Includes
