@@ -21,6 +21,8 @@ top   := $(shell pwd)
 c_dir := $(top)
 # find all of c files to be compiled in this directory
 c_files := $(wildcard $(top)/*.c)
+# find all of h files in this directory
+h_files := $(wildcard $(top)/*.h)
 # make directory name correspond to this directory
 o_dir := $(notdir $(top))
 o_dir := $(O_TOP)/$(o_dir)
@@ -57,7 +59,7 @@ make_lib: $(o_files) $(d_files)
 
 ## using string % to make the object file according to its c file.
 # then put the resultant into $(o_dir)/$*.o.
-$(o_dir)/%.o :$(c_dir)/%.c $(c_dir)/%.h $(H_FILES) $(d_files)
+$(o_dir)/%.o :$(c_dir)/%.c $(h_files) $(H_FILES) $(d_files)
 	@$(call build_and_print_func, $(CC) $(CFLAGS) -o $(o_dir)/$*.o -c $<, $*.o)
 	
 ## figuring out the inter dependencies
@@ -80,8 +82,7 @@ include $(wildcard $(d_dir)/*.d)
 ## functions:
 #############
 
-# build and print objects, if error happens it prints full info,
-# otherwise it prints succinctly.
+# build and print objects, print error if happens otherwise succinctly.
 # useage:
 #
 # $(call build_and_print_func, command, print_this)
