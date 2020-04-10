@@ -59,22 +59,16 @@ d_files := \
 # default target to make libaries out of object files
 make_lib: $(o_files) $(d_files)
 	$(AR) rcs $(LIB_DIR)/$(lib_name) $(o_files)
+
+#	@$(call build_and_print_func, $(AR) rcs $(LIB_DIR)/$(lib_name) $(o_files), $(lib_name))
 	
 compile_o: $(o_files)
 	@true
-#	echo $(PR_F1) $(C_LIBS) $(PR_F2)
-#	echo $(PR_F1) $(C_LIBS) $(PR_F2)
-#	echo $(PR_F1) $(C_LIBS) $(PR_F2)
-#	echo $(PR_F1) $(C_LIBS) $(PR_F2)
-#
-#	@echo $(PR_F1) $(c_dir) $(PR_F2)
-#	@echo $(PR_F1) $(c_files) $(PR_F2)
-#	@echo $(PR_F1) $(o_dir) $(PR_F2)
 
 # using string % to make the object file according to its c file.
 # then put the resultant into $(o_dir)/$*.o.
 $(o_dir)/%.o :$(c_dir)/%.c  $(d_files)
-	@$(call COMPILE_AND_PR_OBJECT, $(CC) $(CFLAGS) -o $(o_dir)/$*.o -c $<, $(o_dir)/$*.o)
+	@$(call build_and_print_func, $(CC) $(CFLAGS) -o $(o_dir)/$*.o -c $<,$*.o)
 #	$(CC) $(CFLAGS) -o $(o_dir)/$*.o -c $<
 #	@echo $(PR_F1) $(C_LIBS) $(PR_F2)
 #
@@ -88,7 +82,7 @@ $(o_dir)/%.o :$(c_dir)/%.c  $(d_files)
 $(d_dir)/%.d : $(c_dir)/%.c | $(d_dir)
 	@set -e; rm -f $@;\
 	$(CC) $(DEPFLAGS) $(CFLAGS) $< > $@.$$$$; \
-	sed 's,\($*\)\.o[ :]*,\1.o $@ : ,g' < $@.$$$$ > $@; \
+	$(SED) 's,\($*\)\.o[ :]*,\1.o $@ : ,g' < $@.$$$$ > $@; \
 	rm -f $@.$$$$
 
 # making dep_dir if does not exist
@@ -100,15 +94,17 @@ include $(wildcard $(d_dir)/*.d)
 .PHONY: compile_o make_lib
 ########################################################################
 
-# compile opject file and print, if error happens it prints full info,
-# otherwise it prints succinctly. It gets the whole
-define COMPILE_AND_PR_OBJECT
-$(1) 2> $@.COMPILE_ERROR; \
-if [ $$? -eq 0 ]; \
+# build and print objects, if error happens it prints full info,
+# otherwise it prints succinctly.
+define build_and_print_func
+$(1) &> $@.COMPILE_ERROR ; \
+ret=$$? ; \
+if [ $$ret -eq 0 ]; \
 then \
-echo $(PR_F0) "build" $*.o; \
-else  \
-$(1) ; \
-exit 1;\
-fi
+echo $(PR_F0) "build" $(2) ; \
+else \
+cat $@.COMPILE_ERROR ; \
+exit $$ret ; \
+fi ; \
+rm -rf $@.COMPILE_ERROR;
 endef
