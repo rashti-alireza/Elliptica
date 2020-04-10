@@ -66,16 +66,17 @@ compile_o: $(o_files)
 #	echo $(PR_F1) $(C_LIBS) $(PR_F2)
 #	echo $(PR_F1) $(C_LIBS) $(PR_F2)
 #	echo $(PR_F1) $(C_LIBS) $(PR_F2)
-
+#
 #	@echo $(PR_F1) $(c_dir) $(PR_F2)
 #	@echo $(PR_F1) $(c_files) $(PR_F2)
 #	@echo $(PR_F1) $(o_dir) $(PR_F2)
 
 # using string % to make the object file according to its c file.
 # then put the resultant into $(o_dir)/$*.o.
-$(o_dir)/%.o :$(c_dir)/%.c  $(d_files) 
-	$(CC) $(CFLAGS) -o $(o_dir)/$*.o -c $<
-	@echo $(PR_F1) $(C_LIBS) $(PR_F2)
+$(o_dir)/%.o :$(c_dir)/%.c  $(d_files)
+	@$(call COMPILE_AND_PR_OBJECT, $(CC) $(CFLAGS) -o $(o_dir)/$*.o -c $<, $(o_dir)/$*.o)
+#	$(CC) $(CFLAGS) -o $(o_dir)/$*.o -c $<
+#	@echo $(PR_F1) $(C_LIBS) $(PR_F2)
 #
 #
 #	@echo Making object file for :
@@ -98,3 +99,16 @@ include $(wildcard $(d_dir)/*.d)
 
 .PHONY: compile_o make_lib
 ########################################################################
+
+# compile opject file and print, if error happens it prints full info,
+# otherwise it prints succinctly. It gets the whole
+define COMPILE_AND_PR_OBJECT
+$(1) 2> $@.COMPILE_ERROR; \
+if [ $$? -eq 0 ]; \
+then \
+echo $(PR_F0) "build" $*.o; \
+else  \
+$(1) ; \
+exit 1;\
+fi
+endef
