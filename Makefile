@@ -185,7 +185,9 @@ all: $(EXEC)
 ##
 ## make the executable out of the object files
 $(EXEC): MyConfig $(H_FILES) | $(LIB_DIR) $(EXEC_DIR)
+# --> print
 	@echo $(PR_F0) "compiling '$(EXEC)':"
+	@echo $(PR_L0)
 # --> copy submake directories:
 	@for d in $(C_DIRS); \
           do \
@@ -195,9 +197,14 @@ $(EXEC): MyConfig $(H_FILES) | $(LIB_DIR) $(EXEC_DIR)
           fi; \
           done;
 # --> invoke submakes:
-	@$(call cmd_and_pr_func, for d in $(C_DIRS); do $(MAKE) $(SUB_MAKE_FLAGS) -C $$d; done)
+	@for d in $(C_DIRS); \
+	  do \
+#	  $(call PR_TASK_relPATH,"entering",$$d) \
+	  $(MAKE) $(SUB_MAKE_FLAGS) -C $$d; \
+#	  $(call PR_TASK_relPATH,"leaving",$$d) \
+	  done
 # --> link all of the libaries to build the EXEC:
-	$(CC) $(CFLAGS) -o $(EXEC_DIR)/$@ $(MAIN) $(LDFLAGS)
+	@$(call cmd_and_pr_func, $(CC) $(CFLAGS) -o $(EXEC_DIR)/$@ $(MAIN) $(LDFLAGS),$(EXEC))
 # ------------------------------------------------------------------- #
 ##
 ## if EXEC_DIR does not exist make it.	
@@ -238,6 +245,16 @@ define PR_L0
 "-------------------------------------------------------------------------"
 endef
 
+# print half a line with -
+define PR_L1
+"------------------------------------"
+endef
+
+# print ERROR message
+define PR_ERROR
+":(\nError:\n"
+endef
+
 # print -->
 define PR_F0
 "~~>"
@@ -271,30 +288,28 @@ echo $(PR_F0) $(1) $(2); \
 fi;
 endef
 
-define pr_cmd
-echo "$(1)"
-endef
 # command and print function, print error if happens otherwise succinctly.
 # useage:
 #
 # $(call cmd_and_pr_func, command, print_this)
 # $(1) refers to command and $(2) refers to print_this.
 define cmd_and_pr_func
-$(strip $(1))
-#2> $@.COMPILE_ERROR ; \
-#ret=$$? ; \
-#if [ $$ret -eq 0 ]; \
-#then \
-#printf "%s %s %-39s %s\n" $(PR_F0) "building" $(strip $(2)) "=> [SUCCESSFU
-#else \
-#echo $(PR_DIVIDER) ; \
-#printf "%s %s %-39s %s\n" $(PR_F0) "building" $(strip $(2)) "=> [FAILED] <
-#cat $@.COMPILE_ERROR ; \
-#fi ; \
-#rm -rf $@.COMPILE_ERROR; \
-#exit $$ret ;
+$(strip $(1)) 2> $@.COMPILE_ERROR ; \
+ret=$$? ; \
+if [ $$ret -eq 0 ]; \
+then \
+printf "%s %s %-39s %s\n" $(PR_F0) "building" $(strip $(2)) "=> [SUCCESSFUL] <="; \
+else \
+echo $(PR_L0) ; \
+echo $(PR_ERROR) ; \
+cat $@.COMPILE_ERROR ; \
+printf "\n%s %s %-39s %s\n" $(PR_F0) "building" $(strip $(2)) "=> [FAILED] <="; \
+echo $(PR_L0) ;\
+fi ; \
+rm -rf $@.COMPILE_ERROR; \
+exit $$ret ;
 endef
-# unexport cmd_and_pr_func
+
 unexport cmd_and_pr_func
 #######################################################################
 
