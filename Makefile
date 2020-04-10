@@ -11,7 +11,9 @@
 # A complete documentation can be found:
 # https://www.gnu.org/software/make/manual/
 #
-# The hierarchy of the source files and libraries are like the followings:
+# The hierarchy of the source files and libraries are like the followings;
+# Thus, one can use this chart to adjust their project by the variables
+# are defined at this Makefile in the section "paths and variables".
 #
 #
 #                                  TOP
@@ -178,7 +180,7 @@ all: $(EXEC)
 ##
 ## make the executable out of the object files
 $(EXEC): MyConfig $(H_FILES) | $(LIB_DIR) $(EXEC_DIR)
-	@echo $(PR_F0) "build '$(EXEC)':"
+	@echo $(PR_F0) "compiling '$(EXEC)':"
 	@for d in $(C_DIRS); do $(MAKE) -C $$d; done
 	$(CC) $(CFLAGS) -o $(EXEC_DIR)/$@ $(MAIN) $(LDFLAGS)
 ##
@@ -217,12 +219,12 @@ endef
 
 # print line with -
 define PR_L0
-"--------------------------------------------------------------------------"
+"-------------------------------------------------------------------------"
 endef
 
 # print -->
 define PR_F0
-"-->"
+"~~>"
 endef
 
 # print ==>
@@ -235,6 +237,12 @@ define PR_F2
 "<=="
 endef
 
+# print many newlines and a line, like a divider,
+# its important to be written in one line
+define PR_DIVIDER
+"\n\n\n\n\n\n"$(PR_L0)
+endef
+
 # get a string s1 and a path p1, it makes the p1 relative path and
 # then prints --> "s1 p1"
 define PR_TASK_relPATH
@@ -244,7 +252,7 @@ then \
 echo $(PR_F0) $(1) $$p; \
 else  \
 echo $(PR_F0) $(1) $(2); \
-fi
+fi;
 endef
 #######################################################################
 
