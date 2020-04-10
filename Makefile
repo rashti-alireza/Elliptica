@@ -236,7 +236,7 @@ clean:
 	@$(call PR_TASK_relPATH,"rm -rf",$(LIB_DIR))
 	@-rm -rf $(LIB_DIR)
 	@$(call PR_TASK_relPATH,"rm -rf",$(EXEC_DIR))
-	@-rm -rf $(LIB_DIR)
+	@-rm -rf $(EXEC_DIR)
 # --> invoke submakes to clean dependency files:
 	@for d in $(C_DIRS); \
 	  do \
