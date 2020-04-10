@@ -56,6 +56,7 @@ d_files := \
 ## default target to make libaries out of object files
 make_lib: $(o_files) $(d_files)
 	@$(call build_and_print_func, $(AR) $(ARFLAGS) $(LIB_DIR)/$(lib_name) $(o_files), $(lib_name))
+.PHONY: make_lib
 
 ## using string % to make the object file according to its c file.
 # then put the resultant into $(o_dir)/$*.o.
@@ -69,14 +70,18 @@ $(d_dir)/%.d : $(c_dir)/%.c | $(d_dir)
 	$(CC) $(DEPFLAGS) $(CFLAGS) $< > $@.$$$$; \
 	$(SED) 's,\($*\)\.o[ :]*,\1.o $@ : ,g' < $@.$$$$ > $@; \
 	rm -f $@.$$$$
-
+##
+## clean dependecy folder:
+clean:
+	@$(call pr_task_relpath,"rm -rf",$(d_dir))
+	@-rm -rf $(d_dir)
+.PHONY: clean
 # making dep_dir if does not exist
 $(d_dir):
 	@mkdir -p $@
 
 include $(wildcard $(d_dir)/*.d)
 
-.PHONY: make_lib
 ########################################################################
 #############
 ## functions:
@@ -102,6 +107,18 @@ echo $(PR_L0) ;\
 fi ; \
 rm -rf $@.COMPILE_ERROR; \
 exit $$ret ;
+endef
+
+# get a string s1 and a path p1, it makes the p1 relative path and
+# then prints --> "s1 p1"
+define pr_task_relpath
+p=$$(echo $(2) | $(SED) 's,$(TOP),.,g' | $(SED) "s,\(.*\),'\1',g");\
+if [ $$? -eq 0 ]; \
+then \
+echo $(PR_F0) $(1) $$p; \
+else  \
+echo $(PR_F0) $(1) $(2); \
+fi;
 endef
 
 # no export 

@@ -55,7 +55,7 @@
 # $ make -k # it runs and ignores the errors
 # $ make -n # it only shows the sketch of make and doesn't make anything
 # $ make -C dir # means cd to dir and then invoke make
-#
+# $ make -j4    # using 4 processors to build the target
 #
 # NOTE: in the following the capital words are exported and 
 # small words are local.
@@ -176,12 +176,12 @@ export
 MAIN := $(O_TOP)/$(CORE_DIR)/main.o
 ##
 ## default rule to construct EXEC
-all: $(EXEC)
+install: $(EXEC)
 	@echo $(PR_L0)"\n\n"
 	@echo $(PR_F1) "successful compilation for '$(EXEC)'"
 	@echo $(PR_F1) "find '$(EXEC)' at '$(EXEC_DIR)'""\n\n"
 	@true
-.PHONY: all
+.PHONY: install
 ##
 ## make the executable out of the object files
 $(EXEC): MyConfig $(H_FILES) | $(LIB_DIR) $(EXEC_DIR)
@@ -196,12 +196,12 @@ $(EXEC): MyConfig $(H_FILES) | $(LIB_DIR) $(EXEC_DIR)
               cp Doc/SUB_MAKEFILE $$d/$(SUB_MAKE_FILE_NAME);\
           fi; \
           done;
-# --> invoke submakes:
+# --> invoke submakes with the default target
 	@for d in $(C_DIRS); \
 	  do \
-#	  $(call PR_TASK_relPATH,"entering",$$d) \
-	  $(MAKE) $(SUB_MAKE_FLAGS) -C $$d; \
-#	  $(call PR_TASK_relPATH,"leaving",$$d) \
+#	    $(call PR_TASK_relPATH,"entering",$$d) \
+	    $(MAKE) $(SUB_MAKE_FLAGS) -C $$d; \
+#	    $(call PR_TASK_relPATH,"leaving",$$d) \
 	  done
 # --> link all of the libaries to build the EXEC:
 	@$(call cmd_and_pr_func, $(CC) $(CFLAGS) -o $(EXEC_DIR)/$@ $(MAIN) $(LDFLAGS),$(EXEC))
@@ -228,6 +228,21 @@ MyConfig:
 	then \
         cp Doc/MyConfig.example MyConfig; \
         fi
+##
+## clean Lib, Exe, dependecy files:
+clean:
+	@echo $(PR_F0) "cleaning '$(EXEC)':"
+	@echo $(PR_L0)
+	@$(call PR_TASK_relPATH,"rm -rf",$(LIB_DIR))
+	@-rm -rf $(LIB_DIR)
+	@$(call PR_TASK_relPATH,"rm -rf",$(EXEC_DIR))
+	@-rm -rf $(LIB_DIR)
+# --> invoke submakes to clean dependency files:
+	@for d in $(C_DIRS); \
+	  do \
+	    $(MAKE) $(SUB_MAKE_FLAGS) -C $$d $@; \
+	  done	 	
+.PHONY: clean
 #######################################################################
 ####################################
 ## some tools for print and compile:
