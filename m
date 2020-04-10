@@ -58,9 +58,9 @@ d_files := \
 ###########
 # default target to make libaries out of object files
 make_lib: $(o_files) $(d_files)
-	$(AR) rcs $(LIB_DIR)/$(lib_name) $(o_files)
-
-#	@$(call build_and_print_func, $(AR) rcs $(LIB_DIR)/$(lib_name) $(o_files), $(lib_name))
+#	$(AR) rcs $(LIB_DIR)/$(lib_name) $(o_files)
+#
+	@$(call build_and_print_func, $(AR) rcs $(LIB_DIR)/$(lib_name) $(o_files), $(lib_name))
 	
 compile_o: $(o_files)
 	@true
@@ -97,7 +97,7 @@ include $(wildcard $(d_dir)/*.d)
 # build and print objects, if error happens it prints full info,
 # otherwise it prints succinctly.
 define build_and_print_func
-$(1) &> $@.COMPILE_ERROR ; \
+$(1) 2> $@.COMPILE_ERROR ; \
 ret=$$? ; \
 if [ $$ret -eq 0 ]; \
 then \
