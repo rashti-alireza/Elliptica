@@ -57,7 +57,7 @@ make_lib: $(o_files) $(d_files)
 
 ## using string % to make the object file according to its c file.
 # then put the resultant into $(o_dir)/$*.o.
-$(o_dir)/%.o :$(c_dir)/%.c  $(d_files)
+$(o_dir)/%.o :$(c_dir)/%.c $(c_dir)/%.h $(H_FILES) $(d_files)
 	@$(call build_and_print_func, $(CC) $(CFLAGS) -o $(o_dir)/$*.o -c $<, $*.o)
 	
 ## figuring out the inter dependencies
