@@ -227,7 +227,7 @@ $(EXEC): MyConfig $(H_FILES) AUTO_ADD_PROJECT | $(LIB_DIR) $(EXEC_DIR)
 ## Note: this depends on how the automation is desinged for the code.
 AUTO_ADD_PROJECT: MyConfig $(H_FILES)
 # --> if file exists delete it:
-	-if [ -f $(auto_gen_c_file) ];\
+	@if [ -f $(auto_gen_c_file) ];\
 	 then \
 	   rm -rf $(auto_gen_c_file); \
 	 fi
@@ -267,9 +267,9 @@ $(O_DIRS):
 ##	
 ## if there is no MyConfig file, use the prototype
 MyConfig:
-	-if [ ! -f MyConfig ];\
+	@if [ ! -f MyConfig ];\
 	then \
-        cp Doc/MyConfig.example MyConfig; \
+          cp Doc/MyConfig.example MyConfig; \
         fi
 ##
 ## clean Lib, Exe, dependecy files:
