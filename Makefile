@@ -83,6 +83,9 @@ MODULE_DIR := $(TOP)/Src/Main/Modules
 CORE_DIR := Core
 # sub-make file name
 SUB_MAKE_FILE_NAME := makefile
+# sub-make options:
+SUB_MAKE_FLAGS := --no-print-directory
+SUB_MAKE_FLAGS += --warn-undefined-variables
 ########################################################################
 ##############
 ## C compiler:
@@ -183,15 +186,19 @@ all: $(EXEC)
 ## make the executable out of the object files
 $(EXEC): MyConfig $(H_FILES) | $(LIB_DIR) $(EXEC_DIR)
 	@echo $(PR_F0) "compiling '$(EXEC)':"
+# --> copy submake directories:
 	@for d in $(C_DIRS); \
-	  do \
-	  if [ ! -f $(C_DIRS)/$(SUB_MAKE_FILE_NAME) ]; \
-	    then \
-	      cp Doc/SUB_MAKEFILE $(C_DIRS)/$(SUB_MAKE_FILE_NAME);\
-	  fi; \
-	  done;
-	@for d in $(C_DIRS); do $(MAKE) -C $$d; done
+          do \
+          if [ ! -f $$d/$(SUB_MAKE_FILE_NAME) ]; \
+            then \
+              cp Doc/SUB_MAKEFILE $$d/$(SUB_MAKE_FILE_NAME);\
+          fi; \
+          done;
+# --> invoke submakes:
+	@$(call cmd_and_pr_func, for d in $(C_DIRS); do $(MAKE) $(SUB_MAKE_FLAGS) -C $$d; done)
+# --> link all of the libaries to build the EXEC:
 	$(CC) $(CFLAGS) -o $(EXEC_DIR)/$@ $(MAIN) $(LDFLAGS)
+# ------------------------------------------------------------------- #
 ##
 ## if EXEC_DIR does not exist make it.	
 $(EXEC_DIR):
@@ -263,5 +270,31 @@ else  \
 echo $(PR_F0) $(1) $(2); \
 fi;
 endef
+
+define pr_cmd
+echo "$(1)"
+endef
+# command and print function, print error if happens otherwise succinctly.
+# useage:
+#
+# $(call cmd_and_pr_func, command, print_this)
+# $(1) refers to command and $(2) refers to print_this.
+define cmd_and_pr_func
+$(strip $(1))
+#2> $@.COMPILE_ERROR ; \
+#ret=$$? ; \
+#if [ $$ret -eq 0 ]; \
+#then \
+#printf "%s %s %-39s %s\n" $(PR_F0) "building" $(strip $(2)) "=> [SUCCESSFU
+#else \
+#echo $(PR_DIVIDER) ; \
+#printf "%s %s %-39s %s\n" $(PR_F0) "building" $(strip $(2)) "=> [FAILED] <
+#cat $@.COMPILE_ERROR ; \
+#fi ; \
+#rm -rf $@.COMPILE_ERROR; \
+#exit $$ret ;
+endef
+# unexport cmd_and_pr_func
+unexport cmd_and_pr_func
 #######################################################################
 
