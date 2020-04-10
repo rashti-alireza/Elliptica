@@ -126,6 +126,18 @@ MODULE  =# to be determined in MyConfig
 PROJECT =# to be determined in MyConfig
 include MyConfig
 ########################################################################
+####################
+## auto generations:
+####################
+
+# name of the auto generated c file
+auto_gen_c_file_name := projects_data_base_MADE_BY_MAKE.c
+# where we put the auto generated c file
+auto_gen_c_file := $(TOP)/Src/Main/$(CORE_DIR)/$(auto_gen_c_file_name)
+# project names added in MyConfig, NOTE: the name of the project function
+# and the name of the project directory assumed to be the same.
+PROJECT_NAMES := $(strip $(notdir $(PROJECT_DIR)))
+########################################################################
 ################################
 ## c sources and object sources:
 ################################
@@ -188,7 +200,7 @@ install: $(EXEC)
 .PHONY: install
 ##
 ## make the executable out of the object files
-$(EXEC): MyConfig $(H_FILES) | $(LIB_DIR) $(EXEC_DIR)
+$(EXEC): MyConfig $(H_FILES) $(AUTO_ADD_PROJECT) | $(LIB_DIR) $(EXEC_DIR)
 # --> print
 	@echo $(PR_F0) "compiling '$(EXEC)':"
 	@echo $(PR_L0)
@@ -208,6 +220,33 @@ $(EXEC): MyConfig $(H_FILES) | $(LIB_DIR) $(EXEC_DIR)
 # --> link all of the libaries to build the EXEC:
 	@$(call cmd_and_pr_func, $(CC) $(CFLAGS) -o $(EXEC_DIR)/$@ $(MAIN) $(LDFLAGS),$(EXEC))
 # ------------------------------------------------------------------- #
+##
+## adding all of the determined projects at Myconfig 
+## into a c file in Core to be compiled. 
+## Note: this depends on how the automation is desinged for the code.
+$(AUTO_ADD_PROJECT): MyConfig $(H_FILES)
+# --> if file exists delete it:
+	-if [-d $(auto_gen_c_file) ];\
+	 then \
+	   rm -rf $(auto_gen_c_file); \
+	 fi
+# --> headers and declarations:
+	@echo "#include \"core_lib.h\"" >> $(auto_gen_c_file)
+	@echo "void add_project(ProjFunc *const projfunc, const char *const name, const char *const des);" >> $(auto_gen_c_file)
+	@echo "int create_db_projects(void);" >> $(auto_gen_c_file)
+	@for p in $(PROJECT_NAMES); \
+	  do \
+	    echo "int " $$p "(void);" >> $(auto_gen_c_file) ;\
+	   done;
+# --> add function to add the projects:
+	@echo "int create_db_projects(void){" >> $(auto_gen_c_file)
+	@for p in $(PROJECT_NAMES); \
+	  do \
+	    echo "add_project(" "$$p,""\"$$p\",0);" >> $(auto_gen_c_file) ;\
+	   done;
+	@echo "return EXIT_SUCCESS;" >> $(auto_gen_c_file)
+	@echo "}" >> $(auto_gen_c_file)
+	
 ##
 ## if EXEC_DIR does not exist make it.	
 $(EXEC_DIR):
