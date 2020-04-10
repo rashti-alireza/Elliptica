@@ -203,9 +203,7 @@ $(EXEC): MyConfig $(H_FILES) | $(LIB_DIR) $(EXEC_DIR)
 # --> invoke submakes with the default target
 	@for d in $(C_DIRS); \
 	  do \
-#	    $(call PR_TASK_relPATH,"entering",$$d) \
 	    $(MAKE) $(SUB_MAKE_FLAGS) -C $$d; \
-#	    $(call PR_TASK_relPATH,"leaving",$$d) \
 	  done
 # --> link all of the libaries to build the EXEC:
 	@$(call cmd_and_pr_func, $(CC) $(CFLAGS) -o $(EXEC_DIR)/$@ $(MAIN) $(LDFLAGS),$(EXEC))
