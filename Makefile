@@ -138,6 +138,19 @@ auto_gen_c_file := $(TOP)/Src/Main/$(CORE_DIR)/$(auto_gen_c_file_name)
 # and the name of the project directory assumed to be the same.
 PROJECT_NAMES := $(foreach d,$(PROJECT),$(notdir $d))
 PROJECT_NAMES := $(strip $(PROJECT_NAMES))
+# the following module(s) are mandatory for compilation;
+# thus, if they don't exist auto generate a function with their 
+# folder name but, the generated function does nothing, only return.
+# NOTE: one must adjust AUTO_GEN_C_FILE target as well.
+## print modules
+SPECIAL_PR_MODULE_NAMES =
+# add the followings if the following required module has not been added
+# it must auto generate it
+pr_required_modules  = $(MODULE_DIR)/Prints/pr_hdf5_silo
+#pr_required_modules +=
+# get those module which are not listed in $(MODULE)
+SPECIAL_PR_MODULE_NAMES = $(notdir $(filter-out $(MODULE),$(pr_required_modules)))
+
 ########################################################################
 ################################
 ## c sources and object sources:
@@ -201,7 +214,7 @@ install: $(EXEC)
 .PHONY: install
 ##
 ## make the executable out of the object files
-$(EXEC): MyConfig $(H_FILES) AUTO_ADD_PROJECT | $(LIB_DIR) $(EXEC_DIR)
+$(EXEC): MyConfig $(H_FILES) AUTO_GEN_C_FILE | $(LIB_DIR) $(EXEC_DIR)
 # --> print
 	@echo $(PR_F0) "compiling '$(EXEC)':"
 	@echo $(PR_L0)
@@ -225,7 +238,7 @@ $(EXEC): MyConfig $(H_FILES) AUTO_ADD_PROJECT | $(LIB_DIR) $(EXEC_DIR)
 ## adding all of the determined projects at Myconfig 
 ## into a c file in Core to be compiled. 
 ## Note: this depends on how the automation is desinged for the code.
-AUTO_ADD_PROJECT: MyConfig $(H_FILES)
+AUTO_GEN_C_FILE: MyConfig $(H_FILES)
 # --> if file exists delete it:
 	@if [ -f $(auto_gen_c_file) ];\
 	 then \
@@ -244,10 +257,18 @@ AUTO_ADD_PROJECT: MyConfig $(H_FILES)
 	@echo "int create_db_projects(void){" >> $(auto_gen_c_file)
 	@for p in $(PROJECT_NAMES); \
 	  do \
-	    echo "  add_project(" "$$p,""\"$$p\",0);" >> $(auto_gen_c_file) ;\
+	    echo "  add_project(" "$$p,""\"$$p\",0);" >> $(auto_gen_c_file) ; \
 	   done;
 	@echo "  return EXIT_SUCCESS;" >> $(auto_gen_c_file)
 	@echo "}" >> $(auto_gen_c_file)
+# --> add function if spacial print module does not exist:
+	@for m in $(SPECIAL_PR_MODULE_NAMES); \
+	  do \
+	   echo "void " $$m "(Pr_Field_T *const pr);" >> $(auto_gen_c_file) ; \
+	   echo "void " $$m "(Pr_Field_T *const pr){" >> $(auto_gen_c_file) ; \
+	   echo "UNUSED(pr);" >> $(auto_gen_c_file) ; \
+	   echo "return;}" >> $(auto_gen_c_file) ; \
+	 done
 	
 ##
 ## if EXEC_DIR does not exist make it.	
