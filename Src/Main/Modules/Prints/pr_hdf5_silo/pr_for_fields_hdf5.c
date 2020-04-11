@@ -113,30 +113,6 @@ void pr_hdf5_silo(Pr_Field_T *const pr)
     write_multi_mesh(pr);
   if (pr->multivar_f)/* if multivar flag active */
     write_multi_vars(pr);
-  
-  /* freeing info struct */
-  free_info_s(pr);
-}
-
-/* freeing info struct */
-static void free_info_s(Pr_Field_T *const pr)
-{
-  struct Info_S *info = pr->group;
-  unsigned i;
-  
-  for (i = 0; i < pr->ng; ++i)
-  {
-    if (info[i].vec_flg)
-    {
-      free(info[i].comp[0]);
-      free(info[i].comp[1]);
-      free(info[i].comp[2]);
-    }
-    else
-      free(info[i].field);
-    
-  }
-  free(info);
 }
 
 /* make master file to encompass all of the patch info 

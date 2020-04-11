@@ -3,6 +3,36 @@
 // July 2018
 */
 
+/* Print Fields:
+// note: in Silo language, I'm using curvilinear format for both mesh and data (fields)
+// regardless of the patch is Cartesian or not.
+// note: data and mesh in Silo must be written in column major order,
+//       otherwise for inhomogeneous resolutions you get a scrambled mesh.
+//
+// usage examples:
+// ===============
+// # parameter that is determined in input file is like:
+// print_fields_4d = yes,Format:HDF5,{(V_U0,V_U1,V_U2),psi,eta,(a_U0,a_U1,a_U2)}
+// # as one can see the vector quantities determined by parenthesis 
+// # and all of the desired fields need to be put in curly bracket
+//
+// Pr_Field_T *pr  = init_PrField(grid);
+// pr->folder      = "folder_path";
+// pr->par         = "print_fields_4d";
+// pr->cycle       = iteration_number;// if you wanna plot data at each iteration
+//
+// # the following options and flag are not necessary, their default value is 0.
+// pr->multimesh_f = 1; # if you wanna make a master file for all patches as a whole grid
+// pr->multivar_f  = 1; # if you wanna make a master file for all fields. This, option seems not working with VisIt.
+// pr->abc_f       = 1; # if you wanna have the patches and fields in (X,Y,Z) corods or (a,b,c) coords.
+//
+// # print all patchs and fields
+// pr_fields(pr);
+//
+// # free
+// free_PrField(pr);
+*/
+
 #include "pr_for_fields.h"
 
 /* DeLimits */
@@ -64,6 +94,22 @@ Pr_Field_T *init_PrField(const Grid_T *const grid)
 /* freeing Pr_Field_T */
 void free_PrField(Pr_Field_T *pr)
 {
+  struct Info_S *info = pr->group;
+  unsigned i;
+  
+  for (i = 0; i < pr->ng; ++i)
+  {
+    if (info[i].vec_flg)
+    {
+      free(info[i].comp[0]);
+      free(info[i].comp[1]);
+      free(info[i].comp[2]);
+    }
+    else
+      free(info[i].field);
+    
+  }
+  _free(info);
   _free(pr);
 }
 

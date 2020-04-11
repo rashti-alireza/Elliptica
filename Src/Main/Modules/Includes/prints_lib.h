@@ -20,7 +20,7 @@ typedef enum PRINT_T
   PRINT_INTERFACES
 }Print_T;
 
-/* print field */
+/* print field ,this is a general stuct for print purposes. */
 typedef struct PR_FIELD_T
 {
   const struct GRID_T *grid;
@@ -31,8 +31,8 @@ typedef struct PR_FIELD_T
   double time;
   unsigned ng;/* number of group */
   void *group;/* points to a group for printing */
-  void *opt_patch;/* points to options for patch */
-  void *opt_field;/* points to options for field */
+  void *opt_patch;/* options for patch */
+  void *opt_field;/* options for field */
   void *vptr;/* general pointer for different purposes */
   void *a;/* a in double or float */
   void *b;/* b in double or float */

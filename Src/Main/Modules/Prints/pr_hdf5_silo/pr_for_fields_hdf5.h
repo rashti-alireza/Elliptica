@@ -14,7 +14,6 @@ Pr_Field_T *init_PrField(const Grid_T *const grid);
 void pr_fields(Pr_Field_T *const pr);
 void pr_hdf5_silo(Pr_Field_T *const pr);
 void free_PrField(Pr_Field_T *pr);
-static void free_info_s(Pr_Field_T *const pr);
 static void pr_structured_mesh_3d_silo(const Pr_Field_T *const pr);
 static void pr_scalar_on_structured_mesh_3d_silo(const Pr_Field_T *const pr);
 static void pr_vector_on_structured_mesh_3d_silo(const Pr_Field_T *const pr);
