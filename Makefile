@@ -11,7 +11,6 @@
 # A complete documentation can be found:
 # https://www.gnu.org/software/make/manual/
 #
-# To bug report or feedback email me at "rashti.alireza@gmail.com"
 #
 # The hierarchy of the source files and libraries are like the followings;
 # Thus, one can use this chart to adjust their project by the variables
@@ -59,8 +58,11 @@
 # $ make -C dir # means cd to dir and then invoke make
 # $ make -j4    # using 4 processors to build the target
 #
-# NOTE: in the following the capital words are exported and 
-# small words are local.
+# NOTE: you can find the sub-make file for all modules and projects 
+# at ./Doc/SUB_MAKEFILE, this is the DEFAULT.
+#
+#
+# To report bug or feedback email me at "rashti.alireza@gmail.com" !
 ########################################################################
 #######################
 ## paths and variables:
@@ -218,7 +220,7 @@ $(EXEC): MyConfig $(H_FILES) AUTO_GEN_C_FILE | $(LIB_DIR) $(EXEC_DIR)
 # --> print
 	@echo $(PR_F0) "compiling '$(EXEC)':"
 	@echo $(PR_L0)
-# --> copy submake directories:
+# --> copy submake directories from './Doc/SUB_MAKEFILE':
 	@for d in $(C_DIRS); \
           do \
           if [ ! -f $$d/$(SUB_MAKE_FILE_NAME) ]; \
