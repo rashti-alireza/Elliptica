@@ -16,13 +16,12 @@ EXEC_DIR := $(TOP)/Exe
 ## modules to be compiled:
 ##########################
 
-## we need all of the modules
+## we need all of the the following modules:
 MODULE += $(MODULE_DIR)/Manifold
 MODULE += $(MODULE_DIR)/Fields
 MODULE += $(MODULE_DIR)/Error_Handlings
 MODULE += $(MODULE_DIR)/Text_and_File_Tools
 MODULE += $(MODULE_DIR)/Includes
-#MODULE += $(MODULE_DIR)/Memory_Managers
 MODULE += $(MODULE_DIR)/Prints
 MODULE += $(MODULE_DIR)/Utilities
 MODULE += $(MODULE_DIR)/Maths/Linear_Algebra
@@ -38,6 +37,10 @@ MODULE += $(MODULE_DIR)/Physics/StressEnergy_Tensor
 MODULE += $(MODULE_DIR)/Physics/EoS
 MODULE += $(MODULE_DIR)/Physics/Observables
 MODULE += $(MODULE_DIR)/Physics/Transformation
+
+# one can comment out these module(s):
+#MODULE += $(MODULE_DIR)/Prints/pr_hdf5_silo
+
 ########################################################################
 ###########################
 ## Projects to be compiled:

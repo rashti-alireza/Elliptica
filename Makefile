@@ -144,12 +144,12 @@ PROJECT_NAMES := $(strip $(PROJECT_NAMES))
 # NOTE: one must adjust AUTO_GEN_C_FILE target as well.
 ## print modules
 SPECIAL_PR_MODULE_NAMES =
-# add the followings if the following required module has not been added
-# it must auto generate it
-pr_required_modules  = $(MODULE_DIR)/Prints/pr_hdf5_silo
-#pr_required_modules +=
+# add the followings if the following required module(s) has 
+# not been added. it must auto be generated.
+pr_required  = $(MODULE_DIR)/Prints/pr_hdf5_silo
+#pr_required +=
 # get those module which are not listed in $(MODULE)
-SPECIAL_PR_MODULE_NAMES = $(notdir $(filter-out $(MODULE),$(pr_required_modules)))
+SPECIAL_PR_MODULE_NAMES = $(notdir $(filter-out $(MODULE),$(pr_required)))
 
 ########################################################################
 ################################
