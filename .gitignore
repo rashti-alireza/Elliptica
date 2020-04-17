@@ -1,0 +1,43 @@
+#Ignore the following:
+
+# ignore backup joe files:
+*.*~ 
+*~
+DEADJOE
+#.gitignore
+
+# ignore folder Bin
+Bin
+
+#ignore input files
+#*.in
+#*.in~
+
+#ignore output directory
+*_output_*/
+
+#ignore parameter directory
+Parfiles/*
+
+#ignore Trash directory
+Trash/*
+
+#ignore makes
+makefile
+MyConfig
+
+#ignore ctags
+tags
+
+# ignore backup dir
+backup
+
+# ignore Lib and Exe
+Lib/*
+Exe/*
+
+# dependency files
+.dep
+
+# auto-generated things:
+projects_data_base_MADE_BY_MAKE.c
