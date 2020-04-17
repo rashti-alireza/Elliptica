@@ -68,4 +68,8 @@ void bbn_set_default_parameters(void)
   // 	for phi requires to be exponentially decreasing and be C^2
   //    and for enthalpy it requires to be sum{Clm * r^-(l+1) * Ylm}. */
   Pset_default("extrapolate_fluid_fields_method","phi:exp_continuity,enthalpy:Ylm");
+  
+  /* max allowed enthalpy L2 norm residual; if root finder of NS surface 
+  // gets L2 norm residual below this number => it's been failed. */
+  Pset_default("enthalpy_allowed_L2_residual","1e-4");
 }

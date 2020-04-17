@@ -2467,6 +2467,8 @@ static void find_NS_surface_Ylm_method_CS(Grid_T *const grid,struct Grid_Params_
   unsigned Ntheta,Nphi;/* total number of theta and phi points */
   const unsigned lmax = (unsigned)Pgeti("NS_surface_Ylm_expansion_max_l");
   const double RESIDUAL = sqrt(Pgetd("RootFinder_Tolerance"));
+  const double max_h_L2_res = Pgetd("enthalpy_allowed_L2_residual");
+  double h_L2_res = 0;
   //const double W1  = Pgetd("Solving_Field_Update_Weight");
   //const double W2  = 1-W1;
   double theta,phi;
@@ -2572,7 +2574,7 @@ static void find_NS_surface_Ylm_method_CS(Grid_T *const grid,struct Grid_Params_
         printf(". Root finder for NS surface at %s:\n.. ",h_patch->name);
         print_root_finder_exit_status(root);
         printf(".. Residual = %g\n",root->residual);
-        NS_surface_finder_work_flg = 0;/* since the residual is large don't update */
+        //NS_surface_finder_work_flg = 0;/* since the residual is large don't update */
       }
       
       /*  new coords of R respect to the center of NS */
@@ -2591,6 +2593,12 @@ static void find_NS_surface_Ylm_method_CS(Grid_T *const grid,struct Grid_Params_
     }/* end of for (j = 0; j < Nphi; ++j) */
   }/* end of for (i = 0; i < Ntheta; ++i) */
   
+  h_L2_res = L2_norm(Ntheta*Nphi,h_res,0);
+  if (h_L2_res > max_h_L2_res)
+    NS_surface_finder_work_flg = 0;/* since the residual is large don't update */
+  else
+    NS_surface_finder_work_flg = 1;
+    
   /* adding maximum radius of NS to grid parameters */
   GridParams->Max_R_NS_l = Max_R_NS;
   
@@ -2605,10 +2613,9 @@ static void find_NS_surface_Ylm_method_CS(Grid_T *const grid,struct Grid_Params_
   GridParams->NS_R_Ylm->Lmax    = lmax;
   
   /* printing */
-  
   printf("|--> Max NS radius       = %e\n",Max_R_NS);
   printf("|--> Min NS radius       = %e\n",Min_R_NS);
-  printf("|--> L2 norm of enthalpy = %e\n",L2_norm(Ntheta*Nphi,h_res,0));
+  printf("|--> L2 norm of enthalpy = %e\n",h_L2_res);
   l = lmax;
   for (m = 0; m <= l; ++m)
   {
