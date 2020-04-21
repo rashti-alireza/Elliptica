@@ -393,7 +393,7 @@ static void P_ADM_control(Grid_T *const grid)
                               get_func_P_ADM_adjustment(adjust[2]);
   
   /* update P_ADM and J_ADM momentum parameters */
-  Observable_T *obs = init_observable(grid);
+  Observable_T *obs = init_observable(grid,bbn_plan_PsJs_ADM_CS,bbn_free_PsJs_ADM_CS);
   double p1[3] = {0};
   double p2[3] = {0};
   double j_adm[3] = {0};
@@ -3782,7 +3782,7 @@ static Grid_T *TOV_KerrSchild_approximation(void)
   find_Euler_eq_const_TOV_KerrSchild(grid);
   
   /* add some parameters for momentum and its adjustments */
-  Observable_T *obs = init_observable(grid);
+  Observable_T *obs = init_observable(grid,bbn_plan_PsJs_ADM_CS,bbn_free_PsJs_ADM_CS);
   obs->quantity     = "ADM_momentums";
   plan_observable(obs);
   Psetd("P_ADM_x",obs->Px_ADM(obs));

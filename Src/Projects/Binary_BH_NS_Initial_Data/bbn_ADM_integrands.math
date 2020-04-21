@@ -1,0 +1,119 @@
+# populating ADM momentum integrand P^{ij}*n_{j} and G^{i} 
+# using arxiv:1506.01689 formalism.
+# their names are ADM_integrand_P and ADM_integrand_G respectively.
+
+# Manifold or grid Dimension
+Dimension = 3;
+
+# point on manifold shown by:
+Point = ijk;
+
+C_macro  = READ_v(name);
+C_macro2 = add_and_get_field(name);
+
+`#include "core_lib.h"`
+`#include "physics_observables_lib.h"`
+`#include "utilities_lib.h"`
+`#include "manifold_lib.h"`
+`#include "maths_general_lib.h"`
+`#include "maths_calculus_lib.h"`
+`#include "fields_lib.h"`
+`#include "bbn_headers.h"`
+``
+`#define add_and_get_field(name) \`
+         `  if (_Ind(#name) >= 0)\`# means if it exists already
+         `  {DECLARE_FIELD(name);REMOVE_FIELD(name);}\`
+         `  ADD_FIELD(name);REALLOC_v_WRITE_v(name);`
+``
+``
+`void bbn_populate_ADM_integrand_PdS_GdV(const Observable_T *const obs);`
+`void bbn_populate_ADM_integrand_PdS_GdV(const Observable_T *const obs)`
+`{`
+`  struct PsJs_ADM_S **adm = obs->items;`
+`  const unsigned N = obs->Nitems;`
+`  unsigned p;`
+``
+`  for(p = 0; p < N; ++p)`
+`  {`
+`  Patch_T *patch = adm[p]->patch;`
+
+Declare = 
+{
+  # _A^{ij}
+ (obj = Field,name = _A_UiUj, rank = UU, C_macro);
+
+ # conformal metric 
+ (obj = Field,name = _gamma, rank = DD, C_macro);
+
+ # conformal metric inverse
+ (obj = Field,name = _gammaI, rank = UU, C_macro);
+
+ # conformal factor
+ (obj = Field,name = psi, rank = 0, C_macro);
+
+ # conformal factor derivative
+ (obj = Field,name = dpsi, rank = D, C_macro);
+
+ # Christoffer symbol value
+ (obj = Field,name = _Gamma, rank = UDD, C_macro);
+
+ # trKij
+ (obj = Field,name = K, rank = 0, C_macro);
+
+ # normal vector components
+ (obj = Field,name = n, rank = U, none);
+
+ # integrand P
+ (obj = Field,name = ADM_integrand_P, rank = U, C_macro2);
+
+ # integrand G
+ (obj = Field,name = ADM_integrand_G, rank = U, C_macro2);
+}
+# symmetries:
+Symm[_A_UiUj(i,j)  = _A_UiUj(j,i)];
+Symm[_gammaI(i,j)  = _gammaI(j,i)];
+Symm[_gamma(i,j)   = _gamma(j,i)];
+Symm[_Gamma(i,j,k) = _Gamma(i,k,j)];
+
+`    unsigned nn = patch->nn;`
+`    unsigned ijk;`
+``
+# populating the integrands:
+
+# if we needs surface integral too.
+`    if (adm[p]->surface_integration_flg)`
+`    {`
+`      const double *n_U0 = adm[p]->n_U0;`
+`      const double *n_U1 = adm[p]->n_U1;`
+`      const double *n_U2 = adm[p]->n_U2;`
+`      for (ijk = 0; ijk < nn; ++ijk)`
+`      {`
+       psi4   = psi**4;
+       psi6   = psi**(6);
+       P(i,j) = _A_UiUj(i,j)-(2/3)*K*psi6*_gammaI(i,j);
+       G1(i)  = _Gamma(i,j,k)*P(-j,-k) + _Gamma(j,jp,k)*KD(-j,-jp)*P(i,-k);
+       G2(i)  = -2*_gamma(-j,-k)*P(j,k)*_gammaI(i,l)*dpsi(-l)/psi;
+       G(i)   = G1(i)+G2(i);
+       Pn(i)  = P(i,j)*n(k)*_gamma(-j,-k)*psi4;
+       Cpopulate[ADM_integrand_P = Pn];
+       Cpopulate[ADM_integrand_G = G];
+`      }`
+`    }`
+# if no need for surface inegral.
+`    else`
+`    {`
+# suffix '_' is added to prevent cpi error for duplicate variables
+`      for (ijk = 0; ijk < nn; ++ijk)`
+`      {`
+       psi6_   = psi**(6);
+       P_(i,j) = _A_UiUj(i,j)-(2/3)*K*psi6_*_gammaI(i,j);
+       G1_(i)  = _Gamma(i,j,k)*P_(-j,-k) + _Gamma(j,jp,k)*KD(-j,-jp)*P_(i,-k);
+       G2_(i)  = -2*_gamma(-j,-k)*P_(j,k)*_gammaI(i,l)*dpsi(-l)/psi;
+       G_(i)   = G1_(i)+G2_(i);
+       Cpopulate[ADM_integrand_G = G_];
+`      }`
+`    }`
+``
+`  }`# end of for(p = 0; p < N; ++p)
+
+`}`

@@ -1,3 +1,8 @@
+#ifndef bbn_headers_LIB_H
+#define bbn_headers_LIB_H
+
+
+
 #include "core_lib.h"
 #include "TOV_lib.h"
 #include "maths_general_lib.h"
@@ -9,6 +14,11 @@
 #include "physics_StressEnergyTensor_lib.h"
 #include "physics_transformation_lib.h"
 #include "fields_lib.h"
+#include "physics_observables_lib.h"
+
+/*----------------------------------------------------------------------*/
+/* some sturcture for different purposes                                */
+/*----------------------------------------------------------------------*/
 
 /* root finder struc for force balance equation */  
 struct Force_Balance_RootFinder_S
@@ -26,6 +36,36 @@ struct Force_Balance_RootFinder_S
   unsigned find_x_CM: 1;
   unsigned find_Omega: 1;
   int dir;/* direction of derivative */
+};
+
+/* items needed to calculate Ps and Js ADMs */
+struct PsJs_ADM_S
+{
+  Patch_T *patch;/* the patch in which the following variables are defined */
+  /* physical metric components */
+  double *g00;
+  double *g01;
+  double *g02;
+  double *g11;
+  double *g12;
+  double *g22;
+  /* normal vector at the surface S, outward */
+  double *n_U0;
+  double *n_U1;
+  double *n_U2;
+  /* integration flags */
+  unsigned surface_integration_flg: 1;/* if 1 means it measn 
+                                      // we need surface integration 
+                                      // on this patch as well, 
+                                      // 0 means, no need */
+  /* which hypersurface the surface integral is carried out */
+  unsigned X_surface: 1;
+  unsigned Y_surface: 1;
+  unsigned Z_surface: 1;
+  /* index of hypersurface for each X,Y and Z respectively */
+  unsigned I;
+  unsigned J;
+  unsigned K;
 };
 
 void bbn_study_initial_data(Grid_T *const grid);
@@ -90,8 +130,11 @@ int bbn_IsCheckpointFileCompleted(const char *const file_path);
 void bbn_add_fields_in_patch(Patch_T *const patch);
 void bbn_bam_set_bam_fields(Grid_T *const grid);
 void bbn_print_properties(Grid_T *const grid,const unsigned iteration, const char *const folder,const char *const open_file_mode,const int pr_flg);
+void bbn_plan_PsJs_ADM_CS(Observable_T *obs);
+void bbn_free_PsJs_ADM_CS(Observable_T *obs);
 
 
+#endif
 
 
 
