@@ -1,45 +1,18 @@
 #ifndef physics_observables_LIB_H
 #define physics_observables_LIB_H
 
-
 /* struct for physics observables */
 typedef struct OBSERVABLE_T
 {
   const char *quantity;/* which quantity is computed */
-  void *grid;/* computational grid */
-  /* ADM momentums */
-  struct
-  {
-    void *patch;/* the patch in which the following variables are defined */
-    /* physical metric components */
-    double *g00;
-    double *g01;
-    double *g02;
-    double *g11;
-    double *g12;
-    double *g22;
-    /* normal vector at the surface S, outward */
-    double *n_U0;
-    double *n_U1;
-    double *n_U2;
-    /* integration flags */
-    unsigned surface_integration_flg: 1;/* if 1 means it measn 
-                                        // we need surface integration 
-                                        // on this patch as well, 
-                                        // 0 means, no need */
-    /* which hypersurface the surface integral is carried out */
-    unsigned X_surface: 1;
-    unsigned Y_surface: 1;
-    unsigned Z_surface: 1;
-    /* index of hypersurface for each X,Y and Z respectively */
-    unsigned I;
-    unsigned J;
-    unsigned K;
-    
-  }**ADM;
-  unsigned N_ADM;/* number of ADM struct */
-  /* functions to calculate ADM momentums in each direction */
+  Grid_T *grid;/* computational grid */
+  void *items;/* this is general struct that composes 
+               // the needed material and items to calculate 
+               // the quantities of interest. this struct is populated
+               // by plan and freed by free fucntions */
+  unsigned Nitems;/* number of items */
   
+  /* functions to calculate ADM momentums in each direction */
   double (*Px_ADM)(struct OBSERVABLE_T *const obs);
   double (*Py_ADM)(struct OBSERVABLE_T *const obs);
   double (*Pz_ADM)(struct OBSERVABLE_T *const obs);
@@ -50,9 +23,15 @@ typedef struct OBSERVABLE_T
   /* function to calculate masses */
   double (*ADM_mass)(struct OBSERVABLE_T *obs);
   double (*Komar_mass)(struct OBSERVABLE_T *obs);
+  
+  /* preparing functions and freeing functions of items stuct
+  // these functions are populated during initilization of Observable_T */
+  void (*plan_items)(struct OBSERVABLE_T *obs);
+  void (*free_items)(struct OBSERVABLE_T *obs);
 }Observable_T;
 
-Observable_T *init_observable(void *grid);
+
+Observable_T *init_observable(void *grid,void (*plan_items)(struct OBSERVABLE_T *obs),void (*free_items)(struct OBSERVABLE_T *obs));
 void plan_observable(Observable_T *const obs);
 void free_observable(Observable_T *obs);
 
