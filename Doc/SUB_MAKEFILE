@@ -104,8 +104,8 @@ else \
    then \
    rm -rf $(LIB_DIR)/$(lib_name); \
    fi; \
-   print "%s"$(PR_L0) ; \
-   print "%s"$(PR_ERROR) ; \
+   printf "%s\n"$(PR_L0) ; \
+   printf "%s\n"$(PR_ERROR)"\n" ; \
    cat $@.COMPILE_ERROR ; \
    printf "\n%s %s %-39s %s\n" $(PR_F0) "building" $(strip $(2)) "=> [FAILED] <="; \
    echo $(PR_L0) ;\

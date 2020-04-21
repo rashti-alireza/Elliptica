@@ -21,7 +21,6 @@ MODULE += $(MODULE_DIR)/Manifold
 MODULE += $(MODULE_DIR)/Fields
 MODULE += $(MODULE_DIR)/Error_Handlings
 MODULE += $(MODULE_DIR)/Text_and_File_Tools
-MODULE += $(MODULE_DIR)/Includes
 MODULE += $(MODULE_DIR)/Prints
 MODULE += $(MODULE_DIR)/Utilities
 MODULE += $(MODULE_DIR)/Maths/Linear_Algebra
