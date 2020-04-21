@@ -143,7 +143,7 @@ PROJECT_NAMES := $(strip $(PROJECT_NAMES))
 # the following module(s) are mandatory for compilation;
 # thus, if they don't exist auto generate a function with their 
 # folder name but, the generated function does nothing, only return.
-# NOTE: one must adjust AUTO_GEN_C_FILE target as well.
+# NOTE: one must adjust $(auto_gen_c_file) target as well.
 ## print modules
 SPECIAL_PR_MODULE_NAMES =
 # add the followings if the following required module(s) has 
@@ -216,7 +216,7 @@ install: $(EXEC)
 .PHONY: install
 ##
 ## make the executable out of the object files
-$(EXEC): MyConfig $(H_FILES) AUTO_GEN_C_FILE | $(LIB_DIR) $(EXEC_DIR)
+$(EXEC): MyConfig $(H_FILES) $(auto_gen_c_file) | $(LIB_DIR) $(EXEC_DIR)
 # --> print
 	@echo $(PR_F0) "compiling '$(EXEC)':"
 	@echo $(PR_L0)
@@ -240,7 +240,7 @@ $(EXEC): MyConfig $(H_FILES) AUTO_GEN_C_FILE | $(LIB_DIR) $(EXEC_DIR)
 ## adding all of the determined projects at Myconfig 
 ## into a c file in Core to be compiled. 
 ## Note: this depends on how the automation is desinged for the code.
-AUTO_GEN_C_FILE: MyConfig $(H_FILES)
+$(auto_gen_c_file): MyConfig $(H_FILES)
 # --> if file exists delete it:
 	@if [ -f $(auto_gen_c_file) ];\
 	 then \
