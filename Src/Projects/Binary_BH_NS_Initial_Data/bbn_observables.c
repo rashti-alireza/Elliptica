@@ -77,6 +77,7 @@ void bbn_plan_PsJs_ADM_CS(Observable_T *obs)
     /* alloc memory for each patch */
     adm = calloc(N,sizeof(*adm));
     pointerEr(adm);
+    /* this is where we link to obs struct */
     obs->items = adm;
     obs->Nitems = N;
     
