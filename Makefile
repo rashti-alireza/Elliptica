@@ -127,6 +127,8 @@ SYSTEM_LIBS = -lm
 MODULE  =# to be determined in MyConfig
 PROJECT =# to be determined in MyConfig
 include MyConfig
+# MyConfig file path
+MyConfig_FILE := $(TOP)/MyConfig
 ########################################################################
 ####################
 ## auto generations:
@@ -195,8 +197,9 @@ C_LIBS += $(C_LIBS)
 CFLAGS = $(DFLAGS) $(OFLAGS) $(WARN) $(INCS) $(SPECIAL_INCS)
 # all linking flags, Note: the order matters!
 LDFLAGS = $(C_LIBS_PATH) $(C_LIBS) $(SPECIAL_LIBS) $(SYSTEM_LIBS)
-
-# exporting to other submake
+# global crucial dependency files:
+DEPENDENCY_FILES = $(H_FILES) $(MyConfig_FILE) 
+# exporting to other submakes
 export
 ########################################################################
 #####################
@@ -216,7 +219,7 @@ install: $(EXEC)
 .PHONY: install
 ##
 ## make the executable out of the object files
-$(EXEC): MyConfig $(H_FILES) $(auto_gen_c_file) | $(LIB_DIR) $(EXEC_DIR)
+$(EXEC): $(DEPENDENCY_FILES) $(auto_gen_c_file) | $(LIB_DIR) $(EXEC_DIR) MyConfig
 # --> print
 	@echo $(PR_F0) "compiling '$(EXEC)':"
 	@echo $(PR_L0)
@@ -240,7 +243,7 @@ $(EXEC): MyConfig $(H_FILES) $(auto_gen_c_file) | $(LIB_DIR) $(EXEC_DIR)
 ## adding all of the determined projects at Myconfig 
 ## into a c file in Core to be compiled. 
 ## Note: this depends on how the automation is desinged for the code.
-$(auto_gen_c_file): MyConfig $(H_FILES)
+$(auto_gen_c_file): $(DEPENDENCY_FILES)
 # --> if file exists delete it:
 	@if [ -f $(auto_gen_c_file) ];\
 	 then \
