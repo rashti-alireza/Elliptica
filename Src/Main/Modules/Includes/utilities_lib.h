@@ -63,6 +63,7 @@ unsigned IsItNSPatch(const Patch_T *const patch);
 unsigned IsItNSSurroundingPatch(const Patch_T *const patch);
 unsigned IsItNSSurface(const Patch_T *const patch);
 unsigned IsItOutermostPatch(const Patch_T *const patch);
+unsigned IsItFarthestOutermostPatch(const Patch_T *const patch);
 void dbprint(const double *v,const unsigned n,const char *const desc);
 Patch_T *GetPatch(const char *const stem,const Grid_T *const grid);
 unsigned IsItInsideBHPatch(const Patch_T *const patch);

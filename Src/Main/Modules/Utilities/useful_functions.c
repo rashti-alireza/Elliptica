@@ -651,6 +651,25 @@ unsigned IsItOutermostPatch(const Patch_T *const patch)
   return ret;
 }
 
+/* ->return value: if the patch covers a part of the farthest outermost patches 1, otherwise 0 */
+unsigned IsItFarthestOutermostPatch(const Patch_T *const patch)
+{
+  unsigned ret = 0;
+  char str[1000] = {'\0'};
+  
+  if (strcmp_i(patch->grid->kind,"BBN_CubedSpherical_grid"))
+  {
+    sprintf(str,"outermost%d",Pgeti("Number_of_Outermost_Split")-1);
+    /* it could have used regex, but need extra attention to NS surrounding case */
+    if (strstr(patch->name,str))
+       ret = 1;
+  }
+  else
+    abortEr(NO_JOB);
+    
+  return ret;
+}
+
 /* ->return value: if the patch is a filling box patch, 1, otherwise, 0 */
 unsigned IsItFillingBoxPatch(const Patch_T *const patch)
 {

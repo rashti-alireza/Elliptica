@@ -7,6 +7,7 @@
 
 #define EPS 1E-11
 #define UF_OpenMP(x) _Pragma(#x)
+#define MAX_STR_LEN 1000
 
 void test_start(const char *const file,const int line);
 unsigned countf(void *const p);
@@ -48,5 +49,9 @@ void free_2d(void *mem0);
 double **alloc_2D_double(const long unsigned R,const long unsigned C);
 double *alloc_double(const unsigned N);
 void _free(void *p);
+unsigned IsItFarthestOutermostPatch(const Patch_T *const patch);
+
+
+
 
 
