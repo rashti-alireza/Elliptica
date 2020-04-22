@@ -406,7 +406,7 @@ static double dg_dx_of_df_dx_SD(void *params,double *const x,const unsigned dir,
 // at point x with respect to x^{dir} using finite difference (three-point midpoint formula)*/
 static double dg_dx_FD3M_SD(void *params,double *const x,const unsigned dir,double (**f)(void *params,const double *const x),double (**df_dx)(void *params,const double *const x,const unsigned dir))
 {
-  const double eps    = 10E-10;
+  const double eps    = 10E-5;
   const double fabsx  = fabs(x[dir])*eps;
   const double h      = fabsx > eps ? fabsx : eps;/* just in case fabsx is 0, so h won't get 0 */
   double gl,gr,dg_dx;
@@ -429,7 +429,7 @@ static double dg_dx_FD3M_SD(void *params,double *const x,const unsigned dir,doub
 // at point x with respect to x^{dir} using finite difference (three-point right end formula)*/
 static double dg_dx_FD3R_SD(void *params,double *const x,const unsigned dir,double (**f)(void *params,const double *const x),double (**df_dx)(void *params,const double *const x,const unsigned dir))
 {
-  const double eps    = 10E-10;
+  const double eps    = 10E-5;
   const double fabsx  = fabs(x[dir])*eps;
   const double h      = fabsx > eps ? fabsx : eps;/* just in case fabsx is 0, so h won't get 0 */
   double g,gr1,gr2,dg_dx;
@@ -454,7 +454,7 @@ static double dg_dx_FD3R_SD(void *params,double *const x,const unsigned dir,doub
 // at point x with respect to x^{dir} using finite difference (three-point left end formula)*/
 static double dg_dx_FD3L_SD(void *params,double *const x,const unsigned dir,double (**f)(void *params,const double *const x),double (**df_dx)(void *params,const double *const x,const unsigned dir))
 {
-  const double eps    = 10E-10;
+  const double eps    = 10E-5;
   const double fabsx  = fabs(x[dir])*eps;
   const double h      = fabsx > eps ? fabsx : eps;/* just in case fabsx is 0, so h won't get 0 */
   double g,gl1,gl2,dg_dx;
