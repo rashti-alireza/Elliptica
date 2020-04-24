@@ -286,6 +286,8 @@ unsigned find_index_string(char **const heystack,const unsigned N,const char *co
 // by using regular expression libraries.
 // it's case sensitive, and new line is NOT treated as separator of new string.
 // note: regex_pattern must be in posix format, i.e. [:digit:], [:alpha:] etc.
+// ex: regex_pattern = ".+(left|right)_NS_surrounding.+"
+//     => matches: _left_NS_surrounding_
 // ->return value: 1 if matches, 0 otherwise */
 int regex_search(const char *const regex_pattern,const char *const str)
 {
