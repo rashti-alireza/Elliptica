@@ -5099,7 +5099,8 @@ static void NS_BH_surface_CubedSpherical_grid(Grid_T *const grid,struct Grid_Par
     
     if (GridParams->grid_prev)
     {
-      printf("~> |R_2 - R1|/|R_1| = %g >= Tolerance = %g:\n",dR_rms,NS_surf_tolerance);
+      if (dR_rms > 0)
+        printf("~> |R_2 - R1|/|R_1| = %g >= Tolerance = %g:\n",dR_rms,NS_surf_tolerance);
       
       /* update the surface in relaxed fashion */
       if (same_res_flag && did_NS_surface_finder_work)
