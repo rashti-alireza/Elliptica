@@ -16,4 +16,8 @@ static double ADM_momentum_z_BBN_CS(Observable_T *const obs);
 static double ADM_angular_momentum_x_BBN_CS(Observable_T *const obs);
 static double ADM_angular_momentum_y_BBN_CS(Observable_T *const obs);
 static double ADM_angular_momentum_z_BBN_CS(Observable_T *const obs);
+static void populate_normal_surrounding(struct PsJs_ADM_S *const adm,const Dd_T dir);
+
+
+
 

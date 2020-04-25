@@ -28,7 +28,7 @@
 */
 
 #include "bbn_observables.h"
-#define VOLUME_INTEGRAL 0 /* put it to 1 if you want \int{Gdv} */
+#define VOLUME_INTEGRAL 1 /* put it to 1 if you want \int{Gdv} */
 
 /* plan and populate PsJs_ADM_S sturct and obs struct */
 void bbn_plan_PsJs_ADM_CS(Observable_T *obs)
@@ -37,144 +37,179 @@ void bbn_plan_PsJs_ADM_CS(Observable_T *obs)
   
   if (!strcmp_i(grid->kind,"BBN_CubedSpherical_grid"))
     abortEr(NO_OPTION);
-  
+  if (!strcmp_i(obs->quantity,"ADM_momentums") && 
+      !strcmp_i(obs->quantity,"ADM_momentum"))
+    abortEr_s("This is not the correct plan for %s.\n",obs->quantity);
+    
   const unsigned N_outermost = (unsigned) Pgeti("Number_of_Outermost_Split");
   Patch_T **patches = 0,*patch = 0;
   char stem[1000];
   struct PsJs_ADM_S **adm = 0;
+  unsigned p = 0;
   unsigned n,N,ijk,nn;
   
   if (N_outermost == 0)
     abortEr("No outermost patch for integration.\n");
-    
-  if (strcmp_i(obs->quantity,"ADM_momentums") || strcmp_i(obs->quantity,"ADM_momentum"))
+  N = 6*N_outermost/* outermosts */ +
+      4/* 4 filling boxes */        +
+      10/* 10 sides for surroundings */;
+  patches = calloc(N,sizeof(*patches));
+  pointerEr(patches);  
+  
+  /* alloc memory for all patches */
+  adm = calloc(N,sizeof(*adm));
+  pointerEr(adm);
+  /* this is where we link to obs struct */
+  obs->items = adm;
+  obs->Nitems = N;
+  
+  /* first collect all of the patches required */
+  p = 0;
+  for (n = 0; n < N_outermost; ++n)
   {
-    /* first collect all of the patches required */
-    for (n = 0; n < N_outermost; ++n)
-    {
-      patches = realloc(patches,6*(n+1)*sizeof(*patches));
-      pointerEr(patches);
-      
-      sprintf(stem,"outermost%u_up",n);
-      patches[6*n]   = GetPatch(stem,grid);
-      
-      sprintf(stem,"outermost%u_down",n);
-      patches[6*n+1] = GetPatch(stem,grid);
-      
-      sprintf(stem,"outermost%u_back",n);
-      patches[6*n+2] = GetPatch(stem,grid);
-      
-      sprintf(stem,"outermost%u_front",n);
-      patches[6*n+3] = GetPatch(stem,grid);
-      
-      sprintf(stem,"outermost%u_left",n);
-      patches[6*n+4] = GetPatch(stem,grid);
-      
-      sprintf(stem,"outermost%u_right",n);
-      patches[6*n+5] = GetPatch(stem,grid);
-    }
-    N = 6*n;
-    /* alloc memory for each patch */
-    adm = calloc(N,sizeof(*adm));
-    pointerEr(adm);
-    /* this is where we link to obs struct */
-    obs->items = adm;
-    obs->Nitems = N;
+    sprintf(stem,"outermost%u_up",n);
+    patches[p++]   = GetPatch(stem,grid);
     
-    /* fill ADM struct for each patch */
-    for (n = 0; n < N; ++n)
+    sprintf(stem,"outermost%u_down",n);
+    patches[p++] = GetPatch(stem,grid);
+    
+    sprintf(stem,"outermost%u_back",n);
+    patches[p++] = GetPatch(stem,grid);
+    
+    sprintf(stem,"outermost%u_front",n);
+    patches[p++] = GetPatch(stem,grid);
+    
+    sprintf(stem,"outermost%u_left",n);
+    patches[p++] = GetPatch(stem,grid);
+    
+    sprintf(stem,"outermost%u_right",n);
+    patches[p++] = GetPatch(stem,grid);
+  }
+  /* filling box for vol integrals */
+  patches[p++] = GetPatch("filling_box_up",grid);
+  patches[p++] = GetPatch("filling_box_down",grid);
+  patches[p++] = GetPatch("filling_box_back",grid);
+  patches[p++] = GetPatch("filling_box_front",grid);
+  
+  /* surroundings for surface integrals */
+  patches[p++] = GetPatch("left_NS_surrounding_up",grid);
+  patches[p++] = GetPatch("left_NS_surrounding_down",grid);
+  patches[p++] = GetPatch("left_NS_surrounding_left",grid);
+  patches[p++] = GetPatch("left_NS_surrounding_back",grid);
+  patches[p++] = GetPatch("left_NS_surrounding_front",grid);
+  
+  patches[p++] = GetPatch("right_BH_surrounding_up",grid);
+  patches[p++] = GetPatch("right_BH_surrounding_down",grid);
+  patches[p++] = GetPatch("right_BH_surrounding_right",grid);
+  patches[p++] = GetPatch("right_BH_surrounding_back",grid);
+  patches[p++] = GetPatch("right_BH_surrounding_front",grid);
+  
+  assert(p==N);
+  
+  /* fill ADM struct for each patch */
+  for (n = 0; n < N; ++n)
+  {
+    adm[n] = calloc(1,sizeof(*adm[n]));
+    pointerEr(adm[n]);
+    patch = patches[n];
+    nn    = patch->nn;
+    
+    double *g00 = alloc_double(nn);
+    double *g01 = alloc_double(nn);
+    double *g02 = alloc_double(nn);
+    double *g11 = alloc_double(nn);
+    double *g12 = alloc_double(nn);
+    double *g22 = alloc_double(nn);
+    
+    READ_v(_gamma_D2D2)
+    READ_v(_gamma_D0D2)
+    READ_v(_gamma_D0D0)
+    READ_v(_gamma_D0D1)
+    READ_v(_gamma_D1D2)
+    READ_v(_gamma_D1D1)
+    READ_v(psi);
+    
+    adm[n]->patch = patch;
+    /* populate metric components */ 
+    for (ijk = 0; ijk < nn; ++ijk)
     {
-      adm[n] = calloc(1,sizeof(*adm[n]));
-      pointerEr(adm[n]);
-      patch = patches[n];
-      nn    = patch->nn;
-      
-      double *g00 = alloc_double(nn);
-      double *g01 = alloc_double(nn);
-      double *g02 = alloc_double(nn);
-      double *g11 = alloc_double(nn);
-      double *g12 = alloc_double(nn);
-      double *g22 = alloc_double(nn);
-      
-      READ_v(_gamma_D2D2)
-      READ_v(_gamma_D0D2)
-      READ_v(_gamma_D0D0)
-      READ_v(_gamma_D0D1)
-      READ_v(_gamma_D1D2)
-      READ_v(_gamma_D1D1)
-      READ_v(psi);
-      
-      adm[n]->patch = patch;
-      /* populate metric components */ 
-      for (ijk = 0; ijk < nn; ++ijk)
-      {
-        double psi4 = Pow2(psi[ijk])*Pow2(psi[ijk]);
-        g00[ijk] = psi4*_gamma_D0D0[ijk];
-        g01[ijk] = psi4*_gamma_D0D1[ijk];
-        g02[ijk] = psi4*_gamma_D0D2[ijk];
-        g11[ijk] = psi4*_gamma_D1D1[ijk];
-        g12[ijk] = psi4*_gamma_D1D2[ijk];
-        g22[ijk] = psi4*_gamma_D2D2[ijk];
-      }
-      adm[n]->g00 = g00;
-      adm[n]->g01 = g01;
-      adm[n]->g02 = g02;
-      adm[n]->g11 = g11;
-      adm[n]->g12 = g12;
-      adm[n]->g22 = g22;
-      
-      /* outward normal vector is only needed for outermost0 patches
-      // where the surface integral carried out */
-      if (strstr_i(patch->name,"_outermost0_"))
-      {
-        adm[n]->surface_integration_flg = 1;
-        adm[n]->Z_surface = 1;
-        adm[n]->K = 0;
+      double psi4 = Pow2(psi[ijk])*Pow2(psi[ijk]);
+      g00[ijk] = psi4*_gamma_D0D0[ijk];
+      g01[ijk] = psi4*_gamma_D0D1[ijk];
+      g02[ijk] = psi4*_gamma_D0D2[ijk];
+      g11[ijk] = psi4*_gamma_D1D1[ijk];
+      g12[ijk] = psi4*_gamma_D1D2[ijk];
+      g22[ijk] = psi4*_gamma_D2D2[ijk];
+    }
+    adm[n]->g00 = g00;
+    adm[n]->g01 = g01;
+    adm[n]->g02 = g02;
+    adm[n]->g11 = g11;
+    adm[n]->g12 = g12;
+    adm[n]->g22 = g22;
+    
+    /* surface integrals params */
+    if (regex_search(".+(left|right)_(NS|BH)_surrounding.+",patch->name))
+    {
+      adm[n]->surface_integration_flg = 1;
+      adm[n]->Z_surface = 1;
+      adm[n]->K = patch->n[2]-1;
+      populate_normal_surrounding(adm[n],_c_);
+    }
+  }
+  obs->Px_ADM = ADM_momentum_x_BBN_CS;
+  obs->Py_ADM = ADM_momentum_y_BBN_CS;
+  obs->Pz_ADM = ADM_momentum_z_BBN_CS;
+  obs->Jx_ADM = ADM_angular_momentum_x_BBN_CS;
+  obs->Jy_ADM = ADM_angular_momentum_y_BBN_CS;
+  obs->Jz_ADM = ADM_angular_momentum_z_BBN_CS;
+  bbn_populate_ADM_integrand_PdS_GdV(obs);
+  
+  free(patches);
+}
 
-        double *n_U0 = alloc_double(nn);
-        double *n_U1 = alloc_double(nn);
-        double *n_U2 = alloc_double(nn);
-        
-        for (ijk = 0; ijk < nn; ++ijk)
-        {
-          n_U0[ijk] = dq2_dq1(patch,_c_,_x_,ijk);
-          n_U1[ijk] = dq2_dq1(patch,_c_,_y_,ijk);
-          n_U2[ijk] = dq2_dq1(patch,_c_,_z_,ijk);
-          
-          /* normalization */
-          double psi4 = Pow2(psi[ijk])*Pow2(psi[ijk]);
-          double Norm2 = 
+/* populating normal outward vector for surrounding according to the given dir */
+static void populate_normal_surrounding(struct PsJs_ADM_S *const adm,const Dd_T dir)
+{
+  Patch_T *const patch = adm->patch;
+  const unsigned nn = patch->nn;
+  double *n_U0 = alloc_double(nn);
+  double *n_U1 = alloc_double(nn);
+  double *n_U2 = alloc_double(nn);
+  unsigned ijk;
+  
+  READ_v(_gamma_D2D2)
+  READ_v(_gamma_D0D2)
+  READ_v(_gamma_D0D0)
+  READ_v(_gamma_D0D1)
+  READ_v(_gamma_D1D2)
+  READ_v(_gamma_D1D1)
+  READ_v(psi);
+    
+  for (ijk = 0; ijk < nn; ++ijk)
+  {
+    n_U0[ijk] = dq2_dq1(patch,dir,_x_,ijk);
+    n_U1[ijk] = dq2_dq1(patch,dir,_y_,ijk);
+    n_U2[ijk] = dq2_dq1(patch,dir,_z_,ijk);
+    
+    /* normalization */
+    double psi4 = Pow2(psi[ijk])*Pow2(psi[ijk]);
+    double Norm2 = 
 psi4*(_gamma_D0D0[ijk]*pow(n_U0[ijk], 2) + 2.0*_gamma_D0D1[ijk]*
 n_U0[ijk]*n_U1[ijk] + 2.0*_gamma_D0D2[ijk]*n_U0[ijk]*n_U2[ijk] +
 _gamma_D1D1[ijk]*pow(n_U1[ijk], 2) + 2.0*_gamma_D1D2[ijk]*n_U1[ijk]*
 n_U2[ijk] + _gamma_D2D2[ijk]*pow(n_U2[ijk], 2));
 
-          double Norm = sqrt(Norm2);
-          
-          n_U0[ijk] /= Norm;
-          n_U1[ijk] /= Norm;
-          n_U2[ijk] /= Norm;
-          
-        }
-        adm[n]->n_U0 = n_U0;
-        adm[n]->n_U1 = n_U1;
-        adm[n]->n_U2 = n_U2;
-      }/* end of if (strstr_i(patch->name,"_outermost0_")) */
-      
-    }
-    obs->Px_ADM = ADM_momentum_x_BBN_CS;
-    obs->Py_ADM = ADM_momentum_y_BBN_CS;
-    obs->Pz_ADM = ADM_momentum_z_BBN_CS;
-    obs->Jx_ADM = ADM_angular_momentum_x_BBN_CS;
-    obs->Jy_ADM = ADM_angular_momentum_y_BBN_CS;
-    obs->Jz_ADM = ADM_angular_momentum_z_BBN_CS;
-    bbn_populate_ADM_integrand_PdS_GdV(obs);
+    double Norm = sqrt(Norm2);
     
-    free(patches);
-  }/* end of if (strcmp_i(obs->quantity,"ADM_momentums") || strcmp_i(obs->quantity,"ADM_momentum")) */
-  else
-    abortEr(NO_OPTION);
-  
+    n_U0[ijk] /= Norm;
+    n_U1[ijk] /= Norm;
+    n_U2[ijk] /= Norm;
+    
+  }
+  adm->n_U0 = n_U0;
+  adm->n_U1 = n_U1;
+  adm->n_U2 = n_U2;
 }
 
 /* free stuct Observable_T */
@@ -255,10 +290,10 @@ static double ADM_momentum_x_BBN_CS(Observable_T *const obs)
   /* surface integration */
   for(p = 0; p < N; ++p)
   {
-    Patch_T *patch = adm[p]->patch;
-    
     if (!adm[p]->surface_integration_flg)
       continue;
+      
+    Patch_T *patch = adm[p]->patch;
     
     I  = init_integration();
     I->type = "Integral{f(x)dS},Spectral";
@@ -270,7 +305,11 @@ static double ADM_momentum_x_BBN_CS(Observable_T *const obs)
     I->g12 = adm[p]->g12;
     I->g22 = adm[p]->g22;
     
+    I->Spectral->X_surface = adm[p]->X_surface;
+    I->Spectral->Y_surface = adm[p]->Y_surface;
     I->Spectral->Z_surface = adm[p]->Z_surface;
+    I->Spectral->I         = adm[p]->I;
+    I->Spectral->J         = adm[p]->J;
     I->Spectral->K         = adm[p]->K;
     
     plan_integration(I);
@@ -282,6 +321,9 @@ static double ADM_momentum_x_BBN_CS(Observable_T *const obs)
   if (VOLUME_INTEGRAL)
   for(p = 0; p < N; ++p)
   {
+    if (adm[p]->surface_integration_flg)
+      continue;
+    
     Patch_T *patch = adm[p]->patch;
     
     I  = init_integration();
@@ -318,10 +360,10 @@ static double ADM_momentum_y_BBN_CS(Observable_T *const obs)
   /* surface integration */
   for(p = 0; p < N; ++p)
   {
-    Patch_T *patch = adm[p]->patch;
-    
     if (!adm[p]->surface_integration_flg)
       continue;
+      
+    Patch_T *patch = adm[p]->patch;
     
     I  = init_integration();
     I->type = "Integral{f(x)dS},Spectral";
@@ -333,7 +375,11 @@ static double ADM_momentum_y_BBN_CS(Observable_T *const obs)
     I->g12 = adm[p]->g12;
     I->g22 = adm[p]->g22;
     
+    I->Spectral->X_surface = adm[p]->X_surface;
+    I->Spectral->Y_surface = adm[p]->Y_surface;
     I->Spectral->Z_surface = adm[p]->Z_surface;
+    I->Spectral->I         = adm[p]->I;
+    I->Spectral->J         = adm[p]->J;
     I->Spectral->K         = adm[p]->K;
     
     plan_integration(I);
@@ -345,6 +391,9 @@ static double ADM_momentum_y_BBN_CS(Observable_T *const obs)
   if (VOLUME_INTEGRAL)
   for(p = 0; p < N; ++p)
   {
+    if (adm[p]->surface_integration_flg)
+      continue;
+      
     Patch_T *patch = adm[p]->patch;
     
     I  = init_integration();
@@ -381,10 +430,10 @@ static double ADM_momentum_z_BBN_CS(Observable_T *const obs)
   /* surface integration */
   for(p = 0; p < N; ++p)
   {
-    Patch_T *patch = adm[p]->patch;
-    
     if (!adm[p]->surface_integration_flg)
       continue;
+      
+    Patch_T *patch = adm[p]->patch;
     
     I  = init_integration();
     I->type = "Integral{f(x)dS},Spectral";
@@ -396,7 +445,11 @@ static double ADM_momentum_z_BBN_CS(Observable_T *const obs)
     I->g12 = adm[p]->g12;
     I->g22 = adm[p]->g22;
     
+    I->Spectral->X_surface = adm[p]->X_surface;
+    I->Spectral->Y_surface = adm[p]->Y_surface;
     I->Spectral->Z_surface = adm[p]->Z_surface;
+    I->Spectral->I         = adm[p]->I;
+    I->Spectral->J         = adm[p]->J;
     I->Spectral->K         = adm[p]->K;
     
     plan_integration(I);
@@ -408,6 +461,9 @@ static double ADM_momentum_z_BBN_CS(Observable_T *const obs)
   if (VOLUME_INTEGRAL)
   for(p = 0; p < N; ++p)
   {
+    if (adm[p]->surface_integration_flg)
+      continue;
+
     Patch_T *patch = adm[p]->patch;
     
     I  = init_integration();
@@ -432,6 +488,7 @@ static double ADM_momentum_z_BBN_CS(Observable_T *const obs)
 /* calculating ADM angular momentum in z component */
 static double ADM_angular_momentum_z_BBN_CS(Observable_T *const obs)
 {
+  return 0;
   double Jz = 0;
   struct PsJs_ADM_S **const adm = obs->items;
   const unsigned N = obs->Nitems;
@@ -550,6 +607,7 @@ static double ADM_angular_momentum_z_BBN_CS(Observable_T *const obs)
 /* calculating ADM angular momentum in x component */
 static double ADM_angular_momentum_x_BBN_CS(Observable_T *const obs)
 {
+  return 0;
   double Jx = 0;
   struct PsJs_ADM_S **const adm = obs->items;
   const unsigned N = obs->Nitems;
@@ -665,6 +723,7 @@ static double ADM_angular_momentum_x_BBN_CS(Observable_T *const obs)
 /* calculating ADM angular momentum in y component */
 static double ADM_angular_momentum_y_BBN_CS(Observable_T *const obs)
 {
+  return 0;
   double Jy = 0;
   struct PsJs_ADM_S **const adm = obs->items;
   const unsigned N = obs->Nitems;
