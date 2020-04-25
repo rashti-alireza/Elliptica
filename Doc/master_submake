@@ -54,9 +54,12 @@ d_files := \
 ###########
 
 ## default target to make libaries out of object files
-make_lib: $(o_files) $(d_files)
-	@$(call build_and_print_func, $(AR) $(ARFLAGS) $(LIB_DIR)/$(lib_name) $(o_files), $(lib_name))
+make_lib: $(LIB_DIR)/$(lib_name)
+	@true
 .PHONY: make_lib
+
+$(LIB_DIR)/$(lib_name): $(o_files) $(d_files)
+	@$(call build_and_print_func, $(AR) $(ARFLAGS) $(LIB_DIR)/$(lib_name) $(o_files), $(lib_name))
 
 ## using string % to make the object file according to its c file.
 # then put the resultant into $(o_dir)/$*.o.
