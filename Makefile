@@ -58,8 +58,8 @@
 # $ make -C dir # means cd to dir and then invoke make
 # $ make -j4    # using 4 processors to build the target
 #
-# NOTE: you can find the sub-make file for all modules and projects 
-# at ./Doc/SUB_MAKEFILE, this is the DEFAULT.
+# NOTE: you can find the master sub-make file for all modules and projects 
+# at ./Doc/master_submake, this is the DEFAULT.
 #
 #
 # To report bug or feedback email me at "rashti.alireza@gmail.com" !
@@ -85,8 +85,10 @@ PROJECT_DIR := $(TOP)/Src/Projects
 MODULE_DIR := $(TOP)/Src/Main/Modules
 # core directory, where main.c is, see the above sketch
 CORE_DIR := Core
-# sub-make file name
-SUB_MAKE_FILE_NAME := makefile
+# master sub-make file path
+MASTER_SUB_MAKE_FILE := $(TOP)/Doc/master_submake
+# sub-make file name stem in each directory
+SUB_MAKE_NAME_STEM := makefile
 # sub-make options:
 SUB_MAKE_FLAGS := --no-print-directory
 SUB_MAKE_FLAGS += --warn-undefined-variables
@@ -183,6 +185,8 @@ O_DIRS := $(notdir $(C_DIRS))
 O_DIRS := $(foreach d,$(O_DIRS),$(O_TOP)/$(d))
 # strip extra spaces
 O_DIRS := $(strip $(O_DIRS))
+# sub make files:
+SUB_MAKE_FILES := $(foreach d,$(C_DIRS),$(join $d/,$(SUB_MAKE_NAME_STEM)))
 ########################################################################
 ########################################
 ## recap flags and export all variables:
@@ -219,18 +223,10 @@ install: $(EXEC)
 .PHONY: install
 ##
 ## make the executable out of the object files
-$(EXEC): $(DEPENDENCY_FILES) $(auto_gen_c_file) | $(LIB_DIR) $(EXEC_DIR) MyConfig
+$(EXEC): $(DEPENDENCY_FILES) $(auto_gen_c_file) $(SUB_MAKE_FILES) | $(LIB_DIR) $(EXEC_DIR) MyConfig
 # --> print
 	@echo $(PR_F0) "compiling '$(EXEC)':"
 	@echo $(PR_L0)
-# --> copy submake directories from './Doc/SUB_MAKEFILE':
-	@for d in $(C_DIRS); \
-          do \
-          if [ ! -f $$d/$(SUB_MAKE_FILE_NAME) ]; \
-            then \
-              cp Doc/SUB_MAKEFILE $$d/$(SUB_MAKE_FILE_NAME);\
-          fi; \
-          done;
 # --> invoke submakes with the default target
 	@for d in $(C_DIRS); \
 	  do \
@@ -290,7 +286,12 @@ $(LIB_DIR): | $(O_DIRS)
 $(O_DIRS):
 	@$(call PR_TASK_relPATH,"mkdir",$@)
 	@mkdir -p $@
-##	
+##
+## update sub make files:
+%/$(SUB_MAKE_NAME_STEM): $(MASTER_SUB_MAKE_FILE)
+	@cp $(MASTER_SUB_MAKE_FILE) $@
+
+##
 ## if there is no MyConfig file, use the prototype
 MyConfig:
 	@if [ ! -f MyConfig ];\
