@@ -80,6 +80,14 @@ struct Euler_eq_const_RootFinder_S
   double NS_baryonic_mass;
 };
 
+/* root finder struct for {Px(y_CM) = 0 && Py(x_CM) = 0} */  
+struct PxPy_RootFinder_S
+{
+  Grid_T *grid;
+  Grid_T *freedata_grid;
+};
+
+
 Grid_T *bbn_initialize_next_grid(Grid_T *const grid_prev);
 static Grid_T *make_next_grid_using_previous_grid(Grid_T *const grid_prev);
 static Grid_T *TOV_KerrSchild_approximation(void);

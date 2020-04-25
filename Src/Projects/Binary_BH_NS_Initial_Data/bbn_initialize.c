@@ -1482,8 +1482,36 @@ static void Pxy_ADM_is0_by_xy_CM_roots(Grid_T *const grid)
   const double W    = Pgetd("Solving_Field_Update_Weight");
   const double dP   = Pgetd("P_ADM_control_tolerance");
   Root_Finder_T *root   = 0;
+  struct PxPy_RootFinder_S params[1] = {0};
   const double x_old[2] = {Pgetd("x_CM"),Pgetd("y_CM")};/* NOTE: index 0 is for x and 1 for y */
   double *x_new = 0;
+  Grid_T *freedata_grid = 0;/* don't update for inside BH patches */
+  Patch_T **freedata_patch = 0;/* all but inside BH patches */
+  unsigned i,p;
+  
+  /* populate Aij grid */
+  freedata_grid = calloc(1,sizeof(*freedata_grid));
+  pointerEr(freedata_grid);
+  
+  i = 0;
+  FOR_ALL_PATCHES(p,grid)
+  {
+    if (!IsItInsideBHPatch(grid->patch[p]))
+    {
+      freedata_patch = realloc(freedata_patch,
+                  (i+1)*sizeof(*freedata_patch));
+      pointerEr(freedata_patch);
+      freedata_patch[i++] = grid->patch[p];
+    }
+  }
+  freedata_grid->kind  = grid->kind;
+  freedata_grid->patch = freedata_patch;
+  freedata_grid->gn    = grid->gn;
+  freedata_grid->np    = i;
+  freedata_grid->nn    = UINT_MAX;
+  
+  params->grid    = grid;
+  params->freedata_grid = freedata_grid;
   
   root = init_root_finder(2);
   root->description   = "finding roots of equations {Px(y_CM) = 0 && Py(x_CM) = 0}:";
@@ -1492,7 +1520,7 @@ static void Pxy_ADM_is0_by_xy_CM_roots(Grid_T *const grid)
   root->tolerance     = dP;
   root->MaxIter       = (unsigned)Pgeti("RootFinder_Max_Number_of_Iteration");
   root->x_gss         = x_old;
-  root->params        = grid;
+  root->params        = params;
   root->f[0]          = x_CM_root_of_Py;
   root->f[1]          = y_CM_root_of_Px;
   plan_root_finder(root);
@@ -1506,19 +1534,24 @@ static void Pxy_ADM_is0_by_xy_CM_roots(Grid_T *const grid)
   Psetd("y_CM",x_new[1]);
   
   free(x_new);
+  free(freedata_grid);
+  free(freedata_patch);
+  
 }
 
 /* solving Py = 0 by finding x_CM */
 static double x_CM_root_of_Py(void *params,const double *const x)
 {
-  Grid_T *grid = params;
+  struct PxPy_RootFinder_S *const par = params;
+  Grid_T *const grid    = par->grid;
+  Grid_T *const freedata_grid = par->freedata_grid;
   Observable_T *obs = 0;
   const double x_cm = x[0];/* index 0 is for x_cm */
   double residual;
 
   /* updating free data and B's and related */
   Psetd("x_CM",x_cm);
-  bbn_populate_free_data(grid);
+  bbn_populate_free_data(freedata_grid);
   update_B1_dB1_Beta_dBete_Aij_dAij(grid);
 
   obs = init_observable(grid,bbn_plan_PsJs_ADM_CS,bbn_free_PsJs_ADM_CS);
@@ -1533,14 +1566,16 @@ static double x_CM_root_of_Py(void *params,const double *const x)
 /* solving Px = 0 by finding y_CM */
 static double y_CM_root_of_Px(void *params,const double *const x)
 {
-  Grid_T *grid = params;
+  struct PxPy_RootFinder_S *const par = params;
+  Grid_T *const grid    = par->grid;
+  Grid_T *const freedata_grid = par->freedata_grid;
   Observable_T *obs = 0;
   const double y_cm = x[1];/* index 1 is for y_cm */
   double residual;
 
   /* updating free data and B's and related */
   Psetd("y_CM",y_cm);
-  bbn_populate_free_data(grid);
+  bbn_populate_free_data(freedata_grid);
   update_B1_dB1_Beta_dBete_Aij_dAij(grid);
 
   obs = init_observable(grid,bbn_plan_PsJs_ADM_CS,bbn_free_PsJs_ADM_CS);
