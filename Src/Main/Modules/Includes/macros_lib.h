@@ -97,7 +97,8 @@
 #define PgetddEZ(x) get_parameter_array_format(x,__FILE__,__LINE__,NONE)/* if not exist go easy */
 
 /* add or update a double type parameter */
-#define Psetd(x,y)  update_parameter_double_format(x,(y))
+#define Psetd(x,y)  update_parameter_double_format(x,(y),1)
+#define Psetd_0print(x,y)  update_parameter_double_format(x,(y),0)
 
 /* add or update an integer type parameter */
 #define Pseti(x,y)  update_parameter_integer(x,(y))

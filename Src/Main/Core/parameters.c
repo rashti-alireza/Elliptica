@@ -49,8 +49,9 @@ void update_parameter_integer(const char *const lv, const int rv)
   
 }
 
-/* add or update a double value parameter */
-void update_parameter_double_format(const char *const lv, const double rv)
+/* add or update a double value parameter, 
+// if print_flg != 0 it prints the changes. */
+void update_parameter_double_format(const char *const lv, const double rv,const int print_flg)
 {
   if (!lv)
     return;
@@ -61,12 +62,14 @@ void update_parameter_double_format(const char *const lv, const double rv)
   par = get_parameter(lv);
   if (par)/* if this parameter exists update it */
   {
-    printf("Updating Parameter:\n");
-    printf("         |--> parameter     = %s\n",lv);
-    printf("         |--> new value     = %+g\n",rv);
-    printf("         |--> old value     = %+g\n",par->rv_double);
-    printf("         |--> v_new - v_old = %+g\n",rv-par->rv_double);
-    
+    if (print_flg)
+    {
+      printf("Updating Parameter:\n");
+      printf("         |--> parameter     = %s\n",lv);
+      printf("         |--> new value     = %+e\n",rv);
+      printf("         |--> old value     = %+e\n",par->rv_double);
+      printf("         |--> v_new - v_old = %+e\n",rv-par->rv_double);
+    }
     sprintf(str_rv,"%15.18f",rv);
     _free(par->rv);
     
