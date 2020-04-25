@@ -1533,6 +1533,9 @@ static void Pxy_ADM_is0_by_xy_CM_roots(Grid_T *const grid)
   Psetd("x_CM",x_new[0]);
   Psetd("y_CM",x_new[1]);
   
+  /* updating the free data */
+  bbn_populate_free_data(freedata_grid);
+  
   free(x_new);
   free(freedata_grid);
   free(freedata_patch);
@@ -1551,7 +1554,11 @@ static double x_CM_root_of_Py(void *params,const double *const x)
 
   /* updating free data and B's and related */
   Psetd("x_CM",x_cm);
-  bbn_populate_free_data(freedata_grid);
+  bbn_free_data_gammas(freedata_grid);
+  bbn_free_data_Gamma(freedata_grid);
+  //bbn_free_data_dGamma(freedata_grid);
+  //bbn_free_data_Ricci(freedata_grid);
+  bbn_free_data_tr_KSKij(freedata_grid);
   update_B1_dB1_Beta_dBete_Aij_dAij(grid);
 
   obs = init_observable(grid,bbn_plan_PsJs_ADM_CS,bbn_free_PsJs_ADM_CS);
@@ -1575,7 +1582,11 @@ static double y_CM_root_of_Px(void *params,const double *const x)
 
   /* updating free data and B's and related */
   Psetd("y_CM",y_cm);
-  bbn_populate_free_data(freedata_grid);
+  bbn_free_data_gammas(freedata_grid);
+  bbn_free_data_Gamma(freedata_grid);
+  //bbn_free_data_dGamma(freedata_grid);
+  //bbn_free_data_Ricci(freedata_grid);
+  bbn_free_data_tr_KSKij(freedata_grid);
   update_B1_dB1_Beta_dBete_Aij_dAij(grid);
 
   obs = init_observable(grid,bbn_plan_PsJs_ADM_CS,bbn_free_PsJs_ADM_CS);
