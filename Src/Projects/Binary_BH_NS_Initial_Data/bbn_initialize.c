@@ -1480,7 +1480,7 @@ static void find_Euler_eq_const(Grid_T *const grid)
 static void Pxy_ADM_is0_by_xy_CM_roots(Grid_T *const grid)
 {
   printf("|--> Solving {Px(y_CM) = 0 && Py(x_CM) = 0} ...\n");
-  const double W    = Pgetd("Solving_Field_Update_Weight");
+  const double W    = Pgetd("P_ADM_control_update_weight");
   const double dP   = Pgetd("P_ADM_control_tolerance");
   Root_Finder_T *root   = 0;
   struct PxPy_RootFinder_S params[1] = {0};
