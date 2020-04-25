@@ -460,6 +460,10 @@ fAdjustment_t *get_func_P_ADM_adjustment(const char *const adjust)
   {
     f = 0;
   }
+  else if (strcmp_i(adjust,"x_CM&y_CM") || strcmp_i(adjust,"y_CM&x_CM"))
+  {
+    f = Pxy_ADM_is0_by_xy_CM_roots;
+  }
   else if (strcmp_i(adjust,"none"))
   {
     f = 0;
@@ -1470,6 +1474,82 @@ static void find_Euler_eq_const(Grid_T *const grid)
   printf("} Finding Euler equation constant using NS baryonic mass ==> Done.\n");
   pr_clock();
   pr_line_custom('=');
+}
+/* find y_CM and x_CM by demanding Px_ADM = 0 and Py_ADM = 0
+// using root finder. */
+static void Pxy_ADM_is0_by_xy_CM_roots(Grid_T *const grid)
+{
+  const double W    = Pgetd("Solving_Field_Update_Weight");
+  const double dP   = Pgetd("P_ADM_control_tolerance");
+  Root_Finder_T *root   = 0;
+  const double x_old[2] = {Pgetd("x_CM"),Pgetd("y_CM")};/* NOTE: index 0 is for x and 1 for y */
+  double *x_new = 0;
+  
+  root = init_root_finder(2);
+  root->description   = "finding roots of equations {Px(y_CM) = 0 && Py(x_CM) = 0}:";
+  root->verbose       = 1;
+  root->type          = Pgets("RootFinder_Method");
+  root->tolerance     = dP;
+  root->MaxIter       = (unsigned)Pgeti("RootFinder_Max_Number_of_Iteration");
+  root->x_gss         = x_old;
+  root->params        = grid;
+  root->f[0]          = x_CM_root_of_Py;
+  root->f[1]          = y_CM_root_of_Px;
+  plan_root_finder(root);
+  x_new = execute_root_finder(root);
+  free_root_finder(root);
+  
+  /* updating */
+  x_new[0] = W*x_new[0]+(1-W)*x_old[0];
+  x_new[1] = W*x_new[1]+(1-W)*x_old[1];
+  Psetd("x_CM",x_new[0]);
+  Psetd("y_CM",x_new[1]);
+  
+  free(x_new);
+}
+
+/* solving Py = 0 by finding x_CM */
+static double x_CM_root_of_Py(void *params,const double *const x)
+{
+  Grid_T *grid = params;
+  Observable_T *obs = 0;
+  const double x_cm = x[0];/* index 0 is for x_cm */
+  double residual;
+
+  /* updating free data and B's and related */
+  Psetd("x_CM",x_cm);
+  bbn_populate_free_data(grid);
+  update_B1_dB1_Beta_dBete_Aij_dAij(grid);
+
+  obs = init_observable(grid,bbn_plan_PsJs_ADM_CS,bbn_free_PsJs_ADM_CS);
+  obs->quantity = "ADM_momentums";
+  plan_observable(obs);
+  residual = obs->Py_ADM(obs);
+  free_observable(obs);
+
+  return residual;
+}
+
+/* solving Px = 0 by finding y_CM */
+static double y_CM_root_of_Px(void *params,const double *const x)
+{
+  Grid_T *grid = params;
+  Observable_T *obs = 0;
+  const double y_cm = x[1];/* index 1 is for y_cm */
+  double residual;
+
+  /* updating free data and B's and related */
+  Psetd("y_CM",y_cm);
+  bbn_populate_free_data(grid);
+  update_B1_dB1_Beta_dBete_Aij_dAij(grid);
+
+  obs = init_observable(grid,bbn_plan_PsJs_ADM_CS,bbn_free_PsJs_ADM_CS);
+  obs->quantity = "ADM_momentums";
+  plan_observable(obs);
+  residual = obs->Px_ADM(obs);
+  free_observable(obs);
+
+  return residual;
 }
 
 /* find y_CM by demanding Px_ADM = 0 */
