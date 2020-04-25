@@ -85,6 +85,8 @@ struct PxPy_RootFinder_S
 {
   Grid_T *grid;
   Grid_T *freedata_grid;
+  double x_CM0;
+  double y_CM0;
 };
 
 

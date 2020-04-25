@@ -1484,8 +1484,9 @@ static void Pxy_ADM_is0_by_xy_CM_roots(Grid_T *const grid)
   const double dP   = Pgetd("P_ADM_control_tolerance");
   Root_Finder_T *root   = 0;
   struct PxPy_RootFinder_S params[1] = {0};
-  const double x_old[2] = {Pgetd("x_CM"),Pgetd("y_CM")};/* NOTE: index 0 is for x and 1 for y */
-  double *x_new = 0;
+  const double x0[2] = {Pgetd("x_CM0"),Pgetd("y_CM0")};/* NOTE: index 0 is for x and 1 for y */
+  const double guess[2] = {0,0};
+  double x_new[2] = {0},*dx = 0;
   Grid_T *freedata_grid = 0;/* don't update for inside BH patches */
   Patch_T **freedata_patch = 0;/* all but inside BH patches */
   double p_adm[3] = {0},j_adm[3] = {0};
@@ -1512,32 +1513,34 @@ static void Pxy_ADM_is0_by_xy_CM_roots(Grid_T *const grid)
   freedata_grid->np    = i;
   freedata_grid->nn    = UINT_MAX;
   
-  params->grid    = grid;
+  params->grid  = grid;
   params->freedata_grid = freedata_grid;
+  params->x_CM0 = x0[0];
+  params->y_CM0 = x0[1];
   
   root = init_root_finder(2);
   root->verbose       = 1;
   root->type          = Pgets("RootFinder_Method");
   root->tolerance     = dP;
   root->MaxIter       = (unsigned)Pgeti("RootFinder_Max_Number_of_Iteration");
-  root->x_gss         = x_old;
+  root->x_gss         = guess;
   root->params        = params;
   root->f[0]          = x_CM_root_of_Py;
   root->f[1]          = y_CM_root_of_Px;
   plan_root_finder(root);
-  x_new = execute_root_finder(root);
+  dx = execute_root_finder(root);
   free_root_finder(root);
   
   /* updating */
-  x_new[0] = W*x_new[0]+(1-W)*x_old[0];
-  x_new[1] = W*x_new[1]+(1-W)*x_old[1];
+  x_new[0] = W*dx[0]+x0[0];
+  x_new[1] = W*dx[1]+x0[1];
   Psetd("x_CM",x_new[0]);
   Psetd("y_CM",x_new[1]);
   
   /* updating the free data */
   bbn_populate_free_data(freedata_grid);
   
-  free(x_new);
+  free(dx);
   free(freedata_grid);
   free(freedata_patch);
   
@@ -1567,7 +1570,7 @@ static double x_CM_root_of_Py(void *params,const double *const x)
   Grid_T *const grid    = par->grid;
   Grid_T *const freedata_grid = par->freedata_grid;
   Observable_T *obs = 0;
-  const double x_cm = x[0];/* index 0 is for x_cm */
+  const double x_cm = par->x_CM0+x[0];/* index 0 is for x_cm */
   double residual;
 
   /* updating free data and B's and related */
@@ -1595,7 +1598,7 @@ static double y_CM_root_of_Px(void *params,const double *const x)
   Grid_T *const grid    = par->grid;
   Grid_T *const freedata_grid = par->freedata_grid;
   Observable_T *obs = 0;
-  const double y_cm = x[1];/* index 1 is for y_cm */
+  const double y_cm = par->y_CM0+x[1];/* index 1 is for y_cm */
   double residual;
 
   /* updating free data and B's and related */
