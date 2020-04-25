@@ -39,15 +39,15 @@ o_files:= \
           )\
         )
 # dependency directory
-d_dir := $(top)/.dep
+#d_dir := $(top)/.dep
 # dependency files
-d_files := \
-       $(foreach f,$(c_files),\
-         $(join\
-	   $(d_dir)/,\
-           $(notdir $(f:.c=.d))\
-          )\
-        )
+#d_files := \
+#       $(foreach f,$(c_files),\
+#         $(join\
+#	   $(d_dir)/,\
+#           $(notdir $(f:.c=.d))\
+#          )\
+#        )
 #######################################################################
 ###########
 ## targets:
@@ -60,33 +60,34 @@ make_lib: $(LIB_DIR)/$(lib_name)
 
 ## building the library
 .DELETE_ON_ERROR:
-$(LIB_DIR)/$(lib_name): $(o_files) $(d_files)
+$(LIB_DIR)/$(lib_name): $(o_files) #$(d_files)
 	@$(call build_and_print_func, $(AR) $(ARFLAGS) $(LIB_DIR)/$(lib_name) $(o_files), $(lib_name))
 
 ## using string % to make the object file according to its c file.
 # then put the resultant into $(o_dir)/$*.o.
-$(o_dir)/%.o :$(c_dir)/%.c $(h_files) $(DEPENDENCY_FILES) $(d_files)
+$(o_dir)/%.o :$(c_dir)/%.c $(h_files) $(DEPENDENCY_FILES) #$(d_files)
 	@$(call build_and_print_func, $(CC) $(CFLAGS) -o $(o_dir)/$*.o -c $<, $*.o)
 	
 ## figuring out the inter dependencies, since some compiler might not
 ## have -M flag, this command is skipped if error takes place.
-%.o : %.c
-$(d_dir)/%.d : $(c_dir)/%.c | $(d_dir)
-	@set -e; rm -f $@;\
-	$(CC) $(DEPFLAGS) $(CFLAGS) $< > $@.$$$$ || true; \
-	$(SED) 's,\($*\)\.o[ :]*,\1.o $@ : ,g' < $@.$$$$ > $@; \
-	rm -f $@.$$$$
+#%.o : %.c
+#$(d_dir)/%.d : $(c_dir)/%.c | $(d_dir)
+#	@set -e; rm -f $@;\
+#	$(CC) $(DEPFLAGS) $(CFLAGS) $< > $@.$$$$ || true; \
+#	$(SED) 's,\($*\)\.o[ :]*,\1.o $@ : ,g' < $@.$$$$ > $@; \
+#	rm -f $@.$$$$
 ##
 ## clean dependecy folder:
 clean:
-	@$(call pr_task_relpath,"rm -rf",$(d_dir))
-	@-rm -rf $(d_dir)
+	@true
+#	@$(call pr_task_relpath,"rm -rf",$(d_dir))
+#	@-rm -rf $(d_dir)
 .PHONY: clean
 # making dep_dir if does not exist
-$(d_dir):
-	@mkdir -p $@
-
-include $(wildcard $(d_dir)/*.d)
+#$(d_dir):
+#	@mkdir -p $@
+#
+#include $(wildcard $(d_dir)/*.d)
 
 ########################################################################
 #############
