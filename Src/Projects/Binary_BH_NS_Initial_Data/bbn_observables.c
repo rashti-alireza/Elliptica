@@ -488,7 +488,6 @@ static double ADM_momentum_z_BBN_CS(Observable_T *const obs)
 /* calculating ADM angular momentum in z component */
 static double ADM_angular_momentum_z_BBN_CS(Observable_T *const obs)
 {
-  return 0;
   double Jz = 0;
   struct PsJs_ADM_S **const adm = obs->items;
   const unsigned N = obs->Nitems;
@@ -509,12 +508,12 @@ static double ADM_angular_momentum_z_BBN_CS(Observable_T *const obs)
   /* surface integration */
   for(p = 0; p < N; ++p)
   {
+    if (!adm[p]->surface_integration_flg)
+      continue;
+    
     Patch_T *patch = adm[p]->patch;
     unsigned nn = patch->nn;
     unsigned ijk;
-    
-    if (!adm[p]->surface_integration_flg)
-      continue;
     
     Field_T *Py = patch->pool[Ind("ADM_integrand_P_U1")];
     Field_T *Px = patch->pool[Ind("ADM_integrand_P_U0")];
@@ -539,9 +538,14 @@ static double ADM_angular_momentum_z_BBN_CS(Observable_T *const obs)
     I->g11 = adm[p]->g11;
     I->g12 = adm[p]->g12;
     I->g22 = adm[p]->g22;
-    I->Spectral->Z_surface = adm[p]->Z_surface;
-    I->Spectral->K         = adm[p]->K;
     
+    I->Spectral->X_surface = adm[p]->X_surface;
+    I->Spectral->Y_surface = adm[p]->Y_surface;
+    I->Spectral->Z_surface = adm[p]->Z_surface;
+    I->Spectral->I         = adm[p]->I;
+    I->Spectral->J         = adm[p]->J;
+    I->Spectral->K         = adm[p]->K;
+        
     I->Spectral->f = xPy_adm_integrand;
     plan_integration(I);
     Jz += execute_integration(I);
@@ -559,6 +563,9 @@ static double ADM_angular_momentum_z_BBN_CS(Observable_T *const obs)
   if (VOLUME_INTEGRAL)
   for(p = 0; p < N; ++p)
   {
+    if (adm[p]->surface_integration_flg)
+      continue;
+
     Patch_T *patch = adm[p]->patch;
     unsigned nn = patch->nn;
     unsigned ijk;
@@ -607,7 +614,6 @@ static double ADM_angular_momentum_z_BBN_CS(Observable_T *const obs)
 /* calculating ADM angular momentum in x component */
 static double ADM_angular_momentum_x_BBN_CS(Observable_T *const obs)
 {
-  return 0;
   double Jx = 0;
   struct PsJs_ADM_S **const adm = obs->items;
   const unsigned N = obs->Nitems;
@@ -624,12 +630,12 @@ static double ADM_angular_momentum_x_BBN_CS(Observable_T *const obs)
   /* surface integration */
   for(p = 0; p < N; ++p)
   {
+   if (!adm[p]->surface_integration_flg)
+      continue;
+   
     Patch_T *patch = adm[p]->patch;
     unsigned nn = patch->nn;
     unsigned ijk;
-    
-    if (!adm[p]->surface_integration_flg)
-      continue;
     
     Field_T *Py = patch->pool[Ind("ADM_integrand_P_U1")];
     Field_T *Pz = patch->pool[Ind("ADM_integrand_P_U2")];
@@ -655,8 +661,13 @@ static double ADM_angular_momentum_x_BBN_CS(Observable_T *const obs)
     I->g11 = adm[p]->g11;
     I->g12 = adm[p]->g12;
     I->g22 = adm[p]->g22;
+    I->Spectral->X_surface = adm[p]->X_surface;
+    I->Spectral->Y_surface = adm[p]->Y_surface;
     I->Spectral->Z_surface = adm[p]->Z_surface;
+    I->Spectral->I         = adm[p]->I;
+    I->Spectral->J         = adm[p]->J;
     I->Spectral->K         = adm[p]->K;
+    
     
     I->Spectral->f = zPy_adm_integrand;
     plan_integration(I);
@@ -675,6 +686,9 @@ static double ADM_angular_momentum_x_BBN_CS(Observable_T *const obs)
   if (VOLUME_INTEGRAL)
   for(p = 0; p < N; ++p)
   {
+    if (adm[p]->surface_integration_flg)
+      continue;
+   
     Patch_T *patch = adm[p]->patch;
     unsigned nn = patch->nn;
     unsigned ijk;
@@ -723,7 +737,6 @@ static double ADM_angular_momentum_x_BBN_CS(Observable_T *const obs)
 /* calculating ADM angular momentum in y component */
 static double ADM_angular_momentum_y_BBN_CS(Observable_T *const obs)
 {
-  return 0;
   double Jy = 0;
   struct PsJs_ADM_S **const adm = obs->items;
   const unsigned N = obs->Nitems;
@@ -740,12 +753,12 @@ static double ADM_angular_momentum_y_BBN_CS(Observable_T *const obs)
   /* surface integration */
   for(p = 0; p < N; ++p)
   {
+    if (!adm[p]->surface_integration_flg)
+      continue;
+    
     Patch_T *patch = adm[p]->patch;
     unsigned nn = patch->nn;
     unsigned ijk;
-    
-    if (!adm[p]->surface_integration_flg)
-      continue;
     
     Field_T *Px = patch->pool[Ind("ADM_integrand_P_U0")];
     Field_T *Pz = patch->pool[Ind("ADM_integrand_P_U2")];
@@ -770,9 +783,14 @@ static double ADM_angular_momentum_y_BBN_CS(Observable_T *const obs)
     I->g11 = adm[p]->g11;
     I->g12 = adm[p]->g12;
     I->g22 = adm[p]->g22;
-    I->Spectral->Z_surface = adm[p]->Z_surface;
-    I->Spectral->K         = adm[p]->K;
     
+    I->Spectral->X_surface = adm[p]->X_surface;
+    I->Spectral->Y_surface = adm[p]->Y_surface;
+    I->Spectral->Z_surface = adm[p]->Z_surface;
+    I->Spectral->I         = adm[p]->I;
+    I->Spectral->J         = adm[p]->J;
+    I->Spectral->K         = adm[p]->K;
+        
     I->Spectral->f = zPx_adm_integrand;
     plan_integration(I);
     Jy += execute_integration(I);
@@ -790,6 +808,9 @@ static double ADM_angular_momentum_y_BBN_CS(Observable_T *const obs)
   if (VOLUME_INTEGRAL)
   for(p = 0; p < N; ++p)
   {
+    if (adm[p]->surface_integration_flg)
+      continue;
+   
     Patch_T *patch = adm[p]->patch;
     unsigned nn = patch->nn;
     unsigned ijk;
