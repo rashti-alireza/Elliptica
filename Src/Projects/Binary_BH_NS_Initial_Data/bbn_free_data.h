@@ -9,12 +9,12 @@ void bbn_free_data_Ricci(Grid_T *const grid);
 void bbn_free_data_KS_trKij(Patch_T *const patch);
 double bbn_KerrSchild_H(const double M_BH,const double rbar,const double a,const double z);
 double bbn_KerrShcild_r(const double x,const double y,const double z,const double a);
-static void bbn_free_data_dGamma(Grid_T *const grid);
+void bbn_free_data_dGamma(Grid_T *const grid);
+void bbn_free_data_tr_KSKij(Grid_T *const grid);
 static void populating_KSGamma(Patch_T *const patch);
 static void populate_KSgammas_KSalpha_KSBeta(Patch_T *const patch);
 static void partial_derivative_KSBeta(Patch_T *const patch);
 static void free_KSfields(Patch_T *const patch);
-static void bbn_free_data_tr_KSKij(Grid_T *const grid);
 
 
 

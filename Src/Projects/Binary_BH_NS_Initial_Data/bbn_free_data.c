@@ -47,7 +47,7 @@ void bbn_populate_free_data(Grid_T *const grid)
 }
 
 /* partial derivtive of _Gamma, used in covariant derivative and _R */
-static void bbn_free_data_dGamma(Grid_T *const grid)
+void bbn_free_data_dGamma(Grid_T *const grid)
 {
   const unsigned np = grid->np;
   unsigned p;
@@ -461,7 +461,7 @@ void bbn_free_data_gammas(Grid_T *const grid)
 }
 
 /* trace of Kerr Schild extrinsic curvature */
-static void bbn_free_data_tr_KSKij(Grid_T *const grid)
+void bbn_free_data_tr_KSKij(Grid_T *const grid)
 {
   const unsigned np = grid->np;
   unsigned p;
