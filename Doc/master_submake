@@ -58,6 +58,8 @@ make_lib: $(LIB_DIR)/$(lib_name)
 	@true
 .PHONY: make_lib
 
+## building the library
+.DELETE_ON_ERROR:
 $(LIB_DIR)/$(lib_name): $(o_files) $(d_files)
 	@$(call build_and_print_func, $(AR) $(ARFLAGS) $(LIB_DIR)/$(lib_name) $(o_files), $(lib_name))
 
