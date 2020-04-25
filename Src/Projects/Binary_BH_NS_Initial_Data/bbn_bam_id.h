@@ -27,8 +27,8 @@
   fields_name = realloc(fields_name,(nf+2)*sizeof(*fields_name));\
   pointerEr(fields_name);\
   fields_name[nf+1] = 0;\
-  char fname_[STR_LEN_MAX];\
-  unsigned index_;\
+  char fname_[STR_LEN_MAX] = {'\0'};\
+  unsigned index_ = 0;\
   unsigned len_ = (unsigned)strlen(bam_fields[nf]);assert(len_);\
   const char *aux_ = &bam_fields[nf][len_-1];/* Fx => aux->x */\
   str2index(aux_,index_);\
@@ -40,8 +40,8 @@
   fields_name = realloc(fields_name,(nf+2)*sizeof(*fields_name));\
   pointerEr(fields_name);\
   fields_name[nf+1] = 0;\
-  char fname_[STR_LEN_MAX];\
-  unsigned index0_,index1_;\
+  char fname_[STR_LEN_MAX] = {'\0'};\
+  unsigned index0_ = 0,index1_ = 0;\
   unsigned len_    = (unsigned)strlen(bam_fields[nf]);assert(len_>1);\
   const char *aux_ = &bam_fields[nf][len_-2];/* Fxy => aux->x */\
   str2index(aux_,index0_);\
