@@ -1479,6 +1479,7 @@ static void find_Euler_eq_const(Grid_T *const grid)
 // using root finder. */
 static void Pxy_ADM_is0_by_xy_CM_roots(Grid_T *const grid)
 {
+  printf("|--> Solving {Px(y_CM) = 0 && Py(x_CM) = 0} ...\n");
   const double W    = Pgetd("Solving_Field_Update_Weight");
   const double dP   = Pgetd("P_ADM_control_tolerance");
   Root_Finder_T *root   = 0;
@@ -1487,6 +1488,7 @@ static void Pxy_ADM_is0_by_xy_CM_roots(Grid_T *const grid)
   double *x_new = 0;
   Grid_T *freedata_grid = 0;/* don't update for inside BH patches */
   Patch_T **freedata_patch = 0;/* all but inside BH patches */
+  double p_adm[3] = {0},j_adm[3] = {0};
   unsigned i,p;
   
   /* populate Aij grid */
@@ -1514,7 +1516,6 @@ static void Pxy_ADM_is0_by_xy_CM_roots(Grid_T *const grid)
   params->freedata_grid = freedata_grid;
   
   root = init_root_finder(2);
-  root->description   = "finding roots of equations {Px(y_CM) = 0 && Py(x_CM) = 0}:";
   root->verbose       = 1;
   root->type          = Pgets("RootFinder_Method");
   root->tolerance     = dP;
@@ -1540,6 +1541,23 @@ static void Pxy_ADM_is0_by_xy_CM_roots(Grid_T *const grid)
   free(freedata_grid);
   free(freedata_patch);
   
+  Observable_T *obs = init_observable(grid,bbn_plan_PsJs_ADM_CS,bbn_free_PsJs_ADM_CS);
+  obs->quantity = "ADM_momentums";
+  plan_observable(obs);
+  
+  /* get the current P_ADMs */
+  p_adm[0] = obs->Px_ADM(obs);
+  p_adm[1] = obs->Py_ADM(obs);
+  p_adm[2] = obs->Pz_ADM(obs);
+  
+  /* get the current J_ADMs  */
+  j_adm[0] = obs->Jx_ADM(obs);
+  j_adm[1] = obs->Jy_ADM(obs);
+  j_adm[2] = obs->Jz_ADM(obs);
+  
+  printf("|--> After CM update P_ADM = (%e,%e,%e)\n",p_adm[0],p_adm[1],p_adm[2]);
+  printf("|--> After CM update J_ADM = (%e,%e,%e)\n",j_adm[0],j_adm[1],j_adm[2]);
+  free_observable(obs);
 }
 
 /* solving Py = 0 by finding x_CM */
@@ -1553,7 +1571,7 @@ static double x_CM_root_of_Py(void *params,const double *const x)
   double residual;
 
   /* updating free data and B's and related */
-  Psetd("x_CM",x_cm);
+  Psetd_0print("x_CM",x_cm);
   bbn_free_data_gammas(freedata_grid);
   bbn_free_data_Gamma(freedata_grid);
   //bbn_free_data_dGamma(freedata_grid);
@@ -1581,7 +1599,7 @@ static double y_CM_root_of_Px(void *params,const double *const x)
   double residual;
 
   /* updating free data and B's and related */
-  Psetd("y_CM",y_cm);
+  Psetd_0print("y_CM",y_cm);
   bbn_free_data_gammas(freedata_grid);
   bbn_free_data_Gamma(freedata_grid);
   //bbn_free_data_dGamma(freedata_grid);
