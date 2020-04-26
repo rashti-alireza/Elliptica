@@ -54,7 +54,7 @@ void bbn_set_default_parameters(void)
   Pset_default("BH_mass_tolerance","1e-2");
   
   /* the weight we use to update enthalpy */
-  Pset_default("enthalpy_update_weight","1e-3");
+  Pset_default("NS_enthalpy_update_weight","1e-3");
   
   /* the weight we use to update NS surface */
   Pset_default("NS_surface_update_weight","1e-3");
