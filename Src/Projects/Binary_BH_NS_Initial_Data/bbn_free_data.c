@@ -315,7 +315,7 @@ void bbn_free_data_gammas(Grid_T *const grid)
 {
   Transformation_T *t = initialize_transformation();
   /* roll off distance at exp(-(r/r0)^4)  */
-  const double r0   = Pgetd("RollOff_distance");
+  const double r0   = Pgetd("BH_KerrSchild_RollOff");
   const double M_BH = Pgetd("BH_mass");
   const double a    = Pgetd("BH_X_U2")*M_BH;
   const double BH_center_x = Pgetd("BH_center_x");

@@ -166,7 +166,7 @@ static int IsThereAnyUsefulCheckpointFile(void)
     free(prev_data_folder_list[i]);
   
   /* some checks to make sure the checkpoint file is valid */
-  /* NS & BH masses, NS & BH spins, EoS, separation, RollOff_distance */
+  /* NS & BH masses, NS & BH spins, EoS, separation, BH_KerrSchild_RollOff */
   if (ret && 0)
   {
     checkpoint_file = fopen(prev_data_file_path,"r");
@@ -179,7 +179,7 @@ static int IsThereAnyUsefulCheckpointFile(void)
                                       "BH_mass",
                                       "BH_X_U2",
                                       "BH_NS_separation",
-                                      "RollOff_distance",
+                                      "BH_KerrSchild_RollOff",
                                       0};
     i = 0;
     while (check_quantities[i])
