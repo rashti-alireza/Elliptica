@@ -204,8 +204,8 @@ int bbn_stop_criteria(Grid_T *const grid,const char *const name)
   int stop_res = 0;
   int stop_backtrack = 1;
   int stop_abnormal  = 1;
-  const double res_TOLERANCE = 1E-10;/* this is the tolerance that solver allowed to increase residual */
-  const double res_bckt = Pgetd("Solving_Allowed_Relative_Residual_Backtrack_Tolerance");
+  //const double res_TOLERANCE = 1E-10;/* this is the tolerance that solver allowed to increase residual */
+  //const double res_bckt = Pgetd("Solving_Backtrack_Tolerance");
   const double res_d    = Pgetd("Solving_Residual");/* desired residual */
   const int max_step    = Pgeti("Solving_Max_Number_of_Newton_Step");
   const double res_fac  = Pgetd("Solving_Residual_Factor");
@@ -227,7 +227,7 @@ int bbn_stop_criteria(Grid_T *const grid,const char *const name)
   {
     Patch_T *patch  = grid->patch[p];
     double res      = patch->solving_man->Frms;/* current residual */
-    double res_last;
+    //double res_last;
     int solver_step = patch->solving_man->settings->solver_step;/* iteration number */
     
     /* if nan or inf */
@@ -242,12 +242,12 @@ int bbn_stop_criteria(Grid_T *const grid,const char *const name)
       continue;
     
     /* if residual increased stop */
-    res_last = patch->solving_man->settings->HFrms[solver_step-1];
-    if (res > res_last*(1. + res_bckt) && GRT(res,res_TOLERANCE) && !IsItOutermostPatch(patch))
-    {
-      stop_backtrack = 0;
-      break;
-    }
+    //res_last = patch->solving_man->settings->HFrms[solver_step-1];
+    //if (res > res_last*(1. + res_bckt) && GRT(res,res_TOLERANCE) && !IsItOutermostPatch(patch))
+    //{
+      //stop_backtrack = 0;
+      //break;
+    //}
     
     /* note: all patches have same solver_step */
     if (solver_step >= max_step)
