@@ -232,7 +232,6 @@ void bbn_print_fields(Grid_T *const grid,const unsigned iteration, const char *c
 
   Pr_Field_T *pr  = init_PrField(grid);
   pr->folder = folder;
-  pr->par    = "print_fields_4d";
   pr->cycle  = (int)iteration;
   pr_fields(pr);
   free_PrField(pr);

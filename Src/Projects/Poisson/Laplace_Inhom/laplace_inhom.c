@@ -32,7 +32,6 @@ int Laplace_Inhom(void)
   Pr_Field_T *pr  = init_PrField(grid);
   outdir     = make_directory(Pgets("output_directory_path"),"output_4d");
   pr->folder = outdir;
-  pr->par    = "print_fields_4d";
   pr_fields(pr);
   free_PrField(pr);
   free(outdir);

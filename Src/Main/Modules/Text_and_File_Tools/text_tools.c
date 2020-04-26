@@ -207,7 +207,8 @@ int check_format_s(const char *str,const char *const format)
   char *subs1,*subs2;/* make sure you check the first substring */
   unsigned i,n;
   
-  assert(str);
+  if(!str)
+    return 0;
   delimits = 0;
   
   n = 0;

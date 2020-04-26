@@ -15,13 +15,11 @@
 // usage examples:
 // ===============
 // # parameter that is determined in input file is like:
-// print_fields_4d = yes,Format:HDF5,{(V_U0,V_U1,V_U2),psi,eta,(a_U0,a_U1,a_U2)}
+// output_3d_hdf5 = (V_U0,V_U1,V_U2),psi,eta,(a_U0,a_U1,a_U2)
 // # as one can see the vector quantities determined by parenthesis 
-// # and all of the desired fields need to be put in curly bracket
 //
 // Pr_Field_T *pr  = init_PrField(grid);
 // pr->folder      = "folder_path";
-// pr->par         = "print_fields_4d";
 // pr->cycle       = iteration_number;// if you wanna plot data at each iteration
 //
 // # the following options and flag are not necessary, their default value is 0.
