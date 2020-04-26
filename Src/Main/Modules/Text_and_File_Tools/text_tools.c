@@ -356,6 +356,10 @@ char *regex_find(const char *const regex_pattern,const char *const str)
 // ->return value: array of pointers to items,the last pointer is null. */
 char **read_separated_items_in_string(const char *const string,const char delimiter)
 {
+  /* if null return null */
+  if (!string)
+    return 0;
+    
   char *str = dup_s(string);/* str = f1,f2,... */
   char **items = 0;
   unsigned ni  = 0;/* number of items */
