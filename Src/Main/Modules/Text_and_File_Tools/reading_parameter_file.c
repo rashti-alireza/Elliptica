@@ -181,9 +181,9 @@ static void *make_buffer(FILE *const input)
     j++;      
   }/* end of while */
 
-  buff = realloc(buff,(i+1)*sizeof(*buff));
-  pointerEr(buff);
-  buff[i] = END;
-    
+  //buff = realloc(buff,(i+1)*sizeof(*buff));
+  //pointerEr(buff);
+  //buff[i] = END;
+  buff[i-1] = END;
   return buff;
 }
