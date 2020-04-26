@@ -132,27 +132,14 @@ void bbn_print_properties(Grid_T *const grid,const unsigned iteration, const cha
 void bbn_print_residual_norms(Grid_T *const grid,const unsigned iteration, const char *const folder)
 {
   /* list of the fields to be printed out */
-  const char *f[] = {"ham_constraint",
-                     "mom_constraint_U0",
-                     "mom_constraint_U1",
-                     "mom_constraint_U2",
-                     "ham_constraint_2nd",
-                     "mom_constraint_2nd_U0",
-                     "mom_constraint_2nd_U1",
-                     "mom_constraint_2nd_U2",
-                     "B0_U0_residual",
-                     "B0_U1_residual",
-                     "B0_U2_residual",
-                     "psi_residual",
-                     "eta_residual",
-                     "phi_residual",
-                     0};
+  char **f = 
+     read_separated_items_in_string(PgetsEZ("output_2d_txt"),',');
   double largest_L2_error = 0;                   
   unsigned i,p;
-                     
+  
+  if(f)         
   for (i = 0; f[i]; ++i)
   {
-    
     FOR_ALL_PATCHES(p,grid)
     {
       Patch_T *patch = grid->patch[p];
@@ -232,7 +219,7 @@ void bbn_print_residual_norms(Grid_T *const grid,const unsigned iteration, const
       fclose(file_L2);
     }
   }
-  
+  free_2d(f);
   /* update numeric error */
   Psetd("largest_L2norm_error",largest_L2_error);
 }
