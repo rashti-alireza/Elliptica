@@ -45,7 +45,6 @@ static void populate_parameters(const char *const buff)
   char *tok,*savestr,*savestr2;
   char delimit = ENTER, delimit2 = EQUAL;
   char *buff2;
-  
   buff2 = dup_s(buff);
   
   tok = tok_s(buff2,delimit,&savestr);
@@ -73,8 +72,12 @@ static void populate_parameters(const char *const buff)
       
     }/* while (subtok != 0) */
     
-    if (par_l != 0)
+    if (par_l)
+    {
+      if (!par_r)
+        abortEr_s("No value for parameter '%s'\n",par_l);
       add_parameter(par_l,par_r);
+    }
     
     tok = tok_s(0,delimit,&savestr);
   
