@@ -1539,7 +1539,8 @@ static void Pxy_ADM_is0_by_xy_CM_roots(Grid_T *const grid)
   
   /* updating the free data */
   bbn_populate_free_data(freedata_grid);
-  
+  update_B1_dB1_Beta_dBete_Aij_dAij(grid);
+
   free(dx);
   free(freedata_grid);
   free(freedata_patch);
