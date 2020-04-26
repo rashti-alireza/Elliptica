@@ -101,7 +101,7 @@ Symm[_Gamma(i,j,k)  = _Gamma(i,k,j)];
 Symm[ddphi(i,j)     = ddphi(j,i)];
 
 `  const double rhoc = Pgetd("rho_center");`
-`  const double e    = Pgetd("Solving_phi_Jacobian_smoothness");`
+`  const double e    = Pgetd("NS_phi_equation_smoothness");`
 `  const double att  = e*rhoc;`
 
 ##########################################################################

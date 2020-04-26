@@ -82,7 +82,7 @@ void *bbn_eq_phi(void *vp1,void *vp2)
 
 
   const double rhoc = Pgetd("rho_center");
-  const double e    = Pgetd("Solving_phi_Jacobian_smoothness");
+  const double e    = Pgetd("NS_phi_equation_smoothness");
   const double att  = e*rhoc;
   DDM_SCHUR_EQ_OPEN
 
