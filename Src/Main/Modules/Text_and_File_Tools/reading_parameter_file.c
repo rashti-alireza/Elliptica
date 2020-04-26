@@ -3,7 +3,7 @@
 // May 2018
 */
 
-#include "reading_input_file.h"
+#include "reading_parameter_file.h"
 
 /* reading input file and make appropriate directories for output files */
 void read_input_file(const char *const path)
