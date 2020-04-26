@@ -669,7 +669,7 @@ static void Px_ADM_is0_by_BH_center_y(Grid_T *const grid)
   const double W1 = Pgetd("Solving_Field_Update_Weight");
   const double W2 = 1-W1;
   const double dP = Pgetd("P_ADM_control_tolerance");
-  const double Omega_BHNS = Pgetd("BH_NS_orbital_angular_velocity");
+  const double Omega_BHNS = Pgetd("BH_NS_angular_velocity");
   const double BH_center_y = Pgetd("BH_center_y");
   double px0,px,BH_center_y_new,dy;
   
@@ -703,7 +703,7 @@ static void Py_ADM_is0_by_BH_center_x(Grid_T *const grid)
   const double W1 = Pgetd("Solving_Field_Update_Weight");
   const double W2 = 1-W1;
   const double dP = Pgetd("P_ADM_control_tolerance");
-  const double Omega_BHNS = Pgetd("BH_NS_orbital_angular_velocity");
+  const double Omega_BHNS = Pgetd("BH_NS_angular_velocity");
   const double BH_center_x = Pgetd("BH_center_x");
   double py0,py,BH_center_x_new,dx;
   
@@ -1124,19 +1124,19 @@ static void force_balance_ddz_y_CM(Grid_T *const grid)
 /* force_balance_equation : adjust Omega at direction d/dx */
 static void force_balance_ddx_Omega(Grid_T *const grid)
 {
-  force_balance_eq_root_finders(grid,0,"BH_NS_orbital_angular_velocity");
+  force_balance_eq_root_finders(grid,0,"BH_NS_angular_velocity");
 }
 
 /* force_balance_equation : adjust Omega at direction d/dy */
 static void force_balance_ddy_Omega(Grid_T *const grid)
 {
-  force_balance_eq_root_finders(grid,1,"BH_NS_orbital_angular_velocity");
+  force_balance_eq_root_finders(grid,1,"BH_NS_angular_velocity");
 }
 
 /* force_balance_equation : adjust Omega at direction d/dz */
 static void force_balance_ddz_Omega(Grid_T *const grid)
 {
-  force_balance_eq_root_finders(grid,2,"BH_NS_orbital_angular_velocity");
+  force_balance_eq_root_finders(grid,2,"BH_NS_angular_velocity");
 }
 
 /* find parameter par using force balance equation in direction dir */
@@ -1146,7 +1146,7 @@ static void force_balance_eq_root_finders(Grid_T *const grid,const int dir, cons
   const double Vr           = Pgetd("BH_NS_infall_velocity");
   const double NS_center[3] = {0,-D/2,0};/* since we keep the NS center always here */
   const double RESIDUAL     = sqrt(Pgetd("RootFinder_Tolerance"));
-  const double Omega_BHNS   = Pgetd("BH_NS_orbital_angular_velocity");
+  const double Omega_BHNS   = Pgetd("BH_NS_angular_velocity");
   const double y_CM         = Pgetd("y_CM");
   const double x_CM         = Pgetd("x_CM");
   const double W1  = Pgetd("Solving_Field_Update_Weight");
@@ -1170,7 +1170,7 @@ static void force_balance_eq_root_finders(Grid_T *const grid,const int dir, cons
   params->dir        = dir;
   
   /* which par */
-  if (strcmp_i("BH_NS_orbital_angular_velocity",par))
+  if (strcmp_i("BH_NS_angular_velocity",par))
   {
     params->find_Omega = 1;
     params->x_CM       = x_CM;
@@ -1627,7 +1627,7 @@ static void Px_ADM_is0_by_y_CM(Grid_T *const grid)
   double dy_CM = 0,px0,y_CM_new,px;
   const double W    = Pgetd("Solving_Field_Update_Weight");
   const double dP   = Pgetd("P_ADM_control_tolerance");
-  const double Omega_BHNS = Pgetd("BH_NS_orbital_angular_velocity");
+  const double Omega_BHNS = Pgetd("BH_NS_angular_velocity");
   const double y_CM0 = Pgetd("y_CM0");
   const double M_NS  = Pgetd("NS_mass");
   const double M_BH  = Pgetd("BH_mass");
@@ -1663,7 +1663,7 @@ static void Py_ADM_is0_by_x_CM(Grid_T *const grid)
   double  dx_CM = 0,py0,x_CM_new,py;
   const double W    = Pgetd("Solving_Field_Update_Weight");
   const double dP   = Pgetd("P_ADM_control_tolerance");
-  const double Omega_BHNS = Pgetd("BH_NS_orbital_angular_velocity");
+  const double Omega_BHNS = Pgetd("BH_NS_angular_velocity");
   const double x_CM0 = Pgetd("x_CM0");
   const double M_NS  = Pgetd("NS_mass");
   const double M_BH  = Pgetd("BH_mass");
@@ -4139,7 +4139,7 @@ static void init_field_TOV_plus_KerrSchild(Grid_T *const grid,const TOV_T *const
   const double a2_BH = Pow2(a_BH);/* spin vector of BH */
   const double y_CM = Pgetd("y_CM");
   const double x_CM = Pgetd("x_CM");
-  const double Omega_BHNS = Pgetd("BH_NS_orbital_angular_velocity");
+  const double Omega_BHNS = Pgetd("BH_NS_angular_velocity");
   const double Omega_NS_x = Pgetd("NS_Omega_U0");
   const double Omega_NS_y = Pgetd("NS_Omega_U1");
   const double Omega_NS_z = Pgetd("NS_Omega_U2");
@@ -4890,7 +4890,7 @@ static void NS_BH_surface_CubedSpherical_grid(Grid_T *const grid,struct Grid_Par
   const double a_BH       = GridParams->a_BH;
   const double y_CM       = Pgetd("y_CM");
   const double C_BH       = 0.5*Pgetd("BH_NS_separation");/* center of BH patch it's on +y axis */
-  const double Omega_BHNS = Pgetd("BH_NS_orbital_angular_velocity");
+  const double Omega_BHNS = Pgetd("BH_NS_angular_velocity");
   const double g2         = 1-Pow2(-Omega_BHNS*(C_BH-y_CM));/* inverse square of Lorentz factor  */
   const double BH_center[3] = {Pgetd("BH_center_x"),Pgetd("BH_center_y")-C_BH,Pgetd("BH_center_z")};
   const double W1         = Pgetd("NS_surface_update_weight");

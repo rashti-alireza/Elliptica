@@ -324,7 +324,7 @@ void bbn_free_data_gammas(Grid_T *const grid)
   const double y_CM = Pgetd("y_CM");
   const double x_CM = Pgetd("x_CM");
   //const double C_BH = 0.5*Pgetd("BH_NS_separation");/* center of BH it's on +y axis */
-  const double Omega_BHNS = Pgetd("BH_NS_orbital_angular_velocity");
+  const double Omega_BHNS = Pgetd("BH_NS_angular_velocity");
   const double a2   = Pow2(a);
   double H,k0,k1,k2;/* in ds^2 = (delta_ij+2*H*ki*kj)dx^i*dx^j */
   double Bx,By,Bz;/* B = v/c */
@@ -670,7 +670,7 @@ static void populate_KSgammas_KSalpha_KSBeta(Patch_T *const patch)
   const double y_CM = Pgetd("y_CM");
   const double x_CM = Pgetd("x_CM");
   //const double C_BH = 0.5*Pgetd("BH_NS_separation");
-  const double Omega_BHNS = Pgetd("BH_NS_orbital_angular_velocity");
+  const double Omega_BHNS = Pgetd("BH_NS_angular_velocity");
   const unsigned nn = patch->nn;
   unsigned ijk;
   double H,k0,k1,k2,kt;/* in ds^2 = (eta_ij+2*H*ki*kj)dx^i*dx^j */

@@ -823,7 +823,7 @@ void bbn_update_derivative_B1_U2(Patch_T *const patch)
 {
   //const double D          = Pgetd("BH_NS_separation");
   //const double Vr         = Pgetd("BH_NS_infall_velocity");
-  //const double Omega_BHNS = Pgetd("BH_NS_orbital_angular_velocity"); 
+  //const double Omega_BHNS = Pgetd("BH_NS_angular_velocity"); 
   const unsigned nn = patch->nn;
   unsigned ijk;
   
@@ -859,7 +859,7 @@ void bbn_update_derivative_B1_U1(Patch_T *const patch)
 {
   const double D          = Pgetd("BH_NS_separation");
   const double Vr         = Pgetd("BH_NS_infall_velocity");
-  const double Omega_BHNS = Pgetd("BH_NS_orbital_angular_velocity"); 
+  const double Omega_BHNS = Pgetd("BH_NS_angular_velocity"); 
   const unsigned nn = patch->nn;
   unsigned ijk;
   
@@ -895,7 +895,7 @@ void bbn_update_derivative_B1_U0(Patch_T *const patch)
 {
   const double D          = Pgetd("BH_NS_separation");
   const double Vr         = Pgetd("BH_NS_infall_velocity");
-  const double Omega_BHNS = Pgetd("BH_NS_orbital_angular_velocity"); 
+  const double Omega_BHNS = Pgetd("BH_NS_angular_velocity"); 
   const unsigned nn = patch->nn;
   unsigned ijk;
   
@@ -1224,7 +1224,7 @@ void bbn_update_stress_energy_tensor(Grid_T *const grid,const int flag)
 /* updaing B1 */
 void bbn_update_B1_U012(Patch_T *const patch)
 {
-  const double Omega_BHNS = Pgetd("BH_NS_orbital_angular_velocity");
+  const double Omega_BHNS = Pgetd("BH_NS_angular_velocity");
   const double Vr   = Pgetd("BH_NS_infall_velocity");
   const double D    = Pgetd("BH_NS_separation");
   const double y_CM = Pgetd("y_CM");
