@@ -3,12 +3,12 @@
 // June 2018
 */
 
-#include "laplace_inhom_grid.h"
+#include "poisson0_grid.h"
 
-/* making grid for Laplace_Inhom project.
+/* making grid for poisson0 project.
 // ->return value: made grid.
 */
-Grid_T *Laplace_Inhom_make_grid(void)
+Grid_T *poisson0_make_grid(void)
 {
   Grid_T *grid = alloc_grid();/* adding a new grid */
   grid_characteristics_example(grid);

@@ -3,12 +3,12 @@
 // Feb 2019
 */
 
-#include "laplace_inhom_analyze.h"
+#include "poisson0_analyze.h"
 
 /* analyze the found answer, it calculates the difference between 
 // the calculated field and analytic value. 
 // ->return value: EXIT_SUCCESS. */
-int Laplace_Inhom_analyze_answer(const Grid_T *const grid)
+int poisson0_analyze_answer(const Grid_T *const grid)
 {
   unsigned p;
   

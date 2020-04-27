@@ -4,9 +4,9 @@
 */
 
 
-#include "laplace_inhom_headers.h"
+#include "poisson0_headers.h"
 #include "maths_equation_solvings_lib.h"
-#include "laplace_inhom_equations_lib.h"
+#include "poisson0_equations_lib.h"
 
 
 void *eq_alpha(void *vp1,void *vp2)

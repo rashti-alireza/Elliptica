@@ -11,9 +11,9 @@ C_macro2 = REALLOC_v_WRITE_v(name);
 C_macro3  = DECLARE_FIELD(name);
 
 # main function:
-Ccode["#include "laplace_inhom_headers.h""];
+Ccode["#include "poisson0_headers.h""];
 Ccode["#include "maths_equation_solvings_lib.h""];
-Ccode["#include "laplace_inhom_equations_lib.h"\n\n"];
+Ccode["#include "poisson0_equations_lib.h"\n\n"];
 Ccode["void *eq_alpha(void *vp1,void *vp2)\n{"];
 
 # NOTE: THE FOLLOWING MACRO DECLARES AND DEFINES THE FOLLOWING VARIABLES:

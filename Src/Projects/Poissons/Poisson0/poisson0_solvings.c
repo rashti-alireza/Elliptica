@@ -3,12 +3,12 @@
 // August 2018
 */
 
-#include "laplace_inhom_solvings.h"
+#include "poisson0_solvings.h"
 
 /* solving inhomogeneous Laplace equation
 // ->return value: EXIT_SUCCEESS if succeeds
 */
-int Laplace_Inhom_solve_eq(Grid_T *const grid)
+int poisson0_solve_eq(Grid_T *const grid)
 {
   Solve_Equations_T *SolveEqs = init_solve_equations(grid);/* initialization */
   sEquation_T **field_eq/* field equation */,
@@ -17,12 +17,12 @@ int Laplace_Inhom_solve_eq(Grid_T *const grid)
               **jacobian_bc_eq/* jacobian for B.C. */;
   
   /* fill data base of equations */
-  Laplace_Inhom_fill_db_eqs(&field_eq,&bc_eq,&jacobian_field_eq,&jacobian_bc_eq);
+  poisson0_fill_db_eqs(&field_eq,&bc_eq,&jacobian_field_eq,&jacobian_bc_eq);
   
   /* initializing and solving */
   initialize_solving_man(grid,field_eq,bc_eq,jacobian_field_eq,jacobian_bc_eq);/* populating solution managing */
   enable_fields(grid);/* allocating required fields in patch->pool */
-  Laplace_Inhom_initial_data_alpha(grid);/* initial data for field alpha */
+  poisson0_initial_data_alpha(grid);/* initial data for field alpha */
   
   SolveEqs->solving_order = Pgets("Solving_Order");
   solve_eqs(SolveEqs);/* solving equation(s) */
@@ -38,7 +38,7 @@ int Laplace_Inhom_solve_eq(Grid_T *const grid)
 }
 
 /* adding Laplace Inhomogeneous equations to data base */
-void Laplace_Inhom_fill_db_eqs(sEquation_T ***const field_eq,sEquation_T ***const bc_eq,sEquation_T ***const jacobian_field_eq,sEquation_T ***const jacobian_bc_eq)
+void poisson0_fill_db_eqs(sEquation_T ***const field_eq,sEquation_T ***const bc_eq,sEquation_T ***const jacobian_field_eq,sEquation_T ***const jacobian_bc_eq)
 {
   /* adding field and boundary condition equations */
   *field_eq      = init_eq();

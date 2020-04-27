@@ -3,12 +3,12 @@
 // August 2018
 */
 
-#include "laplace_inhom_initial_data.h"
+#include "poisson0_initial_data.h"
 
 /* initial data for field alpha
 // ->return value: EXIT_SUCCESS
 */
-int Laplace_Inhom_initial_data_alpha(Grid_T *const grid)
+int poisson0_initial_data_alpha(Grid_T *const grid)
 {
   unsigned p;
   

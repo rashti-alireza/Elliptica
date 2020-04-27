@@ -3,4 +3,4 @@
 #include "manifold_lib.h"
 #include "fields_lib.h"
 
-int Laplace_Inhom_initial_data_alpha(Grid_T *const grid);
+int poisson0_initial_data_alpha(Grid_T *const grid);

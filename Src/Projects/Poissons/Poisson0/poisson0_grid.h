@@ -5,4 +5,4 @@
 #include "maths_general_lib.h"
 
 
-Grid_T *Laplace_Inhom_make_grid(void);
+Grid_T *poisson0_make_grid(void);
