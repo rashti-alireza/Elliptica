@@ -81,7 +81,7 @@ Collocation_T get_collocation(const char *const coll)
   else if (strcmp_i(coll,"Chebyshev_Extrema")) c = Chebyshev_Extrema;
   else if (strcmp_i(coll,"Chebyshev_Nodes")) c = Chebyshev_Nodes;
   else
-    abortEr_s("There is no such %s collocation.\n",coll);
+    Error1("There is no such %s collocation.\n",coll);
     
   return c;
 }
@@ -99,7 +99,7 @@ Basis_T get_basis(const char *const basis)
   else if (strcmp_i(basis,"No_Basis")) 
     b = No_BASIS;
   else
-    abortEr_s("There is no such %s basis.\n",basis);
+    Error1("There is no such %s basis.\n",basis);
     
   return b;
 }
@@ -194,7 +194,7 @@ static unsigned check_interface(const double *const X, const Patch_T *const patc
       if (LSSEQL(ABS(Y[2]-X[2]),res)) return 1;
       break;
     default:
-      abortEr("No such interface was defined for this function.\n");
+      Error0("No such interface was defined for this function.\n");
       
   }
   
@@ -268,7 +268,7 @@ Coord_T find_coord(const char *const coordsys)
   if(strcmp_i(coordsys,"Cartesian"))
     coord = Cartesian;
   else
-    abortEr_s("There is no such %s coordinates.\n",coordsys);  
+    Error1("There is no such %s coordinates.\n",coordsys);  
     
   return coord;
 }
@@ -347,7 +347,7 @@ unsigned subface_map_invers_id(const SubFace_T *const subface,const unsigned n)
 unsigned *dup_UINT(const unsigned *const s,const unsigned N)
 {
   if (!s)
-    abortEr("The given array to be duplicated is Null!");
+    Error0("The given array to be duplicated is Null!");
   
   unsigned *dup = calloc(N,sizeof(*dup));
   pointerEr(dup);
@@ -499,7 +499,7 @@ double spectral_derivative_max_error(const Field_T *const f,const unsigned o)
       e = 1e-15;
   } 
   else
-    abortEr(NO_JOB);
+    Error0(NO_JOB);
     
   return e;
 }
@@ -528,7 +528,7 @@ unsigned IsItHorizonPatch(const Patch_T *const patch)
     return 0;
   }
   else
-    abortEr(NO_JOB);
+    Error0(NO_JOB);
   
   return ret;
 }
@@ -555,7 +555,7 @@ Patch_T *GetPatch(const char *const stem,const Grid_T *const grid)
   }
   
   if(!retPatch)
-    abortEr_s("It could not find patch %s.\n",name);
+    Error1("It could not find patch %s.\n",name);
     
   return retPatch;
 }
@@ -605,7 +605,7 @@ unsigned IsItNSPatch(const Patch_T *const patch)
        ret = 1;
   }
   else
-    abortEr(NO_JOB);
+    Error0(NO_JOB);
     
   return ret;
 }
@@ -629,7 +629,7 @@ unsigned IsItInsideBHPatch(const Patch_T *const patch)
        ret = 1;
   }
   else
-    abortEr(NO_JOB);
+    Error0(NO_JOB);
     
   return ret;
 }
@@ -646,7 +646,7 @@ unsigned IsItOutermostPatch(const Patch_T *const patch)
        ret = 1;
   }
   else
-    abortEr(NO_JOB);
+    Error0(NO_JOB);
     
   return ret;
 }
@@ -665,7 +665,7 @@ unsigned IsItFarthestOutermostPatch(const Patch_T *const patch)
        ret = 1;
   }
   else
-    abortEr(NO_JOB);
+    Error0(NO_JOB);
     
   return ret;
 }
@@ -681,7 +681,7 @@ unsigned IsItFillingBoxPatch(const Patch_T *const patch)
        ret = 1;
   }
   else
-    abortEr(NO_JOB);
+    Error0(NO_JOB);
     
   return ret;
 }
@@ -728,7 +728,7 @@ unsigned IsItNSSurface(const Patch_T *const patch)
        ret = 1;
   }
   else
-    abortEr(NO_JOB);
+    Error0(NO_JOB);
     
   return ret;
 }
@@ -772,7 +772,7 @@ unsigned IsItNSSurroundingPatch(const Patch_T *const patch)
        ret = 1;
   }
   else
-    abortEr(NO_JOB);
+    Error0(NO_JOB);
     
   return ret;
 }

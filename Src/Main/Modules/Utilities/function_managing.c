@@ -32,7 +32,7 @@ void run_func_PtoV(sFunc_PtoV_T **const func,const char *const task,Patch_T *con
   Coord_T coord = patch->coordsys;
   Flag_T flg = NONE;
   
-  if (!func) abortEr("The func is null!\n");
+  if (!func) Error0("The func is null!\n");
   
   FOR_ALL(i,func)
     if (strcmp_i(func[i]->task,task) && func[i]->coord == coord)
@@ -42,7 +42,7 @@ void run_func_PtoV(sFunc_PtoV_T **const func,const char *const task,Patch_T *con
     }
   
   if (flg != FOUND)
-    abortEr_s("There is not %s task.\n",task);
+    Error1("There is not %s task.\n",task);
 }
 
 /* initiatin a sFunc_Grid2Pdouble_T struct */

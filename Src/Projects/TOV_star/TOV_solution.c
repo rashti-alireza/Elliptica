@@ -87,7 +87,7 @@ TOV_T *TOV_solution(TOV_T *const TOV)
   /* if it finder messed up */
   if (!isfinite(m))
   {
-    abortEr("TOV solution failed!\n");
+    Error0("TOV solution failed!\n");
   }
   /* if it needs more step to find the root, set the last value as baryonic mass */
   if (!EQL(m,TOV->bar_m))
@@ -287,7 +287,7 @@ static void calculate_ADM_and_Komar_mass(TOV_T *const TOV)
   if (GRT(fabs(Komar_mass-ADM_mass),tol))/* virial theorem */
   {
     fprintf(stderr,"Komar mass = %g, ADM mass = %g\n",Komar_mass,ADM_mass);
-    abortEr("Komar mass and ADM mass must be equal!\n");
+    Error0("Komar mass and ADM mass must be equal!\n");
   }
 }
 
@@ -498,7 +498,7 @@ static double drbar_dh(const double h,const double rbar,const double r, const do
   ret = rbar/sqrt(1-2*m/r)/r*dr_dh(h,r,m);
   
   if (!isfinite(ret))
-    abortEr("The interpolation failed due to the high oscillation of interpolant.\n"
+    Error0("The interpolation failed due to the high oscillation of interpolant.\n"
             " One solution could be to lower the resolution.\n");
     
   return ret;

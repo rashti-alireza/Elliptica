@@ -146,11 +146,11 @@ void plan_integration(Integration_T *const I)
           I->integration_func = f_xyz_dV_Cheb_Ext_Spec;
         }
         else
-          abortEr(INCOMPLETE_FUNC);
+          Error0(INCOMPLETE_FUNC);
       }
     }
     else
-      abortEr(NO_OPTION);
+      Error0(NO_OPTION);
 
   }
   else if (strcmp_i(I->type,"Integral{f(x)dS},Spectral"))/* means over the whole specified slice in physical area in the patch */
@@ -163,7 +163,7 @@ void plan_integration(Integration_T *const I)
     if (I->Spectral->Y_surface) count++;
     if (I->Spectral->Z_surface) count++;
     if (count > 1)
-      abortEr("At 'Integral{f(x)dS},Spectral' more than one hypersurface was flagged.\n");
+      Error0("At 'Integral{f(x)dS},Spectral' more than one hypersurface was flagged.\n");
     
     if (coordsys == Cartesian || coordsys == CubedSpherical)
     {
@@ -175,14 +175,14 @@ void plan_integration(Integration_T *const I)
           I->integration_func = f_xyz_dS_Cheb_Ext_Spec;
         }
         else
-          abortEr(INCOMPLETE_FUNC);
+          Error0(INCOMPLETE_FUNC);
       }
     }
     else
-      abortEr(NO_OPTION);
+      Error0(NO_OPTION);
   }
   else
-    abortEr(NO_OPTION);
+    Error0(NO_OPTION);
 }
 
 /* free the integral struct */
@@ -199,7 +199,7 @@ void free_integration(Integration_T *I)
 static double Composite_Simpson_1D(Integration_T *const I)
 {
   if (I->Composite_Simpson_1D->n % 2 != 1)
-    abortEr("Composite Simpson's Rule requires odd number of points.\n");
+    Error0("Composite Simpson's Rule requires odd number of points.\n");
     
   const double h = (I->Composite_Simpson_1D->b-I->Composite_Simpson_1D->a)/(I->Composite_Simpson_1D->n-1);
   const double *const f = I->Composite_Simpson_1D->f;
@@ -459,7 +459,7 @@ static double f_xyz_dS_Cheb_Ext_Spec(Integration_T *const I)
                Int_ChebTn_OPTM(j,n[1]);
   }
   else
-    abortEr(NO_OPTION);
+    Error0(NO_OPTION);
   
   remove_field(F);
   free_temp_patch(&patch);
@@ -474,7 +474,7 @@ static double f_xyz_dS_Cheb_Ext_Spec(Integration_T *const I)
 double Integrate_ChebTn(const unsigned n,const double xi,const double xf)
 {
   if (fabs(xi) > 1. || fabs(xf) > 1.)
-    abortEr("Bad argument for Int_ChebTn function.\n");
+    Error0("Bad argument for Int_ChebTn function.\n");
     
   const double i = acos(xi);
   const double f = acos(xf);

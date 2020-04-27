@@ -259,7 +259,7 @@ void make_nodes_CubedSpherical_coord(Patch_T *const patch)
       }
     break;
     default:
-      abortEr(NO_OPTION);
+      Error0(NO_OPTION);
   }
   
 }
@@ -293,7 +293,7 @@ void make_JacobianT_CubedSpherical_coord(Patch_T *const patch)
         patch->JacobianT->j      = JT_NS_T_CS_front;
       break;
       default:
-        abortEr(NO_JOB);
+        Error0(NO_JOB);
     }/* end of switch */
     R2_derivative(patch);/* surface function derivative */
   }/* end of if (type == NS_T_CS) */
@@ -321,7 +321,7 @@ void make_JacobianT_CubedSpherical_coord(Patch_T *const patch)
         patch->JacobianT->j      = JT_SR_T_CS_front;
       break;
       default:
-        abortEr(NO_JOB);
+        Error0(NO_JOB);
     }/* end of switch */
     R1_derivative(patch);/* surface function derivative */
   }/* end of else if (type == SR_T_CS) */
@@ -349,7 +349,7 @@ void make_JacobianT_CubedSpherical_coord(Patch_T *const patch)
         patch->JacobianT->j      = JT_OT_T1_CS_front;
       break;
       default:
-        abortEr(NO_JOB);
+        Error0(NO_JOB);
     }/* end of switch */
   }/* end of else if (type == OT_T1_CS) */
   else if (type == OT_T2_CS)
@@ -375,7 +375,7 @@ void make_JacobianT_CubedSpherical_coord(Patch_T *const patch)
         patch->JacobianT->j      = JT_OT_T2_CS_front;
       break;
       default:
-        abortEr(NO_JOB);
+        Error0(NO_JOB);
     }/* end of switch */
   }/* end of else if (type == OT_T2_CS) */
   
@@ -517,11 +517,11 @@ static void populate_left_NS(Grid_T *const grid,const unsigned pn)
     if (n != INT_MAX)	patch->n[2] = n;
       
     if(patch->n[0] == INT_MAX)
-      abortEr("n_a could not be set.\n");
+      Error0("n_a could not be set.\n");
     if(patch->n[1] == INT_MAX)
-      abortEr("n_b could not be set.\n");
+      Error0("n_b could not be set.\n");
     if(patch->n[2] == INT_MAX)
-      abortEr("n_c could not be set.\n");
+      Error0("n_c could not be set.\n");
     
     /* filling nn */
     patch->nn = total_nodes_patch(patch);
@@ -631,7 +631,7 @@ static void populate_left_NS(Grid_T *const grid,const unsigned pn)
       
       break;
       default:
-        abortEr(NO_OPTION);
+        Error0(NO_OPTION);
     }
     
     /* filling center */
@@ -711,11 +711,11 @@ void populate_right_BH(Grid_T *const grid,const unsigned pn)
     if (n != INT_MAX)	patch->n[2] = n;
       
     if(patch->n[0] == INT_MAX)
-      abortEr("n_a could not be set.\n");
+      Error0("n_a could not be set.\n");
     if(patch->n[1] == INT_MAX)
-      abortEr("n_b could not be set.\n");
+      Error0("n_b could not be set.\n");
     if(patch->n[2] == INT_MAX)
-      abortEr("n_c could not be set.\n");
+      Error0("n_c could not be set.\n");
     
     /* filling nn */
     patch->nn = total_nodes_patch(patch);
@@ -825,7 +825,7 @@ void populate_right_BH(Grid_T *const grid,const unsigned pn)
       
       break;
       default:
-        abortEr(NO_OPTION);
+        Error0(NO_OPTION);
     }
     
     /* filling center */
@@ -905,11 +905,11 @@ static void populate_central_NS(Grid_T *const grid,const unsigned pn)
     if (n != INT_MAX)	patch->n[2] = n;
       
     if(patch->n[0] == INT_MAX)
-      abortEr("n_a could not be set.\n");
+      Error0("n_a could not be set.\n");
     if(patch->n[1] == INT_MAX)
-      abortEr("n_b could not be set.\n");
+      Error0("n_b could not be set.\n");
     if(patch->n[2] == INT_MAX)
-      abortEr("n_c could not be set.\n");
+      Error0("n_c could not be set.\n");
     
     /* filling nn */
     patch->nn = total_nodes_patch(patch);
@@ -1019,7 +1019,7 @@ static void populate_central_NS(Grid_T *const grid,const unsigned pn)
       
       break;
       default:
-        abortEr(NO_OPTION);
+        Error0(NO_OPTION);
     }
     
     /* filling center */
@@ -1099,11 +1099,11 @@ static void populate_right_NS(Grid_T *const grid,const unsigned pn)
     if (n != INT_MAX)	patch->n[2] = n;
       
     if(patch->n[0] == INT_MAX)
-      abortEr("n_a could not be set.\n");
+      Error0("n_a could not be set.\n");
     if(patch->n[1] == INT_MAX)
-      abortEr("n_b could not be set.\n");
+      Error0("n_b could not be set.\n");
     if(patch->n[2] == INT_MAX)
-      abortEr("n_c could not be set.\n");
+      Error0("n_c could not be set.\n");
     
     /* filling nn */
     patch->nn = total_nodes_patch(patch);
@@ -1213,7 +1213,7 @@ static void populate_right_NS(Grid_T *const grid,const unsigned pn)
       
       break;
       default:
-        abortEr(NO_OPTION);
+        Error0(NO_OPTION);
     }
     
     /* filling center */
@@ -1293,11 +1293,11 @@ static void populate_right_NS_surrounding(Grid_T *const grid,const unsigned pn)
     if (n != INT_MAX)	patch->n[2] = n;
       
     if(patch->n[0] == INT_MAX)
-      abortEr("n_a could not be set.\n");
+      Error0("n_a could not be set.\n");
     if(patch->n[1] == INT_MAX)
-      abortEr("n_b could not be set.\n");
+      Error0("n_b could not be set.\n");
     if(patch->n[2] == INT_MAX)
-      abortEr("n_c could not be set.\n");
+      Error0("n_c could not be set.\n");
     
     /* filling nn */
     patch->nn = total_nodes_patch(patch);
@@ -1407,7 +1407,7 @@ static void populate_right_NS_surrounding(Grid_T *const grid,const unsigned pn)
       
       break;
       default:
-        abortEr(NO_OPTION);
+        Error0(NO_OPTION);
     }
     
     /* filling center */
@@ -1487,11 +1487,11 @@ static void populate_right_BH_surrounding(Grid_T *const grid,const unsigned pn)
     if (n != INT_MAX)	patch->n[2] = n;
       
     if(patch->n[0] == INT_MAX)
-      abortEr("n_a could not be set.\n");
+      Error0("n_a could not be set.\n");
     if(patch->n[1] == INT_MAX)
-      abortEr("n_b could not be set.\n");
+      Error0("n_b could not be set.\n");
     if(patch->n[2] == INT_MAX)
-      abortEr("n_c could not be set.\n");
+      Error0("n_c could not be set.\n");
     
     /* filling nn */
     patch->nn = total_nodes_patch(patch);
@@ -1601,7 +1601,7 @@ static void populate_right_BH_surrounding(Grid_T *const grid,const unsigned pn)
       
       break;
       default:
-        abortEr(NO_OPTION);
+        Error0(NO_OPTION);
     }
     
     /* filling center */
@@ -1681,11 +1681,11 @@ static void populate_left_NS_surrounding(Grid_T *const grid,const unsigned pn)
     if (n != INT_MAX)	patch->n[2] = n;
       
     if(patch->n[0] == INT_MAX)
-      abortEr("n_a could not be set.\n");
+      Error0("n_a could not be set.\n");
     if(patch->n[1] == INT_MAX)
-      abortEr("n_b could not be set.\n");
+      Error0("n_b could not be set.\n");
     if(patch->n[2] == INT_MAX)
-      abortEr("n_c could not be set.\n");
+      Error0("n_c could not be set.\n");
     
     /* filling nn */
     patch->nn = total_nodes_patch(patch);
@@ -1795,7 +1795,7 @@ static void populate_left_NS_surrounding(Grid_T *const grid,const unsigned pn)
       
       break;
       default:
-        abortEr(NO_OPTION);
+        Error0(NO_OPTION);
     }
     
     /* filling center */
@@ -1875,11 +1875,11 @@ static void populate_central_BH_surrounding(Grid_T *const grid,const unsigned pn
     if (n != INT_MAX)	patch->n[2] = n;
       
     if(patch->n[0] == INT_MAX)
-      abortEr("n_a could not be set.\n");
+      Error0("n_a could not be set.\n");
     if(patch->n[1] == INT_MAX)
-      abortEr("n_b could not be set.\n");
+      Error0("n_b could not be set.\n");
     if(patch->n[2] == INT_MAX)
-      abortEr("n_c could not be set.\n");
+      Error0("n_c could not be set.\n");
     
     /* filling nn */
     patch->nn = total_nodes_patch(patch);
@@ -1989,7 +1989,7 @@ static void populate_central_BH_surrounding(Grid_T *const grid,const unsigned pn
       
       break;
       default:
-        abortEr(NO_OPTION);
+        Error0(NO_OPTION);
     }
     
     /* filling center */
@@ -2069,11 +2069,11 @@ static void populate_central_NS_surrounding(Grid_T *const grid,const unsigned pn
     if (n != INT_MAX)	patch->n[2] = n;
       
     if(patch->n[0] == INT_MAX)
-      abortEr("n_a could not be set.\n");
+      Error0("n_a could not be set.\n");
     if(patch->n[1] == INT_MAX)
-      abortEr("n_b could not be set.\n");
+      Error0("n_b could not be set.\n");
     if(patch->n[2] == INT_MAX)
-      abortEr("n_c could not be set.\n");
+      Error0("n_c could not be set.\n");
     
     /* filling nn */
     patch->nn = total_nodes_patch(patch);
@@ -2183,7 +2183,7 @@ static void populate_central_NS_surrounding(Grid_T *const grid,const unsigned pn
       
       break;
       default:
-        abortEr(NO_OPTION);
+        Error0(NO_OPTION);
     }
     
     /* filling center */
@@ -2277,7 +2277,7 @@ static void populate_outermost(Grid_T *const grid,const unsigned pn,const unsign
           patch->CoordSysInfo->CubedSphericalCoord->xc1 = Pgetd(var);         
         break;
         default:
-          abortEr(NO_OPTION);
+          Error0(NO_OPTION);
       }
 
       /* filling Rs */
@@ -2337,7 +2337,7 @@ static void populate_outermost(Grid_T *const grid,const unsigned pn,const unsign
       
       break;
       default:
-        abortEr(NO_OPTION);
+        Error0(NO_OPTION);
     }
 
     /* filling n */
@@ -2355,11 +2355,11 @@ static void populate_outermost(Grid_T *const grid,const unsigned pn,const unsign
     if (n != INT_MAX)	patch->n[2] = n;
       
     if(patch->n[0] == INT_MAX)
-      abortEr("n_a could not be set.\n");
+      Error0("n_a could not be set.\n");
     if(patch->n[1] == INT_MAX)
-      abortEr("n_b could not be set.\n");
+      Error0("n_b could not be set.\n");
     if(patch->n[2] == INT_MAX)
-      abortEr("n_c could not be set.\n");
+      Error0("n_c could not be set.\n");
     
     /* filling nn */
     patch->nn = total_nodes_patch(patch);
@@ -2606,7 +2606,7 @@ double JT_NS_T_CS_up(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const
       J = (K[k==l]-(x[k]-xc1)*dxc2_dz/(xc2-xc1))/(xc2-xc1);
     break;
     default:
-      abortEr("No such an enum!\n");
+      Error0("No such an enum!\n");
   }
   
   return J;
@@ -2702,7 +2702,7 @@ double JT_NS_T_CS_down(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,con
       J = (K[k==l]-(x[k]-xc1)*dxc2_dz/(xc2-xc1))/(xc2-xc1);
     break;
     default:
-      abortEr("No such an enum!\n");
+      Error0("No such an enum!\n");
   }
   
   return J;
@@ -2798,7 +2798,7 @@ double JT_NS_T_CS_left(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,con
       J = (K[k==l]-(x[k]-xc1)*dxc2_dz/(xc2-xc1))/(xc2-xc1);
     break;
     default:
-      abortEr("No such an enum!\n");
+      Error0("No such an enum!\n");
   }
   
   return J;
@@ -2894,7 +2894,7 @@ double JT_NS_T_CS_right(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,co
       J = (K[k==l]-(x[k]-xc1)*dxc2_dz/(xc2-xc1))/(xc2-xc1);
     break;
     default:
-      abortEr("No such an enum!\n");
+      Error0("No such an enum!\n");
   }
   
   return J;
@@ -2990,7 +2990,7 @@ double JT_NS_T_CS_back(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,con
       J = (K[k==l]-(x[k]-xc1)*dxc2_dz/(xc2-xc1))/(xc2-xc1);
     break;
     default:
-      abortEr("No such an enum!\n");
+      Error0("No such an enum!\n");
   }
   
   return J;
@@ -3086,7 +3086,7 @@ double JT_NS_T_CS_front(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,co
       J = (K[k==l]-(x[k]-xc1)*dxc2_dz/(xc2-xc1))/(xc2-xc1);
     break;
     default:
-      abortEr("No such an enum!\n");
+      Error0("No such an enum!\n");
   }
   
   return J;
@@ -3182,7 +3182,7 @@ double JT_SR_T_CS_up(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const
       J = (K[k==l]-dxc1_dz+(x[k]-xc1)*dxc1_dz/(xc2-xc1))/(xc2-xc1);
     break;
     default:
-      abortEr("No such an enum!\n");
+      Error0("No such an enum!\n");
   }
   
   return J;
@@ -3278,7 +3278,7 @@ double JT_SR_T_CS_down(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,con
       J = (K[k==l]-dxc1_dz+(x[k]-xc1)*dxc1_dz/(xc2-xc1))/(xc2-xc1);
     break;
     default:
-      abortEr("No such an enum!\n");
+      Error0("No such an enum!\n");
   }
   
   return J;
@@ -3374,7 +3374,7 @@ double JT_SR_T_CS_left(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,con
       J = (K[k==l]-dxc1_dz+(x[k]-xc1)*dxc1_dz/(xc2-xc1))/(xc2-xc1);
     break;
     default:
-      abortEr("No such an enum!\n");
+      Error0("No such an enum!\n");
   }
   
   return J;
@@ -3470,7 +3470,7 @@ double JT_SR_T_CS_right(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,co
       J = (K[k==l]-dxc1_dz+(x[k]-xc1)*dxc1_dz/(xc2-xc1))/(xc2-xc1);
     break;
     default:
-      abortEr("No such an enum!\n");
+      Error0("No such an enum!\n");
   }
   
   return J;
@@ -3566,7 +3566,7 @@ double JT_SR_T_CS_back(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,con
       J = (K[k==l]-dxc1_dz+(x[k]-xc1)*dxc1_dz/(xc2-xc1))/(xc2-xc1);
     break;
     default:
-      abortEr("No such an enum!\n");
+      Error0("No such an enum!\n");
   }
   
   return J;
@@ -3662,7 +3662,7 @@ double JT_SR_T_CS_front(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,co
       J = (K[k==l]-dxc1_dz+(x[k]-xc1)*dxc1_dz/(xc2-xc1))/(xc2-xc1);
     break;
     default:
-      abortEr("No such an enum!\n");
+      Error0("No such an enum!\n");
   }
   
   return J;
@@ -3749,7 +3749,7 @@ double JT_OT_T1_CS_up(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,cons
       J      = (xc1*K[k==l]/Pow2(x[k])-X[2]*dL_dz)/L;
     break;
     default:
-      abortEr("No such an enum!\n");
+      Error0("No such an enum!\n");
   }
   
   return J;
@@ -3836,7 +3836,7 @@ double JT_OT_T1_CS_down(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,co
       J      = (xc1*K[k==l]/Pow2(x[k])-X[2]*dL_dz)/L;
     break;
     default:
-      abortEr("No such an enum!\n");
+      Error0("No such an enum!\n");
   }
   
   return J;
@@ -3923,7 +3923,7 @@ double JT_OT_T1_CS_left(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,co
       J      = (xc1*K[k==l]/Pow2(x[k])-X[2]*dL_dz)/L;
     break;
     default:
-      abortEr("No such an enum!\n");
+      Error0("No such an enum!\n");
   }
   
   return J;
@@ -4010,7 +4010,7 @@ double JT_OT_T1_CS_right(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,c
       J      = (xc1*K[k==l]/Pow2(x[k])-X[2]*dL_dz)/L;
     break;
     default:
-      abortEr("No such an enum!\n");
+      Error0("No such an enum!\n");
   }
   
   return J;
@@ -4097,7 +4097,7 @@ double JT_OT_T1_CS_back(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,co
       J      = (xc1*K[k==l]/Pow2(x[k])-X[2]*dL_dz)/L;
     break;
     default:
-      abortEr("No such an enum!\n");
+      Error0("No such an enum!\n");
   }
   
   return J;
@@ -4184,7 +4184,7 @@ double JT_OT_T1_CS_front(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,c
       J      = (xc1*K[k==l]/Pow2(x[k])-X[2]*dL_dz)/L;
     break;
     default:
-      abortEr("No such an enum!\n");
+      Error0("No such an enum!\n");
   }
   
   return J;
@@ -4273,7 +4273,7 @@ double JT_OT_T2_CS_up(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,cons
       J     = (K[k==l]/x[k]+dd_dz/d2)*S*R1/(dR*x[k]*d1);
     break;
     default:
-      abortEr("No such an enum!\n");
+      Error0("No such an enum!\n");
   }
   
   return J;
@@ -4362,7 +4362,7 @@ double JT_OT_T2_CS_down(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,co
       J     = (K[k==l]/x[k]+dd_dz/d2)*S*R1/(dR*x[k]*d1);
     break;
     default:
-      abortEr("No such an enum!\n");
+      Error0("No such an enum!\n");
   }
   
   return J;
@@ -4451,7 +4451,7 @@ double JT_OT_T2_CS_left(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,co
       J     = (K[k==l]/x[k]+dd_dz/d2)*S*R1/(dR*x[k]*d1);
     break;
     default:
-      abortEr("No such an enum!\n");
+      Error0("No such an enum!\n");
   }
   
   return J;
@@ -4540,7 +4540,7 @@ double JT_OT_T2_CS_right(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,c
       J     = (K[k==l]/x[k]+dd_dz/d2)*S*R1/(dR*x[k]*d1);
     break;
     default:
-      abortEr("No such an enum!\n");
+      Error0("No such an enum!\n");
   }
   
   return J;
@@ -4629,7 +4629,7 @@ double JT_OT_T2_CS_back(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,co
       J     = (K[k==l]/x[k]+dd_dz/d2)*S*R1/(dR*x[k]*d1);
     break;
     default:
-      abortEr("No such an enum!\n");
+      Error0("No such an enum!\n");
   }
   
   return J;
@@ -4718,7 +4718,7 @@ double JT_OT_T2_CS_front(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,c
       J     = (K[k==l]/x[k]+dd_dz/d2)*S*R1/(dR*x[k]*d1);
     break;
     default:
-      abortEr("No such an enum!\n");
+      Error0("No such an enum!\n");
   }
   
   return J;
@@ -4766,7 +4766,7 @@ void SignAndIndex_permutation_CubedSphere(const Flag_T side,unsigned *const a,un
       *c = 0;
     break;
     default:
-      abortEr(NO_OPTION);
+      Error0(NO_OPTION);
   }
 }
 

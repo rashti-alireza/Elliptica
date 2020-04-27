@@ -931,11 +931,11 @@ void init_Ylm(void)
 double complex Ylm(const unsigned l, int m, const double theta, const double phi)
 {
   if (theta > M_PI || theta < 0)
-    abortEr("theta exceeds from [0,pi] interval.\n");
+    Error0("theta exceeds from [0,pi] interval.\n");
   if (phi > 2*M_PI || phi < 0)
-    abortEr("phi exceeds from [0,2*pi] interval.\n");
+    Error0("phi exceeds from [0,2*pi] interval.\n");
   if (l >= 15)
-    abortEr("l exceeds the maximum.\n");
+    Error0("l exceeds the maximum.\n");
   if ((unsigned)abs(m) > l)
     return 0;
   if (m < 0)
@@ -1178,11 +1178,11 @@ void init_dYlm_dphi(void)
 double complex dYlm_dphi(const unsigned l, int m, const double theta, const double phi)
 {
   if (theta > M_PI || theta < 0)
-    abortEr("theta exceeds from [0,pi] interval.\n");
+    Error0("theta exceeds from [0,pi] interval.\n");
   if (phi > 2*M_PI || phi < 0)
-    abortEr("phi exceeds from [0,2*pi] interval.\n");
+    Error0("phi exceeds from [0,2*pi] interval.\n");
   if (l >= 15)
-    abortEr("l exceeds the maximum.\n");
+    Error0("l exceeds the maximum.\n");
   if ((unsigned)abs(m) > l)
     return 0;
   if (m < 0)
@@ -1425,11 +1425,11 @@ void init_dYlm_dtheta(void)
 double complex dYlm_dtheta(const unsigned l, int m, const double theta, const double phi)
 {
   if (theta > M_PI || theta < 0)
-    abortEr("theta exceeds from [0,pi] interval.\n");
+    Error0("theta exceeds from [0,pi] interval.\n");
   if (phi > 2*M_PI || phi < 0)
-    abortEr("phi exceeds from [0,2*pi] interval.\n");
+    Error0("phi exceeds from [0,2*pi] interval.\n");
   if (l >= 15)
-    abortEr("l exceeds the maximum.\n");
+    Error0("l exceeds the maximum.\n");
   if ((unsigned)abs(m) > l)
     return 0;
   if (m < 0)

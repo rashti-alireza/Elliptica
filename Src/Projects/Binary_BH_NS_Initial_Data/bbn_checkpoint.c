@@ -119,7 +119,7 @@ static void write_header(const Grid_T *const grid)
 
   sprintf(file_path,"%s/%s_temp",folder,CHECKPOINT_FILE_NAME);
   if (!access(file_path,F_OK))/* if file exists */
-    abortEr("File already exists.\n");
+    Error0("File already exists.\n");
   
     
   file = fopen(file_path,"w");
@@ -393,7 +393,7 @@ static void read_header(struct checkpoint_header *const alloc_info,FILE *const f
   /* check the header */
   fscanf(file,"%s",line);
   if (strcmp(line,ALLOC_HEADER))
-      abortEr("No header found. Checkpoint file got a problem.\n");
+      Error0("No header found. Checkpoint file got a problem.\n");
     
   /* read allocations */
   while (strcmp(line,ALLOC_FOOTER))
@@ -404,7 +404,7 @@ static void read_header(struct checkpoint_header *const alloc_info,FILE *const f
       
     char *v = strstr(line,"=");/* v -> "=..." */
     if (!v)
-      abortEr("No value found. Checkpoint file got a problem.\n");
+      Error0("No value found. Checkpoint file got a problem.\n");
     v++;
     
     if (strstr(line,"number_of_parameters"))
@@ -424,7 +424,7 @@ static void read_header(struct checkpoint_header *const alloc_info,FILE *const f
       alloc_info->grid_kind = dup_s(v);
     }
     else
-      abortEr(NO_OPTION);
+      Error0(NO_OPTION);
   }
   /* read the binary parts */
   fseek(file,ftell(file)+1,SEEK_SET);/* +1 since fscanf won't read \n */
@@ -523,7 +523,7 @@ Parameter_T *bbn_parameter_query_from_checkpoint_file(const char *const par_name
   /* check the header */
   fscanf(file,"%s",line);
   if (strcmp(line,ALLOC_HEADER))
-      abortEr("No header found. Checkpoint file got a problem.\n");
+      Error0("No header found. Checkpoint file got a problem.\n");
     
   /* read allocations */
   while (strcmp(line,ALLOC_FOOTER))
@@ -534,7 +534,7 @@ Parameter_T *bbn_parameter_query_from_checkpoint_file(const char *const par_name
       
     char *v = strstr(line,"=");/* v -> "=..." */
     if (!v)
-      abortEr("No value found. Checkpoint file got a problem.\n");
+      Error0("No value found. Checkpoint file got a problem.\n");
     v++;
     
     if (strstr(line,"number_of_parameters"))
@@ -549,7 +549,7 @@ Parameter_T *bbn_parameter_query_from_checkpoint_file(const char *const par_name
   /* is the cursor matched? */
   FReadP_bin(match_str);
   if (strcmp(match_str,PARAM_HEADER))
-    abortEr("It could not find the parameter header.\n");
+    Error0("It could not find the parameter header.\n");
   _free(match_str);
   
   found = 0;
@@ -584,7 +584,7 @@ Parameter_T *bbn_parameter_query_from_checkpoint_file(const char *const par_name
     /* is the cursor matched? */
     FReadP_bin(match_str);
     if (strcmp(match_str,PARAM_FOOTER))
-      abortEr("It could not find the parameter footer.\n");
+      Error0("It could not find the parameter footer.\n");
     _free(match_str);
   }
  
@@ -605,7 +605,7 @@ static void read_parameters(struct checkpoint_header *const alloc_info,FILE *con
   /* is the cursor matched? */
   FReadP_bin(match_str);
   if (strcmp(match_str,PARAM_HEADER))
-    abortEr("It could not find the parameter header.\n");
+    Error0("It could not find the parameter header.\n");
   _free(match_str);
   
   /* start reading one by one */
@@ -638,7 +638,7 @@ static void read_parameters(struct checkpoint_header *const alloc_info,FILE *con
   /* is the cursor matched? */
   FReadP_bin(match_str);
   if (strcmp(match_str,PARAM_FOOTER))
-    abortEr("It could not find the parameter footer.\n");
+    Error0("It could not find the parameter footer.\n");
   _free(match_str);
   
   /* incorporate the modified parameter in the parameter file
@@ -739,7 +739,7 @@ static void read_fields(struct checkpoint_header *const alloc_info,FILE *const f
   /* is the cursor matched? */
   FReadP_bin(match_str);
   if (strcmp(match_str,FIELD_HEADER))
-    abortEr("It could not find the field header.\n");
+    Error0("It could not find the field header.\n");
   _free(match_str);
   
   FOR_ALL_PATCHES(p,grid)
@@ -773,6 +773,6 @@ static void read_fields(struct checkpoint_header *const alloc_info,FILE *const f
   /* is the cursor matched? */
   FReadP_bin(match_str);
   if (strcmp(match_str,FIELD_FOOTER))
-    abortEr("It could not find the field footer.\n");
+    Error0("It could not find the field footer.\n");
   _free(match_str);
 }

@@ -155,7 +155,7 @@ static unsigned find_threshold_number_h(const EoS_T *const eos)
   Flag_T flg = NONE;
   
   if (eos->enthalpy_fatal && LSS(eos->h,1))
-    abortEr("The value of the enthalpy is not set correctly.\n");
+    Error0("The value of the enthalpy is not set correctly.\n");
   
   if (LSSEQL(eos->h,eos->h_th[1]))
     return 0;
@@ -175,7 +175,7 @@ static unsigned find_threshold_number_h(const EoS_T *const eos)
   if (flg == NONE)
   {
     sprintf(str,"%e",eos->h);
-    abortEr_s("Threshold number could not be found for enthalpy = %s.\n",str);
+    Error1("Threshold number could not be found for enthalpy = %s.\n",str);
   }
   
   return i;

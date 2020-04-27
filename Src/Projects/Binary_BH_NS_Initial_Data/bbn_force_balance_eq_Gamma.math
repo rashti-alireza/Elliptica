@@ -80,7 +80,7 @@ Symm[_gamma(i,j)   = _gamma(j,i)];
 `else if (dir == 2)`
 `  dGAMMA_fb->v  = Partial_Derivative(GAMMA_fb,"z");`
 `else`
-`  abortEr(NO_OPTION);`
+`  Error0(NO_OPTION);`
 ``
 `Interpolation_T *interp_GAMMA   = init_interpolation();`
 `Interpolation_T *interp_dGAMMA  = init_interpolation();`
@@ -106,7 +106,7 @@ Symm[_gamma(i,j)   = _gamma(j,i)];
 `const double f  = dg/g;`
 `if(!isfinite(f))` # if f goes banana!
 `{`
-`  abortEr("Force balance equation was failed.\n");`
+`  Error0("Force balance equation was failed.\n");`
 `}`
 ``
 `REMOVE_FIELD(GAMMA_fb);`

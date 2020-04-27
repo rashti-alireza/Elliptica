@@ -16,11 +16,11 @@
 int matrix_by_vector(const Matrix_T *const m, const double *const v,double *const b,const Flag_T flag)
 {
   if (!m)
-    abortEr("Null Matrix \"m\".");
+    Error0("Null Matrix \"m\".");
   else if (!v)
-    abortEr("Null Vector \"v\".");
+    Error0("Null Vector \"v\".");
   else if(!b)
-    abortEr("No memory for Resultant vector \"b\".");
+    Error0("No memory for Resultant vector \"b\".");
     
   const long row = m->row;
   const long col = m->col;
@@ -28,7 +28,7 @@ int matrix_by_vector(const Matrix_T *const m, const double *const v,double *cons
   
   /* if empty */
   if (!row || !col)
-    abortEr("The matrix \"m\" is empty.");
+    Error0("The matrix \"m\" is empty.");
 
   /* if the entries of the resultant vector 
     has not been initialized to zero thus initialization is needed */
@@ -39,7 +39,7 @@ int matrix_by_vector(const Matrix_T *const m, const double *const v,double *cons
   }
   else if (flag != NOT_INITIALIZE)
   {
-    abortEr("No such flag has been defined for this function.");
+    Error0("No such flag has been defined for this function.");
   }
   
   if (m->reg_f)
@@ -52,30 +52,30 @@ int matrix_by_vector(const Matrix_T *const m, const double *const v,double *cons
   }
   else if (m->tri_f)
   {
-    abortEr(INCOMPLETE_FUNC);
+    Error0(INCOMPLETE_FUNC);
   }
   else if (m->ccs_f)
   {
-    abortEr(INCOMPLETE_FUNC);
+    Error0(INCOMPLETE_FUNC);
   }
   else if (m->crs_f)
   {
-    abortEr(INCOMPLETE_FUNC);
+    Error0(INCOMPLETE_FUNC);
   }
   else if (m->tri_l_f)
   {
-    abortEr(INCOMPLETE_FUNC);
+    Error0(INCOMPLETE_FUNC);
   }
   else if (m->ccs_l_f)
   {
-    abortEr(INCOMPLETE_FUNC);
+    Error0(INCOMPLETE_FUNC);
   }
   else if (m->crs_l_f)
   {
-    abortEr(INCOMPLETE_FUNC);
+    Error0(INCOMPLETE_FUNC);
   }
   else
-    abortEr("No matrix format is defined for this given matrix.");
+    Error0("No matrix format is defined for this given matrix.");
 
   return 0;
 }
@@ -92,9 +92,9 @@ Matrix_T *matrix_by_matrix(const Matrix_T *const a, const Matrix_T *const b,cons
 {
   /* some checks */
   if (!a)
-    abortEr("Null Matrix \"a\".");
+    Error0("Null Matrix \"a\".");
   if (!b)
-    abortEr("Null Matrix \"b\".");
+    Error0("Null Matrix \"b\".");
   
   Matrix_T *d = 0;
   const long a_row = a->row;
@@ -105,14 +105,14 @@ Matrix_T *matrix_by_matrix(const Matrix_T *const a, const Matrix_T *const b,cons
   
   /* more checks */
   if (!a_row || !a_col)
-    abortEr("The matrix \"a\" is empty.");
+    Error0("The matrix \"a\" is empty.");
   if (!b_row || !b_col)
-    abortEr("The matrix \"b\" is empty.");
+    Error0("The matrix \"b\" is empty.");
   
   if (strcmp_i("a*b",dir))
   {
     if (a_col != b_row)
-      abortEr("The dimensions of matrix a and b are not matched.");
+      Error0("The dimensions of matrix a and b are not matched.");
       
     d = alloc_matrix(REG_SF,a_row,b_col);
     if (a->reg_f && b->reg_f)
@@ -142,12 +142,12 @@ Matrix_T *matrix_by_matrix(const Matrix_T *const a, const Matrix_T *const b,cons
             D[Ai_a[i]][c] += Ax_a[i]*Ax_b[r];
     }
     else
-      abortEr(INCOMPLETE_FUNC);
+      Error0(INCOMPLETE_FUNC);
   }/* end of if (strcmp_i("AxB",dir)) */
   else if (strcmp_i("a*Transpose(b)",dir))
   {
     if (a_col != b_col)
-      abortEr("The dimensions of matrix a and Transpose(b) are not matched.\n");
+      Error0("The dimensions of matrix a and Transpose(b) are not matched.\n");
       
     d = alloc_matrix(REG_SF,a_row,b_row);
     if (a->reg_f && b->reg_f)
@@ -162,10 +162,10 @@ Matrix_T *matrix_by_matrix(const Matrix_T *const a, const Matrix_T *const b,cons
               D[r][c] += A[r][i]*B[c][i];
     }
     else
-      abortEr(INCOMPLETE_FUNC);
+      Error0(INCOMPLETE_FUNC);
   }
   else
-    abortEr(INCOMPLETE_FUNC);
+    Error0(INCOMPLETE_FUNC);
   
   return d;
 }
@@ -190,9 +190,9 @@ Matrix_T *CCSOpCCS(Matrix_T *const ccs2,Matrix_T *const ccs1,const char Op)
   long r,c;/* row and column */
   
   if (Nr != ccs1->row)
-    abortEr("Rows of the matrices are not matched.\n");
+    Error0("Rows of the matrices are not matched.\n");
   if (Nc != ccs1->col)
-    abortEr("columns of the matrices are not matched.\n");
+    Error0("columns of the matrices are not matched.\n");
   
   Ap = calloc((long unsigned)Nc+1,sizeof(*Ap));
   pointerEr(Ap);
@@ -246,7 +246,7 @@ Matrix_T *CCSOpCCS(Matrix_T *const ccs2,Matrix_T *const ccs1,const char Op)
     }
   }
   else
-    abortEr(NO_OPTION);
+    Error0(NO_OPTION);
 
   res->ccs->Ap = Ap;
   res->ccs->Ai = Ai;
@@ -283,7 +283,7 @@ int matrix_comparison(const Matrix_T *const M1,const Matrix_T *const M2)
     }
   }/* end of if (M1->reg_f && M2->reg_f) */
   else
-    abortEr(NO_OPTION);
+    Error0(NO_OPTION);
   
   return 1;
 }

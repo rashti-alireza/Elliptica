@@ -96,7 +96,7 @@ static void interpolate_and_write(Grid_T *const grid,struct interpolation_points
       R1_f  = R2_f = 0;
     }
     else
-      abortEr(NO_OPTION);
+      Error0(NO_OPTION);
   }
   
   OpenMP_1d_Pragma(omp parallel for)
@@ -120,14 +120,14 @@ static void interpolate_and_write(Grid_T *const grid,struct interpolation_points
     if (!needle->Nans)
     {
       fprintf(stderr,"(%g,%g,%g) is troublesome!\n",x[0],x[1],x[2]);
-      abortEr("It could not find a point!\n");
+      Error0("It could not find a point!\n");
     }
     else
     {
       pn = needle->ans[0];
       pnt->patchn[p] = pn;
       if(!X_of_x(X,x,grid->patch[pn]))
-        abortEr("It could not find X of x!\n");
+        Error0("It could not find X of x!\n");
       pnt->X[p] = X[0];
       pnt->Y[p] = X[1];
       pnt->Z[p] = X[2];
@@ -248,7 +248,7 @@ static void load_coords_from_coords_file(struct interpolation_points *const pnt)
   fgets(str,STR_LEN_MAX,file);
   FReadP_bin(match_str)
   if (strcmp(match_str,HEADER))
-    abortEr("It could not find the header.\n");
+    Error0("It could not find the header.\n");
   _free(match_str);
   
   /* allocating */
@@ -276,7 +276,7 @@ static void load_coords_from_coords_file(struct interpolation_points *const pnt)
   }
   FReadP_bin(match_str)
   if (strcmp(match_str,FOOTER))
-    abortEr("It could not find the footer.\n");
+    Error0("It could not find the footer.\n");
   _free(match_str);
   
   fclose(file);
@@ -326,7 +326,7 @@ static char **translate_fields_name(char ***const ptr_bam_fields)
       add2fieldsname_2ind_M("adm_K","bam_adm_K","D","D");
     }
     else
-      abortEr_s("No option has not been defined for %s.\n",bam_fields[nf]);
+      Error1("No option has not been defined for %s.\n",bam_fields[nf]);
     printf("~> Translating %s --> %s\n",bam_fields[nf],fields_name[nf]);
     nf++;
   }

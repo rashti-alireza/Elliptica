@@ -75,7 +75,7 @@ void plan_root_finder(Root_Finder_T *const root)
     root->root_finder_func = root_finder_steepest_descent;
   }
   else
-    abortEr(NO_OPTION);
+    Error0(NO_OPTION);
 }
 
 /* free the root_finder struct */
@@ -116,7 +116,7 @@ static double *root_finder_steepest_descent(Root_Finder_T *const root)
   unsigned i,k;
   
   if (!f)
-    abortEr("\n~> No equation has been given.\n");
+    Error0("\n~> No equation has been given.\n");
   
   if (desc)
     printf("%s\n",desc);

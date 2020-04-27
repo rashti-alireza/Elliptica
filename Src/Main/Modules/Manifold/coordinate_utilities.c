@@ -151,7 +151,7 @@ void needle_ans(Needle_T *const needle,const Patch_T *const patch)
   while(i < needle->Nans)
   {
     if (needle->ans[i] == patch->pn)
-      abortEr("This point has been found twice in a same patch.\n"
+      Error0("This point has been found twice in a same patch.\n"
       "Apparently, some part of point_finder is wrong or the needle"
       "has not been initialized correctly.\n");
     i++;
@@ -182,7 +182,7 @@ static void find(Needle_T *const needle,Mode_T mode)
     np = needle->Nin;
   }
   else
-    abortEr("There is no such mode.\n");
+    Error0("There is no such mode.\n");
   
   for (i = 0; i < np; i++)
   {
@@ -214,7 +214,7 @@ int X_of_x(double *const X,const double *const x,const Patch_T *const patch)
   else if (patch->coordsys == CubedSpherical)
     r = X_of_x_CS_coord(X,x,patch,1);
   else
-      abortEr("No finder for this coordinate.\n");
+      Error0("No finder for this coordinate.\n");
  
   return r;
 }
@@ -232,7 +232,7 @@ int x_of_X(double *const x,const double *const X,const Patch_T *const patch)
   else if (patch->coordsys == CubedSpherical)
     ret = x_of_X_CS_coord(x,X,patch,1);
   else
-      abortEr(NO_JOB);
+      Error0(NO_JOB);
  
   return ret;
 }
@@ -328,7 +328,7 @@ static int x_of_X_CS_coord(double *const x,const double *const X,const Patch_T *
       x[c]+= C[c];
     break;
     default:
-      abortEr(NO_OPTION);
+      Error0(NO_OPTION);
   }
   
   /* test the solution */
@@ -412,7 +412,7 @@ static int X_of_x_CS_coord(double *const X,const double *const cart,const Patch_
       X[2] = (1-x1/x[k])/L;
     break;
     default:
-      abortEr(NO_OPTION);
+      Error0(NO_OPTION);
   }
   
   /* adujusting boundary number to avoid some unexpeted behavior

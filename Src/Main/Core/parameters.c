@@ -96,7 +96,7 @@ void add_parameter_double(const char *const lv, const double rv)
   
   par = get_parameter(lv);
   if (par)
-    abortEr_s("This parameter \"%s\" has already been added!\n",lv);
+    Error1("This parameter \"%s\" has already been added!\n",lv);
     
   sprintf(str_rv,"%15.18f",rv);
   par = alloc_parameter(&parameters_global);
@@ -122,7 +122,7 @@ void add_parameter_array(const char *const lv, const double *const rv,const unsi
   
   par = get_parameter(lv);
   if (par)
-    abortEr_s("This parameter '%s' has already been added!\n",lv);
+    Error1("This parameter '%s' has already been added!\n",lv);
     
   par = alloc_parameter(&parameters_global);
   par->lv = dup_s(lv);
@@ -148,7 +148,7 @@ void update_parameter_array(const char *const lv, const double *const rv,const u
   if (par)
   {
     if (par->iterative)
-      abortEr_s("Wrong update: parameter '%s' is iterative.\n",lv);
+      Error1("Wrong update: parameter '%s' is iterative.\n",lv);
     
     par->double_flg = 0;
       
@@ -183,7 +183,7 @@ void add_parameter(const char *const lv, const char *const rv)
   
   par = get_parameter(lv);
   if (par)
-    abortEr_s("This parameter \"%s\" has already been added!\n",lv);
+    Error1("This parameter \"%s\" has already been added!\n",lv);
     
   par = alloc_parameter(&parameters_global);
   par->lv = dup_s(lv);
@@ -221,7 +221,7 @@ void add_parameter(const char *const lv, const char *const rv)
 static char *parse_multiplicity_of_iterative_parameter(const char *const rv)
 {
   if (regex_search("->$",rv))
-    abortEr_s("Wrong syntax for '%s'; '->' at the end of the line.",rv);
+    Error1("Wrong syntax for '%s'; '->' at the end of the line.",rv);
     
   char *ret_str = 0;
   char *str = dup_s(rv);
@@ -257,9 +257,9 @@ static char *parse_multiplicity_of_iterative_parameter(const char *const rv)
     unsigned mult   = (unsigned)atoi(mult_str);
     
     if (mult == UINT_MAX)
-      abortEr_s("Wrong syntax for '%s'; negative multiplicity.\n",rv);
+      Error1("Wrong syntax for '%s'; negative multiplicity.\n",rv);
     if (mult == 0)
-      abortEr_s("Wrong syntax for '%s'; zero multiplicity.\n",rv);
+      Error1("Wrong syntax for '%s'; zero multiplicity.\n",rv);
     
     unsigned n_mult = (mult-1)*2+mult*(n-1)+1;/* for each '->' 2 Byte,
                                     // for each v_str n-1 */
@@ -339,7 +339,7 @@ double get_parameter_double_format(const char *const par_name,const char *const 
     if (strcmp_i(parameters_global[i]->lv,par_name))
     {
       if (!parameters_global[i]->double_flg)
-        abortEr_s("Flag of parameter '%s' has not been set correctly.\n"
+        Error1("Flag of parameter '%s' has not been set correctly.\n"
                   ,par_name);
         
       v = parameters_global[i]->rv_double;
@@ -528,7 +528,7 @@ unsigned total_iterations_ip(void)
       {
         subs += 2;/* move forward */
         if (subs[0]=='\0')/* if after -> is empty */
-          abortEr_s("No value is specified after '->' in parameter %s.\n",parameters_global[i]->lv);
+          Error1("No value is specified after '->' in parameter %s.\n",parameters_global[i]->lv);
         subs = strstr(subs,"->");
         if (subs)
           l++;
@@ -593,10 +593,10 @@ void update_iterative_parameter_ip(const unsigned iter)
 char *get_n_value_str_ip(const Parameter_T *const par,const unsigned n)
 {
   if (!par->iterative)
-    abortEr_s("The parameter %s is not an iterative parameter",par->lv);
+    Error1("The parameter %s is not an iterative parameter",par->lv);
  
   if (!par->rv_ip)
-    abortEr_s("The parameter %s doesn't have an iterative value",par->lv);
+    Error1("The parameter %s doesn't have an iterative value",par->lv);
     
   char *ret = 0;
   char *subs,*subs2;
@@ -670,7 +670,7 @@ char *par_name_ip(const unsigned n)
   }
   
   if (count < n)
-    abortEr("The total number of iterative parameters is fewer.\n");
+    Error0("The total number of iterative parameters is fewer.\n");
   
   return ret;
 }
@@ -697,7 +697,7 @@ char *par_value_str_ip(const unsigned n)
   }
   
   if (count < n)
-    abortEr("The total number of iterative parameters is fewer.\n");
+    Error0("The total number of iterative parameters is fewer.\n");
   
   return ret;
 }

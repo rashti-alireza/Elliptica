@@ -35,7 +35,7 @@ void prepare_Js_jacobian_eq(Patch_T *const patch,const char * const *types)
   else if (strcmp_i(Pgets("dF/du_for_Newton_Method"),"Finite_Difference"))
     Jacobian = make_jacobian_direct_method;
   else
-    abortEr(INCOMPLETE_FUNC);
+    Error0(INCOMPLETE_FUNC);
   
   i = 0;
   while (types[i] != 0)
@@ -113,7 +113,7 @@ static char *interpret_type(const char *const type)
    else if (match[i] == '1') strcat(jtype,"y");
    else if (match[i] == '2') strcat(jtype,"z");
    else if (match[i] == 'U' || match[i] == 'D') continue;
-   else abortEr_s("This type '%s' has not been defined.\n",type);
+   else Error1("This type '%s' has not been defined.\n",type);
   }
   
   strcat(jtype,"_df");
@@ -121,7 +121,7 @@ static char *interpret_type(const char *const type)
   free(match);
  }
  else
-  abortEr_s("The type '%s' cannot be realized!\n",type);
+  Error1("The type '%s' cannot be realized!\n",type);
  
   return jtype;
 }
@@ -145,7 +145,7 @@ void make_Js_jacobian_eq(Grid_T *const grid, const char * const* types)
   else if (strcmp_i(Pgets("Making_Jacobian_Eq_Method"),"direct"))
     Jacobian = make_jacobian_direct_method;
   else
-    abortEr(INCOMPLETE_FUNC);
+    Error0(INCOMPLETE_FUNC);
   
   i = 0;
   while (types[i] != 0)
@@ -285,7 +285,7 @@ static JType_E str2JType_E(const char *const str)
     jt_e = T_yz;
     
   else
-    abortEr(INCOMPLETE_FUNC);
+    Error0(INCOMPLETE_FUNC);
   
   return jt_e;
 }
@@ -325,7 +325,7 @@ static void make_jacobian_direct_method(double **const J,Patch_T *const patch,co
       fill_jacobian_direct_method_2ndOrder(J,patch,T_zz);
       break;
     default:
-      abortEr("No such type for Jacobian defined!\n");
+      Error0("No such type for Jacobian defined!\n");
   }
 }
 
@@ -456,7 +456,7 @@ static void make_jacobian_spectral_method(double **const J,Patch_T *const patch,
       break;
       
     default:
-      abortEr("No such type for Jacobian defined!\n");
+      Error0("No such type for Jacobian defined!\n");
   }
 }
 
@@ -604,7 +604,7 @@ static void JType_E2Dd_T(const JType_E jt_e, Dd_T *const q_dir)
       *q_dir = _z_;
       break;
     default:
-      abortEr(INCOMPLETE_FUNC);
+      Error0(INCOMPLETE_FUNC);
   }
 }
 
@@ -685,7 +685,7 @@ static void read_1st_and_2nd_deriv(const JType_E deriv_dir,JType_E *const deriv_
       *deriv_2nd = T_z;
       break;
     default:
-      abortEr(INCOMPLETE_FUNC);
+      Error0(INCOMPLETE_FUNC);
   }
 }
 
@@ -758,7 +758,7 @@ static void JType_E2str(const JType_E e,char *const str)
       sprintf(str,"y,z");
       break;
     default:
-      abortEr(INCOMPLETE_FUNC);
+      Error0(INCOMPLETE_FUNC);
   }
 }
 
@@ -773,7 +773,7 @@ fJs_T *get_j_reader(const Matrix_T *const m)
   if (m->ccs_f)
     reader = read_matrix_entry_ccs;
   else
-    abortEr(INCOMPLETE_FUNC);
+    Error0(INCOMPLETE_FUNC);
   
   return reader;  
 }
@@ -863,7 +863,7 @@ static double J_sizeMb_ccs(const Matrix_T *const m)
   }
   else
   {
-    abortEr("This given matrix is not in CCS format.\n");
+    Error0("This given matrix is not in CCS format.\n");
   }
   
   return sum;
@@ -872,7 +872,7 @@ static double J_sizeMb_ccs(const Matrix_T *const m)
 /* supposed to write J in ccs format in disk. No completed yet! */
 static void write_J_in_disk_ccs(void)
 {
-  abortEr("Jacobian Exceeded max size and no function implemented yet."
+  Error0("Jacobian Exceeded max size and no function implemented yet."
           "To avoid this error increase \"Maximum_Size_of_J_Kept_in_Mb\" parameter.\n");
 }
 
@@ -906,7 +906,7 @@ fdInterp_dfs_T *get_dInterp_df(const Patch_T *const patch,const SubFace_T *const
       else if (!strcmp("z derivative",dir)) Func = dInterp_z_df_XYZ_Tn_Ex;
       else if (!strcmp("none",dir))	    Func = dInterp_df_XYZ_Tn_Ex;
       else
-        abortEr("No such directive defined for this function.\n");
+        Error0("No such directive defined for this function.\n");
     }
     else if (sf->sameX)
     {
@@ -915,7 +915,7 @@ fdInterp_dfs_T *get_dInterp_df(const Patch_T *const patch,const SubFace_T *const
       else if (!strcmp("z derivative",dir)) Func = dInterp_z_df_YZ_Tn_Ex;
       else if (!strcmp("none",dir))	    Func = dInterp_df_YZ_Tn_Ex;
       else
-        abortEr("No such directive defined for this function.\n");
+        Error0("No such directive defined for this function.\n");
     }
     else if (sf->sameY)
     {
@@ -924,7 +924,7 @@ fdInterp_dfs_T *get_dInterp_df(const Patch_T *const patch,const SubFace_T *const
       else if (!strcmp("z derivative",dir)) Func = dInterp_z_df_XZ_Tn_Ex;
       else if (!strcmp("none",dir))	    Func = dInterp_df_XZ_Tn_Ex;
       else
-        abortEr("No such directive defined for this function.\n");
+        Error0("No such directive defined for this function.\n");
     }
     else if (sf->sameZ)
     {
@@ -933,7 +933,7 @@ fdInterp_dfs_T *get_dInterp_df(const Patch_T *const patch,const SubFace_T *const
       else if (!strcmp("z derivative",dir)) Func = dInterp_z_df_XY_Tn_Ex;
       else if (!strcmp("none",dir))	    Func = dInterp_df_XY_Tn_Ex;
       else
-        abortEr("No such directive defined for this function.\n");
+        Error0("No such directive defined for this function.\n");
     }
     else if (!sf->sameX && !sf->sameY && !sf->sameZ)
     {
@@ -942,16 +942,16 @@ fdInterp_dfs_T *get_dInterp_df(const Patch_T *const patch,const SubFace_T *const
       else if (!strcmp("z derivative",dir)) Func = dInterp_z_df_XYZ_Tn_Ex;
       else if (!strcmp("none",dir))	    Func = dInterp_df_XYZ_Tn_Ex;
       else
-        abortEr("No such directive defined for this function.\n");
+        Error0("No such directive defined for this function.\n");
     }
     else 
     {
-      abortEr("Such surface's flag has not been defined for this function.\n");
+      Error0("Such surface's flag has not been defined for this function.\n");
     }
   }/* end of if (!strcmp(type,"Tn_Extrema,Tn_Extrema,Tn_Extrema,")) */
   else
   {
-    abortEr("No such option has been defined for this function.\n");
+    Error0("No such option has been defined for this function.\n");
   }
   
   return Func;

@@ -470,12 +470,12 @@ void init_associated_legendre(void)
 double associated_legendre(const int l, const int m, const double x)
 {
   if (x > 1. || x < -1.)
-    abortEr("x exceeds from [-1,1] interval.\n");
+    Error0("x exceeds from [-1,1] interval.\n");
   if (l >= 15)
-    abortEr("l exceeds the maximum.\n"
+    Error0("l exceeds the maximum.\n"
             "To go higher number change lmax in 'associated_legendre.py'.\n");
   if (l < 0)
-    abortEr("l is negative.\n");
+    Error0("l is negative.\n");
   if (abs(m) > l)
     return 0;
   if (m < 0)

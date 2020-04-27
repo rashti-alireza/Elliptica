@@ -99,11 +99,11 @@ void fill_patches_Cartesian_grid(Grid_T *const grid)
     if (n != INT_MAX)	patch->n[2] = n;
 
     if(patch->n[0] == INT_MAX)
-      abortEr("n_a could not be set.\n");
+      Error0("n_a could not be set.\n");
     if(patch->n[1] == INT_MAX)
-      abortEr("n_b could not be set.\n");
+      Error0("n_b could not be set.\n");
     if(patch->n[2] == INT_MAX)
-      abortEr("n_c could not be set.\n");
+      Error0("n_c could not be set.\n");
       
     /* filling nn */
     patch->nn = total_nodes_patch(patch);
@@ -620,7 +620,7 @@ void populate_filling_box_CubedSpherical(Grid_T *const grid,const unsigned pn,co
     
     break;
     default:
-      abortEr(NO_OPTION);
+      Error0(NO_OPTION);
   }
   
   /* filling nn */
@@ -732,7 +732,7 @@ void alloc_patches_Cartesian_grid(Grid_T *const grid)
   unsigned i;
   
   if (get_parameter("number_of_boxes") == 0)
-    abortEr("\"number_of_boxes\" parameter is not defined!\n");
+    Error0("\"number_of_boxes\" parameter is not defined!\n");
     
   Nboxes = (unsigned) Pgeti("number_of_boxes");
   

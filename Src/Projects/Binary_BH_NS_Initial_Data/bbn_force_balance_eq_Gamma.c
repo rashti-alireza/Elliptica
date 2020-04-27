@@ -85,7 +85,7 @@ else if (dir == 1)
 else if (dir == 2)
   dGAMMA_fb->v  = Partial_Derivative(GAMMA_fb,"z");
 else
-  abortEr(NO_OPTION);
+  Error0(NO_OPTION);
 
 Interpolation_T *interp_GAMMA   = init_interpolation();
 Interpolation_T *interp_dGAMMA  = init_interpolation();
@@ -111,7 +111,7 @@ const double dg = execute_interpolation(interp_dGAMMA);
 const double f  = dg/g;
 if(!isfinite(f))
 {
-  abortEr("Force balance equation was failed.\n");
+  Error0("Force balance equation was failed.\n");
 }
 
 REMOVE_FIELD(GAMMA_fb);

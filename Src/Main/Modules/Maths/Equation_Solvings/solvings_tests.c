@@ -108,7 +108,7 @@ static double root_finder_df0_dx_eq(void *params,const double *const x,const uns
     df_dx = - x[0]*x[1]*sin(x[0]*x[1]*x[2]);
   }
   else
-    abortEr("Bad argument for derivative.\n");
+    Error0("Bad argument for derivative.\n");
   
   return df_dx;
   UNUSED(params);
@@ -132,7 +132,7 @@ static double root_finder_df1_dx_eq(void *params,const double *const x,const uns
     df_dx = 0.1*x[2]-0.15;
   }
   else
-    abortEr("Bad argument for derivative.\n");
+    Error0("Bad argument for derivative.\n");
   
   return df_dx;
   UNUSED(params);
@@ -156,7 +156,7 @@ static double root_finder_df2_dx_eq(void *params,const double *const x,const uns
     df_dx = 1;
   }
   else
-    abortEr("Bad argument for derivative.\n");
+    Error0("Bad argument for derivative.\n");
   
   return df_dx;
   UNUSED(params);

@@ -10,7 +10,7 @@
 int Factorial(const int n)
 {
   if (n < 0)
-    abortEr("Factorial argument is negative!\n");
+    Error0("Factorial argument is negative!\n");
   if (n == 0)
     return 1;
     

@@ -30,7 +30,7 @@ double *Covariant_Derivative(Field_T *const f,const char *task)
   // Gamma*A_U?D? parts for each index. */
   UNUSED(f);
   UNUSED(task);
-  abortEr(NO_JOB);
+  Error0(NO_JOB);
   return 0;
 }
 
@@ -72,11 +72,11 @@ double *Partial_Derivative(Field_T *const f,const char *task)
 {
   /* check up */
   if (!f)
-    abortEr("The field is empty!\n");
+    Error0("The field is empty!\n");
   if (!f->v && !f->v2)  
-    abortEr("The field is empty!\n");
+    Error0("The field is empty!\n");
   if (!task)
-    abortEr("The task is empty!\n");
+    Error0("The task is empty!\n");
 
   double *r = 0;
   const char *der_par = PgetsEZ("Derivative_Method");
@@ -87,7 +87,7 @@ double *Partial_Derivative(Field_T *const f,const char *task)
   if (method_e == SPECTRAL)
     r = take_spectral_derivative(f,dir_e,Ndir);
   else
-    abortEr("There is no such derivative method defined for this function.\n");
+    Error0("There is no such derivative method defined for this function.\n");
     
   free(dir_e);
   return r;
@@ -146,7 +146,7 @@ static double *take_spectral_derivative(Field_T *const f,const Dd_T  *const dir_
     }
   }/* end of if (strstr(f->attr,"(3dim)")) */
   else
-    abortEr("No such Dimension is defined for this function.\n");
+    Error0("No such Dimension is defined for this function.\n");
   
   return deriv;
 }
@@ -210,7 +210,7 @@ static unsigned JacobianFormat_2ndOrder(const Patch_T *const patch,const Dd_T di
       r = 1;
   }
   else
-     abortEr(NO_JOB);
+     Error0(NO_JOB);
   
   return r;
 }
@@ -235,7 +235,7 @@ static void get_SpecDerivative_func_2ndOrder(const Patch_T *const patch,SpecDeri
       func[i] = derivative_ChebyshevNodes_Tn_2ndOrder;
     }
     else
-      abortEr("There is no such basis or collocation defined for this function.\n");
+      Error0("There is no such basis or collocation defined for this function.\n");
   }
 }
 
@@ -270,7 +270,7 @@ static int get_dp_2ndOrder(const Patch_T *const patch,SpecDerivative_Func_T **fu
         cnt++;
       }
       else
-        abortEr("There is no such derivative function defined for this function.\n");
+        Error0("There is no such derivative function defined for this function.\n");
 
     }
   }
@@ -371,7 +371,7 @@ static Dd_T *derivative_direction(const char *const task,unsigned *const n)
   char *tok = tok_s(str,DELIMIT,&savestr);
   
   if (!tok)
-    abortEr_s("There is No direction in %s.\n",task);
+    Error1("There is No direction in %s.\n",task);
   
   *n = 0;
   tok = tok_s(tok,COMMA,&savestr);  
@@ -411,7 +411,7 @@ static Method_T derivative_method(const char *const par,const char *const task)
   
   /* if still no type has been found => no info in parameter and task */
   if (type == UNDEFINED_METHOD)
-    abortEr("No Derivative Method is defined "
+    Error0("No Derivative Method is defined "
       "in parameter file or in function task.\n");
   
   return type;
@@ -452,7 +452,7 @@ static Dd_T str2enum_direction(const char *const str)
   else if (strcmp_i(str,"c"))
     return _c_;
   else
-    abortEr_s("There is no such %s derivative defined!\n",str);
+    Error1("There is no such %s derivative defined!\n",str);
   
   return UNDEFINED_DIR;
 }
@@ -881,7 +881,7 @@ static void get_SpecDerivative_func_1stOrder(const Patch_T *const patch,SpecDeri
       func[i] = derivative_ChebyshevNodes_Tn_1stOrder;
     }
     else
-      abortEr("There is no such basis or collocation defined for this function.\n");
+      Error0("There is no such basis or collocation defined for this function.\n");
   }
 }
 
@@ -918,7 +918,7 @@ static void get_dependency(const Patch_T *const patch,const Dd_T dir, unsigned *
     dep[2] = 1;
   }
   else
-     abortEr("There is no coordinate defined for this function.\n");
+     Error0("There is no coordinate defined for this function.\n");
 }
 
 /* based on spectral derivative function and dependencies 
@@ -941,7 +941,7 @@ static void get_dp_1stOrder(const Patch_T *const patch,SpecDerivative_Func_T **f
       else if (func[i] == derivative_ChebyshevNodes_Tn_1stOrder)
         dp[i] = (Dd_T)i;/* means _N0_or _N1_or _N2_ */
       else
-        abortEr("There is no such derivative function defined for this function.\n");
+        Error0("There is no such derivative function defined for this function.\n");
 
     }
   }

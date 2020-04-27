@@ -114,12 +114,12 @@ static void test_invert_matrix(const Matrix_T *const invertM,const Matrix_T *con
       if (i == j)
       {
         if(!EQL(Iij,1))
-          abortEr("Inverting matrix algorithm doesn't work!\n");
+          Error0("Inverting matrix algorithm doesn't work!\n");
       }
       else
       {
         if(!EQL(Iij,0))
-          abortEr("Inverting matrix algorithm doesn't work!\n");
+          Error0("Inverting matrix algorithm doesn't work!\n");
       }
       
     }/* end of for (j = 0; j < col; ++j) */

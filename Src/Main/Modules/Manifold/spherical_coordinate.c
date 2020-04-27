@@ -58,12 +58,12 @@ void fill_patches_BNS_Spherical_grid(Grid_T *const grid)
   populate_left_NS_sphere(grid,pn++);
   populate_left_NS_surrounding_sphere(grid,pn++);
   for (i = 0; i < N_outermost_split; i++)
-    abortEr(NO_JOB);
+    Error0(NO_JOB);
  
   populate_right_NS_sphere(grid,pn++);
   populate_right_NS_surrounding_sphere(grid,pn++);
   for (i = 0; i < N_outermost_split; i++)
-    abortEr(NO_JOB);
+    Error0(NO_JOB);
 
   
 }
@@ -110,11 +110,11 @@ static void populate_left_NS_sphere(Grid_T *const grid,const unsigned pn)
   if (n != INT_MAX)	patch->n[2] = n;
     
   if(patch->n[0] == INT_MAX)
-    abortEr("n_a could not be set.\n");
+    Error0("n_a could not be set.\n");
   if(patch->n[1] == INT_MAX)
-    abortEr("n_b could not be set.\n");
+    Error0("n_b could not be set.\n");
   if(patch->n[2] == INT_MAX)
-    abortEr("n_c could not be set.\n");
+    Error0("n_c could not be set.\n");
   
   /* filling nn */
   patch->nn = total_nodes_patch(patch);
@@ -242,11 +242,11 @@ static void populate_right_NS_sphere(Grid_T *const grid,const unsigned pn)
   if (n != INT_MAX)	patch->n[2] = n;
     
   if(patch->n[0] == INT_MAX)
-    abortEr("n_a could not be set.\n");
+    Error0("n_a could not be set.\n");
   if(patch->n[1] == INT_MAX)
-    abortEr("n_b could not be set.\n");
+    Error0("n_b could not be set.\n");
   if(patch->n[2] == INT_MAX)
-    abortEr("n_c could not be set.\n");
+    Error0("n_c could not be set.\n");
   
   /* filling nn */
   patch->nn = total_nodes_patch(patch);
@@ -374,11 +374,11 @@ static void populate_left_NS_surrounding_sphere(Grid_T *const grid,const unsigne
   if (n != INT_MAX)	patch->n[2] = n;
     
   if(patch->n[0] == INT_MAX)
-    abortEr("n_a could not be set.\n");
+    Error0("n_a could not be set.\n");
   if(patch->n[1] == INT_MAX)
-    abortEr("n_b could not be set.\n");
+    Error0("n_b could not be set.\n");
   if(patch->n[2] == INT_MAX)
-    abortEr("n_c could not be set.\n");
+    Error0("n_c could not be set.\n");
   
   /* filling nn */
   patch->nn = total_nodes_patch(patch);
@@ -506,11 +506,11 @@ static void populate_right_NS_surrounding_sphere(Grid_T *const grid,const unsign
   if (n != INT_MAX)	patch->n[2] = n;
     
   if(patch->n[0] == INT_MAX)
-    abortEr("n_a could not be set.\n");
+    Error0("n_a could not be set.\n");
   if(patch->n[1] == INT_MAX)
-    abortEr("n_b could not be set.\n");
+    Error0("n_b could not be set.\n");
   if(patch->n[2] == INT_MAX)
-    abortEr("n_c could not be set.\n");
+    Error0("n_c could not be set.\n");
   
   /* filling nn */
   patch->nn = total_nodes_patch(patch);

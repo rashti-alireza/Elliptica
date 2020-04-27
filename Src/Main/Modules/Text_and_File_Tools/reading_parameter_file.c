@@ -21,7 +21,7 @@ void read_input_file(const char *const path)
   
   /* is file empty? */
   if (strlen(buff) < 2)
-    abortEr("The parameter file is empty.\n");
+    Error0("The parameter file is empty.\n");
   
   //TEST_START
     //printf("buff:\n%s\n",buff);
@@ -75,7 +75,7 @@ static void populate_parameters(const char *const buff)
     if (par_l)
     {
       if (!par_r)
-        abortEr_s("No value for parameter '%s'\n",par_l);
+        Error1("No value for parameter '%s'\n",par_l);
       add_parameter(par_l,par_r);
     }
     
@@ -129,7 +129,7 @@ static void *make_buffer(FILE *const input)
     {
       c = fgetc(input);
       if (c != ENTER)/* if after \ is not enter */
-        abortEr("No enter after '\\'. Broken line is incorrect.\n");
+        Error0("No enter after '\\'. Broken line is incorrect.\n");
         
       c = fgetc(input);/* skip enter */
       while (c != ENTER && c != EOF)
@@ -143,12 +143,12 @@ static void *make_buffer(FILE *const input)
         {
           c = fgetc(input);
           if (c != ENTER)/* if after \ is not enter */
-            abortEr("No enter after '\\'. Broken line is incorrect.\n");
+            Error0("No enter after '\\'. Broken line is incorrect.\n");
           c = fgetc(input);/* skip enter */
           continue;
         }
         //else if (c == EQUAL)
-          //abortEr("It found '=' sign in broken line. Broken line is incorrect.\n");
+          //Error0("It found '=' sign in broken line. Broken line is incorrect.\n");
         else if (c == COMMENT)/* time off comment */
         {
           while (c != ENTER && c != EOF) c = fgetc(input);
@@ -175,7 +175,7 @@ static void *make_buffer(FILE *const input)
     }
     
     if (j > MAX_NUM_CHAR)
-      abortEr("Input file has been written wrong!\n"
+      Error0("Input file has been written wrong!\n"
         "It might beacuse either it is too long or "
           "beacuse its format has not been met\n");
     j++;      

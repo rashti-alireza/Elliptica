@@ -443,15 +443,15 @@ void bbn_free_data_gammas(Grid_T *const grid)
         _gammaI_U0U2[ijk]*_gamma_D0D1[ijk] + _gammaI_U1U2[ijk]*
         _gamma_D1D1[ijk] + _gammaI_U2U2[ijk]*_gamma_D1D2[ijk];
 
-        if(!EQL(delta_U1D1,1))  abortEr("_gammaI is not correct!\n");
-        if(!EQL(delta_U0D1,0))  abortEr("_gammaI is not correct!\n");
-        if(!EQL(delta_U0D2,0))  abortEr("_gammaI is not correct!\n");
-        if(!EQL(delta_U1D2,0))  abortEr("_gammaI is not correct!\n");
-        if(!EQL(delta_U0D0,1))  abortEr("_gammaI is not correct!\n");
-        if(!EQL(delta_U2D1,0))  abortEr("_gammaI is not correct!\n");
-        if(!EQL(delta_U2D2,1))  abortEr("_gammaI is not correct!\n");
-        if(!EQL(delta_U2D0,0))  abortEr("_gammaI is not correct!\n");
-        if(!EQL(delta_U1D0,0))  abortEr("_gammaI is not correct!\n");
+        if(!EQL(delta_U1D1,1))  Error0("_gammaI is not correct!\n");
+        if(!EQL(delta_U0D1,0))  Error0("_gammaI is not correct!\n");
+        if(!EQL(delta_U0D2,0))  Error0("_gammaI is not correct!\n");
+        if(!EQL(delta_U1D2,0))  Error0("_gammaI is not correct!\n");
+        if(!EQL(delta_U0D0,1))  Error0("_gammaI is not correct!\n");
+        if(!EQL(delta_U2D1,0))  Error0("_gammaI is not correct!\n");
+        if(!EQL(delta_U2D2,1))  Error0("_gammaI is not correct!\n");
+        if(!EQL(delta_U2D0,0))  Error0("_gammaI is not correct!\n");
+        if(!EQL(delta_U1D0,0))  Error0("_gammaI is not correct!\n");
 
       }
       
@@ -812,15 +812,15 @@ static void populate_KSgammas_KSalpha_KSBeta(Patch_T *const patch)
       KSgammaI_U0U2[ijk]*KSgamma_D0D1[ijk] + KSgammaI_U1U2[ijk]*
       KSgamma_D1D1[ijk] + KSgammaI_U2U2[ijk]*KSgamma_D1D2[ijk];
 
-      if(!EQL(delta_U1D1,1))  abortEr("KSgammaI is not correct!\n");
-      if(!EQL(delta_U0D1,0))  abortEr("KSgammaI is not correct!\n");
-      if(!EQL(delta_U0D2,0))  abortEr("KSgammaI is not correct!\n");
-      if(!EQL(delta_U1D2,0))  abortEr("KSgammaI is not correct!\n");
-      if(!EQL(delta_U0D0,1))  abortEr("KSgammaI is not correct!\n");
-      if(!EQL(delta_U2D1,0))  abortEr("KSgammaI is not correct!\n");
-      if(!EQL(delta_U2D2,1))  abortEr("KSgammaI is not correct!\n");
-      if(!EQL(delta_U2D0,0))  abortEr("KSgammaI is not correct!\n");
-      if(!EQL(delta_U1D0,0))  abortEr("KSgammaI is not correct!\n");
+      if(!EQL(delta_U1D1,1))  Error0("KSgammaI is not correct!\n");
+      if(!EQL(delta_U0D1,0))  Error0("KSgammaI is not correct!\n");
+      if(!EQL(delta_U0D2,0))  Error0("KSgammaI is not correct!\n");
+      if(!EQL(delta_U1D2,0))  Error0("KSgammaI is not correct!\n");
+      if(!EQL(delta_U0D0,1))  Error0("KSgammaI is not correct!\n");
+      if(!EQL(delta_U2D1,0))  Error0("KSgammaI is not correct!\n");
+      if(!EQL(delta_U2D2,1))  Error0("KSgammaI is not correct!\n");
+      if(!EQL(delta_U2D0,0))  Error0("KSgammaI is not correct!\n");
+      if(!EQL(delta_U1D0,0))  Error0("KSgammaI is not correct!\n");
 
     }/* end of if(0 or 1) */
     
@@ -1109,7 +1109,7 @@ double bbn_KerrSchild_H(const double M_BH,const double rbar,const double a,const
     lambda = 1;
   }
   else
-    abortEr(NO_OPTION);
+    Error0(NO_OPTION);
 
   return lambda*M_BH*rbar/(rbar2+a2*Pow2(k2));
 }

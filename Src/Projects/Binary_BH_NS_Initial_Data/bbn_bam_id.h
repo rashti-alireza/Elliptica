@@ -13,7 +13,7 @@
   if(s[0] == 'x')      i = 0;\
   else if(s[0] == 'y') i = 1;\
   else if(s[0] == 'z') i = 2;\
-  else abortEr(NO_OPTION);}
+  else Error0(NO_OPTION);}
 
 /* add x to fields_name */   
 #define add2fieldsname_0ind_M(x) {\

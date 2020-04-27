@@ -32,7 +32,7 @@ int make_nodes(Grid_T *const grid)
     }
     
     else
-      abortEr("No action for such coordinate.\n");
+      Error0("No action for such coordinate.\n");
   }
   
   return EXIT_SUCCESS;
@@ -63,7 +63,7 @@ int make_JacobianT(Grid_T *const grid)
       make_JacobianT_CubedSpherical_coord(patch);
     }
     else
-      abortEr("No job for such coordinate.\n");
+      Error0("No job for such coordinate.\n");
   }
   
   return EXIT_SUCCESS;
@@ -127,7 +127,7 @@ void initialize_collocation_struct(const Patch_T *const patch,struct Collocation
     coll_s->b = 0.5*(coll_s->max+coll_s->min);
   }
   else
-    abortEr("There is no such COLLOCATION.\n");
+    Error0("There is no such COLLOCATION.\n");
 }
 
 /* point value based on collocation 
@@ -157,7 +157,7 @@ double point_value(const unsigned i, const struct Collocation_s *const coll_s)
     x = coll_s->a*cos(t)+coll_s->b;
   }
   else
-    abortEr("There is no such collocation.\n");
+    Error0("There is no such collocation.\n");
   
   return x;
 }
@@ -229,7 +229,7 @@ static double dN_dX(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const 
   }
   else
   {
-    abortEr(INCOMPLETE_FUNC);
+    Error0(INCOMPLETE_FUNC);
   }
   
   UNUSED(p);
@@ -262,7 +262,7 @@ static double dN_dq(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const 
           jN_X = dN_dX(patch,q2_e,_c_,p)*dq2_dq1(patch,_c_,q1_e,p);
         break;
         default:
-          abortEr("It should not reach here!");
+          Error0("It should not reach here!");
       }
     }
     else
@@ -318,7 +318,7 @@ static double dq_dN(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const 
           j = ADJ_02/det;
         break;
         default:
-          abortEr(NO_OPTION);
+          Error0(NO_OPTION);
       }
     }
     else if(a == 1)
@@ -335,7 +335,7 @@ static double dq_dN(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const 
           j = ADJ_12/det;
         break;
         default:
-          abortEr(NO_OPTION);
+          Error0(NO_OPTION);
       }
     }
     else if (a == 2)
@@ -352,14 +352,14 @@ static double dq_dN(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const 
           j = ADJ_22/det;
         break;
         default:
-          abortEr(NO_OPTION);
+          Error0(NO_OPTION);
       }
     }
     else
-      abortEr(NO_OPTION);
+      Error0(NO_OPTION);
   }
   else
-    abortEr(INCOMPLETE_FUNC);
+    Error0(INCOMPLETE_FUNC);
   
   return j;
 }
@@ -416,15 +416,15 @@ void test_dq_dN(Grid_T *const grid)
       c21 = a20*b01 + a21*b11 + a22*b21;
       c22 = a20*b02 + a21*b12 + a22*b22;
       
-      if(!EQL(c00,1))  abortEr("dx_dN is not correct!\n");
-      if(!EQL(c01,0))  abortEr("dx_dN is not correct!\n");
-      if(!EQL(c02,0))  abortEr("dx_dN is not correct!\n");
-      if(!EQL(c10,0))  abortEr("dx_dN is not correct!\n");
-      if(!EQL(c11,1))  abortEr("dx_dN is not correct!\n");
-      if(!EQL(c12,0))  abortEr("dx_dN is not correct!\n");
-      if(!EQL(c20,0))  abortEr("dx_dN is not correct!\n");
-      if(!EQL(c21,0))  abortEr("dx_dN is not correct!\n");
-      if(!EQL(c22,1))  abortEr("dx_dN is not correct!\n");
+      if(!EQL(c00,1))  Error0("dx_dN is not correct!\n");
+      if(!EQL(c01,0))  Error0("dx_dN is not correct!\n");
+      if(!EQL(c02,0))  Error0("dx_dN is not correct!\n");
+      if(!EQL(c10,0))  Error0("dx_dN is not correct!\n");
+      if(!EQL(c11,1))  Error0("dx_dN is not correct!\n");
+      if(!EQL(c12,0))  Error0("dx_dN is not correct!\n");
+      if(!EQL(c20,0))  Error0("dx_dN is not correct!\n");
+      if(!EQL(c21,0))  Error0("dx_dN is not correct!\n");
+      if(!EQL(c22,1))  Error0("dx_dN is not correct!\n");
     }
   }
 }
@@ -438,7 +438,7 @@ double General2ChebyshevExtrema(const double X,const unsigned dir,const Patch_T 
 {
   if (patch->basis[dir]       != Chebyshev_Tn_BASIS && 
       patch->collocation[dir] != Chebyshev_Extrema    )
-    abortEr("This direction at the specified patch doesn't use first kind Chebyshev,\n"
+    Error0("This direction at the specified patch doesn't use first kind Chebyshev,\n"
       "and Chebyshev Extrema collocation which this function needs.\n");
     
   const double a = -patch->max[dir]+patch->min[dir];
@@ -495,7 +495,7 @@ void make_keyword_parameter(struct Ret_S *const ret,const char *const box,const 
   }
   else
   {
-    abortEr_s("There is no such %s.\n",needle);
+    Error1("There is no such %s.\n",needle);
   }
 }
 
@@ -521,7 +521,7 @@ enum enum_dA_da get_dA_da(const Dd_T q2_e, const Dd_T q1_e)
      dA_da = da_dz;
    }
    else
-     abortEr("Invalid entry.");
+     Error0("Invalid entry.");
   }/* end of if (q2_e == _a_) */
   
   else if (q2_e == _b_)
@@ -539,7 +539,7 @@ enum enum_dA_da get_dA_da(const Dd_T q2_e, const Dd_T q1_e)
      dA_da = db_dz;
    }
    else
-     abortEr("Invalid entry.");
+     Error0("Invalid entry.");
   }/* end of else if (q2_e == _b_) */
   
   else if (q2_e == _c_)
@@ -557,11 +557,11 @@ enum enum_dA_da get_dA_da(const Dd_T q2_e, const Dd_T q1_e)
      dA_da = dc_dz;
    }
    else
-     abortEr("Invalid entry.");
+     Error0("Invalid entry.");
   }/* end of else if (q2_e == _c_) */
   
   else
-    abortEr("Invalid entry.");
+    Error0("Invalid entry.");
   
   return dA_da;  
 }
@@ -588,7 +588,7 @@ void grid_characteristics_example(Grid_T *const grid)
     characteristics_BBN_CS_grid_eg(grid); 
    
   else
-    abortEr_s("There is no such %s grid kind.\n",grid->kind);
+    Error1("There is no such %s grid kind.\n",grid->kind);
   
 }
 
@@ -641,11 +641,11 @@ static void characteristics_BBN_CS_grid_eg(Grid_T *const grid)
     R_outermost[i] = Pgetd(var);
     
     if (LSS(R_outermost[i],2*C))
-      abortEr("the radius of outermost patches must be greater than twice of BNS distance.");
+      Error0("the radius of outermost patches must be greater than twice of BNS distance.");
     
     if (i > 0)
       if (LSSEQL(R_outermost[i],R_outermost[i-1]))
-        abortEr("The radius of outermost must be increasing.");
+        Error0("The radius of outermost must be increasing.");
     
   }
   
@@ -664,11 +664,11 @@ static void characteristics_BBN_CS_grid_eg(Grid_T *const grid)
   if (n != INT_MAX)   nlb[2] = n;
     
   if(nlb[0] == INT_MAX)
-    abortEr("n_a could not be set.\n");
+    Error0("n_a could not be set.\n");
   if(nlb[1] == INT_MAX)
-    abortEr("n_b could not be set.\n");
+    Error0("n_b could not be set.\n");
   if(nlb[2] == INT_MAX)
-    abortEr("n_c could not be set.\n");
+    Error0("n_c could not be set.\n");
   
   /* adding the results to the parameter data base */
   
@@ -786,11 +786,11 @@ static void NS_BH_surface_CS_grid_eg(Grid_T *const grid,const double R_NS_l,cons
   if (n != INT_MAX)     N[2] = n;
   
   if(N[0] == INT_MAX)
-    abortEr("n_a could not be set.\n");
+    Error0("n_a could not be set.\n");
   if(N[1] == INT_MAX)
-    abortEr("n_b could not be set.\n");
+    Error0("n_b could not be set.\n");
   if(N[2] == INT_MAX)
-    abortEr("n_c could not be set.\n");
+    Error0("n_c could not be set.\n");
   
   patch->n[0] = N[0];
   patch->n[1] = N[1];
@@ -840,11 +840,11 @@ static void NS_BH_surface_CS_grid_eg(Grid_T *const grid,const double R_NS_l,cons
   if (n != INT_MAX)     N[2] = n;
   
   if(N[0] == INT_MAX)
-    abortEr("n_a could not be set.\n");
+    Error0("n_a could not be set.\n");
   if(N[1] == INT_MAX)
-    abortEr("n_b could not be set.\n");
+    Error0("n_b could not be set.\n");
   if(N[2] == INT_MAX)
-    abortEr("n_c could not be set.\n");
+    Error0("n_c could not be set.\n");
    
   patch->n[0] = N[0];
   patch->n[1] = N[1];
@@ -986,11 +986,11 @@ static void characteristics_BNS_CS_grid_eg(Grid_T *const grid)
     R_outermost[i] = Pgetd(var);
     
     if (LSS(R_outermost[i],2*C))
-      abortEr("the radius of outermost patches must be greater than twice of BNS distance.");
+      Error0("the radius of outermost patches must be greater than twice of BNS distance.");
     
     if (i > 0)
       if (LSSEQL(R_outermost[i],R_outermost[i-1]))
-        abortEr("The radius of outermost must be increasing.");
+        Error0("The radius of outermost must be increasing.");
     
   }
   
@@ -1009,11 +1009,11 @@ static void characteristics_BNS_CS_grid_eg(Grid_T *const grid)
   if (n != INT_MAX)   nlb[2] = n;
     
   if(nlb[0] == INT_MAX)
-    abortEr("n_a could not be set.\n");
+    Error0("n_a could not be set.\n");
   if(nlb[1] == INT_MAX)
-    abortEr("n_b could not be set.\n");
+    Error0("n_b could not be set.\n");
   if(nlb[2] == INT_MAX)
-    abortEr("n_c could not be set.\n");
+    Error0("n_c could not be set.\n");
   
   /* right box */
   nrb[0] = (unsigned)PgetiEZ("n_a");
@@ -1028,11 +1028,11 @@ static void characteristics_BNS_CS_grid_eg(Grid_T *const grid)
   if (n != INT_MAX)   nrb[2] = n;
     
   if(nrb[0] == INT_MAX)
-    abortEr("n_a could not be set.\n");
+    Error0("n_a could not be set.\n");
   if(nrb[1] == INT_MAX)
-    abortEr("n_b could not be set.\n");
+    Error0("n_b could not be set.\n");
   if(nrb[2] == INT_MAX)
-    abortEr("n_c could not be set.\n");
+    Error0("n_c could not be set.\n");
   
   /* adding the results to the parameter data base */
   
@@ -1153,7 +1153,7 @@ static void characteristics_BNS_Spherical_grid_eg(Grid_T *const grid)
   
   O = C-R_NS_l-R_NS_r;
   if(!GRT(O,0))
-    abortEr("The centers of neutron stars are too close.");
+    Error0("The centers of neutron stars are too close.");
     
   O_l = O/2+R_NS_l;
   O_r = O/2+R_NS_r;
@@ -1173,11 +1173,11 @@ static void characteristics_BNS_Spherical_grid_eg(Grid_T *const grid)
     assert(GRT(R0[i],s));/* => R2_outermost <= R2_Surr */
     
     if (LSS(R0[i],C))
-      abortEr("the radius of outermost patches must be greater than BNS distance.");
+      Error0("the radius of outermost patches must be greater than BNS distance.");
     
     if (i > 0)
       if (LSSEQL(R0[i],R0[i-1]))
-        abortEr("The radius of outermost must be increasing.");
+        Error0("The radius of outermost must be increasing.");
         
     R_outmost_l[i] = sqrt(Pow2(O_l)+Pow2(R0[i]));
     R_outmost_r[i] = sqrt(Pow2(O_r)+Pow2(R0[i]));
@@ -1274,11 +1274,11 @@ static void NS_radii_BNS_Spherical_grid_eg(Grid_T *const grid,void *vp)
   if (n != INT_MAX)     N[2] = n;
   
   if(N[0] == INT_MAX)
-    abortEr("n_a could not be set.\n");
+    Error0("n_a could not be set.\n");
   if(N[1] == INT_MAX)
-    abortEr("n_b could not be set.\n");
+    Error0("n_b could not be set.\n");
   if(N[2] == INT_MAX)
-    abortEr("n_c could not be set.\n");
+    Error0("n_c could not be set.\n");
     
   N_total = N[0]*N[1]*N[2];
   
@@ -1315,11 +1315,11 @@ static void NS_radii_BNS_Spherical_grid_eg(Grid_T *const grid,void *vp)
   if (n != INT_MAX)     N[2] = n;
   
   if(N[0] == INT_MAX)
-    abortEr("n_a could not be set.\n");
+    Error0("n_a could not be set.\n");
   if(N[1] == INT_MAX)
-    abortEr("n_b could not be set.\n");
+    Error0("n_b could not be set.\n");
   if(N[2] == INT_MAX)
-    abortEr("n_c could not be set.\n");
+    Error0("n_c could not be set.\n");
     
   N_total = N[0]*N[1]*N[2];
   
@@ -1366,11 +1366,11 @@ static void NS_surface_BNS_CS_grid_eg(Grid_T *const grid)
   if (n != INT_MAX)     N[2] = n;
   
   if(N[0] == INT_MAX)
-    abortEr("n_a could not be set.\n");
+    Error0("n_a could not be set.\n");
   if(N[1] == INT_MAX)
-    abortEr("n_b could not be set.\n");
+    Error0("n_b could not be set.\n");
   if(N[2] == INT_MAX)
-    abortEr("n_c could not be set.\n");
+    Error0("n_c could not be set.\n");
     
   N_total = N[0]*N[1]*N[2];
   
@@ -1411,11 +1411,11 @@ static void NS_surface_BNS_CS_grid_eg(Grid_T *const grid)
   if (n != INT_MAX)     N[2] = n;
   
   if(N[0] == INT_MAX)
-    abortEr("n_a could not be set.\n");
+    Error0("n_a could not be set.\n");
   if(N[1] == INT_MAX)
-    abortEr("n_b could not be set.\n");
+    Error0("n_b could not be set.\n");
   if(N[2] == INT_MAX)
-    abortEr("n_c could not be set.\n");
+    Error0("n_c could not be set.\n");
     
   N_total = N[0]*N[1]*N[2];
   

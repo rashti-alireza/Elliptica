@@ -96,7 +96,7 @@ static void misc(Grid_T *const grid)
           subf->adjPatch = UINT_MAX;
           subf->adjFace  = UINT_MAX;
           if (grid->patch[pa]->outerB != 1)
-            abortEr("The patch->outerB has not been set correctly!\n");
+            Error0("The patch->outerB has not been set correctly!\n");
         }
         if (subf->innerB)
         {
@@ -104,7 +104,7 @@ static void misc(Grid_T *const grid)
           subf->adjPatch = UINT_MAX;
           subf->adjFace  = UINT_MAX;
           if (grid->patch[pa]->innerB != 1)
-            abortEr("The patch->innerB has not been set correctly!\n"); 
+            Error0("The patch->innerB has not been set correctly!\n"); 
         }
       }
     }
@@ -135,26 +135,26 @@ static void test_subfaces(const Grid_T *const grid)
         subf = face[f]->subface[sf];
         
         if (subf->outerB && subf->innerB)
-          abortEr("Outerbound and innerboundary faces conflict.\n");
+          Error0("Outerbound and innerboundary faces conflict.\n");
         if (subf->outerB && subf->touch)
-          abortEr("Outerbound and touch faces conflict.\n");
+          Error0("Outerbound and touch faces conflict.\n");
         if (subf->innerB && subf->touch)
-          abortEr("innerB and touch faces conflict.\n");
+          Error0("innerB and touch faces conflict.\n");
         if (subf->outerB && subf->copy)
-          abortEr("Outerbound and copy faces conflict.\n");
+          Error0("Outerbound and copy faces conflict.\n");
         if (subf->outerB && !subf->exterF)
-          abortEr("Outerbound and external face conflict.\n");
+          Error0("Outerbound and external face conflict.\n");
         if (subf->innerB && !subf->exterF)
-          abortEr("Innerbound and external face conflict.\n");
+          Error0("Innerbound and external face conflict.\n");
         if (subf->patch->pn == subf->adjPatch && 
             !subf->outerB && !subf->innerB && subf->exterF)
-          abortEr("patch and adjacent patch conflict.\n");
+          Error0("patch and adjacent patch conflict.\n");
         if (subf->sameX && subf->sameY)
-          abortEr("Two constant for an interface.\n");
+          Error0("Two constant for an interface.\n");
         if (subf->sameX && subf->sameZ)
-          abortEr("Two constant for an interface.\n");
+          Error0("Two constant for an interface.\n");
         if (subf->sameZ && subf->sameY)
-          abortEr("Two constant for an interface.\n");
+          Error0("Two constant for an interface.\n");
       }
     }
   }/* FOR_ALL(pa,grid->patch) */
@@ -175,12 +175,12 @@ static void test_subfaces(const Grid_T *const grid)
           
           /* making sure two touching sufaces have different df_dn */
           if (subf->df_dn && subf2->df_dn)
-            abortEr("Wrong df_dn flags: both have df_dn = 1 (Neumann).\n");
+            Error0("Wrong df_dn flags: both have df_dn = 1 (Neumann).\n");
           /* making sure two touching sufaces have different df_dn */
           if (!subf->df_dn && !subf2->df_dn)
-            abortEr("Wrong df_dn flags: both have df_dn = 0 (Dirichlet).\n");
+            Error0("Wrong df_dn flags: both have df_dn = 0 (Dirichlet).\n");
           if (!subf2->touch)
-            abortEr("Wrong paired subface.\n");
+            Error0("Wrong paired subface.\n");
         }
 
       }
@@ -208,7 +208,7 @@ static void test_subfaces(const Grid_T *const grid)
         break;
     }
     if (flg == NO)
-      abortEr("One of patches has all Neumann boundary condition.");
+      Error0("One of patches has all Neumann boundary condition.");
     
   }/* FOR_ALL(pa,grid->patch) */
   
@@ -266,7 +266,7 @@ static void set_df_dn_and_pair(Grid_T *const grid)
         nc = countf(chain);
         
         if (nc == 1)
-          abortEr("There is no other subface matches to this subface.");
+          Error0("There is no other subface matches to this subface.");
       
         /* first check if there is any clue for how to set this flags 
         // by looking to other memebers of this chain */
@@ -288,7 +288,7 @@ static void set_df_dn_and_pair(Grid_T *const grid)
               break;
             }
             else
-              abortEr("Flags in subface are not set right!");
+              Error0("Flags in subface are not set right!");
               
           }
         }
@@ -367,7 +367,7 @@ static void set_one_Dirichlet_BC(Interface_T **const face)
       nc = countf(chain);
       
       if (nc == 1)
-        abortEr("There is no other subface matches to this subface.");
+        Error0("There is no other subface matches to this subface.");
         
       /* first check if there is any clue for how to set this flags 
       // by looking to other memebers of this chain */
@@ -389,7 +389,7 @@ static void set_one_Dirichlet_BC(Interface_T **const face)
             break;
           }
           else
-            abortEr("Flags in subface are not set right!");
+            Error0("Flags in subface are not set right!");
             
         }
       }
@@ -429,7 +429,7 @@ static void set_one_Dirichlet_BC(Interface_T **const face)
     free_2d(chain);
   
   if (flg != READY && np > 1)/* since it has a touching subface and no Drichlete BC */
-    abortEr_s("Drichlet Boundary Condition cannot be set for patch %s .\n",patch->name);
+    Error1("Drichlet Boundary Condition cannot be set for patch %s .\n",patch->name);
     
 }
 
@@ -450,7 +450,7 @@ static void set_df_dn(Subf_T *const ring,const unsigned df_dn)
     if (next->set == 1)
     { 
       if (next->subf->df_dn != f%2)
-        abortEr("Wrong df_dn flags was found.");
+        Error0("Wrong df_dn flags was found.");
       else
       {
         ++f;
@@ -474,7 +474,7 @@ static void set_df_dn(Subf_T *const ring,const unsigned df_dn)
     if (prev->set == 1)
     { 
       if (prev->subf->df_dn != f%2)
-        abortEr("Wrong df_dn flags was found.");
+        Error0("Wrong df_dn flags was found.");
       else
       {
         ++f;
@@ -668,7 +668,7 @@ static SubFace_T *find_subface(const SubFace_T *const sub)
   }/* end of else */
   
   if (flg == NONE)
-    abortEr("The related subface could not be found.\n");
+    Error0("The related subface could not be found.\n");
     
   return sub2;
 }
@@ -1045,7 +1045,7 @@ static void analyze_adjPnt(PointSet_T *const Pnt,unsigned **const point_flag)
       "and face = '%d' "
     " \nhas not been found.\n",
                     x[0],x[1],x[2],p1->patch->name,p1->face);
-    abortEr("Incomplete function.\n");
+    Error0("Incomplete function.\n");
   }
   p1->houseK = 1;
   point_flag[p1->patch->pn][p1->ind] = 1;
@@ -1355,7 +1355,7 @@ static int IsOutBndry(PointSet_T *const Pnt)
       tangent(Pnt->Pnt,Ntan);
       nrm = root_square(3,Ntan,0);
       if (EQL(nrm,0))
-        abortEr("Normal vector is null!");
+        Error0("Normal vector is null!");
         
       /* make it unit */  
       Ntan[0] /= nrm;
@@ -1376,7 +1376,7 @@ static int IsOutBndry(PointSet_T *const Pnt)
       q[2] = x[2]+eps*N1[2];
     }
     else
-      abortEr(NO_OPTION);
+      Error0(NO_OPTION);
     
     Needle_T *needle = alloc_needle();
     needle->grid = patch->grid;
@@ -1425,7 +1425,7 @@ static int IsInnBndry(PointSet_T *const Pnt)
       tangent(Pnt->Pnt,Ntan);
       nrm = root_square(3,Ntan,0);
       if (EQL(nrm,0))
-        abortEr("Normal vector is null!");
+        Error0("Normal vector is null!");
         
       /* make it unit */  
       Ntan[0] /= nrm;
@@ -1446,7 +1446,7 @@ static int IsInnBndry(PointSet_T *const Pnt)
       q[2] = x[2]+eps*N1[2];
     }
     else
-      abortEr(NO_OPTION);
+      Error0(NO_OPTION);
     
     Needle_T *needle = alloc_needle();
     needle->grid = patch->grid;
@@ -1740,7 +1740,7 @@ static unsigned NumPoint(const Interface_T *const interface,const enum Type type
         v = (n[0]-2)*(n[1]-2);
         break;
       default:
-        abortEr("There is not such interface.\n");
+        Error0("There is not such interface.\n");
     }
   }
   else if (type == EDGE)
@@ -1766,11 +1766,11 @@ static unsigned NumPoint(const Interface_T *const interface,const enum Type type
         v = 2*(n[0]+n[1]-2);
         break;
       default:
-        abortEr("There is not such interface.\n");
+        Error0("There is not such interface.\n");
     }
   }
   else
-    abortEr("There is no such type.\n");
+    Error0("There is no such type.\n");
   
   return v;
 }
@@ -1877,7 +1877,7 @@ static void FindInnerB_CS_coord(Patch_T *const patch)
     }
   }
   else
-    abortEr(INCOMPLETE_FUNC);
+    Error0(INCOMPLETE_FUNC);
 }
 
 /* find external faces for cubed spherical type */
@@ -1942,7 +1942,7 @@ static void FindExterF_CS_coord(Patch_T *const patch)
     }
   }
   else
-    abortEr(INCOMPLETE_FUNC);
+    Error0(INCOMPLETE_FUNC);
 }
 
 /* filling point[?]->N */
@@ -2028,7 +2028,7 @@ static unsigned L2(const unsigned *const n,const unsigned f, const unsigned i, c
       v = j+n[1]*i;
       break;
     default:
-      abortEr("Exceeding from total number of face.\n");
+      Error0("Exceeding from total number of face.\n");
       break; 
   }
   
@@ -2100,7 +2100,7 @@ static void set_min_max_sum(const unsigned *const n,const unsigned f,unsigned *c
       *sum = n[0]*n[1];
       break;
     default:
-      abortEr("Exceeding from total number of face.\n");
+      Error0("Exceeding from total number of face.\n");
       break;
   }
 }
@@ -2123,7 +2123,7 @@ double *normal_vec(Point_T *const point)
     normal_vec_CS_coord(point);
   }
   else
-    abortEr("No Normal defined for such coordinate yet!\n");
+    Error0("No Normal defined for such coordinate yet!\n");
   
   return point->N;
 }
@@ -2200,12 +2200,12 @@ static void normal_vec_CS_coord(Point_T *const point)
       point->N[2] = dq2_dq1(patch,_c_,_z_,p);
     break;
     default:
-      abortEr("There is no such face.\n");
+      Error0("There is no such face.\n");
   }
   
   N = root_square(3,point->N,0);
   if (EQL(N,0))
-    abortEr("Normal vector is null!");
+    Error0("Normal vector is null!");
   
   /* make it unit */  
   point->N[0] /= N;
@@ -2249,7 +2249,7 @@ static void normal_vec_Cartesian_coord(Point_T *const point)
       point->N[2] = 1;
       break;
     default:
-      abortEr("There is no such face.\n");
+      Error0("There is no such face.\n");
   }
   
   
@@ -2424,7 +2424,7 @@ void tangent(const Point_T *const pnt,double *const N)
   }
   
   if (flg == NONE)
-    abortEr("Tangent vector could not be found.\n");
+    Error0("Tangent vector could not be found.\n");
   
   /* note: it must be y-x to tilt toward interface not out of it */  
   y = pnt->patch->node[s_in]->x;
@@ -2471,7 +2471,7 @@ static void set_sameXYZ(Point_T *const p,const unsigned f)
       p->sameZ = 1;
       break;
     default:
-      abortEr("There is not such interface.\n");
+      Error0("There is not such interface.\n");
   }
 }
 

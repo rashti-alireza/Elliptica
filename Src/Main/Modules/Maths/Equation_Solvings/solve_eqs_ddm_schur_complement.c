@@ -475,7 +475,7 @@ static char *solve_Sy_g_prime(Matrix_T *const S,double *const g_prime,Grid_T *co
     direct_solver_umfpack_dl(umfpack);
     
   else
-    abortEr(NO_OPTION);
+    Error0(NO_OPTION);
 
   /* populate SchurC->y */
   FOR_ALL_PATCHES(p,grid)
@@ -887,16 +887,16 @@ static void populate_F_and_C(Patch_T *const patch, Pair_T *const pair)
   
   if (!subface->exterF)/* if subface is internal */
   {
-    abortEr(INCOMPLETE_FUNC);
+    Error0(INCOMPLETE_FUNC);
   }
   else if (subface->innerB)/* if there is inner boundary */
   {
-    abortEr("Wrong subface:\n"
+    Error0("Wrong subface:\n"
         "It isn't suppoed to have this subface here!\n");
   }
   else if (subface->outerB)/* if it reaches outer boundary */
   {
-    abortEr("Wrong subface:\n"
+    Error0("Wrong subface:\n"
         "It isn't suppoed to have this subface here!\n");
   }
   else if (subface->touch)/* if two patches are in touch */
@@ -1415,7 +1415,7 @@ static void preparing_ingredients(Solve_Equations_T *const SolveEqs)
   if (!count)/* if all structures are ready, exit */
     return;
   else if (count != 0 && count < grid->np)/* is some structures have been made and some not */
-    abortEr(" How come that some Schur structure are ready and some are not!\n");
+    Error0(" How come that some Schur structure are ready and some are not!\n");
   
   /* populating Schur sturct */
   FOR_ALL_PATCHES(p,grid)
@@ -1463,7 +1463,7 @@ static void checks_and_constraints(const Grid_T *const grid)
     Patch_T *patch = grid->patch[p];
     
     if (patch->outerB && patch->innerB)
-      abortEr("In this version of domain decompostion method it is assumed \n"
+      Error0("In this version of domain decompostion method it is assumed \n"
               "a patch can only have one outer boundary or inner bounday at a time;\n"
               "but, it seems this patch has both outer boundary and inner bounday at a time!\n");
     
@@ -1474,7 +1474,7 @@ static void checks_and_constraints(const Grid_T *const grid)
   }
   
   if (count > 1)
-    abortEr("Disconnected Manifold: It seems that the grid has some gaps in it!\n"
+    Error0("Disconnected Manifold: It seems that the grid has some gaps in it!\n"
     " At least two of the patches are disconnected.");
 }
 
@@ -1628,7 +1628,7 @@ static Pair_T *find_pair_in_sewing(const Sewing_T *const sewing,const SubFace_T 
     SubFace_T *s = sewing->pair[i]->subface;
     
     if (s->patch != subface->patch)
-      abortEr("These subfaces are supposed to be on a same patches!\n");
+      Error0("These subfaces are supposed to be on a same patches!\n");
       
     if (s->face == subface->face && s->sn == subface->sn)
     {
@@ -1661,7 +1661,7 @@ static void make_its_sewing(const Patch_T *const patch,Sewing_T **const sewing)
       
       if (!subface->exterF)
       {
-        abortEr(INCOMPLETE_FUNC);
+        Error0(INCOMPLETE_FUNC);
       }
       else if (subface->innerB)
       {
@@ -1708,7 +1708,7 @@ static void make_others_sewing(const Patch_T *const patch,const Patch_T *const p
       
       if (!subface->exterF)
       {
-        abortEr(INCOMPLETE_FUNC);
+        Error0(INCOMPLETE_FUNC);
       }
       else if (subface->innerB)
       {
@@ -1754,7 +1754,7 @@ static void populate_pair(Sewing_T *const sewing,SubFace_T *const subface,const 
   else if (flag == ITS)
     pair->subface = subface;
   else
-    abortEr("Wrong flag.\n");
+    Error0("Wrong flag.\n");
   
   
   /* if this subface needs normal vector */
@@ -1832,7 +1832,7 @@ static void make_map_and_inv(Patch_T *const patch)
   pointerEr(flag_point);
   
   if (patch->is_a_closed || patch->is_b_closed || patch->is_c_closed)
-    abortEr(INCOMPLETE_FUNC);
+    Error0(INCOMPLETE_FUNC);
     
   /* filling inner points */
   j = 0;
@@ -1907,7 +1907,7 @@ static void make_map_and_inv(Patch_T *const patch)
       
       if (!subface->exterF)/* if subface is internal */
       {
-        abortEr(INCOMPLETE_FUNC);
+        Error0(INCOMPLETE_FUNC);
       }
       else if (subface->innerB)/* if there is inner boundary */
       {
@@ -1936,7 +1936,7 @@ static void make_map_and_inv(Patch_T *const patch)
   
   if (j != nn)
   {
-    abortEr("Not all points are mapped.\n");
+    Error0("Not all points are mapped.\n");
   }
   
   SchurC->Imap = Imap;
@@ -2065,16 +2065,16 @@ static void make_pg(Patch_T *const patch, Pair_T *const pair)
   
   if (!subface->exterF)/* if subface is internal */
   {
-    abortEr(INCOMPLETE_FUNC);
+    Error0(INCOMPLETE_FUNC);
   }
   else if (subface->innerB)/* if there is inner boundary */
   {
-    abortEr("Wrong subface:\n"
+    Error0("Wrong subface:\n"
         "It isn't suppoed to have this subface here!\n");
   }
   else if (subface->outerB)/* if it reaches outer boundary */
   {
-    abortEr("Wrong subface:\n"
+    Error0("Wrong subface:\n"
         "It isn't suppoed to have this subface here!\n");
   }
   else if (subface->touch)/* if two patches are in touch */
@@ -2318,7 +2318,7 @@ static void fill_interpolation_flags(Interpolation_T *const it,Patch_T *const pa
   }
   else if (sf->sameX && sf->sameY && sf->sameZ)
   {
-    abortEr("How come to have all the sameX,Y,Z flags of subface be the same.\n"
+    Error0("How come to have all the sameX,Y,Z flags of subface be the same.\n"
     "It means there is something wrong at finding of adjacent patches.\n");
   }
 
@@ -2366,7 +2366,7 @@ static unsigned const_index_of_face(Patch_T *const patch,const SubFace_T *const 
         C = n[2]-1;
         break;
       default:
-        abortEr(NO_OPTION);
+        Error0(NO_OPTION);
     }
   }
   
@@ -2642,7 +2642,7 @@ void test_Jacobian_of_equations(Solve_Equations_T *const SolveEqs)
     else if (status == TEST_UNSUCCESSFUL)
       sprintf(status_str,":(");
     else
-      abortEr(NO_OPTION);
+      Error0(NO_OPTION);
       
     printf("Verifying the Jacobian of equation for '%s' --> %s\n",field_name[f],status_str);
   }
@@ -2662,7 +2662,7 @@ static int Jwritten_vs_Jequation(Solve_Equations_T *const SolveEqs)
   
   /* if number grid only has one patch */
   if (grid->np == 1)
-    abortEr(INCOMPLETE_FUNC);
+    Error0(INCOMPLETE_FUNC);
   
   J_Schur = making_J_Schur_Method(SolveEqs);
   J_Reg   = making_J_Old_Fashion( SolveEqs);

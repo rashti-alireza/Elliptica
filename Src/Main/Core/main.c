@@ -31,7 +31,7 @@ int main(int argn, char **argv)
   
   /* check if the parameter file is correct and this project exists */
   if (!proj)
-    abortEr_s("There is no such %s project!\n",proj_name);
+    Error1("There is no such %s project!\n",proj_name);
   
   execute_project(proj);
   

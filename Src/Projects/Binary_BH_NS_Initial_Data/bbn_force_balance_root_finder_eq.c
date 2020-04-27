@@ -39,7 +39,7 @@ else if(par->find_Omega)
   x_CM       = par->x_CM;
 }
 else
-  abortEr(NO_OPTION);
+  Error0(NO_OPTION);
 
 /* B^1 */
 REALLOC_v_WRITE_v(B1_U0)
@@ -119,7 +119,7 @@ else if (dir == 1)
 else if (dir == 2)
   dGtilda_rf->v  = Partial_Derivative(Gtilda_rf,"z");
 else
-  abortEr(NO_OPTION);
+  Error0(NO_OPTION);
 
 Interpolation_T *interp_Gtilda  = init_interpolation();
 Interpolation_T *interp_dGtilda = init_interpolation();

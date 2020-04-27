@@ -400,7 +400,7 @@ void bbn_SolveEqs_FieldUpdate(Patch_T *const patch,const char *const name)
     //bbn_update_psi10A_UiUj(patch);
   }
   else
-    abortEr(NO_OPTION);
+    Error0(NO_OPTION);
   
 }
 
@@ -426,7 +426,7 @@ static Grid_T *bbn_phi_grid(Grid_T *const grid)
     bbn_phi_grid_CS(phi_grid,grid);
   }
   else
-    abortEr(NO_JOB);
+    Error0(NO_JOB);
   
   return phi_grid;
 }

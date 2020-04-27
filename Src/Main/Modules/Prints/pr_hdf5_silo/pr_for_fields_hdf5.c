@@ -71,7 +71,7 @@ void pr_hdf5_silo(Pr_Field_T *const pr)
     }
     
     if (DBClose(dbfile_xyz) == -1)
-      abortEr("Silo library failed to close the file.\n");
+      Error0("Silo library failed to close the file.\n");
   }/* end of FOR_ALL_PATCHES(pa,pr->grid) */
   
   /* if you want in (a,b,c) coords */
@@ -102,7 +102,7 @@ void pr_hdf5_silo(Pr_Field_T *const pr)
       }
       
       if (DBClose(dbfile_abc) == -1)
-        abortEr("Silo library failed to close the file.\n");
+        Error0("Silo library failed to close the file.\n");
     }/* end of FOR_ALL_PATCHES(pa,pr->grid) */
   
   }
@@ -153,11 +153,11 @@ static void write_multi_mesh(const Pr_Field_T *const pr)
   sprintf(grid_name,"grid%d_xyz",pr->grid->gn);
   DB_ret = DBPutMultimesh(grid_file_xyz,grid_name,npatch,patch_names_xyz,patch_types,0);
   if (DB_ret == -1)
-    abortEr("Silo library failed to make multi-mesh.\n");
+    Error0("Silo library failed to make multi-mesh.\n");
     
   /* close and free */
   if (DBClose(grid_file_xyz) == -1)
-    abortEr("Silo library failed to close the file.\n");
+    Error0("Silo library failed to close the file.\n");
   for (i = 0; i < npatch; ++i)
     free(patch_names_xyz[i]);
   
@@ -187,11 +187,11 @@ static void write_multi_mesh(const Pr_Field_T *const pr)
     sprintf(grid_name,"grid%d_abc",pr->grid->gn);
     DB_ret = DBPutMultimesh(grid_file_abc,grid_name,npatch,patch_names_abc,patch_types,0);
     if (DB_ret == -1)
-      abortEr("Silo library failed to make multi-mesh.\n");
+      Error0("Silo library failed to make multi-mesh.\n");
       
     /* close and free */
     if (DBClose(grid_file_abc) == -1)
-      abortEr("Silo library failed to close the file.\n");
+      Error0("Silo library failed to close the file.\n");
     for (i = 0; i < npatch; ++i)
       free(patch_names_abc[i]);
   }/* end of if (pr->abc_f) */
@@ -265,11 +265,11 @@ static void make_multi_var(const Pr_Field_T *const pr,const char *const var)
   sprintf(var_name,"%s_xyz",var);
   DB_ret = DBPutMultivar(var_file_xyz,var_name,npatch,var_names_xyz,var_types,0);
   if (DB_ret == -1)
-    abortEr("Silo library failed to make multi-var.\n");
+    Error0("Silo library failed to make multi-var.\n");
     
   /* close and free */
   if (DBClose(var_file_xyz) == -1)
-    abortEr("Silo library failed to close the file.\n");
+    Error0("Silo library failed to close the file.\n");
   for (i = 0; i < npatch; ++i)
     free(var_names_xyz[i]);
 
@@ -305,11 +305,11 @@ static void make_multi_var(const Pr_Field_T *const pr,const char *const var)
     sprintf(var_name,"%s_abc",var);
     DB_ret = DBPutMultivar(var_file_abc,var_name,npatch,var_names_abc,var_types,0);
     if (DB_ret == -1)
-      abortEr("Silo library failed to make multivar.\n");
+      Error0("Silo library failed to make multivar.\n");
       
     /* close and free */
     if (DBClose(var_file_abc) == -1)
-      abortEr("Silo library failed to close the file.\n");
+      Error0("Silo library failed to close the file.\n");
     for (i = 0; i < npatch; ++i)
       free(var_names_abc[i]);
   }
@@ -471,7 +471,7 @@ static void pr_scalar_on_structured_mesh_3d_silo(const Pr_Field_T *const pr)
   DB_ret = DBPutQuadvar1(dbfile,subg->field,mesh_name,
     data,dims,ndims,0,0,DB_DOUBLE,DB_NODECENT,0);
   if (DB_ret == -1)
-    abortEr("Silo library failed to print.\n");
+    Error0("Silo library failed to print.\n");
   
   /* if there is another file that the field needs to be printed */
   if (pr->file2)
@@ -479,7 +479,7 @@ static void pr_scalar_on_structured_mesh_3d_silo(const Pr_Field_T *const pr)
     DB_ret = DBPutQuadvar1(pr->file2,subg->field,mesh_name,
       data,dims,ndims,0,0,DB_DOUBLE,DB_NODECENT,0);
     if (DB_ret == -1)
-      abortEr("Silo library failed to print.\n");
+      Error0("Silo library failed to print.\n");
   }
   
   _free(data);
@@ -541,7 +541,7 @@ static void pr_vector_on_structured_mesh_3d_silo(const Pr_Field_T *const pr)
   DB_ret = DBPutQuadvar(dbfile,desc,mesh_name,3,
     varnames,comp,dims,ndims,0,0,DB_DOUBLE,DB_NODECENT,0);
   if (DB_ret == -1)
-    abortEr("Silo library failed to print.\n");
+    Error0("Silo library failed to print.\n");
     
   /* if there is another file that the field needs to be printed */
   if (pr->file2)
@@ -549,7 +549,7 @@ static void pr_vector_on_structured_mesh_3d_silo(const Pr_Field_T *const pr)
     DB_ret = DBPutQuadvar(pr->file2,desc,mesh_name,3,
       varnames,comp,dims,ndims,0,0,DB_DOUBLE,DB_NODECENT,0);
     if (DB_ret == -1)
-      abortEr("Silo library failed to print.\n");
+      Error0("Silo library failed to print.\n");
   }
   
   _free(comp[0]);
@@ -575,7 +575,7 @@ static void pr_structured_mesh_3d_silo(const Pr_Field_T *const pr)
       DB_DOUBLE,DB_NONCOLLINEAR,pr->opt_patch);
       
   if (DB_ret == -1)
-    abortEr("Silo library failed to print.\n"); 
+    Error0("Silo library failed to print.\n"); 
 }
 
 /* filling x,y,z value for each node for a structured mesh,
@@ -610,7 +610,7 @@ static void prepare_node_structured_mesh_3d_silo(const char *const type,const Pa
     }
   }
   else
-    abortEr_s("There is no such type of coordinates"
+    Error1("There is no such type of coordinates"
       " \"%s\"for printing.\n",type);
   
 }

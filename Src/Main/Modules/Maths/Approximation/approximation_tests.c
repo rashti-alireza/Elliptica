@@ -1208,7 +1208,7 @@ static Flag_T read_F(sFunc_Patch2Pdouble_T **const F,sFunc_Patch2Pdouble_T **con
   F[FUNC] = get_func_Patch2Pdouble(fname,DataBase_func);
   
   if (!F[FUNC])
-    abortEr_s("There is no function %s .\n",fname);
+    Error1("There is no function %s .\n",fname);
   else
     F[FUNC]->flg = 1;
     
@@ -1264,7 +1264,7 @@ static void enum2strcat(enum FUNC_E e,char *const fname_derivative)
       strcat(fname_derivative,"_xyz");
       break;
     default:
-      abortEr("There is no such derivative defined.\n"
+      Error0("There is no such derivative defined.\n"
       "If you added more kind of derivative please add" 
         "to enum FUNC_E and consequently other locations.\n");
   }
@@ -1306,7 +1306,7 @@ static void enum2str(enum FUNC_E e,char *const str)
       sprintf(str,"x,y,z");
       break;
     default:
-      abortEr("There is no such derivative defined.\n"
+      Error0("There is no such derivative defined.\n"
       "If you added more kind of derivative please add" 
         "to enum FUNC_E and consequently other locations.\n");
   }
@@ -1382,7 +1382,7 @@ static unsigned order_of_derivative(const enum FUNC_E fn)
       o = 3;
       break;
     default:
-      abortEr("There is no such derivative defined.\n"
+      Error0("There is no such derivative defined.\n"
       "If you added more kind of derivative please add" 
         "to enum FUNC_E and consequently other locations.\n");
   }

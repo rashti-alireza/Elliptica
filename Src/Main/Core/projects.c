@@ -27,13 +27,13 @@ int execute_project(Project_T *const proj)
 void add_project(ProjFunc *const projfunc, const char *const name, const char *const des)
 {
   if (projfunc == 0)
-   abortEr("Empty project.\n");
+   Error0("Empty project.\n");
   
   Project_T *proj;
 
   proj = get_project(name);
   if (proj)
-    abortEr_s("This project \"%s\" has already been added!",name);
+    Error1("This project \"%s\" has already been added!",name);
   
   proj = alloc_project(&projects_global);
   

@@ -26,7 +26,7 @@ int direct_solver_umfpack_di(void *vp)
   double time1 = get_time_sec();
   
   if (!umf->a->ccs_f)
-    abortEr("The matrix a in a.x = b in umfpack must be in CCS format.\n");
+    Error0("The matrix a in a.x = b in umfpack must be in CCS format.\n");
   
   umfpack_di_defaults(Control);
   
@@ -81,7 +81,7 @@ int direct_solver_umfpack_dl(void *vp)
   double time1 = get_time_sec();
   
   if (!umf->a->ccs_l_f)
-    abortEr("The matrix a in a.x = b in umfpack must be in CCS long format.\n");
+    Error0("The matrix a in a.x = b in umfpack must be in CCS long format.\n");
   
   umfpack_dl_defaults(Control);
   
@@ -154,7 +154,7 @@ int direct_solver_series_umfpack_di(void *vp)
   double time1 = get_time_sec();
   
   if (!umf->a->ccs_f)
-    abortEr("The matrix a in a.x = b in umfpack must be in CCS format.\n");
+    Error0("The matrix a in a.x = b in umfpack must be in CCS format.\n");
   
   umfpack_di_defaults(Control);
   
@@ -215,7 +215,7 @@ int direct_solver_series_umfpack_dl(void *vp)
   double time1 = get_time_sec();
   
   if (!umf->a->ccs_l_f)
-    abortEr("The matrix a in a.x = b in umfpack must be in CCS long format.\n");
+    Error0("The matrix a in a.x = b in umfpack must be in CCS long format.\n");
   
   umfpack_dl_defaults(Control);
   

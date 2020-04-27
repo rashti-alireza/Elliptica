@@ -347,7 +347,7 @@ static int fdS_spectral(Grid_T *const grid)
            numeric,analytic,numeric-analytic);
   }
   else
-    abortEr(NO_OPTION);
+    Error0(NO_OPTION);
     
   return EXIT_SUCCESS;
 }

@@ -35,7 +35,7 @@ const unsigned Lmax/* maximum l (inclusive) for the expansion */
   if (strcmp_i(collocation,"GaussLegendre_EquiSpaced"))
     get_Ylm_coeffs_GaussLegendre_EquiSpaced(realClm,imagClm,f,Ntheta,Nphi,Lmax);
   else
-    abortEr(NO_JOB);
+    Error0(NO_JOB);
 
 }
 

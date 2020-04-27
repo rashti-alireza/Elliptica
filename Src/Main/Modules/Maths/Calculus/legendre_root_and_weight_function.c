@@ -44,7 +44,7 @@ static double dP24_dx(const double x);
 double Legendre_weight_function(const double x, const unsigned n)
 {
   if (EQL(x,1.) || EQL(x,-1.))
-    abortEr("Bad argument for Legendre weight function.\n");
+    Error0("Bad argument for Legendre weight function.\n");
   return 2./((1-Pow2(x))*Pow2(dLegendre_dx(n,x)));
 }
 
@@ -52,9 +52,9 @@ double Legendre_weight_function(const double x, const unsigned n)
 double dLegendre_dx(const unsigned n, const double x)
 {
   if (x > 1. || x < -1.)
-    abortEr("x exceeds from [-1,1] interval.\n");
+    Error0("x exceeds from [-1,1] interval.\n");
   if (n >= 25)
-    abortEr("n exceeds the maximum.\n"
+    Error0("n exceeds the maximum.\n"
             "To go higher number change Nmax in 'legendre_root_and_weight_function.py'.\n");
   return dP_dx[n](x);
 }
@@ -64,10 +64,10 @@ double dLegendre_dx(const unsigned n, const double x)
 double Legendre_root_function(const unsigned rootN, const unsigned N)
 {
   if (N >= 25)
-    abortEr("N exceeds from the maximum.\n");
+    Error0("N exceeds from the maximum.\n");
 
   if (rootN >= N)
-    abortEr("root number exceeds from the maximum.\n");
+    Error0("root number exceeds from the maximum.\n");
 
   return Legendre_root[N][rootN];
 }

@@ -205,9 +205,9 @@ double sum_0_N_dCi_dfj_by_dTi_dq(const unsigned N,const unsigned j,const double 
 {
   /* some checks */
   if (q < -1.0 || q > 1)
-    abortEr("q must be in interval [-1,1].");
+    Error0("q must be in interval [-1,1].");
   if (j >= N)
-    abortEr("j must be smaller that N");
+    Error0("j must be smaller that N");
     
   double sum = 0;
   const double scale = 0.5/(N-1);/* coming when one does Fourier transformation */
@@ -254,9 +254,9 @@ double sum_0_N_dCi_dfj_by_Ti_q(const unsigned N,const unsigned j,const double q)
 {
   /* some checks */
   if (q < -1.0 || q > 1.0)
-    abortEr("q must be in interval [-1,1].");
+    Error0("q must be in interval [-1,1].");
   if (j >= N)
-    abortEr("j must be smaller that N");
+    Error0("j must be smaller that N");
     
   double sum = 0;
   const double scale = 0.5/(N-1);/* coming when one does Fourier transformation */
@@ -426,7 +426,7 @@ double MaxMag_d(const double a,const double b)
 double L_inf(const unsigned N,const double *const v)
 {
   if (!v || !N)
-    abortEr("The given array is empty.");
+    Error0("The given array is empty.");
   
   double max = ABS(v[0]);
   unsigned i;
@@ -484,7 +484,7 @@ double arctan(const double y,const double x)
 void arctan_argument_signum(double *const y_sign,double *const x_sign,const double phi)
 {
   if (phi < 0 || phi >= 2*M_PI)
-    abortEr("Bad argument, phi must be in [0,2Pi).\n");
+    Error0("Bad argument, phi must be in [0,2Pi).\n");
   
   if (GRTEQL(phi,0) && LSSEQL(phi,M_PI/2))
   {
@@ -507,6 +507,6 @@ void arctan_argument_signum(double *const y_sign,double *const x_sign,const doub
     *x_sign = 1;
   }
   else
-    abortEr(NO_OPTION);
+    Error0(NO_OPTION);
     
 }

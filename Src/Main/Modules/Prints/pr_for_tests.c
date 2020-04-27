@@ -575,10 +575,10 @@ double pr_derivatives_DiffByNode(const double *const numc, const double *const a
   unsigned p;
   
   if (!numc)
-    abortEr("There is no numeric value.\n");
+    Error0("There is no numeric value.\n");
   
   if (!anac)
-    abortEr("There is no analytic value.\n");
+    Error0("There is no analytic value.\n");
   
   nn = total_nodes_patch(patch);
   sprintf(file_name,"%s.%s",prefix,patch->name);
@@ -632,30 +632,30 @@ void pr_matrix(const Matrix_T *const M,const char *const name)
   }
   else if (M->tri_f)
   {
-    abortEr(INCOMPLETE_FUNC);
+    Error0(INCOMPLETE_FUNC);
   }
   else if (M->ccs_f)
   {
-    abortEr(INCOMPLETE_FUNC);
+    Error0(INCOMPLETE_FUNC);
   }
   else if (M->crs_f)
   {
-    abortEr(INCOMPLETE_FUNC);
+    Error0(INCOMPLETE_FUNC);
   }
   else if (M->tri_l_f)
   {
-    abortEr(INCOMPLETE_FUNC);
+    Error0(INCOMPLETE_FUNC);
   }
   else if (M->ccs_l_f)
   {
-    abortEr(INCOMPLETE_FUNC);
+    Error0(INCOMPLETE_FUNC);
   }
   else if (M->crs_l_f)
   {
-    abortEr(INCOMPLETE_FUNC);
+    Error0(INCOMPLETE_FUNC);
   }
   else
-    abortEr("No matrix format is defined for this given matrix.\n");
+    Error0("No matrix format is defined for this given matrix.\n");
 
   fclose(file);
   free(folder);

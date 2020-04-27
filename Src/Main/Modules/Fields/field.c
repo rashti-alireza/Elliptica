@@ -26,10 +26,10 @@ Field_T *add_field(const char *const name,const char *attribute,Patch_T *const p
   Field_T *fld = 0;
   
   if (alloc_flg != NO && alloc_flg != YES)
-    abortEr("Wrong Flag was used. Flag for allocation is either YES or NO.\n");
+    Error0("Wrong Flag was used. Flag for allocation is either YES or NO.\n");
   
   if (LookUpField(name,patch) >= 0)
-    abortEr_s("There is already a field with the same name \"%s\".\n",name);
+    Error1("There is already a field with the same name \"%s\".\n",name);
   else
   {  
     
@@ -102,7 +102,7 @@ void add_attribute(Field_T *const fld,const char *const attribute)
   if (!attribute)
     return;
   if(!strchr(attribute,'(') || !strchr(attribute,')'))
-    abortEr_s("Each attribute must be written in parentheses.\n"
+    Error1("Each attribute must be written in parentheses.\n"
     "This attribute %s doesn't have.\n",attribute);
     
   /* if the attribute already exists, return */
@@ -156,7 +156,7 @@ int LookUpField_E(const char *const name,const Patch_T *const patch)
   if (ind == INT_MIN)
   {
     fprintf(stderr,"Field %s could not be found in patch %s.\n",name,patch->name);
-    abortEr("Field could not be found.\n");
+    Error0("Field could not be found.\n");
   }
   
   return ind;
@@ -211,7 +211,7 @@ double *make_coeffs_2d(Field_T *const f,const unsigned dir1,const unsigned dir2)
   assert(strstr(f->attr,"(3dim)"));
   
   if (dir1 == dir2)
-    abortEr_s("What does it mean to have twice transformation "
+    Error1("What does it mean to have twice transformation "
         "in the same direction for the field \"%s\"!\n",f->name);
     
   const unsigned N = f->patch->nn;
@@ -560,16 +560,16 @@ static double *find_1d_coeffs_in_patch(Field_T *const f,const unsigned dir)
       add_Tinfo(f,dir,Chebyshev_Nodes,Chebyshev_Tn_BASIS);
     }
     else
-      abortEr("There is no such COLLOCATION defined for this function.\n");
+      Error0("There is no such COLLOCATION defined for this function.\n");
   }/* end of if(basis == Chebyshev_Tn_BASIS) */
   
   else if (basis == No_BASIS)
   {
-    abortEr("This function is not have this part!\n");
+    Error0("This function is not have this part!\n");
   }
   
   else
-    abortEr("There is no such BASIS defined for this function.\n");
+    Error0("There is no such BASIS defined for this function.\n");
     
   return f->v2;
 }
@@ -594,7 +594,7 @@ static void coeffs_patch_Tn_Extrema_1d(Field_T *const f,const unsigned dir)
   if (strstr_i(PgetsEZ("Fourier_Transformation_Method"),"RFT"))
     FourierTrans = rft_1d_ChebyshevExtrema_coeffs;
   else
-    abortEr("No such Fourier_Transformation_Method defined for this function.\n");
+    Error0("No such Fourier_Transformation_Method defined for this function.\n");
   
   if (dir == 0)
   {
@@ -665,7 +665,7 @@ static void coeffs_patch_Tn_Extrema_1d(Field_T *const f,const unsigned dir)
     }
   }/* end of if (dir == 2) */
   else
-    abortEr("direction must be 0,1 or 2.\n");
+    Error0("direction must be 0,1 or 2.\n");
     
   free(out);
   free(in);
@@ -691,7 +691,7 @@ static void coeffs_patch_Tn_Nodes_1d(Field_T *const f,const unsigned dir)
   if (strstr_i(PgetsEZ("Fourier_Transformation_Method"),"RFT"))
     FourierTrans = rft_1d_ChebyshevNodes_coeffs;
   else
-    abortEr("No such Fourier_Transformation_Method defined for this function.\n");
+    Error0("No such Fourier_Transformation_Method defined for this function.\n");
   
   if (dir == 0)
   {
@@ -762,7 +762,7 @@ static void coeffs_patch_Tn_Nodes_1d(Field_T *const f,const unsigned dir)
     }
   }/* end of if (dir == 2) */
   else
-    abortEr("direction must be 0,1 or 2.\n");
+    Error0("direction must be 0,1 or 2.\n");
     
   free(out);
   free(in);

@@ -36,10 +36,10 @@ void bbn_plan_PsJs_ADM_CS(Observable_T *obs)
   Grid_T *const grid = obs->grid;
   
   if (!strcmp_i(grid->kind,"BBN_CubedSpherical_grid"))
-    abortEr(NO_OPTION);
+    Error0(NO_OPTION);
   if (!strcmp_i(obs->quantity,"ADM_momentums") && 
       !strcmp_i(obs->quantity,"ADM_momentum"))
-    abortEr_s("This is not the correct plan for %s.\n",obs->quantity);
+    Error1("This is not the correct plan for %s.\n",obs->quantity);
     
   const unsigned N_outermost = (unsigned) Pgeti("Number_of_Outermost_Split");
   Patch_T **patches = 0,*patch = 0;
@@ -49,7 +49,7 @@ void bbn_plan_PsJs_ADM_CS(Observable_T *obs)
   unsigned n,N,ijk,nn;
   
   if (N_outermost == 0)
-    abortEr("No outermost patch for integration.\n");
+    Error0("No outermost patch for integration.\n");
   N = 6*N_outermost/* outermosts */ +
       4/* 4 filling boxes */        +
       10/* 10 sides for surroundings */;
@@ -219,7 +219,7 @@ void bbn_free_PsJs_ADM_CS(Observable_T *obs)
     return;
     
   if (!strcmp_i(obs->grid->kind,"BBN_CubedSpherical_grid"))
-    abortEr(NO_OPTION);
+    Error0(NO_OPTION);
   
   struct PsJs_ADM_S **adm = obs->items;
   unsigned i;

@@ -50,7 +50,7 @@ Matrix_T *alloc_matrix(const Matrix_SF_T type_e,const long row,const long col)
       m->crs_l_f = 1;
       break;
     default:
-      abortEr("The specified type is undefined.\n");
+      Error0("The specified type is undefined.\n");
   }
   
   return m;
@@ -122,7 +122,7 @@ void free_matrix(Matrix_T *m)
       free(m->crs_long->Ax);
   }
   else
-    abortEr("No matrix format is defined for this given matrix.\n");
+    Error0("No matrix format is defined for this given matrix.\n");
     
   free(m);
 }

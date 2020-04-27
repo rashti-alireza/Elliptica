@@ -43,7 +43,7 @@ C_macro = READ_v(name);
 `  x_CM       = par->x_CM;`
 `}`
 `else`
-`  abortEr(NO_OPTION);`
+`  Error0(NO_OPTION);`
 ``
 `/* B^1 */`
 `REALLOC_v_WRITE_v(B1_U0)`
@@ -124,7 +124,7 @@ Symm[_gamma(i,j)   = _gamma(j,i)];
 `else if (dir == 2)`
 `  dGtilda_rf->v  = Partial_Derivative(Gtilda_rf,"z");`
 `else`
-`  abortEr(NO_OPTION);`
+`  Error0(NO_OPTION);`
 ``
 
 `Interpolation_T *interp_Gtilda  = init_interpolation();`

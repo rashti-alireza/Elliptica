@@ -24,10 +24,10 @@ double Lobatto_weight_function(const double x, const unsigned n)
 double Lobatto_root_function(const unsigned rootN, const unsigned N)
 {
   if (N >= 35)
-    abortEr("N exceeds from the maximum.\n");
+    Error0("N exceeds from the maximum.\n");
 
   if (rootN >= N-1)
-    abortEr("root number exceeds from the maximum.\n");
+    Error0("root number exceeds from the maximum.\n");
 
   return Lobatto_root[N][rootN];
 }

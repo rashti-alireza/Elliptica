@@ -90,7 +90,7 @@ void rft_1d_ChebyshevNodes_coeffs(double *const values ,double *const coeffs,con
 void *r2cft_1d_EquiSpaced_coeffs(const double *const value,const unsigned n)
 {
   if (n == 0)
-    abortEr("Fourier Transformation: No points!\n");
+    Error0("Fourier Transformation: No points!\n");
   
   const unsigned l = n/2+1;/* note: if n is not even, it is rounded down */
   double complex *const coeffs = alloc_double_complex(l);
@@ -119,7 +119,7 @@ void *r2cft_1d_EquiSpaced_coeffs(const double *const value,const unsigned n)
 double *c2rft_1d_EquiSpaced_values(void *const coeffs,const unsigned N)
 {
   if (N == 0)
-    abortEr("Fourier Transformation: No points!\n");
+    Error0("Fourier Transformation: No points!\n");
   
   const double complex *const c = coeffs;
   double *f = alloc_double(N);

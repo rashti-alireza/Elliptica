@@ -32,9 +32,9 @@ print ('// note: rootN starts from 0. */')
 print ('double Lobatto_root_function(const unsigned rootN, const unsigned N)')
 print ('{')
 print ('  if (N >= {})'.format(Nmax))
-print ('    abortEr("N exceeds from the maximum.\\n");\n')
+print ('    Error0("N exceeds from the maximum.\\n");\n')
 print ('  if (rootN >= N-1)') # derivative makes it N-1 and since starts form 0, the max rootN is N-2
-print ('    abortEr("root number exceeds from the maximum.\\n");\n')
+print ('    Error0("root number exceeds from the maximum.\\n");\n')
 print ('  return Lobatto_root[N][rootN];')
 print ('}')
 

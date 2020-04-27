@@ -26,7 +26,7 @@ Grid_T *bbn_initialize_next_grid(Grid_T *const grid_prev)
       grid_next = TOV_KerrSchild_approximation();
       
     else
-      abortEr(NO_OPTION);
+      Error0(NO_OPTION);
   }
   else/* use previous grid to make the next one with new adjustments */
   {
@@ -49,7 +49,7 @@ static Grid_T *load_checkpoint_file(void)
   const char *const checkpoint_file_path = Pgets("checkpoint_file_path");
   
   if (access(checkpoint_file_path,F_OK))/* if file does not exist */
-    abortEr_s("Checkpoint file does not exist at\n%s\n",checkpoint_file_path);
+    Error1("Checkpoint file does not exist at\n%s\n",checkpoint_file_path);
     
   file = fopen(checkpoint_file_path,"r");
   pointerEr(file);
@@ -344,7 +344,7 @@ static void keep_NS_center_fixed(Grid_T *const grid)
     adjust_NS_center_tune_enthalpy(grid,dhx0,dhz0);
   }
   else
-    abortEr(NO_OPTION);
+    Error0(NO_OPTION);
   
   dh2[0] = dh_dx0_root_finder_eq(par,x_center);
   dh2[1] = dh_dx1_root_finder_eq(par,x_center);
@@ -497,7 +497,7 @@ fAdjustment_t *get_func_P_ADM_adjustment(const char *const adjust)
     f = Pz_ADM_is0_by_z_boost;
   }
   else
-    abortEr(NO_OPTION);
+    Error0(NO_OPTION);
   
   return f;
 }
@@ -552,7 +552,7 @@ fAdjustment_t *get_func_force_balance_adjustment(const char *const adjust)
     f = force_balance_ddz_Omega;
   }
   else
-    abortEr(NO_OPTION);
+    Error0(NO_OPTION);
   
   return f;
 }
@@ -561,7 +561,7 @@ fAdjustment_t *get_func_force_balance_adjustment(const char *const adjust)
 static void parse_adjust_parameter(const char *const par,char *adjust[3])
 {
   if (!strstr_i(par,"adjust(") && !strstr_i(par,"none"))
-    abortEr_s("Syntax error for '%s'.\n",par);
+    Error1("Syntax error for '%s'.\n",par);
   
   /* if it is none */  
   if (strcmp_i(par,"none"))
@@ -1195,7 +1195,7 @@ static void force_balance_eq_root_finders(Grid_T *const grid,const int dir, cons
     old_par            = y_CM;
   }
   else
-    abortEr(NO_OPTION);
+    Error0(NO_OPTION);
   
   /* which direction */
   if (dir == 0)
@@ -1211,7 +1211,7 @@ static void force_balance_eq_root_finders(Grid_T *const grid,const int dir, cons
     params->dLnGamma = dLnGamma_in_force_balance_eq(patch,X,2);
   }
   else
-    abortEr(NO_OPTION);
+    Error0(NO_OPTION);
   
   sprintf(desc,"Solving Force Balance Eq. for '%s' at direction 'x^%d'",par,dir);
   
@@ -1309,7 +1309,7 @@ static void find_NS_center(Grid_T *const grid)
   if (success_f != YES)
   {
     print_root_finder_exit_status(root);
-    abortEr("NS center could not be found.\n");
+    Error0("NS center could not be found.\n");
   }
   free_root_finder(root);
   
@@ -1859,7 +1859,7 @@ static void interpolate_and_initialize_to_next_grid(Grid_T *const grid_next,Grid
       R1_f  = R2_f = 0;
     }
     else
-      abortEr(NO_OPTION);
+      Error0(NO_OPTION);
       
     DECLARE_FIELD(B0_U0)
     DECLARE_FIELD(B0_U1)
@@ -2577,13 +2577,13 @@ static void find_X_and_patch(const double *const x,const char *const hint,Grid_T
         else
         {
           fprintf(stderr,"The point (%g,%g,%g) could not be found!\n",x[0],x[1],x[2]);
-          abortEr("Point not found!\n");
+          Error0("Point not found!\n");
         }
       }
       else
       {
         fprintf(stderr,"The point (%g,%g,%g) could not be found!\n",x[0],x[1],x[2]);
-        abortEr("Point not found!\n");
+        Error0("Point not found!\n");
       }
     }
     else
@@ -2867,7 +2867,7 @@ static void find_XYZ_and_patch_of_theta_phi_NS_CS(double *const X,Patch_T **cons
         a = tan_phi;
       break;
       default:
-        abortEr(NO_OPTION);
+        Error0(NO_OPTION);
     }
     
     /* having found the magnitude of a and b, we need to find out the sign of them.
@@ -2901,7 +2901,7 @@ static void find_XYZ_and_patch_of_theta_phi_NS_CS(double *const X,Patch_T **cons
         else		   b_sign = -1;
       break;
       default:
-        abortEr(NO_OPTION);
+        Error0(NO_OPTION);
     }
     
     X[0] = fabs(a)*a_sign;
@@ -2923,7 +2923,7 @@ static void find_XYZ_and_patch_of_theta_phi_NS_CS(double *const X,Patch_T **cons
     }
   }
   if (found_flg == NO)
-    abortEr("(X,Y,Z) or patch could not be found.\n");
+    Error0("(X,Y,Z) or patch could not be found.\n");
 }
 
 /* make patches inside the excision region of BH and and extrapolate
@@ -2951,7 +2951,7 @@ void bbn_extrapolate_metric_fields_insideBH(Grid_T *const grid)
 static void add_patches_insideBH(Grid_T *const grid)
 {
   if (!strcmp_i(grid->kind,"BBN_CubedSpherical_grid"))
-    abortEr(NO_OPTION);
+    Error0(NO_OPTION);
     
   const unsigned np1 = grid->np;
   const unsigned np2 = np1+7;/* 6 cubed spherical + 1 box */
@@ -3606,7 +3606,7 @@ static void extrapolate_outsideNS_CS_slop_method(Grid_T *const grid)
         point_finder(needle);
         if (!needle->Nans)
         {
-          abortEr("The FACTOR is too larg for extrapolation.\n");
+          Error0("The FACTOR is too larg for extrapolation.\n");
         }
         free_needle(needle);
         /* end of check */
@@ -3790,7 +3790,7 @@ static void extrapolate_outsideNS_CS_slop_method(Grid_T *const grid)
     else if (0)/* use metric and matter fields to make enthalpy */
       Tij_IF_CTS_enthalpy(patch);
     else
-      abortEr(NO_OPTION);
+      Error0(NO_OPTION);
       
     Field_T *enthalpy = patch->pool[Ind("enthalpy")];
     DECLARE_AND_EMPTY_FIELD(denthalpy_D2)
@@ -4469,17 +4469,17 @@ static Grid_T *creat_bbn_grid_CS(struct Grid_Params_S *const GridParams)
   
   /* some checks */
   if (!strcmp_i(kind,"BBN_CubedSpherical_grid"))
-    abortEr("This function only works with cubed spherical grid.\n");
+    Error0("This function only works with cubed spherical grid.\n");
   if(!GRT(S,0))
-    abortEr("The distance between the two compact objects must be positive.\n");
+    Error0("The distance between the two compact objects must be positive.\n");
   if(!GRT(Max_R_NS_l,0))
-    abortEr("Neutron star must have positive radius.\n");
+    Error0("Neutron star must have positive radius.\n");
   if(!GRT(R_BH_r,0))
-    abortEr("Black hole must have positive radius.\n");
+    Error0("Black hole must have positive radius.\n");
   if(!LSS(2*Max_R_NS_l,S))
-    abortEr("The neutron star radius is too big.\n");
+    Error0("The neutron star radius is too big.\n");
   if(!LSS(2*R_BH_r,S))
-    abortEr("The black hole radius is too big.\n");
+    Error0("The black hole radius is too big.\n");
   
   grid_next->kind = dup_s(kind);  
   /* making NS and BH surfaces function */
@@ -4494,11 +4494,11 @@ static Grid_T *creat_bbn_grid_CS(struct Grid_Params_S *const GridParams)
     R_outermost[i] = Pgetd(var);
     
     if (LSS(R_outermost[i],2*S))
-      abortEr("The radius of outermost patches must be greater than twice of BBN distance.");
+      Error0("The radius of outermost patches must be greater than twice of BBN distance.");
     
     if (i > 0)
       if (LSSEQL(R_outermost[i],R_outermost[i-1]))
-        abortEr("The radius of outermost must be increasing.");
+        Error0("The radius of outermost must be increasing.");
     
   }
   
@@ -4517,11 +4517,11 @@ static Grid_T *creat_bbn_grid_CS(struct Grid_Params_S *const GridParams)
   if (n != INT_MAX)   nlb[2] = n;
     
   if(nlb[0] == INT_MAX)
-    abortEr("n_a could not be set.\n");
+    Error0("n_a could not be set.\n");
   if(nlb[1] == INT_MAX)
-    abortEr("n_b could not be set.\n");
+    Error0("n_b could not be set.\n");
   if(nlb[2] == INT_MAX)
-    abortEr("n_c could not be set.\n");
+    Error0("n_c could not be set.\n");
   
   /* adding the results to the parameter data base */
   
@@ -4566,11 +4566,11 @@ static Grid_T *creat_bbn_grid_CS(struct Grid_Params_S *const GridParams)
   if (n != INT_MAX)   nlb[2] = n;
     
   if(nlb[0] == INT_MAX)
-    abortEr("n_a could not be set.\n");
+    Error0("n_a could not be set.\n");
   if(nlb[1] == INT_MAX)
-    abortEr("n_b could not be set.\n");
+    Error0("n_b could not be set.\n");
   if(nlb[2] == INT_MAX)
-    abortEr("n_c could not be set.\n");
+    Error0("n_c could not be set.\n");
   
   /* adding the results to the parameter data base */
   
@@ -4661,7 +4661,7 @@ static Grid_T *creat_bbn_grid_CS(struct Grid_Params_S *const GridParams)
   else if (!change_NS_flg && !change_AH_flg)
   {
     if (!strcmp_i(kind,"BBN_CubedSpherical_grid"))
-      abortEr(NO_OPTION);
+      Error0(NO_OPTION);
     
     printf("~> Using BH, NS, filling_box and outermost of previous patches ...\n");
     
@@ -4831,7 +4831,7 @@ static void move_geometry(Grid_T *const grid_next,Grid_T *const grid_prev)
   assert(grid_next);
   
   if (!strcmp_i(grid_prev->kind,"BBN_CubedSpherical_grid"))
-    abortEr("This algorithm only works for BBN cubed spherical grid!\n");
+    Error0("This algorithm only works for BBN cubed spherical grid!\n");
   
   FOR_ALL_PATCHES(p2,grid_next)
   {
@@ -4920,11 +4920,11 @@ static void NS_BH_surface_CubedSpherical_grid(Grid_T *const grid,struct Grid_Par
   if (n != INT_MAX)     N[2] = n;
   
   if(N[0] == INT_MAX)
-    abortEr("n_a could not be set.\n");
+    Error0("n_a could not be set.\n");
   if(N[1] == INT_MAX)
-    abortEr("n_b could not be set.\n");
+    Error0("n_b could not be set.\n");
   if(N[2] == INT_MAX)
-    abortEr("n_c could not be set.\n");
+    Error0("n_c could not be set.\n");
     
   N_total = N[0]*N[1]*N[2];
   
@@ -5184,7 +5184,7 @@ static void NS_BH_surface_CubedSpherical_grid(Grid_T *const grid,struct Grid_Par
 
   }
   else
-    abortEr(NO_OPTION);
+    Error0(NO_OPTION);
   
   free(R);
   
@@ -5393,11 +5393,11 @@ static void NS_BH_surface_CubedSpherical_grid(Grid_T *const grid,struct Grid_Par
   if (n != INT_MAX)     N[2] = n;
   
   if(N[0] == INT_MAX)
-    abortEr("n_a could not be set.\n");
+    Error0("n_a could not be set.\n");
   if(N[1] == INT_MAX)
-    abortEr("n_b could not be set.\n");
+    Error0("n_b could not be set.\n");
   if(N[2] == INT_MAX)
-    abortEr("n_c could not be set.\n");
+    Error0("n_c could not be set.\n");
    
   patch->n[0] = N[0];
   patch->n[1] = N[1];
@@ -5413,7 +5413,7 @@ static void NS_BH_surface_CubedSpherical_grid(Grid_T *const grid,struct Grid_Par
   /* Boosted_Kerr-Schild radius */
   if (strcmp_i(GridParams->BH_R_type,"Boosted_Kerr-Schild"))
   {
-    abortEr("This surface function is incomplete;\n"
+    Error0("This surface function is incomplete;\n"
             "One needs to incorporate changes in BH center and in center of mass of the system.\n");
     /* surface up */
     for (i = 0; i < N[0]; ++i)
@@ -5616,7 +5616,7 @@ static void NS_BH_surface_CubedSpherical_grid(Grid_T *const grid,struct Grid_Par
     add_parameter_array(par,R,N_total);
   }
   else
-    abortEr(NO_OPTION);
+    Error0(NO_OPTION);
   
   free(R);
   
@@ -5658,7 +5658,7 @@ static void find_theta_phi_of_XYZ_NS_CS(double *const theta,double *const phi,co
       *theta = acos(b/d);
     break;
     default:
-      abortEr(NO_OPTION);
+      Error0(NO_OPTION);
   }
   
 }
@@ -5801,7 +5801,7 @@ static void find_NS_surface(Grid_T *const grid,struct Grid_Params_S *const GridP
   if (strstr_i(GridParams->NS_R_type,"SphericalHarmonic"))
     find_NS_surface_Ylm_method_CS(grid,GridParams);
   else
-    abortEr(NO_OPTION);
+    Error0(NO_OPTION);
 }
 
 /* extrapolate fluid fields outside NS */
@@ -5839,14 +5839,14 @@ static void extrapolate_fluid_fields_outsideNS(Grid_T *const grid)
 
     }
     else
-      abortEr(NO_OPTION);
+      Error0(NO_OPTION);
       
     if (0)/* this method is sucks! */
       extrapolate_outsideNS_CS_slop_method(grid);
  
   }
   else
-    abortEr(NO_OPTION);
+    Error0(NO_OPTION);
   
   printf("} Extrapolating fluid fields outside NS ==> Done.\n");
   pr_clock();
@@ -5898,7 +5898,7 @@ static double AH_surface_function_PerfectSphere_CS(const double a,const double b
       (-Power(R,2) + Power(x0,2) + Power(y0,2) + Power(z0,2)));
     break;
     default:
-      abortEr(NO_JOB);
+      Error0(NO_JOB);
   }/* end of switch */
 
   return fabs(S)/sqrt(Pow2(a)+Pow2(b)+1);

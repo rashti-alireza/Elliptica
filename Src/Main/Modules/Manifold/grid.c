@@ -148,7 +148,7 @@ static void fill_patches(Grid_T *const grid)
     fill_patches_SBH_CubedSpherical_grid(grid); 
     
   else
-    abortEr_s("There is no such '%s' grid kind.\n",grid->kind);
+    Error1("There is no such '%s' grid kind.\n",grid->kind);
 }
 
 /* check if all of houseKs have been marked */
@@ -167,7 +167,7 @@ void check_houseK(Patch_T *const patch)
         double *x = node->x;
         fprintf(stderr,"This point(%f,%f,%f) has not been found.\n",
                         x[0],x[1],x[2]);
-        abortEr("Incomplete function.\n");
+        Error0("Incomplete function.\n");
       }
 }
 
@@ -272,7 +272,7 @@ void alloc_patches(Grid_T *const grid)
   else if (strcmp_i(grid->kind,"SBH_CubedSpherical_grid"))
     alloc_patches_SBH_CubedSpherical_grid(grid);
   else
-    abortEr_s("No such %s kind for grid.\n",grid->kind);
+    Error1("No such %s kind for grid.\n",grid->kind);
 }
 
 /* free the given grid completely */

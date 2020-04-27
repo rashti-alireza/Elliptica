@@ -65,7 +65,7 @@ void plan_interpolation(Interpolation_T *const interp_s)
   {
     fPick_Func_T *func = 0;
     if (!interp_s->field)
-      abortEr("Bad argument:No field specified for the interpolation.\n");
+      Error0("Bad argument:No field specified for the interpolation.\n");
     patch = interp_s->field->patch;
   
     for (i = 0; i < 3; ++i)
@@ -76,7 +76,7 @@ void plan_interpolation(Interpolation_T *const interp_s)
         func = interpolation_Chebyshev_Tn;
       }
       else
-         abortEr(INCOMPLETE_FUNC);
+         Error0(INCOMPLETE_FUNC);
 
     }/* end of for (i = 0; i < 3; ++i) */
     
@@ -87,7 +87,7 @@ void plan_interpolation(Interpolation_T *const interp_s)
     interp_s->interpolation_func = func(interp_s);
   }
   else
-    abortEr(INCOMPLETE_FUNC);
+    Error0(INCOMPLETE_FUNC);
   
 }
 
@@ -103,7 +103,7 @@ static void order_arrays_natural_cubic_spline_1d(Interpolation_T *const interp_s
   
   if (EQL(x[0],x[N-1]))
   {
-    abortEr("Periodic case has not been considered.\n");
+    Error0("Periodic case has not been considered.\n");
   }
   if (GRT(x[0],x[N-1]))/* if the x's are in decreasing order */
   {
@@ -229,7 +229,7 @@ static double interpolation_natural_cubic_spline_1d(Interpolation_T *const inter
   
   if (flg != FOUND)
   {
-    abortEr("The give point for interpolation is out of the domain.\n");
+    Error0("The give point for interpolation is out of the domain.\n");
   }
   else
   {
@@ -263,7 +263,7 @@ static double interpolation_natural_cubic_spline_1d(Interpolation_T *const inter
 static double interpolation_Neville_1d(Interpolation_T *const interp_s)
 {
   if (!interp_s->Neville_1d->f)
-    abortEr("No function is specified.\n");
+    Error0("No function is specified.\n");
   
   const double *const f = interp_s->Neville_1d->f;
   double *x;
@@ -339,7 +339,7 @@ static fInterpolation_T *interpolation_Chebyshev_Tn(Interpolation_T *const inter
   if (interp_s->Z_dir_flag)   count++;
   
   if (count > 1)
-    abortEr("For spectral interpolation, more than one direction was flagged.\n");
+    Error0("For spectral interpolation, more than one direction was flagged.\n");
   
   if (interp_s->XYZ_dir_flag)
     func = interpolation_Chebyshev_Tn_XYZ;
@@ -363,7 +363,7 @@ static fInterpolation_T *interpolation_Chebyshev_Tn(Interpolation_T *const inter
     func = interpolation_Chebyshev_Tn_Z;
     
   else
-    abortEr("The flags in interpolation structure were not set correctly.\n");
+    Error0("The flags in interpolation structure were not set correctly.\n");
   
   return func;
 }

@@ -298,7 +298,7 @@ int regex_search(const char *const regex_pattern,const char *const str)
   
   ret_regex = regcomp(&regex,regex_pattern,REG_EXTENDED);
   if (ret_regex)
-    abortEr("Regular expression Faild. It could be wrong pattern or memory failure.\n");
+    Error0("Regular expression Faild. It could be wrong pattern or memory failure.\n");
   
   ret_regex = regexec(&regex,str,0,0,0);
   
@@ -327,7 +327,7 @@ char *regex_find(const char *const regex_pattern,const char *const str)
   
   status = regcomp(&regex,regex_pattern,REG_EXTENDED);
   if (status)
-    abortEr("Regular expression Faild. It could be wrong pattern or memory failure.\n");
+    Error0("Regular expression Faild. It could be wrong pattern or memory failure.\n");
   
   status = regexec(&regex,str,n_matches,match,0);
   if (status)/* if no match is found */

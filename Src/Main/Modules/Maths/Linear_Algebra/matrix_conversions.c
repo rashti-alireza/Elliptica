@@ -112,7 +112,7 @@ Matrix_T *cast_matrix_ccs(Matrix_T *const m)
   }
   else if (m->tri_f)
   {
-    abortEr(INCOMPLETE_FUNC);
+    Error0(INCOMPLETE_FUNC);
   }
   else if (m->ccs_f)
   {
@@ -120,22 +120,22 @@ Matrix_T *cast_matrix_ccs(Matrix_T *const m)
   }
   else if (m->crs_f)
   {
-    abortEr(INCOMPLETE_FUNC);
+    Error0(INCOMPLETE_FUNC);
   }
   else if (m->tri_l_f)
   {
-    abortEr(INCOMPLETE_FUNC);
+    Error0(INCOMPLETE_FUNC);
   }
   else if (m->ccs_l_f)
   {
-    abortEr(INCOMPLETE_FUNC);
+    Error0(INCOMPLETE_FUNC);
   }
   else if (m->crs_l_f)
   {
-    abortEr(INCOMPLETE_FUNC);
+    Error0(INCOMPLETE_FUNC);
   }
   else
-    abortEr("No matrix format is defined for this given matrix.\n");
+    Error0("No matrix format is defined for this given matrix.\n");
   
   return ccs;
 }
@@ -168,19 +168,19 @@ Matrix_T *cast_matrix_ccs_long(Matrix_T *const m)
   }
   else if (m->tri_f)
   {
-    abortEr(INCOMPLETE_FUNC);
+    Error0(INCOMPLETE_FUNC);
   }
   else if (m->ccs_f)
   {
-    abortEr(INCOMPLETE_FUNC);
+    Error0(INCOMPLETE_FUNC);
   }
   else if (m->crs_f)
   {
-    abortEr(INCOMPLETE_FUNC);
+    Error0(INCOMPLETE_FUNC);
   }
   else if (m->tri_l_f)
   {
-    abortEr(INCOMPLETE_FUNC);
+    Error0(INCOMPLETE_FUNC);
   }
   else if (m->ccs_l_f)
   {
@@ -188,10 +188,10 @@ Matrix_T *cast_matrix_ccs_long(Matrix_T *const m)
   }
   else if (m->crs_l_f)
   {
-    abortEr(INCOMPLETE_FUNC);
+    Error0(INCOMPLETE_FUNC);
   }
   else
-    abortEr("No matrix format is defined for this given matrix.\n");
+    Error0("No matrix format is defined for this given matrix.\n");
   
   return ccs_l;
 }
@@ -221,7 +221,7 @@ Matrix_T *cast_matrix_reg(Matrix_T *const m)
   }
   else if (m->tri_f)
   {
-    abortEr(INCOMPLETE_FUNC);
+    Error0(INCOMPLETE_FUNC);
   }
   else if (m->ccs_f)
   {
@@ -229,11 +229,11 @@ Matrix_T *cast_matrix_reg(Matrix_T *const m)
   }
   else if (m->crs_f)
   {
-    abortEr(INCOMPLETE_FUNC);
+    Error0(INCOMPLETE_FUNC);
   }
   else if (m->tri_l_f)
   {
-    abortEr(INCOMPLETE_FUNC);
+    Error0(INCOMPLETE_FUNC);
   }
   else if (m->ccs_l_f)
   {
@@ -241,10 +241,10 @@ Matrix_T *cast_matrix_reg(Matrix_T *const m)
   }
   else if (m->crs_l_f)
   {
-    abortEr(INCOMPLETE_FUNC);
+    Error0(INCOMPLETE_FUNC);
   }
   else
-    abortEr("No matrix format is defined for this given matrix.\n");
+    Error0("No matrix format is defined for this given matrix.\n");
   
   return reg;
 }

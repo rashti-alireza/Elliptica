@@ -77,11 +77,11 @@ static void populate_EoS(EoS_T *const eos)
     {    
       /* check if rho is in increasing order. */
       if (!rho_th)
-        abortEr("rho threshold must be specified.\n");
+        Error0("rho threshold must be specified.\n");
         
       for (i = 1; i < N-1; ++i)
         if (GRT(rho_th[i-1],rho_th[i]))
-          abortEr("rho_th for piecewise polytropic EoS "
+          Error0("rho_th for piecewise polytropic EoS "
                   "must be written in increasing order.\n");
     
       eos->N      = N;
@@ -102,7 +102,7 @@ static void populate_EoS(EoS_T *const eos)
              strcmp_i(eos->type,"p"))
     {
       if (N != 1)
-        abortEr("This EoS is not polytropic, there is more than one piece.\n");
+        Error0("This EoS is not polytropic, there is more than one piece.\n");
         
       eos->N      = N;
       eos->K      = K;
@@ -116,11 +116,11 @@ static void populate_EoS(EoS_T *const eos)
       eos->drho_dh	     = EoS_drho_dh_h_p;
     }
     else
-      abortEr(NO_JOB);
+      Error0(NO_JOB);
     
   }
   else
-    abortEr(NO_JOB);
+    Error0(NO_JOB);
   
 }
 
@@ -190,7 +190,7 @@ static double *read_EoS_in_parameter_file(const char *const par,unsigned *const 
   unsigned i = 0;
   
   if (!check_format_s(par,"[?]"))
-    abortEr("K, rho_th and Gamma in EoS must be written in square brackets.\n"
+    Error0("K, rho_th and Gamma in EoS must be written in square brackets.\n"
     "If there are multivalues, as in piecewise polytropic EoS, the values\n"
     "must be separated by a comma ','\n");
   
@@ -199,7 +199,7 @@ static double *read_EoS_in_parameter_file(const char *const par,unsigned *const 
   sub_tok = sub_s(str,'[',']',&save);/* => v1,v2,v3,... */
   sub_tok = tok_s(sub_tok,',',&save);/* sub_tok = v1 and save = v2,v3,... */
   if (sub_tok == 0)
-    abortEr_s("There is no value in %s.\n",par);
+    Error1("There is no value in %s.\n",par);
   
   v = realloc(v,(i+1)*sizeof(*v));
   pointerEr(v);
