@@ -19,6 +19,8 @@ Bin
 #ignore parameter directory
 Parfiles/*
 parfiles/*
+Parfile/*
+parfile/*
 
 #ignore Trash directory
 Trash/*
