@@ -15,7 +15,7 @@ NS_Omega_U1      = 0      #:= rotational fluid W = NS_Omega*r
 NS_Omega_U2      = 0.005  #:= rotational fluid W = NS_Omega*r
 
 #### NS EoS:
-EoS_description  = Sly
+EoS_description  = SLy
 EoS_type         = piecewise_polytropic
 EoS_unit         = geo
 EoS_K            = [8.9493e-02, 8.4581e+04, 7.4943e+04, 3.1074e+04]
