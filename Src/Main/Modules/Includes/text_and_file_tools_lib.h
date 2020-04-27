@@ -53,7 +53,7 @@ unsigned find_index_string(char **const heystack,const unsigned N,const char *co
 int regex_search(const char *const regex_pattern,const char *const str);
 char *regex_find(const char *const regex_pattern,const char *const str);
 char **read_separated_items_in_string(const char *const string,const char delimiter);
-
+void *fopen_and_check(const char *const file_path,const char *const mode,const char *const file_dbg, const int line_dbg);
 
 #endif
 

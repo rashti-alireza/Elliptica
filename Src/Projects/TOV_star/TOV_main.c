@@ -47,7 +47,7 @@ int TOV_star(void)
   /* print pressure */
   p = tov->p;
   sprintf(file_name,"%s/pressure.2d",path);
-  file = fopen(file_name,"w+");
+  file = Fopen(file_name,"w+");
   pointerEr(file);
   fprintf(file,"#Schwarzchild_r  pressure\n");
   
@@ -59,7 +59,7 @@ int TOV_star(void)
   /* print mass */
   m = tov->m;
   sprintf(file_name,"%s/mass.2d",path);
-  file = fopen(file_name,"w+");
+  file = Fopen(file_name,"w+");
   pointerEr(file);
   fprintf(file,"#Schwarzchild_r  mass\n");
   
@@ -71,7 +71,7 @@ int TOV_star(void)
   /* print isotropic r */
   rbar = tov->rbar;
   sprintf(file_name,"%s/isotropic_radius.2d",path);
-  file = fopen(file_name,"w+");
+  file = Fopen(file_name,"w+");
   pointerEr(file);
   fprintf(file,"#Schwarzchild_r  isotropic_radius\n");
   

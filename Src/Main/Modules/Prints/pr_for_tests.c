@@ -80,7 +80,7 @@ void pr_interfaces(const Grid_T *const grid)
   
   str[0] = '\0';
   sprintf(str,"%s/interface_pairings.rm",path);
-  f = fopen(str,"w");
+  f = Fopen(str,"w");
   pointerEr(f);
   
   /* printing out pairing information: outerB*/
@@ -315,7 +315,7 @@ void pr_interfaces(const Grid_T *const grid)
       {
         str[0] = '\0';
         sprintf(str,"%s/%s.paired",path,arch[n][i].n1);
-        f = fopen(str,"w");
+        f = Fopen(str,"w");
         pointerEr(f);
         fprintf(f,"#%s\n",arch[n][i].s1->flags_str);
         
@@ -330,7 +330,7 @@ void pr_interfaces(const Grid_T *const grid)
         
         str[0] = '\0';
         sprintf(str,"%s/%s.paired",path,arch[n][i].n2);
-        f = fopen(str,"w");
+        f = Fopen(str,"w");
         pointerEr(f);
         fprintf(f,"#%s\n",arch[n][i].s2->flags_str);
         
@@ -347,7 +347,7 @@ void pr_interfaces(const Grid_T *const grid)
       {
         str[0] = '\0';
         sprintf(str,"%s/%s.single",path,arch[n][i].n1);
-        f = fopen(str,"w");
+        f = Fopen(str,"w");
         pointerEr(f);
         fprintf(f,"#%s\n",arch[n][i].s1->flags_str);
         
@@ -385,7 +385,7 @@ void pr_parameters(void)
     path = PgetsEZ("output_directory_path");
   
   sprintf(dir,"%s/parameters.out",path);
-  f = fopen(dir,"w");
+  f = Fopen(dir,"w");
   pointerEr(f);
   
   fprintf(f,SECTION"Parameters"SECTION"\n");
@@ -421,7 +421,7 @@ void pr_coords(const Grid_T *const grid)
     unsigned l;
     
     sprintf(dir,"%s/%s.patch",path,patch->name);
-    f = fopen(dir,"w");
+    f = Fopen(dir,"w");
     pointerEr(f);
     
     for (l = 0; l < U; l++)
@@ -449,7 +449,7 @@ void pr_field_difference(const Grid_T *const grid,const char *const fld1,const c
   path = make_directory(path_par,"Fields");
   
   sprintf(dir,"%s/%s-%s.grid",path,fld1,fld2);
-  file1 = fopen(dir,"w");
+  file1 = Fopen(dir,"w");
   pointerEr(file1);
   
   fprintf(file1,"# node %s %s %s-%s\n",fld2,fld1,fld2,fld1);
@@ -462,7 +462,7 @@ void pr_field_difference(const Grid_T *const grid,const char *const fld1,const c
     unsigned U = patch->nn;
     
     sprintf(dir,"%s/%s-%s.%s",path,fld1,fld2,patch->name);
-    file2 = fopen(dir,"w");
+    file2 = Fopen(dir,"w");
     pointerEr(file2);
   
     for (l = 0; l < U; l++)
@@ -582,7 +582,7 @@ double pr_derivatives_DiffByNode(const double *const numc, const double *const a
   
   nn = total_nodes_patch(patch);
   sprintf(file_name,"%s.%s",prefix,patch->name);
-  f = fopen(file_name,"w");
+  f = Fopen(file_name,"w");
   pointerEr(f);
   
   fprintf(f,"#Node (df/d?|N-df/d?|A) df/d?|N df/d?|A i j k x y z:\n");
@@ -612,7 +612,7 @@ void pr_matrix(const Matrix_T *const M,const char *const name)
   long r,c;
   
   sprintf(path,"%s/%s",folder,name);
-  file = fopen(path,"w");
+  file = Fopen(path,"w");
   pointerEr(file);
   
   fprintf(file,"#row = %ld ,#column = %ld\n",M->row,M->col);

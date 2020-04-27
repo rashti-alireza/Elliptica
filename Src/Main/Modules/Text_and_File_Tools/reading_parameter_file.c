@@ -13,7 +13,7 @@ void read_input_file(const char *const path)
   
   null_pathEr(path);
   
-  input = fopen(path,"r");
+  input = Fopen(path,"r");
   null_pathEr(input);  
   
   /* parsing and reading input file and making buffer */

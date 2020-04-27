@@ -27,7 +27,7 @@ static void find_inputfile_name(const char *const path)
   int i;
   
   /* does the file exist */
-  FILE *f_par = fopen(path,"r");
+  FILE *f_par = Fopen(path,"r");
   if (!f_par)
     Error0("The parameter file does not exist.\n");
   fclose(f_par);

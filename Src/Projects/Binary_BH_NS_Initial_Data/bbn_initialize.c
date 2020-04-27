@@ -51,7 +51,7 @@ static Grid_T *load_checkpoint_file(void)
   if (access(checkpoint_file_path,F_OK))/* if file does not exist */
     Error1("Checkpoint file does not exist at\n%s\n",checkpoint_file_path);
     
-  file = fopen(checkpoint_file_path,"r");
+  file = Fopen(checkpoint_file_path,"r");
   pointerEr(file);
   
   grid = bbn_init_from_checkpoint(file);
@@ -169,7 +169,7 @@ static int IsThereAnyUsefulCheckpointFile(void)
   /* NS & BH masses, NS & BH spins, EoS, separation, BH_KerrSchild_RollOff */
   if (ret && 0)
   {
-    checkpoint_file = fopen(prev_data_file_path,"r");
+    checkpoint_file = Fopen(prev_data_file_path,"r");
     pointerEr(checkpoint_file);
     const char *check_quantities[] = {"NS_baryonic_mass",
                                       "NS_Omega_U0",

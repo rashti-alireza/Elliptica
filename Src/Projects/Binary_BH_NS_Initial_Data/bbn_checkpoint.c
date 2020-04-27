@@ -68,7 +68,7 @@ void bbn_write_checkpoint(Grid_T *const grid)
   
   /* successful message at the end of the checkpoint file */
   sprintf(file_path,"%s/%s_temp",out_dir,CHECKPOINT_FILE_NAME);
-  file = fopen(file_path,"a");
+  file = Fopen(file_path,"a");
   pointerEr(file);
   sprintf(msg,"%s",END_MSG);
   FWriteP_bin(p_msg,strlen(msg)+1);
@@ -93,7 +93,7 @@ int bbn_IsCheckpointFileCompleted(const char *const file_path)
   char msg[MAX_ARR];
   int msg_len = (int)strlen(END_MSG)+1;
   
-  file = fopen(file_path,"r");
+  file = Fopen(file_path,"r");
   pointerEr(file);
   
   fseek(file,-msg_len,SEEK_END);
@@ -122,7 +122,7 @@ static void write_header(const Grid_T *const grid)
     Error0("File already exists.\n");
   
     
-  file = fopen(file_path,"w");
+  file = Fopen(file_path,"w");
   pointerEr(file);
   
   np = 0;
@@ -167,7 +167,7 @@ static void write_parameters(const Grid_T *const grid)
   unsigned i,np;
 
   sprintf(file_path,"%s/%s_temp",folder,CHECKPOINT_FILE_NAME);
-  file = fopen(file_path,"ab");
+  file = Fopen(file_path,"ab");
   pointerEr(file);
   
   np = 0;
@@ -214,7 +214,7 @@ static void write_fields(const Grid_T *const grid)
   unsigned p;
   
   sprintf(file_path,"%s/%s_temp",folder,CHECKPOINT_FILE_NAME);
-  file = fopen(file_path,"ab");
+  file = Fopen(file_path,"ab");
   pointerEr(file);
   
   /* NOTE the order is crucial for reading part */

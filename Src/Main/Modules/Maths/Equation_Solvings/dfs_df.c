@@ -213,7 +213,7 @@ void test_make_Js_jacobian_eq(Grid_T *const grid, const char * const* types)
       printf("Testing Jacobian for Equations: patch=%s, type:%5s\t",patch->name,jtype);
       
       sprintf(file_name,"%s/%s_SepctalDirect.patch%u",path,jtype,patch->pn);
-      file = fopen(file_name,"w");
+      file = Fopen(file_name,"w");
       pointerEr(file);
       fprintf(file,"Row Column J_Spectal J_Direct\n");
       
@@ -235,7 +235,7 @@ void test_make_Js_jacobian_eq(Grid_T *const grid, const char * const* types)
       
       flg = NO;
       /* check if the second line is empty so both approach are equal */
-      file = fopen(file_name,"r");
+      file = Fopen(file_name,"r");
       fgets(line,sizeof(line),file);
       if(fgets(line,sizeof(line),file) == 0)
         flg = YES;
