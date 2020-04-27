@@ -112,6 +112,7 @@ static double *root_finder_steepest_descent(Root_Finder_T *const root)
   double *const x = alloc_double(n);
   double z[n],y[n];
   double g0,g1,g2,g3,g,h1,h2,h3,alpha0,alpha,alpha2,alpha3,z0;
+  double res;
   Flag_T small_alpha3_flg = NO;
   unsigned i,k;
   
@@ -164,7 +165,14 @@ static double *root_finder_steepest_descent(Root_Finder_T *const root)
     }
     if (root->verbose)
     {
-      printf("|--> Step[%02u]: Residual{f(x) = 0} = %+e\n",k-1,sqrt(g1));
+      res = sqrt(g1);
+      if (!isfinite(res))
+      {
+        root->exit_status = ROOT_FINDER_NAN;
+        break;
+      }
+      else
+        printf("|--> Step[%02u]: Residual{f(x) = 0} = %+e\n",k-1,res);
     }
     
     for (i = 0; i < n; i++)
