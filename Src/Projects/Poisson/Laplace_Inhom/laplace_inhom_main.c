@@ -3,7 +3,7 @@
 // June 2018
 */
 
-#include "laplace_inhom.h"
+#include "laplace_inhom_main.h"
 
 //double *sinxyz_f(Patch_T *const patch);
 int Laplace_Inhom(void)
@@ -30,7 +30,7 @@ int Laplace_Inhom(void)
   
   /* print */
   Pr_Field_T *pr  = init_PrField(grid);
-  outdir     = make_directory(Pgets("output_directory_path"),"output_4d");
+  outdir     = make_directory(Pgets("output_directory_path"),"output_3d");
   pr->folder = outdir;
   pr_fields(pr);
   free_PrField(pr);
