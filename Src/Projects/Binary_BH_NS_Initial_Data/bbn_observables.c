@@ -10,7 +10,7 @@
 // Observable_T *obs = init_observable(grid,plan_items_func,free_items_func);
 //
 // * specifiy which obeservable *
-// obs->quantity = "P_ADM&J_ADM" # means calculate P and J ADM 
+// obs->quantity = "ADMs" # means calculate P and J ADM for the system 
 //
 // * plan observable *
 // plan_observable(obs);# it finds out the related patches, physical metric etc.
@@ -40,7 +40,7 @@ void bbn_plan_PsJs_ADM_CS(Observable_T *obs)
     Error0(NO_OPTION);
   
       
-  if (strcmp_i(obs->quantity,"P_ADM&J_ADM"))
+  if (strcmp_i(obs->quantity,"ADMs"))
   {  
     const unsigned N_outermost = (unsigned) Pgeti("Number_of_Outermost_Split");
     Patch_T **patches = 0,*patch = 0;
@@ -167,7 +167,7 @@ void bbn_plan_PsJs_ADM_CS(Observable_T *obs)
     bbn_populate_ADM_integrand_PdS_GdV(obs);
     free(patches);
   }
-  else if (strcmp_i(obs->quantity,"P_NS_ADM"))
+  else if (strcmp_i(obs->quantity,"NS_ADMs"))
   {  
     Patch_T **patches = 0,*patch = 0;
     struct PsJs_ADM_S **adm = 0;
@@ -255,7 +255,7 @@ void bbn_plan_PsJs_ADM_CS(Observable_T *obs)
     bbn_populate_ADM_integrand_PdS_GdV(obs);
     free(patches);
   }
-  else if (strcmp_i(obs->quantity,"P_BH_ADM"))
+  else if (strcmp_i(obs->quantity,"BH_ADMs"))
   {  
     Patch_T **patches = 0,*patch = 0;
     struct PsJs_ADM_S **adm = 0;

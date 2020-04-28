@@ -398,7 +398,7 @@ static void P_ADM_control(Grid_T *const grid)
   double p2[3] = {0};
   double j_adm[3] = {0};
   
-  obs->quantity = "P_ADM&J_ADM";
+  obs->quantity = "ADMs";
   plan_observable(obs);
   
   /* get previous P_ADMs */
@@ -1547,7 +1547,7 @@ static void Pxy_ADM_is0_by_xy_CM_roots(Grid_T *const grid)
   free(freedata_patch);
   
   Observable_T *obs = init_observable(grid,bbn_plan_PsJs_ADM_CS,bbn_free_PsJs_ADM_CS);
-  obs->quantity = "P_ADM&J_ADM";
+  obs->quantity = "ADMs";
   plan_observable(obs);
   
   /* get the current P_ADMs */
@@ -1585,7 +1585,7 @@ static double x_CM_root_of_Py(void *params,const double *const x)
   update_B1_dB1_Beta_dBete_Aij_dAij(grid);
 
   obs = init_observable(grid,bbn_plan_PsJs_ADM_CS,bbn_free_PsJs_ADM_CS);
-  obs->quantity = "P_ADM&J_ADM";
+  obs->quantity = "ADMs";
   plan_observable(obs);
   residual = obs->Py_ADM(obs);
   free_observable(obs);
@@ -1613,7 +1613,7 @@ static double y_CM_root_of_Px(void *params,const double *const x)
   update_B1_dB1_Beta_dBete_Aij_dAij(grid);
 
   obs = init_observable(grid,bbn_plan_PsJs_ADM_CS,bbn_free_PsJs_ADM_CS);
-  obs->quantity = "P_ADM&J_ADM";
+  obs->quantity = "ADMs";
   plan_observable(obs);
   residual = obs->Px_ADM(obs);
   free_observable(obs);
@@ -1678,7 +1678,7 @@ static void Px_ADM_is0_by_y_CM(Grid_T *const grid)
     bbn_populate_free_data(freedata_grid);
     update_B1_dB1_Beta_dBete_Aij_dAij(grid);
     obs = init_observable(grid,bbn_plan_PsJs_ADM_CS,bbn_free_PsJs_ADM_CS);
-    obs->quantity = "P_ADM&J_ADM";
+    obs->quantity = "ADMs";
     plan_observable(obs);
     
     /* get the current P_ADMs */
@@ -1762,7 +1762,7 @@ static void Py_ADM_is0_by_x_CM(Grid_T *const grid)
     bbn_populate_free_data(freedata_grid);
     update_B1_dB1_Beta_dBete_Aij_dAij(grid);
     obs = init_observable(grid,bbn_plan_PsJs_ADM_CS,bbn_free_PsJs_ADM_CS);
-    obs->quantity = "P_ADM&J_ADM";
+    obs->quantity = "ADMs";
     plan_observable(obs);
     
     /* get the current P_ADMs */
@@ -4030,7 +4030,7 @@ static Grid_T *TOV_KerrSchild_approximation(void)
   
   /* add some parameters for momentum and its adjustments */
   Observable_T *obs = init_observable(grid,bbn_plan_PsJs_ADM_CS,bbn_free_PsJs_ADM_CS);
-  obs->quantity     = "P_ADM&J_ADM";
+  obs->quantity     = "ADMs";
   plan_observable(obs);
   Psetd("P_ADM_x",obs->Px_ADM(obs));
   Psetd("P_ADM_y",obs->Py_ADM(obs));
