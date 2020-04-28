@@ -13,7 +13,7 @@ int Binary_BH_NS_Initial_Data(void)
     bbn_elliptic_eqs_convergence_test();
     
   /* if this is a BAM call */
-  if (strcmp_i(PgetsEZ("bbn_bam_export_id"),"yes"))
+  else if (strcmp_i(PgetsEZ("bbn_bam_export_id"),"yes"))
     bbn_bam_export_id();
     
   /* construct id */
