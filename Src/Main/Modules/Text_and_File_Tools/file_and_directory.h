@@ -5,7 +5,8 @@
 #include "error_handling_lib.h"
 #include "utilities_lib.h"
 
-#define MAX_ARR 400
+#define MAX_ARR  400
+#define MAX_ARR2 800
 
 char *make_directory(const char *const path,const char *const name);
 char *make_folder(const char *const folder);

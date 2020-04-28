@@ -9,7 +9,7 @@ void test_EoS(Grid_T *const grid)
 {
   EoS_T *eos = initialize_EoS();
   const char *const path_par = Pgets("output_directory_path");
-  char *path,file_name[400];
+  char *path,file_name[1000];
   FILE *file = 0;
   unsigned N = 100;
   const double h_max = eos->h_th != 0 ? eos->h_th[eos->N-1]+10: 10;

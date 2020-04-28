@@ -12,7 +12,7 @@
 char *make_directory(const char *const path,const char *const name)
 {
   char dir[MAX_ARR]     = {'\0'};
-  char command[MAX_ARR] = {'\0'};
+  char command[MAX_ARR2] = {'\0'};
   char *folder = 0;
   struct stat st = {0};/* status of files */
   int i;
