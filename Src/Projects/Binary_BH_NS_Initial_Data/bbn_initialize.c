@@ -433,6 +433,31 @@ static void P_ADM_control(Grid_T *const grid)
   
   free_observable(obs);
   
+  /* NS adms */
+  obs = init_observable(grid,bbn_plan_ADMs_CS,bbn_free_ADMs_CS);
+  obs->quantity = "NS_ADMs";
+  plan_observable(obs);
+  Psetd("NS_P_ADM_x",obs->Px_ADM(obs));
+  Psetd("NS_P_ADM_y",obs->Py_ADM(obs));
+  Psetd("NS_P_ADM_z",obs->Pz_ADM(obs));
+  Psetd("NS_J_ADM_x",obs->Jx_ADM(obs));
+  Psetd("NS_J_ADM_y",obs->Jy_ADM(obs));
+  Psetd("NS_J_ADM_z",obs->Jz_ADM(obs));
+  free_observable(obs);
+  
+  /* BH adms */
+  obs = init_observable(grid,bbn_plan_ADMs_CS,bbn_free_ADMs_CS);
+  obs->quantity = "BH_ADMs";
+  plan_observable(obs);
+  Psetd("BH_P_ADM_x",obs->Px_ADM(obs));
+  Psetd("BH_P_ADM_y",obs->Py_ADM(obs));
+  Psetd("BH_P_ADM_z",obs->Pz_ADM(obs));
+  Psetd("BH_J_ADM_x",obs->Jx_ADM(obs));
+  Psetd("BH_J_ADM_y",obs->Jy_ADM(obs));
+  Psetd("BH_J_ADM_z",obs->Jz_ADM(obs));
+  free_observable(obs);
+  
+  
   if (P_ADM_control_0)
     P_ADM_control_0(grid);
   
