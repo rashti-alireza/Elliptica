@@ -515,7 +515,7 @@ Parameter_T *bbn_parameter_query_from_checkpoint_file(const char *const par_name
   Parameter_T *par = 0;
   char line[MAX_ARR] = {'\0'};
   char *match_str = 0;
-  unsigned i,npar;
+  unsigned i,npar = 0;
   int found;
   
   fseek(file,0,SEEK_SET);

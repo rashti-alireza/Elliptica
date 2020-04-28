@@ -8,7 +8,11 @@
 #include <dirent.h>
 #include <sys/stat.h>
 
-#define MAX_ARR 400
+#define MAX_ARR   400
+#define MAX_ARRx2 2*MAX_ARR
+#define MAX_ARRx3 3*MAX_ARR
+#define MAX_ARRx4 4*MAX_ARR
+#define MAX_ARRx5 5*MAX_ARR
 #define Power(a,b) pow(a,b)
 #define Sqrt(a) sqrt(a)
 #define prep_and_call(x) REALLOC_v_WRITE_v(x)\

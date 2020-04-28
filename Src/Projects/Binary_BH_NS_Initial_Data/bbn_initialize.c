@@ -82,13 +82,13 @@ static int IsThereAnyUsefulCheckpointFile(void)
   const char *const cur_folder_name  = strrchr(cur_out_dir,'/')+1;
   const char *const cur_folder_affix = strrchr(cur_folder_name,'_')+1;
   int cur_folder_index = atoi(cur_folder_affix);
-  char prev_out_dir[MAX_ARR];
-  char prev_folder_name[MAX_ARR];
+  char prev_out_dir[MAX_ARRx4];
+  char prev_folder_name[MAX_ARRx2];
   char folder_stem[MAX_ARR];
-  char out_dir_stem[MAX_ARR];
+  char out_dir_stem[MAX_ARRx2];
   char *prev_data_folder_list[MAX_LIST_NUM];
-  char prev_data_file_path[MAX_ARR];
-  char *aux,str[MAX_ARR];
+  char prev_data_file_path[MAX_ARRx5];
+  char *aux,str[MAX_ARRx5];
   long latest_mtime = 0;
   unsigned count,i;
   
