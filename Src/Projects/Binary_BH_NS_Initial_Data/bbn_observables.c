@@ -11,6 +11,8 @@
 //
 // * specifiy which obeservable *
 // obs->quantity = "ADMs" # means calculate P and J ADM for the system 
+// obs->quantity = "NS_ADMs" # means calculate P and J ADM for single NS 
+// obs->quantity = "BH_ADMs" # means calculate P and J ADM for single BH
 //
 // * plan observable *
 // plan_observable(obs);# it finds out the related patches, physical metric etc.
