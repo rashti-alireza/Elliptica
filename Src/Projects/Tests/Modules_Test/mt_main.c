@@ -11,6 +11,14 @@
 */
 int Modules_Test(void)
 {
+  /* making output directory for this project */
+  char folder[STR_LEN_MAX] = {'\0'};
+  char *outdir = 0;
+  sprintf(folder,"%s",Pgets("parameter_file_name_stem"));
+  outdir = make_directory(Pgets("relative_root_path"),folder);
+  add_parameter("output_directory_path",outdir);
+  free(outdir);
+  
   Grid_T *grid = mt_make_grid();/* making grid */
   sEquation_T **field_eq,**bc_eq,
               **jacobian_field_eq,**jacobian_bc_eq;/* data base of equations */
