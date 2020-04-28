@@ -10,7 +10,7 @@
 // Observable_T *obs = init_observable(grid,plan_items_func,free_items_func);
 //
 // * specifiy which obeservable *
-// obs->quantity = "ADM_momentums" # means ADM momentums
+// obs->quantity = "P_ADM&J_ADM" # means calculate P and J ADM 
 //
 // * plan observable *
 // plan_observable(obs);# it finds out the related patches, physical metric etc.
@@ -30,142 +30,322 @@
 #include "bbn_observables.h"
 #define VOLUME_INTEGRAL 1 /* put it to 1 if you want \int{Gdv} */
 
-/* plan and populate PsJs_ADM_S sturct and obs struct */
+/* plan and populate PsJs_ADM_S sturct and obs struct
+// for binary and single object */
 void bbn_plan_PsJs_ADM_CS(Observable_T *obs)
 {
   Grid_T *const grid = obs->grid;
   
   if (!strcmp_i(grid->kind,"BBN_CubedSpherical_grid"))
     Error0(NO_OPTION);
-  if (!strcmp_i(obs->quantity,"ADM_momentums") && 
-      !strcmp_i(obs->quantity,"ADM_momentum"))
-    Error1("This is not the correct plan for %s.\n",obs->quantity);
-    
-  const unsigned N_outermost = (unsigned) Pgeti("Number_of_Outermost_Split");
-  Patch_T **patches = 0,*patch = 0;
-  char stem[1000];
-  struct PsJs_ADM_S **adm = 0;
-  unsigned p = 0;
-  unsigned n,N,ijk,nn;
   
-  if (N_outermost == 0)
-    Error0("No outermost patch for integration.\n");
-  N = 6*N_outermost/* outermosts */ +
-      4/* 4 filling boxes */        +
-      10/* 10 sides for surroundings */;
-  patches = calloc(N,sizeof(*patches));
-  pointerEr(patches);  
-  
-  /* alloc memory for all patches */
-  adm = calloc(N,sizeof(*adm));
-  pointerEr(adm);
-  /* this is where we link to obs struct */
-  obs->items = adm;
-  obs->Nitems = N;
-  
-  /* first collect all of the patches required */
-  p = 0;
-  for (n = 0; n < N_outermost; ++n)
-  {
-    sprintf(stem,"outermost%u_up",n);
-    patches[p++]   = GetPatch(stem,grid);
+      
+  if (strcmp_i(obs->quantity,"P_ADM&J_ADM"))
+  {  
+    const unsigned N_outermost = (unsigned) Pgeti("Number_of_Outermost_Split");
+    Patch_T **patches = 0,*patch = 0;
+    char stem[1000];
+    struct PsJs_ADM_S **adm = 0;
+    unsigned p = 0;
+    unsigned n,N,ijk,nn;
     
-    sprintf(stem,"outermost%u_down",n);
-    patches[p++] = GetPatch(stem,grid);
+    if (N_outermost == 0)
+      Error0("No outermost patch for integration.\n");
+    N = 6*N_outermost/* outermosts */ +
+        4/* 4 filling boxes */        +
+        10/* 10 sides for surroundings */;
+    patches = calloc(N,sizeof(*patches));
+    pointerEr(patches);  
     
-    sprintf(stem,"outermost%u_back",n);
-    patches[p++] = GetPatch(stem,grid);
+    /* alloc memory for all patches */
+    adm = calloc(N,sizeof(*adm));
+    pointerEr(adm);
+    /* this is where we link to obs struct */
+    obs->items = adm;
+    obs->Nitems = N;
     
-    sprintf(stem,"outermost%u_front",n);
-    patches[p++] = GetPatch(stem,grid);
-    
-    sprintf(stem,"outermost%u_left",n);
-    patches[p++] = GetPatch(stem,grid);
-    
-    sprintf(stem,"outermost%u_right",n);
-    patches[p++] = GetPatch(stem,grid);
-  }
-  /* filling box for vol integrals */
-  patches[p++] = GetPatch("filling_box_up",grid);
-  patches[p++] = GetPatch("filling_box_down",grid);
-  patches[p++] = GetPatch("filling_box_back",grid);
-  patches[p++] = GetPatch("filling_box_front",grid);
-  
-  /* surroundings for surface integrals */
-  patches[p++] = GetPatch("left_NS_surrounding_up",grid);
-  patches[p++] = GetPatch("left_NS_surrounding_down",grid);
-  patches[p++] = GetPatch("left_NS_surrounding_left",grid);
-  patches[p++] = GetPatch("left_NS_surrounding_back",grid);
-  patches[p++] = GetPatch("left_NS_surrounding_front",grid);
-  
-  patches[p++] = GetPatch("right_BH_surrounding_up",grid);
-  patches[p++] = GetPatch("right_BH_surrounding_down",grid);
-  patches[p++] = GetPatch("right_BH_surrounding_right",grid);
-  patches[p++] = GetPatch("right_BH_surrounding_back",grid);
-  patches[p++] = GetPatch("right_BH_surrounding_front",grid);
-  
-  assert(p==N);
-  
-  /* fill ADM struct for each patch */
-  for (n = 0; n < N; ++n)
-  {
-    adm[n] = calloc(1,sizeof(*adm[n]));
-    pointerEr(adm[n]);
-    patch = patches[n];
-    nn    = patch->nn;
-    
-    double *g00 = alloc_double(nn);
-    double *g01 = alloc_double(nn);
-    double *g02 = alloc_double(nn);
-    double *g11 = alloc_double(nn);
-    double *g12 = alloc_double(nn);
-    double *g22 = alloc_double(nn);
-    
-    READ_v(_gamma_D2D2)
-    READ_v(_gamma_D0D2)
-    READ_v(_gamma_D0D0)
-    READ_v(_gamma_D0D1)
-    READ_v(_gamma_D1D2)
-    READ_v(_gamma_D1D1)
-    READ_v(psi);
-    
-    adm[n]->patch = patch;
-    /* populate metric components */ 
-    for (ijk = 0; ijk < nn; ++ijk)
+    /* first collect all of the patches required */
+    p = 0;
+    for (n = 0; n < N_outermost; ++n)
     {
-      double psi4 = Pow2(psi[ijk])*Pow2(psi[ijk]);
-      g00[ijk] = psi4*_gamma_D0D0[ijk];
-      g01[ijk] = psi4*_gamma_D0D1[ijk];
-      g02[ijk] = psi4*_gamma_D0D2[ijk];
-      g11[ijk] = psi4*_gamma_D1D1[ijk];
-      g12[ijk] = psi4*_gamma_D1D2[ijk];
-      g22[ijk] = psi4*_gamma_D2D2[ijk];
+      sprintf(stem,"outermost%u_up",n);
+      patches[p++]   = GetPatch(stem,grid);
+      
+      sprintf(stem,"outermost%u_down",n);
+      patches[p++] = GetPatch(stem,grid);
+      
+      sprintf(stem,"outermost%u_back",n);
+      patches[p++] = GetPatch(stem,grid);
+      
+      sprintf(stem,"outermost%u_front",n);
+      patches[p++] = GetPatch(stem,grid);
+      
+      sprintf(stem,"outermost%u_left",n);
+      patches[p++] = GetPatch(stem,grid);
+      
+      sprintf(stem,"outermost%u_right",n);
+      patches[p++] = GetPatch(stem,grid);
     }
-    adm[n]->g00 = g00;
-    adm[n]->g01 = g01;
-    adm[n]->g02 = g02;
-    adm[n]->g11 = g11;
-    adm[n]->g12 = g12;
-    adm[n]->g22 = g22;
+    /* filling box for vol integrals */
+    patches[p++] = GetPatch("filling_box_up",grid);
+    patches[p++] = GetPatch("filling_box_down",grid);
+    patches[p++] = GetPatch("filling_box_back",grid);
+    patches[p++] = GetPatch("filling_box_front",grid);
     
-    /* surface integrals params */
-    if (regex_search(".+(left|right)_(NS|BH)_surrounding.+",patch->name))
+    /* surroundings for surface integrals */
+    patches[p++] = GetPatch("left_NS_surrounding_up",grid);
+    patches[p++] = GetPatch("left_NS_surrounding_down",grid);
+    patches[p++] = GetPatch("left_NS_surrounding_left",grid);
+    patches[p++] = GetPatch("left_NS_surrounding_back",grid);
+    patches[p++] = GetPatch("left_NS_surrounding_front",grid);
+    
+    patches[p++] = GetPatch("right_BH_surrounding_up",grid);
+    patches[p++] = GetPatch("right_BH_surrounding_down",grid);
+    patches[p++] = GetPatch("right_BH_surrounding_right",grid);
+    patches[p++] = GetPatch("right_BH_surrounding_back",grid);
+    patches[p++] = GetPatch("right_BH_surrounding_front",grid);
+    
+    assert(p==N);
+    
+    /* fill ADM struct for each patch */
+    for (n = 0; n < N; ++n)
     {
+      adm[n] = calloc(1,sizeof(*adm[n]));
+      pointerEr(adm[n]);
+      patch = patches[n];
+      nn    = patch->nn;
+      
+      double *g00 = alloc_double(nn);
+      double *g01 = alloc_double(nn);
+      double *g02 = alloc_double(nn);
+      double *g11 = alloc_double(nn);
+      double *g12 = alloc_double(nn);
+      double *g22 = alloc_double(nn);
+      
+      READ_v(_gamma_D2D2)
+      READ_v(_gamma_D0D2)
+      READ_v(_gamma_D0D0)
+      READ_v(_gamma_D0D1)
+      READ_v(_gamma_D1D2)
+      READ_v(_gamma_D1D1)
+      READ_v(psi);
+      
+      adm[n]->patch = patch;
+      /* populate metric components */ 
+      for (ijk = 0; ijk < nn; ++ijk)
+      {
+        double psi4 = Pow2(psi[ijk])*Pow2(psi[ijk]);
+        g00[ijk] = psi4*_gamma_D0D0[ijk];
+        g01[ijk] = psi4*_gamma_D0D1[ijk];
+        g02[ijk] = psi4*_gamma_D0D2[ijk];
+        g11[ijk] = psi4*_gamma_D1D1[ijk];
+        g12[ijk] = psi4*_gamma_D1D2[ijk];
+        g22[ijk] = psi4*_gamma_D2D2[ijk];
+      }
+      adm[n]->g00 = g00;
+      adm[n]->g01 = g01;
+      adm[n]->g02 = g02;
+      adm[n]->g11 = g11;
+      adm[n]->g12 = g12;
+      adm[n]->g22 = g22;
+      
+      /* surface integrals params */
+      if (regex_search(".+(left|right)_(NS|BH)_surrounding.+",patch->name))
+      {
+        adm[n]->surface_integration_flg = 1;
+        adm[n]->Z_surface = 1;
+        adm[n]->K = patch->n[2]-1;
+        populate_normal_surrounding(adm[n],_c_);
+      }
+    }
+    obs->Px_ADM = ADM_momentum_x_BBN_CS;
+    obs->Py_ADM = ADM_momentum_y_BBN_CS;
+    obs->Pz_ADM = ADM_momentum_z_BBN_CS;
+    obs->Jx_ADM = ADM_angular_momentum_x_BBN_CS;
+    obs->Jy_ADM = ADM_angular_momentum_y_BBN_CS;
+    obs->Jz_ADM = ADM_angular_momentum_z_BBN_CS;
+    bbn_populate_ADM_integrand_PdS_GdV(obs);
+    free(patches);
+  }
+  else if (strcmp_i(obs->quantity,"P_NS_ADM"))
+  {  
+    Patch_T **patches = 0,*patch = 0;
+    struct PsJs_ADM_S **adm = 0;
+    unsigned p = 0;
+    unsigned n,N,ijk,nn;
+    
+    N = 6/* 6 sides for surroundings */;
+        
+    patches = calloc(N,sizeof(*patches));
+    pointerEr(patches);  
+    
+    /* alloc memory for all patches */
+    adm = calloc(N,sizeof(*adm));
+    pointerEr(adm);
+    /* this is where we link to obs struct */
+    obs->items = adm;
+    obs->Nitems = N;
+    
+    /* first collect all of the patches required */
+    p = 0;
+    /* surroundings for surface integrals */
+    patches[p++] = GetPatch("left_NS_surrounding_up",grid);
+    patches[p++] = GetPatch("left_NS_surrounding_down",grid);
+    patches[p++] = GetPatch("left_NS_surrounding_left",grid);
+    patches[p++] = GetPatch("left_NS_surrounding_right",grid);
+    patches[p++] = GetPatch("left_NS_surrounding_back",grid);
+    patches[p++] = GetPatch("left_NS_surrounding_front",grid);
+    
+    assert(p==N);
+    
+    /* fill ADM struct for each patch */
+    for (n = 0; n < N; ++n)
+    {
+      adm[n] = calloc(1,sizeof(*adm[n]));
+      pointerEr(adm[n]);
+      patch = patches[n];
+      nn    = patch->nn;
+      
+      double *g00 = alloc_double(nn);
+      double *g01 = alloc_double(nn);
+      double *g02 = alloc_double(nn);
+      double *g11 = alloc_double(nn);
+      double *g12 = alloc_double(nn);
+      double *g22 = alloc_double(nn);
+      
+      READ_v(_gamma_D2D2)
+      READ_v(_gamma_D0D2)
+      READ_v(_gamma_D0D0)
+      READ_v(_gamma_D0D1)
+      READ_v(_gamma_D1D2)
+      READ_v(_gamma_D1D1)
+      READ_v(psi);
+      
+      adm[n]->patch = patch;
+      /* populate metric components */ 
+      for (ijk = 0; ijk < nn; ++ijk)
+      {
+        double psi4 = Pow2(psi[ijk])*Pow2(psi[ijk]);
+        g00[ijk] = psi4*_gamma_D0D0[ijk];
+        g01[ijk] = psi4*_gamma_D0D1[ijk];
+        g02[ijk] = psi4*_gamma_D0D2[ijk];
+        g11[ijk] = psi4*_gamma_D1D1[ijk];
+        g12[ijk] = psi4*_gamma_D1D2[ijk];
+        g22[ijk] = psi4*_gamma_D2D2[ijk];
+      }
+      adm[n]->g00 = g00;
+      adm[n]->g01 = g01;
+      adm[n]->g02 = g02;
+      adm[n]->g11 = g11;
+      adm[n]->g12 = g12;
+      adm[n]->g22 = g22;
+      
+      /* surface integral */
       adm[n]->surface_integration_flg = 1;
       adm[n]->Z_surface = 1;
-      adm[n]->K = patch->n[2]-1;
+      adm[n]->K = 0;
       populate_normal_surrounding(adm[n],_c_);
     }
+    obs->Px_ADM = ADM_momentum_x_BBN_CS;
+    obs->Py_ADM = ADM_momentum_y_BBN_CS;
+    obs->Pz_ADM = ADM_momentum_z_BBN_CS;
+    obs->Jx_ADM = ADM_angular_momentum_x_BBN_CS;
+    obs->Jy_ADM = ADM_angular_momentum_y_BBN_CS;
+    obs->Jz_ADM = ADM_angular_momentum_z_BBN_CS;
+    bbn_populate_ADM_integrand_PdS_GdV(obs);
+    free(patches);
   }
-  obs->Px_ADM = ADM_momentum_x_BBN_CS;
-  obs->Py_ADM = ADM_momentum_y_BBN_CS;
-  obs->Pz_ADM = ADM_momentum_z_BBN_CS;
-  obs->Jx_ADM = ADM_angular_momentum_x_BBN_CS;
-  obs->Jy_ADM = ADM_angular_momentum_y_BBN_CS;
-  obs->Jz_ADM = ADM_angular_momentum_z_BBN_CS;
-  bbn_populate_ADM_integrand_PdS_GdV(obs);
+  else if (strcmp_i(obs->quantity,"P_BH_ADM"))
+  {  
+    Patch_T **patches = 0,*patch = 0;
+    struct PsJs_ADM_S **adm = 0;
+    unsigned p = 0;
+    unsigned n,N,ijk,nn;
+    
+    N = 6/* 6 sides for surroundings */;
+        
+    patches = calloc(N,sizeof(*patches));
+    pointerEr(patches);  
+    
+    /* alloc memory for all patches */
+    adm = calloc(N,sizeof(*adm));
+    pointerEr(adm);
+    /* this is where we link to obs struct */
+    obs->items = adm;
+    obs->Nitems = N;
+    
+    /* first collect all of the patches required */
+    p = 0;
+    /* surroundings for surface integrals */
+    patches[p++] = GetPatch("right_BH_surrounding_up",grid);
+    patches[p++] = GetPatch("right_BH_surrounding_down",grid);
+    patches[p++] = GetPatch("right_BH_surrounding_left",grid);
+    patches[p++] = GetPatch("right_BH_surrounding_right",grid);
+    patches[p++] = GetPatch("right_BH_surrounding_back",grid);
+    patches[p++] = GetPatch("right_BH_surrounding_front",grid);
+    
+    assert(p==N);
+    
+    /* fill ADM struct for each patch */
+    for (n = 0; n < N; ++n)
+    {
+      adm[n] = calloc(1,sizeof(*adm[n]));
+      pointerEr(adm[n]);
+      patch = patches[n];
+      nn    = patch->nn;
+      
+      double *g00 = alloc_double(nn);
+      double *g01 = alloc_double(nn);
+      double *g02 = alloc_double(nn);
+      double *g11 = alloc_double(nn);
+      double *g12 = alloc_double(nn);
+      double *g22 = alloc_double(nn);
+      
+      READ_v(_gamma_D2D2)
+      READ_v(_gamma_D0D2)
+      READ_v(_gamma_D0D0)
+      READ_v(_gamma_D0D1)
+      READ_v(_gamma_D1D2)
+      READ_v(_gamma_D1D1)
+      READ_v(psi);
+      
+      adm[n]->patch = patch;
+      /* populate metric components */ 
+      for (ijk = 0; ijk < nn; ++ijk)
+      {
+        double psi4 = Pow2(psi[ijk])*Pow2(psi[ijk]);
+        g00[ijk] = psi4*_gamma_D0D0[ijk];
+        g01[ijk] = psi4*_gamma_D0D1[ijk];
+        g02[ijk] = psi4*_gamma_D0D2[ijk];
+        g11[ijk] = psi4*_gamma_D1D1[ijk];
+        g12[ijk] = psi4*_gamma_D1D2[ijk];
+        g22[ijk] = psi4*_gamma_D2D2[ijk];
+      }
+      adm[n]->g00 = g00;
+      adm[n]->g01 = g01;
+      adm[n]->g02 = g02;
+      adm[n]->g11 = g11;
+      adm[n]->g12 = g12;
+      adm[n]->g22 = g22;
+      
+      /* surface integral */
+      adm[n]->surface_integration_flg = 1;
+      adm[n]->Z_surface = 1;
+      adm[n]->K = 0;
+      populate_normal_surrounding(adm[n],_c_);
+    }
+    obs->Px_ADM = ADM_momentum_x_BBN_CS;
+    obs->Py_ADM = ADM_momentum_y_BBN_CS;
+    obs->Pz_ADM = ADM_momentum_z_BBN_CS;
+    obs->Jx_ADM = ADM_angular_momentum_x_BBN_CS;
+    obs->Jy_ADM = ADM_angular_momentum_y_BBN_CS;
+    obs->Jz_ADM = ADM_angular_momentum_z_BBN_CS;
+    bbn_populate_ADM_integrand_PdS_GdV(obs);
+    free(patches);
+  }
+  else
+    Error1("This is not the correct plan for %s.\n",obs->quantity);
   
-  free(patches);
 }
 
 /* populating normal outward vector for surrounding according to the given dir */
