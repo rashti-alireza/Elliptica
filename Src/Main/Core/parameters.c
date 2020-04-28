@@ -204,6 +204,9 @@ void add_parameter(const char *const lv, const char *const rv)
         par->rv_ip = dup_s(rv);
         
       par->rv = get_n_value_str_ip(par,0);/* setting the first value of the iterative parameter */
+      if (par->rv[0] == 0)
+        Error1("No value for parameter '%s' .\n",par->lv);
+
     }
     else
     {
