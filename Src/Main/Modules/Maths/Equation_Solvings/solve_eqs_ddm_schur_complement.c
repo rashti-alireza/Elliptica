@@ -461,7 +461,7 @@ static char *solve_Sy_g_prime(Matrix_T *const S,double *const g_prime,Grid_T *co
   DDM_Schur_Complement_T *Schur;
   unsigned R = 0;
   unsigned p;
-  char *msg = calloc(1000,1);
+  char *msg = calloc(10000,1);
   pointerEr(msg);
   
   umfpack->a = S;
@@ -1234,7 +1234,7 @@ static char *making_E_prime_and_f_prime(Patch_T *const patch)
   UmfPack_T umfpack[1] = {0};
   unsigned ns = 1;
   unsigned i;
-  char *msg = calloc(1000,1);
+  char *msg = calloc(10000,1);
   pointerEr(msg);
   
   /* free unwanted memories */
