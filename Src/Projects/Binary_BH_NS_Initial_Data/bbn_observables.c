@@ -33,7 +33,7 @@
 #define VOLUME_INTEGRAL 1 /* put it to 1 if you want \int{Gdv} */
 
 /* plan and populate PsJs_ADM_S sturct and obs struct
-// for binary and single object */
+// for binary and single objects */
 void bbn_plan_ADMs_CS(Observable_T *obs)
 {
   Grid_T *const grid = obs->grid;
@@ -346,7 +346,7 @@ void bbn_plan_ADMs_CS(Observable_T *obs)
     free(patches);
   }
   else
-    Error1("This is not the correct plan for %s.\n",obs->quantity);
+    Error1("This is no plan for %s.\n",obs->quantity);
   
 }
 
