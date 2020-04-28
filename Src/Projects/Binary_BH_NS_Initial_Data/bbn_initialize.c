@@ -1485,7 +1485,7 @@ static void Pxy_ADM_is0_by_xy_CM_roots(Grid_T *const grid)
   const unsigned Iter = (unsigned)Pgeti("P_ADM_control_iteration");
   Root_Finder_T *root = 0;
   struct PxPy_RootFinder_S params[1] = {0};
-  const double x0[2] = {Pgetd("x_CM0"),Pgetd("y_CM0")};/* NOTE: index 0 is for x and 1 for y */
+  const double x0[2] = {Pgetd("x_CM"),Pgetd("y_CM")};/* NOTE: index 0 is for x and 1 for y */
   const double guess[2] = {0,0};
   double x_new[2] = {0},*dx = 0;
   Grid_T *freedata_grid = 0;/* don't update for inside BH patches */
@@ -1533,8 +1533,8 @@ static void Pxy_ADM_is0_by_xy_CM_roots(Grid_T *const grid)
   free_root_finder(root);
   
   /* updating */
-  x_new[0] = W*dx[0]+x0[0];
-  x_new[1] = W*dx[1]+x0[1];
+  x_new[0] = -W*dx[0]+x0[0];
+  x_new[1] = -W*dx[1]+x0[1];
   Psetd("x_CM",x_new[0]);
   Psetd("y_CM",x_new[1]);
   
@@ -1625,12 +1625,40 @@ static double y_CM_root_of_Px(void *params,const double *const x)
 static void Px_ADM_is0_by_y_CM(Grid_T *const grid)
 {
   double dy_CM = 0,px0,y_CM_new,px;
-  const double W    = Pgetd("Solving_Field_Update_Weight");
+  const double W    = Pgetd("P_ADM_control_update_weight");
   const double dP   = Pgetd("P_ADM_control_tolerance");
   const double Omega_BHNS = Pgetd("BH_NS_angular_velocity");
-  const double y_CM0 = Pgetd("y_CM0");
+  const double y_CM0 = Pgetd("y_CM");
   const double M_NS  = Pgetd("NS_mass");
   const double M_BH  = Pgetd("BH_mass");
+  Grid_T *freedata_grid = 0;/* don't update for inside BH patches */
+  Patch_T **freedata_patch = 0;/* all but inside BH patches */
+  Observable_T *obs = 0;
+  double p_adm[3] = {0},j_adm[3] = {0};
+  unsigned i,p;
+  
+  printf("|--> adjusting P_ADM_x by y_CM ...\n");
+  
+  /* populate Aij grid */
+  freedata_grid = calloc(1,sizeof(*freedata_grid));
+  pointerEr(freedata_grid);
+  
+  i = 0;
+  FOR_ALL_PATCHES(p,grid)
+  {
+    if (!IsItInsideBHPatch(grid->patch[p]))
+    {
+      freedata_patch = realloc(freedata_patch,
+                  (i+1)*sizeof(*freedata_patch));
+      pointerEr(freedata_patch);
+      freedata_patch[i++] = grid->patch[p];
+    }
+  }
+  freedata_grid->kind  = grid->kind;
+  freedata_grid->patch = freedata_patch;
+  freedata_grid->gn    = grid->gn;
+  freedata_grid->np    = i;
+  freedata_grid->nn    = UINT_MAX;
   
   /* get P_ADM */
   px  = Pgetd("P_ADM_x");
@@ -1647,26 +1675,75 @@ static void Px_ADM_is0_by_y_CM(Grid_T *const grid)
   {
     printf("|--> |Px_ADM2 - Px_ADM1|/|Px_ADM2| = %g > %g\n",dPx_Px,dP);
     Psetd("y_CM",y_CM_new);
+    bbn_populate_free_data(freedata_grid);
     update_B1_dB1_Beta_dBete_Aij_dAij(grid);
+    obs = init_observable(grid,bbn_plan_PsJs_ADM_CS,bbn_free_PsJs_ADM_CS);
+    obs->quantity = "ADM_momentums";
+    plan_observable(obs);
+    
+    /* get the current P_ADMs */
+    p_adm[0] = obs->Px_ADM(obs);
+    p_adm[1] = obs->Py_ADM(obs);
+    p_adm[2] = obs->Pz_ADM(obs);
+    
+    /* get the current J_ADMs  */
+    j_adm[0] = obs->Jx_ADM(obs);
+    j_adm[1] = obs->Jy_ADM(obs);
+    j_adm[2] = obs->Jz_ADM(obs);
+    
+    printf("|--> After CM update P_ADM = (%e,%e,%e)\n",p_adm[0],p_adm[1],p_adm[2]);
+    printf("|--> After CM update J_ADM = (%e,%e,%e)\n",j_adm[0],j_adm[1],j_adm[2]);
+    
+    free_observable(obs);
   }
   else
   {
     printf("|--> |Px_ADM2 - Px_ADM1|/|Px_ADM2| = %g <= %g\n"
            "     |--> no y_CM update.\n",dPx_Px,dP);
   }
-    
+  
+  free(freedata_grid);
+  free(freedata_patch);
 }
 
 /* find x_CM by demanding Py_ADM = 0 */
 static void Py_ADM_is0_by_x_CM(Grid_T *const grid)
 {
   double  dx_CM = 0,py0,x_CM_new,py;
-  const double W    = Pgetd("Solving_Field_Update_Weight");
+  const double W    = Pgetd("P_ADM_control_update_weight");
   const double dP   = Pgetd("P_ADM_control_tolerance");
   const double Omega_BHNS = Pgetd("BH_NS_angular_velocity");
-  const double x_CM0 = Pgetd("x_CM0");
+  const double x_CM0 = Pgetd("x_CM");
   const double M_NS  = Pgetd("NS_mass");
   const double M_BH  = Pgetd("BH_mass");
+  Grid_T *freedata_grid = 0;/* don't update for inside BH patches */
+  Patch_T **freedata_patch = 0;/* all but inside BH patches */
+  Observable_T *obs = 0;
+  double p_adm[3] = {0},j_adm[3] = {0};
+  unsigned i,p;
+  
+  printf("|--> adjusting P_ADM_y by x_CM ...\n");
+  
+  /* populate Aij grid */
+  freedata_grid = calloc(1,sizeof(*freedata_grid));
+  pointerEr(freedata_grid);
+  
+  i = 0;
+  FOR_ALL_PATCHES(p,grid)
+  {
+    if (!IsItInsideBHPatch(grid->patch[p]))
+    {
+      freedata_patch = realloc(freedata_patch,
+                  (i+1)*sizeof(*freedata_patch));
+      pointerEr(freedata_patch);
+      freedata_patch[i++] = grid->patch[p];
+    }
+  }
+  freedata_grid->kind  = grid->kind;
+  freedata_grid->patch = freedata_patch;
+  freedata_grid->gn    = grid->gn;
+  freedata_grid->np    = i;
+  freedata_grid->nn    = UINT_MAX;
   
   /* get P_ADM */
   py  = Pgetd("P_ADM_y");
@@ -1682,14 +1759,35 @@ static void Py_ADM_is0_by_x_CM(Grid_T *const grid)
   {
     printf("|--> |Py_ADM2 - Py_ADM1|/|Py_ADM2| = %g > %g\n",dPy_Py,dP);
     Psetd("x_CM",x_CM_new);
+    bbn_populate_free_data(freedata_grid);
     update_B1_dB1_Beta_dBete_Aij_dAij(grid);
+    obs = init_observable(grid,bbn_plan_PsJs_ADM_CS,bbn_free_PsJs_ADM_CS);
+    obs->quantity = "ADM_momentums";
+    plan_observable(obs);
+    
+    /* get the current P_ADMs */
+    p_adm[0] = obs->Px_ADM(obs);
+    p_adm[1] = obs->Py_ADM(obs);
+    p_adm[2] = obs->Pz_ADM(obs);
+    
+    /* get the current J_ADMs  */
+    j_adm[0] = obs->Jx_ADM(obs);
+    j_adm[1] = obs->Jy_ADM(obs);
+    j_adm[2] = obs->Jz_ADM(obs);
+    
+    printf("|--> After CM update P_ADM = (%e,%e,%e)\n",p_adm[0],p_adm[1],p_adm[2]);
+    printf("|--> After CM update J_ADM = (%e,%e,%e)\n",j_adm[0],j_adm[1],j_adm[2]);
+    
+    free_observable(obs);
   }
   else
   {
     printf("|--> |Py_ADM2 - Py_ADM1|/|Py_ADM2| = %g <= %g\n"
            "     |--> no x_CM update.\n",dPy_Py,dP);
   }
-    
+  
+  free(freedata_grid);
+  free(freedata_patch);
 }
 
 /* update: (B1, dB1),(Beta,dBeta),(Aij and dAij)
