@@ -33,7 +33,7 @@
 Observable_T *init_observable(void *grid,void (*plan_items)(struct OBSERVABLE_T *obs),void (*free_items)(struct OBSERVABLE_T *obs))
 {
   Observable_T *const obs = calloc(1,sizeof(*obs));
-  pointerEr(obs);
+  IsNull(obs);
 
   obs->grid = grid;
   obs->plan_items = plan_items;

@@ -32,7 +32,7 @@
 Transformation_T *initialize_transformation(void)
 {
   Transformation_T *t = calloc(1,sizeof(*t));
-  pointerEr(t);
+  IsNull(t);
   
   return t;
 }

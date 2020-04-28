@@ -27,7 +27,7 @@
 EoS_T *initialize_EoS(void)
 {
   EoS_T *eos = calloc(1,sizeof(*eos));
-  pointerEr(eos);
+  IsNull(eos);
   
   populate_EoS(eos);/* populating EoS based on parameter file */
   
@@ -202,7 +202,7 @@ static double *read_EoS_in_parameter_file(const char *const par,unsigned *const 
     Error1("There is no value in %s.\n",par);
   
   v = realloc(v,(i+1)*sizeof(*v));
-  pointerEr(v);
+  IsNull(v);
   v[i] = atof(sub_tok);
   i++;
   while (sub_tok)
@@ -211,7 +211,7 @@ static double *read_EoS_in_parameter_file(const char *const par,unsigned *const 
     if (sub_tok)
     {
       v = realloc(v,(i+1)*sizeof(*v));
-      pointerEr(v);
+      IsNull(v);
       v[i] = atof(sub_tok);
       i++;
     }

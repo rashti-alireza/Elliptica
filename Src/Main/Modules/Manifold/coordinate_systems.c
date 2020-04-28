@@ -52,14 +52,14 @@ int make_JacobianT(Grid_T *const grid)
     if (patch->coordsys == Cartesian)
     {
       patch->JacobianT = calloc(1,sizeof(*patch->JacobianT));
-      pointerEr(patch->JacobianT);
+      IsNull(patch->JacobianT);
       make_JacobianT_Cartesian_coord(patch);
     }
     /* if coord is Cubed Spherical */
     else if (patch->coordsys == CubedSpherical)
     {
       patch->JacobianT = calloc(1,sizeof(*patch->JacobianT));
-      pointerEr(patch->JacobianT);
+      IsNull(patch->JacobianT);
       make_JacobianT_CubedSpherical_coord(patch);
     }
     else

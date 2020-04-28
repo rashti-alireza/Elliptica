@@ -216,7 +216,7 @@ static int solve_field(Solve_Equations_T *const SolveEqs)
         Patch_T *patch = grid->patch[p];
         double tic = get_time_sec();
         char *msg  = calloc(10000,1); 
-        pointerEr(msg);
+        IsNull(msg);
         
         char *msg1 = making_B_and_E(patch);
         char *msg2 = making_E_prime_and_f_prime(patch);/* free{B,E} */
@@ -462,7 +462,7 @@ static char *solve_Sy_g_prime(Matrix_T *const S,double *const g_prime,Grid_T *co
   unsigned R = 0;
   unsigned p;
   char *msg = calloc(10000,1);
-  pointerEr(msg);
+  IsNull(msg);
   
   umfpack->a = S;
   umfpack->b = g_prime;
@@ -525,7 +525,7 @@ static Matrix_T *compute_S_CCS_long(Grid_T *const grid)
   unsigned p;
   
   subS = calloc(npatch,sizeof(*subS));
-  pointerEr(subS);
+  IsNull(subS);
   
   DDM_SCHUR_COMPLEMENT_OpenMP(omp parallel for)
   for (p = 0; p < npatch; ++p)
@@ -539,7 +539,7 @@ static Matrix_T *compute_S_CCS_long(Grid_T *const grid)
   
   /* to be safe we used long format data type */
   Ap = calloc(NI_total+1,sizeof(*Ap));
-  pointerEr(Ap);
+  IsNull(Ap);
   R = nnz = 0;
   for (p = 0; p < npatch; ++p)
   {
@@ -549,9 +549,9 @@ static Matrix_T *compute_S_CCS_long(Grid_T *const grid)
     long Nc1    = subS[p]->col;
     
     Ai = realloc(Ai,(long unsigned)(Ap[R]+Ap1[Nc1])*sizeof(*Ai));
-    pointerEr(Ai);
+    IsNull(Ai);
     Ax = realloc(Ax,(long unsigned)(Ap[R]+Ap1[Nc1])*sizeof(*Ax));
-    pointerEr(Ax);
+    IsNull(Ax);
     
     for (i = 0; i < Nc1; ++i)
     {
@@ -596,7 +596,7 @@ static Matrix_T *compute_S_CCS(Grid_T *const grid)
   unsigned p;
   
   subS = calloc(npatch,sizeof(*subS));
-  pointerEr(subS);
+  IsNull(subS);
   
   DDM_SCHUR_COMPLEMENT_OpenMP(omp parallel for)
   for (p = 0; p < npatch; ++p)
@@ -609,7 +609,7 @@ static Matrix_T *compute_S_CCS(Grid_T *const grid)
   }
   
   Ap = calloc(NI_total+1,sizeof(*Ap));
-  pointerEr(Ap);
+  IsNull(Ap);
   R = nnz = 0;
   for (p = 0; p < npatch; ++p)
   {
@@ -619,9 +619,9 @@ static Matrix_T *compute_S_CCS(Grid_T *const grid)
     long Nc1    = subS[p]->col;
     
     Ai = realloc(Ai,(long unsigned)(Ap[R]+Ap1[Nc1])*sizeof(*Ai));
-    pointerEr(Ai);
+    IsNull(Ai);
     Ax = realloc(Ax,(long unsigned)(Ap[R]+Ap1[Nc1])*sizeof(*Ax));
-    pointerEr(Ax);
+    IsNull(Ax);
     
     for (i = 0; i < Nc1; ++i)
     {
@@ -715,7 +715,7 @@ static char *making_F_by_E_prime(Patch_T *const patch)
   Matrix_T *MxM;
   unsigned p;
   char *msg = calloc(1000,1);
-  pointerEr(msg);
+  IsNull(msg);
   
   for (p = 0; p < np; ++p)
   {
@@ -757,7 +757,7 @@ static char *making_F_by_f_prime(Patch_T *const patch)
   double *const F_by_f_prime = alloc_double(Schur->NI_total);
   unsigned p;
   char *msg = calloc(1000,1);
-  pointerEr(msg);
+  IsNull(msg);
   
   for (p = 0; p < np; ++p)
   {
@@ -788,13 +788,13 @@ static char *making_F_and_C(Patch_T *const patch)
   const unsigned np = Schur->np;
   unsigned p;
   char *msg = calloc(1000,1);
-  pointerEr(msg);
+  IsNull(msg);
   
   /* allocation matrices */
   Schur->F = calloc(np,sizeof(*Schur->F));
-  pointerEr(Schur->F);
+  IsNull(Schur->F);
   Schur->C = calloc(np,sizeof(*Schur->C));
-  pointerEr(Schur->C);
+  IsNull(Schur->C);
   
   /* go thru all of sewings  */
   for (p = 0; p < np; ++p)
@@ -846,9 +846,9 @@ static void making_F_and_C_Regular(Patch_T *const patch)
   
   /* allocation matrices */
   Schur->F = calloc(np,sizeof(*Schur->F));
-  pointerEr(Schur->F);
+  IsNull(Schur->F);
   Schur->C = calloc(np,sizeof(*Schur->C));
-  pointerEr(Schur->C);
+  IsNull(Schur->C);
   
   /* go thru all of sewings  */
   for (p = 0; p < np; ++p)
@@ -1235,7 +1235,7 @@ static char *making_E_prime_and_f_prime(Patch_T *const patch)
   unsigned ns = 1;
   unsigned i;
   char *msg = calloc(10000,1);
-  pointerEr(msg);
+  IsNull(msg);
   
   /* free unwanted memories */
   free_matrix(S->B);
@@ -1245,21 +1245,21 @@ static char *making_E_prime_and_f_prime(Patch_T *const patch)
   ns += (unsigned)S->E_Trans->row;
     
   xs = calloc(ns,sizeof(*xs));
-  pointerEr(xs);
+  IsNull(xs);
   bs = calloc(ns,sizeof(*bs));
-  pointerEr(bs);
+  IsNull(bs);
   
   E_Trans = S->E_Trans->reg->A;
   for (i = 0; i < ns-1; ++i)
   {
     bs[i] = E_Trans[i];
     xs[i] = calloc(S->NS,sizeof(*xs[i]));
-    pointerEr(xs[i]);
+    IsNull(xs[i]);
   }
   
   bs[ns-1] = f;
   xs[ns-1] = calloc(S->NS,sizeof(*xs[ns-1]));
-  pointerEr(xs[ns-1]);
+  IsNull(xs[ns-1]);
   
   umfpack->a = a;
   umfpack->bs = bs;
@@ -1269,7 +1269,7 @@ static char *making_E_prime_and_f_prime(Patch_T *const patch)
   
   S->f_prime = xs[ns-1];
   E_prime = calloc(1,sizeof(*E_prime));
-  pointerEr(E_prime);
+  IsNull(E_prime);
   E_prime->col = (long)S->E_Trans->col;
   E_prime->row = (long)S->E_Trans->row;
   E_prime->reg_f = 1;
@@ -1303,7 +1303,7 @@ static char *making_B_and_E(Patch_T *const patch)
   const long Erow = (long)S->method->SchurC->NS;
   const long Ecol = (long)S->method->SchurC->NI;
   char *msg = calloc(1000,1);
-  pointerEr(msg);
+  IsNull(msg);
   
   S->method->SchurC->B       = alloc_matrix(REG_SF,Brow,Bcol);
   S->method->SchurC->E_Trans = alloc_matrix(REG_SF,Ecol,Erow);
@@ -1423,11 +1423,11 @@ static void preparing_ingredients(Solve_Equations_T *const SolveEqs)
     Patch_T *patch = grid->patch[p];
       
     DDM_Schur_Complement_T *SchurC = calloc(1,sizeof(*SchurC));
-    pointerEr(SchurC);
+    IsNull(SchurC);
     SchurC->map = malloc(patch->nn*sizeof(*SchurC->map));
-    pointerEr(SchurC->map);
+    IsNull(SchurC->map);
     SchurC->inv = malloc(patch->nn*sizeof(*SchurC->inv));
-    pointerEr(SchurC->inv);  
+    IsNull(SchurC->inv);  
     SchurC->patch = patch;
     SchurC->np    = patch->grid->np;
     patch->solving_man->method->Schur_Complement = 1;
@@ -1488,8 +1488,8 @@ static void set_NSs_NIs(Patch_T *const patch)
   unsigned NI_total = 0;
   unsigned *NS_p = calloc(np,sizeof(*NS_p));
   unsigned *NI_p = calloc(np,sizeof(*NI_p));
-  pointerEr(NS_p);
-  pointerEr(NI_p);
+  IsNull(NS_p);
+  IsNull(NI_p);
   unsigned p;
   
   FOR_ALL_PATCHES(p,grid)
@@ -1569,7 +1569,7 @@ static void populate_sewing(Patch_T *const patch)
   unsigned p;
   
   sewing = calloc(np,sizeof(*sewing));
-  pointerEr(sewing);
+  IsNull(sewing);
   
   /* initialize sewings and pairs */
   for (p = 0; p < grid->np; ++p)
@@ -1743,12 +1743,12 @@ static void populate_pair(Sewing_T *const sewing,SubFace_T *const subface,const 
   Pair_T *const pair = calloc(1,sizeof(*pair));
   const unsigned np = subface->np;
   unsigned i;
-  pointerEr(pair);
+  IsNull(pair);
   
   if (flag == OTHERS)
   {
     pair->subface = calloc(1,sizeof(*pair->subface));
-    pointerEr(pair->subface);
+    IsNull(pair->subface);
     copy_subface(pair->subface,subface);
   }
   else if (flag == ITS)
@@ -1764,7 +1764,7 @@ static void populate_pair(Sewing_T *const sewing,SubFace_T *const subface,const 
     Point_T point;
     
     pair->nv = calloc(subface->np,sizeof(*pair->nv));
-    pointerEr(pair->nv);
+    IsNull(pair->nv);
     
     point.patch = subface->patch;
     point.face  = subface->face;
@@ -1788,7 +1788,7 @@ static void populate_pair(Sewing_T *const sewing,SubFace_T *const subface,const 
     double X[3];
     
     pair->ip = calloc(subface->np,sizeof(*pair->ip));
-    pointerEr(pair->ip);
+    IsNull(pair->ip);
     
     for (i = 0; i < np; ++i)
     {
@@ -1805,7 +1805,7 @@ static void populate_pair(Sewing_T *const sewing,SubFace_T *const subface,const 
   pair->patchN = sewing->patchN;
   sewing->pair = 
     realloc(sewing->pair,(sewing->npair+1)*sizeof(*sewing->pair));
-  pointerEr(sewing->pair);
+  IsNull(sewing->pair);
   sewing->pair[sewing->npair] = pair;
   sewing->npair++;
 }
@@ -1829,7 +1829,7 @@ static void make_map_and_inv(Patch_T *const patch)
   
   /* keep tracking of points, 1 means counted, 0 means not */
   unsigned *flag_point = calloc(nn,sizeof(*flag_point));
-  pointerEr(flag_point);
+  IsNull(flag_point);
   
   if (patch->is_a_closed || patch->is_b_closed || patch->is_c_closed)
     Error0(INCOMPLETE_FUNC);
@@ -1883,9 +1883,9 @@ static void make_map_and_inv(Patch_T *const patch)
   
   j2 = 0;
   Imap = calloc(nn,sizeof(*Imap));
-  pointerEr(Imap);
+  IsNull(Imap);
   Iinv = calloc(nn-j,sizeof(*Iinv));
-  pointerEr(Iinv);
+  IsNull(Iinv);
   
   /* make sure if it is given a point outside of its domain
   // it returns UINT_MAX. */
@@ -1963,7 +1963,7 @@ char **get_solving_field_name(const char *const solving_order,unsigned *const nf
   while(tok)
   {
     field_name = realloc(field_name,(*nf+1)*sizeof(*field_name));
-    pointerEr(field_name);
+    IsNull(field_name);
     field_name[*nf] = dup_s(tok);
     tok = tok_s(0,COMMA,&save);/* tok = f2 */
     (*nf)++;
@@ -2513,7 +2513,7 @@ static void calculate_residual(Grid_T *const grid)
     
     extd = patch->solving_man->settings->HFrms;
     extd = realloc(extd,(NHFrms+1)*sizeof(*extd));
-    pointerEr(extd);
+    IsNull(extd);
     extd[NHFrms] = HFrms[p];
     patch->solving_man->settings->HFrms = extd;
     patch->solving_man->settings->NHFrms++;
@@ -3065,7 +3065,7 @@ static void pr_intro_ddm_schur_complement(void)
 Sewing_T *alloc_sewing(void)
 {
   Sewing_T *sewing = calloc(1, sizeof(*sewing));
-  pointerEr(sewing);
+  IsNull(sewing);
   
   return sewing;
 }

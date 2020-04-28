@@ -52,11 +52,11 @@ const unsigned Ntheta/* Ntheta points in theta direction */,
 const unsigned Nphi/* Nphi points in phi direction*/,
 const unsigned Lmax/* maximum l (inclusive) for the expansion */)
 {
-  double **Ftheta    = calloc(Ntheta,sizeof(*Ftheta));pointerEr(Ftheta);
+  double **Ftheta    = calloc(Ntheta,sizeof(*Ftheta));IsNull(Ftheta);
   double *real_fYlm  = alloc_double(Ntheta);/* Re( \int f(theta,phi) Ylm^* sin(theta) exp^{-i m phi} dphi) */
   double *imag_fYlm  = alloc_double(Ntheta);/* Im( \int f(theta,phi) Ylm^* sin(theta) exp^{-i m phi} dphi) */
   double *theta      = alloc_double(Ntheta);
-  double complex **v = calloc(Lmax+1,sizeof(*v));pointerEr(v);/* v_{m}{theta} = \int f(theta,phi) exp^{-i m phi} dphi */
+  double complex **v = calloc(Lmax+1,sizeof(*v));IsNull(v);/* v_{m}{theta} = \int f(theta,phi) exp^{-i m phi} dphi */
   Integration_T *I2  = init_integration();
   unsigned i,j,l,m,lm;
   

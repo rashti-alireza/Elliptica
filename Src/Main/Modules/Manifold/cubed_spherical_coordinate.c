@@ -2409,12 +2409,12 @@ void alloc_patches_BNS_CubedSpherical_grid(Grid_T *const grid)
     Np += 6*outermost;
   
   grid->patch = calloc((Np+1),sizeof(*grid->patch));
-  pointerEr(grid->patch);
+  IsNull(grid->patch);
   
   for (i = 0; i < Np; i++)
   {
     grid->patch[i] = calloc(1,sizeof(*grid->patch[i]));
-    pointerEr(grid->patch[i]);
+    IsNull(grid->patch[i]);
   }
   
 }
@@ -2434,12 +2434,12 @@ void alloc_patches_BBN_CubedSpherical_grid(Grid_T *const grid)
     Np += 6*outermost;
   
   grid->patch = calloc((Np+1),sizeof(*grid->patch));
-  pointerEr(grid->patch);
+  IsNull(grid->patch);
   
   for (i = 0; i < Np; i++)
   {
     grid->patch[i] = calloc(1,sizeof(*grid->patch[i]));
-    pointerEr(grid->patch[i]);
+    IsNull(grid->patch[i]);
   }
   
 }
@@ -2459,12 +2459,12 @@ void alloc_patches_SNS_CubedSpherical_Box_grid(Grid_T *const grid)
     Np += 6*outermost;
   
   grid->patch = calloc((Np+1),sizeof(*grid->patch));
-  pointerEr(grid->patch);
+  IsNull(grid->patch);
   
   for (i = 0; i < Np; i++)
   {
     grid->patch[i] = calloc(1,sizeof(*grid->patch[i]));
-    pointerEr(grid->patch[i]);
+    IsNull(grid->patch[i]);
   }
   
 }
@@ -2483,12 +2483,12 @@ void alloc_patches_SNS_CubedSpherical_grid(Grid_T *const grid)
     Np += 6*outermost;
   
   grid->patch = calloc((Np+1),sizeof(*grid->patch));
-  pointerEr(grid->patch);
+  IsNull(grid->patch);
   
   for (i = 0; i < Np; i++)
   {
     grid->patch[i] = calloc(1,sizeof(*grid->patch[i]));
-    pointerEr(grid->patch[i]);
+    IsNull(grid->patch[i]);
   }
   
 }
@@ -2506,12 +2506,12 @@ void alloc_patches_SBH_CubedSpherical_grid(Grid_T *const grid)
     Np += 6*outermost;
   
   grid->patch = calloc((Np+1),sizeof(*grid->patch));
-  pointerEr(grid->patch);
+  IsNull(grid->patch);
   
   for (i = 0; i < Np; i++)
   {
     grid->patch[i] = calloc(1,sizeof(*grid->patch[i]));
-    pointerEr(grid->patch[i]);
+    IsNull(grid->patch[i]);
   }
   
 }

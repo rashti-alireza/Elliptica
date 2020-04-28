@@ -122,7 +122,7 @@ double get_relaxation_factor_solve_equations(Solve_Equations_T *const solve)
 Solve_Equations_T *init_solve_equations(Grid_T *const grid)
 {
   Solve_Equations_T *solve = calloc(1,sizeof(*solve));
-  pointerEr(solve);
+  IsNull(solve);
   
   solve->grid         = grid;
   solve->StopCriteria = default_stop_criteria_solve_equations; 
@@ -180,10 +180,10 @@ void add_special_grid_solve_equations(Grid_T *const grid,const char *const name,
     N = countf(solve->Sgrid);
   
   solve->Sgrid = realloc(solve->Sgrid,(N+2)*sizeof(*solve->Sgrid));
-  pointerEr(solve->Sgrid);
+  IsNull(solve->Sgrid);
   solve->Sgrid[N+1] = 0;/* terminated with null */
   solve->Sgrid[N] = calloc(1,sizeof(*solve->Sgrid[N]));
-  pointerEr(solve->Sgrid[N]);
+  IsNull(solve->Sgrid[N]);
   solve->Sgrid[N]->sgrid = grid;
   solve->Sgrid[N]->name  = dup_s(name);
 }
@@ -231,7 +231,7 @@ void sync_patch_pools(const Grid_T*const latest_grid,Solve_Equations_T *const so
           if (!patch2->solving_man)
           {
             patch2->solving_man = calloc(1,sizeof(*patch2->solving_man));
-            pointerEr(patch2->solving_man);
+            IsNull(patch2->solving_man);
           }
           patch2->solving_man->jacobian = patch1->solving_man->jacobian;
           patch2->solving_man->nj       = patch1->solving_man->nj;
@@ -263,7 +263,7 @@ void sync_patch_pools(const Grid_T*const latest_grid,Solve_Equations_T *const so
             if (!patch2->solving_man)
             {
               patch2->solving_man = calloc(1,sizeof(*patch2->solving_man));
-              pointerEr(patch2->solving_man);
+              IsNull(patch2->solving_man);
             }
             patch2->solving_man->jacobian = patch1->solving_man->jacobian;
             patch2->solving_man->nj       = patch1->solving_man->nj;

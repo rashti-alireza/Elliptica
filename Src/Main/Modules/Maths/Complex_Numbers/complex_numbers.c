@@ -9,7 +9,7 @@
 void *alloc_double_complex(const unsigned N)
 {
   double complex *f = calloc(N,sizeof(*f));
-  pointerEr(f);
+  IsNull(f);
   
   return f;
 }

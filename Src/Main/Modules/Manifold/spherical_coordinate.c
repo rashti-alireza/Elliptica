@@ -608,12 +608,12 @@ void alloc_patches_BNS_Spherical_grid(Grid_T *const grid)
     Np += 2*outermost;
   
   grid->patch = calloc((Np+1),sizeof(*grid->patch));
-  pointerEr(grid->patch);
+  IsNull(grid->patch);
   
   for (i = 0; i < Np; i++)
   {
     grid->patch[i] = calloc(1,sizeof(*grid->patch[i]));
-    pointerEr(grid->patch[i]);
+    IsNull(grid->patch[i]);
   }
   
 }

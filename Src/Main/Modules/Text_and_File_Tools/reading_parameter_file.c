@@ -119,7 +119,7 @@ static void *make_buffer(FILE *const input)
       if (c == ENTER)
       {
         buff = realloc(buff,(i+1)*sizeof(*buff));
-        pointerEr(buff);
+        IsNull(buff);
         buff[i++] = (char)c;
       }
     }
@@ -156,21 +156,21 @@ static void *make_buffer(FILE *const input)
         }
         
         buff = realloc(buff,(i+1)*sizeof(*buff));
-        pointerEr(buff);
+        IsNull(buff);
         buff[i++] = (char)c;
         c = fgetc(input);
       }/* end of while (c != ENTER && c != EOF) */
       if (c == ENTER)
       {
         buff = realloc(buff,(i+1)*sizeof(*buff));
-        pointerEr(buff);
+        IsNull(buff);
         buff[i++] = (char)c;
       }
     }/* end of else if (c == BACK_SLASH) */
     else
     {
       buff = realloc(buff,(i+1)*sizeof(*buff));
-      pointerEr(buff);
+      IsNull(buff);
       buff[i++] = (char)c;
     }
     
@@ -182,7 +182,7 @@ static void *make_buffer(FILE *const input)
   }/* end of while */
 
   //buff = realloc(buff,(i+1)*sizeof(*buff));
-  //pointerEr(buff);
+  //IsNull(buff);
   //buff[i] = END;
   buff[i-1] = END;
   return buff;

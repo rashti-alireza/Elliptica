@@ -57,11 +57,11 @@ void bbn_plan_ADMs_CS(Observable_T *obs)
         4/* 4 filling boxes */        +
         10/* 10 sides for surroundings */;
     patches = calloc(N,sizeof(*patches));
-    pointerEr(patches);  
+    IsNull(patches);  
     
     /* alloc memory for all patches */
     adm = calloc(N,sizeof(*adm));
-    pointerEr(adm);
+    IsNull(adm);
     /* this is where we link to obs struct */
     obs->items = adm;
     obs->Nitems = N;
@@ -113,7 +113,7 @@ void bbn_plan_ADMs_CS(Observable_T *obs)
     for (n = 0; n < N; ++n)
     {
       adm[n] = calloc(1,sizeof(*adm[n]));
-      pointerEr(adm[n]);
+      IsNull(adm[n]);
       patch = patches[n];
       nn    = patch->nn;
       
@@ -179,11 +179,11 @@ void bbn_plan_ADMs_CS(Observable_T *obs)
     N = 6/* 6 sides for surroundings */;
         
     patches = calloc(N,sizeof(*patches));
-    pointerEr(patches);  
+    IsNull(patches);  
     
     /* alloc memory for all patches */
     adm = calloc(N,sizeof(*adm));
-    pointerEr(adm);
+    IsNull(adm);
     /* this is where we link to obs struct */
     obs->items = adm;
     obs->Nitems = N;
@@ -204,7 +204,7 @@ void bbn_plan_ADMs_CS(Observable_T *obs)
     for (n = 0; n < N; ++n)
     {
       adm[n] = calloc(1,sizeof(*adm[n]));
-      pointerEr(adm[n]);
+      IsNull(adm[n]);
       patch = patches[n];
       nn    = patch->nn;
       
@@ -267,11 +267,11 @@ void bbn_plan_ADMs_CS(Observable_T *obs)
     N = 6/* 6 sides for surroundings */;
         
     patches = calloc(N,sizeof(*patches));
-    pointerEr(patches);  
+    IsNull(patches);  
     
     /* alloc memory for all patches */
     adm = calloc(N,sizeof(*adm));
-    pointerEr(adm);
+    IsNull(adm);
     /* this is where we link to obs struct */
     obs->items = adm;
     obs->Nitems = N;
@@ -292,7 +292,7 @@ void bbn_plan_ADMs_CS(Observable_T *obs)
     for (n = 0; n < N; ++n)
     {
       adm[n] = calloc(1,sizeof(*adm[n]));
-      pointerEr(adm[n]);
+      IsNull(adm[n]);
       patch = patches[n];
       nn    = patch->nn;
       

@@ -136,7 +136,7 @@ static void write_multi_mesh(const Pr_Field_T *const pr)
     
     /* populating DBPutMultimesh function arguments */
     patch_names_xyz[pa] = calloc(MAX_STR_LEN,1);
-    pointerEr(patch_names_xyz[pa]);
+    IsNull(patch_names_xyz[pa]);
     sprintf(patch_names_xyz[pa],"%s_xyz_%04d.silo:%s",/* this is how we set patch files */
                              patch->name,pr->cycle,patch->name);
     patch_types[pa] = DB_QUAD_CURV;/* note, in my implementation both meshes 
@@ -149,7 +149,7 @@ static void write_multi_mesh(const Pr_Field_T *const pr)
   grid_file_xyz = 
     DBCreate(grid_file_path_xyz,DB_CLOBBER,DB_LOCAL,
             "Master file composed of all patches path",DB_HDF5);
-  pointerEr(grid_file_xyz);
+  IsNull(grid_file_xyz);
   sprintf(grid_name,"grid%d_xyz",pr->grid->gn);
   DB_ret = DBPutMultimesh(grid_file_xyz,grid_name,npatch,patch_names_xyz,patch_types,0);
   if (DB_ret == -1)
@@ -170,7 +170,7 @@ static void write_multi_mesh(const Pr_Field_T *const pr)
       
       /* populating DBPutMultimesh function arguments */
       patch_names_abc[pa] = calloc(MAX_STR_LEN,1);
-      pointerEr(patch_names_abc[pa]);
+      IsNull(patch_names_abc[pa]);
       sprintf(patch_names_abc[pa],"%s_abc_%04d.silo:%s",/* this is how we set patch files */
                                patch->name,pr->cycle,patch->name);
       patch_types[pa] = DB_QUAD_CURV;/* note, in my implementation both meshes 
@@ -183,7 +183,7 @@ static void write_multi_mesh(const Pr_Field_T *const pr)
     grid_file_abc = 
       DBCreate(grid_file_path_abc,DB_CLOBBER,DB_LOCAL,
               "Master file composed of all patches path",DB_HDF5);
-    pointerEr(grid_file_abc);
+    IsNull(grid_file_abc);
     sprintf(grid_name,"grid%d_abc",pr->grid->gn);
     DB_ret = DBPutMultimesh(grid_file_abc,grid_name,npatch,patch_names_abc,patch_types,0);
     if (DB_ret == -1)
@@ -249,7 +249,7 @@ static void make_multi_var(const Pr_Field_T *const pr,const char *const var)
     
     /* populating DBPutMultimesh function arguments */
     var_names_xyz[pa] = calloc(MAX_STR_LEN,1);
-    pointerEr(var_names_xyz[pa]);
+    IsNull(var_names_xyz[pa]);
     sprintf(var_names_xyz[pa],"%s_xyz_%04d.silo:%s",/* this is how we set var files */
                              patch->name,pr->cycle,var);
     var_types[pa] = DB_QUADVAR;
@@ -261,7 +261,7 @@ static void make_multi_var(const Pr_Field_T *const pr,const char *const var)
   var_file_xyz = 
     DBCreate(var_file_path_xyz,DB_CLOBBER,DB_LOCAL,
             "Master file composed of all fields path",DB_HDF5);
-  pointerEr(var_file_xyz);
+  IsNull(var_file_xyz);
   sprintf(var_name,"%s_xyz",var);
   DB_ret = DBPutMultivar(var_file_xyz,var_name,npatch,var_names_xyz,var_types,0);
   if (DB_ret == -1)
@@ -274,7 +274,7 @@ static void make_multi_var(const Pr_Field_T *const pr,const char *const var)
     free(var_names_xyz[i]);
 
 //test
-  //pointerEr(DBGetMultivar(var_file_xyz,var_name));
+  //IsNull(DBGetMultivar(var_file_xyz,var_name));
 //end
 
   /* if you want in (a,b,c) coords */
@@ -289,7 +289,7 @@ static void make_multi_var(const Pr_Field_T *const pr,const char *const var)
       
       /* populating DBPutMultimesh function arguments */
       var_names_abc[pa] = calloc(MAX_STR_LEN,1);
-      pointerEr(var_names_abc[pa]);
+      IsNull(var_names_abc[pa]);
       sprintf(var_names_abc[pa],"%s_abc_%04d.silo:%s",/* this is how we set var files */
                                patch->name,pr->cycle,var);
       var_types[pa] = DB_QUADVAR;
@@ -301,7 +301,7 @@ static void make_multi_var(const Pr_Field_T *const pr,const char *const var)
     var_file_abc = 
       DBCreate(var_file_path_abc,DB_CLOBBER,DB_LOCAL,
               "Master file composed of all fields path",DB_HDF5);
-    pointerEr(var_file_abc);
+    IsNull(var_file_abc);
     sprintf(var_name,"%s_abc",var);
     DB_ret = DBPutMultivar(var_file_abc,var_name,npatch,var_names_abc,var_types,0);
     if (DB_ret == -1)
@@ -338,7 +338,7 @@ static void *make_structured_mesh_3d_xyz(Pr_Field_T *const pr,const Patch_T *con
   dbfile = DBCreate(file_name,DB_CLOBBER,DB_LOCAL,
     "3D mesh in Cartesian values with HDF5 format using silo library",
     DB_HDF5);
-  pointerEr(dbfile);
+  IsNull(dbfile);
 
   /* setting up some options */
   label[0] = dup_s("x");
@@ -398,7 +398,7 @@ static void *make_structured_mesh_3d_abc(Pr_Field_T *const pr,const Patch_T *con
   dbfile = DBCreate(file_name,DB_CLOBBER,DB_LOCAL,
     "3D Curvilinear mesh with HDF5 format using silo library",
     DB_HDF5);
-  pointerEr(dbfile);
+  IsNull(dbfile);
 
   /* setting up some options */
   label[0] = dup_s("a");

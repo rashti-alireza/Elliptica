@@ -100,7 +100,7 @@ char *dup_s(const char *const str)
   n = (unsigned)strlen(str)+1;
   
   r = malloc(n);
-  pointerEr(r);
+  IsNull(r);
   
   for (i = 0; i < n-1; i++)
     r[i] = str[i];
@@ -218,7 +218,7 @@ int check_format_s(const char *str,const char *const format)
     if (format[i] != '?')
     {
       delimits = realloc(delimits,(n+1)*sizeof(*delimits));
-      pointerEr(delimits);
+      IsNull(delimits);
       delimits[n][0] = format[i];
       delimits[n][1] = '\0';
       trim[n] = format[i];
@@ -342,7 +342,7 @@ char *regex_find(const char *const regex_pattern,const char *const str)
       - match[0].rm_so/* The offset in string of the beginning of a substring. */
       ;
   ret = calloc((unsigned long)len+1,1);
-  pointerEr(ret);
+  IsNull(ret);
   
   for (i = 0; i < len; ++i)
     ret[i] = str[match[0].rm_so+i];
@@ -370,7 +370,7 @@ char **read_separated_items_in_string(const char *const string,const char delimi
   while(tok)
   {
     items = realloc(items,(ni+2)*sizeof(*items));
-    pointerEr(items);
+    IsNull(items);
     items[ni]   = dup_s(tok);
     items[ni+1] = 0;
     tok = tok_s(0,delimiter,&save);/* tok = f2 */

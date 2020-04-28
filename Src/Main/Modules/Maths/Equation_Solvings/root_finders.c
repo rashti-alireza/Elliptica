@@ -46,14 +46,14 @@
 Root_Finder_T *init_root_finder(const unsigned n)
 {
   Root_Finder_T *root = calloc(1,sizeof(*root));
-  pointerEr(root);
+  IsNull(root);
   
   root->f = calloc(n+1,sizeof(*root->f));
-  pointerEr(root->f);
+  IsNull(root->f);
   root->f[n] = 0;
   
   root->df_dx = calloc(n+1,sizeof(*root->df_dx));
-  pointerEr(root->df_dx);
+  IsNull(root->df_dx);
   root->df_dx[n] = 0;
   
   root->n = n;

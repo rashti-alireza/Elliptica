@@ -29,7 +29,7 @@ if (x){\
   unsigned SIZE_ = 0;\
   assert(fread(&SIZE_, sizeof(SIZE_),1,file));\
   if (SIZE_) {\
-    x = calloc(SIZE_,sizeof(*(x))),pointerEr(x);\
+    x = calloc(SIZE_,sizeof(*(x))),IsNull(x);\
     assert(fread(x,sizeof(*(x)),SIZE_,file));}\
   else { x = 0;}}
 

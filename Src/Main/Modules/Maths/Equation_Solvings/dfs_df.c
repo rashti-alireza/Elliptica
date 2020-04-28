@@ -68,9 +68,9 @@ void prepare_Js_jacobian_eq(Patch_T *const patch,const char * const *types)
     c = sol_man->nj;
     sol_man->jacobian = 
       realloc(sol_man->jacobian,(c+1)*sizeof(*sol_man->jacobian));
-    pointerEr(sol_man->jacobian);
+    IsNull(sol_man->jacobian);
     sol_man->jacobian[c] = calloc(1,sizeof(*sol_man->jacobian[c]));
-    pointerEr(sol_man->jacobian[c]);
+    IsNull(sol_man->jacobian[c]);
     sprintf(sol_man->jacobian[c]->type,jtype);
     sol_man->jacobian[c]->J = cast_matrix_ccs(J);
     free_matrix(J);
@@ -95,7 +95,7 @@ static char *interpret_type(const char *const type)
  char *jtype = calloc(MAX_STR_LEN,1);
  unsigned i,len;
  
- pointerEr(jtype);
+ IsNull(jtype);
  
  /*  possible given types are *_D?D?... or _U?U?... or U?D?... or D?U? ... 
  or simply df*_df */
@@ -214,7 +214,7 @@ void test_make_Js_jacobian_eq(Grid_T *const grid, const char * const* types)
       
       sprintf(file_name,"%s/%s_SepctalDirect.patch%u",path,jtype,patch->pn);
       file = Fopen(file_name,"w");
-      pointerEr(file);
+      IsNull(file);
       fprintf(file,"Row Column J_Spectal J_Direct\n");
       
       for (r = 0; r < nn; ++r)

@@ -158,7 +158,7 @@ static void interpolate_and_write(Grid_T *const grid,struct interpolation_points
   
   /* open fields_file and start interpolating and writing */
   file = Fopen(fields_file_path,"wb");
-  pointerEr(file);
+  IsNull(file);
   fprintf(file,"# this file contains values of %s\n",bam_fields_name);
   sprintf(title_line,"%s",HEADER);
   FWriteP_bin(p_title_line,strlen(title_line)+1);
@@ -216,7 +216,7 @@ static Grid_T *load_grid_from_checkpoint_file(void)
   
   /* open checkpoint file */
   file = Fopen(checkpoint_path,"r");
-  pointerEr(file);
+  IsNull(file);
   grid = bbn_init_from_checkpoint(file);
   fclose(file);
   
@@ -242,7 +242,7 @@ static void load_coords_from_coords_file(struct interpolation_points *const pnt)
   
   /* open and read coords file */
   file = Fopen(coords_file_path,"r");
-  pointerEr(file);
+  IsNull(file);
   
   /*winding file */
   fgets(str,STR_LEN_MAX,file);
@@ -261,7 +261,7 @@ static void load_coords_from_coords_file(struct interpolation_points *const pnt)
   pnt->Y       = alloc_double(npoints);
   pnt->Z       = alloc_double(npoints);
   pnt->patchn  = calloc(npoints,sizeof(*pnt->patchn));
-  pointerEr(pnt->patchn);
+  IsNull(pnt->patchn);
   /* reading (x,y,z) */
   for (i = 0; i < npoints; ++i)
   {

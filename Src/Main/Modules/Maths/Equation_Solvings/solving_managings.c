@@ -34,10 +34,10 @@ void add_eq(sEquation_T ***const data_base, fEquation_T *const eq,const char *co
     ndb = 0;
   
   db = realloc(db,(ndb+2)*sizeof(*db));
-  pointerEr(db);
+  IsNull(db);
   db[ndb+1] = 0;
   db[ndb] = calloc(1,sizeof(*db[ndb]));
-  pointerEr(db[ndb]);
+  IsNull(db[ndb]);
   
   sprintf(db[ndb]->name,name);
   db[ndb]->eq = eq;
@@ -61,7 +61,7 @@ void initialize_solving_man(Grid_T *const grid,sEquation_T **const field_eq,sEqu
   while(tok)
   {
     field_name = realloc(field_name,(nf+1)*sizeof(*field_name));
-    pointerEr(field_name);
+    IsNull(field_name);
     field_name[nf] = dup_s(tok);
     tok = tok_s(0,COMMA,&save);/* tok = f2 */
     nf++;
@@ -77,7 +77,7 @@ void initialize_solving_man(Grid_T *const grid,sEquation_T **const field_eq,sEqu
     if (!patch->solving_man)
     {
       patch->solving_man = calloc(1,sizeof(*patch->solving_man));
-      pointerEr(patch->solving_man);
+      IsNull(patch->solving_man);
     }
     
     if (patch->solving_man->field_name)
@@ -85,23 +85,23 @@ void initialize_solving_man(Grid_T *const grid,sEquation_T **const field_eq,sEqu
       free_2d_mem(patch->solving_man->field_name,patch->solving_man->nf);
     }
     patch->solving_man->field_name = calloc(nf,sizeof(*patch->solving_man->field_name));
-    pointerEr(patch->solving_man->field_name);
+    IsNull(patch->solving_man->field_name);
     
     _free(patch->solving_man->field_eq);
     patch->solving_man->field_eq = calloc(nf,sizeof(*patch->solving_man->field_eq));
-    pointerEr(patch->solving_man->field_eq);
+    IsNull(patch->solving_man->field_eq);
     
     _free(patch->solving_man->bc_eq);
     patch->solving_man->bc_eq = calloc(nf,sizeof(*patch->solving_man->bc_eq));
-    pointerEr(patch->solving_man->bc_eq);
+    IsNull(patch->solving_man->bc_eq);
     
     _free(patch->solving_man->jacobian_field_eq);
     patch->solving_man->jacobian_field_eq = calloc(nf,sizeof(*patch->solving_man->jacobian_field_eq));
-    pointerEr(patch->solving_man->jacobian_field_eq);
+    IsNull(patch->solving_man->jacobian_field_eq);
     
     _free(patch->solving_man->jacobian_bc_eq);
     patch->solving_man->jacobian_bc_eq = calloc(nf,sizeof(*patch->solving_man->jacobian_bc_eq));
-    pointerEr(patch->solving_man->jacobian_bc_eq);
+    IsNull(patch->solving_man->jacobian_bc_eq);
     
     for (i = 0; i < nf; ++i)
     {

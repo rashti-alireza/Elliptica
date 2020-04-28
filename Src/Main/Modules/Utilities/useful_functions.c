@@ -301,9 +301,9 @@ void copy_subface(SubFace_T *const s2,const SubFace_T *const s1)
   s2->adjsn = s1->adjsn;
   s2->np = s1->np;
   s2->id = calloc(s2->np,sizeof(*s2->id));
-  pointerEr(s2->id);
+  IsNull(s2->id);
   s2->adjid = calloc(s2->np,sizeof(*s2->adjid));
-  pointerEr(s2->adjid);
+  IsNull(s2->adjid);
   for (i = 0; i < s2->np; ++i)
     s2->id[i] = s1->id[i];
     
@@ -350,7 +350,7 @@ unsigned *dup_UINT(const unsigned *const s,const unsigned N)
     Error0("The given array to be duplicated is Null!");
   
   unsigned *dup = calloc(N,sizeof(*dup));
-  pointerEr(dup);
+  IsNull(dup);
   unsigned i;
   
   for (i = 0; i < N; ++i)
@@ -810,7 +810,7 @@ double *alloc_double(const unsigned N)
   double *d;
   
   d = calloc(N,sizeof(*d));
-  pointerEr(d);
+  IsNull(d);
   
   return d;
 }
@@ -822,12 +822,12 @@ double **alloc_2D_double(const long unsigned R,const long unsigned C)
   long unsigned row;
   
   M = calloc(R,sizeof(*M));
-  pointerEr(M);
+  IsNull(M);
   
   for (row = 0; row < R; ++row)
   {
     M[row] = calloc(C,sizeof(*M[row]));
-    pointerEr(M[row]);
+    IsNull(M[row]);
   }
   
   return M;

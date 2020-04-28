@@ -52,7 +52,7 @@ static Grid_T *load_checkpoint_file(void)
     Error1("Checkpoint file does not exist at\n%s\n",checkpoint_file_path);
     
   file = Fopen(checkpoint_file_path,"r");
-  pointerEr(file);
+  IsNull(file);
   
   grid = bbn_init_from_checkpoint(file);
   
@@ -170,7 +170,7 @@ static int IsThereAnyUsefulCheckpointFile(void)
   if (ret && 0)
   {
     checkpoint_file = Fopen(prev_data_file_path,"r");
-    pointerEr(checkpoint_file);
+    IsNull(checkpoint_file);
     const char *check_quantities[] = {"NS_baryonic_mass",
                                       "NS_Omega_U0",
                                       "NS_Omega_U1",
@@ -1495,7 +1495,7 @@ static void Pxy_ADM_is0_by_xy_CM_roots(Grid_T *const grid)
   
   /* populate Aij grid */
   freedata_grid = calloc(1,sizeof(*freedata_grid));
-  pointerEr(freedata_grid);
+  IsNull(freedata_grid);
   
   i = 0;
   FOR_ALL_PATCHES(p,grid)
@@ -1504,7 +1504,7 @@ static void Pxy_ADM_is0_by_xy_CM_roots(Grid_T *const grid)
     {
       freedata_patch = realloc(freedata_patch,
                   (i+1)*sizeof(*freedata_patch));
-      pointerEr(freedata_patch);
+      IsNull(freedata_patch);
       freedata_patch[i++] = grid->patch[p];
     }
   }
@@ -1641,7 +1641,7 @@ static void Px_ADM_is0_by_y_CM(Grid_T *const grid)
   
   /* populate Aij grid */
   freedata_grid = calloc(1,sizeof(*freedata_grid));
-  pointerEr(freedata_grid);
+  IsNull(freedata_grid);
   
   i = 0;
   FOR_ALL_PATCHES(p,grid)
@@ -1650,7 +1650,7 @@ static void Px_ADM_is0_by_y_CM(Grid_T *const grid)
     {
       freedata_patch = realloc(freedata_patch,
                   (i+1)*sizeof(*freedata_patch));
-      pointerEr(freedata_patch);
+      IsNull(freedata_patch);
       freedata_patch[i++] = grid->patch[p];
     }
   }
@@ -1726,7 +1726,7 @@ static void Py_ADM_is0_by_x_CM(Grid_T *const grid)
   
   /* populate Aij grid */
   freedata_grid = calloc(1,sizeof(*freedata_grid));
-  pointerEr(freedata_grid);
+  IsNull(freedata_grid);
   
   i = 0;
   FOR_ALL_PATCHES(p,grid)
@@ -1735,7 +1735,7 @@ static void Py_ADM_is0_by_x_CM(Grid_T *const grid)
     {
       freedata_patch = realloc(freedata_patch,
                   (i+1)*sizeof(*freedata_patch));
-      pointerEr(freedata_patch);
+      IsNull(freedata_patch);
       freedata_patch[i++] = grid->patch[p];
     }
   }
@@ -3058,13 +3058,13 @@ static void add_patches_insideBH(Grid_T *const grid)
   
   /* allocating */
   grid->patch = realloc(grid->patch,(np2+1)*sizeof(*grid->patch));
-  pointerEr(grid->patch);
+  IsNull(grid->patch);
   grid->patch[np2] = 0;
   
   for (i = np1; i < np2; i++)
   {
     grid->patch[i] = calloc(1,sizeof(*grid->patch[i]));
-    pointerEr(grid->patch[i]);
+    IsNull(grid->patch[i]);
   }
   grid->np = np2;
   
@@ -3073,7 +3073,7 @@ static void add_patches_insideBH(Grid_T *const grid)
   populate_right_BH(grid,np1+1);
   
   bh_grid = calloc(1,sizeof(*bh_grid));
-  pointerEr(bh_grid);
+  IsNull(bh_grid);
   
   bh_grid->patch = &grid->patch[np1];
   alloc_nodes(bh_grid);
@@ -4910,7 +4910,7 @@ static void move_solve_man_jacobian(Patch_T *const patch2,Patch_T *const patch1)
   if (!patch2->solving_man)
   {
     patch2->solving_man = calloc(1,sizeof(*patch2->solving_man));
-    pointerEr(patch2->solving_man);
+    IsNull(patch2->solving_man);
   }
   
   patch2->solving_man->jacobian = patch1->solving_man->jacobian;

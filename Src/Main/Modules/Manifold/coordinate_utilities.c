@@ -93,7 +93,7 @@ void needle_ex(Needle_T *const needle,const Patch_T *const patch)
   
   needle->ex = 
     realloc(needle->ex,(needle->Nex+1)*sizeof(*needle->ex));
-  pointerEr(needle->ex);
+  IsNull(needle->ex);
   
   needle->ex[needle->Nex] = patch->pn;
   needle->Nex++;
@@ -114,7 +114,7 @@ void needle_in(Needle_T *const needle,const Patch_T *const patch)
   
   needle->in = 
     realloc(needle->in,(needle->Nin+1)*sizeof(*needle->in));
-  pointerEr(needle->in);
+  IsNull(needle->in);
   
   needle->in[needle->Nin] = patch->pn;
   needle->Nin++;
@@ -135,7 +135,7 @@ void needle_guess(Needle_T *const needle,const Patch_T *const patch)
   
   needle->guess = 
     realloc(needle->guess,(needle->Ng+1)*sizeof(*needle->guess));
-  pointerEr(needle->guess);
+  IsNull(needle->guess);
   
   needle->guess[needle->Ng] = patch->pn;
   needle->Ng++;
@@ -159,7 +159,7 @@ void needle_ans(Needle_T *const needle,const Patch_T *const patch)
   
   needle->ans = 
     realloc(needle->ans,(needle->Nans+1)*sizeof(*needle->ans));
-  pointerEr(needle->ans);
+  IsNull(needle->ans);
   
   needle->ans[needle->Nans] = patch->pn;
   needle->Nans++;
@@ -546,7 +546,7 @@ void *alloc_needle(void)
   Needle_T *needle;
   
   needle = calloc(1,sizeof(*needle));
-  pointerEr(needle);
+  IsNull(needle);
 
   return needle;
 }

@@ -418,7 +418,7 @@ static Grid_T *bbn_phi_grid(Grid_T *const grid)
   if (strcmp_i(grid->kind,"BBN_CubedSpherical_grid"))
   {
     phi_grid       = calloc(1,sizeof(*phi_grid));
-    pointerEr(phi_grid);
+    IsNull(phi_grid);
     phi_grid->kind = grid->kind;
     phi_grid->gn   = grid->gn;
     /* NS at left composed of 6 cubed spherical + 1 Cartesian: */
@@ -460,7 +460,7 @@ static void bbn_phi_grid_CS(Grid_T *const phi_grid,Grid_T *const grid)
   /* NS at left composed of 6 cubed spherical + 1 Cartesian,
   // and 1 more to be Null = 8 */
   phi_grid->patch = calloc(8,sizeof(*phi_grid->patch));
-  pointerEr(phi_grid->patch);
+  IsNull(phi_grid->patch);
   
   i = 0;
   FOR_ALL_PATCHES(p,grid)
@@ -470,7 +470,7 @@ static void bbn_phi_grid_CS(Grid_T *const phi_grid,Grid_T *const grid)
     if (IsItNSPatch(patch))/* since we have only one NS we can use IsItNSPatch */
     {
       phi_grid->patch[i] = calloc(1,sizeof(*phi_grid->patch[i]));
-      pointerEr(phi_grid->patch[i]);
+      IsNull(phi_grid->patch[i]);
       /* note, for the following all of the pointers inside the structures 
       // will be equal, since this is not a deep copy. */
       phi_grid->patch[i][0]    = patch[0];
@@ -480,7 +480,7 @@ static void bbn_phi_grid_CS(Grid_T *const phi_grid,Grid_T *const grid)
       /* the following needs to be constructed from scratch */
       phi_grid->patch[i]->interface = 0;
       phi_grid->patch[i]->solving_man = calloc(1,sizeof(*phi_grid->patch[i]->solving_man));
-      pointerEr(phi_grid->patch[i]->solving_man);
+      IsNull(phi_grid->patch[i]->solving_man);
       phi_grid->patch[i]->solving_man[0] = patch->solving_man[0];
       phi_grid->patch[i]->solving_man->patch = phi_grid->patch[i];
       phi_grid->patch[i]->solving_man->jacobian = 0;

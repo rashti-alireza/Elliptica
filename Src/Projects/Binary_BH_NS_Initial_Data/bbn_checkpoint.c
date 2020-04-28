@@ -69,7 +69,7 @@ void bbn_write_checkpoint(Grid_T *const grid)
   /* successful message at the end of the checkpoint file */
   sprintf(file_path,"%s/%s_temp",out_dir,CHECKPOINT_FILE_NAME);
   file = Fopen(file_path,"a");
-  pointerEr(file);
+  IsNull(file);
   sprintf(msg,"%s",END_MSG);
   FWriteP_bin(p_msg,strlen(msg)+1);
   fclose(file);
@@ -94,7 +94,7 @@ int bbn_IsCheckpointFileCompleted(const char *const file_path)
   int msg_len = (int)strlen(END_MSG)+1;
   
   file = Fopen(file_path,"r");
-  pointerEr(file);
+  IsNull(file);
   
   fseek(file,-msg_len,SEEK_END);
   assert(fread(msg,(unsigned)msg_len,1,file));
@@ -123,7 +123,7 @@ static void write_header(const Grid_T *const grid)
   
     
   file = Fopen(file_path,"w");
-  pointerEr(file);
+  IsNull(file);
   
   np = 0;
   while (parameters_global != 0 && parameters_global[np] != 0)
@@ -168,7 +168,7 @@ static void write_parameters(const Grid_T *const grid)
 
   sprintf(file_path,"%s/%s_temp",folder,CHECKPOINT_FILE_NAME);
   file = Fopen(file_path,"ab");
-  pointerEr(file);
+  IsNull(file);
   
   np = 0;
   while (parameters_global != 0 && parameters_global[np] != 0)
@@ -215,7 +215,7 @@ static void write_fields(const Grid_T *const grid)
   
   sprintf(file_path,"%s/%s_temp",folder,CHECKPOINT_FILE_NAME);
   file = Fopen(file_path,"ab");
-  pointerEr(file);
+  IsNull(file);
   
   /* NOTE the order is crucial for reading part */
   
@@ -451,11 +451,11 @@ static void find_and_save_modified_checkpoint_pars(void)
       /* save */
       modified_checkpoint_par = 
         realloc(modified_checkpoint_par,(nmpar+1)*sizeof(*modified_checkpoint_par));
-      pointerEr(modified_checkpoint_par);
+      IsNull(modified_checkpoint_par);
       modified_checkpoint_par[nmpar] = parameters_global[np];
       parameters_global[np] = 0;
       parameters_global[np] = calloc(1,sizeof(*parameters_global[np]));
-      pointerEr(parameters_global[np]);
+      IsNull(parameters_global[np]);
       
       /* trim the prefix */
       pstr = strstr(modified_checkpoint_par[nmpar]->lv,":");/* ->: */
@@ -491,11 +491,11 @@ static void alloc_db(struct checkpoint_header *const alloc_info)
   /* allocate parameters */
   free_parameter_db();
   parameters_global = calloc(npar+1,sizeof(*parameters_global));
-  pointerEr(parameters_global);
+  IsNull(parameters_global);
   for (i = 0; i < npar; ++i)
   {
     parameters_global[i] = calloc(1,sizeof(*parameters_global[i]));
-    pointerEr(parameters_global[i]);
+    IsNull(parameters_global[i]);
   }
   
   /* allocate grid */
@@ -557,7 +557,7 @@ Parameter_T *bbn_parameter_query_from_checkpoint_file(const char *const par_name
   for (i = 0; i < npar; ++i)
   {
     Parameter_T *p = calloc(1,sizeof(*p));
-    pointerEr(p);
+    IsNull(p);
     
     FReadP_bin(p->lv);
     FReadP_bin(p->rv);

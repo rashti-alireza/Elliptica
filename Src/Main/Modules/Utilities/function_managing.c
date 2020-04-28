@@ -97,10 +97,10 @@ void *alloc_sFunc_Patch2Pdouble(sFunc_Patch2Pdouble_T ***const mem)
   for (i = 0; (*mem) != 0 && (*mem)[i] != 0 ; i++);
   
   (*mem) = realloc((*mem),(i+2)*sizeof(*(*mem)));
-  pointerEr((*mem));
+  IsNull((*mem));
   
   (*mem)[i] = calloc(1,sizeof(*(*mem)[i]));
-  pointerEr((*mem)[i]);
+  IsNull((*mem)[i]);
   
   (*mem)[i+1] = 0;
   
@@ -133,10 +133,10 @@ void *alloc_sFunc_PtoV(sFunc_PtoV_T ***const mem)
   for (i = 0; (*mem) != 0 && (*mem)[i] != 0 ; i++);
   
   (*mem) = realloc((*mem),(i+2)*sizeof(*(*mem)));
-  pointerEr((*mem));
+  IsNull((*mem));
   
   (*mem)[i] = malloc(sizeof(*(*mem)[i]));
-  pointerEr((*mem)[i]);
+  IsNull((*mem)[i]);
   
   (*mem)[i+1] = 0;
   

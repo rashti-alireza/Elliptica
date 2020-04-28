@@ -59,7 +59,7 @@ void pr_fields(Pr_Field_T *const pr)
 Pr_Field_T *init_PrField(const Grid_T *const grid)
 {
   Pr_Field_T *pr = calloc(1,sizeof(*pr));
-  pointerEr(pr);
+  IsNull(pr);
   pr->grid = grid;
   
   return pr;
@@ -111,7 +111,7 @@ static void parse_parameter_3d(const char *const par,Pr_Field_T *const pr)
     char *savess = 0,*ss = 0,*dump;
     
     info_s = realloc(info_s,(Ninfo+1)*sizeof(*info_s)); 
-    pointerEr(info_s);
+    IsNull(info_s);
     Pinfo = &info_s[Ninfo];
     Pinfo->field   = 0;
     Pinfo->comp[0] = 0;

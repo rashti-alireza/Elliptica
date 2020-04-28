@@ -237,11 +237,11 @@ void *alloc_grid(void)
   for (i = 0; grids_global != 0 && grids_global[i] != 0; i++);
   
   grids_global = realloc(grids_global,(i+2)*sizeof(*grids_global));
-  pointerEr(grids_global);
+  IsNull(grids_global);
   
   /* allocate new grid */
   grids_global[i] = calloc(1,sizeof(*grids_global[i]));
-  pointerEr(grids_global[i]);
+  IsNull(grids_global[i]);
   /* set grid number */
   if (i == 0)
     grids_global[i]->gn = i;
@@ -334,7 +334,7 @@ void free_grid(Grid_T *grid)
       grids_global[i] = last_grid;
       
       grids_global = realloc(grids_global,ng*sizeof(*grids_global));
-      pointerEr(grids_global);
+      IsNull(grids_global);
       grids_global[ng-1] = 0;
       
       break;

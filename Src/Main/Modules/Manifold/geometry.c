@@ -26,14 +26,14 @@ int realize_geometry(Grid_T *const grid)
   
   /* keep track of counted points; 1 means counted, 0 means not. */
   unsigned **point_flag = calloc(grid->np,sizeof(*point_flag));
-  pointerEr(point_flag);
+  IsNull(point_flag);
   
   FOR_ALL(i,grid->patch)
   {
     Patch_T *const patch = grid->patch[i];
     
     point_flag[i] = calloc(patch->nn,sizeof(*point_flag[i]));
-    pointerEr(point_flag[i]);
+    IsNull(point_flag[i]);
     
     alloc_interface(patch);/* allocating interfaces */
     fill_basics(patch);/* filling basic elements */
@@ -461,7 +461,7 @@ static void set_df_dn(Subf_T *const ring,const unsigned df_dn)
     next->subf->df_dn = f%2;
     ss = (unsigned) strlen(next->subf->flags_str)+AS;
     next->subf->flags_str = realloc(next->subf->flags_str,ss);
-    pointerEr(next->subf->flags_str);
+    IsNull(next->subf->flags_str);
     sprintf(tail,",Dn:%u",f%2);
     strcat(next->subf->flags_str,tail);
     next->set = 1;
@@ -485,7 +485,7 @@ static void set_df_dn(Subf_T *const ring,const unsigned df_dn)
     prev->subf->df_dn = f%2;
     ss = (unsigned) strlen(prev->subf->flags_str)+AS;
     prev->subf->flags_str = realloc(prev->subf->flags_str,ss);
-    pointerEr(prev->subf->flags_str);
+    IsNull(prev->subf->flags_str);
     sprintf(tail,",Dn:%u",f%2);
     strcat(prev->subf->flags_str,tail);
     prev->set = 1;
@@ -505,9 +505,9 @@ static Subf_T *add_ring(Subf_T ***chain_addrss)
   if (chain == 0)
   {
     chain = calloc(2,sizeof(*chain));
-    pointerEr(chain);
+    IsNull(chain);
     chain[0] = calloc(1,sizeof(*chain[0]));
-    pointerEr(chain[0]);
+    IsNull(chain[0]);
     ring = chain[0];
     ring->n = 0;
   }
@@ -515,9 +515,9 @@ static Subf_T *add_ring(Subf_T ***chain_addrss)
   {
     nc = countf(chain);
     chain = realloc(chain,(nc+2)*sizeof(*chain));
-    pointerEr(chain);
+    IsNull(chain);
     chain[nc] = calloc(1,sizeof(*chain[nc]));
-    pointerEr(chain[nc]);
+    IsNull(chain[nc]);
     chain[nc+1] = 0;
     ring = chain[nc];
     ring->n = nc;
@@ -696,10 +696,10 @@ static void add_to_subface(const Point_T *const pnt,const char *const lead)
   {
     face->subface = 
       realloc(face->subface,(face->ns+1)*sizeof(*face->subface));
-    pointerEr(face->subface);
+    IsNull(face->subface);
     face->subface[face->ns] = 
       calloc(1,sizeof(*face->subface[face->ns]));
-    pointerEr(face->subface[face->ns]);
+    IsNull(face->subface[face->ns]);
     subface = face->subface[face->ns];
     face->ns++;
     
@@ -729,14 +729,14 @@ static void add_point(SubFace_T *const subface,const Point_T *const pnt)
 {
   subface->id = 
     realloc(subface->id,(subface->np+1)*sizeof(*subface->id));
-  pointerEr(subface->id);
+  IsNull(subface->id);
   subface->id[subface->np] = pnt->ind;
   
   if (pnt->copy == 1)
   {
     subface->adjid = 
       realloc(subface->adjid,(subface->np+1)*sizeof(*subface->adjid));
-    pointerEr(subface->adjid);
+    IsNull(subface->adjid);
     subface->adjid[subface->np] = pnt->adjPoint->ind;
   }
   
@@ -1233,7 +1233,7 @@ static int IsInterpolation(PointSet_T *const Pnt)
         if (fs->on_f == 1 && LSS(fs->N1dotN2,0))
         {
           interp = realloc(interp,(j+1)*sizeof(*interp));
-          pointerEr(interp);
+          IsNull(interp);
           interp[j].adjid = i;
           interp[j].fid   = f;
           interp[j].dot   = fs->N1dotN2;
@@ -1259,7 +1259,7 @@ static int IsInterpolation(PointSet_T *const Pnt)
         
     e = 0;
     interpEq = realloc(interpEq,(e+1)*sizeof(*interpEq));
-    pointerEr(interpEq);
+    IsNull(interpEq);
     interpEq[e].adjid = interp[id].adjid;
     interpEq[e].fid   = interp[id].fid;
     interpEq[e].dot   = interp[id].dot;
@@ -1272,7 +1272,7 @@ static int IsInterpolation(PointSet_T *const Pnt)
       if (EQL(interp[i].dot,interp[id].dot))
       {
         interpEq = realloc(interpEq,(e+1)*sizeof(*interpEq));
-        pointerEr(interpEq);
+        IsNull(interpEq);
         interpEq[e].adjid = interp[i].adjid;
         interpEq[e].fid   = interp[i].fid;
         interpEq[e].dot   = interp[i].dot;
@@ -2263,10 +2263,10 @@ static void alloc_PointSet(const unsigned N,PointSet_T ***const pnt)
   assert(pnt);
   
   (*pnt) = realloc((*pnt),(N+1)*sizeof(*(*pnt)));
-  pointerEr(*pnt);
+  IsNull(*pnt);
   
   (*pnt)[N-1] = calloc(1,sizeof(*(*pnt)[N-1]));
-  pointerEr((*pnt)[N-1]);
+  IsNull((*pnt)[N-1]);
   
   (*pnt)[N] = 0;
 }
@@ -2308,7 +2308,7 @@ static void add_adjPnt(PointSet_T *const pnt,const unsigned *const p, const unsi
     /* realloc memory for new found point */
     pnt->adjPnt = 
       realloc(pnt->adjPnt,(pnt->NadjPnt+1)*sizeof(*pnt->adjPnt));
-    pointerEr(pnt->adjPnt);
+    IsNull(pnt->adjPnt);
     
     /* initializing */
     AdjPoint_T *const adjPnt = &pnt->adjPnt[pnt->NadjPnt];
@@ -2507,7 +2507,7 @@ void alloc_nodes(Grid_T *const grid)
     n = grid->patch[i]->n;
     grid->patch[i]->node = 
       malloc((n[0]*n[1]*n[2]+1)*sizeof(*grid->patch[i]->node));
-    pointerEr(grid->patch[i]->node);
+    IsNull(grid->patch[i]->node);
     
     node = grid->patch[i]->node;
     node[n[0]*n[1]*n[2]] = 0;
@@ -2516,7 +2516,7 @@ void alloc_nodes(Grid_T *const grid)
     for (j = 0; j < U; j++)
     {
       node[j] = calloc(1,sizeof(*node[j]));
-      pointerEr(node[j]);
+      IsNull(node[j]);
     }
     
   }
@@ -2529,12 +2529,12 @@ void alloc_interface(Patch_T *const patch)
   assert(patch);
   
   patch->interface = calloc(FACE_NUM+1,sizeof(*patch->interface));
-  pointerEr(patch->interface);
+  IsNull(patch->interface);
   
   for (i = 0; i < FACE_NUM; i++)
   {
     patch->interface[i] = calloc(1,sizeof(*patch->interface[i]));
-    pointerEr(patch->interface[i]);
+    IsNull(patch->interface[i]);
   }
 }
 
@@ -2549,12 +2549,12 @@ void *alloc_point(const unsigned s)
   unsigned i;
   
   point = calloc(s+1,sizeof(*point));
-  pointerEr(point);
+  IsNull(point);
   
   for (i = 0; i < s; i++)
   {
     point[i] = calloc(1,sizeof(*point[i]));
-    pointerEr(point[i]);
+    IsNull(point[i]);
   }
   
   return point;

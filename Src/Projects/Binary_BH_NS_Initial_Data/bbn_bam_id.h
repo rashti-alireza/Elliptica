@@ -18,14 +18,14 @@
 /* add x to fields_name */   
 #define add2fieldsname_0ind_M(x) {\
   fields_name = realloc(fields_name,(nf+2)*sizeof(*fields_name));\
-  pointerEr(fields_name);\
+  IsNull(fields_name);\
   fields_name[nf+1] = 0;\
   fields_name[nf] = dup_s(x);}
 
 /* add stem_Ui or stem_Di to fields_name */
 #define add2fieldsname_1ind_M(needle,stem,UD) {\
   fields_name = realloc(fields_name,(nf+2)*sizeof(*fields_name));\
-  pointerEr(fields_name);\
+  IsNull(fields_name);\
   fields_name[nf+1] = 0;\
   char fname_[STR_LEN_MAX] = {'\0'};\
   unsigned index_ = 0;\
@@ -38,7 +38,7 @@
 /* add stem_UUi or stem_DDi etc to fields_name */
 #define add2fieldsname_2ind_M(needle,stem,UD0,UD1) {\
   fields_name = realloc(fields_name,(nf+2)*sizeof(*fields_name));\
-  pointerEr(fields_name);\
+  IsNull(fields_name);\
   fields_name[nf+1] = 0;\
   char fname_[STR_LEN_MAX] = {'\0'};\
   unsigned index0_ = 0,index1_ = 0;\

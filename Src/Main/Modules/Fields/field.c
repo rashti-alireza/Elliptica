@@ -34,7 +34,7 @@ Field_T *add_field(const char *const name,const char *attribute,Patch_T *const p
   {  
     
     fld = calloc(1,sizeof(*fld));
-    pointerEr(fld);
+    IsNull(fld);
     fld->patch = patch;
     
     fld->name = dup_s(name);
@@ -48,12 +48,12 @@ Field_T *add_field(const char *const name,const char *attribute,Patch_T *const p
     {
       const unsigned nn = total_nodes_patch(patch);
       fld->v = calloc(nn,sizeof(*fld->v));
-      pointerEr(fld->v);
+      IsNull(fld->v);
     }
     
     patch->pool = 
       realloc(patch->pool,(patch->nfld+1)*sizeof(*patch->pool));
-    pointerEr(patch->pool);
+    IsNull(patch->pool);
     patch->pool[patch->nfld] = fld;
     ++patch->nfld;
   }
@@ -84,7 +84,7 @@ void remove_field(Field_T *f)
  
   free_field(remove_fld);
   patch->pool = realloc(patch->pool,(patch->nfld)*sizeof(*patch->pool));
-  pointerEr(patch->pool);
+  IsNull(patch->pool);
   
   --patch->nfld;
 }
@@ -115,7 +115,7 @@ void add_attribute(Field_T *const fld,const char *const attribute)
   l2 += (unsigned)strlen(attribute);
   
   fld->attr = realloc(fld->attr,l1+l2);
-  pointerEr(fld->attr);
+  IsNull(fld->attr);
   fld->attr[l1] = '\0';
   strcat(fld->attr,attribute);
   
@@ -785,7 +785,7 @@ static void add_Tinfo(Field_T *const f,const unsigned dir,const Collocation_T co
   sprintf(inf,PR_FORMAT,pn,dir,collocation,basis);
   l2 = l1+(unsigned)strlen(inf)+1;
   f->info = realloc(f->info,l2);
-  pointerEr(f->info);
+  IsNull(f->info);
   f->info[l1] = '\0';
   strcat(f->info,inf);
   

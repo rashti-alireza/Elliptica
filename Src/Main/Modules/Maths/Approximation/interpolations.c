@@ -31,7 +31,7 @@
 Interpolation_T *init_interpolation(void)
 {
   Interpolation_T *s = calloc(1,sizeof(*s));
-  pointerEr(s);
+  IsNull(s);
   
   return s;
 }

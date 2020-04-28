@@ -89,7 +89,7 @@ void update_parameter_double_format(const char *const lv, const double rv,const 
 // double format. */
 void add_parameter_double(const char *const lv, const double rv)
 {
-  pointerEr(lv);
+  IsNull(lv);
   
   Parameter_T *par;
   char str_rv[100] = {'\0'};
@@ -114,8 +114,8 @@ void add_parameter_double(const char *const lv, const double rv)
 // array format. */
 void add_parameter_array(const char *const lv, const double *const rv,const unsigned n)
 {
-  pointerEr(lv);
-  pointerEr(rv);
+  IsNull(lv);
+  IsNull(rv);
   
   Parameter_T *par;
   unsigned i;
@@ -137,8 +137,8 @@ void add_parameter_array(const char *const lv, const double *const rv,const unsi
 /* update parameter array format. */
 void update_parameter_array(const char *const lv, const double *const rv,const unsigned n)
 {
-  pointerEr(lv);
-  pointerEr(rv);
+  IsNull(lv);
+  IsNull(rv);
   
   Parameter_T *par;
   unsigned i;
@@ -177,7 +177,7 @@ void add_parameter_string(const char *const lv, const char *const rv)
 // string format (the most common one) */
 void add_parameter(const char *const lv, const char *const rv)
 {
-  pointerEr(lv);
+  IsNull(lv);
   
   Parameter_T *par;
   
@@ -246,7 +246,7 @@ static char *parse_multiplicity_of_iterative_parameter(const char *const rv)
     
     unsigned n = (unsigned)(l_str-b_str+1);  
     char *v_str = calloc(n,1);
-    pointerEr(v_str);
+    IsNull(v_str);
     
     unsigned i = 0;
     while (i < n-1)
@@ -267,7 +267,7 @@ static char *parse_multiplicity_of_iterative_parameter(const char *const rv)
     unsigned n_mult = (mult-1)*2+mult*(n-1)+1;/* for each '->' 2 Byte,
                                     // for each v_str n-1 */
     char *inter_str = calloc(n_mult,1); 
-    pointerEr(inter_str);
+    IsNull(inter_str);
     
     i = 0;
     while (i < mult-1)
@@ -279,13 +279,13 @@ static char *parse_multiplicity_of_iterative_parameter(const char *const rv)
     strcat(inter_str,v_str);/* => itner_str = 2->2*/
     
     char *i_str = calloc(strlen(str)-strlen(b_str)+2,1);
-    pointerEr(i_str);
+    IsNull(i_str);
     snprintf(i_str,strlen(str)-strlen(b_str)+1,"%s",str);
     
     char *new_str = 0;
     unsigned n_new_str = (unsigned)(strlen(i_str)+strlen(inter_str)+strlen(r_str))+1;
     new_str = calloc(n_new_str,1);
-    pointerEr(new_str);
+    IsNull(new_str);
     
     strcat(new_str,i_str);
     strcat(new_str,inter_str);
@@ -617,7 +617,7 @@ char *get_n_value_str_ip(const Parameter_T *const par,const unsigned n)
     len = (unsigned)(subs-rv_ip+1);/* value-> */
     assert(len != UINT_MAX);
     ret = calloc(len,1);
-    pointerEr(ret);
+    IsNull(ret);
     strncpy(ret,rv_ip,len-1);
     ret[len-1] = '\0';
   }
@@ -639,7 +639,7 @@ char *get_n_value_str_ip(const Parameter_T *const par,const unsigned n)
         len = (unsigned)(subs2-subs+1);/* value1->value2 */
         assert(len != UINT_MAX);
         ret = calloc(len,1);
-        pointerEr(ret);
+        IsNull(ret);
         strncpy(ret,subs,len-1);
         ret[len-1] = '\0';
         break;
@@ -738,10 +738,10 @@ void *alloc_parameter(Parameter_T ***const mem)
   for (i = 0; (*mem) != 0 && (*mem)[i] != 0 ; i++);
   
   (*mem) = realloc((*mem),(i+2)*sizeof(*(*mem)));
-  pointerEr((*mem));
+  IsNull((*mem));
   
   (*mem)[i] = calloc(1,sizeof(*(*mem)[i]));
-  pointerEr((*mem)[i]);
+  IsNull((*mem)[i]);
   
   (*mem)[i+1] = 0;
   
@@ -780,7 +780,7 @@ void free_parameter(const char *const par_name)
       
       parameters_global = 
         realloc(parameters_global,np*sizeof(*parameters_global));
-      pointerEr(parameters_global);
+      IsNull(parameters_global);
       
       parameters_global[np-1] = 0;
       break;

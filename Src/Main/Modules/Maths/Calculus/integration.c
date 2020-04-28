@@ -96,7 +96,7 @@
 Integration_T *init_integration(void)
 {
   Integration_T *I = calloc(1,sizeof(*I));
-  pointerEr(I);
+  IsNull(I);
   
   return I;
 }

@@ -21,7 +21,7 @@ Matrix_T *alloc_matrix(const Matrix_SF_T type_e,const long row,const long col)
     return m;
     
   m = calloc(1,sizeof(*m));
-  pointerEr(m);
+  IsNull(m);
   m->row = row;
   m->col = col;
   

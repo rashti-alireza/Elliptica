@@ -10,7 +10,7 @@ void pr_comment(const char *const comment)
 {
   int i,d;
   
-  pointerEr(comment);
+  IsNull(comment);
   
   for (i = 0; comment[i] != '\0'; i++);
   i++;

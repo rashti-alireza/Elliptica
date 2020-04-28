@@ -195,7 +195,7 @@ Matrix_T *CCSOpCCS(Matrix_T *const ccs2,Matrix_T *const ccs1,const char Op)
     Error0("columns of the matrices are not matched.\n");
   
   Ap = calloc((long unsigned)Nc+1,sizeof(*Ap));
-  pointerEr(Ap);
+  IsNull(Ap);
   res = alloc_matrix(CCS_SF,Nr,Nc);
   
   if (Op == '+')
@@ -209,9 +209,9 @@ Matrix_T *CCSOpCCS(Matrix_T *const ccs2,Matrix_T *const ccs1,const char Op)
         if (GRT(ABS(ax),DropLimit))
         {
           Ai = realloc(Ai,(long unsigned)(Ap[c]+NN0+1)*sizeof(*Ai));
-          pointerEr(Ai);
+          IsNull(Ai);
           Ax = realloc(Ax,(long unsigned)(Ap[c]+NN0+1)*sizeof(*Ax));
-          pointerEr(Ax);
+          IsNull(Ax);
           Ai[Ap[c]+NN0] = (int)r;
           Ax[Ap[c]+NN0] = ax;
           NN0++;
@@ -233,9 +233,9 @@ Matrix_T *CCSOpCCS(Matrix_T *const ccs2,Matrix_T *const ccs1,const char Op)
         if (GRT(ABS(ax),DropLimit))
         {
           Ai = realloc(Ai,(long unsigned)(Ap[c]+NN0+1)*sizeof(*Ai));
-          pointerEr(Ai);
+          IsNull(Ai);
           Ax = realloc(Ax,(long unsigned)(Ap[c]+NN0+1)*sizeof(*Ax));
-          pointerEr(Ax);
+          IsNull(Ax);
           Ai[Ap[c]+NN0] = (int)r;
           Ax[Ap[c]+NN0] = ax;
           NN0++;

@@ -737,12 +737,12 @@ void alloc_patches_Cartesian_grid(Grid_T *const grid)
   Nboxes = (unsigned) Pgeti("number_of_boxes");
   
   grid->patch = calloc((Nboxes+1),sizeof(*grid->patch));
-  pointerEr(grid->patch);
+  IsNull(grid->patch);
   
   for (i = 0; i < Nboxes; i++)
   {
     grid->patch[i] = calloc(1,sizeof(*grid->patch[i]));
-    pointerEr(grid->patch[i]);
+    IsNull(grid->patch[i]);
   }
   
 }

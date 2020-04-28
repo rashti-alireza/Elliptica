@@ -378,7 +378,7 @@ static Dd_T *derivative_direction(const char *const task,unsigned *const n)
   while (tok)
   {
     e = realloc(e,(*n+1)*sizeof(*e));
-    pointerEr(e);
+    IsNull(e);
     e[*n] = str2enum_direction(tok);
     tok = tok_s(0,COMMA,&savestr);
     ++(*n);
