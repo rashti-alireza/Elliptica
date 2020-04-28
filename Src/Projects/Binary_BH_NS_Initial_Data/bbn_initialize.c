@@ -402,9 +402,9 @@ static void P_ADM_control(Grid_T *const grid)
   plan_observable(obs);
   
   /* get previous P_ADMs */
-  p1[0] = Pgetd("P_ADM_x");
-  p1[1] = Pgetd("P_ADM_y");
-  p1[2] = Pgetd("P_ADM_z");
+  p1[0] = Pgetd("Px_ADM");
+  p1[1] = Pgetd("Py_ADM");
+  p1[2] = Pgetd("Pz_ADM");
   
   /* get the current P_ADMs */
   p2[0] = obs->Px_ADM(obs);
@@ -419,13 +419,13 @@ static void P_ADM_control(Grid_T *const grid)
   printf("|--> Current P_ADM = (%e,%e,%e)\n",p2[0],p2[1],p2[2]);
   printf("|--> Current J_ADM = (%e,%e,%e)\n",j_adm[0],j_adm[1],j_adm[2]);
   
-  Psetd("P_ADM_x",p2[0]);
-  Psetd("P_ADM_y",p2[1]);
-  Psetd("P_ADM_z",p2[2]);
+  Psetd("Px_ADM",p2[0]);
+  Psetd("Py_ADM",p2[1]);
+  Psetd("Pz_ADM",p2[2]);
   
-  Psetd("P_ADM_x_prev",p1[0]);
-  Psetd("P_ADM_y_prev",p1[1]);
-  Psetd("P_ADM_z_prev",p1[2]);
+  Psetd("Px_ADM_prev",p1[0]);
+  Psetd("Py_ADM_prev",p1[1]);
+  Psetd("Pz_ADM_prev",p1[2]);
   
   Psetd("J_ADM_x",j_adm[0]);
   Psetd("J_ADM_y",j_adm[1]);
@@ -437,9 +437,9 @@ static void P_ADM_control(Grid_T *const grid)
   obs = init_observable(grid,bbn_plan_ADMs_CS,bbn_free_ADMs_CS);
   obs->quantity = "NS_ADMs";
   plan_observable(obs);
-  Psetd("NS_P_ADM_x",obs->Px_ADM(obs));
-  Psetd("NS_P_ADM_y",obs->Py_ADM(obs));
-  Psetd("NS_P_ADM_z",obs->Pz_ADM(obs));
+  Psetd("NS_Px_ADM",obs->Px_ADM(obs));
+  Psetd("NS_Py_ADM",obs->Py_ADM(obs));
+  Psetd("NS_Pz_ADM",obs->Pz_ADM(obs));
   Psetd("NS_J_ADM_x",obs->Jx_ADM(obs));
   Psetd("NS_J_ADM_y",obs->Jy_ADM(obs));
   Psetd("NS_J_ADM_z",obs->Jz_ADM(obs));
@@ -449,9 +449,9 @@ static void P_ADM_control(Grid_T *const grid)
   obs = init_observable(grid,bbn_plan_ADMs_CS,bbn_free_ADMs_CS);
   obs->quantity = "BH_ADMs";
   plan_observable(obs);
-  Psetd("BH_P_ADM_x",obs->Px_ADM(obs));
-  Psetd("BH_P_ADM_y",obs->Py_ADM(obs));
-  Psetd("BH_P_ADM_z",obs->Pz_ADM(obs));
+  Psetd("BH_Px_ADM",obs->Px_ADM(obs));
+  Psetd("BH_Py_ADM",obs->Py_ADM(obs));
+  Psetd("BH_Pz_ADM",obs->Pz_ADM(obs));
   Psetd("BH_J_ADM_x",obs->Jx_ADM(obs));
   Psetd("BH_J_ADM_y",obs->Jy_ADM(obs));
   Psetd("BH_J_ADM_z",obs->Jz_ADM(obs));
@@ -699,8 +699,8 @@ static void Px_ADM_is0_by_BH_center_y(Grid_T *const grid)
   double px0,px,BH_center_y_new,dy;
   
   /* get P_ADM */
-  px = Pgetd("P_ADM_x");
-  px0  = Pgetd("P_ADM_x_prev");
+  px = Pgetd("Px_ADM");
+  px0  = Pgetd("Px_ADM_prev");
   
   /* changing center of mass */
   dy              = px/Omega_BHNS;
@@ -733,8 +733,8 @@ static void Py_ADM_is0_by_BH_center_x(Grid_T *const grid)
   double py0,py,BH_center_x_new,dx;
   
   /* get P_ADM */
-  py = Pgetd("P_ADM_y");
-  py0  = Pgetd("P_ADM_y_prev");
+  py = Pgetd("Py_ADM");
+  py0  = Pgetd("Py_ADM_prev");
   
   /* changing center of mass */
   dx              = -py/Omega_BHNS;
@@ -772,10 +772,10 @@ static void Px_ADM_is0_by_x_boost(Grid_T *const grid)
   static unsigned iter = 0;
   
   /* get previous P_ADMs */
-  p1[0] = Pgetd("P_ADM_x_prev");
+  p1[0] = Pgetd("Px_ADM_prev");
   
   /* get the current P_ADMs */
-  p2[0] = Pgetd("P_ADM_x");
+  p2[0] = Pgetd("Px_ADM");
   
   if (iter == 0)
   {
@@ -844,10 +844,10 @@ static void Py_ADM_is0_by_y_boost(Grid_T *const grid)
   static unsigned iter = 0;
   
   /* get previous P_ADMs */
-  p1[1] = Pgetd("P_ADM_y_prev");
+  p1[1] = Pgetd("Py_ADM_prev");
   
   /* get the current P_ADMs */
-  p2[1] = Pgetd("P_ADM_y");
+  p2[1] = Pgetd("Py_ADM");
   
   if (iter == 0)
   {
@@ -915,10 +915,10 @@ static void Pz_ADM_is0_by_z_boost(Grid_T *const grid)
   static unsigned iter = 0;
   
   /* get previous P_ADMs */
-  p1[2] = Pgetd("P_ADM_z_prev");
+  p1[2] = Pgetd("Pz_ADM_prev");
   
   /* get the current P_ADMs */
-  p2[2] = Pgetd("P_ADM_z");
+  p2[2] = Pgetd("Pz_ADM");
   
   if (iter == 0)
   {
@@ -1662,7 +1662,7 @@ static void Px_ADM_is0_by_y_CM(Grid_T *const grid)
   double p_adm[3] = {0},j_adm[3] = {0};
   unsigned i,p;
   
-  printf("|--> adjusting P_ADM_x by y_CM ...\n");
+  printf("|--> adjusting Px_ADM by y_CM ...\n");
   
   /* populate Aij grid */
   freedata_grid = calloc(1,sizeof(*freedata_grid));
@@ -1686,8 +1686,8 @@ static void Px_ADM_is0_by_y_CM(Grid_T *const grid)
   freedata_grid->nn    = UINT_MAX;
   
   /* get P_ADM */
-  px  = Pgetd("P_ADM_x");
-  px0 = Pgetd("P_ADM_x_prev");
+  px  = Pgetd("Px_ADM");
+  px0 = Pgetd("Px_ADM_prev");
   
   /* changing center of mass */
   dy_CM    = -px/(Omega_BHNS*(M_NS+M_BH));
@@ -1747,7 +1747,7 @@ static void Py_ADM_is0_by_x_CM(Grid_T *const grid)
   double p_adm[3] = {0},j_adm[3] = {0};
   unsigned i,p;
   
-  printf("|--> adjusting P_ADM_y by x_CM ...\n");
+  printf("|--> adjusting Py_ADM by x_CM ...\n");
   
   /* populate Aij grid */
   freedata_grid = calloc(1,sizeof(*freedata_grid));
@@ -1771,8 +1771,8 @@ static void Py_ADM_is0_by_x_CM(Grid_T *const grid)
   freedata_grid->nn    = UINT_MAX;
   
   /* get P_ADM */
-  py  = Pgetd("P_ADM_y");
-  py0 = Pgetd("P_ADM_y_prev");
+  py  = Pgetd("Py_ADM");
+  py0 = Pgetd("Py_ADM_prev");
   
   /* changing center of mass */
   dx_CM    = py/(Omega_BHNS*(M_NS+M_BH));
@@ -4057,9 +4057,9 @@ static Grid_T *TOV_KerrSchild_approximation(void)
   Observable_T *obs = init_observable(grid,bbn_plan_ADMs_CS,bbn_free_ADMs_CS);
   obs->quantity     = "ADMs";
   plan_observable(obs);
-  Psetd("P_ADM_x",obs->Px_ADM(obs));
-  Psetd("P_ADM_y",obs->Py_ADM(obs));
-  Psetd("P_ADM_z",obs->Pz_ADM(obs));
+  Psetd("Px_ADM",obs->Px_ADM(obs));
+  Psetd("Py_ADM",obs->Py_ADM(obs));
+  Psetd("Pz_ADM",obs->Pz_ADM(obs));
   Psetd("J_ADM_x",obs->Jx_ADM(obs));
   Psetd("J_ADM_y",obs->Jy_ADM(obs));
   Psetd("J_ADM_z",obs->Jz_ADM(obs));

@@ -105,9 +105,9 @@ void bbn_print_properties(Grid_T *const grid,const unsigned iteration, const cha
   PR_PARAMETR_IN_FILE(NS_baryonic_mass)
   PR_PARAMETR_IN_FILE(BH_irreducible_mass)
   
-  PR_PARAMETR_IN_FILE(P_ADM_x)
-  PR_PARAMETR_IN_FILE(P_ADM_y)
-  PR_PARAMETR_IN_FILE(P_ADM_z)
+  PR_PARAMETR_IN_FILE(Px_ADM)
+  PR_PARAMETR_IN_FILE(Py_ADM)
+  PR_PARAMETR_IN_FILE(Pz_ADM)
   
   PR_PARAMETR_IN_FILE(J_ADM_x)
   PR_PARAMETR_IN_FILE(J_ADM_y)
