@@ -34,7 +34,7 @@
 
 /* plan and populate PsJs_ADM_S sturct and obs struct
 // for binary and single object */
-void bbn_plan_PsJs_ADM_CS(Observable_T *obs)
+void bbn_plan_ADMs_CS(Observable_T *obs)
 {
   Grid_T *const grid = obs->grid;
   
@@ -395,7 +395,7 @@ n_U2[ijk] + _gamma_D2D2[ijk]*pow(n_U2[ijk], 2));
 }
 
 /* free stuct Observable_T */
-void bbn_free_PsJs_ADM_CS(Observable_T *obs)
+void bbn_free_ADMs_CS(Observable_T *obs)
 {
   if (!obs)
     return;

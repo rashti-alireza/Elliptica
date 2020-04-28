@@ -7,8 +7,8 @@
 #include "fields_lib.h"
 #include "bbn_headers.h"
 
-void bbn_plan_PsJs_ADM_CS(Observable_T *obs);
-void bbn_free_PsJs_ADM_CS(Observable_T *obs);
+void bbn_plan_ADMs_CS(Observable_T *obs);
+void bbn_free_ADMs_CS(Observable_T *obs);
 void bbn_populate_ADM_integrand_PdS_GdV(const Observable_T *const obs);
 static double ADM_momentum_x_BBN_CS(Observable_T *const obs);
 static double ADM_momentum_y_BBN_CS(Observable_T *const obs);
