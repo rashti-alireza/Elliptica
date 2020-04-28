@@ -2616,7 +2616,7 @@ static void find_NS_surface_Ylm_method_CS(Grid_T *const grid,struct Grid_Params_
   unsigned Ntheta,Nphi;/* total number of theta and phi points */
   const unsigned lmax = (unsigned)Pgeti("NS_surface_Ylm_expansion_max_l");
   const double RESIDUAL = sqrt(Pgetd("RootFinder_Tolerance"));
-  const double max_h_L2_res = Pgetd("enthalpy_allowed_L2_residual");
+  const double max_h_L2_res = Pgetd("NS_enthalpy_allowed_residual");
   double h_L2_res = 0;
   //const double W1  = Pgetd("Solving_Field_Update_Weight");
   //const double W2  = 1-W1;

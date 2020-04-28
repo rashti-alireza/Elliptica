@@ -71,5 +71,5 @@ void bbn_set_default_parameters(void)
   
   /* max allowed enthalpy L2 norm residual; if root finder of NS surface 
   // gets L2 norm residual below this number => it's been failed. */
-  Pset_default("enthalpy_allowed_L2_residual","1e-4");
+  Pset_default("NS_enthalpy_allowed_residual","1e-4");
 }
