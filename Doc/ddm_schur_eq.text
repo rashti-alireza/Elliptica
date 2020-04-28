@@ -33,6 +33,8 @@ Declare =
 # domain decompostion which is encapsulated in macro DDM_SCHUR_EQ_OPEN.
 # The bottom line is JUST simply WRITE the equation FOR F_eq 
 # at Newton-Raphson scheme (Jx = -F_eq) in TERMS OF ijk POINT.
+# NOTE: Although in Newton-Raphson we Jx = -F but we don't multiply F
+#       by MINUS sign; in fact - sign is absored in x.
 ##########################################################################
 
 `  DDM_SCHUR_EQ_OPEN\n`;

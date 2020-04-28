@@ -57,6 +57,8 @@ Declare =
 # and if you're using interim variables use different names for each part.
 #
 #    NOTE3: For each part which doesn't exist, let it be 0.
+#    NOTE4: Although in Newton-Raphson we Jx = -F but we don't multiply F
+#           by MINUS sign; in fact - sign is absored in x.
 ##########################################################################
 
 
