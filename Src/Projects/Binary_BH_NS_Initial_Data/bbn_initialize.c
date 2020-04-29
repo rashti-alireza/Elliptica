@@ -2915,6 +2915,9 @@ static void find_NS_surface_Ylm_method_CS(Grid_T *const grid,struct Grid_Params_
   
   Pseti("did_NS_surface_finder_work?",NS_surface_finder_work_flg);
   
+  Psetd("NS_max_radius",Max_R_NS);
+  Psetd("NS_min_radius",Min_R_NS);
+  
   printf("} Finding the surface of NS, Ylm method ==> Done.\n");
   pr_clock();
   pr_line_custom('=');
