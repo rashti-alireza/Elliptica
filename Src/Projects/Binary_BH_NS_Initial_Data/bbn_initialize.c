@@ -4361,7 +4361,7 @@ static void init_field_TOV_plus_KerrSchild(Grid_T *const grid,const TOV_T *const
   
   Bx = -Omega_BHNS*(BH_center_y-y_CM);
   By = Omega_BHNS*(BH_center_x-x_CM);
-  Bz = 0;
+  Bz = Pgetd("BH_Vz");
   t->boost->Bx = Bx;
   t->boost->By = By;
   t->boost->Bz = Bz;

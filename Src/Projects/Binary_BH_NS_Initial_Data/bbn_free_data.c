@@ -332,7 +332,7 @@ void bbn_free_data_gammas(Grid_T *const grid)
   
   Bx = -Omega_BHNS*(BH_center_y-y_CM);
   By =  Omega_BHNS*(BH_center_x-x_CM);
-  Bz = 0;
+  Bz = Pgetd("BH_Vz");
   t->boost->Bx = Bx;
   t->boost->By = By;
   t->boost->Bz = Bz;
@@ -678,7 +678,7 @@ static void populate_KSgammas_KSalpha_KSBeta(Patch_T *const patch)
       
   Bx = -Omega_BHNS*(BH_center_y-y_CM);
   By =  Omega_BHNS*(BH_center_x-x_CM);
-  Bz = 0;
+  Bz = Pgetd("BH_Vz");
   t->boost->Bx = Bx;
   t->boost->By = By;
   t->boost->Bz = Bz;
