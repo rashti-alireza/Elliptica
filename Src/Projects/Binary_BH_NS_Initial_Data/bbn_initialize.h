@@ -170,5 +170,7 @@ static void move_solve_man_jacobian(Patch_T *const patch2,Patch_T *const patch1)
 void bbn_free_grid_and_its_parameters(Grid_T *grid);
 static Grid_T *load_checkpoint_file(void);
 static int IsThereAnyUsefulCheckpointFile(void);
+static void Pz_ADM_is0_by_BH_Vz(Grid_T *const grid);
+
 
 

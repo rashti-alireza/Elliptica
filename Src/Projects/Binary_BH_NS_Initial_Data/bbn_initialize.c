@@ -485,6 +485,10 @@ fAdjustment_t *get_func_P_ADM_adjustment(const char *const adjust)
   {
     f = 0;
   }
+  else if (strcmp_i(adjust,"x_CM"))
+  {
+    f = Pz_ADM_is0_by_BH_Vz;
+  }
   else if (strcmp_i(adjust,"x_CM&y_CM") || strcmp_i(adjust,"y_CM&x_CM"))
   {
     f = Pxy_ADM_is0_by_xy_CM_roots;
@@ -1725,6 +1729,88 @@ static void Px_ADM_is0_by_y_CM(Grid_T *const grid)
   {
     printf("|--> |Px_ADM2 - Px_ADM1|/|Px_ADM2| = %g <= %g\n"
            "     |--> no y_CM update.\n",dPx_Px,dP);
+  }
+  
+  free(freedata_grid);
+  free(freedata_patch);
+}
+
+/* find BH_Vz by demanding Pz_ADM = 0.
+// in effect, boosting BH in z direction to get Pz_ADM = 0. */
+static void Pz_ADM_is0_by_BH_Vz(Grid_T *const grid)
+{
+  double  pz0,pz,BH_Vz_new,dBH_Vz;
+  const double W     = Pgetd("P_ADM_control_update_weight");
+  const double dP    = Pgetd("P_ADM_control_tolerance");
+  const double BH_Vz = Pgetd("BH_Vz");
+  const double M_BH  = Pgetd("BH_mass");
+  Grid_T *freedata_grid = 0;/* don't update for inside BH patches */
+  Patch_T **freedata_patch = 0;/* all but inside BH patches */
+  Observable_T *obs = 0;
+  double p_adm[3] = {0},j_adm[3] = {0};
+  unsigned i,p;
+  
+  printf("|--> adjusting Pz_ADM by BH_Vz ...\n");
+  
+  /* populate Aij grid */
+  freedata_grid = calloc(1,sizeof(*freedata_grid));
+  IsNull(freedata_grid);
+  
+  i = 0;
+  FOR_ALL_PATCHES(p,grid)
+  {
+    if (!IsItInsideBHPatch(grid->patch[p]))
+    {
+      freedata_patch = realloc(freedata_patch,
+                  (i+1)*sizeof(*freedata_patch));
+      IsNull(freedata_patch);
+      freedata_patch[i++] = grid->patch[p];
+    }
+  }
+  freedata_grid->kind  = grid->kind;
+  freedata_grid->patch = freedata_patch;
+  freedata_grid->gn    = grid->gn;
+  freedata_grid->np    = i;
+  freedata_grid->nn    = UINT_MAX;
+  
+  /* get P_ADM */
+  pz  = Pgetd("Pz_ADM");
+  pz0 = Pgetd("Pz_ADM_prev");
+  /* adjust BH_Vz */
+  dBH_Vz    = -pz/M_BH;
+  BH_Vz_new = W*dBH_Vz+BH_Vz;
+  
+  const double dPz_Pz = fabs(pz0-pz)/fabs(pz);
+  /* having found new BH_Vz now update */
+  if (GRT(dPz_Pz,dP))
+  {
+    printf("|--> |Pz_ADM2 - Pz_ADM1|/|Pz_ADM2| = %g > %g\n",dPz_Pz,dP);
+    Psetd("BH_Vz",BH_Vz_new);
+    bbn_populate_free_data(freedata_grid);
+    update_B1_dB1_Beta_dBete_Aij_dAij(grid);
+    obs = init_observable(grid,bbn_plan_ADMs_CS,bbn_free_ADMs_CS);
+    obs->quantity = "ADMs";
+    plan_observable(obs);
+    
+    /* get the current P_ADMs */
+    p_adm[0] = obs->Px_ADM(obs);
+    p_adm[1] = obs->Py_ADM(obs);
+    p_adm[2] = obs->Pz_ADM(obs);
+    
+    /* get the current J_ADMs  */
+    j_adm[0] = obs->Jx_ADM(obs);
+    j_adm[1] = obs->Jy_ADM(obs);
+    j_adm[2] = obs->Jz_ADM(obs);
+    
+    printf("|--> After BH_Vz update P_ADM = (%e,%e,%e)\n",p_adm[0],p_adm[1],p_adm[2]);
+    printf("|--> After BH_Vz update J_ADM = (%e,%e,%e)\n",j_adm[0],j_adm[1],j_adm[2]);
+    
+    free_observable(obs);
+  }
+  else
+  {
+    printf("|--> |Pz_ADM2 - Pz_ADM1|/|Pz_ADM2| = %g <= %g\n"
+           "     |--> no BH_Vz update.\n",dPz_Pz,dP);
   }
   
   free(freedata_grid);
@@ -3980,8 +4066,8 @@ static Grid_T *TOV_KerrSchild_approximation(void)
   Psetd("x_CM",0);
   Psetd("y_CM",y_CM);
   Psetd("z_CM",0);
-  Psetd("y_CM0",y_CM);
-  Psetd("x_CM0",0);
+  //Psetd("y_CM0",y_CM);
+  //Psetd("x_CM0",0);
   
   /* -> NS properties */
   Psetd("NS_mass",ns_mass);
@@ -3994,6 +4080,7 @@ static Grid_T *TOV_KerrSchild_approximation(void)
   Psetd("BH_center_x",0);
   Psetd("BH_center_y",C_BH);
   Psetd("BH_center_z",0);
+  Psetd("BH_Vz",0);/* BH velocity in z direction */
   Psetd("BH_irreducible_mass",0);
   
   /* -> BH_Omega, the angular frequency of the horizon,
