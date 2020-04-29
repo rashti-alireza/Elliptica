@@ -388,7 +388,7 @@ void bbn_plan_obs_CS(Observable_T *obs)
     
     assert(p==N);
     
-    /* fill ADM struct for each patch */
+    /* fill kommar struct for each patch */
     for (n = 0; n < N; ++n)
     {
       kommar[n] = calloc(1,sizeof(*kommar[n]));
@@ -470,7 +470,7 @@ void bbn_plan_obs_CS(Observable_T *obs)
     
     assert(p==N);
     
-    /* fill ADM struct for each patch */
+    /* fill kommar struct for each patch */
     for (n = 0; n < N; ++n)
     {
       kommar[n] = calloc(1,sizeof(*kommar[n]));
@@ -557,7 +557,7 @@ void bbn_plan_obs_CS(Observable_T *obs)
 
     assert(p==N);
     
-    /* fill ADM struct for each patch */
+    /* fill kommar struct for each patch */
     for (n = 0; n < N; ++n)
     {
       kommar[n] = calloc(1,sizeof(*kommar[n]));
@@ -817,14 +817,10 @@ void bbn_plan_obs_CS(Observable_T *obs)
       adm[n]->g12 = g12;
       adm[n]->g22 = g22;
       
-      /* surface integrals params */
-      if (regex_search(".+right_BH_surrounding.+",patch->name))
-      {
-        adm[n]->surface_integration_flg = 1;
-        adm[n]->Z_surface = 1;
-        adm[n]->K = 0;
-        n_conformal_metric_surrounding(adm[n],_c_);
-      }
+      adm[n]->surface_integration_flg = 1;
+      adm[n]->Z_surface = 1;
+      adm[n]->K = 0;
+      n_conformal_metric_surrounding(adm[n],_c_);
     }
     obs->M = bbn_ADM_mass;
     free(patches);
@@ -836,7 +832,7 @@ void bbn_plan_obs_CS(Observable_T *obs)
     unsigned p = 0;
     unsigned n,N,ijk,nn;
     
-    N = 6/* 6 sides for surroundings for area integral */;
+    N = 6/* 6 Ns patches for vol integral */;
     patches = calloc(N,sizeof(*patches));
     IsNull(patches);  
     
@@ -850,12 +846,12 @@ void bbn_plan_obs_CS(Observable_T *obs)
     /* first collect all of the patches required */
     p = 0;
     /* surroundings for surface integrals. */
-    patches[p++] = GetPatch("left_NS_surrounding_up",grid);
-    patches[p++] = GetPatch("left_NS_surrounding_down",grid);
-    patches[p++] = GetPatch("left_NS_surrounding_left",grid);
-    patches[p++] = GetPatch("left_NS_surrounding_right",grid);
-    patches[p++] = GetPatch("left_NS_surrounding_back",grid);
-    patches[p++] = GetPatch("left_NS_surrounding_front",grid);
+    patches[p++] = GetPatch("left_NS_up",grid);
+    patches[p++] = GetPatch("left_NS_down",grid);
+    patches[p++] = GetPatch("left_NS_left",grid);
+    patches[p++] = GetPatch("left_NS_right",grid);
+    patches[p++] = GetPatch("left_NS_back",grid);
+    patches[p++] = GetPatch("left_NS_front",grid);
     
     assert(p==N);
     
