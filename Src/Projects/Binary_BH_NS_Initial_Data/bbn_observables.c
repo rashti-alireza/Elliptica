@@ -10,21 +10,24 @@
 // Observable_T *obs = init_observable(grid,plan_items_func,free_items_func);
 //
 // * specifiy which obeservable *
-// obs->quantity = "ADM(P,J)"    # means calculate P and J ADM for the system 
-// obs->quantity = "NS_ADM(P,J)" # means calculate P and J ADM for single NS 
-// obs->quantity = "BH_ADM(P,J)" # means calculate P and J ADM for single BH
+// obs->quantity = "ADM(P,J)|BBN"  #=> compute P and J ADM for the system 
+// obs->quantity = "ADM(P,J)|NS"   #=> compute P and J ADM for single NS 
+// obs->quantity = "ADM(P,J)|BH"   #=> compute P and J ADM for single BH
+// obs->quantity = "Kommar(M)|BBN" #=> compute Kommar mass for the system 
+// obs->quantity = "Kommar(M)|NS"  #=> compute kommar mass for NS 
+// obs->quantity = "Kommar(M)|BH"  #=> compute Kommar mass for BH
 //
 // * plan observable *
 // plan_observable(obs);# it finds out the related patches, physical metric etc.
 //
-// * calculate the observable *
+// * calculate the observable example:*
 // double Px_ADM = obs->Px(obs);# x component
 // double Py_ADM = obs->Py(obs);# y component
 // double Pz_ADM = obs->Pz(obs);# z component
 // double Jx_ADM = obs->Jx(obs);# x component of angular momentum
 // double Jy_ADM = obs->Jy(obs);# y component of angular momentum
 // double Jz_ADM = obs->Jz(obs);# z component of angular momentum
-//
+// double M_ADM  = obs->M(obs) ;# a specifed mass for example ADM mass
 // *free*
 // free_observable(obs);
 */
@@ -41,7 +44,7 @@ void bbn_plan_obs_CS(Observable_T *obs)
   if (!strcmp_i(grid->kind,"BBN_CubedSpherical_grid"))
     Error0(NO_OPTION);
       
-  if (strcmp_i(obs->quantity,"ADM(P,J)"))
+  if (strcmp_i(obs->quantity,"ADM(P,J)|BBN"))
   {  
     const unsigned N_outermost = (unsigned) Pgeti("Number_of_Outermost_Split");
     Patch_T **patches = 0,*patch = 0;
@@ -168,7 +171,7 @@ void bbn_plan_obs_CS(Observable_T *obs)
     bbn_populate_ADM_integrand_PdS_GdV(obs);
     free(patches);
   }
-  else if (strcmp_i(obs->quantity,"NS_ADM(P,J)"))
+  else if (strcmp_i(obs->quantity,"ADM(P,J)|NS"))
   {  
     Patch_T **patches = 0,*patch = 0;
     struct items_S **adm = 0;
@@ -256,7 +259,7 @@ void bbn_plan_obs_CS(Observable_T *obs)
     bbn_populate_ADM_integrand_PdS_GdV(obs);
     free(patches);
   }
-  else if (strcmp_i(obs->quantity,"BH_ADM(P,J)"))
+  else if (strcmp_i(obs->quantity,"ADM(P,J)|BH"))
   {  
     Patch_T **patches = 0,*patch = 0;
     struct items_S **adm = 0;
@@ -344,7 +347,7 @@ void bbn_plan_obs_CS(Observable_T *obs)
     bbn_populate_ADM_integrand_PdS_GdV(obs);
     free(patches);
   }
-  else if (strcmp_i(obs->quantity,"BH_Kommar(M)"))
+  else if (strcmp_i(obs->quantity,"Kommar(M)|BH"))
   {  
     Patch_T **patches = 0,*patch = 0;
     struct items_S **kommar = 0;
