@@ -427,9 +427,9 @@ static void P_ADM_control(Grid_T *const grid)
   Psetd("Py_ADM_prev",p1[1]);
   Psetd("Pz_ADM_prev",p1[2]);
   
-  Psetd("J_ADM_x",j_adm[0]);
-  Psetd("J_ADM_y",j_adm[1]);
-  Psetd("J_ADM_z",j_adm[2]);
+  Psetd("Jx_ADM",j_adm[0]);
+  Psetd("Jy_ADM",j_adm[1]);
+  Psetd("Jz_ADM",j_adm[2]);
   
   free_observable(obs);
   
@@ -440,9 +440,9 @@ static void P_ADM_control(Grid_T *const grid)
   Psetd("NS_Px_ADM",obs->Px_ADM(obs));
   Psetd("NS_Py_ADM",obs->Py_ADM(obs));
   Psetd("NS_Pz_ADM",obs->Pz_ADM(obs));
-  Psetd("NS_J_ADM_x",obs->Jx_ADM(obs));
-  Psetd("NS_J_ADM_y",obs->Jy_ADM(obs));
-  Psetd("NS_J_ADM_z",obs->Jz_ADM(obs));
+  Psetd("NS_Jx_ADM",obs->Jx_ADM(obs));
+  Psetd("NS_Jy_ADM",obs->Jy_ADM(obs));
+  Psetd("NS_Jz_ADM",obs->Jz_ADM(obs));
   free_observable(obs);
   
   /* BH adms */
@@ -452,9 +452,9 @@ static void P_ADM_control(Grid_T *const grid)
   Psetd("BH_Px_ADM",obs->Px_ADM(obs));
   Psetd("BH_Py_ADM",obs->Py_ADM(obs));
   Psetd("BH_Pz_ADM",obs->Pz_ADM(obs));
-  Psetd("BH_J_ADM_x",obs->Jx_ADM(obs));
-  Psetd("BH_J_ADM_y",obs->Jy_ADM(obs));
-  Psetd("BH_J_ADM_z",obs->Jz_ADM(obs));
+  Psetd("BH_Jx_ADM",obs->Jx_ADM(obs));
+  Psetd("BH_Jy_ADM",obs->Jy_ADM(obs));
+  Psetd("BH_Jz_ADM",obs->Jz_ADM(obs));
   free_observable(obs);
   
   
@@ -4063,9 +4063,9 @@ static Grid_T *TOV_KerrSchild_approximation(void)
   Psetd("Px_ADM",obs->Px_ADM(obs));
   Psetd("Py_ADM",obs->Py_ADM(obs));
   Psetd("Pz_ADM",obs->Pz_ADM(obs));
-  Psetd("J_ADM_x",obs->Jx_ADM(obs));
-  Psetd("J_ADM_y",obs->Jy_ADM(obs));
-  Psetd("J_ADM_z",obs->Jz_ADM(obs));
+  Psetd("Jx_ADM",obs->Jx_ADM(obs));
+  Psetd("Jy_ADM",obs->Jy_ADM(obs));
+  Psetd("Jz_ADM",obs->Jz_ADM(obs));
   Psetd("v*_boost_x",0);
   Psetd("v*_boost_y",0);
   Psetd("v*_boost_z",0);
