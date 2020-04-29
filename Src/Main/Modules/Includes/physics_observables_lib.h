@@ -21,7 +21,7 @@ typedef struct OBSERVABLE_T
   double (*Jz)(struct OBSERVABLE_T *const obs);
   
   /* function to calculate mass */
-  double (*M)(struct OBSERVABLE_T *obs);
+  double (*M)(struct OBSERVABLE_T *const obs);
   
   /* preparing functions and freeing functions of items stuct
   // these functions are populated during initilization of Observable_T */
