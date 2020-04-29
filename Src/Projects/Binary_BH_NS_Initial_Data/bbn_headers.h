@@ -134,7 +134,6 @@ void bbn_bam_set_bam_fields(Grid_T *const grid);
 void bbn_print_properties(Grid_T *const grid,const unsigned iteration, const char *const folder,const char *const open_file_mode,const int pr_flg);
 void bbn_plan_obs_CS(Observable_T *obs);
 void bbn_free_obs_CS(Observable_T *obs);
-double bbn_ADM_mass(Observable_T *const obs);
 
 #endif
 
