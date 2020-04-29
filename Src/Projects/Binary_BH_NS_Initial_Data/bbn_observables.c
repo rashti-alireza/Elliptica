@@ -344,6 +344,88 @@ void bbn_plan_obs_CS(Observable_T *obs)
     bbn_populate_ADM_integrand_PdS_GdV(obs);
     free(patches);
   }
+  else if (strcmp_i(obs->quantity,"BH_Kommar(M)"))
+  {  
+    Patch_T **patches = 0,*patch = 0;
+    struct items_S **kommar = 0;
+    unsigned p = 0;
+    unsigned n,N,ijk,nn;
+    
+    N = 6/* 6 sides for surroundings */;
+        
+    patches = calloc(N,sizeof(*patches));
+    IsNull(patches);  
+    
+    /* alloc memory for all patches */
+    kommar = calloc(N,sizeof(*kommar));
+    IsNull(kommar);
+    /* this is where we link to obs struct */
+    obs->items = kommar;
+    obs->Nitems = N;
+    
+    /* first collect all of the patches required */
+    p = 0;
+    /* surroundings for surface integrals */
+    patches[p++] = GetPatch("right_BH_surrounding_up",grid);
+    patches[p++] = GetPatch("right_BH_surrounding_down",grid);
+    patches[p++] = GetPatch("right_BH_surrounding_left",grid);
+    patches[p++] = GetPatch("right_BH_surrounding_right",grid);
+    patches[p++] = GetPatch("right_BH_surrounding_back",grid);
+    patches[p++] = GetPatch("right_BH_surrounding_front",grid);
+    
+    assert(p==N);
+    
+    /* fill ADM struct for each patch */
+    for (n = 0; n < N; ++n)
+    {
+      kommar[n] = calloc(1,sizeof(*kommar[n]));
+      IsNull(kommar[n]);
+      patch = patches[n];
+      nn    = patch->nn;
+      
+      double *g00 = alloc_double(nn);
+      double *g01 = alloc_double(nn);
+      double *g02 = alloc_double(nn);
+      double *g11 = alloc_double(nn);
+      double *g12 = alloc_double(nn);
+      double *g22 = alloc_double(nn);
+      
+      READ_v(_gamma_D2D2)
+      READ_v(_gamma_D0D2)
+      READ_v(_gamma_D0D0)
+      READ_v(_gamma_D0D1)
+      READ_v(_gamma_D1D2)
+      READ_v(_gamma_D1D1)
+      READ_v(psi);
+      
+      kommar[n]->patch = patch;
+      /* populate metric components */ 
+      for (ijk = 0; ijk < nn; ++ijk)
+      {
+        double psi4 = Pow2(psi[ijk])*Pow2(psi[ijk]);
+        g00[ijk] = psi4*_gamma_D0D0[ijk];
+        g01[ijk] = psi4*_gamma_D0D1[ijk];
+        g02[ijk] = psi4*_gamma_D0D2[ijk];
+        g11[ijk] = psi4*_gamma_D1D1[ijk];
+        g12[ijk] = psi4*_gamma_D1D2[ijk];
+        g22[ijk] = psi4*_gamma_D2D2[ijk];
+      }
+      kommar[n]->g00 = g00;
+      kommar[n]->g01 = g01;
+      kommar[n]->g02 = g02;
+      kommar[n]->g11 = g11;
+      kommar[n]->g12 = g12;
+      kommar[n]->g22 = g22;
+      
+      /* surface integral */
+      kommar[n]->surface_integration_flg = 1;
+      kommar[n]->Z_surface = 1;
+      kommar[n]->K = 0;
+      //populate_normal_surrounding(kommar[n],_c_);
+    }
+    obs->M = bbn_Kommar_mass_CS;
+    free(patches);
+  }
   else
     Error1("This is no plan for %s.\n",obs->quantity);
   
