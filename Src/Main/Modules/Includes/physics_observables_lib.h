@@ -20,9 +20,8 @@ typedef struct OBSERVABLE_T
   double (*Jy_ADM)(struct OBSERVABLE_T *const obs);
   double (*Jz_ADM)(struct OBSERVABLE_T *const obs);
   
-  /* function to calculate masses */
-  double (*ADM_mass)(struct OBSERVABLE_T *obs);
-  double (*Komar_mass)(struct OBSERVABLE_T *obs);
+  /* function to calculate mass */
+  double (*mass)(struct OBSERVABLE_T *obs);
   
   /* preparing functions and freeing functions of items stuct
   // these functions are populated during initilization of Observable_T */
