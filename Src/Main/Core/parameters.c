@@ -623,6 +623,7 @@ char *get_n_value_str_ip(const Parameter_T *const par,const unsigned n)
   }
   else
   {
+    if (subs)
     while (subs)
     {
       j++;
@@ -645,6 +646,10 @@ char *get_n_value_str_ip(const Parameter_T *const par,const unsigned n)
         break;
       }
       subs = subs2;
+    }
+    else/* it might happen that user written (x1) thus no '->' exists */
+    {
+      ret = dup_s(rv_ip);
     }
   }
   
