@@ -22,7 +22,7 @@
 void bbn_populate_ADM_integrand_PdS_GdV(const Observable_T *const obs);
 void bbn_populate_ADM_integrand_PdS_GdV(const Observable_T *const obs)
 {
-  struct PsJs_ADM_S **adm = obs->items;
+  struct items_S **adm = obs->items;
   const unsigned N = obs->Nitems;
   unsigned p;
 

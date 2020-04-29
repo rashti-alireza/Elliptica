@@ -10,7 +10,7 @@
 // Observable_T *obs = init_observable(grid,plan_items_func,free_items_func);
 //
 // * specifiy which obeservable *
-// obs->quantity = "ADM(P,J)" # means calculate P and J ADM for the system 
+// obs->quantity = "ADM(P,J)"    # means calculate P and J ADM for the system 
 // obs->quantity = "NS_ADM(P,J)" # means calculate P and J ADM for single NS 
 // obs->quantity = "BH_ADM(P,J)" # means calculate P and J ADM for single BH
 //
@@ -32,7 +32,7 @@
 #include "bbn_observables.h"
 #define VOLUME_INTEGRAL 1 /* put it to 1 if you want \int{Gdv} */
 
-/* plan and populate PsJs_ADM_S sturct and obs struct
+/* plan and populate items_S sturct and obs struct
 // for binary and single objects */
 void bbn_plan_obs_CS(Observable_T *obs)
 {
@@ -40,14 +40,13 @@ void bbn_plan_obs_CS(Observable_T *obs)
   
   if (!strcmp_i(grid->kind,"BBN_CubedSpherical_grid"))
     Error0(NO_OPTION);
-  
       
   if (strcmp_i(obs->quantity,"ADM(P,J)"))
   {  
     const unsigned N_outermost = (unsigned) Pgeti("Number_of_Outermost_Split");
     Patch_T **patches = 0,*patch = 0;
     char stem[1000];
-    struct PsJs_ADM_S **adm = 0;
+    struct items_S **adm = 0;
     unsigned p = 0;
     unsigned n,N,ijk,nn;
     
@@ -172,7 +171,7 @@ void bbn_plan_obs_CS(Observable_T *obs)
   else if (strcmp_i(obs->quantity,"NS_ADM(P,J)"))
   {  
     Patch_T **patches = 0,*patch = 0;
-    struct PsJs_ADM_S **adm = 0;
+    struct items_S **adm = 0;
     unsigned p = 0;
     unsigned n,N,ijk,nn;
     
@@ -260,7 +259,7 @@ void bbn_plan_obs_CS(Observable_T *obs)
   else if (strcmp_i(obs->quantity,"BH_ADM(P,J)"))
   {  
     Patch_T **patches = 0,*patch = 0;
-    struct PsJs_ADM_S **adm = 0;
+    struct items_S **adm = 0;
     unsigned p = 0;
     unsigned n,N,ijk,nn;
     
@@ -351,7 +350,7 @@ void bbn_plan_obs_CS(Observable_T *obs)
 }
 
 /* populating normal outward vector for surrounding according to the given dir */
-static void populate_normal_surrounding(struct PsJs_ADM_S *const adm,const Dd_T dir)
+static void populate_normal_surrounding(struct items_S *const adm,const Dd_T dir)
 {
   Patch_T *const patch = adm->patch;
   const unsigned nn = patch->nn;
@@ -403,7 +402,7 @@ void bbn_free_obs_CS(Observable_T *obs)
   if (!strcmp_i(obs->grid->kind,"BBN_CubedSpherical_grid"))
     Error0(NO_OPTION);
   
-  struct PsJs_ADM_S **adm = obs->items;
+  struct items_S **adm = obs->items;
   unsigned i;
     
   for (i = 0; i < obs->Nitems; ++i)
@@ -461,7 +460,7 @@ void bbn_free_obs_CS(Observable_T *obs)
 static double ADM_momentum_x_BBN_CS(Observable_T *const obs)
 {
   double Px = 0;
-  struct PsJs_ADM_S **const adm = obs->items;
+  struct items_S **const adm = obs->items;
   const unsigned N = obs->Nitems;
   Integration_T *I;
   unsigned p;
@@ -531,7 +530,7 @@ static double ADM_momentum_x_BBN_CS(Observable_T *const obs)
 static double ADM_momentum_y_BBN_CS(Observable_T *const obs)
 {
   double Py = 0;
-  struct PsJs_ADM_S **const adm = obs->items;
+  struct items_S **const adm = obs->items;
   const unsigned N = obs->Nitems;
   Integration_T *I;
   unsigned p;
@@ -601,7 +600,7 @@ static double ADM_momentum_y_BBN_CS(Observable_T *const obs)
 static double ADM_momentum_z_BBN_CS(Observable_T *const obs)
 {
   double Pz = 0;
-  struct PsJs_ADM_S **const adm = obs->items;
+  struct items_S **const adm = obs->items;
   const unsigned N = obs->Nitems;
   Integration_T *I;
   unsigned p;
@@ -671,7 +670,7 @@ static double ADM_momentum_z_BBN_CS(Observable_T *const obs)
 static double ADM_angular_momentum_z_BBN_CS(Observable_T *const obs)
 {
   double Jz = 0;
-  struct PsJs_ADM_S **const adm = obs->items;
+  struct items_S **const adm = obs->items;
   const unsigned N = obs->Nitems;
   double y_CM = 0;
   double x_CM = 0;
@@ -797,7 +796,7 @@ static double ADM_angular_momentum_z_BBN_CS(Observable_T *const obs)
 static double ADM_angular_momentum_x_BBN_CS(Observable_T *const obs)
 {
   double Jx = 0;
-  struct PsJs_ADM_S **const adm = obs->items;
+  struct items_S **const adm = obs->items;
   const unsigned N = obs->Nitems;
   double y_CM = 0;
   Integration_T *I;
@@ -920,7 +919,7 @@ static double ADM_angular_momentum_x_BBN_CS(Observable_T *const obs)
 static double ADM_angular_momentum_y_BBN_CS(Observable_T *const obs)
 {
   double Jy = 0;
-  struct PsJs_ADM_S **const adm = obs->items;
+  struct items_S **const adm = obs->items;
   const unsigned N = obs->Nitems;
   double x_CM = 0;
   Integration_T *I;

@@ -39,7 +39,7 @@ struct Force_Balance_RootFinder_S
 };
 
 /* items needed to calculate Ps and Js ADMs */
-struct PsJs_ADM_S
+struct items_S
 {
   Patch_T *patch;/* the patch in which the following variables are defined */
   /* physical metric components */
