@@ -436,7 +436,7 @@ void bbn_plan_obs_CS(Observable_T *obs)
       kommar[n]->K = 0;
       n_physical_metric_surrounding(kommar[n],_c_);
     }
-    obs->M = bbn_Kommar_mass_CS;
+    obs->M = bbn_Kommar_mass;
     free(patches);
   }
   else if (strcmp_i(obs->quantity,"Kommar(M)|NS"))
@@ -518,7 +518,7 @@ void bbn_plan_obs_CS(Observable_T *obs)
       kommar[n]->K = 0;
       n_physical_metric_surrounding(kommar[n],_c_);
     }
-    obs->M = bbn_Kommar_mass_CS;
+    obs->M = bbn_Kommar_mass;
     free(patches);
   }
   else if (strcmp_i(obs->quantity,"Kommar(M)|BBN"))
@@ -605,7 +605,7 @@ void bbn_plan_obs_CS(Observable_T *obs)
       kommar[n]->K = patch->n[2]-1;
       n_physical_metric_surrounding(kommar[n],_c_);
     }
-    obs->M = bbn_Kommar_mass_CS;
+    obs->M = bbn_Kommar_mass;
     free(patches);
   }
   else if (strcmp_i(obs->quantity,"ADM(M)|BBN"))

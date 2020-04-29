@@ -6,8 +6,8 @@
 
 #include "bbn_headers.h"
 
-double bbn_Kommar_mass_CS(Observable_T *const obs);
-double bbn_Kommar_mass_CS(Observable_T *const obs)
+double bbn_Kommar_mass(Observable_T *const obs);
+double bbn_Kommar_mass(Observable_T *const obs)
 {
   double Kommar_mass = 0;
   struct items_S **const kommar = obs->items;

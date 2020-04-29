@@ -9,8 +9,8 @@ C_macro  = READ_v(name);
 `#include "bbn_headers.h"\n`
 
 # return the Kommar mass for the specified object(s)
-`double bbn_Kommar_mass_CS(Observable_T *const obs);`
-`double bbn_Kommar_mass_CS(Observable_T *const obs)`
+`double bbn_Kommar_mass(Observable_T *const obs);`
+`double bbn_Kommar_mass(Observable_T *const obs)`
 `{`
 `  double Kommar_mass = 0;`
 `  struct items_S **const kommar = obs->items;`

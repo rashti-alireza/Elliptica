@@ -10,7 +10,7 @@
 void bbn_plan_obs_CS(Observable_T *obs);
 void bbn_free_obs_CS(Observable_T *obs);
 void bbn_populate_ADM_integrand_PdS_GdV(const Observable_T *const obs);
-double bbn_Kommar_mass_CS(Observable_T *const obs);
+double bbn_Kommar_mass(Observable_T *const obs);
 static double ADM_momentum_x_BBN_CS(Observable_T *const obs);
 static double ADM_momentum_y_BBN_CS(Observable_T *const obs);
 static double ADM_momentum_z_BBN_CS(Observable_T *const obs);
