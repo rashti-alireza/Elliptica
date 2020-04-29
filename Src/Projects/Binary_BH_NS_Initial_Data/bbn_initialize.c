@@ -407,14 +407,14 @@ static void P_ADM_control(Grid_T *const grid)
   p1[2] = Pgetd("Pz_ADM");
   
   /* get the current P_ADMs */
-  p2[0] = obs->Px_ADM(obs);
-  p2[1] = obs->Py_ADM(obs);
-  p2[2] = obs->Pz_ADM(obs);
+  p2[0] = obs->Px(obs);
+  p2[1] = obs->Py(obs);
+  p2[2] = obs->Pz(obs);
   
   /* get the current J_ADMs  */
-  j_adm[0] = obs->Jx_ADM(obs);
-  j_adm[1] = obs->Jy_ADM(obs);
-  j_adm[2] = obs->Jz_ADM(obs);
+  j_adm[0] = obs->Jx(obs);
+  j_adm[1] = obs->Jy(obs);
+  j_adm[2] = obs->Jz(obs);
   
   printf("|--> Current P_ADM = (%e,%e,%e)\n",p2[0],p2[1],p2[2]);
   printf("|--> Current J_ADM = (%e,%e,%e)\n",j_adm[0],j_adm[1],j_adm[2]);
@@ -437,24 +437,24 @@ static void P_ADM_control(Grid_T *const grid)
   obs = init_observable(grid,bbn_plan_obs_CS,bbn_free_obs_CS);
   obs->quantity = "NS_ADMs";
   plan_observable(obs);
-  Psetd("NS_Px_ADM",obs->Px_ADM(obs));
-  Psetd("NS_Py_ADM",obs->Py_ADM(obs));
-  Psetd("NS_Pz_ADM",obs->Pz_ADM(obs));
-  Psetd("NS_Jx_ADM",obs->Jx_ADM(obs));
-  Psetd("NS_Jy_ADM",obs->Jy_ADM(obs));
-  Psetd("NS_Jz_ADM",obs->Jz_ADM(obs));
+  Psetd("NS_Px_ADM",obs->Px(obs));
+  Psetd("NS_Py_ADM",obs->Py(obs));
+  Psetd("NS_Pz_ADM",obs->Pz(obs));
+  Psetd("NS_Jx_ADM",obs->Jx(obs));
+  Psetd("NS_Jy_ADM",obs->Jy(obs));
+  Psetd("NS_Jz_ADM",obs->Jz(obs));
   free_observable(obs);
   
   /* BH adms */
   obs = init_observable(grid,bbn_plan_obs_CS,bbn_free_obs_CS);
   obs->quantity = "BH_ADMs";
   plan_observable(obs);
-  Psetd("BH_Px_ADM",obs->Px_ADM(obs));
-  Psetd("BH_Py_ADM",obs->Py_ADM(obs));
-  Psetd("BH_Pz_ADM",obs->Pz_ADM(obs));
-  Psetd("BH_Jx_ADM",obs->Jx_ADM(obs));
-  Psetd("BH_Jy_ADM",obs->Jy_ADM(obs));
-  Psetd("BH_Jz_ADM",obs->Jz_ADM(obs));
+  Psetd("BH_Px_ADM",obs->Px(obs));
+  Psetd("BH_Py_ADM",obs->Py(obs));
+  Psetd("BH_Pz_ADM",obs->Pz(obs));
+  Psetd("BH_Jx_ADM",obs->Jx(obs));
+  Psetd("BH_Jy_ADM",obs->Jy(obs));
+  Psetd("BH_Jz_ADM",obs->Jz(obs));
   free_observable(obs);
   
   
@@ -1576,14 +1576,14 @@ static void Pxy_ADM_is0_by_xy_CM_roots(Grid_T *const grid)
   plan_observable(obs);
   
   /* get the current P_ADMs */
-  p_adm[0] = obs->Px_ADM(obs);
-  p_adm[1] = obs->Py_ADM(obs);
-  p_adm[2] = obs->Pz_ADM(obs);
+  p_adm[0] = obs->Px(obs);
+  p_adm[1] = obs->Py(obs);
+  p_adm[2] = obs->Pz(obs);
   
   /* get the current J_ADMs  */
-  j_adm[0] = obs->Jx_ADM(obs);
-  j_adm[1] = obs->Jy_ADM(obs);
-  j_adm[2] = obs->Jz_ADM(obs);
+  j_adm[0] = obs->Jx(obs);
+  j_adm[1] = obs->Jy(obs);
+  j_adm[2] = obs->Jz(obs);
   
   printf("|--> After CM update P_ADM = (%e,%e,%e)\n",p_adm[0],p_adm[1],p_adm[2]);
   printf("|--> After CM update J_ADM = (%e,%e,%e)\n",j_adm[0],j_adm[1],j_adm[2]);
@@ -1612,7 +1612,7 @@ static double x_CM_root_of_Py(void *params,const double *const x)
   obs = init_observable(grid,bbn_plan_obs_CS,bbn_free_obs_CS);
   obs->quantity = "ADMs";
   plan_observable(obs);
-  residual = obs->Py_ADM(obs);
+  residual = obs->Py(obs);
   free_observable(obs);
 
   return residual;
@@ -1640,7 +1640,7 @@ static double y_CM_root_of_Px(void *params,const double *const x)
   obs = init_observable(grid,bbn_plan_obs_CS,bbn_free_obs_CS);
   obs->quantity = "ADMs";
   plan_observable(obs);
-  residual = obs->Px_ADM(obs);
+  residual = obs->Px(obs);
   free_observable(obs);
 
   return residual;
@@ -1707,14 +1707,14 @@ static void Px_ADM_is0_by_y_CM(Grid_T *const grid)
     plan_observable(obs);
     
     /* get the current P_ADMs */
-    p_adm[0] = obs->Px_ADM(obs);
-    p_adm[1] = obs->Py_ADM(obs);
-    p_adm[2] = obs->Pz_ADM(obs);
+    p_adm[0] = obs->Px(obs);
+    p_adm[1] = obs->Py(obs);
+    p_adm[2] = obs->Pz(obs);
     
     /* get the current J_ADMs  */
-    j_adm[0] = obs->Jx_ADM(obs);
-    j_adm[1] = obs->Jy_ADM(obs);
-    j_adm[2] = obs->Jz_ADM(obs);
+    j_adm[0] = obs->Jx(obs);
+    j_adm[1] = obs->Jy(obs);
+    j_adm[2] = obs->Jz(obs);
     
     printf("|--> After CM update P_ADM = (%e,%e,%e)\n",p_adm[0],p_adm[1],p_adm[2]);
     printf("|--> After CM update J_ADM = (%e,%e,%e)\n",j_adm[0],j_adm[1],j_adm[2]);
@@ -1791,14 +1791,14 @@ static void Py_ADM_is0_by_x_CM(Grid_T *const grid)
     plan_observable(obs);
     
     /* get the current P_ADMs */
-    p_adm[0] = obs->Px_ADM(obs);
-    p_adm[1] = obs->Py_ADM(obs);
-    p_adm[2] = obs->Pz_ADM(obs);
+    p_adm[0] = obs->Px(obs);
+    p_adm[1] = obs->Py(obs);
+    p_adm[2] = obs->Pz(obs);
     
     /* get the current J_ADMs  */
-    j_adm[0] = obs->Jx_ADM(obs);
-    j_adm[1] = obs->Jy_ADM(obs);
-    j_adm[2] = obs->Jz_ADM(obs);
+    j_adm[0] = obs->Jx(obs);
+    j_adm[1] = obs->Jy(obs);
+    j_adm[2] = obs->Jz(obs);
     
     printf("|--> After CM update P_ADM = (%e,%e,%e)\n",p_adm[0],p_adm[1],p_adm[2]);
     printf("|--> After CM update J_ADM = (%e,%e,%e)\n",j_adm[0],j_adm[1],j_adm[2]);
@@ -4060,12 +4060,12 @@ static Grid_T *TOV_KerrSchild_approximation(void)
   Observable_T *obs = init_observable(grid,bbn_plan_obs_CS,bbn_free_obs_CS);
   obs->quantity     = "ADMs";
   plan_observable(obs);
-  Psetd("Px_ADM",obs->Px_ADM(obs));
-  Psetd("Py_ADM",obs->Py_ADM(obs));
-  Psetd("Pz_ADM",obs->Pz_ADM(obs));
-  Psetd("Jx_ADM",obs->Jx_ADM(obs));
-  Psetd("Jy_ADM",obs->Jy_ADM(obs));
-  Psetd("Jz_ADM",obs->Jz_ADM(obs));
+  Psetd("Px_ADM",obs->Px(obs));
+  Psetd("Py_ADM",obs->Py(obs));
+  Psetd("Pz_ADM",obs->Pz(obs));
+  Psetd("Jx_ADM",obs->Jx(obs));
+  Psetd("Jy_ADM",obs->Jy(obs));
+  Psetd("Jz_ADM",obs->Jz(obs));
   Psetd("v*_boost_x",0);
   Psetd("v*_boost_y",0);
   Psetd("v*_boost_z",0);

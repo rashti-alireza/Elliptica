@@ -18,12 +18,12 @@
 // plan_observable(obs);# it finds out the related patches, physical metric etc.
 //
 // * calculate the observable *
-// double Px_ADM = obs->Px_ADM(obs);# x component
-// double Py_ADM = obs->Py_ADM(obs);# y component
-// double Pz_ADM = obs->Pz_ADM(obs);# z component
-// double Jx_ADM = obs->Jx_ADM(obs);# x component of angular momentum
-// double Jy_ADM = obs->Jy_ADM(obs);# y component of angular momentum
-// double Jz_ADM = obs->Jz_ADM(obs);# z component of angular momentum
+// double Px_ADM = obs->Px(obs);# x component
+// double Py_ADM = obs->Py(obs);# y component
+// double Pz_ADM = obs->Pz(obs);# z component
+// double Jx_ADM = obs->Jx(obs);# x component of angular momentum
+// double Jy_ADM = obs->Jy(obs);# y component of angular momentum
+// double Jz_ADM = obs->Jz(obs);# z component of angular momentum
 //
 // *free*
 // free_observable(obs);
@@ -160,12 +160,12 @@ void bbn_plan_obs_CS(Observable_T *obs)
         populate_normal_surrounding(adm[n],_c_);
       }
     }
-    obs->Px_ADM = ADM_momentum_x_BBN_CS;
-    obs->Py_ADM = ADM_momentum_y_BBN_CS;
-    obs->Pz_ADM = ADM_momentum_z_BBN_CS;
-    obs->Jx_ADM = ADM_angular_momentum_x_BBN_CS;
-    obs->Jy_ADM = ADM_angular_momentum_y_BBN_CS;
-    obs->Jz_ADM = ADM_angular_momentum_z_BBN_CS;
+    obs->Px = ADM_momentum_x_BBN_CS;
+    obs->Py = ADM_momentum_y_BBN_CS;
+    obs->Pz = ADM_momentum_z_BBN_CS;
+    obs->Jx = ADM_angular_momentum_x_BBN_CS;
+    obs->Jy = ADM_angular_momentum_y_BBN_CS;
+    obs->Jz = ADM_angular_momentum_z_BBN_CS;
     bbn_populate_ADM_integrand_PdS_GdV(obs);
     free(patches);
   }
@@ -248,12 +248,12 @@ void bbn_plan_obs_CS(Observable_T *obs)
       adm[n]->K = 0;
       populate_normal_surrounding(adm[n],_c_);
     }
-    obs->Px_ADM = ADM_momentum_x_BBN_CS;
-    obs->Py_ADM = ADM_momentum_y_BBN_CS;
-    obs->Pz_ADM = ADM_momentum_z_BBN_CS;
-    obs->Jx_ADM = ADM_angular_momentum_x_BBN_CS;
-    obs->Jy_ADM = ADM_angular_momentum_y_BBN_CS;
-    obs->Jz_ADM = ADM_angular_momentum_z_BBN_CS;
+    obs->Px = ADM_momentum_x_BBN_CS;
+    obs->Py = ADM_momentum_y_BBN_CS;
+    obs->Pz = ADM_momentum_z_BBN_CS;
+    obs->Jx = ADM_angular_momentum_x_BBN_CS;
+    obs->Jy = ADM_angular_momentum_y_BBN_CS;
+    obs->Jz = ADM_angular_momentum_z_BBN_CS;
     bbn_populate_ADM_integrand_PdS_GdV(obs);
     free(patches);
   }
@@ -336,12 +336,12 @@ void bbn_plan_obs_CS(Observable_T *obs)
       adm[n]->K = 0;
       populate_normal_surrounding(adm[n],_c_);
     }
-    obs->Px_ADM = ADM_momentum_x_BBN_CS;
-    obs->Py_ADM = ADM_momentum_y_BBN_CS;
-    obs->Pz_ADM = ADM_momentum_z_BBN_CS;
-    obs->Jx_ADM = ADM_angular_momentum_x_BBN_CS;
-    obs->Jy_ADM = ADM_angular_momentum_y_BBN_CS;
-    obs->Jz_ADM = ADM_angular_momentum_z_BBN_CS;
+    obs->Px = ADM_momentum_x_BBN_CS;
+    obs->Py = ADM_momentum_y_BBN_CS;
+    obs->Pz = ADM_momentum_z_BBN_CS;
+    obs->Jx = ADM_angular_momentum_x_BBN_CS;
+    obs->Jy = ADM_angular_momentum_y_BBN_CS;
+    obs->Jz = ADM_angular_momentum_z_BBN_CS;
     bbn_populate_ADM_integrand_PdS_GdV(obs);
     free(patches);
   }
