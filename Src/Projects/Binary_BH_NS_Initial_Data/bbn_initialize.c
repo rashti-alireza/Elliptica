@@ -398,7 +398,7 @@ static void P_ADM_control(Grid_T *const grid)
   double p2[3] = {0};
   double j_adm[3] = {0};
   
-  obs->quantity = "ADMs";
+  obs->quantity = "ADM(P,J)";
   plan_observable(obs);
   
   /* get previous P_ADMs */
@@ -435,7 +435,7 @@ static void P_ADM_control(Grid_T *const grid)
   
   /* NS adms */
   obs = init_observable(grid,bbn_plan_obs_CS,bbn_free_obs_CS);
-  obs->quantity = "NS_ADMs";
+  obs->quantity = "NS_ADM(P,J)";
   plan_observable(obs);
   Psetd("NS_Px_ADM",obs->Px(obs));
   Psetd("NS_Py_ADM",obs->Py(obs));
@@ -447,7 +447,7 @@ static void P_ADM_control(Grid_T *const grid)
   
   /* BH adms */
   obs = init_observable(grid,bbn_plan_obs_CS,bbn_free_obs_CS);
-  obs->quantity = "BH_ADMs";
+  obs->quantity = "BH_ADM(P,J)";
   plan_observable(obs);
   Psetd("BH_Px_ADM",obs->Px(obs));
   Psetd("BH_Py_ADM",obs->Py(obs));
@@ -1572,7 +1572,7 @@ static void Pxy_ADM_is0_by_xy_CM_roots(Grid_T *const grid)
   free(freedata_patch);
   
   Observable_T *obs = init_observable(grid,bbn_plan_obs_CS,bbn_free_obs_CS);
-  obs->quantity = "ADMs";
+  obs->quantity = "ADM(P,J)";
   plan_observable(obs);
   
   /* get the current P_ADMs */
@@ -1610,7 +1610,7 @@ static double x_CM_root_of_Py(void *params,const double *const x)
   update_B1_dB1_Beta_dBete_Aij_dAij(grid);
 
   obs = init_observable(grid,bbn_plan_obs_CS,bbn_free_obs_CS);
-  obs->quantity = "ADMs";
+  obs->quantity = "ADM(P,J)";
   plan_observable(obs);
   residual = obs->Py(obs);
   free_observable(obs);
@@ -1638,7 +1638,7 @@ static double y_CM_root_of_Px(void *params,const double *const x)
   update_B1_dB1_Beta_dBete_Aij_dAij(grid);
 
   obs = init_observable(grid,bbn_plan_obs_CS,bbn_free_obs_CS);
-  obs->quantity = "ADMs";
+  obs->quantity = "ADM(P,J)";
   plan_observable(obs);
   residual = obs->Px(obs);
   free_observable(obs);
@@ -1703,7 +1703,7 @@ static void Px_ADM_is0_by_y_CM(Grid_T *const grid)
     bbn_populate_free_data(freedata_grid);
     update_B1_dB1_Beta_dBete_Aij_dAij(grid);
     obs = init_observable(grid,bbn_plan_obs_CS,bbn_free_obs_CS);
-    obs->quantity = "ADMs";
+    obs->quantity = "ADM(P,J)";
     plan_observable(obs);
     
     /* get the current P_ADMs */
@@ -1787,7 +1787,7 @@ static void Py_ADM_is0_by_x_CM(Grid_T *const grid)
     bbn_populate_free_data(freedata_grid);
     update_B1_dB1_Beta_dBete_Aij_dAij(grid);
     obs = init_observable(grid,bbn_plan_obs_CS,bbn_free_obs_CS);
-    obs->quantity = "ADMs";
+    obs->quantity = "ADM(P,J)";
     plan_observable(obs);
     
     /* get the current P_ADMs */
@@ -4058,7 +4058,7 @@ static Grid_T *TOV_KerrSchild_approximation(void)
   
   /* add some parameters for momentum and its adjustments */
   Observable_T *obs = init_observable(grid,bbn_plan_obs_CS,bbn_free_obs_CS);
-  obs->quantity     = "ADMs";
+  obs->quantity     = "ADM(P,J)";
   plan_observable(obs);
   Psetd("Px_ADM",obs->Px(obs));
   Psetd("Py_ADM",obs->Py(obs));
