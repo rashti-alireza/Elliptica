@@ -8,6 +8,16 @@
         fprintf(file,"%-30s = %+0.15f\n",#x,Pgetd(#x));\
         if (pr_flg) printf("%-30s = %+0.15f\n",#x,Pgetd(#x));
         
+#define PR_PARAMETR_IN_FILE_s(x) \
+        {\
+          const char *par_temp = PgetsEZ(#x); \
+          if (par_temp) \
+          { \
+            fprintf(file,"%-30s = %s\n",#x,par_temp);\
+            if (pr_flg) printf("%-30s = %s\n",#x,Pgets(#x)); \
+          } \
+        }
+        
 
 
 void bbn_study_initial_data(Grid_T *const grid);

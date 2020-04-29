@@ -89,11 +89,10 @@ void bbn_print_properties(Grid_T *const grid,const unsigned iteration, const cha
   PR_PARAMETR_IN_FILE(BH_center_y)
   PR_PARAMETR_IN_FILE(BH_center_z)
   
-  PR_PARAMETR_IN_FILE(x_CM)
-  PR_PARAMETR_IN_FILE(y_CM)
-  PR_PARAMETR_IN_FILE(z_CM)
-  
   PR_PARAMETR_IN_FILE(r_excision)
+  PR_PARAMETR_IN_FILE(NS_max_radius)
+  PR_PARAMETR_IN_FILE(NS_min_radius)
+  PR_PARAMETR_IN_FILE(BH_NS_separation)
   /* } geometry */
   
   /* { physics */
@@ -101,6 +100,13 @@ void bbn_print_properties(Grid_T *const grid,const unsigned iteration, const cha
     printf(physics_logo);
   
   fprintf(file,physics_logo);
+  
+  PR_PARAMETR_IN_FILE_s(EoS_description)
+  PR_PARAMETR_IN_FILE_s(EoS_type)
+  PR_PARAMETR_IN_FILE_s(EoS_unit)
+  PR_PARAMETR_IN_FILE_s(EoS_K)
+  PR_PARAMETR_IN_FILE_s(EoS_rho_th)
+  PR_PARAMETR_IN_FILE_s(EoS_Gamma)
   
   PR_PARAMETR_IN_FILE(NS_baryonic_mass)
   PR_PARAMETR_IN_FILE(BH_irreducible_mass)
@@ -126,7 +132,19 @@ void bbn_print_properties(Grid_T *const grid,const unsigned iteration, const cha
   PR_PARAMETR_IN_FILE(BH_J_ADM_y)
   PR_PARAMETR_IN_FILE(BH_J_ADM_z)
   
+  PR_PARAMETR_IN_FILE(BH_NS_angular_velocity)
+  PR_PARAMETR_IN_FILE(BH_NS_infall_velocity)
+  PR_PARAMETR_IN_FILE(x_CM)
+  PR_PARAMETR_IN_FILE(y_CM)
+  PR_PARAMETR_IN_FILE(z_CM)
+  
+  PR_PARAMETR_IN_FILE(rho_center)
+  PR_PARAMETR_IN_FILE(pressure_center)
+  PR_PARAMETR_IN_FILE(energy_density_center)
+  PR_PARAMETR_IN_FILE(Euler_equation_constant)
+  
   PR_PARAMETR_IN_FILE(largest_L2norm_error)
+   
   /* } physics */
   
   fprintf(file,"%s\n",LINE_STR);
