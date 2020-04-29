@@ -393,7 +393,7 @@ static void P_ADM_control(Grid_T *const grid)
                               get_func_P_ADM_adjustment(adjust[2]);
   
   /* update P_ADM and J_ADM momentum parameters */
-  Observable_T *obs = init_observable(grid,bbn_plan_ADMs_CS,bbn_free_ADMs_CS);
+  Observable_T *obs = init_observable(grid,bbn_plan_obs_CS,bbn_free_obs_CS);
   double p1[3] = {0};
   double p2[3] = {0};
   double j_adm[3] = {0};
@@ -434,7 +434,7 @@ static void P_ADM_control(Grid_T *const grid)
   free_observable(obs);
   
   /* NS adms */
-  obs = init_observable(grid,bbn_plan_ADMs_CS,bbn_free_ADMs_CS);
+  obs = init_observable(grid,bbn_plan_obs_CS,bbn_free_obs_CS);
   obs->quantity = "NS_ADMs";
   plan_observable(obs);
   Psetd("NS_Px_ADM",obs->Px_ADM(obs));
@@ -446,7 +446,7 @@ static void P_ADM_control(Grid_T *const grid)
   free_observable(obs);
   
   /* BH adms */
-  obs = init_observable(grid,bbn_plan_ADMs_CS,bbn_free_ADMs_CS);
+  obs = init_observable(grid,bbn_plan_obs_CS,bbn_free_obs_CS);
   obs->quantity = "BH_ADMs";
   plan_observable(obs);
   Psetd("BH_Px_ADM",obs->Px_ADM(obs));
@@ -1571,7 +1571,7 @@ static void Pxy_ADM_is0_by_xy_CM_roots(Grid_T *const grid)
   free(freedata_grid);
   free(freedata_patch);
   
-  Observable_T *obs = init_observable(grid,bbn_plan_ADMs_CS,bbn_free_ADMs_CS);
+  Observable_T *obs = init_observable(grid,bbn_plan_obs_CS,bbn_free_obs_CS);
   obs->quantity = "ADMs";
   plan_observable(obs);
   
@@ -1609,7 +1609,7 @@ static double x_CM_root_of_Py(void *params,const double *const x)
   bbn_free_data_tr_KSKij(freedata_grid);
   update_B1_dB1_Beta_dBete_Aij_dAij(grid);
 
-  obs = init_observable(grid,bbn_plan_ADMs_CS,bbn_free_ADMs_CS);
+  obs = init_observable(grid,bbn_plan_obs_CS,bbn_free_obs_CS);
   obs->quantity = "ADMs";
   plan_observable(obs);
   residual = obs->Py_ADM(obs);
@@ -1637,7 +1637,7 @@ static double y_CM_root_of_Px(void *params,const double *const x)
   bbn_free_data_tr_KSKij(freedata_grid);
   update_B1_dB1_Beta_dBete_Aij_dAij(grid);
 
-  obs = init_observable(grid,bbn_plan_ADMs_CS,bbn_free_ADMs_CS);
+  obs = init_observable(grid,bbn_plan_obs_CS,bbn_free_obs_CS);
   obs->quantity = "ADMs";
   plan_observable(obs);
   residual = obs->Px_ADM(obs);
@@ -1702,7 +1702,7 @@ static void Px_ADM_is0_by_y_CM(Grid_T *const grid)
     Psetd("y_CM",y_CM_new);
     bbn_populate_free_data(freedata_grid);
     update_B1_dB1_Beta_dBete_Aij_dAij(grid);
-    obs = init_observable(grid,bbn_plan_ADMs_CS,bbn_free_ADMs_CS);
+    obs = init_observable(grid,bbn_plan_obs_CS,bbn_free_obs_CS);
     obs->quantity = "ADMs";
     plan_observable(obs);
     
@@ -1786,7 +1786,7 @@ static void Py_ADM_is0_by_x_CM(Grid_T *const grid)
     Psetd("x_CM",x_CM_new);
     bbn_populate_free_data(freedata_grid);
     update_B1_dB1_Beta_dBete_Aij_dAij(grid);
-    obs = init_observable(grid,bbn_plan_ADMs_CS,bbn_free_ADMs_CS);
+    obs = init_observable(grid,bbn_plan_obs_CS,bbn_free_obs_CS);
     obs->quantity = "ADMs";
     plan_observable(obs);
     
@@ -4057,7 +4057,7 @@ static Grid_T *TOV_KerrSchild_approximation(void)
   find_Euler_eq_const_TOV_KerrSchild(grid);
   
   /* add some parameters for momentum and its adjustments */
-  Observable_T *obs = init_observable(grid,bbn_plan_ADMs_CS,bbn_free_ADMs_CS);
+  Observable_T *obs = init_observable(grid,bbn_plan_obs_CS,bbn_free_obs_CS);
   obs->quantity     = "ADMs";
   plan_observable(obs);
   Psetd("Px_ADM",obs->Px_ADM(obs));
