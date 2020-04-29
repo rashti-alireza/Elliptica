@@ -1186,25 +1186,29 @@ void bbn_update_stress_energy_tensor(Grid_T *const grid,const int flag)
   
   }
   
-  /* update central density parameter */
+  /* update central quantites */
   Patch_T *patch = GetPatch("left_central_box",grid);
-  DECLARE_FIELD(rho0);
-  double rho_center;
+  DECLARE_FIELD(enthalpy)
+  double h_center;
   const double *x = patch->c;/* NS center */
   double X[3] = {0};
   
   X_of_x(X,x,patch);
+  EoS_T *eos = initialize_EoS();
   Interpolation_T *interp_s = init_interpolation();
-  interp_s->field = rho0;
+  interp_s->field = enthalpy;
   interp_s->X = X[0];
   interp_s->Y = X[1];
   interp_s->Z = X[2];
   interp_s->XYZ_dir_flag = 1;
   plan_interpolation(interp_s);
-  rho_center = execute_interpolation(interp_s);
+  h_center = execute_interpolation(interp_s);
   free_interpolation(interp_s);
-  
-  Psetd("rho_center",rho_center);
+  eos->h = h_center;
+  Psetd("rho_center",eos->rest_mass_density(eos));
+  Psetd("pressure_center",eos->pressure(eos));
+  Psetd("energy_density_center",eos->energy_density(eos));
+  free_EoS(eos);
   
   printf("} Updating enthalpy, rest-mass density and their derivatives ==> Done.\n");
   pr_clock();
