@@ -485,7 +485,7 @@ fAdjustment_t *get_func_P_ADM_adjustment(const char *const adjust)
   {
     f = 0;
   }
-  else if (strcmp_i(adjust,"x_CM"))
+  else if (strcmp_i(adjust,"BH_Vz"))
   {
     f = Pz_ADM_is0_by_BH_Vz;
   }
