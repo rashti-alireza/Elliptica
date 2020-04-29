@@ -421,7 +421,7 @@ void bbn_plan_obs_CS(Observable_T *obs)
       kommar[n]->surface_integration_flg = 1;
       kommar[n]->Z_surface = 1;
       kommar[n]->K = 0;
-      //populate_normal_surrounding(kommar[n],_c_);
+      populate_normal_surrounding(kommar[n],_c_);
     }
     obs->M = bbn_Kommar_mass_CS;
     free(patches);
@@ -431,7 +431,8 @@ void bbn_plan_obs_CS(Observable_T *obs)
   
 }
 
-/* populating normal outward vector for surrounding according to the given dir */
+/* populating normal outward vector for surrounding according to the given dir 
+// NOTE: the normaliztion is respect to physical metric gamma_{ij} */
 static void populate_normal_surrounding(struct items_S *const adm,const Dd_T dir)
 {
   Patch_T *const patch = adm->patch;

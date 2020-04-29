@@ -16,8 +16,11 @@ double bbn_Kommar_mass_CS(Observable_T *const obs)
 
   for(p = 0; p < N; ++p)
   {
-    Patch_T *patch = kommar[p]->patch;
-    unsigned nn    = patch->nn;
+    Patch_T *patch     = kommar[p]->patch;
+    const double *n_U0 = kommar[p]->n_U0;
+    const double *n_U1 = kommar[p]->n_U1;
+    const double *n_U2 = kommar[p]->n_U2;
+    unsigned nn        = patch->nn;
     unsigned ijk;
 
     ADD_FIELD(Kommar_mass_integrand)
@@ -48,9 +51,6 @@ double bbn_Kommar_mass_CS(Observable_T *const obs)
   READ_v(dpsi_D0)
   READ_v(dpsi_D1)
   READ_v(dpsi_D2)
-  READ_v(_HS_U2)
-  READ_v(_HS_U0)
-  READ_v(_HS_U1)
 
 
 {
@@ -65,15 +65,6 @@ pow(psi[ijk], 2);
 
     double psi4 = 
 pow(psi[ijk], 4);
-
-    double s_U1 = 
-_HS_U1[ijk]*psim2;
-
-    double s_U0 = 
-_HS_U0[ijk]*psim2;
-
-    double s_U2 = 
-_HS_U2[ijk]*psim2;
 
     double dalpha_U1 = 
 deta_D1[ijk]/psi[ijk] - dpsi_D1[ijk]*eta[ijk]/psi2;
@@ -145,11 +136,11 @@ _gamma_D1D2[ijk] + _A_UiUj_U2U2[ijk]*_gamma_D0D2[ijk]*
 _gamma_D2D2[ijk]);
 
     double integrand = 
--s_U0*(Beta_U0[ijk]*K_DD_D0D0 + Beta_U1[ijk]*K_DD_D0D1 + Beta_U2[ijk]*
-K_DD_D0D2 - dalpha_U0) - s_U1*(Beta_U0[ijk]*K_DD_D0D1 + Beta_U1[ijk]*
-K_DD_D1D1 + Beta_U2[ijk]*K_DD_D1D2 - dalpha_U1) - s_U2*(Beta_U0[ijk]*
-K_DD_D0D2 + Beta_U1[ijk]*K_DD_D1D2 + Beta_U2[ijk]*K_DD_D2D2 -
-dalpha_U2);
+-n_U0[ijk]*(Beta_U0[ijk]*K_DD_D0D0 + Beta_U1[ijk]*K_DD_D0D1 +
+Beta_U2[ijk]*K_DD_D0D2 - dalpha_U0) - n_U1[ijk]*(Beta_U0[ijk]*
+K_DD_D0D1 + Beta_U1[ijk]*K_DD_D1D1 + Beta_U2[ijk]*K_DD_D1D2 -
+dalpha_U1) - n_U2[ijk]*(Beta_U0[ijk]*K_DD_D0D2 + Beta_U1[ijk]*
+K_DD_D1D2 + Beta_U2[ijk]*K_DD_D2D2 - dalpha_U2);
 
 
       Kommar_mass_integrand[ijk] = integrand;

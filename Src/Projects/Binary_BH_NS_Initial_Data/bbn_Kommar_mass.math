@@ -19,8 +19,11 @@ C_macro  = READ_v(name);
 ``
 `  for(p = 0; p < N; ++p)`
 `  {`
-`    Patch_T *patch = kommar[p]->patch;`
-`    unsigned nn    = patch->nn;`
+`    Patch_T *patch     = kommar[p]->patch;`
+`    const double *n_U0 = kommar[p]->n_U0;`
+`    const double *n_U1 = kommar[p]->n_U1;`
+`    const double *n_U2 = kommar[p]->n_U2;`
+`    unsigned nn        = patch->nn;`
 `    unsigned ijk;`
 ``
 `    ADD_FIELD(Kommar_mass_integrand)`
@@ -57,8 +60,8 @@ Declare =
  # d(conformal factor)
  (obj = Field,name = dpsi, rank = D, C_macro);
 
- # normal vector on AH
- (obj = Field,name = _HS, rank = U, C_macro);
+ # normal vector on S
+ (obj = Field,name = n, rank = U, none);
 
  # integrand P
  #(obj = Field,name = Kommar_mass_integrand, rank = 0, none);
@@ -78,12 +81,11 @@ Symm[_gamma(i,j)   = _gamma(j,i)];
        psim2 = psi**-2;
        psi2  = psi**2;
        psi4  = psi**4;
-       s(i)  = psim2*_HS(i);
        dalpha(i) = deta(i)/psi-eta*dpsi(i)/psi2;
        K_DD(-i,-j) = psim2*_A_UiUj(ip,jp)*_gamma(i,-ip)*_gamma(j,-jp)+\
 		    1/3*K*psi4*_gamma(i,j);
        Symm[K_DD(i,j) = K_DD(j,i)];
-       integrand = s(-i)*(dalpha(i)-K_DD(i,j)*Beta(-j));
+       integrand = n(-i)*(dalpha(i)-K_DD(i,j)*Beta(-j));
 ``
 `      Kommar_mass_integrand[ijk] = integrand;`
 `    }`
