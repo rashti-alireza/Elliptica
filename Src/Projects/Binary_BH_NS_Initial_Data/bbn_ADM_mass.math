@@ -62,7 +62,7 @@ Declare =
 }
 # symmetries:
 Symm[_gammaI(i,j)  = _gammaI(j,i)];
-#Symm[_gamma(i,j)   = _gamma(j,i)];
+Symm[ddpsi(i,j)    = ddpsi(j,i)];
 Symm[_Gamma(i,j,k) = _Gamma(i,k,j)];
 
 `    unsigned nn = patch->nn;`

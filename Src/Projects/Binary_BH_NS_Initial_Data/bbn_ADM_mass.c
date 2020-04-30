@@ -31,12 +31,9 @@ double bbn_ADM_mass(Observable_T *const obs)
   READ_v(dpsi_D0)
   READ_v(dpsi_D1)
   READ_v(dpsi_D2)
-  READ_v(ddpsi_D0D1)
   READ_v(ddpsi_D2D2)
-  READ_v(ddpsi_D2D1)
   READ_v(ddpsi_D0D0)
-  READ_v(ddpsi_D2D0)
-  READ_v(ddpsi_D1D0)
+  READ_v(ddpsi_D0D1)
   READ_v(ddpsi_D1D1)
   READ_v(ddpsi_D1D2)
   READ_v(ddpsi_D0D2)
@@ -128,11 +125,10 @@ _Gamma_U2D0D1[ijk]*_gammaI_U0U1[ijk]*dpsi_D2[ijk] - 2.0*
 _Gamma_U2D0D2[ijk]*_gammaI_U0U2[ijk]*dpsi_D2[ijk] - _Gamma_U2D1D1[ijk]*
 _gammaI_U1U1[ijk]*dpsi_D2[ijk] - 2.0*_Gamma_U2D1D2[ijk]*
 _gammaI_U1U2[ijk]*dpsi_D2[ijk] - _Gamma_U2D2D2[ijk]*_gammaI_U2U2[ijk]*
-dpsi_D2[ijk] + _gammaI_U0U0[ijk]*ddpsi_D0D0[ijk] + _gammaI_U0U1[ijk]*
-ddpsi_D0D1[ijk] + _gammaI_U0U1[ijk]*ddpsi_D1D0[ijk] +
-_gammaI_U0U2[ijk]*ddpsi_D0D2[ijk] + _gammaI_U0U2[ijk]*ddpsi_D2D0[ijk] +
-_gammaI_U1U1[ijk]*ddpsi_D1D1[ijk] + _gammaI_U1U2[ijk]*ddpsi_D1D2[ijk] +
-_gammaI_U1U2[ijk]*ddpsi_D2D1[ijk] + _gammaI_U2U2[ijk]*
+dpsi_D2[ijk] + _gammaI_U0U0[ijk]*ddpsi_D0D0[ijk] + 2.0*
+_gammaI_U0U1[ijk]*ddpsi_D0D1[ijk] + 2.0*_gammaI_U0U2[ijk]*
+ddpsi_D0D2[ijk] + _gammaI_U1U1[ijk]*ddpsi_D1D1[ijk] + 2.0*
+_gammaI_U1U2[ijk]*ddpsi_D1D2[ijk] + _gammaI_U2U2[ijk]*
 ddpsi_D2D2[ijk];
 
       ADM_mass_integrand_V[ijk] = M_v;
