@@ -1468,13 +1468,35 @@ static void find_Euler_eq_const(Grid_T *const grid)
   const double W1  = Pgetd("Solving_Field_Update_Weight");
   const double W2  = 1-W1;
   double *Euler_const = 0;
-  double guess[1];/* initial guess for Euler const */
+  double guess[1] = {Pgetd("Euler_equation_constant")};
   const double RESIDUAL = sqrt(Pgetd("RootFinder_Tolerance"));
-  struct Euler_eq_const_RootFinder_S params[1];
+  struct Euler_eq_const_RootFinder_S params[1] = {0};
+  Observable_T *obs = 0;
+  double bar_mass,adm_mass,kommar_mass;
+  
+  bar_mass = bbn_NS_baryonic_mass(grid,guess[0]);
+  obs = init_observable(grid,bbn_plan_obs_CS,bbn_free_obs_CS);
+  obs->quantity = "ADM(M)|NS";
+  plan_observable(obs);
+  adm_mass = obs->M(obs);
+  free_observable(obs);
+  
+  obs = init_observable(grid,bbn_plan_obs_CS,bbn_free_obs_CS);
+  obs->quantity = "Kommar(M)|NS";
+  plan_observable(obs);
+  kommar_mass = obs->M(obs);
+  free_observable(obs);
+
+  printf("|--> current NS baryonic mass = %e\n",bar_mass);
+  printf("|--> current NS ADM mass      = %e\n",adm_mass);
+  printf("|--> current NS Kommar mass   = %e\n",kommar_mass);
+  
+  Psetd("NS_baryonic_mass",bar_mass);
+  Psetd("NS_ADM_mass",adm_mass);
+  Psetd("NS_Kommar_mass",kommar_mass);
   
   params->grid = grid;
   params->NS_baryonic_mass = Pgetd("NS_baryonic_mass");
-  guess[0] = Pgetd("Euler_equation_constant");
   
   root->type        = Pgets("RootFinder_Method");
   root->tolerance   = Pgetd("RootFinder_Tolerance");
