@@ -621,7 +621,7 @@ void bbn_plan_obs_CS(Observable_T *obs)
       Error0("No outermost patch for integration.\n");
     N = 6*N_outermost/* outermosts */ +
         4/* 4 filling boxes */        +
-        18/* NS and surroundings for vol integral */ +
+        19/* box+NS+surroundings for vol integral */ +
         6/* 6 sides for surroundings for area integral */;
     patches = calloc(N,sizeof(*patches));
     IsNull(patches);  
@@ -667,7 +667,8 @@ void bbn_plan_obs_CS(Observable_T *obs)
     patches[p++] = GetPatch("left_NS_right",grid);
     patches[p++] = GetPatch("left_NS_back",grid);
     patches[p++] = GetPatch("left_NS_front",grid);
-    
+    patches[p++] = GetPatch("left_central_box",grid);
+      
     patches[p++] = GetPatch("left_NS_surrounding_up",grid);
     patches[p++] = GetPatch("left_NS_surrounding_down",grid);
     patches[p++] = GetPatch("left_NS_surrounding_left",grid);
@@ -831,7 +832,7 @@ void bbn_plan_obs_CS(Observable_T *obs)
     unsigned p = 0;
     unsigned n,N,ijk,nn;
     
-    N = 6/* 6 Ns patches for vol integral */;
+    N = 7/* 6 Ns patches for vol integral */;
     patches = calloc(N,sizeof(*patches));
     IsNull(patches);  
     
@@ -844,13 +845,14 @@ void bbn_plan_obs_CS(Observable_T *obs)
     
     /* first collect all of the patches required */
     p = 0;
-    /* surroundings for surface integrals. */
+    /* vol integrals. */
     patches[p++] = GetPatch("left_NS_up",grid);
     patches[p++] = GetPatch("left_NS_down",grid);
     patches[p++] = GetPatch("left_NS_left",grid);
     patches[p++] = GetPatch("left_NS_right",grid);
     patches[p++] = GetPatch("left_NS_back",grid);
     patches[p++] = GetPatch("left_NS_front",grid);
+    patches[p++] = GetPatch("left_central_box",grid);
     
     assert(p==N);
     
