@@ -107,7 +107,7 @@ void add_parameter_double(const char *const lv, const double rv)
   
   printf("Adding Parameter:\n");
   printf("       |--> parameter = %s\n",lv);
-  printf("       |--> value     = %+g\n",rv);
+  printf("       |--> value     = %+e\n",rv);
 }
 
 /* adding left value and right value to parameter data base 
