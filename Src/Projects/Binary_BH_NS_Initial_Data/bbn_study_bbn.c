@@ -32,7 +32,7 @@ void bbn_study_initial_data(Grid_T *const grid)
   bbn_calculate_constraints_1st(grid);
   bbn_calculate_constraints_2nd(grid);
   /* calculating ADM and Kommar masses */
-  bbn_calculate_total_mass(grid);
+  bbn_measures(grid);
   
   /* prints */
   bbn_print_fields(grid,(unsigned)solving_iter,folder);
@@ -46,12 +46,13 @@ void bbn_study_initial_data(Grid_T *const grid)
   pr_line_custom('=');
 }
 
-/* calculating ADM and Kommar masses */
-void bbn_calculate_total_mass(Grid_T *const grid)
+/* calculating ADM and Kommar masses, error, erc. */
+void bbn_measures(Grid_T *const grid)
 {
   Observable_T *obs = 0;
   double adm_mass,kommar_mass;
-
+  double virial_error, binding_energy;
+  
   obs = init_observable(grid,bbn_plan_obs_CS,bbn_free_obs_CS);
   obs->quantity = "ADM(M)|BBN";
   plan_observable(obs);
@@ -64,8 +65,15 @@ void bbn_calculate_total_mass(Grid_T *const grid)
   kommar_mass = obs->M(obs);
   free_observable(obs);
   
-  Psetd("BBN_ADM_mass",   adm_mass);
+  binding_energy =  adm_mass
+                    -Pgetd("BH_irreducible_mass")-Pgetd("NS_ADM_mass");
+  virial_error   = fabs(1-kommar_mass/adm_mass);
+   
+  Psetd("BBN_ADM_mass"   ,adm_mass);
   Psetd("BBN_Kommar_mass",kommar_mass);
+  Psetd("Binding_energy" ,binding_energy);
+  Psetd("Virial_error"  ,virial_error);
+  
 }
 
 /* print the properites of the system for instance:
@@ -132,8 +140,10 @@ void bbn_print_properties(Grid_T *const grid,const unsigned iteration, const cha
   PR_PARAMETR_IN_FILE_s(EoS_rho_th)
   PR_PARAMETR_IN_FILE_s(EoS_Gamma)
   
+  
   PR_PARAMETR_IN_FILE(BBN_ADM_mass)
   PR_PARAMETR_IN_FILE(BBN_Kommar_mass)
+  PR_PARAMETR_IN_FILE(Binding_energy)
   
   PR_PARAMETR_IN_FILE(NS_baryonic_mass)
   PR_PARAMETR_IN_FILE(NS_baryonic_mass_current)
@@ -177,6 +187,7 @@ void bbn_print_properties(Grid_T *const grid,const unsigned iteration, const cha
   PR_PARAMETR_IN_FILE(energy_density_center)
   PR_PARAMETR_IN_FILE(Euler_equation_constant)
   
+  PR_PARAMETR_IN_FILE(Virial_error)
   PR_PARAMETR_IN_FILE(largest_L2norm_error)
    
   /* } physics */

@@ -4013,6 +4013,7 @@ static Grid_T *TOV_KerrSchild_approximation(void)
   Psetd("NS_center_x",0);
   Psetd("NS_center_y",C_NS);
   Psetd("NS_center_z",0);
+  Psetd("NS_ADM_mass",1);
   
   /* -> BH properties */  
   Psetd("r_excision",bh_R);
