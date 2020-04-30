@@ -3980,9 +3980,9 @@ static Grid_T *TOV_KerrSchild_approximation(void)
   const double bh_mass = Pgetd("BH_irreducible_mass");
   const double bh_R    = bh_mass*(1+sqrt(1-Pow2(bh_chi)));
   printf("BH properties:\n");
-  printf("--> BH radius (Kerr-Schild Coords.) = %e\n",bh_R);
-  printf("--> BH dimensionless spin (z comp.) = %e\n",bh_chi);
-  printf("--> BH ADM mass                     = %e\n",bh_mass);
+  printf("--> BH radius (Kerr-Schild Coords.) = %+e\n",bh_R);
+  printf("--> BH dimensionless spin (z comp.) = %+e\n",bh_chi);
+  printf("--> BH irreducible mass             = %+e\n",bh_mass);
   printf("} Acquiring Black Hole properties ==> Done.\n");
   pr_clock();
   pr_line_custom('=');
@@ -4020,7 +4020,6 @@ static Grid_T *TOV_KerrSchild_approximation(void)
   Psetd("BH_center_x",0);
   Psetd("BH_center_y",C_BH);
   Psetd("BH_center_z",0);
-  Psetd("BH_irreducible_mass",0);
   
   /* -> BH_Omega, the angular frequency of the horizon,
   // is a free vector that determines the spin of BH
