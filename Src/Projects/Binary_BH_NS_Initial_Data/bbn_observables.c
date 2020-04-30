@@ -716,7 +716,7 @@ void bbn_plan_obs_CS(Observable_T *obs)
       READ_v(_gamma_D1D1)
       
       adm[n]->patch = patch;
-      /* populate metric components, it's used conformal metric */ 
+      /* populate metric components, it uses conformal metric */ 
       for (ijk = 0; ijk < nn; ++ijk)
       {
         g00[ijk] = _gamma_D0D0[ijk];
@@ -799,7 +799,7 @@ void bbn_plan_obs_CS(Observable_T *obs)
       READ_v(_gamma_D1D1)
       
       adm[n]->patch = patch;
-      /* populate metric components, it's used conformal metric */ 
+      /* populate metric components, it uses conformal metric */ 
       for (ijk = 0; ijk < nn; ++ijk)
       {
         g00[ijk] = _gamma_D0D0[ijk];
@@ -877,7 +877,7 @@ void bbn_plan_obs_CS(Observable_T *obs)
       READ_v(_gamma_D1D1)
       
       adm[n]->patch = patch;
-      /* populate metric components, it's used conformal metric */ 
+      /* populate metric components, it uses conformal metric */ 
       for (ijk = 0; ijk < nn; ++ijk)
       {
         g00[ijk] = _gamma_D0D0[ijk];
