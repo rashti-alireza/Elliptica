@@ -4006,8 +4006,8 @@ static Grid_T *TOV_KerrSchild_approximation(void)
   Psetd("x_CM",0);
   Psetd("y_CM",y_CM);
   Psetd("z_CM",0);
-  Psetd("y_CM0",y_CM);
-  Psetd("x_CM0",0);
+  //Psetd("y_CM0",y_CM);
+  //Psetd("x_CM0",0);
   
   /* -> NS properties */
   Psetd("NS_center_x",0);
