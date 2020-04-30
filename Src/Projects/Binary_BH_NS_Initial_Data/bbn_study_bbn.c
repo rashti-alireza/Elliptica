@@ -31,6 +31,8 @@ void bbn_study_initial_data(Grid_T *const grid)
   /* calculating the constraints */
   bbn_calculate_constraints_1st(grid);
   bbn_calculate_constraints_2nd(grid);
+  /* calculating ADM and Kommar masses */
+  bbn_calculate_total_mass(grid);
   
   /* prints */
   bbn_print_fields(grid,(unsigned)solving_iter,folder);
@@ -42,6 +44,28 @@ void bbn_study_initial_data(Grid_T *const grid)
   printf("} Studying initial data for binary BH and NS ==> Done.\n");
   pr_clock();
   pr_line_custom('=');
+}
+
+/* calculating ADM and Kommar masses */
+void bbn_calculate_total_mass(Grid_T *const grid)
+{
+  Observable_T *obs = 0;
+  double adm_mass,kommar_mass;
+
+  obs = init_observable(grid,bbn_plan_obs_CS,bbn_free_obs_CS);
+  obs->quantity = "ADM(M)|BBN";
+  plan_observable(obs);
+  adm_mass = obs->M(obs);
+  free_observable(obs);
+ 
+  obs = init_observable(grid,bbn_plan_obs_CS,bbn_free_obs_CS);
+  obs->quantity = "Kommar(M)|BBN";
+  plan_observable(obs);
+  kommar_mass = obs->M(obs);
+  free_observable(obs);
+  
+  Psetd("BBN_ADM_mass",   adm_mass);
+  Psetd("BBN_Kommar_mass",kommar_mass);
 }
 
 /* print the properites of the system for instance:
