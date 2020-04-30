@@ -176,7 +176,7 @@ static int IsThereAnyUsefulCheckpointFile(void)
                                       "NS_Omega_U1",
                                       "NS_Omega_U2",
                                       "EoS_K",
-                                      "BH_mass",
+                                      "BH_irreducible_mass",
                                       "BH_X_U2",
                                       "BH_NS_separation",
                                       "BH_KerrSchild_RollOff",
@@ -1655,7 +1655,7 @@ static void Px_ADM_is0_by_y_CM(Grid_T *const grid)
   const double Omega_BHNS = Pgetd("BH_NS_angular_velocity");
   const double y_CM0 = Pgetd("y_CM");
   const double M_NS  = Pgetd("NS_mass");
-  const double M_BH  = Pgetd("BH_mass");
+  const double M_BH  = Pgetd("BH_irreducible_mass");
   Grid_T *freedata_grid = 0;/* don't update for inside BH patches */
   Patch_T **freedata_patch = 0;/* all but inside BH patches */
   Observable_T *obs = 0;
@@ -1740,7 +1740,7 @@ static void Py_ADM_is0_by_x_CM(Grid_T *const grid)
   const double Omega_BHNS = Pgetd("BH_NS_angular_velocity");
   const double x_CM0 = Pgetd("x_CM");
   const double M_NS  = Pgetd("NS_mass");
-  const double M_BH  = Pgetd("BH_mass");
+  const double M_BH  = Pgetd("BH_irreducible_mass");
   Grid_T *freedata_grid = 0;/* don't update for inside BH patches */
   Patch_T **freedata_patch = 0;/* all but inside BH patches */
   Observable_T *obs = 0;
@@ -1853,7 +1853,7 @@ static void adjust_AH_radius(Grid_T *const grid,struct Grid_Params_S *const Grid
   pr_line_custom('=');
   printf("{ Adjusting apparent horizon radius to meet BH mass ...\n");
   
-  const double target_bh_mass  = Pgetd("BH_mass");
+  const double target_bh_mass  = Pgetd("BH_irreducible_mass");
   const double current_r_excision = Pgetd("r_excision");
   const double irr_mass    = bbn_BH_irreducible_mass(grid);
   const double kommar_mass = bbn_BH_Kommar_mass(grid);
@@ -1904,7 +1904,7 @@ static void adjust_BH_Omega(Grid_T *const grid,struct Grid_Params_S *const GridP
   UNUSED(grid);
   
   const double bh_chi  = Pgetd("BH_X_U2");
-  const double bh_mass = Pgetd("BH_mass");
+  const double bh_mass = Pgetd("BH_irreducible_mass");
   
   GridParams->a_BH   = bh_chi*bh_mass;
   
@@ -3939,7 +3939,7 @@ static Grid_T *TOV_KerrSchild_approximation(void)
   pr_line_custom('=');
   printf("{ Acquiring Black Hole properties ...\n");
   const double bh_chi  = Pgetd("BH_X_U2");
-  const double bh_mass = Pgetd("BH_mass");
+  const double bh_mass = Pgetd("BH_irreducible_mass");
   const double bh_R    = bh_mass*(1+sqrt(1-Pow2(bh_chi)));
   printf("BH properties:\n");
   printf("--> BH radius (Kerr-Schild Coords.) = %e\n",bh_R);
