@@ -323,7 +323,7 @@ void bbn_print_fields(Grid_T *const grid,const unsigned iteration, const char *c
   pr_line_custom('=');
 }
 
-/* calculate the area of the NS then using area = 4 pi R^2 to find R
+/* calculate the proper area of the NS then using area = 4 pi R^2 to find R
 // as the avarage of NS radius.
 // ->return value: avarage NS radius */
 static double NS_r_average(Grid_T *const grid)
@@ -339,6 +339,7 @@ static double NS_r_average(Grid_T *const grid)
       continue;
       
     unsigned ijk;
+    unsigned nn = patch->nn;
     ADD_FIELD(NS_R_average_integrand)
     READ_v(_gamma_D2D2)
     READ_v(_gamma_D0D2)
@@ -346,6 +347,13 @@ static double NS_r_average(Grid_T *const grid)
     READ_v(_gamma_D0D1)
     READ_v(_gamma_D1D2)
     READ_v(_gamma_D1D1)
+    READ_v(psi);
+    double *g00 = alloc_double(nn);
+    double *g01 = alloc_double(nn);
+    double *g02 = alloc_double(nn);
+    double *g11 = alloc_double(nn);
+    double *g12 = alloc_double(nn);
+    double *g22 = alloc_double(nn);
     
     {/* local variables */
       REALLOC_v_WRITE_v(NS_R_average_integrand)
@@ -353,24 +361,37 @@ static double NS_r_average(Grid_T *const grid)
       FOR_ALL_POINTS(ijk,patch)
       {
         NS_R_average_integrand[ijk] = 1;
+        double psi4 = Pow2(psi[ijk])*Pow2(psi[ijk]);
+        g00[ijk] = psi4*_gamma_D0D0[ijk];
+        g01[ijk] = psi4*_gamma_D0D1[ijk];
+        g02[ijk] = psi4*_gamma_D0D2[ijk];
+        g11[ijk] = psi4*_gamma_D1D1[ijk];
+        g12[ijk] = psi4*_gamma_D1D2[ijk];
+        g22[ijk] = psi4*_gamma_D2D2[ijk];
       }
     }
     DECLARE_FIELD(NS_R_average_integrand)
     Integration_T *I = init_integration();
     I->type = "Integral{f(x)dS},Spectral";
     I->Spectral->f = NS_R_average_integrand;
-    I->g00 = _gamma_D0D0;
-    I->g01 = _gamma_D0D1;
-    I->g02 = _gamma_D0D2;
-    I->g11 = _gamma_D1D1;
-    I->g12 = _gamma_D1D2;
-    I->g22 = _gamma_D2D2;
+    I->g00 = g00;
+    I->g01 = g01;
+    I->g02 = g02;
+    I->g11 = g11;
+    I->g12 = g12;
+    I->g22 = g22;
     I->Spectral->Z_surface = 1;
     I->Spectral->K         = 0;
     plan_integration(I);
     area += execute_integration(I);
     free_integration(I);
     REMOVE_FIELD(NS_R_average_integrand)
+    free(g00);
+    free(g01);
+    free(g02);
+    free(g11);
+    free(g12);
+    free(g22);
   }
   R = sqrt(area/(4*M_PI));
   return R;
