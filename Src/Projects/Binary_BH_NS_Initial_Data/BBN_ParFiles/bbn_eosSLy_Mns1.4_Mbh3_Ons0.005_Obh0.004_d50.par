@@ -23,8 +23,8 @@ EoS_rho_th       = [0, 2.3674e-04, 8.1147e-04, 1.6191e-03]
 EoS_Gamma        = [1.3569e+00, 3.0050e+00, 2.9880e+00, 2.8510e+00]
 
 #### BH:
-BH_mass = 3 
-BH_X_U2 = 0.004  #:= BH spin vector parameter
+BH_irreducible_mass = 3 
+BH_X_U2             = 0.004  #:= BH spin vector parameter
 
 #### Orbits:
 BH_NS_separation       = 50    
