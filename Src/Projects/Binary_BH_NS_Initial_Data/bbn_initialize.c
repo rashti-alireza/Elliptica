@@ -1491,7 +1491,7 @@ static void find_Euler_eq_const(Grid_T *const grid)
   printf("|--> current NS ADM mass      = %e\n",adm_mass);
   printf("|--> current NS Kommar mass   = %e\n",kommar_mass);
   
-  Psetd("NS_baryonic_mass",bar_mass);
+  Psetd("NS_baryonic_mass_current",bar_mass);
   Psetd("NS_ADM_mass",adm_mass);
   Psetd("NS_Kommar_mass",kommar_mass);
   
@@ -1900,7 +1900,7 @@ static void adjust_AH_radius(Grid_T *const grid,struct Grid_Params_S *const Grid
   printf("|--> current BH ADM mass         = %e\n",adm_mass);
   printf("|--> current BH Kommar mass      = %e\n",kommar_mass);
   
-  Psetd("BH_irreducible_mass",irr_mass);
+  Psetd("BH_irreducible_mass_current",irr_mass);
   Psetd("BH_ADM_mass",adm_mass);
   Psetd("BH_Kommar_mass",kommar_mass);
   
