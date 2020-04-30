@@ -23,8 +23,6 @@ double bbn_ADM_mass(Observable_T *const obs)
   for(p = 0; p < N; ++p)
   {
   Patch_T *patch = adm[p]->patch;
-  ADD_FIELD(ADM_mass_integrand_V)
-  ADD_FIELD(ADM_mass_integrand_S)
 
 
   /* declaring: */
@@ -68,6 +66,7 @@ double bbn_ADM_mass(Observable_T *const obs)
 
     if (adm[p]->surface_integration_flg)
     {
+      ADD_FIELD(ADM_mass_integrand_S)
       {
       const double *n_U0 = adm[p]->n_U0;
       const double *n_U1 = adm[p]->n_U1;
@@ -105,6 +104,7 @@ n_U2[ijk];
     }
     else
     {
+      ADD_FIELD(ADM_mass_integrand_V)
       {
       REALLOC_v_WRITE_v(ADM_mass_integrand_V)
       for (ijk = 0; ijk < nn; ++ijk)
