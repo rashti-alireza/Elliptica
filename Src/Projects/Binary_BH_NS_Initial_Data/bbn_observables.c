@@ -737,7 +737,6 @@ void bbn_plan_obs_CS(Observable_T *obs)
       if ( n >= surface_index && 
            regex_search(".+right_BH_surrounding.+",patch->name) )
       {
-        printf("regex = %s\n",patch->name);
         adm[n]->surface_integration_flg = 1;
         adm[n]->Z_surface = 1;
         adm[n]->K = 0;
