@@ -1853,18 +1853,34 @@ static void adjust_AH_radius(Grid_T *const grid,struct Grid_Params_S *const Grid
   pr_line_custom('=');
   printf("{ Adjusting apparent horizon radius to meet BH mass ...\n");
   
-  const double target_bh_mass  = Pgetd("BH_irreducible_mass");
+  const double target_bh_mass     = Pgetd("BH_irreducible_mass");
   const double current_r_excision = Pgetd("r_excision");
-  const double irr_mass    = bbn_BH_irreducible_mass(grid);
-  const double kommar_mass = bbn_BH_Kommar_mass(grid);
   const double W  = Pgetd("BH_r_excision_update_weight");
   const double dM_tolerance = Pgetd("BH_mass_tolerance");
+  const double irr_mass     = bbn_BH_irreducible_mass(grid);
+  double kommar_mass, adm_mass;
+  Observable_T *obs = 0;
   double dr, r_excision,dM;
   
-  printf("|--> current BH Kommar's mass    = %e\n",kommar_mass);
+  obs = init_observable(grid,bbn_plan_obs_CS,bbn_free_obs_CS);
+  obs->quantity = "ADM(M)|BH";
+  plan_observable(obs);
+  adm_mass = obs->M(obs);
+  free_observable(obs);
+  
+  obs = init_observable(grid,bbn_plan_obs_CS,bbn_free_obs_CS);
+  obs->quantity = "Kommar(M)|BH";
+  plan_observable(obs);
+  kommar_mass = obs->M(obs);
+  free_observable(obs);
+  
   printf("|--> current BH irreducible mass = %e\n",irr_mass);
+  printf("|--> current BH ADM mass         = %e\n",adm_mass);
+  printf("|--> current BH Kommar mass      = %e\n",kommar_mass);
   
   Psetd("BH_irreducible_mass",irr_mass);
+  Psetd("BH_ADM_mass",adm_mass);
+  Psetd("BH_Kommar_mass",kommar_mass);
   
   dM = fabs(irr_mass-target_bh_mass);
   dr = -current_r_excision*(irr_mass/target_bh_mass-1);

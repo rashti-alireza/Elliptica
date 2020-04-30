@@ -108,8 +108,16 @@ void bbn_print_properties(Grid_T *const grid,const unsigned iteration, const cha
   PR_PARAMETR_IN_FILE_s(EoS_rho_th)
   PR_PARAMETR_IN_FILE_s(EoS_Gamma)
   
+  PR_PARAMETR_IN_FILE(BBN_ADM_mass)
+  PR_PARAMETR_IN_FILE(BBN_Kommar_mass)
+  
   PR_PARAMETR_IN_FILE(NS_baryonic_mass)
+  PR_PARAMETR_IN_FILE(NS_ADM_mass)
+  PR_PARAMETR_IN_FILE(NS_Kommar_mass)
+  
   PR_PARAMETR_IN_FILE(BH_irreducible_mass)
+  PR_PARAMETR_IN_FILE(BH_ADM_mass)
+  PR_PARAMETR_IN_FILE(BH_Kommar_mass)
   
   PR_PARAMETR_IN_FILE(Px_ADM)
   PR_PARAMETR_IN_FILE(Py_ADM)
