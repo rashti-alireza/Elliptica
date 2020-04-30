@@ -1676,7 +1676,7 @@ static void Px_ADM_is0_by_y_CM(Grid_T *const grid)
   const double dP   = Pgetd("P_ADM_control_tolerance");
   const double Omega_BHNS = Pgetd("BH_NS_angular_velocity");
   const double y_CM0 = Pgetd("y_CM");
-  const double M_NS  = Pgetd("NS_mass");
+  const double M_NS  = Pgetd("NS_baryonic_mass");
   const double M_BH  = Pgetd("BH_irreducible_mass");
   Grid_T *freedata_grid = 0;/* don't update for inside BH patches */
   Patch_T **freedata_patch = 0;/* all but inside BH patches */
@@ -1761,7 +1761,7 @@ static void Py_ADM_is0_by_x_CM(Grid_T *const grid)
   const double dP   = Pgetd("P_ADM_control_tolerance");
   const double Omega_BHNS = Pgetd("BH_NS_angular_velocity");
   const double x_CM0 = Pgetd("x_CM");
-  const double M_NS  = Pgetd("NS_mass");
+  const double M_NS  = Pgetd("NS_baryonic_mass");
   const double M_BH  = Pgetd("BH_irreducible_mass");
   Grid_T *freedata_grid = 0;/* don't update for inside BH patches */
   Patch_T **freedata_patch = 0;/* all but inside BH patches */
@@ -4010,7 +4010,6 @@ static Grid_T *TOV_KerrSchild_approximation(void)
   Psetd("x_CM0",0);
   
   /* -> NS properties */
-  Psetd("NS_mass",ns_mass);
   Psetd("NS_center_x",0);
   Psetd("NS_center_y",C_NS);
   Psetd("NS_center_z",0);
