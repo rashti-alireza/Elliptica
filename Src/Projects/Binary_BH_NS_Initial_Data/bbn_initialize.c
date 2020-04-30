@@ -1847,7 +1847,7 @@ static void update_B1_dB1_Beta_dBete_Aij_dAij(Grid_T *const grid)
   }
 }
 
-/* adjust the apparent horizon radius to acquire the desired BH mass */
+/* adjust the apparent horizon radius to acquire the desired BH irreducible mass */
 static void adjust_AH_radius(Grid_T *const grid,struct Grid_Params_S *const GridParams)
 {
   pr_line_custom('=');
@@ -1859,27 +1859,15 @@ static void adjust_AH_radius(Grid_T *const grid,struct Grid_Params_S *const Grid
   const double kommar_mass = bbn_BH_Kommar_mass(grid);
   const double W  = Pgetd("BH_r_excision_update_weight");
   const double dM_tolerance = Pgetd("BH_mass_tolerance");
-  double dr, r_excision, current_bh_mass,dM;
+  double dr, r_excision,dM;
   
   printf("|--> current BH Kommar's mass    = %e\n",kommar_mass);
   printf("|--> current BH irreducible mass = %e\n",irr_mass);
   
   Psetd("BH_irreducible_mass",irr_mass);
   
-  if (0)
-  {
-    current_bh_mass = kommar_mass;
-  }
-  if (1)
-  {
-    current_bh_mass = irr_mass;
-  }
-    
-  if (current_bh_mass < 0)
-    current_bh_mass = 0;
-  
-  dM = fabs(current_bh_mass-target_bh_mass);
-  dr = -current_r_excision*(current_bh_mass/target_bh_mass-1);
+  dM = fabs(irr_mass-target_bh_mass);
+  dr = -current_r_excision*(irr_mass/target_bh_mass-1);
   if (EQL(W,0))
   {
     dr = 0;
