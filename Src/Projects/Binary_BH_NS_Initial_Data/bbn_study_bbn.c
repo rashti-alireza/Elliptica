@@ -323,7 +323,7 @@ void bbn_print_fields(Grid_T *const grid,const unsigned iteration, const char *c
   pr_line_custom('=');
 }
 
-/* calculate the area of the NS then using 4 pi R^2 to find R
+/* calculate the area of the NS then using area = 4 pi R^2 to find R
 // as the avarage of NS radius.
 // ->return value: avarage NS radius */
 static double NS_r_average(Grid_T *const grid)
