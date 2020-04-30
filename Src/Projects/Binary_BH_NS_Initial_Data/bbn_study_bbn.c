@@ -52,6 +52,7 @@ void bbn_measures(Grid_T *const grid)
   Observable_T *obs = 0;
   double adm_mass,kommar_mass;
   double virial_error, binding_energy,mass_ratio;
+  const double NS_R_avg = NS_r_average(grid);
   
   obs = init_observable(grid,bbn_plan_obs_CS,bbn_free_obs_CS);
   obs->quantity = "ADM(M)|BBN";
@@ -75,6 +76,7 @@ void bbn_measures(Grid_T *const grid)
   Psetd("Binding_energy" ,binding_energy);
   Psetd("Virial_error"   ,virial_error);
   Psetd("mass_ratio"     ,mass_ratio);
+  Psetd("NS_compactness" ,Pgetd("NS_ADM_mass")/NS_R_avg);
   
 }
 
@@ -155,7 +157,9 @@ void bbn_print_properties(Grid_T *const grid,const unsigned iteration, const cha
   PR_PARAMETR_IN_FILE(BH_irreducible_mass_current)
   PR_PARAMETR_IN_FILE(BH_ADM_mass)
   PR_PARAMETR_IN_FILE(BH_Kommar_mass)
+  
   PR_PARAMETR_IN_FILE(mass_ratio)
+  PR_PARAMETR_IN_FILE(NS_compactness)
   
   PR_PARAMETR_IN_FILE(Px_ADM)
   PR_PARAMETR_IN_FILE(Py_ADM)
@@ -318,3 +322,58 @@ void bbn_print_fields(Grid_T *const grid,const unsigned iteration, const char *c
   printf("} Printing Specified Fields for Binary BH and NS ==> Done.\n");
   pr_line_custom('=');
 }
+
+/* calculate the area of the NS then using 4 pi R^2 to find R
+// as the avarage of NS radius.
+// ->return value: avarage NS radius */
+static double NS_r_average(Grid_T *const grid)
+{
+  double R = 0, area = 0;
+  unsigned p;
+  
+  FOR_ALL_PATCHES(p,grid)
+  {
+    Patch_T *patch = grid->patch[p];
+    
+    if (!IsItNSSurroundingPatch(patch))
+      continue;
+      
+    unsigned ijk;
+    ADD_FIELD(NS_R_average_integrand)
+    READ_v(_gamma_D2D2)
+    READ_v(_gamma_D0D2)
+    READ_v(_gamma_D0D0)
+    READ_v(_gamma_D0D1)
+    READ_v(_gamma_D1D2)
+    READ_v(_gamma_D1D1)
+    
+    {/* local variables */
+      REALLOC_v_WRITE_v(NS_R_average_integrand)
+
+      FOR_ALL_POINTS(ijk,patch)
+      {
+        NS_R_average_integrand[ijk] = 1;
+      }
+    }
+    DECLARE_FIELD(NS_R_average_integrand)
+    Integration_T *I = init_integration();
+    I->type = "Integral{f(x)dS},Spectral";
+    I->Spectral->f = NS_R_average_integrand;
+    I->g00 = _gamma_D0D0;
+    I->g01 = _gamma_D0D1;
+    I->g02 = _gamma_D0D2;
+    I->g11 = _gamma_D1D1;
+    I->g12 = _gamma_D1D2;
+    I->g22 = _gamma_D2D2;
+    I->Spectral->Z_surface = 1;
+    I->Spectral->K         = 0;
+    plan_integration(I);
+    area += execute_integration(I);
+    free_integration(I);
+    REMOVE_FIELD(NS_R_average_integrand)
+  }
+  R = sqrt(area/(4*M_PI));
+  return R;
+}
+
+
