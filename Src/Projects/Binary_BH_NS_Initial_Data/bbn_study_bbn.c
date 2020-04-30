@@ -31,7 +31,7 @@ void bbn_study_initial_data(Grid_T *const grid)
   /* calculating the constraints */
   bbn_calculate_constraints_1st(grid);
   bbn_calculate_constraints_2nd(grid);
-  /* calculating ADM and Kommar masses */
+  /* calculating ADM , Kommar masses ratios, error etc. */
   bbn_measures(grid);
   
   /* prints */
