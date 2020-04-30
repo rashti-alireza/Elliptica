@@ -1853,7 +1853,7 @@ static void adjust_AH_radius(Grid_T *const grid,struct Grid_Params_S *const Grid
   pr_line_custom('=');
   printf("{ Adjusting apparent horizon radius to meet BH mass ...\n");
   
-  const double target_bh_mass     = Pgetd("BH_irreducible_mass");
+  const double target_bh_mass  = Pgetd("BH_irreducible_mass");
   const double current_r_excision = Pgetd("r_excision");
   const double W  = Pgetd("BH_r_excision_update_weight");
   const double dM_tolerance = Pgetd("BH_mass_tolerance");
