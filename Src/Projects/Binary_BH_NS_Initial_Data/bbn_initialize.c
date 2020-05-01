@@ -1799,7 +1799,8 @@ static void Pz_ADM_is0_by_BH_Vz(Grid_T *const grid)
   pz  = Pgetd("Pz_ADM");
   pz0 = Pgetd("Pz_ADM_prev");
   /* adjust BH_Vz */
-  dBH_Vz    = -pz/M_BH;
+  //dBH_Vz    = -pz/M_BH;
+  dBH_Vz    = pz/M_BH;
   BH_Vz_new = W*dBH_Vz+BH_Vz;
   
   const double dPz_Pz = fabs(pz0-pz)/fabs(pz);
