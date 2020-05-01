@@ -77,6 +77,7 @@ void bbn_measures(Grid_T *const grid)
   Psetd("Virial_error"   ,virial_error);
   Psetd("mass_ratio"     ,mass_ratio);
   Psetd("NS_compactness" ,Pgetd("NS_ADM_mass")/NS_R_avg);
+  Psetd("NS_average_proper_radius" ,NS_R_avg);
   
 }
 
@@ -152,6 +153,7 @@ void bbn_print_properties(Grid_T *const grid,const unsigned iteration, const cha
   PR_PARAMETR_IN_FILE(NS_baryonic_mass_current)
   PR_PARAMETR_IN_FILE(NS_ADM_mass)
   PR_PARAMETR_IN_FILE(NS_Kommar_mass)
+  PR_PARAMETR_IN_FILE(NS_average_proper_radius)
   
   PR_PARAMETR_IN_FILE(BH_irreducible_mass)
   PR_PARAMETR_IN_FILE(BH_irreducible_mass_current)
