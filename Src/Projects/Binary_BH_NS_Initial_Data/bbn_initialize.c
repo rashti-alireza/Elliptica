@@ -1811,19 +1811,19 @@ static void Pz_ADM_is0_by_BH_Vz(Grid_T *const grid)
     Psetd("BH_Vz",BH_Vz_new);
     bbn_populate_free_data(freedata_grid);
     update_B1_dB1_Beta_dBete_Aij_dAij(grid);
-    obs = init_observable(grid,bbn_plan_ADMs_CS,bbn_free_ADMs_CS);
+    obs = init_observable(grid,bbn_plan_obs_CS,bbn_free_obs_CS);
     obs->quantity = "ADMs";
     plan_observable(obs);
     
     /* get the current P_ADMs */
-    p_adm[0] = obs->Px_ADM(obs);
-    p_adm[1] = obs->Py_ADM(obs);
-    p_adm[2] = obs->Pz_ADM(obs);
+    p_adm[0] = obs->Px(obs);
+    p_adm[1] = obs->Py(obs);
+    p_adm[2] = obs->Pz(obs);
     
     /* get the current J_ADMs  */
-    j_adm[0] = obs->Jx_ADM(obs);
-    j_adm[1] = obs->Jy_ADM(obs);
-    j_adm[2] = obs->Jz_ADM(obs);
+    j_adm[0] = obs->Jx(obs);
+    j_adm[1] = obs->Jy(obs);
+    j_adm[2] = obs->Jz(obs);
     
     printf("|--> After BH_Vz update P_ADM = (%e,%e,%e)\n",p_adm[0],p_adm[1],p_adm[2]);
     printf("|--> After BH_Vz update J_ADM = (%e,%e,%e)\n",j_adm[0],j_adm[1],j_adm[2]);
