@@ -1765,7 +1765,7 @@ static void Pz_ADM_is0_by_BH_Vz(Grid_T *const grid)
   const double W     = Pgetd("P_ADM_control_update_weight");
   const double dP    = Pgetd("P_ADM_control_tolerance");
   const double BH_Vz = Pgetd("BH_Vz");
-  const double M_BH  = Pgetd("BH_mass");
+  const double M_BH  = Pgetd("BH_irreducible_mass");
   Grid_T *freedata_grid = 0;/* don't update for inside BH patches */
   Patch_T **freedata_patch = 0;/* all but inside BH patches */
   Observable_T *obs = 0;
