@@ -35,9 +35,8 @@ void bbn_study_initial_data(Grid_T *const grid)
   /* make sure solving_iter is set */
   if (solving_iter != INT_MAX)
   {
-    /* calculating ADM , Kommar masses ratios, error etc. */
-    if (solving_iter > 0)/* some pars are defined after 0 iter */
-      bbn_measures(grid);
+    /* calculating ADM , Kommar masses ratios, spins, errors etc. */
+    bbn_measures(grid);
     
     /* prints */
     bbn_print_fields(grid,(unsigned)solving_iter,folder);
@@ -56,13 +55,14 @@ void bbn_measures(Grid_T *const grid)
 {
   Observable_T *obs = 0;
   double adm_mass,kommar_mass;
+  const int solving_iter   = PgetiEZ("solving_iteration_number");
   const double ns_adm_mass = Pgetd("NS_ADM_mass");
   const double bh_irr_mass = Pgetd("BH_irreducible_mass");
   double virial_error, binding_energy,mass_ratio;
   const double NS_R_avg = NS_r_average(grid);
-  double Rc_NS[3] = {0},Rc_BH[3] = {0};/* centers */
-  double S_NS[3] = {0},S_BH[3] = {0};/* spins */
-  double J[3] = {0},P[3] = {0};
+  double Rc_NS[3] = {0}, Rc_BH[3] = {0};/* centers */
+  double S_NS[3]  = {0}, S_BH[3]  = {0};/* spins */
+  double J[3]     = {0}, P[3]     = {0};/* P and J ADMs */
   
   /* adm mass */
   obs = init_observable(grid,bbn_plan_obs_CS,bbn_free_obs_CS);
@@ -78,29 +78,33 @@ void bbn_measures(Grid_T *const grid)
   kommar_mass = obs->M(obs);
   free_observable(obs);
   
-  /* mass ratio, Eb , error */
+  /* mass ratio, E_b , error */
   mass_ratio     = bh_irr_mass/ns_adm_mass;
   binding_energy = adm_mass-bh_irr_mass-ns_adm_mass;
   virial_error   = fabs(1-kommar_mass/adm_mass);
   
-  /* NS spins */
-  bbn_Rc_NS(Rc_NS,grid);
-  P[0] = Pgetd("NS_Px_ADM");
-  P[1] = Pgetd("NS_Py_ADM");
-  P[2] = Pgetd("NS_Pz_ADM");
-  J[0] = Pgetd("NS_Jx_ADM");
-  J[1] = Pgetd("NS_Jy_ADM");
-  J[2] = Pgetd("NS_Jz_ADM");
-  define_spin_JRP(S_NS,J,Rc_NS,P);
-  
-  bbn_Rc_BH(Rc_BH,grid);
-  P[0] = Pgetd("BH_Px_ADM");
-  P[1] = Pgetd("BH_Py_ADM");
-  P[2] = Pgetd("BH_Pz_ADM");
-  J[0] = Pgetd("BH_Jx_ADM");
-  J[1] = Pgetd("BH_Jy_ADM");
-  J[2] = Pgetd("BH_Jz_ADM");
-  define_spin_JRP(S_BH,J,Rc_BH,P);
+  /* some pars are defined after 0 iter */
+  if (solving_iter > 0 && solving_iter != INT_MAX)
+  {
+    /* NS spins */
+    bbn_Rc_NS(Rc_NS,grid);
+    P[0] = Pgetd("NS_Px_ADM");
+    P[1] = Pgetd("NS_Py_ADM");
+    P[2] = Pgetd("NS_Pz_ADM");
+    J[0] = Pgetd("NS_Jx_ADM");
+    J[1] = Pgetd("NS_Jy_ADM");
+    J[2] = Pgetd("NS_Jz_ADM");
+    define_spin_JRP(S_NS,J,Rc_NS,P);
+    
+    bbn_Rc_BH(Rc_BH,grid);
+    P[0] = Pgetd("BH_Px_ADM");
+    P[1] = Pgetd("BH_Py_ADM");
+    P[2] = Pgetd("BH_Pz_ADM");
+    J[0] = Pgetd("BH_Jx_ADM");
+    J[1] = Pgetd("BH_Jy_ADM");
+    J[2] = Pgetd("BH_Jz_ADM");
+    define_spin_JRP(S_BH,J,Rc_BH,P);
+  }
   
   /* update parameters */ 
   Psetd("BBN_ADM_mass"   ,adm_mass);
@@ -577,11 +581,11 @@ void bbn_Rc_BH(double Rc[3],Grid_T *const grid)
 }
 
 /* approximate spin using : S = J - RxP */
-static void define_spin_JRP(double s[3],const double J[3],const double R[3],const double P[3])
+static void define_spin_JRP(double S[3],const double J[3],const double R[3],const double P[3])
 {
-  s[0] = J[0] - (-P[1]*R[2] + P[2]*R[1]);
-  s[1] = J[1] - (P[0]*R[2] - P[2]*R[0]);
-  s[2] = J[2] - (-P[0]*R[1] + P[1]*R[0]);
+  S[0] = J[0] - (-P[1]*R[2] + P[2]*R[1]);
+  S[1] = J[1] - (P[0]*R[2] - P[2]*R[0]);
+  S[2] = J[2] - (-P[0]*R[1] + P[1]*R[0]);
 }
 
 
