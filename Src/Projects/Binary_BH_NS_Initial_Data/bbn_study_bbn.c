@@ -32,7 +32,9 @@ void bbn_study_initial_data(Grid_T *const grid)
   bbn_calculate_constraints_1st(grid);
   bbn_calculate_constraints_2nd(grid);
   /* calculating ADM , Kommar masses ratios, error etc. */
-  bbn_measures(grid);
+  /* since some of the parameters are defined after 1st iterations */
+  if (solving_iter > 0)
+    bbn_measures(grid);
   
   /* prints */
   bbn_print_fields(grid,(unsigned)solving_iter,folder);
@@ -474,7 +476,7 @@ void bbn_Rc_BH(double Rc[3],Grid_T *const grid)
 {
   const double AH_area = Pgetd("BH_AH_area");
   const double x_CM = Pgetd("x_CM");
-  const double y_CM = Pgetd("y_CN");
+  const double y_CM = Pgetd("y_CM");
   unsigned p;
 
   Rc[0] = 0;
