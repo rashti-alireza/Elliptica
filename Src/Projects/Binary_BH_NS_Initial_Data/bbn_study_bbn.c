@@ -502,7 +502,12 @@ void bbn_Rc_BH(double Rc[3],Grid_T *const grid)
   Rc[2] /= (AH_area);
 }
 
-
-
+/* approximate spin using : S = J - RxP */
+static void define_spin_JRP(double s[3],const double J[3],const double R[3],const double P[3])
+{
+  s[0] = J[0] - (-P[1]*R[2] + P[2]*R[1]);
+  s[1] = J[1] - (P[0]*R[2] - P[2]*R[0]);
+  s[2] = J[2] - (-P[0]*R[1] + P[1]*R[0]);
+}
 
 
