@@ -159,6 +159,7 @@ void bbn_print_properties(Grid_T *const grid,const unsigned iteration, const cha
   PR_PARAMETR_IN_FILE(BH_irreducible_mass_current)
   PR_PARAMETR_IN_FILE(BH_ADM_mass)
   PR_PARAMETR_IN_FILE(BH_Kommar_mass)
+  PR_PARAMETR_IN_FILE(BBH_AH_area)
   
   PR_PARAMETR_IN_FILE(mass_ratio)
   PR_PARAMETR_IN_FILE(NS_compactness)

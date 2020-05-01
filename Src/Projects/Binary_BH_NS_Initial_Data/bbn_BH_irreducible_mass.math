@@ -123,6 +123,7 @@ Symm[_gamma(i,j)   = _gamma(j,i)];
 `  free(g22);`
 
 `  }`# end of FOR_ALL_PATCHES
+`  Psetd("BH_AH_area",A_AH);`
 ``
 `  return sqrt(A_AH/(16*M_PI));`
 `}`

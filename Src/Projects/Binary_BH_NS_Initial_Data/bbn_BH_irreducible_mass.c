@@ -81,6 +81,7 @@ pow(psi[ijk], 4);
   free(g12);
   free(g22);
   }
+  Psetd("BH_AH_area",A_AH);
 
   return sqrt(A_AH/(16*M_PI));
 }
