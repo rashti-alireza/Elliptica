@@ -134,6 +134,8 @@ void bbn_print_properties(Grid_T *const grid,const unsigned iteration, const cha
 void bbn_plan_obs_CS(Observable_T *obs);
 void bbn_free_obs_CS(Observable_T *obs);
 void bbn_measures(Grid_T *const grid);
+void bbn_Rc_NS(double Rc[3],Grid_T *const grid);
+void bbn_Rc_BH(double Rc[3],Grid_T *const grid);
 
 #endif
 
