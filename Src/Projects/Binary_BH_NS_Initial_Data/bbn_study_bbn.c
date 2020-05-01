@@ -31,17 +31,20 @@ void bbn_study_initial_data(Grid_T *const grid)
   /* calculating the constraints */
   bbn_calculate_constraints_1st(grid);
   bbn_calculate_constraints_2nd(grid);
-  /* calculating ADM , Kommar masses ratios, error etc. */
-  /* since some of the parameters are defined after 1st iterations */
-  if (solving_iter > 0)
-    bbn_measures(grid);
   
-  /* prints */
-  bbn_print_fields(grid,(unsigned)solving_iter,folder);
-  bbn_print_residual_norms(grid,(unsigned)solving_iter,folder);
-  bbn_print_properties(grid,(unsigned)solving_iter,folder,"a",1);
-  
-  Pseti("solving_iteration_number",++solving_iter);
+  /* make sure solving_iter is set */
+  if (solving_iter != INT_MAX)
+  {
+    /* calculating ADM , Kommar masses ratios, error etc. */
+    if (solving_iter > 0)/* some pars are defined after 0 iter */
+      bbn_measures(grid);
+    
+    /* prints */
+    bbn_print_fields(grid,(unsigned)solving_iter,folder);
+    bbn_print_residual_norms(grid,(unsigned)solving_iter,folder);
+    bbn_print_properties(grid,(unsigned)solving_iter,folder,"a",1);
+    Pseti("solving_iteration_number",++solving_iter);
+  }
   
   printf("} Studying initial data for binary BH and NS ==> Done.\n");
   pr_clock();
