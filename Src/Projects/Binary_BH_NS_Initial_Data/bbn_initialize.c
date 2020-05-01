@@ -1812,7 +1812,7 @@ static void Pz_ADM_is0_by_BH_Vz(Grid_T *const grid)
     bbn_populate_free_data(freedata_grid);
     update_B1_dB1_Beta_dBete_Aij_dAij(grid);
     obs = init_observable(grid,bbn_plan_obs_CS,bbn_free_obs_CS);
-    obs->quantity = "ADMs";
+    obs->quantity = "ADM(P,J)|BBN";
     plan_observable(obs);
     
     /* get the current P_ADMs */
