@@ -1,0 +1,121 @@
+# Manifold or grid Dimension
+Dimension = 3;
+
+# point on manifold shown by:
+Point = ijk;
+
+C_macro  = READ_v(name);
+
+`#include "bbn_headers.h"\n`
+
+# return the Kommar mass for the specified object(s)
+`double bbn_Kommar_mass(Observable_T *const obs);`
+`double bbn_Kommar_mass(Observable_T *const obs)`
+`{`
+`  double Kommar_mass = 0;`
+`  struct items_S **const kommar = obs->items;`
+`  const unsigned N = obs->Nitems;`
+`  unsigned p;`
+``
+`  for(p = 0; p < N; ++p)`
+`  {`
+`    Patch_T *patch     = kommar[p]->patch;`
+`    const double *n_U0 = kommar[p]->n_U0;`
+`    const double *n_U1 = kommar[p]->n_U1;`
+`    const double *n_U2 = kommar[p]->n_U2;`
+`    unsigned nn        = patch->nn;`
+`    unsigned ijk;`
+``
+`    ADD_FIELD(Kommar_mass_integrand)`
+``
+Declare = 
+{
+ # conformal metric 
+ (obj = Field,name = _gamma, rank = DD, C_macro);
+
+ # conformal metric inverse
+ #(obj = Field,name = _gammaI, rank = UU, C_macro);
+
+ # _A^{ij}
+ (obj = Field,name = _A_UiUj, rank = UU, C_macro);
+
+ # eta
+ (obj = Field,name = eta, rank = 0, C_macro);
+
+ # deta
+ (obj = Field,name = deta, rank = D, C_macro);
+
+ # Beta
+ (obj = Field,name = Beta, rank = U, C_macro);
+
+ # trKij
+ (obj = Field,name = K, rank = 0, C_macro);
+
+ # Killing vector xi^i, assumed 0
+ #(obj = Field,name = xi, rank = U, C_macro);
+
+ # conformal factor
+ (obj = Field,name = psi, rank = 0, C_macro);
+
+ # d(conformal factor)
+ (obj = Field,name = dpsi, rank = D, C_macro);
+
+ # normal vector on S
+ (obj = Field,name = n, rank = U, none);
+
+ # integrand P
+ #(obj = Field,name = Kommar_mass_integrand, rank = 0, none);
+
+}
+# symmetries:
+Symm[_A_UiUj(i,j)  = _A_UiUj(j,i)];
+#Symm[_gammaI(i,j)  = _gammaI(j,i)];
+Symm[_gamma(i,j)   = _gamma(j,i)];
+
+`{`# make it local variables
+`    REALLOC_v_WRITE_v(Kommar_mass_integrand)`
+
+# populate inegrand 
+`    for(ijk = 0; ijk < nn; ++ijk)`
+`    {`
+       psim2 = psi**-2;
+       psi2  = psi**2;
+       psi4  = psi**4;
+       dalpha(i) = deta(i)/psi-eta*dpsi(i)/psi2;
+       K_DD(-i,-j) = psim2*_A_UiUj(ip,jp)*_gamma(i,-ip)*_gamma(j,-jp)+\
+		    1/3*K*psi4*_gamma(i,j);
+       Symm[K_DD(i,j) = K_DD(j,i)];
+       integrand = n(-i)*(dalpha(i)-K_DD(i,j)*Beta(-j));
+``
+`      Kommar_mass_integrand[ijk] = integrand;`
+`    }`
+`}`
+``
+`  DECLARE_FIELD(Kommar_mass_integrand)`
+`  Integration_T *I = init_integration();`
+`  I->type = "Integral{f(x)dS},Spectral";`
+`  I->Spectral->f = Kommar_mass_integrand;`
+`  I->g00 = kommar[p]->g00;`
+`  I->g01 = kommar[p]->g01;`
+`  I->g02 = kommar[p]->g02;`
+`  I->g11 = kommar[p]->g11;`
+`  I->g12 = kommar[p]->g12;`
+`  I->g22 = kommar[p]->g22;`
+`  I->Spectral->X_surface = kommar[p]->X_surface;`
+`  I->Spectral->Y_surface = kommar[p]->Y_surface;`
+`  I->Spectral->Z_surface = kommar[p]->Z_surface;`
+`  I->Spectral->I         = kommar[p]->I;`
+`  I->Spectral->J         = kommar[p]->J;`
+`  I->Spectral->K         = kommar[p]->K;`
+`  plan_integration(I);`
+`  Kommar_mass += execute_integration(I);`
+``
+`  free_integration(I);`
+`  REMOVE_FIELD(Kommar_mass_integrand)`
+
+`  }`# end of FOR_ALL_PATCHES
+``
+`  Kommar_mass /= (4*M_PI);`
+`  return Kommar_mass;`
+
+`}`

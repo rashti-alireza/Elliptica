@@ -6,61 +6,55 @@
 
 #include "bbn_headers.h"
 
-double bbn_BH_Kommar_mass(Grid_T *const grid);
-double bbn_BH_Kommar_mass(Grid_T *const grid)
+double bbn_Kommar_mass(Observable_T *const obs);
+double bbn_Kommar_mass(Observable_T *const obs)
 {
-  double BH_Kommar_mass = 0;
+  double Kommar_mass = 0;
+  struct items_S **const kommar = obs->items;
+  const unsigned N = obs->Nitems;
   unsigned p;
 
-  FOR_ALL_PATCHES(p,grid)
+  for(p = 0; p < N; ++p)
   {
-    Patch_T *patch = grid->patch[p];
-    unsigned nn    = patch->nn;
+    Patch_T *patch     = kommar[p]->patch;
+    const double *n_U0 = kommar[p]->n_U0;
+    const double *n_U1 = kommar[p]->n_U1;
+    const double *n_U2 = kommar[p]->n_U2;
+    unsigned nn        = patch->nn;
     unsigned ijk;
 
-    if (!IsItHorizonPatch(patch))
-      continue;
-    ADD_FIELD(BH_Kommar_mass_integrand)
+    ADD_FIELD(Kommar_mass_integrand)
 
-    double *g00 = alloc_double(nn);
-    double *g01 = alloc_double(nn);
-    double *g02 = alloc_double(nn);
-    double *g11 = alloc_double(nn);
-    double *g12 = alloc_double(nn);
-    double *g22 = alloc_double(nn);
 
-    /* declaring: */
-    READ_v(_gamma_D2D2)
-    READ_v(_gamma_D0D2)
-    READ_v(_gamma_D0D0)
-    READ_v(_gamma_D0D1)
-    READ_v(_gamma_D1D2)
-    READ_v(_gamma_D1D1)
-    READ_v(_A_UiUj_U2U2)
-    READ_v(_A_UiUj_U1U2)
-    READ_v(_A_UiUj_U1U1)
-    READ_v(_A_UiUj_U0U2)
-    READ_v(_A_UiUj_U0U1)
-    READ_v(_A_UiUj_U0U0)
-    READ_v(eta)
-    READ_v(deta_D0)
-    READ_v(deta_D1)
-    READ_v(deta_D2)
-    READ_v(Beta_U1)
-    READ_v(Beta_U0)
-    READ_v(Beta_U2)
-    READ_v(K)
-    READ_v(psi)
-    READ_v(dpsi_D0)
-    READ_v(dpsi_D1)
-    READ_v(dpsi_D2)
-    READ_v(_HS_U2)
-    READ_v(_HS_U0)
-    READ_v(_HS_U1)
+  /* declaring: */
+  READ_v(_gamma_D2D2)
+  READ_v(_gamma_D0D2)
+  READ_v(_gamma_D0D0)
+  READ_v(_gamma_D0D1)
+  READ_v(_gamma_D1D2)
+  READ_v(_gamma_D1D1)
+  READ_v(_A_UiUj_U2U2)
+  READ_v(_A_UiUj_U1U2)
+  READ_v(_A_UiUj_U1U1)
+  READ_v(_A_UiUj_U0U2)
+  READ_v(_A_UiUj_U0U1)
+  READ_v(_A_UiUj_U0U0)
+  READ_v(eta)
+  READ_v(deta_D0)
+  READ_v(deta_D1)
+  READ_v(deta_D2)
+  READ_v(Beta_U1)
+  READ_v(Beta_U0)
+  READ_v(Beta_U2)
+  READ_v(K)
+  READ_v(psi)
+  READ_v(dpsi_D0)
+  READ_v(dpsi_D1)
+  READ_v(dpsi_D2)
 
 
 {
-    REALLOC_v_WRITE_v(BH_Kommar_mass_integrand)
+    REALLOC_v_WRITE_v(Kommar_mass_integrand)
     for(ijk = 0; ijk < nn; ++ijk)
     {
     double psim2 = 
@@ -71,15 +65,6 @@ pow(psi[ijk], 2);
 
     double psi4 = 
 pow(psi[ijk], 4);
-
-    double s_U1 = 
-_HS_U1[ijk]*psim2;
-
-    double s_U0 = 
-_HS_U0[ijk]*psim2;
-
-    double s_U2 = 
-_HS_U2[ijk]*psim2;
 
     double dalpha_U1 = 
 deta_D1[ijk]/psi[ijk] - dpsi_D1[ijk]*eta[ijk]/psi2;
@@ -151,49 +136,40 @@ _gamma_D1D2[ijk] + _A_UiUj_U2U2[ijk]*_gamma_D0D2[ijk]*
 _gamma_D2D2[ijk]);
 
     double integrand = 
--s_U0*(Beta_U0[ijk]*K_DD_D0D0 + Beta_U1[ijk]*K_DD_D0D1 + Beta_U2[ijk]*
-K_DD_D0D2 - dalpha_U0) - s_U1*(Beta_U0[ijk]*K_DD_D0D1 + Beta_U1[ijk]*
-K_DD_D1D1 + Beta_U2[ijk]*K_DD_D1D2 - dalpha_U1) - s_U2*(Beta_U0[ijk]*
-K_DD_D0D2 + Beta_U1[ijk]*K_DD_D1D2 + Beta_U2[ijk]*K_DD_D2D2 -
-dalpha_U2);
+-n_U0[ijk]*(Beta_U0[ijk]*K_DD_D0D0 + Beta_U1[ijk]*K_DD_D0D1 +
+Beta_U2[ijk]*K_DD_D0D2 - dalpha_U0) - n_U1[ijk]*(Beta_U0[ijk]*
+K_DD_D0D1 + Beta_U1[ijk]*K_DD_D1D1 + Beta_U2[ijk]*K_DD_D1D2 -
+dalpha_U1) - n_U2[ijk]*(Beta_U0[ijk]*K_DD_D0D2 + Beta_U1[ijk]*
+K_DD_D1D2 + Beta_U2[ijk]*K_DD_D2D2 - dalpha_U2);
 
 
-      BH_Kommar_mass_integrand[ijk] = integrand;
-      /* metric */
-      g00[ijk] = psi4*_gamma_D0D0[ijk];
-      g01[ijk] = psi4*_gamma_D0D1[ijk];
-      g02[ijk] = psi4*_gamma_D0D2[ijk];
-      g11[ijk] = psi4*_gamma_D1D1[ijk];
-      g12[ijk] = psi4*_gamma_D1D2[ijk];
-      g22[ijk] = psi4*_gamma_D2D2[ijk];
+      Kommar_mass_integrand[ijk] = integrand;
     }
 }
 
-  DECLARE_FIELD(BH_Kommar_mass_integrand)
+  DECLARE_FIELD(Kommar_mass_integrand)
   Integration_T *I = init_integration();
   I->type = "Integral{f(x)dS},Spectral";
-  I->Spectral->f = BH_Kommar_mass_integrand;
-  I->g00 = g00;
-  I->g01 = g01;
-  I->g02 = g02;
-  I->g11 = g11;
-  I->g12 = g12;
-  I->g22 = g22;
-  I->Spectral->Z_surface = 1;
-  I->Spectral->K         = 0;
+  I->Spectral->f = Kommar_mass_integrand;
+  I->g00 = kommar[p]->g00;
+  I->g01 = kommar[p]->g01;
+  I->g02 = kommar[p]->g02;
+  I->g11 = kommar[p]->g11;
+  I->g12 = kommar[p]->g12;
+  I->g22 = kommar[p]->g22;
+  I->Spectral->X_surface = kommar[p]->X_surface;
+  I->Spectral->Y_surface = kommar[p]->Y_surface;
+  I->Spectral->Z_surface = kommar[p]->Z_surface;
+  I->Spectral->I         = kommar[p]->I;
+  I->Spectral->J         = kommar[p]->J;
+  I->Spectral->K         = kommar[p]->K;
   plan_integration(I);
-  BH_Kommar_mass += execute_integration(I);
+  Kommar_mass += execute_integration(I);
 
   free_integration(I);
-  REMOVE_FIELD(BH_Kommar_mass_integrand)
-  free(g00);
-  free(g01);
-  free(g02);
-  free(g11);
-  free(g12);
-  free(g22);
+  REMOVE_FIELD(Kommar_mass_integrand)
   }
 
-  BH_Kommar_mass /= (4*M_PI);
-  return BH_Kommar_mass;
+  Kommar_mass /= (4*M_PI);
+  return Kommar_mass;
 }

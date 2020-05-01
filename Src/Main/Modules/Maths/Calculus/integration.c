@@ -162,8 +162,8 @@ void plan_integration(Integration_T *const I)
     if (I->Spectral->X_surface) count++;
     if (I->Spectral->Y_surface) count++;
     if (I->Spectral->Z_surface) count++;
-    if (count > 1)
-      Error0("At 'Integral{f(x)dS},Spectral' more than one hypersurface was flagged.\n");
+    if (count != 1)
+      Error0("Wrong hypersurface flag for 'Integral{f(x)dS},Spectral'.\n");
     
     if (coordsys == Cartesian || coordsys == CubedSpherical)
     {

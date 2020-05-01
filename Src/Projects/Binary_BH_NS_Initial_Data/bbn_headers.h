@@ -39,7 +39,7 @@ struct Force_Balance_RootFinder_S
 };
 
 /* items needed to calculate Ps and Js ADMs */
-struct PsJs_ADM_S
+struct items_S
 {
   Patch_T *patch;/* the patch in which the following variables are defined */
   /* physical metric components */
@@ -90,7 +90,6 @@ void bbn_update_stress_energy_tensor(Grid_T *const grid,const int flag);
 double bbn_KerrSchild_H(const double M_BH,const double rbar,const double a,const double z);
 double bbn_KerrShcild_r(const double x,const double y,const double z,const double a);
 void bbn_extrapolate_metric_fields_insideBH(Grid_T *const grid);
-double bbn_BH_Kommar_mass(Grid_T *const grid);
 double bbn_BH_irreducible_mass(Grid_T *const grid);
 void bbn_free_metric_and_Gamma_and_derivatives(Grid_T *const grid);
 void bbn_make_metric_and_Gamma_and_derivatives(Grid_T *const grid);
@@ -132,9 +131,9 @@ int bbn_IsCheckpointFileCompleted(const char *const file_path);
 void bbn_add_fields_in_patch(Patch_T *const patch);
 void bbn_bam_set_bam_fields(Grid_T *const grid);
 void bbn_print_properties(Grid_T *const grid,const unsigned iteration, const char *const folder,const char *const open_file_mode,const int pr_flg);
-void bbn_plan_ADMs_CS(Observable_T *obs);
-void bbn_free_ADMs_CS(Observable_T *obs);
-
+void bbn_plan_obs_CS(Observable_T *obs);
+void bbn_free_obs_CS(Observable_T *obs);
+void bbn_measures(Grid_T *const grid);
 
 #endif
 

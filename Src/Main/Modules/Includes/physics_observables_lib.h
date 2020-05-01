@@ -12,17 +12,16 @@ typedef struct OBSERVABLE_T
                // by plan and freed by free fucntions */
   unsigned Nitems;/* number of items */
   
-  /* functions to calculate ADM momentums in each direction */
-  double (*Px_ADM)(struct OBSERVABLE_T *const obs);
-  double (*Py_ADM)(struct OBSERVABLE_T *const obs);
-  double (*Pz_ADM)(struct OBSERVABLE_T *const obs);
-  double (*Jx_ADM)(struct OBSERVABLE_T *const obs);
-  double (*Jy_ADM)(struct OBSERVABLE_T *const obs);
-  double (*Jz_ADM)(struct OBSERVABLE_T *const obs);
+  /* functions to calculate momentums in each direction */
+  double (*Px)(struct OBSERVABLE_T *const obs);
+  double (*Py)(struct OBSERVABLE_T *const obs);
+  double (*Pz)(struct OBSERVABLE_T *const obs);
+  double (*Jx)(struct OBSERVABLE_T *const obs);
+  double (*Jy)(struct OBSERVABLE_T *const obs);
+  double (*Jz)(struct OBSERVABLE_T *const obs);
   
-  /* function to calculate masses */
-  double (*ADM_mass)(struct OBSERVABLE_T *obs);
-  double (*Komar_mass)(struct OBSERVABLE_T *obs);
+  /* function to calculate mass */
+  double (*M)(struct OBSERVABLE_T *const obs);
   
   /* preparing functions and freeing functions of items stuct
   // these functions are populated during initilization of Observable_T */

@@ -31,6 +31,8 @@ void bbn_study_initial_data(Grid_T *const grid)
   /* calculating the constraints */
   bbn_calculate_constraints_1st(grid);
   bbn_calculate_constraints_2nd(grid);
+  /* calculating ADM , Kommar masses ratios, error etc. */
+  bbn_measures(grid);
   
   /* prints */
   bbn_print_fields(grid,(unsigned)solving_iter,folder);
@@ -42,6 +44,41 @@ void bbn_study_initial_data(Grid_T *const grid)
   printf("} Studying initial data for binary BH and NS ==> Done.\n");
   pr_clock();
   pr_line_custom('=');
+}
+
+/* calculating ADM and Kommar masses, error, erc. */
+void bbn_measures(Grid_T *const grid)
+{
+  Observable_T *obs = 0;
+  double adm_mass,kommar_mass;
+  double virial_error, binding_energy,mass_ratio;
+  const double NS_R_avg = NS_r_average(grid);
+  
+  obs = init_observable(grid,bbn_plan_obs_CS,bbn_free_obs_CS);
+  obs->quantity = "ADM(M)|BBN";
+  plan_observable(obs);
+  adm_mass = obs->M(obs);
+  free_observable(obs);
+ 
+  obs = init_observable(grid,bbn_plan_obs_CS,bbn_free_obs_CS);
+  obs->quantity = "Kommar(M)|BBN";
+  plan_observable(obs);
+  kommar_mass = obs->M(obs);
+  free_observable(obs);
+  
+  mass_ratio     = Pgetd("BH_irreducible_mass")/Pgetd("NS_ADM_mass");
+  binding_energy =  adm_mass
+                    -Pgetd("BH_irreducible_mass")-Pgetd("NS_ADM_mass");
+  virial_error   = fabs(1-kommar_mass/adm_mass);
+   
+  Psetd("BBN_ADM_mass"   ,adm_mass);
+  Psetd("BBN_Kommar_mass",kommar_mass);
+  Psetd("Binding_energy" ,binding_energy);
+  Psetd("Virial_error"   ,virial_error);
+  Psetd("mass_ratio"     ,mass_ratio);
+  Psetd("NS_compactness" ,Pgetd("NS_ADM_mass")/NS_R_avg);
+  Psetd("NS_average_proper_radius" ,NS_R_avg);
+  
 }
 
 /* print the properites of the system for instance:
@@ -108,8 +145,23 @@ void bbn_print_properties(Grid_T *const grid,const unsigned iteration, const cha
   PR_PARAMETR_IN_FILE_s(EoS_rho_th)
   PR_PARAMETR_IN_FILE_s(EoS_Gamma)
   
+  PR_PARAMETR_IN_FILE(BBN_ADM_mass)
+  PR_PARAMETR_IN_FILE(BBN_Kommar_mass)
+  PR_PARAMETR_IN_FILE(Binding_energy)
+  
   PR_PARAMETR_IN_FILE(NS_baryonic_mass)
+  PR_PARAMETR_IN_FILE(NS_baryonic_mass_current)
+  PR_PARAMETR_IN_FILE(NS_ADM_mass)
+  PR_PARAMETR_IN_FILE(NS_Kommar_mass)
+  PR_PARAMETR_IN_FILE(NS_average_proper_radius)
+  
   PR_PARAMETR_IN_FILE(BH_irreducible_mass)
+  PR_PARAMETR_IN_FILE(BH_irreducible_mass_current)
+  PR_PARAMETR_IN_FILE(BH_ADM_mass)
+  PR_PARAMETR_IN_FILE(BH_Kommar_mass)
+  
+  PR_PARAMETR_IN_FILE(mass_ratio)
+  PR_PARAMETR_IN_FILE(NS_compactness)
   
   PR_PARAMETR_IN_FILE(Px_ADM)
   PR_PARAMETR_IN_FILE(Py_ADM)
@@ -143,6 +195,7 @@ void bbn_print_properties(Grid_T *const grid,const unsigned iteration, const cha
   PR_PARAMETR_IN_FILE(energy_density_center)
   PR_PARAMETR_IN_FILE(Euler_equation_constant)
   
+  PR_PARAMETR_IN_FILE(Virial_error)
   PR_PARAMETR_IN_FILE(largest_L2norm_error)
    
   /* } physics */
@@ -271,3 +324,79 @@ void bbn_print_fields(Grid_T *const grid,const unsigned iteration, const char *c
   printf("} Printing Specified Fields for Binary BH and NS ==> Done.\n");
   pr_line_custom('=');
 }
+
+/* calculate the proper area of the NS then using area = 4 pi R^2 to find R
+// as the avarage of NS radius.
+// ->return value: avarage NS radius */
+static double NS_r_average(Grid_T *const grid)
+{
+  double R = 0, area = 0;
+  unsigned p;
+  
+  FOR_ALL_PATCHES(p,grid)
+  {
+    Patch_T *patch = grid->patch[p];
+    
+    if (!IsItNSSurroundingPatch(patch))
+      continue;
+      
+    unsigned ijk;
+    unsigned nn = patch->nn;
+    ADD_FIELD(NS_R_average_integrand)
+    READ_v(_gamma_D2D2)
+    READ_v(_gamma_D0D2)
+    READ_v(_gamma_D0D0)
+    READ_v(_gamma_D0D1)
+    READ_v(_gamma_D1D2)
+    READ_v(_gamma_D1D1)
+    READ_v(psi);
+    double *g00 = alloc_double(nn);
+    double *g01 = alloc_double(nn);
+    double *g02 = alloc_double(nn);
+    double *g11 = alloc_double(nn);
+    double *g12 = alloc_double(nn);
+    double *g22 = alloc_double(nn);
+    
+    {/* local variables */
+      REALLOC_v_WRITE_v(NS_R_average_integrand)
+
+      FOR_ALL_POINTS(ijk,patch)
+      {
+        NS_R_average_integrand[ijk] = 1;
+        double psi4 = Pow2(psi[ijk])*Pow2(psi[ijk]);
+        g00[ijk] = psi4*_gamma_D0D0[ijk];
+        g01[ijk] = psi4*_gamma_D0D1[ijk];
+        g02[ijk] = psi4*_gamma_D0D2[ijk];
+        g11[ijk] = psi4*_gamma_D1D1[ijk];
+        g12[ijk] = psi4*_gamma_D1D2[ijk];
+        g22[ijk] = psi4*_gamma_D2D2[ijk];
+      }
+    }
+    DECLARE_FIELD(NS_R_average_integrand)
+    Integration_T *I = init_integration();
+    I->type = "Integral{f(x)dS},Spectral";
+    I->Spectral->f = NS_R_average_integrand;
+    I->g00 = g00;
+    I->g01 = g01;
+    I->g02 = g02;
+    I->g11 = g11;
+    I->g12 = g12;
+    I->g22 = g22;
+    I->Spectral->Z_surface = 1;
+    I->Spectral->K         = 0;
+    plan_integration(I);
+    area += execute_integration(I);
+    free_integration(I);
+    REMOVE_FIELD(NS_R_average_integrand)
+    free(g00);
+    free(g01);
+    free(g02);
+    free(g11);
+    free(g12);
+    free(g22);
+  }
+  R = sqrt(area/(4*M_PI));
+  return R;
+}
+
+

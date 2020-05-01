@@ -7,16 +7,19 @@
 #include "fields_lib.h"
 #include "bbn_headers.h"
 
-void bbn_plan_ADMs_CS(Observable_T *obs);
-void bbn_free_ADMs_CS(Observable_T *obs);
+void bbn_plan_obs_CS(Observable_T *obs);
+void bbn_free_obs_CS(Observable_T *obs);
 void bbn_populate_ADM_integrand_PdS_GdV(const Observable_T *const obs);
+double bbn_Kommar_mass(Observable_T *const obs);
+double bbn_ADM_mass(Observable_T *const obs);
 static double ADM_momentum_x_BBN_CS(Observable_T *const obs);
 static double ADM_momentum_y_BBN_CS(Observable_T *const obs);
 static double ADM_momentum_z_BBN_CS(Observable_T *const obs);
 static double ADM_angular_momentum_x_BBN_CS(Observable_T *const obs);
 static double ADM_angular_momentum_y_BBN_CS(Observable_T *const obs);
 static double ADM_angular_momentum_z_BBN_CS(Observable_T *const obs);
-static void populate_normal_surrounding(struct PsJs_ADM_S *const adm,const Dd_T dir);
+static void n_physical_metric_surrounding(struct items_S *const adm,const Dd_T dir);
+static void n_conformal_metric_surrounding(struct items_S *const adm,const Dd_T dir);
 
 
 

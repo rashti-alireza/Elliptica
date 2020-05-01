@@ -176,7 +176,7 @@ static int IsThereAnyUsefulCheckpointFile(void)
                                       "NS_Omega_U1",
                                       "NS_Omega_U2",
                                       "EoS_K",
-                                      "BH_mass",
+                                      "BH_irreducible_mass",
                                       "BH_X_U2",
                                       "BH_NS_separation",
                                       "BH_KerrSchild_RollOff",
@@ -393,12 +393,12 @@ static void P_ADM_control(Grid_T *const grid)
                               get_func_P_ADM_adjustment(adjust[2]);
   
   /* update P_ADM and J_ADM momentum parameters */
-  Observable_T *obs = init_observable(grid,bbn_plan_ADMs_CS,bbn_free_ADMs_CS);
+  Observable_T *obs = init_observable(grid,bbn_plan_obs_CS,bbn_free_obs_CS);
   double p1[3] = {0};
   double p2[3] = {0};
   double j_adm[3] = {0};
   
-  obs->quantity = "ADMs";
+  obs->quantity = "ADM(P,J)|BBN";
   plan_observable(obs);
   
   /* get previous P_ADMs */
@@ -407,14 +407,14 @@ static void P_ADM_control(Grid_T *const grid)
   p1[2] = Pgetd("Pz_ADM");
   
   /* get the current P_ADMs */
-  p2[0] = obs->Px_ADM(obs);
-  p2[1] = obs->Py_ADM(obs);
-  p2[2] = obs->Pz_ADM(obs);
+  p2[0] = obs->Px(obs);
+  p2[1] = obs->Py(obs);
+  p2[2] = obs->Pz(obs);
   
   /* get the current J_ADMs  */
-  j_adm[0] = obs->Jx_ADM(obs);
-  j_adm[1] = obs->Jy_ADM(obs);
-  j_adm[2] = obs->Jz_ADM(obs);
+  j_adm[0] = obs->Jx(obs);
+  j_adm[1] = obs->Jy(obs);
+  j_adm[2] = obs->Jz(obs);
   
   printf("|--> Current P_ADM = (%e,%e,%e)\n",p2[0],p2[1],p2[2]);
   printf("|--> Current J_ADM = (%e,%e,%e)\n",j_adm[0],j_adm[1],j_adm[2]);
@@ -434,27 +434,27 @@ static void P_ADM_control(Grid_T *const grid)
   free_observable(obs);
   
   /* NS adms */
-  obs = init_observable(grid,bbn_plan_ADMs_CS,bbn_free_ADMs_CS);
-  obs->quantity = "NS_ADMs";
+  obs = init_observable(grid,bbn_plan_obs_CS,bbn_free_obs_CS);
+  obs->quantity = "ADM(P,J)|NS";
   plan_observable(obs);
-  Psetd("NS_Px_ADM",obs->Px_ADM(obs));
-  Psetd("NS_Py_ADM",obs->Py_ADM(obs));
-  Psetd("NS_Pz_ADM",obs->Pz_ADM(obs));
-  Psetd("NS_Jx_ADM",obs->Jx_ADM(obs));
-  Psetd("NS_Jy_ADM",obs->Jy_ADM(obs));
-  Psetd("NS_Jz_ADM",obs->Jz_ADM(obs));
+  Psetd("NS_Px_ADM",obs->Px(obs));
+  Psetd("NS_Py_ADM",obs->Py(obs));
+  Psetd("NS_Pz_ADM",obs->Pz(obs));
+  Psetd("NS_Jx_ADM",obs->Jx(obs));
+  Psetd("NS_Jy_ADM",obs->Jy(obs));
+  Psetd("NS_Jz_ADM",obs->Jz(obs));
   free_observable(obs);
   
   /* BH adms */
-  obs = init_observable(grid,bbn_plan_ADMs_CS,bbn_free_ADMs_CS);
-  obs->quantity = "BH_ADMs";
+  obs = init_observable(grid,bbn_plan_obs_CS,bbn_free_obs_CS);
+  obs->quantity = "ADM(P,J)|BH";
   plan_observable(obs);
-  Psetd("BH_Px_ADM",obs->Px_ADM(obs));
-  Psetd("BH_Py_ADM",obs->Py_ADM(obs));
-  Psetd("BH_Pz_ADM",obs->Pz_ADM(obs));
-  Psetd("BH_Jx_ADM",obs->Jx_ADM(obs));
-  Psetd("BH_Jy_ADM",obs->Jy_ADM(obs));
-  Psetd("BH_Jz_ADM",obs->Jz_ADM(obs));
+  Psetd("BH_Px_ADM",obs->Px(obs));
+  Psetd("BH_Py_ADM",obs->Py(obs));
+  Psetd("BH_Pz_ADM",obs->Pz(obs));
+  Psetd("BH_Jx_ADM",obs->Jx(obs));
+  Psetd("BH_Jy_ADM",obs->Jy(obs));
+  Psetd("BH_Jz_ADM",obs->Jz(obs));
   free_observable(obs);
   
   
@@ -1472,13 +1472,35 @@ static void find_Euler_eq_const(Grid_T *const grid)
   const double W1  = Pgetd("Solving_Field_Update_Weight");
   const double W2  = 1-W1;
   double *Euler_const = 0;
-  double guess[1];/* initial guess for Euler const */
+  double guess[1] = {Pgetd("Euler_equation_constant")};
   const double RESIDUAL = sqrt(Pgetd("RootFinder_Tolerance"));
-  struct Euler_eq_const_RootFinder_S params[1];
+  struct Euler_eq_const_RootFinder_S params[1] = {0};
+  Observable_T *obs = 0;
+  double bar_mass,adm_mass,kommar_mass;
+  
+  bar_mass = bbn_NS_baryonic_mass(grid,guess[0]);
+  obs = init_observable(grid,bbn_plan_obs_CS,bbn_free_obs_CS);
+  obs->quantity = "ADM(M)|NS";
+  plan_observable(obs);
+  adm_mass = obs->M(obs);
+  free_observable(obs);
+  
+  obs = init_observable(grid,bbn_plan_obs_CS,bbn_free_obs_CS);
+  obs->quantity = "Kommar(M)|NS";
+  plan_observable(obs);
+  kommar_mass = obs->M(obs);
+  free_observable(obs);
+
+  printf("|--> current NS baryonic mass = %e\n",bar_mass);
+  printf("|--> current NS ADM mass      = %e\n",adm_mass);
+  printf("|--> current NS Kommar mass   = %e\n",kommar_mass);
+  
+  Psetd("NS_baryonic_mass_current",bar_mass);
+  Psetd("NS_ADM_mass",adm_mass);
+  Psetd("NS_Kommar_mass",kommar_mass);
   
   params->grid = grid;
   params->NS_baryonic_mass = Pgetd("NS_baryonic_mass");
-  guess[0] = Pgetd("Euler_equation_constant");
   
   root->type        = Pgets("RootFinder_Method");
   root->tolerance   = Pgetd("RootFinder_Tolerance");
@@ -1575,19 +1597,19 @@ static void Pxy_ADM_is0_by_xy_CM_roots(Grid_T *const grid)
   free(freedata_grid);
   free(freedata_patch);
   
-  Observable_T *obs = init_observable(grid,bbn_plan_ADMs_CS,bbn_free_ADMs_CS);
-  obs->quantity = "ADMs";
+  Observable_T *obs = init_observable(grid,bbn_plan_obs_CS,bbn_free_obs_CS);
+  obs->quantity = "ADM(P,J)|BBN";
   plan_observable(obs);
   
   /* get the current P_ADMs */
-  p_adm[0] = obs->Px_ADM(obs);
-  p_adm[1] = obs->Py_ADM(obs);
-  p_adm[2] = obs->Pz_ADM(obs);
+  p_adm[0] = obs->Px(obs);
+  p_adm[1] = obs->Py(obs);
+  p_adm[2] = obs->Pz(obs);
   
   /* get the current J_ADMs  */
-  j_adm[0] = obs->Jx_ADM(obs);
-  j_adm[1] = obs->Jy_ADM(obs);
-  j_adm[2] = obs->Jz_ADM(obs);
+  j_adm[0] = obs->Jx(obs);
+  j_adm[1] = obs->Jy(obs);
+  j_adm[2] = obs->Jz(obs);
   
   printf("|--> After CM update P_ADM = (%e,%e,%e)\n",p_adm[0],p_adm[1],p_adm[2]);
   printf("|--> After CM update J_ADM = (%e,%e,%e)\n",j_adm[0],j_adm[1],j_adm[2]);
@@ -1613,10 +1635,10 @@ static double x_CM_root_of_Py(void *params,const double *const x)
   bbn_free_data_tr_KSKij(freedata_grid);
   update_B1_dB1_Beta_dBete_Aij_dAij(grid);
 
-  obs = init_observable(grid,bbn_plan_ADMs_CS,bbn_free_ADMs_CS);
-  obs->quantity = "ADMs";
+  obs = init_observable(grid,bbn_plan_obs_CS,bbn_free_obs_CS);
+  obs->quantity = "ADM(P,J)|BBN";
   plan_observable(obs);
-  residual = obs->Py_ADM(obs);
+  residual = obs->Py(obs);
   free_observable(obs);
 
   return residual;
@@ -1641,10 +1663,10 @@ static double y_CM_root_of_Px(void *params,const double *const x)
   bbn_free_data_tr_KSKij(freedata_grid);
   update_B1_dB1_Beta_dBete_Aij_dAij(grid);
 
-  obs = init_observable(grid,bbn_plan_ADMs_CS,bbn_free_ADMs_CS);
-  obs->quantity = "ADMs";
+  obs = init_observable(grid,bbn_plan_obs_CS,bbn_free_obs_CS);
+  obs->quantity = "ADM(P,J)|BBN";
   plan_observable(obs);
-  residual = obs->Px_ADM(obs);
+  residual = obs->Px(obs);
   free_observable(obs);
 
   return residual;
@@ -1658,8 +1680,8 @@ static void Px_ADM_is0_by_y_CM(Grid_T *const grid)
   const double dP   = Pgetd("P_ADM_control_tolerance");
   const double Omega_BHNS = Pgetd("BH_NS_angular_velocity");
   const double y_CM0 = Pgetd("y_CM");
-  const double M_NS  = Pgetd("NS_mass");
-  const double M_BH  = Pgetd("BH_mass");
+  const double M_NS  = Pgetd("NS_baryonic_mass");
+  const double M_BH  = Pgetd("BH_irreducible_mass");
   Grid_T *freedata_grid = 0;/* don't update for inside BH patches */
   Patch_T **freedata_patch = 0;/* all but inside BH patches */
   Observable_T *obs = 0;
@@ -1706,19 +1728,19 @@ static void Px_ADM_is0_by_y_CM(Grid_T *const grid)
     Psetd("y_CM",y_CM_new);
     bbn_populate_free_data(freedata_grid);
     update_B1_dB1_Beta_dBete_Aij_dAij(grid);
-    obs = init_observable(grid,bbn_plan_ADMs_CS,bbn_free_ADMs_CS);
-    obs->quantity = "ADMs";
+    obs = init_observable(grid,bbn_plan_obs_CS,bbn_free_obs_CS);
+    obs->quantity = "ADM(P,J)|BBN";
     plan_observable(obs);
     
     /* get the current P_ADMs */
-    p_adm[0] = obs->Px_ADM(obs);
-    p_adm[1] = obs->Py_ADM(obs);
-    p_adm[2] = obs->Pz_ADM(obs);
+    p_adm[0] = obs->Px(obs);
+    p_adm[1] = obs->Py(obs);
+    p_adm[2] = obs->Pz(obs);
     
     /* get the current J_ADMs  */
-    j_adm[0] = obs->Jx_ADM(obs);
-    j_adm[1] = obs->Jy_ADM(obs);
-    j_adm[2] = obs->Jz_ADM(obs);
+    j_adm[0] = obs->Jx(obs);
+    j_adm[1] = obs->Jy(obs);
+    j_adm[2] = obs->Jz(obs);
     
     printf("|--> After CM update P_ADM = (%e,%e,%e)\n",p_adm[0],p_adm[1],p_adm[2]);
     printf("|--> After CM update J_ADM = (%e,%e,%e)\n",j_adm[0],j_adm[1],j_adm[2]);
@@ -1825,8 +1847,8 @@ static void Py_ADM_is0_by_x_CM(Grid_T *const grid)
   const double dP   = Pgetd("P_ADM_control_tolerance");
   const double Omega_BHNS = Pgetd("BH_NS_angular_velocity");
   const double x_CM0 = Pgetd("x_CM");
-  const double M_NS  = Pgetd("NS_mass");
-  const double M_BH  = Pgetd("BH_mass");
+  const double M_NS  = Pgetd("NS_baryonic_mass");
+  const double M_BH  = Pgetd("BH_irreducible_mass");
   Grid_T *freedata_grid = 0;/* don't update for inside BH patches */
   Patch_T **freedata_patch = 0;/* all but inside BH patches */
   Observable_T *obs = 0;
@@ -1872,19 +1894,19 @@ static void Py_ADM_is0_by_x_CM(Grid_T *const grid)
     Psetd("x_CM",x_CM_new);
     bbn_populate_free_data(freedata_grid);
     update_B1_dB1_Beta_dBete_Aij_dAij(grid);
-    obs = init_observable(grid,bbn_plan_ADMs_CS,bbn_free_ADMs_CS);
-    obs->quantity = "ADMs";
+    obs = init_observable(grid,bbn_plan_obs_CS,bbn_free_obs_CS);
+    obs->quantity = "ADM(P,J)|BBN";
     plan_observable(obs);
     
     /* get the current P_ADMs */
-    p_adm[0] = obs->Px_ADM(obs);
-    p_adm[1] = obs->Py_ADM(obs);
-    p_adm[2] = obs->Pz_ADM(obs);
+    p_adm[0] = obs->Px(obs);
+    p_adm[1] = obs->Py(obs);
+    p_adm[2] = obs->Pz(obs);
     
     /* get the current J_ADMs  */
-    j_adm[0] = obs->Jx_ADM(obs);
-    j_adm[1] = obs->Jy_ADM(obs);
-    j_adm[2] = obs->Jz_ADM(obs);
+    j_adm[0] = obs->Jx(obs);
+    j_adm[1] = obs->Jy(obs);
+    j_adm[2] = obs->Jz(obs);
     
     printf("|--> After CM update P_ADM = (%e,%e,%e)\n",p_adm[0],p_adm[1],p_adm[2]);
     printf("|--> After CM update J_ADM = (%e,%e,%e)\n",j_adm[0],j_adm[1],j_adm[2]);
@@ -1933,39 +1955,43 @@ static void update_B1_dB1_Beta_dBete_Aij_dAij(Grid_T *const grid)
   }
 }
 
-/* adjust the apparent horizon radius to acquire the desired BH mass */
+/* adjust the apparent horizon radius to acquire the desired BH irreducible mass */
 static void adjust_AH_radius(Grid_T *const grid,struct Grid_Params_S *const GridParams)
 {
   pr_line_custom('=');
   printf("{ Adjusting apparent horizon radius to meet BH mass ...\n");
   
-  const double target_bh_mass  = Pgetd("BH_mass");
+  const double target_bh_mass  = Pgetd("BH_irreducible_mass");
   const double current_r_excision = Pgetd("r_excision");
-  const double irr_mass    = bbn_BH_irreducible_mass(grid);
-  const double kommar_mass = bbn_BH_Kommar_mass(grid);
   const double W  = Pgetd("BH_r_excision_update_weight");
   const double dM_tolerance = Pgetd("BH_mass_tolerance");
-  double dr, r_excision, current_bh_mass,dM;
+  const double irr_mass     = bbn_BH_irreducible_mass(grid);
+  double kommar_mass, adm_mass;
+  Observable_T *obs = 0;
+  double dr, r_excision,dM;
   
-  printf("|--> current BH Kommar's mass    = %e\n",kommar_mass);
+  obs = init_observable(grid,bbn_plan_obs_CS,bbn_free_obs_CS);
+  obs->quantity = "ADM(M)|BH";
+  plan_observable(obs);
+  adm_mass = obs->M(obs);
+  free_observable(obs);
+  
+  obs = init_observable(grid,bbn_plan_obs_CS,bbn_free_obs_CS);
+  obs->quantity = "Kommar(M)|BH";
+  plan_observable(obs);
+  kommar_mass = obs->M(obs);
+  free_observable(obs);
+  
   printf("|--> current BH irreducible mass = %e\n",irr_mass);
+  printf("|--> current BH ADM mass         = %e\n",adm_mass);
+  printf("|--> current BH Kommar mass      = %e\n",kommar_mass);
   
-  Psetd("BH_irreducible_mass",irr_mass);
+  Psetd("BH_irreducible_mass_current",irr_mass);
+  Psetd("BH_ADM_mass",adm_mass);
+  Psetd("BH_Kommar_mass",kommar_mass);
   
-  if (0)
-  {
-    current_bh_mass = kommar_mass;
-  }
-  if (1)
-  {
-    current_bh_mass = irr_mass;
-  }
-    
-  if (current_bh_mass < 0)
-    current_bh_mass = 0;
-  
-  dM = fabs(current_bh_mass-target_bh_mass);
-  dr = -current_r_excision*(current_bh_mass/target_bh_mass-1);
+  dM = fabs(irr_mass-target_bh_mass);
+  dr = -current_r_excision*(irr_mass/target_bh_mass-1);
   if (EQL(W,0))
   {
     dr = 0;
@@ -2002,7 +2028,7 @@ static void adjust_BH_Omega(Grid_T *const grid,struct Grid_Params_S *const GridP
   UNUSED(grid);
   
   const double bh_chi  = Pgetd("BH_X_U2");
-  const double bh_mass = Pgetd("BH_mass");
+  const double bh_mass = Pgetd("BH_irreducible_mass");
   
   GridParams->a_BH   = bh_chi*bh_mass;
   
@@ -4037,12 +4063,12 @@ static Grid_T *TOV_KerrSchild_approximation(void)
   pr_line_custom('=');
   printf("{ Acquiring Black Hole properties ...\n");
   const double bh_chi  = Pgetd("BH_X_U2");
-  const double bh_mass = Pgetd("BH_mass");
+  const double bh_mass = Pgetd("BH_irreducible_mass");
   const double bh_R    = bh_mass*(1+sqrt(1-Pow2(bh_chi)));
   printf("BH properties:\n");
-  printf("--> BH radius (Kerr-Schild Coords.) = %e\n",bh_R);
-  printf("--> BH dimensionless spin (z comp.) = %e\n",bh_chi);
-  printf("--> BH ADM mass                     = %e\n",bh_mass);
+  printf("--> BH radius (Kerr-Schild Coords.) = %+e\n",bh_R);
+  printf("--> BH dimensionless spin (z comp.) = %+e\n",bh_chi);
+  printf("--> BH irreducible mass             = %+e\n",bh_mass);
   printf("} Acquiring Black Hole properties ==> Done.\n");
   pr_clock();
   pr_line_custom('=');
@@ -4070,10 +4096,10 @@ static Grid_T *TOV_KerrSchild_approximation(void)
   //Psetd("x_CM0",0);
   
   /* -> NS properties */
-  Psetd("NS_mass",ns_mass);
   Psetd("NS_center_x",0);
   Psetd("NS_center_y",C_NS);
   Psetd("NS_center_z",0);
+  Psetd("NS_ADM_mass",1);
   
   /* -> BH properties */  
   Psetd("r_excision",bh_R);
@@ -4081,7 +4107,6 @@ static Grid_T *TOV_KerrSchild_approximation(void)
   Psetd("BH_center_y",C_BH);
   Psetd("BH_center_z",0);
   Psetd("BH_Vz",0);/* BH velocity in z direction */
-  Psetd("BH_irreducible_mass",0);
   
   /* -> BH_Omega, the angular frequency of the horizon,
   // is a free vector that determines the spin of BH
@@ -4144,15 +4169,15 @@ static Grid_T *TOV_KerrSchild_approximation(void)
   find_Euler_eq_const_TOV_KerrSchild(grid);
   
   /* add some parameters for momentum and its adjustments */
-  Observable_T *obs = init_observable(grid,bbn_plan_ADMs_CS,bbn_free_ADMs_CS);
-  obs->quantity     = "ADMs";
+  Observable_T *obs = init_observable(grid,bbn_plan_obs_CS,bbn_free_obs_CS);
+  obs->quantity     = "ADM(P,J)|BBN";
   plan_observable(obs);
-  Psetd("Px_ADM",obs->Px_ADM(obs));
-  Psetd("Py_ADM",obs->Py_ADM(obs));
-  Psetd("Pz_ADM",obs->Pz_ADM(obs));
-  Psetd("Jx_ADM",obs->Jx_ADM(obs));
-  Psetd("Jy_ADM",obs->Jy_ADM(obs));
-  Psetd("Jz_ADM",obs->Jz_ADM(obs));
+  Psetd("Px_ADM",obs->Px(obs));
+  Psetd("Py_ADM",obs->Py(obs));
+  Psetd("Pz_ADM",obs->Pz(obs));
+  Psetd("Jx_ADM",obs->Jx(obs));
+  Psetd("Jy_ADM",obs->Jy(obs));
+  Psetd("Jz_ADM",obs->Jz(obs));
   Psetd("v*_boost_x",0);
   Psetd("v*_boost_y",0);
   Psetd("v*_boost_z",0);
