@@ -51,26 +51,53 @@ void bbn_measures(Grid_T *const grid)
 {
   Observable_T *obs = 0;
   double adm_mass,kommar_mass;
+  const double ns_adm_mass = Pgetd("NS_ADM_mass");
+  const double bh_irr_mass = Pgetd("BH_irreducible_mass");
   double virial_error, binding_energy,mass_ratio;
   const double NS_R_avg = NS_r_average(grid);
+  double Rc_NS[3] = {0},Rc_BH[3] = {0};/* centers */
+  double S_NS[3] = {0},S_BH[3] = {0};/* spins */
+  double J[3] = {0},P[3] = {0};
   
+  /* adm mass */
   obs = init_observable(grid,bbn_plan_obs_CS,bbn_free_obs_CS);
   obs->quantity = "ADM(M)|BBN";
   plan_observable(obs);
   adm_mass = obs->M(obs);
   free_observable(obs);
  
+  /* kommar mass */
   obs = init_observable(grid,bbn_plan_obs_CS,bbn_free_obs_CS);
   obs->quantity = "Kommar(M)|BBN";
   plan_observable(obs);
   kommar_mass = obs->M(obs);
   free_observable(obs);
   
-  mass_ratio     = Pgetd("BH_irreducible_mass")/Pgetd("NS_ADM_mass");
-  binding_energy =  adm_mass
-                    -Pgetd("BH_irreducible_mass")-Pgetd("NS_ADM_mass");
+  /* mass ratio, Eb , error */
+  mass_ratio     = bh_irr_mass/ns_adm_mass;
+  binding_energy = adm_mass-bh_irr_mass-ns_adm_mass;
   virial_error   = fabs(1-kommar_mass/adm_mass);
-   
+  
+  /* NS spins */
+  bbn_Rc_NS(Rc_NS,grid);
+  P[0] = Pgetd("NS_Px_ADM");
+  P[1] = Pgetd("NS_Py_ADM");
+  P[2] = Pgetd("NS_Pz_ADM");
+  J[0] = Pgetd("NS_Jx_ADM");
+  J[1] = Pgetd("NS_Jy_ADM");
+  J[2] = Pgetd("NS_Jz_ADM");
+  define_spin_JRP(S_NS,J,Rc_NS,P);
+  
+  bbn_Rc_BH(Rc_BH,grid);
+  P[0] = Pgetd("BH_Px_ADM");
+  P[1] = Pgetd("BH_Py_ADM");
+  P[2] = Pgetd("BH_Pz_ADM");
+  J[0] = Pgetd("BH_Jx_ADM");
+  J[1] = Pgetd("BH_Jy_ADM");
+  J[2] = Pgetd("BH_Jz_ADM");
+  define_spin_JRP(S_BH,J,Rc_BH,P);
+  
+  /* update parameters */ 
   Psetd("BBN_ADM_mass"   ,adm_mass);
   Psetd("BBN_Kommar_mass",kommar_mass);
   Psetd("Binding_energy" ,binding_energy);
@@ -78,6 +105,30 @@ void bbn_measures(Grid_T *const grid)
   Psetd("mass_ratio"     ,mass_ratio);
   Psetd("NS_compactness" ,Pgetd("NS_ADM_mass")/NS_R_avg);
   Psetd("NS_average_proper_radius" ,NS_R_avg);
+  
+  Psetd("NS_Sx",S_NS[0]);
+  Psetd("NS_Sy",S_NS[1]);
+  Psetd("NS_Sz",S_NS[2]);
+  
+  Psetd("NS_chi_x",S_NS[0]/Pow2(ns_adm_mass));
+  Psetd("NS_chi_y",S_NS[1]/Pow2(ns_adm_mass));
+  Psetd("NS_chi_z",S_NS[2]/Pow2(ns_adm_mass));
+  
+  Psetd("NS_Rcenter_x",Rc_NS[0]);
+  Psetd("NS_Rcenter_y",Rc_NS[1]);
+  Psetd("NS_Rcenter_z",Rc_NS[2]);
+  
+  Psetd("BH_Sx",S_BH[0]);
+  Psetd("BH_Sy",S_BH[1]);
+  Psetd("BH_Sz",S_BH[2]);
+  
+  Psetd("BH_chi_x",S_BH[0]/Pow2(bh_irr_mass));
+  Psetd("BH_chi_y",S_BH[1]/Pow2(bh_irr_mass));
+  Psetd("BH_chi_z",S_BH[2]/Pow2(bh_irr_mass));
+  
+  Psetd("BH_Rcenter_x",Rc_BH[0]);
+  Psetd("BH_Rcenter_y",Rc_BH[1]);
+  Psetd("BH_Rcenter_z",Rc_BH[2]);
   
 }
 
@@ -154,13 +205,31 @@ void bbn_print_properties(Grid_T *const grid,const unsigned iteration, const cha
   PR_PARAMETR_IN_FILE(NS_ADM_mass)
   PR_PARAMETR_IN_FILE(NS_Kommar_mass)
   PR_PARAMETR_IN_FILE(NS_average_proper_radius)
+  PR_PARAMETR_IN_FILE(NS_Sx)
+  PR_PARAMETR_IN_FILE(NS_Sy)
+  PR_PARAMETR_IN_FILE(NS_Sz)
+  PR_PARAMETR_IN_FILE(NS_chi_x)
+  PR_PARAMETR_IN_FILE(NS_chi_y)
+  PR_PARAMETR_IN_FILE(NS_chi_z)
+  PR_PARAMETR_IN_FILE(NS_Rcenter_x)
+  PR_PARAMETR_IN_FILE(NS_Rcenter_y)
+  PR_PARAMETR_IN_FILE(NS_Rcenter_z)
   
   PR_PARAMETR_IN_FILE(BH_irreducible_mass)
   PR_PARAMETR_IN_FILE(BH_irreducible_mass_current)
   PR_PARAMETR_IN_FILE(BH_ADM_mass)
   PR_PARAMETR_IN_FILE(BH_Kommar_mass)
-  PR_PARAMETR_IN_FILE(BBH_AH_area)
-  
+  PR_PARAMETR_IN_FILE(BH_AH_area)
+  PR_PARAMETR_IN_FILE(BH_Sx)
+  PR_PARAMETR_IN_FILE(BH_Sy)
+  PR_PARAMETR_IN_FILE(BH_Sz)
+  PR_PARAMETR_IN_FILE(BH_chi_x)
+  PR_PARAMETR_IN_FILE(BH_chi_y)
+  PR_PARAMETR_IN_FILE(BH_chi_z)
+  PR_PARAMETR_IN_FILE(BH_Rcenter_x)
+  PR_PARAMETR_IN_FILE(BH_Rcenter_y)
+  PR_PARAMETR_IN_FILE(BH_Rcenter_z)
+    
   PR_PARAMETR_IN_FILE(mass_ratio)
   PR_PARAMETR_IN_FILE(NS_compactness)
   
