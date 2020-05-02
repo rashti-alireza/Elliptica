@@ -26,7 +26,6 @@ void test_EoS(Grid_T *const grid)
   {
     sprintf(file_name,"%s/%s.pwp",path,eos->description);
     file = Fopen(file_name,"w+");
-    IsNull(file);
     
     fprintf(file,"piece  Kappa         rho           gamma         a             h-1\n");
     for (i = 0; i < eos->N; ++i)  
@@ -37,7 +36,6 @@ void test_EoS(Grid_T *const grid)
   /* continuity */
   sprintf(file_name,"%s/%s",path,"pressure");
   file = Fopen(file_name,"w+");
-  IsNull(file);
   fprintf(file,"# enthalpy   pressure\n");  
   for (i = 0; i < N; ++i)
   {
@@ -48,7 +46,6 @@ void test_EoS(Grid_T *const grid)
   
   sprintf(file_name,"%s/%s",path,"rest_mass_density");
   file = Fopen(file_name,"w+");
-  IsNull(file);
   fprintf(file,"# enthalpy   rest_mass_density\n");  
   for (i = 0; i < N; ++i)
   {
@@ -59,7 +56,6 @@ void test_EoS(Grid_T *const grid)
   
   sprintf(file_name,"%s/%s",path,"energy_density");
   file = Fopen(file_name,"w+");
-  IsNull(file);
   fprintf(file,"# enthalpy   energy_density\n");
   for (i = 0; i < N; ++i)
   {
@@ -70,7 +66,6 @@ void test_EoS(Grid_T *const grid)
   
   sprintf(file_name,"%s/%s",path,"drho_dh");
   file = Fopen(file_name,"w+");
-  IsNull(file);
   fprintf(file,"# enthalpy   drho_dh\n");  
   for (i = 0; i < N; ++i)
   {
@@ -81,7 +76,6 @@ void test_EoS(Grid_T *const grid)
   
   sprintf(file_name,"%s/%s",path,"de_dh");
   file = Fopen(file_name,"w+");
-  IsNull(file);
   fprintf(file,"# enthalpy   de_dh\n");  
   for (i = 0; i < N; ++i)
   {

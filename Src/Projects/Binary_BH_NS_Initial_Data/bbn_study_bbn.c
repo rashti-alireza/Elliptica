@@ -157,7 +157,6 @@ void bbn_print_properties(Grid_T *const grid,const unsigned iteration, const cha
   /* open file */
   sprintf(str,"%s/%s",folder,file_name);
   file = Fopen(str,open_file_mode);
-  IsNull(file);
   fprintf(file,"%s\n",LINE_STR);
   fprintf(file,"# iteration = %u\n",iteration);
   

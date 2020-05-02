@@ -214,7 +214,6 @@ void test_make_Js_jacobian_eq(Grid_T *const grid, const char * const* types)
       
       sprintf(file_name,"%s/%s_SepctalDirect.patch%u",path,jtype,patch->pn);
       file = Fopen(file_name,"w");
-      IsNull(file);
       fprintf(file,"Row Column J_Spectal J_Direct\n");
       
       for (r = 0; r < nn; ++r)

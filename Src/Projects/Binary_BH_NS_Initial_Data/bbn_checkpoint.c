@@ -69,7 +69,6 @@ void bbn_write_checkpoint(Grid_T *const grid)
   /* successful message at the end of the checkpoint file */
   sprintf(file_path,"%s/%s_temp",out_dir,CHECKPOINT_FILE_NAME);
   file = Fopen(file_path,"a");
-  IsNull(file);
   sprintf(msg,"%s",END_MSG);
   FWriteP_bin(p_msg,strlen(msg)+1);
   fclose(file);
@@ -94,7 +93,6 @@ int bbn_IsCheckpointFileCompleted(const char *const file_path)
   int msg_len = (int)strlen(END_MSG)+1;
   
   file = Fopen(file_path,"r");
-  IsNull(file);
   
   fseek(file,-msg_len,SEEK_END);
   assert(fread(msg,(unsigned)msg_len,1,file));
@@ -123,7 +121,6 @@ static void write_header(const Grid_T *const grid)
   
     
   file = Fopen(file_path,"w");
-  IsNull(file);
   
   np = 0;
   while (parameters_global != 0 && parameters_global[np] != 0)
@@ -168,7 +165,6 @@ static void write_parameters(const Grid_T *const grid)
 
   sprintf(file_path,"%s/%s_temp",folder,CHECKPOINT_FILE_NAME);
   file = Fopen(file_path,"ab");
-  IsNull(file);
   
   np = 0;
   while (parameters_global != 0 && parameters_global[np] != 0)
@@ -215,7 +211,6 @@ static void write_fields(const Grid_T *const grid)
   
   sprintf(file_path,"%s/%s_temp",folder,CHECKPOINT_FILE_NAME);
   file = Fopen(file_path,"ab");
-  IsNull(file);
   
   /* NOTE the order is crucial for reading part */
   

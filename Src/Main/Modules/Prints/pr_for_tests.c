@@ -81,7 +81,6 @@ void pr_interfaces(const Grid_T *const grid)
   str[0] = '\0';
   sprintf(str,"%s/interface_pairings.rm",path);
   f = Fopen(str,"w");
-  IsNull(f);
   
   /* printing out pairing information: outerB*/
   fprintf(f,"###outer-boundaries are:\n");
@@ -316,7 +315,6 @@ void pr_interfaces(const Grid_T *const grid)
         str[0] = '\0';
         sprintf(str,"%s/%s.paired",path,arch[n][i].n1);
         f = Fopen(str,"w");
-        IsNull(f);
         fprintf(f,"#%s\n",arch[n][i].s1->flags_str);
         
         node = arch[n][i].s1->patch->node;
@@ -331,7 +329,6 @@ void pr_interfaces(const Grid_T *const grid)
         str[0] = '\0';
         sprintf(str,"%s/%s.paired",path,arch[n][i].n2);
         f = Fopen(str,"w");
-        IsNull(f);
         fprintf(f,"#%s\n",arch[n][i].s2->flags_str);
         
         node = arch[n][i].s2->patch->node;
@@ -348,7 +345,6 @@ void pr_interfaces(const Grid_T *const grid)
         str[0] = '\0';
         sprintf(str,"%s/%s.single",path,arch[n][i].n1);
         f = Fopen(str,"w");
-        IsNull(f);
         fprintf(f,"#%s\n",arch[n][i].s1->flags_str);
         
         node = arch[n][i].s1->patch->node;
@@ -386,7 +382,6 @@ void pr_parameters(void)
   
   sprintf(dir,"%s/parameters.out",path);
   f = Fopen(dir,"w");
-  IsNull(f);
   
   fprintf(f,SECTION"Parameters"SECTION"\n");
   
@@ -422,7 +417,6 @@ void pr_coords(const Grid_T *const grid)
     
     sprintf(dir,"%s/%s.patch",path,patch->name);
     f = Fopen(dir,"w");
-    IsNull(f);
     
     for (l = 0; l < U; l++)
       fprintf(f,"%f %f %f\n",
@@ -450,7 +444,6 @@ void pr_field_difference(const Grid_T *const grid,const char *const fld1,const c
   
   sprintf(dir,"%s/%s-%s.grid",path,fld1,fld2);
   file1 = Fopen(dir,"w");
-  IsNull(file1);
   
   fprintf(file1,"# node %s %s %s-%s\n",fld2,fld1,fld2,fld1);
   R = 0;
@@ -463,7 +456,6 @@ void pr_field_difference(const Grid_T *const grid,const char *const fld1,const c
     
     sprintf(dir,"%s/%s-%s.%s",path,fld1,fld2,patch->name);
     file2 = Fopen(dir,"w");
-    IsNull(file2);
   
     for (l = 0; l < U; l++)
     {
@@ -583,7 +575,6 @@ double pr_derivatives_DiffByNode(const double *const numc, const double *const a
   nn = total_nodes_patch(patch);
   sprintf(file_name,"%s.%s",prefix,patch->name);
   f = Fopen(file_name,"w");
-  IsNull(f);
   
   fprintf(f,"#Node (df/d?|N-df/d?|A) df/d?|N df/d?|A i j k x y z:\n");
   for (p = 0; p < nn; ++p)
@@ -613,7 +604,6 @@ void pr_matrix(const Matrix_T *const M,const char *const name)
   
   sprintf(path,"%s/%s",folder,name);
   file = Fopen(path,"w");
-  IsNull(file);
   
   fprintf(file,"#row = %ld ,#column = %ld\n",M->row,M->col);
   
