@@ -248,7 +248,10 @@ static Grid_T *make_next_grid_using_previous_grid(Grid_T *const grid_prev)
   /* update enthalpy,denthalpy,rho0, drho0, u0, _J^i, _E and _S */
   bbn_update_stress_energy_tensor(grid_prev,0);
   
-   /* adjust the apparent horizon radius to acquire the desired BH mass */
+  /* adjust the Omega_BH to acquire the desired BH spin */
+  adjust_BH_Omega(grid_prev,GridParams);
+  
+  /* adjust the apparent horizon radius to acquire the desired BH mass */
   adjust_AH_radius(grid_prev,GridParams);
  
   /* P_ADM control */
@@ -271,9 +274,6 @@ static Grid_T *make_next_grid_using_previous_grid(Grid_T *const grid_prev)
   
   /* find NS surface using h = 1 */
   find_NS_surface(grid_prev,GridParams);
-  
-  /* adjust the Omega_BH to acquire the desired BH spin */
-  adjust_BH_Omega(grid_prev,GridParams);
   
   /* make new grid with new parameters */
   grid_next = creat_bbn_grid_CS(GridParams);
