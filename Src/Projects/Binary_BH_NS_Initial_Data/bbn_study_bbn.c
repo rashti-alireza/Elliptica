@@ -88,9 +88,13 @@ void bbn_measures(Grid_T *const grid)
   {
     /* NS spin */
     bbn_define_spin_JRP(S_NS,grid,"NS");
+    /* NS center */
+    bbn_Rc_NS(Rc_NS,grid);
     
     /* BH spin */
     bbn_define_spin_JRP(S_BH,grid,"BH");
+    /* BH center */
+    bbn_Rc_BH(Rc_BH,grid);
     
     double s_BH2  = Pow2(S_BH[0])+Pow2(S_BH[1])+Pow2(S_BH[2]);
     double irrm2  = Pow2(bh_irr_mass);
