@@ -63,6 +63,7 @@ void bbn_measures(Grid_T *const grid)
   double Rc_NS[3] = {0}, Rc_BH[3] = {0};/* centers */
   double S_NS[3]  = {0}, S_BH[3]  = {0};/* spins */
   double J[3]     = {0}, P[3]     = {0};/* P and J ADMs */
+  double chris_bh_mass = 1;/* Christodoulou mass, 1 to avoid division by 0 */
   
   /* adm mass */
   obs = init_observable(grid,bbn_plan_obs_CS,bbn_free_obs_CS);
@@ -104,6 +105,10 @@ void bbn_measures(Grid_T *const grid)
     J[1] = Pgetd("BH_Jy_ADM");
     J[2] = Pgetd("BH_Jz_ADM");
     define_spin_JRP(S_BH,J,Rc_BH,P);
+    double s_BH2  = Pow2(S_BH[0])+Pow2(S_BH[1])+Pow2(S_BH[2]);
+    double irrm2  = Pow2(bh_irr_mass);
+    chris_bh_mass = sqrt(irrm2+s_BH2/(4*irrm2));
+    Psetd("Christodoulou_mass",chris_bh_mass);
   }
   
   /* update parameters */ 
@@ -131,9 +136,9 @@ void bbn_measures(Grid_T *const grid)
   Psetd("BH_Sy",S_BH[1]);
   Psetd("BH_Sz",S_BH[2]);
   
-  Psetd("BH_chi_x",S_BH[0]/Pow2(bh_irr_mass));
-  Psetd("BH_chi_y",S_BH[1]/Pow2(bh_irr_mass));
-  Psetd("BH_chi_z",S_BH[2]/Pow2(bh_irr_mass));
+  Psetd("BH_chi_x",S_BH[0]/Pow2(chris_bh_mass));
+  Psetd("BH_chi_y",S_BH[1]/Pow2(chris_bh_mass));
+  Psetd("BH_chi_z",S_BH[2]/Pow2(chris_bh_mass));
   
   Psetd("BH_Rcenter_x",Rc_BH[0]);
   Psetd("BH_Rcenter_y",Rc_BH[1]);
@@ -178,13 +183,13 @@ void bbn_print_properties(Grid_T *const grid,const unsigned iteration, const cha
     
   fprintf(file,geometry_logo);
   
-  PR_PARAMETR_IN_FILE(NS_center_x)
-  PR_PARAMETR_IN_FILE(NS_center_y)
-  PR_PARAMETR_IN_FILE(NS_center_z)
+  //PR_PARAMETR_IN_FILE(NS_center_x)
+  //PR_PARAMETR_IN_FILE(NS_center_y)
+  //PR_PARAMETR_IN_FILE(NS_center_z)
   
-  PR_PARAMETR_IN_FILE(BH_center_x)
-  PR_PARAMETR_IN_FILE(BH_center_y)
-  PR_PARAMETR_IN_FILE(BH_center_z)
+  //PR_PARAMETR_IN_FILE(BH_center_x)
+  //PR_PARAMETR_IN_FILE(BH_center_y)
+  //PR_PARAMETR_IN_FILE(BH_center_z)
   
   PR_PARAMETR_IN_FILE(r_excision)
   PR_PARAMETR_IN_FILE(NS_max_radius)
@@ -228,6 +233,8 @@ void bbn_print_properties(Grid_T *const grid,const unsigned iteration, const cha
   PR_PARAMETR_IN_FILE(BH_irreducible_mass_current)
   PR_PARAMETR_IN_FILE(BH_ADM_mass)
   PR_PARAMETR_IN_FILE(BH_Kommar_mass)
+  PR_PARAMETR_IN_FILE(Christodoulou_mass)
+  
   PR_PARAMETR_IN_FILE(BH_AH_area)
   PR_PARAMETR_IN_FILE(BH_Sx)
   PR_PARAMETR_IN_FILE(BH_Sy)
