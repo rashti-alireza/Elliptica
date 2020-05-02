@@ -43,8 +43,8 @@ BH_NS_free_data_metric = boosted_KerrSchild_metric
 
 #### NS:
 NS_enthalpy_update_weight      = 0.2
-NS_surface_update_weight       = 0.3
-NS_surface_tolerance           = 0.1
+NS_surface_update_weight       = 0.2
+NS_surface_tolerance           = 1E-2
 NS_surface_finder_method       = SphericalHarmonic
 NS_surface_Ylm_expansion_max_l = 5(x400)->6
 NS_adjust_center_method        = draw_enthalpy
