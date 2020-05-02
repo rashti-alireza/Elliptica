@@ -63,7 +63,7 @@ P_ADM_control_iteration        = 10
 force_balance_equation         = none(x4)->adjust(d/dy:Omega)
 
 #### general:
-write_checkpoint_every = 10h
+write_checkpoint_every = 0h
 
 #-----------------------------------------------------------------------#
 # Solving_Settings:                                                     #
