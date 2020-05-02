@@ -2043,7 +2043,7 @@ static void adjust_BH_Omega(Grid_T *const grid,struct Grid_Params_S *const GridP
   const double Omega_z   = Pgetd("BH_Omega_U2");
   double chr_mass = 0;
   double S_BH[3] = {0},s_BH2;
-  double dOmega_x,dOmega_y,dOmega_z;
+  double dOmega_x = 0,dOmega_y = 0,dOmega_z = 0;
   double chi_xc,chi_yc,chi_zc;
   
   /* find current BH spin */
@@ -2056,13 +2056,14 @@ static void adjust_BH_Omega(Grid_T *const grid,struct Grid_Params_S *const GridP
   chi_zc   = S_BH[2]/Pow2(chr_mass);
   
   /* adjust Omegas */
-  dOmega_x = -(chi_xc-chi_xt)/(4*chr_mass) + 
+  if (!EQL(chi_xt,0))
+    dOmega_x = -(chi_xc-chi_xt)/(4*chr_mass) + 
             (irr_massc-irr_mass)/(4*Pow2(irr_massc))*chi_xc;
-  
-  dOmega_y = -(chi_yc-chi_yt)/(4*chr_mass) + 
+  if (!EQL(chi_yt,0))
+    dOmega_y = -(chi_yc-chi_yt)/(4*chr_mass) + 
             (irr_massc-irr_mass)/(4*Pow2(irr_massc))*chi_yc;
-            
-  dOmega_z = -(chi_zc-chi_zt)/(4*chr_mass) + 
+  if (!EQL(chi_zt,0))
+    dOmega_z = -(chi_zc-chi_zt)/(4*chr_mass) + 
             (irr_massc-irr_mass)/(4*Pow2(irr_massc))*chi_zc;
   
   Psetd("BH_omega_U0",Omega_x+W*dOmega_x);
