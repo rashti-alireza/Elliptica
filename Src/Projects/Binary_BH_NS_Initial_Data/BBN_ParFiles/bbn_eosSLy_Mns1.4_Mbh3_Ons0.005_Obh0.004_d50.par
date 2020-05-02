@@ -24,7 +24,7 @@ EoS_Gamma        = [1.3569e+00, 3.0050e+00, 2.9880e+00, 2.8510e+00]
 
 #### BH:
 BH_irreducible_mass = 3 
-BH_X_U2             = 0.004  #:= BH spin vector parameter
+BH_X_U2             = 0.004  #:= BH target dimensionless spin z-direction
 
 #### Orbits:
 BH_NS_separation       = 50    
