@@ -10,9 +10,9 @@ Project = Binary_BH_NS_Initial_Data
 
 #### NS:
 NS_baryonic_mass = 1.4
-NS_Omega_U0      = 0      #:= rotational fluid W = NS_Omega*r 
-NS_Omega_U1      = 0      #:= rotational fluid W = NS_Omega*r
-NS_Omega_U2      = 0.005  #:= rotational fluid W = NS_Omega*r
+NS_Omega_U0      = 0      #:= NS spin_x parameter
+NS_Omega_U1      = 0      #:= NS spin_y parameter
+NS_Omega_U2      = 0.005  #:= NS spin_z parameter
 
 #### NS EoS:
 EoS_description  = K123
@@ -23,9 +23,9 @@ EoS_Gamma        = [2]
 
 #### BH:
 BH_irreducible_mass = 3 
-BH_chi_U0             = 0     #:= target dimensionless spin in x-direction
-BH_chi_U1             = 0     #:= target dimensionless spin in y-direction
-BH_chi_U2             = 0.004 #:= target dimensionless spin in z-direction
+BH_chi_U0           = 0     #:= target dimensionless spin in x-direction
+BH_chi_U1           = 0     #:= target dimensionless spin in y-direction
+BH_chi_U2           = 0.004 #:= target dimensionless spin in z-direction
 
 #### Orbits:
 BH_NS_separation       = 50    
