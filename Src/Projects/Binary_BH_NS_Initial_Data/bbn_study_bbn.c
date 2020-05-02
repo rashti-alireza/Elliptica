@@ -62,7 +62,6 @@ void bbn_measures(Grid_T *const grid)
   const double NS_R_avg = NS_r_average(grid);
   double Rc_NS[3] = {0}, Rc_BH[3] = {0};/* centers */
   double S_NS[3]  = {0}, S_BH[3]  = {0};/* spins */
-  double J[3]     = {0}, P[3]     = {0};/* P and J ADMs */
   double chris_bh_mass = 1;/* Christodoulou mass, 1 to avoid division by 0 */
   
   /* adm mass */
@@ -87,24 +86,12 @@ void bbn_measures(Grid_T *const grid)
   /* some pars are defined after 0 iter */
   if (solving_iter > 0 && solving_iter != INT_MAX)
   {
-    /* NS spins */
-    bbn_Rc_NS(Rc_NS,grid);
-    P[0] = Pgetd("NS_Px_ADM");
-    P[1] = Pgetd("NS_Py_ADM");
-    P[2] = Pgetd("NS_Pz_ADM");
-    J[0] = Pgetd("NS_Jx_ADM");
-    J[1] = Pgetd("NS_Jy_ADM");
-    J[2] = Pgetd("NS_Jz_ADM");
-    define_spin_JRP(S_NS,J,Rc_NS,P);
+    /* NS spin */
+    bbn_define_spin_JRP(S_NS,grid,"NS");
     
-    bbn_Rc_BH(Rc_BH,grid);
-    P[0] = Pgetd("BH_Px_ADM");
-    P[1] = Pgetd("BH_Py_ADM");
-    P[2] = Pgetd("BH_Pz_ADM");
-    J[0] = Pgetd("BH_Jx_ADM");
-    J[1] = Pgetd("BH_Jy_ADM");
-    J[2] = Pgetd("BH_Jz_ADM");
-    define_spin_JRP(S_BH,J,Rc_BH,P);
+    /* BH spin */
+    bbn_define_spin_JRP(S_BH,grid,"BH");
+    
     double s_BH2  = Pow2(S_BH[0])+Pow2(S_BH[1])+Pow2(S_BH[2]);
     double irrm2  = Pow2(bh_irr_mass);
     chris_bh_mass = sqrt(irrm2+s_BH2/(4*irrm2));
@@ -591,8 +578,36 @@ void bbn_Rc_BH(double Rc[3],Grid_T *const grid)
 }
 
 /* approximate spin using : S = J - RxP */
-static void define_spin_JRP(double S[3],const double J[3],const double R[3],const double P[3])
+void bbn_define_spin_JRP(double S[3],Grid_T *const grid,const char *const kind)
 {
+  double J[3] = {0,0,0};
+  double R[3] = {0,0,0};
+  double P[3] = {0,0,0};
+  
+  /* NS spins */
+  if (strcmp_i(kind,"NS"))
+  {
+    bbn_Rc_NS(R,grid);
+    P[0] = Pgetd("NS_Px_ADM");
+    P[1] = Pgetd("NS_Py_ADM");
+    P[2] = Pgetd("NS_Pz_ADM");
+    J[0] = Pgetd("NS_Jx_ADM");
+    J[1] = Pgetd("NS_Jy_ADM");
+    J[2] = Pgetd("NS_Jz_ADM");
+  }
+  else if (strcmp_i(kind,"BH"))
+  {
+    bbn_Rc_BH(R,grid);
+    P[0] = Pgetd("BH_Px_ADM");
+    P[1] = Pgetd("BH_Py_ADM");
+    P[2] = Pgetd("BH_Pz_ADM");
+    J[0] = Pgetd("BH_Jx_ADM");
+    J[1] = Pgetd("BH_Jy_ADM");
+    J[2] = Pgetd("BH_Jz_ADM");
+  }
+  else
+    Error0(NO_OPTION);
+
   S[0] = J[0] - (-P[1]*R[2] + P[2]*R[1]);
   S[1] = J[1] - (P[0]*R[2] - P[2]*R[0]);
   S[2] = J[2] - (-P[0]*R[1] + P[1]*R[0]);

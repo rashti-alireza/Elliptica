@@ -136,6 +136,8 @@ void bbn_free_obs_CS(Observable_T *obs);
 void bbn_measures(Grid_T *const grid);
 void bbn_Rc_NS(double Rc[3],Grid_T *const grid);
 void bbn_Rc_BH(double Rc[3],Grid_T *const grid);
+void bbn_define_spin_JRP(double S[3],Grid_T *const grid,const char *const kind);
+
 
 #endif
 
