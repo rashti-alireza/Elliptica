@@ -333,36 +333,30 @@ void bbn_print_residual_norms(Grid_T *const grid,const unsigned iteration, const
       if (access(file_name_Linf,F_OK) != -1)/* if file exists */
       {
         file_Linf = Fopen(file_name_Linf,"a");
-        IsNull(file_Linf);
       }
       else
       {
         file_Linf = Fopen(file_name_Linf,"w");
-        IsNull(file_Linf);
         fprintf(file_Linf,"#iteration  %s\n",f[i]);
       }
       
       if (access(file_name_L1,F_OK) != -1)
       {
         file_L1 = Fopen(file_name_L1,"a");
-        IsNull(file_L1);
       }
       else
       {
         file_L1 = Fopen(file_name_L1,"w");
-        IsNull(file_L1);
         fprintf(file_L1,"#iteration  %s\n",f[i]);
       }
       
       if (access(file_name_L2,F_OK) != -1)
       {
         file_L2 = Fopen(file_name_L2,"a");
-        IsNull(file_L2);
       }
       else
       {
         file_L2 = Fopen(file_name_L2,"w");
-        IsNull(file_L2);
         fprintf(file_L2,"#iteration  %s\n",f[i]);
       }
         
