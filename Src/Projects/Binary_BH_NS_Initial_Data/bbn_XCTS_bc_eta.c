@@ -34,7 +34,7 @@ eta[ijk] - 1;
   {
   const double r02   = Pow2(Pgetd("BH_KerrSchild_RollOff"));
   const double M_BH  = Pgetd("BH_irreducible_mass");
-  const double a  = Pgetd("BH_X_U2")*M_BH;
+  const double a  = Pgetd("BH_chi_U2")*M_BH;
   const double a2 = Pow2(a);
   const double BH_center_x = Pgetd("BH_center_x");
   const double BH_center_y = Pgetd("BH_center_y");

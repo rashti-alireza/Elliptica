@@ -177,7 +177,7 @@ static int IsThereAnyUsefulCheckpointFile(void)
                                       "NS_Omega_U2",
                                       "EoS_K",
                                       "BH_irreducible_mass",
-                                      "BH_X_U2",
+                                      "BH_chi_U2",
                                       "BH_NS_separation",
                                       "BH_KerrSchild_RollOff",
                                       0};
@@ -2035,9 +2035,9 @@ static void adjust_BH_Omega(Grid_T *const grid,struct Grid_Params_S *const GridP
   const double irr_mass  = Pgetd("BH_irreducible_mass");
   const double irr_mc2   = Pow2(irr_massc);
   const double W         = Pgetd("Solving_Field_Update_Weight");
-  const double chi_xt    = Pgetd("BH_X_U0");
-  const double chi_yt    = Pgetd("BH_X_U1");
-  const double chi_zt    = Pgetd("BH_X_U2");
+  const double chi_xt    = Pgetd("BH_chi_U0");
+  const double chi_yt    = Pgetd("BH_chi_U1");
+  const double chi_zt    = Pgetd("BH_chi_U2");
   const double Omega_x   = Pgetd("BH_Omega_U0");
   const double Omega_y   = Pgetd("BH_Omega_U1");
   const double Omega_z   = Pgetd("BH_Omega_U2");
@@ -4102,9 +4102,9 @@ static Grid_T *TOV_KerrSchild_approximation(void)
   /* basics of Kerr Schild black hole located at right side of y axis */
   pr_line_custom('=');
   printf("{ Acquiring Black Hole properties ...\n");
-  const double bh_chi_x    = Pgetd("BH_X_U0");
-  const double bh_chi_y    = Pgetd("BH_X_U1");
-  const double bh_chi_z    = Pgetd("BH_X_U2");
+  const double bh_chi_x    = Pgetd("BH_chi_U0");
+  const double bh_chi_y    = Pgetd("BH_chi_U1");
+  const double bh_chi_z    = Pgetd("BH_chi_U2");
   const double bh_irr_mass = Pgetd("BH_irreducible_mass");
   const double bh_R        = bh_irr_mass;/* approximate initial radius */
   printf("BH properties:\n");
@@ -4155,7 +4155,7 @@ static Grid_T *TOV_KerrSchild_approximation(void)
   /* -> approximate BH_Omega, the angular frequency of the horizon,
   // is a free vector that determines the spin of BH
   // and it is related to the dimensionless spin by:
-  // BH_X = 4*BH_mass*BH_Omega (PRD 86 084033). */
+  // BH_chi = 4*BH_mass*BH_Omega (PRD 86 084033). */
   Psetd("BH_Omega_U0",bh_chi_x/(4*bh_irr_mass));
   Psetd("BH_Omega_U1",bh_chi_y/(4*bh_irr_mass));
   Psetd("BH_Omega_U2",bh_chi_z/(4*bh_irr_mass));

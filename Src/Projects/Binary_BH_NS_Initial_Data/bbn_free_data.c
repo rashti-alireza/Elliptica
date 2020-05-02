@@ -317,7 +317,7 @@ void bbn_free_data_gammas(Grid_T *const grid)
   /* roll off distance at exp(-(r/r0)^4)  */
   const double r0   = Pgetd("BH_KerrSchild_RollOff");
   const double M_BH = Pgetd("BH_irreducible_mass");
-  const double a    = Pgetd("BH_X_U2")*M_BH;
+  const double a    = Pgetd("BH_chi_U2")*M_BH;
   const double BH_center_x = Pgetd("BH_center_x");
   const double BH_center_y = Pgetd("BH_center_y");
   const double BH_center_z = Pgetd("BH_center_z");
@@ -662,7 +662,7 @@ static void populate_KSgammas_KSalpha_KSBeta(Patch_T *const patch)
 {
   Transformation_T *t = initialize_transformation();
   const double M_BH = Pgetd("BH_irreducible_mass");
-  const double a    = Pgetd("BH_X_U2")*M_BH;
+  const double a    = Pgetd("BH_chi_U2")*M_BH;
   const double a2   = Pow2(a);
   const double BH_center_x = Pgetd("BH_center_x");
   const double BH_center_y = Pgetd("BH_center_y");
