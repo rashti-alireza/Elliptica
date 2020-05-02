@@ -248,15 +248,18 @@ static Grid_T *make_next_grid_using_previous_grid(Grid_T *const grid_prev)
   /* update enthalpy,denthalpy,rho0, drho0, u0, _J^i, _E and _S */
   bbn_update_stress_energy_tensor(grid_prev,0);
   
-  /* adjust the Omega_BH to acquire the desired BH spin */
-  adjust_BH_Omega(grid_prev,GridParams);
-  
   /* adjust the apparent horizon radius to acquire the desired BH mass */
   adjust_AH_radius(grid_prev,GridParams);
- 
+  
   /* P_ADM control */
   P_ADM_control(grid_prev);
   
+  /* adjust the Omega_BH to acquire the desired BH spin
+  // NOTE: this function should be after adjust_AH_radius 
+  // and P_ADM_control since it needs some parameters such as
+  // BH_irreducible_mass_current and BH_Px_ADM etc. */
+  adjust_BH_Omega(grid_prev,GridParams);
+ 
   /* update enthalpy,denthalpy,rho0, drho0, u0, _J^i, _E and _S */
   bbn_update_stress_energy_tensor(grid_prev,0);
   
@@ -2028,11 +2031,46 @@ static void adjust_BH_Omega(Grid_T *const grid,struct Grid_Params_S *const GridP
   printf("{ Adjusting BH Omega ...\n");
   UNUSED(grid);
   
-  const double bh_chi  = Pgetd("BH_X_U2");
-  const double bh_mass = Pgetd("BH_irreducible_mass");
+  const double irr_massc = Pgetd("BH_irreducible_mass_current");
+  const double irr_mass  = Pgetd("BH_irreducible_mass");
+  const double irr_mc2   = Pow2(irr_massc);
+  const double W         = Pgetd("Solving_Field_Update_Weight");
+  const double chi_xt    = Pgetd("BH_X_U0");
+  const double chi_yt    = Pgetd("BH_X_U1");
+  const double chi_zt    = Pgetd("BH_X_U2");
+  const double Omega_x   = Pgetd("BH_Omega_U0");
+  const double Omega_y   = Pgetd("BH_Omega_U1");
+  const double Omega_z   = Pgetd("BH_Omega_U2");
+  double chr_mass = 0;
+  double S_BH[3] = {0},s_BH2;
+  double dOmega_x,dOmega_y,dOmega_z;
+  double chi_xc,chi_yc,chi_zc;
   
-  GridParams->a_BH   = bh_chi*bh_mass;
+  /* find current BH spin */
+  bbn_define_spin_JRP(S_BH,grid,"BH");
   
+  s_BH2    = Pow2(S_BH[0])+Pow2(S_BH[1])+Pow2(S_BH[2]);
+  chr_mass = sqrt(irr_mc2+s_BH2/(4*irr_mc2));
+  chi_xc   = S_BH[0]/Pow2(chr_mass);
+  chi_yc   = S_BH[1]/Pow2(chr_mass);
+  chi_zc   = S_BH[2]/Pow2(chr_mass);
+  
+  /* adjust Omegas */
+  dOmega_x = -(chi_xc-chi_xt)/(4*chr_mass) + 
+            (irr_massc-irr_mass)/(4*Pow2(irr_massc))*chi_xc;
+  
+  dOmega_y = -(chi_yc-chi_yt)/(4*chr_mass) + 
+            (irr_massc-irr_mass)/(4*Pow2(irr_massc))*chi_yc;
+            
+  dOmega_z = -(chi_zc-chi_zt)/(4*chr_mass) + 
+            (irr_massc-irr_mass)/(4*Pow2(irr_massc))*chi_zc;
+  
+  Psetd("BH_omega_U0",Omega_x+W*dOmega_x);
+  Psetd("BH_omega_U1",Omega_y+W*dOmega_y);
+  Psetd("BH_omega_U2",Omega_z+W*dOmega_z);
+  Psetd("BH_Christodoulou_mass",chr_mass);
+  
+  GridParams->a_BH   = DBL_MAX;/* to catch error */
   printf("} Adjusting BH Omega ==> Done.\n");
   pr_clock();
   pr_line_custom('=');
