@@ -4063,13 +4063,17 @@ static Grid_T *TOV_KerrSchild_approximation(void)
   /* basics of Kerr Schild black hole located at right side of y axis */
   pr_line_custom('=');
   printf("{ Acquiring Black Hole properties ...\n");
-  const double bh_chi  = Pgetd("BH_X_U2");
-  const double bh_mass = Pgetd("BH_irreducible_mass");
-  const double bh_R    = bh_mass*(1+sqrt(1-Pow2(bh_chi)));
+  const double bh_chi_x    = Pgetd("BH_X_U0");
+  const double bh_chi_y    = Pgetd("BH_X_U1");
+  const double bh_chi_z    = Pgetd("BH_X_U2");
+  const double bh_irr_mass = Pgetd("BH_irreducible_mass");
+  const double bh_R        = bh_irr_mass;/* approximate initial radius */
   printf("BH properties:\n");
-  printf("--> BH radius (Kerr-Schild Coords.) = %+e\n",bh_R);
-  printf("--> BH dimensionless spin (z comp.) = %+e\n",bh_chi);
-  printf("--> BH irreducible mass             = %+e\n",bh_mass);
+  //printf("--> BH radius (Kerr-Schild Coords.) = %+e\n",bh_R);
+  printf("--> BH irreducible mass             = %+e\n",bh_irr_mass);
+  printf("--> BH dimensionless spin (x comp.) = %+e\n",bh_chi_x);
+  printf("--> BH dimensionless spin (y comp.) = %+e\n",bh_chi_y);
+  printf("--> BH dimensionless spin (z comp.) = %+e\n",bh_chi_z);
   printf("} Acquiring Black Hole properties ==> Done.\n");
   pr_clock();
   pr_line_custom('=');
@@ -4079,7 +4083,7 @@ static Grid_T *TOV_KerrSchild_approximation(void)
   const double C_BH = 0.5*D;/* center of BH patch, it's on +y axis */
   const double C_NS = -C_BH;/* center of NS it's on -y axis*/
   const double ns_mass = tov->ADM_m;/* NS adm mass */
-  const double y_CM = (ns_mass*C_NS+bh_mass*C_BH)/(ns_mass+bh_mass);
+  const double y_CM = (ns_mass*C_NS+bh_irr_mass*C_BH)/(ns_mass+bh_irr_mass);
   
   /* adding some parameters: */
   /* -> pars for adjusting NS surface and interpolation for the next grid */
@@ -4109,13 +4113,13 @@ static Grid_T *TOV_KerrSchild_approximation(void)
   Psetd("BH_center_z",0);
   Psetd("BH_Vz",0);/* BH velocity in z direction */
   
-  /* -> BH_Omega, the angular frequency of the horizon,
+  /* -> approximate BH_Omega, the angular frequency of the horizon,
   // is a free vector that determines the spin of BH
   // and it is related to the dimensionless spin by:
-  // BH_X = 4*BH_mass*BH_Omega .
-  // we only use U2 component, since we assume BH only has spin 
-  // in +/- of z direction (PRD 86 084033) */
-  Psetd("BH_Omega_U2",bh_chi/(4*bh_mass));
+  // BH_X = 4*BH_mass*BH_Omega (PRD 86 084033). */
+  Psetd("BH_Omega_U0",bh_chi_x/(4*bh_irr_mass));
+  Psetd("BH_Omega_U1",bh_chi_y/(4*bh_irr_mass));
+  Psetd("BH_Omega_U2",bh_chi_z/(4*bh_irr_mass));
 
   /* -> the Constant of the integration of Euler equation */
   Psetd("Euler_equation_constant",0);
@@ -4130,7 +4134,7 @@ static Grid_T *TOV_KerrSchild_approximation(void)
   /* combining these two geometry to create the grid */
   GridParams->Max_R_NS_l = ns_R;
   GridParams->R_BH_r     = bh_R;
-  GridParams->a_BH       = bh_chi*bh_mass;
+  GridParams->a_BH       = DBL_MAX;/* to catch error! *///bh_chi*bh_mass;
   GridParams->NS_R_type  = "PerfectSphere";
   GridParams->BH_R_type  = "PerfectSphere";
   grid = creat_bbn_grid_CS(GridParams);
@@ -4141,8 +4145,9 @@ static Grid_T *TOV_KerrSchild_approximation(void)
   /* populating the free data part of initial data that we chose ourself */
   bbn_populate_free_data(grid);
   
-  /* initialize the fields using TOV and Kerr-Schild solution */
-  init_field_TOV_plus_KerrSchild(grid,tov,bh_chi*bh_mass,bh_mass);
+  /* initialize the fields using TOV and Kerr-Schild solution.
+  // NOTE: for now I am using bh_chi_z approximatly.  */
+  init_field_TOV_plus_KerrSchild(grid,tov,bh_chi_z*bh_irr_mass,bh_irr_mass);
   
   /* make normal vectorn on BH horizon 
   // note: this MUST be before "bbn_partial_derivatives_fields" */

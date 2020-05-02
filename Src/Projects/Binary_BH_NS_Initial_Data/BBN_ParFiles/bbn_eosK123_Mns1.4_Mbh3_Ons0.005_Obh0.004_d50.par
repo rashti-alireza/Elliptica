@@ -23,7 +23,9 @@ EoS_Gamma        = [2]
 
 #### BH:
 BH_irreducible_mass = 3 
-BH_X_U2             = 0.004  #:= target dimensionless spin in z-direction
+BH_X_U0             = 0     #:= target dimensionless spin in x-direction
+BH_X_U1             = 0     #:= target dimensionless spin in y-direction
+BH_X_U2             = 0.004 #:= target dimensionless spin in z-direction
 
 #### Orbits:
 BH_NS_separation       = 50    
