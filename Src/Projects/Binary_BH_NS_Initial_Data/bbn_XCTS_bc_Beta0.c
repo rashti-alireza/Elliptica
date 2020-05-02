@@ -23,6 +23,8 @@ void *bbn_bc_Beta_U0(void *vp1,void *vp2)
 
 
   const double BH_center_y = Pgetd("BH_center_y");
+  const double BH_center_z = Pgetd("BH_center_z");
+  const double BH_Omega_U1 = Pgetd("BH_Omega_U1");
   const double BH_Omega_U2 = Pgetd("BH_Omega_U2");
   const double v0_boost    = Pgetd("v*_boost_x");
   if (patch->outerB)/* at outer boundary */
@@ -47,8 +49,9 @@ eta[ijk]/psi[ijk];
 _HS_U0[ijk]/pow(psi[ijk], 2);
 
   double y = patch->node[ijk]->x[1]-BH_center_y;
+  double z = patch->node[ijk]->x[2]-BH_center_z;
   double OmegaXr_U0 = 
--BH_Omega_U2*y;
+BH_Omega_U1*z - BH_Omega_U2*y;
 
   double innerB_F = 
 B0_U0[ijk] + B1_U0[ijk] - OmegaXr_U0 - S_U0*alpha;

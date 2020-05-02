@@ -22,6 +22,10 @@ void *bbn_bc_Beta_U2(void *vp1,void *vp2)
   READ_v_IF_ON_HORIZON(_HS_U2)
 
 
+  const double BH_center_x = Pgetd("BH_center_x");
+  const double BH_center_y = Pgetd("BH_center_y");
+  const double BH_Omega_U0 = Pgetd("BH_Omega_U0");
+  const double BH_Omega_U1 = Pgetd("BH_Omega_U1");
   const double v2_boost = Pgetd("v*_boost_z");
   if (patch->outerB)/* at outer boundary */
   {
@@ -44,8 +48,10 @@ eta[ijk]/psi[ijk];
   double S_U2 = 
 _HS_U2[ijk]/pow(psi[ijk], 2);
 
+  double x = patch->node[ijk]->x[0]-BH_center_x;
+  double y = patch->node[ijk]->x[1]-BH_center_y;
   double OmegaXr_U2 = 
-0;
+BH_Omega_U0*y - BH_Omega_U1*x;
 
   double innerB_F = 
 B0_U2[ijk] + B1_U2[ijk] - OmegaXr_U2 - S_U2*alpha;
