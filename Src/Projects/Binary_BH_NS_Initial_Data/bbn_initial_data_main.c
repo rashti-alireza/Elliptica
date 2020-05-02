@@ -42,14 +42,14 @@ void bbn_construct_id(void)
     /* write checkpoint before updating the params for the next grid */
     bbn_write_checkpoint(grid_next);
     
-    /* study and analyse the new grid */
-    bbn_study_initial_data(grid_next);
-    
     /* free previous grid and related parameters */
     bbn_free_grid_and_its_parameters(grid_prev);
     
     /* solve the elliptic equations for the given grid */
     bbn_solve_elliptic_eqs(grid_next);
+    
+    /* study and analyse the new grid */
+    bbn_study_initial_data(grid_next);
     
     /* extrapolate metric fields inside the BH */
     bbn_extrapolate_metric_fields_insideBH(grid_next);
