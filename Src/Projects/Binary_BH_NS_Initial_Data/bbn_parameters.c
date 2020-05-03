@@ -75,4 +75,7 @@ void bbn_set_default_parameters(void)
   
   /* weight for update of BH's spin */
   Pset_default("BH_spin_update_weight","0.0");
+  
+  /* relative tolerance(error) for BH's mass */
+  Pset_default("BH_mass_tolerance","0.1");
 }
