@@ -53,6 +53,7 @@ NS_phi_equation_smoothness     = 0.1
 BH_KerrSchild_RollOff          = 25
 BH_r_excision_update_weight    = 0(x4)->0.2(x200)->0
 BH_mass_tolerance              = 1E-3
+BH_spin_update_weight          = 0.2
 
 #### BH_NS:
 P_ADM_control_method           = none(x4)->adjust(x_CM,y_CM,BH_Vz)

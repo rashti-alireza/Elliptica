@@ -72,4 +72,7 @@ void bbn_set_default_parameters(void)
   /* max allowed enthalpy L2 norm residual; if root finder of NS surface 
   // gets L2 norm residual below this number => it's been failed. */
   Pset_default("NS_enthalpy_allowed_residual","1e-4");
+  
+  /* weight for update of BH's spin */
+  Pset_default("BH_spin_update_weight","0.0");
 }

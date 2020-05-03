@@ -2034,7 +2034,7 @@ static void adjust_BH_Omega(Grid_T *const grid,struct Grid_Params_S *const GridP
   const double irr_massc = Pgetd("BH_irreducible_mass_current");
   const double irr_mass  = Pgetd("BH_irreducible_mass");
   const double irr_mc2   = Pow2(irr_massc);
-  const double W         = Pgetd("Solving_Field_Update_Weight");
+  const double W         = Pgetd("BH_spin_update_weight");
   const double chi_xt    = Pgetd("BH_chi_U0");
   const double chi_yt    = Pgetd("BH_chi_U1");
   const double chi_zt    = Pgetd("BH_chi_U2");
