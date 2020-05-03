@@ -2065,11 +2065,18 @@ static void adjust_BH_Omega(Grid_T *const grid,struct Grid_Params_S *const GridP
   if (!EQL(chi_zt,0))
     dOmega_z = -(chi_zc-chi_zt)/(4*chr_mass) + 
             (irr_massc-irr_mass)/(4*Pow2(irr_massc))*chi_zc;
-  
-  Psetd("BH_omega_U0",Omega_x+W*dOmega_x);
-  Psetd("BH_omega_U1",Omega_y+W*dOmega_y);
-  Psetd("BH_omega_U2",Omega_z+W*dOmega_z);
-  Psetd("BH_Christodoulou_mass",chr_mass);
+ 
+  if (EQL(W,0))
+  {
+    printf("|--> updating weight factor is zero.\n");
+  }
+  else
+  {
+    Psetd("BH_omega_U0",Omega_x+W*dOmega_x);
+    Psetd("BH_omega_U1",Omega_y+W*dOmega_y);
+    Psetd("BH_omega_U2",Omega_z+W*dOmega_z);
+    Psetd("BH_Christodoulou_mass",chr_mass);
+  }
   
   GridParams->a_BH   = DBL_MAX;/* to catch error */
   printf("} Adjusting BH Omega ==> Done.\n");
