@@ -1994,7 +1994,7 @@ static void adjust_AH_radius(Grid_T *const grid,struct Grid_Params_S *const Grid
   Psetd("BH_ADM_mass",adm_mass);
   Psetd("BH_Kommar_mass",kommar_mass);
   
-  dM = fabs(irr_mass-target_bh_mass);
+  dM = fabs(irr_mass/target_bh_mass-1);
   dr = -current_r_excision*(irr_mass/target_bh_mass-1);
   if (EQL(W,0))
   {
@@ -2004,7 +2004,7 @@ static void adjust_AH_radius(Grid_T *const grid,struct Grid_Params_S *const Grid
   if (LSSEQL(dM,dM_tolerance)) 
   {
     dr = 0;
-    printf("|--> |current_M-target_M| = %g < Tol. = %g\n",dM,dM_tolerance);
+    printf("|--> |dM/M| = %g < Tol. = %g\n",dM,dM_tolerance);
   }
 
   r_excision = current_r_excision + W*dr;
