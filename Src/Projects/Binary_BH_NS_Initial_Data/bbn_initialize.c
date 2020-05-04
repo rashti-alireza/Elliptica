@@ -5486,9 +5486,8 @@ static void NS_BH_surface_CubedSpherical_grid(Grid_T *const grid,struct Grid_Par
   // if surface finder was failed 
   // do not change the NS surface function */
   if (
-      (same_res_flag && dR_rms < NS_surf_tolerance && GridParams->grid_prev) 
-      ||
-      (GridParams->grid_prev && !did_NS_surface_finder_work)
+      (same_res_flag && GridParams->grid_prev) && 
+      (dR_rms < NS_surf_tolerance || !did_NS_surface_finder_work) 
      )
   {
     if (dR_rms < NS_surf_tolerance && did_NS_surface_finder_work)/* prints only if this is the case */
