@@ -58,7 +58,7 @@ BH_spin_update_weight          = 0.2
 
 #### BH_NS:
 P_ADM_control_method           = none(x4)->adjust(x_CM,y_CM,BH_Vz)
-P_ADM_control_tolerance        = 1E-2
+P_ADM_control_tolerance        = 1E-5
 P_ADM_control_update_weight    = 0.1
 P_ADM_control_iteration        = 10
 force_balance_equation         = none(x4)->adjust(d/dy:Omega)
