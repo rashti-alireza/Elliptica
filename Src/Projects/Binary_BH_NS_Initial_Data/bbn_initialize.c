@@ -6096,10 +6096,17 @@ static void NS_BH_surface_CubedSpherical_grid(Grid_T *const grid,struct Grid_Par
     sprintf(par,"grid%u_right_BH_surface_function_right",grid->gn);
     add_parameter_array(par,R,N_total);
   }
-  else if (strcmp_i(GridParams->BH_R_type,"PerfectSphere"))
+  else if (/* if BH center is instructed to change */
+           (strstr_i(Pgets("P_ADM_control_method"),"Px_BH_center")  ||
+            strstr_i(Pgets("P_ADM_control_method"),"Py_BH_center")
+           )                                                        &&
+            strcmp_i(GridParams->BH_R_type,"PerfectSphere")
+          )
   {
-    Psets("BH_R_type","PerfectSphere");
-    Psetd("BH_R_size",r);/* this is used later for Ylm extrapolation */
+    if (Pcmps("extrapolate_inside_BH_method","Ylm"))
+      Error0("This part is not complete for Ylm BH extrapolation.");
+      
+    double r_bh_max = 0;/* this is for Ylm extrapolation */
     
     /* surface up */
     for (i = 0; i < N[0]; ++i)
@@ -6190,6 +6197,37 @@ static void NS_BH_surface_CubedSpherical_grid(Grid_T *const grid,struct Grid_Par
     }
     sprintf(par,"grid%u_right_BH_surface_function_right",grid->gn);
     add_parameter_array(par,R,N_total);
+    
+    Psets("BH_R_type","PerfectSphere");
+    Psetd("BH_R_size",r_bh_max);/* this is used later for Ylm extrapolation */
+  }
+  else if (strcmp_i(GridParams->BH_R_type,"PerfectSphere"))
+  {
+    for (i = 0; i < N[0]; ++i)
+      for (j = 0; j < N[1]; ++j)
+        for (k = 0; k < N[2]; ++k)
+          R[L(N,i,j,k)] = R_BH_r;
+    
+    sprintf(par,"grid%u_right_BH_surface_function_up",grid->gn);
+    add_parameter_array(par,R,N_total);
+    
+    sprintf(par,"grid%u_right_BH_surface_function_down",grid->gn);
+    add_parameter_array(par,R,N_total);
+    
+    sprintf(par,"grid%u_right_BH_surface_function_back",grid->gn);
+    add_parameter_array(par,R,N_total);
+    
+    sprintf(par,"grid%u_right_BH_surface_function_front",grid->gn);
+    add_parameter_array(par,R,N_total);
+    
+    sprintf(par,"grid%u_right_BH_surface_function_left",grid->gn);
+    add_parameter_array(par,R,N_total);
+    
+    sprintf(par,"grid%u_right_BH_surface_function_right",grid->gn);
+    add_parameter_array(par,R,N_total);
+    
+    Psets("BH_R_type","PerfectSphere");
+    Psetd("BH_R_size",R_BH_r);/* this is used later for Ylm extrapolation */
   }
   else
     Error0(NO_OPTION);
