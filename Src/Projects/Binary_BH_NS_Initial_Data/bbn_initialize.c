@@ -2029,7 +2029,6 @@ static void adjust_BH_Omega(Grid_T *const grid,struct Grid_Params_S *const GridP
 {
   pr_line_custom('=');
   printf("{ Adjusting BH Omega ...\n");
-  UNUSED(grid);
   
   const double irr_massc = Pgetd("BH_irreducible_mass_current");
   const double irr_mass  = Pgetd("BH_irreducible_mass");
