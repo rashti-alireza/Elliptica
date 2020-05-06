@@ -171,6 +171,9 @@ void bbn_free_grid_and_its_parameters(Grid_T *grid);
 static Grid_T *load_checkpoint_file(void);
 static int IsThereAnyUsefulCheckpointFile(void);
 static void Pz_ADM_is0_by_BH_Vz(Grid_T *const grid);
+static void extrapolate_insideBH_CS_C0_Ylm(Grid_T *const grid,const char *const field_name);
+static void find_XYZ_and_patch_of_theta_phi_BH_CS(double *const X,Patch_T **const ppatch,const double theta,const double phi,Grid_T *const grid);
+
 
 
 

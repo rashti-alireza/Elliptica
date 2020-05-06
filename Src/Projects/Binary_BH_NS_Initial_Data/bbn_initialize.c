@@ -3211,6 +3211,133 @@ static void find_XYZ_and_patch_of_theta_phi_NS_CS(double *const X,Patch_T **cons
     Error0("(X,Y,Z) or patch could not be found.\n");
 }
 
+
+/* given theta, phi and knowing the fact that they are on BH surface, 
+// it finds the corresponding patch and X,Y,Z coordinate. */
+static void find_XYZ_and_patch_of_theta_phi_BH_CS(double *const X,Patch_T **const ppatch,const double theta,const double phi,Grid_T *const grid)
+{
+  const double tan_phi    = tan(phi);
+  const double cos_theta  = cos(theta);
+  const double tan_phi2   = Pow2(tan_phi);
+  const double cos_theta2 = Pow2(cos_theta);
+  Flag_T found_flg = NO;
+  unsigned p;
+  
+  X[2] = 0;/* since we are on BH surface from BH surrounding side */
+  
+  /* check all of BH patches in which (x,y,z) and 
+  // (X,Y,Z) and (theta,phi) are consistent */
+  FOR_ALL_PATCHES(p,grid)
+  {
+    Patch_T *patch = grid->patch[p];
+    
+    if (!IsItHorizonPatch(patch))
+      continue;
+
+    Flag_T side = patch->CoordSysInfo->CubedSphericalCoord->side;
+    const double *c = patch->c;
+    double a = 0, b = 0;
+    double a_sign = 0,b_sign = 0,c_sign = 0;
+    double x[3],phi2,theta2,r;
+    
+    /* we know that theta = 0 or Pi occures only at UP or DOWN patches
+    // so don't bother to follow algorithm all the way down.
+    // furthermore, this prevent 0 in denominator of unrelated patches. */
+    if (EQL(theta,0) || EQL(theta,M_PI))
+    {
+      if (side == LEFT || side == RIGHT || 
+          side == BACK || side == FRONT   )
+        continue;
+    }
+    
+    /* first calculate the magnetitude of a and b 
+    // which are related to X[0] and X[1] with a sign */
+    switch (side)
+    {
+      case UP:
+        a = Sqrt((1 - cos_theta2)/(cos_theta2 + cos_theta2*tan_phi2));
+        b = tan_phi*Sqrt((1 - cos_theta2)/(cos_theta2*(1 + tan_phi2)));
+      break;
+      case DOWN:
+        b = Sqrt((1 - cos_theta2)/(cos_theta2 + cos_theta2*tan_phi2));
+        a = tan_phi*Sqrt((1 - cos_theta2)/(cos_theta2*(1 + tan_phi2)));
+      break;
+      case LEFT:
+        a = 1/tan_phi;
+        b = Sqrt((cos_theta2 + cos_theta2*tan_phi2)/((1. - cos_theta2)*tan_phi2));
+      break;
+      case RIGHT:
+        b = 1/tan_phi;
+        a = Sqrt((cos_theta2 + cos_theta2*tan_phi2)/((1. - cos_theta2)*tan_phi2));
+      break;
+      case BACK:
+        a = Sqrt((cos_theta2 + cos_theta2*tan_phi2)/(1 - cos_theta2));
+        b = tan_phi;
+      break;
+      case FRONT:
+        b = Sqrt((cos_theta2 + cos_theta2*tan_phi2)/(1 - cos_theta2));
+        a = tan_phi;
+      break;
+      default:
+        Error0(NO_OPTION);
+    }
+    
+    /* having found the magnitude of a and b, we need to find out the sign of them.
+    // this is done by paying attention to side, signum(cos_theta) and range of tanphi */
+    switch (side)
+    {
+      case UP:
+        arctan_argument_signum(&b_sign,&a_sign,phi);
+      break;
+      case DOWN:
+        arctan_argument_signum(&a_sign,&b_sign,phi);
+      break;
+      case LEFT:
+        arctan_argument_signum(&c_sign,&a_sign,phi);
+        if (cos_theta > 0) b_sign = 1;
+        else		   b_sign = -1;
+      break;
+      case RIGHT:
+        arctan_argument_signum(&c_sign,&b_sign,phi);
+        if (cos_theta > 0) a_sign = 1;
+        else		   a_sign = -1;
+      break;
+      case BACK:
+        arctan_argument_signum(&b_sign,&c_sign,phi);
+        if (cos_theta > 0) a_sign = 1;
+        else		   a_sign = -1;
+      break;
+      case FRONT:
+        arctan_argument_signum(&a_sign,&c_sign,phi);
+        if (cos_theta > 0) b_sign = 1;
+        else		   b_sign = -1;
+      break;
+      default:
+        Error0(NO_OPTION);
+    }
+    
+    X[0] = fabs(a)*a_sign;
+    X[1] = fabs(b)*b_sign;
+    
+    /* check if x of X really gives you the correct angles */
+    x_of_X(x,X,patch);
+    x[0] -= c[0];
+    x[1] -= c[1];
+    x[2] -= c[2];
+    r = root_square(3,x,0);
+    theta2 = acos(x[2]/r);
+    phi2   = arctan(x[1],x[0]);
+    if (EQL(theta2,theta) && EQL(phi2,phi))
+    {
+      found_flg = YES;
+      *ppatch = patch;
+      break;
+    }
+  }
+  if (found_flg == NO)
+    Error0("(X,Y,Z) or patch could not be found.\n");
+}
+
 /* make patches inside the excision region of BH and and extrapolate
 // metric fields i.e. beta,eta and psi inside this region */
 void bbn_extrapolate_metric_fields_insideBH(Grid_T *const grid)
@@ -3221,11 +3348,39 @@ void bbn_extrapolate_metric_fields_insideBH(Grid_T *const grid)
   pr_line_custom('=');
   printf("{ Extrapolating metric fields inside the BH ...\n");
   
+  unsigned p;
+  
   /* add patches in side the excision region */
   add_patches_insideBH(grid);
   
-  /* extrapolate the fields inside the BH */
-  extrapolate_insideBH_CS_C1(grid);
+  if (Pcmps("extrapolate_inside_BH_method","Ylm"))
+  {
+    /* add and update necessary fields inside the BH */
+    FOR_ALL_PATCHES(p,grid)
+    {
+      Patch_T *patch = grid->patch[p];
+      if (!IsItInsideBHPatch(patch))
+        continue;
+      
+      bbn_add_fields_in_patch(patch);
+      
+      /* making B1 */
+      //bbn_update_B1_U012(patch);
+    }
+    
+    /* extrapolate the fields inside the BH */
+    extrapolate_insideBH_CS_C0_Ylm(grid,"B0_U0");
+    extrapolate_insideBH_CS_C0_Ylm(grid,"B0_U1");
+    extrapolate_insideBH_CS_C0_Ylm(grid,"B0_U2");
+    extrapolate_insideBH_CS_C0_Ylm(grid,"psi");
+    extrapolate_insideBH_CS_C0_Ylm(grid,"eta");
+  }
+  else if (Pcmps("extrapolate_inside_BH_method","linear"))
+  {
+    extrapolate_insideBH_CS_C1(grid);
+  }
+  else
+    Error0(NO_OPTION);
   
   printf("} Extrapolating metric fields inside the BH ==> Done.\n");
   pr_clock();
@@ -3412,6 +3567,135 @@ static void extrapolate_insideBH_CS_C1(Grid_T *const grid)
   }/* end of FOR_ALL_PATCHES(p,grid) */
   
 }
+
+#define ij(i,j) ((j)+Nphi*(i))
+/* extrapolating the given field inside of BH using Ylm method.
+// field(r,theta,phi) = Sum{C_lm * r^-(l+1) * Ylm(theta,phi)} 
+//
+// in this method we:
+// first : pick a R.
+// second: finding the coeffs Clm using:
+//         field(R_min,theta,phi) = Sum{Clm * r^-(l+1) * Ylm(theta,phi)}
+// third : we interpolate using the Ylm expansion. */
+static void extrapolate_insideBH_CS_C0_Ylm(Grid_T *const grid,const char *const field_name)
+{
+  const double FRACTION = 1.;/* if you wanna use R_min = FRACTION*R_min */
+  const unsigned lmax = (unsigned)Pgeti("NS_surface_Ylm_expansion_max_l");
+  unsigned Ntheta,Nphi;/* total number of theta and phi points */
+  double *field_R_min = 0;/* field(R_min,theta,phi) */
+  double *realClm,*imagClm;/* Clm coeffs */
+  double R_min = Pgetd("BH_R_size");
+  unsigned ijk,i,j,l,m,lm,p;
+  
+  /* check if it is perfect sphere */
+  if (!Pcmps("BH_R_type","PerfectSphere"))
+    Error0("This function is used when the BH surface is a perfect sphere!");
+    
+  /* initialize tables */
+  init_Legendre_root_function();
+  
+  Ntheta  = Nphi = 2*lmax+1;
+  field_R_min = alloc_double(Ntheta*Nphi);
+  
+  R_min = FRACTION*R_min;
+  
+  /* populate field(R_min,theta,phi) */
+  for (i = 0; i < Ntheta; ++i)
+  {
+    double theta = acos(-Legendre_root_function(i,Ntheta));
+    for (j = 0; j < Nphi; ++j)
+    {
+      double phi = j*2*M_PI/Nphi;
+      Patch_T *patch = 0;
+      double X[3],x[3];
+      
+      /* find patch for the given theta and phi */
+      find_XYZ_and_patch_of_theta_phi_BH_CS(X,&patch,theta,phi,grid);
+      
+      /* r = R_min(sin(theta)cos(phi)x^+sin(theta)sin(phi)y^+cos(theta)z^) */
+      x[0]  = R_min*sin(theta)*cos(phi);
+      x[1]  = R_min*sin(theta)*sin(phi);
+      x[2]  = R_min*cos(theta);
+      x[0] += patch->c[0];
+      x[1] += patch->c[1];
+      x[2] += patch->c[2];
+      
+      assert(X_of_x(X,x,patch));
+        
+      /* find field at the (X,Y,Z) */
+      Interpolation_T *interp = init_interpolation();
+      interp->field = patch->pool[Ind(field_name)];
+      interp->XYZ_dir_flag = 1;
+      interp->X            = X[0];
+      interp->Y            = X[1];
+      interp->Z            = X[2];
+      plan_interpolation(interp);
+      field_R_min[ij(i,j)] = execute_interpolation(interp);
+      
+      free_interpolation(interp);
+    }
+  }/* end of for (i = 0; i < Ntheta; ++i) */
+  
+  /* finding Clm in the expansion:
+  // field(r,theta,phi) = Sum{Clm * r^-(l+1) * Ylm(theta,phi)} 
+  // note: the coeffs need to be multiplied by R_min^(l+1) */
+  realClm = alloc_ClmYlm(lmax);
+  imagClm = alloc_ClmYlm(lmax);
+  get_Ylm_coeffs(realClm,imagClm,field_R_min,Ntheta,Nphi,lmax);
+  
+  /* multiplying coeff by R_min^(l+1) */
+  for (l = 0; l <= lmax; ++l)
+  {
+    double mult = pow(R_min,l+1);
+    for (m = 0; m <= l; ++m)
+    {
+      lm = lm2n(l,m);
+      realClm[lm] *= mult;
+      imagClm[lm] *= mult;
+    }
+  }
+  
+  /* having found Clm's we using Ylm interpolation
+  // field(r,theta,phi) = Sum{C_lm * r^-(l+1) * Ylm(theta,phi)} 
+  // to extrapolate the field outside the BH. */
+  FOR_ALL_PATCHES(p,grid)
+  {
+    /* surrounding patch */
+    Patch_T *patch = grid->patch[p];
+    const unsigned nn = patch->nn;
+    Field_T *field;
+    double *v;
+    double x[3],r,theta,phi;
+    
+    if (!IsItInsideBHPatch(patch))
+      continue;
+      
+    field = patch->pool[Ind(field_name)];
+    empty_field(field);
+    field->v = alloc_double(patch->nn);
+    v = field->v;
+    
+    /* interpolate */
+    for (ijk = 0; ijk < nn; ++ijk)
+    {
+      x[0]   = patch->node[ijk]->x[0]-patch->c[0];
+      x[1]   = patch->node[ijk]->x[1]-patch->c[1];
+      x[2]   = patch->node[ijk]->x[2]-patch->c[2];
+      r      = root_square(3,x,0);
+      theta  = acos(x[2]/r);
+      phi    = arctan(x[1],x[0]);
+      v[ijk] = interpolate_Clm_r_Ylm_3d(realClm,imagClm,lmax,r,theta,phi);
+    }
+  }/* end of FOR_ALL_PATCHES(p,grid) */
+  
+  /* free */
+  _free(field_R_min);
+  _free(realClm);
+  _free(imagClm);
+}
+#ifdef ij
+#undef ij
+#endif
 
 /* extrapolating phi, dphi and W in NS surrounding coords 
 // in case they are needed for interpolation to the next grid
@@ -5814,6 +6098,9 @@ static void NS_BH_surface_CubedSpherical_grid(Grid_T *const grid,struct Grid_Par
   }
   else if (strcmp_i(GridParams->BH_R_type,"PerfectSphere"))
   {
+    Psets("BH_R_type","PerfectSphere");
+    Psetd("BH_R_size",r);/* this is used later for Ylm extrapolation */
+    
     /* surface up */
     for (i = 0; i < N[0]; ++i)
     {
