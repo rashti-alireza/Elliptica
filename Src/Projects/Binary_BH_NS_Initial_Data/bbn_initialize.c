@@ -6104,7 +6104,8 @@ static void NS_BH_surface_CubedSpherical_grid(Grid_T *const grid,struct Grid_Par
           )
   {
     if (Pcmps("extrapolate_inside_BH_method","Ylm"))
-      Error0("This part is not complete for Ylm BH extrapolation.");
+      Error0("This part is not complete for Ylm BH extrapolation.\n"
+              "You should find r_bh_max appropriately.\n");
       
     double r_bh_max = 0;/* this is for Ylm extrapolation */
     
