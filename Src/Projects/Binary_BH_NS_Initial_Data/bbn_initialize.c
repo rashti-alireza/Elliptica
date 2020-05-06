@@ -3225,7 +3225,7 @@ void bbn_extrapolate_metric_fields_insideBH(Grid_T *const grid)
   add_patches_insideBH(grid);
   
   /* extrapolate the fields inside the BH */
-  extrapolate_insideBH(grid);
+  extrapolate_insideBH_CS_C1(grid);
   
   printf("} Extrapolating metric fields inside the BH ==> Done.\n");
   pr_clock();
@@ -3278,7 +3278,7 @@ static void add_patches_insideBH(Grid_T *const grid)
 // we assume: f = a*(r-rh)+b, r is coordinate distance to the center of BH. 
 // note: at the central box, we put B0 to 0 and psi and eta to 1 and
 // B1 is calculated fromm its formula "Omega cross r". */
-static void extrapolate_insideBH(Grid_T *const grid)
+static void extrapolate_insideBH_CS_C1(Grid_T *const grid)
 {
   unsigned p;
   

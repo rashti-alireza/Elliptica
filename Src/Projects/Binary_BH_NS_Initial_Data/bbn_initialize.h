@@ -136,7 +136,7 @@ static void find_NS_surface(Grid_T *const grid,struct Grid_Params_S *const GridP
 static void update_B1_dB1_Beta_dBete_Aij_dAij(Grid_T *const grid);
 void bbn_extrapolate_metric_fields_insideBH(Grid_T *const grid);
 static void add_patches_insideBH(Grid_T *const grid);
-static void extrapolate_insideBH(Grid_T *const grid);
+static void extrapolate_insideBH_CS_C1(Grid_T *const grid);
 static void parse_adjust_parameter(const char *const par,char *adjust[3]);
 static void P_ADM_control(Grid_T *const grid);
 fAdjustment_t *get_func_force_balance_adjustment(const char *const adjust);
