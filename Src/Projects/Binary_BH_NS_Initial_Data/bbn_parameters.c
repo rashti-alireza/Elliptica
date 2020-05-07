@@ -71,8 +71,9 @@ void bbn_set_default_parameters(void)
   
   /* how to extrapolate fields inside the BH 
   // options:
-  // 1. Ylm
-  // 2. linear */
+  // 1. Ylm   : using Ylm expansion
+  // 2. linear: simply using a linear function 
+  // 3. WTGR  : using the method developed by Wolfgang and George. */
   Pset_default("extrapolate_inside_BH_method","linear");
   
   /* max allowed enthalpy L2 norm residual; if root finder of NS surface 
