@@ -3604,7 +3604,7 @@ static void extrapolate_insideBH_CS_WTGR(Grid_T *const grid)
   needle_in(needle,GetPatch("right_BH_surrounding_back",grid));
   needle_in(needle,GetPatch("right_BH_surrounding_front",grid));
   
-  /* compute dgamma */
+  /* compute _dgamma */
   bbn_preparing_conformal_metric_derivatives(GetPatch("right_BH_surrounding_up",grid));
   bbn_preparing_conformal_metric_derivatives(GetPatch("right_BH_surrounding_down",grid));
   bbn_preparing_conformal_metric_derivatives(GetPatch("right_BH_surrounding_left",grid));
