@@ -73,7 +73,7 @@ void bbn_set_default_parameters(void)
   // options:
   // 1. Ylm
   // 2. linear */
-  Pset_default("extrapolate_inside_BH_method","Ylm");
+  Pset_default("extrapolate_inside_BH_method","linear");
   
   /* max allowed enthalpy L2 norm residual; if root finder of NS surface 
   // gets L2 norm residual below this number => it's been failed. */
