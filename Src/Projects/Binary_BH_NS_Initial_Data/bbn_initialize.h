@@ -22,7 +22,7 @@
 /* handy macros for extrapolating inside BH */
 #define STRING_IT(x)  #x
 
-#define WTGR_EXTRAPOLATE_FORMULA0(x)   \
+#define WTGR_EXTRAPOLATE_scalar(x)   \
         double x##_onAH       = interpolate_from_patch_prim(STRING_IT(x)        ,X_on_BHsurf,BHsurf_patch); \
         double d##x##_D0_onAH = interpolate_from_patch_prim(STRING_IT(d##x##_D0),X_on_BHsurf,BHsurf_patch); \
         double d##x##_D1_onAH = interpolate_from_patch_prim(STRING_IT(d##x##_D1),X_on_BHsurf,BHsurf_patch); \
@@ -31,7 +31,7 @@
         double ur_##x        = x##_onAH + dur_##x*dr; \
         x[ijk]               = ur_##x*Y + u0_##x*(1-Y);
 
-#define WTGR_EXTRAPOLATE_FORMULA1(x)   \
+#define WTGR_EXTRAPOLATE_Beta(x)   \
         double x##_onAH       = interpolate_from_patch_prim(STRING_IT(x)       ,X_on_BHsurf,BHsurf_patch); \
         double d##x##D0_onAH = interpolate_from_patch_prim(STRING_IT(d##x##D0),X_on_BHsurf,BHsurf_patch); \
         double d##x##D1_onAH = interpolate_from_patch_prim(STRING_IT(d##x##D1),X_on_BHsurf,BHsurf_patch); \
@@ -40,7 +40,7 @@
         double ur_##x        = x##_onAH + dur_##x*dr; \
         x[ijk]               = ur_##x*Y + u0_##x*(1-Y);
         
-#define WTGR_EXTRAPOLATE_FORMULA2(x)   \
+#define WTGR_EXTRAPOLATE_gammabar(x)   \
         double x##_onAH      = interpolate_from_patch_prim(STRING_IT(_##x)       ,X_on_BHsurf,BHsurf_patch); \
         double d##x##D0_onAH = interpolate_from_patch_prim(STRING_IT(_d##x##D0),X_on_BHsurf,BHsurf_patch); \
         double d##x##D1_onAH = interpolate_from_patch_prim(STRING_IT(_d##x##D1),X_on_BHsurf,BHsurf_patch); \

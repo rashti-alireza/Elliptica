@@ -3675,19 +3675,19 @@ static void extrapolate_insideBH_CS_WTGR(Grid_T *const grid)
       double u0_psi = 2+Ma/(2*r);
       double u0_eta = 0.1*(2+Ma/(2*r));
       
-      WTGR_EXTRAPOLATE_FORMULA0(psi)
-      WTGR_EXTRAPOLATE_FORMULA0(eta)
+      WTGR_EXTRAPOLATE_scalar(psi)
+      WTGR_EXTRAPOLATE_scalar(eta)
 
-      WTGR_EXTRAPOLATE_FORMULA1(Beta_U0)
-      WTGR_EXTRAPOLATE_FORMULA1(Beta_U1)
-      WTGR_EXTRAPOLATE_FORMULA1(Beta_U2)
+      WTGR_EXTRAPOLATE_Beta(Beta_U0)
+      WTGR_EXTRAPOLATE_Beta(Beta_U1)
+      WTGR_EXTRAPOLATE_Beta(Beta_U2)
       
-      WTGR_EXTRAPOLATE_FORMULA2(gamma_D2D2)
-      WTGR_EXTRAPOLATE_FORMULA2(gamma_D0D2)
-      WTGR_EXTRAPOLATE_FORMULA2(gamma_D0D0)
-      WTGR_EXTRAPOLATE_FORMULA2(gamma_D0D1)
-      WTGR_EXTRAPOLATE_FORMULA2(gamma_D1D2)
-      WTGR_EXTRAPOLATE_FORMULA2(gamma_D1D1)
+      WTGR_EXTRAPOLATE_gammabar(gamma_D2D2)
+      WTGR_EXTRAPOLATE_gammabar(gamma_D0D2)
+      WTGR_EXTRAPOLATE_gammabar(gamma_D0D0)
+      WTGR_EXTRAPOLATE_gammabar(gamma_D0D1)
+      WTGR_EXTRAPOLATE_gammabar(gamma_D1D2)
+      WTGR_EXTRAPOLATE_gammabar(gamma_D1D1)
     }
   }/* end of FOR_ALL_PATCHES(p,grid) */
   
