@@ -41,7 +41,7 @@
         x[ijk]               = ur_##x*Y + u0_##x*(1-Y);
         
 #define WTGR_EXTRAPOLATE_gammabar(x)   \
-        double x##_onAH      = interpolate_from_patch_prim(STRING_IT(_##x)       ,X_on_BHsurf,BHsurf_patch); \
+        double x##_onAH      = interpolate_from_patch_prim(STRING_IT(_##x)     ,X_on_BHsurf,BHsurf_patch); \
         double d##x##D0_onAH = interpolate_from_patch_prim(STRING_IT(_d##x##D0),X_on_BHsurf,BHsurf_patch); \
         double d##x##D1_onAH = interpolate_from_patch_prim(STRING_IT(_d##x##D1),X_on_BHsurf,BHsurf_patch); \
         double d##x##D2_onAH = interpolate_from_patch_prim(STRING_IT(_d##x##D2),X_on_BHsurf,BHsurf_patch); \
