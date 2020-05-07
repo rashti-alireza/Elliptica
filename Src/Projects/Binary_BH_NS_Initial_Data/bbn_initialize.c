@@ -3376,7 +3376,11 @@ void bbn_extrapolate_metric_fields_insideBH(Grid_T *const grid)
   }
   else if (Pcmps("extrapolate_inside_BH_method","linear"))
   {
-    extrapolate_insideBH_CS_C1(grid);
+    extrapolate_insideBH_CS_linear(grid);
+  }
+  else if (Pcmps("extrapolate_inside_BH_method","WTGR"))
+  {
+    extrapolate_insideBH_CS_WTGR(grid);
   }
   else
     Error0(NO_OPTION);
@@ -3432,7 +3436,7 @@ static void add_patches_insideBH(Grid_T *const grid)
 // we assume: f = a*(r-rh)+b, r is coordinate distance to the center of BH. 
 // note: at the central box, we put B0 to 0 and psi and eta to 1 and
 // B1 is calculated fromm its formula "Omega cross r". */
-static void extrapolate_insideBH_CS_C1(Grid_T *const grid)
+static void extrapolate_insideBH_CS_linear(Grid_T *const grid)
 {
   unsigned p;
   
@@ -3565,6 +3569,134 @@ static void extrapolate_insideBH_CS_C1(Grid_T *const grid)
     }/* end of for (i = 0; i < n[0]; ++i) */
   }/* end of FOR_ALL_PATCHES(p,grid) */
   
+}
+
+/* for BAM initial data reader,
+// extrapolate the fields Beta,eta, psi, _gamma's
+// inside the BH, using the method developed by Wolfgang and Geroge,
+// more info "http://fau.digital.flvc.org/islandora/object/fau%3A4224" .
+// B1 is calculated fromm its formula "Omega cross r". */
+static void extrapolate_insideBH_CS_WTGR(Grid_T *const grid)
+{
+  const double r_fill         = Pgetd("BH_R_size");
+  const double Ma             = Pgetd("BH_irreducible_mass");
+  const double u0_Beta_U0     = 0;
+  const double u0_Beta_U1     = 0;
+  const double u0_Beta_U2     = 0;
+  const double u0__gamma_D0D0 = 1;
+  const double u0__gamma_D0D1 = 0;
+  const double u0__gamma_D0D2 = 0;
+  const double u0__gamma_D1D1 = 1;
+  const double u0__gamma_D1D2 = 0;
+  const double u0__gamma_D2D2 = 1;
+  Needle_T *needle = alloc_needle();
+  unsigned p;
+  
+  /* check if it is perfect sphere */
+  if (!Pcmps("BH_R_type","PerfectSphere"))
+    Error0("This function is used when the BH surface is a perfect sphere!");
+
+  /* fill needle */
+  needle->grid = grid;
+  needle_in(needle,GetPatch("right_BH_surrounding_up",grid));
+  needle_in(needle,GetPatch("right_BH_surrounding_down",grid));
+  needle_in(needle,GetPatch("right_BH_surrounding_left",grid));
+  needle_in(needle,GetPatch("right_BH_surrounding_right",grid));
+  needle_in(needle,GetPatch("right_BH_surrounding_back",grid));
+  needle_in(needle,GetPatch("right_BH_surrounding_front",grid));
+  
+  /* compute dgamma */
+  bbn_preparing_conformal_metric_derivatives(GetPatch("right_BH_surrounding_up",grid));
+  bbn_preparing_conformal_metric_derivatives(GetPatch("right_BH_surrounding_down",grid));
+  bbn_preparing_conformal_metric_derivatives(GetPatch("right_BH_surrounding_left",grid));
+  bbn_preparing_conformal_metric_derivatives(GetPatch("right_BH_surrounding_right",grid));
+  bbn_preparing_conformal_metric_derivatives(GetPatch("right_BH_surrounding_back",grid));
+  bbn_preparing_conformal_metric_derivatives(GetPatch("right_BH_surrounding_front",grid));
+  
+  FOR_ALL_PATCHES(p,grid)
+  {
+    Patch_T *patch = grid->patch[p];
+    if (!IsItInsideBHPatch(patch))
+      continue;
+    
+    unsigned nn = patch->nn;
+    double Y;
+    double r,theta,phi,dr;
+    double x_on_BHsurf[3]={0},
+           X_on_BHsurf[3]={0},
+           N[3] = {0};
+    unsigned ijk;
+    
+    bbn_add_fields_in_patch(patch);
+    REALLOC_v_WRITE_v(Beta_U0)
+    REALLOC_v_WRITE_v(Beta_U1)
+    REALLOC_v_WRITE_v(Beta_U2)
+    REALLOC_v_WRITE_v(psi)
+    REALLOC_v_WRITE_v(eta)
+    REALLOC_v_WRITE_v(_gamma_D2D2)
+    REALLOC_v_WRITE_v(_gamma_D0D2)
+    REALLOC_v_WRITE_v(_gamma_D0D0)
+    REALLOC_v_WRITE_v(_gamma_D0D1)
+    REALLOC_v_WRITE_v(_gamma_D1D2)
+    REALLOC_v_WRITE_v(_gamma_D1D1)
+    
+    for (ijk = 0; ijk < nn; ++ijk)
+    {
+      DEF_RELATIVE_x
+      DEF_RELATIVE_y
+      DEF_RELATIVE_z
+      Patch_T *BHsurf_patch = 0;
+      r     = sqrt(Pow2(x)+Pow2(y)+Pow2(z));
+      N[0]  = x/r;
+      N[1]  = y/r;
+      N[2]  = z/r;
+      dr    = r - r_fill;
+      theta = acos(z/r);
+      phi   = arctan(y,x);
+      Y     = 0.5*(1+tanh(48./125.*(r_fill/(r_fill-r)-3/2*(r_fill/r))));
+      assert(isfinite(Y));
+      
+      x_on_BHsurf[0] = r_fill*sin(theta)*cos(phi)+patch->c[0];
+      x_on_BHsurf[1] = r_fill*sin(theta)*sin(phi)+patch->c[1];
+      x_on_BHsurf[2] = r_fill*cos(theta)         +patch->c[2];
+      
+      /* find the patch and X which has this point */
+      needle->x = x_on_BHsurf;
+      point_finder(needle);
+      if (!needle->Nans)
+        Error0("Could not find the point!\n");
+      BHsurf_patch = grid->patch[needle->ans[0]];
+      assert(X_of_x(X_on_BHsurf,x_on_BHsurf,BHsurf_patch));
+      _free(needle->ans);
+      needle->ans  = 0;
+      needle->Nans = 0;
+      
+      /* extrapolate */
+      double u0_psi = 2+Ma/(2*r);
+      double u0_eta = 0.1*(2+Ma/(2*r));
+      
+      WTGR_EXTRAPOLATE_FORMULA(Beta_U0)
+      WTGR_EXTRAPOLATE_FORMULA(Beta_U1)
+      WTGR_EXTRAPOLATE_FORMULA(Beta_U2)
+      WTGR_EXTRAPOLATE_FORMULA(psi)
+      WTGR_EXTRAPOLATE_FORMULA(eta)
+      WTGR_EXTRAPOLATE_FORMULA(_gamma_D2D2)
+      WTGR_EXTRAPOLATE_FORMULA(_gamma_D0D2)
+      WTGR_EXTRAPOLATE_FORMULA(_gamma_D0D0)
+      WTGR_EXTRAPOLATE_FORMULA(_gamma_D0D1)
+      WTGR_EXTRAPOLATE_FORMULA(_gamma_D1D2)
+      WTGR_EXTRAPOLATE_FORMULA(_gamma_D1D1)
+    }
+  }/* end of FOR_ALL_PATCHES(p,grid) */
+  
+  /* free */
+  free_needle(needle);
+  bbn_free_conformal_metric_derivatives(GetPatch("right_BH_surrounding_up",grid));
+  bbn_free_conformal_metric_derivatives(GetPatch("right_BH_surrounding_down",grid));
+  bbn_free_conformal_metric_derivatives(GetPatch("right_BH_surrounding_left",grid));
+  bbn_free_conformal_metric_derivatives(GetPatch("right_BH_surrounding_right",grid));
+  bbn_free_conformal_metric_derivatives(GetPatch("right_BH_surrounding_back",grid));
+  bbn_free_conformal_metric_derivatives(GetPatch("right_BH_surrounding_front",grid));
 }
 
 #define ij(i,j) ((j)+Nphi*(i))

@@ -19,6 +19,19 @@
                          const double *const other_##x = patchp->pool[LookUpField_E(#x,patchp)]->v;
 #define copy_values(x)   x[ijk] = other_##x[ijk];
 
+/* handy macros for extrapolating inside BH */
+#define STRING_IT(x)  #x
+
+#define WTGR_EXTRAPOLATE_FORMULA(x)   \
+        double x##_onAH      = interpolate_from_patch_prim(STRING_IT(x)       ,X_on_BHsurf,BHsurf_patch); \
+        double d##x##D0_onAH = interpolate_from_patch_prim(STRING_IT(d##x##D0),X_on_BHsurf,BHsurf_patch); \
+        double d##x##D1_onAH = interpolate_from_patch_prim(STRING_IT(d##x##D1),X_on_BHsurf,BHsurf_patch); \
+        double d##x##D2_onAH = interpolate_from_patch_prim(STRING_IT(d##x##D2),X_on_BHsurf,BHsurf_patch); \
+        double dur_##x       = (N[0]*d##x##D0_onAH+N[1]*d##x##D1_onAH+N[2]*d##x##D2_onAH); \
+        double ur_##x        = x##_onAH + dur_##x*dr; \
+        x[ijk]               = ur_##x*Y + u0_##x*(1-Y);
+
+
 typedef void fAdjustment_t (Grid_T *const grid);
 
 /* root finder struct for NS surface eq */
@@ -136,7 +149,7 @@ static void find_NS_surface(Grid_T *const grid,struct Grid_Params_S *const GridP
 static void update_B1_dB1_Beta_dBete_Aij_dAij(Grid_T *const grid);
 void bbn_extrapolate_metric_fields_insideBH(Grid_T *const grid);
 static void add_patches_insideBH(Grid_T *const grid);
-static void extrapolate_insideBH_CS_C1(Grid_T *const grid);
+static void extrapolate_insideBH_CS_linear(Grid_T *const grid);
 static void parse_adjust_parameter(const char *const par,char *adjust[3]);
 static void P_ADM_control(Grid_T *const grid);
 fAdjustment_t *get_func_force_balance_adjustment(const char *const adjust);
@@ -172,6 +185,7 @@ static Grid_T *load_checkpoint_file(void);
 static int IsThereAnyUsefulCheckpointFile(void);
 static void Pz_ADM_is0_by_BH_Vz(Grid_T *const grid);
 static void extrapolate_insideBH_CS_C0_Ylm(Grid_T *const grid,const char *const field_name);
+static void extrapolate_insideBH_CS_WTGR(Grid_T *const grid);
 static void find_XYZ_and_patch_of_theta_phi_BH_CS(double *const X,Patch_T **const ppatch,const double theta,const double phi,Grid_T *const grid);
 
 
