@@ -3574,8 +3574,7 @@ static void extrapolate_insideBH_CS_linear(Grid_T *const grid)
 /* for BAM initial data reader,
 // extrapolate the fields Beta,eta, psi, _gamma's
 // inside the BH, using the method developed by Wolfgang and Geroge,
-// more info "http://fau.digital.flvc.org/islandora/object/fau%3A4224" .
-// B1 is calculated fromm its formula "Omega cross r". */
+// more info "http://fau.digital.flvc.org/islandora/object/fau%3A4224". */
 static void extrapolate_insideBH_CS_WTGR(Grid_T *const grid)
 {
   const double r_fill         = Pgetd("BH_R_size");
