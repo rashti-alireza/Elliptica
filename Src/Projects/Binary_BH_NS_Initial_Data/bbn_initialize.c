@@ -3423,7 +3423,7 @@ static void add_patches_insideBH(Grid_T *const grid)
   bh_grid->patch = &grid->patch[np1];
   alloc_nodes(bh_grid);
   make_nodes(bh_grid);
-  
+  make_JacobianT(bh_grid);
   /* test printing coords */
   if (test_print(PRINT_COORDS))
     pr_coords(grid);
@@ -3630,6 +3630,9 @@ static void extrapolate_insideBH_CS_WTGR(Grid_T *const grid)
     REALLOC_v_WRITE_v(Beta_U0)
     REALLOC_v_WRITE_v(Beta_U1)
     REALLOC_v_WRITE_v(Beta_U2)
+    REALLOC_v_WRITE_v(B0_U0)
+    REALLOC_v_WRITE_v(B0_U1)
+    REALLOC_v_WRITE_v(B0_U2)
     REALLOC_v_WRITE_v(psi)
     REALLOC_v_WRITE_v(eta)
     REALLOC_v_WRITE_v(_gamma_D2D2)
@@ -3646,6 +3649,11 @@ static void extrapolate_insideBH_CS_WTGR(Grid_T *const grid)
     REALLOC_v_WRITE_v(_gammaI_U1U2)
     REALLOC_v_WRITE_v(_gammaI_U1U1)
     
+    /* making B1 */
+    bbn_update_B1_U012(patch);
+    READ_v(B1_U0)
+    READ_v(B1_U1)
+    READ_v(B1_U2)
     for (ijk = 0; ijk < nn; ++ijk)
     {
       DEF_RELATIVE_x
@@ -3697,6 +3705,10 @@ static void extrapolate_insideBH_CS_WTGR(Grid_T *const grid)
       WTGR_EXTRAPOLATE_Beta(Beta_U1)
       WTGR_EXTRAPOLATE_Beta(Beta_U2)
       
+      B0_U0[ijk] = Beta_U0[ijk]-B1_U0[ijk];
+      B0_U1[ijk] = Beta_U1[ijk]-B1_U1[ijk];
+      B0_U2[ijk] = Beta_U2[ijk]-B1_U2[ijk];
+      
       WTGR_EXTRAPOLATE_gammabar(gamma_D2D2)
       WTGR_EXTRAPOLATE_gammabar(gamma_D0D2)
       WTGR_EXTRAPOLATE_gammabar(gamma_D0D0)
@@ -3710,7 +3722,7 @@ static void extrapolate_insideBH_CS_WTGR(Grid_T *const grid)
                      _gamma_D0D2[ijk],_gamma_D1D2[ijk],_gamma_D2D2[ijk])
                      
       /* quick test check _gamma * _gammaI = delta */
-      if (1)
+      if (0)
       {
           double delta_U0D0 = 
         _gammaI_U0U0[ijk]*_gamma_D0D0[ijk] + _gammaI_U0U1[ijk]*
@@ -3761,6 +3773,15 @@ static void extrapolate_insideBH_CS_WTGR(Grid_T *const grid)
       }
       
     }
+    /* update derivatives */
+    bbn_update_derivative_Beta_U0(patch);
+    bbn_update_derivative_Beta_U1(patch);
+    bbn_update_derivative_Beta_U2(patch);
+    bbn_update_derivative_psi(patch);
+    bbn_update_derivative_eta(patch);
+    
+    /* compute _Aij */
+    //bbn_update_psi10A_UiUj(patch);
   }/* end of FOR_ALL_PATCHES(p,grid) */
   
   /* free */
@@ -3771,6 +3792,7 @@ static void extrapolate_insideBH_CS_WTGR(Grid_T *const grid)
   bbn_free_conformal_metric_derivatives(GetPatch("right_BH_surrounding_right",grid));
   bbn_free_conformal_metric_derivatives(GetPatch("right_BH_surrounding_back",grid));
   bbn_free_conformal_metric_derivatives(GetPatch("right_BH_surrounding_front",grid));
+  abort();
 }
 
 #define ij(i,j) ((j)+Nphi*(i))
