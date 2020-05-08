@@ -3646,13 +3646,22 @@ static void extrapolate_insideBH_CS_WTGR(Grid_T *const grid)
       DEF_RELATIVE_z
       Patch_T *BHsurf_patch = 0;
       r     = sqrt(Pow2(x)+Pow2(y)+Pow2(z));
-      N[0]  = x/r;
-      N[1]  = y/r;
-      N[2]  = z/r;
+      if (!EQL(r,0))
+      {
+        N[0]  = x/r;
+        N[1]  = y/r;
+        N[2]  = z/r;
+      }
+      else
+      {
+        N[0]  = 0;
+        N[1]  = 0;
+        N[2]  = 0;
+      }
       dr    = r - r_fill;
       theta = acos(z/r);
       phi   = arctan(y,x);
-      Y     = 0.5*(1+tanh(48./125.*(r_fill/(r_fill-r)-3/2*(r_fill/r))));
+      Y     = 0.5*(1+tanh(48./125.*(r_fill/(r_fill-r)-3./2.*(r_fill/r))));
       assert(isfinite(Y));
       
       x_on_BHsurf[0] = r_fill*sin(theta)*cos(phi)+patch->c[0];
@@ -3663,7 +3672,7 @@ static void extrapolate_insideBH_CS_WTGR(Grid_T *const grid)
       needle->x = x_on_BHsurf;
       point_finder(needle);
       if (!needle->Nans)
-        Error0("Could not find the point!\n");
+        Error0("Could not find the given point!\n");
       BHsurf_patch = grid->patch[needle->ans[0]];
       assert(X_of_x(X_on_BHsurf,x_on_BHsurf,BHsurf_patch));
       _free(needle->ans);
@@ -3672,7 +3681,7 @@ static void extrapolate_insideBH_CS_WTGR(Grid_T *const grid)
       
       /* extrapolate */
       double u0_psi = 2+Ma/(2*r);
-      double u0_eta = 0.1*(2+Ma/(2*r));
+      double u0_eta = 0.1*u0_psi;
       
       WTGR_EXTRAPOLATE_scalar(psi)
       WTGR_EXTRAPOLATE_scalar(eta)

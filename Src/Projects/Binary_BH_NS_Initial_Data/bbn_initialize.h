@@ -27,12 +27,12 @@
         double d##x##_D0_onAH = interpolate_from_patch_prim(STRING_IT(d##x##_D0),X_on_BHsurf,BHsurf_patch); \
         double d##x##_D1_onAH = interpolate_from_patch_prim(STRING_IT(d##x##_D1),X_on_BHsurf,BHsurf_patch); \
         double d##x##_D2_onAH = interpolate_from_patch_prim(STRING_IT(d##x##_D2),X_on_BHsurf,BHsurf_patch); \
-        double dur_##x       = (N[0]*d##x##_D0_onAH+N[1]*d##x##_D1_onAH+N[2]*d##x##_D2_onAH); \
-        double ur_##x        = x##_onAH + dur_##x*dr; \
-        x[ijk]               = ur_##x*Y + u0_##x*(1-Y);
+        double dur_##x        = (N[0]*d##x##_D0_onAH+N[1]*d##x##_D1_onAH+N[2]*d##x##_D2_onAH); \
+        double ur_##x         = x##_onAH + dur_##x*dr; \
+        x[ijk]                = ur_##x*Y + u0_##x*(1-Y);
 
 #define WTGR_EXTRAPOLATE_Beta(x)   \
-        double x##_onAH       = interpolate_from_patch_prim(STRING_IT(x)       ,X_on_BHsurf,BHsurf_patch); \
+        double x##_onAH      = interpolate_from_patch_prim(STRING_IT(x)       ,X_on_BHsurf,BHsurf_patch); \
         double d##x##D0_onAH = interpolate_from_patch_prim(STRING_IT(d##x##D0),X_on_BHsurf,BHsurf_patch); \
         double d##x##D1_onAH = interpolate_from_patch_prim(STRING_IT(d##x##D1),X_on_BHsurf,BHsurf_patch); \
         double d##x##D2_onAH = interpolate_from_patch_prim(STRING_IT(d##x##D2),X_on_BHsurf,BHsurf_patch); \
