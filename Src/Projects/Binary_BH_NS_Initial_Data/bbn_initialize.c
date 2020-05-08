@@ -3639,12 +3639,12 @@ static void extrapolate_insideBH_CS_WTGR(Grid_T *const grid)
     REALLOC_v_WRITE_v(_gamma_D1D2)
     REALLOC_v_WRITE_v(_gamma_D1D1)
     
-    REALLOC_v_WRITE_v(_gammaI_D2D2)
-    REALLOC_v_WRITE_v(_gammaI_D0D2)
-    REALLOC_v_WRITE_v(_gammaI_D0D0)
-    REALLOC_v_WRITE_v(_gammaI_D0D1)
-    REALLOC_v_WRITE_v(_gammaI_D1D2)
-    REALLOC_v_WRITE_v(_gammaI_D1D1)
+    REALLOC_v_WRITE_v(_gammaI_U2U2)
+    REALLOC_v_WRITE_v(_gammaI_U0U2)
+    REALLOC_v_WRITE_v(_gammaI_U0U0)
+    REALLOC_v_WRITE_v(_gammaI_U0U1)
+    REALLOC_v_WRITE_v(_gammaI_U1U2)
+    REALLOC_v_WRITE_v(_gammaI_U1U1)
     
     for (ijk = 0; ijk < nn; ++ijk)
     {
@@ -3705,9 +3705,60 @@ static void extrapolate_insideBH_CS_WTGR(Grid_T *const grid)
       WTGR_EXTRAPOLATE_gammabar(gamma_D1D1)
       
       /* _gammaI =  _gamma inverse */
-      COMPUTE_gammaI(gamma_D0D0[ijk],gamma_D0D1[ijk],gamma_D0D2[ijk]
-                     gamma_D0D1[ijk],gamma_D1D1[ijk],gamma_D1D2[ijk]
-                     gamma_D0D2[ijk],gamma_D1D2[ijk],gamma_D2D2[ijk])
+      COMPUTE_gammaI(_gamma_D0D0[ijk],_gamma_D0D1[ijk],_gamma_D0D2[ijk],
+                     _gamma_D0D1[ijk],_gamma_D1D1[ijk],_gamma_D1D2[ijk],
+                     _gamma_D0D2[ijk],_gamma_D1D2[ijk],_gamma_D2D2[ijk])
+                     
+      /* quick test check _gamma * _gammaI = delta */
+      if (1)
+      {
+          double delta_U0D0 = 
+        _gammaI_U0U0[ijk]*_gamma_D0D0[ijk] + _gammaI_U0U1[ijk]*
+        _gamma_D0D1[ijk] + _gammaI_U0U2[ijk]*_gamma_D0D2[ijk];
+
+          double delta_U0D1 = 
+        _gammaI_U0U0[ijk]*_gamma_D0D1[ijk] + _gammaI_U0U1[ijk]*
+        _gamma_D1D1[ijk] + _gammaI_U0U2[ijk]*_gamma_D1D2[ijk];
+
+          double delta_U0D2 = 
+        _gammaI_U0U0[ijk]*_gamma_D0D2[ijk] + _gammaI_U0U1[ijk]*
+        _gamma_D1D2[ijk] + _gammaI_U0U2[ijk]*_gamma_D2D2[ijk];
+
+          double delta_U1D2 = 
+        _gammaI_U0U1[ijk]*_gamma_D0D2[ijk] + _gammaI_U1U1[ijk]*
+        _gamma_D1D2[ijk] + _gammaI_U1U2[ijk]*_gamma_D2D2[ijk];
+
+          double delta_U1D0 = 
+        _gammaI_U0U1[ijk]*_gamma_D0D0[ijk] + _gammaI_U1U1[ijk]*
+        _gamma_D0D1[ijk] + _gammaI_U1U2[ijk]*_gamma_D0D2[ijk];
+
+         double delta_U1D1 = 
+        _gammaI_U0U1[ijk]*_gamma_D0D1[ijk] + _gammaI_U1U1[ijk]*
+        _gamma_D1D1[ijk] + _gammaI_U1U2[ijk]*_gamma_D1D2[ijk];
+
+          double delta_U2D2 = 
+        _gammaI_U0U2[ijk]*_gamma_D0D2[ijk] + _gammaI_U1U2[ijk]*
+        _gamma_D1D2[ijk] + _gammaI_U2U2[ijk]*_gamma_D2D2[ijk];
+
+          double delta_U2D0 = 
+        _gammaI_U0U2[ijk]*_gamma_D0D0[ijk] + _gammaI_U1U2[ijk]*
+        _gamma_D0D1[ijk] + _gammaI_U2U2[ijk]*_gamma_D0D2[ijk];
+
+          double delta_U2D1 = 
+        _gammaI_U0U2[ijk]*_gamma_D0D1[ijk] + _gammaI_U1U2[ijk]*
+        _gamma_D1D1[ijk] + _gammaI_U2U2[ijk]*_gamma_D1D2[ijk];
+
+        if(!EQL(delta_U1D1,1))  Error0("_gammaI is not correct!\n");
+        if(!EQL(delta_U0D1,0))  Error0("_gammaI is not correct!\n");
+        if(!EQL(delta_U0D2,0))  Error0("_gammaI is not correct!\n");
+        if(!EQL(delta_U1D2,0))  Error0("_gammaI is not correct!\n");
+        if(!EQL(delta_U0D0,1))  Error0("_gammaI is not correct!\n");
+        if(!EQL(delta_U2D1,0))  Error0("_gammaI is not correct!\n");
+        if(!EQL(delta_U2D2,1))  Error0("_gammaI is not correct!\n");
+        if(!EQL(delta_U2D0,0))  Error0("_gammaI is not correct!\n");
+        if(!EQL(delta_U1D0,0))  Error0("_gammaI is not correct!\n");
+
+      }
       
     }
   }/* end of FOR_ALL_PATCHES(p,grid) */
