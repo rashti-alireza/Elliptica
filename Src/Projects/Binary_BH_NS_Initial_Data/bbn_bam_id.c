@@ -10,6 +10,7 @@ static char coords_file_path[STR_LEN_MAX];
 static char fields_file_path[STR_LEN_MAX];
 static char checkpoint_path[STR_LEN_MAX];
 static char bam_fields_name[STR_LEN_MAX];
+static char bam_BHfiller_method[STR_LEN_MAX];
   
 /* exporting initial data for bam.
 // it writes the required fields into a file to be read by bam. */
@@ -29,6 +30,7 @@ void bbn_bam_export_id(void)
   sprintf(fields_file_path,"%s",Pgets("bbn_bam_fields_file_path"));
   sprintf(bam_fields_name, "%s",Pgets("bbn_bam_fields_name"));
   sprintf(checkpoint_path, "%s",Pgets("bbn_bam_checkpoint_path"));
+  sprintf(bam_BHfiller_method,"%s",Pgets("bbn_bam_BHfiller"));
   
   /* read (x,y,x) points from bam file to be interpolated on them */
   load_coords_from_coords_file(points);
@@ -220,7 +222,7 @@ static Grid_T *load_grid_from_checkpoint_file(void)
   
   /* extrapolate metric fields inside the BH */
   Pseti("STOP",0);
-  Psets("extrapolate_inside_BH_method",Pgets("bbn_bam_BHfiller"));
+  Psets("extrapolate_inside_BH_method",bam_BHfiller_method);
   bbn_extrapolate_metric_fields_insideBH(grid);
   
   return grid;
