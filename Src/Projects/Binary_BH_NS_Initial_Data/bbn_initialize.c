@@ -3798,7 +3798,6 @@ static void extrapolate_insideBH_CS_WTGR(Grid_T *const grid)
   bbn_free_conformal_metric_derivatives(GetPatch("right_BH_surrounding_right",grid));
   bbn_free_conformal_metric_derivatives(GetPatch("right_BH_surrounding_back",grid));
   bbn_free_conformal_metric_derivatives(GetPatch("right_BH_surrounding_front",grid));
-  Error0("DONE.");
 }
 
 #define ij(i,j) ((j)+Nphi*(i))
