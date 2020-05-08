@@ -15,6 +15,8 @@ Ccode["#include "bbn_headers.h""];
 `#define FREE_DATA_OpenMP(x)  _Pragma ( #x )`
 ``
 
+Ccode["void bbn_free_data_Gamma(Grid_T *const grid);"];
+Ccode["void bbn_free_data_Gamma_patch(Patch_T *const patch);"];
 Ccode["void bbn_free_data_Gamma(Grid_T *const grid)\n{"];
 Ccode["  const unsigned np = grid->np;"];
 Ccode["  unsigned p;\n"];
@@ -23,6 +25,12 @@ Ccode["  for(p = 0; p < np; ++p)"];
 Ccode["  {"];
 Ccode["    Patch_T *patch = grid->patch[p];"];
 Ccode["    bbn_preparing_conformal_metric_derivatives(patch);"];
+Ccode["    bbn_free_data_Gamma_patch(patch);"];
+Ccode["    bbn_free_conformal_metric_derivatives(patch);"];
+Ccode["  }"];
+Ccode["}"]; # end of _Gamma function
+``
+Ccode["void bbn_free_data_Gamma_patch(Patch_T *const patch)\n{"];
 
 Declare = 
 {
@@ -39,7 +47,7 @@ Symm[_gammaI(i,j)   = _gammaI(j,i)];
 Symm[_dgamma(i,j,k) = _dgamma(j,i,k)];
 Symm[_Gamma(i,j,k)  = _Gamma(i,k,j)];
 
-Ccode["    unsigned nn = patch->nn;"];
+Ccode["    const unsigned nn = patch->nn;"];
 Ccode["    unsigned ijk;"];
 Ccode["    for(ijk = 0; ijk < nn; ++ijk)"];
 Ccode["    {"];
@@ -50,6 +58,5 @@ Symm[GAMMA(i,j,k) = GAMMA(i,k,j)];
 Cpopulate[_Gamma = GAMMA];
 
 Ccode["    }/*end of for(ijk = 0; ijk < nn; ++ijk)*/"];
-Ccode["    bbn_free_conformal_metric_derivatives(patch);"];
-Ccode["  }"];
+
 Ccode["}"]; # end of _Gamma function

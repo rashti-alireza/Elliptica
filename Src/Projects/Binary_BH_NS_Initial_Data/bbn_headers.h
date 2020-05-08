@@ -68,6 +68,7 @@ struct items_S
   unsigned K;
 };
 
+void bbn_free_data_Gamma_patch(Patch_T *const patch);
 void bbn_study_initial_data(Grid_T *const grid);
 void bbn_print_fields(Grid_T *const grid,const unsigned iteration, const char *const folder);
 void bbn_update_psi10A_UiUj(Patch_T *const patch);
