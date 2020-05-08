@@ -63,7 +63,7 @@ Declare =
  (obj = Field,name = Beta, rank = U, C_macro);
 
  # B1 in Beta = B0+B1
- (obj = Field,name = B1, rank = U, C_macro);
+ #(obj = Field,name = B1, rank = U, C_macro);
 
  # psi
  (obj = Field,name = psi, rank = 0, C_macro);
@@ -100,7 +100,6 @@ Symm[bam_adm_g(i,j) = bam_adm_g(j,i)];
 Symm[_gamma(i,j)    = _gamma(j,i)];
 Symm[_gammaI(i,j)   = _gammaI(j,i)];
 
-`  if (!IsItInsideBHPatch(patch))`
 `  for(ijk = 0; ijk < nn; ++ijk)`
 `  {`
 
@@ -159,28 +158,6 @@ Symm[_gammaI(i,j)   = _gammaI(j,i)];
 `  }`# end of for(ijk = 0; ijk < nn; ++ijk)
 `  free_EoS(eos);`
 `  }`# end of if (IsItNSPatch(patch))
-
-############################### {
-### temp: I don't have the appropriate form of the fields inside BH
-### so for now, let's fill them with some junk values
-
-`  for(ijk = 0; ijk < nn; ++ijk)`
-`  {`
-
-temp_bh2(-i,-j) = KD(i,j);
-Symm[temp_bh2(i,j) = temp_bh2(j,i)];
-temp_bh1(i) = B1(i);
-
-`  bam_alpha[ijk] = eta[ijk]/psi[ijk];`
-   Cpopulate[bam_Beta = temp_bh1];
-   Cpopulate[bam_adm_g = temp_bh2];
-   Cpopulate[bam_adm_K = temp_bh2];
-
-`  }`# end of for(ijk = 0; ijk < nn; ++ijk)
-
-
-### temp: inside BH ends
-############################### }
 
 `  }`# end of FOR_ALL_PATCHES
 
