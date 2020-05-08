@@ -50,6 +50,17 @@
         _##x[ijk]            = ur_##x*Y + u0__##x*(1-Y);
 
 
+/* _gamma inverse */
+#define COMPUTE_gammaI(a00,a01,a02,a10,a11,a12,a20,a21,a22) \
+  { \
+  _gammaI_U0U0[ijk] = (a11*a22 - a12*a21)/(a00*a11*a22 - a00*a12*a21 - a01*a10*a22 + a01*a12*a20 + a02*a10*a21 - a02*a11*a20); \
+  _gammaI_U0U1[ijk] = (-a01*a22 + a02*a21)/(a00*a11*a22 - a00*a12*a21 - a01*a10*a22 + a01*a12*a20 + a02*a10*a21 - a02*a11*a20); \
+  _gammaI_U0U2[ijk] = (a01*a12 - a02*a11)/(a00*a11*a22 - a00*a12*a21 - a01*a10*a22 + a01*a12*a20 + a02*a10*a21 - a02*a11*a20); \
+  _gammaI_U1U1[ijk] = a00*(a00*a22 - a02*a20)/((a00*a11 - a01*a10)*(a00*a22 - a02*a20) - (a00*a12 - a02*a10)*(a00*a21 - a01*a20)); \
+  _gammaI_U1U2[ijk] =-a00*(a00*a12 - a02*a10)/((a00*a11 - a01*a10)*(a00*a22 - a02*a20) - (a00*a12 - a02*a10)*(a00*a21 - a01*a20)); \
+  _gammaI_U2U2[ijk] = a00*(a00*a11 - a01*a10)/((a00*a11 - a01*a10)*(a00*a22 - a02*a20) - (a00*a12 - a02*a10)*(a00*a21 - a01*a20)); \
+  }
+
 typedef void fAdjustment_t (Grid_T *const grid);
 
 /* root finder struct for NS surface eq */

@@ -3639,6 +3639,13 @@ static void extrapolate_insideBH_CS_WTGR(Grid_T *const grid)
     REALLOC_v_WRITE_v(_gamma_D1D2)
     REALLOC_v_WRITE_v(_gamma_D1D1)
     
+    REALLOC_v_WRITE_v(_gammaI_D2D2)
+    REALLOC_v_WRITE_v(_gammaI_D0D2)
+    REALLOC_v_WRITE_v(_gammaI_D0D0)
+    REALLOC_v_WRITE_v(_gammaI_D0D1)
+    REALLOC_v_WRITE_v(_gammaI_D1D2)
+    REALLOC_v_WRITE_v(_gammaI_D1D1)
+    
     for (ijk = 0; ijk < nn; ++ijk)
     {
       DEF_RELATIVE_x
@@ -3696,6 +3703,12 @@ static void extrapolate_insideBH_CS_WTGR(Grid_T *const grid)
       WTGR_EXTRAPOLATE_gammabar(gamma_D0D1)
       WTGR_EXTRAPOLATE_gammabar(gamma_D1D2)
       WTGR_EXTRAPOLATE_gammabar(gamma_D1D1)
+      
+      /* _gammaI =  _gamma inverse */
+      COMPUTE_gammaI(gamma_D0D0[ijk],gamma_D0D1[ijk],gamma_D0D2[ijk]
+                     gamma_D0D1[ijk],gamma_D1D1[ijk],gamma_D1D2[ijk]
+                     gamma_D0D2[ijk],gamma_D1D2[ijk],gamma_D2D2[ijk])
+      
     }
   }/* end of FOR_ALL_PATCHES(p,grid) */
   
