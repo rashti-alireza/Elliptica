@@ -173,13 +173,14 @@ void bbn_print_properties(Grid_T *const grid,const unsigned iteration, const cha
     
   fprintf(file,geometry_logo);
   
-  //PR_PARAMETR_IN_FILE(NS_center_x)
-  //PR_PARAMETR_IN_FILE(NS_center_y)
-  //PR_PARAMETR_IN_FILE(NS_center_z)
+  /* these centers needed for ID reader */
+  PR_PARAMETR_IN_FILE(NS_center_x)
+  PR_PARAMETR_IN_FILE(NS_center_y)
+  PR_PARAMETR_IN_FILE(NS_center_z)
   
-  //PR_PARAMETR_IN_FILE(BH_center_x)
-  //PR_PARAMETR_IN_FILE(BH_center_y)
-  //PR_PARAMETR_IN_FILE(BH_center_z)
+  PR_PARAMETR_IN_FILE(BH_center_x)
+  PR_PARAMETR_IN_FILE(BH_center_y)
+  PR_PARAMETR_IN_FILE(BH_center_z)
   
   PR_PARAMETR_IN_FILE(r_excision)
   PR_PARAMETR_IN_FILE(NS_max_radius)
