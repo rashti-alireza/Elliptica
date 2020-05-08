@@ -220,6 +220,7 @@ static Grid_T *load_grid_from_checkpoint_file(void)
   
   /* extrapolate metric fields inside the BH */
   Pseti("STOP",0);
+  Psets("extrapolate_inside_BH_method",Pgets("bbn_bam_BHfiller"));
   bbn_extrapolate_metric_fields_insideBH(grid);
   
   return grid;
