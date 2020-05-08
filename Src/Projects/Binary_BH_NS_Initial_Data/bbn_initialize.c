@@ -3588,6 +3588,7 @@ static void extrapolate_insideBH_CS_WTGR(Grid_T *const grid)
   const double u0__gamma_D1D1 = 1;
   const double u0__gamma_D1D2 = 0;
   const double u0__gamma_D2D2 = 1;
+  const double u0_K           = 0;
   Needle_T *needle = alloc_needle();
   unsigned p;
   
@@ -3635,6 +3636,7 @@ static void extrapolate_insideBH_CS_WTGR(Grid_T *const grid)
     REALLOC_v_WRITE_v(B0_U2)
     REALLOC_v_WRITE_v(psi)
     REALLOC_v_WRITE_v(eta)
+    REALLOC_v_WRITE_v(K)
     REALLOC_v_WRITE_v(_gamma_D2D2)
     REALLOC_v_WRITE_v(_gamma_D0D2)
     REALLOC_v_WRITE_v(_gamma_D0D0)
@@ -3700,6 +3702,7 @@ static void extrapolate_insideBH_CS_WTGR(Grid_T *const grid)
       
       WTGR_EXTRAPOLATE_scalar(psi)
       WTGR_EXTRAPOLATE_scalar(eta)
+      WTGR_EXTRAPOLATE_scalar(K)
 
       WTGR_EXTRAPOLATE_Beta(Beta_U0)
       WTGR_EXTRAPOLATE_Beta(Beta_U1)
@@ -3792,7 +3795,7 @@ static void extrapolate_insideBH_CS_WTGR(Grid_T *const grid)
   bbn_free_conformal_metric_derivatives(GetPatch("right_BH_surrounding_right",grid));
   bbn_free_conformal_metric_derivatives(GetPatch("right_BH_surrounding_back",grid));
   bbn_free_conformal_metric_derivatives(GetPatch("right_BH_surrounding_front",grid));
-  abort();
+  Error0("DONE.");
 }
 
 #define ij(i,j) ((j)+Nphi*(i))
