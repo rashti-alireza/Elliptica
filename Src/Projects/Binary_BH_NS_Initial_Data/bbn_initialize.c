@@ -3784,6 +3784,7 @@ static void extrapolate_insideBH_CS_WTGR(Grid_T *const grid)
     bbn_update_derivative_eta(patch);
     
     /* compute _Aij */
+    //bbn_free_data_Gamma_patch(patch);
     //bbn_update_psi10A_UiUj(patch);
   }/* end of FOR_ALL_PATCHES(p,grid) */
   
