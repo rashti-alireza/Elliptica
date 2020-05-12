@@ -41,10 +41,11 @@
 #define Y_(i)	Y_coord((i),patch)
 #define Z_(i)	Z_coord((i),patch)
 
-/* relative (x,y,z) respect to center of patch */
+/* relative (x,y,z) and r respect to center of patch */
 #define DEF_RELATIVE_x  double x=patch->node[ijk]->x[0]-patch->c[0];
 #define DEF_RELATIVE_y  double y=patch->node[ijk]->x[1]-patch->c[1];
 #define DEF_RELATIVE_z  double z=patch->node[ijk]->x[2]-patch->c[2];
+#define DEF_RELATIVE_r  double r=sqrt(Pow2(x)+Pow2(y)+Pow2(z));
 
 /* variables and fields macors */
 #define ADD_AND_ALLOC_FIELD(xNAME)     add_field(#xNAME,0,patch,YES);/* add field to patch->pool and alloc memory */
