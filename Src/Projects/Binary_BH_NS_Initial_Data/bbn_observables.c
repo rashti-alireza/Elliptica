@@ -801,17 +801,19 @@ void bbn_plan_obs_CS(Observable_T *obs)
       READ_v(_gamma_D0D1)
       READ_v(_gamma_D1D2)
       READ_v(_gamma_D1D1)
-      
+      READ_v(psi);
+
       adm[n]->patch = patch;
       /* populate metric components, it uses conformal metric */ 
       for (ijk = 0; ijk < nn; ++ijk)
       {
-        g00[ijk] = _gamma_D0D0[ijk];
-        g01[ijk] = _gamma_D0D1[ijk];
-        g02[ijk] = _gamma_D0D2[ijk];
-        g11[ijk] = _gamma_D1D1[ijk];
-        g12[ijk] = _gamma_D1D2[ijk];
-        g22[ijk] = _gamma_D2D2[ijk];
+        double psi4 = Pow2(psi[ijk])*Pow2(psi[ijk]);
+        g00[ijk] = psi4*_gamma_D0D0[ijk];
+        g01[ijk] = psi4*_gamma_D0D1[ijk];
+        g02[ijk] = psi4*_gamma_D0D2[ijk];
+        g11[ijk] = psi4*_gamma_D1D1[ijk];
+        g12[ijk] = psi4*_gamma_D1D2[ijk];
+        g22[ijk] = psi4*_gamma_D2D2[ijk];
       }
       adm[n]->g00 = g00;
       adm[n]->g01 = g01;
@@ -823,9 +825,9 @@ void bbn_plan_obs_CS(Observable_T *obs)
       adm[n]->surface_integration_flg = 1;
       adm[n]->Z_surface = 1;
       adm[n]->K = 0;
-      n_conformal_metric_surrounding(adm[n],_c_);
+      n_physical_metric_surrounding(adm[n],_c_);
     }
-    obs->M = bbn_ADM_mass;
+    obs->M = bbn_BH_ADM_mass;
     free(patches);
   }
   else if (strcmp_i(obs->quantity,"ADM(M)|NS"))

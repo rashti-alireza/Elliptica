@@ -1,0 +1,104 @@
+# computing BH ADM Mass.
+
+# Manifold or grid Dimension
+Dimension = 3;
+
+# point on manifold shown by:
+Point = ijk;
+
+C_macro  = READ_v_UNUSED(name);
+
+`#include "bbn_headers.h"`
+``
+``
+`double bbn_BH_ADM_mass(Observable_T *const obs);`
+`double bbn_BH_ADM_mass(Observable_T *const obs)`
+`{`
+`  double adm_mass = 0;`
+`  struct items_S **adm = obs->items;`
+`  const unsigned N = obs->Nitems;`
+`  unsigned p;`
+``
+`  for(p = 0; p < N; ++p)`
+`  {`
+`  Patch_T *patch = adm[p]->patch;`
+`  bbn_preparing_conformal_metric_derivatives(patch);`
+``
+Declare = 
+{
+ # conformal factor
+ (obj = Field,name = psi, rank = 0, C_macro);
+
+ # conformal factor first derivative 
+ (obj = Field,name = dpsi, rank = D, C_macro);
+
+ # partial derivative of conformal metric
+ (obj = Field,name = _dgamma, rank = DDD, C_macro);
+
+ # conformal metric inverse
+ (obj = Field,name = _gammaI, rank = UU, C_macro);
+
+ # normal vector components
+ (obj = Field,name = n, rank = U, none);
+
+ # integrand P
+ (obj = Field,name = ADM_mass_integrand_S, rank = 0, none);
+}
+# symmetries:
+Symm[_gammaI(i,j)  = _gammaI(j,i)];
+Symm[_dgamma(i,j,k) = _dgamma(j,i,k)];
+
+`    unsigned nn = patch->nn;`
+`    unsigned ijk;`
+``
+# populating the integrands:
+
+# if this is surface integral.
+`    if (adm[p]->surface_integration_flg)`
+`    {`
+`      ADD_FIELD(ADM_mass_integrand_S)`
+`      {` # make it local variable
+`      const double *n_U0 = adm[p]->n_U0;`
+`      const double *n_U1 = adm[p]->n_U1;`
+`      const double *n_U2 = adm[p]->n_U2;`
+`      REALLOC_v_WRITE_v(ADM_mass_integrand_S)`
+`      for (ijk = 0; ijk < nn; ++ijk)`
+`      {`
+       dlnpsi(k) = dpsi(k)/psi;
+       M_s = n(-k)*(-8*dlnpsi(k) +\
+           _gammaI(-i,-j)*(_dgamma(i,k,j)-_dgamma(i,j,k)));
+`      ADM_mass_integrand_S[ijk] = M_s;`
+`      }`
+`      }`
+`      DECLARE_FIELD(ADM_mass_integrand_S)`
+`      Integration_T *I = init_integration();`
+`      I->type = "Integral{f(x)dS},Spectral";`
+`      I->Spectral->f = ADM_mass_integrand_S;`
+`      I->g00 = adm[p]->g00;`
+`      I->g01 = adm[p]->g01;`
+`      I->g02 = adm[p]->g02;`
+`      I->g11 = adm[p]->g11;`
+`      I->g12 = adm[p]->g12;`
+`      I->g22 = adm[p]->g22;`
+`      I->Spectral->X_surface = adm[p]->X_surface;`
+`      I->Spectral->Y_surface = adm[p]->Y_surface;`
+`      I->Spectral->Z_surface = adm[p]->Z_surface;`
+`      I->Spectral->I         = adm[p]->I;`
+`      I->Spectral->J         = adm[p]->J;`
+`      I->Spectral->K         = adm[p]->K;`
+`      plan_integration(I);`
+`      adm_mass += execute_integration(I);`
+`      free_integration(I);`
+`      REMOVE_FIELD(ADM_mass_integrand_S)`
+`    }`
+# must not reach else
+`    else`
+`    {`
+`      Error0("Wrong flag!\n");`
+`    }`
+`    bbn_free_conformal_metric_derivatives(patch);`
+``
+`  }`# end of for(p = 0; p < N; ++p)
+`  adm_mass /= (16*M_PI);`
+`  return adm_mass;`
+`}`
