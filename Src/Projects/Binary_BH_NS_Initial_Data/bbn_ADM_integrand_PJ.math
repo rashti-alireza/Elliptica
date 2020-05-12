@@ -31,6 +31,7 @@ C_macro2 = add_and_get_field(name);
 `{`
 `  struct items_S **adm = obs->items;`
 `  const unsigned N = obs->Nitems;`
+`  const double CUTOFF = 1E3;`
 `  unsigned p;`
 ``
 `  for(p = 0; p < N; ++p)`
@@ -68,6 +69,9 @@ Declare =
 
  # integrand G
  (obj = Field,name = ADM_integrand_G, rank = U, C_macro2);
+
+ # attenuation factor
+ (obj = variable,name = att, none);
 }
 # symmetries:
 Symm[_A_UiUj(i,j)  = _A_UiUj(j,i)];
@@ -105,11 +109,16 @@ Symm[_Gamma(i,j,k) = _Gamma(i,k,j)];
 # suffix '_' is added to prevent cpi error for duplicate variables
 `      for (ijk = 0; ijk < nn; ++ijk)`
 `      {`
+`      DEF_RELATIVE_x`
+`      DEF_RELATIVE_y`
+`      DEF_RELATIVE_z`
+`      DEF_RELATIVE_r`
+`      double att = r > CUTOFF ? 0:1;`
        psi6_   = psi**(6);
        P_(i,j) = _A_UiUj(i,j)-(2/3)*K*psi6_*_gammaI(i,j);
        G1(i)  = _Gamma(i,j,k)*P_(-j,-k) + _Gamma(j,jp,k)*KD(-j,-jp)*P_(i,-k);
        G2(i)  = -2*_gamma(-j,-k)*P_(j,k)*_gammaI(i,l)*dpsi(-l)/psi;
-       G(i)   = G1(i)+G2(i);
+       G(i)   = att*(G1(i)+G2(i));
        Cpopulate[ADM_integrand_G = G];
 `      }`
 `    }`
