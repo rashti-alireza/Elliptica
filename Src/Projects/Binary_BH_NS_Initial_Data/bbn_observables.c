@@ -16,6 +16,9 @@
 // obs->quantity = "Kommar(M)|BBN" #=> compute Kommar mass for the system 
 // obs->quantity = "Kommar(M)|NS"  #=> compute kommar mass for NS 
 // obs->quantity = "Kommar(M)|BH"  #=> compute Kommar mass for BH
+// obs->quantity = "ADM(M)|BBN"    #=> compute ADM mass for the system 
+// obs->quantity = "ADM(M)|NS"     #=> compute ADM mass for NS 
+// obs->quantity = "ADM(M)|BH"     #=> compute ADM mass for BH
 //
 // * plan observable *
 // plan_observable(obs);# it finds out the related patches, physical metric etc.
