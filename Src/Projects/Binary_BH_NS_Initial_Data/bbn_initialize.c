@@ -3580,6 +3580,7 @@ static void extrapolate_insideBH_CS_WTGR(Grid_T *const grid)
   printf("|--> BH-filler method = WTGR.\n");
   fflush(stdout);
   
+  const double EPS            = 1E-12;/* to avoid division by zero */
   const double r_fill         = Pgetd("BH_R_size");
   const double Ma             = Pgetd("BH_irreducible_mass");
   const double u0_Beta_U0     = 0;
@@ -3624,7 +3625,7 @@ static void extrapolate_insideBH_CS_WTGR(Grid_T *const grid)
     
     unsigned nn = patch->nn;
     double Y;
-    double r,theta,phi,dr;
+    double r = 0,theta = 0,phi = 0,dr = 0;
     double x_on_BHsurf[3]={0},
            X_on_BHsurf[3]={0},
            N[3] = {0};
@@ -3664,22 +3665,24 @@ static void extrapolate_insideBH_CS_WTGR(Grid_T *const grid)
       DEF_RELATIVE_x
       DEF_RELATIVE_y
       DEF_RELATIVE_z
+      DEF_RELATIVE_r
       Patch_T *BHsurf_patch = 0;
-      r     = sqrt(Pow2(x)+Pow2(y)+Pow2(z));
       if (!EQL(r,0))
       {
         N[0]  = x/r;
         N[1]  = y/r;
         N[2]  = z/r;
+        theta = acos(z/r);
       }
       else
       {
         N[0]  = 0;
         N[1]  = 0;
         N[2]  = 0;
+        r     = EPS;
+        theta = 0;
       }
       dr    = r - r_fill;
-      theta = acos(z/r);
       phi   = arctan(y,x);
       Y     = 0.5*(1+tanh(48./125.*(r_fill/(r_fill-r)-3./2.*(r_fill/r))));
       assert(isfinite(Y));
