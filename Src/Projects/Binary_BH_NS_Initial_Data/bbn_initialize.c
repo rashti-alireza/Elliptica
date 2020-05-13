@@ -3593,43 +3593,84 @@ static void extrapolate_insideBH_CS_WTGR(Grid_T *const grid)
   const double u0__gamma_D1D2 = 0;
   const double u0__gamma_D2D2 = 1;
   const double u0_K           = 0;
-  Needle_T *needle = alloc_needle();
+  Needle_T *patch_numbers = 0;
+  const unsigned npi = 7;/* number of patches inside BH */
+  const unsigned npo = 6;/* number of patches outside BH */
   unsigned p;
   
   /* check if it is perfect sphere */
   if (!Pcmps("BH_R_type","PerfectSphere"))
     Error0("This function is used when the BH surface is a perfect sphere!");
-
-  /* fill needle */
-  needle->grid = grid;
-  needle_in(needle,GetPatch("right_BH_surrounding_up",grid));
-  needle_in(needle,GetPatch("right_BH_surrounding_down",grid));
-  needle_in(needle,GetPatch("right_BH_surrounding_left",grid));
-  needle_in(needle,GetPatch("right_BH_surrounding_right",grid));
-  needle_in(needle,GetPatch("right_BH_surrounding_back",grid));
-  needle_in(needle,GetPatch("right_BH_surrounding_front",grid));
   
-  /* compute _dgamma */
-  bbn_preparing_conformal_metric_derivatives(GetPatch("right_BH_surrounding_up",grid));
-  bbn_preparing_conformal_metric_derivatives(GetPatch("right_BH_surrounding_down",grid));
-  bbn_preparing_conformal_metric_derivatives(GetPatch("right_BH_surrounding_left",grid));
-  bbn_preparing_conformal_metric_derivatives(GetPatch("right_BH_surrounding_right",grid));
-  bbn_preparing_conformal_metric_derivatives(GetPatch("right_BH_surrounding_back",grid));
-  bbn_preparing_conformal_metric_derivatives(GetPatch("right_BH_surrounding_front",grid));
+  /* update coeffs to avoid race condition */
+  patch_numbers       = alloc_needle();
+  patch_numbers->grid = grid;
+  needle_in(patch_numbers,GetPatch("right_BH_surrounding_up",grid));
+  needle_in(patch_numbers,GetPatch("right_BH_surrounding_down",grid));
+  needle_in(patch_numbers,GetPatch("right_BH_surrounding_left",grid));
+  needle_in(patch_numbers,GetPatch("right_BH_surrounding_right",grid));
+  needle_in(patch_numbers,GetPatch("right_BH_surrounding_back",grid));
+  needle_in(patch_numbers,GetPatch("right_BH_surrounding_front",grid));
+  assert(patch_numbers->Nin == npo);
   
-  FOR_ALL_PATCHES(p,grid)
+  OpenMP_Patch_Pragma(omp parallel for)
+  for (p = 0; p < npo; p++)
   {
-    Patch_T *patch = grid->patch[p];
-    if (!IsItInsideBHPatch(patch))
-      continue;
+    Patch_T *patch = grid->patch[patch_numbers->in[p]];
+    unsigned f;
     
+    bbn_preparing_conformal_metric_derivatives(patch);
+    
+    Field_T *R1_f  = patch->CoordSysInfo->CubedSphericalCoord->R1_f;
+    Field_T *R2_f  = patch->CoordSysInfo->CubedSphericalCoord->R2_f;
+    if (R1_f)
+      make_coeffs_2d(R1_f,0,1);/* X and Y direction */
+    if (R2_f)
+      make_coeffs_2d(R2_f,0,1);/* X and Y direction */
+    
+    /* make coeffs for all fields inside this patch */
+    for (f = 0; f < patch->nfld; ++f)
+    {
+      if (patch->pool[f]->v)
+        make_coeffs_3d(patch->pool[f]);
+    }
+    
+  }
+  free_needle(patch_numbers);
+  
+  /* extrapolate */
+  patch_numbers       = alloc_needle();
+  patch_numbers->grid = grid;
+  needle_in(patch_numbers,GetPatch("right_BH_up",grid));
+  needle_in(patch_numbers,GetPatch("right_BH_down",grid));
+  needle_in(patch_numbers,GetPatch("right_BH_left",grid));
+  needle_in(patch_numbers,GetPatch("right_BH_right",grid));
+  needle_in(patch_numbers,GetPatch("right_BH_back",grid));
+  needle_in(patch_numbers,GetPatch("right_BH_front",grid));
+  needle_in(patch_numbers,GetPatch("right_central_box",grid));
+  assert(patch_numbers->Nin == npi);
+  
+  OpenMP_Patch_Pragma(omp parallel for)
+  for (p = 0; p < npi; p++)
+  {
+    Patch_T *patch = grid->patch[patch_numbers->in[p]];
     unsigned nn = patch->nn;
     double Y;
-    double r = 0,theta = 0,phi = 0,dr = 0;
+    double theta = 0,phi = 0,dr = 0;
     double x_on_BHsurf[3]={0},
            X_on_BHsurf[3]={0},
            N[3] = {0};
     unsigned ijk;
+    
+    /* fill needle */
+    Needle_T *needle = alloc_needle();
+    needle->grid = grid;
+    needle_in(needle,GetPatch("right_BH_surrounding_up",grid));
+    needle_in(needle,GetPatch("right_BH_surrounding_down",grid));
+    needle_in(needle,GetPatch("right_BH_surrounding_left",grid));
+    needle_in(needle,GetPatch("right_BH_surrounding_right",grid));
+    needle_in(needle,GetPatch("right_BH_surrounding_back",grid));
+    needle_in(needle,GetPatch("right_BH_surrounding_front",grid));
     
     bbn_add_fields_in_patch(patch);
     REALLOC_v_WRITE_v(Beta_U0)
@@ -3778,10 +3819,11 @@ static void extrapolate_insideBH_CS_WTGR(Grid_T *const grid)
         if(!EQL(delta_U2D2,1))  Error0("_gammaI is not correct!\n");
         if(!EQL(delta_U2D0,0))  Error0("_gammaI is not correct!\n");
         if(!EQL(delta_U1D0,0))  Error0("_gammaI is not correct!\n");
-
       }
-      
     }
+    /* free */
+    free_needle(needle);
+    
     /* update derivatives */
     bbn_update_derivative_Beta_U0(patch);
     bbn_update_derivative_Beta_U1(patch);
@@ -3797,7 +3839,7 @@ static void extrapolate_insideBH_CS_WTGR(Grid_T *const grid)
   }/* end of FOR_ALL_PATCHES(p,grid) */
   
   /* free */
-  free_needle(needle);
+  free_needle(patch_numbers);
   bbn_free_conformal_metric_derivatives(GetPatch("right_BH_surrounding_up",grid));
   bbn_free_conformal_metric_derivatives(GetPatch("right_BH_surrounding_down",grid));
   bbn_free_conformal_metric_derivatives(GetPatch("right_BH_surrounding_left",grid));
