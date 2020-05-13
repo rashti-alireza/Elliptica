@@ -3631,7 +3631,9 @@ static void extrapolate_insideBH_CS_WTGR(Grid_T *const grid)
     /* make coeffs for all fields inside this patch */
     for (f = 0; f < patch->nfld; ++f)
     {
-      if (patch->pool[f]->v)
+      if (patch->pool[f]->v      &&
+          patch->pool[f] != R1_f && 
+          patch->pool[f] != R2_f    )
         make_coeffs_3d(patch->pool[f]);
     }
     
