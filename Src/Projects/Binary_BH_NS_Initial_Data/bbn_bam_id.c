@@ -190,6 +190,23 @@ static void interpolate_and_write(Grid_T *const grid,struct interpolation_points
     
     for (p = 0; p < npoints; ++p)
     {
+      /* doc test */
+      if (0)//!isfinite(interp_v[p]))
+      {
+        fprintf(stdout,"%s[%s](%g,%g,%g)|x(%g,%g,%g)|X = %g\n",
+                fields_name[f],
+                grid->patch[pnt->patchn[p]]->name,
+                pnt->x[p],pnt->y[p],pnt->z[p],
+                pnt->X[p],pnt->Y[p],pnt->Z[p],interp_v[p]);
+        fflush(stdout);
+        fprintf(stderr,"%s[%s](%g,%g,%g)|x(%g,%g,%g)|X = %g\n",
+                fields_name[f],
+                grid->patch[pnt->patchn[p]]->name,
+                pnt->x[p],pnt->y[p],pnt->z[p],
+                pnt->X[p],pnt->Y[p],pnt->Z[p],interp_v[p]);
+        fflush(stderr);
+        Error0("BUG!\n");
+      }
       /* write it into the fields_file */
       FWriteV_bin(interp_v[p],1);
     }
