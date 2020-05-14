@@ -2722,7 +2722,9 @@ static void interpolate_and_initialize_to_next_grid(Grid_T *const grid_next,Grid
   const double Omega_NS_x = Pgetd("NS_Omega_U0");
   const double Omega_NS_y = Pgetd("NS_Omega_U1");
   const double Omega_NS_z = Pgetd("NS_Omega_U2");
-  const double C_NS = Pgetd("NS_Center_y");
+  const double C_NSx = Pgetd("NS_Center_x");
+  const double C_NSy = Pgetd("NS_Center_y");
+  const double C_NSz = Pgetd("NS_Center_z");
   
   OpenMP_Patch_Pragma(omp parallel for)
   for (p = 0; p < np; ++p)
@@ -2744,9 +2746,9 @@ static void interpolate_and_initialize_to_next_grid(Grid_T *const grid_next,Grid
       
       for (ijk = 0; ijk < nn; ++ijk)
       {
-        double x = patch->node[ijk]->x[0];
-        double y = patch->node[ijk]->x[1]-C_NS;
-        double z = patch->node[ijk]->x[2];
+        double x = patch->node[ijk]->x[0]-C_NSx;
+        double y = patch->node[ijk]->x[1]-C_NSy;
+        double z = patch->node[ijk]->x[2]-C_NSz;
         
         /* spin part */
         W_U0[ijk] = Omega_NS_y*z-Omega_NS_z*y;
@@ -4990,7 +4992,9 @@ static void init_field_TOV_plus_KerrSchild(Grid_T *const grid,const TOV_T *const
   const double BH_center_x = Pgetd("BH_center_x");
   const double BH_center_y = Pgetd("BH_center_y");
   const double BH_center_z = Pgetd("BH_center_z");
-  const double C_NS = Pgetd("NS_center_y");/* center of NS it's on -y axis*/
+  const double C_NSx = Pgetd("NS_center_x");/* center of NS on x axis */
+  const double C_NSy = Pgetd("NS_center_y");/* center of NS on y axis */
+  const double C_NSz = Pgetd("NS_center_z");/* center of NS on z axis */
   const double R_Schwar = tov->r[tov->N-1];/* NS's Schwarzchild radius */
   const double a2_BH = Pow2(a_BH);/* spin vector of BH */
   const double y_CM = Pgetd("y_CM");
@@ -5139,9 +5143,9 @@ KSbeta_D2[ijk]*_gammaI_U2U2[ijk];
       {
         /* note that we naturally using isotropic coords. 
         // for our coordiante, so bar in rbar is dropped */
-        double x = patch->node[ijk]->x[0];
-        double y = patch->node[ijk]->x[1]-C_NS;
-        double z = patch->node[ijk]->x[2];
+        double x = patch->node[ijk]->x[0]-C_NSx;
+        double y = patch->node[ijk]->x[1]-C_NSy;
+        double z = patch->node[ijk]->x[2]-C_NSz;
         double r = sqrt(Pow2(x)+Pow2(y)+Pow2(z));
         double alpha;
         double enthalpy_h;
@@ -5167,7 +5171,7 @@ KSbeta_D2[ijk]*_gammaI_U2U2[ijk];
         rho0[ijk] = eos->rest_mass_density(eos);
         
         /* phi Newtonian approximation */
-        phi[ijk] = -Omega_BHNS*(C_NS-y_CM)*x;
+        phi[ijk] = -Omega_BHNS*(C_NSy-y_CM)*x;
         
         /* spin part */
         W_U0[ijk] = Omega_NS_y*z-Omega_NS_z*y;
@@ -5184,9 +5188,9 @@ KSbeta_D2[ijk]*_gammaI_U2U2[ijk];
       {
         /* note that we naturally using isotropic for our coordiante, 
         // so bar in rbar is dropped */
-        double x    = patch->node[ijk]->x[0];
-        double y    = patch->node[ijk]->x[1]-C_NS;
-        double z    = patch->node[ijk]->x[2];
+        double x    = patch->node[ijk]->x[0]-C_NSx;
+        double y    = patch->node[ijk]->x[1]-C_NSy;
+        double z    = patch->node[ijk]->x[2]-C_NSz;
         double r = sqrt(Pow2(x)+Pow2(y)+Pow2(z));
         double alpha;
         
