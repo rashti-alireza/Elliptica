@@ -3583,16 +3583,17 @@ static void extrapolate_insideBH_CS_WTGR(Grid_T *const grid)
   fflush(stdout);
   
   const double EPS            = 1E-12;/* to avoid division by zero */
-  const double r_fill         = Pgetd("BH_R_size");
+  const double EPS2           = 1E-6;/* to increase r_fill radius a bit */
+  const double r_fill         = Pgetd("BH_R_size")*(1+EPS2);
   const double Ma             = Pgetd("BH_irreducible_mass");
   const double u0_Beta_U0     = 0;
   const double u0_Beta_U1     = 0;
   const double u0_Beta_U2     = 0;
   const double u0__gamma_D0D0 = 1;
-  const double u0__gamma_D0D1 = 0;
-  const double u0__gamma_D0D2 = 0;
+  const double u0__gamma_D0D1 = 1;
+  const double u0__gamma_D0D2 = 1;
   const double u0__gamma_D1D1 = 1;
-  const double u0__gamma_D1D2 = 0;
+  const double u0__gamma_D1D2 = 1;
   const double u0__gamma_D2D2 = 1;
   const double u0_K           = 0;
   Needle_T *patch_numbers = 0;
