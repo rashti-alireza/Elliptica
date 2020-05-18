@@ -58,8 +58,8 @@ PROJECT += $(PROJECT_DIR)/Binary_BH_NS_Initial_Data
 CC = gcc
 
 ### compiler flags:
-OFLAGS += -fopenmp -g3
-#OFLAGS += -fopenmp -O3
+#OFLAGS += -fopenmp -g3
+OFLAGS += -fopenmp -O3
 
 ### warninng flags for the compiler
 #WARN +=# no warnings
@@ -69,6 +69,7 @@ OFLAGS += -fopenmp -g3
   -Wcast-qual -Wcast-align\
   -Wwrite-strings -Wnested-externs\
   -fshort-enums -fno-common -Dinline= 
+
 
 ### define flags for compiler
 DFLAGS += -DPragma_OpenMP_2d -DPragma_OpenMP_1d -DPragma_OpenMP_Patch
