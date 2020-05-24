@@ -362,10 +362,14 @@ void bbn_free_data_gammas(Grid_T *const grid)
       double x = patch->node[ijk]->x[0]-BH_center_x;
       double y = patch->node[ijk]->x[1]-BH_center_y;
       double z = patch->node[ijk]->x[2]-BH_center_z;
+      
+      /* x1_mu = R x0_mu : rotation  */
+      /* x_mu  = B x1_mu  : Boost    */
+      
       double x_mu[4] = {0/* time component */,x,y,z};/* x^mu in boost coords */
       double Lm1_x_mu[4];/* Lorentz^-1 x^mu, inverse boost */
       t->boost->inverse = 1;
-      Lorentz_boost(t,x_mu,Lm1_x_mu);
+      boost_transformation(t,x_mu,Lm1_x_mu);
       double _x    = Lm1_x_mu[1];
       double _y    = Lm1_x_mu[2];
       double _z    = Lm1_x_mu[3];
@@ -380,7 +384,7 @@ void bbn_free_data_gammas(Grid_T *const grid)
       double _k_mu[4] = {_kt,_k0,_k1,_k2};
       double L_k_mu[4];/* Lorentz *k^mu */
       t->boost->inverse = 0;
-      Lorentz_boost(t,_k_mu,L_k_mu);
+      boost_transformation(t,_k_mu,L_k_mu);
       k0 = L_k_mu[1];
       k1 = L_k_mu[2];
       k2 = L_k_mu[3];
@@ -731,7 +735,7 @@ static void populate_KSgammas_KSalpha_KSBeta(Patch_T *const patch)
     double x_mu[4] = {0/* time component */,x,y,z};/* x^mu in boost coords */
     double Lm1_x_mu[4];/* Lorentz^-1 x^mu, inverse boost */
     t->boost->inverse = 1;
-    Lorentz_boost(t,x_mu,Lm1_x_mu);
+    boost_transformation(t,x_mu,Lm1_x_mu);
     double _x    = Lm1_x_mu[1];
     double _y    = Lm1_x_mu[2];
     double _z    = Lm1_x_mu[3];
@@ -744,7 +748,7 @@ static void populate_KSgammas_KSalpha_KSBeta(Patch_T *const patch)
     double _k_mu[4] = {_kt,_k0,_k1,_k2};
     double L_k_mu[4];/* Lorentz *k^mu */
     t->boost->inverse = 0;
-    Lorentz_boost(t,_k_mu,L_k_mu);
+    boost_transformation(t,_k_mu,L_k_mu);
     kt = L_k_mu[0];
     k0 = L_k_mu[1];
     k1 = L_k_mu[2];

@@ -9,8 +9,8 @@
 /* performing Lorentz boost in an arbitray direction.
 // the given four-vector is in and its boost transformed is out.
 // note: x^mu = (ct,x,y,z) so 0-component is t. */
-void Lorentz_boost(Transformation_T *const t,const double *const in,double *const out);
-void Lorentz_boost(Transformation_T *const t,const double *const in,double *const out)
+void boost_transformation(Transformation_T *const t,const double *const in,double *const out);
+void boost_transformation(Transformation_T *const t,const double *const in,double *const out)
 {
   const double s  = (t->boost->inverse == 1) ? -1.: 1.;
   const double Bx = s*t->boost->Bx;

@@ -60,7 +60,7 @@ eta[ijk] - 1;
   double x_mu[4] = {0/* time component */,x,y,z};/* x^mu in boost coords */
   double Lm1_x_mu[4];/* Lorentz^-1 x^mu, inverse boost */
   t->boost->inverse = 1;
-  Lorentz_boost(t,x_mu,Lm1_x_mu);
+  boost_transformation(t,x_mu,Lm1_x_mu);
   double _x    = Lm1_x_mu[1];
   double _y    = Lm1_x_mu[2];
   double _z    = Lm1_x_mu[3];
@@ -74,7 +74,7 @@ eta[ijk] - 1;
   double _k_mu[4] = {_kt,_k0,_k1,_k2};
   double L_k_mu[4];/* Lorentz *k^mu */
   t->boost->inverse = 0;
-  Lorentz_boost(t,_k_mu,L_k_mu);
+  boost_transformation(t,_k_mu,L_k_mu);
   kt = L_k_mu[0];
   H  = bbn_KerrSchild_H(M_BH,rbar,a,_z);
   double C = 2.*H;
