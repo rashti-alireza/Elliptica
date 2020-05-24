@@ -4682,7 +4682,7 @@ static Grid_T *TOV_KerrSchild_approximation(void)
   const double bh_chi_y    = Pgetd("BH_chi_U1");
   const double bh_chi_z    = Pgetd("BH_chi_U2");
   const double bh_irr_mass = Pgetd("BH_irreducible_mass");
-  const double bh_R        = bh_irr_mass;/* approximate initial radius */
+  const double bh_R        = 2*bh_irr_mass;/* approximate initial radius */
   printf("BH properties:\n");
   //printf("--> BH radius (Kerr-Schild Coords.) = %+e\n",bh_R);
   printf("--> BH irreducible mass             = %+e\n",bh_irr_mass);
