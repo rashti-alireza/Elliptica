@@ -1088,7 +1088,7 @@ double bbn_KerrShcild_r(const double x,const double y,const double z,const doubl
   const double r2 = Pow2(x)+Pow2(y)+Pow2(z);
   const double a2 = Pow2(a);
   
-  return 0.5*(r2-a2+sqrt(Pow2(r2-a2)+4*a2*Pow2(z)));
+  return sqrt(0.5*(r2-a2+sqrt(Pow2(r2-a2)+4*a2*Pow2(z))));
 }
 
 /* ->return value: H function in Kerr-Schild coords */
