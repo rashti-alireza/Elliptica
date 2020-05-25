@@ -313,30 +313,21 @@ void bbn_free_conformal_metric_derivatives(Patch_T *const patch)
 /* populate conformal metric and its inverse */
 void bbn_free_data_gammas(Grid_T *const grid)
 {
-  Transformation_T *t = initialize_transformation();
+  Transformation_T *tB = initialize_transformation();
+  Transformation_T *tR = initialize_transformation();
   /* roll off distance at exp(-(r/r0)^4)  */
-  const double r0   = Pgetd("BH_KerrSchild_RollOff");
-  const double M_BH = Pgetd("BH_irreducible_mass");
-  const double a    = Pgetd("BH_chi_U2")*M_BH;
   const double BH_center_x = Pgetd("BH_center_x");
   const double BH_center_y = Pgetd("BH_center_y");
   const double BH_center_z = Pgetd("BH_center_z");
-  const double y_CM = Pgetd("y_CM");
-  const double x_CM = Pgetd("x_CM");
-  //const double C_BH = 0.5*Pgetd("BH_NS_separation");/* center of BH it's on +y axis */
-  const double Omega_BHNS = Pgetd("BH_NS_angular_velocity");
-  const double a2   = Pow2(a);
+  const double r0          = Pgetd("BH_KerrSchild_RollOff");
+  const double M_BH        = Pgetd("BH_irreducible_mass");
+  const double a           = Pgetd("BH_net_spin");
+  const double a2          = Pow2(a);
   double H,k0,k1,k2;/* in ds^2 = (delta_ij+2*H*ki*kj)dx^i*dx^j */
-  double Bx,By,Bz;/* B = v/c */
-  unsigned p;
   
-  Bx = -Omega_BHNS*(BH_center_y-y_CM);
-  By =  Omega_BHNS*(BH_center_x-x_CM);
-  Bz = Pgetd("BH_Vz");
-  t->boost->Bx = Bx;
-  t->boost->By = By;
-  t->boost->Bz = Bz;
-  t->boost->B2 = Pow2(Bx)+Pow2(By)+Pow2(Bz);
+  unsigned p;
+  bbn_populate_tB_tR(tB,tR);
+  
   
   FOR_ALL_PATCHES(p,grid)
   {
@@ -368,8 +359,8 @@ void bbn_free_data_gammas(Grid_T *const grid)
       
       double x_mu[4] = {0/* time component */,x,y,z};/* x^mu in boost coords */
       double Lm1_x_mu[4];/* Lorentz^-1 x^mu, inverse boost */
-      t->boost->inverse = 1;
-      boost_transformation(t,x_mu,Lm1_x_mu);
+      tB->boost->inverse = 1;
+      boost_transformation(tB,x_mu,Lm1_x_mu);
       double _x    = Lm1_x_mu[1];
       double _y    = Lm1_x_mu[2];
       double _z    = Lm1_x_mu[3];
@@ -383,8 +374,8 @@ void bbn_free_data_gammas(Grid_T *const grid)
       double _kt = 1;
       double _k_mu[4] = {_kt,_k0,_k1,_k2};
       double L_k_mu[4];/* Lorentz *k^mu */
-      t->boost->inverse = 0;
-      boost_transformation(t,_k_mu,L_k_mu);
+      tB->boost->inverse = 0;
+      boost_transformation(tB,_k_mu,L_k_mu);
       k0 = L_k_mu[1];
       k1 = L_k_mu[2];
       k2 = L_k_mu[3];
@@ -461,7 +452,9 @@ void bbn_free_data_gammas(Grid_T *const grid)
       
     }
   }
-  free_transformation(t);
+  free_transformation(tB);
+  free_transformation(tR);
+  
 }
 
 /* trace of Kerr Schild extrinsic curvature */
@@ -1119,9 +1112,11 @@ double bbn_KerrSchild_H(const double M_BH,const double rbar,const double a,const
 }
 
 /* transforming 4-vector 'in' to 'out' by the rotation tR 
-// followed by the boost tB, i.e. in = (tB * tR) out.
+// followed by the boost tB, i.e. out = (tB * tR) in.
 // if IsInverse is 1 then it does inverse transformation,
-// i.e. in = (tB * tR)^-1 out = tR^-1 * tB ^-1 out */
+// i.e. out = (tB * tR)^-1 in = tR^-1 * tB ^-1 out.
+// Note: We need specific order for rotation of BH which is
+// out = Ry*Rz in.*/
 void bbn_boost_rotation_transform(Transformation_T *const tB,
                                   Transformation_T *const tR,
                                   const int IsInverse,
@@ -1132,7 +1127,6 @@ void bbn_boost_rotation_transform(Transformation_T *const tB,
   if (IsInverse)
   {
     double outB[4] ={0};
-    double outRz[4]={0};
     double outRy[4]={0};
     
     /* inverse */
@@ -1146,37 +1140,89 @@ void bbn_boost_rotation_transform(Transformation_T *const tB,
     tB->boost->By *= -1.;
     tB->boost->Bz *= -1.;
     
-    /* second rotation transfrom, the default oreder is RzRyRx,
-    // thus, the inverse is Rx^-1 Ry^-1 Rz^-1. */
+    /* second rotation transfrom, the oreder used was RyRz,
+    // thus, the inverse is Rz^-1 Ry^-1 */
     Transformation_T *tIR = initialize_transformation();
     tIR->rotation->active = tR->rotation->active;
-    
-    tIR->rotation->Rx = 0;
-    tIR->rotation->Ry = 0;
-    tIR->rotation->Rz = -tR->rotation->Rz;
-    rotation_transformation(tIR,outB,outRz);
+    assert(EQL(tR->rotation->Rx,0));
     
     tIR->rotation->Rx = 0;
     tIR->rotation->Ry = -tR->rotation->Ry;
     tIR->rotation->Rz = 0;
-    rotation_transformation(tIR,outRz,outRy);
+    rotation_transformation(tIR,outB,outRy);
     
-    tIR->rotation->Rx = -tR->rotation->Rx;
+    tIR->rotation->Rx = 0;
     tIR->rotation->Ry = 0;
-    tIR->rotation->Rz = 0;
+    tIR->rotation->Rz = -tR->rotation->Rz;
     rotation_transformation(tIR,outRy,out);
     
     free_transformation(tIR);
   }
   else
   {
-    double outR[4]={0};
-    rotation_transformation(tR,in,outR);
-    boost_transformation(tB,outR,out);
+    double outRz[4]={0};
+    double outRy[4]={0};
+    
+    /* rotation: out = Ry Rz in */
+    Transformation_T *tIR = initialize_transformation();
+    tIR->rotation->active = tR->rotation->active;
+    assert(EQL(tR->rotation->Rx,0));
+    /* Rz */
+    tIR->rotation->Rx = 0;
+    tIR->rotation->Ry = 0;
+    tIR->rotation->Rz = tR->rotation->Rz;
+    rotation_transformation(tIR,in,outRz);
+    
+    /* Ry */
+    tIR->rotation->Rx = 0;
+    tIR->rotation->Ry = tR->rotation->Ry;
+    tIR->rotation->Rz = 0;
+    rotation_transformation(tIR,outRz,outRy);
+    
+    free_transformation(tIR);
+    
+    /* boost */
+    boost_transformation(tB,outRy,out);
   }
 }
 
-
+/* populating tB(boost) and tR(rotation) for boost and rotation of BH. */
+void bbn_populate_tB_tR(Transformation_T *const tB,
+                        Transformation_T *const tR)
+{
+  const double BH_center_x = Pgetd("BH_center_x");
+  const double BH_center_y = Pgetd("BH_center_y");
+  //const double BH_center_z = Pgetd("BH_center_z");
+  const double chi_U0   = Pgetd("BH_chi_U0");
+  const double chi_U1   = Pgetd("BH_chi_U1");
+  const double chi_U2   = Pgetd("BH_chi_U2");
+  const double y_CM = Pgetd("y_CM");
+  const double x_CM = Pgetd("x_CM");
+  const double Omega_BHNS = Pgetd("BH_NS_angular_velocity");
+  const double chi = sqrt(Pow2(chi_U0)+Pow2(chi_U1)+Pow2(chi_U2));
+  double phiy,phiz;
+  double Bx,By,Bz;/* B = v/c */
+  
+  /* boost */
+  Bx = -Omega_BHNS*(BH_center_y-y_CM);
+  By =  Omega_BHNS*(BH_center_x-x_CM);
+  Bz = Pgetd("BH_Vz");
+  tB->boost->Bx = Bx;
+  tB->boost->By = By;
+  tB->boost->Bz = Bz;
+  tB->boost->B2 = Pow2(Bx)+Pow2(By)+Pow2(Bz);
+  
+  /* rotation */
+  if (!EQL(chi,0))
+  {
+    phiz = arctan(chi_U1,chi_U0);
+    phiy = acos(chi_U2/chi);
+    assert(isfinite(phiy));
+    tR->rotation->Rx = 0;
+    tR->rotation->Ry = phiy;
+    tR->rotation->Rz = phiz;
+  }
+} 
 
 
 
