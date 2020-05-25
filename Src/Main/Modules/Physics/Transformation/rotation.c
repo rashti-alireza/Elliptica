@@ -7,7 +7,7 @@
 #include "transformation.h"
 
 /* performing rotation transformation.
-// the given four-vector is in and its transformed is out.
+// the given four-vector is 'in' and its transformed is 'out'.
 // note: x^mu = (ct,x,y,z) so 0-component is t. */
 void rotation_transformation(Transformation_T *const t,const double *const in,double *const out);
 void rotation_transformation(Transformation_T *const t,const double *const in,double *const out)
