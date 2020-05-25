@@ -1028,7 +1028,7 @@ dKSgamma_D0D2D1[ijk] - dKSgamma_D1D2D0[ijk]);
 }
 
 /* ->return value: r funciont in Kerr-Schild coords */
-double bbn_KerrShcild_r(const double x,const double y,const double z,const double a)
+double bbn_KerrSchild_r(const double x,const double y,const double z,const double a)
 {
   const double r2 = Pow2(x)+Pow2(y)+Pow2(z);
   const double a2 = Pow2(a);
@@ -1198,7 +1198,7 @@ void bbn_transform_get_k_and_H_KerrSchild(const double x,const double y,const do
   _x  = _x_mu[1];
   _y  = _x_mu[2];
   _z  = _x_mu[3];
-  _r  = bbn_KerrShcild_r(_x,_y,_z,a);
+  _r  = bbn_KerrSchild_r(_x,_y,_z,a);
   _r2 = Pow2(_r);
   _k0 = (_r*_x+a*_y)/(_r2+a2);
   _k1 = (_r*_y-a*_x)/(_r2+a2);
