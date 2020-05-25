@@ -1164,7 +1164,7 @@ void bbn_transform_populate_boost_rotation(Transformation_T *const tB,
   tB->boost->B2 = Pow2(Bx)+Pow2(By)+Pow2(Bz);
   
   /* rotation */
-  if (!EQL(chi,0))
+  if (!EQL(chi,0))/* otherwise tR is 0 */
   {
     phiz = arctan(chi_U1,chi_U0);
     phiy = acos(chi_U2/chi);
@@ -1178,7 +1178,7 @@ void bbn_transform_populate_boost_rotation(Transformation_T *const tB,
 /* given x,y,z and transformation info of non inertial frame, 
 // it gets the correspoinding k0,k1,k2 and H in Kerr-Schild context */
 void bbn_transform_get_k_and_H_KerrSchild(const double x,const double y,const double z,
-                                          const double a,const double M_BH,
+                                          const double a,const double m,
                                           Transformation_T *const tB,
                                           Transformation_T *const tR,
                                           double *const kt,double *const k0,
@@ -1218,7 +1218,7 @@ void bbn_transform_get_k_and_H_KerrSchild(const double x,const double y,const do
   *k0 = k_mu[1];
   *k1 = k_mu[2];
   *k2 = k_mu[3];
-  *H  = KerrSchild_H(M_BH,_r,a,_z);
+  *H  = KerrSchild_H(m,_r,a,_z);
 }
 
 

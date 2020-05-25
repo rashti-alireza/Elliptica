@@ -17,7 +17,7 @@ static void partial_derivative_KSBeta(Patch_T *const patch);
 static void free_KSfields(Patch_T *const patch);
 static void execute_boost_and_rotation(Transformation_T *const tB,Transformation_T *const tR,const int IsInverse,const double in[4],double out[4]);
 void bbn_transform_populate_boost_rotation(Transformation_T *const tB,Transformation_T *const tR);
-void bbn_transform_get_k_and_H_KerrSchild(const double x,const double y,const double z,const double a,const double M_BH,Transformation_T *const tB,Transformation_T *const tR,double *const kt,double *const k0,double *const k1,double *const k2,double *const H);
+void bbn_transform_get_k_and_H_KerrSchild(const double x,const double y,const double z,const double a,const double m,Transformation_T *const tB,Transformation_T *const tR,double *const kt,double *const k0,double *const k1,double *const k2,double *const H);
 
 
 
