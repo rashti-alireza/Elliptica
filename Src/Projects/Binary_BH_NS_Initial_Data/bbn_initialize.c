@@ -4683,15 +4683,18 @@ static Grid_T *TOV_KerrSchild_approximation(void)
   const double bh_chi_z    = Pgetd("BH_chi_U2");
   const double bh_irr_mass = Pgetd("BH_irreducible_mass");
   const double bh_R        = 2*bh_irr_mass;/* approximate initial radius */
-  const double bh_a = sqrt(Pow2(bh_chi_x)+Pow2(bh_chi_y)+Pow2(bh_chi_z))*bh_irr_mass;
+  const double bh_chi      = sqrt(Pow2(bh_chi_x)+Pow2(bh_chi_y)+Pow2(bh_chi_z));
+  const double bh_a        = bh_chi*bh_irr_mass;
+  /* check size of bh_chi */
+  if (GRT(bh_chi,1))
+    Error0("BH spin is too large!\n");
   printf("BH properties:\n");
-  //printf("--> BH radius (Kerr-Schild Coords.) = %+e\n",bh_R);
-  printf("--> BH irreducible mass             = %+e\n",bh_irr_mass);
+  printf("--> BH radius (Kerr-Schild Coords.) ~ %+e\n",bh_R);
+  printf("--> BH irreducible mass             ~ %+e\n",bh_irr_mass);
   printf("--> BH dimensionless spin (x comp.) = %+e\n",bh_chi_x);
   printf("--> BH dimensionless spin (y comp.) = %+e\n",bh_chi_y);
   printf("--> BH dimensionless spin (z comp.) = %+e\n",bh_chi_z);
-  printf("--> BH approximate radius           = %+e\n",bh_R);
-  printf("--> BH approximate net spin         = %+e\n",bh_a);
+  printf("--> BH approximate net spin         ~ %+e\n",bh_a);
   printf("} Acquiring Black Hole properties ==> Done.\n");
   pr_clock();
   pr_line_custom('=');
