@@ -1063,7 +1063,7 @@ double bbn_KerrSchild_H(const double M_BH,const double rbar,const double a,const
 // i.e. out = (tB * tR)^-1 in = tR^-1 * tB ^-1 out.
 // Note: We need specific order for rotation of BH which is
 // out = Ry*Rz in.*/
-void bbn_transform_boost_rotation(Transformation_T *const tB,
+static void execute_boost_and_rotation(Transformation_T *const tB,
                                   Transformation_T *const tR,
                                   const int IsInverse,
                                   const double in[4],
@@ -1191,7 +1191,7 @@ void bbn_transform_get_k_and_H_KerrSchild(const double x,const double y,const do
   double _x_mu[4];
       
   /* _x_mu = T^-1 x_mu */
-  bbn_transform_boost_rotation(tB,tR,1,x_mu,_x_mu);
+  execute_boost_and_rotation(tB,tR,1,x_mu,_x_mu);
   
   _x  = _x_mu[1];
   _y  = _x_mu[2];
@@ -1207,7 +1207,7 @@ void bbn_transform_get_k_and_H_KerrSchild(const double x,const double y,const do
   double k_mu[4];/* Lorentz *k^mu */
   
   /* k_mu = T _k_mu */
-  bbn_transform_boost_rotation(tB,tR,0,_k_mu,k_mu);
+  execute_boost_and_rotation(tB,tR,0,_k_mu,k_mu);
   
   *kt = k_mu[0];
   *k0 = k_mu[1];
