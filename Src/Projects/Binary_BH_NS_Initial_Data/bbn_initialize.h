@@ -141,7 +141,7 @@ static Grid_T *make_next_grid_using_previous_grid(Grid_T *const grid_prev);
 static Grid_T *TOV_KerrSchild_approximation(void);
 static Grid_T *creat_bbn_grid_CS(struct Grid_Params_S *const GridParams);
 static void NS_BH_surface_CubedSpherical_grid(Grid_T *const grid,struct Grid_Params_S *const GridParams);
-static void init_field_TOV_plus_KerrSchild(Grid_T *const grid,const TOV_T *const tov, const double a_BH, const double M_BH);
+static void init_field_TOV_plus_KerrSchild(Grid_T *const grid,const TOV_T *const tov);
 void bbn_make_normal_vector_on_BH_horizon(Grid_T *const grid);
 void bbn_add_fields(Grid_T *const grid);
 void bbn_partial_derivatives_fields(Grid_T *const grid);

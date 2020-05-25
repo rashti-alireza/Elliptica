@@ -4764,9 +4764,8 @@ static Grid_T *TOV_KerrSchild_approximation(void)
   /* populating the free data part of initial data that we chose ourself */
   bbn_populate_free_data(grid);
   
-  /* initialize the fields using TOV and Kerr-Schild solution.
-  // NOTE: for now I am using bh_chi_z approximatly.  */
-  init_field_TOV_plus_KerrSchild(grid,tov,bh_chi_z*bh_irr_mass,bh_irr_mass);
+  /* initialize the fields using TOV and Kerr-Schild solution. */
+  init_field_TOV_plus_KerrSchild(grid,tov);
   
   /* make normal vectorn on BH horizon 
   // note: this MUST be before "bbn_partial_derivatives_fields" */
@@ -4987,38 +4986,33 @@ _gamma_D1D2[ijk] + pow(_HS_U2[ijk], 2)*_gamma_D2D2[ijk];
 
 /* initialize the fields using TOV and Kerr-Schild solution.
 // the idea is to superimpose two fields of each solutions. */
-static void init_field_TOV_plus_KerrSchild(Grid_T *const grid,const TOV_T *const tov, const double a_BH, const double M_BH)
+static void init_field_TOV_plus_KerrSchild(Grid_T *const grid,const TOV_T *const tov)
 {
   pr_line_custom('=');
   printf("{ Superimposing TOV and Kerr-Schild solution ...\n");
   
-  Transformation_T *t = initialize_transformation();
-  const double M_NS = tov->ADM_m;/* NS adm mass */
   const double BH_center_x = Pgetd("BH_center_x");
   const double BH_center_y = Pgetd("BH_center_y");
   const double BH_center_z = Pgetd("BH_center_z");
+  const double Omega_BHNS  = Pgetd("BH_NS_angular_velocity");
+  const double Omega_NS_x  = Pgetd("NS_Omega_U0");
+  const double Omega_NS_y  = Pgetd("NS_Omega_U1");
+  const double Omega_NS_z  = Pgetd("NS_Omega_U2");
+  const double R_Schwar    = tov->r[tov->N-1];/* NS's Schwarzchild radius */
+  const double M_NS  = tov->ADM_m;/* NS adm mass */
   const double C_NSx = Pgetd("NS_center_x");/* center of NS on x axis */
   const double C_NSy = Pgetd("NS_center_y");/* center of NS on y axis */
   const double C_NSz = Pgetd("NS_center_z");/* center of NS on z axis */
-  const double R_Schwar = tov->r[tov->N-1];/* NS's Schwarzchild radius */
-  const double a2_BH = Pow2(a_BH);/* spin vector of BH */
-  const double y_CM = Pgetd("y_CM");
-  const double x_CM = Pgetd("x_CM");
-  const double Omega_BHNS = Pgetd("BH_NS_angular_velocity");
-  const double Omega_NS_x = Pgetd("NS_Omega_U0");
-  const double Omega_NS_y = Pgetd("NS_Omega_U1");
-  const double Omega_NS_z = Pgetd("NS_Omega_U2");
-  double Bx,By,Bz;/* B = v/c */
+  const double y_CM  = Pgetd("y_CM");
+  const double a_BH  = Pgetd("BH_net_spin");
+  const double M_BH  = Pgetd("BH_irreducible_mass");
   unsigned p;
   
-  Bx = -Omega_BHNS*(BH_center_y-y_CM);
-  By = Omega_BHNS*(BH_center_x-x_CM);
-  Bz = Pgetd("BH_Vz");
-  t->boost->Bx = Bx;
-  t->boost->By = By;
-  t->boost->Bz = Bz;
-  t->boost->B2 = Pow2(Bx)+Pow2(By)+Pow2(Bz);
-
+  /* populate tB tR */
+  Transformation_T *tB = initialize_transformation();
+  Transformation_T *tR = initialize_transformation();
+  bbn_transform_populate_boost_rotation(tB,tR);
+  
   /* black hole parts */
   FOR_ALL_PATCHES(p,grid)
   {
@@ -5050,31 +5044,14 @@ static void init_field_TOV_plus_KerrSchild(Grid_T *const grid,const TOV_T *const
     /* beta and alpha needed */
     for (ijk = 0; ijk < nn; ++ijk)
     {
-      double x = patch->node[ijk]->x[0]-BH_center_x;
-      double y = patch->node[ijk]->x[1]-BH_center_y;
-      double z = patch->node[ijk]->x[2]-BH_center_z;
-      double x_mu[4] = {0/* time component */,x,y,z};/* x^mu in boost coords */
-      double Lm1_x_mu[4];/* Lorentz^-1 x^mu, inverse boost */
-      t->boost->inverse = 1;
-      boost_transformation(t,x_mu,Lm1_x_mu);
-      double _x    = Lm1_x_mu[1];
-      double _y    = Lm1_x_mu[2];
-      double _z    = Lm1_x_mu[3];
-      double rbar  = bbn_KerrShcild_r(_x,_y,_z,a_BH);
-      double rbar2 = Pow2(rbar);
-      double _k0 = (rbar*_x+a_BH*_y)/(rbar2+a2_BH);
-      double _k1 = (rbar*_y-a_BH*_x)/(rbar2+a2_BH);
-      double _k2 = _z/rbar;
-      double _kt = 1;
-      double _k_mu[4] = {_kt,_k0,_k1,_k2};
-      double L_k_mu[4];/* Lorentz *k^mu */
-      t->boost->inverse = 0;
-      boost_transformation(t,_k_mu,L_k_mu);
-      double kt = L_k_mu[0];
-      double k0 = L_k_mu[1];
-      double k1 = L_k_mu[2];
-      double k2 = L_k_mu[3];
-      double H  = bbn_KerrSchild_H(M_BH,rbar,a_BH,_z);
+       double x,y,z,H,k0,k1,k2,kt;
+      x = patch->node[ijk]->x[0]-BH_center_x;
+      y = patch->node[ijk]->x[1]-BH_center_y;
+      z = patch->node[ijk]->x[2]-BH_center_z;
+      
+      bbn_transform_get_k_and_H_KerrSchild
+        (x,y,z,a_BH,M_BH,tB,tR,&kt,&k0,&k1,&k2,&H);
+      
       double C = 2.*H;
       
       KSalpha[ijk] = 1/sqrt(1+C*kt*kt);
@@ -5106,7 +5083,8 @@ KSbeta_D2[ijk]*_gammaI_U2U2[ijk];
     }
     
   }/* end of black hole part */
-  free_transformation(t);
+  free_transformation(tB);
+  free_transformation(tR);  
   
   /* initialization psi, eta and matter fields: */
   FOR_ALL_PATCHES(p,grid)

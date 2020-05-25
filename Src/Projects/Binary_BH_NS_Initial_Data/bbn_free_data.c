@@ -319,7 +319,7 @@ void bbn_free_data_gammas(Grid_T *const grid)
   const double BH_center_y = Pgetd("BH_center_y");
   const double BH_center_z = Pgetd("BH_center_z");
   const double M_BH        = Pgetd("BH_irreducible_mass");
-  const double a           = Pgetd("BH_net_spin");
+  const double a_BH        = Pgetd("BH_net_spin");
   unsigned p;
   
   /* populate tB tR */
@@ -354,7 +354,8 @@ void bbn_free_data_gammas(Grid_T *const grid)
       y = patch->node[ijk]->x[1]-BH_center_y;
       z = patch->node[ijk]->x[2]-BH_center_z;
       r = sqrt(Pow2(x)+Pow2(y)+Pow2(z));
-      bbn_transform_get_k_and_H_KerrSchild(x,y,z,a,M_BH,tB,tR,&kt,&k0,&k1,&k2,&H);
+      bbn_transform_get_k_and_H_KerrSchild
+        (x,y,z,a_BH,M_BH,tB,tR,&kt,&k0,&k1,&k2,&H);
       
       double e = exp(-pow(r/r0,4));
       double C = 2.*H*e;
@@ -632,7 +633,7 @@ static void partial_derivative_KSBeta(Patch_T *const patch)
 static void populate_KSgammas_KSalpha_KSBeta(Patch_T *const patch)
 {
   const double M_BH        = Pgetd("BH_irreducible_mass");
-  const double a           = Pgetd("BH_net_spin");
+  const double a_BH        = Pgetd("BH_net_spin");
   const double BH_center_x = Pgetd("BH_center_x");
   const double BH_center_y = Pgetd("BH_center_y");
   const double BH_center_z = Pgetd("BH_center_z");
@@ -691,7 +692,8 @@ static void populate_KSgammas_KSalpha_KSBeta(Patch_T *const patch)
     y = patch->node[ijk]->x[1]-BH_center_y;
     z = patch->node[ijk]->x[2]-BH_center_z;
     
-    bbn_transform_get_k_and_H_KerrSchild(x,y,z,a,M_BH,tB,tR,&kt,&k0,&k1,&k2,&H);
+    bbn_transform_get_k_and_H_KerrSchild
+      (x,y,z,a_BH,M_BH,tB,tR,&kt,&k0,&k1,&k2,&H);
     
     double C = 2.*H;
     double A = 1./(1+C*(Pow2(k0)+Pow2(k1)+Pow2(k2)));
