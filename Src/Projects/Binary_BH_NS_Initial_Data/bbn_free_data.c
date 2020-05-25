@@ -316,18 +316,23 @@ void bbn_free_data_gammas(Grid_T *const grid)
   Transformation_T *tB = initialize_transformation();
   Transformation_T *tR = initialize_transformation();
   /* roll off distance at exp(-(r/r0)^4)  */
+  const double r0          = Pgetd("BH_KerrSchild_RollOff");
   const double BH_center_x = Pgetd("BH_center_x");
   const double BH_center_y = Pgetd("BH_center_y");
   const double BH_center_z = Pgetd("BH_center_z");
-  const double r0          = Pgetd("BH_KerrSchild_RollOff");
   const double M_BH        = Pgetd("BH_irreducible_mass");
   const double a           = Pgetd("BH_net_spin");
   const double a2          = Pow2(a);
-  double H,k0,k1,k2;/* in ds^2 = (delta_ij+2*H*ki*kj)dx^i*dx^j */
-  
   unsigned p;
-  bbn_populate_tB_tR(tB,tR);
   
+  /*notation:
+  // all of the variables with '_' prefix are in inetrial frame and
+  // all of the variables without '_' prefix, are in transformed frame. */
+  double H,k0,k1,k2,_k0,_k1,_k2,_kt;/* in ds^2 = (delta_ij+2*H*ki*kj)dx^i*dx^j */
+  double x,y,z,r,r2,_r,_r2,_x,_y,_z;
+  
+  /* populate tB tR */
+  bbn_transform_populate_boost_rotation(tB,tR);
   
   FOR_ALL_PATCHES(p,grid)
   {
@@ -350,36 +355,38 @@ void bbn_free_data_gammas(Grid_T *const grid)
     
     for (ijk = 0; ijk < nn; ++ijk)
     {
-      double x = patch->node[ijk]->x[0]-BH_center_x;
-      double y = patch->node[ijk]->x[1]-BH_center_y;
-      double z = patch->node[ijk]->x[2]-BH_center_z;
+      x = patch->node[ijk]->x[0]-BH_center_x;
+      y = patch->node[ijk]->x[1]-BH_center_y;
+      z = patch->node[ijk]->x[2]-BH_center_z;
       
-      /* x1_mu = R x0_mu : rotation  */
-      /* x_mu  = B x1_mu  : Boost    */
+      double x_mu[4] = {0/* time component */,x,y,z};
+      double _x_mu[4];
       
-      double x_mu[4] = {0/* time component */,x,y,z};/* x^mu in boost coords */
-      double Lm1_x_mu[4];/* Lorentz^-1 x^mu, inverse boost */
-      tB->boost->inverse = 1;
-      boost_transformation(tB,x_mu,Lm1_x_mu);
-      double _x    = Lm1_x_mu[1];
-      double _y    = Lm1_x_mu[2];
-      double _z    = Lm1_x_mu[3];
-      double rbar  = bbn_KerrShcild_r(_x,_y,_z,a);
-      double rbar2 = Pow2(rbar);
-      double r2    = Pow2(x)+Pow2(y)+Pow2(z);
-      double r     = sqrt(r2);
-      double _k0 = (rbar*_x+a*_y)/(rbar2+a2);
-      double _k1 = (rbar*_y-a*_x)/(rbar2+a2);
-      double _k2 = _z/rbar;
-      double _kt = 1;
+      /* _x_mu = T^-1 x_mu */
+      bbn_transform_boost_rotation(tB,tR,1,x_mu,_x_mu);
+      
+      _x  = _x_mu[1];
+      _y  = _x_mu[2];
+      _z  = _x_mu[3];
+      _r  = bbn_KerrShcild_r(_x,_y,_z,a);
+      _r2 = Pow2(_r);
+      r2  = Pow2(x)+Pow2(y)+Pow2(z);
+      r   = sqrt(r2);
+      _k0 = (_r*_x+a*_y)/(_r2+a2);
+      _k1 = (_r*_y-a*_x)/(_r2+a2);
+      _k2 = _z/_r;
+      _kt = 1;
+      
       double _k_mu[4] = {_kt,_k0,_k1,_k2};
-      double L_k_mu[4];/* Lorentz *k^mu */
-      tB->boost->inverse = 0;
-      boost_transformation(tB,_k_mu,L_k_mu);
-      k0 = L_k_mu[1];
-      k1 = L_k_mu[2];
-      k2 = L_k_mu[3];
-      H  = bbn_KerrSchild_H(M_BH,rbar,a,_z);
+      double k_mu[4];/* Lorentz *k^mu */
+      
+      /* k_mu = T _k_mu */
+      bbn_transform_boost_rotation(tB,tR,0,_k_mu,k_mu);
+      
+      k0 = k_mu[1];
+      k1 = k_mu[2];
+      k2 = k_mu[3];
+      H  = bbn_KerrSchild_H(M_BH,_r,a,_z);
       
       double e = exp(-pow(r/r0,4));
       double C = 2.*H*e;
@@ -400,7 +407,7 @@ void bbn_free_data_gammas(Grid_T *const grid)
       _gammaI_U2U2[ijk] = A*(1+C*(Pow2(k0)+Pow2(k1)));
       
       /* quick test check _gamma * _gammaI = delta */
-      if (0)
+      if (1)
       {
           double delta_U0D0 = 
         _gammaI_U0U0[ijk]*_gamma_D0D0[ijk] + _gammaI_U0U1[ijk]*
@@ -438,15 +445,15 @@ void bbn_free_data_gammas(Grid_T *const grid)
         _gammaI_U0U2[ijk]*_gamma_D0D1[ijk] + _gammaI_U1U2[ijk]*
         _gamma_D1D1[ijk] + _gammaI_U2U2[ijk]*_gamma_D1D2[ijk];
 
-        if(!EQL(delta_U1D1,1))  Error0("_gammaI is not correct!\n");
-        if(!EQL(delta_U0D1,0))  Error0("_gammaI is not correct!\n");
-        if(!EQL(delta_U0D2,0))  Error0("_gammaI is not correct!\n");
-        if(!EQL(delta_U1D2,0))  Error0("_gammaI is not correct!\n");
-        if(!EQL(delta_U0D0,1))  Error0("_gammaI is not correct!\n");
-        if(!EQL(delta_U2D1,0))  Error0("_gammaI is not correct!\n");
-        if(!EQL(delta_U2D2,1))  Error0("_gammaI is not correct!\n");
-        if(!EQL(delta_U2D0,0))  Error0("_gammaI is not correct!\n");
-        if(!EQL(delta_U1D0,0))  Error0("_gammaI is not correct!\n");
+        if(!EQL(delta_U1D1,1)||!isfinite(delta_U1D1))  Error0("_gammaI is not correct!\n");
+        if(!EQL(delta_U0D1,0)||!isfinite(delta_U0D1))  Error0("_gammaI is not correct!\n");
+        if(!EQL(delta_U0D2,0)||!isfinite(delta_U0D2))  Error0("_gammaI is not correct!\n");
+        if(!EQL(delta_U1D2,0)||!isfinite(delta_U1D2))  Error0("_gammaI is not correct!\n");
+        if(!EQL(delta_U0D0,1)||!isfinite(delta_U0D0))  Error0("_gammaI is not correct!\n");
+        if(!EQL(delta_U2D1,0)||!isfinite(delta_U2D1))  Error0("_gammaI is not correct!\n");
+        if(!EQL(delta_U2D2,1)||!isfinite(delta_U2D2))  Error0("_gammaI is not correct!\n");
+        if(!EQL(delta_U2D0,0)||!isfinite(delta_U2D0))  Error0("_gammaI is not correct!\n");
+        if(!EQL(delta_U1D0,0)||!isfinite(delta_U1D0))  Error0("_gammaI is not correct!\n");
 
       }
       
@@ -1117,7 +1124,7 @@ double bbn_KerrSchild_H(const double M_BH,const double rbar,const double a,const
 // i.e. out = (tB * tR)^-1 in = tR^-1 * tB ^-1 out.
 // Note: We need specific order for rotation of BH which is
 // out = Ry*Rz in.*/
-void bbn_boost_rotation_transform(Transformation_T *const tB,
+void bbn_transform_boost_rotation(Transformation_T *const tB,
                                   Transformation_T *const tR,
                                   const int IsInverse,
                                   const double in[4],
@@ -1187,7 +1194,7 @@ void bbn_boost_rotation_transform(Transformation_T *const tB,
 }
 
 /* populating tB(boost) and tR(rotation) for boost and rotation of BH. */
-void bbn_populate_tB_tR(Transformation_T *const tB,
+void bbn_transform_populate_boost_rotation(Transformation_T *const tB,
                         Transformation_T *const tR)
 {
   const double BH_center_x = Pgetd("BH_center_x");
