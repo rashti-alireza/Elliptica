@@ -1152,6 +1152,8 @@ void bbn_transform_populate_boost_rotation(Transformation_T *const tB,
   double phiy,phiz;
   double Bx,By,Bz;/* B = v/c */
   
+  assert(LSSEQL(chi,1));
+  
   /* boost */
   Bx = -Omega_BHNS*(BH_center_y-y_CM);
   By =  Omega_BHNS*(BH_center_x-x_CM);
