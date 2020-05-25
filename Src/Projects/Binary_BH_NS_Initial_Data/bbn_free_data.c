@@ -313,8 +313,6 @@ void bbn_free_conformal_metric_derivatives(Patch_T *const patch)
 /* populate conformal metric and its inverse */
 void bbn_free_data_gammas(Grid_T *const grid)
 {
-  Transformation_T *tB = initialize_transformation();
-  Transformation_T *tR = initialize_transformation();
   /* roll off distance at exp(-(r/r0)^4)  */
   const double r0          = Pgetd("BH_KerrSchild_RollOff");
   const double BH_center_x = Pgetd("BH_center_x");
@@ -322,16 +320,11 @@ void bbn_free_data_gammas(Grid_T *const grid)
   const double BH_center_z = Pgetd("BH_center_z");
   const double M_BH        = Pgetd("BH_irreducible_mass");
   const double a           = Pgetd("BH_net_spin");
-  const double a2          = Pow2(a);
   unsigned p;
   
-  /*notation:
-  // all of the variables with '_' prefix are in inetrial frame and
-  // all of the variables without '_' prefix, are in transformed frame. */
-  double H,k0,k1,k2,_k0,_k1,_k2,_kt;/* in ds^2 = (delta_ij+2*H*ki*kj)dx^i*dx^j */
-  double x,y,z,r,r2,_r,_r2,_x,_y,_z;
-  
   /* populate tB tR */
+  Transformation_T *tB = initialize_transformation();
+  Transformation_T *tR = initialize_transformation();
   bbn_transform_populate_boost_rotation(tB,tR);
   
   FOR_ALL_PATCHES(p,grid)
@@ -355,38 +348,13 @@ void bbn_free_data_gammas(Grid_T *const grid)
     
     for (ijk = 0; ijk < nn; ++ijk)
     {
+      double x,y,z,r,H,k0,k1,k2,kt;
+  
       x = patch->node[ijk]->x[0]-BH_center_x;
       y = patch->node[ijk]->x[1]-BH_center_y;
       z = patch->node[ijk]->x[2]-BH_center_z;
-      
-      double x_mu[4] = {0/* time component */,x,y,z};
-      double _x_mu[4];
-      
-      /* _x_mu = T^-1 x_mu */
-      bbn_transform_boost_rotation(tB,tR,1,x_mu,_x_mu);
-      
-      _x  = _x_mu[1];
-      _y  = _x_mu[2];
-      _z  = _x_mu[3];
-      _r  = bbn_KerrShcild_r(_x,_y,_z,a);
-      _r2 = Pow2(_r);
-      r2  = Pow2(x)+Pow2(y)+Pow2(z);
-      r   = sqrt(r2);
-      _k0 = (_r*_x+a*_y)/(_r2+a2);
-      _k1 = (_r*_y-a*_x)/(_r2+a2);
-      _k2 = _z/_r;
-      _kt = 1;
-      
-      double _k_mu[4] = {_kt,_k0,_k1,_k2};
-      double k_mu[4];/* Lorentz *k^mu */
-      
-      /* k_mu = T _k_mu */
-      bbn_transform_boost_rotation(tB,tR,0,_k_mu,k_mu);
-      
-      k0 = k_mu[1];
-      k1 = k_mu[2];
-      k2 = k_mu[3];
-      H  = bbn_KerrSchild_H(M_BH,_r,a,_z);
+      r = sqrt(Pow2(x)+Pow2(y)+Pow2(z));
+      bbn_transform_get_k_and_H_KerrSchild(x,y,z,a,M_BH,tB,tR,&kt,&k0,&k1,&k2,&H);
       
       double e = exp(-pow(r/r0,4));
       double C = 2.*H*e;
@@ -461,7 +429,6 @@ void bbn_free_data_gammas(Grid_T *const grid)
   }
   free_transformation(tB);
   free_transformation(tR);
-  
 }
 
 /* trace of Kerr Schild extrinsic curvature */
@@ -664,29 +631,18 @@ static void partial_derivative_KSBeta(Patch_T *const patch)
 /* populating Kerr Schild gammas , lapse and shift vector */
 static void populate_KSgammas_KSalpha_KSBeta(Patch_T *const patch)
 {
-  Transformation_T *t = initialize_transformation();
-  const double M_BH = Pgetd("BH_irreducible_mass");
-  const double a    = Pgetd("BH_chi_U2")*M_BH;
-  const double a2   = Pow2(a);
+  const double M_BH        = Pgetd("BH_irreducible_mass");
+  const double a           = Pgetd("BH_net_spin");
   const double BH_center_x = Pgetd("BH_center_x");
   const double BH_center_y = Pgetd("BH_center_y");
   const double BH_center_z = Pgetd("BH_center_z");
-  const double y_CM = Pgetd("y_CM");
-  const double x_CM = Pgetd("x_CM");
-  //const double C_BH = 0.5*Pgetd("BH_NS_separation");
-  const double Omega_BHNS = Pgetd("BH_NS_angular_velocity");
-  const unsigned nn = patch->nn;
+  const unsigned nn        = patch->nn;
   unsigned ijk;
-  double H,k0,k1,k2,kt;/* in ds^2 = (eta_ij+2*H*ki*kj)dx^i*dx^j */
-  double Bx,By,Bz;/* B = v/c */
-      
-  Bx = -Omega_BHNS*(BH_center_y-y_CM);
-  By =  Omega_BHNS*(BH_center_x-x_CM);
-  Bz = Pgetd("BH_Vz");
-  t->boost->Bx = Bx;
-  t->boost->By = By;
-  t->boost->Bz = Bz;
-  t->boost->B2 = Pow2(Bx)+Pow2(By)+Pow2(Bz);
+  
+  /* populate tB tR */
+  Transformation_T *tB = initialize_transformation();
+  Transformation_T *tR = initialize_transformation();
+  bbn_transform_populate_boost_rotation(tB,tR);
   
   /* add Kerr Schild gammas */
   ADD_FIELD(KSgamma_D2D2)
@@ -729,31 +685,13 @@ static void populate_KSgammas_KSalpha_KSBeta(Patch_T *const patch)
   
   for (ijk = 0; ijk < nn; ++ijk)
   {
-    double x = patch->node[ijk]->x[0]-BH_center_x;
-    double y = patch->node[ijk]->x[1]-BH_center_y;
-    double z = patch->node[ijk]->x[2]-BH_center_z;
-    double x_mu[4] = {0/* time component */,x,y,z};/* x^mu in boost coords */
-    double Lm1_x_mu[4];/* Lorentz^-1 x^mu, inverse boost */
-    t->boost->inverse = 1;
-    boost_transformation(t,x_mu,Lm1_x_mu);
-    double _x    = Lm1_x_mu[1];
-    double _y    = Lm1_x_mu[2];
-    double _z    = Lm1_x_mu[3];
-    double rbar  = bbn_KerrShcild_r(_x,_y,_z,a);
-    double rbar2 = Pow2(rbar);
-    double _k0 = (rbar*_x+a*_y)/(rbar2+a2);
-    double _k1 = (rbar*_y-a*_x)/(rbar2+a2);
-    double _k2 = _z/rbar;
-    double _kt = 1;
-    double _k_mu[4] = {_kt,_k0,_k1,_k2};
-    double L_k_mu[4];/* Lorentz *k^mu */
-    t->boost->inverse = 0;
-    boost_transformation(t,_k_mu,L_k_mu);
-    kt = L_k_mu[0];
-    k0 = L_k_mu[1];
-    k1 = L_k_mu[2];
-    k2 = L_k_mu[3];
-    H  = bbn_KerrSchild_H(M_BH,rbar,a,_z);
+    double x,y,z,H,k0,k1,k2,kt;
+ 
+    x = patch->node[ijk]->x[0]-BH_center_x;
+    y = patch->node[ijk]->x[1]-BH_center_y;
+    z = patch->node[ijk]->x[2]-BH_center_z;
+    
+    bbn_transform_get_k_and_H_KerrSchild(x,y,z,a,M_BH,tB,tR,&kt,&k0,&k1,&k2,&H);
     
     double C = 2.*H;
     double A = 1./(1+C*(Pow2(k0)+Pow2(k1)+Pow2(k2)));
@@ -778,7 +716,7 @@ static void populate_KSgammas_KSalpha_KSBeta(Patch_T *const patch)
     KSgammaI_U2U2[ijk] = A*(1+C*(Pow2(k0)+Pow2(k1)));
     
     /* quick test check KSgamma * KSgammaI = delta */
-    if (0)
+    if (1)
     {
         double delta_U0D0 = 
       KSgammaI_U0U0[ijk]*KSgamma_D0D0[ijk] + KSgammaI_U0U1[ijk]*
@@ -816,20 +754,21 @@ static void populate_KSgammas_KSalpha_KSBeta(Patch_T *const patch)
       KSgammaI_U0U2[ijk]*KSgamma_D0D1[ijk] + KSgammaI_U1U2[ijk]*
       KSgamma_D1D1[ijk] + KSgammaI_U2U2[ijk]*KSgamma_D1D2[ijk];
 
-      if(!EQL(delta_U1D1,1))  Error0("KSgammaI is not correct!\n");
-      if(!EQL(delta_U0D1,0))  Error0("KSgammaI is not correct!\n");
-      if(!EQL(delta_U0D2,0))  Error0("KSgammaI is not correct!\n");
-      if(!EQL(delta_U1D2,0))  Error0("KSgammaI is not correct!\n");
-      if(!EQL(delta_U0D0,1))  Error0("KSgammaI is not correct!\n");
-      if(!EQL(delta_U2D1,0))  Error0("KSgammaI is not correct!\n");
-      if(!EQL(delta_U2D2,1))  Error0("KSgammaI is not correct!\n");
-      if(!EQL(delta_U2D0,0))  Error0("KSgammaI is not correct!\n");
-      if(!EQL(delta_U1D0,0))  Error0("KSgammaI is not correct!\n");
+      if(!EQL(delta_U1D1,1)||!isfinite(delta_U1D1))  Error0("_gammaI is not correct!\n");
+      if(!EQL(delta_U0D1,0)||!isfinite(delta_U0D1))  Error0("_gammaI is not correct!\n");
+      if(!EQL(delta_U0D2,0)||!isfinite(delta_U0D2))  Error0("_gammaI is not correct!\n");
+      if(!EQL(delta_U1D2,0)||!isfinite(delta_U1D2))  Error0("_gammaI is not correct!\n");
+      if(!EQL(delta_U0D0,1)||!isfinite(delta_U0D0))  Error0("_gammaI is not correct!\n");
+      if(!EQL(delta_U2D1,0)||!isfinite(delta_U2D1))  Error0("_gammaI is not correct!\n");
+      if(!EQL(delta_U2D2,1)||!isfinite(delta_U2D2))  Error0("_gammaI is not correct!\n");
+      if(!EQL(delta_U2D0,0)||!isfinite(delta_U2D0))  Error0("_gammaI is not correct!\n");
+      if(!EQL(delta_U1D0,0)||!isfinite(delta_U1D0))  Error0("_gammaI is not correct!\n");
 
     }/* end of if(0 or 1) */
     
   }/* end of for (ijk = 0; ijk < nn; ++ijk) */
-  free_transformation(t);
+  free_transformation(tB);
+  free_transformation(tR);
 }
 
 /* populating Kerr Schild Chirstoffer symbols */
@@ -1230,6 +1169,55 @@ void bbn_transform_populate_boost_rotation(Transformation_T *const tB,
     tR->rotation->Rz = phiz;
   }
 } 
+
+/* given x,y,z and transformation info of non inertial frame, 
+// it gets the correspoinding k0,k1,k2 and H in Kerr-Schild context */
+void bbn_transform_get_k_and_H_KerrSchild(const double x,const double y,const double z,
+                                          const double a,const double M_BH,
+                                          Transformation_T *const tB,
+                                          Transformation_T *const tR,
+                                          double *const kt,double *const k0,
+                                          double *const k1,double *const k2,
+                                          double *const H)
+
+{
+  const double a2 = Pow2(a);
+  /*notation:
+  // all of the variables with '_' prefix are in inetrial frame and
+  // all of the variables without '_' prefix, are in transformed frame. */
+  double _k0,_k1,_k2,_kt;/* in ds^2 = (delta_ij+2*H*ki*kj)dx^i*dx^j */
+  double _r,_r2,_x,_y,_z;
+  double x_mu[4] = {0/* time component */,x,y,z};
+  double _x_mu[4];
+      
+  /* _x_mu = T^-1 x_mu */
+  bbn_transform_boost_rotation(tB,tR,1,x_mu,_x_mu);
+  
+  _x  = _x_mu[1];
+  _y  = _x_mu[2];
+  _z  = _x_mu[3];
+  _r  = bbn_KerrShcild_r(_x,_y,_z,a);
+  _r2 = Pow2(_r);
+  _k0 = (_r*_x+a*_y)/(_r2+a2);
+  _k1 = (_r*_y-a*_x)/(_r2+a2);
+  _k2 = _z/_r;
+  _kt = 1;
+  
+  double _k_mu[4] = {_kt,_k0,_k1,_k2};
+  double k_mu[4];/* Lorentz *k^mu */
+  
+  /* k_mu = T _k_mu */
+  bbn_transform_boost_rotation(tB,tR,0,_k_mu,k_mu);
+  
+  *kt = k_mu[0];
+  *k0 = k_mu[1];
+  *k1 = k_mu[2];
+  *k2 = k_mu[3];
+  *H  = bbn_KerrSchild_H(M_BH,_r,a,_z);
+}
+
+
+
 
 
 
