@@ -376,7 +376,7 @@ void bbn_free_data_gammas(Grid_T *const grid)
       _gammaI_U2U2[ijk] = A*(1+C*(Pow2(k0)+Pow2(k1)));
       
       /* quick test check _gamma * _gammaI = delta */
-      if (1)
+      if (0)
       {
           double delta_U0D0 = 
         _gammaI_U0U0[ijk]*_gamma_D0D0[ijk] + _gammaI_U0U1[ijk]*
@@ -718,7 +718,7 @@ static void populate_KSgammas_KSalpha_KSBeta(Patch_T *const patch)
     KSgammaI_U2U2[ijk] = A*(1+C*(Pow2(k0)+Pow2(k1)));
     
     /* quick test check KSgamma * KSgammaI = delta */
-    if (1)
+    if (0)
     {
         double delta_U0D0 = 
       KSgammaI_U0U0[ijk]*KSgamma_D0D0[ijk] + KSgammaI_U0U1[ijk]*
@@ -1063,7 +1063,7 @@ static double KerrSchild_H(const double M_BH,const double _r,const double a,cons
 /* transforming 4-vector 'in' to 'out' by the rotation tR 
 // followed by the boost tB, i.e. out = (tB * tR) in.
 // if IsInverse is 1 then it does inverse transformation,
-// i.e. out = (tB * tR)^-1 in = tR^-1 * tB ^-1 out.
+// i.e. out = (tB * tR)^-1 in = tR^-1 * tB ^-1 in.
 // Note: We need specific order for rotation of BH which is
 // out = Ry*Rz in.*/
 static void execute_boost_and_rotation(Transformation_T *const tB,

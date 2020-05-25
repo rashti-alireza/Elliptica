@@ -5047,7 +5047,7 @@ static void init_field_TOV_plus_KerrSchild(Grid_T *const grid,const TOV_T *const
     /* beta and alpha needed */
     for (ijk = 0; ijk < nn; ++ijk)
     {
-       double x,y,z,H,k0,k1,k2,kt;
+      double x,y,z,H,k0,k1,k2,kt;
       x = patch->node[ijk]->x[0]-BH_center_x;
       y = patch->node[ijk]->x[1]-BH_center_y;
       z = patch->node[ijk]->x[2]-BH_center_z;
