@@ -22,6 +22,8 @@ typedef struct TRANSFORMATION_T
     double Rx;/* Rx amount along x-axis */
     double Ry;/* Ry amount along y-axis */
     double Rz;/* Rz amount along z-axis */
+    int active;/* if 1 means active transformation, otherwise means
+               // passive transformation */
   }rotation[1];
 }Transformation_T;
 

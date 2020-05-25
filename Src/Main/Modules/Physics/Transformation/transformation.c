@@ -26,9 +26,12 @@
 //
 // ** R O T A T I O N **
 // ** populating **
-// T->rotation->Rx = phi0; => phi0 along x-axis
-// T->rotation->Ry = phi1; => phi1 along y-axis
-// T->rotation->Rz = phi2; => phi2 along z-axis
+// t->rotation->Rx = phi0; => phi0 along x-axis
+// t->rotation->Ry = phi1; => phi1 along y-axis
+// t->rotation->Rz = phi2; => phi2 along z-axis
+//
+// ** if you wanna active transformation, default is passive **
+// t->rotation->active = 1;
 //
 // ** transforming four vector u1 to u2 **
 // ** u2 = Rz(phi2)*Ry(phi1)*Rx(phi0) u1 **

@@ -1,0 +1,107 @@
+Dimension = 4;
+Point  =;
+C_arg1 =;
+
+`#include "transformation.h"`
+``
+`/* performing rotation transformation.`
+`// the given four-vector is in and its transformed is out.`
+`// note: x^mu = (ct,x,y,z) so 0-component is t. */`
+`void rotation_transformation(Transformation_T *const t,const double *const in,double *const out);`
+`void rotation_transformation(Transformation_T *const t,const double *const in,double *const out)`
+`{`
+`  const double s    = (t->rotation->active == 1) ? 1.: -1.;`
+`  const double phix = s*t->rotation->Rx;`
+`  const double phiy = s*t->rotation->Ry;`
+`  const double phiz = s*t->rotation->Rz;`
+`  const double v_U0 = in[0];`
+`  const double v_U1 = in[1];`
+`  const double v_U2 = in[2];`
+`  const double v_U3 = in[3];`
+
+# Rx(phix)
+`  const double Rx_D0D0 = 1;`
+`  const double Rx_D0D1 = 0;`
+`  const double Rx_D0D2 = 0;`
+`  const double Rx_D0D3 = 0;`
+
+`  const double Rx_D1D0 = 0;`
+`  const double Rx_D1D1 = 1;`
+`  const double Rx_D1D2 = 0;`
+`  const double Rx_D1D3 = 0;`
+
+`  const double Rx_D2D0 = 0;`
+`  const double Rx_D2D1 = 0;`
+`  const double Rx_D2D2 = cos(phix);`
+`  const double Rx_D2D3 = -sin(phix);`
+
+`  const double Rx_D3D0 = 0;`
+`  const double Rx_D3D1 = 0;`
+`  const double Rx_D3D2 = sin(phix);`
+`  const double Rx_D3D3 = cos(phix);`
+
+# Ry(phiy)
+`  const double Ry_D0D0 = 1;`
+`  const double Ry_D0D1 = 0;`
+`  const double Ry_D0D2 = 0;`
+`  const double Ry_D0D3 = 0;`
+
+`  const double Ry_D1D0 = 0;`
+`  const double Ry_D1D1 = cos(phiy);`
+`  const double Ry_D1D2 = 0;`
+`  const double Ry_D1D3 = sin(phiy);`
+
+`  const double Ry_D2D0 = 0;`
+`  const double Ry_D2D1 = 0;`
+`  const double Ry_D2D2 = 1;`
+`  const double Ry_D2D3 = 0;`
+
+`  const double Ry_D3D0 = 0;`
+`  const double Ry_D3D1 = -sin(phiy);`
+`  const double Ry_D3D2 = 0;`
+`  const double Ry_D3D3 = cos(phiy);`
+
+# Rz(phiz)
+`  const double Rz_D0D0 = 1;`
+`  const double Rz_D0D1 = 0;`
+`  const double Rz_D0D2 = 0;`
+`  const double Rz_D0D3 = 0;`
+
+`  const double Rz_D1D0 = 0;`
+`  const double Rz_D1D1 = cos(phiz);`
+`  const double Rz_D1D2 = -sin(phiz);`
+`  const double Rz_D1D3 = 0;`
+
+`  const double Rz_D2D0 = 0;`
+`  const double Rz_D2D1 = sin(phiz);`
+`  const double Rz_D2D2 = cos(phiz);`
+`  const double Rz_D2D3 = 0;`
+
+`  const double Rz_D3D0 = 0;`
+`  const double Rz_D3D1 = 0;`
+`  const double Rz_D3D2 = 0;`
+`  const double Rz_D3D3 = 1;`
+
+Declare = 
+{
+ # Rotation matrix
+ (obj = Field,name = Rx, rank = DD,none,C_arg1);
+ (obj = Field,name = Ry, rank = DD,none,C_arg1);
+ (obj = Field,name = Rz, rank = DD,none,C_arg1);
+
+ # four vector
+ (obj = Field,name = v, rank = U,none,C_arg1);
+}
+
+`/* multiply */`
+u0(i) = Rx(i,j)*v(-j);
+u1(i) = Ry(i,j)*u0(-j);
+u(i)  = Rz(i,j)*u1(-j);
+
+`  out[0] = u_U0;`
+`  out[1] = u_U1;`
+`  out[2] = u_U2;`
+`  out[3] = u_U3;`
+
+`}`
+
