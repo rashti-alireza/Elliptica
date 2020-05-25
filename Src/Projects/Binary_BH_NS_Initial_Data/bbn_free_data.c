@@ -1028,22 +1028,22 @@ dKSgamma_D0D2D1[ijk] - dKSgamma_D1D2D0[ijk]);
 }
 
 /* ->return value: r funciont in Kerr-Schild coords */
-double bbn_KerrSchild_r(const double x,const double y,const double z,const double a)
+static double KerrSchild_r(const double _x,const double _y,const double _z,const double a)
 {
-  const double r2 = Pow2(x)+Pow2(y)+Pow2(z);
+  const double r2 = Pow2(_x)+Pow2(_y)+Pow2(_z);
   const double a2 = Pow2(a);
   
-  return sqrt(0.5*(r2-a2+sqrt(Pow2(r2-a2)+4*a2*Pow2(z))));
+  return sqrt(0.5*(r2-a2+sqrt(Pow2(r2-a2)+4*a2*Pow2(_z))));
 }
 
 /* ->return value: H function in Kerr-Schild coords */
-double bbn_KerrSchild_H(const double M_BH,const double rbar,const double a,const double z)
+static double KerrSchild_H(const double M_BH,const double _r,const double a,const double _z)
 {
   /* double lambda      = 0; */
-  const double lambda= 1.;
-  const double k2    = z/rbar;
-  const double a2    = Pow2(a);
-  const double rbar2 = Pow2(rbar);
+  const double lambda = 1.;
+  const double _k2    = _z/_r;
+  const double a2     = Pow2(a);
+  const double _r2    = Pow2(_r);
   
   /* which metric specified
     if (Pcmps("BH_NS_free_data_metric","conformally_flat_metric"))
@@ -1057,7 +1057,7 @@ double bbn_KerrSchild_H(const double M_BH,const double rbar,const double a,const
     else
       Error0(NO_OPTION);
   */
-  return lambda*M_BH*rbar/(rbar2+a2*Pow2(k2));
+  return lambda*M_BH*_r/(_r2+a2*Pow2(_k2));
 }
 
 /* transforming 4-vector 'in' to 'out' by the rotation tR 
@@ -1199,7 +1199,7 @@ void bbn_transform_get_k_and_H_KerrSchild(const double x,const double y,const do
   _x  = _x_mu[1];
   _y  = _x_mu[2];
   _z  = _x_mu[3];
-  _r  = bbn_KerrSchild_r(_x,_y,_z,a);
+  _r  = KerrSchild_r(_x,_y,_z,a);
   _r2 = Pow2(_r);
   _k0 = (_r*_x+a*_y)/(_r2+a2);
   _k1 = (_r*_y-a*_x)/(_r2+a2);
@@ -1216,7 +1216,7 @@ void bbn_transform_get_k_and_H_KerrSchild(const double x,const double y,const do
   *k0 = k_mu[1];
   *k1 = k_mu[2];
   *k2 = k_mu[3];
-  *H  = bbn_KerrSchild_H(M_BH,_r,a,_z);
+  *H  = KerrSchild_H(M_BH,_r,a,_z);
 }
 
 
