@@ -1117,3 +1117,66 @@ double bbn_KerrSchild_H(const double M_BH,const double rbar,const double a,const
 
   return lambda*M_BH*rbar/(rbar2+a2*Pow2(k2));
 }
+
+/* transforming 4-vector 'in' to 'out' by the rotation tR 
+// followed by the boost tB, i.e. in = (tB * tR) out.
+// if IsInverse is 1 then it does inverse transformation,
+// i.e. in = (tB * tR)^-1 out = tR^-1 * tB ^-1 out */
+void bbn_boost_rotation_transform(Transformation_T *const tB,
+                                  Transformation_T *const tR,
+                                  const int IsInverse,
+                                  const double in[4],
+                                  double out[4])
+{
+  
+  if (IsInverse)
+  {
+    double outB[4] ={0};
+    double outRz[4]={0};
+    double outRy[4]={0};
+    
+    /* inverse */
+    tB->boost->Bx *= -1.;
+    tB->boost->By *= -1.;
+    tB->boost->Bz *= -1.;
+    /* first boost transform */
+    boost_transformation(tB,in,outB);
+    /* bring back */
+    tB->boost->Bx *= -1.;
+    tB->boost->By *= -1.;
+    tB->boost->Bz *= -1.;
+    
+    /* second rotation transfrom, the default oreder is RzRyRx,
+    // thus, the inverse is Rx^-1 Ry^-1 Rz^-1. */
+    Transformation_T *tIR = initialize_transformation();
+    tIR->rotation->active = tR->rotation->active;
+    
+    tIR->rotation->Rx = 0;
+    tIR->rotation->Ry = 0;
+    tIR->rotation->Rz = -tR->rotation->Rz;
+    rotation_transformation(tIR,outB,outRz);
+    
+    tIR->rotation->Rx = 0;
+    tIR->rotation->Ry = -tR->rotation->Ry;
+    tIR->rotation->Rz = 0;
+    rotation_transformation(tIR,outRz,outRy);
+    
+    tIR->rotation->Rx = -tR->rotation->Rx;
+    tIR->rotation->Ry = 0;
+    tIR->rotation->Rz = 0;
+    rotation_transformation(tIR,outRy,out);
+    
+    free_transformation(tIR);
+  }
+  else
+  {
+    double outR[4]={0};
+    rotation_transformation(tR,in,outR);
+    boost_transformation(tB,outR,out);
+  }
+}
+
+
+
+
+

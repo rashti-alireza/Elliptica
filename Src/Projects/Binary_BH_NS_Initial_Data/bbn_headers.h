@@ -139,6 +139,7 @@ void bbn_Rc_NS(double Rc[3],Grid_T *const grid);
 void bbn_Rc_BH(double Rc[3],Grid_T *const grid);
 void bbn_define_spin_JRP(double S[3],Grid_T *const grid,const char *const kind);
 double bbn_BH_ADM_mass(Observable_T *const obs);
+void bbn_boost_rotation_transform(Transformation_T *const tB,Transformation_T *const tR,const int IsInverse,const double in[4],double out[4]);
 
 #endif
 
