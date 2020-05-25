@@ -35,7 +35,6 @@ BH_NS_infall_velocity  = 0
 
 #### initialization:
 BH_NS_initialization   = TOV_KerrSchild
-BH_NS_free_data_metric = boosted_KerrSchild_metric
 
 #-----------------------------------------------------------------------#
 # Adjustments and Tunings:                                              #

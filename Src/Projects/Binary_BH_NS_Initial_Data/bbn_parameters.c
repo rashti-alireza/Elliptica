@@ -85,4 +85,12 @@ void bbn_set_default_parameters(void)
   
   /* relative tolerance(error) for BH's mass */
   Pset_default("BH_mass_tolerance","0.1");
+  
+  /* type of free data for BH
+  // options:
+  // 1. boosted_KerrSchild_metric
+  // 2. conformally_flat_metric => this option is not complete.
+  */
+  Pset_default("BH_NS_free_data_metric","boosted_KerrSchild_metric");
+  
 }
