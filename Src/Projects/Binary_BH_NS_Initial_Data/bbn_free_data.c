@@ -1076,7 +1076,7 @@ static void execute_boost_and_rotation(Transformation_T *const tB,
   if (IsInverse)
   {
     double outB[4] ={0};
-    double outRy[4]={0};
+    double outRz[4]={0};
     
     /* inverse */
     tB->boost->Bx *= -1.;
@@ -1089,21 +1089,23 @@ static void execute_boost_and_rotation(Transformation_T *const tB,
     tB->boost->By *= -1.;
     tB->boost->Bz *= -1.;
     
-    /* second rotation transfrom, the oreder used was RyRz,
-    // thus, the inverse is Rz^-1 Ry^-1 */
+    /* second rotation transfrom, the oreder used was RzRy,
+    // thus, the inverse is Ry^-1 Rz^-1 */
     Transformation_T *tIR = initialize_transformation();
     tIR->rotation->active = tR->rotation->active;
     assert(EQL(tR->rotation->Rx,0));
     
-    tIR->rotation->Rx = 0;
-    tIR->rotation->Ry = -tR->rotation->Ry;
-    tIR->rotation->Rz = 0;
-    rotation_transformation(tIR,outB,outRy);
-    
+    /* Rz^-1 */
     tIR->rotation->Rx = 0;
     tIR->rotation->Ry = 0;
     tIR->rotation->Rz = -tR->rotation->Rz;
-    rotation_transformation(tIR,outRy,out);
+    rotation_transformation(tIR,outB,outRz);
+    
+    /* Ry^-1 */
+    tIR->rotation->Rx = 0;
+    tIR->rotation->Ry = -tR->rotation->Ry;
+    tIR->rotation->Rz = 0;
+    rotation_transformation(tIR,outRz,out);
     
     free_transformation(tIR);
   }
@@ -1112,26 +1114,27 @@ static void execute_boost_and_rotation(Transformation_T *const tB,
     double outRz[4]={0};
     double outRy[4]={0};
     
-    /* rotation: out = Ry Rz in */
+    /* rotation: out = Rz Ry in */
     Transformation_T *tIR = initialize_transformation();
     tIR->rotation->active = tR->rotation->active;
     assert(EQL(tR->rotation->Rx,0));
-    /* Rz */
-    tIR->rotation->Rx = 0;
-    tIR->rotation->Ry = 0;
-    tIR->rotation->Rz = tR->rotation->Rz;
-    rotation_transformation(tIR,in,outRz);
     
     /* Ry */
     tIR->rotation->Rx = 0;
     tIR->rotation->Ry = tR->rotation->Ry;
     tIR->rotation->Rz = 0;
-    rotation_transformation(tIR,outRz,outRy);
+    rotation_transformation(tIR,in,outRy);
+    
+    /* Rz */
+    tIR->rotation->Rx = 0;
+    tIR->rotation->Ry = 0;
+    tIR->rotation->Rz = tR->rotation->Rz;
+    rotation_transformation(tIR,outRy,outRz);
     
     free_transformation(tIR);
     
     /* boost */
-    boost_transformation(tB,outRy,out);
+    boost_transformation(tB,outRz,out);
   }
 }
 
@@ -1166,8 +1169,8 @@ void bbn_transform_populate_boost_rotation(Transformation_T *const tB,
   /* rotation */
   if (!EQL(chi,0))/* otherwise tR is 0 */
   {
-    phiz = arctan(chi_U1,chi_U0);
-    phiy = acos(chi_U2/chi);
+    phiz = -arctan(chi_U1,chi_U0);
+    phiy = -acos(chi_U2/chi);
     assert(isfinite(phiy));
     tR->rotation->Rx = 0;
     tR->rotation->Ry = phiy;
