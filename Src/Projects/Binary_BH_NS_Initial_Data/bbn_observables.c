@@ -1045,6 +1045,38 @@ void bbn_free_obs_CS(Observable_T *obs)
         DECLARE_FIELD(ADM_integrand_G_U2);
         REMOVE_FIELD(ADM_integrand_G_U2);
       }
+      
+      if (_Ind("ADM_integrand_xiP_D0") >= 0)
+      {
+        DECLARE_FIELD(ADM_integrand_xiP_D0);
+        REMOVE_FIELD(ADM_integrand_xiP_D0);
+      }
+      if (_Ind("ADM_integrand_xiP_D2") >= 0)
+      {
+        DECLARE_FIELD(ADM_integrand_xiP_D2);
+        REMOVE_FIELD(ADM_integrand_xiP_D2);
+      }
+      if (_Ind("ADM_integrand_xiP_D1") >= 0)
+      {
+        DECLARE_FIELD(ADM_integrand_xiP_D1);
+        REMOVE_FIELD(ADM_integrand_xiP_D1);
+      }
+      
+      if (_Ind("ADM_integrand_xiG_D0") >= 0)
+      {
+        DECLARE_FIELD(ADM_integrand_xiG_D0);
+        REMOVE_FIELD(ADM_integrand_xiG_D0);
+      }
+      if (_Ind("ADM_integrand_xiG_D2") >= 0)
+      {
+        DECLARE_FIELD(ADM_integrand_xiG_D2);
+        REMOVE_FIELD(ADM_integrand_xiG_D2);
+      }
+      if (_Ind("ADM_integrand_xiG_D1") >= 0)
+      {
+        DECLARE_FIELD(ADM_integrand_xiG_D1);
+        REMOVE_FIELD(ADM_integrand_xiG_D1);
+      }
     }
     _free(adm[i]->g00);
     _free(adm[i]->g01);
@@ -1277,19 +1309,9 @@ static double ADM_angular_momentum_z_BBN_CS(Observable_T *const obs)
   double Jz = 0;
   struct items_S **const adm = obs->items;
   const unsigned N = obs->Nitems;
-  double y_CM = 0;
-  double x_CM = 0;
   Integration_T *I;
   unsigned p;
   assert(N);
-  
-  //populate_ADM_momentums_integrand_PdS_GdV(obs);
-  
-  if (get_parameter("y_CM"))
-    y_CM = Pgetd("y_CM");
-    
-  if (get_parameter("x_CM"))
-    x_CM = Pgetd("x_CM");
   
   /* surface integration */
   for(p = 0; p < N; ++p)
@@ -1298,23 +1320,7 @@ static double ADM_angular_momentum_z_BBN_CS(Observable_T *const obs)
       continue;
     
     Patch_T *patch = adm[p]->patch;
-    unsigned nn = patch->nn;
-    unsigned ijk;
-    
-    Field_T *Py = patch->pool[Ind("ADM_integrand_P_U1")];
-    Field_T *Px = patch->pool[Ind("ADM_integrand_P_U0")];
-    ADD_AND_ALLOC_FIELD(xPy_adm_integrand);
-    ADD_AND_ALLOC_FIELD(yPx_adm_integrand);
-    DECLARE_FIELD(xPy_adm_integrand);
-    DECLARE_FIELD(yPx_adm_integrand);
-    
-    for (ijk = 0; ijk < nn; ++ijk)
-    {
-      double x = patch->node[ijk]->x[0]-x_CM;
-      double y = patch->node[ijk]->x[1]-y_CM;
-      xPy_adm_integrand->v[ijk] = x*Py->v[ijk];
-      yPx_adm_integrand->v[ijk] = y*Px->v[ijk];
-    }
+    Field_T *xiPz = patch->pool[Ind("ADM_integrand_xiP_D2")];
     
     I  = init_integration();
     I->type = "Integral{f(x)dS},Spectral";
@@ -1332,17 +1338,11 @@ static double ADM_angular_momentum_z_BBN_CS(Observable_T *const obs)
     I->Spectral->J         = adm[p]->J;
     I->Spectral->K         = adm[p]->K;
         
-    I->Spectral->f = xPy_adm_integrand;
+    I->Spectral->f = xiPz;
     plan_integration(I);
     Jz += execute_integration(I);
     
-    I->Spectral->f = yPx_adm_integrand;
-    plan_integration(I);
-    Jz -= execute_integration(I);
-    
     free_integration(I);
-    REMOVE_FIELD(xPy_adm_integrand);
-    REMOVE_FIELD(yPx_adm_integrand);
   }
   
   /* volume integration */
@@ -1353,23 +1353,7 @@ static double ADM_angular_momentum_z_BBN_CS(Observable_T *const obs)
       continue;
 
     Patch_T *patch = adm[p]->patch;
-    unsigned nn = patch->nn;
-    unsigned ijk;
-    
-    Field_T *Gy = patch->pool[Ind("ADM_integrand_G_U1")];
-    Field_T *Gx = patch->pool[Ind("ADM_integrand_G_U0")];
-    ADD_AND_ALLOC_FIELD(xGy_adm_integrand);
-    ADD_AND_ALLOC_FIELD(yGx_adm_integrand);
-    DECLARE_FIELD(xGy_adm_integrand);
-    DECLARE_FIELD(yGx_adm_integrand);
-    
-    for (ijk = 0; ijk < nn; ++ijk)
-    {
-      double x = patch->node[ijk]->x[0]-x_CM;
-      double y = patch->node[ijk]->x[1]-y_CM;
-      xGy_adm_integrand->v[ijk] = x*Gy->v[ijk];
-      yGx_adm_integrand->v[ijk] = y*Gx->v[ijk];
-    }
+    Field_T *xiGz = patch->pool[Ind("ADM_integrand_xiG_D2")];
     
     I  = init_integration();
     I->type = "Integral{f(x)dV},Spectral";
@@ -1380,17 +1364,11 @@ static double ADM_angular_momentum_z_BBN_CS(Observable_T *const obs)
     I->g12 = adm[p]->g12;
     I->g22 = adm[p]->g22;
     
-    I->Spectral->f = xGy_adm_integrand;
+    I->Spectral->f = xiGz;
     plan_integration(I);
     Jz -= execute_integration(I);
     
-    I->Spectral->f = yGx_adm_integrand;
-    plan_integration(I);
-    Jz += execute_integration(I);
-    
     free_integration(I);
-    REMOVE_FIELD(xGy_adm_integrand);
-    REMOVE_FIELD(yGx_adm_integrand);
   }
   
   Jz /= (8*M_PI);
@@ -1403,16 +1381,10 @@ static double ADM_angular_momentum_x_BBN_CS(Observable_T *const obs)
   double Jx = 0;
   struct items_S **const adm = obs->items;
   const unsigned N = obs->Nitems;
-  double y_CM = 0;
   Integration_T *I;
   unsigned p;
   assert(N);
   
-  //populate_ADM_momentums_integrand_PdS_GdV(obs);
-  
-  if (get_parameter("y_CM"))
-    y_CM = Pgetd("y_CM");
-    
   /* surface integration */
   for(p = 0; p < N; ++p)
   {
@@ -1420,24 +1392,7 @@ static double ADM_angular_momentum_x_BBN_CS(Observable_T *const obs)
       continue;
    
     Patch_T *patch = adm[p]->patch;
-    unsigned nn = patch->nn;
-    unsigned ijk;
-    
-    Field_T *Py = patch->pool[Ind("ADM_integrand_P_U1")];
-    Field_T *Pz = patch->pool[Ind("ADM_integrand_P_U2")];
-    
-    ADD_AND_ALLOC_FIELD(zPy_adm_integrand);
-    ADD_AND_ALLOC_FIELD(yPz_adm_integrand);
-    DECLARE_FIELD(zPy_adm_integrand);
-    DECLARE_FIELD(yPz_adm_integrand);
-    
-    for (ijk = 0; ijk < nn; ++ijk)
-    {
-      double z = patch->node[ijk]->x[2];
-      double y = patch->node[ijk]->x[1]-y_CM;
-      zPy_adm_integrand->v[ijk] = z*Py->v[ijk];
-      yPz_adm_integrand->v[ijk] = y*Pz->v[ijk];
-    }
+    Field_T *xiPx = patch->pool[Ind("ADM_integrand_xiP_D0")];
     
     I  = init_integration();
     I->type = "Integral{f(x)dS},Spectral";
@@ -1454,18 +1409,11 @@ static double ADM_angular_momentum_x_BBN_CS(Observable_T *const obs)
     I->Spectral->J         = adm[p]->J;
     I->Spectral->K         = adm[p]->K;
     
-    
-    I->Spectral->f = zPy_adm_integrand;
-    plan_integration(I);
-    Jx -= execute_integration(I);
-    
-    I->Spectral->f = yPz_adm_integrand;
+    I->Spectral->f = xiPx;
     plan_integration(I);
     Jx += execute_integration(I);
     
     free_integration(I);
-    REMOVE_FIELD(zPy_adm_integrand);
-    REMOVE_FIELD(yPz_adm_integrand);
   }
   
   /* volume integration */
@@ -1476,23 +1424,7 @@ static double ADM_angular_momentum_x_BBN_CS(Observable_T *const obs)
       continue;
    
     Patch_T *patch = adm[p]->patch;
-    unsigned nn = patch->nn;
-    unsigned ijk;
-    
-    Field_T *Gy = patch->pool[Ind("ADM_integrand_G_U1")];
-    Field_T *Gz = patch->pool[Ind("ADM_integrand_G_U2")];
-    ADD_AND_ALLOC_FIELD(zGy_adm_integrand);
-    ADD_AND_ALLOC_FIELD(yGz_adm_integrand);
-    DECLARE_FIELD(zGy_adm_integrand);
-    DECLARE_FIELD(yGz_adm_integrand);
-    
-    for (ijk = 0; ijk < nn; ++ijk)
-    {
-      double z = patch->node[ijk]->x[2];
-      double y = patch->node[ijk]->x[1]-y_CM;
-      zGy_adm_integrand->v[ijk] = z*Gy->v[ijk];
-      yGz_adm_integrand->v[ijk] = y*Gz->v[ijk];
-    }
+    Field_T *xiGx = patch->pool[Ind("ADM_integrand_xiG_D0")];
     
     I  = init_integration();
     I->type = "Integral{f(x)dV},Spectral";
@@ -1503,17 +1435,11 @@ static double ADM_angular_momentum_x_BBN_CS(Observable_T *const obs)
     I->g12 = adm[p]->g12;
     I->g22 = adm[p]->g22;
     
-    I->Spectral->f = zGy_adm_integrand;
-    plan_integration(I);
-    Jx += execute_integration(I);
-    
-    I->Spectral->f = yGz_adm_integrand;
+    I->Spectral->f = xiGx;
     plan_integration(I);
     Jx -= execute_integration(I);
     
     free_integration(I);
-    REMOVE_FIELD(zGy_adm_integrand);
-    REMOVE_FIELD(yGz_adm_integrand);
   }
   
   Jx /= (8*M_PI);
@@ -1526,16 +1452,10 @@ static double ADM_angular_momentum_y_BBN_CS(Observable_T *const obs)
   double Jy = 0;
   struct items_S **const adm = obs->items;
   const unsigned N = obs->Nitems;
-  double x_CM = 0;
   Integration_T *I;
   unsigned p;
   assert(N);
   
-  //populate_ADM_momentums_integrand_PdS_GdV(obs);
-  
-  if (get_parameter("x_CM"))
-    x_CM = Pgetd("x_CM");
-    
   /* surface integration */
   for(p = 0; p < N; ++p)
   {
@@ -1543,23 +1463,7 @@ static double ADM_angular_momentum_y_BBN_CS(Observable_T *const obs)
       continue;
     
     Patch_T *patch = adm[p]->patch;
-    unsigned nn = patch->nn;
-    unsigned ijk;
-    
-    Field_T *Px = patch->pool[Ind("ADM_integrand_P_U0")];
-    Field_T *Pz = patch->pool[Ind("ADM_integrand_P_U2")];
-    ADD_AND_ALLOC_FIELD(zPx_adm_integrand);
-    ADD_AND_ALLOC_FIELD(xPz_adm_integrand);
-    DECLARE_FIELD(zPx_adm_integrand);
-    DECLARE_FIELD(xPz_adm_integrand);
-    
-    for (ijk = 0; ijk < nn; ++ijk)
-    {
-      double z = patch->node[ijk]->x[2];
-      double x = patch->node[ijk]->x[0]-x_CM;
-      zPx_adm_integrand->v[ijk] = z*Px->v[ijk];
-      xPz_adm_integrand->v[ijk] = x*Pz->v[ijk];
-    }
+    Field_T *xiPy = patch->pool[Ind("ADM_integrand_xiP_D1")];
     
     I  = init_integration();
     I->type = "Integral{f(x)dS},Spectral";
@@ -1577,17 +1481,11 @@ static double ADM_angular_momentum_y_BBN_CS(Observable_T *const obs)
     I->Spectral->J         = adm[p]->J;
     I->Spectral->K         = adm[p]->K;
         
-    I->Spectral->f = zPx_adm_integrand;
+    I->Spectral->f = xiPy;
     plan_integration(I);
     Jy += execute_integration(I);
     
-    I->Spectral->f = xPz_adm_integrand;
-    plan_integration(I);
-    Jy -= execute_integration(I);
-    
     free_integration(I);
-    REMOVE_FIELD(zPx_adm_integrand);
-    REMOVE_FIELD(xPz_adm_integrand);
   }
   
   /* volume integration */
@@ -1598,23 +1496,7 @@ static double ADM_angular_momentum_y_BBN_CS(Observable_T *const obs)
       continue;
    
     Patch_T *patch = adm[p]->patch;
-    unsigned nn = patch->nn;
-    unsigned ijk;
-    
-    Field_T *Gx = patch->pool[Ind("ADM_integrand_G_U0")];
-    Field_T *Gz = patch->pool[Ind("ADM_integrand_G_U2")];
-    ADD_AND_ALLOC_FIELD(zGx_adm_integrand);
-    ADD_AND_ALLOC_FIELD(xGz_adm_integrand);
-    DECLARE_FIELD(zGx_adm_integrand);
-    DECLARE_FIELD(xGz_adm_integrand);
-    
-    for (ijk = 0; ijk < nn; ++ijk)
-    {
-      double z = patch->node[ijk]->x[2];
-      double x = patch->node[ijk]->x[0]-x_CM;
-      zGx_adm_integrand->v[ijk] = z*Gx->v[ijk];
-      xGz_adm_integrand->v[ijk] = x*Gz->v[ijk];
-    }
+    Field_T *xiGy = patch->pool[Ind("ADM_integrand_xiG_D1")];
     
     I  = init_integration();
     I->type = "Integral{f(x)dV},Spectral";
@@ -1625,17 +1507,11 @@ static double ADM_angular_momentum_y_BBN_CS(Observable_T *const obs)
     I->g12 = adm[p]->g12;
     I->g22 = adm[p]->g22;
     
-    I->Spectral->f = zGx_adm_integrand;
+    I->Spectral->f = xiGy;
     plan_integration(I);
     Jy -= execute_integration(I);
     
-    I->Spectral->f = xGz_adm_integrand;
-    plan_integration(I);
-    Jy += execute_integration(I);
-    
     free_integration(I);
-    REMOVE_FIELD(zGx_adm_integrand);
-    REMOVE_FIELD(xGz_adm_integrand);
   }
   
   Jy /= (8*M_PI);
