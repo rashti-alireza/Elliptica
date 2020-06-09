@@ -10,6 +10,7 @@ Point = ijk;
 
 C_macro  = READ_v(name);
 C_macro2 = add_and_get_field(name);
+C_macro3 = declare_and_alloc_xi(name);
 
 `#include "core_lib.h"`
 `#include "physics_observables_lib.h"`
@@ -19,6 +20,9 @@ C_macro2 = add_and_get_field(name);
 `#include "maths_calculus_lib.h"`
 `#include "fields_lib.h"`
 `#include "bbn_headers.h"`
+``
+`#define declare_and_alloc_xi(name) \`
+	`  double *name = alloc_double(nn);`
 ``
 `#define add_and_get_field(name) \`
          `  if (_Ind(#name) >= 0)\`# means if it exists already
@@ -31,12 +35,17 @@ C_macro2 = add_and_get_field(name);
 `{`
 `  struct items_S **adm = obs->items;`
 `  const unsigned N = obs->Nitems;`
+`  const double x_cm = Pgetd("x_CM");`
+`  const double y_cm = Pgetd("y_CM");`
+`  const double z_cm = 0;`
 `  const double CUTOFF = 1E3;`
 `  unsigned p;`
 ``
 `  for(p = 0; p < N; ++p)`
 `  {`
 `  Patch_T *patch = adm[p]->patch;`
+`  unsigned nn = patch->nn;`
+`  unsigned ijk;`
 
 Declare = 
 {
@@ -70,6 +79,19 @@ Declare =
  # integrand G
  (obj = Field,name = ADM_integrand_G, rank = U, C_macro2);
 
+ # integrand xiP
+ (obj = Field,name = ADM_integrand_xiP, rank = D, C_macro2);
+
+ # integrand xiG
+ (obj = Field,name = ADM_integrand_xiG, rank = D, C_macro2);
+
+ # xi0
+ (obj = Field,name = xi0, rank = U, C_macro3);
+ # xi1
+ (obj = Field,name = xi1, rank = U, C_macro3);
+ # xi2
+ (obj = Field,name = xi2, rank = U, C_macro3);
+
  # attenuation factor
  (obj = variable,name = att, none);
 }
@@ -79,9 +101,25 @@ Symm[_gammaI(i,j)  = _gammaI(j,i)];
 Symm[_gamma(i,j)   = _gamma(j,i)];
 Symm[_Gamma(i,j,k) = _Gamma(i,k,j)];
 
-`    unsigned nn = patch->nn;`
-`    unsigned ijk;`
 ``
+`   for(ijk = 0; ijk < nn; ++ijk)`
+`   {`
+`   double x    = patch->node[ijk]->x[0];`
+`   double y    = patch->node[ijk]->x[1];`
+`   double z    = patch->node[ijk]->x[2];`
+
+`   xi0_U0[ijk] = 0;`
+`   xi0_U1[ijk] = -(z-z_cm);`
+`   xi0_U2[ijk] = y-y_cm;`
+
+`   xi1_U0[ijk] = z-z_cm;`
+`   xi1_U1[ijk] = 0;`
+`   xi1_U2[ijk] = -(x-x_cm);`
+
+`   xi2_U0[ijk] = -(y-y_cm);`
+`   xi2_U1[ijk] = (x-x_cm);`
+`   xi2_U2[ijk] = 0;`
+`   }`
 # populating the integrands:
 
 # if we needs surface integral too.
@@ -99,7 +137,15 @@ Symm[_Gamma(i,j,k) = _Gamma(i,k,j)];
 #       G2(i)  = -2*_gamma(-j,-k)*P(j,k)*_gammaI(i,l)*dpsi(-l)/psi;
 #       G(i)   = G1(i)+G2(i);
        Pn(i)  = P(i,j)*n(k)*_gamma(-j,-k)*psi4;
+       xi0P = psi4*_gamma(-i,-j)*xi0(i)*Pn(j);
+       xi1P = psi4*_gamma(-i,-j)*xi1(i)*Pn(j);
+       xi2P = psi4*_gamma(-i,-j)*xi2(i)*Pn(j);
+
        Cpopulate[ADM_integrand_P = Pn];
+`      ADM_integrand_xiP_D0[ijk] = xi0P;`
+`      ADM_integrand_xiP_D1[ijk] = xi1P;`
+`      ADM_integrand_xiP_D2[ijk] = xi2P;`
+
 #       Cpopulate[ADM_integrand_G = G];
 `      }`
 `    }`
@@ -115,13 +161,33 @@ Symm[_Gamma(i,j,k) = _Gamma(i,k,j)];
 `      DEF_RELATIVE_r`
 `      double att = r > CUTOFF ? 0:1;`
        psi6_   = psi**(6);
+       psi4_   = psi**(4);
        P_(i,j) = _A_UiUj(i,j)-(2/3)*K*psi6_*_gammaI(i,j);
        G1(i)  = _Gamma(i,j,k)*P_(-j,-k) + _Gamma(j,jp,k)*KD(-j,-jp)*P_(i,-k);
        G2(i)  = -2*_gamma(-j,-k)*P_(j,k)*_gammaI(i,l)*dpsi(-l)/psi;
        G(i)   = att*(G1(i)+G2(i));
+       xi0G = psi4_*_gamma(-i,-j)*xi0(i)*G(j);
+       xi1G = psi4_*_gamma(-i,-j)*xi1(i)*G(j);
+       xi2G = psi4_*_gamma(-i,-j)*xi2(i)*G(j);
+`      ADM_integrand_xiG_D0[ijk] = xi0G;`
+`      ADM_integrand_xiG_D1[ijk] = xi1G;`
+`      ADM_integrand_xiG_D2[ijk] = xi2G;`
+
        Cpopulate[ADM_integrand_G = G];
 `      }`
 `    }`
+``
+`  free(xi0_U0);`
+`  free(xi0_U1);`
+`  free(xi0_U2);`
+
+`  free(xi1_U0);`
+`  free(xi1_U1);`
+`  free(xi1_U2);`
+
+`  free(xi2_U0);`
+`  free(xi2_U1);`
+`  free(xi2_U2);`
 ``
 `  }`# end of for(p = 0; p < N; ++p)
 
