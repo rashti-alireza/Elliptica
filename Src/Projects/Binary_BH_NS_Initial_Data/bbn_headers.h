@@ -136,9 +136,11 @@ void bbn_measures(Grid_T *const grid);
 void bbn_Rc_NS(double Rc[3],Grid_T *const grid);
 void bbn_Rc_BH(double Rc[3],Grid_T *const grid);
 void bbn_define_spin_JRP(double S[3],Grid_T *const grid,const char *const kind);
+void bbn_define_spin_integral(double S[3],Grid_T *const grid,const char *const kind);
 double bbn_BH_ADM_mass(Observable_T *const obs);
 void bbn_transform_populate_boost_rotation(Transformation_T *const tB,Transformation_T *const tR);
 void bbn_transform_get_k_and_H_KerrSchild(const double x,const double y,const double z,const double a,const double m,Transformation_T *const tB,Transformation_T *const tR,double *const kt,double *const k0,double *const k1,double *const k2,double *const H);
+void bbn_populate_spin_integrands_Campanelli(Patch_T *const patch,const double xc[3],const double *const normal[3]);
 
 #endif
 
