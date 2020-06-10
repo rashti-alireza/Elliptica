@@ -1517,3 +1517,174 @@ static double ADM_angular_momentum_y_BBN_CS(Observable_T *const obs)
   Jy /= (8*M_PI);
   return Jy;
 }
+
+/* approximate spin using : S_a = \frac{1}{8\pi}\oint{\xi_{ai} K^{ij}ds^{2}_j} */
+void bbn_define_spin_integral(double S[3],Grid_T *const grid,const char *const kind)
+{
+  if (!strcmp_i(grid->kind,"BBN_CubedSpherical_grid"))
+    Error0(NO_OPTION);
+    
+  const unsigned N     = 6;  
+  double obj_center[3] = {0};
+  Patch_T *patches[N];
+  unsigned p = 0;
+  
+  S[0] = S[1] = S[2] = 0;
+  
+  /* NS spins */
+  if (strcmp_i(kind,"NS"))
+  {
+     /* surroundings for surface integrals */
+    patches[p++] = GetPatch("left_NS_surrounding_up",grid);
+    patches[p++] = GetPatch("left_NS_surrounding_down",grid);
+    patches[p++] = GetPatch("left_NS_surrounding_left",grid);
+    patches[p++] = GetPatch("left_NS_surrounding_right",grid);
+    patches[p++] = GetPatch("left_NS_surrounding_back",grid);
+    patches[p++] = GetPatch("left_NS_surrounding_front",grid);
+    obj_center[0]= Pgetd("NS_center_x");
+    obj_center[1]= Pgetd("NS_center_y");
+    obj_center[2]= Pgetd("NS_center_z");
+  }
+  /* BH spins */
+  if (strcmp_i(kind,"BH"))
+  {
+    /* surroundings for surface integrals */
+    patches[p++] = GetPatch("right_BH_surrounding_up",grid);
+    patches[p++] = GetPatch("right_BH_surrounding_down",grid);
+    patches[p++] = GetPatch("right_BH_surrounding_left",grid);
+    patches[p++] = GetPatch("right_BH_surrounding_right",grid);
+    patches[p++] = GetPatch("right_BH_surrounding_back",grid);
+    patches[p++] = GetPatch("right_BH_surrounding_front",grid);
+    obj_center[0]= Pgetd("BH_center_x");
+    obj_center[1]= Pgetd("BH_center_y");
+    obj_center[2]= Pgetd("BH_center_z");
+  }  
+  assert(p==N);
+  
+  /* carry out the integral for each patch */
+  for (p = 0; p < N; ++p)
+  {
+    Patch_T *patch = patches[p];
+    Integration_T *I = 0;
+    unsigned nn  = patch->nn;
+    struct items_S normal[1] = {0};
+    const double *n_comp[3];
+    double *g00 = alloc_double(nn);
+    double *g01 = alloc_double(nn);
+    double *g02 = alloc_double(nn);
+    double *g11 = alloc_double(nn);
+    double *g12 = alloc_double(nn);
+    double *g22 = alloc_double(nn);
+    unsigned ijk;
+    
+    READ_v(_gamma_D2D2)
+    READ_v(_gamma_D0D2)
+    READ_v(_gamma_D0D0)
+    READ_v(_gamma_D0D1)
+    READ_v(_gamma_D1D2)
+    READ_v(_gamma_D1D1)
+    READ_v(psi);
+    
+    /* populate metric components */ 
+    for (ijk = 0; ijk < nn; ++ijk)
+    {
+      double psi4 = Pow2(psi[ijk])*Pow2(psi[ijk]);
+      g00[ijk] = psi4*_gamma_D0D0[ijk];
+      g01[ijk] = psi4*_gamma_D0D1[ijk];
+      g02[ijk] = psi4*_gamma_D0D2[ijk];
+      g11[ijk] = psi4*_gamma_D1D1[ijk];
+      g12[ijk] = psi4*_gamma_D1D2[ijk];
+      g22[ijk] = psi4*_gamma_D2D2[ijk];
+    }
+    
+    normal->patch = patch;
+    n_physical_metric_surrounding(normal,_c_);
+    n_comp[0] = normal->n_U0;
+    n_comp[1] = normal->n_U1;
+    n_comp[2] = normal->n_U2;
+    bbn_populate_spin_integrands_Campanelli(patch,obj_center,n_comp);
+    
+    /* surface integral */
+    I  = init_integration();
+    I->type = "Integral{f(x)dS},Spectral";
+    I->g00 = g00;
+    I->g01 = g01;
+    I->g02 = g02;
+    I->g11 = g11;
+    I->g12 = g12;
+    I->g22 = g22;
+    I->Spectral->Z_surface = 1;
+    I->Spectral->K         = 0;
+    
+    I->Spectral->f = patch->pool[Ind("SPIN_integrand_D0")];
+    plan_integration(I);
+    S[0] += execute_integration(I);
+    
+    I->Spectral->f = patch->pool[Ind("SPIN_integrand_D1")];
+    plan_integration(I);
+    S[1] += execute_integration(I);
+    
+    I->Spectral->f = patch->pool[Ind("SPIN_integrand_D2")];
+    plan_integration(I);
+    S[2] += execute_integration(I);
+    
+    /* free */
+    DECLARE_FIELD(SPIN_integrand_D0);
+    REMOVE_FIELD(SPIN_integrand_D0);
+    DECLARE_FIELD(SPIN_integrand_D1);
+    REMOVE_FIELD(SPIN_integrand_D1);
+    DECLARE_FIELD(SPIN_integrand_D2);
+    REMOVE_FIELD(SPIN_integrand_D2);
+    free_integration(I);    
+    _free(normal->n_U0);
+    _free(normal->n_U1);
+    _free(normal->n_U2);
+    _free(g00);
+    _free(g01);
+    _free(g02);
+    _free(g11);
+    _free(g12);
+    _free(g22);
+  }
+  S[0] /= (8*M_PI);
+  S[1] /= (8*M_PI);
+  S[2] /= (8*M_PI);
+}
+
+/* approximate spin using : S = J - RxP */
+void bbn_define_spin_JRP(double S[3],Grid_T *const grid,const char *const kind)
+{
+  double J[3] = {0,0,0};
+  double R[3] = {0,0,0};
+  double P[3] = {0,0,0};
+  
+  /* NS spins */
+  if (strcmp_i(kind,"NS"))
+  {
+    bbn_Rc_NS(R,grid);
+    P[0] = Pgetd("NS_Px_ADM");
+    P[1] = Pgetd("NS_Py_ADM");
+    P[2] = Pgetd("NS_Pz_ADM");
+    J[0] = Pgetd("NS_Jx_ADM");
+    J[1] = Pgetd("NS_Jy_ADM");
+    J[2] = Pgetd("NS_Jz_ADM");
+  }
+  else if (strcmp_i(kind,"BH"))
+  {
+    bbn_Rc_BH(R,grid);
+    P[0] = Pgetd("BH_Px_ADM");
+    P[1] = Pgetd("BH_Py_ADM");
+    P[2] = Pgetd("BH_Pz_ADM");
+    J[0] = Pgetd("BH_Jx_ADM");
+    J[1] = Pgetd("BH_Jy_ADM");
+    J[2] = Pgetd("BH_Jz_ADM");
+  }
+  else
+    Error0(NO_OPTION);
+
+  S[0] = J[0] - (-P[1]*R[2] + P[2]*R[1]);
+  S[1] = J[1] - (P[0]*R[2] - P[2]*R[0]);
+  S[2] = J[2] - (-P[0]*R[1] + P[1]*R[0]);
+}
+
+
