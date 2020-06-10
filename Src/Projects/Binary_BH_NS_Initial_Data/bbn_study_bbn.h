@@ -34,7 +34,6 @@ void bbn_measures(Grid_T *const grid);
 void bbn_Rc_NS(double Rc[3],Grid_T *const grid);
 void bbn_Rc_BH(double Rc[3],Grid_T *const grid);
 static double NS_r_average(Grid_T *const grid);
-void bbn_define_spin_JRP(double S[3],Grid_T *const grid,const char *const kind);
 
 
 

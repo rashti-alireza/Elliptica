@@ -575,40 +575,4 @@ void bbn_Rc_BH(double Rc[3],Grid_T *const grid)
   Rc[2] /= (AH_area);
 }
 
-/* approximate spin using : S = J - RxP */
-void bbn_define_spin_JRP(double S[3],Grid_T *const grid,const char *const kind)
-{
-  double J[3] = {0,0,0};
-  double R[3] = {0,0,0};
-  double P[3] = {0,0,0};
-  
-  /* NS spins */
-  if (strcmp_i(kind,"NS"))
-  {
-    bbn_Rc_NS(R,grid);
-    P[0] = Pgetd("NS_Px_ADM");
-    P[1] = Pgetd("NS_Py_ADM");
-    P[2] = Pgetd("NS_Pz_ADM");
-    J[0] = Pgetd("NS_Jx_ADM");
-    J[1] = Pgetd("NS_Jy_ADM");
-    J[2] = Pgetd("NS_Jz_ADM");
-  }
-  else if (strcmp_i(kind,"BH"))
-  {
-    bbn_Rc_BH(R,grid);
-    P[0] = Pgetd("BH_Px_ADM");
-    P[1] = Pgetd("BH_Py_ADM");
-    P[2] = Pgetd("BH_Pz_ADM");
-    J[0] = Pgetd("BH_Jx_ADM");
-    J[1] = Pgetd("BH_Jy_ADM");
-    J[2] = Pgetd("BH_Jz_ADM");
-  }
-  else
-    Error0(NO_OPTION);
-
-  S[0] = J[0] - (-P[1]*R[2] + P[2]*R[1]);
-  S[1] = J[1] - (P[0]*R[2] - P[2]*R[0]);
-  S[2] = J[2] - (-P[0]*R[1] + P[1]*R[0]);
-}
-
 
