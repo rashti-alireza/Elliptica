@@ -62,6 +62,8 @@ void bbn_measures(Grid_T *const grid)
   const double NS_R_avg = NS_r_average(grid);
   double Rc_NS[3] = {0}, Rc_BH[3] = {0};/* centers */
   double S_NS[3]  = {0}, S_BH[3]  = {0};/* spins */
+  double S_NS_JRP_method[3]  = {0}, S_BH_JRP_method[3]  = {0};/* spins */
+  
   double chris_bh_mass = 1;/* Christodoulou mass, 1 to avoid division by 0 */
   
   /* adm mass */
@@ -87,12 +89,14 @@ void bbn_measures(Grid_T *const grid)
   if (solving_iter > 0 && solving_iter != INT_MAX)
   {
     /* NS spin */
-    bbn_define_spin_JRP(S_NS,grid,"NS");
+    bbn_define_spin_JRP(S_NS_JRP_method,grid,"NS");
+    bbn_define_spin_integral(S_NS,grid,"NS");
     /* NS center */
     bbn_Rc_NS(Rc_NS,grid);
     
     /* BH spin */
-    bbn_define_spin_JRP(S_BH,grid,"BH");
+    bbn_define_spin_JRP(S_BH_JRP_method,grid,"BH");
+    bbn_define_spin_integral(S_BH,grid,"BH");
     /* BH center */
     bbn_Rc_BH(Rc_BH,grid);
     
@@ -115,6 +119,10 @@ void bbn_measures(Grid_T *const grid)
   Psetd("NS_Sy",S_NS[1]);
   Psetd("NS_Sz",S_NS[2]);
   
+  Psetd("NS_Sx_JRP_method",S_NS_JRP_method[0]);
+  Psetd("NS_Sy_JRP_method",S_NS_JRP_method[1]);
+  Psetd("NS_Sz_JRP_method",S_NS_JRP_method[2]);
+  
   Psetd("NS_chi_x",S_NS[0]/Pow2(ns_adm_mass));
   Psetd("NS_chi_y",S_NS[1]/Pow2(ns_adm_mass));
   Psetd("NS_chi_z",S_NS[2]/Pow2(ns_adm_mass));
@@ -126,6 +134,10 @@ void bbn_measures(Grid_T *const grid)
   Psetd("BH_Sx",S_BH[0]);
   Psetd("BH_Sy",S_BH[1]);
   Psetd("BH_Sz",S_BH[2]);
+  
+  Psetd("BH_Sx_JRP_method",S_BH_JRP_method[0]);
+  Psetd("BH_Sy_JRP_method",S_BH_JRP_method[1]);
+  Psetd("BH_Sz_JRP_method",S_BH_JRP_method[2]);
   
   Psetd("BH_chi_x",S_BH[0]/Pow2(chris_bh_mass));
   Psetd("BH_chi_y",S_BH[1]/Pow2(chris_bh_mass));
@@ -213,6 +225,10 @@ void bbn_print_properties(Grid_T *const grid,const unsigned iteration, const cha
   PR_PARAMETR_IN_FILE(NS_Sx)
   PR_PARAMETR_IN_FILE(NS_Sy)
   PR_PARAMETR_IN_FILE(NS_Sz)
+  PR_PARAMETR_IN_FILE(NS_Sx_JRP_method)
+  PR_PARAMETR_IN_FILE(NS_Sy_JRP_method)
+  PR_PARAMETR_IN_FILE(NS_Sz_JRP_method)
+  
   PR_PARAMETR_IN_FILE(NS_chi_x)
   PR_PARAMETR_IN_FILE(NS_chi_y)
   PR_PARAMETR_IN_FILE(NS_chi_z)
@@ -230,6 +246,9 @@ void bbn_print_properties(Grid_T *const grid,const unsigned iteration, const cha
   PR_PARAMETR_IN_FILE(BH_Sx)
   PR_PARAMETR_IN_FILE(BH_Sy)
   PR_PARAMETR_IN_FILE(BH_Sz)
+  PR_PARAMETR_IN_FILE(BH_Sx_JRP_method)
+  PR_PARAMETR_IN_FILE(BH_Sy_JRP_method)
+  PR_PARAMETR_IN_FILE(BH_Sz_JRP_method)
   PR_PARAMETR_IN_FILE(BH_chi_x)
   PR_PARAMETR_IN_FILE(BH_chi_y)
   PR_PARAMETR_IN_FILE(BH_chi_z)
