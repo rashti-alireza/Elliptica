@@ -86,11 +86,11 @@ Declare =
  (obj = Field,name = ADM_integrand_xiG, rank = D, C_macro2);
 
  # xi0
- (obj = Field,name = xi0, rank = U, C_macro3);
+ (obj = Field,name = xi0, rank = D, C_macro3);
  # xi1
- (obj = Field,name = xi1, rank = U, C_macro3);
+ (obj = Field,name = xi1, rank = D, C_macro3);
  # xi2
- (obj = Field,name = xi2, rank = U, C_macro3);
+ (obj = Field,name = xi2, rank = D, C_macro3);
 
  # attenuation factor
  (obj = variable,name = att, none);
@@ -108,17 +108,17 @@ Symm[_Gamma(i,j,k) = _Gamma(i,k,j)];
 `   double y    = patch->node[ijk]->x[1];`
 `   double z    = patch->node[ijk]->x[2];`
 
-`   xi0_U0[ijk] = 0;`
-`   xi0_U1[ijk] = -(z-z_cm);`
-`   xi0_U2[ijk] = y-y_cm;`
+`   xi0_D0[ijk] = 0;`
+`   xi0_D1[ijk] = -(z-z_cm);`
+`   xi0_D2[ijk] = y-y_cm;`
 
-`   xi1_U0[ijk] = z-z_cm;`
-`   xi1_U1[ijk] = 0;`
-`   xi1_U2[ijk] = -(x-x_cm);`
+`   xi1_D0[ijk] = z-z_cm;`
+`   xi1_D1[ijk] = 0;`
+`   xi1_D2[ijk] = -(x-x_cm);`
 
-`   xi2_U0[ijk] = -(y-y_cm);`
-`   xi2_U1[ijk] = (x-x_cm);`
-`   xi2_U2[ijk] = 0;`
+`   xi2_D0[ijk] = -(y-y_cm);`
+`   xi2_D1[ijk] = (x-x_cm);`
+`   xi2_D2[ijk] = 0;`
 `   }`
 # populating the integrands:
 
@@ -138,9 +138,15 @@ Symm[_Gamma(i,j,k) = _Gamma(i,k,j)];
 #       G2(i)  = -2*_gamma(-j,-k)*P(j,k)*_gammaI(i,l)*dpsi(-l)/psi;
 #       G(i)   = G1(i)+G2(i);
        Pn(i)  = P(i,j)*n(k)*_gamma(-j,-k)*psi4;
-       xi0P = psi4*_gamma(-i,-j)*xi0(i)*Pn(j);
-       xi1P = psi4*_gamma(-i,-j)*xi1(i)*Pn(j);
-       xi2P = psi4*_gamma(-i,-j)*xi2(i)*Pn(j);
+
+       xi0P = xi0(-i)*Pn(i);
+       xi1P = xi1(-i)*Pn(i);
+       xi2P = xi2(-i)*Pn(i);
+
+# this is not how paper 1506.01689 contracts xi so commented out
+#       xi0P = psi4*_gamma(-i,-j)*xi0(i)*Pn(j);
+#       xi1P = psi4*_gamma(-i,-j)*xi1(i)*Pn(j);
+#       xi2P = psi4*_gamma(-i,-j)*xi2(i)*Pn(j);
 
        Cpopulate[ADM_integrand_P = Pn];
 `      ADM_integrand_xiP_D0[ijk] = xi0P;`
@@ -168,9 +174,16 @@ Symm[_Gamma(i,j,k) = _Gamma(i,k,j)];
        G1(i)  = _Gamma(i,j,k)*P_(-j,-k) + _Gamma(j,jp,k)*KD(-j,-jp)*P_(i,-k);
        G2(i)  = -2*_gamma(-j,-k)*P_(j,k)*_gammaI(i,l)*dpsi(-l)/psi;
        G(i)   = att*(G1(i)+G2(i));
-       xi0G = psi4_*_gamma(-i,-j)*xi0(i)*G(j);
-       xi1G = psi4_*_gamma(-i,-j)*xi1(i)*G(j);
-       xi2G = psi4_*_gamma(-i,-j)*xi2(i)*G(j);
+
+       xi0G = xi0(-i)*G(i);
+       xi1G = xi1(-i)*G(i);
+       xi2G = xi2(-i)*G(i);
+
+# this is not how paper 1506.01689 contracts xi so commented out
+#       xi0G = psi4_*_gamma(-i,-j)*xi0(i)*G(j);
+#       xi1G = psi4_*_gamma(-i,-j)*xi1(i)*G(j);
+#       xi2G = psi4_*_gamma(-i,-j)*xi2(i)*G(j);
+
 `      ADM_integrand_xiG_D0[ijk] = xi0G;`
 `      ADM_integrand_xiG_D1[ijk] = xi1G;`
 `      ADM_integrand_xiG_D2[ijk] = xi2G;`
@@ -179,17 +192,17 @@ Symm[_Gamma(i,j,k) = _Gamma(i,k,j)];
 `      }`
 `    }`
 ``
-`  free(xi0_U0);`
-`  free(xi0_U1);`
-`  free(xi0_U2);`
+`  free(xi0_D0);`
+`  free(xi0_D1);`
+`  free(xi0_D2);`
 
-`  free(xi1_U0);`
-`  free(xi1_U1);`
-`  free(xi1_U2);`
+`  free(xi1_D0);`
+`  free(xi1_D1);`
+`  free(xi1_D2);`
 
-`  free(xi2_U0);`
-`  free(xi2_U1);`
-`  free(xi2_U2);`
+`  free(xi2_D0);`
+`  free(xi2_D1);`
+`  free(xi2_D2);`
 ``
 `  }`# end of for(p = 0; p < N; ++p)
 
