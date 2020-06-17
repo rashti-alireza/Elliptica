@@ -29,9 +29,10 @@
 
 argc=$#
 argv=("$@")
-quant=${argv[0]}
+prefix=${argv[0]}
+quant="\b${argv[0]}\b"
 file=${argv[1]}
-out=${quant}_${file}
+out=${prefix}_${file}
 
 # check if it needs help
 if [[ $argc -le 1 || $1 =~ --h.? ]]; then
@@ -50,7 +51,7 @@ fi
 
 # now make the table:
 printf "# iteration %s\n" ${quant} > ${out}
-grep -i ${quant} ${file} | \
+grep -i -E ${quant} ${file} | \
 awk 'BEGIN{v=0;}{ v = v+1; print v " " $3}' >> ${out} ;
 
 # print:
