@@ -93,4 +93,10 @@ void bbn_set_default_parameters(void)
   */
   Pset_default("BH_NS_free_data_metric","boosted_KerrSchild_metric");
   
+  /* checking the convergec of elliptic eqs.
+  // options:
+  // 1. yes: to check
+  // 2. no : ignore
+  */
+  Pset_default("Elliptic_Convergence_Test","NO");
 }
