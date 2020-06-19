@@ -56,7 +56,7 @@ Declare =
  (obj = Field,name = deta, rank = D, C_macro4);
 
  # Ricc
- #(obj = Field,name = _Ric, rank = DD, C_macro4);
+ (obj = Field,name = _Ric, rank = DD, C_macro4);
 
  # conformal metric inverse
  (obj = Field,name = _gammaI, rank = UU, C_macro4);
@@ -124,7 +124,7 @@ t7_B(i) =  1/3*_gammaI(i,-m)*KD(-j,-jp)*KD(-l,-lp)*_Gamma(j,m,l)*_Gamma(lp,jp,n)
 
 t8_B(i) = -1/3*_gammaI(i,-m)*(_Gamma(n,m,j)*KD0i(-j)*JB0(-n)+KD(-l,-lp)*KD(-j,-jp)*_Gamma(l,m,j)*_Gamma(jp,lp,n)*KD0i(-n)*kd);
 
-#t9_B(i) = _gammaI(i,-m)*_Ric(m,l)*KD0i(-l)*kd;
+t9_B(i) = _gammaI(i,-m)*_Ric(m,l)*KD0i(-l)*kd;
 
 # for _Aij
 t10_B(i) = -dLnOf_alpha_B(-j)*( \
@@ -134,10 +134,10 @@ _gammaI(i,-m)*(KD0i(j)*JB0(m)+_Gamma(j,m,l)*KD0i(-l)*kd)- \
 );
 
 # with _Aij and _Ric
-# Bpart(i) = t1_B(i)+t2_B(i)+t3_B(i)+t4_B(i)+t5_B(i)+t6_B(i)+t7_B(i)+t8_B(i)+t9_B(i)+t10_B(i);
+Bpart(i) = t1_B(i)+t2_B(i)+t3_B(i)+t4_B(i)+t5_B(i)+t6_B(i)+t7_B(i)+t8_B(i)+t9_B(i)+t10_B(i);
 
 # with Aij and no _Ric
-Bpart(i) = t1_B(i)+t2_B(i)+t3_B(i)+t4_B(i)+t5_B(i)+t6_B(i)+t7_B(i)+t8_B(i)+t10_B(i);
+#Bpart(i) = t1_B(i)+t2_B(i)+t3_B(i)+t4_B(i)+t5_B(i)+t6_B(i)+t7_B(i)+t8_B(i)+t10_B(i);
 
 # with _Ric and no _Aij 
 # Bpart(i) = t1_B(i)+t2_B(i)+t3_B(i)+t4_B(i)+t5_B(i)+t6_B(i)+t7_B(i)+t8_B(i)+t9_B(i);
@@ -172,7 +172,7 @@ t7_E(i) =  1/3*_gammaI(i,-m)*KD(-j,-jp)*KD(-l,-lp)*_Gamma(j,m,l)*_Gamma(lp,jp,n)
 
 t8_E(i) = -1/3*_gammaI(i,-m)*(_Gamma(n,m,j)*KD0i(-j)*JB0(-n)+KD(-l,-lp)*KD(-j,-jp)*_Gamma(l,m,j)*_Gamma(jp,lp,n)*KD0i(-n)*kd);
 
-#t9_E(i) = _gammaI(i,-m)*_Ric(m,l)*KD0i(-l)*kd;
+t9_E(i) = _gammaI(i,-m)*_Ric(m,l)*KD0i(-l)*kd;
 
 # for _Aij
 t10_E(i) = -dLnOf_alpha_E(-j)*( \
@@ -182,10 +182,10 @@ _gammaI(i,-m)*(KD0i(j)*JB0(m)+_Gamma(j,m,l)*KD0i(-l)*kd)- \
 );
 
 # with _Aij and _Ric
-# Epart(i) = t1_E(i)+t2_E(i)+t3_E(i)+t4_E(i)+t5_E(i)+t6_E(i)+t7_E(i)+t8_E(i)+t9_E(i)+t10_E(i);
+Epart(i) = t1_E(i)+t2_E(i)+t3_E(i)+t4_E(i)+t5_E(i)+t6_E(i)+t7_E(i)+t8_E(i)+t9_E(i)+t10_E(i);
 
 # with Aij and no _Ric
-Epart(i) = t1_E(i)+t2_E(i)+t3_E(i)+t4_E(i)+t5_E(i)+t6_E(i)+t7_E(i)+t8_E(i)+t10_E(i);
+#Epart(i) = t1_E(i)+t2_E(i)+t3_E(i)+t4_E(i)+t5_E(i)+t6_E(i)+t7_E(i)+t8_E(i)+t10_E(i);
 
 # with _Ric and no _Aij
 # Epart(i) = t1_E(i)+t2_E(i)+t3_E(i)+t4_E(i)+t5_E(i)+t6_E(i)+t7_E(i)+t8_E(i)+t9_E(i);
