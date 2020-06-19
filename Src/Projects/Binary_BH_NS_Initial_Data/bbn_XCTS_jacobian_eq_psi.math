@@ -39,7 +39,7 @@ Declare =
  (obj = Field,name = psi, rank = 0, C_macro);
 
  # Ricci
- #(obj = Field,name = _R, rank = 0, C_macro);
+ (obj = Field,name = _R, rank = 0, C_macro);
 
  # trKij
  (obj = Field,name = K, rank = 0, C_macro);
