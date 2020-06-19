@@ -60,6 +60,7 @@ void bbn_solve_elliptic_eqs(Grid_T *const grid)
     {
       calculate_equation_residual(SolveEqs);
       bbn_study_initial_data(grid);
+      bbn_write_checkpoint(grid);
     }
     
     /* some prints */
