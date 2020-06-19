@@ -36,7 +36,7 @@ void bbn_study_initial_data(Grid_T *const grid)
   if (solving_iter != INT_MAX)
   {
     /* calculating ADM , Kommar masses ratios, spins, errors etc. */
-    if (Pcmps("Elliptic_Convergence_Test"),"no")
+    if (Pcmps("Elliptic_Convergence_Test","no"))
       bbn_measures(grid);
     
     /* prints */
