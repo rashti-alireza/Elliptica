@@ -93,4 +93,6 @@ void bbn_set_default_parameters(void)
   */
   Pset_default("BH_NS_free_data_metric","boosted_KerrSchild_metric");
   
+  /* test elliptic equations converge [yes/no] */
+  Pset_default("Elliptic_Convergence_Test","NO");
 }
