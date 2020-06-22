@@ -141,7 +141,6 @@ Symm[_Gamma(i,j,k) = _Gamma(i,k,j)];
 `      DEF_RELATIVE_r`
 `      double att = r > CUTOFF ? 0:1;`
        psi6_   = psi**(6);
-       psi4_   = psi**(4);
        P_(i,j) = _A_UiUj(i,j)-(2/3)*K*psi6_*_gammaI(i,j);
        Symm[P_(i,j)  = P_(j,i)];
 

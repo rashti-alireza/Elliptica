@@ -63,7 +63,7 @@ Declare =
  (obj = Field,name = psi, rank = 0, C_macro);
 
  # conformal factor derivative
- (obj = Field,name = dpsi, rank = D, C_macro);
+ #(obj = Field,name = dpsi, rank = D, C_macro);
 
  # Christoffer symbol value
  #(obj = Field,name = _Gamma, rank = UDD, C_macro);
