@@ -181,7 +181,7 @@ void bbn_plan_obs_CS(Observable_T *obs)
     obs->Jx = ADM_angular_momentum_x_BBN_CS;
     obs->Jy = ADM_angular_momentum_y_BBN_CS;
     obs->Jz = ADM_angular_momentum_z_BBN_CS;
-    bbn_populate_ADM_integrand_PdS_GdV(obs);
+    bbn_populate_ADM_integrand_PdS_GdV_binary(obs);
     free(patches);
   }
   else if (strcmp_i(obs->quantity,"ADM(P,J)|NS"))
@@ -269,7 +269,7 @@ void bbn_plan_obs_CS(Observable_T *obs)
     obs->Jx = ADM_angular_momentum_x_BBN_CS;
     obs->Jy = ADM_angular_momentum_y_BBN_CS;
     obs->Jz = ADM_angular_momentum_z_BBN_CS;
-    bbn_populate_ADM_integrand_PdS_GdV(obs);
+    bbn_populate_ADM_integrand_PdS_GdV_single(obs);
     free(patches);
   }
   else if (strcmp_i(obs->quantity,"ADM(P,J)|BH"))
@@ -357,7 +357,7 @@ void bbn_plan_obs_CS(Observable_T *obs)
     obs->Jx = ADM_angular_momentum_x_BBN_CS;
     obs->Jy = ADM_angular_momentum_y_BBN_CS;
     obs->Jz = ADM_angular_momentum_z_BBN_CS;
-    bbn_populate_ADM_integrand_PdS_GdV(obs);
+    bbn_populate_ADM_integrand_PdS_GdV_single(obs);
     free(patches);
   }
   else if (strcmp_i(obs->quantity,"Kommar(M)|BH"))
@@ -1046,36 +1046,36 @@ void bbn_free_obs_CS(Observable_T *obs)
         REMOVE_FIELD(ADM_integrand_G_U2);
       }
       
-      if (_Ind("ADM_integrand_xiP_D0") >= 0)
+      if (_Ind("ADM_integrand_xiP_U0") >= 0)
       {
-        DECLARE_FIELD(ADM_integrand_xiP_D0);
-        REMOVE_FIELD(ADM_integrand_xiP_D0);
+        DECLARE_FIELD(ADM_integrand_xiP_U0);
+        REMOVE_FIELD(ADM_integrand_xiP_U0);
       }
-      if (_Ind("ADM_integrand_xiP_D2") >= 0)
+      if (_Ind("ADM_integrand_xiP_U2") >= 0)
       {
-        DECLARE_FIELD(ADM_integrand_xiP_D2);
-        REMOVE_FIELD(ADM_integrand_xiP_D2);
+        DECLARE_FIELD(ADM_integrand_xiP_U2);
+        REMOVE_FIELD(ADM_integrand_xiP_U2);
       }
-      if (_Ind("ADM_integrand_xiP_D1") >= 0)
+      if (_Ind("ADM_integrand_xiP_U1") >= 0)
       {
-        DECLARE_FIELD(ADM_integrand_xiP_D1);
-        REMOVE_FIELD(ADM_integrand_xiP_D1);
+        DECLARE_FIELD(ADM_integrand_xiP_U1);
+        REMOVE_FIELD(ADM_integrand_xiP_U1);
       }
       
-      if (_Ind("ADM_integrand_xiG_D0") >= 0)
+      if (_Ind("ADM_integrand_xiG_U0") >= 0)
       {
-        DECLARE_FIELD(ADM_integrand_xiG_D0);
-        REMOVE_FIELD(ADM_integrand_xiG_D0);
+        DECLARE_FIELD(ADM_integrand_xiG_U0);
+        REMOVE_FIELD(ADM_integrand_xiG_U0);
       }
-      if (_Ind("ADM_integrand_xiG_D2") >= 0)
+      if (_Ind("ADM_integrand_xiG_U2") >= 0)
       {
-        DECLARE_FIELD(ADM_integrand_xiG_D2);
-        REMOVE_FIELD(ADM_integrand_xiG_D2);
+        DECLARE_FIELD(ADM_integrand_xiG_U2);
+        REMOVE_FIELD(ADM_integrand_xiG_U2);
       }
-      if (_Ind("ADM_integrand_xiG_D1") >= 0)
+      if (_Ind("ADM_integrand_xiG_U1") >= 0)
       {
-        DECLARE_FIELD(ADM_integrand_xiG_D1);
-        REMOVE_FIELD(ADM_integrand_xiG_D1);
+        DECLARE_FIELD(ADM_integrand_xiG_U1);
+        REMOVE_FIELD(ADM_integrand_xiG_U1);
       }
     }
     _free(adm[i]->g00);
@@ -1320,7 +1320,7 @@ static double ADM_angular_momentum_z_BBN_CS(Observable_T *const obs)
       continue;
     
     Patch_T *patch = adm[p]->patch;
-    Field_T *xiPz = patch->pool[Ind("ADM_integrand_xiP_D2")];
+    Field_T *xiPz = patch->pool[Ind("ADM_integrand_xiP_U2")];
     
     I  = init_integration();
     I->type = "Integral{f(x)dS},Spectral";
@@ -1353,7 +1353,7 @@ static double ADM_angular_momentum_z_BBN_CS(Observable_T *const obs)
       continue;
 
     Patch_T *patch = adm[p]->patch;
-    Field_T *xiGz = patch->pool[Ind("ADM_integrand_xiG_D2")];
+    Field_T *xiGz = patch->pool[Ind("ADM_integrand_xiG_U2")];
     
     I  = init_integration();
     I->type = "Integral{f(x)dV},Spectral";
@@ -1392,7 +1392,7 @@ static double ADM_angular_momentum_x_BBN_CS(Observable_T *const obs)
       continue;
    
     Patch_T *patch = adm[p]->patch;
-    Field_T *xiPx = patch->pool[Ind("ADM_integrand_xiP_D0")];
+    Field_T *xiPx = patch->pool[Ind("ADM_integrand_xiP_U0")];
     
     I  = init_integration();
     I->type = "Integral{f(x)dS},Spectral";
@@ -1424,7 +1424,7 @@ static double ADM_angular_momentum_x_BBN_CS(Observable_T *const obs)
       continue;
    
     Patch_T *patch = adm[p]->patch;
-    Field_T *xiGx = patch->pool[Ind("ADM_integrand_xiG_D0")];
+    Field_T *xiGx = patch->pool[Ind("ADM_integrand_xiG_U0")];
     
     I  = init_integration();
     I->type = "Integral{f(x)dV},Spectral";
@@ -1463,7 +1463,7 @@ static double ADM_angular_momentum_y_BBN_CS(Observable_T *const obs)
       continue;
     
     Patch_T *patch = adm[p]->patch;
-    Field_T *xiPy = patch->pool[Ind("ADM_integrand_xiP_D1")];
+    Field_T *xiPy = patch->pool[Ind("ADM_integrand_xiP_U1")];
     
     I  = init_integration();
     I->type = "Integral{f(x)dS},Spectral";
@@ -1496,7 +1496,7 @@ static double ADM_angular_momentum_y_BBN_CS(Observable_T *const obs)
       continue;
    
     Patch_T *patch = adm[p]->patch;
-    Field_T *xiGy = patch->pool[Ind("ADM_integrand_xiG_D1")];
+    Field_T *xiGy = patch->pool[Ind("ADM_integrand_xiG_U1")];
     
     I  = init_integration();
     I->type = "Integral{f(x)dV},Spectral";

@@ -9,7 +9,8 @@
 
 void bbn_plan_obs_CS(Observable_T *obs);
 void bbn_free_obs_CS(Observable_T *obs);
-void bbn_populate_ADM_integrand_PdS_GdV(const Observable_T *const obs);
+void bbn_populate_ADM_integrand_PdS_GdV_binary(const Observable_T *const obs);
+void bbn_populate_ADM_integrand_PdS_GdV_single(const Observable_T *const obs);
 double bbn_Kommar_mass(Observable_T *const obs);
 double bbn_ADM_mass(Observable_T *const obs);
 void bbn_define_spin_integral(double S[3],Grid_T *const grid,const char *const kind);
