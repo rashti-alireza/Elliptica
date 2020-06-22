@@ -56,10 +56,11 @@ void bbn_solve_elliptic_eqs(Grid_T *const grid)
     solve_eqs(SolveEqs);
     
     /* study the solution */
-    if (strcmp_i(PgetsEZ("Elliptic_Convergence_Test"),"yes"))
+    if (Pcmps("Elliptic_Convergence_Test","yes"))
     {
       calculate_equation_residual(SolveEqs);
       bbn_study_initial_data(grid);
+      bbn_write_checkpoint(grid);
     }
     
     /* some prints */
@@ -343,7 +344,7 @@ void bbn_SolveEqs_SourceUpdate(Grid_T *const grid,const char *const name)
     bbn_update_psi10A_UiUj(patch);
   }
   /* update matter terms due to change of the fields being solved */
-  if (1)
+  if(Pcmps("Elliptic_Convergence_Test","no"))
   {
     Tij_IF_CTS_psi6Sources(grid);
     

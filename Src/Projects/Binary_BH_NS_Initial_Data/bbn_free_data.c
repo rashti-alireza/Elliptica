@@ -1069,8 +1069,8 @@ static double KerrSchild_H(const double M_BH,const double _r,const double a,cons
 static void execute_boost_and_rotation(Transformation_T *const tB,
                                   Transformation_T *const tR,
                                   const int IsInverse,
-                                  const double in[4],
-                                  double out[4])
+                                  const double *const in,
+                                  double *const out)
 {
   
   if (IsInverse)
