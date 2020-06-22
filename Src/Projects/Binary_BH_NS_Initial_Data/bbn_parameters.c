@@ -47,7 +47,7 @@ void bbn_set_default_parameters(void)
   /* if _Aij is active for jacobian of psi equation it is 1
   // otherwise it is 0. the default is 0. it seems when it is active
   // the elliptic solve won't converge. */
-  Pset_default("is_Aij_on_at_AH?","0");
+  Pset_default("is_Aij_on_at_AH?","1");
   
   /* the tolerance of BH mass while adjusting the AH excision radius to
   // meet the target BH mass */
