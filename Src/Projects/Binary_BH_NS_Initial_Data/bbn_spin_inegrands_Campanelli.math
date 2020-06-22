@@ -56,14 +56,10 @@ Declare =
  (obj = Field,name = n, rank = U, none);
 
  # integrand xiP
- (obj = Field,name = SPIN_integrand, rank = D, C_macro2);
+ (obj = Field,name = SPIN_integrand, rank = U, C_macro2);
 
- # xi0
- (obj = Field,name = xi0, rank = U, C_macro3);
- # xi1
- (obj = Field,name = xi1, rank = U, C_macro3);
- # xi2
- (obj = Field,name = xi2, rank = U, C_macro3);
+ # xi
+ (obj = Field,name = xi, rank = U, C_macro3);
 
 }
 # symmetries:
@@ -79,17 +75,9 @@ Symm[_gamma(i,j)   = _gamma(j,i)];
 `   double y    = patch->node[ijk]->x[1];`
 `   double z    = patch->node[ijk]->x[2];`
 
-`   xi0_U0[ijk] = 0;`
-`   xi0_U1[ijk] = -(z-z_c);`
-`   xi0_U2[ijk] = y-y_c;`
-
-`   xi1_U0[ijk] = z-z_c;`
-`   xi1_U1[ijk] = 0;`
-`   xi1_U2[ijk] = -(x-x_c);`
-
-`   xi2_U0[ijk] = -(y-y_c);`
-`   xi2_U1[ijk] = (x-x_c);`
-`   xi2_U2[ijk] = 0;`
+`   xi_U0[ijk] = x-x_c;`
+`   xi_U1[ijk] = y-y_c;`
+`   xi_U2[ijk] = z-z_c;`
 `   }`
 # populating the integrands:
 `   const double *const n_U0 = normal[0];`
@@ -101,26 +89,14 @@ Symm[_gamma(i,j)   = _gamma(j,i)];
     # note K^ij ~ psi^(-10)_A^{ij} but there is two gamma multiplication
     # in which gamma ~ psi^4 => psi^(-2)
     psim2 = psi**(-2);
-    Pn(i) = _A_UiUj(i,j)*_gamma(-j,-k)*n(k);
-    xi0P = psim2*_gamma(-i,-j)*xi0(i)*Pn(j);
-    xi1P = psim2*_gamma(-i,-j)*xi1(i)*Pn(j);
-    xi2P = psim2*_gamma(-i,-j)*xi2(i)*Pn(j);
+    Pn(i) = _A_UiUj(l,j)*_gamma(-j,-k)*n(k)*psim2*_gamma(-l,i);
 
-`   SPIN_integrand_D0[ijk] = xi0P;`
-`   SPIN_integrand_D1[ijk] = xi1P;`
-`   SPIN_integrand_D2[ijk] = xi2P;`
+    xiP(i) = EIJK(i,j,k)*xi(-j)*Pn(-k);
+
+    Cpopulate[SPIN_integrand = xiP];
 `   }`
 ``
-`   free(xi0_U0);`
-`   free(xi0_U1);`
-`   free(xi0_U2);`
-
-`   free(xi1_U0);`
-`   free(xi1_U1);`
-`   free(xi1_U2);`
-
-`   free(xi2_U0);`
-`   free(xi2_U1);`
-`   free(xi2_U2);`
-``
+`   free(xi_U0);`
+`   free(xi_U1);`
+`   free(xi_U2);`
 `}`

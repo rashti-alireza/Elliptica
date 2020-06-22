@@ -1616,25 +1616,25 @@ void bbn_define_spin_integral(double S[3],Grid_T *const grid,const char *const k
     I->Spectral->Z_surface = 1;
     I->Spectral->K         = 0;
     
-    I->Spectral->f = patch->pool[Ind("SPIN_integrand_D0")];
+    I->Spectral->f = patch->pool[Ind("SPIN_integrand_U0")];
     plan_integration(I);
     S[0] += execute_integration(I);
     
-    I->Spectral->f = patch->pool[Ind("SPIN_integrand_D1")];
+    I->Spectral->f = patch->pool[Ind("SPIN_integrand_U1")];
     plan_integration(I);
     S[1] += execute_integration(I);
     
-    I->Spectral->f = patch->pool[Ind("SPIN_integrand_D2")];
+    I->Spectral->f = patch->pool[Ind("SPIN_integrand_U2")];
     plan_integration(I);
     S[2] += execute_integration(I);
     
     /* free */
-    DECLARE_FIELD(SPIN_integrand_D0);
-    REMOVE_FIELD(SPIN_integrand_D0);
-    DECLARE_FIELD(SPIN_integrand_D1);
-    REMOVE_FIELD(SPIN_integrand_D1);
-    DECLARE_FIELD(SPIN_integrand_D2);
-    REMOVE_FIELD(SPIN_integrand_D2);
+    DECLARE_FIELD(SPIN_integrand_U0);
+    REMOVE_FIELD(SPIN_integrand_U0);
+    DECLARE_FIELD(SPIN_integrand_U1);
+    REMOVE_FIELD(SPIN_integrand_U1);
+    DECLARE_FIELD(SPIN_integrand_U2);
+    REMOVE_FIELD(SPIN_integrand_U2);
     free_integration(I);    
     _free(normal->n_U0);
     _free(normal->n_U1);
