@@ -4682,7 +4682,7 @@ static Grid_T *TOV_KerrSchild_approximation(void)
   const double bh_chi_y    = Pgetd("BH_chi_U1");
   const double bh_chi_z    = Pgetd("BH_chi_U2");
   const double bh_irr_mass = Pgetd("BH_irreducible_mass");
-  const double bh_R        = 2*bh_irr_mass;/* approximate initial radius */
+  const double bh_R        = 1.5*bh_irr_mass;/* approximate initial radius */
   const double bh_chi      = sqrt(Pow2(bh_chi_x)+Pow2(bh_chi_y)+Pow2(bh_chi_z));
   const double bh_a        = bh_chi*bh_irr_mass;
   /* check size of bh_chi */
