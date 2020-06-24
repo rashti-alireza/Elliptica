@@ -115,7 +115,7 @@ void bbn_measures(Grid_T *const grid)
   Psetd("mass_ratio"     ,mass_ratio);
   Psetd("NS_compactness" ,Pgetd("NS_ADM_mass")/NS_R_avg);
   Psetd("NS_average_proper_radius" ,NS_R_avg);
-  
+  Psetd("NS_mass_shedding_indicator",bbn_mass_shedding_indicator(grid));
   Psetd("NS_Sx_Campanelli",S_NS[0]);
   Psetd("NS_Sy_Campanelli",S_NS[1]);
   Psetd("NS_Sz_Campanelli",S_NS[2]);
@@ -223,6 +223,7 @@ void bbn_print_properties(Grid_T *const grid,const unsigned iteration, const cha
   PR_PARAMETR_IN_FILE(NS_ADM_mass)
   PR_PARAMETR_IN_FILE(NS_Kommar_mass)
   PR_PARAMETR_IN_FILE(NS_average_proper_radius)
+  PR_PARAMETR_IN_FILE(NS_mass_shedding_indicator)
   PR_PARAMETR_IN_FILE(NS_Sx_Campanelli)
   PR_PARAMETR_IN_FILE(NS_Sy_Campanelli)
   PR_PARAMETR_IN_FILE(NS_Sz_Campanelli)
