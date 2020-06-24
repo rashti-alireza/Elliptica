@@ -595,4 +595,94 @@ void bbn_Rc_BH(double Rc[3],Grid_T *const grid)
   Rc[2] /= (AH_area);
 }
 
+/* calculating mass shedding indicator:
+// Chi = {d(ln h)/dr|equator}/{d(ln h)/dr|pole} */
+double bbn_mass_shedding_indicator(Grid_T *const grid)
+{
+  Patch_T *patch = 0;
+  Interpolation_T *interp_s = init_interpolation();
+  double dh_eq[3] = {0},dh_pole[3] = {0};/* h derivatives */
+  double h_eq,h_pole;/* h values */
+  double dr_dlnh_pole,dr_dlnh_eq;
+  double N[3] = {0},X[3] = {0},x[3] = {0};
+  double r,theta,phi;
+  
+  /* approx. equator value at left_NS_right patch on (X,Y,Z)=(0,0,1) */
+  patch = GetPatch("left_NS_right",grid);
+  X[0] = 0;
+  X[1] = 0;
+  X[2] = 1;
+  x_of_X(x,X,patch);
+  r     = root_square(3,x,0);
+  theta = acos(x[2]/r);
+  phi   = arctan(x[1],x[0]);
+  N[0]  = sin(theta)*cos(phi);
+  N[1]  = sin(theta)*sin(phi);
+  N[2]  = cos(theta);
+  interp_s->X = 0;
+  interp_s->Y = 0;
+  interp_s->K = patch->n[2]-1;
+  interp_s->XY_dir_flag = 1;
+  
+  /* derivatives */
+  interp_s->field = patch->pool[Ind("denthalpy_D0")];
+  plan_interpolation(interp_s);
+  dh_eq[0] = execute_interpolation(interp_s);
+  
+  interp_s->field = patch->pool[Ind("denthalpy_D1")];
+  plan_interpolation(interp_s);
+  dh_eq[1] = execute_interpolation(interp_s);
+  
+  interp_s->field = patch->pool[Ind("denthalpy_D2")];
+  plan_interpolation(interp_s);
+  dh_eq[2] = execute_interpolation(interp_s);
+  
+  /* value */
+  interp_s->field = patch->pool[Ind("enthalpy")];
+  plan_interpolation(interp_s);
+  h_eq = execute_interpolation(interp_s);
+  
+  dr_dlnh_eq = (N[0]*dh_eq[0]+N[1]*dh_eq[1]+N[2]*dh_eq[2])/h_eq;
+  
+  /* approx. pole value at left_NS_up patch on (X,Y,Z)=(0,0,1) */
+  patch = GetPatch("left_NS_up",grid);
+  X[0] = 0;
+  X[1] = 0;
+  X[2] = 1;
+  x_of_X(x,X,patch);
+  r     = root_square(3,x,0);
+  theta = acos(x[2]/r);
+  phi   = arctan(x[1],x[0]);
+  N[0]  = sin(theta)*cos(phi);
+  N[1]  = sin(theta)*sin(phi);
+  N[2]  = cos(theta);
+  interp_s->X = 0;
+  interp_s->Y = 0;
+  interp_s->K = patch->n[2]-1;
+  interp_s->XY_dir_flag = 1;
+  
+  /* derivatives */
+  interp_s->field = patch->pool[Ind("denthalpy_D0")];
+  plan_interpolation(interp_s);
+  dh_pole[0] = execute_interpolation(interp_s);
+  
+  interp_s->field = patch->pool[Ind("denthalpy_D1")];
+  plan_interpolation(interp_s);
+  dh_pole[1] = execute_interpolation(interp_s);
+  
+  interp_s->field = patch->pool[Ind("denthalpy_D2")];
+  plan_interpolation(interp_s);
+  dh_pole[2] = execute_interpolation(interp_s);
+  
+  /* value */
+  interp_s->field = patch->pool[Ind("enthalpy")];
+  plan_interpolation(interp_s);
+  h_pole = execute_interpolation(interp_s);
+  dr_dlnh_pole = (N[0]*dh_pole[0]+N[1]*dh_pole[1]+N[2]*dh_pole[2])/h_pole;
+  
+  free_interpolation(interp_s);
+  
+  return dr_dlnh_eq/dr_dlnh_pole;
+}
+
 

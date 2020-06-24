@@ -34,6 +34,9 @@ void bbn_measures(Grid_T *const grid);
 void bbn_Rc_NS(double Rc[3],Grid_T *const grid);
 void bbn_Rc_BH(double Rc[3],Grid_T *const grid);
 static double NS_r_average(Grid_T *const grid);
+double bbn_mass_shedding_indicator(Grid_T *const grid);
+
+
 
 
 
