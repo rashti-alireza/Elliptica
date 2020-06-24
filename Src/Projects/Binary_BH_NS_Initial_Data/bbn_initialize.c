@@ -3045,9 +3045,12 @@ static void find_NS_surface_Ylm_method_CS(Grid_T *const grid,struct Grid_Params_
   GridParams->NS_R_Ylm->Lmax    = lmax;
   
   /* printing */
-  printf("|--> Max NS radius       = %e\n",Max_R_NS);
-  printf("|--> Min NS radius       = %e\n",Min_R_NS);
-  printf("|--> L2 norm of enthalpy = %e\n",h_L2_res);
+  printf("|--> Max NS radius           = %e\n",Max_R_NS);
+  printf("|--> Min NS radius           = %e\n",Min_R_NS);
+  printf("|--> L2 norm of enthalpy     = %e\n",h_L2_res);
+  printf("|--> Mass shedding indicator = %e\n",
+                      bbn_mass_shedding_indicator(grid));
+  
   l = lmax;
   for (m = 0; m <= l; ++m)
   {
