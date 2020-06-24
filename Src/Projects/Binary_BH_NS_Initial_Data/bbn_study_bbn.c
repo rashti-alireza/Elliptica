@@ -614,6 +614,9 @@ double bbn_mass_shedding_indicator(Grid_T *const grid)
   X[1] = 0;
   X[2] = 1;
   x_of_X(x,X,patch);
+  x[0] -= patch->c[0];
+  x[1] -= patch->c[1];
+  x[2] -= patch->c[2];
   r     = root_square(3,x,0);
   theta = acos(x[2]/r);
   phi   = arctan(x[1],x[0]);
@@ -651,6 +654,9 @@ double bbn_mass_shedding_indicator(Grid_T *const grid)
   X[1] = 0;
   X[2] = 1;
   x_of_X(x,X,patch);
+  x[0] -= patch->c[0];
+  x[1] -= patch->c[1];
+  x[2] -= patch->c[2];
   r     = root_square(3,x,0);
   theta = acos(x[2]/r);
   phi   = arctan(x[1],x[0]);
