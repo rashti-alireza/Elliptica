@@ -5848,228 +5848,240 @@ static void NS_BH_surface_CubedSpherical_grid(Grid_T *const grid,struct Grid_Par
     const unsigned Lmax   = GridParams->NS_R_Ylm->Lmax;
     double theta,phi;
     
-    X[2] = 1;/* since we are on the NS surface */
-    
-    /* filling min */
-    patch->min[0] = -1;
-    patch->min[1] = -1;
-    patch->min[2] = 0;
-
-    /* filling max */
-    patch->max[0] = 1;
-    patch->max[1] = 1;
-    patch->max[2] = 1;
-    
-    /* collocation */
-    patch->collocation[0] = Chebyshev_Extrema;
-    patch->collocation[1] = Chebyshev_Extrema;
-    patch->collocation[2] = Chebyshev_Extrema;
-
-    /* basis */
-    patch->basis[0] = Chebyshev_Tn_BASIS;
-    patch->basis[1] = Chebyshev_Tn_BASIS;
-    patch->basis[2] = Chebyshev_Tn_BASIS;
-      
-    patch->n[0] = N[0];
-    patch->n[1] = N[1];
-    patch->n[2] = N[2];
-  
-    initialize_collocation_struct(patch,&coll_s[0],0);
-    initialize_collocation_struct(patch,&coll_s[1],1);
-    
-    /* surface up */
-    for (i = 0; i < N[0]; ++i)
+    /* if coeffs exist */
+    if (realClm && imagClm)
     {
-      X[0] = point_value(i,&coll_s[0]);
-      for (j = 0; j < N[1]; ++j)
-      {
-        X[1] = point_value(j,&coll_s[1]);
-        find_theta_phi_of_XYZ_NS_CS(&theta,&phi,X,UP);
-        r = interpolation_Ylm(realClm,imagClm,Lmax,theta,phi);
-        for (k = 0; k < N[2]; ++k)
-          R[L(N,i,j,k)] = r;
-      }
-    }
-    sprintf(par,"grid%u_left_NS_surface_function_up",grid->gn);
-    add_parameter_array(par,R,N_total);
-    
-    if (same_res_flag)
-    {
-      Grid_T *grid_prev      = GridParams->grid_prev;
-      Patch_T *patch_prev    = GetPatch("left_NS_up",grid_prev);
-      const int R0_ind       = LookUpField_E("surface_function",patch_prev);
-      const double *const R0 = patch_prev->pool[R0_ind]->v;
+      X[2] = 1;/* since we are on the NS surface */
       
+      /* filling min */
+      patch->min[0] = -1;
+      patch->min[1] = -1;
+      patch->min[2] = 0;
+
+      /* filling max */
+      patch->max[0] = 1;
+      patch->max[1] = 1;
+      patch->max[2] = 1;
+      
+      /* collocation */
+      patch->collocation[0] = Chebyshev_Extrema;
+      patch->collocation[1] = Chebyshev_Extrema;
+      patch->collocation[2] = Chebyshev_Extrema;
+
+      /* basis */
+      patch->basis[0] = Chebyshev_Tn_BASIS;
+      patch->basis[1] = Chebyshev_Tn_BASIS;
+      patch->basis[2] = Chebyshev_Tn_BASIS;
+        
+      patch->n[0] = N[0];
+      patch->n[1] = N[1];
+      patch->n[2] = N[2];
+    
+      initialize_collocation_struct(patch,&coll_s[0],0);
+      initialize_collocation_struct(patch,&coll_s[1],1);
+      
+      /* surface up */
       for (i = 0; i < N[0]; ++i)
+      {
+        X[0] = point_value(i,&coll_s[0]);
         for (j = 0; j < N[1]; ++j)
         {
-          ijk = L(N,i,j,0);
-          dR_sum_square += Pow2(1-R[ijk]/R0[ijk]);
+          X[1] = point_value(j,&coll_s[1]);
+          find_theta_phi_of_XYZ_NS_CS(&theta,&phi,X,UP);
+          r = interpolation_Ylm(realClm,imagClm,Lmax,theta,phi);
+          for (k = 0; k < N[2]; ++k)
+            R[L(N,i,j,k)] = r;
         }
-      
-    }/* end of if (same_res_flag) */
-
-    /* surface down */
-    for (i = 0; i < N[0]; ++i)
-    {
-      X[0] = point_value(i,&coll_s[0]);
-      for (j = 0; j < N[1]; ++j)
-      {
-        X[1] = point_value(j,&coll_s[1]);
-        find_theta_phi_of_XYZ_NS_CS(&theta,&phi,X,DOWN);
-        r = interpolation_Ylm(realClm,imagClm,Lmax,theta,phi);
-        for (k = 0; k < N[2]; ++k)
-          R[L(N,i,j,k)] = r;
       }
-    }
-    sprintf(par,"grid%u_left_NS_surface_function_down",grid->gn);
-    add_parameter_array(par,R,N_total);
-    
-    if (same_res_flag)
-    {
-      Grid_T *grid_prev      = GridParams->grid_prev;
-      Patch_T *patch_prev    = GetPatch("left_NS_down",grid_prev);
-      const int R0_ind       = LookUpField_E("surface_function",patch_prev);
-      const double *const R0 = patch_prev->pool[R0_ind]->v;
+      sprintf(par,"grid%u_left_NS_surface_function_up",grid->gn);
+      add_parameter_array(par,R,N_total);
       
+      if (same_res_flag)
+      {
+        Grid_T *grid_prev      = GridParams->grid_prev;
+        Patch_T *patch_prev    = GetPatch("left_NS_up",grid_prev);
+        const int R0_ind       = LookUpField_E("surface_function",patch_prev);
+        const double *const R0 = patch_prev->pool[R0_ind]->v;
+        
+        for (i = 0; i < N[0]; ++i)
+          for (j = 0; j < N[1]; ++j)
+          {
+            ijk = L(N,i,j,0);
+            dR_sum_square += Pow2(1-R[ijk]/R0[ijk]);
+          }
+        
+      }/* end of if (same_res_flag) */
+
+      /* surface down */
       for (i = 0; i < N[0]; ++i)
+      {
+        X[0] = point_value(i,&coll_s[0]);
         for (j = 0; j < N[1]; ++j)
         {
-          ijk = L(N,i,j,0);
-          dR_sum_square += Pow2(1-R[ijk]/R0[ijk]);
+          X[1] = point_value(j,&coll_s[1]);
+          find_theta_phi_of_XYZ_NS_CS(&theta,&phi,X,DOWN);
+          r = interpolation_Ylm(realClm,imagClm,Lmax,theta,phi);
+          for (k = 0; k < N[2]; ++k)
+            R[L(N,i,j,k)] = r;
         }
-      
-    }/* end of if (same_res_flag) */
-
-    /* surface back */
-    for (i = 0; i < N[0]; ++i)
-    {
-      X[0] = point_value(i,&coll_s[0]);
-      for (j = 0; j < N[1]; ++j)
-      {
-        X[1] = point_value(j,&coll_s[1]);
-        find_theta_phi_of_XYZ_NS_CS(&theta,&phi,X,BACK);
-        r = interpolation_Ylm(realClm,imagClm,Lmax,theta,phi);
-        for (k = 0; k < N[2]; ++k)
-          R[L(N,i,j,k)] = r;
       }
-    }
-    sprintf(par,"grid%u_left_NS_surface_function_back",grid->gn);
-    add_parameter_array(par,R,N_total);
-    
-    if (same_res_flag)
-    {
-      Grid_T *grid_prev      = GridParams->grid_prev;
-      Patch_T *patch_prev    = GetPatch("left_NS_back",grid_prev);
-      const int R0_ind       = LookUpField_E("surface_function",patch_prev);
-      const double *const R0 = patch_prev->pool[R0_ind]->v;
+      sprintf(par,"grid%u_left_NS_surface_function_down",grid->gn);
+      add_parameter_array(par,R,N_total);
       
+      if (same_res_flag)
+      {
+        Grid_T *grid_prev      = GridParams->grid_prev;
+        Patch_T *patch_prev    = GetPatch("left_NS_down",grid_prev);
+        const int R0_ind       = LookUpField_E("surface_function",patch_prev);
+        const double *const R0 = patch_prev->pool[R0_ind]->v;
+        
+        for (i = 0; i < N[0]; ++i)
+          for (j = 0; j < N[1]; ++j)
+          {
+            ijk = L(N,i,j,0);
+            dR_sum_square += Pow2(1-R[ijk]/R0[ijk]);
+          }
+        
+      }/* end of if (same_res_flag) */
+
+      /* surface back */
       for (i = 0; i < N[0]; ++i)
+      {
+        X[0] = point_value(i,&coll_s[0]);
         for (j = 0; j < N[1]; ++j)
         {
-          ijk = L(N,i,j,0);
-          dR_sum_square += Pow2(1-R[ijk]/R0[ijk]);
+          X[1] = point_value(j,&coll_s[1]);
+          find_theta_phi_of_XYZ_NS_CS(&theta,&phi,X,BACK);
+          r = interpolation_Ylm(realClm,imagClm,Lmax,theta,phi);
+          for (k = 0; k < N[2]; ++k)
+            R[L(N,i,j,k)] = r;
         }
-      
-    }/* end of if (same_res_flag) */
-
-    /* surface front */
-    for (i = 0; i < N[0]; ++i)
-    {
-      X[0] = point_value(i,&coll_s[0]);
-      for (j = 0; j < N[1]; ++j)
-      {
-        X[1] = point_value(j,&coll_s[1]);
-        find_theta_phi_of_XYZ_NS_CS(&theta,&phi,X,FRONT);
-        r = interpolation_Ylm(realClm,imagClm,Lmax,theta,phi);
-        for (k = 0; k < N[2]; ++k)
-          R[L(N,i,j,k)] = r;
       }
-    }
-    sprintf(par,"grid%u_left_NS_surface_function_front",grid->gn);
-    add_parameter_array(par,R,N_total);
-    
-    if (same_res_flag)
-    {
-      Grid_T *grid_prev      = GridParams->grid_prev;
-      Patch_T *patch_prev    = GetPatch("left_NS_front",grid_prev);
-      const int R0_ind       = LookUpField_E("surface_function",patch_prev);
-      const double *const R0 = patch_prev->pool[R0_ind]->v;
+      sprintf(par,"grid%u_left_NS_surface_function_back",grid->gn);
+      add_parameter_array(par,R,N_total);
       
+      if (same_res_flag)
+      {
+        Grid_T *grid_prev      = GridParams->grid_prev;
+        Patch_T *patch_prev    = GetPatch("left_NS_back",grid_prev);
+        const int R0_ind       = LookUpField_E("surface_function",patch_prev);
+        const double *const R0 = patch_prev->pool[R0_ind]->v;
+        
+        for (i = 0; i < N[0]; ++i)
+          for (j = 0; j < N[1]; ++j)
+          {
+            ijk = L(N,i,j,0);
+            dR_sum_square += Pow2(1-R[ijk]/R0[ijk]);
+          }
+        
+      }/* end of if (same_res_flag) */
+
+      /* surface front */
       for (i = 0; i < N[0]; ++i)
+      {
+        X[0] = point_value(i,&coll_s[0]);
         for (j = 0; j < N[1]; ++j)
         {
-          ijk = L(N,i,j,0);
-          dR_sum_square += Pow2(1-R[ijk]/R0[ijk]);
+          X[1] = point_value(j,&coll_s[1]);
+          find_theta_phi_of_XYZ_NS_CS(&theta,&phi,X,FRONT);
+          r = interpolation_Ylm(realClm,imagClm,Lmax,theta,phi);
+          for (k = 0; k < N[2]; ++k)
+            R[L(N,i,j,k)] = r;
         }
-      
-    }/* end of if (same_res_flag) */
-
-    /* surface left */
-    for (i = 0; i < N[0]; ++i)
-    {
-      X[0] = point_value(i,&coll_s[0]);
-      for (j = 0; j < N[1]; ++j)
-      {
-        X[1] = point_value(j,&coll_s[1]);
-        find_theta_phi_of_XYZ_NS_CS(&theta,&phi,X,LEFT);
-        r = interpolation_Ylm(realClm,imagClm,Lmax,theta,phi);
-        for (k = 0; k < N[2]; ++k)
-          R[L(N,i,j,k)] = r;
       }
-    }
-    sprintf(par,"grid%u_left_NS_surface_function_left",grid->gn);
-    add_parameter_array(par,R,N_total);
-    
-    if (same_res_flag)
-    {
-      Grid_T *grid_prev      = GridParams->grid_prev;
-      Patch_T *patch_prev    = GetPatch("left_NS_left",grid_prev);
-      const int R0_ind       = LookUpField_E("surface_function",patch_prev);
-      const double *const R0 = patch_prev->pool[R0_ind]->v;
+      sprintf(par,"grid%u_left_NS_surface_function_front",grid->gn);
+      add_parameter_array(par,R,N_total);
       
+      if (same_res_flag)
+      {
+        Grid_T *grid_prev      = GridParams->grid_prev;
+        Patch_T *patch_prev    = GetPatch("left_NS_front",grid_prev);
+        const int R0_ind       = LookUpField_E("surface_function",patch_prev);
+        const double *const R0 = patch_prev->pool[R0_ind]->v;
+        
+        for (i = 0; i < N[0]; ++i)
+          for (j = 0; j < N[1]; ++j)
+          {
+            ijk = L(N,i,j,0);
+            dR_sum_square += Pow2(1-R[ijk]/R0[ijk]);
+          }
+        
+      }/* end of if (same_res_flag) */
+
+      /* surface left */
       for (i = 0; i < N[0]; ++i)
+      {
+        X[0] = point_value(i,&coll_s[0]);
         for (j = 0; j < N[1]; ++j)
         {
-          ijk = L(N,i,j,0);
-          dR_sum_square += Pow2(1-R[ijk]/R0[ijk]);
+          X[1] = point_value(j,&coll_s[1]);
+          find_theta_phi_of_XYZ_NS_CS(&theta,&phi,X,LEFT);
+          r = interpolation_Ylm(realClm,imagClm,Lmax,theta,phi);
+          for (k = 0; k < N[2]; ++k)
+            R[L(N,i,j,k)] = r;
         }
-      
-    }/* end of if (same_res_flag) */
-
-    
-    /* surface right */
-    for (i = 0; i < N[0]; ++i)
-    {
-      X[0] = point_value(i,&coll_s[0]);
-      for (j = 0; j < N[1]; ++j)
-      {
-        X[1] = point_value(j,&coll_s[1]);
-        find_theta_phi_of_XYZ_NS_CS(&theta,&phi,X,RIGHT);
-        r = interpolation_Ylm(realClm,imagClm,Lmax,theta,phi);
-        for (k = 0; k < N[2]; ++k)
-          R[L(N,i,j,k)] = r;
       }
-    }
-    sprintf(par,"grid%u_left_NS_surface_function_right",grid->gn);
-    add_parameter_array(par,R,N_total);
-    
-    if (same_res_flag)
-    {
-      Grid_T *grid_prev      = GridParams->grid_prev;
-      Patch_T *patch_prev    = GetPatch("left_NS_right",grid_prev);
-      const int R0_ind       = LookUpField_E("surface_function",patch_prev);
-      const double *const R0 = patch_prev->pool[R0_ind]->v;
+      sprintf(par,"grid%u_left_NS_surface_function_left",grid->gn);
+      add_parameter_array(par,R,N_total);
       
+      if (same_res_flag)
+      {
+        Grid_T *grid_prev      = GridParams->grid_prev;
+        Patch_T *patch_prev    = GetPatch("left_NS_left",grid_prev);
+        const int R0_ind       = LookUpField_E("surface_function",patch_prev);
+        const double *const R0 = patch_prev->pool[R0_ind]->v;
+        
+        for (i = 0; i < N[0]; ++i)
+          for (j = 0; j < N[1]; ++j)
+          {
+            ijk = L(N,i,j,0);
+            dR_sum_square += Pow2(1-R[ijk]/R0[ijk]);
+          }
+        
+      }/* end of if (same_res_flag) */
+
+      
+      /* surface right */
       for (i = 0; i < N[0]; ++i)
+      {
+        X[0] = point_value(i,&coll_s[0]);
         for (j = 0; j < N[1]; ++j)
         {
-          ijk = L(N,i,j,0);
-          dR_sum_square += Pow2(1-R[ijk]/R0[ijk]);
+          X[1] = point_value(j,&coll_s[1]);
+          find_theta_phi_of_XYZ_NS_CS(&theta,&phi,X,RIGHT);
+          r = interpolation_Ylm(realClm,imagClm,Lmax,theta,phi);
+          for (k = 0; k < N[2]; ++k)
+            R[L(N,i,j,k)] = r;
         }
+      }
+      sprintf(par,"grid%u_left_NS_surface_function_right",grid->gn);
+      add_parameter_array(par,R,N_total);
       
-    }/* end of if (same_res_flag) */
-
+      if (same_res_flag)
+      {
+        Grid_T *grid_prev      = GridParams->grid_prev;
+        Patch_T *patch_prev    = GetPatch("left_NS_right",grid_prev);
+        const int R0_ind       = LookUpField_E("surface_function",patch_prev);
+        const double *const R0 = patch_prev->pool[R0_ind]->v;
+        
+        for (i = 0; i < N[0]; ++i)
+          for (j = 0; j < N[1]; ++j)
+          {
+            ijk = L(N,i,j,0);
+            dR_sum_square += Pow2(1-R[ijk]/R0[ijk]);
+          }
+        
+      }/* end of if (same_res_flag) */
+    }/* end of if (realClm && imagClm) */
+    else/* if coeffs don't exist */
+    {
+      /* if surface finder interrupted and resolution is changing
+      // for the next iteration, this run is failed! */
+      if (!same_res_flag)
+      {
+        Error0("NS surface finder heavily failed and cannot get away with it.\n");
+      }
+    }
   }
   else
     Error0(NO_OPTION);
