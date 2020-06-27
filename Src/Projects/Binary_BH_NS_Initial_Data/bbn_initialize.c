@@ -3010,6 +3010,10 @@ static void find_NS_surface_Ylm_method_CS(Grid_T *const grid,struct Grid_Params_
       par->N     = N;
       dr = execute_root_finder(root);
       h_res[ij(i,j)] = root->residual;
+      
+      /* if NS surface finder interrupted */
+      if (root->interrupt)
+        break;
       /* if root finder is not OK for some reason */
       if (GRT(root->residual,RESIDUAL))
       {
@@ -3018,7 +3022,7 @@ static void find_NS_surface_Ylm_method_CS(Grid_T *const grid,struct Grid_Params_
         printf(".. Residual = %g\n",root->residual);
         //NS_surface_finder_work_flg = 0;/* since the residual is large don't update */
       }
-      
+        
       /*  new coords of R respect to the center of NS */
       y2[0] += N[0]*dr[0];
       y2[1] += N[1]*dr[0];
@@ -3033,7 +3037,30 @@ static void find_NS_surface_Ylm_method_CS(Grid_T *const grid,struct Grid_Params_
       if (Rnew_NS[ij(i,j)] < Min_R_NS)
         Min_R_NS = Rnew_NS[ij(i,j)];
     }/* end of for (j = 0; j < Nphi; ++j) */
+    
+    /* if NS surface finder interrupted */
+    if (root->interrupt)
+      break;
   }/* end of for (i = 0; i < Ntheta; ++i) */
+  
+  /* if NS surface finder interrupted */
+  if (root->interrupt)
+  {
+    /* these are crucial for the next grid */
+    Pseti("did_NS_surface_finder_work?",0);
+    GridParams->Max_R_NS_l        = Pgetd("NS_max_radius");
+    GridParams->NS_R_Ylm->realClm = 0;
+    GridParams->NS_R_Ylm->imagClm = 0;
+    GridParams->NS_R_Ylm->Lmax    = lmax;
+    free(Rnew_NS);
+    free(h_res);
+    free_root_finder(root);
+  
+    printf("} Finding the surface of NS, Ylm method ==> Done.\n");
+    pr_clock();
+    pr_line_custom('=');
+    return;
+  }
   
   h_L2_res = L2_norm(Ntheta*Nphi,h_res,0);
   if (h_L2_res > max_h_L2_res)
@@ -4739,6 +4766,8 @@ static Grid_T *TOV_KerrSchild_approximation(void)
   Psetd("NS_center_y",C_NS);
   Psetd("NS_center_z",0);
   Psetd("NS_ADM_mass",1);
+  Psetd("NS_max_radius",ns_R);
+  Psetd("NS_min_radius",ns_R);
   
   /* -> BH properties */  
   Psetd("r_excision",bh_R);
@@ -6600,8 +6629,12 @@ static double bbn_NS_surface_enthalpy_eq(void *params,const double *const x)
   sprintf(hint,"%s",root_name);
     
   IsXfound = find_X_and_patch(y,hint,patch0->grid,X,&patch);
-  if (!IsXfound)
+  if (IsXfound != 1)
+  {
+    Root_Finder_T *root_finder = pars->root_finder;
+    root_finder->interrupt = 1;
     return DBL_MAX;
+  }
     
   /* find enthalpy at the (X,Y,Z) */
   h_ind = _Ind("enthalpy");
@@ -6646,8 +6679,12 @@ static double bbn_NS_surface_denthalpy_dr(void *params,const double *const x,con
   sprintf(hint,"%s",root_name);
     
   IsXfound = find_X_and_patch(y,hint,patch0->grid,X,&patch);
-  if (!IsXfound)
+  if (IsXfound != 1)
+  {
+    Root_Finder_T *root_finder = pars->root_finder;
+    root_finder->interrupt = 1;
     return DBL_MAX;
+  }
  
   /* find denthalpy/dr at the (X,Y,Z): */
   
