@@ -3013,7 +3013,10 @@ static void find_NS_surface_Ylm_method_CS(Grid_T *const grid,struct Grid_Params_
       
       /* if NS surface finder interrupted */
       if (root->interrupt)
+      {
+        free(dr);
         break;
+      }
       /* if root finder is not OK for some reason */
       if (GRT(root->residual,RESIDUAL))
       {
@@ -3047,6 +3050,8 @@ static void find_NS_surface_Ylm_method_CS(Grid_T *const grid,struct Grid_Params_
   if (root->interrupt)
   {
     /* these are crucial for the next grid */
+    printf("|--> NS surface finder was interrupted.\n");
+    
     Pseti("did_NS_surface_finder_work?",0);
     GridParams->Max_R_NS_l        = Pgetd("NS_max_radius");
     GridParams->NS_R_Ylm->realClm = 0;
@@ -6103,8 +6108,8 @@ static void NS_BH_surface_CubedSpherical_grid(Grid_T *const grid,struct Grid_Par
     if (dR_rms < NS_surf_tolerance && did_NS_surface_finder_work)/* prints only if this is the case */
       printf("~> |R_2 - R1|/|R_1| = %g < Tolerance = %g:\n",dR_rms,NS_surf_tolerance);
     if (!did_NS_surface_finder_work)
-      printf("~> NS surface finder was failed:\n");
-    printf("~> No changes in NS surface\n");
+      printf("~> NS surface finder was failed.\n");
+    printf("~> No changes in NS surface.\n");
 
     Pseti("did_NS_surface_change?",0);
     
