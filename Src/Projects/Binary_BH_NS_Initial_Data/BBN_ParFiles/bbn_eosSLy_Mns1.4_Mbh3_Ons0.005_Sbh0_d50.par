@@ -41,8 +41,8 @@ BH_NS_initialization   = TOV_KerrSchild
 #-----------------------------------------------------------------------#
 
 #### NS:
-NS_enthalpy_update_weight      = 0.2
-NS_surface_update_weight       = 0.2
+NS_enthalpy_update_weight      = 0.3
+NS_surface_update_weight       = 0.3
 NS_surface_tolerance           = 1E-5
 NS_enthalpy_allowed_residual   = 1E-2
 NS_surface_finder_method       = SphericalHarmonic
@@ -52,14 +52,14 @@ NS_phi_equation_smoothness     = 0.1
 
 #### BH:
 BH_KerrSchild_RollOff          = 25
-BH_r_excision_update_weight    = 0(x4)->0.2
+BH_r_excision_update_weight    = 0(x4)->0.3
 BH_mass_tolerance              = 1E-3
-BH_spin_update_weight          = 0.2
+BH_spin_update_weight          = 0.3
 
 #### BH_NS:
 P_ADM_control_method           = none(x4)->adjust(x_CM,y_CM)
 P_ADM_control_tolerance        = 1E-5
-P_ADM_control_update_weight    = 0.1
+P_ADM_control_update_weight    = 0.3
 P_ADM_control_iteration        = 10
 force_balance_equation         = none(x4)->adjust(d/dy:Omega)
 
@@ -71,8 +71,8 @@ write_checkpoint_every = 0h
 #-----------------------------------------------------------------------#
 
 Solving_Order                     = phi,psi,eta,B0_U0,B0_U1,B0_U2
-Solving_Newton_Update_Weight      = 0.2 
-Solving_Field_Update_Weight       = 0.2 
+Solving_Newton_Update_Weight      = 0.3
+Solving_Field_Update_Weight       = 0.3 
 Solving_Residual                  = 1E-10
 Solving_Residual_Factor           = 1E-5
 Solving_Max_Number_of_Iteration   = 1
