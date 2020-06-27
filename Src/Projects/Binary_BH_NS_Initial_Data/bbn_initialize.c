@@ -1069,7 +1069,7 @@ static void adjust_NS_center_draw_enthalpy(Grid_T *const grid)
       x[0] = patch->node[ijk]->x[0]+R[0];
       x[1] = patch->node[ijk]->x[1]+R[1];
       x[2] = patch->node[ijk]->x[2]+R[2];
-      find_X_and_patch(x,hint,grid,Xp,&patchp);
+      assert(find_X_and_patch(x,hint,grid,Xp,&patchp));
       
       /* if point x located outside of NS surrounding */
       if (!IsItNSPatch(patchp) && !IsItNSSurroundingPatch(patchp))
@@ -2199,7 +2199,7 @@ static void interpolate_and_initialize_to_next_grid(Grid_T *const grid_next,Grid
           Patch_T *patchp = 0;/* patch in grid_prev contains (x,y,z) */
           
           /* finding X and patch in grid_prev, associated to x */
-          find_X_and_patch(x,hint,grid_prev,Xp,&patchp);
+          assert(find_X_and_patch(x,hint,grid_prev,Xp,&patchp));
           
           B0_U0[ijk]    = interpolate_from_patch_prim("B0_U0",Xp,patchp);
           B0_U1[ijk]    = interpolate_from_patch_prim("B0_U1",Xp,patchp);
@@ -2232,7 +2232,7 @@ static void interpolate_and_initialize_to_next_grid(Grid_T *const grid_next,Grid
           Patch_T *patchp = 0;/* patch in grid_prev contains (x,y,z) */
           
           /* finding X and patch in grid_prev, associated to x */
-          find_X_and_patch(x,hint,grid_prev,Xp,&patchp);
+          assert(find_X_and_patch(x,hint,grid_prev,Xp,&patchp));
           
           B0_U0[ijk] = interpolate_from_patch_prim("B0_U0",Xp,patchp);
           B0_U1[ijk] = interpolate_from_patch_prim("B0_U1",Xp,patchp);
@@ -2383,7 +2383,7 @@ static void interpolate_and_initialize_to_next_grid(Grid_T *const grid_next,Grid
         Patch_T *patchp = 0;/* patch in grid_prev contains (x,y,z) */
         
         /* finding X and patch in grid_prev, associated to x */
-        find_X_and_patch(x,hint,grid_prev,Xp,&patchp);
+        assert(find_X_and_patch(x,hint,grid_prev,Xp,&patchp));
         
         B0_U0[ijk] = interpolate_from_patch_prim("B0_U0",Xp,patchp);
         B0_U1[ijk] = interpolate_from_patch_prim("B0_U1",Xp,patchp);
@@ -2506,7 +2506,7 @@ static void interpolate_and_initialize_to_next_grid(Grid_T *const grid_next,Grid
           Patch_T *patchp = 0;/* patch in grid_prev contains (x,y,z) */
           
           /* finding X and patch in grid_prev, associated to x */
-          find_X_and_patch(x,hint,grid_prev,Xp,&patchp);
+          assert(find_X_and_patch(x,hint,grid_prev,Xp,&patchp));
           
           B0_U0[ijk]    = interpolate_from_patch_prim("B0_U0",Xp,patchp);
           B0_U1[ijk]    = interpolate_from_patch_prim("B0_U1",Xp,patchp);
@@ -2539,7 +2539,7 @@ static void interpolate_and_initialize_to_next_grid(Grid_T *const grid_next,Grid
           Patch_T *patchp = 0;/* patch in grid_prev contains (x,y,z) */
           
           /* finding X and patch in grid_prev, associated to x */
-          find_X_and_patch(x,hint,grid_prev,Xp,&patchp);
+          assert(find_X_and_patch(x,hint,grid_prev,Xp,&patchp));
           
           B0_U0[ijk] = interpolate_from_patch_prim("B0_U0",Xp,patchp);
           B0_U1[ijk] = interpolate_from_patch_prim("B0_U1",Xp,patchp);
@@ -2663,7 +2663,7 @@ static void interpolate_and_initialize_to_next_grid(Grid_T *const grid_next,Grid
           Patch_T *patchp = 0;/* patch in grid_prev contains (x,y,z) */
           
           /* finding X and patch in grid_prev, associated to x */
-          find_X_and_patch(x,hint,grid_prev,Xp,&patchp);
+          assert(find_X_and_patch(x,hint,grid_prev,Xp,&patchp));
           
           B0_U0[ijk]    = interpolate_from_patch_prim("B0_U0",Xp,patchp);
           B0_U1[ijk]    = interpolate_from_patch_prim("B0_U1",Xp,patchp);
@@ -2696,7 +2696,7 @@ static void interpolate_and_initialize_to_next_grid(Grid_T *const grid_next,Grid
           Patch_T *patchp = 0;/* patch in grid_prev contains (x,y,z) */
           
           /* finding X and patch in grid_prev, associated to x */
-          find_X_and_patch(x,hint,grid_prev,Xp,&patchp);
+          assert(find_X_and_patch(x,hint,grid_prev,Xp,&patchp));
           
           B0_U0[ijk] = interpolate_from_patch_prim("B0_U0",Xp,patchp);
           B0_U1[ijk] = interpolate_from_patch_prim("B0_U1",Xp,patchp);
@@ -2862,6 +2862,8 @@ static int find_X_and_patch(const double *const x,const char *const hint,Grid_T 
         else
         {
           fprintf(stderr,"The point (%g,%g,%g) could not be found!\n",x[0],x[1],x[2]);
+          fflush(stdout);
+          fflush(stderr);
           ret = 0;
           /* Error0("Point not found!\n"); */
         }
@@ -2869,6 +2871,8 @@ static int find_X_and_patch(const double *const x,const char *const hint,Grid_T 
       else
       {
         fprintf(stderr,"The point (%g,%g,%g) could not be found!\n",x[0],x[1],x[2]);
+        fflush(stdout);
+        fflush(stderr);
         ret = 0;
         /* Error0("Point not found!\n"); */
       }
@@ -6588,14 +6592,17 @@ static double bbn_NS_surface_enthalpy_eq(void *params,const double *const x)
   double X[3],h;
   int h_ind;
   char hint[1000],*root_name;
+  int IsXfound;
   
   root_name = strstr(patch0->name,"_");/* the patch->name convention is grid\d?_root */
   assert(root_name);
   root_name++;
   sprintf(hint,"%s",root_name);
     
-  find_X_and_patch(y,hint,patch0->grid,X,&patch);
-  
+  IsXfound = find_X_and_patch(y,hint,patch0->grid,X,&patch);
+  if (!IsXfound)
+    return DBL_MAX;
+    
   /* find enthalpy at the (X,Y,Z) */
   h_ind = _Ind("enthalpy");
   if (!patch->pool[h_ind]->v)/* if there is no enthalpy defined in the patch */
@@ -6631,14 +6638,17 @@ static double bbn_NS_surface_denthalpy_dr(void *params,const double *const x,con
                   *interp_dh_dy = 0,
                   *interp_dh_dz = 0;
   char hint[1000],*root_name;
+  int IsXfound;
   
   root_name = strstr(patch0->name,"_");/* the patch->name convention is grid\d?_root */
   assert(root_name);
   root_name++;
   sprintf(hint,"%s",root_name);
     
-  find_X_and_patch(y,hint,patch0->grid,X,&patch);
-  
+  IsXfound = find_X_and_patch(y,hint,patch0->grid,X,&patch);
+  if (!IsXfound)
+    return DBL_MAX;
+ 
   /* find denthalpy/dr at the (X,Y,Z): */
   
   dh_dx_ind = _Ind("denthalpy_D0");
