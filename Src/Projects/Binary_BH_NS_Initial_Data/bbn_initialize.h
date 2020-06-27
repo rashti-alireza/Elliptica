@@ -149,7 +149,7 @@ void bbn_populate_free_data(Grid_T *const grid);
 void bbn_update_psi10A_UiUj(Patch_T *const patch);
 void bbn_update_Aij(Grid_T *const grid);
 static void interpolate_and_initialize_to_next_grid(Grid_T *const grid_next,Grid_T *const grid_prev);
-static void find_X_and_patch(const double *const x,const char *const hint,Grid_T *const grid,double *const X,Patch_T **const ppatch);
+static int find_X_and_patch(const double *const x,const char *const hint,Grid_T *const grid,double *const X,Patch_T **const ppatch);
 static double interpolate_from_patch_prim(const char *const field,const double *const X,Patch_T *const patch);
 static void find_Euler_eq_const_TOV_KerrSchild(Grid_T *const grid);
 static void find_Euler_eq_const(Grid_T *const grid);

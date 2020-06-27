@@ -2799,13 +2799,15 @@ static double interpolate_from_patch_prim(const char *const field,const double *
 
 /* given a cartesian point x on the grid, it finds the corresponding X and patch 
 // on which this x takes place. 
-// hint, is the name of the patch that potentially has the given x */
-static void find_X_and_patch(const double *const x,const char *const hint,Grid_T *const grid,double *const X,Patch_T **const ppatch)
+// hint, is the name of the patch that potentially has the given x 
+// -> return value: for success 1, otherwise 0 */
+static int find_X_and_patch(const double *const x,const char *const hint,Grid_T *const grid,double *const X,Patch_T **const ppatch)
 {
   Needle_T *needle = alloc_needle();
   const double LOW_RES_ERR = 1E-9;
   unsigned *found;
   unsigned p;
+  int ret = 1;
   
   needle->grid = grid;
   needle->x    = x;
@@ -2860,13 +2862,15 @@ static void find_X_and_patch(const double *const x,const char *const hint,Grid_T
         else
         {
           fprintf(stderr,"The point (%g,%g,%g) could not be found!\n",x[0],x[1],x[2]);
-          Error0("Point not found!\n");
+          ret = 0;
+          /* Error0("Point not found!\n"); */
         }
       }
       else
       {
         fprintf(stderr,"The point (%g,%g,%g) could not be found!\n",x[0],x[1],x[2]);
-        Error0("Point not found!\n");
+        ret = 0;
+        /* Error0("Point not found!\n"); */
       }
     }
     else
@@ -2876,6 +2880,8 @@ static void find_X_and_patch(const double *const x,const char *const hint,Grid_T
     }
   }
   free_needle(needle);
+  
+  return ret;
 }
 
 #define ij(i,j) ((j)+Nphi*(i))
