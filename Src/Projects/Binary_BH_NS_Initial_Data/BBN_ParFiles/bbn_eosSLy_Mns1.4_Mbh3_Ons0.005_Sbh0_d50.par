@@ -43,7 +43,8 @@ BH_NS_initialization   = TOV_KerrSchild
 #### NS:
 NS_enthalpy_update_weight      = 0.2
 NS_surface_update_weight       = 0.2
-NS_surface_tolerance           = 1E-2
+NS_surface_tolerance           = 1E-5
+NS_enthalpy_allowed_residual   = 1E-2
 NS_surface_finder_method       = SphericalHarmonic
 NS_surface_Ylm_expansion_max_l = 5(x400)->6
 NS_adjust_center_method        = draw_enthalpy
