@@ -71,8 +71,8 @@ write_checkpoint_every = 0h
 #-----------------------------------------------------------------------#
 
 Solving_Order                     = phi,psi,eta,B0_U0,B0_U1,B0_U2
-Solving_Newton_Update_weight      = 0.2
-Solving_Field_Update_weight       = 0.2
+Solving_Newton_update_weight      = 0.2
+Solving_field_update_weight       = 0.2
 Solving_Residual                  = 1E-10
 Solving_Residual_Factor           = 1E-5
 Solving_Max_Number_of_Iteration   = 1
