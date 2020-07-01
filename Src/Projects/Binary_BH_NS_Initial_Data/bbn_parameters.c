@@ -95,4 +95,8 @@ void bbn_set_default_parameters(void)
   
   /* test elliptic equations converge [yes/no] */
   Pset_default("Elliptic_Convergence_Test","NO");
+  
+  /* update weight for Euler constant */
+  Pset_default("NS_Euler_const_update_weight","1.0");
+  
 }

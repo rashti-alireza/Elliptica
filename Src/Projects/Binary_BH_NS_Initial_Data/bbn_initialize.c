@@ -1472,7 +1472,7 @@ static void find_Euler_eq_const(Grid_T *const grid)
   printf("{ Finding Euler equation constant using NS baryonic mass ...\n");
   
   Root_Finder_T *root = init_root_finder(1);
-  const double W1  = Pgetd("Solving_Field_Update_Weight");
+  const double W1  = Pgetd("NS_Euler_const_update_weight");
   const double W2  = 1-W1;
   double *Euler_const = 0;
   double guess[1] = {Pgetd("Euler_equation_constant")};
