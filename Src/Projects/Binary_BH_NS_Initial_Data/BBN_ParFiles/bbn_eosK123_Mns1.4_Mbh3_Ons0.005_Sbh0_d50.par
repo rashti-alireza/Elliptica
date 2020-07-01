@@ -42,6 +42,7 @@ BH_NS_initialization   = TOV_KerrSchild
 #### NS:
 NS_enthalpy_update_weight      = 0.2
 NS_surface_update_weight       = 0.2
+NS_Euler_const_update_weight   = 1.0
 NS_surface_tolerance           = 1E-5
 NS_enthalpy_allowed_residual   = 1E-2
 NS_surface_finder_method       = SphericalHarmonic
