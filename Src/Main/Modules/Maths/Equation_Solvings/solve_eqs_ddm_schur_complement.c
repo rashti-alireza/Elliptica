@@ -1221,13 +1221,15 @@ static void fill_C_F_collocation(Patch_T *const patch, Pair_T *const pair)
 }
 
 /* making E prime and f prime. refer to the note on the very top
+// NOTE: if you wanna switch to long version put LONG_VERSION to 1.
 // ->return value: some info */
 static char *making_E_prime_and_f_prime(Patch_T *const patch)
 {
   const double time1 = get_time_sec();
+  const int LONG_VERSION = 0;/* long version (= 1), normal version (= 0). */
   DDM_Schur_Complement_T *const S = patch->solving_man->method->SchurC;
   double **E_Trans;
-  Matrix_T *const a = cast_matrix_ccs(S->B);
+  Matrix_T *a;
   double *const f = S->f;
   double **xs,**bs;
   Matrix_T *E_prime;
@@ -1236,6 +1238,11 @@ static char *making_E_prime_and_f_prime(Patch_T *const patch)
   unsigned i;
   char *msg = calloc(10000,1);
   IsNull(msg);
+  
+  if (LONG_VERSION)
+    a = cast_matrix_ccs_long(S->B);
+  else
+    a = cast_matrix_ccs(S->B);
   
   /* free unwanted memories */
   free_matrix(S->B);
@@ -1265,7 +1272,11 @@ static char *making_E_prime_and_f_prime(Patch_T *const patch)
   umfpack->bs = bs;
   umfpack->xs = xs;
   umfpack->ns = ns;
-  direct_solver_series_umfpack_di(umfpack);
+  
+  if (LONG_VERSION)
+    direct_solver_series_umfpack_dl(umfpack);
+  else
+    direct_solver_series_umfpack_di(umfpack);
   
   S->f_prime = xs[ns-1];
   E_prime = calloc(1,sizeof(*E_prime));
