@@ -58,14 +58,12 @@ void bbn_measures(Grid_T *const grid)
   double adm_mass,kommar_mass;
   const int solving_iter   = PgetiEZ("solving_iteration_number");
   const double ns_adm_mass = Pgetd("NS_ADM_mass");
-  const double bh_irr_mass = Pgetd("BH_irreducible_mass");
-  double virial_error, binding_energy,mass_ratio;
+  double virial_error, binding_energy;
   const double NS_R_avg = NS_r_average(grid);
   double Rc_NS[3] = {0}, Rc_BH[3] = {0};/* centers */
   double S_NS[3]  = {0}, S_BH[3]  = {0};/* spins */
   double S_NS_JRP_method[3]  = {0}, S_BH_JRP_method[3]  = {0};/* spins */
-  
-  double chris_bh_mass = 1;/* Christodoulou mass, 1 to avoid division by 0 */
+  double bh_chris_mass = 1;/* Christodoulou mass, 1 to avoid division by 0 */
   
   /* adm mass */
   obs = init_observable(grid,bbn_plan_obs_CS,bbn_free_obs_CS);
@@ -80,11 +78,6 @@ void bbn_measures(Grid_T *const grid)
   plan_observable(obs);
   kommar_mass = obs->M(obs);
   free_observable(obs);
-  
-  /* mass ratio, E_b , error */
-  mass_ratio     = bh_irr_mass/ns_adm_mass;
-  binding_energy = adm_mass-bh_irr_mass-ns_adm_mass;
-  virial_error   = fabs(1-kommar_mass/adm_mass);
   
   /* some pars are defined after 0 iter */
   if (solving_iter > 0 && solving_iter != INT_MAX)
@@ -101,19 +94,36 @@ void bbn_measures(Grid_T *const grid)
     /* BH center */
     bbn_Rc_BH(Rc_BH,grid);
     
+    double bh_irr_mass = Pgetd("BH_irreducible_mass_current");
     double s_BH2  = Pow2(S_BH[0])+Pow2(S_BH[1])+Pow2(S_BH[2]);
     double irrm2  = Pow2(bh_irr_mass);
-    chris_bh_mass = sqrt(irrm2+s_BH2/(4*irrm2));
-    Psetd("Christodoulou_mass",chris_bh_mass);
+    bh_chris_mass = sqrt(irrm2+s_BH2/(4*irrm2));
+    Psetd("BH_Christodoulou_mass",bh_chris_mass);
+    
+    /* TOV star with the current baryonic mass 
+    // to compute compactness and adm mass of an isolated NS
+    // and mass ratio and binding energy */
+    TOV_T *tov = TOV_init();
+    tov->bar_m = Pgetd("NS_baryonic_mass_current");
+    tov->description = "current baryonic mass";
+    tov = TOV_solution(tov);
+    binding_energy = adm_mass-bh_chris_mass-tov->ADM_m;
+    /* update parameters */
+    Psetd("NS_TOV_compactness" ,tov->ADM_m/tov->rbar[tov->N-1]);
+    Psetd("NS_TOV_adm_mass"    ,tov->ADM_m);
+    Psetd("NS_TOV_radius"      ,tov->rbar[tov->N-1]);
+    Psetd("mass_ratio"         ,bh_chris_mass/tov->ADM_m);
+    Psetd("Binding_energy"     ,binding_energy);
+    
+    TOV_free(tov);
   }
+  
+  virial_error   = fabs(1-kommar_mass/adm_mass);
   
   /* update parameters */ 
   Psetd("BBN_ADM_mass"   ,adm_mass);
   Psetd("BBN_Kommar_mass",kommar_mass);
-  Psetd("Binding_energy" ,binding_energy);
   Psetd("Virial_error"   ,virial_error);
-  Psetd("mass_ratio"     ,mass_ratio);
-  Psetd("NS_compactness" ,Pgetd("NS_ADM_mass")/NS_R_avg);
   Psetd("NS_average_proper_radius" ,NS_R_avg);
   Psetd("NS_mass_shedding_indicator",bbn_mass_shedding_indicator(grid));
   Psetd("NS_Sx_Campanelli",S_NS[0]);
@@ -140,9 +150,9 @@ void bbn_measures(Grid_T *const grid)
   Psetd("BH_Sy_JRP",S_BH_JRP_method[1]);
   Psetd("BH_Sz_JRP",S_BH_JRP_method[2]);
   
-  Psetd("BH_chi_x",S_BH[0]/Pow2(chris_bh_mass));
-  Psetd("BH_chi_y",S_BH[1]/Pow2(chris_bh_mass));
-  Psetd("BH_chi_z",S_BH[2]/Pow2(chris_bh_mass));
+  Psetd("BH_chi_x",S_BH[0]/Pow2(bh_chris_mass));
+  Psetd("BH_chi_y",S_BH[1]/Pow2(bh_chris_mass));
+  Psetd("BH_chi_z",S_BH[2]/Pow2(bh_chris_mass));
   
   Psetd("BH_Rcenter_x",Rc_BH[0]);
   Psetd("BH_Rcenter_y",Rc_BH[1]);
@@ -222,7 +232,9 @@ void bbn_print_properties(Grid_T *const grid,const unsigned iteration, const cha
   PR_PARAMETR_IN_FILE(NS_baryonic_mass_current)
   PR_PARAMETR_IN_FILE(NS_ADM_mass)
   PR_PARAMETR_IN_FILE(NS_Kommar_mass)
+  PR_PARAMETR_IN_FILE(NS_TOV_ADM_mass)
   PR_PARAMETR_IN_FILE(NS_average_proper_radius)
+  PR_PARAMETR_IN_FILE(NS_TOV_radius)
   PR_PARAMETR_IN_FILE(NS_mass_shedding_indicator)
   PR_PARAMETR_IN_FILE(NS_Sx_Campanelli)
   PR_PARAMETR_IN_FILE(NS_Sy_Campanelli)
@@ -242,7 +254,7 @@ void bbn_print_properties(Grid_T *const grid,const unsigned iteration, const cha
   PR_PARAMETR_IN_FILE(BH_irreducible_mass_current)
   PR_PARAMETR_IN_FILE(BH_ADM_mass)
   PR_PARAMETR_IN_FILE(BH_Kommar_mass)
-  PR_PARAMETR_IN_FILE(Christodoulou_mass)
+  PR_PARAMETR_IN_FILE(BH_Christodoulou_mass)
   
   PR_PARAMETR_IN_FILE(BH_AH_area)
   PR_PARAMETR_IN_FILE(BH_Sx_Campanelli)
@@ -262,7 +274,7 @@ void bbn_print_properties(Grid_T *const grid,const unsigned iteration, const cha
   PR_PARAMETR_IN_FILE(BH_Rcenter_z)
     
   PR_PARAMETR_IN_FILE(mass_ratio)
-  PR_PARAMETR_IN_FILE(NS_compactness)
+  PR_PARAMETR_IN_FILE(NS_TOV_compactness)
   
   PR_PARAMETR_IN_FILE(Px_ADM)
   PR_PARAMETR_IN_FILE(Py_ADM)
