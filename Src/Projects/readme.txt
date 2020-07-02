@@ -8,6 +8,7 @@
 1. The name of the project function and project directory must 
    be the same in order to be compiled correctly.
 
-2. If the include files to be used by others are put in the "Includes" 
+2. The include files used by the other projects are put in the "Includes" 
    directory.
+
 
