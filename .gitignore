@@ -1,5 +1,6 @@
 # Ignore the following:
 Src/Projects/S2_Killing_Vector/*
+Src/Projects/S2_Killing_Vector
 
 # ignore backup joe files:
 *.*~ 

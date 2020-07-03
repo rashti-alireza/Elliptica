@@ -15,8 +15,10 @@ typedef struct FIELD_T
              // e.g. fields in spectral expansion needs both 
              // coefficients of expansion and values of field on each node.
              // so for field with expansion this v2 refers to coefficents
-             // value.
-             */
+             // value. */
+  double *v3;/* other values. for example in Ylm expansion we need 
+             // both real and imaginary coeffs, one goes with v2,
+             // the other goes with v3; */
   char *attr;/* attributes of fields like its dimension 
              // or other essential info.
              */
