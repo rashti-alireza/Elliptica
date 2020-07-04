@@ -99,4 +99,10 @@ void bbn_set_default_parameters(void)
   /* update weight for Euler constant */
   Pset_default("NS_Euler_const_update_weight","1.0");
   
+  /* root finder method for NS surface
+  // options:
+  // 1. Bisect_Single: using bisect method.
+  // 2. Steepest_Descent: using steepest descent method. */
+  Pset_default("NS_surface_root_finder","Bisect_Single");
+  
 }

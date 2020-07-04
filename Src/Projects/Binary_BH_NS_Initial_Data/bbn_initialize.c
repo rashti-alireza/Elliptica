@@ -2889,7 +2889,8 @@ static int find_X_and_patch(const double *const x,const char *const hint,Grid_T 
 }
 
 #define ij(i,j) ((j)+Nphi*(i))
-/* given the grid, find the NS surface on Ylm points 
+/* given the grid and Steepest Descent root finder, 
+// find the NS surface on Ylm points 
 // i.e (theta,phi) collocations are = (Legendre,EquiSpaced),
 // using the fact that at the surface enthalpy = 1.
 // it fills also NS radius attributes:
@@ -2899,7 +2900,7 @@ static int find_X_and_patch(const double *const x,const char *const hint,Grid_T 
 //   GridParams->NS_R_Ylm->Lmax;
 //
 // we assumed cubed spherical grid */
-static void find_NS_surface_Ylm_method_CS(Grid_T *const grid,struct Grid_Params_S *const GridParams)
+static void find_NS_surface_Ylm_SD_CS(Grid_T *const grid,struct Grid_Params_S *const GridParams)
 {
   pr_line_custom('=');
   printf("{ Finding the surface of NS, Ylm method ...\n");
@@ -2927,7 +2928,7 @@ static void find_NS_surface_Ylm_method_CS(Grid_T *const grid,struct Grid_Params_
   
   /* populate root finder */
   Root_Finder_T *root = init_root_finder(1);
-  root->type      = Pgets("RootFinder_Method");
+  root->type      = "Steepest_Descent";
   root->tolerance = Pgetd("RootFinder_Tolerance");
   root->MaxIter   = (unsigned)Pgeti("RootFinder_Max_Number_of_Iteration");
   root->x_gss     = &guess;
@@ -3008,6 +3009,258 @@ static void find_NS_surface_Ylm_method_CS(Grid_T *const grid,struct Grid_Params_
       par->x0[2] = x[2];
       par->patch = h_patch;
       par->N     = N;
+      dr = execute_root_finder(root);
+      h_res[ij(i,j)] = root->residual;
+      
+      /* if NS surface finder interrupted */
+      if (root->interrupt)
+      {
+        free(dr);
+        break;
+      }
+      /* if root finder is not OK for some reason */
+      if (GRT(root->residual,RESIDUAL))
+      {
+        printf(". Root finder for NS surface at %s:\n.. ",h_patch->name);
+        print_root_finder_exit_status(root);
+        printf(".. Residual = %g\n",root->residual);
+        //NS_surface_finder_work_flg = 0;/* since the residual is large don't update */
+      }
+        
+      /*  new coords of R respect to the center of NS */
+      y2[0] += N[0]*dr[0];
+      y2[1] += N[1]*dr[0];
+      y2[2] += N[2]*dr[0];
+      Rnew_NS[ij(i,j)] = root_square(3,y2,0);
+      free(dr);
+      
+      /* find the max NS radius */
+      if (Rnew_NS[ij(i,j)] > Max_R_NS)
+        Max_R_NS = Rnew_NS[ij(i,j)];
+      /* find the min NS radius */
+      if (Rnew_NS[ij(i,j)] < Min_R_NS)
+        Min_R_NS = Rnew_NS[ij(i,j)];
+    }/* end of for (j = 0; j < Nphi; ++j) */
+    
+    /* if NS surface finder interrupted */
+    if (root->interrupt)
+      break;
+  }/* end of for (i = 0; i < Ntheta; ++i) */
+  
+  /* if NS surface finder interrupted */
+  if (root->interrupt)
+  {
+    /* these are crucial for the next grid */
+    printf("|--> NS surface finder was interrupted.\n");
+    
+    Pseti("did_NS_surface_finder_work?",0);
+    GridParams->Max_R_NS_l        = Pgetd("NS_max_radius");
+    GridParams->NS_R_Ylm->realClm = 0;
+    GridParams->NS_R_Ylm->imagClm = 0;
+    GridParams->NS_R_Ylm->Lmax    = lmax;
+    free(Rnew_NS);
+    free(h_res);
+    free_root_finder(root);
+  
+    printf("} Finding the surface of NS, Ylm method ==> Done.\n");
+    pr_clock();
+    pr_line_custom('=');
+    return;
+  }
+  
+  h_L2_res = L2_norm(Ntheta*Nphi,h_res,0);
+  if (h_L2_res > max_h_L2_res)
+    NS_surface_finder_work_flg = 0;/* since the residual is large don't update */
+  else
+    NS_surface_finder_work_flg = 1;
+    
+  /* adding maximum radius of NS to grid parameters */
+  GridParams->Max_R_NS_l = Max_R_NS;
+  
+  /* making radius of NS parameter at each patch using Ylm interpolation */
+  double *realClm = alloc_ClmYlm(lmax);
+  double *imagClm = alloc_ClmYlm(lmax);
+  
+  /* calculating coeffs */
+  get_Ylm_coeffs(realClm,imagClm,Rnew_NS,Ntheta,Nphi,lmax);
+  GridParams->NS_R_Ylm->realClm = realClm;
+  GridParams->NS_R_Ylm->imagClm = imagClm;
+  GridParams->NS_R_Ylm->Lmax    = lmax;
+  
+  /* printing */
+  printf("|--> Max NS radius           = %e\n",Max_R_NS);
+  printf("|--> Min NS radius           = %e\n",Min_R_NS);
+  printf("|--> L2 norm of enthalpy     = %e\n",h_L2_res);
+  printf("|--> Mass shedding indicator = %e\n",
+                      bbn_mass_shedding_indicator(grid));
+  
+  l = lmax;
+  for (m = 0; m <= l; ++m)
+  {
+    unsigned lm = lm2n(l,m);
+    printf("|--> Truncation error [Real(C[%u][%u])] = %e\n",l,m,realClm[lm]);
+    printf("|--> Truncation error [Imag(C[%u][%u])] = %e\n",l,m,imagClm[lm]);
+  }
+  
+  /* if some day you wanna filter Clm's */
+  if (0)
+  {
+    const double e = 0.1;
+    for (l = 0; l <= lmax; ++l)
+      for (m = 0; m <= l; ++m)
+      {
+        unsigned lm = lm2n(l,m);
+        realClm[lm] /= (1+e*Pow2(l)*Pow2(l+1));
+        imagClm[lm] /= (1+e*Pow2(l)*Pow2(l+1));
+      }
+  }
+  
+  free(Rnew_NS);
+  free(h_res);
+  free_root_finder(root);
+  
+  Pseti("did_NS_surface_finder_work?",NS_surface_finder_work_flg);
+  
+  Psetd("NS_max_radius",Max_R_NS);
+  Psetd("NS_min_radius",Min_R_NS);
+  
+  printf("} Finding the surface of NS, Ylm method ==> Done.\n");
+  pr_clock();
+  pr_line_custom('=');
+}
+#ifdef ij
+#undef ij
+#endif
+
+#define ij(i,j) ((j)+Nphi*(i))
+/* given the grid and bisect root finder, 
+// find the NS surface on Ylm points 
+// i.e (theta,phi) collocations are = (Legendre,EquiSpaced),
+// using the fact that at the surface enthalpy = 1.
+// it fills also NS radius attributes:
+//   GridParams->Max_R_NS_l;
+//   GridParams->NS_R_Ylm->realClm;
+//   GridParams->NS_R_Ylm->imagClm;
+//   GridParams->NS_R_Ylm->Lmax;
+//
+// we assumed cubed spherical grid */
+static void find_NS_surface_Ylm_bisect_CS(Grid_T *const grid,struct Grid_Params_S *const GridParams)
+{
+  pr_line_custom('=');
+  printf("{ Finding the surface of NS, Ylm method ...\n");
+  
+  /* the stucture for the root finder */
+  struct NS_surface_RootFinder_S par[1];
+  unsigned Ntheta,Nphi;/* total number of theta and phi points */
+  const unsigned lmax = (unsigned)Pgeti("NS_surface_Ylm_expansion_max_l");
+  const double RESIDUAL = sqrt(Pgetd("RootFinder_Tolerance"));
+  const double max_h_L2_res = Pgetd("NS_enthalpy_allowed_residual");
+  double h_L2_res = 0;
+  double theta,phi;
+  double *Rnew_NS = 0;/* new R for NS */
+  double Max_R_NS = 0;/* maximum radius of NS */
+  double Min_R_NS = DBL_MAX;/* minimum radius of NS */
+  double *h_res   = 0;/* residual of h */
+  double X[3],x[3],N[3];
+  char stem[1000],*affix;
+  int NS_surface_finder_work_flg = 1;/* whether surface finder worked or not */
+  unsigned i,j;
+  unsigned l,m;
+  
+  /* populate root finder */
+  Root_Finder_T *root = init_root_finder(1);
+  root->type      = "Bisect_Single";
+  root->tolerance = Pgetd("RootFinder_Tolerance");
+  root->MaxIter   = (unsigned)Pgeti("RootFinder_Max_Number_of_Iteration");
+  root->params    = par;
+  root->f[0]      = bbn_NS_surface_enthalpy_eq;
+  //root->verbose   = 1;
+  plan_root_finder(root);
+  
+  /* parameters for root finder */
+  par->root_finder = root;
+  
+  /* initialize tables */
+  init_Legendre_root_function();
+  
+  Ntheta  = Nphi = 2*lmax+1;
+  Rnew_NS = alloc_double(Ntheta*Nphi);
+  h_res   = alloc_double(Ntheta*Nphi);
+  /* for each points of Ylm find the surface of NS */
+  for (i = 0; i < Ntheta; ++i)
+  {
+    theta = acos(-Legendre_root_function(i,Ntheta));
+    for (j = 0; j < Nphi; ++j)
+    {
+      phi = j*2*M_PI/Nphi;
+      
+      Patch_T *h_patch = 0,*patch = 0;
+      double y2[3] = {0};
+      double h,*dr,a,b,Fa,Fb;
+      
+      /* find patch and X,Y,Z at NS surface in which theta and phi take place */
+      find_XYZ_and_patch_of_theta_phi_NS_CS(X,&patch,theta,phi,grid);
+      
+      /* find enthalpy at the (X,Y,Z) */
+      Interpolation_T *interp_h = init_interpolation();
+      interp_h->field = patch->pool[Ind("enthalpy")];
+      interp_h->XY_dir_flag  = 1;
+      interp_h->X            = X[0];
+      interp_h->Y            = X[1];
+      interp_h->K            = patch->n[2]-1;
+      plan_interpolation(interp_h);
+      h = execute_interpolation(interp_h);/* enthalpy */
+      
+      //if (h <= 0)
+        //printf("WARNING: enthalpy = %g\n",h);
+      assert(h > 0);
+      
+      free_interpolation(interp_h);
+      
+      /* finding x */
+      x_of_X(x,X,patch);
+      
+      /* r^ = sin(theta)cos(phi)x^+sin(theta)sin(phi)y^+cos(theta)z^ */
+      N[0]  = sin(theta)*cos(phi);
+      N[1]  = sin(theta)*sin(phi);
+      N[2]  = cos(theta);
+      y2[0] = x[0]-patch->c[0];
+      y2[1] = x[1]-patch->c[1];
+      y2[2] = x[2]-patch->c[2];  
+      
+      if(LSSEQL(h,1))/* if it takes place at NS patch */
+      {
+        h_patch = patch;
+      }
+      else/* which means h = 1 occures in neighboring patch */
+      {
+        /* finding the juxtapose patch of this NS patch */
+        affix = regex_find("_[[:alpha:]]{2,5}$",patch->name);
+        assert(affix);
+        sprintf(stem,"left_NS_surrounding%s",affix);
+        free(affix);
+        h_patch = GetPatch(stem,grid);
+      }
+      /* having found h_patch, now find the the position of h = 1 */
+      par->x0[0] = x[0];
+      par->x0[1] = x[1];
+      par->x0[2] = x[2];
+      par->patch = h_patch;
+      par->N     = N;
+      /* set [a,b] for bisect */
+      a  = -1;
+      b  = 1;
+      Fa = bbn_NS_surface_enthalpy_eq(par,&a);
+      Fb = bbn_NS_surface_enthalpy_eq(par,&b);
+      while( Fa*Fb > 0)
+      {
+        a =- 0.5;
+        b =+ 0.5;
+        Fa = bbn_NS_surface_enthalpy_eq(par,&a);
+        Fb = bbn_NS_surface_enthalpy_eq(par,&b);
+      }
+      root->a_bisect  = a;
+      root->b_bisect  = b;
       dr = execute_root_finder(root);
       h_res[ij(i,j)] = root->residual;
       
@@ -6759,7 +7012,14 @@ static void find_NS_surface(Grid_T *const grid,struct Grid_Params_S *const GridP
     
   /* find NS surface using spherical harmonic points */
   if (strstr_i(GridParams->NS_R_type,"SphericalHarmonic"))
-    find_NS_surface_Ylm_method_CS(grid,GridParams);
+  {
+    if(Pcmps("NS_surface_root_finder","Bisect_Single"))
+      find_NS_surface_Ylm_bisect_CS(grid,GridParams);
+    else if (Pcmps("NS_surface_root_finder","Steepest_Descent"))
+      find_NS_surface_Ylm_SD_CS(grid,GridParams);
+    else
+      Error0(NO_OPTION);
+  }
   else
     Error0(NO_OPTION);
 }
