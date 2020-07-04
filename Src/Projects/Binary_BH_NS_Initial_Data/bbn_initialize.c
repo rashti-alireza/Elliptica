@@ -2903,7 +2903,7 @@ static int find_X_and_patch(const double *const x,const char *const hint,Grid_T 
 static void find_NS_surface_Ylm_SD_CS(Grid_T *const grid,struct Grid_Params_S *const GridParams)
 {
   pr_line_custom('=');
-  printf("{ Finding the surface of NS, Ylm method ...\n");
+  printf("{ Finding the surface of NS, Ylm & steepest decent ...\n");
   
   /* the stucture for the root finder */
   struct NS_surface_RootFinder_S par[1];
@@ -3062,7 +3062,7 @@ static void find_NS_surface_Ylm_SD_CS(Grid_T *const grid,struct Grid_Params_S *c
     free(h_res);
     free_root_finder(root);
   
-    printf("} Finding the surface of NS, Ylm method ==> Done.\n");
+    printf("} Finding the surface of NS, Ylm & steepest decent ==> Done.\n");
     pr_clock();
     pr_line_custom('=');
     return;
@@ -3124,7 +3124,7 @@ static void find_NS_surface_Ylm_SD_CS(Grid_T *const grid,struct Grid_Params_S *c
   Psetd("NS_max_radius",Max_R_NS);
   Psetd("NS_min_radius",Min_R_NS);
   
-  printf("} Finding the surface of NS, Ylm method ==> Done.\n");
+  printf("} Finding the surface of NS, Ylm & steepest decent ==> Done.\n");
   pr_clock();
   pr_line_custom('=');
 }
@@ -3147,7 +3147,7 @@ static void find_NS_surface_Ylm_SD_CS(Grid_T *const grid,struct Grid_Params_S *c
 static void find_NS_surface_Ylm_bisect_CS(Grid_T *const grid,struct Grid_Params_S *const GridParams)
 {
   pr_line_custom('=');
-  printf("{ Finding the surface of NS, Ylm method ...\n");
+  printf("{ Finding the surface of NS, Ylm & bisect ...\n");
   
   /* the stucture for the root finder */
   struct NS_surface_RootFinder_S par[1];
@@ -3314,7 +3314,7 @@ static void find_NS_surface_Ylm_bisect_CS(Grid_T *const grid,struct Grid_Params_
     free(h_res);
     free_root_finder(root);
   
-    printf("} Finding the surface of NS, Ylm method ==> Done.\n");
+    printf("} Finding the surface of NS, Ylm & bisect ==> Done.\n");
     pr_clock();
     pr_line_custom('=');
     return;
@@ -3376,7 +3376,7 @@ static void find_NS_surface_Ylm_bisect_CS(Grid_T *const grid,struct Grid_Params_
   Psetd("NS_max_radius",Max_R_NS);
   Psetd("NS_min_radius",Min_R_NS);
   
-  printf("} Finding the surface of NS, Ylm method ==> Done.\n");
+  printf("} Finding the surface of NS, Ylm & bisect ==> Done.\n");
   pr_clock();
   pr_line_custom('=');
 }
