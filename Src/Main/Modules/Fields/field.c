@@ -818,6 +818,14 @@ void free_v2(Field_T *f)
   f->v2 = 0;
 }
 
+/* freeing v3 of field and put it to 0 */
+void free_v3(Field_T *f)
+{
+  if (f->v3)
+    free(f->v3);
+  f->v3 = 0;
+}
+
 /* freeing attr of field and put it to 0 */
 void free_attr(Field_T *f)
 {
@@ -855,6 +863,8 @@ void free_field(Field_T *fld)
     free(fld->v);
   if (fld->v2)
     free(fld->v2);
+  if (fld->v3)
+    free(fld->v3);
   if (fld->attr)
     free(fld->attr);
   if (fld->info)
@@ -863,7 +873,7 @@ void free_field(Field_T *fld)
   free(fld);
 }
 
-/* free v, v2 and info to update values of a field */
+/* free v, v2, v3 and info to update values of a field */
 void empty_field(Field_T *fld)
 {
   if (!fld)
@@ -873,19 +883,23 @@ void empty_field(Field_T *fld)
     free(fld->v);
   if (fld->v2)
     free(fld->v2);
+  if (fld->v3)
+    free(fld->v3);
   if (fld->info)
     free(fld->info);
   
   fld->v    = 0;
   fld->v2   = 0;
+  fld->v3   = 0;
   fld->info = 0; 
 }
 
-/* freeing v2 and info of a field */
+/* freeing v2,v3 and info of a field */
 void free_coeffs(Field_T *fld)
 {
   free_info(fld);
   free_v2(fld);
+  free_v3(fld);
 }
 
 

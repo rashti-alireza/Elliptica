@@ -26,6 +26,7 @@ static void coeffs_patch_Tn_Nodes_1d(Field_T *const f,const unsigned dir);
 static void add_Tinfo(Field_T *const f,const unsigned dir,const Collocation_T collocation,const Basis_T basis);
 void enable_fields(Grid_T *const grid);
 void free_v2(Field_T *f);
+void free_v3(Field_T *f);
 void free_attr(Field_T *f);
 void free_v(Field_T *f);
 void free_info(Field_T *f);
