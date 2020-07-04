@@ -9,6 +9,8 @@
 // synopsis:
 // =========
 //
+// "Steepest_Descent":
+// ===================
 // Root_Finder_T *root = init_root_finder(n); # n is number of equations or (equivalently variables)
 // root->type          = "Steepest_Descent";
 // plan_root_finder(root);
@@ -29,6 +31,30 @@
 // # or
 // root->FD_Left  = 1; # left side f.d. method
 // double *x_sol     = execute_root_finder(root);
+// # some checks:
+// * to check the exit status of root finder do: *
+// print_root_finder_exit_status(root);
+// * to find out the residual *
+// printf("%e",root->residual);
+// * note one can interrupt the root finder by setting 
+//   root->interupt = 1 inside the params of equation. *
+// free_root_finder(root); # free struct root
+// free(x_sol);
+//
+//
+// "Bisect_Single":
+// ================
+// Root_Finder_T *root = init_root_finder(1); # only 1 equation
+// root->type          = "Bisect_Single";
+// plan_root_finder(root);
+// root->description = "solving f = 0";
+// root->verbose     = 1;# to prints every steps of solution
+// root->tolerance   = 10E-10;
+// root->MaxIter     = 1000;
+// root->params      = params; # parameters used for evaluation of fs
+// root->f[0]        = f0; # f0 = 0 equation
+// root->a_bisect    = a; # f(x) must change sign for x in [a,b]
+// root->b_bisect    = b; # f(x) must change sign for x in [a,b]
 // # some checks:
 // * to check the exit status of root finder do: *
 // print_root_finder_exit_status(root);
@@ -74,6 +100,11 @@ void plan_root_finder(Root_Finder_T *const root)
   {
     root->root_finder_func = root_finder_steepest_descent;
   }
+  else if (strcmp_i(root->type,"Bisect_Single"))
+  {
+    root->root_finder_func = root_finder_bisect_single;
+  }
+  
   else
     Error0(NO_OPTION);
 }
@@ -91,6 +122,121 @@ void free_root_finder(Root_Finder_T *root)
    free(root->df_dx);
    
   free(root);
+}
+
+/* using bisect method, find the root of function f(x)
+// and then return the solution.
+// note: this is only works for a single equation.
+// note: it allocates memory for the solution.
+// note: f(x) must change sign for x in [a,b].
+// ->return value: x solution that makes f(x) = 0 */
+static double *root_finder_bisect_single(Root_Finder_T *const root)
+{
+  const double tic = get_time_sec();
+  const unsigned MaxIter = root->MaxIter;
+  const unsigned n = root->n;
+  void *params     = root->params;
+  const double TOL = root->tolerance;
+  double (**f)(void *params,const double *const x) = root->f;
+  const double A = root->a_bisect;
+  const double B = root->b_bisect;
+  const char *const desc = root->description;
+  double *const x = alloc_double(n);
+  double a = A,b = B;
+  double FA,FP,p[1] = {0},d;
+  unsigned i;
+  
+  /* some checks */
+  if (!f)
+    Error0("\n~> No equation has been given.\n");
+  if (n != 1)
+    Error0("This bisect method only works for single equation.");
+  if (f[0](params,&A)*f[0](params,&B) > 0)
+    Error0("f(x) must change sign for x in [a,b].\n");
+  
+  if (desc)
+    printf("%s\n",desc);
+  if (root->verbose)
+  {
+    printf("\n{ Root finder ...\n\n");
+    printf("|--> Root Finder  = Bisect Single Method\n");
+    printf("|--> Num. of Eqs. = %u\n"
+           "|--> Tolerance    = %e\n"
+           "|--> Max. Iter.   = %u\n",
+            n,TOL,MaxIter);
+  }
+  
+  /* initialize */
+  root->exit_status = ROOT_FINDER_UNDEF;
+  root->residual    = DBL_MAX;
+  root->interrupt   = 0;
+  
+  i = 1;
+  FA = f[0](params,&a);
+  while(i <= MaxIter)
+  {
+    d    = 0.5*(b-a);
+    p[0] = a+d;
+    FP   = f[0](params,p);
+    root->residual = FP;
+    
+    /* some checks */
+    if (root->interrupt != 0)
+    {
+      root->exit_status = ROOT_FINDER_INTERRUPTED;
+      if (root->verbose)
+      {
+        printf("\n~> Root finder was interrupted!\n");
+      }
+      break;
+    }
+    if (!isfinite(root->residual))
+    {
+      root->exit_status = ROOT_FINDER_NAN;
+      if (root->verbose)
+      {
+        printf("\n~> Residual is abnormal; Residual = %e\n",root->residual);
+      }
+      break;
+    }
+    /* verbose */
+    if (root->verbose)
+    {
+      printf("|--> Step[%02u]: Residual{f(x) = 0} = %+e\n",i,root->residual);
+      fflush(stdout);
+    }
+    
+    if (EQL(FP,0) || LSS(d,TOL))
+    {
+      x[0] = p[0];
+      if (root->verbose)
+        printf("|--> Step[%02u]: Residual{f(x) = 0} = %+e\n",i,root->residual);
+      root->exit_status = ROOT_FINDER_OK;
+      break;
+    }
+    
+    i++;
+    
+    if (FA*FP > 0)
+    {
+      a  = p[0];
+      FA = FP;
+    }
+    else
+    {
+      b = p[0];
+    }
+    
+  }/* end of while(i <= MaxIter) */
+  
+  root->x_sol = x;
+  
+  if (root->verbose)
+    printf("\n} Root finder --> Done. ( Wall-Clock = %.2fs )\n\n",
+           get_time_sec()-tic);
+  fflush(stdout);
+  
+  return x;
 }
 
 /* using steepest descent method, find the root of function f(x)

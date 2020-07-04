@@ -228,6 +228,8 @@ typedef struct ROOT_FINDER_T
                 // root finder exceeds the domain of function. note, this 
                 // must be set by the user at the equation function f(x). */
   unsigned verbose: 1;/* if 1, prints every step of root finding */
+  double a_bisect;/* note: f(x) must change sign for x in [a,b]. */
+  double b_bisect;/* note: f(x) must change sign for x in [a,b]. */
 }Root_Finder_T;
 
 /* solve equation struct that is passed to the solver.

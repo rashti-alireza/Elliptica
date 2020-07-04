@@ -13,4 +13,6 @@ static double dg_dx_FD3L_SD(void *params,double *const x,const unsigned dir,doub
 static double dg_dx_FD3R_SD(void *params,double *const x,const unsigned dir,double (**f)(void *params,const double *const x),double (**df_dx)(void *params,const double *const x,const unsigned dir),Root_Finder_T *const root);
 static double dg_dx_of_df_dx_SD(void *params,double *const x,const unsigned dir,double (**f)(void *params,const double *const x),double (**df_dx)(void *params,const double *const x,const unsigned dir),Root_Finder_T *const root);
 void print_root_finder_exit_status(const Root_Finder_T *const root);
+static double *root_finder_bisect_single(Root_Finder_T *const root);
+
 
