@@ -3155,6 +3155,7 @@ static void find_NS_surface_Ylm_bisect_CS(Grid_T *const grid,struct Grid_Params_
   const unsigned lmax = (unsigned)Pgeti("NS_surface_Ylm_expansion_max_l");
   const double RESIDUAL = sqrt(Pgetd("RootFinder_Tolerance"));
   const double max_h_L2_res = Pgetd("NS_enthalpy_allowed_residual");
+  const unsigned Nincr = 10;
   double h_L2_res = 0;
   double theta,phi;
   double *Rnew_NS = 0;/* new R for NS */
@@ -3197,6 +3198,7 @@ static void find_NS_surface_Ylm_bisect_CS(Grid_T *const grid,struct Grid_Params_
       Patch_T *h_patch = 0,*patch = 0;
       double y2[3] = {0};
       double h,*dr,a,b,Fa,Fb;
+      unsigned iincr;
       
       /* find patch and X,Y,Z at NS surface in which theta and phi take place */
       find_XYZ_and_patch_of_theta_phi_NS_CS(X,&patch,theta,phi,grid);
@@ -3248,17 +3250,20 @@ static void find_NS_surface_Ylm_bisect_CS(Grid_T *const grid,struct Grid_Params_
       par->patch = h_patch;
       par->N     = N;
       /* set [a,b] for bisect */
-      a  = -1;
-      b  = 1;
+      a  = -0.1;
+      b  = 0.1;
       Fa = bbn_NS_surface_enthalpy_eq(par,&a);
       Fb = bbn_NS_surface_enthalpy_eq(par,&b);
-      while( Fa*Fb > 0)
+      iincr = 0;
+      while( Fa*Fb > 0 && iincr < Nincr)
       {
-        a =- 0.5;
-        b =+ 0.5;
+        a -= 0.1;
+        b += 0.1;
         Fa = bbn_NS_surface_enthalpy_eq(par,&a);
         Fb = bbn_NS_surface_enthalpy_eq(par,&b);
+        iincr++;
       }
+      assert(Fa*Fb <= 0);
       root->a_bisect  = a;
       root->b_bisect  = b;
       dr = execute_root_finder(root);
