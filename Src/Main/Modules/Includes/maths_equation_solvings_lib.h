@@ -205,6 +205,11 @@ typedef struct ROOT_FINDER_T
   unsigned n;/* number of variables (or equations) that make f = 0, 
              // e.g in {f1(x1,x2) = 0,f2(x1,x2) = 0, n is 2 */
   unsigned MaxIter;/* maximum iteration */
+  unsigned eq_number;/* current equation number, there are cases ,e.g. PDE, 
+                     // that the equations are the same but they are 
+                     // at different point, this could help to populate the
+                     // root->f with one function but the funcation is evaluated
+                     // at different points. */
   const double *x_gss;/* initial guess */
   double *x_sol;/* solution of f(x) = 0 */
   unsigned FD_Left : 1;/* if 1 it uses finite difference with Left side stencil */

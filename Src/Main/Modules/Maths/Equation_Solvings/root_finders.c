@@ -57,7 +57,7 @@ Root_Finder_T *init_root_finder(const unsigned n)
   root->df_dx[n] = 0;
   
   root->n = n;
-  
+  root->eq_number = UINT_MAX;
   return root;
 }
 
@@ -107,7 +107,7 @@ static double *root_finder_steepest_descent(Root_Finder_T *const root)
   const double TOL = root->tolerance;
   double (**f)(void *params,const double *const x) = root->f;
   double (**df_dx)(void *params,const double *const x,const unsigned dir) = root->df_dx;
-  double (*dg_dx)(void *params,double *const x,const unsigned dir,double (**f)(void *params,const double *const x),double (**df_dx)(void *params,const double *const x,const unsigned dir)) = 0;
+  double (*dg_dx)(void *params,double *const x,const unsigned dir,double (**f)(void *params,const double *const x),double (**df_dx)(void *params,const double *const x,const unsigned dir),Root_Finder_T *const root) = 0;
   const char *const desc = root->description;
   double *const x = alloc_double(n);
   double z[n],y[n];
@@ -153,7 +153,7 @@ static double *root_finder_steepest_descent(Root_Finder_T *const root)
   k = 1;
   while (k <= MaxIter)
   {
-    g1 = g_SD(f,params,x);
+    g1 = g_SD(f,params,x,root);
     if (root->interrupt != 0)
     {
       root->exit_status = ROOT_FINDER_INTERRUPTED;
@@ -176,7 +176,7 @@ static double *root_finder_steepest_descent(Root_Finder_T *const root)
     }
     
     for (i = 0; i < n; i++)
-      z[i] = dg_dx(params,x,i,f,df_dx);
+      z[i] = dg_dx(params,x,i,f,df_dx,root);
       
     z0 = root_square(n,z,0);
     if (EQL(z0,0.))
@@ -207,7 +207,7 @@ static double *root_finder_steepest_descent(Root_Finder_T *const root)
     alpha3 = 1.;
     for (i = 0; i < n; i++)
       y[i] = x[i] - alpha3*z[i];
-    g3 = g_SD(f,params,y);
+    g3 = g_SD(f,params,y,root);
     if (root->interrupt != 0)
     {
       root->exit_status = ROOT_FINDER_INTERRUPTED;
@@ -223,7 +223,7 @@ static double *root_finder_steepest_descent(Root_Finder_T *const root)
       alpha3 /= 2.;
       for (i = 0; i < n; i++)
         y[i] = x[i] - alpha3*z[i];
-      g3 = g_SD(f,params,y);
+      g3 = g_SD(f,params,y,root);
       if (root->interrupt != 0)
       {
         root->exit_status = ROOT_FINDER_INTERRUPTED;
@@ -267,7 +267,7 @@ static double *root_finder_steepest_descent(Root_Finder_T *const root)
     alpha2 = alpha3*0.5;
     for (i = 0; i < n; i++)
       y[i] = x[i] - alpha2*z[i];
-    g2 = g_SD(f,params,y);
+    g2 = g_SD(f,params,y,root);
     if (root->interrupt != 0)
     {
       root->exit_status = ROOT_FINDER_INTERRUPTED;
@@ -283,7 +283,7 @@ static double *root_finder_steepest_descent(Root_Finder_T *const root)
     alpha0 = 0.5*(alpha2 - h1/h3);
     for (i = 0; i < n; i++)
       y[i] = x[i] - alpha0*z[i];
-    g0 = g_SD(f,params,y);
+    g0 = g_SD(f,params,y,root);
     if (root->interrupt != 0)
     {
       root->exit_status = ROOT_FINDER_INTERRUPTED;
@@ -379,40 +379,42 @@ void print_root_finder_exit_status(const Root_Finder_T *const root)
 }
 
 /* ->return value: f0^2(params,x)+f1^2(params,x) + ... */
-static double g_SD(double (**f)(void *params,const double *const x),void *params,const double *const x)
+static double g_SD(double (**f)(void *params,const double *const x),void *params,const double *const x,Root_Finder_T *const root)
 {
   unsigned i = 0;
   double g = 0;
   
   while (f[i])
   {
+    root->eq_number = i;
     g += pow(f[i](params,x),2);
     i++;
   }
-  
+  root->eq_number = UINT_MAX;/* catch error */
   return g;
 }
 
 /* ->return value: derivative of e.g. f0^2(x0,x1)+f1^2(x0,x1) given df0_dx, df1_dx etc. 
 // at point x with respect to x^{dir} using the given df_dx's */
-static double dg_dx_of_df_dx_SD(void *params,double *const x,const unsigned dir,double (**f)(void *params,const double *const x),double (**df_dx)(void *params,const double *const x,const unsigned dir))
+static double dg_dx_of_df_dx_SD(void *params,double *const x,const unsigned dir,double (**f)(void *params,const double *const x),double (**df_dx)(void *params,const double *const x,const unsigned dir),Root_Finder_T *const root)
 {
   unsigned i = 0;
   double dg_dx = 0;
   
   while (f[i])
   {
+    root->eq_number = i;
     dg_dx += f[i](params,x)*df_dx[i](params,x,dir);
     i++;
   }
   dg_dx *= 2.;
-  
+  root->eq_number = UINT_MAX;/* catch error */
   return dg_dx;
 }
 
 /* ->return value: derivative of e.g. f0^2(x0,x1)+f1^2(x0,x1) 
 // at point x with respect to x^{dir} using finite difference (three-point midpoint formula)*/
-static double dg_dx_FD3M_SD(void *params,double *const x,const unsigned dir,double (**f)(void *params,const double *const x),double (**df_dx)(void *params,const double *const x,const unsigned dir))
+static double dg_dx_FD3M_SD(void *params,double *const x,const unsigned dir,double (**f)(void *params,const double *const x),double (**df_dx)(void *params,const double *const x,const unsigned dir),Root_Finder_T *const root)
 {
   const double eps    = 10E-5;
   const double fabsx  = fabs(x[dir])*eps;
@@ -420,10 +422,10 @@ static double dg_dx_FD3M_SD(void *params,double *const x,const unsigned dir,doub
   double gl,gr,dg_dx;
   
   x[dir] -= h;/* x' = x-h */
-  gl      = g_SD(f,params,x);/* g(x-h) */
+  gl      = g_SD(f,params,x,root);/* g(x-h) */
   
   x[dir] += 2.*h;/* x' + 2h => x'' = x+h */
-  gr      = g_SD(f,params,x);/* g(x+h) */
+  gr      = g_SD(f,params,x,root);/* g(x+h) */
   
   dg_dx = 0.5*(gr-gl)/h;
   
@@ -435,20 +437,20 @@ static double dg_dx_FD3M_SD(void *params,double *const x,const unsigned dir,doub
 
 /* ->return value: derivative of e.g. f0^2(x0,x1)+f1^2(x0,x1)
 // at point x with respect to x^{dir} using finite difference (three-point right end formula)*/
-static double dg_dx_FD3R_SD(void *params,double *const x,const unsigned dir,double (**f)(void *params,const double *const x),double (**df_dx)(void *params,const double *const x,const unsigned dir))
+static double dg_dx_FD3R_SD(void *params,double *const x,const unsigned dir,double (**f)(void *params,const double *const x),double (**df_dx)(void *params,const double *const x,const unsigned dir),Root_Finder_T *const root)
 {
   const double eps    = 10E-5;
   const double fabsx  = fabs(x[dir])*eps;
   const double h      = fabsx > eps ? fabsx : eps;/* just in case fabsx is 0, so h won't get 0 */
   double g,gr1,gr2,dg_dx;
   
-  g       = g_SD(f,params,x);/* g(x) */
+  g       = g_SD(f,params,x,root);/* g(x) */
   
   x[dir] += h;/* x' = x+h */
-  gr1     = g_SD(f,params,x);/* g(x+h) */
+  gr1     = g_SD(f,params,x,root);/* g(x+h) */
   
   x[dir] += h;/* x' + h => x'' = x+2h */
-  gr2     = g_SD(f,params,x);/* g(x+2h) */
+  gr2     = g_SD(f,params,x,root);/* g(x+2h) */
   
   dg_dx = 0.5*(-3*g+4*gr1-gr2)/h;
   
@@ -460,20 +462,20 @@ static double dg_dx_FD3R_SD(void *params,double *const x,const unsigned dir,doub
 
 /* ->return value: derivative of e.g. f0^2(x0,x1)+f1^2(x0,x1)
 // at point x with respect to x^{dir} using finite difference (three-point left end formula)*/
-static double dg_dx_FD3L_SD(void *params,double *const x,const unsigned dir,double (**f)(void *params,const double *const x),double (**df_dx)(void *params,const double *const x,const unsigned dir))
+static double dg_dx_FD3L_SD(void *params,double *const x,const unsigned dir,double (**f)(void *params,const double *const x),double (**df_dx)(void *params,const double *const x,const unsigned dir),Root_Finder_T *const root)
 {
   const double eps    = 10E-5;
   const double fabsx  = fabs(x[dir])*eps;
   const double h      = fabsx > eps ? fabsx : eps;/* just in case fabsx is 0, so h won't get 0 */
   double g,gl1,gl2,dg_dx;
   
-  g       = g_SD(f,params,x);/* g(x) */
+  g       = g_SD(f,params,x,root);/* g(x) */
   
   x[dir] -= h;/* x' = x-h */
-  gl1     = g_SD(f,params,x);/* g(x-h) */
+  gl1     = g_SD(f,params,x,root);/* g(x-h) */
   
   x[dir] -= h;/* x' - h => x'' = x-2h */
-  gl2     = g_SD(f,params,x);/* g(x-2h) */
+  gl2     = g_SD(f,params,x,root);/* g(x-2h) */
   
   dg_dx = 0.5*(3*g-4*gl1+gl2)/h;
   
