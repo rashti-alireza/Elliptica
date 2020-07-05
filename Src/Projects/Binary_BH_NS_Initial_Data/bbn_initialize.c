@@ -3155,7 +3155,7 @@ static void find_NS_surface_Ylm_bisect_CS(Grid_T *const grid,struct Grid_Params_
   const unsigned lmax = (unsigned)Pgeti("NS_surface_Ylm_expansion_max_l");
   const double RESIDUAL = sqrt(Pgetd("RootFinder_Tolerance"));
   const double max_h_L2_res = Pgetd("NS_enthalpy_allowed_residual");
-  const unsigned Nincr = 10;
+  const unsigned Nincr = 100;
   double h_L2_res = 0;
   double theta,phi;
   double *Rnew_NS = 0;/* new R for NS */
