@@ -210,7 +210,7 @@ static double *root_finder_bisect_single(Root_Finder_T *const root)
       fflush(stdout);
     }
     
-    if (EQL(FP,0) || LSS(d,TOL))
+    if (EQL(FP,0) || LSS(fabs(d),TOL))
     {
       x[0] = p[0];
       if (root->verbose)
