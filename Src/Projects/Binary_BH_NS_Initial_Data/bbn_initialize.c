@@ -7063,12 +7063,10 @@ static void extrapolate_fluid_fields_outsideNS(Grid_T *const grid)
       }
 
     }
+    else if (Pcmps("extrapolate_fluid_fields_method","slop_method"))
+      extrapolate_outsideNS_CS_slop_method(grid);
     else
       Error0(NO_OPTION);
-      
-    if (0)/* this method is sucks! */
-      extrapolate_outsideNS_CS_slop_method(grid);
- 
   }
   else
     Error0(NO_OPTION);

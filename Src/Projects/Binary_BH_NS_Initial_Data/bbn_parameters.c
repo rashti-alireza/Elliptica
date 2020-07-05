@@ -64,9 +64,12 @@ void bbn_set_default_parameters(void)
   
   /* how to extrapolate fluid_fields outside the NS 
   // options:
-  // "phi:exp_exp_continuity,enthalpy:Ylm" -->
+  // 1. "phi:exp_exp_continuity,enthalpy:Ylm" -->
   // 	for phi requires to be exponentially decreasing and be C^2
-  //    and for enthalpy it requires to be sum{Clm * r^-(l+1) * Ylm}. */
+  //    and for enthalpy it requires to be sum{Clm * r^-(l+1) * Ylm}.
+  // 2. "slop_method" -->
+  //    required to have C^1 field across the boundary.
+  */
   Pset_default("extrapolate_fluid_fields_method","phi:exp_continuity,enthalpy:Ylm");
   
   /* how to extrapolate fields inside the BH 
