@@ -232,6 +232,15 @@ static double *root_finder_bisect_single(Root_Finder_T *const root)
     }
     
   }/* end of while(i <= MaxIter) */
+  if (i > MaxIter)
+  { 
+    root->exit_status = ROOT_FINDER_MAX_ITER; 
+    if (root->verbose)
+    {
+      printf("|--> Step[%02u]: Residual[f(x) = 0] = %+e\n",i,root->residual);
+      printf("\n~> Exceeds maximum number of iterations => Residual = %e\n",root->residual);
+    }
+  }
   
   root->x_sol = x;
   
