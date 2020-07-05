@@ -11,6 +11,10 @@
 //
 // "Steepest_Descent":
 // ===================
+// note: this function always finds the roots of the equations
+// if they are smooth, if they be only C^0 the root might not be found.
+// in this case we recommand bisect method.
+//
 // Root_Finder_T *root = init_root_finder(n); # n is number of equations or (equivalently variables)
 // root->type          = "Steepest_Descent";
 // plan_root_finder(root);
