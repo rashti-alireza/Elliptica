@@ -46,7 +46,7 @@ NS_Euler_const_update_weight   = 1.0
 NS_surface_tolerance           = 1E-5
 NS_enthalpy_allowed_residual   = 1E-2
 NS_surface_finder_method       = SphericalHarmonic
-NS_surface_Ylm_expansion_max_l = 5(x200)->6
+NS_surface_Ylm_expansion_max_l = 5(x360)->6
 NS_adjust_center_method        = draw_enthalpy
 NS_phi_equation_smoothness     = 0.1 
 
@@ -89,9 +89,9 @@ Outermost0_radius              = 1E5
 Left_central_box_length_ratio  = 0.5
 
 #### resolution(s):
-n_a = 12(x200)->14(x100)->16(x50)->18(x25)->20(x25)
-n_b = 12(x200)->14(x100)->16(x50)->18(x25)->20(x25)
-n_c = 12(x200)->14(x100)->16(x50)->18(x25)->20(x25)
+n_a = 12(x360)->14(x100)->16(x50)->18(x25)->20(x25)
+n_b = 12(x360)->14(x100)->16(x50)->18(x25)->20(x25)
+n_c = 12(x360)->14(x100)->16(x50)->18(x25)->20(x25)
 
 #-----------------------------------------------------------------------#
 # Print:                                                                #
