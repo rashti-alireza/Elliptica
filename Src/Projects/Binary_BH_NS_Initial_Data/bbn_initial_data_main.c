@@ -14,7 +14,6 @@ void bbn_construct_id(void)
   printf("{ Constructing Initial Data for Binary BH and NS ...\n");
   
   /* making output directory for this project if needed */
-  add_parameter("output_directory_path","NOT_SPECIFIED_YET");
   if (!Pcmps("BH_NS_initialization","checkpoint_file"))
   {
     char folder[STR_LEN_MAX] = {'\0'};
@@ -23,6 +22,10 @@ void bbn_construct_id(void)
     outdir = make_directory(Pgets("relative_root_path"),folder);
     add_parameter("output_directory_path",outdir);
     free(outdir);
+  }
+  else
+  {
+    add_parameter("output_directory_path","NOT_SPECIFIED_YET");
   }
 
   /* setting the default parameters */

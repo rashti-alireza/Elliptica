@@ -11,7 +11,15 @@
 // the parameter does not exist it is added:
 // e.g.
 // modify_checkpoint_par: n_a = 4(x6)
-// modify_checkpoint_par: Solving_Max_Number_of_Iteration = 0  */
+// modify_checkpoint_par: Solving_Max_Number_of_Iteration = 0 
+// 
+// if you wanna change the output directories, change the following
+// and note that the folders must be made already:
+// modify_checkpoint_par:iteration_output      = path1
+// modify_checkpoint_par:output_directory_path = path2
+// modify_checkpoint_par:Diagnostics           = path3
+// 
+*/
 static unsigned n_modified_checkpoint_par;/* number of modify_checkpoint_par */
 static Parameter_T **modified_checkpoint_par;/* modified pars in par file
                                            // to be used after loading of
