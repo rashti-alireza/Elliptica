@@ -7,7 +7,8 @@
 
 
 /* if you set a parameter as below in the par file it uses this parameter
-// and disregards its value obtained from the checkpoint:
+// and disregards its value obtained from the checkpoint and if
+// the parameter does not exist it is added:
 // e.g.
 // modify_checkpoint_par: n_a = 4(x6)
 // modify_checkpoint_par: Solving_Max_Number_of_Iteration = 0  */
@@ -680,6 +681,7 @@ static void incorporate_modified_checkpoint_par(void)
   // might have more iterations */
   free_parameter("total_iterations_ip");
   
+  /* if the parameter already exists: */
   /* find the modified pars and save them */
   np      = 0;
   n_found = 0;
@@ -717,6 +719,18 @@ static void incorporate_modified_checkpoint_par(void)
       break;
         
     np++;
+  }
+  /* if the parameter is new: */
+  /* add the new parameter */
+  for (i = 0; i < n_modified_checkpoint_par; i++)
+  {
+    /* if does not exist */
+    if (!get_parameter(modified_checkpoint_par[i]->lv))
+    {
+      printf("-> Adding new parameter               = %s\n",modified_checkpoint_par[i]->lv);
+          
+      add_parameter(modified_checkpoint_par[i]->lv,modified_checkpoint_par[i]->rv);
+    }
   }
   
   /* update total iterations */
