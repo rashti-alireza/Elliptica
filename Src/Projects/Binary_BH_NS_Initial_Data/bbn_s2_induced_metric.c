@@ -1,9 +1,89 @@
+/*
+// Alireza Rashti
+// July 2020
+*/
+
+#include "bbn_s2_induced_metric.h"
+
+/* compute approximate Killing vector from z scalar.
+// here we use (theta,phi) coords on sub-manifold S2 and 
+// (x,y,z) = r(sin(theta)*cos(phi),sin(theta)*sin(phi),cos(theta)) 
+// coords for the manifold. the field name to be populated are
+// nAKV_x, nAKV_y, nAKV_z. */
+void 
+bbn_compute_AKV_from_z
+  (
+  Grid_T *const grid,
+  const char *const type,/* NS or BH */
+  const unsigned lmax,/* l max in Ylm */
+  const double *const z,/* given z(theta,phi) scalar */
+  const char *const nAKV_x,/* field name for AKV|x = dz/dx */
+  const char *const nAKV_y,/* field name for AKV|y = dz/dy */
+  const char *const nAKV_z/* field name for AKV|z = dz/dz */
+  )
+{
+  const unsigned Ntheta= 2*lmax+1;
+  const unsigned Nphi  = 2*lmax+1;
+  double *realClm = alloc_ClmYlm(lmax);
+  double *imagClm = alloc_ClmYlm(lmax);
+  
+  unsigned (*surface_patch)(const Patch_T *const patch) = 0;
+  unsigned i,j,k,p;
+  
+  if (strcmp_i(type,"BH"))
+    surface_patch = IsItHorizonPatch;
+  else if (strcmp_i(type,"NS"))
+    surface_patch = IsItNSSurface;
+  else
+    Error0("No such type.");
+    
+  /* find Ylm coeffs */
+  get_Ylm_coeffs(realClm,imagClm,z,Ntheta,Nphi,lmax);
+  
+  FOR_ALL_PATCHES(p,grid)
+  {
+    Patch_T *patch = grid->patch[p];
+    if (!surface_patch(patch))
+      continue;
+    
+    const unsigned *N = patch->n;
+    Flag_T side = patch->CoordSysInfo->CubedSphericalCoord->side;
+    const double *X;
+    double theta,phi,iz;
+    ADD_AND_ALLOC_FIELD(__z_scalar_TEMP)
+    DECLARE_FIELD(__z_scalar_TEMP)
+    
+    /* populate z scalar in 3d */
+    for (i = 0; i < N[0]; ++i)
+    {
+      for (j = 0; j < N[1]; ++j)
+      {
+        X = patch->node[L(N,i,j,0)]->X;
+        find_theta_phi_of_XYZ_CS(&theta,&phi,X,side);
+        
+        iz = interpolation_Ylm(realClm,imagClm,lmax,theta,phi);
+        
+        for (k = 0; k < N[2]; ++k)
+          __z_scalar_TEMP->v[L(N,i,j,k)] = iz;
+      }
+    }
+    patch->pool[Ind(nAKV_x)]->v = Partial_Derivative(__z_scalar_TEMP,"x");
+    patch->pool[Ind(nAKV_y)]->v = Partial_Derivative(__z_scalar_TEMP,"y");
+    patch->pool[Ind(nAKV_z)]->v = Partial_Derivative(__z_scalar_TEMP,"z");
+    
+    REMOVE_FIELD(__z_scalar_TEMP)
+  }
+  
+  free(realClm);
+  free(imagClm);
+}
 
 /* computing the induced metric on S2 (cubedspherical,Ylm,CTS).
 // here we use (theta,phi) coords on sub-manifold S2 and 
 // (x,y,z) = r(sin(theta)*cos(phi),sin(theta)*sin(phi),cos(theta)) 
 // coords for the manifold. 
-// also assuming CTS method is used thus metic gamma = psi*_gamma. */
+// also assuming CTS method is used; thus metic gamma = psi*_gamma. 
+// note: it allocates memory for the induced metric */
 void 
 bbn_compute_induced_metric_on_S2_CS_Ylm_CTS
   (
@@ -19,8 +99,10 @@ bbn_compute_induced_metric_on_S2_CS_Ylm_CTS
   double *const h_D0D0 = alloc_double(N);
   double *const h_D0D1 = alloc_double(N);
   double *const h_D1D1 = alloc_double(N);
+  const unsigned Ntheta= 2*lmax+1;
+  const unsigned Nphi  = 2*lmax+1;
   double theta,phi;
-  unsigned Ntheta,Nphi;
+  unsigned i,j;
   int type_flg = -1;/* 1 for NS , 0 for BH */
   
   if (strcmp_i(type,"BH"))
@@ -32,7 +114,6 @@ bbn_compute_induced_metric_on_S2_CS_Ylm_CTS
     
   /* initialize tables */
   init_Legendre_root_function();
-  Ntheta  = Nphi = 2*lmax+1;
   
   /* for each points of Ylm find manifold metric g_D?D? */
   for (i = 0; i < Ntheta; ++i)
@@ -44,7 +125,7 @@ bbn_compute_induced_metric_on_S2_CS_Ylm_CTS
       
       unsigned ij = IJ(i,j);
       Patch_T *patch = 0;
-      double ipsi,
+      double ipsi,r,x[3],X[3],
             i_gamma_D0D0,i_gamma_D0D1,i_gamma_D0D2,
             i_gamma_D1D1,i_gamma_D1D2,i_gamma_D2D2,
             gamma_D0D0,gamma_D0D1,gamma_D0D2,
@@ -52,6 +133,13 @@ bbn_compute_induced_metric_on_S2_CS_Ylm_CTS
       /* find patch and X,Y,Z on the surface in which theta and phi take place */
       find_XYZ_and_patch_of_theta_phi_CS(X,&patch,theta,phi,grid,type);
 
+      /* finding x */
+      x_of_X(x,X,patch);
+      x[0] -= patch->c[0];
+      x[1] -= patch->c[1];
+      x[2] -= patch->c[2];
+      r     = root_square(3,x,0);
+      
       /* find value at the (X,Y,Z) */
       INTERPOLATE_macro(psi);
       INTERPOLATE_macro(_gamma_D0D0);
@@ -69,12 +157,11 @@ bbn_compute_induced_metric_on_S2_CS_Ylm_CTS
       gamma_D1D2 = ipsi*i_gamma_D1D2;
       gamma_D2D2 = ipsi*i_gamma_D2D2;
       
-      //bbn_populate_3d_included_metric_S2_theta_phi
       bbn_populate_2d_induced_metric_S2_theta_phi(
          &h_D0D0[ij],&h_D0D1[ij],&h_D1D1[ij],
-         &gamma_D0D0,&gamma_D0D1,&gamma_D0D2
+         &gamma_D0D0,&gamma_D0D1,&gamma_D0D2,
          &gamma_D1D1,&gamma_D1D2,&gamma_D2D2,
-         theta,phi);
+         r,theta,phi);
       
     }/* end of for (j = 0; j < Nphi; ++j) */
   }/* end for (i = 0; i < Ntheta; ++i) */
@@ -226,4 +313,44 @@ find_XYZ_and_patch_of_theta_phi_CS
   }
   if (found_flg == NO)
     Error0("(X,Y,Z) or patch could not be found.\n");
+}
+
+/* given (X,Y,Z) in the specified slice of NS/BH in cubed spherical coords
+// it finds the associated polar and azimuthal angels on the surface  */
+static void find_theta_phi_of_XYZ_CS(double *const theta,double *const phi,const double *const X,const Flag_T side)
+{
+  const double a = X[0];
+  const double b = X[1];
+  const double d = sqrt(1+Pow2(a)+Pow2(b));
+  
+  switch (side)
+  {
+    case UP:
+      *phi   = arctan(b,a);
+      *theta = acos(1/d);
+    break;
+    case DOWN:
+      *phi   = arctan(a,b);
+      *theta = acos(-1/d);
+    break;
+    case LEFT:
+      *phi   = arctan(-1,a);
+      *theta = acos(b/d);
+    break;
+    case RIGHT:
+      *phi   = arctan(1,b);
+      *theta = acos(a/d);
+    break;
+    case BACK:
+      *phi   = arctan(b,-1);
+      *theta = acos(a/d);
+    break;
+    case FRONT:
+      *phi   = arctan(a,1);
+      *theta = acos(b/d);
+    break;
+    default:
+      Error0(NO_OPTION);
+  }
+  
 }
