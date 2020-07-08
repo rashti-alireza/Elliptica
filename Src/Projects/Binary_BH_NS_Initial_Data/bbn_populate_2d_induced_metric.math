@@ -20,6 +20,7 @@ Point = ij;
 `const double *const g_D1D1,`
 `const double *const g_D1D2,`
 `const double *const g_D2D2,`
+`const double r,`
 `const double theta,`
 `const double phi);`
 `void bbn_populate_2d_induced_metric_S2_theta_phi(`
@@ -43,31 +44,35 @@ Declare =
  # induced metric h
  (obj = Field,name = h, rank = DD, none);
  # metric
- (obj = Field,name = gamma, rank = DD, none);
+ (obj = Field,name = g, rank = DD, none);
  # metric transformation
  (obj = Field,name = dx_dy, rank = UD, none);
 }
-Symm[gamma(i,j)   = gamma(j,i)];
+Symm[g(i,j)   = g(j,i)];
 
+`double dx_dy_U0D0[1],dx_dy_U0D1[1];`
 `dx_dy_U0D0[ij] = r*cos(theta)*cos(phi);`
 `dx_dy_U0D1[ij] = -r*sin(theta)*sin(phi);`
 #`dx_dy_U0D2[ij] = 0;`
 
+
+`double dx_dy_U1D0[1],dx_dy_U1D1[1];`
 `dx_dy_U1D0[ij] = r*cos(theta)*sin(phi);`
 `dx_dy_U1D1[ij] = r*sin(theta)*cos(phi);`
 #`dx_dy_U1D2[ij] = 0;`
 
 
-`dx_dy_U0D0[ij] = 0;`
-`dx_dy_U0D1[ij] = -r*sin(theta);`
+`double dx_dy_U2D0[1],dx_dy_U2D1[1];`
+`dx_dy_U2D0[ij] = 0;`
+`dx_dy_U2D1[ij] = -r*sin(theta);`
 #`dx_dy_U0D2[ij] = 0;`
 
-ih(-a,-b) = dx_dy(i,a)*dx_dy(j,b)*gamma(-i,-j);
+ih(-a,-b) = dx_dy(i,a)*dx_dy(j,b)*g(-i,-j);
 Symm[ih(a,b)   = ih(b,a))];
 
-`h_D0D0[ij] = ih_D0D0[ij];`
-`h_D0D1[ij] = ih_D0D1[ij];`
-`h_D1D1[ij] = ih_D1D1[ij];`
+`h_D0D0[ij] = ih_D0D0;`
+`h_D0D1[ij] = ih_D0D1;`
+`h_D1D1[ij] = ih_D1D1;`
 
 `}`
 
