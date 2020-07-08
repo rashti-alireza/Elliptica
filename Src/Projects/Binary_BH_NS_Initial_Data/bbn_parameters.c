@@ -70,7 +70,7 @@ void bbn_set_default_parameters(void)
   // 2. "slop_method" -->
   //    required to have C^1 field across the boundary.
   */
-  Pset_default("extrapolate_fluid_fields_method","phi:exp_continuity,enthalpy:Ylm");
+  Pset_default("extrapolate_fluid_fields_method","slop_method");
   
   /* how to extrapolate fields inside the BH 
   // options:
