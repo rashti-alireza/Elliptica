@@ -49,7 +49,7 @@ bbn_compute_AKV_from_z
     const unsigned *N = patch->n;
     Flag_T side = patch->CoordSysInfo->CubedSphericalCoord->side;
     const double *X;
-    double theta,phi,iz;
+    double theta = 0,phi = 0,iz;
     ADD_AND_ALLOC_FIELD(__z_scalar_TEMP)
     DECLARE_FIELD(__z_scalar_TEMP)
     
