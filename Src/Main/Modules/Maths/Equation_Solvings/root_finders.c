@@ -94,6 +94,9 @@ Root_Finder_T *init_root_finder(const unsigned n)
 /* ->return value: root of system of equations {f0 = 0, f1 = 0, ...} */
 double *execute_root_finder(Root_Finder_T *const root)
 {
+  if (!root->root_finder_func)
+    Error0("No plan for the root finder.\n");
+    
   return root->root_finder_func(root);
 }
 
