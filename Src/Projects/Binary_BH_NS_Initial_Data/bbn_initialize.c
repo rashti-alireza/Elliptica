@@ -5122,6 +5122,10 @@ static Grid_T *TOV_KerrSchild_approximation(void)
   printf("} Initializing fields & grid using TOV & Kerr-Schild solutions ==> Done.\n");
   pr_line_custom('=');
   
+  /* test */
+  find_AKV(grid,"NS");
+  find_AKV(grid,"BH");
+  /* end */
   return grid;
 }
 
@@ -7170,3 +7174,52 @@ void bbn_free_grid_and_its_parameters(Grid_T *grid)
   }
   
 }
+
+/* find approximate Killing vector on BH or NS */
+static void find_AKV(Grid_T *const grid,const char *const type)
+{
+  const unsigned lmax = (unsigned)Pgeti("s2kv_lmax");
+  const unsigned N    = Pow2(2*lmax+1);
+  double *h_D0D0,*h_D0D1,*h_D1D1;/* induced metric */
+  double *z0,*z1,*z2;
+  
+  /* populate the induced metric h */
+  bbn_compute_induced_metric_on_S2_CS_Ylm_CTS
+                      (grid,type,lmax,&h_D0D0,&h_D0D1,&h_D1D1);
+  
+  /* pass h as array parameters */
+  update_parameter_array("s2kv_2d_metric_D0D0",h_D0D0,N);
+  update_parameter_array("s2kv_2d_metric_D0D1",h_D0D1,N);
+  update_parameter_array("s2kv_2d_metric_D1D1",h_D1D1,N);
+  
+  /* solve the AKV equation to find z S2_Killing_Vector project */
+  S2_Killing_Vector();
+  
+  /* get AKV */
+  z0 = Pgetdd("s2kv_z0_scalar");
+  z1 = Pgetdd("s2kv_z1_scalar");
+  z2 = Pgetdd("s2kv_z2_scalar");
+  
+  /* compute AKVs */
+  bbn_compute_AKV_from_z
+      (grid,type,lmax,z0,"AKV0_U0","AKV0_U1","AKV0_U2");
+  bbn_compute_AKV_from_z
+      (grid,type,lmax,z1,"AKV1_U0","AKV1_U1","AKV1_U2");
+  bbn_compute_AKV_from_z
+      (grid,type,lmax,z2,"AKV2_U0","AKV2_U1","AKV2_U2");
+  
+  /* free */
+  free_parameter("s2kv_z0_scalar");
+  free_parameter("s2kv_z1_scalar");
+  free_parameter("s2kv_z2_scalar");
+  free_parameter("s2kv_2d_metric_D0D0");
+  free_parameter("s2kv_2d_metric_D0D1");
+  free_parameter("s2kv_2d_metric_D1D1");
+  free(h_D0D0);
+  free(h_D0D1);
+  free(h_D1D1);
+}
+
+
+
+
