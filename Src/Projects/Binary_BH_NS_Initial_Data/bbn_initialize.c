@@ -7178,10 +7178,6 @@ void bbn_free_grid_and_its_parameters(Grid_T *grid)
 /* find approximate Killing vector on BH or NS */
 static void find_AKV(Grid_T *const grid,const char *const type)
 {
-  /* when all the three solutions are found remove these lines. */
-  printf("***TEMP***\n");
-  return;
-  
   const unsigned lmax = (unsigned)Pgeti("s2kv_lmax");
   const unsigned N    = Pow2(2*lmax+1);
   double *h_D0D0,*h_D0D1,*h_D1D1;/* induced metric */
@@ -7198,6 +7194,10 @@ static void find_AKV(Grid_T *const grid,const char *const type)
   
   /* solve the AKV equation to find z S2_Killing_Vector project */
   S2_Killing_Vector();
+
+  /* when all the three solutions are found remove these lines. */
+  printf("***TEMP***\n");
+  return;
   
   /* get AKV */
   z0 = Pgetdd("s2kv_z0_scalar");
