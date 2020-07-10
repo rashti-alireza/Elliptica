@@ -1181,8 +1181,10 @@ static void force_balance_eq_root_finders(Grid_T *const grid,const int dir, cons
   const double Omega_BHNS   = Pgetd("BH_NS_angular_velocity");
   const double y_CM         = Pgetd("y_CM");
   const double x_CM         = Pgetd("x_CM");
-  const double W1  = Pgetd("Solving_Field_Update_Weight");
-  const double W2  = 1-W1;
+  const double Scale        = 0.1;/* scale the weight */
+  const double Rel_Change   = 0.1;/* relative change */
+  double W1  = Pgetd("Solving_Field_Update_Weight");
+  double W2  = 1-W1;
   double *new_par,old_par = 0;
   double guess[1],X[3];
   struct Force_Balance_RootFinder_S params[1];
@@ -1265,6 +1267,12 @@ static void force_balance_eq_root_finders(Grid_T *const grid,const int dir, cons
     print_root_finder_exit_status(root);
   }
   
+  /* if change is big try to soften it */
+  if (fabs(1-new_par[0]/old_par) > Rel_Change)
+  {
+    W1 *= Scale;
+    W2  = 1-W1;
+  }
   new_par[0] = W1*new_par[0]+W2*old_par;
   Psetd(par,new_par[0]);
   
