@@ -7178,6 +7178,8 @@ void bbn_free_grid_and_its_parameters(Grid_T *grid)
 /* find approximate Killing vector on BH or NS */
 static void find_AKV(Grid_T *const grid,const char *const type)
 {
+  FUNC_TIC
+  
   const unsigned lmax = (unsigned)Pgeti("akv_lmax");
   const unsigned N    = Pow2(2*lmax+1);
   double *h_D0D0,*h_D0D1,*h_D1D1;/* induced metric */
@@ -7222,6 +7224,8 @@ static void find_AKV(Grid_T *const grid,const char *const type)
   free(h_D0D0);
   free(h_D0D1);
   free(h_D1D1);
+  
+  FUNC_TOC
 }
 
 
