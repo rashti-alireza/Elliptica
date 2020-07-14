@@ -23,7 +23,7 @@ static void find_theta_phi_of_XYZ_CS(double *const theta,double *const phi,const
 void bbn_populate_2d_induced_metric_S2_theta_phi(double *const h_D0D0,double *const h_D0D1,double *const h_D1D1,const double *const g_D0D0,const double *const g_D0D1,const double *const g_D0D2,const double *const g_D1D1,const double *const g_D1D2,const double *const g_D2D2,const double r,const double theta,const double phi);
 void bbn_compute_AKV_from_z(Grid_T *const grid,const char *const type,const unsigned lmax,const double *const z,const char *const nAKV_x,const char *const nAKV_y,const char *const nAKV_z);
 void bbn_compute_induced_metric_on_S2_CS_Ylm_CTS(Grid_T *const grid,const char *const type,const unsigned lmax,double **const ph_D0D0,double **const ph_D0D1,double **const ph_D1D1);
-void bbn_test_induce_metric_algorithm(Grid_T *const grid);
+void bbn_test_induced_metric_algorithm(Grid_T *const grid);
 
 
 

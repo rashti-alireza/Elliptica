@@ -7195,9 +7195,9 @@ static void find_AKV(Grid_T *const grid,const char *const type)
   /* test induce_metric_algorithm */
   if (1)
   {
-    bbn_test_induce_metric_algorithm(grid);
+    bbn_test_induced_metric_algorithm(grid);
     FUNC_TOC
-    return;
+    exit(0);
   }
   
   /* populate the induced metric h */

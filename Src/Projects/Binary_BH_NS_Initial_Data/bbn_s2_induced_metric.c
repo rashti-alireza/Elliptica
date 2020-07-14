@@ -372,7 +372,7 @@ static void find_theta_phi_of_XYZ_CS(double *const theta,double *const phi,const
 // it tests both NS and BH for simple case of a perfect sphere
 // in which ds^2 = r^2(dtheta^2+sin^2(theta) dphi^2).
 // NOTE: it changes the values of _gamma and psi. */
-void bbn_test_induce_metric_algorithm(Grid_T *const grid)
+void bbn_test_induced_metric_algorithm(Grid_T *const grid)
 {
   FUNC_TIC
   const unsigned lmax = (unsigned)Pgeti("akv_lmax");/* lmax in Ylm */

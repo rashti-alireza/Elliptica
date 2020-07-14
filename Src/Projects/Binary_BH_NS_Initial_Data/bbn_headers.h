@@ -142,7 +142,7 @@ void bbn_transform_populate_boost_rotation(Transformation_T *const tB,Transforma
 void bbn_transform_get_k_and_H_KerrSchild(const double x,const double y,const double z,const double a,const double m,Transformation_T *const tB,Transformation_T *const tR,double *const kt,double *const k0,double *const k1,double *const k2,double *const H);
 void bbn_populate_spin_integrands_Campanelli(Patch_T *const patch,const double xc[3],const double *const normal[3]);
 double bbn_mass_shedding_indicator(Grid_T *const grid);
-void bbn_test_induce_metric_algorithm(Grid_T *const grid);
+void bbn_test_induced_metric_algorithm(Grid_T *const grid);
 
 #endif
 
