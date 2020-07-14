@@ -473,6 +473,10 @@ void bbn_test_induce_metric_algorithm(Grid_T *const grid)
         printf("dh11 = %g\n",h_D1D1[ij]-Pow2(r*sin(theta)));
     }
   }
+  
+  free(h_D0D0); h_D0D0 = 0;
+  free(h_D0D1); h_D0D1 = 0;
+  free(h_D1D1); h_D1D1 = 0;
   FUNC_TOC
 }
 
