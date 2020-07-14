@@ -67,9 +67,16 @@ bbn_compute_AKV_from_z
           __z_scalar_TEMP->v[L(N,i,j,k)] = iz;
       }
     }
-    patch->pool[Ind(nAKV_x)]->v = Partial_Derivative(__z_scalar_TEMP,"x");
-    patch->pool[Ind(nAKV_y)]->v = Partial_Derivative(__z_scalar_TEMP,"y");
-    patch->pool[Ind(nAKV_z)]->v = Partial_Derivative(__z_scalar_TEMP,"z");
+    Field_T *AKV_D0 = patch->pool[Ind(nAKV_x)];
+    Field_T *AKV_D1 = patch->pool[Ind(nAKV_y)];
+    Field_T *AKV_D2 = patch->pool[Ind(nAKV_z)];
+    empty_field(AKV_D0);
+    empty_field(AKV_D1);
+    empty_field(AKV_D2);
+    
+    AKV_D0->v = Partial_Derivative(__z_scalar_TEMP,"x");
+    AKV_D1->v = Partial_Derivative(__z_scalar_TEMP,"y");
+    AKV_D2->v = Partial_Derivative(__z_scalar_TEMP,"z");
     
     REMOVE_FIELD(__z_scalar_TEMP)
   }
@@ -82,7 +89,7 @@ bbn_compute_AKV_from_z
 // here we use (theta,phi) coords on sub-manifold S2 and 
 // (x,y,z) = r(sin(theta)*cos(phi),sin(theta)*sin(phi),cos(theta)) 
 // coords for the manifold. 
-// also assuming CTS method is used; thus metic gamma = psi*_gamma. 
+// also assuming CTS method is used; thus metic gamma = psi^4*_gamma. 
 // note: it allocates memory for the induced metric */
 void 
 bbn_compute_induced_metric_on_S2_CS_Ylm_CTS
@@ -149,13 +156,14 @@ bbn_compute_induced_metric_on_S2_CS_Ylm_CTS
       INTERPOLATE_macro(_gamma_D1D2);
       INTERPOLATE_macro(_gamma_D2D2);
       
-      /* gamma = psi * _gamma */
-      gamma_D0D0 = ipsi*i_gamma_D0D0;
-      gamma_D0D1 = ipsi*i_gamma_D0D1;
-      gamma_D0D2 = ipsi*i_gamma_D0D2;
-      gamma_D1D1 = ipsi*i_gamma_D1D1;
-      gamma_D1D2 = ipsi*i_gamma_D1D2;
-      gamma_D2D2 = ipsi*i_gamma_D2D2;
+      /* gamma = psi^4 * _gamma */
+      double ipsi4 = pow(ipsi,4);
+      gamma_D0D0 = ipsi4*i_gamma_D0D0;
+      gamma_D0D1 = ipsi4*i_gamma_D0D1;
+      gamma_D0D2 = ipsi4*i_gamma_D0D2;
+      gamma_D1D1 = ipsi4*i_gamma_D1D1;
+      gamma_D1D2 = ipsi4*i_gamma_D1D2;
+      gamma_D2D2 = ipsi4*i_gamma_D2D2;
       
       bbn_populate_2d_induced_metric_S2_theta_phi(
          &h_D0D0[ij],&h_D0D1[ij],&h_D1D1[ij],
@@ -193,12 +201,17 @@ find_XYZ_and_patch_of_theta_phi_CS
   unsigned (*surface_patch)(const Patch_T *const patch) = 0;
   unsigned p;
   
-  X[2] = 0;/* since we are on BH surface from BH surrounding side */
   
   if (strcmp_i(type,"BH"))
+  {
     surface_patch = IsItHorizonPatch;
+    X[2] = 0;/* since we are on BH surface from BH surrounding side */
+  }
   else if (strcmp_i(type,"NS"))
+  {
     surface_patch = IsItNSSurface;
+    X[2] = 1;/* since we are on NS surface */
+  }
   else
     Error0("No such type.");
   
