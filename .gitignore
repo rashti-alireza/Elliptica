@@ -1,6 +1,6 @@
 # Ignore the following:
-Src/Projects/S2_Killing_Vector/*
-Src/Projects/S2_Killing_Vector
+Src/Projects/Approximate_Killing_Vector/*
+Src/Projects/Approximate_Killing_Vector
 Src/Projects/Binary_NS_Initial_Data/*
 Src/Projects/Binary_NS_Initial_Data
 

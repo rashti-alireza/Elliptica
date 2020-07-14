@@ -7188,21 +7188,21 @@ static void find_AKV(Grid_T *const grid,const char *const type)
                       (grid,type,lmax,&h_D0D0,&h_D0D1,&h_D1D1);
   
   /* pass h as array parameters */
-  update_parameter_array("s2kv_2d_metric_D0D0",h_D0D0,N);
-  update_parameter_array("s2kv_2d_metric_D0D1",h_D0D1,N);
-  update_parameter_array("s2kv_2d_metric_D1D1",h_D1D1,N);
+  update_parameter_array("akv_2d_metric_D0D0",h_D0D0,N);
+  update_parameter_array("akv_2d_metric_D0D1",h_D0D1,N);
+  update_parameter_array("akv_2d_metric_D1D1",h_D1D1,N);
   
   /* solve the AKV equation to find z S2_Killing_Vector project */
-  S2_Killing_Vector();
+  Approximate_Killing_Vector();
 
   /* when all the three solutions are found remove these lines. */
   printf("***TEMP***\n");
   return;
   
   /* get AKV */
-  z0 = Pgetdd("s2kv_z0_scalar");
-  z1 = Pgetdd("s2kv_z1_scalar");
-  z2 = Pgetdd("s2kv_z2_scalar");
+  z0 = Pgetdd("akv_z0_scalar");
+  z1 = Pgetdd("akv_z1_scalar");
+  z2 = Pgetdd("akv_z2_scalar");
   
   /* compute AKVs */
   bbn_compute_AKV_from_z
@@ -7213,12 +7213,12 @@ static void find_AKV(Grid_T *const grid,const char *const type)
       (grid,type,lmax,z2,"AKV2_U0","AKV2_U1","AKV2_U2");
   
   /* free */
-  free_parameter("s2kv_z0_scalar");
-  free_parameter("s2kv_z1_scalar");
-  free_parameter("s2kv_z2_scalar");
-  free_parameter("s2kv_2d_metric_D0D0");
-  free_parameter("s2kv_2d_metric_D0D1");
-  free_parameter("s2kv_2d_metric_D1D1");
+  free_parameter("akv_z0_scalar");
+  free_parameter("akv_z1_scalar");
+  free_parameter("akv_z2_scalar");
+  free_parameter("akv_2d_metric_D0D0");
+  free_parameter("akv_2d_metric_D0D1");
+  free_parameter("akv_2d_metric_D1D1");
   free(h_D0D0);
   free(h_D0D1);
   free(h_D1D1);
