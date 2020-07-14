@@ -7192,7 +7192,7 @@ static void find_AKV(Grid_T *const grid,const char *const type)
   update_parameter_array("akv_2d_metric_D0D1",h_D0D1,N);
   update_parameter_array("akv_2d_metric_D1D1",h_D1D1,N);
   
-  /* solve the AKV equation to find z S2_Killing_Vector project */
+  /* solve the AKV equation to find z */
   Approximate_Killing_Vector();
 
   /* when all the three solutions are found remove these lines. */
