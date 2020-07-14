@@ -367,3 +367,113 @@ static void find_theta_phi_of_XYZ_CS(double *const theta,double *const phi,const
   }
   
 }
+
+/* test induced metric h algorithm.
+// it tests both NS and BH for simple case of a perfect sphere
+// in which ds^2 = r^2(dtheta^2+sin^2(theta) dphi^2).
+// NOTE: it changes the values of _gamma and psi. */
+void bbn_test_induce_metric_algorithm(Grid_T *const grid)
+{
+  FUNC_TIC
+  const unsigned lmax = (unsigned)Pgeti("akv_lmax");/* lmax in Ylm */
+  const unsigned Ntheta= 2*lmax+1;
+  const unsigned Nphi  = 2*lmax+1;
+  const char *type     = 0;
+  double *h_D0D0=0,*h_D0D1=0,*h_D1D1=0;/* induced metric */
+  double x[3],X[3],r,theta,phi;
+  unsigned p,i,j,ij;
+  
+  /* change psi and _gamma to sphere */
+  FOR_ALL_PATCHES(p,grid)
+  {
+    Patch_T *patch = grid->patch[p];
+    unsigned nn,ijk;
+    nn = patch->nn;
+    
+    REALLOC_v_WRITE_v(_gammaI_U0U2)
+    REALLOC_v_WRITE_v(_gammaI_U0U0)
+    REALLOC_v_WRITE_v(_gammaI_U0U1)
+    REALLOC_v_WRITE_v(_gammaI_U1U2)
+    REALLOC_v_WRITE_v(_gammaI_U1U1)
+    REALLOC_v_WRITE_v(_gammaI_U2U2)
+    REALLOC_v_WRITE_v(psi)
+    
+    for (ijk = 0; ijk < nn; ++ijk)
+    {
+      _gammaI_U0U0[ijk] = 1;
+      _gammaI_U0U1[ijk] = 0;
+      _gammaI_U0U2[ijk] = 0;
+      _gammaI_U1U2[ijk] = 0;
+      _gammaI_U1U1[ijk] = 1;
+      _gammaI_U2U2[ijk] = 1;
+      psi[ijk]          = 1;
+    }
+  }/* end of FOR_ALL_PATCHES */
+  
+  /* test NS */
+  printf("~> testing NS side:\n");
+  type = "NS";
+  bbn_compute_induced_metric_on_S2_CS_Ylm_CTS
+    (grid,type,lmax,&h_D0D0,&h_D0D1,&h_D1D1);
+  for (i = 0; i < Ntheta; ++i)
+  {
+    theta = acos(-Legendre_root_function(i,Ntheta));
+    for (j = 0; j < Nphi; ++j)
+    {
+      phi = j*2*M_PI/Nphi;
+      ij  = IJ(i,j);
+      Patch_T *patch = 0;
+      find_XYZ_and_patch_of_theta_phi_CS(X,&patch,theta,phi,grid,type);
+      /* finding x */
+      x_of_X(x,X,patch);
+      x[0] -= patch->c[0];
+      x[1] -= patch->c[1];
+      x[2] -= patch->c[2];
+      r     = root_square(3,x,0);
+      
+      if (!EQL(h_D0D0[ij],Pow2(r))) 
+        printf("dh00 = %g\n",h_D0D0[ij]-Pow2(r));
+      if (!EQL(h_D0D1[ij],0)) 
+        printf("dh01 = %g\n",h_D0D1[ij]);
+      if (!EQL(h_D1D1[ij],Pow2(r*sin(theta)))) 
+        printf("dh11 = %g\n",h_D1D1[ij]-Pow2(r*sin(theta)));
+    }
+  }
+  
+  free(h_D0D0); h_D0D0 = 0;
+  free(h_D0D1); h_D0D1 = 0;
+  free(h_D1D1); h_D1D1 = 0;
+  
+  /* test BH */
+  printf("~> testing BH side:\n");
+  type = "BH";
+  bbn_compute_induced_metric_on_S2_CS_Ylm_CTS
+    (grid,type,lmax,&h_D0D0,&h_D0D1,&h_D1D1);
+  for (i = 0; i < Ntheta; ++i)
+  {
+    theta = acos(-Legendre_root_function(i,Ntheta));
+    for (j = 0; j < Nphi; ++j)
+    {
+      phi = j*2*M_PI/Nphi;
+      ij  = IJ(i,j);
+      Patch_T *patch = 0;
+      find_XYZ_and_patch_of_theta_phi_CS(X,&patch,theta,phi,grid,type);
+      /* finding x */
+      x_of_X(x,X,patch);
+      x[0] -= patch->c[0];
+      x[1] -= patch->c[1];
+      x[2] -= patch->c[2];
+      r     = root_square(3,x,0);
+      
+      if (!EQL(h_D0D0[ij],Pow2(r))) 
+        printf("dh00 = %g\n",h_D0D0[ij]-Pow2(r));
+      if (!EQL(h_D0D1[ij],0)) 
+        printf("dh01 = %g\n",h_D0D1[ij]);
+      if (!EQL(h_D1D1[ij],Pow2(r*sin(theta)))) 
+        printf("dh11 = %g\n",h_D1D1[ij]-Pow2(r*sin(theta)));
+    }
+  }
+  FUNC_TOC
+}
+
+

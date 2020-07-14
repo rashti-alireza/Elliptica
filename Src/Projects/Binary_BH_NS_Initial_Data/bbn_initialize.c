@@ -7192,6 +7192,14 @@ static void find_AKV(Grid_T *const grid,const char *const type)
   double *h_D0D0=0,*h_D0D1=0,*h_D1D1=0;/* induced metric */
   double *z0,*z1,*z2;/* AKV equation answers */
   
+  /* test induce_metric_algorithm */
+  if (1)
+  {
+    bbn_test_induce_metric_algorithm(grid);
+    FUNC_TOC
+    return;
+  }
+  
   /* populate the induced metric h */
   bbn_compute_induced_metric_on_S2_CS_Ylm_CTS
                       (grid,type,lmax,&h_D0D0,&h_D0D1,&h_D1D1);
