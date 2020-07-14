@@ -45,23 +45,8 @@ double dx_dy_U1D0[1],dx_dy_U1D1[1];
 dx_dy_U1D0[ij] = r*cos(theta)*sin(phi);
 dx_dy_U1D1[ij] = r*sin(theta)*cos(phi);
 double dx_dy_U2D0[1],dx_dy_U2D1[1];
-dx_dy_U2D0[ij] = 0;
-dx_dy_U2D1[ij] = -r*sin(theta);
-  double ih_D0D0 = 
-pow(dx_dy_U0D0[ij], 2)*g_D0D0[ij] + 2.0*dx_dy_U0D0[ij]*dx_dy_U1D0[ij]*
-g_D0D1[ij] + 2.0*dx_dy_U0D0[ij]*dx_dy_U2D0[ij]*g_D0D2[ij] + 
-pow(dx_dy_U1D0[ij], 2)*g_D1D1[ij] + 2.0*dx_dy_U1D0[ij]*dx_dy_U2D0[ij]*
-g_D1D2[ij] + pow(dx_dy_U2D0[ij], 2)*g_D2D2[ij];
-
-
-
-
-  double ih_D1D1 = 
-pow(dx_dy_U0D1[ij], 2)*g_D0D0[ij] + 2.0*dx_dy_U0D1[ij]*dx_dy_U1D1[ij]*
-g_D0D1[ij] + 2.0*dx_dy_U0D1[ij]*dx_dy_U2D1[ij]*g_D0D2[ij] + 
-pow(dx_dy_U1D1[ij], 2)*g_D1D1[ij] + 2.0*dx_dy_U1D1[ij]*dx_dy_U2D1[ij]*
-g_D1D2[ij] + pow(dx_dy_U2D1[ij], 2)*g_D2D2[ij];
-
+dx_dy_U2D0[ij] = -r*sin(theta);
+dx_dy_U2D1[ij] = 0;
   double ih_D0D1 = 
 dx_dy_U0D0[ij]*dx_dy_U0D1[ij]*g_D0D0[ij] + dx_dy_U0D0[ij]*
 dx_dy_U1D1[ij]*g_D0D1[ij] + dx_dy_U0D0[ij]*dx_dy_U2D1[ij]*g_D0D2[ij] + 
@@ -70,6 +55,21 @@ dx_dy_U2D0[ij]*g_D0D2[ij] + dx_dy_U1D0[ij]*dx_dy_U1D1[ij]*g_D1D1[ij] +
 dx_dy_U1D0[ij]*dx_dy_U2D1[ij]*g_D1D2[ij] + dx_dy_U1D1[ij]*
 dx_dy_U2D0[ij]*g_D1D2[ij] + dx_dy_U2D0[ij]*dx_dy_U2D1[ij]*
 g_D2D2[ij];
+
+
+
+
+  double ih_D0D0 = 
+pow(dx_dy_U0D0[ij], 2)*g_D0D0[ij] + 2.0*dx_dy_U0D0[ij]*dx_dy_U1D0[ij]*
+g_D0D1[ij] + 2.0*dx_dy_U0D0[ij]*dx_dy_U2D0[ij]*g_D0D2[ij] + 
+pow(dx_dy_U1D0[ij], 2)*g_D1D1[ij] + 2.0*dx_dy_U1D0[ij]*dx_dy_U2D0[ij]*
+g_D1D2[ij] + pow(dx_dy_U2D0[ij], 2)*g_D2D2[ij];
+
+  double ih_D1D1 = 
+pow(dx_dy_U0D1[ij], 2)*g_D0D0[ij] + 2.0*dx_dy_U0D1[ij]*dx_dy_U1D1[ij]*
+g_D0D1[ij] + 2.0*dx_dy_U0D1[ij]*dx_dy_U2D1[ij]*g_D0D2[ij] + 
+pow(dx_dy_U1D1[ij], 2)*g_D1D1[ij] + 2.0*dx_dy_U1D1[ij]*dx_dy_U2D1[ij]*
+g_D1D2[ij] + pow(dx_dy_U2D1[ij], 2)*g_D2D2[ij];
 
 h_D0D0[ij] = ih_D0D0;
 h_D0D1[ij] = ih_D0D1;

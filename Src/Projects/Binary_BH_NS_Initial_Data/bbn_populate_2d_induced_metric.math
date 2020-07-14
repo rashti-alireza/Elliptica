@@ -63,8 +63,8 @@ Symm[g(i,j)   = g(j,i)];
 
 
 `double dx_dy_U2D0[1],dx_dy_U2D1[1];`
-`dx_dy_U2D0[ij] = 0;`
-`dx_dy_U2D1[ij] = -r*sin(theta);`
+`dx_dy_U2D0[ij] = -r*sin(theta);`
+`dx_dy_U2D1[ij] = 0;`
 #`dx_dy_U0D2[ij] = 0;`
 
 ih(-a,-b) = dx_dy(i,a)*dx_dy(j,b)*g(-i,-j);
