@@ -50,8 +50,8 @@ double **alloc_2D_double(const long unsigned R,const long unsigned C);
 double *alloc_double(const unsigned N);
 void _free(void *p);
 unsigned IsItFarthestOutermostPatch(const Patch_T *const patch);
-
-
+void header_and_clock(const char *const msg);
+void footer_and_clock(const char *const msg);
 
 
 

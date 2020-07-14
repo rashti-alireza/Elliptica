@@ -876,4 +876,24 @@ void _free(void *p)
     free(p);
 }
 
+/* header and clock when the function called */
+void header_and_clock(const char *const msg)
+{
+  char str[9999] = {'\0'};
+  sprintf(str,"{ %s ...",msg);
+  pr_clock();
+  pr_line_custom('=');
+  printf("%s\n",str);
+  fflush(stdout);
+}
 
+/* header and clock when the function ends */
+void footer_and_clock(const char *const msg)
+{
+  char str[9999] = {'\0'};
+  sprintf(str,"} %s ==> Done. :)",msg);
+  printf("%s\n",str);
+  pr_clock();
+  pr_line_custom('=');
+  fflush(stdout);
+}
