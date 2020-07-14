@@ -7175,15 +7175,22 @@ void bbn_free_grid_and_its_parameters(Grid_T *grid)
   
 }
 
-/* find approximate Killing vector on BH or NS */
+/* find approximate Killing vector on BH or NS 
+//
+// Algorithm:
+// ==========
+// 1. induce the 2-d metric on S2.
+// 2. solve AKV equation and find z scalars.
+// 3. \xi = \nabla z ==> AKV.
+*/
 static void find_AKV(Grid_T *const grid,const char *const type)
 {
   FUNC_TIC
   
-  const unsigned lmax = (unsigned)Pgeti("akv_lmax");
-  const unsigned N    = Pow2(2*lmax+1);
-  double *h_D0D0,*h_D0D1,*h_D1D1;/* induced metric */
-  double *z0,*z1,*z2;
+  const unsigned lmax = (unsigned)Pgeti("akv_lmax");/* lmax in Ylm */
+  const unsigned N    = Pow2(2*lmax+1);/* = S2 grid pnts Ntheta*Nphi */
+  double *h_D0D0=0,*h_D0D1=0,*h_D1D1=0;/* induced metric */
+  double *z0,*z1,*z2;/* AKV equation answers */
   
   /* populate the induced metric h */
   bbn_compute_induced_metric_on_S2_CS_Ylm_CTS
@@ -7206,13 +7213,15 @@ static void find_AKV(Grid_T *const grid,const char *const type)
   z1 = Pgetdd("akv_z1_scalar");
   z2 = Pgetdd("akv_z2_scalar");
   
+  /************************/
+  // I SHOULD ADD THESE FIELD SOMEWHERE!
   /* compute AKVs */
   bbn_compute_AKV_from_z
-      (grid,type,lmax,z0,"AKV0_U0","AKV0_U1","AKV0_U2");
+      (grid,type,lmax,z0,"AKV0_D0","AKV0_D1","AKV0_D2");
   bbn_compute_AKV_from_z
-      (grid,type,lmax,z1,"AKV1_U0","AKV1_U1","AKV1_U2");
+      (grid,type,lmax,z1,"AKV1_D0","AKV1_D1","AKV1_D2");
   bbn_compute_AKV_from_z
-      (grid,type,lmax,z2,"AKV2_U0","AKV2_U1","AKV2_U2");
+      (grid,type,lmax,z2,"AKV2_D0","AKV2_D1","AKV2_D2");
   
   /* free */
   free_parameter("akv_z0_scalar");
