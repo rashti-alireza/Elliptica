@@ -96,6 +96,8 @@ TOV_T *TOV_solution(TOV_T *const TOV)
     {
       fprintf(stderr,"~> TOV solution failed! Exiting ...\n");
       printf("} Solving TOV equations for %s ==> Done.\n",TOV->description);
+      pr_clock();
+      pr_line_custom('=');
       return TOV;
     }
   }
@@ -136,6 +138,32 @@ TOV_T *TOV_solution(TOV_T *const TOV)
   printf("--> central energy density            = %+e\n",eos->energy_density(eos));
   printf("--> central rest_mass_density         = %+e\n",eos->rest_mass_density(eos));
   free_EoS(eos);
+  
+  if (
+      !isfinite(TOV->r[TOV->N-1])    ||
+      !isfinite(TOV->rbar[TOV->N-1]) ||
+      !isfinite(TOV->ADM_m)          ||
+      !isfinite(TOV->bar_m)          ||
+      !isfinite(TOV->psi[0])         ||
+      !isfinite(TOV->h[0])           ||
+      !isfinite(TOV->p[0])
+     )
+  {
+    TOV->status = 1;
+    if (TOV->exit_if_error)
+    {
+      Error0("TOV solution failed!\n");
+    }
+    else
+    {
+      fprintf(stderr,"~> TOV solution failed! Exiting ...\n");
+      printf("} Solving TOV equations for %s ==> Done.\n",TOV->description);
+      pr_clock();
+      pr_line_custom('=');
+  
+      return TOV;
+    }
+  }
   
   printf("} Solving TOV equations for %s ==> Done.\n",TOV->description);
   pr_clock();
