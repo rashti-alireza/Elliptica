@@ -19,9 +19,9 @@ typedef struct TOV_PROJECT_T
  double *rbar; /* rbar -> radius at each point for metric inside the star:
              // d^{2}_{s}=-e^{2\phi }dt^{2}+\psi^{4}\left( \overline {r}\right) \left( d\overline {r}^{2}+\overline {r}^{2}d\Omega \right) */
  double *psi;/* conformal factor */
- unsigned status:1;/* status of exist: 0 = no error happens, 1 = error happens. */
- unsigned exit_if_error:1;/* 1 = if error happens exit the code (default), 
-                          // 0 = if error happens don't exit the code  */
+ unsigned status:1;/* status of exist: 0 = no error happens, 1 = some errors happened. */
+ unsigned exit_if_error:1;/* 1 = if error happens exit Elliptica (default), 
+                          // 0 = if error happens don't exit Elliptica  */
 }TOV_T;
 
 TOV_T *TOV_solution(TOV_T *const TOV);

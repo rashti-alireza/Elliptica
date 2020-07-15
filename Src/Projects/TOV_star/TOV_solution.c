@@ -139,6 +139,7 @@ TOV_T *TOV_solution(TOV_T *const TOV)
   printf("--> central rest_mass_density         = %+e\n",eos->rest_mass_density(eos));
   free_EoS(eos);
   
+  /* some checks */
   if (
       !isfinite(TOV->r[TOV->N-1])    ||
       !isfinite(TOV->rbar[TOV->N-1]) ||
