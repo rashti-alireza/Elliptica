@@ -2,7 +2,11 @@
 
 
 #define IJ(i,j) ((j)+Nphi*(i))
-#define Sqrt(x) sqrt((x))
+/* math */
+#define Sqrt(x)     sqrt((x))
+#define Cos(x)      cos((x))
+#define Sin(x)      sin((x))
+#define Power(x,n)  pow((x),(n))
 
 /* getting field name (xName) and put the interpolant into ixName */
 #define INTERPOLATE_macro(xName) \

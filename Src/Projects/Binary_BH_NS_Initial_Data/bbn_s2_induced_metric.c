@@ -369,7 +369,8 @@ static void find_theta_phi_of_XYZ_CS(double *const theta,double *const phi,const
 }
 
 /* test induced metric h algorithm.
-// it tests both NS and BH for simple case of a perfect sphere
+// it tests both NS and BH for a concrete example:
+// 3-d = ds^2 = dx^2+dy^2+dz^2+dx*dy+dx*dz+dy*dz
 // in which ds^2 = psi^4*r^2(dtheta^2+sin^2(theta) dphi^2).
 // NOTE: it changes the values of _gamma and psi. */
 void bbn_test_induced_metric_algorithm(Grid_T *const grid)
@@ -403,9 +404,9 @@ void bbn_test_induced_metric_algorithm(Grid_T *const grid)
     for (ijk = 0; ijk < nn; ++ijk)
     {
       _gamma_D0D0[ijk] = 1;
-      _gamma_D0D1[ijk] = 0;
-      _gamma_D0D2[ijk] = 0;
-      _gamma_D1D2[ijk] = 0;
+      _gamma_D0D1[ijk] = 0.5;
+      _gamma_D0D2[ijk] = 0.5;
+      _gamma_D1D2[ijk] = 0.5;
       _gamma_D1D1[ijk] = 1;
       _gamma_D2D2[ijk] = 1;
       psi[ijk]         = 0.7;/* arbitrary */
@@ -438,19 +439,32 @@ void bbn_test_induced_metric_algorithm(Grid_T *const grid)
       INTERPOLATE_macro(psi)
       double ipsi4 = pow(ipsi,4);
       
-      if (!EQL(h_D0D0[ij],Pow2(r)*ipsi4))
+      double h00 = 
+        Pow2(r)*ipsi4*(Power(Cos(phi),2)*Power(Cos(theta),2) + 
+        Power(Cos(theta),2)*Power(Sin(phi),2) + 
+        Cos(phi)*Cos(theta)*(Cos(theta)*Sin(phi) - Sin(theta)) - 
+        Cos(theta)*Sin(phi)*Sin(theta) + Power(Sin(theta),2));
+        
+      double h01 = 
+        0.5*Pow2(r)*ipsi4*(Cos(phi) - Sin(phi))*Sin(theta)*
+        (Cos(phi)*Cos(theta) + Cos(theta)*Sin(phi) - Sin(theta));
+      
+      double h11 =
+        Pow2(r)*ipsi4*(1 - Cos(phi)*Sin(phi))*Power(Sin(theta),2);
+        
+      if (!EQL(h_D0D0[ij],h00))
       {
-        printf("dh00 = %g\n",h_D0D0[ij]-Pow2(r)*ipsi4);
+        printf("dh00 = %g\n",h_D0D0[ij]-h00);
         status = 1;
       }
-      if (!EQL(h_D0D1[ij],0)) 
+      if (!EQL(h_D0D1[ij],h01)) 
       {
-        printf("dh01 = %g\n",h_D0D1[ij]);
+        printf("dh01 = %g\n",h_D0D1[ij]-h01);
         status = 1;
       }
-      if (!EQL(h_D1D1[ij],Pow2(r*sin(theta))*ipsi4)) 
+      if (!EQL(h_D1D1[ij],h11))
       {
-        printf("dh11 = %g\n",h_D1D1[ij]-Pow2(r*sin(theta))*ipsi4);
+        printf("dh11 = %g\n",h_D1D1[ij]-h11);
         status = 1;
       }
     }
@@ -491,19 +505,32 @@ void bbn_test_induced_metric_algorithm(Grid_T *const grid)
       INTERPOLATE_macro(psi)
       double ipsi4 = pow(ipsi,4);
       
-      if (!EQL(h_D0D0[ij],Pow2(r)*ipsi4))
+      double h00 = 
+        Pow2(r)*ipsi4*(Power(Cos(phi),2)*Power(Cos(theta),2) + 
+        Power(Cos(theta),2)*Power(Sin(phi),2) + 
+        Cos(phi)*Cos(theta)*(Cos(theta)*Sin(phi) - Sin(theta)) - 
+        Cos(theta)*Sin(phi)*Sin(theta) + Power(Sin(theta),2));
+        
+      double h01 = 
+        0.5*Pow2(r)*ipsi4*(Cos(phi) - Sin(phi))*Sin(theta)*
+        (Cos(phi)*Cos(theta) + Cos(theta)*Sin(phi) - Sin(theta));
+      
+      double h11 =
+        Pow2(r)*ipsi4*(1 - Cos(phi)*Sin(phi))*Power(Sin(theta),2);
+        
+      if (!EQL(h_D0D0[ij],h00))
       {
-        printf("dh00 = %g\n",h_D0D0[ij]-Pow2(r)*ipsi4);
+        printf("dh00 = %g\n",h_D0D0[ij]-h00);
         status = 1;
       }
-      if (!EQL(h_D0D1[ij],0)) 
+      if (!EQL(h_D0D1[ij],h01)) 
       {
-        printf("dh01 = %g\n",h_D0D1[ij]);
+        printf("dh01 = %g\n",h_D0D1[ij]-h01);
         status = 1;
       }
-      if (!EQL(h_D1D1[ij],Pow2(r*sin(theta))*ipsi4)) 
+      if (!EQL(h_D1D1[ij],h11))
       {
-        printf("dh11 = %g\n",h_D1D1[ij]-Pow2(r*sin(theta))*ipsi4);
+        printf("dh11 = %g\n",h_D1D1[ij]-h11);
         status = 1;
       }
     }
