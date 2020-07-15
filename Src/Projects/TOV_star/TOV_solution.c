@@ -87,7 +87,16 @@ TOV_T *TOV_solution(TOV_T *const TOV)
   /* if it finder messed up */
   if (!isfinite(m))
   {
-    Error0("TOV solution failed!\n");
+    if (TOV->exit_if_error)
+    {
+      Error0("TOV solution failed!\n");
+    }
+    else
+    {
+      fprintf(stderr,"~> TOV solution failed! exiting ...\n");
+      printf("} Solving TOV equations for %s ==> Done.\n",TOV->description);
+      return TOV;
+    }
   }
   /* if it needs more step to find the root, set the last value as baryonic mass */
   if (!EQL(m,TOV->bar_m))
@@ -287,7 +296,8 @@ static void calculate_ADM_and_Komar_mass(TOV_T *const TOV)
   if (GRT(fabs(Komar_mass-ADM_mass),tol))/* virial theorem */
   {
     fprintf(stderr,"Komar mass = %g, ADM mass = %g\n",Komar_mass,ADM_mass);
-    Error0("Komar mass and ADM mass must be equal!\n");
+    if (TOV->exit_if_error)
+      Error0("Komar mass and ADM mass must be equal!\n");
   }
 }
 
@@ -543,19 +553,22 @@ static double dm_dh(const double h,const double r, const double m)
 TOV_T *TOV_init(void)
 {
   TOV_T *tov = calloc(1,sizeof(*tov));
-  
+  tov->exit_if_error = 1;/* if error happens exist the code */
   return tov;
 }
 
 /* free thoroughly the given struct */
 void TOV_free(TOV_T *TOV)
 {
-  free(TOV->m);
-  free(TOV->r);
-  free(TOV->p);
-  free(TOV->h);
-  free(TOV->phi);
-  free(TOV->rbar);
-  free(TOV->psi);
+  if (!TOV)
+    return;
+    
+  _free(TOV->m);
+  _free(TOV->r);
+  _free(TOV->p);
+  _free(TOV->h);
+  _free(TOV->phi);
+  _free(TOV->rbar);
+  _free(TOV->psi);
   free(TOV);
 }
