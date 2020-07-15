@@ -84,9 +84,10 @@ TOV_T *TOV_solution(TOV_T *const TOV)
     iter++;
   }
   
-  /* if it finder messed up */
+  /* if finder messed up */
   if (!isfinite(m))
   {
+    TOV->status = 1;
     if (TOV->exit_if_error)
     {
       Error0("TOV solution failed!\n");
@@ -101,6 +102,7 @@ TOV_T *TOV_solution(TOV_T *const TOV)
   /* if it needs more step to find the root, set the last value as baryonic mass */
   if (!EQL(m,TOV->bar_m))
   {
+    TOV->status = 1;
     fprintf(stderr,"TOV root finder for enteral enthalpy needs more steps!\n"
                    "The difference between current baryonic mass and desired one is = %e\n",m-TOV->bar_m);
     TOV->bar_m = m;
@@ -295,6 +297,7 @@ static void calculate_ADM_and_Komar_mass(TOV_T *const TOV)
   /* some test control */
   if (GRT(fabs(Komar_mass-ADM_mass),tol))/* virial theorem */
   {
+    TOV->status = 1;
     fprintf(stderr,"Komar mass = %g, ADM mass = %g\n",Komar_mass,ADM_mass);
     if (TOV->exit_if_error)
       Error0("Komar mass and ADM mass must be equal!\n");
