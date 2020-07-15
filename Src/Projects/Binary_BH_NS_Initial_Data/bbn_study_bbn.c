@@ -104,6 +104,7 @@ void bbn_measures(Grid_T *const grid)
     // to compute compactness and adm mass of an isolated NS
     // and mass ratio and binding energy */
     TOV_T *tov = TOV_init();
+    tov->exit_if_error = 0;/* don't exit if error happens */
     tov->bar_m = Pgetd("NS_baryonic_mass_current");
     tov->description = "current baryonic mass";
     tov = TOV_solution(tov);
