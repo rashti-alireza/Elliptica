@@ -384,6 +384,7 @@ void bbn_test_induced_metric_algorithm(Grid_T *const grid)
   unsigned p,i,j,ij;
   int status;/* 0 success, 1 failed */
   int type_flg;/* NS = 1, BH = 0 */
+  
   /* change psi and _gamma to sphere */
   FOR_ALL_PATCHES(p,grid)
   {
