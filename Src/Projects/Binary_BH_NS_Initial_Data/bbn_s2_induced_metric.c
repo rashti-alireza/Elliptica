@@ -370,8 +370,7 @@ static void find_theta_phi_of_XYZ_CS(double *const theta,double *const phi,const
 
 /* test induced metric h algorithm.
 // it tests both NS and BH for a concrete example:
-// 3-d = ds^2 = dx^2+dy^2+dz^2+dx*dy+dx*dz+dy*dz
-// in which ds^2 = psi^4*r^2(dtheta^2+sin^2(theta) dphi^2).
+// 3-d => ds^2 = dx^2+dy^2+dz^2+dx*dy+dx*dz+dy*dz.
 // NOTE: it changes the values of _gamma and psi. */
 void bbn_test_induced_metric_algorithm(Grid_T *const grid)
 {
