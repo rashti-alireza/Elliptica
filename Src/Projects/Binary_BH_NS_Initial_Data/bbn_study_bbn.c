@@ -108,14 +108,16 @@ void bbn_measures(Grid_T *const grid)
     tov->bar_m = Pgetd("NS_baryonic_mass_current");
     tov->description = "current baryonic mass";
     tov = TOV_solution(tov);
-    binding_energy = adm_mass-bh_chris_mass-tov->ADM_m;
-    /* update parameters */
-    Psetd("NS_TOV_compactness" ,tov->ADM_m/tov->rbar[tov->N-1]);
-    Psetd("NS_TOV_adm_mass"    ,tov->ADM_m);
-    Psetd("NS_TOV_radius"      ,tov->rbar[tov->N-1]);
-    Psetd("mass_ratio"         ,bh_chris_mass/tov->ADM_m);
-    Psetd("Binding_energy"     ,binding_energy);
-    
+    if (tov->status == 0)/* if no error */
+    {
+      binding_energy = adm_mass-bh_chris_mass-tov->ADM_m;
+      /* update parameters */
+      Psetd("NS_TOV_compactness" ,tov->ADM_m/tov->rbar[tov->N-1]);
+      Psetd("NS_TOV_adm_mass"    ,tov->ADM_m);
+      Psetd("NS_TOV_radius"      ,tov->rbar[tov->N-1]);
+      Psetd("mass_ratio"         ,bh_chris_mass/tov->ADM_m);
+      Psetd("Binding_energy"     ,binding_energy);
+    }
     TOV_free(tov);
   }
   
