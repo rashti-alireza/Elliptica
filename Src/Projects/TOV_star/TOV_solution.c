@@ -94,7 +94,7 @@ TOV_T *TOV_solution(TOV_T *const TOV)
     }
     else
     {
-      fprintf(stderr,"~> TOV solution failed! exiting ...\n");
+      fprintf(stderr,"~> TOV solution failed! Exiting ...\n");
       printf("} Solving TOV equations for %s ==> Done.\n",TOV->description);
       return TOV;
     }
