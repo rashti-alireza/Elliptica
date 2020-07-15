@@ -370,7 +370,7 @@ static void find_theta_phi_of_XYZ_CS(double *const theta,double *const phi,const
 
 /* test induced metric h algorithm.
 // it tests both NS and BH for simple case of a perfect sphere
-// in which ds^2 = r^2(dtheta^2+sin^2(theta) dphi^2).
+// in which ds^2 = psi^4*r^2(dtheta^2+sin^2(theta) dphi^2).
 // NOTE: it changes the values of _gamma and psi. */
 void bbn_test_induced_metric_algorithm(Grid_T *const grid)
 {
@@ -382,7 +382,8 @@ void bbn_test_induced_metric_algorithm(Grid_T *const grid)
   double *h_D0D0=0,*h_D0D1=0,*h_D1D1=0;/* induced metric */
   double x[3],X[3],r,theta,phi;
   unsigned p,i,j,ij;
-  
+  int status;/* 0 success, 1 failed */
+  int type_flg;/* NS = 1, BH = 0 */
   /* change psi and _gamma to sphere */
   FOR_ALL_PATCHES(p,grid)
   {
@@ -390,29 +391,30 @@ void bbn_test_induced_metric_algorithm(Grid_T *const grid)
     unsigned nn,ijk;
     nn = patch->nn;
     
-    REALLOC_v_WRITE_v(_gammaI_U0U2)
-    REALLOC_v_WRITE_v(_gammaI_U0U0)
-    REALLOC_v_WRITE_v(_gammaI_U0U1)
-    REALLOC_v_WRITE_v(_gammaI_U1U2)
-    REALLOC_v_WRITE_v(_gammaI_U1U1)
-    REALLOC_v_WRITE_v(_gammaI_U2U2)
+    REALLOC_v_WRITE_v(_gamma_D0D2)
+    REALLOC_v_WRITE_v(_gamma_D0D0)
+    REALLOC_v_WRITE_v(_gamma_D0D1)
+    REALLOC_v_WRITE_v(_gamma_D1D2)
+    REALLOC_v_WRITE_v(_gamma_D1D1)
+    REALLOC_v_WRITE_v(_gamma_D2D2)
     REALLOC_v_WRITE_v(psi)
     
     for (ijk = 0; ijk < nn; ++ijk)
     {
-      _gammaI_U0U0[ijk] = 1;
-      _gammaI_U0U1[ijk] = 0;
-      _gammaI_U0U2[ijk] = 0;
-      _gammaI_U1U2[ijk] = 0;
-      _gammaI_U1U1[ijk] = 1;
-      _gammaI_U2U2[ijk] = 1;
-      psi[ijk]          = 1;
+      _gamma_D0D0[ijk] = 1;
+      _gamma_D0D1[ijk] = 0;
+      _gamma_D0D2[ijk] = 0;
+      _gamma_D1D2[ijk] = 0;
+      _gamma_D1D1[ijk] = 1;
+      _gamma_D2D2[ijk] = 1;
+      psi[ijk]         = 0.7;/* arbitrary */
     }
   }/* end of FOR_ALL_PATCHES */
   
   /* test NS */
-  printf("~> testing NS side:\n");
-  type = "NS";
+  status   = 0;
+  type     = "NS";
+  type_flg = 1;
   bbn_compute_induced_metric_on_S2_CS_Ylm_CTS
     (grid,type,lmax,&h_D0D0,&h_D0D1,&h_D1D1);
   for (i = 0; i < Ntheta; ++i)
@@ -431,22 +433,41 @@ void bbn_test_induced_metric_algorithm(Grid_T *const grid)
       x[2] -= patch->c[2];
       r     = root_square(3,x,0);
       
-      if (!EQL(h_D0D0[ij],Pow2(r))) 
-        printf("dh00 = %g\n",h_D0D0[ij]-Pow2(r));
+      double ipsi;
+      INTERPOLATE_macro(psi)
+      double ipsi4 = pow(ipsi,4);
+      
+      if (!EQL(h_D0D0[ij],Pow2(r)*ipsi4))
+      {
+        printf("dh00 = %g\n",h_D0D0[ij]-Pow2(r)*ipsi4);
+        status = 1;
+      }
       if (!EQL(h_D0D1[ij],0)) 
+      {
         printf("dh01 = %g\n",h_D0D1[ij]);
-      if (!EQL(h_D1D1[ij],Pow2(r*sin(theta)))) 
-        printf("dh11 = %g\n",h_D1D1[ij]-Pow2(r*sin(theta)));
+        status = 1;
+      }
+      if (!EQL(h_D1D1[ij],Pow2(r*sin(theta))*ipsi4)) 
+      {
+        printf("dh11 = %g\n",h_D1D1[ij]-Pow2(r*sin(theta))*ipsi4);
+        status = 1;
+      }
     }
   }
+  printf("~> Testing induced metric algorithm %s side:",type);
+  if (status)
+    printf(" => [FAILED] <=\n");
+  else
+    printf(" => [PASSED] <=\n");
   
   free(h_D0D0); h_D0D0 = 0;
   free(h_D0D1); h_D0D1 = 0;
   free(h_D1D1); h_D1D1 = 0;
   
   /* test BH */
-  printf("~> testing BH side:\n");
-  type = "BH";
+  status   = 0;
+  type     = "BH";
+  type_flg = 0;
   bbn_compute_induced_metric_on_S2_CS_Ylm_CTS
     (grid,type,lmax,&h_D0D0,&h_D0D1,&h_D1D1);
   for (i = 0; i < Ntheta; ++i)
@@ -465,14 +486,33 @@ void bbn_test_induced_metric_algorithm(Grid_T *const grid)
       x[2] -= patch->c[2];
       r     = root_square(3,x,0);
       
-      if (!EQL(h_D0D0[ij],Pow2(r))) 
-        printf("dh00 = %g\n",h_D0D0[ij]-Pow2(r));
+      double ipsi;
+      INTERPOLATE_macro(psi)
+      double ipsi4 = pow(ipsi,4);
+      
+      if (!EQL(h_D0D0[ij],Pow2(r)*ipsi4))
+      {
+        printf("dh00 = %g\n",h_D0D0[ij]-Pow2(r)*ipsi4);
+        status = 1;
+      }
       if (!EQL(h_D0D1[ij],0)) 
+      {
         printf("dh01 = %g\n",h_D0D1[ij]);
-      if (!EQL(h_D1D1[ij],Pow2(r*sin(theta)))) 
-        printf("dh11 = %g\n",h_D1D1[ij]-Pow2(r*sin(theta)));
+        status = 1;
+      }
+      if (!EQL(h_D1D1[ij],Pow2(r*sin(theta))*ipsi4)) 
+      {
+        printf("dh11 = %g\n",h_D1D1[ij]-Pow2(r*sin(theta))*ipsi4);
+        status = 1;
+      }
     }
   }
+  
+  printf("~> Testing induced metric algorithm %s side:",type);
+  if (status)
+    printf(" => [FAILED] <=\n");
+  else
+    printf(" => [PASSED] <=\n");
   
   free(h_D0D0); h_D0D0 = 0;
   free(h_D0D1); h_D0D1 = 0;
