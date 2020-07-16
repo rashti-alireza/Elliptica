@@ -467,6 +467,8 @@ static char *solve_Sy_g_prime(Matrix_T *const S,double *const g_prime,Grid_T *co
   umfpack->a = S;
   umfpack->b = g_prime;
   umfpack->x = y;
+  umfpack->refinement = 
+    grid->patch[0]->solving_man->settings->umfpack_refine;
   
   if (S->ccs_f)
     direct_solver_umfpack_di(umfpack);
@@ -1227,7 +1229,7 @@ static void fill_C_F_collocation(Patch_T *const patch, Pair_T *const pair)
 static char *making_E_prime_and_f_prime(Patch_T *const patch)
 {
   const double time1 = get_time_sec();
-  const int LONG_VERSION = 0;/* long version (= 1), normal version (= 0). */
+  const int LONG_VERSION = patch->solving_man->settings->umfpack_size;
   DDM_Schur_Complement_T *const S = patch->solving_man->method->SchurC;
   double **E_Trans;
   Matrix_T *a;
@@ -1240,6 +1242,7 @@ static char *making_E_prime_and_f_prime(Patch_T *const patch)
   char *msg = calloc(10000,1);
   IsNull(msg);
   
+  /* long version (= 1), normal version (= 0). */
   if (LONG_VERSION)
     a = cast_matrix_ccs_long(S->B);
   else
@@ -1273,6 +1276,7 @@ static char *making_E_prime_and_f_prime(Patch_T *const patch)
   umfpack->bs = bs;
   umfpack->xs = xs;
   umfpack->ns = ns;
+  umfpack->refinement = patch->solving_man->settings->umfpack_refine;
   
   if (LONG_VERSION)
     direct_solver_series_umfpack_dl(umfpack);
@@ -2023,6 +2027,9 @@ static void set_solving_man_settings(Solve_Equations_T *const SolveEqs)
     patch->solving_man->settings->NHFrms  = 0;
     patch->solving_man->settings->solver_step  = 0;
     patch->solving_man->settings->last_sol = 0;
+    patch->solving_man->settings->umfpack_size = SolveEqs->umfpack_size;
+    patch->solving_man->settings->umfpack_refine = SolveEqs->umfpack_refine;
+    
   }
 }
 
@@ -2606,6 +2613,7 @@ static void solve_Bx_f(Patch_T *const patch)
   umfpack->a = B_ccs;
   umfpack->b = f;
   umfpack->x = x;
+  umfpack->refinement = patch->solving_man->settings->umfpack_refine;
   direct_solver_umfpack_di(umfpack);
   
   free_matrix(B_ccs);
