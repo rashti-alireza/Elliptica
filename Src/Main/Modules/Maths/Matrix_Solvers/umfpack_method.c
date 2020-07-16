@@ -53,10 +53,12 @@ int direct_solver_umfpack_di(void *vp)
   sprintf(umf->description,
             "o.  Solver            = UMFPACK_di\n"
             "o.  Matrix Dimension  = %dx%d\n"
-            "o.  Condition Number  = %e\n" 
+            "o.  Condition Number  = %e\n"
+            "o.  Refinement_Step   = %d\n" 
             "o.  Solver Wall-Clock = %g(s)\n",
                                            row,col,
                                            1/Info[UMFPACK_RCOND],
+                                           (int)Control[UMFPACK_IRSTEP],
                                            get_time_sec()-time1);
   
   return EXIT_SUCCESS;
@@ -110,11 +112,13 @@ int direct_solver_umfpack_dl(void *vp)
   sprintf(umf->description,
             "o.  Solver            = UMFPACK_dl\n"
             "o.  Matrix Dimension  = %dx%d\n"
-            "o.  Condition Number  = %e\n" 
+            "o.  Condition Number  = %e\n"
+            "o.  Refinement_Step   = %d\n" 
             "o.  Solver Wall-Clock = %g(s)\n",
                                            row,col,
                                            1/Info[UMFPACK_RCOND],
-                                           get_time_sec()-time1);  
+                                           (int)Control[UMFPACK_IRSTEP],
+                                           get_time_sec()-time1);
   
   return EXIT_SUCCESS;
 }
@@ -185,14 +189,18 @@ int direct_solver_series_umfpack_di(void *vp)
   umfpack_di_free_numeric(&Numeric);
 
   umf->description[0] = '\0';
+  
   sprintf(umf->description,
             "o.  Series Solver     = UMFPACK_di\n"
             "o.  Matrix Dimension  = %dx%d\n"
-            "o.  Condition Number  = %e\n" 
+            "o.  Condition Number  = %e\n"
+            "o.  Refinement_Step   = %d\n" 
             "o.  Solver Wall-Clock = %g(s)\n",
                                            row,col,
                                            1/Info[UMFPACK_RCOND],
-                                           get_time_sec()-time1);  
+                                           (int)Control[UMFPACK_IRSTEP],
+                                           get_time_sec()-time1);
+                                           
   return EXIT_SUCCESS;
 }
 
@@ -248,15 +256,18 @@ int direct_solver_series_umfpack_dl(void *vp)
   umfpack_dl_free_numeric(&Numeric);
  
   umf->description[0] = '\0';
+  
   sprintf(umf->description,
             "o.  Series Solver     = UMFPACK_dl\n"
             "o.  Matrix Dimension  = %dx%d\n"
-            "o.  Condition Number  = %e\n" 
+            "o.  Condition Number  = %e\n"
+            "o.  Refinement_Step   = %d\n" 
             "o.  Solver Wall-Clock = %g(s)\n",
                                            row,col,
                                            1/Info[UMFPACK_RCOND],
+                                           (int)Control[UMFPACK_IRSTEP],
                                            get_time_sec()-time1);
-  
+                                           
   return EXIT_SUCCESS;
 }
 
