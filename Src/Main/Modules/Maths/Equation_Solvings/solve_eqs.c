@@ -127,6 +127,9 @@ Solve_Equations_T *init_solve_equations(Grid_T *const grid)
   solve->grid         = grid;
   solve->StopCriteria = default_stop_criteria_solve_equations; 
   
+  /* default values for umfpack settings */
+  solve->umfpack_size   = 0;/* means di */
+  solve->umfpack_refine = DBL_MAX;/* then it uses the default value of UMFPACK */
   return solve;
 }
 

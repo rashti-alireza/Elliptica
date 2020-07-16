@@ -252,6 +252,9 @@ typedef struct SOLVE_EQUATIONS_T
                            // this factor can be set for each field separately
                            // and if no info is given, it is equal to 1, which
                            // means no relaxation. */
+  
+  int umfpack_size;/* 0 = di, 1 = dl (default is 0) */
+  double umfpack_refine;/* max iter. refinement step, default is the default of UMFPACK which is 2 */
   /* some fields need their own grid, called sgrid (Special GRID) here. 
   // e.g. phi in Euler's equations is solved only in NS not the whole grid */
   struct
