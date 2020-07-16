@@ -1242,7 +1242,7 @@ static char *making_E_prime_and_f_prime(Patch_T *const patch)
   char *msg = calloc(10000,1);
   IsNull(msg);
   
-  /* long version (= 1), normal version (= 0). */
+  /* normal version (= 0), otherwise long */
   if (LONG_VERSION)
     a = cast_matrix_ccs_long(S->B);
   else
