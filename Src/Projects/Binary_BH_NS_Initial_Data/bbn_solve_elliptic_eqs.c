@@ -31,7 +31,8 @@ void bbn_solve_elliptic_eqs(Grid_T *const grid)
   SolveEqs->FieldUpdate   = bbn_SolveEqs_FieldUpdate;
   SolveEqs->SourceUpdate  = bbn_SolveEqs_SourceUpdate;
   SolveEqs->StopCriteria  = bbn_stop_criteria;
-  
+  SolveEqs->umfpack_refine= PgetdEZ("Solving_UMFPACK_refinement_step");
+  SolveEqs->umfpack_size  = PgetiEZ("Solving_UMFPACK_size");
   Grid_T *phi_grid = bbn_phi_grid(grid);/* phi needed to be solved only in NS */
   add_special_grid_solve_equations(phi_grid,"phi",SolveEqs);
   

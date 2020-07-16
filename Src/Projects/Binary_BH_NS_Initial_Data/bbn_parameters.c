@@ -29,6 +29,14 @@ void bbn_set_default_parameters(void)
   /* how to solve Jx = -F equations */
   Pset_default("Solving_Method","DDM_Schur_Complement");
   
+  /* umfpack settings for size int (~2GB matrix) or long int 
+  // options: "0" for int, "1" for long int */
+  Pset_default("Solving_UMFPACK_size","0");
+  
+  /* umfpack max iter. refinement step: the bigger the slower and precise
+  // options: integer number 0,1,2,... */
+  Pset_default("Solving_UMFPACK_refinement_step","0");
+  
   /* root finder method */
   Pset_default("RootFinder_Method","Steepest_Descent");
   
