@@ -30,7 +30,7 @@ void solver_tests(void)
 // to test direct_solver_umfpack_di solver. */
 static int test_solver_umfpack_di(void)
 {
-  UmfPack_T *eg = init_umfpack();
+  Umfpack_T *eg = init_umfpack();
   Matrix_T *A = alloc_matrix(REG_SF,4,4);
   Matrix_T *ccs;
   double **const a = A->reg->A;
@@ -103,7 +103,7 @@ static int test_solver_umfpack_di(void)
 // to test direct_solver_series_umfpack_di */
 static int test_solver_series_umfpack_di(void)
 {
-  UmfPack_T *eg = init_umfpack();
+  Umfpack_T *eg = init_umfpack();
   Matrix_T *A = alloc_matrix(REG_SF,4,4);
   Matrix_T *ccs;
   const int N = 3;

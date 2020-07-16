@@ -10,7 +10,7 @@
 */
 int direct_solver_umfpack_di(void *vp)
 {
-  UmfPack_T *const umf = vp;
+  Umfpack_T *const umf = vp;
   /* a is row by col matrix at a.x = b and in compressed column storage */
   const int row    = (int)umf->a->row;
   const int col    = (int)umf->a->col;
@@ -69,7 +69,7 @@ int direct_solver_umfpack_di(void *vp)
 */
 int direct_solver_umfpack_dl(void *vp)
 {
-  UmfPack_T *const umf = vp;
+  Umfpack_T *const umf = vp;
   /* a is row by col matrix at a.x = b and in compressed column storage */
   const int row    = (int)umf->a->row;
   const int col    = (int)umf->a->col;
@@ -144,7 +144,7 @@ void umfpack_error_dl(const double *const Control,const long status,const char *
 */
 int direct_solver_series_umfpack_di(void *vp)
 {
-  UmfPack_T *const umf = vp;
+  Umfpack_T *const umf = vp;
   /* a is row by col matrix at a.x = b and in compressed column storage */
   const int row    = (int)umf->a->row;
   const int col    = (int)umf->a->col;
@@ -211,7 +211,7 @@ int direct_solver_series_umfpack_di(void *vp)
 */
 int direct_solver_series_umfpack_dl(void *vp)
 {
-  UmfPack_T *const umf = vp;
+  Umfpack_T *const umf = vp;
   /* a is row by col matrix at a.x = b and in compressed column storage */
   const int row     = (int)umf->a->row;
   const int col     = (int)umf->a->col;
@@ -372,9 +372,9 @@ static void umfpack_failed(const int status,const char *const file,const int lin
 
 /* initializing the umfpack struct.
 // ->return value: pointer to allocated umfpack struct */
-UmfPack_T *init_umfpack(void)
+Umfpack_T *init_umfpack(void)
 {
-  UmfPack_T *umf = calloc(1,sizeof(*umf));
+  Umfpack_T *umf = calloc(1,sizeof(*umf));
   IsNull(umf);
   
   /* so this uses the default value of umfpack unless otherwise is set */
@@ -384,7 +384,7 @@ UmfPack_T *init_umfpack(void)
 }
 
 /* free umfpack struct */
-void free_umfpack(UmfPack_T *umf)
+void free_umfpack(Umfpack_T *umf)
 {
   if (!umf)
     return;

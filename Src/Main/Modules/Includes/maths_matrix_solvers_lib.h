@@ -14,14 +14,14 @@ typedef struct UMFPACK_T
   double **bs;/* b for series solving Ax[i]=b[i], i runs 0,...,ns */
   unsigned ns;/* number of series */
   double refinement;/* max iter. refinement step, if DBL_MAX is set then it uses the default of UMFPACK which is 2 */
-}UmfPack_T;
+}Umfpack_T;
 
 int direct_solver_umfpack_di(void *vp);
 int direct_solver_umfpack_dl(void *vp);
 int direct_solver_series_umfpack_di(void *vp);
 int direct_solver_series_umfpack_dl(void *vp);
-UmfPack_T *init_umfpack(void);
-void free_umfpack(UmfPack_T *umf);
+Umfpack_T *init_umfpack(void);
+void free_umfpack(Umfpack_T *umf);
 
 void solver_tests(void);
 

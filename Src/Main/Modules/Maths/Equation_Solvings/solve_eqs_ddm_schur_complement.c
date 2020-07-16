@@ -457,7 +457,7 @@ static char *solve_Sy_g_prime(Matrix_T *const S,double *const g_prime,Grid_T *co
   const unsigned *const NI_p = 
                   grid->patch[0]->solving_man->method->SchurC->NI_p;
   double *y = alloc_double(NI_total);
-  UmfPack_T *umfpack = init_umfpack();
+  Umfpack_T *umfpack = init_umfpack();
   DDM_Schur_Complement_T *Schur;
   unsigned R = 0;
   unsigned p;
@@ -1236,7 +1236,7 @@ static char *making_E_prime_and_f_prime(Patch_T *const patch)
   double *const f = S->f;
   double **xs,**bs;
   Matrix_T *E_prime;
-  UmfPack_T *umfpack = init_umfpack();
+  Umfpack_T *umfpack = init_umfpack();
   unsigned ns = 1;
   unsigned i;
   char *msg = calloc(10000,1);
@@ -2606,7 +2606,7 @@ static void solve_Bx_f(Patch_T *const patch)
   double *x = alloc_double(NS);
   Matrix_T *B = Schur->B;
   Matrix_T *B_ccs = cast_matrix_ccs(B);
-  UmfPack_T *umfpack = init_umfpack();
+  Umfpack_T *umfpack = init_umfpack();
   
   free_matrix(B);
   
