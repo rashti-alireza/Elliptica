@@ -30,7 +30,7 @@ void bbn_set_default_parameters(void)
   Pset_default("Solving_Method","DDM_Schur_Complement");
   
   /* umfpack settings for size int (~2GB matrix) or long int 
-  // options: "0" for int, "1" for long int */
+  // options: "0" for int, otherwise long int */
   Pset_default("Solving_UMFPACK_size","0");
   
   /* umfpack max iter. refinement step: the bigger the slower and precise
