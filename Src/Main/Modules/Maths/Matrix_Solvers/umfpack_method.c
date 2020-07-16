@@ -29,7 +29,9 @@ int direct_solver_umfpack_di(void *vp)
     Error0("The matrix a in a.x = b in umfpack must be in CCS format.\n");
   
   umfpack_di_defaults(Control);
-  
+  if (!EQL(umf->refinement,DBL_MAX))/* refinment step */
+    Control[UMFPACK_IRSTEP] = umf->refinement;
+    
   status = umfpack_di_symbolic(row,col,Ap,Ai,Ax,&Symbolic,Control,Info);
   if(status != UMFPACK_OK)
     umfpack_error_di(Control,status,__FILE__,__LINE__);
@@ -84,6 +86,8 @@ int direct_solver_umfpack_dl(void *vp)
     Error0("The matrix a in a.x = b in umfpack must be in CCS long format.\n");
   
   umfpack_dl_defaults(Control);
+  if (!EQL(umf->refinement,DBL_MAX))/* refinment step */
+    Control[UMFPACK_IRSTEP] = umf->refinement;
   
   status = umfpack_dl_symbolic(row,col,Ap,Ai,Ax,&Symbolic,Control,Info);
   if(status != UMFPACK_OK)
@@ -157,6 +161,8 @@ int direct_solver_series_umfpack_di(void *vp)
     Error0("The matrix a in a.x = b in umfpack must be in CCS format.\n");
   
   umfpack_di_defaults(Control);
+  if (!EQL(umf->refinement,DBL_MAX))/* refinment step */
+    Control[UMFPACK_IRSTEP] = umf->refinement;
   
   status = umfpack_di_symbolic(row,col,Ap,Ai,Ax,&Symbolic,Control,Info);
   if(status != UMFPACK_OK)
@@ -218,6 +224,8 @@ int direct_solver_series_umfpack_dl(void *vp)
     Error0("The matrix a in a.x = b in umfpack must be in CCS long format.\n");
   
   umfpack_dl_defaults(Control);
+  if (!EQL(umf->refinement,DBL_MAX))/* refinment step */
+    Control[UMFPACK_IRSTEP] = umf->refinement;
   
   status = umfpack_dl_symbolic(row,col,Ap,Ai,Ax,&Symbolic,Control,Info);
   if(status != UMFPACK_OK)
