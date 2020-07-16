@@ -160,6 +160,8 @@ typedef struct SOLVING_MAN_T
                      // so in case the residula goes up, it uses this value. */
     unsigned NHFrms;/* number of HFrms */
     int solver_step;/* number of steps have been taken by solver till now. starting from 0 */
+    int umfpack_size;/* 0 = di, 1 = dl (default is 0) */
+    double umfpack_refine;/* max iter. refinement step, default is the default of UMFPACK which is 2 */
   }settings[1];
 }Solving_Man_T;
 
