@@ -11,6 +11,11 @@ void umfpack_error_dl(const double *const Control,const long status,const char *
 static void umfpack_failed(const int status,const char *const file,const int line);
 int direct_solver_series_umfpack_di(void *vp);
 int direct_solver_series_umfpack_dl(void *vp);
+UmfPack_T *init_umfpack(void);
+void free_umfpack(UmfPack_T *umf);
+
+
+
 
 
 

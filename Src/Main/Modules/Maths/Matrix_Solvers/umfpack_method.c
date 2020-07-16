@@ -350,3 +350,28 @@ static void umfpack_failed(const int status,const char *const file,const int lin
       abort_error("No such error defined for UMFPACK!\n",file,line);
   }
 }
+
+/* initializing the umfpack struct.
+// ->return value: pointer to allocated umfpack struct */
+UmfPack_T *init_umfpack(void)
+{
+  UmfPack_T *umf = calloc(1,sizeof(*umf));
+  IsNull(umf);
+  
+  /* so this uses the default value of umfpack unless otherwise is set */
+  umf->refinement = DBL_MAX;
+  
+  return umf;
+}
+
+/* free umfpack struct */
+void free_umfpack(UmfPack_T *umf)
+{
+  if (!umf)
+    return;
+  free(umf);
+}
+
+
+
+
