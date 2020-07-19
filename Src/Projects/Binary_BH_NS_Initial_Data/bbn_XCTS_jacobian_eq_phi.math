@@ -164,6 +164,7 @@ Epart_ = t1_e_+rho0*(t2_e_+t3_e_)+att*((1-rho0/rhoc)**4)*t3_e_;
 
 `  if(strstr(patch->name,"left_central_box"))`
 `  {`
+`   const double Att_Con_Num = 1E-5;`
 `   fdInterp_dfs_T *const dInterp_df = get_dInterp_df(patch,0,"none");`
 `   const double NS_center[3] = {Pgetd("NS_center_x"),Pgetd("NS_center_y"),Pgetd("NS_center_z")};`
 `   const unsigned nn = patch->nn;`
@@ -181,7 +182,7 @@ Epart_ = t1_e_+rho0*(t2_e_+t3_e_)+att*((1-rho0/rhoc)**4)*t3_e_;
 `    for (j = 0; j < Nj; ++j)`
 `    {`
 `     lmn = node[j];`
-`     B[i][j] += d_df[lmn];` # for eq: phi = 0
+`     B[i][j] += Att_Con_Num*d_df[lmn];` # for eq: phi = 0
 `    }`
 `   }`
 ``
@@ -196,7 +197,7 @@ Epart_ = t1_e_+rho0*(t2_e_+t3_e_)+att*((1-rho0/rhoc)**4)*t3_e_;
 `     for (i = 0; i < Ni; ++i)`
 `     {`
 #`      ijk = node[i];`
-`      E_Trans[j][i] += d_df[lmn];`
+`      E_Trans[j][i] += Att_Con_Num*d_df[lmn];`
 `     }`
 `    }`
 `   }/* end of if (S->NI) */`

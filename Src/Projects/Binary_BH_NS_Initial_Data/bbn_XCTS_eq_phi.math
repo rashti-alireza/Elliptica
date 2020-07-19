@@ -142,6 +142,7 @@ F_eq = t1+rho0*(t2+t3+t4)+t5+t6+att*((1-rho0/rhoc)**4)*t3;
 ## put phi zero at a point in the center of NS
 `  if(strstr(patch->name,"left_central_box"))`
 `  {`
+`    const double Att_Con_Num = 1E-5;`
 `    const double NS_center[3] = {Pgetd("NS_center_x"),Pgetd("NS_center_y"),Pgetd("NS_center_z")};`
 `    Interpolation_T *interp_phi0 = init_interpolation();`
 `    double interp;`
@@ -158,7 +159,7 @@ F_eq = t1+rho0*(t2+t3+t4)+t5+t6+att*((1-rho0/rhoc)**4)*t3;
 `    free_interpolation(interp_phi0);`
 ``
 `    for (n = 0; n < N; ++n)`
-`    	F[n] += interp;` # phi = 0 at the center of NS
+`    	F[n] += Att_Con_Num*interp;` # phi = 0 at the center of NS
 `   `
 `  }`
 
