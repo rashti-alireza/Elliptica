@@ -68,7 +68,6 @@ if [[ ${scale} -eq 1 ]];then
 		sed 's/+//g' | \
 		awk '{print $3}'| tr '\n' ',')
 	IFS=',' read -r -a array <<< "${data}"
-	
 	# find the max to scale
 	max=0
 	for (( i=0; i < ${#array[@]}; ++i ));
@@ -101,8 +100,6 @@ printf "\n%s  = %s\n\n" "==> output file" ${out}
 
 # plot with tgraph:
 tgraph.py -m ${out}
-
-
 
 
 # End
