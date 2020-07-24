@@ -5061,6 +5061,8 @@ static Grid_T *TOV_KerrSchild_approximation(void)
   Psetd("NS_ADM_mass",1);
   Psetd("NS_max_radius",ns_R);
   Psetd("NS_min_radius",ns_R);
+  Psetd("NS_left_central_box_length",
+      Pgetd("left_central_box_length_ratio")*ns_R);
   
   /* -> BH properties */  
   Psetd("r_excision",bh_R);
@@ -5666,7 +5668,7 @@ static Grid_T *creat_bbn_grid_CS(struct Grid_Params_S *const GridParams)
   /* making NS and BH surfaces function */
   NS_BH_surface_CubedSpherical_grid(grid_next,GridParams);
   
-  box_size_l = Pgetd("left_central_box_length_ratio")*Max_R_NS_l;
+  box_size_l = Pgetd("NS_left_central_box_length");
   box_size_r = Pgetd("left_central_box_length_ratio")*R_BH_r;/* use same ratio as NS */
   
   for (i = 0; i < N_Outermost_Split; i++)
