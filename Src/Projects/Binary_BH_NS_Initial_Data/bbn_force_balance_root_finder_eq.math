@@ -21,6 +21,7 @@ C_macro = READ_v(name);
 `const int dir         = par->dir;`
 `const double Vr       = par->Vr;`
 `const double D        = par->D;`
+`const double *const V2CM = par->V2CM; `
 `double Omega_BHNS = 0, y_CM = 0, x_CM = 0;`
 `unsigned ijk;`  
 ``
@@ -117,7 +118,23 @@ Symm[_gamma(i,j)   = _gamma(j,i)];
     `Gtilda_rf->v[ijk] = Gtilda;`
 `}`
 ``
-`if (dir == 0)`
+
+
+`if (dir == -1)`
+`{`
+`  double *dx_rf = Partial_Derivative(Gtilda_rf,"x");`
+`  double *dy_rf = Partial_Derivative(Gtilda_rf,"y");`
+`  double *const drf = dx_rf;`
+`  for (ijk = 0; ijk < nn; ++ijk)`
+`  {`
+`    drf[ijk] = V2CM[0]*dx_rf[ijk]+V2CM[1]*dy_rf[ijk];`
+`  }`
+`  dGtilda_rf->v = drf;`
+`  dx_rf = 0;`
+`  free(dy_rf);`
+
+`}`
+`else if (dir == 0)`
 `  dGtilda_rf->v  = Partial_Derivative(Gtilda_rf,"x");`
 `else if (dir == 1)`
 `  dGtilda_rf->v  = Partial_Derivative(Gtilda_rf,"y");`

@@ -551,6 +551,10 @@ fAdjustment_t *get_func_force_balance_adjustment(const char *const adjust)
   {
     f = force_balance_ddx_x_CM;
   }
+  else if (strcmp_i(adjust,"d/dCM:Omega"))
+  {
+    f = force_balance_ddCM_Omega;
+  }
   else if (strcmp_i(adjust,"d/dy:x_CM"))
   {
     f = force_balance_ddy_x_CM;
@@ -1129,6 +1133,12 @@ static void force_balance_ddy_x_CM(Grid_T *const grid)
   force_balance_eq_root_finders(grid,1,"x_CM");
 }
 
+/* force_balance_equation : adjust Omega along the V2CM = R_cm-R_NS. */
+static void force_balance_ddCM_Omega(Grid_T *const grid)
+{
+  force_balance_eq_root_finders(grid,-1,"BH_NS_angular_velocity");
+}
+
 /* force_balance_equation : adjust x_CM at direction d/dz */
 static void force_balance_ddz_x_CM(Grid_T *const grid)
 {
@@ -1186,7 +1196,7 @@ static void force_balance_eq_root_finders(Grid_T *const grid,const int dir, cons
   double W1  = Pgetd("Solving_Field_Update_Weight");
   double W2  = 1-W1;
   double *new_par,old_par = 0;
-  double guess[1],X[3];
+  double guess[1],X[3],V2CM[2]={0,0};
   struct Force_Balance_RootFinder_S params[1];
   Patch_T *patch;
   char desc[1000] = {'\0'};
@@ -1198,6 +1208,7 @@ static void force_balance_eq_root_finders(Grid_T *const grid,const int dir, cons
   params->X          = X;
   params->Vr         = Vr;
   params->D          = D;
+  params->V2CM       = V2CM;
   params->find_x_CM  = 0;
   params->find_y_CM  = 0;
   params->find_Omega = 0;
@@ -1232,7 +1243,18 @@ static void force_balance_eq_root_finders(Grid_T *const grid,const int dir, cons
     Error0(NO_OPTION);
   
   /* which direction */
-  if (dir == 0)
+  if (dir == -1)
+  {
+    V2CM[0] = x_CM-NS_center[0];
+    V2CM[1] = y_CM-NS_center[1];
+    double V2CM_norm = root_square(2,V2CM,0);
+    assert(!EQL(V2CM_norm,0));
+    V2CM[0] /= V2CM_norm;
+    V2CM[1] /= V2CM_norm;
+    params->dLnGamma = V2CM[0]*dLnGamma_in_force_balance_eq(patch,X,0) + 
+                       V2CM[1]*dLnGamma_in_force_balance_eq(patch,X,1);
+  }
+  else if (dir == 0)
   {
     params->dLnGamma = dLnGamma_in_force_balance_eq(patch,X,0);
   }
