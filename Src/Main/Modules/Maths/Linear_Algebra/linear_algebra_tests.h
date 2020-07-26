@@ -5,7 +5,7 @@
 #include "maths_linear_algebra_lib.h"
 
 #define DO 1
-#define NOT_DO 0
+#define DO_NOT 0
 
 void matrix_tests(void);
 Matrix_T *cast_matrix_ccs(Matrix_T *const m);

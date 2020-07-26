@@ -10,7 +10,7 @@
 #include "maths_matrix_solvers_lib.h"
 
 #define DO 1
-#define NOT_DO 0
+#define DO_NOT 0
 
 static int test_solver_umfpack_di(void);
 static int test_solver_series_umfpack_di(void);

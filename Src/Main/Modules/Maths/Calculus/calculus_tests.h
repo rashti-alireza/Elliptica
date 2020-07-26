@@ -7,7 +7,7 @@
 #include "fields_lib.h"
 
 #define DO 1
-#define NOT_DO 0
+#define DO_NOT 0
 
 #define E M_E
 #define Cos(a) cos(a)

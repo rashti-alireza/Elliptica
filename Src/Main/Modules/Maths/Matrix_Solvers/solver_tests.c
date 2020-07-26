@@ -10,7 +10,7 @@ void solver_tests(void)
 {
   int status;
   
-  if (NOT_DO)
+  if (DO_NOT)
   {
     status = test_solver_umfpack_di();
     printf("Testing umfpack_di solver:");

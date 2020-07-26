@@ -17,7 +17,7 @@ int fourier_transformation_tests(Grid_T *const grid)
     printf("Fourier transformation test: real to complex Fourier transformation 1-D: \n");
     cft_c2r_r2c_1d_EquiSpaced_test(grid);
   }
-  if (NOT_DO)
+  if (DO_NOT)
   {
     printf("Fourier transformation test: real to complex Fourier transformation 2-D: \n");
     r2cft_2d_EquiSpaced_test(grid);
@@ -432,44 +432,44 @@ int interpolation_tests(Grid_T *const grid)
     Y = make_random_number(n[1],min[1],max[1]);
     Z = make_random_number(n[2],min[2],max[2]);
     
-    if (NOT_DO)
+    if (DO_NOT)
     {
       printf("Interpolation test:      X direction, patch %10s =>",patch->name);
       status = interpolation_tests_X(field,X,n[0]);
       check_test_result(status);
     }
     
-    if (NOT_DO)
+    if (DO_NOT)
     {
       printf("Interpolation test:      Y direction, patch %10s =>",patch->name);
       status = interpolation_tests_Y(field,Y,n[1]);
       check_test_result(status);
     }
-    if (NOT_DO)
+    if (DO_NOT)
     {
       printf("Interpolation test:      Z direction, patch %10s =>",patch->name);
       status = interpolation_tests_Z(field,Z,n[2]);
       check_test_result(status);
     }
-    if (NOT_DO)
+    if (DO_NOT)
     {
       printf("Interpolation test: X & Y directions, patch %10s =>",patch->name);
       status = interpolation_tests_XY(field,X,Y,n[0],n[1]);
       check_test_result(status);
     }
-    if (NOT_DO)
+    if (DO_NOT)
     {
       printf("Interpolation test: X & Z directions, patch %10s =>",patch->name);
       status = interpolation_tests_XZ(field,X,Z,n[0],n[2]);
       check_test_result(status);
     } 
-    if (NOT_DO)
+    if (DO_NOT)
     {
       printf("Interpolation test: Y & Z directions, patch %10s =>",patch->name);
       status = interpolation_tests_YZ(field,Y,Z,n[1],n[2]);
       check_test_result(status);
     }
-    if (NOT_DO)
+    if (DO_NOT)
     {
       printf("Interpolation test:              3-D, patch %10s =>",patch->name);
       status = interpolation_tests_XYZ(field,X,Y,Z,n[0],n[1],n[2]);
@@ -484,7 +484,7 @@ int interpolation_tests(Grid_T *const grid)
     remove_field(field);
   }
   
-  if (NOT_DO)
+  if (DO_NOT)
   {
       printf("Interpolation test:            Neville Iterative Method =>");
       status = interpolation_tests_Neville_1d();

@@ -11,7 +11,7 @@
 
 
 #define DO 1
-#define NOT_DO 0
+#define DO_NOT 0
 
 
 void test_dfs_df_values(Grid_T *const grid);
