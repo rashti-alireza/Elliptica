@@ -140,13 +140,14 @@ double *c2rft_1d_EquiSpaced_values(void *const coeffs,const unsigned N)
 
 /* fourier transformation from real value to complex coeffs for 2d.
 // notes:
-// o. f expansion => f(phi0,phi1) = sum{Clm exp(I.l.phi0) exp(I.m.phi1)}.
-//    =>  Clm = 1/(2*pi)^2 *\integral_{0}^{2*pi}\integral_{0}^{2*pi} f(phi0,phi1) exp(-I*l*phi0) exp(-I*m*phi1) dphi0 dphi1.
+// o. f expansion => f(phi0,phi1) = 
+//    \sum_{l=0,m=0}^{l=Nphi0-1,m=Nphi1-1}{Clm exp(I.l.phi0) exp(I.m.phi1)}.
+//    =>  Clm = 1/(2*pi)^2 *\integral_{0}^{2*pi}\integral_{0}^{2*pi} 
+//              f(phi0,phi1) exp(-I*l*phi0) exp(-I*m*phi1) dphi0 dphi1.
 // o. phi1 and phi2 are in [0,2 pi]
 // o. collocation poinst are EquiSpaced
 // o. f(phi0(i),phi1(j)) = f[i][j] = f[IJ(i,j,Nphi1)], where IJ is the macro in the header
-// o. Clm(i,j) = Clm[i][j] = Clm[IJ(i,j,l1)], where again IJ is the macro in the header
-//    and l1 is Nphi1/2+1 in which if Nphi1 is not even, it is rounded down.
+// o. Clm(i,j) = Clm[i][j] = Clm[IJ(i,j,Nphi1)], where again IJ is the macro in the header
 //
 // o. syntax:
 // =========
@@ -172,43 +173,29 @@ r2cft_2d_coeffs
   if (!f)
     Error0("Bad argument: no value\n!");
     
-  const unsigned l0 = Nphi0/2+1;/* note: if n is not even, it is rounded down */
-  const unsigned l1 = Nphi1/2+1;/* note: if n is not even, it is rounded down */
+  const unsigned l0 = Nphi0;
+  const unsigned l1 = Nphi1;
   const double complex x0 = -2.*I*M_PI/Nphi0;/* - included */
   const double complex x1 = -2.*I*M_PI/Nphi1;/* - included */
   double *const Rc = alloc_double(l0*l1);
   double *const Ic = alloc_double(l0*l1);
   double complex *const coeffs = alloc_double_complex(l0*l1);
-  double complex **cf = calloc(Nphi0,sizeof(*cf));IsNull(cf);
   unsigned i,j,m0,m1;
   
-  /* for each point FT  => 1-d */
-  for (i = 0; i < Nphi0; ++i)
-  {
-    cf[i] = alloc_double_complex(l1);
-    for (m1 = 0; m1 < l1; ++m1)/* note: l is excluded, otherwise one have aliasing and then error */
-    {
-      double complex x = m1*x1;
-      for (j = 0; j < Nphi1; ++j)
-        cf[i][m1] += f[IJ(i,j,Nphi1)]*cexp(j*x);
-
-      cf[i][m1] /= Nphi1;
-    }
-  }/* end of for (i = 0; i < Nphi0; ++i) */
-  
-  
-  /* FT for the coeffs => 2-d */
   for (m1 = 0; m1 < l1; ++m1)
   {
     for (m0 = 0; m0 < l0; ++m0)
     {
-      double complex x = m0*x0;
+      double complex x00 = m0*x0;
       for (i = 0; i < Nphi0; ++i)
-        coeffs[IJ(m0,m1,l1)] += cf[i][m1]*cexp(i*x);
-
-      coeffs[IJ(m0,m1,l1)] /= Nphi0;
-    }
-  }/* end of for (i = 0; i < Nphi0; ++i) */
+      {
+        double complex x11 = m1*x1;
+        for (j = 0; j < Nphi1; ++j)
+          coeffs[IJ(m0,m1,l1)] += f[IJ(i,j,Nphi1)]*cexp(i*x00)*cexp(j*x11);
+      }
+      coeffs[IJ(m0,m1,l1)] /= (Nphi1*Nphi0);
+    }/* for (m0 = 0; m0 < l0; ++m0) */
+  }/* for (m1 = 0; m1 < l1; ++m1) */
   
   /* decompose real and imag parts */
   for (m1 = 0; m1 < l1; ++m1)
@@ -218,7 +205,6 @@ r2cft_2d_coeffs
       Ic[IJ(m0,m1,l1)]= cimag(coeffs[IJ(m0,m1,l1)]);
     }
   
-  free_2d_mem(cf,Nphi0);
   free(coeffs);
   
   *realC = Rc;

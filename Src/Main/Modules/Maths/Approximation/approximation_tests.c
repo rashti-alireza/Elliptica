@@ -253,11 +253,10 @@ static int Ylm_derivatives_test(Grid_T *const grid)
 // ->return value: TEST_SUCCESSFUL */
 static int r2cft_2d_EquiSpaced_test(Grid_T *const grid)
 {
-
-  const unsigned Nphi0 = 80;
-  const unsigned Nphi1 = 80;
-  const unsigned l0 = Nphi0/2+1;/* note: if n is not even, it is rounded down */
-  const unsigned l1 = Nphi1/2+1;/* note: if n is not even, it is rounded down */
+  const unsigned Nphi0 = 4;
+  const unsigned Nphi1 = 4;
+  const unsigned l0 = Nphi0;
+  const unsigned l1 = Nphi1;
   double *f = alloc_double(Nphi0*Nphi1);
   double *realC = 0;
   double *imagC = 0; 
@@ -271,7 +270,7 @@ static int r2cft_2d_EquiSpaced_test(Grid_T *const grid)
     for (j = 0; j < Nphi1; ++j)
     {
       y = 2.*j*M_PI/Nphi1;
-      if (1)
+      if (0)
         f[IJ(i,j,Nphi1)] = cos(x)*cos(y)+1;
       else if (0)
         f[IJ(i,j,Nphi1)] = 2;
@@ -283,8 +282,8 @@ static int r2cft_2d_EquiSpaced_test(Grid_T *const grid)
         f[IJ(i,j,Nphi1)] = 2*Pow2(cos(x));
       else if (0)
         f[IJ(i,j,Nphi1)] = 2*Pow2(cos(y));
-      else if (0)
-        f[IJ(i,j,Nphi1)] = Pow2(cos(x))+Pow2(cos(y));
+      else if (1)
+        f[IJ(i,j,Nphi1)] = Pow2(cos(x))+Pow2(cos(y))*Pow2(cos(x))+1;
     }
   }
   
@@ -299,43 +298,20 @@ static int r2cft_2d_EquiSpaced_test(Grid_T *const grid)
     for (j = 0; j < Nphi1; ++j)
     {
       y = 2.*j*M_PI/Nphi1;
-      double complex fc = 2*(realC[IJ(0,0,l1)]);//+I*imagC[IJ(0,0,l1)]);
+      double complex fc = 0;
       
       /* sum */
-      for (m0 = 1; m0 < l0; ++m0)
+      for (m0 = 0; m0 < l0; ++m0)
       {
-        for (m1 = 1; m1 < l1; ++m1)
+        for (m1 = 0; m1 < l1; ++m1)
         {
-          //fc += 2*(realC[IJ(m0,m1,l1)]+I*imagC[IJ(m0,m1,l1)]) *
-          //          cexp(I*m0*x)*cexp(I*m1*y);
-          //fc += 2*(realC[IJ(m0,m1,l1)]-I*imagC[IJ(m0,m1,l1)]) *
-          //          cexp(-I*m0*x)*cexp(-I*m1*y);
-          fc += 2*creal((realC[IJ(m0,m1,l1)]+I*imagC[IJ(m0,m1,l1)]) *
-                    cexp(I*m0*x)*cexp(I*m1*y));
+          fc += (realC[IJ(m0,m1,l1)]+I*imagC[IJ(m0,m1,l1)]) *
+                    cexp(I*m0*x)*cexp(I*m1*y);
         }
       }
-      m0 = 0;
-      for (m1 = 1; m1 < l1; ++m1)
-      {
-        //fc += (realC[IJ(m0,m1,l1)]+I*imagC[IJ(m0,m1,l1)]) *
-        //          cexp(I*m0*x)*cexp(I*m1*y);
-        //fc += (realC[IJ(m0,m1,l1)]-I*imagC[IJ(m0,m1,l1)]) *
-        //          cexp(-I*m0*x)*cexp(-I*m1*y);
-        fc += 2*creal((realC[IJ(m0,m1,l1)]+I*imagC[IJ(m0,m1,l1)]) *
-                    cexp(I*m0*x)*cexp(I*m1*y));
-      }
-      m1 = 0;
-      for (m0 = 1; m0 < l0; ++m0)
-      {
-        //fc += (realC[IJ(m0,m1,l1)]+I*imagC[IJ(m0,m1,l1)]) *
-        //          cexp(I*m0*x)*cexp(I*m1*y);
-        //fc += (realC[IJ(m0,m1,l1)]-I*imagC[IJ(m0,m1,l1)]) *
-        //          cexp(-I*m0*x)*cexp(-I*m1*y);
-        fc += 2*creal((realC[IJ(m0,m1,l1)]+I*imagC[IJ(m0,m1,l1)]) *
-                    cexp(I*m0*x)*cexp(I*m1*y));
-      }
       ij = IJ(i,j,Nphi1);
-      printf("%+0.15f%+0.15fI   %+0.15f   %+e\n",creal(fc),cimag(fc),f[ij],creal(fc)-f[ij]);
+      printf("%+0.15f%+0.15fI   %+0.15f   %+e\n",
+        creal(fc),cimag(fc),f[ij],creal(fc)-f[ij]);
     }
   }
   
