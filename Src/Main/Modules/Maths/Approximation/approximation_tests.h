@@ -12,6 +12,8 @@
 
 #define DO 1
 #define NOT_DO 0
+#define IJ(i,j,n)  ((j)+(i)*(n))
+
 
 /* types of derivatives; new one "must" be added to one before the last */
 enum FUNC_E
@@ -63,6 +65,8 @@ static int Ylm_trans_test(Grid_T *const grid);
 int Ylm_transformation_tests(Grid_T *const grid);
 static int Ylm_derivatives_test(Grid_T *const grid);
 static void free_func_Patch2Pdouble(sFunc_Patch2Pdouble_T **func);
+static int r2cft_2d_EquiSpaced_test(Grid_T *const grid);
+
 
 
 
