@@ -66,12 +66,46 @@ double *df_dtheta_Ylm(const double *const realClm,const double *const imagClm,co
 unsigned lm2n(const unsigned l, const unsigned m);
 double *alloc_ClmYlm(unsigned Lmax);
 void free_interpolation(Interpolation_T *interp_s);
-void *r2cft_2d_Coeffs(const double *const f,const unsigned Nphi0, const unsigned Nphi1);
-double *r2cft_2d_realCs(void *C,const unsigned Nphi0, const unsigned Nphi1);
-double *r2cft_2d_ImagCs(void *C,const unsigned Nphi0, const unsigned Nphi1);
-double r2cft_2d_interpolation(void *C,const unsigned Nphi0, const unsigned Nphi1,const double phi0,const double phi1);
-double *r2cft_2d_df_dphi0(void *C,const unsigned Nphi0, const unsigned Nphi1);
-double *r2cft_2d_df_dphi1(void *C,const unsigned Nphi0, const unsigned Nphi1);
+
+double *
+r2cft_2d_df_dphi1
+(
+  const double *const realC/* real part of coeffs */,
+  const double *const imagC/* imag part of coeffs */,
+  const unsigned Nphi0/* number of point in phi0 direction */,
+  const unsigned Nphi1/* number of point in phi1 direction */
+);
+
+double 
+r2cft_2d_interpolation
+(
+  const double *const realC/* real part of coeffs */,
+  const double *const imagC/* imag part of coeffs */,
+  const unsigned Nphi0/* number of point in phi0 direction */,
+  const unsigned Nphi1/* number of point in phi1 direction */,
+  const double phi0/* point of interest at phi0 dir */,
+  const double phi1/* point of interest at phi0 dir */
+);
+
+double *
+r2cft_2d_df_dphi0
+(
+  const double *const realC/* real part of coeffs */,
+  const double *const imagC/* imag part of coeffs */,
+  const unsigned Nphi0/* number of point in phi0 direction */,
+  const unsigned Nphi1/* number of point in phi1 direction */
+);
+
+void
+r2cft_2d_coeffs
+(
+  const double *const f/* field values */,
+  const unsigned Nphi0/* number of point in phi0 direction */, 
+  const unsigned Nphi1/* number of point in phi1 direction */,
+  double **const realC/* real part of coeffs, allocates memory */,
+  double **const imagC/* imag part of coeffs, allocates memory*/
+);
+
 
 #endif
 

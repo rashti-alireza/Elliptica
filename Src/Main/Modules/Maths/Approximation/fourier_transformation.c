@@ -141,19 +141,43 @@ double *c2rft_1d_EquiSpaced_values(void *const coeffs,const unsigned N)
 /* fourier transformation from real value to complex coeffs for 2d.
 // notes:
 // o. f expansion => f(phi0,phi1) = sum{Clm exp(I.l.phi0) exp(I.m.phi1)}.
-// o. phi1 and phi2 in [0,2 pi]
+//    =>  Clm = 1/(2*pi)^2 *\integral_{0}^{2*pi}\integral_{0}^{2*pi} f(phi0,phi1) exp(-I*l*phi0) exp(-I*m*phi1) dphi0 dphi1.
+// o. phi1 and phi2 are in [0,2 pi]
 // o. collocation poinst are EquiSpaced
-// o. f(phi0(i),phi1(j)) = f[i][j] = f[IJ(i,j,Nphi1)], where IJ is macro in the header
-// o. Clm(i,j) = Clm[i][j] = Clm[IJ(i,j,l1)], where again IJ is macro in the header
-// ->ruturn value: Clm  */
-void *r2cft_2d_Coeffs(const double *const f,const unsigned Nphi0, const unsigned Nphi1)
+// o. f(phi0(i),phi1(j)) = f[i][j] = f[IJ(i,j,Nphi1)], where IJ is the macro in the header
+// o. Clm(i,j) = Clm[i][j] = Clm[IJ(i,j,l1)], where again IJ is the macro in the header
+//    and l1 is Nphi1/2+1 in which if Nphi1 is not even, it is rounded down.
+//
+// o. syntax:
+// =========
+// double f = data;
+// double *realC,*imagC;
+//
+// r2cft_2d_coeffs(f,n0,n1,&realC,&imagC);
+// ...
+// free(realC);
+// free(imagC);
+//
+// ->: Clm  */
+void
+r2cft_2d_coeffs
+(
+  const double *const f/* field values */,
+  const unsigned Nphi0/* number of point in phi0 direction */, 
+  const unsigned Nphi1/* number of point in phi1 direction */,
+  double **const realC/* real part of coeffs, allocates memory */,
+  double **const imagC/* imag part of coeffs, allocates memory*/
+)
 {
-  assert(f);
+  if (!f)
+    Error0("Bad argument: no value\n!");
+    
   const unsigned l0 = Nphi0/2+1;/* note: if n is not even, it is rounded down */
   const unsigned l1 = Nphi1/2+1;/* note: if n is not even, it is rounded down */
-  const unsigned N  = Nphi0*Nphi1;
   const double complex x0 = -2.*I*M_PI/Nphi0;/* - included */
   const double complex x1 = -2.*I*M_PI/Nphi1;/* - included */
+  double *const Rc = alloc_double(l0*l1);
+  double *const Ic = alloc_double(l0*l1);
   double complex *const coeffs = alloc_double_complex(l0*l1);
   double complex **cf = calloc(Nphi0,sizeof(*cf));IsNull(cf);
   unsigned i,j,m0,m1;
@@ -164,8 +188,9 @@ void *r2cft_2d_Coeffs(const double *const f,const unsigned Nphi0, const unsigned
     cf[i] = alloc_double_complex(l1);
     for (m1 = 0; m1 < l1; ++m1)/* note: l is excluded, otherwise one have aliasing and then error */
     {
+      double complex x = m1*x1;
       for (j = 0; j < Nphi1; ++j)
-        cf[i][m1] += f[IJ(i,j,Nphi1)]*cexp(m1*j*x1);
+        cf[i][m1] += f[IJ(i,j,Nphi1)]*cexp(j*x);
 
       cf[i][m1] /= Nphi1;
     }
@@ -177,62 +202,46 @@ void *r2cft_2d_Coeffs(const double *const f,const unsigned Nphi0, const unsigned
   {
     for (m0 = 0; m0 < l0; ++m0)
     {
+      double complex x = m0*x0;
       for (i = 0; i < Nphi0; ++i)
-        coeffs[IJ(m0,m1,l1)] += cf[i][m1]*cexp(m0*i*x0);
+        coeffs[IJ(m0,m1,l1)] += cf[i][m1]*cexp(i*x);
 
       coeffs[IJ(m0,m1,l1)] /= Nphi0;
     }
   }/* end of for (i = 0; i < Nphi0; ++i) */
   
+  /* decompose real and imag parts */
+  for (m1 = 0; m1 < l1; ++m1)
+    for (m0 = 0; m0 < l0; ++m0)
+    {
+      Rc[IJ(m0,m1,l1)]= creal(coeffs[IJ(m0,m1,l1)]);
+      Ic[IJ(m0,m1,l1)]= cimag(coeffs[IJ(m0,m1,l1)]);
+    }
   
-  free(cf);
-  return coeffs;
+  free_2d_mem(cf,Nphi0);
+  free(coeffs);
+  
+  *realC = Rc;
+  *imagC = Ic;
 }
 
-/* ->: extract the real part of Coeffs from given C made by r2cft_2d_Coeffs.
-// note: it allocates memory */
-double *r2cft_2d_realCs(void *C,const unsigned Nphi0, const unsigned Nphi1)
+/* -> interpolation at (phi0,phi1) using 2-d Fourier transformation 
+// r2cft_2d.
+// note: phi0 and phi1 must be in radian. */
+double 
+r2cft_2d_interpolation
+(
+  const double *const realC/* real part of coeffs */,
+  const double *const imagC/* imag part of coeffs */,
+  const unsigned Nphi0/* number of point in phi0 direction */,
+  const unsigned Nphi1/* number of point in phi1 direction */,
+  const double phi0/* point of interest at phi0 dir */,
+  const double phi1/* point of interest at phi0 dir */
+)
 {
-  assert(C);
-  const unsigned l0 = Nphi0/2+1;/* note: if n is not even, it is rounded down */
-  const unsigned l1 = Nphi1/2+1;/* note: if n is not even, it is rounded down */
-  const unsigned N  = l0*l1;
-  const double complex *const coeffs = C;
-  double *const realC = alloc_double(l0*l1);
-  unsigned ij;
-  
-  for (ij = 0 ; ij < N; ++ij)
-  {
-    realC[ij] = creal(coeffs[ij]);
-  }
-  return realC;
-}
-
-/* ->: extract the imaginary part of Coeffs from given C made by r2cft_2d_Coeffs.
-// note: it allocates memory */
-double *r2cft_2d_imagCs(void *C,const unsigned Nphi0, const unsigned Nphi1)
-{
-  assert(C);
-  const unsigned l0 = Nphi0/2+1;/* note: if n is not even, it is rounded down */
-  const unsigned l1 = Nphi1/2+1;/* note: if n is not even, it is rounded down */
-  const unsigned N  = l0*l1;
-  const double complex *const coeffs = C;
-  double *const imagC = alloc_double(l0*l1);
-  unsigned ij;
-  
-  for (ij = 0 ; ij < N; ++ij)
-  {
-    imagC[ij] = cimag(coeffs[ij]);
-  }
-  return imagC;
-}
-
-/* -> interpolation at (phi0,phi1) using 2-d Fourier transformation r2cft_2d
-// C is the coeffs made by r2cft_2d_Coeffs */
-double r2cft_2d_interpolation(void *C,const unsigned Nphi0, const unsigned Nphi1,const double phi0,const double phi1)
-{
-  assert(C);
-  const double complex *const coeffs = C;
+  if(!realC || !imagC)
+    Error0("Bad argument: no coefficients!\n");
+    
   const unsigned l0 = Nphi0/2+1;/* note: if n is not even, it is rounded down */
   const unsigned l1 = Nphi1/2+1;/* note: if n is not even, it is rounded down */
   double complex interp = 0;
@@ -243,7 +252,8 @@ double r2cft_2d_interpolation(void *C,const unsigned Nphi0, const unsigned Nphi1
   {
     for (m1 = 0; m1 < l1; ++m1)
     {
-      interp += coeffs[IJ(m0,m1,l1)]*cexp(I*m0*phi0)*cexp(I*m1*phi1);
+      interp += (realC[IJ(m0,m1,l1)]+I*imagC[IJ(m0,m1,l1)]) *
+                cexp(I*m0*phi0)*cexp(I*m1*phi1);
     }
   }
   
@@ -251,12 +261,19 @@ double r2cft_2d_interpolation(void *C,const unsigned Nphi0, const unsigned Nphi1
   return creal(interp);
 }
 
-/* -> taking derivative : df(phi0,phi1)/dphi0.
-// note: it allocates memory */
-double *r2cft_2d_df_dphi0(void *C,const unsigned Nphi0, const unsigned Nphi1)
+/* -> taking derivative : df(phi0,phi1)/dphi0. */
+double *
+r2cft_2d_df_dphi0
+(
+  const double *const realC/* real part of coeffs */,
+  const double *const imagC/* imag part of coeffs */,
+  const unsigned Nphi0/* number of point in phi0 direction */,
+  const unsigned Nphi1/* number of point in phi1 direction */
+)
 {
-  assert(C);
-  const double complex *const coeffs = C;
+  if(!realC || !imagC)
+    Error0("Bad argument: no coefficients!\n");
+    
   const unsigned l0 = Nphi0/2+1;/* note: if n is not even, it is rounded down */
   const unsigned l1 = Nphi1/2+1;/* note: if n is not even, it is rounded down */
   const double complex x0 = -2.*I*M_PI/Nphi0;/* - included */
@@ -273,7 +290,8 @@ double *r2cft_2d_df_dphi0(void *C,const unsigned Nphi0, const unsigned Nphi1)
       {
         for (m1 = 0; m1 < l1; ++m1)
         {
-          df[ij] += creal(I*m0*coeffs[IJ(m0,m1,l1)]*cexp(m0*i*x0)*cexp(m1*j*x1));
+          df[ij] += creal((realC[IJ(m0,m1,l1)]+I*imagC[IJ(m0,m1,l1)])*
+                    I*m0*cexp(m0*i*x0)*cexp(m1*j*x1));
         }
       }
     }
@@ -282,12 +300,19 @@ double *r2cft_2d_df_dphi0(void *C,const unsigned Nphi0, const unsigned Nphi1)
   return df;
 }
 
-/* -> taking derivative : df(phi0,phi1)/dphi1.
-// note: it allocates memory */
-double *r2cft_2d_df_dphi1(void *C,const unsigned Nphi0, const unsigned Nphi1)
+/* -> taking derivative : df(phi0,phi1)/dphi1. */
+double *
+r2cft_2d_df_dphi1
+(
+  const double *const realC/* real part of coeffs */,
+  const double *const imagC/* imag part of coeffs */,
+  const unsigned Nphi0/* number of point in phi0 direction */,
+  const unsigned Nphi1/* number of point in phi1 direction */
+)
 {
-  assert(C);
-  const double complex *const coeffs = C;
+  if(!realC || !imagC)
+    Error0("Bad argument: no coefficients!\n");
+
   const unsigned l0 = Nphi0/2+1;/* note: if n is not even, it is rounded down */
   const unsigned l1 = Nphi1/2+1;/* note: if n is not even, it is rounded down */
   const double complex x0 = -2.*I*M_PI/Nphi0;/* - included */
@@ -304,7 +329,7 @@ double *r2cft_2d_df_dphi1(void *C,const unsigned Nphi0, const unsigned Nphi1)
       {
         for (m1 = 0; m1 < l1; ++m1)
         {
-          df[ij] += creal(I*m1*coeffs[IJ(m0,m1,l1)]*cexp(m0*i*x0)*cexp(m1*j*x1));
+          df[ij] += creal((realC[IJ(m0,m1,l1)]+I*imagC[IJ(m0,m1,l1)])*I*m1*cexp(m0*i*x0)*cexp(m1*j*x1));
         }
       }
     }
