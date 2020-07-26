@@ -12,12 +12,12 @@
 int fourier_transformation_tests(Grid_T *const grid)
 {
   
-  if (DO)
+  if (DO_NOT)
   {
     printf("Fourier transformation test: real to complex Fourier transformation 1-D: \n");
     cft_c2r_r2c_1d_EquiSpaced_test(grid);
   }
-  if (DO_NOT)
+  if (DO)
   {
     printf("Fourier transformation test: real to complex Fourier transformation 2-D: \n");
     r2cft_2d_EquiSpaced_test(grid);
@@ -254,8 +254,8 @@ static int Ylm_derivatives_test(Grid_T *const grid)
 static int r2cft_2d_EquiSpaced_test(Grid_T *const grid)
 {
 
-  const unsigned Nphi0 = 10;
-  const unsigned Nphi1 = 11;
+  const unsigned Nphi0 = 20;
+  const unsigned Nphi1 = 21;
   const unsigned l0 = Nphi0/2+1;/* note: if n is not even, it is rounded down */
   const unsigned l1 = Nphi1/2+1;/* note: if n is not even, it is rounded down */
   double *f = alloc_double(Nphi0*Nphi1);
