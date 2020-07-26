@@ -228,8 +228,8 @@ r2cft_2d_interpolation
   if(!realC || !imagC)
     Error0("Bad argument: no coefficients!\n");
     
-  const unsigned l0 = Nphi0/2+1;/* note: if n is not even, it is rounded down */
-  const unsigned l1 = Nphi1/2+1;/* note: if n is not even, it is rounded down */
+  const unsigned l0 = Nphi0;
+  const unsigned l1 = Nphi1;
   double complex interp = 0;
   unsigned m0,m1;
   
@@ -243,7 +243,7 @@ r2cft_2d_interpolation
     }
   }
   
-  assert(EQL(cimag(interp),0));
+  //assert(EQL(cimag(interp),0));
   return creal(interp);
 }
 
@@ -260,8 +260,8 @@ r2cft_2d_df_dphi0
   if(!realC || !imagC)
     Error0("Bad argument: no coefficients!\n");
     
-  const unsigned l0 = Nphi0/2+1;/* note: if n is not even, it is rounded down */
-  const unsigned l1 = Nphi1/2+1;/* note: if n is not even, it is rounded down */
+  const unsigned l0 = Nphi0;
+  const unsigned l1 = Nphi1;
   const double complex x0 = -2.*I*M_PI/Nphi0;/* - included */
   const double complex x1 = -2.*I*M_PI/Nphi1;/* - included */
   double *df        = alloc_double(Nphi0*Nphi1);
@@ -299,8 +299,8 @@ r2cft_2d_df_dphi1
   if(!realC || !imagC)
     Error0("Bad argument: no coefficients!\n");
 
-  const unsigned l0 = Nphi0/2+1;/* note: if n is not even, it is rounded down */
-  const unsigned l1 = Nphi1/2+1;/* note: if n is not even, it is rounded down */
+  const unsigned l0 = Nphi0;
+  const unsigned l1 = Nphi1;
   const double complex x0 = -2.*I*M_PI/Nphi0;/* - included */
   const double complex x1 = -2.*I*M_PI/Nphi1;/* - included */
   double *df        = alloc_double(Nphi0*Nphi1);
