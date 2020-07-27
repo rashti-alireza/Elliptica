@@ -186,12 +186,13 @@ r2cft_2d_coeffs
   {
     for (m0 = 0; m0 < l0; ++m0)
     {
-      double complex x00 = m0*x0;
+      double complex x0m0 = m0*x0;
       for (i = 0; i < Nphi0; ++i)
       {
-        double complex x11 = m1*x1;
+        double complex x1m1 = m1*x1;
         for (j = 0; j < Nphi1; ++j)
-          coeffs[IJ(m0,m1,l1)] += f[IJ(i,j,Nphi1)]*cexp(i*x00)*cexp(j*x11);
+          coeffs[IJ(m0,m1,l1)] += f[IJ(i,j,Nphi1)]*
+                                  cexp(i*x0m0)*cexp(j*x1m1);
       }
       coeffs[IJ(m0,m1,l1)] /= (Nphi1*Nphi0);
     }/* for (m0 = 0; m0 < l0; ++m0) */
@@ -239,7 +240,7 @@ r2cft_2d_interpolation
     for (m1 = 0; m1 < l1; ++m1)
     {
       interp += (realC[IJ(m0,m1,l1)]+I*imagC[IJ(m0,m1,l1)]) *
-                cexp(I*m0*phi0)*cexp(I*m1*phi1);
+                cexp(I*(double)m0*phi0)*cexp(I*(double)m1*phi1);
     }
   }
   
