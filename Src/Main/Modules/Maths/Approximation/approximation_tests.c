@@ -253,8 +253,8 @@ static int Ylm_derivatives_test(Grid_T *const grid)
 // ->return value: TEST_SUCCESSFUL */
 static int r2cft_2d_EquiSpaced_test(Grid_T *const grid)
 {
-  const unsigned Nphi0 = 5;
-  const unsigned Nphi1 = 5;
+  const unsigned Nphi0 = 2;
+  const unsigned Nphi1 = 2;
   const unsigned l0 = Nphi0;
   const unsigned l1 = Nphi1;
   double *f = alloc_double(Nphi0*Nphi1);
@@ -270,9 +270,9 @@ static int r2cft_2d_EquiSpaced_test(Grid_T *const grid)
     for (j = 0; j < Nphi1; ++j)
     {
       y = 2.*j*M_PI/Nphi1;
-      //f[IJ(i,j,Nphi1)] = cos(x)*cos(y)+1;
+      f[IJ(i,j,Nphi1)] = cos(x)*cos(y)+1;
       //f[IJ(i,j,Nphi1)] = 2;
-      f[IJ(i,j,Nphi1)] = 2*cos(x);
+      //f[IJ(i,j,Nphi1)] = 2*cos(x)+cos(y);
       //f[IJ(i,j,Nphi1)] = 2*cos(y);
       //f[IJ(i,j,Nphi1)] = 2*Pow2(cos(x));
       //f[IJ(i,j,Nphi1)] = 2*Pow2(cos(y));
@@ -285,6 +285,7 @@ static int r2cft_2d_EquiSpaced_test(Grid_T *const grid)
   
   /* now let's see how Fourier sum works: */
   printf("%-*s%-*s diff:\n",40,"Fourier sum:",20,"f(x):");
+  if (0)
   for (i = 0; i < Nphi0; ++i)
   {
     x = 2.*i*M_PI/Nphi0;
@@ -299,7 +300,7 @@ static int r2cft_2d_EquiSpaced_test(Grid_T *const grid)
         for (m1 = 0; m1 < l1; ++m1)
         {
           fc += (realC[IJ(m0,m1,l1)]+I*imagC[IJ(m0,m1,l1)]) *
-                    cexp(I*m0*x)*cexp(I*m1*y);
+                    cexp(I*(double)m0*x)*cexp(I*(double)m1*y);
         }
       }
       ij = IJ(i,j,Nphi1);
@@ -312,19 +313,30 @@ static int r2cft_2d_EquiSpaced_test(Grid_T *const grid)
   double *ran_phi0 = make_random_number(Nphi0,0,2*M_PI);
   double *ran_phi1 = make_random_number(Nphi1,0,2*M_PI);
   
-  printf("%s       f(x):                diff:\n","Interpolation:");
+  printf("Interpolation:       f(x):                diff:\n");
   for (i = 0; i < Nphi0; ++i)
   {
-    x = ran_phi0[i];
+    x = 0.12;//ran_phi0[i];
     for (j = 0; j < Nphi1; ++j)
     {
       y = ran_phi1[j];
       //double fr = Pow2(cos(x))+Pow2(cos(y))*Pow2(cos(x))+1;
       //double fr = 2;
-      double fr =  2*cos(x);
+      //double fr =  2*cos(x)+cos(y);
+      double fr   = cos(x)*cos(y)+1;
       
       double fi = r2cft_2d_interpolation(realC,imagC,Nphi0,Nphi1,x,y);
       printf("%+0.15f   %+0.15f   %+e\n",fi,fr,fi-fr);
+    }
+  }
+  
+  printf("Bases:\n");
+  for (i = 0; i < Nphi0; ++i)
+  {
+    for (j = 0; j < Nphi1; ++j)
+    {
+      printf("Cr(%u,%u)+Ci(%u,%u)I = %+.2f %+.2fI\n",
+            i,j,i,j,realC[IJ(i,j,Nphi1)],imagC[IJ(i,j,Nphi1)]);
     }
   }
   
