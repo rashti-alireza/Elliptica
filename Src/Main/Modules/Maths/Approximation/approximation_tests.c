@@ -253,8 +253,8 @@ static int Ylm_derivatives_test(Grid_T *const grid)
 // ->return value: TEST_SUCCESSFUL */
 static int r2cft_2d_EquiSpaced_test(Grid_T *const grid)
 {
-  const unsigned Nphi0 = 4;
-  const unsigned Nphi1 = 4;
+  const unsigned Nphi0 = 5;
+  const unsigned Nphi1 = 5;
   const unsigned l0 = Nphi0;
   const unsigned l1 = Nphi1;
   double *f = alloc_double(Nphi0*Nphi1);
@@ -270,20 +270,13 @@ static int r2cft_2d_EquiSpaced_test(Grid_T *const grid)
     for (j = 0; j < Nphi1; ++j)
     {
       y = 2.*j*M_PI/Nphi1;
-      if (0)
-        f[IJ(i,j,Nphi1)] = cos(x)*cos(y)+1;
-      else if (0)
-        f[IJ(i,j,Nphi1)] = 2;
-      else if (0)
-        f[IJ(i,j,Nphi1)] = 2*cos(x);
-      else if (0)
-        f[IJ(i,j,Nphi1)] = 2*cos(y);
-      else if (0)
-        f[IJ(i,j,Nphi1)] = 2*Pow2(cos(x));
-      else if (0)
-        f[IJ(i,j,Nphi1)] = 2*Pow2(cos(y));
-      else if (1)
-        f[IJ(i,j,Nphi1)] = Pow2(cos(x))+Pow2(cos(y))*Pow2(cos(x))+1;
+      //f[IJ(i,j,Nphi1)] = cos(x)*cos(y)+1;
+      //f[IJ(i,j,Nphi1)] = 2;
+      f[IJ(i,j,Nphi1)] = 2*cos(x);
+      //f[IJ(i,j,Nphi1)] = 2*cos(y);
+      //f[IJ(i,j,Nphi1)] = 2*Pow2(cos(x));
+      //f[IJ(i,j,Nphi1)] = 2*Pow2(cos(y));
+      //f[IJ(i,j,Nphi1)] = Pow2(cos(x))+Pow2(cos(y))*Pow2(cos(x))+1;
     }
   }
   
@@ -315,25 +308,32 @@ static int r2cft_2d_EquiSpaced_test(Grid_T *const grid)
     }
   }
   
-  /* let's do some interpolation too:
-  double *rand = make_random_number(N,0,2*M_PI);
-  printf("\nFor n = %u:\n",N);
-  printf("%-*s%-*s diff:\n",40,"Interpolation:",20,"f(x):");
-  for (i = 0; i < N; ++i)
+  /* let's do some interpolation too: */
+  double *ran_phi0 = make_random_number(Nphi0,0,2*M_PI);
+  double *ran_phi1 = make_random_number(Nphi1,0,2*M_PI);
+  
+  printf("%s       f(x):                diff:\n","Interpolation:");
+  for (i = 0; i < Nphi0; ++i)
   {
-    x = rand[i];
-    double complex fi = 0;
-    double fr = sin(2*x)*cos(x)+Pow2(sin(4*x));
-    fi = c[0];
-    for (j = 1; j < N/2+1; ++j)
-      fi += c[j]*cexp(I*(double)j*x)+conj(c[j])*cexp(-I*(double)j*x);
-    printf("%+0.15f%+0.15fI   %+0.15f   %+e\n",creal(fi),cimag(fi),fr,creal(fi)-fr);
+    x = ran_phi0[i];
+    for (j = 0; j < Nphi1; ++j)
+    {
+      y = ran_phi1[j];
+      //double fr = Pow2(cos(x))+Pow2(cos(y))*Pow2(cos(x))+1;
+      //double fr = 2;
+      double fr =  2*cos(x);
+      
+      double fi = r2cft_2d_interpolation(realC,imagC,Nphi0,Nphi1,x,y);
+      printf("%+0.15f   %+0.15f   %+e\n",fi,fr,fi-fr);
+    }
   }
-  */
   
   free(f);
   free(realC);
   free(imagC);
+  free(ran_phi0);
+  free(ran_phi1);
+  
   UNUSED(grid);
   
   return TEST_SUCCESSFUL;
