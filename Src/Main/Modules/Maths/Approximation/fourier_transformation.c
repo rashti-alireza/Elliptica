@@ -338,15 +338,16 @@ r2cft_2d_df_dphi0
       for (m0 = 0; m0 < l0; ++m0)
       {
         double complex Im0 = I*(double)m0;
+        double complex expIm0phi0 = cexp(Im0*phi0);
         for (m1 = 0; m1 < l1; ++m1)
         {
           m0m1 = IJ(m0,m1,l1);
           dfc += Im0*(realC[m0m1]   - imagC[l0l1+m0m1]+
                      I*(imagC[m0m1] + realC[l0l1+m0m1]))*
-                     cexp(I*((double)m0*phi0+(double)m1*phi1));
+                     expIm0phi0*cexp(I*(double)m1*phi1);
           dfc += Im0*(realC[m0m1]   + imagC[l0l1+m0m1] +
                      I*(imagC[m0m1] - realC[l0l1+m0m1]))*
-                     cexp(I*((double)m0*phi0-(double)m1*phi1));
+                     expIm0phi0*cexp(-I*(double)m1*phi1);
         }
       }
       df[ij] = 2*creal(dfc);
@@ -388,15 +389,16 @@ r2cft_2d_df_dphi1
       for (m1 = 0; m1 < l1; ++m1)
       {
         double complex Im1 = I*(double)m1;
+        double complex expIm1phi1 = cexp(Im1*phi1);
         for (m0 = 0; m0 < l0; ++m0)
         {
           m0m1 = IJ(m0,m1,l1);
           dfc += Im1*(realC[m0m1]   - imagC[l0l1+m0m1]+
                      I*(imagC[m0m1] + realC[l0l1+m0m1]))*
-                     cexp(I*((double)m0*phi0+(double)m1*phi1));
+                     cexp(I*(double)m0*phi0)*expIm1phi1;
           dfc += -Im1*(realC[m0m1]  + imagC[l0l1+m0m1] +
                      I*(imagC[m0m1] - realC[l0l1+m0m1]))*
-                     cexp(I*((double)m0*phi0-(double)m1*phi1));
+                     cexp(I*(double)m0*phi0)/expIm1phi1;
         }
       }
       df[ij] = 2*creal(dfc);
