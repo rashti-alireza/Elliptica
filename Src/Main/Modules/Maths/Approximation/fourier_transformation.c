@@ -141,14 +141,13 @@ double *c2rft_1d_EquiSpaced_values(void *const coeffs,const unsigned N)
 /* fourier transformation from real value to complex coeffs for 2d.
 // notes:
 // o. f expansion => f(phi0,phi1) = 
-//    \sum_{l=0,m=0}^{l=Nphi0-1,m=Nphi1-1}{Clm exp(I.l.phi0) exp(I.m.phi1)}.
-//    =>  Clm = 1/(2*pi)^2 *\integral_{0}^{2*pi}\integral_{0}^{2*pi} 
-//              f(phi0,phi1) exp(-I*l*phi0) exp(-I*m*phi1) dphi0 dphi1.
+//    \sum_{m0=-l0,m1=-l1}^{m0=l0,m1=l1}{Cm0m1 exp(I.m0.phi0) exp(I.m1.phi1)}.
+//    =>  Cm0m1 = 1/(2*pi)^2 *\integral_{0}^{2*pi}\integral_{0}^{2*pi} 
+//              f(phi0,phi1) exp(-I*m0*phi0) exp(-I*m1*phi1) dphi0 dphi1.
 // o. phi1 and phi2 are in [0,2 pi]
 // o. collocation poinst are EquiSpaced
 // o. f(phi0(i),phi1(j)) = f[i][j] = f[IJ(i,j,Nphi1)], where IJ is the macro in the header
-// o. Clm(i,j) = Clm[i][j] = Clm[IJ(i,j,Nphi1)], where again IJ is the macro in the header
-//
+// o. Cm0m1's are composed of two parts, Cr[IJ(m0,m1,l1)] and Ci[l0*l1+IJ(m0,m1,l1)]
 // o. syntax:
 // =========
 // double f = data;
@@ -159,7 +158,7 @@ double *c2rft_1d_EquiSpaced_values(void *const coeffs,const unsigned N)
 // free(realC);
 // free(imagC);
 //
-// ->: Clm  */
+// ->: Cm0m1  */
 void
 r2cft_2d_coeffs
 (
@@ -294,12 +293,12 @@ r2cft_2d_interpolation
     for (m1 = 0; m1 < l1; ++m1)
     {
       unsigned m0m1 = IJ(m0,m1,l1);
-      interp += (realC[m0m1]+I*imagC[m0m1] + 
-                 I*(realC[l0l1+m0m1]+I*imagC[l0l1+m0m1]))*
-                 cexp(I*(double)m0*phi0)*cexp(I*(double)m1*phi1);
-      interp += (realC[m0m1]+I*imagC[m0m1] -
-                 I*(realC[l0l1+m0m1]+I*imagC[l0l1+m0m1]))*
-                 cexp(I*(double)m0*phi0)*cexp(-I*(double)m1*phi1);
+      interp += (realC[m0m1]    - imagC[l0l1+m0m1]+
+                 I*(imagC[m0m1] + realC[l0l1+m0m1]))*
+                 cexp(I*((double)m0*phi0+(double)m1*phi1));
+      interp += (realC[m0m1]    + imagC[l0l1+m0m1] +
+                 I*(imagC[m0m1] - realC[l0l1+m0m1]))*
+                 cexp(I*((double)m0*phi0-(double)m1*phi1));
     }
   }
   return 2*creal(interp);
