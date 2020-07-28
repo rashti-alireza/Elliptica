@@ -319,26 +319,37 @@ r2cft_2d_df_dphi0
   if(!realC || !imagC)
     Error0("Bad argument: no coefficients!\n");
     
-  const unsigned l0 = Nphi0;
-  const unsigned l1 = Nphi1;
-  const double complex x0 = -2.*I*M_PI/Nphi0;/* - included */
-  const double complex x1 = -2.*I*M_PI/Nphi1;/* - included */
+  const unsigned l0 = Nphi0/2+1;
+  const unsigned l1 = Nphi1/2+1;
+  const unsigned l0l1 = l0*l1;
+  const double x0 = 2.*M_PI/Nphi0;
+  const double x1 = 2.*M_PI/Nphi1;
   double *df        = alloc_double(Nphi0*Nphi1);
-  unsigned i,j,m0,m1,ij;
+  unsigned i,j,m0,m1,ij,m0m1;
   
   for (i = 0; i < Nphi0; ++i)
   {
+    double phi0 = i*x0;
     for (j = 0; j < Nphi1; ++j)
     {
+      double phi1        = j*x1;
+      double complex dfc = 0;
       ij = IJ(i,j,Nphi1);
       for (m0 = 0; m0 < l0; ++m0)
       {
+        double complex Im0 = I*(double)m0;
         for (m1 = 0; m1 < l1; ++m1)
         {
-          df[ij] += creal((realC[IJ(m0,m1,l1)]+I*imagC[IJ(m0,m1,l1)])*
-                    I*m0*cexp(m0*i*x0)*cexp(m1*j*x1));
+          m0m1 = IJ(m0,m1,l1);
+          dfc += Im0*(realC[m0m1]    - imagC[l0l1+m0m1]+
+                     I*(imagC[m0m1] + realC[l0l1+m0m1]))*
+                     cexp(I*((double)m0*phi0+(double)m1*phi1));
+          dfc += Im0*(realC[m0m1]    + imagC[l0l1+m0m1] +
+                     I*(imagC[m0m1] - realC[l0l1+m0m1]))*
+                     cexp(I*((double)m0*phi0-(double)m1*phi1));
         }
       }
+      df[ij] = 2*creal(dfc);
     }
   }
   
@@ -357,26 +368,38 @@ r2cft_2d_df_dphi1
 {
   if(!realC || !imagC)
     Error0("Bad argument: no coefficients!\n");
-
-  const unsigned l0 = Nphi0;
-  const unsigned l1 = Nphi1;
-  const double complex x0 = -2.*I*M_PI/Nphi0;/* - included */
-  const double complex x1 = -2.*I*M_PI/Nphi1;/* - included */
+    
+  const unsigned l0 = Nphi0/2+1;
+  const unsigned l1 = Nphi1/2+1;
+  const unsigned l0l1 = l0*l1;
+  const double x0 = 2.*M_PI/Nphi0;
+  const double x1 = 2.*M_PI/Nphi1;
   double *df        = alloc_double(Nphi0*Nphi1);
-  unsigned i,j,m0,m1,ij;
+  unsigned i,j,m0,m1,ij,m0m1;
   
   for (i = 0; i < Nphi0; ++i)
   {
+    double phi0 = i*x0;
     for (j = 0; j < Nphi1; ++j)
     {
+      double phi1        = j*x1;
+      double complex dfc = 0;
       ij = IJ(i,j,Nphi1);
-      for (m0 = 0; m0 < l0; ++m0)
+      for (m1 = 0; m1 < l1; ++m1)
       {
-        for (m1 = 0; m1 < l1; ++m1)
+        double complex Im1 = I*(double)m1;
+        for (m0 = 0; m0 < l0; ++m0)
         {
-          df[ij] += creal((realC[IJ(m0,m1,l1)]+I*imagC[IJ(m0,m1,l1)])*I*m1*cexp(m0*i*x0)*cexp(m1*j*x1));
+          m0m1 = IJ(m0,m1,l1);
+          dfc += Im1*(realC[m0m1]    - imagC[l0l1+m0m1]+
+                     I*(imagC[m0m1] + realC[l0l1+m0m1]))*
+                     cexp(I*((double)m0*phi0+(double)m1*phi1));
+          dfc += -Im1*(realC[m0m1]    + imagC[l0l1+m0m1] +
+                     I*(imagC[m0m1] - realC[l0l1+m0m1]))*
+                     cexp(I*((double)m0*phi0-(double)m1*phi1));
         }
       }
+      df[ij] = 2*creal(dfc);
     }
   }
   
