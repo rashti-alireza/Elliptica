@@ -228,11 +228,15 @@ r2cft_2d_coeffs
       cii[m0m1] = cimag(ci);
     }
   }
-  crr[0] /= 2;
-  cri[0] /= 2;
-  cir[0] /= 2;
-  cii[0] /= 2;
-  
+  m0 = 0;
+  for (m1 = 0; m1 < l1; ++m1)
+  {
+    unsigned m0m1 = IJ(m0,m1,l1);
+    crr[m0m1] /= 2;
+    cri[m0m1] /= 2;
+    cir[m0m1] /= 2;
+    cii[m0m1] /= 2;
+  }
   /* decompose real and imag parts */
   for (m1 = 0; m1 < l1; ++m1)
     for (m0 = 0; m0 < l0; ++m0)
