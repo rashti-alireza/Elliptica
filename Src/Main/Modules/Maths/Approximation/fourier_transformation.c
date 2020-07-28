@@ -173,18 +173,19 @@ r2cft_2d_coeffs
   if (!f)
     Error0("Bad argument: no value\n!");
     
-  const unsigned l0 = Nphi0/2+1;
-  const unsigned l1 = Nphi1/2+1;
+  const unsigned l0   = Nphi0/2+1;
+  const unsigned l1   = Nphi1/2+1;
+  const unsigned l0l1 = l0*l1;
   const double complex x0 = -2.*I*M_PI/Nphi0;/* - included */
   const double complex x1 = -2.*I*M_PI/Nphi1;/* - included */
-  double *const Rc = alloc_double(l0*l1);
-  double *const Ic = alloc_double(l0*l1);
-  double *crr = alloc_double(l0*l1);
-  double *cri = alloc_double(l0*l1);
-  double *cir = alloc_double(l0*l1);
-  double *cii = alloc_double(l0*l1);
-  double complex **cfr = calloc(Nphi0,sizeof(*cfr));
-  double complex **cfi = calloc(Nphi0,sizeof(*cfi));
+  double *const Rc = alloc_double(2*l0l1);
+  double *const Ic = alloc_double(2*l0l1);
+  double *crr      = alloc_double(l0l1);
+  double *cri      = alloc_double(l0l1);
+  double *cir      = alloc_double(l0l1);
+  double *cii      = alloc_double(l0l1);
+  double **cfr     = calloc(Nphi0,sizeof(*cfr));IsNull(cfr);
+  double **cfi     = calloc(Nphi0,sizeof(*cfi));IsNull(cfi);
   unsigned i,j,m0,m1;
   
   /* FT in 2nd index */
@@ -202,34 +203,52 @@ r2cft_2d_coeffs
       cfr[i][m1] = creal(cf);
       cfi[i][m1] = cimag(cf);
     }
+    cfr[i][0] /= 2;
+    cfi[i][0] /= 2;
   }
-  /* FT for each component for 1st index */
+  
+  /* FT for each component in 1st index */
   for (m1 = 0; m1 < l1; ++m1)
-  for (m0 = 0; m0 < l0; ++m0)
   {
-    double complex m0x0 = m0*x0;
-    double complex Cfr = 0, Cfi = 0;
-    unsigned m0m1 = IJ(m0,m1,l1);
-    for (i = 0; i < Nphi0; ++i)
+    for (m0 = 0; m0 < l0; ++m0)
     {
-      Cfr += cfr[i][m1]*exp(i*m0x0);
-      Cfi += cfi[i][m1]*exp(i*m0x0);
+      double complex m0x0 = m0*x0;
+      double complex cr = 0, ci = 0;
+      unsigned m0m1 = IJ(m0,m1,l1);
+      for (i = 0; i < Nphi0; ++i)
+      {
+        cr += cfr[i][m1]*exp(i*m0x0);
+        ci += cfi[i][m1]*exp(i*m0x0);
+      }
+      cr /= Nphi0;
+      ci /= Nphi0;
+      crr[m0m1] = creal(cr);
+      cri[m0m1] = cimag(cr);
+      cir[m0m1] = creal(ci);
+      cii[m0m1] = cimag(ci);
     }
-    crr[m0m1] = creal(Cfr)/Nphi0;
-    cri[m0m1] = cimag(Cfr)/Nphi0;
-    cir[m0m1] = creal(Cfi)/Nphi0;
-    cii[m0m1] = cimag(Cfi)/Nphi0;
   }
+  crr[0] /= 2;
+  cri[0] /= 2;
+  cir[0] /= 2;
+  cii[0] /= 2;
   
   /* decompose real and imag parts */
   for (m1 = 0; m1 < l1; ++m1)
     for (m0 = 0; m0 < l0; ++m0)
     {
       unsigned m0m1 = IJ(m0,m1,l1);
-      double complex cm0m1 = 
-        crr[m0m1]+I*cri[m0m1]+I*(cri[m0m1]+I*cii[m0m1]);
-      Rc[m0m1]= creal(cm0m1);
-      Ic[m0m1]= cimag(cm0m1);
+      Rc[m0m1]= crr[m0m1];
+      Ic[m0m1]= cri[m0m1];
+    }
+  
+  /* decompose real and imag parts */
+  for (m1 = 0; m1 < l1; ++m1)
+    for (m0 = 0; m0 < l0; ++m0)
+    {
+      unsigned m0m1 = IJ(m0,m1,l1);
+      Rc[m0m1+l0l1]= cir[m0m1];
+      Ic[m0m1+l0l1]= cii[m0m1];
     }
   
   free_2d_mem(cfr,Nphi0);
@@ -261,6 +280,7 @@ r2cft_2d_interpolation
     
   const unsigned l0 = Nphi0/2+1;
   const unsigned l1 = Nphi1/2+1;
+  const unsigned l0l1 = l0*l1;
   double complex interp = 0;
   unsigned m0,m1;
   
@@ -269,12 +289,15 @@ r2cft_2d_interpolation
   {
     for (m1 = 0; m1 < l1; ++m1)
     {
-      interp += (realC[IJ(m0,m1,l1)]+I*imagC[IJ(m0,m1,l1)]) *
-                cexp(I*(double)m0*phi0)*cexp(I*(double)m1*phi1);
+      unsigned m0m1 = IJ(m0,m1,l1);
+      interp += (realC[m0m1]+I*imagC[m0m1] + 
+                 I*(realC[l0l1+m0m1]+I*imagC[l0l1+m0m1]))*
+                 cexp(I*(double)m0*phi0)*cexp(I*(double)m1*phi1);
+      interp += (realC[m0m1]+I*imagC[m0m1] -
+                 I*(realC[l0l1+m0m1]+I*imagC[l0l1+m0m1]))*
+                 cexp(I*(double)m0*phi0)*cexp(-I*(double)m1*phi1);
     }
   }
-  
-  //assert(EQL(cimag(interp),0));
   return 2*creal(interp);
 }
 
