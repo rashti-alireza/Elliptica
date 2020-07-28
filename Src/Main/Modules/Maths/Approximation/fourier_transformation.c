@@ -148,6 +148,8 @@ double *c2rft_1d_EquiSpaced_values(void *const coeffs,const unsigned N)
 // o. collocation poinst are EquiSpaced
 // o. f(phi0(i),phi1(j)) = f[i][j] = f[IJ(i,j,Nphi1)], where IJ is the macro in the header
 // o. Cm0m1's are composed of two parts, Cr[IJ(m0,m1,l1)] and Ci[l0*l1+IJ(m0,m1,l1)]
+// o. l0 = Nphi0/2+1 since f is real, note: if Nphi0 is odd it is rounded down
+// o. l1 = Nphi1/2+1 since f is real, note: if Nphi1 is odd it is rounded down
 // o. syntax:
 // =========
 // double f = data;
