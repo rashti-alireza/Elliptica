@@ -17,10 +17,15 @@ int fourier_transformation_tests(Grid_T *const grid)
     printf("Fourier transformation test: real to complex Fourier transformation 1-D: \n");
     cft_c2r_r2c_1d_EquiSpaced_test(grid);
   }
-  if (DO)
+  if (DO_NOT)
   {
     printf("Fourier transformation test: real to complex Fourier transformation 2-D: \n");
     r2cft_2d_EquiSpaced_test(grid);
+  }
+  if (DO)
+  {
+    printf("Fourier transformation test: real to complex Fourier transformation 2-D on S2: \n");
+    r2cft_2d_EquiSpaced_S2_test(grid);
   }
   
   return EXIT_SUCCESS;
@@ -375,6 +380,111 @@ static int r2cft_2d_EquiSpaced_test(Grid_T *const grid)
   free(df_dy);
   free(ran_phi0);
   free(ran_phi1);
+  
+  UNUSED(grid);
+  return TEST_SUCCESSFUL;
+}
+
+/* testing : r2cft_2d functions interpolations, derivatives, etc on S2
+// ->return value: TEST_SUCCESSFUL */
+static int r2cft_2d_EquiSpaced_S2_test(Grid_T *const grid)
+{
+  const unsigned Ntheta = 200;
+  const unsigned Nphi = 50;
+  double *f = alloc_double(Ntheta*Nphi);
+  double *df_dx = alloc_double(Ntheta*Nphi);
+  double *df_dy = alloc_double(Ntheta*Nphi);
+  double *df_dtheta = 0, *df_dphi = 0;
+  double *realC = 0;
+  double *imagC = 0; 
+  double x,y;
+  unsigned i,j,ij;
+  
+  /* populate the values */
+  for (i = 0; i < Ntheta; ++i)
+  {
+    x = i*M_PI/Ntheta;
+    for (j = 0; j < Nphi; ++j)
+    {
+      y = 2.*j*M_PI/Nphi;
+      
+      f[IJ(i,j,Nphi)] = 1 + Cos(x) - Power(Cos(x),2) + 
+          Cos(y) + Sin(x) + Sin(4*x)/2. + Sin(y) + 
+          Power(Sin(x),2)*Power(Sin(y),2) - Power(Sin(x) + Sin(y),2) - 
+          Sin(6*y)/2.;
+          
+      df_dx[IJ(i,j,Nphi)] = Cos(x) + 2*Cos(4*x) - 
+            Sin(x) - 2*Cos(x)*Sin(y) + Sin(2*x)*Power(Sin(y),2);
+      df_dy[IJ(i,j,Nphi)] = Cos(y) - 3*Cos(6*y) - Sin(y) - 
+            2*Cos(y)*(Sin(x) + Sin(y)) + Power(Sin(x),2)*Sin(2*y);
+
+
+    }
+  }
+  
+  /* calculating coeffs */
+  r2cft_2d_coeffs_S2(f,Ntheta,Nphi,&realC,&imagC);
+  
+  /* let's do some interpolation: */
+  double *ran_theta = make_random_number(Ntheta,0,M_PI);
+  double *ran_phi = make_random_number(Nphi,0,2*M_PI);
+  if (1)
+  {
+    printf("Interpolation:       f(x):                diff:\n");
+    for (i = 0; i < Ntheta; ++i)
+    {
+      x = ran_theta[i];
+      for (j = 0; j < Nphi; ++j)
+      {
+        y = ran_phi[j];
+        double fr = 1 + Cos(x) - Power(Cos(x),2) + 
+          Cos(y) + Sin(x) + Sin(4*x)/2. + Sin(y) + 
+          Power(Sin(x),2)*Power(Sin(y),2) - Power(Sin(x) + Sin(y),2) - 
+          Sin(6*y)/2.;
+                    
+        double fi = r2cft_2d_interpolation_S2(realC,imagC,Ntheta,Nphi,x,y);
+        printf("%+0.15f   %+0.15f   %+e\n",fi,fr,fi-fr);
+      }
+    }
+  }
+
+  /* derivative tests: */
+  if (0)
+  {
+    df_dtheta = r2cft_2d_df_dtheta_S2(realC,imagC,Ntheta,Nphi);
+    df_dphi   = r2cft_2d_df_dphi_S2(realC,imagC,Ntheta,Nphi);
+    
+    printf("df(x)/dtheta|num:     df(x)/dtheta|anl:     diff:\n");
+    for (i = 0; i < Ntheta; ++i)
+    {
+      for (j = 0; j < Nphi; ++j)
+      {
+        ij=IJ(i,j,Nphi);
+        printf("%+0.15f   %+0.15f   %+e\n",
+            df_dtheta[ij],df_dx[ij],df_dtheta[ij]-df_dx[ij]);
+      }
+    }
+      
+    printf("df(x)/dphi|num:     df(x)/dphi|anl:     diff:\n");
+    for (i = 0; i < Ntheta; ++i)
+    {
+      for (j = 0; j < Nphi; ++j)
+      {
+        ij=IJ(i,j,Nphi);
+        printf("%+0.15f   %+0.15f   %+e\n",
+            df_dphi[ij],df_dy[ij],df_dphi[ij]-df_dy[ij]);
+      }
+    }
+    free(df_dtheta);
+    free(df_dphi);
+  }  
+  free(f);
+  free(realC);
+  free(imagC);
+  free(df_dx);
+  free(df_dy);
+  free(ran_theta);
+  free(ran_phi);
   
   UNUSED(grid);
   return TEST_SUCCESSFUL;
