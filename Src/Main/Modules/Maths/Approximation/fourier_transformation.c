@@ -138,6 +138,46 @@ double *c2rft_1d_EquiSpaced_values(void *const coeffs,const unsigned N)
   return f;
 }
 
+
+
+
+/* fourier transformation from real value to complex coeffs for 2d on S2
+// notes:
+// o. f expansion => f(theta,phi) = F(phi0,phi1) =
+//    \sum_{m0=-l0,m1=-l1}^{m0=l0,m1=l1}{Cm0m1 exp(I.m0.phi0) exp(I.m1.phi1)}.
+//    =>  Cm0m1 = 1/(2*pi)^2 *\integral_{0}^{2*pi}\integral_{0}^{2*pi} 
+//              f(phi0,phi1) exp(-I*m0*phi0) exp(-I*m1*phi1) dphi0 dphi1.
+// o. theta is in [0,pi] and phi is in [0,2pi]
+// o. theta = phi0/2 and phi = phi1
+// o. phi1 and phi2 are in [0,2 pi]
+// o. collocation poinst are EquiSpaced for theta and phi
+// o. f(theta(i),phi(j)) = f[i][j] = f[IJ(i,j,Nphi)], where IJ is the macro in the header
+// o. Cm0m1's are composed of two parts, Cr[IJ(m0,m1,l1)] and Ci[l0*l1+IJ(m0,m1,l1)]
+// o. syntax:
+// =========
+// double f = data;
+// double *realC,*imagC;
+//
+// r2cft_2d_coeffs_S2(f,Ntheta,Nphi,&realC,&imagC);
+// ...
+// free(realC);
+// free(imagC);
+//
+// ->: Cm0m1  */
+void
+r2cft_2d_coeffs_S2
+(
+  const double *const f/* field values given on theta and phi coords. */,
+  const unsigned Ntheta/* number of point in theta direction */, 
+  const unsigned Nphi/* number of point in phi direction */,
+  double **const realC/* real part of coeffs, allocates memory */,
+  double **const imagC/* imag part of coeffs, allocates memory*/
+)
+{
+  /* populate coeffs, note: f(theta,phi) = F(phi0.phi1) */
+  r2cft_2d_coeffs(f,Ntheta,Nphi,realC,imagC);
+}
+
 /* fourier transformation from real value to complex coeffs for 2d.
 // notes:
 // o. f expansion => f(phi0,phi1) = 
@@ -155,7 +195,7 @@ double *c2rft_1d_EquiSpaced_values(void *const coeffs,const unsigned N)
 // double f = data;
 // double *realC,*imagC;
 //
-// r2cft_2d_coeffs(f,n0,n1,&realC,&imagC);
+// r2cft_2d_coeffs(f,Nphi0,Nphi1,&realC,&imagC);
 // ...
 // free(realC);
 // free(imagC);
@@ -266,6 +306,22 @@ r2cft_2d_coeffs
   *imagC = Ic;
 }
 
+/* -> interpolation at (theta,phi) using 2-d Fourier transformation on S2 */
+double 
+r2cft_2d_interpolation_S2
+(
+  const double *const realC/* real part of coeffs */,
+  const double *const imagC/* imag part of coeffs */,
+  const unsigned Ntheta/* number of point in theta direction */,
+  const unsigned Nphi/* number of point in phi direction */,
+  const double theta/* point of interest at theta dir */,
+  const double phi/* point of interest at phi dir */
+)
+{
+  /* since phi0 = 2 theta: */
+  return r2cft_2d_interpolation(realC,imagC,Ntheta,Nphi,2*theta,phi);
+}
+
 /* -> interpolation at (phi0,phi1) using 2-d Fourier transformation 
 // r2cft_2d.
 // note: phi0 and phi1 must be in radian. */
@@ -304,6 +360,43 @@ r2cft_2d_interpolation
     }
   }
   return 2*creal(interp);
+}
+
+/* -> taking derivative : df(theta,phi)/dtheta on S2. */
+double *
+r2cft_2d_df_dtheta_S2
+(
+  const double *const realC/* real part of coeffs */,
+  const double *const imagC/* imag part of coeffs */,
+  const unsigned Ntheta/* number of point in theta direction */,
+  const unsigned Nphi/* number of point in phi direction */
+)
+{
+  /* note: theta = phi/2 */ 
+  double *const df = r2cft_2d_df_dphi0(realC,imagC,Ntheta,Nphi);
+  const unsigned N = Ntheta*Nphi;
+  unsigned ij;
+  
+  /* since theta = phi/2 */ 
+  for (ij = 0; ij < N; ++ij)
+  {
+    df[ij] *= 0.5;
+  }
+  
+  return df;
+}
+
+/* -> taking derivative : df(theta,phi)/dphi on S2. */
+double *
+r2cft_2d_df_dphi_S2
+(
+  const double *const realC/* real part of coeffs */,
+  const double *const imagC/* imag part of coeffs */,
+  const unsigned Ntheta/* number of point in theta direction */,
+  const unsigned Nphi/* number of point in phi direction */
+)
+{
+  return r2cft_2d_df_dphi0(realC,imagC,Ntheta,Nphi);
 }
 
 /* -> taking derivative : df(phi0,phi1)/dphi0. */

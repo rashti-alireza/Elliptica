@@ -106,6 +106,45 @@ r2cft_2d_coeffs
   double **const imagC/* imag part of coeffs, allocates memory*/
 );
 
+void
+r2cft_2d_coeffs_S2
+(
+  const double *const f/* field values given on theta and phi coords. */,
+  const unsigned Ntheta/* number of point in theta direction */, 
+  const unsigned Nphi/* number of point in phi direction */,
+  double **const realC/* real part of coeffs, allocates memory */,
+  double **const imagC/* imag part of coeffs, allocates memory*/
+);
+
+double 
+r2cft_2d_interpolation_S2
+(
+  const double *const realC/* real part of coeffs */,
+  const double *const imagC/* imag part of coeffs */,
+  const unsigned Ntheta/* number of point in theta direction */,
+  const unsigned Nphi/* number of point in phi direction */,
+  const double theta/* point of interest at theta dir */,
+  const double phi/* point of interest at phi dir */
+);
+
+double *
+r2cft_2d_df_dphi_S2
+(
+  const double *const realC/* real part of coeffs */,
+  const double *const imagC/* imag part of coeffs */,
+  const unsigned Ntheta/* number of point in theta direction */,
+  const unsigned Nphi/* number of point in phi direction */
+);
+
+double *
+r2cft_2d_df_dtheta_S2
+(
+  const double *const realC/* real part of coeffs */,
+  const double *const imagC/* imag part of coeffs */,
+  const unsigned Ntheta/* number of point in theta direction */,
+  const unsigned Nphi/* number of point in phi direction */
+);
+
 
 #endif
 
