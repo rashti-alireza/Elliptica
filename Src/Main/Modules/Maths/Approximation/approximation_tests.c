@@ -271,12 +271,14 @@ static int r2cft_2d_EquiSpaced_test(Grid_T *const grid)
     for (j = 0; j < Nphi1; ++j)
     {
       y = 2.*j*M_PI/Nphi1;
-      f[IJ(i,j,Nphi1)] = Pow2(cos(x)) +
-                         Pow2(sin(y))*Pow2(sin(x)) + 
-                         1 + sin(x)+sin(y)         +
-                         Pow2(sin(x)+sin(y))       -
-                         sin(2*x)*cos(2*x)         +
+      f[IJ(i,j,Nphi1)] = 1                           +
+                         cos(x)+sin(x)+sin(y)+cos(y) - 
+                         Pow2(cos(x))                + 
+                         Pow2(sin(y))*Pow2(sin(x))   - 
+                         Pow2(sin(x)+sin(y))         +
+                         sin(2*x)*cos(2*x)           -
                          cos(3*y)*sin(3*y);
+          
 
     }
   }
@@ -321,11 +323,12 @@ static int r2cft_2d_EquiSpaced_test(Grid_T *const grid)
       for (j = 0; j < Nphi1; ++j)
       {
         y = ran_phi1[j];
-        double fr = Pow2(cos(x)) +
-                    Pow2(sin(y))*Pow2(sin(x)) + 
-                    1 + sin(x)+sin(y)         +
-                    Pow2(sin(x)+sin(y))       -
-                    sin(2*x)*cos(2*x)         +
+        double fr = 1                           +
+                    cos(x)+sin(x)+sin(y)+cos(y) - 
+                    Pow2(cos(x))                + 
+                    Pow2(sin(y))*Pow2(sin(x))   - 
+                    Pow2(sin(x)+sin(y))         +
+                    sin(2*x)*cos(2*x)           -
                     cos(3*y)*sin(3*y);
                     
         double fi = r2cft_2d_interpolation(realC,imagC,Nphi0,Nphi1,x,y);
