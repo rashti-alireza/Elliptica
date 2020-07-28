@@ -174,8 +174,34 @@ r2cft_2d_coeffs_S2
   double **const imagC/* imag part of coeffs, allocates memory*/
 )
 {
+  if (!f)
+    Error0("Bad argument: no value\n!");
+  
+  double *const F = alloc_double(2*Ntheta*Nphi); IsNull(F);
+  unsigned ij,i,j,k;
+  
+  for (i = 0; i < Ntheta; ++i)
+  {
+    for (j = 0; j < Nphi; ++j)
+    {
+      ij        = IJ(i,j,Nphi);
+      F[ij]     = f[ij];
+    }
+  }
+  for (i = Ntheta; i < 2*Ntheta; ++i)
+  {
+    k = i-Ntheta;
+    for (j = 0; j < Nphi; ++j)
+    {
+      ij    = IJ(i,j,Nphi);
+      F[ij] = f[IJ(k,j,Nphi)];
+    }
+  }
+   
   /* populate coeffs, note: f(theta,phi) = F(phi0.phi1) */
-  r2cft_2d_coeffs(f,Ntheta,Nphi,realC,imagC);
+  r2cft_2d_coeffs(F,2*Ntheta,Nphi,realC,imagC);
+  
+  free(F);
 }
 
 /* fourier transformation from real value to complex coeffs for 2d.
@@ -319,7 +345,7 @@ r2cft_2d_interpolation_S2
 )
 {
   /* since phi0 = 2 theta: */
-  return r2cft_2d_interpolation(realC,imagC,Ntheta,Nphi,2*theta,phi);
+  return r2cft_2d_interpolation(realC,imagC,2*Ntheta,Nphi,theta,phi);
 }
 
 /* -> interpolation at (phi0,phi1) using 2-d Fourier transformation 
@@ -372,18 +398,7 @@ r2cft_2d_df_dtheta_S2
   const unsigned Nphi/* number of point in phi direction */
 )
 {
-  /* note: theta = phi/2 */ 
-  double *const df = r2cft_2d_df_dphi0(realC,imagC,Ntheta,Nphi);
-  const unsigned N = Ntheta*Nphi;
-  unsigned ij;
-  
-  /* since theta = phi/2 */ 
-  for (ij = 0; ij < N; ++ij)
-  {
-    df[ij] *= 0.5;
-  }
-  
-  return df;
+  return r2cft_2d_df_dphi0(realC,imagC,2*Ntheta,Nphi);
 }
 
 /* -> taking derivative : df(theta,phi)/dphi on S2. */
@@ -396,7 +411,7 @@ r2cft_2d_df_dphi_S2
   const unsigned Nphi/* number of point in phi direction */
 )
 {
-  return r2cft_2d_df_dphi0(realC,imagC,Ntheta,Nphi);
+  return r2cft_2d_df_dphi0(realC,imagC,2*Ntheta,Nphi);
 }
 
 /* -> taking derivative : df(phi0,phi1)/dphi0. */

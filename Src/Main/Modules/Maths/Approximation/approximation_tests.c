@@ -389,11 +389,11 @@ static int r2cft_2d_EquiSpaced_test(Grid_T *const grid)
 // ->return value: TEST_SUCCESSFUL */
 static int r2cft_2d_EquiSpaced_S2_test(Grid_T *const grid)
 {
-  const unsigned Ntheta = 200;
-  const unsigned Nphi = 50;
-  double *f = alloc_double(Ntheta*Nphi);
-  double *df_dx = alloc_double(Ntheta*Nphi);
-  double *df_dy = alloc_double(Ntheta*Nphi);
+  const unsigned Ntheta = 400;
+  const unsigned Nphi = 40;
+  double *f = alloc_double((Ntheta)*Nphi);
+  double *df_dx = alloc_double((Ntheta)*Nphi);
+  double *df_dy = alloc_double((Ntheta)*Nphi);
   double *df_dtheta = 0, *df_dphi = 0;
   double *realC = 0;
   double *imagC = 0; 
