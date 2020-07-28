@@ -13,7 +13,9 @@
 #define DO 1
 #define DO_NOT 0
 #define IJ(i,j,n)  ((j)+(i)*(n))
-
+#define Cos(a) cos(a)
+#define Sin(a) sin(a)
+#define Power(a,b) pow(a,b)
 
 /* types of derivatives; new one "must" be added to one before the last */
 enum FUNC_E

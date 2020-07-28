@@ -259,10 +259,13 @@ static int r2cft_2d_EquiSpaced_test(Grid_T *const grid)
   const unsigned l1 = Nphi1/2+1;
   const unsigned l0l1 = l0*l1;
   double *f = alloc_double(Nphi0*Nphi1);
+  double *df_dx = alloc_double(Nphi0*Nphi1);
+  double *df_dy = alloc_double(Nphi0*Nphi1);
+  double *df_dphi0 = 0, *df_dphi1 = 0;
   double *realC = 0;
   double *imagC = 0; 
   double x,y;
-  unsigned i,j,m0,m1;
+  unsigned i,j,m0,m1,ij;
   
   /* populate the values */
   for (i = 0; i < Nphi0; ++i)
@@ -271,14 +274,17 @@ static int r2cft_2d_EquiSpaced_test(Grid_T *const grid)
     for (j = 0; j < Nphi1; ++j)
     {
       y = 2.*j*M_PI/Nphi1;
-      f[IJ(i,j,Nphi1)] = 1                           +
-                         cos(x)+sin(x)+sin(y)+cos(y) - 
-                         Pow2(cos(x))                + 
-                         Pow2(sin(y))*Pow2(sin(x))   - 
-                         Pow2(sin(x)+sin(y))         +
-                         sin(2*x)*cos(2*x)           -
-                         cos(3*y)*sin(3*y);
+      
+      f[IJ(i,j,Nphi1)] = 1 + Cos(x) - Power(Cos(x),2) + 
+          Cos(y) + Sin(x) + Sin(4*x)/2. + Sin(y) + 
+          Power(Sin(x),2)*Power(Sin(y),2) - Power(Sin(x) + Sin(y),2) - 
+          Sin(6*y)/2.;
           
+      df_dx[IJ(i,j,Nphi1)] = Cos(x) + 2*Cos(4*x) - 
+            Sin(x) - 2*Cos(x)*Sin(y) + Sin(2*x)*Power(Sin(y),2);
+      df_dy[IJ(i,j,Nphi1)] = Cos(y) - 3*Cos(6*y) - Sin(y) - 
+            2*Cos(y)*(Sin(x) + Sin(y)) + Power(Sin(x),2)*Sin(2*y);
+
 
     }
   }
@@ -323,28 +329,54 @@ static int r2cft_2d_EquiSpaced_test(Grid_T *const grid)
       for (j = 0; j < Nphi1; ++j)
       {
         y = ran_phi1[j];
-        double fr = 1                           +
-                    cos(x)+sin(x)+sin(y)+cos(y) - 
-                    Pow2(cos(x))                + 
-                    Pow2(sin(y))*Pow2(sin(x))   - 
-                    Pow2(sin(x)+sin(y))         +
-                    sin(2*x)*cos(2*x)           -
-                    cos(3*y)*sin(3*y);
+        double fr = 1 + Cos(x) - Power(Cos(x),2) + 
+          Cos(y) + Sin(x) + Sin(4*x)/2. + Sin(y) + 
+          Power(Sin(x),2)*Power(Sin(y),2) - Power(Sin(x) + Sin(y),2) - 
+          Sin(6*y)/2.;
                     
         double fi = r2cft_2d_interpolation(realC,imagC,Nphi0,Nphi1,x,y);
         printf("%+0.15f   %+0.15f   %+e\n",fi,fr,fi-fr);
       }
     }
   }
+
+  /* derivative tests: */
+  df_dphi0 = r2cft_2d_df_dphi0(realC,imagC,Nphi0,Nphi1);
+  df_dphi1 = r2cft_2d_df_dphi1(realC,imagC,Nphi0,Nphi1);
   
+  printf("df(x)/dphi0|num:     df(x)/dphi0|anl:     diff:\n");
+  for (i = 0; i < Nphi0; ++i)
+  {
+    for (j = 0; j < Nphi1; ++j)
+    {
+      ij=IJ(i,j,Nphi1);
+      printf("%+0.15f   %+0.15f   %+e\n",
+          df_dphi0[ij],df_dx[ij],df_dphi0[ij]-df_dx[ij]);
+    }
+  }
+    
+  printf("df(x)/dphi1|num:     df(x)/dphi1|anl:     diff:\n");
+  for (i = 0; i < Nphi0; ++i)
+  {
+    for (j = 0; j < Nphi1; ++j)
+    {
+      ij=IJ(i,j,Nphi1);
+      printf("%+0.15f   %+0.15f   %+e\n",
+          df_dphi1[ij],df_dy[ij],df_dphi1[ij]-df_dy[ij]);
+    }
+  }
+    
   free(f);
   free(realC);
   free(imagC);
+  free(df_dphi0);
+  free(df_dphi1);
+  free(df_dx);
+  free(df_dy);
   free(ran_phi0);
   free(ran_phi1);
   
   UNUSED(grid);
-  
   return TEST_SUCCESSFUL;
 }
 
