@@ -142,7 +142,17 @@ double *c2rft_1d_EquiSpaced_values(void *const coeffs,const unsigned N)
 
 
 /* fourier transformation from real value to complex coeffs for 2d on S2
+// this is double fourier transformation on S2, since the given function f
+// is extended on the whole sphere:
+//                 | f(theta,phi),                         theta in [0,pi] and phi in [0,2pi)
+// f`(theta,phi) = |
+//                 | f(theta+pi,phi) = f(pi-theta,phi+pi), theta+pi in [pi,2pi), phi in [0,2pi)
+//
+//
 // notes:
+// o. Nphi MUST be even
+// o. values of f at theta = pi MUST be given.
+// o. it is cursed to slowly converge!
 // o. f expansion => f(theta,phi) = F(phi0,phi1) =
 //    \sum_{m0=-l0,m1=-l1}^{m0=l0,m1=l1}{Cm0m1 exp(I.m0.phi0) exp(I.m1.phi1)}.
 //    =>  Cm0m1 = 1/(2*pi)^2 *\integral_{0}^{2*pi}\integral_{0}^{2*pi} 
@@ -168,7 +178,7 @@ void
 r2cft_2d_coeffs_S2
 (
   const double *const f/* field values given on theta and phi coords. */,
-  const unsigned Ntheta/* number of point in theta direction */, 
+  unsigned Ntheta/* number of point in theta direction */, 
   const unsigned Nphi/* number of point in phi direction */,
   double **const realC/* real part of coeffs, allocates memory */,
   double **const imagC/* imag part of coeffs, allocates memory*/
@@ -177,36 +187,36 @@ r2cft_2d_coeffs_S2
   if (!f)
     Error0("Bad argument: no value\n!");
   
-  double *const F = alloc_double((2*Ntheta)*Nphi); IsNull(F);
-  unsigned ij,i,j,k;
+  if (Nphi%2)
+    Error0("Number of points in phi direction must be even.\n!");
   
-  for (i = 0; i < Ntheta+1; ++i)
+  Ntheta -= 1;/* adjust Ntheta */
+  const unsigned TwiceNtheta = 2*Ntheta;
+  double *const F = alloc_double(TwiceNtheta*Nphi); IsNull(F);
+  unsigned ij,i,j,k,l;
+  
+  /* f(theta,phi), theta in [0,pi] and phi in [0,2pi) */
+  for (i = 0; i <= Ntheta; ++i)
   {
     for (j = 0; j < Nphi; ++j)
     {
       ij        = IJ(i,j,Nphi);
       F[ij]     = f[ij];
-     //printf("%u\n",ij);
-    }
-  }
-  for (i = Ntheta+1; i < 2*Ntheta; ++i)
-  {
-    k = 2*Ntheta-i;
-    for (j = 0; j < Nphi; ++j)
-    {
-      unsigned jp = (j+Nphi/2)%Nphi;
-      //printf("%u\n",jp);
-      ij    = IJ(i,j,Nphi);
-      F[ij] = f[IJ(k+1,jp,Nphi)];
-      //printf("~>%u\n",ij);
     }
   }
   
-  for(ij = 0; ij < (2*Ntheta)*Nphi; ++ij)
-    printf("%u %f\n",ij,F[ij]); 
-  //exit(1);
-  /* populate coeffs, note: f(theta,phi) = F(phi0.phi1) */
-  r2cft_2d_coeffs(F,2*Ntheta,Nphi,realC,imagC);
+  /* f(theta+pi,phi) = f(pi-theta,phi+pi), theta+pi in [pi,2pi), phi in [0,2pi) */
+  for (i = Ntheta+1; i < TwiceNtheta; ++i)
+  {
+    k = TwiceNtheta-i;
+    for (j = 0; j < Nphi; ++j)
+    {
+      l               = (j+Nphi/2)%Nphi;
+      F[IJ(i,j,Nphi)] = f[IJ(k,l,Nphi)];
+    }
+  }
+  
+  r2cft_2d_coeffs(F,TwiceNtheta,Nphi,realC,imagC);
   
   free(F);
 }
@@ -352,7 +362,7 @@ r2cft_2d_interpolation_S2
 )
 {
   /* since phi0 = 2 theta: */
-  return r2cft_2d_interpolation(realC,imagC,2*Ntheta,Nphi,theta,phi);
+  return r2cft_2d_interpolation(realC,imagC,2*(Ntheta-1),Nphi,theta,phi);
 }
 
 /* -> interpolation at (phi0,phi1) using 2-d Fourier transformation 

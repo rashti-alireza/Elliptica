@@ -53,7 +53,7 @@ void
 r2cft_2d_coeffs_S2
 (
   const double *const f/* field values given on theta and phi coords. */,
-  const unsigned Ntheta/* number of point in theta direction */, 
+  unsigned Ntheta/* number of point in theta direction */, 
   const unsigned Nphi/* number of point in phi direction */,
   double **const realC/* real part of coeffs, allocates memory */,
   double **const imagC/* imag part of coeffs, allocates memory*/
