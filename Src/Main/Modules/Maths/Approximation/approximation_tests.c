@@ -389,11 +389,11 @@ static int r2cft_2d_EquiSpaced_test(Grid_T *const grid)
 // ->return value: TEST_SUCCESSFUL */
 static int r2cft_2d_EquiSpaced_S2_test(Grid_T *const grid)
 {
-  const unsigned Ntheta = 400;
-  const unsigned Nphi = 40;
-  double *f = alloc_double((Ntheta)*Nphi);
-  double *df_dx = alloc_double((Ntheta)*Nphi);
-  double *df_dy = alloc_double((Ntheta)*Nphi);
+  const unsigned Ntheta = 15;
+  const unsigned Nphi = 15;
+  double *f = alloc_double((Ntheta+1)*Nphi);
+  double *df_dx = alloc_double((Ntheta+1)*Nphi);
+  double *df_dy = alloc_double((Ntheta+1)*Nphi);
   double *df_dtheta = 0, *df_dphi = 0;
   double *realC = 0;
   double *imagC = 0; 
@@ -401,17 +401,14 @@ static int r2cft_2d_EquiSpaced_S2_test(Grid_T *const grid)
   unsigned i,j,ij;
   
   /* populate the values */
-  for (i = 0; i < Ntheta; ++i)
+  for (i = 0; i < Ntheta+1; ++i)
   {
     x = i*M_PI/Ntheta;
     for (j = 0; j < Nphi; ++j)
     {
       y = 2.*j*M_PI/Nphi;
       
-      f[IJ(i,j,Nphi)] = 1 + Cos(x) - Power(Cos(x),2) + 
-          Cos(y) + Sin(x) + Sin(4*x)/2. + Sin(y) + 
-          Power(Sin(x),2)*Power(Sin(y),2) - Power(Sin(x) + Sin(y),2) - 
-          Sin(6*y)/2.;
+      f[IJ(i,j,Nphi)] = Cos(x)+Sin(y);
           
       df_dx[IJ(i,j,Nphi)] = Cos(x) + 2*Cos(4*x) - 
             Sin(x) - 2*Cos(x)*Sin(y) + Sin(2*x)*Power(Sin(y),2);
@@ -426,7 +423,7 @@ static int r2cft_2d_EquiSpaced_S2_test(Grid_T *const grid)
   r2cft_2d_coeffs_S2(f,Ntheta,Nphi,&realC,&imagC);
   
   /* let's do some interpolation: */
-  double *ran_theta = make_random_number(Ntheta,0,M_PI);
+  double *ran_theta = make_random_number(Ntheta+1,0,M_PI);
   double *ran_phi = make_random_number(Nphi,0,2*M_PI);
   if (1)
   {
@@ -437,10 +434,7 @@ static int r2cft_2d_EquiSpaced_S2_test(Grid_T *const grid)
       for (j = 0; j < Nphi; ++j)
       {
         y = ran_phi[j];
-        double fr = 1 + Cos(x) - Power(Cos(x),2) + 
-          Cos(y) + Sin(x) + Sin(4*x)/2. + Sin(y) + 
-          Power(Sin(x),2)*Power(Sin(y),2) - Power(Sin(x) + Sin(y),2) - 
-          Sin(6*y)/2.;
+        double fr = Cos(x)+Sin(y);
                     
         double fi = r2cft_2d_interpolation_S2(realC,imagC,Ntheta,Nphi,x,y);
         printf("%+0.15f   %+0.15f   %+e\n",fi,fr,fi-fr);

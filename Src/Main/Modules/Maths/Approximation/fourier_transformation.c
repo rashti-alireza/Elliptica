@@ -177,27 +177,34 @@ r2cft_2d_coeffs_S2
   if (!f)
     Error0("Bad argument: no value\n!");
   
-  double *const F = alloc_double(2*Ntheta*Nphi); IsNull(F);
+  double *const F = alloc_double((2*Ntheta)*Nphi); IsNull(F);
   unsigned ij,i,j,k;
   
-  for (i = 0; i < Ntheta; ++i)
+  for (i = 0; i < Ntheta+1; ++i)
   {
     for (j = 0; j < Nphi; ++j)
     {
       ij        = IJ(i,j,Nphi);
       F[ij]     = f[ij];
+     //printf("%u\n",ij);
     }
   }
-  for (i = Ntheta; i < 2*Ntheta; ++i)
+  for (i = Ntheta+1; i < 2*Ntheta; ++i)
   {
-    k = i-Ntheta;
+    k = 2*Ntheta-i;
     for (j = 0; j < Nphi; ++j)
     {
+      unsigned jp = (j+Nphi/2)%Nphi;
+      //printf("%u\n",jp);
       ij    = IJ(i,j,Nphi);
-      F[ij] = f[IJ(k,j,Nphi)];
+      F[ij] = f[IJ(k+1,jp,Nphi)];
+      //printf("~>%u\n",ij);
     }
   }
-   
+  
+  for(ij = 0; ij < (2*Ntheta)*Nphi; ++ij)
+    printf("%u %f\n",ij,F[ij]); 
+  //exit(1);
   /* populate coeffs, note: f(theta,phi) = F(phi0.phi1) */
   r2cft_2d_coeffs(F,2*Ntheta,Nphi,realC,imagC);
   
