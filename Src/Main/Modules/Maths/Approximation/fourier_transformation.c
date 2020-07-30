@@ -544,7 +544,7 @@ r2cft_2d_df_dtheta_S2
   const unsigned Nphi/* number of point in phi direction */
 )
 {
-  return r2cft_2d_df_dphi0(realC,imagC,2*Ntheta,Nphi);
+  return r2cft_2d_df_dphi0(realC,imagC,2*(Ntheta-1),Nphi);
 }
 
 /* -> taking derivative : df(theta,phi)/dphi on S2. */
@@ -557,7 +557,7 @@ r2cft_2d_df_dphi_S2
   const unsigned Nphi/* number of point in phi direction */
 )
 {
-  return r2cft_2d_df_dphi0(realC,imagC,2*Ntheta,Nphi);
+  return r2cft_2d_df_dphi1(realC,imagC,2*(Ntheta-1),Nphi);
 }
 
 /* -> taking derivative : df(phi0,phi1)/dphi0. */
