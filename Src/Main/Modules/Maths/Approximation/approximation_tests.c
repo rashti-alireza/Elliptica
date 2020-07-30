@@ -389,8 +389,8 @@ static int r2cft_2d_EquiSpaced_test(Grid_T *const grid)
 // ->return value: TEST_SUCCESSFUL */
 static int r2cft_2d_EquiSpaced_S2_test(Grid_T *const grid)
 {
-  const unsigned Ntheta = 21;
-  const unsigned Nphi = 20;
+  const unsigned Ntheta = 10;
+  const unsigned Nphi = 10;
   const unsigned l0   = Ntheta;
   const unsigned l1   = Nphi/2+1;
   const unsigned l0l1 = l0*l1;
@@ -402,14 +402,7 @@ static int r2cft_2d_EquiSpaced_S2_test(Grid_T *const grid)
   double *imagC = 0; 
   double x,y;
   unsigned i,j,ij,m0,m1;
-  
-//#define Fu(x,y) (2*sin(2*x)*cos(y)+1)*cos(x);//*cos(x);
-#define Fu(x,y) (cos(x)+1+sin(x))
-//#define Fu(x,y) Pow2(sin(2*x)*cos(3*y)*cos(x)*cos(y));//*cos(y);//*sin(x)+cos(x)*sin(x);
-//#define Fu(x,y) (cos(y)+1)*cos(x)*sin(x);
-//#define Fu(x,y) sin(y)*cos(x);
-
-
+ 
   /* populate the values */
   for (i = 0; i < Ntheta; ++i)
   {
@@ -418,12 +411,7 @@ static int r2cft_2d_EquiSpaced_S2_test(Grid_T *const grid)
     {
       y = 2.*j*M_PI/Nphi;
       
-      f[IJ(i,j,Nphi)] =  Fu(x,y);
-      //f[IJ(i,j,Nphi)] =  Pow2(Sin(y)*Sin(y)+Cos(x)*Sin(y)+1);
-       //f[IJ(i,j,Nphi)] = 1 + Cos(x) - Power(Cos(x),2) + 
-         // Cos(y) + Sin(x) + Sin(y) + 
-          //Power(Sin(x),2)*Power(Sin(y),2) - Power(Sin(x) + Sin(y),2);// - 
-          //Sin(6*y)/2.;
+      f[IJ(i,j,Nphi)] =  (2*sin(2*x)*cos(y)+1)*cos(x);
            
       df_dx[IJ(i,j,Nphi)] = Cos(x) + 2*Cos(4*x) - 
             Sin(x) - 2*Cos(x)*Sin(y) + Sin(2*x)*Power(Sin(y),2);
@@ -435,19 +423,19 @@ static int r2cft_2d_EquiSpaced_S2_test(Grid_T *const grid)
   }
   
   /* calculating coeffs */
-  r2cft_2d_coeffs_S2(f,Ntheta,Nphi,&realC,&imagC);
+  r2cft_2d_coeffs_S2(f,Ntheta,Nphi,&realC,&imagC,1);
   /* print bases */
-  if(0)
+  if(1)
   {
-    const double eps = 1E-3;
-    printf("Bases: Crr+Cri*I\n");
+    const double eps = 1E-6;
+    printf("Large Bases: Crr+Cri*I\n");
     for (m0 = 0; m0 < l0; ++m0)
     {
       for (m1 = 0; m1 < l1; ++m1)
       {
         unsigned m0m1 = IJ(m0,m1,l1);
-        if    (GRT(fabs(realC[m0m1]),eps)
-            || GRT(fabs(imagC[m0m1]),eps))
+        if ( GRT(fabs(realC[m0m1]),eps) ||
+             GRT(fabs(imagC[m0m1]),eps) )
         printf("Crr(%u,%u)+Cri(%u,%u)I = %g %gI\n",
               m0,m1,m0,m1,realC[m0m1],imagC[m0m1]);
       }
@@ -459,8 +447,8 @@ static int r2cft_2d_EquiSpaced_S2_test(Grid_T *const grid)
       for (m1 = 0; m1 < l1; ++m1)
       {
         unsigned m0m1 = IJ(m0,m1,l1);
-        if    (GRT(fabs(realC[l0l1+m0m1]),eps)
-            || GRT(fabs(imagC[l0l1+m0m1]),eps))
+        if ( GRT(fabs(realC[l0l1+m0m1]),eps) ||
+             GRT(fabs(imagC[l0l1+m0m1]),eps))
         printf("Cir(%u,%u)+Cii(%u,%u)I = %+g %+gI\n",
               m0,m1,m0,m1,realC[l0l1+m0m1],imagC[l0l1+m0m1]);
       }
@@ -478,13 +466,7 @@ static int r2cft_2d_EquiSpaced_S2_test(Grid_T *const grid)
       for (j = 0; j < Nphi; ++j)
       {
         y = ran_phi[j];
-        double fr = Fu(x,y);
-        //double fr = Pow2(Sin(y)*Sin(y)+Cos(x)*Sin(y)+1);
-        //double fr= 1 + Cos(x) - Power(Cos(x),2) + 
-          //Cos(y) + Sin(x)  + Sin(y) + 
-          //Power(Sin(x),2)*Power(Sin(y),2) - Power(Sin(x) + Sin(y),2);// - 
-          //Sin(6*y)/2.;
-                   
+        double fr = (2*sin(2*x)*cos(y)+1)*cos(x);
         double fi = r2cft_2d_interpolation_S2(realC,imagC,Ntheta,Nphi,x,y);
         printf("%+0.15f   %+0.15f   %+e\n",fi,fr,fi-fr);
       }
