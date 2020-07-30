@@ -389,8 +389,11 @@ static int r2cft_2d_EquiSpaced_test(Grid_T *const grid)
 // ->return value: TEST_SUCCESSFUL */
 static int r2cft_2d_EquiSpaced_S2_test(Grid_T *const grid)
 {
-  const unsigned Ntheta = 11;
-  const unsigned Nphi = 10;
+  const unsigned Ntheta = 21;
+  const unsigned Nphi = 20;
+  const unsigned l0   = Ntheta;
+  const unsigned l1   = Nphi/2+1;
+  const unsigned l0l1 = l0*l1;
   double *f = alloc_double(Ntheta*Nphi);
   double *df_dx = alloc_double(Ntheta*Nphi);
   double *df_dy = alloc_double(Ntheta*Nphi);
@@ -398,9 +401,14 @@ static int r2cft_2d_EquiSpaced_S2_test(Grid_T *const grid)
   double *realC = 0;
   double *imagC = 0; 
   double x,y;
-  unsigned i,j,ij;
+  unsigned i,j,ij,m0,m1;
   
-#define Fu(x,y) Cos(x)+cos(y);//*sin(x)+cos(x)*sin(x);
+//#define Fu(x,y) (2*sin(2*x)*cos(y)+1)*cos(x);//*cos(x);
+#define Fu(x,y) (cos(x)+1+sin(x))
+//#define Fu(x,y) Pow2(sin(2*x)*cos(3*y)*cos(x)*cos(y));//*cos(y);//*sin(x)+cos(x)*sin(x);
+//#define Fu(x,y) (cos(y)+1)*cos(x)*sin(x);
+//#define Fu(x,y) sin(y)*cos(x);
+
 
   /* populate the values */
   for (i = 0; i < Ntheta; ++i)
@@ -428,7 +436,36 @@ static int r2cft_2d_EquiSpaced_S2_test(Grid_T *const grid)
   
   /* calculating coeffs */
   r2cft_2d_coeffs_S2(f,Ntheta,Nphi,&realC,&imagC);
-  
+  /* print bases */
+  if(0)
+  {
+    const double eps = 1E-3;
+    printf("Bases: Crr+Cri*I\n");
+    for (m0 = 0; m0 < l0; ++m0)
+    {
+      for (m1 = 0; m1 < l1; ++m1)
+      {
+        unsigned m0m1 = IJ(m0,m1,l1);
+        if    (GRT(fabs(realC[m0m1]),eps)
+            || GRT(fabs(imagC[m0m1]),eps))
+        printf("Crr(%u,%u)+Cri(%u,%u)I = %g %gI\n",
+              m0,m1,m0,m1,realC[m0m1],imagC[m0m1]);
+      }
+    }
+    
+    printf("Bases: Cir+Cii*I\n");
+    for (m0 = 0; m0 < l0; ++m0)
+    {
+      for (m1 = 0; m1 < l1; ++m1)
+      {
+        unsigned m0m1 = IJ(m0,m1,l1);
+        if    (GRT(fabs(realC[l0l1+m0m1]),eps)
+            || GRT(fabs(imagC[l0l1+m0m1]),eps))
+        printf("Cir(%u,%u)+Cii(%u,%u)I = %+g %+gI\n",
+              m0,m1,m0,m1,realC[l0l1+m0m1],imagC[l0l1+m0m1]);
+      }
+    }
+  }
   /* let's do some interpolation: */
   double *ran_theta = make_random_number(Ntheta,0,M_PI);
   double *ran_phi = make_random_number(Nphi,0,2*M_PI);

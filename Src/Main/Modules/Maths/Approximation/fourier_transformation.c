@@ -195,6 +195,8 @@ r2cft_2d_coeffs_S2
   double *const F = alloc_double(TwiceNtheta*Nphi); IsNull(F);
   unsigned ij,i,j,k,l;
   
+  FILE *fp = Fopen("plot.txt","w");
+  
   /* f(theta,phi), theta in [0,pi] and phi in [0,2pi) */
   for (i = 0; i <= Ntheta; ++i)
   {
@@ -202,6 +204,8 @@ r2cft_2d_coeffs_S2
     {
       ij        = IJ(i,j,Nphi);
       F[ij]     = f[ij];
+      
+      fprintf(fp,"%f %f %f\n",i*M_PI/Ntheta,2*j*M_PI/Nphi,F[ij]);
     }
   }
   
@@ -212,10 +216,12 @@ r2cft_2d_coeffs_S2
     for (j = 0; j < Nphi; ++j)
     {
       l               = (j+Nphi/2)%Nphi;
-      F[IJ(i,j,Nphi)] = f[IJ(k,l,Nphi)];
+      double ff = F[IJ(i,j,Nphi)] = f[IJ(k,l,Nphi)];
+      
+      fprintf(fp,"%f %f %f\n",i*M_PI/Ntheta,2*l*M_PI/Nphi,ff);
     }
   }
-  
+  fclose(fp);
   r2cft_2d_coeffs(F,TwiceNtheta,Nphi,realC,imagC);
   
   free(F);
