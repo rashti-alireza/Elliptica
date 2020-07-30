@@ -175,8 +175,9 @@ double *c2rft_1d_EquiSpaced_values(void *const coeffs,const unsigned N)
 // free(realC);
 // free(imagC);
 //
-// ->: Cm0m1  */
-void
+// ->: Cm0m1  if improve==1 it returns the max magnitude of 
+// the last coeffs otherwise DBL_MAX. */
+double
 r2cft_2d_coeffs_S2
 (
   const double *const f/* field values given on theta and phi coords. */,
@@ -198,6 +199,7 @@ r2cft_2d_coeffs_S2
                                       // change the continuation method */
   const unsigned TwiceNtheta = 2*Ntheta;
   double *const F = alloc_double(TwiceNtheta*Nphi); IsNull(F);
+  double ret = DBL_MAX;
   unsigned ij,i,j,k,l;
   
   /* f(theta,phi), theta in [0,pi] and phi in [0,2pi) */
@@ -230,6 +232,7 @@ r2cft_2d_coeffs_S2
     double max1,max2;
     
     max1 = r2cft_2d_last_coeffs_max_mag_S2(TwiceNtheta,Nphi,*realC,*imagC);
+    ret  = max1;
     /* if passes the threshold */
     if (max1 > COEFF_THRESHOLD)
     {
@@ -250,6 +253,7 @@ r2cft_2d_coeffs_S2
       {
         free(realC2);
         free(imagC2);
+        ret = max1;
       }
       else
       {
@@ -257,11 +261,13 @@ r2cft_2d_coeffs_S2
         free(*imagC);
         *realC = realC2;
         *imagC = imagC2;
+        ret = max2;
       }
     }/* if (max1 > COEFF_THRESHOLD) */
   }/* if (improve) */
   
   free(F);
+  return ret;
 }
 
 /* -> the max magnitude of the last few coeffs.

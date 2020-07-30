@@ -49,7 +49,7 @@ r2cft_2d_df_dphi1
 );
 
 
-void
+double
 r2cft_2d_coeffs_S2
 (
   const double *const f/* field values given on theta and phi coords. */,

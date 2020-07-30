@@ -106,7 +106,7 @@ r2cft_2d_coeffs
   double **const imagC/* imag part of coeffs, allocates memory*/
 );
 
-void
+double
 r2cft_2d_coeffs_S2
 (
   const double *const f/* field values given on theta and phi coords. */,
