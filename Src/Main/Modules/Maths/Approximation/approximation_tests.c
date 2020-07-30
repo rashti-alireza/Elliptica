@@ -413,10 +413,9 @@ static int r2cft_2d_EquiSpaced_S2_test(Grid_T *const grid)
       
       f[IJ(i,j,Nphi)] =  (2*sin(2*x)*cos(y)+1)*cos(x);
            
-      df_dx[IJ(i,j,Nphi)] = Cos(x) + 2*Cos(4*x) - 
-            Sin(x) - 2*Cos(x)*Sin(y) + Sin(2*x)*Power(Sin(y),2);
-      df_dy[IJ(i,j,Nphi)] = Cos(y) - 3*Cos(6*y) - Sin(y) - 
-            2*Cos(y)*(Sin(x) + Sin(y)) + Power(Sin(x),2)*Sin(2*y);
+      df_dx[IJ(i,j,Nphi)] = 4*Power(Cos(x),3)*Cos(y) - Sin(x) 
+                            - 8*Cos(x)*Cos(y)*Power(Sin(x),2);
+      df_dy[IJ(i,j,Nphi)] = -4*Power(Cos(x),2)*Sin(x)*Sin(y);
 
 
     }
@@ -474,7 +473,7 @@ static int r2cft_2d_EquiSpaced_S2_test(Grid_T *const grid)
   }
 
   /* derivative tests: */
-  if (0)
+  if (1)
   {
     df_dtheta = r2cft_2d_df_dtheta_S2(realC,imagC,Ntheta,Nphi);
     df_dphi   = r2cft_2d_df_dphi_S2(realC,imagC,Ntheta,Nphi);
