@@ -147,6 +147,8 @@ double *c2rft_1d_EquiSpaced_values(void *const coeffs,const unsigned N)
 //                 | f(theta,phi),                         theta in [0,pi] and phi in [0,2pi)
 // f`(theta,phi) = |
 //                 | f(theta+pi,phi) = f(pi-theta,phi+pi), theta+pi in [pi,2pi), phi in [0,2pi)
+//                 | or 
+//                 | f(theta+pi,phi) = f(pi-theta,phi), theta+pi in [pi,2pi), phi in [0,2pi) if this is better.
 //
 //
 // notes:
@@ -181,7 +183,8 @@ r2cft_2d_coeffs_S2
   unsigned Ntheta/* number of point in theta direction */, 
   const unsigned Nphi/* number of point in phi direction */,
   double **const realC/* real part of coeffs, allocates memory */,
-  double **const imagC/* imag part of coeffs, allocates memory*/
+  double **const imagC/* imag part of coeffs, allocates memory*/,
+  const int improve/* if 1, it tries to improve the expansion, otherwise no. */
 )
 {
   if (!f)
@@ -191,40 +194,161 @@ r2cft_2d_coeffs_S2
     Error0("Number of points in phi direction must be even.\n!");
   
   Ntheta -= 1;/* adjust Ntheta */
+  const double COEFF_THRESHOLD = 1E-6;/* if coeffs error is bigger than this 
+                                      // change the continuation method */
   const unsigned TwiceNtheta = 2*Ntheta;
   double *const F = alloc_double(TwiceNtheta*Nphi); IsNull(F);
   unsigned ij,i,j,k,l;
   
-  FILE *fp = Fopen("plot.txt","w");
-  
   /* f(theta,phi), theta in [0,pi] and phi in [0,2pi) */
-  for (i = 0; i <= Ntheta; ++i)
+  for (i = 0; i < Ntheta; ++i)
   {
     for (j = 0; j < Nphi; ++j)
     {
       ij        = IJ(i,j,Nphi);
       F[ij]     = f[ij];
-      
-      fprintf(fp,"%f %f %f\n",i*M_PI/Ntheta,2*j*M_PI/Nphi,F[ij]);
     }
   }
   
   /* f(theta+pi,phi) = f(pi-theta,phi+pi), theta+pi in [pi,2pi), phi in [0,2pi) */
-  for (i = Ntheta+1; i < TwiceNtheta; ++i)
+  for (i = Ntheta; i < TwiceNtheta; ++i)
   {
     k = TwiceNtheta-i;
     for (j = 0; j < Nphi; ++j)
     {
       l               = (j+Nphi/2)%Nphi;
-      double ff = F[IJ(i,j,Nphi)] = f[IJ(k,l,Nphi)];
-      
-      fprintf(fp,"%f %f %f\n",i*M_PI/Ntheta,2*l*M_PI/Nphi,ff);
+      F[IJ(i,j,Nphi)] = f[IJ(k,l,Nphi)];
     }
   }
-  fclose(fp);
   r2cft_2d_coeffs(F,TwiceNtheta,Nphi,realC,imagC);
   
+  /* check the coeffs and if possible improve the expansion
+  // by using different continuation */
+  if (improve)
+  {
+    double *realC2 = 0,*imagC2 = 0;
+    double max1,max2;
+    
+    max1 = r2cft_2d_last_coeffs_max_mag_S2(TwiceNtheta,Nphi,*realC,*imagC);
+    /* if passes the threshold */
+    if (max1 > COEFF_THRESHOLD)
+    {
+      /* f(theta+pi,phi) = f(pi-theta,phi), theta+pi in [pi,2pi), phi in [0,2pi) */
+      for (i = Ntheta; i < TwiceNtheta; ++i)
+      {
+        k = TwiceNtheta-i;
+        for (j = 0; j < Nphi; ++j)
+        {
+          F[IJ(i,j,Nphi)] = f[IJ(k,j,Nphi)];
+        }
+      }
+      
+      r2cft_2d_coeffs(F,TwiceNtheta,Nphi,&realC2,&imagC2);
+      max2 = r2cft_2d_last_coeffs_max_mag_S2(TwiceNtheta,Nphi,realC2,imagC2);
+      
+      if (max2 > max1)
+      {
+        free(realC2);
+        free(imagC2);
+      }
+      else
+      {
+        free(*realC);
+        free(*imagC);
+        *realC = realC2;
+        *imagC = imagC2;
+      }
+    }/* if (max1 > COEFF_THRESHOLD) */
+  }/* if (improve) */
+  
   free(F);
+}
+
+/* -> the max magnitude of the last few coeffs.
+// find the max magnitude of the last few coeffs to estimate the error 
+// in the expansion for r2cft_2d_coeffs_S2 */
+static double 
+r2cft_2d_last_coeffs_max_mag_S2
+(
+  unsigned Ntheta/* number of point in theta direction */, 
+  const unsigned Nphi/* number of point in phi direction */,
+  const double *const realC/* real part of coeffs */,
+  const double *const imagC/* imag part of coeffs,*/
+)
+{
+  const unsigned FEW  = 2;/* the last few 'FEW' coeffs */
+  const unsigned l0   = Ntheta/2+1;/* note: there are TwiceNtheta coeffs */
+  const unsigned l1   = Nphi/2+1;
+  const unsigned l0l1 = l0*l1;
+  double max_r,max_i,abs_coeff;
+  unsigned m0,m1,m0m1;
+  
+  assert(l0>=FEW);
+  assert(l1>=FEW);
+  
+  /* check the last few coeffs and make sure the last coeffs are small */
+  max_r = max_i = 0;
+  for (m0 = l0-FEW; m0 < l0; ++m0)
+  {
+    for (m1 = 0; m1 < l1; ++m1)
+    {
+      m0m1 = IJ(m0,m1,l1);
+      
+      abs_coeff = fabs(realC[m0m1]);
+      if (abs_coeff > max_r)
+        max_r = abs_coeff;
+        
+      abs_coeff = fabs(imagC[m0m1]);
+      if (abs_coeff > max_i)
+        max_i = abs_coeff;
+    }
+  }
+  for (m0 = 0; m0 < l0; ++m0)
+  {
+    for (m1 = l1-FEW; m1 < l1; ++m1)
+    {
+      m0m1 = IJ(m0,m1,l1);
+      
+      abs_coeff = fabs(realC[m0m1]);
+      if (abs_coeff > max_r)
+        max_r = abs_coeff;
+        
+      abs_coeff = fabs(imagC[m0m1]);
+      if (abs_coeff > max_i)
+        max_i = abs_coeff;
+    }
+  }
+  for (m0 = l0-FEW; m0 < l0; ++m0)
+  {
+    for (m1 = 0; m1 < l1; ++m1)
+    {
+      m0m1 = IJ(m0,m1,l1)+l0l1;
+      
+      abs_coeff = fabs(realC[m0m1]);
+      if (abs_coeff > max_r)
+        max_r = abs_coeff;
+        
+      abs_coeff = fabs(imagC[m0m1]);
+      if (abs_coeff > max_i)
+        max_i = abs_coeff;
+    }
+  }
+  for (m0 = 0; m0 < l0; ++m0)
+  {
+    for (m1 = l1-FEW; m1 < l1; ++m1)
+    {
+      m0m1 = IJ(m0,m1,l1)+l0l1;
+      
+      abs_coeff = fabs(realC[m0m1]);
+      if (abs_coeff > max_r)
+        max_r = abs_coeff;
+        
+      abs_coeff = fabs(imagC[m0m1]);
+      if (abs_coeff > max_i)
+        max_i = abs_coeff;
+    }
+  }
+  return MaxMag_d(max_r,max_i);
 }
 
 /* fourier transformation from real value to complex coeffs for 2d.
@@ -367,7 +491,6 @@ r2cft_2d_interpolation_S2
   const double phi/* point of interest at phi dir */
 )
 {
-  /* since phi0 = 2 theta: */
   return r2cft_2d_interpolation(realC,imagC,2*(Ntheta-1),Nphi,theta,phi);
 }
 

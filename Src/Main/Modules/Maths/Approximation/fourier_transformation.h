@@ -56,7 +56,8 @@ r2cft_2d_coeffs_S2
   unsigned Ntheta/* number of point in theta direction */, 
   const unsigned Nphi/* number of point in phi direction */,
   double **const realC/* real part of coeffs, allocates memory */,
-  double **const imagC/* imag part of coeffs, allocates memory*/
+  double **const imagC/* imag part of coeffs, allocates memory*/,
+  const int improve/* if 1, it tries to improve the expansion, otherwise no. */
 );
 
 double 
@@ -88,5 +89,14 @@ r2cft_2d_df_dtheta_S2
   const unsigned Nphi/* number of point in phi direction */
 );
 
+
+static double 
+r2cft_2d_last_coeffs_max_mag_S2
+(
+  unsigned Ntheta/* number of point in theta direction */, 
+  const unsigned Nphi/* number of point in phi direction */,
+  const double *const realC/* real part of coeffs */,
+  const double *const imagC/* imag part of coeffs,*/
+);
 
 
