@@ -7,6 +7,7 @@
 
 #define EPS 1E-5
 #define FACE_NUM 6
+#define ARRANGEMENT 1
 
 /* 
 // realizing the geometry of grid such as how patches are glued
@@ -66,7 +67,6 @@ int realize_geometry(Grid_T *const grid)
   printf("} Realizing boundary conditions for each patch ==> Done.\n");
   pr_clock();
   pr_line_custom('=');
- 
   return EXIT_SUCCESS;
 }
 
@@ -836,11 +836,32 @@ static void fill_geometry(Grid_T *const grid,unsigned **const point_flag)
     run_func_PtoV(func,"FindInnerB",patch);/* find inner boundary */
   }
   free_func_PtoV(func);/* freeing func struct */
+
+  /* with arrangement */
+  if (ARRANGEMENT)
+  {
+    /* realize neighbor properties first for Cartesian type */
+    FOR_ALL(i,grid->patch)
+    {
+      if (grid->patch[i]->coordsys == Cartesian)
+        realize_neighbor(grid->patch[i],point_flag);
+    }
+    
+    /* realize neighbor properties first for non Cartesian type */
+    FOR_ALL(i,grid->patch)
+    {
+      if (grid->patch[i]->coordsys != Cartesian)
+        realize_neighbor(grid->patch[i],point_flag);
+    }
+  }
+  if (!ARRANGEMENT)/* with no arrangement */
+  {
+    FOR_ALL(i,grid->patch)
+    {
+      realize_neighbor(grid->patch[i],point_flag);
+    }
   
-  /* realize neighbor properties */
-  FOR_ALL(i,grid->patch)
-    realize_neighbor(grid->patch[i],point_flag);
-  
+  }
 }
 
 /* study neighbor of points to find quantities like 
