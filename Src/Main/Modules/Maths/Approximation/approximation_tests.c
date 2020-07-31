@@ -12,12 +12,12 @@
 int fourier_transformation_tests(Grid_T *const grid)
 {
   
-  if (DO_NOT)
+  if (DO)
   {
     printf("Fourier transformation test: real to complex Fourier transformation 1-D: \n");
     cft_c2r_r2c_1d_EquiSpaced_test(grid);
   }
-  if (DO_NOT)
+  if (DO)
   {
     printf("Fourier transformation test: real to complex Fourier transformation 2-D: \n");
     r2cft_2d_EquiSpaced_test(grid);
