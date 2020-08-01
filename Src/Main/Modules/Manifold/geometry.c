@@ -246,8 +246,7 @@ static void set_df_dn_and_pair(Grid_T *const grid)
       for (sf = 0; sf < face[K_n2]->ns; ++sf)
       {
         subf = face[K_n2]->subface[sf];
-        Subf_T **chain = 0, *ring = 0;
-        Flag_T flg = NONE;
+        Subf_T **chain = 0;
         unsigned nc;
         
         if (!subf->touch || strstr(subf->flags_str,"Dn:"))
@@ -287,60 +286,88 @@ static void set_df_dn_and_pair(Grid_T *const grid)
     FOR_ALL(f,face)
     {
       unsigned sf;
+      Flag_T pristine_flg = YES;
       
+      /* check if this face is pristine */
       for (sf = 0; sf < face[f]->ns; ++sf)
       {
         subf = face[f]->subface[sf];
-        Subf_T **chain = 0, *ring = 0;
-        Flag_T flg = NONE;
-        unsigned nc;
-        
         if (!subf->touch || strstr(subf->flags_str,"Dn:"))
-          continue;
-      
-        /* make the whole chain and determine the last ring by null pointer and so for next pointer */
-        chain = compose_the_chain(subf);
-        nc = countf(chain);
-        
-        if (nc == 1)
-          Error0("There is no other subface matches to this subface.");
-      
-        /* first check if there is any clue for how to set this flags 
-        // by looking to other memebers of this chain */
-        for (ring = chain[1]; ring; ring = ring->next)
         {
-          /* from the moment it finds a clue, it sets the afterward ones */
-          if (ring->set)
-          {
-            if (strstr(ring->subf->flags_str,"Dn:1"))
-            {
-              set_df_dn(ring,1);
-              flg = READY;
-              break;
-            }
-            else if (strstr(ring->subf->flags_str,"Dn:0"))
-            {
-              set_df_dn(ring,0);
-              flg = READY;
-              break;
-            }
-            else
-              Error0("Flags in subface are not set right!");
-              
-          }
+          pristine_flg = NO;
+          break;
         }
-        
-        /* if cluse didn't exist, favor Neumann bc  */
-        if (flg != READY)
+      }
+      if (pristine_flg == YES)
+      {
+        for (sf = 0; sf < face[f]->ns; ++sf)
         {
+          subf = face[f]->subface[sf];
+          /* make the whole chain and determine the last ring by null pointer and so for next pointer */
+          Subf_T **chain = compose_the_chain(subf);
+          unsigned nc = countf(chain);
+          if (nc == 1)
+            Error0("There is no other subface matches to this subface.");
           set_df_dn(chain[0],1);
-          flg = READY;
-        }
-        
-        if (chain != 0)
           free_2d(chain);
+        }
+      }
+      else
+      {
+        for (sf = 0; sf < face[f]->ns; ++sf)
+        {
+          subf = face[f]->subface[sf];
+          Subf_T **chain = 0, *ring = 0;
+          Flag_T flg = NONE;
+          unsigned nc;
+          
+          if (!subf->touch || strstr(subf->flags_str,"Dn:"))
+            continue;
         
-      }/* end of for (sf = 0; sf < face[f]->ns; ++sf) */
+          /* make the whole chain and determine the last ring by null pointer and so for next pointer */
+          chain = compose_the_chain(subf);
+          nc = countf(chain);
+          
+          if (nc == 1)
+            Error0("There is no other subface matches to this subface.");
+        
+          /* first check if there is any clue for how to set this flags 
+          // by looking to other memebers of this chain */
+          for (ring = chain[1]; ring; ring = ring->next)
+          {
+            /* from the moment it finds a clue, it sets the afterward ones */
+            if (ring->set)
+            {
+              if (strstr(ring->subf->flags_str,"Dn:1"))
+              {
+                set_df_dn(ring,1);
+                flg = READY;
+                break;
+              }
+              else if (strstr(ring->subf->flags_str,"Dn:0"))
+              {
+                set_df_dn(ring,0);
+                flg = READY;
+                break;
+              }
+              else
+                Error0("Flags in subface are not set right!");
+                
+            }
+          }
+          
+          /* if cluse didn't exist, favor Neumann bc  */
+          if (flg != READY)
+          {
+            set_df_dn(chain[0],1);
+            flg = READY;
+          }
+          
+          if (chain != 0)
+            free_2d(chain);
+          
+        }/* end of for (sf = 0; sf < face[f]->ns; ++sf) */
+      }
     }/* end of FOR_ALL(f,face) */
   }/* end of FOR_ALL(pa,grid->patch) */
   
@@ -375,9 +402,7 @@ static void set_df_dn_and_pair(Grid_T *const grid)
 // it also sets the flags df_dn adn adjsn if there are trivial cases. */
 static void set_one_Dirichlet_BC(Interface_T **const face)
 { 
-  const Patch_T *const patch = face[0]->patch;
-  const unsigned np = patch->grid->np;
-  Subf_T **chain = 0, *ring;
+  Subf_T **chain = 0;
   unsigned nc;/* number of chain */
   SubFace_T *subf;
   unsigned sf,f; 
@@ -385,88 +410,33 @@ static void set_one_Dirichlet_BC(Interface_T **const face)
   
   FOR_ALL(f,face)
   {
+    flg = NONE;
+    /* check if there is any BC set for this face */
     for (sf = 0; sf < face[f]->ns; ++sf)
     {
       subf = face[f]->subface[sf];
-      flg = NONE;
-      
-      if (strstr(subf->flags_str,"Dn:0"))
+      if (strstr(subf->flags_str,"Dn:") || !subf->touch )
       {
-        flg = READY;
+        flg = FOUND;
         break;
       }
-      
-      if (!subf->touch || strstr(subf->flags_str,"Dn:"))
-        continue;
-      
+    }
+    if (flg == FOUND)/* if this face is used */
+      continue;
+    
+    /* since it's pristine set Dn=0 for the whole face */
+    for (sf = 0; sf < face[f]->ns; ++sf)
+    {
+      subf = face[f]->subface[sf];
       /* make the whole chain and determine the last ring by null pointer and so for next pointer */
       chain = compose_the_chain(subf);
       nc = countf(chain);
-      
       if (nc == 1)
         Error0("There is no other subface matches to this subface.");
-        
-      /* first check if there is any clue for how to set this flags 
-      // by looking to other memebers of this chain */
-      for (ring = chain[1]; ring; ring = ring->next)
-      {
-        /* from the moment it finds a clue, it sets the flags accordingly */
-        if (ring->set)
-        {
-          if (strstr(ring->subf->flags_str,"Dn:1"))
-          {
-            set_df_dn(ring,1);
-            flg = YES;
-            break;
-          }
-          else if (strstr(ring->subf->flags_str,"Dn:0"))
-          {
-            set_df_dn(ring,0);
-            flg = YES;
-            break;
-          }
-          else
-            Error0("Flags in subface are not set right!");
-            
-        }
-      }
-      
-      /* if clue exists */
-      if (flg == YES)
-      {
-        /* check if it is Dirichlet */
-        if (strstr(subf->flags_str,"Dn:0"))
-        {
-          flg = READY;
-          free_2d(chain);
-          chain = 0;
-          break;
-        }
-        else
-          flg = NOT_READY;
-        
-      }
-      /* if cluse didn't exist */
-      else if (flg != YES)
-      {
-        set_df_dn(chain[0],0);
-        flg = READY;
-        free_2d(chain);
-        chain = 0;
-        break;
-      }
-      
+      set_df_dn(chain[0],0);
+      free_2d(chain);
     }
-    /* if subf is ready */
-    if (flg == READY)
-      break;
   }/* end of FOR_ALL(f,face) */
-  
-  if (chain != 0)
-    free_2d(chain);
-  
-  if (flg != READY && np > 1)/* since it has a touching subface and no Drichlete BC */
-    Error1("Drichlet Boundary Condition cannot be set for patch %s .\n",patch->name);
     
 }
 
