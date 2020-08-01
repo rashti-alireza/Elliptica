@@ -7,7 +7,6 @@
 
 #define EPS 1E-5
 #define FACE_NUM 6
-#define ARRANGEMENT 1
 
 /* 
 // realizing the geometry of grid such as how patches are glued
@@ -229,7 +228,45 @@ static void set_df_dn_and_pair(Grid_T *const grid)
   unsigned pa,f;
   
   /* one can add a function here if needs specific arrangement of df_dn */
-    
+  
+  /* favor Drichlet BC for sourrounding patches for face = K_n2*/
+  if (strcmp_i(grid->kind,"BBN_CubedSpherical_grid"))
+  {
+    FOR_ALL_PATCHES(pa,grid)
+    {
+      Patch_T *patch = grid->patch[pa];
+      
+      if ( !IsItNSSurroundingPatch(patch) &&
+           !IsItHorizonPatch(patch))
+        continue;
+      
+      face = patch->interface;
+      unsigned sf;
+      
+      for (sf = 0; sf < face[K_n2]->ns; ++sf)
+      {
+        subf = face[K_n2]->subface[sf];
+        Subf_T **chain = 0, *ring = 0;
+        Flag_T flg = NONE;
+        unsigned nc;
+        
+        if (!subf->touch || strstr(subf->flags_str,"Dn:"))
+          continue;
+      
+        /* make the whole chain and determine the last ring by null pointer and so for next pointer */
+        chain = compose_the_chain(subf);
+        nc = countf(chain);
+        
+        if (nc == 1)
+          Error0("There is no other subface matches to this subface.");
+      
+       set_df_dn(chain[0],0);
+       free_2d(chain);
+        
+      }/* end of for (sf = 0; sf < face[f]->ns; ++sf) */
+    }/* FOR_ALL_PATCHES(pa,grid) */
+  }/* if (strcmp_i(grid->kind,"BBN_CubedSpherical_grid")) */
+  
   /* go thru all patches and set one Dirichlet BC for each */
   FOR_ALL_PATCHES(pa,grid)
   {
@@ -837,30 +874,9 @@ static void fill_geometry(Grid_T *const grid,unsigned **const point_flag)
   }
   free_func_PtoV(func);/* freeing func struct */
 
-  /* with arrangement */
-  if (ARRANGEMENT)
+  FOR_ALL(i,grid->patch)
   {
-    /* realize neighbor properties first for Cartesian type */
-    FOR_ALL(i,grid->patch)
-    {
-      if (grid->patch[i]->coordsys == Cartesian)
-        realize_neighbor(grid->patch[i],point_flag);
-    }
-    
-    /* realize neighbor properties first for non Cartesian type */
-    FOR_ALL(i,grid->patch)
-    {
-      if (grid->patch[i]->coordsys != Cartesian)
-        realize_neighbor(grid->patch[i],point_flag);
-    }
-  }
-  if (!ARRANGEMENT)/* with no arrangement */
-  {
-    FOR_ALL(i,grid->patch)
-    {
-      realize_neighbor(grid->patch[i],point_flag);
-    }
-  
+    realize_neighbor(grid->patch[i],point_flag);
   }
 }
 
