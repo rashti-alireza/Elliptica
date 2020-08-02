@@ -230,7 +230,8 @@ static void set_df_dn_and_pair(Grid_T *const grid)
   /* one can add a function here if needs specific arrangement of df_dn */
   
   /* favor Drichlet BC for sourrounding patches for face = K_n2*/
-  if (strcmp_i(grid->kind,"BBN_CubedSpherical_grid"))
+  if (strcmp_i(grid->kind,"BBN_CubedSpherical_grid") ||
+      strcmp_i(grid->kind,"BNS_CubedSpherical_grid")   )
   {
     FOR_ALL_PATCHES(pa,grid)
     {
