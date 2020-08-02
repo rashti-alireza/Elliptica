@@ -7232,3 +7232,153 @@ void bbn_free_grid_and_its_parameters(Grid_T *grid)
   }
   
 }
+
+/* to keep BC consistent use a perfect sphere for NS
+// set BC and then use the real NS surface saved in checkpoint file */
+void bbn_create_grid_prototype_BC(Grid_T *const grid)
+{
+  const double max_NS_R = Pgetd("NS_max_radius");
+  Grid_T *grid_temp = 0;
+  double *R = 0;
+  char par[1000] = {'\0'},par_b[1000] = {'\0'};
+  unsigned N[3],n,N_total,i,j,k,p;
+  
+  /* filling N */
+  N[0] = (unsigned)PgetiEZ("n_a");
+  N[1] = (unsigned)PgetiEZ("n_b");
+  N[2] = (unsigned)PgetiEZ("n_c");
+  /* check for override */
+  n = (unsigned)PgetiEZ("left_NS_n_a");
+  if (n != INT_MAX)     N[0] = n;
+  n = (unsigned)PgetiEZ("left_NS_n_b");
+  if (n != INT_MAX)     N[1] = n;
+  n = (unsigned)PgetiEZ("left_NS_n_c");
+  if (n != INT_MAX)     N[2] = n;
+  
+  if(N[0] == INT_MAX)
+    Error0("n_a could not be set.\n");
+  if(N[1] == INT_MAX)
+    Error0("n_b could not be set.\n");
+  if(N[2] == INT_MAX)
+    Error0("n_c could not be set.\n");
+    
+  N_total = N[0]*N[1]*N[2];
+  
+  /* backup real surfaces already saved */
+  sprintf(par,"grid%u_left_NS_surface_function_up",grid->gn);
+  sprintf(par_b,"grid%u_left_NS_surface_function_up_backup",grid->gn);
+  R = Pgetdd(par);
+  update_parameter_array(par_b,R,N_total);
+  
+  sprintf(par,"grid%u_left_NS_surface_function_down",grid->gn);
+  sprintf(par_b,"grid%u_left_NS_surface_function_down_backup",grid->gn);
+  R = Pgetdd(par);
+  update_parameter_array(par_b,R,N_total);
+  
+  sprintf(par,"grid%u_left_NS_surface_function_back",grid->gn);
+  sprintf(par_b,"grid%u_left_NS_surface_function_back_backup",grid->gn);
+  R = Pgetdd(par);
+  update_parameter_array(par_b,R,N_total);
+  
+  sprintf(par,"grid%u_left_NS_surface_function_front",grid->gn);
+  sprintf(par_b,"grid%u_left_NS_surface_function_front_backup",grid->gn);
+  R = Pgetdd(par);
+  update_parameter_array(par_b,R,N_total);
+  
+  sprintf(par,"grid%u_left_NS_surface_function_left",grid->gn);
+  sprintf(par_b,"grid%u_left_NS_surface_function_left_backup",grid->gn);
+  R = Pgetdd(par);
+  update_parameter_array(par_b,R,N_total);
+  
+  sprintf(par,"grid%u_left_NS_surface_function_right",grid->gn);
+  sprintf(par_b,"grid%u_left_NS_surface_function_right_backup",grid->gn);
+  R = Pgetdd(par);
+  update_parameter_array(par_b,R,N_total);
+  
+  /* now change the NS surface to a perfect sphere */
+  R = alloc_double(N_total);
+  for (i = 0; i < N[0]; ++i)
+    for (j = 0; j < N[1]; ++j)
+      for (k = 0; k < N[2]; ++k)
+        R[L(N,i,j,k)] = max_NS_R;
+  
+  sprintf(par,"grid%u_left_NS_surface_function_up",grid->gn);
+  update_parameter_array(par,R,N_total);
+  sprintf(par,"grid%u_left_NS_surface_function_down",grid->gn);
+  update_parameter_array(par,R,N_total);
+  sprintf(par,"grid%u_left_NS_surface_function_back",grid->gn);
+  update_parameter_array(par,R,N_total);
+  sprintf(par,"grid%u_left_NS_surface_function_front",grid->gn);
+  update_parameter_array(par,R,N_total);
+  sprintf(par,"grid%u_left_NS_surface_function_left",grid->gn);
+  update_parameter_array(par,R,N_total);
+  sprintf(par,"grid%u_left_NS_surface_function_right",grid->gn);
+  update_parameter_array(par,R,N_total);
+  
+  free(R);
+  
+  /* create a temporary grid */
+  grid_temp = calloc(1,sizeof(*grid_temp));
+  IsNull(grid_temp);
+  grid_temp->kind = dup_s(grid->kind);
+  grid_temp->gn = grid->gn;
+  
+  printf("~> Making patches from scratch with prototype surfaces ...\n");
+  make_patches(grid_temp);/* making patch(es) to cover the grid */
+  realize_geometry(grid_temp);/* realizing the geometry of whole grid
+                   // including the way patches have been sewed,
+                   // normal to the boundary, 
+                   // outer-boundary, inner boundary and etc. */
+                   
+  /* retrieve saved surfaces */
+  sprintf(par,"grid%u_left_NS_surface_function_up",grid->gn);
+  sprintf(par_b,"grid%u_left_NS_surface_function_up_backup",grid->gn);
+  R = Pgetdd(par_b);
+  update_parameter_array(par,R,N_total);
+  free_parameter(par_b);
+  
+  sprintf(par,"grid%u_left_NS_surface_function_down",grid->gn);
+  sprintf(par_b,"grid%u_left_NS_surface_function_down_backup",grid->gn);
+  R = Pgetdd(par_b);
+  update_parameter_array(par,R,N_total);
+  free_parameter(par_b);
+  
+  sprintf(par,"grid%u_left_NS_surface_function_back",grid->gn);
+  sprintf(par_b,"grid%u_left_NS_surface_function_back_backup",grid->gn);
+  R = Pgetdd(par_b);
+  update_parameter_array(par,R,N_total);
+  free_parameter(par_b);
+  
+  sprintf(par,"grid%u_left_NS_surface_function_front",grid->gn);
+  sprintf(par_b,"grid%u_left_NS_surface_function_front_backup",grid->gn);
+  R = Pgetdd(par_b);
+  update_parameter_array(par,R,N_total);
+  free_parameter(par_b);
+  
+  sprintf(par,"grid%u_left_NS_surface_function_left",grid->gn);
+  sprintf(par_b,"grid%u_left_NS_surface_function_left_backup",grid->gn);
+  R = Pgetdd(par_b);
+  update_parameter_array(par,R,N_total);
+  free_parameter(par_b);
+  
+  sprintf(par,"grid%u_left_NS_surface_function_right",grid->gn);
+  sprintf(par_b,"grid%u_left_NS_surface_function_right_backup",grid->gn);
+  R = Pgetdd(par_b);
+  update_parameter_array(par,R,N_total);
+  free_parameter(par_b);
+  
+  printf("~> Updating patches with the latest surfaces ...\n");
+  make_patches(grid);
+  move_geometry(grid,grid_temp);
+  
+  /* free grid_temp */
+  FOR_ALL_PATCHES(p,grid_temp)
+  {
+    free_patch(grid_temp->patch[p]);
+  }
+  free(grid_temp->kind);
+  free(grid_temp->patch);
+  free(grid_temp);
+
+}
+
