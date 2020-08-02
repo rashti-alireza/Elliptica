@@ -5631,7 +5631,7 @@ static Grid_T *creat_bbn_grid_CS(struct Grid_Params_S *const GridParams)
   
   Grid_T *grid_next = alloc_grid();/* adding a new grid */
   Grid_T *grid_prev = GridParams->grid_prev;
-  
+  Grid_T *grid_temp = 0;
   /* calculate the characteristics of this grid */
   const double Max_R_NS_l = GridParams->Max_R_NS_l;/* maximum radius of NS */
   const double R_BH_r     = GridParams->R_BH_r;
@@ -5644,7 +5644,7 @@ static Grid_T *creat_bbn_grid_CS(struct Grid_Params_S *const GridParams)
   char var[100] = {'\0'};
   char par[100] = {'\0'};
   char val[100] = {'\0'};
-  const char *kind;
+  const char *kind,*save_prev_option = 0;
   unsigned i,p;
   
   /* finding the kind of grid */
@@ -5665,8 +5665,6 @@ static Grid_T *creat_bbn_grid_CS(struct Grid_Params_S *const GridParams)
     Error0("The black hole radius is too big.\n");
   
   grid_next->kind = dup_s(kind);  
-  /* making NS and BH surfaces function */
-  NS_BH_surface_CubedSpherical_grid(grid_next,GridParams);
   
   box_size_l = Pgetd("NS_left_central_box_length");
   box_size_r = Pgetd("left_central_box_length_ratio")*R_BH_r;/* use same ratio as NS */
@@ -5828,16 +5826,50 @@ static Grid_T *creat_bbn_grid_CS(struct Grid_Params_S *const GridParams)
   
   Pseti("use_previous_data",0);
   
+  /* if resolution isn't changed  */
+  if (!change_res_flg)
+  {
+    /* making NS and BH surfaces functions with the latest one. */
+    NS_BH_surface_CubedSpherical_grid(grid_next,GridParams);
+  }
+  else/* if resolution is changed  */
+  {
+    /* making NS and BH surfaces functions with a prototype perfect sphere 
+    // and after realize_geometry, update the surfaces with new the latest one. */
+    save_prev_option = GridParams->NS_R_type;
+    GridParams->NS_R_type = "PerfectSphere";
+    NS_BH_surface_CubedSpherical_grid(grid_next,GridParams);
+    GridParams->NS_R_type = save_prev_option;
+  }
+  
   /* either the resolution is changed or it is the first grid */
   if (change_res_flg || !grid_prev)/* make geometry from scratch */
   {
-    printf("~> Making patches from scratch ...\n");
+    printf("~> Making patches from scratch with prototype surfaces ...\n");
     
-    make_patches(grid_next);/* making patch(es) to cover the grid */
-    realize_geometry(grid_next);/* realizing the geometry of whole grid
+    grid_temp = calloc(1,sizeof(*grid_temp));
+    IsNull(grid_temp);
+    grid_temp->kind = dup_s(kind);
+    grid_temp->gn = grid_next->gn;
+    make_patches(grid_temp);/* making patch(es) to cover the grid */
+    realize_geometry(grid_temp);/* realizing the geometry of whole grid
                      // including the way patches have been sewed,
                      // normal to the boundary, 
                      // outer-boundary, inner boundary and etc. */
+                     
+    printf("~> Updating patches with the latest surfaces ...\n");
+    NS_BH_surface_CubedSpherical_grid(grid_next,GridParams);
+    make_patches(grid_next);
+    move_geometry(grid_next,grid_temp);
+    
+    /* free grid_temp */
+    FOR_ALL_PATCHES(p,grid_temp)
+    {
+      free_patch(grid_temp->patch[p]);
+    }
+    free(grid_temp->kind);
+    free(grid_temp->patch);
+    free(grid_temp);
   }
   /* NS surface and AH surface are not changed 
   // so let's use the previous grid */
@@ -6122,17 +6154,17 @@ static void NS_BH_surface_CubedSpherical_grid(Grid_T *const grid,struct Grid_Par
           R[L(N,i,j,k)] = Max_R_NS_l;
     
     sprintf(par,"grid%u_left_NS_surface_function_up",grid->gn);
-    add_parameter_array(par,R,N_total);
+    update_parameter_array(par,R,N_total);
     sprintf(par,"grid%u_left_NS_surface_function_down",grid->gn);
-    add_parameter_array(par,R,N_total);
+    update_parameter_array(par,R,N_total);
     sprintf(par,"grid%u_left_NS_surface_function_back",grid->gn);
-    add_parameter_array(par,R,N_total);
+    update_parameter_array(par,R,N_total);
     sprintf(par,"grid%u_left_NS_surface_function_front",grid->gn);
-    add_parameter_array(par,R,N_total);
+    update_parameter_array(par,R,N_total);
     sprintf(par,"grid%u_left_NS_surface_function_left",grid->gn);
-    add_parameter_array(par,R,N_total);
+    update_parameter_array(par,R,N_total);
     sprintf(par,"grid%u_left_NS_surface_function_right",grid->gn);
-    add_parameter_array(par,R,N_total);
+    update_parameter_array(par,R,N_total);
   }
   /* if NS radius is varied and we know its expansion in Ylm bases */
   else if (strcmp_i(GridParams->NS_R_type,"SphericalHarmonic"))
@@ -6189,7 +6221,7 @@ static void NS_BH_surface_CubedSpherical_grid(Grid_T *const grid,struct Grid_Par
         }
       }
       sprintf(par,"grid%u_left_NS_surface_function_up",grid->gn);
-      add_parameter_array(par,R,N_total);
+      update_parameter_array(par,R,N_total);
       
       if (same_res_flag)
       {
@@ -6221,7 +6253,7 @@ static void NS_BH_surface_CubedSpherical_grid(Grid_T *const grid,struct Grid_Par
         }
       }
       sprintf(par,"grid%u_left_NS_surface_function_down",grid->gn);
-      add_parameter_array(par,R,N_total);
+      update_parameter_array(par,R,N_total);
       
       if (same_res_flag)
       {
@@ -6253,7 +6285,7 @@ static void NS_BH_surface_CubedSpherical_grid(Grid_T *const grid,struct Grid_Par
         }
       }
       sprintf(par,"grid%u_left_NS_surface_function_back",grid->gn);
-      add_parameter_array(par,R,N_total);
+      update_parameter_array(par,R,N_total);
       
       if (same_res_flag)
       {
@@ -6285,7 +6317,7 @@ static void NS_BH_surface_CubedSpherical_grid(Grid_T *const grid,struct Grid_Par
         }
       }
       sprintf(par,"grid%u_left_NS_surface_function_front",grid->gn);
-      add_parameter_array(par,R,N_total);
+      update_parameter_array(par,R,N_total);
       
       if (same_res_flag)
       {
@@ -6317,7 +6349,7 @@ static void NS_BH_surface_CubedSpherical_grid(Grid_T *const grid,struct Grid_Par
         }
       }
       sprintf(par,"grid%u_left_NS_surface_function_left",grid->gn);
-      add_parameter_array(par,R,N_total);
+      update_parameter_array(par,R,N_total);
       
       if (same_res_flag)
       {
@@ -6350,7 +6382,7 @@ static void NS_BH_surface_CubedSpherical_grid(Grid_T *const grid,struct Grid_Par
         }
       }
       sprintf(par,"grid%u_left_NS_surface_function_right",grid->gn);
-      add_parameter_array(par,R,N_total);
+      update_parameter_array(par,R,N_total);
       
       if (same_res_flag)
       {
@@ -6625,7 +6657,7 @@ static void NS_BH_surface_CubedSpherical_grid(Grid_T *const grid,struct Grid_Par
       }
     }
     sprintf(par,"grid%u_right_BH_surface_function_up",grid->gn);
-    add_parameter_array(par,R,N_total);
+    update_parameter_array(par,R,N_total);
     
     /* surface down */
     for (i = 0; i < N[0]; ++i)
@@ -6643,7 +6675,7 @@ static void NS_BH_surface_CubedSpherical_grid(Grid_T *const grid,struct Grid_Par
       }
     }
     sprintf(par,"grid%u_right_BH_surface_function_down",grid->gn);
-    add_parameter_array(par,R,N_total);
+    update_parameter_array(par,R,N_total);
     
     /* surface back */
     for (i = 0; i < N[0]; ++i)
@@ -6661,7 +6693,7 @@ static void NS_BH_surface_CubedSpherical_grid(Grid_T *const grid,struct Grid_Par
       }
     }
     sprintf(par,"grid%u_right_BH_surface_function_back",grid->gn);
-    add_parameter_array(par,R,N_total);
+    update_parameter_array(par,R,N_total);
     
     /* surface front */
     for (i = 0; i < N[0]; ++i)
@@ -6679,7 +6711,7 @@ static void NS_BH_surface_CubedSpherical_grid(Grid_T *const grid,struct Grid_Par
       }
     }
     sprintf(par,"grid%u_right_BH_surface_function_front",grid->gn);
-    add_parameter_array(par,R,N_total);
+    update_parameter_array(par,R,N_total);
     
     /* surface left */
     for (i = 0; i < N[0]; ++i)
@@ -6697,7 +6729,7 @@ static void NS_BH_surface_CubedSpherical_grid(Grid_T *const grid,struct Grid_Par
       }
     }
     sprintf(par,"grid%u_right_BH_surface_function_left",grid->gn);
-    add_parameter_array(par,R,N_total);
+    update_parameter_array(par,R,N_total);
     
     /* surface right */
     for (i = 0; i < N[0]; ++i)
@@ -6715,7 +6747,7 @@ static void NS_BH_surface_CubedSpherical_grid(Grid_T *const grid,struct Grid_Par
       }
     }
     sprintf(par,"grid%u_right_BH_surface_function_right",grid->gn);
-    add_parameter_array(par,R,N_total);
+    update_parameter_array(par,R,N_total);
   }
   else if (/* if BH center is instructed to change */
            (strstr_i(Pgets("P_ADM_control_method"),"Px_BH_center")  ||
@@ -6743,7 +6775,7 @@ static void NS_BH_surface_CubedSpherical_grid(Grid_T *const grid,struct Grid_Par
       }
     }
     sprintf(par,"grid%u_right_BH_surface_function_up",grid->gn);
-    add_parameter_array(par,R,N_total);
+    update_parameter_array(par,R,N_total);
     
     /* surface down */
     for (i = 0; i < N[0]; ++i)
@@ -6758,7 +6790,7 @@ static void NS_BH_surface_CubedSpherical_grid(Grid_T *const grid,struct Grid_Par
       }
     }
     sprintf(par,"grid%u_right_BH_surface_function_down",grid->gn);
-    add_parameter_array(par,R,N_total);
+    update_parameter_array(par,R,N_total);
     
     /* surface back */
     for (i = 0; i < N[0]; ++i)
@@ -6773,7 +6805,7 @@ static void NS_BH_surface_CubedSpherical_grid(Grid_T *const grid,struct Grid_Par
       }
     }
     sprintf(par,"grid%u_right_BH_surface_function_back",grid->gn);
-    add_parameter_array(par,R,N_total);
+    update_parameter_array(par,R,N_total);
     
     /* surface front */
     for (i = 0; i < N[0]; ++i)
@@ -6788,7 +6820,7 @@ static void NS_BH_surface_CubedSpherical_grid(Grid_T *const grid,struct Grid_Par
       }
     }
     sprintf(par,"grid%u_right_BH_surface_function_front",grid->gn);
-    add_parameter_array(par,R,N_total);
+    update_parameter_array(par,R,N_total);
     
     /* surface left */
     for (i = 0; i < N[0]; ++i)
@@ -6803,7 +6835,7 @@ static void NS_BH_surface_CubedSpherical_grid(Grid_T *const grid,struct Grid_Par
       }
     }
     sprintf(par,"grid%u_right_BH_surface_function_left",grid->gn);
-    add_parameter_array(par,R,N_total);
+    update_parameter_array(par,R,N_total);
     
     /* surface right */
     for (i = 0; i < N[0]; ++i)
@@ -6818,7 +6850,7 @@ static void NS_BH_surface_CubedSpherical_grid(Grid_T *const grid,struct Grid_Par
       }
     }
     sprintf(par,"grid%u_right_BH_surface_function_right",grid->gn);
-    add_parameter_array(par,R,N_total);
+    update_parameter_array(par,R,N_total);
     
     Psets("BH_R_type","PerfectSphere");
     Psetd("BH_R_size",r_bh_max);/* this is used later for Ylm extrapolation */
@@ -6831,22 +6863,22 @@ static void NS_BH_surface_CubedSpherical_grid(Grid_T *const grid,struct Grid_Par
           R[L(N,i,j,k)] = R_BH_r;
     
     sprintf(par,"grid%u_right_BH_surface_function_up",grid->gn);
-    add_parameter_array(par,R,N_total);
+    update_parameter_array(par,R,N_total);
     
     sprintf(par,"grid%u_right_BH_surface_function_down",grid->gn);
-    add_parameter_array(par,R,N_total);
+    update_parameter_array(par,R,N_total);
     
     sprintf(par,"grid%u_right_BH_surface_function_back",grid->gn);
-    add_parameter_array(par,R,N_total);
+    update_parameter_array(par,R,N_total);
     
     sprintf(par,"grid%u_right_BH_surface_function_front",grid->gn);
-    add_parameter_array(par,R,N_total);
+    update_parameter_array(par,R,N_total);
     
     sprintf(par,"grid%u_right_BH_surface_function_left",grid->gn);
-    add_parameter_array(par,R,N_total);
+    update_parameter_array(par,R,N_total);
     
     sprintf(par,"grid%u_right_BH_surface_function_right",grid->gn);
-    add_parameter_array(par,R,N_total);
+    update_parameter_array(par,R,N_total);
     
     Psets("BH_R_type","PerfectSphere");
     Psetd("BH_R_size",R_BH_r);/* this is used later for Ylm extrapolation */
