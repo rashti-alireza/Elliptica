@@ -29,6 +29,18 @@ void bbn_compute_AKV_from_z(Grid_T *const grid,const char *const type,const unsi
 void bbn_compute_induced_metric_on_S2_CS_Ylm_CTS(Grid_T *const grid,const char *const type,const unsigned lmax,double **const ph_D0D0,double **const ph_D0D1,double **const ph_D1D1);
 void bbn_test_induced_metric_algorithm(Grid_T *const grid);
 
+void 
+bbn_compute_induced_metric_on_S2_CS_FT_CTS
+  (
+  Grid_T *const grid,
+  const char *const type,/* NS or BH */
+  const unsigned Ntheta,/* # of collocation points in theta direction */
+  const unsigned Nphi,/* # of collocation points in phi direction */
+  double **const ph_D0D0,/* induced h00  pointer */
+  double **const ph_D0D1,/* induced h01  pointer */
+  double **const ph_D1D1 /* induced h11  pointer */
+  );
+
 
 
 

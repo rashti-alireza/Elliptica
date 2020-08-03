@@ -144,6 +144,19 @@ void bbn_populate_spin_integrands_Campanelli(Patch_T *const patch,const double x
 double bbn_mass_shedding_indicator(Grid_T *const grid);
 void bbn_test_induced_metric_algorithm(Grid_T *const grid);
 
+void 
+bbn_compute_induced_metric_on_S2_CS_FT_CTS
+  (
+  Grid_T *const grid,
+  const char *const type,/* NS or BH */
+  const unsigned Ntheta,/* # of collocation points in theta direction */
+  const unsigned Nphi,/* # of collocation points in phi direction */
+  double **const ph_D0D0,/* induced h00  pointer */
+  double **const ph_D0D1,/* induced h01  pointer */
+  double **const ph_D1D1 /* induced h11  pointer */
+  );
+  
+
 #endif
 
 
