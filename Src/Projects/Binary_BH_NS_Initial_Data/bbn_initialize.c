@@ -7187,13 +7187,31 @@ static void find_AKV(Grid_T *const grid,const char *const type)
 {
   FUNC_TIC
   
-  const unsigned lmax = (unsigned)Pgeti("akv_lmax");/* lmax in Ylm */
-  const unsigned N    = Pow2(2*lmax+1);/* = S2 grid pnts Ntheta*Nphi */
+  unsigned lmax   = UINT_MAX;
+  unsigned N      = UINT_MAX;
+  unsigned Ntheta = UINT_MAX;
+  unsigned Nphi   = UINT_MAX;
+  
+  if (Pcmps("akv_expansion","spherical_harmonic"))
+  {
+    lmax = (unsigned)Pgeti("akv_lmax");/* lmax in Ylm */
+    N    = Pow2(2*lmax+1);/* = S2 grid pnts Ntheta*Nphi */
+    
+  }
+  else if (Pcmps("akv_expansion","double_fourier"))
+  {
+    Ntheta = (unsigned)Pgeti("akv_n_theta");
+    Nphi   = (unsigned)Pgeti("akv_n_phi");
+    N      = Ntheta*Nphi;
+  }
+  else
+    Error0(NO_OPTION);
+    
   double *h_D0D0=0,*h_D0D1=0,*h_D1D1=0;/* induced metric */
   double *z0,*z1,*z2;/* AKV equation answers */
   
   /* test induce_metric_algorithm */
-  if (0)
+  if (1)
   {
     bbn_test_induced_metric_algorithm(grid);
     FUNC_TOC
@@ -7201,8 +7219,19 @@ static void find_AKV(Grid_T *const grid,const char *const type)
   }
   
   /* populate the induced metric h */
-  bbn_compute_induced_metric_on_S2_CS_Ylm_CTS
-                      (grid,type,lmax,&h_D0D0,&h_D0D1,&h_D1D1);
+  if (Pcmps("akv_expansion","spherical_harmonic"))
+  {
+    bbn_compute_induced_metric_on_S2_CS_Ylm_CTS
+                        (grid,type,lmax,&h_D0D0,&h_D0D1,&h_D1D1);
+  }
+  /* FT is better */
+  else if (Pcmps("akv_expansion","double_fourier"))
+  {
+    bbn_compute_induced_metric_on_S2_CS_FT_CTS
+                      (grid,type,Ntheta,Nphi,&h_D0D0,&h_D0D1,&h_D1D1);
+  }
+  else
+    Error0(NO_OPTION);
   
   /* pass h as array parameters */
   update_parameter_array("akv_2d_metric_D0D0",h_D0D0,N);
@@ -7220,6 +7249,10 @@ static void find_AKV(Grid_T *const grid,const char *const type)
   z0 = Pgetdd("akv_z0_scalar");
   z1 = Pgetdd("akv_z1_scalar");
   z2 = Pgetdd("akv_z2_scalar");
+  UNUSED(z0);
+  UNUSED(z1);
+  UNUSED(z2);
+  
   
   /************************/
   // I SHOULD ADD THESE FIELD SOMEWHERE!
