@@ -304,13 +304,18 @@ Grid_T *bbn_init_from_checkpoint(FILE *const file)
   
   /* to keep BC consistent use a perfect sphere for NS
   // set BC and then use the real NS surface */
-  bbn_create_grid_prototype_BC(grid);
-  
-  /* make the patches */
-  /* make_patches(grid); */
-  
-  /* realizing the geometry */
-  /* realize_geometry(grid); */
+  if (0)
+  {
+    bbn_create_grid_prototype_BC(grid);
+  }
+  else
+  {
+    /* make the patches */
+    make_patches(grid);
+    
+    /* realizing the geometry */
+    realize_geometry(grid);
+  }
   
   /* adding all of the fields needed for construction of Initial Data */
   bbn_add_fields(grid);
