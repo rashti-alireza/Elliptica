@@ -437,8 +437,8 @@ r2cft_2d_coeffs
       unsigned m0m1 = IJ(m0,m1,l1);
       for (i = 0; i < Nphi0; ++i)
       {
-        cr += cfr[i][m1]*exp(i*m0x0);
-        ci += cfi[i][m1]*exp(i*m0x0);
+        cr += cfr[i][m1]*cexp(i*m0x0);
+        ci += cfi[i][m1]*cexp(i*m0x0);
       }
       cr /= Nphi0;
       ci /= Nphi0;
