@@ -7211,7 +7211,7 @@ static void find_AKV(Grid_T *const grid,const char *const type)
   double *z0,*z1,*z2;/* AKV equation answers */
   
   /* test induce_metric_algorithm */
-  if (1)
+  if (0)
   {
     bbn_test_induced_metric_algorithm(grid);
     FUNC_TOC
