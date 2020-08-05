@@ -418,6 +418,18 @@ find_XYZ_and_patch_of_theta_phi_CS
       *ppatch = patch;
       break;
     }
+    else if (EQL(theta2,0) && side == UP)
+    {
+      found_flg = YES;
+      *ppatch = patch;
+      break;
+    }
+    else if (EQL(theta2,M_PI) && side == DOWN)
+    {
+      found_flg = YES;
+      *ppatch = patch;
+      break;
+    }
   }
   if (found_flg == NO)
     Error0("(X,Y,Z) or patch could not be found.\n");
