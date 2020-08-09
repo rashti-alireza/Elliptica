@@ -394,7 +394,19 @@ void bbn_add_fields_in_patch(Patch_T *const patch)
   ADD_FIELD(_dA_UiUj_U0U2D0)
   ADD_FIELD(_dA_UiUj_U0U2D1)
   ADD_FIELD(_dA_UiUj_U0U2D2)
-    
+  
+  /* approximate killing vectors */
+  ADD_FIELD(dAKV0_D0)
+  ADD_FIELD(dAKV0_D1)
+  ADD_FIELD(dAKV0_D2)
+  
+  ADD_FIELD(dAKV1_D0)
+  ADD_FIELD(dAKV1_D1)
+  ADD_FIELD(dAKV1_D2)
+  
+  ADD_FIELD(dAKV2_D0)
+  ADD_FIELD(dAKV2_D1)
+  ADD_FIELD(dAKV2_D2)
 }
 
 /* taking partial derivatives of fields needed in equations */
