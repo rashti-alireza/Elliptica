@@ -157,6 +157,22 @@ bbn_compute_induced_metric_on_S2_CS_FT_CTS
   );
   
 
+void
+bbn_compute_AKV_from_z
+  (
+  Grid_T *const grid/* grid */,
+  const double *const akv/* akv scalar values */,
+  const char *const dakv_D0/* d/dx akv name */,
+  const char *const dakv_D1/* d/dy akv name */,
+  const char *const dakv_D2/* d/dz akv name */,
+  const char *const type/* NS or BH */,
+  const unsigned Ntheta/* number of points in theta direction */,
+  const unsigned Nphi/* number of points in theta direction */,
+  const unsigned lmax/* l max in Ylm, if asked for spherical harmonic */,
+  const int interpolation_type/* 1 double fourier, 0: spherical harmonic */
+  );
+
+
 #endif
 
 

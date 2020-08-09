@@ -5,28 +5,25 @@
 
 #include "bbn_s2_induced_metric.h"
 
-/* compute approximate Killing vector from z scalar.
+/* inclusion map S2->M and computing AKV vector from the derivatives.
 // here we use (theta,phi) coords on sub-manifold S2 and 
-// (x,y,z) = r(sin(theta)*cos(phi),sin(theta)*sin(phi),cos(theta)) 
-// coords for the manifold. the field name to be populated are
-// nAKV_x, nAKV_y, nAKV_z. */
-void 
+// (x,y,z) = r(sin(theta)*cos(phi),sin(theta)*sin(phi),cos(theta)) on M */
+void
 bbn_compute_AKV_from_z
   (
-  Grid_T *const grid,
-  const char *const type,/* NS or BH */
-  const unsigned lmax,/* l max in Ylm */
-  const double *const z,/* given z(theta,phi) scalar */
-  const char *const nAKV_x,/* field name for AKV|x = dz/dx */
-  const char *const nAKV_y,/* field name for AKV|y = dz/dy */
-  const char *const nAKV_z/* field name for AKV|z = dz/dz */
+  Grid_T *const grid/* grid */,
+  const double *const akv/* akv scalar values */,
+  const char *const dakv_D0/* d/dx akv name */,
+  const char *const dakv_D1/* d/dy akv name */,
+  const char *const dakv_D2/* d/dz akv name */,
+  const char *const type/* NS or BH */,
+  const unsigned Ntheta/* number of points in theta direction */,
+  const unsigned Nphi/* number of points in theta direction */,
+  const unsigned lmax/* l max in Ylm, if asked for spherical harmonic */,
+  const int interpolation_type/* 1 double fourier, 0: spherical harmonic */
   )
 {
-  const unsigned Ntheta= 2*lmax+1;
-  const unsigned Nphi  = 2*lmax+1;
-  double *realClm = alloc_ClmYlm(lmax);
-  double *imagClm = alloc_ClmYlm(lmax);
-  
+
   unsigned (*surface_patch)(const Patch_T *const patch) = 0;
   unsigned i,j,k,p;
   
@@ -36,53 +33,109 @@ bbn_compute_AKV_from_z
     surface_patch = IsItNSSurface;
   else
     Error0("No such type.");
-    
-  /* find Ylm coeffs */
-  get_Ylm_coeffs(realClm,imagClm,z,Ntheta,Nphi,lmax);
-  
-  FOR_ALL_PATCHES(p,grid)
+ 
+  if (interpolation_type)
   {
-    Patch_T *patch = grid->patch[p];
-    if (!surface_patch(patch))
-      continue;
+    double *realC,*imagC;
     
-    const unsigned *N = patch->n;
-    Flag_T side = patch->CoordSysInfo->CubedSphericalCoord->side;
-    const double *X;
-    double theta = 0,phi = 0,iz;
-    ADD_AND_ALLOC_FIELD(__z_scalar_TEMP)
-    DECLARE_FIELD(__z_scalar_TEMP)
+    /* find FT coeffs */
+    r2cft_2d_coeffs_S2(akv,Ntheta,Nphi,&realC,&imagC,1);
     
-    /* populate z scalar in 3d */
-    for (i = 0; i < N[0]; ++i)
+    FOR_ALL_PATCHES(p,grid)
     {
-      for (j = 0; j < N[1]; ++j)
+      Patch_T *patch = grid->patch[p];
+      if (!surface_patch(patch))
+        continue;
+      
+      const unsigned *N = patch->n;
+      Flag_T side = patch->CoordSysInfo->CubedSphericalCoord->side;
+      const double *X;
+      double theta = 0,phi = 0,iz;
+      ADD_AND_ALLOC_FIELD(__z_scalar_TEMP)
+      DECLARE_FIELD(__z_scalar_TEMP)
+      
+      /* populate z scalar in 3d */
+      for (i = 0; i < N[0]; ++i)
       {
-        X = patch->node[L(N,i,j,0)]->X;
-        find_theta_phi_of_XYZ_CS(&theta,&phi,X,side);
-        
-        iz = interpolation_Ylm(realClm,imagClm,lmax,theta,phi);
-        
-        for (k = 0; k < N[2]; ++k)
-          __z_scalar_TEMP->v[L(N,i,j,k)] = iz;
-      }
+        for (j = 0; j < N[1]; ++j)
+        {
+          X = patch->node[L(N,i,j,0)]->X;
+          find_theta_phi_of_XYZ_CS(&theta,&phi,X,side);
+          
+          iz = r2cft_2d_interpolation_S2(realC,imagC,Ntheta,Nphi,theta,phi);
+          
+          for (k = 0; k < N[2]; ++k)
+            __z_scalar_TEMP->v[L(N,i,j,k)] = iz;
+        }
+      }/* for (i = 0; i < N[0]; ++i) */
+      
+      /* compute derivatives */
+      Field_T *dAKV_D0 = patch->pool[Ind(dakv_D0)];
+      Field_T *dAKV_D1 = patch->pool[Ind(dakv_D1)];
+      Field_T *dAKV_D2 = patch->pool[Ind(dakv_D2)];
+      empty_field(dAKV_D0);
+      empty_field(dAKV_D1);
+      empty_field(dAKV_D2);
+      dAKV_D0->v = Partial_Derivative(__z_scalar_TEMP,"x");
+      dAKV_D1->v = Partial_Derivative(__z_scalar_TEMP,"y");
+      dAKV_D2->v = Partial_Derivative(__z_scalar_TEMP,"z");
+      REMOVE_FIELD(__z_scalar_TEMP)
     }
-    Field_T *AKV_D0 = patch->pool[Ind(nAKV_x)];
-    Field_T *AKV_D1 = patch->pool[Ind(nAKV_y)];
-    Field_T *AKV_D2 = patch->pool[Ind(nAKV_z)];
-    empty_field(AKV_D0);
-    empty_field(AKV_D1);
-    empty_field(AKV_D2);
+    free(realC);
+    free(imagC);
+  }/* double Fourier */
+  else/* Ylm expansion */
+  {
+    double *realClm = alloc_ClmYlm(lmax);
+    double *imagClm = alloc_ClmYlm(lmax);
+      
+    /* find Ylm coeffs */
+    get_Ylm_coeffs(realClm,imagClm,akv,Ntheta,Nphi,lmax);
     
-    AKV_D0->v = Partial_Derivative(__z_scalar_TEMP,"x");
-    AKV_D1->v = Partial_Derivative(__z_scalar_TEMP,"y");
-    AKV_D2->v = Partial_Derivative(__z_scalar_TEMP,"z");
-    
-    REMOVE_FIELD(__z_scalar_TEMP)
-  }
+    FOR_ALL_PATCHES(p,grid)
+    {
+      Patch_T *patch = grid->patch[p];
+      if (!surface_patch(patch))
+        continue;
+      
+      const unsigned *N = patch->n;
+      Flag_T side = patch->CoordSysInfo->CubedSphericalCoord->side;
+      const double *X;
+      double theta = 0,phi = 0,iz;
+      ADD_AND_ALLOC_FIELD(__z_scalar_TEMP)
+      DECLARE_FIELD(__z_scalar_TEMP)
+      
+      /* populate z scalar in 3d */
+      for (i = 0; i < N[0]; ++i)
+      {
+        for (j = 0; j < N[1]; ++j)
+        {
+          X = patch->node[L(N,i,j,0)]->X;
+          find_theta_phi_of_XYZ_CS(&theta,&phi,X,side);
+          
+          iz = interpolation_Ylm(realClm,imagClm,lmax,theta,phi);
+          
+          for (k = 0; k < N[2]; ++k)
+            __z_scalar_TEMP->v[L(N,i,j,k)] = iz;
+        }
+      }/* for (i = 0; i < N[0]; ++i) */
+      
+      /* compute derivatives */
+      Field_T *dAKV_D0 = patch->pool[Ind(dakv_D0)];
+      Field_T *dAKV_D1 = patch->pool[Ind(dakv_D1)];
+      Field_T *dAKV_D2 = patch->pool[Ind(dakv_D2)];
+      empty_field(dAKV_D0);
+      empty_field(dAKV_D1);
+      empty_field(dAKV_D2);
+      dAKV_D0->v = Partial_Derivative(__z_scalar_TEMP,"x");
+      dAKV_D1->v = Partial_Derivative(__z_scalar_TEMP,"y");
+      dAKV_D2->v = Partial_Derivative(__z_scalar_TEMP,"z");
+      REMOVE_FIELD(__z_scalar_TEMP)
+    }
+    free(realClm);
+    free(imagClm);
+  }/* Ylm expansion */
   
-  free(realClm);
-  free(imagClm);
 }
 
 /* computing the induced metric on S2 (cubedspherical,Ylm,CTS).
