@@ -220,7 +220,6 @@ static void extrapolate_insideBH_CS_WTGR(Grid_T *const grid);
 static void find_XYZ_and_patch_of_theta_phi_BH_CS(double *const X,Patch_T **const ppatch,const double theta,const double phi,Grid_T *const grid);
 static void find_AKV(Grid_T *const grid,const char *const type);
 void bbn_populate_2d_induced_metric_S2_theta_phi(double *const h_D0D0,double *const h_D0D1,double *const h_D1D1,const double *const g_D0D0,const double *const g_D0D1,const double *const g_D0D2,const double *const g_D1D1,const double *const g_D1D2,const double *const g_D2D2,const double r,const double theta,const double phi);
-void bbn_compute_AKV_from_z(Grid_T *const grid,const char *const type,const unsigned lmax,const double *const z,const char *const nAKV_x,const char *const nAKV_y,const char *const nAKV_z);
 void bbn_compute_induced_metric_on_S2_CS_Ylm_CTS(Grid_T *const grid,const char *const type,const unsigned lmax,double **const ph_D0D0,double **const ph_D0D1,double **const ph_D1D1);
 
 

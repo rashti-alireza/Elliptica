@@ -7187,6 +7187,8 @@ static void find_AKV(Grid_T *const grid,const char *const type)
 {
   FUNC_TIC
   
+  double *h_D0D0=0,*h_D0D1=0,*h_D1D1=0;/* induced metric */
+  double *z0,*z1,*z2;/* AKV equation answers */
   unsigned lmax   = UINT_MAX;
   unsigned N      = UINT_MAX;
   unsigned Ntheta = UINT_MAX;
@@ -7207,9 +7209,6 @@ static void find_AKV(Grid_T *const grid,const char *const type)
   else
     Error0(NO_OPTION);
     
-  double *h_D0D0=0,*h_D0D1=0,*h_D1D1=0;/* induced metric */
-  double *z0,*z1,*z2;/* AKV equation answers */
-  
   /* test induce_metric_algorithm */
   if (0)
   {
@@ -7241,28 +7240,19 @@ static void find_AKV(Grid_T *const grid,const char *const type)
   /* solve the AKV equation to find z */
   Approximate_Killing_Vector();
 
-  /* when all the three solutions are found remove these lines. */
-  printf("***TEMP***\n");
-  return;
-  
   /* get AKV */
   z0 = Pgetdd("akv_z0_scalar");
   z1 = Pgetdd("akv_z1_scalar");
   z2 = Pgetdd("akv_z2_scalar");
-  UNUSED(z0);
-  UNUSED(z1);
-  UNUSED(z2);
   
-  
-  /************************/
-  // I SHOULD ADD THESE FIELD SOMEWHERE!
   /* compute AKVs */
+  /* inclusion map S2->M and its derivative to find AKV */
   bbn_compute_AKV_from_z
-      (grid,type,lmax,z0,"AKV0_D0","AKV0_D1","AKV0_D2");
+    (grid,z0,"dAKV0_D0","dAKV0_D1","dAKV0_D2",type,Ntheta,Nphi,lmax,1);
   bbn_compute_AKV_from_z
-      (grid,type,lmax,z1,"AKV1_D0","AKV1_D1","AKV1_D2");
+    (grid,z1,"dAKV1_D0","dAKV1_D1","dAKV1_D2",type,Ntheta,Nphi,lmax,1);
   bbn_compute_AKV_from_z
-      (grid,type,lmax,z2,"AKV2_D0","AKV2_D1","AKV2_D2");
+    (grid,z2,"dAKV2_D0","dAKV2_D1","dAKV2_D2",type,Ntheta,Nphi,lmax,1);
   
   /* free */
   free_parameter("akv_z0_scalar");
