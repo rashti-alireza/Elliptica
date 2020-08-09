@@ -7193,18 +7193,22 @@ static void find_AKV(Grid_T *const grid,const char *const type)
   unsigned N      = UINT_MAX;
   unsigned Ntheta = UINT_MAX;
   unsigned Nphi   = UINT_MAX;
+  int expansion_flg;/* 1 double fourier, 0: spherical harmonic */
   
   if (Pcmps("akv_expansion","spherical_harmonic"))
   {
     lmax = (unsigned)Pgeti("akv_lmax");/* lmax in Ylm */
-    N    = Pow2(2*lmax+1);/* = S2 grid pnts Ntheta*Nphi */
-    
+    Ntheta = 2*lmax+1;
+    Nphi   = 2*lmax+1;
+    N      = Ntheta*Nphi;/* = S2 grid pnts Ntheta*Nphi */
+    expansion_flg = 0;
   }
   else if (Pcmps("akv_expansion","double_fourier"))
   {
     Ntheta = (unsigned)Pgeti("akv_n_theta");
     Nphi   = (unsigned)Pgeti("akv_n_phi");
-    N      = Ntheta*Nphi;
+    N      = Ntheta*Nphi;/* = S2 grid pnts Ntheta*Nphi */
+    expansion_flg = 1;
   }
   else
     Error0(NO_OPTION);
@@ -7218,19 +7222,8 @@ static void find_AKV(Grid_T *const grid,const char *const type)
   }
   
   /* populate the induced metric h */
-  if (Pcmps("akv_expansion","spherical_harmonic"))
-  {
-    bbn_compute_induced_metric_on_S2_CS_Ylm_CTS
-                        (grid,type,lmax,&h_D0D0,&h_D0D1,&h_D1D1);
-  }
-  /* FT is better */
-  else if (Pcmps("akv_expansion","double_fourier"))
-  {
-    bbn_compute_induced_metric_on_S2_CS_FT_CTS
-                      (grid,type,Ntheta,Nphi,&h_D0D0,&h_D0D1,&h_D1D1);
-  }
-  else
-    Error0(NO_OPTION);
+  bbn_compute_induced_metric_on_S2_CS_CTS
+    (grid,type,Ntheta,Nphi,lmax,&h_D0D0,&h_D0D1,&h_D1D1,expansion_flg);
   
   /* pass h as array parameters */
   update_parameter_array("akv_2d_metric_D0D0",h_D0D0,N);
@@ -7248,11 +7241,11 @@ static void find_AKV(Grid_T *const grid,const char *const type)
   /* compute AKVs */
   /* inclusion map S2->M and its derivative to find AKV */
   bbn_compute_AKV_from_z
-    (grid,z0,"dAKV0_D0","dAKV0_D1","dAKV0_D2",type,Ntheta,Nphi,lmax,1);
+    (grid,z0,"dAKV0_D0","dAKV0_D1","dAKV0_D2",type,Ntheta,Nphi,lmax,expansion_flg);
   bbn_compute_AKV_from_z
-    (grid,z1,"dAKV1_D0","dAKV1_D1","dAKV1_D2",type,Ntheta,Nphi,lmax,1);
+    (grid,z1,"dAKV1_D0","dAKV1_D1","dAKV1_D2",type,Ntheta,Nphi,lmax,expansion_flg);
   bbn_compute_AKV_from_z
-    (grid,z2,"dAKV2_D0","dAKV2_D1","dAKV2_D2",type,Ntheta,Nphi,lmax,1);
+    (grid,z2,"dAKV2_D0","dAKV2_D1","dAKV2_D2",type,Ntheta,Nphi,lmax,expansion_flg);
   
   /* free */
   free_parameter("akv_z0_scalar");
@@ -7265,7 +7258,16 @@ static void find_AKV(Grid_T *const grid,const char *const type)
   free(h_D0D1);
   free(h_D1D1);
   
+  /* test */
+  printf("printing fields:\n");
+  Pr_Field_T *pr  = init_PrField(grid);
+  pr->folder = Pgets("Diagnostics");
+  pr_fields(pr);
+  free_PrField(pr);
   FUNC_TOC
+  
+  /* test */
+  exit(0);
 }
 
 

@@ -20,10 +20,11 @@ bbn_compute_AKV_from_z
   const unsigned Ntheta/* number of points in theta direction */,
   const unsigned Nphi/* number of points in theta direction */,
   const unsigned lmax/* l max in Ylm, if asked for spherical harmonic */,
-  const int interpolation_type/* 1 double fourier, 0: spherical harmonic */
+  const int expansion_type/* 1 double fourier, 0: spherical harmonic */
   )
 {
-
+  FUNC_TIC
+  
   unsigned (*surface_patch)(const Patch_T *const patch) = 0;
   unsigned i,j,k,p;
   
@@ -34,7 +35,7 @@ bbn_compute_AKV_from_z
   else
     Error0("No such type.");
  
-  if (interpolation_type)
+  if (expansion_type == 1)
   {
     double *realC,*imagC;
     
@@ -84,7 +85,7 @@ bbn_compute_AKV_from_z
     free(realC);
     free(imagC);
   }/* double Fourier */
-  else/* Ylm expansion */
+  else if (expansion_type == 0)/* Ylm expansion */
   {
     double *realClm = alloc_ClmYlm(lmax);
     double *imagClm = alloc_ClmYlm(lmax);
@@ -135,7 +136,41 @@ bbn_compute_AKV_from_z
     free(realClm);
     free(imagClm);
   }/* Ylm expansion */
-  
+  else
+    Error0(NO_OPTION);
+    
+  FUNC_TOC
+}
+
+/* computing the induced metric on S2 (cubedspherical,CTS). */
+void
+bbn_compute_induced_metric_on_S2_CS_CTS
+  (
+  Grid_T *const grid/* grid */,
+  const char *const type/* NS or BH */,
+  const unsigned Ntheta/* number of points in theta direction */,
+  const unsigned Nphi/* number of points in phi direction */,
+  const unsigned lmax/* l max in Ylm */,
+  double **const ph_D0D0/* induced h00  pointer */,
+  double **const ph_D0D1/* induced h01  pointer */,
+  double **const ph_D1D1/* induced h11  pointer */,
+  const int expansion_type/* 1 double fourier, 0: spherical harmonic */
+  )
+{
+
+  if (expansion_type == 0)
+  {
+   compute_induced_metric_on_S2_CS_FT_CTS
+     (grid,type,Ntheta,Nphi,ph_D0D0,ph_D0D1,ph_D1D1);
+  }
+  else if (expansion_type == 1)
+  {
+   compute_induced_metric_on_S2_CS_Ylm_CTS
+     (grid,type,lmax,ph_D0D0,ph_D0D1,ph_D1D1);
+  }
+  else
+    Error0(NO_OPTION);
+
 }
 
 /* computing the induced metric on S2 (cubedspherical,Ylm,CTS).
@@ -145,8 +180,8 @@ bbn_compute_AKV_from_z
 // also assuming CTS method is used; thus metic gamma = psi^4*_gamma. 
 // note: it allocates memory for the induced metric.
 // note: it uses Ylm collocation points */
-void 
-bbn_compute_induced_metric_on_S2_CS_Ylm_CTS
+static void 
+compute_induced_metric_on_S2_CS_Ylm_CTS
   (
   Grid_T *const grid,
   const char *const type,/* NS or BH */
@@ -156,6 +191,7 @@ bbn_compute_induced_metric_on_S2_CS_Ylm_CTS
   double **const ph_D1D1 /* induced h11  pointer */
   )
 {
+  FUNC_TIC
   const unsigned N = Pow2(2*lmax+1);
   double *const h_D0D0 = alloc_double(N);
   double *const h_D0D1 = alloc_double(N);
@@ -232,6 +268,7 @@ bbn_compute_induced_metric_on_S2_CS_Ylm_CTS
   *ph_D0D1 = h_D0D1;
   *ph_D1D1 = h_D1D1;
   
+  FUNC_TOC
 }
 
 /* computing the induced metric on S2 (cubedspherical,FT,CTS).
@@ -241,8 +278,8 @@ bbn_compute_induced_metric_on_S2_CS_Ylm_CTS
 // also assuming CTS method is used; thus metic gamma = psi^4*_gamma. 
 // note: it allocates memory for the induced metric.
 // note: this using double Fourier on S2 collocation points. */
-void 
-bbn_compute_induced_metric_on_S2_CS_FT_CTS
+static void 
+compute_induced_metric_on_S2_CS_FT_CTS
   (
   Grid_T *const grid,
   const char *const type,/* NS or BH */
@@ -253,6 +290,7 @@ bbn_compute_induced_metric_on_S2_CS_FT_CTS
   double **const ph_D1D1 /* induced h11  pointer */
   )
 {
+  FUNC_TIC
   const unsigned N = Ntheta*Nphi;
   double *const h_D0D0 = alloc_double(N);
   double *const h_D0D1 = alloc_double(N);
@@ -325,6 +363,7 @@ bbn_compute_induced_metric_on_S2_CS_FT_CTS
   *ph_D0D1 = h_D0D1;
   *ph_D1D1 = h_D1D1;
   
+  FUNC_TOC  
 }
 
 
@@ -594,7 +633,7 @@ void bbn_test_induced_metric_algorithm(Grid_T *const grid)
   
   if (Pcmps("akv_expansion","spherical_harmonic"))
   {
-    bbn_compute_induced_metric_on_S2_CS_Ylm_CTS
+    compute_induced_metric_on_S2_CS_Ylm_CTS
       (grid,type,lmax,&h_D0D0,&h_D0D1,&h_D1D1);
     for (i = 0; i < Ntheta; ++i)
     {
@@ -649,7 +688,7 @@ void bbn_test_induced_metric_algorithm(Grid_T *const grid)
   }/* if (Pcmps("akv_expansion","spherical_harmonic")) */
   else if (Pcmps("akv_expansion","double_fourier"))
   {
-    bbn_compute_induced_metric_on_S2_CS_FT_CTS
+    compute_induced_metric_on_S2_CS_FT_CTS
       (grid,type,Ntheta,Nphi,&h_D0D0,&h_D0D1,&h_D1D1);
     for (i = 0; i < Ntheta; ++i)
     {
@@ -723,7 +762,7 @@ void bbn_test_induced_metric_algorithm(Grid_T *const grid)
   
   if (Pcmps("akv_expansion","spherical_harmonic"))
   {
-    bbn_compute_induced_metric_on_S2_CS_Ylm_CTS
+    compute_induced_metric_on_S2_CS_Ylm_CTS
       (grid,type,lmax,&h_D0D0,&h_D0D1,&h_D1D1);
     for (i = 0; i < Ntheta; ++i)
     {
@@ -778,7 +817,7 @@ void bbn_test_induced_metric_algorithm(Grid_T *const grid)
   }/* if (Pcmps("akv_expansion","spherical_harmonic")) */
   else if (Pcmps("akv_expansion","double_fourier"))
   {
-    bbn_compute_induced_metric_on_S2_CS_FT_CTS
+    compute_induced_metric_on_S2_CS_FT_CTS
       (grid,type,Ntheta,Nphi,&h_D0D0,&h_D0D1,&h_D1D1);
     for (i = 0; i < Ntheta; ++i)
     {
