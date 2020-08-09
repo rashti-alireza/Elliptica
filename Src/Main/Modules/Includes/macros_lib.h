@@ -59,7 +59,7 @@
 #define REMOVE_FIELD(xNAME)            remove_field(xNAME);/* remove the field utterly */
 #define DECLARE_FIELD(xNAME)           Field_T *const xNAME = patch->pool[Ind(#xNAME)];/* access to the whole field */
 #define DECLARE_AND_EMPTY_FIELD(xNAME) DECLARE_FIELD(xNAME)/* declare field */\
-                                       empty_field(xNAME);/* free v,v2 and info of field */
+                                       empty_field(xNAME);/* free v,v2,v3 and info of field */
                                        
 /* access to the memory values to modify */
 #define WRITE_v(xNAME)  const int _field_index_of_##xNAME = Ind(#xNAME);\
