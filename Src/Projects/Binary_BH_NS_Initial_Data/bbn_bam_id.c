@@ -23,6 +23,7 @@ void bbn_bam_export_id(void)
   
   Grid_T *grid = 0;
   struct interpolation_points points[1] = {0};
+  char par[1000] = {'\0'};
   
   /* write parameters b/c they'll be overridden 
   // when checkpoint file is loaded */
@@ -31,6 +32,8 @@ void bbn_bam_export_id(void)
   sprintf(bam_fields_name, "%s",Pgets("bbn_bam_fields_name"));
   sprintf(checkpoint_path, "%s",Pgets("bbn_bam_checkpoint_path"));
   sprintf(bam_BHfiller_method,"%s",Pgets("bbn_bam_BHfiller"));
+  sprintf(par,"%s:%s","modify_checkpoint_par","bbn_bam_export_id");
+  add_parameter(par,Pgets("bbn_bam_export_id"));
   
   /* read (x,y,x) points from bam file to be interpolated on them */
   load_coords_from_coords_file(points);

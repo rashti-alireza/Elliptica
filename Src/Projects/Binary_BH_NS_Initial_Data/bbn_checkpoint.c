@@ -313,8 +313,12 @@ Grid_T *bbn_init_from_checkpoint(FILE *const file)
     /* make the patches */
     make_patches(grid);
     
-    /* realizing the geometry */
-    realize_geometry(grid);
+    /* no need geomery to export the data */
+    if(!strcmp_i(PgetsEZ("bbn_bam_export_id"),"yes"))
+    {
+      /* realizing the geometry */
+      realize_geometry(grid);
+    }
   }
   
   /* adding all of the fields needed for construction of Initial Data */
