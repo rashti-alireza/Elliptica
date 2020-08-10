@@ -290,6 +290,7 @@ Grid_T *bbn_init_from_checkpoint(FILE *const file)
 {
   Grid_T *grid = 0;
   struct checkpoint_header alloc_info[1] = {0};
+  double W_temp;
   
   /* reading the header for allocations */
   read_header(alloc_info,file);
@@ -340,8 +341,13 @@ Grid_T *bbn_init_from_checkpoint(FILE *const file)
   /* taking partial derivatives of the fields needed for equations */
   bbn_partial_derivatives_fields(grid);
 
-  /* update enthalpy,denthalpy,rho0, drho0, u0, _J^i, _E and _S */
-  bbn_update_stress_energy_tensor(grid,1);
+  /* update enthalpy,denthalpy,rho0, drho0, u0, _J^i, _E and _S
+  // to keep everything the same let's don't update enthalpy
+  // in relaxed way and also don't clean it. */
+  W_temp = Pgetd("NS_enthalpy_update_weight");/* save */
+  Psetd("NS_enthalpy_update_weight",0);/* don't relax */
+  bbn_update_stress_energy_tensor(grid,0);/* don't clean */
+  Psetd("NS_enthalpy_update_weight",W_temp);/* bring back */
   
   /* update _Aij in K^{ij} = A^{ij}+1/3*gamma^{ij}*K and 
   // _A^{ij} = gamma^10*A^{ij} and _dA^{ij} */
