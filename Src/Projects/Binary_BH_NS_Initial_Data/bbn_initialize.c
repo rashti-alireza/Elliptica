@@ -7197,11 +7197,13 @@ static void find_AKV(Grid_T *const grid,const char *const type)
   
   if (Pcmps("akv_expansion","spherical_harmonic"))
   {
-    lmax = (unsigned)Pgeti("akv_lmax");/* lmax in Ylm */
+    lmax   = (unsigned)Pgeti("akv_lmax");/* lmax in Ylm */
     Ntheta = 2*lmax+1;
     Nphi   = 2*lmax+1;
     N      = Ntheta*Nphi;/* = S2 grid pnts Ntheta*Nphi */
     expansion_flg = 0;
+    Pseti("akv_n_theta",(int)Ntheta);
+    Pseti("akv_n_phi",(int)Nphi);
   }
   else if (Pcmps("akv_expansion","double_fourier"))
   {
@@ -7239,7 +7241,7 @@ static void find_AKV(Grid_T *const grid,const char *const type)
   z2 = Pgetdd("akv_z2_scalar");
   
   /* compute AKVs */
-  /* inclusion map S2->M and its derivative to find AKV */
+  /* inclusion map S2->M and its derivatives to find AKV */
   bbn_compute_AKV_from_z
     (grid,z0,"dAKV0_D0","dAKV0_D1","dAKV0_D2",type,Ntheta,Nphi,lmax,expansion_flg);
   bbn_compute_AKV_from_z

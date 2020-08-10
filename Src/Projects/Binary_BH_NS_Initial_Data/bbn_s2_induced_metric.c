@@ -158,12 +158,12 @@ bbn_compute_induced_metric_on_S2_CS_CTS
   )
 {
 
-  if (expansion_type == 0)
+  if (expansion_type == 1)
   {
    compute_induced_metric_on_S2_CS_FT_CTS
      (grid,type,Ntheta,Nphi,ph_D0D0,ph_D0D1,ph_D1D1);
   }
-  else if (expansion_type == 1)
+  else if (expansion_type == 0)
   {
    compute_induced_metric_on_S2_CS_Ylm_CTS
      (grid,type,lmax,ph_D0D0,ph_D0D1,ph_D1D1);
@@ -576,21 +576,13 @@ void bbn_test_induced_metric_algorithm(Grid_T *const grid)
   FUNC_TIC
   
   unsigned lmax   = UINT_MAX;
-  unsigned Ntheta = UINT_MAX;
-  unsigned Nphi   = UINT_MAX;
+  unsigned Ntheta = (unsigned)Pgeti("akv_n_theta");
+  unsigned Nphi   = (unsigned)Pgeti("akv_n_phi");
 
   if (Pcmps("akv_expansion","spherical_harmonic"))
   {
     lmax = (unsigned)Pgeti("akv_lmax");/* lmax in Ylm */
-
   }
-  else if (Pcmps("akv_expansion","double_fourier"))
-  {
-    Ntheta = (unsigned)Pgeti("akv_n_theta");
-    Nphi   = (unsigned)Pgeti("akv_n_phi");
-  }
-  else
-    Error0(NO_OPTION);
 
   const char *type     = 0;
   double *h_D0D0=0,*h_D0D1=0,*h_D1D1=0;/* induced metric */
