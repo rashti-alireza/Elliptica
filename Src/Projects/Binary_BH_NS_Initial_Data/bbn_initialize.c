@@ -7193,7 +7193,7 @@ static void find_AKV(Grid_T *const grid,const char *const type)
   unsigned N      = UINT_MAX;
   unsigned Ntheta = UINT_MAX;
   unsigned Nphi   = UINT_MAX;
-  int expansion_flg;/* 1 double fourier, 0: spherical harmonic */
+  int expansion_flg = 1;/* 1 double fourier, 0: spherical harmonic */
   
   if (Pcmps("akv_expansion","spherical_harmonic"))
   {
