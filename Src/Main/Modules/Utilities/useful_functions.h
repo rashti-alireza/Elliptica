@@ -4,6 +4,7 @@
 #include "utilities_lib.h"
 #include "maths_general_lib.h"
 #include "fields_lib.h"
+#include <sys/resource.h>
 
 #define EPS 1E-11
 #define UF_OpenMP(x) _Pragma(#x)
@@ -50,6 +51,12 @@ double **alloc_2D_double(const long unsigned R,const long unsigned C);
 double *alloc_double(const unsigned N);
 void _free(void *p);
 unsigned IsItFarthestOutermostPatch(const Patch_T *const patch);
+
+double 
+how_much_memory
+  (
+    const char *const unit/* gb,mb,kb */
+  );
 
 
 

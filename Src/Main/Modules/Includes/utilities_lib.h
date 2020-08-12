@@ -80,6 +80,13 @@ void free_func_PtoV(sFunc_PtoV_T **func);
 void _free(void *p);
 void *alloc_sFunc_PtoV(sFunc_PtoV_T ***const mem);
 
+double 
+how_much_memory
+  (
+    const char *const unit/* gb,mb,kb */
+  );
+
+
 
 #endif
 

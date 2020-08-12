@@ -876,4 +876,34 @@ void _free(void *p)
     free(p);
 }
 
+/* ->: memory usage, default Kb.
+// The maximum resident set size used. That is, the maximum number of 
+// physical memory that processes used simultaneously. */
+double 
+how_much_memory
+  (
+    const char *const unit/* gb,mb,kb */
+  )
+{
+  struct rusage r_usage;
+  double factor = 1;
+  
+  if (strcmp_i(unit,"gb"))
+  {
+    factor = 1E-6;
+  }
+  else if (strcmp_i(unit,"mb"))
+  {
+    factor = 1E-3;
+  }
+  else/* default */
+  {
+    factor = 1;
+  }
+    
+  getrusage(RUSAGE_SELF,&r_usage);
+  
+  return ((double)r_usage.ru_maxrss*factor);
+}
+
 
