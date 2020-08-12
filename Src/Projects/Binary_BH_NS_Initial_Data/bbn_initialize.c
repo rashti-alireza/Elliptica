@@ -4184,6 +4184,18 @@ static void extrapolate_insideBH_CS_WTGR(Grid_T *const grid)
   bbn_free_conformal_metric_derivatives(GetPatch("right_BH_surrounding_right",grid));
   bbn_free_conformal_metric_derivatives(GetPatch("right_BH_surrounding_back",grid));
   bbn_free_conformal_metric_derivatives(GetPatch("right_BH_surrounding_front",grid));
+  /* free all coeffs */
+  for (p = 0; p < grid->np; p++)
+  {
+    Patch_T *patch = grid->patch[p];
+    unsigned f;
+    for (f = 0; f < patch->nfld; ++f)
+    {
+      free_coeffs(patch->pool[f]);
+    }
+  }
+  printf("|--> memory usege     = %0.2f(Gb)\n",how_much_memory("gb"));
+  fflush(stdout);
 }
 
 #define ij(i,j) ((j)+Nphi*(i))

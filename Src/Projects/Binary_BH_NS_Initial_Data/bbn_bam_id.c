@@ -140,6 +140,11 @@ static void interpolate_and_write(Grid_T *const grid,struct interpolation_points
     free_needle(needle);
   }
   
+  /* don't need them any more */
+  _free(pnt->x); pnt->x = 0;
+  _free(pnt->y); pnt->y = 0;
+  _free(pnt->z); pnt->z = 0;
+  
   /* translate fields from BAM notation to Elliptica notation */
   fields_name = translate_fields_name(&bam_fields);
   
@@ -234,6 +239,7 @@ static Grid_T *load_grid_from_checkpoint_file(void)
   
   Grid_T *grid = 0;
   FILE *file   = 0;
+  unsigned p;
   
   /* open checkpoint file */
   file = Fopen(checkpoint_path,"r");
@@ -245,6 +251,22 @@ static Grid_T *load_grid_from_checkpoint_file(void)
   Psets("extrapolate_inside_BH_method",bam_BHfiller_method);
   bbn_extrapolate_metric_fields_insideBH(grid);
   
+  /* free nodes as we don't need them */
+  FOR_ALL_PATCHES(p,grid)
+  {
+    Patch_T *patch = grid->patch[p];
+    unsigned ijk;
+
+    if (patch->node)
+    {
+      if (patch->coordsys != Cartesian)
+        for (ijk = 0; ijk < patch->nn; ++ijk)
+          _free(patch->node[ijk]->X);
+
+      free_2d_mem(patch->node,patch->nn);
+      patch->node = 0;
+    }
+  }
   return grid;
 }
   
