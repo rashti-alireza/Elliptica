@@ -64,6 +64,9 @@ static void load_coords_from_coords_file(struct interpolation_points *const pnt)
 static Grid_T *load_grid_from_checkpoint_file(void);
 static void interpolate_and_write(Grid_T *const grid,struct interpolation_points *const pnt);
 static char **translate_fields_name(char ***const bam_fields);
+void bbn_bam_error(const char *const msg,const char *const file,const int line);
+
+
 
 
 

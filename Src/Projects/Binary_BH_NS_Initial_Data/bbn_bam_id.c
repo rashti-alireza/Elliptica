@@ -101,7 +101,7 @@ static void interpolate_and_write(Grid_T *const grid,struct interpolation_points
       R1_f  = R2_f = 0;
     }
     else
-      Error0(NO_OPTION);
+      bbn_bam_error(NO_OPTION,__FILE__,__LINE__);
   }
   
   OpenMP_1d_Pragma(omp parallel for)
@@ -125,14 +125,14 @@ static void interpolate_and_write(Grid_T *const grid,struct interpolation_points
     if (!needle->Nans)
     {
       fprintf(stderr,"(%g,%g,%g) is troublesome!\n",x[0],x[1],x[2]);
-      Error0("It could not find a point!\n");
+      bbn_bam_error("It could not find a point!\n",__FILE__,__LINE__);
     }
     else
     {
       pn = needle->ans[0];
       pnt->patchn[p] = pn;
       if(!X_of_x(X,x,grid->patch[pn]))
-        Error0("It could not find X of x!\n");
+        bbn_bam_error("It could not find X of x!\n",__FILE__,__LINE__);
       pnt->X[p] = X[0];
       pnt->Y[p] = X[1];
       pnt->Z[p] = X[2];
@@ -213,7 +213,7 @@ static void interpolate_and_write(Grid_T *const grid,struct interpolation_points
                 pnt->x[p],pnt->y[p],pnt->z[p],
                 pnt->X[p],pnt->Y[p],pnt->Z[p],interp_v[p]);
         fflush(stderr);
-        Error0("BUG!\n");
+        bbn_bam_error("BUG!\n",__FILE__,__LINE__);
       }
       /* write it into the fields_file */
       FWriteV_bin(interp_v[p],1);
@@ -290,7 +290,7 @@ static void load_coords_from_coords_file(struct interpolation_points *const pnt)
   fgets(str,STR_LEN_MAX,file);
   FReadP_bin(match_str)
   if (strcmp(match_str,HEADER))
-    Error0("It could not find the header.\n");
+    bbn_bam_error("It could not find the header.\n",__FILE__,__LINE__);
   _free(match_str);
   
   /* allocating */
@@ -308,17 +308,20 @@ static void load_coords_from_coords_file(struct interpolation_points *const pnt)
   for (i = 0; i < npoints; ++i)
   {
     FReadV_bin(pnt->x[i]);
-    assert(isfinite(pnt->x[i]));
+    if(!isfinite(pnt->x[i]))
+      bbn_bam_error("bad coordinate.",__FILE__,__LINE__);
     
     FReadV_bin(pnt->y[i]);
-    assert(isfinite(pnt->y[i]));
+    if(!isfinite(pnt->y[i]))
+      bbn_bam_error("bad coordinate.",__FILE__,__LINE__);
     
-    FReadV_bin(pnt->z[i]);
-    assert(isfinite(pnt->z[i]));
+    FReadV_bin(pnt->z[i])
+    if (!isfinite(pnt->z[i]))
+      bbn_bam_error("bad coordinate.",__FILE__,__LINE__);
   }
   FReadP_bin(match_str)
   if (strcmp(match_str,FOOTER))
-    Error0("It could not find the footer.\n");
+    bbn_bam_error("It could not find the footer.\n",__FILE__,__LINE__);
   _free(match_str);
   
   fclose(file);
@@ -329,6 +332,7 @@ static char **translate_fields_name(char ***const ptr_bam_fields)
 {
   char **fields_name = 0;
   char **bam_fields  = 0;
+  char msg[1000] = {'\0'};
   unsigned nf = 0;
   
   bam_fields = read_separated_items_in_string(bam_fields_name,',');
@@ -368,7 +372,10 @@ static char **translate_fields_name(char ***const ptr_bam_fields)
       add2fieldsname_2ind_M("adm_K","bam_adm_K","D","D");
     }
     else
-      Error1("No option has not been defined for %s.\n",bam_fields[nf]);
+    {
+      sprintf(msg,"No such option for %s",bam_fields[nf]);
+      bbn_bam_error(msg,__FILE__,__LINE__);
+    }
     printf("~> Translating %s --> %s\n",bam_fields[nf],fields_name[nf]);
     nf++;
   }
@@ -376,4 +383,17 @@ static char **translate_fields_name(char ***const ptr_bam_fields)
   (*ptr_bam_fields) = bam_fields;
   return fields_name;
 }
+
+/* print error in stdout and not stderr it's better when called by bam. */
+void bbn_bam_error(const char *const msg,const char *const file,const int line)
+{
+  printf("\n:("
+         "\n|--> %s\n"
+         "File = %s\n"
+         "Line = %d\n",
+         msg,file,line);
+  fflush(stdout);
+  abort();
+}
+
 
