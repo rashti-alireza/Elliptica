@@ -219,6 +219,7 @@ static void extrapolate_insideBH_CS_WTGR(Grid_T *const grid);
 static void find_XYZ_and_patch_of_theta_phi_BH_CS(double *const X,Patch_T **const ppatch,const double theta,const double phi,Grid_T *const grid);
 static void force_balance_ddCM_Omega(Grid_T *const grid);
 void bbn_create_grid_prototype_BC(Grid_T *const grid);
+void bbn_bam_error(const char *const msg,const char *const file,const int line);
 
 
 

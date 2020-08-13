@@ -3937,7 +3937,8 @@ static void extrapolate_insideBH_CS_WTGR(Grid_T *const grid)
   
   /* check if it is perfect sphere */
   if (!Pcmps("BH_R_type","PerfectSphere"))
-    Error0("This function is used when the BH surface is a perfect sphere!");
+    bbn_bam_error("This function is used when "
+        "the BH surface is a perfect sphere!",__FILE__,__LINE__);
   
   /* update coeffs to avoid race condition */
   patch_numbers       = alloc_needle();
@@ -3948,7 +3949,8 @@ static void extrapolate_insideBH_CS_WTGR(Grid_T *const grid)
   needle_in(patch_numbers,GetPatch("right_BH_surrounding_right",grid));
   needle_in(patch_numbers,GetPatch("right_BH_surrounding_back",grid));
   needle_in(patch_numbers,GetPatch("right_BH_surrounding_front",grid));
-  assert(patch_numbers->Nin == npo);
+  if (patch_numbers->Nin != npo)
+    bbn_bam_error("Wrong patch number",__FILE__,__LINE__);
   
   OpenMP_Patch_Pragma(omp parallel for)
   for (p = 0; p < npo; p++)
@@ -3987,7 +3989,8 @@ static void extrapolate_insideBH_CS_WTGR(Grid_T *const grid)
   needle_in(patch_numbers,GetPatch("right_BH_back",grid));
   needle_in(patch_numbers,GetPatch("right_BH_front",grid));
   needle_in(patch_numbers,GetPatch("right_central_box",grid));
-  assert(patch_numbers->Nin == npi);
+  if(patch_numbers->Nin != npi)
+    bbn_bam_error("Wrong patch number",__FILE__,__LINE__);
   
   OpenMP_Patch_Pragma(omp parallel for)
   for (p = 0; p < npi; p++)
@@ -4065,7 +4068,8 @@ static void extrapolate_insideBH_CS_WTGR(Grid_T *const grid)
       dr    = r - r_fill;
       phi   = arctan(y,x);
       Y     = 0.5*(1+tanh(48./125.*(r_fill/(r_fill-r)-3./2.*(r_fill/r))));
-      assert(isfinite(Y));
+      if(!isfinite(Y))
+        bbn_bam_error("BH filler Y goes wrong.",__FILE__,__LINE__);
       
       x_on_BHsurf[0] = r_fill*sin(theta)*cos(phi)+patch->c[0];
       x_on_BHsurf[1] = r_fill*sin(theta)*sin(phi)+patch->c[1];
@@ -4075,9 +4079,11 @@ static void extrapolate_insideBH_CS_WTGR(Grid_T *const grid)
       needle->x = x_on_BHsurf;
       point_finder(needle);
       if (!needle->Nans)
-        Error0("Could not find the given point!\n");
+        bbn_bam_error("Could not find the given point!\n",__FILE__,__LINE__);
       BHsurf_patch = grid->patch[needle->ans[0]];
-      assert(X_of_x(X_on_BHsurf,x_on_BHsurf,BHsurf_patch));
+      if(!X_of_x(X_on_BHsurf,x_on_BHsurf,BHsurf_patch))
+        bbn_bam_error("X is wrong.",__FILE__,__LINE__);
+      
       _free(needle->ans);
       needle->ans  = 0;
       needle->Nans = 0;
@@ -4149,15 +4155,15 @@ static void extrapolate_insideBH_CS_WTGR(Grid_T *const grid)
         _gammaI_U0U2[ijk]*_gamma_D0D1[ijk] + _gammaI_U1U2[ijk]*
         _gamma_D1D1[ijk] + _gammaI_U2U2[ijk]*_gamma_D1D2[ijk];
 
-        if(!EQL(delta_U1D1,1))  Error0("_gammaI is not correct!\n");
-        if(!EQL(delta_U0D1,0))  Error0("_gammaI is not correct!\n");
-        if(!EQL(delta_U0D2,0))  Error0("_gammaI is not correct!\n");
-        if(!EQL(delta_U1D2,0))  Error0("_gammaI is not correct!\n");
-        if(!EQL(delta_U0D0,1))  Error0("_gammaI is not correct!\n");
-        if(!EQL(delta_U2D1,0))  Error0("_gammaI is not correct!\n");
-        if(!EQL(delta_U2D2,1))  Error0("_gammaI is not correct!\n");
-        if(!EQL(delta_U2D0,0))  Error0("_gammaI is not correct!\n");
-        if(!EQL(delta_U1D0,0))  Error0("_gammaI is not correct!\n");
+        if(!EQL(delta_U1D1,1))  bbn_bam_error("_gammaI is not correct!\n",__FILE__,__LINE__);
+        if(!EQL(delta_U0D1,0))  bbn_bam_error("_gammaI is not correct!\n",__FILE__,__LINE__);
+        if(!EQL(delta_U0D2,0))  bbn_bam_error("_gammaI is not correct!\n",__FILE__,__LINE__);
+        if(!EQL(delta_U1D2,0))  bbn_bam_error("_gammaI is not correct!\n",__FILE__,__LINE__);
+        if(!EQL(delta_U0D0,1))  bbn_bam_error("_gammaI is not correct!\n",__FILE__,__LINE__);
+        if(!EQL(delta_U2D1,0))  bbn_bam_error("_gammaI is not correct!\n",__FILE__,__LINE__);
+        if(!EQL(delta_U2D2,1))  bbn_bam_error("_gammaI is not correct!\n",__FILE__,__LINE__);
+        if(!EQL(delta_U2D0,0))  bbn_bam_error("_gammaI is not correct!\n",__FILE__,__LINE__);
+        if(!EQL(delta_U1D0,0))  bbn_bam_error("_gammaI is not correct!\n",__FILE__,__LINE__);
       }
     }
     /* free */
