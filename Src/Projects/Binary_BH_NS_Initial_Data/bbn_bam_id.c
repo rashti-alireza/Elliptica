@@ -304,6 +304,8 @@ static void load_coords_from_coords_file(struct interpolation_points *const pnt)
   pnt->Z       = alloc_double(npoints);
   pnt->patchn  = calloc(npoints,sizeof(*pnt->patchn));
   IsNull(pnt->patchn);
+  printf("~> number of points to interpolate = %u\n",npoints);
+  
   /* reading (x,y,z) */
   for (i = 0; i < npoints; ++i)
   {
