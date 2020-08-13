@@ -18,6 +18,7 @@ C_macro4 = add_field_and_alloc_field(name);
 ``
 `#define add_field_and_alloc_field(name) ADD_FIELD(name) REALLOC_v_WRITE_v(name)`
 ``
+`void bbn_extrinsic_K_DiDj(Patch_T *const patch);`
 `void bbn_bam_set_bam_fields(Grid_T *const grid);`
 `void bbn_bam_set_bam_fields(Grid_T *const grid)`
 `{`
@@ -30,6 +31,8 @@ C_macro4 = add_field_and_alloc_field(name);
 `  Patch_T *patch = grid->patch[p];`
 `  unsigned nn    = patch->nn;`
 `  unsigned ijk;`
+`  bbn_extrinsic_K_DiDj(patch);`
+``
 Declare = 
 {
  # add: bam_alpha
@@ -56,8 +59,8 @@ Declare =
  # add: bam_grhd_v^i
  (obj = Field,name = bam_grhd_v, rank = U, C_macro4);
 
- # _A^{ij}
- (obj = Field,name = _A_UiUj, rank = UU, C_macro);
+ # K_{ij}
+ (obj = Field,name = K_DiDj, rank = DD, C_macro);
 
  # shift
  (obj = Field,name = Beta, rank = U, C_macro);
@@ -72,7 +75,7 @@ Declare =
  (obj = Field,name = eta, rank = 0, C_macro);
 
  # trKij
- (obj = Field,name = K, rank = 0, C_macro);
+# (obj = Field,name = K, rank = 0, C_macro);
 
  # enthalpy
  (obj = Field,name = enthalpy, rank = 0, C_macro);
@@ -94,7 +97,7 @@ Declare =
 }
 
 # symmetries:
-Symm[_A_UiUj(i,j)   = _A_UiUj(j,i)];
+Symm[K_DiDj(i,j)   = K_DiDj(j,i)];
 Symm[bam_adm_K(i,j) = bam_adm_K(j,i)];
 Symm[bam_adm_g(i,j) = bam_adm_g(j,i)];
 Symm[_gamma(i,j)    = _gamma(j,i)];
@@ -102,10 +105,7 @@ Symm[_gammaI(i,j)   = _gammaI(j,i)];
 
 `  for(ijk = 0; ijk < nn; ++ijk)`
 `  {`
-
    psi4   = psi**4;
-   psim4  = psi**(-4);
-   psim10 = psim4*psim4/(psi**2);
 
 # alpha:
 `   bam_alpha[ijk] = eta[ijk]/psi[ijk];`
@@ -121,11 +121,9 @@ Symm[_gammaI(i,j)   = _gammaI(j,i)];
    Cpopulate[bam_adm_g = adm_g];
 
 # K_ij:
-   adm_Kuu(i,j) = psim10*_A_UiUj(i,j)+psim4*K*_gammaI(i,j)/3;
-   Symm[adm_Kuu(i,j) = adm_Kuu(j,i)];
-   adm_Kdd(-i,-j) = adm_g(-i,-ip)*adm_g(-j,-jp)*adm_Kuu(ip,jp);
-   Symm[adm_Kdd(i,j) = adm_Kdd(j,i)];
-   Cpopulate[bam_adm_K = adm_Kdd];
+   Kdd(-i,-j) = K_DiDj(i,j);
+   Symm[Kdd(i,j) = Kdd(j,i)];
+   Cpopulate[bam_adm_K = Kdd];
 
 `  }`# end of for(ijk = 0; ijk < nn; ++ijk)
 
@@ -137,8 +135,8 @@ Symm[_gammaI(i,j)   = _gammaI(j,i)];
 `  {`
 
    # grhd_v^i:
-   psim4_ = psi**(-4);
-   grhd_v(i) = (psim4_*_gammaI(i,j)*dphi(-j)+W(i))/(bam_alpha*enthalpy*u0);
+   psim4 = psi**(-4);
+   grhd_v(i) = (psim4*_gammaI(i,j)*dphi(-j)+W(i))/(bam_alpha*enthalpy*u0);
    Cpopulate[bam_grhd_v = grhd_v];
 ``
    # matter: total_energy_density = grhd_rho(1+grhd_epsl)
