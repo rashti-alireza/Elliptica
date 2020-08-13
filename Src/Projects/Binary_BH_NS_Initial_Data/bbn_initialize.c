@@ -3923,12 +3923,13 @@ static void extrapolate_insideBH_CS_WTGR(Grid_T *const grid)
   const double u0_Beta_U1     = 0;
   const double u0_Beta_U2     = 0;
   const double u0__gamma_D0D0 = 1;
-  const double u0__gamma_D0D1 = 1;
-  const double u0__gamma_D0D2 = 1;
+  const double u0__gamma_D0D1 = 0;
+  const double u0__gamma_D0D2 = 0;
   const double u0__gamma_D1D1 = 1;
-  const double u0__gamma_D1D2 = 1;
+  const double u0__gamma_D1D2 = 0;
   const double u0__gamma_D2D2 = 1;
   const double u0_K           = 0;
+  const double u0_alpha       = 0.1;
   Needle_T *patch_numbers = 0;
   const unsigned npi = 7;/* number of patches inside BH */
   const unsigned npo = 6;/* number of patches outside BH */
@@ -4083,7 +4084,7 @@ static void extrapolate_insideBH_CS_WTGR(Grid_T *const grid)
       
       /* extrapolate */
       double u0_psi = 2+Ma/(2*r);
-      double u0_eta = 0.1*u0_psi;
+      double u0_eta = u0_alpha*u0_psi;
       
       WTGR_EXTRAPOLATE_scalar(psi)
       WTGR_EXTRAPOLATE_scalar(eta)
@@ -4169,11 +4170,11 @@ static void extrapolate_insideBH_CS_WTGR(Grid_T *const grid)
     bbn_update_derivative_psi(patch);
     bbn_update_derivative_eta(patch);
     
-    /* compute _Aij inside BH patches */
+    /* for K_{ij} inside BH patches */
     bbn_preparing_conformal_metric_derivatives(patch);
     bbn_free_data_Gamma_patch(patch);
     bbn_free_conformal_metric_derivatives(patch);
-    bbn_update_psi10A_UiUj(patch);
+    /* bbn_update_psi10A_UiUj(patch); */
   }/* end of FOR_ALL_PATCHES(p,grid) */
   
   /* free */
