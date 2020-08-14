@@ -7188,7 +7188,6 @@ static void find_AKV(Grid_T *const grid,const char *const type)
   FUNC_TIC
   
   double *h_D0D0=0,*h_D0D1=0,*h_D1D1=0;/* induced metric */
-  double *z0,*z1,*z2;/* AKV equation answers */
   unsigned lmax   = UINT_MAX;
   unsigned N      = UINT_MAX;
   unsigned Ntheta = UINT_MAX;
@@ -7235,24 +7234,36 @@ static void find_AKV(Grid_T *const grid,const char *const type)
   /* solve the AKV equation to find z */
   Approximate_Killing_Vector();
 
-  /* get AKV */
-  z0 = Pgetdd("akv_z0_scalar");
-  z1 = Pgetdd("akv_z1_scalar");
-  z2 = Pgetdd("akv_z2_scalar");
-  
-  /* compute AKVs */
-  /* inclusion map S2->M and its derivatives to find AKV */
-  bbn_compute_AKV_from_z
-    (grid,z0,"dAKV0_D0","dAKV0_D1","dAKV0_D2",type,Ntheta,Nphi,lmax,expansion_flg);
-  bbn_compute_AKV_from_z
-    (grid,z1,"dAKV1_D0","dAKV1_D1","dAKV1_D2",type,Ntheta,Nphi,lmax,expansion_flg);
-  bbn_compute_AKV_from_z
-    (grid,z2,"dAKV2_D0","dAKV2_D1","dAKV2_D2",type,Ntheta,Nphi,lmax,expansion_flg);
+  /* AKV inclusion map S2->M */
+  bbn_inclusion_map_S2_to_M_CS
+  (
+    grid,type,Ntheta,Nphi,lmax,expansion_flg,
+    Pgetdd("akv_xi0_D0"),
+    Pgetdd("akv_xi0_D1"),
+    "AKV0_D0","AKV0_D1","AKV0_D2"
+  );
+  bbn_inclusion_map_S2_to_M_CS
+  (
+    grid,type,Ntheta,Nphi,lmax,expansion_flg,
+    Pgetdd("akv_xi1_D0"),
+    Pgetdd("akv_xi1_D1"),
+    "AKV1_D0","AKV1_D1","AKV1_D2"
+  );
+  bbn_inclusion_map_S2_to_M_CS
+  (
+    grid,type,Ntheta,Nphi,lmax,expansion_flg,
+    Pgetdd("akv_xi2_D0"),
+    Pgetdd("akv_xi2_D1"),
+    "AKV0_D2","AKV2_D1","AKV2_D2"
+  );
   
   /* free */
-  free_parameter("akv_z0_scalar");
-  free_parameter("akv_z1_scalar");
-  free_parameter("akv_z2_scalar");
+  free_parameter("akv_xi0_D0");
+  free_parameter("akv_xi0_D1");
+  free_parameter("akv_xi1_D0");
+  free_parameter("akv_xi1_D1");
+  free_parameter("akv_xi2_D0");
+  free_parameter("akv_xi2_D1");
   free_parameter("akv_2d_metric_D0D0");
   free_parameter("akv_2d_metric_D0D1");
   free_parameter("akv_2d_metric_D1D1");
