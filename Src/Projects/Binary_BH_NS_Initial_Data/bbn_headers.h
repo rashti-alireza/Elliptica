@@ -172,7 +172,24 @@ bbn_compute_induced_metric_on_S2_CS_CTS
   double **const ph_D1D1/* induced h11  pointer */,
   const int expansion_type/* 1 double fourier, 0: spherical harmonic */
   );
+  
+void
+bbn_inclusion_map_S2_to_M_CS
+  (
+  Grid_T *const grid/* grid */,
+  const char *const type/* NS or BH */,
+  const unsigned Ntheta/* number of points in theta direction */,
+  const unsigned Nphi/* number of points in phi direction */,
+  const unsigned lmax/* l max in Ylm */,
+  const int expansion_type/* 1 double fourier, 0: spherical harmonic */,
+  const double *const S2akv_U0/* akv on S2 */,
+  const double *const S2akv_U1/* akv on S2 */,
+  const char *const name_akv_U0/* inclusion akv vector v^0 name */,
+  const char *const name_akv_U1/* inclusion akv vector v^1 name */,
+  const char *const name_akv_U2/* inclusion akv vector v^2 name */
+  );
 
+  
 #endif
 
 

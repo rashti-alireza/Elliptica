@@ -71,7 +71,32 @@ bbn_compute_AKV_from_z
   const int interpolation_type/* 1 double fourier, 0: spherical harmonic */
   );
 
+void 
+bbn_inclusion_map_S2_to_M_theta_phi
+(
+  double *const v_U0,
+  double *const v_U1,
+  double *const v_U2,
+  const double *const w_U0,
+  const double *const w_U1,
+  const double r,
+  const double theta,
+  const double phi
+);
 
-
-
+void
+bbn_inclusion_map_S2_to_M_CS
+  (
+  Grid_T *const grid/* grid */,
+  const char *const type/* NS or BH */,
+  const unsigned Ntheta/* number of points in theta direction */,
+  const unsigned Nphi/* number of points in phi direction */,
+  const unsigned lmax/* l max in Ylm */,
+  const int expansion_type/* 1 double fourier, 0: spherical harmonic */,
+  const double *const S2akv_U0/* akv on S2 */,
+  const double *const S2akv_U1/* akv on S2 */,
+  const char *const name_akv_U0/* inclusion akv vector v^0 name */,
+  const char *const name_akv_U1/* inclusion akv vector v^1 name */,
+  const char *const name_akv_U2/* inclusion akv vector v^2 name */
+  );
 

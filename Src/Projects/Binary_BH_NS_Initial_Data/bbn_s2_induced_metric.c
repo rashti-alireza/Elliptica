@@ -173,6 +173,178 @@ bbn_compute_induced_metric_on_S2_CS_CTS
 
 }
 
+/* computing the Killing vector via inclusion map */
+void
+bbn_inclusion_map_S2_to_M_CS
+  (
+  Grid_T *const grid/* grid */,
+  const char *const type/* NS or BH */,
+  const unsigned Ntheta/* number of points in theta direction */,
+  const unsigned Nphi/* number of points in phi direction */,
+  const unsigned lmax/* l max in Ylm */,
+  const int expansion_type/* 1 double fourier, 0: spherical harmonic */,
+  const double *const S2akv_U0/* akv on S2 */,
+  const double *const S2akv_U1/* akv on S2 */,
+  const char *const name_akv_U0/* inclusion akv vector v^0 name */,
+  const char *const name_akv_U1/* inclusion akv vector v^1 name */,
+  const char *const name_akv_U2/* inclusion akv vector v^2 name */
+  )
+{
+  FUNC_TIC
+  double *realC0 = 0,*imagC0 = 0;
+  double *realC1 = 0,*imagC1 = 0;
+  double theta,phi;
+  unsigned (*surface_patch)(const Patch_T *const patch) = 0;
+  unsigned i,j,k,p,ijk,ijk0,k0;
+  int type_flg = -1;/* 1 for NS , 0 for BH */
+  
+  if (strcmp_i(type,"BH"))
+  {
+    type_flg = 0;
+    surface_patch = IsItHorizonPatch;
+  }
+  else if (strcmp_i(type,"NS"))
+  {
+    type_flg = 1;
+    surface_patch = IsItNSSurface;
+  }
+  else
+    Error0("Bad argument: no such type.");
+
+  if (expansion_type == 1)
+  {
+    /* find FT coeffs */
+    r2cft_2d_coeffs_S2(S2akv_U0,Ntheta,Nphi,&realC0,&imagC0,1);
+    /* find Ylm coeffs */
+    
+    /* find FT coeffs */
+    r2cft_2d_coeffs_S2(S2akv_U1,Ntheta,Nphi,&realC1,&imagC1,1);
+    
+    FOR_ALL_PATCHES(p,grid)
+    {
+      Patch_T *patch = grid->patch[p];
+      if (!surface_patch(patch))
+        continue;
+      
+      Field_T *AKV_U0 = patch->pool[Ind(name_akv_U0)];
+      Field_T *AKV_U1 = patch->pool[Ind(name_akv_U1)];
+      Field_T *AKV_U2 = patch->pool[Ind(name_akv_U2)];
+      const unsigned *N = patch->n;
+      Flag_T side = patch->CoordSysInfo->CubedSphericalCoord->side;
+      const double *X;
+      double x[3],r;
+      double *akv_U0,*akv_U1,*akv_U2;
+      double iw0,iw1;
+      
+      empty_field(AKV_U0);
+      empty_field(AKV_U1);
+      empty_field(AKV_U2);
+      akv_U0 = AKV_U0->v = alloc_double(patch->nn);
+      akv_U1 = AKV_U1->v = alloc_double(patch->nn);
+      akv_U2 = AKV_U2->v = alloc_double(patch->nn);
+      
+      k0 = type_flg == 1/* NS? */? patch->n[2]-1 : 0;
+      /* populate z scalar in 3d */
+      for (i = 0; i < N[0]; ++i)
+      {
+        for (j = 0; j < N[1]; ++j)
+        {
+          ijk0  = L(N,i,j,k0);
+          X     = patch->node[ijk0]->X;
+          x[0]  = patch->node[ijk0]->x[0]-patch->c[0];
+          x[1]  = patch->node[ijk0]->x[1]-patch->c[1];
+          x[2]  = patch->node[ijk0]->x[2]-patch->c[2];
+          r     = root_square(3,x,0);
+          find_theta_phi_of_XYZ_CS(&theta,&phi,X,side);
+          
+          iw0 = r2cft_2d_interpolation_S2(realC0,imagC0,Ntheta,Nphi,theta,phi);
+          iw1 = r2cft_2d_interpolation_S2(realC1,imagC1,Ntheta,Nphi,theta,phi);
+          bbn_inclusion_map_S2_to_M_theta_phi
+            (&akv_U0[ijk0],&akv_U1[ijk0],&akv_U2[ijk0],&iw0,&iw1,r,theta,phi);
+          
+          for (k = 0; k < N[2]; ++k)
+          {
+            ijk = L(N,i,j,k);
+            akv_U0[ijk] = akv_U0[ijk0];
+            akv_U1[ijk] = akv_U1[ijk0];
+            akv_U2[ijk] = akv_U2[ijk0];
+            
+          }
+        }/* for (j = 0; j < N[1]; ++j) */
+      }/* for (i = 0; i < N[0]; ++i) */
+    }/* FOR_ALL_PATCHES(p,grid) */
+  }/* if (expansion_type == 1) */
+  else if (expansion_type == 0)
+  {
+    /* find Ylm coeffs */
+    get_Ylm_coeffs(realC0,imagC0,S2akv_U0,Ntheta,Nphi,lmax);
+    /* find Ylm coeffs */
+    get_Ylm_coeffs(realC1,imagC1,S2akv_U0,Ntheta,Nphi,lmax);
+    
+    FOR_ALL_PATCHES(p,grid)
+    {
+      Patch_T *patch = grid->patch[p];
+      if (!surface_patch(patch))
+        continue;
+      
+      Field_T *AKV_U0 = patch->pool[Ind(name_akv_U0)];
+      Field_T *AKV_U1 = patch->pool[Ind(name_akv_U1)];
+      Field_T *AKV_U2 = patch->pool[Ind(name_akv_U2)];
+      const unsigned *N = patch->n;
+      Flag_T side = patch->CoordSysInfo->CubedSphericalCoord->side;
+      const double *X;
+      double x[3],r;
+      double *akv_U0,*akv_U1,*akv_U2;
+      double iw0,iw1;
+
+      empty_field(AKV_U0);
+      empty_field(AKV_U1);
+      empty_field(AKV_U2);
+      akv_U0 = AKV_U0->v = alloc_double(patch->nn);
+      akv_U1 = AKV_U1->v = alloc_double(patch->nn);
+      akv_U2 = AKV_U2->v = alloc_double(patch->nn);
+      
+      k0 = type_flg == 1/* NS? */? patch->n[2]-1 : 0;
+      /* populate z scalar in 3d */
+      for (i = 0; i < N[0]; ++i)
+      {
+        for (j = 0; j < N[1]; ++j)
+        {
+          ijk0  = L(N,i,j,k0);
+          X     = patch->node[ijk0]->X;
+          x[0]  = patch->node[ijk0]->x[0]-patch->c[0];
+          x[1]  = patch->node[ijk0]->x[1]-patch->c[1];
+          x[2]  = patch->node[ijk0]->x[2]-patch->c[2];
+          r     = root_square(3,x,0);
+          find_theta_phi_of_XYZ_CS(&theta,&phi,X,side);
+          
+          iw0 = interpolation_Ylm(realC0,imagC0,lmax,theta,phi);
+          iw1 = interpolation_Ylm(realC1,imagC1,lmax,theta,phi);
+          bbn_inclusion_map_S2_to_M_theta_phi
+            (&akv_U0[ijk0],&akv_U1[ijk0],&akv_U2[ijk0],&iw0,&iw1,r,theta,phi);
+          
+          for (k = 0; k < N[2]; ++k)
+          {
+            ijk = L(N,i,j,k);
+            akv_U0[ijk] = akv_U0[ijk0];
+            akv_U1[ijk] = akv_U1[ijk0];
+            akv_U2[ijk] = akv_U2[ijk0]; 
+          }
+        }/* for (j = 0; j < N[1]; ++j) */
+      }/* for (i = 0; i < N[0]; ++i) */
+    }/* FOR_ALL_PATCHES(p,grid) */
+  }/* else if (expansion_type == 0) */
+  else
+    Error0(NO_OPTION);
+    
+  _free(realC0);
+  _free(realC1);
+  _free(imagC0);
+  _free(imagC1);
+  
+  FUNC_TOC
+}
+
 /* computing the induced metric on S2 (cubedspherical,Ylm,CTS).
 // here we use (theta,phi) coords on sub-manifold S2 and 
 // (x,y,z) = r(sin(theta)*cos(phi),sin(theta)*sin(phi),cos(theta)) 
