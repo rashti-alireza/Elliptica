@@ -7254,7 +7254,7 @@ static void find_AKV(Grid_T *const grid,const char *const type)
     grid,type,Ntheta,Nphi,lmax,expansion_flg,
     Pgetdd("akv_xi2_D0"),
     Pgetdd("akv_xi2_D1"),
-    "AKV0_D2","AKV2_D1","AKV2_D2"
+    "AKV2_D0","AKV2_D1","AKV2_D2"
   );
   
   /* free */
