@@ -7179,9 +7179,9 @@ void bbn_free_grid_and_its_parameters(Grid_T *grid)
 //
 // Algorithm:
 // ==========
-// 1. induce the 2-d metric on S2.
-// 2. solve AKV equation and find z scalars.
-// 3. \xi = \nabla z ==> AKV.
+// 1. induce the 2-d metric on S2 (induce manp)
+// 2. solve AKV equation and find AKV on S2.
+// 3. include AKV into manifold M (inclusion map)
 */
 static void find_AKV(Grid_T *const grid,const char *const type)
 {
