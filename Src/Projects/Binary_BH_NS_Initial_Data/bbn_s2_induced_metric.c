@@ -276,10 +276,15 @@ bbn_inclusion_map_S2_to_M_CS
   }/* if (expansion_type == 1) */
   else if (expansion_type == 0)
   {
+    realC0 = alloc_ClmYlm(lmax);
+    imagC0 = alloc_ClmYlm(lmax);
+    realC1 = alloc_ClmYlm(lmax);
+    imagC1 = alloc_ClmYlm(lmax);
+    
     /* find Ylm coeffs */
     get_Ylm_coeffs(realC0,imagC0,S2akv_U0,Ntheta,Nphi,lmax);
     /* find Ylm coeffs */
-    get_Ylm_coeffs(realC1,imagC1,S2akv_U0,Ntheta,Nphi,lmax);
+    get_Ylm_coeffs(realC1,imagC1,S2akv_U1,Ntheta,Nphi,lmax);
     
     FOR_ALL_PATCHES(p,grid)
     {
