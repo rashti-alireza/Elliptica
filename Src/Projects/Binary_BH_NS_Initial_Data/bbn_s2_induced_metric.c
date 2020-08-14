@@ -244,7 +244,7 @@ bbn_inclusion_map_S2_to_M_CS
       akv_U2 = AKV_U2->v = alloc_double(patch->nn);
       
       k0 = type_flg == 1/* NS? */? patch->n[2]-1 : 0;
-      /* populate z scalar in 3d */
+      /* populate 3d AKV */
       for (i = 0; i < N[0]; ++i)
       {
         for (j = 0; j < N[1]; ++j)
@@ -310,7 +310,7 @@ bbn_inclusion_map_S2_to_M_CS
       akv_U2 = AKV_U2->v = alloc_double(patch->nn);
       
       k0 = type_flg == 1/* NS? */? patch->n[2]-1 : 0;
-      /* populate z scalar in 3d */
+      /* populate 3d AKV */
       for (i = 0; i < N[0]; ++i)
       {
         for (j = 0; j < N[1]; ++j)

@@ -7238,32 +7238,32 @@ static void find_AKV(Grid_T *const grid,const char *const type)
   bbn_inclusion_map_S2_to_M_CS
   (
     grid,type,Ntheta,Nphi,lmax,expansion_flg,
-    Pgetdd("akv_xi0_D0"),
-    Pgetdd("akv_xi0_D1"),
-    "AKV0_D0","AKV0_D1","AKV0_D2"
+    Pgetdd("akv_xi0_U0"),
+    Pgetdd("akv_xi0_U1"),
+    "AKV0_U0","AKV0_U1","AKV0_U2"
   );
   bbn_inclusion_map_S2_to_M_CS
   (
     grid,type,Ntheta,Nphi,lmax,expansion_flg,
-    Pgetdd("akv_xi1_D0"),
-    Pgetdd("akv_xi1_D1"),
-    "AKV1_D0","AKV1_D1","AKV1_D2"
+    Pgetdd("akv_xi1_U0"),
+    Pgetdd("akv_xi1_U1"),
+    "AKV1_U0","AKV1_U1","AKV1_U2"
   );
   bbn_inclusion_map_S2_to_M_CS
   (
     grid,type,Ntheta,Nphi,lmax,expansion_flg,
-    Pgetdd("akv_xi2_D0"),
-    Pgetdd("akv_xi2_D1"),
-    "AKV2_D0","AKV2_D1","AKV2_D2"
+    Pgetdd("akv_xi2_U0"),
+    Pgetdd("akv_xi2_U1"),
+    "AKV2_U0","AKV2_U1","AKV2_U2"
   );
   
   /* free */
-  free_parameter("akv_xi0_D0");
-  free_parameter("akv_xi0_D1");
-  free_parameter("akv_xi1_D0");
-  free_parameter("akv_xi1_D1");
-  free_parameter("akv_xi2_D0");
-  free_parameter("akv_xi2_D1");
+  free_parameter("akv_xi0_U0");
+  free_parameter("akv_xi0_U1");
+  free_parameter("akv_xi1_U0");
+  free_parameter("akv_xi1_U1");
+  free_parameter("akv_xi2_U0");
+  free_parameter("akv_xi2_U1");
   free_parameter("akv_2d_metric_D0D0");
   free_parameter("akv_2d_metric_D0D1");
   free_parameter("akv_2d_metric_D1D1");
