@@ -5123,7 +5123,7 @@ static Grid_T *TOV_KerrSchild_approximation(void)
   pr_line_custom('=');
   
   /* test */
-  find_AKV(grid,"NS");
+  //find_AKV(grid,"NS");
   find_AKV(grid,"BH");
   /* end */
   return grid;
@@ -7277,6 +7277,11 @@ static void find_AKV(Grid_T *const grid,const char *const type)
   pr->folder = Pgets("Diagnostics");
   pr_fields(pr);
   free_PrField(pr);
+  
+  /* test spin */
+  double S[3] = {0};
+  bbn_define_spin_akv(S,grid,"BH");
+  printf("S=(%g,%g,%g)\n",S[0],S[1],S[2]);
   FUNC_TOC
   
   /* test */
