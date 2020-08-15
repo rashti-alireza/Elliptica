@@ -15,6 +15,7 @@ double bbn_Kommar_mass(Observable_T *const obs);
 double bbn_ADM_mass(Observable_T *const obs);
 void bbn_define_spin_integral(double S[3],Grid_T *const grid,const char *const kind);
 void bbn_define_spin_JRP(double S[3],Grid_T *const grid,const char *const kind);
+void bbn_define_spin_akv(double S[3],Grid_T *const grid,const char *const kind);
 static double ADM_momentum_x_BBN_CS(Observable_T *const obs);
 static double ADM_momentum_y_BBN_CS(Observable_T *const obs);
 static double ADM_momentum_z_BBN_CS(Observable_T *const obs);

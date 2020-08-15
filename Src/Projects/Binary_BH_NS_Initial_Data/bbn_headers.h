@@ -189,7 +189,18 @@ bbn_inclusion_map_S2_to_M_CS
   const char *const name_akv_U2/* inclusion akv vector v^2 name */
   );
 
-  
+void bbn_populate_spin_integrands_akv(Patch_T *const patch,const double *const normal[3]);
+
+void 
+bbn_define_spin_akv
+  (
+  double S[3]/* spin Sx,Sy,Sz */,
+  Grid_T *const grid/* grid */,
+  const char *const kind/* "NS" or "BH" */
+  );
+
+
+
 #endif
 
 
