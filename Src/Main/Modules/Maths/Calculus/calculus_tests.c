@@ -10,23 +10,23 @@ int integration_tests(Grid_T *const grid)
 {
   int status;
   
-  if (!DO)
+  if (DO)
   {
     printf("\nIntegration test: Composite Simpson's Rule 1D => \n");
     status = csr_1d(grid);
     check_test_result(status);
   }
-  if (!DO)
+  if (DO)
   {
     printf("\nIntegration test: Gaussian Quadrature Chebyshev Extrema: \n");
     GQ_ChebExtrema(grid);
   }
-  if (!DO)
+  if (DO)
   {
     printf("\nIntegration test: Gaussian Quadrature Lobatto method: \n");
     GQ_Lobatto(grid);
   }
-  if (!DO)
+  if (DO)
   {
     printf("\nIntegration test: Gaussian Quadrature Legendre method: \n");
     GQ_Legendre(grid);
