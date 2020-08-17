@@ -124,11 +124,11 @@ static int Ylm_trans_test(Grid_T *const grid)
           int mp = (int)m;
           lm   = lm2n(l,m);
           
-          sum += (realClm[lm]+_Complex_I*imagClm[lm])*Ylm((int)l,mp,theta,phi);/* m >= 0 */
-          sum += sign[m%2]*(realClm[lm]-_Complex_I*imagClm[lm])*Ylm((int)l,-mp,theta,phi);/* m < 0 */
+          sum += (realClm[lm]+imagI*imagClm[lm])*Ylm((int)l,mp,theta,phi);/* m >= 0 */
+          sum += sign[m%2]*(realClm[lm]-imagI*imagClm[lm])*Ylm((int)l,-mp,theta,phi);/* m < 0 */
         }
         lm   = lm2n(l,0);
-        sum += (realClm[lm]+_Complex_I*imagClm[lm])*Ylm((int)l,0,theta,phi);/* m == 0 */
+        sum += (realClm[lm]+imagI*imagClm[lm])*Ylm((int)l,0,theta,phi);/* m == 0 */
       }
       if (df < fabs(creal(sum)-fr))
         df = fabs(creal(sum)-fr);
@@ -196,8 +196,8 @@ static int Ylm_derivatives_test(Grid_T *const grid)
     {
       phi = j*2*M_PI/Nphi;
       f[j+Nphi*i]        = creal(Ylm(6,-5,theta,phi));
-      f_dphi[j+Nphi*i]   = creal(-15.0/32.0*sqrt(1001)*_Complex_I*cexp(-5*_Complex_I*phi)*pow(sin(theta), 5)*cos(theta)/sqrt(M_PI));
-      f_dtheta[j+Nphi*i] = creal((3.0/32.0)*sqrt(1001)*(5 - 6*pow(sin(theta), 2))*cexp(-5*_Complex_I*phi)*pow(sin(theta), 4)/sqrt(M_PI));
+      f_dphi[j+Nphi*i]   = creal(-15.0/32.0*sqrt(1001)*imagI*cexp(-5*imagI*phi)*pow(sin(theta), 5)*cos(theta)/sqrt(M_PI));
+      f_dtheta[j+Nphi*i] = creal((3.0/32.0)*sqrt(1001)*(5 - 6*pow(sin(theta), 2))*cexp(-5*imagI*phi)*pow(sin(theta), 4)/sqrt(M_PI));
     }
   }
   /* calculating coeffs */
@@ -519,7 +519,7 @@ static int cft_c2r_r2c_1d_EquiSpaced_test(Grid_T *const grid)
   unsigned N = 0;
   const char *const par = Pgets("Test_FourierTransformation");
   double *f;/* f(x) x = [0,2pi] */
-  double complex *c;/* f(x) = c_i*exp(_Complex_I*i*x) */
+  double complex *c;/* f(x) = c_i*exp(imagI*i*x) */
   double x;
   unsigned i,j;
   
@@ -549,7 +549,7 @@ static int cft_c2r_r2c_1d_EquiSpaced_test(Grid_T *const grid)
     double complex fc = 0;
     fc = c[0];
     for (j = 1; j < N/2+1; ++j)
-      fc += c[j]*cexp(_Complex_I*(double)j*x)+conj(c[j])*cexp(-_Complex_I*(double)j*x);
+      fc += c[j]*cexp(imagI*(double)j*x)+conj(c[j])*cexp(-imagI*(double)j*x);
     printf("%+0.15f%+0.15fI   %+0.15f   %+e\n",creal(fc),cimag(fc),f[i],creal(fc)-f[i]);
   }
   
@@ -564,7 +564,7 @@ static int cft_c2r_r2c_1d_EquiSpaced_test(Grid_T *const grid)
     double fr = sin(2*x)*cos(x)+Pow2(sin(4*x));
     fi = c[0];
     for (j = 1; j < N/2+1; ++j)
-      fi += c[j]*cexp(_Complex_I*(double)j*x)+conj(c[j])*cexp(-_Complex_I*(double)j*x);
+      fi += c[j]*cexp(imagI*(double)j*x)+conj(c[j])*cexp(-imagI*(double)j*x);
     printf("%+0.15f%+0.15fI   %+0.15f   %+e\n",creal(fi),cimag(fi),fr,creal(fi)-fr);
   }
   

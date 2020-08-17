@@ -3,6 +3,7 @@
 
 #include <complex.h>
 #undef I
+#define imagI _Complex_I
 
 double *c_f(Patch_T *const patch);
 double *x_f(Patch_T *const patch);

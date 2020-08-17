@@ -133,11 +133,11 @@ double interpolation_Ylm(const double *const realClm,const double *const imagClm
       int mp = (int)m;
       lm   = lm2n(l,m);
       
-      sum += (realClm[lm]+_Complex_I*imagClm[lm])*Ylm((int)l,mp,theta,phi);/* m >= 0 */
-      sum += sign[m%2]*(realClm[lm]-_Complex_I*imagClm[lm])*Ylm((int)l,-mp,theta,phi);/* m < 0 */
+      sum += (realClm[lm]+imagI*imagClm[lm])*Ylm((int)l,mp,theta,phi);/* m >= 0 */
+      sum += sign[m%2]*(realClm[lm]-imagI*imagClm[lm])*Ylm((int)l,-mp,theta,phi);/* m < 0 */
     }
     lm   = lm2n(l,0);
-    sum += (realClm[lm]+_Complex_I*imagClm[lm])*Ylm((int)l,0,theta,phi);/* m == 0 */
+    sum += (realClm[lm]+imagI*imagClm[lm])*Ylm((int)l,0,theta,phi);/* m == 0 */
   }
 
   return creal(sum);
@@ -169,11 +169,11 @@ double *df_dphi_Ylm(const double *const realClm,const double *const imagClm,cons
         {
           int mp = (int)m;
           lm   = lm2n(l,m);
-          sum += (realClm[lm]+_Complex_I*imagClm[lm])*dYlm_dphi((int)l,mp,theta,phi);/* m >= 0 */
-          sum += sign[m%2]*(realClm[lm]-_Complex_I*imagClm[lm])*dYlm_dphi((int)l,-mp,theta,phi);/* m < 0 */
+          sum += (realClm[lm]+imagI*imagClm[lm])*dYlm_dphi((int)l,mp,theta,phi);/* m >= 0 */
+          sum += sign[m%2]*(realClm[lm]-imagI*imagClm[lm])*dYlm_dphi((int)l,-mp,theta,phi);/* m < 0 */
         }
         //lm   = lm2n(l,0);
-        //sum += (realClm[lm]+_Complex_I*imagClm[lm])*dYlm_dphi(l,0,theta,phi);/* m == 0 */
+        //sum += (realClm[lm]+imagI*imagClm[lm])*dYlm_dphi(l,0,theta,phi);/* m == 0 */
       }
       df_dphi[j+i*Nphi] = creal(sum);
     }/* end of for (j = 0; j < Nphi; ++j) */
@@ -208,11 +208,11 @@ double *df_dtheta_Ylm(const double *const realClm,const double *const imagClm,co
         {
           int mp = (int)m;
           lm   = lm2n(l,m);
-          sum += (realClm[lm]+_Complex_I*imagClm[lm])*dYlm_dtheta((int)l,mp,theta,phi);/* m >= 0 */
-          sum += sign[m%2]*(realClm[lm]-_Complex_I*imagClm[lm])*dYlm_dtheta((int)l,-mp,theta,phi);/* m < 0 */
+          sum += (realClm[lm]+imagI*imagClm[lm])*dYlm_dtheta((int)l,mp,theta,phi);/* m >= 0 */
+          sum += sign[m%2]*(realClm[lm]-imagI*imagClm[lm])*dYlm_dtheta((int)l,-mp,theta,phi);/* m < 0 */
         }
         lm   = lm2n(l,0);
-        sum += (realClm[lm]+_Complex_I*imagClm[lm])*dYlm_dtheta((int)l,0,theta,phi);/* m == 0 */
+        sum += (realClm[lm]+imagI*imagClm[lm])*dYlm_dtheta((int)l,0,theta,phi);/* m == 0 */
       }
       df_dtheta[j+i*Nphi] = creal(sum);
     }/* end of for (j = 0; j < Nphi; ++j) */
@@ -248,11 +248,11 @@ unsigned lm2n(const unsigned l, const unsigned m)
   return l*(l+1)/2+m;
 }
 
-/* ->return value \integral_{0}^{2pi} f(phi)*exp(_Complex_I*m*phi)dphi (trapezoidal rule) */
+/* ->return value \integral_{0}^{2pi} f(phi)*exp(imagI*m*phi)dphi (trapezoidal rule) */
 static double complex integrate_expImphi(const double *const f, const unsigned n/* f array dimension */,const int m)
 {
   double complex i0 = 0;
-  const double complex phi0 = 2.*_Complex_I*M_PI/n;
+  const double complex phi0 = 2.*imagI*M_PI/n;
   unsigned i;
   
   for (i = 0; i < n; ++i)
