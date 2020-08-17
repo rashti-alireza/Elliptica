@@ -10,7 +10,7 @@ x = symbols('x')
 
 print (' /* direct output of this file to lobatto_root_and_weight_function.c */\n')
 print ('#include "core_lib.h"')
-print ('#include "maths_analytic_lib.h"')
+print ('#include "maths_special_functions_lib.h"')
 print ('#include "maths_general_lib.h"\n')
 print ('#define  ARRAY_SIZE_LOBATTO {}'.format(Nmax))
 print ('double Lobatto_root[ARRAY_SIZE_LOBATTO][ARRAY_SIZE_LOBATTO] = {{0}};\n')

@@ -1,7 +1,7 @@
  /* direct output of this file to legendre_root_and_weight_function.c */
 
 #include "core_lib.h"
-#include "maths_analytic_lib.h"
+#include "maths_special_functions_lib.h"
 #include "maths_general_lib.h"
 
 #define ARRAY_SIZE_LEGENDRE 25

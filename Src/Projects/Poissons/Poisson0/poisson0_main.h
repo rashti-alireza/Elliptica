@@ -1,6 +1,6 @@
 #include "core_lib.h"
 #include "maths_approximation_lib.h"
-#include "maths_analytic_lib.h"
+#include "maths_special_functions_lib.h"
 
 #define STR_LEN_MAX 400
 
