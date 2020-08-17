@@ -124,11 +124,11 @@ static int Ylm_trans_test(Grid_T *const grid)
           int mp = (int)m;
           lm   = lm2n(l,m);
           
-          sum += (realClm[lm]+_Complex_I*imagClm[lm])*Ylm(l,mp,theta,phi);/* m >= 0 */
-          sum += sign[m%2]*(realClm[lm]-_Complex_I*imagClm[lm])*Ylm(l,-mp,theta,phi);/* m < 0 */
+          sum += (realClm[lm]+_Complex_I*imagClm[lm])*Ylm((int)l,mp,theta,phi);/* m >= 0 */
+          sum += sign[m%2]*(realClm[lm]-_Complex_I*imagClm[lm])*Ylm((int)l,-mp,theta,phi);/* m < 0 */
         }
         lm   = lm2n(l,0);
-        sum += (realClm[lm]+_Complex_I*imagClm[lm])*Ylm(l,0,theta,phi);/* m == 0 */
+        sum += (realClm[lm]+_Complex_I*imagClm[lm])*Ylm((int)l,0,theta,phi);/* m == 0 */
       }
       if (df < fabs(creal(sum)-fr))
         df = fabs(creal(sum)-fr);
