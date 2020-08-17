@@ -3,7 +3,7 @@
 // August 2019
 */
 
-#include "special_functions.h"
+#include "misc_functions.h"
 
 /* calculate factorial for integer number/
 // ->return value: n*(n-1)*...*1. */
