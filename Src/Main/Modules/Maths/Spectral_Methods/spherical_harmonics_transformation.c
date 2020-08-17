@@ -133,7 +133,7 @@ double interpolation_Ylm(const double *const realClm,const double *const imagClm
       int mp = (int)m;
       lm   = lm2n(l,m);
       
-      sum += (realClm[lm]+imagI*imagClm[lm])*Ylm((int)l,mp,theta,phi);/* m >= 0 */
+      sum += (realClm[lm]+imagI*imagClm[lm])*Ylm((int)l,mp,theta,phi);/* m >= 1 */
       sum += sign[m%2]*(realClm[lm]-imagI*imagClm[lm])*Ylm((int)l,-mp,theta,phi);/* m < 0 */
     }
     lm   = lm2n(l,0);
