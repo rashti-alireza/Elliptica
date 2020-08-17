@@ -106,6 +106,7 @@ static int Ylm_trans_test(Grid_T *const grid)
   df = 0.;
   /* now let's see how Ylm sum works: */
   printf("--> For Ntheta = %u, Nphi = %u, Lmax = %u:\n",Ntheta,Nphi,lmax);
+  printf("sum:\n");
   /* for each theta and phi */
   for (i = 0; i < Ntheta; ++i)
   {
@@ -135,6 +136,31 @@ static int Ylm_trans_test(Grid_T *const grid)
     }
   }/* for (i = 0; i < Ntheta; ++i) */
   printf("Max Error = %e\n",df);
+  
+  /* let's do some interpolation: */
+  if (1)
+  {
+    double *ran_theta = make_random_number(Ntheta,0,M_PI);
+    double *ran_phi   = make_random_number(Nphi,0,2*M_PI);
+    printf("Interpolation:       f(x):                diff:\n");
+    df = 0;
+    for (i = 0; i < Ntheta; ++i)
+    {
+      double x = ran_theta[i];
+      for (j = 0; j < Nphi; ++j)
+      {
+        double y = ran_phi[j];
+        double fr = creal(Ylm(4,3,x,y));
+        double fi = interpolation_Ylm(realClm,imagClm,lmax,x,y);
+        printf("%+0.15f   %+0.15f   %+e\n",fi,fr,fi-fr);
+        if (df<fabs(fi-fr))
+          df = fabs(fi-fr);
+      }
+    }
+    printf("Max Error = %e\n",df);
+    _free(ran_theta);
+    _free(ran_phi);
+  }
   
   free(f);
   free(realClm);
@@ -174,7 +200,7 @@ static int Ylm_derivatives_test(Grid_T *const grid)
     _free(s);
   }
   else
-    N = 10;
+    N = 14;
   
   /* setting grid size */  
   Ntheta = Nphi = N;
