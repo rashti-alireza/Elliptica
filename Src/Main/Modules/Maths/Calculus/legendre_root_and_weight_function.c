@@ -13,8 +13,6 @@ void init_Legendre_root_function(void);
 /* weight = 2./(dPn(cos(theta))/dtheta)^2) */
 double Legendre_weight_function(const double x, const unsigned n)
 {
-  if (EQL(x,1.) || EQL(x,-1.))
-    Error0("Bad argument for Legendre weight function.\n");
   const double dp_dth = d_associated_legendre_dtheta((int)n,0,x);
   return 2./(Pow2(dp_dth));
 }
