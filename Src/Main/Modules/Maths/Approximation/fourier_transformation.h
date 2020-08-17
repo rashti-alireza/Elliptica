@@ -1,6 +1,6 @@
 #include "core_lib.h"
 #include "maths_general_lib.h"
-#include "maths_complex_numbers_lib.h"
+#include "maths_complex_lib.h"
 
 #define IJ(i,j,n)  ((j)+(i)*(n))
 

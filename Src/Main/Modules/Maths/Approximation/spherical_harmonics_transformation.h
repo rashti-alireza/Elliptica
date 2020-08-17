@@ -4,7 +4,7 @@
 #include "maths_special_functions_lib.h"
 #include "maths_calculus_lib.h"
 #include "maths_approximation_lib.h"
-#include "maths_complex_numbers_lib.h"
+#include "maths_complex_lib.h"
 
 void get_Ylm_coeffs(double *const realClm,double *const imagClm,const double *const f,const unsigned Ntheta,const unsigned Nphi,const unsigned Lmax);
 static void get_Ylm_coeffs_GaussLegendre_EquiSpaced(double *const realClm,double *const imagClm,const double *const f,const unsigned Ntheta,const unsigned Nphi,const unsigned Lmax);
