@@ -110,7 +110,7 @@ double Cheb_Tn(const int n, const double x);
 double d2T_dx2(const int n, const double x);
 
 double 
-d_associated_Legendre_dtheta
+d_associated_legendre_dtheta
   (
   const int l/* l in P^l_m(x) */,
   const int m/* m in P^l_m(x), 0 <= m <= l*/,
@@ -118,7 +118,7 @@ d_associated_Legendre_dtheta
   );
 
 double 
-associated_Legendre
+associated_legendre
   (
   const int l/* l in P^l_m(x) */,
   const int m/* m in P^l_m(x), 0 <= m <= l*/,

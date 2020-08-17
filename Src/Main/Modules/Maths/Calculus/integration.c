@@ -268,8 +268,6 @@ static double GaussQuadrature_Lobatto(Integration_T *const I)
   
   /* initializing root tables */
   init_Lobatto_root_function();
-  /* initialzing associated_legendre needed for Lobatto_weight_function */
-  init_associated_legendre();
   
   /* trying to tame err */
   err = 1./Factorial(2*ni-2);

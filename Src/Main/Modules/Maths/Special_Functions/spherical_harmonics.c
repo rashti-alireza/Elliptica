@@ -7,7 +7,7 @@
 
 /* ->: d(P^m_l(x))/dtheta. */
 double 
-d_associated_Legendre_dtheta
+d_associated_legendre_dtheta
   (
   const int l/* l in P^l_m(x) */,
   const int m/* m in P^l_m(x), 0 <= m <= l*/,
@@ -22,17 +22,17 @@ d_associated_Legendre_dtheta
   }
   else if (m == l)
   {
-    dp = (l+m)*(l-m+1)*associated_Legendre(l,m-1,x);
+    dp = (l+m)*(l-m+1)*associated_legendre(l,m-1,x);
   }
   else if (m == 0)
   {
     dp = -(1+(l+m)*(l-m+1)/(l*(l+1)))*
-          associated_Legendre(l,1,x);
+          associated_legendre(l,1,x);
   }
   else
   {
-    dp = (l+m)*(l-m+1)*associated_Legendre(l,m-1,x)
-          -associated_Legendre(l,m+1,x);
+    dp = (l+m)*(l-m+1)*associated_legendre(l,m-1,x)
+          -associated_legendre(l,m+1,x);
   }
   
   return -dp*0.5;
@@ -41,7 +41,7 @@ d_associated_Legendre_dtheta
 /* ->: associated Legendre polynomial P^m_l(x). 
 // this recurrence relation claimed (numerical recipe) to be stable */
 double 
-associated_Legendre
+associated_legendre
   (
   const int l/* l in P^l_m(x) */,
   const int m/* m in P^l_m(x), 0 <= m <= l*/,
@@ -128,7 +128,7 @@ Ylm
   if (m >= 0)
   {
     ylm = factor*
-          associated_Legendre(l,m,cos(theta))*
+          associated_legendre(l,m,cos(theta))*
           cexp(I*(double)m*phi);
   }
   else
@@ -136,7 +136,7 @@ Ylm
     double SIGN[2] = {1,-1};
     int mp = -m;
     ylm = SIGN[mp%2]*factor*
-          associated_Legendre(l,mp,cos(theta))*
+          associated_legendre(l,mp,cos(theta))*
           cexp(I*(double)m*phi);
   }
   
@@ -189,7 +189,7 @@ dYlm_dtheta
   if (m >= 0)
   {
     dylm = factor*
-          d_associated_Legendre_dtheta(l,m,x)*
+          d_associated_legendre_dtheta(l,m,x)*
           cexp(I*(double)m*phi);
   }
   else
@@ -197,7 +197,7 @@ dYlm_dtheta
     double SIGN[2] = {1,-1};
     int mp = -m;
     dylm = SIGN[mp%2]*factor*
-          d_associated_Legendre_dtheta(l,mp,x)*
+          d_associated_legendre_dtheta(l,mp,x)*
           cexp(I*(double)m*phi);
   }
   
