@@ -6,7 +6,7 @@
 #include "maths_general_lib.h"
 #include "maths_special_functions_lib.h"
 #include "maths_calculus_lib.h"
-#include "maths_approximation_lib.h"
+#include "maths_spectral_methods_lib.h"
 #include "maths_complex_lib.h"
 #include "fields_lib.h"
 

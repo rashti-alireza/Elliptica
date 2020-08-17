@@ -1,6 +1,6 @@
 #include "bbn_headers.h"
 #include "utilities_lib.h"
-#include "maths_approximation_lib.h"
+#include "maths_spectral_methods_lib.h"
 #include "maths_special_functions_lib.h"
 #include "physics_observables_lib.h"
 #include "maths_equation_solvings_lib.h"

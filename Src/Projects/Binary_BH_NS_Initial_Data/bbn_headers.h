@@ -8,7 +8,7 @@
 #include "maths_general_lib.h"
 #include "manifold_lib.h"
 #include "utilities_lib.h"
-#include "maths_approximation_lib.h"
+#include "maths_spectral_methods_lib.h"
 #include "maths_calculus_lib.h"
 #include "physics_EoS_lib.h"
 #include "physics_StressEnergyTensor_lib.h"

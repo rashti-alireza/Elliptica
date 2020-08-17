@@ -3,7 +3,7 @@
 #include "maths_general_lib.h"
 #include "maths_special_functions_lib.h"
 #include "maths_calculus_lib.h"
-#include "maths_approximation_lib.h"
+#include "maths_spectral_methods_lib.h"
 #include "maths_complex_lib.h"
 
 void get_Ylm_coeffs(double *const realClm,double *const imagClm,const double *const f,const unsigned Ntheta,const unsigned Nphi,const unsigned Lmax);

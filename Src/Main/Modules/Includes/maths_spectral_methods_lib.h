@@ -1,5 +1,5 @@
-#ifndef maths_approximation_LIB_H
-#define maths_approximation_LIB_H
+#ifndef maths_spectral_methods_LIB_H
+#define maths_spectral_methods_LIB_H
 
 
 struct INTERPOLATION_T;
