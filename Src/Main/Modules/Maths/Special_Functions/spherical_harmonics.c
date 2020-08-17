@@ -48,7 +48,7 @@ associated_legendre
   const double x/* x in P^l_m(x), -1 <= x=cos(theta) <= 1 */
   )
 {
-  double fact, pll, pmm, pmmp1, somx2;
+  double fact, pll = 0, pmm, pmmp1, somx2;
   int i, ll;
 
   if (x > 1. || x < -1.)
