@@ -3,9 +3,11 @@
 
 
 #include <complex.h>
-#include <tgmath.h>//for the type generate macros.
+/* #include <tgmath.h> for the type generate macros. */
+#undef I
 
 void *alloc_double_complex(const unsigned N);
+
 #endif
 
 

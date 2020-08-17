@@ -73,9 +73,9 @@ void rft_1d_ChebyshevNodes_coeffs(double *const values ,double *const coeffs,con
 }
 
 /* fourier transformation from real value to complex coeffs:
-// f(x) = \sum_{m=-l+1}^{l-1} c(m)*exp(I*m*x), where x is in [0,2*pi],
+// f(x) = \sum_{m=-l+1}^{l-1} c(m)*exp(_Complex_I*m*x), where x is in [0,2*pi],
 // and l = n/2+1 (if n is odd, it is rounded down) thus: we have:
-// c(m) = 1/(2*pi)*\integral_{0}^{2*pi} f(x)*exp(-I*m*x) dx.
+// c(m) = 1/(2*pi)*\integral_{0}^{2*pi} f(x)*exp(-_Complex_I*m*x) dx.
 //
 // some notes:
 // ============
@@ -94,7 +94,7 @@ void *r2cft_1d_EquiSpaced_coeffs(const double *const value,const unsigned n)
   
   const unsigned l = n/2+1;/* note: if n is not even, it is rounded down */
   double complex *const coeffs = alloc_double_complex(l);
-  const double complex x0 = -2.*I*M_PI/n;/* - included */
+  const double complex x0 = -2.*_Complex_I*M_PI/n;/* - included */
   unsigned m;
   
   for (m = 0; m < l; ++m)/* note: l is excluded, otherwise one have aliasing and then error */
@@ -112,9 +112,9 @@ void *r2cft_1d_EquiSpaced_coeffs(const double *const value,const unsigned n)
 }
 
 /* fourier transformation from complex coeffs to real values:
-// f(x) = \sum_{m=-l+1}^{l-1} c(m)*exp(I*m*x), where x is in [0,2*pi],
+// f(x) = \sum_{m=-l+1}^{l-1} c(m)*exp(_Complex_I*m*x), where x is in [0,2*pi],
 // and l = n/2+1 (if n is odd, it is rounded down) thus: we have:
-// c(m) = 1/(2*pi)*\integral_{0}^{2*pi} f(x)*exp(-I*m*x) dx. 
+// c(m) = 1/(2*pi)*\integral_{0}^{2*pi} f(x)*exp(-_Complex_I*m*x) dx. 
 // ->return value : f(x) */
 double *c2rft_1d_EquiSpaced_values(void *const coeffs,const unsigned N)
 {
@@ -124,7 +124,7 @@ double *c2rft_1d_EquiSpaced_values(void *const coeffs,const unsigned N)
   const double complex *const c = coeffs;
   double *f = alloc_double(N);
   const unsigned l = N/2+1;
-  const double complex x0 = 2.*I*M_PI/N;
+  const double complex x0 = 2.*_Complex_I*M_PI/N;
   unsigned i,j;
   
   for (i = 0; i < N; ++i)
@@ -158,7 +158,7 @@ double *c2rft_1d_EquiSpaced_values(void *const coeffs,const unsigned N)
 // o. f expansion => f(theta,phi) = F(phi0,phi1) =
 //    \sum_{m0=-l0,m1=-l1}^{m0=l0,m1=l1}{Cm0m1 exp(I.m0.phi0) exp(I.m1.phi1)}.
 //    =>  Cm0m1 = 1/(2*pi)^2 *\integral_{0}^{2*pi}\integral_{0}^{2*pi} 
-//              f(phi0,phi1) exp(-I*m0*phi0) exp(-I*m1*phi1) dphi0 dphi1.
+//              f(phi0,phi1) exp(-_Complex_I*m0*phi0) exp(-_Complex_I*m1*phi1) dphi0 dphi1.
 // o. theta is in [0,pi] and phi is in [0,2pi]
 // o. theta = phi0/2 and phi = phi1
 // o. phi1 and phi2 are in [0,2 pi]
@@ -362,7 +362,7 @@ r2cft_2d_last_coeffs_max_mag_S2
 // o. f expansion => f(phi0,phi1) = 
 //    \sum_{m0=-l0,m1=-l1}^{m0=l0,m1=l1}{Cm0m1 exp(I.m0.phi0) exp(I.m1.phi1)}.
 //    =>  Cm0m1 = 1/(2*pi)^2 *\integral_{0}^{2*pi}\integral_{0}^{2*pi} 
-//              f(phi0,phi1) exp(-I*m0*phi0) exp(-I*m1*phi1) dphi0 dphi1.
+//              f(phi0,phi1) exp(-_Complex_I*m0*phi0) exp(-_Complex_I*m1*phi1) dphi0 dphi1.
 // o. phi1 and phi2 are in [0,2 pi]
 // o. collocation poinst are EquiSpaced
 // o. f(phi0(i),phi1(j)) = f[i][j] = f[IJ(i,j,Nphi1)], where IJ is the macro in the header
@@ -396,8 +396,8 @@ r2cft_2d_coeffs
   const unsigned l0   = Nphi0/2+1;
   const unsigned l1   = Nphi1/2+1;
   const unsigned l0l1 = l0*l1;
-  const double complex x0 = -2.*I*M_PI/Nphi0;/* - included */
-  const double complex x1 = -2.*I*M_PI/Nphi1;/* - included */
+  const double complex x0 = -2.*_Complex_I*M_PI/Nphi0;/* - included */
+  const double complex x1 = -2.*_Complex_I*M_PI/Nphi1;/* - included */
   double *const Rc = alloc_double(2*l0l1);
   double *const Ic = alloc_double(2*l0l1);
   double *crr      = alloc_double(l0l1);
@@ -530,11 +530,11 @@ r2cft_2d_interpolation
     {
       unsigned m0m1 = IJ(m0,m1,l1);
       interp += (realC[m0m1]    - imagC[l0l1+m0m1]+
-                 I*(imagC[m0m1] + realC[l0l1+m0m1]))*
-                 cexp(I*((double)m0*phi0+(double)m1*phi1));
+                 _Complex_I*(imagC[m0m1] + realC[l0l1+m0m1]))*
+                 cexp(_Complex_I*((double)m0*phi0+(double)m1*phi1));
       interp += (realC[m0m1]    + imagC[l0l1+m0m1] +
-                 I*(imagC[m0m1] - realC[l0l1+m0m1]))*
-                 cexp(I*((double)m0*phi0-(double)m1*phi1));
+                 _Complex_I*(imagC[m0m1] - realC[l0l1+m0m1]))*
+                 cexp(_Complex_I*((double)m0*phi0-(double)m1*phi1));
     }
   }
   return 2*creal(interp);
@@ -597,17 +597,17 @@ r2cft_2d_df_dphi0
       ij = IJ(i,j,Nphi1);
       for (m0 = 0; m0 < l0; ++m0)
       {
-        double complex Im0 = I*(double)m0;
+        double complex Im0 = _Complex_I*(double)m0;
         double complex expIm0phi0 = cexp(Im0*phi0);
         for (m1 = 0; m1 < l1; ++m1)
         {
           m0m1 = IJ(m0,m1,l1);
           dfc += Im0*(realC[m0m1]   - imagC[l0l1+m0m1]+
-                     I*(imagC[m0m1] + realC[l0l1+m0m1]))*
-                     expIm0phi0*cexp(I*(double)m1*phi1);
+                     _Complex_I*(imagC[m0m1] + realC[l0l1+m0m1]))*
+                     expIm0phi0*cexp(_Complex_I*(double)m1*phi1);
           dfc += Im0*(realC[m0m1]   + imagC[l0l1+m0m1] +
-                     I*(imagC[m0m1] - realC[l0l1+m0m1]))*
-                     expIm0phi0*cexp(-I*(double)m1*phi1);
+                     _Complex_I*(imagC[m0m1] - realC[l0l1+m0m1]))*
+                     expIm0phi0*cexp(-_Complex_I*(double)m1*phi1);
         }
       }
       df[ij] = 2*creal(dfc);
@@ -648,17 +648,17 @@ r2cft_2d_df_dphi1
       ij = IJ(i,j,Nphi1);
       for (m1 = 0; m1 < l1; ++m1)
       {
-        double complex Im1 = I*(double)m1;
+        double complex Im1 = _Complex_I*(double)m1;
         double complex expIm1phi1 = cexp(Im1*phi1);
         for (m0 = 0; m0 < l0; ++m0)
         {
           m0m1 = IJ(m0,m1,l1);
           dfc += Im1*(realC[m0m1]   - imagC[l0l1+m0m1]+
-                     I*(imagC[m0m1] + realC[l0l1+m0m1]))*
-                     cexp(I*(double)m0*phi0)*expIm1phi1;
+                     _Complex_I*(imagC[m0m1] + realC[l0l1+m0m1]))*
+                     cexp(_Complex_I*(double)m0*phi0)*expIm1phi1;
           dfc += -Im1*(realC[m0m1]  + imagC[l0l1+m0m1] +
-                     I*(imagC[m0m1] - realC[l0l1+m0m1]))*
-                     cexp(I*(double)m0*phi0)/expIm1phi1;
+                     _Complex_I*(imagC[m0m1] - realC[l0l1+m0m1]))*
+                     cexp(_Complex_I*(double)m0*phi0)/expIm1phi1;
         }
       }
       df[ij] = 2*creal(dfc);

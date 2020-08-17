@@ -196,8 +196,8 @@ static int Ylm_derivatives_test(Grid_T *const grid)
     {
       phi = j*2*M_PI/Nphi;
       f[j+Nphi*i]        = creal(Ylm(6,-5,theta,phi));
-      f_dphi[j+Nphi*i]   = creal(-15.0/32.0*sqrt(1001)*_Complex_I*exp(-5*_Complex_I*phi)*pow(sin(theta), 5)*cos(theta)/sqrt(M_PI));
-      f_dtheta[j+Nphi*i] = creal((3.0/32.0)*sqrt(1001)*(5 - 6*pow(sin(theta), 2))*exp(-5*_Complex_I*phi)*pow(sin(theta), 4)/sqrt(M_PI));
+      f_dphi[j+Nphi*i]   = creal(-15.0/32.0*sqrt(1001)*_Complex_I*cexp(-5*_Complex_I*phi)*pow(sin(theta), 5)*cos(theta)/sqrt(M_PI));
+      f_dtheta[j+Nphi*i] = creal((3.0/32.0)*sqrt(1001)*(5 - 6*pow(sin(theta), 2))*cexp(-5*_Complex_I*phi)*pow(sin(theta), 4)/sqrt(M_PI));
     }
   }
   /* calculating coeffs */
