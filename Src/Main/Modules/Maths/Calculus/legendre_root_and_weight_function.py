@@ -11,7 +11,6 @@ print (' /* direct output of this file to legendre_root_and_weight_function.c */
 print ('#include "core_lib.h"')
 print ('#include "maths_special_functions_lib.h"')
 print ('#include "maths_general_lib.h"\n')
-
 print ('#define ARRAY_SIZE_LEGENDRE {}'.format(Nmax))
 print ('double Legendre_root[ARRAY_SIZE_LEGENDRE][ARRAY_SIZE_LEGENDRE] = {{0}};\n')
 # declaration
