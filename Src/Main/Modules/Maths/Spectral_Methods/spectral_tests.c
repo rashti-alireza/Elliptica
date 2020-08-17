@@ -3,7 +3,7 @@
 // July 2018
 */
 
-#include "approximation_tests.h"
+#include "spectral_tests.h"
 #define ArgM(a) a,#a/*used for being more accurate in naming and fast */
 #define MAXSTR 400
 
