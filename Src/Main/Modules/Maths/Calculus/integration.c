@@ -311,9 +311,6 @@ static double GaussQuadrature_Legendre(Integration_T *const I)
   /* initializing root tables */
   init_Legendre_root_function();
   
-  /* initialzing dPn/dx needed for Legendre_weight_function */
-  init_dLegendre_dx();
-  
   /* trying to tame err */
   err = 1./Factorial(2*ni);
   err *= Factorial(ni);
