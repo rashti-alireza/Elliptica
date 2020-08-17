@@ -2,6 +2,7 @@
 #include "error_handling_lib.h"
 #include "utilities_lib.h"
 #include "maths_general_lib.h"
+#include "maths_special_functions_lib.h"
 
 /* these following are used for compatibility with CForm in mathematica */
 #define E M_E
@@ -19,9 +20,6 @@ double root_square(const unsigned n, const double *const v2,const double *const 
 long double root_square_long(const long unsigned n, const double *const v2, const double *const v1);
 double dot(const unsigned n, const double *const v2,const double *const v1);
 double ABS(const double v);
-double Cheb_U(const int n, const double x);
-double Cheb_Tn(const int n, const double x);
-double d2T_dx2(const int n, const double x);
 double sum_1_N_cos_ia(const unsigned N, const double a);
 double sum_0_N_dCi_dfj_by_Ti_q(const unsigned N,const unsigned j,const double q);
 double sum_0_N_dCi_dfj_by_dTi_dq(const unsigned N,const unsigned j,const double q);
