@@ -9,7 +9,7 @@
 // tests will be done according to input file.
 // ->return value: EXIT_SUCCESS
 */
-int Modules_Test(void)
+int Modules_Test(void *vp)
 {
   /* making output directory for this project */
   char folder[STR_LEN_MAX] = {'\0'};
@@ -113,5 +113,6 @@ int Modules_Test(void)
   }
   
   
+  UNUSED(vp);
   return EXIT_SUCCESS;
 }

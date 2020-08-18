@@ -69,7 +69,7 @@ typedef struct PARAMETER_T
 */
 
 /* functions */
-typedef int ProjFunc(void);
+typedef int ProjFunc(void *vp);
 
 /* projects */
 typedef struct PROJECT_T

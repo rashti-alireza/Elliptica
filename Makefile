@@ -258,7 +258,7 @@ $(auto_gen_c_file): $(DEPENDENCY_FILES)
 	@echo "int create_db_projects(void);" >> $(auto_gen_c_file)
 	@for p in $(PROJECT_NAMES); \
 	  do \
-	    echo "int " $$p "(void);" >> $(auto_gen_c_file) ;\
+	    echo "int " $$p "(void *vp);" >> $(auto_gen_c_file) ;\
 	   done;
 # --> add function to add the projects:
 	@echo "int create_db_projects(void){" >> $(auto_gen_c_file)
@@ -271,8 +271,9 @@ $(auto_gen_c_file): $(DEPENDENCY_FILES)
 # --> add function if spacial project does not exist:
 	@for m in $(SPECIAL_PR_PROJECT_NAMES); \
 	  do \
-	   echo "int " $$m "(void);" >> $(auto_gen_c_file) ; \
-	   echo "int " $$m "(void){" >> $(auto_gen_c_file) ; \
+	   echo "int " $$m "(void *vp);" >> $(auto_gen_c_file) ; \
+	   echo "int " $$m "(void *vp){" >> $(auto_gen_c_file) ; \
+	   echo "UNUSED(vp);" >> $(auto_gen_c_file) ; \
 	   echo "return EXIT_FAILURE;}" >> $(auto_gen_c_file) ; \
 	 done
 # --> add function if spacial print module does not exist:
@@ -280,8 +281,7 @@ $(auto_gen_c_file): $(DEPENDENCY_FILES)
 	  do \
 	   echo "void " $$m "(Pr_Field_T *const pr);" >> $(auto_gen_c_file) ; \
 	   echo "void " $$m "(Pr_Field_T *const pr){" >> $(auto_gen_c_file) ; \
-	   echo "UNUSED(pr);" >> $(auto_gen_c_file) ; \
-	   echo "return;}" >> $(auto_gen_c_file) ; \
+	   echo "UNUSED(pr);}" >> $(auto_gen_c_file) ; \
 	 done
 	 	
 ##

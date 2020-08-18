@@ -14,7 +14,7 @@
 #define STR_LEN_MAX 400
 
 
-int Modules_Test(void);
+int Modules_Test(void *vp);
 Grid_T *mt_make_grid(void);
 void mt_fill_db_eqs(sEquation_T ***const field_eq,sEquation_T ***const bc_eq,sEquation_T ***const jacobian_field_eq,sEquation_T ***const jacobian_bc_eq);
 int mt_initial_data_alpha(Grid_T *const grid);
