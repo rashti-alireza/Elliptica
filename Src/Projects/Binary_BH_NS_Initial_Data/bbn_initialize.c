@@ -7186,91 +7186,11 @@ void bbn_free_grid_and_its_parameters(Grid_T *grid)
 static void find_AKV(Grid_T *const grid,const char *const type)
 {
   FUNC_TIC
-  
-  double *h_D0D0=0,*h_D0D1=0,*h_D1D1=0;/* induced metric */
-  unsigned lmax   = UINT_MAX;
-  unsigned N      = UINT_MAX;
-  unsigned Ntheta = UINT_MAX;
-  unsigned Nphi   = UINT_MAX;
-  int expansion_flg = 1;/* 1 double fourier, 0: spherical harmonic */
-  
-  if (Pcmps("akv_expansion","spherical_harmonic"))
-  {
-    lmax   = (unsigned)Pgeti("akv_lmax");/* lmax in Ylm */
-    Ntheta = 2*lmax+1;
-    Nphi   = 2*lmax+1;
-    N      = Ntheta*Nphi;/* = S2 grid pnts Ntheta*Nphi */
-    expansion_flg = 0;
-    Pseti("akv_n_theta",(int)Ntheta);
-    Pseti("akv_n_phi",(int)Nphi);
-  }
-  else if (Pcmps("akv_expansion","double_fourier"))
-  {
-    Ntheta = (unsigned)Pgeti("akv_n_theta");
-    Nphi   = (unsigned)Pgeti("akv_n_phi");
-    N      = Ntheta*Nphi;/* = S2 grid pnts Ntheta*Nphi */
-    expansion_flg = 1;
-  }
-  else
-    Error0(NO_OPTION);
-    
-  /* test induce_metric_algorithm */
-  if (0)
-  {
-    bbn_test_induced_metric_algorithm(grid);
-    FUNC_TOC
-    exit(0);
-  }
-  
-  /* populate the induced metric h */
-  bbn_compute_induced_metric_on_S2_CS_CTS
-    (grid,type,Ntheta,Nphi,lmax,&h_D0D0,&h_D0D1,&h_D1D1,expansion_flg);
-  
-  /* pass h as array parameters */
-  update_parameter_array("akv_2d_metric_D0D0",h_D0D0,N);
-  update_parameter_array("akv_2d_metric_D0D1",h_D0D1,N);
-  update_parameter_array("akv_2d_metric_D1D1",h_D1D1,N);
-  
+  UNUSED(type);
+  Psets("akv_object","NS");
   /* solve the AKV equation to find z */
-  Approximate_Killing_Vector();
+  Approximate_Killing_Vector(grid);
 
-  /* AKV inclusion map S2->M */
-  bbn_inclusion_map_S2_to_M_CS
-  (
-    grid,type,Ntheta,Nphi,lmax,expansion_flg,
-    Pgetdd("akv_xi0_U0"),
-    Pgetdd("akv_xi0_U1"),
-    "AKV0_U0","AKV0_U1","AKV0_U2"
-  );
-  bbn_inclusion_map_S2_to_M_CS
-  (
-    grid,type,Ntheta,Nphi,lmax,expansion_flg,
-    Pgetdd("akv_xi1_U0"),
-    Pgetdd("akv_xi1_U1"),
-    "AKV1_U0","AKV1_U1","AKV1_U2"
-  );
-  bbn_inclusion_map_S2_to_M_CS
-  (
-    grid,type,Ntheta,Nphi,lmax,expansion_flg,
-    Pgetdd("akv_xi2_U0"),
-    Pgetdd("akv_xi2_U1"),
-    "AKV2_U0","AKV2_U1","AKV2_U2"
-  );
-  
-  /* free */
-  free_parameter("akv_xi0_U0");
-  free_parameter("akv_xi0_U1");
-  free_parameter("akv_xi1_U0");
-  free_parameter("akv_xi1_U1");
-  free_parameter("akv_xi2_U0");
-  free_parameter("akv_xi2_U1");
-  free_parameter("akv_2d_metric_D0D0");
-  free_parameter("akv_2d_metric_D0D1");
-  free_parameter("akv_2d_metric_D1D1");
-  free(h_D0D0);
-  free(h_D0D1);
-  free(h_D1D1);
-  
   /* test */
   printf("printing fields:\n");
   Pr_Field_T *pr  = init_PrField(grid);

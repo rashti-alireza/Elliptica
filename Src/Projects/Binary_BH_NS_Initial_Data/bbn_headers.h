@@ -142,53 +142,6 @@ void bbn_transform_populate_boost_rotation(Transformation_T *const tB,Transforma
 void bbn_transform_get_k_and_H_KerrSchild(const double x,const double y,const double z,const double a,const double m,Transformation_T *const tB,Transformation_T *const tR,double *const kt,double *const k0,double *const k1,double *const k2,double *const H);
 void bbn_populate_spin_integrands_Campanelli(Patch_T *const patch,const double xc[3],const double *const normal[3]);
 double bbn_mass_shedding_indicator(Grid_T *const grid);
-void bbn_test_induced_metric_algorithm(Grid_T *const grid);
-
-void
-bbn_compute_AKV_from_z
-  (
-  Grid_T *const grid/* grid */,
-  const double *const akv/* akv scalar values */,
-  const char *const dakv_D0/* d/dx akv name */,
-  const char *const dakv_D1/* d/dy akv name */,
-  const char *const dakv_D2/* d/dz akv name */,
-  const char *const type/* NS or BH */,
-  const unsigned Ntheta/* number of points in theta direction */,
-  const unsigned Nphi/* number of points in theta direction */,
-  const unsigned lmax/* l max in Ylm, if asked for spherical harmonic */,
-  const int interpolation_type/* 1 double fourier, 0: spherical harmonic */
-  );
-
-void
-bbn_compute_induced_metric_on_S2_CS_CTS
-  (
-  Grid_T *const grid/* grid */,
-  const char *const type/* NS or BH */,
-  const unsigned Ntheta/* number of points in theta direction */,
-  const unsigned Nphi/* number of points in phi direction */,
-  const unsigned lmax/* l max in Ylm */,
-  double **const ph_D0D0/* induced h00  pointer */,
-  double **const ph_D0D1/* induced h01  pointer */,
-  double **const ph_D1D1/* induced h11  pointer */,
-  const int expansion_type/* 1 double fourier, 0: spherical harmonic */
-  );
-  
-void
-bbn_inclusion_map_S2_to_M_CS
-  (
-  Grid_T *const grid/* grid */,
-  const char *const type/* NS or BH */,
-  const unsigned Ntheta/* number of points in theta direction */,
-  const unsigned Nphi/* number of points in phi direction */,
-  const unsigned lmax/* l max in Ylm */,
-  const int expansion_type/* 1 double fourier, 0: spherical harmonic */,
-  const double *const S2akv_U0/* akv on S2 */,
-  const double *const S2akv_U1/* akv on S2 */,
-  const char *const name_akv_U0/* inclusion akv vector v^0 name */,
-  const char *const name_akv_U1/* inclusion akv vector v^1 name */,
-  const char *const name_akv_U2/* inclusion akv vector v^2 name */
-  );
-
 void bbn_populate_spin_integrands_akv(Patch_T *const patch,const double *const normal[3]);
 
 void 
