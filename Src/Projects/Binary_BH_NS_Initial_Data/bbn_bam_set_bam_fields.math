@@ -59,6 +59,9 @@ Declare =
  # add: bam_grhd_v^i
  (obj = Field,name = bam_grhd_v, rank = U, C_macro4);
 
+ # add: bam_chi = psi^-4
+ (obj = Field,name = bam_chi, rank = 0, C_macro4);
+
  # K_{ij}
  (obj = Field,name = K_DiDj, rank = DD, C_macro);
 
@@ -125,6 +128,9 @@ Symm[_gammaI(i,j)   = _gammaI(j,i)];
    Symm[Kdd(i,j) = Kdd(j,i)];
    Cpopulate[bam_adm_K = Kdd];
 
+# bam_chi (for test purposes)
+`   bam_chi[ijk] = 1/psi4;`
+
 `  }`# end of for(ijk = 0; ijk < nn; ++ijk)
 
 # otherwise grhd_v^i and metter fields set zero by calloc
@@ -156,7 +162,6 @@ Symm[_gammaI(i,j)   = _gammaI(j,i)];
 `  }`# end of for(ijk = 0; ijk < nn; ++ijk)
 `  free_EoS(eos);`
 `  }`# end of if (IsItNSPatch(patch))
-
 `  }`# end of FOR_ALL_PATCHES
 
 
