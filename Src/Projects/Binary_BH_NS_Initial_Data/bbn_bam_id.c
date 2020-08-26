@@ -416,10 +416,11 @@ bam_output_doctest
   struct interpolation_points *const pnt/* where interpolation takes place */
   )
 {
-  const char *const fields_name[] = {"bam_chi",0};
+  const char *const fields_name[] = {"bam_chi","psi",0};
   const double Ly        = 100;/* length of y-axis */
   const double y0        = -Ly/2; /* initial y */
-  const unsigned npoints = 1000;
+  const unsigned npoints = 2000;
+  const double x0        = 0;/* x-axis */
   const double step      = Ly/npoints;
   char fname[1000] = {'\0'};
   double *interp_v = 0;
@@ -439,6 +440,7 @@ bam_output_doctest
   for (i = 0; i < npoints; ++i)
   {
     pnt->y[i] = y0+i*step;
+    pnt->x[i] = x0;
   }
   
   
@@ -547,7 +549,7 @@ bam_output_doctest
     }
     
     /* write */
-    sprintf(fname,"%s.txt",fields_name[f]);
+    sprintf(fname,"%s_%.1f.txt",fields_name[f],x0);
     file = Fopen(fname,"w");
     fprintf(file,"# y-coord %s\n",fields_name[f]);
     for (p = 0; p < npoints; ++p)
