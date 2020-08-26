@@ -66,7 +66,12 @@ static void interpolate_and_write(Grid_T *const grid,struct interpolation_points
 static char **translate_fields_name(char ***const bam_fields);
 void bbn_bam_error(const char *const msg,const char *const file,const int line);
 
-
+static void 
+bam_output_doctest
+  (
+  Grid_T *const grid/* loaded grid */,
+  struct interpolation_points *const pnt/* where interpolation takes place */
+  );
 
 
 
