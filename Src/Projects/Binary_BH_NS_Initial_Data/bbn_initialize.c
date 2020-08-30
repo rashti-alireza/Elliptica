@@ -7200,7 +7200,7 @@ static void find_AKV(Grid_T *const grid,const char *const type)
   
   /* test spin */
   double S[3] = {0};
-  bbn_define_spin_akv(S,grid,"BH");
+  bbn_define_spin_akv(S,grid,"NS");
   printf("S=(%g,%g,%g)\n",S[0],S[1],S[2]);
   FUNC_TOC
   
