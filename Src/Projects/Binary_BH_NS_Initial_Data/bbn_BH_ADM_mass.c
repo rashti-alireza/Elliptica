@@ -18,7 +18,7 @@ double bbn_BH_ADM_mass(Observable_T *const obs)
   for(p = 0; p < N; ++p)
   {
   Patch_T *patch = adm[p]->patch;
-  bbn_preparing_conformal_metric_derivatives(patch);
+  bbn_1st_derivatives_conformal_metric(patch);
 
 
   /* declaring: */

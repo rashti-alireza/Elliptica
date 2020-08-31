@@ -194,7 +194,7 @@ void bbn_free_data_dGamma(Grid_T *const grid)
 
 /* to make christoffer symbol we need derivative of the metric, 
 // this function does that. */
-void bbn_preparing_conformal_metric_derivatives(Patch_T *const patch)
+void bbn_1st_derivatives_conformal_metric(Patch_T *const patch)
 {
   /* declaring conformal metric */
   DECLARE_FIELD(_gamma_D2D2)

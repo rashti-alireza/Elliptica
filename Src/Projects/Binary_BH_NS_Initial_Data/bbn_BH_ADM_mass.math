@@ -22,7 +22,7 @@ C_macro  = READ_v_UNUSED(name);
 `  for(p = 0; p < N; ++p)`
 `  {`
 `  Patch_T *patch = adm[p]->patch;`
-`  bbn_preparing_conformal_metric_derivatives(patch);`
+`  bbn_1st_derivatives_conformal_metric(patch);`
 ``
 Declare = 
 {

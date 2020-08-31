@@ -4177,7 +4177,7 @@ static void extrapolate_insideBH_CS_WTGR(Grid_T *const grid)
     bbn_update_derivative_eta(patch);
     
     /* for K_{ij} inside BH patches */
-    bbn_preparing_conformal_metric_derivatives(patch);
+    bbn_1st_derivatives_conformal_metric(patch);
     bbn_free_data_Gamma_patch(patch);
     bbn_free_conformal_metric_derivatives(patch);
     /* bbn_update_psi10A_UiUj(patch); */

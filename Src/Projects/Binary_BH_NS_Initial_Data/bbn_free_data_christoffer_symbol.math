@@ -24,7 +24,7 @@ Ccode["  unsigned p;\n"];
 Ccode["  for(p = 0; p < np; ++p)"];
 Ccode["  {"];
 Ccode["    Patch_T *patch = grid->patch[p];"];
-Ccode["    bbn_preparing_conformal_metric_derivatives(patch);"];
+Ccode["    bbn_1st_derivatives_conformal_metric(patch);"];
 Ccode["    bbn_free_data_Gamma_patch(patch);"];
 Ccode["    bbn_free_conformal_metric_derivatives(patch);"];
 Ccode["  }"];

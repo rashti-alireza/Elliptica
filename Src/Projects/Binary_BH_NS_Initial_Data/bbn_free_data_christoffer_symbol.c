@@ -18,7 +18,7 @@ void bbn_free_data_Gamma(Grid_T *const grid)
   for(p = 0; p < np; ++p)
   {
     Patch_T *patch = grid->patch[p];
-    bbn_preparing_conformal_metric_derivatives(patch);
+    bbn_1st_derivatives_conformal_metric(patch);
     bbn_free_data_Gamma_patch(patch);
     bbn_free_conformal_metric_derivatives(patch);
   }
