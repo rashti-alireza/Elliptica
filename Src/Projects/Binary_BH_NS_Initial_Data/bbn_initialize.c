@@ -3959,7 +3959,7 @@ static void extrapolate_insideBH_CS_WTGR(Grid_T *const grid)
     unsigned f;
     
     bbn_1st_2nd_derivatives_conformal_metric(patch);
-    
+    bbn_add_and_take_2nd_derivatives_K(patch);
     Field_T *R1_f  = patch->CoordSysInfo->CubedSphericalCoord->R1_f;
     Field_T *R2_f  = patch->CoordSysInfo->CubedSphericalCoord->R2_f;
     if (R1_f)
