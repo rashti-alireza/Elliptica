@@ -144,6 +144,8 @@ void bbn_transform_get_k_and_H_KerrSchild(const double x,const double y,const do
 void bbn_populate_spin_integrands_Campanelli(Patch_T *const patch,const double xc[3],const double *const normal[3]);
 double bbn_mass_shedding_indicator(Grid_T *const grid);
 void bbn_create_grid_prototype_BC(Grid_T *const grid);
+void bbn_1st_2nd_derivatives_conformal_metric(Patch_T *const patch);
+void bbn_rm_1st_2nd_derivatives_conformal_metric(Patch_T *const patch);
 
 #endif
 
