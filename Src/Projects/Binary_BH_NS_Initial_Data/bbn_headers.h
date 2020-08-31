@@ -146,6 +146,8 @@ double bbn_mass_shedding_indicator(Grid_T *const grid);
 void bbn_create_grid_prototype_BC(Grid_T *const grid);
 void bbn_1st_2nd_derivatives_conformal_metric(Patch_T *const patch);
 void bbn_rm_1st_2nd_derivatives_conformal_metric(Patch_T *const patch);
+void bbn_add_and_take_2nd_derivatives_K(Patch_T *const patch);
+
 
 #endif
 

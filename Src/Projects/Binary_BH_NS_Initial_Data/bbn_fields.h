@@ -30,6 +30,7 @@ void bbn_update_derivative_B1_U1(Patch_T *const patch);
 void bbn_update_derivative_B1_U2(Patch_T *const patch);
 void bbn_update_B1_U012(Patch_T *const patch);
 void bbn_update_Aij(Grid_T *const grid);
+void bbn_add_and_take_2nd_derivatives_K(Patch_T *const patch);
 
 
 

@@ -703,6 +703,36 @@ void bbn_update_derivative_psi(Patch_T *const patch)
   ddpsi_D0D1->v = Partial_Derivative(dpsi_D0,"y");
 }
 
+/* add ddK fields and take 2nd order derivatives of K 
+// mainly needed for extrapolation of initiala data at BH filler. */
+void bbn_add_and_take_2nd_derivatives_K(Patch_T *const patch)
+{
+  ADD_FIELD(ddK_D2D2)
+  ADD_FIELD(ddK_D1D2)
+  ADD_FIELD(ddK_D1D1)
+  ADD_FIELD(ddK_D0D2)
+  ADD_FIELD(ddK_D0D0)
+  ADD_FIELD(ddK_D0D1)
+  
+  DECLARE_FIELD(ddK_D2D2)
+  DECLARE_FIELD(ddK_D1D2)
+  DECLARE_FIELD(ddK_D1D1)
+  DECLARE_FIELD(ddK_D0D2)
+  DECLARE_FIELD(ddK_D0D0)
+  DECLARE_FIELD(ddK_D0D1)
+  
+  DECLARE_FIELD(dK_D2)
+  DECLARE_FIELD(dK_D1)
+  DECLARE_FIELD(dK_D0)
+  
+  ddK_D2D2->v = Partial_Derivative(dK_D2,"z");
+  ddK_D1D2->v = Partial_Derivative(dK_D1,"z");
+  ddK_D1D1->v = Partial_Derivative(dK_D1,"y");
+  ddK_D0D2->v = Partial_Derivative(dK_D0,"z");
+  ddK_D0D0->v = Partial_Derivative(dK_D0,"x");
+  ddK_D0D1->v = Partial_Derivative(dK_D0,"y");
+}
+
 /* updating derivative */
 void bbn_update_derivative_eta(Patch_T *const patch)
 {
