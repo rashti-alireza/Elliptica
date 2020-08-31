@@ -3958,7 +3958,7 @@ static void extrapolate_insideBH_CS_WTGR(Grid_T *const grid)
     Patch_T *patch = grid->patch[patch_numbers->in[p]];
     unsigned f;
     
-    bbn_preparing_conformal_metric_derivatives(patch);
+    bbn_1st_2nd_derivatives_conformal_metric(patch);
     
     Field_T *R1_f  = patch->CoordSysInfo->CubedSphericalCoord->R1_f;
     Field_T *R2_f  = patch->CoordSysInfo->CubedSphericalCoord->R2_f;
@@ -4185,12 +4185,18 @@ static void extrapolate_insideBH_CS_WTGR(Grid_T *const grid)
   
   /* free */
   free_needle(patch_numbers);
-  bbn_free_conformal_metric_derivatives(GetPatch("right_BH_surrounding_up",grid));
-  bbn_free_conformal_metric_derivatives(GetPatch("right_BH_surrounding_down",grid));
-  bbn_free_conformal_metric_derivatives(GetPatch("right_BH_surrounding_left",grid));
-  bbn_free_conformal_metric_derivatives(GetPatch("right_BH_surrounding_right",grid));
-  bbn_free_conformal_metric_derivatives(GetPatch("right_BH_surrounding_back",grid));
-  bbn_free_conformal_metric_derivatives(GetPatch("right_BH_surrounding_front",grid));
+  bbn_rm_1st_2nd_derivatives_conformal_metric
+    (GetPatch("right_BH_surrounding_up",grid));
+  bbn_rm_1st_2nd_derivatives_conformal_metric
+    (GetPatch("right_BH_surrounding_down",grid));
+  bbn_rm_1st_2nd_derivatives_conformal_metric
+    (GetPatch("right_BH_surrounding_left",grid));
+  bbn_rm_1st_2nd_derivatives_conformal_metric
+    (GetPatch("right_BH_surrounding_right",grid));
+  bbn_rm_1st_2nd_derivatives_conformal_metric
+    (GetPatch("right_BH_surrounding_back",grid));
+  bbn_rm_1st_2nd_derivatives_conformal_metric
+    (GetPatch("right_BH_surrounding_front",grid));
   /* free all coeffs */
   for (p = 0; p < grid->np; p++)
   {
