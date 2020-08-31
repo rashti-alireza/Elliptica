@@ -22,33 +22,99 @@
 /* handy macros for extrapolating inside BH */
 #define STRING_IT(x)  #x
 
+/* BH-filler */
 #define WTGR_EXTRAPOLATE_scalar(x)   \
+        /* u */ \
         double x##_onAH       = interpolate_from_patch_prim(STRING_IT(x)        ,X_on_BHsurf,BHsurf_patch); \
-        double d##x##_D0_onAH = interpolate_from_patch_prim(STRING_IT(d##x##_D0),X_on_BHsurf,BHsurf_patch); \
-        double d##x##_D1_onAH = interpolate_from_patch_prim(STRING_IT(d##x##_D1),X_on_BHsurf,BHsurf_patch); \
-        double d##x##_D2_onAH = interpolate_from_patch_prim(STRING_IT(d##x##_D2),X_on_BHsurf,BHsurf_patch); \
-        double dur_##x        = (N[0]*d##x##_D0_onAH+N[1]*d##x##_D1_onAH+N[2]*d##x##_D2_onAH); \
-        double ur_##x         = x##_onAH + dur_##x*dr; \
+        /* du/dx^i */ \
+        double d##x##D0_onAH = interpolate_from_patch_prim(STRING_IT(d##x##_D0),X_on_BHsurf,BHsurf_patch); \
+        double d##x##D1_onAH = interpolate_from_patch_prim(STRING_IT(d##x##_D1),X_on_BHsurf,BHsurf_patch); \
+        double d##x##D2_onAH = interpolate_from_patch_prim(STRING_IT(d##x##_D2),X_on_BHsurf,BHsurf_patch); \
+        /* d^2u/d(x^i)^2 */ \
+        double dd##x##D0D0_onAH = interpolate_from_patch_prim(STRING_IT(dd##x##_D0D0),X_on_BHsurf,BHsurf_patch); \
+        double dd##x##D0D1_onAH = interpolate_from_patch_prim(STRING_IT(dd##x##_D0D1),X_on_BHsurf,BHsurf_patch); \
+        double dd##x##D0D2_onAH = interpolate_from_patch_prim(STRING_IT(dd##x##_D0D2),X_on_BHsurf,BHsurf_patch); \
+        double dd##x##D1D2_onAH = interpolate_from_patch_prim(STRING_IT(dd##x##_D1D2),X_on_BHsurf,BHsurf_patch); \
+        double dd##x##D1D1_onAH = interpolate_from_patch_prim(STRING_IT(dd##x##_D1D1),X_on_BHsurf,BHsurf_patch); \
+        double dd##x##D2D2_onAH = interpolate_from_patch_prim(STRING_IT(dd##x##_D2D2),X_on_BHsurf,BHsurf_patch); \
+        /* du/dr */ \
+        double dur_##x        = (N[0]*d##x##D0_onAH+N[1]*d##x##D1_onAH+N[2]*d##x##D2_onAH); \
+        /* ddu/dr^2 */ \
+        WTGR_ddu_r2(x); \
+        double ur_##x         = x##_onAH + dur_##x*dr + ddur2_##x*dr; \
         x[ijk]                = ur_##x*Y + u0_##x*(1-Y);
 
+/* BH-filler */
 #define WTGR_EXTRAPOLATE_Beta(x)   \
+        /* u */ \
         double x##_onAH      = interpolate_from_patch_prim(STRING_IT(x)       ,X_on_BHsurf,BHsurf_patch); \
+        /* du/dx^i */ \
         double d##x##D0_onAH = interpolate_from_patch_prim(STRING_IT(d##x##D0),X_on_BHsurf,BHsurf_patch); \
         double d##x##D1_onAH = interpolate_from_patch_prim(STRING_IT(d##x##D1),X_on_BHsurf,BHsurf_patch); \
         double d##x##D2_onAH = interpolate_from_patch_prim(STRING_IT(d##x##D2),X_on_BHsurf,BHsurf_patch); \
+        /* d^2u/d(x^i)^2 */ \
+        double dd##x##D0D0_onAH = interpolate_from_patch_prim(STRING_IT(dd##x##D0D0),X_on_BHsurf,BHsurf_patch); \
+        double dd##x##D0D1_onAH = interpolate_from_patch_prim(STRING_IT(dd##x##D0D1),X_on_BHsurf,BHsurf_patch); \
+        double dd##x##D0D2_onAH = interpolate_from_patch_prim(STRING_IT(dd##x##D0D2),X_on_BHsurf,BHsurf_patch); \
+        double dd##x##D1D2_onAH = interpolate_from_patch_prim(STRING_IT(dd##x##D1D2),X_on_BHsurf,BHsurf_patch); \
+        double dd##x##D1D1_onAH = interpolate_from_patch_prim(STRING_IT(dd##x##D1D1),X_on_BHsurf,BHsurf_patch); \
+        double dd##x##D2D2_onAH = interpolate_from_patch_prim(STRING_IT(dd##x##D2D2),X_on_BHsurf,BHsurf_patch); \
+        /* du/dr */ \
         double dur_##x       = (N[0]*d##x##D0_onAH+N[1]*d##x##D1_onAH+N[2]*d##x##D2_onAH); \
-        double ur_##x        = x##_onAH + dur_##x*dr; \
+        /* ddu/dr^2 */ \
+        WTGR_ddu_r2(x); \
+        double ur_##x        = x##_onAH + dur_##x*dr + ddur2_##x*dr; \
         x[ijk]               = ur_##x*Y + u0_##x*(1-Y);
-        
+
+/* BH-filler */        
 #define WTGR_EXTRAPOLATE_gammabar(x)   \
+        /* u */ \
         double x##_onAH      = interpolate_from_patch_prim(STRING_IT(_##x)     ,X_on_BHsurf,BHsurf_patch); \
+        /* du/dx^i */ \
         double d##x##D0_onAH = interpolate_from_patch_prim(STRING_IT(_d##x##D0),X_on_BHsurf,BHsurf_patch); \
         double d##x##D1_onAH = interpolate_from_patch_prim(STRING_IT(_d##x##D1),X_on_BHsurf,BHsurf_patch); \
         double d##x##D2_onAH = interpolate_from_patch_prim(STRING_IT(_d##x##D2),X_on_BHsurf,BHsurf_patch); \
+        /* d^2u/d(x^i)^2 */ \
+        double dd##x##D0D0_onAH = interpolate_from_patch_prim(STRING_IT(_dd##x##D0D0),X_on_BHsurf,BHsurf_patch); \
+        double dd##x##D0D1_onAH = interpolate_from_patch_prim(STRING_IT(_dd##x##D0D1),X_on_BHsurf,BHsurf_patch); \
+        double dd##x##D0D2_onAH = interpolate_from_patch_prim(STRING_IT(_dd##x##D0D2),X_on_BHsurf,BHsurf_patch); \
+        double dd##x##D1D2_onAH = interpolate_from_patch_prim(STRING_IT(_dd##x##D1D2),X_on_BHsurf,BHsurf_patch); \
+        double dd##x##D1D1_onAH = interpolate_from_patch_prim(STRING_IT(_dd##x##D1D1),X_on_BHsurf,BHsurf_patch); \
+        double dd##x##D2D2_onAH = interpolate_from_patch_prim(STRING_IT(_dd##x##D2D2),X_on_BHsurf,BHsurf_patch); \
+        /* du/dr */ \
         double dur_##x       = (N[0]*d##x##D0_onAH+N[1]*d##x##D1_onAH+N[2]*d##x##D2_onAH); \
-        double ur_##x        = x##_onAH + dur_##x*dr; \
+        /* ddu/dr^2 */ \
+        WTGR_ddu_r2(x); \
+        double ur_##x        = x##_onAH + dur_##x*dr + ddur2_##x*dr; \
         _##x[ijk]            = ur_##x*Y + u0__##x*(1-Y);
 
+
+/* compute ddu/dr^2  */
+#define WTGR_ddu_r2(a) \
+        double ddur2_##a = 0; \
+        {/* local */ \
+          double KD[2]  = {0,1}; \
+          double _ddur2_##a[3] = {0,0,0}; \
+          double _x[3]  = {x,y,z}; \
+          double _r3    = pow(r,3); \
+          double _du[3] = {d##a##D0_onAH,d##a##D1_onAH,d##a##D2_onAH}; \
+          double _ddu[3][3] = { \
+            {dd##a##D0D0_onAH,dd##a##D0D1_onAH,dd##a##D0D2_onAH}, \
+            {dd##a##D0D1_onAH,dd##a##D1D1_onAH,dd##a##D1D2_onAH}, \
+            {dd##a##D0D2_onAH,dd##a##D1D2_onAH,dd##a##D2D2_onAH} \
+                              }; \
+          unsigned _i,_j; \
+          for (_i = 0; _i < 3; ++_i) \
+          { \
+            for (_j = 0; _j < 3; ++_j) \
+            { \
+              _ddur2_##a[_i] += (KD[_i==_j]/r - _x[_i]*_x[_j]/_r3)*_du[_j]; \
+              _ddur2_##a[_i] += N[_j]*_ddu[_j][_i]; \
+            } \
+            ddur2_##a += _ddur2_##a[_i]*N[_i]; \
+          } \
+        }
+          
 
 /* _gamma inverse */
 #define COMPUTE_gammaI(a00,a01,a02,a10,a11,a12,a20,a21,a22) \
