@@ -4179,7 +4179,7 @@ static void extrapolate_insideBH_CS_WTGR(Grid_T *const grid)
     /* for K_{ij} inside BH patches */
     bbn_1st_derivatives_conformal_metric(patch);
     bbn_free_data_Gamma_patch(patch);
-    bbn_free_conformal_metric_derivatives(patch);
+    bbn_rm_1st_derivatives_conformal_metric(patch);
     /* bbn_update_psi10A_UiUj(patch); */
   }/* end of FOR_ALL_PATCHES(p,grid) */
   

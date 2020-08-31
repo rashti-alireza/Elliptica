@@ -96,7 +96,7 @@ Symm[_dgamma(i,j,k) = _dgamma(j,i,k)];
 `    {`
 `      Error0("Wrong flag!\n");`
 `    }`
-`    bbn_free_conformal_metric_derivatives(patch);`
+`    bbn_rm_1st_derivatives_conformal_metric(patch);`
 ``
 `  }`# end of for(p = 0; p < N; ++p)
 `  adm_mass /= (16*M_PI);`

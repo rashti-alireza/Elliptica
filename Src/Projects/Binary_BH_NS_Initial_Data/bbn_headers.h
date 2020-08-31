@@ -75,7 +75,7 @@ void bbn_print_fields(Grid_T *const grid,const unsigned iteration, const char *c
 void bbn_update_psi10A_UiUj(Patch_T *const patch);
 void bbn_populate_free_data(Grid_T *const grid);
 void bbn_free_data_gammas(Grid_T *const grid);
-void bbn_free_conformal_metric_derivatives(Patch_T *const patch);
+void bbn_rm_1st_derivatives_conformal_metric(Patch_T *const patch);
 void bbn_1st_derivatives_conformal_metric(Patch_T *const patch);
 void bbn_free_data_Gamma(Grid_T *const grid);
 void bbn_free_data_Ricci(Grid_T *const grid);

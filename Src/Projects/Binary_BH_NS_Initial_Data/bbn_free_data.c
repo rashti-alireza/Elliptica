@@ -266,7 +266,7 @@ void bbn_1st_derivatives_conformal_metric(Patch_T *const patch)
 }
 
 /* freeing conformal metric derivatives */
-void bbn_free_conformal_metric_derivatives(Patch_T *const patch)
+void bbn_rm_1st_derivatives_conformal_metric(Patch_T *const patch)
 {
   /* declare _dgamma */
   DECLARE_FIELD(_dgamma_D0D0D1)

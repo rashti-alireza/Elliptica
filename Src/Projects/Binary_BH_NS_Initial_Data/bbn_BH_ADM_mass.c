@@ -124,7 +124,7 @@ dlnpsi_U2);
     {
       Error0("Wrong flag!\n");
     }
-    bbn_free_conformal_metric_derivatives(patch);
+    bbn_rm_1st_derivatives_conformal_metric(patch);
 
   }
   adm_mass /= (16*M_PI);
