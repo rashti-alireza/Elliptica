@@ -39,7 +39,7 @@ void bbn_bam_export_id(void)
   grid = load_grid_from_checkpoint_file();
   
   /* if you wanna plot */
-  Pset_default("bbn_bam_output_doctest","yes");
+  Pset_default("bbn_bam_output_doctest","no");
   
   /* output the date of interest for test purposes, to plot etc. */
   if(Pcmps("bbn_bam_output_doctest","yes"))
