@@ -3916,7 +3916,7 @@ static void extrapolate_insideBH_CS_WTGR(Grid_T *const grid)
   fflush(stdout);
   
   const double EPS            = 1E-12;/* to avoid division by zero */
-  const double EPS2           = 1E-6;/* to increase r_fill radius a bit */
+  const double EPS2           = 1E-8;/* to increase r_fill radius a bit */
   const double r_fill         = Pgetd("BH_R_size")*(1+EPS2);
   const double Ma             = Pgetd("BH_irreducible_mass");
   const double u0_Beta_U0     = 0;
