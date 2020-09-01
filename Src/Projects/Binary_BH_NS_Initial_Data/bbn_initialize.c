@@ -3930,8 +3930,6 @@ static void extrapolate_insideBH_CS_WTGR(Grid_T *const grid)
   const double u0__gamma_D2D2 = 1;
   const double u0_K           = 0;
   const double u0_alpha       = 0.1;
-  const double extend         = 1;
-  const double slop           = 0.5;
   Needle_T *patch_numbers = 0;
   const unsigned npi = 7;/* number of patches inside BH */
   const unsigned npo = 6;/* number of patches outside BH */
@@ -3999,8 +3997,7 @@ static void extrapolate_insideBH_CS_WTGR(Grid_T *const grid)
   {
     Patch_T *patch = grid->patch[patch_numbers->in[p]];
     unsigned nn = patch->nn;
-    double Y;
-    double theta = 0,phi = 0,dr = 0;
+    double theta = 0,phi = 0;
     double x_on_BHsurf[3]={0},
            X_on_BHsurf[3]={0},
            N[3] = {0};
@@ -4067,12 +4064,7 @@ static void extrapolate_insideBH_CS_WTGR(Grid_T *const grid)
         r     = EPS;
         theta = 0;
       }
-      dr    = r - r_fill;
-      phi   = arctan(y,x);
-      Y     = 0.5*(1+tanh(extend*(r_fill/(r_fill-r)-slop*(r_fill/r))));
-      if(!isfinite(Y))
-        bbn_bam_error("BH filler Y goes wrong.",__FILE__,__LINE__);
-      
+      phi            = arctan(y,x);
       x_on_BHsurf[0] = r_fill*sin(theta)*cos(phi)+patch->c[0];
       x_on_BHsurf[1] = r_fill*sin(theta)*sin(phi)+patch->c[1];
       x_on_BHsurf[2] = r_fill*cos(theta)         +patch->c[2];
