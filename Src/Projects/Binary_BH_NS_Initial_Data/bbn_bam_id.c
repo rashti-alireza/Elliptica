@@ -577,5 +577,57 @@ bam_output_doctest
     f++;
   }/* while(fields_name[f]) */
   _free(interp_v);
+  
+  if (1)/* check det(metric) */
+  {
+    /* interpolating each fields at the all given points */
+    OpenMP_1d_Pragma(omp parallel for)
+    for (p = 0; p < npoints; ++p)
+    {
+      Patch_T *patch  = grid->patch[pnt->patchn[p]];
+      double gxx,gyy,gzz,gxy,gxz,gyz,detg;
+      
+      Interpolation_T *interp_s = init_interpolation();
+      interp_s->XYZ_dir_flag = 1;
+      interp_s->X = pnt->X[p];
+      interp_s->Y = pnt->Y[p];
+      interp_s->Z = pnt->Z[p];
+      
+      interp_s->field = patch->pool[Ind("bam_adm_g_D0D0")];
+      plan_interpolation(interp_s);
+      gxx = execute_interpolation(interp_s);
+      
+      interp_s->field = patch->pool[Ind("bam_adm_g_D0D1")];
+      plan_interpolation(interp_s);
+      gxy = execute_interpolation(interp_s);
+      
+      interp_s->field = patch->pool[Ind("bam_adm_g_D0D2")];
+      plan_interpolation(interp_s);
+      gxz = execute_interpolation(interp_s);
+      
+      interp_s->field = patch->pool[Ind("bam_adm_g_D1D1")];
+      plan_interpolation(interp_s);
+      gyy = execute_interpolation(interp_s);
+      
+      interp_s->field = patch->pool[Ind("bam_adm_g_D1D2")];
+      plan_interpolation(interp_s);
+      gyz = execute_interpolation(interp_s);
+      
+      interp_s->field = patch->pool[Ind("bam_adm_g_D2D2")];
+      plan_interpolation(interp_s);
+      gzz = execute_interpolation(interp_s);
+      
+      detg=(2.*gxy*gxz*gyz + gxx*gyy*gzz -
+              gzz*gxy*gxy  - gyy*gxz*gxz -
+              gxx*gyz*gyz);
+
+      if(detg <= 0)
+      {
+        printf("det(g_ij(%g,%g,%g))=%g\n",
+             pnt->x[p], pnt->y[p], pnt->z[p],detg);
+      }
+      free_interpolation(interp_s);
+    }
+  }/* if(?) */
 }
 
