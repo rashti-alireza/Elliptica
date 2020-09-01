@@ -3930,6 +3930,8 @@ static void extrapolate_insideBH_CS_WTGR(Grid_T *const grid)
   const double u0__gamma_D2D2 = 1;
   const double u0_K           = 0;
   const double u0_alpha       = 0.1;
+  const double extend         = 1;
+  const double slop           = 0.5;
   Needle_T *patch_numbers = 0;
   const unsigned npi = 7;/* number of patches inside BH */
   const unsigned npo = 6;/* number of patches outside BH */
@@ -4067,7 +4069,7 @@ static void extrapolate_insideBH_CS_WTGR(Grid_T *const grid)
       }
       dr    = r - r_fill;
       phi   = arctan(y,x);
-      Y     = 0.5*(1+tanh(48./125.*(r_fill/(r_fill-r)-3./2.*(r_fill/r))));
+      Y     = 0.5*(1+tanh(extend*(r_fill/(r_fill-r)-slop*(r_fill/r))));
       if(!isfinite(Y))
         bbn_bam_error("BH filler Y goes wrong.",__FILE__,__LINE__);
       
