@@ -261,22 +261,6 @@ static Grid_T *load_grid_from_checkpoint_file(void)
   Psets("extrapolate_inside_BH_method",bam_BHfiller_method);
   bbn_extrapolate_metric_fields_insideBH(grid);
   
-  /* free nodes as we don't need them */
-  FOR_ALL_PATCHES(p,grid)
-  {
-    Patch_T *patch = grid->patch[p];
-    unsigned ijk;
-
-    if (patch->node)
-    {
-      if (patch->coordsys != Cartesian)
-        for (ijk = 0; ijk < patch->nn; ++ijk)
-          _free(patch->node[ijk]->X);
-
-      free_2d_mem(patch->node,patch->nn);
-      patch->node = 0;
-    }
-  }
   return grid;
 }
   
@@ -629,5 +613,7 @@ bam_output_doctest
       free_interpolation(interp_s);
     }
   }/* if(?) */
+  
+  bbn_print_fields(grid,0,".");
 }
 
