@@ -543,19 +543,11 @@ bam_output_doctest
       /* doc test */
       if (!isfinite(interp_v[p]))
       {
-        fprintf(stdout,"%s[%s](%g,%g,%g)|x(%g,%g,%g)|X = %g\n",
+        printf("%s[%s](%g,%g,%g)|x(%g,%g,%g)|X = %g\n",
                 fields_name[f],
                 grid->patch[pnt->patchn[p]]->name,
                 pnt->x[p],pnt->y[p],pnt->z[p],
                 pnt->X[p],pnt->Y[p],pnt->Z[p],interp_v[p]);
-        fflush(stdout);
-        fprintf(stderr,"%s[%s](%g,%g,%g)|x(%g,%g,%g)|X = %g\n",
-                fields_name[f],
-                grid->patch[pnt->patchn[p]]->name,
-                pnt->x[p],pnt->y[p],pnt->z[p],
-                pnt->X[p],pnt->Y[p],pnt->Z[p],interp_v[p]);
-        fflush(stderr);
-        bbn_bam_error("BUG!\n",__FILE__,__LINE__);
       }
       fprintf(file,"%f  %f\n",pnt->y[p],interp_v[p]);
     }

@@ -43,7 +43,7 @@
         WTGR_ddu_r2(x); \
         double a_##x = (2*ddur2_##x - 6*dur_##x + 11*x##_onAH + 5*u0_##x)/16.; \
         double b_##x = (-2*ddur2_##x + 2*dur_##x + 15*(x##_onAH - u0_##x))/32.; \
-        double c_##x = (-2*ddur2_##x + 6*dur_##x - 3*x##_onAH + 3*u0_##x)/16.;\ 
+        double c_##x = (-2*ddur2_##x + 6*dur_##x - 3*x##_onAH + 3*u0_##x)/16.;\
         double d_##x = (2*ddur2_##x - 2*dur_##x + x##_onAH - u0_##x)/32.; \
         x[ijk]       = a_##x*Cheb_Tn(0,t)+b_##x*Cheb_Tn(1,t)+c_##x*Cheb_Tn(2,t)+d_##x*Cheb_Tn(3,t);
 
@@ -69,7 +69,7 @@
         WTGR_ddu_r2(x); \
         double a_##x = (2*ddur2_##x - 6*dur_##x + 11*x##_onAH + 5*u0_##x)/16.; \
         double b_##x = (-2*ddur2_##x + 2*dur_##x + 15*(x##_onAH - u0_##x))/32.; \
-        double c_##x = (-2*ddur2_##x + 6*dur_##x - 3*x##_onAH + 3*u0_##x)/16.;\ 
+        double c_##x = (-2*ddur2_##x + 6*dur_##x - 3*x##_onAH + 3*u0_##x)/16.;\
         double d_##x = (2*ddur2_##x - 2*dur_##x + x##_onAH - u0_##x)/32.; \
         x[ijk]       = a_##x*Cheb_Tn(0,t)+b_##x*Cheb_Tn(1,t)+c_##x*Cheb_Tn(2,t)+d_##x*Cheb_Tn(3,t);
 
@@ -95,7 +95,7 @@
         WTGR_ddu_r2(x); \
         double a_##x = (2*ddur2_##x - 6*dur_##x + 11*x##_onAH + 5*u0_##x)/16.; \
         double b_##x = (-2*ddur2_##x + 2*dur_##x + 15*(x##_onAH - u0_##x))/32.; \
-        double c_##x = (-2*ddur2_##x + 6*dur_##x - 3*x##_onAH + 3*u0_##x)/16.;\ 
+        double c_##x = (-2*ddur2_##x + 6*dur_##x - 3*x##_onAH + 3*u0_##x)/16.;\
         double d_##x = (2*ddur2_##x - 2*dur_##x + x##_onAH - u0_##x)/32.; \
         _##x[ijk]    = a_##x*Cheb_Tn(0,t)+b_##x*Cheb_Tn(1,t)+c_##x*Cheb_Tn(2,t)+d_##x*Cheb_Tn(3,t);
 
