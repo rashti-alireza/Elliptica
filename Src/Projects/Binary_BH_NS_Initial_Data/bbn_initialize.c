@@ -3922,12 +3922,12 @@ static void extrapolate_insideBH_CS_WTGR(Grid_T *const grid)
   const double u0_Beta_U0     = 0;
   const double u0_Beta_U1     = 0;
   const double u0_Beta_U2     = 0;
-  const double u0__gamma_D0D0 = 1;
-  const double u0__gamma_D0D1 = 0;
-  const double u0__gamma_D0D2 = 0;
-  const double u0__gamma_D1D1 = 1;
-  const double u0__gamma_D1D2 = 0;
-  const double u0__gamma_D2D2 = 1;
+  const double u0_gamma_D0D0  = 1;
+  const double u0_gamma_D0D1  = 0;
+  const double u0_gamma_D0D2  = 0;
+  const double u0_gamma_D1D1  = 1;
+  const double u0_gamma_D1D2  = 0;
+  const double u0_gamma_D2D2  = 1;
   const double u0_K           = 0;
   const double u0_alpha       = 0.1;
   Needle_T *patch_numbers = 0;
@@ -3997,7 +3997,7 @@ static void extrapolate_insideBH_CS_WTGR(Grid_T *const grid)
   {
     Patch_T *patch = grid->patch[patch_numbers->in[p]];
     unsigned nn = patch->nn;
-    double theta = 0,phi = 0;
+    double theta = 0,phi = 0, t = 0;
     double x_on_BHsurf[3]={0},
            X_on_BHsurf[3]={0},
            N[3] = {0};
@@ -4064,6 +4064,7 @@ static void extrapolate_insideBH_CS_WTGR(Grid_T *const grid)
         r     = EPS;
         theta = 0;
       }
+      t              = 2*r/r_fill -1;
       phi            = arctan(y,x);
       x_on_BHsurf[0] = r_fill*sin(theta)*cos(phi)+patch->c[0];
       x_on_BHsurf[1] = r_fill*sin(theta)*sin(phi)+patch->c[1];

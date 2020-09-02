@@ -41,10 +41,12 @@
         double dur_##x = (N[0]*d##x##D0_onAH+N[1]*d##x##D1_onAH+N[2]*d##x##D2_onAH); \
         /* ddu/dr^2 */ \
         WTGR_ddu_r2(x); \
-        double b_##x = -(4*dur_##x*r_fill - ddur2_##x*Power(r_fill,2) + 6*u0_##x - 6*x##_onAH)/(2.*r_fill); \
-        double c_##x = -((-3*dur_##x*r_fill + ddur2_##x*Power(r_fill,2) - 3*u0_##x + 3*x##_onAH)/Power(r_fill,2)); \
-        double d_##x = -(2*dur_##x*r_fill - ddur2_##x*Power(r_fill,2) + 2*u0_##x - 2*x##_onAH)/(2.*Power(r_fill,3)); \
-        x[ijk]       = u0_##x+b_##x*r+c_##x*pow(r,2)+d_##x*pow(r,3);
+        double a_##x = (2*ddur2_##x - 6*dur_##x + 11*x##_onAH + 5*u0_##x)/16.; \
+        double b_##x = (-2*ddur2_##x + 2*dur_##x + 15*(x##_onAH - u0_##x))/32.; \
+        double c_##x = (-2*ddur2_##x + 6*dur_##x - 3*x##_onAH + 3*u0_##x)/16.;\ 
+        double d_##x = (2*ddur2_##x - 2*dur_##x + x##_onAH - u0_##x)/32.; \
+        x[ijk]       = a_##x*Cheb_Tn(0,t)+b_##x*Cheb_Tn(1,t)+c_##x*Cheb_Tn(2,t)+d_##x*Cheb_Tn(3,t);
+
 
 /* BH-filler */
 #define WTGR_EXTRAPOLATE_Beta(x)   \
@@ -65,10 +67,11 @@
         double dur_##x = (N[0]*d##x##D0_onAH+N[1]*d##x##D1_onAH+N[2]*d##x##D2_onAH); \
         /* ddu/dr^2 */ \
         WTGR_ddu_r2(x); \
-        double b_##x = -(4*dur_##x*r_fill - ddur2_##x*Power(r_fill,2) + 6*u0_##x - 6*x##_onAH)/(2.*r_fill); \
-        double c_##x = -((-3*dur_##x*r_fill + ddur2_##x*Power(r_fill,2) - 3*u0_##x + 3*x##_onAH)/Power(r_fill,2)); \
-        double d_##x = -(2*dur_##x*r_fill - ddur2_##x*Power(r_fill,2) + 2*u0_##x - 2*x##_onAH)/(2.*Power(r_fill,3)); \
-        x[ijk]       = u0_##x+b_##x*r+c_##x*pow(r,2)+d_##x*pow(r,3);
+        double a_##x = (2*ddur2_##x - 6*dur_##x + 11*x##_onAH + 5*u0_##x)/16.; \
+        double b_##x = (-2*ddur2_##x + 2*dur_##x + 15*(x##_onAH - u0_##x))/32.; \
+        double c_##x = (-2*ddur2_##x + 6*dur_##x - 3*x##_onAH + 3*u0_##x)/16.;\ 
+        double d_##x = (2*ddur2_##x - 2*dur_##x + x##_onAH - u0_##x)/32.; \
+        x[ijk]       = a_##x*Cheb_Tn(0,t)+b_##x*Cheb_Tn(1,t)+c_##x*Cheb_Tn(2,t)+d_##x*Cheb_Tn(3,t);
 
 
 /* BH-filler */        
@@ -90,10 +93,11 @@
         double dur_##x = (N[0]*d##x##D0_onAH+N[1]*d##x##D1_onAH+N[2]*d##x##D2_onAH); \
         /* ddu/dr^2 */ \
         WTGR_ddu_r2(x); \
-        double b_##x = -(4*dur_##x*r_fill - ddur2_##x*Power(r_fill,2) + 6*u0__##x - 6*x##_onAH)/(2.*r_fill); \
-        double c_##x = -((-3*dur_##x*r_fill + ddur2_##x*Power(r_fill,2) - 3*u0__##x + 3*x##_onAH)/Power(r_fill,2)); \
-        double d_##x = -(2*dur_##x*r_fill - ddur2_##x*Power(r_fill,2) + 2*u0__##x - 2*x##_onAH)/(2.*Power(r_fill,3)); \
-        _##x[ijk]    = u0__##x+b_##x*r+c_##x*pow(r,2)+d_##x*pow(r,3);
+        double a_##x = (2*ddur2_##x - 6*dur_##x + 11*x##_onAH + 5*u0_##x)/16.; \
+        double b_##x = (-2*ddur2_##x + 2*dur_##x + 15*(x##_onAH - u0_##x))/32.; \
+        double c_##x = (-2*ddur2_##x + 6*dur_##x - 3*x##_onAH + 3*u0_##x)/16.;\ 
+        double d_##x = (2*ddur2_##x - 2*dur_##x + x##_onAH - u0_##x)/32.; \
+        _##x[ijk]    = a_##x*Cheb_Tn(0,t)+b_##x*Cheb_Tn(1,t)+c_##x*Cheb_Tn(2,t)+d_##x*Cheb_Tn(3,t);
 
 /* compute ddu/dr^2  */
 #define WTGR_ddu_r2(a) \
