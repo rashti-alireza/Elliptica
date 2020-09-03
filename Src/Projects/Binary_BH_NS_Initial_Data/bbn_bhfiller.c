@@ -274,7 +274,7 @@ bbn_bhfiller
   unsigned p,fld;
   
   /* update all coeffs to avoid race condition */
-  printf("--> Updating coeffs\n");
+  printf("--> Updating coefficients ...\n");
   fflush(stdout);
   OpenMP_Patch_Pragma(omp parallel for)
   for (p = 0; p < npo; p++)
@@ -302,6 +302,8 @@ bbn_bhfiller
   }
   
   /* populating f, df/dr, d^2f/dr^2 at each (th,ph) points */
+  printf("--> Populating extrapolation coefficients ...\n");
+  fflush(stdout);
   OpenMP_1d_Pragma(omp parallel for)
   for (fld = 0; fld < nf; ++fld)
   {
@@ -405,6 +407,8 @@ bbn_bhfiller
   }/* for (fld = 0; fld < nf ++fld) */
   
   /* now fill the BH */
+  printf("--> Fill the holes ...\n");
+  fflush(stdout);
   OpenMP_Patch_Pragma(omp parallel for)
   for (p = 0; p < npi; p++)
   {
