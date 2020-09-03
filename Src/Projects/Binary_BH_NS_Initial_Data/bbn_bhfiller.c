@@ -1,0 +1,555 @@
+/*
+// Alireza Rashti
+// June 2019
+*/
+/* filling the inside of BH for evolution purposes */
+
+#include "bbn_bhfiller.h"
+
+/* these fields to be extrapolated  */
+static const char *const fields_name[] = {
+  "psi","eta","K",
+  "Beta_U0","Beta_U1","Beta_U2"
+  "_gamma_D2D2","_gamma_D0D2",
+  "_gamma_D0D0","_gamma_D0D1",
+  "_gamma_D1D2","_gamma_D1D1",0};
+
+#define MAX_STR  (100)
+#define MAX_STR2 (200)
+/* 2d index */
+#define IJ(i,j,n)  ((j)+(i)*(n))
+
+struct BHFiller_S
+{
+  Grid_T *grid;/* the grid */
+  Patch_T **patches_outBH;/* patches outside the BH */
+  Patch_T **patches_inBH;/* patches inside the BH */
+  unsigned npi;/* number of patches inside the BH */
+  unsigned npo;/* number of patches outside the BH */
+  unsigned lmax;/* max l in Ylm expansion */
+  unsigned Ntheta;/* number of points in theta direction */
+  unsigned Nphi;/* number of points in phi direction */
+  struct
+  {
+    char f[MAX_STR];/* f */
+    char df[3][MAX_STR];/* df/dx */
+    char ddf[6][MAX_STR];/* d^2f/dx^2 */
+    double *ChebTn_coeffs[4];/* ChebTn coeffs to ensure C2 continuity */
+    double *realYlm_coeffs[4];/* Ylm coeffs of ChebTn real part */
+    double *imagYlm_coeffs[4];/* Ylm coeffs of ChebTn imag part */
+    double f_r0;/* value of the field at r = 0 */
+  }*fld;/* field info */
+  unsigned nf;/* number of fields */
+};
+
+/* initialize the bhfiller struct */
+struct BHFiller_S* 
+bhf_init
+  (
+  Grid_T *const grid/* the whole grid */,
+  const char *const method/* the method to be used for extrapolating */
+  )
+{
+  BHFiller_S *const bhf = calloc(1,sizeof(&bhf));IsNull(bhf);
+  const double EPS      = 1E-12;
+  const double Ma       = Pgetd("BH_irreducible_mass");
+  const unsigned lmax   = 10;
+  const unsigned Ntheta = 2*lmax+1;
+  const unsigned Nphi   = 2*lmax+1;
+  const unsigned N      = Ntheta*Nphi;
+  const char *s = 0;
+  const unsigned npi = 7;/* number of patches inside BH */
+  const unsigned npo = 6;/* number of patches outside BH */
+  const double fr0_Beta_U0     = 0;
+  const double fr0_Beta_U1     = 0;
+  const double fr0_Beta_U2     = 0;
+  const double fr0_gamma_D0D0  = 1;
+  const double fr0_gamma_D0D1  = 0;
+  const double fr0_gamma_D0D2  = 0;
+  const double fr0_gamma_D1D1  = 1;
+  const double fr0_gamma_D1D2  = 0;
+  const double fr0_gamma_D2D2  = 1;
+  const double fr0_K           = 0;
+  const double fr0_alpha       = 0.1;
+  const double fr0_psi = 2+Ma/(2*EPS);
+  const double fr0_eta = fr0_alpha*fr0_psi;
+  unsigned f,nf,i,j,p;
+  
+  nf = 0;/* number of fields */
+  while(fields_name[nf]) ++nf;
+  bhf->nf = nf;
+  /* using Cheb_Tn and Ylm as the bases 
+  // and extrapolate demanding C2 continuity */
+  if (strcmp_i(method,"TnYlm_C2"))
+  {
+    bhf->lmax   = lmax;
+    bhf->Ntheta = Ntheta;
+    bhf->Nphi   = Nphi;
+    bhf->fld    = calloc(nf,sizeof(*bhf->fld));IsNull(bhf->fld);
+    for (f = 0; f < nf ++f)
+    {
+      /* names of fields and its derivatives */
+      sprintf(bhf->fld[f]->f,"%s",fields_name[f]);
+      for (i = 0; i < 3; ++i)/* df/dx, d^2f/dx^2 */
+      {
+        if (fields_name[f][0] == '_')/* => _dgamma */
+        {
+          s = fields_name[f]++;
+          /* if it is indexed */
+          if (regex_search(".+_(U|D)[:digit:].+",))
+          {
+            sprintf(bhf->fld[f]->df[i],"_d%sD%u",s,i);
+            for (j = i; j < 3; ++j)
+              sprintf(bhf->fld[f]->ddf[IJ(i,j,3)],"_d%sD%uD%u",s,i,j);
+          }
+          else/* not indexed */
+          {
+            sprintf(bhf->fld[f]->df[0],"_d%s_D%u",s,i);
+            for (j = i; j < 3; ++j)
+              sprintf(bhf->fld[f]->ddf[IJ(i,j,3)],"_d%s_D%uD%u",s,i,j);
+          }
+        }
+        else/* if no _ at the beginning */
+        {
+          s = fields_name[f];
+          /* if it is indexed */
+          if (regex_search(".+_(U|D)[:digit:].+",))
+          {
+            sprintf(bhf->fld[f]->df[i],"d%sD%u",s,i);
+            for (j = i; j < 3; ++j)
+              sprintf(bhf->fld[f]->ddf[IJ(i,j,3)],"d%sD%uD%u",s,i,j);
+          }
+          else/* not indexed */
+          {
+            sprintf(bhf->fld[f]->df[0],"d%s_D%u",s,i);
+            for (j = i; j < 3; ++j)
+              sprintf(bhf->fld[f]->ddf[IJ(i,j,3)],"d%s_D%uD%u",s,i,j);
+          }
+        }
+      }/* end of for (i = 0; i < 3; ++i) */
+      
+      /* alloc ChebTn_coeffss */
+      for (i = 0 ; i < 4; ++i)
+      {
+        bhf->fld[f]->ChebTn_coeffs[i]  = alloc_double(N);
+        bhf->fld[f]->realYlm_coeffs[i] = alloc_ClmYlm(lmax);
+        bhf->fld[f]->imagYlm_coeffs[i] = alloc_ClmYlm(lmax);
+      }
+      
+    /* set values of field at r=0 */
+    if (strcmp_i(fields_name[f],"psi"))
+    {
+      bhf->fld[f]->f_r0 = fr0_psi;
+    }
+    else if (strcmp_i(fields_name[f],"eta"))
+    {
+      bhf->fld[f]->f_r0 = fr0_eta;
+    }
+    else if (strcmp_i(fields_name[f],"K"))
+    {
+      bhf->fld[f]->f_r0 = fr0_K;
+    }
+    else if (strcmp_i(fields_name[f],"Beta_U0"))
+    {
+      bhf->fld[f]->f_r0 = fr0_Beta_U0;
+    }
+    else if (strcmp_i(fields_name[f],"Beta_U1"))
+    {
+      bhf->fld[f]->f_r0 = fr0_Beta_U1;
+    }
+    else if (strcmp_i(fields_name[f],"Beta_U2"))
+    {
+      bhf->fld[f]->f_r0 = fr0_Beta_U2;
+    }
+    else if (strcmp_i(fields_name[f],"_gamma_D2D2"))
+    {
+      bhf->fld[f]->f_r0 = fr0_gamma_D2D2;
+    }
+    else if (strcmp_i(fields_name[f],"_gamma_D0D2"))
+    {
+      bhf->fld[f]->f_r0 = fr0_gamma_D0D2;
+    }
+    else if (strcmp_i(fields_name[f],"_gamma_D0D0"))
+    {
+      bhf->fld[f]->f_r0 = fr0_gamma_D0D0;
+    }
+    else if (strcmp_i(fields_name[f],"_gamma_D0D1"))
+    {
+      bhf->fld[f]->f_r0 = fr0_gamma_D0D1;
+    }
+    else if (strcmp_i(fields_name[f],"_gamma_D1D2"))
+    {
+      bhf->fld[f]->f_r0 = fr0_gamma_D1D2;
+    }
+    else if (strcmp_i(fields_name[f],"_gamma_D1D1"))
+    {
+      bhf->fld[f]->f_r0 = fr0_gamma_D1D1;
+    }
+    else
+      Error0(NO_OPTION);
+    
+    }/* for (f = 0; f < nf ++f) */
+    
+    
+  }
+  else
+    Error0(NO_OPTION);
+  
+  /* initialize tables */
+  init_Legendre_root_function();
+  
+  /* patches outside the BH */
+  bhf->patches_outBH = calloc(npo,sizeof(*bhf->patches_outBH));
+  IsNull(bhf->patches_outBH);
+  /* patches inside the BH */
+  bhf->patches_inBH = calloc(npo,sizeof(*bhf->patches_inBH));
+  IsNull(bhf->patches_inBH);
+  
+  i = j = 0;
+  FOR_ALL_PATCHES(p,grid)
+  {
+    Patch_T *patch = grid->patch[p];
+    if (IsItHorizonPatch(patch))
+      bhf->patches_outBH[i++] = patch;
+    else if (IsItInsideBHPatch(patch))
+     bhf->patches_inBH[j++] = patch;
+  }
+  assert(i == npo);
+  assert(j == npi);
+  
+  return bhf;
+}
+
+/* free bhfiller struct */
+static void bhf_free(struct BHFiller_S *const bhf)
+{
+  unsigned i;
+  
+  if(!bhf)
+    return;
+  
+  if (bhf->fld)
+  for (i = 0; i < 4; ++i)
+  {
+    _free(bhf->fld->ChebTn_coeffs[i]);
+    _free(bhf->fld->realYlm_coeffs[i]);
+    _free(bhf->fld->imagYlm_coeffs[i]);
+  }
+  _free(bhf->fld);
+  _free(bhf->patches_outBH);
+  _free(bhf->patches_inBH);
+  free(bhf);
+}
+
+/* ->: EXIT_SUCCESSFUL if succeeds. 
+// extrapolating inside the BH */
+int 
+bbn_bhfiller
+  (
+  Grid_T *const grid/* the whole grid */,
+  const char *const method/* the method to be used for extrapolating */
+  )
+{
+  /* check if it is perfect sphere */
+  if (!Pcmps("BH_R_type","PerfectSphere"))
+    Error0(NO_OPTION);
+
+  struct BHFiller_S *const bhf = bhf_init(grid,method);
+  const unsigned npo = bhf->npo;
+  const unsigned npi = bhf->npi;
+  const unsigned nf  = bhf->nf;/* numebr of fields */
+  const unsigned lmax   = bhf->lmax;
+  const unsigned Ntheta = bhf->Ntheta;
+  const unsigned Nphi   = bhf->Nphi;
+  const double r_fill = Pgetd("BH_R_size");
+  const double r_fill3= pow(r_fill,3);
+  unsigned p,fld;
+  
+  /* update all coeffs to avoid race condition */
+  print("--> Updating coeffs\n");
+  fflush(stdout);
+  OpenMP_Patch_Pragma(omp parallel for)
+  for (p = 0; p < npo; p++)
+  {
+    Patch_T *patch = bhf->patches_outBH[p];
+    unsigned f;
+
+    bbn_1st_2nd_derivatives_conformal_metric(patch);
+    bbn_add_and_take_2nd_derivatives_K(patch);
+    Field_T *R1_f  = patch->CoordSysInfo->CubedSphericalCoord->R1_f;
+    Field_T *R2_f  = patch->CoordSysInfo->CubedSphericalCoord->R2_f;
+    if (R1_f)
+      make_coeffs_2d(R1_f,0,1);/* X and Y direction */
+    if (R2_f)
+      make_coeffs_2d(R2_f,0,1);/* X and Y direction */
+
+    /* make coeffs for all fields inside this patch */
+    for (f = 0; f < patch->nfld; ++f)
+    {
+      if (patch->pool[f]->v      &&
+          patch->pool[f] != R1_f && 
+          patch->pool[f] != R2_f    )
+        make_coeffs_3d(patch->pool[f]);
+    }
+  }
+  
+  /* populating f, df/dr, d^2f/dr^2 at each (th,ph) points */
+  OpenMP_1d_Pragma(omp parallel for)
+  for (fld = 0; fld < nf ++fld)
+  {
+    unsigned i,j,_i,_j;
+    for (i = 0; i < Ntheta; ++i)
+    {
+      double theta = acos(-Legendre_root_function(i,Ntheta));
+      for (j = 0; j < Nphi; ++j)
+      {
+        double phi = j*2*M_PI/Nphi;
+        Patch_T *patch    = 0;
+        double KD[2]      = {0,1};
+        double df_dx[3]   = {0};
+        double ddf_ddx[6] = {0};
+        double ddfddr = 0,dfdr = 0,f_r1 = 0,f_r0 = 0,r3;
+        double a[4] = {0};
+        double _ddfddr[3] = {0,0,0};
+        unsigned ij = IJ(i,j,Nphi);
+        unsigned d1,d2;/* derivative */
+        double X[3],x[3],_x[3];
+        /* find patch for the given theta and phi */
+        find_XYZ_and_patch_of_theta_phi_BH_CS(X,&patch,theta,phi,grid);
+
+        /* r = r_fill(sin(theta)cos(phi)x^+sin(theta)sin(phi)y^+cos(theta)z^) */
+        _x[0] = r_fill*sin(theta)*cos(phi);
+        _x[1] = r_fill*sin(theta)*sin(phi);
+        _x[2] = r_fill*cos(theta);
+        x[0]  = _x[0] + patch->c[0];
+        x[1]  = _x[1] + patch->c[1];
+        x[2]  = _x[2] + patch->c[2];
+        assert(X_of_x(X,x,patch));
+        
+        /* normal vector */
+        N[0]  = sin(theta)*cos(phi);
+        N[1]  = sin(theta)*sin(phi);
+        N[2]  = cos(theta);
+        
+        Interpolation_T *interp_s = init_interpolation();
+        interp_s->XYZ_dir_flag = 1;
+        interp_s->X = X[0];
+        interp_s->Y = X[1];
+        interp_s->Z = X[2];
+        /* f value */
+        interp_s->field = patch->pool[Ind(bhf->fld[fld]->f)];
+        plan_interpolation(interp_s);
+        f_r1 = execute_interpolation(interp_s);
+        f_r0 = bhf->fld[fld]->f_r0;
+        
+        /* df/dx value */
+        for (d1 = 0; d1 < 3; d1++)
+        {
+          interp_s->field = patch->pool[Ind(bhf->fld[fld]->df[d1])];
+          plan_interpolation(interp_s);
+          df_dx[d1] = execute_interpolation(interp_s);
+        }
+        /* d^2f/dx^2 value */
+        for (d1 = 0; d1 < 3; d1++)
+        {
+          for (d2 = d1; d2 < 3; d2++)
+          {
+            interp_s->field = 
+              patch->pool[Ind(bhf->fld[fld]->ddf[IJ(d1,d2,3)])];
+            plan_interpolation(interp_s);
+            ddf_ddx[IJ(d1,d2,3)] = execute_interpolation(interp_s);
+          }
+        }
+        free_interpolation(interp_s);
+        
+        /* df/dr */
+        dfdr = (N[0]*df_dx[0]+N[1]*df_dx[1]+N[2]*df_dx[2]);
+        
+        /* d^2f/dr^2 */
+        for (_i = 0; _i < 3; ++_i)
+        {
+          for (_j = 0; _j < 3; ++_j)
+          {
+            _ddfddr[_i] += (KD[_i==_j]/r_fill - _x[_i]*_x[_j]/r_fill3)*df_dx[_j];
+            _ddfddr[_i] += N[_j]*ddf_ddx[IJ(_i,_j,3)];
+          }
+          ddfddr += _ddfddr[_i]*N[_i]; \
+        }
+        
+        a[0] = (2*ddfddr  - 6*dfdr + 11*f_r1  + 5*f_r0)/16.;
+        a[1] = (-2*ddfddr + 2*dfdr + 15*(f_r1 - f_r0))/32.;
+        a[2] = (-2*ddfddr + 6*dfdr - 3*f_r1   + 3*f_r0)/16.;
+        a[3] = (2*ddfddr  - 2*dfdr + f_r1     - f_r0)/32.;
+        
+        for (_i = 0; _i < 4; _i++)
+          bhf->fld[fld]->ChebTn_coeffs[_i][ij] = a[_i];
+        
+      }
+    }/* for (i = 0; i < Ntheta; ++i) */
+    /* now populate the Ylm coeffs */
+    for ( i = 0 ; i < 4; ++i)
+    {
+      double *rC = bhf->fld[fld]->realYlm_coeffs[i];
+      double *iC = bhf->fld[fld]->imagYlm_coeffs[i];
+      double *v  = bhf->fld[fld]->ChebTn_coeffs[i];
+      get_Ylm_coeffs(rC,iC,v,Ntheta,Nphi,lmax);
+    }
+  }/* for (fld = 0; fld < nf ++fld) */
+  
+  /* now fill the BH */
+  OpenMP_Patch_Pragma(omp parallel for)
+  for (p = 0; p < npi; p++)
+  {
+    Patch_T *patch = grid->patch[patch_numbers->in[p]];
+    unsigned nn = patch->nn;
+    double theta = 0,phi = 0, t = 0;
+    unsigned ijk;
+    bbn_add_fields_in_patch(patch);
+    
+    for (ijk = 0; ijk < nn; ++ijk)
+    {
+      DEF_RELATIVE_x
+      DEF_RELATIVE_y
+      DEF_RELATIVE_z
+      DEF_RELATIVE_r
+      
+    }
+
+
+ }/* for (p = 0; p < npi; p++) */
+  
+  bhf_free(bhf,method);
+  return EXIT_SUCCESSFUL;
+}
+
+
+/* given theta, phi and knowing the fact that they are on BH surface, 
+// it finds the corresponding patch and X,Y,Z coordinate. */
+static void find_XYZ_and_patch_of_theta_phi_BH_CS(double *const X,Patch_T **const ppatch,const double theta,const double phi,Grid_T *const grid)
+{
+  const double tan_phi    = tan(phi);
+  const double cos_theta  = cos(theta);
+  const double tan_phi2   = Pow2(tan_phi);
+  const double cos_theta2 = Pow2(cos_theta);
+  Flag_T found_flg = NO;
+  unsigned p;
+  
+  X[2] = 0;/* since we are on BH surface from BH surrounding side */
+  
+  /* check all of BH patches in which (x,y,z) and 
+  // (X,Y,Z) and (theta,phi) are consistent */
+  FOR_ALL_PATCHES(p,grid)
+  {
+    Patch_T *patch = grid->patch[p];
+    
+    if (!IsItHorizonPatch(patch))
+      continue;
+
+    Flag_T side = patch->CoordSysInfo->CubedSphericalCoord->side;
+    const double *c = patch->c;
+    double a = 0, b = 0;
+    double a_sign = 0,b_sign = 0,c_sign = 0;
+    double x[3],phi2,theta2,r;
+    
+    /* we know that theta = 0 or Pi occures only at UP or DOWN patches
+    // so don't bother to follow algorithm all the way down.
+    // furthermore, this prevent 0 in denominator of unrelated patches. */
+    if (EQL(theta,0) || EQL(theta,M_PI))
+    {
+      if (side == LEFT || side == RIGHT || 
+          side == BACK || side == FRONT   )
+        continue;
+    }
+    
+    /* first calculate the magnetitude of a and b 
+    // which are related to X[0] and X[1] with a sign */
+    switch (side)
+    {
+      case UP:
+        a = Sqrt((1 - cos_theta2)/(cos_theta2 + cos_theta2*tan_phi2));
+        b = tan_phi*Sqrt((1 - cos_theta2)/(cos_theta2*(1 + tan_phi2)));
+      break;
+      case DOWN:
+        b = Sqrt((1 - cos_theta2)/(cos_theta2 + cos_theta2*tan_phi2));
+        a = tan_phi*Sqrt((1 - cos_theta2)/(cos_theta2*(1 + tan_phi2)));
+      break;
+      case LEFT:
+        a = 1/tan_phi;
+        b = Sqrt((cos_theta2 + cos_theta2*tan_phi2)/((1. - cos_theta2)*tan_phi2));
+      break;
+      case RIGHT:
+        b = 1/tan_phi;
+        a = Sqrt((cos_theta2 + cos_theta2*tan_phi2)/((1. - cos_theta2)*tan_phi2));
+      break;
+      case BACK:
+        a = Sqrt((cos_theta2 + cos_theta2*tan_phi2)/(1 - cos_theta2));
+        b = tan_phi;
+      break;
+      case FRONT:
+        b = Sqrt((cos_theta2 + cos_theta2*tan_phi2)/(1 - cos_theta2));
+        a = tan_phi;
+      break;
+      default:
+        Error0(NO_OPTION);
+    }
+    
+    /* having found the magnitude of a and b, we need to find out the sign of them.
+    // this is done by paying attention to side, signum(cos_theta) and range of tanphi */
+    switch (side)
+    {
+      case UP:
+        arctan_argument_signum(&b_sign,&a_sign,phi);
+      break;
+      case DOWN:
+        arctan_argument_signum(&a_sign,&b_sign,phi);
+      break;
+      case LEFT:
+        arctan_argument_signum(&c_sign,&a_sign,phi);
+        if (cos_theta > 0) b_sign = 1;
+        else		   b_sign = -1;
+      break;
+      case RIGHT:
+        arctan_argument_signum(&c_sign,&b_sign,phi);
+        if (cos_theta > 0) a_sign = 1;
+        else		   a_sign = -1;
+      break;
+      case BACK:
+        arctan_argument_signum(&b_sign,&c_sign,phi);
+        if (cos_theta > 0) a_sign = 1;
+        else		   a_sign = -1;
+      break;
+      case FRONT:
+        arctan_argument_signum(&a_sign,&c_sign,phi);
+        if (cos_theta > 0) b_sign = 1;
+        else		   b_sign = -1;
+      break;
+      default:
+        Error0(NO_OPTION);
+    }
+    
+    X[0] = fabs(a)*a_sign;
+    X[1] = fabs(b)*b_sign;
+    
+    /* check if x of X really gives you the correct angles */
+    x_of_X(x,X,patch);
+    x[0] -= c[0];
+    x[1] -= c[1];
+    x[2] -= c[2];
+    r = root_square(3,x,0);
+    theta2 = acos(x[2]/r);
+    phi2   = arctan(x[1],x[0]);
+    if (EQL(theta2,theta) && EQL(phi2,phi))
+    {
+      found_flg = YES;
+      *ppatch = patch;
+      break;
+    }
+  }
+  if (found_flg == NO)
+    Error0("(X,Y,Z) or patch could not be found.\n");
+}
+
+
+
+
+
