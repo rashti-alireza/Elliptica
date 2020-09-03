@@ -130,7 +130,7 @@ bhf_init
     Error0(NO_OPTION);
   
   /* quick test for names */
-  if (1)
+  if (0)
   {
     /* show contents */
     for (f = 0; f < nf; ++f)
@@ -273,7 +273,7 @@ bbn_bhfiller
   const unsigned lmax   = bhf->lmax;
   const unsigned Ntheta = bhf->Ntheta;
   const unsigned Nphi   = bhf->Nphi;
-  const double r_fill = Pgetd("BH_R_size");
+  const double r_fill = Pgetd("r_excision");
   const double r_fill3= pow(r_fill,3);
   unsigned p,fld;
   
@@ -345,12 +345,13 @@ bbn_bhfiller
         N[1]  = sin(theta)*sin(phi);
         N[2]  = cos(theta);
         
+        /* interpolate on the surface */
         Interpolation_T *interp_s = init_interpolation();
-        interp_s->XYZ_dir_flag = 1;
+        interp_s->XY_dir_flag = 1;
         interp_s->X = X[0];
         interp_s->Y = X[1];
-        interp_s->Z = X[2];
-        /* f value */
+        interp_s->K = 0;
+        /* f value at r = r0 and r = 0*/
         interp_s->field = patch->pool[Ind(bhf->fld[fld]->f)];
         plan_interpolation(interp_s);
         f_r1 = execute_interpolation(interp_s);
@@ -379,6 +380,8 @@ bbn_bhfiller
         /* df/dr */
         dfdr = (N[0]*df_dx[0]+N[1]*df_dx[1]+N[2]*df_dx[2]);
         
+        ddfddr = 0;
+        _ddfddr[0] = _ddfddr[1] = _ddfddr[2] = 0;
         /* d^2f/dr^2 */
         for (_i = 0; _i < 3; ++_i)
         {
