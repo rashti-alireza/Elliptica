@@ -393,10 +393,10 @@ bbn_bhfiller
           ddfddr += _ddfddr[_i]*N[_i]; \
         }
         
-        a[0] = (2*ddfddr  - 6*dfdr + 11*f_r1  + 5*f_r0)/16.;
-        a[1] = (-2*ddfddr + 2*dfdr + 15*(f_r1 - f_r0))/32.;
-        a[2] = (-2*ddfddr + 6*dfdr - 3*f_r1   + 3*f_r0)/16.;
-        a[3] = (2*ddfddr  - 2*dfdr + f_r1     - f_r0)/32.;
+        a[0] = (10*f_r0 + 22*f_r1 + 2*ddfddr*r_fill - 6*dfdr*r_fill)/32.;
+        a[1] = (-15*f_r0 + 15*f_r1 - ddfddr*r_fill + dfdr*r_fill)/32.;
+        a[2] = (6*f_r0 - 6*f_r1 - 2*ddfddr*r_fill + 6*dfdr*r_fill)/32.;
+        a[3] = (-f_r0 + f_r1 + ddfddr*r_fill - dfdr*r_fill)/32.;
         
         for (_i = 0; _i < 4; _i++)
           bhf->fld[fld]->ChebTn_coeffs[_i][ij] = a[_i];
