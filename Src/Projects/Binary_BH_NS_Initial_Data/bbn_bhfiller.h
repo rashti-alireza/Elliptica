@@ -3,11 +3,26 @@
 #include "maths_approximation_lib.h"
 #include "maths_analytic_lib.h"
 
+/* constants */
 #define MAX_STR  (100)
 #define MAX_STR2 (200)
-
 /* 2 indices */
 #define IJ(i,j,n)  ((j)+(i)*(n))
+/* math */
+#define Power(a,b) pow(a,b)
+#define Sqrt(a) sqrt(a)
+
+/* _gamma inverse */
+#define COMPUTE_gammaI(a00,a01,a02,a10,a11,a12,a20,a21,a22) \
+  { \
+  _gammaI_U0U0[ijk] = (a11*a22 - a12*a21)/(a00*a11*a22 - a00*a12*a21 - a01*a10*a22 + a01*a12*a20 + a02*a10*a21 - a02*a11*a20); \
+  _gammaI_U0U1[ijk] = (-a01*a22 + a02*a21)/(a00*a11*a22 - a00*a12*a21 - a01*a10*a22 + a01*a12*a20 + a02*a10*a21 - a02*a11*a20); \
+  _gammaI_U0U2[ijk] = (a01*a12 - a02*a11)/(a00*a11*a22 - a00*a12*a21 - a01*a10*a22 + a01*a12*a20 + a02*a10*a21 - a02*a11*a20); \
+  _gammaI_U1U1[ijk] = a00*(a00*a22 - a02*a20)/((a00*a11 - a01*a10)*(a00*a22 - a02*a20) - (a00*a12 - a02*a10)*(a00*a21 - a01*a20)); \
+  _gammaI_U1U2[ijk] =-a00*(a00*a12 - a02*a10)/((a00*a11 - a01*a10)*(a00*a22 - a02*a20) - (a00*a12 - a02*a10)*(a00*a21 - a01*a20)); \
+  _gammaI_U2U2[ijk] = a00*(a00*a11 - a01*a10)/((a00*a11 - a01*a10)*(a00*a22 - a02*a20) - (a00*a12 - a02*a10)*(a00*a21 - a01*a20)); \
+  }
+
 
 struct BHFiller_S
 {
@@ -33,7 +48,7 @@ struct BHFiller_S
     double *realYlm_coeffs[4];/* Ylm coeffs of ChebTn real part */
     double *imagYlm_coeffs[4];/* Ylm coeffs of ChebTn imag part */
     double f_r0;/* value of the field at r = 0 */
-  }*fld;/* field info */
+  }**fld;/* field info */
 };
 
 /* initialize the bhfiller struct */

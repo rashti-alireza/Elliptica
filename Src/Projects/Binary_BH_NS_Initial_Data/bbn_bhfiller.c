@@ -1,6 +1,6 @@
 /*
 // Alireza Rashti
-// June 2019
+// September 2020
 */
 /* filling the inside of BH for evolution purposes */
 
@@ -22,7 +22,7 @@ bhf_init
   const char *const method/* the method to be used for extrapolating */
   )
 {
-  BHFiller_S *const bhf = calloc(1,sizeof(&bhf));IsNull(bhf);
+  struct BHFiller_S *const bhf = calloc(1,sizeof(&bhf));IsNull(bhf);
   const double EPS      = 1E-12;
   const double Ma       = Pgetd("BH_irreducible_mass");
   const unsigned lmax   = 10;
@@ -59,17 +59,18 @@ bhf_init
     bhf->Nphi   = Nphi;
     bhf->fld    = calloc(nf,sizeof(*bhf->fld));IsNull(bhf->fld);
     sprintf(bhf->method,"%s",method);
-    for (f = 0; f < nf ++f)
+    for (f = 0; f < nf; ++f)
     {
+      bhf->fld[f] = calloc(1,sizeof(*bhf->fld[f]));IsNull(bhf->fld[f]);
       /* names of fields and its derivatives */
       sprintf(bhf->fld[f]->f,"%s",fields_name[f]);
       for (i = 0; i < 3; ++i)/* df/dx, d^2f/dx^2 */
       {
         if (fields_name[f][0] == '_')/* => _dgamma */
         {
-          s = fields_name[f]++;
+          s = fields_name[f]+1;
           /* if it is indexed */
-          if (regex_search(".+_(U|D)[:digit:].+",))
+          if (regex_search(".+_(U|D)[:digit:].+",s))
           {
             sprintf(bhf->fld[f]->df[i],"_d%sD%u",s,i);
             for (j = i; j < 3; ++j)
@@ -86,7 +87,7 @@ bhf_init
         {
           s = fields_name[f];
           /* if it is indexed */
-          if (regex_search(".+_(U|D)[:digit:].+",))
+          if (regex_search(".+_(U|D)[:digit:].+",s))
           {
             sprintf(bhf->fld[f]->df[i],"d%sD%u",s,i);
             for (j = i; j < 3; ++j)
@@ -162,9 +163,7 @@ bhf_init
       Error0(NO_OPTION);
     
     }/* for (f = 0; f < nf ++f) */
-    
-    
-  }
+  }/* if (strcmp_i(method,"TnYlm_C2")) */
   else
     Error0(NO_OPTION);
   
@@ -196,25 +195,27 @@ bhf_init
 /* free bhfiller struct */
 static void bhf_free(struct BHFiller_S *const bhf)
 {
-  unsigned i;
+  unsigned i,f;
   
   if(!bhf)
     return;
   
-  if (bhf->fld)
-  for (i = 0; i < 4; ++i)
+  for (f = 0; f < bhf->nf; ++f)
   {
-    _free(bhf->fld->ChebTn_coeffs[i]);
-    _free(bhf->fld->realYlm_coeffs[i]);
-    _free(bhf->fld->imagYlm_coeffs[i]);
+    for (i = 0; i < 4; ++i)
+    {
+      _free(bhf->fld[f]->ChebTn_coeffs[i]);
+      _free(bhf->fld[f]->realYlm_coeffs[i]);
+      _free(bhf->fld[f]->imagYlm_coeffs[i]);
+    }
   }
-  _free(bhf->fld);
+  free_2d_mem(bhf->fld,bhf->nf);
   _free(bhf->patches_outBH);
   _free(bhf->patches_inBH);
   free(bhf);
 }
 
-/* ->: EXIT_SUCCESSFUL if succeeds. 
+/* ->: EXIT_SUCCESS if succeeds. 
 // extrapolating inside the BH */
 int 
 bbn_bhfiller
@@ -240,7 +241,7 @@ bbn_bhfiller
   unsigned p,fld;
   
   /* update all coeffs to avoid race condition */
-  print("--> Updating coeffs\n");
+  printf("--> Updating coeffs\n");
   fflush(stdout);
   OpenMP_Patch_Pragma(omp parallel for)
   for (p = 0; p < npo; p++)
@@ -269,7 +270,7 @@ bbn_bhfiller
   
   /* populating f, df/dr, d^2f/dr^2 at each (th,ph) points */
   OpenMP_1d_Pragma(omp parallel for)
-  for (fld = 0; fld < nf ++fld)
+  for (fld = 0; fld < nf; ++fld)
   {
     unsigned i,j,_i,_j;
     for (i = 0; i < Ntheta; ++i)
@@ -282,12 +283,12 @@ bbn_bhfiller
         double KD[2]      = {0,1};
         double df_dx[3]   = {0};
         double ddf_ddx[6] = {0};
-        double ddfddr = 0,dfdr = 0,f_r1 = 0,f_r0 = 0,r3;
+        double ddfddr = 0,dfdr = 0,f_r1 = 0,f_r0 = 0;
         double a[4] = {0};
         double _ddfddr[3] = {0,0,0};
         unsigned ij = IJ(i,j,Nphi);
         unsigned d1,d2;/* derivative */
-        double X[3],x[3],_x[3];
+        double X[3],x[3],_x[3],N[3];
         /* find patch for the given theta and phi */
         find_XYZ_and_patch_of_theta_phi_BH_CS(X,&patch,theta,phi,grid);
 
@@ -374,7 +375,7 @@ bbn_bhfiller
   OpenMP_Patch_Pragma(omp parallel for)
   for (p = 0; p < npi; p++)
   {
-    Patch_T *patch = grid->patch[patch_numbers->in[p]];
+    Patch_T *patch = bhf->patches_inBH[p];
     unsigned nn = patch->nn;
     double theta = 0,phi = 0, t = 0;
     unsigned ijk;
@@ -383,7 +384,7 @@ bbn_bhfiller
     bbn_add_fields_in_patch(patch);
     
     /* loop over all fields to be extrapolated */
-    for (f = 0; f < nf ++f)
+    for (f = 0; f < nf; ++f)
     {
       Field_T *u = patch->pool[Ind(bhf->fld[f]->f)];
       empty_field(u);
@@ -411,7 +412,8 @@ bbn_bhfiller
         {
           double *rC = bhf->fld[f]->realYlm_coeffs[i];
           double *iC = bhf->fld[f]->imagYlm_coeffs[i];
-          v[ijk] += interpolation_Ylm(rC,iC,lmax,theta,phi)*Cheb_Tn(i,t);
+          v[ijk] += 
+            interpolation_Ylm(rC,iC,lmax,theta,phi)*Cheb_Tn((int)i,t);
         }
       }/* for (ijk = 0; ijk < nn; ++ijk) */
     }/* for (f = 0; f < nf ++f) */
@@ -423,12 +425,12 @@ bbn_bhfiller
     REALLOC_v_WRITE_v(_gammaI_U0U1)
     REALLOC_v_WRITE_v(_gammaI_U1U2)
     REALLOC_v_WRITE_v(_gammaI_U1U1)
-    READ_V(_gamma_D2D2)
-    READ_V(_gamma_D0D2)
-    READ_V(_gamma_D0D0)
-    READ_V(_gamma_D0D1)
-    READ_V(_gamma_D1D2)
-    READ_V(_gamma_D1D1)
+    READ_v(_gamma_D2D2)
+    READ_v(_gamma_D0D2)
+    READ_v(_gamma_D0D0)
+    READ_v(_gamma_D0D1)
+    READ_v(_gamma_D1D2)
+    READ_v(_gamma_D1D1)
     READ_v(Beta_U0)
     READ_v(Beta_U1)
     READ_v(Beta_U2)
@@ -489,15 +491,15 @@ bbn_bhfiller
         _gammaI_U0U2[ijk]*_gamma_D0D1[ijk] + _gammaI_U1U2[ijk]*
         _gamma_D1D1[ijk] + _gammaI_U2U2[ijk]*_gamma_D1D2[ijk];
 
-        if(!EQL(delta_U1D1,1))  bbn_bam_error("_gammaI is not correct!\n",__FILE__,__LINE__);
-        if(!EQL(delta_U0D1,0))  bbn_bam_error("_gammaI is not correct!\n",__FILE__,__LINE__);
-        if(!EQL(delta_U0D2,0))  bbn_bam_error("_gammaI is not correct!\n",__FILE__,__LINE__);
-        if(!EQL(delta_U1D2,0))  bbn_bam_error("_gammaI is not correct!\n",__FILE__,__LINE__);
-        if(!EQL(delta_U0D0,1))  bbn_bam_error("_gammaI is not correct!\n",__FILE__,__LINE__);
-        if(!EQL(delta_U2D1,0))  bbn_bam_error("_gammaI is not correct!\n",__FILE__,__LINE__);
-        if(!EQL(delta_U2D2,1))  bbn_bam_error("_gammaI is not correct!\n",__FILE__,__LINE__);
-        if(!EQL(delta_U2D0,0))  bbn_bam_error("_gammaI is not correct!\n",__FILE__,__LINE__);
-        if(!EQL(delta_U1D0,0))  bbn_bam_error("_gammaI is not correct!\n",__FILE__,__LINE__);
+        if(!EQL(delta_U1D1,1))  Error0("_gammaI is not correct!\n");
+        if(!EQL(delta_U0D1,0))  Error0("_gammaI is not correct!\n");
+        if(!EQL(delta_U0D2,0))  Error0("_gammaI is not correct!\n");
+        if(!EQL(delta_U1D2,0))  Error0("_gammaI is not correct!\n");
+        if(!EQL(delta_U0D0,1))  Error0("_gammaI is not correct!\n");
+        if(!EQL(delta_U2D1,0))  Error0("_gammaI is not correct!\n");
+        if(!EQL(delta_U2D2,1))  Error0("_gammaI is not correct!\n");
+        if(!EQL(delta_U2D0,0))  Error0("_gammaI is not correct!\n");
+        if(!EQL(delta_U1D0,0))  Error0("_gammaI is not correct!\n");
       }
     }/* for (ijk = 0; ijk < nn; ++ijk) */
     /* update derivatives */
@@ -528,7 +530,7 @@ bbn_bhfiller
     (GetPatch("right_BH_surrounding_front",grid));
   
   bhf_free(bhf);
-  return EXIT_SUCCESSFUL;
+  return EXIT_SUCCESS;
 }
 
 
