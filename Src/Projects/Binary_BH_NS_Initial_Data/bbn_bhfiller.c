@@ -14,34 +14,6 @@ static const char *const fields_name[] = {
   "_gamma_D0D0","_gamma_D0D1",
   "_gamma_D1D2","_gamma_D1D1",0};
 
-#define MAX_STR  (100)
-#define MAX_STR2 (200)
-/* 2d index */
-#define IJ(i,j,n)  ((j)+(i)*(n))
-
-struct BHFiller_S
-{
-  Grid_T *grid;/* the grid */
-  Patch_T **patches_outBH;/* patches outside the BH */
-  Patch_T **patches_inBH;/* patches inside the BH */
-  unsigned npi;/* number of patches inside the BH */
-  unsigned npo;/* number of patches outside the BH */
-  unsigned lmax;/* max l in Ylm expansion */
-  unsigned Ntheta;/* number of points in theta direction */
-  unsigned Nphi;/* number of points in phi direction */
-  struct
-  {
-    char f[MAX_STR];/* f */
-    char df[3][MAX_STR];/* df/dx */
-    char ddf[6][MAX_STR];/* d^2f/dx^2 */
-    double *ChebTn_coeffs[4];/* ChebTn coeffs to ensure C2 continuity */
-    double *realYlm_coeffs[4];/* Ylm coeffs of ChebTn real part */
-    double *imagYlm_coeffs[4];/* Ylm coeffs of ChebTn imag part */
-    double f_r0;/* value of the field at r = 0 */
-  }*fld;/* field info */
-  unsigned nf;/* number of fields */
-};
-
 /* initialize the bhfiller struct */
 struct BHFiller_S* 
 bhf_init
@@ -86,6 +58,7 @@ bhf_init
     bhf->Ntheta = Ntheta;
     bhf->Nphi   = Nphi;
     bhf->fld    = calloc(nf,sizeof(*bhf->fld));IsNull(bhf->fld);
+    sprintf(bhf->method,"%s",method);
     for (f = 0; f < nf ++f)
     {
       /* names of fields and its derivatives */
@@ -255,6 +228,7 @@ bbn_bhfiller
     Error0(NO_OPTION);
 
   struct BHFiller_S *const bhf = bhf_init(grid,method);
+  const double EPS   = 1E-12;
   const unsigned npo = bhf->npo;
   const unsigned npi = bhf->npi;
   const unsigned nf  = bhf->nf;/* numebr of fields */
@@ -404,21 +378,156 @@ bbn_bhfiller
     unsigned nn = patch->nn;
     double theta = 0,phi = 0, t = 0;
     unsigned ijk;
+    unsigned f,i;
+
     bbn_add_fields_in_patch(patch);
+    
+    /* loop over all fields to be extrapolated */
+    for (f = 0; f < nf ++f)
+    {
+      Field_T *u = patch->pool[Ind(bhf->fld[f]->f)];
+      empty_field(u);
+      u->v      = alloc_double(patch->nn);
+      double *v = u->v;
+      
+      for (ijk = 0; ijk < nn; ++ijk)
+      {
+        DEF_RELATIVE_x
+        DEF_RELATIVE_y
+        DEF_RELATIVE_z
+        DEF_RELATIVE_r
+        if (!EQL(r,0))
+        {
+          theta = acos(z/r);
+        }
+        else
+        {
+          r     = EPS;
+          theta = 0;
+        }
+        t   = 2*r/r_fill-1;
+        phi = arctan(y,x);
+        for (i = 0; i < 4; ++i)
+        {
+          double *rC = bhf->fld[f]->realYlm_coeffs[i];
+          double *iC = bhf->fld[f]->imagYlm_coeffs[i];
+          v[ijk] += interpolation_Ylm(rC,iC,lmax,theta,phi)*Cheb_Tn(i,t);
+        }
+      }/* for (ijk = 0; ijk < nn; ++ijk) */
+    }/* for (f = 0; f < nf ++f) */
+    
+    /* _gammaI */
+    REALLOC_v_WRITE_v(_gammaI_U2U2)
+    REALLOC_v_WRITE_v(_gammaI_U0U2)
+    REALLOC_v_WRITE_v(_gammaI_U0U0)
+    REALLOC_v_WRITE_v(_gammaI_U0U1)
+    REALLOC_v_WRITE_v(_gammaI_U1U2)
+    REALLOC_v_WRITE_v(_gammaI_U1U1)
+    READ_V(_gamma_D2D2)
+    READ_V(_gamma_D0D2)
+    READ_V(_gamma_D0D0)
+    READ_V(_gamma_D0D1)
+    READ_V(_gamma_D1D2)
+    READ_V(_gamma_D1D1)
+    READ_v(Beta_U0)
+    READ_v(Beta_U1)
+    READ_v(Beta_U2)
+    REALLOC_v_WRITE_v(B0_U0)
+    REALLOC_v_WRITE_v(B0_U1)
+    REALLOC_v_WRITE_v(B0_U2)
+    bbn_update_B1_U012(patch);
+    READ_v(B1_U0)
+    READ_v(B1_U1)
+    READ_v(B1_U2)
     
     for (ijk = 0; ijk < nn; ++ijk)
     {
-      DEF_RELATIVE_x
-      DEF_RELATIVE_y
-      DEF_RELATIVE_z
-      DEF_RELATIVE_r
-      
-    }
+      B0_U0[ijk] = Beta_U0[ijk]-B1_U0[ijk];
+      B0_U1[ijk] = Beta_U1[ijk]-B1_U1[ijk];
+      B0_U2[ijk] = Beta_U2[ijk]-B1_U2[ijk];
+      /* _gammaI =  _gamma inverse */
+      COMPUTE_gammaI(_gamma_D0D0[ijk],_gamma_D0D1[ijk],_gamma_D0D2[ijk],
+                     _gamma_D0D1[ijk],_gamma_D1D1[ijk],_gamma_D1D2[ijk],
+                     _gamma_D0D2[ijk],_gamma_D1D2[ijk],_gamma_D2D2[ijk])
+                     
+      /* quick test check _gamma * _gammaI = delta */
+      if (1)
+      {
+          double delta_U0D0 = 
+        _gammaI_U0U0[ijk]*_gamma_D0D0[ijk] + _gammaI_U0U1[ijk]*
+        _gamma_D0D1[ijk] + _gammaI_U0U2[ijk]*_gamma_D0D2[ijk];
 
+          double delta_U0D1 = 
+        _gammaI_U0U0[ijk]*_gamma_D0D1[ijk] + _gammaI_U0U1[ijk]*
+        _gamma_D1D1[ijk] + _gammaI_U0U2[ijk]*_gamma_D1D2[ijk];
 
- }/* for (p = 0; p < npi; p++) */
+          double delta_U0D2 = 
+        _gammaI_U0U0[ijk]*_gamma_D0D2[ijk] + _gammaI_U0U1[ijk]*
+        _gamma_D1D2[ijk] + _gammaI_U0U2[ijk]*_gamma_D2D2[ijk];
+
+          double delta_U1D2 = 
+        _gammaI_U0U1[ijk]*_gamma_D0D2[ijk] + _gammaI_U1U1[ijk]*
+        _gamma_D1D2[ijk] + _gammaI_U1U2[ijk]*_gamma_D2D2[ijk];
+
+          double delta_U1D0 = 
+        _gammaI_U0U1[ijk]*_gamma_D0D0[ijk] + _gammaI_U1U1[ijk]*
+        _gamma_D0D1[ijk] + _gammaI_U1U2[ijk]*_gamma_D0D2[ijk];
+
+         double delta_U1D1 = 
+        _gammaI_U0U1[ijk]*_gamma_D0D1[ijk] + _gammaI_U1U1[ijk]*
+        _gamma_D1D1[ijk] + _gammaI_U1U2[ijk]*_gamma_D1D2[ijk];
+
+          double delta_U2D2 = 
+        _gammaI_U0U2[ijk]*_gamma_D0D2[ijk] + _gammaI_U1U2[ijk]*
+        _gamma_D1D2[ijk] + _gammaI_U2U2[ijk]*_gamma_D2D2[ijk];
+
+          double delta_U2D0 = 
+        _gammaI_U0U2[ijk]*_gamma_D0D0[ijk] + _gammaI_U1U2[ijk]*
+        _gamma_D0D1[ijk] + _gammaI_U2U2[ijk]*_gamma_D0D2[ijk];
+
+          double delta_U2D1 = 
+        _gammaI_U0U2[ijk]*_gamma_D0D1[ijk] + _gammaI_U1U2[ijk]*
+        _gamma_D1D1[ijk] + _gammaI_U2U2[ijk]*_gamma_D1D2[ijk];
+
+        if(!EQL(delta_U1D1,1))  bbn_bam_error("_gammaI is not correct!\n",__FILE__,__LINE__);
+        if(!EQL(delta_U0D1,0))  bbn_bam_error("_gammaI is not correct!\n",__FILE__,__LINE__);
+        if(!EQL(delta_U0D2,0))  bbn_bam_error("_gammaI is not correct!\n",__FILE__,__LINE__);
+        if(!EQL(delta_U1D2,0))  bbn_bam_error("_gammaI is not correct!\n",__FILE__,__LINE__);
+        if(!EQL(delta_U0D0,1))  bbn_bam_error("_gammaI is not correct!\n",__FILE__,__LINE__);
+        if(!EQL(delta_U2D1,0))  bbn_bam_error("_gammaI is not correct!\n",__FILE__,__LINE__);
+        if(!EQL(delta_U2D2,1))  bbn_bam_error("_gammaI is not correct!\n",__FILE__,__LINE__);
+        if(!EQL(delta_U2D0,0))  bbn_bam_error("_gammaI is not correct!\n",__FILE__,__LINE__);
+        if(!EQL(delta_U1D0,0))  bbn_bam_error("_gammaI is not correct!\n",__FILE__,__LINE__);
+      }
+    }/* for (ijk = 0; ijk < nn; ++ijk) */
+    /* update derivatives */
+    bbn_update_derivative_Beta_U0(patch);
+    bbn_update_derivative_Beta_U1(patch);
+    bbn_update_derivative_Beta_U2(patch);
+    bbn_update_derivative_psi(patch);
+    bbn_update_derivative_eta(patch);
+    
+    /* for K_{ij} inside BH patches */
+    bbn_1st_derivatives_conformal_metric(patch);
+    bbn_free_data_Gamma_patch(patch);
+    bbn_rm_1st_derivatives_conformal_metric(patch);
+  }/* for (p = 0; p < npi; p++) */
   
-  bhf_free(bhf,method);
+  /* free */
+  bbn_rm_1st_2nd_derivatives_conformal_metric
+    (GetPatch("right_BH_surrounding_up",grid));
+  bbn_rm_1st_2nd_derivatives_conformal_metric
+    (GetPatch("right_BH_surrounding_down",grid));
+  bbn_rm_1st_2nd_derivatives_conformal_metric
+    (GetPatch("right_BH_surrounding_left",grid));
+  bbn_rm_1st_2nd_derivatives_conformal_metric
+    (GetPatch("right_BH_surrounding_right",grid));
+  bbn_rm_1st_2nd_derivatives_conformal_metric
+    (GetPatch("right_BH_surrounding_back",grid));
+  bbn_rm_1st_2nd_derivatives_conformal_metric
+    (GetPatch("right_BH_surrounding_front",grid));
+  
+  bhf_free(bhf);
   return EXIT_SUCCESSFUL;
 }
 
