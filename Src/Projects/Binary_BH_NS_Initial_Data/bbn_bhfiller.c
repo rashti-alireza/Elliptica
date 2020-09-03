@@ -9,7 +9,7 @@
 /* these fields to be extrapolated  */
 static const char *const fields_name[] = {
   "psi","eta","K",
-  "Beta_U0","Beta_U1","Beta_U2"
+  "Beta_U0","Beta_U1","Beta_U2",
   "_gamma_D2D2","_gamma_D0D2",
   "_gamma_D0D0","_gamma_D0D1",
   "_gamma_D1D2","_gamma_D1D1",0};
@@ -22,10 +22,10 @@ bhf_init
   const char *const method/* the method to be used for extrapolating */
   )
 {
-  struct BHFiller_S *const bhf = calloc(1,sizeof(&bhf));IsNull(bhf);
+  struct BHFiller_S *const bhf = calloc(1,sizeof(*bhf));IsNull(bhf);
   const double EPS      = 1E-12;
   const double Ma       = Pgetd("BH_irreducible_mass");
-  const unsigned lmax   = 10;
+  const unsigned lmax   = 3;
   const unsigned Ntheta = 2*lmax+1;
   const unsigned Nphi   = 2*lmax+1;
   const unsigned N      = Ntheta*Nphi;
@@ -47,6 +47,8 @@ bhf_init
   const double fr0_eta = fr0_alpha*fr0_psi;
   unsigned f,nf,i,j,p;
   
+  bhf->npo = npo;
+  bhf->npi = npi;
   nf = 0;/* number of fields */
   while(fields_name[nf]) ++nf;
   bhf->nf = nf;
@@ -64,43 +66,52 @@ bhf_init
       bhf->fld[f] = calloc(1,sizeof(*bhf->fld[f]));IsNull(bhf->fld[f]);
       /* names of fields and its derivatives */
       sprintf(bhf->fld[f]->f,"%s",fields_name[f]);
-      for (i = 0; i < 3; ++i)/* df/dx, d^2f/dx^2 */
+      if (fields_name[f][0] == '_')/* => _dgamma */
       {
-        if (fields_name[f][0] == '_')/* => _dgamma */
+        s = bhf->fld[f]->f+1;
+        /* if it is indexed */
+        if (regex_search(".+_(U|D)[[:digit:]]",s))
         {
-          s = fields_name[f]+1;
-          /* if it is indexed */
-          if (regex_search(".+_(U|D)[:digit:].+",s))
+          for (i = 0; i < 3; ++i)
           {
             sprintf(bhf->fld[f]->df[i],"_d%sD%u",s,i);
             for (j = i; j < 3; ++j)
-              sprintf(bhf->fld[f]->ddf[IJ(i,j,3)],"_d%sD%uD%u",s,i,j);
+              sprintf(bhf->fld[f]->ddf[IJsymm3(i,j)],"_dd%sD%uD%u",s,i,j);
           }
-          else/* not indexed */
+        }
+        else/* not indexed */
+        {
+          for (i = 0; i < 3; ++i)
           {
             sprintf(bhf->fld[f]->df[0],"_d%s_D%u",s,i);
             for (j = i; j < 3; ++j)
-              sprintf(bhf->fld[f]->ddf[IJ(i,j,3)],"_d%s_D%uD%u",s,i,j);
+              sprintf(bhf->fld[f]->ddf[IJsymm3(i,j)],"_dd%s_D%uD%u",s,i,j);
           }
         }
-        else/* if no _ at the beginning */
+      }
+      else/* if no _ at the beginning */
+      {
+        s = fields_name[f];
+        /* if it is indexed */
+        if (regex_search(".+_(U|D)[[:digit:]]",s))
         {
-          s = fields_name[f];
-          /* if it is indexed */
-          if (regex_search(".+_(U|D)[:digit:].+",s))
+          for (i = 0; i < 3; ++i)
           {
             sprintf(bhf->fld[f]->df[i],"d%sD%u",s,i);
             for (j = i; j < 3; ++j)
-              sprintf(bhf->fld[f]->ddf[IJ(i,j,3)],"d%sD%uD%u",s,i,j);
-          }
-          else/* not indexed */
-          {
-            sprintf(bhf->fld[f]->df[0],"d%s_D%u",s,i);
-            for (j = i; j < 3; ++j)
-              sprintf(bhf->fld[f]->ddf[IJ(i,j,3)],"d%s_D%uD%u",s,i,j);
+              sprintf(bhf->fld[f]->ddf[IJsymm3(i,j)],"dd%sD%uD%u",s,i,j);
           }
         }
-      }/* end of for (i = 0; i < 3; ++i) */
+        else/* not indexed */
+        {
+          for (i = 0; i < 3; ++i)
+          {
+            sprintf(bhf->fld[f]->df[i],"d%s_D%u",s,i);
+            for (j = i; j < 3; ++j)
+              sprintf(bhf->fld[f]->ddf[IJsymm3(i,j)],"dd%s_D%uD%u",s,i,j);
+          }
+        }
+      }
       
       /* alloc ChebTn_coeffss */
       for (i = 0 ; i < 4; ++i)
@@ -174,7 +185,7 @@ bhf_init
   bhf->patches_outBH = calloc(npo,sizeof(*bhf->patches_outBH));
   IsNull(bhf->patches_outBH);
   /* patches inside the BH */
-  bhf->patches_inBH = calloc(npo,sizeof(*bhf->patches_inBH));
+  bhf->patches_inBH = calloc(npi,sizeof(*bhf->patches_inBH));
   IsNull(bhf->patches_inBH);
   
   i = j = 0;
@@ -188,6 +199,28 @@ bhf_init
   }
   assert(i == npo);
   assert(j == npi);
+  
+  /* quick test */
+  if (1)
+  {
+    /* show contents */
+    for (f = 0; f < nf; ++f)
+    {
+      pr_line();
+      printf("fld[%u] = %s\n",f,bhf->fld[f]->f);
+      printf("d[%s] = (%s,%s,%s)\n",
+          bhf->fld[f]->f,bhf->fld[f]->df[0],
+          bhf->fld[f]->df[1],bhf->fld[f]->df[2]);
+      for (i = 0; i < 3; ++i)
+      {
+        for (j = i; j < 3; ++j)
+        {
+          printf("dd[%s](%u,%u) = %s\n",
+            bhf->fld[f]->f,i,j,bhf->fld[f]->ddf[IJsymm3(i,j)]);
+        }
+      }
+    }
+  }
   
   return bhf;
 }
@@ -269,7 +302,7 @@ bbn_bhfiller
   }
   
   /* populating f, df/dr, d^2f/dr^2 at each (th,ph) points */
-  OpenMP_1d_Pragma(omp parallel for)
+  //OpenMP_1d_Pragma(omp parallel for)
   for (fld = 0; fld < nf; ++fld)
   {
     unsigned i,j,_i,_j;
@@ -330,9 +363,9 @@ bbn_bhfiller
           for (d2 = d1; d2 < 3; d2++)
           {
             interp_s->field = 
-              patch->pool[Ind(bhf->fld[fld]->ddf[IJ(d1,d2,3)])];
+              patch->pool[Ind(bhf->fld[fld]->ddf[IJsymm3(d1,d2)])];
             plan_interpolation(interp_s);
-            ddf_ddx[IJ(d1,d2,3)] = execute_interpolation(interp_s);
+            ddf_ddx[IJsymm3(d1,d2)] = execute_interpolation(interp_s);
           }
         }
         free_interpolation(interp_s);
@@ -346,7 +379,7 @@ bbn_bhfiller
           for (_j = 0; _j < 3; ++_j)
           {
             _ddfddr[_i] += (KD[_i==_j]/r_fill - _x[_i]*_x[_j]/r_fill3)*df_dx[_j];
-            _ddfddr[_i] += N[_j]*ddf_ddx[IJ(_i,_j,3)];
+            _ddfddr[_i] += N[_j]*ddf_ddx[IJsymm3(_i,_j)];
           }
           ddfddr += _ddfddr[_i]*N[_i]; \
         }
@@ -372,7 +405,7 @@ bbn_bhfiller
   }/* for (fld = 0; fld < nf ++fld) */
   
   /* now fill the BH */
-  OpenMP_Patch_Pragma(omp parallel for)
+  //OpenMP_Patch_Pragma(omp parallel for)
   for (p = 0; p < npi; p++)
   {
     Patch_T *patch = bhf->patches_inBH[p];

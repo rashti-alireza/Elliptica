@@ -8,6 +8,12 @@
 #define MAX_STR2 (200)
 /* 2 indices */
 #define IJ(i,j,n)  ((j)+(i)*(n))
+/* 2 indices with symmetry for n = 3 */
+#define IJsymm3(i,j)  \
+ ((j)>=(i) ? \
+  (5*(((j)+(i)*2)/6)+((j)+(i)*2)%6) : \
+  (5*(((i)+(j)*2)/6)+((i)+(j)*2)%6))
+
 /* math */
 #define Power(a,b) pow(a,b)
 #define Sqrt(a) sqrt(a)
