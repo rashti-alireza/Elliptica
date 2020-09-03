@@ -25,7 +25,7 @@ bhf_init
   struct BHFiller_S *const bhf = calloc(1,sizeof(*bhf));IsNull(bhf);
   const double EPS      = 1E-12;
   const double Ma       = Pgetd("BH_irreducible_mass");
-  const unsigned lmax   = 3;
+  const unsigned lmax   = (unsigned)Pgeti("bbn_bhfiller_lmax");
   const unsigned Ntheta = 2*lmax+1;
   const unsigned Nphi   = 2*lmax+1;
   const unsigned N      = Ntheta*Nphi;
@@ -302,7 +302,7 @@ bbn_bhfiller
   }
   
   /* populating f, df/dr, d^2f/dr^2 at each (th,ph) points */
-  //OpenMP_1d_Pragma(omp parallel for)
+  OpenMP_1d_Pragma(omp parallel for)
   for (fld = 0; fld < nf; ++fld)
   {
     unsigned i,j,_i,_j;
@@ -405,7 +405,7 @@ bbn_bhfiller
   }/* for (fld = 0; fld < nf ++fld) */
   
   /* now fill the BH */
-  //OpenMP_Patch_Pragma(omp parallel for)
+  OpenMP_Patch_Pragma(omp parallel for)
   for (p = 0; p < npi; p++)
   {
     Patch_T *patch = bhf->patches_inBH[p];
