@@ -249,7 +249,6 @@ static Grid_T *load_grid_from_checkpoint_file(void)
   
   Grid_T *grid = 0;
   FILE *file   = 0;
-  unsigned p;
   
   /* open checkpoint file */
   file = Fopen(checkpoint_path,"r");
