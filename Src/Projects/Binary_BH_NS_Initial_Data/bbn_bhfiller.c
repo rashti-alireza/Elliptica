@@ -497,7 +497,7 @@ bbn_bhfiller
                      _gamma_D0D2[ijk],_gamma_D1D2[ijk],_gamma_D2D2[ijk])
                      
       /* quick test check _gamma * _gammaI = delta */
-      if (1)
+      if (0)
       {
           double delta_U0D0 = 
         _gammaI_U0U0[ijk]*_gamma_D0D0[ijk] + _gammaI_U0U1[ijk]*
