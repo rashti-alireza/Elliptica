@@ -399,9 +399,11 @@ bam_output_doctest
   struct interpolation_points *const pnt/* where interpolation takes place */
   )
 {
-  const char *const fields_name[] = {"bam_chi","psi","_gamma_D2D2",
+  const char *const fields_name[] = {
+    "bam_chi","psi","_gamma_D2D2",
     "_gamma_D0D2","_gamma_D0D0","_gamma_D0D1",
-    "_gamma_D1D2","_gamma_D1D1",0};
+    "_gamma_D1D2","_gamma_D1D1","eta","K",
+    "Beta_U0","Beta_U1","Beta_U2",0};
   const double Ly        = 100;/* length of y-axis */
   const double y0        = -Ly/2; /* initial y */
   const unsigned npoints = 2000;
