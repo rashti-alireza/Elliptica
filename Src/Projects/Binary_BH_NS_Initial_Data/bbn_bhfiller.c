@@ -23,13 +23,8 @@ bhf_init
   )
 {
   struct BHFiller_S *const bhf = calloc(1,sizeof(*bhf));IsNull(bhf);
-  const double EPS      = 1E-12;
-  const double Ma       = Pgetd("BH_irreducible_mass");
-  const unsigned lmax   = (unsigned)Pgeti("bbn_bhfiller_lmax");
-  const unsigned Ntheta = 2*lmax+1;
-  const unsigned Nphi   = 2*lmax+1;
-  const unsigned N      = Ntheta*Nphi;
-  const char *s = 0;
+  const double EPS   = 1;
+  const double Ma    = Pgetd("BH_irreducible_mass");
   const unsigned npi = 7;/* number of patches inside BH */
   const unsigned npo = 6;/* number of patches outside BH */
   const double fr0_Beta_U0     = 0;
@@ -45,6 +40,7 @@ bhf_init
   const double fr0_alpha       = 0.1;
   const double fr0_psi = 2+Ma/(2*EPS);
   const double fr0_eta = fr0_alpha*fr0_psi;
+  const char *s = 0;
   unsigned f,nf,i,j,p;
   
   bhf->npo = npo;
@@ -56,6 +52,14 @@ bhf_init
   // and extrapolate demanding C2 continuity */
   if (strcmp_i(method,"TnYlm_C2"))
   {
+    const unsigned lmax   = (unsigned)Pgeti("bbn_bhfiller_lmax");
+    const unsigned Ntheta = 2*lmax+1;
+    const unsigned Nphi   = 2*lmax+1;
+    const unsigned N      = Ntheta*Nphi;
+    
+    /* initialize tables */
+    init_Legendre_root_function();
+  
     bhf->lmax   = lmax;
     bhf->Ntheta = Ntheta;
     bhf->Nphi   = Nphi;
@@ -113,15 +117,43 @@ bhf_init
         }
       }
       
-      /* alloc ChebTn_coeffss */
+      /* alloc ChebTn_coeffs */
       for (i = 0 ; i < 4; ++i)
       {
         bhf->fld[f]->ChebTn_coeffs[i]  = alloc_double(N);
         bhf->fld[f]->realYlm_coeffs[i] = alloc_ClmYlm(lmax);
         bhf->fld[f]->imagYlm_coeffs[i] = alloc_ClmYlm(lmax);
       }
-      
-    /* set values of field at r=0 */
+    }/* for (f = 0; f < nf; ++f) */
+  }/* if (strcmp_i(method,"TnYlm_C2")) */
+  else
+    Error0(NO_OPTION);
+  
+  /* quick test for names */
+  if (1)
+  {
+    /* show contents */
+    for (f = 0; f < nf; ++f)
+    {
+      pr_line();
+      printf("fld[%u] = %s\n",f,bhf->fld[f]->f);
+      printf("d[%s] = (%s,%s,%s)\n",
+          bhf->fld[f]->f,bhf->fld[f]->df[0],
+          bhf->fld[f]->df[1],bhf->fld[f]->df[2]);
+      for (i = 0; i < 3; ++i)
+      {
+        for (j = i; j < 3; ++j)
+        {
+          printf("dd[%s](%u,%u) = %s\n",
+            bhf->fld[f]->f,i,j,bhf->fld[f]->ddf[IJsymm3(i,j)]);
+        }
+      }
+    }
+  }
+
+  /* set values of field at r=0 */
+  for (f = 0; f < nf; ++f)
+  {
     if (strcmp_i(fields_name[f],"psi"))
     {
       bhf->fld[f]->f_r0 = fr0_psi;
@@ -173,13 +205,7 @@ bhf_init
     else
       Error0(NO_OPTION);
     
-    }/* for (f = 0; f < nf ++f) */
-  }/* if (strcmp_i(method,"TnYlm_C2")) */
-  else
-    Error0(NO_OPTION);
-  
-  /* initialize tables */
-  init_Legendre_root_function();
+  }/* for (f = 0; f < nf ++f) */
   
   /* patches outside the BH */
   bhf->patches_outBH = calloc(npo,sizeof(*bhf->patches_outBH));
@@ -199,28 +225,6 @@ bhf_init
   }
   assert(i == npo);
   assert(j == npi);
-  
-  /* quick test */
-  if (1)
-  {
-    /* show contents */
-    for (f = 0; f < nf; ++f)
-    {
-      pr_line();
-      printf("fld[%u] = %s\n",f,bhf->fld[f]->f);
-      printf("d[%s] = (%s,%s,%s)\n",
-          bhf->fld[f]->f,bhf->fld[f]->df[0],
-          bhf->fld[f]->df[1],bhf->fld[f]->df[2]);
-      for (i = 0; i < 3; ++i)
-      {
-        for (j = i; j < 3; ++j)
-        {
-          printf("dd[%s](%u,%u) = %s\n",
-            bhf->fld[f]->f,i,j,bhf->fld[f]->ddf[IJsymm3(i,j)]);
-        }
-      }
-    }
-  }
   
   return bhf;
 }
