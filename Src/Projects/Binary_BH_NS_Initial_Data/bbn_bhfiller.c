@@ -311,6 +311,8 @@ static void bhf_free(struct BHFiller_S *const bhf)
 // */
 static int bhf_ChebTnYlm_C2(struct BHFiller_S *const bhf)
 {
+  printf("|--> BH-filler method = ChebTnYlm_C2.\n");
+  fflush(stdout);
   Grid_T *const grid = bhf->grid;
   const double EPS   = 1E-12;
   const unsigned npo = bhf->npo;
@@ -324,7 +326,7 @@ static int bhf_ChebTnYlm_C2(struct BHFiller_S *const bhf)
   unsigned p,fld;
   
   /* update all coeffs to avoid race condition */
-  printf("--> Updating coefficients ...\n");
+  printf("|--> Updating coefficients ...\n");
   fflush(stdout);
   OpenMP_Patch_Pragma(omp parallel for)
   for (p = 0; p < npo; p++)
@@ -352,7 +354,7 @@ static int bhf_ChebTnYlm_C2(struct BHFiller_S *const bhf)
   }
   
   /* populating f, df/dr, d^2f/dr^2 at each (th,ph) points */
-  printf("--> Populating extrapolation coefficients ...\n");
+  printf("|--> Populating extrapolation coefficients ...\n");
   fflush(stdout);
   OpenMP_1d_Pragma(omp parallel for)
   for (fld = 0; fld < nf; ++fld)
@@ -460,7 +462,7 @@ static int bhf_ChebTnYlm_C2(struct BHFiller_S *const bhf)
   }/* for (fld = 0; fld < nf ++fld) */
   
   /* now fill the BH */
-  printf("--> Fill the holes ...\n");
+  printf("|--> Fill the holes ...\n");
   fflush(stdout);
   OpenMP_Patch_Pragma(omp parallel for)
   for (p = 0; p < npi; p++)
