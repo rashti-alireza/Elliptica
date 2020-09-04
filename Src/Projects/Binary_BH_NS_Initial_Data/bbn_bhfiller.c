@@ -739,6 +739,350 @@ static void find_XYZ_and_patch_of_theta_phi_BH_CS(double *const X,Patch_T **cons
 }
 
 
+/* for BAM initial data reader,
+// extrapolate the fields Beta,eta, psi, _gamma's
+// inside the BH, using the method developed by Wolfgang and Geroge,
+// more info "http://fau.digital.flvc.org/islandora/object/fau%3A4224". */
+
+/* handy macros for extrapolating inside BH: */
+#define WTGR_StringIt(x)  #x
+
+#define WTGR_EXTRAPOLATE_scalar(x)   \
+        double x##_onAH       = interpolate_from_patch_prim(WTGR_StringIt(x)        ,X_on_BHsurf,BHsurf_patch); \
+        double d##x##_D0_onAH = interpolate_from_patch_prim(WTGR_StringIt(d##x##_D0),X_on_BHsurf,BHsurf_patch); \
+        double d##x##_D1_onAH = interpolate_from_patch_prim(WTGR_StringIt(d##x##_D1),X_on_BHsurf,BHsurf_patch); \
+        double d##x##_D2_onAH = interpolate_from_patch_prim(WTGR_StringIt(d##x##_D2),X_on_BHsurf,BHsurf_patch); \
+        double dur_##x        = (N[0]*d##x##_D0_onAH+N[1]*d##x##_D1_onAH+N[2]*d##x##_D2_onAH); \
+        double ur_##x         = x##_onAH + dur_##x*dr; \
+        x[ijk]                = ur_##x*Y + u0_##x*(1-Y);
+
+#define WTGR_EXTRAPOLATE_Beta(x)   \
+        double x##_onAH      = interpolate_from_patch_prim(WTGR_StringIt(x)       ,X_on_BHsurf,BHsurf_patch); \
+        double d##x##D0_onAH = interpolate_from_patch_prim(WTGR_StringIt(d##x##D0),X_on_BHsurf,BHsurf_patch); \
+        double d##x##D1_onAH = interpolate_from_patch_prim(WTGR_StringIt(d##x##D1),X_on_BHsurf,BHsurf_patch); \
+        double d##x##D2_onAH = interpolate_from_patch_prim(WTGR_StringIt(d##x##D2),X_on_BHsurf,BHsurf_patch); \
+        double dur_##x       = (N[0]*d##x##D0_onAH+N[1]*d##x##D1_onAH+N[2]*d##x##D2_onAH); \
+        double ur_##x        = x##_onAH + dur_##x*dr; \
+        x[ijk]               = ur_##x*Y + u0_##x*(1-Y);
+        
+#define WTGR_EXTRAPOLATE_gammabar(x)   \
+        double x##_onAH      = interpolate_from_patch_prim(WTGR_StringIt(_##x)     ,X_on_BHsurf,BHsurf_patch); \
+        double d##x##D0_onAH = interpolate_from_patch_prim(WTGR_StringIt(_d##x##D0),X_on_BHsurf,BHsurf_patch); \
+        double d##x##D1_onAH = interpolate_from_patch_prim(WTGR_StringIt(_d##x##D1),X_on_BHsurf,BHsurf_patch); \
+        double d##x##D2_onAH = interpolate_from_patch_prim(WTGR_StringIt(_d##x##D2),X_on_BHsurf,BHsurf_patch); \
+        double dur_##x       = (N[0]*d##x##D0_onAH+N[1]*d##x##D1_onAH+N[2]*d##x##D2_onAH); \
+        double ur_##x        = x##_onAH + dur_##x*dr; \
+        _##x[ijk]            = ur_##x*Y + u0__##x*(1-Y);
 
 
+static void extrapolate_insideBH_CS_WTGR(Grid_T *const grid)
+{
+  printf("|--> BH-filler method = WTGR.\n");
+  fflush(stdout);
+  
+  const double EPS            = 1E-12;/* to avoid division by zero */
+  const double EPS2           = 1E-6;/* to increase r_fill radius a bit */
+  const double r_fill         = Pgetd("BH_R_size")*(1+EPS2);
+  const double Ma             = Pgetd("BH_irreducible_mass");
+  const double u0_Beta_U0     = 0;
+  const double u0_Beta_U1     = 0;
+  const double u0_Beta_U2     = 0;
+  const double u0__gamma_D0D0 = 1;
+  const double u0__gamma_D0D1 = 0;
+  const double u0__gamma_D0D2 = 0;
+  const double u0__gamma_D1D1 = 1;
+  const double u0__gamma_D1D2 = 0;
+  const double u0__gamma_D2D2 = 1;
+  const double u0_K           = 0;
+  const double u0_alpha       = 0.1;
+  Needle_T *patch_numbers = 0;
+  const unsigned npi = 7;/* number of patches inside BH */
+  const unsigned npo = 6;/* number of patches outside BH */
+  unsigned p;
+  
+  /* check if it is perfect sphere */
+  if (!Pcmps("BH_R_type","PerfectSphere"))
+    bbn_bam_error("This function is used when "
+        "the BH surface is a perfect sphere!",__FILE__,__LINE__);
+  
+  /* update coeffs to avoid race condition */
+  patch_numbers       = alloc_needle();
+  patch_numbers->grid = grid;
+  needle_in(patch_numbers,GetPatch("right_BH_surrounding_up",grid));
+  needle_in(patch_numbers,GetPatch("right_BH_surrounding_down",grid));
+  needle_in(patch_numbers,GetPatch("right_BH_surrounding_left",grid));
+  needle_in(patch_numbers,GetPatch("right_BH_surrounding_right",grid));
+  needle_in(patch_numbers,GetPatch("right_BH_surrounding_back",grid));
+  needle_in(patch_numbers,GetPatch("right_BH_surrounding_front",grid));
+  if (patch_numbers->Nin != npo)
+    bbn_bam_error("Wrong patch number",__FILE__,__LINE__);
+  
+  OpenMP_Patch_Pragma(omp parallel for)
+  for (p = 0; p < npo; p++)
+  {
+    Patch_T *patch = grid->patch[patch_numbers->in[p]];
+    unsigned f;
+    
+    bbn_preparing_conformal_metric_derivatives(patch);
+    
+    Field_T *R1_f  = patch->CoordSysInfo->CubedSphericalCoord->R1_f;
+    Field_T *R2_f  = patch->CoordSysInfo->CubedSphericalCoord->R2_f;
+    if (R1_f)
+      make_coeffs_2d(R1_f,0,1);/* X and Y direction */
+    if (R2_f)
+      make_coeffs_2d(R2_f,0,1);/* X and Y direction */
+    
+    /* make coeffs for all fields inside this patch */
+    for (f = 0; f < patch->nfld; ++f)
+    {
+      if (patch->pool[f]->v      &&
+          patch->pool[f] != R1_f && 
+          patch->pool[f] != R2_f    )
+        make_coeffs_3d(patch->pool[f]);
+    }
+    
+  }
+  free_needle(patch_numbers);
+  
+  /* extrapolate */
+  patch_numbers       = alloc_needle();
+  patch_numbers->grid = grid;
+  needle_in(patch_numbers,GetPatch("right_BH_up",grid));
+  needle_in(patch_numbers,GetPatch("right_BH_down",grid));
+  needle_in(patch_numbers,GetPatch("right_BH_left",grid));
+  needle_in(patch_numbers,GetPatch("right_BH_right",grid));
+  needle_in(patch_numbers,GetPatch("right_BH_back",grid));
+  needle_in(patch_numbers,GetPatch("right_BH_front",grid));
+  needle_in(patch_numbers,GetPatch("right_central_box",grid));
+  if(patch_numbers->Nin != npi)
+    bbn_bam_error("Wrong patch number",__FILE__,__LINE__);
+  
+  OpenMP_Patch_Pragma(omp parallel for)
+  for (p = 0; p < npi; p++)
+  {
+    Patch_T *patch = grid->patch[patch_numbers->in[p]];
+    unsigned nn = patch->nn;
+    double Y;
+    double theta = 0,phi = 0,dr = 0;
+    double x_on_BHsurf[3]={0},
+           X_on_BHsurf[3]={0},
+           N[3] = {0};
+    unsigned ijk;
+    
+    /* fill needle */
+    Needle_T *needle = alloc_needle();
+    needle->grid = grid;
+    needle_in(needle,GetPatch("right_BH_surrounding_up",grid));
+    needle_in(needle,GetPatch("right_BH_surrounding_down",grid));
+    needle_in(needle,GetPatch("right_BH_surrounding_left",grid));
+    needle_in(needle,GetPatch("right_BH_surrounding_right",grid));
+    needle_in(needle,GetPatch("right_BH_surrounding_back",grid));
+    needle_in(needle,GetPatch("right_BH_surrounding_front",grid));
+    
+    bbn_add_fields_in_patch(patch);
+    REALLOC_v_WRITE_v(Beta_U0)
+    REALLOC_v_WRITE_v(Beta_U1)
+    REALLOC_v_WRITE_v(Beta_U2)
+    REALLOC_v_WRITE_v(B0_U0)
+    REALLOC_v_WRITE_v(B0_U1)
+    REALLOC_v_WRITE_v(B0_U2)
+    REALLOC_v_WRITE_v(psi)
+    REALLOC_v_WRITE_v(eta)
+    REALLOC_v_WRITE_v(K)
+    REALLOC_v_WRITE_v(_gamma_D2D2)
+    REALLOC_v_WRITE_v(_gamma_D0D2)
+    REALLOC_v_WRITE_v(_gamma_D0D0)
+    REALLOC_v_WRITE_v(_gamma_D0D1)
+    REALLOC_v_WRITE_v(_gamma_D1D2)
+    REALLOC_v_WRITE_v(_gamma_D1D1)
+    
+    REALLOC_v_WRITE_v(_gammaI_U2U2)
+    REALLOC_v_WRITE_v(_gammaI_U0U2)
+    REALLOC_v_WRITE_v(_gammaI_U0U0)
+    REALLOC_v_WRITE_v(_gammaI_U0U1)
+    REALLOC_v_WRITE_v(_gammaI_U1U2)
+    REALLOC_v_WRITE_v(_gammaI_U1U1)
+    
+    /* making B1 */
+    bbn_update_B1_U012(patch);
+    READ_v(B1_U0)
+    READ_v(B1_U1)
+    READ_v(B1_U2)
+    for (ijk = 0; ijk < nn; ++ijk)
+    {
+      DEF_RELATIVE_x
+      DEF_RELATIVE_y
+      DEF_RELATIVE_z
+      DEF_RELATIVE_r
+      Patch_T *BHsurf_patch = 0;
+      if (!EQL(r,0))
+      {
+        N[0]  = x/r;
+        N[1]  = y/r;
+        N[2]  = z/r;
+        theta = acos(z/r);
+      }
+      else
+      {
+        N[0]  = 0;
+        N[1]  = 0;
+        N[2]  = 0;
+        r     = EPS;
+        theta = 0;
+      }
+      dr    = r - r_fill;
+      phi   = arctan(y,x);
+      Y     = 0.5*(1+tanh(48./125.*(r_fill/(r_fill-r)-3./2.*(r_fill/r))));
+      if(!isfinite(Y))
+        bbn_bam_error("BH filler Y goes wrong.",__FILE__,__LINE__);
+      
+      x_on_BHsurf[0] = r_fill*sin(theta)*cos(phi)+patch->c[0];
+      x_on_BHsurf[1] = r_fill*sin(theta)*sin(phi)+patch->c[1];
+      x_on_BHsurf[2] = r_fill*cos(theta)         +patch->c[2];
+      
+      /* find the patch and X which has this point */
+      needle->x = x_on_BHsurf;
+      point_finder(needle);
+      if (!needle->Nans)
+        bbn_bam_error("Could not find the given point!\n",__FILE__,__LINE__);
+      BHsurf_patch = grid->patch[needle->ans[0]];
+      if(!X_of_x(X_on_BHsurf,x_on_BHsurf,BHsurf_patch))
+        bbn_bam_error("X is wrong.",__FILE__,__LINE__);
+      
+      _free(needle->ans);
+      needle->ans  = 0;
+      needle->Nans = 0;
+      
+      /* extrapolate */
+      double u0_psi = 2+Ma/(2*r);
+      double u0_eta = u0_alpha*u0_psi;
+      
+      WTGR_EXTRAPOLATE_scalar(psi)
+      WTGR_EXTRAPOLATE_scalar(eta)
+      WTGR_EXTRAPOLATE_scalar(K)
 
+      WTGR_EXTRAPOLATE_Beta(Beta_U0)
+      WTGR_EXTRAPOLATE_Beta(Beta_U1)
+      WTGR_EXTRAPOLATE_Beta(Beta_U2)
+      
+      B0_U0[ijk] = Beta_U0[ijk]-B1_U0[ijk];
+      B0_U1[ijk] = Beta_U1[ijk]-B1_U1[ijk];
+      B0_U2[ijk] = Beta_U2[ijk]-B1_U2[ijk];
+      
+      WTGR_EXTRAPOLATE_gammabar(gamma_D2D2)
+      WTGR_EXTRAPOLATE_gammabar(gamma_D0D2)
+      WTGR_EXTRAPOLATE_gammabar(gamma_D0D0)
+      WTGR_EXTRAPOLATE_gammabar(gamma_D0D1)
+      WTGR_EXTRAPOLATE_gammabar(gamma_D1D2)
+      WTGR_EXTRAPOLATE_gammabar(gamma_D1D1)
+      
+      /* _gammaI =  _gamma inverse */
+      COMPUTE_gammaI(_gamma_D0D0[ijk],_gamma_D0D1[ijk],_gamma_D0D2[ijk],
+                     _gamma_D0D1[ijk],_gamma_D1D1[ijk],_gamma_D1D2[ijk],
+                     _gamma_D0D2[ijk],_gamma_D1D2[ijk],_gamma_D2D2[ijk])
+                     
+      /* quick test check _gamma * _gammaI = delta */
+      if (0)
+      {
+          double delta_U0D0 = 
+        _gammaI_U0U0[ijk]*_gamma_D0D0[ijk] + _gammaI_U0U1[ijk]*
+        _gamma_D0D1[ijk] + _gammaI_U0U2[ijk]*_gamma_D0D2[ijk];
+
+          double delta_U0D1 = 
+        _gammaI_U0U0[ijk]*_gamma_D0D1[ijk] + _gammaI_U0U1[ijk]*
+        _gamma_D1D1[ijk] + _gammaI_U0U2[ijk]*_gamma_D1D2[ijk];
+
+          double delta_U0D2 = 
+        _gammaI_U0U0[ijk]*_gamma_D0D2[ijk] + _gammaI_U0U1[ijk]*
+        _gamma_D1D2[ijk] + _gammaI_U0U2[ijk]*_gamma_D2D2[ijk];
+
+          double delta_U1D2 = 
+        _gammaI_U0U1[ijk]*_gamma_D0D2[ijk] + _gammaI_U1U1[ijk]*
+        _gamma_D1D2[ijk] + _gammaI_U1U2[ijk]*_gamma_D2D2[ijk];
+
+          double delta_U1D0 = 
+        _gammaI_U0U1[ijk]*_gamma_D0D0[ijk] + _gammaI_U1U1[ijk]*
+        _gamma_D0D1[ijk] + _gammaI_U1U2[ijk]*_gamma_D0D2[ijk];
+
+         double delta_U1D1 = 
+        _gammaI_U0U1[ijk]*_gamma_D0D1[ijk] + _gammaI_U1U1[ijk]*
+        _gamma_D1D1[ijk] + _gammaI_U1U2[ijk]*_gamma_D1D2[ijk];
+
+          double delta_U2D2 = 
+        _gammaI_U0U2[ijk]*_gamma_D0D2[ijk] + _gammaI_U1U2[ijk]*
+        _gamma_D1D2[ijk] + _gammaI_U2U2[ijk]*_gamma_D2D2[ijk];
+
+          double delta_U2D0 = 
+        _gammaI_U0U2[ijk]*_gamma_D0D0[ijk] + _gammaI_U1U2[ijk]*
+        _gamma_D0D1[ijk] + _gammaI_U2U2[ijk]*_gamma_D0D2[ijk];
+
+          double delta_U2D1 = 
+        _gammaI_U0U2[ijk]*_gamma_D0D1[ijk] + _gammaI_U1U2[ijk]*
+        _gamma_D1D1[ijk] + _gammaI_U2U2[ijk]*_gamma_D1D2[ijk];
+
+        if(!EQL(delta_U1D1,1))  bbn_bam_error("_gammaI is not correct!\n",__FILE__,__LINE__);
+        if(!EQL(delta_U0D1,0))  bbn_bam_error("_gammaI is not correct!\n",__FILE__,__LINE__);
+        if(!EQL(delta_U0D2,0))  bbn_bam_error("_gammaI is not correct!\n",__FILE__,__LINE__);
+        if(!EQL(delta_U1D2,0))  bbn_bam_error("_gammaI is not correct!\n",__FILE__,__LINE__);
+        if(!EQL(delta_U0D0,1))  bbn_bam_error("_gammaI is not correct!\n",__FILE__,__LINE__);
+        if(!EQL(delta_U2D1,0))  bbn_bam_error("_gammaI is not correct!\n",__FILE__,__LINE__);
+        if(!EQL(delta_U2D2,1))  bbn_bam_error("_gammaI is not correct!\n",__FILE__,__LINE__);
+        if(!EQL(delta_U2D0,0))  bbn_bam_error("_gammaI is not correct!\n",__FILE__,__LINE__);
+        if(!EQL(delta_U1D0,0))  bbn_bam_error("_gammaI is not correct!\n",__FILE__,__LINE__);
+      }
+    }
+    /* free */
+    free_needle(needle);
+    
+    /* update derivatives */
+    bbn_update_derivative_Beta_U0(patch);
+    bbn_update_derivative_Beta_U1(patch);
+    bbn_update_derivative_Beta_U2(patch);
+    bbn_update_derivative_psi(patch);
+    bbn_update_derivative_eta(patch);
+    
+    /* for K_{ij} inside BH patches */
+    bbn_preparing_conformal_metric_derivatives(patch);
+    bbn_free_data_Gamma_patch(patch);
+    bbn_free_conformal_metric_derivatives(patch);
+    /* bbn_update_psi10A_UiUj(patch); */
+  }/* end of FOR_ALL_PATCHES(p,grid) */
+  
+  /* free */
+  free_needle(patch_numbers);
+  bbn_free_conformal_metric_derivatives(GetPatch("right_BH_surrounding_up",grid));
+  bbn_free_conformal_metric_derivatives(GetPatch("right_BH_surrounding_down",grid));
+  bbn_free_conformal_metric_derivatives(GetPatch("right_BH_surrounding_left",grid));
+  bbn_free_conformal_metric_derivatives(GetPatch("right_BH_surrounding_right",grid));
+  bbn_free_conformal_metric_derivatives(GetPatch("right_BH_surrounding_back",grid));
+  bbn_free_conformal_metric_derivatives(GetPatch("right_BH_surrounding_front",grid));
+  /* free all coeffs */
+  for (p = 0; p < grid->np; p++)
+  {
+    Patch_T *patch = grid->patch[p];
+    unsigned f;
+    for (f = 0; f < patch->nfld; ++f)
+    {
+      free_coeffs(patch->pool[f]);
+    }
+  }
+  printf("|--> memory usege     = %0.2f(Gb)\n",how_much_memory("gb"));
+  fflush(stdout);
+}
+
+/* undef the macros */
+#ifdef WTGR_StringIt
+#undef WTGR_StringIt
+#endif
+
+#ifdef WTGR_EXTRAPOLATE_scalar
+#undef WTGR_EXTRAPOLATE_scalar
+#endif
+
+#ifdef WTGR_EXTRAPOLATE_Beta
+#undef WTGR_EXTRAPOLATE_Beta
+#endif
+
+#ifdef WTGR_EXTRAPOLATE_gammabar
+#undef WTGR_EXTRAPOLATE_gammabar
+#endif
