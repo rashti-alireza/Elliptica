@@ -84,5 +84,9 @@ find_XYZ_and_patch_of_theta_phi_BH_CS
  );
 
 static int bhf_ChebTnYlm_C2(struct BHFiller_S *const bhf);
+static int bhf_WTGR(struct BHFiller_S *const bhf);
+static double interpolate_from_patch_prim(const char *const field,const double *const X,Patch_T *const patch);
+void bbn_bam_error(const char *const msg,const char *const file,const int line);
+
 
 

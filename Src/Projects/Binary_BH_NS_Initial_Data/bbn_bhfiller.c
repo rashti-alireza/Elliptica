@@ -51,35 +51,41 @@ bhf_init
   )
 {
   struct BHFiller_S *const bhf = calloc(1,sizeof(*bhf));IsNull(bhf);
-  const double EPS   = 1;
-  const double Ma    = Pgetd("BH_irreducible_mass");
-  const unsigned npi = 7;/* number of patches inside BH */
-  const unsigned npo = 6;/* number of patches outside BH */
-  const double fr0_Beta_U0     = 0;
-  const double fr0_Beta_U1     = 0;
-  const double fr0_Beta_U2     = 0;
-  const double fr0_gamma_D0D0  = 1;
-  const double fr0_gamma_D0D1  = 0;
-  const double fr0_gamma_D0D2  = 0;
-  const double fr0_gamma_D1D1  = 1;
-  const double fr0_gamma_D1D2  = 0;
-  const double fr0_gamma_D2D2  = 1;
-  const double fr0_K           = 0;
-  const double fr0_alpha       = 0.1;
-  const double fr0_psi = 2+Ma/(2*EPS);
-  const double fr0_eta = fr0_alpha*fr0_psi;
-  const char *s = 0;
-  unsigned f,nf,i,j,p;
+  /* grid */
+  bhf->grid = grid;
+  /* method */
+  sprintf(bhf->method,"%s",method);
   
-  bhf->npo = npo;
-  bhf->npi = npi;
-  nf = 0;/* number of fields */
-  while(fields_name[nf]) ++nf;
-  bhf->nf = nf;
   /* using Cheb_Tn and Ylm as the bases 
   // and extrapolate demanding C2 continuity */
   if (strcmp_i(method,"ChebTnYlm_C2"))
   {
+    const double EPS   = 1;
+    const double Ma    = Pgetd("BH_irreducible_mass");
+    const unsigned npi = 7;/* number of patches inside BH */
+    const unsigned npo = 6;/* number of patches outside BH */
+    const double fr0_Beta_U0     = 0;
+    const double fr0_Beta_U1     = 0;
+    const double fr0_Beta_U2     = 0;
+    const double fr0_gamma_D0D0  = 1;
+    const double fr0_gamma_D0D1  = 0;
+    const double fr0_gamma_D0D2  = 0;
+    const double fr0_gamma_D1D1  = 1;
+    const double fr0_gamma_D1D2  = 0;
+    const double fr0_gamma_D2D2  = 1;
+    const double fr0_K           = 0;
+    const double fr0_alpha       = 0.1;
+    const double fr0_psi = 2+Ma/(2*EPS);
+    const double fr0_eta = fr0_alpha*fr0_psi;
+    const char *s = 0;
+    unsigned f,nf,i,j,p;
+    
+    bhf->npo = npo;
+    bhf->npi = npi;
+    nf = 0;/* number of fields */
+    while(fields_name[nf]) ++nf;
+    bhf->nf = nf;
+    
     /* set the method function */
     bhf->bhfiller = bhf_ChebTnYlm_C2;
     
@@ -99,7 +105,7 @@ bhf_init
     bhf->Ntheta = Ntheta;
     bhf->Nphi   = Nphi;
     bhf->fld    = calloc(nf,sizeof(*bhf->fld));IsNull(bhf->fld);
-    sprintf(bhf->method,"%s",method);
+    
     for (f = 0; f < nf; ++f)
     {
       bhf->fld[f] = calloc(1,sizeof(*bhf->fld[f]));IsNull(bhf->fld[f]);
@@ -160,108 +166,112 @@ bhf_init
         bhf->fld[f]->imagYlm_coeffs[i] = alloc_ClmYlm(lmax);
       }
     }/* for (f = 0; f < nf; ++f) */
-  }/* if (strcmp_i(method,"TnYlm_C2")) */
-  else
-    Error0(NO_OPTION);
-  
-  /* quick test for names */
-  if (0)
-  {
-    /* show contents */
-    for (f = 0; f < nf; ++f)
+    
+    /* quick test for names */
+    if (0)
     {
-      pr_line();
-      printf("fld[%u] = %s\n",f,bhf->fld[f]->f);
-      printf("d[%s] = (%s,%s,%s)\n",
-          bhf->fld[f]->f,bhf->fld[f]->df[0],
-          bhf->fld[f]->df[1],bhf->fld[f]->df[2]);
-      for (i = 0; i < 3; ++i)
+      /* show contents */
+      for (f = 0; f < nf; ++f)
       {
-        for (j = i; j < 3; ++j)
+        pr_line();
+        printf("fld[%u] = %s\n",f,bhf->fld[f]->f);
+        printf("d[%s] = (%s,%s,%s)\n",
+            bhf->fld[f]->f,bhf->fld[f]->df[0],
+            bhf->fld[f]->df[1],bhf->fld[f]->df[2]);
+        for (i = 0; i < 3; ++i)
         {
-          printf("dd[%s](%u,%u) = %s\n",
-            bhf->fld[f]->f,i,j,bhf->fld[f]->ddf[IJsymm3(i,j)]);
+          for (j = i; j < 3; ++j)
+          {
+            printf("dd[%s](%u,%u) = %s\n",
+              bhf->fld[f]->f,i,j,bhf->fld[f]->ddf[IJsymm3(i,j)]);
+          }
         }
       }
     }
-  }
 
-  /* set values of field at r=0 */
-  for (f = 0; f < nf; ++f)
-  {
-    if (strcmp_i(fields_name[f],"psi"))
+    /* set values of field at r=0 */
+    for (f = 0; f < nf; ++f)
     {
-      bhf->fld[f]->f_r0 = fr0_psi;
-    }
-    else if (strcmp_i(fields_name[f],"eta"))
-    {
-      bhf->fld[f]->f_r0 = fr0_eta;
-    }
-    else if (strcmp_i(fields_name[f],"K"))
-    {
-      bhf->fld[f]->f_r0 = fr0_K;
-    }
-    else if (strcmp_i(fields_name[f],"Beta_U0"))
-    {
-      bhf->fld[f]->f_r0 = fr0_Beta_U0;
-    }
-    else if (strcmp_i(fields_name[f],"Beta_U1"))
-    {
-      bhf->fld[f]->f_r0 = fr0_Beta_U1;
-    }
-    else if (strcmp_i(fields_name[f],"Beta_U2"))
-    {
-      bhf->fld[f]->f_r0 = fr0_Beta_U2;
-    }
-    else if (strcmp_i(fields_name[f],"_gamma_D2D2"))
-    {
-      bhf->fld[f]->f_r0 = fr0_gamma_D2D2;
-    }
-    else if (strcmp_i(fields_name[f],"_gamma_D0D2"))
-    {
-      bhf->fld[f]->f_r0 = fr0_gamma_D0D2;
-    }
-    else if (strcmp_i(fields_name[f],"_gamma_D0D0"))
-    {
-      bhf->fld[f]->f_r0 = fr0_gamma_D0D0;
-    }
-    else if (strcmp_i(fields_name[f],"_gamma_D0D1"))
-    {
-      bhf->fld[f]->f_r0 = fr0_gamma_D0D1;
-    }
-    else if (strcmp_i(fields_name[f],"_gamma_D1D2"))
-    {
-      bhf->fld[f]->f_r0 = fr0_gamma_D1D2;
-    }
-    else if (strcmp_i(fields_name[f],"_gamma_D1D1"))
-    {
-      bhf->fld[f]->f_r0 = fr0_gamma_D1D1;
-    }
-    else
-      Error0(NO_OPTION);
+      if (strcmp_i(fields_name[f],"psi"))
+      {
+        bhf->fld[f]->f_r0 = fr0_psi;
+      }
+      else if (strcmp_i(fields_name[f],"eta"))
+      {
+        bhf->fld[f]->f_r0 = fr0_eta;
+      }
+      else if (strcmp_i(fields_name[f],"K"))
+      {
+        bhf->fld[f]->f_r0 = fr0_K;
+      }
+      else if (strcmp_i(fields_name[f],"Beta_U0"))
+      {
+        bhf->fld[f]->f_r0 = fr0_Beta_U0;
+      }
+      else if (strcmp_i(fields_name[f],"Beta_U1"))
+      {
+        bhf->fld[f]->f_r0 = fr0_Beta_U1;
+      }
+      else if (strcmp_i(fields_name[f],"Beta_U2"))
+      {
+        bhf->fld[f]->f_r0 = fr0_Beta_U2;
+      }
+      else if (strcmp_i(fields_name[f],"_gamma_D2D2"))
+      {
+        bhf->fld[f]->f_r0 = fr0_gamma_D2D2;
+      }
+      else if (strcmp_i(fields_name[f],"_gamma_D0D2"))
+      {
+        bhf->fld[f]->f_r0 = fr0_gamma_D0D2;
+      }
+      else if (strcmp_i(fields_name[f],"_gamma_D0D0"))
+      {
+        bhf->fld[f]->f_r0 = fr0_gamma_D0D0;
+      }
+      else if (strcmp_i(fields_name[f],"_gamma_D0D1"))
+      {
+        bhf->fld[f]->f_r0 = fr0_gamma_D0D1;
+      }
+      else if (strcmp_i(fields_name[f],"_gamma_D1D2"))
+      {
+        bhf->fld[f]->f_r0 = fr0_gamma_D1D2;
+      }
+      else if (strcmp_i(fields_name[f],"_gamma_D1D1"))
+      {
+        bhf->fld[f]->f_r0 = fr0_gamma_D1D1;
+      }
+      else
+        Error0(NO_OPTION);
+      
+    }/* for (f = 0; f < nf ++f) */
     
-  }/* for (f = 0; f < nf ++f) */
-  
-  /*grid */
-  bhf->grid = grid;
-  /* patches outside the BH */
-  bhf->patches_outBH = calloc(npo,sizeof(*bhf->patches_outBH));
-  IsNull(bhf->patches_outBH);
-  /* patches inside the BH */
-  bhf->patches_inBH = calloc(npi,sizeof(*bhf->patches_inBH));
-  IsNull(bhf->patches_inBH);
-  
-  i = j = 0;
-  FOR_ALL_PATCHES(p,grid)
+    /* patches outside the BH */
+    bhf->patches_outBH = calloc(npo,sizeof(*bhf->patches_outBH));
+    IsNull(bhf->patches_outBH);
+    /* patches inside the BH */
+    bhf->patches_inBH = calloc(npi,sizeof(*bhf->patches_inBH));
+    IsNull(bhf->patches_inBH);
+    
+    i = j = 0;
+    FOR_ALL_PATCHES(p,grid)
+    {
+      Patch_T *patch = grid->patch[p];
+      if (IsItHorizonPatch(patch))
+        bhf->patches_outBH[i++] = patch;
+      else if (IsItInsideBHPatch(patch))
+       bhf->patches_inBH[j++] = patch;
+    }
+    assert(i == npo);
+    assert(j == npi);
+  }/* if (strcmp_i(method,"ChebTnYlm_C2")) */
+  /* using George's thesis method */
+  else if (strcmp_i(method,"WTGR"))
   {
-    Patch_T *patch = grid->patch[p];
-    if (IsItHorizonPatch(patch))
-      bhf->patches_outBH[i++] = patch;
-    else if (IsItInsideBHPatch(patch))
-     bhf->patches_inBH[j++] = patch;
+    /* set the method function */
+    bhf->bhfiller = bhf_WTGR;
   }
-  assert(i == npo);
-  assert(j == npi);
+  else
+    Error0(NO_OPTION);
   
   return bhf;
 }
@@ -775,11 +785,11 @@ static void find_XYZ_and_patch_of_theta_phi_BH_CS(double *const X,Patch_T **cons
         _##x[ijk]            = ur_##x*Y + u0__##x*(1-Y);
 
 
-static void extrapolate_insideBH_CS_WTGR(Grid_T *const grid)
+static int bhf_WTGR(struct BHFiller_S *const bhf)
 {
   printf("|--> BH-filler method = WTGR.\n");
   fflush(stdout);
-  
+  Grid_T *const grid          = bhf->grid;
   const double EPS            = 1E-12;/* to avoid division by zero */
   const double EPS2           = 1E-6;/* to increase r_fill radius a bit */
   const double r_fill         = Pgetd("BH_R_size")*(1+EPS2);
@@ -823,7 +833,7 @@ static void extrapolate_insideBH_CS_WTGR(Grid_T *const grid)
     Patch_T *patch = grid->patch[patch_numbers->in[p]];
     unsigned f;
     
-    bbn_preparing_conformal_metric_derivatives(patch);
+    bbn_1st_derivatives_conformal_metric(patch);
     
     Field_T *R1_f  = patch->CoordSysInfo->CubedSphericalCoord->R1_f;
     Field_T *R2_f  = patch->CoordSysInfo->CubedSphericalCoord->R2_f;
@@ -1042,20 +1052,20 @@ static void extrapolate_insideBH_CS_WTGR(Grid_T *const grid)
     bbn_update_derivative_eta(patch);
     
     /* for K_{ij} inside BH patches */
-    bbn_preparing_conformal_metric_derivatives(patch);
+    bbn_1st_derivatives_conformal_metric(patch);
     bbn_free_data_Gamma_patch(patch);
-    bbn_free_conformal_metric_derivatives(patch);
+    bbn_rm_1st_derivatives_conformal_metric(patch);
     /* bbn_update_psi10A_UiUj(patch); */
   }/* end of FOR_ALL_PATCHES(p,grid) */
   
   /* free */
   free_needle(patch_numbers);
-  bbn_free_conformal_metric_derivatives(GetPatch("right_BH_surrounding_up",grid));
-  bbn_free_conformal_metric_derivatives(GetPatch("right_BH_surrounding_down",grid));
-  bbn_free_conformal_metric_derivatives(GetPatch("right_BH_surrounding_left",grid));
-  bbn_free_conformal_metric_derivatives(GetPatch("right_BH_surrounding_right",grid));
-  bbn_free_conformal_metric_derivatives(GetPatch("right_BH_surrounding_back",grid));
-  bbn_free_conformal_metric_derivatives(GetPatch("right_BH_surrounding_front",grid));
+  bbn_rm_1st_derivatives_conformal_metric(GetPatch("right_BH_surrounding_up",grid));
+  bbn_rm_1st_derivatives_conformal_metric(GetPatch("right_BH_surrounding_down",grid));
+  bbn_rm_1st_derivatives_conformal_metric(GetPatch("right_BH_surrounding_left",grid));
+  bbn_rm_1st_derivatives_conformal_metric(GetPatch("right_BH_surrounding_right",grid));
+  bbn_rm_1st_derivatives_conformal_metric(GetPatch("right_BH_surrounding_back",grid));
+  bbn_rm_1st_derivatives_conformal_metric(GetPatch("right_BH_surrounding_front",grid));
   /* free all coeffs */
   for (p = 0; p < grid->np; p++)
   {
@@ -1068,6 +1078,8 @@ static void extrapolate_insideBH_CS_WTGR(Grid_T *const grid)
   }
   printf("|--> memory usege     = %0.2f(Gb)\n",how_much_memory("gb"));
   fflush(stdout);
+  
+  return EXIT_SUCCESS;
 }
 
 /* undef the macros */
@@ -1086,3 +1098,25 @@ static void extrapolate_insideBH_CS_WTGR(Grid_T *const grid)
 #ifdef WTGR_EXTRAPOLATE_gammabar
 #undef WTGR_EXTRAPOLATE_gammabar
 #endif
+
+/* given field name, X and patch, finds the value of the field in X  
+// using interpolation.
+// ->return value: f(X) */
+static double interpolate_from_patch_prim(const char *const field,const double *const X,Patch_T *const patch)
+{
+  double interp;
+  Interpolation_T *interp_s = init_interpolation();
+  Field_T *const F_field    = patch->pool[Ind(field)];
+  
+  interp_s->field = F_field;
+  interp_s->X = X[0];
+  interp_s->Y = X[1];
+  interp_s->Z = X[2];
+  interp_s->XYZ_dir_flag = 1;
+  plan_interpolation(interp_s);
+  interp = execute_interpolation(interp_s);
+  free_interpolation(interp_s);
+  
+  return interp;
+}
+
