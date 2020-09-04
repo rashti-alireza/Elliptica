@@ -414,6 +414,9 @@ bam_output_doctest
   FILE *file;
   unsigned i,p,f;
   
+  printf("|--> bam doctest ...\n");
+  fflush(stdout);
+  
   /* populate points along y-axis since the objects are there */
   pnt->npoints = npoints;
   pnt->x       = alloc_double(npoints);
@@ -429,7 +432,6 @@ bam_output_doctest
     pnt->y[i] = y0+i*step;
     pnt->x[i] = x0;
   }
-  
   
   /* to avoid race condition between threads write all coeffs */
   OpenMP_Patch_Pragma(omp parallel for)
@@ -511,10 +513,7 @@ bam_output_doctest
       fn++;
     }
   }
-  
-  printf("~> interpolating ...\n");
-  fflush(stdout);
-  
+    
   interp_v = alloc_double(npoints);
   f = 0;
   while(fields_name[f])
