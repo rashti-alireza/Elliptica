@@ -3715,7 +3715,7 @@ void bbn_extrapolate_metric_fields_insideBH(Grid_T *const grid)
   }
   else if (Pcmps("extrapolate_inside_BH_method","WTGR"))
   {
-    bbn_bhfiller(grid,"TnYlm_C2");
+    bbn_bhfiller(grid,"ChebTnYlm_C2");
     UNUSED(extrapolate_insideBH_CS_WTGR);
   }
   else
