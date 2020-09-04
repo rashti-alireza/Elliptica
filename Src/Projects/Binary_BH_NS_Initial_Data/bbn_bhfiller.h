@@ -29,7 +29,7 @@
   _gammaI_U2U2[ijk] = a00*(a00*a11 - a01*a10)/((a00*a11 - a01*a10)*(a00*a22 - a02*a20) - (a00*a12 - a02*a10)*(a00*a21 - a01*a20)); \
   }
 
-
+/* all needed items for bhfiller function */
 struct BHFiller_S
 {
   Grid_T *grid;/* the grid */
@@ -55,6 +55,7 @@ struct BHFiller_S
     double *imagYlm_coeffs[4];/* Ylm coeffs of ChebTn imag part */
     double f_r0;/* value of the field at r = 0 */
   }**fld;/* field info */
+  int (*bhfiller)(struct BHFiller_S *const bhf);/* the method to fill the BH */
 };
 
 /* initialize the bhfiller struct */
@@ -81,4 +82,7 @@ find_XYZ_and_patch_of_theta_phi_BH_CS
  double *const X,Patch_T **const ppatch,
  const double theta,const double phi,Grid_T *const grid
  );
+
+static int bhf_ChebTnYlm_C2(struct BHFiller_S *const bhf);
+
 

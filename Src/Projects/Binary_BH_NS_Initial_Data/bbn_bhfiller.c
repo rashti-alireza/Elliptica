@@ -14,6 +14,34 @@ static const char *const fields_name[] = {
   "_gamma_D0D0","_gamma_D0D1",
   "_gamma_D1D2","_gamma_D1D1",0};
 
+/* ->: EXIT_SUCCESS if succeeds, otherwise an error code
+// extrapolating inside the BH */
+int 
+bbn_bhfiller
+  (
+  Grid_T *const grid/* the whole grid */,
+  const char *const method/* the method to be used for extrapolating */
+  )
+{
+  /* check if it is perfect sphere */
+  if (!Pcmps("BH_R_type","PerfectSphere"))
+    Error0(NO_OPTION);
+
+  int ret = 0;
+  
+  /* initialize */
+  struct BHFiller_S *const bhf = bhf_init(grid,method);
+  
+  /* call bh-filler */
+  ret = bhf->bhfiller(bhf);
+  
+  /* free */
+  bhf_free(bhf);
+  
+  return ret;
+}
+
+
 /* initialize the bhfiller struct */
 struct BHFiller_S* 
 bhf_init
@@ -50,8 +78,11 @@ bhf_init
   bhf->nf = nf;
   /* using Cheb_Tn and Ylm as the bases 
   // and extrapolate demanding C2 continuity */
-  if (strcmp_i(method,"TnYlm_C2"))
+  if (strcmp_i(method,"ChebTnYlm_C2"))
   {
+    /* set the method function */
+    bhf->bhfiller = bhf_ChebTnYlm_C2;
+    
     /* if par doesn't exist */
     int lmax_par = PgetiEZ("bbn_bhfiller_lmax");
     if (lmax_par == INT_MAX)
@@ -211,6 +242,8 @@ bhf_init
     
   }/* for (f = 0; f < nf ++f) */
   
+  /*grid */
+  bhf->grid = grid;
   /* patches outside the BH */
   bhf->patches_outBH = calloc(npo,sizeof(*bhf->patches_outBH));
   IsNull(bhf->patches_outBH);
@@ -256,20 +289,19 @@ static void bhf_free(struct BHFiller_S *const bhf)
   free(bhf);
 }
 
-/* ->: EXIT_SUCCESS if succeeds. 
-// extrapolating inside the BH */
-int 
-bbn_bhfiller
-  (
-  Grid_T *const grid/* the whole grid */,
-  const char *const method/* the method to be used for extrapolating */
-  )
+/* ->: EXIT_SUCESS if succeeds, otherwise an error code.
+// method to fill BH is ChebTnYlm:
+// ===============================
+//
+// f(r,th,ph) = a0(th,ph)Tn(0,t)+a1(th,ph)Tn(1,t)+
+//              a2(th,ph)Tn(2,t)+a3(th,ph)Tn(3,t)
+// where, t = 2*r/rfill-1.
+// the coeffs a's are determinded by demaning the C2 continuity
+// across the AH and the value of the function at r = 0.
+// */
+static int bhf_ChebTnYlm_C2(struct BHFiller_S *const bhf)
 {
-  /* check if it is perfect sphere */
-  if (!Pcmps("BH_R_type","PerfectSphere"))
-    Error0(NO_OPTION);
-
-  struct BHFiller_S *const bhf = bhf_init(grid,method);
+  Grid_T *const grid = bhf->grid;
   const double EPS   = 1E-12;
   const unsigned npo = bhf->npo;
   const unsigned npi = bhf->npi;
@@ -576,11 +608,9 @@ bbn_bhfiller
     (GetPatch("right_BH_surrounding_back",grid));
   bbn_rm_1st_2nd_derivatives_conformal_metric
     (GetPatch("right_BH_surrounding_front",grid));
-  
-  bhf_free(bhf);
+    
   return EXIT_SUCCESS;
 }
-
 
 /* given theta, phi and knowing the fact that they are on BH surface, 
 // it finds the corresponding patch and X,Y,Z coordinate. */
