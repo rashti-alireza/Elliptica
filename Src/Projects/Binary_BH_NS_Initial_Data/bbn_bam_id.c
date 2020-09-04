@@ -559,6 +559,25 @@ bam_output_doctest
   
   if (1)/* check det(metric) */
   {
+    const char *const adm_g[] = {
+    "bam_adm_g_D0D0","bam_adm_g_D0D1","bam_adm_g_D0D2",
+    "bam_adm_g_D1D1","bam_adm_g_D1D2","bam_adm_g_D2D2",
+    0
+    };
+    /* to avoid race condition between threads write all coeffs */
+    OpenMP_Patch_Pragma(omp parallel for)
+    for (p = 0; p < grid->np; ++p)
+    {
+      Patch_T *patch = grid->patch[p];
+      unsigned fn = 0;
+      
+      while(adm_g[fn])
+      {
+        Field_T *field = patch->pool[Ind(adm_g[fn])];
+        make_coeffs_3d(field);
+        fn++;
+      }
+    }
     /* interpolating each fields at the all given points */
     OpenMP_1d_Pragma(omp parallel for)
     for (p = 0; p < npoints; ++p)

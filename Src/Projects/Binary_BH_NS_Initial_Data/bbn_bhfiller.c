@@ -336,8 +336,8 @@ static int bhf_ChebTnYlm_C2(struct BHFiller_S *const bhf)
 
     bbn_1st_2nd_derivatives_conformal_metric(patch);
     bbn_add_and_take_2nd_derivatives_K(patch);
-    Field_T *R1_f  = patch->CoordSysInfo->CubedSphericalCoord->R1_f;
-    Field_T *R2_f  = patch->CoordSysInfo->CubedSphericalCoord->R2_f;
+    Field_T *R1_f = patch->CoordSysInfo->CubedSphericalCoord->R1_f;
+    Field_T *R2_f = patch->CoordSysInfo->CubedSphericalCoord->R2_f;
     if (R1_f)
       make_coeffs_2d(R1_f,0,1);/* X and Y direction */
     if (R2_f)
@@ -349,7 +349,7 @@ static int bhf_ChebTnYlm_C2(struct BHFiller_S *const bhf)
       if (patch->pool[f]->v      &&
           patch->pool[f] != R1_f && 
           patch->pool[f] != R2_f    )
-        make_coeffs_3d(patch->pool[f]);
+        make_coeffs_2d(patch->pool[f],0,1);/* X and Y direction */
     }
   }
   
@@ -393,7 +393,7 @@ static int bhf_ChebTnYlm_C2(struct BHFiller_S *const bhf)
         N[1]  = sin(theta)*sin(phi);
         N[2]  = cos(theta);
         
-        /* interpolate on the surface */
+        /* 2d interpolate on the surface */
         Interpolation_T *interp_s = init_interpolation();
         interp_s->XY_dir_flag = 1;
         interp_s->X = X[0];
@@ -454,9 +454,9 @@ static int bhf_ChebTnYlm_C2(struct BHFiller_S *const bhf)
     /* now populate the Ylm coeffs */
     for ( i = 0 ; i < 4; ++i)
     {
-      double *rC = bhf->fld[fld]->realYlm_coeffs[i];
-      double *iC = bhf->fld[fld]->imagYlm_coeffs[i];
-      double *v  = bhf->fld[fld]->ChebTn_coeffs[i];
+      double *rC       = bhf->fld[fld]->realYlm_coeffs[i];
+      double *iC       = bhf->fld[fld]->imagYlm_coeffs[i];
+      const double *v  = bhf->fld[fld]->ChebTn_coeffs[i];
       get_Ylm_coeffs(rC,iC,v,Ntheta,Nphi,lmax);
     }
   }/* for (fld = 0; fld < nf ++fld) */
@@ -502,8 +502,8 @@ static int bhf_ChebTnYlm_C2(struct BHFiller_S *const bhf)
         phi = arctan(y,x);
         for (i = 0; i < 4; ++i)
         {
-          double *rC = bhf->fld[f]->realYlm_coeffs[i];
-          double *iC = bhf->fld[f]->imagYlm_coeffs[i];
+          const double *rC = bhf->fld[f]->realYlm_coeffs[i];
+          const double *iC = bhf->fld[f]->imagYlm_coeffs[i];
           v[ijk] += 
             interpolation_Ylm(rC,iC,lmax,theta,phi)*Cheb_Tn((int)i,t);
         }
