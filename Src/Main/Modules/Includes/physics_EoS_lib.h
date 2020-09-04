@@ -1,7 +1,7 @@
 #ifndef physics_EoS_LIB_H
 #define physics_EoS_LIB_H
 
-#define EOS_MAX_STR 400
+#define EOS_MAX_STR (400)
 
 /* struct for equation of states */
 typedef struct EquationOfState_T
