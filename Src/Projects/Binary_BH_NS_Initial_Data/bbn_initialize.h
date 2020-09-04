@@ -19,124 +19,6 @@
                          const double *const other_##x = patchp->pool[LookUpField_E(#x,patchp)]->v;
 #define copy_values(x)   x[ijk] = other_##x[ijk];
 
-/* handy macros for extrapolating inside BH */
-#define STRING_IT(x)  #x
-
-/* BH-filler */
-#define WTGR_EXTRAPOLATE_scalar(x)   \
-        /* u */ \
-        double x##_onAH       = interpolate_from_patch_prim(STRING_IT(x)        ,X_on_BHsurf,BHsurf_patch); \
-        /* du/dx^i */ \
-        double d##x##D0_onAH = interpolate_from_patch_prim(STRING_IT(d##x##_D0),X_on_BHsurf,BHsurf_patch); \
-        double d##x##D1_onAH = interpolate_from_patch_prim(STRING_IT(d##x##_D1),X_on_BHsurf,BHsurf_patch); \
-        double d##x##D2_onAH = interpolate_from_patch_prim(STRING_IT(d##x##_D2),X_on_BHsurf,BHsurf_patch); \
-        /* d^2u/d(x^i)^2 */ \
-        double dd##x##D0D0_onAH = interpolate_from_patch_prim(STRING_IT(dd##x##_D0D0),X_on_BHsurf,BHsurf_patch); \
-        double dd##x##D0D1_onAH = interpolate_from_patch_prim(STRING_IT(dd##x##_D0D1),X_on_BHsurf,BHsurf_patch); \
-        double dd##x##D0D2_onAH = interpolate_from_patch_prim(STRING_IT(dd##x##_D0D2),X_on_BHsurf,BHsurf_patch); \
-        double dd##x##D1D2_onAH = interpolate_from_patch_prim(STRING_IT(dd##x##_D1D2),X_on_BHsurf,BHsurf_patch); \
-        double dd##x##D1D1_onAH = interpolate_from_patch_prim(STRING_IT(dd##x##_D1D1),X_on_BHsurf,BHsurf_patch); \
-        double dd##x##D2D2_onAH = interpolate_from_patch_prim(STRING_IT(dd##x##_D2D2),X_on_BHsurf,BHsurf_patch); \
-        /* du/dr */ \
-        double dur_##x = (N[0]*d##x##D0_onAH+N[1]*d##x##D1_onAH+N[2]*d##x##D2_onAH); \
-        /* ddu/dr^2 */ \
-        WTGR_ddu_r2(x); \
-        double a_##x = (2*ddur2_##x - 6*dur_##x + 11*x##_onAH + 5*u0_##x)/16.; \
-        double b_##x = (-2*ddur2_##x + 2*dur_##x + 15*(x##_onAH - u0_##x))/32.; \
-        double c_##x = (-2*ddur2_##x + 6*dur_##x - 3*x##_onAH + 3*u0_##x)/16.;\
-        double d_##x = (2*ddur2_##x - 2*dur_##x + x##_onAH - u0_##x)/32.; \
-        x[ijk]       = a_##x*Cheb_Tn(0,t)+b_##x*Cheb_Tn(1,t)+c_##x*Cheb_Tn(2,t)+d_##x*Cheb_Tn(3,t);
-
-
-/* BH-filler */
-#define WTGR_EXTRAPOLATE_Beta(x)   \
-        /* u */ \
-        double x##_onAH      = interpolate_from_patch_prim(STRING_IT(x)       ,X_on_BHsurf,BHsurf_patch); \
-        /* du/dx^i */ \
-        double d##x##D0_onAH = interpolate_from_patch_prim(STRING_IT(d##x##D0),X_on_BHsurf,BHsurf_patch); \
-        double d##x##D1_onAH = interpolate_from_patch_prim(STRING_IT(d##x##D1),X_on_BHsurf,BHsurf_patch); \
-        double d##x##D2_onAH = interpolate_from_patch_prim(STRING_IT(d##x##D2),X_on_BHsurf,BHsurf_patch); \
-        /* d^2u/d(x^i)^2 */ \
-        double dd##x##D0D0_onAH = interpolate_from_patch_prim(STRING_IT(dd##x##D0D0),X_on_BHsurf,BHsurf_patch); \
-        double dd##x##D0D1_onAH = interpolate_from_patch_prim(STRING_IT(dd##x##D0D1),X_on_BHsurf,BHsurf_patch); \
-        double dd##x##D0D2_onAH = interpolate_from_patch_prim(STRING_IT(dd##x##D0D2),X_on_BHsurf,BHsurf_patch); \
-        double dd##x##D1D2_onAH = interpolate_from_patch_prim(STRING_IT(dd##x##D1D2),X_on_BHsurf,BHsurf_patch); \
-        double dd##x##D1D1_onAH = interpolate_from_patch_prim(STRING_IT(dd##x##D1D1),X_on_BHsurf,BHsurf_patch); \
-        double dd##x##D2D2_onAH = interpolate_from_patch_prim(STRING_IT(dd##x##D2D2),X_on_BHsurf,BHsurf_patch); \
-        /* du/dr */ \
-        double dur_##x = (N[0]*d##x##D0_onAH+N[1]*d##x##D1_onAH+N[2]*d##x##D2_onAH); \
-        /* ddu/dr^2 */ \
-        WTGR_ddu_r2(x); \
-        double a_##x = (2*ddur2_##x - 6*dur_##x + 11*x##_onAH + 5*u0_##x)/16.; \
-        double b_##x = (-2*ddur2_##x + 2*dur_##x + 15*(x##_onAH - u0_##x))/32.; \
-        double c_##x = (-2*ddur2_##x + 6*dur_##x - 3*x##_onAH + 3*u0_##x)/16.;\
-        double d_##x = (2*ddur2_##x - 2*dur_##x + x##_onAH - u0_##x)/32.; \
-        x[ijk]       = a_##x*Cheb_Tn(0,t)+b_##x*Cheb_Tn(1,t)+c_##x*Cheb_Tn(2,t)+d_##x*Cheb_Tn(3,t);
-
-
-/* BH-filler */        
-#define WTGR_EXTRAPOLATE_gammabar(x)   \
-        /* u */ \
-        double x##_onAH      = interpolate_from_patch_prim(STRING_IT(_##x)     ,X_on_BHsurf,BHsurf_patch); \
-        /* du/dx^i */ \
-        double d##x##D0_onAH = interpolate_from_patch_prim(STRING_IT(_d##x##D0),X_on_BHsurf,BHsurf_patch); \
-        double d##x##D1_onAH = interpolate_from_patch_prim(STRING_IT(_d##x##D1),X_on_BHsurf,BHsurf_patch); \
-        double d##x##D2_onAH = interpolate_from_patch_prim(STRING_IT(_d##x##D2),X_on_BHsurf,BHsurf_patch); \
-        /* d^2u/d(x^i)^2 */ \
-        double dd##x##D0D0_onAH = interpolate_from_patch_prim(STRING_IT(_dd##x##D0D0),X_on_BHsurf,BHsurf_patch); \
-        double dd##x##D0D1_onAH = interpolate_from_patch_prim(STRING_IT(_dd##x##D0D1),X_on_BHsurf,BHsurf_patch); \
-        double dd##x##D0D2_onAH = interpolate_from_patch_prim(STRING_IT(_dd##x##D0D2),X_on_BHsurf,BHsurf_patch); \
-        double dd##x##D1D2_onAH = interpolate_from_patch_prim(STRING_IT(_dd##x##D1D2),X_on_BHsurf,BHsurf_patch); \
-        double dd##x##D1D1_onAH = interpolate_from_patch_prim(STRING_IT(_dd##x##D1D1),X_on_BHsurf,BHsurf_patch); \
-        double dd##x##D2D2_onAH = interpolate_from_patch_prim(STRING_IT(_dd##x##D2D2),X_on_BHsurf,BHsurf_patch); \
-        /* du/dr */ \
-        double dur_##x = (N[0]*d##x##D0_onAH+N[1]*d##x##D1_onAH+N[2]*d##x##D2_onAH); \
-        /* ddu/dr^2 */ \
-        WTGR_ddu_r2(x); \
-        double a_##x = (2*ddur2_##x - 6*dur_##x + 11*x##_onAH + 5*u0_##x)/16.; \
-        double b_##x = (-2*ddur2_##x + 2*dur_##x + 15*(x##_onAH - u0_##x))/32.; \
-        double c_##x = (-2*ddur2_##x + 6*dur_##x - 3*x##_onAH + 3*u0_##x)/16.;\
-        double d_##x = (2*ddur2_##x - 2*dur_##x + x##_onAH - u0_##x)/32.; \
-        _##x[ijk]    = a_##x*Cheb_Tn(0,t)+b_##x*Cheb_Tn(1,t)+c_##x*Cheb_Tn(2,t)+d_##x*Cheb_Tn(3,t);
-
-/* compute ddu/dr^2  */
-#define WTGR_ddu_r2(a) \
-        double ddur2_##a = 0; \
-        {/* local */ \
-          double KD[2]  = {0,1}; \
-          double _ddur2_##a[3] = {0,0,0}; \
-          double _x[3]  = {x,y,z}; \
-          double _r3    = pow(r,3); \
-          double _du[3] = {d##a##D0_onAH,d##a##D1_onAH,d##a##D2_onAH}; \
-          double _ddu[3][3] = { \
-            {dd##a##D0D0_onAH,dd##a##D0D1_onAH,dd##a##D0D2_onAH}, \
-            {dd##a##D0D1_onAH,dd##a##D1D1_onAH,dd##a##D1D2_onAH}, \
-            {dd##a##D0D2_onAH,dd##a##D1D2_onAH,dd##a##D2D2_onAH} \
-                              }; \
-          unsigned _i,_j; \
-          for (_i = 0; _i < 3; ++_i) \
-          { \
-            for (_j = 0; _j < 3; ++_j) \
-            { \
-              _ddur2_##a[_i] += (KD[_i==_j]/r - _x[_i]*_x[_j]/_r3)*_du[_j]; \
-              _ddur2_##a[_i] += N[_j]*_ddu[_j][_i]; \
-            } \
-            ddur2_##a += _ddur2_##a[_i]*N[_i]; \
-          } \
-        }
-          
-
-/* _gamma inverse */
-#define COMPUTE_gammaI(a00,a01,a02,a10,a11,a12,a20,a21,a22) \
-  { \
-  _gammaI_U0U0[ijk] = (a11*a22 - a12*a21)/(a00*a11*a22 - a00*a12*a21 - a01*a10*a22 + a01*a12*a20 + a02*a10*a21 - a02*a11*a20); \
-  _gammaI_U0U1[ijk] = (-a01*a22 + a02*a21)/(a00*a11*a22 - a00*a12*a21 - a01*a10*a22 + a01*a12*a20 + a02*a10*a21 - a02*a11*a20); \
-  _gammaI_U0U2[ijk] = (a01*a12 - a02*a11)/(a00*a11*a22 - a00*a12*a21 - a01*a10*a22 + a01*a12*a20 + a02*a10*a21 - a02*a11*a20); \
-  _gammaI_U1U1[ijk] = a00*(a00*a22 - a02*a20)/((a00*a11 - a01*a10)*(a00*a22 - a02*a20) - (a00*a12 - a02*a10)*(a00*a21 - a01*a20)); \
-  _gammaI_U1U2[ijk] =-a00*(a00*a12 - a02*a10)/((a00*a11 - a01*a10)*(a00*a22 - a02*a20) - (a00*a12 - a02*a10)*(a00*a21 - a01*a20)); \
-  _gammaI_U2U2[ijk] = a00*(a00*a11 - a01*a10)/((a00*a11 - a01*a10)*(a00*a22 - a02*a20) - (a00*a12 - a02*a10)*(a00*a21 - a01*a20)); \
-  }
-
 typedef void fAdjustment_t (Grid_T *const grid);
 
 /* root finder struct for NS surface eq */
@@ -291,7 +173,6 @@ static Grid_T *load_checkpoint_file(void);
 static int IsThereAnyUsefulCheckpointFile(void);
 static void Pz_ADM_is0_by_BH_Vz(Grid_T *const grid);
 static void extrapolate_insideBH_CS_C0_Ylm(Grid_T *const grid,const char *const field_name);
-static void extrapolate_insideBH_CS_WTGR(Grid_T *const grid);
 static void find_XYZ_and_patch_of_theta_phi_BH_CS(double *const X,Patch_T **const ppatch,const double theta,const double phi,Grid_T *const grid);
 static void force_balance_ddCM_Omega(Grid_T *const grid);
 void bbn_create_grid_prototype_BC(Grid_T *const grid);
