@@ -52,7 +52,11 @@ bhf_init
   // and extrapolate demanding C2 continuity */
   if (strcmp_i(method,"TnYlm_C2"))
   {
-    const unsigned lmax   = (unsigned)Pgeti("bbn_bhfiller_lmax");
+    /* if par doesn't exist */
+    int lmax_par = PgetiEZ("bbn_bhfiller_lmax");
+    if (lmax_par == INT_MAX)
+      lmax_par = 10;
+    const unsigned lmax   = (unsigned)lmax_par;
     const unsigned Ntheta = 2*lmax+1;
     const unsigned Nphi   = 2*lmax+1;
     const unsigned N      = Ntheta*Nphi;
