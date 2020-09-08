@@ -5,9 +5,11 @@
 #########################
 # Issue the following (TAKES A VERY VERY LONG TIME):
 # 
-# $ cpi bbn_free_data_g_analytic.math > bbn_free_data_g_analytic.c && \
-#   sed -i '/Welcome to Cpi/,$d' bbn_free_data_g_analytic.c
+# $ cpi bbn_free_data_g_gI_dg_analytic.math > bbn_free_data_g_gI_dg_analytic.c && \
+#   sed -i '/Welcome to Cpi/,$d' bbn_free_data_g_gI_dg_analytic.c
 
+Dimension = 3;
+point = x;
 
 `from __future__ import division`
 `from sympy import *`
@@ -21,7 +23,7 @@
 ### ccode generator
 `def mcode(m):`
 `  code = ""`
-`  if (0):`
+`  if (1):`
 `    pid = os.getpid()`
 `    mfile_name=".mfile_temp_{}".format(pid)`
 `    cfile_name=".cfile_temp_{}".format(pid)`
@@ -32,7 +34,7 @@
 `      rhs  = mathematica_code(m)`
 ``
 `    math_code  = rhs + ";\n"`
-`    math_code += "Simplify[%,TimeConstraint->2000];\n"`
+`    math_code += "Simplify[%,TimeConstraint->1000];\n"`
 `    math_code += "c=CForm[%];\n"`
 `    math_code += "Print[c]"+"\n"`
 ## write into mathematica file
@@ -172,23 +174,23 @@
 `  `
 `  print("/* kt */")`
 `  sys.stdout.flush()`
-`  kt = simplify(k_mu[0,0])`
+`  kt = (k_mu[0,0])`
 `  `
 `  print("/* k0 */")`
 `  sys.stdout.flush()`
-`  k0 = simplify(k_mu[1,0])`
+`  k0 = (k_mu[1,0])`
 `  `
 `  print("/* k1 */")`
 `  sys.stdout.flush()`
-`  k1 = simplify(k_mu[2,0])`
+`  k1 = (k_mu[2,0])`
 `  `
 `  print("/* k2 */")`
 `  sys.stdout.flush()`
-`  k2 = simplify(k_mu[3,0])`
+`  k2 = (k_mu[3,0])`
 `  `
 `  print("/* H */")`
 `  sys.stdout.flush()`
-`  H = simplify(HKS(m,_r,a,_z,Lambda))`
+`  H = (HKS(m,_r,a,_z,Lambda))`
 `  `
 `  return kt,k0,k1,k2,H`
 ``
@@ -199,7 +201,7 @@
 `C = 2*H*e`
 `print("/* A */")`
 `sys.stdout.flush()`
-`A = simplify(1/(1+C*(k0**2+k1**2+K2**2)))`
+`A = (1/(1+C*(k0**2+k1**2+k2**2)))`
 ``
 `_g00 = 1.+C*k0*k0`
 `_g01 = C*k0*k1`
@@ -213,299 +215,289 @@
 `      [_g01,_g11,_g12],`
 `      [_g02,_g12,_g22]`
 `      ])`
-`_ig = inverse(_g)`
+`_ig = _g**-1`
 ``
 `########################`
 `### C code generator ###`
 `########################`
 ``
-print('#include "bbn_headers.h"'
-print('void bbn_free_data_g_gI_analytic(')
-print(' Patch_T *const patch,')
-print(' double *(*get_v)(const char *const fname,void *params),')
-print(' void *params);')
-print('void bbn_free_data_g_gI_analytic(')
-print(' Patch_T *const patch,')
-print(' double *(*get_v)(const char *const fname,void *params),')
-print(' void *params);')
-print('{')
-print('  const double r0          = Pgetd("BH_KerrSchild_RollOff");')
-print('  const double BH_center_x = Pgetd("BH_center_x");')
-print('  const double BH_center_y = Pgetd("BH_center_y");')
-print('  const double BH_center_z = Pgetd("BH_center_z");')
-print('  const double M_BH        = Pgetd("BH_irreducible_mass");')
-print('  const double a_BH        = Pgetd("BH_net_spin");')
-print('  const double chi_U0   = Pgetd("BH_chi_U0");')
-print('  const double chi_U1   = Pgetd("BH_chi_U1");')
-print('  const double chi_U2   = Pgetd("BH_chi_U2");')
-print('  const double y_CM = Pgetd("y_CM");')
-print('  const double x_CM = Pgetd("x_CM")')
-print('  const double Omega_BHNS = Pgetd("BH_NS_angular_velocity");')
-print('  const double chi = sqrt(Pow2(chi_U0)+Pow2(chi_U1)+Pow2(chi_U2));')
-print('  const unsigned nn = patch->nn;')
-print('  double phiy = 0,phiz = 0;')
-print('  double Bx,By,Bz,B2;/* B = v/c */')
-print('  unsigned ijk;')
-print('')
-print('  assert(LSSEQL(chi,1));')
-print('')
-print('  /* boost */')
-print('  Bx = -Omega_BHNS*(BH_center_y-y_CM);')
-print('  By =  Omega_BHNS*(BH_center_x-x_CM);')
-print('  Bz = Pgetd("BH_Vz");')
-print('  B2 = Pow2(Bx)+Pow2(By)+Pow2(Bz);')
-print('')
-print('  /* rotation */')
-print('  if (!EQL(chi,0))/* otherwise tR is 0 */')
-print('  {')
-print('    phiz = -arctan(chi_U1,chi_U0);')
-print('    phiy = -acos(chi_U2/chi);')
-print('    assert(isfinite(phiy));')
-print('  }')
-
-print('\n')
-print('    double *const _gamma_D2D2 = get_v("_gamma_D2D2",params)')
-print('    double *const _gamma_D0D2 = get_v("_gamma_D0D2",params)')
-print('    double *const _gamma_D0D0 = get_v("_gamma_D0D0",params)')
-print('    double *const _gamma_D0D1 = get_v("_gamma_D0D1",params)')
-print('    double *const _gamma_D1D2 = get_v("_gamma_D1D2",params)')
-print('    double *const _gamma_D1D1 = get_v("_gamma_D1D1",params)')
-print('    double *const _gammaI_U0U2 = get_v("_gammaI_U0U2",params)')
-print('    double *const _gammaI_U0U0 = get_v("_gammaI_U0U0",params)')
-print('    double *const _gammaI_U0U1 = get_v("_gammaI_U0U1",params)')
-print('    double *const _gammaI_U1U2 = get_v("_gammaI_U1U2",params)')
-print('    double *const _gammaI_U1U1 = get_v("_gammaI_U1U1",params)')
-print('    double *const _gammaI_U2U2 = get_v("_gammaI_U2U2",params)')
-print('    ')
-print('    for (ijk = 0; ijk < nn; ++ijk)')
-print('    {')
-print('      double x,y,z,r,H,k0,k1,k2,kt;')
-print('\n')
-print('      x = patch->node[ijk]->x[0]-BH_center_x;')
-print('      y = patch->node[ijk]->x[1]-BH_center_y;')
-print('      z = patch->node[ijk]->x[2]-BH_center_z;')
-print('      r = sqrt(Pow2(x)+Pow2(y)+Pow2(z));')
-print('\n')
-print('      _gamma_D0D0[ijk] =')
-print(mcode(_g[0,0])
-
-print('      _gamma_D0D1[ijk] =') 
-print(mcode(_g[0,1])
-
-print('      _gamma_D0D2[ijk] =')
-print(mcode(_g[0,2])
-
-print('      _gamma_D1D1[ijk] =')
-print(mcode(_g[1,1])
-
-print('      _gamma_D1D2[ijk] =')
-print(mcode(_g[1,2])
-
-print('      _gamma_D2D2[ijk] =')
-print(mcode(_g[2,2])
-
-print('\n')
-print('      _gammaI_U0U0[ijk] =')
-print(mcode(_ig[0,0])
-
-print('      _gammaI_U0U1[ijk] =')
-print(mcode(_ig[0,1])
-
-print('      _gammaI_U0U2[ijk] =')
-print(mcode(_ig[0,2])
-
-print('      _gammaI_U1U1[ijk] =')
-print(mcode(_ig[1,1])
-
-print('      _gammaI_U1U2[ijk] =')
-print(mcode(_ig[1,2])
-
-print('      _gammaI_U2U2[ijk] =')
-print(mcode(_ig[2,2])
-
-print('      /* quick test check _gamma * _gammaI = delta */')
-print('      if (0)')
-print('      {')
-print('          double delta_U0D0 = ')
-print('        _gammaI_U0U0[ijk]*_gamma_D0D0[ijk] + _gammaI_U0U1[ijk]*')
-print('        _gamma_D0D1[ijk] + _gammaI_U0U2[ijk]*_gamma_D0D2[ijk];')
-print('\n')
-print('          double delta_U0D1 = ')
-print('        _gammaI_U0U0[ijk]*_gamma_D0D1[ijk] + _gammaI_U0U1[ijk]*')
-print('        _gamma_D1D1[ijk] + _gammaI_U0U2[ijk]*_gamma_D1D2[ijk];')
-print('\n')
-print('          double delta_U0D2 = ')
-print('        _gammaI_U0U0[ijk]*_gamma_D0D2[ijk] + _gammaI_U0U1[ijk]*')
-print('        _gamma_D1D2[ijk] + _gammaI_U0U2[ijk]*_gamma_D2D2[ijk];')
-print('\n')
-print('          double delta_U1D2 = ')
-print('        _gammaI_U0U1[ijk]*_gamma_D0D2[ijk] + _gammaI_U1U1[ijk]*')
-print('        _gamma_D1D2[ijk] + _gammaI_U1U2[ijk]*_gamma_D2D2[ijk];')
-print('\n')
-print('          double delta_U1D0 = ')
-print('        _gammaI_U0U1[ijk]*_gamma_D0D0[ijk] + _gammaI_U1U1[ijk]*')
-print('        _gamma_D0D1[ijk] + _gammaI_U1U2[ijk]*_gamma_D0D2[ijk];')
-print('\n')
-print('         double delta_U1D1 = ')
-print('        _gammaI_U0U1[ijk]*_gamma_D0D1[ijk] + _gammaI_U1U1[ijk]*')
-print('        _gamma_D1D1[ijk] + _gammaI_U1U2[ijk]*_gamma_D1D2[ijk];')
-print('        ')
-print('          double delta_U2D2 = ')
-print('        _gammaI_U0U2[ijk]*_gamma_D0D2[ijk] + _gammaI_U1U2[ijk]*')
-print('        _gamma_D1D2[ijk] + _gammaI_U2U2[ijk]*_gamma_D2D2[ijk];')
-print('\n')
-print('          double delta_U2D0 = ')
-print('        _gammaI_U0U2[ijk]*_gamma_D0D0[ijk] + _gammaI_U1U2[ijk]*')
-print('        _gamma_D0D1[ijk] + _gammaI_U2U2[ijk]*_gamma_D0D2[ijk];')
-print('\n')
-print('          double delta_U2D1 = ')
-print('        _gammaI_U0U2[ijk]*_gamma_D0D1[ijk] + _gammaI_U1U2[ijk]*')
-print('        _gamma_D1D1[ijk] + _gammaI_U2U2[ijk]*_gamma_D1D2[ijk];')
-print('\n')
-print('        if(!EQL(delta_U1D1,1)||!isfinite(delta_U1D1))  Error0("_gammaI is not correct!\n");')
-print('        if(!EQL(delta_U0D1,0)||!isfinite(delta_U0D1))  Error0("_gammaI is not correct!\n");')
-print('        if(!EQL(delta_U0D2,0)||!isfinite(delta_U0D2))  Error0("_gammaI is not correct!\n");')
-print('        if(!EQL(delta_U1D2,0)||!isfinite(delta_U1D2))  Error0("_gammaI is not correct!\n");')
-print('        if(!EQL(delta_U0D0,1)||!isfinite(delta_U0D0))  Error0("_gammaI is not correct!\n");')
-print('        if(!EQL(delta_U2D1,0)||!isfinite(delta_U2D1))  Error0("_gammaI is not correct!\n");')
-print('        if(!EQL(delta_U2D2,1)||!isfinite(delta_U2D2))  Error0("_gammaI is not correct!\n");')
-print('        if(!EQL(delta_U2D0,0)||!isfinite(delta_U2D0))  Error0("_gammaI is not correct!\n");')
-print('        if(!EQL(delta_U1D0,0)||!isfinite(delta_U1D0))  Error0("_gammaI is not correct!\n");')
-print('\n')
-print('      }')
-print('    }')
-print('}')
-
-print('void bbn_free_data_dg_analytic(')
-print('	Patch_T *const patch, ')
-print('	double *(*get_v)(const char *const fname,void *params),')
-print('	void *params);')
-print('void bbn_free_data_dg_analytic(')
-print('	Patch_T *const patch, ')
-print('	double *(*get_v)(const char *const fname,void *params),')
-print('	void *params)')
-print('{')
-print('  const double r0          = Pgetd("BH_KerrSchild_RollOff");')
-print('  const double BH_center_x = Pgetd("BH_center_x");')
-print('  const double BH_center_y = Pgetd("BH_center_y");')
-print('  const double BH_center_z = Pgetd("BH_center_z");')
-print('  const double M_BH        = Pgetd("BH_irreducible_mass");')
-print('  const double a_BH        = Pgetd("BH_net_spin");')
-print('  const double chi_U0   = Pgetd("BH_chi_U0");')
-print('  const double chi_U1   = Pgetd("BH_chi_U1");')
-print('  const double chi_U2   = Pgetd("BH_chi_U2");')
-print('  const double y_CM = Pgetd("y_CM");')
-print('  const double x_CM = Pgetd("x_CM")')
-print('  const double Omega_BHNS = Pgetd("BH_NS_angular_velocity");')
-print('  const double chi = sqrt(Pow2(chi_U0)+Pow2(chi_U1)+Pow2(chi_U2));')
-print('  const unsigned nn = patch->nn;')
-print('  double phiy = 0,phiz = 0;')
-print('  double Bx,By,Bz,B2;/* B = v/c */')
-print('  unsigned ijk;')
-print('')
-print('  assert(LSSEQL(chi,1));')
-print('')
-print('  /* boost */')
-print('  Bx = -Omega_BHNS*(BH_center_y-y_CM);')
-print('  By =  Omega_BHNS*(BH_center_x-x_CM);')
-print('  Bz = Pgetd("BH_Vz");')
-print('  B2 = Pow2(Bx)+Pow2(By)+Pow2(Bz);')
-print('')
-print('  /* rotation */')
-print('  if (!EQL(chi,0))/* otherwise tR is 0 */')
-print('  {')
-print('    phiz = -arctan(chi_U1,chi_U0);')
-print('    phiy = -acos(chi_U2/chi);')
-print('    assert(isfinite(phiy));')
-print('  }')
-print('  ')
-print('double *const   dgamma_D1D2D2 = get_v("dgamma_D1D2D2",params);')
-print('double *const   dgamma_D0D0D1 = get_v("dgamma_D0D0D1",params);')
-print('double *const   dgamma_D0D2D1 = get_v("dgamma_D0D2D1",params);')
-print('double *const   dgamma_D0D1D0 = get_v("dgamma_D0D1D0",params);')
-print('double *const   dgamma_D1D2D1 = get_v("dgamma_D1D2D1",params);')
-print('double *const   dgamma_D2D2D0 = get_v("dgamma_D2D2D0",params);')
-print('double *const   dgamma_D0D0D0 = get_v("dgamma_D0D0D0",params);')
-print('double *const   dgamma_D0D0D2 = get_v("dgamma_D0D0D2",params);')
-print('double *const   dgamma_D0D2D2 = get_v("dgamma_D0D2D2",params);')
-print('double *const   dgamma_D2D2D1 = get_v("dgamma_D2D2D1",params);')
-print('double *const   dgamma_D0D1D1 = get_v("dgamma_D0D1D1",params);')
-print('double *const   dgamma_D0D2D0 = get_v("dgamma_D0D2D0",params);')
-print('double *const   dgamma_D1D2D0 = get_v("dgamma_D1D2D0",params);')
-print('double *const   dgamma_D1D1D1 = get_v("dgamma_D1D1D1",params);')
-print('double *const   dgamma_D0D1D2 = get_v("dgamma_D0D1D2",params);')
-print('double *const   dgamma_D1D1D0 = get_v("dgamma_D1D1D0",params);')
-print('double *const   dgamma_D1D1D2 = get_v("dgamma_D1D1D2",params);')
-print('double *const   dgamma_D2D2D2 = get_v("dgamma_D2D2D2",params);')
-print('')
-print('  for (ijk = 0; ijk < nn; ++ijk) ')
-print('  {')
-print('    double x,y,z;')
-print('    x = patch->node[ijk]->x[0]-BH_center_x;')
-print('    y = patch->node[ijk]->x[1]-BH_center_y;')
-print('    z = patch->node[ijk]->x[2]-BH_center_z;')
-print('')
-print('    _dgamma_D1D2D2[ijk]=')
-print('    mcode(g12_D2)')
-print('')
-print('    _dgamma_D0D0D1[ijk]=')
-print('    mcode(g00_D1)')
-print('')
-print('    _dgamma_D0D2D1[ijk]=')
-print('    mcode(g02_D1)')
-print('')
-print('    _dgamma_D0D1D0[ijk]=')
-print('    mcode(g01_D0)')
-print('')
-print('    _dgamma_D1D2D1[ijk]=')
-print('    mcode(g12_D1)')
-print('')
-print('    _dgamma_D2D2D0[ijk]=')
-print('    mcode(g22_D0)')
-print('')
-print('    _dgamma_D0D0D0[ijk]=')
-print('    mcode(g00_D0)')
-print('')
-print('    _dgamma_D0D0D2[ijk]=')
-print('    mcode(g00_D2)')
-print('')
-print('    _dgamma_D0D2D2[ijk]=')
-print('    mcode(g02_D2)')
-print('')
-print('    _dgamma_D2D2D1[ijk]=')
-print('    mcode(g22_D1)')
-print('')
-print('    _dgamma_D0D1D1[ijk]=')
-print('    mcode(g01_D1)')
-print('')
-print('    _dgamma_D0D2D0[ijk]=')
-print('    mcode(g02_D0)')
-print('')
-print('    _dgamma_D1D2D0[ijk]=')
-print('    mcode(g12_D0)')
-print('')
-print('    _dgamma_D1D1D1[ijk]=')
-print('    mcode(g11_D1)')
-print('')
-print('    _dgamma_D0D1D2[ijk]=')
-print('    mcode(g01_D2)')
-print('')
-print('    _dgamma_D1D1D0[ijk]=')
-print('    mcode(g11_D0)')
-print('')
-print('    _dgamma_D1D1D2[ijk]=')
-print('    mcode(g11_D2)')
-print('')
-print('    _dgamma_D2D2D2[ijk]=')
-print('    mcode(g22_D2)')
-print('')
-print('  }')
-print('}')
-
-
+``
+`print('#include "bbn_headers.h"')`
+`print('void bbn_free_data_g_gI_analytic(')`
+`print(' Patch_T *const patch,')`
+`print(' double *(*get_v)(const char *const fname,void *params),')`
+`print(' void *params);')`
+`print('void bbn_free_data_g_gI_analytic(')`
+`print(' Patch_T *const patch,')`
+`print(' double *(*get_v)(const char *const fname,void *params),')`
+`print(' void *params);')`
+`print('{')`
+`print('  const double r0          = Pgetd("BH_KerrSchild_RollOff");')`
+`print('  const double BH_center_x = Pgetd("BH_center_x");')`
+`print('  const double BH_center_y = Pgetd("BH_center_y");')`
+`print('  const double BH_center_z = Pgetd("BH_center_z");')`
+`print('  const double M_BH        = Pgetd("BH_irreducible_mass");')`
+`print('  const double a_BH        = Pgetd("BH_net_spin");')`
+`print('  const double chi_U0   = Pgetd("BH_chi_U0");')`
+`print('  const double chi_U1   = Pgetd("BH_chi_U1");')`
+`print('  const double chi_U2   = Pgetd("BH_chi_U2");')`
+`print('  const double y_CM = Pgetd("y_CM");')`
+`print('  const double x_CM = Pgetd("x_CM")')`
+`print('  const double Omega_BHNS = Pgetd("BH_NS_angular_velocity");')`
+`print('  const double chi = sqrt(Pow2(chi_U0)+Pow2(chi_U1)+Pow2(chi_U2));')`
+`print('  const unsigned nn = patch->nn;')`
+`print('  double phiy = 0,phiz = 0;')`
+`print('  double Bx,By,Bz,B2;/* B = v/c */')`
+`print('  unsigned ijk;')`
+`print('')`
+`print('  assert(LSSEQL(chi,1));')`
+`print('')`
+`print('  /* boost */')`
+`print('  Bx = -Omega_BHNS*(BH_center_y-y_CM);')`
+`print('  By =  Omega_BHNS*(BH_center_x-x_CM);')`
+`print('  Bz = Pgetd("BH_Vz");')`
+`print('  B2 = Pow2(Bx)+Pow2(By)+Pow2(Bz);')`
+`print('')`
+`print('  /* rotation */')`
+`print('  if (!EQL(chi,0))/* otherwise tR is 0 */')`
+`print('  {')`
+`print('    phiz = -arctan(chi_U1,chi_U0);')`
+`print('    phiy = -acos(chi_U2/chi);')`
+`print('    assert(isfinite(phiy));')`
+`print('  }')`
+``
+`print('    double *const _gamma_D2D2 = get_v("_gamma_D2D2",params)')`
+`print('    double *const _gamma_D0D2 = get_v("_gamma_D0D2",params)')`
+`print('    double *const _gamma_D0D0 = get_v("_gamma_D0D0",params)')`
+`print('    double *const _gamma_D0D1 = get_v("_gamma_D0D1",params)')`
+`print('    double *const _gamma_D1D2 = get_v("_gamma_D1D2",params)')`
+`print('    double *const _gamma_D1D1 = get_v("_gamma_D1D1",params)')`
+`print('    double *const _gammaI_U0U2 = get_v("_gammaI_U0U2",params)')`
+`print('    double *const _gammaI_U0U0 = get_v("_gammaI_U0U0",params)')`
+`print('    double *const _gammaI_U0U1 = get_v("_gammaI_U0U1",params)')`
+`print('    double *const _gammaI_U1U2 = get_v("_gammaI_U1U2",params)')`
+`print('    double *const _gammaI_U1U1 = get_v("_gammaI_U1U1",params)')`
+`print('    double *const _gammaI_U2U2 = get_v("_gammaI_U2U2",params)')`
+`print('    ')`
+`print('    for (ijk = 0; ijk < nn; ++ijk)')`
+`print('    {')`
+`print('      double x,y,z,r,H,k0,k1,k2,kt;')`
+`print('      x = patch->node[ijk]->x[0]-BH_center_x;')`
+`print('      y = patch->node[ijk]->x[1]-BH_center_y;')`
+`print('      z = patch->node[ijk]->x[2]-BH_center_z;')`
+`print('      r = sqrt(Pow2(x)+Pow2(y)+Pow2(z));')`
+`print('      _gamma_D0D0[ijk] =')`
+`print(mcode(_g[0,0]))`
+``
+`print('      _gamma_D0D1[ijk] =') `
+`print(mcode(_g[0,1]))`
+``
+`print('      _gamma_D0D2[ijk] =')`
+`print(mcode(_g[0,2]))`
+``
+`print('      _gamma_D1D1[ijk] =')`
+`print(mcode(_g[1,1]))`
+``
+`print('      _gamma_D1D2[ijk] =')`
+`print(mcode(_g[1,2]))`
+``
+`print('      _gamma_D2D2[ijk] =')`
+`print(mcode(_g[2,2]))`
+``
+`print('      _gammaI_U0U0[ijk] =')`
+`print(mcode(_ig[0,0]))`
+``
+`print('      _gammaI_U0U1[ijk] =')`
+`print(mcode(_ig[0,1]))`
+``
+`print('      _gammaI_U0U2[ijk] =')`
+`print(mcode(_ig[0,2]))`
+``
+`print('      _gammaI_U1U1[ijk] =')`
+`print(mcode(_ig[1,1]))`
+``
+`print('      _gammaI_U1U2[ijk] =')`
+`print(mcode(_ig[1,2]))`
+``
+`print('      _gammaI_U2U2[ijk] =')`
+`print(mcode(_ig[2,2]))`
+``
+`print('      /* quick test check _gamma * _gammaI = delta */')`
+`print('      if (0)')`
+`print('      {')`
+`print('          double delta_U0D0 = ')`
+`print('        _gammaI_U0U0[ijk]*_gamma_D0D0[ijk] + _gammaI_U0U1[ijk]*')`
+`print('        _gamma_D0D1[ijk] + _gammaI_U0U2[ijk]*_gamma_D0D2[ijk];')`
+`print('          double delta_U0D1 = ')`
+`print('        _gammaI_U0U0[ijk]*_gamma_D0D1[ijk] + _gammaI_U0U1[ijk]*')`
+`print('        _gamma_D1D1[ijk] + _gammaI_U0U2[ijk]*_gamma_D1D2[ijk];')`
+`print('          double delta_U0D2 = ')`
+`print('        _gammaI_U0U0[ijk]*_gamma_D0D2[ijk] + _gammaI_U0U1[ijk]*')`
+`print('        _gamma_D1D2[ijk] + _gammaI_U0U2[ijk]*_gamma_D2D2[ijk];')`
+`print('          double delta_U1D2 = ')`
+`print('        _gammaI_U0U1[ijk]*_gamma_D0D2[ijk] + _gammaI_U1U1[ijk]*')`
+`print('        _gamma_D1D2[ijk] + _gammaI_U1U2[ijk]*_gamma_D2D2[ijk];')`
+`print('          double delta_U1D0 = ')`
+`print('        _gammaI_U0U1[ijk]*_gamma_D0D0[ijk] + _gammaI_U1U1[ijk]*')`
+`print('        _gamma_D0D1[ijk] + _gammaI_U1U2[ijk]*_gamma_D0D2[ijk];')`
+`print('         double delta_U1D1 = ')`
+`print('        _gammaI_U0U1[ijk]*_gamma_D0D1[ijk] + _gammaI_U1U1[ijk]*')`
+`print('        _gamma_D1D1[ijk] + _gammaI_U1U2[ijk]*_gamma_D1D2[ijk];')`
+`print('        ')`
+`print('          double delta_U2D2 = ')`
+`print('        _gammaI_U0U2[ijk]*_gamma_D0D2[ijk] + _gammaI_U1U2[ijk]*')`
+`print('        _gamma_D1D2[ijk] + _gammaI_U2U2[ijk]*_gamma_D2D2[ijk];')`
+`print('          double delta_U2D0 = ')`
+`print('        _gammaI_U0U2[ijk]*_gamma_D0D0[ijk] + _gammaI_U1U2[ijk]*')`
+`print('        _gamma_D0D1[ijk] + _gammaI_U2U2[ijk]*_gamma_D0D2[ijk];')`
+`print('          double delta_U2D1 = ')`
+`print('        _gammaI_U0U2[ijk]*_gamma_D0D1[ijk] + _gammaI_U1U2[ijk]*')`
+`print('        _gamma_D1D1[ijk] + _gammaI_U2U2[ijk]*_gamma_D1D2[ijk];')`
+`print('        if(!EQL(delta_U1D1,1)||!isfinite(delta_U1D1))  Error0("_gammaI is not correct!\n");')`
+`print('        if(!EQL(delta_U0D1,0)||!isfinite(delta_U0D1))  Error0("_gammaI is not correct!\n");')`
+`print('        if(!EQL(delta_U0D2,0)||!isfinite(delta_U0D2))  Error0("_gammaI is not correct!\n");')`
+`print('        if(!EQL(delta_U1D2,0)||!isfinite(delta_U1D2))  Error0("_gammaI is not correct!\n");')`
+`print('        if(!EQL(delta_U0D0,1)||!isfinite(delta_U0D0))  Error0("_gammaI is not correct!\n");')`
+`print('        if(!EQL(delta_U2D1,0)||!isfinite(delta_U2D1))  Error0("_gammaI is not correct!\n");')`
+`print('        if(!EQL(delta_U2D2,1)||!isfinite(delta_U2D2))  Error0("_gammaI is not correct!\n");')`
+`print('        if(!EQL(delta_U2D0,0)||!isfinite(delta_U2D0))  Error0("_gammaI is not correct!\n");')`
+`print('        if(!EQL(delta_U1D0,0)||!isfinite(delta_U1D0))  Error0("_gammaI is not correct!\n");')`
+`print('      }')`
+`print('    }')`
+`print('}')`
+``
+`print('void bbn_free_data_dg_analytic(')`
+`print('	Patch_T *const patch, ')`
+`print('	double *(*get_v)(const char *const fname,void *params),')`
+`print('	void *params);')`
+`print('void bbn_free_data_dg_analytic(')`
+`print('	Patch_T *const patch, ')`
+`print('	double *(*get_v)(const char *const fname,void *params),')`
+`print('	void *params)')`
+`print('{')`
+`print('  const double r0          = Pgetd("BH_KerrSchild_RollOff");')`
+`print('  const double BH_center_x = Pgetd("BH_center_x");')`
+`print('  const double BH_center_y = Pgetd("BH_center_y");')`
+`print('  const double BH_center_z = Pgetd("BH_center_z");')`
+`print('  const double M_BH        = Pgetd("BH_irreducible_mass");')`
+`print('  const double a_BH        = Pgetd("BH_net_spin");')`
+`print('  const double chi_U0   = Pgetd("BH_chi_U0");')`
+`print('  const double chi_U1   = Pgetd("BH_chi_U1");')`
+`print('  const double chi_U2   = Pgetd("BH_chi_U2");')`
+`print('  const double y_CM = Pgetd("y_CM");')`
+`print('  const double x_CM = Pgetd("x_CM")')`
+`print('  const double Omega_BHNS = Pgetd("BH_NS_angular_velocity");')`
+`print('  const double chi = sqrt(Pow2(chi_U0)+Pow2(chi_U1)+Pow2(chi_U2));')`
+`print('  const unsigned nn = patch->nn;')`
+`print('  double phiy = 0,phiz = 0;')`
+`print('  double Bx,By,Bz,B2;/* B = v/c */')`
+`print('  unsigned ijk;')`
+`print('')`
+`print('  assert(LSSEQL(chi,1));')`
+`print('')`
+`print('  /* boost */')`
+`print('  Bx = -Omega_BHNS*(BH_center_y-y_CM);')`
+`print('  By =  Omega_BHNS*(BH_center_x-x_CM);')`
+`print('  Bz = Pgetd("BH_Vz");')`
+`print('  B2 = Pow2(Bx)+Pow2(By)+Pow2(Bz);')`
+`print('')`
+`print('  /* rotation */')`
+`print('  if (!EQL(chi,0))/* otherwise tR is 0 */')`
+`print('  {')`
+`print('    phiz = -arctan(chi_U1,chi_U0);')`
+`print('    phiy = -acos(chi_U2/chi);')`
+`print('    assert(isfinite(phiy));')`
+`print('  }')`
+`print('  ')`
+`print('double *const   dgamma_D1D2D2 = get_v("dgamma_D1D2D2",params);')`
+`print('double *const   dgamma_D0D0D1 = get_v("dgamma_D0D0D1",params);')`
+`print('double *const   dgamma_D0D2D1 = get_v("dgamma_D0D2D1",params);')`
+`print('double *const   dgamma_D0D1D0 = get_v("dgamma_D0D1D0",params);')`
+`print('double *const   dgamma_D1D2D1 = get_v("dgamma_D1D2D1",params);')`
+`print('double *const   dgamma_D2D2D0 = get_v("dgamma_D2D2D0",params);')`
+`print('double *const   dgamma_D0D0D0 = get_v("dgamma_D0D0D0",params);')`
+`print('double *const   dgamma_D0D0D2 = get_v("dgamma_D0D0D2",params);')`
+`print('double *const   dgamma_D0D2D2 = get_v("dgamma_D0D2D2",params);')`
+`print('double *const   dgamma_D2D2D1 = get_v("dgamma_D2D2D1",params);')`
+`print('double *const   dgamma_D0D1D1 = get_v("dgamma_D0D1D1",params);')`
+`print('double *const   dgamma_D0D2D0 = get_v("dgamma_D0D2D0",params);')`
+`print('double *const   dgamma_D1D2D0 = get_v("dgamma_D1D2D0",params);')`
+`print('double *const   dgamma_D1D1D1 = get_v("dgamma_D1D1D1",params);')`
+`print('double *const   dgamma_D0D1D2 = get_v("dgamma_D0D1D2",params);')`
+`print('double *const   dgamma_D1D1D0 = get_v("dgamma_D1D1D0",params);')`
+`print('double *const   dgamma_D1D1D2 = get_v("dgamma_D1D1D2",params);')`
+`print('double *const   dgamma_D2D2D2 = get_v("dgamma_D2D2D2",params);')`
+`print('')`
+`print('  for (ijk = 0; ijk < nn; ++ijk) ')`
+`print('  {')`
+`print('    double x,y,z;')`
+`print('    x = patch->node[ijk]->x[0]-BH_center_x;')`
+`print('    y = patch->node[ijk]->x[1]-BH_center_y;')`
+`print('    z = patch->node[ijk]->x[2]-BH_center_z;')`
+`print('')`
+`print('    _dgamma_D1D2D2[ijk]=')`
+`print('    mcode(g12_D2)')`
+`print('')`
+`print('    _dgamma_D0D0D1[ijk]=')`
+`print('    mcode(g00_D1)')`
+`print('')`
+`print('    _dgamma_D0D2D1[ijk]=')`
+`print('    mcode(g02_D1)')`
+`print('')`
+`print('    _dgamma_D0D1D0[ijk]=')`
+`print('    mcode(g01_D0)')`
+`print('')`
+`print('    _dgamma_D1D2D1[ijk]=')`
+`print('    mcode(g12_D1)')`
+`print('')`
+`print('    _dgamma_D2D2D0[ijk]=')`
+`print('    mcode(g22_D0)')`
+`print('')`
+`print('    _dgamma_D0D0D0[ijk]=')`
+`print('    mcode(g00_D0)')`
+`print('')`
+`print('    _dgamma_D0D0D2[ijk]=')`
+`print('    mcode(g00_D2)')`
+`print('')`
+`print('    _dgamma_D0D2D2[ijk]=')`
+`print('    mcode(g02_D2)')`
+`print('')`
+`print('    _dgamma_D2D2D1[ijk]=')`
+`print('    mcode(g22_D1)')`
+`print('')`
+`print('    _dgamma_D0D1D1[ijk]=')`
+`print('    mcode(g01_D1)')`
+`print('')`
+`print('    _dgamma_D0D2D0[ijk]=')`
+`print('    mcode(g02_D0)')`
+`print('')`
+`print('    _dgamma_D1D2D0[ijk]=')`
+`print('    mcode(g12_D0)')`
+`print('')`
+`print('    _dgamma_D1D1D1[ijk]=')`
+`print('    mcode(g11_D1)')`
+`print('')`
+`print('    _dgamma_D0D1D2[ijk]=')`
+`print('    mcode(g01_D2)')`
+`print('')`
+`print('    _dgamma_D1D1D0[ijk]=')`
+`print('    mcode(g11_D0)')`
+`print('')`
+`print('    _dgamma_D1D1D2[ijk]=')`
+`print('    mcode(g11_D2)')`
+`print('')`
+`print('    _dgamma_D2D2D2[ijk]=')`
+`print('    mcode(g22_D2)')`
+`print('')`
+`print('  }')`
+`print('}')`
+``
+``
+### run python
+### remove C comments:
+Command["sed -i '1,5d'"];
 ### run python
 Comand["python "];
 
 ### rm redundants
-Comand["rm "];
-
+#Comand["rm "];
