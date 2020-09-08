@@ -500,4 +500,4 @@ Command["sed -i '1,5d'"];
 Comand["python "];
 
 ### rm redundants
-#Comand["rm "];
+Comand["rm "];
