@@ -3,30 +3,11 @@ Dimension = 3;
 point = x;
 #C_macro=name_simplify(diff(name).doit());
 C_macro=name_(diff(name).doit());
-C_macro2=print('static double name\
-	(const double x,const double y,const double z,\
-	const double r0,const double M_BH,const double a_BH,\
-	const double Lambda);UNUSED(name);');
-C_macro3=print('static double name(const double x,const double y,const double z,\
-	const double r0,const double M_BH,const double a_BH,\
-	const double Lambda)')\nprint('{return') \n\
-	print(mcode(name))\nprint('}');
-
-C_macro4=name[ijk]_\n\
-	 name(x,y,z,r0,M_BH,a_BH,Lambda);\n;
 
 ``
 Declare =
 {
- # metric components:
- #(obj = Field,name = _g00, rank = 0, C_macro);
- #(obj = Field,name = _g01, rank = 0, C_macro);
- #(obj = Field,name = _g02, rank = 0, C_macro);
- #(obj = Field,name = _g11, rank = 0, C_macro);
- #(obj = Field,name = _g12, rank = 0, C_macro);
- #(obj = Field,name = _g22, rank = 0, C_macro);
-
-#### macro1
+#### diff
 
  # d 3d metric
  (obj = Field,name = _dg00, rank = D, C_macro);
@@ -82,131 +63,6 @@ Declare =
  # ddd 3d metric
  (obj = Field,name = _dddg22, rank = DDD, C_macro);
 
-
-##### macro2
-
- # d 3d metric
- (obj = Field,name = dg00, rank = D, C_macro2);
-
- # dd 3d metric
- (obj = Field,name = ddg00, rank = DD, C_macro2);
-
- # ddd 3d metric
- (obj = Field,name = dddg00, rank = DDD, C_macro2);
-
- # d 3d metric
- (obj = Field,name = dg01, rank = D, C_macro2);
-
- # dd 3d metric
- (obj = Field,name = ddg01, rank = DD, C_macro2);
-
- # ddd 3d metric
- (obj = Field,name = dddg01, rank = DDD, C_macro2);
-
- # d 3d metric
- (obj = Field,name = dg02, rank = D, C_macro2);
-
- # dd 3d metric
- (obj = Field,name = ddg02, rank = DD, C_macro2);
-
- # ddd 3d metric
- (obj = Field,name = dddg02, rank = DDD, C_macro2);
-
- # d 3d metric
- (obj = Field,name = dg11, rank = D, C_macro2);
-
- # dd 3d metric
- (obj = Field,name = ddg11, rank = DD, C_macro2);
-
- # ddd 3d metric
- (obj = Field,name = dddg11, rank = DDD, C_macro2);
-
- # d 3d metric
- (obj = Field,name = dg12, rank = D, C_macro2);
-
- # dd 3d metric
- (obj = Field,name = ddg12, rank = DD, C_macro2);
-
- # ddd 3d metric
- (obj = Field,name = dddg12, rank = DDD, C_macro2);
-
- # d 3d metric
- (obj = Field,name = dg22, rank = D, C_macro2);
-
- # dd 3d metric
- (obj = Field,name = ddg22, rank = DD, C_macro2);
-
- # ddd 3d metric
- (obj = Field,name = dddg22, rank = DDD, C_macro2);
-
-###### macro 3
-
- # d 3d metric
- (obj = Field,name = dg00, rank = D, C_macro3);
-
- # dd 3d metric
- (obj = Field,name = ddg00, rank = DD, C_macro3);
-
- # ddd 3d metric
- (obj = Field,name = dddg00, rank = DDD, C_macro3);
-
- # d 3d metric
- (obj = Field,name = dg01, rank = D, C_macro3);
-
- # dd 3d metric
- (obj = Field,name = ddg01, rank = DD, C_macro3);
-
- # ddd 3d metric
- (obj = Field,name = dddg01, rank = DDD, C_macro3);
-
- # d 3d metric
- (obj = Field,name = dg02, rank = D, C_macro3);
-
- # dd 3d metric
- (obj = Field,name = ddg02, rank = DD, C_macro3);
-
- # ddd 3d metric
- (obj = Field,name = dddg02, rank = DDD, C_macro3);
-
- # d 3d metric
- (obj = Field,name = dg11, rank = D, C_macro3);
-
- # dd 3d metric
- (obj = Field,name = ddg11, rank = DD, C_macro3);
-
- # ddd 3d metric
- (obj = Field,name = dddg11, rank = DDD, C_macro3);
-
- # d 3d metric
- (obj = Field,name = dg12, rank = D, C_macro3);
-
- # dd 3d metric
- (obj = Field,name = ddg12, rank = DD, C_macro3);
-
- # ddd 3d metric
- (obj = Field,name = dddg12, rank = DDD, C_macro3);
-
- # d 3d metric
- (obj = Field,name = dg22, rank = D, C_macro3);
-
- # dd 3d metric
- (obj = Field,name = ddg22, rank = DD, C_macro3);
-
- # ddd 3d metric
- (obj = Field,name = dddg22, rank = DDD, C_macro3);
-
-#### macro 4 used and commented out.
-#### this is for producing different functions calls
-#### to populate the components.
-
-# # d 3d metric
-# (obj = Field,name = _dgamma, rank = DDD, C_macro4);
-#
-# # dd 3d metric
-# (obj = Field,name = _ddgamma, rank = DDDD, C_macro4);
-#
-# # ddd 3d metric
-# (obj = Field,name = _dddgamma, rank = DDDDD, C_macro4);
 }
 
 # symmetries:
@@ -228,7 +84,6 @@ Symm[_dddg12(i,j,k) = _dddg12(j,i,k)];
 Symm[_ddg22(i,j)      = _ddg22(j,i)];
 Symm[_dddg22(i,j,k)   = _dddg22(j,i,k)];
 
-
 Symm[ddg00(i,j)    = ddg00(j,i)];
 Symm[dddg00(i,j,k) = dddg00(j,i,k)];
 
@@ -246,12 +101,6 @@ Symm[dddg12(i,j,k) = dddg12(j,i,k)];
 
 Symm[ddg22(i,j)      = ddg22(j,i)];
 Symm[dddg22(i,j,k)   = dddg22(j,i,k)];
-
-Symm[_dgamma(i,j,k)       = _dgamma(j,i,k)];
-Symm[_ddgamma(i,j,k,l)    = _ddgamma(j,i,k,l)];
-Symm[_dddgamma(i,j,k,l,m) = _dddgamma(j,i,k,l,m)];
-
-
 
 ### make it ready for python:
 ### remove C comments:
@@ -279,878 +128,1105 @@ Command["sed -i 's/_(diff/=(diff/g'"];
 # if *C_macro=name_simplify(diff(name).doit());* is active
 #Command["sed -i 's/_simplify(/=simplify(/g'"];
 
-Command["sed -i 's/staticdouble/static double /g'"];
-Command["sed -i 's/constdouble/const double /g'"];
-Command["sed -i 's/  //g'"];
 
-### for function calls used and commented out
-#Command["sed -i 's/\[ijk\]_/\[ijk\]=/g'"];
-#Command["sed -i -E 's/\b_dgamma_D(.)D(.)D(.)\(/dg\1\2_D\3\(/g'"];
-#Command["sed -i -E 's/\b_ddgamma_D(.)D(.)D(.)D(.)\(/ddg\1\2_D\3D\4(/g'"];
-#Command["sed -i -E 's/\b_dddgamma_D(.)D(.)D(.)D(.)D(.)\(/dddg\1\2_D\3D\4D\5(/g'"];
-
-
-/* prefix is used to populate the following fields in different
-// collocation points */
-void bbn_free_data_dg_analytic(
-	Patch_T *const patch, 
-	double *(*get_v)(const char *const fname,void *params),
-	void *params);
-void bbn_free_data_dg_analytic(
-	Patch_T *const patch, 
-	double *(*get_v)(const char *const fname,void *params),
-	void *params)
-{
-  const double r0          = Pgetd("BH_KerrSchild_RollOff");
-  const double BH_center_x = Pgetd("BH_center_x");
-  const double BH_center_y = Pgetd("BH_center_y");
-  const double BH_center_z = Pgetd("BH_center_z");
-  const double M_BH        = Pgetd("BH_irreducible_mass");
-  const double a_BH        = Pgetd("BH_net_spin");
-  const double chi_U0   = Pgetd("BH_chi_U0");
-  const double chi_U1   = Pgetd("BH_chi_U1");
-  const double chi_U2   = Pgetd("BH_chi_U2");
-  const double y_CM = Pgetd("y_CM");
-  const double x_CM = Pgetd("x_CM")
-  const double Omega_BHNS = Pgetd("BH_NS_angular_velocity");
-  const double chi = sqrt(Pow2(chi_U0)+Pow2(chi_U1)+Pow2(chi_U2));
-  const unsigned nn = patch->nn;
-  double phiy = 0,phiz = 0;
-  double Bx,By,Bz,B2;/* B = v/c */
-  unsigned ijk;
-
-  assert(LSSEQL(chi,1));
-
-  /* boost */
-  Bx = -Omega_BHNS*(BH_center_y-y_CM);
-  By =  Omega_BHNS*(BH_center_x-x_CM);
-  Bz = Pgetd("BH_Vz");
-  B2 = Pow2(Bx)+Pow2(By)+Pow2(Bz);
-
-  /* rotation */
-  if (!EQL(chi,0))/* otherwise tR is 0 */
-  {
-    phiz = -arctan(chi_U1,chi_U0);
-    phiy = -acos(chi_U2/chi);
-    assert(isfinite(phiy));
-  }
-  
-  for (ijk = 0; ijk < nn; ++ijk) 
-  {
-    double x,y,z;
-    x = patch->node[ijk]->x[0]-BH_center_x;
-    y = patch->node[ijk]->x[1]-BH_center_y;
-    z = patch->node[ijk]->x[2]-BH_center_z;
-
-    _dgamma_D1D2D2[ijk]=
-    dg12_D2(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dgamma_D0D0D1[ijk]=
-    dg00_D1(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dgamma_D0D2D1[ijk]=
-    dg02_D1(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dgamma_D0D1D0[ijk]=
-    dg01_D0(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dgamma_D1D2D1[ijk]=
-    dg12_D1(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dgamma_D2D2D0[ijk]=
-    dg22_D0(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dgamma_D0D0D0[ijk]=
-    dg00_D0(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dgamma_D0D0D2[ijk]=
-    dg00_D2(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dgamma_D0D2D2[ijk]=
-    dg02_D2(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dgamma_D2D2D1[ijk]=
-    dg22_D1(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dgamma_D0D1D1[ijk]=
-    dg01_D1(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dgamma_D0D2D0[ijk]=
-    dg02_D0(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dgamma_D1D2D0[ijk]=
-    dg12_D0(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dgamma_D1D1D1[ijk]=
-    dg11_D1(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dgamma_D0D1D2[ijk]=
-    dg01_D2(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dgamma_D1D1D0[ijk]=
-    dg11_D0(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dgamma_D1D1D2[ijk]=
-    dg11_D2(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dgamma_D2D2D2[ijk]=
-    dg22_D2(x,y,z,r0,M_BH,a_BH,Lambda);
-
-  }
-}
-
-void bbn_free_data_ddg_analytic(
-	Patch_T *const patch, 
-	double *(*get_v)(const char *const fname,void *params),
-	void *params);
-void bbn_free_data_ddg_analytic(
-	Patch_T *const patch, 
-	double *(*get_v)(const char *const fname,void *params),
-	void *params)
-{
-
-  const double r0          = Pgetd("BH_KerrSchild_RollOff");
-  const double BH_center_x = Pgetd("BH_center_x");
-  const double BH_center_y = Pgetd("BH_center_y");
-  const double BH_center_z = Pgetd("BH_center_z");
-  const double M_BH        = Pgetd("BH_irreducible_mass");
-  const double a_BH        = Pgetd("BH_net_spin");
-  const double chi_U0   = Pgetd("BH_chi_U0");
-  const double chi_U1   = Pgetd("BH_chi_U1");
-  const double chi_U2   = Pgetd("BH_chi_U2");
-  const double y_CM = Pgetd("y_CM");
-  const double x_CM = Pgetd("x_CM")
-  const double Omega_BHNS = Pgetd("BH_NS_angular_velocity");
-  const double chi = sqrt(Pow2(chi_U0)+Pow2(chi_U1)+Pow2(chi_U2));
-  const unsigned nn = patch->nn;
-  double phiy = 0,phiz = 0;
-  double Bx,By,Bz,B2;/* B = v/c */
-  unsigned ijk;
-
-  assert(LSSEQL(chi,1));
-
-  /* boost */
-  Bx = -Omega_BHNS*(BH_center_y-y_CM);
-  By =  Omega_BHNS*(BH_center_x-x_CM);
-  Bz = Pgetd("BH_Vz");
-  B2 = Pow2(Bx)+Pow2(By)+Pow2(Bz);
-
-  /* rotation */
-  if (!EQL(chi,0))/* otherwise tR is 0 */
-  {
-    phiz = -arctan(chi_U1,chi_U0);
-    phiy = -acos(chi_U2/chi);
-    assert(isfinite(phiy));
-  }
-
-  for (ijk = 0; ijk < nn; ++ijk) 
-  {
-    double x,y,z;
-    x = patch->node[ijk]->x[0]-BH_center_x;
-    y = patch->node[ijk]->x[1]-BH_center_y;
-    z = patch->node[ijk]->x[2]-BH_center_z;
-
-    _ddgamma_D2D2D0D2[ijk]=
-    ddg22_D0D2(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _ddgamma_D0D1D0D1[ijk]=
-    ddg01_D0D1(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _ddgamma_D1D1D0D1[ijk]=
-    ddg11_D0D1(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _ddgamma_D1D2D0D1[ijk]=
-    ddg12_D0D1(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _ddgamma_D0D0D1D0[ijk]=
-    ddg00_D1D0(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _ddgamma_D1D1D2D0[ijk]=
-    ddg11_D2D0(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _ddgamma_D0D0D0D1[ijk]=
-    ddg00_D0D1(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _ddgamma_D1D1D0D0[ijk]=
-    ddg11_D0D0(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _ddgamma_D0D0D2D2[ijk]=
-    ddg00_D2D2(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _ddgamma_D2D2D1D1[ijk]=
-    ddg22_D1D1(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _ddgamma_D2D2D2D2[ijk]=
-    ddg22_D2D2(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _ddgamma_D0D0D2D0[ijk]=
-    ddg00_D2D0(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _ddgamma_D0D2D2D1[ijk]=
-    ddg02_D2D1(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _ddgamma_D1D2D0D2[ijk]=
-    ddg12_D0D2(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _ddgamma_D1D2D1D0[ijk]=
-    ddg12_D1D0(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _ddgamma_D2D2D2D0[ijk]=
-    ddg22_D2D0(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _ddgamma_D0D0D0D0[ijk]=
-    ddg00_D0D0(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _ddgamma_D0D0D1D1[ijk]=
-    ddg00_D1D1(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _ddgamma_D0D1D0D2[ijk]=
-    ddg01_D0D2(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _ddgamma_D1D2D1D1[ijk]=
-    ddg12_D1D1(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _ddgamma_D0D2D1D1[ijk]=
-    ddg02_D1D1(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _ddgamma_D1D2D2D2[ijk]=
-    ddg12_D2D2(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _ddgamma_D2D2D1D2[ijk]=
-    ddg22_D1D2(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _ddgamma_D0D1D2D0[ijk]=
-    ddg01_D2D0(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _ddgamma_D0D2D2D0[ijk]=
-    ddg02_D2D0(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _ddgamma_D0D1D1D0[ijk]=
-    ddg01_D1D0(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _ddgamma_D1D2D2D0[ijk]=
-    ddg12_D2D0(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _ddgamma_D1D1D1D0[ijk]=
-    ddg11_D1D0(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _ddgamma_D1D2D1D2[ijk]=
-    ddg12_D1D2(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _ddgamma_D1D2D0D0[ijk]=
-    ddg12_D0D0(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _ddgamma_D0D0D0D2[ijk]=
-    ddg00_D0D2(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _ddgamma_D2D2D2D1[ijk]=
-    ddg22_D2D1(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _ddgamma_D0D2D0D0[ijk]=
-    ddg02_D0D0(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _ddgamma_D0D2D0D1[ijk]=
-    ddg02_D0D1(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _ddgamma_D1D1D1D1[ijk]=
-    ddg11_D1D1(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _ddgamma_D0D1D0D0[ijk]=
-    ddg01_D0D0(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _ddgamma_D1D1D2D2[ijk]=
-    ddg11_D2D2(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _ddgamma_D0D2D1D2[ijk]=
-    ddg02_D1D2(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _ddgamma_D0D1D2D1[ijk]=
-    ddg01_D2D1(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _ddgamma_D0D1D1D2[ijk]=
-    ddg01_D1D2(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _ddgamma_D1D1D2D1[ijk]=
-    ddg11_D2D1(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _ddgamma_D0D1D1D1[ijk]=
-    ddg01_D1D1(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _ddgamma_D0D2D1D0[ijk]=
-    ddg02_D1D0(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _ddgamma_D2D2D1D0[ijk]=
-    ddg22_D1D0(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _ddgamma_D0D1D2D2[ijk]=
-    ddg01_D2D2(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _ddgamma_D2D2D0D0[ijk]=
-    ddg22_D0D0(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _ddgamma_D0D0D2D1[ijk]=
-    ddg00_D2D1(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _ddgamma_D0D2D2D2[ijk]=
-    ddg02_D2D2(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _ddgamma_D1D1D1D2[ijk]=
-    ddg11_D1D2(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _ddgamma_D1D2D2D1[ijk]=
-    ddg12_D2D1(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _ddgamma_D0D0D1D2[ijk]=
-    ddg00_D1D2(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _ddgamma_D0D2D0D2[ijk]=
-    ddg02_D0D2(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _ddgamma_D1D1D0D2[ijk]=
-    ddg11_D0D2(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _ddgamma_D2D2D0D1[ijk]=
-    ddg22_D0D1(x,y,z,r0,M_BH,a_BH,Lambda);
-  }	
-}
-
-void bbn_free_data_dddg_analytic(
-	Patch_T *const patch, 
-	double *(*get_v)(const char *const fname,void *params),
-	void *params);
-void bbn_free_data_dddg_analytic(
-	Patch_T *const patch, 
-	double *(*get_v)(const char *const fname,void *params),
-	void *params)
-{
-  const double r0          = Pgetd("BH_KerrSchild_RollOff");
-  const double BH_center_x = Pgetd("BH_center_x");
-  const double BH_center_y = Pgetd("BH_center_y");
-  const double BH_center_z = Pgetd("BH_center_z");
-  const double M_BH        = Pgetd("BH_irreducible_mass");
-  const double a_BH        = Pgetd("BH_net_spin");
-  const double chi_U0   = Pgetd("BH_chi_U0");
-  const double chi_U1   = Pgetd("BH_chi_U1");
-  const double chi_U2   = Pgetd("BH_chi_U2");
-  const double y_CM = Pgetd("y_CM");
-  const double x_CM = Pgetd("x_CM")
-  const double Omega_BHNS = Pgetd("BH_NS_angular_velocity");
-  const double chi = sqrt(Pow2(chi_U0)+Pow2(chi_U1)+Pow2(chi_U2));
-  const unsigned nn = patch->nn;
-  double phiy = 0,phiz = 0;
-  double Bx,By,Bz,B2;/* B = v/c */
-  unsigned ijk;
-
-  assert(LSSEQL(chi,1));
-
-  /* boost */
-  Bx = -Omega_BHNS*(BH_center_y-y_CM);
-  By =  Omega_BHNS*(BH_center_x-x_CM);
-  Bz = Pgetd("BH_Vz");
-  B2 = Pow2(Bx)+Pow2(By)+Pow2(Bz);
-
-  /* rotation */
-  if (!EQL(chi,0))/* otherwise tR is 0 */
-  {
-    phiz = -arctan(chi_U1,chi_U0);
-    phiy = -acos(chi_U2/chi);
-    assert(isfinite(phiy));
-  }
-
-  for (ijk = 0; ijk < nn; ++ijk) 
-  {
-    double x,y,z;
-    x = patch->node[ijk]->x[0]-BH_center_x;
-    y = patch->node[ijk]->x[1]-BH_center_y;
-    z = patch->node[ijk]->x[2]-BH_center_z;
-
-    _dddgamma_D0D1D2D2D1[ijk]=
-    dddg01_D2D2D1(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dddgamma_D0D1D2D0D1[ijk]=
-    dddg01_D2D0D1(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dddgamma_D1D2D0D2D0[ijk]=
-    dddg12_D0D2D0(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dddgamma_D1D1D1D2D1[ijk]=
-    dddg11_D1D2D1(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dddgamma_D0D2D0D0D1[ijk]=
-    dddg02_D0D0D1(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dddgamma_D0D2D0D2D2[ijk]=
-    dddg02_D0D2D2(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dddgamma_D2D2D2D1D2[ijk]=
-    dddg22_D2D1D2(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dddgamma_D0D1D0D2D0[ijk]=
-    dddg01_D0D2D0(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dddgamma_D1D1D2D2D0[ijk]=
-    dddg11_D2D2D0(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dddgamma_D0D2D0D2D1[ijk]=
-    dddg02_D0D2D1(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dddgamma_D1D1D2D1D0[ijk]=
-    dddg11_D2D1D0(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dddgamma_D1D1D0D1D2[ijk]=
-    dddg11_D0D1D2(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dddgamma_D0D2D1D1D0[ijk]=
-    dddg02_D1D1D0(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dddgamma_D1D1D1D0D1[ijk]=
-    dddg11_D1D0D1(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dddgamma_D0D0D2D1D1[ijk]=
-    dddg00_D2D1D1(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dddgamma_D0D1D2D1D2[ijk]=
-    dddg01_D2D1D2(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dddgamma_D0D0D0D1D1[ijk]=
-    dddg00_D0D1D1(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dddgamma_D2D2D1D2D1[ijk]=
-    dddg22_D1D2D1(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dddgamma_D1D1D1D2D2[ijk]=
-    dddg11_D1D2D2(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dddgamma_D2D2D2D2D1[ijk]=
-    dddg22_D2D2D1(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dddgamma_D2D2D1D0D0[ijk]=
-    dddg22_D1D0D0(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dddgamma_D0D1D2D1D1[ijk]=
-    dddg01_D2D1D1(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dddgamma_D1D1D2D2D2[ijk]=
-    dddg11_D2D2D2(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dddgamma_D1D2D1D0D1[ijk]=
-    dddg12_D1D0D1(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dddgamma_D0D1D1D1D0[ijk]=
-    dddg01_D1D1D0(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dddgamma_D2D2D2D0D1[ijk]=
-    dddg22_D2D0D1(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dddgamma_D1D2D2D2D2[ijk]=
-    dddg12_D2D2D2(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dddgamma_D1D2D1D2D1[ijk]=
-    dddg12_D1D2D1(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dddgamma_D2D2D0D2D1[ijk]=
-    dddg22_D0D2D1(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dddgamma_D1D1D2D1D2[ijk]=
-    dddg11_D2D1D2(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dddgamma_D1D2D2D1D0[ijk]=
-    dddg12_D2D1D0(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dddgamma_D1D2D0D0D1[ijk]=
-    dddg12_D0D0D1(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dddgamma_D0D2D0D1D1[ijk]=
-    dddg02_D0D1D1(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dddgamma_D0D2D1D0D1[ijk]=
-    dddg02_D1D0D1(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dddgamma_D0D0D0D1D2[ijk]=
-    dddg00_D0D1D2(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dddgamma_D0D0D2D1D2[ijk]=
-    dddg00_D2D1D2(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dddgamma_D0D1D0D1D0[ijk]=
-    dddg01_D0D1D0(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dddgamma_D1D2D1D0D0[ijk]=
-    dddg12_D1D0D0(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dddgamma_D0D2D1D0D0[ijk]=
-    dddg02_D1D0D0(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dddgamma_D1D2D0D1D1[ijk]=
-    dddg12_D0D1D1(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dddgamma_D0D1D2D0D2[ijk]=
-    dddg01_D2D0D2(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dddgamma_D1D1D2D0D0[ijk]=
-    dddg11_D2D0D0(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dddgamma_D0D1D2D2D2[ijk]=
-    dddg01_D2D2D2(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dddgamma_D0D0D2D0D2[ijk]=
-    dddg00_D2D0D2(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dddgamma_D0D0D0D0D2[ijk]=
-    dddg00_D0D0D2(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dddgamma_D1D1D0D1D1[ijk]=
-    dddg11_D0D1D1(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dddgamma_D2D2D0D0D1[ijk]=
-    dddg22_D0D0D1(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dddgamma_D0D0D1D2D2[ijk]=
-    dddg00_D1D2D2(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dddgamma_D1D1D0D2D0[ijk]=
-    dddg11_D0D2D0(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dddgamma_D0D1D1D2D0[ijk]=
-    dddg01_D1D2D0(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dddgamma_D1D1D0D0D1[ijk]=
-    dddg11_D0D0D1(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dddgamma_D1D1D0D0D2[ijk]=
-    dddg11_D0D0D2(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dddgamma_D1D2D0D1D2[ijk]=
-    dddg12_D0D1D2(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dddgamma_D0D0D1D0D2[ijk]=
-    dddg00_D1D0D2(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dddgamma_D0D0D0D2D0[ijk]=
-    dddg00_D0D2D0(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dddgamma_D2D2D2D1D1[ijk]=
-    dddg22_D2D1D1(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dddgamma_D0D2D0D0D2[ijk]=
-    dddg02_D0D0D2(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dddgamma_D2D2D2D2D0[ijk]=
-    dddg22_D2D2D0(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dddgamma_D0D2D0D0D0[ijk]=
-    dddg02_D0D0D0(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dddgamma_D2D2D1D2D0[ijk]=
-    dddg22_D1D2D0(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dddgamma_D1D1D0D1D0[ijk]=
-    dddg11_D0D1D0(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dddgamma_D1D2D2D0D2[ijk]=
-    dddg12_D2D0D2(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dddgamma_D0D1D0D1D1[ijk]=
-    dddg01_D0D1D1(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dddgamma_D2D2D0D2D2[ijk]=
-    dddg22_D0D2D2(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dddgamma_D1D2D2D1D2[ijk]=
-    dddg12_D2D1D2(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dddgamma_D2D2D1D1D1[ijk]=
-    dddg22_D1D1D1(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dddgamma_D0D0D0D0D0[ijk]=
-    dddg00_D0D0D0(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dddgamma_D0D0D1D2D1[ijk]=
-    dddg00_D1D2D1(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dddgamma_D1D1D1D1D0[ijk]=
-    dddg11_D1D1D0(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dddgamma_D1D1D1D1D1[ijk]=
-    dddg11_D1D1D1(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dddgamma_D1D1D1D2D0[ijk]=
-    dddg11_D1D2D0(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dddgamma_D0D1D0D2D1[ijk]=
-    dddg01_D0D2D1(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dddgamma_D2D2D1D1D0[ijk]=
-    dddg22_D1D1D0(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dddgamma_D1D2D2D2D0[ijk]=
-    dddg12_D2D2D0(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dddgamma_D0D0D1D1D2[ijk]=
-    dddg00_D1D1D2(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dddgamma_D0D2D0D2D0[ijk]=
-    dddg02_D0D2D0(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dddgamma_D0D0D1D0D0[ijk]=
-    dddg00_D1D0D0(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dddgamma_D0D2D2D1D0[ijk]=
-    dddg02_D2D1D0(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dddgamma_D0D2D2D0D0[ijk]=
-    dddg02_D2D0D0(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dddgamma_D1D1D1D1D2[ijk]=
-    dddg11_D1D1D2(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dddgamma_D0D0D2D2D1[ijk]=
-    dddg00_D2D2D1(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dddgamma_D2D2D0D1D0[ijk]=
-    dddg22_D0D1D0(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dddgamma_D1D1D2D0D2[ijk]=
-    dddg11_D2D0D2(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dddgamma_D0D1D1D1D1[ijk]=
-    dddg01_D1D1D1(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dddgamma_D1D2D0D0D0[ijk]=
-    dddg12_D0D0D0(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dddgamma_D1D2D0D0D2[ijk]=
-    dddg12_D0D0D2(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dddgamma_D2D2D0D1D2[ijk]=
-    dddg22_D0D1D2(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dddgamma_D0D0D1D1D1[ijk]=
-    dddg00_D1D1D1(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dddgamma_D0D2D0D1D0[ijk]=
-    dddg02_D0D1D0(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dddgamma_D0D2D1D2D1[ijk]=
-    dddg02_D1D2D1(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dddgamma_D1D2D1D2D2[ijk]=
-    dddg12_D1D2D2(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dddgamma_D0D1D1D0D0[ijk]=
-    dddg01_D1D0D0(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dddgamma_D0D0D1D2D0[ijk]=
-    dddg00_D1D2D0(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dddgamma_D1D2D1D1D0[ijk]=
-    dddg12_D1D1D0(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dddgamma_D1D2D2D2D1[ijk]=
-    dddg12_D2D2D1(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dddgamma_D0D1D0D0D0[ijk]=
-    dddg01_D0D0D0(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dddgamma_D1D2D2D1D1[ijk]=
-    dddg12_D2D1D1(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dddgamma_D0D0D0D1D0[ijk]=
-    dddg00_D0D1D0(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dddgamma_D0D0D0D0D1[ijk]=
-    dddg00_D0D0D1(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dddgamma_D0D0D0D2D2[ijk]=
-    dddg00_D0D2D2(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dddgamma_D1D2D0D2D1[ijk]=
-    dddg12_D0D2D1(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dddgamma_D2D2D1D1D2[ijk]=
-    dddg22_D1D1D2(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dddgamma_D1D2D1D1D1[ijk]=
-    dddg12_D1D1D1(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dddgamma_D0D0D1D0D1[ijk]=
-    dddg00_D1D0D1(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dddgamma_D0D1D0D1D2[ijk]=
-    dddg01_D0D1D2(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dddgamma_D0D2D1D2D2[ijk]=
-    dddg02_D1D2D2(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dddgamma_D1D1D0D2D2[ijk]=
-    dddg11_D0D2D2(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dddgamma_D0D1D0D0D2[ijk]=
-    dddg01_D0D0D2(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dddgamma_D0D1D0D2D2[ijk]=
-    dddg01_D0D2D2(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dddgamma_D0D2D1D2D0[ijk]=
-    dddg02_D1D2D0(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dddgamma_D0D1D0D0D1[ijk]=
-    dddg01_D0D0D1(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dddgamma_D1D2D1D1D2[ijk]=
-    dddg12_D1D1D2(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dddgamma_D2D2D0D1D1[ijk]=
-    dddg22_D0D1D1(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dddgamma_D1D1D2D2D1[ijk]=
-    dddg11_D2D2D1(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dddgamma_D0D1D2D1D0[ijk]=
-    dddg01_D2D1D0(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dddgamma_D0D2D1D0D2[ijk]=
-    dddg02_D1D0D2(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dddgamma_D2D2D2D1D0[ijk]=
-    dddg22_D2D1D0(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dddgamma_D0D1D1D1D2[ijk]=
-    dddg01_D1D1D2(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dddgamma_D1D2D1D0D2[ijk]=
-    dddg12_D1D0D2(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dddgamma_D0D0D2D2D0[ijk]=
-    dddg00_D2D2D0(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dddgamma_D0D1D1D0D1[ijk]=
-    dddg01_D1D0D1(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dddgamma_D0D1D2D2D0[ijk]=
-    dddg01_D2D2D0(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dddgamma_D0D2D0D1D2[ijk]=
-    dddg02_D0D1D2(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dddgamma_D0D2D2D2D1[ijk]=
-    dddg02_D2D2D1(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dddgamma_D1D1D0D2D1[ijk]=
-    dddg11_D0D2D1(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dddgamma_D0D0D2D1D0[ijk]=
-    dddg00_D2D1D0(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dddgamma_D1D2D0D1D0[ijk]=
-    dddg12_D0D1D0(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dddgamma_D0D2D2D1D2[ijk]=
-    dddg02_D2D1D2(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dddgamma_D0D1D1D2D1[ijk]=
-    dddg01_D1D2D1(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dddgamma_D1D2D2D0D0[ijk]=
-    dddg12_D2D0D0(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dddgamma_D0D1D2D0D0[ijk]=
-    dddg01_D2D0D0(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dddgamma_D1D2D1D2D0[ijk]=
-    dddg12_D1D2D0(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dddgamma_D2D2D1D0D1[ijk]=
-    dddg22_D1D0D1(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dddgamma_D2D2D1D2D2[ijk]=
-    dddg22_D1D2D2(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dddgamma_D1D1D1D0D0[ijk]=
-    dddg11_D1D0D0(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dddgamma_D0D1D1D0D2[ijk]=
-    dddg01_D1D0D2(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dddgamma_D0D2D2D2D0[ijk]=
-    dddg02_D2D2D0(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dddgamma_D2D2D2D2D2[ijk]=
-    dddg22_D2D2D2(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dddgamma_D0D2D2D0D1[ijk]=
-    dddg02_D2D0D1(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dddgamma_D0D2D1D1D2[ijk]=
-    dddg02_D1D1D2(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dddgamma_D2D2D0D0D2[ijk]=
-    dddg22_D0D0D2(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dddgamma_D2D2D2D0D0[ijk]=
-    dddg22_D2D0D0(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dddgamma_D2D2D0D2D0[ijk]=
-    dddg22_D0D2D0(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dddgamma_D1D1D2D0D1[ijk]=
-    dddg11_D2D0D1(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dddgamma_D2D2D0D0D0[ijk]=
-    dddg22_D0D0D0(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dddgamma_D2D2D2D0D2[ijk]=
-    dddg22_D2D0D2(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dddgamma_D0D2D2D0D2[ijk]=
-    dddg02_D2D0D2(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dddgamma_D0D2D2D2D2[ijk]=
-    dddg02_D2D2D2(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dddgamma_D1D1D0D0D0[ijk]=
-    dddg11_D0D0D0(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dddgamma_D1D2D2D0D1[ijk]=
-    dddg12_D2D0D1(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dddgamma_D0D0D1D1D0[ijk]=
-    dddg00_D1D1D0(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dddgamma_D1D1D1D0D2[ijk]=
-    dddg11_D1D0D2(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dddgamma_D2D2D1D0D2[ijk]=
-    dddg22_D1D0D2(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dddgamma_D0D2D1D1D1[ijk]=
-    dddg02_D1D1D1(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dddgamma_D0D0D2D0D0[ijk]=
-    dddg00_D2D0D0(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dddgamma_D0D1D1D2D2[ijk]=
-    dddg01_D1D2D2(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dddgamma_D0D0D2D0D1[ijk]=
-    dddg00_D2D0D1(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dddgamma_D0D0D0D2D1[ijk]=
-    dddg00_D0D2D1(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dddgamma_D0D2D2D1D1[ijk]=
-    dddg02_D2D1D1(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dddgamma_D0D0D2D2D2[ijk]=
-    dddg00_D2D2D2(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dddgamma_D1D1D2D1D1[ijk]=
-    dddg11_D2D1D1(x,y,z,r0,M_BH,a_BH,Lambda);
-
-    _dddgamma_D1D2D0D2D2[ijk]=
-    dddg12_D0D2D2(x,y,z,r0,M_BH,a_BH,Lambda);
-  }
-}
-
-Command["cat"];
-Command["rm"];
+print('')
+print('')
+print('/* prefix is used to populate the following fields in different')
+print('// collocation points */')
+print('void bbn_free_data_dg_analytic(')
+print('	Patch_T *const patch, ')
+print('	double *(*get_v)(const char *const fname,void *params),')
+print('	void *params);')
+print('void bbn_free_data_dg_analytic(')
+print('	Patch_T *const patch, ')
+print('	double *(*get_v)(const char *const fname,void *params),')
+print('	void *params)')
+print('{')
+print('  const double r0          = Pgetd("BH_KerrSchild_RollOff");')
+print('  const double BH_center_x = Pgetd("BH_center_x");')
+print('  const double BH_center_y = Pgetd("BH_center_y");')
+print('  const double BH_center_z = Pgetd("BH_center_z");')
+print('  const double M_BH        = Pgetd("BH_irreducible_mass");')
+print('  const double a_BH        = Pgetd("BH_net_spin");')
+print('  const double chi_U0   = Pgetd("BH_chi_U0");')
+print('  const double chi_U1   = Pgetd("BH_chi_U1");')
+print('  const double chi_U2   = Pgetd("BH_chi_U2");')
+print('  const double y_CM = Pgetd("y_CM");')
+print('  const double x_CM = Pgetd("x_CM")')
+print('  const double Omega_BHNS = Pgetd("BH_NS_angular_velocity");')
+print('  const double chi = sqrt(Pow2(chi_U0)+Pow2(chi_U1)+Pow2(chi_U2));')
+print('  const unsigned nn = patch->nn;')
+print('  double phiy = 0,phiz = 0;')
+print('  double Bx,By,Bz,B2;/* B = v/c */')
+print('  unsigned ijk;')
+print('')
+print('  assert(LSSEQL(chi,1));')
+print('')
+print('  /* boost */')
+print('  Bx = -Omega_BHNS*(BH_center_y-y_CM);')
+print('  By =  Omega_BHNS*(BH_center_x-x_CM);')
+print('  Bz = Pgetd("BH_Vz");')
+print('  B2 = Pow2(Bx)+Pow2(By)+Pow2(Bz);')
+print('')
+print('  /* rotation */')
+print('  if (!EQL(chi,0))/* otherwise tR is 0 */')
+print('  {')
+print('    phiz = -arctan(chi_U1,chi_U0);')
+print('    phiy = -acos(chi_U2/chi);')
+print('    assert(isfinite(phiy));')
+print('  }')
+print('  ')
+print('double *const   dgamma_D1D2D2 = get_v("dgamma_D1D2D2",params);')
+print('double *const   dgamma_D0D0D1 = get_v("dgamma_D0D0D1",params);')
+print('double *const   dgamma_D0D2D1 = get_v("dgamma_D0D2D1",params);')
+print('double *const   dgamma_D0D1D0 = get_v("dgamma_D0D1D0",params);')
+print('double *const   dgamma_D1D2D1 = get_v("dgamma_D1D2D1",params);')
+print('double *const   dgamma_D2D2D0 = get_v("dgamma_D2D2D0",params);')
+print('double *const   dgamma_D0D0D0 = get_v("dgamma_D0D0D0",params);')
+print('double *const   dgamma_D0D0D2 = get_v("dgamma_D0D0D2",params);')
+print('double *const   dgamma_D0D2D2 = get_v("dgamma_D0D2D2",params);')
+print('double *const   dgamma_D2D2D1 = get_v("dgamma_D2D2D1",params);')
+print('double *const   dgamma_D0D1D1 = get_v("dgamma_D0D1D1",params);')
+print('double *const   dgamma_D0D2D0 = get_v("dgamma_D0D2D0",params);')
+print('double *const   dgamma_D1D2D0 = get_v("dgamma_D1D2D0",params);')
+print('double *const   dgamma_D1D1D1 = get_v("dgamma_D1D1D1",params);')
+print('double *const   dgamma_D0D1D2 = get_v("dgamma_D0D1D2",params);')
+print('double *const   dgamma_D1D1D0 = get_v("dgamma_D1D1D0",params);')
+print('double *const   dgamma_D1D1D2 = get_v("dgamma_D1D1D2",params);')
+print('double *const   dgamma_D2D2D2 = get_v("dgamma_D2D2D2",params);')
+print('')
+print('  for (ijk = 0; ijk < nn; ++ijk) ')
+print('  {')
+print('    double x,y,z;')
+print('    x = patch->node[ijk]->x[0]-BH_center_x;')
+print('    y = patch->node[ijk]->x[1]-BH_center_y;')
+print('    z = patch->node[ijk]->x[2]-BH_center_z;')
+print('')
+print('    _dgamma_D1D2D2[ijk]=')
+print('    mcode(g12_D2)')
+print('')
+print('    _dgamma_D0D0D1[ijk]=')
+print('    mcode(g00_D1)')
+print('')
+print('    _dgamma_D0D2D1[ijk]=')
+print('    mcode(g02_D1)')
+print('')
+print('    _dgamma_D0D1D0[ijk]=')
+print('    mcode(g01_D0)')
+print('')
+print('    _dgamma_D1D2D1[ijk]=')
+print('    mcode(g12_D1)')
+print('')
+print('    _dgamma_D2D2D0[ijk]=')
+print('    mcode(g22_D0)')
+print('')
+print('    _dgamma_D0D0D0[ijk]=')
+print('    mcode(g00_D0)')
+print('')
+print('    _dgamma_D0D0D2[ijk]=')
+print('    mcode(g00_D2)')
+print('')
+print('    _dgamma_D0D2D2[ijk]=')
+print('    mcode(g02_D2)')
+print('')
+print('    _dgamma_D2D2D1[ijk]=')
+print('    mcode(g22_D1)')
+print('')
+print('    _dgamma_D0D1D1[ijk]=')
+print('    mcode(g01_D1)')
+print('')
+print('    _dgamma_D0D2D0[ijk]=')
+print('    mcode(g02_D0)')
+print('')
+print('    _dgamma_D1D2D0[ijk]=')
+print('    mcode(g12_D0)')
+print('')
+print('    _dgamma_D1D1D1[ijk]=')
+print('    mcode(g11_D1)')
+print('')
+print('    _dgamma_D0D1D2[ijk]=')
+print('    mcode(g01_D2)')
+print('')
+print('    _dgamma_D1D1D0[ijk]=')
+print('    mcode(g11_D0)')
+print('')
+print('    _dgamma_D1D1D2[ijk]=')
+print('    mcode(g11_D2)')
+print('')
+print('    _dgamma_D2D2D2[ijk]=')
+print('    mcode(g22_D2)')
+print('')
+print('  }')
+print('}')
+print('')
+print('void bbn_free_data_ddg_analytic(')
+print('	Patch_T *const patch, ')
+print('	double *(*get_v)(const char *const fname,void *params),')
+print('	void *params);')
+print('void bbn_free_data_ddg_analytic(')
+print('	Patch_T *const patch, ')
+print('	double *(*get_v)(const char *const fname,void *params),')
+print('	void *params)')
+print('{')
+print('')
+print('  const double r0          = Pgetd("BH_KerrSchild_RollOff");')
+print('  const double BH_center_x = Pgetd("BH_center_x");')
+print('  const double BH_center_y = Pgetd("BH_center_y");')
+print('  const double BH_center_z = Pgetd("BH_center_z");')
+print('  const double M_BH        = Pgetd("BH_irreducible_mass");')
+print('  const double a_BH        = Pgetd("BH_net_spin");')
+print('  const double chi_U0   = Pgetd("BH_chi_U0");')
+print('  const double chi_U1   = Pgetd("BH_chi_U1");')
+print('  const double chi_U2   = Pgetd("BH_chi_U2");')
+print('  const double y_CM = Pgetd("y_CM");')
+print('  const double x_CM = Pgetd("x_CM")')
+print('  const double Omega_BHNS = Pgetd("BH_NS_angular_velocity");')
+print('  const double chi = sqrt(Pow2(chi_U0)+Pow2(chi_U1)+Pow2(chi_U2));')
+print('  const unsigned nn = patch->nn;')
+print('  double phiy = 0,phiz = 0;')
+print('  double Bx,By,Bz,B2;/* B = v/c */')
+print('  unsigned ijk;')
+print('')
+print('  assert(LSSEQL(chi,1));')
+print('')
+print('  /* boost */')
+print('  Bx = -Omega_BHNS*(BH_center_y-y_CM);')
+print('  By =  Omega_BHNS*(BH_center_x-x_CM);')
+print('  Bz = Pgetd("BH_Vz");')
+print('  B2 = Pow2(Bx)+Pow2(By)+Pow2(Bz);')
+print('')
+print('  /* rotation */')
+print('  if (!EQL(chi,0))/* otherwise tR is 0 */')
+print('  {')
+print('    phiz = -arctan(chi_U1,chi_U0);')
+print('    phiy = -acos(chi_U2/chi);')
+print('    assert(isfinite(phiy));')
+print('  }')
+print('')
+print('double *const   ddgamma_D2D2D0D2 = get_v("ddgamma_D2D2D0D2",params);')
+print('double *const   ddgamma_D0D1D0D1 = get_v("ddgamma_D0D1D0D1",params);')
+print('double *const   ddgamma_D1D1D0D1 = get_v("ddgamma_D1D1D0D1",params);')
+print('double *const   ddgamma_D1D2D0D1 = get_v("ddgamma_D1D2D0D1",params);')
+print('double *const   ddgamma_D0D0D1D0 = get_v("ddgamma_D0D0D1D0",params);')
+print('double *const   ddgamma_D1D1D2D0 = get_v("ddgamma_D1D1D2D0",params);')
+print('double *const   ddgamma_D0D0D0D1 = get_v("ddgamma_D0D0D0D1",params);')
+print('double *const   ddgamma_D1D1D0D0 = get_v("ddgamma_D1D1D0D0",params);')
+print('double *const   ddgamma_D0D0D2D2 = get_v("ddgamma_D0D0D2D2",params);')
+print('double *const   ddgamma_D2D2D1D1 = get_v("ddgamma_D2D2D1D1",params);')
+print('double *const   ddgamma_D2D2D2D2 = get_v("ddgamma_D2D2D2D2",params);')
+print('double *const   ddgamma_D0D0D2D0 = get_v("ddgamma_D0D0D2D0",params);')
+print('double *const   ddgamma_D0D2D2D1 = get_v("ddgamma_D0D2D2D1",params);')
+print('double *const   ddgamma_D1D2D0D2 = get_v("ddgamma_D1D2D0D2",params);')
+print('double *const   ddgamma_D1D2D1D0 = get_v("ddgamma_D1D2D1D0",params);')
+print('double *const   ddgamma_D2D2D2D0 = get_v("ddgamma_D2D2D2D0",params);')
+print('double *const   ddgamma_D0D0D0D0 = get_v("ddgamma_D0D0D0D0",params);')
+print('double *const   ddgamma_D0D0D1D1 = get_v("ddgamma_D0D0D1D1",params);')
+print('double *const   ddgamma_D0D1D0D2 = get_v("ddgamma_D0D1D0D2",params);')
+print('double *const   ddgamma_D1D2D1D1 = get_v("ddgamma_D1D2D1D1",params);')
+print('double *const   ddgamma_D0D2D1D1 = get_v("ddgamma_D0D2D1D1",params);')
+print('double *const   ddgamma_D1D2D2D2 = get_v("ddgamma_D1D2D2D2",params);')
+print('double *const   ddgamma_D2D2D1D2 = get_v("ddgamma_D2D2D1D2",params);')
+print('double *const   ddgamma_D0D1D2D0 = get_v("ddgamma_D0D1D2D0",params);')
+print('double *const   ddgamma_D0D2D2D0 = get_v("ddgamma_D0D2D2D0",params);')
+print('double *const   ddgamma_D0D1D1D0 = get_v("ddgamma_D0D1D1D0",params);')
+print('double *const   ddgamma_D1D2D2D0 = get_v("ddgamma_D1D2D2D0",params);')
+print('double *const   ddgamma_D1D1D1D0 = get_v("ddgamma_D1D1D1D0",params);')
+print('double *const   ddgamma_D1D2D1D2 = get_v("ddgamma_D1D2D1D2",params);')
+print('double *const   ddgamma_D1D2D0D0 = get_v("ddgamma_D1D2D0D0",params);')
+print('double *const   ddgamma_D0D0D0D2 = get_v("ddgamma_D0D0D0D2",params);')
+print('double *const   ddgamma_D2D2D2D1 = get_v("ddgamma_D2D2D2D1",params);')
+print('double *const   ddgamma_D0D2D0D0 = get_v("ddgamma_D0D2D0D0",params);')
+print('double *const   ddgamma_D0D2D0D1 = get_v("ddgamma_D0D2D0D1",params);')
+print('double *const   ddgamma_D1D1D1D1 = get_v("ddgamma_D1D1D1D1",params);')
+print('double *const   ddgamma_D0D1D0D0 = get_v("ddgamma_D0D1D0D0",params);')
+print('double *const   ddgamma_D1D1D2D2 = get_v("ddgamma_D1D1D2D2",params);')
+print('double *const   ddgamma_D0D2D1D2 = get_v("ddgamma_D0D2D1D2",params);')
+print('double *const   ddgamma_D0D1D2D1 = get_v("ddgamma_D0D1D2D1",params);')
+print('double *const   ddgamma_D0D1D1D2 = get_v("ddgamma_D0D1D1D2",params);')
+print('double *const   ddgamma_D1D1D2D1 = get_v("ddgamma_D1D1D2D1",params);')
+print('double *const   ddgamma_D0D1D1D1 = get_v("ddgamma_D0D1D1D1",params);')
+print('double *const   ddgamma_D0D2D1D0 = get_v("ddgamma_D0D2D1D0",params);')
+print('double *const   ddgamma_D2D2D1D0 = get_v("ddgamma_D2D2D1D0",params);')
+print('double *const   ddgamma_D0D1D2D2 = get_v("ddgamma_D0D1D2D2",params);')
+print('double *const   ddgamma_D2D2D0D0 = get_v("ddgamma_D2D2D0D0",params);')
+print('double *const   ddgamma_D0D0D2D1 = get_v("ddgamma_D0D0D2D1",params);')
+print('double *const   ddgamma_D0D2D2D2 = get_v("ddgamma_D0D2D2D2",params);')
+print('double *const   ddgamma_D1D1D1D2 = get_v("ddgamma_D1D1D1D2",params);')
+print('double *const   ddgamma_D1D2D2D1 = get_v("ddgamma_D1D2D2D1",params);')
+print('double *const   ddgamma_D0D0D1D2 = get_v("ddgamma_D0D0D1D2",params);')
+print('double *const   ddgamma_D0D2D0D2 = get_v("ddgamma_D0D2D0D2",params);')
+print('double *const   ddgamma_D1D1D0D2 = get_v("ddgamma_D1D1D0D2",params);')
+print('double *const   ddgamma_D2D2D0D1 = get_v("ddgamma_D2D2D0D1",params);')
+print('')
+print('  for (ijk = 0; ijk < nn; ++ijk) ')
+print('  {')
+print('    double x,y,z;')
+print('    x = patch->node[ijk]->x[0]-BH_center_x;')
+print('    y = patch->node[ijk]->x[1]-BH_center_y;')
+print('    z = patch->node[ijk]->x[2]-BH_center_z;')
+print('')
+print('    _ddgamma_D2D2D0D2[ijk]=')
+print('    mcode(dg22_D0D2)')
+print('')
+print('    _ddgamma_D0D1D0D1[ijk]=')
+print('    mcode(dg01_D0D1)')
+print('')
+print('    _ddgamma_D1D1D0D1[ijk]=')
+print('    mcode(dg11_D0D1)')
+print('')
+print('    _ddgamma_D1D2D0D1[ijk]=')
+print('    mcode(dg12_D0D1)')
+print('')
+print('    _ddgamma_D0D0D1D0[ijk]=')
+print('    mcode(dg00_D1D0)')
+print('')
+print('    _ddgamma_D1D1D2D0[ijk]=')
+print('    mcode(dg11_D2D0)')
+print('')
+print('    _ddgamma_D0D0D0D1[ijk]=')
+print('    mcode(dg00_D0D1)')
+print('')
+print('    _ddgamma_D1D1D0D0[ijk]=')
+print('    mcode(dg11_D0D0)')
+print('')
+print('    _ddgamma_D0D0D2D2[ijk]=')
+print('    mcode(dg00_D2D2)')
+print('')
+print('    _ddgamma_D2D2D1D1[ijk]=')
+print('    mcode(dg22_D1D1)')
+print('')
+print('    _ddgamma_D2D2D2D2[ijk]=')
+print('    mcode(dg22_D2D2)')
+print('')
+print('    _ddgamma_D0D0D2D0[ijk]=')
+print('    mcode(dg00_D2D0)')
+print('')
+print('    _ddgamma_D0D2D2D1[ijk]=')
+print('    mcode(dg02_D2D1)')
+print('')
+print('    _ddgamma_D1D2D0D2[ijk]=')
+print('    mcode(dg12_D0D2)')
+print('')
+print('    _ddgamma_D1D2D1D0[ijk]=')
+print('    mcode(dg12_D1D0)')
+print('')
+print('    _ddgamma_D2D2D2D0[ijk]=')
+print('    mcode(dg22_D2D0)')
+print('')
+print('    _ddgamma_D0D0D0D0[ijk]=')
+print('    mcode(dg00_D0D0)')
+print('')
+print('    _ddgamma_D0D0D1D1[ijk]=')
+print('    mcode(dg00_D1D1)')
+print('')
+print('    _ddgamma_D0D1D0D2[ijk]=')
+print('    mcode(dg01_D0D2)')
+print('')
+print('    _ddgamma_D1D2D1D1[ijk]=')
+print('    mcode(dg12_D1D1)')
+print('')
+print('    _ddgamma_D0D2D1D1[ijk]=')
+print('    mcode(dg02_D1D1)')
+print('')
+print('    _ddgamma_D1D2D2D2[ijk]=')
+print('    mcode(dg12_D2D2)')
+print('')
+print('    _ddgamma_D2D2D1D2[ijk]=')
+print('    mcode(dg22_D1D2)')
+print('')
+print('    _ddgamma_D0D1D2D0[ijk]=')
+print('    mcode(dg01_D2D0)')
+print('')
+print('    _ddgamma_D0D2D2D0[ijk]=')
+print('    mcode(dg02_D2D0)')
+print('')
+print('    _ddgamma_D0D1D1D0[ijk]=')
+print('    mcode(dg01_D1D0)')
+print('')
+print('    _ddgamma_D1D2D2D0[ijk]=')
+print('    mcode(dg12_D2D0)')
+print('')
+print('    _ddgamma_D1D1D1D0[ijk]=')
+print('    mcode(dg11_D1D0)')
+print('')
+print('    _ddgamma_D1D2D1D2[ijk]=')
+print('    mcode(dg12_D1D2)')
+print('')
+print('    _ddgamma_D1D2D0D0[ijk]=')
+print('    mcode(dg12_D0D0)')
+print('')
+print('    _ddgamma_D0D0D0D2[ijk]=')
+print('    mcode(dg00_D0D2)')
+print('')
+print('    _ddgamma_D2D2D2D1[ijk]=')
+print('    mcode(dg22_D2D1)')
+print('')
+print('    _ddgamma_D0D2D0D0[ijk]=')
+print('    mcode(dg02_D0D0)')
+print('')
+print('    _ddgamma_D0D2D0D1[ijk]=')
+print('    mcode(dg02_D0D1)')
+print('')
+print('    _ddgamma_D1D1D1D1[ijk]=')
+print('    mcode(dg11_D1D1)')
+print('')
+print('    _ddgamma_D0D1D0D0[ijk]=')
+print('    mcode(dg01_D0D0)')
+print('')
+print('    _ddgamma_D1D1D2D2[ijk]=')
+print('    mcode(dg11_D2D2)')
+print('')
+print('    _ddgamma_D0D2D1D2[ijk]=')
+print('    mcode(dg02_D1D2)')
+print('')
+print('    _ddgamma_D0D1D2D1[ijk]=')
+print('    mcode(dg01_D2D1)')
+print('')
+print('    _ddgamma_D0D1D1D2[ijk]=')
+print('    mcode(dg01_D1D2)')
+print('')
+print('    _ddgamma_D1D1D2D1[ijk]=')
+print('    mcode(dg11_D2D1)')
+print('')
+print('    _ddgamma_D0D1D1D1[ijk]=')
+print('    mcode(dg01_D1D1)')
+print('')
+print('    _ddgamma_D0D2D1D0[ijk]=')
+print('    mcode(dg02_D1D0)')
+print('')
+print('    _ddgamma_D2D2D1D0[ijk]=')
+print('    mcode(dg22_D1D0)')
+print('')
+print('    _ddgamma_D0D1D2D2[ijk]=')
+print('    mcode(dg01_D2D2)')
+print('')
+print('    _ddgamma_D2D2D0D0[ijk]=')
+print('    mcode(dg22_D0D0)')
+print('')
+print('    _ddgamma_D0D0D2D1[ijk]=')
+print('    mcode(dg00_D2D1)')
+print('')
+print('    _ddgamma_D0D2D2D2[ijk]=')
+print('    mcode(dg02_D2D2)')
+print('')
+print('    _ddgamma_D1D1D1D2[ijk]=')
+print('    mcode(dg11_D1D2)')
+print('')
+print('    _ddgamma_D1D2D2D1[ijk]=')
+print('    mcode(dg12_D2D1)')
+print('')
+print('    _ddgamma_D0D0D1D2[ijk]=')
+print('    mcode(dg00_D1D2)')
+print('')
+print('    _ddgamma_D0D2D0D2[ijk]=')
+print('    mcode(dg02_D0D2)')
+print('')
+print('    _ddgamma_D1D1D0D2[ijk]=')
+print('    mcode(dg11_D0D2)')
+print('')
+print('    _ddgamma_D2D2D0D1[ijk]=')
+print('    mcode(dg22_D0D1)')
+print('  }	')
+print('}')
+print('')
+print('void bbn_free_data_dddg_analytic(')
+print('	Patch_T *const patch, ')
+print('	double *(*get_v)(const char *const fname,void *params),')
+print('	void *params);')
+print('void bbn_free_data_dddg_analytic(')
+print('	Patch_T *const patch, ')
+print('	double *(*get_v)(const char *const fname,void *params),')
+print('	void *params)')
+print('{')
+print('  const double r0          = Pgetd("BH_KerrSchild_RollOff");')
+print('  const double BH_center_x = Pgetd("BH_center_x");')
+print('  const double BH_center_y = Pgetd("BH_center_y");')
+print('  const double BH_center_z = Pgetd("BH_center_z");')
+print('  const double M_BH        = Pgetd("BH_irreducible_mass");')
+print('  const double a_BH        = Pgetd("BH_net_spin");')
+print('  const double chi_U0   = Pgetd("BH_chi_U0");')
+print('  const double chi_U1   = Pgetd("BH_chi_U1");')
+print('  const double chi_U2   = Pgetd("BH_chi_U2");')
+print('  const double y_CM = Pgetd("y_CM");')
+print('  const double x_CM = Pgetd("x_CM")')
+print('  const double Omega_BHNS = Pgetd("BH_NS_angular_velocity");')
+print('  const double chi = sqrt(Pow2(chi_U0)+Pow2(chi_U1)+Pow2(chi_U2));')
+print('  const unsigned nn = patch->nn;')
+print('  double phiy = 0,phiz = 0;')
+print('  double Bx,By,Bz,B2;/* B = v/c */')
+print('  unsigned ijk;')
+print('')
+print('  assert(LSSEQL(chi,1));')
+print('')
+print('  /* boost */')
+print('  Bx = -Omega_BHNS*(BH_center_y-y_CM);')
+print('  By =  Omega_BHNS*(BH_center_x-x_CM);')
+print('  Bz = Pgetd("BH_Vz");')
+print('  B2 = Pow2(Bx)+Pow2(By)+Pow2(Bz);')
+print('')
+print('  /* rotation */')
+print('  if (!EQL(chi,0))/* otherwise tR is 0 */')
+print('  {')
+print('    phiz = -arctan(chi_U1,chi_U0);')
+print('    phiy = -acos(chi_U2/chi);')
+print('    assert(isfinite(phiy));')
+print('  }')
+print('double *const   dddgamma_D0D1D2D2D1 = get_v("dddgamma_D0D1D2D2D1",params);')
+print('double *const   dddgamma_D0D1D2D0D1 = get_v("dddgamma_D0D1D2D0D1",params);')
+print('double *const   dddgamma_D1D2D0D2D0 = get_v("dddgamma_D1D2D0D2D0",params);')
+print('double *const   dddgamma_D1D1D1D2D1 = get_v("dddgamma_D1D1D1D2D1",params);')
+print('double *const   dddgamma_D0D2D0D0D1 = get_v("dddgamma_D0D2D0D0D1",params);')
+print('double *const   dddgamma_D0D2D0D2D2 = get_v("dddgamma_D0D2D0D2D2",params);')
+print('double *const   dddgamma_D2D2D2D1D2 = get_v("dddgamma_D2D2D2D1D2",params);')
+print('double *const   dddgamma_D0D1D0D2D0 = get_v("dddgamma_D0D1D0D2D0",params);')
+print('double *const   dddgamma_D1D1D2D2D0 = get_v("dddgamma_D1D1D2D2D0",params);')
+print('double *const   dddgamma_D0D2D0D2D1 = get_v("dddgamma_D0D2D0D2D1",params);')
+print('double *const   dddgamma_D1D1D2D1D0 = get_v("dddgamma_D1D1D2D1D0",params);')
+print('double *const   dddgamma_D1D1D0D1D2 = get_v("dddgamma_D1D1D0D1D2",params);')
+print('double *const   dddgamma_D0D2D1D1D0 = get_v("dddgamma_D0D2D1D1D0",params);')
+print('double *const   dddgamma_D1D1D1D0D1 = get_v("dddgamma_D1D1D1D0D1",params);')
+print('double *const   dddgamma_D0D0D2D1D1 = get_v("dddgamma_D0D0D2D1D1",params);')
+print('double *const   dddgamma_D0D1D2D1D2 = get_v("dddgamma_D0D1D2D1D2",params);')
+print('double *const   dddgamma_D0D0D0D1D1 = get_v("dddgamma_D0D0D0D1D1",params);')
+print('double *const   dddgamma_D2D2D1D2D1 = get_v("dddgamma_D2D2D1D2D1",params);')
+print('double *const   dddgamma_D1D1D1D2D2 = get_v("dddgamma_D1D1D1D2D2",params);')
+print('double *const   dddgamma_D2D2D2D2D1 = get_v("dddgamma_D2D2D2D2D1",params);')
+print('double *const   dddgamma_D2D2D1D0D0 = get_v("dddgamma_D2D2D1D0D0",params);')
+print('double *const   dddgamma_D0D1D2D1D1 = get_v("dddgamma_D0D1D2D1D1",params);')
+print('double *const   dddgamma_D1D1D2D2D2 = get_v("dddgamma_D1D1D2D2D2",params);')
+print('double *const   dddgamma_D1D2D1D0D1 = get_v("dddgamma_D1D2D1D0D1",params);')
+print('double *const   dddgamma_D0D1D1D1D0 = get_v("dddgamma_D0D1D1D1D0",params);')
+print('double *const   dddgamma_D2D2D2D0D1 = get_v("dddgamma_D2D2D2D0D1",params);')
+print('double *const   dddgamma_D1D2D2D2D2 = get_v("dddgamma_D1D2D2D2D2",params);')
+print('double *const   dddgamma_D1D2D1D2D1 = get_v("dddgamma_D1D2D1D2D1",params);')
+print('double *const   dddgamma_D2D2D0D2D1 = get_v("dddgamma_D2D2D0D2D1",params);')
+print('double *const   dddgamma_D1D1D2D1D2 = get_v("dddgamma_D1D1D2D1D2",params);')
+print('double *const   dddgamma_D1D2D2D1D0 = get_v("dddgamma_D1D2D2D1D0",params);')
+print('double *const   dddgamma_D1D2D0D0D1 = get_v("dddgamma_D1D2D0D0D1",params);')
+print('double *const   dddgamma_D0D2D0D1D1 = get_v("dddgamma_D0D2D0D1D1",params);')
+print('double *const   dddgamma_D0D2D1D0D1 = get_v("dddgamma_D0D2D1D0D1",params);')
+print('double *const   dddgamma_D0D0D0D1D2 = get_v("dddgamma_D0D0D0D1D2",params);')
+print('double *const   dddgamma_D0D0D2D1D2 = get_v("dddgamma_D0D0D2D1D2",params);')
+print('double *const   dddgamma_D0D1D0D1D0 = get_v("dddgamma_D0D1D0D1D0",params);')
+print('double *const   dddgamma_D1D2D1D0D0 = get_v("dddgamma_D1D2D1D0D0",params);')
+print('double *const   dddgamma_D0D2D1D0D0 = get_v("dddgamma_D0D2D1D0D0",params);')
+print('double *const   dddgamma_D1D2D0D1D1 = get_v("dddgamma_D1D2D0D1D1",params);')
+print('double *const   dddgamma_D0D1D2D0D2 = get_v("dddgamma_D0D1D2D0D2",params);')
+print('double *const   dddgamma_D1D1D2D0D0 = get_v("dddgamma_D1D1D2D0D0",params);')
+print('double *const   dddgamma_D0D1D2D2D2 = get_v("dddgamma_D0D1D2D2D2",params);')
+print('double *const   dddgamma_D0D0D2D0D2 = get_v("dddgamma_D0D0D2D0D2",params);')
+print('double *const   dddgamma_D0D0D0D0D2 = get_v("dddgamma_D0D0D0D0D2",params);')
+print('double *const   dddgamma_D1D1D0D1D1 = get_v("dddgamma_D1D1D0D1D1",params);')
+print('double *const   dddgamma_D2D2D0D0D1 = get_v("dddgamma_D2D2D0D0D1",params);')
+print('double *const   dddgamma_D0D0D1D2D2 = get_v("dddgamma_D0D0D1D2D2",params);')
+print('double *const   dddgamma_D1D1D0D2D0 = get_v("dddgamma_D1D1D0D2D0",params);')
+print('double *const   dddgamma_D0D1D1D2D0 = get_v("dddgamma_D0D1D1D2D0",params);')
+print('double *const   dddgamma_D1D1D0D0D1 = get_v("dddgamma_D1D1D0D0D1",params);')
+print('double *const   dddgamma_D1D1D0D0D2 = get_v("dddgamma_D1D1D0D0D2",params);')
+print('double *const   dddgamma_D1D2D0D1D2 = get_v("dddgamma_D1D2D0D1D2",params);')
+print('double *const   dddgamma_D0D0D1D0D2 = get_v("dddgamma_D0D0D1D0D2",params);')
+print('double *const   dddgamma_D0D0D0D2D0 = get_v("dddgamma_D0D0D0D2D0",params);')
+print('double *const   dddgamma_D2D2D2D1D1 = get_v("dddgamma_D2D2D2D1D1",params);')
+print('double *const   dddgamma_D0D2D0D0D2 = get_v("dddgamma_D0D2D0D0D2",params);')
+print('double *const   dddgamma_D2D2D2D2D0 = get_v("dddgamma_D2D2D2D2D0",params);')
+print('double *const   dddgamma_D0D2D0D0D0 = get_v("dddgamma_D0D2D0D0D0",params);')
+print('double *const   dddgamma_D2D2D1D2D0 = get_v("dddgamma_D2D2D1D2D0",params);')
+print('double *const   dddgamma_D1D1D0D1D0 = get_v("dddgamma_D1D1D0D1D0",params);')
+print('double *const   dddgamma_D1D2D2D0D2 = get_v("dddgamma_D1D2D2D0D2",params);')
+print('double *const   dddgamma_D0D1D0D1D1 = get_v("dddgamma_D0D1D0D1D1",params);')
+print('double *const   dddgamma_D2D2D0D2D2 = get_v("dddgamma_D2D2D0D2D2",params);')
+print('double *const   dddgamma_D1D2D2D1D2 = get_v("dddgamma_D1D2D2D1D2",params);')
+print('double *const   dddgamma_D2D2D1D1D1 = get_v("dddgamma_D2D2D1D1D1",params);')
+print('double *const   dddgamma_D0D0D0D0D0 = get_v("dddgamma_D0D0D0D0D0",params);')
+print('double *const   dddgamma_D0D0D1D2D1 = get_v("dddgamma_D0D0D1D2D1",params);')
+print('double *const   dddgamma_D1D1D1D1D0 = get_v("dddgamma_D1D1D1D1D0",params);')
+print('double *const   dddgamma_D1D1D1D1D1 = get_v("dddgamma_D1D1D1D1D1",params);')
+print('double *const   dddgamma_D1D1D1D2D0 = get_v("dddgamma_D1D1D1D2D0",params);')
+print('double *const   dddgamma_D0D1D0D2D1 = get_v("dddgamma_D0D1D0D2D1",params);')
+print('double *const   dddgamma_D2D2D1D1D0 = get_v("dddgamma_D2D2D1D1D0",params);')
+print('double *const   dddgamma_D1D2D2D2D0 = get_v("dddgamma_D1D2D2D2D0",params);')
+print('double *const   dddgamma_D0D0D1D1D2 = get_v("dddgamma_D0D0D1D1D2",params);')
+print('double *const   dddgamma_D0D2D0D2D0 = get_v("dddgamma_D0D2D0D2D0",params);')
+print('double *const   dddgamma_D0D0D1D0D0 = get_v("dddgamma_D0D0D1D0D0",params);')
+print('double *const   dddgamma_D0D2D2D1D0 = get_v("dddgamma_D0D2D2D1D0",params);')
+print('double *const   dddgamma_D0D2D2D0D0 = get_v("dddgamma_D0D2D2D0D0",params);')
+print('double *const   dddgamma_D1D1D1D1D2 = get_v("dddgamma_D1D1D1D1D2",params);')
+print('double *const   dddgamma_D0D0D2D2D1 = get_v("dddgamma_D0D0D2D2D1",params);')
+print('double *const   dddgamma_D2D2D0D1D0 = get_v("dddgamma_D2D2D0D1D0",params);')
+print('double *const   dddgamma_D1D1D2D0D2 = get_v("dddgamma_D1D1D2D0D2",params);')
+print('double *const   dddgamma_D0D1D1D1D1 = get_v("dddgamma_D0D1D1D1D1",params);')
+print('double *const   dddgamma_D1D2D0D0D0 = get_v("dddgamma_D1D2D0D0D0",params);')
+print('double *const   dddgamma_D1D2D0D0D2 = get_v("dddgamma_D1D2D0D0D2",params);')
+print('double *const   dddgamma_D2D2D0D1D2 = get_v("dddgamma_D2D2D0D1D2",params);')
+print('double *const   dddgamma_D0D0D1D1D1 = get_v("dddgamma_D0D0D1D1D1",params);')
+print('double *const   dddgamma_D0D2D0D1D0 = get_v("dddgamma_D0D2D0D1D0",params);')
+print('double *const   dddgamma_D0D2D1D2D1 = get_v("dddgamma_D0D2D1D2D1",params);')
+print('double *const   dddgamma_D1D2D1D2D2 = get_v("dddgamma_D1D2D1D2D2",params);')
+print('double *const   dddgamma_D0D1D1D0D0 = get_v("dddgamma_D0D1D1D0D0",params);')
+print('double *const   dddgamma_D0D0D1D2D0 = get_v("dddgamma_D0D0D1D2D0",params);')
+print('double *const   dddgamma_D1D2D1D1D0 = get_v("dddgamma_D1D2D1D1D0",params);')
+print('double *const   dddgamma_D1D2D2D2D1 = get_v("dddgamma_D1D2D2D2D1",params);')
+print('double *const   dddgamma_D0D1D0D0D0 = get_v("dddgamma_D0D1D0D0D0",params);')
+print('double *const   dddgamma_D1D2D2D1D1 = get_v("dddgamma_D1D2D2D1D1",params);')
+print('double *const   dddgamma_D0D0D0D1D0 = get_v("dddgamma_D0D0D0D1D0",params);')
+print('double *const   dddgamma_D0D0D0D0D1 = get_v("dddgamma_D0D0D0D0D1",params);')
+print('double *const   dddgamma_D0D0D0D2D2 = get_v("dddgamma_D0D0D0D2D2",params);')
+print('double *const   dddgamma_D1D2D0D2D1 = get_v("dddgamma_D1D2D0D2D1",params);')
+print('double *const   dddgamma_D2D2D1D1D2 = get_v("dddgamma_D2D2D1D1D2",params);')
+print('double *const   dddgamma_D1D2D1D1D1 = get_v("dddgamma_D1D2D1D1D1",params);')
+print('double *const   dddgamma_D0D0D1D0D1 = get_v("dddgamma_D0D0D1D0D1",params);')
+print('double *const   dddgamma_D0D1D0D1D2 = get_v("dddgamma_D0D1D0D1D2",params);')
+print('double *const   dddgamma_D0D2D1D2D2 = get_v("dddgamma_D0D2D1D2D2",params);')
+print('double *const   dddgamma_D1D1D0D2D2 = get_v("dddgamma_D1D1D0D2D2",params);')
+print('double *const   dddgamma_D0D1D0D0D2 = get_v("dddgamma_D0D1D0D0D2",params);')
+print('double *const   dddgamma_D0D1D0D2D2 = get_v("dddgamma_D0D1D0D2D2",params);')
+print('double *const   dddgamma_D0D2D1D2D0 = get_v("dddgamma_D0D2D1D2D0",params);')
+print('double *const   dddgamma_D0D1D0D0D1 = get_v("dddgamma_D0D1D0D0D1",params);')
+print('double *const   dddgamma_D1D2D1D1D2 = get_v("dddgamma_D1D2D1D1D2",params);')
+print('double *const   dddgamma_D2D2D0D1D1 = get_v("dddgamma_D2D2D0D1D1",params);')
+print('double *const   dddgamma_D1D1D2D2D1 = get_v("dddgamma_D1D1D2D2D1",params);')
+print('double *const   dddgamma_D0D1D2D1D0 = get_v("dddgamma_D0D1D2D1D0",params);')
+print('double *const   dddgamma_D0D2D1D0D2 = get_v("dddgamma_D0D2D1D0D2",params);')
+print('double *const   dddgamma_D2D2D2D1D0 = get_v("dddgamma_D2D2D2D1D0",params);')
+print('double *const   dddgamma_D0D1D1D1D2 = get_v("dddgamma_D0D1D1D1D2",params);')
+print('double *const   dddgamma_D1D2D1D0D2 = get_v("dddgamma_D1D2D1D0D2",params);')
+print('double *const   dddgamma_D0D0D2D2D0 = get_v("dddgamma_D0D0D2D2D0",params);')
+print('double *const   dddgamma_D0D1D1D0D1 = get_v("dddgamma_D0D1D1D0D1",params);')
+print('double *const   dddgamma_D0D1D2D2D0 = get_v("dddgamma_D0D1D2D2D0",params);')
+print('double *const   dddgamma_D0D2D0D1D2 = get_v("dddgamma_D0D2D0D1D2",params);')
+print('double *const   dddgamma_D0D2D2D2D1 = get_v("dddgamma_D0D2D2D2D1",params);')
+print('double *const   dddgamma_D1D1D0D2D1 = get_v("dddgamma_D1D1D0D2D1",params);')
+print('double *const   dddgamma_D0D0D2D1D0 = get_v("dddgamma_D0D0D2D1D0",params);')
+print('double *const   dddgamma_D1D2D0D1D0 = get_v("dddgamma_D1D2D0D1D0",params);')
+print('double *const   dddgamma_D0D2D2D1D2 = get_v("dddgamma_D0D2D2D1D2",params);')
+print('double *const   dddgamma_D0D1D1D2D1 = get_v("dddgamma_D0D1D1D2D1",params);')
+print('double *const   dddgamma_D1D2D2D0D0 = get_v("dddgamma_D1D2D2D0D0",params);')
+print('double *const   dddgamma_D0D1D2D0D0 = get_v("dddgamma_D0D1D2D0D0",params);')
+print('double *const   dddgamma_D1D2D1D2D0 = get_v("dddgamma_D1D2D1D2D0",params);')
+print('double *const   dddgamma_D2D2D1D0D1 = get_v("dddgamma_D2D2D1D0D1",params);')
+print('double *const   dddgamma_D2D2D1D2D2 = get_v("dddgamma_D2D2D1D2D2",params);')
+print('double *const   dddgamma_D1D1D1D0D0 = get_v("dddgamma_D1D1D1D0D0",params);')
+print('double *const   dddgamma_D0D1D1D0D2 = get_v("dddgamma_D0D1D1D0D2",params);')
+print('double *const   dddgamma_D0D2D2D2D0 = get_v("dddgamma_D0D2D2D2D0",params);')
+print('double *const   dddgamma_D2D2D2D2D2 = get_v("dddgamma_D2D2D2D2D2",params);')
+print('double *const   dddgamma_D0D2D2D0D1 = get_v("dddgamma_D0D2D2D0D1",params);')
+print('double *const   dddgamma_D0D2D1D1D2 = get_v("dddgamma_D0D2D1D1D2",params);')
+print('double *const   dddgamma_D2D2D0D0D2 = get_v("dddgamma_D2D2D0D0D2",params);')
+print('double *const   dddgamma_D2D2D2D0D0 = get_v("dddgamma_D2D2D2D0D0",params);')
+print('double *const   dddgamma_D2D2D0D2D0 = get_v("dddgamma_D2D2D0D2D0",params);')
+print('double *const   dddgamma_D1D1D2D0D1 = get_v("dddgamma_D1D1D2D0D1",params);')
+print('double *const   dddgamma_D2D2D0D0D0 = get_v("dddgamma_D2D2D0D0D0",params);')
+print('double *const   dddgamma_D2D2D2D0D2 = get_v("dddgamma_D2D2D2D0D2",params);')
+print('double *const   dddgamma_D0D2D2D0D2 = get_v("dddgamma_D0D2D2D0D2",params);')
+print('double *const   dddgamma_D0D2D2D2D2 = get_v("dddgamma_D0D2D2D2D2",params);')
+print('double *const   dddgamma_D1D1D0D0D0 = get_v("dddgamma_D1D1D0D0D0",params);')
+print('double *const   dddgamma_D1D2D2D0D1 = get_v("dddgamma_D1D2D2D0D1",params);')
+print('double *const   dddgamma_D0D0D1D1D0 = get_v("dddgamma_D0D0D1D1D0",params);')
+print('double *const   dddgamma_D1D1D1D0D2 = get_v("dddgamma_D1D1D1D0D2",params);')
+print('double *const   dddgamma_D2D2D1D0D2 = get_v("dddgamma_D2D2D1D0D2",params);')
+print('double *const   dddgamma_D0D2D1D1D1 = get_v("dddgamma_D0D2D1D1D1",params);')
+print('double *const   dddgamma_D0D0D2D0D0 = get_v("dddgamma_D0D0D2D0D0",params);')
+print('double *const   dddgamma_D0D1D1D2D2 = get_v("dddgamma_D0D1D1D2D2",params);')
+print('double *const   dddgamma_D0D0D2D0D1 = get_v("dddgamma_D0D0D2D0D1",params);')
+print('double *const   dddgamma_D0D0D0D2D1 = get_v("dddgamma_D0D0D0D2D1",params);')
+print('double *const   dddgamma_D0D2D2D1D1 = get_v("dddgamma_D0D2D2D1D1",params);')
+print('double *const   dddgamma_D0D0D2D2D2 = get_v("dddgamma_D0D0D2D2D2",params);')
+print('double *const   dddgamma_D1D1D2D1D1 = get_v("dddgamma_D1D1D2D1D1",params);')
+print('double *const   dddgamma_D1D2D0D2D2 = get_v("dddgamma_D1D2D0D2D2",params);')
+print('')
+print('')
+print('  for (ijk = 0; ijk < nn; ++ijk) ')
+print('  {')
+print('    double x,y,z;')
+print('    x = patch->node[ijk]->x[0]-BH_center_x;')
+print('    y = patch->node[ijk]->x[1]-BH_center_y;')
+print('    z = patch->node[ijk]->x[2]-BH_center_z;')
+print('')
+print('    _dddgamma_D0D1D2D2D1[ijk]=')
+print('    mcode(ddg01_D2D2D1)')
+print('')
+print('    _dddgamma_D0D1D2D0D1[ijk]=')
+print('    mcode(ddg01_D2D0D1)')
+print('')
+print('    _dddgamma_D1D2D0D2D0[ijk]=')
+print('    mcode(ddg12_D0D2D0)')
+print('')
+print('    _dddgamma_D1D1D1D2D1[ijk]=')
+print('    mcode(ddg11_D1D2D1)')
+print('')
+print('    _dddgamma_D0D2D0D0D1[ijk]=')
+print('    mcode(ddg02_D0D0D1)')
+print('')
+print('    _dddgamma_D0D2D0D2D2[ijk]=')
+print('    mcode(ddg02_D0D2D2)')
+print('')
+print('    _dddgamma_D2D2D2D1D2[ijk]=')
+print('    mcode(ddg22_D2D1D2)')
+print('')
+print('    _dddgamma_D0D1D0D2D0[ijk]=')
+print('    mcode(ddg01_D0D2D0)')
+print('')
+print('    _dddgamma_D1D1D2D2D0[ijk]=')
+print('    mcode(ddg11_D2D2D0)')
+print('')
+print('    _dddgamma_D0D2D0D2D1[ijk]=')
+print('    mcode(ddg02_D0D2D1)')
+print('')
+print('    _dddgamma_D1D1D2D1D0[ijk]=')
+print('    mcode(ddg11_D2D1D0)')
+print('')
+print('    _dddgamma_D1D1D0D1D2[ijk]=')
+print('    mcode(ddg11_D0D1D2)')
+print('')
+print('    _dddgamma_D0D2D1D1D0[ijk]=')
+print('    mcode(ddg02_D1D1D0)')
+print('')
+print('    _dddgamma_D1D1D1D0D1[ijk]=')
+print('    mcode(ddg11_D1D0D1)')
+print('')
+print('    _dddgamma_D0D0D2D1D1[ijk]=')
+print('    mcode(ddg00_D2D1D1)')
+print('')
+print('    _dddgamma_D0D1D2D1D2[ijk]=')
+print('    mcode(ddg01_D2D1D2)')
+print('')
+print('    _dddgamma_D0D0D0D1D1[ijk]=')
+print('    mcode(ddg00_D0D1D1)')
+print('')
+print('    _dddgamma_D2D2D1D2D1[ijk]=')
+print('    mcode(ddg22_D1D2D1)')
+print('')
+print('    _dddgamma_D1D1D1D2D2[ijk]=')
+print('    mcode(ddg11_D1D2D2)')
+print('')
+print('    _dddgamma_D2D2D2D2D1[ijk]=')
+print('    mcode(ddg22_D2D2D1)')
+print('')
+print('    _dddgamma_D2D2D1D0D0[ijk]=')
+print('    mcode(ddg22_D1D0D0)')
+print('')
+print('    _dddgamma_D0D1D2D1D1[ijk]=')
+print('    mcode(ddg01_D2D1D1)')
+print('')
+print('    _dddgamma_D1D1D2D2D2[ijk]=')
+print('    mcode(ddg11_D2D2D2)')
+print('')
+print('    _dddgamma_D1D2D1D0D1[ijk]=')
+print('    mcode(ddg12_D1D0D1)')
+print('')
+print('    _dddgamma_D0D1D1D1D0[ijk]=')
+print('    mcode(ddg01_D1D1D0)')
+print('')
+print('    _dddgamma_D2D2D2D0D1[ijk]=')
+print('    mcode(ddg22_D2D0D1)')
+print('')
+print('    _dddgamma_D1D2D2D2D2[ijk]=')
+print('    mcode(ddg12_D2D2D2)')
+print('')
+print('    _dddgamma_D1D2D1D2D1[ijk]=')
+print('    mcode(ddg12_D1D2D1)')
+print('')
+print('    _dddgamma_D2D2D0D2D1[ijk]=')
+print('    mcode(ddg22_D0D2D1)')
+print('')
+print('    _dddgamma_D1D1D2D1D2[ijk]=')
+print('    mcode(ddg11_D2D1D2)')
+print('')
+print('    _dddgamma_D1D2D2D1D0[ijk]=')
+print('    mcode(ddg12_D2D1D0)')
+print('')
+print('    _dddgamma_D1D2D0D0D1[ijk]=')
+print('    mcode(ddg12_D0D0D1)')
+print('')
+print('    _dddgamma_D0D2D0D1D1[ijk]=')
+print('    mcode(ddg02_D0D1D1)')
+print('')
+print('    _dddgamma_D0D2D1D0D1[ijk]=')
+print('    mcode(ddg02_D1D0D1)')
+print('')
+print('    _dddgamma_D0D0D0D1D2[ijk]=')
+print('    mcode(ddg00_D0D1D2)')
+print('')
+print('    _dddgamma_D0D0D2D1D2[ijk]=')
+print('    mcode(ddg00_D2D1D2)')
+print('')
+print('    _dddgamma_D0D1D0D1D0[ijk]=')
+print('    mcode(ddg01_D0D1D0)')
+print('')
+print('    _dddgamma_D1D2D1D0D0[ijk]=')
+print('    mcode(ddg12_D1D0D0)')
+print('')
+print('    _dddgamma_D0D2D1D0D0[ijk]=')
+print('    mcode(ddg02_D1D0D0)')
+print('')
+print('    _dddgamma_D1D2D0D1D1[ijk]=')
+print('    mcode(ddg12_D0D1D1)')
+print('')
+print('    _dddgamma_D0D1D2D0D2[ijk]=')
+print('    mcode(ddg01_D2D0D2)')
+print('')
+print('    _dddgamma_D1D1D2D0D0[ijk]=')
+print('    mcode(ddg11_D2D0D0)')
+print('')
+print('    _dddgamma_D0D1D2D2D2[ijk]=')
+print('    mcode(ddg01_D2D2D2)')
+print('')
+print('    _dddgamma_D0D0D2D0D2[ijk]=')
+print('    mcode(ddg00_D2D0D2)')
+print('')
+print('    _dddgamma_D0D0D0D0D2[ijk]=')
+print('    mcode(ddg00_D0D0D2)')
+print('')
+print('    _dddgamma_D1D1D0D1D1[ijk]=')
+print('    mcode(ddg11_D0D1D1)')
+print('')
+print('    _dddgamma_D2D2D0D0D1[ijk]=')
+print('    mcode(ddg22_D0D0D1)')
+print('')
+print('    _dddgamma_D0D0D1D2D2[ijk]=')
+print('    mcode(ddg00_D1D2D2)')
+print('')
+print('    _dddgamma_D1D1D0D2D0[ijk]=')
+print('    mcode(ddg11_D0D2D0)')
+print('')
+print('    _dddgamma_D0D1D1D2D0[ijk]=')
+print('    mcode(ddg01_D1D2D0)')
+print('')
+print('    _dddgamma_D1D1D0D0D1[ijk]=')
+print('    mcode(ddg11_D0D0D1)')
+print('')
+print('    _dddgamma_D1D1D0D0D2[ijk]=')
+print('    mcode(ddg11_D0D0D2)')
+print('')
+print('    _dddgamma_D1D2D0D1D2[ijk]=')
+print('    mcode(ddg12_D0D1D2)')
+print('')
+print('    _dddgamma_D0D0D1D0D2[ijk]=')
+print('    mcode(ddg00_D1D0D2)')
+print('')
+print('    _dddgamma_D0D0D0D2D0[ijk]=')
+print('    mcode(ddg00_D0D2D0)')
+print('')
+print('    _dddgamma_D2D2D2D1D1[ijk]=')
+print('    mcode(ddg22_D2D1D1)')
+print('')
+print('    _dddgamma_D0D2D0D0D2[ijk]=')
+print('    mcode(ddg02_D0D0D2)')
+print('')
+print('    _dddgamma_D2D2D2D2D0[ijk]=')
+print('    mcode(ddg22_D2D2D0)')
+print('')
+print('    _dddgamma_D0D2D0D0D0[ijk]=')
+print('    mcode(ddg02_D0D0D0)')
+print('')
+print('    _dddgamma_D2D2D1D2D0[ijk]=')
+print('    mcode(ddg22_D1D2D0)')
+print('')
+print('    _dddgamma_D1D1D0D1D0[ijk]=')
+print('    mcode(ddg11_D0D1D0)')
+print('')
+print('    _dddgamma_D1D2D2D0D2[ijk]=')
+print('    mcode(ddg12_D2D0D2)')
+print('')
+print('    _dddgamma_D0D1D0D1D1[ijk]=')
+print('    mcode(ddg01_D0D1D1)')
+print('')
+print('    _dddgamma_D2D2D0D2D2[ijk]=')
+print('    mcode(ddg22_D0D2D2)')
+print('')
+print('    _dddgamma_D1D2D2D1D2[ijk]=')
+print('    mcode(ddg12_D2D1D2)')
+print('')
+print('    _dddgamma_D2D2D1D1D1[ijk]=')
+print('    mcode(ddg22_D1D1D1)')
+print('')
+print('    _dddgamma_D0D0D0D0D0[ijk]=')
+print('    mcode(ddg00_D0D0D0)')
+print('')
+print('    _dddgamma_D0D0D1D2D1[ijk]=')
+print('    mcode(ddg00_D1D2D1)')
+print('')
+print('    _dddgamma_D1D1D1D1D0[ijk]=')
+print('    mcode(ddg11_D1D1D0)')
+print('')
+print('    _dddgamma_D1D1D1D1D1[ijk]=')
+print('    mcode(ddg11_D1D1D1)')
+print('')
+print('    _dddgamma_D1D1D1D2D0[ijk]=')
+print('    mcode(ddg11_D1D2D0)')
+print('')
+print('    _dddgamma_D0D1D0D2D1[ijk]=')
+print('    mcode(ddg01_D0D2D1)')
+print('')
+print('    _dddgamma_D2D2D1D1D0[ijk]=')
+print('    mcode(ddg22_D1D1D0)')
+print('')
+print('    _dddgamma_D1D2D2D2D0[ijk]=')
+print('    mcode(ddg12_D2D2D0)')
+print('')
+print('    _dddgamma_D0D0D1D1D2[ijk]=')
+print('    mcode(ddg00_D1D1D2)')
+print('')
+print('    _dddgamma_D0D2D0D2D0[ijk]=')
+print('    mcode(ddg02_D0D2D0)')
+print('')
+print('    _dddgamma_D0D0D1D0D0[ijk]=')
+print('    mcode(ddg00_D1D0D0)')
+print('')
+print('    _dddgamma_D0D2D2D1D0[ijk]=')
+print('    mcode(ddg02_D2D1D0)')
+print('')
+print('    _dddgamma_D0D2D2D0D0[ijk]=')
+print('    mcode(ddg02_D2D0D0)')
+print('')
+print('    _dddgamma_D1D1D1D1D2[ijk]=')
+print('    mcode(ddg11_D1D1D2)')
+print('')
+print('    _dddgamma_D0D0D2D2D1[ijk]=')
+print('    mcode(ddg00_D2D2D1)')
+print('')
+print('    _dddgamma_D2D2D0D1D0[ijk]=')
+print('    mcode(ddg22_D0D1D0)')
+print('')
+print('    _dddgamma_D1D1D2D0D2[ijk]=')
+print('    mcode(ddg11_D2D0D2)')
+print('')
+print('    _dddgamma_D0D1D1D1D1[ijk]=')
+print('    mcode(ddg01_D1D1D1)')
+print('')
+print('    _dddgamma_D1D2D0D0D0[ijk]=')
+print('    mcode(ddg12_D0D0D0)')
+print('')
+print('    _dddgamma_D1D2D0D0D2[ijk]=')
+print('    mcode(ddg12_D0D0D2)')
+print('')
+print('    _dddgamma_D2D2D0D1D2[ijk]=')
+print('    mcode(ddg22_D0D1D2)')
+print('')
+print('    _dddgamma_D0D0D1D1D1[ijk]=')
+print('    mcode(ddg00_D1D1D1)')
+print('')
+print('    _dddgamma_D0D2D0D1D0[ijk]=')
+print('    mcode(ddg02_D0D1D0)')
+print('')
+print('    _dddgamma_D0D2D1D2D1[ijk]=')
+print('    mcode(ddg02_D1D2D1)')
+print('')
+print('    _dddgamma_D1D2D1D2D2[ijk]=')
+print('    mcode(ddg12_D1D2D2)')
+print('')
+print('    _dddgamma_D0D1D1D0D0[ijk]=')
+print('    mcode(ddg01_D1D0D0)')
+print('')
+print('    _dddgamma_D0D0D1D2D0[ijk]=')
+print('    mcode(ddg00_D1D2D0)')
+print('')
+print('    _dddgamma_D1D2D1D1D0[ijk]=')
+print('    mcode(ddg12_D1D1D0)')
+print('')
+print('    _dddgamma_D1D2D2D2D1[ijk]=')
+print('    mcode(ddg12_D2D2D1)')
+print('')
+print('    _dddgamma_D0D1D0D0D0[ijk]=')
+print('    mcode(ddg01_D0D0D0)')
+print('')
+print('    _dddgamma_D1D2D2D1D1[ijk]=')
+print('    mcode(ddg12_D2D1D1)')
+print('')
+print('    _dddgamma_D0D0D0D1D0[ijk]=')
+print('    mcode(ddg00_D0D1D0)')
+print('')
+print('    _dddgamma_D0D0D0D0D1[ijk]=')
+print('    mcode(ddg00_D0D0D1)')
+print('')
+print('    _dddgamma_D0D0D0D2D2[ijk]=')
+print('    mcode(ddg00_D0D2D2)')
+print('')
+print('    _dddgamma_D1D2D0D2D1[ijk]=')
+print('    mcode(ddg12_D0D2D1)')
+print('')
+print('    _dddgamma_D2D2D1D1D2[ijk]=')
+print('    mcode(ddg22_D1D1D2)')
+print('')
+print('    _dddgamma_D1D2D1D1D1[ijk]=')
+print('    mcode(ddg12_D1D1D1)')
+print('')
+print('    _dddgamma_D0D0D1D0D1[ijk]=')
+print('    mcode(ddg00_D1D0D1)')
+print('')
+print('    _dddgamma_D0D1D0D1D2[ijk]=')
+print('    mcode(ddg01_D0D1D2)')
+print('')
+print('    _dddgamma_D0D2D1D2D2[ijk]=')
+print('    mcode(ddg02_D1D2D2)')
+print('')
+print('    _dddgamma_D1D1D0D2D2[ijk]=')
+print('    mcode(ddg11_D0D2D2)')
+print('')
+print('    _dddgamma_D0D1D0D0D2[ijk]=')
+print('    mcode(ddg01_D0D0D2)')
+print('')
+print('    _dddgamma_D0D1D0D2D2[ijk]=')
+print('    mcode(ddg01_D0D2D2)')
+print('')
+print('    _dddgamma_D0D2D1D2D0[ijk]=')
+print('    mcode(ddg02_D1D2D0)')
+print('')
+print('    _dddgamma_D0D1D0D0D1[ijk]=')
+print('    mcode(ddg01_D0D0D1)')
+print('')
+print('    _dddgamma_D1D2D1D1D2[ijk]=')
+print('    mcode(ddg12_D1D1D2)')
+print('')
+print('    _dddgamma_D2D2D0D1D1[ijk]=')
+print('    mcode(ddg22_D0D1D1)')
+print('')
+print('    _dddgamma_D1D1D2D2D1[ijk]=')
+print('    mcode(ddg11_D2D2D1)')
+print('')
+print('    _dddgamma_D0D1D2D1D0[ijk]=')
+print('    mcode(ddg01_D2D1D0)')
+print('')
+print('    _dddgamma_D0D2D1D0D2[ijk]=')
+print('    mcode(ddg02_D1D0D2)')
+print('')
+print('    _dddgamma_D2D2D2D1D0[ijk]=')
+print('    mcode(ddg22_D2D1D0)')
+print('')
+print('    _dddgamma_D0D1D1D1D2[ijk]=')
+print('    mcode(ddg01_D1D1D2)')
+print('')
+print('    _dddgamma_D1D2D1D0D2[ijk]=')
+print('    mcode(ddg12_D1D0D2)')
+print('')
+print('    _dddgamma_D0D0D2D2D0[ijk]=')
+print('    mcode(ddg00_D2D2D0)')
+print('')
+print('    _dddgamma_D0D1D1D0D1[ijk]=')
+print('    mcode(ddg01_D1D0D1)')
+print('')
+print('    _dddgamma_D0D1D2D2D0[ijk]=')
+print('    mcode(ddg01_D2D2D0)')
+print('')
+print('    _dddgamma_D0D2D0D1D2[ijk]=')
+print('    mcode(ddg02_D0D1D2)')
+print('')
+print('    _dddgamma_D0D2D2D2D1[ijk]=')
+print('    mcode(ddg02_D2D2D1)')
+print('')
+print('    _dddgamma_D1D1D0D2D1[ijk]=')
+print('    mcode(ddg11_D0D2D1)')
+print('')
+print('    _dddgamma_D0D0D2D1D0[ijk]=')
+print('    mcode(ddg00_D2D1D0)')
+print('')
+print('    _dddgamma_D1D2D0D1D0[ijk]=')
+print('    mcode(ddg12_D0D1D0)')
+print('')
+print('    _dddgamma_D0D2D2D1D2[ijk]=')
+print('    mcode(ddg02_D2D1D2)')
+print('')
+print('    _dddgamma_D0D1D1D2D1[ijk]=')
+print('    mcode(ddg01_D1D2D1)')
+print('')
+print('    _dddgamma_D1D2D2D0D0[ijk]=')
+print('    mcode(ddg12_D2D0D0)')
+print('')
+print('    _dddgamma_D0D1D2D0D0[ijk]=')
+print('    mcode(ddg01_D2D0D0)')
+print('')
+print('    _dddgamma_D1D2D1D2D0[ijk]=')
+print('    mcode(ddg12_D1D2D0)')
+print('')
+print('    _dddgamma_D2D2D1D0D1[ijk]=')
+print('    mcode(ddg22_D1D0D1)')
+print('')
+print('    _dddgamma_D2D2D1D2D2[ijk]=')
+print('    mcode(ddg22_D1D2D2)')
+print('')
+print('    _dddgamma_D1D1D1D0D0[ijk]=')
+print('    mcode(ddg11_D1D0D0)')
+print('')
+print('    _dddgamma_D0D1D1D0D2[ijk]=')
+print('    mcode(ddg01_D1D0D2)')
+print('')
+print('    _dddgamma_D0D2D2D2D0[ijk]=')
+print('    mcode(ddg02_D2D2D0)')
+print('')
+print('    _dddgamma_D2D2D2D2D2[ijk]=')
+print('    mcode(ddg22_D2D2D2)')
+print('')
+print('    _dddgamma_D0D2D2D0D1[ijk]=')
+print('    mcode(ddg02_D2D0D1)')
+print('')
+print('    _dddgamma_D0D2D1D1D2[ijk]=')
+print('    mcode(ddg02_D1D1D2)')
+print('')
+print('    _dddgamma_D2D2D0D0D2[ijk]=')
+print('    mcode(ddg22_D0D0D2)')
+print('')
+print('    _dddgamma_D2D2D2D0D0[ijk]=')
+print('    mcode(ddg22_D2D0D0)')
+print('')
+print('    _dddgamma_D2D2D0D2D0[ijk]=')
+print('    mcode(ddg22_D0D2D0)')
+print('')
+print('    _dddgamma_D1D1D2D0D1[ijk]=')
+print('    mcode(ddg11_D2D0D1)')
+print('')
+print('    _dddgamma_D2D2D0D0D0[ijk]=')
+print('    mcode(ddg22_D0D0D0)')
+print('')
+print('    _dddgamma_D2D2D2D0D2[ijk]=')
+print('    mcode(ddg22_D2D0D2)')
+print('')
+print('    _dddgamma_D0D2D2D0D2[ijk]=')
+print('    mcode(ddg02_D2D0D2)')
+print('')
+print('    _dddgamma_D0D2D2D2D2[ijk]=')
+print('    mcode(ddg02_D2D2D2)')
+print('')
+print('    _dddgamma_D1D1D0D0D0[ijk]=')
+print('    mcode(ddg11_D0D0D0)')
+print('')
+print('    _dddgamma_D1D2D2D0D1[ijk]=')
+print('    mcode(ddg12_D2D0D1)')
+print('')
+print('    _dddgamma_D0D0D1D1D0[ijk]=')
+print('    mcode(ddg00_D1D1D0)')
+print('')
+print('    _dddgamma_D1D1D1D0D2[ijk]=')
+print('    mcode(ddg11_D1D0D2)')
+print('')
+print('    _dddgamma_D2D2D1D0D2[ijk]=')
+print('    mcode(ddg22_D1D0D2)')
+print('')
+print('    _dddgamma_D0D2D1D1D1[ijk]=')
+print('    mcode(ddg02_D1D1D1)')
+print('')
+print('    _dddgamma_D0D0D2D0D0[ijk]=')
+print('    mcode(ddg00_D2D0D0)')
+print('')
+print('    _dddgamma_D0D1D1D2D2[ijk]=')
+print('    mcode(ddg01_D1D2D2)')
+print('')
+print('    _dddgamma_D0D0D2D0D1[ijk]=')
+print('    mcode(ddg00_D2D0D1)')
+print('')
+print('    _dddgamma_D0D0D0D2D1[ijk]=')
+print('    mcode(ddg00_D0D2D1)')
+print('')
+print('    _dddgamma_D0D2D2D1D1[ijk]=')
+print('    mcode(ddg02_D2D1D1)')
+print('')
+print('    _dddgamma_D0D0D2D2D2[ijk]=')
+print('    mcode(ddg00_D2D2D2)')
+print('')
+print('    _dddgamma_D1D1D2D1D1[ijk]=')
+print('    mcode(ddg11_D2D1D1)')
+print('')
+print('    _dddgamma_D1D2D0D2D2[ijk]=')
+print('    mcode(ddg12_D0D2D2)')
+print('  }')
+print('}')
+print('')
