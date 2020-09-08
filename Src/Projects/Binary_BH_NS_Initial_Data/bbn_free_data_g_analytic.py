@@ -224,8 +224,40 @@ print('#include "bbn_headers.h"')
 print('void bbn_free_data_g_gI_analytic(Patch_T *const patch);')
 print('void bbn_free_data_g_gI_analytic(Patch_T *const patch)')
 print('{')
-print('    unsigned nn,ijk;')
-print('    nn = patch->nn;')
+  const double r0          = Pgetd("BH_KerrSchild_RollOff");
+  const double BH_center_x = Pgetd("BH_center_x");
+  const double BH_center_y = Pgetd("BH_center_y");
+  const double BH_center_z = Pgetd("BH_center_z");
+  const double M_BH        = Pgetd("BH_irreducible_mass");
+  const double a_BH        = Pgetd("BH_net_spin");
+  const double chi_U0   = Pgetd("BH_chi_U0");
+  const double chi_U1   = Pgetd("BH_chi_U1");
+  const double chi_U2   = Pgetd("BH_chi_U2");
+  const double y_CM = Pgetd("y_CM");
+  const double x_CM = Pgetd("x_CM")
+  const double Omega_BHNS = Pgetd("BH_NS_angular_velocity");
+  const double chi = sqrt(Pow2(chi_U0)+Pow2(chi_U1)+Pow2(chi_U2));
+  const unsigned nn = patch->nn;
+  double phiy = 0,phiz = 0;
+  double Bx,By,Bz,B2;/* B = v/c */
+  unsigned ijk;
+
+  assert(LSSEQL(chi,1));
+
+  /* boost */
+  Bx = -Omega_BHNS*(BH_center_y-y_CM);
+  By =  Omega_BHNS*(BH_center_x-x_CM);
+  Bz = Pgetd("BH_Vz");
+  B2 = Pow2(Bx)+Pow2(By)+Pow2(Bz);
+
+  /* rotation */
+  if (!EQL(chi,0))/* otherwise tR is 0 */
+  {
+    phiz = -arctan(chi_U1,chi_U0);
+    phiy = -acos(chi_U2/chi);
+    assert(isfinite(phiy));
+  }
+
 print('\n')
 print('    REALLOC_v_WRITE_v(_gamma_D2D2)')
 print('    REALLOC_v_WRITE_v(_gamma_D0D2)')
@@ -338,3 +370,11 @@ print('\n')
 print('      }')
 print('    }')
 print('}')
+
+
+### run python
+Comand["python "];
+
+### rm redundants
+Comand["rm "];
+
