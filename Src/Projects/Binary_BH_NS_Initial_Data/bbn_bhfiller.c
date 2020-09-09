@@ -321,8 +321,8 @@ static int bhf_ChebTnYlm_C2(struct BHFiller_S *const bhf)
   const unsigned lmax   = bhf->lmax;
   const unsigned Ntheta = bhf->Ntheta;
   const unsigned Nphi   = bhf->Nphi;
-  const double r_fill = Pgetd("r_excision");
-  const double r_fill3= pow(r_fill,3);
+  const double rfill = Pgetd("r_excision");
+  const double rfill3= pow(rfill,3);
   unsigned p,fld;
   
   /* update all coeffs to avoid race condition */
@@ -370,7 +370,7 @@ static int bhf_ChebTnYlm_C2(struct BHFiller_S *const bhf)
         double KD[2]      = {0,1};
         double df_dx[3]   = {0};
         double ddf_ddx[6] = {0};
-        double ddfddr = 0,dfdr = 0,f_r1 = 0,f_r0 = 0;
+        double ddfddr = 0,dfdr = 0,fr1 = 0,fr0 = 0;
         double a[4] = {0};
         double _ddfddr[3] = {0,0,0};
         unsigned ij = IJ(i,j,Nphi);
@@ -379,10 +379,10 @@ static int bhf_ChebTnYlm_C2(struct BHFiller_S *const bhf)
         /* find patch for the given theta and phi */
         find_XYZ_and_patch_of_theta_phi_BH_CS(X,&patch,theta,phi,grid);
 
-        /* r = r_fill(sin(theta)cos(phi)x^+sin(theta)sin(phi)y^+cos(theta)z^) */
-        _x[0] = r_fill*sin(theta)*cos(phi);
-        _x[1] = r_fill*sin(theta)*sin(phi);
-        _x[2] = r_fill*cos(theta);
+        /* r = rfill(sin(theta)cos(phi)x^+sin(theta)sin(phi)y^+cos(theta)z^) */
+        _x[0] = rfill*sin(theta)*cos(phi);
+        _x[1] = rfill*sin(theta)*sin(phi);
+        _x[2] = rfill*cos(theta);
         x[0]  = _x[0] + patch->c[0];
         x[1]  = _x[1] + patch->c[1];
         x[2]  = _x[2] + patch->c[2];
@@ -402,8 +402,8 @@ static int bhf_ChebTnYlm_C2(struct BHFiller_S *const bhf)
         /* f value at r = r0 and r = 0*/
         interp_s->field = patch->pool[Ind(bhf->fld[fld]->f)];
         plan_interpolation(interp_s);
-        f_r1 = execute_interpolation(interp_s);
-        f_r0 = bhf->fld[fld]->f_r0;
+        fr1 = execute_interpolation(interp_s);
+        fr0 = bhf->fld[fld]->f_r0;
         
         /* df/dx value */
         for (d1 = 0; d1 < 3; d1++)
@@ -435,16 +435,16 @@ static int bhf_ChebTnYlm_C2(struct BHFiller_S *const bhf)
         {
           for (_j = 0; _j < 3; ++_j)
           {
-            _ddfddr[_i] += (KD[_i==_j]/r_fill - _x[_i]*_x[_j]/r_fill3)*df_dx[_j];
+            _ddfddr[_i] += (KD[_i==_j]/rfill - _x[_i]*_x[_j]/rfill3)*df_dx[_j];
             _ddfddr[_i] += N[_j]*ddf_ddx[IJsymm3(_i,_j)];
           }
           ddfddr += _ddfddr[_i]*N[_i]; \
         }
         
-        a[0] = (10*f_r0 + 22*f_r1 + 2*ddfddr*r_fill - 6*dfdr*r_fill)/32.;
-        a[1] = (-15*f_r0 + 15*f_r1 - ddfddr*r_fill + dfdr*r_fill)/32.;
-        a[2] = (6*f_r0 - 6*f_r1 - 2*ddfddr*r_fill + 6*dfdr*r_fill)/32.;
-        a[3] = (-f_r0 + f_r1 + ddfddr*r_fill - dfdr*r_fill)/32.;
+        a[0] = (10*fr0 + 22*fr1 + rfill*(-6*dfdr + ddfddr*rfill))/32.;
+        a[1] = (-30*fr0 + 30*fr1 + rfill*(2*dfdr - ddfddr*rfill))/64.;
+        a[2] = (6*fr0 - 6*fr1 + rfill*(6*dfdr - ddfddr*rfill))/32.;
+        a[3] = (-2*fr0 + 2*fr1 + rfill*(-2*dfdr + ddfddr*rfill))/64.;
         
         for (_i = 0; _i < 4; _i++)
           bhf->fld[fld]->ChebTn_coeffs[_i][ij] = a[_i];
@@ -498,7 +498,7 @@ static int bhf_ChebTnYlm_C2(struct BHFiller_S *const bhf)
           r     = EPS;
           theta = 0;
         }
-        t   = 2*r/r_fill-1;
+        t   = 2*r/rfill-1;
         phi = arctan(y,x);
         for (i = 0; i < 4; ++i)
         {
