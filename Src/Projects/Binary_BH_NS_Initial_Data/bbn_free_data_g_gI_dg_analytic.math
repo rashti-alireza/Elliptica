@@ -16,12 +16,15 @@ point = x;
 `from sympy.tensor.tensor import TensorIndexType, TensorHead`
 `from sympy.tensor.tensor import tensor_indices`
 `from sympy.functions import transpose`
+`from sympy.parsing.mathematica import mathematica`
 `import sys`
 `import re`
 `import os`
 
 ### ccode generator
 `def mcode(m):`
+`  print('/* mcode */')`
+`  sys.stdout.flush()`
 `  code = ""`
 `  if (1):`
 `    pid = os.getpid()`
@@ -61,8 +64,48 @@ point = x;
 `  code = '{};'.format(code)`
 `  code = re.sub(r'\b1.0\*\b','',code)`
 `  code = re.sub(r'(.{50,70}[\+\-\*/]+\s?)','\\1{}n'.format("\\"),code)`
-`  sys.stdout.flush()`
+``
 `  return code`
+``
+### simplify using mathematica or sympy:
+`def msimplify(m):`
+`  print('/* msimplify */')`
+`  sys.stdout.flush()`
+`  code = ""`
+`  if (1):`# if you want mathematica
+`    pid = os.getpid()`
+`    mfile_name=".mfile_temp_{}".format(pid)`
+`    cfile_name=".cfile_temp_{}".format(pid)`
+`    rhs  =""`
+`    try:`
+`      rhs  = mathematica_code((m).doit())`
+`    except:`
+`      rhs  = mathematica_code(m)`
+``
+`    math_code  = rhs + ";\n"`
+`    math_code += "Simplify[%,TimeConstraint->1000];\n"`
+`    math_code += "Print[%]"+"\n"`
+## write into mathematica file
+`    mfile = open(mfile_name,"w")`
+`    mfile.write(math_code)`
+`    mfile.close()`
+
+## run mathematica and output into another
+`    cmd = "math -run -noprompt < {} 1> {}".format(mfile_name,cfile_name)`
+`    ret=os.system(cmd)`
+
+## read math results.
+`    cfile=open(cfile_name,"r")`
+`    code =cfile.read()`
+`    cfile.close()`
+
+## delete the files
+`    cmd = "rm -rf {} {}".format(mfile_name,cfile_name)`
+`    os.system(cmd)`
+`    return mathematica(code)`
+`  else:` ## if you wanna use simpy
+`    code = simplify(m)`
+`    return code`
 ``
 ``
 `### coords and parameters`
@@ -158,15 +201,15 @@ point = x;
 `  tB       = PB(Bx,By,Bz,B2)`
 `  tRy, tRz = PR(phiy,phiz)`
 `  _x_mu = TBR(tB,tRy,tRz,-1,x_mu)`
-`  _x    = (_x_mu[1,0])`
-`  _y    = (_x_mu[2,0])`
-`  _z    = (_x_mu[3,0])`
+`  _x    = msimplify(_x_mu[1,0])`
+`  _y    = msimplify(_x_mu[2,0])`
+`  _z    = msimplify(_x_mu[3,0])`
 `  _r    = rKS(_x,_y,_z,a)`
 `  a2  = a**2`
 `  _r2 = _r**2`
-`  _k0 = ((_r*_x+a*_y)/(_r2+a2))`
-`  _k1 = ((_r*_y-a*_x)/(_r2+a2))`
-`  _k2 = (_z/_r)`
+`  _k0 = msimplify((_r*_x+a*_y)/(_r2+a2))`
+`  _k1 = msimplify((_r*_y-a*_x)/(_r2+a2))`
+`  _k2 = msimplify(_z/_r)`
 `  _kt = 1`
 `  `
 `  _k_mu = transpose(Matrix([[_kt,_k0,_k1,_k2]]))`
@@ -174,23 +217,23 @@ point = x;
 `  `
 `  print("/* kt */")`
 `  sys.stdout.flush()`
-`  kt = (k_mu[0,0])`
+`  kt = msimplify(k_mu[0,0])`
 `  `
 `  print("/* k0 */")`
 `  sys.stdout.flush()`
-`  k0 = (k_mu[1,0])`
+`  k0 = msimplify(k_mu[1,0])`
 `  `
 `  print("/* k1 */")`
 `  sys.stdout.flush()`
-`  k1 = (k_mu[2,0])`
+`  k1 = msimplify(k_mu[2,0])`
 `  `
 `  print("/* k2 */")`
 `  sys.stdout.flush()`
-`  k2 = (k_mu[3,0])`
+`  k2 = msimplify(k_mu[3,0])`
 `  `
 `  print("/* H */")`
 `  sys.stdout.flush()`
-`  H = (HKS(m,_r,a,_z,Lambda))`
+`  H = msimplify(HKS(m,_r,a,_z,Lambda))`
 `  `
 `  return kt,k0,k1,k2,H`
 ``
@@ -201,7 +244,7 @@ point = x;
 `C = 2*H*e`
 `print("/* A */")`
 `sys.stdout.flush()`
-`A = (1/(1+C*(k0**2+k1**2+k2**2)))`
+`A = msimplify(1/(1+C*(k0**2+k1**2+k2**2)))`
 ``
 `_g00 = 1.+C*k0*k0`
 `_g01 = C*k0*k1`
@@ -231,7 +274,7 @@ point = x;
 ### first order derivatives:
 `_dg00_D0=(diff(_g00,x))`
 `_dg00_D2=(diff(_g00,z))`
-`_dg00_D1=(diff(_g00,y)`
+`_dg00_D1=(diff(_g00,y))`
 `_dg01_D1=(diff(_g01,y))`
 `_dg01_D2=(diff(_g01,z))`
 `_dg01_D0=(diff(_g01,x))`
