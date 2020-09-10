@@ -120,10 +120,10 @@ point = x;
 `def PB(Bx,By,Bz,B2):`
 `   gamma  = (1-B2)**(-0.5)`
 `   b = Matrix([`
-`     [gamma    , -gamma*Bx              ,-gamma*By              ,-gamma*Bz],`
-`     [-gamma*Bx, 1+(gamma-1)*Bx**2/B2,(gamma-1)*Bx*By/B2     ,(gamma-1)*Bx*Bz/B2],`
-`     [-gamma*By, (gamma-1)*Bx*By/B2     ,1+(gamma-1)*By**2/B2,(gamma-1)*By*Bz/B2],`
-`     [-gamma*Bz, (gamma-1)*Bx*Bz/B2     ,(gamma-1)*By*Bz/B2     ,1+(gamma-1)*Bz**2/B2]`
+`     [gamma    , -gamma*Bx            , -gamma*By            , -gamma*Bz],`
+`     [-gamma*Bx, 1+(gamma-1)*Bx**2/B2 , (gamma-1)*Bx*By/B2   , (gamma-1)*Bx*Bz/B2],`
+`     [-gamma*By, (gamma-1)*Bx*By/B2   , 1+(gamma-1)*By**2/B2 , (gamma-1)*By*Bz/B2],`
+`     [-gamma*Bz, (gamma-1)*Bx*Bz/B2   , (gamma-1)*By*Bz/B2   , 1+(gamma-1)*Bz**2/B2]`
 `     ])`
 `     `
 `   return b;`
@@ -136,9 +136,9 @@ point = x;
 `  sz = sin(phiz)`
 `  `
 `  ty = Matrix([`
-`     [1,0 ,0,0],`
-`     [0,cy,0,sy],`
-`     [0,0 ,1,0],`
+`     [1,0  ,0,0],`
+`     [0,cy ,0,sy],`
+`     [0,0  ,1,0],`
 `     [0,-sy,0,cy]`
 `     ])`
 `     `
