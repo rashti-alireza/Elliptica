@@ -192,7 +192,7 @@ int direct_solver_series_umfpack_di(void *vp)
 
 /* umfpack direct solver double long kind 
 // used to solve ax = b for series of b's but same a.
-// thus, it won't need to decompose matrix a each time.
+// thus, it won't need to decompose matrix at each time.
 // ->return value: EXIT_SUCCESS
 */
 int direct_solver_series_umfpack_dl(void *vp)
