@@ -68,8 +68,8 @@ point = x;
 `  return code`
 ``
 ### simplify using mathematica or sympy:
-`def msimplify(m):`
-`  print('/* msimplify */')`
+`def msimplify(m,msg):`
+`  print('/* msimplify({}) */'.format(msg))`
 `  sys.stdout.flush()`
 `  code = ""`
 `  if (1):`# if you want mathematica
@@ -201,15 +201,15 @@ point = x;
 `  tB       = PB(Bx,By,Bz,B2)`
 `  tRy, tRz = PR(phiy,phiz)`
 `  _x_mu = TBR(tB,tRy,tRz,-1,x_mu)`
-`  _x    = msimplify(_x_mu[1,0])`
-`  _y    = msimplify(_x_mu[2,0])`
-`  _z    = msimplify(_x_mu[3,0])`
+`  _x    = msimplify(_x_mu[1,0],'_x')`
+`  _y    = msimplify(_x_mu[2,0],'_y')`
+`  _z    = msimplify(_x_mu[3,0],'_z')`
 `  _r    = rKS(_x,_y,_z,a)`
 `  a2  = a**2`
 `  _r2 = _r**2`
-`  _k0 = msimplify((_r*_x+a*_y)/(_r2+a2))`
-`  _k1 = msimplify((_r*_y-a*_x)/(_r2+a2))`
-`  _k2 = msimplify(_z/_r)`
+`  _k0 = msimplify((_r*_x+a*_y)/(_r2+a2),'_k0')`
+`  _k1 = msimplify((_r*_y-a*_x)/(_r2+a2),'_k1')`
+`  _k2 = msimplify(_z/_r,'_k2')`
 `  _kt = 1`
 `  `
 `  _k_mu = transpose(Matrix([[_kt,_k0,_k1,_k2]]))`
@@ -217,23 +217,23 @@ point = x;
 `  `
 `  print("/* kt */")`
 `  sys.stdout.flush()`
-`  kt = msimplify(k_mu[0,0])`
+`  kt = msimplify(k_mu[0,0],'kt')`
 `  `
 `  print("/* k0 */")`
 `  sys.stdout.flush()`
-`  k0 = msimplify(k_mu[1,0])`
+`  k0 = msimplify(k_mu[1,0],'k0')`
 `  `
 `  print("/* k1 */")`
 `  sys.stdout.flush()`
-`  k1 = msimplify(k_mu[2,0])`
+`  k1 = msimplify(k_mu[2,0],'k1')`
 `  `
 `  print("/* k2 */")`
 `  sys.stdout.flush()`
-`  k2 = msimplify(k_mu[3,0])`
+`  k2 = msimplify(k_mu[3,0],'k2')`
 `  `
 `  print("/* H */")`
 `  sys.stdout.flush()`
-`  H = msimplify(HKS(m,_r,a,_z,Lambda))`
+`  H = msimplify(HKS(m,_r,a,_z,Lambda),'H')`
 `  `
 `  return kt,k0,k1,k2,H`
 ``
@@ -244,7 +244,7 @@ point = x;
 `C = 2*H*e`
 `print("/* A */")`
 `sys.stdout.flush()`
-`A = msimplify(1/(1+C*(k0**2+k1**2+k2**2)))`
+`A = msimplify(1/(1+C*(k0**2+k1**2+k2**2)),'A')`
 ``
 `_g00 = 1.+C*k0*k0`
 `_g01 = C*k0*k1`
