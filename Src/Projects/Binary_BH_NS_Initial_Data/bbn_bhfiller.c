@@ -395,6 +395,7 @@ static int bhf_ChebTnYlm_C2(struct BHFiller_S *const bhf)
   fflush(stdout);
   Grid_T *const grid = bhf->grid;
   const double EPS   = 1E-12;
+  const unsigned NCoeffs = 4;
   const unsigned npo = bhf->npo;
   const unsigned npi = bhf->npi;
   const unsigned nf  = bhf->nf;/* numebr of fields */
@@ -451,7 +452,7 @@ static int bhf_ChebTnYlm_C2(struct BHFiller_S *const bhf)
         double df_dx[3]   = {0};
         double ddf_ddx[6] = {0};
         double ddfddr = 0,dfdr = 0,fr1 = 0,fr0 = 0;
-        double a[4] = {0};
+        double a[NCoeffs];
         double _ddfddr[3] = {0,0,0};
         unsigned ij = IJ(i,j,Nphi);
         unsigned d1,d2;/* derivative */
@@ -526,13 +527,13 @@ static int bhf_ChebTnYlm_C2(struct BHFiller_S *const bhf)
         a[2] = (6*fr0 - 6*fr1 + rfill*(6*dfdr - ddfddr*rfill))/32.;
         a[3] = (-2*fr0 + 2*fr1 + rfill*(-2*dfdr + ddfddr*rfill))/64.;
         
-        for (_i = 0; _i < 4; _i++)
+        for (_i = 0; _i < NCoeffs; _i++)
           bhf->fld[fld]->radial_coeffs[_i][ij] = a[_i];
         
       }
     }/* for (i = 0; i < Ntheta; ++i) */
     /* now populate the Ylm coeffs */
-    for ( i = 0 ; i < 4; ++i)
+    for ( i = 0 ; i < NCoeffs; ++i)
     {
       double *rC       = bhf->fld[fld]->realYlm_coeffs[i];
       double *iC       = bhf->fld[fld]->imagYlm_coeffs[i];
@@ -580,7 +581,7 @@ static int bhf_ChebTnYlm_C2(struct BHFiller_S *const bhf)
         }
         t   = 2*r/rfill-1;
         phi = arctan(y,x);
-        for (i = 0; i < 4; ++i)
+        for (i = 0; i < NCoeffs; ++i)
         {
           const double *rC = bhf->fld[f]->realYlm_coeffs[i];
           const double *iC = bhf->fld[f]->imagYlm_coeffs[i];
@@ -1300,6 +1301,7 @@ static int bhf_poly_r_4_Ylm(struct BHFiller_S *const bhf)
   fflush(stdout);
   Grid_T *const grid = bhf->grid;
   const double EPS   = 1E-12;
+  const unsigned NCoeffs = 5;
   const unsigned npo = bhf->npo;
   const unsigned npi = bhf->npi;
   const unsigned nf  = bhf->nf;/* numebr of fields */
@@ -1308,7 +1310,7 @@ static int bhf_poly_r_4_Ylm(struct BHFiller_S *const bhf)
   const unsigned Nphi   = bhf->Nphi;
   const double rfill = Pgetd("r_excision");
   const double rfill3= pow(rfill,3);
-  const double r_2 = rfill*(1+0.01);/* a bit farther from AH */
+  const double r_2   = rfill*(1+0.01);/* a bit farther from AH */
   unsigned p,fld;
   
   /* update all coeffs to avoid race condition */
@@ -1352,27 +1354,19 @@ static int bhf_poly_r_4_Ylm(struct BHFiller_S *const bhf)
       for (j = 0; j < Nphi; ++j)
       {
         double phi = j*2*M_PI/Nphi;
-        Patch_T *patch    = 0;
-        double KD[2]      = {0,1};
+        Patch_T *patch = 0;
+        double KD[2]   = {0,1};
+        unsigned ij    = IJ(i,j,Nphi);
         double df_dx[3]   = {0};
         double ddf_ddx[6] = {0};
-        double ddfddr = 0,dfdr = 0,fr_0 = 0,fr_1 = 0,fr_2 = 0;
-        double a[5] = {0};
+        double ddfddr = 0,dfdr = 0,
+               fr_0 = 0,fr_1 = 0,fr_2 = 0;
+        double a[NCoeffs];
         double _ddfddr[3] = {0,0,0};
-        unsigned ij = IJ(i,j,Nphi);
         unsigned d1,d2;/* derivative */
         double X[3],x[3],_x[3],N[3],Xr_2[3];
         /* find patch for the given theta and phi */
         find_XYZ_and_patch_of_theta_phi_BH_CS(X,&patch,theta,phi,grid);
-
-        /* r = rfill(sin(theta)cos(phi)x^+sin(theta)sin(phi)y^+cos(theta)z^) */
-        _x[0] = rfill*sin(theta)*cos(phi);
-        _x[1] = rfill*sin(theta)*sin(phi);
-        _x[2] = rfill*cos(theta);
-        x[0]  = _x[0] + patch->c[0];
-        x[1]  = _x[1] + patch->c[1];
-        x[2]  = _x[2] + patch->c[2];
-        assert(X_of_x(X,x,patch));
         
         /* r = r_2 */
         _x[0] = r_2*sin(theta)*cos(phi);
@@ -1382,6 +1376,15 @@ static int bhf_poly_r_4_Ylm(struct BHFiller_S *const bhf)
         x[1]  = _x[1] + patch->c[1];
         x[2]  = _x[2] + patch->c[2];
         assert(X_of_x(Xr_2,x,patch));
+        
+        /* r = rfill(sin(theta)cos(phi)x^+sin(theta)sin(phi)y^+cos(theta)z^) */
+        _x[0] = rfill*sin(theta)*cos(phi);
+        _x[1] = rfill*sin(theta)*sin(phi);
+        _x[2] = rfill*cos(theta);
+        x[0]  = _x[0] + patch->c[0];
+        x[1]  = _x[1] + patch->c[1];
+        x[2]  = _x[2] + patch->c[2];
+        assert(X_of_x(X,x,patch));
         
         /* normal vector */
         N[0]  = sin(theta)*cos(phi);
@@ -1407,6 +1410,7 @@ static int bhf_poly_r_4_Ylm(struct BHFiller_S *const bhf)
         interp_s->field = patch->pool[Ind(bhf->fld[fld]->f)];
         plan_interpolation(interp_s);
         fr_1 = execute_interpolation(interp_s);
+        /* r = 0 */
         fr_0 = bhf->fld[fld]->f_r0;
         
         /* df/dx value */
@@ -1473,13 +1477,13 @@ static int bhf_poly_r_4_Ylm(struct BHFiller_S *const bhf)
         2*dfdr*r_2*(Power(r_2,2) - 3*r_2*rfill + 2*Power(rfill,2))))/
    (2.*r_2*Power(r_2 - rfill,3)*Power(rfill,3));
         
-        for (_i = 0; _i < 5; _i++)
+        for (_i = 0; _i < NCoeffs; _i++)
           bhf->fld[fld]->radial_coeffs[_i][ij] = a[_i];
         
       }
     }/* for (i = 0; i < Ntheta; ++i) */
     /* now populate the Ylm coeffs */
-    for ( i = 0 ; i < 5; ++i)
+    for ( i = 0 ; i < NCoeffs; ++i)
     {
       double *rC       = bhf->fld[fld]->realYlm_coeffs[i];
       double *iC       = bhf->fld[fld]->imagYlm_coeffs[i];
@@ -1526,7 +1530,7 @@ static int bhf_poly_r_4_Ylm(struct BHFiller_S *const bhf)
           theta = 0;
         }
         phi = arctan(y,x);
-        for (i = 0; i < 5; ++i)
+        for (i = 0; i < NCoeffs; ++i)
         {
           const double *rC = bhf->fld[f]->realYlm_coeffs[i];
           const double *iC = bhf->fld[f]->imagYlm_coeffs[i];
