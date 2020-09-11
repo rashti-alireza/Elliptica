@@ -83,8 +83,14 @@ void bbn_set_default_parameters(void)
   /* how to extrapolate fields inside the BH 
   // options:
   // 1. Ylm   : using Ylm expansion
-  // 2. linear: simply using a linear function 
-  // 3. WTGR  : using the method developed by Wolfgang and George. */
+  // 2. linear: simply using a linear function.
+  //    this is used during the elliptic solve.
+  // 3. WTGR  : using the method developed by Wolfgang and George. 
+  //    it's C^1 continues.
+  // 4. 3rd_ChebTn_Ylm: using 3rd order ChebTn in r and Ylm in 
+  //    directions. it's C^2 continues.
+  // 5. 4th_Poly_Ylm: 4th order Polynomial in r and Ylm in 
+  //    angular directions. it's C^2 continues. */
   Pset_default("extrapolate_inside_BH_method","linear");
   
   /* max allowed enthalpy L2 norm residual; if root finder of NS surface 
