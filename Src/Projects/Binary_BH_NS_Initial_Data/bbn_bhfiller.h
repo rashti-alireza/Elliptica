@@ -90,12 +90,12 @@ find_XYZ_and_patch_of_theta_phi_BH_CS
  const double theta,const double phi,Grid_T *const grid
  );
 
-static int bhf_ChebTnYlm_C2(struct BHFiller_S *const bhf);
+static int bhf_3rd_ChebTn_Ylm(struct BHFiller_S *const bhf);
 static int bhf_WTGR(struct BHFiller_S *const bhf);
 static double interpolate_from_patch_prim(const char *const field,const double *const X,Patch_T *const patch);
 void bbn_bam_error(const char *const msg,const char *const file,const int line);
 static void collect_names(struct BHFiller_S *const bhf,const unsigned nf);
-static int bhf_poly_r_4_Ylm(struct BHFiller_S *const bhf);
+static int bhf_4th_Poly_Ylm(struct BHFiller_S *const bhf);
 
 
 

@@ -3713,17 +3713,17 @@ void bbn_extrapolate_metric_fields_insideBH(Grid_T *const grid)
   {
     extrapolate_insideBH_CS_linear(grid);
   }
-  else if (Pcmps("extrapolate_inside_BH_method","ChebTnYlm_C2"))
+  else if (Pcmps("extrapolate_inside_BH_method","3rd_ChebTn_Ylm"))
   {
-    bbn_bhfiller(grid,"ChebTnYlm_C2");
+    bbn_bhfiller(grid,"3rd_ChebTn_Ylm");
   }
   else if (Pcmps("extrapolate_inside_BH_method","WTGR"))
   {
     bbn_bhfiller(grid,"WTGR");
   }
-  else if (Pcmps("extrapolate_inside_BH_method","poly(r,4)xYlm(th,ph)"))
+  else if (Pcmps("extrapolate_inside_BH_method","4th_Poly_Ylm"))
   {
-    bbn_bhfiller(grid,"poly(r,4)xYlm(th,ph)");
+    bbn_bhfiller(grid,"4th_Poly_Ylm");
   }
   else
     Error0(NO_OPTION);

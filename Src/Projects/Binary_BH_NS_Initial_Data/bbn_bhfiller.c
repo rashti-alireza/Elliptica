@@ -58,7 +58,7 @@ bhf_init
   
   /* using Cheb_Tn and Ylm as the bases 
   // and extrapolate demanding C2 continuity */
-  if (strcmp_i(method,"ChebTnYlm_C2"))
+  if (strcmp_i(method,"3rd_ChebTn_Ylm"))
   {
     const double EPS   = 1;
     const double Ma    = Pgetd("BH_irreducible_mass");
@@ -94,7 +94,7 @@ bhf_init
     bhf->fld= calloc(nf,sizeof(*bhf->fld));IsNull(bhf->fld);
     
     /* set the method function */
-    bhf->bhfiller = bhf_ChebTnYlm_C2;
+    bhf->bhfiller = bhf_3rd_ChebTn_Ylm;
     
     /* collect names */
     collect_names(bhf,nf);
@@ -191,14 +191,14 @@ bhf_init
     }
     assert(i == npo);
     assert(j == npi);
-  }/* if (strcmp_i(method,"ChebTnYlm_C2")) */
+  }/* if (strcmp_i(method,"3rd_ChebTn_Ylm")) */
   /* using George's thesis method */
   else if (strcmp_i(method,"WTGR"))
   {
     /* set the method function */
     bhf->bhfiller = bhf_WTGR;
   }
-  else if (strcmp_i(method,"poly(r,4)xYlm(th,ph)"))
+  else if (strcmp_i(method,"4th_Poly_Ylm"))
   {
     const double EPS   = 1;
     const double Ma    = Pgetd("BH_irreducible_mass");
@@ -234,7 +234,7 @@ bhf_init
     bhf->fld= calloc(nf,sizeof(*bhf->fld));IsNull(bhf->fld);
     
     /* set the method function */
-    bhf->bhfiller = bhf_poly_r_4_Ylm;
+    bhf->bhfiller = bhf_4th_Poly_Ylm;
     
     /* collect names */
     collect_names(bhf,nf);
@@ -380,7 +380,7 @@ static void bhf_free(struct BHFiller_S *const bhf)
 }
 
 /* ->: EXIT_SUCESS if succeeds, otherwise an error code.
-// method to fill BH is ChebTnYlm:
+// method to fill BH is 3rd_ChebTn_Ylm:
 // ===============================
 //
 // f(r,th,ph) = a0(th,ph)Tn(0,t)+a1(th,ph)Tn(1,t)+
@@ -389,9 +389,9 @@ static void bhf_free(struct BHFiller_S *const bhf)
 // the coeffs a's are determinded by demaning the C2 continuity
 // across the AH and the value of the function at r = 0.
 // */
-static int bhf_ChebTnYlm_C2(struct BHFiller_S *const bhf)
+static int bhf_3rd_ChebTn_Ylm(struct BHFiller_S *const bhf)
 {
-  printf("|--> BH-filler method = ChebTnYlm_C2.\n");
+  printf("|--> BH-filler method = 3rd_ChebTn_Ylm.\n");
   fflush(stdout);
   Grid_T *const grid = bhf->grid;
   const double EPS   = 1E-12;
@@ -1286,7 +1286,7 @@ static void collect_names(struct BHFiller_S *const bhf,const unsigned nf)
 }
 
 /* ->: EXIT_SUCESS if succeeds, otherwise an error code.
-// method to fill BH is poly(r,4)xYlm(th,ph:
+// method to fill BH is 4th_Poly_Ylm:
 // ===============================
 //
 // f(r,th,ph) = a0(th,ph)+a1(th,ph)*r + a2(th,ph)*r^2 +
@@ -1295,9 +1295,9 @@ static void collect_names(struct BHFiller_S *const bhf,const unsigned nf)
 // across the AH and the value of the function at r = 0 and a point
 // near horizon from outside.
 // */
-static int bhf_poly_r_4_Ylm(struct BHFiller_S *const bhf)
+static int bhf_4th_Poly_Ylm(struct BHFiller_S *const bhf)
 {
-  printf("|--> BH-filler method = poly(r,4)xYlm(th,ph).\n");
+  printf("|--> BH-filler method = 4th_Poly_Ylm.\n");
   fflush(stdout);
   Grid_T *const grid = bhf->grid;
   const double EPS   = 1E-12;
