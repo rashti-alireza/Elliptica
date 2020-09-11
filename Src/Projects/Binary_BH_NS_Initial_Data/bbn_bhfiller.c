@@ -86,27 +86,24 @@ bhf_init
     const unsigned Nphi   = 2*lmax+1;
     const unsigned N      = Ntheta*Nphi;
     
-    bhf->npo = npo;
-    bhf->npi = npi;
     nf = 0;/* number of fields */
     while(fields_name[nf]) ++nf;
+    
+    /* alloc */
     bhf->nf = nf;
+    bhf->fld= calloc(nf,sizeof(*bhf->fld));IsNull(bhf->fld);
     
     /* set the method function */
     bhf->bhfiller = bhf_ChebTnYlm_C2;
     
-    /* alloc */
-    bhf->fld  = calloc(nf,sizeof(*bhf->fld));IsNull(bhf->fld);
-    
     /* collect names */
-    collect_names(bhf);
+    collect_names(bhf,nf);
     
     /* initialize tables */
     init_Legendre_root_function();
     bhf->lmax   = lmax;
     bhf->Ntheta = Ntheta;
     bhf->Nphi   = Nphi;
-    
     /* alloc ChebTn_coeffs */
     for (f = 0; f < nf; ++f)
     {
@@ -175,6 +172,8 @@ bhf_init
     }/* for (f = 0; f < nf ++f) */
     
     /* patches outside the BH */
+    bhf->npo = npo;
+    bhf->npi = npi;
     bhf->patches_outBH = calloc(npo,sizeof(*bhf->patches_outBH));
     IsNull(bhf->patches_outBH);
     /* patches inside the BH */
@@ -202,10 +201,20 @@ bhf_init
   /* solving elliptic equations in the hole */
   else if (strcmp_i(method,"EllEq"))
   {
+    unsigned nf;
+    
+    nf = 0;/* number of fields */
+    while(fields_name[nf]) ++nf;
+    
+    /* alloc */
+    bhf->nf = nf;
+    bhf->fld= calloc(nf,sizeof(*bhf->fld));IsNull(bhf->fld);
+    
     /* collect names */
-    collect_names(bhf);
+    collect_names(bhf,nf);
+    
     /* set the method function */
-    bhf->bhfiller = 0;;//bhf_EllEq;
+    bhf->bhfiller = 0;
   }
   else
     Error0(NO_OPTION);
@@ -1060,17 +1069,11 @@ static double interpolate_from_patch_prim(const char *const field,const double *
 }
 
 /* collect names of the fields and their derivatives */
-static void collect_names(struct BHFiller_S *const bhf)
+static void collect_names(struct BHFiller_S *const bhf,const unsigned nf)
 {
   const char *s = 0;
-  unsigned f,nf,i,j;
+  unsigned f,i,j;
     
-  nf = 0;/* number of fields */
-  while(fields_name[nf]) ++nf;
-  bhf->nf = nf;
-  
-  bhf->fld = calloc(nf,sizeof(*bhf->fld));IsNull(bhf->fld);
-  
   for (f = 0; f < nf; ++f)
   {
     bhf->fld[f] = calloc(1,sizeof(*bhf->fld[f]));IsNull(bhf->fld[f]);
