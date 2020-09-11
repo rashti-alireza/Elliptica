@@ -6,6 +6,8 @@
 /* constants */
 #define MAX_STR  (100)
 #define MAX_STR2 (200)
+#define MAX_COEFFS (10)
+
 /* 2 indices */
 #define IJ(i,j,n)  ((j)+(i)*(n))
 /* 2 indices with symmetry for n = 3 */
@@ -55,9 +57,9 @@ struct BHFiller_S
     char f[MAX_STR];/* f */
     char df[3][MAX_STR];/* df/dx */
     char ddf[6][MAX_STR];/* d^2f/dx^2 */
-    double *ChebTn_coeffs[4];/* ChebTn coeffs to ensure C2 continuity */
-    double *realYlm_coeffs[4];/* Ylm coeffs of ChebTn real part */
-    double *imagYlm_coeffs[4];/* Ylm coeffs of ChebTn imag part */
+    double *radial_coeffs[MAX_COEFFS];/* radial coeffs to ensure continuity */
+    double *realYlm_coeffs[MAX_COEFFS];/* Ylm coeffs of radial real part */
+    double *imagYlm_coeffs[MAX_COEFFS];/* Ylm coeffs of radial imag part */
     double f_r0;/* value of the field at r = 0 */
   }**fld;/* field info */
   int (*bhfiller)(struct BHFiller_S *const bhf);/* the method to fill the BH */

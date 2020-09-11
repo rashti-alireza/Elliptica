@@ -104,12 +104,12 @@ bhf_init
     bhf->lmax   = lmax;
     bhf->Ntheta = Ntheta;
     bhf->Nphi   = Nphi;
-    /* alloc ChebTn_coeffs */
+    /* alloc radial_coeffs */
     for (f = 0; f < nf; ++f)
     {
       for (i = 0 ; i < 4; ++i)
       {
-        bhf->fld[f]->ChebTn_coeffs[i]  = alloc_double(N);
+        bhf->fld[f]->radial_coeffs[i]  = alloc_double(N);
         bhf->fld[f]->realYlm_coeffs[i] = alloc_ClmYlm(lmax);
         bhf->fld[f]->imagYlm_coeffs[i] = alloc_ClmYlm(lmax);
       }
@@ -244,12 +244,12 @@ bhf_init
     bhf->lmax   = lmax;
     bhf->Ntheta = Ntheta;
     bhf->Nphi   = Nphi;
-    /* alloc ChebTn_coeffs */
+    /* alloc radial_coeffs */
     for (f = 0; f < nf; ++f)
     {
       for (i = 0 ; i < 5; ++i)
       {
-        bhf->fld[f]->ChebTn_coeffs[i]  = alloc_double(N);
+        bhf->fld[f]->radial_coeffs[i]  = alloc_double(N);
         bhf->fld[f]->realYlm_coeffs[i] = alloc_ClmYlm(lmax);
         bhf->fld[f]->imagYlm_coeffs[i] = alloc_ClmYlm(lmax);
       }
@@ -366,9 +366,9 @@ static void bhf_free(struct BHFiller_S *const bhf)
   
   for (f = 0; f < bhf->nf; ++f)
   {
-    for (i = 0; i < 4; ++i)
+    for (i = 0; i < MAX_COEFFS; ++i)
     {
-      _free(bhf->fld[f]->ChebTn_coeffs[i]);
+      _free(bhf->fld[f]->radial_coeffs[i]);
       _free(bhf->fld[f]->realYlm_coeffs[i]);
       _free(bhf->fld[f]->imagYlm_coeffs[i]);
     }
@@ -527,7 +527,7 @@ static int bhf_ChebTnYlm_C2(struct BHFiller_S *const bhf)
         a[3] = (-2*fr0 + 2*fr1 + rfill*(-2*dfdr + ddfddr*rfill))/64.;
         
         for (_i = 0; _i < 4; _i++)
-          bhf->fld[fld]->ChebTn_coeffs[_i][ij] = a[_i];
+          bhf->fld[fld]->radial_coeffs[_i][ij] = a[_i];
         
       }
     }/* for (i = 0; i < Ntheta; ++i) */
@@ -536,7 +536,7 @@ static int bhf_ChebTnYlm_C2(struct BHFiller_S *const bhf)
     {
       double *rC       = bhf->fld[fld]->realYlm_coeffs[i];
       double *iC       = bhf->fld[fld]->imagYlm_coeffs[i];
-      const double *v  = bhf->fld[fld]->ChebTn_coeffs[i];
+      const double *v  = bhf->fld[fld]->radial_coeffs[i];
       get_Ylm_coeffs(rC,iC,v,Ntheta,Nphi,lmax);
     }
   }/* for (fld = 0; fld < nf ++fld) */
@@ -1474,7 +1474,7 @@ static int bhf_poly_r_4_Ylm(struct BHFiller_S *const bhf)
    (2.*r_2*Power(r_2 - rfill,3)*Power(rfill,3));
         
         for (_i = 0; _i < 5; _i++)
-          bhf->fld[fld]->ChebTn_coeffs[_i][ij] = a[_i];
+          bhf->fld[fld]->radial_coeffs[_i][ij] = a[_i];
         
       }
     }/* for (i = 0; i < Ntheta; ++i) */
@@ -1483,7 +1483,7 @@ static int bhf_poly_r_4_Ylm(struct BHFiller_S *const bhf)
     {
       double *rC       = bhf->fld[fld]->realYlm_coeffs[i];
       double *iC       = bhf->fld[fld]->imagYlm_coeffs[i];
-      const double *v  = bhf->fld[fld]->ChebTn_coeffs[i];
+      const double *v  = bhf->fld[fld]->radial_coeffs[i];
       get_Ylm_coeffs(rC,iC,v,Ntheta,Nphi,lmax);
     }
   }/* for (fld = 0; fld < nf ++fld) */
