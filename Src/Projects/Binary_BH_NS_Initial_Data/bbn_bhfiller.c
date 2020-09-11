@@ -77,8 +77,14 @@ bhf_init
     const double fr0_alpha       = 0.1;
     const double fr0_psi = 2+Ma/(2*EPS);
     const double fr0_eta = fr0_alpha*fr0_psi;
-    const char *s = 0;
     unsigned f,nf,i,j,p;
+    int lmax_par = PgetiEZ("bbn_bhfiller_lmax");
+    if (lmax_par == INT_MAX)/* if par doesn't exist */
+      lmax_par = 10;
+    const unsigned lmax   = (unsigned)lmax_par;
+    const unsigned Ntheta = 2*lmax+1;
+    const unsigned Nphi   = 2*lmax+1;
+    const unsigned N      = Ntheta*Nphi;
     
     bhf->npo = npo;
     bhf->npi = npi;
@@ -89,103 +95,26 @@ bhf_init
     /* set the method function */
     bhf->bhfiller = bhf_ChebTnYlm_C2;
     
-    /* if par doesn't exist */
-    int lmax_par = PgetiEZ("bbn_bhfiller_lmax");
-    if (lmax_par == INT_MAX)
-      lmax_par = 10;
-    const unsigned lmax   = (unsigned)lmax_par;
-    const unsigned Ntheta = 2*lmax+1;
-    const unsigned Nphi   = 2*lmax+1;
-    const unsigned N      = Ntheta*Nphi;
+    /* alloc */
+    bhf->fld  = calloc(nf,sizeof(*bhf->fld));IsNull(bhf->fld);
+    
+    /* collect names */
+    collect_names(bhf);
     
     /* initialize tables */
     init_Legendre_root_function();
-  
     bhf->lmax   = lmax;
     bhf->Ntheta = Ntheta;
     bhf->Nphi   = Nphi;
-    bhf->fld    = calloc(nf,sizeof(*bhf->fld));IsNull(bhf->fld);
     
+    /* alloc ChebTn_coeffs */
     for (f = 0; f < nf; ++f)
     {
-      bhf->fld[f] = calloc(1,sizeof(*bhf->fld[f]));IsNull(bhf->fld[f]);
-      /* names of fields and its derivatives */
-      sprintf(bhf->fld[f]->f,"%s",fields_name[f]);
-      if (fields_name[f][0] == '_')/* => _dgamma */
-      {
-        s = bhf->fld[f]->f+1;
-        /* if it is indexed */
-        if (regex_search(".+_(U|D)[[:digit:]]",s))
-        {
-          for (i = 0; i < 3; ++i)
-          {
-            sprintf(bhf->fld[f]->df[i],"_d%sD%u",s,i);
-            for (j = i; j < 3; ++j)
-              sprintf(bhf->fld[f]->ddf[IJsymm3(i,j)],"_dd%sD%uD%u",s,i,j);
-          }
-        }
-        else/* not indexed */
-        {
-          for (i = 0; i < 3; ++i)
-          {
-            sprintf(bhf->fld[f]->df[0],"_d%s_D%u",s,i);
-            for (j = i; j < 3; ++j)
-              sprintf(bhf->fld[f]->ddf[IJsymm3(i,j)],"_dd%s_D%uD%u",s,i,j);
-          }
-        }
-      }
-      else/* if no _ at the beginning */
-      {
-        s = fields_name[f];
-        /* if it is indexed */
-        if (regex_search(".+_(U|D)[[:digit:]]",s))
-        {
-          for (i = 0; i < 3; ++i)
-          {
-            sprintf(bhf->fld[f]->df[i],"d%sD%u",s,i);
-            for (j = i; j < 3; ++j)
-              sprintf(bhf->fld[f]->ddf[IJsymm3(i,j)],"dd%sD%uD%u",s,i,j);
-          }
-        }
-        else/* not indexed */
-        {
-          for (i = 0; i < 3; ++i)
-          {
-            sprintf(bhf->fld[f]->df[i],"d%s_D%u",s,i);
-            for (j = i; j < 3; ++j)
-              sprintf(bhf->fld[f]->ddf[IJsymm3(i,j)],"dd%s_D%uD%u",s,i,j);
-          }
-        }
-      }
-      
-      /* alloc ChebTn_coeffs */
       for (i = 0 ; i < 4; ++i)
       {
         bhf->fld[f]->ChebTn_coeffs[i]  = alloc_double(N);
         bhf->fld[f]->realYlm_coeffs[i] = alloc_ClmYlm(lmax);
         bhf->fld[f]->imagYlm_coeffs[i] = alloc_ClmYlm(lmax);
-      }
-    }/* for (f = 0; f < nf; ++f) */
-    
-    /* quick test for names */
-    if (0)
-    {
-      /* show contents */
-      for (f = 0; f < nf; ++f)
-      {
-        pr_line();
-        printf("fld[%u] = %s\n",f,bhf->fld[f]->f);
-        printf("d[%s] = (%s,%s,%s)\n",
-            bhf->fld[f]->f,bhf->fld[f]->df[0],
-            bhf->fld[f]->df[1],bhf->fld[f]->df[2]);
-        for (i = 0; i < 3; ++i)
-        {
-          for (j = i; j < 3; ++j)
-          {
-            printf("dd[%s](%u,%u) = %s\n",
-              bhf->fld[f]->f,i,j,bhf->fld[f]->ddf[IJsymm3(i,j)]);
-          }
-        }
       }
     }
 
@@ -269,6 +198,14 @@ bhf_init
   {
     /* set the method function */
     bhf->bhfiller = bhf_WTGR;
+  }
+  /* solving elliptic equations in the hole */
+  else if (strcmp_i(method,"EllEq"))
+  {
+    /* collect names */
+    collect_names(bhf);
+    /* set the method function */
+    bhf->bhfiller = 0;;//bhf_EllEq;
   }
   else
     Error0(NO_OPTION);
@@ -1120,5 +1057,93 @@ static double interpolate_from_patch_prim(const char *const field,const double *
   free_interpolation(interp_s);
   
   return interp;
+}
+
+/* collect names of the fields and their derivatives */
+static void collect_names(struct BHFiller_S *const bhf)
+{
+  const char *s = 0;
+  unsigned f,nf,i,j;
+    
+  nf = 0;/* number of fields */
+  while(fields_name[nf]) ++nf;
+  bhf->nf = nf;
+  
+  bhf->fld = calloc(nf,sizeof(*bhf->fld));IsNull(bhf->fld);
+  
+  for (f = 0; f < nf; ++f)
+  {
+    bhf->fld[f] = calloc(1,sizeof(*bhf->fld[f]));IsNull(bhf->fld[f]);
+    /* names of fields and its derivatives */
+    sprintf(bhf->fld[f]->f,"%s",fields_name[f]);
+    if (fields_name[f][0] == '_')/* => _dgamma */
+    {
+      s = bhf->fld[f]->f+1;
+      /* if it is indexed */
+      if (regex_search(".+_(U|D)[[:digit:]]",s))
+      {
+        for (i = 0; i < 3; ++i)
+        {
+          sprintf(bhf->fld[f]->df[i],"_d%sD%u",s,i);
+          for (j = i; j < 3; ++j)
+            sprintf(bhf->fld[f]->ddf[IJsymm3(i,j)],"_dd%sD%uD%u",s,i,j);
+        }
+      }
+      else/* not indexed */
+      {
+        for (i = 0; i < 3; ++i)
+        {
+          sprintf(bhf->fld[f]->df[0],"_d%s_D%u",s,i);
+          for (j = i; j < 3; ++j)
+            sprintf(bhf->fld[f]->ddf[IJsymm3(i,j)],"_dd%s_D%uD%u",s,i,j);
+        }
+      }
+    }
+    else/* if no _ at the beginning */
+    {
+      s = fields_name[f];
+      /* if it is indexed */
+      if (regex_search(".+_(U|D)[[:digit:]]",s))
+      {
+        for (i = 0; i < 3; ++i)
+        {
+          sprintf(bhf->fld[f]->df[i],"d%sD%u",s,i);
+          for (j = i; j < 3; ++j)
+            sprintf(bhf->fld[f]->ddf[IJsymm3(i,j)],"dd%sD%uD%u",s,i,j);
+        }
+      }
+      else/* not indexed */
+      {
+        for (i = 0; i < 3; ++i)
+        {
+          sprintf(bhf->fld[f]->df[i],"d%s_D%u",s,i);
+          for (j = i; j < 3; ++j)
+            sprintf(bhf->fld[f]->ddf[IJsymm3(i,j)],"dd%s_D%uD%u",s,i,j);
+        }
+      }
+    }
+  }/* for (f = 0; f < nf; ++f) */
+  
+  /* quick test for names */
+  if (0)
+  {
+    /* show contents */
+    for (f = 0; f < nf; ++f)
+    {
+      pr_line();
+      printf("fld[%u] = %s\n",f,bhf->fld[f]->f);
+      printf("d[%s] = (%s,%s,%s)\n",
+          bhf->fld[f]->f,bhf->fld[f]->df[0],
+          bhf->fld[f]->df[1],bhf->fld[f]->df[2]);
+      for (i = 0; i < 3; ++i)
+      {
+        for (j = i; j < 3; ++j)
+        {
+          printf("dd[%s](%u,%u) = %s\n",
+            bhf->fld[f]->f,i,j,bhf->fld[f]->ddf[IJsymm3(i,j)]);
+        }
+      }
+    }
+  }
 }
 

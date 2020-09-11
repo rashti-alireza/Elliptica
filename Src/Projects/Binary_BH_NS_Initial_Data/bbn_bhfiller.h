@@ -44,7 +44,12 @@ struct BHFiller_S
   char method[MAX_STR];/* methods: 
                        // O. TnYlm_C2 => f(r,th,ph) = R(r)*T(th,ph) 
                        // and it is asked for C2 continitui along r.
-                       // R expanded in Cheb_Tn and T in Ylm. */
+                       // R expanded in Cheb_Tn and T in Ylm.
+                       //
+                       // O. WTGR => it's C1 in which using Tanh function.
+                       //
+                       // O. EllEq => it's C^n in which elliptic equation
+                       // of n-th order is solved. */
   struct
   {
     char f[MAX_STR];/* f */
@@ -87,6 +92,5 @@ static int bhf_ChebTnYlm_C2(struct BHFiller_S *const bhf);
 static int bhf_WTGR(struct BHFiller_S *const bhf);
 static double interpolate_from_patch_prim(const char *const field,const double *const X,Patch_T *const patch);
 void bbn_bam_error(const char *const msg,const char *const file,const int line);
-
-
+static void collect_names(struct BHFiller_S *const bhf);
 
