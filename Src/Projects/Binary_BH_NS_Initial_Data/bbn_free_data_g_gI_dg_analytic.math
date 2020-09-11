@@ -25,8 +25,9 @@ point = x;
 `def mcode(m):`
 `  print('/* mcode */')`
 `  sys.stdout.flush()`
+`  m = (m).doit()`
 `  code = ""`
-`  if (1):`
+`  if (0):`
 `    pid = os.getpid()`
 `    mfile_name=".mfile_temp_{}".format(pid)`
 `    cfile_name=".cfile_temp_{}".format(pid)`
@@ -37,7 +38,7 @@ point = x;
 `      rhs  = mathematica_code(m)`
 ``
 `    math_code  = rhs + ";\n"`
-`    math_code += "Simplify[%,TimeConstraint->1000];\n"`
+`    math_code += "Simplify[%];\n"`
 `    math_code += "c=CForm[%];\n"`
 `    math_code += "Print[c]"+"\n"`
 ## write into mathematica file
@@ -68,11 +69,12 @@ point = x;
 `  return code`
 ``
 ### simplify using mathematica or sympy:
-`def msimplify(m,msg):`
+`def msimplify(m,msg,s=0):`
 `  print('/* msimplify({}) */'.format(msg))`
 `  sys.stdout.flush()`
+`  m = (m).doit()`
 `  code = ""`
-`  if (1):`# if you want mathematica
+`  if (s):`# if you want mathematica
 `    pid = os.getpid()`
 `    mfile_name=".mfile_temp_{}".format(pid)`
 `    cfile_name=".cfile_temp_{}".format(pid)`
@@ -103,8 +105,8 @@ point = x;
 `    cmd = "rm -rf {} {}".format(mfile_name,cfile_name)`
 `    os.system(cmd)`
 `    return mathematica(code)`
-`  else:` ## if you wanna use simpy
-`    code = simplify(m)`
+`  else:` ## if you dont wanna simplify
+`    code = m`
 `    return code`
 ``
 ``
@@ -201,9 +203,9 @@ point = x;
 `  tB       = PB(Bx,By,Bz,B2)`
 `  tRy, tRz = PR(phiy,phiz)`
 `  _x_mu = TBR(tB,tRy,tRz,-1,x_mu)`
-`  _x    = msimplify(_x_mu[1,0],'_x')`
-`  _y    = msimplify(_x_mu[2,0],'_y')`
-`  _z    = msimplify(_x_mu[3,0],'_z')`
+`  _x    = msimplify(_x_mu[1,0],'_x',1)`
+`  _y    = msimplify(_x_mu[2,0],'_y',1)`
+`  _z    = msimplify(_x_mu[3,0],'_z',1)`
 `  _r    = rKS(_x,_y,_z,a)`
 `  a2  = a**2`
 `  _r2 = _r**2`
@@ -272,24 +274,24 @@ point = x;
 `      ])`
 
 ### first order derivatives:
-`_dg00_D0=(diff(_g00,x))`
-`_dg00_D2=(diff(_g00,z))`
-`_dg00_D1=(diff(_g00,y))`
-`_dg01_D1=(diff(_g01,y))`
-`_dg01_D2=(diff(_g01,z))`
-`_dg01_D0=(diff(_g01,x))`
-`_dg02_D0=(diff(_g02,x))`
-`_dg02_D2=(diff(_g02,z))`
-`_dg02_D1=(diff(_g02,y))`
-`_dg11_D0=(diff(_g11,x))`
-`_dg11_D2=(diff(_g11,z))`
-`_dg11_D1=(diff(_g11,y))`
-`_dg12_D2=(diff(_g12,z))`
-`_dg12_D1=(diff(_g12,y))`
-`_dg12_D0=(diff(_g12,x))`
-`_dg22_D1=(diff(_g22,y))`
-`_dg22_D0=(diff(_g22,x))`
-`_dg22_D2=(diff(_g22,z))`
+`dg00_D0=(diff(_g00,x))`
+`dg00_D2=(diff(_g00,z))`
+`dg00_D1=(diff(_g00,y))`
+`dg01_D1=(diff(_g01,y))`
+`dg01_D2=(diff(_g01,z))`
+`dg01_D0=(diff(_g01,x))`
+`dg02_D0=(diff(_g02,x))`
+`dg02_D2=(diff(_g02,z))`
+`dg02_D1=(diff(_g02,y))`
+`dg11_D0=(diff(_g11,x))`
+`dg11_D2=(diff(_g11,z))`
+`dg11_D1=(diff(_g11,y))`
+`dg12_D2=(diff(_g12,z))`
+`dg12_D1=(diff(_g12,y))`
+`dg12_D0=(diff(_g12,x))`
+`dg22_D1=(diff(_g22,y))`
+`dg22_D0=(diff(_g22,x))`
+`dg22_D2=(diff(_g22,z))`
 ``
 `########################`
 `### C code generator ###`
@@ -510,58 +512,58 @@ point = x;
 `print('    z = patch->node[ijk]->x[2]-BH_center_z;')`
 `print('')`
 `print('    _dgamma_D1D2D2[ijk]=')`
-`print('    mcode(dg12_D2)')`
+`print(mcode(dg12_D2))`
 `print('')`
 `print('    _dgamma_D0D0D1[ijk]=')`
-`print('    mcode(dg00_D1)')`
+`print(mcode(dg00_D1))`
 `print('')`
 `print('    _dgamma_D0D2D1[ijk]=')`
-`print('    mcode(dg02_D1)')`
+`print(mcode(dg02_D1))`
 `print('')`
 `print('    _dgamma_D0D1D0[ijk]=')`
-`print('    mcode(dg01_D0)')`
+`print(mcode(dg01_D0))`
 `print('')`
 `print('    _dgamma_D1D2D1[ijk]=')`
-`print('    mcode(dg12_D1)')`
+`print(mcode(dg12_D1))`
 `print('')`
 `print('    _dgamma_D2D2D0[ijk]=')`
-`print('    mcode(dg22_D0)')`
+`print(mcode(dg22_D0))`
 `print('')`
 `print('    _dgamma_D0D0D0[ijk]=')`
-`print('    mcode(dg00_D0)')`
+`print(mcode(dg00_D0))`
 `print('')`
 `print('    _dgamma_D0D0D2[ijk]=')`
-`print('    mcode(dg00_D2)')`
+`print(mcode(dg00_D2))`
 `print('')`
 `print('    _dgamma_D0D2D2[ijk]=')`
-`print('    mcode(dg02_D2)')`
+`print(mcode(dg02_D2))`
 `print('')`
 `print('    _dgamma_D2D2D1[ijk]=')`
-`print('    mcode(dg22_D1)')`
+`print(mcode(dg22_D1))`
 `print('')`
 `print('    _dgamma_D0D1D1[ijk]=')`
-`print('    mcode(dg01_D1)')`
+`print(mcode(dg01_D1))`
 `print('')`
 `print('    _dgamma_D0D2D0[ijk]=')`
-`print('    mcode(dg02_D0)')`
+`print(mcode(dg02_D0))`
 `print('')`
 `print('    _dgamma_D1D2D0[ijk]=')`
-`print('    mcode(dg12_D0)')`
+`print(mcode(dg12_D0))`
 `print('')`
 `print('    _dgamma_D1D1D1[ijk]=')`
-`print('    mcode(dg11_D1)')`
+`print(mcode(dg11_D1))`
 `print('')`
 `print('    _dgamma_D0D1D2[ijk]=')`
-`print('    mcode(dg01_D2)')`
+`print(mcode(dg01_D2))`
 `print('')`
 `print('    _dgamma_D1D1D0[ijk]=')`
-`print('    mcode(dg11_D0)')`
+`print(mcode(dg11_D0))`
 `print('')`
 `print('    _dgamma_D1D1D2[ijk]=')`
-`print('    mcode(dg11_D2)')`
+`print(mcode(dg11_D2))`
 `print('')`
 `print('    _dgamma_D2D2D2[ijk]=')`
-`print('    mcode(dg22_D2)')`
+`print(mcode(dg22_D2))`
 `print('')`
 `print('  }')`
 `print('}')`
