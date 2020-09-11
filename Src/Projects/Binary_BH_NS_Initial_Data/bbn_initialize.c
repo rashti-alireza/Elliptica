@@ -3721,6 +3721,10 @@ void bbn_extrapolate_metric_fields_insideBH(Grid_T *const grid)
   {
     bbn_bhfiller(grid,"WTGR");
   }
+  else if (Pcmps("extrapolate_inside_BH_method","poly(r,4)xYlm(th,ph)"))
+  {
+    bbn_bhfiller(grid,"poly(r,4)xYlm(th,ph)");
+  }
   else
     Error0(NO_OPTION);
   
