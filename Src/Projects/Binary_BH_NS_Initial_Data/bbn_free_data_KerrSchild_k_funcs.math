@@ -5,13 +5,14 @@
 #########################
 # Issue the following (TAKES A VERY VERY LONG TIME):
 # 
-# $ cpi bbn_free_data_ddg_dddg.math > bbn_free_data_ddg_dddg.c && \
-#   sed -i '/Welcome to Cpi/,$d' bbn_free_data_ddg_dddg.c
+# $ cpi bbn_free_data_KerrSchild_k_funcs.math > \
+#   bbn_free_data_KerrSchild_k_funcs.c && \
+#   sed -i '/Welcome to Cpi/,$d' bbn_free_data_KerrSchild_k_funcs.c
 
 Dimension = 3;
 point = x;
 C_macro=name_(diff(name).doit());
-C_macro2=print('double bbn_name_KS_freedataKS_func_args_macro');
+C_macro2=print('double bbn_name_KS_freedataKS_func_args_macro;');
 C_macro3=print('double bbn_name_KS_freedataKS_func_args_macro')\n\
 	print('{')\n\
 	print('return')\n\
@@ -28,6 +29,236 @@ C_macro3=print('double bbn_name_KS_freedataKS_func_args_macro')\n\
 `import sys`
 `import re`
 `import os`
+
+### ccode generator
+`def mcode(m):`
+`  print('/* mcode in progress ... */')`
+`  sys.stdout.flush()`
+`  m = (m).doit()`
+`  code = ""`
+`  if (0):`
+`    pid = os.getpid()`
+`    mfile_name=".mfile_temp_{}".format(pid)`
+`    cfile_name=".cfile_temp_{}".format(pid)`
+`    rhs  =""`
+`    try:`
+`      rhs  = mathematica_code((m).doit())`
+`    except:`
+`      rhs  = mathematica_code(m)`
+``
+`    math_code  = rhs + ";\n"`
+`    math_code += "Simplify[%];\n"`
+`    math_code += "c=CForm[%];\n"`
+`    math_code += "Print[c]"+"\n"`
+## write into mathematica file
+`    mfile = open(mfile_name,"w")`
+`    mfile.write(math_code)`
+`    mfile.close()`
+
+## run mathematica and output into another
+`    cmd = "math -run -noprompt < {} 1> {}".format(mfile_name,cfile_name)`
+`    ret=os.system(cmd)`
+
+## read math results.
+`    cfile=open(cfile_name,"r")`
+`    code =cfile.read()`
+`    cfile.close()`
+
+## delete the files
+`    cmd = "rm -rf {} {}".format(mfile_name,cfile_name)`
+`    os.system(cmd)`
+`  else:`
+`    code = ccode(m)`
+``
+## return the code and break long lines
+`  code = '{};'.format(code)`
+`  code = re.sub(r'\b1.0\*\b','',code)`
+`  code = re.sub(r'(.{50,70}[\+\-\*/]+\s?)','\\1{}n'.format("\\"),code)`
+``
+`  return code`
+``
+
+### simplify using mathematica or sympy or none:
+`def msimplify(m,msg,s="mathematica"):`
+`  print('/* msimplify({}) */'.format(msg))`
+`  sys.stdout.flush()`
+`  code = ""`
+`  if (s=="mathematica"):`# if you want mathematica
+`    pid = os.getpid()`
+`    mfile_name=".mfile_temp_{}".format(pid)`
+`    cfile_name=".cfile_temp_{}".format(pid)`
+`    rhs  =""`
+`    try:`
+`      rhs  = mathematica_code((m).doit())`
+`    except:`
+`      rhs  = mathematica_code(m)`
+``
+`    math_code  = rhs + ";\n"`
+`    math_code += "Simplify[%,TimeConstraint->1000];\n"`
+`    math_code += "Print[%]"+"\n"`
+## write into mathematica file
+`    mfile = open(mfile_name,"w")`
+`    mfile.write(math_code)`
+`    mfile.close()`
+
+## run mathematica and output into another
+`    cmd = "math -run -noprompt < {} 1> {}".format(mfile_name,cfile_name)`
+`    ret=os.system(cmd)`
+
+## read math results.
+`    cfile=open(cfile_name,"r")`
+`    code =cfile.read()`
+`    cfile.close()`
+
+## delete the files
+`    cmd = "rm -rf {} {}".format(mfile_name,cfile_name)`
+`    os.system(cmd)`
+`    return mathematica(code)`
+`  elif(s=="sympy"):` ## if you wanna simpy simplify
+`    code = simplify(m)`
+`    return code`
+`  else:` ## no simplification
+`    return m`
+
+### symbols
+###########
+
+`### coords and parameters`
+`x,y,z = symbols('x,y,z')`
+``
+`r0,M_BH,a_BH,Lambda = symbols('r0,M_BH,a_BH,Lambda')`
+``
+`BH_center_x,BH_center_y,BH_center_z = \`
+`  symbols('BH_center_x,BH_center_y,BH_center_z')`
+`  `
+`chi,chi_U0,chi_U1,chi_U2 = symbols('chi,chi_U0,chi_U1,chi_U2')`
+`x_CM,y_CM,Omega_BHNS = symbols('x_CM,y_CM,Omega_BHNS')`
+``
+`Bx,By,Bz,B2 = symbols('Bx,By,Bz,B2')`
+`phiy,phiz   = symbols('phiy,phiz')`
+``
+`r = (x**2+y**2+z**2)**0.5`
+`e = exp(-(r/r0)**4)`
+``
+`### functions`
+`rKS = symbols('rKS',cls=Function)`
+`HKS = symbols('HKS',cls=Function)`
+`TBR = symbols('TBR',cls=Function)`
+`PB  = symbols('TB',cls=Function)`
+`PR  = symbols('TR',cls=Function)`
+
+``
+``
+`### r funciont in Kerr-Schild coords:`
+`def rKS(_x,_y,_z,a):`
+`  r2 = (_x**2+_y**2+_z**2)`
+`  a2 = a**2`
+`  return (0.5*(r2-a2+sqrt((r2-a2)**2+4*a2*_z**2)))`
+``
+``
+`### H function in Kerr-Schild coords`
+`def HKS (M_BH,_r,a,_z,Lambda):`
+`  _k2 = _z/_r;`
+`  a2  = a**2`
+`  _r2 = _r**2`
+`  return (Lambda*M_BH*_r/(_r2+a2*_k2**2))`
+``
+``
+`### boost and rotation transformation, dir = [1,-1]`
+`def TBR(B,Ry,Rz,dir,v):`
+`  if (dir == 1):`
+`    return simplify(B*Rz*Ry)*v`
+`  elif (dir == -1):`
+`    Bm1 = simplify(B**-1)`
+`    return simplify(Ry**-1*Rz**-1) * (Bm1) * v`
+`  else:`
+`    raise Exception('Bad argument')`
+``
+`  `
+``
+`### populate boost transformation:`
+`def PB(Bx,By,Bz,B2):`
+`   gamma  = (1-B2)**(-0.5)`
+`   b = Matrix([`
+`     [gamma    , -gamma*Bx            , -gamma*By            , -gamma*Bz],`
+`     [-gamma*Bx, 1+(gamma-1)*Bx**2/B2 , (gamma-1)*Bx*By/B2   , (gamma-1)*Bx*Bz/B2],`
+`     [-gamma*By, (gamma-1)*Bx*By/B2   , 1+(gamma-1)*By**2/B2 , (gamma-1)*By*Bz/B2],`
+`     [-gamma*Bz, (gamma-1)*Bx*Bz/B2   , (gamma-1)*By*Bz/B2   , 1+(gamma-1)*Bz**2/B2]`
+`     ])`
+`     `
+`   return b;`
+``
+`### populate rotation transformaion`
+`def PR(phiy,phiz):`
+`  cy = cos(phiy)`
+`  sy = sin(phiy)`
+`  cz = cos(phiz)`
+`  sz = sin(phiz)`
+`  `
+`  ty = Matrix([`
+`     [1,0  ,0,0],`
+`     [0,cy ,0,sy],`
+`     [0,0  ,1,0],`
+`     [0,-sy,0,cy]`
+`     ])`
+`     `
+`  tz = Matrix([`
+`     [1,0 ,0  ,0],`
+`     [0,cz,-sz,0],`
+`     [0,sz,cz ,0],`
+`     [0,0 ,0  ,1]`
+`     ])`
+`     `
+`  return ty, tz  `
+``
+``
+`### get ks and H needed to populate Kerr-Schild`
+`def get_ks_and_H(x,y,z,a,m,Bx,By,Bz,B2,phiy,phiz):`
+`  x_mu     = transpose(Matrix([[0,x,y,z]]))`
+`  tB       = PB(Bx,By,Bz,B2)`
+`  tRy, tRz = PR(phiy,phiz)`
+`  _x_mu = TBR(tB,tRy,tRz,-1,x_mu)`
+`  _x    = msimplify(_x_mu[1,0],"_x")`
+`  _y    = msimplify(_x_mu[2,0],"_y")`
+`  _z    = msimplify(_x_mu[3,0],"_z")`
+`  _r    = rKS(_x,_y,_z,a)`
+`  a2  = a**2`
+`  _r2 = _r**2`
+`  _k0 = ((_r*_x+a*_y)/(_r2+a2))`
+`  _k1 = ((_r*_y-a*_x)/(_r2+a2))`
+`  _k2 = (_z/_r)`
+`  _kt = 1`
+`  `
+`  _k_mu = transpose(Matrix([[_kt,_k0,_k1,_k2]]))`
+`  k_mu  = TBR(tB,tRy,tRz,1,_k_mu)`
+`  `
+`  print("/* kt */")`
+`  sys.stdout.flush()`
+`  kt = (k_mu[0,0])`
+`  `
+`  print("/* k0 */")`
+`  sys.stdout.flush()`
+`  k0 = (k_mu[1,0])`
+`  `
+`  print("/* k1 */")`
+`  sys.stdout.flush()`
+`  k1 = (k_mu[2,0])`
+`  `
+`  print("/* k2 */")`
+`  sys.stdout.flush()`
+`  k2 = (k_mu[3,0])`
+`  `
+`  print("/* H */")`
+`  sys.stdout.flush()`
+`  H = (HKS(m,_r,a,_z,Lambda))`
+`  `
+`  return kt,k0,k1,k2,H`
+``
+`### evaluates:`
+`kt,k0,k1,k2,H = get_ks_and_H(x,y,z,a_BH,M_BH,Bx,By,Bz,B2,phiy,phiz)`
+`r = (x**2+y**2+z**2)**0.5`
+`e = exp(-(r/r0)**4)`
+`c = 2*H*e`
 
 Declare =
 {
@@ -149,8 +380,6 @@ Declare =
  # ddd c
  (obj = Field,name = dddc, rank = DDD, C_macro3);
 
-
-
 }
 
 # symmetries:
@@ -166,12 +395,14 @@ Symm[dddk2(i,j,k)   = dddk2(j,i,k)];
 Symm[ddc(i,j)      = ddc(j,i)];
 Symm[dddc(i,j,k)   = dddc(j,i,k)];
 
+
 ### make it ready for python:
 ### remove C comments:
 Command["sed -i 's/\/\* declaring: \*\///'"];
 
-### remove spaces for dg's
-Command["sed -i 's/^  //g'"];
+### remove spaces:
+Command["sed -i 's/^  d/d/g'"];
+Command["sed -i "s/^  print('double/print('double/g""];
 
 ### derivatives d/dx
 Command["sed -i 's/0)\.doit/,x)\.doit/g'"];
@@ -194,7 +425,7 @@ Command["sed -i 's/KS_func_args_macro/ KS_func_args_macro/g'"];
 ### remove C comments:
 Command["sed -i '1,5d'"];
 ### run python
-Comand["python "];
+#Comand["python "];
 Comand["cat "];
 
 ### rm redundants
