@@ -31,12 +31,12 @@ C_macro3=print('double bbn_name_KS_freedataKS_func_args_macro')\n\
 `import os`
 
 ### ccode generator
-`def mcode(m):`
+`def mcode(m,s=2):`
 `  print('/* mcode in progress ... */')`
 `  sys.stdout.flush()`
 `  m = (m).doit()`
 `  code = ""`
-`  if (0):`
+`  if (s==1):`
 `    pid = os.getpid()`
 `    mfile_name=".mfile_temp_{}".format(pid)`
 `    cfile_name=".cfile_temp_{}".format(pid)`
@@ -67,6 +67,8 @@ C_macro3=print('double bbn_name_KS_freedataKS_func_args_macro')\n\
 ## delete the files
 `    cmd = "rm -rf {} {}".format(mfile_name,cfile_name)`
 `    os.system(cmd)`
+`  elif (s==2):`
+`    code = ccode(simplify(m))`
 `  else:`
 `    code = ccode(m)`
 ``
@@ -79,7 +81,7 @@ C_macro3=print('double bbn_name_KS_freedataKS_func_args_macro')\n\
 ``
 
 ### simplify using mathematica or sympy or none:
-`def msimplify(m,msg,s="mathematica"):`
+`def msimplify(m,msg="...",s="mathematica"):`
 `  print('/* msimplify({}) */'.format(msg))`
 `  sys.stdout.flush()`
 `  code = ""`
@@ -119,65 +121,52 @@ C_macro3=print('double bbn_name_KS_freedataKS_func_args_macro')\n\
 `    return code`
 `  else:` ## no simplification
 `    return m`
-
-### symbols
-###########
-
-`### coords and parameters`
-`x,y,z = symbols('x,y,z')`
 ``
+``
+``
+`### symbols`
+`x,y,z               = symbols('x,y,z')`
 `r0,M_BH,a_BH,Lambda = symbols('r0,M_BH,a_BH,Lambda')`
-``
-`BH_center_x,BH_center_y,BH_center_z = \`
-`  symbols('BH_center_x,BH_center_y,BH_center_z')`
-`  `
-`chi,chi_U0,chi_U1,chi_U2 = symbols('chi,chi_U0,chi_U1,chi_U2')`
-`x_CM,y_CM,Omega_BHNS = symbols('x_CM,y_CM,Omega_BHNS')`
-``
-`Bx,By,Bz,B2 = symbols('Bx,By,Bz,B2')`
-`phiy,phiz   = symbols('phiy,phiz')`
-``
-`r = (x**2+y**2+z**2)**0.5`
-`e = exp(-(r/r0)**4)`
+`Bx,By,Bz,B2         = symbols('Bx,By,Bz,B2')`
+`phiy,phiz           = symbols('phiy,phiz')`
 ``
 `### functions`
-`rKS = symbols('rKS',cls=Function)`
-`HKS = symbols('HKS',cls=Function)`
-`TBR = symbols('TBR',cls=Function)`
-`PB  = symbols('TB',cls=Function)`
-`PR  = symbols('TR',cls=Function)`
+`_x  = symbols('_x',cls=Function)`
+`_y  = symbols('_y',cls=Function)`
+`_z  = symbols('_z',cls=Function)`
+`_k0  = symbols('_k0',cls=Function)`
+`_k1  = symbols('_k1',cls=Function)`
+`_k2  = symbols('_k2',cls=Function)`
+`H    = symbols('H',cls=Function)`
 
 ``
-``
-`### r funciont in Kerr-Schild coords:`
-`def rKS(_x,_y,_z,a):`
+`### radius function in Kerr-Schild coords:`
+`def KS_radius(_x,_y,_z,a):`
 `  r2 = (_x**2+_y**2+_z**2)`
 `  a2 = a**2`
 `  return (0.5*(r2-a2+sqrt((r2-a2)**2+4*a2*_z**2)))`
 ``
 ``
 `### H function in Kerr-Schild coords`
-`def HKS (M_BH,_r,a,_z,Lambda):`
+`def KS_Hfunc(M_BH,_r,a,_z,Lambda):`
 `  _k2 = _z/_r;`
 `  a2  = a**2`
 `  _r2 = _r**2`
 `  return (Lambda*M_BH*_r/(_r2+a2*_k2**2))`
 ``
 ``
-`### boost and rotation transformation, dir = [1,-1]`
-`def TBR(B,Ry,Rz,dir,v):`
+`### perform boost and rotation transformation, dir = [1,-1]`
+`def Boost_Rotation(B,Ry,Rz,dir,v):`
 `  if (dir == 1):`
 `    return simplify(B*Rz*Ry)*v`
 `  elif (dir == -1):`
-`    Bm1 = simplify(B**-1)`
-`    return simplify(Ry**-1*Rz**-1) * (Bm1) * v`
+`    return simplify(Ry**-1*Rz**-1)*(simplify(B**-1))*v`
 `  else:`
 `    raise Exception('Bad argument')`
 ``
-`  `
 ``
-`### populate boost transformation:`
-`def PB(Bx,By,Bz,B2):`
+`### populate boost transformation matrix:`
+`def Boost_matrix(Bx,By,Bz,B2):`
 `   gamma  = (1-B2)**(-0.5)`
 `   b = Matrix([`
 `     [gamma    , -gamma*Bx            , -gamma*By            , -gamma*Bz],`
@@ -188,8 +177,8 @@ C_macro3=print('double bbn_name_KS_freedataKS_func_args_macro')\n\
 `     `
 `   return b;`
 ``
-`### populate rotation transformaion`
-`def PR(phiy,phiz):`
+`### populate rotation transformaion matrix:`
+`def Rotation_matrix(phiy,phiz):`
 `  cy = cos(phiy)`
 `  sy = sin(phiy)`
 `  cz = cos(phiz)`
@@ -214,23 +203,30 @@ C_macro3=print('double bbn_name_KS_freedataKS_func_args_macro')\n\
 ``
 `### get ks and H needed to populate Kerr-Schild`
 `def get_ks_and_H(x,y,z,a,m,Bx,By,Bz,B2,phiy,phiz):`
-`  x_mu     = transpose(Matrix([[0,x,y,z]]))`
-`  tB       = PB(Bx,By,Bz,B2)`
-`  tRy, tRz = PR(phiy,phiz)`
-`  _x_mu = TBR(tB,tRy,tRz,-1,x_mu)`
-`  _x    = msimplify(_x_mu[1,0],"_x")`
-`  _y    = msimplify(_x_mu[2,0],"_y")`
-`  _z    = msimplify(_x_mu[3,0],"_z")`
-`  _r    = rKS(_x,_y,_z,a)`
-`  a2  = a**2`
-`  _r2 = _r**2`
-`  _k0 = ((_r*_x+a*_y)/(_r2+a2))`
-`  _k1 = ((_r*_y-a*_x)/(_r2+a2))`
-`  _k2 = (_z/_r)`
-`  _kt = 1`
-`  `
-`  _k_mu = transpose(Matrix([[_kt,_k0,_k1,_k2]]))`
-`  k_mu  = TBR(tB,tRy,tRz,1,_k_mu)`
+
+#`  x_mu     = transpose(Matrix([[0,x,y,z]]))`
+#`  tB       = Boost_matrix(Bx,By,Bz,B2)`
+#`  tRy, tRz = Rotation_matrix(phiy,phiz)`
+#`  _x_mu = Boost_Rotation(tB,tRy,tRz,-1,x_mu)`
+#`  _x    = msimplify(_x_mu[1,0],"_x")`
+#`  _y    = msimplify(_x_mu[2,0],"_y")`
+#`  _z    = msimplify(_x_mu[3,0],"_z")`
+#`  _r    = KS_radius(_x,_y,_z,a)`
+
+#`  _r  = KS_radius(_x(x,y,z),_y(x,y,z),_z(x,y,z),a)`
+#`  a2  = a**2`
+#`  _r2 = _r**2`
+#`  _k0 = msimplify((_r*_x(x,y,z)+a*_y(x,y,z))/(_r2+a2))`
+#`  _k1 = msimplify((_r*_y(x,y,z)-a*_x(x,y,z))/(_r2+a2))`
+#`  _k2 = msimplify((_z(x,y,z)/_r))`
+#`  _kt = 1`
+``
+### to lower the file size
+`  tB       = Boost_matrix(Bx,By,Bz,B2)`
+`  tRy, tRz = Rotation_matrix(phiy,phiz)`
+`  _k_mu    = transpose(Matrix(`
+`              [[1,_k0(x,y,z),_k1(x,y,z),_k2(x,y,z)]]))`
+`  k_mu     = Boost_Rotation(tB,tRy,tRz,1,_k_mu)`
 `  `
 `  print("/* kt */")`
 `  sys.stdout.flush()`
@@ -248,17 +244,25 @@ C_macro3=print('double bbn_name_KS_freedataKS_func_args_macro')\n\
 `  sys.stdout.flush()`
 `  k2 = (k_mu[3,0])`
 `  `
-`  print("/* H */")`
-`  sys.stdout.flush()`
-`  H = (HKS(m,_r,a,_z,Lambda))`
+#`  print("/* H */")`
+#`  sys.stdout.flush()`
+#`  _r= KS_radius(_x(x,y,z),_y(x,y,z),_z(x,y,z),a)`
+#`  H = msimplify(KS_Hfunc(m,_r,a,_z(x,y,z),Lambda),"H","none")`
 `  `
-`  return kt,k0,k1,k2,H`
+`  return kt,k0,k1,k2`
 ``
 `### evaluates:`
-`kt,k0,k1,k2,H = get_ks_and_H(x,y,z,a_BH,M_BH,Bx,By,Bz,B2,phiy,phiz)`
-`r = (x**2+y**2+z**2)**0.5`
-`e = exp(-(r/r0)**4)`
-`c = 2*H*e`
+`kt,k0,k1,k2 = get_ks_and_H(x,y,z,a_BH,M_BH,Bx,By,Bz,B2,phiy,phiz)`
+`r   = (x**2+y**2+z**2)**0.5`
+`e   = exp(-(r/r0)**4)`
+`c   = 2*H(x,y,z)*e`
+`a   = a_BH`
+`_r  = KS_radius(_x(x,y,z),_y(x,y,z),_z(x,y,z),a)`
+`_r2 = _r**2`
+`a2  = a**2`
+`func_k0 = ((_r*_x(x,y,z)+a*_y(x,y,z))/(_r2+a2))`
+`func_k1 = ((_r*_y(x,y,z)-a*_x(x,y,z))/(_r2+a2))`
+`func_k2 = ((_z(x,y,z)/_r))`
 
 Declare =
 {
@@ -282,6 +286,41 @@ Declare =
  # ddd k1
  (obj = Field,name = dddk1, rank = DDD, C_macro);
 
+ # k2
+ #(obj = Field,name = k2, rank = 0, C_macro);
+ # d k2
+ (obj = Field,name = dk2, rank = D, C_macro);
+ # dd k2
+ (obj = Field,name = ddk2, rank = DD, C_macro);
+ # ddd k2
+ (obj = Field,name = dddk2, rank = DDD, C_macro);
+
+ # func_k0
+ #(obj = Field,name = func_k0, rank = 0, C_macro);
+ # dfunc_k0
+ (obj = Field,name = dfunc_k0, rank = D, C_macro);
+ # dd func_k0
+ (obj = Field,name = ddfunc_k0, rank = DD, C_macro);
+ # ddd func_k0
+ (obj = Field,name = dddfunc_k0, rank = DDD, C_macro);
+
+ # k1
+ #(obj = Field,name = k1, rank = 0, C_macro);
+ # d k1
+ (obj = Field,name = dk1, rank = D, C_macro);
+ # dd k1
+ (obj = Field,name = ddk1, rank = DD, C_macro);
+ # ddd k1
+ (obj = Field,name = dddk1, rank = DDD, C_macro);
+
+ # func_k1
+ #(obj = Field,name = func_k1, rank = 0, C_macro);
+ # d func_k1
+ (obj = Field,name = dfunc_k1, rank = D, C_macro);
+ # dd func_k1
+ (obj = Field,name = ddfunc_k1, rank = DD, C_macro);
+ # ddd func_k1
+ (obj = Field,name = dddfunc_k1, rank = DDD, C_macro);
 
  # k2
  #(obj = Field,name = k2, rank = 0, C_macro);
@@ -291,6 +330,15 @@ Declare =
  (obj = Field,name = ddk2, rank = DD, C_macro);
  # ddd k2
  (obj = Field,name = dddk2, rank = DDD, C_macro);
+
+ # func_k2
+ #(obj = Field,name = func_k2, rank = 0, C_macro);
+ # d func_k2
+ (obj = Field,name = dfunc_k2, rank = D, C_macro);
+ # dd func_k2
+ (obj = Field,name = ddfunc_k2, rank = DD, C_macro);
+ # ddd func_k2
+ (obj = Field,name = dddfunc_k2, rank = DDD, C_macro);
 
  # c
  #(obj = Field,name = c, rank = 0, C_macro);
@@ -312,6 +360,15 @@ Declare =
  # ddd k0
  (obj = Field,name = dddk0, rank = DDD, C_macro2);
 
+ # func_k0
+ #(obj = Field,name = func_k0, rank = 0, C_macro2);
+ # dfunc_k0
+ (obj = Field,name = dfunc_k0, rank = D, C_macro2);
+ # dd func_k0
+ (obj = Field,name = ddfunc_k0, rank = DD, C_macro2);
+ # ddd func_k0
+ (obj = Field,name = dddfunc_k0, rank = DDD, C_macro2);
+
  # k1
  (obj = Field,name = k1, rank = 0, C_macro2);
  # d k1
@@ -321,6 +378,14 @@ Declare =
  # ddd k1
  (obj = Field,name = dddk1, rank = DDD, C_macro2);
 
+ # func_k1
+ #(obj = Field,name = func_k1, rank = 0, C_macro2);
+ # d func_k1
+ (obj = Field,name = dfunc_k1, rank = D, C_macro2);
+ # dd func_k1
+ (obj = Field,name = ddfunc_k1, rank = DD, C_macro2);
+ # ddd func_k1
+ (obj = Field,name = dddfunc_k1, rank = DDD, C_macro2);
 
  # k2
  (obj = Field,name = k2, rank = 0, C_macro2);
@@ -330,6 +395,16 @@ Declare =
  (obj = Field,name = ddk2, rank = DD, C_macro2);
  # ddd k2
  (obj = Field,name = dddk2, rank = DDD, C_macro2);
+
+ # func_k2
+ #(obj = Field,name = func_k2, rank = 0, C_macro2);
+ # d func_k2
+ (obj = Field,name = dfunc_k2, rank = D, C_macro2);
+ # dd func_k2
+ (obj = Field,name = ddfunc_k2, rank = DD, C_macro2);
+ # ddd func_k2
+ (obj = Field,name = dddfunc_k2, rank = DDD, C_macro2);
+
 
  # c
  #(obj = Field,name = c, rank = 0, C_macro2);
@@ -352,6 +427,15 @@ Declare =
  # ddd k0
  (obj = Field,name = dddk0, rank = DDD, C_macro3);
 
+ # func_k0
+ #(obj = Field,name = func_k0, rank = 0, C_macro3);
+ # dfunc_k0
+ (obj = Field,name = dfunc_k0, rank = D, C_macro3);
+ # dd func_k0
+ (obj = Field,name = ddfunc_k0, rank = DD, C_macro3);
+ # ddd func_k0
+ (obj = Field,name = dddfunc_k0, rank = DDD, C_macro3);
+
  # k1
  (obj = Field,name = k1, rank = 0, C_macro3);
  # d k1
@@ -361,6 +445,14 @@ Declare =
  # ddd k1
  (obj = Field,name = dddk1, rank = DDD, C_macro3);
 
+ # func_k1
+ #(obj = Field,name = func_k1, rank = 0, C_macro3);
+ # d func_k1
+ (obj = Field,name = dfunc_k1, rank = D, C_macro3);
+ # dd func_k1
+ (obj = Field,name = ddfunc_k1, rank = DD, C_macro3);
+ # ddd func_k1
+ (obj = Field,name = dddfunc_k1, rank = DDD, C_macro3);
 
  # k2
  (obj = Field,name = k2, rank = 0, C_macro3);
@@ -370,6 +462,15 @@ Declare =
  (obj = Field,name = ddk2, rank = DD, C_macro3);
  # ddd k2
  (obj = Field,name = dddk2, rank = DDD, C_macro3);
+
+ # func_k2
+ #(obj = Field,name = func_k2, rank = 0, C_macro3);
+ # d func_k2
+ (obj = Field,name = dfunc_k2, rank = D, C_macro3);
+ # dd func_k2
+ (obj = Field,name = ddfunc_k2, rank = DD, C_macro3);
+ # ddd func_k2
+ (obj = Field,name = dddfunc_k2, rank = DDD, C_macro3);
 
  # c
  #(obj = Field,name = c, rank = 0, C_macro3);
@@ -425,8 +526,8 @@ Command["sed -i 's/KS_func_args_macro/ KS_func_args_macro/g'"];
 ### remove C comments:
 Command["sed -i '1,5d'"];
 ### run python
-#Comand["python "];
-Comand["cat "];
+Comand["python "];
+#Comand["cat "];
 
 ### rm redundants
 Comand["rm "];
