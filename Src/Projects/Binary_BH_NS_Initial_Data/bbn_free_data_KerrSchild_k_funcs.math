@@ -1,0 +1,201 @@
+### Calculating free data _ddgamma and _dddgamma analytically.
+
+#########################
+### H O W  T O  U S E ###
+#########################
+# Issue the following (TAKES A VERY VERY LONG TIME):
+# 
+# $ cpi bbn_free_data_ddg_dddg.math > bbn_free_data_ddg_dddg.c && \
+#   sed -i '/Welcome to Cpi/,$d' bbn_free_data_ddg_dddg.c
+
+Dimension = 3;
+point = x;
+C_macro=name_(diff(name).doit());
+C_macro2=print('double bbn_name_KS_freedataKS_func_args_macro');
+C_macro3=print('double bbn_name_KS_freedataKS_func_args_macro')\n\
+	print('{')\n\
+	print('return')\n\
+	print(mcode(name));\n\
+	print('}');
+
+## libs
+`from __future__ import division`
+`from sympy import *`
+`from sympy.tensor.tensor import TensorIndexType, TensorHead`
+`from sympy.tensor.tensor import tensor_indices`
+`from sympy.functions import transpose`
+`from sympy.parsing.mathematica import mathematica`
+`import sys`
+`import re`
+`import os`
+
+Declare =
+{
+#### diff
+
+ # k0
+ #(obj = Field,name = k0, rank = 0, C_macro);
+ # dk0
+ (obj = Field,name = dk0, rank = D, C_macro);
+ # dd k0
+ (obj = Field,name = ddk0, rank = DD, C_macro);
+ # ddd k0
+ (obj = Field,name = dddk0, rank = DDD, C_macro);
+
+ # k1
+ #(obj = Field,name = k1, rank = 0, C_macro);
+ # d k1
+ (obj = Field,name = dk1, rank = D, C_macro);
+ # dd k1
+ (obj = Field,name = ddk1, rank = DD, C_macro);
+ # ddd k1
+ (obj = Field,name = dddk1, rank = DDD, C_macro);
+
+
+ # k2
+ #(obj = Field,name = k2, rank = 0, C_macro);
+ # d k2
+ (obj = Field,name = dk2, rank = D, C_macro);
+ # dd k2
+ (obj = Field,name = ddk2, rank = DD, C_macro);
+ # ddd k2
+ (obj = Field,name = dddk2, rank = DDD, C_macro);
+
+ # c
+ #(obj = Field,name = c, rank = 0, C_macro);
+ # d c
+ (obj = Field,name = dc, rank = D, C_macro);
+ # dd c
+ (obj = Field,name = ddc, rank = DD, C_macro);
+ # ddd c
+ (obj = Field,name = dddc, rank = DDD, C_macro);
+
+#### c function declarations
+
+ # k0
+ (obj = Field,name = k0, rank = 0, C_macro2);
+ # dk0
+ (obj = Field,name = dk0, rank = D, C_macro2);
+ # dd k0
+ (obj = Field,name = ddk0, rank = DD, C_macro2);
+ # ddd k0
+ (obj = Field,name = dddk0, rank = DDD, C_macro2);
+
+ # k1
+ (obj = Field,name = k1, rank = 0, C_macro2);
+ # d k1
+ (obj = Field,name = dk1, rank = D, C_macro2);
+ # dd k1
+ (obj = Field,name = ddk1, rank = DD, C_macro2);
+ # ddd k1
+ (obj = Field,name = dddk1, rank = DDD, C_macro2);
+
+
+ # k2
+ (obj = Field,name = k2, rank = 0, C_macro2);
+ # d k2
+ (obj = Field,name = dk2, rank = D, C_macro2);
+ # dd k2
+ (obj = Field,name = ddk2, rank = DD, C_macro2);
+ # ddd k2
+ (obj = Field,name = dddk2, rank = DDD, C_macro2);
+
+ # c
+ #(obj = Field,name = c, rank = 0, C_macro2);
+ # d c
+ (obj = Field,name = dc, rank = D, C_macro2);
+ # dd c
+ (obj = Field,name = ddc, rank = DD, C_macro2);
+ # ddd c
+ (obj = Field,name = dddc, rank = DDD, C_macro2);
+
+
+#### c function definition
+
+ # k0
+ (obj = Field,name = k0, rank = 0, C_macro3);
+ # dk0
+ (obj = Field,name = dk0, rank = D, C_macro3);
+ # dd k0
+ (obj = Field,name = ddk0, rank = DD, C_macro3);
+ # ddd k0
+ (obj = Field,name = dddk0, rank = DDD, C_macro3);
+
+ # k1
+ (obj = Field,name = k1, rank = 0, C_macro3);
+ # d k1
+ (obj = Field,name = dk1, rank = D, C_macro3);
+ # dd k1
+ (obj = Field,name = ddk1, rank = DD, C_macro3);
+ # ddd k1
+ (obj = Field,name = dddk1, rank = DDD, C_macro3);
+
+
+ # k2
+ (obj = Field,name = k2, rank = 0, C_macro3);
+ # d k2
+ (obj = Field,name = dk2, rank = D, C_macro3);
+ # dd k2
+ (obj = Field,name = ddk2, rank = DD, C_macro3);
+ # ddd k2
+ (obj = Field,name = dddk2, rank = DDD, C_macro3);
+
+ # c
+ #(obj = Field,name = c, rank = 0, C_macro3);
+ # d c
+ (obj = Field,name = dc, rank = D, C_macro3);
+ # dd c
+ (obj = Field,name = ddc, rank = DD, C_macro3);
+ # ddd c
+ (obj = Field,name = dddc, rank = DDD, C_macro3);
+
+
+
+}
+
+# symmetries:
+Symm[ddk0(i,j)    = ddk0(j,i)];
+Symm[dddk0(i,j,k) = dddk0(j,i,k)];
+
+Symm[ddk1(i,j)    = ddk1(j,i)];
+Symm[dddk1(i,j,k) = dddk1(j,i,k)];
+
+Symm[ddk2(i,j)      = ddk2(j,i)];
+Symm[dddk2(i,j,k)   = dddk2(j,i,k)];
+
+Symm[ddc(i,j)      = ddc(j,i)];
+Symm[dddc(i,j,k)   = dddc(j,i,k)];
+
+### make it ready for python:
+### remove C comments:
+Command["sed -i 's/\/\* declaring: \*\///'"];
+
+### remove spaces for dg's
+Command["sed -i 's/^  //g'"];
+
+### derivatives d/dx
+Command["sed -i 's/0)\.doit/,x)\.doit/g'"];
+### derivatives d/dy
+Command["sed -i 's/1)\.doit/,y)\.doit/g'"];
+### derivatives d/dz
+Command["sed -i 's/2)\.doit/,z)\.doit/g'"];
+### no doit
+Command["sed -i 's/\.doit()//g'"];
+### indices
+Command["sed -i 's/D,/,/g'"];
+Command["sed -i 's/diff(d/diff(/g'"];
+Command["sed -i 's/_(diff/=(diff/g'"];
+Command["sed -i 's/_,/,/g'"];
+
+### functions:
+Command["sed -i 's/double/double /g'"];
+Command["sed -i 's/KS_func_args_macro/ KS_func_args_macro/g'"];
+
+### remove C comments:
+Command["sed -i '1,5d'"];
+### run python
+Comand["python "];
+Comand["cat "];
+
+### rm redundants
+Comand["rm "];

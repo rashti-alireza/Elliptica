@@ -1,0 +1,275 @@
+### Calculating components Kerr-Schild free data analytically part 1
+
+#########################
+### H O W  T O  U S E ###
+#########################
+# Issue the following (TAKES A VERY VERY LONG TIME):
+# 
+# $ cpi bbn_free_data_analytic_ks.math > bbn_free_data_analytic_ks.c && \
+#   sed -i '/Welcome to Cpi/,$d' bbn_free_data_analytic_ks.c
+
+Dimension = 3;
+point = x;
+
+`from __future__ import division`
+`from sympy import *`
+`from sympy.tensor.tensor import TensorIndexType, TensorHead`
+`from sympy.tensor.tensor import tensor_indices`
+`from sympy.functions import transpose`
+`from sympy.parsing.mathematica import mathematica`
+`import sys`
+`import re`
+`import os`
+
+### ccode generator
+`def mcode(m):`
+`  print('/* mcode */')`
+`  sys.stdout.flush()`
+`  m = (m).doit()`
+`  code = ""`
+`  if (1):`
+`    pid = os.getpid()`
+`    mfile_name=".mfile_temp_{}".format(pid)`
+`    cfile_name=".cfile_temp_{}".format(pid)`
+`    rhs  =""`
+`    try:`
+`      rhs  = mathematica_code((m).doit())`
+`    except:`
+`      rhs  = mathematica_code(m)`
+``
+`    math_code  = rhs + ";\n"`
+`    math_code += "Simplify[%];\n"`
+`    math_code += "c=CForm[%];\n"`
+`    math_code += "Print[c]"+"\n"`
+## write into mathematica file
+`    mfile = open(mfile_name,"w")`
+`    mfile.write(math_code)`
+`    mfile.close()`
+
+## run mathematica and output into another
+`    cmd = "math -run -noprompt < {} 1> {}".format(mfile_name,cfile_name)`
+`    ret=os.system(cmd)`
+
+## read math results.
+`    cfile=open(cfile_name,"r")`
+`    code =cfile.read()`
+`    cfile.close()`
+
+## delete the files
+`    cmd = "rm -rf {} {}".format(mfile_name,cfile_name)`
+`    os.system(cmd)`
+`  else:`
+`    code = ccode(m)`
+``
+## return the code and break long lines
+`  code = '{};'.format(code)`
+`  code = re.sub(r'\b1.0\*\b','',code)`
+`  code = re.sub(r'(.{50,70}[\+\-\*/]+\s?)','\\1{}n'.format("\\"),code)`
+``
+`  return code`
+``
+### simplify using mathematica or sympy or none:
+`def msimplify(m,msg,s="none"):`
+`  print('/* msimplify({}) */'.format(msg))`
+`  sys.stdout.flush()`
+`  m = (m).doit()`
+`  code = ""`
+`  if (s=="mathematica"):`# if you want mathematica
+`    pid = os.getpid()`
+`    mfile_name=".mfile_temp_{}".format(pid)`
+`    cfile_name=".cfile_temp_{}".format(pid)`
+`    rhs  =""`
+`    try:`
+`      rhs  = mathematica_code((m).doit())`
+`    except:`
+`      rhs  = mathematica_code(m)`
+``
+`    math_code  = rhs + ";\n"`
+`    math_code += "Simplify[%,TimeConstraint->1000];\n"`
+`    math_code += "Print[%]"+"\n"`
+## write into mathematica file
+`    mfile = open(mfile_name,"w")`
+`    mfile.write(math_code)`
+`    mfile.close()`
+
+## run mathematica and output into another
+`    cmd = "math -run -noprompt < {} 1> {}".format(mfile_name,cfile_name)`
+`    ret=os.system(cmd)`
+
+## read math results.
+`    cfile=open(cfile_name,"r")`
+`    code =cfile.read()`
+`    cfile.close()`
+
+## delete the files
+`    cmd = "rm -rf {} {}".format(mfile_name,cfile_name)`
+`    os.system(cmd)`
+`    return mathematica(code)`
+`  elif(s=="sympy"):` ## if you wanna simpy simplify
+`    code = simplify(m)`
+`    return code`
+`  else:` ## no simplification
+`    return m`
+``
+``
+`### coords and parameters`
+`x,y,z = symbols('x,y,z')`
+``
+`r0,M_BH,a_BH,Lambda = symbols('r0,M_BH,a_BH,Lambda')`
+``
+`BH_center_x,BH_center_y,BH_center_z = \`
+`  symbols('BH_center_x,BH_center_y,BH_center_z')`
+`  `
+`chi,chi_U0,chi_U1,chi_U2 = symbols('chi,chi_U0,chi_U1,chi_U2')`
+`x_CM,y_CM,Omega_BHNS = symbols('x_CM,y_CM,Omega_BHNS')`
+``
+`Bx,By,Bz,B2 = symbols('Bx,By,Bz,B2')`
+`phiy,phiz   = symbols('phiy,phiz')`
+``
+`r = (x**2+y**2+z**2)**0.5`
+`e = exp(-(r/r0)**4)`
+``
+`### functions`
+`rKS = symbols('rKS',cls=Function)`
+`HKS = symbols('HKS',cls=Function)`
+`TBR = symbols('TBR',cls=Function)`
+`PB  = symbols('TB',cls=Function)`
+`PR  = symbols('TR',cls=Function)`
+
+`k0KS  = symbols('k0KS',cls=Function)`
+`k1KS  = symbols('k1KS',cls=Function)`
+`k2KS  = symbols('k2KS',cls=Function)`
+`k3KS  = symbols('k3KS',cls=Function)`
+`cKS   = symbols('cKS',cls=Function)`
+
+``
+``
+`### r funciont in Kerr-Schild coords:`
+`def rKS(_x,_y,_z,a):`
+`  r2 = simplify(_x**2+_y**2+_z**2)`
+`  a2 = a**2`
+`  return (0.5*(r2-a2+sqrt((r2-a2)**2+4*a2*_z**2)))`
+``
+``
+`### H function in Kerr-Schild coords`
+`def HKS (M_BH,_r,a,_z,Lambda):`
+`  _k2 = _z/_r;`
+`  a2  = a**2`
+`  _r2 = _r**2`
+`  return (Lambda*M_BH*_r/(_r2+a2*_k2**2))`
+``
+``
+`### boost and rotation transformation, dir = [1,-1]`
+`def TBR(B,Ry,Rz,dir,v):`
+`  if (dir == 1):`
+`    return simplify(B*Rz*Ry)*v`
+`  elif (dir == -1):`
+`    Bm1 = (B**-1)`
+`    return simplify(Ry**-1*Rz**-1) * (Bm1) * v`
+`  else:`
+`    raise Exception('Bad argument')`
+``
+`  `
+``
+`### populate boost transformation:`
+`def PB(Bx,By,Bz,B2):`
+`   gamma  = (1-B2)**(-0.5)`
+`   b = Matrix([`
+`     [gamma    , -gamma*Bx            , -gamma*By            , -gamma*Bz],`
+`     [-gamma*Bx, 1+(gamma-1)*Bx**2/B2 , (gamma-1)*Bx*By/B2   , (gamma-1)*Bx*Bz/B2],`
+`     [-gamma*By, (gamma-1)*Bx*By/B2   , 1+(gamma-1)*By**2/B2 , (gamma-1)*By*Bz/B2],`
+`     [-gamma*Bz, (gamma-1)*Bx*Bz/B2   , (gamma-1)*By*Bz/B2   , 1+(gamma-1)*Bz**2/B2]`
+`     ])`
+`     `
+`   b = simplify(b)`
+`   return b;`
+``
+`### populate rotation transformaion`
+`def PR(phiy,phiz):`
+`  cy = cos(phiy)`
+`  sy = sin(phiy)`
+`  cz = cos(phiz)`
+`  sz = sin(phiz)`
+`  `
+`  ty = Matrix([`
+`     [1,0  ,0,0],`
+`     [0,cy ,0,sy],`
+`     [0,0  ,1,0],`
+`     [0,-sy,0,cy]`
+`     ])`
+`     `
+`  tz = Matrix([`
+`     [1,0 ,0  ,0],`
+`     [0,cz,-sz,0],`
+`     [0,sz,cz ,0],`
+`     [0,0 ,0  ,1]`
+`     ])`
+`     `
+`  return ty, tz  `
+``
+``
+`### get ks and H needed to populate Kerr-Schild`
+`def get_ks_and_H(x,y,z,a,m,Bx,By,Bz,B2,phiy,phiz):`
+`  x_mu     = transpose(Matrix([[0,x,y,z]]))`
+`  tB       = PB(Bx,By,Bz,B2)`
+`  tRy, tRz = PR(phiy,phiz)`
+`  _x_mu = TBR(tB,tRy,tRz,-1,x_mu)`
+`  _x    = msimplify(_x_mu[1,0],'_x',1)`
+`  _y    = msimplify(_x_mu[2,0],'_y',1)`
+`  _z    = msimplify(_x_mu[3,0],'_z',1)`
+`  _r    = rKS(_x,_y,_z,a)`
+`  a2  = a**2`
+`  _r2 = _r**2`
+`  _k0 = msimplify((_r*_x+a*_y)/(_r2+a2),'_k0')`
+`  _k1 = msimplify((_r*_y-a*_x)/(_r2+a2),'_k1')`
+`  _k2 = msimplify(_z/_r,'_k2')`
+`  _kt = 1`
+`  `
+`  _k_mu = transpose(Matrix([[_kt,_k0,_k1,_k2]]))`
+`  k_mu  = TBR(tB,tRy,tRz,1,_k_mu)`
+`  `
+`  print("/* kt */")`
+`  sys.stdout.flush()`
+`  kt = msimplify(k_mu[0,0],'kt')`
+`  `
+`  print("/* k0 */")`
+`  sys.stdout.flush()`
+`  k0 = msimplify(k_mu[1,0],'k0')`
+`  `
+`  print("/* k1 */")`
+`  sys.stdout.flush()`
+`  k1 = msimplify(k_mu[2,0],'k1')`
+`  `
+`  print("/* k2 */")`
+`  sys.stdout.flush()`
+`  k2 = msimplify(k_mu[3,0],'k2')`
+`  `
+`  print("/* H */")`
+`  sys.stdout.flush()`
+`  H = msimplify(HKS(m,_r,a,_z,Lambda),'H')`
+`  `
+`  return kt,k0,k1,k2,H`
+``
+`### evaluates:`
+`kt,k0,k1,k2,H = get_ks_and_H(x,y,z,a_BH,M_BH,Bx,By,Bz,B2,phiy,phiz)`
+`r = (x**2+y**2+z**2)**0.5`
+`e = exp(-(r/r0)**4)`
+`c = 2*H*e`
+`print("/* A */")`
+`sys.stdout.flush()`
+`A = msimplify(1/(1+c*(k0**2+k1**2+k2**2)),'A')`
+``
+`print(mcode(k0))`
+`print(mcode(k1))`
+`print(mcode(k2))`
+`print(mcode(c))`
+
+
+### run python
+### remove C comments:
+Command["sed -i '1,5d'"];
+### run python
+Comand["python "];
+
+### rm redundants
+Comand["rm "];

@@ -27,7 +27,7 @@ point = x;
 `  sys.stdout.flush()`
 `  m = (m).doit()`
 `  code = ""`
-`  if (0):`
+`  if (1):`
 `    pid = os.getpid()`
 `    mfile_name=".mfile_temp_{}".format(pid)`
 `    cfile_name=".cfile_temp_{}".format(pid)`
@@ -137,7 +137,7 @@ point = x;
 ``
 `### r funciont in Kerr-Schild coords:`
 `def rKS(_x,_y,_z,a):`
-`  r2 = _x**2+_y**2+_z**2`
+`  r2 = simplify(_x**2+_y**2+_z**2)`
 `  a2 = a**2`
 `  return (0.5*(r2-a2+sqrt((r2-a2)**2+4*a2*_z**2)))`
 ``
@@ -147,15 +147,16 @@ point = x;
 `  _k2 = _z/_r;`
 `  a2  = a**2`
 `  _r2 = _r**2`
-`  return Lambda*M_BH*_r/(_r2+a2*_k2**2)`
+`  return (Lambda*M_BH*_r/(_r2+a2*_k2**2))`
 ``
 ``
 `### boost and rotation transformation, dir = [1,-1]`
 `def TBR(B,Ry,Rz,dir,v):`
 `  if (dir == 1):`
-`    return (B*Rz*Ry*v)`
+`    return simplify(B*Rz*Ry)*v`
 `  elif (dir == -1):`
-`    return (Ry**-1 * Rz**-1 *B**-1 *v)`
+`    Bm1 = (B**-1)`
+`    return simplify(Ry**-1*Rz**-1) * (Bm1) * v`
 `  else:`
 `    raise Exception('Bad argument')`
 ``
@@ -171,6 +172,7 @@ point = x;
 `     [-gamma*Bz, (gamma-1)*Bx*Bz/B2   , (gamma-1)*By*Bz/B2   , 1+(gamma-1)*Bz**2/B2]`
 `     ])`
 `     `
+`   b = simplify(b)`
 `   return b;`
 ``
 `### populate rotation transformaion`
@@ -248,6 +250,8 @@ point = x;
 `sys.stdout.flush()`
 `A = msimplify(1/(1+C*(k0**2+k1**2+k2**2)),'A')`
 ``
+`print(k0)`
+`exit(0)`
 `_g00 = 1.+C*k0*k0`
 `_g01 = C*k0*k1`
 `_g02 = C*k0*k2`
