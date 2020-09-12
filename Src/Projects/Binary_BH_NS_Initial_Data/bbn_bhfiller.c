@@ -877,6 +877,8 @@ static int bhf_WTGR(struct BHFiller_S *const bhf)
   const double EPS2           = 1E-6;/* to increase r_fill radius a bit */
   const double r_fill         = Pgetd("BH_R_size")*(1+EPS2);
   const double Ma             = Pgetd("BH_irreducible_mass");
+  const double att_a          = 48./125.;
+  const double att_b          = -3./2.;
   const double u0_Beta_U0     = 0;
   const double u0_Beta_U1     = 0;
   const double u0_Beta_U2     = 0;
@@ -1025,7 +1027,7 @@ static int bhf_WTGR(struct BHFiller_S *const bhf)
       }
       dr    = r - r_fill;
       phi   = arctan(y,x);
-      Y     = 0.5*(1+tanh(48./125.*(r_fill/(r_fill-r)-3./2.*(r_fill/r))));
+      Y     = 0.5*(1+tanh(att_a*(r_fill/(r_fill-r)+att_b*(r_fill/r))));
       if(!isfinite(Y))
         bbn_bam_error("BH filler Y goes wrong.",__FILE__,__LINE__);
       
