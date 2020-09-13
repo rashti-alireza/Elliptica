@@ -1,5 +1,6 @@
 ### Calculating free data k0,k1,k2,c and their derivatives
-### note: bbn_ks_func_k? are k's before transformation
+### using chain rule part 1.
+### note: bbn_ks_func_? are before transformation
 ### their values taken from another math file.
 
 #########################
@@ -7,9 +8,9 @@
 #########################
 # Issue the following:
 # 
-# $ cpi bbn_free_data_KS_k012_c_derives.math > \
-#   bbn_free_data_KS_k012_c_derives.c && \
-#   sed -i '/Welcome to Cpi/,$d' bbn_free_data_KS_k012_c_derives.c
+# $ cpi bbn_free_data_KS_k012_c_part2.math > \
+#   bbn_free_data_KS_k012_c_part2.c && \
+#   sed -i '/Welcome to Cpi/,$d' bbn_free_data_KS_k012_c_part2.c
 
 Dimension = 3;
 point     = x;
@@ -83,7 +84,7 @@ C_macro3=print('double bbn_name_KS_freedataKS_func_args_macro')\n\
 ``
 
 ### simplify using mathematica or sympy or none:
-`def msimplify(m,msg="...",s="mathematica"):`
+`def msimplify(m,msg="...",s="none"):`
 `  print('/* msimplify({}) */'.format(msg))`
 `  sys.stdout.flush()`
 `  code = ""`
@@ -127,82 +128,28 @@ C_macro3=print('double bbn_name_KS_freedataKS_func_args_macro')\n\
 ``
 ``
 `### symbols`
-`x,y,z               = symbols('x,y,z')`
-`r0,M_BH,a_BH,Lambda = symbols('r0,M_BH,a_BH,Lambda')`
-`Bx,By,Bz,B2         = symbols('Bx,By,Bz,B2')`
-`phiy,phiz           = symbols('phiy,phiz')`
+`x,y,z = symbols('x,y,z')`
+`a_BH  = symbols('a_BH')`
 ``
-`### functions`
-`bbn_ks_func_k0  = symbols('bbn_ks_func_k0',cls=Function)`
-`bbn_ks_func_k1  = symbols('bbn_ks_func_k1',cls=Function)`
-`bbn_ks_func_k2  = symbols('bbn_ks_func_k2',cls=Function)`
-`bbn_ks_func_H   = symbols('bbn_ks_func_H',cls=Function)`
-`bbn_ks_func_rolloff = symbols('bbn_ks_func_rolloff',cls=Function)`
-
+### functions \bar{x} no transformation on them
+`bbn_ks_func_x = symbols('bbn_ks_func_x',cls=Function)`
+`bbn_ks_func_y = symbols('bbn_ks_func_y',cls=Function)`
+`bbn_ks_func_z = symbols('bbn_ks_func_z',cls=Function)`
+## Kerr-Schild radius
+`bbn_ks_func_R = symbols('bbn_ks_func_R',cls=Function)`
 ``
-`### perform boost and rotation transformation, dir = [1,-1]`
-`def Boost_Rotation(B,Ry,Rz,dir,v):`
-`  if (dir == 1):`
-`    return simplify(B*Rz*Ry)*v`
-`  elif (dir == -1):`
-`    return simplify(Ry**-1*Rz**-1)*(simplify(B**-1))*v`
-`  else:`
-`    raise Exception('Bad argument')`
-``
-`### populate boost transformation matrix:`
-`def Boost_matrix(Bx,By,Bz,B2):`
-`   gamma  = (1-B2)**(-0.5)`
-`   b = Matrix([`
-`     [gamma    , -gamma*Bx            , -gamma*By            , -gamma*Bz],`
-`     [-gamma*Bx, 1+(gamma-1)*Bx**2/B2 , (gamma-1)*Bx*By/B2   , (gamma-1)*Bx*Bz/B2],`
-`     [-gamma*By, (gamma-1)*Bx*By/B2   , 1+(gamma-1)*By**2/B2 , (gamma-1)*By*Bz/B2],`
-`     [-gamma*Bz, (gamma-1)*Bx*Bz/B2   , (gamma-1)*By*Bz/B2   , 1+(gamma-1)*Bz**2/B2]`
-`     ])`
-`     `
-`   return b;`
-``
-`### populate rotation transformaion matrix:`
-`def Rotation_matrix(phiy,phiz):`
-`  cy = cos(phiy)`
-`  sy = sin(phiy)`
-`  cz = cos(phiz)`
-`  sz = sin(phiz)`
-`  `
-`  ty = Matrix([`
-`     [1,0  ,0,0],`
-`     [0,cy ,0,sy],`
-`     [0,0  ,1,0],`
-`     [0,-sy,0,cy]`
-`     ])`
-`     `
-`  tz = Matrix([`
-`     [1,0 ,0  ,0],`
-`     [0,cz,-sz,0],`
-`     [0,sz,cz ,0],`
-`     [0,0 ,0  ,1]`
-`     ])`
-`     `
-`  return ty, tz`
-``
-``
-`### get k's to populate Kerr-Schild`
-`def get_ks(Bx,By,Bz,B2,phiy,phiz):`
-`  tB       = Boost_matrix(Bx,By,Bz,B2)`
-`  tRy, tRz = Rotation_matrix(phiy,phiz)`
-`  _k_mu    = transpose(Matrix(`
-           `[[1,bbn_ks_func_k0(x,y,z),`
-           `bbn_ks_func_k1(x,y,z),bbn_ks_func_k2(x,y,z)]]))`
-`  k_mu     = Boost_Rotation(tB,tRy,tRz,1,_k_mu)`
-`  kt = (k_mu[0,0])`
-`  k0 = (k_mu[1,0])`
-`  k1 = (k_mu[2,0])`
-`  k2 = (k_mu[3,0])`
-`  return kt,k0,k1,k2`
 ``
 `### evaluates:`
-`kt,k0,k1,k2 = get_ks(Bx,By,Bz,B2,phiy,phiz)`
-`c           = 2*bbn_ks_func_H(x,y,z)*bbn_ks_func_rolloff(x,y,z)`
-
+`_r  = bbn_ks_func_R(x,y,z)`
+`a   = a_BH`
+`a2  = a**2`
+`_r2 = _r**2`
+### k's before transformation
+`k0 = msimplify((_r*bbn_ks_func_x(x,y,z)+a*bbn_ks_func_y(x,y,z))/(_r2+a2))`
+`k1 = msimplify((_r*bbn_ks_func_y(x,y,z)-a*bbn_ks_func_x(x,y,z))/(_r2+a2))`
+`k2 = msimplify((bbn_ks_func_z(x,y,z)/_r))`
+``
+``
 `print('#include "bbn_free_date_analytic.h"')`
 ``
 Declare =
@@ -229,13 +176,6 @@ Declare =
  (obj = Field,name = ddk2, rank = DD, C_macro);
  # ddd k2
  (obj = Field,name = dddk2, rank = DDD, C_macro);
-
- # d c
- (obj = Field,name = dc, rank = D, C_macro);
- # dd c
- (obj = Field,name = ddc, rank = DD, C_macro);
- # ddd c
- (obj = Field,name = dddc, rank = DDD, C_macro);
 
 #### c function declarations
 
@@ -266,15 +206,6 @@ Declare =
  # ddd k2
  (obj = Field,name = dddk2, rank = DDD, C_macro2);
 
- # c
- #(obj = Field,name = c, rank = 0, C_macro2);
- # d c
- (obj = Field,name = dc, rank = D, C_macro2);
- # dd c
- (obj = Field,name = ddc, rank = DD, C_macro2);
- # ddd c
- (obj = Field,name = dddc, rank = DDD, C_macro2);
-
 
 #### c function definition
 
@@ -304,15 +235,6 @@ Declare =
  (obj = Field,name = ddk2, rank = DD, C_macro3);
  # ddd k2
  (obj = Field,name = dddk2, rank = DDD, C_macro3);
-
- # c
- #(obj = Field,name = c, rank = 0, C_macro3);
- # d c
- (obj = Field,name = dc, rank = D, C_macro3);
- # dd c
- (obj = Field,name = ddc, rank = DD, C_macro3);
- # ddd c
- (obj = Field,name = dddc, rank = DDD, C_macro3);
 
 }
 
