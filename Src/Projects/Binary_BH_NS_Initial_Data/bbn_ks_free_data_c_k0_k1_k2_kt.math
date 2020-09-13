@@ -1,16 +1,23 @@
-### Calculating free data k0,k1,k2,c and their derivatives
-### using chain rule part 1.
-### note: bbn_ks_func_k? are k's before transformation
-### their values taken from another math file.
+### analytic Kerr-Schild free data :kt,k0,k1,k2,c and their derivatives
+###
+### note: k0,k1,k2 and c are used in:
+### _gamma_D?D? =
+### _gamma_D?D?(k0(x,y,z),k1(x,y,z),k2(x,y,z),
+###             c(x,y,z),H(x,y,z).rollOff(x,y,z))
+###
+### and kt is used in lapse.
+###
+### note: capital quantities or those with '_' prefix are 
+###       in inertial frame (not in rotating frame)
 
 #########################
 ### H O W  T O  U S E ###
 #########################
 # Issue the following:
 # 
-# $ cpi bbn_free_data_KS_k012_c_part1.math > \
-#   bbn_free_data_KS_k012_c_part1.c && \
-#   sed -i '/Welcome to Cpi/,$d' bbn_free_data_KS_k012_c_part1.c
+# $ cpi bbn_ks_free_data_c_k0_k1_k2_kt.math > \
+#   bbn_ks_free_data_c_k0_k1_k2_kt.c && \
+#   sed -i '/Welcome to Cpi/,$d' bbn_ks_free_data_c_k0_k1_k2_kt.c
 
 Dimension = 3;
 point     = x;
@@ -134,11 +141,11 @@ C_macro3=print('double bbn_name_KS_freedataKS_func_args_macro')\n\
 `phiy,phiz           = symbols('phiy,phiz')`
 ``
 `### functions`
-`bbn_ks_func_k0  = symbols('bbn_ks_func_k0',cls=Function)`
-`bbn_ks_func_k1  = symbols('bbn_ks_func_k1',cls=Function)`
-`bbn_ks_func_k2  = symbols('bbn_ks_func_k2',cls=Function)`
-`bbn_ks_func_H   = symbols('bbn_ks_func_H',cls=Function)`
-`bbn_ks_func_rolloff = symbols('bbn_ks_func_rolloff',cls=Function)`
+`bbn_ks_k0  = symbols('bbn_ks_k0',cls=Function)`
+`bbn_ks_k1  = symbols('bbn_ks_k1',cls=Function)`
+`bbn_ks_k2  = symbols('bbn_ks_k2',cls=Function)`
+`bbn_ks_H   = symbols('bbn_ks_H',cls=Function)`
+`bbn_ks_rolloff = symbols('bbn_ks_rolloff',cls=Function)`
 
 ``
 `### perform boost and rotation transformation, dir = [1,-1]`
@@ -191,8 +198,8 @@ C_macro3=print('double bbn_name_KS_freedataKS_func_args_macro')\n\
 `  tB       = Boost_matrix(Bx,By,Bz,B2)`
 `  tRy, tRz = Rotation_matrix(phiy,phiz)`
 `  _k_mu    = transpose(Matrix(`
-           `[[1,bbn_ks_func_k0(x,y,z),`
-           `bbn_ks_func_k1(x,y,z),bbn_ks_func_k2(x,y,z)]]))`
+           `[[1,bbn_ks_k0(x,y,z),`
+           `bbn_ks_k1(x,y,z),bbn_ks_k2(x,y,z)]]))`
 `  k_mu     = Boost_Rotation(tB,tRy,tRz,1,_k_mu)`
 `  kt = (k_mu[0,0])`
 `  k0 = (k_mu[1,0])`
@@ -202,7 +209,7 @@ C_macro3=print('double bbn_name_KS_freedataKS_func_args_macro')\n\
 ``
 `### evaluates:`
 `kt,k0,k1,k2 = get_ks(Bx,By,Bz,B2,phiy,phiz)`
-`c           = 2*bbn_ks_func_H(x,y,z)*bbn_ks_func_rolloff(x,y,z)`
+`c           = 2*bbn_ks_H(x,y,z)*bbn_ks_rolloff(x,y,z)`
 
 `print('#include "bbn_free_date_analytic.h"')`
 ``
@@ -230,6 +237,13 @@ Declare =
  (obj = Field,name = ddk2, rank = DD, C_macro);
  # ddd k2
  (obj = Field,name = dddk2, rank = DDD, C_macro);
+
+ # d kt
+ (obj = Field,name = dkt, rank = D, C_macro);
+ # dd kt
+ (obj = Field,name = ddkt, rank = DD, C_macro);
+ # ddd kt
+ (obj = Field,name = dddkt, rank = DDD, C_macro);
 
  # d c
  (obj = Field,name = dc, rank = D, C_macro);
@@ -266,6 +280,15 @@ Declare =
  (obj = Field,name = ddk2, rank = DD, C_macro2);
  # ddd k2
  (obj = Field,name = dddk2, rank = DDD, C_macro2);
+
+ # kt
+ (obj = Field,name = kt, rank = 0, C_macro2);
+ # d kt
+ (obj = Field,name = dkt, rank = D, C_macro2);
+ # dd kt
+ (obj = Field,name = ddkt, rank = DD, C_macro2);
+ # ddd kt
+ (obj = Field,name = dddkt, rank = DDD, C_macro2);
 
  # c
  #(obj = Field,name = c, rank = 0, C_macro2);
@@ -306,6 +329,15 @@ Declare =
  # ddd k2
  (obj = Field,name = dddk2, rank = DDD, C_macro3);
 
+ # kt
+ (obj = Field,name = kt, rank = 0, C_macro3);
+ # d kt
+ (obj = Field,name = dkt, rank = D, C_macro3);
+ # dd kt
+ (obj = Field,name = ddkt, rank = DD, C_macro3);
+ # ddd kt
+ (obj = Field,name = dddkt, rank = DDD, C_macro3);
+
  # c
  #(obj = Field,name = c, rank = 0, C_macro3);
  # d c
@@ -326,6 +358,9 @@ Symm[dddk1(i,j,k) = dddk1(j,i,k)];
 
 Symm[ddk2(i,j)    = ddk2(j,i)];
 Symm[dddk2(i,j,k) = dddk2(j,i,k)];
+
+Symm[ddkt(i,j)    = ddkt(j,i)];
+Symm[dddkt(i,j,k) = dddkt(j,i,k)];
 
 Symm[ddc(i,j)     = ddc(j,i)];
 Symm[dddc(i,j,k)  = dddc(j,i,k)];
@@ -360,8 +395,8 @@ Command["sed -i 's/KS_func_args_macro/ KS_func_args_macro/g'"];
 ### remove C comments:
 Command["sed -i '1,5d'"];
 ### run python
-Comand["python "];
-#Comand["cat "];
+#Comand["python "];
+Comand["cat "];
 
 ### rm redundants
 Comand["rm "];
