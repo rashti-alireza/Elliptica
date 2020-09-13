@@ -1,22 +1,30 @@
-### Calculating free data k0,k1,k2,c and their derivatives
-### using chain rule part 2.
-### note: bbn_ks_func_? are before transformation
-### their values taken from another math file.
+### analytic Kerr-Schild free data :K0,K1,K2,H and their derivatives
+###
+### note: k0,k1,k2 and c are used in:
+### _gamma_D?D? =
+### _gamma_D?D?(k0(x,y,z),k1(x,y,z),k2(x,y,z),
+###             c(x,y,z),H(x,y,z).rollOff(x,y,z))
+###
+### and k0=k0(K0,K1,K2),k1= k1(K0,K1,K2) and k2=k2(K0,K1,K2).
+### also K0 and K1 and K2 and H depend on (X,Y,Z).
+###
+### note: capital quantities or those with '_' prefix are 
+###       in inertial frame (not in rotating frame
 
 #########################
 ### H O W  T O  U S E ###
 #########################
 # Issue the following:
 # 
-# $ cpi bbn_free_data_KS_k012_c_part2.math > \
-#   bbn_free_data_KS_k012_c_part2.c && \
-#   sed -i '/Welcome to Cpi/,$d' bbn_free_data_KS_k012_c_part2.c
+# $ cpi bbn_ks_free_data_H_K0_K1_K2.math > \
+#   bbn_ks_free_data_H_K0_K1_K2.c && \
+#   sed -i '/Welcome to Cpi/,$d' bbn_ks_free_data_H_K0_K1_K2.c
 
 Dimension = 3;
 point     = x;
 C_macro=name_(diff(name).doit());
-C_macro2=print('double bbn_name_KS_freedataKS_func_args_macro;');
-C_macro3=print('double bbn_name_KS_freedataKS_func_args_macro')\n\
+C_macro2=print('KS_func_def_macro(name)KS_func_args_macro;');
+C_macro3=print('KS_func_def_macro(name)KS_func_args_macro')\n\
 	print('{')\n\
 	print('return')\n\
 	print(mcode(name));\n\
@@ -129,25 +137,34 @@ C_macro3=print('double bbn_name_KS_freedataKS_func_args_macro')\n\
 ``
 `### symbols`
 `x,y,z = symbols('x,y,z')`
-`a_BH  = symbols('a_BH')`
+`r0,M_BH,a_BH,Lambda = symbols('r0,M_BH,a_BH,Lambda')`
 ``
 ### functions \bar{x} no transformation on them
-`bbn_ks_func_x = symbols('bbn_ks_func_x',cls=Function)`
-`bbn_ks_func_y = symbols('bbn_ks_func_y',cls=Function)`
-`bbn_ks_func_z = symbols('bbn_ks_func_z',cls=Function)`
+`X = symbols('X',cls=Function)`
+`Y = symbols('Y',cls=Function)`
+`Z = symbols('Z',cls=Function)`
 ## Kerr-Schild radius
-`bbn_ks_func_R = symbols('bbn_ks_func_R',cls=Function)`
+`R = symbols('R',cls=Function)`
+
+`### H function in Kerr-Schild coords`
+`def KS_Hfunc(M_BH,_r,a,_z,Lambda):`
+`  _k2 = _z/_r;`
+`  a2  = a**2`
+`  _r2 = _r**2`
+`  return (Lambda*M_BH*_r/(_r2+a2*_k2**2))`
 ``
 ``
 `### evaluates:`
-`_r  = bbn_ks_func_R(x,y,z)`
+`_r  = R(x,y,z)`
 `a   = a_BH`
 `a2  = a**2`
 `_r2 = _r**2`
 ### k's before transformation
-`k0 = msimplify((_r*bbn_ks_func_x(x,y,z)+a*bbn_ks_func_y(x,y,z))/(_r2+a2))`
-`k1 = msimplify((_r*bbn_ks_func_y(x,y,z)-a*bbn_ks_func_x(x,y,z))/(_r2+a2))`
-`k2 = msimplify((bbn_ks_func_z(x,y,z)/_r))`
+`K0 = msimplify((_r*X(x,y,z)+a*Y(x,y,z))/(_r2+a2))`
+`K1 = msimplify((_r*Y(x,y,z)-a*X(x,y,z))/(_r2+a2))`
+`K2 = msimplify((Z(x,y,z)/_r))`
+`m  = M_BH`
+`H  = KS_Hfunc(m,_r,a,Z(x,y,z),Lambda)`
 ``
 ``
 `print('#include "bbn_free_date_analytic.h"')`
@@ -156,101 +173,125 @@ Declare =
 {
 #### diff
 
- # dk0
- (obj = Field,name = dk0, rank = D, C_macro);
- # dd k0
- (obj = Field,name = ddk0, rank = DD, C_macro);
- # ddd k0
- (obj = Field,name = dddk0, rank = DDD, C_macro);
+ # dK0
+ (obj = Field,name = dK0, rank = D, C_macro);
+ # dd K0
+ (obj = Field,name = ddK0, rank = DD, C_macro);
+ # ddd K0
+ (obj = Field,name = dddK0, rank = DDD, C_macro);
 
- # d k1
- (obj = Field,name = dk1, rank = D, C_macro);
- # dd k1
- (obj = Field,name = ddk1, rank = DD, C_macro);
- # ddd k1
- (obj = Field,name = dddk1, rank = DDD, C_macro);
+ # d K1
+ (obj = Field,name = dK1, rank = D, C_macro);
+ # dd K1
+ (obj = Field,name = ddK1, rank = DD, C_macro);
+ # ddd K1
+ (obj = Field,name = dddK1, rank = DDD, C_macro);
 
- # d k2
- (obj = Field,name = dk2, rank = D, C_macro);
- # dd k2
- (obj = Field,name = ddk2, rank = DD, C_macro);
- # ddd k2
- (obj = Field,name = dddk2, rank = DDD, C_macro);
+ # d K2
+ (obj = Field,name = dK2, rank = D, C_macro);
+ # dd K2
+ (obj = Field,name = ddK2, rank = DD, C_macro);
+ # ddd K2
+ (obj = Field,name = dddK2, rank = DDD, C_macro);
+
+ # d H
+ (obj = Field,name = dH, rank = D, C_macro);
+ # dd H
+ (obj = Field,name = ddH, rank = DD, C_macro);
+ # ddd H
+ (obj = Field,name = dddH, rank = DDD, C_macro);
 
 #### c function declarations
 
- # k0
- (obj = Field,name = k0, rank = 0, C_macro2);
- # dk0
- (obj = Field,name = dk0, rank = D, C_macro2);
- # dd k0
- (obj = Field,name = ddk0, rank = DD, C_macro2);
- # ddd k0
- (obj = Field,name = dddk0, rank = DDD, C_macro2);
+ # K0
+ (obj = Field,name = K0, rank = 0, C_macro2);
+ # dK0
+ (obj = Field,name = dK0, rank = D, C_macro2);
+ # dd K0
+ (obj = Field,name = ddK0, rank = DD, C_macro2);
+ # ddd K0
+ (obj = Field,name = dddK0, rank = DDD, C_macro2);
 
- # k1
- (obj = Field,name = k1, rank = 0, C_macro2);
- # d k1
- (obj = Field,name = dk1, rank = D, C_macro2);
- # dd k1
- (obj = Field,name = ddk1, rank = DD, C_macro2);
- # ddd k1
- (obj = Field,name = dddk1, rank = DDD, C_macro2);
+ # K1
+ (obj = Field,name = K1, rank = 0, C_macro2);
+ # d K1
+ (obj = Field,name = dK1, rank = D, C_macro2);
+ # dd K1
+ (obj = Field,name = ddK1, rank = DD, C_macro2);
+ # ddd K1
+ (obj = Field,name = dddK1, rank = DDD, C_macro2);
 
- # k2
- (obj = Field,name = k2, rank = 0, C_macro2);
- # d k2
- (obj = Field,name = dk2, rank = D, C_macro2);
- # dd k2
- (obj = Field,name = ddk2, rank = DD, C_macro2);
- # ddd k2
- (obj = Field,name = dddk2, rank = DDD, C_macro2);
+ # K2
+ (obj = Field,name = K2, rank = 0, C_macro2);
+ # d K2
+ (obj = Field,name = dK2, rank = D, C_macro2);
+ # dd K2
+ (obj = Field,name = ddK2, rank = DD, C_macro2);
+ # ddd K2
+ (obj = Field,name = dddK2, rank = DDD, C_macro2);
+
+ # H
+ (obj = Field,name = H, rank = 0, C_macro2);
+ # d H
+ (obj = Field,name = dH, rank = D, C_macro2);
+ # dd H
+ (obj = Field,name = ddH, rank = DD, C_macro2);
+ # ddd H
+ (obj = Field,name = dddH, rank = DDD, C_macro2);
 
 
 #### c function definition
 
- # k0
- (obj = Field,name = k0, rank = 0, C_macro3);
- # dk0
- (obj = Field,name = dk0, rank = D, C_macro3);
- # dd k0
- (obj = Field,name = ddk0, rank = DD, C_macro3);
- # ddd k0
- (obj = Field,name = dddk0, rank = DDD, C_macro3);
+ # K0
+ (obj = Field,name = K0, rank = 0, C_macro3);
+ # dK0
+ (obj = Field,name = dK0, rank = D, C_macro3);
+ # dd K0
+ (obj = Field,name = ddK0, rank = DD, C_macro3);
+ # ddd K0
+ (obj = Field,name = dddK0, rank = DDD, C_macro3);
 
- # k1
- (obj = Field,name = k1, rank = 0, C_macro3);
- # d k1
- (obj = Field,name = dk1, rank = D, C_macro3);
- # dd k1
- (obj = Field,name = ddk1, rank = DD, C_macro3);
- # ddd k1
- (obj = Field,name = dddk1, rank = DDD, C_macro3);
+ # K1
+ (obj = Field,name = K1, rank = 0, C_macro3);
+ # d K1
+ (obj = Field,name = dK1, rank = D, C_macro3);
+ # dd K1
+ (obj = Field,name = ddK1, rank = DD, C_macro3);
+ # ddd K1
+ (obj = Field,name = dddK1, rank = DDD, C_macro3);
 
- # k2
- (obj = Field,name = k2, rank = 0, C_macro3);
- # d k2
- (obj = Field,name = dk2, rank = D, C_macro3);
- # dd k2
- (obj = Field,name = ddk2, rank = DD, C_macro3);
- # ddd k2
- (obj = Field,name = dddk2, rank = DDD, C_macro3);
+ # K2
+ (obj = Field,name = K2, rank = 0, C_macro3);
+ # d K2
+ (obj = Field,name = dK2, rank = D, C_macro3);
+ # dd K2
+ (obj = Field,name = ddK2, rank = DD, C_macro3);
+ # ddd K2
+ (obj = Field,name = dddK2, rank = DDD, C_macro3);
+
+ # H
+ (obj = Field,name = H, rank = 0, C_macro3);
+ # d H
+ (obj = Field,name = dH, rank = D, C_macro3);
+ # dd H
+ (obj = Field,name = ddH, rank = DD, C_macro3);
+ # ddd H
+ (obj = Field,name = dddH, rank = DDD, C_macro3);
 
 }
 
 # symmetries:
-Symm[ddk0(i,j)    = ddk0(j,i)];
-Symm[dddk0(i,j,k) = dddk0(j,i,k)];
+Symm[ddK0(i,j)    = ddK0(j,i)];
+Symm[dddK0(i,j,k) = dddK0(j,i,k)];
 
-Symm[ddk1(i,j)    = ddk1(j,i)];
-Symm[dddk1(i,j,k) = dddk1(j,i,k)];
+Symm[ddK1(i,j)    = ddK1(j,i)];
+Symm[dddK1(i,j,k) = dddK1(j,i,k)];
 
-Symm[ddk2(i,j)    = ddk2(j,i)];
-Symm[dddk2(i,j,k) = dddk2(j,i,k)];
+Symm[ddK2(i,j)    = ddK2(j,i)];
+Symm[dddK2(i,j,k) = dddK2(j,i,k)];
 
-Symm[ddc(i,j)     = ddc(j,i)];
-Symm[dddc(i,j,k)  = dddc(j,i,k)];
-
+Symm[ddH(i,j)    = ddH(j,i)];
+Symm[dddH(i,j,k) = dddH(j,i,k)];
 
 ### make it ready for python:
 ### remove C comments:
@@ -258,7 +299,7 @@ Command["sed -i 's/\/\* declaring: \*\///'"];
 
 ### remove spaces:
 Command["sed -i 's/^  d/d/g'"];
-Command["sed -i "s/^  print('double/print('double/g""];
+Command["sed -i "s/^  print('KS_func/print('KS_func/g""];
 
 ### derivatives d/dx
 Command["sed -i 's/0)\.doit/,x)\.doit/g'"];
@@ -276,7 +317,7 @@ Command["sed -i 's/_,/,/g'"];
 
 ### functions:
 Command["sed -i 's/double/double /g'"];
-Command["sed -i 's/KS_func_args_macro/ KS_func_args_macro/g'"];
+Command["sed -i 's/ KS_func_args_macro/KS_func_args_macro/g'"];
 
 ### remove C comments:
 Command["sed -i '1,5d'"];
