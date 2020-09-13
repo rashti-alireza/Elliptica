@@ -22,8 +22,8 @@
 Dimension = 3;
 point     = x;
 C_macro=name_(diff(name).doit());
-C_macro2=print('double bbn_name_KS_freedataKS_func_args_macro;');
-C_macro3=print('double bbn_name_KS_freedataKS_func_args_macro')\n\
+C_macro2=print('KS_func_def_macro(name)KS_func_args_macro;');
+C_macro3=print('KS_func_def_macro(name)KS_func_args_macro')\n\
 	print('{')\n\
 	print('return')\n\
 	print(mcode(name));\n\
@@ -210,7 +210,7 @@ C_macro3=print('double bbn_name_KS_freedataKS_func_args_macro')\n\
 `### evaluates:`
 `kt,k0,k1,k2 = get_ks(Bx,By,Bz,B2,phiy,phiz)`
 `c           = 2*bbn_ks_H(x,y,z)*bbn_ks_rolloff(x,y,z)`
-
+``
 `print('#include "bbn_free_date_analytic.h"')`
 ``
 Declare =
@@ -372,7 +372,7 @@ Command["sed -i 's/\/\* declaring: \*\///'"];
 
 ### remove spaces:
 Command["sed -i 's/^  d/d/g'"];
-Command["sed -i "s/^  print('double/print('double/g""];
+Command["sed -i "s/^  print('KS_func/print('KS_func/g""];
 
 ### derivatives d/dx
 Command["sed -i 's/0)\.doit/,x)\.doit/g'"];
@@ -395,8 +395,8 @@ Command["sed -i 's/KS_func_args_macro/ KS_func_args_macro/g'"];
 ### remove C comments:
 Command["sed -i '1,5d'"];
 ### run python
-#Comand["python "];
-Comand["cat "];
+Comand["python "];
+#Comand["cat "];
 
 ### rm redundants
 Comand["rm "];
