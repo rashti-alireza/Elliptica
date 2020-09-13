@@ -1,9 +1,11 @@
-### Calculating free data _ddgamma and _dddgamma analytically.
+### Calculating free data k0,k1,k2,c and their derivatives
+### note: bbn_ks_func_k? are k's before transformation
+### their values taken from another math file.
 
 #########################
 ### H O W  T O  U S E ###
 #########################
-# Issue the following (TAKES A VERY VERY LONG TIME):
+# Issue the following:
 # 
 # $ cpi bbn_free_data_KS_k012_c_derives.math > \
 #   bbn_free_data_KS_k012_c_derives.c && \
