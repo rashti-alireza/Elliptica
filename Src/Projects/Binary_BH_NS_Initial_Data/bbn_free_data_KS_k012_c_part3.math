@@ -1,0 +1,362 @@
+### Calculating free data k0,k1,k2,c and their derivatives
+### using chain rule part 3.
+### note: bbn_ks_func_? are before transformation
+### their values taken from another math file.
+
+#########################
+### H O W  T O  U S E ###
+#########################
+# Issue the following:
+# 
+# $ cpi bbn_free_data_KS_k012_c_part3.math > \
+#   bbn_free_data_KS_k012_c_part2.3 && \
+#   sed -i '/Welcome to Cpi/,$d' bbn_free_data_KS_k012_c_part3.c
+
+Dimension = 3;
+point     = x;
+C_macro=name_(diff(name).doit());
+C_macro2=print('double bbn_name_KS_freedataKS_func_args_macro;');
+C_macro3=print('double bbn_name_KS_freedataKS_func_args_macro')\n\
+	print('{')\n\
+	print('return')\n\
+	print(mcode(name));\n\
+	print('}');
+
+## libs
+`from __future__ import division`
+`from sympy import *`
+`from sympy.tensor.tensor import TensorIndexType, TensorHead`
+`from sympy.tensor.tensor import tensor_indices`
+`from sympy.functions import transpose`
+`from sympy.parsing.mathematica import mathematica`
+`import sys`
+`import re`
+`import os`
+
+### ccode generator
+`def mcode(m,s=2):`
+`  print('/* mcode in progress ... */')`
+`  sys.stdout.flush()`
+`  m = (m).doit()`
+`  code = ""`
+`  if (s==1):`
+`    pid = os.getpid()`
+`    mfile_name=".mfile_temp_{}".format(pid)`
+`    cfile_name=".cfile_temp_{}".format(pid)`
+`    rhs  =""`
+`    try:`
+`      rhs  = mathematica_code((m).doit())`
+`    except:`
+`      rhs  = mathematica_code(m)`
+``
+`    math_code  = rhs + ";\n"`
+`    math_code += "Simplify[%];\n"`
+`    math_code += "c=CForm[%];\n"`
+`    math_code += "Print[c]"+"\n"`
+## write into mathematica file
+`    mfile = open(mfile_name,"w")`
+`    mfile.write(math_code)`
+`    mfile.close()`
+
+## run mathematica and output into another
+`    cmd = "math -run -noprompt < {} 1> {}".format(mfile_name,cfile_name)`
+`    ret=os.system(cmd)`
+
+## read math results.
+`    cfile=open(cfile_name,"r")`
+`    code =cfile.read()`
+`    cfile.close()`
+
+## delete the files
+`    cmd = "rm -rf {} {}".format(mfile_name,cfile_name)`
+`    os.system(cmd)`
+`  elif (s==2):`
+`    code = ccode(simplify(m))`
+`  else:`
+`    code = ccode(m)`
+``
+## return the code and break long lines
+`  code = '{};'.format(code)`
+`  code = re.sub(r'\b1.0\*\b','',code)`
+`  code = re.sub(r'(.{50,70}[\+\-\*/]+\s?)','\\1{}n'.format("\\"),code)`
+``
+`  return code`
+``
+
+### simplify using mathematica or sympy or none:
+`def msimplify(m,msg="...",s="none"):`
+`  print('/* msimplify({}) */'.format(msg))`
+`  sys.stdout.flush()`
+`  code = ""`
+`  if (s=="mathematica"):`# if you want mathematica
+`    pid = os.getpid()`
+`    mfile_name=".mfile_temp_{}".format(pid)`
+`    cfile_name=".cfile_temp_{}".format(pid)`
+`    rhs  =""`
+`    try:`
+`      rhs  = mathematica_code((m).doit())`
+`    except:`
+`      rhs  = mathematica_code(m)`
+``
+`    math_code  = rhs + ";\n"`
+`    math_code += "Simplify[%,TimeConstraint->1000];\n"`
+`    math_code += "Print[%]"+"\n"`
+## write into mathematica file
+`    mfile = open(mfile_name,"w")`
+`    mfile.write(math_code)`
+`    mfile.close()`
+
+## run mathematica and output into another
+`    cmd = "math -run -noprompt < {} 1> {}".format(mfile_name,cfile_name)`
+`    ret=os.system(cmd)`
+
+## read math results.
+`    cfile=open(cfile_name,"r")`
+`    code =cfile.read()`
+`    cfile.close()`
+
+## delete the files
+`    cmd = "rm -rf {} {}".format(mfile_name,cfile_name)`
+`    os.system(cmd)`
+`    return mathematica(code)`
+`  elif(s=="sympy"):` ## if you wanna simpy simplify
+`    code = simplify(m)`
+`    return code`
+`  else:` ## no simplification
+`    return m`
+``
+``
+``
+`### symbols`
+`x,y,z               = symbols('x,y,z')`
+`r0,M_BH,a_BH,Lambda = symbols('r0,M_BH,a_BH,Lambda')`
+`Bx,By,Bz,B2         = symbols('Bx,By,Bz,B2')`
+`phiy,phiz           = symbols('phiy,phiz')`
+
+``
+``
+`### radius function in Kerr-Schild coords:`
+`def KS_radius(_x,_y,_z,a):`
+`  r2 = (_x**2+_y**2+_z**2)`
+`  a2 = a**2`
+`  return (0.5*(r2-a2+sqrt((r2-a2)**2+4*a2*_z**2)))`
+``
+``
+`### perform boost and rotation transformation, dir = [1,-1]`
+`def Boost_Rotation(B,Ry,Rz,dir,v):`
+`  if (dir == 1):`
+`    return simplify(B*Rz*Ry)*v`
+`  elif (dir == -1):`
+`    return simplify(Ry**-1*Rz**-1)*(simplify(B**-1))*v`
+`  else:`
+`    raise Exception('Bad argument')`
+``
+``
+`### populate boost transformation matrix:`
+`def Boost_matrix(Bx,By,Bz,B2):`
+`   gamma  = (1-B2)**(-0.5)`
+`   b = Matrix([`
+`     [gamma    , -gamma*Bx            , -gamma*By            , -gamma*Bz],`
+`     [-gamma*Bx, 1+(gamma-1)*Bx**2/B2 , (gamma-1)*Bx*By/B2   , (gamma-1)*Bx*Bz/B2],`
+`     [-gamma*By, (gamma-1)*Bx*By/B2   , 1+(gamma-1)*By**2/B2 , (gamma-1)*By*Bz/B2],`
+`     [-gamma*Bz, (gamma-1)*Bx*Bz/B2   , (gamma-1)*By*Bz/B2   , 1+(gamma-1)*Bz**2/B2]`
+`     ])`
+`     `
+`   return b;`
+``
+`### populate rotation transformaion matrix:`
+`def Rotation_matrix(phiy,phiz):`
+`  cy = cos(phiy)`
+`  sy = sin(phiy)`
+`  cz = cos(phiz)`
+`  sz = sin(phiz)`
+`  `
+`  ty = Matrix([`
+`     [1,0  ,0,0],`
+`     [0,cy ,0,sy],`
+`     [0,0  ,1,0],`
+`     [0,-sy,0,cy]`
+`     ])`
+`     `
+`  tz = Matrix([`
+`     [1,0 ,0  ,0],`
+`     [0,cz,-sz,0],`
+`     [0,sz,cz ,0],`
+`     [0,0 ,0  ,1]`
+`     ])`
+`     `
+`  return ty, tz  `
+
+`### evaluates:`
+
+`x_mu     = transpose(Matrix([[0,x,y,z]]))`
+`tB       = Boost_matrix(Bx,By,Bz,B2)`
+`tRy, tRz = Rotation_matrix(phiy,phiz)`
+`_x_mu = Boost_Rotation(tB,tRy,tRz,-1,x_mu)`
+`_x    = msimplify(_x_mu[1,0],"_x")`
+`_y    = msimplify(_x_mu[2,0],"_y")`
+`_z    = msimplify(_x_mu[3,0],"_z")`
+`_r    = KS_radius(_x,_y,_z,a)`
+
+``
+`print('#include "bbn_free_date_analytic.h"')`
+``
+Declare =
+{
+#### diff
+
+ # d_x
+ (obj = Field,name = d_x, rank = D, C_macro);
+ # dd _x
+ (obj = Field,name = dd_x, rank = DD, C_macro);
+ # ddd _x
+ (obj = Field,name = ddd_x, rank = DDD, C_macro);
+
+ # d _y
+ (obj = Field,name = d_y, rank = D, C_macro);
+ # dd _y
+ (obj = Field,name = dd_y, rank = DD, C_macro);
+ # ddd _y
+ (obj = Field,name = ddd_y, rank = DDD, C_macro);
+
+ # d _z
+ (obj = Field,name = d_z, rank = D, C_macro);
+ # dd _z
+ (obj = Field,name = dd_z, rank = DD, C_macro);
+ # ddd _z
+ (obj = Field,name = ddd_z, rank = DDD, C_macro);
+
+ # d _r
+ (obj = Field,name = d_r, rank = D, C_macro);
+ # dd _r
+ (obj = Field,name = dd_r, rank = DD, C_macro);
+ # ddd _r
+ (obj = Field,name = ddd_r, rank = DDD, C_macro);
+
+#### c function declarations
+
+ # _x
+ (obj = Field,name = _x, rank = 0, C_macro2);
+ # d_x
+ (obj = Field,name = d_x, rank = D, C_macro2);
+ # dd _x
+ (obj = Field,name = dd_x, rank = DD, C_macro2);
+ # ddd _x
+ (obj = Field,name = ddd_x, rank = DDD, C_macro2);
+
+ # _y
+ (obj = Field,name = _y, rank = 0, C_macro2);
+ # d _y
+ (obj = Field,name = d_y, rank = D, C_macro2);
+ # dd _y
+ (obj = Field,name = dd_y, rank = DD, C_macro2);
+ # ddd _y
+ (obj = Field,name = ddd_y, rank = DDD, C_macro2);
+
+ # _z
+ (obj = Field,name = _z, rank = 0, C_macro2);
+ # d _z
+ (obj = Field,name = d_z, rank = D, C_macro2);
+ # dd _z
+ (obj = Field,name = dd_z, rank = DD, C_macro2);
+ # ddd _z
+ (obj = Field,name = ddd_z, rank = DDD, C_macro2);
+
+ # _r
+ (obj = Field,name = _r, rank = 0, C_macro2);
+ # d _r
+ (obj = Field,name = d_r, rank = D, C_macro2);
+ # dd _r
+ (obj = Field,name = dd_r, rank = DD, C_macro2);
+ # ddd _r
+ (obj = Field,name = ddd_r, rank = DDD, C_macro2);
+
+
+#### c function definition
+
+ # _x
+ (obj = Field,name = _x, rank = 0, C_macro3);
+ # d_x
+ (obj = Field,name = d_x, rank = D, C_macro3);
+ # dd _x
+ (obj = Field,name = dd_x, rank = DD, C_macro3);
+ # ddd _x
+ (obj = Field,name = ddd_x, rank = DDD, C_macro3);
+
+ # _y
+ (obj = Field,name = _y, rank = 0, C_macro3);
+ # d _y
+ (obj = Field,name = d_y, rank = D, C_macro3);
+ # dd _y
+ (obj = Field,name = dd_y, rank = DD, C_macro3);
+ # ddd _y
+ (obj = Field,name = ddd_y, rank = DDD, C_macro3);
+
+ # _z
+ (obj = Field,name = _z, rank = 0, C_macro3);
+ # d _z
+ (obj = Field,name = d_z, rank = D, C_macro3);
+ # dd _z
+ (obj = Field,name = dd_z, rank = DD, C_macro3);
+ # ddd _z
+ (obj = Field,name = ddd_z, rank = DDD, C_macro3);
+
+ # _r
+ (obj = Field,name = _r, rank = 0, C_macro3);
+ # d _r
+ (obj = Field,name = d_r, rank = D, C_macro3);
+ # dd _r
+ (obj = Field,name = dd_r, rank = DD, C_macro3);
+ # ddd _r
+ (obj = Field,name = ddd_r, rank = DDD, C_macro3);
+
+}
+
+# symmetries:
+Symm[dd_x(i,j)    = dd_x(j,i)];
+Symm[ddd_x(i,j,k) = ddd_x(j,i,k)];
+
+Symm[dd_y(i,j)    = dd_y(j,i)];
+Symm[ddd_y(i,j,k) = ddd_y(j,i,k)];
+
+Symm[dd_z(i,j)    = dd_z(j,i)];
+Symm[ddd_z(i,j,k) = ddd_z(j,i,k)];
+
+Symm[dd_r(i,j)    = dd_r(j,i)];
+Symm[ddd_r(i,j,k) = ddd_r(j,i,k)];
+
+
+### make it ready for python:
+### remove C comments:
+Command["sed -i 's/\/\* declaring: \*\///'"];
+
+### remove spaces:
+Command["sed -i 's/^  d/d/g'"];
+Command["sed -i "s/^  print('double/print('double/g""];
+
+### derivatives d/dx
+Command["sed -i 's/0)\.doit/,x)\.doit/g'"];
+### derivatives d/dy
+Command["sed -i 's/1)\.doit/,y)\.doit/g'"];
+### derivatives d/dz
+Command["sed -i 's/2)\.doit/,z)\.doit/g'"];
+### no doit
+Command["sed -i 's/\.doit()//g'"];
+### indices
+Command["sed -i 's/D,/,/g'"];
+Command["sed -i 's/diff(d/diff(/g'"];
+Command["sed -i 's/_(diff/=(diff/g'"];
+Command["sed -i 's/_,/,/g'"];
+
+### functions:
+Command["sed -i 's/double/double /g'"];
+Command["sed -i 's/KS_func_args_macro/ KS_func_args_macro/g'"];
+
+### remove C comments:
+Command["sed -i '1,5d'"];
+### run python
+Comand["python "];
+#Comand["cat "];
+
+### rm redundants
+Comand["rm "];
