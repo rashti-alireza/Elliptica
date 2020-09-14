@@ -1681,13 +1681,13 @@ static int bhf_4th_Poly_Ylm(struct BHFiller_S *const bhf)
 
 /* ->: EXIT_SUCCESS.
 // filling the hole using elliptic equations (Brown's method)
+// this is ellptic eq. of 3rd order i.e (Laplace^2)^3 f = 0.
 // ref:https://arxiv.org/pdf/0809.3533.pdf */
 static int bhf_ell_Brown(struct BHFiller_S *const bhf)
 {
   const unsigned nf  = bhf->nf;
   const unsigned npi = bhf->npi;
   Grid_T *bh_grid = calloc(1,sizeof(*bh_grid));IsNull(bh_grid);
-  char s[MAX_STR2] = {'\0'};
   unsigned f,i;
   
   /* setup bh grid */
@@ -1718,11 +1718,79 @@ static int bhf_ell_Brown(struct BHFiller_S *const bhf)
   /* now let's fill up bh_grid->patch[?]->interface */
   realize_geometry(bh_grid);
   
-  /* setup equations */
+  /* init equations */
+  Solve_Equations_T *SolveEqs = init_solve_equations(bh_grid);
   sEquation_T **field_eq = init_eq()/* field equation */,
             **bc_eq = init_eq()/* B.C. for the field */,
             **jacobian_field_eq = init_eq()/* jacobian for field equation */,
             **jacobian_bc_eq = init_eq()/* jacobian for B.C. */;
+  
+  /* setup fields for ell. eq. and for B.C.
+  // note: each field has 3 ell. eqs => 3 b.c. */
+  for (f = 0; f < nf; ++f)
+  {
+    char s[MAX_STR2] = {'\0'};
+    unsigned p;
+    
+    /* adding field */
+    FOR_ALL_PATCHES(p,bh_grid)
+    {
+      Patch_T *patch = bh_grid->patch[p];
+      
+      /* add 2 fields and their derivatives 
+      // with suffix 1,2 higher order fields */
+      /* field */
+      sprintf(s,"%s.1",bhf->fld[f]->f);
+      ADD_AND_ALLOC_FIELD(s,0,patch,YES);
+      
+      sprintf(s,"%s.2",bhf->fld[f]->f);
+      ADD_AND_ALLOC_FIELD(s,0,patch,YES);
+      /* dfield/d? */
+      sprintf(s,"d%s.1_D0",bhf->fld[f]->f);
+      ADD_AND_ALLOC_FIELD(s,0,patch,YES);
+      sprintf(s,"d%s.1_D1",bhf->fld[f]->f);
+      ADD_AND_ALLOC_FIELD(s,0,patch,YES);
+      sprintf(s,"d%s.1_D2",bhf->fld[f]->f);
+      ADD_AND_ALLOC_FIELD(s,0,patch,YES);
+      
+      sprintf(s,"d%s.2_D0",bhf->fld[f]->f);
+      ADD_AND_ALLOC_FIELD(s,0,patch,YES);
+      sprintf(s,"d%s.2_D1",bhf->fld[f]->f);
+      ADD_AND_ALLOC_FIELD(s,0,patch,YES);
+      sprintf(s,"d%s.2_D2",bhf->fld[f]->f);
+      ADD_AND_ALLOC_FIELD(s,0,patch,YES);
+      
+      /* ddfield/d^2? */
+      sprintf(s,"dd%s.1_D0D0",bhf->fld[f]->f);
+      ADD_AND_ALLOC_FIELD(s,0,patch,YES);
+      sprintf(s,"dd%s.1_D1D1",bhf->fld[f]->f);
+      ADD_AND_ALLOC_FIELD(s,0,patch,YES);
+      sprintf(s,"dd%s.1_D2D2",bhf->fld[f]->f);
+      ADD_AND_ALLOC_FIELD(s,0,patch,YES);
+      
+      sprintf(s,"dd%s.2_D0D0",bhf->fld[f]->f);
+      ADD_AND_ALLOC_FIELD(s,0,patch,YES);
+      sprintf(s,"dd%s.2_D1D1",bhf->fld[f]->f);
+      ADD_AND_ALLOC_FIELD(s,0,patch,YES);
+      sprintf(s,"dd%s.2_D2D2",bhf->fld[f]->f);
+      ADD_AND_ALLOC_FIELD(s,0,patch,YES);
+    }  
+      
+      
+    sprintf(s,"eq_%s",bhf->fld[f]->f);
+    add_eq(&field_eq,bbn_bhf_eq_Brown,s);
+    
+    sprintf(s,"bc_%s",bhf->fld[f]->f);
+    add_eq(&bc_eq,bbn_bhf_bc_Brown,s);
+    
+    sprintf(s,"jacobian_eq_%s",bhf->fld[f]->f);
+    add_eq(&jacobian_field_eq,bbn_bhf_jacobian_eq_Brown,s);
+    
+    sprintf(s,"jacobian_bc_%s",bhf->fld[f]->f);
+    add_eq(&jacobian_bc_eq ,bbn_bhf_jacobian_bc_Brown,s);
+  }
+  
+  
   
   for (f = 0; f < nf; ++f)
   {
@@ -1749,7 +1817,8 @@ static int bhf_ell_Brown(struct BHFiller_S *const bhf)
   free_db_eqs(bc_eq);
   free_db_eqs(jacobian_field_eq);
   free_db_eqs(jacobian_bc_eq);     
-  
+  /* free grid and patches */
+  //?????
   return EXIT_SUCCESS;                  
 }
 
