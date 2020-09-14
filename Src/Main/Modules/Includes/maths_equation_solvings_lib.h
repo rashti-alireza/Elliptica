@@ -129,7 +129,7 @@ typedef struct SOLVING_MAN_T
   struct PATCH_T *patch;/* refers to its patch itself */
   char **field_name;/* field to be solved */
   unsigned nf;/* number of fields */
-  unsigned cf;/* current field; index of the field the is being solved */
+  unsigned cf;/* current field; index of the field is being solved */
   double Frms;/* the current residual(rms) of F in, Jx=-F for this field 
               // at this patch. note: it's initialized to DBL_MAX. */
   fEquation_T **field_eq;/* the equation needed to be satisfied */
