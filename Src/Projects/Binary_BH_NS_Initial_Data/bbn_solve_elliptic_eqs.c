@@ -496,7 +496,7 @@ static void bbn_phi_grid_CS(Grid_T *const phi_grid,Grid_T *const grid)
   
   assert(i==7);
   
-  /* no let's fill up phi_grid->patch[?]->interface */
+  /* now let's fill up phi_grid->patch[?]->interface */
   realize_geometry(phi_grid);      
 }
 
