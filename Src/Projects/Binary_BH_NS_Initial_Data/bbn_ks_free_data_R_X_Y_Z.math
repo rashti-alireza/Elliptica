@@ -35,7 +35,7 @@ C_macro3=print('KS_func_def_macro(name)KS_func_args_macro')\n\
 `import os`
 
 ### ccode generator
-`def mcode(m,s=2):`
+`def mcode(m,s=1):`
 `  print('/* mcode in progress ... */')`
 `  sys.stdout.flush()`
 `  m = (m).doit()`
