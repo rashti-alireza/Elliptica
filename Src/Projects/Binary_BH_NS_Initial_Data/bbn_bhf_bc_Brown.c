@@ -6,7 +6,8 @@
 
 #include "bbn_headers.h"
 #include "maths_equation_solvings_lib.h"
-void *bbn_bhf_bc(void *vp1,void *vp2)
+void *bbn_bhf_Brown_bc(void *vp1,void *vp2);
+void *bbn_bhf_Brown_bc(void *vp1,void *vp2)
 {
   DDM_SCHUR_BC_DECLARE
   unsigned ijk;/* node index */

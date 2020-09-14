@@ -1,4 +1,4 @@
-# BH-filler B.C.
+# BH-filler B.C. Brown's way
 
 # Manifold or grid Dimension
 Dimension = 3;
@@ -14,7 +14,8 @@ C_macro3 = READ_v_IF_IN_NS(name);
 `#include "bbn_headers.h"`;
 `#include "maths_equation_solvings_lib.h"`;
 
-`void *bbn_bhf_bc(void *vp1,void *vp2)\n{`;
+`void *bbn_bhf_Brown_bc(void *vp1,void *vp2);`
+`void *bbn_bhf_Brown_bc(void *vp1,void *vp2)\n{`
 
 # NOTE: THE FOLLOWING MACRO DECLARES AND DEFINES THE FOLLOWING VARIABLES:
 # patch, S, map, F, node, N, n.

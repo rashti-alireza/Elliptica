@@ -6,10 +6,8 @@
 
 #include "bbn_headers.h"
 #include "maths_equation_solvings_lib.h"
-#include "bbn_XCTS_equations_lib.h"
-
-
-void *bbn_jacobian_bc_psi(void *vp1,void *vp2)
+void *bbn_bhf_jacobian_bc_Brown(void *vp1,void *vp2);
+void *bbn_bhf_jacobian_bc_Brown(void *vp1,void *vp2)
 {
   DDM_SCHUR_JACOBIAN_BC_DECLARE
   unsigned ijk,lmn;/* for Jacobian entries J[ijk][lmn] */
