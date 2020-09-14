@@ -335,7 +335,9 @@ bhf_init
   /* solving elliptic equations in the hole */
   else if (strcmp_i(method,"EllEq"))
   {
-    unsigned nf;
+    const unsigned npi = 7;/* number of patches inside BH */
+    const unsigned npo = 6;/* number of patches outside BH */
+    unsigned nf,i,j,p;
     
     nf = 0;/* number of fields */
     while(fields_name[nf]) ++nf;
@@ -346,9 +348,30 @@ bhf_init
     
     /* collect names */
     collect_names(bhf,nf);
-    
+        
     /* set the method function */
-    bhf->bhfiller = 0;
+    bhf->bhfiller = bhf_ell_Brown;
+    
+    /* patches outside the BH */
+    bhf->npo = npo;
+    bhf->npi = npi;
+    bhf->patches_outBH = calloc(npo,sizeof(*bhf->patches_outBH));
+    IsNull(bhf->patches_outBH);
+    /* patches inside the BH */
+    bhf->patches_inBH = calloc(npi,sizeof(*bhf->patches_inBH));
+    IsNull(bhf->patches_inBH);
+   
+    i = j = 0;
+    FOR_ALL_PATCHES(p,grid)
+    {
+      Patch_T *patch = grid->patch[p];
+      if (IsItHorizonPatch(patch))
+        bhf->patches_outBH[i++] = patch;
+      else if (IsItInsideBHPatch(patch))
+        bhf->patches_inBH[j++] = patch;
+    }
+    assert(i == npo);
+    assert(j == npi);
   }
   else
     Error0(NO_OPTION);
@@ -1655,3 +1678,78 @@ static int bhf_4th_Poly_Ylm(struct BHFiller_S *const bhf)
     
   return EXIT_SUCCESS;
 }
+
+/* ->: EXIT_SUCCESS.
+// filling the hole using elliptic equations (Brown's method)
+// ref:https://arxiv.org/pdf/0809.3533.pdf */
+static int bhf_ell_Brown(struct BHFiller_S *const bhf)
+{
+  const unsigned nf  = bhf->nf;
+  const unsigned npi = bhf->npi;
+  Grid_T *bh_grid = calloc(1,sizeof(*bh_grid));IsNull(bh_grid);
+  char s[MAX_STR2] = {'\0'};
+  unsigned f,i;
+  
+  /* setup bh grid */
+  bh_grid->patch = calloc(npi,sizeof(*bh_grid->patch));
+  IsNull(bh_grid->patch);
+  for (i = 0; i < npi; ++i)
+  {
+    Patch_T *patch = bhf->patches_inBH[i];
+    bh_grid->patch[i] = calloc(1,sizeof(*bh_grid->patch[i]));
+    IsNull(bh_grid->patch[i]);
+    /* note, for the following all of the pointers inside the structures 
+    // will be equal, since this is not a deep copy. */
+    bh_grid->patch[i][0]    = patch[0];
+    bh_grid->patch[i]->pn   = i;
+    bh_grid->patch[i]->grid = bh_grid;
+    bh_grid->nn            += patch->nn;
+    /* the following needs to be constructed from scratch */
+    bh_grid->patch[i]->interface = 0;
+    bh_grid->patch[i]->solving_man = calloc(1,sizeof(*bh_grid->patch[i]->solving_man));
+    IsNull(bh_grid->patch[i]->solving_man);
+    bh_grid->patch[i]->solving_man[0] = patch->solving_man[0];
+    bh_grid->patch[i]->solving_man->patch = bh_grid->patch[i];
+    bh_grid->patch[i]->solving_man->jacobian = 0;
+    bh_grid->patch[i]->solving_man->nj       = 0;
+    bh_grid->patch[i]->solving_man->method->Schur_Complement = 0;
+    bh_grid->patch[i]->solving_man->method->SchurC = 0;
+  }
+  /* now let's fill up bh_grid->patch[?]->interface */
+  realize_geometry(bh_grid);
+  
+  /* setup equations */
+  sEquation_T **field_eq = init_eq()/* field equation */,
+            **bc_eq = init_eq()/* B.C. for the field */,
+            **jacobian_field_eq = init_eq()/* jacobian for field equation */,
+            **jacobian_bc_eq = init_eq()/* jacobian for B.C. */;
+  
+  for (f = 0; f < nf; ++f)
+  {
+    sprintf(s,"eq_%s",bhf->fld[f]->f);
+    add_eq(&field_eq,bbn_bhf_eq_Brown,s);
+    
+    sprintf(s,"bc_%s",bhf->fld[f]->f);
+    add_eq(&bc_eq,bbn_bhf_bc_Brown,s);
+    
+    sprintf(s,"jacobian_eq_%s",bhf->fld[f]->f);
+    add_eq(&jacobian_field_eq,bbn_bhf_jacobian_eq_Brown,s);
+    
+    sprintf(s,"jacobian_bc_%s",bhf->fld[f]->f);
+    add_eq(&jacobian_bc_eq ,bbn_bhf_jacobian_bc_Brown,s);
+  }
+
+  /* populating solution managment */
+  initialize_solving_man(bh_grid,field_eq,bc_eq,
+                         jacobian_field_eq,jacobian_bc_eq);
+ 
+  
+  /* free data base of equations */
+  free_db_eqs(field_eq);
+  free_db_eqs(bc_eq);
+  free_db_eqs(jacobian_field_eq);
+  free_db_eqs(jacobian_bc_eq);     
+  
+  return EXIT_SUCCESS;                  
+}
+

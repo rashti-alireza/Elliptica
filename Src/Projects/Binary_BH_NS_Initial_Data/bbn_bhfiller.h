@@ -2,6 +2,7 @@
 #include "utilities_lib.h"
 #include "maths_approximation_lib.h"
 #include "maths_analytic_lib.h"
+#include "maths_equation_solvings_lib.h"
 
 /* constants */
 #define MAX_STR  (100)
@@ -96,6 +97,10 @@ static double interpolate_from_patch_prim(const char *const field,const double *
 void bbn_bam_error(const char *const msg,const char *const file,const int line);
 static void collect_names(struct BHFiller_S *const bhf,const unsigned nf);
 static int bhf_4th_Poly_Ylm(struct BHFiller_S *const bhf);
-
+static int bhf_ell_Brown(struct BHFiller_S *const bhf);
+void *bbn_bhf_bc_Brown(void *vp1,void *vp2);
+void *bbn_bhf_eq_Brown(void *vp1,void *vp2);
+void *bbn_bhf_jacobian_bc_Brown(void *vp1,void *vp2);
+void *bbn_bhf_jacobian_eq_Brown(void *vp1,void *vp2);
 
 
