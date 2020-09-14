@@ -1,12 +1,13 @@
-### Calculating free data _gamma,_gammaI and _dgamma analytically.
+### Kerr-Schild free data _gamma,_gammaI and their derivatives.
 
 #########################
 ### H O W  T O  U S E ###
 #########################
 # Issue the following (TAKES A VERY VERY LONG TIME):
 # 
-# $ cpi bbn_free_data_g_gI_dg_analytic.math > bbn_free_data_g_gI_dg_analytic.c && \
-#   sed -i '/Welcome to Cpi/,$d' bbn_free_data_g_gI_dg_analytic.c
+# $ cpi bbn_ks_free_data_g_gI_dg_ddg_dddg.math > \
+#   bbn_ks_free_data_g_gI_dg_ddg_dddg.c && \
+#   sed -i '/Welcome to Cpi/,$d' bbn_ks_free_data_g_gI_dg_ddg_dddg.c
 
 Dimension = 3;
 point     = x;
@@ -156,24 +157,26 @@ Declare =
 
 }
 
+# don't apply symmetry, since in _gamma only symmetry is applied
+# in first two indices, later you might imporve it.
 # symmetries:
-Symm[_ddg00(i,j)    = _ddg00(j,i)];
-Symm[_dddg00(i,j,k) = _dddg00(j,i,k)];
+#Symm[_ddg00(i,j)    = _ddg00(j,i)];
+#Symm[_dddg00(i,j,k) = _dddg00(j,i,k)];
 
-Symm[_ddg01(i,j)    = _ddg01(j,i)];
-Symm[_dddg01(i,j,k) = _dddg01(j,i,k)];
+#Symm[_ddg01(i,j)    = _ddg01(j,i)];
+#Symm[_dddg01(i,j,k) = _dddg01(j,i,k)];
 
-Symm[_ddg02(i,j)    = _ddg02(j,i)];
-Symm[_dddg02(i,j,k) = _dddg02(j,i,k)];
+#Symm[_ddg02(i,j)    = _ddg02(j,i)];
+#Symm[_dddg02(i,j,k) = _dddg02(j,i,k)];
 
-Symm[_ddg11(i,j)    = _ddg11(j,i)];
-Symm[_dddg11(i,j,k) = _dddg11(j,i,k)];
+#Symm[_ddg11(i,j)    = _ddg11(j,i)];
+#Symm[_dddg11(i,j,k) = _dddg11(j,i,k)];
 
-Symm[_ddg12(i,j)    = _ddg12(j,i)];
-Symm[_dddg12(i,j,k) = _dddg12(j,i,k)];
+#Symm[_ddg12(i,j)    = _ddg12(j,i)];
+#Symm[_dddg12(i,j,k) = _dddg12(j,i,k)];
 
-Symm[_ddg22(i,j)    = _ddg22(j,i)];
-Symm[_dddg22(i,j,k) = _dddg22(j,i,k)];
+#Symm[_ddg22(i,j)    = _ddg22(j,i)];
+#Symm[_dddg22(i,j,k) = _dddg22(j,i,k)];
 
 ### make it ready for python:
 ### remove C comments:
@@ -208,9 +211,25 @@ Command["sed -i 's/_,/,/g'"];
 `print('#include "bbn_free_date_analytic.h"')`
 
 `print('void bbn_free_data_g_gI_analytic(')`
-`print(' Patch_T *const patch,')`
-`print(' double *(*get_v)(const char *const fname,void *params),')`
-`print(' void *params);')`
+`print('        Patch_T *const patch,')`
+`print('        double *(*get_v)(const char *const fname,void *params),')`
+`print('        void *params);')`
+
+`print('void bbn_free_data_dg_analytic(')`
+`print('	Patch_T *const patch, ')`
+`print('	double *(*get_v)(const char *const fname,void *params),')`
+`print('	void *params);')`
+
+`print('void bbn_free_data_ddg_analytic(')`
+`print('	Patch_T *const patch, ')`
+`print('	double *(*get_v)(const char *const fname,void *params),')`
+`print('	void *params);')`
+
+`print('void bbn_free_data_dddg_analytic(')`
+`print('	Patch_T *const patch, ')`
+`print('	double *(*get_v)(const char *const fname,void *params),')`
+`print('	void *params);')`
+
 `print('void bbn_free_data_g_gI_analytic(')`
 `print(' Patch_T *const patch,')`
 `print(' double *(*get_v)(const char *const fname,void *params),')`
@@ -337,23 +356,19 @@ Command["sed -i 's/_,/,/g'"];
 `print('          double delta_U2D1 = ')`
 `print('        _gammaI_U0U2[ijk]*_gamma_D0D1[ijk] + _gammaI_U1U2[ijk]*')`
 `print('        _gamma_D1D1[ijk] + _gammaI_U2U2[ijk]*_gamma_D1D2[ijk];')`
-`print('        if(!EQL(delta_U1D1,1)||!isfinite(delta_U1D1))  Error0("_gammaI is not correct!\n");')`
-`print('        if(!EQL(delta_U0D1,0)||!isfinite(delta_U0D1))  Error0("_gammaI is not correct!\n");')`
-`print('        if(!EQL(delta_U0D2,0)||!isfinite(delta_U0D2))  Error0("_gammaI is not correct!\n");')`
-`print('        if(!EQL(delta_U1D2,0)||!isfinite(delta_U1D2))  Error0("_gammaI is not correct!\n");')`
-`print('        if(!EQL(delta_U0D0,1)||!isfinite(delta_U0D0))  Error0("_gammaI is not correct!\n");')`
-`print('        if(!EQL(delta_U2D1,0)||!isfinite(delta_U2D1))  Error0("_gammaI is not correct!\n");')`
-`print('        if(!EQL(delta_U2D2,1)||!isfinite(delta_U2D2))  Error0("_gammaI is not correct!\n");')`
-`print('        if(!EQL(delta_U2D0,0)||!isfinite(delta_U2D0))  Error0("_gammaI is not correct!\n");')`
-`print('        if(!EQL(delta_U1D0,0)||!isfinite(delta_U1D0))  Error0("_gammaI is not correct!\n");')`
+`print('        if(!EQL(delta_U1D1,1)||!isfinite(delta_U1D1))  Error0("_gammaI is not correct!\\n");')`
+`print('        if(!EQL(delta_U0D1,0)||!isfinite(delta_U0D1))  Error0("_gammaI is not correct!\\n");')`
+`print('        if(!EQL(delta_U0D2,0)||!isfinite(delta_U0D2))  Error0("_gammaI is not correct!\\n");')`
+`print('        if(!EQL(delta_U1D2,0)||!isfinite(delta_U1D2))  Error0("_gammaI is not correct!\\n");')`
+`print('        if(!EQL(delta_U0D0,1)||!isfinite(delta_U0D0))  Error0("_gammaI is not correct!\\n");')`
+`print('        if(!EQL(delta_U2D1,0)||!isfinite(delta_U2D1))  Error0("_gammaI is not correct!\\n");')`
+`print('        if(!EQL(delta_U2D2,1)||!isfinite(delta_U2D2))  Error0("_gammaI is not correct!\\n");')`
+`print('        if(!EQL(delta_U2D0,0)||!isfinite(delta_U2D0))  Error0("_gammaI is not correct!\\n");')`
+`print('        if(!EQL(delta_U1D0,0)||!isfinite(delta_U1D0))  Error0("_gammaI is not correct!\\n");')`
 `print('      }')`
 `print('    }')`
 `print('}')`
 ``
-`print('void bbn_free_data_dg_analytic(')`
-`print('	Patch_T *const patch, ')`
-`print('	double *(*get_v)(const char *const fname,void *params),')`
-`print('	void *params);')`
 `print('void bbn_free_data_dg_analytic(')`
 `print('	Patch_T *const patch, ')`
 `print('	double *(*get_v)(const char *const fname,void *params),')`
@@ -477,10 +492,6 @@ Command["sed -i 's/_,/,/g'"];
 `print('}')`
 ``
 `print('')`
-`print('void bbn_free_data_ddg_analytic(')`
-`print('	Patch_T *const patch, ')`
-`print('	double *(*get_v)(const char *const fname,void *params),')`
-`print('	void *params);')`
 `print('void bbn_free_data_ddg_analytic(')`
 `print('	Patch_T *const patch, ')`
 `print('	double *(*get_v)(const char *const fname,void *params),')`
@@ -747,10 +758,6 @@ Command["sed -i 's/_,/,/g'"];
 `print('  }	')`
 `print('}')`
 `print('')`
-`print('void bbn_free_data_dddg_analytic(')`
-`print('	Patch_T *const patch, ')`
-`print('	double *(*get_v)(const char *const fname,void *params),')`
-`print('	void *params);')`
 `print('void bbn_free_data_dddg_analytic(')`
 `print('	Patch_T *const patch, ')`
 `print('	double *(*get_v)(const char *const fname,void *params),')`
@@ -1453,7 +1460,6 @@ Command["sed -i 's/_,/,/g'"];
 ### remove C comments:
 Command["sed -i '1,5d'"];
 ### run python
-Command["cat"];
 Comand["python "];
 
 ### rm redundants
