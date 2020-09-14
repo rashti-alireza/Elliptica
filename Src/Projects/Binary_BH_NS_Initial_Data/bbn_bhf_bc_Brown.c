@@ -16,7 +16,7 @@ void *bbn_bhf_Brown_bc(void *vp1,void *vp2)
   char bc_fld_name[100] = {'\0'};
 
   sprintf(bc_fld_name,"bc_%s",fld_name);
-  const double * const v_bc = Patch->pool[Ind(bc_fld_name)]->v;
+  const double * const v_bc = patch->pool[Ind(bc_fld_name)]->v;
 
   if (patch->outerB)/* at outer boundary */
   {
