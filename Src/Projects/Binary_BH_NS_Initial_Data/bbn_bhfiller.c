@@ -1696,6 +1696,12 @@ static int bhf_ell_Brown(struct BHFiller_S *const bhf)
   char s_solve_eq[MAX_STR2] = {'\0'};
   Grid_T *inbh_grid  = calloc(1,sizeof(*inbh_grid));IsNull(inbh_grid);
   Grid_T *outbh_grid = calloc(1,sizeof(*outbh_grid));IsNull(outbh_grid);
+  /* init equations */
+  Solve_Equations_T *SolveEqs = init_solve_equations(inbh_grid);
+  sEquation_T **field_eq = init_eq()/* field equation */,
+            **bc_eq = init_eq()/* B.C. for the field */,
+            **jacobian_field_eq = init_eq()/* jacobian for field equation */,
+            **jacobian_bc_eq = init_eq()/* jacobian for B.C. */;
   unsigned f,p;
   ////////////////////////////fix outbh_grid for 3rd_cheb and polynomial.
   
@@ -1771,13 +1777,6 @@ static int bhf_ell_Brown(struct BHFiller_S *const bhf)
     outbh_grid->patch[p]->solving_man = 0;
   }
   
-  /* init equations */
-  Solve_Equations_T *SolveEqs = init_solve_equations(inbh_grid);
-  sEquation_T **field_eq = init_eq()/* field equation */,
-            **bc_eq = init_eq()/* B.C. for the field */,
-            **jacobian_field_eq = init_eq()/* jacobian for field equation */,
-            **jacobian_bc_eq = init_eq()/* jacobian for B.C. */;
-  
   /* adding field */
   FOR_ALL_PATCHES(p,inbh_grid)
   {
@@ -1797,7 +1796,7 @@ static int bhf_ell_Brown(struct BHFiller_S *const bhf)
     strcat(s_solve_eq,s);
     sprintf(s,"%s.1,",bhf->fld[f]->f);
     strcat(s_solve_eq,s);
-    sprintf(s,"%s,",bhf->fld[f]->f);
+    sprintf(s,"%s.0,",bhf->fld[f]->f);
     strcat(s_solve_eq,s);
     
     /* adding field */
@@ -1805,15 +1804,24 @@ static int bhf_ell_Brown(struct BHFiller_S *const bhf)
     {
       Patch_T *patch = inbh_grid->patch[p];
       
-      /* add 2 fields and their derivatives 
-      // with suffix 1,2 higher order fields */
+      /* add 3 fields and their derivatives 
+      // with suffix 0,1,2 higher order fields */
       /* field */
+      sprintf(s,"%s.0",bhf->fld[f]->f);
+      add_field(s,0,patch,YES);
       sprintf(s,"%s.1",bhf->fld[f]->f);
       add_field(s,0,patch,YES);
       sprintf(s,"%s.2",bhf->fld[f]->f);
       add_field(s,0,patch,YES);
       
       /* dfield/d? */
+      sprintf(s,"d%s.0_D0",bhf->fld[f]->f);
+      add_field(s,0,patch,YES);
+      sprintf(s,"d%s.0_D1",bhf->fld[f]->f);
+      add_field(s,0,patch,YES);
+      sprintf(s,"d%s.0_D2",bhf->fld[f]->f);
+      
+      add_field(s,0,patch,YES);
       sprintf(s,"d%s.1_D0",bhf->fld[f]->f);
       add_field(s,0,patch,YES);
       sprintf(s,"d%s.1_D1",bhf->fld[f]->f);
@@ -1829,6 +1837,13 @@ static int bhf_ell_Brown(struct BHFiller_S *const bhf)
       add_field(s,0,patch,YES);
       
       /* ddfield/d^2? */
+      sprintf(s,"dd%s.0_D0D0",bhf->fld[f]->f);
+      add_field(s,0,patch,YES);
+      sprintf(s,"dd%s.0_D1D1",bhf->fld[f]->f);
+      add_field(s,0,patch,YES);
+      sprintf(s,"dd%s.0_D2D2",bhf->fld[f]->f);
+      add_field(s,0,patch,YES);
+      
       sprintf(s,"dd%s.1_D0D0",bhf->fld[f]->f);
       add_field(s,0,patch,YES);
       sprintf(s,"dd%s.1_D1D1",bhf->fld[f]->f);
@@ -1844,11 +1859,19 @@ static int bhf_ell_Brown(struct BHFiller_S *const bhf)
       add_field(s,0,patch,YES);
       
       /* b.c field */
-      sprintf(s,"bc_%s",bhf->fld[f]->f);
+      sprintf(s,"bc_%s.0",bhf->fld[f]->f);
       add_field(s,0,patch,YES);
       sprintf(s,"bc_%s.1",bhf->fld[f]->f);
       add_field(s,0,patch,YES);
       sprintf(s,"bc_%s.2",bhf->fld[f]->f);
+      add_field(s,0,patch,YES);
+      
+      /* source fields */
+      sprintf(s,"src_%s.0",bhf->fld[f]->f);
+      add_field(s,0,patch,YES);
+      sprintf(s,"src_%s.1",bhf->fld[f]->f);
+      add_field(s,0,patch,YES);
+      sprintf(s,"src_%s.2",bhf->fld[f]->f);
       add_field(s,0,patch,YES);
       
     }  
@@ -1865,8 +1888,8 @@ static int bhf_ell_Brown(struct BHFiller_S *const bhf)
       const unsigned *n = patch->n;
       unsigned i,j,k,ijk,_i,_j;
       
-      sprintf(s,"bc_%s",bhf->fld[f]->f);
-      double *bc = patch->pool[Ind(s)]->v;
+      sprintf(s,"bc_%s.0",bhf->fld[f]->f);
+      double *bc0 = patch->pool[Ind(s)]->v;
       
       sprintf(s,"bc_%s.1",bhf->fld[f]->f);
       double *bc1 = patch->pool[Ind(s)]->v;
@@ -1958,7 +1981,7 @@ static int bhf_ell_Brown(struct BHFiller_S *const bhf)
           for (k = 0; k < n[2]; ++k)
           {
             ijk = L(n,i,j,k);
-            bc[ijk]  = fr1;
+            bc0[ijk] = fr1;
             bc1[ijk] = dfdr;
             bc2[ijk] = ddfddr;
           }
@@ -1968,46 +1991,54 @@ static int bhf_ell_Brown(struct BHFiller_S *const bhf)
     }/* FOR_ALL_PATCHES(p,inbh_grid) */
     
     /* adding eqs. (each field has 3 eqs.) */  
-    sprintf(s,"eq_%s",bhf->fld[f]->f);
+    sprintf(s,"eq_%s.0",bhf->fld[f]->f);
     add_eq(&field_eq,bbn_bhf_eq_Brown,s);
     sprintf(s,"eq_%s.1",bhf->fld[f]->f);
     add_eq(&field_eq,bbn_bhf_eq_Brown,s);
     sprintf(s,"eq_%s.2",bhf->fld[f]->f);
     add_eq(&field_eq,bbn_bhf_eq_Brown,s);
     
-    sprintf(s,"bc_%s",bhf->fld[f]->f);
+    sprintf(s,"bc_%s.0",bhf->fld[f]->f);
     add_eq(&bc_eq,bbn_bhf_bc_Brown,s);
     sprintf(s,"bc_%s.1",bhf->fld[f]->f);
     add_eq(&bc_eq,bbn_bhf_bc_Brown,s);
     sprintf(s,"bc_%s.2",bhf->fld[f]->f);
     add_eq(&bc_eq,bbn_bhf_bc_Brown,s);
     
-    sprintf(s,"jacobian_eq_%s",bhf->fld[f]->f);
+    sprintf(s,"jacobian_eq_%s.0",bhf->fld[f]->f);
     add_eq(&jacobian_field_eq,bbn_bhf_jacobian_eq_Brown,s);
     sprintf(s,"jacobian_eq_%s.1",bhf->fld[f]->f);
     add_eq(&jacobian_field_eq,bbn_bhf_jacobian_eq_Brown,s);
     sprintf(s,"jacobian_eq_%s.2",bhf->fld[f]->f);
     add_eq(&jacobian_field_eq,bbn_bhf_jacobian_eq_Brown,s);
     
-    sprintf(s,"jacobian_bc_%s",bhf->fld[f]->f);
+    sprintf(s,"jacobian_bc_%s.0",bhf->fld[f]->f);
     add_eq(&jacobian_bc_eq ,bbn_bhf_jacobian_bc_Brown,s);
     sprintf(s,"jacobian_bc_%s.1",bhf->fld[f]->f);
     add_eq(&jacobian_bc_eq ,bbn_bhf_jacobian_bc_Brown,s);
     sprintf(s,"jacobian_bc_%s.2",bhf->fld[f]->f);
     add_eq(&jacobian_bc_eq ,bbn_bhf_jacobian_bc_Brown,s);
-  }
+  }/* for (f = 0; f < nf; ++f) */
   
   /* populating solution managment */
   Psets("Solving_Order",s_solve_eq);
-  
   initialize_solving_man(inbh_grid,field_eq,bc_eq,
                          jacobian_field_eq,jacobian_bc_eq);
  
+  SolveEqs->solving_order = Pgets("Solving_Order");
+  SolveEqs->FieldUpdate   = 0;
+  SolveEqs->SourceUpdate  = 0;
+  SolveEqs->umfpack_refine= PgetdEZ("Solving_UMFPACK_refinement_step");
+  SolveEqs->umfpack_size  = PgetiEZ("Solving_UMFPACK_size");
   
+  /* solve equations */
+  solve_eqs(SolveEqs);
   
   /* bring back solving order parameter */
   Psets("Solving_Order",s_save_eq);
   
+  /* free SolveEqs and phi grid */
+  free_solve_equations(SolveEqs);
   /* free data base of equations */
   free_db_eqs(field_eq);
   free_db_eqs(bc_eq);
