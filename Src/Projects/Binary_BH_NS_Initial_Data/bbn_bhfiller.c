@@ -1873,13 +1873,48 @@ static int bhf_ell_Brown(struct BHFiller_S *const bhf)
       add_field(s,0,patch,YES);
       sprintf(s,"src_%s.2",bhf->fld[f]->f);
       add_field(s,0,patch,YES);
-      
     }  
     
-    /* populating bc values */
-    FOR_ALL_PATCHES(p,inbh_grid)
+    /* adding eqs. (each field has 3 eqs.) */  
+    sprintf(s,"eq_%s.0",bhf->fld[f]->f);
+    add_eq(&field_eq,bbn_bhf_eq_Brown,s);
+    sprintf(s,"eq_%s.1",bhf->fld[f]->f);
+    add_eq(&field_eq,bbn_bhf_eq_Brown,s);
+    sprintf(s,"eq_%s.2",bhf->fld[f]->f);
+    add_eq(&field_eq,bbn_bhf_eq_Brown,s);
+    
+    sprintf(s,"bc_%s.0",bhf->fld[f]->f);
+    add_eq(&bc_eq,bbn_bhf_bc_Brown,s);
+    sprintf(s,"bc_%s.1",bhf->fld[f]->f);
+    add_eq(&bc_eq,bbn_bhf_bc_Brown,s);
+    sprintf(s,"bc_%s.2",bhf->fld[f]->f);
+    add_eq(&bc_eq,bbn_bhf_bc_Brown,s);
+    
+    sprintf(s,"jacobian_eq_%s.0",bhf->fld[f]->f);
+    add_eq(&jacobian_field_eq,bbn_bhf_jacobian_eq_Brown,s);
+    sprintf(s,"jacobian_eq_%s.1",bhf->fld[f]->f);
+    add_eq(&jacobian_field_eq,bbn_bhf_jacobian_eq_Brown,s);
+    sprintf(s,"jacobian_eq_%s.2",bhf->fld[f]->f);
+    add_eq(&jacobian_field_eq,bbn_bhf_jacobian_eq_Brown,s);
+    
+    sprintf(s,"jacobian_bc_%s.0",bhf->fld[f]->f);
+    add_eq(&jacobian_bc_eq ,bbn_bhf_jacobian_bc_Brown,s);
+    sprintf(s,"jacobian_bc_%s.1",bhf->fld[f]->f);
+    add_eq(&jacobian_bc_eq ,bbn_bhf_jacobian_bc_Brown,s);
+    sprintf(s,"jacobian_bc_%s.2",bhf->fld[f]->f);
+    add_eq(&jacobian_bc_eq ,bbn_bhf_jacobian_bc_Brown,s);
+  }/* for (f = 0; f < nf; ++f) */
+  
+  /* populating bc values */
+  OpenMP_Patch_Pragma(omp parallel for)
+  for (f = 0; f < nf; ++f)
+  {
+    char s[MAX_STR2] = {'\0'};
+    unsigned pp;
+    
+    FOR_ALL_PATCHES(pp,inbh_grid)
     {
-      Patch_T *patch = inbh_grid->patch[p];
+      Patch_T *patch = inbh_grid->patch[pp];
       
       /* this patch does not have BC */
       if (strstr(patch->name,"right_central_box"))
@@ -1989,35 +2024,6 @@ static int bhf_ell_Brown(struct BHFiller_S *const bhf)
         }/* for (j = 0; j < n[1]; ++j) */
       }/* for (i = 0; i < n[0]; ++i) */
     }/* FOR_ALL_PATCHES(p,inbh_grid) */
-    
-    /* adding eqs. (each field has 3 eqs.) */  
-    sprintf(s,"eq_%s.0",bhf->fld[f]->f);
-    add_eq(&field_eq,bbn_bhf_eq_Brown,s);
-    sprintf(s,"eq_%s.1",bhf->fld[f]->f);
-    add_eq(&field_eq,bbn_bhf_eq_Brown,s);
-    sprintf(s,"eq_%s.2",bhf->fld[f]->f);
-    add_eq(&field_eq,bbn_bhf_eq_Brown,s);
-    
-    sprintf(s,"bc_%s.0",bhf->fld[f]->f);
-    add_eq(&bc_eq,bbn_bhf_bc_Brown,s);
-    sprintf(s,"bc_%s.1",bhf->fld[f]->f);
-    add_eq(&bc_eq,bbn_bhf_bc_Brown,s);
-    sprintf(s,"bc_%s.2",bhf->fld[f]->f);
-    add_eq(&bc_eq,bbn_bhf_bc_Brown,s);
-    
-    sprintf(s,"jacobian_eq_%s.0",bhf->fld[f]->f);
-    add_eq(&jacobian_field_eq,bbn_bhf_jacobian_eq_Brown,s);
-    sprintf(s,"jacobian_eq_%s.1",bhf->fld[f]->f);
-    add_eq(&jacobian_field_eq,bbn_bhf_jacobian_eq_Brown,s);
-    sprintf(s,"jacobian_eq_%s.2",bhf->fld[f]->f);
-    add_eq(&jacobian_field_eq,bbn_bhf_jacobian_eq_Brown,s);
-    
-    sprintf(s,"jacobian_bc_%s.0",bhf->fld[f]->f);
-    add_eq(&jacobian_bc_eq ,bbn_bhf_jacobian_bc_Brown,s);
-    sprintf(s,"jacobian_bc_%s.1",bhf->fld[f]->f);
-    add_eq(&jacobian_bc_eq ,bbn_bhf_jacobian_bc_Brown,s);
-    sprintf(s,"jacobian_bc_%s.2",bhf->fld[f]->f);
-    add_eq(&jacobian_bc_eq ,bbn_bhf_jacobian_bc_Brown,s);
   }/* for (f = 0; f < nf; ++f) */
   
   /* populating solution managment */
