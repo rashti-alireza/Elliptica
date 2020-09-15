@@ -12,13 +12,13 @@
 /* function args */
 #define KS_func_args_macro  \
   (const double x,const double y, const double z, \
-   const double M_BH,const double a_BH,const double phix, \
-   const double phiy,const double Bx, \
+   const double M_BH,const double a_BH,const double phiy, \
+   const double phiz,const double Bx, \
    const double By,const double Bz,const double B2)
 
 /* pass special argument to each function */   
 #define KS_func_pass_args_macro  \
-  (x,y,z,M_BH,a_BH,phix,phiy,Bx,By,Bz,B2)
+  (x,y,z,M_BH,a_BH,phiy,phiz,Bx,By,Bz,B2)
 
 /* pass arguments for the following functions */
 #define bbn_ks_k0(x,y,z) bbn_ks_k0 KS_func_pass_args_macro
@@ -27,6 +27,8 @@
 #define bbn_ks_kt(x,y,z) bbn_ks_kt KS_func_pass_args_macro
 #define bbn_ks_c(x,y,z)  bbn_ks_c  KS_func_pass_args_macro
 
+
+/* derivative macro */
 
 /* all external functions */
 void bbn_free_data_g_gI_analytic(
