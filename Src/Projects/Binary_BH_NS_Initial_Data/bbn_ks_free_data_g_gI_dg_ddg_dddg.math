@@ -7,7 +7,11 @@
 # 
 # $ cpi bbn_ks_free_data_g_gI_dg_ddg_dddg.math > \
 #   bbn_ks_free_data_g_gI_dg_ddg_dddg.c && \
-#   sed -i '/Welcome to Cpi/,$d' bbn_ks_free_data_g_gI_dg_ddg_dddg.c
+#   sed -i '/Welcome to Cpi/,$d' bbn_ks_free_data_g_gI_dg_ddg_dddg.c && \
+#   sed -i -E 's/\bk0\b\(/bbn_ks_k0\(/g' bbn_ks_free_data_g_gI_dg_ddg_dddg.c && \
+#   sed -i -E 's/\bk1\b\(/bbn_ks_k1\(/g' bbn_ks_free_data_g_gI_dg_ddg_dddg.c && \
+#   sed -i -E 's/\bk2\b\(/bbn_ks_k2\(/g' bbn_ks_free_data_g_gI_dg_ddg_dddg.c && \
+#   sed -i -E 's/\bc\b\(/bbn_ks_c\(/g'   bbn_ks_free_data_g_gI_dg_ddg_dddg.c
 
 Dimension = 3;
 point     = x;
@@ -209,6 +213,10 @@ Command["sed -i 's/_,/,/g'"];
 ``
 `print('#include "bbn_headers.h"')`
 `print('#include "bbn_ks_free_date_analytic.h"')`
+
+### NOTE the function "get_v" is for geting the value of a field
+### according to the parameter and the given name. it is used for
+### different name formats
 
 `print('void bbn_free_data_g_gI_analytic(')`
 `print('        Patch_T *const patch,')`

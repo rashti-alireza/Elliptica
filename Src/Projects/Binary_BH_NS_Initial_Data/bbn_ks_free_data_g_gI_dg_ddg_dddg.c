@@ -79,40 +79,40 @@ void bbn_free_data_g_gI_analytic(
 // Not supported in C:
 // c
 // k0
-c(x, y, z)*pow(k0(x, y, z), 2) + 1.0;
+bbn_ks_c(x, y, z)*pow(bbn_ks_k0(x, y, z), 2) + 1.0;
       _gamma_D0D1[ijk] =
 /* mcode in progress ... */
 // Not supported in C:
 // c
 // k0
 // k1
-c(x, y, z)*k0(x, y, z)*k1(x, y, z);
+bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*bbn_ks_k1(x, y, z);
       _gamma_D0D2[ijk] =
 /* mcode in progress ... */
 // Not supported in C:
 // c
 // k0
 // k2
-c(x, y, z)*k0(x, y, z)*k2(x, y, z);
+bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*bbn_ks_k2(x, y, z);
       _gamma_D1D1[ijk] =
 /* mcode in progress ... */
 // Not supported in C:
 // c
 // k1
-c(x, y, z)*pow(k1(x, y, z), 2) + 1.0;
+bbn_ks_c(x, y, z)*pow(bbn_ks_k1(x, y, z), 2) + 1.0;
       _gamma_D1D2[ijk] =
 /* mcode in progress ... */
 // Not supported in C:
 // c
 // k1
 // k2
-c(x, y, z)*k1(x, y, z)*k2(x, y, z);
+bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*bbn_ks_k2(x, y, z);
       _gamma_D2D2[ijk] =
 /* mcode in progress ... */
 // Not supported in C:
 // c
 // k2
-c(x, y, z)*pow(k2(x, y, z), 2) + 1.0;
+bbn_ks_c(x, y, z)*pow(bbn_ks_k2(x, y, z), 2) + 1.0;
       _gammaI_U0U0[ijk] =
 /* mcode in progress ... */
 // Not supported in C:
@@ -120,9 +120,9 @@ c(x, y, z)*pow(k2(x, y, z), 2) + 1.0;
 // k0
 // k1
 // k2
-((pow(k1(x, y, z), 2) + pow(k2(x, y, z), 2))*c(x, y, z) + 1)/
-((pow(k0(x, y, z), 2) + pow(k1(x, y, z), 2) + pow(k2(x, y, z), 2))*
-c(x, y, z) + 1);
+((pow(bbn_ks_k1(x, y, z), 2) + pow(bbn_ks_k2(x, y, z), 2))*bbn_ks_c(x, y, z) + 1)/
+((pow(bbn_ks_k0(x, y, z), 2) + pow(bbn_ks_k1(x, y, z), 2) + pow(bbn_ks_k2(x, y, z), 2))*
+bbn_ks_c(x, y, z) + 1);
       _gammaI_U0U1[ijk] =
 /* mcode in progress ... */
 // Not supported in C:
@@ -130,8 +130,8 @@ c(x, y, z) + 1);
 // k0
 // k1
 // k2
--c(x, y, z)*k0(x, y, z)*k1(x, y, z)/((pow(k0(x, y, z), 2) + 
-pow(k1(x, y, z), 2) + pow(k2(x, y, z), 2))*c(x, y, z) + 
+-bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*bbn_ks_k1(x, y, z)/((pow(bbn_ks_k0(x, y, z), 2) + 
+pow(bbn_ks_k1(x, y, z), 2) + pow(bbn_ks_k2(x, y, z), 2))*bbn_ks_c(x, y, z) + 
 1);
       _gammaI_U0U2[ijk] =
 /* mcode in progress ... */
@@ -140,8 +140,8 @@ pow(k1(x, y, z), 2) + pow(k2(x, y, z), 2))*c(x, y, z) +
 // k0
 // k1
 // k2
--c(x, y, z)*k0(x, y, z)*k2(x, y, z)/((pow(k0(x, y, z), 2) + 
-pow(k1(x, y, z), 2) + pow(k2(x, y, z), 2))*c(x, y, z) + 
+-bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*bbn_ks_k2(x, y, z)/((pow(bbn_ks_k0(x, y, z), 2) + 
+pow(bbn_ks_k1(x, y, z), 2) + pow(bbn_ks_k2(x, y, z), 2))*bbn_ks_c(x, y, z) + 
 1);
       _gammaI_U1U1[ijk] =
 /* mcode in progress ... */
@@ -150,9 +150,9 @@ pow(k1(x, y, z), 2) + pow(k2(x, y, z), 2))*c(x, y, z) +
 // k0
 // k1
 // k2
-((pow(k0(x, y, z), 2) + pow(k2(x, y, z), 2))*c(x, y, z) + 1)/
-((pow(k0(x, y, z), 2) + pow(k1(x, y, z), 2) + pow(k2(x, y, z), 2))*
-c(x, y, z) + 1);
+((pow(bbn_ks_k0(x, y, z), 2) + pow(bbn_ks_k2(x, y, z), 2))*bbn_ks_c(x, y, z) + 1)/
+((pow(bbn_ks_k0(x, y, z), 2) + pow(bbn_ks_k1(x, y, z), 2) + pow(bbn_ks_k2(x, y, z), 2))*
+bbn_ks_c(x, y, z) + 1);
       _gammaI_U1U2[ijk] =
 /* mcode in progress ... */
 // Not supported in C:
@@ -160,8 +160,8 @@ c(x, y, z) + 1);
 // k0
 // k1
 // k2
--c(x, y, z)*k1(x, y, z)*k2(x, y, z)/((pow(k0(x, y, z), 2) + 
-pow(k1(x, y, z), 2) + pow(k2(x, y, z), 2))*c(x, y, z) + 
+-bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*bbn_ks_k2(x, y, z)/((pow(bbn_ks_k0(x, y, z), 2) + 
+pow(bbn_ks_k1(x, y, z), 2) + pow(bbn_ks_k2(x, y, z), 2))*bbn_ks_c(x, y, z) + 
 1);
       _gammaI_U2U2[ijk] =
 /* mcode in progress ... */
@@ -170,9 +170,9 @@ pow(k1(x, y, z), 2) + pow(k2(x, y, z), 2))*c(x, y, z) +
 // k0
 // k1
 // k2
-((pow(k0(x, y, z), 2) + pow(k1(x, y, z), 2))*c(x, y, z) + 1)/
-((pow(k0(x, y, z), 2) + pow(k1(x, y, z), 2) + pow(k2(x, y, z), 2))*
-c(x, y, z) + 1);
+((pow(bbn_ks_k0(x, y, z), 2) + pow(bbn_ks_k1(x, y, z), 2))*bbn_ks_c(x, y, z) + 1)/
+((pow(bbn_ks_k0(x, y, z), 2) + pow(bbn_ks_k1(x, y, z), 2) + pow(bbn_ks_k2(x, y, z), 2))*
+bbn_ks_c(x, y, z) + 1);
       /* quick test check _gamma * _gammaI = delta */
       if (0)
       {
@@ -290,9 +290,9 @@ double *const   dgamma_D2D2D2 = get_v("dgamma_D2D2D2",params);
 // c
 // k1
 // k2
-c(x, y, z)*k1(x, y, z)*Derivative(k2(x, y, z), z) + c(x, y, z)*
-k2(x, y, z)*Derivative(k1(x, y, z), z) + k1(x, y, z)*k2(x, y, z)*
-Derivative(c(x, y, z), z);
+bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k2(x, y, z), z) + bbn_ks_c(x, y, z)*
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k1(x, y, z), z) + bbn_ks_k1(x, y, z)*bbn_ks_k2(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), z);
 
     _dgamma_D0D0D1[ijk]=
 /* mcode in progress ... */
@@ -301,8 +301,8 @@ Derivative(c(x, y, z), z);
 // Derivative
 // c
 // k0
-(2*c(x, y, z)*Derivative(k0(x, y, z), y) + k0(x, y, z)*
-Derivative(c(x, y, z), y))*k0(x, y, z);
+(2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), y) + bbn_ks_k0(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), y))*bbn_ks_k0(x, y, z);
 
     _dgamma_D0D2D1[ijk]=
 /* mcode in progress ... */
@@ -313,9 +313,9 @@ Derivative(c(x, y, z), y))*k0(x, y, z);
 // c
 // k0
 // k2
-c(x, y, z)*k0(x, y, z)*Derivative(k2(x, y, z), y) + c(x, y, z)*
-k2(x, y, z)*Derivative(k0(x, y, z), y) + k0(x, y, z)*k2(x, y, z)*
-Derivative(c(x, y, z), y);
+bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k2(x, y, z), y) + bbn_ks_c(x, y, z)*
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k0(x, y, z), y) + bbn_ks_k0(x, y, z)*bbn_ks_k2(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), y);
 
     _dgamma_D0D1D0[ijk]=
 /* mcode in progress ... */
@@ -326,9 +326,9 @@ Derivative(c(x, y, z), y);
 // c
 // k0
 // k1
-c(x, y, z)*k0(x, y, z)*Derivative(k1(x, y, z), x) + c(x, y, z)*
-k1(x, y, z)*Derivative(k0(x, y, z), x) + k0(x, y, z)*k1(x, y, z)*
-Derivative(c(x, y, z), x);
+bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x) + bbn_ks_c(x, y, z)*
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x) + bbn_ks_k0(x, y, z)*bbn_ks_k1(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), x);
 
     _dgamma_D1D2D1[ijk]=
 /* mcode in progress ... */
@@ -339,9 +339,9 @@ Derivative(c(x, y, z), x);
 // c
 // k1
 // k2
-c(x, y, z)*k1(x, y, z)*Derivative(k2(x, y, z), y) + c(x, y, z)*
-k2(x, y, z)*Derivative(k1(x, y, z), y) + k1(x, y, z)*k2(x, y, z)*
-Derivative(c(x, y, z), y);
+bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k2(x, y, z), y) + bbn_ks_c(x, y, z)*
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k1(x, y, z), y) + bbn_ks_k1(x, y, z)*bbn_ks_k2(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), y);
 
     _dgamma_D2D2D0[ijk]=
 /* mcode in progress ... */
@@ -350,8 +350,8 @@ Derivative(c(x, y, z), y);
 // Derivative
 // c
 // k2
-(2*c(x, y, z)*Derivative(k2(x, y, z), x) + k2(x, y, z)*
-Derivative(c(x, y, z), x))*k2(x, y, z);
+(2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x) + bbn_ks_k2(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), x))*bbn_ks_k2(x, y, z);
 
     _dgamma_D0D0D0[ijk]=
 /* mcode in progress ... */
@@ -360,8 +360,8 @@ Derivative(c(x, y, z), x))*k2(x, y, z);
 // Derivative
 // c
 // k0
-(2*c(x, y, z)*Derivative(k0(x, y, z), x) + k0(x, y, z)*
-Derivative(c(x, y, z), x))*k0(x, y, z);
+(2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x) + bbn_ks_k0(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), x))*bbn_ks_k0(x, y, z);
 
     _dgamma_D0D0D2[ijk]=
 /* mcode in progress ... */
@@ -370,8 +370,8 @@ Derivative(c(x, y, z), x))*k0(x, y, z);
 // Derivative
 // c
 // k0
-(2*c(x, y, z)*Derivative(k0(x, y, z), z) + k0(x, y, z)*
-Derivative(c(x, y, z), z))*k0(x, y, z);
+(2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), z) + bbn_ks_k0(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), z))*bbn_ks_k0(x, y, z);
 
     _dgamma_D0D2D2[ijk]=
 /* mcode in progress ... */
@@ -382,9 +382,9 @@ Derivative(c(x, y, z), z))*k0(x, y, z);
 // c
 // k0
 // k2
-c(x, y, z)*k0(x, y, z)*Derivative(k2(x, y, z), z) + c(x, y, z)*
-k2(x, y, z)*Derivative(k0(x, y, z), z) + k0(x, y, z)*k2(x, y, z)*
-Derivative(c(x, y, z), z);
+bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k2(x, y, z), z) + bbn_ks_c(x, y, z)*
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k0(x, y, z), z) + bbn_ks_k0(x, y, z)*bbn_ks_k2(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), z);
 
     _dgamma_D2D2D1[ijk]=
 /* mcode in progress ... */
@@ -393,8 +393,8 @@ Derivative(c(x, y, z), z);
 // Derivative
 // c
 // k2
-(2*c(x, y, z)*Derivative(k2(x, y, z), y) + k2(x, y, z)*
-Derivative(c(x, y, z), y))*k2(x, y, z);
+(2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), y) + bbn_ks_k2(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), y))*bbn_ks_k2(x, y, z);
 
     _dgamma_D0D1D1[ijk]=
 /* mcode in progress ... */
@@ -405,9 +405,9 @@ Derivative(c(x, y, z), y))*k2(x, y, z);
 // c
 // k0
 // k1
-c(x, y, z)*k0(x, y, z)*Derivative(k1(x, y, z), y) + c(x, y, z)*
-k1(x, y, z)*Derivative(k0(x, y, z), y) + k0(x, y, z)*k1(x, y, z)*
-Derivative(c(x, y, z), y);
+bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k1(x, y, z), y) + bbn_ks_c(x, y, z)*
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k0(x, y, z), y) + bbn_ks_k0(x, y, z)*bbn_ks_k1(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), y);
 
     _dgamma_D0D2D0[ijk]=
 /* mcode in progress ... */
@@ -418,9 +418,9 @@ Derivative(c(x, y, z), y);
 // c
 // k0
 // k2
-c(x, y, z)*k0(x, y, z)*Derivative(k2(x, y, z), x) + c(x, y, z)*
-k2(x, y, z)*Derivative(k0(x, y, z), x) + k0(x, y, z)*k2(x, y, z)*
-Derivative(c(x, y, z), x);
+bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x) + bbn_ks_c(x, y, z)*
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x) + bbn_ks_k0(x, y, z)*bbn_ks_k2(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), x);
 
     _dgamma_D1D2D0[ijk]=
 /* mcode in progress ... */
@@ -431,9 +431,9 @@ Derivative(c(x, y, z), x);
 // c
 // k1
 // k2
-c(x, y, z)*k1(x, y, z)*Derivative(k2(x, y, z), x) + c(x, y, z)*
-k2(x, y, z)*Derivative(k1(x, y, z), x) + k1(x, y, z)*k2(x, y, z)*
-Derivative(c(x, y, z), x);
+bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x) + bbn_ks_c(x, y, z)*
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x) + bbn_ks_k1(x, y, z)*bbn_ks_k2(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), x);
 
     _dgamma_D1D1D1[ijk]=
 /* mcode in progress ... */
@@ -442,8 +442,8 @@ Derivative(c(x, y, z), x);
 // Derivative
 // c
 // k1
-(2*c(x, y, z)*Derivative(k1(x, y, z), y) + k1(x, y, z)*
-Derivative(c(x, y, z), y))*k1(x, y, z);
+(2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), y) + bbn_ks_k1(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), y))*bbn_ks_k1(x, y, z);
 
     _dgamma_D0D1D2[ijk]=
 /* mcode in progress ... */
@@ -454,9 +454,9 @@ Derivative(c(x, y, z), y))*k1(x, y, z);
 // c
 // k0
 // k1
-c(x, y, z)*k0(x, y, z)*Derivative(k1(x, y, z), z) + c(x, y, z)*
-k1(x, y, z)*Derivative(k0(x, y, z), z) + k0(x, y, z)*k1(x, y, z)*
-Derivative(c(x, y, z), z);
+bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k1(x, y, z), z) + bbn_ks_c(x, y, z)*
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k0(x, y, z), z) + bbn_ks_k0(x, y, z)*bbn_ks_k1(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), z);
 
     _dgamma_D1D1D0[ijk]=
 /* mcode in progress ... */
@@ -465,8 +465,8 @@ Derivative(c(x, y, z), z);
 // Derivative
 // c
 // k1
-(2*c(x, y, z)*Derivative(k1(x, y, z), x) + k1(x, y, z)*
-Derivative(c(x, y, z), x))*k1(x, y, z);
+(2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x) + bbn_ks_k1(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), x))*bbn_ks_k1(x, y, z);
 
     _dgamma_D1D1D2[ijk]=
 /* mcode in progress ... */
@@ -475,8 +475,8 @@ Derivative(c(x, y, z), x))*k1(x, y, z);
 // Derivative
 // c
 // k1
-(2*c(x, y, z)*Derivative(k1(x, y, z), z) + k1(x, y, z)*
-Derivative(c(x, y, z), z))*k1(x, y, z);
+(2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), z) + bbn_ks_k1(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), z))*bbn_ks_k1(x, y, z);
 
     _dgamma_D2D2D2[ijk]=
 /* mcode in progress ... */
@@ -485,8 +485,8 @@ Derivative(c(x, y, z), z))*k1(x, y, z);
 // Derivative
 // c
 // k2
-(2*c(x, y, z)*Derivative(k2(x, y, z), z) + k2(x, y, z)*
-Derivative(c(x, y, z), z))*k2(x, y, z);
+(2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), z) + bbn_ks_k2(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), z))*bbn_ks_k2(x, y, z);
 
   }
 }
@@ -604,11 +604,11 @@ double *const   ddgamma_D2D2D0D1 = get_v("ddgamma_D2D2D0D1",params);
 // Derivative
 // c
 // k2
-2*c(x, y, z)*k2(x, y, z)*Derivative(k2(x, y, z), x, z) + 2*c(x, y, z)*
-Derivative(k2(x, y, z), x)*Derivative(k2(x, y, z), z) + 
-pow(k2(x, y, z), 2)*Derivative(c(x, y, z), x, z) + 2*k2(x, y, z)*
-Derivative(c(x, y, z), x)*Derivative(k2(x, y, z), z) + 2*k2(x, y, z)*
-Derivative(c(x, y, z), z)*Derivative(k2(x, y, z), x);
+2*bbn_ks_c(x, y, z)*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x, z) + 2*bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), z) + 
+pow(bbn_ks_k2(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), x, z) + 2*bbn_ks_k2(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), z) + 2*bbn_ks_k2(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x);
 
     _ddgamma_D0D1D0D1[ijk]=
 /* mcode in progress ... */
@@ -625,15 +625,15 @@ Derivative(c(x, y, z), z)*Derivative(k2(x, y, z), x);
 // c
 // k0
 // k1
-c(x, y, z)*k0(x, y, z)*Derivative(k1(x, y, z), x, y) + c(x, y, z)*
-k1(x, y, z)*Derivative(k0(x, y, z), x, y) + c(x, y, z)*
-Derivative(k0(x, y, z), x)*Derivative(k1(x, y, z), y) + c(x, y, z)*
-Derivative(k0(x, y, z), y)*Derivative(k1(x, y, z), x) + k0(x, y, z)*
-k1(x, y, z)*Derivative(c(x, y, z), x, y) + k0(x, y, z)*
-Derivative(c(x, y, z), x)*Derivative(k1(x, y, z), y) + k0(x, y, z)*
-Derivative(c(x, y, z), y)*Derivative(k1(x, y, z), x) + k1(x, y, z)*
-Derivative(c(x, y, z), x)*Derivative(k0(x, y, z), y) + k1(x, y, z)*
-Derivative(c(x, y, z), y)*Derivative(k0(x, y, z), x);
+bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x, y) + bbn_ks_c(x, y, z)*
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x, y) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), y) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x) + bbn_ks_k0(x, y, z)*
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), x, y) + bbn_ks_k0(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), y) + bbn_ks_k0(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x) + bbn_ks_k1(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), y) + bbn_ks_k1(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x);
 
     _ddgamma_D1D1D0D1[ijk]=
 /* mcode in progress ... */
@@ -646,11 +646,11 @@ Derivative(c(x, y, z), y)*Derivative(k0(x, y, z), x);
 // Derivative
 // c
 // k1
-2*c(x, y, z)*k1(x, y, z)*Derivative(k1(x, y, z), x, y) + 2*c(x, y, z)*
-Derivative(k1(x, y, z), x)*Derivative(k1(x, y, z), y) + 
-pow(k1(x, y, z), 2)*Derivative(c(x, y, z), x, y) + 2*k1(x, y, z)*
-Derivative(c(x, y, z), x)*Derivative(k1(x, y, z), y) + 2*k1(x, y, z)*
-Derivative(c(x, y, z), y)*Derivative(k1(x, y, z), x);
+2*bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x, y) + 2*bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), y) + 
+pow(bbn_ks_k1(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), x, y) + 2*bbn_ks_k1(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), y) + 2*bbn_ks_k1(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x);
 
     _ddgamma_D1D2D0D1[ijk]=
 /* mcode in progress ... */
@@ -667,15 +667,15 @@ Derivative(c(x, y, z), y)*Derivative(k1(x, y, z), x);
 // c
 // k1
 // k2
-c(x, y, z)*k1(x, y, z)*Derivative(k2(x, y, z), x, y) + c(x, y, z)*
-k2(x, y, z)*Derivative(k1(x, y, z), x, y) + c(x, y, z)*
-Derivative(k1(x, y, z), x)*Derivative(k2(x, y, z), y) + c(x, y, z)*
-Derivative(k1(x, y, z), y)*Derivative(k2(x, y, z), x) + k1(x, y, z)*
-k2(x, y, z)*Derivative(c(x, y, z), x, y) + k1(x, y, z)*
-Derivative(c(x, y, z), x)*Derivative(k2(x, y, z), y) + k1(x, y, z)*
-Derivative(c(x, y, z), y)*Derivative(k2(x, y, z), x) + k2(x, y, z)*
-Derivative(c(x, y, z), x)*Derivative(k1(x, y, z), y) + k2(x, y, z)*
-Derivative(c(x, y, z), y)*Derivative(k1(x, y, z), x);
+bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x, y) + bbn_ks_c(x, y, z)*
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x, y) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), y) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x) + bbn_ks_k1(x, y, z)*
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), x, y) + bbn_ks_k1(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), y) + bbn_ks_k1(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x) + bbn_ks_k2(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), y) + bbn_ks_k2(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x);
 
     _ddgamma_D0D0D1D0[ijk]=
 /* mcode in progress ... */
@@ -688,11 +688,11 @@ Derivative(c(x, y, z), y)*Derivative(k1(x, y, z), x);
 // Derivative
 // c
 // k0
-2*c(x, y, z)*k0(x, y, z)*Derivative(k0(x, y, z), x, y) + 2*c(x, y, z)*
-Derivative(k0(x, y, z), x)*Derivative(k0(x, y, z), y) + 
-pow(k0(x, y, z), 2)*Derivative(c(x, y, z), x, y) + 2*k0(x, y, z)*
-Derivative(c(x, y, z), x)*Derivative(k0(x, y, z), y) + 2*k0(x, y, z)*
-Derivative(c(x, y, z), y)*Derivative(k0(x, y, z), x);
+2*bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x, y) + 2*bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), y) + 
+pow(bbn_ks_k0(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), x, y) + 2*bbn_ks_k0(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), y) + 2*bbn_ks_k0(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x);
 
     _ddgamma_D1D1D2D0[ijk]=
 /* mcode in progress ... */
@@ -705,11 +705,11 @@ Derivative(c(x, y, z), y)*Derivative(k0(x, y, z), x);
 // Derivative
 // c
 // k1
-2*c(x, y, z)*k1(x, y, z)*Derivative(k1(x, y, z), x, z) + 2*c(x, y, z)*
-Derivative(k1(x, y, z), x)*Derivative(k1(x, y, z), z) + 
-pow(k1(x, y, z), 2)*Derivative(c(x, y, z), x, z) + 2*k1(x, y, z)*
-Derivative(c(x, y, z), x)*Derivative(k1(x, y, z), z) + 2*k1(x, y, z)*
-Derivative(c(x, y, z), z)*Derivative(k1(x, y, z), x);
+2*bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x, z) + 2*bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), z) + 
+pow(bbn_ks_k1(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), x, z) + 2*bbn_ks_k1(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), z) + 2*bbn_ks_k1(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x);
 
     _ddgamma_D0D0D0D1[ijk]=
 /* mcode in progress ... */
@@ -722,11 +722,11 @@ Derivative(c(x, y, z), z)*Derivative(k1(x, y, z), x);
 // Derivative
 // c
 // k0
-2*c(x, y, z)*k0(x, y, z)*Derivative(k0(x, y, z), x, y) + 2*c(x, y, z)*
-Derivative(k0(x, y, z), x)*Derivative(k0(x, y, z), y) + 
-pow(k0(x, y, z), 2)*Derivative(c(x, y, z), x, y) + 2*k0(x, y, z)*
-Derivative(c(x, y, z), x)*Derivative(k0(x, y, z), y) + 2*k0(x, y, z)*
-Derivative(c(x, y, z), y)*Derivative(k0(x, y, z), x);
+2*bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x, y) + 2*bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), y) + 
+pow(bbn_ks_k0(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), x, y) + 2*bbn_ks_k0(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), y) + 2*bbn_ks_k0(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x);
 
     _ddgamma_D1D1D0D0[ijk]=
 /* mcode in progress ... */
@@ -737,10 +737,10 @@ Derivative(c(x, y, z), y)*Derivative(k0(x, y, z), x);
 // Derivative
 // c
 // k1
-2*c(x, y, z)*k1(x, y, z)*Derivative(k1(x, y, z), (x, 2)) + 2*
-c(x, y, z)*pow(Derivative(k1(x, y, z), x), 2) + pow(k1(x, y, z), 2)*
-Derivative(c(x, y, z), (x, 2)) + 4*k1(x, y, z)*Derivative(c(x, y, z), x)*
-Derivative(k1(x, y, z), x);
+2*bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k1(x, y, z), (x, 2)) + 2*
+bbn_ks_c(x, y, z)*pow(Derivative(bbn_ks_k1(x, y, z), x), 2) + pow(bbn_ks_k1(x, y, z), 2)*
+Derivative(bbn_ks_c(x, y, z), (x, 2)) + 4*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), x)*
+Derivative(bbn_ks_k1(x, y, z), x);
 
     _ddgamma_D0D0D2D2[ijk]=
 /* mcode in progress ... */
@@ -751,10 +751,10 @@ Derivative(k1(x, y, z), x);
 // Derivative
 // c
 // k0
-2*c(x, y, z)*k0(x, y, z)*Derivative(k0(x, y, z), (z, 2)) + 2*
-c(x, y, z)*pow(Derivative(k0(x, y, z), z), 2) + pow(k0(x, y, z), 2)*
-Derivative(c(x, y, z), (z, 2)) + 4*k0(x, y, z)*Derivative(c(x, y, z), z)*
-Derivative(k0(x, y, z), z);
+2*bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k0(x, y, z), (z, 2)) + 2*
+bbn_ks_c(x, y, z)*pow(Derivative(bbn_ks_k0(x, y, z), z), 2) + pow(bbn_ks_k0(x, y, z), 2)*
+Derivative(bbn_ks_c(x, y, z), (z, 2)) + 4*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*
+Derivative(bbn_ks_k0(x, y, z), z);
 
     _ddgamma_D2D2D1D1[ijk]=
 /* mcode in progress ... */
@@ -765,10 +765,10 @@ Derivative(k0(x, y, z), z);
 // Derivative
 // c
 // k2
-2*c(x, y, z)*k2(x, y, z)*Derivative(k2(x, y, z), (y, 2)) + 2*
-c(x, y, z)*pow(Derivative(k2(x, y, z), y), 2) + pow(k2(x, y, z), 2)*
-Derivative(c(x, y, z), (y, 2)) + 4*k2(x, y, z)*Derivative(c(x, y, z), y)*
-Derivative(k2(x, y, z), y);
+2*bbn_ks_c(x, y, z)*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k2(x, y, z), (y, 2)) + 2*
+bbn_ks_c(x, y, z)*pow(Derivative(bbn_ks_k2(x, y, z), y), 2) + pow(bbn_ks_k2(x, y, z), 2)*
+Derivative(bbn_ks_c(x, y, z), (y, 2)) + 4*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*
+Derivative(bbn_ks_k2(x, y, z), y);
 
     _ddgamma_D2D2D2D2[ijk]=
 /* mcode in progress ... */
@@ -779,10 +779,10 @@ Derivative(k2(x, y, z), y);
 // Derivative
 // c
 // k2
-2*c(x, y, z)*k2(x, y, z)*Derivative(k2(x, y, z), (z, 2)) + 2*
-c(x, y, z)*pow(Derivative(k2(x, y, z), z), 2) + pow(k2(x, y, z), 2)*
-Derivative(c(x, y, z), (z, 2)) + 4*k2(x, y, z)*Derivative(c(x, y, z), z)*
-Derivative(k2(x, y, z), z);
+2*bbn_ks_c(x, y, z)*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k2(x, y, z), (z, 2)) + 2*
+bbn_ks_c(x, y, z)*pow(Derivative(bbn_ks_k2(x, y, z), z), 2) + pow(bbn_ks_k2(x, y, z), 2)*
+Derivative(bbn_ks_c(x, y, z), (z, 2)) + 4*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*
+Derivative(bbn_ks_k2(x, y, z), z);
 
     _ddgamma_D0D0D2D0[ijk]=
 /* mcode in progress ... */
@@ -795,11 +795,11 @@ Derivative(k2(x, y, z), z);
 // Derivative
 // c
 // k0
-2*c(x, y, z)*k0(x, y, z)*Derivative(k0(x, y, z), x, z) + 2*c(x, y, z)*
-Derivative(k0(x, y, z), x)*Derivative(k0(x, y, z), z) + 
-pow(k0(x, y, z), 2)*Derivative(c(x, y, z), x, z) + 2*k0(x, y, z)*
-Derivative(c(x, y, z), x)*Derivative(k0(x, y, z), z) + 2*k0(x, y, z)*
-Derivative(c(x, y, z), z)*Derivative(k0(x, y, z), x);
+2*bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x, z) + 2*bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), z) + 
+pow(bbn_ks_k0(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), x, z) + 2*bbn_ks_k0(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), z) + 2*bbn_ks_k0(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x);
 
     _ddgamma_D0D2D2D1[ijk]=
 /* mcode in progress ... */
@@ -816,15 +816,15 @@ Derivative(c(x, y, z), z)*Derivative(k0(x, y, z), x);
 // c
 // k0
 // k2
-c(x, y, z)*k0(x, y, z)*Derivative(k2(x, y, z), y, z) + c(x, y, z)*
-k2(x, y, z)*Derivative(k0(x, y, z), y, z) + c(x, y, z)*
-Derivative(k0(x, y, z), y)*Derivative(k2(x, y, z), z) + c(x, y, z)*
-Derivative(k0(x, y, z), z)*Derivative(k2(x, y, z), y) + k0(x, y, z)*
-k2(x, y, z)*Derivative(c(x, y, z), y, z) + k0(x, y, z)*
-Derivative(c(x, y, z), y)*Derivative(k2(x, y, z), z) + k0(x, y, z)*
-Derivative(c(x, y, z), z)*Derivative(k2(x, y, z), y) + k2(x, y, z)*
-Derivative(c(x, y, z), y)*Derivative(k0(x, y, z), z) + k2(x, y, z)*
-Derivative(c(x, y, z), z)*Derivative(k0(x, y, z), y);
+bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k2(x, y, z), y, z) + bbn_ks_c(x, y, z)*
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k0(x, y, z), y, z) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), z) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), y) + bbn_ks_k0(x, y, z)*
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), y, z) + bbn_ks_k0(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), z) + bbn_ks_k0(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), y) + bbn_ks_k2(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), z) + bbn_ks_k2(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), y);
 
     _ddgamma_D1D2D0D2[ijk]=
 /* mcode in progress ... */
@@ -841,15 +841,15 @@ Derivative(c(x, y, z), z)*Derivative(k0(x, y, z), y);
 // c
 // k1
 // k2
-c(x, y, z)*k1(x, y, z)*Derivative(k2(x, y, z), x, z) + c(x, y, z)*
-k2(x, y, z)*Derivative(k1(x, y, z), x, z) + c(x, y, z)*
-Derivative(k1(x, y, z), x)*Derivative(k2(x, y, z), z) + c(x, y, z)*
-Derivative(k1(x, y, z), z)*Derivative(k2(x, y, z), x) + k1(x, y, z)*
-k2(x, y, z)*Derivative(c(x, y, z), x, z) + k1(x, y, z)*
-Derivative(c(x, y, z), x)*Derivative(k2(x, y, z), z) + k1(x, y, z)*
-Derivative(c(x, y, z), z)*Derivative(k2(x, y, z), x) + k2(x, y, z)*
-Derivative(c(x, y, z), x)*Derivative(k1(x, y, z), z) + k2(x, y, z)*
-Derivative(c(x, y, z), z)*Derivative(k1(x, y, z), x);
+bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x, z) + bbn_ks_c(x, y, z)*
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x, z) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), z) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x) + bbn_ks_k1(x, y, z)*
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), x, z) + bbn_ks_k1(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), z) + bbn_ks_k1(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x) + bbn_ks_k2(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), z) + bbn_ks_k2(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x);
 
     _ddgamma_D1D2D1D0[ijk]=
 /* mcode in progress ... */
@@ -866,15 +866,15 @@ Derivative(c(x, y, z), z)*Derivative(k1(x, y, z), x);
 // c
 // k1
 // k2
-c(x, y, z)*k1(x, y, z)*Derivative(k2(x, y, z), x, y) + c(x, y, z)*
-k2(x, y, z)*Derivative(k1(x, y, z), x, y) + c(x, y, z)*
-Derivative(k1(x, y, z), x)*Derivative(k2(x, y, z), y) + c(x, y, z)*
-Derivative(k1(x, y, z), y)*Derivative(k2(x, y, z), x) + k1(x, y, z)*
-k2(x, y, z)*Derivative(c(x, y, z), x, y) + k1(x, y, z)*
-Derivative(c(x, y, z), x)*Derivative(k2(x, y, z), y) + k1(x, y, z)*
-Derivative(c(x, y, z), y)*Derivative(k2(x, y, z), x) + k2(x, y, z)*
-Derivative(c(x, y, z), x)*Derivative(k1(x, y, z), y) + k2(x, y, z)*
-Derivative(c(x, y, z), y)*Derivative(k1(x, y, z), x);
+bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x, y) + bbn_ks_c(x, y, z)*
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x, y) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), y) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x) + bbn_ks_k1(x, y, z)*
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), x, y) + bbn_ks_k1(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), y) + bbn_ks_k1(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x) + bbn_ks_k2(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), y) + bbn_ks_k2(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x);
 
     _ddgamma_D2D2D2D0[ijk]=
 /* mcode in progress ... */
@@ -887,11 +887,11 @@ Derivative(c(x, y, z), y)*Derivative(k1(x, y, z), x);
 // Derivative
 // c
 // k2
-2*c(x, y, z)*k2(x, y, z)*Derivative(k2(x, y, z), x, z) + 2*c(x, y, z)*
-Derivative(k2(x, y, z), x)*Derivative(k2(x, y, z), z) + 
-pow(k2(x, y, z), 2)*Derivative(c(x, y, z), x, z) + 2*k2(x, y, z)*
-Derivative(c(x, y, z), x)*Derivative(k2(x, y, z), z) + 2*k2(x, y, z)*
-Derivative(c(x, y, z), z)*Derivative(k2(x, y, z), x);
+2*bbn_ks_c(x, y, z)*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x, z) + 2*bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), z) + 
+pow(bbn_ks_k2(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), x, z) + 2*bbn_ks_k2(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), z) + 2*bbn_ks_k2(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x);
 
     _ddgamma_D0D0D0D0[ijk]=
 /* mcode in progress ... */
@@ -902,10 +902,10 @@ Derivative(c(x, y, z), z)*Derivative(k2(x, y, z), x);
 // Derivative
 // c
 // k0
-2*c(x, y, z)*k0(x, y, z)*Derivative(k0(x, y, z), (x, 2)) + 2*
-c(x, y, z)*pow(Derivative(k0(x, y, z), x), 2) + pow(k0(x, y, z), 2)*
-Derivative(c(x, y, z), (x, 2)) + 4*k0(x, y, z)*Derivative(c(x, y, z), x)*
-Derivative(k0(x, y, z), x);
+2*bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k0(x, y, z), (x, 2)) + 2*
+bbn_ks_c(x, y, z)*pow(Derivative(bbn_ks_k0(x, y, z), x), 2) + pow(bbn_ks_k0(x, y, z), 2)*
+Derivative(bbn_ks_c(x, y, z), (x, 2)) + 4*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), x)*
+Derivative(bbn_ks_k0(x, y, z), x);
 
     _ddgamma_D0D0D1D1[ijk]=
 /* mcode in progress ... */
@@ -916,10 +916,10 @@ Derivative(k0(x, y, z), x);
 // Derivative
 // c
 // k0
-2*c(x, y, z)*k0(x, y, z)*Derivative(k0(x, y, z), (y, 2)) + 2*
-c(x, y, z)*pow(Derivative(k0(x, y, z), y), 2) + pow(k0(x, y, z), 2)*
-Derivative(c(x, y, z), (y, 2)) + 4*k0(x, y, z)*Derivative(c(x, y, z), y)*
-Derivative(k0(x, y, z), y);
+2*bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k0(x, y, z), (y, 2)) + 2*
+bbn_ks_c(x, y, z)*pow(Derivative(bbn_ks_k0(x, y, z), y), 2) + pow(bbn_ks_k0(x, y, z), 2)*
+Derivative(bbn_ks_c(x, y, z), (y, 2)) + 4*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*
+Derivative(bbn_ks_k0(x, y, z), y);
 
     _ddgamma_D0D1D0D2[ijk]=
 /* mcode in progress ... */
@@ -936,15 +936,15 @@ Derivative(k0(x, y, z), y);
 // c
 // k0
 // k1
-c(x, y, z)*k0(x, y, z)*Derivative(k1(x, y, z), x, z) + c(x, y, z)*
-k1(x, y, z)*Derivative(k0(x, y, z), x, z) + c(x, y, z)*
-Derivative(k0(x, y, z), x)*Derivative(k1(x, y, z), z) + c(x, y, z)*
-Derivative(k0(x, y, z), z)*Derivative(k1(x, y, z), x) + k0(x, y, z)*
-k1(x, y, z)*Derivative(c(x, y, z), x, z) + k0(x, y, z)*
-Derivative(c(x, y, z), x)*Derivative(k1(x, y, z), z) + k0(x, y, z)*
-Derivative(c(x, y, z), z)*Derivative(k1(x, y, z), x) + k1(x, y, z)*
-Derivative(c(x, y, z), x)*Derivative(k0(x, y, z), z) + k1(x, y, z)*
-Derivative(c(x, y, z), z)*Derivative(k0(x, y, z), x);
+bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x, z) + bbn_ks_c(x, y, z)*
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x, z) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), z) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x) + bbn_ks_k0(x, y, z)*
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), x, z) + bbn_ks_k0(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), z) + bbn_ks_k0(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x) + bbn_ks_k1(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), z) + bbn_ks_k1(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x);
 
     _ddgamma_D1D2D1D1[ijk]=
 /* mcode in progress ... */
@@ -958,12 +958,12 @@ Derivative(c(x, y, z), z)*Derivative(k0(x, y, z), x);
 // c
 // k1
 // k2
-c(x, y, z)*k1(x, y, z)*Derivative(k2(x, y, z), (y, 2)) + c(x, y, z)*
-k2(x, y, z)*Derivative(k1(x, y, z), (y, 2)) + 2*c(x, y, z)*
-Derivative(k1(x, y, z), y)*Derivative(k2(x, y, z), y) + k1(x, y, z)*
-k2(x, y, z)*Derivative(c(x, y, z), (y, 2)) + 2*k1(x, y, z)*
-Derivative(c(x, y, z), y)*Derivative(k2(x, y, z), y) + 2*k2(x, y, z)*
-Derivative(c(x, y, z), y)*Derivative(k1(x, y, z), y);
+bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k2(x, y, z), (y, 2)) + bbn_ks_c(x, y, z)*
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k1(x, y, z), (y, 2)) + 2*bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), y) + bbn_ks_k1(x, y, z)*
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (y, 2)) + 2*bbn_ks_k1(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), y) + 2*bbn_ks_k2(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), y);
 
     _ddgamma_D0D2D1D1[ijk]=
 /* mcode in progress ... */
@@ -977,12 +977,12 @@ Derivative(c(x, y, z), y)*Derivative(k1(x, y, z), y);
 // c
 // k0
 // k2
-c(x, y, z)*k0(x, y, z)*Derivative(k2(x, y, z), (y, 2)) + c(x, y, z)*
-k2(x, y, z)*Derivative(k0(x, y, z), (y, 2)) + 2*c(x, y, z)*
-Derivative(k0(x, y, z), y)*Derivative(k2(x, y, z), y) + k0(x, y, z)*
-k2(x, y, z)*Derivative(c(x, y, z), (y, 2)) + 2*k0(x, y, z)*
-Derivative(c(x, y, z), y)*Derivative(k2(x, y, z), y) + 2*k2(x, y, z)*
-Derivative(c(x, y, z), y)*Derivative(k0(x, y, z), y);
+bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k2(x, y, z), (y, 2)) + bbn_ks_c(x, y, z)*
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k0(x, y, z), (y, 2)) + 2*bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), y) + bbn_ks_k0(x, y, z)*
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (y, 2)) + 2*bbn_ks_k0(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), y) + 2*bbn_ks_k2(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), y);
 
     _ddgamma_D1D2D2D2[ijk]=
 /* mcode in progress ... */
@@ -996,12 +996,12 @@ Derivative(c(x, y, z), y)*Derivative(k0(x, y, z), y);
 // c
 // k1
 // k2
-c(x, y, z)*k1(x, y, z)*Derivative(k2(x, y, z), (z, 2)) + c(x, y, z)*
-k2(x, y, z)*Derivative(k1(x, y, z), (z, 2)) + 2*c(x, y, z)*
-Derivative(k1(x, y, z), z)*Derivative(k2(x, y, z), z) + k1(x, y, z)*
-k2(x, y, z)*Derivative(c(x, y, z), (z, 2)) + 2*k1(x, y, z)*
-Derivative(c(x, y, z), z)*Derivative(k2(x, y, z), z) + 2*k2(x, y, z)*
-Derivative(c(x, y, z), z)*Derivative(k1(x, y, z), z);
+bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k2(x, y, z), (z, 2)) + bbn_ks_c(x, y, z)*
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k1(x, y, z), (z, 2)) + 2*bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), z) + bbn_ks_k1(x, y, z)*
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (z, 2)) + 2*bbn_ks_k1(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), z) + 2*bbn_ks_k2(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), z);
 
     _ddgamma_D2D2D1D2[ijk]=
 /* mcode in progress ... */
@@ -1014,11 +1014,11 @@ Derivative(c(x, y, z), z)*Derivative(k1(x, y, z), z);
 // Derivative
 // c
 // k2
-2*c(x, y, z)*k2(x, y, z)*Derivative(k2(x, y, z), y, z) + 2*c(x, y, z)*
-Derivative(k2(x, y, z), y)*Derivative(k2(x, y, z), z) + 
-pow(k2(x, y, z), 2)*Derivative(c(x, y, z), y, z) + 2*k2(x, y, z)*
-Derivative(c(x, y, z), y)*Derivative(k2(x, y, z), z) + 2*k2(x, y, z)*
-Derivative(c(x, y, z), z)*Derivative(k2(x, y, z), y);
+2*bbn_ks_c(x, y, z)*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k2(x, y, z), y, z) + 2*bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k2(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), z) + 
+pow(bbn_ks_k2(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), y, z) + 2*bbn_ks_k2(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), z) + 2*bbn_ks_k2(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), y);
 
     _ddgamma_D0D1D2D0[ijk]=
 /* mcode in progress ... */
@@ -1035,15 +1035,15 @@ Derivative(c(x, y, z), z)*Derivative(k2(x, y, z), y);
 // c
 // k0
 // k1
-c(x, y, z)*k0(x, y, z)*Derivative(k1(x, y, z), x, z) + c(x, y, z)*
-k1(x, y, z)*Derivative(k0(x, y, z), x, z) + c(x, y, z)*
-Derivative(k0(x, y, z), x)*Derivative(k1(x, y, z), z) + c(x, y, z)*
-Derivative(k0(x, y, z), z)*Derivative(k1(x, y, z), x) + k0(x, y, z)*
-k1(x, y, z)*Derivative(c(x, y, z), x, z) + k0(x, y, z)*
-Derivative(c(x, y, z), x)*Derivative(k1(x, y, z), z) + k0(x, y, z)*
-Derivative(c(x, y, z), z)*Derivative(k1(x, y, z), x) + k1(x, y, z)*
-Derivative(c(x, y, z), x)*Derivative(k0(x, y, z), z) + k1(x, y, z)*
-Derivative(c(x, y, z), z)*Derivative(k0(x, y, z), x);
+bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x, z) + bbn_ks_c(x, y, z)*
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x, z) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), z) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x) + bbn_ks_k0(x, y, z)*
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), x, z) + bbn_ks_k0(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), z) + bbn_ks_k0(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x) + bbn_ks_k1(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), z) + bbn_ks_k1(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x);
 
     _ddgamma_D0D2D2D0[ijk]=
 /* mcode in progress ... */
@@ -1060,15 +1060,15 @@ Derivative(c(x, y, z), z)*Derivative(k0(x, y, z), x);
 // c
 // k0
 // k2
-c(x, y, z)*k0(x, y, z)*Derivative(k2(x, y, z), x, z) + c(x, y, z)*
-k2(x, y, z)*Derivative(k0(x, y, z), x, z) + c(x, y, z)*
-Derivative(k0(x, y, z), x)*Derivative(k2(x, y, z), z) + c(x, y, z)*
-Derivative(k0(x, y, z), z)*Derivative(k2(x, y, z), x) + k0(x, y, z)*
-k2(x, y, z)*Derivative(c(x, y, z), x, z) + k0(x, y, z)*
-Derivative(c(x, y, z), x)*Derivative(k2(x, y, z), z) + k0(x, y, z)*
-Derivative(c(x, y, z), z)*Derivative(k2(x, y, z), x) + k2(x, y, z)*
-Derivative(c(x, y, z), x)*Derivative(k0(x, y, z), z) + k2(x, y, z)*
-Derivative(c(x, y, z), z)*Derivative(k0(x, y, z), x);
+bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x, z) + bbn_ks_c(x, y, z)*
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x, z) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), z) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x) + bbn_ks_k0(x, y, z)*
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), x, z) + bbn_ks_k0(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), z) + bbn_ks_k0(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x) + bbn_ks_k2(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), z) + bbn_ks_k2(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x);
 
     _ddgamma_D0D1D1D0[ijk]=
 /* mcode in progress ... */
@@ -1085,15 +1085,15 @@ Derivative(c(x, y, z), z)*Derivative(k0(x, y, z), x);
 // c
 // k0
 // k1
-c(x, y, z)*k0(x, y, z)*Derivative(k1(x, y, z), x, y) + c(x, y, z)*
-k1(x, y, z)*Derivative(k0(x, y, z), x, y) + c(x, y, z)*
-Derivative(k0(x, y, z), x)*Derivative(k1(x, y, z), y) + c(x, y, z)*
-Derivative(k0(x, y, z), y)*Derivative(k1(x, y, z), x) + k0(x, y, z)*
-k1(x, y, z)*Derivative(c(x, y, z), x, y) + k0(x, y, z)*
-Derivative(c(x, y, z), x)*Derivative(k1(x, y, z), y) + k0(x, y, z)*
-Derivative(c(x, y, z), y)*Derivative(k1(x, y, z), x) + k1(x, y, z)*
-Derivative(c(x, y, z), x)*Derivative(k0(x, y, z), y) + k1(x, y, z)*
-Derivative(c(x, y, z), y)*Derivative(k0(x, y, z), x);
+bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x, y) + bbn_ks_c(x, y, z)*
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x, y) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), y) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x) + bbn_ks_k0(x, y, z)*
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), x, y) + bbn_ks_k0(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), y) + bbn_ks_k0(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x) + bbn_ks_k1(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), y) + bbn_ks_k1(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x);
 
     _ddgamma_D1D2D2D0[ijk]=
 /* mcode in progress ... */
@@ -1110,15 +1110,15 @@ Derivative(c(x, y, z), y)*Derivative(k0(x, y, z), x);
 // c
 // k1
 // k2
-c(x, y, z)*k1(x, y, z)*Derivative(k2(x, y, z), x, z) + c(x, y, z)*
-k2(x, y, z)*Derivative(k1(x, y, z), x, z) + c(x, y, z)*
-Derivative(k1(x, y, z), x)*Derivative(k2(x, y, z), z) + c(x, y, z)*
-Derivative(k1(x, y, z), z)*Derivative(k2(x, y, z), x) + k1(x, y, z)*
-k2(x, y, z)*Derivative(c(x, y, z), x, z) + k1(x, y, z)*
-Derivative(c(x, y, z), x)*Derivative(k2(x, y, z), z) + k1(x, y, z)*
-Derivative(c(x, y, z), z)*Derivative(k2(x, y, z), x) + k2(x, y, z)*
-Derivative(c(x, y, z), x)*Derivative(k1(x, y, z), z) + k2(x, y, z)*
-Derivative(c(x, y, z), z)*Derivative(k1(x, y, z), x);
+bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x, z) + bbn_ks_c(x, y, z)*
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x, z) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), z) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x) + bbn_ks_k1(x, y, z)*
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), x, z) + bbn_ks_k1(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), z) + bbn_ks_k1(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x) + bbn_ks_k2(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), z) + bbn_ks_k2(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x);
 
     _ddgamma_D1D1D1D0[ijk]=
 /* mcode in progress ... */
@@ -1131,11 +1131,11 @@ Derivative(c(x, y, z), z)*Derivative(k1(x, y, z), x);
 // Derivative
 // c
 // k1
-2*c(x, y, z)*k1(x, y, z)*Derivative(k1(x, y, z), x, y) + 2*c(x, y, z)*
-Derivative(k1(x, y, z), x)*Derivative(k1(x, y, z), y) + 
-pow(k1(x, y, z), 2)*Derivative(c(x, y, z), x, y) + 2*k1(x, y, z)*
-Derivative(c(x, y, z), x)*Derivative(k1(x, y, z), y) + 2*k1(x, y, z)*
-Derivative(c(x, y, z), y)*Derivative(k1(x, y, z), x);
+2*bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x, y) + 2*bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), y) + 
+pow(bbn_ks_k1(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), x, y) + 2*bbn_ks_k1(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), y) + 2*bbn_ks_k1(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x);
 
     _ddgamma_D1D2D1D2[ijk]=
 /* mcode in progress ... */
@@ -1152,15 +1152,15 @@ Derivative(c(x, y, z), y)*Derivative(k1(x, y, z), x);
 // c
 // k1
 // k2
-c(x, y, z)*k1(x, y, z)*Derivative(k2(x, y, z), y, z) + c(x, y, z)*
-k2(x, y, z)*Derivative(k1(x, y, z), y, z) + c(x, y, z)*
-Derivative(k1(x, y, z), y)*Derivative(k2(x, y, z), z) + c(x, y, z)*
-Derivative(k1(x, y, z), z)*Derivative(k2(x, y, z), y) + k1(x, y, z)*
-k2(x, y, z)*Derivative(c(x, y, z), y, z) + k1(x, y, z)*
-Derivative(c(x, y, z), y)*Derivative(k2(x, y, z), z) + k1(x, y, z)*
-Derivative(c(x, y, z), z)*Derivative(k2(x, y, z), y) + k2(x, y, z)*
-Derivative(c(x, y, z), y)*Derivative(k1(x, y, z), z) + k2(x, y, z)*
-Derivative(c(x, y, z), z)*Derivative(k1(x, y, z), y);
+bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k2(x, y, z), y, z) + bbn_ks_c(x, y, z)*
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k1(x, y, z), y, z) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), z) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), y) + bbn_ks_k1(x, y, z)*
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), y, z) + bbn_ks_k1(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), z) + bbn_ks_k1(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), y) + bbn_ks_k2(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), z) + bbn_ks_k2(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), y);
 
     _ddgamma_D1D2D0D0[ijk]=
 /* mcode in progress ... */
@@ -1174,12 +1174,12 @@ Derivative(c(x, y, z), z)*Derivative(k1(x, y, z), y);
 // c
 // k1
 // k2
-c(x, y, z)*k1(x, y, z)*Derivative(k2(x, y, z), (x, 2)) + c(x, y, z)*
-k2(x, y, z)*Derivative(k1(x, y, z), (x, 2)) + 2*c(x, y, z)*
-Derivative(k1(x, y, z), x)*Derivative(k2(x, y, z), x) + k1(x, y, z)*
-k2(x, y, z)*Derivative(c(x, y, z), (x, 2)) + 2*k1(x, y, z)*
-Derivative(c(x, y, z), x)*Derivative(k2(x, y, z), x) + 2*k2(x, y, z)*
-Derivative(c(x, y, z), x)*Derivative(k1(x, y, z), x);
+bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k2(x, y, z), (x, 2)) + bbn_ks_c(x, y, z)*
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k1(x, y, z), (x, 2)) + 2*bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), x) + bbn_ks_k1(x, y, z)*
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2)) + 2*bbn_ks_k1(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), x) + 2*bbn_ks_k2(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), x);
 
     _ddgamma_D0D0D0D2[ijk]=
 /* mcode in progress ... */
@@ -1192,11 +1192,11 @@ Derivative(c(x, y, z), x)*Derivative(k1(x, y, z), x);
 // Derivative
 // c
 // k0
-2*c(x, y, z)*k0(x, y, z)*Derivative(k0(x, y, z), x, z) + 2*c(x, y, z)*
-Derivative(k0(x, y, z), x)*Derivative(k0(x, y, z), z) + 
-pow(k0(x, y, z), 2)*Derivative(c(x, y, z), x, z) + 2*k0(x, y, z)*
-Derivative(c(x, y, z), x)*Derivative(k0(x, y, z), z) + 2*k0(x, y, z)*
-Derivative(c(x, y, z), z)*Derivative(k0(x, y, z), x);
+2*bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x, z) + 2*bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), z) + 
+pow(bbn_ks_k0(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), x, z) + 2*bbn_ks_k0(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), z) + 2*bbn_ks_k0(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x);
 
     _ddgamma_D2D2D2D1[ijk]=
 /* mcode in progress ... */
@@ -1209,11 +1209,11 @@ Derivative(c(x, y, z), z)*Derivative(k0(x, y, z), x);
 // Derivative
 // c
 // k2
-2*c(x, y, z)*k2(x, y, z)*Derivative(k2(x, y, z), y, z) + 2*c(x, y, z)*
-Derivative(k2(x, y, z), y)*Derivative(k2(x, y, z), z) + 
-pow(k2(x, y, z), 2)*Derivative(c(x, y, z), y, z) + 2*k2(x, y, z)*
-Derivative(c(x, y, z), y)*Derivative(k2(x, y, z), z) + 2*k2(x, y, z)*
-Derivative(c(x, y, z), z)*Derivative(k2(x, y, z), y);
+2*bbn_ks_c(x, y, z)*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k2(x, y, z), y, z) + 2*bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k2(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), z) + 
+pow(bbn_ks_k2(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), y, z) + 2*bbn_ks_k2(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), z) + 2*bbn_ks_k2(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), y);
 
     _ddgamma_D0D2D0D0[ijk]=
 /* mcode in progress ... */
@@ -1227,12 +1227,12 @@ Derivative(c(x, y, z), z)*Derivative(k2(x, y, z), y);
 // c
 // k0
 // k2
-c(x, y, z)*k0(x, y, z)*Derivative(k2(x, y, z), (x, 2)) + c(x, y, z)*
-k2(x, y, z)*Derivative(k0(x, y, z), (x, 2)) + 2*c(x, y, z)*
-Derivative(k0(x, y, z), x)*Derivative(k2(x, y, z), x) + k0(x, y, z)*
-k2(x, y, z)*Derivative(c(x, y, z), (x, 2)) + 2*k0(x, y, z)*
-Derivative(c(x, y, z), x)*Derivative(k2(x, y, z), x) + 2*k2(x, y, z)*
-Derivative(c(x, y, z), x)*Derivative(k0(x, y, z), x);
+bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k2(x, y, z), (x, 2)) + bbn_ks_c(x, y, z)*
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k0(x, y, z), (x, 2)) + 2*bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), x) + bbn_ks_k0(x, y, z)*
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2)) + 2*bbn_ks_k0(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), x) + 2*bbn_ks_k2(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), x);
 
     _ddgamma_D0D2D0D1[ijk]=
 /* mcode in progress ... */
@@ -1249,15 +1249,15 @@ Derivative(c(x, y, z), x)*Derivative(k0(x, y, z), x);
 // c
 // k0
 // k2
-c(x, y, z)*k0(x, y, z)*Derivative(k2(x, y, z), x, y) + c(x, y, z)*
-k2(x, y, z)*Derivative(k0(x, y, z), x, y) + c(x, y, z)*
-Derivative(k0(x, y, z), x)*Derivative(k2(x, y, z), y) + c(x, y, z)*
-Derivative(k0(x, y, z), y)*Derivative(k2(x, y, z), x) + k0(x, y, z)*
-k2(x, y, z)*Derivative(c(x, y, z), x, y) + k0(x, y, z)*
-Derivative(c(x, y, z), x)*Derivative(k2(x, y, z), y) + k0(x, y, z)*
-Derivative(c(x, y, z), y)*Derivative(k2(x, y, z), x) + k2(x, y, z)*
-Derivative(c(x, y, z), x)*Derivative(k0(x, y, z), y) + k2(x, y, z)*
-Derivative(c(x, y, z), y)*Derivative(k0(x, y, z), x);
+bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x, y) + bbn_ks_c(x, y, z)*
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x, y) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), y) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x) + bbn_ks_k0(x, y, z)*
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), x, y) + bbn_ks_k0(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), y) + bbn_ks_k0(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x) + bbn_ks_k2(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), y) + bbn_ks_k2(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x);
 
     _ddgamma_D1D1D1D1[ijk]=
 /* mcode in progress ... */
@@ -1268,10 +1268,10 @@ Derivative(c(x, y, z), y)*Derivative(k0(x, y, z), x);
 // Derivative
 // c
 // k1
-2*c(x, y, z)*k1(x, y, z)*Derivative(k1(x, y, z), (y, 2)) + 2*
-c(x, y, z)*pow(Derivative(k1(x, y, z), y), 2) + pow(k1(x, y, z), 2)*
-Derivative(c(x, y, z), (y, 2)) + 4*k1(x, y, z)*Derivative(c(x, y, z), y)*
-Derivative(k1(x, y, z), y);
+2*bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k1(x, y, z), (y, 2)) + 2*
+bbn_ks_c(x, y, z)*pow(Derivative(bbn_ks_k1(x, y, z), y), 2) + pow(bbn_ks_k1(x, y, z), 2)*
+Derivative(bbn_ks_c(x, y, z), (y, 2)) + 4*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*
+Derivative(bbn_ks_k1(x, y, z), y);
 
     _ddgamma_D0D1D0D0[ijk]=
 /* mcode in progress ... */
@@ -1285,12 +1285,12 @@ Derivative(k1(x, y, z), y);
 // c
 // k0
 // k1
-c(x, y, z)*k0(x, y, z)*Derivative(k1(x, y, z), (x, 2)) + c(x, y, z)*
-k1(x, y, z)*Derivative(k0(x, y, z), (x, 2)) + 2*c(x, y, z)*
-Derivative(k0(x, y, z), x)*Derivative(k1(x, y, z), x) + k0(x, y, z)*
-k1(x, y, z)*Derivative(c(x, y, z), (x, 2)) + 2*k0(x, y, z)*
-Derivative(c(x, y, z), x)*Derivative(k1(x, y, z), x) + 2*k1(x, y, z)*
-Derivative(c(x, y, z), x)*Derivative(k0(x, y, z), x);
+bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k1(x, y, z), (x, 2)) + bbn_ks_c(x, y, z)*
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k0(x, y, z), (x, 2)) + 2*bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), x) + bbn_ks_k0(x, y, z)*
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2)) + 2*bbn_ks_k0(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), x) + 2*bbn_ks_k1(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), x);
 
     _ddgamma_D1D1D2D2[ijk]=
 /* mcode in progress ... */
@@ -1301,10 +1301,10 @@ Derivative(c(x, y, z), x)*Derivative(k0(x, y, z), x);
 // Derivative
 // c
 // k1
-2*c(x, y, z)*k1(x, y, z)*Derivative(k1(x, y, z), (z, 2)) + 2*
-c(x, y, z)*pow(Derivative(k1(x, y, z), z), 2) + pow(k1(x, y, z), 2)*
-Derivative(c(x, y, z), (z, 2)) + 4*k1(x, y, z)*Derivative(c(x, y, z), z)*
-Derivative(k1(x, y, z), z);
+2*bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k1(x, y, z), (z, 2)) + 2*
+bbn_ks_c(x, y, z)*pow(Derivative(bbn_ks_k1(x, y, z), z), 2) + pow(bbn_ks_k1(x, y, z), 2)*
+Derivative(bbn_ks_c(x, y, z), (z, 2)) + 4*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*
+Derivative(bbn_ks_k1(x, y, z), z);
 
     _ddgamma_D0D2D1D2[ijk]=
 /* mcode in progress ... */
@@ -1321,15 +1321,15 @@ Derivative(k1(x, y, z), z);
 // c
 // k0
 // k2
-c(x, y, z)*k0(x, y, z)*Derivative(k2(x, y, z), y, z) + c(x, y, z)*
-k2(x, y, z)*Derivative(k0(x, y, z), y, z) + c(x, y, z)*
-Derivative(k0(x, y, z), y)*Derivative(k2(x, y, z), z) + c(x, y, z)*
-Derivative(k0(x, y, z), z)*Derivative(k2(x, y, z), y) + k0(x, y, z)*
-k2(x, y, z)*Derivative(c(x, y, z), y, z) + k0(x, y, z)*
-Derivative(c(x, y, z), y)*Derivative(k2(x, y, z), z) + k0(x, y, z)*
-Derivative(c(x, y, z), z)*Derivative(k2(x, y, z), y) + k2(x, y, z)*
-Derivative(c(x, y, z), y)*Derivative(k0(x, y, z), z) + k2(x, y, z)*
-Derivative(c(x, y, z), z)*Derivative(k0(x, y, z), y);
+bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k2(x, y, z), y, z) + bbn_ks_c(x, y, z)*
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k0(x, y, z), y, z) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), z) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), y) + bbn_ks_k0(x, y, z)*
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), y, z) + bbn_ks_k0(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), z) + bbn_ks_k0(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), y) + bbn_ks_k2(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), z) + bbn_ks_k2(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), y);
 
     _ddgamma_D0D1D2D1[ijk]=
 /* mcode in progress ... */
@@ -1346,15 +1346,15 @@ Derivative(c(x, y, z), z)*Derivative(k0(x, y, z), y);
 // c
 // k0
 // k1
-c(x, y, z)*k0(x, y, z)*Derivative(k1(x, y, z), y, z) + c(x, y, z)*
-k1(x, y, z)*Derivative(k0(x, y, z), y, z) + c(x, y, z)*
-Derivative(k0(x, y, z), y)*Derivative(k1(x, y, z), z) + c(x, y, z)*
-Derivative(k0(x, y, z), z)*Derivative(k1(x, y, z), y) + k0(x, y, z)*
-k1(x, y, z)*Derivative(c(x, y, z), y, z) + k0(x, y, z)*
-Derivative(c(x, y, z), y)*Derivative(k1(x, y, z), z) + k0(x, y, z)*
-Derivative(c(x, y, z), z)*Derivative(k1(x, y, z), y) + k1(x, y, z)*
-Derivative(c(x, y, z), y)*Derivative(k0(x, y, z), z) + k1(x, y, z)*
-Derivative(c(x, y, z), z)*Derivative(k0(x, y, z), y);
+bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k1(x, y, z), y, z) + bbn_ks_c(x, y, z)*
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k0(x, y, z), y, z) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), z) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), y) + bbn_ks_k0(x, y, z)*
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), y, z) + bbn_ks_k0(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), z) + bbn_ks_k0(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), y) + bbn_ks_k1(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), z) + bbn_ks_k1(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), y);
 
     _ddgamma_D0D1D1D2[ijk]=
 /* mcode in progress ... */
@@ -1371,15 +1371,15 @@ Derivative(c(x, y, z), z)*Derivative(k0(x, y, z), y);
 // c
 // k0
 // k1
-c(x, y, z)*k0(x, y, z)*Derivative(k1(x, y, z), y, z) + c(x, y, z)*
-k1(x, y, z)*Derivative(k0(x, y, z), y, z) + c(x, y, z)*
-Derivative(k0(x, y, z), y)*Derivative(k1(x, y, z), z) + c(x, y, z)*
-Derivative(k0(x, y, z), z)*Derivative(k1(x, y, z), y) + k0(x, y, z)*
-k1(x, y, z)*Derivative(c(x, y, z), y, z) + k0(x, y, z)*
-Derivative(c(x, y, z), y)*Derivative(k1(x, y, z), z) + k0(x, y, z)*
-Derivative(c(x, y, z), z)*Derivative(k1(x, y, z), y) + k1(x, y, z)*
-Derivative(c(x, y, z), y)*Derivative(k0(x, y, z), z) + k1(x, y, z)*
-Derivative(c(x, y, z), z)*Derivative(k0(x, y, z), y);
+bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k1(x, y, z), y, z) + bbn_ks_c(x, y, z)*
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k0(x, y, z), y, z) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), z) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), y) + bbn_ks_k0(x, y, z)*
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), y, z) + bbn_ks_k0(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), z) + bbn_ks_k0(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), y) + bbn_ks_k1(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), z) + bbn_ks_k1(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), y);
 
     _ddgamma_D1D1D2D1[ijk]=
 /* mcode in progress ... */
@@ -1392,11 +1392,11 @@ Derivative(c(x, y, z), z)*Derivative(k0(x, y, z), y);
 // Derivative
 // c
 // k1
-2*c(x, y, z)*k1(x, y, z)*Derivative(k1(x, y, z), y, z) + 2*c(x, y, z)*
-Derivative(k1(x, y, z), y)*Derivative(k1(x, y, z), z) + 
-pow(k1(x, y, z), 2)*Derivative(c(x, y, z), y, z) + 2*k1(x, y, z)*
-Derivative(c(x, y, z), y)*Derivative(k1(x, y, z), z) + 2*k1(x, y, z)*
-Derivative(c(x, y, z), z)*Derivative(k1(x, y, z), y);
+2*bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k1(x, y, z), y, z) + 2*bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), z) + 
+pow(bbn_ks_k1(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), y, z) + 2*bbn_ks_k1(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), z) + 2*bbn_ks_k1(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), y);
 
     _ddgamma_D0D1D1D1[ijk]=
 /* mcode in progress ... */
@@ -1410,12 +1410,12 @@ Derivative(c(x, y, z), z)*Derivative(k1(x, y, z), y);
 // c
 // k0
 // k1
-c(x, y, z)*k0(x, y, z)*Derivative(k1(x, y, z), (y, 2)) + c(x, y, z)*
-k1(x, y, z)*Derivative(k0(x, y, z), (y, 2)) + 2*c(x, y, z)*
-Derivative(k0(x, y, z), y)*Derivative(k1(x, y, z), y) + k0(x, y, z)*
-k1(x, y, z)*Derivative(c(x, y, z), (y, 2)) + 2*k0(x, y, z)*
-Derivative(c(x, y, z), y)*Derivative(k1(x, y, z), y) + 2*k1(x, y, z)*
-Derivative(c(x, y, z), y)*Derivative(k0(x, y, z), y);
+bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k1(x, y, z), (y, 2)) + bbn_ks_c(x, y, z)*
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k0(x, y, z), (y, 2)) + 2*bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), y) + bbn_ks_k0(x, y, z)*
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), (y, 2)) + 2*bbn_ks_k0(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), y) + 2*bbn_ks_k1(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), y);
 
     _ddgamma_D0D2D1D0[ijk]=
 /* mcode in progress ... */
@@ -1432,15 +1432,15 @@ Derivative(c(x, y, z), y)*Derivative(k0(x, y, z), y);
 // c
 // k0
 // k2
-c(x, y, z)*k0(x, y, z)*Derivative(k2(x, y, z), x, y) + c(x, y, z)*
-k2(x, y, z)*Derivative(k0(x, y, z), x, y) + c(x, y, z)*
-Derivative(k0(x, y, z), x)*Derivative(k2(x, y, z), y) + c(x, y, z)*
-Derivative(k0(x, y, z), y)*Derivative(k2(x, y, z), x) + k0(x, y, z)*
-k2(x, y, z)*Derivative(c(x, y, z), x, y) + k0(x, y, z)*
-Derivative(c(x, y, z), x)*Derivative(k2(x, y, z), y) + k0(x, y, z)*
-Derivative(c(x, y, z), y)*Derivative(k2(x, y, z), x) + k2(x, y, z)*
-Derivative(c(x, y, z), x)*Derivative(k0(x, y, z), y) + k2(x, y, z)*
-Derivative(c(x, y, z), y)*Derivative(k0(x, y, z), x);
+bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x, y) + bbn_ks_c(x, y, z)*
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x, y) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), y) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x) + bbn_ks_k0(x, y, z)*
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), x, y) + bbn_ks_k0(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), y) + bbn_ks_k0(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x) + bbn_ks_k2(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), y) + bbn_ks_k2(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x);
 
     _ddgamma_D2D2D1D0[ijk]=
 /* mcode in progress ... */
@@ -1453,11 +1453,11 @@ Derivative(c(x, y, z), y)*Derivative(k0(x, y, z), x);
 // Derivative
 // c
 // k2
-2*c(x, y, z)*k2(x, y, z)*Derivative(k2(x, y, z), x, y) + 2*c(x, y, z)*
-Derivative(k2(x, y, z), x)*Derivative(k2(x, y, z), y) + 
-pow(k2(x, y, z), 2)*Derivative(c(x, y, z), x, y) + 2*k2(x, y, z)*
-Derivative(c(x, y, z), x)*Derivative(k2(x, y, z), y) + 2*k2(x, y, z)*
-Derivative(c(x, y, z), y)*Derivative(k2(x, y, z), x);
+2*bbn_ks_c(x, y, z)*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x, y) + 2*bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), y) + 
+pow(bbn_ks_k2(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), x, y) + 2*bbn_ks_k2(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), y) + 2*bbn_ks_k2(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x);
 
     _ddgamma_D0D1D2D2[ijk]=
 /* mcode in progress ... */
@@ -1471,12 +1471,12 @@ Derivative(c(x, y, z), y)*Derivative(k2(x, y, z), x);
 // c
 // k0
 // k1
-c(x, y, z)*k0(x, y, z)*Derivative(k1(x, y, z), (z, 2)) + c(x, y, z)*
-k1(x, y, z)*Derivative(k0(x, y, z), (z, 2)) + 2*c(x, y, z)*
-Derivative(k0(x, y, z), z)*Derivative(k1(x, y, z), z) + k0(x, y, z)*
-k1(x, y, z)*Derivative(c(x, y, z), (z, 2)) + 2*k0(x, y, z)*
-Derivative(c(x, y, z), z)*Derivative(k1(x, y, z), z) + 2*k1(x, y, z)*
-Derivative(c(x, y, z), z)*Derivative(k0(x, y, z), z);
+bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k1(x, y, z), (z, 2)) + bbn_ks_c(x, y, z)*
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k0(x, y, z), (z, 2)) + 2*bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), z) + bbn_ks_k0(x, y, z)*
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), (z, 2)) + 2*bbn_ks_k0(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), z) + 2*bbn_ks_k1(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), z);
 
     _ddgamma_D2D2D0D0[ijk]=
 /* mcode in progress ... */
@@ -1487,10 +1487,10 @@ Derivative(c(x, y, z), z)*Derivative(k0(x, y, z), z);
 // Derivative
 // c
 // k2
-2*c(x, y, z)*k2(x, y, z)*Derivative(k2(x, y, z), (x, 2)) + 2*
-c(x, y, z)*pow(Derivative(k2(x, y, z), x), 2) + pow(k2(x, y, z), 2)*
-Derivative(c(x, y, z), (x, 2)) + 4*k2(x, y, z)*Derivative(c(x, y, z), x)*
-Derivative(k2(x, y, z), x);
+2*bbn_ks_c(x, y, z)*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k2(x, y, z), (x, 2)) + 2*
+bbn_ks_c(x, y, z)*pow(Derivative(bbn_ks_k2(x, y, z), x), 2) + pow(bbn_ks_k2(x, y, z), 2)*
+Derivative(bbn_ks_c(x, y, z), (x, 2)) + 4*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), x)*
+Derivative(bbn_ks_k2(x, y, z), x);
 
     _ddgamma_D0D0D2D1[ijk]=
 /* mcode in progress ... */
@@ -1503,11 +1503,11 @@ Derivative(k2(x, y, z), x);
 // Derivative
 // c
 // k0
-2*c(x, y, z)*k0(x, y, z)*Derivative(k0(x, y, z), y, z) + 2*c(x, y, z)*
-Derivative(k0(x, y, z), y)*Derivative(k0(x, y, z), z) + 
-pow(k0(x, y, z), 2)*Derivative(c(x, y, z), y, z) + 2*k0(x, y, z)*
-Derivative(c(x, y, z), y)*Derivative(k0(x, y, z), z) + 2*k0(x, y, z)*
-Derivative(c(x, y, z), z)*Derivative(k0(x, y, z), y);
+2*bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k0(x, y, z), y, z) + 2*bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), z) + 
+pow(bbn_ks_k0(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), y, z) + 2*bbn_ks_k0(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), z) + 2*bbn_ks_k0(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), y);
 
     _ddgamma_D0D2D2D2[ijk]=
 /* mcode in progress ... */
@@ -1521,12 +1521,12 @@ Derivative(c(x, y, z), z)*Derivative(k0(x, y, z), y);
 // c
 // k0
 // k2
-c(x, y, z)*k0(x, y, z)*Derivative(k2(x, y, z), (z, 2)) + c(x, y, z)*
-k2(x, y, z)*Derivative(k0(x, y, z), (z, 2)) + 2*c(x, y, z)*
-Derivative(k0(x, y, z), z)*Derivative(k2(x, y, z), z) + k0(x, y, z)*
-k2(x, y, z)*Derivative(c(x, y, z), (z, 2)) + 2*k0(x, y, z)*
-Derivative(c(x, y, z), z)*Derivative(k2(x, y, z), z) + 2*k2(x, y, z)*
-Derivative(c(x, y, z), z)*Derivative(k0(x, y, z), z);
+bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k2(x, y, z), (z, 2)) + bbn_ks_c(x, y, z)*
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k0(x, y, z), (z, 2)) + 2*bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), z) + bbn_ks_k0(x, y, z)*
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (z, 2)) + 2*bbn_ks_k0(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), z) + 2*bbn_ks_k2(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), z);
 
     _ddgamma_D1D1D1D2[ijk]=
 /* mcode in progress ... */
@@ -1539,11 +1539,11 @@ Derivative(c(x, y, z), z)*Derivative(k0(x, y, z), z);
 // Derivative
 // c
 // k1
-2*c(x, y, z)*k1(x, y, z)*Derivative(k1(x, y, z), y, z) + 2*c(x, y, z)*
-Derivative(k1(x, y, z), y)*Derivative(k1(x, y, z), z) + 
-pow(k1(x, y, z), 2)*Derivative(c(x, y, z), y, z) + 2*k1(x, y, z)*
-Derivative(c(x, y, z), y)*Derivative(k1(x, y, z), z) + 2*k1(x, y, z)*
-Derivative(c(x, y, z), z)*Derivative(k1(x, y, z), y);
+2*bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k1(x, y, z), y, z) + 2*bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), z) + 
+pow(bbn_ks_k1(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), y, z) + 2*bbn_ks_k1(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), z) + 2*bbn_ks_k1(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), y);
 
     _ddgamma_D1D2D2D1[ijk]=
 /* mcode in progress ... */
@@ -1560,15 +1560,15 @@ Derivative(c(x, y, z), z)*Derivative(k1(x, y, z), y);
 // c
 // k1
 // k2
-c(x, y, z)*k1(x, y, z)*Derivative(k2(x, y, z), y, z) + c(x, y, z)*
-k2(x, y, z)*Derivative(k1(x, y, z), y, z) + c(x, y, z)*
-Derivative(k1(x, y, z), y)*Derivative(k2(x, y, z), z) + c(x, y, z)*
-Derivative(k1(x, y, z), z)*Derivative(k2(x, y, z), y) + k1(x, y, z)*
-k2(x, y, z)*Derivative(c(x, y, z), y, z) + k1(x, y, z)*
-Derivative(c(x, y, z), y)*Derivative(k2(x, y, z), z) + k1(x, y, z)*
-Derivative(c(x, y, z), z)*Derivative(k2(x, y, z), y) + k2(x, y, z)*
-Derivative(c(x, y, z), y)*Derivative(k1(x, y, z), z) + k2(x, y, z)*
-Derivative(c(x, y, z), z)*Derivative(k1(x, y, z), y);
+bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k2(x, y, z), y, z) + bbn_ks_c(x, y, z)*
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k1(x, y, z), y, z) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), z) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), y) + bbn_ks_k1(x, y, z)*
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), y, z) + bbn_ks_k1(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), z) + bbn_ks_k1(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), y) + bbn_ks_k2(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), z) + bbn_ks_k2(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), y);
 
     _ddgamma_D0D0D1D2[ijk]=
 /* mcode in progress ... */
@@ -1581,11 +1581,11 @@ Derivative(c(x, y, z), z)*Derivative(k1(x, y, z), y);
 // Derivative
 // c
 // k0
-2*c(x, y, z)*k0(x, y, z)*Derivative(k0(x, y, z), y, z) + 2*c(x, y, z)*
-Derivative(k0(x, y, z), y)*Derivative(k0(x, y, z), z) + 
-pow(k0(x, y, z), 2)*Derivative(c(x, y, z), y, z) + 2*k0(x, y, z)*
-Derivative(c(x, y, z), y)*Derivative(k0(x, y, z), z) + 2*k0(x, y, z)*
-Derivative(c(x, y, z), z)*Derivative(k0(x, y, z), y);
+2*bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k0(x, y, z), y, z) + 2*bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), z) + 
+pow(bbn_ks_k0(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), y, z) + 2*bbn_ks_k0(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), z) + 2*bbn_ks_k0(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), y);
 
     _ddgamma_D0D2D0D2[ijk]=
 /* mcode in progress ... */
@@ -1602,15 +1602,15 @@ Derivative(c(x, y, z), z)*Derivative(k0(x, y, z), y);
 // c
 // k0
 // k2
-c(x, y, z)*k0(x, y, z)*Derivative(k2(x, y, z), x, z) + c(x, y, z)*
-k2(x, y, z)*Derivative(k0(x, y, z), x, z) + c(x, y, z)*
-Derivative(k0(x, y, z), x)*Derivative(k2(x, y, z), z) + c(x, y, z)*
-Derivative(k0(x, y, z), z)*Derivative(k2(x, y, z), x) + k0(x, y, z)*
-k2(x, y, z)*Derivative(c(x, y, z), x, z) + k0(x, y, z)*
-Derivative(c(x, y, z), x)*Derivative(k2(x, y, z), z) + k0(x, y, z)*
-Derivative(c(x, y, z), z)*Derivative(k2(x, y, z), x) + k2(x, y, z)*
-Derivative(c(x, y, z), x)*Derivative(k0(x, y, z), z) + k2(x, y, z)*
-Derivative(c(x, y, z), z)*Derivative(k0(x, y, z), x);
+bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x, z) + bbn_ks_c(x, y, z)*
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x, z) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), z) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x) + bbn_ks_k0(x, y, z)*
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), x, z) + bbn_ks_k0(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), z) + bbn_ks_k0(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x) + bbn_ks_k2(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), z) + bbn_ks_k2(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x);
 
     _ddgamma_D1D1D0D2[ijk]=
 /* mcode in progress ... */
@@ -1623,11 +1623,11 @@ Derivative(c(x, y, z), z)*Derivative(k0(x, y, z), x);
 // Derivative
 // c
 // k1
-2*c(x, y, z)*k1(x, y, z)*Derivative(k1(x, y, z), x, z) + 2*c(x, y, z)*
-Derivative(k1(x, y, z), x)*Derivative(k1(x, y, z), z) + 
-pow(k1(x, y, z), 2)*Derivative(c(x, y, z), x, z) + 2*k1(x, y, z)*
-Derivative(c(x, y, z), x)*Derivative(k1(x, y, z), z) + 2*k1(x, y, z)*
-Derivative(c(x, y, z), z)*Derivative(k1(x, y, z), x);
+2*bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x, z) + 2*bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), z) + 
+pow(bbn_ks_k1(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), x, z) + 2*bbn_ks_k1(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), z) + 2*bbn_ks_k1(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x);
 
     _ddgamma_D2D2D0D1[ijk]=
 /* mcode in progress ... */
@@ -1640,11 +1640,11 @@ Derivative(c(x, y, z), z)*Derivative(k1(x, y, z), x);
 // Derivative
 // c
 // k2
-2*c(x, y, z)*k2(x, y, z)*Derivative(k2(x, y, z), x, y) + 2*c(x, y, z)*
-Derivative(k2(x, y, z), x)*Derivative(k2(x, y, z), y) + 
-pow(k2(x, y, z), 2)*Derivative(c(x, y, z), x, y) + 2*k2(x, y, z)*
-Derivative(c(x, y, z), x)*Derivative(k2(x, y, z), y) + 2*k2(x, y, z)*
-Derivative(c(x, y, z), y)*Derivative(k2(x, y, z), x);
+2*bbn_ks_c(x, y, z)*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x, y) + 2*bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), y) + 
+pow(bbn_ks_k2(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), x, y) + 2*bbn_ks_k2(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), y) + 2*bbn_ks_k2(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x);
   }	
 }
 
@@ -1878,26 +1878,26 @@ double *const   dddgamma_D1D2D0D2D2 = get_v("dddgamma_D1D2D0D2D2",params);
 // c
 // k0
 // k1
-c(x, y, z)*k0(x, y, z)*Derivative(k1(x, y, z), y, (z, 2)) + c(x, y, z)*
-k1(x, y, z)*Derivative(k0(x, y, z), y, (z, 2)) + c(x, y, z)*
-Derivative(k0(x, y, z), y)*Derivative(k1(x, y, z), (z, 2)) + 2*
-c(x, y, z)*Derivative(k0(x, y, z), z)*Derivative(k1(x, y, z), y, z) + 
-c(x, y, z)*Derivative(k0(x, y, z), (z, 2))*Derivative(k1(x, y, z), y) + 
-2*c(x, y, z)*Derivative(k1(x, y, z), z)*Derivative(k0(x, y, z), y, z) + 
-k0(x, y, z)*k1(x, y, z)*Derivative(c(x, y, z), y, (z, 2)) + 
-k0(x, y, z)*Derivative(c(x, y, z), y)*Derivative(k1(x, y, z), (z, 2)) + 
-2*k0(x, y, z)*Derivative(c(x, y, z), z)*Derivative(k1(x, y, z), y, z) + 
-k0(x, y, z)*Derivative(c(x, y, z), (z, 2))*Derivative(k1(x, y, z), y) + 
-2*k0(x, y, z)*Derivative(k1(x, y, z), z)*Derivative(c(x, y, z), y, z) + 
-k1(x, y, z)*Derivative(c(x, y, z), y)*Derivative(k0(x, y, z), (z, 2)) + 
-2*k1(x, y, z)*Derivative(c(x, y, z), z)*Derivative(k0(x, y, z), y, z) + 
-k1(x, y, z)*Derivative(c(x, y, z), (z, 2))*Derivative(k0(x, y, z), y) + 
-2*k1(x, y, z)*Derivative(k0(x, y, z), z)*Derivative(c(x, y, z), y, z) + 
-2*Derivative(c(x, y, z), y)*Derivative(k0(x, y, z), z)*
-Derivative(k1(x, y, z), z) + 2*Derivative(c(x, y, z), z)*
-Derivative(k0(x, y, z), y)*Derivative(k1(x, y, z), z) + 2*
-Derivative(c(x, y, z), z)*Derivative(k0(x, y, z), z)*
-Derivative(k1(x, y, z), y);
+bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k1(x, y, z), y, (z, 2)) + bbn_ks_c(x, y, z)*
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k0(x, y, z), y, (z, 2)) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), (z, 2)) + 2*
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), y, z) + 
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), (z, 2))*Derivative(bbn_ks_k1(x, y, z), y) + 
+2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), y, z) + 
+bbn_ks_k0(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), y, (z, 2)) + 
+bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), (z, 2)) + 
+2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), y, z) + 
+bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), (z, 2))*Derivative(bbn_ks_k1(x, y, z), y) + 
+2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), y, z) + 
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), (z, 2)) + 
+2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), y, z) + 
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), (z, 2))*Derivative(bbn_ks_k0(x, y, z), y) + 
+2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), y, z) + 
+2*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), z)*
+Derivative(bbn_ks_k1(x, y, z), z) + 2*Derivative(bbn_ks_c(x, y, z), z)*
+Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), z) + 2*
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), z)*
+Derivative(bbn_ks_k1(x, y, z), y);
 
     _dddgamma_D0D1D2D0D1[ijk]=
 /* mcode in progress ... */
@@ -1926,36 +1926,36 @@ Derivative(k1(x, y, z), y);
 // c
 // k0
 // k1
-c(x, y, z)*k0(x, y, z)*Derivative(k1(x, y, z), x, y, z) + c(x, y, z)*
-k1(x, y, z)*Derivative(k0(x, y, z), x, y, z) + c(x, y, z)*
-Derivative(k0(x, y, z), x)*Derivative(k1(x, y, z), y, z) + c(x, y, z)*
-Derivative(k0(x, y, z), y)*Derivative(k1(x, y, z), x, z) + c(x, y, z)*
-Derivative(k0(x, y, z), z)*Derivative(k1(x, y, z), x, y) + c(x, y, z)*
-Derivative(k1(x, y, z), x)*Derivative(k0(x, y, z), y, z) + c(x, y, z)*
-Derivative(k1(x, y, z), y)*Derivative(k0(x, y, z), x, z) + c(x, y, z)*
-Derivative(k1(x, y, z), z)*Derivative(k0(x, y, z), x, y) + k0(x, y, z)*
-k1(x, y, z)*Derivative(c(x, y, z), x, y, z) + k0(x, y, z)*
-Derivative(c(x, y, z), x)*Derivative(k1(x, y, z), y, z) + k0(x, y, z)*
-Derivative(c(x, y, z), y)*Derivative(k1(x, y, z), x, z) + k0(x, y, z)*
-Derivative(c(x, y, z), z)*Derivative(k1(x, y, z), x, y) + k0(x, y, z)*
-Derivative(k1(x, y, z), x)*Derivative(c(x, y, z), y, z) + k0(x, y, z)*
-Derivative(k1(x, y, z), y)*Derivative(c(x, y, z), x, z) + k0(x, y, z)*
-Derivative(k1(x, y, z), z)*Derivative(c(x, y, z), x, y) + k1(x, y, z)*
-Derivative(c(x, y, z), x)*Derivative(k0(x, y, z), y, z) + k1(x, y, z)*
-Derivative(c(x, y, z), y)*Derivative(k0(x, y, z), x, z) + k1(x, y, z)*
-Derivative(c(x, y, z), z)*Derivative(k0(x, y, z), x, y) + k1(x, y, z)*
-Derivative(k0(x, y, z), x)*Derivative(c(x, y, z), y, z) + k1(x, y, z)*
-Derivative(k0(x, y, z), y)*Derivative(c(x, y, z), x, z) + k1(x, y, z)*
-Derivative(k0(x, y, z), z)*Derivative(c(x, y, z), x, y) + 
-Derivative(c(x, y, z), x)*Derivative(k0(x, y, z), y)*
-Derivative(k1(x, y, z), z) + Derivative(c(x, y, z), x)*
-Derivative(k0(x, y, z), z)*Derivative(k1(x, y, z), y) + 
-Derivative(c(x, y, z), y)*Derivative(k0(x, y, z), x)*
-Derivative(k1(x, y, z), z) + Derivative(c(x, y, z), y)*
-Derivative(k0(x, y, z), z)*Derivative(k1(x, y, z), x) + 
-Derivative(c(x, y, z), z)*Derivative(k0(x, y, z), x)*
-Derivative(k1(x, y, z), y) + Derivative(c(x, y, z), z)*
-Derivative(k0(x, y, z), y)*Derivative(k1(x, y, z), x);
+bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x, y, z) + bbn_ks_c(x, y, z)*
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x, y, z) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), y, z) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x, z) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x, y) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), y, z) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x, z) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x, y) + bbn_ks_k0(x, y, z)*
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), x, y, z) + bbn_ks_k0(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), y, z) + bbn_ks_k0(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x, z) + bbn_ks_k0(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x, y) + bbn_ks_k0(x, y, z)*
+Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), y, z) + bbn_ks_k0(x, y, z)*
+Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), x, z) + bbn_ks_k0(x, y, z)*
+Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), x, y) + bbn_ks_k1(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), y, z) + bbn_ks_k1(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x, z) + bbn_ks_k1(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x, y) + bbn_ks_k1(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), y, z) + bbn_ks_k1(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), x, z) + bbn_ks_k1(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), x, y) + 
+Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), y)*
+Derivative(bbn_ks_k1(x, y, z), z) + Derivative(bbn_ks_c(x, y, z), x)*
+Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), y) + 
+Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x)*
+Derivative(bbn_ks_k1(x, y, z), z) + Derivative(bbn_ks_c(x, y, z), y)*
+Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x) + 
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x)*
+Derivative(bbn_ks_k1(x, y, z), y) + Derivative(bbn_ks_c(x, y, z), z)*
+Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x);
 
     _dddgamma_D1D2D0D2D0[ijk]=
 /* mcode in progress ... */
@@ -1978,26 +1978,26 @@ Derivative(k0(x, y, z), y)*Derivative(k1(x, y, z), x);
 // c
 // k1
 // k2
-c(x, y, z)*k1(x, y, z)*Derivative(k2(x, y, z), (x, 2), z) + c(x, y, z)*
-k2(x, y, z)*Derivative(k1(x, y, z), (x, 2), z) + 2*c(x, y, z)*
-Derivative(k1(x, y, z), x)*Derivative(k2(x, y, z), x, z) + c(x, y, z)*
-Derivative(k1(x, y, z), (x, 2))*Derivative(k2(x, y, z), z) + 
-c(x, y, z)*Derivative(k1(x, y, z), z)*Derivative(k2(x, y, z), (x, 2)) + 
-2*c(x, y, z)*Derivative(k2(x, y, z), x)*Derivative(k1(x, y, z), x, z) + 
-k1(x, y, z)*k2(x, y, z)*Derivative(c(x, y, z), (x, 2), z) + 2*
-k1(x, y, z)*Derivative(c(x, y, z), x)*Derivative(k2(x, y, z), x, z) + 
-k1(x, y, z)*Derivative(c(x, y, z), (x, 2))*Derivative(k2(x, y, z), z) + 
-k1(x, y, z)*Derivative(c(x, y, z), z)*Derivative(k2(x, y, z), (x, 2)) + 
-2*k1(x, y, z)*Derivative(k2(x, y, z), x)*Derivative(c(x, y, z), x, z) + 
-2*k2(x, y, z)*Derivative(c(x, y, z), x)*Derivative(k1(x, y, z), x, z) + 
-k2(x, y, z)*Derivative(c(x, y, z), (x, 2))*Derivative(k1(x, y, z), z) + 
-k2(x, y, z)*Derivative(c(x, y, z), z)*Derivative(k1(x, y, z), (x, 2)) + 
-2*k2(x, y, z)*Derivative(k1(x, y, z), x)*Derivative(c(x, y, z), x, z) + 
-2*Derivative(c(x, y, z), x)*Derivative(k1(x, y, z), x)*
-Derivative(k2(x, y, z), z) + 2*Derivative(c(x, y, z), x)*
-Derivative(k1(x, y, z), z)*Derivative(k2(x, y, z), x) + 2*
-Derivative(c(x, y, z), z)*Derivative(k1(x, y, z), x)*
-Derivative(k2(x, y, z), x);
+bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k2(x, y, z), (x, 2), z) + bbn_ks_c(x, y, z)*
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k1(x, y, z), (x, 2), z) + 2*bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), x, z) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k1(x, y, z), (x, 2))*Derivative(bbn_ks_k2(x, y, z), z) + 
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), (x, 2)) + 
+2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), x, z) + 
+bbn_ks_k1(x, y, z)*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2), z) + 2*
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), x, z) + 
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2))*Derivative(bbn_ks_k2(x, y, z), z) + 
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), (x, 2)) + 
+2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), x, z) + 
+2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), x, z) + 
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2))*Derivative(bbn_ks_k1(x, y, z), z) + 
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), (x, 2)) + 
+2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), x, z) + 
+2*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), x)*
+Derivative(bbn_ks_k2(x, y, z), z) + 2*Derivative(bbn_ks_c(x, y, z), x)*
+Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x) + 2*
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x)*
+Derivative(bbn_ks_k2(x, y, z), x);
 
     _dddgamma_D1D1D1D2D1[ijk]=
 /* mcode in progress ... */
@@ -2014,17 +2014,17 @@ Derivative(k2(x, y, z), x);
 // Derivative
 // c
 // k1
-2*c(x, y, z)*k1(x, y, z)*Derivative(k1(x, y, z), (y, 2), z) + 4*
-c(x, y, z)*Derivative(k1(x, y, z), y)*Derivative(k1(x, y, z), y, z) + 
-2*c(x, y, z)*Derivative(k1(x, y, z), (y, 2))*Derivative(k1(x, y, z), z) + 
-pow(k1(x, y, z), 2)*Derivative(c(x, y, z), (y, 2), z) + 4*k1(x, y, z)*
-Derivative(c(x, y, z), y)*Derivative(k1(x, y, z), y, z) + 2*
-k1(x, y, z)*Derivative(c(x, y, z), (y, 2))*Derivative(k1(x, y, z), z) + 
-2*k1(x, y, z)*Derivative(c(x, y, z), z)*Derivative(k1(x, y, z), (y, 2)) + 
-4*k1(x, y, z)*Derivative(k1(x, y, z), y)*Derivative(c(x, y, z), y, z) + 
-4*Derivative(c(x, y, z), y)*Derivative(k1(x, y, z), y)*
-Derivative(k1(x, y, z), z) + 2*Derivative(c(x, y, z), z)*
-pow(Derivative(k1(x, y, z), y), 2);
+2*bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k1(x, y, z), (y, 2), z) + 4*
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), y, z) + 
+2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), (y, 2))*Derivative(bbn_ks_k1(x, y, z), z) + 
+pow(bbn_ks_k1(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), (y, 2), z) + 4*bbn_ks_k1(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), y, z) + 2*
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), (y, 2))*Derivative(bbn_ks_k1(x, y, z), z) + 
+2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), (y, 2)) + 
+4*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), y, z) + 
+4*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), y)*
+Derivative(bbn_ks_k1(x, y, z), z) + 2*Derivative(bbn_ks_c(x, y, z), z)*
+pow(Derivative(bbn_ks_k1(x, y, z), y), 2);
 
     _dddgamma_D0D2D0D0D1[ijk]=
 /* mcode in progress ... */
@@ -2047,26 +2047,26 @@ pow(Derivative(k1(x, y, z), y), 2);
 // c
 // k0
 // k2
-c(x, y, z)*k0(x, y, z)*Derivative(k2(x, y, z), (x, 2), y) + c(x, y, z)*
-k2(x, y, z)*Derivative(k0(x, y, z), (x, 2), y) + 2*c(x, y, z)*
-Derivative(k0(x, y, z), x)*Derivative(k2(x, y, z), x, y) + c(x, y, z)*
-Derivative(k0(x, y, z), (x, 2))*Derivative(k2(x, y, z), y) + 
-c(x, y, z)*Derivative(k0(x, y, z), y)*Derivative(k2(x, y, z), (x, 2)) + 
-2*c(x, y, z)*Derivative(k2(x, y, z), x)*Derivative(k0(x, y, z), x, y) + 
-k0(x, y, z)*k2(x, y, z)*Derivative(c(x, y, z), (x, 2), y) + 2*
-k0(x, y, z)*Derivative(c(x, y, z), x)*Derivative(k2(x, y, z), x, y) + 
-k0(x, y, z)*Derivative(c(x, y, z), (x, 2))*Derivative(k2(x, y, z), y) + 
-k0(x, y, z)*Derivative(c(x, y, z), y)*Derivative(k2(x, y, z), (x, 2)) + 
-2*k0(x, y, z)*Derivative(k2(x, y, z), x)*Derivative(c(x, y, z), x, y) + 
-2*k2(x, y, z)*Derivative(c(x, y, z), x)*Derivative(k0(x, y, z), x, y) + 
-k2(x, y, z)*Derivative(c(x, y, z), (x, 2))*Derivative(k0(x, y, z), y) + 
-k2(x, y, z)*Derivative(c(x, y, z), y)*Derivative(k0(x, y, z), (x, 2)) + 
-2*k2(x, y, z)*Derivative(k0(x, y, z), x)*Derivative(c(x, y, z), x, y) + 
-2*Derivative(c(x, y, z), x)*Derivative(k0(x, y, z), x)*
-Derivative(k2(x, y, z), y) + 2*Derivative(c(x, y, z), x)*
-Derivative(k0(x, y, z), y)*Derivative(k2(x, y, z), x) + 2*
-Derivative(c(x, y, z), y)*Derivative(k0(x, y, z), x)*
-Derivative(k2(x, y, z), x);
+bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k2(x, y, z), (x, 2), y) + bbn_ks_c(x, y, z)*
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k0(x, y, z), (x, 2), y) + 2*bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), x, y) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), (x, 2))*Derivative(bbn_ks_k2(x, y, z), y) + 
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), (x, 2)) + 
+2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), x, y) + 
+bbn_ks_k0(x, y, z)*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2), y) + 2*
+bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), x, y) + 
+bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2))*Derivative(bbn_ks_k2(x, y, z), y) + 
+bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), (x, 2)) + 
+2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), x, y) + 
+2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), x, y) + 
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2))*Derivative(bbn_ks_k0(x, y, z), y) + 
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), (x, 2)) + 
+2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), x, y) + 
+2*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), x)*
+Derivative(bbn_ks_k2(x, y, z), y) + 2*Derivative(bbn_ks_c(x, y, z), x)*
+Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x) + 2*
+Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x)*
+Derivative(bbn_ks_k2(x, y, z), x);
 
     _dddgamma_D0D2D0D2D2[ijk]=
 /* mcode in progress ... */
@@ -2089,26 +2089,26 @@ Derivative(k2(x, y, z), x);
 // c
 // k0
 // k2
-c(x, y, z)*k0(x, y, z)*Derivative(k2(x, y, z), x, (z, 2)) + c(x, y, z)*
-k2(x, y, z)*Derivative(k0(x, y, z), x, (z, 2)) + c(x, y, z)*
-Derivative(k0(x, y, z), x)*Derivative(k2(x, y, z), (z, 2)) + 2*
-c(x, y, z)*Derivative(k0(x, y, z), z)*Derivative(k2(x, y, z), x, z) + 
-c(x, y, z)*Derivative(k0(x, y, z), (z, 2))*Derivative(k2(x, y, z), x) + 
-2*c(x, y, z)*Derivative(k2(x, y, z), z)*Derivative(k0(x, y, z), x, z) + 
-k0(x, y, z)*k2(x, y, z)*Derivative(c(x, y, z), x, (z, 2)) + 
-k0(x, y, z)*Derivative(c(x, y, z), x)*Derivative(k2(x, y, z), (z, 2)) + 
-2*k0(x, y, z)*Derivative(c(x, y, z), z)*Derivative(k2(x, y, z), x, z) + 
-k0(x, y, z)*Derivative(c(x, y, z), (z, 2))*Derivative(k2(x, y, z), x) + 
-2*k0(x, y, z)*Derivative(k2(x, y, z), z)*Derivative(c(x, y, z), x, z) + 
-k2(x, y, z)*Derivative(c(x, y, z), x)*Derivative(k0(x, y, z), (z, 2)) + 
-2*k2(x, y, z)*Derivative(c(x, y, z), z)*Derivative(k0(x, y, z), x, z) + 
-k2(x, y, z)*Derivative(c(x, y, z), (z, 2))*Derivative(k0(x, y, z), x) + 
-2*k2(x, y, z)*Derivative(k0(x, y, z), z)*Derivative(c(x, y, z), x, z) + 
-2*Derivative(c(x, y, z), x)*Derivative(k0(x, y, z), z)*
-Derivative(k2(x, y, z), z) + 2*Derivative(c(x, y, z), z)*
-Derivative(k0(x, y, z), x)*Derivative(k2(x, y, z), z) + 2*
-Derivative(c(x, y, z), z)*Derivative(k0(x, y, z), z)*
-Derivative(k2(x, y, z), x);
+bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x, (z, 2)) + bbn_ks_c(x, y, z)*
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x, (z, 2)) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), (z, 2)) + 2*
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x, z) + 
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), (z, 2))*Derivative(bbn_ks_k2(x, y, z), x) + 
+2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x, z) + 
+bbn_ks_k0(x, y, z)*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), x, (z, 2)) + 
+bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), (z, 2)) + 
+2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x, z) + 
+bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), (z, 2))*Derivative(bbn_ks_k2(x, y, z), x) + 
+2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k2(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), x, z) + 
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), (z, 2)) + 
+2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x, z) + 
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (z, 2))*Derivative(bbn_ks_k0(x, y, z), x) + 
+2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), x, z) + 
+2*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), z)*
+Derivative(bbn_ks_k2(x, y, z), z) + 2*Derivative(bbn_ks_c(x, y, z), z)*
+Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), z) + 2*
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), z)*
+Derivative(bbn_ks_k2(x, y, z), x);
 
     _dddgamma_D2D2D2D1D2[ijk]=
 /* mcode in progress ... */
@@ -2125,17 +2125,17 @@ Derivative(k2(x, y, z), x);
 // Derivative
 // c
 // k2
-2*c(x, y, z)*k2(x, y, z)*Derivative(k2(x, y, z), y, (z, 2)) + 2*
-c(x, y, z)*Derivative(k2(x, y, z), y)*Derivative(k2(x, y, z), (z, 2)) + 
-4*c(x, y, z)*Derivative(k2(x, y, z), z)*Derivative(k2(x, y, z), y, z) + 
-pow(k2(x, y, z), 2)*Derivative(c(x, y, z), y, (z, 2)) + 2*k2(x, y, z)*
-Derivative(c(x, y, z), y)*Derivative(k2(x, y, z), (z, 2)) + 4*
-k2(x, y, z)*Derivative(c(x, y, z), z)*Derivative(k2(x, y, z), y, z) + 
-2*k2(x, y, z)*Derivative(c(x, y, z), (z, 2))*Derivative(k2(x, y, z), y) + 
-4*k2(x, y, z)*Derivative(k2(x, y, z), z)*Derivative(c(x, y, z), y, z) + 
-2*Derivative(c(x, y, z), y)*pow(Derivative(k2(x, y, z), z), 2) + 4*
-Derivative(c(x, y, z), z)*Derivative(k2(x, y, z), y)*
-Derivative(k2(x, y, z), z);
+2*bbn_ks_c(x, y, z)*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k2(x, y, z), y, (z, 2)) + 2*
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), (z, 2)) + 
+4*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), y, z) + 
+pow(bbn_ks_k2(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), y, (z, 2)) + 2*bbn_ks_k2(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), (z, 2)) + 4*
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), y, z) + 
+2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (z, 2))*Derivative(bbn_ks_k2(x, y, z), y) + 
+4*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k2(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), y, z) + 
+2*Derivative(bbn_ks_c(x, y, z), y)*pow(Derivative(bbn_ks_k2(x, y, z), z), 2) + 4*
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), y)*
+Derivative(bbn_ks_k2(x, y, z), z);
 
     _dddgamma_D0D1D0D2D0[ijk]=
 /* mcode in progress ... */
@@ -2158,26 +2158,26 @@ Derivative(k2(x, y, z), z);
 // c
 // k0
 // k1
-c(x, y, z)*k0(x, y, z)*Derivative(k1(x, y, z), (x, 2), z) + c(x, y, z)*
-k1(x, y, z)*Derivative(k0(x, y, z), (x, 2), z) + 2*c(x, y, z)*
-Derivative(k0(x, y, z), x)*Derivative(k1(x, y, z), x, z) + c(x, y, z)*
-Derivative(k0(x, y, z), (x, 2))*Derivative(k1(x, y, z), z) + 
-c(x, y, z)*Derivative(k0(x, y, z), z)*Derivative(k1(x, y, z), (x, 2)) + 
-2*c(x, y, z)*Derivative(k1(x, y, z), x)*Derivative(k0(x, y, z), x, z) + 
-k0(x, y, z)*k1(x, y, z)*Derivative(c(x, y, z), (x, 2), z) + 2*
-k0(x, y, z)*Derivative(c(x, y, z), x)*Derivative(k1(x, y, z), x, z) + 
-k0(x, y, z)*Derivative(c(x, y, z), (x, 2))*Derivative(k1(x, y, z), z) + 
-k0(x, y, z)*Derivative(c(x, y, z), z)*Derivative(k1(x, y, z), (x, 2)) + 
-2*k0(x, y, z)*Derivative(k1(x, y, z), x)*Derivative(c(x, y, z), x, z) + 
-2*k1(x, y, z)*Derivative(c(x, y, z), x)*Derivative(k0(x, y, z), x, z) + 
-k1(x, y, z)*Derivative(c(x, y, z), (x, 2))*Derivative(k0(x, y, z), z) + 
-k1(x, y, z)*Derivative(c(x, y, z), z)*Derivative(k0(x, y, z), (x, 2)) + 
-2*k1(x, y, z)*Derivative(k0(x, y, z), x)*Derivative(c(x, y, z), x, z) + 
-2*Derivative(c(x, y, z), x)*Derivative(k0(x, y, z), x)*
-Derivative(k1(x, y, z), z) + 2*Derivative(c(x, y, z), x)*
-Derivative(k0(x, y, z), z)*Derivative(k1(x, y, z), x) + 2*
-Derivative(c(x, y, z), z)*Derivative(k0(x, y, z), x)*
-Derivative(k1(x, y, z), x);
+bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k1(x, y, z), (x, 2), z) + bbn_ks_c(x, y, z)*
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k0(x, y, z), (x, 2), z) + 2*bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), x, z) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), (x, 2))*Derivative(bbn_ks_k1(x, y, z), z) + 
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), (x, 2)) + 
+2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), x, z) + 
+bbn_ks_k0(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2), z) + 2*
+bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), x, z) + 
+bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2))*Derivative(bbn_ks_k1(x, y, z), z) + 
+bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), (x, 2)) + 
+2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), x, z) + 
+2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), x, z) + 
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2))*Derivative(bbn_ks_k0(x, y, z), z) + 
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), (x, 2)) + 
+2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), x, z) + 
+2*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), x)*
+Derivative(bbn_ks_k1(x, y, z), z) + 2*Derivative(bbn_ks_c(x, y, z), x)*
+Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x) + 2*
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x)*
+Derivative(bbn_ks_k1(x, y, z), x);
 
     _dddgamma_D1D1D2D2D0[ijk]=
 /* mcode in progress ... */
@@ -2194,17 +2194,17 @@ Derivative(k1(x, y, z), x);
 // Derivative
 // c
 // k1
-2*c(x, y, z)*k1(x, y, z)*Derivative(k1(x, y, z), x, (z, 2)) + 2*
-c(x, y, z)*Derivative(k1(x, y, z), x)*Derivative(k1(x, y, z), (z, 2)) + 
-4*c(x, y, z)*Derivative(k1(x, y, z), z)*Derivative(k1(x, y, z), x, z) + 
-pow(k1(x, y, z), 2)*Derivative(c(x, y, z), x, (z, 2)) + 2*k1(x, y, z)*
-Derivative(c(x, y, z), x)*Derivative(k1(x, y, z), (z, 2)) + 4*
-k1(x, y, z)*Derivative(c(x, y, z), z)*Derivative(k1(x, y, z), x, z) + 
-2*k1(x, y, z)*Derivative(c(x, y, z), (z, 2))*Derivative(k1(x, y, z), x) + 
-4*k1(x, y, z)*Derivative(k1(x, y, z), z)*Derivative(c(x, y, z), x, z) + 
-2*Derivative(c(x, y, z), x)*pow(Derivative(k1(x, y, z), z), 2) + 4*
-Derivative(c(x, y, z), z)*Derivative(k1(x, y, z), x)*
-Derivative(k1(x, y, z), z);
+2*bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x, (z, 2)) + 2*
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), (z, 2)) + 
+4*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x, z) + 
+pow(bbn_ks_k1(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), x, (z, 2)) + 2*bbn_ks_k1(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), (z, 2)) + 4*
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x, z) + 
+2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), (z, 2))*Derivative(bbn_ks_k1(x, y, z), x) + 
+4*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), x, z) + 
+2*Derivative(bbn_ks_c(x, y, z), x)*pow(Derivative(bbn_ks_k1(x, y, z), z), 2) + 4*
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x)*
+Derivative(bbn_ks_k1(x, y, z), z);
 
     _dddgamma_D0D2D0D2D1[ijk]=
 /* mcode in progress ... */
@@ -2233,36 +2233,36 @@ Derivative(k1(x, y, z), z);
 // c
 // k0
 // k2
-c(x, y, z)*k0(x, y, z)*Derivative(k2(x, y, z), x, y, z) + c(x, y, z)*
-k2(x, y, z)*Derivative(k0(x, y, z), x, y, z) + c(x, y, z)*
-Derivative(k0(x, y, z), x)*Derivative(k2(x, y, z), y, z) + c(x, y, z)*
-Derivative(k0(x, y, z), y)*Derivative(k2(x, y, z), x, z) + c(x, y, z)*
-Derivative(k0(x, y, z), z)*Derivative(k2(x, y, z), x, y) + c(x, y, z)*
-Derivative(k2(x, y, z), x)*Derivative(k0(x, y, z), y, z) + c(x, y, z)*
-Derivative(k2(x, y, z), y)*Derivative(k0(x, y, z), x, z) + c(x, y, z)*
-Derivative(k2(x, y, z), z)*Derivative(k0(x, y, z), x, y) + k0(x, y, z)*
-k2(x, y, z)*Derivative(c(x, y, z), x, y, z) + k0(x, y, z)*
-Derivative(c(x, y, z), x)*Derivative(k2(x, y, z), y, z) + k0(x, y, z)*
-Derivative(c(x, y, z), y)*Derivative(k2(x, y, z), x, z) + k0(x, y, z)*
-Derivative(c(x, y, z), z)*Derivative(k2(x, y, z), x, y) + k0(x, y, z)*
-Derivative(k2(x, y, z), x)*Derivative(c(x, y, z), y, z) + k0(x, y, z)*
-Derivative(k2(x, y, z), y)*Derivative(c(x, y, z), x, z) + k0(x, y, z)*
-Derivative(k2(x, y, z), z)*Derivative(c(x, y, z), x, y) + k2(x, y, z)*
-Derivative(c(x, y, z), x)*Derivative(k0(x, y, z), y, z) + k2(x, y, z)*
-Derivative(c(x, y, z), y)*Derivative(k0(x, y, z), x, z) + k2(x, y, z)*
-Derivative(c(x, y, z), z)*Derivative(k0(x, y, z), x, y) + k2(x, y, z)*
-Derivative(k0(x, y, z), x)*Derivative(c(x, y, z), y, z) + k2(x, y, z)*
-Derivative(k0(x, y, z), y)*Derivative(c(x, y, z), x, z) + k2(x, y, z)*
-Derivative(k0(x, y, z), z)*Derivative(c(x, y, z), x, y) + 
-Derivative(c(x, y, z), x)*Derivative(k0(x, y, z), y)*
-Derivative(k2(x, y, z), z) + Derivative(c(x, y, z), x)*
-Derivative(k0(x, y, z), z)*Derivative(k2(x, y, z), y) + 
-Derivative(c(x, y, z), y)*Derivative(k0(x, y, z), x)*
-Derivative(k2(x, y, z), z) + Derivative(c(x, y, z), y)*
-Derivative(k0(x, y, z), z)*Derivative(k2(x, y, z), x) + 
-Derivative(c(x, y, z), z)*Derivative(k0(x, y, z), x)*
-Derivative(k2(x, y, z), y) + Derivative(c(x, y, z), z)*
-Derivative(k0(x, y, z), y)*Derivative(k2(x, y, z), x);
+bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x, y, z) + bbn_ks_c(x, y, z)*
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x, y, z) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), y, z) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x, z) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x, y) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), y, z) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k2(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x, z) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k2(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x, y) + bbn_ks_k0(x, y, z)*
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), x, y, z) + bbn_ks_k0(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), y, z) + bbn_ks_k0(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x, z) + bbn_ks_k0(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x, y) + bbn_ks_k0(x, y, z)*
+Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), y, z) + bbn_ks_k0(x, y, z)*
+Derivative(bbn_ks_k2(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), x, z) + bbn_ks_k0(x, y, z)*
+Derivative(bbn_ks_k2(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), x, y) + bbn_ks_k2(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), y, z) + bbn_ks_k2(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x, z) + bbn_ks_k2(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x, y) + bbn_ks_k2(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), y, z) + bbn_ks_k2(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), x, z) + bbn_ks_k2(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), x, y) + 
+Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), y)*
+Derivative(bbn_ks_k2(x, y, z), z) + Derivative(bbn_ks_c(x, y, z), x)*
+Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), y) + 
+Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x)*
+Derivative(bbn_ks_k2(x, y, z), z) + Derivative(bbn_ks_c(x, y, z), y)*
+Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x) + 
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x)*
+Derivative(bbn_ks_k2(x, y, z), y) + Derivative(bbn_ks_c(x, y, z), z)*
+Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x);
 
     _dddgamma_D1D1D2D1D0[ijk]=
 /* mcode in progress ... */
@@ -2283,22 +2283,22 @@ Derivative(k0(x, y, z), y)*Derivative(k2(x, y, z), x);
 // Derivative
 // c
 // k1
-2*c(x, y, z)*k1(x, y, z)*Derivative(k1(x, y, z), x, y, z) + 2*
-c(x, y, z)*Derivative(k1(x, y, z), x)*Derivative(k1(x, y, z), y, z) + 
-2*c(x, y, z)*Derivative(k1(x, y, z), y)*Derivative(k1(x, y, z), x, z) + 
-2*c(x, y, z)*Derivative(k1(x, y, z), z)*Derivative(k1(x, y, z), x, y) + 
-pow(k1(x, y, z), 2)*Derivative(c(x, y, z), x, y, z) + 2*k1(x, y, z)*
-Derivative(c(x, y, z), x)*Derivative(k1(x, y, z), y, z) + 2*
-k1(x, y, z)*Derivative(c(x, y, z), y)*Derivative(k1(x, y, z), x, z) + 
-2*k1(x, y, z)*Derivative(c(x, y, z), z)*Derivative(k1(x, y, z), x, y) + 
-2*k1(x, y, z)*Derivative(k1(x, y, z), x)*Derivative(c(x, y, z), y, z) + 
-2*k1(x, y, z)*Derivative(k1(x, y, z), y)*Derivative(c(x, y, z), x, z) + 
-2*k1(x, y, z)*Derivative(k1(x, y, z), z)*Derivative(c(x, y, z), x, y) + 
-2*Derivative(c(x, y, z), x)*Derivative(k1(x, y, z), y)*
-Derivative(k1(x, y, z), z) + 2*Derivative(c(x, y, z), y)*
-Derivative(k1(x, y, z), x)*Derivative(k1(x, y, z), z) + 2*
-Derivative(c(x, y, z), z)*Derivative(k1(x, y, z), x)*
-Derivative(k1(x, y, z), y);
+2*bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x, y, z) + 2*
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), y, z) + 
+2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x, z) + 
+2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x, y) + 
+pow(bbn_ks_k1(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), x, y, z) + 2*bbn_ks_k1(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), y, z) + 2*
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x, z) + 
+2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x, y) + 
+2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), y, z) + 
+2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), x, z) + 
+2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), x, y) + 
+2*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), y)*
+Derivative(bbn_ks_k1(x, y, z), z) + 2*Derivative(bbn_ks_c(x, y, z), y)*
+Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), z) + 2*
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x)*
+Derivative(bbn_ks_k1(x, y, z), y);
 
     _dddgamma_D1D1D0D1D2[ijk]=
 /* mcode in progress ... */
@@ -2319,22 +2319,22 @@ Derivative(k1(x, y, z), y);
 // Derivative
 // c
 // k1
-2*c(x, y, z)*k1(x, y, z)*Derivative(k1(x, y, z), x, y, z) + 2*
-c(x, y, z)*Derivative(k1(x, y, z), x)*Derivative(k1(x, y, z), y, z) + 
-2*c(x, y, z)*Derivative(k1(x, y, z), y)*Derivative(k1(x, y, z), x, z) + 
-2*c(x, y, z)*Derivative(k1(x, y, z), z)*Derivative(k1(x, y, z), x, y) + 
-pow(k1(x, y, z), 2)*Derivative(c(x, y, z), x, y, z) + 2*k1(x, y, z)*
-Derivative(c(x, y, z), x)*Derivative(k1(x, y, z), y, z) + 2*
-k1(x, y, z)*Derivative(c(x, y, z), y)*Derivative(k1(x, y, z), x, z) + 
-2*k1(x, y, z)*Derivative(c(x, y, z), z)*Derivative(k1(x, y, z), x, y) + 
-2*k1(x, y, z)*Derivative(k1(x, y, z), x)*Derivative(c(x, y, z), y, z) + 
-2*k1(x, y, z)*Derivative(k1(x, y, z), y)*Derivative(c(x, y, z), x, z) + 
-2*k1(x, y, z)*Derivative(k1(x, y, z), z)*Derivative(c(x, y, z), x, y) + 
-2*Derivative(c(x, y, z), x)*Derivative(k1(x, y, z), y)*
-Derivative(k1(x, y, z), z) + 2*Derivative(c(x, y, z), y)*
-Derivative(k1(x, y, z), x)*Derivative(k1(x, y, z), z) + 2*
-Derivative(c(x, y, z), z)*Derivative(k1(x, y, z), x)*
-Derivative(k1(x, y, z), y);
+2*bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x, y, z) + 2*
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), y, z) + 
+2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x, z) + 
+2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x, y) + 
+pow(bbn_ks_k1(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), x, y, z) + 2*bbn_ks_k1(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), y, z) + 2*
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x, z) + 
+2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x, y) + 
+2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), y, z) + 
+2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), x, z) + 
+2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), x, y) + 
+2*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), y)*
+Derivative(bbn_ks_k1(x, y, z), z) + 2*Derivative(bbn_ks_c(x, y, z), y)*
+Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), z) + 2*
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x)*
+Derivative(bbn_ks_k1(x, y, z), y);
 
     _dddgamma_D0D2D1D1D0[ijk]=
 /* mcode in progress ... */
@@ -2357,26 +2357,26 @@ Derivative(k1(x, y, z), y);
 // c
 // k0
 // k2
-c(x, y, z)*k0(x, y, z)*Derivative(k2(x, y, z), x, (y, 2)) + c(x, y, z)*
-k2(x, y, z)*Derivative(k0(x, y, z), x, (y, 2)) + c(x, y, z)*
-Derivative(k0(x, y, z), x)*Derivative(k2(x, y, z), (y, 2)) + 2*
-c(x, y, z)*Derivative(k0(x, y, z), y)*Derivative(k2(x, y, z), x, y) + 
-c(x, y, z)*Derivative(k0(x, y, z), (y, 2))*Derivative(k2(x, y, z), x) + 
-2*c(x, y, z)*Derivative(k2(x, y, z), y)*Derivative(k0(x, y, z), x, y) + 
-k0(x, y, z)*k2(x, y, z)*Derivative(c(x, y, z), x, (y, 2)) + 
-k0(x, y, z)*Derivative(c(x, y, z), x)*Derivative(k2(x, y, z), (y, 2)) + 
-2*k0(x, y, z)*Derivative(c(x, y, z), y)*Derivative(k2(x, y, z), x, y) + 
-k0(x, y, z)*Derivative(c(x, y, z), (y, 2))*Derivative(k2(x, y, z), x) + 
-2*k0(x, y, z)*Derivative(k2(x, y, z), y)*Derivative(c(x, y, z), x, y) + 
-k2(x, y, z)*Derivative(c(x, y, z), x)*Derivative(k0(x, y, z), (y, 2)) + 
-2*k2(x, y, z)*Derivative(c(x, y, z), y)*Derivative(k0(x, y, z), x, y) + 
-k2(x, y, z)*Derivative(c(x, y, z), (y, 2))*Derivative(k0(x, y, z), x) + 
-2*k2(x, y, z)*Derivative(k0(x, y, z), y)*Derivative(c(x, y, z), x, y) + 
-2*Derivative(c(x, y, z), x)*Derivative(k0(x, y, z), y)*
-Derivative(k2(x, y, z), y) + 2*Derivative(c(x, y, z), y)*
-Derivative(k0(x, y, z), x)*Derivative(k2(x, y, z), y) + 2*
-Derivative(c(x, y, z), y)*Derivative(k0(x, y, z), y)*
-Derivative(k2(x, y, z), x);
+bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x, (y, 2)) + bbn_ks_c(x, y, z)*
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x, (y, 2)) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), (y, 2)) + 2*
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x, y) + 
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), (y, 2))*Derivative(bbn_ks_k2(x, y, z), x) + 
+2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x, y) + 
+bbn_ks_k0(x, y, z)*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), x, (y, 2)) + 
+bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), (y, 2)) + 
+2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x, y) + 
+bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), (y, 2))*Derivative(bbn_ks_k2(x, y, z), x) + 
+2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k2(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), x, y) + 
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), (y, 2)) + 
+2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x, y) + 
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (y, 2))*Derivative(bbn_ks_k0(x, y, z), x) + 
+2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), x, y) + 
+2*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), y)*
+Derivative(bbn_ks_k2(x, y, z), y) + 2*Derivative(bbn_ks_c(x, y, z), y)*
+Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), y) + 2*
+Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), y)*
+Derivative(bbn_ks_k2(x, y, z), x);
 
     _dddgamma_D1D1D1D0D1[ijk]=
 /* mcode in progress ... */
@@ -2393,17 +2393,17 @@ Derivative(k2(x, y, z), x);
 // Derivative
 // c
 // k1
-2*c(x, y, z)*k1(x, y, z)*Derivative(k1(x, y, z), x, (y, 2)) + 2*
-c(x, y, z)*Derivative(k1(x, y, z), x)*Derivative(k1(x, y, z), (y, 2)) + 
-4*c(x, y, z)*Derivative(k1(x, y, z), y)*Derivative(k1(x, y, z), x, y) + 
-pow(k1(x, y, z), 2)*Derivative(c(x, y, z), x, (y, 2)) + 2*k1(x, y, z)*
-Derivative(c(x, y, z), x)*Derivative(k1(x, y, z), (y, 2)) + 4*
-k1(x, y, z)*Derivative(c(x, y, z), y)*Derivative(k1(x, y, z), x, y) + 
-2*k1(x, y, z)*Derivative(c(x, y, z), (y, 2))*Derivative(k1(x, y, z), x) + 
-4*k1(x, y, z)*Derivative(k1(x, y, z), y)*Derivative(c(x, y, z), x, y) + 
-2*Derivative(c(x, y, z), x)*pow(Derivative(k1(x, y, z), y), 2) + 4*
-Derivative(c(x, y, z), y)*Derivative(k1(x, y, z), x)*
-Derivative(k1(x, y, z), y);
+2*bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x, (y, 2)) + 2*
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), (y, 2)) + 
+4*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x, y) + 
+pow(bbn_ks_k1(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), x, (y, 2)) + 2*bbn_ks_k1(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), (y, 2)) + 4*
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x, y) + 
+2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), (y, 2))*Derivative(bbn_ks_k1(x, y, z), x) + 
+4*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), x, y) + 
+2*Derivative(bbn_ks_c(x, y, z), x)*pow(Derivative(bbn_ks_k1(x, y, z), y), 2) + 4*
+Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x)*
+Derivative(bbn_ks_k1(x, y, z), y);
 
     _dddgamma_D0D0D2D1D1[ijk]=
 /* mcode in progress ... */
@@ -2420,17 +2420,17 @@ Derivative(k1(x, y, z), y);
 // Derivative
 // c
 // k0
-2*c(x, y, z)*k0(x, y, z)*Derivative(k0(x, y, z), (y, 2), z) + 4*
-c(x, y, z)*Derivative(k0(x, y, z), y)*Derivative(k0(x, y, z), y, z) + 
-2*c(x, y, z)*Derivative(k0(x, y, z), (y, 2))*Derivative(k0(x, y, z), z) + 
-pow(k0(x, y, z), 2)*Derivative(c(x, y, z), (y, 2), z) + 4*k0(x, y, z)*
-Derivative(c(x, y, z), y)*Derivative(k0(x, y, z), y, z) + 2*
-k0(x, y, z)*Derivative(c(x, y, z), (y, 2))*Derivative(k0(x, y, z), z) + 
-2*k0(x, y, z)*Derivative(c(x, y, z), z)*Derivative(k0(x, y, z), (y, 2)) + 
-4*k0(x, y, z)*Derivative(k0(x, y, z), y)*Derivative(c(x, y, z), y, z) + 
-4*Derivative(c(x, y, z), y)*Derivative(k0(x, y, z), y)*
-Derivative(k0(x, y, z), z) + 2*Derivative(c(x, y, z), z)*
-pow(Derivative(k0(x, y, z), y), 2);
+2*bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k0(x, y, z), (y, 2), z) + 4*
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), y, z) + 
+2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), (y, 2))*Derivative(bbn_ks_k0(x, y, z), z) + 
+pow(bbn_ks_k0(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), (y, 2), z) + 4*bbn_ks_k0(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), y, z) + 2*
+bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), (y, 2))*Derivative(bbn_ks_k0(x, y, z), z) + 
+2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), (y, 2)) + 
+4*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), y, z) + 
+4*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), y)*
+Derivative(bbn_ks_k0(x, y, z), z) + 2*Derivative(bbn_ks_c(x, y, z), z)*
+pow(Derivative(bbn_ks_k0(x, y, z), y), 2);
 
     _dddgamma_D0D1D2D1D2[ijk]=
 /* mcode in progress ... */
@@ -2453,26 +2453,26 @@ pow(Derivative(k0(x, y, z), y), 2);
 // c
 // k0
 // k1
-c(x, y, z)*k0(x, y, z)*Derivative(k1(x, y, z), y, (z, 2)) + c(x, y, z)*
-k1(x, y, z)*Derivative(k0(x, y, z), y, (z, 2)) + c(x, y, z)*
-Derivative(k0(x, y, z), y)*Derivative(k1(x, y, z), (z, 2)) + 2*
-c(x, y, z)*Derivative(k0(x, y, z), z)*Derivative(k1(x, y, z), y, z) + 
-c(x, y, z)*Derivative(k0(x, y, z), (z, 2))*Derivative(k1(x, y, z), y) + 
-2*c(x, y, z)*Derivative(k1(x, y, z), z)*Derivative(k0(x, y, z), y, z) + 
-k0(x, y, z)*k1(x, y, z)*Derivative(c(x, y, z), y, (z, 2)) + 
-k0(x, y, z)*Derivative(c(x, y, z), y)*Derivative(k1(x, y, z), (z, 2)) + 
-2*k0(x, y, z)*Derivative(c(x, y, z), z)*Derivative(k1(x, y, z), y, z) + 
-k0(x, y, z)*Derivative(c(x, y, z), (z, 2))*Derivative(k1(x, y, z), y) + 
-2*k0(x, y, z)*Derivative(k1(x, y, z), z)*Derivative(c(x, y, z), y, z) + 
-k1(x, y, z)*Derivative(c(x, y, z), y)*Derivative(k0(x, y, z), (z, 2)) + 
-2*k1(x, y, z)*Derivative(c(x, y, z), z)*Derivative(k0(x, y, z), y, z) + 
-k1(x, y, z)*Derivative(c(x, y, z), (z, 2))*Derivative(k0(x, y, z), y) + 
-2*k1(x, y, z)*Derivative(k0(x, y, z), z)*Derivative(c(x, y, z), y, z) + 
-2*Derivative(c(x, y, z), y)*Derivative(k0(x, y, z), z)*
-Derivative(k1(x, y, z), z) + 2*Derivative(c(x, y, z), z)*
-Derivative(k0(x, y, z), y)*Derivative(k1(x, y, z), z) + 2*
-Derivative(c(x, y, z), z)*Derivative(k0(x, y, z), z)*
-Derivative(k1(x, y, z), y);
+bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k1(x, y, z), y, (z, 2)) + bbn_ks_c(x, y, z)*
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k0(x, y, z), y, (z, 2)) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), (z, 2)) + 2*
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), y, z) + 
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), (z, 2))*Derivative(bbn_ks_k1(x, y, z), y) + 
+2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), y, z) + 
+bbn_ks_k0(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), y, (z, 2)) + 
+bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), (z, 2)) + 
+2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), y, z) + 
+bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), (z, 2))*Derivative(bbn_ks_k1(x, y, z), y) + 
+2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), y, z) + 
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), (z, 2)) + 
+2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), y, z) + 
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), (z, 2))*Derivative(bbn_ks_k0(x, y, z), y) + 
+2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), y, z) + 
+2*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), z)*
+Derivative(bbn_ks_k1(x, y, z), z) + 2*Derivative(bbn_ks_c(x, y, z), z)*
+Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), z) + 2*
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), z)*
+Derivative(bbn_ks_k1(x, y, z), y);
 
     _dddgamma_D0D0D0D1D1[ijk]=
 /* mcode in progress ... */
@@ -2489,17 +2489,17 @@ Derivative(k1(x, y, z), y);
 // Derivative
 // c
 // k0
-2*c(x, y, z)*k0(x, y, z)*Derivative(k0(x, y, z), x, (y, 2)) + 2*
-c(x, y, z)*Derivative(k0(x, y, z), x)*Derivative(k0(x, y, z), (y, 2)) + 
-4*c(x, y, z)*Derivative(k0(x, y, z), y)*Derivative(k0(x, y, z), x, y) + 
-pow(k0(x, y, z), 2)*Derivative(c(x, y, z), x, (y, 2)) + 2*k0(x, y, z)*
-Derivative(c(x, y, z), x)*Derivative(k0(x, y, z), (y, 2)) + 4*
-k0(x, y, z)*Derivative(c(x, y, z), y)*Derivative(k0(x, y, z), x, y) + 
-2*k0(x, y, z)*Derivative(c(x, y, z), (y, 2))*Derivative(k0(x, y, z), x) + 
-4*k0(x, y, z)*Derivative(k0(x, y, z), y)*Derivative(c(x, y, z), x, y) + 
-2*Derivative(c(x, y, z), x)*pow(Derivative(k0(x, y, z), y), 2) + 4*
-Derivative(c(x, y, z), y)*Derivative(k0(x, y, z), x)*
-Derivative(k0(x, y, z), y);
+2*bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x, (y, 2)) + 2*
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), (y, 2)) + 
+4*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x, y) + 
+pow(bbn_ks_k0(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), x, (y, 2)) + 2*bbn_ks_k0(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), (y, 2)) + 4*
+bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x, y) + 
+2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), (y, 2))*Derivative(bbn_ks_k0(x, y, z), x) + 
+4*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), x, y) + 
+2*Derivative(bbn_ks_c(x, y, z), x)*pow(Derivative(bbn_ks_k0(x, y, z), y), 2) + 4*
+Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x)*
+Derivative(bbn_ks_k0(x, y, z), y);
 
     _dddgamma_D2D2D1D2D1[ijk]=
 /* mcode in progress ... */
@@ -2516,17 +2516,17 @@ Derivative(k0(x, y, z), y);
 // Derivative
 // c
 // k2
-2*c(x, y, z)*k2(x, y, z)*Derivative(k2(x, y, z), (y, 2), z) + 4*
-c(x, y, z)*Derivative(k2(x, y, z), y)*Derivative(k2(x, y, z), y, z) + 
-2*c(x, y, z)*Derivative(k2(x, y, z), (y, 2))*Derivative(k2(x, y, z), z) + 
-pow(k2(x, y, z), 2)*Derivative(c(x, y, z), (y, 2), z) + 4*k2(x, y, z)*
-Derivative(c(x, y, z), y)*Derivative(k2(x, y, z), y, z) + 2*
-k2(x, y, z)*Derivative(c(x, y, z), (y, 2))*Derivative(k2(x, y, z), z) + 
-2*k2(x, y, z)*Derivative(c(x, y, z), z)*Derivative(k2(x, y, z), (y, 2)) + 
-4*k2(x, y, z)*Derivative(k2(x, y, z), y)*Derivative(c(x, y, z), y, z) + 
-4*Derivative(c(x, y, z), y)*Derivative(k2(x, y, z), y)*
-Derivative(k2(x, y, z), z) + 2*Derivative(c(x, y, z), z)*
-pow(Derivative(k2(x, y, z), y), 2);
+2*bbn_ks_c(x, y, z)*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k2(x, y, z), (y, 2), z) + 4*
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), y, z) + 
+2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), (y, 2))*Derivative(bbn_ks_k2(x, y, z), z) + 
+pow(bbn_ks_k2(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), (y, 2), z) + 4*bbn_ks_k2(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), y, z) + 2*
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (y, 2))*Derivative(bbn_ks_k2(x, y, z), z) + 
+2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), (y, 2)) + 
+4*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k2(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), y, z) + 
+4*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), y)*
+Derivative(bbn_ks_k2(x, y, z), z) + 2*Derivative(bbn_ks_c(x, y, z), z)*
+pow(Derivative(bbn_ks_k2(x, y, z), y), 2);
 
     _dddgamma_D1D1D1D2D2[ijk]=
 /* mcode in progress ... */
@@ -2543,17 +2543,17 @@ pow(Derivative(k2(x, y, z), y), 2);
 // Derivative
 // c
 // k1
-2*c(x, y, z)*k1(x, y, z)*Derivative(k1(x, y, z), y, (z, 2)) + 2*
-c(x, y, z)*Derivative(k1(x, y, z), y)*Derivative(k1(x, y, z), (z, 2)) + 
-4*c(x, y, z)*Derivative(k1(x, y, z), z)*Derivative(k1(x, y, z), y, z) + 
-pow(k1(x, y, z), 2)*Derivative(c(x, y, z), y, (z, 2)) + 2*k1(x, y, z)*
-Derivative(c(x, y, z), y)*Derivative(k1(x, y, z), (z, 2)) + 4*
-k1(x, y, z)*Derivative(c(x, y, z), z)*Derivative(k1(x, y, z), y, z) + 
-2*k1(x, y, z)*Derivative(c(x, y, z), (z, 2))*Derivative(k1(x, y, z), y) + 
-4*k1(x, y, z)*Derivative(k1(x, y, z), z)*Derivative(c(x, y, z), y, z) + 
-2*Derivative(c(x, y, z), y)*pow(Derivative(k1(x, y, z), z), 2) + 4*
-Derivative(c(x, y, z), z)*Derivative(k1(x, y, z), y)*
-Derivative(k1(x, y, z), z);
+2*bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k1(x, y, z), y, (z, 2)) + 2*
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), (z, 2)) + 
+4*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), y, z) + 
+pow(bbn_ks_k1(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), y, (z, 2)) + 2*bbn_ks_k1(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), (z, 2)) + 4*
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), y, z) + 
+2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), (z, 2))*Derivative(bbn_ks_k1(x, y, z), y) + 
+4*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), y, z) + 
+2*Derivative(bbn_ks_c(x, y, z), y)*pow(Derivative(bbn_ks_k1(x, y, z), z), 2) + 4*
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), y)*
+Derivative(bbn_ks_k1(x, y, z), z);
 
     _dddgamma_D2D2D2D2D1[ijk]=
 /* mcode in progress ... */
@@ -2570,17 +2570,17 @@ Derivative(k1(x, y, z), z);
 // Derivative
 // c
 // k2
-2*c(x, y, z)*k2(x, y, z)*Derivative(k2(x, y, z), y, (z, 2)) + 2*
-c(x, y, z)*Derivative(k2(x, y, z), y)*Derivative(k2(x, y, z), (z, 2)) + 
-4*c(x, y, z)*Derivative(k2(x, y, z), z)*Derivative(k2(x, y, z), y, z) + 
-pow(k2(x, y, z), 2)*Derivative(c(x, y, z), y, (z, 2)) + 2*k2(x, y, z)*
-Derivative(c(x, y, z), y)*Derivative(k2(x, y, z), (z, 2)) + 4*
-k2(x, y, z)*Derivative(c(x, y, z), z)*Derivative(k2(x, y, z), y, z) + 
-2*k2(x, y, z)*Derivative(c(x, y, z), (z, 2))*Derivative(k2(x, y, z), y) + 
-4*k2(x, y, z)*Derivative(k2(x, y, z), z)*Derivative(c(x, y, z), y, z) + 
-2*Derivative(c(x, y, z), y)*pow(Derivative(k2(x, y, z), z), 2) + 4*
-Derivative(c(x, y, z), z)*Derivative(k2(x, y, z), y)*
-Derivative(k2(x, y, z), z);
+2*bbn_ks_c(x, y, z)*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k2(x, y, z), y, (z, 2)) + 2*
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), (z, 2)) + 
+4*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), y, z) + 
+pow(bbn_ks_k2(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), y, (z, 2)) + 2*bbn_ks_k2(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), (z, 2)) + 4*
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), y, z) + 
+2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (z, 2))*Derivative(bbn_ks_k2(x, y, z), y) + 
+4*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k2(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), y, z) + 
+2*Derivative(bbn_ks_c(x, y, z), y)*pow(Derivative(bbn_ks_k2(x, y, z), z), 2) + 4*
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), y)*
+Derivative(bbn_ks_k2(x, y, z), z);
 
     _dddgamma_D2D2D1D0D0[ijk]=
 /* mcode in progress ... */
@@ -2597,17 +2597,17 @@ Derivative(k2(x, y, z), z);
 // Derivative
 // c
 // k2
-2*c(x, y, z)*k2(x, y, z)*Derivative(k2(x, y, z), (x, 2), y) + 4*
-c(x, y, z)*Derivative(k2(x, y, z), x)*Derivative(k2(x, y, z), x, y) + 
-2*c(x, y, z)*Derivative(k2(x, y, z), (x, 2))*Derivative(k2(x, y, z), y) + 
-pow(k2(x, y, z), 2)*Derivative(c(x, y, z), (x, 2), y) + 4*k2(x, y, z)*
-Derivative(c(x, y, z), x)*Derivative(k2(x, y, z), x, y) + 2*
-k2(x, y, z)*Derivative(c(x, y, z), (x, 2))*Derivative(k2(x, y, z), y) + 
-2*k2(x, y, z)*Derivative(c(x, y, z), y)*Derivative(k2(x, y, z), (x, 2)) + 
-4*k2(x, y, z)*Derivative(k2(x, y, z), x)*Derivative(c(x, y, z), x, y) + 
-4*Derivative(c(x, y, z), x)*Derivative(k2(x, y, z), x)*
-Derivative(k2(x, y, z), y) + 2*Derivative(c(x, y, z), y)*
-pow(Derivative(k2(x, y, z), x), 2);
+2*bbn_ks_c(x, y, z)*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k2(x, y, z), (x, 2), y) + 4*
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), x, y) + 
+2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), (x, 2))*Derivative(bbn_ks_k2(x, y, z), y) + 
+pow(bbn_ks_k2(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), (x, 2), y) + 4*bbn_ks_k2(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), x, y) + 2*
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2))*Derivative(bbn_ks_k2(x, y, z), y) + 
+2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), (x, 2)) + 
+4*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), x, y) + 
+4*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), x)*
+Derivative(bbn_ks_k2(x, y, z), y) + 2*Derivative(bbn_ks_c(x, y, z), y)*
+pow(Derivative(bbn_ks_k2(x, y, z), x), 2);
 
     _dddgamma_D0D1D2D1D1[ijk]=
 /* mcode in progress ... */
@@ -2630,26 +2630,26 @@ pow(Derivative(k2(x, y, z), x), 2);
 // c
 // k0
 // k1
-c(x, y, z)*k0(x, y, z)*Derivative(k1(x, y, z), (y, 2), z) + c(x, y, z)*
-k1(x, y, z)*Derivative(k0(x, y, z), (y, 2), z) + 2*c(x, y, z)*
-Derivative(k0(x, y, z), y)*Derivative(k1(x, y, z), y, z) + c(x, y, z)*
-Derivative(k0(x, y, z), (y, 2))*Derivative(k1(x, y, z), z) + 
-c(x, y, z)*Derivative(k0(x, y, z), z)*Derivative(k1(x, y, z), (y, 2)) + 
-2*c(x, y, z)*Derivative(k1(x, y, z), y)*Derivative(k0(x, y, z), y, z) + 
-k0(x, y, z)*k1(x, y, z)*Derivative(c(x, y, z), (y, 2), z) + 2*
-k0(x, y, z)*Derivative(c(x, y, z), y)*Derivative(k1(x, y, z), y, z) + 
-k0(x, y, z)*Derivative(c(x, y, z), (y, 2))*Derivative(k1(x, y, z), z) + 
-k0(x, y, z)*Derivative(c(x, y, z), z)*Derivative(k1(x, y, z), (y, 2)) + 
-2*k0(x, y, z)*Derivative(k1(x, y, z), y)*Derivative(c(x, y, z), y, z) + 
-2*k1(x, y, z)*Derivative(c(x, y, z), y)*Derivative(k0(x, y, z), y, z) + 
-k1(x, y, z)*Derivative(c(x, y, z), (y, 2))*Derivative(k0(x, y, z), z) + 
-k1(x, y, z)*Derivative(c(x, y, z), z)*Derivative(k0(x, y, z), (y, 2)) + 
-2*k1(x, y, z)*Derivative(k0(x, y, z), y)*Derivative(c(x, y, z), y, z) + 
-2*Derivative(c(x, y, z), y)*Derivative(k0(x, y, z), y)*
-Derivative(k1(x, y, z), z) + 2*Derivative(c(x, y, z), y)*
-Derivative(k0(x, y, z), z)*Derivative(k1(x, y, z), y) + 2*
-Derivative(c(x, y, z), z)*Derivative(k0(x, y, z), y)*
-Derivative(k1(x, y, z), y);
+bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k1(x, y, z), (y, 2), z) + bbn_ks_c(x, y, z)*
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k0(x, y, z), (y, 2), z) + 2*bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), y, z) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), (y, 2))*Derivative(bbn_ks_k1(x, y, z), z) + 
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), (y, 2)) + 
+2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), y, z) + 
+bbn_ks_k0(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), (y, 2), z) + 2*
+bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), y, z) + 
+bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), (y, 2))*Derivative(bbn_ks_k1(x, y, z), z) + 
+bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), (y, 2)) + 
+2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), y, z) + 
+2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), y, z) + 
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), (y, 2))*Derivative(bbn_ks_k0(x, y, z), z) + 
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), (y, 2)) + 
+2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), y, z) + 
+2*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), y)*
+Derivative(bbn_ks_k1(x, y, z), z) + 2*Derivative(bbn_ks_c(x, y, z), y)*
+Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), y) + 2*
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), y)*
+Derivative(bbn_ks_k1(x, y, z), y);
 
     _dddgamma_D1D1D2D2D2[ijk]=
 /* mcode in progress ... */
@@ -2662,12 +2662,12 @@ Derivative(k1(x, y, z), y);
 // Derivative
 // c
 // k1
-2*c(x, y, z)*k1(x, y, z)*Derivative(k1(x, y, z), (z, 3)) + 6*
-c(x, y, z)*Derivative(k1(x, y, z), z)*Derivative(k1(x, y, z), (z, 2)) + 
-pow(k1(x, y, z), 2)*Derivative(c(x, y, z), (z, 3)) + 6*k1(x, y, z)*
-Derivative(c(x, y, z), z)*Derivative(k1(x, y, z), (z, 2)) + 6*
-k1(x, y, z)*Derivative(c(x, y, z), (z, 2))*Derivative(k1(x, y, z), z) + 
-6*Derivative(c(x, y, z), z)*pow(Derivative(k1(x, y, z), z), 2);
+2*bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k1(x, y, z), (z, 3)) + 6*
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), (z, 2)) + 
+pow(bbn_ks_k1(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), (z, 3)) + 6*bbn_ks_k1(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), (z, 2)) + 6*
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), (z, 2))*Derivative(bbn_ks_k1(x, y, z), z) + 
+6*Derivative(bbn_ks_c(x, y, z), z)*pow(Derivative(bbn_ks_k1(x, y, z), z), 2);
 
     _dddgamma_D1D2D1D0D1[ijk]=
 /* mcode in progress ... */
@@ -2690,26 +2690,26 @@ k1(x, y, z)*Derivative(c(x, y, z), (z, 2))*Derivative(k1(x, y, z), z) +
 // c
 // k1
 // k2
-c(x, y, z)*k1(x, y, z)*Derivative(k2(x, y, z), x, (y, 2)) + c(x, y, z)*
-k2(x, y, z)*Derivative(k1(x, y, z), x, (y, 2)) + c(x, y, z)*
-Derivative(k1(x, y, z), x)*Derivative(k2(x, y, z), (y, 2)) + 2*
-c(x, y, z)*Derivative(k1(x, y, z), y)*Derivative(k2(x, y, z), x, y) + 
-c(x, y, z)*Derivative(k1(x, y, z), (y, 2))*Derivative(k2(x, y, z), x) + 
-2*c(x, y, z)*Derivative(k2(x, y, z), y)*Derivative(k1(x, y, z), x, y) + 
-k1(x, y, z)*k2(x, y, z)*Derivative(c(x, y, z), x, (y, 2)) + 
-k1(x, y, z)*Derivative(c(x, y, z), x)*Derivative(k2(x, y, z), (y, 2)) + 
-2*k1(x, y, z)*Derivative(c(x, y, z), y)*Derivative(k2(x, y, z), x, y) + 
-k1(x, y, z)*Derivative(c(x, y, z), (y, 2))*Derivative(k2(x, y, z), x) + 
-2*k1(x, y, z)*Derivative(k2(x, y, z), y)*Derivative(c(x, y, z), x, y) + 
-k2(x, y, z)*Derivative(c(x, y, z), x)*Derivative(k1(x, y, z), (y, 2)) + 
-2*k2(x, y, z)*Derivative(c(x, y, z), y)*Derivative(k1(x, y, z), x, y) + 
-k2(x, y, z)*Derivative(c(x, y, z), (y, 2))*Derivative(k1(x, y, z), x) + 
-2*k2(x, y, z)*Derivative(k1(x, y, z), y)*Derivative(c(x, y, z), x, y) + 
-2*Derivative(c(x, y, z), x)*Derivative(k1(x, y, z), y)*
-Derivative(k2(x, y, z), y) + 2*Derivative(c(x, y, z), y)*
-Derivative(k1(x, y, z), x)*Derivative(k2(x, y, z), y) + 2*
-Derivative(c(x, y, z), y)*Derivative(k1(x, y, z), y)*
-Derivative(k2(x, y, z), x);
+bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x, (y, 2)) + bbn_ks_c(x, y, z)*
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x, (y, 2)) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), (y, 2)) + 2*
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x, y) + 
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), (y, 2))*Derivative(bbn_ks_k2(x, y, z), x) + 
+2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x, y) + 
+bbn_ks_k1(x, y, z)*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), x, (y, 2)) + 
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), (y, 2)) + 
+2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x, y) + 
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), (y, 2))*Derivative(bbn_ks_k2(x, y, z), x) + 
+2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k2(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), x, y) + 
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), (y, 2)) + 
+2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x, y) + 
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (y, 2))*Derivative(bbn_ks_k1(x, y, z), x) + 
+2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), x, y) + 
+2*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), y)*
+Derivative(bbn_ks_k2(x, y, z), y) + 2*Derivative(bbn_ks_c(x, y, z), y)*
+Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), y) + 2*
+Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), y)*
+Derivative(bbn_ks_k2(x, y, z), x);
 
     _dddgamma_D0D1D1D1D0[ijk]=
 /* mcode in progress ... */
@@ -2732,26 +2732,26 @@ Derivative(k2(x, y, z), x);
 // c
 // k0
 // k1
-c(x, y, z)*k0(x, y, z)*Derivative(k1(x, y, z), x, (y, 2)) + c(x, y, z)*
-k1(x, y, z)*Derivative(k0(x, y, z), x, (y, 2)) + c(x, y, z)*
-Derivative(k0(x, y, z), x)*Derivative(k1(x, y, z), (y, 2)) + 2*
-c(x, y, z)*Derivative(k0(x, y, z), y)*Derivative(k1(x, y, z), x, y) + 
-c(x, y, z)*Derivative(k0(x, y, z), (y, 2))*Derivative(k1(x, y, z), x) + 
-2*c(x, y, z)*Derivative(k1(x, y, z), y)*Derivative(k0(x, y, z), x, y) + 
-k0(x, y, z)*k1(x, y, z)*Derivative(c(x, y, z), x, (y, 2)) + 
-k0(x, y, z)*Derivative(c(x, y, z), x)*Derivative(k1(x, y, z), (y, 2)) + 
-2*k0(x, y, z)*Derivative(c(x, y, z), y)*Derivative(k1(x, y, z), x, y) + 
-k0(x, y, z)*Derivative(c(x, y, z), (y, 2))*Derivative(k1(x, y, z), x) + 
-2*k0(x, y, z)*Derivative(k1(x, y, z), y)*Derivative(c(x, y, z), x, y) + 
-k1(x, y, z)*Derivative(c(x, y, z), x)*Derivative(k0(x, y, z), (y, 2)) + 
-2*k1(x, y, z)*Derivative(c(x, y, z), y)*Derivative(k0(x, y, z), x, y) + 
-k1(x, y, z)*Derivative(c(x, y, z), (y, 2))*Derivative(k0(x, y, z), x) + 
-2*k1(x, y, z)*Derivative(k0(x, y, z), y)*Derivative(c(x, y, z), x, y) + 
-2*Derivative(c(x, y, z), x)*Derivative(k0(x, y, z), y)*
-Derivative(k1(x, y, z), y) + 2*Derivative(c(x, y, z), y)*
-Derivative(k0(x, y, z), x)*Derivative(k1(x, y, z), y) + 2*
-Derivative(c(x, y, z), y)*Derivative(k0(x, y, z), y)*
-Derivative(k1(x, y, z), x);
+bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x, (y, 2)) + bbn_ks_c(x, y, z)*
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x, (y, 2)) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), (y, 2)) + 2*
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x, y) + 
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), (y, 2))*Derivative(bbn_ks_k1(x, y, z), x) + 
+2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x, y) + 
+bbn_ks_k0(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), x, (y, 2)) + 
+bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), (y, 2)) + 
+2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x, y) + 
+bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), (y, 2))*Derivative(bbn_ks_k1(x, y, z), x) + 
+2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), x, y) + 
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), (y, 2)) + 
+2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x, y) + 
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), (y, 2))*Derivative(bbn_ks_k0(x, y, z), x) + 
+2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), x, y) + 
+2*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), y)*
+Derivative(bbn_ks_k1(x, y, z), y) + 2*Derivative(bbn_ks_c(x, y, z), y)*
+Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), y) + 2*
+Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), y)*
+Derivative(bbn_ks_k1(x, y, z), x);
 
     _dddgamma_D2D2D2D0D1[ijk]=
 /* mcode in progress ... */
@@ -2772,22 +2772,22 @@ Derivative(k1(x, y, z), x);
 // Derivative
 // c
 // k2
-2*c(x, y, z)*k2(x, y, z)*Derivative(k2(x, y, z), x, y, z) + 2*
-c(x, y, z)*Derivative(k2(x, y, z), x)*Derivative(k2(x, y, z), y, z) + 
-2*c(x, y, z)*Derivative(k2(x, y, z), y)*Derivative(k2(x, y, z), x, z) + 
-2*c(x, y, z)*Derivative(k2(x, y, z), z)*Derivative(k2(x, y, z), x, y) + 
-pow(k2(x, y, z), 2)*Derivative(c(x, y, z), x, y, z) + 2*k2(x, y, z)*
-Derivative(c(x, y, z), x)*Derivative(k2(x, y, z), y, z) + 2*
-k2(x, y, z)*Derivative(c(x, y, z), y)*Derivative(k2(x, y, z), x, z) + 
-2*k2(x, y, z)*Derivative(c(x, y, z), z)*Derivative(k2(x, y, z), x, y) + 
-2*k2(x, y, z)*Derivative(k2(x, y, z), x)*Derivative(c(x, y, z), y, z) + 
-2*k2(x, y, z)*Derivative(k2(x, y, z), y)*Derivative(c(x, y, z), x, z) + 
-2*k2(x, y, z)*Derivative(k2(x, y, z), z)*Derivative(c(x, y, z), x, y) + 
-2*Derivative(c(x, y, z), x)*Derivative(k2(x, y, z), y)*
-Derivative(k2(x, y, z), z) + 2*Derivative(c(x, y, z), y)*
-Derivative(k2(x, y, z), x)*Derivative(k2(x, y, z), z) + 2*
-Derivative(c(x, y, z), z)*Derivative(k2(x, y, z), x)*
-Derivative(k2(x, y, z), y);
+2*bbn_ks_c(x, y, z)*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x, y, z) + 2*
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), y, z) + 
+2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x, z) + 
+2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x, y) + 
+pow(bbn_ks_k2(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), x, y, z) + 2*bbn_ks_k2(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), y, z) + 2*
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x, z) + 
+2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x, y) + 
+2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), y, z) + 
+2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k2(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), x, z) + 
+2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k2(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), x, y) + 
+2*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), y)*
+Derivative(bbn_ks_k2(x, y, z), z) + 2*Derivative(bbn_ks_c(x, y, z), y)*
+Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), z) + 2*
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x)*
+Derivative(bbn_ks_k2(x, y, z), y);
 
     _dddgamma_D1D2D2D2D2[ijk]=
 /* mcode in progress ... */
@@ -2804,17 +2804,17 @@ Derivative(k2(x, y, z), y);
 // c
 // k1
 // k2
-c(x, y, z)*k1(x, y, z)*Derivative(k2(x, y, z), (z, 3)) + c(x, y, z)*
-k2(x, y, z)*Derivative(k1(x, y, z), (z, 3)) + 3*c(x, y, z)*
-Derivative(k1(x, y, z), z)*Derivative(k2(x, y, z), (z, 2)) + 3*
-c(x, y, z)*Derivative(k1(x, y, z), (z, 2))*Derivative(k2(x, y, z), z) + 
-k1(x, y, z)*k2(x, y, z)*Derivative(c(x, y, z), (z, 3)) + 3*k1(x, y, z)*
-Derivative(c(x, y, z), z)*Derivative(k2(x, y, z), (z, 2)) + 3*
-k1(x, y, z)*Derivative(c(x, y, z), (z, 2))*Derivative(k2(x, y, z), z) + 
-3*k2(x, y, z)*Derivative(c(x, y, z), z)*Derivative(k1(x, y, z), (z, 2)) + 
-3*k2(x, y, z)*Derivative(c(x, y, z), (z, 2))*Derivative(k1(x, y, z), z) + 
-6*Derivative(c(x, y, z), z)*Derivative(k1(x, y, z), z)*
-Derivative(k2(x, y, z), z);
+bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k2(x, y, z), (z, 3)) + bbn_ks_c(x, y, z)*
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k1(x, y, z), (z, 3)) + 3*bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), (z, 2)) + 3*
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), (z, 2))*Derivative(bbn_ks_k2(x, y, z), z) + 
+bbn_ks_k1(x, y, z)*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (z, 3)) + 3*bbn_ks_k1(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), (z, 2)) + 3*
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), (z, 2))*Derivative(bbn_ks_k2(x, y, z), z) + 
+3*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), (z, 2)) + 
+3*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (z, 2))*Derivative(bbn_ks_k1(x, y, z), z) + 
+6*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), z)*
+Derivative(bbn_ks_k2(x, y, z), z);
 
     _dddgamma_D1D2D1D2D1[ijk]=
 /* mcode in progress ... */
@@ -2837,26 +2837,26 @@ Derivative(k2(x, y, z), z);
 // c
 // k1
 // k2
-c(x, y, z)*k1(x, y, z)*Derivative(k2(x, y, z), (y, 2), z) + c(x, y, z)*
-k2(x, y, z)*Derivative(k1(x, y, z), (y, 2), z) + 2*c(x, y, z)*
-Derivative(k1(x, y, z), y)*Derivative(k2(x, y, z), y, z) + c(x, y, z)*
-Derivative(k1(x, y, z), (y, 2))*Derivative(k2(x, y, z), z) + 
-c(x, y, z)*Derivative(k1(x, y, z), z)*Derivative(k2(x, y, z), (y, 2)) + 
-2*c(x, y, z)*Derivative(k2(x, y, z), y)*Derivative(k1(x, y, z), y, z) + 
-k1(x, y, z)*k2(x, y, z)*Derivative(c(x, y, z), (y, 2), z) + 2*
-k1(x, y, z)*Derivative(c(x, y, z), y)*Derivative(k2(x, y, z), y, z) + 
-k1(x, y, z)*Derivative(c(x, y, z), (y, 2))*Derivative(k2(x, y, z), z) + 
-k1(x, y, z)*Derivative(c(x, y, z), z)*Derivative(k2(x, y, z), (y, 2)) + 
-2*k1(x, y, z)*Derivative(k2(x, y, z), y)*Derivative(c(x, y, z), y, z) + 
-2*k2(x, y, z)*Derivative(c(x, y, z), y)*Derivative(k1(x, y, z), y, z) + 
-k2(x, y, z)*Derivative(c(x, y, z), (y, 2))*Derivative(k1(x, y, z), z) + 
-k2(x, y, z)*Derivative(c(x, y, z), z)*Derivative(k1(x, y, z), (y, 2)) + 
-2*k2(x, y, z)*Derivative(k1(x, y, z), y)*Derivative(c(x, y, z), y, z) + 
-2*Derivative(c(x, y, z), y)*Derivative(k1(x, y, z), y)*
-Derivative(k2(x, y, z), z) + 2*Derivative(c(x, y, z), y)*
-Derivative(k1(x, y, z), z)*Derivative(k2(x, y, z), y) + 2*
-Derivative(c(x, y, z), z)*Derivative(k1(x, y, z), y)*
-Derivative(k2(x, y, z), y);
+bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k2(x, y, z), (y, 2), z) + bbn_ks_c(x, y, z)*
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k1(x, y, z), (y, 2), z) + 2*bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), y, z) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k1(x, y, z), (y, 2))*Derivative(bbn_ks_k2(x, y, z), z) + 
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), (y, 2)) + 
+2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), y, z) + 
+bbn_ks_k1(x, y, z)*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (y, 2), z) + 2*
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), y, z) + 
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), (y, 2))*Derivative(bbn_ks_k2(x, y, z), z) + 
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), (y, 2)) + 
+2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k2(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), y, z) + 
+2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), y, z) + 
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (y, 2))*Derivative(bbn_ks_k1(x, y, z), z) + 
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), (y, 2)) + 
+2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), y, z) + 
+2*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), y)*
+Derivative(bbn_ks_k2(x, y, z), z) + 2*Derivative(bbn_ks_c(x, y, z), y)*
+Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), y) + 2*
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), y)*
+Derivative(bbn_ks_k2(x, y, z), y);
 
     _dddgamma_D2D2D0D2D1[ijk]=
 /* mcode in progress ... */
@@ -2877,22 +2877,22 @@ Derivative(k2(x, y, z), y);
 // Derivative
 // c
 // k2
-2*c(x, y, z)*k2(x, y, z)*Derivative(k2(x, y, z), x, y, z) + 2*
-c(x, y, z)*Derivative(k2(x, y, z), x)*Derivative(k2(x, y, z), y, z) + 
-2*c(x, y, z)*Derivative(k2(x, y, z), y)*Derivative(k2(x, y, z), x, z) + 
-2*c(x, y, z)*Derivative(k2(x, y, z), z)*Derivative(k2(x, y, z), x, y) + 
-pow(k2(x, y, z), 2)*Derivative(c(x, y, z), x, y, z) + 2*k2(x, y, z)*
-Derivative(c(x, y, z), x)*Derivative(k2(x, y, z), y, z) + 2*
-k2(x, y, z)*Derivative(c(x, y, z), y)*Derivative(k2(x, y, z), x, z) + 
-2*k2(x, y, z)*Derivative(c(x, y, z), z)*Derivative(k2(x, y, z), x, y) + 
-2*k2(x, y, z)*Derivative(k2(x, y, z), x)*Derivative(c(x, y, z), y, z) + 
-2*k2(x, y, z)*Derivative(k2(x, y, z), y)*Derivative(c(x, y, z), x, z) + 
-2*k2(x, y, z)*Derivative(k2(x, y, z), z)*Derivative(c(x, y, z), x, y) + 
-2*Derivative(c(x, y, z), x)*Derivative(k2(x, y, z), y)*
-Derivative(k2(x, y, z), z) + 2*Derivative(c(x, y, z), y)*
-Derivative(k2(x, y, z), x)*Derivative(k2(x, y, z), z) + 2*
-Derivative(c(x, y, z), z)*Derivative(k2(x, y, z), x)*
-Derivative(k2(x, y, z), y);
+2*bbn_ks_c(x, y, z)*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x, y, z) + 2*
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), y, z) + 
+2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x, z) + 
+2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x, y) + 
+pow(bbn_ks_k2(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), x, y, z) + 2*bbn_ks_k2(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), y, z) + 2*
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x, z) + 
+2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x, y) + 
+2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), y, z) + 
+2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k2(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), x, z) + 
+2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k2(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), x, y) + 
+2*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), y)*
+Derivative(bbn_ks_k2(x, y, z), z) + 2*Derivative(bbn_ks_c(x, y, z), y)*
+Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), z) + 2*
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x)*
+Derivative(bbn_ks_k2(x, y, z), y);
 
     _dddgamma_D1D1D2D1D2[ijk]=
 /* mcode in progress ... */
@@ -2909,17 +2909,17 @@ Derivative(k2(x, y, z), y);
 // Derivative
 // c
 // k1
-2*c(x, y, z)*k1(x, y, z)*Derivative(k1(x, y, z), y, (z, 2)) + 2*
-c(x, y, z)*Derivative(k1(x, y, z), y)*Derivative(k1(x, y, z), (z, 2)) + 
-4*c(x, y, z)*Derivative(k1(x, y, z), z)*Derivative(k1(x, y, z), y, z) + 
-pow(k1(x, y, z), 2)*Derivative(c(x, y, z), y, (z, 2)) + 2*k1(x, y, z)*
-Derivative(c(x, y, z), y)*Derivative(k1(x, y, z), (z, 2)) + 4*
-k1(x, y, z)*Derivative(c(x, y, z), z)*Derivative(k1(x, y, z), y, z) + 
-2*k1(x, y, z)*Derivative(c(x, y, z), (z, 2))*Derivative(k1(x, y, z), y) + 
-4*k1(x, y, z)*Derivative(k1(x, y, z), z)*Derivative(c(x, y, z), y, z) + 
-2*Derivative(c(x, y, z), y)*pow(Derivative(k1(x, y, z), z), 2) + 4*
-Derivative(c(x, y, z), z)*Derivative(k1(x, y, z), y)*
-Derivative(k1(x, y, z), z);
+2*bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k1(x, y, z), y, (z, 2)) + 2*
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), (z, 2)) + 
+4*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), y, z) + 
+pow(bbn_ks_k1(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), y, (z, 2)) + 2*bbn_ks_k1(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), (z, 2)) + 4*
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), y, z) + 
+2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), (z, 2))*Derivative(bbn_ks_k1(x, y, z), y) + 
+4*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), y, z) + 
+2*Derivative(bbn_ks_c(x, y, z), y)*pow(Derivative(bbn_ks_k1(x, y, z), z), 2) + 4*
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), y)*
+Derivative(bbn_ks_k1(x, y, z), z);
 
     _dddgamma_D1D2D2D1D0[ijk]=
 /* mcode in progress ... */
@@ -2948,36 +2948,36 @@ Derivative(k1(x, y, z), z);
 // c
 // k1
 // k2
-c(x, y, z)*k1(x, y, z)*Derivative(k2(x, y, z), x, y, z) + c(x, y, z)*
-k2(x, y, z)*Derivative(k1(x, y, z), x, y, z) + c(x, y, z)*
-Derivative(k1(x, y, z), x)*Derivative(k2(x, y, z), y, z) + c(x, y, z)*
-Derivative(k1(x, y, z), y)*Derivative(k2(x, y, z), x, z) + c(x, y, z)*
-Derivative(k1(x, y, z), z)*Derivative(k2(x, y, z), x, y) + c(x, y, z)*
-Derivative(k2(x, y, z), x)*Derivative(k1(x, y, z), y, z) + c(x, y, z)*
-Derivative(k2(x, y, z), y)*Derivative(k1(x, y, z), x, z) + c(x, y, z)*
-Derivative(k2(x, y, z), z)*Derivative(k1(x, y, z), x, y) + k1(x, y, z)*
-k2(x, y, z)*Derivative(c(x, y, z), x, y, z) + k1(x, y, z)*
-Derivative(c(x, y, z), x)*Derivative(k2(x, y, z), y, z) + k1(x, y, z)*
-Derivative(c(x, y, z), y)*Derivative(k2(x, y, z), x, z) + k1(x, y, z)*
-Derivative(c(x, y, z), z)*Derivative(k2(x, y, z), x, y) + k1(x, y, z)*
-Derivative(k2(x, y, z), x)*Derivative(c(x, y, z), y, z) + k1(x, y, z)*
-Derivative(k2(x, y, z), y)*Derivative(c(x, y, z), x, z) + k1(x, y, z)*
-Derivative(k2(x, y, z), z)*Derivative(c(x, y, z), x, y) + k2(x, y, z)*
-Derivative(c(x, y, z), x)*Derivative(k1(x, y, z), y, z) + k2(x, y, z)*
-Derivative(c(x, y, z), y)*Derivative(k1(x, y, z), x, z) + k2(x, y, z)*
-Derivative(c(x, y, z), z)*Derivative(k1(x, y, z), x, y) + k2(x, y, z)*
-Derivative(k1(x, y, z), x)*Derivative(c(x, y, z), y, z) + k2(x, y, z)*
-Derivative(k1(x, y, z), y)*Derivative(c(x, y, z), x, z) + k2(x, y, z)*
-Derivative(k1(x, y, z), z)*Derivative(c(x, y, z), x, y) + 
-Derivative(c(x, y, z), x)*Derivative(k1(x, y, z), y)*
-Derivative(k2(x, y, z), z) + Derivative(c(x, y, z), x)*
-Derivative(k1(x, y, z), z)*Derivative(k2(x, y, z), y) + 
-Derivative(c(x, y, z), y)*Derivative(k1(x, y, z), x)*
-Derivative(k2(x, y, z), z) + Derivative(c(x, y, z), y)*
-Derivative(k1(x, y, z), z)*Derivative(k2(x, y, z), x) + 
-Derivative(c(x, y, z), z)*Derivative(k1(x, y, z), x)*
-Derivative(k2(x, y, z), y) + Derivative(c(x, y, z), z)*
-Derivative(k1(x, y, z), y)*Derivative(k2(x, y, z), x);
+bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x, y, z) + bbn_ks_c(x, y, z)*
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x, y, z) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), y, z) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x, z) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x, y) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), y, z) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k2(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x, z) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k2(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x, y) + bbn_ks_k1(x, y, z)*
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), x, y, z) + bbn_ks_k1(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), y, z) + bbn_ks_k1(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x, z) + bbn_ks_k1(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x, y) + bbn_ks_k1(x, y, z)*
+Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), y, z) + bbn_ks_k1(x, y, z)*
+Derivative(bbn_ks_k2(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), x, z) + bbn_ks_k1(x, y, z)*
+Derivative(bbn_ks_k2(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), x, y) + bbn_ks_k2(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), y, z) + bbn_ks_k2(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x, z) + bbn_ks_k2(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x, y) + bbn_ks_k2(x, y, z)*
+Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), y, z) + bbn_ks_k2(x, y, z)*
+Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), x, z) + bbn_ks_k2(x, y, z)*
+Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), x, y) + 
+Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), y)*
+Derivative(bbn_ks_k2(x, y, z), z) + Derivative(bbn_ks_c(x, y, z), x)*
+Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), y) + 
+Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x)*
+Derivative(bbn_ks_k2(x, y, z), z) + Derivative(bbn_ks_c(x, y, z), y)*
+Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x) + 
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x)*
+Derivative(bbn_ks_k2(x, y, z), y) + Derivative(bbn_ks_c(x, y, z), z)*
+Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x);
 
     _dddgamma_D1D2D0D0D1[ijk]=
 /* mcode in progress ... */
@@ -3000,26 +3000,26 @@ Derivative(k1(x, y, z), y)*Derivative(k2(x, y, z), x);
 // c
 // k1
 // k2
-c(x, y, z)*k1(x, y, z)*Derivative(k2(x, y, z), (x, 2), y) + c(x, y, z)*
-k2(x, y, z)*Derivative(k1(x, y, z), (x, 2), y) + 2*c(x, y, z)*
-Derivative(k1(x, y, z), x)*Derivative(k2(x, y, z), x, y) + c(x, y, z)*
-Derivative(k1(x, y, z), (x, 2))*Derivative(k2(x, y, z), y) + 
-c(x, y, z)*Derivative(k1(x, y, z), y)*Derivative(k2(x, y, z), (x, 2)) + 
-2*c(x, y, z)*Derivative(k2(x, y, z), x)*Derivative(k1(x, y, z), x, y) + 
-k1(x, y, z)*k2(x, y, z)*Derivative(c(x, y, z), (x, 2), y) + 2*
-k1(x, y, z)*Derivative(c(x, y, z), x)*Derivative(k2(x, y, z), x, y) + 
-k1(x, y, z)*Derivative(c(x, y, z), (x, 2))*Derivative(k2(x, y, z), y) + 
-k1(x, y, z)*Derivative(c(x, y, z), y)*Derivative(k2(x, y, z), (x, 2)) + 
-2*k1(x, y, z)*Derivative(k2(x, y, z), x)*Derivative(c(x, y, z), x, y) + 
-2*k2(x, y, z)*Derivative(c(x, y, z), x)*Derivative(k1(x, y, z), x, y) + 
-k2(x, y, z)*Derivative(c(x, y, z), (x, 2))*Derivative(k1(x, y, z), y) + 
-k2(x, y, z)*Derivative(c(x, y, z), y)*Derivative(k1(x, y, z), (x, 2)) + 
-2*k2(x, y, z)*Derivative(k1(x, y, z), x)*Derivative(c(x, y, z), x, y) + 
-2*Derivative(c(x, y, z), x)*Derivative(k1(x, y, z), x)*
-Derivative(k2(x, y, z), y) + 2*Derivative(c(x, y, z), x)*
-Derivative(k1(x, y, z), y)*Derivative(k2(x, y, z), x) + 2*
-Derivative(c(x, y, z), y)*Derivative(k1(x, y, z), x)*
-Derivative(k2(x, y, z), x);
+bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k2(x, y, z), (x, 2), y) + bbn_ks_c(x, y, z)*
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k1(x, y, z), (x, 2), y) + 2*bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), x, y) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k1(x, y, z), (x, 2))*Derivative(bbn_ks_k2(x, y, z), y) + 
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), (x, 2)) + 
+2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), x, y) + 
+bbn_ks_k1(x, y, z)*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2), y) + 2*
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), x, y) + 
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2))*Derivative(bbn_ks_k2(x, y, z), y) + 
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), (x, 2)) + 
+2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), x, y) + 
+2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), x, y) + 
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2))*Derivative(bbn_ks_k1(x, y, z), y) + 
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), (x, 2)) + 
+2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), x, y) + 
+2*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), x)*
+Derivative(bbn_ks_k2(x, y, z), y) + 2*Derivative(bbn_ks_c(x, y, z), x)*
+Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x) + 2*
+Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x)*
+Derivative(bbn_ks_k2(x, y, z), x);
 
     _dddgamma_D0D2D0D1D1[ijk]=
 /* mcode in progress ... */
@@ -3042,26 +3042,26 @@ Derivative(k2(x, y, z), x);
 // c
 // k0
 // k2
-c(x, y, z)*k0(x, y, z)*Derivative(k2(x, y, z), x, (y, 2)) + c(x, y, z)*
-k2(x, y, z)*Derivative(k0(x, y, z), x, (y, 2)) + c(x, y, z)*
-Derivative(k0(x, y, z), x)*Derivative(k2(x, y, z), (y, 2)) + 2*
-c(x, y, z)*Derivative(k0(x, y, z), y)*Derivative(k2(x, y, z), x, y) + 
-c(x, y, z)*Derivative(k0(x, y, z), (y, 2))*Derivative(k2(x, y, z), x) + 
-2*c(x, y, z)*Derivative(k2(x, y, z), y)*Derivative(k0(x, y, z), x, y) + 
-k0(x, y, z)*k2(x, y, z)*Derivative(c(x, y, z), x, (y, 2)) + 
-k0(x, y, z)*Derivative(c(x, y, z), x)*Derivative(k2(x, y, z), (y, 2)) + 
-2*k0(x, y, z)*Derivative(c(x, y, z), y)*Derivative(k2(x, y, z), x, y) + 
-k0(x, y, z)*Derivative(c(x, y, z), (y, 2))*Derivative(k2(x, y, z), x) + 
-2*k0(x, y, z)*Derivative(k2(x, y, z), y)*Derivative(c(x, y, z), x, y) + 
-k2(x, y, z)*Derivative(c(x, y, z), x)*Derivative(k0(x, y, z), (y, 2)) + 
-2*k2(x, y, z)*Derivative(c(x, y, z), y)*Derivative(k0(x, y, z), x, y) + 
-k2(x, y, z)*Derivative(c(x, y, z), (y, 2))*Derivative(k0(x, y, z), x) + 
-2*k2(x, y, z)*Derivative(k0(x, y, z), y)*Derivative(c(x, y, z), x, y) + 
-2*Derivative(c(x, y, z), x)*Derivative(k0(x, y, z), y)*
-Derivative(k2(x, y, z), y) + 2*Derivative(c(x, y, z), y)*
-Derivative(k0(x, y, z), x)*Derivative(k2(x, y, z), y) + 2*
-Derivative(c(x, y, z), y)*Derivative(k0(x, y, z), y)*
-Derivative(k2(x, y, z), x);
+bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x, (y, 2)) + bbn_ks_c(x, y, z)*
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x, (y, 2)) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), (y, 2)) + 2*
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x, y) + 
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), (y, 2))*Derivative(bbn_ks_k2(x, y, z), x) + 
+2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x, y) + 
+bbn_ks_k0(x, y, z)*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), x, (y, 2)) + 
+bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), (y, 2)) + 
+2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x, y) + 
+bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), (y, 2))*Derivative(bbn_ks_k2(x, y, z), x) + 
+2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k2(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), x, y) + 
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), (y, 2)) + 
+2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x, y) + 
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (y, 2))*Derivative(bbn_ks_k0(x, y, z), x) + 
+2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), x, y) + 
+2*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), y)*
+Derivative(bbn_ks_k2(x, y, z), y) + 2*Derivative(bbn_ks_c(x, y, z), y)*
+Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), y) + 2*
+Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), y)*
+Derivative(bbn_ks_k2(x, y, z), x);
 
     _dddgamma_D0D2D1D0D1[ijk]=
 /* mcode in progress ... */
@@ -3084,26 +3084,26 @@ Derivative(k2(x, y, z), x);
 // c
 // k0
 // k2
-c(x, y, z)*k0(x, y, z)*Derivative(k2(x, y, z), x, (y, 2)) + c(x, y, z)*
-k2(x, y, z)*Derivative(k0(x, y, z), x, (y, 2)) + c(x, y, z)*
-Derivative(k0(x, y, z), x)*Derivative(k2(x, y, z), (y, 2)) + 2*
-c(x, y, z)*Derivative(k0(x, y, z), y)*Derivative(k2(x, y, z), x, y) + 
-c(x, y, z)*Derivative(k0(x, y, z), (y, 2))*Derivative(k2(x, y, z), x) + 
-2*c(x, y, z)*Derivative(k2(x, y, z), y)*Derivative(k0(x, y, z), x, y) + 
-k0(x, y, z)*k2(x, y, z)*Derivative(c(x, y, z), x, (y, 2)) + 
-k0(x, y, z)*Derivative(c(x, y, z), x)*Derivative(k2(x, y, z), (y, 2)) + 
-2*k0(x, y, z)*Derivative(c(x, y, z), y)*Derivative(k2(x, y, z), x, y) + 
-k0(x, y, z)*Derivative(c(x, y, z), (y, 2))*Derivative(k2(x, y, z), x) + 
-2*k0(x, y, z)*Derivative(k2(x, y, z), y)*Derivative(c(x, y, z), x, y) + 
-k2(x, y, z)*Derivative(c(x, y, z), x)*Derivative(k0(x, y, z), (y, 2)) + 
-2*k2(x, y, z)*Derivative(c(x, y, z), y)*Derivative(k0(x, y, z), x, y) + 
-k2(x, y, z)*Derivative(c(x, y, z), (y, 2))*Derivative(k0(x, y, z), x) + 
-2*k2(x, y, z)*Derivative(k0(x, y, z), y)*Derivative(c(x, y, z), x, y) + 
-2*Derivative(c(x, y, z), x)*Derivative(k0(x, y, z), y)*
-Derivative(k2(x, y, z), y) + 2*Derivative(c(x, y, z), y)*
-Derivative(k0(x, y, z), x)*Derivative(k2(x, y, z), y) + 2*
-Derivative(c(x, y, z), y)*Derivative(k0(x, y, z), y)*
-Derivative(k2(x, y, z), x);
+bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x, (y, 2)) + bbn_ks_c(x, y, z)*
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x, (y, 2)) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), (y, 2)) + 2*
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x, y) + 
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), (y, 2))*Derivative(bbn_ks_k2(x, y, z), x) + 
+2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x, y) + 
+bbn_ks_k0(x, y, z)*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), x, (y, 2)) + 
+bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), (y, 2)) + 
+2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x, y) + 
+bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), (y, 2))*Derivative(bbn_ks_k2(x, y, z), x) + 
+2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k2(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), x, y) + 
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), (y, 2)) + 
+2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x, y) + 
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (y, 2))*Derivative(bbn_ks_k0(x, y, z), x) + 
+2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), x, y) + 
+2*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), y)*
+Derivative(bbn_ks_k2(x, y, z), y) + 2*Derivative(bbn_ks_c(x, y, z), y)*
+Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), y) + 2*
+Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), y)*
+Derivative(bbn_ks_k2(x, y, z), x);
 
     _dddgamma_D0D0D0D1D2[ijk]=
 /* mcode in progress ... */
@@ -3124,22 +3124,22 @@ Derivative(k2(x, y, z), x);
 // Derivative
 // c
 // k0
-2*c(x, y, z)*k0(x, y, z)*Derivative(k0(x, y, z), x, y, z) + 2*
-c(x, y, z)*Derivative(k0(x, y, z), x)*Derivative(k0(x, y, z), y, z) + 
-2*c(x, y, z)*Derivative(k0(x, y, z), y)*Derivative(k0(x, y, z), x, z) + 
-2*c(x, y, z)*Derivative(k0(x, y, z), z)*Derivative(k0(x, y, z), x, y) + 
-pow(k0(x, y, z), 2)*Derivative(c(x, y, z), x, y, z) + 2*k0(x, y, z)*
-Derivative(c(x, y, z), x)*Derivative(k0(x, y, z), y, z) + 2*
-k0(x, y, z)*Derivative(c(x, y, z), y)*Derivative(k0(x, y, z), x, z) + 
-2*k0(x, y, z)*Derivative(c(x, y, z), z)*Derivative(k0(x, y, z), x, y) + 
-2*k0(x, y, z)*Derivative(k0(x, y, z), x)*Derivative(c(x, y, z), y, z) + 
-2*k0(x, y, z)*Derivative(k0(x, y, z), y)*Derivative(c(x, y, z), x, z) + 
-2*k0(x, y, z)*Derivative(k0(x, y, z), z)*Derivative(c(x, y, z), x, y) + 
-2*Derivative(c(x, y, z), x)*Derivative(k0(x, y, z), y)*
-Derivative(k0(x, y, z), z) + 2*Derivative(c(x, y, z), y)*
-Derivative(k0(x, y, z), x)*Derivative(k0(x, y, z), z) + 2*
-Derivative(c(x, y, z), z)*Derivative(k0(x, y, z), x)*
-Derivative(k0(x, y, z), y);
+2*bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x, y, z) + 2*
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), y, z) + 
+2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x, z) + 
+2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x, y) + 
+pow(bbn_ks_k0(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), x, y, z) + 2*bbn_ks_k0(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), y, z) + 2*
+bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x, z) + 
+2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x, y) + 
+2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), y, z) + 
+2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), x, z) + 
+2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), x, y) + 
+2*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), y)*
+Derivative(bbn_ks_k0(x, y, z), z) + 2*Derivative(bbn_ks_c(x, y, z), y)*
+Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), z) + 2*
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x)*
+Derivative(bbn_ks_k0(x, y, z), y);
 
     _dddgamma_D0D0D2D1D2[ijk]=
 /* mcode in progress ... */
@@ -3156,17 +3156,17 @@ Derivative(k0(x, y, z), y);
 // Derivative
 // c
 // k0
-2*c(x, y, z)*k0(x, y, z)*Derivative(k0(x, y, z), y, (z, 2)) + 2*
-c(x, y, z)*Derivative(k0(x, y, z), y)*Derivative(k0(x, y, z), (z, 2)) + 
-4*c(x, y, z)*Derivative(k0(x, y, z), z)*Derivative(k0(x, y, z), y, z) + 
-pow(k0(x, y, z), 2)*Derivative(c(x, y, z), y, (z, 2)) + 2*k0(x, y, z)*
-Derivative(c(x, y, z), y)*Derivative(k0(x, y, z), (z, 2)) + 4*
-k0(x, y, z)*Derivative(c(x, y, z), z)*Derivative(k0(x, y, z), y, z) + 
-2*k0(x, y, z)*Derivative(c(x, y, z), (z, 2))*Derivative(k0(x, y, z), y) + 
-4*k0(x, y, z)*Derivative(k0(x, y, z), z)*Derivative(c(x, y, z), y, z) + 
-2*Derivative(c(x, y, z), y)*pow(Derivative(k0(x, y, z), z), 2) + 4*
-Derivative(c(x, y, z), z)*Derivative(k0(x, y, z), y)*
-Derivative(k0(x, y, z), z);
+2*bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k0(x, y, z), y, (z, 2)) + 2*
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), (z, 2)) + 
+4*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), y, z) + 
+pow(bbn_ks_k0(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), y, (z, 2)) + 2*bbn_ks_k0(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), (z, 2)) + 4*
+bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), y, z) + 
+2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), (z, 2))*Derivative(bbn_ks_k0(x, y, z), y) + 
+4*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), y, z) + 
+2*Derivative(bbn_ks_c(x, y, z), y)*pow(Derivative(bbn_ks_k0(x, y, z), z), 2) + 4*
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), y)*
+Derivative(bbn_ks_k0(x, y, z), z);
 
     _dddgamma_D0D1D0D1D0[ijk]=
 /* mcode in progress ... */
@@ -3189,26 +3189,26 @@ Derivative(k0(x, y, z), z);
 // c
 // k0
 // k1
-c(x, y, z)*k0(x, y, z)*Derivative(k1(x, y, z), (x, 2), y) + c(x, y, z)*
-k1(x, y, z)*Derivative(k0(x, y, z), (x, 2), y) + 2*c(x, y, z)*
-Derivative(k0(x, y, z), x)*Derivative(k1(x, y, z), x, y) + c(x, y, z)*
-Derivative(k0(x, y, z), (x, 2))*Derivative(k1(x, y, z), y) + 
-c(x, y, z)*Derivative(k0(x, y, z), y)*Derivative(k1(x, y, z), (x, 2)) + 
-2*c(x, y, z)*Derivative(k1(x, y, z), x)*Derivative(k0(x, y, z), x, y) + 
-k0(x, y, z)*k1(x, y, z)*Derivative(c(x, y, z), (x, 2), y) + 2*
-k0(x, y, z)*Derivative(c(x, y, z), x)*Derivative(k1(x, y, z), x, y) + 
-k0(x, y, z)*Derivative(c(x, y, z), (x, 2))*Derivative(k1(x, y, z), y) + 
-k0(x, y, z)*Derivative(c(x, y, z), y)*Derivative(k1(x, y, z), (x, 2)) + 
-2*k0(x, y, z)*Derivative(k1(x, y, z), x)*Derivative(c(x, y, z), x, y) + 
-2*k1(x, y, z)*Derivative(c(x, y, z), x)*Derivative(k0(x, y, z), x, y) + 
-k1(x, y, z)*Derivative(c(x, y, z), (x, 2))*Derivative(k0(x, y, z), y) + 
-k1(x, y, z)*Derivative(c(x, y, z), y)*Derivative(k0(x, y, z), (x, 2)) + 
-2*k1(x, y, z)*Derivative(k0(x, y, z), x)*Derivative(c(x, y, z), x, y) + 
-2*Derivative(c(x, y, z), x)*Derivative(k0(x, y, z), x)*
-Derivative(k1(x, y, z), y) + 2*Derivative(c(x, y, z), x)*
-Derivative(k0(x, y, z), y)*Derivative(k1(x, y, z), x) + 2*
-Derivative(c(x, y, z), y)*Derivative(k0(x, y, z), x)*
-Derivative(k1(x, y, z), x);
+bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k1(x, y, z), (x, 2), y) + bbn_ks_c(x, y, z)*
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k0(x, y, z), (x, 2), y) + 2*bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), x, y) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), (x, 2))*Derivative(bbn_ks_k1(x, y, z), y) + 
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), (x, 2)) + 
+2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), x, y) + 
+bbn_ks_k0(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2), y) + 2*
+bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), x, y) + 
+bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2))*Derivative(bbn_ks_k1(x, y, z), y) + 
+bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), (x, 2)) + 
+2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), x, y) + 
+2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), x, y) + 
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2))*Derivative(bbn_ks_k0(x, y, z), y) + 
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), (x, 2)) + 
+2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), x, y) + 
+2*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), x)*
+Derivative(bbn_ks_k1(x, y, z), y) + 2*Derivative(bbn_ks_c(x, y, z), x)*
+Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x) + 2*
+Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x)*
+Derivative(bbn_ks_k1(x, y, z), x);
 
     _dddgamma_D1D2D1D0D0[ijk]=
 /* mcode in progress ... */
@@ -3231,26 +3231,26 @@ Derivative(k1(x, y, z), x);
 // c
 // k1
 // k2
-c(x, y, z)*k1(x, y, z)*Derivative(k2(x, y, z), (x, 2), y) + c(x, y, z)*
-k2(x, y, z)*Derivative(k1(x, y, z), (x, 2), y) + 2*c(x, y, z)*
-Derivative(k1(x, y, z), x)*Derivative(k2(x, y, z), x, y) + c(x, y, z)*
-Derivative(k1(x, y, z), (x, 2))*Derivative(k2(x, y, z), y) + 
-c(x, y, z)*Derivative(k1(x, y, z), y)*Derivative(k2(x, y, z), (x, 2)) + 
-2*c(x, y, z)*Derivative(k2(x, y, z), x)*Derivative(k1(x, y, z), x, y) + 
-k1(x, y, z)*k2(x, y, z)*Derivative(c(x, y, z), (x, 2), y) + 2*
-k1(x, y, z)*Derivative(c(x, y, z), x)*Derivative(k2(x, y, z), x, y) + 
-k1(x, y, z)*Derivative(c(x, y, z), (x, 2))*Derivative(k2(x, y, z), y) + 
-k1(x, y, z)*Derivative(c(x, y, z), y)*Derivative(k2(x, y, z), (x, 2)) + 
-2*k1(x, y, z)*Derivative(k2(x, y, z), x)*Derivative(c(x, y, z), x, y) + 
-2*k2(x, y, z)*Derivative(c(x, y, z), x)*Derivative(k1(x, y, z), x, y) + 
-k2(x, y, z)*Derivative(c(x, y, z), (x, 2))*Derivative(k1(x, y, z), y) + 
-k2(x, y, z)*Derivative(c(x, y, z), y)*Derivative(k1(x, y, z), (x, 2)) + 
-2*k2(x, y, z)*Derivative(k1(x, y, z), x)*Derivative(c(x, y, z), x, y) + 
-2*Derivative(c(x, y, z), x)*Derivative(k1(x, y, z), x)*
-Derivative(k2(x, y, z), y) + 2*Derivative(c(x, y, z), x)*
-Derivative(k1(x, y, z), y)*Derivative(k2(x, y, z), x) + 2*
-Derivative(c(x, y, z), y)*Derivative(k1(x, y, z), x)*
-Derivative(k2(x, y, z), x);
+bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k2(x, y, z), (x, 2), y) + bbn_ks_c(x, y, z)*
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k1(x, y, z), (x, 2), y) + 2*bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), x, y) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k1(x, y, z), (x, 2))*Derivative(bbn_ks_k2(x, y, z), y) + 
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), (x, 2)) + 
+2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), x, y) + 
+bbn_ks_k1(x, y, z)*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2), y) + 2*
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), x, y) + 
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2))*Derivative(bbn_ks_k2(x, y, z), y) + 
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), (x, 2)) + 
+2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), x, y) + 
+2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), x, y) + 
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2))*Derivative(bbn_ks_k1(x, y, z), y) + 
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), (x, 2)) + 
+2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), x, y) + 
+2*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), x)*
+Derivative(bbn_ks_k2(x, y, z), y) + 2*Derivative(bbn_ks_c(x, y, z), x)*
+Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x) + 2*
+Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x)*
+Derivative(bbn_ks_k2(x, y, z), x);
 
     _dddgamma_D0D2D1D0D0[ijk]=
 /* mcode in progress ... */
@@ -3273,26 +3273,26 @@ Derivative(k2(x, y, z), x);
 // c
 // k0
 // k2
-c(x, y, z)*k0(x, y, z)*Derivative(k2(x, y, z), (x, 2), y) + c(x, y, z)*
-k2(x, y, z)*Derivative(k0(x, y, z), (x, 2), y) + 2*c(x, y, z)*
-Derivative(k0(x, y, z), x)*Derivative(k2(x, y, z), x, y) + c(x, y, z)*
-Derivative(k0(x, y, z), (x, 2))*Derivative(k2(x, y, z), y) + 
-c(x, y, z)*Derivative(k0(x, y, z), y)*Derivative(k2(x, y, z), (x, 2)) + 
-2*c(x, y, z)*Derivative(k2(x, y, z), x)*Derivative(k0(x, y, z), x, y) + 
-k0(x, y, z)*k2(x, y, z)*Derivative(c(x, y, z), (x, 2), y) + 2*
-k0(x, y, z)*Derivative(c(x, y, z), x)*Derivative(k2(x, y, z), x, y) + 
-k0(x, y, z)*Derivative(c(x, y, z), (x, 2))*Derivative(k2(x, y, z), y) + 
-k0(x, y, z)*Derivative(c(x, y, z), y)*Derivative(k2(x, y, z), (x, 2)) + 
-2*k0(x, y, z)*Derivative(k2(x, y, z), x)*Derivative(c(x, y, z), x, y) + 
-2*k2(x, y, z)*Derivative(c(x, y, z), x)*Derivative(k0(x, y, z), x, y) + 
-k2(x, y, z)*Derivative(c(x, y, z), (x, 2))*Derivative(k0(x, y, z), y) + 
-k2(x, y, z)*Derivative(c(x, y, z), y)*Derivative(k0(x, y, z), (x, 2)) + 
-2*k2(x, y, z)*Derivative(k0(x, y, z), x)*Derivative(c(x, y, z), x, y) + 
-2*Derivative(c(x, y, z), x)*Derivative(k0(x, y, z), x)*
-Derivative(k2(x, y, z), y) + 2*Derivative(c(x, y, z), x)*
-Derivative(k0(x, y, z), y)*Derivative(k2(x, y, z), x) + 2*
-Derivative(c(x, y, z), y)*Derivative(k0(x, y, z), x)*
-Derivative(k2(x, y, z), x);
+bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k2(x, y, z), (x, 2), y) + bbn_ks_c(x, y, z)*
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k0(x, y, z), (x, 2), y) + 2*bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), x, y) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), (x, 2))*Derivative(bbn_ks_k2(x, y, z), y) + 
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), (x, 2)) + 
+2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), x, y) + 
+bbn_ks_k0(x, y, z)*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2), y) + 2*
+bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), x, y) + 
+bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2))*Derivative(bbn_ks_k2(x, y, z), y) + 
+bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), (x, 2)) + 
+2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), x, y) + 
+2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), x, y) + 
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2))*Derivative(bbn_ks_k0(x, y, z), y) + 
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), (x, 2)) + 
+2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), x, y) + 
+2*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), x)*
+Derivative(bbn_ks_k2(x, y, z), y) + 2*Derivative(bbn_ks_c(x, y, z), x)*
+Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x) + 2*
+Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x)*
+Derivative(bbn_ks_k2(x, y, z), x);
 
     _dddgamma_D1D2D0D1D1[ijk]=
 /* mcode in progress ... */
@@ -3315,26 +3315,26 @@ Derivative(k2(x, y, z), x);
 // c
 // k1
 // k2
-c(x, y, z)*k1(x, y, z)*Derivative(k2(x, y, z), x, (y, 2)) + c(x, y, z)*
-k2(x, y, z)*Derivative(k1(x, y, z), x, (y, 2)) + c(x, y, z)*
-Derivative(k1(x, y, z), x)*Derivative(k2(x, y, z), (y, 2)) + 2*
-c(x, y, z)*Derivative(k1(x, y, z), y)*Derivative(k2(x, y, z), x, y) + 
-c(x, y, z)*Derivative(k1(x, y, z), (y, 2))*Derivative(k2(x, y, z), x) + 
-2*c(x, y, z)*Derivative(k2(x, y, z), y)*Derivative(k1(x, y, z), x, y) + 
-k1(x, y, z)*k2(x, y, z)*Derivative(c(x, y, z), x, (y, 2)) + 
-k1(x, y, z)*Derivative(c(x, y, z), x)*Derivative(k2(x, y, z), (y, 2)) + 
-2*k1(x, y, z)*Derivative(c(x, y, z), y)*Derivative(k2(x, y, z), x, y) + 
-k1(x, y, z)*Derivative(c(x, y, z), (y, 2))*Derivative(k2(x, y, z), x) + 
-2*k1(x, y, z)*Derivative(k2(x, y, z), y)*Derivative(c(x, y, z), x, y) + 
-k2(x, y, z)*Derivative(c(x, y, z), x)*Derivative(k1(x, y, z), (y, 2)) + 
-2*k2(x, y, z)*Derivative(c(x, y, z), y)*Derivative(k1(x, y, z), x, y) + 
-k2(x, y, z)*Derivative(c(x, y, z), (y, 2))*Derivative(k1(x, y, z), x) + 
-2*k2(x, y, z)*Derivative(k1(x, y, z), y)*Derivative(c(x, y, z), x, y) + 
-2*Derivative(c(x, y, z), x)*Derivative(k1(x, y, z), y)*
-Derivative(k2(x, y, z), y) + 2*Derivative(c(x, y, z), y)*
-Derivative(k1(x, y, z), x)*Derivative(k2(x, y, z), y) + 2*
-Derivative(c(x, y, z), y)*Derivative(k1(x, y, z), y)*
-Derivative(k2(x, y, z), x);
+bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x, (y, 2)) + bbn_ks_c(x, y, z)*
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x, (y, 2)) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), (y, 2)) + 2*
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x, y) + 
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), (y, 2))*Derivative(bbn_ks_k2(x, y, z), x) + 
+2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x, y) + 
+bbn_ks_k1(x, y, z)*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), x, (y, 2)) + 
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), (y, 2)) + 
+2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x, y) + 
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), (y, 2))*Derivative(bbn_ks_k2(x, y, z), x) + 
+2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k2(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), x, y) + 
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), (y, 2)) + 
+2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x, y) + 
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (y, 2))*Derivative(bbn_ks_k1(x, y, z), x) + 
+2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), x, y) + 
+2*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), y)*
+Derivative(bbn_ks_k2(x, y, z), y) + 2*Derivative(bbn_ks_c(x, y, z), y)*
+Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), y) + 2*
+Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), y)*
+Derivative(bbn_ks_k2(x, y, z), x);
 
     _dddgamma_D0D1D2D0D2[ijk]=
 /* mcode in progress ... */
@@ -3357,26 +3357,26 @@ Derivative(k2(x, y, z), x);
 // c
 // k0
 // k1
-c(x, y, z)*k0(x, y, z)*Derivative(k1(x, y, z), x, (z, 2)) + c(x, y, z)*
-k1(x, y, z)*Derivative(k0(x, y, z), x, (z, 2)) + c(x, y, z)*
-Derivative(k0(x, y, z), x)*Derivative(k1(x, y, z), (z, 2)) + 2*
-c(x, y, z)*Derivative(k0(x, y, z), z)*Derivative(k1(x, y, z), x, z) + 
-c(x, y, z)*Derivative(k0(x, y, z), (z, 2))*Derivative(k1(x, y, z), x) + 
-2*c(x, y, z)*Derivative(k1(x, y, z), z)*Derivative(k0(x, y, z), x, z) + 
-k0(x, y, z)*k1(x, y, z)*Derivative(c(x, y, z), x, (z, 2)) + 
-k0(x, y, z)*Derivative(c(x, y, z), x)*Derivative(k1(x, y, z), (z, 2)) + 
-2*k0(x, y, z)*Derivative(c(x, y, z), z)*Derivative(k1(x, y, z), x, z) + 
-k0(x, y, z)*Derivative(c(x, y, z), (z, 2))*Derivative(k1(x, y, z), x) + 
-2*k0(x, y, z)*Derivative(k1(x, y, z), z)*Derivative(c(x, y, z), x, z) + 
-k1(x, y, z)*Derivative(c(x, y, z), x)*Derivative(k0(x, y, z), (z, 2)) + 
-2*k1(x, y, z)*Derivative(c(x, y, z), z)*Derivative(k0(x, y, z), x, z) + 
-k1(x, y, z)*Derivative(c(x, y, z), (z, 2))*Derivative(k0(x, y, z), x) + 
-2*k1(x, y, z)*Derivative(k0(x, y, z), z)*Derivative(c(x, y, z), x, z) + 
-2*Derivative(c(x, y, z), x)*Derivative(k0(x, y, z), z)*
-Derivative(k1(x, y, z), z) + 2*Derivative(c(x, y, z), z)*
-Derivative(k0(x, y, z), x)*Derivative(k1(x, y, z), z) + 2*
-Derivative(c(x, y, z), z)*Derivative(k0(x, y, z), z)*
-Derivative(k1(x, y, z), x);
+bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x, (z, 2)) + bbn_ks_c(x, y, z)*
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x, (z, 2)) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), (z, 2)) + 2*
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x, z) + 
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), (z, 2))*Derivative(bbn_ks_k1(x, y, z), x) + 
+2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x, z) + 
+bbn_ks_k0(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), x, (z, 2)) + 
+bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), (z, 2)) + 
+2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x, z) + 
+bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), (z, 2))*Derivative(bbn_ks_k1(x, y, z), x) + 
+2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), x, z) + 
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), (z, 2)) + 
+2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x, z) + 
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), (z, 2))*Derivative(bbn_ks_k0(x, y, z), x) + 
+2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), x, z) + 
+2*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), z)*
+Derivative(bbn_ks_k1(x, y, z), z) + 2*Derivative(bbn_ks_c(x, y, z), z)*
+Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), z) + 2*
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), z)*
+Derivative(bbn_ks_k1(x, y, z), x);
 
     _dddgamma_D1D1D2D0D0[ijk]=
 /* mcode in progress ... */
@@ -3393,17 +3393,17 @@ Derivative(k1(x, y, z), x);
 // Derivative
 // c
 // k1
-2*c(x, y, z)*k1(x, y, z)*Derivative(k1(x, y, z), (x, 2), z) + 4*
-c(x, y, z)*Derivative(k1(x, y, z), x)*Derivative(k1(x, y, z), x, z) + 
-2*c(x, y, z)*Derivative(k1(x, y, z), (x, 2))*Derivative(k1(x, y, z), z) + 
-pow(k1(x, y, z), 2)*Derivative(c(x, y, z), (x, 2), z) + 4*k1(x, y, z)*
-Derivative(c(x, y, z), x)*Derivative(k1(x, y, z), x, z) + 2*
-k1(x, y, z)*Derivative(c(x, y, z), (x, 2))*Derivative(k1(x, y, z), z) + 
-2*k1(x, y, z)*Derivative(c(x, y, z), z)*Derivative(k1(x, y, z), (x, 2)) + 
-4*k1(x, y, z)*Derivative(k1(x, y, z), x)*Derivative(c(x, y, z), x, z) + 
-4*Derivative(c(x, y, z), x)*Derivative(k1(x, y, z), x)*
-Derivative(k1(x, y, z), z) + 2*Derivative(c(x, y, z), z)*
-pow(Derivative(k1(x, y, z), x), 2);
+2*bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k1(x, y, z), (x, 2), z) + 4*
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), x, z) + 
+2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), (x, 2))*Derivative(bbn_ks_k1(x, y, z), z) + 
+pow(bbn_ks_k1(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), (x, 2), z) + 4*bbn_ks_k1(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), x, z) + 2*
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2))*Derivative(bbn_ks_k1(x, y, z), z) + 
+2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), (x, 2)) + 
+4*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), x, z) + 
+4*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), x)*
+Derivative(bbn_ks_k1(x, y, z), z) + 2*Derivative(bbn_ks_c(x, y, z), z)*
+pow(Derivative(bbn_ks_k1(x, y, z), x), 2);
 
     _dddgamma_D0D1D2D2D2[ijk]=
 /* mcode in progress ... */
@@ -3420,17 +3420,17 @@ pow(Derivative(k1(x, y, z), x), 2);
 // c
 // k0
 // k1
-c(x, y, z)*k0(x, y, z)*Derivative(k1(x, y, z), (z, 3)) + c(x, y, z)*
-k1(x, y, z)*Derivative(k0(x, y, z), (z, 3)) + 3*c(x, y, z)*
-Derivative(k0(x, y, z), z)*Derivative(k1(x, y, z), (z, 2)) + 3*
-c(x, y, z)*Derivative(k0(x, y, z), (z, 2))*Derivative(k1(x, y, z), z) + 
-k0(x, y, z)*k1(x, y, z)*Derivative(c(x, y, z), (z, 3)) + 3*k0(x, y, z)*
-Derivative(c(x, y, z), z)*Derivative(k1(x, y, z), (z, 2)) + 3*
-k0(x, y, z)*Derivative(c(x, y, z), (z, 2))*Derivative(k1(x, y, z), z) + 
-3*k1(x, y, z)*Derivative(c(x, y, z), z)*Derivative(k0(x, y, z), (z, 2)) + 
-3*k1(x, y, z)*Derivative(c(x, y, z), (z, 2))*Derivative(k0(x, y, z), z) + 
-6*Derivative(c(x, y, z), z)*Derivative(k0(x, y, z), z)*
-Derivative(k1(x, y, z), z);
+bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k1(x, y, z), (z, 3)) + bbn_ks_c(x, y, z)*
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k0(x, y, z), (z, 3)) + 3*bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), (z, 2)) + 3*
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), (z, 2))*Derivative(bbn_ks_k1(x, y, z), z) + 
+bbn_ks_k0(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), (z, 3)) + 3*bbn_ks_k0(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), (z, 2)) + 3*
+bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), (z, 2))*Derivative(bbn_ks_k1(x, y, z), z) + 
+3*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), (z, 2)) + 
+3*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), (z, 2))*Derivative(bbn_ks_k0(x, y, z), z) + 
+6*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), z)*
+Derivative(bbn_ks_k1(x, y, z), z);
 
     _dddgamma_D0D0D2D0D2[ijk]=
 /* mcode in progress ... */
@@ -3447,17 +3447,17 @@ Derivative(k1(x, y, z), z);
 // Derivative
 // c
 // k0
-2*c(x, y, z)*k0(x, y, z)*Derivative(k0(x, y, z), x, (z, 2)) + 2*
-c(x, y, z)*Derivative(k0(x, y, z), x)*Derivative(k0(x, y, z), (z, 2)) + 
-4*c(x, y, z)*Derivative(k0(x, y, z), z)*Derivative(k0(x, y, z), x, z) + 
-pow(k0(x, y, z), 2)*Derivative(c(x, y, z), x, (z, 2)) + 2*k0(x, y, z)*
-Derivative(c(x, y, z), x)*Derivative(k0(x, y, z), (z, 2)) + 4*
-k0(x, y, z)*Derivative(c(x, y, z), z)*Derivative(k0(x, y, z), x, z) + 
-2*k0(x, y, z)*Derivative(c(x, y, z), (z, 2))*Derivative(k0(x, y, z), x) + 
-4*k0(x, y, z)*Derivative(k0(x, y, z), z)*Derivative(c(x, y, z), x, z) + 
-2*Derivative(c(x, y, z), x)*pow(Derivative(k0(x, y, z), z), 2) + 4*
-Derivative(c(x, y, z), z)*Derivative(k0(x, y, z), x)*
-Derivative(k0(x, y, z), z);
+2*bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x, (z, 2)) + 2*
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), (z, 2)) + 
+4*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x, z) + 
+pow(bbn_ks_k0(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), x, (z, 2)) + 2*bbn_ks_k0(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), (z, 2)) + 4*
+bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x, z) + 
+2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), (z, 2))*Derivative(bbn_ks_k0(x, y, z), x) + 
+4*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), x, z) + 
+2*Derivative(bbn_ks_c(x, y, z), x)*pow(Derivative(bbn_ks_k0(x, y, z), z), 2) + 4*
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x)*
+Derivative(bbn_ks_k0(x, y, z), z);
 
     _dddgamma_D0D0D0D0D2[ijk]=
 /* mcode in progress ... */
@@ -3474,17 +3474,17 @@ Derivative(k0(x, y, z), z);
 // Derivative
 // c
 // k0
-2*c(x, y, z)*k0(x, y, z)*Derivative(k0(x, y, z), (x, 2), z) + 4*
-c(x, y, z)*Derivative(k0(x, y, z), x)*Derivative(k0(x, y, z), x, z) + 
-2*c(x, y, z)*Derivative(k0(x, y, z), (x, 2))*Derivative(k0(x, y, z), z) + 
-pow(k0(x, y, z), 2)*Derivative(c(x, y, z), (x, 2), z) + 4*k0(x, y, z)*
-Derivative(c(x, y, z), x)*Derivative(k0(x, y, z), x, z) + 2*
-k0(x, y, z)*Derivative(c(x, y, z), (x, 2))*Derivative(k0(x, y, z), z) + 
-2*k0(x, y, z)*Derivative(c(x, y, z), z)*Derivative(k0(x, y, z), (x, 2)) + 
-4*k0(x, y, z)*Derivative(k0(x, y, z), x)*Derivative(c(x, y, z), x, z) + 
-4*Derivative(c(x, y, z), x)*Derivative(k0(x, y, z), x)*
-Derivative(k0(x, y, z), z) + 2*Derivative(c(x, y, z), z)*
-pow(Derivative(k0(x, y, z), x), 2);
+2*bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k0(x, y, z), (x, 2), z) + 4*
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), x, z) + 
+2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), (x, 2))*Derivative(bbn_ks_k0(x, y, z), z) + 
+pow(bbn_ks_k0(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), (x, 2), z) + 4*bbn_ks_k0(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), x, z) + 2*
+bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2))*Derivative(bbn_ks_k0(x, y, z), z) + 
+2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), (x, 2)) + 
+4*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), x, z) + 
+4*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), x)*
+Derivative(bbn_ks_k0(x, y, z), z) + 2*Derivative(bbn_ks_c(x, y, z), z)*
+pow(Derivative(bbn_ks_k0(x, y, z), x), 2);
 
     _dddgamma_D1D1D0D1D1[ijk]=
 /* mcode in progress ... */
@@ -3501,17 +3501,17 @@ pow(Derivative(k0(x, y, z), x), 2);
 // Derivative
 // c
 // k1
-2*c(x, y, z)*k1(x, y, z)*Derivative(k1(x, y, z), x, (y, 2)) + 2*
-c(x, y, z)*Derivative(k1(x, y, z), x)*Derivative(k1(x, y, z), (y, 2)) + 
-4*c(x, y, z)*Derivative(k1(x, y, z), y)*Derivative(k1(x, y, z), x, y) + 
-pow(k1(x, y, z), 2)*Derivative(c(x, y, z), x, (y, 2)) + 2*k1(x, y, z)*
-Derivative(c(x, y, z), x)*Derivative(k1(x, y, z), (y, 2)) + 4*
-k1(x, y, z)*Derivative(c(x, y, z), y)*Derivative(k1(x, y, z), x, y) + 
-2*k1(x, y, z)*Derivative(c(x, y, z), (y, 2))*Derivative(k1(x, y, z), x) + 
-4*k1(x, y, z)*Derivative(k1(x, y, z), y)*Derivative(c(x, y, z), x, y) + 
-2*Derivative(c(x, y, z), x)*pow(Derivative(k1(x, y, z), y), 2) + 4*
-Derivative(c(x, y, z), y)*Derivative(k1(x, y, z), x)*
-Derivative(k1(x, y, z), y);
+2*bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x, (y, 2)) + 2*
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), (y, 2)) + 
+4*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x, y) + 
+pow(bbn_ks_k1(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), x, (y, 2)) + 2*bbn_ks_k1(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), (y, 2)) + 4*
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x, y) + 
+2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), (y, 2))*Derivative(bbn_ks_k1(x, y, z), x) + 
+4*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), x, y) + 
+2*Derivative(bbn_ks_c(x, y, z), x)*pow(Derivative(bbn_ks_k1(x, y, z), y), 2) + 4*
+Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x)*
+Derivative(bbn_ks_k1(x, y, z), y);
 
     _dddgamma_D2D2D0D0D1[ijk]=
 /* mcode in progress ... */
@@ -3528,17 +3528,17 @@ Derivative(k1(x, y, z), y);
 // Derivative
 // c
 // k2
-2*c(x, y, z)*k2(x, y, z)*Derivative(k2(x, y, z), (x, 2), y) + 4*
-c(x, y, z)*Derivative(k2(x, y, z), x)*Derivative(k2(x, y, z), x, y) + 
-2*c(x, y, z)*Derivative(k2(x, y, z), (x, 2))*Derivative(k2(x, y, z), y) + 
-pow(k2(x, y, z), 2)*Derivative(c(x, y, z), (x, 2), y) + 4*k2(x, y, z)*
-Derivative(c(x, y, z), x)*Derivative(k2(x, y, z), x, y) + 2*
-k2(x, y, z)*Derivative(c(x, y, z), (x, 2))*Derivative(k2(x, y, z), y) + 
-2*k2(x, y, z)*Derivative(c(x, y, z), y)*Derivative(k2(x, y, z), (x, 2)) + 
-4*k2(x, y, z)*Derivative(k2(x, y, z), x)*Derivative(c(x, y, z), x, y) + 
-4*Derivative(c(x, y, z), x)*Derivative(k2(x, y, z), x)*
-Derivative(k2(x, y, z), y) + 2*Derivative(c(x, y, z), y)*
-pow(Derivative(k2(x, y, z), x), 2);
+2*bbn_ks_c(x, y, z)*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k2(x, y, z), (x, 2), y) + 4*
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), x, y) + 
+2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), (x, 2))*Derivative(bbn_ks_k2(x, y, z), y) + 
+pow(bbn_ks_k2(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), (x, 2), y) + 4*bbn_ks_k2(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), x, y) + 2*
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2))*Derivative(bbn_ks_k2(x, y, z), y) + 
+2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), (x, 2)) + 
+4*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), x, y) + 
+4*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), x)*
+Derivative(bbn_ks_k2(x, y, z), y) + 2*Derivative(bbn_ks_c(x, y, z), y)*
+pow(Derivative(bbn_ks_k2(x, y, z), x), 2);
 
     _dddgamma_D0D0D1D2D2[ijk]=
 /* mcode in progress ... */
@@ -3555,17 +3555,17 @@ pow(Derivative(k2(x, y, z), x), 2);
 // Derivative
 // c
 // k0
-2*c(x, y, z)*k0(x, y, z)*Derivative(k0(x, y, z), y, (z, 2)) + 2*
-c(x, y, z)*Derivative(k0(x, y, z), y)*Derivative(k0(x, y, z), (z, 2)) + 
-4*c(x, y, z)*Derivative(k0(x, y, z), z)*Derivative(k0(x, y, z), y, z) + 
-pow(k0(x, y, z), 2)*Derivative(c(x, y, z), y, (z, 2)) + 2*k0(x, y, z)*
-Derivative(c(x, y, z), y)*Derivative(k0(x, y, z), (z, 2)) + 4*
-k0(x, y, z)*Derivative(c(x, y, z), z)*Derivative(k0(x, y, z), y, z) + 
-2*k0(x, y, z)*Derivative(c(x, y, z), (z, 2))*Derivative(k0(x, y, z), y) + 
-4*k0(x, y, z)*Derivative(k0(x, y, z), z)*Derivative(c(x, y, z), y, z) + 
-2*Derivative(c(x, y, z), y)*pow(Derivative(k0(x, y, z), z), 2) + 4*
-Derivative(c(x, y, z), z)*Derivative(k0(x, y, z), y)*
-Derivative(k0(x, y, z), z);
+2*bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k0(x, y, z), y, (z, 2)) + 2*
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), (z, 2)) + 
+4*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), y, z) + 
+pow(bbn_ks_k0(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), y, (z, 2)) + 2*bbn_ks_k0(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), (z, 2)) + 4*
+bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), y, z) + 
+2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), (z, 2))*Derivative(bbn_ks_k0(x, y, z), y) + 
+4*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), y, z) + 
+2*Derivative(bbn_ks_c(x, y, z), y)*pow(Derivative(bbn_ks_k0(x, y, z), z), 2) + 4*
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), y)*
+Derivative(bbn_ks_k0(x, y, z), z);
 
     _dddgamma_D1D1D0D2D0[ijk]=
 /* mcode in progress ... */
@@ -3582,17 +3582,17 @@ Derivative(k0(x, y, z), z);
 // Derivative
 // c
 // k1
-2*c(x, y, z)*k1(x, y, z)*Derivative(k1(x, y, z), (x, 2), z) + 4*
-c(x, y, z)*Derivative(k1(x, y, z), x)*Derivative(k1(x, y, z), x, z) + 
-2*c(x, y, z)*Derivative(k1(x, y, z), (x, 2))*Derivative(k1(x, y, z), z) + 
-pow(k1(x, y, z), 2)*Derivative(c(x, y, z), (x, 2), z) + 4*k1(x, y, z)*
-Derivative(c(x, y, z), x)*Derivative(k1(x, y, z), x, z) + 2*
-k1(x, y, z)*Derivative(c(x, y, z), (x, 2))*Derivative(k1(x, y, z), z) + 
-2*k1(x, y, z)*Derivative(c(x, y, z), z)*Derivative(k1(x, y, z), (x, 2)) + 
-4*k1(x, y, z)*Derivative(k1(x, y, z), x)*Derivative(c(x, y, z), x, z) + 
-4*Derivative(c(x, y, z), x)*Derivative(k1(x, y, z), x)*
-Derivative(k1(x, y, z), z) + 2*Derivative(c(x, y, z), z)*
-pow(Derivative(k1(x, y, z), x), 2);
+2*bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k1(x, y, z), (x, 2), z) + 4*
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), x, z) + 
+2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), (x, 2))*Derivative(bbn_ks_k1(x, y, z), z) + 
+pow(bbn_ks_k1(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), (x, 2), z) + 4*bbn_ks_k1(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), x, z) + 2*
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2))*Derivative(bbn_ks_k1(x, y, z), z) + 
+2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), (x, 2)) + 
+4*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), x, z) + 
+4*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), x)*
+Derivative(bbn_ks_k1(x, y, z), z) + 2*Derivative(bbn_ks_c(x, y, z), z)*
+pow(Derivative(bbn_ks_k1(x, y, z), x), 2);
 
     _dddgamma_D0D1D1D2D0[ijk]=
 /* mcode in progress ... */
@@ -3621,36 +3621,36 @@ pow(Derivative(k1(x, y, z), x), 2);
 // c
 // k0
 // k1
-c(x, y, z)*k0(x, y, z)*Derivative(k1(x, y, z), x, y, z) + c(x, y, z)*
-k1(x, y, z)*Derivative(k0(x, y, z), x, y, z) + c(x, y, z)*
-Derivative(k0(x, y, z), x)*Derivative(k1(x, y, z), y, z) + c(x, y, z)*
-Derivative(k0(x, y, z), y)*Derivative(k1(x, y, z), x, z) + c(x, y, z)*
-Derivative(k0(x, y, z), z)*Derivative(k1(x, y, z), x, y) + c(x, y, z)*
-Derivative(k1(x, y, z), x)*Derivative(k0(x, y, z), y, z) + c(x, y, z)*
-Derivative(k1(x, y, z), y)*Derivative(k0(x, y, z), x, z) + c(x, y, z)*
-Derivative(k1(x, y, z), z)*Derivative(k0(x, y, z), x, y) + k0(x, y, z)*
-k1(x, y, z)*Derivative(c(x, y, z), x, y, z) + k0(x, y, z)*
-Derivative(c(x, y, z), x)*Derivative(k1(x, y, z), y, z) + k0(x, y, z)*
-Derivative(c(x, y, z), y)*Derivative(k1(x, y, z), x, z) + k0(x, y, z)*
-Derivative(c(x, y, z), z)*Derivative(k1(x, y, z), x, y) + k0(x, y, z)*
-Derivative(k1(x, y, z), x)*Derivative(c(x, y, z), y, z) + k0(x, y, z)*
-Derivative(k1(x, y, z), y)*Derivative(c(x, y, z), x, z) + k0(x, y, z)*
-Derivative(k1(x, y, z), z)*Derivative(c(x, y, z), x, y) + k1(x, y, z)*
-Derivative(c(x, y, z), x)*Derivative(k0(x, y, z), y, z) + k1(x, y, z)*
-Derivative(c(x, y, z), y)*Derivative(k0(x, y, z), x, z) + k1(x, y, z)*
-Derivative(c(x, y, z), z)*Derivative(k0(x, y, z), x, y) + k1(x, y, z)*
-Derivative(k0(x, y, z), x)*Derivative(c(x, y, z), y, z) + k1(x, y, z)*
-Derivative(k0(x, y, z), y)*Derivative(c(x, y, z), x, z) + k1(x, y, z)*
-Derivative(k0(x, y, z), z)*Derivative(c(x, y, z), x, y) + 
-Derivative(c(x, y, z), x)*Derivative(k0(x, y, z), y)*
-Derivative(k1(x, y, z), z) + Derivative(c(x, y, z), x)*
-Derivative(k0(x, y, z), z)*Derivative(k1(x, y, z), y) + 
-Derivative(c(x, y, z), y)*Derivative(k0(x, y, z), x)*
-Derivative(k1(x, y, z), z) + Derivative(c(x, y, z), y)*
-Derivative(k0(x, y, z), z)*Derivative(k1(x, y, z), x) + 
-Derivative(c(x, y, z), z)*Derivative(k0(x, y, z), x)*
-Derivative(k1(x, y, z), y) + Derivative(c(x, y, z), z)*
-Derivative(k0(x, y, z), y)*Derivative(k1(x, y, z), x);
+bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x, y, z) + bbn_ks_c(x, y, z)*
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x, y, z) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), y, z) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x, z) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x, y) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), y, z) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x, z) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x, y) + bbn_ks_k0(x, y, z)*
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), x, y, z) + bbn_ks_k0(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), y, z) + bbn_ks_k0(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x, z) + bbn_ks_k0(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x, y) + bbn_ks_k0(x, y, z)*
+Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), y, z) + bbn_ks_k0(x, y, z)*
+Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), x, z) + bbn_ks_k0(x, y, z)*
+Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), x, y) + bbn_ks_k1(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), y, z) + bbn_ks_k1(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x, z) + bbn_ks_k1(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x, y) + bbn_ks_k1(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), y, z) + bbn_ks_k1(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), x, z) + bbn_ks_k1(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), x, y) + 
+Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), y)*
+Derivative(bbn_ks_k1(x, y, z), z) + Derivative(bbn_ks_c(x, y, z), x)*
+Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), y) + 
+Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x)*
+Derivative(bbn_ks_k1(x, y, z), z) + Derivative(bbn_ks_c(x, y, z), y)*
+Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x) + 
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x)*
+Derivative(bbn_ks_k1(x, y, z), y) + Derivative(bbn_ks_c(x, y, z), z)*
+Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x);
 
     _dddgamma_D1D1D0D0D1[ijk]=
 /* mcode in progress ... */
@@ -3667,17 +3667,17 @@ Derivative(k0(x, y, z), y)*Derivative(k1(x, y, z), x);
 // Derivative
 // c
 // k1
-2*c(x, y, z)*k1(x, y, z)*Derivative(k1(x, y, z), (x, 2), y) + 4*
-c(x, y, z)*Derivative(k1(x, y, z), x)*Derivative(k1(x, y, z), x, y) + 
-2*c(x, y, z)*Derivative(k1(x, y, z), (x, 2))*Derivative(k1(x, y, z), y) + 
-pow(k1(x, y, z), 2)*Derivative(c(x, y, z), (x, 2), y) + 4*k1(x, y, z)*
-Derivative(c(x, y, z), x)*Derivative(k1(x, y, z), x, y) + 2*
-k1(x, y, z)*Derivative(c(x, y, z), (x, 2))*Derivative(k1(x, y, z), y) + 
-2*k1(x, y, z)*Derivative(c(x, y, z), y)*Derivative(k1(x, y, z), (x, 2)) + 
-4*k1(x, y, z)*Derivative(k1(x, y, z), x)*Derivative(c(x, y, z), x, y) + 
-4*Derivative(c(x, y, z), x)*Derivative(k1(x, y, z), x)*
-Derivative(k1(x, y, z), y) + 2*Derivative(c(x, y, z), y)*
-pow(Derivative(k1(x, y, z), x), 2);
+2*bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k1(x, y, z), (x, 2), y) + 4*
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), x, y) + 
+2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), (x, 2))*Derivative(bbn_ks_k1(x, y, z), y) + 
+pow(bbn_ks_k1(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), (x, 2), y) + 4*bbn_ks_k1(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), x, y) + 2*
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2))*Derivative(bbn_ks_k1(x, y, z), y) + 
+2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), (x, 2)) + 
+4*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), x, y) + 
+4*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), x)*
+Derivative(bbn_ks_k1(x, y, z), y) + 2*Derivative(bbn_ks_c(x, y, z), y)*
+pow(Derivative(bbn_ks_k1(x, y, z), x), 2);
 
     _dddgamma_D1D1D0D0D2[ijk]=
 /* mcode in progress ... */
@@ -3694,17 +3694,17 @@ pow(Derivative(k1(x, y, z), x), 2);
 // Derivative
 // c
 // k1
-2*c(x, y, z)*k1(x, y, z)*Derivative(k1(x, y, z), (x, 2), z) + 4*
-c(x, y, z)*Derivative(k1(x, y, z), x)*Derivative(k1(x, y, z), x, z) + 
-2*c(x, y, z)*Derivative(k1(x, y, z), (x, 2))*Derivative(k1(x, y, z), z) + 
-pow(k1(x, y, z), 2)*Derivative(c(x, y, z), (x, 2), z) + 4*k1(x, y, z)*
-Derivative(c(x, y, z), x)*Derivative(k1(x, y, z), x, z) + 2*
-k1(x, y, z)*Derivative(c(x, y, z), (x, 2))*Derivative(k1(x, y, z), z) + 
-2*k1(x, y, z)*Derivative(c(x, y, z), z)*Derivative(k1(x, y, z), (x, 2)) + 
-4*k1(x, y, z)*Derivative(k1(x, y, z), x)*Derivative(c(x, y, z), x, z) + 
-4*Derivative(c(x, y, z), x)*Derivative(k1(x, y, z), x)*
-Derivative(k1(x, y, z), z) + 2*Derivative(c(x, y, z), z)*
-pow(Derivative(k1(x, y, z), x), 2);
+2*bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k1(x, y, z), (x, 2), z) + 4*
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), x, z) + 
+2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), (x, 2))*Derivative(bbn_ks_k1(x, y, z), z) + 
+pow(bbn_ks_k1(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), (x, 2), z) + 4*bbn_ks_k1(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), x, z) + 2*
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2))*Derivative(bbn_ks_k1(x, y, z), z) + 
+2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), (x, 2)) + 
+4*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), x, z) + 
+4*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), x)*
+Derivative(bbn_ks_k1(x, y, z), z) + 2*Derivative(bbn_ks_c(x, y, z), z)*
+pow(Derivative(bbn_ks_k1(x, y, z), x), 2);
 
     _dddgamma_D1D2D0D1D2[ijk]=
 /* mcode in progress ... */
@@ -3733,36 +3733,36 @@ pow(Derivative(k1(x, y, z), x), 2);
 // c
 // k1
 // k2
-c(x, y, z)*k1(x, y, z)*Derivative(k2(x, y, z), x, y, z) + c(x, y, z)*
-k2(x, y, z)*Derivative(k1(x, y, z), x, y, z) + c(x, y, z)*
-Derivative(k1(x, y, z), x)*Derivative(k2(x, y, z), y, z) + c(x, y, z)*
-Derivative(k1(x, y, z), y)*Derivative(k2(x, y, z), x, z) + c(x, y, z)*
-Derivative(k1(x, y, z), z)*Derivative(k2(x, y, z), x, y) + c(x, y, z)*
-Derivative(k2(x, y, z), x)*Derivative(k1(x, y, z), y, z) + c(x, y, z)*
-Derivative(k2(x, y, z), y)*Derivative(k1(x, y, z), x, z) + c(x, y, z)*
-Derivative(k2(x, y, z), z)*Derivative(k1(x, y, z), x, y) + k1(x, y, z)*
-k2(x, y, z)*Derivative(c(x, y, z), x, y, z) + k1(x, y, z)*
-Derivative(c(x, y, z), x)*Derivative(k2(x, y, z), y, z) + k1(x, y, z)*
-Derivative(c(x, y, z), y)*Derivative(k2(x, y, z), x, z) + k1(x, y, z)*
-Derivative(c(x, y, z), z)*Derivative(k2(x, y, z), x, y) + k1(x, y, z)*
-Derivative(k2(x, y, z), x)*Derivative(c(x, y, z), y, z) + k1(x, y, z)*
-Derivative(k2(x, y, z), y)*Derivative(c(x, y, z), x, z) + k1(x, y, z)*
-Derivative(k2(x, y, z), z)*Derivative(c(x, y, z), x, y) + k2(x, y, z)*
-Derivative(c(x, y, z), x)*Derivative(k1(x, y, z), y, z) + k2(x, y, z)*
-Derivative(c(x, y, z), y)*Derivative(k1(x, y, z), x, z) + k2(x, y, z)*
-Derivative(c(x, y, z), z)*Derivative(k1(x, y, z), x, y) + k2(x, y, z)*
-Derivative(k1(x, y, z), x)*Derivative(c(x, y, z), y, z) + k2(x, y, z)*
-Derivative(k1(x, y, z), y)*Derivative(c(x, y, z), x, z) + k2(x, y, z)*
-Derivative(k1(x, y, z), z)*Derivative(c(x, y, z), x, y) + 
-Derivative(c(x, y, z), x)*Derivative(k1(x, y, z), y)*
-Derivative(k2(x, y, z), z) + Derivative(c(x, y, z), x)*
-Derivative(k1(x, y, z), z)*Derivative(k2(x, y, z), y) + 
-Derivative(c(x, y, z), y)*Derivative(k1(x, y, z), x)*
-Derivative(k2(x, y, z), z) + Derivative(c(x, y, z), y)*
-Derivative(k1(x, y, z), z)*Derivative(k2(x, y, z), x) + 
-Derivative(c(x, y, z), z)*Derivative(k1(x, y, z), x)*
-Derivative(k2(x, y, z), y) + Derivative(c(x, y, z), z)*
-Derivative(k1(x, y, z), y)*Derivative(k2(x, y, z), x);
+bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x, y, z) + bbn_ks_c(x, y, z)*
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x, y, z) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), y, z) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x, z) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x, y) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), y, z) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k2(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x, z) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k2(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x, y) + bbn_ks_k1(x, y, z)*
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), x, y, z) + bbn_ks_k1(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), y, z) + bbn_ks_k1(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x, z) + bbn_ks_k1(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x, y) + bbn_ks_k1(x, y, z)*
+Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), y, z) + bbn_ks_k1(x, y, z)*
+Derivative(bbn_ks_k2(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), x, z) + bbn_ks_k1(x, y, z)*
+Derivative(bbn_ks_k2(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), x, y) + bbn_ks_k2(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), y, z) + bbn_ks_k2(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x, z) + bbn_ks_k2(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x, y) + bbn_ks_k2(x, y, z)*
+Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), y, z) + bbn_ks_k2(x, y, z)*
+Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), x, z) + bbn_ks_k2(x, y, z)*
+Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), x, y) + 
+Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), y)*
+Derivative(bbn_ks_k2(x, y, z), z) + Derivative(bbn_ks_c(x, y, z), x)*
+Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), y) + 
+Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x)*
+Derivative(bbn_ks_k2(x, y, z), z) + Derivative(bbn_ks_c(x, y, z), y)*
+Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x) + 
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x)*
+Derivative(bbn_ks_k2(x, y, z), y) + Derivative(bbn_ks_c(x, y, z), z)*
+Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x);
 
     _dddgamma_D0D0D1D0D2[ijk]=
 /* mcode in progress ... */
@@ -3783,22 +3783,22 @@ Derivative(k1(x, y, z), y)*Derivative(k2(x, y, z), x);
 // Derivative
 // c
 // k0
-2*c(x, y, z)*k0(x, y, z)*Derivative(k0(x, y, z), x, y, z) + 2*
-c(x, y, z)*Derivative(k0(x, y, z), x)*Derivative(k0(x, y, z), y, z) + 
-2*c(x, y, z)*Derivative(k0(x, y, z), y)*Derivative(k0(x, y, z), x, z) + 
-2*c(x, y, z)*Derivative(k0(x, y, z), z)*Derivative(k0(x, y, z), x, y) + 
-pow(k0(x, y, z), 2)*Derivative(c(x, y, z), x, y, z) + 2*k0(x, y, z)*
-Derivative(c(x, y, z), x)*Derivative(k0(x, y, z), y, z) + 2*
-k0(x, y, z)*Derivative(c(x, y, z), y)*Derivative(k0(x, y, z), x, z) + 
-2*k0(x, y, z)*Derivative(c(x, y, z), z)*Derivative(k0(x, y, z), x, y) + 
-2*k0(x, y, z)*Derivative(k0(x, y, z), x)*Derivative(c(x, y, z), y, z) + 
-2*k0(x, y, z)*Derivative(k0(x, y, z), y)*Derivative(c(x, y, z), x, z) + 
-2*k0(x, y, z)*Derivative(k0(x, y, z), z)*Derivative(c(x, y, z), x, y) + 
-2*Derivative(c(x, y, z), x)*Derivative(k0(x, y, z), y)*
-Derivative(k0(x, y, z), z) + 2*Derivative(c(x, y, z), y)*
-Derivative(k0(x, y, z), x)*Derivative(k0(x, y, z), z) + 2*
-Derivative(c(x, y, z), z)*Derivative(k0(x, y, z), x)*
-Derivative(k0(x, y, z), y);
+2*bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x, y, z) + 2*
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), y, z) + 
+2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x, z) + 
+2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x, y) + 
+pow(bbn_ks_k0(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), x, y, z) + 2*bbn_ks_k0(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), y, z) + 2*
+bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x, z) + 
+2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x, y) + 
+2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), y, z) + 
+2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), x, z) + 
+2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), x, y) + 
+2*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), y)*
+Derivative(bbn_ks_k0(x, y, z), z) + 2*Derivative(bbn_ks_c(x, y, z), y)*
+Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), z) + 2*
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x)*
+Derivative(bbn_ks_k0(x, y, z), y);
 
     _dddgamma_D0D0D0D2D0[ijk]=
 /* mcode in progress ... */
@@ -3815,17 +3815,17 @@ Derivative(k0(x, y, z), y);
 // Derivative
 // c
 // k0
-2*c(x, y, z)*k0(x, y, z)*Derivative(k0(x, y, z), (x, 2), z) + 4*
-c(x, y, z)*Derivative(k0(x, y, z), x)*Derivative(k0(x, y, z), x, z) + 
-2*c(x, y, z)*Derivative(k0(x, y, z), (x, 2))*Derivative(k0(x, y, z), z) + 
-pow(k0(x, y, z), 2)*Derivative(c(x, y, z), (x, 2), z) + 4*k0(x, y, z)*
-Derivative(c(x, y, z), x)*Derivative(k0(x, y, z), x, z) + 2*
-k0(x, y, z)*Derivative(c(x, y, z), (x, 2))*Derivative(k0(x, y, z), z) + 
-2*k0(x, y, z)*Derivative(c(x, y, z), z)*Derivative(k0(x, y, z), (x, 2)) + 
-4*k0(x, y, z)*Derivative(k0(x, y, z), x)*Derivative(c(x, y, z), x, z) + 
-4*Derivative(c(x, y, z), x)*Derivative(k0(x, y, z), x)*
-Derivative(k0(x, y, z), z) + 2*Derivative(c(x, y, z), z)*
-pow(Derivative(k0(x, y, z), x), 2);
+2*bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k0(x, y, z), (x, 2), z) + 4*
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), x, z) + 
+2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), (x, 2))*Derivative(bbn_ks_k0(x, y, z), z) + 
+pow(bbn_ks_k0(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), (x, 2), z) + 4*bbn_ks_k0(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), x, z) + 2*
+bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2))*Derivative(bbn_ks_k0(x, y, z), z) + 
+2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), (x, 2)) + 
+4*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), x, z) + 
+4*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), x)*
+Derivative(bbn_ks_k0(x, y, z), z) + 2*Derivative(bbn_ks_c(x, y, z), z)*
+pow(Derivative(bbn_ks_k0(x, y, z), x), 2);
 
     _dddgamma_D2D2D2D1D1[ijk]=
 /* mcode in progress ... */
@@ -3842,17 +3842,17 @@ pow(Derivative(k0(x, y, z), x), 2);
 // Derivative
 // c
 // k2
-2*c(x, y, z)*k2(x, y, z)*Derivative(k2(x, y, z), (y, 2), z) + 4*
-c(x, y, z)*Derivative(k2(x, y, z), y)*Derivative(k2(x, y, z), y, z) + 
-2*c(x, y, z)*Derivative(k2(x, y, z), (y, 2))*Derivative(k2(x, y, z), z) + 
-pow(k2(x, y, z), 2)*Derivative(c(x, y, z), (y, 2), z) + 4*k2(x, y, z)*
-Derivative(c(x, y, z), y)*Derivative(k2(x, y, z), y, z) + 2*
-k2(x, y, z)*Derivative(c(x, y, z), (y, 2))*Derivative(k2(x, y, z), z) + 
-2*k2(x, y, z)*Derivative(c(x, y, z), z)*Derivative(k2(x, y, z), (y, 2)) + 
-4*k2(x, y, z)*Derivative(k2(x, y, z), y)*Derivative(c(x, y, z), y, z) + 
-4*Derivative(c(x, y, z), y)*Derivative(k2(x, y, z), y)*
-Derivative(k2(x, y, z), z) + 2*Derivative(c(x, y, z), z)*
-pow(Derivative(k2(x, y, z), y), 2);
+2*bbn_ks_c(x, y, z)*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k2(x, y, z), (y, 2), z) + 4*
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), y, z) + 
+2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), (y, 2))*Derivative(bbn_ks_k2(x, y, z), z) + 
+pow(bbn_ks_k2(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), (y, 2), z) + 4*bbn_ks_k2(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), y, z) + 2*
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (y, 2))*Derivative(bbn_ks_k2(x, y, z), z) + 
+2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), (y, 2)) + 
+4*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k2(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), y, z) + 
+4*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), y)*
+Derivative(bbn_ks_k2(x, y, z), z) + 2*Derivative(bbn_ks_c(x, y, z), z)*
+pow(Derivative(bbn_ks_k2(x, y, z), y), 2);
 
     _dddgamma_D0D2D0D0D2[ijk]=
 /* mcode in progress ... */
@@ -3875,26 +3875,26 @@ pow(Derivative(k2(x, y, z), y), 2);
 // c
 // k0
 // k2
-c(x, y, z)*k0(x, y, z)*Derivative(k2(x, y, z), (x, 2), z) + c(x, y, z)*
-k2(x, y, z)*Derivative(k0(x, y, z), (x, 2), z) + 2*c(x, y, z)*
-Derivative(k0(x, y, z), x)*Derivative(k2(x, y, z), x, z) + c(x, y, z)*
-Derivative(k0(x, y, z), (x, 2))*Derivative(k2(x, y, z), z) + 
-c(x, y, z)*Derivative(k0(x, y, z), z)*Derivative(k2(x, y, z), (x, 2)) + 
-2*c(x, y, z)*Derivative(k2(x, y, z), x)*Derivative(k0(x, y, z), x, z) + 
-k0(x, y, z)*k2(x, y, z)*Derivative(c(x, y, z), (x, 2), z) + 2*
-k0(x, y, z)*Derivative(c(x, y, z), x)*Derivative(k2(x, y, z), x, z) + 
-k0(x, y, z)*Derivative(c(x, y, z), (x, 2))*Derivative(k2(x, y, z), z) + 
-k0(x, y, z)*Derivative(c(x, y, z), z)*Derivative(k2(x, y, z), (x, 2)) + 
-2*k0(x, y, z)*Derivative(k2(x, y, z), x)*Derivative(c(x, y, z), x, z) + 
-2*k2(x, y, z)*Derivative(c(x, y, z), x)*Derivative(k0(x, y, z), x, z) + 
-k2(x, y, z)*Derivative(c(x, y, z), (x, 2))*Derivative(k0(x, y, z), z) + 
-k2(x, y, z)*Derivative(c(x, y, z), z)*Derivative(k0(x, y, z), (x, 2)) + 
-2*k2(x, y, z)*Derivative(k0(x, y, z), x)*Derivative(c(x, y, z), x, z) + 
-2*Derivative(c(x, y, z), x)*Derivative(k0(x, y, z), x)*
-Derivative(k2(x, y, z), z) + 2*Derivative(c(x, y, z), x)*
-Derivative(k0(x, y, z), z)*Derivative(k2(x, y, z), x) + 2*
-Derivative(c(x, y, z), z)*Derivative(k0(x, y, z), x)*
-Derivative(k2(x, y, z), x);
+bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k2(x, y, z), (x, 2), z) + bbn_ks_c(x, y, z)*
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k0(x, y, z), (x, 2), z) + 2*bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), x, z) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), (x, 2))*Derivative(bbn_ks_k2(x, y, z), z) + 
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), (x, 2)) + 
+2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), x, z) + 
+bbn_ks_k0(x, y, z)*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2), z) + 2*
+bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), x, z) + 
+bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2))*Derivative(bbn_ks_k2(x, y, z), z) + 
+bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), (x, 2)) + 
+2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), x, z) + 
+2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), x, z) + 
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2))*Derivative(bbn_ks_k0(x, y, z), z) + 
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), (x, 2)) + 
+2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), x, z) + 
+2*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), x)*
+Derivative(bbn_ks_k2(x, y, z), z) + 2*Derivative(bbn_ks_c(x, y, z), x)*
+Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x) + 2*
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x)*
+Derivative(bbn_ks_k2(x, y, z), x);
 
     _dddgamma_D2D2D2D2D0[ijk]=
 /* mcode in progress ... */
@@ -3911,17 +3911,17 @@ Derivative(k2(x, y, z), x);
 // Derivative
 // c
 // k2
-2*c(x, y, z)*k2(x, y, z)*Derivative(k2(x, y, z), x, (z, 2)) + 2*
-c(x, y, z)*Derivative(k2(x, y, z), x)*Derivative(k2(x, y, z), (z, 2)) + 
-4*c(x, y, z)*Derivative(k2(x, y, z), z)*Derivative(k2(x, y, z), x, z) + 
-pow(k2(x, y, z), 2)*Derivative(c(x, y, z), x, (z, 2)) + 2*k2(x, y, z)*
-Derivative(c(x, y, z), x)*Derivative(k2(x, y, z), (z, 2)) + 4*
-k2(x, y, z)*Derivative(c(x, y, z), z)*Derivative(k2(x, y, z), x, z) + 
-2*k2(x, y, z)*Derivative(c(x, y, z), (z, 2))*Derivative(k2(x, y, z), x) + 
-4*k2(x, y, z)*Derivative(k2(x, y, z), z)*Derivative(c(x, y, z), x, z) + 
-2*Derivative(c(x, y, z), x)*pow(Derivative(k2(x, y, z), z), 2) + 4*
-Derivative(c(x, y, z), z)*Derivative(k2(x, y, z), x)*
-Derivative(k2(x, y, z), z);
+2*bbn_ks_c(x, y, z)*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x, (z, 2)) + 2*
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), (z, 2)) + 
+4*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x, z) + 
+pow(bbn_ks_k2(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), x, (z, 2)) + 2*bbn_ks_k2(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), (z, 2)) + 4*
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x, z) + 
+2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (z, 2))*Derivative(bbn_ks_k2(x, y, z), x) + 
+4*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k2(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), x, z) + 
+2*Derivative(bbn_ks_c(x, y, z), x)*pow(Derivative(bbn_ks_k2(x, y, z), z), 2) + 4*
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x)*
+Derivative(bbn_ks_k2(x, y, z), z);
 
     _dddgamma_D0D2D0D0D0[ijk]=
 /* mcode in progress ... */
@@ -3938,17 +3938,17 @@ Derivative(k2(x, y, z), z);
 // c
 // k0
 // k2
-c(x, y, z)*k0(x, y, z)*Derivative(k2(x, y, z), (x, 3)) + c(x, y, z)*
-k2(x, y, z)*Derivative(k0(x, y, z), (x, 3)) + 3*c(x, y, z)*
-Derivative(k0(x, y, z), x)*Derivative(k2(x, y, z), (x, 2)) + 3*
-c(x, y, z)*Derivative(k0(x, y, z), (x, 2))*Derivative(k2(x, y, z), x) + 
-k0(x, y, z)*k2(x, y, z)*Derivative(c(x, y, z), (x, 3)) + 3*k0(x, y, z)*
-Derivative(c(x, y, z), x)*Derivative(k2(x, y, z), (x, 2)) + 3*
-k0(x, y, z)*Derivative(c(x, y, z), (x, 2))*Derivative(k2(x, y, z), x) + 
-3*k2(x, y, z)*Derivative(c(x, y, z), x)*Derivative(k0(x, y, z), (x, 2)) + 
-3*k2(x, y, z)*Derivative(c(x, y, z), (x, 2))*Derivative(k0(x, y, z), x) + 
-6*Derivative(c(x, y, z), x)*Derivative(k0(x, y, z), x)*
-Derivative(k2(x, y, z), x);
+bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k2(x, y, z), (x, 3)) + bbn_ks_c(x, y, z)*
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k0(x, y, z), (x, 3)) + 3*bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), (x, 2)) + 3*
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), (x, 2))*Derivative(bbn_ks_k2(x, y, z), x) + 
+bbn_ks_k0(x, y, z)*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 3)) + 3*bbn_ks_k0(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), (x, 2)) + 3*
+bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2))*Derivative(bbn_ks_k2(x, y, z), x) + 
+3*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), (x, 2)) + 
+3*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2))*Derivative(bbn_ks_k0(x, y, z), x) + 
+6*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), x)*
+Derivative(bbn_ks_k2(x, y, z), x);
 
     _dddgamma_D2D2D1D2D0[ijk]=
 /* mcode in progress ... */
@@ -3969,22 +3969,22 @@ Derivative(k2(x, y, z), x);
 // Derivative
 // c
 // k2
-2*c(x, y, z)*k2(x, y, z)*Derivative(k2(x, y, z), x, y, z) + 2*
-c(x, y, z)*Derivative(k2(x, y, z), x)*Derivative(k2(x, y, z), y, z) + 
-2*c(x, y, z)*Derivative(k2(x, y, z), y)*Derivative(k2(x, y, z), x, z) + 
-2*c(x, y, z)*Derivative(k2(x, y, z), z)*Derivative(k2(x, y, z), x, y) + 
-pow(k2(x, y, z), 2)*Derivative(c(x, y, z), x, y, z) + 2*k2(x, y, z)*
-Derivative(c(x, y, z), x)*Derivative(k2(x, y, z), y, z) + 2*
-k2(x, y, z)*Derivative(c(x, y, z), y)*Derivative(k2(x, y, z), x, z) + 
-2*k2(x, y, z)*Derivative(c(x, y, z), z)*Derivative(k2(x, y, z), x, y) + 
-2*k2(x, y, z)*Derivative(k2(x, y, z), x)*Derivative(c(x, y, z), y, z) + 
-2*k2(x, y, z)*Derivative(k2(x, y, z), y)*Derivative(c(x, y, z), x, z) + 
-2*k2(x, y, z)*Derivative(k2(x, y, z), z)*Derivative(c(x, y, z), x, y) + 
-2*Derivative(c(x, y, z), x)*Derivative(k2(x, y, z), y)*
-Derivative(k2(x, y, z), z) + 2*Derivative(c(x, y, z), y)*
-Derivative(k2(x, y, z), x)*Derivative(k2(x, y, z), z) + 2*
-Derivative(c(x, y, z), z)*Derivative(k2(x, y, z), x)*
-Derivative(k2(x, y, z), y);
+2*bbn_ks_c(x, y, z)*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x, y, z) + 2*
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), y, z) + 
+2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x, z) + 
+2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x, y) + 
+pow(bbn_ks_k2(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), x, y, z) + 2*bbn_ks_k2(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), y, z) + 2*
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x, z) + 
+2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x, y) + 
+2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), y, z) + 
+2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k2(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), x, z) + 
+2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k2(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), x, y) + 
+2*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), y)*
+Derivative(bbn_ks_k2(x, y, z), z) + 2*Derivative(bbn_ks_c(x, y, z), y)*
+Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), z) + 2*
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x)*
+Derivative(bbn_ks_k2(x, y, z), y);
 
     _dddgamma_D1D1D0D1D0[ijk]=
 /* mcode in progress ... */
@@ -4001,17 +4001,17 @@ Derivative(k2(x, y, z), y);
 // Derivative
 // c
 // k1
-2*c(x, y, z)*k1(x, y, z)*Derivative(k1(x, y, z), (x, 2), y) + 4*
-c(x, y, z)*Derivative(k1(x, y, z), x)*Derivative(k1(x, y, z), x, y) + 
-2*c(x, y, z)*Derivative(k1(x, y, z), (x, 2))*Derivative(k1(x, y, z), y) + 
-pow(k1(x, y, z), 2)*Derivative(c(x, y, z), (x, 2), y) + 4*k1(x, y, z)*
-Derivative(c(x, y, z), x)*Derivative(k1(x, y, z), x, y) + 2*
-k1(x, y, z)*Derivative(c(x, y, z), (x, 2))*Derivative(k1(x, y, z), y) + 
-2*k1(x, y, z)*Derivative(c(x, y, z), y)*Derivative(k1(x, y, z), (x, 2)) + 
-4*k1(x, y, z)*Derivative(k1(x, y, z), x)*Derivative(c(x, y, z), x, y) + 
-4*Derivative(c(x, y, z), x)*Derivative(k1(x, y, z), x)*
-Derivative(k1(x, y, z), y) + 2*Derivative(c(x, y, z), y)*
-pow(Derivative(k1(x, y, z), x), 2);
+2*bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k1(x, y, z), (x, 2), y) + 4*
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), x, y) + 
+2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), (x, 2))*Derivative(bbn_ks_k1(x, y, z), y) + 
+pow(bbn_ks_k1(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), (x, 2), y) + 4*bbn_ks_k1(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), x, y) + 2*
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2))*Derivative(bbn_ks_k1(x, y, z), y) + 
+2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), (x, 2)) + 
+4*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), x, y) + 
+4*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), x)*
+Derivative(bbn_ks_k1(x, y, z), y) + 2*Derivative(bbn_ks_c(x, y, z), y)*
+pow(Derivative(bbn_ks_k1(x, y, z), x), 2);
 
     _dddgamma_D1D2D2D0D2[ijk]=
 /* mcode in progress ... */
@@ -4034,26 +4034,26 @@ pow(Derivative(k1(x, y, z), x), 2);
 // c
 // k1
 // k2
-c(x, y, z)*k1(x, y, z)*Derivative(k2(x, y, z), x, (z, 2)) + c(x, y, z)*
-k2(x, y, z)*Derivative(k1(x, y, z), x, (z, 2)) + c(x, y, z)*
-Derivative(k1(x, y, z), x)*Derivative(k2(x, y, z), (z, 2)) + 2*
-c(x, y, z)*Derivative(k1(x, y, z), z)*Derivative(k2(x, y, z), x, z) + 
-c(x, y, z)*Derivative(k1(x, y, z), (z, 2))*Derivative(k2(x, y, z), x) + 
-2*c(x, y, z)*Derivative(k2(x, y, z), z)*Derivative(k1(x, y, z), x, z) + 
-k1(x, y, z)*k2(x, y, z)*Derivative(c(x, y, z), x, (z, 2)) + 
-k1(x, y, z)*Derivative(c(x, y, z), x)*Derivative(k2(x, y, z), (z, 2)) + 
-2*k1(x, y, z)*Derivative(c(x, y, z), z)*Derivative(k2(x, y, z), x, z) + 
-k1(x, y, z)*Derivative(c(x, y, z), (z, 2))*Derivative(k2(x, y, z), x) + 
-2*k1(x, y, z)*Derivative(k2(x, y, z), z)*Derivative(c(x, y, z), x, z) + 
-k2(x, y, z)*Derivative(c(x, y, z), x)*Derivative(k1(x, y, z), (z, 2)) + 
-2*k2(x, y, z)*Derivative(c(x, y, z), z)*Derivative(k1(x, y, z), x, z) + 
-k2(x, y, z)*Derivative(c(x, y, z), (z, 2))*Derivative(k1(x, y, z), x) + 
-2*k2(x, y, z)*Derivative(k1(x, y, z), z)*Derivative(c(x, y, z), x, z) + 
-2*Derivative(c(x, y, z), x)*Derivative(k1(x, y, z), z)*
-Derivative(k2(x, y, z), z) + 2*Derivative(c(x, y, z), z)*
-Derivative(k1(x, y, z), x)*Derivative(k2(x, y, z), z) + 2*
-Derivative(c(x, y, z), z)*Derivative(k1(x, y, z), z)*
-Derivative(k2(x, y, z), x);
+bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x, (z, 2)) + bbn_ks_c(x, y, z)*
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x, (z, 2)) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), (z, 2)) + 2*
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x, z) + 
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), (z, 2))*Derivative(bbn_ks_k2(x, y, z), x) + 
+2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x, z) + 
+bbn_ks_k1(x, y, z)*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), x, (z, 2)) + 
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), (z, 2)) + 
+2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x, z) + 
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), (z, 2))*Derivative(bbn_ks_k2(x, y, z), x) + 
+2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k2(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), x, z) + 
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), (z, 2)) + 
+2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x, z) + 
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (z, 2))*Derivative(bbn_ks_k1(x, y, z), x) + 
+2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), x, z) + 
+2*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), z)*
+Derivative(bbn_ks_k2(x, y, z), z) + 2*Derivative(bbn_ks_c(x, y, z), z)*
+Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), z) + 2*
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), z)*
+Derivative(bbn_ks_k2(x, y, z), x);
 
     _dddgamma_D0D1D0D1D1[ijk]=
 /* mcode in progress ... */
@@ -4076,26 +4076,26 @@ Derivative(k2(x, y, z), x);
 // c
 // k0
 // k1
-c(x, y, z)*k0(x, y, z)*Derivative(k1(x, y, z), x, (y, 2)) + c(x, y, z)*
-k1(x, y, z)*Derivative(k0(x, y, z), x, (y, 2)) + c(x, y, z)*
-Derivative(k0(x, y, z), x)*Derivative(k1(x, y, z), (y, 2)) + 2*
-c(x, y, z)*Derivative(k0(x, y, z), y)*Derivative(k1(x, y, z), x, y) + 
-c(x, y, z)*Derivative(k0(x, y, z), (y, 2))*Derivative(k1(x, y, z), x) + 
-2*c(x, y, z)*Derivative(k1(x, y, z), y)*Derivative(k0(x, y, z), x, y) + 
-k0(x, y, z)*k1(x, y, z)*Derivative(c(x, y, z), x, (y, 2)) + 
-k0(x, y, z)*Derivative(c(x, y, z), x)*Derivative(k1(x, y, z), (y, 2)) + 
-2*k0(x, y, z)*Derivative(c(x, y, z), y)*Derivative(k1(x, y, z), x, y) + 
-k0(x, y, z)*Derivative(c(x, y, z), (y, 2))*Derivative(k1(x, y, z), x) + 
-2*k0(x, y, z)*Derivative(k1(x, y, z), y)*Derivative(c(x, y, z), x, y) + 
-k1(x, y, z)*Derivative(c(x, y, z), x)*Derivative(k0(x, y, z), (y, 2)) + 
-2*k1(x, y, z)*Derivative(c(x, y, z), y)*Derivative(k0(x, y, z), x, y) + 
-k1(x, y, z)*Derivative(c(x, y, z), (y, 2))*Derivative(k0(x, y, z), x) + 
-2*k1(x, y, z)*Derivative(k0(x, y, z), y)*Derivative(c(x, y, z), x, y) + 
-2*Derivative(c(x, y, z), x)*Derivative(k0(x, y, z), y)*
-Derivative(k1(x, y, z), y) + 2*Derivative(c(x, y, z), y)*
-Derivative(k0(x, y, z), x)*Derivative(k1(x, y, z), y) + 2*
-Derivative(c(x, y, z), y)*Derivative(k0(x, y, z), y)*
-Derivative(k1(x, y, z), x);
+bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x, (y, 2)) + bbn_ks_c(x, y, z)*
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x, (y, 2)) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), (y, 2)) + 2*
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x, y) + 
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), (y, 2))*Derivative(bbn_ks_k1(x, y, z), x) + 
+2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x, y) + 
+bbn_ks_k0(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), x, (y, 2)) + 
+bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), (y, 2)) + 
+2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x, y) + 
+bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), (y, 2))*Derivative(bbn_ks_k1(x, y, z), x) + 
+2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), x, y) + 
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), (y, 2)) + 
+2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x, y) + 
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), (y, 2))*Derivative(bbn_ks_k0(x, y, z), x) + 
+2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), x, y) + 
+2*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), y)*
+Derivative(bbn_ks_k1(x, y, z), y) + 2*Derivative(bbn_ks_c(x, y, z), y)*
+Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), y) + 2*
+Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), y)*
+Derivative(bbn_ks_k1(x, y, z), x);
 
     _dddgamma_D2D2D0D2D2[ijk]=
 /* mcode in progress ... */
@@ -4112,17 +4112,17 @@ Derivative(k1(x, y, z), x);
 // Derivative
 // c
 // k2
-2*c(x, y, z)*k2(x, y, z)*Derivative(k2(x, y, z), x, (z, 2)) + 2*
-c(x, y, z)*Derivative(k2(x, y, z), x)*Derivative(k2(x, y, z), (z, 2)) + 
-4*c(x, y, z)*Derivative(k2(x, y, z), z)*Derivative(k2(x, y, z), x, z) + 
-pow(k2(x, y, z), 2)*Derivative(c(x, y, z), x, (z, 2)) + 2*k2(x, y, z)*
-Derivative(c(x, y, z), x)*Derivative(k2(x, y, z), (z, 2)) + 4*
-k2(x, y, z)*Derivative(c(x, y, z), z)*Derivative(k2(x, y, z), x, z) + 
-2*k2(x, y, z)*Derivative(c(x, y, z), (z, 2))*Derivative(k2(x, y, z), x) + 
-4*k2(x, y, z)*Derivative(k2(x, y, z), z)*Derivative(c(x, y, z), x, z) + 
-2*Derivative(c(x, y, z), x)*pow(Derivative(k2(x, y, z), z), 2) + 4*
-Derivative(c(x, y, z), z)*Derivative(k2(x, y, z), x)*
-Derivative(k2(x, y, z), z);
+2*bbn_ks_c(x, y, z)*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x, (z, 2)) + 2*
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), (z, 2)) + 
+4*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x, z) + 
+pow(bbn_ks_k2(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), x, (z, 2)) + 2*bbn_ks_k2(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), (z, 2)) + 4*
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x, z) + 
+2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (z, 2))*Derivative(bbn_ks_k2(x, y, z), x) + 
+4*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k2(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), x, z) + 
+2*Derivative(bbn_ks_c(x, y, z), x)*pow(Derivative(bbn_ks_k2(x, y, z), z), 2) + 4*
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x)*
+Derivative(bbn_ks_k2(x, y, z), z);
 
     _dddgamma_D1D2D2D1D2[ijk]=
 /* mcode in progress ... */
@@ -4145,26 +4145,26 @@ Derivative(k2(x, y, z), z);
 // c
 // k1
 // k2
-c(x, y, z)*k1(x, y, z)*Derivative(k2(x, y, z), y, (z, 2)) + c(x, y, z)*
-k2(x, y, z)*Derivative(k1(x, y, z), y, (z, 2)) + c(x, y, z)*
-Derivative(k1(x, y, z), y)*Derivative(k2(x, y, z), (z, 2)) + 2*
-c(x, y, z)*Derivative(k1(x, y, z), z)*Derivative(k2(x, y, z), y, z) + 
-c(x, y, z)*Derivative(k1(x, y, z), (z, 2))*Derivative(k2(x, y, z), y) + 
-2*c(x, y, z)*Derivative(k2(x, y, z), z)*Derivative(k1(x, y, z), y, z) + 
-k1(x, y, z)*k2(x, y, z)*Derivative(c(x, y, z), y, (z, 2)) + 
-k1(x, y, z)*Derivative(c(x, y, z), y)*Derivative(k2(x, y, z), (z, 2)) + 
-2*k1(x, y, z)*Derivative(c(x, y, z), z)*Derivative(k2(x, y, z), y, z) + 
-k1(x, y, z)*Derivative(c(x, y, z), (z, 2))*Derivative(k2(x, y, z), y) + 
-2*k1(x, y, z)*Derivative(k2(x, y, z), z)*Derivative(c(x, y, z), y, z) + 
-k2(x, y, z)*Derivative(c(x, y, z), y)*Derivative(k1(x, y, z), (z, 2)) + 
-2*k2(x, y, z)*Derivative(c(x, y, z), z)*Derivative(k1(x, y, z), y, z) + 
-k2(x, y, z)*Derivative(c(x, y, z), (z, 2))*Derivative(k1(x, y, z), y) + 
-2*k2(x, y, z)*Derivative(k1(x, y, z), z)*Derivative(c(x, y, z), y, z) + 
-2*Derivative(c(x, y, z), y)*Derivative(k1(x, y, z), z)*
-Derivative(k2(x, y, z), z) + 2*Derivative(c(x, y, z), z)*
-Derivative(k1(x, y, z), y)*Derivative(k2(x, y, z), z) + 2*
-Derivative(c(x, y, z), z)*Derivative(k1(x, y, z), z)*
-Derivative(k2(x, y, z), y);
+bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k2(x, y, z), y, (z, 2)) + bbn_ks_c(x, y, z)*
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k1(x, y, z), y, (z, 2)) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), (z, 2)) + 2*
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), y, z) + 
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), (z, 2))*Derivative(bbn_ks_k2(x, y, z), y) + 
+2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), y, z) + 
+bbn_ks_k1(x, y, z)*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), y, (z, 2)) + 
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), (z, 2)) + 
+2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), y, z) + 
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), (z, 2))*Derivative(bbn_ks_k2(x, y, z), y) + 
+2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k2(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), y, z) + 
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), (z, 2)) + 
+2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), y, z) + 
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (z, 2))*Derivative(bbn_ks_k1(x, y, z), y) + 
+2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), y, z) + 
+2*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), z)*
+Derivative(bbn_ks_k2(x, y, z), z) + 2*Derivative(bbn_ks_c(x, y, z), z)*
+Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), z) + 2*
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), z)*
+Derivative(bbn_ks_k2(x, y, z), y);
 
     _dddgamma_D2D2D1D1D1[ijk]=
 /* mcode in progress ... */
@@ -4177,12 +4177,12 @@ Derivative(k2(x, y, z), y);
 // Derivative
 // c
 // k2
-2*c(x, y, z)*k2(x, y, z)*Derivative(k2(x, y, z), (y, 3)) + 6*
-c(x, y, z)*Derivative(k2(x, y, z), y)*Derivative(k2(x, y, z), (y, 2)) + 
-pow(k2(x, y, z), 2)*Derivative(c(x, y, z), (y, 3)) + 6*k2(x, y, z)*
-Derivative(c(x, y, z), y)*Derivative(k2(x, y, z), (y, 2)) + 6*
-k2(x, y, z)*Derivative(c(x, y, z), (y, 2))*Derivative(k2(x, y, z), y) + 
-6*Derivative(c(x, y, z), y)*pow(Derivative(k2(x, y, z), y), 2);
+2*bbn_ks_c(x, y, z)*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k2(x, y, z), (y, 3)) + 6*
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), (y, 2)) + 
+pow(bbn_ks_k2(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), (y, 3)) + 6*bbn_ks_k2(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), (y, 2)) + 6*
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (y, 2))*Derivative(bbn_ks_k2(x, y, z), y) + 
+6*Derivative(bbn_ks_c(x, y, z), y)*pow(Derivative(bbn_ks_k2(x, y, z), y), 2);
 
     _dddgamma_D0D0D0D0D0[ijk]=
 /* mcode in progress ... */
@@ -4195,12 +4195,12 @@ k2(x, y, z)*Derivative(c(x, y, z), (y, 2))*Derivative(k2(x, y, z), y) +
 // Derivative
 // c
 // k0
-2*c(x, y, z)*k0(x, y, z)*Derivative(k0(x, y, z), (x, 3)) + 6*
-c(x, y, z)*Derivative(k0(x, y, z), x)*Derivative(k0(x, y, z), (x, 2)) + 
-pow(k0(x, y, z), 2)*Derivative(c(x, y, z), (x, 3)) + 6*k0(x, y, z)*
-Derivative(c(x, y, z), x)*Derivative(k0(x, y, z), (x, 2)) + 6*
-k0(x, y, z)*Derivative(c(x, y, z), (x, 2))*Derivative(k0(x, y, z), x) + 
-6*Derivative(c(x, y, z), x)*pow(Derivative(k0(x, y, z), x), 2);
+2*bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k0(x, y, z), (x, 3)) + 6*
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), (x, 2)) + 
+pow(bbn_ks_k0(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), (x, 3)) + 6*bbn_ks_k0(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), (x, 2)) + 6*
+bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2))*Derivative(bbn_ks_k0(x, y, z), x) + 
+6*Derivative(bbn_ks_c(x, y, z), x)*pow(Derivative(bbn_ks_k0(x, y, z), x), 2);
 
     _dddgamma_D0D0D1D2D1[ijk]=
 /* mcode in progress ... */
@@ -4217,17 +4217,17 @@ k0(x, y, z)*Derivative(c(x, y, z), (x, 2))*Derivative(k0(x, y, z), x) +
 // Derivative
 // c
 // k0
-2*c(x, y, z)*k0(x, y, z)*Derivative(k0(x, y, z), (y, 2), z) + 4*
-c(x, y, z)*Derivative(k0(x, y, z), y)*Derivative(k0(x, y, z), y, z) + 
-2*c(x, y, z)*Derivative(k0(x, y, z), (y, 2))*Derivative(k0(x, y, z), z) + 
-pow(k0(x, y, z), 2)*Derivative(c(x, y, z), (y, 2), z) + 4*k0(x, y, z)*
-Derivative(c(x, y, z), y)*Derivative(k0(x, y, z), y, z) + 2*
-k0(x, y, z)*Derivative(c(x, y, z), (y, 2))*Derivative(k0(x, y, z), z) + 
-2*k0(x, y, z)*Derivative(c(x, y, z), z)*Derivative(k0(x, y, z), (y, 2)) + 
-4*k0(x, y, z)*Derivative(k0(x, y, z), y)*Derivative(c(x, y, z), y, z) + 
-4*Derivative(c(x, y, z), y)*Derivative(k0(x, y, z), y)*
-Derivative(k0(x, y, z), z) + 2*Derivative(c(x, y, z), z)*
-pow(Derivative(k0(x, y, z), y), 2);
+2*bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k0(x, y, z), (y, 2), z) + 4*
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), y, z) + 
+2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), (y, 2))*Derivative(bbn_ks_k0(x, y, z), z) + 
+pow(bbn_ks_k0(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), (y, 2), z) + 4*bbn_ks_k0(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), y, z) + 2*
+bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), (y, 2))*Derivative(bbn_ks_k0(x, y, z), z) + 
+2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), (y, 2)) + 
+4*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), y, z) + 
+4*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), y)*
+Derivative(bbn_ks_k0(x, y, z), z) + 2*Derivative(bbn_ks_c(x, y, z), z)*
+pow(Derivative(bbn_ks_k0(x, y, z), y), 2);
 
     _dddgamma_D1D1D1D1D0[ijk]=
 /* mcode in progress ... */
@@ -4244,17 +4244,17 @@ pow(Derivative(k0(x, y, z), y), 2);
 // Derivative
 // c
 // k1
-2*c(x, y, z)*k1(x, y, z)*Derivative(k1(x, y, z), x, (y, 2)) + 2*
-c(x, y, z)*Derivative(k1(x, y, z), x)*Derivative(k1(x, y, z), (y, 2)) + 
-4*c(x, y, z)*Derivative(k1(x, y, z), y)*Derivative(k1(x, y, z), x, y) + 
-pow(k1(x, y, z), 2)*Derivative(c(x, y, z), x, (y, 2)) + 2*k1(x, y, z)*
-Derivative(c(x, y, z), x)*Derivative(k1(x, y, z), (y, 2)) + 4*
-k1(x, y, z)*Derivative(c(x, y, z), y)*Derivative(k1(x, y, z), x, y) + 
-2*k1(x, y, z)*Derivative(c(x, y, z), (y, 2))*Derivative(k1(x, y, z), x) + 
-4*k1(x, y, z)*Derivative(k1(x, y, z), y)*Derivative(c(x, y, z), x, y) + 
-2*Derivative(c(x, y, z), x)*pow(Derivative(k1(x, y, z), y), 2) + 4*
-Derivative(c(x, y, z), y)*Derivative(k1(x, y, z), x)*
-Derivative(k1(x, y, z), y);
+2*bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x, (y, 2)) + 2*
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), (y, 2)) + 
+4*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x, y) + 
+pow(bbn_ks_k1(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), x, (y, 2)) + 2*bbn_ks_k1(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), (y, 2)) + 4*
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x, y) + 
+2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), (y, 2))*Derivative(bbn_ks_k1(x, y, z), x) + 
+4*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), x, y) + 
+2*Derivative(bbn_ks_c(x, y, z), x)*pow(Derivative(bbn_ks_k1(x, y, z), y), 2) + 4*
+Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x)*
+Derivative(bbn_ks_k1(x, y, z), y);
 
     _dddgamma_D1D1D1D1D1[ijk]=
 /* mcode in progress ... */
@@ -4267,12 +4267,12 @@ Derivative(k1(x, y, z), y);
 // Derivative
 // c
 // k1
-2*c(x, y, z)*k1(x, y, z)*Derivative(k1(x, y, z), (y, 3)) + 6*
-c(x, y, z)*Derivative(k1(x, y, z), y)*Derivative(k1(x, y, z), (y, 2)) + 
-pow(k1(x, y, z), 2)*Derivative(c(x, y, z), (y, 3)) + 6*k1(x, y, z)*
-Derivative(c(x, y, z), y)*Derivative(k1(x, y, z), (y, 2)) + 6*
-k1(x, y, z)*Derivative(c(x, y, z), (y, 2))*Derivative(k1(x, y, z), y) + 
-6*Derivative(c(x, y, z), y)*pow(Derivative(k1(x, y, z), y), 2);
+2*bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k1(x, y, z), (y, 3)) + 6*
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), (y, 2)) + 
+pow(bbn_ks_k1(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), (y, 3)) + 6*bbn_ks_k1(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), (y, 2)) + 6*
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), (y, 2))*Derivative(bbn_ks_k1(x, y, z), y) + 
+6*Derivative(bbn_ks_c(x, y, z), y)*pow(Derivative(bbn_ks_k1(x, y, z), y), 2);
 
     _dddgamma_D1D1D1D2D0[ijk]=
 /* mcode in progress ... */
@@ -4293,22 +4293,22 @@ k1(x, y, z)*Derivative(c(x, y, z), (y, 2))*Derivative(k1(x, y, z), y) +
 // Derivative
 // c
 // k1
-2*c(x, y, z)*k1(x, y, z)*Derivative(k1(x, y, z), x, y, z) + 2*
-c(x, y, z)*Derivative(k1(x, y, z), x)*Derivative(k1(x, y, z), y, z) + 
-2*c(x, y, z)*Derivative(k1(x, y, z), y)*Derivative(k1(x, y, z), x, z) + 
-2*c(x, y, z)*Derivative(k1(x, y, z), z)*Derivative(k1(x, y, z), x, y) + 
-pow(k1(x, y, z), 2)*Derivative(c(x, y, z), x, y, z) + 2*k1(x, y, z)*
-Derivative(c(x, y, z), x)*Derivative(k1(x, y, z), y, z) + 2*
-k1(x, y, z)*Derivative(c(x, y, z), y)*Derivative(k1(x, y, z), x, z) + 
-2*k1(x, y, z)*Derivative(c(x, y, z), z)*Derivative(k1(x, y, z), x, y) + 
-2*k1(x, y, z)*Derivative(k1(x, y, z), x)*Derivative(c(x, y, z), y, z) + 
-2*k1(x, y, z)*Derivative(k1(x, y, z), y)*Derivative(c(x, y, z), x, z) + 
-2*k1(x, y, z)*Derivative(k1(x, y, z), z)*Derivative(c(x, y, z), x, y) + 
-2*Derivative(c(x, y, z), x)*Derivative(k1(x, y, z), y)*
-Derivative(k1(x, y, z), z) + 2*Derivative(c(x, y, z), y)*
-Derivative(k1(x, y, z), x)*Derivative(k1(x, y, z), z) + 2*
-Derivative(c(x, y, z), z)*Derivative(k1(x, y, z), x)*
-Derivative(k1(x, y, z), y);
+2*bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x, y, z) + 2*
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), y, z) + 
+2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x, z) + 
+2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x, y) + 
+pow(bbn_ks_k1(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), x, y, z) + 2*bbn_ks_k1(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), y, z) + 2*
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x, z) + 
+2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x, y) + 
+2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), y, z) + 
+2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), x, z) + 
+2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), x, y) + 
+2*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), y)*
+Derivative(bbn_ks_k1(x, y, z), z) + 2*Derivative(bbn_ks_c(x, y, z), y)*
+Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), z) + 2*
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x)*
+Derivative(bbn_ks_k1(x, y, z), y);
 
     _dddgamma_D0D1D0D2D1[ijk]=
 /* mcode in progress ... */
@@ -4337,36 +4337,36 @@ Derivative(k1(x, y, z), y);
 // c
 // k0
 // k1
-c(x, y, z)*k0(x, y, z)*Derivative(k1(x, y, z), x, y, z) + c(x, y, z)*
-k1(x, y, z)*Derivative(k0(x, y, z), x, y, z) + c(x, y, z)*
-Derivative(k0(x, y, z), x)*Derivative(k1(x, y, z), y, z) + c(x, y, z)*
-Derivative(k0(x, y, z), y)*Derivative(k1(x, y, z), x, z) + c(x, y, z)*
-Derivative(k0(x, y, z), z)*Derivative(k1(x, y, z), x, y) + c(x, y, z)*
-Derivative(k1(x, y, z), x)*Derivative(k0(x, y, z), y, z) + c(x, y, z)*
-Derivative(k1(x, y, z), y)*Derivative(k0(x, y, z), x, z) + c(x, y, z)*
-Derivative(k1(x, y, z), z)*Derivative(k0(x, y, z), x, y) + k0(x, y, z)*
-k1(x, y, z)*Derivative(c(x, y, z), x, y, z) + k0(x, y, z)*
-Derivative(c(x, y, z), x)*Derivative(k1(x, y, z), y, z) + k0(x, y, z)*
-Derivative(c(x, y, z), y)*Derivative(k1(x, y, z), x, z) + k0(x, y, z)*
-Derivative(c(x, y, z), z)*Derivative(k1(x, y, z), x, y) + k0(x, y, z)*
-Derivative(k1(x, y, z), x)*Derivative(c(x, y, z), y, z) + k0(x, y, z)*
-Derivative(k1(x, y, z), y)*Derivative(c(x, y, z), x, z) + k0(x, y, z)*
-Derivative(k1(x, y, z), z)*Derivative(c(x, y, z), x, y) + k1(x, y, z)*
-Derivative(c(x, y, z), x)*Derivative(k0(x, y, z), y, z) + k1(x, y, z)*
-Derivative(c(x, y, z), y)*Derivative(k0(x, y, z), x, z) + k1(x, y, z)*
-Derivative(c(x, y, z), z)*Derivative(k0(x, y, z), x, y) + k1(x, y, z)*
-Derivative(k0(x, y, z), x)*Derivative(c(x, y, z), y, z) + k1(x, y, z)*
-Derivative(k0(x, y, z), y)*Derivative(c(x, y, z), x, z) + k1(x, y, z)*
-Derivative(k0(x, y, z), z)*Derivative(c(x, y, z), x, y) + 
-Derivative(c(x, y, z), x)*Derivative(k0(x, y, z), y)*
-Derivative(k1(x, y, z), z) + Derivative(c(x, y, z), x)*
-Derivative(k0(x, y, z), z)*Derivative(k1(x, y, z), y) + 
-Derivative(c(x, y, z), y)*Derivative(k0(x, y, z), x)*
-Derivative(k1(x, y, z), z) + Derivative(c(x, y, z), y)*
-Derivative(k0(x, y, z), z)*Derivative(k1(x, y, z), x) + 
-Derivative(c(x, y, z), z)*Derivative(k0(x, y, z), x)*
-Derivative(k1(x, y, z), y) + Derivative(c(x, y, z), z)*
-Derivative(k0(x, y, z), y)*Derivative(k1(x, y, z), x);
+bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x, y, z) + bbn_ks_c(x, y, z)*
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x, y, z) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), y, z) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x, z) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x, y) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), y, z) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x, z) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x, y) + bbn_ks_k0(x, y, z)*
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), x, y, z) + bbn_ks_k0(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), y, z) + bbn_ks_k0(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x, z) + bbn_ks_k0(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x, y) + bbn_ks_k0(x, y, z)*
+Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), y, z) + bbn_ks_k0(x, y, z)*
+Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), x, z) + bbn_ks_k0(x, y, z)*
+Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), x, y) + bbn_ks_k1(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), y, z) + bbn_ks_k1(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x, z) + bbn_ks_k1(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x, y) + bbn_ks_k1(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), y, z) + bbn_ks_k1(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), x, z) + bbn_ks_k1(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), x, y) + 
+Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), y)*
+Derivative(bbn_ks_k1(x, y, z), z) + Derivative(bbn_ks_c(x, y, z), x)*
+Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), y) + 
+Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x)*
+Derivative(bbn_ks_k1(x, y, z), z) + Derivative(bbn_ks_c(x, y, z), y)*
+Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x) + 
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x)*
+Derivative(bbn_ks_k1(x, y, z), y) + Derivative(bbn_ks_c(x, y, z), z)*
+Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x);
 
     _dddgamma_D2D2D1D1D0[ijk]=
 /* mcode in progress ... */
@@ -4383,17 +4383,17 @@ Derivative(k0(x, y, z), y)*Derivative(k1(x, y, z), x);
 // Derivative
 // c
 // k2
-2*c(x, y, z)*k2(x, y, z)*Derivative(k2(x, y, z), x, (y, 2)) + 2*
-c(x, y, z)*Derivative(k2(x, y, z), x)*Derivative(k2(x, y, z), (y, 2)) + 
-4*c(x, y, z)*Derivative(k2(x, y, z), y)*Derivative(k2(x, y, z), x, y) + 
-pow(k2(x, y, z), 2)*Derivative(c(x, y, z), x, (y, 2)) + 2*k2(x, y, z)*
-Derivative(c(x, y, z), x)*Derivative(k2(x, y, z), (y, 2)) + 4*
-k2(x, y, z)*Derivative(c(x, y, z), y)*Derivative(k2(x, y, z), x, y) + 
-2*k2(x, y, z)*Derivative(c(x, y, z), (y, 2))*Derivative(k2(x, y, z), x) + 
-4*k2(x, y, z)*Derivative(k2(x, y, z), y)*Derivative(c(x, y, z), x, y) + 
-2*Derivative(c(x, y, z), x)*pow(Derivative(k2(x, y, z), y), 2) + 4*
-Derivative(c(x, y, z), y)*Derivative(k2(x, y, z), x)*
-Derivative(k2(x, y, z), y);
+2*bbn_ks_c(x, y, z)*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x, (y, 2)) + 2*
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), (y, 2)) + 
+4*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x, y) + 
+pow(bbn_ks_k2(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), x, (y, 2)) + 2*bbn_ks_k2(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), (y, 2)) + 4*
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x, y) + 
+2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (y, 2))*Derivative(bbn_ks_k2(x, y, z), x) + 
+4*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k2(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), x, y) + 
+2*Derivative(bbn_ks_c(x, y, z), x)*pow(Derivative(bbn_ks_k2(x, y, z), y), 2) + 4*
+Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x)*
+Derivative(bbn_ks_k2(x, y, z), y);
 
     _dddgamma_D1D2D2D2D0[ijk]=
 /* mcode in progress ... */
@@ -4416,26 +4416,26 @@ Derivative(k2(x, y, z), y);
 // c
 // k1
 // k2
-c(x, y, z)*k1(x, y, z)*Derivative(k2(x, y, z), x, (z, 2)) + c(x, y, z)*
-k2(x, y, z)*Derivative(k1(x, y, z), x, (z, 2)) + c(x, y, z)*
-Derivative(k1(x, y, z), x)*Derivative(k2(x, y, z), (z, 2)) + 2*
-c(x, y, z)*Derivative(k1(x, y, z), z)*Derivative(k2(x, y, z), x, z) + 
-c(x, y, z)*Derivative(k1(x, y, z), (z, 2))*Derivative(k2(x, y, z), x) + 
-2*c(x, y, z)*Derivative(k2(x, y, z), z)*Derivative(k1(x, y, z), x, z) + 
-k1(x, y, z)*k2(x, y, z)*Derivative(c(x, y, z), x, (z, 2)) + 
-k1(x, y, z)*Derivative(c(x, y, z), x)*Derivative(k2(x, y, z), (z, 2)) + 
-2*k1(x, y, z)*Derivative(c(x, y, z), z)*Derivative(k2(x, y, z), x, z) + 
-k1(x, y, z)*Derivative(c(x, y, z), (z, 2))*Derivative(k2(x, y, z), x) + 
-2*k1(x, y, z)*Derivative(k2(x, y, z), z)*Derivative(c(x, y, z), x, z) + 
-k2(x, y, z)*Derivative(c(x, y, z), x)*Derivative(k1(x, y, z), (z, 2)) + 
-2*k2(x, y, z)*Derivative(c(x, y, z), z)*Derivative(k1(x, y, z), x, z) + 
-k2(x, y, z)*Derivative(c(x, y, z), (z, 2))*Derivative(k1(x, y, z), x) + 
-2*k2(x, y, z)*Derivative(k1(x, y, z), z)*Derivative(c(x, y, z), x, z) + 
-2*Derivative(c(x, y, z), x)*Derivative(k1(x, y, z), z)*
-Derivative(k2(x, y, z), z) + 2*Derivative(c(x, y, z), z)*
-Derivative(k1(x, y, z), x)*Derivative(k2(x, y, z), z) + 2*
-Derivative(c(x, y, z), z)*Derivative(k1(x, y, z), z)*
-Derivative(k2(x, y, z), x);
+bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x, (z, 2)) + bbn_ks_c(x, y, z)*
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x, (z, 2)) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), (z, 2)) + 2*
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x, z) + 
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), (z, 2))*Derivative(bbn_ks_k2(x, y, z), x) + 
+2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x, z) + 
+bbn_ks_k1(x, y, z)*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), x, (z, 2)) + 
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), (z, 2)) + 
+2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x, z) + 
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), (z, 2))*Derivative(bbn_ks_k2(x, y, z), x) + 
+2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k2(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), x, z) + 
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), (z, 2)) + 
+2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x, z) + 
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (z, 2))*Derivative(bbn_ks_k1(x, y, z), x) + 
+2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), x, z) + 
+2*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), z)*
+Derivative(bbn_ks_k2(x, y, z), z) + 2*Derivative(bbn_ks_c(x, y, z), z)*
+Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), z) + 2*
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), z)*
+Derivative(bbn_ks_k2(x, y, z), x);
 
     _dddgamma_D0D0D1D1D2[ijk]=
 /* mcode in progress ... */
@@ -4452,17 +4452,17 @@ Derivative(k2(x, y, z), x);
 // Derivative
 // c
 // k0
-2*c(x, y, z)*k0(x, y, z)*Derivative(k0(x, y, z), (y, 2), z) + 4*
-c(x, y, z)*Derivative(k0(x, y, z), y)*Derivative(k0(x, y, z), y, z) + 
-2*c(x, y, z)*Derivative(k0(x, y, z), (y, 2))*Derivative(k0(x, y, z), z) + 
-pow(k0(x, y, z), 2)*Derivative(c(x, y, z), (y, 2), z) + 4*k0(x, y, z)*
-Derivative(c(x, y, z), y)*Derivative(k0(x, y, z), y, z) + 2*
-k0(x, y, z)*Derivative(c(x, y, z), (y, 2))*Derivative(k0(x, y, z), z) + 
-2*k0(x, y, z)*Derivative(c(x, y, z), z)*Derivative(k0(x, y, z), (y, 2)) + 
-4*k0(x, y, z)*Derivative(k0(x, y, z), y)*Derivative(c(x, y, z), y, z) + 
-4*Derivative(c(x, y, z), y)*Derivative(k0(x, y, z), y)*
-Derivative(k0(x, y, z), z) + 2*Derivative(c(x, y, z), z)*
-pow(Derivative(k0(x, y, z), y), 2);
+2*bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k0(x, y, z), (y, 2), z) + 4*
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), y, z) + 
+2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), (y, 2))*Derivative(bbn_ks_k0(x, y, z), z) + 
+pow(bbn_ks_k0(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), (y, 2), z) + 4*bbn_ks_k0(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), y, z) + 2*
+bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), (y, 2))*Derivative(bbn_ks_k0(x, y, z), z) + 
+2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), (y, 2)) + 
+4*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), y, z) + 
+4*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), y)*
+Derivative(bbn_ks_k0(x, y, z), z) + 2*Derivative(bbn_ks_c(x, y, z), z)*
+pow(Derivative(bbn_ks_k0(x, y, z), y), 2);
 
     _dddgamma_D0D2D0D2D0[ijk]=
 /* mcode in progress ... */
@@ -4485,26 +4485,26 @@ pow(Derivative(k0(x, y, z), y), 2);
 // c
 // k0
 // k2
-c(x, y, z)*k0(x, y, z)*Derivative(k2(x, y, z), (x, 2), z) + c(x, y, z)*
-k2(x, y, z)*Derivative(k0(x, y, z), (x, 2), z) + 2*c(x, y, z)*
-Derivative(k0(x, y, z), x)*Derivative(k2(x, y, z), x, z) + c(x, y, z)*
-Derivative(k0(x, y, z), (x, 2))*Derivative(k2(x, y, z), z) + 
-c(x, y, z)*Derivative(k0(x, y, z), z)*Derivative(k2(x, y, z), (x, 2)) + 
-2*c(x, y, z)*Derivative(k2(x, y, z), x)*Derivative(k0(x, y, z), x, z) + 
-k0(x, y, z)*k2(x, y, z)*Derivative(c(x, y, z), (x, 2), z) + 2*
-k0(x, y, z)*Derivative(c(x, y, z), x)*Derivative(k2(x, y, z), x, z) + 
-k0(x, y, z)*Derivative(c(x, y, z), (x, 2))*Derivative(k2(x, y, z), z) + 
-k0(x, y, z)*Derivative(c(x, y, z), z)*Derivative(k2(x, y, z), (x, 2)) + 
-2*k0(x, y, z)*Derivative(k2(x, y, z), x)*Derivative(c(x, y, z), x, z) + 
-2*k2(x, y, z)*Derivative(c(x, y, z), x)*Derivative(k0(x, y, z), x, z) + 
-k2(x, y, z)*Derivative(c(x, y, z), (x, 2))*Derivative(k0(x, y, z), z) + 
-k2(x, y, z)*Derivative(c(x, y, z), z)*Derivative(k0(x, y, z), (x, 2)) + 
-2*k2(x, y, z)*Derivative(k0(x, y, z), x)*Derivative(c(x, y, z), x, z) + 
-2*Derivative(c(x, y, z), x)*Derivative(k0(x, y, z), x)*
-Derivative(k2(x, y, z), z) + 2*Derivative(c(x, y, z), x)*
-Derivative(k0(x, y, z), z)*Derivative(k2(x, y, z), x) + 2*
-Derivative(c(x, y, z), z)*Derivative(k0(x, y, z), x)*
-Derivative(k2(x, y, z), x);
+bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k2(x, y, z), (x, 2), z) + bbn_ks_c(x, y, z)*
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k0(x, y, z), (x, 2), z) + 2*bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), x, z) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), (x, 2))*Derivative(bbn_ks_k2(x, y, z), z) + 
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), (x, 2)) + 
+2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), x, z) + 
+bbn_ks_k0(x, y, z)*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2), z) + 2*
+bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), x, z) + 
+bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2))*Derivative(bbn_ks_k2(x, y, z), z) + 
+bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), (x, 2)) + 
+2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), x, z) + 
+2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), x, z) + 
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2))*Derivative(bbn_ks_k0(x, y, z), z) + 
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), (x, 2)) + 
+2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), x, z) + 
+2*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), x)*
+Derivative(bbn_ks_k2(x, y, z), z) + 2*Derivative(bbn_ks_c(x, y, z), x)*
+Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x) + 2*
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x)*
+Derivative(bbn_ks_k2(x, y, z), x);
 
     _dddgamma_D0D0D1D0D0[ijk]=
 /* mcode in progress ... */
@@ -4521,17 +4521,17 @@ Derivative(k2(x, y, z), x);
 // Derivative
 // c
 // k0
-2*c(x, y, z)*k0(x, y, z)*Derivative(k0(x, y, z), (x, 2), y) + 4*
-c(x, y, z)*Derivative(k0(x, y, z), x)*Derivative(k0(x, y, z), x, y) + 
-2*c(x, y, z)*Derivative(k0(x, y, z), (x, 2))*Derivative(k0(x, y, z), y) + 
-pow(k0(x, y, z), 2)*Derivative(c(x, y, z), (x, 2), y) + 4*k0(x, y, z)*
-Derivative(c(x, y, z), x)*Derivative(k0(x, y, z), x, y) + 2*
-k0(x, y, z)*Derivative(c(x, y, z), (x, 2))*Derivative(k0(x, y, z), y) + 
-2*k0(x, y, z)*Derivative(c(x, y, z), y)*Derivative(k0(x, y, z), (x, 2)) + 
-4*k0(x, y, z)*Derivative(k0(x, y, z), x)*Derivative(c(x, y, z), x, y) + 
-4*Derivative(c(x, y, z), x)*Derivative(k0(x, y, z), x)*
-Derivative(k0(x, y, z), y) + 2*Derivative(c(x, y, z), y)*
-pow(Derivative(k0(x, y, z), x), 2);
+2*bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k0(x, y, z), (x, 2), y) + 4*
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), x, y) + 
+2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), (x, 2))*Derivative(bbn_ks_k0(x, y, z), y) + 
+pow(bbn_ks_k0(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), (x, 2), y) + 4*bbn_ks_k0(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), x, y) + 2*
+bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2))*Derivative(bbn_ks_k0(x, y, z), y) + 
+2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), (x, 2)) + 
+4*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), x, y) + 
+4*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), x)*
+Derivative(bbn_ks_k0(x, y, z), y) + 2*Derivative(bbn_ks_c(x, y, z), y)*
+pow(Derivative(bbn_ks_k0(x, y, z), x), 2);
 
     _dddgamma_D0D2D2D1D0[ijk]=
 /* mcode in progress ... */
@@ -4560,36 +4560,36 @@ pow(Derivative(k0(x, y, z), x), 2);
 // c
 // k0
 // k2
-c(x, y, z)*k0(x, y, z)*Derivative(k2(x, y, z), x, y, z) + c(x, y, z)*
-k2(x, y, z)*Derivative(k0(x, y, z), x, y, z) + c(x, y, z)*
-Derivative(k0(x, y, z), x)*Derivative(k2(x, y, z), y, z) + c(x, y, z)*
-Derivative(k0(x, y, z), y)*Derivative(k2(x, y, z), x, z) + c(x, y, z)*
-Derivative(k0(x, y, z), z)*Derivative(k2(x, y, z), x, y) + c(x, y, z)*
-Derivative(k2(x, y, z), x)*Derivative(k0(x, y, z), y, z) + c(x, y, z)*
-Derivative(k2(x, y, z), y)*Derivative(k0(x, y, z), x, z) + c(x, y, z)*
-Derivative(k2(x, y, z), z)*Derivative(k0(x, y, z), x, y) + k0(x, y, z)*
-k2(x, y, z)*Derivative(c(x, y, z), x, y, z) + k0(x, y, z)*
-Derivative(c(x, y, z), x)*Derivative(k2(x, y, z), y, z) + k0(x, y, z)*
-Derivative(c(x, y, z), y)*Derivative(k2(x, y, z), x, z) + k0(x, y, z)*
-Derivative(c(x, y, z), z)*Derivative(k2(x, y, z), x, y) + k0(x, y, z)*
-Derivative(k2(x, y, z), x)*Derivative(c(x, y, z), y, z) + k0(x, y, z)*
-Derivative(k2(x, y, z), y)*Derivative(c(x, y, z), x, z) + k0(x, y, z)*
-Derivative(k2(x, y, z), z)*Derivative(c(x, y, z), x, y) + k2(x, y, z)*
-Derivative(c(x, y, z), x)*Derivative(k0(x, y, z), y, z) + k2(x, y, z)*
-Derivative(c(x, y, z), y)*Derivative(k0(x, y, z), x, z) + k2(x, y, z)*
-Derivative(c(x, y, z), z)*Derivative(k0(x, y, z), x, y) + k2(x, y, z)*
-Derivative(k0(x, y, z), x)*Derivative(c(x, y, z), y, z) + k2(x, y, z)*
-Derivative(k0(x, y, z), y)*Derivative(c(x, y, z), x, z) + k2(x, y, z)*
-Derivative(k0(x, y, z), z)*Derivative(c(x, y, z), x, y) + 
-Derivative(c(x, y, z), x)*Derivative(k0(x, y, z), y)*
-Derivative(k2(x, y, z), z) + Derivative(c(x, y, z), x)*
-Derivative(k0(x, y, z), z)*Derivative(k2(x, y, z), y) + 
-Derivative(c(x, y, z), y)*Derivative(k0(x, y, z), x)*
-Derivative(k2(x, y, z), z) + Derivative(c(x, y, z), y)*
-Derivative(k0(x, y, z), z)*Derivative(k2(x, y, z), x) + 
-Derivative(c(x, y, z), z)*Derivative(k0(x, y, z), x)*
-Derivative(k2(x, y, z), y) + Derivative(c(x, y, z), z)*
-Derivative(k0(x, y, z), y)*Derivative(k2(x, y, z), x);
+bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x, y, z) + bbn_ks_c(x, y, z)*
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x, y, z) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), y, z) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x, z) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x, y) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), y, z) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k2(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x, z) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k2(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x, y) + bbn_ks_k0(x, y, z)*
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), x, y, z) + bbn_ks_k0(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), y, z) + bbn_ks_k0(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x, z) + bbn_ks_k0(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x, y) + bbn_ks_k0(x, y, z)*
+Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), y, z) + bbn_ks_k0(x, y, z)*
+Derivative(bbn_ks_k2(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), x, z) + bbn_ks_k0(x, y, z)*
+Derivative(bbn_ks_k2(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), x, y) + bbn_ks_k2(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), y, z) + bbn_ks_k2(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x, z) + bbn_ks_k2(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x, y) + bbn_ks_k2(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), y, z) + bbn_ks_k2(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), x, z) + bbn_ks_k2(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), x, y) + 
+Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), y)*
+Derivative(bbn_ks_k2(x, y, z), z) + Derivative(bbn_ks_c(x, y, z), x)*
+Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), y) + 
+Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x)*
+Derivative(bbn_ks_k2(x, y, z), z) + Derivative(bbn_ks_c(x, y, z), y)*
+Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x) + 
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x)*
+Derivative(bbn_ks_k2(x, y, z), y) + Derivative(bbn_ks_c(x, y, z), z)*
+Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x);
 
     _dddgamma_D0D2D2D0D0[ijk]=
 /* mcode in progress ... */
@@ -4612,26 +4612,26 @@ Derivative(k0(x, y, z), y)*Derivative(k2(x, y, z), x);
 // c
 // k0
 // k2
-c(x, y, z)*k0(x, y, z)*Derivative(k2(x, y, z), (x, 2), z) + c(x, y, z)*
-k2(x, y, z)*Derivative(k0(x, y, z), (x, 2), z) + 2*c(x, y, z)*
-Derivative(k0(x, y, z), x)*Derivative(k2(x, y, z), x, z) + c(x, y, z)*
-Derivative(k0(x, y, z), (x, 2))*Derivative(k2(x, y, z), z) + 
-c(x, y, z)*Derivative(k0(x, y, z), z)*Derivative(k2(x, y, z), (x, 2)) + 
-2*c(x, y, z)*Derivative(k2(x, y, z), x)*Derivative(k0(x, y, z), x, z) + 
-k0(x, y, z)*k2(x, y, z)*Derivative(c(x, y, z), (x, 2), z) + 2*
-k0(x, y, z)*Derivative(c(x, y, z), x)*Derivative(k2(x, y, z), x, z) + 
-k0(x, y, z)*Derivative(c(x, y, z), (x, 2))*Derivative(k2(x, y, z), z) + 
-k0(x, y, z)*Derivative(c(x, y, z), z)*Derivative(k2(x, y, z), (x, 2)) + 
-2*k0(x, y, z)*Derivative(k2(x, y, z), x)*Derivative(c(x, y, z), x, z) + 
-2*k2(x, y, z)*Derivative(c(x, y, z), x)*Derivative(k0(x, y, z), x, z) + 
-k2(x, y, z)*Derivative(c(x, y, z), (x, 2))*Derivative(k0(x, y, z), z) + 
-k2(x, y, z)*Derivative(c(x, y, z), z)*Derivative(k0(x, y, z), (x, 2)) + 
-2*k2(x, y, z)*Derivative(k0(x, y, z), x)*Derivative(c(x, y, z), x, z) + 
-2*Derivative(c(x, y, z), x)*Derivative(k0(x, y, z), x)*
-Derivative(k2(x, y, z), z) + 2*Derivative(c(x, y, z), x)*
-Derivative(k0(x, y, z), z)*Derivative(k2(x, y, z), x) + 2*
-Derivative(c(x, y, z), z)*Derivative(k0(x, y, z), x)*
-Derivative(k2(x, y, z), x);
+bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k2(x, y, z), (x, 2), z) + bbn_ks_c(x, y, z)*
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k0(x, y, z), (x, 2), z) + 2*bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), x, z) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), (x, 2))*Derivative(bbn_ks_k2(x, y, z), z) + 
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), (x, 2)) + 
+2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), x, z) + 
+bbn_ks_k0(x, y, z)*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2), z) + 2*
+bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), x, z) + 
+bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2))*Derivative(bbn_ks_k2(x, y, z), z) + 
+bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), (x, 2)) + 
+2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), x, z) + 
+2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), x, z) + 
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2))*Derivative(bbn_ks_k0(x, y, z), z) + 
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), (x, 2)) + 
+2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), x, z) + 
+2*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), x)*
+Derivative(bbn_ks_k2(x, y, z), z) + 2*Derivative(bbn_ks_c(x, y, z), x)*
+Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x) + 2*
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x)*
+Derivative(bbn_ks_k2(x, y, z), x);
 
     _dddgamma_D1D1D1D1D2[ijk]=
 /* mcode in progress ... */
@@ -4648,17 +4648,17 @@ Derivative(k2(x, y, z), x);
 // Derivative
 // c
 // k1
-2*c(x, y, z)*k1(x, y, z)*Derivative(k1(x, y, z), (y, 2), z) + 4*
-c(x, y, z)*Derivative(k1(x, y, z), y)*Derivative(k1(x, y, z), y, z) + 
-2*c(x, y, z)*Derivative(k1(x, y, z), (y, 2))*Derivative(k1(x, y, z), z) + 
-pow(k1(x, y, z), 2)*Derivative(c(x, y, z), (y, 2), z) + 4*k1(x, y, z)*
-Derivative(c(x, y, z), y)*Derivative(k1(x, y, z), y, z) + 2*
-k1(x, y, z)*Derivative(c(x, y, z), (y, 2))*Derivative(k1(x, y, z), z) + 
-2*k1(x, y, z)*Derivative(c(x, y, z), z)*Derivative(k1(x, y, z), (y, 2)) + 
-4*k1(x, y, z)*Derivative(k1(x, y, z), y)*Derivative(c(x, y, z), y, z) + 
-4*Derivative(c(x, y, z), y)*Derivative(k1(x, y, z), y)*
-Derivative(k1(x, y, z), z) + 2*Derivative(c(x, y, z), z)*
-pow(Derivative(k1(x, y, z), y), 2);
+2*bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k1(x, y, z), (y, 2), z) + 4*
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), y, z) + 
+2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), (y, 2))*Derivative(bbn_ks_k1(x, y, z), z) + 
+pow(bbn_ks_k1(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), (y, 2), z) + 4*bbn_ks_k1(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), y, z) + 2*
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), (y, 2))*Derivative(bbn_ks_k1(x, y, z), z) + 
+2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), (y, 2)) + 
+4*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), y, z) + 
+4*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), y)*
+Derivative(bbn_ks_k1(x, y, z), z) + 2*Derivative(bbn_ks_c(x, y, z), z)*
+pow(Derivative(bbn_ks_k1(x, y, z), y), 2);
 
     _dddgamma_D0D0D2D2D1[ijk]=
 /* mcode in progress ... */
@@ -4675,17 +4675,17 @@ pow(Derivative(k1(x, y, z), y), 2);
 // Derivative
 // c
 // k0
-2*c(x, y, z)*k0(x, y, z)*Derivative(k0(x, y, z), y, (z, 2)) + 2*
-c(x, y, z)*Derivative(k0(x, y, z), y)*Derivative(k0(x, y, z), (z, 2)) + 
-4*c(x, y, z)*Derivative(k0(x, y, z), z)*Derivative(k0(x, y, z), y, z) + 
-pow(k0(x, y, z), 2)*Derivative(c(x, y, z), y, (z, 2)) + 2*k0(x, y, z)*
-Derivative(c(x, y, z), y)*Derivative(k0(x, y, z), (z, 2)) + 4*
-k0(x, y, z)*Derivative(c(x, y, z), z)*Derivative(k0(x, y, z), y, z) + 
-2*k0(x, y, z)*Derivative(c(x, y, z), (z, 2))*Derivative(k0(x, y, z), y) + 
-4*k0(x, y, z)*Derivative(k0(x, y, z), z)*Derivative(c(x, y, z), y, z) + 
-2*Derivative(c(x, y, z), y)*pow(Derivative(k0(x, y, z), z), 2) + 4*
-Derivative(c(x, y, z), z)*Derivative(k0(x, y, z), y)*
-Derivative(k0(x, y, z), z);
+2*bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k0(x, y, z), y, (z, 2)) + 2*
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), (z, 2)) + 
+4*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), y, z) + 
+pow(bbn_ks_k0(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), y, (z, 2)) + 2*bbn_ks_k0(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), (z, 2)) + 4*
+bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), y, z) + 
+2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), (z, 2))*Derivative(bbn_ks_k0(x, y, z), y) + 
+4*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), y, z) + 
+2*Derivative(bbn_ks_c(x, y, z), y)*pow(Derivative(bbn_ks_k0(x, y, z), z), 2) + 4*
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), y)*
+Derivative(bbn_ks_k0(x, y, z), z);
 
     _dddgamma_D2D2D0D1D0[ijk]=
 /* mcode in progress ... */
@@ -4702,17 +4702,17 @@ Derivative(k0(x, y, z), z);
 // Derivative
 // c
 // k2
-2*c(x, y, z)*k2(x, y, z)*Derivative(k2(x, y, z), (x, 2), y) + 4*
-c(x, y, z)*Derivative(k2(x, y, z), x)*Derivative(k2(x, y, z), x, y) + 
-2*c(x, y, z)*Derivative(k2(x, y, z), (x, 2))*Derivative(k2(x, y, z), y) + 
-pow(k2(x, y, z), 2)*Derivative(c(x, y, z), (x, 2), y) + 4*k2(x, y, z)*
-Derivative(c(x, y, z), x)*Derivative(k2(x, y, z), x, y) + 2*
-k2(x, y, z)*Derivative(c(x, y, z), (x, 2))*Derivative(k2(x, y, z), y) + 
-2*k2(x, y, z)*Derivative(c(x, y, z), y)*Derivative(k2(x, y, z), (x, 2)) + 
-4*k2(x, y, z)*Derivative(k2(x, y, z), x)*Derivative(c(x, y, z), x, y) + 
-4*Derivative(c(x, y, z), x)*Derivative(k2(x, y, z), x)*
-Derivative(k2(x, y, z), y) + 2*Derivative(c(x, y, z), y)*
-pow(Derivative(k2(x, y, z), x), 2);
+2*bbn_ks_c(x, y, z)*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k2(x, y, z), (x, 2), y) + 4*
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), x, y) + 
+2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), (x, 2))*Derivative(bbn_ks_k2(x, y, z), y) + 
+pow(bbn_ks_k2(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), (x, 2), y) + 4*bbn_ks_k2(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), x, y) + 2*
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2))*Derivative(bbn_ks_k2(x, y, z), y) + 
+2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), (x, 2)) + 
+4*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), x, y) + 
+4*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), x)*
+Derivative(bbn_ks_k2(x, y, z), y) + 2*Derivative(bbn_ks_c(x, y, z), y)*
+pow(Derivative(bbn_ks_k2(x, y, z), x), 2);
 
     _dddgamma_D1D1D2D0D2[ijk]=
 /* mcode in progress ... */
@@ -4729,17 +4729,17 @@ pow(Derivative(k2(x, y, z), x), 2);
 // Derivative
 // c
 // k1
-2*c(x, y, z)*k1(x, y, z)*Derivative(k1(x, y, z), x, (z, 2)) + 2*
-c(x, y, z)*Derivative(k1(x, y, z), x)*Derivative(k1(x, y, z), (z, 2)) + 
-4*c(x, y, z)*Derivative(k1(x, y, z), z)*Derivative(k1(x, y, z), x, z) + 
-pow(k1(x, y, z), 2)*Derivative(c(x, y, z), x, (z, 2)) + 2*k1(x, y, z)*
-Derivative(c(x, y, z), x)*Derivative(k1(x, y, z), (z, 2)) + 4*
-k1(x, y, z)*Derivative(c(x, y, z), z)*Derivative(k1(x, y, z), x, z) + 
-2*k1(x, y, z)*Derivative(c(x, y, z), (z, 2))*Derivative(k1(x, y, z), x) + 
-4*k1(x, y, z)*Derivative(k1(x, y, z), z)*Derivative(c(x, y, z), x, z) + 
-2*Derivative(c(x, y, z), x)*pow(Derivative(k1(x, y, z), z), 2) + 4*
-Derivative(c(x, y, z), z)*Derivative(k1(x, y, z), x)*
-Derivative(k1(x, y, z), z);
+2*bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x, (z, 2)) + 2*
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), (z, 2)) + 
+4*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x, z) + 
+pow(bbn_ks_k1(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), x, (z, 2)) + 2*bbn_ks_k1(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), (z, 2)) + 4*
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x, z) + 
+2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), (z, 2))*Derivative(bbn_ks_k1(x, y, z), x) + 
+4*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), x, z) + 
+2*Derivative(bbn_ks_c(x, y, z), x)*pow(Derivative(bbn_ks_k1(x, y, z), z), 2) + 4*
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x)*
+Derivative(bbn_ks_k1(x, y, z), z);
 
     _dddgamma_D0D1D1D1D1[ijk]=
 /* mcode in progress ... */
@@ -4756,17 +4756,17 @@ Derivative(k1(x, y, z), z);
 // c
 // k0
 // k1
-c(x, y, z)*k0(x, y, z)*Derivative(k1(x, y, z), (y, 3)) + c(x, y, z)*
-k1(x, y, z)*Derivative(k0(x, y, z), (y, 3)) + 3*c(x, y, z)*
-Derivative(k0(x, y, z), y)*Derivative(k1(x, y, z), (y, 2)) + 3*
-c(x, y, z)*Derivative(k0(x, y, z), (y, 2))*Derivative(k1(x, y, z), y) + 
-k0(x, y, z)*k1(x, y, z)*Derivative(c(x, y, z), (y, 3)) + 3*k0(x, y, z)*
-Derivative(c(x, y, z), y)*Derivative(k1(x, y, z), (y, 2)) + 3*
-k0(x, y, z)*Derivative(c(x, y, z), (y, 2))*Derivative(k1(x, y, z), y) + 
-3*k1(x, y, z)*Derivative(c(x, y, z), y)*Derivative(k0(x, y, z), (y, 2)) + 
-3*k1(x, y, z)*Derivative(c(x, y, z), (y, 2))*Derivative(k0(x, y, z), y) + 
-6*Derivative(c(x, y, z), y)*Derivative(k0(x, y, z), y)*
-Derivative(k1(x, y, z), y);
+bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k1(x, y, z), (y, 3)) + bbn_ks_c(x, y, z)*
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k0(x, y, z), (y, 3)) + 3*bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), (y, 2)) + 3*
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), (y, 2))*Derivative(bbn_ks_k1(x, y, z), y) + 
+bbn_ks_k0(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), (y, 3)) + 3*bbn_ks_k0(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), (y, 2)) + 3*
+bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), (y, 2))*Derivative(bbn_ks_k1(x, y, z), y) + 
+3*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), (y, 2)) + 
+3*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), (y, 2))*Derivative(bbn_ks_k0(x, y, z), y) + 
+6*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), y)*
+Derivative(bbn_ks_k1(x, y, z), y);
 
     _dddgamma_D1D2D0D0D0[ijk]=
 /* mcode in progress ... */
@@ -4783,17 +4783,17 @@ Derivative(k1(x, y, z), y);
 // c
 // k1
 // k2
-c(x, y, z)*k1(x, y, z)*Derivative(k2(x, y, z), (x, 3)) + c(x, y, z)*
-k2(x, y, z)*Derivative(k1(x, y, z), (x, 3)) + 3*c(x, y, z)*
-Derivative(k1(x, y, z), x)*Derivative(k2(x, y, z), (x, 2)) + 3*
-c(x, y, z)*Derivative(k1(x, y, z), (x, 2))*Derivative(k2(x, y, z), x) + 
-k1(x, y, z)*k2(x, y, z)*Derivative(c(x, y, z), (x, 3)) + 3*k1(x, y, z)*
-Derivative(c(x, y, z), x)*Derivative(k2(x, y, z), (x, 2)) + 3*
-k1(x, y, z)*Derivative(c(x, y, z), (x, 2))*Derivative(k2(x, y, z), x) + 
-3*k2(x, y, z)*Derivative(c(x, y, z), x)*Derivative(k1(x, y, z), (x, 2)) + 
-3*k2(x, y, z)*Derivative(c(x, y, z), (x, 2))*Derivative(k1(x, y, z), x) + 
-6*Derivative(c(x, y, z), x)*Derivative(k1(x, y, z), x)*
-Derivative(k2(x, y, z), x);
+bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k2(x, y, z), (x, 3)) + bbn_ks_c(x, y, z)*
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k1(x, y, z), (x, 3)) + 3*bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), (x, 2)) + 3*
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), (x, 2))*Derivative(bbn_ks_k2(x, y, z), x) + 
+bbn_ks_k1(x, y, z)*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 3)) + 3*bbn_ks_k1(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), (x, 2)) + 3*
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2))*Derivative(bbn_ks_k2(x, y, z), x) + 
+3*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), (x, 2)) + 
+3*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2))*Derivative(bbn_ks_k1(x, y, z), x) + 
+6*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), x)*
+Derivative(bbn_ks_k2(x, y, z), x);
 
     _dddgamma_D1D2D0D0D2[ijk]=
 /* mcode in progress ... */
@@ -4816,26 +4816,26 @@ Derivative(k2(x, y, z), x);
 // c
 // k1
 // k2
-c(x, y, z)*k1(x, y, z)*Derivative(k2(x, y, z), (x, 2), z) + c(x, y, z)*
-k2(x, y, z)*Derivative(k1(x, y, z), (x, 2), z) + 2*c(x, y, z)*
-Derivative(k1(x, y, z), x)*Derivative(k2(x, y, z), x, z) + c(x, y, z)*
-Derivative(k1(x, y, z), (x, 2))*Derivative(k2(x, y, z), z) + 
-c(x, y, z)*Derivative(k1(x, y, z), z)*Derivative(k2(x, y, z), (x, 2)) + 
-2*c(x, y, z)*Derivative(k2(x, y, z), x)*Derivative(k1(x, y, z), x, z) + 
-k1(x, y, z)*k2(x, y, z)*Derivative(c(x, y, z), (x, 2), z) + 2*
-k1(x, y, z)*Derivative(c(x, y, z), x)*Derivative(k2(x, y, z), x, z) + 
-k1(x, y, z)*Derivative(c(x, y, z), (x, 2))*Derivative(k2(x, y, z), z) + 
-k1(x, y, z)*Derivative(c(x, y, z), z)*Derivative(k2(x, y, z), (x, 2)) + 
-2*k1(x, y, z)*Derivative(k2(x, y, z), x)*Derivative(c(x, y, z), x, z) + 
-2*k2(x, y, z)*Derivative(c(x, y, z), x)*Derivative(k1(x, y, z), x, z) + 
-k2(x, y, z)*Derivative(c(x, y, z), (x, 2))*Derivative(k1(x, y, z), z) + 
-k2(x, y, z)*Derivative(c(x, y, z), z)*Derivative(k1(x, y, z), (x, 2)) + 
-2*k2(x, y, z)*Derivative(k1(x, y, z), x)*Derivative(c(x, y, z), x, z) + 
-2*Derivative(c(x, y, z), x)*Derivative(k1(x, y, z), x)*
-Derivative(k2(x, y, z), z) + 2*Derivative(c(x, y, z), x)*
-Derivative(k1(x, y, z), z)*Derivative(k2(x, y, z), x) + 2*
-Derivative(c(x, y, z), z)*Derivative(k1(x, y, z), x)*
-Derivative(k2(x, y, z), x);
+bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k2(x, y, z), (x, 2), z) + bbn_ks_c(x, y, z)*
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k1(x, y, z), (x, 2), z) + 2*bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), x, z) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k1(x, y, z), (x, 2))*Derivative(bbn_ks_k2(x, y, z), z) + 
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), (x, 2)) + 
+2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), x, z) + 
+bbn_ks_k1(x, y, z)*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2), z) + 2*
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), x, z) + 
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2))*Derivative(bbn_ks_k2(x, y, z), z) + 
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), (x, 2)) + 
+2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), x, z) + 
+2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), x, z) + 
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2))*Derivative(bbn_ks_k1(x, y, z), z) + 
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), (x, 2)) + 
+2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), x, z) + 
+2*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), x)*
+Derivative(bbn_ks_k2(x, y, z), z) + 2*Derivative(bbn_ks_c(x, y, z), x)*
+Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x) + 2*
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x)*
+Derivative(bbn_ks_k2(x, y, z), x);
 
     _dddgamma_D2D2D0D1D2[ijk]=
 /* mcode in progress ... */
@@ -4856,22 +4856,22 @@ Derivative(k2(x, y, z), x);
 // Derivative
 // c
 // k2
-2*c(x, y, z)*k2(x, y, z)*Derivative(k2(x, y, z), x, y, z) + 2*
-c(x, y, z)*Derivative(k2(x, y, z), x)*Derivative(k2(x, y, z), y, z) + 
-2*c(x, y, z)*Derivative(k2(x, y, z), y)*Derivative(k2(x, y, z), x, z) + 
-2*c(x, y, z)*Derivative(k2(x, y, z), z)*Derivative(k2(x, y, z), x, y) + 
-pow(k2(x, y, z), 2)*Derivative(c(x, y, z), x, y, z) + 2*k2(x, y, z)*
-Derivative(c(x, y, z), x)*Derivative(k2(x, y, z), y, z) + 2*
-k2(x, y, z)*Derivative(c(x, y, z), y)*Derivative(k2(x, y, z), x, z) + 
-2*k2(x, y, z)*Derivative(c(x, y, z), z)*Derivative(k2(x, y, z), x, y) + 
-2*k2(x, y, z)*Derivative(k2(x, y, z), x)*Derivative(c(x, y, z), y, z) + 
-2*k2(x, y, z)*Derivative(k2(x, y, z), y)*Derivative(c(x, y, z), x, z) + 
-2*k2(x, y, z)*Derivative(k2(x, y, z), z)*Derivative(c(x, y, z), x, y) + 
-2*Derivative(c(x, y, z), x)*Derivative(k2(x, y, z), y)*
-Derivative(k2(x, y, z), z) + 2*Derivative(c(x, y, z), y)*
-Derivative(k2(x, y, z), x)*Derivative(k2(x, y, z), z) + 2*
-Derivative(c(x, y, z), z)*Derivative(k2(x, y, z), x)*
-Derivative(k2(x, y, z), y);
+2*bbn_ks_c(x, y, z)*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x, y, z) + 2*
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), y, z) + 
+2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x, z) + 
+2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x, y) + 
+pow(bbn_ks_k2(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), x, y, z) + 2*bbn_ks_k2(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), y, z) + 2*
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x, z) + 
+2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x, y) + 
+2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), y, z) + 
+2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k2(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), x, z) + 
+2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k2(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), x, y) + 
+2*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), y)*
+Derivative(bbn_ks_k2(x, y, z), z) + 2*Derivative(bbn_ks_c(x, y, z), y)*
+Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), z) + 2*
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x)*
+Derivative(bbn_ks_k2(x, y, z), y);
 
     _dddgamma_D0D0D1D1D1[ijk]=
 /* mcode in progress ... */
@@ -4884,12 +4884,12 @@ Derivative(k2(x, y, z), y);
 // Derivative
 // c
 // k0
-2*c(x, y, z)*k0(x, y, z)*Derivative(k0(x, y, z), (y, 3)) + 6*
-c(x, y, z)*Derivative(k0(x, y, z), y)*Derivative(k0(x, y, z), (y, 2)) + 
-pow(k0(x, y, z), 2)*Derivative(c(x, y, z), (y, 3)) + 6*k0(x, y, z)*
-Derivative(c(x, y, z), y)*Derivative(k0(x, y, z), (y, 2)) + 6*
-k0(x, y, z)*Derivative(c(x, y, z), (y, 2))*Derivative(k0(x, y, z), y) + 
-6*Derivative(c(x, y, z), y)*pow(Derivative(k0(x, y, z), y), 2);
+2*bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k0(x, y, z), (y, 3)) + 6*
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), (y, 2)) + 
+pow(bbn_ks_k0(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), (y, 3)) + 6*bbn_ks_k0(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), (y, 2)) + 6*
+bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), (y, 2))*Derivative(bbn_ks_k0(x, y, z), y) + 
+6*Derivative(bbn_ks_c(x, y, z), y)*pow(Derivative(bbn_ks_k0(x, y, z), y), 2);
 
     _dddgamma_D0D2D0D1D0[ijk]=
 /* mcode in progress ... */
@@ -4912,26 +4912,26 @@ k0(x, y, z)*Derivative(c(x, y, z), (y, 2))*Derivative(k0(x, y, z), y) +
 // c
 // k0
 // k2
-c(x, y, z)*k0(x, y, z)*Derivative(k2(x, y, z), (x, 2), y) + c(x, y, z)*
-k2(x, y, z)*Derivative(k0(x, y, z), (x, 2), y) + 2*c(x, y, z)*
-Derivative(k0(x, y, z), x)*Derivative(k2(x, y, z), x, y) + c(x, y, z)*
-Derivative(k0(x, y, z), (x, 2))*Derivative(k2(x, y, z), y) + 
-c(x, y, z)*Derivative(k0(x, y, z), y)*Derivative(k2(x, y, z), (x, 2)) + 
-2*c(x, y, z)*Derivative(k2(x, y, z), x)*Derivative(k0(x, y, z), x, y) + 
-k0(x, y, z)*k2(x, y, z)*Derivative(c(x, y, z), (x, 2), y) + 2*
-k0(x, y, z)*Derivative(c(x, y, z), x)*Derivative(k2(x, y, z), x, y) + 
-k0(x, y, z)*Derivative(c(x, y, z), (x, 2))*Derivative(k2(x, y, z), y) + 
-k0(x, y, z)*Derivative(c(x, y, z), y)*Derivative(k2(x, y, z), (x, 2)) + 
-2*k0(x, y, z)*Derivative(k2(x, y, z), x)*Derivative(c(x, y, z), x, y) + 
-2*k2(x, y, z)*Derivative(c(x, y, z), x)*Derivative(k0(x, y, z), x, y) + 
-k2(x, y, z)*Derivative(c(x, y, z), (x, 2))*Derivative(k0(x, y, z), y) + 
-k2(x, y, z)*Derivative(c(x, y, z), y)*Derivative(k0(x, y, z), (x, 2)) + 
-2*k2(x, y, z)*Derivative(k0(x, y, z), x)*Derivative(c(x, y, z), x, y) + 
-2*Derivative(c(x, y, z), x)*Derivative(k0(x, y, z), x)*
-Derivative(k2(x, y, z), y) + 2*Derivative(c(x, y, z), x)*
-Derivative(k0(x, y, z), y)*Derivative(k2(x, y, z), x) + 2*
-Derivative(c(x, y, z), y)*Derivative(k0(x, y, z), x)*
-Derivative(k2(x, y, z), x);
+bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k2(x, y, z), (x, 2), y) + bbn_ks_c(x, y, z)*
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k0(x, y, z), (x, 2), y) + 2*bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), x, y) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), (x, 2))*Derivative(bbn_ks_k2(x, y, z), y) + 
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), (x, 2)) + 
+2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), x, y) + 
+bbn_ks_k0(x, y, z)*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2), y) + 2*
+bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), x, y) + 
+bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2))*Derivative(bbn_ks_k2(x, y, z), y) + 
+bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), (x, 2)) + 
+2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), x, y) + 
+2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), x, y) + 
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2))*Derivative(bbn_ks_k0(x, y, z), y) + 
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), (x, 2)) + 
+2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), x, y) + 
+2*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), x)*
+Derivative(bbn_ks_k2(x, y, z), y) + 2*Derivative(bbn_ks_c(x, y, z), x)*
+Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x) + 2*
+Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x)*
+Derivative(bbn_ks_k2(x, y, z), x);
 
     _dddgamma_D0D2D1D2D1[ijk]=
 /* mcode in progress ... */
@@ -4954,26 +4954,26 @@ Derivative(k2(x, y, z), x);
 // c
 // k0
 // k2
-c(x, y, z)*k0(x, y, z)*Derivative(k2(x, y, z), (y, 2), z) + c(x, y, z)*
-k2(x, y, z)*Derivative(k0(x, y, z), (y, 2), z) + 2*c(x, y, z)*
-Derivative(k0(x, y, z), y)*Derivative(k2(x, y, z), y, z) + c(x, y, z)*
-Derivative(k0(x, y, z), (y, 2))*Derivative(k2(x, y, z), z) + 
-c(x, y, z)*Derivative(k0(x, y, z), z)*Derivative(k2(x, y, z), (y, 2)) + 
-2*c(x, y, z)*Derivative(k2(x, y, z), y)*Derivative(k0(x, y, z), y, z) + 
-k0(x, y, z)*k2(x, y, z)*Derivative(c(x, y, z), (y, 2), z) + 2*
-k0(x, y, z)*Derivative(c(x, y, z), y)*Derivative(k2(x, y, z), y, z) + 
-k0(x, y, z)*Derivative(c(x, y, z), (y, 2))*Derivative(k2(x, y, z), z) + 
-k0(x, y, z)*Derivative(c(x, y, z), z)*Derivative(k2(x, y, z), (y, 2)) + 
-2*k0(x, y, z)*Derivative(k2(x, y, z), y)*Derivative(c(x, y, z), y, z) + 
-2*k2(x, y, z)*Derivative(c(x, y, z), y)*Derivative(k0(x, y, z), y, z) + 
-k2(x, y, z)*Derivative(c(x, y, z), (y, 2))*Derivative(k0(x, y, z), z) + 
-k2(x, y, z)*Derivative(c(x, y, z), z)*Derivative(k0(x, y, z), (y, 2)) + 
-2*k2(x, y, z)*Derivative(k0(x, y, z), y)*Derivative(c(x, y, z), y, z) + 
-2*Derivative(c(x, y, z), y)*Derivative(k0(x, y, z), y)*
-Derivative(k2(x, y, z), z) + 2*Derivative(c(x, y, z), y)*
-Derivative(k0(x, y, z), z)*Derivative(k2(x, y, z), y) + 2*
-Derivative(c(x, y, z), z)*Derivative(k0(x, y, z), y)*
-Derivative(k2(x, y, z), y);
+bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k2(x, y, z), (y, 2), z) + bbn_ks_c(x, y, z)*
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k0(x, y, z), (y, 2), z) + 2*bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), y, z) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), (y, 2))*Derivative(bbn_ks_k2(x, y, z), z) + 
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), (y, 2)) + 
+2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), y, z) + 
+bbn_ks_k0(x, y, z)*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (y, 2), z) + 2*
+bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), y, z) + 
+bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), (y, 2))*Derivative(bbn_ks_k2(x, y, z), z) + 
+bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), (y, 2)) + 
+2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k2(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), y, z) + 
+2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), y, z) + 
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (y, 2))*Derivative(bbn_ks_k0(x, y, z), z) + 
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), (y, 2)) + 
+2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), y, z) + 
+2*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), y)*
+Derivative(bbn_ks_k2(x, y, z), z) + 2*Derivative(bbn_ks_c(x, y, z), y)*
+Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), y) + 2*
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), y)*
+Derivative(bbn_ks_k2(x, y, z), y);
 
     _dddgamma_D1D2D1D2D2[ijk]=
 /* mcode in progress ... */
@@ -4996,26 +4996,26 @@ Derivative(k2(x, y, z), y);
 // c
 // k1
 // k2
-c(x, y, z)*k1(x, y, z)*Derivative(k2(x, y, z), y, (z, 2)) + c(x, y, z)*
-k2(x, y, z)*Derivative(k1(x, y, z), y, (z, 2)) + c(x, y, z)*
-Derivative(k1(x, y, z), y)*Derivative(k2(x, y, z), (z, 2)) + 2*
-c(x, y, z)*Derivative(k1(x, y, z), z)*Derivative(k2(x, y, z), y, z) + 
-c(x, y, z)*Derivative(k1(x, y, z), (z, 2))*Derivative(k2(x, y, z), y) + 
-2*c(x, y, z)*Derivative(k2(x, y, z), z)*Derivative(k1(x, y, z), y, z) + 
-k1(x, y, z)*k2(x, y, z)*Derivative(c(x, y, z), y, (z, 2)) + 
-k1(x, y, z)*Derivative(c(x, y, z), y)*Derivative(k2(x, y, z), (z, 2)) + 
-2*k1(x, y, z)*Derivative(c(x, y, z), z)*Derivative(k2(x, y, z), y, z) + 
-k1(x, y, z)*Derivative(c(x, y, z), (z, 2))*Derivative(k2(x, y, z), y) + 
-2*k1(x, y, z)*Derivative(k2(x, y, z), z)*Derivative(c(x, y, z), y, z) + 
-k2(x, y, z)*Derivative(c(x, y, z), y)*Derivative(k1(x, y, z), (z, 2)) + 
-2*k2(x, y, z)*Derivative(c(x, y, z), z)*Derivative(k1(x, y, z), y, z) + 
-k2(x, y, z)*Derivative(c(x, y, z), (z, 2))*Derivative(k1(x, y, z), y) + 
-2*k2(x, y, z)*Derivative(k1(x, y, z), z)*Derivative(c(x, y, z), y, z) + 
-2*Derivative(c(x, y, z), y)*Derivative(k1(x, y, z), z)*
-Derivative(k2(x, y, z), z) + 2*Derivative(c(x, y, z), z)*
-Derivative(k1(x, y, z), y)*Derivative(k2(x, y, z), z) + 2*
-Derivative(c(x, y, z), z)*Derivative(k1(x, y, z), z)*
-Derivative(k2(x, y, z), y);
+bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k2(x, y, z), y, (z, 2)) + bbn_ks_c(x, y, z)*
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k1(x, y, z), y, (z, 2)) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), (z, 2)) + 2*
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), y, z) + 
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), (z, 2))*Derivative(bbn_ks_k2(x, y, z), y) + 
+2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), y, z) + 
+bbn_ks_k1(x, y, z)*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), y, (z, 2)) + 
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), (z, 2)) + 
+2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), y, z) + 
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), (z, 2))*Derivative(bbn_ks_k2(x, y, z), y) + 
+2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k2(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), y, z) + 
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), (z, 2)) + 
+2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), y, z) + 
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (z, 2))*Derivative(bbn_ks_k1(x, y, z), y) + 
+2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), y, z) + 
+2*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), z)*
+Derivative(bbn_ks_k2(x, y, z), z) + 2*Derivative(bbn_ks_c(x, y, z), z)*
+Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), z) + 2*
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), z)*
+Derivative(bbn_ks_k2(x, y, z), y);
 
     _dddgamma_D0D1D1D0D0[ijk]=
 /* mcode in progress ... */
@@ -5038,26 +5038,26 @@ Derivative(k2(x, y, z), y);
 // c
 // k0
 // k1
-c(x, y, z)*k0(x, y, z)*Derivative(k1(x, y, z), (x, 2), y) + c(x, y, z)*
-k1(x, y, z)*Derivative(k0(x, y, z), (x, 2), y) + 2*c(x, y, z)*
-Derivative(k0(x, y, z), x)*Derivative(k1(x, y, z), x, y) + c(x, y, z)*
-Derivative(k0(x, y, z), (x, 2))*Derivative(k1(x, y, z), y) + 
-c(x, y, z)*Derivative(k0(x, y, z), y)*Derivative(k1(x, y, z), (x, 2)) + 
-2*c(x, y, z)*Derivative(k1(x, y, z), x)*Derivative(k0(x, y, z), x, y) + 
-k0(x, y, z)*k1(x, y, z)*Derivative(c(x, y, z), (x, 2), y) + 2*
-k0(x, y, z)*Derivative(c(x, y, z), x)*Derivative(k1(x, y, z), x, y) + 
-k0(x, y, z)*Derivative(c(x, y, z), (x, 2))*Derivative(k1(x, y, z), y) + 
-k0(x, y, z)*Derivative(c(x, y, z), y)*Derivative(k1(x, y, z), (x, 2)) + 
-2*k0(x, y, z)*Derivative(k1(x, y, z), x)*Derivative(c(x, y, z), x, y) + 
-2*k1(x, y, z)*Derivative(c(x, y, z), x)*Derivative(k0(x, y, z), x, y) + 
-k1(x, y, z)*Derivative(c(x, y, z), (x, 2))*Derivative(k0(x, y, z), y) + 
-k1(x, y, z)*Derivative(c(x, y, z), y)*Derivative(k0(x, y, z), (x, 2)) + 
-2*k1(x, y, z)*Derivative(k0(x, y, z), x)*Derivative(c(x, y, z), x, y) + 
-2*Derivative(c(x, y, z), x)*Derivative(k0(x, y, z), x)*
-Derivative(k1(x, y, z), y) + 2*Derivative(c(x, y, z), x)*
-Derivative(k0(x, y, z), y)*Derivative(k1(x, y, z), x) + 2*
-Derivative(c(x, y, z), y)*Derivative(k0(x, y, z), x)*
-Derivative(k1(x, y, z), x);
+bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k1(x, y, z), (x, 2), y) + bbn_ks_c(x, y, z)*
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k0(x, y, z), (x, 2), y) + 2*bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), x, y) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), (x, 2))*Derivative(bbn_ks_k1(x, y, z), y) + 
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), (x, 2)) + 
+2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), x, y) + 
+bbn_ks_k0(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2), y) + 2*
+bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), x, y) + 
+bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2))*Derivative(bbn_ks_k1(x, y, z), y) + 
+bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), (x, 2)) + 
+2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), x, y) + 
+2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), x, y) + 
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2))*Derivative(bbn_ks_k0(x, y, z), y) + 
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), (x, 2)) + 
+2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), x, y) + 
+2*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), x)*
+Derivative(bbn_ks_k1(x, y, z), y) + 2*Derivative(bbn_ks_c(x, y, z), x)*
+Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x) + 2*
+Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x)*
+Derivative(bbn_ks_k1(x, y, z), x);
 
     _dddgamma_D0D0D1D2D0[ijk]=
 /* mcode in progress ... */
@@ -5078,22 +5078,22 @@ Derivative(k1(x, y, z), x);
 // Derivative
 // c
 // k0
-2*c(x, y, z)*k0(x, y, z)*Derivative(k0(x, y, z), x, y, z) + 2*
-c(x, y, z)*Derivative(k0(x, y, z), x)*Derivative(k0(x, y, z), y, z) + 
-2*c(x, y, z)*Derivative(k0(x, y, z), y)*Derivative(k0(x, y, z), x, z) + 
-2*c(x, y, z)*Derivative(k0(x, y, z), z)*Derivative(k0(x, y, z), x, y) + 
-pow(k0(x, y, z), 2)*Derivative(c(x, y, z), x, y, z) + 2*k0(x, y, z)*
-Derivative(c(x, y, z), x)*Derivative(k0(x, y, z), y, z) + 2*
-k0(x, y, z)*Derivative(c(x, y, z), y)*Derivative(k0(x, y, z), x, z) + 
-2*k0(x, y, z)*Derivative(c(x, y, z), z)*Derivative(k0(x, y, z), x, y) + 
-2*k0(x, y, z)*Derivative(k0(x, y, z), x)*Derivative(c(x, y, z), y, z) + 
-2*k0(x, y, z)*Derivative(k0(x, y, z), y)*Derivative(c(x, y, z), x, z) + 
-2*k0(x, y, z)*Derivative(k0(x, y, z), z)*Derivative(c(x, y, z), x, y) + 
-2*Derivative(c(x, y, z), x)*Derivative(k0(x, y, z), y)*
-Derivative(k0(x, y, z), z) + 2*Derivative(c(x, y, z), y)*
-Derivative(k0(x, y, z), x)*Derivative(k0(x, y, z), z) + 2*
-Derivative(c(x, y, z), z)*Derivative(k0(x, y, z), x)*
-Derivative(k0(x, y, z), y);
+2*bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x, y, z) + 2*
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), y, z) + 
+2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x, z) + 
+2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x, y) + 
+pow(bbn_ks_k0(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), x, y, z) + 2*bbn_ks_k0(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), y, z) + 2*
+bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x, z) + 
+2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x, y) + 
+2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), y, z) + 
+2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), x, z) + 
+2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), x, y) + 
+2*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), y)*
+Derivative(bbn_ks_k0(x, y, z), z) + 2*Derivative(bbn_ks_c(x, y, z), y)*
+Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), z) + 2*
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x)*
+Derivative(bbn_ks_k0(x, y, z), y);
 
     _dddgamma_D1D2D1D1D0[ijk]=
 /* mcode in progress ... */
@@ -5116,26 +5116,26 @@ Derivative(k0(x, y, z), y);
 // c
 // k1
 // k2
-c(x, y, z)*k1(x, y, z)*Derivative(k2(x, y, z), x, (y, 2)) + c(x, y, z)*
-k2(x, y, z)*Derivative(k1(x, y, z), x, (y, 2)) + c(x, y, z)*
-Derivative(k1(x, y, z), x)*Derivative(k2(x, y, z), (y, 2)) + 2*
-c(x, y, z)*Derivative(k1(x, y, z), y)*Derivative(k2(x, y, z), x, y) + 
-c(x, y, z)*Derivative(k1(x, y, z), (y, 2))*Derivative(k2(x, y, z), x) + 
-2*c(x, y, z)*Derivative(k2(x, y, z), y)*Derivative(k1(x, y, z), x, y) + 
-k1(x, y, z)*k2(x, y, z)*Derivative(c(x, y, z), x, (y, 2)) + 
-k1(x, y, z)*Derivative(c(x, y, z), x)*Derivative(k2(x, y, z), (y, 2)) + 
-2*k1(x, y, z)*Derivative(c(x, y, z), y)*Derivative(k2(x, y, z), x, y) + 
-k1(x, y, z)*Derivative(c(x, y, z), (y, 2))*Derivative(k2(x, y, z), x) + 
-2*k1(x, y, z)*Derivative(k2(x, y, z), y)*Derivative(c(x, y, z), x, y) + 
-k2(x, y, z)*Derivative(c(x, y, z), x)*Derivative(k1(x, y, z), (y, 2)) + 
-2*k2(x, y, z)*Derivative(c(x, y, z), y)*Derivative(k1(x, y, z), x, y) + 
-k2(x, y, z)*Derivative(c(x, y, z), (y, 2))*Derivative(k1(x, y, z), x) + 
-2*k2(x, y, z)*Derivative(k1(x, y, z), y)*Derivative(c(x, y, z), x, y) + 
-2*Derivative(c(x, y, z), x)*Derivative(k1(x, y, z), y)*
-Derivative(k2(x, y, z), y) + 2*Derivative(c(x, y, z), y)*
-Derivative(k1(x, y, z), x)*Derivative(k2(x, y, z), y) + 2*
-Derivative(c(x, y, z), y)*Derivative(k1(x, y, z), y)*
-Derivative(k2(x, y, z), x);
+bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x, (y, 2)) + bbn_ks_c(x, y, z)*
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x, (y, 2)) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), (y, 2)) + 2*
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x, y) + 
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), (y, 2))*Derivative(bbn_ks_k2(x, y, z), x) + 
+2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x, y) + 
+bbn_ks_k1(x, y, z)*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), x, (y, 2)) + 
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), (y, 2)) + 
+2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x, y) + 
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), (y, 2))*Derivative(bbn_ks_k2(x, y, z), x) + 
+2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k2(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), x, y) + 
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), (y, 2)) + 
+2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x, y) + 
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (y, 2))*Derivative(bbn_ks_k1(x, y, z), x) + 
+2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), x, y) + 
+2*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), y)*
+Derivative(bbn_ks_k2(x, y, z), y) + 2*Derivative(bbn_ks_c(x, y, z), y)*
+Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), y) + 2*
+Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), y)*
+Derivative(bbn_ks_k2(x, y, z), x);
 
     _dddgamma_D1D2D2D2D1[ijk]=
 /* mcode in progress ... */
@@ -5158,26 +5158,26 @@ Derivative(k2(x, y, z), x);
 // c
 // k1
 // k2
-c(x, y, z)*k1(x, y, z)*Derivative(k2(x, y, z), y, (z, 2)) + c(x, y, z)*
-k2(x, y, z)*Derivative(k1(x, y, z), y, (z, 2)) + c(x, y, z)*
-Derivative(k1(x, y, z), y)*Derivative(k2(x, y, z), (z, 2)) + 2*
-c(x, y, z)*Derivative(k1(x, y, z), z)*Derivative(k2(x, y, z), y, z) + 
-c(x, y, z)*Derivative(k1(x, y, z), (z, 2))*Derivative(k2(x, y, z), y) + 
-2*c(x, y, z)*Derivative(k2(x, y, z), z)*Derivative(k1(x, y, z), y, z) + 
-k1(x, y, z)*k2(x, y, z)*Derivative(c(x, y, z), y, (z, 2)) + 
-k1(x, y, z)*Derivative(c(x, y, z), y)*Derivative(k2(x, y, z), (z, 2)) + 
-2*k1(x, y, z)*Derivative(c(x, y, z), z)*Derivative(k2(x, y, z), y, z) + 
-k1(x, y, z)*Derivative(c(x, y, z), (z, 2))*Derivative(k2(x, y, z), y) + 
-2*k1(x, y, z)*Derivative(k2(x, y, z), z)*Derivative(c(x, y, z), y, z) + 
-k2(x, y, z)*Derivative(c(x, y, z), y)*Derivative(k1(x, y, z), (z, 2)) + 
-2*k2(x, y, z)*Derivative(c(x, y, z), z)*Derivative(k1(x, y, z), y, z) + 
-k2(x, y, z)*Derivative(c(x, y, z), (z, 2))*Derivative(k1(x, y, z), y) + 
-2*k2(x, y, z)*Derivative(k1(x, y, z), z)*Derivative(c(x, y, z), y, z) + 
-2*Derivative(c(x, y, z), y)*Derivative(k1(x, y, z), z)*
-Derivative(k2(x, y, z), z) + 2*Derivative(c(x, y, z), z)*
-Derivative(k1(x, y, z), y)*Derivative(k2(x, y, z), z) + 2*
-Derivative(c(x, y, z), z)*Derivative(k1(x, y, z), z)*
-Derivative(k2(x, y, z), y);
+bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k2(x, y, z), y, (z, 2)) + bbn_ks_c(x, y, z)*
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k1(x, y, z), y, (z, 2)) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), (z, 2)) + 2*
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), y, z) + 
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), (z, 2))*Derivative(bbn_ks_k2(x, y, z), y) + 
+2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), y, z) + 
+bbn_ks_k1(x, y, z)*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), y, (z, 2)) + 
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), (z, 2)) + 
+2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), y, z) + 
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), (z, 2))*Derivative(bbn_ks_k2(x, y, z), y) + 
+2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k2(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), y, z) + 
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), (z, 2)) + 
+2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), y, z) + 
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (z, 2))*Derivative(bbn_ks_k1(x, y, z), y) + 
+2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), y, z) + 
+2*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), z)*
+Derivative(bbn_ks_k2(x, y, z), z) + 2*Derivative(bbn_ks_c(x, y, z), z)*
+Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), z) + 2*
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), z)*
+Derivative(bbn_ks_k2(x, y, z), y);
 
     _dddgamma_D0D1D0D0D0[ijk]=
 /* mcode in progress ... */
@@ -5194,17 +5194,17 @@ Derivative(k2(x, y, z), y);
 // c
 // k0
 // k1
-c(x, y, z)*k0(x, y, z)*Derivative(k1(x, y, z), (x, 3)) + c(x, y, z)*
-k1(x, y, z)*Derivative(k0(x, y, z), (x, 3)) + 3*c(x, y, z)*
-Derivative(k0(x, y, z), x)*Derivative(k1(x, y, z), (x, 2)) + 3*
-c(x, y, z)*Derivative(k0(x, y, z), (x, 2))*Derivative(k1(x, y, z), x) + 
-k0(x, y, z)*k1(x, y, z)*Derivative(c(x, y, z), (x, 3)) + 3*k0(x, y, z)*
-Derivative(c(x, y, z), x)*Derivative(k1(x, y, z), (x, 2)) + 3*
-k0(x, y, z)*Derivative(c(x, y, z), (x, 2))*Derivative(k1(x, y, z), x) + 
-3*k1(x, y, z)*Derivative(c(x, y, z), x)*Derivative(k0(x, y, z), (x, 2)) + 
-3*k1(x, y, z)*Derivative(c(x, y, z), (x, 2))*Derivative(k0(x, y, z), x) + 
-6*Derivative(c(x, y, z), x)*Derivative(k0(x, y, z), x)*
-Derivative(k1(x, y, z), x);
+bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k1(x, y, z), (x, 3)) + bbn_ks_c(x, y, z)*
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k0(x, y, z), (x, 3)) + 3*bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), (x, 2)) + 3*
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), (x, 2))*Derivative(bbn_ks_k1(x, y, z), x) + 
+bbn_ks_k0(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 3)) + 3*bbn_ks_k0(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), (x, 2)) + 3*
+bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2))*Derivative(bbn_ks_k1(x, y, z), x) + 
+3*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), (x, 2)) + 
+3*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2))*Derivative(bbn_ks_k0(x, y, z), x) + 
+6*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), x)*
+Derivative(bbn_ks_k1(x, y, z), x);
 
     _dddgamma_D1D2D2D1D1[ijk]=
 /* mcode in progress ... */
@@ -5227,26 +5227,26 @@ Derivative(k1(x, y, z), x);
 // c
 // k1
 // k2
-c(x, y, z)*k1(x, y, z)*Derivative(k2(x, y, z), (y, 2), z) + c(x, y, z)*
-k2(x, y, z)*Derivative(k1(x, y, z), (y, 2), z) + 2*c(x, y, z)*
-Derivative(k1(x, y, z), y)*Derivative(k2(x, y, z), y, z) + c(x, y, z)*
-Derivative(k1(x, y, z), (y, 2))*Derivative(k2(x, y, z), z) + 
-c(x, y, z)*Derivative(k1(x, y, z), z)*Derivative(k2(x, y, z), (y, 2)) + 
-2*c(x, y, z)*Derivative(k2(x, y, z), y)*Derivative(k1(x, y, z), y, z) + 
-k1(x, y, z)*k2(x, y, z)*Derivative(c(x, y, z), (y, 2), z) + 2*
-k1(x, y, z)*Derivative(c(x, y, z), y)*Derivative(k2(x, y, z), y, z) + 
-k1(x, y, z)*Derivative(c(x, y, z), (y, 2))*Derivative(k2(x, y, z), z) + 
-k1(x, y, z)*Derivative(c(x, y, z), z)*Derivative(k2(x, y, z), (y, 2)) + 
-2*k1(x, y, z)*Derivative(k2(x, y, z), y)*Derivative(c(x, y, z), y, z) + 
-2*k2(x, y, z)*Derivative(c(x, y, z), y)*Derivative(k1(x, y, z), y, z) + 
-k2(x, y, z)*Derivative(c(x, y, z), (y, 2))*Derivative(k1(x, y, z), z) + 
-k2(x, y, z)*Derivative(c(x, y, z), z)*Derivative(k1(x, y, z), (y, 2)) + 
-2*k2(x, y, z)*Derivative(k1(x, y, z), y)*Derivative(c(x, y, z), y, z) + 
-2*Derivative(c(x, y, z), y)*Derivative(k1(x, y, z), y)*
-Derivative(k2(x, y, z), z) + 2*Derivative(c(x, y, z), y)*
-Derivative(k1(x, y, z), z)*Derivative(k2(x, y, z), y) + 2*
-Derivative(c(x, y, z), z)*Derivative(k1(x, y, z), y)*
-Derivative(k2(x, y, z), y);
+bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k2(x, y, z), (y, 2), z) + bbn_ks_c(x, y, z)*
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k1(x, y, z), (y, 2), z) + 2*bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), y, z) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k1(x, y, z), (y, 2))*Derivative(bbn_ks_k2(x, y, z), z) + 
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), (y, 2)) + 
+2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), y, z) + 
+bbn_ks_k1(x, y, z)*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (y, 2), z) + 2*
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), y, z) + 
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), (y, 2))*Derivative(bbn_ks_k2(x, y, z), z) + 
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), (y, 2)) + 
+2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k2(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), y, z) + 
+2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), y, z) + 
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (y, 2))*Derivative(bbn_ks_k1(x, y, z), z) + 
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), (y, 2)) + 
+2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), y, z) + 
+2*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), y)*
+Derivative(bbn_ks_k2(x, y, z), z) + 2*Derivative(bbn_ks_c(x, y, z), y)*
+Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), y) + 2*
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), y)*
+Derivative(bbn_ks_k2(x, y, z), y);
 
     _dddgamma_D0D0D0D1D0[ijk]=
 /* mcode in progress ... */
@@ -5263,17 +5263,17 @@ Derivative(k2(x, y, z), y);
 // Derivative
 // c
 // k0
-2*c(x, y, z)*k0(x, y, z)*Derivative(k0(x, y, z), (x, 2), y) + 4*
-c(x, y, z)*Derivative(k0(x, y, z), x)*Derivative(k0(x, y, z), x, y) + 
-2*c(x, y, z)*Derivative(k0(x, y, z), (x, 2))*Derivative(k0(x, y, z), y) + 
-pow(k0(x, y, z), 2)*Derivative(c(x, y, z), (x, 2), y) + 4*k0(x, y, z)*
-Derivative(c(x, y, z), x)*Derivative(k0(x, y, z), x, y) + 2*
-k0(x, y, z)*Derivative(c(x, y, z), (x, 2))*Derivative(k0(x, y, z), y) + 
-2*k0(x, y, z)*Derivative(c(x, y, z), y)*Derivative(k0(x, y, z), (x, 2)) + 
-4*k0(x, y, z)*Derivative(k0(x, y, z), x)*Derivative(c(x, y, z), x, y) + 
-4*Derivative(c(x, y, z), x)*Derivative(k0(x, y, z), x)*
-Derivative(k0(x, y, z), y) + 2*Derivative(c(x, y, z), y)*
-pow(Derivative(k0(x, y, z), x), 2);
+2*bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k0(x, y, z), (x, 2), y) + 4*
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), x, y) + 
+2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), (x, 2))*Derivative(bbn_ks_k0(x, y, z), y) + 
+pow(bbn_ks_k0(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), (x, 2), y) + 4*bbn_ks_k0(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), x, y) + 2*
+bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2))*Derivative(bbn_ks_k0(x, y, z), y) + 
+2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), (x, 2)) + 
+4*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), x, y) + 
+4*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), x)*
+Derivative(bbn_ks_k0(x, y, z), y) + 2*Derivative(bbn_ks_c(x, y, z), y)*
+pow(Derivative(bbn_ks_k0(x, y, z), x), 2);
 
     _dddgamma_D0D0D0D0D1[ijk]=
 /* mcode in progress ... */
@@ -5290,17 +5290,17 @@ pow(Derivative(k0(x, y, z), x), 2);
 // Derivative
 // c
 // k0
-2*c(x, y, z)*k0(x, y, z)*Derivative(k0(x, y, z), (x, 2), y) + 4*
-c(x, y, z)*Derivative(k0(x, y, z), x)*Derivative(k0(x, y, z), x, y) + 
-2*c(x, y, z)*Derivative(k0(x, y, z), (x, 2))*Derivative(k0(x, y, z), y) + 
-pow(k0(x, y, z), 2)*Derivative(c(x, y, z), (x, 2), y) + 4*k0(x, y, z)*
-Derivative(c(x, y, z), x)*Derivative(k0(x, y, z), x, y) + 2*
-k0(x, y, z)*Derivative(c(x, y, z), (x, 2))*Derivative(k0(x, y, z), y) + 
-2*k0(x, y, z)*Derivative(c(x, y, z), y)*Derivative(k0(x, y, z), (x, 2)) + 
-4*k0(x, y, z)*Derivative(k0(x, y, z), x)*Derivative(c(x, y, z), x, y) + 
-4*Derivative(c(x, y, z), x)*Derivative(k0(x, y, z), x)*
-Derivative(k0(x, y, z), y) + 2*Derivative(c(x, y, z), y)*
-pow(Derivative(k0(x, y, z), x), 2);
+2*bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k0(x, y, z), (x, 2), y) + 4*
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), x, y) + 
+2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), (x, 2))*Derivative(bbn_ks_k0(x, y, z), y) + 
+pow(bbn_ks_k0(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), (x, 2), y) + 4*bbn_ks_k0(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), x, y) + 2*
+bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2))*Derivative(bbn_ks_k0(x, y, z), y) + 
+2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), (x, 2)) + 
+4*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), x, y) + 
+4*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), x)*
+Derivative(bbn_ks_k0(x, y, z), y) + 2*Derivative(bbn_ks_c(x, y, z), y)*
+pow(Derivative(bbn_ks_k0(x, y, z), x), 2);
 
     _dddgamma_D0D0D0D2D2[ijk]=
 /* mcode in progress ... */
@@ -5317,17 +5317,17 @@ pow(Derivative(k0(x, y, z), x), 2);
 // Derivative
 // c
 // k0
-2*c(x, y, z)*k0(x, y, z)*Derivative(k0(x, y, z), x, (z, 2)) + 2*
-c(x, y, z)*Derivative(k0(x, y, z), x)*Derivative(k0(x, y, z), (z, 2)) + 
-4*c(x, y, z)*Derivative(k0(x, y, z), z)*Derivative(k0(x, y, z), x, z) + 
-pow(k0(x, y, z), 2)*Derivative(c(x, y, z), x, (z, 2)) + 2*k0(x, y, z)*
-Derivative(c(x, y, z), x)*Derivative(k0(x, y, z), (z, 2)) + 4*
-k0(x, y, z)*Derivative(c(x, y, z), z)*Derivative(k0(x, y, z), x, z) + 
-2*k0(x, y, z)*Derivative(c(x, y, z), (z, 2))*Derivative(k0(x, y, z), x) + 
-4*k0(x, y, z)*Derivative(k0(x, y, z), z)*Derivative(c(x, y, z), x, z) + 
-2*Derivative(c(x, y, z), x)*pow(Derivative(k0(x, y, z), z), 2) + 4*
-Derivative(c(x, y, z), z)*Derivative(k0(x, y, z), x)*
-Derivative(k0(x, y, z), z);
+2*bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x, (z, 2)) + 2*
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), (z, 2)) + 
+4*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x, z) + 
+pow(bbn_ks_k0(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), x, (z, 2)) + 2*bbn_ks_k0(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), (z, 2)) + 4*
+bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x, z) + 
+2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), (z, 2))*Derivative(bbn_ks_k0(x, y, z), x) + 
+4*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), x, z) + 
+2*Derivative(bbn_ks_c(x, y, z), x)*pow(Derivative(bbn_ks_k0(x, y, z), z), 2) + 4*
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x)*
+Derivative(bbn_ks_k0(x, y, z), z);
 
     _dddgamma_D1D2D0D2D1[ijk]=
 /* mcode in progress ... */
@@ -5356,36 +5356,36 @@ Derivative(k0(x, y, z), z);
 // c
 // k1
 // k2
-c(x, y, z)*k1(x, y, z)*Derivative(k2(x, y, z), x, y, z) + c(x, y, z)*
-k2(x, y, z)*Derivative(k1(x, y, z), x, y, z) + c(x, y, z)*
-Derivative(k1(x, y, z), x)*Derivative(k2(x, y, z), y, z) + c(x, y, z)*
-Derivative(k1(x, y, z), y)*Derivative(k2(x, y, z), x, z) + c(x, y, z)*
-Derivative(k1(x, y, z), z)*Derivative(k2(x, y, z), x, y) + c(x, y, z)*
-Derivative(k2(x, y, z), x)*Derivative(k1(x, y, z), y, z) + c(x, y, z)*
-Derivative(k2(x, y, z), y)*Derivative(k1(x, y, z), x, z) + c(x, y, z)*
-Derivative(k2(x, y, z), z)*Derivative(k1(x, y, z), x, y) + k1(x, y, z)*
-k2(x, y, z)*Derivative(c(x, y, z), x, y, z) + k1(x, y, z)*
-Derivative(c(x, y, z), x)*Derivative(k2(x, y, z), y, z) + k1(x, y, z)*
-Derivative(c(x, y, z), y)*Derivative(k2(x, y, z), x, z) + k1(x, y, z)*
-Derivative(c(x, y, z), z)*Derivative(k2(x, y, z), x, y) + k1(x, y, z)*
-Derivative(k2(x, y, z), x)*Derivative(c(x, y, z), y, z) + k1(x, y, z)*
-Derivative(k2(x, y, z), y)*Derivative(c(x, y, z), x, z) + k1(x, y, z)*
-Derivative(k2(x, y, z), z)*Derivative(c(x, y, z), x, y) + k2(x, y, z)*
-Derivative(c(x, y, z), x)*Derivative(k1(x, y, z), y, z) + k2(x, y, z)*
-Derivative(c(x, y, z), y)*Derivative(k1(x, y, z), x, z) + k2(x, y, z)*
-Derivative(c(x, y, z), z)*Derivative(k1(x, y, z), x, y) + k2(x, y, z)*
-Derivative(k1(x, y, z), x)*Derivative(c(x, y, z), y, z) + k2(x, y, z)*
-Derivative(k1(x, y, z), y)*Derivative(c(x, y, z), x, z) + k2(x, y, z)*
-Derivative(k1(x, y, z), z)*Derivative(c(x, y, z), x, y) + 
-Derivative(c(x, y, z), x)*Derivative(k1(x, y, z), y)*
-Derivative(k2(x, y, z), z) + Derivative(c(x, y, z), x)*
-Derivative(k1(x, y, z), z)*Derivative(k2(x, y, z), y) + 
-Derivative(c(x, y, z), y)*Derivative(k1(x, y, z), x)*
-Derivative(k2(x, y, z), z) + Derivative(c(x, y, z), y)*
-Derivative(k1(x, y, z), z)*Derivative(k2(x, y, z), x) + 
-Derivative(c(x, y, z), z)*Derivative(k1(x, y, z), x)*
-Derivative(k2(x, y, z), y) + Derivative(c(x, y, z), z)*
-Derivative(k1(x, y, z), y)*Derivative(k2(x, y, z), x);
+bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x, y, z) + bbn_ks_c(x, y, z)*
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x, y, z) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), y, z) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x, z) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x, y) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), y, z) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k2(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x, z) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k2(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x, y) + bbn_ks_k1(x, y, z)*
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), x, y, z) + bbn_ks_k1(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), y, z) + bbn_ks_k1(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x, z) + bbn_ks_k1(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x, y) + bbn_ks_k1(x, y, z)*
+Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), y, z) + bbn_ks_k1(x, y, z)*
+Derivative(bbn_ks_k2(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), x, z) + bbn_ks_k1(x, y, z)*
+Derivative(bbn_ks_k2(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), x, y) + bbn_ks_k2(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), y, z) + bbn_ks_k2(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x, z) + bbn_ks_k2(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x, y) + bbn_ks_k2(x, y, z)*
+Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), y, z) + bbn_ks_k2(x, y, z)*
+Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), x, z) + bbn_ks_k2(x, y, z)*
+Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), x, y) + 
+Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), y)*
+Derivative(bbn_ks_k2(x, y, z), z) + Derivative(bbn_ks_c(x, y, z), x)*
+Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), y) + 
+Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x)*
+Derivative(bbn_ks_k2(x, y, z), z) + Derivative(bbn_ks_c(x, y, z), y)*
+Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x) + 
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x)*
+Derivative(bbn_ks_k2(x, y, z), y) + Derivative(bbn_ks_c(x, y, z), z)*
+Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x);
 
     _dddgamma_D2D2D1D1D2[ijk]=
 /* mcode in progress ... */
@@ -5402,17 +5402,17 @@ Derivative(k1(x, y, z), y)*Derivative(k2(x, y, z), x);
 // Derivative
 // c
 // k2
-2*c(x, y, z)*k2(x, y, z)*Derivative(k2(x, y, z), (y, 2), z) + 4*
-c(x, y, z)*Derivative(k2(x, y, z), y)*Derivative(k2(x, y, z), y, z) + 
-2*c(x, y, z)*Derivative(k2(x, y, z), (y, 2))*Derivative(k2(x, y, z), z) + 
-pow(k2(x, y, z), 2)*Derivative(c(x, y, z), (y, 2), z) + 4*k2(x, y, z)*
-Derivative(c(x, y, z), y)*Derivative(k2(x, y, z), y, z) + 2*
-k2(x, y, z)*Derivative(c(x, y, z), (y, 2))*Derivative(k2(x, y, z), z) + 
-2*k2(x, y, z)*Derivative(c(x, y, z), z)*Derivative(k2(x, y, z), (y, 2)) + 
-4*k2(x, y, z)*Derivative(k2(x, y, z), y)*Derivative(c(x, y, z), y, z) + 
-4*Derivative(c(x, y, z), y)*Derivative(k2(x, y, z), y)*
-Derivative(k2(x, y, z), z) + 2*Derivative(c(x, y, z), z)*
-pow(Derivative(k2(x, y, z), y), 2);
+2*bbn_ks_c(x, y, z)*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k2(x, y, z), (y, 2), z) + 4*
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), y, z) + 
+2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), (y, 2))*Derivative(bbn_ks_k2(x, y, z), z) + 
+pow(bbn_ks_k2(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), (y, 2), z) + 4*bbn_ks_k2(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), y, z) + 2*
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (y, 2))*Derivative(bbn_ks_k2(x, y, z), z) + 
+2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), (y, 2)) + 
+4*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k2(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), y, z) + 
+4*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), y)*
+Derivative(bbn_ks_k2(x, y, z), z) + 2*Derivative(bbn_ks_c(x, y, z), z)*
+pow(Derivative(bbn_ks_k2(x, y, z), y), 2);
 
     _dddgamma_D1D2D1D1D1[ijk]=
 /* mcode in progress ... */
@@ -5429,17 +5429,17 @@ pow(Derivative(k2(x, y, z), y), 2);
 // c
 // k1
 // k2
-c(x, y, z)*k1(x, y, z)*Derivative(k2(x, y, z), (y, 3)) + c(x, y, z)*
-k2(x, y, z)*Derivative(k1(x, y, z), (y, 3)) + 3*c(x, y, z)*
-Derivative(k1(x, y, z), y)*Derivative(k2(x, y, z), (y, 2)) + 3*
-c(x, y, z)*Derivative(k1(x, y, z), (y, 2))*Derivative(k2(x, y, z), y) + 
-k1(x, y, z)*k2(x, y, z)*Derivative(c(x, y, z), (y, 3)) + 3*k1(x, y, z)*
-Derivative(c(x, y, z), y)*Derivative(k2(x, y, z), (y, 2)) + 3*
-k1(x, y, z)*Derivative(c(x, y, z), (y, 2))*Derivative(k2(x, y, z), y) + 
-3*k2(x, y, z)*Derivative(c(x, y, z), y)*Derivative(k1(x, y, z), (y, 2)) + 
-3*k2(x, y, z)*Derivative(c(x, y, z), (y, 2))*Derivative(k1(x, y, z), y) + 
-6*Derivative(c(x, y, z), y)*Derivative(k1(x, y, z), y)*
-Derivative(k2(x, y, z), y);
+bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k2(x, y, z), (y, 3)) + bbn_ks_c(x, y, z)*
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k1(x, y, z), (y, 3)) + 3*bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), (y, 2)) + 3*
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), (y, 2))*Derivative(bbn_ks_k2(x, y, z), y) + 
+bbn_ks_k1(x, y, z)*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (y, 3)) + 3*bbn_ks_k1(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), (y, 2)) + 3*
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), (y, 2))*Derivative(bbn_ks_k2(x, y, z), y) + 
+3*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), (y, 2)) + 
+3*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (y, 2))*Derivative(bbn_ks_k1(x, y, z), y) + 
+6*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), y)*
+Derivative(bbn_ks_k2(x, y, z), y);
 
     _dddgamma_D0D0D1D0D1[ijk]=
 /* mcode in progress ... */
@@ -5456,17 +5456,17 @@ Derivative(k2(x, y, z), y);
 // Derivative
 // c
 // k0
-2*c(x, y, z)*k0(x, y, z)*Derivative(k0(x, y, z), x, (y, 2)) + 2*
-c(x, y, z)*Derivative(k0(x, y, z), x)*Derivative(k0(x, y, z), (y, 2)) + 
-4*c(x, y, z)*Derivative(k0(x, y, z), y)*Derivative(k0(x, y, z), x, y) + 
-pow(k0(x, y, z), 2)*Derivative(c(x, y, z), x, (y, 2)) + 2*k0(x, y, z)*
-Derivative(c(x, y, z), x)*Derivative(k0(x, y, z), (y, 2)) + 4*
-k0(x, y, z)*Derivative(c(x, y, z), y)*Derivative(k0(x, y, z), x, y) + 
-2*k0(x, y, z)*Derivative(c(x, y, z), (y, 2))*Derivative(k0(x, y, z), x) + 
-4*k0(x, y, z)*Derivative(k0(x, y, z), y)*Derivative(c(x, y, z), x, y) + 
-2*Derivative(c(x, y, z), x)*pow(Derivative(k0(x, y, z), y), 2) + 4*
-Derivative(c(x, y, z), y)*Derivative(k0(x, y, z), x)*
-Derivative(k0(x, y, z), y);
+2*bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x, (y, 2)) + 2*
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), (y, 2)) + 
+4*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x, y) + 
+pow(bbn_ks_k0(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), x, (y, 2)) + 2*bbn_ks_k0(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), (y, 2)) + 4*
+bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x, y) + 
+2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), (y, 2))*Derivative(bbn_ks_k0(x, y, z), x) + 
+4*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), x, y) + 
+2*Derivative(bbn_ks_c(x, y, z), x)*pow(Derivative(bbn_ks_k0(x, y, z), y), 2) + 4*
+Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x)*
+Derivative(bbn_ks_k0(x, y, z), y);
 
     _dddgamma_D0D1D0D1D2[ijk]=
 /* mcode in progress ... */
@@ -5495,36 +5495,36 @@ Derivative(k0(x, y, z), y);
 // c
 // k0
 // k1
-c(x, y, z)*k0(x, y, z)*Derivative(k1(x, y, z), x, y, z) + c(x, y, z)*
-k1(x, y, z)*Derivative(k0(x, y, z), x, y, z) + c(x, y, z)*
-Derivative(k0(x, y, z), x)*Derivative(k1(x, y, z), y, z) + c(x, y, z)*
-Derivative(k0(x, y, z), y)*Derivative(k1(x, y, z), x, z) + c(x, y, z)*
-Derivative(k0(x, y, z), z)*Derivative(k1(x, y, z), x, y) + c(x, y, z)*
-Derivative(k1(x, y, z), x)*Derivative(k0(x, y, z), y, z) + c(x, y, z)*
-Derivative(k1(x, y, z), y)*Derivative(k0(x, y, z), x, z) + c(x, y, z)*
-Derivative(k1(x, y, z), z)*Derivative(k0(x, y, z), x, y) + k0(x, y, z)*
-k1(x, y, z)*Derivative(c(x, y, z), x, y, z) + k0(x, y, z)*
-Derivative(c(x, y, z), x)*Derivative(k1(x, y, z), y, z) + k0(x, y, z)*
-Derivative(c(x, y, z), y)*Derivative(k1(x, y, z), x, z) + k0(x, y, z)*
-Derivative(c(x, y, z), z)*Derivative(k1(x, y, z), x, y) + k0(x, y, z)*
-Derivative(k1(x, y, z), x)*Derivative(c(x, y, z), y, z) + k0(x, y, z)*
-Derivative(k1(x, y, z), y)*Derivative(c(x, y, z), x, z) + k0(x, y, z)*
-Derivative(k1(x, y, z), z)*Derivative(c(x, y, z), x, y) + k1(x, y, z)*
-Derivative(c(x, y, z), x)*Derivative(k0(x, y, z), y, z) + k1(x, y, z)*
-Derivative(c(x, y, z), y)*Derivative(k0(x, y, z), x, z) + k1(x, y, z)*
-Derivative(c(x, y, z), z)*Derivative(k0(x, y, z), x, y) + k1(x, y, z)*
-Derivative(k0(x, y, z), x)*Derivative(c(x, y, z), y, z) + k1(x, y, z)*
-Derivative(k0(x, y, z), y)*Derivative(c(x, y, z), x, z) + k1(x, y, z)*
-Derivative(k0(x, y, z), z)*Derivative(c(x, y, z), x, y) + 
-Derivative(c(x, y, z), x)*Derivative(k0(x, y, z), y)*
-Derivative(k1(x, y, z), z) + Derivative(c(x, y, z), x)*
-Derivative(k0(x, y, z), z)*Derivative(k1(x, y, z), y) + 
-Derivative(c(x, y, z), y)*Derivative(k0(x, y, z), x)*
-Derivative(k1(x, y, z), z) + Derivative(c(x, y, z), y)*
-Derivative(k0(x, y, z), z)*Derivative(k1(x, y, z), x) + 
-Derivative(c(x, y, z), z)*Derivative(k0(x, y, z), x)*
-Derivative(k1(x, y, z), y) + Derivative(c(x, y, z), z)*
-Derivative(k0(x, y, z), y)*Derivative(k1(x, y, z), x);
+bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x, y, z) + bbn_ks_c(x, y, z)*
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x, y, z) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), y, z) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x, z) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x, y) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), y, z) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x, z) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x, y) + bbn_ks_k0(x, y, z)*
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), x, y, z) + bbn_ks_k0(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), y, z) + bbn_ks_k0(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x, z) + bbn_ks_k0(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x, y) + bbn_ks_k0(x, y, z)*
+Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), y, z) + bbn_ks_k0(x, y, z)*
+Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), x, z) + bbn_ks_k0(x, y, z)*
+Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), x, y) + bbn_ks_k1(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), y, z) + bbn_ks_k1(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x, z) + bbn_ks_k1(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x, y) + bbn_ks_k1(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), y, z) + bbn_ks_k1(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), x, z) + bbn_ks_k1(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), x, y) + 
+Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), y)*
+Derivative(bbn_ks_k1(x, y, z), z) + Derivative(bbn_ks_c(x, y, z), x)*
+Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), y) + 
+Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x)*
+Derivative(bbn_ks_k1(x, y, z), z) + Derivative(bbn_ks_c(x, y, z), y)*
+Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x) + 
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x)*
+Derivative(bbn_ks_k1(x, y, z), y) + Derivative(bbn_ks_c(x, y, z), z)*
+Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x);
 
     _dddgamma_D0D2D1D2D2[ijk]=
 /* mcode in progress ... */
@@ -5547,26 +5547,26 @@ Derivative(k0(x, y, z), y)*Derivative(k1(x, y, z), x);
 // c
 // k0
 // k2
-c(x, y, z)*k0(x, y, z)*Derivative(k2(x, y, z), y, (z, 2)) + c(x, y, z)*
-k2(x, y, z)*Derivative(k0(x, y, z), y, (z, 2)) + c(x, y, z)*
-Derivative(k0(x, y, z), y)*Derivative(k2(x, y, z), (z, 2)) + 2*
-c(x, y, z)*Derivative(k0(x, y, z), z)*Derivative(k2(x, y, z), y, z) + 
-c(x, y, z)*Derivative(k0(x, y, z), (z, 2))*Derivative(k2(x, y, z), y) + 
-2*c(x, y, z)*Derivative(k2(x, y, z), z)*Derivative(k0(x, y, z), y, z) + 
-k0(x, y, z)*k2(x, y, z)*Derivative(c(x, y, z), y, (z, 2)) + 
-k0(x, y, z)*Derivative(c(x, y, z), y)*Derivative(k2(x, y, z), (z, 2)) + 
-2*k0(x, y, z)*Derivative(c(x, y, z), z)*Derivative(k2(x, y, z), y, z) + 
-k0(x, y, z)*Derivative(c(x, y, z), (z, 2))*Derivative(k2(x, y, z), y) + 
-2*k0(x, y, z)*Derivative(k2(x, y, z), z)*Derivative(c(x, y, z), y, z) + 
-k2(x, y, z)*Derivative(c(x, y, z), y)*Derivative(k0(x, y, z), (z, 2)) + 
-2*k2(x, y, z)*Derivative(c(x, y, z), z)*Derivative(k0(x, y, z), y, z) + 
-k2(x, y, z)*Derivative(c(x, y, z), (z, 2))*Derivative(k0(x, y, z), y) + 
-2*k2(x, y, z)*Derivative(k0(x, y, z), z)*Derivative(c(x, y, z), y, z) + 
-2*Derivative(c(x, y, z), y)*Derivative(k0(x, y, z), z)*
-Derivative(k2(x, y, z), z) + 2*Derivative(c(x, y, z), z)*
-Derivative(k0(x, y, z), y)*Derivative(k2(x, y, z), z) + 2*
-Derivative(c(x, y, z), z)*Derivative(k0(x, y, z), z)*
-Derivative(k2(x, y, z), y);
+bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k2(x, y, z), y, (z, 2)) + bbn_ks_c(x, y, z)*
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k0(x, y, z), y, (z, 2)) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), (z, 2)) + 2*
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), y, z) + 
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), (z, 2))*Derivative(bbn_ks_k2(x, y, z), y) + 
+2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), y, z) + 
+bbn_ks_k0(x, y, z)*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), y, (z, 2)) + 
+bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), (z, 2)) + 
+2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), y, z) + 
+bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), (z, 2))*Derivative(bbn_ks_k2(x, y, z), y) + 
+2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k2(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), y, z) + 
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), (z, 2)) + 
+2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), y, z) + 
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (z, 2))*Derivative(bbn_ks_k0(x, y, z), y) + 
+2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), y, z) + 
+2*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), z)*
+Derivative(bbn_ks_k2(x, y, z), z) + 2*Derivative(bbn_ks_c(x, y, z), z)*
+Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), z) + 2*
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), z)*
+Derivative(bbn_ks_k2(x, y, z), y);
 
     _dddgamma_D1D1D0D2D2[ijk]=
 /* mcode in progress ... */
@@ -5583,17 +5583,17 @@ Derivative(k2(x, y, z), y);
 // Derivative
 // c
 // k1
-2*c(x, y, z)*k1(x, y, z)*Derivative(k1(x, y, z), x, (z, 2)) + 2*
-c(x, y, z)*Derivative(k1(x, y, z), x)*Derivative(k1(x, y, z), (z, 2)) + 
-4*c(x, y, z)*Derivative(k1(x, y, z), z)*Derivative(k1(x, y, z), x, z) + 
-pow(k1(x, y, z), 2)*Derivative(c(x, y, z), x, (z, 2)) + 2*k1(x, y, z)*
-Derivative(c(x, y, z), x)*Derivative(k1(x, y, z), (z, 2)) + 4*
-k1(x, y, z)*Derivative(c(x, y, z), z)*Derivative(k1(x, y, z), x, z) + 
-2*k1(x, y, z)*Derivative(c(x, y, z), (z, 2))*Derivative(k1(x, y, z), x) + 
-4*k1(x, y, z)*Derivative(k1(x, y, z), z)*Derivative(c(x, y, z), x, z) + 
-2*Derivative(c(x, y, z), x)*pow(Derivative(k1(x, y, z), z), 2) + 4*
-Derivative(c(x, y, z), z)*Derivative(k1(x, y, z), x)*
-Derivative(k1(x, y, z), z);
+2*bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x, (z, 2)) + 2*
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), (z, 2)) + 
+4*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x, z) + 
+pow(bbn_ks_k1(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), x, (z, 2)) + 2*bbn_ks_k1(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), (z, 2)) + 4*
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x, z) + 
+2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), (z, 2))*Derivative(bbn_ks_k1(x, y, z), x) + 
+4*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), x, z) + 
+2*Derivative(bbn_ks_c(x, y, z), x)*pow(Derivative(bbn_ks_k1(x, y, z), z), 2) + 4*
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x)*
+Derivative(bbn_ks_k1(x, y, z), z);
 
     _dddgamma_D0D1D0D0D2[ijk]=
 /* mcode in progress ... */
@@ -5616,26 +5616,26 @@ Derivative(k1(x, y, z), z);
 // c
 // k0
 // k1
-c(x, y, z)*k0(x, y, z)*Derivative(k1(x, y, z), (x, 2), z) + c(x, y, z)*
-k1(x, y, z)*Derivative(k0(x, y, z), (x, 2), z) + 2*c(x, y, z)*
-Derivative(k0(x, y, z), x)*Derivative(k1(x, y, z), x, z) + c(x, y, z)*
-Derivative(k0(x, y, z), (x, 2))*Derivative(k1(x, y, z), z) + 
-c(x, y, z)*Derivative(k0(x, y, z), z)*Derivative(k1(x, y, z), (x, 2)) + 
-2*c(x, y, z)*Derivative(k1(x, y, z), x)*Derivative(k0(x, y, z), x, z) + 
-k0(x, y, z)*k1(x, y, z)*Derivative(c(x, y, z), (x, 2), z) + 2*
-k0(x, y, z)*Derivative(c(x, y, z), x)*Derivative(k1(x, y, z), x, z) + 
-k0(x, y, z)*Derivative(c(x, y, z), (x, 2))*Derivative(k1(x, y, z), z) + 
-k0(x, y, z)*Derivative(c(x, y, z), z)*Derivative(k1(x, y, z), (x, 2)) + 
-2*k0(x, y, z)*Derivative(k1(x, y, z), x)*Derivative(c(x, y, z), x, z) + 
-2*k1(x, y, z)*Derivative(c(x, y, z), x)*Derivative(k0(x, y, z), x, z) + 
-k1(x, y, z)*Derivative(c(x, y, z), (x, 2))*Derivative(k0(x, y, z), z) + 
-k1(x, y, z)*Derivative(c(x, y, z), z)*Derivative(k0(x, y, z), (x, 2)) + 
-2*k1(x, y, z)*Derivative(k0(x, y, z), x)*Derivative(c(x, y, z), x, z) + 
-2*Derivative(c(x, y, z), x)*Derivative(k0(x, y, z), x)*
-Derivative(k1(x, y, z), z) + 2*Derivative(c(x, y, z), x)*
-Derivative(k0(x, y, z), z)*Derivative(k1(x, y, z), x) + 2*
-Derivative(c(x, y, z), z)*Derivative(k0(x, y, z), x)*
-Derivative(k1(x, y, z), x);
+bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k1(x, y, z), (x, 2), z) + bbn_ks_c(x, y, z)*
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k0(x, y, z), (x, 2), z) + 2*bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), x, z) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), (x, 2))*Derivative(bbn_ks_k1(x, y, z), z) + 
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), (x, 2)) + 
+2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), x, z) + 
+bbn_ks_k0(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2), z) + 2*
+bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), x, z) + 
+bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2))*Derivative(bbn_ks_k1(x, y, z), z) + 
+bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), (x, 2)) + 
+2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), x, z) + 
+2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), x, z) + 
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2))*Derivative(bbn_ks_k0(x, y, z), z) + 
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), (x, 2)) + 
+2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), x, z) + 
+2*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), x)*
+Derivative(bbn_ks_k1(x, y, z), z) + 2*Derivative(bbn_ks_c(x, y, z), x)*
+Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x) + 2*
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x)*
+Derivative(bbn_ks_k1(x, y, z), x);
 
     _dddgamma_D0D1D0D2D2[ijk]=
 /* mcode in progress ... */
@@ -5658,26 +5658,26 @@ Derivative(k1(x, y, z), x);
 // c
 // k0
 // k1
-c(x, y, z)*k0(x, y, z)*Derivative(k1(x, y, z), x, (z, 2)) + c(x, y, z)*
-k1(x, y, z)*Derivative(k0(x, y, z), x, (z, 2)) + c(x, y, z)*
-Derivative(k0(x, y, z), x)*Derivative(k1(x, y, z), (z, 2)) + 2*
-c(x, y, z)*Derivative(k0(x, y, z), z)*Derivative(k1(x, y, z), x, z) + 
-c(x, y, z)*Derivative(k0(x, y, z), (z, 2))*Derivative(k1(x, y, z), x) + 
-2*c(x, y, z)*Derivative(k1(x, y, z), z)*Derivative(k0(x, y, z), x, z) + 
-k0(x, y, z)*k1(x, y, z)*Derivative(c(x, y, z), x, (z, 2)) + 
-k0(x, y, z)*Derivative(c(x, y, z), x)*Derivative(k1(x, y, z), (z, 2)) + 
-2*k0(x, y, z)*Derivative(c(x, y, z), z)*Derivative(k1(x, y, z), x, z) + 
-k0(x, y, z)*Derivative(c(x, y, z), (z, 2))*Derivative(k1(x, y, z), x) + 
-2*k0(x, y, z)*Derivative(k1(x, y, z), z)*Derivative(c(x, y, z), x, z) + 
-k1(x, y, z)*Derivative(c(x, y, z), x)*Derivative(k0(x, y, z), (z, 2)) + 
-2*k1(x, y, z)*Derivative(c(x, y, z), z)*Derivative(k0(x, y, z), x, z) + 
-k1(x, y, z)*Derivative(c(x, y, z), (z, 2))*Derivative(k0(x, y, z), x) + 
-2*k1(x, y, z)*Derivative(k0(x, y, z), z)*Derivative(c(x, y, z), x, z) + 
-2*Derivative(c(x, y, z), x)*Derivative(k0(x, y, z), z)*
-Derivative(k1(x, y, z), z) + 2*Derivative(c(x, y, z), z)*
-Derivative(k0(x, y, z), x)*Derivative(k1(x, y, z), z) + 2*
-Derivative(c(x, y, z), z)*Derivative(k0(x, y, z), z)*
-Derivative(k1(x, y, z), x);
+bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x, (z, 2)) + bbn_ks_c(x, y, z)*
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x, (z, 2)) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), (z, 2)) + 2*
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x, z) + 
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), (z, 2))*Derivative(bbn_ks_k1(x, y, z), x) + 
+2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x, z) + 
+bbn_ks_k0(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), x, (z, 2)) + 
+bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), (z, 2)) + 
+2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x, z) + 
+bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), (z, 2))*Derivative(bbn_ks_k1(x, y, z), x) + 
+2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), x, z) + 
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), (z, 2)) + 
+2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x, z) + 
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), (z, 2))*Derivative(bbn_ks_k0(x, y, z), x) + 
+2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), x, z) + 
+2*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), z)*
+Derivative(bbn_ks_k1(x, y, z), z) + 2*Derivative(bbn_ks_c(x, y, z), z)*
+Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), z) + 2*
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), z)*
+Derivative(bbn_ks_k1(x, y, z), x);
 
     _dddgamma_D0D2D1D2D0[ijk]=
 /* mcode in progress ... */
@@ -5706,36 +5706,36 @@ Derivative(k1(x, y, z), x);
 // c
 // k0
 // k2
-c(x, y, z)*k0(x, y, z)*Derivative(k2(x, y, z), x, y, z) + c(x, y, z)*
-k2(x, y, z)*Derivative(k0(x, y, z), x, y, z) + c(x, y, z)*
-Derivative(k0(x, y, z), x)*Derivative(k2(x, y, z), y, z) + c(x, y, z)*
-Derivative(k0(x, y, z), y)*Derivative(k2(x, y, z), x, z) + c(x, y, z)*
-Derivative(k0(x, y, z), z)*Derivative(k2(x, y, z), x, y) + c(x, y, z)*
-Derivative(k2(x, y, z), x)*Derivative(k0(x, y, z), y, z) + c(x, y, z)*
-Derivative(k2(x, y, z), y)*Derivative(k0(x, y, z), x, z) + c(x, y, z)*
-Derivative(k2(x, y, z), z)*Derivative(k0(x, y, z), x, y) + k0(x, y, z)*
-k2(x, y, z)*Derivative(c(x, y, z), x, y, z) + k0(x, y, z)*
-Derivative(c(x, y, z), x)*Derivative(k2(x, y, z), y, z) + k0(x, y, z)*
-Derivative(c(x, y, z), y)*Derivative(k2(x, y, z), x, z) + k0(x, y, z)*
-Derivative(c(x, y, z), z)*Derivative(k2(x, y, z), x, y) + k0(x, y, z)*
-Derivative(k2(x, y, z), x)*Derivative(c(x, y, z), y, z) + k0(x, y, z)*
-Derivative(k2(x, y, z), y)*Derivative(c(x, y, z), x, z) + k0(x, y, z)*
-Derivative(k2(x, y, z), z)*Derivative(c(x, y, z), x, y) + k2(x, y, z)*
-Derivative(c(x, y, z), x)*Derivative(k0(x, y, z), y, z) + k2(x, y, z)*
-Derivative(c(x, y, z), y)*Derivative(k0(x, y, z), x, z) + k2(x, y, z)*
-Derivative(c(x, y, z), z)*Derivative(k0(x, y, z), x, y) + k2(x, y, z)*
-Derivative(k0(x, y, z), x)*Derivative(c(x, y, z), y, z) + k2(x, y, z)*
-Derivative(k0(x, y, z), y)*Derivative(c(x, y, z), x, z) + k2(x, y, z)*
-Derivative(k0(x, y, z), z)*Derivative(c(x, y, z), x, y) + 
-Derivative(c(x, y, z), x)*Derivative(k0(x, y, z), y)*
-Derivative(k2(x, y, z), z) + Derivative(c(x, y, z), x)*
-Derivative(k0(x, y, z), z)*Derivative(k2(x, y, z), y) + 
-Derivative(c(x, y, z), y)*Derivative(k0(x, y, z), x)*
-Derivative(k2(x, y, z), z) + Derivative(c(x, y, z), y)*
-Derivative(k0(x, y, z), z)*Derivative(k2(x, y, z), x) + 
-Derivative(c(x, y, z), z)*Derivative(k0(x, y, z), x)*
-Derivative(k2(x, y, z), y) + Derivative(c(x, y, z), z)*
-Derivative(k0(x, y, z), y)*Derivative(k2(x, y, z), x);
+bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x, y, z) + bbn_ks_c(x, y, z)*
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x, y, z) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), y, z) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x, z) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x, y) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), y, z) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k2(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x, z) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k2(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x, y) + bbn_ks_k0(x, y, z)*
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), x, y, z) + bbn_ks_k0(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), y, z) + bbn_ks_k0(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x, z) + bbn_ks_k0(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x, y) + bbn_ks_k0(x, y, z)*
+Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), y, z) + bbn_ks_k0(x, y, z)*
+Derivative(bbn_ks_k2(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), x, z) + bbn_ks_k0(x, y, z)*
+Derivative(bbn_ks_k2(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), x, y) + bbn_ks_k2(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), y, z) + bbn_ks_k2(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x, z) + bbn_ks_k2(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x, y) + bbn_ks_k2(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), y, z) + bbn_ks_k2(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), x, z) + bbn_ks_k2(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), x, y) + 
+Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), y)*
+Derivative(bbn_ks_k2(x, y, z), z) + Derivative(bbn_ks_c(x, y, z), x)*
+Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), y) + 
+Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x)*
+Derivative(bbn_ks_k2(x, y, z), z) + Derivative(bbn_ks_c(x, y, z), y)*
+Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x) + 
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x)*
+Derivative(bbn_ks_k2(x, y, z), y) + Derivative(bbn_ks_c(x, y, z), z)*
+Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x);
 
     _dddgamma_D0D1D0D0D1[ijk]=
 /* mcode in progress ... */
@@ -5758,26 +5758,26 @@ Derivative(k0(x, y, z), y)*Derivative(k2(x, y, z), x);
 // c
 // k0
 // k1
-c(x, y, z)*k0(x, y, z)*Derivative(k1(x, y, z), (x, 2), y) + c(x, y, z)*
-k1(x, y, z)*Derivative(k0(x, y, z), (x, 2), y) + 2*c(x, y, z)*
-Derivative(k0(x, y, z), x)*Derivative(k1(x, y, z), x, y) + c(x, y, z)*
-Derivative(k0(x, y, z), (x, 2))*Derivative(k1(x, y, z), y) + 
-c(x, y, z)*Derivative(k0(x, y, z), y)*Derivative(k1(x, y, z), (x, 2)) + 
-2*c(x, y, z)*Derivative(k1(x, y, z), x)*Derivative(k0(x, y, z), x, y) + 
-k0(x, y, z)*k1(x, y, z)*Derivative(c(x, y, z), (x, 2), y) + 2*
-k0(x, y, z)*Derivative(c(x, y, z), x)*Derivative(k1(x, y, z), x, y) + 
-k0(x, y, z)*Derivative(c(x, y, z), (x, 2))*Derivative(k1(x, y, z), y) + 
-k0(x, y, z)*Derivative(c(x, y, z), y)*Derivative(k1(x, y, z), (x, 2)) + 
-2*k0(x, y, z)*Derivative(k1(x, y, z), x)*Derivative(c(x, y, z), x, y) + 
-2*k1(x, y, z)*Derivative(c(x, y, z), x)*Derivative(k0(x, y, z), x, y) + 
-k1(x, y, z)*Derivative(c(x, y, z), (x, 2))*Derivative(k0(x, y, z), y) + 
-k1(x, y, z)*Derivative(c(x, y, z), y)*Derivative(k0(x, y, z), (x, 2)) + 
-2*k1(x, y, z)*Derivative(k0(x, y, z), x)*Derivative(c(x, y, z), x, y) + 
-2*Derivative(c(x, y, z), x)*Derivative(k0(x, y, z), x)*
-Derivative(k1(x, y, z), y) + 2*Derivative(c(x, y, z), x)*
-Derivative(k0(x, y, z), y)*Derivative(k1(x, y, z), x) + 2*
-Derivative(c(x, y, z), y)*Derivative(k0(x, y, z), x)*
-Derivative(k1(x, y, z), x);
+bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k1(x, y, z), (x, 2), y) + bbn_ks_c(x, y, z)*
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k0(x, y, z), (x, 2), y) + 2*bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), x, y) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), (x, 2))*Derivative(bbn_ks_k1(x, y, z), y) + 
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), (x, 2)) + 
+2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), x, y) + 
+bbn_ks_k0(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2), y) + 2*
+bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), x, y) + 
+bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2))*Derivative(bbn_ks_k1(x, y, z), y) + 
+bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), (x, 2)) + 
+2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), x, y) + 
+2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), x, y) + 
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2))*Derivative(bbn_ks_k0(x, y, z), y) + 
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), (x, 2)) + 
+2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), x, y) + 
+2*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), x)*
+Derivative(bbn_ks_k1(x, y, z), y) + 2*Derivative(bbn_ks_c(x, y, z), x)*
+Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x) + 2*
+Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x)*
+Derivative(bbn_ks_k1(x, y, z), x);
 
     _dddgamma_D1D2D1D1D2[ijk]=
 /* mcode in progress ... */
@@ -5800,26 +5800,26 @@ Derivative(k1(x, y, z), x);
 // c
 // k1
 // k2
-c(x, y, z)*k1(x, y, z)*Derivative(k2(x, y, z), (y, 2), z) + c(x, y, z)*
-k2(x, y, z)*Derivative(k1(x, y, z), (y, 2), z) + 2*c(x, y, z)*
-Derivative(k1(x, y, z), y)*Derivative(k2(x, y, z), y, z) + c(x, y, z)*
-Derivative(k1(x, y, z), (y, 2))*Derivative(k2(x, y, z), z) + 
-c(x, y, z)*Derivative(k1(x, y, z), z)*Derivative(k2(x, y, z), (y, 2)) + 
-2*c(x, y, z)*Derivative(k2(x, y, z), y)*Derivative(k1(x, y, z), y, z) + 
-k1(x, y, z)*k2(x, y, z)*Derivative(c(x, y, z), (y, 2), z) + 2*
-k1(x, y, z)*Derivative(c(x, y, z), y)*Derivative(k2(x, y, z), y, z) + 
-k1(x, y, z)*Derivative(c(x, y, z), (y, 2))*Derivative(k2(x, y, z), z) + 
-k1(x, y, z)*Derivative(c(x, y, z), z)*Derivative(k2(x, y, z), (y, 2)) + 
-2*k1(x, y, z)*Derivative(k2(x, y, z), y)*Derivative(c(x, y, z), y, z) + 
-2*k2(x, y, z)*Derivative(c(x, y, z), y)*Derivative(k1(x, y, z), y, z) + 
-k2(x, y, z)*Derivative(c(x, y, z), (y, 2))*Derivative(k1(x, y, z), z) + 
-k2(x, y, z)*Derivative(c(x, y, z), z)*Derivative(k1(x, y, z), (y, 2)) + 
-2*k2(x, y, z)*Derivative(k1(x, y, z), y)*Derivative(c(x, y, z), y, z) + 
-2*Derivative(c(x, y, z), y)*Derivative(k1(x, y, z), y)*
-Derivative(k2(x, y, z), z) + 2*Derivative(c(x, y, z), y)*
-Derivative(k1(x, y, z), z)*Derivative(k2(x, y, z), y) + 2*
-Derivative(c(x, y, z), z)*Derivative(k1(x, y, z), y)*
-Derivative(k2(x, y, z), y);
+bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k2(x, y, z), (y, 2), z) + bbn_ks_c(x, y, z)*
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k1(x, y, z), (y, 2), z) + 2*bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), y, z) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k1(x, y, z), (y, 2))*Derivative(bbn_ks_k2(x, y, z), z) + 
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), (y, 2)) + 
+2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), y, z) + 
+bbn_ks_k1(x, y, z)*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (y, 2), z) + 2*
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), y, z) + 
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), (y, 2))*Derivative(bbn_ks_k2(x, y, z), z) + 
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), (y, 2)) + 
+2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k2(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), y, z) + 
+2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), y, z) + 
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (y, 2))*Derivative(bbn_ks_k1(x, y, z), z) + 
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), (y, 2)) + 
+2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), y, z) + 
+2*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), y)*
+Derivative(bbn_ks_k2(x, y, z), z) + 2*Derivative(bbn_ks_c(x, y, z), y)*
+Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), y) + 2*
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), y)*
+Derivative(bbn_ks_k2(x, y, z), y);
 
     _dddgamma_D2D2D0D1D1[ijk]=
 /* mcode in progress ... */
@@ -5836,17 +5836,17 @@ Derivative(k2(x, y, z), y);
 // Derivative
 // c
 // k2
-2*c(x, y, z)*k2(x, y, z)*Derivative(k2(x, y, z), x, (y, 2)) + 2*
-c(x, y, z)*Derivative(k2(x, y, z), x)*Derivative(k2(x, y, z), (y, 2)) + 
-4*c(x, y, z)*Derivative(k2(x, y, z), y)*Derivative(k2(x, y, z), x, y) + 
-pow(k2(x, y, z), 2)*Derivative(c(x, y, z), x, (y, 2)) + 2*k2(x, y, z)*
-Derivative(c(x, y, z), x)*Derivative(k2(x, y, z), (y, 2)) + 4*
-k2(x, y, z)*Derivative(c(x, y, z), y)*Derivative(k2(x, y, z), x, y) + 
-2*k2(x, y, z)*Derivative(c(x, y, z), (y, 2))*Derivative(k2(x, y, z), x) + 
-4*k2(x, y, z)*Derivative(k2(x, y, z), y)*Derivative(c(x, y, z), x, y) + 
-2*Derivative(c(x, y, z), x)*pow(Derivative(k2(x, y, z), y), 2) + 4*
-Derivative(c(x, y, z), y)*Derivative(k2(x, y, z), x)*
-Derivative(k2(x, y, z), y);
+2*bbn_ks_c(x, y, z)*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x, (y, 2)) + 2*
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), (y, 2)) + 
+4*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x, y) + 
+pow(bbn_ks_k2(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), x, (y, 2)) + 2*bbn_ks_k2(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), (y, 2)) + 4*
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x, y) + 
+2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (y, 2))*Derivative(bbn_ks_k2(x, y, z), x) + 
+4*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k2(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), x, y) + 
+2*Derivative(bbn_ks_c(x, y, z), x)*pow(Derivative(bbn_ks_k2(x, y, z), y), 2) + 4*
+Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x)*
+Derivative(bbn_ks_k2(x, y, z), y);
 
     _dddgamma_D1D1D2D2D1[ijk]=
 /* mcode in progress ... */
@@ -5863,17 +5863,17 @@ Derivative(k2(x, y, z), y);
 // Derivative
 // c
 // k1
-2*c(x, y, z)*k1(x, y, z)*Derivative(k1(x, y, z), y, (z, 2)) + 2*
-c(x, y, z)*Derivative(k1(x, y, z), y)*Derivative(k1(x, y, z), (z, 2)) + 
-4*c(x, y, z)*Derivative(k1(x, y, z), z)*Derivative(k1(x, y, z), y, z) + 
-pow(k1(x, y, z), 2)*Derivative(c(x, y, z), y, (z, 2)) + 2*k1(x, y, z)*
-Derivative(c(x, y, z), y)*Derivative(k1(x, y, z), (z, 2)) + 4*
-k1(x, y, z)*Derivative(c(x, y, z), z)*Derivative(k1(x, y, z), y, z) + 
-2*k1(x, y, z)*Derivative(c(x, y, z), (z, 2))*Derivative(k1(x, y, z), y) + 
-4*k1(x, y, z)*Derivative(k1(x, y, z), z)*Derivative(c(x, y, z), y, z) + 
-2*Derivative(c(x, y, z), y)*pow(Derivative(k1(x, y, z), z), 2) + 4*
-Derivative(c(x, y, z), z)*Derivative(k1(x, y, z), y)*
-Derivative(k1(x, y, z), z);
+2*bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k1(x, y, z), y, (z, 2)) + 2*
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), (z, 2)) + 
+4*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), y, z) + 
+pow(bbn_ks_k1(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), y, (z, 2)) + 2*bbn_ks_k1(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), (z, 2)) + 4*
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), y, z) + 
+2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), (z, 2))*Derivative(bbn_ks_k1(x, y, z), y) + 
+4*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), y, z) + 
+2*Derivative(bbn_ks_c(x, y, z), y)*pow(Derivative(bbn_ks_k1(x, y, z), z), 2) + 4*
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), y)*
+Derivative(bbn_ks_k1(x, y, z), z);
 
     _dddgamma_D0D1D2D1D0[ijk]=
 /* mcode in progress ... */
@@ -5902,36 +5902,36 @@ Derivative(k1(x, y, z), z);
 // c
 // k0
 // k1
-c(x, y, z)*k0(x, y, z)*Derivative(k1(x, y, z), x, y, z) + c(x, y, z)*
-k1(x, y, z)*Derivative(k0(x, y, z), x, y, z) + c(x, y, z)*
-Derivative(k0(x, y, z), x)*Derivative(k1(x, y, z), y, z) + c(x, y, z)*
-Derivative(k0(x, y, z), y)*Derivative(k1(x, y, z), x, z) + c(x, y, z)*
-Derivative(k0(x, y, z), z)*Derivative(k1(x, y, z), x, y) + c(x, y, z)*
-Derivative(k1(x, y, z), x)*Derivative(k0(x, y, z), y, z) + c(x, y, z)*
-Derivative(k1(x, y, z), y)*Derivative(k0(x, y, z), x, z) + c(x, y, z)*
-Derivative(k1(x, y, z), z)*Derivative(k0(x, y, z), x, y) + k0(x, y, z)*
-k1(x, y, z)*Derivative(c(x, y, z), x, y, z) + k0(x, y, z)*
-Derivative(c(x, y, z), x)*Derivative(k1(x, y, z), y, z) + k0(x, y, z)*
-Derivative(c(x, y, z), y)*Derivative(k1(x, y, z), x, z) + k0(x, y, z)*
-Derivative(c(x, y, z), z)*Derivative(k1(x, y, z), x, y) + k0(x, y, z)*
-Derivative(k1(x, y, z), x)*Derivative(c(x, y, z), y, z) + k0(x, y, z)*
-Derivative(k1(x, y, z), y)*Derivative(c(x, y, z), x, z) + k0(x, y, z)*
-Derivative(k1(x, y, z), z)*Derivative(c(x, y, z), x, y) + k1(x, y, z)*
-Derivative(c(x, y, z), x)*Derivative(k0(x, y, z), y, z) + k1(x, y, z)*
-Derivative(c(x, y, z), y)*Derivative(k0(x, y, z), x, z) + k1(x, y, z)*
-Derivative(c(x, y, z), z)*Derivative(k0(x, y, z), x, y) + k1(x, y, z)*
-Derivative(k0(x, y, z), x)*Derivative(c(x, y, z), y, z) + k1(x, y, z)*
-Derivative(k0(x, y, z), y)*Derivative(c(x, y, z), x, z) + k1(x, y, z)*
-Derivative(k0(x, y, z), z)*Derivative(c(x, y, z), x, y) + 
-Derivative(c(x, y, z), x)*Derivative(k0(x, y, z), y)*
-Derivative(k1(x, y, z), z) + Derivative(c(x, y, z), x)*
-Derivative(k0(x, y, z), z)*Derivative(k1(x, y, z), y) + 
-Derivative(c(x, y, z), y)*Derivative(k0(x, y, z), x)*
-Derivative(k1(x, y, z), z) + Derivative(c(x, y, z), y)*
-Derivative(k0(x, y, z), z)*Derivative(k1(x, y, z), x) + 
-Derivative(c(x, y, z), z)*Derivative(k0(x, y, z), x)*
-Derivative(k1(x, y, z), y) + Derivative(c(x, y, z), z)*
-Derivative(k0(x, y, z), y)*Derivative(k1(x, y, z), x);
+bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x, y, z) + bbn_ks_c(x, y, z)*
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x, y, z) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), y, z) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x, z) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x, y) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), y, z) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x, z) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x, y) + bbn_ks_k0(x, y, z)*
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), x, y, z) + bbn_ks_k0(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), y, z) + bbn_ks_k0(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x, z) + bbn_ks_k0(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x, y) + bbn_ks_k0(x, y, z)*
+Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), y, z) + bbn_ks_k0(x, y, z)*
+Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), x, z) + bbn_ks_k0(x, y, z)*
+Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), x, y) + bbn_ks_k1(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), y, z) + bbn_ks_k1(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x, z) + bbn_ks_k1(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x, y) + bbn_ks_k1(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), y, z) + bbn_ks_k1(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), x, z) + bbn_ks_k1(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), x, y) + 
+Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), y)*
+Derivative(bbn_ks_k1(x, y, z), z) + Derivative(bbn_ks_c(x, y, z), x)*
+Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), y) + 
+Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x)*
+Derivative(bbn_ks_k1(x, y, z), z) + Derivative(bbn_ks_c(x, y, z), y)*
+Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x) + 
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x)*
+Derivative(bbn_ks_k1(x, y, z), y) + Derivative(bbn_ks_c(x, y, z), z)*
+Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x);
 
     _dddgamma_D0D2D1D0D2[ijk]=
 /* mcode in progress ... */
@@ -5960,36 +5960,36 @@ Derivative(k0(x, y, z), y)*Derivative(k1(x, y, z), x);
 // c
 // k0
 // k2
-c(x, y, z)*k0(x, y, z)*Derivative(k2(x, y, z), x, y, z) + c(x, y, z)*
-k2(x, y, z)*Derivative(k0(x, y, z), x, y, z) + c(x, y, z)*
-Derivative(k0(x, y, z), x)*Derivative(k2(x, y, z), y, z) + c(x, y, z)*
-Derivative(k0(x, y, z), y)*Derivative(k2(x, y, z), x, z) + c(x, y, z)*
-Derivative(k0(x, y, z), z)*Derivative(k2(x, y, z), x, y) + c(x, y, z)*
-Derivative(k2(x, y, z), x)*Derivative(k0(x, y, z), y, z) + c(x, y, z)*
-Derivative(k2(x, y, z), y)*Derivative(k0(x, y, z), x, z) + c(x, y, z)*
-Derivative(k2(x, y, z), z)*Derivative(k0(x, y, z), x, y) + k0(x, y, z)*
-k2(x, y, z)*Derivative(c(x, y, z), x, y, z) + k0(x, y, z)*
-Derivative(c(x, y, z), x)*Derivative(k2(x, y, z), y, z) + k0(x, y, z)*
-Derivative(c(x, y, z), y)*Derivative(k2(x, y, z), x, z) + k0(x, y, z)*
-Derivative(c(x, y, z), z)*Derivative(k2(x, y, z), x, y) + k0(x, y, z)*
-Derivative(k2(x, y, z), x)*Derivative(c(x, y, z), y, z) + k0(x, y, z)*
-Derivative(k2(x, y, z), y)*Derivative(c(x, y, z), x, z) + k0(x, y, z)*
-Derivative(k2(x, y, z), z)*Derivative(c(x, y, z), x, y) + k2(x, y, z)*
-Derivative(c(x, y, z), x)*Derivative(k0(x, y, z), y, z) + k2(x, y, z)*
-Derivative(c(x, y, z), y)*Derivative(k0(x, y, z), x, z) + k2(x, y, z)*
-Derivative(c(x, y, z), z)*Derivative(k0(x, y, z), x, y) + k2(x, y, z)*
-Derivative(k0(x, y, z), x)*Derivative(c(x, y, z), y, z) + k2(x, y, z)*
-Derivative(k0(x, y, z), y)*Derivative(c(x, y, z), x, z) + k2(x, y, z)*
-Derivative(k0(x, y, z), z)*Derivative(c(x, y, z), x, y) + 
-Derivative(c(x, y, z), x)*Derivative(k0(x, y, z), y)*
-Derivative(k2(x, y, z), z) + Derivative(c(x, y, z), x)*
-Derivative(k0(x, y, z), z)*Derivative(k2(x, y, z), y) + 
-Derivative(c(x, y, z), y)*Derivative(k0(x, y, z), x)*
-Derivative(k2(x, y, z), z) + Derivative(c(x, y, z), y)*
-Derivative(k0(x, y, z), z)*Derivative(k2(x, y, z), x) + 
-Derivative(c(x, y, z), z)*Derivative(k0(x, y, z), x)*
-Derivative(k2(x, y, z), y) + Derivative(c(x, y, z), z)*
-Derivative(k0(x, y, z), y)*Derivative(k2(x, y, z), x);
+bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x, y, z) + bbn_ks_c(x, y, z)*
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x, y, z) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), y, z) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x, z) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x, y) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), y, z) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k2(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x, z) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k2(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x, y) + bbn_ks_k0(x, y, z)*
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), x, y, z) + bbn_ks_k0(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), y, z) + bbn_ks_k0(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x, z) + bbn_ks_k0(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x, y) + bbn_ks_k0(x, y, z)*
+Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), y, z) + bbn_ks_k0(x, y, z)*
+Derivative(bbn_ks_k2(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), x, z) + bbn_ks_k0(x, y, z)*
+Derivative(bbn_ks_k2(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), x, y) + bbn_ks_k2(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), y, z) + bbn_ks_k2(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x, z) + bbn_ks_k2(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x, y) + bbn_ks_k2(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), y, z) + bbn_ks_k2(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), x, z) + bbn_ks_k2(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), x, y) + 
+Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), y)*
+Derivative(bbn_ks_k2(x, y, z), z) + Derivative(bbn_ks_c(x, y, z), x)*
+Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), y) + 
+Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x)*
+Derivative(bbn_ks_k2(x, y, z), z) + Derivative(bbn_ks_c(x, y, z), y)*
+Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x) + 
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x)*
+Derivative(bbn_ks_k2(x, y, z), y) + Derivative(bbn_ks_c(x, y, z), z)*
+Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x);
 
     _dddgamma_D2D2D2D1D0[ijk]=
 /* mcode in progress ... */
@@ -6010,22 +6010,22 @@ Derivative(k0(x, y, z), y)*Derivative(k2(x, y, z), x);
 // Derivative
 // c
 // k2
-2*c(x, y, z)*k2(x, y, z)*Derivative(k2(x, y, z), x, y, z) + 2*
-c(x, y, z)*Derivative(k2(x, y, z), x)*Derivative(k2(x, y, z), y, z) + 
-2*c(x, y, z)*Derivative(k2(x, y, z), y)*Derivative(k2(x, y, z), x, z) + 
-2*c(x, y, z)*Derivative(k2(x, y, z), z)*Derivative(k2(x, y, z), x, y) + 
-pow(k2(x, y, z), 2)*Derivative(c(x, y, z), x, y, z) + 2*k2(x, y, z)*
-Derivative(c(x, y, z), x)*Derivative(k2(x, y, z), y, z) + 2*
-k2(x, y, z)*Derivative(c(x, y, z), y)*Derivative(k2(x, y, z), x, z) + 
-2*k2(x, y, z)*Derivative(c(x, y, z), z)*Derivative(k2(x, y, z), x, y) + 
-2*k2(x, y, z)*Derivative(k2(x, y, z), x)*Derivative(c(x, y, z), y, z) + 
-2*k2(x, y, z)*Derivative(k2(x, y, z), y)*Derivative(c(x, y, z), x, z) + 
-2*k2(x, y, z)*Derivative(k2(x, y, z), z)*Derivative(c(x, y, z), x, y) + 
-2*Derivative(c(x, y, z), x)*Derivative(k2(x, y, z), y)*
-Derivative(k2(x, y, z), z) + 2*Derivative(c(x, y, z), y)*
-Derivative(k2(x, y, z), x)*Derivative(k2(x, y, z), z) + 2*
-Derivative(c(x, y, z), z)*Derivative(k2(x, y, z), x)*
-Derivative(k2(x, y, z), y);
+2*bbn_ks_c(x, y, z)*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x, y, z) + 2*
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), y, z) + 
+2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x, z) + 
+2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x, y) + 
+pow(bbn_ks_k2(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), x, y, z) + 2*bbn_ks_k2(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), y, z) + 2*
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x, z) + 
+2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x, y) + 
+2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), y, z) + 
+2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k2(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), x, z) + 
+2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k2(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), x, y) + 
+2*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), y)*
+Derivative(bbn_ks_k2(x, y, z), z) + 2*Derivative(bbn_ks_c(x, y, z), y)*
+Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), z) + 2*
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x)*
+Derivative(bbn_ks_k2(x, y, z), y);
 
     _dddgamma_D0D1D1D1D2[ijk]=
 /* mcode in progress ... */
@@ -6048,26 +6048,26 @@ Derivative(k2(x, y, z), y);
 // c
 // k0
 // k1
-c(x, y, z)*k0(x, y, z)*Derivative(k1(x, y, z), (y, 2), z) + c(x, y, z)*
-k1(x, y, z)*Derivative(k0(x, y, z), (y, 2), z) + 2*c(x, y, z)*
-Derivative(k0(x, y, z), y)*Derivative(k1(x, y, z), y, z) + c(x, y, z)*
-Derivative(k0(x, y, z), (y, 2))*Derivative(k1(x, y, z), z) + 
-c(x, y, z)*Derivative(k0(x, y, z), z)*Derivative(k1(x, y, z), (y, 2)) + 
-2*c(x, y, z)*Derivative(k1(x, y, z), y)*Derivative(k0(x, y, z), y, z) + 
-k0(x, y, z)*k1(x, y, z)*Derivative(c(x, y, z), (y, 2), z) + 2*
-k0(x, y, z)*Derivative(c(x, y, z), y)*Derivative(k1(x, y, z), y, z) + 
-k0(x, y, z)*Derivative(c(x, y, z), (y, 2))*Derivative(k1(x, y, z), z) + 
-k0(x, y, z)*Derivative(c(x, y, z), z)*Derivative(k1(x, y, z), (y, 2)) + 
-2*k0(x, y, z)*Derivative(k1(x, y, z), y)*Derivative(c(x, y, z), y, z) + 
-2*k1(x, y, z)*Derivative(c(x, y, z), y)*Derivative(k0(x, y, z), y, z) + 
-k1(x, y, z)*Derivative(c(x, y, z), (y, 2))*Derivative(k0(x, y, z), z) + 
-k1(x, y, z)*Derivative(c(x, y, z), z)*Derivative(k0(x, y, z), (y, 2)) + 
-2*k1(x, y, z)*Derivative(k0(x, y, z), y)*Derivative(c(x, y, z), y, z) + 
-2*Derivative(c(x, y, z), y)*Derivative(k0(x, y, z), y)*
-Derivative(k1(x, y, z), z) + 2*Derivative(c(x, y, z), y)*
-Derivative(k0(x, y, z), z)*Derivative(k1(x, y, z), y) + 2*
-Derivative(c(x, y, z), z)*Derivative(k0(x, y, z), y)*
-Derivative(k1(x, y, z), y);
+bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k1(x, y, z), (y, 2), z) + bbn_ks_c(x, y, z)*
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k0(x, y, z), (y, 2), z) + 2*bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), y, z) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), (y, 2))*Derivative(bbn_ks_k1(x, y, z), z) + 
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), (y, 2)) + 
+2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), y, z) + 
+bbn_ks_k0(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), (y, 2), z) + 2*
+bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), y, z) + 
+bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), (y, 2))*Derivative(bbn_ks_k1(x, y, z), z) + 
+bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), (y, 2)) + 
+2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), y, z) + 
+2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), y, z) + 
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), (y, 2))*Derivative(bbn_ks_k0(x, y, z), z) + 
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), (y, 2)) + 
+2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), y, z) + 
+2*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), y)*
+Derivative(bbn_ks_k1(x, y, z), z) + 2*Derivative(bbn_ks_c(x, y, z), y)*
+Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), y) + 2*
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), y)*
+Derivative(bbn_ks_k1(x, y, z), y);
 
     _dddgamma_D1D2D1D0D2[ijk]=
 /* mcode in progress ... */
@@ -6096,36 +6096,36 @@ Derivative(k1(x, y, z), y);
 // c
 // k1
 // k2
-c(x, y, z)*k1(x, y, z)*Derivative(k2(x, y, z), x, y, z) + c(x, y, z)*
-k2(x, y, z)*Derivative(k1(x, y, z), x, y, z) + c(x, y, z)*
-Derivative(k1(x, y, z), x)*Derivative(k2(x, y, z), y, z) + c(x, y, z)*
-Derivative(k1(x, y, z), y)*Derivative(k2(x, y, z), x, z) + c(x, y, z)*
-Derivative(k1(x, y, z), z)*Derivative(k2(x, y, z), x, y) + c(x, y, z)*
-Derivative(k2(x, y, z), x)*Derivative(k1(x, y, z), y, z) + c(x, y, z)*
-Derivative(k2(x, y, z), y)*Derivative(k1(x, y, z), x, z) + c(x, y, z)*
-Derivative(k2(x, y, z), z)*Derivative(k1(x, y, z), x, y) + k1(x, y, z)*
-k2(x, y, z)*Derivative(c(x, y, z), x, y, z) + k1(x, y, z)*
-Derivative(c(x, y, z), x)*Derivative(k2(x, y, z), y, z) + k1(x, y, z)*
-Derivative(c(x, y, z), y)*Derivative(k2(x, y, z), x, z) + k1(x, y, z)*
-Derivative(c(x, y, z), z)*Derivative(k2(x, y, z), x, y) + k1(x, y, z)*
-Derivative(k2(x, y, z), x)*Derivative(c(x, y, z), y, z) + k1(x, y, z)*
-Derivative(k2(x, y, z), y)*Derivative(c(x, y, z), x, z) + k1(x, y, z)*
-Derivative(k2(x, y, z), z)*Derivative(c(x, y, z), x, y) + k2(x, y, z)*
-Derivative(c(x, y, z), x)*Derivative(k1(x, y, z), y, z) + k2(x, y, z)*
-Derivative(c(x, y, z), y)*Derivative(k1(x, y, z), x, z) + k2(x, y, z)*
-Derivative(c(x, y, z), z)*Derivative(k1(x, y, z), x, y) + k2(x, y, z)*
-Derivative(k1(x, y, z), x)*Derivative(c(x, y, z), y, z) + k2(x, y, z)*
-Derivative(k1(x, y, z), y)*Derivative(c(x, y, z), x, z) + k2(x, y, z)*
-Derivative(k1(x, y, z), z)*Derivative(c(x, y, z), x, y) + 
-Derivative(c(x, y, z), x)*Derivative(k1(x, y, z), y)*
-Derivative(k2(x, y, z), z) + Derivative(c(x, y, z), x)*
-Derivative(k1(x, y, z), z)*Derivative(k2(x, y, z), y) + 
-Derivative(c(x, y, z), y)*Derivative(k1(x, y, z), x)*
-Derivative(k2(x, y, z), z) + Derivative(c(x, y, z), y)*
-Derivative(k1(x, y, z), z)*Derivative(k2(x, y, z), x) + 
-Derivative(c(x, y, z), z)*Derivative(k1(x, y, z), x)*
-Derivative(k2(x, y, z), y) + Derivative(c(x, y, z), z)*
-Derivative(k1(x, y, z), y)*Derivative(k2(x, y, z), x);
+bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x, y, z) + bbn_ks_c(x, y, z)*
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x, y, z) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), y, z) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x, z) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x, y) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), y, z) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k2(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x, z) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k2(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x, y) + bbn_ks_k1(x, y, z)*
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), x, y, z) + bbn_ks_k1(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), y, z) + bbn_ks_k1(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x, z) + bbn_ks_k1(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x, y) + bbn_ks_k1(x, y, z)*
+Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), y, z) + bbn_ks_k1(x, y, z)*
+Derivative(bbn_ks_k2(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), x, z) + bbn_ks_k1(x, y, z)*
+Derivative(bbn_ks_k2(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), x, y) + bbn_ks_k2(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), y, z) + bbn_ks_k2(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x, z) + bbn_ks_k2(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x, y) + bbn_ks_k2(x, y, z)*
+Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), y, z) + bbn_ks_k2(x, y, z)*
+Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), x, z) + bbn_ks_k2(x, y, z)*
+Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), x, y) + 
+Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), y)*
+Derivative(bbn_ks_k2(x, y, z), z) + Derivative(bbn_ks_c(x, y, z), x)*
+Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), y) + 
+Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x)*
+Derivative(bbn_ks_k2(x, y, z), z) + Derivative(bbn_ks_c(x, y, z), y)*
+Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x) + 
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x)*
+Derivative(bbn_ks_k2(x, y, z), y) + Derivative(bbn_ks_c(x, y, z), z)*
+Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x);
 
     _dddgamma_D0D0D2D2D0[ijk]=
 /* mcode in progress ... */
@@ -6142,17 +6142,17 @@ Derivative(k1(x, y, z), y)*Derivative(k2(x, y, z), x);
 // Derivative
 // c
 // k0
-2*c(x, y, z)*k0(x, y, z)*Derivative(k0(x, y, z), x, (z, 2)) + 2*
-c(x, y, z)*Derivative(k0(x, y, z), x)*Derivative(k0(x, y, z), (z, 2)) + 
-4*c(x, y, z)*Derivative(k0(x, y, z), z)*Derivative(k0(x, y, z), x, z) + 
-pow(k0(x, y, z), 2)*Derivative(c(x, y, z), x, (z, 2)) + 2*k0(x, y, z)*
-Derivative(c(x, y, z), x)*Derivative(k0(x, y, z), (z, 2)) + 4*
-k0(x, y, z)*Derivative(c(x, y, z), z)*Derivative(k0(x, y, z), x, z) + 
-2*k0(x, y, z)*Derivative(c(x, y, z), (z, 2))*Derivative(k0(x, y, z), x) + 
-4*k0(x, y, z)*Derivative(k0(x, y, z), z)*Derivative(c(x, y, z), x, z) + 
-2*Derivative(c(x, y, z), x)*pow(Derivative(k0(x, y, z), z), 2) + 4*
-Derivative(c(x, y, z), z)*Derivative(k0(x, y, z), x)*
-Derivative(k0(x, y, z), z);
+2*bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x, (z, 2)) + 2*
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), (z, 2)) + 
+4*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x, z) + 
+pow(bbn_ks_k0(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), x, (z, 2)) + 2*bbn_ks_k0(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), (z, 2)) + 4*
+bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x, z) + 
+2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), (z, 2))*Derivative(bbn_ks_k0(x, y, z), x) + 
+4*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), x, z) + 
+2*Derivative(bbn_ks_c(x, y, z), x)*pow(Derivative(bbn_ks_k0(x, y, z), z), 2) + 4*
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x)*
+Derivative(bbn_ks_k0(x, y, z), z);
 
     _dddgamma_D0D1D1D0D1[ijk]=
 /* mcode in progress ... */
@@ -6175,26 +6175,26 @@ Derivative(k0(x, y, z), z);
 // c
 // k0
 // k1
-c(x, y, z)*k0(x, y, z)*Derivative(k1(x, y, z), x, (y, 2)) + c(x, y, z)*
-k1(x, y, z)*Derivative(k0(x, y, z), x, (y, 2)) + c(x, y, z)*
-Derivative(k0(x, y, z), x)*Derivative(k1(x, y, z), (y, 2)) + 2*
-c(x, y, z)*Derivative(k0(x, y, z), y)*Derivative(k1(x, y, z), x, y) + 
-c(x, y, z)*Derivative(k0(x, y, z), (y, 2))*Derivative(k1(x, y, z), x) + 
-2*c(x, y, z)*Derivative(k1(x, y, z), y)*Derivative(k0(x, y, z), x, y) + 
-k0(x, y, z)*k1(x, y, z)*Derivative(c(x, y, z), x, (y, 2)) + 
-k0(x, y, z)*Derivative(c(x, y, z), x)*Derivative(k1(x, y, z), (y, 2)) + 
-2*k0(x, y, z)*Derivative(c(x, y, z), y)*Derivative(k1(x, y, z), x, y) + 
-k0(x, y, z)*Derivative(c(x, y, z), (y, 2))*Derivative(k1(x, y, z), x) + 
-2*k0(x, y, z)*Derivative(k1(x, y, z), y)*Derivative(c(x, y, z), x, y) + 
-k1(x, y, z)*Derivative(c(x, y, z), x)*Derivative(k0(x, y, z), (y, 2)) + 
-2*k1(x, y, z)*Derivative(c(x, y, z), y)*Derivative(k0(x, y, z), x, y) + 
-k1(x, y, z)*Derivative(c(x, y, z), (y, 2))*Derivative(k0(x, y, z), x) + 
-2*k1(x, y, z)*Derivative(k0(x, y, z), y)*Derivative(c(x, y, z), x, y) + 
-2*Derivative(c(x, y, z), x)*Derivative(k0(x, y, z), y)*
-Derivative(k1(x, y, z), y) + 2*Derivative(c(x, y, z), y)*
-Derivative(k0(x, y, z), x)*Derivative(k1(x, y, z), y) + 2*
-Derivative(c(x, y, z), y)*Derivative(k0(x, y, z), y)*
-Derivative(k1(x, y, z), x);
+bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x, (y, 2)) + bbn_ks_c(x, y, z)*
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x, (y, 2)) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), (y, 2)) + 2*
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x, y) + 
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), (y, 2))*Derivative(bbn_ks_k1(x, y, z), x) + 
+2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x, y) + 
+bbn_ks_k0(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), x, (y, 2)) + 
+bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), (y, 2)) + 
+2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x, y) + 
+bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), (y, 2))*Derivative(bbn_ks_k1(x, y, z), x) + 
+2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), x, y) + 
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), (y, 2)) + 
+2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x, y) + 
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), (y, 2))*Derivative(bbn_ks_k0(x, y, z), x) + 
+2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), x, y) + 
+2*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), y)*
+Derivative(bbn_ks_k1(x, y, z), y) + 2*Derivative(bbn_ks_c(x, y, z), y)*
+Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), y) + 2*
+Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), y)*
+Derivative(bbn_ks_k1(x, y, z), x);
 
     _dddgamma_D0D1D2D2D0[ijk]=
 /* mcode in progress ... */
@@ -6217,26 +6217,26 @@ Derivative(k1(x, y, z), x);
 // c
 // k0
 // k1
-c(x, y, z)*k0(x, y, z)*Derivative(k1(x, y, z), x, (z, 2)) + c(x, y, z)*
-k1(x, y, z)*Derivative(k0(x, y, z), x, (z, 2)) + c(x, y, z)*
-Derivative(k0(x, y, z), x)*Derivative(k1(x, y, z), (z, 2)) + 2*
-c(x, y, z)*Derivative(k0(x, y, z), z)*Derivative(k1(x, y, z), x, z) + 
-c(x, y, z)*Derivative(k0(x, y, z), (z, 2))*Derivative(k1(x, y, z), x) + 
-2*c(x, y, z)*Derivative(k1(x, y, z), z)*Derivative(k0(x, y, z), x, z) + 
-k0(x, y, z)*k1(x, y, z)*Derivative(c(x, y, z), x, (z, 2)) + 
-k0(x, y, z)*Derivative(c(x, y, z), x)*Derivative(k1(x, y, z), (z, 2)) + 
-2*k0(x, y, z)*Derivative(c(x, y, z), z)*Derivative(k1(x, y, z), x, z) + 
-k0(x, y, z)*Derivative(c(x, y, z), (z, 2))*Derivative(k1(x, y, z), x) + 
-2*k0(x, y, z)*Derivative(k1(x, y, z), z)*Derivative(c(x, y, z), x, z) + 
-k1(x, y, z)*Derivative(c(x, y, z), x)*Derivative(k0(x, y, z), (z, 2)) + 
-2*k1(x, y, z)*Derivative(c(x, y, z), z)*Derivative(k0(x, y, z), x, z) + 
-k1(x, y, z)*Derivative(c(x, y, z), (z, 2))*Derivative(k0(x, y, z), x) + 
-2*k1(x, y, z)*Derivative(k0(x, y, z), z)*Derivative(c(x, y, z), x, z) + 
-2*Derivative(c(x, y, z), x)*Derivative(k0(x, y, z), z)*
-Derivative(k1(x, y, z), z) + 2*Derivative(c(x, y, z), z)*
-Derivative(k0(x, y, z), x)*Derivative(k1(x, y, z), z) + 2*
-Derivative(c(x, y, z), z)*Derivative(k0(x, y, z), z)*
-Derivative(k1(x, y, z), x);
+bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x, (z, 2)) + bbn_ks_c(x, y, z)*
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x, (z, 2)) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), (z, 2)) + 2*
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x, z) + 
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), (z, 2))*Derivative(bbn_ks_k1(x, y, z), x) + 
+2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x, z) + 
+bbn_ks_k0(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), x, (z, 2)) + 
+bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), (z, 2)) + 
+2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x, z) + 
+bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), (z, 2))*Derivative(bbn_ks_k1(x, y, z), x) + 
+2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), x, z) + 
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), (z, 2)) + 
+2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x, z) + 
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), (z, 2))*Derivative(bbn_ks_k0(x, y, z), x) + 
+2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), x, z) + 
+2*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), z)*
+Derivative(bbn_ks_k1(x, y, z), z) + 2*Derivative(bbn_ks_c(x, y, z), z)*
+Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), z) + 2*
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), z)*
+Derivative(bbn_ks_k1(x, y, z), x);
 
     _dddgamma_D0D2D0D1D2[ijk]=
 /* mcode in progress ... */
@@ -6265,36 +6265,36 @@ Derivative(k1(x, y, z), x);
 // c
 // k0
 // k2
-c(x, y, z)*k0(x, y, z)*Derivative(k2(x, y, z), x, y, z) + c(x, y, z)*
-k2(x, y, z)*Derivative(k0(x, y, z), x, y, z) + c(x, y, z)*
-Derivative(k0(x, y, z), x)*Derivative(k2(x, y, z), y, z) + c(x, y, z)*
-Derivative(k0(x, y, z), y)*Derivative(k2(x, y, z), x, z) + c(x, y, z)*
-Derivative(k0(x, y, z), z)*Derivative(k2(x, y, z), x, y) + c(x, y, z)*
-Derivative(k2(x, y, z), x)*Derivative(k0(x, y, z), y, z) + c(x, y, z)*
-Derivative(k2(x, y, z), y)*Derivative(k0(x, y, z), x, z) + c(x, y, z)*
-Derivative(k2(x, y, z), z)*Derivative(k0(x, y, z), x, y) + k0(x, y, z)*
-k2(x, y, z)*Derivative(c(x, y, z), x, y, z) + k0(x, y, z)*
-Derivative(c(x, y, z), x)*Derivative(k2(x, y, z), y, z) + k0(x, y, z)*
-Derivative(c(x, y, z), y)*Derivative(k2(x, y, z), x, z) + k0(x, y, z)*
-Derivative(c(x, y, z), z)*Derivative(k2(x, y, z), x, y) + k0(x, y, z)*
-Derivative(k2(x, y, z), x)*Derivative(c(x, y, z), y, z) + k0(x, y, z)*
-Derivative(k2(x, y, z), y)*Derivative(c(x, y, z), x, z) + k0(x, y, z)*
-Derivative(k2(x, y, z), z)*Derivative(c(x, y, z), x, y) + k2(x, y, z)*
-Derivative(c(x, y, z), x)*Derivative(k0(x, y, z), y, z) + k2(x, y, z)*
-Derivative(c(x, y, z), y)*Derivative(k0(x, y, z), x, z) + k2(x, y, z)*
-Derivative(c(x, y, z), z)*Derivative(k0(x, y, z), x, y) + k2(x, y, z)*
-Derivative(k0(x, y, z), x)*Derivative(c(x, y, z), y, z) + k2(x, y, z)*
-Derivative(k0(x, y, z), y)*Derivative(c(x, y, z), x, z) + k2(x, y, z)*
-Derivative(k0(x, y, z), z)*Derivative(c(x, y, z), x, y) + 
-Derivative(c(x, y, z), x)*Derivative(k0(x, y, z), y)*
-Derivative(k2(x, y, z), z) + Derivative(c(x, y, z), x)*
-Derivative(k0(x, y, z), z)*Derivative(k2(x, y, z), y) + 
-Derivative(c(x, y, z), y)*Derivative(k0(x, y, z), x)*
-Derivative(k2(x, y, z), z) + Derivative(c(x, y, z), y)*
-Derivative(k0(x, y, z), z)*Derivative(k2(x, y, z), x) + 
-Derivative(c(x, y, z), z)*Derivative(k0(x, y, z), x)*
-Derivative(k2(x, y, z), y) + Derivative(c(x, y, z), z)*
-Derivative(k0(x, y, z), y)*Derivative(k2(x, y, z), x);
+bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x, y, z) + bbn_ks_c(x, y, z)*
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x, y, z) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), y, z) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x, z) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x, y) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), y, z) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k2(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x, z) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k2(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x, y) + bbn_ks_k0(x, y, z)*
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), x, y, z) + bbn_ks_k0(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), y, z) + bbn_ks_k0(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x, z) + bbn_ks_k0(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x, y) + bbn_ks_k0(x, y, z)*
+Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), y, z) + bbn_ks_k0(x, y, z)*
+Derivative(bbn_ks_k2(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), x, z) + bbn_ks_k0(x, y, z)*
+Derivative(bbn_ks_k2(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), x, y) + bbn_ks_k2(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), y, z) + bbn_ks_k2(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x, z) + bbn_ks_k2(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x, y) + bbn_ks_k2(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), y, z) + bbn_ks_k2(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), x, z) + bbn_ks_k2(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), x, y) + 
+Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), y)*
+Derivative(bbn_ks_k2(x, y, z), z) + Derivative(bbn_ks_c(x, y, z), x)*
+Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), y) + 
+Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x)*
+Derivative(bbn_ks_k2(x, y, z), z) + Derivative(bbn_ks_c(x, y, z), y)*
+Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x) + 
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x)*
+Derivative(bbn_ks_k2(x, y, z), y) + Derivative(bbn_ks_c(x, y, z), z)*
+Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x);
 
     _dddgamma_D0D2D2D2D1[ijk]=
 /* mcode in progress ... */
@@ -6317,26 +6317,26 @@ Derivative(k0(x, y, z), y)*Derivative(k2(x, y, z), x);
 // c
 // k0
 // k2
-c(x, y, z)*k0(x, y, z)*Derivative(k2(x, y, z), y, (z, 2)) + c(x, y, z)*
-k2(x, y, z)*Derivative(k0(x, y, z), y, (z, 2)) + c(x, y, z)*
-Derivative(k0(x, y, z), y)*Derivative(k2(x, y, z), (z, 2)) + 2*
-c(x, y, z)*Derivative(k0(x, y, z), z)*Derivative(k2(x, y, z), y, z) + 
-c(x, y, z)*Derivative(k0(x, y, z), (z, 2))*Derivative(k2(x, y, z), y) + 
-2*c(x, y, z)*Derivative(k2(x, y, z), z)*Derivative(k0(x, y, z), y, z) + 
-k0(x, y, z)*k2(x, y, z)*Derivative(c(x, y, z), y, (z, 2)) + 
-k0(x, y, z)*Derivative(c(x, y, z), y)*Derivative(k2(x, y, z), (z, 2)) + 
-2*k0(x, y, z)*Derivative(c(x, y, z), z)*Derivative(k2(x, y, z), y, z) + 
-k0(x, y, z)*Derivative(c(x, y, z), (z, 2))*Derivative(k2(x, y, z), y) + 
-2*k0(x, y, z)*Derivative(k2(x, y, z), z)*Derivative(c(x, y, z), y, z) + 
-k2(x, y, z)*Derivative(c(x, y, z), y)*Derivative(k0(x, y, z), (z, 2)) + 
-2*k2(x, y, z)*Derivative(c(x, y, z), z)*Derivative(k0(x, y, z), y, z) + 
-k2(x, y, z)*Derivative(c(x, y, z), (z, 2))*Derivative(k0(x, y, z), y) + 
-2*k2(x, y, z)*Derivative(k0(x, y, z), z)*Derivative(c(x, y, z), y, z) + 
-2*Derivative(c(x, y, z), y)*Derivative(k0(x, y, z), z)*
-Derivative(k2(x, y, z), z) + 2*Derivative(c(x, y, z), z)*
-Derivative(k0(x, y, z), y)*Derivative(k2(x, y, z), z) + 2*
-Derivative(c(x, y, z), z)*Derivative(k0(x, y, z), z)*
-Derivative(k2(x, y, z), y);
+bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k2(x, y, z), y, (z, 2)) + bbn_ks_c(x, y, z)*
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k0(x, y, z), y, (z, 2)) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), (z, 2)) + 2*
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), y, z) + 
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), (z, 2))*Derivative(bbn_ks_k2(x, y, z), y) + 
+2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), y, z) + 
+bbn_ks_k0(x, y, z)*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), y, (z, 2)) + 
+bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), (z, 2)) + 
+2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), y, z) + 
+bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), (z, 2))*Derivative(bbn_ks_k2(x, y, z), y) + 
+2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k2(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), y, z) + 
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), (z, 2)) + 
+2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), y, z) + 
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (z, 2))*Derivative(bbn_ks_k0(x, y, z), y) + 
+2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), y, z) + 
+2*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), z)*
+Derivative(bbn_ks_k2(x, y, z), z) + 2*Derivative(bbn_ks_c(x, y, z), z)*
+Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), z) + 2*
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), z)*
+Derivative(bbn_ks_k2(x, y, z), y);
 
     _dddgamma_D1D1D0D2D1[ijk]=
 /* mcode in progress ... */
@@ -6357,22 +6357,22 @@ Derivative(k2(x, y, z), y);
 // Derivative
 // c
 // k1
-2*c(x, y, z)*k1(x, y, z)*Derivative(k1(x, y, z), x, y, z) + 2*
-c(x, y, z)*Derivative(k1(x, y, z), x)*Derivative(k1(x, y, z), y, z) + 
-2*c(x, y, z)*Derivative(k1(x, y, z), y)*Derivative(k1(x, y, z), x, z) + 
-2*c(x, y, z)*Derivative(k1(x, y, z), z)*Derivative(k1(x, y, z), x, y) + 
-pow(k1(x, y, z), 2)*Derivative(c(x, y, z), x, y, z) + 2*k1(x, y, z)*
-Derivative(c(x, y, z), x)*Derivative(k1(x, y, z), y, z) + 2*
-k1(x, y, z)*Derivative(c(x, y, z), y)*Derivative(k1(x, y, z), x, z) + 
-2*k1(x, y, z)*Derivative(c(x, y, z), z)*Derivative(k1(x, y, z), x, y) + 
-2*k1(x, y, z)*Derivative(k1(x, y, z), x)*Derivative(c(x, y, z), y, z) + 
-2*k1(x, y, z)*Derivative(k1(x, y, z), y)*Derivative(c(x, y, z), x, z) + 
-2*k1(x, y, z)*Derivative(k1(x, y, z), z)*Derivative(c(x, y, z), x, y) + 
-2*Derivative(c(x, y, z), x)*Derivative(k1(x, y, z), y)*
-Derivative(k1(x, y, z), z) + 2*Derivative(c(x, y, z), y)*
-Derivative(k1(x, y, z), x)*Derivative(k1(x, y, z), z) + 2*
-Derivative(c(x, y, z), z)*Derivative(k1(x, y, z), x)*
-Derivative(k1(x, y, z), y);
+2*bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x, y, z) + 2*
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), y, z) + 
+2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x, z) + 
+2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x, y) + 
+pow(bbn_ks_k1(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), x, y, z) + 2*bbn_ks_k1(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), y, z) + 2*
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x, z) + 
+2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x, y) + 
+2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), y, z) + 
+2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), x, z) + 
+2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), x, y) + 
+2*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), y)*
+Derivative(bbn_ks_k1(x, y, z), z) + 2*Derivative(bbn_ks_c(x, y, z), y)*
+Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), z) + 2*
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x)*
+Derivative(bbn_ks_k1(x, y, z), y);
 
     _dddgamma_D0D0D2D1D0[ijk]=
 /* mcode in progress ... */
@@ -6393,22 +6393,22 @@ Derivative(k1(x, y, z), y);
 // Derivative
 // c
 // k0
-2*c(x, y, z)*k0(x, y, z)*Derivative(k0(x, y, z), x, y, z) + 2*
-c(x, y, z)*Derivative(k0(x, y, z), x)*Derivative(k0(x, y, z), y, z) + 
-2*c(x, y, z)*Derivative(k0(x, y, z), y)*Derivative(k0(x, y, z), x, z) + 
-2*c(x, y, z)*Derivative(k0(x, y, z), z)*Derivative(k0(x, y, z), x, y) + 
-pow(k0(x, y, z), 2)*Derivative(c(x, y, z), x, y, z) + 2*k0(x, y, z)*
-Derivative(c(x, y, z), x)*Derivative(k0(x, y, z), y, z) + 2*
-k0(x, y, z)*Derivative(c(x, y, z), y)*Derivative(k0(x, y, z), x, z) + 
-2*k0(x, y, z)*Derivative(c(x, y, z), z)*Derivative(k0(x, y, z), x, y) + 
-2*k0(x, y, z)*Derivative(k0(x, y, z), x)*Derivative(c(x, y, z), y, z) + 
-2*k0(x, y, z)*Derivative(k0(x, y, z), y)*Derivative(c(x, y, z), x, z) + 
-2*k0(x, y, z)*Derivative(k0(x, y, z), z)*Derivative(c(x, y, z), x, y) + 
-2*Derivative(c(x, y, z), x)*Derivative(k0(x, y, z), y)*
-Derivative(k0(x, y, z), z) + 2*Derivative(c(x, y, z), y)*
-Derivative(k0(x, y, z), x)*Derivative(k0(x, y, z), z) + 2*
-Derivative(c(x, y, z), z)*Derivative(k0(x, y, z), x)*
-Derivative(k0(x, y, z), y);
+2*bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x, y, z) + 2*
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), y, z) + 
+2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x, z) + 
+2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x, y) + 
+pow(bbn_ks_k0(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), x, y, z) + 2*bbn_ks_k0(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), y, z) + 2*
+bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x, z) + 
+2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x, y) + 
+2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), y, z) + 
+2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), x, z) + 
+2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), x, y) + 
+2*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), y)*
+Derivative(bbn_ks_k0(x, y, z), z) + 2*Derivative(bbn_ks_c(x, y, z), y)*
+Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), z) + 2*
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x)*
+Derivative(bbn_ks_k0(x, y, z), y);
 
     _dddgamma_D1D2D0D1D0[ijk]=
 /* mcode in progress ... */
@@ -6431,26 +6431,26 @@ Derivative(k0(x, y, z), y);
 // c
 // k1
 // k2
-c(x, y, z)*k1(x, y, z)*Derivative(k2(x, y, z), (x, 2), y) + c(x, y, z)*
-k2(x, y, z)*Derivative(k1(x, y, z), (x, 2), y) + 2*c(x, y, z)*
-Derivative(k1(x, y, z), x)*Derivative(k2(x, y, z), x, y) + c(x, y, z)*
-Derivative(k1(x, y, z), (x, 2))*Derivative(k2(x, y, z), y) + 
-c(x, y, z)*Derivative(k1(x, y, z), y)*Derivative(k2(x, y, z), (x, 2)) + 
-2*c(x, y, z)*Derivative(k2(x, y, z), x)*Derivative(k1(x, y, z), x, y) + 
-k1(x, y, z)*k2(x, y, z)*Derivative(c(x, y, z), (x, 2), y) + 2*
-k1(x, y, z)*Derivative(c(x, y, z), x)*Derivative(k2(x, y, z), x, y) + 
-k1(x, y, z)*Derivative(c(x, y, z), (x, 2))*Derivative(k2(x, y, z), y) + 
-k1(x, y, z)*Derivative(c(x, y, z), y)*Derivative(k2(x, y, z), (x, 2)) + 
-2*k1(x, y, z)*Derivative(k2(x, y, z), x)*Derivative(c(x, y, z), x, y) + 
-2*k2(x, y, z)*Derivative(c(x, y, z), x)*Derivative(k1(x, y, z), x, y) + 
-k2(x, y, z)*Derivative(c(x, y, z), (x, 2))*Derivative(k1(x, y, z), y) + 
-k2(x, y, z)*Derivative(c(x, y, z), y)*Derivative(k1(x, y, z), (x, 2)) + 
-2*k2(x, y, z)*Derivative(k1(x, y, z), x)*Derivative(c(x, y, z), x, y) + 
-2*Derivative(c(x, y, z), x)*Derivative(k1(x, y, z), x)*
-Derivative(k2(x, y, z), y) + 2*Derivative(c(x, y, z), x)*
-Derivative(k1(x, y, z), y)*Derivative(k2(x, y, z), x) + 2*
-Derivative(c(x, y, z), y)*Derivative(k1(x, y, z), x)*
-Derivative(k2(x, y, z), x);
+bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k2(x, y, z), (x, 2), y) + bbn_ks_c(x, y, z)*
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k1(x, y, z), (x, 2), y) + 2*bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), x, y) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k1(x, y, z), (x, 2))*Derivative(bbn_ks_k2(x, y, z), y) + 
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), (x, 2)) + 
+2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), x, y) + 
+bbn_ks_k1(x, y, z)*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2), y) + 2*
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), x, y) + 
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2))*Derivative(bbn_ks_k2(x, y, z), y) + 
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), (x, 2)) + 
+2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), x, y) + 
+2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), x, y) + 
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2))*Derivative(bbn_ks_k1(x, y, z), y) + 
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), (x, 2)) + 
+2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), x, y) + 
+2*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), x)*
+Derivative(bbn_ks_k2(x, y, z), y) + 2*Derivative(bbn_ks_c(x, y, z), x)*
+Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x) + 2*
+Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x)*
+Derivative(bbn_ks_k2(x, y, z), x);
 
     _dddgamma_D0D2D2D1D2[ijk]=
 /* mcode in progress ... */
@@ -6473,26 +6473,26 @@ Derivative(k2(x, y, z), x);
 // c
 // k0
 // k2
-c(x, y, z)*k0(x, y, z)*Derivative(k2(x, y, z), y, (z, 2)) + c(x, y, z)*
-k2(x, y, z)*Derivative(k0(x, y, z), y, (z, 2)) + c(x, y, z)*
-Derivative(k0(x, y, z), y)*Derivative(k2(x, y, z), (z, 2)) + 2*
-c(x, y, z)*Derivative(k0(x, y, z), z)*Derivative(k2(x, y, z), y, z) + 
-c(x, y, z)*Derivative(k0(x, y, z), (z, 2))*Derivative(k2(x, y, z), y) + 
-2*c(x, y, z)*Derivative(k2(x, y, z), z)*Derivative(k0(x, y, z), y, z) + 
-k0(x, y, z)*k2(x, y, z)*Derivative(c(x, y, z), y, (z, 2)) + 
-k0(x, y, z)*Derivative(c(x, y, z), y)*Derivative(k2(x, y, z), (z, 2)) + 
-2*k0(x, y, z)*Derivative(c(x, y, z), z)*Derivative(k2(x, y, z), y, z) + 
-k0(x, y, z)*Derivative(c(x, y, z), (z, 2))*Derivative(k2(x, y, z), y) + 
-2*k0(x, y, z)*Derivative(k2(x, y, z), z)*Derivative(c(x, y, z), y, z) + 
-k2(x, y, z)*Derivative(c(x, y, z), y)*Derivative(k0(x, y, z), (z, 2)) + 
-2*k2(x, y, z)*Derivative(c(x, y, z), z)*Derivative(k0(x, y, z), y, z) + 
-k2(x, y, z)*Derivative(c(x, y, z), (z, 2))*Derivative(k0(x, y, z), y) + 
-2*k2(x, y, z)*Derivative(k0(x, y, z), z)*Derivative(c(x, y, z), y, z) + 
-2*Derivative(c(x, y, z), y)*Derivative(k0(x, y, z), z)*
-Derivative(k2(x, y, z), z) + 2*Derivative(c(x, y, z), z)*
-Derivative(k0(x, y, z), y)*Derivative(k2(x, y, z), z) + 2*
-Derivative(c(x, y, z), z)*Derivative(k0(x, y, z), z)*
-Derivative(k2(x, y, z), y);
+bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k2(x, y, z), y, (z, 2)) + bbn_ks_c(x, y, z)*
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k0(x, y, z), y, (z, 2)) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), (z, 2)) + 2*
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), y, z) + 
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), (z, 2))*Derivative(bbn_ks_k2(x, y, z), y) + 
+2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), y, z) + 
+bbn_ks_k0(x, y, z)*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), y, (z, 2)) + 
+bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), (z, 2)) + 
+2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), y, z) + 
+bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), (z, 2))*Derivative(bbn_ks_k2(x, y, z), y) + 
+2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k2(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), y, z) + 
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), (z, 2)) + 
+2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), y, z) + 
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (z, 2))*Derivative(bbn_ks_k0(x, y, z), y) + 
+2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), y, z) + 
+2*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), z)*
+Derivative(bbn_ks_k2(x, y, z), z) + 2*Derivative(bbn_ks_c(x, y, z), z)*
+Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), z) + 2*
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), z)*
+Derivative(bbn_ks_k2(x, y, z), y);
 
     _dddgamma_D0D1D1D2D1[ijk]=
 /* mcode in progress ... */
@@ -6515,26 +6515,26 @@ Derivative(k2(x, y, z), y);
 // c
 // k0
 // k1
-c(x, y, z)*k0(x, y, z)*Derivative(k1(x, y, z), (y, 2), z) + c(x, y, z)*
-k1(x, y, z)*Derivative(k0(x, y, z), (y, 2), z) + 2*c(x, y, z)*
-Derivative(k0(x, y, z), y)*Derivative(k1(x, y, z), y, z) + c(x, y, z)*
-Derivative(k0(x, y, z), (y, 2))*Derivative(k1(x, y, z), z) + 
-c(x, y, z)*Derivative(k0(x, y, z), z)*Derivative(k1(x, y, z), (y, 2)) + 
-2*c(x, y, z)*Derivative(k1(x, y, z), y)*Derivative(k0(x, y, z), y, z) + 
-k0(x, y, z)*k1(x, y, z)*Derivative(c(x, y, z), (y, 2), z) + 2*
-k0(x, y, z)*Derivative(c(x, y, z), y)*Derivative(k1(x, y, z), y, z) + 
-k0(x, y, z)*Derivative(c(x, y, z), (y, 2))*Derivative(k1(x, y, z), z) + 
-k0(x, y, z)*Derivative(c(x, y, z), z)*Derivative(k1(x, y, z), (y, 2)) + 
-2*k0(x, y, z)*Derivative(k1(x, y, z), y)*Derivative(c(x, y, z), y, z) + 
-2*k1(x, y, z)*Derivative(c(x, y, z), y)*Derivative(k0(x, y, z), y, z) + 
-k1(x, y, z)*Derivative(c(x, y, z), (y, 2))*Derivative(k0(x, y, z), z) + 
-k1(x, y, z)*Derivative(c(x, y, z), z)*Derivative(k0(x, y, z), (y, 2)) + 
-2*k1(x, y, z)*Derivative(k0(x, y, z), y)*Derivative(c(x, y, z), y, z) + 
-2*Derivative(c(x, y, z), y)*Derivative(k0(x, y, z), y)*
-Derivative(k1(x, y, z), z) + 2*Derivative(c(x, y, z), y)*
-Derivative(k0(x, y, z), z)*Derivative(k1(x, y, z), y) + 2*
-Derivative(c(x, y, z), z)*Derivative(k0(x, y, z), y)*
-Derivative(k1(x, y, z), y);
+bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k1(x, y, z), (y, 2), z) + bbn_ks_c(x, y, z)*
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k0(x, y, z), (y, 2), z) + 2*bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), y, z) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), (y, 2))*Derivative(bbn_ks_k1(x, y, z), z) + 
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), (y, 2)) + 
+2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), y, z) + 
+bbn_ks_k0(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), (y, 2), z) + 2*
+bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), y, z) + 
+bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), (y, 2))*Derivative(bbn_ks_k1(x, y, z), z) + 
+bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), (y, 2)) + 
+2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), y, z) + 
+2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), y, z) + 
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), (y, 2))*Derivative(bbn_ks_k0(x, y, z), z) + 
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), (y, 2)) + 
+2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), y, z) + 
+2*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), y)*
+Derivative(bbn_ks_k1(x, y, z), z) + 2*Derivative(bbn_ks_c(x, y, z), y)*
+Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), y) + 2*
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), y)*
+Derivative(bbn_ks_k1(x, y, z), y);
 
     _dddgamma_D1D2D2D0D0[ijk]=
 /* mcode in progress ... */
@@ -6557,26 +6557,26 @@ Derivative(k1(x, y, z), y);
 // c
 // k1
 // k2
-c(x, y, z)*k1(x, y, z)*Derivative(k2(x, y, z), (x, 2), z) + c(x, y, z)*
-k2(x, y, z)*Derivative(k1(x, y, z), (x, 2), z) + 2*c(x, y, z)*
-Derivative(k1(x, y, z), x)*Derivative(k2(x, y, z), x, z) + c(x, y, z)*
-Derivative(k1(x, y, z), (x, 2))*Derivative(k2(x, y, z), z) + 
-c(x, y, z)*Derivative(k1(x, y, z), z)*Derivative(k2(x, y, z), (x, 2)) + 
-2*c(x, y, z)*Derivative(k2(x, y, z), x)*Derivative(k1(x, y, z), x, z) + 
-k1(x, y, z)*k2(x, y, z)*Derivative(c(x, y, z), (x, 2), z) + 2*
-k1(x, y, z)*Derivative(c(x, y, z), x)*Derivative(k2(x, y, z), x, z) + 
-k1(x, y, z)*Derivative(c(x, y, z), (x, 2))*Derivative(k2(x, y, z), z) + 
-k1(x, y, z)*Derivative(c(x, y, z), z)*Derivative(k2(x, y, z), (x, 2)) + 
-2*k1(x, y, z)*Derivative(k2(x, y, z), x)*Derivative(c(x, y, z), x, z) + 
-2*k2(x, y, z)*Derivative(c(x, y, z), x)*Derivative(k1(x, y, z), x, z) + 
-k2(x, y, z)*Derivative(c(x, y, z), (x, 2))*Derivative(k1(x, y, z), z) + 
-k2(x, y, z)*Derivative(c(x, y, z), z)*Derivative(k1(x, y, z), (x, 2)) + 
-2*k2(x, y, z)*Derivative(k1(x, y, z), x)*Derivative(c(x, y, z), x, z) + 
-2*Derivative(c(x, y, z), x)*Derivative(k1(x, y, z), x)*
-Derivative(k2(x, y, z), z) + 2*Derivative(c(x, y, z), x)*
-Derivative(k1(x, y, z), z)*Derivative(k2(x, y, z), x) + 2*
-Derivative(c(x, y, z), z)*Derivative(k1(x, y, z), x)*
-Derivative(k2(x, y, z), x);
+bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k2(x, y, z), (x, 2), z) + bbn_ks_c(x, y, z)*
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k1(x, y, z), (x, 2), z) + 2*bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), x, z) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k1(x, y, z), (x, 2))*Derivative(bbn_ks_k2(x, y, z), z) + 
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), (x, 2)) + 
+2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), x, z) + 
+bbn_ks_k1(x, y, z)*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2), z) + 2*
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), x, z) + 
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2))*Derivative(bbn_ks_k2(x, y, z), z) + 
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), (x, 2)) + 
+2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), x, z) + 
+2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), x, z) + 
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2))*Derivative(bbn_ks_k1(x, y, z), z) + 
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), (x, 2)) + 
+2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), x, z) + 
+2*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), x)*
+Derivative(bbn_ks_k2(x, y, z), z) + 2*Derivative(bbn_ks_c(x, y, z), x)*
+Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x) + 2*
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x)*
+Derivative(bbn_ks_k2(x, y, z), x);
 
     _dddgamma_D0D1D2D0D0[ijk]=
 /* mcode in progress ... */
@@ -6599,26 +6599,26 @@ Derivative(k2(x, y, z), x);
 // c
 // k0
 // k1
-c(x, y, z)*k0(x, y, z)*Derivative(k1(x, y, z), (x, 2), z) + c(x, y, z)*
-k1(x, y, z)*Derivative(k0(x, y, z), (x, 2), z) + 2*c(x, y, z)*
-Derivative(k0(x, y, z), x)*Derivative(k1(x, y, z), x, z) + c(x, y, z)*
-Derivative(k0(x, y, z), (x, 2))*Derivative(k1(x, y, z), z) + 
-c(x, y, z)*Derivative(k0(x, y, z), z)*Derivative(k1(x, y, z), (x, 2)) + 
-2*c(x, y, z)*Derivative(k1(x, y, z), x)*Derivative(k0(x, y, z), x, z) + 
-k0(x, y, z)*k1(x, y, z)*Derivative(c(x, y, z), (x, 2), z) + 2*
-k0(x, y, z)*Derivative(c(x, y, z), x)*Derivative(k1(x, y, z), x, z) + 
-k0(x, y, z)*Derivative(c(x, y, z), (x, 2))*Derivative(k1(x, y, z), z) + 
-k0(x, y, z)*Derivative(c(x, y, z), z)*Derivative(k1(x, y, z), (x, 2)) + 
-2*k0(x, y, z)*Derivative(k1(x, y, z), x)*Derivative(c(x, y, z), x, z) + 
-2*k1(x, y, z)*Derivative(c(x, y, z), x)*Derivative(k0(x, y, z), x, z) + 
-k1(x, y, z)*Derivative(c(x, y, z), (x, 2))*Derivative(k0(x, y, z), z) + 
-k1(x, y, z)*Derivative(c(x, y, z), z)*Derivative(k0(x, y, z), (x, 2)) + 
-2*k1(x, y, z)*Derivative(k0(x, y, z), x)*Derivative(c(x, y, z), x, z) + 
-2*Derivative(c(x, y, z), x)*Derivative(k0(x, y, z), x)*
-Derivative(k1(x, y, z), z) + 2*Derivative(c(x, y, z), x)*
-Derivative(k0(x, y, z), z)*Derivative(k1(x, y, z), x) + 2*
-Derivative(c(x, y, z), z)*Derivative(k0(x, y, z), x)*
-Derivative(k1(x, y, z), x);
+bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k1(x, y, z), (x, 2), z) + bbn_ks_c(x, y, z)*
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k0(x, y, z), (x, 2), z) + 2*bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), x, z) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), (x, 2))*Derivative(bbn_ks_k1(x, y, z), z) + 
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), (x, 2)) + 
+2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), x, z) + 
+bbn_ks_k0(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2), z) + 2*
+bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), x, z) + 
+bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2))*Derivative(bbn_ks_k1(x, y, z), z) + 
+bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), (x, 2)) + 
+2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), x, z) + 
+2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), x, z) + 
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2))*Derivative(bbn_ks_k0(x, y, z), z) + 
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), (x, 2)) + 
+2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), x, z) + 
+2*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), x)*
+Derivative(bbn_ks_k1(x, y, z), z) + 2*Derivative(bbn_ks_c(x, y, z), x)*
+Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x) + 2*
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x)*
+Derivative(bbn_ks_k1(x, y, z), x);
 
     _dddgamma_D1D2D1D2D0[ijk]=
 /* mcode in progress ... */
@@ -6647,36 +6647,36 @@ Derivative(k1(x, y, z), x);
 // c
 // k1
 // k2
-c(x, y, z)*k1(x, y, z)*Derivative(k2(x, y, z), x, y, z) + c(x, y, z)*
-k2(x, y, z)*Derivative(k1(x, y, z), x, y, z) + c(x, y, z)*
-Derivative(k1(x, y, z), x)*Derivative(k2(x, y, z), y, z) + c(x, y, z)*
-Derivative(k1(x, y, z), y)*Derivative(k2(x, y, z), x, z) + c(x, y, z)*
-Derivative(k1(x, y, z), z)*Derivative(k2(x, y, z), x, y) + c(x, y, z)*
-Derivative(k2(x, y, z), x)*Derivative(k1(x, y, z), y, z) + c(x, y, z)*
-Derivative(k2(x, y, z), y)*Derivative(k1(x, y, z), x, z) + c(x, y, z)*
-Derivative(k2(x, y, z), z)*Derivative(k1(x, y, z), x, y) + k1(x, y, z)*
-k2(x, y, z)*Derivative(c(x, y, z), x, y, z) + k1(x, y, z)*
-Derivative(c(x, y, z), x)*Derivative(k2(x, y, z), y, z) + k1(x, y, z)*
-Derivative(c(x, y, z), y)*Derivative(k2(x, y, z), x, z) + k1(x, y, z)*
-Derivative(c(x, y, z), z)*Derivative(k2(x, y, z), x, y) + k1(x, y, z)*
-Derivative(k2(x, y, z), x)*Derivative(c(x, y, z), y, z) + k1(x, y, z)*
-Derivative(k2(x, y, z), y)*Derivative(c(x, y, z), x, z) + k1(x, y, z)*
-Derivative(k2(x, y, z), z)*Derivative(c(x, y, z), x, y) + k2(x, y, z)*
-Derivative(c(x, y, z), x)*Derivative(k1(x, y, z), y, z) + k2(x, y, z)*
-Derivative(c(x, y, z), y)*Derivative(k1(x, y, z), x, z) + k2(x, y, z)*
-Derivative(c(x, y, z), z)*Derivative(k1(x, y, z), x, y) + k2(x, y, z)*
-Derivative(k1(x, y, z), x)*Derivative(c(x, y, z), y, z) + k2(x, y, z)*
-Derivative(k1(x, y, z), y)*Derivative(c(x, y, z), x, z) + k2(x, y, z)*
-Derivative(k1(x, y, z), z)*Derivative(c(x, y, z), x, y) + 
-Derivative(c(x, y, z), x)*Derivative(k1(x, y, z), y)*
-Derivative(k2(x, y, z), z) + Derivative(c(x, y, z), x)*
-Derivative(k1(x, y, z), z)*Derivative(k2(x, y, z), y) + 
-Derivative(c(x, y, z), y)*Derivative(k1(x, y, z), x)*
-Derivative(k2(x, y, z), z) + Derivative(c(x, y, z), y)*
-Derivative(k1(x, y, z), z)*Derivative(k2(x, y, z), x) + 
-Derivative(c(x, y, z), z)*Derivative(k1(x, y, z), x)*
-Derivative(k2(x, y, z), y) + Derivative(c(x, y, z), z)*
-Derivative(k1(x, y, z), y)*Derivative(k2(x, y, z), x);
+bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x, y, z) + bbn_ks_c(x, y, z)*
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x, y, z) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), y, z) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x, z) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x, y) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), y, z) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k2(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x, z) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k2(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x, y) + bbn_ks_k1(x, y, z)*
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), x, y, z) + bbn_ks_k1(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), y, z) + bbn_ks_k1(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x, z) + bbn_ks_k1(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x, y) + bbn_ks_k1(x, y, z)*
+Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), y, z) + bbn_ks_k1(x, y, z)*
+Derivative(bbn_ks_k2(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), x, z) + bbn_ks_k1(x, y, z)*
+Derivative(bbn_ks_k2(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), x, y) + bbn_ks_k2(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), y, z) + bbn_ks_k2(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x, z) + bbn_ks_k2(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x, y) + bbn_ks_k2(x, y, z)*
+Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), y, z) + bbn_ks_k2(x, y, z)*
+Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), x, z) + bbn_ks_k2(x, y, z)*
+Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), x, y) + 
+Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), y)*
+Derivative(bbn_ks_k2(x, y, z), z) + Derivative(bbn_ks_c(x, y, z), x)*
+Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), y) + 
+Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x)*
+Derivative(bbn_ks_k2(x, y, z), z) + Derivative(bbn_ks_c(x, y, z), y)*
+Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x) + 
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x)*
+Derivative(bbn_ks_k2(x, y, z), y) + Derivative(bbn_ks_c(x, y, z), z)*
+Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x);
 
     _dddgamma_D2D2D1D0D1[ijk]=
 /* mcode in progress ... */
@@ -6693,17 +6693,17 @@ Derivative(k1(x, y, z), y)*Derivative(k2(x, y, z), x);
 // Derivative
 // c
 // k2
-2*c(x, y, z)*k2(x, y, z)*Derivative(k2(x, y, z), x, (y, 2)) + 2*
-c(x, y, z)*Derivative(k2(x, y, z), x)*Derivative(k2(x, y, z), (y, 2)) + 
-4*c(x, y, z)*Derivative(k2(x, y, z), y)*Derivative(k2(x, y, z), x, y) + 
-pow(k2(x, y, z), 2)*Derivative(c(x, y, z), x, (y, 2)) + 2*k2(x, y, z)*
-Derivative(c(x, y, z), x)*Derivative(k2(x, y, z), (y, 2)) + 4*
-k2(x, y, z)*Derivative(c(x, y, z), y)*Derivative(k2(x, y, z), x, y) + 
-2*k2(x, y, z)*Derivative(c(x, y, z), (y, 2))*Derivative(k2(x, y, z), x) + 
-4*k2(x, y, z)*Derivative(k2(x, y, z), y)*Derivative(c(x, y, z), x, y) + 
-2*Derivative(c(x, y, z), x)*pow(Derivative(k2(x, y, z), y), 2) + 4*
-Derivative(c(x, y, z), y)*Derivative(k2(x, y, z), x)*
-Derivative(k2(x, y, z), y);
+2*bbn_ks_c(x, y, z)*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x, (y, 2)) + 2*
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), (y, 2)) + 
+4*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x, y) + 
+pow(bbn_ks_k2(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), x, (y, 2)) + 2*bbn_ks_k2(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), (y, 2)) + 4*
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x, y) + 
+2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (y, 2))*Derivative(bbn_ks_k2(x, y, z), x) + 
+4*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k2(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), x, y) + 
+2*Derivative(bbn_ks_c(x, y, z), x)*pow(Derivative(bbn_ks_k2(x, y, z), y), 2) + 4*
+Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x)*
+Derivative(bbn_ks_k2(x, y, z), y);
 
     _dddgamma_D2D2D1D2D2[ijk]=
 /* mcode in progress ... */
@@ -6720,17 +6720,17 @@ Derivative(k2(x, y, z), y);
 // Derivative
 // c
 // k2
-2*c(x, y, z)*k2(x, y, z)*Derivative(k2(x, y, z), y, (z, 2)) + 2*
-c(x, y, z)*Derivative(k2(x, y, z), y)*Derivative(k2(x, y, z), (z, 2)) + 
-4*c(x, y, z)*Derivative(k2(x, y, z), z)*Derivative(k2(x, y, z), y, z) + 
-pow(k2(x, y, z), 2)*Derivative(c(x, y, z), y, (z, 2)) + 2*k2(x, y, z)*
-Derivative(c(x, y, z), y)*Derivative(k2(x, y, z), (z, 2)) + 4*
-k2(x, y, z)*Derivative(c(x, y, z), z)*Derivative(k2(x, y, z), y, z) + 
-2*k2(x, y, z)*Derivative(c(x, y, z), (z, 2))*Derivative(k2(x, y, z), y) + 
-4*k2(x, y, z)*Derivative(k2(x, y, z), z)*Derivative(c(x, y, z), y, z) + 
-2*Derivative(c(x, y, z), y)*pow(Derivative(k2(x, y, z), z), 2) + 4*
-Derivative(c(x, y, z), z)*Derivative(k2(x, y, z), y)*
-Derivative(k2(x, y, z), z);
+2*bbn_ks_c(x, y, z)*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k2(x, y, z), y, (z, 2)) + 2*
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), (z, 2)) + 
+4*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), y, z) + 
+pow(bbn_ks_k2(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), y, (z, 2)) + 2*bbn_ks_k2(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), (z, 2)) + 4*
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), y, z) + 
+2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (z, 2))*Derivative(bbn_ks_k2(x, y, z), y) + 
+4*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k2(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), y, z) + 
+2*Derivative(bbn_ks_c(x, y, z), y)*pow(Derivative(bbn_ks_k2(x, y, z), z), 2) + 4*
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), y)*
+Derivative(bbn_ks_k2(x, y, z), z);
 
     _dddgamma_D1D1D1D0D0[ijk]=
 /* mcode in progress ... */
@@ -6747,17 +6747,17 @@ Derivative(k2(x, y, z), z);
 // Derivative
 // c
 // k1
-2*c(x, y, z)*k1(x, y, z)*Derivative(k1(x, y, z), (x, 2), y) + 4*
-c(x, y, z)*Derivative(k1(x, y, z), x)*Derivative(k1(x, y, z), x, y) + 
-2*c(x, y, z)*Derivative(k1(x, y, z), (x, 2))*Derivative(k1(x, y, z), y) + 
-pow(k1(x, y, z), 2)*Derivative(c(x, y, z), (x, 2), y) + 4*k1(x, y, z)*
-Derivative(c(x, y, z), x)*Derivative(k1(x, y, z), x, y) + 2*
-k1(x, y, z)*Derivative(c(x, y, z), (x, 2))*Derivative(k1(x, y, z), y) + 
-2*k1(x, y, z)*Derivative(c(x, y, z), y)*Derivative(k1(x, y, z), (x, 2)) + 
-4*k1(x, y, z)*Derivative(k1(x, y, z), x)*Derivative(c(x, y, z), x, y) + 
-4*Derivative(c(x, y, z), x)*Derivative(k1(x, y, z), x)*
-Derivative(k1(x, y, z), y) + 2*Derivative(c(x, y, z), y)*
-pow(Derivative(k1(x, y, z), x), 2);
+2*bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k1(x, y, z), (x, 2), y) + 4*
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), x, y) + 
+2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), (x, 2))*Derivative(bbn_ks_k1(x, y, z), y) + 
+pow(bbn_ks_k1(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), (x, 2), y) + 4*bbn_ks_k1(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), x, y) + 2*
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2))*Derivative(bbn_ks_k1(x, y, z), y) + 
+2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), (x, 2)) + 
+4*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), x, y) + 
+4*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), x)*
+Derivative(bbn_ks_k1(x, y, z), y) + 2*Derivative(bbn_ks_c(x, y, z), y)*
+pow(Derivative(bbn_ks_k1(x, y, z), x), 2);
 
     _dddgamma_D0D1D1D0D2[ijk]=
 /* mcode in progress ... */
@@ -6786,36 +6786,36 @@ pow(Derivative(k1(x, y, z), x), 2);
 // c
 // k0
 // k1
-c(x, y, z)*k0(x, y, z)*Derivative(k1(x, y, z), x, y, z) + c(x, y, z)*
-k1(x, y, z)*Derivative(k0(x, y, z), x, y, z) + c(x, y, z)*
-Derivative(k0(x, y, z), x)*Derivative(k1(x, y, z), y, z) + c(x, y, z)*
-Derivative(k0(x, y, z), y)*Derivative(k1(x, y, z), x, z) + c(x, y, z)*
-Derivative(k0(x, y, z), z)*Derivative(k1(x, y, z), x, y) + c(x, y, z)*
-Derivative(k1(x, y, z), x)*Derivative(k0(x, y, z), y, z) + c(x, y, z)*
-Derivative(k1(x, y, z), y)*Derivative(k0(x, y, z), x, z) + c(x, y, z)*
-Derivative(k1(x, y, z), z)*Derivative(k0(x, y, z), x, y) + k0(x, y, z)*
-k1(x, y, z)*Derivative(c(x, y, z), x, y, z) + k0(x, y, z)*
-Derivative(c(x, y, z), x)*Derivative(k1(x, y, z), y, z) + k0(x, y, z)*
-Derivative(c(x, y, z), y)*Derivative(k1(x, y, z), x, z) + k0(x, y, z)*
-Derivative(c(x, y, z), z)*Derivative(k1(x, y, z), x, y) + k0(x, y, z)*
-Derivative(k1(x, y, z), x)*Derivative(c(x, y, z), y, z) + k0(x, y, z)*
-Derivative(k1(x, y, z), y)*Derivative(c(x, y, z), x, z) + k0(x, y, z)*
-Derivative(k1(x, y, z), z)*Derivative(c(x, y, z), x, y) + k1(x, y, z)*
-Derivative(c(x, y, z), x)*Derivative(k0(x, y, z), y, z) + k1(x, y, z)*
-Derivative(c(x, y, z), y)*Derivative(k0(x, y, z), x, z) + k1(x, y, z)*
-Derivative(c(x, y, z), z)*Derivative(k0(x, y, z), x, y) + k1(x, y, z)*
-Derivative(k0(x, y, z), x)*Derivative(c(x, y, z), y, z) + k1(x, y, z)*
-Derivative(k0(x, y, z), y)*Derivative(c(x, y, z), x, z) + k1(x, y, z)*
-Derivative(k0(x, y, z), z)*Derivative(c(x, y, z), x, y) + 
-Derivative(c(x, y, z), x)*Derivative(k0(x, y, z), y)*
-Derivative(k1(x, y, z), z) + Derivative(c(x, y, z), x)*
-Derivative(k0(x, y, z), z)*Derivative(k1(x, y, z), y) + 
-Derivative(c(x, y, z), y)*Derivative(k0(x, y, z), x)*
-Derivative(k1(x, y, z), z) + Derivative(c(x, y, z), y)*
-Derivative(k0(x, y, z), z)*Derivative(k1(x, y, z), x) + 
-Derivative(c(x, y, z), z)*Derivative(k0(x, y, z), x)*
-Derivative(k1(x, y, z), y) + Derivative(c(x, y, z), z)*
-Derivative(k0(x, y, z), y)*Derivative(k1(x, y, z), x);
+bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x, y, z) + bbn_ks_c(x, y, z)*
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x, y, z) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), y, z) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x, z) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x, y) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), y, z) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x, z) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x, y) + bbn_ks_k0(x, y, z)*
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), x, y, z) + bbn_ks_k0(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), y, z) + bbn_ks_k0(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x, z) + bbn_ks_k0(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x, y) + bbn_ks_k0(x, y, z)*
+Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), y, z) + bbn_ks_k0(x, y, z)*
+Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), x, z) + bbn_ks_k0(x, y, z)*
+Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), x, y) + bbn_ks_k1(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), y, z) + bbn_ks_k1(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x, z) + bbn_ks_k1(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x, y) + bbn_ks_k1(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), y, z) + bbn_ks_k1(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), x, z) + bbn_ks_k1(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), x, y) + 
+Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), y)*
+Derivative(bbn_ks_k1(x, y, z), z) + Derivative(bbn_ks_c(x, y, z), x)*
+Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), y) + 
+Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x)*
+Derivative(bbn_ks_k1(x, y, z), z) + Derivative(bbn_ks_c(x, y, z), y)*
+Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x) + 
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x)*
+Derivative(bbn_ks_k1(x, y, z), y) + Derivative(bbn_ks_c(x, y, z), z)*
+Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x);
 
     _dddgamma_D0D2D2D2D0[ijk]=
 /* mcode in progress ... */
@@ -6838,26 +6838,26 @@ Derivative(k0(x, y, z), y)*Derivative(k1(x, y, z), x);
 // c
 // k0
 // k2
-c(x, y, z)*k0(x, y, z)*Derivative(k2(x, y, z), x, (z, 2)) + c(x, y, z)*
-k2(x, y, z)*Derivative(k0(x, y, z), x, (z, 2)) + c(x, y, z)*
-Derivative(k0(x, y, z), x)*Derivative(k2(x, y, z), (z, 2)) + 2*
-c(x, y, z)*Derivative(k0(x, y, z), z)*Derivative(k2(x, y, z), x, z) + 
-c(x, y, z)*Derivative(k0(x, y, z), (z, 2))*Derivative(k2(x, y, z), x) + 
-2*c(x, y, z)*Derivative(k2(x, y, z), z)*Derivative(k0(x, y, z), x, z) + 
-k0(x, y, z)*k2(x, y, z)*Derivative(c(x, y, z), x, (z, 2)) + 
-k0(x, y, z)*Derivative(c(x, y, z), x)*Derivative(k2(x, y, z), (z, 2)) + 
-2*k0(x, y, z)*Derivative(c(x, y, z), z)*Derivative(k2(x, y, z), x, z) + 
-k0(x, y, z)*Derivative(c(x, y, z), (z, 2))*Derivative(k2(x, y, z), x) + 
-2*k0(x, y, z)*Derivative(k2(x, y, z), z)*Derivative(c(x, y, z), x, z) + 
-k2(x, y, z)*Derivative(c(x, y, z), x)*Derivative(k0(x, y, z), (z, 2)) + 
-2*k2(x, y, z)*Derivative(c(x, y, z), z)*Derivative(k0(x, y, z), x, z) + 
-k2(x, y, z)*Derivative(c(x, y, z), (z, 2))*Derivative(k0(x, y, z), x) + 
-2*k2(x, y, z)*Derivative(k0(x, y, z), z)*Derivative(c(x, y, z), x, z) + 
-2*Derivative(c(x, y, z), x)*Derivative(k0(x, y, z), z)*
-Derivative(k2(x, y, z), z) + 2*Derivative(c(x, y, z), z)*
-Derivative(k0(x, y, z), x)*Derivative(k2(x, y, z), z) + 2*
-Derivative(c(x, y, z), z)*Derivative(k0(x, y, z), z)*
-Derivative(k2(x, y, z), x);
+bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x, (z, 2)) + bbn_ks_c(x, y, z)*
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x, (z, 2)) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), (z, 2)) + 2*
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x, z) + 
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), (z, 2))*Derivative(bbn_ks_k2(x, y, z), x) + 
+2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x, z) + 
+bbn_ks_k0(x, y, z)*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), x, (z, 2)) + 
+bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), (z, 2)) + 
+2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x, z) + 
+bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), (z, 2))*Derivative(bbn_ks_k2(x, y, z), x) + 
+2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k2(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), x, z) + 
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), (z, 2)) + 
+2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x, z) + 
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (z, 2))*Derivative(bbn_ks_k0(x, y, z), x) + 
+2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), x, z) + 
+2*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), z)*
+Derivative(bbn_ks_k2(x, y, z), z) + 2*Derivative(bbn_ks_c(x, y, z), z)*
+Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), z) + 2*
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), z)*
+Derivative(bbn_ks_k2(x, y, z), x);
 
     _dddgamma_D2D2D2D2D2[ijk]=
 /* mcode in progress ... */
@@ -6870,12 +6870,12 @@ Derivative(k2(x, y, z), x);
 // Derivative
 // c
 // k2
-2*c(x, y, z)*k2(x, y, z)*Derivative(k2(x, y, z), (z, 3)) + 6*
-c(x, y, z)*Derivative(k2(x, y, z), z)*Derivative(k2(x, y, z), (z, 2)) + 
-pow(k2(x, y, z), 2)*Derivative(c(x, y, z), (z, 3)) + 6*k2(x, y, z)*
-Derivative(c(x, y, z), z)*Derivative(k2(x, y, z), (z, 2)) + 6*
-k2(x, y, z)*Derivative(c(x, y, z), (z, 2))*Derivative(k2(x, y, z), z) + 
-6*Derivative(c(x, y, z), z)*pow(Derivative(k2(x, y, z), z), 2);
+2*bbn_ks_c(x, y, z)*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k2(x, y, z), (z, 3)) + 6*
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), (z, 2)) + 
+pow(bbn_ks_k2(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), (z, 3)) + 6*bbn_ks_k2(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), (z, 2)) + 6*
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (z, 2))*Derivative(bbn_ks_k2(x, y, z), z) + 
+6*Derivative(bbn_ks_c(x, y, z), z)*pow(Derivative(bbn_ks_k2(x, y, z), z), 2);
 
     _dddgamma_D0D2D2D0D1[ijk]=
 /* mcode in progress ... */
@@ -6904,36 +6904,36 @@ k2(x, y, z)*Derivative(c(x, y, z), (z, 2))*Derivative(k2(x, y, z), z) +
 // c
 // k0
 // k2
-c(x, y, z)*k0(x, y, z)*Derivative(k2(x, y, z), x, y, z) + c(x, y, z)*
-k2(x, y, z)*Derivative(k0(x, y, z), x, y, z) + c(x, y, z)*
-Derivative(k0(x, y, z), x)*Derivative(k2(x, y, z), y, z) + c(x, y, z)*
-Derivative(k0(x, y, z), y)*Derivative(k2(x, y, z), x, z) + c(x, y, z)*
-Derivative(k0(x, y, z), z)*Derivative(k2(x, y, z), x, y) + c(x, y, z)*
-Derivative(k2(x, y, z), x)*Derivative(k0(x, y, z), y, z) + c(x, y, z)*
-Derivative(k2(x, y, z), y)*Derivative(k0(x, y, z), x, z) + c(x, y, z)*
-Derivative(k2(x, y, z), z)*Derivative(k0(x, y, z), x, y) + k0(x, y, z)*
-k2(x, y, z)*Derivative(c(x, y, z), x, y, z) + k0(x, y, z)*
-Derivative(c(x, y, z), x)*Derivative(k2(x, y, z), y, z) + k0(x, y, z)*
-Derivative(c(x, y, z), y)*Derivative(k2(x, y, z), x, z) + k0(x, y, z)*
-Derivative(c(x, y, z), z)*Derivative(k2(x, y, z), x, y) + k0(x, y, z)*
-Derivative(k2(x, y, z), x)*Derivative(c(x, y, z), y, z) + k0(x, y, z)*
-Derivative(k2(x, y, z), y)*Derivative(c(x, y, z), x, z) + k0(x, y, z)*
-Derivative(k2(x, y, z), z)*Derivative(c(x, y, z), x, y) + k2(x, y, z)*
-Derivative(c(x, y, z), x)*Derivative(k0(x, y, z), y, z) + k2(x, y, z)*
-Derivative(c(x, y, z), y)*Derivative(k0(x, y, z), x, z) + k2(x, y, z)*
-Derivative(c(x, y, z), z)*Derivative(k0(x, y, z), x, y) + k2(x, y, z)*
-Derivative(k0(x, y, z), x)*Derivative(c(x, y, z), y, z) + k2(x, y, z)*
-Derivative(k0(x, y, z), y)*Derivative(c(x, y, z), x, z) + k2(x, y, z)*
-Derivative(k0(x, y, z), z)*Derivative(c(x, y, z), x, y) + 
-Derivative(c(x, y, z), x)*Derivative(k0(x, y, z), y)*
-Derivative(k2(x, y, z), z) + Derivative(c(x, y, z), x)*
-Derivative(k0(x, y, z), z)*Derivative(k2(x, y, z), y) + 
-Derivative(c(x, y, z), y)*Derivative(k0(x, y, z), x)*
-Derivative(k2(x, y, z), z) + Derivative(c(x, y, z), y)*
-Derivative(k0(x, y, z), z)*Derivative(k2(x, y, z), x) + 
-Derivative(c(x, y, z), z)*Derivative(k0(x, y, z), x)*
-Derivative(k2(x, y, z), y) + Derivative(c(x, y, z), z)*
-Derivative(k0(x, y, z), y)*Derivative(k2(x, y, z), x);
+bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x, y, z) + bbn_ks_c(x, y, z)*
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x, y, z) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), y, z) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x, z) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x, y) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), y, z) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k2(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x, z) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k2(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x, y) + bbn_ks_k0(x, y, z)*
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), x, y, z) + bbn_ks_k0(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), y, z) + bbn_ks_k0(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x, z) + bbn_ks_k0(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x, y) + bbn_ks_k0(x, y, z)*
+Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), y, z) + bbn_ks_k0(x, y, z)*
+Derivative(bbn_ks_k2(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), x, z) + bbn_ks_k0(x, y, z)*
+Derivative(bbn_ks_k2(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), x, y) + bbn_ks_k2(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), y, z) + bbn_ks_k2(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x, z) + bbn_ks_k2(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x, y) + bbn_ks_k2(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), y, z) + bbn_ks_k2(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), x, z) + bbn_ks_k2(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), x, y) + 
+Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), y)*
+Derivative(bbn_ks_k2(x, y, z), z) + Derivative(bbn_ks_c(x, y, z), x)*
+Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), y) + 
+Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x)*
+Derivative(bbn_ks_k2(x, y, z), z) + Derivative(bbn_ks_c(x, y, z), y)*
+Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x) + 
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x)*
+Derivative(bbn_ks_k2(x, y, z), y) + Derivative(bbn_ks_c(x, y, z), z)*
+Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x);
 
     _dddgamma_D0D2D1D1D2[ijk]=
 /* mcode in progress ... */
@@ -6956,26 +6956,26 @@ Derivative(k0(x, y, z), y)*Derivative(k2(x, y, z), x);
 // c
 // k0
 // k2
-c(x, y, z)*k0(x, y, z)*Derivative(k2(x, y, z), (y, 2), z) + c(x, y, z)*
-k2(x, y, z)*Derivative(k0(x, y, z), (y, 2), z) + 2*c(x, y, z)*
-Derivative(k0(x, y, z), y)*Derivative(k2(x, y, z), y, z) + c(x, y, z)*
-Derivative(k0(x, y, z), (y, 2))*Derivative(k2(x, y, z), z) + 
-c(x, y, z)*Derivative(k0(x, y, z), z)*Derivative(k2(x, y, z), (y, 2)) + 
-2*c(x, y, z)*Derivative(k2(x, y, z), y)*Derivative(k0(x, y, z), y, z) + 
-k0(x, y, z)*k2(x, y, z)*Derivative(c(x, y, z), (y, 2), z) + 2*
-k0(x, y, z)*Derivative(c(x, y, z), y)*Derivative(k2(x, y, z), y, z) + 
-k0(x, y, z)*Derivative(c(x, y, z), (y, 2))*Derivative(k2(x, y, z), z) + 
-k0(x, y, z)*Derivative(c(x, y, z), z)*Derivative(k2(x, y, z), (y, 2)) + 
-2*k0(x, y, z)*Derivative(k2(x, y, z), y)*Derivative(c(x, y, z), y, z) + 
-2*k2(x, y, z)*Derivative(c(x, y, z), y)*Derivative(k0(x, y, z), y, z) + 
-k2(x, y, z)*Derivative(c(x, y, z), (y, 2))*Derivative(k0(x, y, z), z) + 
-k2(x, y, z)*Derivative(c(x, y, z), z)*Derivative(k0(x, y, z), (y, 2)) + 
-2*k2(x, y, z)*Derivative(k0(x, y, z), y)*Derivative(c(x, y, z), y, z) + 
-2*Derivative(c(x, y, z), y)*Derivative(k0(x, y, z), y)*
-Derivative(k2(x, y, z), z) + 2*Derivative(c(x, y, z), y)*
-Derivative(k0(x, y, z), z)*Derivative(k2(x, y, z), y) + 2*
-Derivative(c(x, y, z), z)*Derivative(k0(x, y, z), y)*
-Derivative(k2(x, y, z), y);
+bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k2(x, y, z), (y, 2), z) + bbn_ks_c(x, y, z)*
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k0(x, y, z), (y, 2), z) + 2*bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), y, z) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), (y, 2))*Derivative(bbn_ks_k2(x, y, z), z) + 
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), (y, 2)) + 
+2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), y, z) + 
+bbn_ks_k0(x, y, z)*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (y, 2), z) + 2*
+bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), y, z) + 
+bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), (y, 2))*Derivative(bbn_ks_k2(x, y, z), z) + 
+bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), (y, 2)) + 
+2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k2(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), y, z) + 
+2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), y, z) + 
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (y, 2))*Derivative(bbn_ks_k0(x, y, z), z) + 
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), (y, 2)) + 
+2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), y, z) + 
+2*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), y)*
+Derivative(bbn_ks_k2(x, y, z), z) + 2*Derivative(bbn_ks_c(x, y, z), y)*
+Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), y) + 2*
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), y)*
+Derivative(bbn_ks_k2(x, y, z), y);
 
     _dddgamma_D2D2D0D0D2[ijk]=
 /* mcode in progress ... */
@@ -6992,17 +6992,17 @@ Derivative(k2(x, y, z), y);
 // Derivative
 // c
 // k2
-2*c(x, y, z)*k2(x, y, z)*Derivative(k2(x, y, z), (x, 2), z) + 4*
-c(x, y, z)*Derivative(k2(x, y, z), x)*Derivative(k2(x, y, z), x, z) + 
-2*c(x, y, z)*Derivative(k2(x, y, z), (x, 2))*Derivative(k2(x, y, z), z) + 
-pow(k2(x, y, z), 2)*Derivative(c(x, y, z), (x, 2), z) + 4*k2(x, y, z)*
-Derivative(c(x, y, z), x)*Derivative(k2(x, y, z), x, z) + 2*
-k2(x, y, z)*Derivative(c(x, y, z), (x, 2))*Derivative(k2(x, y, z), z) + 
-2*k2(x, y, z)*Derivative(c(x, y, z), z)*Derivative(k2(x, y, z), (x, 2)) + 
-4*k2(x, y, z)*Derivative(k2(x, y, z), x)*Derivative(c(x, y, z), x, z) + 
-4*Derivative(c(x, y, z), x)*Derivative(k2(x, y, z), x)*
-Derivative(k2(x, y, z), z) + 2*Derivative(c(x, y, z), z)*
-pow(Derivative(k2(x, y, z), x), 2);
+2*bbn_ks_c(x, y, z)*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k2(x, y, z), (x, 2), z) + 4*
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), x, z) + 
+2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), (x, 2))*Derivative(bbn_ks_k2(x, y, z), z) + 
+pow(bbn_ks_k2(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), (x, 2), z) + 4*bbn_ks_k2(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), x, z) + 2*
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2))*Derivative(bbn_ks_k2(x, y, z), z) + 
+2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), (x, 2)) + 
+4*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), x, z) + 
+4*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), x)*
+Derivative(bbn_ks_k2(x, y, z), z) + 2*Derivative(bbn_ks_c(x, y, z), z)*
+pow(Derivative(bbn_ks_k2(x, y, z), x), 2);
 
     _dddgamma_D2D2D2D0D0[ijk]=
 /* mcode in progress ... */
@@ -7019,17 +7019,17 @@ pow(Derivative(k2(x, y, z), x), 2);
 // Derivative
 // c
 // k2
-2*c(x, y, z)*k2(x, y, z)*Derivative(k2(x, y, z), (x, 2), z) + 4*
-c(x, y, z)*Derivative(k2(x, y, z), x)*Derivative(k2(x, y, z), x, z) + 
-2*c(x, y, z)*Derivative(k2(x, y, z), (x, 2))*Derivative(k2(x, y, z), z) + 
-pow(k2(x, y, z), 2)*Derivative(c(x, y, z), (x, 2), z) + 4*k2(x, y, z)*
-Derivative(c(x, y, z), x)*Derivative(k2(x, y, z), x, z) + 2*
-k2(x, y, z)*Derivative(c(x, y, z), (x, 2))*Derivative(k2(x, y, z), z) + 
-2*k2(x, y, z)*Derivative(c(x, y, z), z)*Derivative(k2(x, y, z), (x, 2)) + 
-4*k2(x, y, z)*Derivative(k2(x, y, z), x)*Derivative(c(x, y, z), x, z) + 
-4*Derivative(c(x, y, z), x)*Derivative(k2(x, y, z), x)*
-Derivative(k2(x, y, z), z) + 2*Derivative(c(x, y, z), z)*
-pow(Derivative(k2(x, y, z), x), 2);
+2*bbn_ks_c(x, y, z)*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k2(x, y, z), (x, 2), z) + 4*
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), x, z) + 
+2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), (x, 2))*Derivative(bbn_ks_k2(x, y, z), z) + 
+pow(bbn_ks_k2(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), (x, 2), z) + 4*bbn_ks_k2(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), x, z) + 2*
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2))*Derivative(bbn_ks_k2(x, y, z), z) + 
+2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), (x, 2)) + 
+4*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), x, z) + 
+4*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), x)*
+Derivative(bbn_ks_k2(x, y, z), z) + 2*Derivative(bbn_ks_c(x, y, z), z)*
+pow(Derivative(bbn_ks_k2(x, y, z), x), 2);
 
     _dddgamma_D2D2D0D2D0[ijk]=
 /* mcode in progress ... */
@@ -7046,17 +7046,17 @@ pow(Derivative(k2(x, y, z), x), 2);
 // Derivative
 // c
 // k2
-2*c(x, y, z)*k2(x, y, z)*Derivative(k2(x, y, z), (x, 2), z) + 4*
-c(x, y, z)*Derivative(k2(x, y, z), x)*Derivative(k2(x, y, z), x, z) + 
-2*c(x, y, z)*Derivative(k2(x, y, z), (x, 2))*Derivative(k2(x, y, z), z) + 
-pow(k2(x, y, z), 2)*Derivative(c(x, y, z), (x, 2), z) + 4*k2(x, y, z)*
-Derivative(c(x, y, z), x)*Derivative(k2(x, y, z), x, z) + 2*
-k2(x, y, z)*Derivative(c(x, y, z), (x, 2))*Derivative(k2(x, y, z), z) + 
-2*k2(x, y, z)*Derivative(c(x, y, z), z)*Derivative(k2(x, y, z), (x, 2)) + 
-4*k2(x, y, z)*Derivative(k2(x, y, z), x)*Derivative(c(x, y, z), x, z) + 
-4*Derivative(c(x, y, z), x)*Derivative(k2(x, y, z), x)*
-Derivative(k2(x, y, z), z) + 2*Derivative(c(x, y, z), z)*
-pow(Derivative(k2(x, y, z), x), 2);
+2*bbn_ks_c(x, y, z)*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k2(x, y, z), (x, 2), z) + 4*
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), x, z) + 
+2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), (x, 2))*Derivative(bbn_ks_k2(x, y, z), z) + 
+pow(bbn_ks_k2(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), (x, 2), z) + 4*bbn_ks_k2(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), x, z) + 2*
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2))*Derivative(bbn_ks_k2(x, y, z), z) + 
+2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), (x, 2)) + 
+4*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), x, z) + 
+4*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), x)*
+Derivative(bbn_ks_k2(x, y, z), z) + 2*Derivative(bbn_ks_c(x, y, z), z)*
+pow(Derivative(bbn_ks_k2(x, y, z), x), 2);
 
     _dddgamma_D1D1D2D0D1[ijk]=
 /* mcode in progress ... */
@@ -7077,22 +7077,22 @@ pow(Derivative(k2(x, y, z), x), 2);
 // Derivative
 // c
 // k1
-2*c(x, y, z)*k1(x, y, z)*Derivative(k1(x, y, z), x, y, z) + 2*
-c(x, y, z)*Derivative(k1(x, y, z), x)*Derivative(k1(x, y, z), y, z) + 
-2*c(x, y, z)*Derivative(k1(x, y, z), y)*Derivative(k1(x, y, z), x, z) + 
-2*c(x, y, z)*Derivative(k1(x, y, z), z)*Derivative(k1(x, y, z), x, y) + 
-pow(k1(x, y, z), 2)*Derivative(c(x, y, z), x, y, z) + 2*k1(x, y, z)*
-Derivative(c(x, y, z), x)*Derivative(k1(x, y, z), y, z) + 2*
-k1(x, y, z)*Derivative(c(x, y, z), y)*Derivative(k1(x, y, z), x, z) + 
-2*k1(x, y, z)*Derivative(c(x, y, z), z)*Derivative(k1(x, y, z), x, y) + 
-2*k1(x, y, z)*Derivative(k1(x, y, z), x)*Derivative(c(x, y, z), y, z) + 
-2*k1(x, y, z)*Derivative(k1(x, y, z), y)*Derivative(c(x, y, z), x, z) + 
-2*k1(x, y, z)*Derivative(k1(x, y, z), z)*Derivative(c(x, y, z), x, y) + 
-2*Derivative(c(x, y, z), x)*Derivative(k1(x, y, z), y)*
-Derivative(k1(x, y, z), z) + 2*Derivative(c(x, y, z), y)*
-Derivative(k1(x, y, z), x)*Derivative(k1(x, y, z), z) + 2*
-Derivative(c(x, y, z), z)*Derivative(k1(x, y, z), x)*
-Derivative(k1(x, y, z), y);
+2*bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x, y, z) + 2*
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), y, z) + 
+2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x, z) + 
+2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x, y) + 
+pow(bbn_ks_k1(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), x, y, z) + 2*bbn_ks_k1(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), y, z) + 2*
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x, z) + 
+2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x, y) + 
+2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), y, z) + 
+2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), x, z) + 
+2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), x, y) + 
+2*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), y)*
+Derivative(bbn_ks_k1(x, y, z), z) + 2*Derivative(bbn_ks_c(x, y, z), y)*
+Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), z) + 2*
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x)*
+Derivative(bbn_ks_k1(x, y, z), y);
 
     _dddgamma_D2D2D0D0D0[ijk]=
 /* mcode in progress ... */
@@ -7105,12 +7105,12 @@ Derivative(k1(x, y, z), y);
 // Derivative
 // c
 // k2
-2*c(x, y, z)*k2(x, y, z)*Derivative(k2(x, y, z), (x, 3)) + 6*
-c(x, y, z)*Derivative(k2(x, y, z), x)*Derivative(k2(x, y, z), (x, 2)) + 
-pow(k2(x, y, z), 2)*Derivative(c(x, y, z), (x, 3)) + 6*k2(x, y, z)*
-Derivative(c(x, y, z), x)*Derivative(k2(x, y, z), (x, 2)) + 6*
-k2(x, y, z)*Derivative(c(x, y, z), (x, 2))*Derivative(k2(x, y, z), x) + 
-6*Derivative(c(x, y, z), x)*pow(Derivative(k2(x, y, z), x), 2);
+2*bbn_ks_c(x, y, z)*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k2(x, y, z), (x, 3)) + 6*
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), (x, 2)) + 
+pow(bbn_ks_k2(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), (x, 3)) + 6*bbn_ks_k2(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), (x, 2)) + 6*
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2))*Derivative(bbn_ks_k2(x, y, z), x) + 
+6*Derivative(bbn_ks_c(x, y, z), x)*pow(Derivative(bbn_ks_k2(x, y, z), x), 2);
 
     _dddgamma_D2D2D2D0D2[ijk]=
 /* mcode in progress ... */
@@ -7127,17 +7127,17 @@ k2(x, y, z)*Derivative(c(x, y, z), (x, 2))*Derivative(k2(x, y, z), x) +
 // Derivative
 // c
 // k2
-2*c(x, y, z)*k2(x, y, z)*Derivative(k2(x, y, z), x, (z, 2)) + 2*
-c(x, y, z)*Derivative(k2(x, y, z), x)*Derivative(k2(x, y, z), (z, 2)) + 
-4*c(x, y, z)*Derivative(k2(x, y, z), z)*Derivative(k2(x, y, z), x, z) + 
-pow(k2(x, y, z), 2)*Derivative(c(x, y, z), x, (z, 2)) + 2*k2(x, y, z)*
-Derivative(c(x, y, z), x)*Derivative(k2(x, y, z), (z, 2)) + 4*
-k2(x, y, z)*Derivative(c(x, y, z), z)*Derivative(k2(x, y, z), x, z) + 
-2*k2(x, y, z)*Derivative(c(x, y, z), (z, 2))*Derivative(k2(x, y, z), x) + 
-4*k2(x, y, z)*Derivative(k2(x, y, z), z)*Derivative(c(x, y, z), x, z) + 
-2*Derivative(c(x, y, z), x)*pow(Derivative(k2(x, y, z), z), 2) + 4*
-Derivative(c(x, y, z), z)*Derivative(k2(x, y, z), x)*
-Derivative(k2(x, y, z), z);
+2*bbn_ks_c(x, y, z)*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x, (z, 2)) + 2*
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), (z, 2)) + 
+4*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x, z) + 
+pow(bbn_ks_k2(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), x, (z, 2)) + 2*bbn_ks_k2(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), (z, 2)) + 4*
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x, z) + 
+2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (z, 2))*Derivative(bbn_ks_k2(x, y, z), x) + 
+4*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k2(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), x, z) + 
+2*Derivative(bbn_ks_c(x, y, z), x)*pow(Derivative(bbn_ks_k2(x, y, z), z), 2) + 4*
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x)*
+Derivative(bbn_ks_k2(x, y, z), z);
 
     _dddgamma_D0D2D2D0D2[ijk]=
 /* mcode in progress ... */
@@ -7160,26 +7160,26 @@ Derivative(k2(x, y, z), z);
 // c
 // k0
 // k2
-c(x, y, z)*k0(x, y, z)*Derivative(k2(x, y, z), x, (z, 2)) + c(x, y, z)*
-k2(x, y, z)*Derivative(k0(x, y, z), x, (z, 2)) + c(x, y, z)*
-Derivative(k0(x, y, z), x)*Derivative(k2(x, y, z), (z, 2)) + 2*
-c(x, y, z)*Derivative(k0(x, y, z), z)*Derivative(k2(x, y, z), x, z) + 
-c(x, y, z)*Derivative(k0(x, y, z), (z, 2))*Derivative(k2(x, y, z), x) + 
-2*c(x, y, z)*Derivative(k2(x, y, z), z)*Derivative(k0(x, y, z), x, z) + 
-k0(x, y, z)*k2(x, y, z)*Derivative(c(x, y, z), x, (z, 2)) + 
-k0(x, y, z)*Derivative(c(x, y, z), x)*Derivative(k2(x, y, z), (z, 2)) + 
-2*k0(x, y, z)*Derivative(c(x, y, z), z)*Derivative(k2(x, y, z), x, z) + 
-k0(x, y, z)*Derivative(c(x, y, z), (z, 2))*Derivative(k2(x, y, z), x) + 
-2*k0(x, y, z)*Derivative(k2(x, y, z), z)*Derivative(c(x, y, z), x, z) + 
-k2(x, y, z)*Derivative(c(x, y, z), x)*Derivative(k0(x, y, z), (z, 2)) + 
-2*k2(x, y, z)*Derivative(c(x, y, z), z)*Derivative(k0(x, y, z), x, z) + 
-k2(x, y, z)*Derivative(c(x, y, z), (z, 2))*Derivative(k0(x, y, z), x) + 
-2*k2(x, y, z)*Derivative(k0(x, y, z), z)*Derivative(c(x, y, z), x, z) + 
-2*Derivative(c(x, y, z), x)*Derivative(k0(x, y, z), z)*
-Derivative(k2(x, y, z), z) + 2*Derivative(c(x, y, z), z)*
-Derivative(k0(x, y, z), x)*Derivative(k2(x, y, z), z) + 2*
-Derivative(c(x, y, z), z)*Derivative(k0(x, y, z), z)*
-Derivative(k2(x, y, z), x);
+bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x, (z, 2)) + bbn_ks_c(x, y, z)*
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x, (z, 2)) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), (z, 2)) + 2*
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x, z) + 
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), (z, 2))*Derivative(bbn_ks_k2(x, y, z), x) + 
+2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x, z) + 
+bbn_ks_k0(x, y, z)*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), x, (z, 2)) + 
+bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), (z, 2)) + 
+2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x, z) + 
+bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), (z, 2))*Derivative(bbn_ks_k2(x, y, z), x) + 
+2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k2(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), x, z) + 
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), (z, 2)) + 
+2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x, z) + 
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (z, 2))*Derivative(bbn_ks_k0(x, y, z), x) + 
+2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), x, z) + 
+2*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), z)*
+Derivative(bbn_ks_k2(x, y, z), z) + 2*Derivative(bbn_ks_c(x, y, z), z)*
+Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), z) + 2*
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), z)*
+Derivative(bbn_ks_k2(x, y, z), x);
 
     _dddgamma_D0D2D2D2D2[ijk]=
 /* mcode in progress ... */
@@ -7196,17 +7196,17 @@ Derivative(k2(x, y, z), x);
 // c
 // k0
 // k2
-c(x, y, z)*k0(x, y, z)*Derivative(k2(x, y, z), (z, 3)) + c(x, y, z)*
-k2(x, y, z)*Derivative(k0(x, y, z), (z, 3)) + 3*c(x, y, z)*
-Derivative(k0(x, y, z), z)*Derivative(k2(x, y, z), (z, 2)) + 3*
-c(x, y, z)*Derivative(k0(x, y, z), (z, 2))*Derivative(k2(x, y, z), z) + 
-k0(x, y, z)*k2(x, y, z)*Derivative(c(x, y, z), (z, 3)) + 3*k0(x, y, z)*
-Derivative(c(x, y, z), z)*Derivative(k2(x, y, z), (z, 2)) + 3*
-k0(x, y, z)*Derivative(c(x, y, z), (z, 2))*Derivative(k2(x, y, z), z) + 
-3*k2(x, y, z)*Derivative(c(x, y, z), z)*Derivative(k0(x, y, z), (z, 2)) + 
-3*k2(x, y, z)*Derivative(c(x, y, z), (z, 2))*Derivative(k0(x, y, z), z) + 
-6*Derivative(c(x, y, z), z)*Derivative(k0(x, y, z), z)*
-Derivative(k2(x, y, z), z);
+bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k2(x, y, z), (z, 3)) + bbn_ks_c(x, y, z)*
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k0(x, y, z), (z, 3)) + 3*bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), (z, 2)) + 3*
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), (z, 2))*Derivative(bbn_ks_k2(x, y, z), z) + 
+bbn_ks_k0(x, y, z)*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (z, 3)) + 3*bbn_ks_k0(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), (z, 2)) + 3*
+bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), (z, 2))*Derivative(bbn_ks_k2(x, y, z), z) + 
+3*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), (z, 2)) + 
+3*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (z, 2))*Derivative(bbn_ks_k0(x, y, z), z) + 
+6*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), z)*
+Derivative(bbn_ks_k2(x, y, z), z);
 
     _dddgamma_D1D1D0D0D0[ijk]=
 /* mcode in progress ... */
@@ -7219,12 +7219,12 @@ Derivative(k2(x, y, z), z);
 // Derivative
 // c
 // k1
-2*c(x, y, z)*k1(x, y, z)*Derivative(k1(x, y, z), (x, 3)) + 6*
-c(x, y, z)*Derivative(k1(x, y, z), x)*Derivative(k1(x, y, z), (x, 2)) + 
-pow(k1(x, y, z), 2)*Derivative(c(x, y, z), (x, 3)) + 6*k1(x, y, z)*
-Derivative(c(x, y, z), x)*Derivative(k1(x, y, z), (x, 2)) + 6*
-k1(x, y, z)*Derivative(c(x, y, z), (x, 2))*Derivative(k1(x, y, z), x) + 
-6*Derivative(c(x, y, z), x)*pow(Derivative(k1(x, y, z), x), 2);
+2*bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k1(x, y, z), (x, 3)) + 6*
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), (x, 2)) + 
+pow(bbn_ks_k1(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), (x, 3)) + 6*bbn_ks_k1(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), (x, 2)) + 6*
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2))*Derivative(bbn_ks_k1(x, y, z), x) + 
+6*Derivative(bbn_ks_c(x, y, z), x)*pow(Derivative(bbn_ks_k1(x, y, z), x), 2);
 
     _dddgamma_D1D2D2D0D1[ijk]=
 /* mcode in progress ... */
@@ -7253,36 +7253,36 @@ k1(x, y, z)*Derivative(c(x, y, z), (x, 2))*Derivative(k1(x, y, z), x) +
 // c
 // k1
 // k2
-c(x, y, z)*k1(x, y, z)*Derivative(k2(x, y, z), x, y, z) + c(x, y, z)*
-k2(x, y, z)*Derivative(k1(x, y, z), x, y, z) + c(x, y, z)*
-Derivative(k1(x, y, z), x)*Derivative(k2(x, y, z), y, z) + c(x, y, z)*
-Derivative(k1(x, y, z), y)*Derivative(k2(x, y, z), x, z) + c(x, y, z)*
-Derivative(k1(x, y, z), z)*Derivative(k2(x, y, z), x, y) + c(x, y, z)*
-Derivative(k2(x, y, z), x)*Derivative(k1(x, y, z), y, z) + c(x, y, z)*
-Derivative(k2(x, y, z), y)*Derivative(k1(x, y, z), x, z) + c(x, y, z)*
-Derivative(k2(x, y, z), z)*Derivative(k1(x, y, z), x, y) + k1(x, y, z)*
-k2(x, y, z)*Derivative(c(x, y, z), x, y, z) + k1(x, y, z)*
-Derivative(c(x, y, z), x)*Derivative(k2(x, y, z), y, z) + k1(x, y, z)*
-Derivative(c(x, y, z), y)*Derivative(k2(x, y, z), x, z) + k1(x, y, z)*
-Derivative(c(x, y, z), z)*Derivative(k2(x, y, z), x, y) + k1(x, y, z)*
-Derivative(k2(x, y, z), x)*Derivative(c(x, y, z), y, z) + k1(x, y, z)*
-Derivative(k2(x, y, z), y)*Derivative(c(x, y, z), x, z) + k1(x, y, z)*
-Derivative(k2(x, y, z), z)*Derivative(c(x, y, z), x, y) + k2(x, y, z)*
-Derivative(c(x, y, z), x)*Derivative(k1(x, y, z), y, z) + k2(x, y, z)*
-Derivative(c(x, y, z), y)*Derivative(k1(x, y, z), x, z) + k2(x, y, z)*
-Derivative(c(x, y, z), z)*Derivative(k1(x, y, z), x, y) + k2(x, y, z)*
-Derivative(k1(x, y, z), x)*Derivative(c(x, y, z), y, z) + k2(x, y, z)*
-Derivative(k1(x, y, z), y)*Derivative(c(x, y, z), x, z) + k2(x, y, z)*
-Derivative(k1(x, y, z), z)*Derivative(c(x, y, z), x, y) + 
-Derivative(c(x, y, z), x)*Derivative(k1(x, y, z), y)*
-Derivative(k2(x, y, z), z) + Derivative(c(x, y, z), x)*
-Derivative(k1(x, y, z), z)*Derivative(k2(x, y, z), y) + 
-Derivative(c(x, y, z), y)*Derivative(k1(x, y, z), x)*
-Derivative(k2(x, y, z), z) + Derivative(c(x, y, z), y)*
-Derivative(k1(x, y, z), z)*Derivative(k2(x, y, z), x) + 
-Derivative(c(x, y, z), z)*Derivative(k1(x, y, z), x)*
-Derivative(k2(x, y, z), y) + Derivative(c(x, y, z), z)*
-Derivative(k1(x, y, z), y)*Derivative(k2(x, y, z), x);
+bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x, y, z) + bbn_ks_c(x, y, z)*
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x, y, z) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), y, z) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x, z) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x, y) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), y, z) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k2(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x, z) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k2(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x, y) + bbn_ks_k1(x, y, z)*
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), x, y, z) + bbn_ks_k1(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), y, z) + bbn_ks_k1(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x, z) + bbn_ks_k1(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x, y) + bbn_ks_k1(x, y, z)*
+Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), y, z) + bbn_ks_k1(x, y, z)*
+Derivative(bbn_ks_k2(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), x, z) + bbn_ks_k1(x, y, z)*
+Derivative(bbn_ks_k2(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), x, y) + bbn_ks_k2(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), y, z) + bbn_ks_k2(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x, z) + bbn_ks_k2(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x, y) + bbn_ks_k2(x, y, z)*
+Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), y, z) + bbn_ks_k2(x, y, z)*
+Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), x, z) + bbn_ks_k2(x, y, z)*
+Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), x, y) + 
+Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), y)*
+Derivative(bbn_ks_k2(x, y, z), z) + Derivative(bbn_ks_c(x, y, z), x)*
+Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), y) + 
+Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x)*
+Derivative(bbn_ks_k2(x, y, z), z) + Derivative(bbn_ks_c(x, y, z), y)*
+Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x) + 
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x)*
+Derivative(bbn_ks_k2(x, y, z), y) + Derivative(bbn_ks_c(x, y, z), z)*
+Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x);
 
     _dddgamma_D0D0D1D1D0[ijk]=
 /* mcode in progress ... */
@@ -7299,17 +7299,17 @@ Derivative(k1(x, y, z), y)*Derivative(k2(x, y, z), x);
 // Derivative
 // c
 // k0
-2*c(x, y, z)*k0(x, y, z)*Derivative(k0(x, y, z), x, (y, 2)) + 2*
-c(x, y, z)*Derivative(k0(x, y, z), x)*Derivative(k0(x, y, z), (y, 2)) + 
-4*c(x, y, z)*Derivative(k0(x, y, z), y)*Derivative(k0(x, y, z), x, y) + 
-pow(k0(x, y, z), 2)*Derivative(c(x, y, z), x, (y, 2)) + 2*k0(x, y, z)*
-Derivative(c(x, y, z), x)*Derivative(k0(x, y, z), (y, 2)) + 4*
-k0(x, y, z)*Derivative(c(x, y, z), y)*Derivative(k0(x, y, z), x, y) + 
-2*k0(x, y, z)*Derivative(c(x, y, z), (y, 2))*Derivative(k0(x, y, z), x) + 
-4*k0(x, y, z)*Derivative(k0(x, y, z), y)*Derivative(c(x, y, z), x, y) + 
-2*Derivative(c(x, y, z), x)*pow(Derivative(k0(x, y, z), y), 2) + 4*
-Derivative(c(x, y, z), y)*Derivative(k0(x, y, z), x)*
-Derivative(k0(x, y, z), y);
+2*bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x, (y, 2)) + 2*
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), (y, 2)) + 
+4*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x, y) + 
+pow(bbn_ks_k0(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), x, (y, 2)) + 2*bbn_ks_k0(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), (y, 2)) + 4*
+bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x, y) + 
+2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), (y, 2))*Derivative(bbn_ks_k0(x, y, z), x) + 
+4*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), x, y) + 
+2*Derivative(bbn_ks_c(x, y, z), x)*pow(Derivative(bbn_ks_k0(x, y, z), y), 2) + 4*
+Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x)*
+Derivative(bbn_ks_k0(x, y, z), y);
 
     _dddgamma_D1D1D1D0D2[ijk]=
 /* mcode in progress ... */
@@ -7330,22 +7330,22 @@ Derivative(k0(x, y, z), y);
 // Derivative
 // c
 // k1
-2*c(x, y, z)*k1(x, y, z)*Derivative(k1(x, y, z), x, y, z) + 2*
-c(x, y, z)*Derivative(k1(x, y, z), x)*Derivative(k1(x, y, z), y, z) + 
-2*c(x, y, z)*Derivative(k1(x, y, z), y)*Derivative(k1(x, y, z), x, z) + 
-2*c(x, y, z)*Derivative(k1(x, y, z), z)*Derivative(k1(x, y, z), x, y) + 
-pow(k1(x, y, z), 2)*Derivative(c(x, y, z), x, y, z) + 2*k1(x, y, z)*
-Derivative(c(x, y, z), x)*Derivative(k1(x, y, z), y, z) + 2*
-k1(x, y, z)*Derivative(c(x, y, z), y)*Derivative(k1(x, y, z), x, z) + 
-2*k1(x, y, z)*Derivative(c(x, y, z), z)*Derivative(k1(x, y, z), x, y) + 
-2*k1(x, y, z)*Derivative(k1(x, y, z), x)*Derivative(c(x, y, z), y, z) + 
-2*k1(x, y, z)*Derivative(k1(x, y, z), y)*Derivative(c(x, y, z), x, z) + 
-2*k1(x, y, z)*Derivative(k1(x, y, z), z)*Derivative(c(x, y, z), x, y) + 
-2*Derivative(c(x, y, z), x)*Derivative(k1(x, y, z), y)*
-Derivative(k1(x, y, z), z) + 2*Derivative(c(x, y, z), y)*
-Derivative(k1(x, y, z), x)*Derivative(k1(x, y, z), z) + 2*
-Derivative(c(x, y, z), z)*Derivative(k1(x, y, z), x)*
-Derivative(k1(x, y, z), y);
+2*bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x, y, z) + 2*
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), y, z) + 
+2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x, z) + 
+2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x, y) + 
+pow(bbn_ks_k1(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), x, y, z) + 2*bbn_ks_k1(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), y, z) + 2*
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x, z) + 
+2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x, y) + 
+2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), y, z) + 
+2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), x, z) + 
+2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), x, y) + 
+2*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), y)*
+Derivative(bbn_ks_k1(x, y, z), z) + 2*Derivative(bbn_ks_c(x, y, z), y)*
+Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), z) + 2*
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x)*
+Derivative(bbn_ks_k1(x, y, z), y);
 
     _dddgamma_D2D2D1D0D2[ijk]=
 /* mcode in progress ... */
@@ -7366,22 +7366,22 @@ Derivative(k1(x, y, z), y);
 // Derivative
 // c
 // k2
-2*c(x, y, z)*k2(x, y, z)*Derivative(k2(x, y, z), x, y, z) + 2*
-c(x, y, z)*Derivative(k2(x, y, z), x)*Derivative(k2(x, y, z), y, z) + 
-2*c(x, y, z)*Derivative(k2(x, y, z), y)*Derivative(k2(x, y, z), x, z) + 
-2*c(x, y, z)*Derivative(k2(x, y, z), z)*Derivative(k2(x, y, z), x, y) + 
-pow(k2(x, y, z), 2)*Derivative(c(x, y, z), x, y, z) + 2*k2(x, y, z)*
-Derivative(c(x, y, z), x)*Derivative(k2(x, y, z), y, z) + 2*
-k2(x, y, z)*Derivative(c(x, y, z), y)*Derivative(k2(x, y, z), x, z) + 
-2*k2(x, y, z)*Derivative(c(x, y, z), z)*Derivative(k2(x, y, z), x, y) + 
-2*k2(x, y, z)*Derivative(k2(x, y, z), x)*Derivative(c(x, y, z), y, z) + 
-2*k2(x, y, z)*Derivative(k2(x, y, z), y)*Derivative(c(x, y, z), x, z) + 
-2*k2(x, y, z)*Derivative(k2(x, y, z), z)*Derivative(c(x, y, z), x, y) + 
-2*Derivative(c(x, y, z), x)*Derivative(k2(x, y, z), y)*
-Derivative(k2(x, y, z), z) + 2*Derivative(c(x, y, z), y)*
-Derivative(k2(x, y, z), x)*Derivative(k2(x, y, z), z) + 2*
-Derivative(c(x, y, z), z)*Derivative(k2(x, y, z), x)*
-Derivative(k2(x, y, z), y);
+2*bbn_ks_c(x, y, z)*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x, y, z) + 2*
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), y, z) + 
+2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x, z) + 
+2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x, y) + 
+pow(bbn_ks_k2(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), x, y, z) + 2*bbn_ks_k2(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), y, z) + 2*
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x, z) + 
+2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x, y) + 
+2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), y, z) + 
+2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k2(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), x, z) + 
+2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k2(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), x, y) + 
+2*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), y)*
+Derivative(bbn_ks_k2(x, y, z), z) + 2*Derivative(bbn_ks_c(x, y, z), y)*
+Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), z) + 2*
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x)*
+Derivative(bbn_ks_k2(x, y, z), y);
 
     _dddgamma_D0D2D1D1D1[ijk]=
 /* mcode in progress ... */
@@ -7398,17 +7398,17 @@ Derivative(k2(x, y, z), y);
 // c
 // k0
 // k2
-c(x, y, z)*k0(x, y, z)*Derivative(k2(x, y, z), (y, 3)) + c(x, y, z)*
-k2(x, y, z)*Derivative(k0(x, y, z), (y, 3)) + 3*c(x, y, z)*
-Derivative(k0(x, y, z), y)*Derivative(k2(x, y, z), (y, 2)) + 3*
-c(x, y, z)*Derivative(k0(x, y, z), (y, 2))*Derivative(k2(x, y, z), y) + 
-k0(x, y, z)*k2(x, y, z)*Derivative(c(x, y, z), (y, 3)) + 3*k0(x, y, z)*
-Derivative(c(x, y, z), y)*Derivative(k2(x, y, z), (y, 2)) + 3*
-k0(x, y, z)*Derivative(c(x, y, z), (y, 2))*Derivative(k2(x, y, z), y) + 
-3*k2(x, y, z)*Derivative(c(x, y, z), y)*Derivative(k0(x, y, z), (y, 2)) + 
-3*k2(x, y, z)*Derivative(c(x, y, z), (y, 2))*Derivative(k0(x, y, z), y) + 
-6*Derivative(c(x, y, z), y)*Derivative(k0(x, y, z), y)*
-Derivative(k2(x, y, z), y);
+bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k2(x, y, z), (y, 3)) + bbn_ks_c(x, y, z)*
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k0(x, y, z), (y, 3)) + 3*bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), (y, 2)) + 3*
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), (y, 2))*Derivative(bbn_ks_k2(x, y, z), y) + 
+bbn_ks_k0(x, y, z)*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (y, 3)) + 3*bbn_ks_k0(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), (y, 2)) + 3*
+bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), (y, 2))*Derivative(bbn_ks_k2(x, y, z), y) + 
+3*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), (y, 2)) + 
+3*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (y, 2))*Derivative(bbn_ks_k0(x, y, z), y) + 
+6*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), y)*
+Derivative(bbn_ks_k2(x, y, z), y);
 
     _dddgamma_D0D0D2D0D0[ijk]=
 /* mcode in progress ... */
@@ -7425,17 +7425,17 @@ Derivative(k2(x, y, z), y);
 // Derivative
 // c
 // k0
-2*c(x, y, z)*k0(x, y, z)*Derivative(k0(x, y, z), (x, 2), z) + 4*
-c(x, y, z)*Derivative(k0(x, y, z), x)*Derivative(k0(x, y, z), x, z) + 
-2*c(x, y, z)*Derivative(k0(x, y, z), (x, 2))*Derivative(k0(x, y, z), z) + 
-pow(k0(x, y, z), 2)*Derivative(c(x, y, z), (x, 2), z) + 4*k0(x, y, z)*
-Derivative(c(x, y, z), x)*Derivative(k0(x, y, z), x, z) + 2*
-k0(x, y, z)*Derivative(c(x, y, z), (x, 2))*Derivative(k0(x, y, z), z) + 
-2*k0(x, y, z)*Derivative(c(x, y, z), z)*Derivative(k0(x, y, z), (x, 2)) + 
-4*k0(x, y, z)*Derivative(k0(x, y, z), x)*Derivative(c(x, y, z), x, z) + 
-4*Derivative(c(x, y, z), x)*Derivative(k0(x, y, z), x)*
-Derivative(k0(x, y, z), z) + 2*Derivative(c(x, y, z), z)*
-pow(Derivative(k0(x, y, z), x), 2);
+2*bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k0(x, y, z), (x, 2), z) + 4*
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), x, z) + 
+2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), (x, 2))*Derivative(bbn_ks_k0(x, y, z), z) + 
+pow(bbn_ks_k0(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), (x, 2), z) + 4*bbn_ks_k0(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), x, z) + 2*
+bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2))*Derivative(bbn_ks_k0(x, y, z), z) + 
+2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), (x, 2)) + 
+4*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), x, z) + 
+4*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), x)*
+Derivative(bbn_ks_k0(x, y, z), z) + 2*Derivative(bbn_ks_c(x, y, z), z)*
+pow(Derivative(bbn_ks_k0(x, y, z), x), 2);
 
     _dddgamma_D0D1D1D2D2[ijk]=
 /* mcode in progress ... */
@@ -7458,26 +7458,26 @@ pow(Derivative(k0(x, y, z), x), 2);
 // c
 // k0
 // k1
-c(x, y, z)*k0(x, y, z)*Derivative(k1(x, y, z), y, (z, 2)) + c(x, y, z)*
-k1(x, y, z)*Derivative(k0(x, y, z), y, (z, 2)) + c(x, y, z)*
-Derivative(k0(x, y, z), y)*Derivative(k1(x, y, z), (z, 2)) + 2*
-c(x, y, z)*Derivative(k0(x, y, z), z)*Derivative(k1(x, y, z), y, z) + 
-c(x, y, z)*Derivative(k0(x, y, z), (z, 2))*Derivative(k1(x, y, z), y) + 
-2*c(x, y, z)*Derivative(k1(x, y, z), z)*Derivative(k0(x, y, z), y, z) + 
-k0(x, y, z)*k1(x, y, z)*Derivative(c(x, y, z), y, (z, 2)) + 
-k0(x, y, z)*Derivative(c(x, y, z), y)*Derivative(k1(x, y, z), (z, 2)) + 
-2*k0(x, y, z)*Derivative(c(x, y, z), z)*Derivative(k1(x, y, z), y, z) + 
-k0(x, y, z)*Derivative(c(x, y, z), (z, 2))*Derivative(k1(x, y, z), y) + 
-2*k0(x, y, z)*Derivative(k1(x, y, z), z)*Derivative(c(x, y, z), y, z) + 
-k1(x, y, z)*Derivative(c(x, y, z), y)*Derivative(k0(x, y, z), (z, 2)) + 
-2*k1(x, y, z)*Derivative(c(x, y, z), z)*Derivative(k0(x, y, z), y, z) + 
-k1(x, y, z)*Derivative(c(x, y, z), (z, 2))*Derivative(k0(x, y, z), y) + 
-2*k1(x, y, z)*Derivative(k0(x, y, z), z)*Derivative(c(x, y, z), y, z) + 
-2*Derivative(c(x, y, z), y)*Derivative(k0(x, y, z), z)*
-Derivative(k1(x, y, z), z) + 2*Derivative(c(x, y, z), z)*
-Derivative(k0(x, y, z), y)*Derivative(k1(x, y, z), z) + 2*
-Derivative(c(x, y, z), z)*Derivative(k0(x, y, z), z)*
-Derivative(k1(x, y, z), y);
+bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k1(x, y, z), y, (z, 2)) + bbn_ks_c(x, y, z)*
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k0(x, y, z), y, (z, 2)) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), (z, 2)) + 2*
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), y, z) + 
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), (z, 2))*Derivative(bbn_ks_k1(x, y, z), y) + 
+2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), y, z) + 
+bbn_ks_k0(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), y, (z, 2)) + 
+bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), (z, 2)) + 
+2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), y, z) + 
+bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), (z, 2))*Derivative(bbn_ks_k1(x, y, z), y) + 
+2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), y, z) + 
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), (z, 2)) + 
+2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), y, z) + 
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), (z, 2))*Derivative(bbn_ks_k0(x, y, z), y) + 
+2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), y, z) + 
+2*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), z)*
+Derivative(bbn_ks_k1(x, y, z), z) + 2*Derivative(bbn_ks_c(x, y, z), z)*
+Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), z) + 2*
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), z)*
+Derivative(bbn_ks_k1(x, y, z), y);
 
     _dddgamma_D0D0D2D0D1[ijk]=
 /* mcode in progress ... */
@@ -7498,22 +7498,22 @@ Derivative(k1(x, y, z), y);
 // Derivative
 // c
 // k0
-2*c(x, y, z)*k0(x, y, z)*Derivative(k0(x, y, z), x, y, z) + 2*
-c(x, y, z)*Derivative(k0(x, y, z), x)*Derivative(k0(x, y, z), y, z) + 
-2*c(x, y, z)*Derivative(k0(x, y, z), y)*Derivative(k0(x, y, z), x, z) + 
-2*c(x, y, z)*Derivative(k0(x, y, z), z)*Derivative(k0(x, y, z), x, y) + 
-pow(k0(x, y, z), 2)*Derivative(c(x, y, z), x, y, z) + 2*k0(x, y, z)*
-Derivative(c(x, y, z), x)*Derivative(k0(x, y, z), y, z) + 2*
-k0(x, y, z)*Derivative(c(x, y, z), y)*Derivative(k0(x, y, z), x, z) + 
-2*k0(x, y, z)*Derivative(c(x, y, z), z)*Derivative(k0(x, y, z), x, y) + 
-2*k0(x, y, z)*Derivative(k0(x, y, z), x)*Derivative(c(x, y, z), y, z) + 
-2*k0(x, y, z)*Derivative(k0(x, y, z), y)*Derivative(c(x, y, z), x, z) + 
-2*k0(x, y, z)*Derivative(k0(x, y, z), z)*Derivative(c(x, y, z), x, y) + 
-2*Derivative(c(x, y, z), x)*Derivative(k0(x, y, z), y)*
-Derivative(k0(x, y, z), z) + 2*Derivative(c(x, y, z), y)*
-Derivative(k0(x, y, z), x)*Derivative(k0(x, y, z), z) + 2*
-Derivative(c(x, y, z), z)*Derivative(k0(x, y, z), x)*
-Derivative(k0(x, y, z), y);
+2*bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x, y, z) + 2*
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), y, z) + 
+2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x, z) + 
+2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x, y) + 
+pow(bbn_ks_k0(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), x, y, z) + 2*bbn_ks_k0(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), y, z) + 2*
+bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x, z) + 
+2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x, y) + 
+2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), y, z) + 
+2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), x, z) + 
+2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), x, y) + 
+2*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), y)*
+Derivative(bbn_ks_k0(x, y, z), z) + 2*Derivative(bbn_ks_c(x, y, z), y)*
+Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), z) + 2*
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x)*
+Derivative(bbn_ks_k0(x, y, z), y);
 
     _dddgamma_D0D0D0D2D1[ijk]=
 /* mcode in progress ... */
@@ -7534,22 +7534,22 @@ Derivative(k0(x, y, z), y);
 // Derivative
 // c
 // k0
-2*c(x, y, z)*k0(x, y, z)*Derivative(k0(x, y, z), x, y, z) + 2*
-c(x, y, z)*Derivative(k0(x, y, z), x)*Derivative(k0(x, y, z), y, z) + 
-2*c(x, y, z)*Derivative(k0(x, y, z), y)*Derivative(k0(x, y, z), x, z) + 
-2*c(x, y, z)*Derivative(k0(x, y, z), z)*Derivative(k0(x, y, z), x, y) + 
-pow(k0(x, y, z), 2)*Derivative(c(x, y, z), x, y, z) + 2*k0(x, y, z)*
-Derivative(c(x, y, z), x)*Derivative(k0(x, y, z), y, z) + 2*
-k0(x, y, z)*Derivative(c(x, y, z), y)*Derivative(k0(x, y, z), x, z) + 
-2*k0(x, y, z)*Derivative(c(x, y, z), z)*Derivative(k0(x, y, z), x, y) + 
-2*k0(x, y, z)*Derivative(k0(x, y, z), x)*Derivative(c(x, y, z), y, z) + 
-2*k0(x, y, z)*Derivative(k0(x, y, z), y)*Derivative(c(x, y, z), x, z) + 
-2*k0(x, y, z)*Derivative(k0(x, y, z), z)*Derivative(c(x, y, z), x, y) + 
-2*Derivative(c(x, y, z), x)*Derivative(k0(x, y, z), y)*
-Derivative(k0(x, y, z), z) + 2*Derivative(c(x, y, z), y)*
-Derivative(k0(x, y, z), x)*Derivative(k0(x, y, z), z) + 2*
-Derivative(c(x, y, z), z)*Derivative(k0(x, y, z), x)*
-Derivative(k0(x, y, z), y);
+2*bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x, y, z) + 2*
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), y, z) + 
+2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x, z) + 
+2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x, y) + 
+pow(bbn_ks_k0(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), x, y, z) + 2*bbn_ks_k0(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), y, z) + 2*
+bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x, z) + 
+2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x, y) + 
+2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), y, z) + 
+2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), x, z) + 
+2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), x, y) + 
+2*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), y)*
+Derivative(bbn_ks_k0(x, y, z), z) + 2*Derivative(bbn_ks_c(x, y, z), y)*
+Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), z) + 2*
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x)*
+Derivative(bbn_ks_k0(x, y, z), y);
 
     _dddgamma_D0D2D2D1D1[ijk]=
 /* mcode in progress ... */
@@ -7572,26 +7572,26 @@ Derivative(k0(x, y, z), y);
 // c
 // k0
 // k2
-c(x, y, z)*k0(x, y, z)*Derivative(k2(x, y, z), (y, 2), z) + c(x, y, z)*
-k2(x, y, z)*Derivative(k0(x, y, z), (y, 2), z) + 2*c(x, y, z)*
-Derivative(k0(x, y, z), y)*Derivative(k2(x, y, z), y, z) + c(x, y, z)*
-Derivative(k0(x, y, z), (y, 2))*Derivative(k2(x, y, z), z) + 
-c(x, y, z)*Derivative(k0(x, y, z), z)*Derivative(k2(x, y, z), (y, 2)) + 
-2*c(x, y, z)*Derivative(k2(x, y, z), y)*Derivative(k0(x, y, z), y, z) + 
-k0(x, y, z)*k2(x, y, z)*Derivative(c(x, y, z), (y, 2), z) + 2*
-k0(x, y, z)*Derivative(c(x, y, z), y)*Derivative(k2(x, y, z), y, z) + 
-k0(x, y, z)*Derivative(c(x, y, z), (y, 2))*Derivative(k2(x, y, z), z) + 
-k0(x, y, z)*Derivative(c(x, y, z), z)*Derivative(k2(x, y, z), (y, 2)) + 
-2*k0(x, y, z)*Derivative(k2(x, y, z), y)*Derivative(c(x, y, z), y, z) + 
-2*k2(x, y, z)*Derivative(c(x, y, z), y)*Derivative(k0(x, y, z), y, z) + 
-k2(x, y, z)*Derivative(c(x, y, z), (y, 2))*Derivative(k0(x, y, z), z) + 
-k2(x, y, z)*Derivative(c(x, y, z), z)*Derivative(k0(x, y, z), (y, 2)) + 
-2*k2(x, y, z)*Derivative(k0(x, y, z), y)*Derivative(c(x, y, z), y, z) + 
-2*Derivative(c(x, y, z), y)*Derivative(k0(x, y, z), y)*
-Derivative(k2(x, y, z), z) + 2*Derivative(c(x, y, z), y)*
-Derivative(k0(x, y, z), z)*Derivative(k2(x, y, z), y) + 2*
-Derivative(c(x, y, z), z)*Derivative(k0(x, y, z), y)*
-Derivative(k2(x, y, z), y);
+bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k2(x, y, z), (y, 2), z) + bbn_ks_c(x, y, z)*
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k0(x, y, z), (y, 2), z) + 2*bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), y, z) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k0(x, y, z), (y, 2))*Derivative(bbn_ks_k2(x, y, z), z) + 
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), (y, 2)) + 
+2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), y, z) + 
+bbn_ks_k0(x, y, z)*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (y, 2), z) + 2*
+bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), y, z) + 
+bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), (y, 2))*Derivative(bbn_ks_k2(x, y, z), z) + 
+bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), (y, 2)) + 
+2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k2(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), y, z) + 
+2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), y, z) + 
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (y, 2))*Derivative(bbn_ks_k0(x, y, z), z) + 
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), (y, 2)) + 
+2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), y, z) + 
+2*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), y)*
+Derivative(bbn_ks_k2(x, y, z), z) + 2*Derivative(bbn_ks_c(x, y, z), y)*
+Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), y) + 2*
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), y)*
+Derivative(bbn_ks_k2(x, y, z), y);
 
     _dddgamma_D0D0D2D2D2[ijk]=
 /* mcode in progress ... */
@@ -7604,12 +7604,12 @@ Derivative(k2(x, y, z), y);
 // Derivative
 // c
 // k0
-2*c(x, y, z)*k0(x, y, z)*Derivative(k0(x, y, z), (z, 3)) + 6*
-c(x, y, z)*Derivative(k0(x, y, z), z)*Derivative(k0(x, y, z), (z, 2)) + 
-pow(k0(x, y, z), 2)*Derivative(c(x, y, z), (z, 3)) + 6*k0(x, y, z)*
-Derivative(c(x, y, z), z)*Derivative(k0(x, y, z), (z, 2)) + 6*
-k0(x, y, z)*Derivative(c(x, y, z), (z, 2))*Derivative(k0(x, y, z), z) + 
-6*Derivative(c(x, y, z), z)*pow(Derivative(k0(x, y, z), z), 2);
+2*bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k0(x, y, z), (z, 3)) + 6*
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), (z, 2)) + 
+pow(bbn_ks_k0(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), (z, 3)) + 6*bbn_ks_k0(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), (z, 2)) + 6*
+bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), (z, 2))*Derivative(bbn_ks_k0(x, y, z), z) + 
+6*Derivative(bbn_ks_c(x, y, z), z)*pow(Derivative(bbn_ks_k0(x, y, z), z), 2);
 
     _dddgamma_D1D1D2D1D1[ijk]=
 /* mcode in progress ... */
@@ -7626,17 +7626,17 @@ k0(x, y, z)*Derivative(c(x, y, z), (z, 2))*Derivative(k0(x, y, z), z) +
 // Derivative
 // c
 // k1
-2*c(x, y, z)*k1(x, y, z)*Derivative(k1(x, y, z), (y, 2), z) + 4*
-c(x, y, z)*Derivative(k1(x, y, z), y)*Derivative(k1(x, y, z), y, z) + 
-2*c(x, y, z)*Derivative(k1(x, y, z), (y, 2))*Derivative(k1(x, y, z), z) + 
-pow(k1(x, y, z), 2)*Derivative(c(x, y, z), (y, 2), z) + 4*k1(x, y, z)*
-Derivative(c(x, y, z), y)*Derivative(k1(x, y, z), y, z) + 2*
-k1(x, y, z)*Derivative(c(x, y, z), (y, 2))*Derivative(k1(x, y, z), z) + 
-2*k1(x, y, z)*Derivative(c(x, y, z), z)*Derivative(k1(x, y, z), (y, 2)) + 
-4*k1(x, y, z)*Derivative(k1(x, y, z), y)*Derivative(c(x, y, z), y, z) + 
-4*Derivative(c(x, y, z), y)*Derivative(k1(x, y, z), y)*
-Derivative(k1(x, y, z), z) + 2*Derivative(c(x, y, z), z)*
-pow(Derivative(k1(x, y, z), y), 2);
+2*bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k1(x, y, z), (y, 2), z) + 4*
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), y, z) + 
+2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), (y, 2))*Derivative(bbn_ks_k1(x, y, z), z) + 
+pow(bbn_ks_k1(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), (y, 2), z) + 4*bbn_ks_k1(x, y, z)*
+Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), y, z) + 2*
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), (y, 2))*Derivative(bbn_ks_k1(x, y, z), z) + 
+2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), (y, 2)) + 
+4*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), y, z) + 
+4*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), y)*
+Derivative(bbn_ks_k1(x, y, z), z) + 2*Derivative(bbn_ks_c(x, y, z), z)*
+pow(Derivative(bbn_ks_k1(x, y, z), y), 2);
 
     _dddgamma_D1D2D0D2D2[ijk]=
 /* mcode in progress ... */
@@ -7659,26 +7659,26 @@ pow(Derivative(k1(x, y, z), y), 2);
 // c
 // k1
 // k2
-c(x, y, z)*k1(x, y, z)*Derivative(k2(x, y, z), x, (z, 2)) + c(x, y, z)*
-k2(x, y, z)*Derivative(k1(x, y, z), x, (z, 2)) + c(x, y, z)*
-Derivative(k1(x, y, z), x)*Derivative(k2(x, y, z), (z, 2)) + 2*
-c(x, y, z)*Derivative(k1(x, y, z), z)*Derivative(k2(x, y, z), x, z) + 
-c(x, y, z)*Derivative(k1(x, y, z), (z, 2))*Derivative(k2(x, y, z), x) + 
-2*c(x, y, z)*Derivative(k2(x, y, z), z)*Derivative(k1(x, y, z), x, z) + 
-k1(x, y, z)*k2(x, y, z)*Derivative(c(x, y, z), x, (z, 2)) + 
-k1(x, y, z)*Derivative(c(x, y, z), x)*Derivative(k2(x, y, z), (z, 2)) + 
-2*k1(x, y, z)*Derivative(c(x, y, z), z)*Derivative(k2(x, y, z), x, z) + 
-k1(x, y, z)*Derivative(c(x, y, z), (z, 2))*Derivative(k2(x, y, z), x) + 
-2*k1(x, y, z)*Derivative(k2(x, y, z), z)*Derivative(c(x, y, z), x, z) + 
-k2(x, y, z)*Derivative(c(x, y, z), x)*Derivative(k1(x, y, z), (z, 2)) + 
-2*k2(x, y, z)*Derivative(c(x, y, z), z)*Derivative(k1(x, y, z), x, z) + 
-k2(x, y, z)*Derivative(c(x, y, z), (z, 2))*Derivative(k1(x, y, z), x) + 
-2*k2(x, y, z)*Derivative(k1(x, y, z), z)*Derivative(c(x, y, z), x, z) + 
-2*Derivative(c(x, y, z), x)*Derivative(k1(x, y, z), z)*
-Derivative(k2(x, y, z), z) + 2*Derivative(c(x, y, z), z)*
-Derivative(k1(x, y, z), x)*Derivative(k2(x, y, z), z) + 2*
-Derivative(c(x, y, z), z)*Derivative(k1(x, y, z), z)*
-Derivative(k2(x, y, z), x);
+bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x, (z, 2)) + bbn_ks_c(x, y, z)*
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x, (z, 2)) + bbn_ks_c(x, y, z)*
+Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), (z, 2)) + 2*
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x, z) + 
+bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), (z, 2))*Derivative(bbn_ks_k2(x, y, z), x) + 
+2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x, z) + 
+bbn_ks_k1(x, y, z)*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), x, (z, 2)) + 
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), (z, 2)) + 
+2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x, z) + 
+bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), (z, 2))*Derivative(bbn_ks_k2(x, y, z), x) + 
+2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k2(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), x, z) + 
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), (z, 2)) + 
+2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x, z) + 
+bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (z, 2))*Derivative(bbn_ks_k1(x, y, z), x) + 
+2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), x, z) + 
+2*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), z)*
+Derivative(bbn_ks_k2(x, y, z), z) + 2*Derivative(bbn_ks_c(x, y, z), z)*
+Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), z) + 2*
+Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), z)*
+Derivative(bbn_ks_k2(x, y, z), x);
   }
 }
 
