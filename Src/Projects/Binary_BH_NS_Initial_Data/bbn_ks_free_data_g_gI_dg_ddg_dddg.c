@@ -19,7 +19,7 @@ void bbn_free_data_dddg_analytic(
 void bbn_free_data_g_gI_analytic(
  Patch_T *const patch,
  double *(*get_v)(const char *const fname,void *params),
- void *params);
+ void *params)
 {
   const double r0          = Pgetd("BH_KerrSchild_RollOff");
   const double BH_center_x = Pgetd("BH_center_x");
@@ -31,7 +31,7 @@ void bbn_free_data_g_gI_analytic(
   const double chi_U1   = Pgetd("BH_chi_U1");
   const double chi_U2   = Pgetd("BH_chi_U2");
   const double y_CM = Pgetd("y_CM");
-  const double x_CM = Pgetd("x_CM")
+  const double x_CM = Pgetd("x_CM");
   const double Omega_BHNS = Pgetd("BH_NS_angular_velocity");
   const double chi = sqrt(Pow2(chi_U0)+Pow2(chi_U1)+Pow2(chi_U2));
   const unsigned nn = patch->nn;
@@ -54,18 +54,18 @@ void bbn_free_data_g_gI_analytic(
     phiy = -acos(chi_U2/chi);
     assert(isfinite(phiy));
   }
-    double *const _gamma_D2D2 = get_v("_gamma_D2D2",params)
-    double *const _gamma_D0D2 = get_v("_gamma_D0D2",params)
-    double *const _gamma_D0D0 = get_v("_gamma_D0D0",params)
-    double *const _gamma_D0D1 = get_v("_gamma_D0D1",params)
-    double *const _gamma_D1D2 = get_v("_gamma_D1D2",params)
-    double *const _gamma_D1D1 = get_v("_gamma_D1D1",params)
-    double *const _gammaI_U0U2 = get_v("_gammaI_U0U2",params)
-    double *const _gammaI_U0U0 = get_v("_gammaI_U0U0",params)
-    double *const _gammaI_U0U1 = get_v("_gammaI_U0U1",params)
-    double *const _gammaI_U1U2 = get_v("_gammaI_U1U2",params)
-    double *const _gammaI_U1U1 = get_v("_gammaI_U1U1",params)
-    double *const _gammaI_U2U2 = get_v("_gammaI_U2U2",params)
+    double *const _gamma_D2D2 = get_v("_gamma_D2D2",params);
+    double *const _gamma_D0D2 = get_v("_gamma_D0D2",params);
+    double *const _gamma_D0D0 = get_v("_gamma_D0D0",params);
+    double *const _gamma_D0D1 = get_v("_gamma_D0D1",params);
+    double *const _gamma_D1D2 = get_v("_gamma_D1D2",params);
+    double *const _gamma_D1D1 = get_v("_gamma_D1D1",params);
+    double *const _gammaI_U0U2 = get_v("_gammaI_U0U2",params);
+    double *const _gammaI_U0U0 = get_v("_gammaI_U0U0",params);
+    double *const _gammaI_U0U1 = get_v("_gammaI_U0U1",params);
+    double *const _gammaI_U1U2 = get_v("_gammaI_U1U2",params);
+    double *const _gammaI_U1U1 = get_v("_gammaI_U1U1",params);
+    double *const _gammaI_U2U2 = get_v("_gammaI_U2U2",params);
     
     for (ijk = 0; ijk < nn; ++ijk)
     {
@@ -231,7 +231,7 @@ void bbn_free_data_dg_analytic(
   const double chi_U1   = Pgetd("BH_chi_U1");
   const double chi_U2   = Pgetd("BH_chi_U2");
   const double y_CM = Pgetd("y_CM");
-  const double x_CM = Pgetd("x_CM")
+  const double x_CM = Pgetd("x_CM");
   const double Omega_BHNS = Pgetd("BH_NS_angular_velocity");
   const double chi = sqrt(Pow2(chi_U0)+Pow2(chi_U1)+Pow2(chi_U2));
   const unsigned nn = patch->nn;
@@ -507,7 +507,7 @@ void bbn_free_data_ddg_analytic(
   const double chi_U1   = Pgetd("BH_chi_U1");
   const double chi_U2   = Pgetd("BH_chi_U2");
   const double y_CM = Pgetd("y_CM");
-  const double x_CM = Pgetd("x_CM")
+  const double x_CM = Pgetd("x_CM");
   const double Omega_BHNS = Pgetd("BH_NS_angular_velocity");
   const double chi = sqrt(Pow2(chi_U0)+Pow2(chi_U1)+Pow2(chi_U2));
   const unsigned nn = patch->nn;
@@ -1663,7 +1663,7 @@ void bbn_free_data_dddg_analytic(
   const double chi_U1   = Pgetd("BH_chi_U1");
   const double chi_U2   = Pgetd("BH_chi_U2");
   const double y_CM = Pgetd("y_CM");
-  const double x_CM = Pgetd("x_CM")
+  const double x_CM = Pgetd("x_CM");
   const double Omega_BHNS = Pgetd("BH_NS_angular_velocity");
   const double chi = sqrt(Pow2(chi_U0)+Pow2(chi_U1)+Pow2(chi_U2));
   const unsigned nn = patch->nn;

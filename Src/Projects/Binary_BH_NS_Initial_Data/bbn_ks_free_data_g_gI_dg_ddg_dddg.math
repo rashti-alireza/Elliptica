@@ -233,7 +233,7 @@ Command["sed -i 's/_,/,/g'"];
 `print('void bbn_free_data_g_gI_analytic(')`
 `print(' Patch_T *const patch,')`
 `print(' double *(*get_v)(const char *const fname,void *params),')`
-`print(' void *params);')`
+`print(' void *params)')`
 `print('{')`
 `print('  const double r0          = Pgetd("BH_KerrSchild_RollOff");')`
 `print('  const double BH_center_x = Pgetd("BH_center_x");')`
@@ -245,7 +245,7 @@ Command["sed -i 's/_,/,/g'"];
 `print('  const double chi_U1   = Pgetd("BH_chi_U1");')`
 `print('  const double chi_U2   = Pgetd("BH_chi_U2");')`
 `print('  const double y_CM = Pgetd("y_CM");')`
-`print('  const double x_CM = Pgetd("x_CM")')`
+`print('  const double x_CM = Pgetd("x_CM");')`
 `print('  const double Omega_BHNS = Pgetd("BH_NS_angular_velocity");')`
 `print('  const double chi = sqrt(Pow2(chi_U0)+Pow2(chi_U1)+Pow2(chi_U2));')`
 `print('  const unsigned nn = patch->nn;')`
@@ -269,18 +269,18 @@ Command["sed -i 's/_,/,/g'"];
 `print('    assert(isfinite(phiy));')`
 `print('  }')`
 ``
-`print('    double *const _gamma_D2D2 = get_v("_gamma_D2D2",params)')`
-`print('    double *const _gamma_D0D2 = get_v("_gamma_D0D2",params)')`
-`print('    double *const _gamma_D0D0 = get_v("_gamma_D0D0",params)')`
-`print('    double *const _gamma_D0D1 = get_v("_gamma_D0D1",params)')`
-`print('    double *const _gamma_D1D2 = get_v("_gamma_D1D2",params)')`
-`print('    double *const _gamma_D1D1 = get_v("_gamma_D1D1",params)')`
-`print('    double *const _gammaI_U0U2 = get_v("_gammaI_U0U2",params)')`
-`print('    double *const _gammaI_U0U0 = get_v("_gammaI_U0U0",params)')`
-`print('    double *const _gammaI_U0U1 = get_v("_gammaI_U0U1",params)')`
-`print('    double *const _gammaI_U1U2 = get_v("_gammaI_U1U2",params)')`
-`print('    double *const _gammaI_U1U1 = get_v("_gammaI_U1U1",params)')`
-`print('    double *const _gammaI_U2U2 = get_v("_gammaI_U2U2",params)')`
+`print('    double *const _gamma_D2D2 = get_v("_gamma_D2D2",params);')`
+`print('    double *const _gamma_D0D2 = get_v("_gamma_D0D2",params);')`
+`print('    double *const _gamma_D0D0 = get_v("_gamma_D0D0",params);')`
+`print('    double *const _gamma_D0D1 = get_v("_gamma_D0D1",params);')`
+`print('    double *const _gamma_D1D2 = get_v("_gamma_D1D2",params);')`
+`print('    double *const _gamma_D1D1 = get_v("_gamma_D1D1",params);')`
+`print('    double *const _gammaI_U0U2 = get_v("_gammaI_U0U2",params);')`
+`print('    double *const _gammaI_U0U0 = get_v("_gammaI_U0U0",params);')`
+`print('    double *const _gammaI_U0U1 = get_v("_gammaI_U0U1",params);')`
+`print('    double *const _gammaI_U1U2 = get_v("_gammaI_U1U2",params);')`
+`print('    double *const _gammaI_U1U1 = get_v("_gammaI_U1U1",params);')`
+`print('    double *const _gammaI_U2U2 = get_v("_gammaI_U2U2",params);')`
 `print('    ')`
 `print('    for (ijk = 0; ijk < nn; ++ijk)')`
 `print('    {')`
@@ -384,7 +384,7 @@ Command["sed -i 's/_,/,/g'"];
 `print('  const double chi_U1   = Pgetd("BH_chi_U1");')`
 `print('  const double chi_U2   = Pgetd("BH_chi_U2");')`
 `print('  const double y_CM = Pgetd("y_CM");')`
-`print('  const double x_CM = Pgetd("x_CM")')`
+`print('  const double x_CM = Pgetd("x_CM");')`
 `print('  const double Omega_BHNS = Pgetd("BH_NS_angular_velocity");')`
 `print('  const double chi = sqrt(Pow2(chi_U0)+Pow2(chi_U1)+Pow2(chi_U2));')`
 `print('  const unsigned nn = patch->nn;')`
@@ -508,7 +508,7 @@ Command["sed -i 's/_,/,/g'"];
 `print('  const double chi_U1   = Pgetd("BH_chi_U1");')`
 `print('  const double chi_U2   = Pgetd("BH_chi_U2");')`
 `print('  const double y_CM = Pgetd("y_CM");')`
-`print('  const double x_CM = Pgetd("x_CM")')`
+`print('  const double x_CM = Pgetd("x_CM");')`
 `print('  const double Omega_BHNS = Pgetd("BH_NS_angular_velocity");')`
 `print('  const double chi = sqrt(Pow2(chi_U0)+Pow2(chi_U1)+Pow2(chi_U2));')`
 `print('  const unsigned nn = patch->nn;')`
@@ -773,7 +773,7 @@ Command["sed -i 's/_,/,/g'"];
 `print('  const double chi_U1   = Pgetd("BH_chi_U1");')`
 `print('  const double chi_U2   = Pgetd("BH_chi_U2");')`
 `print('  const double y_CM = Pgetd("y_CM");')`
-`print('  const double x_CM = Pgetd("x_CM")')`
+`print('  const double x_CM = Pgetd("x_CM");')`
 `print('  const double Omega_BHNS = Pgetd("BH_NS_angular_velocity");')`
 `print('  const double chi = sqrt(Pow2(chi_U0)+Pow2(chi_U1)+Pow2(chi_U2));')`
 `print('  const unsigned nn = patch->nn;')`
