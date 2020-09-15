@@ -1692,6 +1692,8 @@ static int bhf_ell_Brown(struct BHFiller_S *const bhf)
   const unsigned npo = bhf->npo;
   const double rfill = Pgetd("r_excision");
   const double rfill3= pow(rfill,3);
+  char s_save_eq[MAX_STR2]  = {'\0'};
+  char s_solve_eq[MAX_STR2] = {'\0'};
   Grid_T *inbh_grid  = calloc(1,sizeof(*inbh_grid));IsNull(inbh_grid);
   Grid_T *outbh_grid = calloc(1,sizeof(*outbh_grid));IsNull(outbh_grid);
   unsigned f,p;
@@ -1782,12 +1784,21 @@ static int bhf_ell_Brown(struct BHFiller_S *const bhf)
     Patch_T *patch = inbh_grid->patch[p];
     bbn_add_fields_in_patch(patch);
   }
-    
+  
+  /* save solving order parameter */
+  sprintf(s_save_eq,"%s",Pgets("Solving_Order"));
   /* setup fields for ell. eq. and for B.C.
   // note: each field has 3 ell. eqs => 3 b.c. */
   for (f = 0; f < nf; ++f)
   {
     char s[MAX_STR2] = {'\0'};
+    
+    sprintf(s,"%s.2,",bhf->fld[f]->f);
+    strcat(s_solve_eq,s);
+    sprintf(s,"%s.1,",bhf->fld[f]->f);
+    strcat(s_solve_eq,s);
+    sprintf(s,"%s,",bhf->fld[f]->f);
+    strcat(s_solve_eq,s);
     
     /* adding field */
     FOR_ALL_PATCHES(p,inbh_grid)
@@ -1986,11 +1997,16 @@ static int bhf_ell_Brown(struct BHFiller_S *const bhf)
     add_eq(&jacobian_bc_eq ,bbn_bhf_jacobian_bc_Brown,s);
   }
   
-  
   /* populating solution managment */
+  Psets("Solving_Order",s_solve_eq);
+  
   initialize_solving_man(inbh_grid,field_eq,bc_eq,
                          jacobian_field_eq,jacobian_bc_eq);
  
+  
+  
+  /* bring back solving order parameter */
+  Psets("Solving_Order",s_save_eq);
   
   /* free data base of equations */
   free_db_eqs(field_eq);
