@@ -152,6 +152,22 @@ bbn_define_spin_akv
   const char *const kind/* "NS" or "BH" */
   );
 
+void bbn_free_data_g_gI_analytic(
+        Patch_T *const patch,
+        double *(*get_v)(const char *const fname,void *params),
+        void *params);
+void bbn_free_data_dg_analytic(
+	Patch_T *const patch, 
+	double *(*get_v)(const char *const fname,void *params),
+	void *params);
+void bbn_free_data_ddg_analytic(
+	Patch_T *const patch, 
+	double *(*get_v)(const char *const fname,void *params),
+	void *params);
+void bbn_free_data_dddg_analytic(
+	Patch_T *const patch, 
+	double *(*get_v)(const char *const fname,void *params),
+	void *params);
 
 
 #endif
