@@ -1682,7 +1682,9 @@ static int bhf_4th_Poly_Ylm(struct BHFiller_S *const bhf)
 /* ->: EXIT_SUCCESS.
 // filling the hole using elliptic equations (Brown's method)
 // this is ellptic eq. of 3rd order i.e (Laplace^2)^3 f = 0.
-// ref:https://arxiv.org/pdf/0809.3533.pdf */
+// ref:https://arxiv.org/pdf/0809.3533.pdf 
+// NOTE: this override solving parameters thus MUST be call
+// at the very end when the ID constructor is done. */
 static int bhf_ell_Brown(struct BHFiller_S *const bhf)
 {
   printf("|--> BH-filler method = C2_EllEq_Brown.\n");
@@ -1692,7 +1694,6 @@ static int bhf_ell_Brown(struct BHFiller_S *const bhf)
   const unsigned npo = bhf->npo;
   const double rfill = Pgetd("r_excision");
   const double rfill3= pow(rfill,3);
-  char s_save_eq[MAX_STR2]  = {'\0'};
   char s_solve_eq[MAX_STR2] = {'\0'};
   Grid_T *inbh_grid  = calloc(1,sizeof(*inbh_grid));IsNull(inbh_grid);
   Grid_T *outbh_grid = calloc(1,sizeof(*outbh_grid));IsNull(outbh_grid);
@@ -1784,8 +1785,6 @@ static int bhf_ell_Brown(struct BHFiller_S *const bhf)
     bbn_add_fields_in_patch(patch);
   }
   
-  /* save solving order parameter */
-  sprintf(s_save_eq,"%s",Pgets("Solving_Order"));
   /* setup fields for ell. eq. and for B.C.
   // note: each field has 3 ell. eqs => 3 b.c. */
   for (f = 0; f < nf; ++f)
@@ -2026,11 +2025,12 @@ static int bhf_ell_Brown(struct BHFiller_S *const bhf)
     }/* FOR_ALL_PATCHES(p,inbh_grid) */
   }/* for (f = 0; f < nf; ++f) */
   
-  /* populating solution managment */
+  /* populating solution managment and set the solving parameters */
   Psets("Solving_Order",s_solve_eq);
+  Psetd("Solving_Residual",1E-10);
+  Pseti("Solving_Max_Number_of_Newton_Step",20);
   initialize_solving_man(inbh_grid,field_eq,bc_eq,
                          jacobian_field_eq,jacobian_bc_eq);
- 
   SolveEqs->solving_order = Pgets("Solving_Order");
   SolveEqs->FieldUpdate   = bbn_bhf_ell_Brown_field_update;
   SolveEqs->SourceUpdate  = bbn_bhf_ell_Brown_source_update;
@@ -2039,9 +2039,6 @@ static int bhf_ell_Brown(struct BHFiller_S *const bhf)
   
   /* solve equations */
   solve_eqs(SolveEqs);
-  
-  /* bring back solving order parameter */
-  Psets("Solving_Order",s_save_eq);
   
   /* free SolveEqs and phi grid */
   free_solve_equations(SolveEqs);
