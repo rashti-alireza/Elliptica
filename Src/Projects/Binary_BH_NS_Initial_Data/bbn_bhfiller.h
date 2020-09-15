@@ -109,6 +109,13 @@ bbn_bhf_ell_Brown_field_update
   Patch_T *const patch,
   const char *const name
   );
+  
+static void 
+bbn_bhf_ell_Brown_source_update
+  (
+  Grid_T *const grid,
+  const char *const name
+  );
 
 
 

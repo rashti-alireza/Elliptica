@@ -2033,7 +2033,7 @@ static int bhf_ell_Brown(struct BHFiller_S *const bhf)
  
   SolveEqs->solving_order = Pgets("Solving_Order");
   SolveEqs->FieldUpdate   = bbn_bhf_ell_Brown_field_update;
-//  SolveEqs->SourceUpdate  = bbn_bhf_ell_Brown_source_update;
+  SolveEqs->SourceUpdate  = bbn_bhf_ell_Brown_source_update;
   SolveEqs->umfpack_refine= PgetdEZ("Solving_UMFPACK_refinement_step");
   SolveEqs->umfpack_size  = PgetiEZ("Solving_UMFPACK_size");
   
@@ -2221,3 +2221,59 @@ bbn_bhf_ell_Brown_field_update
   empty_field(ddf_ddz);
   ddf_ddz->v = Partial_Derivative(df_dz,"z");
 }
+
+/* source update: updating sources of ell. eqs., this is used in 
+// Brown's approach ell eqs. 
+// note: we have:
+// Laplac^2 psi_{n}- psi_{n+1} = 0, here psi_{n+1} is the source. */
+static void 
+bbn_bhf_ell_Brown_source_update
+  (
+  Grid_T *const grid,
+  const char *const name
+  )
+{
+  char s1[MAX_STR2] = {'\0'};
+  char s2[MAX_STR2] = {'\0'};
+  char s[MAX_STR] = {'\0'};
+  const char *s_last;
+  int f_index;
+  unsigned p;
+  
+  sprintf(s,"%s",name);
+  s_last  = name+strlen(name)-1;/* => 0 in psi.0 */
+  f_index = atoi(s_last);/* => 0 in psi.0 */
+  
+  if (f_index > 0) /* -> psi.1 => psi.0 */
+  {
+    sprintf(&s[strlen(name)-1],"%d",f_index-1);
+    sprintf(s1,"src_%s",s);
+    sprintf(s2,"%s",name);
+  }
+    
+  FOR_ALL_PATCHES(p,grid)
+  {
+    Patch_T *patch = grid->patch[p];
+    Field_T *src1,*src2;
+    unsigned nn = patch->nn;
+    unsigned ijk;
+    
+    if (f_index == 0)
+      break;
+      
+    /* src1 */
+    src1 = patch->pool[Ind(s1)];
+    empty_field(src1);
+    src1->v = alloc_double(patch->nn);/* set to zero */
+    /* src2 */
+    src2 = patch->pool[Ind(s2)];
+    
+    /* copy */
+    for (ijk = 0; ijk < nn; ++ijk)
+      src1->v[ijk] = src2->v[ijk];
+  }
+  
+}
+
+
+
