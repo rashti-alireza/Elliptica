@@ -3094,6 +3094,11 @@ Sewing_T *alloc_sewing(void)
 /* free thoroughly patch->interface */
 void free_patch_SolMan_method_Schur(Patch_T *const patch)
 {
+  if (!patch->solving_man)
+    return;
+  if (!patch->solving_man->method)
+    return;
+  
   DDM_Schur_Complement_T *s = patch->solving_man->method->SchurC;
   if (!s)
     return;
