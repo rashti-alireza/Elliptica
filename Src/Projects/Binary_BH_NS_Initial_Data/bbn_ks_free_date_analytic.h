@@ -16,6 +16,16 @@
    const double phiy,const double Bx, \
    const double By,const double Bz,const double B2)
 
+/* pass special argument to each function */   
+#define KS_func_pass_args_macro  \
+  (x,y,z,M_BH,a_BH,phix,phiy,Bx,By,Bz,B2)
+
+/* pass arguments for the following functions */
+#define bbn_ks_k0(x,y,z) bbn_ks_k0 KS_func_pass_args_macro
+#define bbn_ks_k1(x,y,z) bbn_ks_k1 KS_func_pass_args_macro
+#define bbn_ks_k2(x,y,z) bbn_ks_k2 KS_func_pass_args_macro
+#define bbn_ks_kt(x,y,z) bbn_ks_kt KS_func_pass_args_macro
+#define bbn_ks_c(x,y,z)  bbn_ks_c  KS_func_pass_args_macro
 
 
 /* all external functions */
@@ -261,6 +271,7 @@ KS_func_def_macro(dddkt_D2D2D0) KS_func_args_macro;
 KS_func_def_macro(dddkt_D1D2D1) KS_func_args_macro;
 KS_func_def_macro(dddkt_D0D0D1) KS_func_args_macro;
 KS_func_def_macro(dddkt_D0D1D0) KS_func_args_macro;
+KS_func_def_macro(c) KS_func_args_macro;
 KS_func_def_macro(dc_D2) KS_func_args_macro;
 KS_func_def_macro(dc_D1) KS_func_args_macro;
 KS_func_def_macro(dc_D0) KS_func_args_macro;
