@@ -291,7 +291,7 @@ Declare =
  (obj = Field,name = dddkt, rank = DDD, C_macro2);
 
  # c
- #(obj = Field,name = c, rank = 0, C_macro2);
+ (obj = Field,name = c, rank = 0, C_macro2);
  # d c
  (obj = Field,name = dc, rank = D, C_macro2);
  # dd c
@@ -339,7 +339,7 @@ Declare =
  (obj = Field,name = dddkt, rank = DDD, C_macro3);
 
  # c
- #(obj = Field,name = c, rank = 0, C_macro3);
+ (obj = Field,name = c, rank = 0, C_macro3);
  # d c
  (obj = Field,name = dc, rank = D, C_macro3);
  # dd c
