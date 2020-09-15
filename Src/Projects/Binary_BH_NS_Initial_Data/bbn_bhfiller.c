@@ -1689,7 +1689,7 @@ static int bhf_ell_Brown(struct BHFiller_S *const bhf)
   fflush(stdout);
   const unsigned nf  = bhf->nf;
   const unsigned npi = bhf->npi;
-  const unsigned npo = bhf->npi;
+  const unsigned npo = bhf->npo;
   const double rfill = Pgetd("r_excision");
   const double rfill3= pow(rfill,3);
   Grid_T *inbh_grid  = calloc(1,sizeof(*inbh_grid));IsNull(inbh_grid);
@@ -1724,7 +1724,10 @@ static int bhf_ell_Brown(struct BHFiller_S *const bhf)
   }
   
   /* select inside bh grid */
-  inbh_grid->patch = calloc(npi,sizeof(*inbh_grid->patch));
+  inbh_grid->kind = bhf->grid->kind;
+  inbh_grid->gn   = bhf->grid->gn;
+  inbh_grid->np   = npi;
+  inbh_grid->patch = calloc(npi+1,sizeof(*inbh_grid->patch));
   IsNull(inbh_grid->patch);
   for (p = 0; p < npi; ++p)
   {
@@ -1738,22 +1741,17 @@ static int bhf_ell_Brown(struct BHFiller_S *const bhf)
     inbh_grid->patch[p]->grid = inbh_grid;
     inbh_grid->nn            += patch->nn;
     /* the following needs to be constructed from scratch */
-    inbh_grid->patch[p]->interface = 0;
-    inbh_grid->patch[p]->solving_man = 
-      calloc(1,sizeof(*inbh_grid->patch[p]->solving_man));
-    IsNull(inbh_grid->patch[p]->solving_man);
-    inbh_grid->patch[p]->solving_man[0] = patch->solving_man[0];
-    inbh_grid->patch[p]->solving_man->patch = inbh_grid->patch[p];
-    inbh_grid->patch[p]->solving_man->jacobian = 0;
-    inbh_grid->patch[p]->solving_man->nj       = 0;
-    inbh_grid->patch[p]->solving_man->method->Schur_Complement = 0;
-    inbh_grid->patch[p]->solving_man->method->SchurC = 0;
+    inbh_grid->patch[p]->interface   = 0;
+    inbh_grid->patch[p]->solving_man = 0;
   }
   /* now let's fill up inbh_grid->patch[?]->interface */
   realize_geometry(inbh_grid);
   
   /* select outside bh grid */
-  outbh_grid->patch = calloc(npi,sizeof(*outbh_grid->patch));
+  outbh_grid->kind  = bhf->grid->kind;
+  outbh_grid->gn    = bhf->grid->gn;
+  outbh_grid->np    = npo;
+  outbh_grid->patch = calloc(npi+1,sizeof(*outbh_grid->patch));
   IsNull(outbh_grid->patch);
   for (p = 0; p < npo; ++p)
   {
@@ -1767,16 +1765,8 @@ static int bhf_ell_Brown(struct BHFiller_S *const bhf)
     outbh_grid->patch[p]->grid = outbh_grid;
     outbh_grid->nn            += patch->nn;
     /* the following needs to be constructed from scratch */
-    outbh_grid->patch[p]->interface = 0;
-    outbh_grid->patch[p]->solving_man = 
-      calloc(1,sizeof(*outbh_grid->patch[p]->solving_man));
-    IsNull(outbh_grid->patch[p]->solving_man);
-    outbh_grid->patch[p]->solving_man[0] = patch->solving_man[0];
-    outbh_grid->patch[p]->solving_man->patch = outbh_grid->patch[p];
-    outbh_grid->patch[p]->solving_man->jacobian = 0;
-    outbh_grid->patch[p]->solving_man->nj       = 0;
-    outbh_grid->patch[p]->solving_man->method->Schur_Complement = 0;
-    outbh_grid->patch[p]->solving_man->method->SchurC = 0;
+    outbh_grid->patch[p]->interface   = 0;
+    outbh_grid->patch[p]->solving_man = 0;
   }
   
   /* init equations */
@@ -1786,6 +1776,13 @@ static int bhf_ell_Brown(struct BHFiller_S *const bhf)
             **jacobian_field_eq = init_eq()/* jacobian for field equation */,
             **jacobian_bc_eq = init_eq()/* jacobian for B.C. */;
   
+  /* adding field */
+  FOR_ALL_PATCHES(p,inbh_grid)
+  {
+    Patch_T *patch = inbh_grid->patch[p];
+    bbn_add_fields_in_patch(patch);
+  }
+    
   /* setup fields for ell. eq. and for B.C.
   // note: each field has 3 ell. eqs => 3 b.c. */
   for (f = 0; f < nf; ++f)
@@ -1856,10 +1853,13 @@ static int bhf_ell_Brown(struct BHFiller_S *const bhf)
       
       const unsigned *n = patch->n;
       unsigned i,j,k,ijk,_i,_j;
+      
       sprintf(s,"bc_%s",bhf->fld[f]->f);
       double *bc = patch->pool[Ind(s)]->v;
+      
       sprintf(s,"bc_%s.1",bhf->fld[f]->f);
       double *bc1 = patch->pool[Ind(s)]->v;
+      
       sprintf(s,"bc_%s.2",bhf->fld[f]->f);
       double *bc2 = patch->pool[Ind(s)]->v;
       
@@ -1944,7 +1944,7 @@ static int bhf_ell_Brown(struct BHFiller_S *const bhf)
           }
         
           /* now fill the bc values */
-          for (k = 0; k < n[3]; ++k)
+          for (k = 0; k < n[2]; ++k)
           {
             ijk = L(n,i,j,k);
             bc[ijk]  = fr1;
@@ -2005,7 +2005,7 @@ static int bhf_ell_Brown(struct BHFiller_S *const bhf)
       Patch_T *patch = inbh_grid->patch[p];
 
       free_patch_interface(patch);
-      //free_patch_SolMan_jacobian(patch);
+      free_patch_SolMan_jacobian(patch);
       free_patch_SolMan_method_Schur(patch);
       free(patch->solving_man);
     }
@@ -2019,7 +2019,7 @@ static int bhf_ell_Brown(struct BHFiller_S *const bhf)
       Patch_T *patch = outbh_grid->patch[p];
 
       free_patch_interface(patch);
-      //free_patch_SolMan_jacobian(patch);
+      free_patch_SolMan_jacobian(patch);
       free_patch_SolMan_method_Schur(patch);
       free(patch->solving_man);
     }
