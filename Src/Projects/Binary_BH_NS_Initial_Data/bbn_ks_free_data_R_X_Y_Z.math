@@ -205,7 +205,7 @@ C_macro3=print('KS_func_def_macro(name)KS_func_args_macro')\n\
 `R    = KS_radius(XX(x,y,z),YY(x,y,z),ZZ(x,y,z),a)`
 
 ``
-`print('#include "bbn_free_date_analytic.h"')`
+`print('#include "bbn_ks_free_date_analytic.h"')`
 ``
 Declare =
 {
