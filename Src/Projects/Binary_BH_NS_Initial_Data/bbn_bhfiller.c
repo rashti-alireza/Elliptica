@@ -1694,7 +1694,7 @@ static int bhf_ell_Brown(struct BHFiller_S *const bhf)
   const unsigned npo = bhf->npo;
   const double rfill = Pgetd("r_excision");
   const double rfill3= pow(rfill,3);
-  char s_solve_eq[MAX_STR2] = {'\0'};
+  char s_solve_eq[MAX_STR_LARGE] = {'\0'};
   Grid_T *inbh_grid  = calloc(1,sizeof(*inbh_grid));IsNull(inbh_grid);
   Grid_T *outbh_grid = calloc(1,sizeof(*outbh_grid));IsNull(outbh_grid);
   /* init equations */
@@ -2029,6 +2029,7 @@ static int bhf_ell_Brown(struct BHFiller_S *const bhf)
   Psets("Solving_Order",s_solve_eq);
   Psetd("Solving_Residual",1E-10);
   Pseti("Solving_Max_Number_of_Newton_Step",20);
+  Psetd("Solving_Newton_update_weight",1.0);
   initialize_solving_man(inbh_grid,field_eq,bc_eq,
                          jacobian_field_eq,jacobian_bc_eq);
   SolveEqs->solving_order = Pgets("Solving_Order");
