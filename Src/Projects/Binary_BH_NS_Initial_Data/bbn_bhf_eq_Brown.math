@@ -6,15 +6,10 @@ Dimension = 3;
 # point on manifold shown by:
 Point = ijk;
 
-C_macro  = read_2nd_order_derives(name);
 
 # main function:
 `#include "bbn_headers.h"`;
 `#include "maths_equation_solvings_lib.h"`;
-``
-`#define read_2nd_order_derives(name) \`
-`        sprintf(eq_fld_name,"%s_%s",#name,fld_name); \`
-`        const double *const name = patch->pool[Ind(fld_name)]->v;`
 ``
 `void *bbn_bhf_eq_Brown(void *vp1,void *vp2);`;
 `void *bbn_bhf_eq_Brown(void *vp1,void *vp2)\n{`;
@@ -34,17 +29,31 @@ C_macro  = read_2nd_order_derives(name);
 # declare for Cpi:
 Declare = 
 {
+ # (B)rown field
+ (obj = Field,name = B, rank = 0, none);
+
  # d^2 B/dx^2
- (obj = Field,name = ddB_xx, rank = 0, C_macro);
+ (obj = Field,name = ddB_xx, rank = 0, none);
 
  # d^2 B/dy^2
- (obj = Field,name = ddB_yy, rank = 0, C_macro);
+ (obj = Field,name = ddB_yy, rank = 0, none);
 
  # d^2 B/dz^2
- (obj = Field,name = ddB_zz, rank = 0, C_macro);
+ (obj = Field,name = ddB_zz, rank = 0, none);
 
 }
 
+`sprintf(eq_fld_name,"src_%s",fld_name);`
+`const double *const B = patch->pool[Ind(eq_fld_name)]->v;`
+
+`sprintf(eq_fld_name,"dd%s_D0D0",fld_name);`
+`const double *const ddB_xx = patch->pool[Ind(eq_fld_name)]->v;`
+
+`sprintf(eq_fld_name,"dd%s_D1D1",fld_name);`
+`const double *const ddB_yy = patch->pool[Ind(eq_fld_name)]->v;`
+
+`sprintf(eq_fld_name,"dd%s_D2D2",fld_name);`
+`const double *const ddB_zz = patch->pool[Ind(eq_fld_name)]->v;`
 
 ##########################################################################
 # NOTE: In domain decomposition method n is relabed from point ijk.
@@ -57,7 +66,7 @@ Declare =
 `  DDM_SCHUR_EQ_OPEN\n`;
 
 ## simple laplace equation
-F_eq = ddB_xx+ddB_yy+ddB_zz;
+F_eq = ddB_xx+ddB_yy+ddB_zz-B;
 
 `  F[n] = F_eq;\n`;# Jx = -F in Newton-Raphson scheme
 `  DDM_SCHUR_EQ_CLOSE\n`;

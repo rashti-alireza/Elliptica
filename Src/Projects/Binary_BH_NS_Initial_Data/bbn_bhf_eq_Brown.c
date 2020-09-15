@@ -7,10 +7,6 @@
 #include "bbn_headers.h"
 #include "maths_equation_solvings_lib.h"
 
-#define read_2nd_order_derives(name) \
-        sprintf(eq_fld_name,"%s_%s",#name,fld_name); \
-        const double *const name = patch->pool[Ind(fld_name)]->v;
-
 void *bbn_bhf_eq_Brown(void *vp1,void *vp2);
 void *bbn_bhf_eq_Brown(void *vp1,void *vp2)
 {
@@ -22,15 +18,20 @@ void *bbn_bhf_eq_Brown(void *vp1,void *vp2)
 
 
   /* declaring: */
-  read_2nd_order_derives(ddB_xx)
-  read_2nd_order_derives(ddB_yy)
-  read_2nd_order_derives(ddB_zz)
 
 
+sprintf(eq_fld_name,"src_%s",fld_name);
+const double *const B = patch->pool[Ind(eq_fld_name)]->v;
+sprintf(eq_fld_name,"dd%s_D0D0",fld_name);
+const double *const ddB_xx = patch->pool[Ind(eq_fld_name)]->v;
+sprintf(eq_fld_name,"dd%s_D1D1",fld_name);
+const double *const ddB_yy = patch->pool[Ind(eq_fld_name)]->v;
+sprintf(eq_fld_name,"dd%s_D2D2",fld_name);
+const double *const ddB_zz = patch->pool[Ind(eq_fld_name)]->v;
   DDM_SCHUR_EQ_OPEN
 
   double F_eq = 
-ddB_xx[ijk] + ddB_yy[ijk] + ddB_zz[ijk];
+-B[ijk] + ddB_xx[ijk] + ddB_yy[ijk] + ddB_zz[ijk];
 
   F[n] = F_eq;
 
