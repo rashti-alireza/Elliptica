@@ -333,7 +333,7 @@ bhf_init
     assert(j == npi);
   }
   /* solving elliptic equations in the hole */
-  else if (strcmp_i(method,"EllEq"))
+  else if (strcmp_i(method,"C2_EllEq_Brown"))
   {
     const unsigned npi = 7;/* number of patches inside BH */
     const unsigned npo = 6;/* number of patches outside BH */
@@ -1685,41 +1685,102 @@ static int bhf_4th_Poly_Ylm(struct BHFiller_S *const bhf)
 // ref:https://arxiv.org/pdf/0809.3533.pdf */
 static int bhf_ell_Brown(struct BHFiller_S *const bhf)
 {
+  printf("|--> BH-filler method = C2_EllEq_Brown.\n");
+  fflush(stdout);
   const unsigned nf  = bhf->nf;
   const unsigned npi = bhf->npi;
-  Grid_T *bh_grid = calloc(1,sizeof(*bh_grid));IsNull(bh_grid);
-  unsigned f,i;
+  const unsigned npo = bhf->npi;
+  const double rfill = Pgetd("r_excision");
+  const double rfill3= pow(rfill,3);
+  Grid_T *inbh_grid  = calloc(1,sizeof(*inbh_grid));IsNull(inbh_grid);
+  Grid_T *outbh_grid = calloc(1,sizeof(*outbh_grid));IsNull(outbh_grid);
+  unsigned f,p;
+  ////////////////////////////fix outbh_grid for 3rd_cheb and polynomial.
   
-  /* setup bh grid */
-  bh_grid->patch = calloc(npi,sizeof(*bh_grid->patch));
-  IsNull(bh_grid->patch);
-  for (i = 0; i < npi; ++i)
+  /* updating coeffs */
+  OpenMP_Patch_Pragma(omp parallel for)
+  for (p = 0; p < npo; p++)
   {
-    Patch_T *patch = bhf->patches_inBH[i];
-    bh_grid->patch[i] = calloc(1,sizeof(*bh_grid->patch[i]));
-    IsNull(bh_grid->patch[i]);
+    Patch_T *patch = bhf->patches_outBH[p];
+    unsigned fn;
+
+    bbn_1st_2nd_derivatives_conformal_metric(patch);
+    bbn_add_and_take_2nd_derivatives_K(patch);
+    Field_T *R1_f = patch->CoordSysInfo->CubedSphericalCoord->R1_f;
+    Field_T *R2_f = patch->CoordSysInfo->CubedSphericalCoord->R2_f;
+    if (R1_f)
+      make_coeffs_2d(R1_f,0,1);/* X and Y direction */
+    if (R2_f)
+      make_coeffs_2d(R2_f,0,1);/* X and Y direction */
+
+    /* make coeffs for all fields inside this patch */
+    for (fn = 0; fn < patch->nfld; ++fn)
+    {
+      if (patch->pool[fn]->v      &&
+          patch->pool[fn] != R1_f && 
+          patch->pool[fn] != R2_f    )
+        make_coeffs_2d(patch->pool[fn],0,1);/* X and Y direction */
+    }
+  }
+  
+  /* select inside bh grid */
+  inbh_grid->patch = calloc(npi,sizeof(*inbh_grid->patch));
+  IsNull(inbh_grid->patch);
+  for (p = 0; p < npi; ++p)
+  {
+    Patch_T *patch = bhf->patches_inBH[p];
+    inbh_grid->patch[p] = calloc(1,sizeof(*inbh_grid->patch[p]));
+    IsNull(inbh_grid->patch[p]);
     /* note, for the following all of the pointers inside the structures 
     // will be equal, since this is not a deep copy. */
-    bh_grid->patch[i][0]    = patch[0];
-    bh_grid->patch[i]->pn   = i;
-    bh_grid->patch[i]->grid = bh_grid;
-    bh_grid->nn            += patch->nn;
+    inbh_grid->patch[p][0]    = patch[0];
+    inbh_grid->patch[p]->pn   = p;
+    inbh_grid->patch[p]->grid = inbh_grid;
+    inbh_grid->nn            += patch->nn;
     /* the following needs to be constructed from scratch */
-    bh_grid->patch[i]->interface = 0;
-    bh_grid->patch[i]->solving_man = calloc(1,sizeof(*bh_grid->patch[i]->solving_man));
-    IsNull(bh_grid->patch[i]->solving_man);
-    bh_grid->patch[i]->solving_man[0] = patch->solving_man[0];
-    bh_grid->patch[i]->solving_man->patch = bh_grid->patch[i];
-    bh_grid->patch[i]->solving_man->jacobian = 0;
-    bh_grid->patch[i]->solving_man->nj       = 0;
-    bh_grid->patch[i]->solving_man->method->Schur_Complement = 0;
-    bh_grid->patch[i]->solving_man->method->SchurC = 0;
+    inbh_grid->patch[p]->interface = 0;
+    inbh_grid->patch[p]->solving_man = 
+      calloc(1,sizeof(*inbh_grid->patch[p]->solving_man));
+    IsNull(inbh_grid->patch[p]->solving_man);
+    inbh_grid->patch[p]->solving_man[0] = patch->solving_man[0];
+    inbh_grid->patch[p]->solving_man->patch = inbh_grid->patch[p];
+    inbh_grid->patch[p]->solving_man->jacobian = 0;
+    inbh_grid->patch[p]->solving_man->nj       = 0;
+    inbh_grid->patch[p]->solving_man->method->Schur_Complement = 0;
+    inbh_grid->patch[p]->solving_man->method->SchurC = 0;
   }
-  /* now let's fill up bh_grid->patch[?]->interface */
-  realize_geometry(bh_grid);
+  /* now let's fill up inbh_grid->patch[?]->interface */
+  realize_geometry(inbh_grid);
+  
+  /* select outside bh grid */
+  outbh_grid->patch = calloc(npi,sizeof(*outbh_grid->patch));
+  IsNull(outbh_grid->patch);
+  for (p = 0; p < npo; ++p)
+  {
+    Patch_T *patch = bhf->patches_outBH[p];
+    outbh_grid->patch[p] = calloc(1,sizeof(*outbh_grid->patch[p]));
+    IsNull(outbh_grid->patch[p]);
+    /* note, for the following all of the pointers inside the structures 
+    // will be equal, since this is not a deep copy. */
+    outbh_grid->patch[p][0]    = patch[0];
+    outbh_grid->patch[p]->pn   = p;
+    outbh_grid->patch[p]->grid = outbh_grid;
+    outbh_grid->nn            += patch->nn;
+    /* the following needs to be constructed from scratch */
+    outbh_grid->patch[p]->interface = 0;
+    outbh_grid->patch[p]->solving_man = 
+      calloc(1,sizeof(*outbh_grid->patch[p]->solving_man));
+    IsNull(outbh_grid->patch[p]->solving_man);
+    outbh_grid->patch[p]->solving_man[0] = patch->solving_man[0];
+    outbh_grid->patch[p]->solving_man->patch = outbh_grid->patch[p];
+    outbh_grid->patch[p]->solving_man->jacobian = 0;
+    outbh_grid->patch[p]->solving_man->nj       = 0;
+    outbh_grid->patch[p]->solving_man->method->Schur_Complement = 0;
+    outbh_grid->patch[p]->solving_man->method->SchurC = 0;
+  }
   
   /* init equations */
-  Solve_Equations_T *SolveEqs = init_solve_equations(bh_grid);
+  Solve_Equations_T *SolveEqs = init_solve_equations(inbh_grid);
   sEquation_T **field_eq = init_eq()/* field equation */,
             **bc_eq = init_eq()/* B.C. for the field */,
             **jacobian_field_eq = init_eq()/* jacobian for field equation */,
@@ -1730,85 +1791,204 @@ static int bhf_ell_Brown(struct BHFiller_S *const bhf)
   for (f = 0; f < nf; ++f)
   {
     char s[MAX_STR2] = {'\0'};
-    unsigned p;
     
     /* adding field */
-    FOR_ALL_PATCHES(p,bh_grid)
+    FOR_ALL_PATCHES(p,inbh_grid)
     {
-      Patch_T *patch = bh_grid->patch[p];
+      Patch_T *patch = inbh_grid->patch[p];
       
       /* add 2 fields and their derivatives 
       // with suffix 1,2 higher order fields */
       /* field */
       sprintf(s,"%s.1",bhf->fld[f]->f);
-      ADD_AND_ALLOC_FIELD(s,0,patch,YES);
-      
+      add_field(s,0,patch,YES);
       sprintf(s,"%s.2",bhf->fld[f]->f);
-      ADD_AND_ALLOC_FIELD(s,0,patch,YES);
+      add_field(s,0,patch,YES);
+      
       /* dfield/d? */
       sprintf(s,"d%s.1_D0",bhf->fld[f]->f);
-      ADD_AND_ALLOC_FIELD(s,0,patch,YES);
+      add_field(s,0,patch,YES);
       sprintf(s,"d%s.1_D1",bhf->fld[f]->f);
-      ADD_AND_ALLOC_FIELD(s,0,patch,YES);
+      add_field(s,0,patch,YES);
       sprintf(s,"d%s.1_D2",bhf->fld[f]->f);
-      ADD_AND_ALLOC_FIELD(s,0,patch,YES);
+      add_field(s,0,patch,YES);
       
       sprintf(s,"d%s.2_D0",bhf->fld[f]->f);
-      ADD_AND_ALLOC_FIELD(s,0,patch,YES);
+      add_field(s,0,patch,YES);
       sprintf(s,"d%s.2_D1",bhf->fld[f]->f);
-      ADD_AND_ALLOC_FIELD(s,0,patch,YES);
+      add_field(s,0,patch,YES);
       sprintf(s,"d%s.2_D2",bhf->fld[f]->f);
-      ADD_AND_ALLOC_FIELD(s,0,patch,YES);
+      add_field(s,0,patch,YES);
       
       /* ddfield/d^2? */
       sprintf(s,"dd%s.1_D0D0",bhf->fld[f]->f);
-      ADD_AND_ALLOC_FIELD(s,0,patch,YES);
+      add_field(s,0,patch,YES);
       sprintf(s,"dd%s.1_D1D1",bhf->fld[f]->f);
-      ADD_AND_ALLOC_FIELD(s,0,patch,YES);
+      add_field(s,0,patch,YES);
       sprintf(s,"dd%s.1_D2D2",bhf->fld[f]->f);
-      ADD_AND_ALLOC_FIELD(s,0,patch,YES);
+      add_field(s,0,patch,YES);
       
       sprintf(s,"dd%s.2_D0D0",bhf->fld[f]->f);
-      ADD_AND_ALLOC_FIELD(s,0,patch,YES);
+      add_field(s,0,patch,YES);
       sprintf(s,"dd%s.2_D1D1",bhf->fld[f]->f);
-      ADD_AND_ALLOC_FIELD(s,0,patch,YES);
+      add_field(s,0,patch,YES);
       sprintf(s,"dd%s.2_D2D2",bhf->fld[f]->f);
-      ADD_AND_ALLOC_FIELD(s,0,patch,YES);
+      add_field(s,0,patch,YES);
+      
+      /* b.c field */
+      sprintf(s,"bc_%s",bhf->fld[f]->f);
+      add_field(s,0,patch,YES);
+      sprintf(s,"bc_%s.1",bhf->fld[f]->f);
+      add_field(s,0,patch,YES);
+      sprintf(s,"bc_%s.2",bhf->fld[f]->f);
+      add_field(s,0,patch,YES);
+      
     }  
+    
+    /* populating bc values */
+    FOR_ALL_PATCHES(p,inbh_grid)
+    {
+      Patch_T *patch = inbh_grid->patch[p];
       
+      /* this patch does not have BC */
+      if (strstr(patch->name,"right_central_box"))
+        continue;
       
+      const unsigned *n = patch->n;
+      unsigned i,j,k,ijk,_i,_j;
+      sprintf(s,"bc_%s",bhf->fld[f]->f);
+      double *bc = patch->pool[Ind(s)]->v;
+      sprintf(s,"bc_%s.1",bhf->fld[f]->f);
+      double *bc1 = patch->pool[Ind(s)]->v;
+      sprintf(s,"bc_%s.2",bhf->fld[f]->f);
+      double *bc2 = patch->pool[Ind(s)]->v;
+      
+      for (i = 0; i < n[0]; ++i)
+      {
+        for (j = 0; j < n[1]; ++j)
+        {
+          ijk = L(n,i,j,n[2]-1);/* on the boundary */
+          double x[3] = { patch->node[ijk]->x[0],
+                          patch->node[ijk]->x[1],
+                          patch->node[ijk]->x[2] };
+          double Xp[3] = {0};/* (X,Y,Z)(x,y,z) in grid_prev */
+          Patch_T *patchp = 0;/* patch in grid_prev contains (x,y,z) */
+          double KD[2]      = {0,1};
+          double df_dx[3]   = {0};
+          double ddf_ddx[6] = {0};
+          double ddfddr = 0,dfdr = 0,fr1;
+          double _ddfddr[3] = {0,0,0};
+          unsigned d1,d2;/* derivative */
+          double _x[3],N[3],r;
+          
+          /* finding X and patch in outbh_grid associated to x */
+          assert(find_X_and_patch(x,0,outbh_grid,Xp,&patchp));
+          
+          _x[0] = x[0]-patch->c[0];
+          _x[1] = x[1]-patch->c[1];
+          _x[2] = x[2]-patch->c[2];
+          r     = root_square(3,_x,0);
+          
+          /* normal vector */
+          N[0]  = _x[0]/r;
+          N[1]  = _x[1]/r;
+          N[2]  = _x[2]/r;
+          
+          /* 2d interpolate on the surface */
+          Interpolation_T *interp_s = init_interpolation();
+          interp_s->XY_dir_flag = 1;
+          interp_s->X = Xp[0];
+          interp_s->Y = Xp[1];
+          interp_s->K = 0;
+          /* f value at r = r1 */
+          interp_s->field = 
+            patchp->pool[LookUpField_E(bhf->fld[f]->f,patchp)];
+          plan_interpolation(interp_s);
+          fr1 = execute_interpolation(interp_s);
+          
+          /* df/dx value */
+          for (d1 = 0; d1 < 3; d1++)
+          {
+            interp_s->field = 
+              patchp->pool[LookUpField_E(bhf->fld[f]->df[d1],patchp)];
+            plan_interpolation(interp_s);
+            df_dx[d1] = execute_interpolation(interp_s);
+          }
+          /* d^2f/dx^2 value */
+          for (d1 = 0; d1 < 3; d1++)
+          {
+            for (d2 = d1; d2 < 3; d2++)
+            {
+              interp_s->field = 
+                patchp->pool[LookUpField_E(bhf->fld[f]->ddf[IJsymm3(d1,d2)],patchp)];
+              plan_interpolation(interp_s);
+              ddf_ddx[IJsymm3(d1,d2)] = execute_interpolation(interp_s);
+            }
+          }
+          free_interpolation(interp_s);
+          
+          /* df/dr */
+          dfdr = (N[0]*df_dx[0]+N[1]*df_dx[1]+N[2]*df_dx[2]);
+          
+          ddfddr = 0;
+          _ddfddr[0] = _ddfddr[1] = _ddfddr[2] = 0;
+          /* d^2f/dr^2 */
+          for (_i = 0; _i < 3; ++_i)
+          {
+            for (_j = 0; _j < 3; ++_j)
+            {
+              _ddfddr[_i] += (KD[_i==_j]/rfill - _x[_i]*_x[_j]/rfill3)*df_dx[_j];
+              _ddfddr[_i] += N[_j]*ddf_ddx[IJsymm3(_i,_j)];
+            }
+            ddfddr += _ddfddr[_i]*N[_i]; \
+          }
+        
+          /* now fill the bc values */
+          for (k = 0; k < n[3]; ++k)
+          {
+            ijk = L(n,i,j,k);
+            bc[ijk]  = fr1;
+            bc1[ijk] = dfdr;
+            bc2[ijk] = ddfddr;
+          }
+        
+        }/* for (j = 0; j < n[1]; ++j) */
+      }/* for (i = 0; i < n[0]; ++i) */
+    }/* FOR_ALL_PATCHES(p,inbh_grid) */
+    
+    /* adding eqs. (each field has 3 eqs.) */  
     sprintf(s,"eq_%s",bhf->fld[f]->f);
+    add_eq(&field_eq,bbn_bhf_eq_Brown,s);
+    sprintf(s,"eq_%s.1",bhf->fld[f]->f);
+    add_eq(&field_eq,bbn_bhf_eq_Brown,s);
+    sprintf(s,"eq_%s.2",bhf->fld[f]->f);
     add_eq(&field_eq,bbn_bhf_eq_Brown,s);
     
     sprintf(s,"bc_%s",bhf->fld[f]->f);
     add_eq(&bc_eq,bbn_bhf_bc_Brown,s);
-    
-    sprintf(s,"jacobian_eq_%s",bhf->fld[f]->f);
-    add_eq(&jacobian_field_eq,bbn_bhf_jacobian_eq_Brown,s);
-    
-    sprintf(s,"jacobian_bc_%s",bhf->fld[f]->f);
-    add_eq(&jacobian_bc_eq ,bbn_bhf_jacobian_bc_Brown,s);
-  }
-  
-  
-  
-  for (f = 0; f < nf; ++f)
-  {
-    sprintf(s,"eq_%s",bhf->fld[f]->f);
-    add_eq(&field_eq,bbn_bhf_eq_Brown,s);
-    
-    sprintf(s,"bc_%s",bhf->fld[f]->f);
+    sprintf(s,"bc_%s.1",bhf->fld[f]->f);
+    add_eq(&bc_eq,bbn_bhf_bc_Brown,s);
+    sprintf(s,"bc_%s.2",bhf->fld[f]->f);
     add_eq(&bc_eq,bbn_bhf_bc_Brown,s);
     
     sprintf(s,"jacobian_eq_%s",bhf->fld[f]->f);
     add_eq(&jacobian_field_eq,bbn_bhf_jacobian_eq_Brown,s);
+    sprintf(s,"jacobian_eq_%s.1",bhf->fld[f]->f);
+    add_eq(&jacobian_field_eq,bbn_bhf_jacobian_eq_Brown,s);
+    sprintf(s,"jacobian_eq_%s.2",bhf->fld[f]->f);
+    add_eq(&jacobian_field_eq,bbn_bhf_jacobian_eq_Brown,s);
     
     sprintf(s,"jacobian_bc_%s",bhf->fld[f]->f);
     add_eq(&jacobian_bc_eq ,bbn_bhf_jacobian_bc_Brown,s);
+    sprintf(s,"jacobian_bc_%s.1",bhf->fld[f]->f);
+    add_eq(&jacobian_bc_eq ,bbn_bhf_jacobian_bc_Brown,s);
+    sprintf(s,"jacobian_bc_%s.2",bhf->fld[f]->f);
+    add_eq(&jacobian_bc_eq ,bbn_bhf_jacobian_bc_Brown,s);
   }
-
+  
+  
   /* populating solution managment */
-  initialize_solving_man(bh_grid,field_eq,bc_eq,
+  initialize_solving_man(inbh_grid,field_eq,bc_eq,
                          jacobian_field_eq,jacobian_bc_eq);
  
   
@@ -1818,7 +1998,127 @@ static int bhf_ell_Brown(struct BHFiller_S *const bhf)
   free_db_eqs(jacobian_field_eq);
   free_db_eqs(jacobian_bc_eq);     
   /* free grid and patches */
-  //?????
+  if (inbh_grid)
+  {
+    FOR_ALL_PATCHES(p,inbh_grid)
+    {
+      Patch_T *patch = inbh_grid->patch[p];
+
+      free_patch_interface(patch);
+      //free_patch_SolMan_jacobian(patch);
+      free_patch_SolMan_method_Schur(patch);
+      free(patch->solving_man);
+    }
+    free_2d_mem(inbh_grid->patch,inbh_grid->np);
+    free(inbh_grid);
+  }
+  if (outbh_grid)
+  {
+    FOR_ALL_PATCHES(p,outbh_grid)
+    {
+      Patch_T *patch = outbh_grid->patch[p];
+
+      free_patch_interface(patch);
+      //free_patch_SolMan_jacobian(patch);
+      free_patch_SolMan_method_Schur(patch);
+      free(patch->solving_man);
+    }
+    free_2d_mem(outbh_grid->patch,outbh_grid->np);
+    free(outbh_grid);
+  }
+  
+  //temp
+  UNUSED(SolveEqs);
   return EXIT_SUCCESS;                  
 }
 
+/* given a cartesian point x on the grid, it finds the corresponding X and patch 
+// on which this x takes place. 
+// hint, is the name of the patch that potentially has the given x 
+// -> return value: for success 1, otherwise 0 */
+static int find_X_and_patch(const double *const x,const char *const hint,Grid_T *const grid,double *const X,Patch_T **const ppatch)
+{
+  Needle_T *needle = alloc_needle();
+  const double LOW_RES_ERR = 1E-9;
+  unsigned *found;
+  unsigned p;
+  int ret = 1;
+  
+  needle->grid = grid;
+  needle->x    = x;
+  
+  /* find this point everywhere */
+  FOR_ALL_PATCHES(p,grid)
+  {
+    Patch_T *patch = grid->patch[p];
+    
+    needle_in(needle,patch);
+      
+  }/* end of FOR_ALL_PATCHES(p,grid) */
+  
+  point_finder(needle);
+  found = needle->ans;
+  
+  /* if it could not find X in neither the given hint patch nor its neighbors */
+  if (needle->Nans)
+  {
+    *ppatch = grid->patch[found[0]];
+    X_of_x(X,x,*ppatch);
+  }
+  else/* if no patch found let's find it in the other patches */
+  {
+    needle->ex   = needle->in;
+    needle->Nex  = needle->Nin;
+    needle->in   = 0;
+    needle->Nin  = 0;
+    
+    point_finder(needle);
+    found = needle->ans;
+    
+    /* if not found */
+    if (!needle->Nans)
+    {
+      /* at the horizon of BH at low resulotion some points 
+      // might not be found, let's fix this by hand. */
+      if (strstr(hint,"right_BH"))
+      {
+        *ppatch = GetPatch(hint,grid);
+        X_of_x(X,x,*ppatch);
+        
+        /* NOTE: This is assumed Cubed Spherical coords */
+        if (LSS(fabs(X[2]),LOW_RES_ERR))
+        {
+          X[2] = 0;/* the culprit is at low resolution, 
+                   // X[2] won't be found very close to 0! */
+          /* make sure the X falls in the interval */
+          assert(LSSEQL(X[0],1) && GRTEQL(X[0],-1));
+          assert(LSSEQL(X[1],1) && GRTEQL(X[1],-1));
+        }
+        else
+        {
+          fprintf(stderr,"The point (%g,%g,%g) could not be found!\n",x[0],x[1],x[2]);
+          fflush(stdout);
+          fflush(stderr);
+          ret = 0;
+          /* Error0("Point not found!\n"); */
+        }
+      }
+      else
+      {
+        fprintf(stderr,"The point (%g,%g,%g) could not be found!\n",x[0],x[1],x[2]);
+        fflush(stdout);
+        fflush(stderr);
+        ret = 0;
+        /* Error0("Point not found!\n"); */
+      }
+    }
+    else
+    {  
+      *ppatch = grid->patch[found[0]];
+      X_of_x(X,x,*ppatch);
+    }
+  }
+  free_needle(needle);
+  
+  return ret;
+}

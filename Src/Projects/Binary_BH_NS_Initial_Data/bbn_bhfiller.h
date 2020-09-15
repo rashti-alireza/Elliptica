@@ -102,5 +102,10 @@ void *bbn_bhf_bc_Brown(void *vp1,void *vp2);
 void *bbn_bhf_eq_Brown(void *vp1,void *vp2);
 void *bbn_bhf_jacobian_bc_Brown(void *vp1,void *vp2);
 void *bbn_bhf_jacobian_eq_Brown(void *vp1,void *vp2);
+static int find_X_and_patch(const double *const x,const char *const hint,Grid_T *const grid,double *const X,Patch_T **const ppatch);
+
+
+
+
 
 
