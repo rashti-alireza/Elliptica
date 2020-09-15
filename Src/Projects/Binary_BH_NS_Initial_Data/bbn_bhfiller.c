@@ -2032,8 +2032,8 @@ static int bhf_ell_Brown(struct BHFiller_S *const bhf)
                          jacobian_field_eq,jacobian_bc_eq);
  
   SolveEqs->solving_order = Pgets("Solving_Order");
-  SolveEqs->FieldUpdate   = 0;
-  SolveEqs->SourceUpdate  = 0;
+  SolveEqs->FieldUpdate   = bbn_bhf_ell_Brown_field_update;
+//  SolveEqs->SourceUpdate  = bbn_bhf_ell_Brown_source_update;
   SolveEqs->umfpack_refine= PgetdEZ("Solving_UMFPACK_refinement_step");
   SolveEqs->umfpack_size  = PgetiEZ("Solving_UMFPACK_size");
   
@@ -2080,8 +2080,6 @@ static int bhf_ell_Brown(struct BHFiller_S *const bhf)
     free(outbh_grid);
   }
   
-  //temp
-  UNUSED(SolveEqs);
   return EXIT_SUCCESS;                  
 }
 
@@ -2174,4 +2172,52 @@ static int find_X_and_patch(const double *const x,const char *const hint,Grid_T 
   free_needle(needle);
   
   return ret;
+}
+
+
+/* field update: updating the derivatives, this is used in 
+// Brown's approach ell eq. */
+static void 
+bbn_bhf_ell_Brown_field_update
+  (
+  Patch_T *const patch,
+  const char *const name
+  )
+{
+  char s[MAX_STR2] = {'\0'};
+  
+  /* field */
+  Field_T *const f = patch->pool[Ind(name)];
+  
+  /* dfield/d? */
+  sprintf(s,"d%s_D0",name);
+  Field_T *const df_dx = patch->pool[Ind(s)];
+  empty_field(df_dx);
+  df_dx->v = Partial_Derivative(f,"x");
+  
+  sprintf(s,"d%s_D1",name);
+  Field_T *const df_dy = patch->pool[Ind(s)];
+  empty_field(df_dy);
+  df_dy->v = Partial_Derivative(f,"y"); 
+  
+  sprintf(s,"d%s_D2",name);
+  Field_T *const df_dz = patch->pool[Ind(s)];
+  empty_field(df_dz);
+  df_dz->v = Partial_Derivative(f,"z"); 
+  
+  /* d^2field/d?^2 */
+  sprintf(s,"dd%s_D0D0",name);
+  Field_T *const ddf_ddx = patch->pool[Ind(s)];
+  empty_field(ddf_ddx);
+  ddf_ddx->v = Partial_Derivative(df_dx,"x");
+  
+  sprintf(s,"dd%s_D1D1",name);
+  Field_T *const ddf_ddy = patch->pool[Ind(s)];
+  empty_field(ddf_ddy);
+  ddf_ddy->v = Partial_Derivative(df_dy,"y");
+  
+  sprintf(s,"dd%s_D2D2",name);
+  Field_T *const ddf_ddz = patch->pool[Ind(s)];
+  empty_field(ddf_ddz);
+  ddf_ddz->v = Partial_Derivative(df_dz,"z");
 }
