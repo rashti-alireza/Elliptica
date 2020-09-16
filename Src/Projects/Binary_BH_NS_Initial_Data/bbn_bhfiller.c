@@ -2212,7 +2212,6 @@ static int bhf_ell_Brown(struct BHFiller_S *const bhf)
       Patch_T *patch = inbh_grid->patch[p];
 
       free_patch_interface(patch);
-      free_patch_SolMan_jacobian(patch);
       free_patch_SolMan_method_Schur(patch);
       free(patch->solving_man);
     }
@@ -2226,7 +2225,6 @@ static int bhf_ell_Brown(struct BHFiller_S *const bhf)
       Patch_T *patch = outbh_grid->patch[p];
 
       free_patch_interface(patch);
-      free_patch_SolMan_jacobian(patch);
       free_patch_SolMan_method_Schur(patch);
       free(patch->solving_man);
     }
