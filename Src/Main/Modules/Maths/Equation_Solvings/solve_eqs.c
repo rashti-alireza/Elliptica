@@ -191,7 +191,9 @@ void add_special_grid_solve_equations(Grid_T *const grid,const char *const name,
   solve->Sgrid[N]->name  = dup_s(name);
 }
 
-/* since each field might be solved in a special grid 
+/* sync pool and solving_man->jacobian of grid and special grid; THUS,
+// DON'T USED "free_patch_SolMan_jacobian" for special grid.
+// since each field might be solved in a special grid 
 // so each patch of the grid shares the same pool but different
 // interface structure; however, pointer to pool might get changes
 // due to free or add field while solving and calculating some equations.

@@ -1922,7 +1922,7 @@ void free_patch_SolMan_jacobian(Patch_T *const patch)
   _free(SolMan->jacobian);
   
   SolMan->jacobian = 0;
-  
+  SolMan->nj       = 0;
 }
 
 
