@@ -259,7 +259,15 @@ Command["sed -i 's/_,/,/g'"];
 `print('  const unsigned nn = patch->nn;')`
 `print('  double phiy = 0,phiz = 0;')`
 `print('  double Bx,By,Bz,B2;/* B = v/c */')`
+`print('  double Lambda;')`
 `print('  unsigned ijk;')`
+`print('')`
+`print('  if (Pcmps("BH_NS_free_data_metric","conformally_flat_metric"))')`
+`print('    Lambda = 0;')`
+`print('  else if (Pcmps("BH_NS_free_data_metric","Boosted_KerrSchild_metric"))')`
+`print('    Lambda = 1;')`
+`print('  else')`
+`print('    Error0(NO_OPTION);')`
 `print('')`
 `print('  assert(LSSEQL(chi,1));')`
 `print('')`
@@ -398,7 +406,15 @@ Command["sed -i 's/_,/,/g'"];
 `print('  const unsigned nn = patch->nn;')`
 `print('  double phiy = 0,phiz = 0;')`
 `print('  double Bx,By,Bz,B2;/* B = v/c */')`
+`print('  double Lambda;')`
 `print('  unsigned ijk;')`
+`print('')`
+`print('  if (Pcmps("BH_NS_free_data_metric","conformally_flat_metric"))')`
+`print('    Lambda = 0;')`
+`print('  else if (Pcmps("BH_NS_free_data_metric","Boosted_KerrSchild_metric"))')`
+`print('    Lambda = 1;')`
+`print('  else')`
+`print('    Error0(NO_OPTION);')`
 `print('')`
 `print('  assert(LSSEQL(chi,1));')`
 `print('')`
@@ -522,7 +538,15 @@ Command["sed -i 's/_,/,/g'"];
 `print('  const unsigned nn = patch->nn;')`
 `print('  double phiy = 0,phiz = 0;')`
 `print('  double Bx,By,Bz,B2;/* B = v/c */')`
+`print('  double Lambda;')`
 `print('  unsigned ijk;')`
+`print('')`
+`print('  if (Pcmps("BH_NS_free_data_metric","conformally_flat_metric"))')`
+`print('    Lambda = 0;')`
+`print('  else if (Pcmps("BH_NS_free_data_metric","Boosted_KerrSchild_metric"))')`
+`print('    Lambda = 1;')`
+`print('  else')`
+`print('    Error0(NO_OPTION);')`
 `print('')`
 `print('  assert(LSSEQL(chi,1));')`
 `print('')`
@@ -787,7 +811,15 @@ Command["sed -i 's/_,/,/g'"];
 `print('  const unsigned nn = patch->nn;')`
 `print('  double phiy = 0,phiz = 0;')`
 `print('  double Bx,By,Bz,B2;/* B = v/c */')`
+`print('  double Lambda;')`
 `print('  unsigned ijk;')`
+`print('')`
+`print('  if (Pcmps("BH_NS_free_data_metric","conformally_flat_metric"))')`
+`print('    Lambda = 0;')`
+`print('  else if (Pcmps("BH_NS_free_data_metric","Boosted_KerrSchild_metric"))')`
+`print('    Lambda = 1;')`
+`print('  else')`
+`print('    Error0(NO_OPTION);')`
 `print('')`
 `print('  assert(LSSEQL(chi,1));')`
 `print('')`

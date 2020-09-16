@@ -37,7 +37,15 @@ void bbn_free_data_g_gI_analytic(
   const unsigned nn = patch->nn;
   double phiy = 0,phiz = 0;
   double Bx,By,Bz,B2;/* B = v/c */
+  double Lambda;
   unsigned ijk;
+
+  if (Pcmps("BH_NS_free_data_metric","conformally_flat_metric"))
+    Lambda = 0;
+  else if (Pcmps("BH_NS_free_data_metric","Boosted_KerrSchild_metric"))
+    Lambda = 1;
+  else
+    Error0(NO_OPTION);
 
   assert(LSSEQL(chi,1));
 
@@ -237,7 +245,15 @@ void bbn_free_data_dg_analytic(
   const unsigned nn = patch->nn;
   double phiy = 0,phiz = 0;
   double Bx,By,Bz,B2;/* B = v/c */
+  double Lambda;
   unsigned ijk;
+
+  if (Pcmps("BH_NS_free_data_metric","conformally_flat_metric"))
+    Lambda = 0;
+  else if (Pcmps("BH_NS_free_data_metric","Boosted_KerrSchild_metric"))
+    Lambda = 1;
+  else
+    Error0(NO_OPTION);
 
   assert(LSSEQL(chi,1));
 
@@ -513,7 +529,16 @@ void bbn_free_data_ddg_analytic(
   const unsigned nn = patch->nn;
   double phiy = 0,phiz = 0;
   double Bx,By,Bz,B2;/* B = v/c */
+  double Lambda;
   unsigned ijk;
+
+  if (Pcmps("BH_NS_free_data_metric","conformally_flat_metric"))
+    Lambda = 0;
+  else if (Pcmps("BH_NS_free_data_metric","Boosted_KerrSchild_metric"))
+    Lambda = 1;
+  else
+    Error0(NO_OPTION);
+
 
   assert(LSSEQL(chi,1));
 
@@ -1669,7 +1694,16 @@ void bbn_free_data_dddg_analytic(
   const unsigned nn = patch->nn;
   double phiy = 0,phiz = 0;
   double Bx,By,Bz,B2;/* B = v/c */
+  double Lambda;
   unsigned ijk;
+
+  if (Pcmps("BH_NS_free_data_metric","conformally_flat_metric"))
+    Lambda = 0;
+  else if (Pcmps("BH_NS_free_data_metric","Boosted_KerrSchild_metric"))
+    Lambda = 1;
+  else
+    Error0(NO_OPTION);
+
 
   assert(LSSEQL(chi,1));
 
