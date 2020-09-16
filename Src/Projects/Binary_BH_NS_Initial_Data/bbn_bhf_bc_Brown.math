@@ -28,6 +28,7 @@ C_macro3 = READ_v_IF_IN_NS(name);
 `  const char *const fld_name     = sol->field_name[sol->cf];`
 `  char bc_fld_name[100] = {'\0'};`
 ``
+`  const double * const B = patch->pool[Ind(fld_name)]->v;`
 ## the bc pertinent to this field
 `  sprintf(bc_fld_name,"bc_%s",fld_name);`
 `  const double * const v_bc = patch->pool[Ind(bc_fld_name)]->v;`
@@ -42,7 +43,7 @@ C_macro3 = READ_v_IF_IN_NS(name);
 `  DDM_SCHUR_BC_OPEN\n`;
 
 # bc equation for outer boundary at ijk point:
-`  F[map[ijk]] = v_bc[ijk];\n`;
+`  F[map[ijk]] = B[ijk]-v_bc[ijk];\n`;
 `  DDM_SCHUR_BC_CLOSE`;
 `  }/* end of if (patch->outerB) */`;
 

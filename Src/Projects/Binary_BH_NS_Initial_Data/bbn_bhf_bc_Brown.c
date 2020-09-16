@@ -15,6 +15,7 @@ void *bbn_bhf_bc_Brown(void *vp1,void *vp2)
   const char *const fld_name     = sol->field_name[sol->cf];
   char bc_fld_name[100] = {'\0'};
 
+  const double * const B = patch->pool[Ind(fld_name)]->v;
   sprintf(bc_fld_name,"bc_%s",fld_name);
   const double * const v_bc = patch->pool[Ind(bc_fld_name)]->v;
 
@@ -22,7 +23,7 @@ void *bbn_bhf_bc_Brown(void *vp1,void *vp2)
   {
   DDM_SCHUR_BC_OPEN
 
-  F[map[ijk]] = v_bc[ijk];
+  F[map[ijk]] = B[ijk]-v_bc[ijk];
 
   DDM_SCHUR_BC_CLOSE
   }/* end of if (patch->outerB) */
