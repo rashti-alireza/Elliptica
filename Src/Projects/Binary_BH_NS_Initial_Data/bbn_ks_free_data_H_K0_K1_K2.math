@@ -18,7 +18,12 @@
 # 
 # $ cpi bbn_ks_free_data_H_K0_K1_K2.math > \
 #   bbn_ks_free_data_H_K0_K1_K2.c && \
-#   sed -i '/Welcome to Cpi/,$d' bbn_ks_free_data_H_K0_K1_K2.c
+#   sed -i '/Welcome to Cpi/,$d' bbn_ks_free_data_H_K0_K1_K2.c && \
+#   sed -i -E 's/\bX\b\(/bbn_ks_X\(/g' bbn_ks_free_data_H_K0_K1_K2.c &&\
+#   sed -i -E 's/\bY\b\(/bbn_ks_Y\(/g' bbn_ks_free_data_H_K0_K1_K2.c &&\
+#   sed -i -E 's/\bZ\b\(/bbn_ks_Z\(/g' bbn_ks_free_data_H_K0_K1_K2.c &&\
+#   sed -i -E 's/\bR\b\(/bbn_ks_R\(/g' bbn_ks_free_data_H_K0_K1_K2.c
+
 
 Dimension = 3;
 point     = x;
