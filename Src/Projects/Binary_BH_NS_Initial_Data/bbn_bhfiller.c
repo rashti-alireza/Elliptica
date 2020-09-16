@@ -1925,7 +1925,7 @@ static int bhf_ell_Brown(struct BHFiller_S *const bhf)
           double _x[3],N[3],r;
           
           /* finding X and patch in outbh_grid associated to x */
-          assert(find_X_and_patch(x,0,outbh_grid,Xp,&patchp));
+          assert(find_X_and_patch(x,"",outbh_grid,Xp,&patchp));
           
           _x[0] = x[0]-patch->c[0];
           _x[1] = x[1]-patch->c[1];
@@ -2003,7 +2003,7 @@ static int bhf_ell_Brown(struct BHFiller_S *const bhf)
   /* initialize solving parameters */
   Psets("Solving_Order",s_solve_eq);
   Psetd("Solving_Residual",1E-10);
-  Pseti("Solving_Max_Number_of_Newton_Step",0);
+  Pseti("Solving_Max_Number_of_Newton_Step",3);
   Psetd("Solving_Newton_update_weight",1.0);
   initialize_solving_man(bhf->grid,field_eq,bc_eq,
                          jacobian_field_eq,jacobian_bc_eq);
