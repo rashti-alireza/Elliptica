@@ -1689,16 +1689,16 @@ static int bhf_ell_Brown(struct BHFiller_S *const bhf)
 {
   printf("|--> BH-filler method = C2_EllEq_Brown.\n");
   fflush(stdout);
-  const unsigned nf  = bhf->nf;
-  const unsigned npi = bhf->npi;
-  const unsigned npo = bhf->npo;
+  const unsigned Nf  = bhf->nf;
+  const unsigned Npi = bhf->npi;
+  const unsigned Npo = bhf->npo;
   const double rfill = Pgetd("r_excision");
   const double rfill3= pow(rfill,3);
   char s_solve_eq[MAX_STR_LARGE] = {'\0'};
   Grid_T *inbh_grid  = calloc(1,sizeof(*inbh_grid));IsNull(inbh_grid);
   Grid_T *outbh_grid = calloc(1,sizeof(*outbh_grid));IsNull(outbh_grid);
   /* init equations */
-  Solve_Equations_T *SolveEqs = init_solve_equations(inbh_grid);
+  Solve_Equations_T *SolveEqs = init_solve_equations(bhf->grid);
   sEquation_T **field_eq = init_eq()/* field equation */,
             **bc_eq = init_eq()/* B.C. for the field */,
             **jacobian_field_eq = init_eq()/* jacobian for field equation */,
@@ -1708,7 +1708,7 @@ static int bhf_ell_Brown(struct BHFiller_S *const bhf)
   
   /* updating coeffs */
   OpenMP_Patch_Pragma(omp parallel for)
-  for (p = 0; p < npo; p++)
+  for (p = 0; p < Npo; p++)
   {
     Patch_T *patch = bhf->patches_outBH[p];
     unsigned fn;
@@ -1732,37 +1732,13 @@ static int bhf_ell_Brown(struct BHFiller_S *const bhf)
     }
   }
   
-  /* select inside bh grid */
-  inbh_grid->kind = bhf->grid->kind;
-  inbh_grid->gn   = bhf->grid->gn;
-  inbh_grid->np   = npi;
-  inbh_grid->patch = calloc(npi+1,sizeof(*inbh_grid->patch));
-  IsNull(inbh_grid->patch);
-  for (p = 0; p < npi; ++p)
-  {
-    Patch_T *patch = bhf->patches_inBH[p];
-    inbh_grid->patch[p] = calloc(1,sizeof(*inbh_grid->patch[p]));
-    IsNull(inbh_grid->patch[p]);
-    /* note, for the following all of the pointers inside the structures 
-    // will be equal, since this is not a deep copy. */
-    inbh_grid->patch[p][0]    = patch[0];
-    inbh_grid->patch[p]->pn   = p;
-    inbh_grid->patch[p]->grid = inbh_grid;
-    inbh_grid->nn            += patch->nn;
-    /* the following needs to be constructed from scratch */
-    inbh_grid->patch[p]->interface   = 0;
-    inbh_grid->patch[p]->solving_man = 0;
-  }
-  /* now let's fill up inbh_grid->patch[?]->interface */
-  realize_geometry(inbh_grid);
-  
   /* select outside bh grid */
   outbh_grid->kind  = bhf->grid->kind;
   outbh_grid->gn    = bhf->grid->gn;
-  outbh_grid->np    = npo;
-  outbh_grid->patch = calloc(npi+1,sizeof(*outbh_grid->patch));
+  outbh_grid->np    = Npo;
+  outbh_grid->patch = calloc(Npi+1,sizeof(*outbh_grid->patch));
   IsNull(outbh_grid->patch);
-  for (p = 0; p < npo; ++p)
+  for (p = 0; p < Npo; ++p)
   {
     Patch_T *patch = bhf->patches_outBH[p];
     outbh_grid->patch[p] = calloc(1,sizeof(*outbh_grid->patch[p]));
@@ -1779,15 +1755,15 @@ static int bhf_ell_Brown(struct BHFiller_S *const bhf)
   }
   
   /* adding field */
-  FOR_ALL_PATCHES(p,inbh_grid)
+  for (p = 0; p < Npi; ++p)
   {
-    Patch_T *patch = inbh_grid->patch[p];
+    Patch_T *patch = bhf->patches_inBH[p];
     bbn_add_fields_in_patch(patch);
   }
   
-  /* setup fields for ell. eq. and for B.C.
+  /* setup fields and ell. eq. and B.C. .
   // note: each field has 3 ell. eqs => 3 b.c. */
-  for (f = 0; f < nf; ++f)
+  for (f = 0; f < Nf; ++f)
   {
     char s[MAX_STR2] = {'\0'};
     
@@ -1798,11 +1774,11 @@ static int bhf_ell_Brown(struct BHFiller_S *const bhf)
     sprintf(s,"%s.0,",bhf->fld[f]->f);
     strcat(s_solve_eq,s);
     
-    /* adding field */
-    FOR_ALL_PATCHES(p,inbh_grid)
+    /* adding fields */
+    for (p = 0; p < Npi; ++p)
     {
-      Patch_T *patch = inbh_grid->patch[p];
-      
+      Patch_T *patch = bhf->patches_inBH[p];
+    
       /* add 3 fields and their derivatives 
       // with suffix 0,1,2 higher order fields */
       /* field */
@@ -1873,7 +1849,6 @@ static int bhf_ell_Brown(struct BHFiller_S *const bhf)
       sprintf(s,"src_%s.2",bhf->fld[f]->f);
       add_field(s,0,patch,YES);
     }  
-    
     /* adding eqs. (each field has 3 eqs.) */  
     sprintf(s,"eq_%s.0",bhf->fld[f]->f);
     add_eq(&field_eq,bbn_bhf_eq_Brown,s);
@@ -1902,18 +1877,18 @@ static int bhf_ell_Brown(struct BHFiller_S *const bhf)
     add_eq(&jacobian_bc_eq ,bbn_bhf_jacobian_bc_Brown,s);
     sprintf(s,"jacobian_bc_%s.2",bhf->fld[f]->f);
     add_eq(&jacobian_bc_eq ,bbn_bhf_jacobian_bc_Brown,s);
-  }/* for (f = 0; f < nf; ++f) */
+  }/* for (f = 0; f < Nf; ++f) */
   
   /* populating bc values */
   OpenMP_Patch_Pragma(omp parallel for)
-  for (f = 0; f < nf; ++f)
+  for (f = 0; f < Nf; ++f)
   {
     char s[MAX_STR2] = {'\0'};
     unsigned pp;
     
-    FOR_ALL_PATCHES(pp,inbh_grid)
+    for (pp = 0; pp < Npi; ++pp)
     {
-      Patch_T *patch = inbh_grid->patch[pp];
+      Patch_T *patch = bhf->patches_inBH[pp];
       
       /* this patch does not have BC */
       if (strstr(patch->name,"right_central_box"))
@@ -2022,16 +1997,62 @@ static int bhf_ell_Brown(struct BHFiller_S *const bhf)
         
         }/* for (j = 0; j < n[1]; ++j) */
       }/* for (i = 0; i < n[0]; ++i) */
-    }/* FOR_ALL_PATCHES(p,inbh_grid) */
-  }/* for (f = 0; f < nf; ++f) */
+    }
+  }/* for (f = 0; f < Nf; ++f) */
   
-  /* populating solution managment and set the solving parameters */
+  /* initialize solving parameters */
   Psets("Solving_Order",s_solve_eq);
   Psetd("Solving_Residual",1E-10);
-  Pseti("Solving_Max_Number_of_Newton_Step",20);
+  Pseti("Solving_Max_Number_of_Newton_Step",0);
   Psetd("Solving_Newton_update_weight",1.0);
-  initialize_solving_man(inbh_grid,field_eq,bc_eq,
+  initialize_solving_man(bhf->grid,field_eq,bc_eq,
                          jacobian_field_eq,jacobian_bc_eq);
+  /* select inside bh patch to solve the field there */
+  inbh_grid->kind = bhf->grid->kind;
+  inbh_grid->gn   = bhf->grid->gn;
+  inbh_grid->np   = Npi;
+  inbh_grid->patch = calloc(Npi+1,sizeof(*inbh_grid->patch));
+  IsNull(inbh_grid->patch);
+  for (p = 0; p < Npi; ++p)
+  {
+    Patch_T *patch = bhf->patches_inBH[p];
+    inbh_grid->patch[p] = calloc(1,sizeof(*inbh_grid->patch[p]));
+    IsNull(inbh_grid->patch[p]);
+    /* note, for the following all of the pointers inside the structures 
+    // will be equal, since this is not a deep copy. */
+    inbh_grid->patch[p][0]    = patch[0];
+    inbh_grid->patch[p]->pn   = p;
+    inbh_grid->patch[p]->grid = inbh_grid;
+    inbh_grid->nn            += patch->nn;
+    /* the following needs to be constructed from scratch */
+    inbh_grid->patch[p]->interface   = 0;
+    inbh_grid->patch[p]->solving_man = 
+      calloc(1,sizeof(*inbh_grid->patch[p]->solving_man));
+    IsNull(inbh_grid->patch[p]->solving_man);
+    inbh_grid->patch[p]->solving_man[0]     = patch->solving_man[0];
+    inbh_grid->patch[p]->solving_man->patch = inbh_grid->patch[p];
+    inbh_grid->patch[p]->solving_man->jacobian = 0;
+    inbh_grid->patch[p]->solving_man->nj       = 0;
+    inbh_grid->patch[p]->solving_man->method->Schur_Complement = 0;
+    inbh_grid->patch[p]->solving_man->method->SchurC = 0;
+  }
+  /* now let's fill up inbh_grid->patch[?]->interface */
+  realize_geometry(inbh_grid);
+  
+  /* add special grids */
+  for (f = 0; f < Nf; ++f)
+  {
+    char s[MAX_STR2] = {'\0'};
+    /* adding special grid */
+    sprintf(s,"%s.0",bhf->fld[f]->f);
+    add_special_grid_solve_equations(inbh_grid,s,SolveEqs);
+    sprintf(s,"%s.1",bhf->fld[f]->f);
+    add_special_grid_solve_equations(inbh_grid,s,SolveEqs);
+    sprintf(s,"%s.2",bhf->fld[f]->f);
+    add_special_grid_solve_equations(inbh_grid,s,SolveEqs);
+  }/* for (f = 0; f < Nf; ++f) */
+    
+  /* populating solution managment */
   SolveEqs->solving_order = Pgets("Solving_Order");
   SolveEqs->FieldUpdate   = bbn_bhf_ell_Brown_field_update;
   SolveEqs->SourceUpdate  = bbn_bhf_ell_Brown_source_update;
@@ -2043,16 +2064,16 @@ static int bhf_ell_Brown(struct BHFiller_S *const bhf)
   
   /* now fill the BH */
   OpenMP_Patch_Pragma(omp parallel for)
-  for (p = 0; p < npi; p++)
+  for (p = 0; p < Npi; p++)
   {
     Patch_T *patch = bhf->patches_inBH[p];
     unsigned nn = patch->nn;
     char s[MAX_STR2] = {'\0'};
     unsigned ijk;
     unsigned fn;
-
+    
     /* copy the solutions */
-    for (fn = 0; fn < nf; ++fn)
+    for (fn = 0; fn < Nf; ++fn)
     {
       sprintf(s,"%s.0",bhf->fld[fn]->f);
       const double *sol = patch->pool[Ind(s)]->v;
@@ -2063,7 +2084,7 @@ static int bhf_ell_Brown(struct BHFiller_S *const bhf)
       
       for (ijk = 0; ijk < nn; ++ijk)
         v[ijk] = sol[ijk];
-    }/* for (f = 0; f < nf ++f) */
+    }/* for (f = 0; f < Nf ++f) */
     
     /* _gammaI */
     REALLOC_v_WRITE_v(_gammaI_U2U2)
@@ -2100,7 +2121,7 @@ static int bhf_ell_Brown(struct BHFiller_S *const bhf)
                      _gamma_D0D2[ijk],_gamma_D1D2[ijk],_gamma_D2D2[ijk])
                      
       /* quick test check _gamma * _gammaI = delta */
-      if (1)
+      if (0)
       {
           double delta_U0D0 = 
         _gammaI_U0U0[ijk]*_gamma_D0D0[ijk] + _gammaI_U0U1[ijk]*
@@ -2160,23 +2181,23 @@ static int bhf_ell_Brown(struct BHFiller_S *const bhf)
     bbn_1st_derivatives_conformal_metric(patch);
     bbn_free_data_Gamma_patch(patch);
     bbn_rm_1st_derivatives_conformal_metric(patch);
-  }/* for (p = 0; p < npi; p++) */
+  }/* for (p = 0; p < Npi; p++) */
   
   /* free */
   bbn_rm_1st_2nd_derivatives_conformal_metric
-    (GetPatch("right_BH_surrounding_up",outbh_grid));
+    (GetPatch("right_BH_surrounding_up",bhf->grid));
   bbn_rm_1st_2nd_derivatives_conformal_metric
-    (GetPatch("right_BH_surrounding_down",outbh_grid));
+    (GetPatch("right_BH_surrounding_down",bhf->grid));
   bbn_rm_1st_2nd_derivatives_conformal_metric
-    (GetPatch("right_BH_surrounding_left",outbh_grid));
+    (GetPatch("right_BH_surrounding_left",bhf->grid));
   bbn_rm_1st_2nd_derivatives_conformal_metric
-    (GetPatch("right_BH_surrounding_right",outbh_grid));
+    (GetPatch("right_BH_surrounding_right",bhf->grid));
   bbn_rm_1st_2nd_derivatives_conformal_metric
-    (GetPatch("right_BH_surrounding_back",outbh_grid));
+    (GetPatch("right_BH_surrounding_back",bhf->grid));
   bbn_rm_1st_2nd_derivatives_conformal_metric
-    (GetPatch("right_BH_surrounding_front",outbh_grid));
+    (GetPatch("right_BH_surrounding_front",bhf->grid));
   
-  /* free SolveEqs and phi grid */
+  /* free SolveEqs and special grid */
   free_solve_equations(SolveEqs);
   /* free data base of equations */
   free_db_eqs(field_eq);
