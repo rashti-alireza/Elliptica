@@ -1,6 +1,28 @@
 #include "bbn_headers.h"
 
+/* mathematica */
+#define Cos(a) cos(a)
+#define Sin(a) sin(a)
+#define Tan(a) tan(a)
+#define Cot(a) (1./tan(a))
+#define Sec(a) (1./cos(a))
+#define Csc(a) (1./sin(a))
+#define Power(a,b) pow(a,b)
 
+/* nothing for Hold */
+#define Hold    
+
+/* nothing for List */
+//#define List
+
+/* concatenate */
+#define Pattern(a,b) a##_##b
+
+/* derivative */
+#define Derivative(...) 1
+
+/* derivative */
+#define D(...) 1
 
 /* function prefix DON NOT change this prefix macro some fields 
 // using this prefix which then you must change them too.*/
@@ -14,11 +36,12 @@
   (const double x,const double y, const double z, \
    const double M_BH,const double a_BH,const double phiy, \
    const double phiz,const double Bx, \
-   const double By,const double Bz,const double B2)
+   const double By,const double Bz,const double B2,\
+   const double Lambda)
 
 /* pass special argument to each function */   
 #define KS_func_pass_args_macro  \
-  (x,y,z,M_BH,a_BH,phiy,phiz,Bx,By,Bz,B2)
+  (x,y,z,M_BH,a_BH,phiy,phiz,Bx,By,Bz,B2,Lambda)
 
 /* pass arguments for the following functions */
 #define bbn_ks_k0(x,y,z) bbn_ks_k0 KS_func_pass_args_macro
@@ -26,6 +49,12 @@
 #define bbn_ks_k2(x,y,z) bbn_ks_k2 KS_func_pass_args_macro
 #define bbn_ks_kt(x,y,z) bbn_ks_kt KS_func_pass_args_macro
 #define bbn_ks_c(x,y,z)  bbn_ks_c  KS_func_pass_args_macro
+
+#define bbn_ks_X(x,y,z)  bbn_ks_X  KS_func_pass_args_macro
+#define bbn_ks_Y(x,y,z)  bbn_ks_Y  KS_func_pass_args_macro
+#define bbn_ks_Z(x,y,z)  bbn_ks_Z  KS_func_pass_args_macro
+#define bbn_ks_R(x,y,z)  bbn_ks_R  KS_func_pass_args_macro
+#define bbn_ks_H(x,y,z)  bbn_ks_H  KS_func_pass_args_macro
 
 
 /* derivative macro */
