@@ -1696,7 +1696,6 @@ static int bhf_ell_Brown(struct BHFiller_S *const bhf)
   const double rfill3= pow(rfill,3);
   char s_solve_eq[MAX_STR_LARGE] = {'\0'};
   Grid_T *inbh_grid  = calloc(1,sizeof(*inbh_grid));IsNull(inbh_grid);
-  Grid_T *outbh_grid = calloc(1,sizeof(*outbh_grid));IsNull(outbh_grid);
   /* init equations */
   Solve_Equations_T *SolveEqs = init_solve_equations(bhf->grid);
   sEquation_T **field_eq = init_eq()/* field equation */,
@@ -1704,7 +1703,6 @@ static int bhf_ell_Brown(struct BHFiller_S *const bhf)
             **jacobian_field_eq = init_eq()/* jacobian for field equation */,
             **jacobian_bc_eq = init_eq()/* jacobian for B.C. */;
   unsigned f,p;
-  ////////////////////////////fix outbh_grid for 3rd_cheb and polynomial.
   
   /* updating coeffs */
   OpenMP_Patch_Pragma(omp parallel for)
@@ -1730,28 +1728,6 @@ static int bhf_ell_Brown(struct BHFiller_S *const bhf)
           patch->pool[fn] != R2_f    )
         make_coeffs_2d(patch->pool[fn],0,1);/* X and Y direction */
     }
-  }
-  
-  /* select outside bh grid */
-  outbh_grid->kind  = bhf->grid->kind;
-  outbh_grid->gn    = bhf->grid->gn;
-  outbh_grid->np    = Npo;
-  outbh_grid->patch = calloc(Npi+1,sizeof(*outbh_grid->patch));
-  IsNull(outbh_grid->patch);
-  for (p = 0; p < Npo; ++p)
-  {
-    Patch_T *patch = bhf->patches_outBH[p];
-    outbh_grid->patch[p] = calloc(1,sizeof(*outbh_grid->patch[p]));
-    IsNull(outbh_grid->patch[p]);
-    /* note, for the following all of the pointers inside the structures 
-    // will be equal, since this is not a deep copy. */
-    outbh_grid->patch[p][0]    = patch[0];
-    outbh_grid->patch[p]->pn   = p;
-    outbh_grid->patch[p]->grid = outbh_grid;
-    outbh_grid->nn            += patch->nn;
-    /* the following needs to be constructed from scratch */
-    outbh_grid->patch[p]->interface   = 0;
-    outbh_grid->patch[p]->solving_man = 0;
   }
   
   /* adding field */
@@ -1924,8 +1900,8 @@ static int bhf_ell_Brown(struct BHFiller_S *const bhf)
           unsigned d1,d2;/* derivative */
           double _x[3],N[3],r;
           
-          /* finding X and patch in outbh_grid associated to x */
-          assert(find_X_and_patch(x,"",outbh_grid,Xp,&patchp));
+          /* finding X and patch outside BH associated to x */
+          assert(find_X_and_patch_outside_BH(x,"",bhf->grid,Xp,&patchp));
           
           _x[0] = x[0]-patch->c[0];
           _x[1] = x[1]-patch->c[1];
@@ -2218,28 +2194,15 @@ static int bhf_ell_Brown(struct BHFiller_S *const bhf)
     free_2d_mem(inbh_grid->patch,inbh_grid->np);
     free(inbh_grid);
   }
-  if (outbh_grid)
-  {
-    FOR_ALL_PATCHES(p,outbh_grid)
-    {
-      Patch_T *patch = outbh_grid->patch[p];
-
-      free_patch_interface(patch);
-      free_patch_SolMan_method_Schur(patch);
-      free(patch->solving_man);
-    }
-    free_2d_mem(outbh_grid->patch,outbh_grid->np);
-    free(outbh_grid);
-  }
   
   return EXIT_SUCCESS;                  
 }
 
 /* given a cartesian point x on the grid, it finds the corresponding X and patch 
-// on which this x takes place. 
+// on which this x takes place. note: it only finds in patches covered outside of BH.
 // hint, is the name of the patch that potentially has the given x 
 // -> return value: for success 1, otherwise 0 */
-static int find_X_and_patch(const double *const x,const char *const hint,Grid_T *const grid,double *const X,Patch_T **const ppatch)
+static int find_X_and_patch_outside_BH(const double *const x,const char *const hint,Grid_T *const grid,double *const X,Patch_T **const ppatch)
 {
   Needle_T *needle = alloc_needle();
   const double LOW_RES_ERR = 1E-9;
@@ -2254,8 +2217,8 @@ static int find_X_and_patch(const double *const x,const char *const hint,Grid_T 
   FOR_ALL_PATCHES(p,grid)
   {
     Patch_T *patch = grid->patch[p];
-    
-    needle_in(needle,patch);
+    if (IsItHorizonPatch(patch))
+      needle_in(needle,patch);
       
   }/* end of FOR_ALL_PATCHES(p,grid) */
   
