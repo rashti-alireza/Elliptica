@@ -33,15 +33,17 @@
 
 /* function args */
 #define KS_func_args_macro  \
-  (const double x,const double y, const double z, \
-   const double M_BH,const double a_BH,const double phiy, \
-   const double phiz,const double Bx, \
-   const double By,const double Bz,const double B2,\
-   const double Lambda)
+  (const double x,const double y, const double z,/* Cartesian coords */ \
+   const double M_BH,const double a_BH,/* mass and spin of BH */ \
+   const double phiy, const double phiz,/* rotation angels */\
+   const double Bx, const double By,const double Bz,/* B=v/c (boost) */\
+   const double B2/* B^i B_i */,\
+   const double r0/* roll off radius */,\
+   const double Lambda/* flat data => 0, kerr-schild => 1 */)
 
 /* pass special argument to each function */   
 #define KS_func_pass_args_macro  \
-  (x,y,z,M_BH,a_BH,phiy,phiz,Bx,By,Bz,B2,Lambda)
+  (x,y,z,M_BH,a_BH,phiy,phiz,Bx,By,Bz,B2,r0,Lambda)
 
 /* pass arguments for the following functions */
 #define bbn_ks_k0(x,y,z) bbn_ks_k0 KS_func_pass_args_macro
@@ -56,8 +58,9 @@
 #define bbn_ks_R(x,y,z)  bbn_ks_R  KS_func_pass_args_macro
 #define bbn_ks_H(x,y,z)  bbn_ks_H  KS_func_pass_args_macro
 
-
-/* derivative macro */
+/* avoid compiler warning since not all of functions need all variables */
+#define ks_no_use_macro \
+  UNUSED(0*M_BH*a_BH*phiy*phiz*Bx*By*Bz*B2*r0*Lambda)
 
 /* all external functions */
 void bbn_free_data_g_gI_analytic(
