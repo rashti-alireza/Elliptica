@@ -300,11 +300,10 @@ Command["sed -i 's/_,/,/g'"];
 `print('    ')`
 `print('    for (ijk = 0; ijk < nn; ++ijk)')`
 `print('    {')`
-`print('      double x,y,z,r,H,k0,k1,k2,kt;')`
+`print('      double x,y,z;')`
 `print('      x = patch->node[ijk]->x[0]-BH_center_x;')`
 `print('      y = patch->node[ijk]->x[1]-BH_center_y;')`
 `print('      z = patch->node[ijk]->x[2]-BH_center_z;')`
-`print('      r = sqrt(Pow2(x)+Pow2(y)+Pow2(z));')`
 `print('      _gamma_D0D0[ijk] =')`
 `print(mcode(_g00))`
 ``

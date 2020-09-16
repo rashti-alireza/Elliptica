@@ -77,11 +77,10 @@ void bbn_free_data_g_gI_analytic(
     
     for (ijk = 0; ijk < nn; ++ijk)
     {
-      double x,y,z,r,H,k0,k1,k2,kt;
+      double x,y,z;
       x = patch->node[ijk]->x[0]-BH_center_x;
       y = patch->node[ijk]->x[1]-BH_center_y;
       z = patch->node[ijk]->x[2]-BH_center_z;
-      r = sqrt(Pow2(x)+Pow2(y)+Pow2(z));
       _gamma_D0D0[ijk] =
 /* mcode in progress ... */
 // Not supported in C:
