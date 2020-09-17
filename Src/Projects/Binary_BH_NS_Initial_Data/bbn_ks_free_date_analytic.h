@@ -58,6 +58,8 @@
 #define bbn_ks_R(x,y,z)  bbn_ks_R  KS_func_pass_args_macro
 #define bbn_ks_H(x,y,z)  bbn_ks_H  KS_func_pass_args_macro
 
+#define bbn_ks_rolloff(x,y,z)  bbn_ks_rolloff KS_func_pass_args_macro
+
 /* avoid compiler warning since not all of functions need all variables */
 #define ks_no_use_macro \
   UNUSED(0*M_BH*a_BH*phiy*phiz*Bx*By*Bz*B2*r0*Lambda)
@@ -446,4 +448,34 @@ KS_func_def_macro(dddR_D1D1D2) KS_func_args_macro;
 KS_func_def_macro(dddR_D1D2D1) KS_func_args_macro;
 KS_func_def_macro(dddR_D1D1D1) KS_func_args_macro;
 KS_func_def_macro(dddR_D1D2D0) KS_func_args_macro;
+
+KS_func_def_macro(rolloff) KS_func_args_macro;
+KS_func_def_macro(drolloff_D0) KS_func_args_macro;
+KS_func_def_macro(drolloff_D2) KS_func_args_macro;
+KS_func_def_macro(drolloff_D1) KS_func_args_macro;
+KS_func_def_macro(ddrolloff_D2D2) KS_func_args_macro;
+KS_func_def_macro(ddrolloff_D1D2) KS_func_args_macro;
+KS_func_def_macro(ddrolloff_D0D1) KS_func_args_macro;
+KS_func_def_macro(ddrolloff_D0D2) KS_func_args_macro;
+KS_func_def_macro(ddrolloff_D0D0) KS_func_args_macro;
+KS_func_def_macro(ddrolloff_D1D1) KS_func_args_macro;
+KS_func_def_macro(dddrolloff_D0D1D0) KS_func_args_macro;
+KS_func_def_macro(dddrolloff_D1D1D2) KS_func_args_macro;
+KS_func_def_macro(dddrolloff_D0D2D0) KS_func_args_macro;
+KS_func_def_macro(dddrolloff_D2D2D1) KS_func_args_macro;
+KS_func_def_macro(dddrolloff_D0D0D0) KS_func_args_macro;
+KS_func_def_macro(dddrolloff_D0D1D2) KS_func_args_macro;
+KS_func_def_macro(dddrolloff_D0D2D2) KS_func_args_macro;
+KS_func_def_macro(dddrolloff_D1D1D0) KS_func_args_macro;
+KS_func_def_macro(dddrolloff_D1D2D1) KS_func_args_macro;
+KS_func_def_macro(dddrolloff_D2D2D2) KS_func_args_macro;
+KS_func_def_macro(dddrolloff_D1D2D0) KS_func_args_macro;
+KS_func_def_macro(dddrolloff_D1D2D2) KS_func_args_macro;
+KS_func_def_macro(dddrolloff_D2D2D0) KS_func_args_macro;
+KS_func_def_macro(dddrolloff_D0D2D1) KS_func_args_macro;
+KS_func_def_macro(dddrolloff_D0D1D1) KS_func_args_macro;
+KS_func_def_macro(dddrolloff_D1D1D1) KS_func_args_macro;
+KS_func_def_macro(dddrolloff_D0D0D2) KS_func_args_macro;
+KS_func_def_macro(dddrolloff_D0D0D1) KS_func_args_macro;
+
 
