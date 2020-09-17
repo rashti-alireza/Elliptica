@@ -611,7 +611,9 @@ static int bhf_3rd_ChebTn_Ylm(struct BHFiller_S *const bhf)
             interpolation_Ylm(rC,iC,lmax,theta,phi)*Cheb_Tn((int)i,t);
         }
         Y = 0.5*(1+tanh(att_a*(rfill/(rfill-r)+att_b*(rfill/r))));
-        v[ijk] = Y*v[ijk]+(1-Y)*bhf->fld[f]->f_r0;
+        int p = Pgetd("p");
+        double Yn = pow(Y,p);
+        v[ijk] = Yn*v[ijk]+(1-Yn)*bhf->fld[f]->f_r0;
         
       }/* for (ijk = 0; ijk < nn; ++ijk) */
     }/* for (f = 0; f < nf ++f) */
