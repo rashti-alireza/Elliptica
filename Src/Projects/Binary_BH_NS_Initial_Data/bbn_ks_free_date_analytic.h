@@ -1,5 +1,6 @@
 #include "bbn_headers.h"
 
+
 /* mathematica */
 #define Cos(a) cos(a)
 #define Sin(a) sin(a)
@@ -44,6 +45,10 @@
 /* pass special argument to each function */   
 #define KS_func_pass_args_macro  \
   (x,y,z,M_BH,a_BH,phiy,phiz,Bx,By,Bz,B2,r0,Lambda)
+
+/* bbn_ks type def function. FIND the derivative data base in the 
+// bottom of this file. this is used for various derivative functions. */
+typedef double Fbbn_ks_func_t KS_func_args_macro;
 
 /* pass arguments for the following functions */
 #define bbn_ks_k0(x,y,z) bbn_ks_k0 KS_func_pass_args_macro
@@ -478,4 +483,10 @@ KS_func_def_macro(dddrolloff_D1D1D1) KS_func_args_macro;
 KS_func_def_macro(dddrolloff_D0D0D2) KS_func_args_macro;
 KS_func_def_macro(dddrolloff_D0D0D1) KS_func_args_macro;
 
+/* derivative function data base. 
+// NOTE: derive_func_db MUST match with derive_name_db below. */
+static Fbbn_ks_func_t *const derive_func_db[] = {KS_func_prefix(K0),0};
+
+/* derivative name data base */
+static char *const derive_name_db[] = {0};
 
