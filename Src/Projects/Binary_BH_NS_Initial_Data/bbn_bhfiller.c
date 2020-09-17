@@ -596,6 +596,10 @@ static int bhf_3rd_ChebTn_Ylm(struct BHFiller_S *const bhf)
         DEF_RELATIVE_y
         DEF_RELATIVE_z
         DEF_RELATIVE_r
+        
+        if (r > rfill)
+          r = rfill;
+        
         theta = acos(z/r);
         phi = arctan(y,x);
         t   = 2*r/rfill-1;
