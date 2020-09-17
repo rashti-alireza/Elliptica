@@ -1681,10 +1681,15 @@ static int bhf_4th_Poly_Ylm(struct BHFiller_S *const bhf)
 
 /* ->: EXIT_SUCCESS.
 // filling the hole using elliptic equations (Brown's method)
-// this is ellptic eq. of 3rd order i.e (Laplace^2)^3 f = 0.
+// this is elliptic eq. of 3rd order i.e (Laplace^2)^3 f = 0.
 // ref:https://arxiv.org/pdf/0809.3533.pdf 
-// NOTE: this override solving parameters thus MUST be call
-// at the very end when the ID constructor is done. */
+// NOTE: this override solving parameters thus MUST be called
+// at the very end when the ID constructor is done.
+// NOTE: one must use finite center difference to calculate
+// Laplace^2 f in order to achieve C^2 cos the values outside and inside
+// of horizon get interwoven; but, in spectral method derivatives are
+// computed in an individual patch thus one must achieve C^2 by imposing
+// b.c on the horizon. BC for spectral method are not trivial though! */
 static int bhf_ell_Brown(struct BHFiller_S *const bhf)
 {
   printf("|--> BH-filler method = C2_EllEq_Brown.\n");
