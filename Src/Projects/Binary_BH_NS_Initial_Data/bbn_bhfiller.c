@@ -417,7 +417,7 @@ static int bhf_3rd_ChebTn_Ylm(struct BHFiller_S *const bhf)
   printf("|--> BH-filler method = 3rd_ChebTn_Ylm.\n");
   fflush(stdout);
   Grid_T *const grid = bhf->grid;
-  const double EPS   = 1E-12;
+  //const double EPS   = 1E-12;
   const unsigned NCoeffs = 4;
   const unsigned npo = bhf->npo;
   const unsigned npi = bhf->npi;
@@ -427,6 +427,8 @@ static int bhf_3rd_ChebTn_Ylm(struct BHFiller_S *const bhf)
   const unsigned Nphi   = bhf->Nphi;
   const double rfill = Pgetd("r_excision");
   const double rfill3= pow(rfill,3);
+  const double att_a = 0.8;
+  const double att_b = -0.6;
   unsigned p,fld;
   
   /* update all coeffs to avoid race condition */
@@ -574,6 +576,7 @@ static int bhf_3rd_ChebTn_Ylm(struct BHFiller_S *const bhf)
     Patch_T *patch = bhf->patches_inBH[p];
     unsigned nn = patch->nn;
     double theta = 0,phi = 0, t = 0;
+    double Y;
     unsigned ijk;
     unsigned f,i;
 
@@ -593,17 +596,9 @@ static int bhf_3rd_ChebTn_Ylm(struct BHFiller_S *const bhf)
         DEF_RELATIVE_y
         DEF_RELATIVE_z
         DEF_RELATIVE_r
-        if (!EQL(r,0))
-        {
-          theta = acos(z/r);
-        }
-        else
-        {
-          r     = EPS;
-          theta = 0;
-        }
-        t   = 2*r/rfill-1;
+        theta = acos(z/r);
         phi = arctan(y,x);
+        t   = 2*r/rfill-1;
         for (i = 0; i < NCoeffs; ++i)
         {
           const double *rC = bhf->fld[f]->realYlm_coeffs[i];
@@ -611,6 +606,9 @@ static int bhf_3rd_ChebTn_Ylm(struct BHFiller_S *const bhf)
           v[ijk] += 
             interpolation_Ylm(rC,iC,lmax,theta,phi)*Cheb_Tn((int)i,t);
         }
+        Y = 0.5*(1+tanh(att_a*(rfill/(rfill-r)+att_b*(rfill/r))));
+        v[ijk] = Y*v[ijk]+(1-Y)*bhf->fld[f]->f_r0;
+        
       }/* for (ijk = 0; ijk < nn; ++ijk) */
     }/* for (f = 0; f < nf ++f) */
     
