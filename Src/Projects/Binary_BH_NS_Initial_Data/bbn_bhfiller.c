@@ -629,9 +629,7 @@ static int bhf_3rd_ChebTn_Ylm(struct BHFiller_S *const bhf)
             interpolation_Ylm(rC,iC,lmax,theta,phi)*Cheb_Tn((int)i,t);
         }
         Y = 0.5*(1+tanh(att_a*(rfill/(rfill-r)+att_b*(rfill/r))));
-        int p = Pgetd("p");
-        double Yn = pow(Y,p);
-        v[ijk] = Yn*v[ijk]+(1-Yn)*bhf->fld[f]->func_r0(par);
+        v[ijk] = Y*v[ijk]+(1-Y)*bhf->fld[f]->func_r0(par);
         
       }/* for (ijk = 0; ijk < nn; ++ijk) */
     }/* for (f = 0; f < nf ++f) */
@@ -2569,9 +2567,9 @@ double bbn_bhf_smoother(const double r, const double rmax,const double rmin)
 {
   double ret = 0;
   
-  if (r > rmax)
+  if (GRTEQL(r,rmax))
     return 1;
-  else if (r < rmin)
+  else if (LSSEQL(r,rmin))
     return 0;
   else
     return polynomial5(r,rmax,rmin);
