@@ -19,11 +19,6 @@
 /* concatenate */
 #define Pattern(a,b) a##_##b
 
-/* derivative */
-#define Derivative(...) 1
-
-/* derivative */
-#define D(...) 1
 
 /* function prefix DON NOT change this prefix macro some fields 
 // using this prefix which then you must change them too.*/
@@ -45,6 +40,33 @@
 /* pass special argument to each function */   
 #define KS_func_pass_args_macro  \
   (x,y,z,M_BH,a_BH,phiy,phiz,Bx,By,Bz,B2,r0,Lambda)
+
+/* derivative function args */
+#define KS_deriv_func_args_macro  \
+  (const char *const stem/* ex. bbn_ks_k */,\
+   const char *const derivs/* ex."x,y,z" */,\
+   const double x,const double y, const double z,/* Cartesian coords */ \
+   const double M_BH,const double a_BH,/* mass and spin of BH */ \
+   const double phiy, const double phiz,/* rotation angels */\
+   const double Bx, const double By,const double Bz,/* B=v/c (boost) */\
+   const double B2/* B^i B_i */,\
+   const double r0/* roll off radius */,\
+   const double Lambda/* flat data => 0, kerr-schild => 1 */)
+
+/* derivative */
+#define Derivative(a,...) \
+  bbn_ks_derivative \
+  (#a,#__VA_ARGS__,x,y,z, \
+   M_BH,a_BH,phiy,phiz,Bx,By,Bz,\
+   B2,r0,Lambda)
+  
+
+/* derivative */
+#define D(a,...) \
+  bbn_ks_derivative \
+  (#a,#__VA_ARGS__,x,y,z, \
+   M_BH,a_BH,phiy,phiz,Bx,By,Bz,\
+   B2,r0,Lambda)
 
 /* bbn_ks type def function. FIND the derivative data base in the 
 // bottom of this file. this is used for various derivative functions. */
@@ -70,6 +92,8 @@ typedef double Fbbn_ks_func_t KS_func_args_macro;
   UNUSED(0*M_BH*a_BH*phiy*phiz*Bx*By*Bz*B2*r0*Lambda)
 
 /* all external functions */
+double bbn_ks_derivative KS_deriv_func_args_macro;
+
 void bbn_free_data_g_gI_analytic(
         Patch_T *const patch,
         double *(*get_v)(const char *const fname,void *params),
