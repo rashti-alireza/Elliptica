@@ -60,8 +60,8 @@ bhf_init
   // and extrapolate demanding C2 continuity */
   if (strcmp_i(method,"3rd_ChebTn_Ylm"))
   {
-    const double EPS   = 1E-2;
-    const double Ma    = Pgetd("BH_irreducible_mass");
+    //const double EPS   = 1E-2;
+    //const double Ma    = Pgetd("BH_irreducible_mass");
     const unsigned npi = 7;/* number of patches inside BH */
     const unsigned npo = 6;/* number of patches outside BH */
     const double fr0_Beta_U0     = 0;
@@ -74,8 +74,8 @@ bhf_init
     const double fr0_gamma_D1D2  = 0;
     const double fr0_gamma_D2D2  = 1;
     const double fr0_K           = 0;
-    const double fr0_alpha       = 0.1;
-    const double fr0_psi = 2+Ma/(2*EPS);
+    const double fr0_alpha       = 0.4;
+    const double fr0_psi = 10;
     const double fr0_eta = fr0_alpha*fr0_psi;
     unsigned f,nf,i,j,p;
     int lmax_par = PgetiEZ("bbn_bhfiller_lmax");
@@ -628,8 +628,9 @@ static int bhf_3rd_ChebTn_Ylm(struct BHFiller_S *const bhf)
           v[ijk] += 
             interpolation_Ylm(rC,iC,lmax,theta,phi)*Cheb_Tn((int)i,t);
         }
-        Y = 0.5*(1+tanh(att_a*(rfill/(rfill-r)+att_b*(rfill/r))));
-        v[ijk] = Y*v[ijk]+(1-Y)*bhf->fld[f]->func_r0(par);
+        //Y = 0.5*(1+tanh(att_a*(rfill/(rfill-r)+att_b*(rfill/r))));
+        //v[ijk] = Y*v[ijk]+(1-Y)*bhf->fld[f]->f_r0;
+        UNUSED(Y*att_b*att_a);
         
       }/* for (ijk = 0; ijk < nn; ++ijk) */
     }/* for (f = 0; f < nf ++f) */
