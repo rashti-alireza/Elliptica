@@ -43,6 +43,58 @@ function_name
   )
 {
   char func[MAX_ARR] = {'\0'};
-  sprintf(fname,"%s",func);
+  char der[MAX_ARR] = {'\0'};
+  char d[MAX_ARR] = {'\0'};
+  
+  
+  /* 3rd order (x,y,z) */
+  if (strstr(func,"x") && 
+      strstr(func,"y") &&
+      strstr(func,"z"))
+  {
+    sprint(der,"D0D1D2");
+    sprint(d,"ddd");
+  }
+  /* 2nd order (x,y) - (x,z) -(y,z) */
+  else if (strstr(func,"x") && 
+           strstr(func,"y"))
+  {
+    sprint(der,"D0D1");
+    sprint(d,"dd");
+  }
+  else if (strstr(func,"x") && 
+           strstr(func,"z"))
+  {
+    sprint(der,"D0D2");
+    sprint(d,"dd");
+  }
+  else if (strstr(func,"y") && 
+           strstr(func,"z"))
+  {
+    sprint(der,"D1D2");
+    sprint(d,"dd");
+  }
+  /* 1st order x - y - z */
+  else if (strstr(func,"x"))
+  {
+    sprint(der,"D0");
+    sprint(d,"d");
+  }
+  else if (strstr(func,"y"))
+  {
+    sprint(der,"D1");
+    sprint(d,"d");
+  }
+  else if (strstr(func,"z"))
+  {
+    sprint(der,"D2");
+    sprint(d,"d");
+  }
+  else
+    Error0("No recognized!");
+  
+  /* function name */
+  sprintf(fname,"%s%s_%s",d,stem,der);
+  
 }
 
