@@ -142,6 +142,8 @@ static double punc_gamma_D0D2(void *const params);
 static double punc_gamma_D1D1(void *const params);
 static double punc_gamma_D1D2(void *const params);
 static double punc_gamma_D2D2(void *const params);
+double bbn_bhf_smoother(const double r, const double rmax,const double rmin);
+static double polynomial5(const double r, const double rmax,const double rmin);
 
 
 

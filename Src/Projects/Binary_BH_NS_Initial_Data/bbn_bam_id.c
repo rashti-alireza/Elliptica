@@ -547,11 +547,11 @@ bam_output_doctest
         
         /* adm_Kij */
         if (strstr(fields_name[f],"bam_adm_K_"))
-          interp_v[p] *= smooth(r,rfill,rmin);
+          interp_v[p] *= bbn_bhf_smoother(r,rfill,rmin);
         /* adm_gij */  
         else if (strstr(fields_name[f],"bam_adm_g_"))
         {
-          double w = smooth(r,rfill,rmin);
+          double w = bbn_bhf_smoother(r,rfill,rmin);
           /* diagonal entries */
           if (strstr(fields_name[f],"D0D0") ||
               strstr(fields_name[f],"D1D1") ||
@@ -660,48 +660,4 @@ bam_output_doctest
   bbn_print_fields(grid,0,".");
 }
 
-
-/* smoothing function for inside of the BH */
-static double smooth(const double r, const double rmax,const double rmin)
-{
-  double ret = 0;
-  
-  if (r > rmax)
-    return 1;
-  else if (r < rmin)
-    return 0;
-  else
-    return polynomial5(r,rmax,rmin);
-  
-  return ret;
-}
-
-/* polynomial of order 5 with coeffs a, this polynomial is:
-// P(rmin) = P'(rmin) = P"(rmin) = 0 and
-// P(rmax) = 1 and P'(rmax) = P"(rmax) = 0. */
-static double polynomial5(const double r, const double rmax,const double rmin)
-{
-  double a[6] = {0};
-  double ret;
-  
-  a[0] = (Power(rmin,3)*(10*Power(rmax,2) - 5*rmax*rmin + Power(rmin,2)))/
-   Power(-rmax + rmin,5);
-   
-  a[1] = (30*Power(rmax,2)*Power(rmin,2))/Power(rmax - rmin,5);
-  
-  a[2] = (-30*rmax*rmin*(rmax + rmin))/Power(rmax - rmin,5);
-  
-  a[3] = (10*(Power(rmax,2) + 4*rmax*rmin + Power(rmin,2)))/
-   Power(rmax - rmin,5);
-   
-  a[4] = (-15*(rmax + rmin))/Power(rmax - rmin,5);
-  
-  a[5] = 6./Power(rmax - rmin,5);
- 
-  ret  = a[0] + a[1]*r   + a[2]*Power(r,2) + 
-         a[3]*Power(r,3) + a[4]*Power(r,4) + 
-         a[5]*Power(r,5);
-          
-  return ret;
-}
 

@@ -155,6 +155,8 @@ bbn_bhfiller
   const char *const method/* the method to be used for extrapolating */
   );
 
+double bbn_bhf_smoother(const double r, const double rmax,const double rmin);
+
 
 #endif
 

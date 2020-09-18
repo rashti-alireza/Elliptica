@@ -2564,5 +2564,49 @@ static double punc_gamma_D2D2(void *const params)
   return 1;
 }
 
+/* smoothing function for inside of the BH */
+double bbn_bhf_smoother(const double r, const double rmax,const double rmin)
+{
+  double ret = 0;
+  
+  if (r > rmax)
+    return 1;
+  else if (r < rmin)
+    return 0;
+  else
+    return polynomial5(r,rmax,rmin);
+  
+  return ret;
+}
+
+/* polynomial of order 5 with coeffs a, this polynomial is:
+// P(rmin) = P'(rmin) = P"(rmin) = 0 and
+// P(rmax) = 1 and P'(rmax) = P"(rmax) = 0. */
+static double polynomial5(const double r, const double rmax,const double rmin)
+{
+  double a[6] = {0};
+  double ret;
+  
+  a[0] = (Power(rmin,3)*(10*Power(rmax,2) - 5*rmax*rmin + Power(rmin,2)))/
+   Power(-rmax + rmin,5);
+   
+  a[1] = (30*Power(rmax,2)*Power(rmin,2))/Power(rmax - rmin,5);
+  
+  a[2] = (-30*rmax*rmin*(rmax + rmin))/Power(rmax - rmin,5);
+  
+  a[3] = (10*(Power(rmax,2) + 4*rmax*rmin + Power(rmin,2)))/
+   Power(rmax - rmin,5);
+   
+  a[4] = (-15*(rmax + rmin))/Power(rmax - rmin,5);
+  
+  a[5] = 6./Power(rmax - rmin,5);
+ 
+  ret  = a[0] + a[1]*r   + a[2]*Power(r,2) + 
+         a[3]*Power(r,3) + a[4]*Power(r,4) + 
+         a[5]*Power(r,5);
+          
+  return ret;
+}
+
 
 
