@@ -20,10 +20,12 @@ double bbn_ks_derivative KS_deriv_func_args_macro
   function_name(fname,stem,derivs);
   
   /* find the index in the data base and call */
+  f = 0;
   while (derive_name_db[f])
   {
     if (!strcmp(fname,derive_name_db[f]))
       return derive_func_db[f]KS_func_pass_args_macro;
+    f++;
   }
   
   /* it must not reach here! */
