@@ -75,6 +75,8 @@ void bbn_bam_export_id(void)
 static void interpolate_and_write(Grid_T *const grid,struct interpolation_points *const pnt)
 {
   FILE *file = 0;
+  const double rfill     = Pgetd("r_excision");
+  const double rmin      = rfill/2.;
   const unsigned npoints = pnt->npoints;
   char **fields_name = 0,**bam_fields = 0;
   char title_line[STR_LEN_MAX];
@@ -199,6 +201,32 @@ static void interpolate_and_write(Grid_T *const grid,struct interpolation_points
       plan_interpolation(interp_s);
       interp_v[p] = execute_interpolation(interp_s);
       free_interpolation(interp_s);
+      
+      /* smoothing the data inside the BH further */
+      if (IsItInsideBHPatch(patch))
+      {
+        double x = pnt->x[p]-patch->c[0];
+        double y = pnt->y[p]-patch->c[1];
+        double z = pnt->z[p]-patch->c[2];
+        double r = sqrt(Pow2(x)+Pow2(y)+Pow2(z));
+        
+        /* adm_Kij */
+        if (strstr(fields_name[f],"bam_adm_K_"))
+          interp_v[p] *= bbn_bhf_smoother(r,rfill,rmin);
+        /* adm_gij */  
+        else if (strstr(fields_name[f],"bam_adm_g_"))
+        {
+          double w = bbn_bhf_smoother(r,rfill,rmin);
+          /* diagonal entries */
+          if (strstr(fields_name[f],"D0D0") ||
+              strstr(fields_name[f],"D1D1") ||
+              strstr(fields_name[f],"D2D2"))
+              interp_v[p] = w*interp_v[p] +(1-w)*Big_value;
+          /* off diagnoal entries */    
+          else
+             interp_v[p] *= w;
+        }  
+      }
     }
     
     for (p = 0; p < npoints; ++p)
@@ -538,6 +566,7 @@ bam_output_doctest
       interp_v[p] = execute_interpolation(interp_s);
       free_interpolation(interp_s);
       
+      /* smoothing the data inside the BH further */
       if (IsItInsideBHPatch(patch))
       {
         double x = pnt->x[p]-patch->c[0];
