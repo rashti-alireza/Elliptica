@@ -1,6 +1,9 @@
 #include "bbn_headers.h"
 
-#define STR_LEN_MAX 1000
+
+#define Big_value  (100)
+#define Power(a,b) pow(a,b)
+#define STR_LEN_MAX (1000)
 #define HEADER "#{data#"
 #define FOOTER "#}data#"
 #define END_MSG "\n#file_completed#\n"
@@ -74,5 +77,6 @@ bam_output_doctest
   );
 
 
-
+static double smooth(const double r, const double rmax,const double rmin);
+static double polynomial5(const double r, const double rmax,const double rmin);
 

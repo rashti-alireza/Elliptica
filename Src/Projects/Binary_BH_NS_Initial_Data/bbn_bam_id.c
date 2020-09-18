@@ -83,7 +83,7 @@ static void interpolate_and_write(Grid_T *const grid,struct interpolation_points
   char *const p_msg = msg;/* to avoid GCC warning for FWriteP_bin */
   double *interp_v = 0;
   unsigned p,f;
-  
+    
   /* populating pnt->(X,Y,Z) and pnt->patchn */
   printf("~> Preparing points for the interpolation ...\n");
   fflush(stdout);
@@ -149,11 +149,6 @@ static void interpolate_and_write(Grid_T *const grid,struct interpolation_points
     }
     free_needle(needle);
   }
-  
-  /* don't need them any more */
-  _free(pnt->x); pnt->x = 0;
-  _free(pnt->y); pnt->y = 0;
-  _free(pnt->z); pnt->z = 0;
   
   /* translate fields from BAM notation to Elliptica notation */
   fields_name = translate_fields_name(&bam_fields);
@@ -412,6 +407,8 @@ bam_output_doctest
     "bam_adm_g_D0D2","bam_adm_g_D1D1",
     "bam_adm_g_D1D2","bam_adm_g_D2D2",
     0};
+  const double rfill     = Pgetd("r_excision");
+  const double rmin      = rfill/2.;
   const double Ly        = 100;/* length of y-axis */
   const double y0        = -Ly/2; /* initial y */
   const unsigned npoints = 2000;
@@ -540,6 +537,31 @@ bam_output_doctest
       plan_interpolation(interp_s);
       interp_v[p] = execute_interpolation(interp_s);
       free_interpolation(interp_s);
+      
+      if (IsItInsideBHPatch(patch))
+      {
+        double x = pnt->x[p]-patch->c[0];
+        double y = pnt->y[p]-patch->c[1];
+        double z = pnt->z[p]-patch->c[2];
+        double r = sqrt(Pow2(x)+Pow2(y)+Pow2(z));
+        
+        /* adm_Kij */
+        if (strstr(fields_name[f],"bam_adm_K_"))
+          interp_v[p] *= smooth(r,rfill,rmin);
+        /* adm_gij */  
+        else if (strstr(fields_name[f],"bam_adm_g_"))
+        {
+          double w = smooth(r,rfill,rmin);
+          /* diagonal entries */
+          if (strstr(fields_name[f],"D0D0") ||
+              strstr(fields_name[f],"D1D1") ||
+              strstr(fields_name[f],"D2D2"))
+              interp_v[p] = w*interp_v[p] +(1-w)*Big_value;
+          /* off diagnoal entries */    
+          else
+             interp_v[p] *= w;
+        }  
+      }
     }
     
     /* write */
@@ -636,5 +658,50 @@ bam_output_doctest
   }/* if(?) */
   
   bbn_print_fields(grid,0,".");
+}
+
+
+/* smoothing function for inside of the BH */
+static double smooth(const double r, const double rmax,const double rmin)
+{
+  double ret = 0;
+  
+  if (r > rmax)
+    return 1;
+  else if (r < rmin)
+    return 0;
+  else
+    return polynomial5(r,rmax,rmin);
+  
+  return ret;
+}
+
+/* polynomial of order 5 with coeffs a, this polynomial is:
+// P(rmin) = P'(rmin) = P"(rmin) = 0 and
+// P(rmax) = 1 and P'(rmax) = P"(rmax) = 0. */
+static double polynomial5(const double r, const double rmax,const double rmin)
+{
+  double a[6] = {0};
+  double ret;
+  
+  a[0] = (Power(rmin,3)*(10*Power(rmax,2) - 5*rmax*rmin + Power(rmin,2)))/
+   Power(-rmax + rmin,5);
+   
+  a[1] = (30*Power(rmax,2)*Power(rmin,2))/Power(rmax - rmin,5);
+  
+  a[2] = (-30*rmax*rmin*(rmax + rmin))/Power(rmax - rmin,5);
+  
+  a[3] = (10*(Power(rmax,2) + 4*rmax*rmin + Power(rmin,2)))/
+   Power(rmax - rmin,5);
+   
+  a[4] = (-15*(rmax + rmin))/Power(rmax - rmin,5);
+  
+  a[5] = 6./Power(rmax - rmin,5);
+ 
+  ret  = a[0] + a[1]*r   + a[2]*Power(r,2) + 
+         a[3]*Power(r,3) + a[4]*Power(r,4) + 
+         a[5]*Power(r,5);
+          
+  return ret;
 }
 
