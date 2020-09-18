@@ -63,8 +63,18 @@ struct BHFiller_S
     double *realYlm_coeffs[MAX_COEFFS];/* Ylm coeffs of radial real part */
     double *imagYlm_coeffs[MAX_COEFFS];/* Ylm coeffs of radial imag part */
     double f_r0;/* value of the field at r = 0 */
+    double (*func_r0)(void *const params);/* function as we close to r = 0 */
   }**fld;/* field info */
   int (*bhfiller)(struct BHFiller_S *const bhf);/* the method to fill the BH */
+};
+
+/* parameters for func_r0 */
+struct Param_S
+{
+  double r;/* radius */
+  double rfill;/* BH radius */
+  double M;/* M BH */
+  double eps;/* cut off */
 };
 
 /* initialize the bhfiller struct */
@@ -120,7 +130,18 @@ bbn_bhf_ell_Brown_source_update
   );
 
 
-
+static double punc_psi(void *const params);
+static double punc_eta(void *const params);
+static double punc_K(void *const params);
+static double punc_Beta_U0(void *const params);
+static double punc_Beta_U1(void *const params);
+static double punc_Beta_U2(void *const params);
+static double punc_gamma_D0D0(void *const params);
+static double punc_gamma_D0D1(void *const params);
+static double punc_gamma_D0D2(void *const params);
+static double punc_gamma_D1D1(void *const params);
+static double punc_gamma_D1D2(void *const params);
+static double punc_gamma_D2D2(void *const params);
 
 
 

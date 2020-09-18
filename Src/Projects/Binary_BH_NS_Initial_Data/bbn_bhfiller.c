@@ -60,7 +60,7 @@ bhf_init
   // and extrapolate demanding C2 continuity */
   if (strcmp_i(method,"3rd_ChebTn_Ylm"))
   {
-    const double EPS   = 1;
+    const double EPS   = 1E-2;
     const double Ma    = Pgetd("BH_irreducible_mass");
     const unsigned npi = 7;/* number of patches inside BH */
     const unsigned npo = 6;/* number of patches outside BH */
@@ -120,51 +120,63 @@ bhf_init
     {
       if (strcmp_i(fields_name[f],"psi"))
       {
-        bhf->fld[f]->f_r0 = fr0_psi;
+        bhf->fld[f]->f_r0    = fr0_psi;
+        bhf->fld[f]->func_r0 = punc_psi;
       }
       else if (strcmp_i(fields_name[f],"eta"))
       {
-        bhf->fld[f]->f_r0 = fr0_eta;
+        bhf->fld[f]->f_r0    = fr0_eta;
+        bhf->fld[f]->func_r0 = punc_eta;
       }
       else if (strcmp_i(fields_name[f],"K"))
       {
-        bhf->fld[f]->f_r0 = fr0_K;
+        bhf->fld[f]->f_r0    = fr0_K;
+        bhf->fld[f]->func_r0 = punc_K;
       }
       else if (strcmp_i(fields_name[f],"Beta_U0"))
       {
-        bhf->fld[f]->f_r0 = fr0_Beta_U0;
+        bhf->fld[f]->f_r0    = fr0_Beta_U0;
+        bhf->fld[f]->func_r0 = punc_Beta_U0;
       }
       else if (strcmp_i(fields_name[f],"Beta_U1"))
       {
-        bhf->fld[f]->f_r0 = fr0_Beta_U1;
+        bhf->fld[f]->f_r0    = fr0_Beta_U1;
+        bhf->fld[f]->func_r0 = punc_Beta_U1;
       }
       else if (strcmp_i(fields_name[f],"Beta_U2"))
       {
-        bhf->fld[f]->f_r0 = fr0_Beta_U2;
+        bhf->fld[f]->f_r0    = fr0_Beta_U2;
+        bhf->fld[f]->func_r0 = punc_Beta_U2;
       }
       else if (strcmp_i(fields_name[f],"_gamma_D2D2"))
       {
-        bhf->fld[f]->f_r0 = fr0_gamma_D2D2;
+        bhf->fld[f]->f_r0    = fr0_gamma_D2D2;
+        bhf->fld[f]->func_r0 = punc_gamma_D2D2;
       }
       else if (strcmp_i(fields_name[f],"_gamma_D0D2"))
       {
-        bhf->fld[f]->f_r0 = fr0_gamma_D0D2;
+        bhf->fld[f]->f_r0    = fr0_gamma_D0D2;
+        bhf->fld[f]->func_r0 = punc_gamma_D0D2;
       }
       else if (strcmp_i(fields_name[f],"_gamma_D0D0"))
       {
-        bhf->fld[f]->f_r0 = fr0_gamma_D0D0;
+        bhf->fld[f]->f_r0    = fr0_gamma_D0D0;
+        bhf->fld[f]->func_r0 = punc_gamma_D0D0;
       }
       else if (strcmp_i(fields_name[f],"_gamma_D0D1"))
       {
-        bhf->fld[f]->f_r0 = fr0_gamma_D0D1;
+        bhf->fld[f]->f_r0    = fr0_gamma_D0D1;
+        bhf->fld[f]->func_r0 = punc_gamma_D0D1;
       }
       else if (strcmp_i(fields_name[f],"_gamma_D1D2"))
       {
-        bhf->fld[f]->f_r0 = fr0_gamma_D1D2;
+        bhf->fld[f]->f_r0    = fr0_gamma_D1D2;
+        bhf->fld[f]->func_r0 = punc_gamma_D1D2;
       }
       else if (strcmp_i(fields_name[f],"_gamma_D1D1"))
       {
-        bhf->fld[f]->f_r0 = fr0_gamma_D1D1;
+        bhf->fld[f]->f_r0    = fr0_gamma_D1D1;
+        bhf->fld[f]->func_r0 = punc_gamma_D1D1;
       }
       else
         Error0(NO_OPTION);
@@ -417,7 +429,8 @@ static int bhf_3rd_ChebTn_Ylm(struct BHFiller_S *const bhf)
   printf("|--> BH-filler method = 3rd_ChebTn_Ylm.\n");
   fflush(stdout);
   Grid_T *const grid = bhf->grid;
-  //const double EPS   = 1E-12;
+  const double EPS   = 1E-2;
+  const double Ma    = Pgetd("BH_irreducible_mass");
   const unsigned NCoeffs = 4;
   const unsigned npo = bhf->npo;
   const unsigned npi = bhf->npi;
@@ -574,14 +587,18 @@ static int bhf_3rd_ChebTn_Ylm(struct BHFiller_S *const bhf)
   for (p = 0; p < npi; p++)
   {
     Patch_T *patch = bhf->patches_inBH[p];
+    struct Param_S par[1] = {0};
     unsigned nn = patch->nn;
     double theta = 0,phi = 0, t = 0;
     double Y;
     unsigned ijk;
     unsigned f,i;
-
+    
     bbn_add_fields_in_patch(patch);
     
+    par->rfill = rfill;
+    par->eps   = EPS;
+    par->M     = Ma;
     /* loop over all fields to be extrapolated */
     for (f = 0; f < nf; ++f)
     {
@@ -603,6 +620,7 @@ static int bhf_3rd_ChebTn_Ylm(struct BHFiller_S *const bhf)
         theta = acos(z/r);
         phi = arctan(y,x);
         t   = 2*r/rfill-1;
+        par->r = r;
         for (i = 0; i < NCoeffs; ++i)
         {
           const double *rC = bhf->fld[f]->realYlm_coeffs[i];
@@ -613,7 +631,7 @@ static int bhf_3rd_ChebTn_Ylm(struct BHFiller_S *const bhf)
         Y = 0.5*(1+tanh(att_a*(rfill/(rfill-r)+att_b*(rfill/r))));
         int p = Pgetd("p");
         double Yn = pow(Y,p);
-        v[ijk] = Yn*v[ijk]+(1-Yn)*bhf->fld[f]->f_r0;
+        v[ijk] = Yn*v[ijk]+(1-Yn)*bhf->fld[f]->func_r0(par);
         
       }/* for (ijk = 0; ijk < nn; ++ijk) */
     }/* for (f = 0; f < nf ++f) */
@@ -2397,6 +2415,153 @@ bbn_bhf_ell_Brown_source_update
       src1->v[ijk] = src2->v[ijk];
   }
   
+}
+
+/* puncture behavior function */
+static double punc_psi(void *const params)
+{
+  struct Param_S *const par = params;
+  double r     = par->r;
+  //double rfill = par->rfill;
+  double M     = par->M;
+  double eps   = par->eps;
+  
+  if (r < eps)
+    r = eps;
+  
+  return 2+M/(2*r);
+}
+
+/* puncture behavior function */
+static double punc_eta(void *const params)
+{
+  //struct Param_S *const par = params;
+  //double r     = par->r;
+  //double rfill = par->rfill;
+  //double M     = par->M;
+  //double eps   = par->eps;
+  
+  return 0.1*punc_psi(params);
+}
+
+/* puncture behavior function */
+static double punc_K(void *const params)
+{
+  //struct Param_S *const par = params;
+  //double r     = par->r;
+  //double rfill = par->rfill;
+  //double M     = par->M;
+  //double eps   = par->eps;
+  UNUSED(params);
+  return 0;
+}
+
+/* puncture behavior function */
+static double punc_Beta_U0(void *const params)
+{
+  //struct Param_S *const par = params;
+  //double r     = par->r;
+  //double rfill = par->rfill;
+  //double M     = par->M;
+  //double eps   = par->eps;
+  UNUSED(params);
+  return 0;
+}
+
+/* puncture behavior function */
+static double punc_Beta_U1(void *const params)
+{
+  //struct Param_S *const par = params;
+  //double r     = par->r;
+  //double rfill = par->rfill;
+  //double M     = par->M;
+  //const double eps   = par->eps;
+  UNUSED(params);
+  return 0;
+}
+
+/* puncture behavior function */
+static double punc_Beta_U2(void *const params)
+{
+  //struct Param_S *const par = params;
+  //double r     = par->r;
+  //double rfill = par->rfill;
+  //double M     = par->M;
+  //double eps   = par->eps;
+  UNUSED(params);
+  return 0;
+}
+
+/* puncture behavior function */
+static double punc_gamma_D0D0(void *const params)
+{
+  //struct Param_S *const par = params;
+  //double r     = par->r;
+  //double rfill = par->rfill;
+  //double M     = par->M;
+  //double eps   = par->eps;
+  UNUSED(params);
+  return 1;
+}
+
+/* puncture behavior function */
+static double punc_gamma_D0D1(void *const params)
+{
+  //struct Param_S *const par = params;
+  //double r     = par->r;
+  //double rfill = par->rfill;
+  //double M     = par->M;
+  //double eps   = par->eps;
+  UNUSED(params);
+  return 0;
+}
+
+/* puncture behavior function */
+static double punc_gamma_D0D2(void *const params)
+{
+  //struct Param_S *const par = params;
+  //double r     = par->r;
+  //double rfill = par->rfill;
+  //double M     = par->M;
+  //double eps   = par->eps;
+  UNUSED(params);
+  return 0;
+}
+
+/* puncture behavior function */
+static double punc_gamma_D1D1(void *const params)
+{
+  //struct Param_S *const par = params;
+  //double r     = par->r;
+  //double rfill = par->rfill;
+  //double M     = par->M;
+  //double eps   = par->eps;
+  UNUSED(params);
+  return 1;
+}
+
+/* puncture behavior function */
+static double punc_gamma_D1D2(void *const params)
+{	
+  //struct Param_S *const par = params;
+  //double r     = par->r;
+  //double rfill = par->rfill;
+  //double M     = par->M;
+  //double eps   = par->eps;
+  UNUSED(params);
+  return 0;
+}
+
+/* puncture behavior function */
+static double punc_gamma_D2D2(void *const params)
+{
+  //struct Param_S *const par = params;
+  //double r     = par->r;
+  //double rfill = par->rfill;
+  //double M     = par->M;
+  //double eps   = par->eps;
+  UNUSED(params);
+  return 1;
 }
 
 
