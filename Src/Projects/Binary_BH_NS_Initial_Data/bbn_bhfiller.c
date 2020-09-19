@@ -74,7 +74,7 @@ bhf_init
     const double fr0_gamma_D1D2  = 0;
     const double fr0_gamma_D2D2  = 1;
     const double fr0_K           = 0;
-    const double fr0_alpha       = 0.1;
+    const double fr0_alpha       = 0.4;
     const double fr0_psi = 2;
     const double fr0_eta = fr0_alpha*fr0_psi;
     unsigned f,nf,i,j,p;
@@ -590,7 +590,7 @@ static int bhf_3rd_ChebTn_Ylm(struct BHFiller_S *const bhf)
     struct Param_S par[1] = {0};
     unsigned nn = patch->nn;
     double theta = 0,phi = 0, t = 0;
-    double Y;
+    double Y = 0;
     unsigned ijk;
     unsigned f,i;
     
