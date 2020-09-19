@@ -66,95 +66,95 @@ function_name
       strstr(s,"y") &&
       strstr(s,"z"))
   {
-    sprint(der,"D0D1D2");
-    sprint(d,"ddd");
+    sprintf(der,"D0D1D2");
+    sprintf(d,"ddd");
   }
   /* 3rd order:
   //  (x,(z,2))|(x,(y,2))|(y,(x,2))|(y,(z,2))|(z,(x,2))|(z,(y,2)) */
   else if (strstr(s,"(x,(z,2))"))
   {
-    sprint(der,"D0D2D2");
-    sprint(d,"ddd");
+    sprintf(der,"D0D2D2");
+    sprintf(d,"ddd");
   }
   else if (strstr(s,"(x,(y,2))"))
   {
-    sprint(der,"D0D1D1");
-    sprint(d,"ddd");
+    sprintf(der,"D0D1D1");
+    sprintf(d,"ddd");
   }
   else if (strstr(s,"(y,(x,2))"))
   {
     /* symmetry */
-    sprint(der,"D0D1D0");
-    sprint(d,"ddd");
+    sprintf(der,"D0D1D0");
+    sprintf(d,"ddd");
   }
   else if (strstr(s,"(y,(z,2))"))
   {
-    sprint(der,"D1D2D2");
-    sprint(d,"ddd");
+    sprintf(der,"D1D2D2");
+    sprintf(d,"ddd");
   }
   else if (strstr(s,"(z,(x,2))"))
   {
     /* symmetry */
-    sprint(der,"D0D2D0");
-    sprint(d,"ddd");
+    sprintf(der,"D0D2D0");
+    sprintf(d,"ddd");
   }
   else if (strstr(s,"(z,(y,2))"))
   {
     /* symmetry */
-    sprint(der,"D1D2D1");
-    sprint(d,"ddd");
+    sprintf(der,"D1D2D1");
+    sprintf(d,"ddd");
   }
   /* 2nd order (x,y) - (x,z) -(y,z) */
   else if (strstr(s,"x") && 
            strstr(s,"y"))
   {
-    sprint(der,"D0D1");
-    sprint(d,"dd");
+    sprintf(der,"D0D1");
+    sprintf(d,"dd");
   }
   else if (strstr(s,"x") && 
            strstr(s,"z"))
   {
-    sprint(der,"D0D2");
-    sprint(d,"dd");
+    sprintf(der,"D0D2");
+    sprintf(d,"dd");
   }
   else if (strstr(s,"y") && 
            strstr(s,"z"))
   {
-    sprint(der,"D1D2");
-    sprint(d,"dd");
+    sprintf(der,"D1D2");
+    sprintf(d,"dd");
   }
   /* 2rd order:
   //  (x,2)|(y,2)|(z,2) */
   else if (strstr(s,"(x,2)")) 
   {
-    sprint(der,"D0D0");
-    sprint(d,"dd");
+    sprintf(der,"D0D0");
+    sprintf(d,"dd");
   }
   else if (strstr(s,"(y,2)")) 
   {
-    sprint(der,"D1D1");
-    sprint(d,"dd");
+    sprintf(der,"D1D1");
+    sprintf(d,"dd");
   }
   else if (strstr(s,"(z,2)")) 
   {
-    sprint(der,"D2D2");
-    sprint(d,"dd");
+    sprintf(der,"D2D2");
+    sprintf(d,"dd");
   }
   /* 1st order x - y - z */
   else if (strstr(s,"x"))
   {
-    sprint(der,"D0");
-    sprint(d,"d");
+    sprintf(der,"D0");
+    sprintf(d,"d");
   }
   else if (strstr(s,"y"))
   {
-    sprint(der,"D1");
-    sprint(d,"d");
+    sprintf(der,"D1");
+    sprintf(d,"d");
   }
   else if (strstr(s,"z"))
   {
-    sprint(der,"D2");
-    sprint(d,"d");
+    sprintf(der,"D2");
+    sprintf(d,"d");
   }
   else
     Error0("No recognized!");
