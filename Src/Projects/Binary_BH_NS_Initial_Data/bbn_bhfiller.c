@@ -74,8 +74,8 @@ bhf_init
     const double fr0_gamma_D1D2  = 0;
     const double fr0_gamma_D2D2  = 1;
     const double fr0_K           = 0;
-    const double fr0_alpha       = 0.4;
-    const double fr0_psi = 10;
+    const double fr0_alpha       = 0.1;
+    const double fr0_psi = 2;
     const double fr0_eta = fr0_alpha*fr0_psi;
     unsigned f,nf,i,j,p;
     int lmax_par = PgetiEZ("bbn_bhfiller_lmax");
@@ -2573,7 +2573,13 @@ double bbn_bhf_smoother(const double r, const double rmax,const double rmin)
   else if (LSSEQL(r,rmin))
     return 0;
   else
-    return polynomial5(r,rmax,rmin);
+  {
+    if (0)
+      return polynomial5(r,rmax,rmin);
+    if (1)
+      return polynomial7(r,rmax,rmin);
+    
+  }
   
   return ret;
 }
@@ -2603,6 +2609,43 @@ static double polynomial5(const double r, const double rmax,const double rmin)
   ret  = a[0] + a[1]*r   + a[2]*Power(r,2) + 
          a[3]*Power(r,3) + a[4]*Power(r,4) + 
          a[5]*Power(r,5);
+          
+  return ret;
+}
+
+/* polynomial of order 7 with coeffs a, this polynomial is:
+// P(rmin) = P'(rmin) = P''(rmin) = P'''(rmin) = 0 and
+// P(rmax) = 1 and P'(rmax) = P''(rmax) = P'''(rmax) = 0. */
+static double polynomial7(const double r, const double rmax,const double rmin)
+{
+  double a[8] = {0};
+  double ret;
+  
+  a[0] = (Power(rmin,4)*(35*Power(rmax,3) - 21*Power(rmax,2)*rmin + 
+       7*rmax*Power(rmin,2) - Power(rmin,3)))/Power(rmax - rmin,7);
+  
+  a[1] = (-140*Power(rmax,3)*Power(rmin,3))/Power(rmax - rmin,7);
+ 
+  a[2] = (210*Power(rmax,2)*Power(rmin,2)*(rmax + rmin))/
+   Power(rmax - rmin,7);
+  
+  a[3] = (-140*rmax*rmin*(Power(rmax,2) + 3*rmax*rmin + Power(rmin,2)))/
+   Power(rmax - rmin,7);
+  
+  a[4] = (35*(Power(rmax,3) + 9*Power(rmax,2)*rmin + 9*rmax*Power(rmin,2) + 
+       Power(rmin,3)))/Power(rmax - rmin,7);
+  
+  a[5] = (-84*(Power(rmax,2) + 3*rmax*rmin + Power(rmin,2)))/
+   Power(rmax - rmin,7);
+  
+  a[6] = (70*(rmax + rmin))/Power(rmax - rmin,7);
+  
+  a[7] = -20/Power(rmax - rmin,7);
+  
+  ret  = a[0] + a[1]*r   + a[2]*Power(r,2) + 
+         a[3]*Power(r,3) + a[4]*Power(r,4) + 
+         a[5]*Power(r,5) + a[6]*Power(r,6) +
+         a[7]*Power(r,7);
           
   return ret;
 }
