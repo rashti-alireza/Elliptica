@@ -80,6 +80,11 @@ typedef double Fbbn_ks_func_t KS_func_args_macro;
 #define bbn_ks_kt(x,y,z) bbn_ks_kt KS_func_pass_args_macro
 #define bbn_ks_c(x,y,z)  bbn_ks_c  KS_func_pass_args_macro
 
+#define bbn_ks_K0(x,y,z) bbn_ks_K0 KS_func_pass_args_macro
+#define bbn_ks_K1(x,y,z) bbn_ks_K1 KS_func_pass_args_macro
+#define bbn_ks_K2(x,y,z) bbn_ks_K2 KS_func_pass_args_macro
+
+
 #define bbn_ks_X(x,y,z)  bbn_ks_X  KS_func_pass_args_macro
 #define bbn_ks_Y(x,y,z)  bbn_ks_Y  KS_func_pass_args_macro
 #define bbn_ks_Z(x,y,z)  bbn_ks_Z  KS_func_pass_args_macro

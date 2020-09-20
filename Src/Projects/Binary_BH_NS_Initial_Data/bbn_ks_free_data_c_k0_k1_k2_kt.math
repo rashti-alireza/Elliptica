@@ -141,9 +141,9 @@ C_macro3=print('KS_func_def_macro(name)KS_func_args_macro')\n\
 `phiy,phiz           = symbols('phiy,phiz')`
 ``
 `### functions`
-`bbn_ks_k0  = symbols('bbn_ks_k0',cls=Function)`
-`bbn_ks_k1  = symbols('bbn_ks_k1',cls=Function)`
-`bbn_ks_k2  = symbols('bbn_ks_k2',cls=Function)`
+`bbn_ks_K0  = symbols('bbn_ks_K0',cls=Function)`
+`bbn_ks_K1  = symbols('bbn_ks_K1',cls=Function)`
+`bbn_ks_K2  = symbols('bbn_ks_K2',cls=Function)`
 `bbn_ks_H   = symbols('bbn_ks_H',cls=Function)`
 `bbn_ks_rolloff = symbols('bbn_ks_rolloff',cls=Function)`
 
@@ -198,8 +198,8 @@ C_macro3=print('KS_func_def_macro(name)KS_func_args_macro')\n\
 `  tB       = Boost_matrix(Bx,By,Bz,B2)`
 `  tRy, tRz = Rotation_matrix(phiy,phiz)`
 `  _k_mu    = transpose(Matrix(`
-           `[[1,bbn_ks_k0(x,y,z),`
-           `bbn_ks_k1(x,y,z),bbn_ks_k2(x,y,z)]]))`
+           `[[1,bbn_ks_K0(x,y,z),`
+           `bbn_ks_K1(x,y,z),bbn_ks_K2(x,y,z)]]))`
 `  k_mu     = Boost_Rotation(tB,tRy,tRz,1,_k_mu)`
 `  kt = (k_mu[0,0])`
 `  k0 = (k_mu[1,0])`
