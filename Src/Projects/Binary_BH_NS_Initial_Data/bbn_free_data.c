@@ -5,6 +5,23 @@
 
 #include "bbn_free_data.h"
 
+///////////////////////////////////
+struct g_s
+{
+  char *name;
+  Patch_T *patch;
+};
+
+double *read_gs(const char *const fname,void *params);
+double *read_gs(const char *const fname,void *params)
+{
+  struct g_s *par = params;
+  Patch_T *patch = par->patch;
+  return patch->pool[Ind(fname)]->v;
+}
+///////////////////////////////////////
+
+
 /* populating the free data part of initial data that we chose ourself */
 void bbn_populate_free_data(Grid_T *const grid)
 {
@@ -21,6 +38,18 @@ void bbn_populate_free_data(Grid_T *const grid)
     return;
   }
   
+  /////////////////////////////////
+  unsigned p;
+  FOR_ALL_PATCHES(p,grid)
+  {
+    struct g_s par[1] = {0};
+    Patch_T *patch = grid->patch[p];
+    par->patch = patch;
+    bbn_free_data_g_gI_analytic(patch,read_gs,par);
+  }
+ //////////////////////////////////////
+ 
+ 
   /* populate conformal metric and its inverse */
   bbn_free_data_gammas(grid);
   printf("Conformal metric and its inverse ~> Done.\n");
