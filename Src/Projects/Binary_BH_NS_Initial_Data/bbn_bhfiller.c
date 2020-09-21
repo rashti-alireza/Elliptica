@@ -73,8 +73,8 @@ bhf_init
     const double fr0_gamma_D1D1  = 1;
     const double fr0_gamma_D1D2  = 0;
     const double fr0_gamma_D2D2  = 1;
-    const double fr0_K           = 0;
-    const double fr0_alpha       = 0.4;
+    const double fr0_K           = 0.5;
+    const double fr0_alpha       = 0.2;
     const double fr0_psi = 2;
     const double fr0_eta = fr0_alpha*fr0_psi;
     unsigned f,nf,i,j,p;
@@ -107,7 +107,7 @@ bhf_init
     /* alloc radial_coeffs */
     for (f = 0; f < nf; ++f)
     {
-      for (i = 0 ; i < 4; ++i)
+      for (i = 0 ; i < 6; ++i)
       {
         bhf->fld[f]->radial_coeffs[i]  = alloc_double(N);
         bhf->fld[f]->realYlm_coeffs[i] = alloc_ClmYlm(lmax);
@@ -431,7 +431,7 @@ static int bhf_3rd_ChebTn_Ylm(struct BHFiller_S *const bhf)
   Grid_T *const grid = bhf->grid;
   const double EPS   = 1E-2;
   const double Ma    = Pgetd("BH_irreducible_mass");
-  const unsigned NCoeffs = 4;
+  const unsigned NCoeffs = 6;
   const unsigned npo = bhf->npo;
   const unsigned npi = bhf->npi;
   const unsigned nf  = bhf->nf;/* numebr of fields */
@@ -560,10 +560,12 @@ static int bhf_3rd_ChebTn_Ylm(struct BHFiller_S *const bhf)
           ddfddr += _ddfddr[_i]*N[_i]; \
         }
         
-        a[0] = (10*fr0 + 22*fr1 + rfill*(-6*dfdr + ddfddr*rfill))/32.;
-        a[1] = (-30*fr0 + 30*fr1 + rfill*(2*dfdr - ddfddr*rfill))/64.;
-        a[2] = (6*fr0 - 6*fr1 + rfill*(6*dfdr - ddfddr*rfill))/32.;
-        a[3] = (-2*fr0 + 2*fr1 + rfill*(-2*dfdr + ddfddr*rfill))/64.;
+        a[0] = fr0/2. + fr1/2. + (rfill*(-38*dfdr + 3*ddfddr*rfill))/512.;
+        a[1] = (-300*fr0 + 300*fr1 + rfill*(-22*dfdr + ddfddr*rfill))/512.;
+        a[2] = -(rfill*(-10*dfdr + ddfddr*rfill))/128.;
+        a[3] = (100*fr0 - 100*fr1 + rfill*(50*dfdr - 3*ddfddr*rfill))/1024.;
+        a[4] = (rfill*(-2*dfdr + ddfddr*rfill))/512.;
+        a[5] = (-12*fr0 + 12*fr1 + rfill*(-6*dfdr + ddfddr*rfill))/1024.;
         
         for (_i = 0; _i < NCoeffs; _i++)
           bhf->fld[fld]->radial_coeffs[_i][ij] = a[_i];
