@@ -107,7 +107,7 @@ bhf_init
     /* alloc radial_coeffs */
     for (f = 0; f < nf; ++f)
     {
-      for (i = 0 ; i < 6; ++i)
+      for (i = 0 ; i < 10; ++i)
       {
         bhf->fld[f]->radial_coeffs[i]  = alloc_double(N);
         bhf->fld[f]->realYlm_coeffs[i] = alloc_ClmYlm(lmax);
@@ -431,7 +431,7 @@ static int bhf_3rd_ChebTn_Ylm(struct BHFiller_S *const bhf)
   Grid_T *const grid = bhf->grid;
   const double EPS   = 1E-2;
   const double Ma    = Pgetd("BH_irreducible_mass");
-  const unsigned NCoeffs = 6;
+  const unsigned NCoeffs = 10;
   const unsigned npo = bhf->npo;
   const unsigned npi = bhf->npi;
   const unsigned nf  = bhf->nf;/* numebr of fields */
@@ -560,12 +560,9 @@ static int bhf_3rd_ChebTn_Ylm(struct BHFiller_S *const bhf)
           ddfddr += _ddfddr[_i]*N[_i]; \
         }
         
-        a[0] = fr0/2. + fr1/2. + (rfill*(-38*dfdr + 3*ddfddr*rfill))/512.;
-        a[1] = (-300*fr0 + 300*fr1 + rfill*(-22*dfdr + ddfddr*rfill))/512.;
-        a[2] = -(rfill*(-10*dfdr + ddfddr*rfill))/128.;
-        a[3] = (100*fr0 - 100*fr1 + rfill*(50*dfdr - 3*ddfddr*rfill))/1024.;
-        a[4] = (rfill*(-2*dfdr + ddfddr*rfill))/512.;
-        a[5] = (-12*fr0 + 12*fr1 + rfill*(-6*dfdr + ddfddr*rfill))/1024.;
+        /* find and set the coeffs */
+        bbn_bhf_ChebTn_extrapolate
+        (a,fr0,fr1,dfdr,ddfddr,rfill);
         
         for (_i = 0; _i < NCoeffs; _i++)
           bhf->fld[fld]->radial_coeffs[_i][ij] = a[_i];

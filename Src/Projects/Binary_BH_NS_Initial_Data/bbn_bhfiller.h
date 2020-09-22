@@ -8,7 +8,7 @@
 #define MAX_STR  (100)
 #define MAX_STR2 (200)
 #define MAX_STR_LARGE (1000)
-#define MAX_COEFFS (10)
+#define MAX_COEFFS (20)
 
 /* 2 indices */
 #define IJ(i,j,n)  ((j)+(i)*(n))
