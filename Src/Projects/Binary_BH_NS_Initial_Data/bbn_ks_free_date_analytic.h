@@ -23,6 +23,7 @@
 
 /* function prefix DON NOT change this prefix macro some fields 
 // using this prefix which then you must change them too.*/
+#define KS_prefix           "bbn_ks_"
 #define KS_func_prefix(name) bbn_ks_##name
 
 /* function names and prototype */
@@ -522,7 +523,7 @@ KS_func_def_macro(dddrolloff_D0D0D1) KS_func_args_macro;
 /* macro needed for db macros */
 #define StrinIt(x) #x
 #define KS_func_db_macro(x) KS_func_prefix(x)
-#define KS_name_db_macro(x) StrinIt(KS_func_prefix(x))
+#define KS_name_db_macro(x) StrinIt(bbn_ks_##x)
 
 /* derivative function data base. 
 // NOTE: derive_func_db MUST match with derive_name_db below. */

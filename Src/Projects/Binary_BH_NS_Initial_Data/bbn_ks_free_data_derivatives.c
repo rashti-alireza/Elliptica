@@ -45,9 +45,20 @@ function_name
   )
 {
   char der[MAX_ARR] = {'\0'};
+  char root[MAX_ARR] = {'\0'};
   char d[MAX_ARR] = {'\0'};
   char s[MAX_ARR] = {'\0'};
+  char *ps;
   unsigned i,j;
+  
+  /* trim (x,y,z) */
+  sprintf(s,"%s",stem);
+  ps = strchr(s,'(');
+  ps[0] = '\0';
+  
+  /* trim prefix "bbn_ks_" */
+  ps = s+strlen(KS_prefix);
+  sprintf(root,"%s",ps);
   
   /* remove spaces */
   i = j = 0;
@@ -160,7 +171,8 @@ function_name
     Error0("No recognized!");
   
   /* function name */
-  sprintf(fname,"%s%s_%s",d,stem,der);
+  sprintf(fname,"%s%s%s_%s",KS_prefix,d,root,der);
   
+  printf("%s\n",fname);
 }
 
