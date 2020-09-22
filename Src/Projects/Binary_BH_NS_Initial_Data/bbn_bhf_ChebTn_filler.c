@@ -2,11 +2,12 @@
 #include "bbn_headers.h"
 
 void bbn_bhf_ChebTn_extrapolate
-(double *const a,const double fr0,const double fr1,const double dfdr,const double ddfddr,const double rfill)
+(double *const a,const double fr0,const double fr1,const double dfdr,const double ddfddr,const double rfill,const unsigned N)
 ;
 void bbn_bhf_ChebTn_extrapolate
-(double *const a,const double fr0,const double fr1,const double dfdr,const double ddfddr,const double rfill)
+(double *const a,const double fr0,const double fr1,const double dfdr,const double ddfddr,const double rfill,const unsigned N)
 {
+assert(N==10);
 a[0] = 
 (1263.0/131072.0)*ddfddr*pow(rfill, 2) - 5359.0/65536.0*dfdr*rfill + 
 (1.0/2.0)*fr0 + (1.0/2.0)*fr1;
