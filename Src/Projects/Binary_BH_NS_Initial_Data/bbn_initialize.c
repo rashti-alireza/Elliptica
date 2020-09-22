@@ -3715,7 +3715,7 @@ void bbn_extrapolate_metric_fields_insideBH(Grid_T *const grid)
   }
   else
   {
-    bbn_bhfiller(grid,"3rd_ChebTn_Ylm");
+    bbn_bhfiller(grid,"ChebTn_Ylm");
   }
   
   printf("} Extrapolating metric fields inside the BH ==> Done.\n");
