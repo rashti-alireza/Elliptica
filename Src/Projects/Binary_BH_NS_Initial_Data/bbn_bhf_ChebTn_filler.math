@@ -1,0 +1,101 @@
+### Find the coeffs a_i of F(x) = \sum { a_i ChebTn(i,x) } such that
+### this function is C2 across the AH and and be very smooth 
+### at the center of BH.
+### Note: one can increase the number of polynomial by changing
+### POLY_ORDER variable and recompile this file.
+###
+### Note: minimum of POLY_ORDER is 4
+###
+### Note: x here is in [1,1] and x = 2r/rfill-1
+###
+
+#########################
+### H O W  T O  U S E ###
+#########################
+# Issue the following:
+# 
+# $ cpi bbn_bhf_ChebTn_filler.math > \
+#   bbn_bhf_ChebTn_filler.c && \
+#   sed -i '/Welcome to Cpi/,$d' bbn_bhf_ChebTn_filler.c 
+
+
+Dimension = 3;
+point     = x;
+
+## libs
+`from __future__ import division`
+`from sympy import *`
+`from sympy.solvers import solve`
+`from sympy.parsing.mathematica import mathematica`
+`import sys`
+`import re`
+`import os`
+
+### polynomial order
+`POLY_ORDER = 10`
+
+`if (POLY_ORDER < 4):`
+`  raise Exception('Too small order.')`
+
+### ccode generator
+`def mcode(m):`
+`  code = ccode(simplify(m))`
+`  code = '{};'.format(code)`
+`  code = re.sub(r'\b1.0\*\b','',code)`
+`  code = re.sub(r'(.{50,70}[\+\-\*/]+\s?)','\\1{}n'.format("\\"),code)`
+``
+`  return code`
+``
+
+`### symbols`
+`x = symbols('x')`
+`a_symb=symbols('a:{}'.format(POLY_ORDER))`
+`fr0,fr1,rfill,dfdr,ddfddr = symbols('fr0,fr1,rfill,dfdr,ddfddr')`
+``
+### filler:
+`def f(x,order=POLY_ORDER,a=a_symb):`
+`  filler = 0`
+`  for i in range(order):`	
+`    filler += a[i]*chebyshevt(i,x)`
+`  return filler;`
+``
+
+### constraints:
+`df  = lambdify(x,diff(f(x),(x,1)))`
+`ddf = lambdify(x,diff(f(x),(x,2)))`
+`eqs = [f(1)-fr1,f(-1)-fr0,df(1)-dfdr*rfill/2,ddf(1)-ddfddr*(rfill/2)**2]`
+``
+`for n in range (1,POLY_ORDER-3):`
+`  dnf  = lambdify(x,diff(f(x),(x,n)))`
+`  eqs.append(dnf(-1))`
+``
+``
+`sol=solve(eqs,a_symb,check=True,dict=True)`
+``
+
+## print C function:
+`arg="(double *const a,const double fr0,const double fr1,"\`
+`"const double dfdr,const double ddfddr,const double rfill)"`
+`print('')`
+`print('#include "bbn_headers.h"')`
+`print('')`
+`print('void bbn_bhf_ChebTn_extrapolate')`
+`print('{}'.format(arg))`
+`print(';')`
+`print('void bbn_bhf_ChebTn_extrapolate')`
+`print('{}'.format(arg))`
+`print('{')`
+`for i in range(POLY_ORDER):`
+`  print('a[{}] = '.format(i))`
+`  print(mcode(sol[0][a_symb[i]]))`
+`print('}')`
+
+### make it ready for python:
+### remove C comments:
+Command["sed -i '1,5d'"];
+
+Command["python"];
+#Command["cat"];
+Command["rm"];
+
+
