@@ -32,7 +32,7 @@ point     = x;
 `import os`
 
 ### polynomial order
-`POLY_ORDER = 10`
+`POLY_ORDER = 16`
 
 `if (POLY_ORDER < 4):`
 `  raise Exception('Too small order.')`
@@ -90,7 +90,7 @@ point     = x;
 
 ## print C function:
 `arg="(double *const a,const double fr0,const double fr1,"\`
-`"const double dfdr,const double ddfddr,const double rfill)"`
+`"const double dfdr,const double ddfddr,const double rfill,const unsigned N)"`
 `print('')`
 `print('#include "bbn_headers.h"')`
 `print('')`
@@ -100,6 +100,7 @@ point     = x;
 `print('void bbn_bhf_ChebTn_extrapolate')`
 `print('{}'.format(arg))`
 `print('{')`
+`print('assert(N=={});'.format(POLY_ORDER))`
 `for i in range(POLY_ORDER):`
 `  print('a[{}] = '.format(i))`
 `  print(mcode(sol[0][a_symb[i]]))`
