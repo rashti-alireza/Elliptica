@@ -14,9 +14,6 @@
 /* nothing for Hold */
 #define Hold    
 
-/* nothing for List */
-#define List  
-
 /* concatenate */
 #define Pattern(a,b) a##_##b
 

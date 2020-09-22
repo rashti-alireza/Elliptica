@@ -859,9 +859,9 @@ KS_func_def_macro(ddR_D1D1) KS_func_args_macro
 return
 /* mcode in progress ... */
 1.*Power(Hold(D(bbn_ks_X(x,y,z),y)),2) + 1.*Power(Hold(D(bbn_ks_Y(x,y,z),y)),2) + 
-1.*Power(Hold(D(bbn_ks_Z(x,y,z),y)),2) + 1.*Hold(D(bbn_ks_X(x,y,z),List(y,2)))*
-bbn_ks_X(x,y,z) + 1.*Hold(D(bbn_ks_Y(x,y,z),List(y,2)))*bbn_ks_Y(x,y,z) + 1.*
-Hold(D(bbn_ks_Z(x,y,z),List(y,2)))*bbn_ks_Z(x,y,z) + (0.5*(-4*Hold(D(bbn_ks_Z(x,y,z),y))*
+1.*Power(Hold(D(bbn_ks_Z(x,y,z),y)),2) + 1.*Hold(D(bbn_ks_X(x,y,z),(y,2)))*
+bbn_ks_X(x,y,z) + 1.*Hold(D(bbn_ks_Y(x,y,z),(y,2)))*bbn_ks_Y(x,y,z) + 1.*
+Hold(D(bbn_ks_Z(x,y,z),(y,2)))*bbn_ks_Z(x,y,z) + (0.5*(-4*Hold(D(bbn_ks_Z(x,y,z),y))*
 Power(Pattern(a,BH),2)*bbn_ks_Z(x,y,z) - 2*(Hold(D(bbn_ks_X(x,y,z),y))*
 bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),y))*bbn_ks_Y(x,y,z) + Hold(D(bbn_ks_Z(x,y,z),y))*
 bbn_ks_Z(x,y,z))*(-Power(Pattern(a,BH),2) + Power(bbn_ks_X(x,y,z),2) + 
@@ -874,12 +874,12 @@ Power(Pattern(a,BH),2)*Power(bbn_ks_Z(x,y,z),2) + Power(-
 Power(Pattern(a,BH),2) + Power(bbn_ks_X(x,y,z),2) + 
 Power(bbn_ks_Y(x,y,z),2) + Power(bbn_ks_Z(x,y,z),2),2),1.5) + (0.5*(4*
 Power(Hold(D(bbn_ks_Z(x,y,z),y)),2)*Power(Pattern(a,BH),2) + 4*
-Hold(D(bbn_ks_Z(x,y,z),List(y,2)))*Power(Pattern(a,BH),2)*bbn_ks_Z(x,y,z) + 
+Hold(D(bbn_ks_Z(x,y,z),(y,2)))*Power(Pattern(a,BH),2)*bbn_ks_Z(x,y,z) + 
 4*Power(Hold(D(bbn_ks_X(x,y,z),y))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),y))*
 bbn_ks_Y(x,y,z) + Hold(D(bbn_ks_Z(x,y,z),y))*bbn_ks_Z(x,y,z),2) + 2*(Power(Hold(D(bbn_ks_X(x,y,z),y)),2) + 
 Power(Hold(D(bbn_ks_Y(x,y,z),y)),2) + Power(Hold(D(bbn_ks_Z(x,y,z),y)),2) + 
-Hold(D(bbn_ks_X(x,y,z),List(y,2)))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),List(y,2)))*
-bbn_ks_Y(x,y,z) + Hold(D(bbn_ks_Z(x,y,z),List(y,2)))*bbn_ks_Z(x,y,z))*(-
+Hold(D(bbn_ks_X(x,y,z),(y,2)))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),(y,2)))*
+bbn_ks_Y(x,y,z) + Hold(D(bbn_ks_Z(x,y,z),(y,2)))*bbn_ks_Z(x,y,z))*(-
 Power(Pattern(a,BH),2) + Power(bbn_ks_X(x,y,z),2) + 
 Power(bbn_ks_Y(x,y,z),2) + Power(bbn_ks_Z(x,y,z),2))))/Sqrt(4*Power(Pattern(a,BH),2)*
 Power(bbn_ks_Z(x,y,z),2) + Power(-Power(Pattern(a,BH),2) + 
@@ -891,9 +891,9 @@ KS_func_def_macro(ddR_D2D2) KS_func_args_macro
 return
 /* mcode in progress ... */
 1.*Power(Hold(D(bbn_ks_X(x,y,z),z)),2) + 1.*Power(Hold(D(bbn_ks_Y(x,y,z),z)),2) + 
-1.*Power(Hold(D(bbn_ks_Z(x,y,z),z)),2) + 1.*Hold(D(bbn_ks_X(x,y,z),List(z,2)))*
-bbn_ks_X(x,y,z) + 1.*Hold(D(bbn_ks_Y(x,y,z),List(z,2)))*bbn_ks_Y(x,y,z) + 1.*
-Hold(D(bbn_ks_Z(x,y,z),List(z,2)))*bbn_ks_Z(x,y,z) + (0.5*(-4*Hold(D(bbn_ks_Z(x,y,z),z))*
+1.*Power(Hold(D(bbn_ks_Z(x,y,z),z)),2) + 1.*Hold(D(bbn_ks_X(x,y,z),(z,2)))*
+bbn_ks_X(x,y,z) + 1.*Hold(D(bbn_ks_Y(x,y,z),(z,2)))*bbn_ks_Y(x,y,z) + 1.*
+Hold(D(bbn_ks_Z(x,y,z),(z,2)))*bbn_ks_Z(x,y,z) + (0.5*(-4*Hold(D(bbn_ks_Z(x,y,z),z))*
 Power(Pattern(a,BH),2)*bbn_ks_Z(x,y,z) - 2*(Hold(D(bbn_ks_X(x,y,z),z))*
 bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),z))*bbn_ks_Y(x,y,z) + Hold(D(bbn_ks_Z(x,y,z),z))*
 bbn_ks_Z(x,y,z))*(-Power(Pattern(a,BH),2) + Power(bbn_ks_X(x,y,z),2) + 
@@ -906,12 +906,12 @@ Power(Pattern(a,BH),2)*Power(bbn_ks_Z(x,y,z),2) + Power(-
 Power(Pattern(a,BH),2) + Power(bbn_ks_X(x,y,z),2) + 
 Power(bbn_ks_Y(x,y,z),2) + Power(bbn_ks_Z(x,y,z),2),2),1.5) + (0.5*(4*
 Power(Hold(D(bbn_ks_Z(x,y,z),z)),2)*Power(Pattern(a,BH),2) + 4*
-Hold(D(bbn_ks_Z(x,y,z),List(z,2)))*Power(Pattern(a,BH),2)*bbn_ks_Z(x,y,z) + 
+Hold(D(bbn_ks_Z(x,y,z),(z,2)))*Power(Pattern(a,BH),2)*bbn_ks_Z(x,y,z) + 
 4*Power(Hold(D(bbn_ks_X(x,y,z),z))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),z))*
 bbn_ks_Y(x,y,z) + Hold(D(bbn_ks_Z(x,y,z),z))*bbn_ks_Z(x,y,z),2) + 2*(Power(Hold(D(bbn_ks_X(x,y,z),z)),2) + 
 Power(Hold(D(bbn_ks_Y(x,y,z),z)),2) + Power(Hold(D(bbn_ks_Z(x,y,z),z)),2) + 
-Hold(D(bbn_ks_X(x,y,z),List(z,2)))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),List(z,2)))*
-bbn_ks_Y(x,y,z) + Hold(D(bbn_ks_Z(x,y,z),List(z,2)))*bbn_ks_Z(x,y,z))*(-
+Hold(D(bbn_ks_X(x,y,z),(z,2)))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),(z,2)))*
+bbn_ks_Y(x,y,z) + Hold(D(bbn_ks_Z(x,y,z),(z,2)))*bbn_ks_Z(x,y,z))*(-
 Power(Pattern(a,BH),2) + Power(bbn_ks_X(x,y,z),2) + 
 Power(bbn_ks_Y(x,y,z),2) + Power(bbn_ks_Z(x,y,z),2))))/Sqrt(4*Power(Pattern(a,BH),2)*
 Power(bbn_ks_Z(x,y,z),2) + Power(-Power(Pattern(a,BH),2) + 
@@ -957,9 +957,9 @@ KS_func_def_macro(ddR_D0D0) KS_func_args_macro
 return
 /* mcode in progress ... */
 1.*Power(Hold(D(bbn_ks_X(x,y,z),x)),2) + 1.*Power(Hold(D(bbn_ks_Y(x,y,z),x)),2) + 
-1.*Power(Hold(D(bbn_ks_Z(x,y,z),x)),2) + 1.*Hold(D(bbn_ks_X(x,y,z),List(x,2)))*
-bbn_ks_X(x,y,z) + 1.*Hold(D(bbn_ks_Y(x,y,z),List(x,2)))*bbn_ks_Y(x,y,z) + 1.*
-Hold(D(bbn_ks_Z(x,y,z),List(x,2)))*bbn_ks_Z(x,y,z) + (0.5*(-4*Hold(D(bbn_ks_Z(x,y,z),x))*
+1.*Power(Hold(D(bbn_ks_Z(x,y,z),x)),2) + 1.*Hold(D(bbn_ks_X(x,y,z),(x,2)))*
+bbn_ks_X(x,y,z) + 1.*Hold(D(bbn_ks_Y(x,y,z),(x,2)))*bbn_ks_Y(x,y,z) + 1.*
+Hold(D(bbn_ks_Z(x,y,z),(x,2)))*bbn_ks_Z(x,y,z) + (0.5*(-4*Hold(D(bbn_ks_Z(x,y,z),x))*
 Power(Pattern(a,BH),2)*bbn_ks_Z(x,y,z) - 2*(Hold(D(bbn_ks_X(x,y,z),x))*
 bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),x))*bbn_ks_Y(x,y,z) + Hold(D(bbn_ks_Z(x,y,z),x))*
 bbn_ks_Z(x,y,z))*(-Power(Pattern(a,BH),2) + Power(bbn_ks_X(x,y,z),2) + 
@@ -972,12 +972,12 @@ Power(Pattern(a,BH),2)*Power(bbn_ks_Z(x,y,z),2) + Power(-
 Power(Pattern(a,BH),2) + Power(bbn_ks_X(x,y,z),2) + 
 Power(bbn_ks_Y(x,y,z),2) + Power(bbn_ks_Z(x,y,z),2),2),1.5) + (0.5*(4*
 Power(Hold(D(bbn_ks_Z(x,y,z),x)),2)*Power(Pattern(a,BH),2) + 4*
-Hold(D(bbn_ks_Z(x,y,z),List(x,2)))*Power(Pattern(a,BH),2)*bbn_ks_Z(x,y,z) + 
+Hold(D(bbn_ks_Z(x,y,z),(x,2)))*Power(Pattern(a,BH),2)*bbn_ks_Z(x,y,z) + 
 4*Power(Hold(D(bbn_ks_X(x,y,z),x))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),x))*
 bbn_ks_Y(x,y,z) + Hold(D(bbn_ks_Z(x,y,z),x))*bbn_ks_Z(x,y,z),2) + 2*(Power(Hold(D(bbn_ks_X(x,y,z),x)),2) + 
 Power(Hold(D(bbn_ks_Y(x,y,z),x)),2) + Power(Hold(D(bbn_ks_Z(x,y,z),x)),2) + 
-Hold(D(bbn_ks_X(x,y,z),List(x,2)))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),List(x,2)))*
-bbn_ks_Y(x,y,z) + Hold(D(bbn_ks_Z(x,y,z),List(x,2)))*bbn_ks_Z(x,y,z))*(-
+Hold(D(bbn_ks_X(x,y,z),(x,2)))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),(x,2)))*
+bbn_ks_Y(x,y,z) + Hold(D(bbn_ks_Z(x,y,z),(x,2)))*bbn_ks_Z(x,y,z))*(-
 Power(Pattern(a,BH),2) + Power(bbn_ks_X(x,y,z),2) + 
 Power(bbn_ks_Y(x,y,z),2) + Power(bbn_ks_Z(x,y,z),2))))/Sqrt(4*Power(Pattern(a,BH),2)*
 Power(bbn_ks_Z(x,y,z),2) + Power(-Power(Pattern(a,BH),2) + 
@@ -1022,13 +1022,13 @@ KS_func_def_macro(dddR_D0D0D2) KS_func_args_macro
 {
 return
 /* mcode in progress ... */
-1.*Hold(D(bbn_ks_X(x,y,z),z))*Hold(D(bbn_ks_X(x,y,z),List(x,2))) + 1.*
-Hold(D(bbn_ks_Y(x,y,z),z))*Hold(D(bbn_ks_Y(x,y,z),List(x,2))) + 1.*
-Hold(D(bbn_ks_Z(x,y,z),z))*Hold(D(bbn_ks_Z(x,y,z),List(x,2))) + 2.*
+1.*Hold(D(bbn_ks_X(x,y,z),z))*Hold(D(bbn_ks_X(x,y,z),(x,2))) + 1.*
+Hold(D(bbn_ks_Y(x,y,z),z))*Hold(D(bbn_ks_Y(x,y,z),(x,2))) + 1.*
+Hold(D(bbn_ks_Z(x,y,z),z))*Hold(D(bbn_ks_Z(x,y,z),(x,2))) + 2.*
 Hold(D(bbn_ks_X(x,y,z),x))*Hold(D(bbn_ks_X(x,y,z),x,z)) + 2.*Hold(D(bbn_ks_Y(x,y,z),x))*
 Hold(D(bbn_ks_Y(x,y,z),x,z)) + 2.*Hold(D(bbn_ks_Z(x,y,z),x))*Hold(D(bbn_ks_Z(x,y,z),x,z)) + 
-1.*Hold(D(bbn_ks_X(x,y,z),List(x,2),z))*bbn_ks_X(x,y,z) + 1.*Hold(D(bbn_ks_Y(x,y,z),List(x,2),z))*
-bbn_ks_Y(x,y,z) + 1.*Hold(D(bbn_ks_Z(x,y,z),List(x,2),z))*bbn_ks_Z(x,y,z) + (0.5*Power(4*
+1.*Hold(D(bbn_ks_X(x,y,z),(x,2),z))*bbn_ks_X(x,y,z) + 1.*Hold(D(bbn_ks_Y(x,y,z),(x,2),z))*
+bbn_ks_Y(x,y,z) + 1.*Hold(D(bbn_ks_Z(x,y,z),(x,2),z))*bbn_ks_Z(x,y,z) + (0.5*Power(4*
 Hold(D(bbn_ks_Z(x,y,z),x))*Power(Pattern(a,BH),2)*bbn_ks_Z(x,y,z) + 2*
 (Hold(D(bbn_ks_X(x,y,z),x))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),x))*bbn_ks_Y(x,y,z) + 
 Hold(D(bbn_ks_Z(x,y,z),x))*bbn_ks_Z(x,y,z))*(-Power(Pattern(a,BH),2) + 
@@ -1045,12 +1045,12 @@ Hold(D(bbn_ks_Z(x,y,z),z))*Power(Pattern(a,BH),2)*bbn_ks_Z(x,y,z) + 2*
 Hold(D(bbn_ks_Z(x,y,z),z))*bbn_ks_Z(x,y,z))*(-Power(Pattern(a,BH),2) + 
 Power(bbn_ks_X(x,y,z),2) + Power(bbn_ks_Y(x,y,z),2) + Power(bbn_ks_Z(x,y,z),2)))*(4*
 Power(Hold(D(bbn_ks_Z(x,y,z),x)),2)*Power(Pattern(a,BH),2) + 4*
-Hold(D(bbn_ks_Z(x,y,z),List(x,2)))*Power(Pattern(a,BH),2)*bbn_ks_Z(x,y,z) + 
+Hold(D(bbn_ks_Z(x,y,z),(x,2)))*Power(Pattern(a,BH),2)*bbn_ks_Z(x,y,z) + 
 4*Power(Hold(D(bbn_ks_X(x,y,z),x))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),x))*
 bbn_ks_Y(x,y,z) + Hold(D(bbn_ks_Z(x,y,z),x))*bbn_ks_Z(x,y,z),2) + 2*(Power(Hold(D(bbn_ks_X(x,y,z),x)),2) + 
 Power(Hold(D(bbn_ks_Y(x,y,z),x)),2) + Power(Hold(D(bbn_ks_Z(x,y,z),x)),2) + 
-Hold(D(bbn_ks_X(x,y,z),List(x,2)))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),List(x,2)))*
-bbn_ks_Y(x,y,z) + Hold(D(bbn_ks_Z(x,y,z),List(x,2)))*bbn_ks_Z(x,y,z))*(-
+Hold(D(bbn_ks_X(x,y,z),(x,2)))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),(x,2)))*
+bbn_ks_Y(x,y,z) + Hold(D(bbn_ks_Z(x,y,z),(x,2)))*bbn_ks_Z(x,y,z))*(-
 Power(Pattern(a,BH),2) + Power(bbn_ks_X(x,y,z),2) + 
 Power(bbn_ks_Y(x,y,z),2) + Power(bbn_ks_Z(x,y,z),2))))/Power(4*
 Power(Pattern(a,BH),2)*Power(bbn_ks_Z(x,y,z),2) + Power(-
@@ -1073,26 +1073,26 @@ Power(bbn_ks_X(x,y,z),2) + Power(bbn_ks_Y(x,y,z),2) + Power(bbn_ks_Z(x,y,z),2)))
 Power(4*Power(Pattern(a,BH),2)*Power(bbn_ks_Z(x,y,z),2) + Power(-
 Power(Pattern(a,BH),2) + Power(bbn_ks_X(x,y,z),2) + 
 Power(bbn_ks_Y(x,y,z),2) + Power(bbn_ks_Z(x,y,z),2),2),1.5) + (0.5*(4*
-Hold(D(bbn_ks_Z(x,y,z),z))*Hold(D(bbn_ks_Z(x,y,z),List(x,2)))*Power(Pattern(a,BH),2) + 
+Hold(D(bbn_ks_Z(x,y,z),z))*Hold(D(bbn_ks_Z(x,y,z),(x,2)))*Power(Pattern(a,BH),2) + 
 8*Hold(D(bbn_ks_Z(x,y,z),x))*Hold(D(bbn_ks_Z(x,y,z),x,z))*Power(Pattern(a,BH),2) + 
-4*Hold(D(bbn_ks_Z(x,y,z),List(x,2),z))*Power(Pattern(a,BH),2)*
+4*Hold(D(bbn_ks_Z(x,y,z),(x,2),z))*Power(Pattern(a,BH),2)*
 bbn_ks_Z(x,y,z) + 4*(Hold(D(bbn_ks_X(x,y,z),z))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),z))*
 bbn_ks_Y(x,y,z) + Hold(D(bbn_ks_Z(x,y,z),z))*bbn_ks_Z(x,y,z))*(Power(Hold(D(bbn_ks_X(x,y,z),x)),2) + 
 Power(Hold(D(bbn_ks_Y(x,y,z),x)),2) + Power(Hold(D(bbn_ks_Z(x,y,z),x)),2) + 
-Hold(D(bbn_ks_X(x,y,z),List(x,2)))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),List(x,2)))*
-bbn_ks_Y(x,y,z) + Hold(D(bbn_ks_Z(x,y,z),List(x,2)))*bbn_ks_Z(x,y,z)) + 8*
+Hold(D(bbn_ks_X(x,y,z),(x,2)))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),(x,2)))*
+bbn_ks_Y(x,y,z) + Hold(D(bbn_ks_Z(x,y,z),(x,2)))*bbn_ks_Z(x,y,z)) + 8*
 (Hold(D(bbn_ks_X(x,y,z),x))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),x))*bbn_ks_Y(x,y,z) + 
 Hold(D(bbn_ks_Z(x,y,z),x))*bbn_ks_Z(x,y,z))*(Hold(D(bbn_ks_X(x,y,z),x))*
 Hold(D(bbn_ks_X(x,y,z),z)) + Hold(D(bbn_ks_Y(x,y,z),x))*Hold(D(bbn_ks_Y(x,y,z),z)) + 
 Hold(D(bbn_ks_Z(x,y,z),x))*Hold(D(bbn_ks_Z(x,y,z),z)) + Hold(D(bbn_ks_X(x,y,z),x,z))*
 bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),x,z))*bbn_ks_Y(x,y,z) + Hold(D(bbn_ks_Z(x,y,z),x,z))*
-bbn_ks_Z(x,y,z)) + 2*(Hold(D(bbn_ks_X(x,y,z),z))*Hold(D(bbn_ks_X(x,y,z),List(x,2))) + 
-Hold(D(bbn_ks_Y(x,y,z),z))*Hold(D(bbn_ks_Y(x,y,z),List(x,2))) + 
-Hold(D(bbn_ks_Z(x,y,z),z))*Hold(D(bbn_ks_Z(x,y,z),List(x,2))) + 2*
+bbn_ks_Z(x,y,z)) + 2*(Hold(D(bbn_ks_X(x,y,z),z))*Hold(D(bbn_ks_X(x,y,z),(x,2))) + 
+Hold(D(bbn_ks_Y(x,y,z),z))*Hold(D(bbn_ks_Y(x,y,z),(x,2))) + 
+Hold(D(bbn_ks_Z(x,y,z),z))*Hold(D(bbn_ks_Z(x,y,z),(x,2))) + 2*
 Hold(D(bbn_ks_X(x,y,z),x))*Hold(D(bbn_ks_X(x,y,z),x,z)) + 2*Hold(D(bbn_ks_Y(x,y,z),x))*
 Hold(D(bbn_ks_Y(x,y,z),x,z)) + 2*Hold(D(bbn_ks_Z(x,y,z),x))*Hold(D(bbn_ks_Z(x,y,z),x,z)) + 
-Hold(D(bbn_ks_X(x,y,z),List(x,2),z))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),List(x,2),z))*
-bbn_ks_Y(x,y,z) + Hold(D(bbn_ks_Z(x,y,z),List(x,2),z))*bbn_ks_Z(x,y,z))*(-
+Hold(D(bbn_ks_X(x,y,z),(x,2),z))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),(x,2),z))*
+bbn_ks_Y(x,y,z) + Hold(D(bbn_ks_Z(x,y,z),(x,2),z))*bbn_ks_Z(x,y,z))*(-
 Power(Pattern(a,BH),2) + Power(bbn_ks_X(x,y,z),2) + 
 Power(bbn_ks_Y(x,y,z),2) + Power(bbn_ks_Z(x,y,z),2))))/Sqrt(4*Power(Pattern(a,BH),2)*
 Power(bbn_ks_Z(x,y,z),2) + Power(-Power(Pattern(a,BH),2) + 
@@ -1103,13 +1103,13 @@ KS_func_def_macro(dddR_D0D2D2) KS_func_args_macro
 {
 return
 /* mcode in progress ... */
-1.*Hold(D(bbn_ks_X(x,y,z),x))*Hold(D(bbn_ks_X(x,y,z),List(z,2))) + 1.*
-Hold(D(bbn_ks_Y(x,y,z),x))*Hold(D(bbn_ks_Y(x,y,z),List(z,2))) + 1.*
-Hold(D(bbn_ks_Z(x,y,z),x))*Hold(D(bbn_ks_Z(x,y,z),List(z,2))) + 2.*
+1.*Hold(D(bbn_ks_X(x,y,z),x))*Hold(D(bbn_ks_X(x,y,z),(z,2))) + 1.*
+Hold(D(bbn_ks_Y(x,y,z),x))*Hold(D(bbn_ks_Y(x,y,z),(z,2))) + 1.*
+Hold(D(bbn_ks_Z(x,y,z),x))*Hold(D(bbn_ks_Z(x,y,z),(z,2))) + 2.*
 Hold(D(bbn_ks_X(x,y,z),z))*Hold(D(bbn_ks_X(x,y,z),x,z)) + 2.*Hold(D(bbn_ks_Y(x,y,z),z))*
 Hold(D(bbn_ks_Y(x,y,z),x,z)) + 2.*Hold(D(bbn_ks_Z(x,y,z),z))*Hold(D(bbn_ks_Z(x,y,z),x,z)) + 
-1.*Hold(D(bbn_ks_X(x,y,z),x,List(z,2)))*bbn_ks_X(x,y,z) + 1.*Hold(D(bbn_ks_Y(x,y,z),x,List(z,2)))*
-bbn_ks_Y(x,y,z) + 1.*Hold(D(bbn_ks_Z(x,y,z),x,List(z,2)))*bbn_ks_Z(x,y,z) + (0.5*(4*
+1.*Hold(D(bbn_ks_X(x,y,z),x,(z,2)))*bbn_ks_X(x,y,z) + 1.*Hold(D(bbn_ks_Y(x,y,z),x,(z,2)))*
+bbn_ks_Y(x,y,z) + 1.*Hold(D(bbn_ks_Z(x,y,z),x,(z,2)))*bbn_ks_Z(x,y,z) + (0.5*(4*
 Hold(D(bbn_ks_Z(x,y,z),x))*Power(Pattern(a,BH),2)*bbn_ks_Z(x,y,z) + 2*
 (Hold(D(bbn_ks_X(x,y,z),x))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),x))*bbn_ks_Y(x,y,z) + 
 Hold(D(bbn_ks_Z(x,y,z),x))*bbn_ks_Z(x,y,z))*(-Power(Pattern(a,BH),2) + 
@@ -1130,12 +1130,12 @@ Hold(D(bbn_ks_Z(x,y,z),x))*Power(Pattern(a,BH),2)*bbn_ks_Z(x,y,z) + 2*
 Hold(D(bbn_ks_Z(x,y,z),x))*bbn_ks_Z(x,y,z))*(-Power(Pattern(a,BH),2) + 
 Power(bbn_ks_X(x,y,z),2) + Power(bbn_ks_Y(x,y,z),2) + Power(bbn_ks_Z(x,y,z),2)))*(-4*
 Power(Hold(D(bbn_ks_Z(x,y,z),z)),2)*Power(Pattern(a,BH),2) - 4*
-Hold(D(bbn_ks_Z(x,y,z),List(z,2)))*Power(Pattern(a,BH),2)*bbn_ks_Z(x,y,z) - 
+Hold(D(bbn_ks_Z(x,y,z),(z,2)))*Power(Pattern(a,BH),2)*bbn_ks_Z(x,y,z) - 
 4*Power(Hold(D(bbn_ks_X(x,y,z),z))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),z))*
 bbn_ks_Y(x,y,z) + Hold(D(bbn_ks_Z(x,y,z),z))*bbn_ks_Z(x,y,z),2) - 2*(Power(Hold(D(bbn_ks_X(x,y,z),z)),2) + 
 Power(Hold(D(bbn_ks_Y(x,y,z),z)),2) + Power(Hold(D(bbn_ks_Z(x,y,z),z)),2) + 
-Hold(D(bbn_ks_X(x,y,z),List(z,2)))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),List(z,2)))*
-bbn_ks_Y(x,y,z) + Hold(D(bbn_ks_Z(x,y,z),List(z,2)))*bbn_ks_Z(x,y,z))*(-
+Hold(D(bbn_ks_X(x,y,z),(z,2)))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),(z,2)))*
+bbn_ks_Y(x,y,z) + Hold(D(bbn_ks_Z(x,y,z),(z,2)))*bbn_ks_Z(x,y,z))*(-
 Power(Pattern(a,BH),2) + Power(bbn_ks_X(x,y,z),2) + 
 Power(bbn_ks_Y(x,y,z),2) + Power(bbn_ks_Z(x,y,z),2))))/Power(4*
 Power(Pattern(a,BH),2)*Power(bbn_ks_Z(x,y,z),2) + Power(-
@@ -1158,26 +1158,26 @@ Power(bbn_ks_X(x,y,z),2) + Power(bbn_ks_Y(x,y,z),2) + Power(bbn_ks_Z(x,y,z),2)))
 Power(4*Power(Pattern(a,BH),2)*Power(bbn_ks_Z(x,y,z),2) + Power(-
 Power(Pattern(a,BH),2) + Power(bbn_ks_X(x,y,z),2) + 
 Power(bbn_ks_Y(x,y,z),2) + Power(bbn_ks_Z(x,y,z),2),2),1.5) + (0.5*(4*
-Hold(D(bbn_ks_Z(x,y,z),x))*Hold(D(bbn_ks_Z(x,y,z),List(z,2)))*Power(Pattern(a,BH),2) + 
+Hold(D(bbn_ks_Z(x,y,z),x))*Hold(D(bbn_ks_Z(x,y,z),(z,2)))*Power(Pattern(a,BH),2) + 
 8*Hold(D(bbn_ks_Z(x,y,z),z))*Hold(D(bbn_ks_Z(x,y,z),x,z))*Power(Pattern(a,BH),2) + 
-4*Hold(D(bbn_ks_Z(x,y,z),x,List(z,2)))*Power(Pattern(a,BH),2)*
+4*Hold(D(bbn_ks_Z(x,y,z),x,(z,2)))*Power(Pattern(a,BH),2)*
 bbn_ks_Z(x,y,z) + 4*(Hold(D(bbn_ks_X(x,y,z),x))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),x))*
 bbn_ks_Y(x,y,z) + Hold(D(bbn_ks_Z(x,y,z),x))*bbn_ks_Z(x,y,z))*(Power(Hold(D(bbn_ks_X(x,y,z),z)),2) + 
 Power(Hold(D(bbn_ks_Y(x,y,z),z)),2) + Power(Hold(D(bbn_ks_Z(x,y,z),z)),2) + 
-Hold(D(bbn_ks_X(x,y,z),List(z,2)))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),List(z,2)))*
-bbn_ks_Y(x,y,z) + Hold(D(bbn_ks_Z(x,y,z),List(z,2)))*bbn_ks_Z(x,y,z)) + 8*
+Hold(D(bbn_ks_X(x,y,z),(z,2)))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),(z,2)))*
+bbn_ks_Y(x,y,z) + Hold(D(bbn_ks_Z(x,y,z),(z,2)))*bbn_ks_Z(x,y,z)) + 8*
 (Hold(D(bbn_ks_X(x,y,z),z))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),z))*bbn_ks_Y(x,y,z) + 
 Hold(D(bbn_ks_Z(x,y,z),z))*bbn_ks_Z(x,y,z))*(Hold(D(bbn_ks_X(x,y,z),x))*
 Hold(D(bbn_ks_X(x,y,z),z)) + Hold(D(bbn_ks_Y(x,y,z),x))*Hold(D(bbn_ks_Y(x,y,z),z)) + 
 Hold(D(bbn_ks_Z(x,y,z),x))*Hold(D(bbn_ks_Z(x,y,z),z)) + Hold(D(bbn_ks_X(x,y,z),x,z))*
 bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),x,z))*bbn_ks_Y(x,y,z) + Hold(D(bbn_ks_Z(x,y,z),x,z))*
-bbn_ks_Z(x,y,z)) + 2*(Hold(D(bbn_ks_X(x,y,z),x))*Hold(D(bbn_ks_X(x,y,z),List(z,2))) + 
-Hold(D(bbn_ks_Y(x,y,z),x))*Hold(D(bbn_ks_Y(x,y,z),List(z,2))) + 
-Hold(D(bbn_ks_Z(x,y,z),x))*Hold(D(bbn_ks_Z(x,y,z),List(z,2))) + 2*
+bbn_ks_Z(x,y,z)) + 2*(Hold(D(bbn_ks_X(x,y,z),x))*Hold(D(bbn_ks_X(x,y,z),(z,2))) + 
+Hold(D(bbn_ks_Y(x,y,z),x))*Hold(D(bbn_ks_Y(x,y,z),(z,2))) + 
+Hold(D(bbn_ks_Z(x,y,z),x))*Hold(D(bbn_ks_Z(x,y,z),(z,2))) + 2*
 Hold(D(bbn_ks_X(x,y,z),z))*Hold(D(bbn_ks_X(x,y,z),x,z)) + 2*Hold(D(bbn_ks_Y(x,y,z),z))*
 Hold(D(bbn_ks_Y(x,y,z),x,z)) + 2*Hold(D(bbn_ks_Z(x,y,z),z))*Hold(D(bbn_ks_Z(x,y,z),x,z)) + 
-Hold(D(bbn_ks_X(x,y,z),x,List(z,2)))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),x,List(z,2)))*
-bbn_ks_Y(x,y,z) + Hold(D(bbn_ks_Z(x,y,z),x,List(z,2)))*bbn_ks_Z(x,y,z))*(-
+Hold(D(bbn_ks_X(x,y,z),x,(z,2)))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),x,(z,2)))*
+bbn_ks_Y(x,y,z) + Hold(D(bbn_ks_Z(x,y,z),x,(z,2)))*bbn_ks_Z(x,y,z))*(-
 Power(Pattern(a,BH),2) + Power(bbn_ks_X(x,y,z),2) + 
 Power(bbn_ks_Y(x,y,z),2) + Power(bbn_ks_Z(x,y,z),2))))/Sqrt(4*Power(Pattern(a,BH),2)*
 Power(bbn_ks_Z(x,y,z),2) + Power(-Power(Pattern(a,BH),2) + 
@@ -1188,22 +1188,22 @@ KS_func_def_macro(dddR_D2D2D2) KS_func_args_macro
 {
 return
 /* mcode in progress ... */
-3.*Hold(D(bbn_ks_X(x,y,z),z))*Hold(D(bbn_ks_X(x,y,z),List(z,2))) + 3.*
-Hold(D(bbn_ks_Y(x,y,z),z))*Hold(D(bbn_ks_Y(x,y,z),List(z,2))) + 3.*
-Hold(D(bbn_ks_Z(x,y,z),z))*Hold(D(bbn_ks_Z(x,y,z),List(z,2))) + 1.*
-Hold(D(bbn_ks_X(x,y,z),List(z,3)))*bbn_ks_X(x,y,z) + 1.*Hold(D(bbn_ks_Y(x,y,z),List(z,3)))*
-bbn_ks_Y(x,y,z) + 1.*Hold(D(bbn_ks_Z(x,y,z),List(z,3)))*bbn_ks_Z(x,y,z) + (0.5*(4*
+3.*Hold(D(bbn_ks_X(x,y,z),z))*Hold(D(bbn_ks_X(x,y,z),(z,2))) + 3.*
+Hold(D(bbn_ks_Y(x,y,z),z))*Hold(D(bbn_ks_Y(x,y,z),(z,2))) + 3.*
+Hold(D(bbn_ks_Z(x,y,z),z))*Hold(D(bbn_ks_Z(x,y,z),(z,2))) + 1.*
+Hold(D(bbn_ks_X(x,y,z),(z,3)))*bbn_ks_X(x,y,z) + 1.*Hold(D(bbn_ks_Y(x,y,z),(z,3)))*
+bbn_ks_Y(x,y,z) + 1.*Hold(D(bbn_ks_Z(x,y,z),(z,3)))*bbn_ks_Z(x,y,z) + (0.5*(4*
 Hold(D(bbn_ks_Z(x,y,z),z))*Power(Pattern(a,BH),2)*bbn_ks_Z(x,y,z) + 2*
 (Hold(D(bbn_ks_X(x,y,z),z))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),z))*bbn_ks_Y(x,y,z) + 
 Hold(D(bbn_ks_Z(x,y,z),z))*bbn_ks_Z(x,y,z))*(-Power(Pattern(a,BH),2) + 
 Power(bbn_ks_X(x,y,z),2) + Power(bbn_ks_Y(x,y,z),2) + Power(bbn_ks_Z(x,y,z),2)))*(-4*
 Power(Hold(D(bbn_ks_Z(x,y,z),z)),2)*Power(Pattern(a,BH),2) - 4*
-Hold(D(bbn_ks_Z(x,y,z),List(z,2)))*Power(Pattern(a,BH),2)*bbn_ks_Z(x,y,z) - 
+Hold(D(bbn_ks_Z(x,y,z),(z,2)))*Power(Pattern(a,BH),2)*bbn_ks_Z(x,y,z) - 
 4*Power(Hold(D(bbn_ks_X(x,y,z),z))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),z))*
 bbn_ks_Y(x,y,z) + Hold(D(bbn_ks_Z(x,y,z),z))*bbn_ks_Z(x,y,z),2) - 2*(Power(Hold(D(bbn_ks_X(x,y,z),z)),2) + 
 Power(Hold(D(bbn_ks_Y(x,y,z),z)),2) + Power(Hold(D(bbn_ks_Z(x,y,z),z)),2) + 
-Hold(D(bbn_ks_X(x,y,z),List(z,2)))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),List(z,2)))*
-bbn_ks_Y(x,y,z) + Hold(D(bbn_ks_Z(x,y,z),List(z,2)))*bbn_ks_Z(x,y,z))*(-
+Hold(D(bbn_ks_X(x,y,z),(z,2)))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),(z,2)))*
+bbn_ks_Y(x,y,z) + Hold(D(bbn_ks_Z(x,y,z),(z,2)))*bbn_ks_Z(x,y,z))*(-
 Power(Pattern(a,BH),2) + Power(bbn_ks_X(x,y,z),2) + 
 Power(bbn_ks_Y(x,y,z),2) + Power(bbn_ks_Z(x,y,z),2))))/Power(4*
 Power(Pattern(a,BH),2)*Power(bbn_ks_Z(x,y,z),2) + Power(-
@@ -1214,29 +1214,29 @@ Hold(D(bbn_ks_Z(x,y,z),z))*Power(Pattern(a,BH),2)*bbn_ks_Z(x,y,z) - 2*
 Hold(D(bbn_ks_Z(x,y,z),z))*bbn_ks_Z(x,y,z))*(-Power(Pattern(a,BH),2) + 
 Power(bbn_ks_X(x,y,z),2) + Power(bbn_ks_Y(x,y,z),2) + Power(bbn_ks_Z(x,y,z),2)))*(4*
 Power(Hold(D(bbn_ks_Z(x,y,z),z)),2)*Power(Pattern(a,BH),2) + 4*
-Hold(D(bbn_ks_Z(x,y,z),List(z,2)))*Power(Pattern(a,BH),2)*bbn_ks_Z(x,y,z) + 
+Hold(D(bbn_ks_Z(x,y,z),(z,2)))*Power(Pattern(a,BH),2)*bbn_ks_Z(x,y,z) + 
 4*Power(Hold(D(bbn_ks_X(x,y,z),z))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),z))*
 bbn_ks_Y(x,y,z) + Hold(D(bbn_ks_Z(x,y,z),z))*bbn_ks_Z(x,y,z),2) + 2*(Power(Hold(D(bbn_ks_X(x,y,z),z)),2) + 
 Power(Hold(D(bbn_ks_Y(x,y,z),z)),2) + Power(Hold(D(bbn_ks_Z(x,y,z),z)),2) + 
-Hold(D(bbn_ks_X(x,y,z),List(z,2)))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),List(z,2)))*
-bbn_ks_Y(x,y,z) + Hold(D(bbn_ks_Z(x,y,z),List(z,2)))*bbn_ks_Z(x,y,z))*(-
+Hold(D(bbn_ks_X(x,y,z),(z,2)))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),(z,2)))*
+bbn_ks_Y(x,y,z) + Hold(D(bbn_ks_Z(x,y,z),(z,2)))*bbn_ks_Z(x,y,z))*(-
 Power(Pattern(a,BH),2) + Power(bbn_ks_X(x,y,z),2) + 
 Power(bbn_ks_Y(x,y,z),2) + Power(bbn_ks_Z(x,y,z),2))))/Power(4*
 Power(Pattern(a,BH),2)*Power(bbn_ks_Z(x,y,z),2) + Power(-
 Power(Pattern(a,BH),2) + Power(bbn_ks_X(x,y,z),2) + 
 Power(bbn_ks_Y(x,y,z),2) + Power(bbn_ks_Z(x,y,z),2),2),1.5) + (1.*(6*
-Hold(D(bbn_ks_Z(x,y,z),z))*Hold(D(bbn_ks_Z(x,y,z),List(z,2)))*Power(Pattern(a,BH),2) + 
-2*Hold(D(bbn_ks_Z(x,y,z),List(z,3)))*Power(Pattern(a,BH),2)*
+Hold(D(bbn_ks_Z(x,y,z),z))*Hold(D(bbn_ks_Z(x,y,z),(z,2)))*Power(Pattern(a,BH),2) + 
+2*Hold(D(bbn_ks_Z(x,y,z),(z,3)))*Power(Pattern(a,BH),2)*
 bbn_ks_Z(x,y,z) + 6*(Hold(D(bbn_ks_X(x,y,z),z))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),z))*
 bbn_ks_Y(x,y,z) + Hold(D(bbn_ks_Z(x,y,z),z))*bbn_ks_Z(x,y,z))*(Power(Hold(D(bbn_ks_X(x,y,z),z)),2) + 
 Power(Hold(D(bbn_ks_Y(x,y,z),z)),2) + Power(Hold(D(bbn_ks_Z(x,y,z),z)),2) + 
-Hold(D(bbn_ks_X(x,y,z),List(z,2)))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),List(z,2)))*
-bbn_ks_Y(x,y,z) + Hold(D(bbn_ks_Z(x,y,z),List(z,2)))*bbn_ks_Z(x,y,z)) + (3*
-Hold(D(bbn_ks_X(x,y,z),z))*Hold(D(bbn_ks_X(x,y,z),List(z,2))) + 3*
-Hold(D(bbn_ks_Y(x,y,z),z))*Hold(D(bbn_ks_Y(x,y,z),List(z,2))) + 3*
-Hold(D(bbn_ks_Z(x,y,z),z))*Hold(D(bbn_ks_Z(x,y,z),List(z,2))) + 
-Hold(D(bbn_ks_X(x,y,z),List(z,3)))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),List(z,3)))*
-bbn_ks_Y(x,y,z) + Hold(D(bbn_ks_Z(x,y,z),List(z,3)))*bbn_ks_Z(x,y,z))*(-
+Hold(D(bbn_ks_X(x,y,z),(z,2)))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),(z,2)))*
+bbn_ks_Y(x,y,z) + Hold(D(bbn_ks_Z(x,y,z),(z,2)))*bbn_ks_Z(x,y,z)) + (3*
+Hold(D(bbn_ks_X(x,y,z),z))*Hold(D(bbn_ks_X(x,y,z),(z,2))) + 3*
+Hold(D(bbn_ks_Y(x,y,z),z))*Hold(D(bbn_ks_Y(x,y,z),(z,2))) + 3*
+Hold(D(bbn_ks_Z(x,y,z),z))*Hold(D(bbn_ks_Z(x,y,z),(z,2))) + 
+Hold(D(bbn_ks_X(x,y,z),(z,3)))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),(z,3)))*
+bbn_ks_Y(x,y,z) + Hold(D(bbn_ks_Z(x,y,z),(z,3)))*bbn_ks_Z(x,y,z))*(-
 Power(Pattern(a,BH),2) + Power(bbn_ks_X(x,y,z),2) + 
 Power(bbn_ks_Y(x,y,z),2) + Power(bbn_ks_Z(x,y,z),2))))/Sqrt(4*Power(Pattern(a,BH),2)*
 Power(bbn_ks_Z(x,y,z),2) + Power(-Power(Pattern(a,BH),2) + 
@@ -1261,13 +1261,13 @@ KS_func_def_macro(dddR_D2D2D0) KS_func_args_macro
 {
 return
 /* mcode in progress ... */
-1.*Hold(D(bbn_ks_X(x,y,z),x))*Hold(D(bbn_ks_X(x,y,z),List(z,2))) + 1.*
-Hold(D(bbn_ks_Y(x,y,z),x))*Hold(D(bbn_ks_Y(x,y,z),List(z,2))) + 1.*
-Hold(D(bbn_ks_Z(x,y,z),x))*Hold(D(bbn_ks_Z(x,y,z),List(z,2))) + 2.*
+1.*Hold(D(bbn_ks_X(x,y,z),x))*Hold(D(bbn_ks_X(x,y,z),(z,2))) + 1.*
+Hold(D(bbn_ks_Y(x,y,z),x))*Hold(D(bbn_ks_Y(x,y,z),(z,2))) + 1.*
+Hold(D(bbn_ks_Z(x,y,z),x))*Hold(D(bbn_ks_Z(x,y,z),(z,2))) + 2.*
 Hold(D(bbn_ks_X(x,y,z),z))*Hold(D(bbn_ks_X(x,y,z),x,z)) + 2.*Hold(D(bbn_ks_Y(x,y,z),z))*
 Hold(D(bbn_ks_Y(x,y,z),x,z)) + 2.*Hold(D(bbn_ks_Z(x,y,z),z))*Hold(D(bbn_ks_Z(x,y,z),x,z)) + 
-1.*Hold(D(bbn_ks_X(x,y,z),x,List(z,2)))*bbn_ks_X(x,y,z) + 1.*Hold(D(bbn_ks_Y(x,y,z),x,List(z,2)))*
-bbn_ks_Y(x,y,z) + 1.*Hold(D(bbn_ks_Z(x,y,z),x,List(z,2)))*bbn_ks_Z(x,y,z) + (0.5*(12*
+1.*Hold(D(bbn_ks_X(x,y,z),x,(z,2)))*bbn_ks_X(x,y,z) + 1.*Hold(D(bbn_ks_Y(x,y,z),x,(z,2)))*
+bbn_ks_Y(x,y,z) + 1.*Hold(D(bbn_ks_Z(x,y,z),x,(z,2)))*bbn_ks_Z(x,y,z) + (0.5*(12*
 Hold(D(bbn_ks_Z(x,y,z),x))*Power(Pattern(a,BH),2)*bbn_ks_Z(x,y,z) + 6*
 (Hold(D(bbn_ks_X(x,y,z),x))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),x))*bbn_ks_Y(x,y,z) + 
 Hold(D(bbn_ks_Z(x,y,z),x))*bbn_ks_Z(x,y,z))*(-Power(Pattern(a,BH),2) + 
@@ -1284,12 +1284,12 @@ Hold(D(bbn_ks_Z(x,y,z),x))*Power(Pattern(a,BH),2)*bbn_ks_Z(x,y,z) + 2*
 Hold(D(bbn_ks_Z(x,y,z),x))*bbn_ks_Z(x,y,z))*(-Power(Pattern(a,BH),2) + 
 Power(bbn_ks_X(x,y,z),2) + Power(bbn_ks_Y(x,y,z),2) + Power(bbn_ks_Z(x,y,z),2)))*(4*
 Power(Hold(D(bbn_ks_Z(x,y,z),z)),2)*Power(Pattern(a,BH),2) + 4*
-Hold(D(bbn_ks_Z(x,y,z),List(z,2)))*Power(Pattern(a,BH),2)*bbn_ks_Z(x,y,z) + 
+Hold(D(bbn_ks_Z(x,y,z),(z,2)))*Power(Pattern(a,BH),2)*bbn_ks_Z(x,y,z) + 
 4*Power(Hold(D(bbn_ks_X(x,y,z),z))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),z))*
 bbn_ks_Y(x,y,z) + Hold(D(bbn_ks_Z(x,y,z),z))*bbn_ks_Z(x,y,z),2) + 2*(Power(Hold(D(bbn_ks_X(x,y,z),z)),2) + 
 Power(Hold(D(bbn_ks_Y(x,y,z),z)),2) + Power(Hold(D(bbn_ks_Z(x,y,z),z)),2) + 
-Hold(D(bbn_ks_X(x,y,z),List(z,2)))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),List(z,2)))*
-bbn_ks_Y(x,y,z) + Hold(D(bbn_ks_Z(x,y,z),List(z,2)))*bbn_ks_Z(x,y,z))*(-
+Hold(D(bbn_ks_X(x,y,z),(z,2)))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),(z,2)))*
+bbn_ks_Y(x,y,z) + Hold(D(bbn_ks_Z(x,y,z),(z,2)))*bbn_ks_Z(x,y,z))*(-
 Power(Pattern(a,BH),2) + Power(bbn_ks_X(x,y,z),2) + 
 Power(bbn_ks_Y(x,y,z),2) + Power(bbn_ks_Z(x,y,z),2))))/Power(4*
 Power(Pattern(a,BH),2)*Power(bbn_ks_Z(x,y,z),2) + Power(-
@@ -1312,26 +1312,26 @@ Power(bbn_ks_X(x,y,z),2) + Power(bbn_ks_Y(x,y,z),2) + Power(bbn_ks_Z(x,y,z),2)))
 Power(4*Power(Pattern(a,BH),2)*Power(bbn_ks_Z(x,y,z),2) + Power(-
 Power(Pattern(a,BH),2) + Power(bbn_ks_X(x,y,z),2) + 
 Power(bbn_ks_Y(x,y,z),2) + Power(bbn_ks_Z(x,y,z),2),2),1.5) + (0.5*(4*
-Hold(D(bbn_ks_Z(x,y,z),x))*Hold(D(bbn_ks_Z(x,y,z),List(z,2)))*Power(Pattern(a,BH),2) + 
+Hold(D(bbn_ks_Z(x,y,z),x))*Hold(D(bbn_ks_Z(x,y,z),(z,2)))*Power(Pattern(a,BH),2) + 
 8*Hold(D(bbn_ks_Z(x,y,z),z))*Hold(D(bbn_ks_Z(x,y,z),x,z))*Power(Pattern(a,BH),2) + 
-4*Hold(D(bbn_ks_Z(x,y,z),x,List(z,2)))*Power(Pattern(a,BH),2)*
+4*Hold(D(bbn_ks_Z(x,y,z),x,(z,2)))*Power(Pattern(a,BH),2)*
 bbn_ks_Z(x,y,z) + 4*(Hold(D(bbn_ks_X(x,y,z),x))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),x))*
 bbn_ks_Y(x,y,z) + Hold(D(bbn_ks_Z(x,y,z),x))*bbn_ks_Z(x,y,z))*(Power(Hold(D(bbn_ks_X(x,y,z),z)),2) + 
 Power(Hold(D(bbn_ks_Y(x,y,z),z)),2) + Power(Hold(D(bbn_ks_Z(x,y,z),z)),2) + 
-Hold(D(bbn_ks_X(x,y,z),List(z,2)))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),List(z,2)))*
-bbn_ks_Y(x,y,z) + Hold(D(bbn_ks_Z(x,y,z),List(z,2)))*bbn_ks_Z(x,y,z)) + 8*
+Hold(D(bbn_ks_X(x,y,z),(z,2)))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),(z,2)))*
+bbn_ks_Y(x,y,z) + Hold(D(bbn_ks_Z(x,y,z),(z,2)))*bbn_ks_Z(x,y,z)) + 8*
 (Hold(D(bbn_ks_X(x,y,z),z))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),z))*bbn_ks_Y(x,y,z) + 
 Hold(D(bbn_ks_Z(x,y,z),z))*bbn_ks_Z(x,y,z))*(Hold(D(bbn_ks_X(x,y,z),x))*
 Hold(D(bbn_ks_X(x,y,z),z)) + Hold(D(bbn_ks_Y(x,y,z),x))*Hold(D(bbn_ks_Y(x,y,z),z)) + 
 Hold(D(bbn_ks_Z(x,y,z),x))*Hold(D(bbn_ks_Z(x,y,z),z)) + Hold(D(bbn_ks_X(x,y,z),x,z))*
 bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),x,z))*bbn_ks_Y(x,y,z) + Hold(D(bbn_ks_Z(x,y,z),x,z))*
-bbn_ks_Z(x,y,z)) + 2*(Hold(D(bbn_ks_X(x,y,z),x))*Hold(D(bbn_ks_X(x,y,z),List(z,2))) + 
-Hold(D(bbn_ks_Y(x,y,z),x))*Hold(D(bbn_ks_Y(x,y,z),List(z,2))) + 
-Hold(D(bbn_ks_Z(x,y,z),x))*Hold(D(bbn_ks_Z(x,y,z),List(z,2))) + 2*
+bbn_ks_Z(x,y,z)) + 2*(Hold(D(bbn_ks_X(x,y,z),x))*Hold(D(bbn_ks_X(x,y,z),(z,2))) + 
+Hold(D(bbn_ks_Y(x,y,z),x))*Hold(D(bbn_ks_Y(x,y,z),(z,2))) + 
+Hold(D(bbn_ks_Z(x,y,z),x))*Hold(D(bbn_ks_Z(x,y,z),(z,2))) + 2*
 Hold(D(bbn_ks_X(x,y,z),z))*Hold(D(bbn_ks_X(x,y,z),x,z)) + 2*Hold(D(bbn_ks_Y(x,y,z),z))*
 Hold(D(bbn_ks_Y(x,y,z),x,z)) + 2*Hold(D(bbn_ks_Z(x,y,z),z))*Hold(D(bbn_ks_Z(x,y,z),x,z)) + 
-Hold(D(bbn_ks_X(x,y,z),x,List(z,2)))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),x,List(z,2)))*
-bbn_ks_Y(x,y,z) + Hold(D(bbn_ks_Z(x,y,z),x,List(z,2)))*bbn_ks_Z(x,y,z))*(-
+Hold(D(bbn_ks_X(x,y,z),x,(z,2)))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),x,(z,2)))*
+bbn_ks_Y(x,y,z) + Hold(D(bbn_ks_Z(x,y,z),x,(z,2)))*bbn_ks_Z(x,y,z))*(-
 Power(Pattern(a,BH),2) + Power(bbn_ks_X(x,y,z),2) + 
 Power(bbn_ks_Y(x,y,z),2) + Power(bbn_ks_Z(x,y,z),2))))/Sqrt(4*Power(Pattern(a,BH),2)*
 Power(bbn_ks_Z(x,y,z),2) + Power(-Power(Pattern(a,BH),2) + 
@@ -1342,13 +1342,13 @@ KS_func_def_macro(dddR_D1D1D0) KS_func_args_macro
 {
 return
 /* mcode in progress ... */
-1.*Hold(D(bbn_ks_X(x,y,z),x))*Hold(D(bbn_ks_X(x,y,z),List(y,2))) + 1.*
-Hold(D(bbn_ks_Y(x,y,z),x))*Hold(D(bbn_ks_Y(x,y,z),List(y,2))) + 1.*
-Hold(D(bbn_ks_Z(x,y,z),x))*Hold(D(bbn_ks_Z(x,y,z),List(y,2))) + 2.*
+1.*Hold(D(bbn_ks_X(x,y,z),x))*Hold(D(bbn_ks_X(x,y,z),(y,2))) + 1.*
+Hold(D(bbn_ks_Y(x,y,z),x))*Hold(D(bbn_ks_Y(x,y,z),(y,2))) + 1.*
+Hold(D(bbn_ks_Z(x,y,z),x))*Hold(D(bbn_ks_Z(x,y,z),(y,2))) + 2.*
 Hold(D(bbn_ks_X(x,y,z),y))*Hold(D(bbn_ks_X(x,y,z),x,y)) + 2.*Hold(D(bbn_ks_Y(x,y,z),y))*
 Hold(D(bbn_ks_Y(x,y,z),x,y)) + 2.*Hold(D(bbn_ks_Z(x,y,z),y))*Hold(D(bbn_ks_Z(x,y,z),x,y)) + 
-1.*Hold(D(bbn_ks_X(x,y,z),x,List(y,2)))*bbn_ks_X(x,y,z) + 1.*Hold(D(bbn_ks_Y(x,y,z),x,List(y,2)))*
-bbn_ks_Y(x,y,z) + 1.*Hold(D(bbn_ks_Z(x,y,z),x,List(y,2)))*bbn_ks_Z(x,y,z) + (0.5*(12*
+1.*Hold(D(bbn_ks_X(x,y,z),x,(y,2)))*bbn_ks_X(x,y,z) + 1.*Hold(D(bbn_ks_Y(x,y,z),x,(y,2)))*
+bbn_ks_Y(x,y,z) + 1.*Hold(D(bbn_ks_Z(x,y,z),x,(y,2)))*bbn_ks_Z(x,y,z) + (0.5*(12*
 Hold(D(bbn_ks_Z(x,y,z),x))*Power(Pattern(a,BH),2)*bbn_ks_Z(x,y,z) + 6*
 (Hold(D(bbn_ks_X(x,y,z),x))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),x))*bbn_ks_Y(x,y,z) + 
 Hold(D(bbn_ks_Z(x,y,z),x))*bbn_ks_Z(x,y,z))*(-Power(Pattern(a,BH),2) + 
@@ -1365,12 +1365,12 @@ Hold(D(bbn_ks_Z(x,y,z),x))*Power(Pattern(a,BH),2)*bbn_ks_Z(x,y,z) + 2*
 Hold(D(bbn_ks_Z(x,y,z),x))*bbn_ks_Z(x,y,z))*(-Power(Pattern(a,BH),2) + 
 Power(bbn_ks_X(x,y,z),2) + Power(bbn_ks_Y(x,y,z),2) + Power(bbn_ks_Z(x,y,z),2)))*(4*
 Power(Hold(D(bbn_ks_Z(x,y,z),y)),2)*Power(Pattern(a,BH),2) + 4*
-Hold(D(bbn_ks_Z(x,y,z),List(y,2)))*Power(Pattern(a,BH),2)*bbn_ks_Z(x,y,z) + 
+Hold(D(bbn_ks_Z(x,y,z),(y,2)))*Power(Pattern(a,BH),2)*bbn_ks_Z(x,y,z) + 
 4*Power(Hold(D(bbn_ks_X(x,y,z),y))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),y))*
 bbn_ks_Y(x,y,z) + Hold(D(bbn_ks_Z(x,y,z),y))*bbn_ks_Z(x,y,z),2) + 2*(Power(Hold(D(bbn_ks_X(x,y,z),y)),2) + 
 Power(Hold(D(bbn_ks_Y(x,y,z),y)),2) + Power(Hold(D(bbn_ks_Z(x,y,z),y)),2) + 
-Hold(D(bbn_ks_X(x,y,z),List(y,2)))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),List(y,2)))*
-bbn_ks_Y(x,y,z) + Hold(D(bbn_ks_Z(x,y,z),List(y,2)))*bbn_ks_Z(x,y,z))*(-
+Hold(D(bbn_ks_X(x,y,z),(y,2)))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),(y,2)))*
+bbn_ks_Y(x,y,z) + Hold(D(bbn_ks_Z(x,y,z),(y,2)))*bbn_ks_Z(x,y,z))*(-
 Power(Pattern(a,BH),2) + Power(bbn_ks_X(x,y,z),2) + 
 Power(bbn_ks_Y(x,y,z),2) + Power(bbn_ks_Z(x,y,z),2))))/Power(4*
 Power(Pattern(a,BH),2)*Power(bbn_ks_Z(x,y,z),2) + Power(-
@@ -1393,26 +1393,26 @@ Power(bbn_ks_X(x,y,z),2) + Power(bbn_ks_Y(x,y,z),2) + Power(bbn_ks_Z(x,y,z),2)))
 Power(4*Power(Pattern(a,BH),2)*Power(bbn_ks_Z(x,y,z),2) + Power(-
 Power(Pattern(a,BH),2) + Power(bbn_ks_X(x,y,z),2) + 
 Power(bbn_ks_Y(x,y,z),2) + Power(bbn_ks_Z(x,y,z),2),2),1.5) + (0.5*(4*
-Hold(D(bbn_ks_Z(x,y,z),x))*Hold(D(bbn_ks_Z(x,y,z),List(y,2)))*Power(Pattern(a,BH),2) + 
+Hold(D(bbn_ks_Z(x,y,z),x))*Hold(D(bbn_ks_Z(x,y,z),(y,2)))*Power(Pattern(a,BH),2) + 
 8*Hold(D(bbn_ks_Z(x,y,z),y))*Hold(D(bbn_ks_Z(x,y,z),x,y))*Power(Pattern(a,BH),2) + 
-4*Hold(D(bbn_ks_Z(x,y,z),x,List(y,2)))*Power(Pattern(a,BH),2)*
+4*Hold(D(bbn_ks_Z(x,y,z),x,(y,2)))*Power(Pattern(a,BH),2)*
 bbn_ks_Z(x,y,z) + 4*(Hold(D(bbn_ks_X(x,y,z),x))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),x))*
 bbn_ks_Y(x,y,z) + Hold(D(bbn_ks_Z(x,y,z),x))*bbn_ks_Z(x,y,z))*(Power(Hold(D(bbn_ks_X(x,y,z),y)),2) + 
 Power(Hold(D(bbn_ks_Y(x,y,z),y)),2) + Power(Hold(D(bbn_ks_Z(x,y,z),y)),2) + 
-Hold(D(bbn_ks_X(x,y,z),List(y,2)))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),List(y,2)))*
-bbn_ks_Y(x,y,z) + Hold(D(bbn_ks_Z(x,y,z),List(y,2)))*bbn_ks_Z(x,y,z)) + 8*
+Hold(D(bbn_ks_X(x,y,z),(y,2)))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),(y,2)))*
+bbn_ks_Y(x,y,z) + Hold(D(bbn_ks_Z(x,y,z),(y,2)))*bbn_ks_Z(x,y,z)) + 8*
 (Hold(D(bbn_ks_X(x,y,z),y))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),y))*bbn_ks_Y(x,y,z) + 
 Hold(D(bbn_ks_Z(x,y,z),y))*bbn_ks_Z(x,y,z))*(Hold(D(bbn_ks_X(x,y,z),x))*
 Hold(D(bbn_ks_X(x,y,z),y)) + Hold(D(bbn_ks_Y(x,y,z),x))*Hold(D(bbn_ks_Y(x,y,z),y)) + 
 Hold(D(bbn_ks_Z(x,y,z),x))*Hold(D(bbn_ks_Z(x,y,z),y)) + Hold(D(bbn_ks_X(x,y,z),x,y))*
 bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),x,y))*bbn_ks_Y(x,y,z) + Hold(D(bbn_ks_Z(x,y,z),x,y))*
-bbn_ks_Z(x,y,z)) + 2*(Hold(D(bbn_ks_X(x,y,z),x))*Hold(D(bbn_ks_X(x,y,z),List(y,2))) + 
-Hold(D(bbn_ks_Y(x,y,z),x))*Hold(D(bbn_ks_Y(x,y,z),List(y,2))) + 
-Hold(D(bbn_ks_Z(x,y,z),x))*Hold(D(bbn_ks_Z(x,y,z),List(y,2))) + 2*
+bbn_ks_Z(x,y,z)) + 2*(Hold(D(bbn_ks_X(x,y,z),x))*Hold(D(bbn_ks_X(x,y,z),(y,2))) + 
+Hold(D(bbn_ks_Y(x,y,z),x))*Hold(D(bbn_ks_Y(x,y,z),(y,2))) + 
+Hold(D(bbn_ks_Z(x,y,z),x))*Hold(D(bbn_ks_Z(x,y,z),(y,2))) + 2*
 Hold(D(bbn_ks_X(x,y,z),y))*Hold(D(bbn_ks_X(x,y,z),x,y)) + 2*Hold(D(bbn_ks_Y(x,y,z),y))*
 Hold(D(bbn_ks_Y(x,y,z),x,y)) + 2*Hold(D(bbn_ks_Z(x,y,z),y))*Hold(D(bbn_ks_Z(x,y,z),x,y)) + 
-Hold(D(bbn_ks_X(x,y,z),x,List(y,2)))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),x,List(y,2)))*
-bbn_ks_Y(x,y,z) + Hold(D(bbn_ks_Z(x,y,z),x,List(y,2)))*bbn_ks_Z(x,y,z))*(-
+Hold(D(bbn_ks_X(x,y,z),x,(y,2)))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),x,(y,2)))*
+bbn_ks_Y(x,y,z) + Hold(D(bbn_ks_Z(x,y,z),x,(y,2)))*bbn_ks_Z(x,y,z))*(-
 Power(Pattern(a,BH),2) + Power(bbn_ks_X(x,y,z),2) + 
 Power(bbn_ks_Y(x,y,z),2) + Power(bbn_ks_Z(x,y,z),2))))/Sqrt(4*Power(Pattern(a,BH),2)*
 Power(bbn_ks_Z(x,y,z),2) + Power(-Power(Pattern(a,BH),2) + 
@@ -1423,13 +1423,13 @@ KS_func_def_macro(dddR_D2D2D1) KS_func_args_macro
 {
 return
 /* mcode in progress ... */
-1.*Hold(D(bbn_ks_X(x,y,z),y))*Hold(D(bbn_ks_X(x,y,z),List(z,2))) + 1.*
-Hold(D(bbn_ks_Y(x,y,z),y))*Hold(D(bbn_ks_Y(x,y,z),List(z,2))) + 1.*
-Hold(D(bbn_ks_Z(x,y,z),y))*Hold(D(bbn_ks_Z(x,y,z),List(z,2))) + 2.*
+1.*Hold(D(bbn_ks_X(x,y,z),y))*Hold(D(bbn_ks_X(x,y,z),(z,2))) + 1.*
+Hold(D(bbn_ks_Y(x,y,z),y))*Hold(D(bbn_ks_Y(x,y,z),(z,2))) + 1.*
+Hold(D(bbn_ks_Z(x,y,z),y))*Hold(D(bbn_ks_Z(x,y,z),(z,2))) + 2.*
 Hold(D(bbn_ks_X(x,y,z),z))*Hold(D(bbn_ks_X(x,y,z),y,z)) + 2.*Hold(D(bbn_ks_Y(x,y,z),z))*
 Hold(D(bbn_ks_Y(x,y,z),y,z)) + 2.*Hold(D(bbn_ks_Z(x,y,z),z))*Hold(D(bbn_ks_Z(x,y,z),y,z)) + 
-1.*Hold(D(bbn_ks_X(x,y,z),y,List(z,2)))*bbn_ks_X(x,y,z) + 1.*Hold(D(bbn_ks_Y(x,y,z),y,List(z,2)))*
-bbn_ks_Y(x,y,z) + 1.*Hold(D(bbn_ks_Z(x,y,z),y,List(z,2)))*bbn_ks_Z(x,y,z) + (0.5*(12*
+1.*Hold(D(bbn_ks_X(x,y,z),y,(z,2)))*bbn_ks_X(x,y,z) + 1.*Hold(D(bbn_ks_Y(x,y,z),y,(z,2)))*
+bbn_ks_Y(x,y,z) + 1.*Hold(D(bbn_ks_Z(x,y,z),y,(z,2)))*bbn_ks_Z(x,y,z) + (0.5*(12*
 Hold(D(bbn_ks_Z(x,y,z),y))*Power(Pattern(a,BH),2)*bbn_ks_Z(x,y,z) + 6*
 (Hold(D(bbn_ks_X(x,y,z),y))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),y))*bbn_ks_Y(x,y,z) + 
 Hold(D(bbn_ks_Z(x,y,z),y))*bbn_ks_Z(x,y,z))*(-Power(Pattern(a,BH),2) + 
@@ -1446,12 +1446,12 @@ Hold(D(bbn_ks_Z(x,y,z),y))*Power(Pattern(a,BH),2)*bbn_ks_Z(x,y,z) + 2*
 Hold(D(bbn_ks_Z(x,y,z),y))*bbn_ks_Z(x,y,z))*(-Power(Pattern(a,BH),2) + 
 Power(bbn_ks_X(x,y,z),2) + Power(bbn_ks_Y(x,y,z),2) + Power(bbn_ks_Z(x,y,z),2)))*(4*
 Power(Hold(D(bbn_ks_Z(x,y,z),z)),2)*Power(Pattern(a,BH),2) + 4*
-Hold(D(bbn_ks_Z(x,y,z),List(z,2)))*Power(Pattern(a,BH),2)*bbn_ks_Z(x,y,z) + 
+Hold(D(bbn_ks_Z(x,y,z),(z,2)))*Power(Pattern(a,BH),2)*bbn_ks_Z(x,y,z) + 
 4*Power(Hold(D(bbn_ks_X(x,y,z),z))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),z))*
 bbn_ks_Y(x,y,z) + Hold(D(bbn_ks_Z(x,y,z),z))*bbn_ks_Z(x,y,z),2) + 2*(Power(Hold(D(bbn_ks_X(x,y,z),z)),2) + 
 Power(Hold(D(bbn_ks_Y(x,y,z),z)),2) + Power(Hold(D(bbn_ks_Z(x,y,z),z)),2) + 
-Hold(D(bbn_ks_X(x,y,z),List(z,2)))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),List(z,2)))*
-bbn_ks_Y(x,y,z) + Hold(D(bbn_ks_Z(x,y,z),List(z,2)))*bbn_ks_Z(x,y,z))*(-
+Hold(D(bbn_ks_X(x,y,z),(z,2)))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),(z,2)))*
+bbn_ks_Y(x,y,z) + Hold(D(bbn_ks_Z(x,y,z),(z,2)))*bbn_ks_Z(x,y,z))*(-
 Power(Pattern(a,BH),2) + Power(bbn_ks_X(x,y,z),2) + 
 Power(bbn_ks_Y(x,y,z),2) + Power(bbn_ks_Z(x,y,z),2))))/Power(4*
 Power(Pattern(a,BH),2)*Power(bbn_ks_Z(x,y,z),2) + Power(-
@@ -1474,26 +1474,26 @@ Power(bbn_ks_X(x,y,z),2) + Power(bbn_ks_Y(x,y,z),2) + Power(bbn_ks_Z(x,y,z),2)))
 Power(4*Power(Pattern(a,BH),2)*Power(bbn_ks_Z(x,y,z),2) + Power(-
 Power(Pattern(a,BH),2) + Power(bbn_ks_X(x,y,z),2) + 
 Power(bbn_ks_Y(x,y,z),2) + Power(bbn_ks_Z(x,y,z),2),2),1.5) + (0.5*(4*
-Hold(D(bbn_ks_Z(x,y,z),y))*Hold(D(bbn_ks_Z(x,y,z),List(z,2)))*Power(Pattern(a,BH),2) + 
+Hold(D(bbn_ks_Z(x,y,z),y))*Hold(D(bbn_ks_Z(x,y,z),(z,2)))*Power(Pattern(a,BH),2) + 
 8*Hold(D(bbn_ks_Z(x,y,z),z))*Hold(D(bbn_ks_Z(x,y,z),y,z))*Power(Pattern(a,BH),2) + 
-4*Hold(D(bbn_ks_Z(x,y,z),y,List(z,2)))*Power(Pattern(a,BH),2)*
+4*Hold(D(bbn_ks_Z(x,y,z),y,(z,2)))*Power(Pattern(a,BH),2)*
 bbn_ks_Z(x,y,z) + 4*(Hold(D(bbn_ks_X(x,y,z),y))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),y))*
 bbn_ks_Y(x,y,z) + Hold(D(bbn_ks_Z(x,y,z),y))*bbn_ks_Z(x,y,z))*(Power(Hold(D(bbn_ks_X(x,y,z),z)),2) + 
 Power(Hold(D(bbn_ks_Y(x,y,z),z)),2) + Power(Hold(D(bbn_ks_Z(x,y,z),z)),2) + 
-Hold(D(bbn_ks_X(x,y,z),List(z,2)))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),List(z,2)))*
-bbn_ks_Y(x,y,z) + Hold(D(bbn_ks_Z(x,y,z),List(z,2)))*bbn_ks_Z(x,y,z)) + 8*
+Hold(D(bbn_ks_X(x,y,z),(z,2)))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),(z,2)))*
+bbn_ks_Y(x,y,z) + Hold(D(bbn_ks_Z(x,y,z),(z,2)))*bbn_ks_Z(x,y,z)) + 8*
 (Hold(D(bbn_ks_X(x,y,z),z))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),z))*bbn_ks_Y(x,y,z) + 
 Hold(D(bbn_ks_Z(x,y,z),z))*bbn_ks_Z(x,y,z))*(Hold(D(bbn_ks_X(x,y,z),y))*
 Hold(D(bbn_ks_X(x,y,z),z)) + Hold(D(bbn_ks_Y(x,y,z),y))*Hold(D(bbn_ks_Y(x,y,z),z)) + 
 Hold(D(bbn_ks_Z(x,y,z),y))*Hold(D(bbn_ks_Z(x,y,z),z)) + Hold(D(bbn_ks_X(x,y,z),y,z))*
 bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),y,z))*bbn_ks_Y(x,y,z) + Hold(D(bbn_ks_Z(x,y,z),y,z))*
-bbn_ks_Z(x,y,z)) + 2*(Hold(D(bbn_ks_X(x,y,z),y))*Hold(D(bbn_ks_X(x,y,z),List(z,2))) + 
-Hold(D(bbn_ks_Y(x,y,z),y))*Hold(D(bbn_ks_Y(x,y,z),List(z,2))) + 
-Hold(D(bbn_ks_Z(x,y,z),y))*Hold(D(bbn_ks_Z(x,y,z),List(z,2))) + 2*
+bbn_ks_Z(x,y,z)) + 2*(Hold(D(bbn_ks_X(x,y,z),y))*Hold(D(bbn_ks_X(x,y,z),(z,2))) + 
+Hold(D(bbn_ks_Y(x,y,z),y))*Hold(D(bbn_ks_Y(x,y,z),(z,2))) + 
+Hold(D(bbn_ks_Z(x,y,z),y))*Hold(D(bbn_ks_Z(x,y,z),(z,2))) + 2*
 Hold(D(bbn_ks_X(x,y,z),z))*Hold(D(bbn_ks_X(x,y,z),y,z)) + 2*Hold(D(bbn_ks_Y(x,y,z),z))*
 Hold(D(bbn_ks_Y(x,y,z),y,z)) + 2*Hold(D(bbn_ks_Z(x,y,z),z))*Hold(D(bbn_ks_Z(x,y,z),y,z)) + 
-Hold(D(bbn_ks_X(x,y,z),y,List(z,2)))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),y,List(z,2)))*
-bbn_ks_Y(x,y,z) + Hold(D(bbn_ks_Z(x,y,z),y,List(z,2)))*bbn_ks_Z(x,y,z))*(-
+Hold(D(bbn_ks_X(x,y,z),y,(z,2)))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),y,(z,2)))*
+bbn_ks_Y(x,y,z) + Hold(D(bbn_ks_Z(x,y,z),y,(z,2)))*bbn_ks_Z(x,y,z))*(-
 Power(Pattern(a,BH),2) + Power(bbn_ks_X(x,y,z),2) + 
 Power(bbn_ks_Y(x,y,z),2) + Power(bbn_ks_Z(x,y,z),2))))/Sqrt(4*Power(Pattern(a,BH),2)*
 Power(bbn_ks_Z(x,y,z),2) + Power(-Power(Pattern(a,BH),2) + 
@@ -1504,13 +1504,13 @@ KS_func_def_macro(dddR_D0D1D1) KS_func_args_macro
 {
 return
 /* mcode in progress ... */
-1.*Hold(D(bbn_ks_X(x,y,z),x))*Hold(D(bbn_ks_X(x,y,z),List(y,2))) + 1.*
-Hold(D(bbn_ks_Y(x,y,z),x))*Hold(D(bbn_ks_Y(x,y,z),List(y,2))) + 1.*
-Hold(D(bbn_ks_Z(x,y,z),x))*Hold(D(bbn_ks_Z(x,y,z),List(y,2))) + 2.*
+1.*Hold(D(bbn_ks_X(x,y,z),x))*Hold(D(bbn_ks_X(x,y,z),(y,2))) + 1.*
+Hold(D(bbn_ks_Y(x,y,z),x))*Hold(D(bbn_ks_Y(x,y,z),(y,2))) + 1.*
+Hold(D(bbn_ks_Z(x,y,z),x))*Hold(D(bbn_ks_Z(x,y,z),(y,2))) + 2.*
 Hold(D(bbn_ks_X(x,y,z),y))*Hold(D(bbn_ks_X(x,y,z),x,y)) + 2.*Hold(D(bbn_ks_Y(x,y,z),y))*
 Hold(D(bbn_ks_Y(x,y,z),x,y)) + 2.*Hold(D(bbn_ks_Z(x,y,z),y))*Hold(D(bbn_ks_Z(x,y,z),x,y)) + 
-1.*Hold(D(bbn_ks_X(x,y,z),x,List(y,2)))*bbn_ks_X(x,y,z) + 1.*Hold(D(bbn_ks_Y(x,y,z),x,List(y,2)))*
-bbn_ks_Y(x,y,z) + 1.*Hold(D(bbn_ks_Z(x,y,z),x,List(y,2)))*bbn_ks_Z(x,y,z) + (0.5*(4*
+1.*Hold(D(bbn_ks_X(x,y,z),x,(y,2)))*bbn_ks_X(x,y,z) + 1.*Hold(D(bbn_ks_Y(x,y,z),x,(y,2)))*
+bbn_ks_Y(x,y,z) + 1.*Hold(D(bbn_ks_Z(x,y,z),x,(y,2)))*bbn_ks_Z(x,y,z) + (0.5*(4*
 Hold(D(bbn_ks_Z(x,y,z),x))*Power(Pattern(a,BH),2)*bbn_ks_Z(x,y,z) + 2*
 (Hold(D(bbn_ks_X(x,y,z),x))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),x))*bbn_ks_Y(x,y,z) + 
 Hold(D(bbn_ks_Z(x,y,z),x))*bbn_ks_Z(x,y,z))*(-Power(Pattern(a,BH),2) + 
@@ -1531,12 +1531,12 @@ Hold(D(bbn_ks_Z(x,y,z),x))*Power(Pattern(a,BH),2)*bbn_ks_Z(x,y,z) + 2*
 Hold(D(bbn_ks_Z(x,y,z),x))*bbn_ks_Z(x,y,z))*(-Power(Pattern(a,BH),2) + 
 Power(bbn_ks_X(x,y,z),2) + Power(bbn_ks_Y(x,y,z),2) + Power(bbn_ks_Z(x,y,z),2)))*(-4*
 Power(Hold(D(bbn_ks_Z(x,y,z),y)),2)*Power(Pattern(a,BH),2) - 4*
-Hold(D(bbn_ks_Z(x,y,z),List(y,2)))*Power(Pattern(a,BH),2)*bbn_ks_Z(x,y,z) - 
+Hold(D(bbn_ks_Z(x,y,z),(y,2)))*Power(Pattern(a,BH),2)*bbn_ks_Z(x,y,z) - 
 4*Power(Hold(D(bbn_ks_X(x,y,z),y))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),y))*
 bbn_ks_Y(x,y,z) + Hold(D(bbn_ks_Z(x,y,z),y))*bbn_ks_Z(x,y,z),2) - 2*(Power(Hold(D(bbn_ks_X(x,y,z),y)),2) + 
 Power(Hold(D(bbn_ks_Y(x,y,z),y)),2) + Power(Hold(D(bbn_ks_Z(x,y,z),y)),2) + 
-Hold(D(bbn_ks_X(x,y,z),List(y,2)))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),List(y,2)))*
-bbn_ks_Y(x,y,z) + Hold(D(bbn_ks_Z(x,y,z),List(y,2)))*bbn_ks_Z(x,y,z))*(-
+Hold(D(bbn_ks_X(x,y,z),(y,2)))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),(y,2)))*
+bbn_ks_Y(x,y,z) + Hold(D(bbn_ks_Z(x,y,z),(y,2)))*bbn_ks_Z(x,y,z))*(-
 Power(Pattern(a,BH),2) + Power(bbn_ks_X(x,y,z),2) + 
 Power(bbn_ks_Y(x,y,z),2) + Power(bbn_ks_Z(x,y,z),2))))/Power(4*
 Power(Pattern(a,BH),2)*Power(bbn_ks_Z(x,y,z),2) + Power(-
@@ -1559,26 +1559,26 @@ Power(bbn_ks_X(x,y,z),2) + Power(bbn_ks_Y(x,y,z),2) + Power(bbn_ks_Z(x,y,z),2)))
 Power(4*Power(Pattern(a,BH),2)*Power(bbn_ks_Z(x,y,z),2) + Power(-
 Power(Pattern(a,BH),2) + Power(bbn_ks_X(x,y,z),2) + 
 Power(bbn_ks_Y(x,y,z),2) + Power(bbn_ks_Z(x,y,z),2),2),1.5) + (0.5*(4*
-Hold(D(bbn_ks_Z(x,y,z),x))*Hold(D(bbn_ks_Z(x,y,z),List(y,2)))*Power(Pattern(a,BH),2) + 
+Hold(D(bbn_ks_Z(x,y,z),x))*Hold(D(bbn_ks_Z(x,y,z),(y,2)))*Power(Pattern(a,BH),2) + 
 8*Hold(D(bbn_ks_Z(x,y,z),y))*Hold(D(bbn_ks_Z(x,y,z),x,y))*Power(Pattern(a,BH),2) + 
-4*Hold(D(bbn_ks_Z(x,y,z),x,List(y,2)))*Power(Pattern(a,BH),2)*
+4*Hold(D(bbn_ks_Z(x,y,z),x,(y,2)))*Power(Pattern(a,BH),2)*
 bbn_ks_Z(x,y,z) + 4*(Hold(D(bbn_ks_X(x,y,z),x))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),x))*
 bbn_ks_Y(x,y,z) + Hold(D(bbn_ks_Z(x,y,z),x))*bbn_ks_Z(x,y,z))*(Power(Hold(D(bbn_ks_X(x,y,z),y)),2) + 
 Power(Hold(D(bbn_ks_Y(x,y,z),y)),2) + Power(Hold(D(bbn_ks_Z(x,y,z),y)),2) + 
-Hold(D(bbn_ks_X(x,y,z),List(y,2)))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),List(y,2)))*
-bbn_ks_Y(x,y,z) + Hold(D(bbn_ks_Z(x,y,z),List(y,2)))*bbn_ks_Z(x,y,z)) + 8*
+Hold(D(bbn_ks_X(x,y,z),(y,2)))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),(y,2)))*
+bbn_ks_Y(x,y,z) + Hold(D(bbn_ks_Z(x,y,z),(y,2)))*bbn_ks_Z(x,y,z)) + 8*
 (Hold(D(bbn_ks_X(x,y,z),y))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),y))*bbn_ks_Y(x,y,z) + 
 Hold(D(bbn_ks_Z(x,y,z),y))*bbn_ks_Z(x,y,z))*(Hold(D(bbn_ks_X(x,y,z),x))*
 Hold(D(bbn_ks_X(x,y,z),y)) + Hold(D(bbn_ks_Y(x,y,z),x))*Hold(D(bbn_ks_Y(x,y,z),y)) + 
 Hold(D(bbn_ks_Z(x,y,z),x))*Hold(D(bbn_ks_Z(x,y,z),y)) + Hold(D(bbn_ks_X(x,y,z),x,y))*
 bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),x,y))*bbn_ks_Y(x,y,z) + Hold(D(bbn_ks_Z(x,y,z),x,y))*
-bbn_ks_Z(x,y,z)) + 2*(Hold(D(bbn_ks_X(x,y,z),x))*Hold(D(bbn_ks_X(x,y,z),List(y,2))) + 
-Hold(D(bbn_ks_Y(x,y,z),x))*Hold(D(bbn_ks_Y(x,y,z),List(y,2))) + 
-Hold(D(bbn_ks_Z(x,y,z),x))*Hold(D(bbn_ks_Z(x,y,z),List(y,2))) + 2*
+bbn_ks_Z(x,y,z)) + 2*(Hold(D(bbn_ks_X(x,y,z),x))*Hold(D(bbn_ks_X(x,y,z),(y,2))) + 
+Hold(D(bbn_ks_Y(x,y,z),x))*Hold(D(bbn_ks_Y(x,y,z),(y,2))) + 
+Hold(D(bbn_ks_Z(x,y,z),x))*Hold(D(bbn_ks_Z(x,y,z),(y,2))) + 2*
 Hold(D(bbn_ks_X(x,y,z),y))*Hold(D(bbn_ks_X(x,y,z),x,y)) + 2*Hold(D(bbn_ks_Y(x,y,z),y))*
 Hold(D(bbn_ks_Y(x,y,z),x,y)) + 2*Hold(D(bbn_ks_Z(x,y,z),y))*Hold(D(bbn_ks_Z(x,y,z),x,y)) + 
-Hold(D(bbn_ks_X(x,y,z),x,List(y,2)))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),x,List(y,2)))*
-bbn_ks_Y(x,y,z) + Hold(D(bbn_ks_Z(x,y,z),x,List(y,2)))*bbn_ks_Z(x,y,z))*(-
+Hold(D(bbn_ks_X(x,y,z),x,(y,2)))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),x,(y,2)))*
+bbn_ks_Y(x,y,z) + Hold(D(bbn_ks_Z(x,y,z),x,(y,2)))*bbn_ks_Z(x,y,z))*(-
 Power(Pattern(a,BH),2) + Power(bbn_ks_X(x,y,z),2) + 
 Power(bbn_ks_Y(x,y,z),2) + Power(bbn_ks_Z(x,y,z),2))))/Sqrt(4*Power(Pattern(a,BH),2)*
 Power(bbn_ks_Z(x,y,z),2) + Power(-Power(Pattern(a,BH),2) + 
@@ -1589,13 +1589,13 @@ KS_func_def_macro(dddR_D1D2D2) KS_func_args_macro
 {
 return
 /* mcode in progress ... */
-1.*Hold(D(bbn_ks_X(x,y,z),y))*Hold(D(bbn_ks_X(x,y,z),List(z,2))) + 1.*
-Hold(D(bbn_ks_Y(x,y,z),y))*Hold(D(bbn_ks_Y(x,y,z),List(z,2))) + 1.*
-Hold(D(bbn_ks_Z(x,y,z),y))*Hold(D(bbn_ks_Z(x,y,z),List(z,2))) + 2.*
+1.*Hold(D(bbn_ks_X(x,y,z),y))*Hold(D(bbn_ks_X(x,y,z),(z,2))) + 1.*
+Hold(D(bbn_ks_Y(x,y,z),y))*Hold(D(bbn_ks_Y(x,y,z),(z,2))) + 1.*
+Hold(D(bbn_ks_Z(x,y,z),y))*Hold(D(bbn_ks_Z(x,y,z),(z,2))) + 2.*
 Hold(D(bbn_ks_X(x,y,z),z))*Hold(D(bbn_ks_X(x,y,z),y,z)) + 2.*Hold(D(bbn_ks_Y(x,y,z),z))*
 Hold(D(bbn_ks_Y(x,y,z),y,z)) + 2.*Hold(D(bbn_ks_Z(x,y,z),z))*Hold(D(bbn_ks_Z(x,y,z),y,z)) + 
-1.*Hold(D(bbn_ks_X(x,y,z),y,List(z,2)))*bbn_ks_X(x,y,z) + 1.*Hold(D(bbn_ks_Y(x,y,z),y,List(z,2)))*
-bbn_ks_Y(x,y,z) + 1.*Hold(D(bbn_ks_Z(x,y,z),y,List(z,2)))*bbn_ks_Z(x,y,z) + (0.5*(4*
+1.*Hold(D(bbn_ks_X(x,y,z),y,(z,2)))*bbn_ks_X(x,y,z) + 1.*Hold(D(bbn_ks_Y(x,y,z),y,(z,2)))*
+bbn_ks_Y(x,y,z) + 1.*Hold(D(bbn_ks_Z(x,y,z),y,(z,2)))*bbn_ks_Z(x,y,z) + (0.5*(4*
 Hold(D(bbn_ks_Z(x,y,z),y))*Power(Pattern(a,BH),2)*bbn_ks_Z(x,y,z) + 2*
 (Hold(D(bbn_ks_X(x,y,z),y))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),y))*bbn_ks_Y(x,y,z) + 
 Hold(D(bbn_ks_Z(x,y,z),y))*bbn_ks_Z(x,y,z))*(-Power(Pattern(a,BH),2) + 
@@ -1616,12 +1616,12 @@ Hold(D(bbn_ks_Z(x,y,z),y))*Power(Pattern(a,BH),2)*bbn_ks_Z(x,y,z) + 2*
 Hold(D(bbn_ks_Z(x,y,z),y))*bbn_ks_Z(x,y,z))*(-Power(Pattern(a,BH),2) + 
 Power(bbn_ks_X(x,y,z),2) + Power(bbn_ks_Y(x,y,z),2) + Power(bbn_ks_Z(x,y,z),2)))*(-4*
 Power(Hold(D(bbn_ks_Z(x,y,z),z)),2)*Power(Pattern(a,BH),2) - 4*
-Hold(D(bbn_ks_Z(x,y,z),List(z,2)))*Power(Pattern(a,BH),2)*bbn_ks_Z(x,y,z) - 
+Hold(D(bbn_ks_Z(x,y,z),(z,2)))*Power(Pattern(a,BH),2)*bbn_ks_Z(x,y,z) - 
 4*Power(Hold(D(bbn_ks_X(x,y,z),z))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),z))*
 bbn_ks_Y(x,y,z) + Hold(D(bbn_ks_Z(x,y,z),z))*bbn_ks_Z(x,y,z),2) - 2*(Power(Hold(D(bbn_ks_X(x,y,z),z)),2) + 
 Power(Hold(D(bbn_ks_Y(x,y,z),z)),2) + Power(Hold(D(bbn_ks_Z(x,y,z),z)),2) + 
-Hold(D(bbn_ks_X(x,y,z),List(z,2)))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),List(z,2)))*
-bbn_ks_Y(x,y,z) + Hold(D(bbn_ks_Z(x,y,z),List(z,2)))*bbn_ks_Z(x,y,z))*(-
+Hold(D(bbn_ks_X(x,y,z),(z,2)))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),(z,2)))*
+bbn_ks_Y(x,y,z) + Hold(D(bbn_ks_Z(x,y,z),(z,2)))*bbn_ks_Z(x,y,z))*(-
 Power(Pattern(a,BH),2) + Power(bbn_ks_X(x,y,z),2) + 
 Power(bbn_ks_Y(x,y,z),2) + Power(bbn_ks_Z(x,y,z),2))))/Power(4*
 Power(Pattern(a,BH),2)*Power(bbn_ks_Z(x,y,z),2) + Power(-
@@ -1644,26 +1644,26 @@ Power(bbn_ks_X(x,y,z),2) + Power(bbn_ks_Y(x,y,z),2) + Power(bbn_ks_Z(x,y,z),2)))
 Power(4*Power(Pattern(a,BH),2)*Power(bbn_ks_Z(x,y,z),2) + Power(-
 Power(Pattern(a,BH),2) + Power(bbn_ks_X(x,y,z),2) + 
 Power(bbn_ks_Y(x,y,z),2) + Power(bbn_ks_Z(x,y,z),2),2),1.5) + (0.5*(4*
-Hold(D(bbn_ks_Z(x,y,z),y))*Hold(D(bbn_ks_Z(x,y,z),List(z,2)))*Power(Pattern(a,BH),2) + 
+Hold(D(bbn_ks_Z(x,y,z),y))*Hold(D(bbn_ks_Z(x,y,z),(z,2)))*Power(Pattern(a,BH),2) + 
 8*Hold(D(bbn_ks_Z(x,y,z),z))*Hold(D(bbn_ks_Z(x,y,z),y,z))*Power(Pattern(a,BH),2) + 
-4*Hold(D(bbn_ks_Z(x,y,z),y,List(z,2)))*Power(Pattern(a,BH),2)*
+4*Hold(D(bbn_ks_Z(x,y,z),y,(z,2)))*Power(Pattern(a,BH),2)*
 bbn_ks_Z(x,y,z) + 4*(Hold(D(bbn_ks_X(x,y,z),y))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),y))*
 bbn_ks_Y(x,y,z) + Hold(D(bbn_ks_Z(x,y,z),y))*bbn_ks_Z(x,y,z))*(Power(Hold(D(bbn_ks_X(x,y,z),z)),2) + 
 Power(Hold(D(bbn_ks_Y(x,y,z),z)),2) + Power(Hold(D(bbn_ks_Z(x,y,z),z)),2) + 
-Hold(D(bbn_ks_X(x,y,z),List(z,2)))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),List(z,2)))*
-bbn_ks_Y(x,y,z) + Hold(D(bbn_ks_Z(x,y,z),List(z,2)))*bbn_ks_Z(x,y,z)) + 8*
+Hold(D(bbn_ks_X(x,y,z),(z,2)))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),(z,2)))*
+bbn_ks_Y(x,y,z) + Hold(D(bbn_ks_Z(x,y,z),(z,2)))*bbn_ks_Z(x,y,z)) + 8*
 (Hold(D(bbn_ks_X(x,y,z),z))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),z))*bbn_ks_Y(x,y,z) + 
 Hold(D(bbn_ks_Z(x,y,z),z))*bbn_ks_Z(x,y,z))*(Hold(D(bbn_ks_X(x,y,z),y))*
 Hold(D(bbn_ks_X(x,y,z),z)) + Hold(D(bbn_ks_Y(x,y,z),y))*Hold(D(bbn_ks_Y(x,y,z),z)) + 
 Hold(D(bbn_ks_Z(x,y,z),y))*Hold(D(bbn_ks_Z(x,y,z),z)) + Hold(D(bbn_ks_X(x,y,z),y,z))*
 bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),y,z))*bbn_ks_Y(x,y,z) + Hold(D(bbn_ks_Z(x,y,z),y,z))*
-bbn_ks_Z(x,y,z)) + 2*(Hold(D(bbn_ks_X(x,y,z),y))*Hold(D(bbn_ks_X(x,y,z),List(z,2))) + 
-Hold(D(bbn_ks_Y(x,y,z),y))*Hold(D(bbn_ks_Y(x,y,z),List(z,2))) + 
-Hold(D(bbn_ks_Z(x,y,z),y))*Hold(D(bbn_ks_Z(x,y,z),List(z,2))) + 2*
+bbn_ks_Z(x,y,z)) + 2*(Hold(D(bbn_ks_X(x,y,z),y))*Hold(D(bbn_ks_X(x,y,z),(z,2))) + 
+Hold(D(bbn_ks_Y(x,y,z),y))*Hold(D(bbn_ks_Y(x,y,z),(z,2))) + 
+Hold(D(bbn_ks_Z(x,y,z),y))*Hold(D(bbn_ks_Z(x,y,z),(z,2))) + 2*
 Hold(D(bbn_ks_X(x,y,z),z))*Hold(D(bbn_ks_X(x,y,z),y,z)) + 2*Hold(D(bbn_ks_Y(x,y,z),z))*
 Hold(D(bbn_ks_Y(x,y,z),y,z)) + 2*Hold(D(bbn_ks_Z(x,y,z),z))*Hold(D(bbn_ks_Z(x,y,z),y,z)) + 
-Hold(D(bbn_ks_X(x,y,z),y,List(z,2)))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),y,List(z,2)))*
-bbn_ks_Y(x,y,z) + Hold(D(bbn_ks_Z(x,y,z),y,List(z,2)))*bbn_ks_Z(x,y,z))*(-
+Hold(D(bbn_ks_X(x,y,z),y,(z,2)))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),y,(z,2)))*
+bbn_ks_Y(x,y,z) + Hold(D(bbn_ks_Z(x,y,z),y,(z,2)))*bbn_ks_Z(x,y,z))*(-
 Power(Pattern(a,BH),2) + Power(bbn_ks_X(x,y,z),2) + 
 Power(bbn_ks_Y(x,y,z),2) + Power(bbn_ks_Z(x,y,z),2))))/Sqrt(4*Power(Pattern(a,BH),2)*
 Power(bbn_ks_Z(x,y,z),2) + Power(-Power(Pattern(a,BH),2) + 
@@ -1674,22 +1674,22 @@ KS_func_def_macro(dddR_D0D0D0) KS_func_args_macro
 {
 return
 /* mcode in progress ... */
-3.*Hold(D(bbn_ks_X(x,y,z),x))*Hold(D(bbn_ks_X(x,y,z),List(x,2))) + 3.*
-Hold(D(bbn_ks_Y(x,y,z),x))*Hold(D(bbn_ks_Y(x,y,z),List(x,2))) + 3.*
-Hold(D(bbn_ks_Z(x,y,z),x))*Hold(D(bbn_ks_Z(x,y,z),List(x,2))) + 1.*
-Hold(D(bbn_ks_X(x,y,z),List(x,3)))*bbn_ks_X(x,y,z) + 1.*Hold(D(bbn_ks_Y(x,y,z),List(x,3)))*
-bbn_ks_Y(x,y,z) + 1.*Hold(D(bbn_ks_Z(x,y,z),List(x,3)))*bbn_ks_Z(x,y,z) + (0.5*(4*
+3.*Hold(D(bbn_ks_X(x,y,z),x))*Hold(D(bbn_ks_X(x,y,z),(x,2))) + 3.*
+Hold(D(bbn_ks_Y(x,y,z),x))*Hold(D(bbn_ks_Y(x,y,z),(x,2))) + 3.*
+Hold(D(bbn_ks_Z(x,y,z),x))*Hold(D(bbn_ks_Z(x,y,z),(x,2))) + 1.*
+Hold(D(bbn_ks_X(x,y,z),(x,3)))*bbn_ks_X(x,y,z) + 1.*Hold(D(bbn_ks_Y(x,y,z),(x,3)))*
+bbn_ks_Y(x,y,z) + 1.*Hold(D(bbn_ks_Z(x,y,z),(x,3)))*bbn_ks_Z(x,y,z) + (0.5*(4*
 Hold(D(bbn_ks_Z(x,y,z),x))*Power(Pattern(a,BH),2)*bbn_ks_Z(x,y,z) + 2*
 (Hold(D(bbn_ks_X(x,y,z),x))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),x))*bbn_ks_Y(x,y,z) + 
 Hold(D(bbn_ks_Z(x,y,z),x))*bbn_ks_Z(x,y,z))*(-Power(Pattern(a,BH),2) + 
 Power(bbn_ks_X(x,y,z),2) + Power(bbn_ks_Y(x,y,z),2) + Power(bbn_ks_Z(x,y,z),2)))*(-4*
 Power(Hold(D(bbn_ks_Z(x,y,z),x)),2)*Power(Pattern(a,BH),2) - 4*
-Hold(D(bbn_ks_Z(x,y,z),List(x,2)))*Power(Pattern(a,BH),2)*bbn_ks_Z(x,y,z) - 
+Hold(D(bbn_ks_Z(x,y,z),(x,2)))*Power(Pattern(a,BH),2)*bbn_ks_Z(x,y,z) - 
 4*Power(Hold(D(bbn_ks_X(x,y,z),x))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),x))*
 bbn_ks_Y(x,y,z) + Hold(D(bbn_ks_Z(x,y,z),x))*bbn_ks_Z(x,y,z),2) - 2*(Power(Hold(D(bbn_ks_X(x,y,z),x)),2) + 
 Power(Hold(D(bbn_ks_Y(x,y,z),x)),2) + Power(Hold(D(bbn_ks_Z(x,y,z),x)),2) + 
-Hold(D(bbn_ks_X(x,y,z),List(x,2)))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),List(x,2)))*
-bbn_ks_Y(x,y,z) + Hold(D(bbn_ks_Z(x,y,z),List(x,2)))*bbn_ks_Z(x,y,z))*(-
+Hold(D(bbn_ks_X(x,y,z),(x,2)))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),(x,2)))*
+bbn_ks_Y(x,y,z) + Hold(D(bbn_ks_Z(x,y,z),(x,2)))*bbn_ks_Z(x,y,z))*(-
 Power(Pattern(a,BH),2) + Power(bbn_ks_X(x,y,z),2) + 
 Power(bbn_ks_Y(x,y,z),2) + Power(bbn_ks_Z(x,y,z),2))))/Power(4*
 Power(Pattern(a,BH),2)*Power(bbn_ks_Z(x,y,z),2) + Power(-
@@ -1700,29 +1700,29 @@ Hold(D(bbn_ks_Z(x,y,z),x))*Power(Pattern(a,BH),2)*bbn_ks_Z(x,y,z) - 2*
 Hold(D(bbn_ks_Z(x,y,z),x))*bbn_ks_Z(x,y,z))*(-Power(Pattern(a,BH),2) + 
 Power(bbn_ks_X(x,y,z),2) + Power(bbn_ks_Y(x,y,z),2) + Power(bbn_ks_Z(x,y,z),2)))*(4*
 Power(Hold(D(bbn_ks_Z(x,y,z),x)),2)*Power(Pattern(a,BH),2) + 4*
-Hold(D(bbn_ks_Z(x,y,z),List(x,2)))*Power(Pattern(a,BH),2)*bbn_ks_Z(x,y,z) + 
+Hold(D(bbn_ks_Z(x,y,z),(x,2)))*Power(Pattern(a,BH),2)*bbn_ks_Z(x,y,z) + 
 4*Power(Hold(D(bbn_ks_X(x,y,z),x))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),x))*
 bbn_ks_Y(x,y,z) + Hold(D(bbn_ks_Z(x,y,z),x))*bbn_ks_Z(x,y,z),2) + 2*(Power(Hold(D(bbn_ks_X(x,y,z),x)),2) + 
 Power(Hold(D(bbn_ks_Y(x,y,z),x)),2) + Power(Hold(D(bbn_ks_Z(x,y,z),x)),2) + 
-Hold(D(bbn_ks_X(x,y,z),List(x,2)))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),List(x,2)))*
-bbn_ks_Y(x,y,z) + Hold(D(bbn_ks_Z(x,y,z),List(x,2)))*bbn_ks_Z(x,y,z))*(-
+Hold(D(bbn_ks_X(x,y,z),(x,2)))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),(x,2)))*
+bbn_ks_Y(x,y,z) + Hold(D(bbn_ks_Z(x,y,z),(x,2)))*bbn_ks_Z(x,y,z))*(-
 Power(Pattern(a,BH),2) + Power(bbn_ks_X(x,y,z),2) + 
 Power(bbn_ks_Y(x,y,z),2) + Power(bbn_ks_Z(x,y,z),2))))/Power(4*
 Power(Pattern(a,BH),2)*Power(bbn_ks_Z(x,y,z),2) + Power(-
 Power(Pattern(a,BH),2) + Power(bbn_ks_X(x,y,z),2) + 
 Power(bbn_ks_Y(x,y,z),2) + Power(bbn_ks_Z(x,y,z),2),2),1.5) + (1.*(6*
-Hold(D(bbn_ks_Z(x,y,z),x))*Hold(D(bbn_ks_Z(x,y,z),List(x,2)))*Power(Pattern(a,BH),2) + 
-2*Hold(D(bbn_ks_Z(x,y,z),List(x,3)))*Power(Pattern(a,BH),2)*
+Hold(D(bbn_ks_Z(x,y,z),x))*Hold(D(bbn_ks_Z(x,y,z),(x,2)))*Power(Pattern(a,BH),2) + 
+2*Hold(D(bbn_ks_Z(x,y,z),(x,3)))*Power(Pattern(a,BH),2)*
 bbn_ks_Z(x,y,z) + 6*(Hold(D(bbn_ks_X(x,y,z),x))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),x))*
 bbn_ks_Y(x,y,z) + Hold(D(bbn_ks_Z(x,y,z),x))*bbn_ks_Z(x,y,z))*(Power(Hold(D(bbn_ks_X(x,y,z),x)),2) + 
 Power(Hold(D(bbn_ks_Y(x,y,z),x)),2) + Power(Hold(D(bbn_ks_Z(x,y,z),x)),2) + 
-Hold(D(bbn_ks_X(x,y,z),List(x,2)))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),List(x,2)))*
-bbn_ks_Y(x,y,z) + Hold(D(bbn_ks_Z(x,y,z),List(x,2)))*bbn_ks_Z(x,y,z)) + (3*
-Hold(D(bbn_ks_X(x,y,z),x))*Hold(D(bbn_ks_X(x,y,z),List(x,2))) + 3*
-Hold(D(bbn_ks_Y(x,y,z),x))*Hold(D(bbn_ks_Y(x,y,z),List(x,2))) + 3*
-Hold(D(bbn_ks_Z(x,y,z),x))*Hold(D(bbn_ks_Z(x,y,z),List(x,2))) + 
-Hold(D(bbn_ks_X(x,y,z),List(x,3)))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),List(x,3)))*
-bbn_ks_Y(x,y,z) + Hold(D(bbn_ks_Z(x,y,z),List(x,3)))*bbn_ks_Z(x,y,z))*(-
+Hold(D(bbn_ks_X(x,y,z),(x,2)))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),(x,2)))*
+bbn_ks_Y(x,y,z) + Hold(D(bbn_ks_Z(x,y,z),(x,2)))*bbn_ks_Z(x,y,z)) + (3*
+Hold(D(bbn_ks_X(x,y,z),x))*Hold(D(bbn_ks_X(x,y,z),(x,2))) + 3*
+Hold(D(bbn_ks_Y(x,y,z),x))*Hold(D(bbn_ks_Y(x,y,z),(x,2))) + 3*
+Hold(D(bbn_ks_Z(x,y,z),x))*Hold(D(bbn_ks_Z(x,y,z),(x,2))) + 
+Hold(D(bbn_ks_X(x,y,z),(x,3)))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),(x,3)))*
+bbn_ks_Y(x,y,z) + Hold(D(bbn_ks_Z(x,y,z),(x,3)))*bbn_ks_Z(x,y,z))*(-
 Power(Pattern(a,BH),2) + Power(bbn_ks_X(x,y,z),2) + 
 Power(bbn_ks_Y(x,y,z),2) + Power(bbn_ks_Z(x,y,z),2))))/Sqrt(4*Power(Pattern(a,BH),2)*
 Power(bbn_ks_Z(x,y,z),2) + Power(-Power(Pattern(a,BH),2) + 
@@ -1747,13 +1747,13 @@ KS_func_def_macro(dddR_D0D1D0) KS_func_args_macro
 {
 return
 /* mcode in progress ... */
-1.*Hold(D(bbn_ks_X(x,y,z),y))*Hold(D(bbn_ks_X(x,y,z),List(x,2))) + 1.*
-Hold(D(bbn_ks_Y(x,y,z),y))*Hold(D(bbn_ks_Y(x,y,z),List(x,2))) + 1.*
-Hold(D(bbn_ks_Z(x,y,z),y))*Hold(D(bbn_ks_Z(x,y,z),List(x,2))) + 2.*
+1.*Hold(D(bbn_ks_X(x,y,z),y))*Hold(D(bbn_ks_X(x,y,z),(x,2))) + 1.*
+Hold(D(bbn_ks_Y(x,y,z),y))*Hold(D(bbn_ks_Y(x,y,z),(x,2))) + 1.*
+Hold(D(bbn_ks_Z(x,y,z),y))*Hold(D(bbn_ks_Z(x,y,z),(x,2))) + 2.*
 Hold(D(bbn_ks_X(x,y,z),x))*Hold(D(bbn_ks_X(x,y,z),x,y)) + 2.*Hold(D(bbn_ks_Y(x,y,z),x))*
 Hold(D(bbn_ks_Y(x,y,z),x,y)) + 2.*Hold(D(bbn_ks_Z(x,y,z),x))*Hold(D(bbn_ks_Z(x,y,z),x,y)) + 
-1.*Hold(D(bbn_ks_X(x,y,z),List(x,2),y))*bbn_ks_X(x,y,z) + 1.*Hold(D(bbn_ks_Y(x,y,z),List(x,2),y))*
-bbn_ks_Y(x,y,z) + 1.*Hold(D(bbn_ks_Z(x,y,z),List(x,2),y))*bbn_ks_Z(x,y,z) + (0.5*(-12*
+1.*Hold(D(bbn_ks_X(x,y,z),(x,2),y))*bbn_ks_X(x,y,z) + 1.*Hold(D(bbn_ks_Y(x,y,z),(x,2),y))*
+bbn_ks_Y(x,y,z) + 1.*Hold(D(bbn_ks_Z(x,y,z),(x,2),y))*bbn_ks_Z(x,y,z) + (0.5*(-12*
 Hold(D(bbn_ks_Z(x,y,z),x))*Power(Pattern(a,BH),2)*bbn_ks_Z(x,y,z) - 6*
 (Hold(D(bbn_ks_X(x,y,z),x))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),x))*bbn_ks_Y(x,y,z) + 
 Hold(D(bbn_ks_Z(x,y,z),x))*bbn_ks_Z(x,y,z))*(-Power(Pattern(a,BH),2) + 
@@ -1774,12 +1774,12 @@ Hold(D(bbn_ks_Z(x,y,z),y))*Power(Pattern(a,BH),2)*bbn_ks_Z(x,y,z) - 2*
 Hold(D(bbn_ks_Z(x,y,z),y))*bbn_ks_Z(x,y,z))*(-Power(Pattern(a,BH),2) + 
 Power(bbn_ks_X(x,y,z),2) + Power(bbn_ks_Y(x,y,z),2) + Power(bbn_ks_Z(x,y,z),2)))*(4*
 Power(Hold(D(bbn_ks_Z(x,y,z),x)),2)*Power(Pattern(a,BH),2) + 4*
-Hold(D(bbn_ks_Z(x,y,z),List(x,2)))*Power(Pattern(a,BH),2)*bbn_ks_Z(x,y,z) + 
+Hold(D(bbn_ks_Z(x,y,z),(x,2)))*Power(Pattern(a,BH),2)*bbn_ks_Z(x,y,z) + 
 4*Power(Hold(D(bbn_ks_X(x,y,z),x))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),x))*
 bbn_ks_Y(x,y,z) + Hold(D(bbn_ks_Z(x,y,z),x))*bbn_ks_Z(x,y,z),2) + 2*(Power(Hold(D(bbn_ks_X(x,y,z),x)),2) + 
 Power(Hold(D(bbn_ks_Y(x,y,z),x)),2) + Power(Hold(D(bbn_ks_Z(x,y,z),x)),2) + 
-Hold(D(bbn_ks_X(x,y,z),List(x,2)))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),List(x,2)))*
-bbn_ks_Y(x,y,z) + Hold(D(bbn_ks_Z(x,y,z),List(x,2)))*bbn_ks_Z(x,y,z))*(-
+Hold(D(bbn_ks_X(x,y,z),(x,2)))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),(x,2)))*
+bbn_ks_Y(x,y,z) + Hold(D(bbn_ks_Z(x,y,z),(x,2)))*bbn_ks_Z(x,y,z))*(-
 Power(Pattern(a,BH),2) + Power(bbn_ks_X(x,y,z),2) + 
 Power(bbn_ks_Y(x,y,z),2) + Power(bbn_ks_Z(x,y,z),2))))/Power(4*
 Power(Pattern(a,BH),2)*Power(bbn_ks_Z(x,y,z),2) + Power(-
@@ -1819,26 +1819,26 @@ Power(bbn_ks_X(x,y,z),2) + Power(bbn_ks_Y(x,y,z),2) + Power(bbn_ks_Z(x,y,z),2)))
 Power(4*Power(Pattern(a,BH),2)*Power(bbn_ks_Z(x,y,z),2) + Power(-
 Power(Pattern(a,BH),2) + Power(bbn_ks_X(x,y,z),2) + 
 Power(bbn_ks_Y(x,y,z),2) + Power(bbn_ks_Z(x,y,z),2),2),1.5) + (0.5*(4*
-Hold(D(bbn_ks_Z(x,y,z),y))*Hold(D(bbn_ks_Z(x,y,z),List(x,2)))*Power(Pattern(a,BH),2) + 
+Hold(D(bbn_ks_Z(x,y,z),y))*Hold(D(bbn_ks_Z(x,y,z),(x,2)))*Power(Pattern(a,BH),2) + 
 8*Hold(D(bbn_ks_Z(x,y,z),x))*Hold(D(bbn_ks_Z(x,y,z),x,y))*Power(Pattern(a,BH),2) + 
-4*Hold(D(bbn_ks_Z(x,y,z),List(x,2),y))*Power(Pattern(a,BH),2)*
+4*Hold(D(bbn_ks_Z(x,y,z),(x,2),y))*Power(Pattern(a,BH),2)*
 bbn_ks_Z(x,y,z) + 4*(Hold(D(bbn_ks_X(x,y,z),y))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),y))*
 bbn_ks_Y(x,y,z) + Hold(D(bbn_ks_Z(x,y,z),y))*bbn_ks_Z(x,y,z))*(Power(Hold(D(bbn_ks_X(x,y,z),x)),2) + 
 Power(Hold(D(bbn_ks_Y(x,y,z),x)),2) + Power(Hold(D(bbn_ks_Z(x,y,z),x)),2) + 
-Hold(D(bbn_ks_X(x,y,z),List(x,2)))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),List(x,2)))*
-bbn_ks_Y(x,y,z) + Hold(D(bbn_ks_Z(x,y,z),List(x,2)))*bbn_ks_Z(x,y,z)) + 8*
+Hold(D(bbn_ks_X(x,y,z),(x,2)))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),(x,2)))*
+bbn_ks_Y(x,y,z) + Hold(D(bbn_ks_Z(x,y,z),(x,2)))*bbn_ks_Z(x,y,z)) + 8*
 (Hold(D(bbn_ks_X(x,y,z),x))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),x))*bbn_ks_Y(x,y,z) + 
 Hold(D(bbn_ks_Z(x,y,z),x))*bbn_ks_Z(x,y,z))*(Hold(D(bbn_ks_X(x,y,z),x))*
 Hold(D(bbn_ks_X(x,y,z),y)) + Hold(D(bbn_ks_Y(x,y,z),x))*Hold(D(bbn_ks_Y(x,y,z),y)) + 
 Hold(D(bbn_ks_Z(x,y,z),x))*Hold(D(bbn_ks_Z(x,y,z),y)) + Hold(D(bbn_ks_X(x,y,z),x,y))*
 bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),x,y))*bbn_ks_Y(x,y,z) + Hold(D(bbn_ks_Z(x,y,z),x,y))*
-bbn_ks_Z(x,y,z)) + 2*(Hold(D(bbn_ks_X(x,y,z),y))*Hold(D(bbn_ks_X(x,y,z),List(x,2))) + 
-Hold(D(bbn_ks_Y(x,y,z),y))*Hold(D(bbn_ks_Y(x,y,z),List(x,2))) + 
-Hold(D(bbn_ks_Z(x,y,z),y))*Hold(D(bbn_ks_Z(x,y,z),List(x,2))) + 2*
+bbn_ks_Z(x,y,z)) + 2*(Hold(D(bbn_ks_X(x,y,z),y))*Hold(D(bbn_ks_X(x,y,z),(x,2))) + 
+Hold(D(bbn_ks_Y(x,y,z),y))*Hold(D(bbn_ks_Y(x,y,z),(x,2))) + 
+Hold(D(bbn_ks_Z(x,y,z),y))*Hold(D(bbn_ks_Z(x,y,z),(x,2))) + 2*
 Hold(D(bbn_ks_X(x,y,z),x))*Hold(D(bbn_ks_X(x,y,z),x,y)) + 2*Hold(D(bbn_ks_Y(x,y,z),x))*
 Hold(D(bbn_ks_Y(x,y,z),x,y)) + 2*Hold(D(bbn_ks_Z(x,y,z),x))*Hold(D(bbn_ks_Z(x,y,z),x,y)) + 
-Hold(D(bbn_ks_X(x,y,z),List(x,2),y))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),List(x,2),y))*
-bbn_ks_Y(x,y,z) + Hold(D(bbn_ks_Z(x,y,z),List(x,2),y))*bbn_ks_Z(x,y,z))*(-
+Hold(D(bbn_ks_X(x,y,z),(x,2),y))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),(x,2),y))*
+bbn_ks_Y(x,y,z) + Hold(D(bbn_ks_Z(x,y,z),(x,2),y))*bbn_ks_Z(x,y,z))*(-
 Power(Pattern(a,BH),2) + Power(bbn_ks_X(x,y,z),2) + 
 Power(bbn_ks_Y(x,y,z),2) + Power(bbn_ks_Z(x,y,z),2))))/Sqrt(4*Power(Pattern(a,BH),2)*
 Power(bbn_ks_Z(x,y,z),2) + Power(-Power(Pattern(a,BH),2) + 
@@ -1849,13 +1849,13 @@ KS_func_def_macro(dddR_D0D2D0) KS_func_args_macro
 {
 return
 /* mcode in progress ... */
-1.*Hold(D(bbn_ks_X(x,y,z),z))*Hold(D(bbn_ks_X(x,y,z),List(x,2))) + 1.*
-Hold(D(bbn_ks_Y(x,y,z),z))*Hold(D(bbn_ks_Y(x,y,z),List(x,2))) + 1.*
-Hold(D(bbn_ks_Z(x,y,z),z))*Hold(D(bbn_ks_Z(x,y,z),List(x,2))) + 2.*
+1.*Hold(D(bbn_ks_X(x,y,z),z))*Hold(D(bbn_ks_X(x,y,z),(x,2))) + 1.*
+Hold(D(bbn_ks_Y(x,y,z),z))*Hold(D(bbn_ks_Y(x,y,z),(x,2))) + 1.*
+Hold(D(bbn_ks_Z(x,y,z),z))*Hold(D(bbn_ks_Z(x,y,z),(x,2))) + 2.*
 Hold(D(bbn_ks_X(x,y,z),x))*Hold(D(bbn_ks_X(x,y,z),x,z)) + 2.*Hold(D(bbn_ks_Y(x,y,z),x))*
 Hold(D(bbn_ks_Y(x,y,z),x,z)) + 2.*Hold(D(bbn_ks_Z(x,y,z),x))*Hold(D(bbn_ks_Z(x,y,z),x,z)) + 
-1.*Hold(D(bbn_ks_X(x,y,z),List(x,2),z))*bbn_ks_X(x,y,z) + 1.*Hold(D(bbn_ks_Y(x,y,z),List(x,2),z))*
-bbn_ks_Y(x,y,z) + 1.*Hold(D(bbn_ks_Z(x,y,z),List(x,2),z))*bbn_ks_Z(x,y,z) + (0.5*(-12*
+1.*Hold(D(bbn_ks_X(x,y,z),(x,2),z))*bbn_ks_X(x,y,z) + 1.*Hold(D(bbn_ks_Y(x,y,z),(x,2),z))*
+bbn_ks_Y(x,y,z) + 1.*Hold(D(bbn_ks_Z(x,y,z),(x,2),z))*bbn_ks_Z(x,y,z) + (0.5*(-12*
 Hold(D(bbn_ks_Z(x,y,z),x))*Power(Pattern(a,BH),2)*bbn_ks_Z(x,y,z) - 6*
 (Hold(D(bbn_ks_X(x,y,z),x))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),x))*bbn_ks_Y(x,y,z) + 
 Hold(D(bbn_ks_Z(x,y,z),x))*bbn_ks_Z(x,y,z))*(-Power(Pattern(a,BH),2) + 
@@ -1876,12 +1876,12 @@ Hold(D(bbn_ks_Z(x,y,z),z))*Power(Pattern(a,BH),2)*bbn_ks_Z(x,y,z) - 2*
 Hold(D(bbn_ks_Z(x,y,z),z))*bbn_ks_Z(x,y,z))*(-Power(Pattern(a,BH),2) + 
 Power(bbn_ks_X(x,y,z),2) + Power(bbn_ks_Y(x,y,z),2) + Power(bbn_ks_Z(x,y,z),2)))*(4*
 Power(Hold(D(bbn_ks_Z(x,y,z),x)),2)*Power(Pattern(a,BH),2) + 4*
-Hold(D(bbn_ks_Z(x,y,z),List(x,2)))*Power(Pattern(a,BH),2)*bbn_ks_Z(x,y,z) + 
+Hold(D(bbn_ks_Z(x,y,z),(x,2)))*Power(Pattern(a,BH),2)*bbn_ks_Z(x,y,z) + 
 4*Power(Hold(D(bbn_ks_X(x,y,z),x))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),x))*
 bbn_ks_Y(x,y,z) + Hold(D(bbn_ks_Z(x,y,z),x))*bbn_ks_Z(x,y,z),2) + 2*(Power(Hold(D(bbn_ks_X(x,y,z),x)),2) + 
 Power(Hold(D(bbn_ks_Y(x,y,z),x)),2) + Power(Hold(D(bbn_ks_Z(x,y,z),x)),2) + 
-Hold(D(bbn_ks_X(x,y,z),List(x,2)))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),List(x,2)))*
-bbn_ks_Y(x,y,z) + Hold(D(bbn_ks_Z(x,y,z),List(x,2)))*bbn_ks_Z(x,y,z))*(-
+Hold(D(bbn_ks_X(x,y,z),(x,2)))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),(x,2)))*
+bbn_ks_Y(x,y,z) + Hold(D(bbn_ks_Z(x,y,z),(x,2)))*bbn_ks_Z(x,y,z))*(-
 Power(Pattern(a,BH),2) + Power(bbn_ks_X(x,y,z),2) + 
 Power(bbn_ks_Y(x,y,z),2) + Power(bbn_ks_Z(x,y,z),2))))/Power(4*
 Power(Pattern(a,BH),2)*Power(bbn_ks_Z(x,y,z),2) + Power(-
@@ -1921,26 +1921,26 @@ Power(bbn_ks_X(x,y,z),2) + Power(bbn_ks_Y(x,y,z),2) + Power(bbn_ks_Z(x,y,z),2)))
 Power(4*Power(Pattern(a,BH),2)*Power(bbn_ks_Z(x,y,z),2) + Power(-
 Power(Pattern(a,BH),2) + Power(bbn_ks_X(x,y,z),2) + 
 Power(bbn_ks_Y(x,y,z),2) + Power(bbn_ks_Z(x,y,z),2),2),1.5) + (0.5*(4*
-Hold(D(bbn_ks_Z(x,y,z),z))*Hold(D(bbn_ks_Z(x,y,z),List(x,2)))*Power(Pattern(a,BH),2) + 
+Hold(D(bbn_ks_Z(x,y,z),z))*Hold(D(bbn_ks_Z(x,y,z),(x,2)))*Power(Pattern(a,BH),2) + 
 8*Hold(D(bbn_ks_Z(x,y,z),x))*Hold(D(bbn_ks_Z(x,y,z),x,z))*Power(Pattern(a,BH),2) + 
-4*Hold(D(bbn_ks_Z(x,y,z),List(x,2),z))*Power(Pattern(a,BH),2)*
+4*Hold(D(bbn_ks_Z(x,y,z),(x,2),z))*Power(Pattern(a,BH),2)*
 bbn_ks_Z(x,y,z) + 4*(Hold(D(bbn_ks_X(x,y,z),z))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),z))*
 bbn_ks_Y(x,y,z) + Hold(D(bbn_ks_Z(x,y,z),z))*bbn_ks_Z(x,y,z))*(Power(Hold(D(bbn_ks_X(x,y,z),x)),2) + 
 Power(Hold(D(bbn_ks_Y(x,y,z),x)),2) + Power(Hold(D(bbn_ks_Z(x,y,z),x)),2) + 
-Hold(D(bbn_ks_X(x,y,z),List(x,2)))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),List(x,2)))*
-bbn_ks_Y(x,y,z) + Hold(D(bbn_ks_Z(x,y,z),List(x,2)))*bbn_ks_Z(x,y,z)) + 8*
+Hold(D(bbn_ks_X(x,y,z),(x,2)))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),(x,2)))*
+bbn_ks_Y(x,y,z) + Hold(D(bbn_ks_Z(x,y,z),(x,2)))*bbn_ks_Z(x,y,z)) + 8*
 (Hold(D(bbn_ks_X(x,y,z),x))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),x))*bbn_ks_Y(x,y,z) + 
 Hold(D(bbn_ks_Z(x,y,z),x))*bbn_ks_Z(x,y,z))*(Hold(D(bbn_ks_X(x,y,z),x))*
 Hold(D(bbn_ks_X(x,y,z),z)) + Hold(D(bbn_ks_Y(x,y,z),x))*Hold(D(bbn_ks_Y(x,y,z),z)) + 
 Hold(D(bbn_ks_Z(x,y,z),x))*Hold(D(bbn_ks_Z(x,y,z),z)) + Hold(D(bbn_ks_X(x,y,z),x,z))*
 bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),x,z))*bbn_ks_Y(x,y,z) + Hold(D(bbn_ks_Z(x,y,z),x,z))*
-bbn_ks_Z(x,y,z)) + 2*(Hold(D(bbn_ks_X(x,y,z),z))*Hold(D(bbn_ks_X(x,y,z),List(x,2))) + 
-Hold(D(bbn_ks_Y(x,y,z),z))*Hold(D(bbn_ks_Y(x,y,z),List(x,2))) + 
-Hold(D(bbn_ks_Z(x,y,z),z))*Hold(D(bbn_ks_Z(x,y,z),List(x,2))) + 2*
+bbn_ks_Z(x,y,z)) + 2*(Hold(D(bbn_ks_X(x,y,z),z))*Hold(D(bbn_ks_X(x,y,z),(x,2))) + 
+Hold(D(bbn_ks_Y(x,y,z),z))*Hold(D(bbn_ks_Y(x,y,z),(x,2))) + 
+Hold(D(bbn_ks_Z(x,y,z),z))*Hold(D(bbn_ks_Z(x,y,z),(x,2))) + 2*
 Hold(D(bbn_ks_X(x,y,z),x))*Hold(D(bbn_ks_X(x,y,z),x,z)) + 2*Hold(D(bbn_ks_Y(x,y,z),x))*
 Hold(D(bbn_ks_Y(x,y,z),x,z)) + 2*Hold(D(bbn_ks_Z(x,y,z),x))*Hold(D(bbn_ks_Z(x,y,z),x,z)) + 
-Hold(D(bbn_ks_X(x,y,z),List(x,2),z))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),List(x,2),z))*
-bbn_ks_Y(x,y,z) + Hold(D(bbn_ks_Z(x,y,z),List(x,2),z))*bbn_ks_Z(x,y,z))*(-
+Hold(D(bbn_ks_X(x,y,z),(x,2),z))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),(x,2),z))*
+bbn_ks_Y(x,y,z) + Hold(D(bbn_ks_Z(x,y,z),(x,2),z))*bbn_ks_Z(x,y,z))*(-
 Power(Pattern(a,BH),2) + Power(bbn_ks_X(x,y,z),2) + 
 Power(bbn_ks_Y(x,y,z),2) + Power(bbn_ks_Z(x,y,z),2))))/Sqrt(4*Power(Pattern(a,BH),2)*
 Power(bbn_ks_Z(x,y,z),2) + Power(-Power(Pattern(a,BH),2) + 
@@ -1951,13 +1951,13 @@ KS_func_def_macro(dddR_D0D0D1) KS_func_args_macro
 {
 return
 /* mcode in progress ... */
-1.*Hold(D(bbn_ks_X(x,y,z),y))*Hold(D(bbn_ks_X(x,y,z),List(x,2))) + 1.*
-Hold(D(bbn_ks_Y(x,y,z),y))*Hold(D(bbn_ks_Y(x,y,z),List(x,2))) + 1.*
-Hold(D(bbn_ks_Z(x,y,z),y))*Hold(D(bbn_ks_Z(x,y,z),List(x,2))) + 2.*
+1.*Hold(D(bbn_ks_X(x,y,z),y))*Hold(D(bbn_ks_X(x,y,z),(x,2))) + 1.*
+Hold(D(bbn_ks_Y(x,y,z),y))*Hold(D(bbn_ks_Y(x,y,z),(x,2))) + 1.*
+Hold(D(bbn_ks_Z(x,y,z),y))*Hold(D(bbn_ks_Z(x,y,z),(x,2))) + 2.*
 Hold(D(bbn_ks_X(x,y,z),x))*Hold(D(bbn_ks_X(x,y,z),x,y)) + 2.*Hold(D(bbn_ks_Y(x,y,z),x))*
 Hold(D(bbn_ks_Y(x,y,z),x,y)) + 2.*Hold(D(bbn_ks_Z(x,y,z),x))*Hold(D(bbn_ks_Z(x,y,z),x,y)) + 
-1.*Hold(D(bbn_ks_X(x,y,z),List(x,2),y))*bbn_ks_X(x,y,z) + 1.*Hold(D(bbn_ks_Y(x,y,z),List(x,2),y))*
-bbn_ks_Y(x,y,z) + 1.*Hold(D(bbn_ks_Z(x,y,z),List(x,2),y))*bbn_ks_Z(x,y,z) + (0.5*Power(4*
+1.*Hold(D(bbn_ks_X(x,y,z),(x,2),y))*bbn_ks_X(x,y,z) + 1.*Hold(D(bbn_ks_Y(x,y,z),(x,2),y))*
+bbn_ks_Y(x,y,z) + 1.*Hold(D(bbn_ks_Z(x,y,z),(x,2),y))*bbn_ks_Z(x,y,z) + (0.5*Power(4*
 Hold(D(bbn_ks_Z(x,y,z),x))*Power(Pattern(a,BH),2)*bbn_ks_Z(x,y,z) + 2*
 (Hold(D(bbn_ks_X(x,y,z),x))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),x))*bbn_ks_Y(x,y,z) + 
 Hold(D(bbn_ks_Z(x,y,z),x))*bbn_ks_Z(x,y,z))*(-Power(Pattern(a,BH),2) + 
@@ -1974,12 +1974,12 @@ Hold(D(bbn_ks_Z(x,y,z),y))*Power(Pattern(a,BH),2)*bbn_ks_Z(x,y,z) + 2*
 Hold(D(bbn_ks_Z(x,y,z),y))*bbn_ks_Z(x,y,z))*(-Power(Pattern(a,BH),2) + 
 Power(bbn_ks_X(x,y,z),2) + Power(bbn_ks_Y(x,y,z),2) + Power(bbn_ks_Z(x,y,z),2)))*(4*
 Power(Hold(D(bbn_ks_Z(x,y,z),x)),2)*Power(Pattern(a,BH),2) + 4*
-Hold(D(bbn_ks_Z(x,y,z),List(x,2)))*Power(Pattern(a,BH),2)*bbn_ks_Z(x,y,z) + 
+Hold(D(bbn_ks_Z(x,y,z),(x,2)))*Power(Pattern(a,BH),2)*bbn_ks_Z(x,y,z) + 
 4*Power(Hold(D(bbn_ks_X(x,y,z),x))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),x))*
 bbn_ks_Y(x,y,z) + Hold(D(bbn_ks_Z(x,y,z),x))*bbn_ks_Z(x,y,z),2) + 2*(Power(Hold(D(bbn_ks_X(x,y,z),x)),2) + 
 Power(Hold(D(bbn_ks_Y(x,y,z),x)),2) + Power(Hold(D(bbn_ks_Z(x,y,z),x)),2) + 
-Hold(D(bbn_ks_X(x,y,z),List(x,2)))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),List(x,2)))*
-bbn_ks_Y(x,y,z) + Hold(D(bbn_ks_Z(x,y,z),List(x,2)))*bbn_ks_Z(x,y,z))*(-
+Hold(D(bbn_ks_X(x,y,z),(x,2)))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),(x,2)))*
+bbn_ks_Y(x,y,z) + Hold(D(bbn_ks_Z(x,y,z),(x,2)))*bbn_ks_Z(x,y,z))*(-
 Power(Pattern(a,BH),2) + Power(bbn_ks_X(x,y,z),2) + 
 Power(bbn_ks_Y(x,y,z),2) + Power(bbn_ks_Z(x,y,z),2))))/Power(4*
 Power(Pattern(a,BH),2)*Power(bbn_ks_Z(x,y,z),2) + Power(-
@@ -2002,26 +2002,26 @@ Power(bbn_ks_X(x,y,z),2) + Power(bbn_ks_Y(x,y,z),2) + Power(bbn_ks_Z(x,y,z),2)))
 Power(4*Power(Pattern(a,BH),2)*Power(bbn_ks_Z(x,y,z),2) + Power(-
 Power(Pattern(a,BH),2) + Power(bbn_ks_X(x,y,z),2) + 
 Power(bbn_ks_Y(x,y,z),2) + Power(bbn_ks_Z(x,y,z),2),2),1.5) + (0.5*(4*
-Hold(D(bbn_ks_Z(x,y,z),y))*Hold(D(bbn_ks_Z(x,y,z),List(x,2)))*Power(Pattern(a,BH),2) + 
+Hold(D(bbn_ks_Z(x,y,z),y))*Hold(D(bbn_ks_Z(x,y,z),(x,2)))*Power(Pattern(a,BH),2) + 
 8*Hold(D(bbn_ks_Z(x,y,z),x))*Hold(D(bbn_ks_Z(x,y,z),x,y))*Power(Pattern(a,BH),2) + 
-4*Hold(D(bbn_ks_Z(x,y,z),List(x,2),y))*Power(Pattern(a,BH),2)*
+4*Hold(D(bbn_ks_Z(x,y,z),(x,2),y))*Power(Pattern(a,BH),2)*
 bbn_ks_Z(x,y,z) + 4*(Hold(D(bbn_ks_X(x,y,z),y))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),y))*
 bbn_ks_Y(x,y,z) + Hold(D(bbn_ks_Z(x,y,z),y))*bbn_ks_Z(x,y,z))*(Power(Hold(D(bbn_ks_X(x,y,z),x)),2) + 
 Power(Hold(D(bbn_ks_Y(x,y,z),x)),2) + Power(Hold(D(bbn_ks_Z(x,y,z),x)),2) + 
-Hold(D(bbn_ks_X(x,y,z),List(x,2)))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),List(x,2)))*
-bbn_ks_Y(x,y,z) + Hold(D(bbn_ks_Z(x,y,z),List(x,2)))*bbn_ks_Z(x,y,z)) + 8*
+Hold(D(bbn_ks_X(x,y,z),(x,2)))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),(x,2)))*
+bbn_ks_Y(x,y,z) + Hold(D(bbn_ks_Z(x,y,z),(x,2)))*bbn_ks_Z(x,y,z)) + 8*
 (Hold(D(bbn_ks_X(x,y,z),x))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),x))*bbn_ks_Y(x,y,z) + 
 Hold(D(bbn_ks_Z(x,y,z),x))*bbn_ks_Z(x,y,z))*(Hold(D(bbn_ks_X(x,y,z),x))*
 Hold(D(bbn_ks_X(x,y,z),y)) + Hold(D(bbn_ks_Y(x,y,z),x))*Hold(D(bbn_ks_Y(x,y,z),y)) + 
 Hold(D(bbn_ks_Z(x,y,z),x))*Hold(D(bbn_ks_Z(x,y,z),y)) + Hold(D(bbn_ks_X(x,y,z),x,y))*
 bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),x,y))*bbn_ks_Y(x,y,z) + Hold(D(bbn_ks_Z(x,y,z),x,y))*
-bbn_ks_Z(x,y,z)) + 2*(Hold(D(bbn_ks_X(x,y,z),y))*Hold(D(bbn_ks_X(x,y,z),List(x,2))) + 
-Hold(D(bbn_ks_Y(x,y,z),y))*Hold(D(bbn_ks_Y(x,y,z),List(x,2))) + 
-Hold(D(bbn_ks_Z(x,y,z),y))*Hold(D(bbn_ks_Z(x,y,z),List(x,2))) + 2*
+bbn_ks_Z(x,y,z)) + 2*(Hold(D(bbn_ks_X(x,y,z),y))*Hold(D(bbn_ks_X(x,y,z),(x,2))) + 
+Hold(D(bbn_ks_Y(x,y,z),y))*Hold(D(bbn_ks_Y(x,y,z),(x,2))) + 
+Hold(D(bbn_ks_Z(x,y,z),y))*Hold(D(bbn_ks_Z(x,y,z),(x,2))) + 2*
 Hold(D(bbn_ks_X(x,y,z),x))*Hold(D(bbn_ks_X(x,y,z),x,y)) + 2*Hold(D(bbn_ks_Y(x,y,z),x))*
 Hold(D(bbn_ks_Y(x,y,z),x,y)) + 2*Hold(D(bbn_ks_Z(x,y,z),x))*Hold(D(bbn_ks_Z(x,y,z),x,y)) + 
-Hold(D(bbn_ks_X(x,y,z),List(x,2),y))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),List(x,2),y))*
-bbn_ks_Y(x,y,z) + Hold(D(bbn_ks_Z(x,y,z),List(x,2),y))*bbn_ks_Z(x,y,z))*(-
+Hold(D(bbn_ks_X(x,y,z),(x,2),y))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),(x,2),y))*
+bbn_ks_Y(x,y,z) + Hold(D(bbn_ks_Z(x,y,z),(x,2),y))*bbn_ks_Z(x,y,z))*(-
 Power(Pattern(a,BH),2) + Power(bbn_ks_X(x,y,z),2) + 
 Power(bbn_ks_Y(x,y,z),2) + Power(bbn_ks_Z(x,y,z),2))))/Sqrt(4*Power(Pattern(a,BH),2)*
 Power(bbn_ks_Z(x,y,z),2) + Power(-Power(Pattern(a,BH),2) + 
@@ -2256,13 +2256,13 @@ KS_func_def_macro(dddR_D1D1D2) KS_func_args_macro
 {
 return
 /* mcode in progress ... */
-1.*Hold(D(bbn_ks_X(x,y,z),z))*Hold(D(bbn_ks_X(x,y,z),List(y,2))) + 1.*
-Hold(D(bbn_ks_Y(x,y,z),z))*Hold(D(bbn_ks_Y(x,y,z),List(y,2))) + 1.*
-Hold(D(bbn_ks_Z(x,y,z),z))*Hold(D(bbn_ks_Z(x,y,z),List(y,2))) + 2.*
+1.*Hold(D(bbn_ks_X(x,y,z),z))*Hold(D(bbn_ks_X(x,y,z),(y,2))) + 1.*
+Hold(D(bbn_ks_Y(x,y,z),z))*Hold(D(bbn_ks_Y(x,y,z),(y,2))) + 1.*
+Hold(D(bbn_ks_Z(x,y,z),z))*Hold(D(bbn_ks_Z(x,y,z),(y,2))) + 2.*
 Hold(D(bbn_ks_X(x,y,z),y))*Hold(D(bbn_ks_X(x,y,z),y,z)) + 2.*Hold(D(bbn_ks_Y(x,y,z),y))*
 Hold(D(bbn_ks_Y(x,y,z),y,z)) + 2.*Hold(D(bbn_ks_Z(x,y,z),y))*Hold(D(bbn_ks_Z(x,y,z),y,z)) + 
-1.*Hold(D(bbn_ks_X(x,y,z),List(y,2),z))*bbn_ks_X(x,y,z) + 1.*Hold(D(bbn_ks_Y(x,y,z),List(y,2),z))*
-bbn_ks_Y(x,y,z) + 1.*Hold(D(bbn_ks_Z(x,y,z),List(y,2),z))*bbn_ks_Z(x,y,z) + (0.5*Power(4*
+1.*Hold(D(bbn_ks_X(x,y,z),(y,2),z))*bbn_ks_X(x,y,z) + 1.*Hold(D(bbn_ks_Y(x,y,z),(y,2),z))*
+bbn_ks_Y(x,y,z) + 1.*Hold(D(bbn_ks_Z(x,y,z),(y,2),z))*bbn_ks_Z(x,y,z) + (0.5*Power(4*
 Hold(D(bbn_ks_Z(x,y,z),y))*Power(Pattern(a,BH),2)*bbn_ks_Z(x,y,z) + 2*
 (Hold(D(bbn_ks_X(x,y,z),y))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),y))*bbn_ks_Y(x,y,z) + 
 Hold(D(bbn_ks_Z(x,y,z),y))*bbn_ks_Z(x,y,z))*(-Power(Pattern(a,BH),2) + 
@@ -2279,12 +2279,12 @@ Hold(D(bbn_ks_Z(x,y,z),z))*Power(Pattern(a,BH),2)*bbn_ks_Z(x,y,z) + 2*
 Hold(D(bbn_ks_Z(x,y,z),z))*bbn_ks_Z(x,y,z))*(-Power(Pattern(a,BH),2) + 
 Power(bbn_ks_X(x,y,z),2) + Power(bbn_ks_Y(x,y,z),2) + Power(bbn_ks_Z(x,y,z),2)))*(4*
 Power(Hold(D(bbn_ks_Z(x,y,z),y)),2)*Power(Pattern(a,BH),2) + 4*
-Hold(D(bbn_ks_Z(x,y,z),List(y,2)))*Power(Pattern(a,BH),2)*bbn_ks_Z(x,y,z) + 
+Hold(D(bbn_ks_Z(x,y,z),(y,2)))*Power(Pattern(a,BH),2)*bbn_ks_Z(x,y,z) + 
 4*Power(Hold(D(bbn_ks_X(x,y,z),y))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),y))*
 bbn_ks_Y(x,y,z) + Hold(D(bbn_ks_Z(x,y,z),y))*bbn_ks_Z(x,y,z),2) + 2*(Power(Hold(D(bbn_ks_X(x,y,z),y)),2) + 
 Power(Hold(D(bbn_ks_Y(x,y,z),y)),2) + Power(Hold(D(bbn_ks_Z(x,y,z),y)),2) + 
-Hold(D(bbn_ks_X(x,y,z),List(y,2)))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),List(y,2)))*
-bbn_ks_Y(x,y,z) + Hold(D(bbn_ks_Z(x,y,z),List(y,2)))*bbn_ks_Z(x,y,z))*(-
+Hold(D(bbn_ks_X(x,y,z),(y,2)))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),(y,2)))*
+bbn_ks_Y(x,y,z) + Hold(D(bbn_ks_Z(x,y,z),(y,2)))*bbn_ks_Z(x,y,z))*(-
 Power(Pattern(a,BH),2) + Power(bbn_ks_X(x,y,z),2) + 
 Power(bbn_ks_Y(x,y,z),2) + Power(bbn_ks_Z(x,y,z),2))))/Power(4*
 Power(Pattern(a,BH),2)*Power(bbn_ks_Z(x,y,z),2) + Power(-
@@ -2307,26 +2307,26 @@ Power(bbn_ks_X(x,y,z),2) + Power(bbn_ks_Y(x,y,z),2) + Power(bbn_ks_Z(x,y,z),2)))
 Power(4*Power(Pattern(a,BH),2)*Power(bbn_ks_Z(x,y,z),2) + Power(-
 Power(Pattern(a,BH),2) + Power(bbn_ks_X(x,y,z),2) + 
 Power(bbn_ks_Y(x,y,z),2) + Power(bbn_ks_Z(x,y,z),2),2),1.5) + (0.5*(4*
-Hold(D(bbn_ks_Z(x,y,z),z))*Hold(D(bbn_ks_Z(x,y,z),List(y,2)))*Power(Pattern(a,BH),2) + 
+Hold(D(bbn_ks_Z(x,y,z),z))*Hold(D(bbn_ks_Z(x,y,z),(y,2)))*Power(Pattern(a,BH),2) + 
 8*Hold(D(bbn_ks_Z(x,y,z),y))*Hold(D(bbn_ks_Z(x,y,z),y,z))*Power(Pattern(a,BH),2) + 
-4*Hold(D(bbn_ks_Z(x,y,z),List(y,2),z))*Power(Pattern(a,BH),2)*
+4*Hold(D(bbn_ks_Z(x,y,z),(y,2),z))*Power(Pattern(a,BH),2)*
 bbn_ks_Z(x,y,z) + 4*(Hold(D(bbn_ks_X(x,y,z),z))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),z))*
 bbn_ks_Y(x,y,z) + Hold(D(bbn_ks_Z(x,y,z),z))*bbn_ks_Z(x,y,z))*(Power(Hold(D(bbn_ks_X(x,y,z),y)),2) + 
 Power(Hold(D(bbn_ks_Y(x,y,z),y)),2) + Power(Hold(D(bbn_ks_Z(x,y,z),y)),2) + 
-Hold(D(bbn_ks_X(x,y,z),List(y,2)))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),List(y,2)))*
-bbn_ks_Y(x,y,z) + Hold(D(bbn_ks_Z(x,y,z),List(y,2)))*bbn_ks_Z(x,y,z)) + 8*
+Hold(D(bbn_ks_X(x,y,z),(y,2)))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),(y,2)))*
+bbn_ks_Y(x,y,z) + Hold(D(bbn_ks_Z(x,y,z),(y,2)))*bbn_ks_Z(x,y,z)) + 8*
 (Hold(D(bbn_ks_X(x,y,z),y))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),y))*bbn_ks_Y(x,y,z) + 
 Hold(D(bbn_ks_Z(x,y,z),y))*bbn_ks_Z(x,y,z))*(Hold(D(bbn_ks_X(x,y,z),y))*
 Hold(D(bbn_ks_X(x,y,z),z)) + Hold(D(bbn_ks_Y(x,y,z),y))*Hold(D(bbn_ks_Y(x,y,z),z)) + 
 Hold(D(bbn_ks_Z(x,y,z),y))*Hold(D(bbn_ks_Z(x,y,z),z)) + Hold(D(bbn_ks_X(x,y,z),y,z))*
 bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),y,z))*bbn_ks_Y(x,y,z) + Hold(D(bbn_ks_Z(x,y,z),y,z))*
-bbn_ks_Z(x,y,z)) + 2*(Hold(D(bbn_ks_X(x,y,z),z))*Hold(D(bbn_ks_X(x,y,z),List(y,2))) + 
-Hold(D(bbn_ks_Y(x,y,z),z))*Hold(D(bbn_ks_Y(x,y,z),List(y,2))) + 
-Hold(D(bbn_ks_Z(x,y,z),z))*Hold(D(bbn_ks_Z(x,y,z),List(y,2))) + 2*
+bbn_ks_Z(x,y,z)) + 2*(Hold(D(bbn_ks_X(x,y,z),z))*Hold(D(bbn_ks_X(x,y,z),(y,2))) + 
+Hold(D(bbn_ks_Y(x,y,z),z))*Hold(D(bbn_ks_Y(x,y,z),(y,2))) + 
+Hold(D(bbn_ks_Z(x,y,z),z))*Hold(D(bbn_ks_Z(x,y,z),(y,2))) + 2*
 Hold(D(bbn_ks_X(x,y,z),y))*Hold(D(bbn_ks_X(x,y,z),y,z)) + 2*Hold(D(bbn_ks_Y(x,y,z),y))*
 Hold(D(bbn_ks_Y(x,y,z),y,z)) + 2*Hold(D(bbn_ks_Z(x,y,z),y))*Hold(D(bbn_ks_Z(x,y,z),y,z)) + 
-Hold(D(bbn_ks_X(x,y,z),List(y,2),z))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),List(y,2),z))*
-bbn_ks_Y(x,y,z) + Hold(D(bbn_ks_Z(x,y,z),List(y,2),z))*bbn_ks_Z(x,y,z))*(-
+Hold(D(bbn_ks_X(x,y,z),(y,2),z))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),(y,2),z))*
+bbn_ks_Y(x,y,z) + Hold(D(bbn_ks_Z(x,y,z),(y,2),z))*bbn_ks_Z(x,y,z))*(-
 Power(Pattern(a,BH),2) + Power(bbn_ks_X(x,y,z),2) + 
 Power(bbn_ks_Y(x,y,z),2) + Power(bbn_ks_Z(x,y,z),2))))/Sqrt(4*Power(Pattern(a,BH),2)*
 Power(bbn_ks_Z(x,y,z),2) + Power(-Power(Pattern(a,BH),2) + 
@@ -2337,13 +2337,13 @@ KS_func_def_macro(dddR_D1D2D1) KS_func_args_macro
 {
 return
 /* mcode in progress ... */
-1.*Hold(D(bbn_ks_X(x,y,z),z))*Hold(D(bbn_ks_X(x,y,z),List(y,2))) + 1.*
-Hold(D(bbn_ks_Y(x,y,z),z))*Hold(D(bbn_ks_Y(x,y,z),List(y,2))) + 1.*
-Hold(D(bbn_ks_Z(x,y,z),z))*Hold(D(bbn_ks_Z(x,y,z),List(y,2))) + 2.*
+1.*Hold(D(bbn_ks_X(x,y,z),z))*Hold(D(bbn_ks_X(x,y,z),(y,2))) + 1.*
+Hold(D(bbn_ks_Y(x,y,z),z))*Hold(D(bbn_ks_Y(x,y,z),(y,2))) + 1.*
+Hold(D(bbn_ks_Z(x,y,z),z))*Hold(D(bbn_ks_Z(x,y,z),(y,2))) + 2.*
 Hold(D(bbn_ks_X(x,y,z),y))*Hold(D(bbn_ks_X(x,y,z),y,z)) + 2.*Hold(D(bbn_ks_Y(x,y,z),y))*
 Hold(D(bbn_ks_Y(x,y,z),y,z)) + 2.*Hold(D(bbn_ks_Z(x,y,z),y))*Hold(D(bbn_ks_Z(x,y,z),y,z)) + 
-1.*Hold(D(bbn_ks_X(x,y,z),List(y,2),z))*bbn_ks_X(x,y,z) + 1.*Hold(D(bbn_ks_Y(x,y,z),List(y,2),z))*
-bbn_ks_Y(x,y,z) + 1.*Hold(D(bbn_ks_Z(x,y,z),List(y,2),z))*bbn_ks_Z(x,y,z) + (0.5*(-12*
+1.*Hold(D(bbn_ks_X(x,y,z),(y,2),z))*bbn_ks_X(x,y,z) + 1.*Hold(D(bbn_ks_Y(x,y,z),(y,2),z))*
+bbn_ks_Y(x,y,z) + 1.*Hold(D(bbn_ks_Z(x,y,z),(y,2),z))*bbn_ks_Z(x,y,z) + (0.5*(-12*
 Hold(D(bbn_ks_Z(x,y,z),y))*Power(Pattern(a,BH),2)*bbn_ks_Z(x,y,z) - 6*
 (Hold(D(bbn_ks_X(x,y,z),y))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),y))*bbn_ks_Y(x,y,z) + 
 Hold(D(bbn_ks_Z(x,y,z),y))*bbn_ks_Z(x,y,z))*(-Power(Pattern(a,BH),2) + 
@@ -2364,12 +2364,12 @@ Hold(D(bbn_ks_Z(x,y,z),z))*Power(Pattern(a,BH),2)*bbn_ks_Z(x,y,z) - 2*
 Hold(D(bbn_ks_Z(x,y,z),z))*bbn_ks_Z(x,y,z))*(-Power(Pattern(a,BH),2) + 
 Power(bbn_ks_X(x,y,z),2) + Power(bbn_ks_Y(x,y,z),2) + Power(bbn_ks_Z(x,y,z),2)))*(4*
 Power(Hold(D(bbn_ks_Z(x,y,z),y)),2)*Power(Pattern(a,BH),2) + 4*
-Hold(D(bbn_ks_Z(x,y,z),List(y,2)))*Power(Pattern(a,BH),2)*bbn_ks_Z(x,y,z) + 
+Hold(D(bbn_ks_Z(x,y,z),(y,2)))*Power(Pattern(a,BH),2)*bbn_ks_Z(x,y,z) + 
 4*Power(Hold(D(bbn_ks_X(x,y,z),y))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),y))*
 bbn_ks_Y(x,y,z) + Hold(D(bbn_ks_Z(x,y,z),y))*bbn_ks_Z(x,y,z),2) + 2*(Power(Hold(D(bbn_ks_X(x,y,z),y)),2) + 
 Power(Hold(D(bbn_ks_Y(x,y,z),y)),2) + Power(Hold(D(bbn_ks_Z(x,y,z),y)),2) + 
-Hold(D(bbn_ks_X(x,y,z),List(y,2)))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),List(y,2)))*
-bbn_ks_Y(x,y,z) + Hold(D(bbn_ks_Z(x,y,z),List(y,2)))*bbn_ks_Z(x,y,z))*(-
+Hold(D(bbn_ks_X(x,y,z),(y,2)))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),(y,2)))*
+bbn_ks_Y(x,y,z) + Hold(D(bbn_ks_Z(x,y,z),(y,2)))*bbn_ks_Z(x,y,z))*(-
 Power(Pattern(a,BH),2) + Power(bbn_ks_X(x,y,z),2) + 
 Power(bbn_ks_Y(x,y,z),2) + Power(bbn_ks_Z(x,y,z),2))))/Power(4*
 Power(Pattern(a,BH),2)*Power(bbn_ks_Z(x,y,z),2) + Power(-
@@ -2409,26 +2409,26 @@ Power(bbn_ks_X(x,y,z),2) + Power(bbn_ks_Y(x,y,z),2) + Power(bbn_ks_Z(x,y,z),2)))
 Power(4*Power(Pattern(a,BH),2)*Power(bbn_ks_Z(x,y,z),2) + Power(-
 Power(Pattern(a,BH),2) + Power(bbn_ks_X(x,y,z),2) + 
 Power(bbn_ks_Y(x,y,z),2) + Power(bbn_ks_Z(x,y,z),2),2),1.5) + (0.5*(4*
-Hold(D(bbn_ks_Z(x,y,z),z))*Hold(D(bbn_ks_Z(x,y,z),List(y,2)))*Power(Pattern(a,BH),2) + 
+Hold(D(bbn_ks_Z(x,y,z),z))*Hold(D(bbn_ks_Z(x,y,z),(y,2)))*Power(Pattern(a,BH),2) + 
 8*Hold(D(bbn_ks_Z(x,y,z),y))*Hold(D(bbn_ks_Z(x,y,z),y,z))*Power(Pattern(a,BH),2) + 
-4*Hold(D(bbn_ks_Z(x,y,z),List(y,2),z))*Power(Pattern(a,BH),2)*
+4*Hold(D(bbn_ks_Z(x,y,z),(y,2),z))*Power(Pattern(a,BH),2)*
 bbn_ks_Z(x,y,z) + 4*(Hold(D(bbn_ks_X(x,y,z),z))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),z))*
 bbn_ks_Y(x,y,z) + Hold(D(bbn_ks_Z(x,y,z),z))*bbn_ks_Z(x,y,z))*(Power(Hold(D(bbn_ks_X(x,y,z),y)),2) + 
 Power(Hold(D(bbn_ks_Y(x,y,z),y)),2) + Power(Hold(D(bbn_ks_Z(x,y,z),y)),2) + 
-Hold(D(bbn_ks_X(x,y,z),List(y,2)))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),List(y,2)))*
-bbn_ks_Y(x,y,z) + Hold(D(bbn_ks_Z(x,y,z),List(y,2)))*bbn_ks_Z(x,y,z)) + 8*
+Hold(D(bbn_ks_X(x,y,z),(y,2)))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),(y,2)))*
+bbn_ks_Y(x,y,z) + Hold(D(bbn_ks_Z(x,y,z),(y,2)))*bbn_ks_Z(x,y,z)) + 8*
 (Hold(D(bbn_ks_X(x,y,z),y))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),y))*bbn_ks_Y(x,y,z) + 
 Hold(D(bbn_ks_Z(x,y,z),y))*bbn_ks_Z(x,y,z))*(Hold(D(bbn_ks_X(x,y,z),y))*
 Hold(D(bbn_ks_X(x,y,z),z)) + Hold(D(bbn_ks_Y(x,y,z),y))*Hold(D(bbn_ks_Y(x,y,z),z)) + 
 Hold(D(bbn_ks_Z(x,y,z),y))*Hold(D(bbn_ks_Z(x,y,z),z)) + Hold(D(bbn_ks_X(x,y,z),y,z))*
 bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),y,z))*bbn_ks_Y(x,y,z) + Hold(D(bbn_ks_Z(x,y,z),y,z))*
-bbn_ks_Z(x,y,z)) + 2*(Hold(D(bbn_ks_X(x,y,z),z))*Hold(D(bbn_ks_X(x,y,z),List(y,2))) + 
-Hold(D(bbn_ks_Y(x,y,z),z))*Hold(D(bbn_ks_Y(x,y,z),List(y,2))) + 
-Hold(D(bbn_ks_Z(x,y,z),z))*Hold(D(bbn_ks_Z(x,y,z),List(y,2))) + 2*
+bbn_ks_Z(x,y,z)) + 2*(Hold(D(bbn_ks_X(x,y,z),z))*Hold(D(bbn_ks_X(x,y,z),(y,2))) + 
+Hold(D(bbn_ks_Y(x,y,z),z))*Hold(D(bbn_ks_Y(x,y,z),(y,2))) + 
+Hold(D(bbn_ks_Z(x,y,z),z))*Hold(D(bbn_ks_Z(x,y,z),(y,2))) + 2*
 Hold(D(bbn_ks_X(x,y,z),y))*Hold(D(bbn_ks_X(x,y,z),y,z)) + 2*Hold(D(bbn_ks_Y(x,y,z),y))*
 Hold(D(bbn_ks_Y(x,y,z),y,z)) + 2*Hold(D(bbn_ks_Z(x,y,z),y))*Hold(D(bbn_ks_Z(x,y,z),y,z)) + 
-Hold(D(bbn_ks_X(x,y,z),List(y,2),z))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),List(y,2),z))*
-bbn_ks_Y(x,y,z) + Hold(D(bbn_ks_Z(x,y,z),List(y,2),z))*bbn_ks_Z(x,y,z))*(-
+Hold(D(bbn_ks_X(x,y,z),(y,2),z))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),(y,2),z))*
+bbn_ks_Y(x,y,z) + Hold(D(bbn_ks_Z(x,y,z),(y,2),z))*bbn_ks_Z(x,y,z))*(-
 Power(Pattern(a,BH),2) + Power(bbn_ks_X(x,y,z),2) + 
 Power(bbn_ks_Y(x,y,z),2) + Power(bbn_ks_Z(x,y,z),2))))/Sqrt(4*Power(Pattern(a,BH),2)*
 Power(bbn_ks_Z(x,y,z),2) + Power(-Power(Pattern(a,BH),2) + 
@@ -2439,22 +2439,22 @@ KS_func_def_macro(dddR_D1D1D1) KS_func_args_macro
 {
 return
 /* mcode in progress ... */
-3.*Hold(D(bbn_ks_X(x,y,z),y))*Hold(D(bbn_ks_X(x,y,z),List(y,2))) + 3.*
-Hold(D(bbn_ks_Y(x,y,z),y))*Hold(D(bbn_ks_Y(x,y,z),List(y,2))) + 3.*
-Hold(D(bbn_ks_Z(x,y,z),y))*Hold(D(bbn_ks_Z(x,y,z),List(y,2))) + 1.*
-Hold(D(bbn_ks_X(x,y,z),List(y,3)))*bbn_ks_X(x,y,z) + 1.*Hold(D(bbn_ks_Y(x,y,z),List(y,3)))*
-bbn_ks_Y(x,y,z) + 1.*Hold(D(bbn_ks_Z(x,y,z),List(y,3)))*bbn_ks_Z(x,y,z) + (0.5*(4*
+3.*Hold(D(bbn_ks_X(x,y,z),y))*Hold(D(bbn_ks_X(x,y,z),(y,2))) + 3.*
+Hold(D(bbn_ks_Y(x,y,z),y))*Hold(D(bbn_ks_Y(x,y,z),(y,2))) + 3.*
+Hold(D(bbn_ks_Z(x,y,z),y))*Hold(D(bbn_ks_Z(x,y,z),(y,2))) + 1.*
+Hold(D(bbn_ks_X(x,y,z),(y,3)))*bbn_ks_X(x,y,z) + 1.*Hold(D(bbn_ks_Y(x,y,z),(y,3)))*
+bbn_ks_Y(x,y,z) + 1.*Hold(D(bbn_ks_Z(x,y,z),(y,3)))*bbn_ks_Z(x,y,z) + (0.5*(4*
 Hold(D(bbn_ks_Z(x,y,z),y))*Power(Pattern(a,BH),2)*bbn_ks_Z(x,y,z) + 2*
 (Hold(D(bbn_ks_X(x,y,z),y))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),y))*bbn_ks_Y(x,y,z) + 
 Hold(D(bbn_ks_Z(x,y,z),y))*bbn_ks_Z(x,y,z))*(-Power(Pattern(a,BH),2) + 
 Power(bbn_ks_X(x,y,z),2) + Power(bbn_ks_Y(x,y,z),2) + Power(bbn_ks_Z(x,y,z),2)))*(-4*
 Power(Hold(D(bbn_ks_Z(x,y,z),y)),2)*Power(Pattern(a,BH),2) - 4*
-Hold(D(bbn_ks_Z(x,y,z),List(y,2)))*Power(Pattern(a,BH),2)*bbn_ks_Z(x,y,z) - 
+Hold(D(bbn_ks_Z(x,y,z),(y,2)))*Power(Pattern(a,BH),2)*bbn_ks_Z(x,y,z) - 
 4*Power(Hold(D(bbn_ks_X(x,y,z),y))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),y))*
 bbn_ks_Y(x,y,z) + Hold(D(bbn_ks_Z(x,y,z),y))*bbn_ks_Z(x,y,z),2) - 2*(Power(Hold(D(bbn_ks_X(x,y,z),y)),2) + 
 Power(Hold(D(bbn_ks_Y(x,y,z),y)),2) + Power(Hold(D(bbn_ks_Z(x,y,z),y)),2) + 
-Hold(D(bbn_ks_X(x,y,z),List(y,2)))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),List(y,2)))*
-bbn_ks_Y(x,y,z) + Hold(D(bbn_ks_Z(x,y,z),List(y,2)))*bbn_ks_Z(x,y,z))*(-
+Hold(D(bbn_ks_X(x,y,z),(y,2)))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),(y,2)))*
+bbn_ks_Y(x,y,z) + Hold(D(bbn_ks_Z(x,y,z),(y,2)))*bbn_ks_Z(x,y,z))*(-
 Power(Pattern(a,BH),2) + Power(bbn_ks_X(x,y,z),2) + 
 Power(bbn_ks_Y(x,y,z),2) + Power(bbn_ks_Z(x,y,z),2))))/Power(4*
 Power(Pattern(a,BH),2)*Power(bbn_ks_Z(x,y,z),2) + Power(-
@@ -2465,29 +2465,29 @@ Hold(D(bbn_ks_Z(x,y,z),y))*Power(Pattern(a,BH),2)*bbn_ks_Z(x,y,z) - 2*
 Hold(D(bbn_ks_Z(x,y,z),y))*bbn_ks_Z(x,y,z))*(-Power(Pattern(a,BH),2) + 
 Power(bbn_ks_X(x,y,z),2) + Power(bbn_ks_Y(x,y,z),2) + Power(bbn_ks_Z(x,y,z),2)))*(4*
 Power(Hold(D(bbn_ks_Z(x,y,z),y)),2)*Power(Pattern(a,BH),2) + 4*
-Hold(D(bbn_ks_Z(x,y,z),List(y,2)))*Power(Pattern(a,BH),2)*bbn_ks_Z(x,y,z) + 
+Hold(D(bbn_ks_Z(x,y,z),(y,2)))*Power(Pattern(a,BH),2)*bbn_ks_Z(x,y,z) + 
 4*Power(Hold(D(bbn_ks_X(x,y,z),y))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),y))*
 bbn_ks_Y(x,y,z) + Hold(D(bbn_ks_Z(x,y,z),y))*bbn_ks_Z(x,y,z),2) + 2*(Power(Hold(D(bbn_ks_X(x,y,z),y)),2) + 
 Power(Hold(D(bbn_ks_Y(x,y,z),y)),2) + Power(Hold(D(bbn_ks_Z(x,y,z),y)),2) + 
-Hold(D(bbn_ks_X(x,y,z),List(y,2)))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),List(y,2)))*
-bbn_ks_Y(x,y,z) + Hold(D(bbn_ks_Z(x,y,z),List(y,2)))*bbn_ks_Z(x,y,z))*(-
+Hold(D(bbn_ks_X(x,y,z),(y,2)))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),(y,2)))*
+bbn_ks_Y(x,y,z) + Hold(D(bbn_ks_Z(x,y,z),(y,2)))*bbn_ks_Z(x,y,z))*(-
 Power(Pattern(a,BH),2) + Power(bbn_ks_X(x,y,z),2) + 
 Power(bbn_ks_Y(x,y,z),2) + Power(bbn_ks_Z(x,y,z),2))))/Power(4*
 Power(Pattern(a,BH),2)*Power(bbn_ks_Z(x,y,z),2) + Power(-
 Power(Pattern(a,BH),2) + Power(bbn_ks_X(x,y,z),2) + 
 Power(bbn_ks_Y(x,y,z),2) + Power(bbn_ks_Z(x,y,z),2),2),1.5) + (1.*(6*
-Hold(D(bbn_ks_Z(x,y,z),y))*Hold(D(bbn_ks_Z(x,y,z),List(y,2)))*Power(Pattern(a,BH),2) + 
-2*Hold(D(bbn_ks_Z(x,y,z),List(y,3)))*Power(Pattern(a,BH),2)*
+Hold(D(bbn_ks_Z(x,y,z),y))*Hold(D(bbn_ks_Z(x,y,z),(y,2)))*Power(Pattern(a,BH),2) + 
+2*Hold(D(bbn_ks_Z(x,y,z),(y,3)))*Power(Pattern(a,BH),2)*
 bbn_ks_Z(x,y,z) + 6*(Hold(D(bbn_ks_X(x,y,z),y))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),y))*
 bbn_ks_Y(x,y,z) + Hold(D(bbn_ks_Z(x,y,z),y))*bbn_ks_Z(x,y,z))*(Power(Hold(D(bbn_ks_X(x,y,z),y)),2) + 
 Power(Hold(D(bbn_ks_Y(x,y,z),y)),2) + Power(Hold(D(bbn_ks_Z(x,y,z),y)),2) + 
-Hold(D(bbn_ks_X(x,y,z),List(y,2)))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),List(y,2)))*
-bbn_ks_Y(x,y,z) + Hold(D(bbn_ks_Z(x,y,z),List(y,2)))*bbn_ks_Z(x,y,z)) + (3*
-Hold(D(bbn_ks_X(x,y,z),y))*Hold(D(bbn_ks_X(x,y,z),List(y,2))) + 3*
-Hold(D(bbn_ks_Y(x,y,z),y))*Hold(D(bbn_ks_Y(x,y,z),List(y,2))) + 3*
-Hold(D(bbn_ks_Z(x,y,z),y))*Hold(D(bbn_ks_Z(x,y,z),List(y,2))) + 
-Hold(D(bbn_ks_X(x,y,z),List(y,3)))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),List(y,3)))*
-bbn_ks_Y(x,y,z) + Hold(D(bbn_ks_Z(x,y,z),List(y,3)))*bbn_ks_Z(x,y,z))*(-
+Hold(D(bbn_ks_X(x,y,z),(y,2)))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),(y,2)))*
+bbn_ks_Y(x,y,z) + Hold(D(bbn_ks_Z(x,y,z),(y,2)))*bbn_ks_Z(x,y,z)) + (3*
+Hold(D(bbn_ks_X(x,y,z),y))*Hold(D(bbn_ks_X(x,y,z),(y,2))) + 3*
+Hold(D(bbn_ks_Y(x,y,z),y))*Hold(D(bbn_ks_Y(x,y,z),(y,2))) + 3*
+Hold(D(bbn_ks_Z(x,y,z),y))*Hold(D(bbn_ks_Z(x,y,z),(y,2))) + 
+Hold(D(bbn_ks_X(x,y,z),(y,3)))*bbn_ks_X(x,y,z) + Hold(D(bbn_ks_Y(x,y,z),(y,3)))*
+bbn_ks_Y(x,y,z) + Hold(D(bbn_ks_Z(x,y,z),(y,3)))*bbn_ks_Z(x,y,z))*(-
 Power(Pattern(a,BH),2) + Power(bbn_ks_X(x,y,z),2) + 
 Power(bbn_ks_Y(x,y,z),2) + Power(bbn_ks_Z(x,y,z),2))))/Sqrt(4*Power(Pattern(a,BH),2)*
 Power(bbn_ks_Z(x,y,z),2) + Power(-Power(Pattern(a,BH),2) + 
