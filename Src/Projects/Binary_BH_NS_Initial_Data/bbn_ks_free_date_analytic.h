@@ -94,11 +94,6 @@ typedef double Fbbn_ks_func_t KS_func_args_macro;
 
 #define bbn_ks_rolloff(x,y,z)  bbn_ks_rolloff KS_func_pass_args_macro
 
-/* replace this functions */
-#define XX bbn_ks_X
-#define YY bbn_ks_Y
-#define ZZ bbn_ks_Z
-
 
 /* avoid compiler warning since not all of functions need all variables */
 #define ks_no_use_macro \
