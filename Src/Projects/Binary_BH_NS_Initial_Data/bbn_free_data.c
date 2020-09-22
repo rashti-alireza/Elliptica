@@ -17,6 +17,14 @@ double *read_gs(const char *const fname,void *params)
 {
   struct g_s *par = params;
   Patch_T *patch = par->patch;
+  int i     = _Ind(fname);
+  
+  if (i<0)
+    add_field (fname,0,patch,YES);
+  
+  else if (!patch->pool[i]->v)
+    patch->pool[i]->v = alloc_double(patch->nn);
+
   return patch->pool[Ind(fname)]->v;
 }
 ///////////////////////////////////////
@@ -39,6 +47,8 @@ void bbn_populate_free_data(Grid_T *const grid)
   }
   
   /////////////////////////////////
+  
+  printf("Conformal metric and its inverse ~> Done.\n");
   unsigned p;
   FOR_ALL_PATCHES(p,grid)
   {
@@ -46,13 +56,13 @@ void bbn_populate_free_data(Grid_T *const grid)
     Patch_T *patch = grid->patch[p];
     par->patch = patch;
     bbn_free_data_g_gI_analytic(patch,read_gs,par);
+    bbn_free_data_dg_analytic(patch,read_gs,par);
   }
  //////////////////////////////////////
  
  
   /* populate conformal metric and its inverse */
-  bbn_free_data_gammas(grid);
-  printf("Conformal metric and its inverse ~> Done.\n");
+  //bbn_free_data_gammas(grid);
   
   /* Christoffer symbols made up of conformal metric */
   bbn_free_data_Gamma(grid);
