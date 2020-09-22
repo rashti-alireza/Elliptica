@@ -71,6 +71,7 @@ function_name
     }
     i++;
   }
+  s[j] = '\0';
   
   /* 3rd order (x,y,z) */
   if (strstr(s,"x") && 
@@ -82,37 +83,56 @@ function_name
   }
   /* 3rd order:
   //  (x,(z,2))|(x,(y,2))|(y,(x,2))|(y,(z,2))|(z,(x,2))|(z,(y,2)) */
-  else if (strstr(s,"(x,(z,2))"))
+  else if (!strcmp(s,"(x,(z,2))"))
   {
     sprintf(der,"D0D2D2");
     sprintf(d,"ddd");
   }
-  else if (strstr(s,"(x,(y,2))"))
+  else if (!strcmp(s,"(x,(y,2))"))
   {
     sprintf(der,"D0D1D1");
     sprintf(d,"ddd");
   }
-  else if (strstr(s,"(y,(x,2))"))
+  else if (!strcmp(s,"(y,(x,2))"))
   {
     /* symmetry */
     sprintf(der,"D0D1D0");
     sprintf(d,"ddd");
   }
-  else if (strstr(s,"(y,(z,2))"))
+  else if (!strcmp(s,"(y,(z,2))"))
   {
     sprintf(der,"D1D2D2");
     sprintf(d,"ddd");
   }
-  else if (strstr(s,"(z,(x,2))"))
+  else if (!strcmp(s,"(z,(x,2))"))
   {
     /* symmetry */
     sprintf(der,"D0D2D0");
     sprintf(d,"ddd");
   }
-  else if (strstr(s,"(z,(y,2))"))
+  else if (!strcmp(s,"(z,(y,2))"))
   {
     /* symmetry */
     sprintf(der,"D1D2D1");
+    sprintf(d,"ddd");
+  }
+  /* (x,3) - (y,3) - (z,3) */
+  else if (!strcmp(s,"(x,3)"))
+  {
+    /* symmetry */
+    sprintf(der,"D0D0D0");
+    sprintf(d,"ddd");
+  }
+  else if (!strcmp(s,"(y,3)"))
+  {
+    /* symmetry */
+    sprintf(der,"D1D1D1");
+    sprintf(d,"ddd");
+  }
+  else if (!strcmp(s,"(z,3)"))
+  {
+    /* symmetry */
+    sprintf(der,"D2D2D2");
     sprintf(d,"ddd");
   }
   /* 2nd order (x,y) - (x,z) -(y,z) */
@@ -136,44 +156,44 @@ function_name
   }
   /* 2rd order:
   //  (x,2)|(y,2)|(z,2) */
-  else if (strstr(s,"(x,2)")) 
+  else if (!strcmp(s,"(x,2)")) 
   {
     sprintf(der,"D0D0");
     sprintf(d,"dd");
   }
-  else if (strstr(s,"(y,2)")) 
+  else if (!strcmp(s,"(y,2)")) 
   {
     sprintf(der,"D1D1");
     sprintf(d,"dd");
   }
-  else if (strstr(s,"(z,2)")) 
+  else if (!strcmp(s,"(z,2)")) 
   {
     sprintf(der,"D2D2");
     sprintf(d,"dd");
   }
   /* 1st order x - y - z */
-  else if (strstr(s,"x"))
+  else if (!strcmp(s,"x"))
   {
     sprintf(der,"D0");
     sprintf(d,"d");
   }
-  else if (strstr(s,"y"))
+  else if (!strcmp(s,"y"))
   {
     sprintf(der,"D1");
     sprintf(d,"d");
   }
-  else if (strstr(s,"z"))
+  else if (!strcmp(s,"z"))
   {
     sprintf(der,"D2");
     sprintf(d,"d");
   }
   else
-    Error0("No recognized!");
+    Error1("'%s' not recognized!",s);
   
   /* function name */
   sprintf(fname,"%s%s%s_%s",KS_prefix,d,root,der);
   /* test */
-  printf("'%s','%s' => %s\n",stem,derive,fname);
+  // printf("'%s','%s' => %s\n",stem,derive,fname);
 }
 
 
