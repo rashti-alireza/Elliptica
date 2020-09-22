@@ -172,7 +172,10 @@ function_name
   
   /* function name */
   sprintf(fname,"%s%s%s_%s",KS_prefix,d,root,der);
-  
-  printf("%s\n",fname);
+  /* test */
+  printf("'%s','%s' => %s\n",stem,derive,fname);
 }
+
+
+
 
