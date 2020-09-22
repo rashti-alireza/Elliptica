@@ -56,10 +56,12 @@ void bbn_populate_free_data(Grid_T *const grid)
     Patch_T *patch = grid->patch[p];
     par->patch = patch;
     bbn_free_data_g_gI_analytic(patch,read_gs,par);
-    bbn_free_data_dg_analytic(patch,read_gs,par);
+    //bbn_free_data_dg_analytic(patch,read_gs,par);
+    bbn_free_data_ddg_analytic(patch,read_gs,par);
+    bbn_free_data_dddg_analytic(patch,read_gs,par);
   }
  //////////////////////////////////////
- 
+ exit(0);
  
   /* populate conformal metric and its inverse */
   //bbn_free_data_gammas(grid);
