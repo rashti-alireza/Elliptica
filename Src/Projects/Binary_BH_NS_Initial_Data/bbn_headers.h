@@ -156,7 +156,7 @@ bbn_bhfiller
   );
 
 double bbn_bhf_smoother(const double r, const double rmax,const double rmin);
-void bbn_bhf_ChebTn_extrapolate (double *const a,const double fr0,const double fr1,const double dfdr,const double ddfddr,const double rfill);
+void bbn_bhf_ChebTn_extrapolate (double *const a,const double fr0,const double fr1,const double dfdr,const double ddfddr,const double rfill,const unsigned N);
 
 
 #endif
