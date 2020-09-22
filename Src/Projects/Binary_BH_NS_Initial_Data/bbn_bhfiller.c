@@ -57,13 +57,14 @@ bhf_init
   sprintf(bhf->method,"%s",method);
   
   /* using Cheb_Tn and Ylm as the bases 
-  // and extrapolate demanding C2 continuity */
-  if (strcmp_i(method,"3rd_ChebTn_Ylm"))
+  // and extrapolate demanding C2 continuity.
+  // NOTE: among the other methods this is the best. */
+  if (strcmp_i(method,"ChebTn_Ylm"))
   {
-    //const double EPS   = 1E-2;
-    //const double Ma    = Pgetd("BH_irreducible_mass");
+    const unsigned NCoeffs = 10;/* number of coeffs in ChebTn expansion */
     const unsigned npi = 7;/* number of patches inside BH */
     const unsigned npo = 6;/* number of patches outside BH */
+    /* values of extrapolant function at the center of BH f(r=0) */
     const double fr0_Beta_U0     = 0;
     const double fr0_Beta_U1     = 0;
     const double fr0_Beta_U2     = 0;
@@ -75,16 +76,13 @@ bhf_init
     const double fr0_gamma_D2D2  = 1;
     const double fr0_K           = 0.5;
     const double fr0_alpha       = 0.2;
-    const double fr0_psi = 2;
-    const double fr0_eta = fr0_alpha*fr0_psi;
-    unsigned f,nf,i,j,p;
-    int lmax_par = PgetiEZ("bbn_bhfiller_lmax");
-    if (lmax_par == INT_MAX)/* if par doesn't exist */
-      lmax_par = 10;
-    const unsigned lmax   = (unsigned)lmax_par;
+    const double fr0_psi         = 2;
+    const double fr0_eta         = fr0_alpha*fr0_psi;
+    const unsigned lmax   = 10;/* L max in Ylm */
     const unsigned Ntheta = 2*lmax+1;
     const unsigned Nphi   = 2*lmax+1;
     const unsigned N      = Ntheta*Nphi;
+    unsigned f,nf,i,j,p;
     
     nf = 0;/* number of fields */
     while(fields_name[nf]) ++nf;
@@ -94,7 +92,7 @@ bhf_init
     bhf->fld= calloc(nf,sizeof(*bhf->fld));IsNull(bhf->fld);
     
     /* set the method function */
-    bhf->bhfiller = bhf_3rd_ChebTn_Ylm;
+    bhf->bhfiller = bhf_ChebTn_Ylm;
     
     /* collect names */
     collect_names(bhf,nf);
@@ -104,10 +102,12 @@ bhf_init
     bhf->lmax   = lmax;
     bhf->Ntheta = Ntheta;
     bhf->Nphi   = Nphi;
+    bhf->NCoeffs= NCoeffs;
+    
     /* alloc radial_coeffs */
     for (f = 0; f < nf; ++f)
     {
-      for (i = 0 ; i < 10; ++i)
+      for (i = 0 ; i < NCoeffs; ++i)
       {
         bhf->fld[f]->radial_coeffs[i]  = alloc_double(N);
         bhf->fld[f]->realYlm_coeffs[i] = alloc_ClmYlm(lmax);
@@ -212,6 +212,7 @@ bhf_init
   }
   else if (strcmp_i(method,"4th_Poly_Ylm"))
   {
+    const unsigned NCoeffs = 5;
     const double EPS   = 1;
     const double Ma    = Pgetd("BH_irreducible_mass");
     const unsigned npi = 7;/* number of patches inside BH */
@@ -229,14 +230,11 @@ bhf_init
     const double fr0_alpha       = 0.1;
     const double fr0_psi = 2+Ma/(2*EPS);
     const double fr0_eta = fr0_alpha*fr0_psi;
-    unsigned f,nf,i,j,p;
-    int lmax_par = PgetiEZ("bbn_bhfiller_lmax");
-    if (lmax_par == INT_MAX)/* if par doesn't exist */
-      lmax_par = 10;
-    const unsigned lmax   = (unsigned)lmax_par;
+    const unsigned lmax   = 10;
     const unsigned Ntheta = 2*lmax+1;
     const unsigned Nphi   = 2*lmax+1;
     const unsigned N      = Ntheta*Nphi;
+    unsigned f,nf,i,j,p;
     
     nf = 0;/* number of fields */
     while(fields_name[nf]) ++nf;
@@ -256,6 +254,8 @@ bhf_init
     bhf->lmax   = lmax;
     bhf->Ntheta = Ntheta;
     bhf->Nphi   = Nphi;
+    bhf->NCoeffs= NCoeffs;
+    
     /* alloc radial_coeffs */
     for (f = 0; f < nf; ++f)
     {
@@ -415,7 +415,7 @@ static void bhf_free(struct BHFiller_S *const bhf)
 }
 
 /* ->: EXIT_SUCESS if succeeds, otherwise an error code.
-// method to fill BH is 3rd_ChebTn_Ylm:
+// method to fill BH is ChebTn_Ylm:
 // ===============================
 //
 // f(r,th,ph) = a0(th,ph)Tn(0,t)+a1(th,ph)Tn(1,t)+
@@ -424,24 +424,20 @@ static void bhf_free(struct BHFiller_S *const bhf)
 // the coeffs a's are determinded by demaning the C2 continuity
 // across the AH and the value of the function at r = 0.
 // */
-static int bhf_3rd_ChebTn_Ylm(struct BHFiller_S *const bhf)
+static int bhf_ChebTn_Ylm(struct BHFiller_S *const bhf)
 {
-  printf("|--> BH-filler method = 3rd_ChebTn_Ylm.\n");
+  printf("|--> BH-filler method = ChebTn_Ylm.\n");
   fflush(stdout);
-  Grid_T *const grid = bhf->grid;
-  const double EPS   = 1E-2;
-  const double Ma    = Pgetd("BH_irreducible_mass");
-  const unsigned NCoeffs = 10;
-  const unsigned npo = bhf->npo;
-  const unsigned npi = bhf->npi;
-  const unsigned nf  = bhf->nf;/* numebr of fields */
+  Grid_T *const grid     = bhf->grid;
+  const unsigned NCoeffs = bhf->NCoeffs;
+  const unsigned npo     = bhf->npo;
+  const unsigned npi     = bhf->npi;
+  const unsigned nf     = bhf->nf;/* numebr of fields */
   const unsigned lmax   = bhf->lmax;
   const unsigned Ntheta = bhf->Ntheta;
   const unsigned Nphi   = bhf->Nphi;
   const double rfill = Pgetd("r_excision");
   const double rfill3= pow(rfill,3);
-  const double att_a = 0.8;
-  const double att_b = -0.6;
   unsigned p,fld;
   
   /* update all coeffs to avoid race condition */
@@ -562,7 +558,7 @@ static int bhf_3rd_ChebTn_Ylm(struct BHFiller_S *const bhf)
         
         /* find and set the coeffs */
         bbn_bhf_ChebTn_extrapolate
-        (a,fr0,fr1,dfdr,ddfddr,rfill);
+        (a,fr0,fr1,dfdr,ddfddr,rfill,NCoeffs);
         
         for (_i = 0; _i < NCoeffs; _i++)
           bhf->fld[fld]->radial_coeffs[_i][ij] = a[_i];
@@ -586,18 +582,12 @@ static int bhf_3rd_ChebTn_Ylm(struct BHFiller_S *const bhf)
   for (p = 0; p < npi; p++)
   {
     Patch_T *patch = bhf->patches_inBH[p];
-    struct Param_S par[1] = {0};
-    unsigned nn = patch->nn;
-    double theta = 0,phi = 0, t = 0;
-    double Y = 0;
-    unsigned ijk;
-    unsigned f,i;
+    unsigned nn    = patch->nn;
+    unsigned f,ijk;
     
+    /* add field in side the BH */
     bbn_add_fields_in_patch(patch);
     
-    par->rfill = rfill;
-    par->eps   = EPS;
-    par->M     = Ma;
     /* loop over all fields to be extrapolated */
     for (f = 0; f < nf; ++f)
     {
@@ -605,6 +595,8 @@ static int bhf_3rd_ChebTn_Ylm(struct BHFiller_S *const bhf)
       empty_field(u);
       u->v      = alloc_double(patch->nn);
       double *v = u->v;
+      double theta,phi,t;
+      unsigned i;
       
       for (ijk = 0; ijk < nn; ++ijk)
       {
@@ -619,7 +611,6 @@ static int bhf_3rd_ChebTn_Ylm(struct BHFiller_S *const bhf)
         theta = acos(z/r);
         phi = arctan(y,x);
         t   = 2*r/rfill-1;
-        par->r = r;
         for (i = 0; i < NCoeffs; ++i)
         {
           const double *rC = bhf->fld[f]->realYlm_coeffs[i];
@@ -627,9 +618,6 @@ static int bhf_3rd_ChebTn_Ylm(struct BHFiller_S *const bhf)
           v[ijk] += 
             interpolation_Ylm(rC,iC,lmax,theta,phi)*Cheb_Tn((int)i,t);
         }
-        //Y = 0.5*(1+tanh(att_a*(rfill/(rfill-r)+att_b*(rfill/r))));
-        //v[ijk] = Y*v[ijk]+(1-Y)*bhf->fld[f]->f_r0;
-        UNUSED(Y*att_b*att_a);
         
       }/* for (ijk = 0; ijk < nn; ++ijk) */
     }/* for (f = 0; f < nf ++f) */
@@ -1346,7 +1334,7 @@ static int bhf_4th_Poly_Ylm(struct BHFiller_S *const bhf)
   fflush(stdout);
   Grid_T *const grid = bhf->grid;
   const double EPS   = 1E-12;
-  const unsigned NCoeffs = 5;
+  const unsigned NCoeffs = bhf->NCoeffs;
   const unsigned npo = bhf->npo;
   const unsigned npi = bhf->npi;
   const unsigned nf  = bhf->nf;/* numebr of fields */

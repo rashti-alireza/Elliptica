@@ -44,6 +44,7 @@ struct BHFiller_S
   unsigned lmax;/* max l in Ylm expansion */
   unsigned Ntheta;/* number of points in theta direction */
   unsigned Nphi;/* number of points in phi direction */
+  unsigned NCoeffs;/* number of coeffs for in extrapolant function */
   unsigned nf;/* number of fields */
   char method[MAX_STR];/* methods: 
                        // O. TnYlm_C2 => f(r,th,ph) = R(r)*T(th,ph) 
@@ -102,7 +103,7 @@ find_XYZ_and_patch_of_theta_phi_BH_CS
  const double theta,const double phi,Grid_T *const grid
  );
 
-static int bhf_3rd_ChebTn_Ylm(struct BHFiller_S *const bhf);
+static int bhf_ChebTn_Ylm(struct BHFiller_S *const bhf);
 static int bhf_WTGR(struct BHFiller_S *const bhf);
 static double interpolate_from_patch_prim(const char *const field,const double *const X,Patch_T *const patch);
 void bbn_bam_error(const char *const msg,const char *const file,const int line);
