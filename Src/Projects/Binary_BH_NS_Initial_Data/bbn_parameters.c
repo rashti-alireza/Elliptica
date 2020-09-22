@@ -124,7 +124,6 @@ void bbn_set_default_parameters(void)
   // 2. Steepest_Descent: using steepest descent method. */
   Pset_default("NS_surface_root_finder","Bisect_Single");
  
- /* BH-filler parameter: max l in Ylm expansion */ 
- Pset_default("bbn_bhfiller_lmax","10");
- 
 }
+
+
