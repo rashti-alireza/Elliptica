@@ -91,7 +91,7 @@ void bbn_set_default_parameters(void)
   //    directions. it's C^2 continues.
   // 5. 4th_Poly_Ylm: 4th order Polynomial in r and Ylm in 
   //    angular directions. it's C^2 continues. */
-  // 6. C2_EllEq_Brown: solving ell. eqs. inside the BH (Brown's method).
+  // 6. EllEq_Brown: solving ell. eqs. inside the BH (Brown's method).
   //    it's C^2 continues. */
   Pset_default("extrapolate_inside_BH_method","linear");
   

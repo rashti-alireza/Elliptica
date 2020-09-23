@@ -345,7 +345,7 @@ bhf_init
     assert(j == npi);
   }
   /* solving elliptic equations in the hole */
-  else if (strcmp_i(method,"C2_EllEq_Brown"))
+  else if (strcmp_i(method,"EllEq_Brown"))
   {
     const unsigned npi = 7;/* number of patches inside BH */
     const unsigned npo = 6;/* number of patches outside BH */
@@ -1700,7 +1700,7 @@ static int bhf_4th_Poly_Ylm(struct BHFiller_S *const bhf)
 // b.c on the horizon. BC for spectral method are not trivial though! */
 static int bhf_ell_Brown(struct BHFiller_S *const bhf)
 {
-  printf("|--> BH-filler method = C2_EllEq_Brown.\n");
+  printf("|--> BH-filler method = EllEq_Brown.\n");
   fflush(stdout);
   const unsigned Nf  = bhf->nf;
   const unsigned Npi = bhf->npi;

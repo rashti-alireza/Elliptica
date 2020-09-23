@@ -3725,9 +3725,9 @@ void bbn_extrapolate_metric_fields_insideBH(Grid_T *const grid)
   {
     bbn_bhfiller(grid,"WTGR");
   }
-  else if (Pcmps("extrapolate_inside_BH_method","C2_EllEq_Brown"))
+  else if (Pcmps("extrapolate_inside_BH_method","EllEq_Brown"))
   {
-    bbn_bhfiller(grid,"C2_EllEq_Brown");
+    bbn_bhfiller(grid,"EllEq_Brown");
   }
   else
     Error0(NO_OPTION);
