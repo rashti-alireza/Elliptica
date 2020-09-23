@@ -9,7 +9,7 @@
 /* these fields to be extrapolated  */
 static const char *const fields_name[] = 
 {
-  "psi","eta","K",
+  "psi","eta",
   "Beta_U0","Beta_U1","Beta_U2",
   "_gamma_D0D0","_gamma_D0D1",
   "_gamma_D0D2","_gamma_D1D1",
