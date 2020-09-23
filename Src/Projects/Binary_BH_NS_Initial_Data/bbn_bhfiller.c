@@ -675,101 +675,104 @@ static int bhf_ChebTn_Ylm(struct BHFiller_S *const bhf)
       }/* for (ijk = 0; ijk < nn; ++ijk) */
     }/* for (f = 0; f < nf ++f) */
     
-    /* _gammaI */
-    REALLOC_v_WRITE_v(_gammaI_U2U2)
-    REALLOC_v_WRITE_v(_gammaI_U0U2)
-    REALLOC_v_WRITE_v(_gammaI_U0U0)
-    REALLOC_v_WRITE_v(_gammaI_U0U1)
-    REALLOC_v_WRITE_v(_gammaI_U1U2)
-    REALLOC_v_WRITE_v(_gammaI_U1U1)
-    READ_v(_gamma_D2D2)
-    READ_v(_gamma_D0D2)
-    READ_v(_gamma_D0D0)
-    READ_v(_gamma_D0D1)
-    READ_v(_gamma_D1D2)
-    READ_v(_gamma_D1D1)
-    READ_v(Beta_U0)
-    READ_v(Beta_U1)
-    READ_v(Beta_U2)
-    REALLOC_v_WRITE_v(B0_U0)
-    REALLOC_v_WRITE_v(B0_U1)
-    REALLOC_v_WRITE_v(B0_U2)
-    bbn_update_B1_U012(patch);
-    READ_v(B1_U0)
-    READ_v(B1_U1)
-    READ_v(B1_U2)
-    
-    for (ijk = 0; ijk < nn; ++ijk)
+    if (0)/* if extrapolating K_ij no longer need below: */
     {
-      B0_U0[ijk] = Beta_U0[ijk]-B1_U0[ijk];
-      B0_U1[ijk] = Beta_U1[ijk]-B1_U1[ijk];
-      B0_U2[ijk] = Beta_U2[ijk]-B1_U2[ijk];
-      /* _gammaI =  _gamma inverse */
-      COMPUTE_gammaI(_gamma_D0D0[ijk],_gamma_D0D1[ijk],_gamma_D0D2[ijk],
-                     _gamma_D0D1[ijk],_gamma_D1D1[ijk],_gamma_D1D2[ijk],
-                     _gamma_D0D2[ijk],_gamma_D1D2[ijk],_gamma_D2D2[ijk])
-                     
-      /* quick test check _gamma * _gammaI = delta */
-      if (0)
-      {
-          double delta_U0D0 = 
-        _gammaI_U0U0[ijk]*_gamma_D0D0[ijk] + _gammaI_U0U1[ijk]*
-        _gamma_D0D1[ijk] + _gammaI_U0U2[ijk]*_gamma_D0D2[ijk];
+     /* _gammaI */
+     REALLOC_v_WRITE_v(_gammaI_U2U2)
+     REALLOC_v_WRITE_v(_gammaI_U0U2)
+     REALLOC_v_WRITE_v(_gammaI_U0U0)
+     REALLOC_v_WRITE_v(_gammaI_U0U1)
+     REALLOC_v_WRITE_v(_gammaI_U1U2)
+     REALLOC_v_WRITE_v(_gammaI_U1U1)
+     READ_v(_gamma_D2D2)
+     READ_v(_gamma_D0D2)
+     READ_v(_gamma_D0D0)
+     READ_v(_gamma_D0D1)
+     READ_v(_gamma_D1D2)
+     READ_v(_gamma_D1D1)
+     READ_v(Beta_U0)
+     READ_v(Beta_U1)
+     READ_v(Beta_U2)
+     REALLOC_v_WRITE_v(B0_U0)
+     REALLOC_v_WRITE_v(B0_U1)
+     REALLOC_v_WRITE_v(B0_U2)
+     bbn_update_B1_U012(patch);
+     READ_v(B1_U0)
+     READ_v(B1_U1)
+     READ_v(B1_U2)
+     
+     for (ijk = 0; ijk < nn; ++ijk)
+     {
+       B0_U0[ijk] = Beta_U0[ijk]-B1_U0[ijk];
+       B0_U1[ijk] = Beta_U1[ijk]-B1_U1[ijk];
+       B0_U2[ijk] = Beta_U2[ijk]-B1_U2[ijk];
+       /* _gammaI =  _gamma inverse */
+       COMPUTE_gammaI(_gamma_D0D0[ijk],_gamma_D0D1[ijk],_gamma_D0D2[ijk],
+                      _gamma_D0D1[ijk],_gamma_D1D1[ijk],_gamma_D1D2[ijk],
+                      _gamma_D0D2[ijk],_gamma_D1D2[ijk],_gamma_D2D2[ijk])
+                      
+       /* quick test check _gamma * _gammaI = delta */
+       if (0)
+       {
+           double delta_U0D0 = 
+         _gammaI_U0U0[ijk]*_gamma_D0D0[ijk] + _gammaI_U0U1[ijk]*
+         _gamma_D0D1[ijk] + _gammaI_U0U2[ijk]*_gamma_D0D2[ijk];
 
-          double delta_U0D1 = 
-        _gammaI_U0U0[ijk]*_gamma_D0D1[ijk] + _gammaI_U0U1[ijk]*
-        _gamma_D1D1[ijk] + _gammaI_U0U2[ijk]*_gamma_D1D2[ijk];
+           double delta_U0D1 = 
+         _gammaI_U0U0[ijk]*_gamma_D0D1[ijk] + _gammaI_U0U1[ijk]*
+         _gamma_D1D1[ijk] + _gammaI_U0U2[ijk]*_gamma_D1D2[ijk];
 
-          double delta_U0D2 = 
-        _gammaI_U0U0[ijk]*_gamma_D0D2[ijk] + _gammaI_U0U1[ijk]*
-        _gamma_D1D2[ijk] + _gammaI_U0U2[ijk]*_gamma_D2D2[ijk];
+           double delta_U0D2 = 
+         _gammaI_U0U0[ijk]*_gamma_D0D2[ijk] + _gammaI_U0U1[ijk]*
+         _gamma_D1D2[ijk] + _gammaI_U0U2[ijk]*_gamma_D2D2[ijk];
 
-          double delta_U1D2 = 
-        _gammaI_U0U1[ijk]*_gamma_D0D2[ijk] + _gammaI_U1U1[ijk]*
-        _gamma_D1D2[ijk] + _gammaI_U1U2[ijk]*_gamma_D2D2[ijk];
+           double delta_U1D2 = 
+         _gammaI_U0U1[ijk]*_gamma_D0D2[ijk] + _gammaI_U1U1[ijk]*
+         _gamma_D1D2[ijk] + _gammaI_U1U2[ijk]*_gamma_D2D2[ijk];
 
-          double delta_U1D0 = 
-        _gammaI_U0U1[ijk]*_gamma_D0D0[ijk] + _gammaI_U1U1[ijk]*
-        _gamma_D0D1[ijk] + _gammaI_U1U2[ijk]*_gamma_D0D2[ijk];
+           double delta_U1D0 = 
+         _gammaI_U0U1[ijk]*_gamma_D0D0[ijk] + _gammaI_U1U1[ijk]*
+         _gamma_D0D1[ijk] + _gammaI_U1U2[ijk]*_gamma_D0D2[ijk];
 
-         double delta_U1D1 = 
-        _gammaI_U0U1[ijk]*_gamma_D0D1[ijk] + _gammaI_U1U1[ijk]*
-        _gamma_D1D1[ijk] + _gammaI_U1U2[ijk]*_gamma_D1D2[ijk];
+          double delta_U1D1 = 
+         _gammaI_U0U1[ijk]*_gamma_D0D1[ijk] + _gammaI_U1U1[ijk]*
+         _gamma_D1D1[ijk] + _gammaI_U1U2[ijk]*_gamma_D1D2[ijk];
 
-          double delta_U2D2 = 
-        _gammaI_U0U2[ijk]*_gamma_D0D2[ijk] + _gammaI_U1U2[ijk]*
-        _gamma_D1D2[ijk] + _gammaI_U2U2[ijk]*_gamma_D2D2[ijk];
+           double delta_U2D2 = 
+         _gammaI_U0U2[ijk]*_gamma_D0D2[ijk] + _gammaI_U1U2[ijk]*
+         _gamma_D1D2[ijk] + _gammaI_U2U2[ijk]*_gamma_D2D2[ijk];
 
-          double delta_U2D0 = 
-        _gammaI_U0U2[ijk]*_gamma_D0D0[ijk] + _gammaI_U1U2[ijk]*
-        _gamma_D0D1[ijk] + _gammaI_U2U2[ijk]*_gamma_D0D2[ijk];
+           double delta_U2D0 = 
+         _gammaI_U0U2[ijk]*_gamma_D0D0[ijk] + _gammaI_U1U2[ijk]*
+         _gamma_D0D1[ijk] + _gammaI_U2U2[ijk]*_gamma_D0D2[ijk];
 
-          double delta_U2D1 = 
-        _gammaI_U0U2[ijk]*_gamma_D0D1[ijk] + _gammaI_U1U2[ijk]*
-        _gamma_D1D1[ijk] + _gammaI_U2U2[ijk]*_gamma_D1D2[ijk];
+           double delta_U2D1 = 
+         _gammaI_U0U2[ijk]*_gamma_D0D1[ijk] + _gammaI_U1U2[ijk]*
+         _gamma_D1D1[ijk] + _gammaI_U2U2[ijk]*_gamma_D1D2[ijk];
 
-        if(!EQL(delta_U1D1,1))  Error0("_gammaI is not correct!\n");
-        if(!EQL(delta_U0D1,0))  Error0("_gammaI is not correct!\n");
-        if(!EQL(delta_U0D2,0))  Error0("_gammaI is not correct!\n");
-        if(!EQL(delta_U1D2,0))  Error0("_gammaI is not correct!\n");
-        if(!EQL(delta_U0D0,1))  Error0("_gammaI is not correct!\n");
-        if(!EQL(delta_U2D1,0))  Error0("_gammaI is not correct!\n");
-        if(!EQL(delta_U2D2,1))  Error0("_gammaI is not correct!\n");
-        if(!EQL(delta_U2D0,0))  Error0("_gammaI is not correct!\n");
-        if(!EQL(delta_U1D0,0))  Error0("_gammaI is not correct!\n");
-      }
-    }/* for (ijk = 0; ijk < nn; ++ijk) */
-    /* update derivatives */
-    bbn_update_derivative_Beta_U0(patch);
-    bbn_update_derivative_Beta_U1(patch);
-    bbn_update_derivative_Beta_U2(patch);
-    bbn_update_derivative_psi(patch);
-    bbn_update_derivative_eta(patch);
-    
-    /* for K_{ij} inside BH patches */
-    bbn_1st_derivatives_conformal_metric(patch);
-    bbn_free_data_Gamma_patch(patch);
-    bbn_rm_1st_derivatives_conformal_metric(patch);
+         if(!EQL(delta_U1D1,1))  Error0("_gammaI is not correct!\n");
+         if(!EQL(delta_U0D1,0))  Error0("_gammaI is not correct!\n");
+         if(!EQL(delta_U0D2,0))  Error0("_gammaI is not correct!\n");
+         if(!EQL(delta_U1D2,0))  Error0("_gammaI is not correct!\n");
+         if(!EQL(delta_U0D0,1))  Error0("_gammaI is not correct!\n");
+         if(!EQL(delta_U2D1,0))  Error0("_gammaI is not correct!\n");
+         if(!EQL(delta_U2D2,1))  Error0("_gammaI is not correct!\n");
+         if(!EQL(delta_U2D0,0))  Error0("_gammaI is not correct!\n");
+         if(!EQL(delta_U1D0,0))  Error0("_gammaI is not correct!\n");
+       }
+     }/* for (ijk = 0; ijk < nn; ++ijk) */
+     /* update derivatives */
+     bbn_update_derivative_Beta_U0(patch);
+     bbn_update_derivative_Beta_U1(patch);
+     bbn_update_derivative_Beta_U2(patch);
+     bbn_update_derivative_psi(patch);
+     bbn_update_derivative_eta(patch);
+     
+     /* for K_{ij} inside BH patches */
+     bbn_1st_derivatives_conformal_metric(patch);
+     bbn_free_data_Gamma_patch(patch);
+     bbn_rm_1st_derivatives_conformal_metric(patch);
+    }
   }/* for (p = 0; p < npi; p++) */
   
   /* free */
