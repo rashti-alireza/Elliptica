@@ -7,58 +7,59 @@
 #include "bbn_headers.h"
 
 
-#define add_field_and_prep_field(name) ADD_FIELD(name) REALLOC_v_WRITE_v(name)
+#define add_field_and_prep_field(name) \
+ if (_Ind(#name) < 0) {ADD_FIELD(name)} REALLOC_v_WRITE_v(name)
 
 void bbn_extrinsic_K_DiDj(Patch_T *const patch);
 void bbn_extrinsic_K_DiDj(Patch_T *const patch)
 {
 
   /* declaring: */
+  add_field_and_prep_field(K_DiDj_D2D2)
   add_field_and_prep_field(K_DiDj_D1D1)
+  add_field_and_prep_field(K_DiDj_D1D2)
+  add_field_and_prep_field(K_DiDj_D0D2)
   add_field_and_prep_field(K_DiDj_D0D1)
   add_field_and_prep_field(K_DiDj_D0D0)
-  add_field_and_prep_field(K_DiDj_D2D2)
-  add_field_and_prep_field(K_DiDj_D0D2)
-  add_field_and_prep_field(K_DiDj_D1D2)
-  READ_v(Beta_U1)
-  READ_v(Beta_U2)
   READ_v(Beta_U0)
-  READ_v(dBeta_U0D2)
-  READ_v(dBeta_U1D2)
-  READ_v(dBeta_U0D1)
-  READ_v(dBeta_U2D0)
-  READ_v(dBeta_U2D2)
-  READ_v(dBeta_U1D0)
-  READ_v(dBeta_U0D0)
-  READ_v(dBeta_U1D1)
+  READ_v(Beta_U2)
+  READ_v(Beta_U1)
   READ_v(dBeta_U2D1)
+  READ_v(dBeta_U2D2)
+  READ_v(dBeta_U0D2)
+  READ_v(dBeta_U0D0)
+  READ_v(dBeta_U2D0)
+  READ_v(dBeta_U1D1)
+  READ_v(dBeta_U0D1)
+  READ_v(dBeta_U1D0)
+  READ_v(dBeta_U1D2)
   READ_v(psi)
   READ_v(eta)
   READ_v(K)
   READ_v(_gamma_D1D2)
-  READ_v(_gamma_D0D2)
-  READ_v(_gamma_D0D0)
-  READ_v(_gamma_D0D1)
-  READ_v(_gamma_D2D2)
   READ_v(_gamma_D1D1)
-  READ_v(_Gamma_U0D1D2)
-  READ_v(_Gamma_U1D0D1)
-  READ_v(_Gamma_U1D2D2)
-  READ_v(_Gamma_U2D0D0)
-  READ_v(_Gamma_U2D1D1)
-  READ_v(_Gamma_U2D1D2)
+  READ_v(_gamma_D0D1)
+  READ_v(_gamma_D0D0)
+  READ_v(_gamma_D0D2)
+  READ_v(_gamma_D2D2)
   READ_v(_Gamma_U2D0D2)
   READ_v(_Gamma_U0D0D2)
-  READ_v(_Gamma_U2D2D2)
+  READ_v(_Gamma_U0D0D1)
   READ_v(_Gamma_U0D0D0)
   READ_v(_Gamma_U1D1D2)
-  READ_v(_Gamma_U1D0D0)
-  READ_v(_Gamma_U2D0D1)
+  READ_v(_Gamma_U1D2D2)
+  READ_v(_Gamma_U1D0D1)
+  READ_v(_Gamma_U2D1D1)
   READ_v(_Gamma_U0D1D1)
-  READ_v(_Gamma_U0D0D1)
-  READ_v(_Gamma_U1D1D1)
-  READ_v(_Gamma_U1D0D2)
+  READ_v(_Gamma_U0D1D2)
   READ_v(_Gamma_U0D2D2)
+  READ_v(_Gamma_U2D0D0)
+  READ_v(_Gamma_U2D0D1)
+  READ_v(_Gamma_U1D0D2)
+  READ_v(_Gamma_U2D2D2)
+  READ_v(_Gamma_U1D1D1)
+  READ_v(_Gamma_U2D1D2)
+  READ_v(_Gamma_U1D0D0)
 
 
     unsigned nn = patch->nn;
@@ -68,25 +69,17 @@ void bbn_extrinsic_K_DiDj(Patch_T *const patch)
     double psi4 = 
 pow(psi[ijk], 4);
 
-    double _DB_UD_U0D0 = 
-Beta_U0[ijk]*_Gamma_U0D0D0[ijk] + Beta_U1[ijk]*_Gamma_U0D0D1[ijk] + 
-Beta_U2[ijk]*_Gamma_U0D0D2[ijk] + dBeta_U0D0[ijk];
+    double _DB_UD_U1D2 = 
+Beta_U0[ijk]*_Gamma_U1D0D2[ijk] + Beta_U1[ijk]*_Gamma_U1D1D2[ijk] + 
+Beta_U2[ijk]*_Gamma_U1D2D2[ijk] + dBeta_U1D2[ijk];
 
     double _DB_UD_U0D2 = 
 Beta_U0[ijk]*_Gamma_U0D0D2[ijk] + Beta_U1[ijk]*_Gamma_U0D1D2[ijk] + 
 Beta_U2[ijk]*_Gamma_U0D2D2[ijk] + dBeta_U0D2[ijk];
 
-    double _DB_UD_U1D2 = 
-Beta_U0[ijk]*_Gamma_U1D0D2[ijk] + Beta_U1[ijk]*_Gamma_U1D1D2[ijk] + 
-Beta_U2[ijk]*_Gamma_U1D2D2[ijk] + dBeta_U1D2[ijk];
-
-    double _DB_UD_U2D0 = 
-Beta_U0[ijk]*_Gamma_U2D0D0[ijk] + Beta_U1[ijk]*_Gamma_U2D0D1[ijk] + 
-Beta_U2[ijk]*_Gamma_U2D0D2[ijk] + dBeta_U2D0[ijk];
-
-    double _DB_UD_U0D1 = 
-Beta_U0[ijk]*_Gamma_U0D0D1[ijk] + Beta_U1[ijk]*_Gamma_U0D1D1[ijk] + 
-Beta_U2[ijk]*_Gamma_U0D1D2[ijk] + dBeta_U0D1[ijk];
+    double _DB_UD_U0D0 = 
+Beta_U0[ijk]*_Gamma_U0D0D0[ijk] + Beta_U1[ijk]*_Gamma_U0D0D1[ijk] + 
+Beta_U2[ijk]*_Gamma_U0D0D2[ijk] + dBeta_U0D0[ijk];
 
     double _DB_UD_U1D1 = 
 Beta_U0[ijk]*_Gamma_U1D0D1[ijk] + Beta_U1[ijk]*_Gamma_U1D1D1[ijk] + 
@@ -96,35 +89,26 @@ Beta_U2[ijk]*_Gamma_U1D1D2[ijk] + dBeta_U1D1[ijk];
 Beta_U0[ijk]*_Gamma_U2D0D2[ijk] + Beta_U1[ijk]*_Gamma_U2D1D2[ijk] + 
 Beta_U2[ijk]*_Gamma_U2D2D2[ijk] + dBeta_U2D2[ijk];
 
+    double _DB_UD_U0D1 = 
+Beta_U0[ijk]*_Gamma_U0D0D1[ijk] + Beta_U1[ijk]*_Gamma_U0D1D1[ijk] + 
+Beta_U2[ijk]*_Gamma_U0D1D2[ijk] + dBeta_U0D1[ijk];
+
     double _DB_UD_U2D1 = 
 Beta_U0[ijk]*_Gamma_U2D0D1[ijk] + Beta_U1[ijk]*_Gamma_U2D1D1[ijk] + 
 Beta_U2[ijk]*_Gamma_U2D1D2[ijk] + dBeta_U2D1[ijk];
+
+    double _DB_UD_U2D0 = 
+Beta_U0[ijk]*_Gamma_U2D0D0[ijk] + Beta_U1[ijk]*_Gamma_U2D0D1[ijk] + 
+Beta_U2[ijk]*_Gamma_U2D0D2[ijk] + dBeta_U2D0[ijk];
 
     double _DB_UD_U1D0 = 
 Beta_U0[ijk]*_Gamma_U1D0D0[ijk] + Beta_U1[ijk]*_Gamma_U1D0D1[ijk] + 
 Beta_U2[ijk]*_Gamma_U1D0D2[ijk] + dBeta_U1D0[ijk];
 
-    double _LV_DD_D0D0 = 
-2.0*_DB_UD_U0D0*_gamma_D0D0[ijk] + 2.0*_DB_UD_U1D0*_gamma_D0D1[ijk] + 
-2.0*_DB_UD_U2D0*_gamma_D0D2[ijk] - 0.66666666666666663*
-_gamma_D0D0[ijk]*(_DB_UD_U0D0 + _DB_UD_U1D1 + _DB_UD_U2D2);
-
     double _LV_DD_D1D1 = 
 2.0*_DB_UD_U0D1*_gamma_D0D1[ijk] + 2.0*_DB_UD_U1D1*_gamma_D1D1[ijk] + 
 2.0*_DB_UD_U2D1*_gamma_D1D2[ijk] - 0.66666666666666663*
 _gamma_D1D1[ijk]*(_DB_UD_U0D0 + _DB_UD_U1D1 + _DB_UD_U2D2);
-
-    double _LV_DD_D0D1 = 
-0.33333333333333331*_DB_UD_U0D0*_gamma_D0D1[ijk] + _DB_UD_U0D1*
-_gamma_D0D0[ijk] + _DB_UD_U1D0*_gamma_D1D1[ijk] + 0.33333333333333331*
-_DB_UD_U1D1*_gamma_D0D1[ijk] + _DB_UD_U2D0*_gamma_D1D2[ijk] + 
-_DB_UD_U2D1*_gamma_D0D2[ijk] - 0.66666666666666663*_DB_UD_U2D2*
-_gamma_D0D1[ijk];
-
-    double _LV_DD_D2D2 = 
-2.0*_DB_UD_U0D2*_gamma_D0D2[ijk] + 2.0*_DB_UD_U1D2*_gamma_D1D2[ijk] + 
-2.0*_DB_UD_U2D2*_gamma_D2D2[ijk] - 0.66666666666666663*
-_gamma_D2D2[ijk]*(_DB_UD_U0D0 + _DB_UD_U1D1 + _DB_UD_U2D2);
 
     double _LV_DD_D1D2 = 
 -0.66666666666666663*_DB_UD_U0D0*_gamma_D1D2[ijk] + _DB_UD_U0D1*
@@ -133,6 +117,11 @@ _DB_UD_U1D1*_gamma_D1D2[ijk] + _DB_UD_U1D2*_gamma_D1D1[ijk] +
 _DB_UD_U2D1*_gamma_D2D2[ijk] + 0.33333333333333331*_DB_UD_U2D2*
 _gamma_D1D2[ijk];
 
+    double _LV_DD_D0D0 = 
+2.0*_DB_UD_U0D0*_gamma_D0D0[ijk] + 2.0*_DB_UD_U1D0*_gamma_D0D1[ijk] + 
+2.0*_DB_UD_U2D0*_gamma_D0D2[ijk] - 0.66666666666666663*
+_gamma_D0D0[ijk]*(_DB_UD_U0D0 + _DB_UD_U1D1 + _DB_UD_U2D2);
+
     double _LV_DD_D0D2 = 
 0.33333333333333331*_DB_UD_U0D0*_gamma_D0D2[ijk] + _DB_UD_U0D2*
 _gamma_D0D0[ijk] + _DB_UD_U1D0*_gamma_D1D2[ijk] - 0.66666666666666663*
@@ -140,37 +129,49 @@ _DB_UD_U1D1*_gamma_D0D2[ijk] + _DB_UD_U1D2*_gamma_D0D1[ijk] +
 _DB_UD_U2D0*_gamma_D2D2[ijk] + 0.33333333333333331*_DB_UD_U2D2*
 _gamma_D0D2[ijk];
 
-    double K_DDij_D0D2 = 
-psi4*(0.33333333333333331*K[ijk]*_gamma_D0D2[ijk] + (1.0/2.0)*
-_LV_DD_D0D2*psi[ijk]/eta[ijk]);
+    double _LV_DD_D2D2 = 
+2.0*_DB_UD_U0D2*_gamma_D0D2[ijk] + 2.0*_DB_UD_U1D2*_gamma_D1D2[ijk] + 
+2.0*_DB_UD_U2D2*_gamma_D2D2[ijk] - 0.66666666666666663*
+_gamma_D2D2[ijk]*(_DB_UD_U0D0 + _DB_UD_U1D1 + _DB_UD_U2D2);
 
-    double K_DDij_D1D2 = 
-psi4*(0.33333333333333331*K[ijk]*_gamma_D1D2[ijk] + (1.0/2.0)*
-_LV_DD_D1D2*psi[ijk]/eta[ijk]);
-
-    double K_DDij_D2D2 = 
-psi4*(0.33333333333333331*K[ijk]*_gamma_D2D2[ijk] + (1.0/2.0)*
-_LV_DD_D2D2*psi[ijk]/eta[ijk]);
+    double _LV_DD_D0D1 = 
+0.33333333333333331*_DB_UD_U0D0*_gamma_D0D1[ijk] + _DB_UD_U0D1*
+_gamma_D0D0[ijk] + _DB_UD_U1D0*_gamma_D1D1[ijk] + 0.33333333333333331*
+_DB_UD_U1D1*_gamma_D0D1[ijk] + _DB_UD_U2D0*_gamma_D1D2[ijk] + 
+_DB_UD_U2D1*_gamma_D0D2[ijk] - 0.66666666666666663*_DB_UD_U2D2*
+_gamma_D0D1[ijk];
 
     double K_DDij_D0D0 = 
 psi4*(0.33333333333333331*K[ijk]*_gamma_D0D0[ijk] + (1.0/2.0)*
 _LV_DD_D0D0*psi[ijk]/eta[ijk]);
 
-    double K_DDij_D1D1 = 
-psi4*(0.33333333333333331*K[ijk]*_gamma_D1D1[ijk] + (1.0/2.0)*
-_LV_DD_D1D1*psi[ijk]/eta[ijk]);
-
     double K_DDij_D0D1 = 
 psi4*(0.33333333333333331*K[ijk]*_gamma_D0D1[ijk] + (1.0/2.0)*
 _LV_DD_D0D1*psi[ijk]/eta[ijk]);
 
+    double K_DDij_D2D2 = 
+psi4*(0.33333333333333331*K[ijk]*_gamma_D2D2[ijk] + (1.0/2.0)*
+_LV_DD_D2D2*psi[ijk]/eta[ijk]);
+
+    double K_DDij_D1D2 = 
+psi4*(0.33333333333333331*K[ijk]*_gamma_D1D2[ijk] + (1.0/2.0)*
+_LV_DD_D1D2*psi[ijk]/eta[ijk]);
+
+    double K_DDij_D0D2 = 
+psi4*(0.33333333333333331*K[ijk]*_gamma_D0D2[ijk] + (1.0/2.0)*
+_LV_DD_D0D2*psi[ijk]/eta[ijk]);
+
+    double K_DDij_D1D1 = 
+psi4*(0.33333333333333331*K[ijk]*_gamma_D1D1[ijk] + (1.0/2.0)*
+_LV_DD_D1D1*psi[ijk]/eta[ijk]);
+
 
     /* populating: */
+    K_DiDj_D2D2[ijk] = K_DDij_D2D2;
     K_DiDj_D1D1[ijk] = K_DDij_D1D1;
+    K_DiDj_D1D2[ijk] = K_DDij_D1D2;
+    K_DiDj_D0D2[ijk] = K_DDij_D0D2;
     K_DiDj_D0D1[ijk] = K_DDij_D0D1;
     K_DiDj_D0D0[ijk] = K_DDij_D0D0;
-    K_DiDj_D2D2[ijk] = K_DDij_D2D2;
-    K_DiDj_D0D2[ijk] = K_DDij_D0D2;
-    K_DiDj_D1D2[ijk] = K_DDij_D1D2;
     }/*end of for(ijk = 0; ijk < nn; ++ijk)*/
 }
