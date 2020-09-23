@@ -7,12 +7,18 @@
 #include "bbn_bhfiller.h"
 
 /* these fields to be extrapolated  */
-static const char *const fields_name[] = {
+static const char *const fields_name[] = 
+{
   "psi","eta","K",
   "Beta_U0","Beta_U1","Beta_U2",
-  "_gamma_D2D2","_gamma_D0D2",
   "_gamma_D0D0","_gamma_D0D1",
-  "_gamma_D1D2","_gamma_D1D1",0};
+  "_gamma_D0D2","_gamma_D1D1",
+  "_gamma_D1D2","_gamma_D2D2",
+  "K_DiDj_D0D0","K_DiDj_D0D1",
+  "K_DiDj_D0D2","K_DiDj_D1D1",
+  "K_DiDj_D1D2","K_DiDj_D2D2",
+0/* end */
+};
 
 /* ->: EXIT_SUCCESS if succeeds, otherwise an error code
 // extrapolating inside the BH */
