@@ -621,7 +621,7 @@ static int bhf_ChebTn_Ylm(struct BHFiller_S *const bhf)
   }/* for (fld = 0; fld < nf ++fld) */
   
   /* now fill the BH */
-  printf("|--> Fill the holes ...\n");
+  printf("|--> Fill the hole ...\n");
   fflush(stdout);
   OpenMP_Patch_Pragma(omp parallel for)
   for (p = 0; p < npi; p++)
@@ -1592,7 +1592,7 @@ static int bhf_4th_Poly_Ylm(struct BHFiller_S *const bhf)
   }/* for (fld = 0; fld < nf ++fld) */
   
   /* now fill the BH */
-  printf("|--> Fill the holes ...\n");
+  printf("|--> Fill the hole ...\n");
   fflush(stdout);
   OpenMP_Patch_Pragma(omp parallel for)
   for (p = 0; p < npi; p++)
