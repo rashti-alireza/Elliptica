@@ -31,7 +31,8 @@ C_macro4 = add_field_and_alloc_field(name);
 `  Patch_T *patch = grid->patch[p];`
 `  unsigned nn    = patch->nn;`
 `  unsigned ijk;`
-`  bbn_extrinsic_K_DiDj(patch);`
+`  if (!IsItInsideBHPatch(patch))`
+`    bbn_extrinsic_K_DiDj(patch);`
 ``
 Declare = 
 {
