@@ -75,6 +75,7 @@ void bbn_bam_export_id(void)
 static void interpolate_and_write(Grid_T *const grid,struct interpolation_points *const pnt)
 {
   FILE *file = 0;
+  const int Smoother     = 0;/* 0: no smoother, 1: use smoother. */
   const double rfill     = Pgetd("r_excision");
   const double rmin      = rfill/2.;
   const unsigned npoints = pnt->npoints;
@@ -203,8 +204,11 @@ static void interpolate_and_write(Grid_T *const grid,struct interpolation_points
       free_interpolation(interp_s);
       
       /* smoothing the data inside the BH further */
-      if (0 && IsItInsideBHPatch(patch))
+      if (Smoother)
       {
+        if (!IsItInsideBHPatch(patch))
+          continue;
+      
         double x = pnt->x[p]-patch->c[0];
         double y = pnt->y[p]-patch->c[1];
         double z = pnt->z[p]-patch->c[2];
@@ -226,7 +230,7 @@ static void interpolate_and_write(Grid_T *const grid,struct interpolation_points
           else
              interp_v[p] *= w;
         }  
-      }
+      }/* if (Smoother) */
     }
     
     for (p = 0; p < npoints; ++p)
@@ -435,6 +439,7 @@ bam_output_doctest
     "bam_adm_g_D0D2","bam_adm_g_D1D1",
     "bam_adm_g_D1D2","bam_adm_g_D2D2",
     0};
+  const int Smoother     = 0;/* 0: no smoother, 1: use smoother. */
   const double rfill     = Pgetd("r_excision");
   const double rmin      = rfill/2.;
   const double Ly        = 100;/* length of y-axis */
@@ -566,8 +571,11 @@ bam_output_doctest
       interp_v[p] = execute_interpolation(interp_s);
       free_interpolation(interp_s);
       /* smoothing the data inside the BH further */
-      if (0 && IsItInsideBHPatch(patch))
+      if (Smoother)
       {
+        if (!IsItInsideBHPatch(patch))
+          continue;
+          
         double x = pnt->x[p]-patch->c[0];
         double y = pnt->y[p]-patch->c[1];
         double z = pnt->z[p]-patch->c[2];
@@ -589,7 +597,7 @@ bam_output_doctest
           else
              interp_v[p] *= w;
         }  
-      }
+      }/* if (Smoother) */
     }
     
     /* write */
