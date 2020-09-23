@@ -80,6 +80,12 @@ bhf_init
     const double fr0_gamma_D1D1  = 1;
     const double fr0_gamma_D1D2  = 0;
     const double fr0_gamma_D2D2  = 1;
+    const double fr0_K_DiDj_D0D0 = 0;
+    const double fr0_K_DiDj_D0D1 = 0;
+    const double fr0_K_DiDj_D0D2 = 0;
+    const double fr0_K_DiDj_D1D1 = 0;
+    const double fr0_K_DiDj_D1D2 = 0;
+    const double fr0_K_DiDj_D2D2 = 0;
     const double fr0_K           = 0;
     const double fr0_alpha       = 0.2;
     const double fr0_psi         = 2;
@@ -183,6 +189,36 @@ bhf_init
       {
         bhf->fld[f]->f_r0    = fr0_gamma_D1D1;
         bhf->fld[f]->func_r0 = punc_gamma_D1D1;
+      }
+      else if (strcmp_i(fields_name[f],"K_DiDj_D2D2"))
+      {
+        bhf->fld[f]->f_r0    = fr0_K_DiDj_D2D2;
+        bhf->fld[f]->func_r0 = 0;
+      }
+      else if (strcmp_i(fields_name[f],"K_DiDj_D0D2"))
+      {
+        bhf->fld[f]->f_r0    = fr0_K_DiDj_D0D2;
+        bhf->fld[f]->func_r0 = 0;
+      }
+      else if (strcmp_i(fields_name[f],"K_DiDj_D0D0"))
+      {
+        bhf->fld[f]->f_r0    = fr0_K_DiDj_D0D0;
+        bhf->fld[f]->func_r0 = 0;
+      }
+      else if (strcmp_i(fields_name[f],"K_DiDj_D0D1"))
+      {
+        bhf->fld[f]->f_r0    = fr0_K_DiDj_D0D1;
+        bhf->fld[f]->func_r0 = 0;
+      }
+      else if (strcmp_i(fields_name[f],"K_DiDj_D1D2"))
+      {
+        bhf->fld[f]->f_r0    = fr0_K_DiDj_D1D2;
+        bhf->fld[f]->func_r0 = 0;
+      }
+      else if (strcmp_i(fields_name[f],"K_DiDj_D1D1"))
+      {
+        bhf->fld[f]->f_r0    = fr0_K_DiDj_D1D1;
+        bhf->fld[f]->func_r0 = 0;
       }
       else
         Error0(NO_OPTION);
@@ -457,6 +493,9 @@ static int bhf_ChebTn_Ylm(struct BHFiller_S *const bhf)
 
     bbn_1st_2nd_derivatives_conformal_metric(patch);
     bbn_add_and_take_2nd_derivatives_K(patch);
+    bbn_extrinsic_K_DiDj(patch);
+    bbn_1st_2nd_derivatives_Kij(patch);
+    
     Field_T *R1_f = patch->CoordSysInfo->CubedSphericalCoord->R1_f;
     Field_T *R2_f = patch->CoordSysInfo->CubedSphericalCoord->R2_f;
     if (R1_f)
@@ -597,7 +636,15 @@ static int bhf_ChebTn_Ylm(struct BHFiller_S *const bhf)
     /* loop over all fields to be extrapolated */
     for (f = 0; f < nf; ++f)
     {
-      Field_T *u = patch->pool[Ind(bhf->fld[f]->f)];
+      Field_T *u = 0;
+      /* some fields might not exist, so add them */
+      int f_indx = _Ind(bhf->fld[f]->f);
+      
+      if (f_indx < 0)
+        u = add_field(bhf->fld[f]->f,0,patch,NO);
+      else
+        u = patch->pool[f_indx];
+       
       empty_field(u);
       u->v      = alloc_double(patch->nn);
       double *v = u->v;
@@ -737,6 +784,19 @@ static int bhf_ChebTn_Ylm(struct BHFiller_S *const bhf)
   bbn_rm_1st_2nd_derivatives_conformal_metric
     (GetPatch("right_BH_surrounding_back",grid));
   bbn_rm_1st_2nd_derivatives_conformal_metric
+    (GetPatch("right_BH_surrounding_front",grid));
+  
+  bbn_rm_1st_2nd_derivatives_Kij
+    (GetPatch("right_BH_surrounding_up",grid));
+  bbn_rm_1st_2nd_derivatives_Kij
+    (GetPatch("right_BH_surrounding_down",grid));
+  bbn_rm_1st_2nd_derivatives_Kij
+    (GetPatch("right_BH_surrounding_left",grid));
+  bbn_rm_1st_2nd_derivatives_Kij
+    (GetPatch("right_BH_surrounding_right",grid));
+  bbn_rm_1st_2nd_derivatives_Kij
+    (GetPatch("right_BH_surrounding_back",grid));
+  bbn_rm_1st_2nd_derivatives_Kij
     (GetPatch("right_BH_surrounding_front",grid));
     
   return EXIT_SUCCESS;
