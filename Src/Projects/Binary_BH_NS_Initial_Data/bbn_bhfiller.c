@@ -415,11 +415,11 @@ static void bhf_free(struct BHFiller_S *const bhf)
 }
 
 /* ->: EXIT_SUCESS if succeeds, otherwise an error code.
-// method to fill BH is ChebTn_Ylm:
-// ===============================
+// method to fill BH is ChebTn_Ylm with the following extrapolant:
+// ===============================================================
 //
-// f(r,th,ph) = a0(th,ph)Tn(0,t)+a1(th,ph)Tn(1,t)+
-//              a2(th,ph)Tn(2,t)+a3(th,ph)Tn(3,t)
+// f(r(t),th,ph) = C_{ilm}*ChebT_i(t)*Y_{lm}(th,ph)
+//              
 // where, t = 2*r/rfill-1.
 // the coeffs a's are determinded by demaning the C2 continuity
 // across the AH and the value of the function at r = 0.
