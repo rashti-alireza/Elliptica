@@ -7,12 +7,18 @@
 #include "bbn_bhfiller.h"
 
 /* these fields to be extrapolated  */
-static const char *const fields_name[] = {
-  "psi","eta","K",
+static const char *const fields_name[] = 
+{
+  "psi","eta",
   "Beta_U0","Beta_U1","Beta_U2",
-  "_gamma_D2D2","_gamma_D0D2",
   "_gamma_D0D0","_gamma_D0D1",
-  "_gamma_D1D2","_gamma_D1D1",0};
+  "_gamma_D0D2","_gamma_D1D1",
+  "_gamma_D1D2","_gamma_D2D2",
+  "K_DiDj_D0D0","K_DiDj_D0D1",
+  "K_DiDj_D0D2","K_DiDj_D1D1",
+  "K_DiDj_D1D2","K_DiDj_D2D2",
+0/* end */
+};
 
 /* ->: EXIT_SUCCESS if succeeds, otherwise an error code
 // extrapolating inside the BH */
@@ -74,6 +80,12 @@ bhf_init
     const double fr0_gamma_D1D1  = 1;
     const double fr0_gamma_D1D2  = 0;
     const double fr0_gamma_D2D2  = 1;
+    const double fr0_K_DiDj_D0D0 = 0;
+    const double fr0_K_DiDj_D0D1 = 0;
+    const double fr0_K_DiDj_D0D2 = 0;
+    const double fr0_K_DiDj_D1D1 = 0;
+    const double fr0_K_DiDj_D1D2 = 0;
+    const double fr0_K_DiDj_D2D2 = 0;
     const double fr0_K           = 0;
     const double fr0_alpha       = 0.2;
     const double fr0_psi         = 2;
@@ -177,6 +189,36 @@ bhf_init
       {
         bhf->fld[f]->f_r0    = fr0_gamma_D1D1;
         bhf->fld[f]->func_r0 = punc_gamma_D1D1;
+      }
+      else if (strcmp_i(fields_name[f],"K_DiDj_D2D2"))
+      {
+        bhf->fld[f]->f_r0    = fr0_K_DiDj_D2D2;
+        bhf->fld[f]->func_r0 = 0;
+      }
+      else if (strcmp_i(fields_name[f],"K_DiDj_D0D2"))
+      {
+        bhf->fld[f]->f_r0    = fr0_K_DiDj_D0D2;
+        bhf->fld[f]->func_r0 = 0;
+      }
+      else if (strcmp_i(fields_name[f],"K_DiDj_D0D0"))
+      {
+        bhf->fld[f]->f_r0    = fr0_K_DiDj_D0D0;
+        bhf->fld[f]->func_r0 = 0;
+      }
+      else if (strcmp_i(fields_name[f],"K_DiDj_D0D1"))
+      {
+        bhf->fld[f]->f_r0    = fr0_K_DiDj_D0D1;
+        bhf->fld[f]->func_r0 = 0;
+      }
+      else if (strcmp_i(fields_name[f],"K_DiDj_D1D2"))
+      {
+        bhf->fld[f]->f_r0    = fr0_K_DiDj_D1D2;
+        bhf->fld[f]->func_r0 = 0;
+      }
+      else if (strcmp_i(fields_name[f],"K_DiDj_D1D1"))
+      {
+        bhf->fld[f]->f_r0    = fr0_K_DiDj_D1D1;
+        bhf->fld[f]->func_r0 = 0;
       }
       else
         Error0(NO_OPTION);
@@ -451,6 +493,9 @@ static int bhf_ChebTn_Ylm(struct BHFiller_S *const bhf)
 
     bbn_1st_2nd_derivatives_conformal_metric(patch);
     bbn_add_and_take_2nd_derivatives_K(patch);
+    bbn_extrinsic_K_DiDj(patch);
+    bbn_1st_2nd_derivatives_Kij(patch);
+    
     Field_T *R1_f = patch->CoordSysInfo->CubedSphericalCoord->R1_f;
     Field_T *R2_f = patch->CoordSysInfo->CubedSphericalCoord->R2_f;
     if (R1_f)
@@ -576,7 +621,7 @@ static int bhf_ChebTn_Ylm(struct BHFiller_S *const bhf)
   }/* for (fld = 0; fld < nf ++fld) */
   
   /* now fill the BH */
-  printf("|--> Fill the holes ...\n");
+  printf("|--> Fill the hole ...\n");
   fflush(stdout);
   OpenMP_Patch_Pragma(omp parallel for)
   for (p = 0; p < npi; p++)
@@ -591,7 +636,15 @@ static int bhf_ChebTn_Ylm(struct BHFiller_S *const bhf)
     /* loop over all fields to be extrapolated */
     for (f = 0; f < nf; ++f)
     {
-      Field_T *u = patch->pool[Ind(bhf->fld[f]->f)];
+      Field_T *u = 0;
+      /* some fields might not exist, so add them */
+      int f_indx = _Ind(bhf->fld[f]->f);
+      
+      if (f_indx < 0)
+        u = add_field(bhf->fld[f]->f,0,patch,NO);
+      else
+        u = patch->pool[f_indx];
+       
       empty_field(u);
       u->v      = alloc_double(patch->nn);
       double *v = u->v;
@@ -622,101 +675,104 @@ static int bhf_ChebTn_Ylm(struct BHFiller_S *const bhf)
       }/* for (ijk = 0; ijk < nn; ++ijk) */
     }/* for (f = 0; f < nf ++f) */
     
-    /* _gammaI */
-    REALLOC_v_WRITE_v(_gammaI_U2U2)
-    REALLOC_v_WRITE_v(_gammaI_U0U2)
-    REALLOC_v_WRITE_v(_gammaI_U0U0)
-    REALLOC_v_WRITE_v(_gammaI_U0U1)
-    REALLOC_v_WRITE_v(_gammaI_U1U2)
-    REALLOC_v_WRITE_v(_gammaI_U1U1)
-    READ_v(_gamma_D2D2)
-    READ_v(_gamma_D0D2)
-    READ_v(_gamma_D0D0)
-    READ_v(_gamma_D0D1)
-    READ_v(_gamma_D1D2)
-    READ_v(_gamma_D1D1)
-    READ_v(Beta_U0)
-    READ_v(Beta_U1)
-    READ_v(Beta_U2)
-    REALLOC_v_WRITE_v(B0_U0)
-    REALLOC_v_WRITE_v(B0_U1)
-    REALLOC_v_WRITE_v(B0_U2)
-    bbn_update_B1_U012(patch);
-    READ_v(B1_U0)
-    READ_v(B1_U1)
-    READ_v(B1_U2)
-    
-    for (ijk = 0; ijk < nn; ++ijk)
+    if (0)/* if extrapolating K_ij no longer need below: */
     {
-      B0_U0[ijk] = Beta_U0[ijk]-B1_U0[ijk];
-      B0_U1[ijk] = Beta_U1[ijk]-B1_U1[ijk];
-      B0_U2[ijk] = Beta_U2[ijk]-B1_U2[ijk];
-      /* _gammaI =  _gamma inverse */
-      COMPUTE_gammaI(_gamma_D0D0[ijk],_gamma_D0D1[ijk],_gamma_D0D2[ijk],
-                     _gamma_D0D1[ijk],_gamma_D1D1[ijk],_gamma_D1D2[ijk],
-                     _gamma_D0D2[ijk],_gamma_D1D2[ijk],_gamma_D2D2[ijk])
-                     
-      /* quick test check _gamma * _gammaI = delta */
-      if (0)
-      {
-          double delta_U0D0 = 
-        _gammaI_U0U0[ijk]*_gamma_D0D0[ijk] + _gammaI_U0U1[ijk]*
-        _gamma_D0D1[ijk] + _gammaI_U0U2[ijk]*_gamma_D0D2[ijk];
+     /* _gammaI */
+     REALLOC_v_WRITE_v(_gammaI_U2U2)
+     REALLOC_v_WRITE_v(_gammaI_U0U2)
+     REALLOC_v_WRITE_v(_gammaI_U0U0)
+     REALLOC_v_WRITE_v(_gammaI_U0U1)
+     REALLOC_v_WRITE_v(_gammaI_U1U2)
+     REALLOC_v_WRITE_v(_gammaI_U1U1)
+     READ_v(_gamma_D2D2)
+     READ_v(_gamma_D0D2)
+     READ_v(_gamma_D0D0)
+     READ_v(_gamma_D0D1)
+     READ_v(_gamma_D1D2)
+     READ_v(_gamma_D1D1)
+     READ_v(Beta_U0)
+     READ_v(Beta_U1)
+     READ_v(Beta_U2)
+     REALLOC_v_WRITE_v(B0_U0)
+     REALLOC_v_WRITE_v(B0_U1)
+     REALLOC_v_WRITE_v(B0_U2)
+     bbn_update_B1_U012(patch);
+     READ_v(B1_U0)
+     READ_v(B1_U1)
+     READ_v(B1_U2)
+     
+     for (ijk = 0; ijk < nn; ++ijk)
+     {
+       B0_U0[ijk] = Beta_U0[ijk]-B1_U0[ijk];
+       B0_U1[ijk] = Beta_U1[ijk]-B1_U1[ijk];
+       B0_U2[ijk] = Beta_U2[ijk]-B1_U2[ijk];
+       /* _gammaI =  _gamma inverse */
+       COMPUTE_gammaI(_gamma_D0D0[ijk],_gamma_D0D1[ijk],_gamma_D0D2[ijk],
+                      _gamma_D0D1[ijk],_gamma_D1D1[ijk],_gamma_D1D2[ijk],
+                      _gamma_D0D2[ijk],_gamma_D1D2[ijk],_gamma_D2D2[ijk])
+                      
+       /* quick test check _gamma * _gammaI = delta */
+       if (0)
+       {
+           double delta_U0D0 = 
+         _gammaI_U0U0[ijk]*_gamma_D0D0[ijk] + _gammaI_U0U1[ijk]*
+         _gamma_D0D1[ijk] + _gammaI_U0U2[ijk]*_gamma_D0D2[ijk];
 
-          double delta_U0D1 = 
-        _gammaI_U0U0[ijk]*_gamma_D0D1[ijk] + _gammaI_U0U1[ijk]*
-        _gamma_D1D1[ijk] + _gammaI_U0U2[ijk]*_gamma_D1D2[ijk];
+           double delta_U0D1 = 
+         _gammaI_U0U0[ijk]*_gamma_D0D1[ijk] + _gammaI_U0U1[ijk]*
+         _gamma_D1D1[ijk] + _gammaI_U0U2[ijk]*_gamma_D1D2[ijk];
 
-          double delta_U0D2 = 
-        _gammaI_U0U0[ijk]*_gamma_D0D2[ijk] + _gammaI_U0U1[ijk]*
-        _gamma_D1D2[ijk] + _gammaI_U0U2[ijk]*_gamma_D2D2[ijk];
+           double delta_U0D2 = 
+         _gammaI_U0U0[ijk]*_gamma_D0D2[ijk] + _gammaI_U0U1[ijk]*
+         _gamma_D1D2[ijk] + _gammaI_U0U2[ijk]*_gamma_D2D2[ijk];
 
-          double delta_U1D2 = 
-        _gammaI_U0U1[ijk]*_gamma_D0D2[ijk] + _gammaI_U1U1[ijk]*
-        _gamma_D1D2[ijk] + _gammaI_U1U2[ijk]*_gamma_D2D2[ijk];
+           double delta_U1D2 = 
+         _gammaI_U0U1[ijk]*_gamma_D0D2[ijk] + _gammaI_U1U1[ijk]*
+         _gamma_D1D2[ijk] + _gammaI_U1U2[ijk]*_gamma_D2D2[ijk];
 
-          double delta_U1D0 = 
-        _gammaI_U0U1[ijk]*_gamma_D0D0[ijk] + _gammaI_U1U1[ijk]*
-        _gamma_D0D1[ijk] + _gammaI_U1U2[ijk]*_gamma_D0D2[ijk];
+           double delta_U1D0 = 
+         _gammaI_U0U1[ijk]*_gamma_D0D0[ijk] + _gammaI_U1U1[ijk]*
+         _gamma_D0D1[ijk] + _gammaI_U1U2[ijk]*_gamma_D0D2[ijk];
 
-         double delta_U1D1 = 
-        _gammaI_U0U1[ijk]*_gamma_D0D1[ijk] + _gammaI_U1U1[ijk]*
-        _gamma_D1D1[ijk] + _gammaI_U1U2[ijk]*_gamma_D1D2[ijk];
+          double delta_U1D1 = 
+         _gammaI_U0U1[ijk]*_gamma_D0D1[ijk] + _gammaI_U1U1[ijk]*
+         _gamma_D1D1[ijk] + _gammaI_U1U2[ijk]*_gamma_D1D2[ijk];
 
-          double delta_U2D2 = 
-        _gammaI_U0U2[ijk]*_gamma_D0D2[ijk] + _gammaI_U1U2[ijk]*
-        _gamma_D1D2[ijk] + _gammaI_U2U2[ijk]*_gamma_D2D2[ijk];
+           double delta_U2D2 = 
+         _gammaI_U0U2[ijk]*_gamma_D0D2[ijk] + _gammaI_U1U2[ijk]*
+         _gamma_D1D2[ijk] + _gammaI_U2U2[ijk]*_gamma_D2D2[ijk];
 
-          double delta_U2D0 = 
-        _gammaI_U0U2[ijk]*_gamma_D0D0[ijk] + _gammaI_U1U2[ijk]*
-        _gamma_D0D1[ijk] + _gammaI_U2U2[ijk]*_gamma_D0D2[ijk];
+           double delta_U2D0 = 
+         _gammaI_U0U2[ijk]*_gamma_D0D0[ijk] + _gammaI_U1U2[ijk]*
+         _gamma_D0D1[ijk] + _gammaI_U2U2[ijk]*_gamma_D0D2[ijk];
 
-          double delta_U2D1 = 
-        _gammaI_U0U2[ijk]*_gamma_D0D1[ijk] + _gammaI_U1U2[ijk]*
-        _gamma_D1D1[ijk] + _gammaI_U2U2[ijk]*_gamma_D1D2[ijk];
+           double delta_U2D1 = 
+         _gammaI_U0U2[ijk]*_gamma_D0D1[ijk] + _gammaI_U1U2[ijk]*
+         _gamma_D1D1[ijk] + _gammaI_U2U2[ijk]*_gamma_D1D2[ijk];
 
-        if(!EQL(delta_U1D1,1))  Error0("_gammaI is not correct!\n");
-        if(!EQL(delta_U0D1,0))  Error0("_gammaI is not correct!\n");
-        if(!EQL(delta_U0D2,0))  Error0("_gammaI is not correct!\n");
-        if(!EQL(delta_U1D2,0))  Error0("_gammaI is not correct!\n");
-        if(!EQL(delta_U0D0,1))  Error0("_gammaI is not correct!\n");
-        if(!EQL(delta_U2D1,0))  Error0("_gammaI is not correct!\n");
-        if(!EQL(delta_U2D2,1))  Error0("_gammaI is not correct!\n");
-        if(!EQL(delta_U2D0,0))  Error0("_gammaI is not correct!\n");
-        if(!EQL(delta_U1D0,0))  Error0("_gammaI is not correct!\n");
-      }
-    }/* for (ijk = 0; ijk < nn; ++ijk) */
-    /* update derivatives */
-    bbn_update_derivative_Beta_U0(patch);
-    bbn_update_derivative_Beta_U1(patch);
-    bbn_update_derivative_Beta_U2(patch);
-    bbn_update_derivative_psi(patch);
-    bbn_update_derivative_eta(patch);
-    
-    /* for K_{ij} inside BH patches */
-    bbn_1st_derivatives_conformal_metric(patch);
-    bbn_free_data_Gamma_patch(patch);
-    bbn_rm_1st_derivatives_conformal_metric(patch);
+         if(!EQL(delta_U1D1,1))  Error0("_gammaI is not correct!\n");
+         if(!EQL(delta_U0D1,0))  Error0("_gammaI is not correct!\n");
+         if(!EQL(delta_U0D2,0))  Error0("_gammaI is not correct!\n");
+         if(!EQL(delta_U1D2,0))  Error0("_gammaI is not correct!\n");
+         if(!EQL(delta_U0D0,1))  Error0("_gammaI is not correct!\n");
+         if(!EQL(delta_U2D1,0))  Error0("_gammaI is not correct!\n");
+         if(!EQL(delta_U2D2,1))  Error0("_gammaI is not correct!\n");
+         if(!EQL(delta_U2D0,0))  Error0("_gammaI is not correct!\n");
+         if(!EQL(delta_U1D0,0))  Error0("_gammaI is not correct!\n");
+       }
+     }/* for (ijk = 0; ijk < nn; ++ijk) */
+     /* update derivatives */
+     bbn_update_derivative_Beta_U0(patch);
+     bbn_update_derivative_Beta_U1(patch);
+     bbn_update_derivative_Beta_U2(patch);
+     bbn_update_derivative_psi(patch);
+     bbn_update_derivative_eta(patch);
+     
+     /* for K_{ij} inside BH patches */
+     bbn_1st_derivatives_conformal_metric(patch);
+     bbn_free_data_Gamma_patch(patch);
+     bbn_rm_1st_derivatives_conformal_metric(patch);
+    }
   }/* for (p = 0; p < npi; p++) */
   
   /* free */
@@ -731,6 +787,19 @@ static int bhf_ChebTn_Ylm(struct BHFiller_S *const bhf)
   bbn_rm_1st_2nd_derivatives_conformal_metric
     (GetPatch("right_BH_surrounding_back",grid));
   bbn_rm_1st_2nd_derivatives_conformal_metric
+    (GetPatch("right_BH_surrounding_front",grid));
+  
+  bbn_rm_1st_2nd_derivatives_Kij
+    (GetPatch("right_BH_surrounding_up",grid));
+  bbn_rm_1st_2nd_derivatives_Kij
+    (GetPatch("right_BH_surrounding_down",grid));
+  bbn_rm_1st_2nd_derivatives_Kij
+    (GetPatch("right_BH_surrounding_left",grid));
+  bbn_rm_1st_2nd_derivatives_Kij
+    (GetPatch("right_BH_surrounding_right",grid));
+  bbn_rm_1st_2nd_derivatives_Kij
+    (GetPatch("right_BH_surrounding_back",grid));
+  bbn_rm_1st_2nd_derivatives_Kij
     (GetPatch("right_BH_surrounding_front",grid));
     
   return EXIT_SUCCESS;
@@ -1526,7 +1595,7 @@ static int bhf_4th_Poly_Ylm(struct BHFiller_S *const bhf)
   }/* for (fld = 0; fld < nf ++fld) */
   
   /* now fill the BH */
-  printf("|--> Fill the holes ...\n");
+  printf("|--> Fill the hole ...\n");
   fflush(stdout);
   OpenMP_Patch_Pragma(omp parallel for)
   for (p = 0; p < npi; p++)

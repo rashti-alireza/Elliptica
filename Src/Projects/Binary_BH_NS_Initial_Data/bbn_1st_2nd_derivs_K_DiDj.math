@@ -1,0 +1,121 @@
+# Derivatives: 1st and 2nd order derivative of extrisic curvature
+
+# Manifold or grid Dimension
+Dimension = 3;
+
+# point on manifold shown by:
+Point = ijk;
+
+C_macro  = add_field_and_get_field(name);
+C_macro1 = DECLARE_FIELD(name);
+
+`#include "bbn_headers.h"`
+`#include "maths_calculus_lib.h"`
+``
+`#define add_field_and_get_field(name) \`
+` ADD_FIELD(name); DECLARE_FIELD(name);`
+``
+`void bbn_1st_2nd_derivatives_Kij(Patch_T *const patch);`
+`void bbn_1st_2nd_derivatives_Kij(Patch_T *const patch)`
+`{`
+
+## add to fields on M
+Declare = 
+{
+ # 3d metric
+ (obj = Field,name = K_DiDj, rank = DD, C_macro1);
+
+ # d 3d metric
+ (obj = Field,name = dK_DiDj, rank = DDD, C_macro);
+
+ # dd 3d metric
+ (obj = Field,name = ddK_DiDj, rank = DDDD, C_macro);
+
+}
+# symmetries:
+Symm[K_DiDj(i,j)       = K_DiDj(j,i)];
+Symm[dK_DiDj(i,j,k)    = dK_DiDj(j,i,k)];
+Symm[ddK_DiDj(i,j,k,l) = ddK_DiDj(j,i,k,l)];
+
+## populate the derivatives`
+``
+`  dK_DiDj_D1D1D2->v=Partial_Derivative(K_DiDj_D1D1,"z");`
+`  dK_DiDj_D2D2D0->v=Partial_Derivative(K_DiDj_D2D2,"x");`
+`  dK_DiDj_D0D2D0->v=Partial_Derivative(K_DiDj_D0D2,"x");`
+`  dK_DiDj_D1D1D1->v=Partial_Derivative(K_DiDj_D1D1,"y");`
+`  dK_DiDj_D0D1D2->v=Partial_Derivative(K_DiDj_D0D1,"z");`
+`  dK_DiDj_D0D1D1->v=Partial_Derivative(K_DiDj_D0D1,"y");`
+`  dK_DiDj_D0D0D1->v=Partial_Derivative(K_DiDj_D0D0,"y");`
+`  dK_DiDj_D0D1D0->v=Partial_Derivative(K_DiDj_D0D1,"x");`
+`  dK_DiDj_D1D2D1->v=Partial_Derivative(K_DiDj_D1D2,"y");`
+`  dK_DiDj_D2D2D1->v=Partial_Derivative(K_DiDj_D2D2,"y");`
+`  dK_DiDj_D2D2D2->v=Partial_Derivative(K_DiDj_D2D2,"z");`
+`  dK_DiDj_D0D0D2->v=Partial_Derivative(K_DiDj_D0D0,"z");`
+`  dK_DiDj_D0D2D1->v=Partial_Derivative(K_DiDj_D0D2,"y");`
+`  dK_DiDj_D1D2D0->v=Partial_Derivative(K_DiDj_D1D2,"x");`
+`  dK_DiDj_D0D0D0->v=Partial_Derivative(K_DiDj_D0D0,"x");`
+`  dK_DiDj_D0D2D2->v=Partial_Derivative(K_DiDj_D0D2,"z");`
+`  dK_DiDj_D1D1D0->v=Partial_Derivative(K_DiDj_D1D1,"x");`
+`  dK_DiDj_D1D2D2->v=Partial_Derivative(K_DiDj_D1D2,"z");`
+`  ddK_DiDj_D0D0D0D2->v=Partial_Derivative(dK_DiDj_D0D0D0,"z");`
+`  ddK_DiDj_D0D1D1D1->v=Partial_Derivative(dK_DiDj_D0D1D1,"y");`
+`  ddK_DiDj_D2D2D2D2->v=Partial_Derivative(dK_DiDj_D2D2D2,"z");`
+`  ddK_DiDj_D0D0D0D1->v=Partial_Derivative(dK_DiDj_D0D0D0,"y");`
+`  ddK_DiDj_D0D1D0D0->v=Partial_Derivative(dK_DiDj_D0D1D0,"x");`
+`  ddK_DiDj_D0D2D2D2->v=Partial_Derivative(dK_DiDj_D0D2D2,"z");`
+`  ddK_DiDj_D0D2D1D2->v=Partial_Derivative(dK_DiDj_D0D2D1,"z");`
+`  ddK_DiDj_D1D1D0D2->v=Partial_Derivative(dK_DiDj_D1D1D0,"z");`
+`  ddK_DiDj_D2D2D0D0->v=Partial_Derivative(dK_DiDj_D2D2D0,"x");`
+`  ddK_DiDj_D1D1D0D1->v=Partial_Derivative(dK_DiDj_D1D1D0,"y");`
+`  ddK_DiDj_D1D2D2D0->v=Partial_Derivative(dK_DiDj_D1D2D2,"x");`
+`  ddK_DiDj_D2D2D2D0->v=Partial_Derivative(dK_DiDj_D2D2D2,"x");`
+`  ddK_DiDj_D0D0D1D2->v=Partial_Derivative(dK_DiDj_D0D0D1,"z");`
+`  ddK_DiDj_D0D2D1D0->v=Partial_Derivative(dK_DiDj_D0D2D1,"x");`
+`  ddK_DiDj_D0D1D2D2->v=Partial_Derivative(dK_DiDj_D0D1D2,"z");`
+`  ddK_DiDj_D0D0D2D2->v=Partial_Derivative(dK_DiDj_D0D0D2,"z");`
+`  ddK_DiDj_D0D0D1D0->v=Partial_Derivative(dK_DiDj_D0D0D1,"x");`
+`  ddK_DiDj_D1D2D1D0->v=Partial_Derivative(dK_DiDj_D1D2D1,"x");`
+`  ddK_DiDj_D1D1D2D0->v=Partial_Derivative(dK_DiDj_D1D1D2,"x");`
+`  ddK_DiDj_D0D1D1D0->v=Partial_Derivative(dK_DiDj_D0D1D1,"x");`
+`  ddK_DiDj_D2D2D1D1->v=Partial_Derivative(dK_DiDj_D2D2D1,"y");`
+`  ddK_DiDj_D2D2D0D2->v=Partial_Derivative(dK_DiDj_D2D2D0,"z");`
+`  ddK_DiDj_D2D2D1D2->v=Partial_Derivative(dK_DiDj_D2D2D1,"z");`
+`  ddK_DiDj_D0D1D0D1->v=Partial_Derivative(dK_DiDj_D0D1D0,"y");`
+`  ddK_DiDj_D0D1D2D1->v=Partial_Derivative(dK_DiDj_D0D1D2,"y");`
+`  ddK_DiDj_D0D0D2D0->v=Partial_Derivative(dK_DiDj_D0D0D2,"x");`
+`  ddK_DiDj_D1D1D2D2->v=Partial_Derivative(dK_DiDj_D1D1D2,"z");`
+`  ddK_DiDj_D1D2D2D2->v=Partial_Derivative(dK_DiDj_D1D2D2,"z");`
+`  ddK_DiDj_D2D2D0D1->v=Partial_Derivative(dK_DiDj_D2D2D0,"y");`
+`  ddK_DiDj_D0D2D2D1->v=Partial_Derivative(dK_DiDj_D0D2D2,"y");`
+`  ddK_DiDj_D0D0D1D1->v=Partial_Derivative(dK_DiDj_D0D0D1,"y");`
+`  ddK_DiDj_D1D1D1D0->v=Partial_Derivative(dK_DiDj_D1D1D1,"x");`
+`  ddK_DiDj_D1D1D1D1->v=Partial_Derivative(dK_DiDj_D1D1D1,"y");`
+`  ddK_DiDj_D0D2D2D0->v=Partial_Derivative(dK_DiDj_D0D2D2,"x");`
+`  ddK_DiDj_D2D2D1D0->v=Partial_Derivative(dK_DiDj_D2D2D1,"x");`
+`  ddK_DiDj_D1D2D1D1->v=Partial_Derivative(dK_DiDj_D1D2D1,"y");`
+`  ddK_DiDj_D0D1D2D0->v=Partial_Derivative(dK_DiDj_D0D1D2,"x");`
+`  ddK_DiDj_D0D2D0D2->v=Partial_Derivative(dK_DiDj_D0D2D0,"z");`
+`  ddK_DiDj_D1D2D2D1->v=Partial_Derivative(dK_DiDj_D1D2D2,"y");`
+`  ddK_DiDj_D0D2D1D1->v=Partial_Derivative(dK_DiDj_D0D2D1,"y");`
+`  ddK_DiDj_D0D0D0D0->v=Partial_Derivative(dK_DiDj_D0D0D0,"x");`
+`  ddK_DiDj_D0D2D0D0->v=Partial_Derivative(dK_DiDj_D0D2D0,"x");`
+`  ddK_DiDj_D0D1D1D2->v=Partial_Derivative(dK_DiDj_D0D1D1,"z");`
+`  ddK_DiDj_D1D2D0D0->v=Partial_Derivative(dK_DiDj_D1D2D0,"x");`
+`  ddK_DiDj_D0D2D0D1->v=Partial_Derivative(dK_DiDj_D0D2D0,"y");`
+`  ddK_DiDj_D0D0D2D1->v=Partial_Derivative(dK_DiDj_D0D0D2,"y");`
+`  ddK_DiDj_D1D1D2D1->v=Partial_Derivative(dK_DiDj_D1D1D2,"y");`
+`  ddK_DiDj_D1D1D0D0->v=Partial_Derivative(dK_DiDj_D1D1D0,"x");`
+`  ddK_DiDj_D1D1D1D2->v=Partial_Derivative(dK_DiDj_D1D1D1,"z");`
+`  ddK_DiDj_D1D2D0D1->v=Partial_Derivative(dK_DiDj_D1D2D0,"y");`
+`  ddK_DiDj_D1D2D0D2->v=Partial_Derivative(dK_DiDj_D1D2D0,"z");`
+`  ddK_DiDj_D0D1D0D2->v=Partial_Derivative(dK_DiDj_D0D1D0,"z");`
+`  ddK_DiDj_D1D2D1D2->v=Partial_Derivative(dK_DiDj_D1D2D1,"z");`
+`  ddK_DiDj_D2D2D2D1->v=Partial_Derivative(dK_DiDj_D2D2D2,"y");`
+``
+`}`
+
+# test
+#Command["cat"];
+#Command["rm"];
+
+

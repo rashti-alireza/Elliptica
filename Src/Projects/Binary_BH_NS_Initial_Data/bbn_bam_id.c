@@ -427,7 +427,7 @@ bam_output_doctest
   )
 {
   const char *const fields_name[] = {
-    "bam_chi","psi","eta","K",
+    "bam_chi","psi","eta",
     "_gamma_D2D2","_gamma_D0D2",
     "_gamma_D0D0","_gamma_D0D1",
     "_gamma_D1D2","_gamma_D1D1",

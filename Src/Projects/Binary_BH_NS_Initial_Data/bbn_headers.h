@@ -157,7 +157,9 @@ bbn_bhfiller
 
 double bbn_bhf_smoother(const double r, const double rmax,const double rmin);
 void bbn_bhf_ChebTn_extrapolate (double *const a,const double fr0,const double fr1,const double dfdr,const double ddfddr,const double rfill,const unsigned N);
-
+void bbn_rm_1st_2nd_derivatives_Kij(Patch_T *const patch);
+void bbn_1st_2nd_derivatives_Kij(Patch_T *const patch);
+void bbn_extrinsic_K_DiDj(Patch_T *const patch);
 
 #endif
 
