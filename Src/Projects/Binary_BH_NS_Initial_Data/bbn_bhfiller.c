@@ -74,7 +74,7 @@ bhf_init
     const double fr0_gamma_D1D1  = 1;
     const double fr0_gamma_D1D2  = 0;
     const double fr0_gamma_D2D2  = 1;
-    const double fr0_K           = 0.5;
+    const double fr0_K           = 0;
     const double fr0_alpha       = 0.2;
     const double fr0_psi         = 2;
     const double fr0_eta         = fr0_alpha*fr0_psi;
