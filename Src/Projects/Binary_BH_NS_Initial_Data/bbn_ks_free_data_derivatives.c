@@ -40,7 +40,7 @@ static void
 function_name
   (
   char *const fname/* function name */,
-  const char *const stem/* eg. bbn_ks_X */,
+  const char *const stem/* eg. bbn_ks_X(x,y,z) */,
   const char *const derive/* x,y,z */
   )
 {
