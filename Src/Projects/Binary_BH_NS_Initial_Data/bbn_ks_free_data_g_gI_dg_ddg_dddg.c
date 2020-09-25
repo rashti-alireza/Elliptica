@@ -54,12 +54,13 @@ void bbn_free_data_g_gI_analytic(
   By =  Omega_BHNS*(BH_center_x-x_CM);
   Bz = Pgetd("BH_Vz");
   B2 = Pow2(Bx)+Pow2(By)+Pow2(Bz);
-
+  
+  assert(!EQL(B2,0));
   /* rotation */
   if (!EQL(chi,0))/* otherwise tR is 0 */
   {
-    phiz = -arctan(chi_U1,chi_U0);
-    phiy = -acos(chi_U2/chi);
+    phiz = arctan(chi_U1,chi_U0);
+    phiy = acos(chi_U2/chi);
     assert(isfinite(phiy));
   }
     double *const _gamma_D2D2 = get_v("_gamma_D2D2",params);
@@ -261,12 +262,13 @@ void bbn_free_data_dg_analytic(
   By =  Omega_BHNS*(BH_center_x-x_CM);
   Bz = Pgetd("BH_Vz");
   B2 = Pow2(Bx)+Pow2(By)+Pow2(Bz);
-
+  
+  assert(!EQL(B2,0));
   /* rotation */
   if (!EQL(chi,0))/* otherwise tR is 0 */
   {
-    phiz = -arctan(chi_U1,chi_U0);
-    phiy = -acos(chi_U2/chi);
+    phiz = arctan(chi_U1,chi_U0);
+    phiy = acos(chi_U2/chi);
     assert(isfinite(phiy));
   }
   
@@ -546,12 +548,13 @@ void bbn_free_data_ddg_analytic(
   By =  Omega_BHNS*(BH_center_x-x_CM);
   Bz = Pgetd("BH_Vz");
   B2 = Pow2(Bx)+Pow2(By)+Pow2(Bz);
-
+  
+  assert(!EQL(B2,0));
   /* rotation */
   if (!EQL(chi,0))/* otherwise tR is 0 */
   {
-    phiz = -arctan(chi_U1,chi_U0);
-    phiy = -acos(chi_U2/chi);
+    phiz = arctan(chi_U1,chi_U0);
+    phiy = acos(chi_U2/chi);
     assert(isfinite(phiy));
   }
 
@@ -1711,12 +1714,13 @@ void bbn_free_data_dddg_analytic(
   By =  Omega_BHNS*(BH_center_x-x_CM);
   Bz = Pgetd("BH_Vz");
   B2 = Pow2(Bx)+Pow2(By)+Pow2(Bz);
-
+  
+  assert(!EQL(B2,0));
   /* rotation */
   if (!EQL(chi,0))/* otherwise tR is 0 */
   {
-    phiz = -arctan(chi_U1,chi_U0);
-    phiy = -acos(chi_U2/chi);
+    phiz = arctan(chi_U1,chi_U0);
+    phiy = acos(chi_U2/chi);
     assert(isfinite(phiy));
   }
 double *const _dddgamma_D0D1D2D2D1 = get_v("_dddgamma_D0D1D2D2D1",params);

@@ -1,4 +1,8 @@
 ### Kerr-Schild free data _gamma,_gammaI and their derivatives.
+### NOTE: there is a sign difference for rotation matrices between
+### here and 'rotation_transformation' function in Transformation module
+### which accounts for active and passive transformation.
+
 
 #########################
 ### H O W  T O  U S E ###
@@ -277,11 +281,12 @@ Command["sed -i 's/_,/,/g'"];
 `print('  Bz = Pgetd("BH_Vz");')`
 `print('  B2 = Pow2(Bx)+Pow2(By)+Pow2(Bz);')`
 `print('')`
+`print('  assert(!EQL(B2,0));')`
 `print('  /* rotation */')`
 `print('  if (!EQL(chi,0))/* otherwise tR is 0 */')`
 `print('  {')`
-`print('    phiz = -arctan(chi_U1,chi_U0);')`
-`print('    phiy = -acos(chi_U2/chi);')`
+`print('    phiz = arctan(chi_U1,chi_U0);')`
+`print('    phiy = acos(chi_U2/chi);')`
 `print('    assert(isfinite(phiy));')`
 `print('  }')`
 ``
@@ -423,11 +428,12 @@ Command["sed -i 's/_,/,/g'"];
 `print('  Bz = Pgetd("BH_Vz");')`
 `print('  B2 = Pow2(Bx)+Pow2(By)+Pow2(Bz);')`
 `print('')`
+`print('  assert(!EQL(B2,0));')`
 `print('  /* rotation */')`
 `print('  if (!EQL(chi,0))/* otherwise tR is 0 */')`
 `print('  {')`
-`print('    phiz = -arctan(chi_U1,chi_U0);')`
-`print('    phiy = -acos(chi_U2/chi);')`
+`print('    phiz = arctan(chi_U1,chi_U0);')`
+`print('    phiy = acos(chi_U2/chi);')`
 `print('    assert(isfinite(phiy));')`
 `print('  }')`
 `print('  ')`
@@ -555,11 +561,12 @@ Command["sed -i 's/_,/,/g'"];
 `print('  Bz = Pgetd("BH_Vz");')`
 `print('  B2 = Pow2(Bx)+Pow2(By)+Pow2(Bz);')`
 `print('')`
+`print('  assert(!EQL(B2,0));')`
 `print('  /* rotation */')`
 `print('  if (!EQL(chi,0))/* otherwise tR is 0 */')`
 `print('  {')`
-`print('    phiz = -arctan(chi_U1,chi_U0);')`
-`print('    phiy = -acos(chi_U2/chi);')`
+`print('    phiz = arctan(chi_U1,chi_U0);')`
+`print('    phiy = acos(chi_U2/chi);')`
 `print('    assert(isfinite(phiy));')`
 `print('  }')`
 `print('')`
@@ -828,11 +835,12 @@ Command["sed -i 's/_,/,/g'"];
 `print('  Bz = Pgetd("BH_Vz");')`
 `print('  B2 = Pow2(Bx)+Pow2(By)+Pow2(Bz);')`
 `print('')`
+`print('  assert(!EQL(B2,0));')`
 `print('  /* rotation */')`
 `print('  if (!EQL(chi,0))/* otherwise tR is 0 */')`
 `print('  {')`
-`print('    phiz = -arctan(chi_U1,chi_U0);')`
-`print('    phiy = -acos(chi_U2/chi);')`
+`print('    phiz = arctan(chi_U1,chi_U0);')`
+`print('    phiy = acos(chi_U2/chi);')`
 `print('    assert(isfinite(phiy));')`
 `print('  }')`
 `print('double *const _dddgamma_D0D1D2D2D1 = get_v("_dddgamma_D0D1D2D2D1",params);')`
