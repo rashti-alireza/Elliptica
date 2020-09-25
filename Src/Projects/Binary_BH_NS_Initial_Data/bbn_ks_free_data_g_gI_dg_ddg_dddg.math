@@ -216,7 +216,7 @@ Command["sed -i 's/_,/,/g'"];
 ``
 ``
 `print('#include "bbn_headers.h"')`
-`print('#include "bbn_ks_free_date_analytic.h"')`
+`print('#include "bbn_ks_free_data_analytic.h"')`
 
 ### NOTE the function "get_v" is for geting the value of a field
 ### according to the parameter and the given name. it is used for

@@ -211,7 +211,7 @@ C_macro3=print('KS_func_def_macro(name)KS_func_args_macro')\n\
 `kt,k0,k1,k2 = get_ks(Bx,By,Bz,B2,phiy,phiz)`
 `c           = 2*bbn_ks_H(x,y,z)*bbn_ks_rolloff(x,y,z)`
 ``
-`print('#include "bbn_ks_free_date_analytic.h"')`
+`print('#include "bbn_ks_free_data_analytic.h"')`
 ``
 Declare =
 {

@@ -1,4 +1,4 @@
-#include "bbn_ks_free_date_analytic.h"
+#include "bbn_ks_free_data_analytic.h"
 
 #define MAX_ARR (100)
 

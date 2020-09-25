@@ -1,5 +1,5 @@
 #include "bbn_headers.h"
-#include "bbn_ks_free_date_analytic.h"
+#include "bbn_ks_free_data_analytic.h"
 void bbn_free_data_g_gI_analytic(
         Patch_T *const patch,
         double *(*get_v)(const char *const fname,void *params),

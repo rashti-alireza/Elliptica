@@ -1,4 +1,4 @@
-#include "bbn_ks_free_date_analytic.h"
+#include "bbn_ks_free_data_analytic.h"
 KS_func_def_macro(k0) KS_func_args_macro;
 KS_func_def_macro(dk0_D2) KS_func_args_macro;
 KS_func_def_macro(dk0_D0) KS_func_args_macro;
