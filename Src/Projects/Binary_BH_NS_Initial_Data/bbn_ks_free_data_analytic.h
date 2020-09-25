@@ -1,5 +1,18 @@
 #include "bbn_headers.h"
 
+/* for external variables DON'T CHANGE THIS */
+#define KS_glob_var(x) bbn_ks_glob##x
+
+#define M_BH    KS_glob_var(M_BH) /* BH mass */
+#define a_BH    KS_glob_var(a_BH) /* BH spin */
+#define phiy    KS_glob_var(phiy) /* rotation angel */
+#define phiz    KS_glob_var(phiz) /* rotation angel */
+#define Bx      KS_glob_var(Bx) /* B=v/c (boost) */
+#define By      KS_glob_var(By) /* B=v/c (boost) */
+#define Bz      KS_glob_var(Bz) /* B=v/c (boost) */
+#define B2      KS_glob_var(B2) /* B^i B_i */
+#define r0      KS_glob_var(r0) /* roll off radius */
+#define Lambda  KS_glob_var(Lambda) /* flat data => 0, kerr-schild => 1 */
 
 /* mathematica */
 #define Cos(a) cos(a)
@@ -17,7 +30,6 @@
 /* concatenate */
 #define Pattern(a,b) a##_##b
 
-
 /* function prefix DON NOT change this prefix macro some fields 
 // using this prefix which then you must change them too.*/
 #define KS_prefix           "bbn_ks_"
@@ -28,44 +40,29 @@
 
 /* function args */
 #define KS_func_args_macro  \
-  (const double x,const double y, const double z,/* Cartesian coords */ \
-   const double M_BH,const double a_BH,/* mass and spin of BH */ \
-   const double phiy, const double phiz,/* rotation angels */\
-   const double Bx, const double By,const double Bz,/* B=v/c (boost) */\
-   const double B2/* B^i B_i */,\
-   const double r0/* roll off radius */,\
-   const double Lambda/* flat data => 0, kerr-schild => 1 */)
+  (const double x __attribute__((unused)),\
+   const double y __attribute__((unused)) , \
+   const double z __attribute__((unused))/* Cartesian coords */)
 
 /* pass special argument to each function */   
 #define KS_func_pass_args_macro  \
-  (x,y,z,M_BH,a_BH,phiy,phiz,Bx,By,Bz,B2,r0,Lambda)
+  (x,y,z)
 
 /* derivative function args */
 #define KS_deriv_func_args_macro  \
   (const char *const stem/* ex. bbn_ks_k */,\
    const char *const derivs/* ex."x,y,z" */,\
-   const double x,const double y, const double z,/* Cartesian coords */ \
-   const double M_BH,const double a_BH,/* mass and spin of BH */ \
-   const double phiy, const double phiz,/* rotation angels */\
-   const double Bx, const double By,const double Bz,/* B=v/c (boost) */\
-   const double B2/* B^i B_i */,\
-   const double r0/* roll off radius */,\
-   const double Lambda/* flat data => 0, kerr-schild => 1 */)
+   const double x,const double y, const double z/* Cartesian coords */)
 
 /* derivative */
 #define Derivative(a,...) \
   bbn_ks_derivative \
-  (#a,#__VA_ARGS__,x,y,z, \
-   M_BH,a_BH,phiy,phiz,Bx,By,Bz,\
-   B2,r0,Lambda)
-  
+  (#a,#__VA_ARGS__,x,y,z)
 
 /* derivative */
 #define D(a,...) \
   bbn_ks_derivative \
-  (#a,#__VA_ARGS__,x,y,z, \
-   M_BH,a_BH,phiy,phiz,Bx,By,Bz,\
-   B2,r0,Lambda)
+  (#a,#__VA_ARGS__,x,y,z)
 
 /* bbn_ks type def function. FIND the derivative data base in the 
 // bottom of this file. this is used for various derivative functions. */
@@ -91,10 +88,13 @@ typedef double Fbbn_ks_func_t KS_func_args_macro;
 
 #define bbn_ks_rolloff(x,y,z)  bbn_ks_rolloff KS_func_pass_args_macro
 
-
-/* avoid compiler warning since not all of functions need all variables */
-#define ks_no_use_macro \
-  UNUSED(0*M_BH*a_BH*phiy*phiz*Bx*By*Bz*B2*r0*Lambda)
+/* global variables */
+extern double M_BH,a_BH;/* mass and spin of BH */
+extern double phiy,phiz;/* rotation angels */
+extern double Bx,By,Bz;/* B=v/c (boost) */
+extern double B2;/* B^i B_i */
+extern double r0;/* roll off radius */
+extern double Lambda;/* flat data => 0, kerr-schild => 1 */
 
 /* all external functions */
 double bbn_ks_derivative KS_deriv_func_args_macro;
@@ -921,7 +921,7 @@ KS_func_db_macro(dddrolloff_D0D0D1) ,
 };
 
 /* derivative name data base */
-static char *const derive_name_db[] = 
+static const char *const derive_name_db[] = 
 {
 KS_name_db_macro(K0),
 KS_name_db_macro(dK0_D1),
