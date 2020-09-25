@@ -21,48 +21,12 @@ void bbn_free_data_g_gI_analytic(
  double *(*get_v)(const char *const fname,void *params),
  void *params)
 {
-  const double r0          = Pgetd("BH_KerrSchild_RollOff");
   const double BH_center_x = Pgetd("BH_center_x");
   const double BH_center_y = Pgetd("BH_center_y");
   const double BH_center_z = Pgetd("BH_center_z");
-  const double M_BH        = Pgetd("BH_irreducible_mass");
-  const double a_BH        = Pgetd("BH_net_spin");
-  const double chi_U0   = Pgetd("BH_chi_U0");
-  const double chi_U1   = Pgetd("BH_chi_U1");
-  const double chi_U2   = Pgetd("BH_chi_U2");
-  const double y_CM = Pgetd("y_CM");
-  const double x_CM = Pgetd("x_CM");
-  const double Omega_BHNS = Pgetd("BH_NS_angular_velocity");
-  const double chi = sqrt(Pow2(chi_U0)+Pow2(chi_U1)+Pow2(chi_U2));
   const unsigned nn = patch->nn;
-  double phiy = 0,phiz = 0;
-  double Bx,By,Bz,B2;/* B = v/c */
-  double Lambda;
   unsigned ijk;
 
-  if (Pcmps("BH_NS_free_data_metric","conformally_flat_metric"))
-    Lambda = 0;
-  else if (Pcmps("BH_NS_free_data_metric","Boosted_KerrSchild_metric"))
-    Lambda = 1;
-  else
-    Error0(NO_OPTION);
-
-  assert(LSSEQL(chi,1));
-
-  /* boost */
-  Bx = -Omega_BHNS*(BH_center_y-y_CM);
-  By =  Omega_BHNS*(BH_center_x-x_CM);
-  Bz = Pgetd("BH_Vz");
-  B2 = Pow2(Bx)+Pow2(By)+Pow2(Bz);
-  
-  assert(!EQL(B2,0));
-  /* rotation */
-  if (!EQL(chi,0))/* otherwise tR is 0 */
-  {
-    phiz = arctan(chi_U1,chi_U0);
-    phiy = acos(chi_U2/chi);
-    assert(isfinite(phiy));
-  }
     double *const _gamma_D2D2 = get_v("_gamma_D2D2",params);
     double *const _gamma_D0D2 = get_v("_gamma_D0D2",params);
     double *const _gamma_D0D0 = get_v("_gamma_D0D0",params);
@@ -229,49 +193,12 @@ void bbn_free_data_dg_analytic(
 	double *(*get_v)(const char *const fname,void *params),
 	void *params)
 {
-  const double r0          = Pgetd("BH_KerrSchild_RollOff");
   const double BH_center_x = Pgetd("BH_center_x");
   const double BH_center_y = Pgetd("BH_center_y");
   const double BH_center_z = Pgetd("BH_center_z");
-  const double M_BH        = Pgetd("BH_irreducible_mass");
-  const double a_BH        = Pgetd("BH_net_spin");
-  const double chi_U0   = Pgetd("BH_chi_U0");
-  const double chi_U1   = Pgetd("BH_chi_U1");
-  const double chi_U2   = Pgetd("BH_chi_U2");
-  const double y_CM = Pgetd("y_CM");
-  const double x_CM = Pgetd("x_CM");
-  const double Omega_BHNS = Pgetd("BH_NS_angular_velocity");
-  const double chi = sqrt(Pow2(chi_U0)+Pow2(chi_U1)+Pow2(chi_U2));
   const unsigned nn = patch->nn;
-  double phiy = 0,phiz = 0;
-  double Bx,By,Bz,B2;/* B = v/c */
-  double Lambda;
   unsigned ijk;
 
-  if (Pcmps("BH_NS_free_data_metric","conformally_flat_metric"))
-    Lambda = 0;
-  else if (Pcmps("BH_NS_free_data_metric","Boosted_KerrSchild_metric"))
-    Lambda = 1;
-  else
-    Error0(NO_OPTION);
-
-  assert(LSSEQL(chi,1));
-
-  /* boost */
-  Bx = -Omega_BHNS*(BH_center_y-y_CM);
-  By =  Omega_BHNS*(BH_center_x-x_CM);
-  Bz = Pgetd("BH_Vz");
-  B2 = Pow2(Bx)+Pow2(By)+Pow2(Bz);
-  
-  assert(!EQL(B2,0));
-  /* rotation */
-  if (!EQL(chi,0))/* otherwise tR is 0 */
-  {
-    phiz = arctan(chi_U1,chi_U0);
-    phiy = acos(chi_U2/chi);
-    assert(isfinite(phiy));
-  }
-  
 double *const _dgamma_D1D2D2 = get_v("_dgamma_D1D2D2",params);
 double *const _dgamma_D0D0D1 = get_v("_dgamma_D0D0D1",params);
 double *const _dgamma_D0D2D1 = get_v("_dgamma_D0D2D1",params);
@@ -513,50 +440,11 @@ void bbn_free_data_ddg_analytic(
 	double *(*get_v)(const char *const fname,void *params),
 	void *params)
 {
-
-  const double r0          = Pgetd("BH_KerrSchild_RollOff");
   const double BH_center_x = Pgetd("BH_center_x");
   const double BH_center_y = Pgetd("BH_center_y");
   const double BH_center_z = Pgetd("BH_center_z");
-  const double M_BH        = Pgetd("BH_irreducible_mass");
-  const double a_BH        = Pgetd("BH_net_spin");
-  const double chi_U0   = Pgetd("BH_chi_U0");
-  const double chi_U1   = Pgetd("BH_chi_U1");
-  const double chi_U2   = Pgetd("BH_chi_U2");
-  const double y_CM = Pgetd("y_CM");
-  const double x_CM = Pgetd("x_CM");
-  const double Omega_BHNS = Pgetd("BH_NS_angular_velocity");
-  const double chi = sqrt(Pow2(chi_U0)+Pow2(chi_U1)+Pow2(chi_U2));
   const unsigned nn = patch->nn;
-  double phiy = 0,phiz = 0;
-  double Bx,By,Bz,B2;/* B = v/c */
-  double Lambda;
   unsigned ijk;
-
-  if (Pcmps("BH_NS_free_data_metric","conformally_flat_metric"))
-    Lambda = 0;
-  else if (Pcmps("BH_NS_free_data_metric","Boosted_KerrSchild_metric"))
-    Lambda = 1;
-  else
-    Error0(NO_OPTION);
-
-
-  assert(LSSEQL(chi,1));
-
-  /* boost */
-  Bx = -Omega_BHNS*(BH_center_y-y_CM);
-  By =  Omega_BHNS*(BH_center_x-x_CM);
-  Bz = Pgetd("BH_Vz");
-  B2 = Pow2(Bx)+Pow2(By)+Pow2(Bz);
-  
-  assert(!EQL(B2,0));
-  /* rotation */
-  if (!EQL(chi,0))/* otherwise tR is 0 */
-  {
-    phiz = arctan(chi_U1,chi_U0);
-    phiy = acos(chi_U2/chi);
-    assert(isfinite(phiy));
-  }
 
 double *const _ddgamma_D2D2D0D2 = get_v("_ddgamma_D2D2D0D2",params);
 double *const _ddgamma_D0D1D0D1 = get_v("_ddgamma_D0D1D0D1",params);
@@ -1680,49 +1568,12 @@ void bbn_free_data_dddg_analytic(
 	double *(*get_v)(const char *const fname,void *params),
 	void *params)
 {
-  const double r0          = Pgetd("BH_KerrSchild_RollOff");
   const double BH_center_x = Pgetd("BH_center_x");
   const double BH_center_y = Pgetd("BH_center_y");
   const double BH_center_z = Pgetd("BH_center_z");
-  const double M_BH        = Pgetd("BH_irreducible_mass");
-  const double a_BH        = Pgetd("BH_net_spin");
-  const double chi_U0   = Pgetd("BH_chi_U0");
-  const double chi_U1   = Pgetd("BH_chi_U1");
-  const double chi_U2   = Pgetd("BH_chi_U2");
-  const double y_CM = Pgetd("y_CM");
-  const double x_CM = Pgetd("x_CM");
-  const double Omega_BHNS = Pgetd("BH_NS_angular_velocity");
-  const double chi = sqrt(Pow2(chi_U0)+Pow2(chi_U1)+Pow2(chi_U2));
   const unsigned nn = patch->nn;
-  double phiy = 0,phiz = 0;
-  double Bx,By,Bz,B2;/* B = v/c */
-  double Lambda;
   unsigned ijk;
 
-  if (Pcmps("BH_NS_free_data_metric","conformally_flat_metric"))
-    Lambda = 0;
-  else if (Pcmps("BH_NS_free_data_metric","Boosted_KerrSchild_metric"))
-    Lambda = 1;
-  else
-    Error0(NO_OPTION);
-
-
-  assert(LSSEQL(chi,1));
-
-  /* boost */
-  Bx = -Omega_BHNS*(BH_center_y-y_CM);
-  By =  Omega_BHNS*(BH_center_x-x_CM);
-  Bz = Pgetd("BH_Vz");
-  B2 = Pow2(Bx)+Pow2(By)+Pow2(Bz);
-  
-  assert(!EQL(B2,0));
-  /* rotation */
-  if (!EQL(chi,0))/* otherwise tR is 0 */
-  {
-    phiz = arctan(chi_U1,chi_U0);
-    phiy = acos(chi_U2/chi);
-    assert(isfinite(phiy));
-  }
 double *const _dddgamma_D0D1D2D2D1 = get_v("_dddgamma_D0D1D2D2D1",params);
 double *const _dddgamma_D0D1D2D0D1 = get_v("_dddgamma_D0D1D2D0D1",params);
 double *const _dddgamma_D1D2D0D2D0 = get_v("_dddgamma_D1D2D0D2D0",params);

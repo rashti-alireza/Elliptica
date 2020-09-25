@@ -247,48 +247,11 @@ Command["sed -i 's/_,/,/g'"];
 `print(' double *(*get_v)(const char *const fname,void *params),')`
 `print(' void *params)')`
 `print('{')`
-`print('  const double r0          = Pgetd("BH_KerrSchild_RollOff");')`
 `print('  const double BH_center_x = Pgetd("BH_center_x");')`
 `print('  const double BH_center_y = Pgetd("BH_center_y");')`
 `print('  const double BH_center_z = Pgetd("BH_center_z");')`
-`print('  const double M_BH        = Pgetd("BH_irreducible_mass");')`
-`print('  const double a_BH        = Pgetd("BH_net_spin");')`
-`print('  const double chi_U0   = Pgetd("BH_chi_U0");')`
-`print('  const double chi_U1   = Pgetd("BH_chi_U1");')`
-`print('  const double chi_U2   = Pgetd("BH_chi_U2");')`
-`print('  const double y_CM = Pgetd("y_CM");')`
-`print('  const double x_CM = Pgetd("x_CM");')`
-`print('  const double Omega_BHNS = Pgetd("BH_NS_angular_velocity");')`
-`print('  const double chi = sqrt(Pow2(chi_U0)+Pow2(chi_U1)+Pow2(chi_U2));')`
 `print('  const unsigned nn = patch->nn;')`
-`print('  double phiy = 0,phiz = 0;')`
-`print('  double Bx,By,Bz,B2;/* B = v/c */')`
-`print('  double Lambda;')`
 `print('  unsigned ijk;')`
-`print('')`
-`print('  if (Pcmps("BH_NS_free_data_metric","conformally_flat_metric"))')`
-`print('    Lambda = 0;')`
-`print('  else if (Pcmps("BH_NS_free_data_metric","Boosted_KerrSchild_metric"))')`
-`print('    Lambda = 1;')`
-`print('  else')`
-`print('    Error0(NO_OPTION);')`
-`print('')`
-`print('  assert(LSSEQL(chi,1));')`
-`print('')`
-`print('  /* boost */')`
-`print('  Bx = -Omega_BHNS*(BH_center_y-y_CM);')`
-`print('  By =  Omega_BHNS*(BH_center_x-x_CM);')`
-`print('  Bz = Pgetd("BH_Vz");')`
-`print('  B2 = Pow2(Bx)+Pow2(By)+Pow2(Bz);')`
-`print('')`
-`print('  assert(!EQL(B2,0));')`
-`print('  /* rotation */')`
-`print('  if (!EQL(chi,0))/* otherwise tR is 0 */')`
-`print('  {')`
-`print('    phiz = arctan(chi_U1,chi_U0);')`
-`print('    phiy = acos(chi_U2/chi);')`
-`print('    assert(isfinite(phiy));')`
-`print('  }')`
 ``
 `print('    double *const _gamma_D2D2 = get_v("_gamma_D2D2",params);')`
 `print('    double *const _gamma_D0D2 = get_v("_gamma_D0D2",params);')`
@@ -394,48 +357,11 @@ Command["sed -i 's/_,/,/g'"];
 `print('	double *(*get_v)(const char *const fname,void *params),')`
 `print('	void *params)')`
 `print('{')`
-`print('  const double r0          = Pgetd("BH_KerrSchild_RollOff");')`
 `print('  const double BH_center_x = Pgetd("BH_center_x");')`
 `print('  const double BH_center_y = Pgetd("BH_center_y");')`
 `print('  const double BH_center_z = Pgetd("BH_center_z");')`
-`print('  const double M_BH        = Pgetd("BH_irreducible_mass");')`
-`print('  const double a_BH        = Pgetd("BH_net_spin");')`
-`print('  const double chi_U0   = Pgetd("BH_chi_U0");')`
-`print('  const double chi_U1   = Pgetd("BH_chi_U1");')`
-`print('  const double chi_U2   = Pgetd("BH_chi_U2");')`
-`print('  const double y_CM = Pgetd("y_CM");')`
-`print('  const double x_CM = Pgetd("x_CM");')`
-`print('  const double Omega_BHNS = Pgetd("BH_NS_angular_velocity");')`
-`print('  const double chi = sqrt(Pow2(chi_U0)+Pow2(chi_U1)+Pow2(chi_U2));')`
 `print('  const unsigned nn = patch->nn;')`
-`print('  double phiy = 0,phiz = 0;')`
-`print('  double Bx,By,Bz,B2;/* B = v/c */')`
-`print('  double Lambda;')`
 `print('  unsigned ijk;')`
-`print('')`
-`print('  if (Pcmps("BH_NS_free_data_metric","conformally_flat_metric"))')`
-`print('    Lambda = 0;')`
-`print('  else if (Pcmps("BH_NS_free_data_metric","Boosted_KerrSchild_metric"))')`
-`print('    Lambda = 1;')`
-`print('  else')`
-`print('    Error0(NO_OPTION);')`
-`print('')`
-`print('  assert(LSSEQL(chi,1));')`
-`print('')`
-`print('  /* boost */')`
-`print('  Bx = -Omega_BHNS*(BH_center_y-y_CM);')`
-`print('  By =  Omega_BHNS*(BH_center_x-x_CM);')`
-`print('  Bz = Pgetd("BH_Vz");')`
-`print('  B2 = Pow2(Bx)+Pow2(By)+Pow2(Bz);')`
-`print('')`
-`print('  assert(!EQL(B2,0));')`
-`print('  /* rotation */')`
-`print('  if (!EQL(chi,0))/* otherwise tR is 0 */')`
-`print('  {')`
-`print('    phiz = arctan(chi_U1,chi_U0);')`
-`print('    phiy = acos(chi_U2/chi);')`
-`print('    assert(isfinite(phiy));')`
-`print('  }')`
 `print('  ')`
 `print('double *const _dgamma_D1D2D2 = get_v("_dgamma_D1D2D2",params);')`
 `print('double *const _dgamma_D0D0D1 = get_v("_dgamma_D0D0D1",params);')`
@@ -527,48 +453,11 @@ Command["sed -i 's/_,/,/g'"];
 `print('	void *params)')`
 `print('{')`
 `print('')`
-`print('  const double r0          = Pgetd("BH_KerrSchild_RollOff");')`
 `print('  const double BH_center_x = Pgetd("BH_center_x");')`
 `print('  const double BH_center_y = Pgetd("BH_center_y");')`
 `print('  const double BH_center_z = Pgetd("BH_center_z");')`
-`print('  const double M_BH        = Pgetd("BH_irreducible_mass");')`
-`print('  const double a_BH        = Pgetd("BH_net_spin");')`
-`print('  const double chi_U0   = Pgetd("BH_chi_U0");')`
-`print('  const double chi_U1   = Pgetd("BH_chi_U1");')`
-`print('  const double chi_U2   = Pgetd("BH_chi_U2");')`
-`print('  const double y_CM = Pgetd("y_CM");')`
-`print('  const double x_CM = Pgetd("x_CM");')`
-`print('  const double Omega_BHNS = Pgetd("BH_NS_angular_velocity");')`
-`print('  const double chi = sqrt(Pow2(chi_U0)+Pow2(chi_U1)+Pow2(chi_U2));')`
 `print('  const unsigned nn = patch->nn;')`
-`print('  double phiy = 0,phiz = 0;')`
-`print('  double Bx,By,Bz,B2;/* B = v/c */')`
-`print('  double Lambda;')`
 `print('  unsigned ijk;')`
-`print('')`
-`print('  if (Pcmps("BH_NS_free_data_metric","conformally_flat_metric"))')`
-`print('    Lambda = 0;')`
-`print('  else if (Pcmps("BH_NS_free_data_metric","Boosted_KerrSchild_metric"))')`
-`print('    Lambda = 1;')`
-`print('  else')`
-`print('    Error0(NO_OPTION);')`
-`print('')`
-`print('  assert(LSSEQL(chi,1));')`
-`print('')`
-`print('  /* boost */')`
-`print('  Bx = -Omega_BHNS*(BH_center_y-y_CM);')`
-`print('  By =  Omega_BHNS*(BH_center_x-x_CM);')`
-`print('  Bz = Pgetd("BH_Vz");')`
-`print('  B2 = Pow2(Bx)+Pow2(By)+Pow2(Bz);')`
-`print('')`
-`print('  assert(!EQL(B2,0));')`
-`print('  /* rotation */')`
-`print('  if (!EQL(chi,0))/* otherwise tR is 0 */')`
-`print('  {')`
-`print('    phiz = arctan(chi_U1,chi_U0);')`
-`print('    phiy = acos(chi_U2/chi);')`
-`print('    assert(isfinite(phiy));')`
-`print('  }')`
 `print('')`
 `print('double *const _ddgamma_D2D2D0D2 = get_v("_ddgamma_D2D2D0D2",params);')`
 `print('double *const _ddgamma_D0D1D0D1 = get_v("_ddgamma_D0D1D0D1",params);')`
@@ -801,48 +690,12 @@ Command["sed -i 's/_,/,/g'"];
 `print('	double *(*get_v)(const char *const fname,void *params),')`
 `print('	void *params)')`
 `print('{')`
-`print('  const double r0          = Pgetd("BH_KerrSchild_RollOff");')`
 `print('  const double BH_center_x = Pgetd("BH_center_x");')`
 `print('  const double BH_center_y = Pgetd("BH_center_y");')`
 `print('  const double BH_center_z = Pgetd("BH_center_z");')`
-`print('  const double M_BH        = Pgetd("BH_irreducible_mass");')`
-`print('  const double a_BH        = Pgetd("BH_net_spin");')`
-`print('  const double chi_U0   = Pgetd("BH_chi_U0");')`
-`print('  const double chi_U1   = Pgetd("BH_chi_U1");')`
-`print('  const double chi_U2   = Pgetd("BH_chi_U2");')`
-`print('  const double y_CM = Pgetd("y_CM");')`
-`print('  const double x_CM = Pgetd("x_CM");')`
-`print('  const double Omega_BHNS = Pgetd("BH_NS_angular_velocity");')`
-`print('  const double chi = sqrt(Pow2(chi_U0)+Pow2(chi_U1)+Pow2(chi_U2));')`
 `print('  const unsigned nn = patch->nn;')`
-`print('  double phiy = 0,phiz = 0;')`
-`print('  double Bx,By,Bz,B2;/* B = v/c */')`
-`print('  double Lambda;')`
 `print('  unsigned ijk;')`
 `print('')`
-`print('  if (Pcmps("BH_NS_free_data_metric","conformally_flat_metric"))')`
-`print('    Lambda = 0;')`
-`print('  else if (Pcmps("BH_NS_free_data_metric","Boosted_KerrSchild_metric"))')`
-`print('    Lambda = 1;')`
-`print('  else')`
-`print('    Error0(NO_OPTION);')`
-`print('')`
-`print('  assert(LSSEQL(chi,1));')`
-`print('')`
-`print('  /* boost */')`
-`print('  Bx = -Omega_BHNS*(BH_center_y-y_CM);')`
-`print('  By =  Omega_BHNS*(BH_center_x-x_CM);')`
-`print('  Bz = Pgetd("BH_Vz");')`
-`print('  B2 = Pow2(Bx)+Pow2(By)+Pow2(Bz);')`
-`print('')`
-`print('  assert(!EQL(B2,0));')`
-`print('  /* rotation */')`
-`print('  if (!EQL(chi,0))/* otherwise tR is 0 */')`
-`print('  {')`
-`print('    phiz = arctan(chi_U1,chi_U0);')`
-`print('    phiy = acos(chi_U2/chi);')`
-`print('    assert(isfinite(phiy));')`
-`print('  }')`
 `print('double *const _dddgamma_D0D1D2D2D1 = get_v("_dddgamma_D0D1D2D2D1",params);')`
 `print('double *const _dddgamma_D0D1D2D0D1 = get_v("_dddgamma_D0D1D2D0D1",params);')`
 `print('double *const _dddgamma_D1D2D0D2D0 = get_v("_dddgamma_D1D2D0D2D0",params);')`
