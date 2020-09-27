@@ -234,9 +234,9 @@ double *const _dgamma_D2D2D2 = get_v("_dgamma_D2D2D2",params);
 // c
 // k1
 // k2
-bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k2(x, y, z), z) + bbn_ks_c(x, y, z)*
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k1(x, y, z), z) + bbn_ks_k1(x, y, z)*bbn_ks_k2(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), z);
+bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+bbn_ks_k2(x, y, z)*(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*bbn_ks_k2(x, y, z)*
+(bbn_ks_dc_D2 KS_func_pass_args_macro );
 
     _dgamma_D0D0D1[ijk]=
 /* mcode in progress ... */
@@ -245,8 +245,8 @@ Derivative(bbn_ks_c(x, y, z), z);
 // Derivative
 // c
 // k0
-(2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), y) + bbn_ks_k0(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), y))*bbn_ks_k0(x, y, z);
+(2*bbn_ks_c(x, y, z)*(bbn_ks_dk0_D1 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
+(bbn_ks_dc_D1 KS_func_pass_args_macro ))*bbn_ks_k0(x, y, z);
 
     _dgamma_D0D2D1[ijk]=
 /* mcode in progress ... */
@@ -257,9 +257,9 @@ Derivative(bbn_ks_c(x, y, z), y))*bbn_ks_k0(x, y, z);
 // c
 // k0
 // k2
-bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k2(x, y, z), y) + bbn_ks_c(x, y, z)*
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k0(x, y, z), y) + bbn_ks_k0(x, y, z)*bbn_ks_k2(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), y);
+bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+bbn_ks_k2(x, y, z)*(bbn_ks_dk0_D1 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*bbn_ks_k2(x, y, z)*
+(bbn_ks_dc_D1 KS_func_pass_args_macro );
 
     _dgamma_D0D1D0[ijk]=
 /* mcode in progress ... */
@@ -270,9 +270,9 @@ Derivative(bbn_ks_c(x, y, z), y);
 // c
 // k0
 // k1
-bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x) + bbn_ks_c(x, y, z)*
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x) + bbn_ks_k0(x, y, z)*bbn_ks_k1(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), x);
+bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dk1_D0 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+bbn_ks_k1(x, y, z)*(bbn_ks_dk0_D0 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*bbn_ks_k1(x, y, z)*
+(bbn_ks_dc_D0 KS_func_pass_args_macro );
 
     _dgamma_D1D2D1[ijk]=
 /* mcode in progress ... */
@@ -283,9 +283,9 @@ Derivative(bbn_ks_c(x, y, z), x);
 // c
 // k1
 // k2
-bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k2(x, y, z), y) + bbn_ks_c(x, y, z)*
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k1(x, y, z), y) + bbn_ks_k1(x, y, z)*bbn_ks_k2(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), y);
+bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+bbn_ks_k2(x, y, z)*(bbn_ks_dk1_D1 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*bbn_ks_k2(x, y, z)*
+(bbn_ks_dc_D1 KS_func_pass_args_macro );
 
     _dgamma_D2D2D0[ijk]=
 /* mcode in progress ... */
@@ -294,8 +294,8 @@ Derivative(bbn_ks_c(x, y, z), y);
 // Derivative
 // c
 // k2
-(2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x) + bbn_ks_k2(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), x))*bbn_ks_k2(x, y, z);
+(2*bbn_ks_c(x, y, z)*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
+(bbn_ks_dc_D0 KS_func_pass_args_macro ))*bbn_ks_k2(x, y, z);
 
     _dgamma_D0D0D0[ijk]=
 /* mcode in progress ... */
@@ -304,8 +304,8 @@ Derivative(bbn_ks_c(x, y, z), x))*bbn_ks_k2(x, y, z);
 // Derivative
 // c
 // k0
-(2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x) + bbn_ks_k0(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), x))*bbn_ks_k0(x, y, z);
+(2*bbn_ks_c(x, y, z)*(bbn_ks_dk0_D0 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
+(bbn_ks_dc_D0 KS_func_pass_args_macro ))*bbn_ks_k0(x, y, z);
 
     _dgamma_D0D0D2[ijk]=
 /* mcode in progress ... */
@@ -314,8 +314,8 @@ Derivative(bbn_ks_c(x, y, z), x))*bbn_ks_k0(x, y, z);
 // Derivative
 // c
 // k0
-(2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), z) + bbn_ks_k0(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), z))*bbn_ks_k0(x, y, z);
+(2*bbn_ks_c(x, y, z)*(bbn_ks_dk0_D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
+(bbn_ks_dc_D2 KS_func_pass_args_macro ))*bbn_ks_k0(x, y, z);
 
     _dgamma_D0D2D2[ijk]=
 /* mcode in progress ... */
@@ -326,9 +326,9 @@ Derivative(bbn_ks_c(x, y, z), z))*bbn_ks_k0(x, y, z);
 // c
 // k0
 // k2
-bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k2(x, y, z), z) + bbn_ks_c(x, y, z)*
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k0(x, y, z), z) + bbn_ks_k0(x, y, z)*bbn_ks_k2(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), z);
+bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+bbn_ks_k2(x, y, z)*(bbn_ks_dk0_D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*bbn_ks_k2(x, y, z)*
+(bbn_ks_dc_D2 KS_func_pass_args_macro );
 
     _dgamma_D2D2D1[ijk]=
 /* mcode in progress ... */
@@ -337,8 +337,8 @@ Derivative(bbn_ks_c(x, y, z), z);
 // Derivative
 // c
 // k2
-(2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), y) + bbn_ks_k2(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), y))*bbn_ks_k2(x, y, z);
+(2*bbn_ks_c(x, y, z)*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
+(bbn_ks_dc_D1 KS_func_pass_args_macro ))*bbn_ks_k2(x, y, z);
 
     _dgamma_D0D1D1[ijk]=
 /* mcode in progress ... */
@@ -349,9 +349,9 @@ Derivative(bbn_ks_c(x, y, z), y))*bbn_ks_k2(x, y, z);
 // c
 // k0
 // k1
-bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k1(x, y, z), y) + bbn_ks_c(x, y, z)*
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k0(x, y, z), y) + bbn_ks_k0(x, y, z)*bbn_ks_k1(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), y);
+bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dk1_D1 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+bbn_ks_k1(x, y, z)*(bbn_ks_dk0_D1 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*bbn_ks_k1(x, y, z)*
+(bbn_ks_dc_D1 KS_func_pass_args_macro );
 
     _dgamma_D0D2D0[ijk]=
 /* mcode in progress ... */
@@ -362,9 +362,9 @@ Derivative(bbn_ks_c(x, y, z), y);
 // c
 // k0
 // k2
-bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x) + bbn_ks_c(x, y, z)*
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x) + bbn_ks_k0(x, y, z)*bbn_ks_k2(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), x);
+bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+bbn_ks_k2(x, y, z)*(bbn_ks_dk0_D0 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*bbn_ks_k2(x, y, z)*
+(bbn_ks_dc_D0 KS_func_pass_args_macro );
 
     _dgamma_D1D2D0[ijk]=
 /* mcode in progress ... */
@@ -375,9 +375,9 @@ Derivative(bbn_ks_c(x, y, z), x);
 // c
 // k1
 // k2
-bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x) + bbn_ks_c(x, y, z)*
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x) + bbn_ks_k1(x, y, z)*bbn_ks_k2(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), x);
+bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+bbn_ks_k2(x, y, z)*(bbn_ks_dk1_D0 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*bbn_ks_k2(x, y, z)*
+(bbn_ks_dc_D0 KS_func_pass_args_macro );
 
     _dgamma_D1D1D1[ijk]=
 /* mcode in progress ... */
@@ -386,8 +386,8 @@ Derivative(bbn_ks_c(x, y, z), x);
 // Derivative
 // c
 // k1
-(2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), y) + bbn_ks_k1(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), y))*bbn_ks_k1(x, y, z);
+(2*bbn_ks_c(x, y, z)*(bbn_ks_dk1_D1 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
+(bbn_ks_dc_D1 KS_func_pass_args_macro ))*bbn_ks_k1(x, y, z);
 
     _dgamma_D0D1D2[ijk]=
 /* mcode in progress ... */
@@ -398,9 +398,9 @@ Derivative(bbn_ks_c(x, y, z), y))*bbn_ks_k1(x, y, z);
 // c
 // k0
 // k1
-bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k1(x, y, z), z) + bbn_ks_c(x, y, z)*
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k0(x, y, z), z) + bbn_ks_k0(x, y, z)*bbn_ks_k1(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), z);
+bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+bbn_ks_k1(x, y, z)*(bbn_ks_dk0_D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*bbn_ks_k1(x, y, z)*
+(bbn_ks_dc_D2 KS_func_pass_args_macro );
 
     _dgamma_D1D1D0[ijk]=
 /* mcode in progress ... */
@@ -409,8 +409,8 @@ Derivative(bbn_ks_c(x, y, z), z);
 // Derivative
 // c
 // k1
-(2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x) + bbn_ks_k1(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), x))*bbn_ks_k1(x, y, z);
+(2*bbn_ks_c(x, y, z)*(bbn_ks_dk1_D0 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
+(bbn_ks_dc_D0 KS_func_pass_args_macro ))*bbn_ks_k1(x, y, z);
 
     _dgamma_D1D1D2[ijk]=
 /* mcode in progress ... */
@@ -419,8 +419,8 @@ Derivative(bbn_ks_c(x, y, z), x))*bbn_ks_k1(x, y, z);
 // Derivative
 // c
 // k1
-(2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), z) + bbn_ks_k1(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), z))*bbn_ks_k1(x, y, z);
+(2*bbn_ks_c(x, y, z)*(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
+(bbn_ks_dc_D2 KS_func_pass_args_macro ))*bbn_ks_k1(x, y, z);
 
     _dgamma_D2D2D2[ijk]=
 /* mcode in progress ... */
@@ -429,8 +429,8 @@ Derivative(bbn_ks_c(x, y, z), z))*bbn_ks_k1(x, y, z);
 // Derivative
 // c
 // k2
-(2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), z) + bbn_ks_k2(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), z))*bbn_ks_k2(x, y, z);
+(2*bbn_ks_c(x, y, z)*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
+(bbn_ks_dc_D2 KS_func_pass_args_macro ))*bbn_ks_k2(x, y, z);
 
   }
 }
@@ -519,11 +519,11 @@ double *const _ddgamma_D2D2D0D1 = get_v("_ddgamma_D2D2D0D1",params);
 // Derivative
 // c
 // k2
-2*bbn_ks_c(x, y, z)*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x, z) + 2*bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), z) + 
-pow(bbn_ks_k2(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), x, z) + 2*bbn_ks_k2(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), z) + 2*bbn_ks_k2(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x);
+2*bbn_ks_c(x, y, z)*bbn_ks_k2(x, y, z)*(bbn_ks_ddk2_D0D2 KS_func_pass_args_macro ) + 2*bbn_ks_c(x, y, z)*
+(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 
+pow(bbn_ks_k2(x, y, z), 2)*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + 2*bbn_ks_k2(x, y, z)*
+(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 2*bbn_ks_k2(x, y, z)*
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro );
 
     _ddgamma_D0D1D0D1[ijk]=
 /* mcode in progress ... */
@@ -540,15 +540,15 @@ Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x);
 // c
 // k0
 // k1
-bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x, y) + bbn_ks_c(x, y, z)*
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x, y) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), y) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x) + bbn_ks_k0(x, y, z)*
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), x, y) + bbn_ks_k0(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), y) + bbn_ks_k0(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x) + bbn_ks_k1(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), y) + bbn_ks_k1(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x);
+bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_ddk1_D0D1 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+bbn_ks_k1(x, y, z)*(bbn_ks_ddk0_D0D1 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
+bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
+(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
+(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
+(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
+(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro );
 
     _ddgamma_D1D1D0D1[ijk]=
 /* mcode in progress ... */
@@ -561,11 +561,11 @@ Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x);
 // Derivative
 // c
 // k1
-2*bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x, y) + 2*bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), y) + 
-pow(bbn_ks_k1(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), x, y) + 2*bbn_ks_k1(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), y) + 2*bbn_ks_k1(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x);
+2*bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_ddk1_D0D1 KS_func_pass_args_macro ) + 2*bbn_ks_c(x, y, z)*
+(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro ) + 
+pow(bbn_ks_k1(x, y, z), 2)*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 2*bbn_ks_k1(x, y, z)*
+(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro ) + 2*bbn_ks_k1(x, y, z)*
+(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro );
 
     _ddgamma_D1D2D0D1[ijk]=
 /* mcode in progress ... */
@@ -582,15 +582,15 @@ Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x);
 // c
 // k1
 // k2
-bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x, y) + bbn_ks_c(x, y, z)*
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x, y) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), y) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x) + bbn_ks_k1(x, y, z)*
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), x, y) + bbn_ks_k1(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), y) + bbn_ks_k1(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x) + bbn_ks_k2(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), y) + bbn_ks_k2(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x);
+bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_ddk2_D0D1 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+bbn_ks_k2(x, y, z)*(bbn_ks_ddk1_D0D1 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
+bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
+(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
+(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
+(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
+(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro );
 
     _ddgamma_D0D0D1D0[ijk]=
 /* mcode in progress ... */
@@ -603,11 +603,11 @@ Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x);
 // Derivative
 // c
 // k0
-2*bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x, y) + 2*bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), y) + 
-pow(bbn_ks_k0(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), x, y) + 2*bbn_ks_k0(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), y) + 2*bbn_ks_k0(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x);
+2*bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_ddk0_D0D1 KS_func_pass_args_macro ) + 2*bbn_ks_c(x, y, z)*
+(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro ) + 
+pow(bbn_ks_k0(x, y, z), 2)*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 2*bbn_ks_k0(x, y, z)*
+(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro ) + 2*bbn_ks_k0(x, y, z)*
+(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro );
 
     _ddgamma_D1D1D2D0[ijk]=
 /* mcode in progress ... */
@@ -620,11 +620,11 @@ Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x);
 // Derivative
 // c
 // k1
-2*bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x, z) + 2*bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), z) + 
-pow(bbn_ks_k1(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), x, z) + 2*bbn_ks_k1(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), z) + 2*bbn_ks_k1(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x);
+2*bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_ddk1_D0D2 KS_func_pass_args_macro ) + 2*bbn_ks_c(x, y, z)*
+(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + 
+pow(bbn_ks_k1(x, y, z), 2)*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + 2*bbn_ks_k1(x, y, z)*
+(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + 2*bbn_ks_k1(x, y, z)*
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro );
 
     _ddgamma_D0D0D0D1[ijk]=
 /* mcode in progress ... */
@@ -637,11 +637,11 @@ Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x);
 // Derivative
 // c
 // k0
-2*bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x, y) + 2*bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), y) + 
-pow(bbn_ks_k0(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), x, y) + 2*bbn_ks_k0(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), y) + 2*bbn_ks_k0(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x);
+2*bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_ddk0_D0D1 KS_func_pass_args_macro ) + 2*bbn_ks_c(x, y, z)*
+(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro ) + 
+pow(bbn_ks_k0(x, y, z), 2)*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 2*bbn_ks_k0(x, y, z)*
+(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro ) + 2*bbn_ks_k0(x, y, z)*
+(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro );
 
     _ddgamma_D1D1D0D0[ijk]=
 /* mcode in progress ... */
@@ -652,10 +652,10 @@ Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x);
 // Derivative
 // c
 // k1
-2*bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k1(x, y, z), (x, 2)) + 2*
-bbn_ks_c(x, y, z)*pow(Derivative(bbn_ks_k1(x, y, z), x), 2) + pow(bbn_ks_k1(x, y, z), 2)*
-Derivative(bbn_ks_c(x, y, z), (x, 2)) + 4*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), x)*
-Derivative(bbn_ks_k1(x, y, z), x);
+2*bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_ddk1_D0D0 KS_func_pass_args_macro ) + 2*
+bbn_ks_c(x, y, z)*pow((bbn_ks_dk1_D0 KS_func_pass_args_macro ), 2) + pow(bbn_ks_k1(x, y, z), 2)*
+(bbn_ks_ddc_D0D0 KS_func_pass_args_macro ) + 4*bbn_ks_k1(x, y, z)*(bbn_ks_dc_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk1_D0 KS_func_pass_args_macro );
 
     _ddgamma_D0D0D2D2[ijk]=
 /* mcode in progress ... */
@@ -666,10 +666,10 @@ Derivative(bbn_ks_k1(x, y, z), x);
 // Derivative
 // c
 // k0
-2*bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k0(x, y, z), (z, 2)) + 2*
-bbn_ks_c(x, y, z)*pow(Derivative(bbn_ks_k0(x, y, z), z), 2) + pow(bbn_ks_k0(x, y, z), 2)*
-Derivative(bbn_ks_c(x, y, z), (z, 2)) + 4*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*
-Derivative(bbn_ks_k0(x, y, z), z);
+2*bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_ddk0_D2D2 KS_func_pass_args_macro ) + 2*
+bbn_ks_c(x, y, z)*pow((bbn_ks_dk0_D2 KS_func_pass_args_macro ), 2) + pow(bbn_ks_k0(x, y, z), 2)*
+(bbn_ks_ddc_D2D2 KS_func_pass_args_macro ) + 4*bbn_ks_k0(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*
+(bbn_ks_dk0_D2 KS_func_pass_args_macro );
 
     _ddgamma_D2D2D1D1[ijk]=
 /* mcode in progress ... */
@@ -680,10 +680,10 @@ Derivative(bbn_ks_k0(x, y, z), z);
 // Derivative
 // c
 // k2
-2*bbn_ks_c(x, y, z)*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k2(x, y, z), (y, 2)) + 2*
-bbn_ks_c(x, y, z)*pow(Derivative(bbn_ks_k2(x, y, z), y), 2) + pow(bbn_ks_k2(x, y, z), 2)*
-Derivative(bbn_ks_c(x, y, z), (y, 2)) + 4*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*
-Derivative(bbn_ks_k2(x, y, z), y);
+2*bbn_ks_c(x, y, z)*bbn_ks_k2(x, y, z)*(bbn_ks_ddk2_D1D1 KS_func_pass_args_macro ) + 2*
+bbn_ks_c(x, y, z)*pow((bbn_ks_dk2_D1 KS_func_pass_args_macro ), 2) + pow(bbn_ks_k2(x, y, z), 2)*
+(bbn_ks_ddc_D1D1 KS_func_pass_args_macro ) + 4*bbn_ks_k2(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*
+(bbn_ks_dk2_D1 KS_func_pass_args_macro );
 
     _ddgamma_D2D2D2D2[ijk]=
 /* mcode in progress ... */
@@ -694,10 +694,10 @@ Derivative(bbn_ks_k2(x, y, z), y);
 // Derivative
 // c
 // k2
-2*bbn_ks_c(x, y, z)*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k2(x, y, z), (z, 2)) + 2*
-bbn_ks_c(x, y, z)*pow(Derivative(bbn_ks_k2(x, y, z), z), 2) + pow(bbn_ks_k2(x, y, z), 2)*
-Derivative(bbn_ks_c(x, y, z), (z, 2)) + 4*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*
-Derivative(bbn_ks_k2(x, y, z), z);
+2*bbn_ks_c(x, y, z)*bbn_ks_k2(x, y, z)*(bbn_ks_ddk2_D2D2 KS_func_pass_args_macro ) + 2*
+bbn_ks_c(x, y, z)*pow((bbn_ks_dk2_D2 KS_func_pass_args_macro ), 2) + pow(bbn_ks_k2(x, y, z), 2)*
+(bbn_ks_ddc_D2D2 KS_func_pass_args_macro ) + 4*bbn_ks_k2(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*
+(bbn_ks_dk2_D2 KS_func_pass_args_macro );
 
     _ddgamma_D0D0D2D0[ijk]=
 /* mcode in progress ... */
@@ -710,11 +710,11 @@ Derivative(bbn_ks_k2(x, y, z), z);
 // Derivative
 // c
 // k0
-2*bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x, z) + 2*bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), z) + 
-pow(bbn_ks_k0(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), x, z) + 2*bbn_ks_k0(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), z) + 2*bbn_ks_k0(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x);
+2*bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_ddk0_D0D2 KS_func_pass_args_macro ) + 2*bbn_ks_c(x, y, z)*
+(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D2 KS_func_pass_args_macro ) + 
+pow(bbn_ks_k0(x, y, z), 2)*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + 2*bbn_ks_k0(x, y, z)*
+(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D2 KS_func_pass_args_macro ) + 2*bbn_ks_k0(x, y, z)*
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro );
 
     _ddgamma_D0D2D2D1[ijk]=
 /* mcode in progress ... */
@@ -731,15 +731,15 @@ Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x);
 // c
 // k0
 // k2
-bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k2(x, y, z), y, z) + bbn_ks_c(x, y, z)*
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k0(x, y, z), y, z) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), z) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), y) + bbn_ks_k0(x, y, z)*
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), y, z) + bbn_ks_k0(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), z) + bbn_ks_k0(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), y) + bbn_ks_k2(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), z) + bbn_ks_k2(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), y);
+bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_ddk2_D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+bbn_ks_k2(x, y, z)*(bbn_ks_ddk0_D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
+bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
+(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
+(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D2 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro );
 
     _ddgamma_D1D2D0D2[ijk]=
 /* mcode in progress ... */
@@ -756,15 +756,15 @@ Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), y);
 // c
 // k1
 // k2
-bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x, z) + bbn_ks_c(x, y, z)*
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x, z) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), z) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x) + bbn_ks_k1(x, y, z)*
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), x, z) + bbn_ks_k1(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), z) + bbn_ks_k1(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x) + bbn_ks_k2(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), z) + bbn_ks_k2(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x);
+bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_ddk2_D0D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+bbn_ks_k2(x, y, z)*(bbn_ks_ddk1_D0D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
+bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
+(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
+(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro );
 
     _ddgamma_D1D2D1D0[ijk]=
 /* mcode in progress ... */
@@ -781,15 +781,15 @@ Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x);
 // c
 // k1
 // k2
-bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x, y) + bbn_ks_c(x, y, z)*
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x, y) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), y) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x) + bbn_ks_k1(x, y, z)*
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), x, y) + bbn_ks_k1(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), y) + bbn_ks_k1(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x) + bbn_ks_k2(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), y) + bbn_ks_k2(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x);
+bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_ddk2_D0D1 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+bbn_ks_k2(x, y, z)*(bbn_ks_ddk1_D0D1 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
+bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
+(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
+(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
+(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
+(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro );
 
     _ddgamma_D2D2D2D0[ijk]=
 /* mcode in progress ... */
@@ -802,11 +802,11 @@ Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x);
 // Derivative
 // c
 // k2
-2*bbn_ks_c(x, y, z)*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x, z) + 2*bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), z) + 
-pow(bbn_ks_k2(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), x, z) + 2*bbn_ks_k2(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), z) + 2*bbn_ks_k2(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x);
+2*bbn_ks_c(x, y, z)*bbn_ks_k2(x, y, z)*(bbn_ks_ddk2_D0D2 KS_func_pass_args_macro ) + 2*bbn_ks_c(x, y, z)*
+(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 
+pow(bbn_ks_k2(x, y, z), 2)*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + 2*bbn_ks_k2(x, y, z)*
+(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 2*bbn_ks_k2(x, y, z)*
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro );
 
     _ddgamma_D0D0D0D0[ijk]=
 /* mcode in progress ... */
@@ -817,10 +817,10 @@ Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x);
 // Derivative
 // c
 // k0
-2*bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k0(x, y, z), (x, 2)) + 2*
-bbn_ks_c(x, y, z)*pow(Derivative(bbn_ks_k0(x, y, z), x), 2) + pow(bbn_ks_k0(x, y, z), 2)*
-Derivative(bbn_ks_c(x, y, z), (x, 2)) + 4*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), x)*
-Derivative(bbn_ks_k0(x, y, z), x);
+2*bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_ddk0_D0D0 KS_func_pass_args_macro ) + 2*
+bbn_ks_c(x, y, z)*pow((bbn_ks_dk0_D0 KS_func_pass_args_macro ), 2) + pow(bbn_ks_k0(x, y, z), 2)*
+(bbn_ks_ddc_D0D0 KS_func_pass_args_macro ) + 4*bbn_ks_k0(x, y, z)*(bbn_ks_dc_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk0_D0 KS_func_pass_args_macro );
 
     _ddgamma_D0D0D1D1[ijk]=
 /* mcode in progress ... */
@@ -831,10 +831,10 @@ Derivative(bbn_ks_k0(x, y, z), x);
 // Derivative
 // c
 // k0
-2*bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k0(x, y, z), (y, 2)) + 2*
-bbn_ks_c(x, y, z)*pow(Derivative(bbn_ks_k0(x, y, z), y), 2) + pow(bbn_ks_k0(x, y, z), 2)*
-Derivative(bbn_ks_c(x, y, z), (y, 2)) + 4*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*
-Derivative(bbn_ks_k0(x, y, z), y);
+2*bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_ddk0_D1D1 KS_func_pass_args_macro ) + 2*
+bbn_ks_c(x, y, z)*pow((bbn_ks_dk0_D1 KS_func_pass_args_macro ), 2) + pow(bbn_ks_k0(x, y, z), 2)*
+(bbn_ks_ddc_D1D1 KS_func_pass_args_macro ) + 4*bbn_ks_k0(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*
+(bbn_ks_dk0_D1 KS_func_pass_args_macro );
 
     _ddgamma_D0D1D0D2[ijk]=
 /* mcode in progress ... */
@@ -851,15 +851,15 @@ Derivative(bbn_ks_k0(x, y, z), y);
 // c
 // k0
 // k1
-bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x, z) + bbn_ks_c(x, y, z)*
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x, z) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), z) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x) + bbn_ks_k0(x, y, z)*
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), x, z) + bbn_ks_k0(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), z) + bbn_ks_k0(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x) + bbn_ks_k1(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), z) + bbn_ks_k1(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x);
+bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_ddk1_D0D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+bbn_ks_k1(x, y, z)*(bbn_ks_ddk0_D0D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
+bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
+(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
+(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D2 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro );
 
     _ddgamma_D1D2D1D1[ijk]=
 /* mcode in progress ... */
@@ -873,12 +873,12 @@ Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x);
 // c
 // k1
 // k2
-bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k2(x, y, z), (y, 2)) + bbn_ks_c(x, y, z)*
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k1(x, y, z), (y, 2)) + 2*bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), y) + bbn_ks_k1(x, y, z)*
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (y, 2)) + 2*bbn_ks_k1(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), y) + 2*bbn_ks_k2(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), y);
+bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_ddk2_D1D1 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+bbn_ks_k2(x, y, z)*(bbn_ks_ddk1_D1D1 KS_func_pass_args_macro ) + 2*bbn_ks_c(x, y, z)*
+(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
+bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D1D1 KS_func_pass_args_macro ) + 2*bbn_ks_k1(x, y, z)*
+(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 2*bbn_ks_k2(x, y, z)*
+(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro );
 
     _ddgamma_D0D2D1D1[ijk]=
 /* mcode in progress ... */
@@ -892,12 +892,12 @@ Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), y);
 // c
 // k0
 // k2
-bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k2(x, y, z), (y, 2)) + bbn_ks_c(x, y, z)*
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k0(x, y, z), (y, 2)) + 2*bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), y) + bbn_ks_k0(x, y, z)*
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (y, 2)) + 2*bbn_ks_k0(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), y) + 2*bbn_ks_k2(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), y);
+bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_ddk2_D1D1 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+bbn_ks_k2(x, y, z)*(bbn_ks_ddk0_D1D1 KS_func_pass_args_macro ) + 2*bbn_ks_c(x, y, z)*
+(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
+bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D1D1 KS_func_pass_args_macro ) + 2*bbn_ks_k0(x, y, z)*
+(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 2*bbn_ks_k2(x, y, z)*
+(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro );
 
     _ddgamma_D1D2D2D2[ijk]=
 /* mcode in progress ... */
@@ -911,12 +911,12 @@ Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), y);
 // c
 // k1
 // k2
-bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k2(x, y, z), (z, 2)) + bbn_ks_c(x, y, z)*
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k1(x, y, z), (z, 2)) + 2*bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), z) + bbn_ks_k1(x, y, z)*
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (z, 2)) + 2*bbn_ks_k1(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), z) + 2*bbn_ks_k2(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), z);
+bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_ddk2_D2D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+bbn_ks_k2(x, y, z)*(bbn_ks_ddk1_D2D2 KS_func_pass_args_macro ) + 2*bbn_ks_c(x, y, z)*
+(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
+bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D2D2 KS_func_pass_args_macro ) + 2*bbn_ks_k1(x, y, z)*
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 2*bbn_ks_k2(x, y, z)*
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro );
 
     _ddgamma_D2D2D1D2[ijk]=
 /* mcode in progress ... */
@@ -929,11 +929,11 @@ Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), z);
 // Derivative
 // c
 // k2
-2*bbn_ks_c(x, y, z)*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k2(x, y, z), y, z) + 2*bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k2(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), z) + 
-pow(bbn_ks_k2(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), y, z) + 2*bbn_ks_k2(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), z) + 2*bbn_ks_k2(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), y);
+2*bbn_ks_c(x, y, z)*bbn_ks_k2(x, y, z)*(bbn_ks_ddk2_D1D2 KS_func_pass_args_macro ) + 2*bbn_ks_c(x, y, z)*
+(bbn_ks_dk2_D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 
+pow(bbn_ks_k2(x, y, z), 2)*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + 2*bbn_ks_k2(x, y, z)*
+(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 2*bbn_ks_k2(x, y, z)*
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro );
 
     _ddgamma_D0D1D2D0[ijk]=
 /* mcode in progress ... */
@@ -950,15 +950,15 @@ Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), y);
 // c
 // k0
 // k1
-bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x, z) + bbn_ks_c(x, y, z)*
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x, z) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), z) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x) + bbn_ks_k0(x, y, z)*
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), x, z) + bbn_ks_k0(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), z) + bbn_ks_k0(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x) + bbn_ks_k1(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), z) + bbn_ks_k1(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x);
+bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_ddk1_D0D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+bbn_ks_k1(x, y, z)*(bbn_ks_ddk0_D0D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
+bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
+(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
+(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D2 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro );
 
     _ddgamma_D0D2D2D0[ijk]=
 /* mcode in progress ... */
@@ -975,15 +975,15 @@ Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x);
 // c
 // k0
 // k2
-bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x, z) + bbn_ks_c(x, y, z)*
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x, z) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), z) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x) + bbn_ks_k0(x, y, z)*
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), x, z) + bbn_ks_k0(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), z) + bbn_ks_k0(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x) + bbn_ks_k2(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), z) + bbn_ks_k2(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x);
+bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_ddk2_D0D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+bbn_ks_k2(x, y, z)*(bbn_ks_ddk0_D0D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
+bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
+(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
+(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D2 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro );
 
     _ddgamma_D0D1D1D0[ijk]=
 /* mcode in progress ... */
@@ -1000,15 +1000,15 @@ Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x);
 // c
 // k0
 // k1
-bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x, y) + bbn_ks_c(x, y, z)*
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x, y) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), y) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x) + bbn_ks_k0(x, y, z)*
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), x, y) + bbn_ks_k0(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), y) + bbn_ks_k0(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x) + bbn_ks_k1(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), y) + bbn_ks_k1(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x);
+bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_ddk1_D0D1 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+bbn_ks_k1(x, y, z)*(bbn_ks_ddk0_D0D1 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
+bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
+(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
+(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
+(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
+(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro );
 
     _ddgamma_D1D2D2D0[ijk]=
 /* mcode in progress ... */
@@ -1025,15 +1025,15 @@ Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x);
 // c
 // k1
 // k2
-bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x, z) + bbn_ks_c(x, y, z)*
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x, z) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), z) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x) + bbn_ks_k1(x, y, z)*
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), x, z) + bbn_ks_k1(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), z) + bbn_ks_k1(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x) + bbn_ks_k2(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), z) + bbn_ks_k2(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x);
+bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_ddk2_D0D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+bbn_ks_k2(x, y, z)*(bbn_ks_ddk1_D0D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
+bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
+(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
+(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro );
 
     _ddgamma_D1D1D1D0[ijk]=
 /* mcode in progress ... */
@@ -1046,11 +1046,11 @@ Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x);
 // Derivative
 // c
 // k1
-2*bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x, y) + 2*bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), y) + 
-pow(bbn_ks_k1(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), x, y) + 2*bbn_ks_k1(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), y) + 2*bbn_ks_k1(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x);
+2*bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_ddk1_D0D1 KS_func_pass_args_macro ) + 2*bbn_ks_c(x, y, z)*
+(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro ) + 
+pow(bbn_ks_k1(x, y, z), 2)*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 2*bbn_ks_k1(x, y, z)*
+(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro ) + 2*bbn_ks_k1(x, y, z)*
+(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro );
 
     _ddgamma_D1D2D1D2[ijk]=
 /* mcode in progress ... */
@@ -1067,15 +1067,15 @@ Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x);
 // c
 // k1
 // k2
-bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k2(x, y, z), y, z) + bbn_ks_c(x, y, z)*
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k1(x, y, z), y, z) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), z) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), y) + bbn_ks_k1(x, y, z)*
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), y, z) + bbn_ks_k1(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), z) + bbn_ks_k1(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), y) + bbn_ks_k2(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), z) + bbn_ks_k2(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), y);
+bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_ddk2_D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+bbn_ks_k2(x, y, z)*(bbn_ks_ddk1_D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
+bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
+(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
+(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro );
 
     _ddgamma_D1D2D0D0[ijk]=
 /* mcode in progress ... */
@@ -1089,12 +1089,12 @@ Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), y);
 // c
 // k1
 // k2
-bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k2(x, y, z), (x, 2)) + bbn_ks_c(x, y, z)*
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k1(x, y, z), (x, 2)) + 2*bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), x) + bbn_ks_k1(x, y, z)*
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2)) + 2*bbn_ks_k1(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), x) + 2*bbn_ks_k2(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), x);
+bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_ddk2_D0D0 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+bbn_ks_k2(x, y, z)*(bbn_ks_ddk1_D0D0 KS_func_pass_args_macro ) + 2*bbn_ks_c(x, y, z)*
+(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
+bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D0D0 KS_func_pass_args_macro ) + 2*bbn_ks_k1(x, y, z)*
+(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + 2*bbn_ks_k2(x, y, z)*
+(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro );
 
     _ddgamma_D0D0D0D2[ijk]=
 /* mcode in progress ... */
@@ -1107,11 +1107,11 @@ Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), x);
 // Derivative
 // c
 // k0
-2*bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x, z) + 2*bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), z) + 
-pow(bbn_ks_k0(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), x, z) + 2*bbn_ks_k0(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), z) + 2*bbn_ks_k0(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x);
+2*bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_ddk0_D0D2 KS_func_pass_args_macro ) + 2*bbn_ks_c(x, y, z)*
+(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D2 KS_func_pass_args_macro ) + 
+pow(bbn_ks_k0(x, y, z), 2)*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + 2*bbn_ks_k0(x, y, z)*
+(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D2 KS_func_pass_args_macro ) + 2*bbn_ks_k0(x, y, z)*
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro );
 
     _ddgamma_D2D2D2D1[ijk]=
 /* mcode in progress ... */
@@ -1124,11 +1124,11 @@ Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x);
 // Derivative
 // c
 // k2
-2*bbn_ks_c(x, y, z)*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k2(x, y, z), y, z) + 2*bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k2(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), z) + 
-pow(bbn_ks_k2(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), y, z) + 2*bbn_ks_k2(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), z) + 2*bbn_ks_k2(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), y);
+2*bbn_ks_c(x, y, z)*bbn_ks_k2(x, y, z)*(bbn_ks_ddk2_D1D2 KS_func_pass_args_macro ) + 2*bbn_ks_c(x, y, z)*
+(bbn_ks_dk2_D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 
+pow(bbn_ks_k2(x, y, z), 2)*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + 2*bbn_ks_k2(x, y, z)*
+(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 2*bbn_ks_k2(x, y, z)*
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro );
 
     _ddgamma_D0D2D0D0[ijk]=
 /* mcode in progress ... */
@@ -1142,12 +1142,12 @@ Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), y);
 // c
 // k0
 // k2
-bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k2(x, y, z), (x, 2)) + bbn_ks_c(x, y, z)*
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k0(x, y, z), (x, 2)) + 2*bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), x) + bbn_ks_k0(x, y, z)*
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2)) + 2*bbn_ks_k0(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), x) + 2*bbn_ks_k2(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), x);
+bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_ddk2_D0D0 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+bbn_ks_k2(x, y, z)*(bbn_ks_ddk0_D0D0 KS_func_pass_args_macro ) + 2*bbn_ks_c(x, y, z)*
+(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
+bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D0D0 KS_func_pass_args_macro ) + 2*bbn_ks_k0(x, y, z)*
+(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + 2*bbn_ks_k2(x, y, z)*
+(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro );
 
     _ddgamma_D0D2D0D1[ijk]=
 /* mcode in progress ... */
@@ -1164,15 +1164,15 @@ Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), x);
 // c
 // k0
 // k2
-bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x, y) + bbn_ks_c(x, y, z)*
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x, y) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), y) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x) + bbn_ks_k0(x, y, z)*
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), x, y) + bbn_ks_k0(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), y) + bbn_ks_k0(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x) + bbn_ks_k2(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), y) + bbn_ks_k2(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x);
+bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_ddk2_D0D1 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+bbn_ks_k2(x, y, z)*(bbn_ks_ddk0_D0D1 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
+bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
+(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
+(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
+(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
+(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro );
 
     _ddgamma_D1D1D1D1[ijk]=
 /* mcode in progress ... */
@@ -1183,10 +1183,10 @@ Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x);
 // Derivative
 // c
 // k1
-2*bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k1(x, y, z), (y, 2)) + 2*
-bbn_ks_c(x, y, z)*pow(Derivative(bbn_ks_k1(x, y, z), y), 2) + pow(bbn_ks_k1(x, y, z), 2)*
-Derivative(bbn_ks_c(x, y, z), (y, 2)) + 4*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*
-Derivative(bbn_ks_k1(x, y, z), y);
+2*bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_ddk1_D1D1 KS_func_pass_args_macro ) + 2*
+bbn_ks_c(x, y, z)*pow((bbn_ks_dk1_D1 KS_func_pass_args_macro ), 2) + pow(bbn_ks_k1(x, y, z), 2)*
+(bbn_ks_ddc_D1D1 KS_func_pass_args_macro ) + 4*bbn_ks_k1(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*
+(bbn_ks_dk1_D1 KS_func_pass_args_macro );
 
     _ddgamma_D0D1D0D0[ijk]=
 /* mcode in progress ... */
@@ -1200,12 +1200,12 @@ Derivative(bbn_ks_k1(x, y, z), y);
 // c
 // k0
 // k1
-bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k1(x, y, z), (x, 2)) + bbn_ks_c(x, y, z)*
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k0(x, y, z), (x, 2)) + 2*bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), x) + bbn_ks_k0(x, y, z)*
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2)) + 2*bbn_ks_k0(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), x) + 2*bbn_ks_k1(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), x);
+bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_ddk1_D0D0 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+bbn_ks_k1(x, y, z)*(bbn_ks_ddk0_D0D0 KS_func_pass_args_macro ) + 2*bbn_ks_c(x, y, z)*
+(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
+bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D0D0 KS_func_pass_args_macro ) + 2*bbn_ks_k0(x, y, z)*
+(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro ) + 2*bbn_ks_k1(x, y, z)*
+(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro );
 
     _ddgamma_D1D1D2D2[ijk]=
 /* mcode in progress ... */
@@ -1216,10 +1216,10 @@ Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), x);
 // Derivative
 // c
 // k1
-2*bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k1(x, y, z), (z, 2)) + 2*
-bbn_ks_c(x, y, z)*pow(Derivative(bbn_ks_k1(x, y, z), z), 2) + pow(bbn_ks_k1(x, y, z), 2)*
-Derivative(bbn_ks_c(x, y, z), (z, 2)) + 4*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*
-Derivative(bbn_ks_k1(x, y, z), z);
+2*bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_ddk1_D2D2 KS_func_pass_args_macro ) + 2*
+bbn_ks_c(x, y, z)*pow((bbn_ks_dk1_D2 KS_func_pass_args_macro ), 2) + pow(bbn_ks_k1(x, y, z), 2)*
+(bbn_ks_ddc_D2D2 KS_func_pass_args_macro ) + 4*bbn_ks_k1(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*
+(bbn_ks_dk1_D2 KS_func_pass_args_macro );
 
     _ddgamma_D0D2D1D2[ijk]=
 /* mcode in progress ... */
@@ -1236,15 +1236,15 @@ Derivative(bbn_ks_k1(x, y, z), z);
 // c
 // k0
 // k2
-bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k2(x, y, z), y, z) + bbn_ks_c(x, y, z)*
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k0(x, y, z), y, z) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), z) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), y) + bbn_ks_k0(x, y, z)*
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), y, z) + bbn_ks_k0(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), z) + bbn_ks_k0(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), y) + bbn_ks_k2(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), z) + bbn_ks_k2(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), y);
+bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_ddk2_D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+bbn_ks_k2(x, y, z)*(bbn_ks_ddk0_D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
+bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
+(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
+(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D2 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro );
 
     _ddgamma_D0D1D2D1[ijk]=
 /* mcode in progress ... */
@@ -1261,15 +1261,15 @@ Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), y);
 // c
 // k0
 // k1
-bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k1(x, y, z), y, z) + bbn_ks_c(x, y, z)*
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k0(x, y, z), y, z) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), z) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), y) + bbn_ks_k0(x, y, z)*
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), y, z) + bbn_ks_k0(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), z) + bbn_ks_k0(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), y) + bbn_ks_k1(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), z) + bbn_ks_k1(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), y);
+bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_ddk1_D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+bbn_ks_k1(x, y, z)*(bbn_ks_ddk0_D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
+bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
+(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
+(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D2 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro );
 
     _ddgamma_D0D1D1D2[ijk]=
 /* mcode in progress ... */
@@ -1286,15 +1286,15 @@ Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), y);
 // c
 // k0
 // k1
-bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k1(x, y, z), y, z) + bbn_ks_c(x, y, z)*
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k0(x, y, z), y, z) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), z) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), y) + bbn_ks_k0(x, y, z)*
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), y, z) + bbn_ks_k0(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), z) + bbn_ks_k0(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), y) + bbn_ks_k1(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), z) + bbn_ks_k1(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), y);
+bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_ddk1_D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+bbn_ks_k1(x, y, z)*(bbn_ks_ddk0_D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
+bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
+(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
+(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D2 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro );
 
     _ddgamma_D1D1D2D1[ijk]=
 /* mcode in progress ... */
@@ -1307,11 +1307,11 @@ Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), y);
 // Derivative
 // c
 // k1
-2*bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k1(x, y, z), y, z) + 2*bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), z) + 
-pow(bbn_ks_k1(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), y, z) + 2*bbn_ks_k1(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), z) + 2*bbn_ks_k1(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), y);
+2*bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_ddk1_D1D2 KS_func_pass_args_macro ) + 2*bbn_ks_c(x, y, z)*
+(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + 
+pow(bbn_ks_k1(x, y, z), 2)*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + 2*bbn_ks_k1(x, y, z)*
+(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + 2*bbn_ks_k1(x, y, z)*
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro );
 
     _ddgamma_D0D1D1D1[ijk]=
 /* mcode in progress ... */
@@ -1325,12 +1325,12 @@ Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), y);
 // c
 // k0
 // k1
-bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k1(x, y, z), (y, 2)) + bbn_ks_c(x, y, z)*
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k0(x, y, z), (y, 2)) + 2*bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), y) + bbn_ks_k0(x, y, z)*
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), (y, 2)) + 2*bbn_ks_k0(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), y) + 2*bbn_ks_k1(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), y);
+bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_ddk1_D1D1 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+bbn_ks_k1(x, y, z)*(bbn_ks_ddk0_D1D1 KS_func_pass_args_macro ) + 2*bbn_ks_c(x, y, z)*
+(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
+bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D1D1 KS_func_pass_args_macro ) + 2*bbn_ks_k0(x, y, z)*
+(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro ) + 2*bbn_ks_k1(x, y, z)*
+(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro );
 
     _ddgamma_D0D2D1D0[ijk]=
 /* mcode in progress ... */
@@ -1347,15 +1347,15 @@ Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), y);
 // c
 // k0
 // k2
-bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x, y) + bbn_ks_c(x, y, z)*
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x, y) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), y) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x) + bbn_ks_k0(x, y, z)*
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), x, y) + bbn_ks_k0(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), y) + bbn_ks_k0(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x) + bbn_ks_k2(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), y) + bbn_ks_k2(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x);
+bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_ddk2_D0D1 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+bbn_ks_k2(x, y, z)*(bbn_ks_ddk0_D0D1 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
+bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
+(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
+(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
+(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
+(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro );
 
     _ddgamma_D2D2D1D0[ijk]=
 /* mcode in progress ... */
@@ -1368,11 +1368,11 @@ Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x);
 // Derivative
 // c
 // k2
-2*bbn_ks_c(x, y, z)*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x, y) + 2*bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), y) + 
-pow(bbn_ks_k2(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), x, y) + 2*bbn_ks_k2(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), y) + 2*bbn_ks_k2(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x);
+2*bbn_ks_c(x, y, z)*bbn_ks_k2(x, y, z)*(bbn_ks_ddk2_D0D1 KS_func_pass_args_macro ) + 2*bbn_ks_c(x, y, z)*
+(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 
+pow(bbn_ks_k2(x, y, z), 2)*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 2*bbn_ks_k2(x, y, z)*
+(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 2*bbn_ks_k2(x, y, z)*
+(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro );
 
     _ddgamma_D0D1D2D2[ijk]=
 /* mcode in progress ... */
@@ -1386,12 +1386,12 @@ Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x);
 // c
 // k0
 // k1
-bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k1(x, y, z), (z, 2)) + bbn_ks_c(x, y, z)*
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k0(x, y, z), (z, 2)) + 2*bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), z) + bbn_ks_k0(x, y, z)*
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), (z, 2)) + 2*bbn_ks_k0(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), z) + 2*bbn_ks_k1(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), z);
+bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_ddk1_D2D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+bbn_ks_k1(x, y, z)*(bbn_ks_ddk0_D2D2 KS_func_pass_args_macro ) + 2*bbn_ks_c(x, y, z)*
+(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
+bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D2D2 KS_func_pass_args_macro ) + 2*bbn_ks_k0(x, y, z)*
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + 2*bbn_ks_k1(x, y, z)*
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D2 KS_func_pass_args_macro );
 
     _ddgamma_D2D2D0D0[ijk]=
 /* mcode in progress ... */
@@ -1402,10 +1402,10 @@ Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), z);
 // Derivative
 // c
 // k2
-2*bbn_ks_c(x, y, z)*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k2(x, y, z), (x, 2)) + 2*
-bbn_ks_c(x, y, z)*pow(Derivative(bbn_ks_k2(x, y, z), x), 2) + pow(bbn_ks_k2(x, y, z), 2)*
-Derivative(bbn_ks_c(x, y, z), (x, 2)) + 4*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), x)*
-Derivative(bbn_ks_k2(x, y, z), x);
+2*bbn_ks_c(x, y, z)*bbn_ks_k2(x, y, z)*(bbn_ks_ddk2_D0D0 KS_func_pass_args_macro ) + 2*
+bbn_ks_c(x, y, z)*pow((bbn_ks_dk2_D0 KS_func_pass_args_macro ), 2) + pow(bbn_ks_k2(x, y, z), 2)*
+(bbn_ks_ddc_D0D0 KS_func_pass_args_macro ) + 4*bbn_ks_k2(x, y, z)*(bbn_ks_dc_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk2_D0 KS_func_pass_args_macro );
 
     _ddgamma_D0D0D2D1[ijk]=
 /* mcode in progress ... */
@@ -1418,11 +1418,11 @@ Derivative(bbn_ks_k2(x, y, z), x);
 // Derivative
 // c
 // k0
-2*bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k0(x, y, z), y, z) + 2*bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), z) + 
-pow(bbn_ks_k0(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), y, z) + 2*bbn_ks_k0(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), z) + 2*bbn_ks_k0(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), y);
+2*bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_ddk0_D1D2 KS_func_pass_args_macro ) + 2*bbn_ks_c(x, y, z)*
+(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D2 KS_func_pass_args_macro ) + 
+pow(bbn_ks_k0(x, y, z), 2)*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + 2*bbn_ks_k0(x, y, z)*
+(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D2 KS_func_pass_args_macro ) + 2*bbn_ks_k0(x, y, z)*
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro );
 
     _ddgamma_D0D2D2D2[ijk]=
 /* mcode in progress ... */
@@ -1436,12 +1436,12 @@ Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), y);
 // c
 // k0
 // k2
-bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k2(x, y, z), (z, 2)) + bbn_ks_c(x, y, z)*
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k0(x, y, z), (z, 2)) + 2*bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), z) + bbn_ks_k0(x, y, z)*
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (z, 2)) + 2*bbn_ks_k0(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), z) + 2*bbn_ks_k2(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), z);
+bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_ddk2_D2D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+bbn_ks_k2(x, y, z)*(bbn_ks_ddk0_D2D2 KS_func_pass_args_macro ) + 2*bbn_ks_c(x, y, z)*
+(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
+bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D2D2 KS_func_pass_args_macro ) + 2*bbn_ks_k0(x, y, z)*
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 2*bbn_ks_k2(x, y, z)*
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D2 KS_func_pass_args_macro );
 
     _ddgamma_D1D1D1D2[ijk]=
 /* mcode in progress ... */
@@ -1454,11 +1454,11 @@ Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), z);
 // Derivative
 // c
 // k1
-2*bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k1(x, y, z), y, z) + 2*bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), z) + 
-pow(bbn_ks_k1(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), y, z) + 2*bbn_ks_k1(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), z) + 2*bbn_ks_k1(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), y);
+2*bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_ddk1_D1D2 KS_func_pass_args_macro ) + 2*bbn_ks_c(x, y, z)*
+(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + 
+pow(bbn_ks_k1(x, y, z), 2)*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + 2*bbn_ks_k1(x, y, z)*
+(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + 2*bbn_ks_k1(x, y, z)*
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro );
 
     _ddgamma_D1D2D2D1[ijk]=
 /* mcode in progress ... */
@@ -1475,15 +1475,15 @@ Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), y);
 // c
 // k1
 // k2
-bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k2(x, y, z), y, z) + bbn_ks_c(x, y, z)*
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k1(x, y, z), y, z) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), z) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), y) + bbn_ks_k1(x, y, z)*
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), y, z) + bbn_ks_k1(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), z) + bbn_ks_k1(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), y) + bbn_ks_k2(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), z) + bbn_ks_k2(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), y);
+bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_ddk2_D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+bbn_ks_k2(x, y, z)*(bbn_ks_ddk1_D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
+bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
+(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
+(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro );
 
     _ddgamma_D0D0D1D2[ijk]=
 /* mcode in progress ... */
@@ -1496,11 +1496,11 @@ Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), y);
 // Derivative
 // c
 // k0
-2*bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k0(x, y, z), y, z) + 2*bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), z) + 
-pow(bbn_ks_k0(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), y, z) + 2*bbn_ks_k0(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), z) + 2*bbn_ks_k0(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), y);
+2*bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_ddk0_D1D2 KS_func_pass_args_macro ) + 2*bbn_ks_c(x, y, z)*
+(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D2 KS_func_pass_args_macro ) + 
+pow(bbn_ks_k0(x, y, z), 2)*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + 2*bbn_ks_k0(x, y, z)*
+(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D2 KS_func_pass_args_macro ) + 2*bbn_ks_k0(x, y, z)*
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro );
 
     _ddgamma_D0D2D0D2[ijk]=
 /* mcode in progress ... */
@@ -1517,15 +1517,15 @@ Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), y);
 // c
 // k0
 // k2
-bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x, z) + bbn_ks_c(x, y, z)*
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x, z) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), z) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x) + bbn_ks_k0(x, y, z)*
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), x, z) + bbn_ks_k0(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), z) + bbn_ks_k0(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x) + bbn_ks_k2(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), z) + bbn_ks_k2(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x);
+bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_ddk2_D0D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+bbn_ks_k2(x, y, z)*(bbn_ks_ddk0_D0D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
+bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
+(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
+(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D2 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro );
 
     _ddgamma_D1D1D0D2[ijk]=
 /* mcode in progress ... */
@@ -1538,11 +1538,11 @@ Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x);
 // Derivative
 // c
 // k1
-2*bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x, z) + 2*bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), z) + 
-pow(bbn_ks_k1(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), x, z) + 2*bbn_ks_k1(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), z) + 2*bbn_ks_k1(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x);
+2*bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_ddk1_D0D2 KS_func_pass_args_macro ) + 2*bbn_ks_c(x, y, z)*
+(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + 
+pow(bbn_ks_k1(x, y, z), 2)*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + 2*bbn_ks_k1(x, y, z)*
+(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + 2*bbn_ks_k1(x, y, z)*
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro );
 
     _ddgamma_D2D2D0D1[ijk]=
 /* mcode in progress ... */
@@ -1555,11 +1555,11 @@ Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x);
 // Derivative
 // c
 // k2
-2*bbn_ks_c(x, y, z)*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x, y) + 2*bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), y) + 
-pow(bbn_ks_k2(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), x, y) + 2*bbn_ks_k2(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), y) + 2*bbn_ks_k2(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x);
+2*bbn_ks_c(x, y, z)*bbn_ks_k2(x, y, z)*(bbn_ks_ddk2_D0D1 KS_func_pass_args_macro ) + 2*bbn_ks_c(x, y, z)*
+(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 
+pow(bbn_ks_k2(x, y, z), 2)*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 2*bbn_ks_k2(x, y, z)*
+(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 2*bbn_ks_k2(x, y, z)*
+(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro );
   }	
 }
 
@@ -1766,26 +1766,26 @@ double *const _dddgamma_D1D2D0D2D2 = get_v("_dddgamma_D1D2D0D2D2",params);
 // c
 // k0
 // k1
-bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k1(x, y, z), y, (z, 2)) + bbn_ks_c(x, y, z)*
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k0(x, y, z), y, (z, 2)) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), (z, 2)) + 2*
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), y, z) + 
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), (z, 2))*Derivative(bbn_ks_k1(x, y, z), y) + 
-2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), y, z) + 
-bbn_ks_k0(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), y, (z, 2)) + 
-bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), (z, 2)) + 
-2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), y, z) + 
-bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), (z, 2))*Derivative(bbn_ks_k1(x, y, z), y) + 
-2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), y, z) + 
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), (z, 2)) + 
-2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), y, z) + 
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), (z, 2))*Derivative(bbn_ks_k0(x, y, z), y) + 
-2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), y, z) + 
-2*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), z)*
-Derivative(bbn_ks_k1(x, y, z), z) + 2*Derivative(bbn_ks_c(x, y, z), z)*
-Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), z) + 2*
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), z)*
-Derivative(bbn_ks_k1(x, y, z), y);
+bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dddk1_D1D2D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+bbn_ks_k1(x, y, z)*(bbn_ks_dddk0_D1D2D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D2D2 KS_func_pass_args_macro ) + 2*
+bbn_ks_c(x, y, z)*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D2 KS_func_pass_args_macro ) + 
+bbn_ks_c(x, y, z)*(bbn_ks_ddk0_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro ) + 
+2*bbn_ks_c(x, y, z)*(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D2 KS_func_pass_args_macro ) + 
+bbn_ks_k0(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_dddc_D1D2D2 KS_func_pass_args_macro ) + 
+bbn_ks_k0(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D2D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_k0(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D2 KS_func_pass_args_macro ) + 
+bbn_ks_k0(x, y, z)*(bbn_ks_ddc_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro ) + 
+2*bbn_ks_k0(x, y, z)*(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
+bbn_ks_k1(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D2D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_k1(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D2 KS_func_pass_args_macro ) + 
+bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro ) + 
+2*bbn_ks_k1(x, y, z)*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
+2*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*
+(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D2 KS_func_pass_args_macro )*
+(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + 2*
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*
+(bbn_ks_dk1_D1 KS_func_pass_args_macro );
 
     _dddgamma_D0D1D2D0D1[ijk]=
 /* mcode in progress ... */
@@ -1814,36 +1814,36 @@ Derivative(bbn_ks_k1(x, y, z), y);
 // c
 // k0
 // k1
-bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x, y, z) + bbn_ks_c(x, y, z)*
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x, y, z) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), y, z) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x, z) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x, y) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), y, z) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x, z) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x, y) + bbn_ks_k0(x, y, z)*
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), x, y, z) + bbn_ks_k0(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), y, z) + bbn_ks_k0(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x, z) + bbn_ks_k0(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x, y) + bbn_ks_k0(x, y, z)*
-Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), y, z) + bbn_ks_k0(x, y, z)*
-Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), x, z) + bbn_ks_k0(x, y, z)*
-Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), x, y) + bbn_ks_k1(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), y, z) + bbn_ks_k1(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x, z) + bbn_ks_k1(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x, y) + bbn_ks_k1(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), y, z) + bbn_ks_k1(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), x, z) + bbn_ks_k1(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), x, y) + 
-Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), y)*
-Derivative(bbn_ks_k1(x, y, z), z) + Derivative(bbn_ks_c(x, y, z), x)*
-Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), y) + 
-Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x)*
-Derivative(bbn_ks_k1(x, y, z), z) + Derivative(bbn_ks_c(x, y, z), y)*
-Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x) + 
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x)*
-Derivative(bbn_ks_k1(x, y, z), y) + Derivative(bbn_ks_c(x, y, z), z)*
-Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x);
+bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dddk1_D0D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+bbn_ks_k1(x, y, z)*(bbn_ks_dddk0_D0D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D1 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D1 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
+bbn_ks_k1(x, y, z)*(bbn_ks_dddc_D0D1D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
+(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
+(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D1 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
+(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
+(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
+(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
+(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D2 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
+(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D2 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D1 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
+(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
+(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
+(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*
+(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + (bbn_ks_dc_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro ) + 
+(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + (bbn_ks_dc_D1 KS_func_pass_args_macro )*
+(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro ) + 
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk1_D1 KS_func_pass_args_macro ) + (bbn_ks_dc_D2 KS_func_pass_args_macro )*
+(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro );
 
     _dddgamma_D1D2D0D2D0[ijk]=
 /* mcode in progress ... */
@@ -1866,26 +1866,26 @@ Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x);
 // c
 // k1
 // k2
-bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k2(x, y, z), (x, 2), z) + bbn_ks_c(x, y, z)*
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k1(x, y, z), (x, 2), z) + 2*bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), x, z) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k1(x, y, z), (x, 2))*Derivative(bbn_ks_k2(x, y, z), z) + 
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), (x, 2)) + 
-2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), x, z) + 
-bbn_ks_k1(x, y, z)*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2), z) + 2*
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), x, z) + 
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2))*Derivative(bbn_ks_k2(x, y, z), z) + 
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), (x, 2)) + 
-2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), x, z) + 
-2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), x, z) + 
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2))*Derivative(bbn_ks_k1(x, y, z), z) + 
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), (x, 2)) + 
-2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), x, z) + 
-2*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), x)*
-Derivative(bbn_ks_k2(x, y, z), z) + 2*Derivative(bbn_ks_c(x, y, z), x)*
-Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x) + 2*
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x)*
-Derivative(bbn_ks_k2(x, y, z), x);
+bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_dddk2_D0D0D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+bbn_ks_k2(x, y, z)*(bbn_ks_dddk1_D0D0D2 KS_func_pass_args_macro ) + 2*bbn_ks_c(x, y, z)*
+(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_ddk1_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 
+bbn_ks_c(x, y, z)*(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D0 KS_func_pass_args_macro ) + 
+2*bbn_ks_c(x, y, z)*(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D2 KS_func_pass_args_macro ) + 
+bbn_ks_k1(x, y, z)*bbn_ks_k2(x, y, z)*(bbn_ks_dddc_D0D0D2 KS_func_pass_args_macro ) + 2*
+bbn_ks_k1(x, y, z)*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D2 KS_func_pass_args_macro ) + 
+bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 
+bbn_ks_k1(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D0 KS_func_pass_args_macro ) + 
+2*bbn_ks_k1(x, y, z)*(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_k2(x, y, z)*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D2 KS_func_pass_args_macro ) + 
+bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + 
+bbn_ks_k2(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D0 KS_func_pass_args_macro ) + 
+2*bbn_ks_k2(x, y, z)*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
+2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + 2*
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk2_D0 KS_func_pass_args_macro );
 
     _dddgamma_D1D1D1D2D1[ijk]=
 /* mcode in progress ... */
@@ -1902,17 +1902,17 @@ Derivative(bbn_ks_k2(x, y, z), x);
 // Derivative
 // c
 // k1
-2*bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k1(x, y, z), (y, 2), z) + 4*
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), y, z) + 
-2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), (y, 2))*Derivative(bbn_ks_k1(x, y, z), z) + 
-pow(bbn_ks_k1(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), (y, 2), z) + 4*bbn_ks_k1(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), y, z) + 2*
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), (y, 2))*Derivative(bbn_ks_k1(x, y, z), z) + 
-2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), (y, 2)) + 
-4*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), y, z) + 
-4*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), y)*
-Derivative(bbn_ks_k1(x, y, z), z) + 2*Derivative(bbn_ks_c(x, y, z), z)*
-pow(Derivative(bbn_ks_k1(x, y, z), y), 2);
+2*bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_dddk1_D1D1D2 KS_func_pass_args_macro ) + 4*
+bbn_ks_c(x, y, z)*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_c(x, y, z)*(bbn_ks_ddk1_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + 
+pow(bbn_ks_k1(x, y, z), 2)*(bbn_ks_dddc_D1D1D2 KS_func_pass_args_macro ) + 4*bbn_ks_k1(x, y, z)*
+(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D2 KS_func_pass_args_macro ) + 2*
+bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_k1(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D1 KS_func_pass_args_macro ) + 
+4*bbn_ks_k1(x, y, z)*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
+4*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*
+(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D2 KS_func_pass_args_macro )*
+pow((bbn_ks_dk1_D1 KS_func_pass_args_macro ), 2);
 
     _dddgamma_D0D2D0D0D1[ijk]=
 /* mcode in progress ... */
@@ -1935,26 +1935,26 @@ pow(Derivative(bbn_ks_k1(x, y, z), y), 2);
 // c
 // k0
 // k2
-bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k2(x, y, z), (x, 2), y) + bbn_ks_c(x, y, z)*
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k0(x, y, z), (x, 2), y) + 2*bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), x, y) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), (x, 2))*Derivative(bbn_ks_k2(x, y, z), y) + 
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), (x, 2)) + 
-2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), x, y) + 
-bbn_ks_k0(x, y, z)*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2), y) + 2*
-bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), x, y) + 
-bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2))*Derivative(bbn_ks_k2(x, y, z), y) + 
-bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), (x, 2)) + 
-2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), x, y) + 
-2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), x, y) + 
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2))*Derivative(bbn_ks_k0(x, y, z), y) + 
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), (x, 2)) + 
-2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), x, y) + 
-2*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), x)*
-Derivative(bbn_ks_k2(x, y, z), y) + 2*Derivative(bbn_ks_c(x, y, z), x)*
-Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x) + 2*
-Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x)*
-Derivative(bbn_ks_k2(x, y, z), x);
+bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dddk2_D0D0D1 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+bbn_ks_k2(x, y, z)*(bbn_ks_dddk0_D0D0D1 KS_func_pass_args_macro ) + 2*bbn_ks_c(x, y, z)*
+(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D1 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_ddk0_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 
+bbn_ks_c(x, y, z)*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D0 KS_func_pass_args_macro ) + 
+2*bbn_ks_c(x, y, z)*(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D1 KS_func_pass_args_macro ) + 
+bbn_ks_k0(x, y, z)*bbn_ks_k2(x, y, z)*(bbn_ks_dddc_D0D0D1 KS_func_pass_args_macro ) + 2*
+bbn_ks_k0(x, y, z)*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D1 KS_func_pass_args_macro ) + 
+bbn_ks_k0(x, y, z)*(bbn_ks_ddc_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 
+bbn_ks_k0(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D0 KS_func_pass_args_macro ) + 
+2*bbn_ks_k0(x, y, z)*(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+2*bbn_ks_k2(x, y, z)*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D1 KS_func_pass_args_macro ) + 
+bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro ) + 
+bbn_ks_k2(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D0 KS_func_pass_args_macro ) + 
+2*bbn_ks_k2(x, y, z)*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + 2*
+(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk2_D0 KS_func_pass_args_macro );
 
     _dddgamma_D0D2D0D2D2[ijk]=
 /* mcode in progress ... */
@@ -1977,26 +1977,26 @@ Derivative(bbn_ks_k2(x, y, z), x);
 // c
 // k0
 // k2
-bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x, (z, 2)) + bbn_ks_c(x, y, z)*
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x, (z, 2)) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), (z, 2)) + 2*
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x, z) + 
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), (z, 2))*Derivative(bbn_ks_k2(x, y, z), x) + 
-2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x, z) + 
-bbn_ks_k0(x, y, z)*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), x, (z, 2)) + 
-bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), (z, 2)) + 
-2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x, z) + 
-bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), (z, 2))*Derivative(bbn_ks_k2(x, y, z), x) + 
-2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k2(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), x, z) + 
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), (z, 2)) + 
-2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x, z) + 
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (z, 2))*Derivative(bbn_ks_k0(x, y, z), x) + 
-2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), x, z) + 
-2*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), z)*
-Derivative(bbn_ks_k2(x, y, z), z) + 2*Derivative(bbn_ks_c(x, y, z), z)*
-Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), z) + 2*
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), z)*
-Derivative(bbn_ks_k2(x, y, z), x);
+bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dddk2_D0D2D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+bbn_ks_k2(x, y, z)*(bbn_ks_dddk0_D0D2D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D2D2 KS_func_pass_args_macro ) + 2*
+bbn_ks_c(x, y, z)*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D2 KS_func_pass_args_macro ) + 
+bbn_ks_c(x, y, z)*(bbn_ks_ddk0_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + 
+2*bbn_ks_c(x, y, z)*(bbn_ks_dk2_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D2 KS_func_pass_args_macro ) + 
+bbn_ks_k0(x, y, z)*bbn_ks_k2(x, y, z)*(bbn_ks_dddc_D0D2D2 KS_func_pass_args_macro ) + 
+bbn_ks_k0(x, y, z)*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D2D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_k0(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D2 KS_func_pass_args_macro ) + 
+bbn_ks_k0(x, y, z)*(bbn_ks_ddc_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + 
+2*bbn_ks_k0(x, y, z)*(bbn_ks_dk2_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
+bbn_ks_k2(x, y, z)*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D2D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_k2(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D2 KS_func_pass_args_macro ) + 
+bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro ) + 
+2*bbn_ks_k2(x, y, z)*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
+2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*
+(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D2 KS_func_pass_args_macro )*
+(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 2*
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*
+(bbn_ks_dk2_D0 KS_func_pass_args_macro );
 
     _dddgamma_D2D2D2D1D2[ijk]=
 /* mcode in progress ... */
@@ -2013,17 +2013,17 @@ Derivative(bbn_ks_k2(x, y, z), x);
 // Derivative
 // c
 // k2
-2*bbn_ks_c(x, y, z)*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k2(x, y, z), y, (z, 2)) + 2*
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), (z, 2)) + 
-4*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), y, z) + 
-pow(bbn_ks_k2(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), y, (z, 2)) + 2*bbn_ks_k2(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), (z, 2)) + 4*
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), y, z) + 
-2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (z, 2))*Derivative(bbn_ks_k2(x, y, z), y) + 
-4*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k2(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), y, z) + 
-2*Derivative(bbn_ks_c(x, y, z), y)*pow(Derivative(bbn_ks_k2(x, y, z), z), 2) + 4*
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), y)*
-Derivative(bbn_ks_k2(x, y, z), z);
+2*bbn_ks_c(x, y, z)*bbn_ks_k2(x, y, z)*(bbn_ks_dddk2_D1D2D2 KS_func_pass_args_macro ) + 2*
+bbn_ks_c(x, y, z)*(bbn_ks_dk2_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D2D2 KS_func_pass_args_macro ) + 
+4*bbn_ks_c(x, y, z)*(bbn_ks_dk2_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D2 KS_func_pass_args_macro ) + 
+pow(bbn_ks_k2(x, y, z), 2)*(bbn_ks_dddc_D1D2D2 KS_func_pass_args_macro ) + 2*bbn_ks_k2(x, y, z)*
+(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D2D2 KS_func_pass_args_macro ) + 4*
+bbn_ks_k2(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 
+4*bbn_ks_k2(x, y, z)*(bbn_ks_dk2_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
+2*(bbn_ks_dc_D1 KS_func_pass_args_macro )*pow((bbn_ks_dk2_D2 KS_func_pass_args_macro ), 2) + 4*
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro )*
+(bbn_ks_dk2_D2 KS_func_pass_args_macro );
 
     _dddgamma_D0D1D0D2D0[ijk]=
 /* mcode in progress ... */
@@ -2046,26 +2046,26 @@ Derivative(bbn_ks_k2(x, y, z), z);
 // c
 // k0
 // k1
-bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k1(x, y, z), (x, 2), z) + bbn_ks_c(x, y, z)*
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k0(x, y, z), (x, 2), z) + 2*bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), x, z) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), (x, 2))*Derivative(bbn_ks_k1(x, y, z), z) + 
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), (x, 2)) + 
-2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), x, z) + 
-bbn_ks_k0(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2), z) + 2*
-bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), x, z) + 
-bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2))*Derivative(bbn_ks_k1(x, y, z), z) + 
-bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), (x, 2)) + 
-2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), x, z) + 
-2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), x, z) + 
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2))*Derivative(bbn_ks_k0(x, y, z), z) + 
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), (x, 2)) + 
-2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), x, z) + 
-2*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), x)*
-Derivative(bbn_ks_k1(x, y, z), z) + 2*Derivative(bbn_ks_c(x, y, z), x)*
-Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x) + 2*
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x)*
-Derivative(bbn_ks_k1(x, y, z), x);
+bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dddk1_D0D0D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+bbn_ks_k1(x, y, z)*(bbn_ks_dddk0_D0D0D2 KS_func_pass_args_macro ) + 2*bbn_ks_c(x, y, z)*
+(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_ddk0_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + 
+bbn_ks_c(x, y, z)*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D0 KS_func_pass_args_macro ) + 
+2*bbn_ks_c(x, y, z)*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D2 KS_func_pass_args_macro ) + 
+bbn_ks_k0(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_dddc_D0D0D2 KS_func_pass_args_macro ) + 2*
+bbn_ks_k0(x, y, z)*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D2 KS_func_pass_args_macro ) + 
+bbn_ks_k0(x, y, z)*(bbn_ks_ddc_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + 
+bbn_ks_k0(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D0 KS_func_pass_args_macro ) + 
+2*bbn_ks_k0(x, y, z)*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_k1(x, y, z)*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D2 KS_func_pass_args_macro ) + 
+bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D2 KS_func_pass_args_macro ) + 
+bbn_ks_k1(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D0 KS_func_pass_args_macro ) + 
+2*bbn_ks_k1(x, y, z)*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
+2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro ) + 2*
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk1_D0 KS_func_pass_args_macro );
 
     _dddgamma_D1D1D2D2D0[ijk]=
 /* mcode in progress ... */
@@ -2082,17 +2082,17 @@ Derivative(bbn_ks_k1(x, y, z), x);
 // Derivative
 // c
 // k1
-2*bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x, (z, 2)) + 2*
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), (z, 2)) + 
-4*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x, z) + 
-pow(bbn_ks_k1(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), x, (z, 2)) + 2*bbn_ks_k1(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), (z, 2)) + 4*
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x, z) + 
-2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), (z, 2))*Derivative(bbn_ks_k1(x, y, z), x) + 
-4*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), x, z) + 
-2*Derivative(bbn_ks_c(x, y, z), x)*pow(Derivative(bbn_ks_k1(x, y, z), z), 2) + 4*
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x)*
-Derivative(bbn_ks_k1(x, y, z), z);
+2*bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_dddk1_D0D2D2 KS_func_pass_args_macro ) + 2*
+bbn_ks_c(x, y, z)*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D2D2 KS_func_pass_args_macro ) + 
+4*bbn_ks_c(x, y, z)*(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D2 KS_func_pass_args_macro ) + 
+pow(bbn_ks_k1(x, y, z), 2)*(bbn_ks_dddc_D0D2D2 KS_func_pass_args_macro ) + 2*bbn_ks_k1(x, y, z)*
+(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D2D2 KS_func_pass_args_macro ) + 4*
+bbn_ks_k1(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro ) + 
+4*bbn_ks_k1(x, y, z)*(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
+2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*pow((bbn_ks_dk1_D2 KS_func_pass_args_macro ), 2) + 4*
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk1_D2 KS_func_pass_args_macro );
 
     _dddgamma_D0D2D0D2D1[ijk]=
 /* mcode in progress ... */
@@ -2121,36 +2121,36 @@ Derivative(bbn_ks_k1(x, y, z), z);
 // c
 // k0
 // k2
-bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x, y, z) + bbn_ks_c(x, y, z)*
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x, y, z) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), y, z) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x, z) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x, y) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), y, z) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k2(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x, z) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k2(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x, y) + bbn_ks_k0(x, y, z)*
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), x, y, z) + bbn_ks_k0(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), y, z) + bbn_ks_k0(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x, z) + bbn_ks_k0(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x, y) + bbn_ks_k0(x, y, z)*
-Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), y, z) + bbn_ks_k0(x, y, z)*
-Derivative(bbn_ks_k2(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), x, z) + bbn_ks_k0(x, y, z)*
-Derivative(bbn_ks_k2(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), x, y) + bbn_ks_k2(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), y, z) + bbn_ks_k2(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x, z) + bbn_ks_k2(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x, y) + bbn_ks_k2(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), y, z) + bbn_ks_k2(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), x, z) + bbn_ks_k2(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), x, y) + 
-Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), y)*
-Derivative(bbn_ks_k2(x, y, z), z) + Derivative(bbn_ks_c(x, y, z), x)*
-Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), y) + 
-Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x)*
-Derivative(bbn_ks_k2(x, y, z), z) + Derivative(bbn_ks_c(x, y, z), y)*
-Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x) + 
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x)*
-Derivative(bbn_ks_k2(x, y, z), y) + Derivative(bbn_ks_c(x, y, z), z)*
-Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x);
+bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dddk2_D0D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+bbn_ks_k2(x, y, z)*(bbn_ks_dddk0_D0D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D1 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk2_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk2_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D1 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
+bbn_ks_k2(x, y, z)*(bbn_ks_dddc_D0D1D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
+(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
+(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D1 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
+(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
+(bbn_ks_dk2_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
+(bbn_ks_dk2_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
+(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D2 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
+(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D2 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D1 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
+(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
+(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
+(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*
+(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + (bbn_ks_dc_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 
+(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + (bbn_ks_dc_D1 KS_func_pass_args_macro )*
+(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + 
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + (bbn_ks_dc_D2 KS_func_pass_args_macro )*
+(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro );
 
     _dddgamma_D1D1D2D1D0[ijk]=
 /* mcode in progress ... */
@@ -2171,22 +2171,22 @@ Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x);
 // Derivative
 // c
 // k1
-2*bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x, y, z) + 2*
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), y, z) + 
-2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x, z) + 
-2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x, y) + 
-pow(bbn_ks_k1(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), x, y, z) + 2*bbn_ks_k1(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), y, z) + 2*
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x, z) + 
-2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x, y) + 
-2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), y, z) + 
-2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), x, z) + 
-2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), x, y) + 
-2*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), y)*
-Derivative(bbn_ks_k1(x, y, z), z) + 2*Derivative(bbn_ks_c(x, y, z), y)*
-Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), z) + 2*
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x)*
-Derivative(bbn_ks_k1(x, y, z), y);
+2*bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_dddk1_D0D1D2 KS_func_pass_args_macro ) + 2*
+bbn_ks_c(x, y, z)*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_c(x, y, z)*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_c(x, y, z)*(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D1 KS_func_pass_args_macro ) + 
+pow(bbn_ks_k1(x, y, z), 2)*(bbn_ks_dddc_D0D1D2 KS_func_pass_args_macro ) + 2*bbn_ks_k1(x, y, z)*
+(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D2 KS_func_pass_args_macro ) + 2*
+bbn_ks_k1(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_k1(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D1 KS_func_pass_args_macro ) + 
+2*bbn_ks_k1(x, y, z)*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_k1(x, y, z)*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_k1(x, y, z)*(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*
+(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D1 KS_func_pass_args_macro )*
+(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + 2*
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk1_D1 KS_func_pass_args_macro );
 
     _dddgamma_D1D1D0D1D2[ijk]=
 /* mcode in progress ... */
@@ -2207,22 +2207,22 @@ Derivative(bbn_ks_k1(x, y, z), y);
 // Derivative
 // c
 // k1
-2*bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x, y, z) + 2*
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), y, z) + 
-2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x, z) + 
-2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x, y) + 
-pow(bbn_ks_k1(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), x, y, z) + 2*bbn_ks_k1(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), y, z) + 2*
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x, z) + 
-2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x, y) + 
-2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), y, z) + 
-2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), x, z) + 
-2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), x, y) + 
-2*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), y)*
-Derivative(bbn_ks_k1(x, y, z), z) + 2*Derivative(bbn_ks_c(x, y, z), y)*
-Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), z) + 2*
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x)*
-Derivative(bbn_ks_k1(x, y, z), y);
+2*bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_dddk1_D0D1D2 KS_func_pass_args_macro ) + 2*
+bbn_ks_c(x, y, z)*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_c(x, y, z)*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_c(x, y, z)*(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D1 KS_func_pass_args_macro ) + 
+pow(bbn_ks_k1(x, y, z), 2)*(bbn_ks_dddc_D0D1D2 KS_func_pass_args_macro ) + 2*bbn_ks_k1(x, y, z)*
+(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D2 KS_func_pass_args_macro ) + 2*
+bbn_ks_k1(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_k1(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D1 KS_func_pass_args_macro ) + 
+2*bbn_ks_k1(x, y, z)*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_k1(x, y, z)*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_k1(x, y, z)*(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*
+(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D1 KS_func_pass_args_macro )*
+(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + 2*
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk1_D1 KS_func_pass_args_macro );
 
     _dddgamma_D0D2D1D1D0[ijk]=
 /* mcode in progress ... */
@@ -2245,26 +2245,26 @@ Derivative(bbn_ks_k1(x, y, z), y);
 // c
 // k0
 // k2
-bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x, (y, 2)) + bbn_ks_c(x, y, z)*
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x, (y, 2)) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), (y, 2)) + 2*
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x, y) + 
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), (y, 2))*Derivative(bbn_ks_k2(x, y, z), x) + 
-2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x, y) + 
-bbn_ks_k0(x, y, z)*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), x, (y, 2)) + 
-bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), (y, 2)) + 
-2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x, y) + 
-bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), (y, 2))*Derivative(bbn_ks_k2(x, y, z), x) + 
-2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k2(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), x, y) + 
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), (y, 2)) + 
-2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x, y) + 
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (y, 2))*Derivative(bbn_ks_k0(x, y, z), x) + 
-2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), x, y) + 
-2*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), y)*
-Derivative(bbn_ks_k2(x, y, z), y) + 2*Derivative(bbn_ks_c(x, y, z), y)*
-Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), y) + 2*
-Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), y)*
-Derivative(bbn_ks_k2(x, y, z), x);
+bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dddk2_D0D1D1 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+bbn_ks_k2(x, y, z)*(bbn_ks_dddk0_D0D1D1 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D1 KS_func_pass_args_macro ) + 2*
+bbn_ks_c(x, y, z)*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D1 KS_func_pass_args_macro ) + 
+bbn_ks_c(x, y, z)*(bbn_ks_ddk0_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + 
+2*bbn_ks_c(x, y, z)*(bbn_ks_dk2_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D1 KS_func_pass_args_macro ) + 
+bbn_ks_k0(x, y, z)*bbn_ks_k2(x, y, z)*(bbn_ks_dddc_D0D1D1 KS_func_pass_args_macro ) + 
+bbn_ks_k0(x, y, z)*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D1 KS_func_pass_args_macro ) + 
+2*bbn_ks_k0(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D1 KS_func_pass_args_macro ) + 
+bbn_ks_k0(x, y, z)*(bbn_ks_ddc_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + 
+2*bbn_ks_k0(x, y, z)*(bbn_ks_dk2_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+bbn_ks_k2(x, y, z)*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D1 KS_func_pass_args_macro ) + 
+2*bbn_ks_k2(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D1 KS_func_pass_args_macro ) + 
+bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro ) + 
+2*bbn_ks_k2(x, y, z)*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*
+(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D1 KS_func_pass_args_macro )*
+(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 2*
+(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*
+(bbn_ks_dk2_D0 KS_func_pass_args_macro );
 
     _dddgamma_D1D1D1D0D1[ijk]=
 /* mcode in progress ... */
@@ -2281,17 +2281,17 @@ Derivative(bbn_ks_k2(x, y, z), x);
 // Derivative
 // c
 // k1
-2*bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x, (y, 2)) + 2*
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), (y, 2)) + 
-4*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x, y) + 
-pow(bbn_ks_k1(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), x, (y, 2)) + 2*bbn_ks_k1(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), (y, 2)) + 4*
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x, y) + 
-2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), (y, 2))*Derivative(bbn_ks_k1(x, y, z), x) + 
-4*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), x, y) + 
-2*Derivative(bbn_ks_c(x, y, z), x)*pow(Derivative(bbn_ks_k1(x, y, z), y), 2) + 4*
-Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x)*
-Derivative(bbn_ks_k1(x, y, z), y);
+2*bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_dddk1_D0D1D1 KS_func_pass_args_macro ) + 2*
+bbn_ks_c(x, y, z)*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D1 KS_func_pass_args_macro ) + 
+4*bbn_ks_c(x, y, z)*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D1 KS_func_pass_args_macro ) + 
+pow(bbn_ks_k1(x, y, z), 2)*(bbn_ks_dddc_D0D1D1 KS_func_pass_args_macro ) + 2*bbn_ks_k1(x, y, z)*
+(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D1 KS_func_pass_args_macro ) + 4*
+bbn_ks_k1(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D1 KS_func_pass_args_macro ) + 
+2*bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro ) + 
+4*bbn_ks_k1(x, y, z)*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*pow((bbn_ks_dk1_D1 KS_func_pass_args_macro ), 2) + 4*
+(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk1_D1 KS_func_pass_args_macro );
 
     _dddgamma_D0D0D2D1D1[ijk]=
 /* mcode in progress ... */
@@ -2308,17 +2308,17 @@ Derivative(bbn_ks_k1(x, y, z), y);
 // Derivative
 // c
 // k0
-2*bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k0(x, y, z), (y, 2), z) + 4*
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), y, z) + 
-2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), (y, 2))*Derivative(bbn_ks_k0(x, y, z), z) + 
-pow(bbn_ks_k0(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), (y, 2), z) + 4*bbn_ks_k0(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), y, z) + 2*
-bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), (y, 2))*Derivative(bbn_ks_k0(x, y, z), z) + 
-2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), (y, 2)) + 
-4*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), y, z) + 
-4*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), y)*
-Derivative(bbn_ks_k0(x, y, z), z) + 2*Derivative(bbn_ks_c(x, y, z), z)*
-pow(Derivative(bbn_ks_k0(x, y, z), y), 2);
+2*bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dddk0_D1D1D2 KS_func_pass_args_macro ) + 4*
+bbn_ks_c(x, y, z)*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_c(x, y, z)*(bbn_ks_ddk0_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D2 KS_func_pass_args_macro ) + 
+pow(bbn_ks_k0(x, y, z), 2)*(bbn_ks_dddc_D1D1D2 KS_func_pass_args_macro ) + 4*bbn_ks_k0(x, y, z)*
+(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D2 KS_func_pass_args_macro ) + 2*
+bbn_ks_k0(x, y, z)*(bbn_ks_ddc_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_k0(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D1 KS_func_pass_args_macro ) + 
+4*bbn_ks_k0(x, y, z)*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
+4*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*
+(bbn_ks_dk0_D2 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D2 KS_func_pass_args_macro )*
+pow((bbn_ks_dk0_D1 KS_func_pass_args_macro ), 2);
 
     _dddgamma_D0D1D2D1D2[ijk]=
 /* mcode in progress ... */
@@ -2341,26 +2341,26 @@ pow(Derivative(bbn_ks_k0(x, y, z), y), 2);
 // c
 // k0
 // k1
-bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k1(x, y, z), y, (z, 2)) + bbn_ks_c(x, y, z)*
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k0(x, y, z), y, (z, 2)) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), (z, 2)) + 2*
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), y, z) + 
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), (z, 2))*Derivative(bbn_ks_k1(x, y, z), y) + 
-2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), y, z) + 
-bbn_ks_k0(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), y, (z, 2)) + 
-bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), (z, 2)) + 
-2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), y, z) + 
-bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), (z, 2))*Derivative(bbn_ks_k1(x, y, z), y) + 
-2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), y, z) + 
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), (z, 2)) + 
-2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), y, z) + 
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), (z, 2))*Derivative(bbn_ks_k0(x, y, z), y) + 
-2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), y, z) + 
-2*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), z)*
-Derivative(bbn_ks_k1(x, y, z), z) + 2*Derivative(bbn_ks_c(x, y, z), z)*
-Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), z) + 2*
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), z)*
-Derivative(bbn_ks_k1(x, y, z), y);
+bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dddk1_D1D2D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+bbn_ks_k1(x, y, z)*(bbn_ks_dddk0_D1D2D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D2D2 KS_func_pass_args_macro ) + 2*
+bbn_ks_c(x, y, z)*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D2 KS_func_pass_args_macro ) + 
+bbn_ks_c(x, y, z)*(bbn_ks_ddk0_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro ) + 
+2*bbn_ks_c(x, y, z)*(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D2 KS_func_pass_args_macro ) + 
+bbn_ks_k0(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_dddc_D1D2D2 KS_func_pass_args_macro ) + 
+bbn_ks_k0(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D2D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_k0(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D2 KS_func_pass_args_macro ) + 
+bbn_ks_k0(x, y, z)*(bbn_ks_ddc_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro ) + 
+2*bbn_ks_k0(x, y, z)*(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
+bbn_ks_k1(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D2D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_k1(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D2 KS_func_pass_args_macro ) + 
+bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro ) + 
+2*bbn_ks_k1(x, y, z)*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
+2*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*
+(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D2 KS_func_pass_args_macro )*
+(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + 2*
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*
+(bbn_ks_dk1_D1 KS_func_pass_args_macro );
 
     _dddgamma_D0D0D0D1D1[ijk]=
 /* mcode in progress ... */
@@ -2377,17 +2377,17 @@ Derivative(bbn_ks_k1(x, y, z), y);
 // Derivative
 // c
 // k0
-2*bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x, (y, 2)) + 2*
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), (y, 2)) + 
-4*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x, y) + 
-pow(bbn_ks_k0(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), x, (y, 2)) + 2*bbn_ks_k0(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), (y, 2)) + 4*
-bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x, y) + 
-2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), (y, 2))*Derivative(bbn_ks_k0(x, y, z), x) + 
-4*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), x, y) + 
-2*Derivative(bbn_ks_c(x, y, z), x)*pow(Derivative(bbn_ks_k0(x, y, z), y), 2) + 4*
-Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x)*
-Derivative(bbn_ks_k0(x, y, z), y);
+2*bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dddk0_D0D1D1 KS_func_pass_args_macro ) + 2*
+bbn_ks_c(x, y, z)*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D1 KS_func_pass_args_macro ) + 
+4*bbn_ks_c(x, y, z)*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D1 KS_func_pass_args_macro ) + 
+pow(bbn_ks_k0(x, y, z), 2)*(bbn_ks_dddc_D0D1D1 KS_func_pass_args_macro ) + 2*bbn_ks_k0(x, y, z)*
+(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D1 KS_func_pass_args_macro ) + 4*
+bbn_ks_k0(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D1 KS_func_pass_args_macro ) + 
+2*bbn_ks_k0(x, y, z)*(bbn_ks_ddc_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro ) + 
+4*bbn_ks_k0(x, y, z)*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*pow((bbn_ks_dk0_D1 KS_func_pass_args_macro ), 2) + 4*
+(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk0_D1 KS_func_pass_args_macro );
 
     _dddgamma_D2D2D1D2D1[ijk]=
 /* mcode in progress ... */
@@ -2404,17 +2404,17 @@ Derivative(bbn_ks_k0(x, y, z), y);
 // Derivative
 // c
 // k2
-2*bbn_ks_c(x, y, z)*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k2(x, y, z), (y, 2), z) + 4*
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), y, z) + 
-2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), (y, 2))*Derivative(bbn_ks_k2(x, y, z), z) + 
-pow(bbn_ks_k2(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), (y, 2), z) + 4*bbn_ks_k2(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), y, z) + 2*
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (y, 2))*Derivative(bbn_ks_k2(x, y, z), z) + 
-2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), (y, 2)) + 
-4*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k2(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), y, z) + 
-4*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), y)*
-Derivative(bbn_ks_k2(x, y, z), z) + 2*Derivative(bbn_ks_c(x, y, z), z)*
-pow(Derivative(bbn_ks_k2(x, y, z), y), 2);
+2*bbn_ks_c(x, y, z)*bbn_ks_k2(x, y, z)*(bbn_ks_dddk2_D1D1D2 KS_func_pass_args_macro ) + 4*
+bbn_ks_c(x, y, z)*(bbn_ks_dk2_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_c(x, y, z)*(bbn_ks_ddk2_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 
+pow(bbn_ks_k2(x, y, z), 2)*(bbn_ks_dddc_D1D1D2 KS_func_pass_args_macro ) + 4*bbn_ks_k2(x, y, z)*
+(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D2 KS_func_pass_args_macro ) + 2*
+bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_k2(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D1 KS_func_pass_args_macro ) + 
+4*bbn_ks_k2(x, y, z)*(bbn_ks_dk2_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
+4*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro )*
+(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D2 KS_func_pass_args_macro )*
+pow((bbn_ks_dk2_D1 KS_func_pass_args_macro ), 2);
 
     _dddgamma_D1D1D1D2D2[ijk]=
 /* mcode in progress ... */
@@ -2431,17 +2431,17 @@ pow(Derivative(bbn_ks_k2(x, y, z), y), 2);
 // Derivative
 // c
 // k1
-2*bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k1(x, y, z), y, (z, 2)) + 2*
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), (z, 2)) + 
-4*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), y, z) + 
-pow(bbn_ks_k1(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), y, (z, 2)) + 2*bbn_ks_k1(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), (z, 2)) + 4*
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), y, z) + 
-2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), (z, 2))*Derivative(bbn_ks_k1(x, y, z), y) + 
-4*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), y, z) + 
-2*Derivative(bbn_ks_c(x, y, z), y)*pow(Derivative(bbn_ks_k1(x, y, z), z), 2) + 4*
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), y)*
-Derivative(bbn_ks_k1(x, y, z), z);
+2*bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_dddk1_D1D2D2 KS_func_pass_args_macro ) + 2*
+bbn_ks_c(x, y, z)*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D2D2 KS_func_pass_args_macro ) + 
+4*bbn_ks_c(x, y, z)*(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D2 KS_func_pass_args_macro ) + 
+pow(bbn_ks_k1(x, y, z), 2)*(bbn_ks_dddc_D1D2D2 KS_func_pass_args_macro ) + 2*bbn_ks_k1(x, y, z)*
+(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D2D2 KS_func_pass_args_macro ) + 4*
+bbn_ks_k1(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro ) + 
+4*bbn_ks_k1(x, y, z)*(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
+2*(bbn_ks_dc_D1 KS_func_pass_args_macro )*pow((bbn_ks_dk1_D2 KS_func_pass_args_macro ), 2) + 4*
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*
+(bbn_ks_dk1_D2 KS_func_pass_args_macro );
 
     _dddgamma_D2D2D2D2D1[ijk]=
 /* mcode in progress ... */
@@ -2458,17 +2458,17 @@ Derivative(bbn_ks_k1(x, y, z), z);
 // Derivative
 // c
 // k2
-2*bbn_ks_c(x, y, z)*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k2(x, y, z), y, (z, 2)) + 2*
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), (z, 2)) + 
-4*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), y, z) + 
-pow(bbn_ks_k2(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), y, (z, 2)) + 2*bbn_ks_k2(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), (z, 2)) + 4*
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), y, z) + 
-2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (z, 2))*Derivative(bbn_ks_k2(x, y, z), y) + 
-4*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k2(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), y, z) + 
-2*Derivative(bbn_ks_c(x, y, z), y)*pow(Derivative(bbn_ks_k2(x, y, z), z), 2) + 4*
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), y)*
-Derivative(bbn_ks_k2(x, y, z), z);
+2*bbn_ks_c(x, y, z)*bbn_ks_k2(x, y, z)*(bbn_ks_dddk2_D1D2D2 KS_func_pass_args_macro ) + 2*
+bbn_ks_c(x, y, z)*(bbn_ks_dk2_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D2D2 KS_func_pass_args_macro ) + 
+4*bbn_ks_c(x, y, z)*(bbn_ks_dk2_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D2 KS_func_pass_args_macro ) + 
+pow(bbn_ks_k2(x, y, z), 2)*(bbn_ks_dddc_D1D2D2 KS_func_pass_args_macro ) + 2*bbn_ks_k2(x, y, z)*
+(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D2D2 KS_func_pass_args_macro ) + 4*
+bbn_ks_k2(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 
+4*bbn_ks_k2(x, y, z)*(bbn_ks_dk2_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
+2*(bbn_ks_dc_D1 KS_func_pass_args_macro )*pow((bbn_ks_dk2_D2 KS_func_pass_args_macro ), 2) + 4*
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro )*
+(bbn_ks_dk2_D2 KS_func_pass_args_macro );
 
     _dddgamma_D2D2D1D0D0[ijk]=
 /* mcode in progress ... */
@@ -2485,17 +2485,17 @@ Derivative(bbn_ks_k2(x, y, z), z);
 // Derivative
 // c
 // k2
-2*bbn_ks_c(x, y, z)*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k2(x, y, z), (x, 2), y) + 4*
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), x, y) + 
-2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), (x, 2))*Derivative(bbn_ks_k2(x, y, z), y) + 
-pow(bbn_ks_k2(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), (x, 2), y) + 4*bbn_ks_k2(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), x, y) + 2*
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2))*Derivative(bbn_ks_k2(x, y, z), y) + 
-2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), (x, 2)) + 
-4*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), x, y) + 
-4*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), x)*
-Derivative(bbn_ks_k2(x, y, z), y) + 2*Derivative(bbn_ks_c(x, y, z), y)*
-pow(Derivative(bbn_ks_k2(x, y, z), x), 2);
+2*bbn_ks_c(x, y, z)*bbn_ks_k2(x, y, z)*(bbn_ks_dddk2_D0D0D1 KS_func_pass_args_macro ) + 4*
+bbn_ks_c(x, y, z)*(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D1 KS_func_pass_args_macro ) + 
+2*bbn_ks_c(x, y, z)*(bbn_ks_ddk2_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 
+pow(bbn_ks_k2(x, y, z), 2)*(bbn_ks_dddc_D0D0D1 KS_func_pass_args_macro ) + 4*bbn_ks_k2(x, y, z)*
+(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D1 KS_func_pass_args_macro ) + 2*
+bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 
+2*bbn_ks_k2(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D0 KS_func_pass_args_macro ) + 
+4*bbn_ks_k2(x, y, z)*(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+4*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D1 KS_func_pass_args_macro )*
+pow((bbn_ks_dk2_D0 KS_func_pass_args_macro ), 2);
 
     _dddgamma_D0D1D2D1D1[ijk]=
 /* mcode in progress ... */
@@ -2518,26 +2518,26 @@ pow(Derivative(bbn_ks_k2(x, y, z), x), 2);
 // c
 // k0
 // k1
-bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k1(x, y, z), (y, 2), z) + bbn_ks_c(x, y, z)*
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k0(x, y, z), (y, 2), z) + 2*bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), y, z) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), (y, 2))*Derivative(bbn_ks_k1(x, y, z), z) + 
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), (y, 2)) + 
-2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), y, z) + 
-bbn_ks_k0(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), (y, 2), z) + 2*
-bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), y, z) + 
-bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), (y, 2))*Derivative(bbn_ks_k1(x, y, z), z) + 
-bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), (y, 2)) + 
-2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), y, z) + 
-2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), y, z) + 
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), (y, 2))*Derivative(bbn_ks_k0(x, y, z), z) + 
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), (y, 2)) + 
-2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), y, z) + 
-2*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), y)*
-Derivative(bbn_ks_k1(x, y, z), z) + 2*Derivative(bbn_ks_c(x, y, z), y)*
-Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), y) + 2*
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), y)*
-Derivative(bbn_ks_k1(x, y, z), y);
+bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dddk1_D1D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+bbn_ks_k1(x, y, z)*(bbn_ks_dddk0_D1D1D2 KS_func_pass_args_macro ) + 2*bbn_ks_c(x, y, z)*
+(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_ddk0_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + 
+bbn_ks_c(x, y, z)*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D1 KS_func_pass_args_macro ) + 
+2*bbn_ks_c(x, y, z)*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D2 KS_func_pass_args_macro ) + 
+bbn_ks_k0(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_dddc_D1D1D2 KS_func_pass_args_macro ) + 2*
+bbn_ks_k0(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D2 KS_func_pass_args_macro ) + 
+bbn_ks_k0(x, y, z)*(bbn_ks_ddc_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + 
+bbn_ks_k0(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D1 KS_func_pass_args_macro ) + 
+2*bbn_ks_k0(x, y, z)*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_k1(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D2 KS_func_pass_args_macro ) + 
+bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D2 KS_func_pass_args_macro ) + 
+bbn_ks_k1(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D1 KS_func_pass_args_macro ) + 
+2*bbn_ks_k1(x, y, z)*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
+2*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*
+(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D1 KS_func_pass_args_macro )*
+(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro ) + 2*
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*
+(bbn_ks_dk1_D1 KS_func_pass_args_macro );
 
     _dddgamma_D1D1D2D2D2[ijk]=
 /* mcode in progress ... */
@@ -2550,12 +2550,12 @@ Derivative(bbn_ks_k1(x, y, z), y);
 // Derivative
 // c
 // k1
-2*bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k1(x, y, z), (z, 3)) + 6*
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), (z, 2)) + 
-pow(bbn_ks_k1(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), (z, 3)) + 6*bbn_ks_k1(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), (z, 2)) + 6*
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), (z, 2))*Derivative(bbn_ks_k1(x, y, z), z) + 
-6*Derivative(bbn_ks_c(x, y, z), z)*pow(Derivative(bbn_ks_k1(x, y, z), z), 2);
+2*bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_dddk1_D2D2D2 KS_func_pass_args_macro ) + 6*
+bbn_ks_c(x, y, z)*(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D2D2 KS_func_pass_args_macro ) + 
+pow(bbn_ks_k1(x, y, z), 2)*(bbn_ks_dddc_D2D2D2 KS_func_pass_args_macro ) + 6*bbn_ks_k1(x, y, z)*
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D2D2 KS_func_pass_args_macro ) + 6*
+bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + 
+6*(bbn_ks_dc_D2 KS_func_pass_args_macro )*pow((bbn_ks_dk1_D2 KS_func_pass_args_macro ), 2);
 
     _dddgamma_D1D2D1D0D1[ijk]=
 /* mcode in progress ... */
@@ -2578,26 +2578,26 @@ bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), (z, 2))*Derivative(bbn_ks_k1(x,
 // c
 // k1
 // k2
-bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x, (y, 2)) + bbn_ks_c(x, y, z)*
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x, (y, 2)) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), (y, 2)) + 2*
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x, y) + 
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), (y, 2))*Derivative(bbn_ks_k2(x, y, z), x) + 
-2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x, y) + 
-bbn_ks_k1(x, y, z)*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), x, (y, 2)) + 
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), (y, 2)) + 
-2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x, y) + 
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), (y, 2))*Derivative(bbn_ks_k2(x, y, z), x) + 
-2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k2(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), x, y) + 
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), (y, 2)) + 
-2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x, y) + 
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (y, 2))*Derivative(bbn_ks_k1(x, y, z), x) + 
-2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), x, y) + 
-2*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), y)*
-Derivative(bbn_ks_k2(x, y, z), y) + 2*Derivative(bbn_ks_c(x, y, z), y)*
-Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), y) + 2*
-Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), y)*
-Derivative(bbn_ks_k2(x, y, z), x);
+bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_dddk2_D0D1D1 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+bbn_ks_k2(x, y, z)*(bbn_ks_dddk1_D0D1D1 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D1 KS_func_pass_args_macro ) + 2*
+bbn_ks_c(x, y, z)*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D1 KS_func_pass_args_macro ) + 
+bbn_ks_c(x, y, z)*(bbn_ks_ddk1_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + 
+2*bbn_ks_c(x, y, z)*(bbn_ks_dk2_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D1 KS_func_pass_args_macro ) + 
+bbn_ks_k1(x, y, z)*bbn_ks_k2(x, y, z)*(bbn_ks_dddc_D0D1D1 KS_func_pass_args_macro ) + 
+bbn_ks_k1(x, y, z)*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D1 KS_func_pass_args_macro ) + 
+2*bbn_ks_k1(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D1 KS_func_pass_args_macro ) + 
+bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + 
+2*bbn_ks_k1(x, y, z)*(bbn_ks_dk2_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+bbn_ks_k2(x, y, z)*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D1 KS_func_pass_args_macro ) + 
+2*bbn_ks_k2(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D1 KS_func_pass_args_macro ) + 
+bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro ) + 
+2*bbn_ks_k2(x, y, z)*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*
+(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D1 KS_func_pass_args_macro )*
+(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 2*
+(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*
+(bbn_ks_dk2_D0 KS_func_pass_args_macro );
 
     _dddgamma_D0D1D1D1D0[ijk]=
 /* mcode in progress ... */
@@ -2620,26 +2620,26 @@ Derivative(bbn_ks_k2(x, y, z), x);
 // c
 // k0
 // k1
-bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x, (y, 2)) + bbn_ks_c(x, y, z)*
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x, (y, 2)) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), (y, 2)) + 2*
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x, y) + 
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), (y, 2))*Derivative(bbn_ks_k1(x, y, z), x) + 
-2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x, y) + 
-bbn_ks_k0(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), x, (y, 2)) + 
-bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), (y, 2)) + 
-2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x, y) + 
-bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), (y, 2))*Derivative(bbn_ks_k1(x, y, z), x) + 
-2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), x, y) + 
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), (y, 2)) + 
-2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x, y) + 
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), (y, 2))*Derivative(bbn_ks_k0(x, y, z), x) + 
-2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), x, y) + 
-2*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), y)*
-Derivative(bbn_ks_k1(x, y, z), y) + 2*Derivative(bbn_ks_c(x, y, z), y)*
-Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), y) + 2*
-Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), y)*
-Derivative(bbn_ks_k1(x, y, z), x);
+bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dddk1_D0D1D1 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+bbn_ks_k1(x, y, z)*(bbn_ks_dddk0_D0D1D1 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D1 KS_func_pass_args_macro ) + 2*
+bbn_ks_c(x, y, z)*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D1 KS_func_pass_args_macro ) + 
+bbn_ks_c(x, y, z)*(bbn_ks_ddk0_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro ) + 
+2*bbn_ks_c(x, y, z)*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D1 KS_func_pass_args_macro ) + 
+bbn_ks_k0(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_dddc_D0D1D1 KS_func_pass_args_macro ) + 
+bbn_ks_k0(x, y, z)*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D1 KS_func_pass_args_macro ) + 
+2*bbn_ks_k0(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D1 KS_func_pass_args_macro ) + 
+bbn_ks_k0(x, y, z)*(bbn_ks_ddc_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro ) + 
+2*bbn_ks_k0(x, y, z)*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+bbn_ks_k1(x, y, z)*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D1 KS_func_pass_args_macro ) + 
+2*bbn_ks_k1(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D1 KS_func_pass_args_macro ) + 
+bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro ) + 
+2*bbn_ks_k1(x, y, z)*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*
+(bbn_ks_dk1_D1 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D1 KS_func_pass_args_macro )*
+(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro ) + 2*
+(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*
+(bbn_ks_dk1_D0 KS_func_pass_args_macro );
 
     _dddgamma_D2D2D2D0D1[ijk]=
 /* mcode in progress ... */
@@ -2660,22 +2660,22 @@ Derivative(bbn_ks_k1(x, y, z), x);
 // Derivative
 // c
 // k2
-2*bbn_ks_c(x, y, z)*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x, y, z) + 2*
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), y, z) + 
-2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x, z) + 
-2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x, y) + 
-pow(bbn_ks_k2(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), x, y, z) + 2*bbn_ks_k2(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), y, z) + 2*
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x, z) + 
-2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x, y) + 
-2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), y, z) + 
-2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k2(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), x, z) + 
-2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k2(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), x, y) + 
-2*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), y)*
-Derivative(bbn_ks_k2(x, y, z), z) + 2*Derivative(bbn_ks_c(x, y, z), y)*
-Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), z) + 2*
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x)*
-Derivative(bbn_ks_k2(x, y, z), y);
+2*bbn_ks_c(x, y, z)*bbn_ks_k2(x, y, z)*(bbn_ks_dddk2_D0D1D2 KS_func_pass_args_macro ) + 2*
+bbn_ks_c(x, y, z)*(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_c(x, y, z)*(bbn_ks_dk2_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_c(x, y, z)*(bbn_ks_dk2_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D1 KS_func_pass_args_macro ) + 
+pow(bbn_ks_k2(x, y, z), 2)*(bbn_ks_dddc_D0D1D2 KS_func_pass_args_macro ) + 2*bbn_ks_k2(x, y, z)*
+(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D2 KS_func_pass_args_macro ) + 2*
+bbn_ks_k2(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_k2(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D1 KS_func_pass_args_macro ) + 
+2*bbn_ks_k2(x, y, z)*(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_k2(x, y, z)*(bbn_ks_dk2_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_k2(x, y, z)*(bbn_ks_dk2_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro )*
+(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D1 KS_func_pass_args_macro )*
+(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 2*
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk2_D1 KS_func_pass_args_macro );
 
     _dddgamma_D1D2D2D2D2[ijk]=
 /* mcode in progress ... */
@@ -2692,17 +2692,17 @@ Derivative(bbn_ks_k2(x, y, z), y);
 // c
 // k1
 // k2
-bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k2(x, y, z), (z, 3)) + bbn_ks_c(x, y, z)*
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k1(x, y, z), (z, 3)) + 3*bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), (z, 2)) + 3*
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), (z, 2))*Derivative(bbn_ks_k2(x, y, z), z) + 
-bbn_ks_k1(x, y, z)*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (z, 3)) + 3*bbn_ks_k1(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), (z, 2)) + 3*
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), (z, 2))*Derivative(bbn_ks_k2(x, y, z), z) + 
-3*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), (z, 2)) + 
-3*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (z, 2))*Derivative(bbn_ks_k1(x, y, z), z) + 
-6*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), z)*
-Derivative(bbn_ks_k2(x, y, z), z);
+bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_dddk2_D2D2D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+bbn_ks_k2(x, y, z)*(bbn_ks_dddk1_D2D2D2 KS_func_pass_args_macro ) + 3*bbn_ks_c(x, y, z)*
+(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D2D2 KS_func_pass_args_macro ) + 3*
+bbn_ks_c(x, y, z)*(bbn_ks_ddk1_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 
+bbn_ks_k1(x, y, z)*bbn_ks_k2(x, y, z)*(bbn_ks_dddc_D2D2D2 KS_func_pass_args_macro ) + 3*bbn_ks_k1(x, y, z)*
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D2D2 KS_func_pass_args_macro ) + 3*
+bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 
+3*bbn_ks_k2(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D2D2 KS_func_pass_args_macro ) + 
+3*bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + 
+6*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro )*
+(bbn_ks_dk2_D2 KS_func_pass_args_macro );
 
     _dddgamma_D1D2D1D2D1[ijk]=
 /* mcode in progress ... */
@@ -2725,26 +2725,26 @@ Derivative(bbn_ks_k2(x, y, z), z);
 // c
 // k1
 // k2
-bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k2(x, y, z), (y, 2), z) + bbn_ks_c(x, y, z)*
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k1(x, y, z), (y, 2), z) + 2*bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), y, z) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k1(x, y, z), (y, 2))*Derivative(bbn_ks_k2(x, y, z), z) + 
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), (y, 2)) + 
-2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), y, z) + 
-bbn_ks_k1(x, y, z)*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (y, 2), z) + 2*
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), y, z) + 
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), (y, 2))*Derivative(bbn_ks_k2(x, y, z), z) + 
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), (y, 2)) + 
-2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k2(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), y, z) + 
-2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), y, z) + 
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (y, 2))*Derivative(bbn_ks_k1(x, y, z), z) + 
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), (y, 2)) + 
-2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), y, z) + 
-2*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), y)*
-Derivative(bbn_ks_k2(x, y, z), z) + 2*Derivative(bbn_ks_c(x, y, z), y)*
-Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), y) + 2*
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), y)*
-Derivative(bbn_ks_k2(x, y, z), y);
+bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_dddk2_D1D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+bbn_ks_k2(x, y, z)*(bbn_ks_dddk1_D1D1D2 KS_func_pass_args_macro ) + 2*bbn_ks_c(x, y, z)*
+(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_ddk1_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 
+bbn_ks_c(x, y, z)*(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D1 KS_func_pass_args_macro ) + 
+2*bbn_ks_c(x, y, z)*(bbn_ks_dk2_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D2 KS_func_pass_args_macro ) + 
+bbn_ks_k1(x, y, z)*bbn_ks_k2(x, y, z)*(bbn_ks_dddc_D1D1D2 KS_func_pass_args_macro ) + 2*
+bbn_ks_k1(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D2 KS_func_pass_args_macro ) + 
+bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 
+bbn_ks_k1(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D1 KS_func_pass_args_macro ) + 
+2*bbn_ks_k1(x, y, z)*(bbn_ks_dk2_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_k2(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D2 KS_func_pass_args_macro ) + 
+bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + 
+bbn_ks_k2(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D1 KS_func_pass_args_macro ) + 
+2*bbn_ks_k2(x, y, z)*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
+2*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*
+(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D1 KS_func_pass_args_macro )*
+(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 2*
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*
+(bbn_ks_dk2_D1 KS_func_pass_args_macro );
 
     _dddgamma_D2D2D0D2D1[ijk]=
 /* mcode in progress ... */
@@ -2765,22 +2765,22 @@ Derivative(bbn_ks_k2(x, y, z), y);
 // Derivative
 // c
 // k2
-2*bbn_ks_c(x, y, z)*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x, y, z) + 2*
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), y, z) + 
-2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x, z) + 
-2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x, y) + 
-pow(bbn_ks_k2(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), x, y, z) + 2*bbn_ks_k2(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), y, z) + 2*
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x, z) + 
-2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x, y) + 
-2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), y, z) + 
-2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k2(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), x, z) + 
-2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k2(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), x, y) + 
-2*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), y)*
-Derivative(bbn_ks_k2(x, y, z), z) + 2*Derivative(bbn_ks_c(x, y, z), y)*
-Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), z) + 2*
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x)*
-Derivative(bbn_ks_k2(x, y, z), y);
+2*bbn_ks_c(x, y, z)*bbn_ks_k2(x, y, z)*(bbn_ks_dddk2_D0D1D2 KS_func_pass_args_macro ) + 2*
+bbn_ks_c(x, y, z)*(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_c(x, y, z)*(bbn_ks_dk2_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_c(x, y, z)*(bbn_ks_dk2_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D1 KS_func_pass_args_macro ) + 
+pow(bbn_ks_k2(x, y, z), 2)*(bbn_ks_dddc_D0D1D2 KS_func_pass_args_macro ) + 2*bbn_ks_k2(x, y, z)*
+(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D2 KS_func_pass_args_macro ) + 2*
+bbn_ks_k2(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_k2(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D1 KS_func_pass_args_macro ) + 
+2*bbn_ks_k2(x, y, z)*(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_k2(x, y, z)*(bbn_ks_dk2_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_k2(x, y, z)*(bbn_ks_dk2_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro )*
+(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D1 KS_func_pass_args_macro )*
+(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 2*
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk2_D1 KS_func_pass_args_macro );
 
     _dddgamma_D1D1D2D1D2[ijk]=
 /* mcode in progress ... */
@@ -2797,17 +2797,17 @@ Derivative(bbn_ks_k2(x, y, z), y);
 // Derivative
 // c
 // k1
-2*bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k1(x, y, z), y, (z, 2)) + 2*
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), (z, 2)) + 
-4*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), y, z) + 
-pow(bbn_ks_k1(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), y, (z, 2)) + 2*bbn_ks_k1(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), (z, 2)) + 4*
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), y, z) + 
-2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), (z, 2))*Derivative(bbn_ks_k1(x, y, z), y) + 
-4*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), y, z) + 
-2*Derivative(bbn_ks_c(x, y, z), y)*pow(Derivative(bbn_ks_k1(x, y, z), z), 2) + 4*
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), y)*
-Derivative(bbn_ks_k1(x, y, z), z);
+2*bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_dddk1_D1D2D2 KS_func_pass_args_macro ) + 2*
+bbn_ks_c(x, y, z)*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D2D2 KS_func_pass_args_macro ) + 
+4*bbn_ks_c(x, y, z)*(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D2 KS_func_pass_args_macro ) + 
+pow(bbn_ks_k1(x, y, z), 2)*(bbn_ks_dddc_D1D2D2 KS_func_pass_args_macro ) + 2*bbn_ks_k1(x, y, z)*
+(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D2D2 KS_func_pass_args_macro ) + 4*
+bbn_ks_k1(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro ) + 
+4*bbn_ks_k1(x, y, z)*(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
+2*(bbn_ks_dc_D1 KS_func_pass_args_macro )*pow((bbn_ks_dk1_D2 KS_func_pass_args_macro ), 2) + 4*
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*
+(bbn_ks_dk1_D2 KS_func_pass_args_macro );
 
     _dddgamma_D1D2D2D1D0[ijk]=
 /* mcode in progress ... */
@@ -2836,36 +2836,36 @@ Derivative(bbn_ks_k1(x, y, z), z);
 // c
 // k1
 // k2
-bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x, y, z) + bbn_ks_c(x, y, z)*
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x, y, z) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), y, z) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x, z) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x, y) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), y, z) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k2(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x, z) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k2(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x, y) + bbn_ks_k1(x, y, z)*
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), x, y, z) + bbn_ks_k1(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), y, z) + bbn_ks_k1(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x, z) + bbn_ks_k1(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x, y) + bbn_ks_k1(x, y, z)*
-Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), y, z) + bbn_ks_k1(x, y, z)*
-Derivative(bbn_ks_k2(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), x, z) + bbn_ks_k1(x, y, z)*
-Derivative(bbn_ks_k2(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), x, y) + bbn_ks_k2(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), y, z) + bbn_ks_k2(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x, z) + bbn_ks_k2(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x, y) + bbn_ks_k2(x, y, z)*
-Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), y, z) + bbn_ks_k2(x, y, z)*
-Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), x, z) + bbn_ks_k2(x, y, z)*
-Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), x, y) + 
-Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), y)*
-Derivative(bbn_ks_k2(x, y, z), z) + Derivative(bbn_ks_c(x, y, z), x)*
-Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), y) + 
-Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x)*
-Derivative(bbn_ks_k2(x, y, z), z) + Derivative(bbn_ks_c(x, y, z), y)*
-Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x) + 
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x)*
-Derivative(bbn_ks_k2(x, y, z), y) + Derivative(bbn_ks_c(x, y, z), z)*
-Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x);
+bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_dddk2_D0D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+bbn_ks_k2(x, y, z)*(bbn_ks_dddk1_D0D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D1 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk2_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk2_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D1 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
+bbn_ks_k2(x, y, z)*(bbn_ks_dddc_D0D1D2 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
+(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D2 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
+(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D2 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D1 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
+(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
+(bbn_ks_dk2_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
+(bbn_ks_dk2_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
+(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D2 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
+(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D2 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D1 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
+(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
+(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
+(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*
+(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + (bbn_ks_dc_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 
+(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + (bbn_ks_dc_D1 KS_func_pass_args_macro )*
+(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + 
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + (bbn_ks_dc_D2 KS_func_pass_args_macro )*
+(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro );
 
     _dddgamma_D1D2D0D0D1[ijk]=
 /* mcode in progress ... */
@@ -2888,26 +2888,26 @@ Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x);
 // c
 // k1
 // k2
-bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k2(x, y, z), (x, 2), y) + bbn_ks_c(x, y, z)*
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k1(x, y, z), (x, 2), y) + 2*bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), x, y) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k1(x, y, z), (x, 2))*Derivative(bbn_ks_k2(x, y, z), y) + 
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), (x, 2)) + 
-2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), x, y) + 
-bbn_ks_k1(x, y, z)*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2), y) + 2*
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), x, y) + 
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2))*Derivative(bbn_ks_k2(x, y, z), y) + 
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), (x, 2)) + 
-2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), x, y) + 
-2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), x, y) + 
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2))*Derivative(bbn_ks_k1(x, y, z), y) + 
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), (x, 2)) + 
-2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), x, y) + 
-2*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), x)*
-Derivative(bbn_ks_k2(x, y, z), y) + 2*Derivative(bbn_ks_c(x, y, z), x)*
-Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x) + 2*
-Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x)*
-Derivative(bbn_ks_k2(x, y, z), x);
+bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_dddk2_D0D0D1 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+bbn_ks_k2(x, y, z)*(bbn_ks_dddk1_D0D0D1 KS_func_pass_args_macro ) + 2*bbn_ks_c(x, y, z)*
+(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D1 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_ddk1_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 
+bbn_ks_c(x, y, z)*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D0 KS_func_pass_args_macro ) + 
+2*bbn_ks_c(x, y, z)*(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D1 KS_func_pass_args_macro ) + 
+bbn_ks_k1(x, y, z)*bbn_ks_k2(x, y, z)*(bbn_ks_dddc_D0D0D1 KS_func_pass_args_macro ) + 2*
+bbn_ks_k1(x, y, z)*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D1 KS_func_pass_args_macro ) + 
+bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 
+bbn_ks_k1(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D0 KS_func_pass_args_macro ) + 
+2*bbn_ks_k1(x, y, z)*(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+2*bbn_ks_k2(x, y, z)*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D1 KS_func_pass_args_macro ) + 
+bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro ) + 
+bbn_ks_k2(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D0 KS_func_pass_args_macro ) + 
+2*bbn_ks_k2(x, y, z)*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + 2*
+(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk2_D0 KS_func_pass_args_macro );
 
     _dddgamma_D0D2D0D1D1[ijk]=
 /* mcode in progress ... */
@@ -2930,26 +2930,26 @@ Derivative(bbn_ks_k2(x, y, z), x);
 // c
 // k0
 // k2
-bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x, (y, 2)) + bbn_ks_c(x, y, z)*
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x, (y, 2)) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), (y, 2)) + 2*
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x, y) + 
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), (y, 2))*Derivative(bbn_ks_k2(x, y, z), x) + 
-2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x, y) + 
-bbn_ks_k0(x, y, z)*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), x, (y, 2)) + 
-bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), (y, 2)) + 
-2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x, y) + 
-bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), (y, 2))*Derivative(bbn_ks_k2(x, y, z), x) + 
-2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k2(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), x, y) + 
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), (y, 2)) + 
-2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x, y) + 
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (y, 2))*Derivative(bbn_ks_k0(x, y, z), x) + 
-2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), x, y) + 
-2*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), y)*
-Derivative(bbn_ks_k2(x, y, z), y) + 2*Derivative(bbn_ks_c(x, y, z), y)*
-Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), y) + 2*
-Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), y)*
-Derivative(bbn_ks_k2(x, y, z), x);
+bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dddk2_D0D1D1 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+bbn_ks_k2(x, y, z)*(bbn_ks_dddk0_D0D1D1 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D1 KS_func_pass_args_macro ) + 2*
+bbn_ks_c(x, y, z)*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D1 KS_func_pass_args_macro ) + 
+bbn_ks_c(x, y, z)*(bbn_ks_ddk0_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + 
+2*bbn_ks_c(x, y, z)*(bbn_ks_dk2_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D1 KS_func_pass_args_macro ) + 
+bbn_ks_k0(x, y, z)*bbn_ks_k2(x, y, z)*(bbn_ks_dddc_D0D1D1 KS_func_pass_args_macro ) + 
+bbn_ks_k0(x, y, z)*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D1 KS_func_pass_args_macro ) + 
+2*bbn_ks_k0(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D1 KS_func_pass_args_macro ) + 
+bbn_ks_k0(x, y, z)*(bbn_ks_ddc_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + 
+2*bbn_ks_k0(x, y, z)*(bbn_ks_dk2_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+bbn_ks_k2(x, y, z)*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D1 KS_func_pass_args_macro ) + 
+2*bbn_ks_k2(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D1 KS_func_pass_args_macro ) + 
+bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro ) + 
+2*bbn_ks_k2(x, y, z)*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*
+(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D1 KS_func_pass_args_macro )*
+(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 2*
+(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*
+(bbn_ks_dk2_D0 KS_func_pass_args_macro );
 
     _dddgamma_D0D2D1D0D1[ijk]=
 /* mcode in progress ... */
@@ -2972,26 +2972,26 @@ Derivative(bbn_ks_k2(x, y, z), x);
 // c
 // k0
 // k2
-bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x, (y, 2)) + bbn_ks_c(x, y, z)*
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x, (y, 2)) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), (y, 2)) + 2*
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x, y) + 
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), (y, 2))*Derivative(bbn_ks_k2(x, y, z), x) + 
-2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x, y) + 
-bbn_ks_k0(x, y, z)*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), x, (y, 2)) + 
-bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), (y, 2)) + 
-2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x, y) + 
-bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), (y, 2))*Derivative(bbn_ks_k2(x, y, z), x) + 
-2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k2(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), x, y) + 
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), (y, 2)) + 
-2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x, y) + 
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (y, 2))*Derivative(bbn_ks_k0(x, y, z), x) + 
-2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), x, y) + 
-2*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), y)*
-Derivative(bbn_ks_k2(x, y, z), y) + 2*Derivative(bbn_ks_c(x, y, z), y)*
-Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), y) + 2*
-Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), y)*
-Derivative(bbn_ks_k2(x, y, z), x);
+bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dddk2_D0D1D1 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+bbn_ks_k2(x, y, z)*(bbn_ks_dddk0_D0D1D1 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D1 KS_func_pass_args_macro ) + 2*
+bbn_ks_c(x, y, z)*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D1 KS_func_pass_args_macro ) + 
+bbn_ks_c(x, y, z)*(bbn_ks_ddk0_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + 
+2*bbn_ks_c(x, y, z)*(bbn_ks_dk2_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D1 KS_func_pass_args_macro ) + 
+bbn_ks_k0(x, y, z)*bbn_ks_k2(x, y, z)*(bbn_ks_dddc_D0D1D1 KS_func_pass_args_macro ) + 
+bbn_ks_k0(x, y, z)*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D1 KS_func_pass_args_macro ) + 
+2*bbn_ks_k0(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D1 KS_func_pass_args_macro ) + 
+bbn_ks_k0(x, y, z)*(bbn_ks_ddc_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + 
+2*bbn_ks_k0(x, y, z)*(bbn_ks_dk2_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+bbn_ks_k2(x, y, z)*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D1 KS_func_pass_args_macro ) + 
+2*bbn_ks_k2(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D1 KS_func_pass_args_macro ) + 
+bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro ) + 
+2*bbn_ks_k2(x, y, z)*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*
+(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D1 KS_func_pass_args_macro )*
+(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 2*
+(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*
+(bbn_ks_dk2_D0 KS_func_pass_args_macro );
 
     _dddgamma_D0D0D0D1D2[ijk]=
 /* mcode in progress ... */
@@ -3012,22 +3012,22 @@ Derivative(bbn_ks_k2(x, y, z), x);
 // Derivative
 // c
 // k0
-2*bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x, y, z) + 2*
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), y, z) + 
-2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x, z) + 
-2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x, y) + 
-pow(bbn_ks_k0(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), x, y, z) + 2*bbn_ks_k0(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), y, z) + 2*
-bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x, z) + 
-2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x, y) + 
-2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), y, z) + 
-2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), x, z) + 
-2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), x, y) + 
-2*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), y)*
-Derivative(bbn_ks_k0(x, y, z), z) + 2*Derivative(bbn_ks_c(x, y, z), y)*
-Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), z) + 2*
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x)*
-Derivative(bbn_ks_k0(x, y, z), y);
+2*bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dddk0_D0D1D2 KS_func_pass_args_macro ) + 2*
+bbn_ks_c(x, y, z)*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_c(x, y, z)*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_c(x, y, z)*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D1 KS_func_pass_args_macro ) + 
+pow(bbn_ks_k0(x, y, z), 2)*(bbn_ks_dddc_D0D1D2 KS_func_pass_args_macro ) + 2*bbn_ks_k0(x, y, z)*
+(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D2 KS_func_pass_args_macro ) + 2*
+bbn_ks_k0(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_k0(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D1 KS_func_pass_args_macro ) + 
+2*bbn_ks_k0(x, y, z)*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_k0(x, y, z)*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_k0(x, y, z)*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*
+(bbn_ks_dk0_D2 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D1 KS_func_pass_args_macro )*
+(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D2 KS_func_pass_args_macro ) + 2*
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk0_D1 KS_func_pass_args_macro );
 
     _dddgamma_D0D0D2D1D2[ijk]=
 /* mcode in progress ... */
@@ -3044,17 +3044,17 @@ Derivative(bbn_ks_k0(x, y, z), y);
 // Derivative
 // c
 // k0
-2*bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k0(x, y, z), y, (z, 2)) + 2*
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), (z, 2)) + 
-4*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), y, z) + 
-pow(bbn_ks_k0(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), y, (z, 2)) + 2*bbn_ks_k0(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), (z, 2)) + 4*
-bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), y, z) + 
-2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), (z, 2))*Derivative(bbn_ks_k0(x, y, z), y) + 
-4*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), y, z) + 
-2*Derivative(bbn_ks_c(x, y, z), y)*pow(Derivative(bbn_ks_k0(x, y, z), z), 2) + 4*
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), y)*
-Derivative(bbn_ks_k0(x, y, z), z);
+2*bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dddk0_D1D2D2 KS_func_pass_args_macro ) + 2*
+bbn_ks_c(x, y, z)*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D2D2 KS_func_pass_args_macro ) + 
+4*bbn_ks_c(x, y, z)*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D2 KS_func_pass_args_macro ) + 
+pow(bbn_ks_k0(x, y, z), 2)*(bbn_ks_dddc_D1D2D2 KS_func_pass_args_macro ) + 2*bbn_ks_k0(x, y, z)*
+(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D2D2 KS_func_pass_args_macro ) + 4*
+bbn_ks_k0(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_k0(x, y, z)*(bbn_ks_ddc_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro ) + 
+4*bbn_ks_k0(x, y, z)*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
+2*(bbn_ks_dc_D1 KS_func_pass_args_macro )*pow((bbn_ks_dk0_D2 KS_func_pass_args_macro ), 2) + 4*
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*
+(bbn_ks_dk0_D2 KS_func_pass_args_macro );
 
     _dddgamma_D0D1D0D1D0[ijk]=
 /* mcode in progress ... */
@@ -3077,26 +3077,26 @@ Derivative(bbn_ks_k0(x, y, z), z);
 // c
 // k0
 // k1
-bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k1(x, y, z), (x, 2), y) + bbn_ks_c(x, y, z)*
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k0(x, y, z), (x, 2), y) + 2*bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), x, y) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), (x, 2))*Derivative(bbn_ks_k1(x, y, z), y) + 
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), (x, 2)) + 
-2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), x, y) + 
-bbn_ks_k0(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2), y) + 2*
-bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), x, y) + 
-bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2))*Derivative(bbn_ks_k1(x, y, z), y) + 
-bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), (x, 2)) + 
-2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), x, y) + 
-2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), x, y) + 
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2))*Derivative(bbn_ks_k0(x, y, z), y) + 
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), (x, 2)) + 
-2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), x, y) + 
-2*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), x)*
-Derivative(bbn_ks_k1(x, y, z), y) + 2*Derivative(bbn_ks_c(x, y, z), x)*
-Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x) + 2*
-Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x)*
-Derivative(bbn_ks_k1(x, y, z), x);
+bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dddk1_D0D0D1 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+bbn_ks_k1(x, y, z)*(bbn_ks_dddk0_D0D0D1 KS_func_pass_args_macro ) + 2*bbn_ks_c(x, y, z)*
+(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D1 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_ddk0_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro ) + 
+bbn_ks_c(x, y, z)*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D0 KS_func_pass_args_macro ) + 
+2*bbn_ks_c(x, y, z)*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D1 KS_func_pass_args_macro ) + 
+bbn_ks_k0(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_dddc_D0D0D1 KS_func_pass_args_macro ) + 2*
+bbn_ks_k0(x, y, z)*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D1 KS_func_pass_args_macro ) + 
+bbn_ks_k0(x, y, z)*(bbn_ks_ddc_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro ) + 
+bbn_ks_k0(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D0 KS_func_pass_args_macro ) + 
+2*bbn_ks_k0(x, y, z)*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+2*bbn_ks_k1(x, y, z)*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D1 KS_func_pass_args_macro ) + 
+bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro ) + 
+bbn_ks_k1(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D0 KS_func_pass_args_macro ) + 
+2*bbn_ks_k1(x, y, z)*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk1_D1 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro ) + 2*
+(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk1_D0 KS_func_pass_args_macro );
 
     _dddgamma_D1D2D1D0D0[ijk]=
 /* mcode in progress ... */
@@ -3119,26 +3119,26 @@ Derivative(bbn_ks_k1(x, y, z), x);
 // c
 // k1
 // k2
-bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k2(x, y, z), (x, 2), y) + bbn_ks_c(x, y, z)*
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k1(x, y, z), (x, 2), y) + 2*bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), x, y) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k1(x, y, z), (x, 2))*Derivative(bbn_ks_k2(x, y, z), y) + 
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), (x, 2)) + 
-2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), x, y) + 
-bbn_ks_k1(x, y, z)*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2), y) + 2*
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), x, y) + 
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2))*Derivative(bbn_ks_k2(x, y, z), y) + 
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), (x, 2)) + 
-2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), x, y) + 
-2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), x, y) + 
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2))*Derivative(bbn_ks_k1(x, y, z), y) + 
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), (x, 2)) + 
-2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), x, y) + 
-2*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), x)*
-Derivative(bbn_ks_k2(x, y, z), y) + 2*Derivative(bbn_ks_c(x, y, z), x)*
-Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x) + 2*
-Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x)*
-Derivative(bbn_ks_k2(x, y, z), x);
+bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_dddk2_D0D0D1 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+bbn_ks_k2(x, y, z)*(bbn_ks_dddk1_D0D0D1 KS_func_pass_args_macro ) + 2*bbn_ks_c(x, y, z)*
+(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D1 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_ddk1_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 
+bbn_ks_c(x, y, z)*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D0 KS_func_pass_args_macro ) + 
+2*bbn_ks_c(x, y, z)*(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D1 KS_func_pass_args_macro ) + 
+bbn_ks_k1(x, y, z)*bbn_ks_k2(x, y, z)*(bbn_ks_dddc_D0D0D1 KS_func_pass_args_macro ) + 2*
+bbn_ks_k1(x, y, z)*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D1 KS_func_pass_args_macro ) + 
+bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 
+bbn_ks_k1(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D0 KS_func_pass_args_macro ) + 
+2*bbn_ks_k1(x, y, z)*(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+2*bbn_ks_k2(x, y, z)*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D1 KS_func_pass_args_macro ) + 
+bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro ) + 
+bbn_ks_k2(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D0 KS_func_pass_args_macro ) + 
+2*bbn_ks_k2(x, y, z)*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + 2*
+(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk2_D0 KS_func_pass_args_macro );
 
     _dddgamma_D0D2D1D0D0[ijk]=
 /* mcode in progress ... */
@@ -3161,26 +3161,26 @@ Derivative(bbn_ks_k2(x, y, z), x);
 // c
 // k0
 // k2
-bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k2(x, y, z), (x, 2), y) + bbn_ks_c(x, y, z)*
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k0(x, y, z), (x, 2), y) + 2*bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), x, y) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), (x, 2))*Derivative(bbn_ks_k2(x, y, z), y) + 
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), (x, 2)) + 
-2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), x, y) + 
-bbn_ks_k0(x, y, z)*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2), y) + 2*
-bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), x, y) + 
-bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2))*Derivative(bbn_ks_k2(x, y, z), y) + 
-bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), (x, 2)) + 
-2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), x, y) + 
-2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), x, y) + 
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2))*Derivative(bbn_ks_k0(x, y, z), y) + 
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), (x, 2)) + 
-2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), x, y) + 
-2*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), x)*
-Derivative(bbn_ks_k2(x, y, z), y) + 2*Derivative(bbn_ks_c(x, y, z), x)*
-Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x) + 2*
-Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x)*
-Derivative(bbn_ks_k2(x, y, z), x);
+bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dddk2_D0D0D1 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+bbn_ks_k2(x, y, z)*(bbn_ks_dddk0_D0D0D1 KS_func_pass_args_macro ) + 2*bbn_ks_c(x, y, z)*
+(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D1 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_ddk0_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 
+bbn_ks_c(x, y, z)*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D0 KS_func_pass_args_macro ) + 
+2*bbn_ks_c(x, y, z)*(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D1 KS_func_pass_args_macro ) + 
+bbn_ks_k0(x, y, z)*bbn_ks_k2(x, y, z)*(bbn_ks_dddc_D0D0D1 KS_func_pass_args_macro ) + 2*
+bbn_ks_k0(x, y, z)*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D1 KS_func_pass_args_macro ) + 
+bbn_ks_k0(x, y, z)*(bbn_ks_ddc_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 
+bbn_ks_k0(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D0 KS_func_pass_args_macro ) + 
+2*bbn_ks_k0(x, y, z)*(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+2*bbn_ks_k2(x, y, z)*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D1 KS_func_pass_args_macro ) + 
+bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro ) + 
+bbn_ks_k2(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D0 KS_func_pass_args_macro ) + 
+2*bbn_ks_k2(x, y, z)*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + 2*
+(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk2_D0 KS_func_pass_args_macro );
 
     _dddgamma_D1D2D0D1D1[ijk]=
 /* mcode in progress ... */
@@ -3203,26 +3203,26 @@ Derivative(bbn_ks_k2(x, y, z), x);
 // c
 // k1
 // k2
-bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x, (y, 2)) + bbn_ks_c(x, y, z)*
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x, (y, 2)) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), (y, 2)) + 2*
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x, y) + 
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), (y, 2))*Derivative(bbn_ks_k2(x, y, z), x) + 
-2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x, y) + 
-bbn_ks_k1(x, y, z)*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), x, (y, 2)) + 
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), (y, 2)) + 
-2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x, y) + 
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), (y, 2))*Derivative(bbn_ks_k2(x, y, z), x) + 
-2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k2(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), x, y) + 
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), (y, 2)) + 
-2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x, y) + 
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (y, 2))*Derivative(bbn_ks_k1(x, y, z), x) + 
-2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), x, y) + 
-2*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), y)*
-Derivative(bbn_ks_k2(x, y, z), y) + 2*Derivative(bbn_ks_c(x, y, z), y)*
-Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), y) + 2*
-Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), y)*
-Derivative(bbn_ks_k2(x, y, z), x);
+bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_dddk2_D0D1D1 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+bbn_ks_k2(x, y, z)*(bbn_ks_dddk1_D0D1D1 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D1 KS_func_pass_args_macro ) + 2*
+bbn_ks_c(x, y, z)*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D1 KS_func_pass_args_macro ) + 
+bbn_ks_c(x, y, z)*(bbn_ks_ddk1_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + 
+2*bbn_ks_c(x, y, z)*(bbn_ks_dk2_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D1 KS_func_pass_args_macro ) + 
+bbn_ks_k1(x, y, z)*bbn_ks_k2(x, y, z)*(bbn_ks_dddc_D0D1D1 KS_func_pass_args_macro ) + 
+bbn_ks_k1(x, y, z)*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D1 KS_func_pass_args_macro ) + 
+2*bbn_ks_k1(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D1 KS_func_pass_args_macro ) + 
+bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + 
+2*bbn_ks_k1(x, y, z)*(bbn_ks_dk2_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+bbn_ks_k2(x, y, z)*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D1 KS_func_pass_args_macro ) + 
+2*bbn_ks_k2(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D1 KS_func_pass_args_macro ) + 
+bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro ) + 
+2*bbn_ks_k2(x, y, z)*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*
+(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D1 KS_func_pass_args_macro )*
+(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 2*
+(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*
+(bbn_ks_dk2_D0 KS_func_pass_args_macro );
 
     _dddgamma_D0D1D2D0D2[ijk]=
 /* mcode in progress ... */
@@ -3245,26 +3245,26 @@ Derivative(bbn_ks_k2(x, y, z), x);
 // c
 // k0
 // k1
-bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x, (z, 2)) + bbn_ks_c(x, y, z)*
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x, (z, 2)) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), (z, 2)) + 2*
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x, z) + 
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), (z, 2))*Derivative(bbn_ks_k1(x, y, z), x) + 
-2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x, z) + 
-bbn_ks_k0(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), x, (z, 2)) + 
-bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), (z, 2)) + 
-2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x, z) + 
-bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), (z, 2))*Derivative(bbn_ks_k1(x, y, z), x) + 
-2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), x, z) + 
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), (z, 2)) + 
-2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x, z) + 
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), (z, 2))*Derivative(bbn_ks_k0(x, y, z), x) + 
-2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), x, z) + 
-2*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), z)*
-Derivative(bbn_ks_k1(x, y, z), z) + 2*Derivative(bbn_ks_c(x, y, z), z)*
-Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), z) + 2*
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), z)*
-Derivative(bbn_ks_k1(x, y, z), x);
+bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dddk1_D0D2D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+bbn_ks_k1(x, y, z)*(bbn_ks_dddk0_D0D2D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D2D2 KS_func_pass_args_macro ) + 2*
+bbn_ks_c(x, y, z)*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D2 KS_func_pass_args_macro ) + 
+bbn_ks_c(x, y, z)*(bbn_ks_ddk0_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro ) + 
+2*bbn_ks_c(x, y, z)*(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D2 KS_func_pass_args_macro ) + 
+bbn_ks_k0(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_dddc_D0D2D2 KS_func_pass_args_macro ) + 
+bbn_ks_k0(x, y, z)*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D2D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_k0(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D2 KS_func_pass_args_macro ) + 
+bbn_ks_k0(x, y, z)*(bbn_ks_ddc_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro ) + 
+2*bbn_ks_k0(x, y, z)*(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
+bbn_ks_k1(x, y, z)*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D2D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_k1(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D2 KS_func_pass_args_macro ) + 
+bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro ) + 
+2*bbn_ks_k1(x, y, z)*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
+2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*
+(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D2 KS_func_pass_args_macro )*
+(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + 2*
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*
+(bbn_ks_dk1_D0 KS_func_pass_args_macro );
 
     _dddgamma_D1D1D2D0D0[ijk]=
 /* mcode in progress ... */
@@ -3281,17 +3281,17 @@ Derivative(bbn_ks_k1(x, y, z), x);
 // Derivative
 // c
 // k1
-2*bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k1(x, y, z), (x, 2), z) + 4*
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), x, z) + 
-2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), (x, 2))*Derivative(bbn_ks_k1(x, y, z), z) + 
-pow(bbn_ks_k1(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), (x, 2), z) + 4*bbn_ks_k1(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), x, z) + 2*
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2))*Derivative(bbn_ks_k1(x, y, z), z) + 
-2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), (x, 2)) + 
-4*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), x, z) + 
-4*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), x)*
-Derivative(bbn_ks_k1(x, y, z), z) + 2*Derivative(bbn_ks_c(x, y, z), z)*
-pow(Derivative(bbn_ks_k1(x, y, z), x), 2);
+2*bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_dddk1_D0D0D2 KS_func_pass_args_macro ) + 4*
+bbn_ks_c(x, y, z)*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_c(x, y, z)*(bbn_ks_ddk1_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + 
+pow(bbn_ks_k1(x, y, z), 2)*(bbn_ks_dddc_D0D0D2 KS_func_pass_args_macro ) + 4*bbn_ks_k1(x, y, z)*
+(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D2 KS_func_pass_args_macro ) + 2*
+bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_k1(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D0 KS_func_pass_args_macro ) + 
+4*bbn_ks_k1(x, y, z)*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
+4*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D2 KS_func_pass_args_macro )*
+pow((bbn_ks_dk1_D0 KS_func_pass_args_macro ), 2);
 
     _dddgamma_D0D1D2D2D2[ijk]=
 /* mcode in progress ... */
@@ -3308,17 +3308,17 @@ pow(Derivative(bbn_ks_k1(x, y, z), x), 2);
 // c
 // k0
 // k1
-bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k1(x, y, z), (z, 3)) + bbn_ks_c(x, y, z)*
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k0(x, y, z), (z, 3)) + 3*bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), (z, 2)) + 3*
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), (z, 2))*Derivative(bbn_ks_k1(x, y, z), z) + 
-bbn_ks_k0(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), (z, 3)) + 3*bbn_ks_k0(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), (z, 2)) + 3*
-bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), (z, 2))*Derivative(bbn_ks_k1(x, y, z), z) + 
-3*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), (z, 2)) + 
-3*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), (z, 2))*Derivative(bbn_ks_k0(x, y, z), z) + 
-6*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), z)*
-Derivative(bbn_ks_k1(x, y, z), z);
+bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dddk1_D2D2D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+bbn_ks_k1(x, y, z)*(bbn_ks_dddk0_D2D2D2 KS_func_pass_args_macro ) + 3*bbn_ks_c(x, y, z)*
+(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D2D2 KS_func_pass_args_macro ) + 3*
+bbn_ks_c(x, y, z)*(bbn_ks_ddk0_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + 
+bbn_ks_k0(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_dddc_D2D2D2 KS_func_pass_args_macro ) + 3*bbn_ks_k0(x, y, z)*
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D2D2 KS_func_pass_args_macro ) + 3*
+bbn_ks_k0(x, y, z)*(bbn_ks_ddc_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + 
+3*bbn_ks_k1(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D2D2 KS_func_pass_args_macro ) + 
+3*bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D2 KS_func_pass_args_macro ) + 
+6*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*
+(bbn_ks_dk1_D2 KS_func_pass_args_macro );
 
     _dddgamma_D0D0D2D0D2[ijk]=
 /* mcode in progress ... */
@@ -3335,17 +3335,17 @@ Derivative(bbn_ks_k1(x, y, z), z);
 // Derivative
 // c
 // k0
-2*bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x, (z, 2)) + 2*
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), (z, 2)) + 
-4*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x, z) + 
-pow(bbn_ks_k0(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), x, (z, 2)) + 2*bbn_ks_k0(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), (z, 2)) + 4*
-bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x, z) + 
-2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), (z, 2))*Derivative(bbn_ks_k0(x, y, z), x) + 
-4*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), x, z) + 
-2*Derivative(bbn_ks_c(x, y, z), x)*pow(Derivative(bbn_ks_k0(x, y, z), z), 2) + 4*
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x)*
-Derivative(bbn_ks_k0(x, y, z), z);
+2*bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dddk0_D0D2D2 KS_func_pass_args_macro ) + 2*
+bbn_ks_c(x, y, z)*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D2D2 KS_func_pass_args_macro ) + 
+4*bbn_ks_c(x, y, z)*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D2 KS_func_pass_args_macro ) + 
+pow(bbn_ks_k0(x, y, z), 2)*(bbn_ks_dddc_D0D2D2 KS_func_pass_args_macro ) + 2*bbn_ks_k0(x, y, z)*
+(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D2D2 KS_func_pass_args_macro ) + 4*
+bbn_ks_k0(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_k0(x, y, z)*(bbn_ks_ddc_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro ) + 
+4*bbn_ks_k0(x, y, z)*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
+2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*pow((bbn_ks_dk0_D2 KS_func_pass_args_macro ), 2) + 4*
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk0_D2 KS_func_pass_args_macro );
 
     _dddgamma_D0D0D0D0D2[ijk]=
 /* mcode in progress ... */
@@ -3362,17 +3362,17 @@ Derivative(bbn_ks_k0(x, y, z), z);
 // Derivative
 // c
 // k0
-2*bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k0(x, y, z), (x, 2), z) + 4*
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), x, z) + 
-2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), (x, 2))*Derivative(bbn_ks_k0(x, y, z), z) + 
-pow(bbn_ks_k0(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), (x, 2), z) + 4*bbn_ks_k0(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), x, z) + 2*
-bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2))*Derivative(bbn_ks_k0(x, y, z), z) + 
-2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), (x, 2)) + 
-4*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), x, z) + 
-4*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), x)*
-Derivative(bbn_ks_k0(x, y, z), z) + 2*Derivative(bbn_ks_c(x, y, z), z)*
-pow(Derivative(bbn_ks_k0(x, y, z), x), 2);
+2*bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dddk0_D0D0D2 KS_func_pass_args_macro ) + 4*
+bbn_ks_c(x, y, z)*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_c(x, y, z)*(bbn_ks_ddk0_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D2 KS_func_pass_args_macro ) + 
+pow(bbn_ks_k0(x, y, z), 2)*(bbn_ks_dddc_D0D0D2 KS_func_pass_args_macro ) + 4*bbn_ks_k0(x, y, z)*
+(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D2 KS_func_pass_args_macro ) + 2*
+bbn_ks_k0(x, y, z)*(bbn_ks_ddc_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_k0(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D0 KS_func_pass_args_macro ) + 
+4*bbn_ks_k0(x, y, z)*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
+4*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk0_D2 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D2 KS_func_pass_args_macro )*
+pow((bbn_ks_dk0_D0 KS_func_pass_args_macro ), 2);
 
     _dddgamma_D1D1D0D1D1[ijk]=
 /* mcode in progress ... */
@@ -3389,17 +3389,17 @@ pow(Derivative(bbn_ks_k0(x, y, z), x), 2);
 // Derivative
 // c
 // k1
-2*bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x, (y, 2)) + 2*
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), (y, 2)) + 
-4*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x, y) + 
-pow(bbn_ks_k1(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), x, (y, 2)) + 2*bbn_ks_k1(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), (y, 2)) + 4*
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x, y) + 
-2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), (y, 2))*Derivative(bbn_ks_k1(x, y, z), x) + 
-4*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), x, y) + 
-2*Derivative(bbn_ks_c(x, y, z), x)*pow(Derivative(bbn_ks_k1(x, y, z), y), 2) + 4*
-Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x)*
-Derivative(bbn_ks_k1(x, y, z), y);
+2*bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_dddk1_D0D1D1 KS_func_pass_args_macro ) + 2*
+bbn_ks_c(x, y, z)*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D1 KS_func_pass_args_macro ) + 
+4*bbn_ks_c(x, y, z)*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D1 KS_func_pass_args_macro ) + 
+pow(bbn_ks_k1(x, y, z), 2)*(bbn_ks_dddc_D0D1D1 KS_func_pass_args_macro ) + 2*bbn_ks_k1(x, y, z)*
+(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D1 KS_func_pass_args_macro ) + 4*
+bbn_ks_k1(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D1 KS_func_pass_args_macro ) + 
+2*bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro ) + 
+4*bbn_ks_k1(x, y, z)*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*pow((bbn_ks_dk1_D1 KS_func_pass_args_macro ), 2) + 4*
+(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk1_D1 KS_func_pass_args_macro );
 
     _dddgamma_D2D2D0D0D1[ijk]=
 /* mcode in progress ... */
@@ -3416,17 +3416,17 @@ Derivative(bbn_ks_k1(x, y, z), y);
 // Derivative
 // c
 // k2
-2*bbn_ks_c(x, y, z)*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k2(x, y, z), (x, 2), y) + 4*
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), x, y) + 
-2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), (x, 2))*Derivative(bbn_ks_k2(x, y, z), y) + 
-pow(bbn_ks_k2(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), (x, 2), y) + 4*bbn_ks_k2(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), x, y) + 2*
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2))*Derivative(bbn_ks_k2(x, y, z), y) + 
-2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), (x, 2)) + 
-4*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), x, y) + 
-4*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), x)*
-Derivative(bbn_ks_k2(x, y, z), y) + 2*Derivative(bbn_ks_c(x, y, z), y)*
-pow(Derivative(bbn_ks_k2(x, y, z), x), 2);
+2*bbn_ks_c(x, y, z)*bbn_ks_k2(x, y, z)*(bbn_ks_dddk2_D0D0D1 KS_func_pass_args_macro ) + 4*
+bbn_ks_c(x, y, z)*(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D1 KS_func_pass_args_macro ) + 
+2*bbn_ks_c(x, y, z)*(bbn_ks_ddk2_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 
+pow(bbn_ks_k2(x, y, z), 2)*(bbn_ks_dddc_D0D0D1 KS_func_pass_args_macro ) + 4*bbn_ks_k2(x, y, z)*
+(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D1 KS_func_pass_args_macro ) + 2*
+bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 
+2*bbn_ks_k2(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D0 KS_func_pass_args_macro ) + 
+4*bbn_ks_k2(x, y, z)*(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+4*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D1 KS_func_pass_args_macro )*
+pow((bbn_ks_dk2_D0 KS_func_pass_args_macro ), 2);
 
     _dddgamma_D0D0D1D2D2[ijk]=
 /* mcode in progress ... */
@@ -3443,17 +3443,17 @@ pow(Derivative(bbn_ks_k2(x, y, z), x), 2);
 // Derivative
 // c
 // k0
-2*bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k0(x, y, z), y, (z, 2)) + 2*
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), (z, 2)) + 
-4*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), y, z) + 
-pow(bbn_ks_k0(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), y, (z, 2)) + 2*bbn_ks_k0(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), (z, 2)) + 4*
-bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), y, z) + 
-2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), (z, 2))*Derivative(bbn_ks_k0(x, y, z), y) + 
-4*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), y, z) + 
-2*Derivative(bbn_ks_c(x, y, z), y)*pow(Derivative(bbn_ks_k0(x, y, z), z), 2) + 4*
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), y)*
-Derivative(bbn_ks_k0(x, y, z), z);
+2*bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dddk0_D1D2D2 KS_func_pass_args_macro ) + 2*
+bbn_ks_c(x, y, z)*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D2D2 KS_func_pass_args_macro ) + 
+4*bbn_ks_c(x, y, z)*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D2 KS_func_pass_args_macro ) + 
+pow(bbn_ks_k0(x, y, z), 2)*(bbn_ks_dddc_D1D2D2 KS_func_pass_args_macro ) + 2*bbn_ks_k0(x, y, z)*
+(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D2D2 KS_func_pass_args_macro ) + 4*
+bbn_ks_k0(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_k0(x, y, z)*(bbn_ks_ddc_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro ) + 
+4*bbn_ks_k0(x, y, z)*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
+2*(bbn_ks_dc_D1 KS_func_pass_args_macro )*pow((bbn_ks_dk0_D2 KS_func_pass_args_macro ), 2) + 4*
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*
+(bbn_ks_dk0_D2 KS_func_pass_args_macro );
 
     _dddgamma_D1D1D0D2D0[ijk]=
 /* mcode in progress ... */
@@ -3470,17 +3470,17 @@ Derivative(bbn_ks_k0(x, y, z), z);
 // Derivative
 // c
 // k1
-2*bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k1(x, y, z), (x, 2), z) + 4*
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), x, z) + 
-2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), (x, 2))*Derivative(bbn_ks_k1(x, y, z), z) + 
-pow(bbn_ks_k1(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), (x, 2), z) + 4*bbn_ks_k1(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), x, z) + 2*
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2))*Derivative(bbn_ks_k1(x, y, z), z) + 
-2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), (x, 2)) + 
-4*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), x, z) + 
-4*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), x)*
-Derivative(bbn_ks_k1(x, y, z), z) + 2*Derivative(bbn_ks_c(x, y, z), z)*
-pow(Derivative(bbn_ks_k1(x, y, z), x), 2);
+2*bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_dddk1_D0D0D2 KS_func_pass_args_macro ) + 4*
+bbn_ks_c(x, y, z)*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_c(x, y, z)*(bbn_ks_ddk1_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + 
+pow(bbn_ks_k1(x, y, z), 2)*(bbn_ks_dddc_D0D0D2 KS_func_pass_args_macro ) + 4*bbn_ks_k1(x, y, z)*
+(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D2 KS_func_pass_args_macro ) + 2*
+bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_k1(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D0 KS_func_pass_args_macro ) + 
+4*bbn_ks_k1(x, y, z)*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
+4*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D2 KS_func_pass_args_macro )*
+pow((bbn_ks_dk1_D0 KS_func_pass_args_macro ), 2);
 
     _dddgamma_D0D1D1D2D0[ijk]=
 /* mcode in progress ... */
@@ -3509,36 +3509,36 @@ pow(Derivative(bbn_ks_k1(x, y, z), x), 2);
 // c
 // k0
 // k1
-bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x, y, z) + bbn_ks_c(x, y, z)*
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x, y, z) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), y, z) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x, z) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x, y) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), y, z) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x, z) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x, y) + bbn_ks_k0(x, y, z)*
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), x, y, z) + bbn_ks_k0(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), y, z) + bbn_ks_k0(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x, z) + bbn_ks_k0(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x, y) + bbn_ks_k0(x, y, z)*
-Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), y, z) + bbn_ks_k0(x, y, z)*
-Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), x, z) + bbn_ks_k0(x, y, z)*
-Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), x, y) + bbn_ks_k1(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), y, z) + bbn_ks_k1(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x, z) + bbn_ks_k1(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x, y) + bbn_ks_k1(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), y, z) + bbn_ks_k1(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), x, z) + bbn_ks_k1(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), x, y) + 
-Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), y)*
-Derivative(bbn_ks_k1(x, y, z), z) + Derivative(bbn_ks_c(x, y, z), x)*
-Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), y) + 
-Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x)*
-Derivative(bbn_ks_k1(x, y, z), z) + Derivative(bbn_ks_c(x, y, z), y)*
-Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x) + 
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x)*
-Derivative(bbn_ks_k1(x, y, z), y) + Derivative(bbn_ks_c(x, y, z), z)*
-Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x);
+bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dddk1_D0D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+bbn_ks_k1(x, y, z)*(bbn_ks_dddk0_D0D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D1 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D1 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
+bbn_ks_k1(x, y, z)*(bbn_ks_dddc_D0D1D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
+(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
+(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D1 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
+(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
+(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
+(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
+(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D2 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
+(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D2 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D1 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
+(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
+(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
+(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*
+(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + (bbn_ks_dc_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro ) + 
+(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + (bbn_ks_dc_D1 KS_func_pass_args_macro )*
+(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro ) + 
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk1_D1 KS_func_pass_args_macro ) + (bbn_ks_dc_D2 KS_func_pass_args_macro )*
+(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro );
 
     _dddgamma_D1D1D0D0D1[ijk]=
 /* mcode in progress ... */
@@ -3555,17 +3555,17 @@ Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x);
 // Derivative
 // c
 // k1
-2*bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k1(x, y, z), (x, 2), y) + 4*
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), x, y) + 
-2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), (x, 2))*Derivative(bbn_ks_k1(x, y, z), y) + 
-pow(bbn_ks_k1(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), (x, 2), y) + 4*bbn_ks_k1(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), x, y) + 2*
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2))*Derivative(bbn_ks_k1(x, y, z), y) + 
-2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), (x, 2)) + 
-4*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), x, y) + 
-4*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), x)*
-Derivative(bbn_ks_k1(x, y, z), y) + 2*Derivative(bbn_ks_c(x, y, z), y)*
-pow(Derivative(bbn_ks_k1(x, y, z), x), 2);
+2*bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_dddk1_D0D0D1 KS_func_pass_args_macro ) + 4*
+bbn_ks_c(x, y, z)*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D1 KS_func_pass_args_macro ) + 
+2*bbn_ks_c(x, y, z)*(bbn_ks_ddk1_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro ) + 
+pow(bbn_ks_k1(x, y, z), 2)*(bbn_ks_dddc_D0D0D1 KS_func_pass_args_macro ) + 4*bbn_ks_k1(x, y, z)*
+(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D1 KS_func_pass_args_macro ) + 2*
+bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro ) + 
+2*bbn_ks_k1(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D0 KS_func_pass_args_macro ) + 
+4*bbn_ks_k1(x, y, z)*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+4*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk1_D1 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D1 KS_func_pass_args_macro )*
+pow((bbn_ks_dk1_D0 KS_func_pass_args_macro ), 2);
 
     _dddgamma_D1D1D0D0D2[ijk]=
 /* mcode in progress ... */
@@ -3582,17 +3582,17 @@ pow(Derivative(bbn_ks_k1(x, y, z), x), 2);
 // Derivative
 // c
 // k1
-2*bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k1(x, y, z), (x, 2), z) + 4*
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), x, z) + 
-2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), (x, 2))*Derivative(bbn_ks_k1(x, y, z), z) + 
-pow(bbn_ks_k1(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), (x, 2), z) + 4*bbn_ks_k1(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), x, z) + 2*
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2))*Derivative(bbn_ks_k1(x, y, z), z) + 
-2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), (x, 2)) + 
-4*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), x, z) + 
-4*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), x)*
-Derivative(bbn_ks_k1(x, y, z), z) + 2*Derivative(bbn_ks_c(x, y, z), z)*
-pow(Derivative(bbn_ks_k1(x, y, z), x), 2);
+2*bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_dddk1_D0D0D2 KS_func_pass_args_macro ) + 4*
+bbn_ks_c(x, y, z)*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_c(x, y, z)*(bbn_ks_ddk1_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + 
+pow(bbn_ks_k1(x, y, z), 2)*(bbn_ks_dddc_D0D0D2 KS_func_pass_args_macro ) + 4*bbn_ks_k1(x, y, z)*
+(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D2 KS_func_pass_args_macro ) + 2*
+bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_k1(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D0 KS_func_pass_args_macro ) + 
+4*bbn_ks_k1(x, y, z)*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
+4*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D2 KS_func_pass_args_macro )*
+pow((bbn_ks_dk1_D0 KS_func_pass_args_macro ), 2);
 
     _dddgamma_D1D2D0D1D2[ijk]=
 /* mcode in progress ... */
@@ -3621,36 +3621,36 @@ pow(Derivative(bbn_ks_k1(x, y, z), x), 2);
 // c
 // k1
 // k2
-bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x, y, z) + bbn_ks_c(x, y, z)*
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x, y, z) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), y, z) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x, z) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x, y) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), y, z) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k2(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x, z) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k2(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x, y) + bbn_ks_k1(x, y, z)*
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), x, y, z) + bbn_ks_k1(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), y, z) + bbn_ks_k1(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x, z) + bbn_ks_k1(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x, y) + bbn_ks_k1(x, y, z)*
-Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), y, z) + bbn_ks_k1(x, y, z)*
-Derivative(bbn_ks_k2(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), x, z) + bbn_ks_k1(x, y, z)*
-Derivative(bbn_ks_k2(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), x, y) + bbn_ks_k2(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), y, z) + bbn_ks_k2(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x, z) + bbn_ks_k2(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x, y) + bbn_ks_k2(x, y, z)*
-Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), y, z) + bbn_ks_k2(x, y, z)*
-Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), x, z) + bbn_ks_k2(x, y, z)*
-Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), x, y) + 
-Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), y)*
-Derivative(bbn_ks_k2(x, y, z), z) + Derivative(bbn_ks_c(x, y, z), x)*
-Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), y) + 
-Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x)*
-Derivative(bbn_ks_k2(x, y, z), z) + Derivative(bbn_ks_c(x, y, z), y)*
-Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x) + 
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x)*
-Derivative(bbn_ks_k2(x, y, z), y) + Derivative(bbn_ks_c(x, y, z), z)*
-Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x);
+bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_dddk2_D0D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+bbn_ks_k2(x, y, z)*(bbn_ks_dddk1_D0D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D1 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk2_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk2_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D1 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
+bbn_ks_k2(x, y, z)*(bbn_ks_dddc_D0D1D2 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
+(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D2 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
+(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D2 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D1 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
+(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
+(bbn_ks_dk2_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
+(bbn_ks_dk2_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
+(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D2 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
+(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D2 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D1 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
+(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
+(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
+(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*
+(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + (bbn_ks_dc_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 
+(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + (bbn_ks_dc_D1 KS_func_pass_args_macro )*
+(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + 
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + (bbn_ks_dc_D2 KS_func_pass_args_macro )*
+(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro );
 
     _dddgamma_D0D0D1D0D2[ijk]=
 /* mcode in progress ... */
@@ -3671,22 +3671,22 @@ Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x);
 // Derivative
 // c
 // k0
-2*bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x, y, z) + 2*
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), y, z) + 
-2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x, z) + 
-2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x, y) + 
-pow(bbn_ks_k0(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), x, y, z) + 2*bbn_ks_k0(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), y, z) + 2*
-bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x, z) + 
-2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x, y) + 
-2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), y, z) + 
-2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), x, z) + 
-2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), x, y) + 
-2*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), y)*
-Derivative(bbn_ks_k0(x, y, z), z) + 2*Derivative(bbn_ks_c(x, y, z), y)*
-Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), z) + 2*
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x)*
-Derivative(bbn_ks_k0(x, y, z), y);
+2*bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dddk0_D0D1D2 KS_func_pass_args_macro ) + 2*
+bbn_ks_c(x, y, z)*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_c(x, y, z)*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_c(x, y, z)*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D1 KS_func_pass_args_macro ) + 
+pow(bbn_ks_k0(x, y, z), 2)*(bbn_ks_dddc_D0D1D2 KS_func_pass_args_macro ) + 2*bbn_ks_k0(x, y, z)*
+(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D2 KS_func_pass_args_macro ) + 2*
+bbn_ks_k0(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_k0(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D1 KS_func_pass_args_macro ) + 
+2*bbn_ks_k0(x, y, z)*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_k0(x, y, z)*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_k0(x, y, z)*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*
+(bbn_ks_dk0_D2 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D1 KS_func_pass_args_macro )*
+(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D2 KS_func_pass_args_macro ) + 2*
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk0_D1 KS_func_pass_args_macro );
 
     _dddgamma_D0D0D0D2D0[ijk]=
 /* mcode in progress ... */
@@ -3703,17 +3703,17 @@ Derivative(bbn_ks_k0(x, y, z), y);
 // Derivative
 // c
 // k0
-2*bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k0(x, y, z), (x, 2), z) + 4*
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), x, z) + 
-2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), (x, 2))*Derivative(bbn_ks_k0(x, y, z), z) + 
-pow(bbn_ks_k0(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), (x, 2), z) + 4*bbn_ks_k0(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), x, z) + 2*
-bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2))*Derivative(bbn_ks_k0(x, y, z), z) + 
-2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), (x, 2)) + 
-4*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), x, z) + 
-4*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), x)*
-Derivative(bbn_ks_k0(x, y, z), z) + 2*Derivative(bbn_ks_c(x, y, z), z)*
-pow(Derivative(bbn_ks_k0(x, y, z), x), 2);
+2*bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dddk0_D0D0D2 KS_func_pass_args_macro ) + 4*
+bbn_ks_c(x, y, z)*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_c(x, y, z)*(bbn_ks_ddk0_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D2 KS_func_pass_args_macro ) + 
+pow(bbn_ks_k0(x, y, z), 2)*(bbn_ks_dddc_D0D0D2 KS_func_pass_args_macro ) + 4*bbn_ks_k0(x, y, z)*
+(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D2 KS_func_pass_args_macro ) + 2*
+bbn_ks_k0(x, y, z)*(bbn_ks_ddc_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_k0(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D0 KS_func_pass_args_macro ) + 
+4*bbn_ks_k0(x, y, z)*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
+4*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk0_D2 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D2 KS_func_pass_args_macro )*
+pow((bbn_ks_dk0_D0 KS_func_pass_args_macro ), 2);
 
     _dddgamma_D2D2D2D1D1[ijk]=
 /* mcode in progress ... */
@@ -3730,17 +3730,17 @@ pow(Derivative(bbn_ks_k0(x, y, z), x), 2);
 // Derivative
 // c
 // k2
-2*bbn_ks_c(x, y, z)*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k2(x, y, z), (y, 2), z) + 4*
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), y, z) + 
-2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), (y, 2))*Derivative(bbn_ks_k2(x, y, z), z) + 
-pow(bbn_ks_k2(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), (y, 2), z) + 4*bbn_ks_k2(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), y, z) + 2*
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (y, 2))*Derivative(bbn_ks_k2(x, y, z), z) + 
-2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), (y, 2)) + 
-4*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k2(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), y, z) + 
-4*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), y)*
-Derivative(bbn_ks_k2(x, y, z), z) + 2*Derivative(bbn_ks_c(x, y, z), z)*
-pow(Derivative(bbn_ks_k2(x, y, z), y), 2);
+2*bbn_ks_c(x, y, z)*bbn_ks_k2(x, y, z)*(bbn_ks_dddk2_D1D1D2 KS_func_pass_args_macro ) + 4*
+bbn_ks_c(x, y, z)*(bbn_ks_dk2_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_c(x, y, z)*(bbn_ks_ddk2_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 
+pow(bbn_ks_k2(x, y, z), 2)*(bbn_ks_dddc_D1D1D2 KS_func_pass_args_macro ) + 4*bbn_ks_k2(x, y, z)*
+(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D2 KS_func_pass_args_macro ) + 2*
+bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_k2(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D1 KS_func_pass_args_macro ) + 
+4*bbn_ks_k2(x, y, z)*(bbn_ks_dk2_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
+4*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro )*
+(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D2 KS_func_pass_args_macro )*
+pow((bbn_ks_dk2_D1 KS_func_pass_args_macro ), 2);
 
     _dddgamma_D0D2D0D0D2[ijk]=
 /* mcode in progress ... */
@@ -3763,26 +3763,26 @@ pow(Derivative(bbn_ks_k2(x, y, z), y), 2);
 // c
 // k0
 // k2
-bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k2(x, y, z), (x, 2), z) + bbn_ks_c(x, y, z)*
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k0(x, y, z), (x, 2), z) + 2*bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), x, z) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), (x, 2))*Derivative(bbn_ks_k2(x, y, z), z) + 
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), (x, 2)) + 
-2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), x, z) + 
-bbn_ks_k0(x, y, z)*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2), z) + 2*
-bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), x, z) + 
-bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2))*Derivative(bbn_ks_k2(x, y, z), z) + 
-bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), (x, 2)) + 
-2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), x, z) + 
-2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), x, z) + 
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2))*Derivative(bbn_ks_k0(x, y, z), z) + 
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), (x, 2)) + 
-2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), x, z) + 
-2*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), x)*
-Derivative(bbn_ks_k2(x, y, z), z) + 2*Derivative(bbn_ks_c(x, y, z), x)*
-Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x) + 2*
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x)*
-Derivative(bbn_ks_k2(x, y, z), x);
+bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dddk2_D0D0D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+bbn_ks_k2(x, y, z)*(bbn_ks_dddk0_D0D0D2 KS_func_pass_args_macro ) + 2*bbn_ks_c(x, y, z)*
+(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_ddk0_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 
+bbn_ks_c(x, y, z)*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D0 KS_func_pass_args_macro ) + 
+2*bbn_ks_c(x, y, z)*(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D2 KS_func_pass_args_macro ) + 
+bbn_ks_k0(x, y, z)*bbn_ks_k2(x, y, z)*(bbn_ks_dddc_D0D0D2 KS_func_pass_args_macro ) + 2*
+bbn_ks_k0(x, y, z)*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D2 KS_func_pass_args_macro ) + 
+bbn_ks_k0(x, y, z)*(bbn_ks_ddc_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 
+bbn_ks_k0(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D0 KS_func_pass_args_macro ) + 
+2*bbn_ks_k0(x, y, z)*(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_k2(x, y, z)*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D2 KS_func_pass_args_macro ) + 
+bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D2 KS_func_pass_args_macro ) + 
+bbn_ks_k2(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D0 KS_func_pass_args_macro ) + 
+2*bbn_ks_k2(x, y, z)*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
+2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + 2*
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk2_D0 KS_func_pass_args_macro );
 
     _dddgamma_D2D2D2D2D0[ijk]=
 /* mcode in progress ... */
@@ -3799,17 +3799,17 @@ Derivative(bbn_ks_k2(x, y, z), x);
 // Derivative
 // c
 // k2
-2*bbn_ks_c(x, y, z)*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x, (z, 2)) + 2*
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), (z, 2)) + 
-4*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x, z) + 
-pow(bbn_ks_k2(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), x, (z, 2)) + 2*bbn_ks_k2(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), (z, 2)) + 4*
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x, z) + 
-2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (z, 2))*Derivative(bbn_ks_k2(x, y, z), x) + 
-4*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k2(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), x, z) + 
-2*Derivative(bbn_ks_c(x, y, z), x)*pow(Derivative(bbn_ks_k2(x, y, z), z), 2) + 4*
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x)*
-Derivative(bbn_ks_k2(x, y, z), z);
+2*bbn_ks_c(x, y, z)*bbn_ks_k2(x, y, z)*(bbn_ks_dddk2_D0D2D2 KS_func_pass_args_macro ) + 2*
+bbn_ks_c(x, y, z)*(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D2D2 KS_func_pass_args_macro ) + 
+4*bbn_ks_c(x, y, z)*(bbn_ks_dk2_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D2 KS_func_pass_args_macro ) + 
+pow(bbn_ks_k2(x, y, z), 2)*(bbn_ks_dddc_D0D2D2 KS_func_pass_args_macro ) + 2*bbn_ks_k2(x, y, z)*
+(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D2D2 KS_func_pass_args_macro ) + 4*
+bbn_ks_k2(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + 
+4*bbn_ks_k2(x, y, z)*(bbn_ks_dk2_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
+2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*pow((bbn_ks_dk2_D2 KS_func_pass_args_macro ), 2) + 4*
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk2_D2 KS_func_pass_args_macro );
 
     _dddgamma_D0D2D0D0D0[ijk]=
 /* mcode in progress ... */
@@ -3826,17 +3826,17 @@ Derivative(bbn_ks_k2(x, y, z), z);
 // c
 // k0
 // k2
-bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k2(x, y, z), (x, 3)) + bbn_ks_c(x, y, z)*
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k0(x, y, z), (x, 3)) + 3*bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), (x, 2)) + 3*
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), (x, 2))*Derivative(bbn_ks_k2(x, y, z), x) + 
-bbn_ks_k0(x, y, z)*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 3)) + 3*bbn_ks_k0(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), (x, 2)) + 3*
-bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2))*Derivative(bbn_ks_k2(x, y, z), x) + 
-3*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), (x, 2)) + 
-3*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2))*Derivative(bbn_ks_k0(x, y, z), x) + 
-6*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), x)*
-Derivative(bbn_ks_k2(x, y, z), x);
+bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dddk2_D0D0D0 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+bbn_ks_k2(x, y, z)*(bbn_ks_dddk0_D0D0D0 KS_func_pass_args_macro ) + 3*bbn_ks_c(x, y, z)*
+(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D0 KS_func_pass_args_macro ) + 3*
+bbn_ks_c(x, y, z)*(bbn_ks_ddk0_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + 
+bbn_ks_k0(x, y, z)*bbn_ks_k2(x, y, z)*(bbn_ks_dddc_D0D0D0 KS_func_pass_args_macro ) + 3*bbn_ks_k0(x, y, z)*
+(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D0 KS_func_pass_args_macro ) + 3*
+bbn_ks_k0(x, y, z)*(bbn_ks_ddc_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + 
+3*bbn_ks_k2(x, y, z)*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D0 KS_func_pass_args_macro ) + 
+3*bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro ) + 
+6*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk2_D0 KS_func_pass_args_macro );
 
     _dddgamma_D2D2D1D2D0[ijk]=
 /* mcode in progress ... */
@@ -3857,22 +3857,22 @@ Derivative(bbn_ks_k2(x, y, z), x);
 // Derivative
 // c
 // k2
-2*bbn_ks_c(x, y, z)*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x, y, z) + 2*
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), y, z) + 
-2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x, z) + 
-2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x, y) + 
-pow(bbn_ks_k2(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), x, y, z) + 2*bbn_ks_k2(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), y, z) + 2*
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x, z) + 
-2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x, y) + 
-2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), y, z) + 
-2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k2(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), x, z) + 
-2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k2(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), x, y) + 
-2*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), y)*
-Derivative(bbn_ks_k2(x, y, z), z) + 2*Derivative(bbn_ks_c(x, y, z), y)*
-Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), z) + 2*
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x)*
-Derivative(bbn_ks_k2(x, y, z), y);
+2*bbn_ks_c(x, y, z)*bbn_ks_k2(x, y, z)*(bbn_ks_dddk2_D0D1D2 KS_func_pass_args_macro ) + 2*
+bbn_ks_c(x, y, z)*(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_c(x, y, z)*(bbn_ks_dk2_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_c(x, y, z)*(bbn_ks_dk2_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D1 KS_func_pass_args_macro ) + 
+pow(bbn_ks_k2(x, y, z), 2)*(bbn_ks_dddc_D0D1D2 KS_func_pass_args_macro ) + 2*bbn_ks_k2(x, y, z)*
+(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D2 KS_func_pass_args_macro ) + 2*
+bbn_ks_k2(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_k2(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D1 KS_func_pass_args_macro ) + 
+2*bbn_ks_k2(x, y, z)*(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_k2(x, y, z)*(bbn_ks_dk2_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_k2(x, y, z)*(bbn_ks_dk2_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro )*
+(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D1 KS_func_pass_args_macro )*
+(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 2*
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk2_D1 KS_func_pass_args_macro );
 
     _dddgamma_D1D1D0D1D0[ijk]=
 /* mcode in progress ... */
@@ -3889,17 +3889,17 @@ Derivative(bbn_ks_k2(x, y, z), y);
 // Derivative
 // c
 // k1
-2*bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k1(x, y, z), (x, 2), y) + 4*
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), x, y) + 
-2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), (x, 2))*Derivative(bbn_ks_k1(x, y, z), y) + 
-pow(bbn_ks_k1(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), (x, 2), y) + 4*bbn_ks_k1(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), x, y) + 2*
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2))*Derivative(bbn_ks_k1(x, y, z), y) + 
-2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), (x, 2)) + 
-4*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), x, y) + 
-4*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), x)*
-Derivative(bbn_ks_k1(x, y, z), y) + 2*Derivative(bbn_ks_c(x, y, z), y)*
-pow(Derivative(bbn_ks_k1(x, y, z), x), 2);
+2*bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_dddk1_D0D0D1 KS_func_pass_args_macro ) + 4*
+bbn_ks_c(x, y, z)*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D1 KS_func_pass_args_macro ) + 
+2*bbn_ks_c(x, y, z)*(bbn_ks_ddk1_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro ) + 
+pow(bbn_ks_k1(x, y, z), 2)*(bbn_ks_dddc_D0D0D1 KS_func_pass_args_macro ) + 4*bbn_ks_k1(x, y, z)*
+(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D1 KS_func_pass_args_macro ) + 2*
+bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro ) + 
+2*bbn_ks_k1(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D0 KS_func_pass_args_macro ) + 
+4*bbn_ks_k1(x, y, z)*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+4*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk1_D1 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D1 KS_func_pass_args_macro )*
+pow((bbn_ks_dk1_D0 KS_func_pass_args_macro ), 2);
 
     _dddgamma_D1D2D2D0D2[ijk]=
 /* mcode in progress ... */
@@ -3922,26 +3922,26 @@ pow(Derivative(bbn_ks_k1(x, y, z), x), 2);
 // c
 // k1
 // k2
-bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x, (z, 2)) + bbn_ks_c(x, y, z)*
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x, (z, 2)) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), (z, 2)) + 2*
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x, z) + 
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), (z, 2))*Derivative(bbn_ks_k2(x, y, z), x) + 
-2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x, z) + 
-bbn_ks_k1(x, y, z)*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), x, (z, 2)) + 
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), (z, 2)) + 
-2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x, z) + 
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), (z, 2))*Derivative(bbn_ks_k2(x, y, z), x) + 
-2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k2(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), x, z) + 
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), (z, 2)) + 
-2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x, z) + 
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (z, 2))*Derivative(bbn_ks_k1(x, y, z), x) + 
-2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), x, z) + 
-2*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), z)*
-Derivative(bbn_ks_k2(x, y, z), z) + 2*Derivative(bbn_ks_c(x, y, z), z)*
-Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), z) + 2*
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), z)*
-Derivative(bbn_ks_k2(x, y, z), x);
+bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_dddk2_D0D2D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+bbn_ks_k2(x, y, z)*(bbn_ks_dddk1_D0D2D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D2D2 KS_func_pass_args_macro ) + 2*
+bbn_ks_c(x, y, z)*(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D2 KS_func_pass_args_macro ) + 
+bbn_ks_c(x, y, z)*(bbn_ks_ddk1_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + 
+2*bbn_ks_c(x, y, z)*(bbn_ks_dk2_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D2 KS_func_pass_args_macro ) + 
+bbn_ks_k1(x, y, z)*bbn_ks_k2(x, y, z)*(bbn_ks_dddc_D0D2D2 KS_func_pass_args_macro ) + 
+bbn_ks_k1(x, y, z)*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D2D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_k1(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D2 KS_func_pass_args_macro ) + 
+bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + 
+2*bbn_ks_k1(x, y, z)*(bbn_ks_dk2_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
+bbn_ks_k2(x, y, z)*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D2D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_k2(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D2 KS_func_pass_args_macro ) + 
+bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro ) + 
+2*bbn_ks_k2(x, y, z)*(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
+2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro )*
+(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D2 KS_func_pass_args_macro )*
+(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 2*
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro )*
+(bbn_ks_dk2_D0 KS_func_pass_args_macro );
 
     _dddgamma_D0D1D0D1D1[ijk]=
 /* mcode in progress ... */
@@ -3964,26 +3964,26 @@ Derivative(bbn_ks_k2(x, y, z), x);
 // c
 // k0
 // k1
-bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x, (y, 2)) + bbn_ks_c(x, y, z)*
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x, (y, 2)) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), (y, 2)) + 2*
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x, y) + 
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), (y, 2))*Derivative(bbn_ks_k1(x, y, z), x) + 
-2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x, y) + 
-bbn_ks_k0(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), x, (y, 2)) + 
-bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), (y, 2)) + 
-2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x, y) + 
-bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), (y, 2))*Derivative(bbn_ks_k1(x, y, z), x) + 
-2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), x, y) + 
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), (y, 2)) + 
-2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x, y) + 
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), (y, 2))*Derivative(bbn_ks_k0(x, y, z), x) + 
-2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), x, y) + 
-2*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), y)*
-Derivative(bbn_ks_k1(x, y, z), y) + 2*Derivative(bbn_ks_c(x, y, z), y)*
-Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), y) + 2*
-Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), y)*
-Derivative(bbn_ks_k1(x, y, z), x);
+bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dddk1_D0D1D1 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+bbn_ks_k1(x, y, z)*(bbn_ks_dddk0_D0D1D1 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D1 KS_func_pass_args_macro ) + 2*
+bbn_ks_c(x, y, z)*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D1 KS_func_pass_args_macro ) + 
+bbn_ks_c(x, y, z)*(bbn_ks_ddk0_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro ) + 
+2*bbn_ks_c(x, y, z)*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D1 KS_func_pass_args_macro ) + 
+bbn_ks_k0(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_dddc_D0D1D1 KS_func_pass_args_macro ) + 
+bbn_ks_k0(x, y, z)*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D1 KS_func_pass_args_macro ) + 
+2*bbn_ks_k0(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D1 KS_func_pass_args_macro ) + 
+bbn_ks_k0(x, y, z)*(bbn_ks_ddc_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro ) + 
+2*bbn_ks_k0(x, y, z)*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+bbn_ks_k1(x, y, z)*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D1 KS_func_pass_args_macro ) + 
+2*bbn_ks_k1(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D1 KS_func_pass_args_macro ) + 
+bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro ) + 
+2*bbn_ks_k1(x, y, z)*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*
+(bbn_ks_dk1_D1 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D1 KS_func_pass_args_macro )*
+(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro ) + 2*
+(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*
+(bbn_ks_dk1_D0 KS_func_pass_args_macro );
 
     _dddgamma_D2D2D0D2D2[ijk]=
 /* mcode in progress ... */
@@ -4000,17 +4000,17 @@ Derivative(bbn_ks_k1(x, y, z), x);
 // Derivative
 // c
 // k2
-2*bbn_ks_c(x, y, z)*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x, (z, 2)) + 2*
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), (z, 2)) + 
-4*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x, z) + 
-pow(bbn_ks_k2(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), x, (z, 2)) + 2*bbn_ks_k2(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), (z, 2)) + 4*
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x, z) + 
-2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (z, 2))*Derivative(bbn_ks_k2(x, y, z), x) + 
-4*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k2(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), x, z) + 
-2*Derivative(bbn_ks_c(x, y, z), x)*pow(Derivative(bbn_ks_k2(x, y, z), z), 2) + 4*
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x)*
-Derivative(bbn_ks_k2(x, y, z), z);
+2*bbn_ks_c(x, y, z)*bbn_ks_k2(x, y, z)*(bbn_ks_dddk2_D0D2D2 KS_func_pass_args_macro ) + 2*
+bbn_ks_c(x, y, z)*(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D2D2 KS_func_pass_args_macro ) + 
+4*bbn_ks_c(x, y, z)*(bbn_ks_dk2_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D2 KS_func_pass_args_macro ) + 
+pow(bbn_ks_k2(x, y, z), 2)*(bbn_ks_dddc_D0D2D2 KS_func_pass_args_macro ) + 2*bbn_ks_k2(x, y, z)*
+(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D2D2 KS_func_pass_args_macro ) + 4*
+bbn_ks_k2(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + 
+4*bbn_ks_k2(x, y, z)*(bbn_ks_dk2_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
+2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*pow((bbn_ks_dk2_D2 KS_func_pass_args_macro ), 2) + 4*
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk2_D2 KS_func_pass_args_macro );
 
     _dddgamma_D1D2D2D1D2[ijk]=
 /* mcode in progress ... */
@@ -4033,26 +4033,26 @@ Derivative(bbn_ks_k2(x, y, z), z);
 // c
 // k1
 // k2
-bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k2(x, y, z), y, (z, 2)) + bbn_ks_c(x, y, z)*
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k1(x, y, z), y, (z, 2)) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), (z, 2)) + 2*
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), y, z) + 
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), (z, 2))*Derivative(bbn_ks_k2(x, y, z), y) + 
-2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), y, z) + 
-bbn_ks_k1(x, y, z)*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), y, (z, 2)) + 
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), (z, 2)) + 
-2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), y, z) + 
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), (z, 2))*Derivative(bbn_ks_k2(x, y, z), y) + 
-2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k2(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), y, z) + 
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), (z, 2)) + 
-2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), y, z) + 
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (z, 2))*Derivative(bbn_ks_k1(x, y, z), y) + 
-2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), y, z) + 
-2*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), z)*
-Derivative(bbn_ks_k2(x, y, z), z) + 2*Derivative(bbn_ks_c(x, y, z), z)*
-Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), z) + 2*
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), z)*
-Derivative(bbn_ks_k2(x, y, z), y);
+bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_dddk2_D1D2D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+bbn_ks_k2(x, y, z)*(bbn_ks_dddk1_D1D2D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D2D2 KS_func_pass_args_macro ) + 2*
+bbn_ks_c(x, y, z)*(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D2 KS_func_pass_args_macro ) + 
+bbn_ks_c(x, y, z)*(bbn_ks_ddk1_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 
+2*bbn_ks_c(x, y, z)*(bbn_ks_dk2_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D2 KS_func_pass_args_macro ) + 
+bbn_ks_k1(x, y, z)*bbn_ks_k2(x, y, z)*(bbn_ks_dddc_D1D2D2 KS_func_pass_args_macro ) + 
+bbn_ks_k1(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D2D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_k1(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D2 KS_func_pass_args_macro ) + 
+bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 
+2*bbn_ks_k1(x, y, z)*(bbn_ks_dk2_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
+bbn_ks_k2(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D2D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_k2(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D2 KS_func_pass_args_macro ) + 
+bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro ) + 
+2*bbn_ks_k2(x, y, z)*(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
+2*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro )*
+(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D2 KS_func_pass_args_macro )*
+(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 2*
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro )*
+(bbn_ks_dk2_D1 KS_func_pass_args_macro );
 
     _dddgamma_D2D2D1D1D1[ijk]=
 /* mcode in progress ... */
@@ -4065,12 +4065,12 @@ Derivative(bbn_ks_k2(x, y, z), y);
 // Derivative
 // c
 // k2
-2*bbn_ks_c(x, y, z)*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k2(x, y, z), (y, 3)) + 6*
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), (y, 2)) + 
-pow(bbn_ks_k2(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), (y, 3)) + 6*bbn_ks_k2(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), (y, 2)) + 6*
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (y, 2))*Derivative(bbn_ks_k2(x, y, z), y) + 
-6*Derivative(bbn_ks_c(x, y, z), y)*pow(Derivative(bbn_ks_k2(x, y, z), y), 2);
+2*bbn_ks_c(x, y, z)*bbn_ks_k2(x, y, z)*(bbn_ks_dddk2_D1D1D1 KS_func_pass_args_macro ) + 6*
+bbn_ks_c(x, y, z)*(bbn_ks_dk2_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D1 KS_func_pass_args_macro ) + 
+pow(bbn_ks_k2(x, y, z), 2)*(bbn_ks_dddc_D1D1D1 KS_func_pass_args_macro ) + 6*bbn_ks_k2(x, y, z)*
+(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D1 KS_func_pass_args_macro ) + 6*
+bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 
+6*(bbn_ks_dc_D1 KS_func_pass_args_macro )*pow((bbn_ks_dk2_D1 KS_func_pass_args_macro ), 2);
 
     _dddgamma_D0D0D0D0D0[ijk]=
 /* mcode in progress ... */
@@ -4083,12 +4083,12 @@ bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (y, 2))*Derivative(bbn_ks_k2(x,
 // Derivative
 // c
 // k0
-2*bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k0(x, y, z), (x, 3)) + 6*
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), (x, 2)) + 
-pow(bbn_ks_k0(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), (x, 3)) + 6*bbn_ks_k0(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), (x, 2)) + 6*
-bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2))*Derivative(bbn_ks_k0(x, y, z), x) + 
-6*Derivative(bbn_ks_c(x, y, z), x)*pow(Derivative(bbn_ks_k0(x, y, z), x), 2);
+2*bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dddk0_D0D0D0 KS_func_pass_args_macro ) + 6*
+bbn_ks_c(x, y, z)*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D0 KS_func_pass_args_macro ) + 
+pow(bbn_ks_k0(x, y, z), 2)*(bbn_ks_dddc_D0D0D0 KS_func_pass_args_macro ) + 6*bbn_ks_k0(x, y, z)*
+(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D0 KS_func_pass_args_macro ) + 6*
+bbn_ks_k0(x, y, z)*(bbn_ks_ddc_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro ) + 
+6*(bbn_ks_dc_D0 KS_func_pass_args_macro )*pow((bbn_ks_dk0_D0 KS_func_pass_args_macro ), 2);
 
     _dddgamma_D0D0D1D2D1[ijk]=
 /* mcode in progress ... */
@@ -4105,17 +4105,17 @@ bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2))*Derivative(bbn_ks_k0(x,
 // Derivative
 // c
 // k0
-2*bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k0(x, y, z), (y, 2), z) + 4*
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), y, z) + 
-2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), (y, 2))*Derivative(bbn_ks_k0(x, y, z), z) + 
-pow(bbn_ks_k0(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), (y, 2), z) + 4*bbn_ks_k0(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), y, z) + 2*
-bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), (y, 2))*Derivative(bbn_ks_k0(x, y, z), z) + 
-2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), (y, 2)) + 
-4*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), y, z) + 
-4*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), y)*
-Derivative(bbn_ks_k0(x, y, z), z) + 2*Derivative(bbn_ks_c(x, y, z), z)*
-pow(Derivative(bbn_ks_k0(x, y, z), y), 2);
+2*bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dddk0_D1D1D2 KS_func_pass_args_macro ) + 4*
+bbn_ks_c(x, y, z)*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_c(x, y, z)*(bbn_ks_ddk0_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D2 KS_func_pass_args_macro ) + 
+pow(bbn_ks_k0(x, y, z), 2)*(bbn_ks_dddc_D1D1D2 KS_func_pass_args_macro ) + 4*bbn_ks_k0(x, y, z)*
+(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D2 KS_func_pass_args_macro ) + 2*
+bbn_ks_k0(x, y, z)*(bbn_ks_ddc_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_k0(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D1 KS_func_pass_args_macro ) + 
+4*bbn_ks_k0(x, y, z)*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
+4*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*
+(bbn_ks_dk0_D2 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D2 KS_func_pass_args_macro )*
+pow((bbn_ks_dk0_D1 KS_func_pass_args_macro ), 2);
 
     _dddgamma_D1D1D1D1D0[ijk]=
 /* mcode in progress ... */
@@ -4132,17 +4132,17 @@ pow(Derivative(bbn_ks_k0(x, y, z), y), 2);
 // Derivative
 // c
 // k1
-2*bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x, (y, 2)) + 2*
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), (y, 2)) + 
-4*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x, y) + 
-pow(bbn_ks_k1(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), x, (y, 2)) + 2*bbn_ks_k1(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), (y, 2)) + 4*
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x, y) + 
-2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), (y, 2))*Derivative(bbn_ks_k1(x, y, z), x) + 
-4*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), x, y) + 
-2*Derivative(bbn_ks_c(x, y, z), x)*pow(Derivative(bbn_ks_k1(x, y, z), y), 2) + 4*
-Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x)*
-Derivative(bbn_ks_k1(x, y, z), y);
+2*bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_dddk1_D0D1D1 KS_func_pass_args_macro ) + 2*
+bbn_ks_c(x, y, z)*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D1 KS_func_pass_args_macro ) + 
+4*bbn_ks_c(x, y, z)*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D1 KS_func_pass_args_macro ) + 
+pow(bbn_ks_k1(x, y, z), 2)*(bbn_ks_dddc_D0D1D1 KS_func_pass_args_macro ) + 2*bbn_ks_k1(x, y, z)*
+(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D1 KS_func_pass_args_macro ) + 4*
+bbn_ks_k1(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D1 KS_func_pass_args_macro ) + 
+2*bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro ) + 
+4*bbn_ks_k1(x, y, z)*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*pow((bbn_ks_dk1_D1 KS_func_pass_args_macro ), 2) + 4*
+(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk1_D1 KS_func_pass_args_macro );
 
     _dddgamma_D1D1D1D1D1[ijk]=
 /* mcode in progress ... */
@@ -4155,12 +4155,12 @@ Derivative(bbn_ks_k1(x, y, z), y);
 // Derivative
 // c
 // k1
-2*bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k1(x, y, z), (y, 3)) + 6*
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), (y, 2)) + 
-pow(bbn_ks_k1(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), (y, 3)) + 6*bbn_ks_k1(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), (y, 2)) + 6*
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), (y, 2))*Derivative(bbn_ks_k1(x, y, z), y) + 
-6*Derivative(bbn_ks_c(x, y, z), y)*pow(Derivative(bbn_ks_k1(x, y, z), y), 2);
+2*bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_dddk1_D1D1D1 KS_func_pass_args_macro ) + 6*
+bbn_ks_c(x, y, z)*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D1 KS_func_pass_args_macro ) + 
+pow(bbn_ks_k1(x, y, z), 2)*(bbn_ks_dddc_D1D1D1 KS_func_pass_args_macro ) + 6*bbn_ks_k1(x, y, z)*
+(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D1 KS_func_pass_args_macro ) + 6*
+bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro ) + 
+6*(bbn_ks_dc_D1 KS_func_pass_args_macro )*pow((bbn_ks_dk1_D1 KS_func_pass_args_macro ), 2);
 
     _dddgamma_D1D1D1D2D0[ijk]=
 /* mcode in progress ... */
@@ -4181,22 +4181,22 @@ bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), (y, 2))*Derivative(bbn_ks_k1(x,
 // Derivative
 // c
 // k1
-2*bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x, y, z) + 2*
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), y, z) + 
-2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x, z) + 
-2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x, y) + 
-pow(bbn_ks_k1(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), x, y, z) + 2*bbn_ks_k1(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), y, z) + 2*
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x, z) + 
-2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x, y) + 
-2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), y, z) + 
-2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), x, z) + 
-2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), x, y) + 
-2*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), y)*
-Derivative(bbn_ks_k1(x, y, z), z) + 2*Derivative(bbn_ks_c(x, y, z), y)*
-Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), z) + 2*
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x)*
-Derivative(bbn_ks_k1(x, y, z), y);
+2*bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_dddk1_D0D1D2 KS_func_pass_args_macro ) + 2*
+bbn_ks_c(x, y, z)*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_c(x, y, z)*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_c(x, y, z)*(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D1 KS_func_pass_args_macro ) + 
+pow(bbn_ks_k1(x, y, z), 2)*(bbn_ks_dddc_D0D1D2 KS_func_pass_args_macro ) + 2*bbn_ks_k1(x, y, z)*
+(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D2 KS_func_pass_args_macro ) + 2*
+bbn_ks_k1(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_k1(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D1 KS_func_pass_args_macro ) + 
+2*bbn_ks_k1(x, y, z)*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_k1(x, y, z)*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_k1(x, y, z)*(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*
+(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D1 KS_func_pass_args_macro )*
+(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + 2*
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk1_D1 KS_func_pass_args_macro );
 
     _dddgamma_D0D1D0D2D1[ijk]=
 /* mcode in progress ... */
@@ -4225,36 +4225,36 @@ Derivative(bbn_ks_k1(x, y, z), y);
 // c
 // k0
 // k1
-bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x, y, z) + bbn_ks_c(x, y, z)*
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x, y, z) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), y, z) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x, z) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x, y) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), y, z) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x, z) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x, y) + bbn_ks_k0(x, y, z)*
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), x, y, z) + bbn_ks_k0(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), y, z) + bbn_ks_k0(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x, z) + bbn_ks_k0(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x, y) + bbn_ks_k0(x, y, z)*
-Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), y, z) + bbn_ks_k0(x, y, z)*
-Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), x, z) + bbn_ks_k0(x, y, z)*
-Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), x, y) + bbn_ks_k1(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), y, z) + bbn_ks_k1(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x, z) + bbn_ks_k1(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x, y) + bbn_ks_k1(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), y, z) + bbn_ks_k1(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), x, z) + bbn_ks_k1(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), x, y) + 
-Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), y)*
-Derivative(bbn_ks_k1(x, y, z), z) + Derivative(bbn_ks_c(x, y, z), x)*
-Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), y) + 
-Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x)*
-Derivative(bbn_ks_k1(x, y, z), z) + Derivative(bbn_ks_c(x, y, z), y)*
-Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x) + 
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x)*
-Derivative(bbn_ks_k1(x, y, z), y) + Derivative(bbn_ks_c(x, y, z), z)*
-Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x);
+bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dddk1_D0D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+bbn_ks_k1(x, y, z)*(bbn_ks_dddk0_D0D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D1 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D1 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
+bbn_ks_k1(x, y, z)*(bbn_ks_dddc_D0D1D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
+(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
+(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D1 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
+(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
+(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
+(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
+(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D2 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
+(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D2 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D1 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
+(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
+(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
+(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*
+(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + (bbn_ks_dc_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro ) + 
+(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + (bbn_ks_dc_D1 KS_func_pass_args_macro )*
+(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro ) + 
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk1_D1 KS_func_pass_args_macro ) + (bbn_ks_dc_D2 KS_func_pass_args_macro )*
+(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro );
 
     _dddgamma_D2D2D1D1D0[ijk]=
 /* mcode in progress ... */
@@ -4271,17 +4271,17 @@ Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x);
 // Derivative
 // c
 // k2
-2*bbn_ks_c(x, y, z)*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x, (y, 2)) + 2*
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), (y, 2)) + 
-4*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x, y) + 
-pow(bbn_ks_k2(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), x, (y, 2)) + 2*bbn_ks_k2(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), (y, 2)) + 4*
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x, y) + 
-2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (y, 2))*Derivative(bbn_ks_k2(x, y, z), x) + 
-4*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k2(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), x, y) + 
-2*Derivative(bbn_ks_c(x, y, z), x)*pow(Derivative(bbn_ks_k2(x, y, z), y), 2) + 4*
-Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x)*
-Derivative(bbn_ks_k2(x, y, z), y);
+2*bbn_ks_c(x, y, z)*bbn_ks_k2(x, y, z)*(bbn_ks_dddk2_D0D1D1 KS_func_pass_args_macro ) + 2*
+bbn_ks_c(x, y, z)*(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D1 KS_func_pass_args_macro ) + 
+4*bbn_ks_c(x, y, z)*(bbn_ks_dk2_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D1 KS_func_pass_args_macro ) + 
+pow(bbn_ks_k2(x, y, z), 2)*(bbn_ks_dddc_D0D1D1 KS_func_pass_args_macro ) + 2*bbn_ks_k2(x, y, z)*
+(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D1 KS_func_pass_args_macro ) + 4*
+bbn_ks_k2(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D1 KS_func_pass_args_macro ) + 
+2*bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + 
+4*bbn_ks_k2(x, y, z)*(bbn_ks_dk2_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*pow((bbn_ks_dk2_D1 KS_func_pass_args_macro ), 2) + 4*
+(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk2_D1 KS_func_pass_args_macro );
 
     _dddgamma_D1D2D2D2D0[ijk]=
 /* mcode in progress ... */
@@ -4304,26 +4304,26 @@ Derivative(bbn_ks_k2(x, y, z), y);
 // c
 // k1
 // k2
-bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x, (z, 2)) + bbn_ks_c(x, y, z)*
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x, (z, 2)) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), (z, 2)) + 2*
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x, z) + 
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), (z, 2))*Derivative(bbn_ks_k2(x, y, z), x) + 
-2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x, z) + 
-bbn_ks_k1(x, y, z)*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), x, (z, 2)) + 
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), (z, 2)) + 
-2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x, z) + 
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), (z, 2))*Derivative(bbn_ks_k2(x, y, z), x) + 
-2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k2(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), x, z) + 
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), (z, 2)) + 
-2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x, z) + 
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (z, 2))*Derivative(bbn_ks_k1(x, y, z), x) + 
-2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), x, z) + 
-2*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), z)*
-Derivative(bbn_ks_k2(x, y, z), z) + 2*Derivative(bbn_ks_c(x, y, z), z)*
-Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), z) + 2*
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), z)*
-Derivative(bbn_ks_k2(x, y, z), x);
+bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_dddk2_D0D2D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+bbn_ks_k2(x, y, z)*(bbn_ks_dddk1_D0D2D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D2D2 KS_func_pass_args_macro ) + 2*
+bbn_ks_c(x, y, z)*(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D2 KS_func_pass_args_macro ) + 
+bbn_ks_c(x, y, z)*(bbn_ks_ddk1_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + 
+2*bbn_ks_c(x, y, z)*(bbn_ks_dk2_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D2 KS_func_pass_args_macro ) + 
+bbn_ks_k1(x, y, z)*bbn_ks_k2(x, y, z)*(bbn_ks_dddc_D0D2D2 KS_func_pass_args_macro ) + 
+bbn_ks_k1(x, y, z)*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D2D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_k1(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D2 KS_func_pass_args_macro ) + 
+bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + 
+2*bbn_ks_k1(x, y, z)*(bbn_ks_dk2_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
+bbn_ks_k2(x, y, z)*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D2D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_k2(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D2 KS_func_pass_args_macro ) + 
+bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro ) + 
+2*bbn_ks_k2(x, y, z)*(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
+2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro )*
+(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D2 KS_func_pass_args_macro )*
+(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 2*
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro )*
+(bbn_ks_dk2_D0 KS_func_pass_args_macro );
 
     _dddgamma_D0D0D1D1D2[ijk]=
 /* mcode in progress ... */
@@ -4340,17 +4340,17 @@ Derivative(bbn_ks_k2(x, y, z), x);
 // Derivative
 // c
 // k0
-2*bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k0(x, y, z), (y, 2), z) + 4*
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), y, z) + 
-2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), (y, 2))*Derivative(bbn_ks_k0(x, y, z), z) + 
-pow(bbn_ks_k0(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), (y, 2), z) + 4*bbn_ks_k0(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), y, z) + 2*
-bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), (y, 2))*Derivative(bbn_ks_k0(x, y, z), z) + 
-2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), (y, 2)) + 
-4*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), y, z) + 
-4*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), y)*
-Derivative(bbn_ks_k0(x, y, z), z) + 2*Derivative(bbn_ks_c(x, y, z), z)*
-pow(Derivative(bbn_ks_k0(x, y, z), y), 2);
+2*bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dddk0_D1D1D2 KS_func_pass_args_macro ) + 4*
+bbn_ks_c(x, y, z)*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_c(x, y, z)*(bbn_ks_ddk0_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D2 KS_func_pass_args_macro ) + 
+pow(bbn_ks_k0(x, y, z), 2)*(bbn_ks_dddc_D1D1D2 KS_func_pass_args_macro ) + 4*bbn_ks_k0(x, y, z)*
+(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D2 KS_func_pass_args_macro ) + 2*
+bbn_ks_k0(x, y, z)*(bbn_ks_ddc_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_k0(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D1 KS_func_pass_args_macro ) + 
+4*bbn_ks_k0(x, y, z)*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
+4*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*
+(bbn_ks_dk0_D2 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D2 KS_func_pass_args_macro )*
+pow((bbn_ks_dk0_D1 KS_func_pass_args_macro ), 2);
 
     _dddgamma_D0D2D0D2D0[ijk]=
 /* mcode in progress ... */
@@ -4373,26 +4373,26 @@ pow(Derivative(bbn_ks_k0(x, y, z), y), 2);
 // c
 // k0
 // k2
-bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k2(x, y, z), (x, 2), z) + bbn_ks_c(x, y, z)*
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k0(x, y, z), (x, 2), z) + 2*bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), x, z) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), (x, 2))*Derivative(bbn_ks_k2(x, y, z), z) + 
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), (x, 2)) + 
-2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), x, z) + 
-bbn_ks_k0(x, y, z)*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2), z) + 2*
-bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), x, z) + 
-bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2))*Derivative(bbn_ks_k2(x, y, z), z) + 
-bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), (x, 2)) + 
-2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), x, z) + 
-2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), x, z) + 
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2))*Derivative(bbn_ks_k0(x, y, z), z) + 
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), (x, 2)) + 
-2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), x, z) + 
-2*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), x)*
-Derivative(bbn_ks_k2(x, y, z), z) + 2*Derivative(bbn_ks_c(x, y, z), x)*
-Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x) + 2*
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x)*
-Derivative(bbn_ks_k2(x, y, z), x);
+bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dddk2_D0D0D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+bbn_ks_k2(x, y, z)*(bbn_ks_dddk0_D0D0D2 KS_func_pass_args_macro ) + 2*bbn_ks_c(x, y, z)*
+(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_ddk0_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 
+bbn_ks_c(x, y, z)*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D0 KS_func_pass_args_macro ) + 
+2*bbn_ks_c(x, y, z)*(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D2 KS_func_pass_args_macro ) + 
+bbn_ks_k0(x, y, z)*bbn_ks_k2(x, y, z)*(bbn_ks_dddc_D0D0D2 KS_func_pass_args_macro ) + 2*
+bbn_ks_k0(x, y, z)*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D2 KS_func_pass_args_macro ) + 
+bbn_ks_k0(x, y, z)*(bbn_ks_ddc_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 
+bbn_ks_k0(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D0 KS_func_pass_args_macro ) + 
+2*bbn_ks_k0(x, y, z)*(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_k2(x, y, z)*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D2 KS_func_pass_args_macro ) + 
+bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D2 KS_func_pass_args_macro ) + 
+bbn_ks_k2(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D0 KS_func_pass_args_macro ) + 
+2*bbn_ks_k2(x, y, z)*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
+2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + 2*
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk2_D0 KS_func_pass_args_macro );
 
     _dddgamma_D0D0D1D0D0[ijk]=
 /* mcode in progress ... */
@@ -4409,17 +4409,17 @@ Derivative(bbn_ks_k2(x, y, z), x);
 // Derivative
 // c
 // k0
-2*bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k0(x, y, z), (x, 2), y) + 4*
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), x, y) + 
-2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), (x, 2))*Derivative(bbn_ks_k0(x, y, z), y) + 
-pow(bbn_ks_k0(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), (x, 2), y) + 4*bbn_ks_k0(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), x, y) + 2*
-bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2))*Derivative(bbn_ks_k0(x, y, z), y) + 
-2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), (x, 2)) + 
-4*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), x, y) + 
-4*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), x)*
-Derivative(bbn_ks_k0(x, y, z), y) + 2*Derivative(bbn_ks_c(x, y, z), y)*
-pow(Derivative(bbn_ks_k0(x, y, z), x), 2);
+2*bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dddk0_D0D0D1 KS_func_pass_args_macro ) + 4*
+bbn_ks_c(x, y, z)*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D1 KS_func_pass_args_macro ) + 
+2*bbn_ks_c(x, y, z)*(bbn_ks_ddk0_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro ) + 
+pow(bbn_ks_k0(x, y, z), 2)*(bbn_ks_dddc_D0D0D1 KS_func_pass_args_macro ) + 4*bbn_ks_k0(x, y, z)*
+(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D1 KS_func_pass_args_macro ) + 2*
+bbn_ks_k0(x, y, z)*(bbn_ks_ddc_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro ) + 
+2*bbn_ks_k0(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D0 KS_func_pass_args_macro ) + 
+4*bbn_ks_k0(x, y, z)*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+4*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk0_D1 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D1 KS_func_pass_args_macro )*
+pow((bbn_ks_dk0_D0 KS_func_pass_args_macro ), 2);
 
     _dddgamma_D0D2D2D1D0[ijk]=
 /* mcode in progress ... */
@@ -4448,36 +4448,36 @@ pow(Derivative(bbn_ks_k0(x, y, z), x), 2);
 // c
 // k0
 // k2
-bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x, y, z) + bbn_ks_c(x, y, z)*
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x, y, z) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), y, z) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x, z) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x, y) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), y, z) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k2(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x, z) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k2(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x, y) + bbn_ks_k0(x, y, z)*
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), x, y, z) + bbn_ks_k0(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), y, z) + bbn_ks_k0(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x, z) + bbn_ks_k0(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x, y) + bbn_ks_k0(x, y, z)*
-Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), y, z) + bbn_ks_k0(x, y, z)*
-Derivative(bbn_ks_k2(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), x, z) + bbn_ks_k0(x, y, z)*
-Derivative(bbn_ks_k2(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), x, y) + bbn_ks_k2(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), y, z) + bbn_ks_k2(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x, z) + bbn_ks_k2(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x, y) + bbn_ks_k2(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), y, z) + bbn_ks_k2(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), x, z) + bbn_ks_k2(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), x, y) + 
-Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), y)*
-Derivative(bbn_ks_k2(x, y, z), z) + Derivative(bbn_ks_c(x, y, z), x)*
-Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), y) + 
-Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x)*
-Derivative(bbn_ks_k2(x, y, z), z) + Derivative(bbn_ks_c(x, y, z), y)*
-Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x) + 
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x)*
-Derivative(bbn_ks_k2(x, y, z), y) + Derivative(bbn_ks_c(x, y, z), z)*
-Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x);
+bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dddk2_D0D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+bbn_ks_k2(x, y, z)*(bbn_ks_dddk0_D0D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D1 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk2_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk2_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D1 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
+bbn_ks_k2(x, y, z)*(bbn_ks_dddc_D0D1D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
+(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
+(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D1 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
+(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
+(bbn_ks_dk2_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
+(bbn_ks_dk2_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
+(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D2 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
+(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D2 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D1 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
+(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
+(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
+(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*
+(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + (bbn_ks_dc_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 
+(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + (bbn_ks_dc_D1 KS_func_pass_args_macro )*
+(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + 
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + (bbn_ks_dc_D2 KS_func_pass_args_macro )*
+(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro );
 
     _dddgamma_D0D2D2D0D0[ijk]=
 /* mcode in progress ... */
@@ -4500,26 +4500,26 @@ Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x);
 // c
 // k0
 // k2
-bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k2(x, y, z), (x, 2), z) + bbn_ks_c(x, y, z)*
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k0(x, y, z), (x, 2), z) + 2*bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), x, z) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), (x, 2))*Derivative(bbn_ks_k2(x, y, z), z) + 
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), (x, 2)) + 
-2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), x, z) + 
-bbn_ks_k0(x, y, z)*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2), z) + 2*
-bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), x, z) + 
-bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2))*Derivative(bbn_ks_k2(x, y, z), z) + 
-bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), (x, 2)) + 
-2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), x, z) + 
-2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), x, z) + 
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2))*Derivative(bbn_ks_k0(x, y, z), z) + 
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), (x, 2)) + 
-2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), x, z) + 
-2*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), x)*
-Derivative(bbn_ks_k2(x, y, z), z) + 2*Derivative(bbn_ks_c(x, y, z), x)*
-Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x) + 2*
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x)*
-Derivative(bbn_ks_k2(x, y, z), x);
+bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dddk2_D0D0D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+bbn_ks_k2(x, y, z)*(bbn_ks_dddk0_D0D0D2 KS_func_pass_args_macro ) + 2*bbn_ks_c(x, y, z)*
+(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_ddk0_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 
+bbn_ks_c(x, y, z)*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D0 KS_func_pass_args_macro ) + 
+2*bbn_ks_c(x, y, z)*(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D2 KS_func_pass_args_macro ) + 
+bbn_ks_k0(x, y, z)*bbn_ks_k2(x, y, z)*(bbn_ks_dddc_D0D0D2 KS_func_pass_args_macro ) + 2*
+bbn_ks_k0(x, y, z)*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D2 KS_func_pass_args_macro ) + 
+bbn_ks_k0(x, y, z)*(bbn_ks_ddc_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 
+bbn_ks_k0(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D0 KS_func_pass_args_macro ) + 
+2*bbn_ks_k0(x, y, z)*(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_k2(x, y, z)*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D2 KS_func_pass_args_macro ) + 
+bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D2 KS_func_pass_args_macro ) + 
+bbn_ks_k2(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D0 KS_func_pass_args_macro ) + 
+2*bbn_ks_k2(x, y, z)*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
+2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + 2*
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk2_D0 KS_func_pass_args_macro );
 
     _dddgamma_D1D1D1D1D2[ijk]=
 /* mcode in progress ... */
@@ -4536,17 +4536,17 @@ Derivative(bbn_ks_k2(x, y, z), x);
 // Derivative
 // c
 // k1
-2*bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k1(x, y, z), (y, 2), z) + 4*
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), y, z) + 
-2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), (y, 2))*Derivative(bbn_ks_k1(x, y, z), z) + 
-pow(bbn_ks_k1(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), (y, 2), z) + 4*bbn_ks_k1(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), y, z) + 2*
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), (y, 2))*Derivative(bbn_ks_k1(x, y, z), z) + 
-2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), (y, 2)) + 
-4*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), y, z) + 
-4*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), y)*
-Derivative(bbn_ks_k1(x, y, z), z) + 2*Derivative(bbn_ks_c(x, y, z), z)*
-pow(Derivative(bbn_ks_k1(x, y, z), y), 2);
+2*bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_dddk1_D1D1D2 KS_func_pass_args_macro ) + 4*
+bbn_ks_c(x, y, z)*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_c(x, y, z)*(bbn_ks_ddk1_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + 
+pow(bbn_ks_k1(x, y, z), 2)*(bbn_ks_dddc_D1D1D2 KS_func_pass_args_macro ) + 4*bbn_ks_k1(x, y, z)*
+(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D2 KS_func_pass_args_macro ) + 2*
+bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_k1(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D1 KS_func_pass_args_macro ) + 
+4*bbn_ks_k1(x, y, z)*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
+4*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*
+(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D2 KS_func_pass_args_macro )*
+pow((bbn_ks_dk1_D1 KS_func_pass_args_macro ), 2);
 
     _dddgamma_D0D0D2D2D1[ijk]=
 /* mcode in progress ... */
@@ -4563,17 +4563,17 @@ pow(Derivative(bbn_ks_k1(x, y, z), y), 2);
 // Derivative
 // c
 // k0
-2*bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k0(x, y, z), y, (z, 2)) + 2*
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), (z, 2)) + 
-4*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), y, z) + 
-pow(bbn_ks_k0(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), y, (z, 2)) + 2*bbn_ks_k0(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), (z, 2)) + 4*
-bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), y, z) + 
-2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), (z, 2))*Derivative(bbn_ks_k0(x, y, z), y) + 
-4*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), y, z) + 
-2*Derivative(bbn_ks_c(x, y, z), y)*pow(Derivative(bbn_ks_k0(x, y, z), z), 2) + 4*
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), y)*
-Derivative(bbn_ks_k0(x, y, z), z);
+2*bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dddk0_D1D2D2 KS_func_pass_args_macro ) + 2*
+bbn_ks_c(x, y, z)*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D2D2 KS_func_pass_args_macro ) + 
+4*bbn_ks_c(x, y, z)*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D2 KS_func_pass_args_macro ) + 
+pow(bbn_ks_k0(x, y, z), 2)*(bbn_ks_dddc_D1D2D2 KS_func_pass_args_macro ) + 2*bbn_ks_k0(x, y, z)*
+(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D2D2 KS_func_pass_args_macro ) + 4*
+bbn_ks_k0(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_k0(x, y, z)*(bbn_ks_ddc_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro ) + 
+4*bbn_ks_k0(x, y, z)*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
+2*(bbn_ks_dc_D1 KS_func_pass_args_macro )*pow((bbn_ks_dk0_D2 KS_func_pass_args_macro ), 2) + 4*
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*
+(bbn_ks_dk0_D2 KS_func_pass_args_macro );
 
     _dddgamma_D2D2D0D1D0[ijk]=
 /* mcode in progress ... */
@@ -4590,17 +4590,17 @@ Derivative(bbn_ks_k0(x, y, z), z);
 // Derivative
 // c
 // k2
-2*bbn_ks_c(x, y, z)*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k2(x, y, z), (x, 2), y) + 4*
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), x, y) + 
-2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), (x, 2))*Derivative(bbn_ks_k2(x, y, z), y) + 
-pow(bbn_ks_k2(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), (x, 2), y) + 4*bbn_ks_k2(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), x, y) + 2*
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2))*Derivative(bbn_ks_k2(x, y, z), y) + 
-2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), (x, 2)) + 
-4*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), x, y) + 
-4*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), x)*
-Derivative(bbn_ks_k2(x, y, z), y) + 2*Derivative(bbn_ks_c(x, y, z), y)*
-pow(Derivative(bbn_ks_k2(x, y, z), x), 2);
+2*bbn_ks_c(x, y, z)*bbn_ks_k2(x, y, z)*(bbn_ks_dddk2_D0D0D1 KS_func_pass_args_macro ) + 4*
+bbn_ks_c(x, y, z)*(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D1 KS_func_pass_args_macro ) + 
+2*bbn_ks_c(x, y, z)*(bbn_ks_ddk2_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 
+pow(bbn_ks_k2(x, y, z), 2)*(bbn_ks_dddc_D0D0D1 KS_func_pass_args_macro ) + 4*bbn_ks_k2(x, y, z)*
+(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D1 KS_func_pass_args_macro ) + 2*
+bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 
+2*bbn_ks_k2(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D0 KS_func_pass_args_macro ) + 
+4*bbn_ks_k2(x, y, z)*(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+4*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D1 KS_func_pass_args_macro )*
+pow((bbn_ks_dk2_D0 KS_func_pass_args_macro ), 2);
 
     _dddgamma_D1D1D2D0D2[ijk]=
 /* mcode in progress ... */
@@ -4617,17 +4617,17 @@ pow(Derivative(bbn_ks_k2(x, y, z), x), 2);
 // Derivative
 // c
 // k1
-2*bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x, (z, 2)) + 2*
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), (z, 2)) + 
-4*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x, z) + 
-pow(bbn_ks_k1(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), x, (z, 2)) + 2*bbn_ks_k1(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), (z, 2)) + 4*
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x, z) + 
-2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), (z, 2))*Derivative(bbn_ks_k1(x, y, z), x) + 
-4*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), x, z) + 
-2*Derivative(bbn_ks_c(x, y, z), x)*pow(Derivative(bbn_ks_k1(x, y, z), z), 2) + 4*
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x)*
-Derivative(bbn_ks_k1(x, y, z), z);
+2*bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_dddk1_D0D2D2 KS_func_pass_args_macro ) + 2*
+bbn_ks_c(x, y, z)*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D2D2 KS_func_pass_args_macro ) + 
+4*bbn_ks_c(x, y, z)*(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D2 KS_func_pass_args_macro ) + 
+pow(bbn_ks_k1(x, y, z), 2)*(bbn_ks_dddc_D0D2D2 KS_func_pass_args_macro ) + 2*bbn_ks_k1(x, y, z)*
+(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D2D2 KS_func_pass_args_macro ) + 4*
+bbn_ks_k1(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro ) + 
+4*bbn_ks_k1(x, y, z)*(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
+2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*pow((bbn_ks_dk1_D2 KS_func_pass_args_macro ), 2) + 4*
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk1_D2 KS_func_pass_args_macro );
 
     _dddgamma_D0D1D1D1D1[ijk]=
 /* mcode in progress ... */
@@ -4644,17 +4644,17 @@ Derivative(bbn_ks_k1(x, y, z), z);
 // c
 // k0
 // k1
-bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k1(x, y, z), (y, 3)) + bbn_ks_c(x, y, z)*
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k0(x, y, z), (y, 3)) + 3*bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), (y, 2)) + 3*
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), (y, 2))*Derivative(bbn_ks_k1(x, y, z), y) + 
-bbn_ks_k0(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), (y, 3)) + 3*bbn_ks_k0(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), (y, 2)) + 3*
-bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), (y, 2))*Derivative(bbn_ks_k1(x, y, z), y) + 
-3*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), (y, 2)) + 
-3*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), (y, 2))*Derivative(bbn_ks_k0(x, y, z), y) + 
-6*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), y)*
-Derivative(bbn_ks_k1(x, y, z), y);
+bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dddk1_D1D1D1 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+bbn_ks_k1(x, y, z)*(bbn_ks_dddk0_D1D1D1 KS_func_pass_args_macro ) + 3*bbn_ks_c(x, y, z)*
+(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D1 KS_func_pass_args_macro ) + 3*
+bbn_ks_c(x, y, z)*(bbn_ks_ddk0_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro ) + 
+bbn_ks_k0(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_dddc_D1D1D1 KS_func_pass_args_macro ) + 3*bbn_ks_k0(x, y, z)*
+(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D1 KS_func_pass_args_macro ) + 3*
+bbn_ks_k0(x, y, z)*(bbn_ks_ddc_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro ) + 
+3*bbn_ks_k1(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D1 KS_func_pass_args_macro ) + 
+3*bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro ) + 
+6*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*
+(bbn_ks_dk1_D1 KS_func_pass_args_macro );
 
     _dddgamma_D1D2D0D0D0[ijk]=
 /* mcode in progress ... */
@@ -4671,17 +4671,17 @@ Derivative(bbn_ks_k1(x, y, z), y);
 // c
 // k1
 // k2
-bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k2(x, y, z), (x, 3)) + bbn_ks_c(x, y, z)*
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k1(x, y, z), (x, 3)) + 3*bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), (x, 2)) + 3*
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), (x, 2))*Derivative(bbn_ks_k2(x, y, z), x) + 
-bbn_ks_k1(x, y, z)*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 3)) + 3*bbn_ks_k1(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), (x, 2)) + 3*
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2))*Derivative(bbn_ks_k2(x, y, z), x) + 
-3*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), (x, 2)) + 
-3*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2))*Derivative(bbn_ks_k1(x, y, z), x) + 
-6*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), x)*
-Derivative(bbn_ks_k2(x, y, z), x);
+bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_dddk2_D0D0D0 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+bbn_ks_k2(x, y, z)*(bbn_ks_dddk1_D0D0D0 KS_func_pass_args_macro ) + 3*bbn_ks_c(x, y, z)*
+(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D0 KS_func_pass_args_macro ) + 3*
+bbn_ks_c(x, y, z)*(bbn_ks_ddk1_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + 
+bbn_ks_k1(x, y, z)*bbn_ks_k2(x, y, z)*(bbn_ks_dddc_D0D0D0 KS_func_pass_args_macro ) + 3*bbn_ks_k1(x, y, z)*
+(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D0 KS_func_pass_args_macro ) + 3*
+bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + 
+3*bbn_ks_k2(x, y, z)*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D0 KS_func_pass_args_macro ) + 
+3*bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro ) + 
+6*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk2_D0 KS_func_pass_args_macro );
 
     _dddgamma_D1D2D0D0D2[ijk]=
 /* mcode in progress ... */
@@ -4704,26 +4704,26 @@ Derivative(bbn_ks_k2(x, y, z), x);
 // c
 // k1
 // k2
-bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k2(x, y, z), (x, 2), z) + bbn_ks_c(x, y, z)*
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k1(x, y, z), (x, 2), z) + 2*bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), x, z) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k1(x, y, z), (x, 2))*Derivative(bbn_ks_k2(x, y, z), z) + 
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), (x, 2)) + 
-2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), x, z) + 
-bbn_ks_k1(x, y, z)*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2), z) + 2*
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), x, z) + 
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2))*Derivative(bbn_ks_k2(x, y, z), z) + 
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), (x, 2)) + 
-2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), x, z) + 
-2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), x, z) + 
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2))*Derivative(bbn_ks_k1(x, y, z), z) + 
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), (x, 2)) + 
-2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), x, z) + 
-2*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), x)*
-Derivative(bbn_ks_k2(x, y, z), z) + 2*Derivative(bbn_ks_c(x, y, z), x)*
-Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x) + 2*
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x)*
-Derivative(bbn_ks_k2(x, y, z), x);
+bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_dddk2_D0D0D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+bbn_ks_k2(x, y, z)*(bbn_ks_dddk1_D0D0D2 KS_func_pass_args_macro ) + 2*bbn_ks_c(x, y, z)*
+(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_ddk1_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 
+bbn_ks_c(x, y, z)*(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D0 KS_func_pass_args_macro ) + 
+2*bbn_ks_c(x, y, z)*(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D2 KS_func_pass_args_macro ) + 
+bbn_ks_k1(x, y, z)*bbn_ks_k2(x, y, z)*(bbn_ks_dddc_D0D0D2 KS_func_pass_args_macro ) + 2*
+bbn_ks_k1(x, y, z)*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D2 KS_func_pass_args_macro ) + 
+bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 
+bbn_ks_k1(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D0 KS_func_pass_args_macro ) + 
+2*bbn_ks_k1(x, y, z)*(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_k2(x, y, z)*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D2 KS_func_pass_args_macro ) + 
+bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + 
+bbn_ks_k2(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D0 KS_func_pass_args_macro ) + 
+2*bbn_ks_k2(x, y, z)*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
+2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + 2*
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk2_D0 KS_func_pass_args_macro );
 
     _dddgamma_D2D2D0D1D2[ijk]=
 /* mcode in progress ... */
@@ -4744,22 +4744,22 @@ Derivative(bbn_ks_k2(x, y, z), x);
 // Derivative
 // c
 // k2
-2*bbn_ks_c(x, y, z)*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x, y, z) + 2*
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), y, z) + 
-2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x, z) + 
-2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x, y) + 
-pow(bbn_ks_k2(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), x, y, z) + 2*bbn_ks_k2(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), y, z) + 2*
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x, z) + 
-2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x, y) + 
-2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), y, z) + 
-2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k2(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), x, z) + 
-2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k2(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), x, y) + 
-2*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), y)*
-Derivative(bbn_ks_k2(x, y, z), z) + 2*Derivative(bbn_ks_c(x, y, z), y)*
-Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), z) + 2*
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x)*
-Derivative(bbn_ks_k2(x, y, z), y);
+2*bbn_ks_c(x, y, z)*bbn_ks_k2(x, y, z)*(bbn_ks_dddk2_D0D1D2 KS_func_pass_args_macro ) + 2*
+bbn_ks_c(x, y, z)*(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_c(x, y, z)*(bbn_ks_dk2_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_c(x, y, z)*(bbn_ks_dk2_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D1 KS_func_pass_args_macro ) + 
+pow(bbn_ks_k2(x, y, z), 2)*(bbn_ks_dddc_D0D1D2 KS_func_pass_args_macro ) + 2*bbn_ks_k2(x, y, z)*
+(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D2 KS_func_pass_args_macro ) + 2*
+bbn_ks_k2(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_k2(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D1 KS_func_pass_args_macro ) + 
+2*bbn_ks_k2(x, y, z)*(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_k2(x, y, z)*(bbn_ks_dk2_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_k2(x, y, z)*(bbn_ks_dk2_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro )*
+(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D1 KS_func_pass_args_macro )*
+(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 2*
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk2_D1 KS_func_pass_args_macro );
 
     _dddgamma_D0D0D1D1D1[ijk]=
 /* mcode in progress ... */
@@ -4772,12 +4772,12 @@ Derivative(bbn_ks_k2(x, y, z), y);
 // Derivative
 // c
 // k0
-2*bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k0(x, y, z), (y, 3)) + 6*
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), (y, 2)) + 
-pow(bbn_ks_k0(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), (y, 3)) + 6*bbn_ks_k0(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), (y, 2)) + 6*
-bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), (y, 2))*Derivative(bbn_ks_k0(x, y, z), y) + 
-6*Derivative(bbn_ks_c(x, y, z), y)*pow(Derivative(bbn_ks_k0(x, y, z), y), 2);
+2*bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dddk0_D1D1D1 KS_func_pass_args_macro ) + 6*
+bbn_ks_c(x, y, z)*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D1 KS_func_pass_args_macro ) + 
+pow(bbn_ks_k0(x, y, z), 2)*(bbn_ks_dddc_D1D1D1 KS_func_pass_args_macro ) + 6*bbn_ks_k0(x, y, z)*
+(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D1 KS_func_pass_args_macro ) + 6*
+bbn_ks_k0(x, y, z)*(bbn_ks_ddc_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro ) + 
+6*(bbn_ks_dc_D1 KS_func_pass_args_macro )*pow((bbn_ks_dk0_D1 KS_func_pass_args_macro ), 2);
 
     _dddgamma_D0D2D0D1D0[ijk]=
 /* mcode in progress ... */
@@ -4800,26 +4800,26 @@ bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), (y, 2))*Derivative(bbn_ks_k0(x,
 // c
 // k0
 // k2
-bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k2(x, y, z), (x, 2), y) + bbn_ks_c(x, y, z)*
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k0(x, y, z), (x, 2), y) + 2*bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), x, y) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), (x, 2))*Derivative(bbn_ks_k2(x, y, z), y) + 
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), (x, 2)) + 
-2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), x, y) + 
-bbn_ks_k0(x, y, z)*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2), y) + 2*
-bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), x, y) + 
-bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2))*Derivative(bbn_ks_k2(x, y, z), y) + 
-bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), (x, 2)) + 
-2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), x, y) + 
-2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), x, y) + 
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2))*Derivative(bbn_ks_k0(x, y, z), y) + 
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), (x, 2)) + 
-2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), x, y) + 
-2*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), x)*
-Derivative(bbn_ks_k2(x, y, z), y) + 2*Derivative(bbn_ks_c(x, y, z), x)*
-Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x) + 2*
-Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x)*
-Derivative(bbn_ks_k2(x, y, z), x);
+bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dddk2_D0D0D1 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+bbn_ks_k2(x, y, z)*(bbn_ks_dddk0_D0D0D1 KS_func_pass_args_macro ) + 2*bbn_ks_c(x, y, z)*
+(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D1 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_ddk0_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 
+bbn_ks_c(x, y, z)*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D0 KS_func_pass_args_macro ) + 
+2*bbn_ks_c(x, y, z)*(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D1 KS_func_pass_args_macro ) + 
+bbn_ks_k0(x, y, z)*bbn_ks_k2(x, y, z)*(bbn_ks_dddc_D0D0D1 KS_func_pass_args_macro ) + 2*
+bbn_ks_k0(x, y, z)*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D1 KS_func_pass_args_macro ) + 
+bbn_ks_k0(x, y, z)*(bbn_ks_ddc_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 
+bbn_ks_k0(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D0 KS_func_pass_args_macro ) + 
+2*bbn_ks_k0(x, y, z)*(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+2*bbn_ks_k2(x, y, z)*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D1 KS_func_pass_args_macro ) + 
+bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro ) + 
+bbn_ks_k2(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D0 KS_func_pass_args_macro ) + 
+2*bbn_ks_k2(x, y, z)*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + 2*
+(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk2_D0 KS_func_pass_args_macro );
 
     _dddgamma_D0D2D1D2D1[ijk]=
 /* mcode in progress ... */
@@ -4842,26 +4842,26 @@ Derivative(bbn_ks_k2(x, y, z), x);
 // c
 // k0
 // k2
-bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k2(x, y, z), (y, 2), z) + bbn_ks_c(x, y, z)*
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k0(x, y, z), (y, 2), z) + 2*bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), y, z) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), (y, 2))*Derivative(bbn_ks_k2(x, y, z), z) + 
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), (y, 2)) + 
-2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), y, z) + 
-bbn_ks_k0(x, y, z)*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (y, 2), z) + 2*
-bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), y, z) + 
-bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), (y, 2))*Derivative(bbn_ks_k2(x, y, z), z) + 
-bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), (y, 2)) + 
-2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k2(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), y, z) + 
-2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), y, z) + 
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (y, 2))*Derivative(bbn_ks_k0(x, y, z), z) + 
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), (y, 2)) + 
-2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), y, z) + 
-2*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), y)*
-Derivative(bbn_ks_k2(x, y, z), z) + 2*Derivative(bbn_ks_c(x, y, z), y)*
-Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), y) + 2*
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), y)*
-Derivative(bbn_ks_k2(x, y, z), y);
+bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dddk2_D1D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+bbn_ks_k2(x, y, z)*(bbn_ks_dddk0_D1D1D2 KS_func_pass_args_macro ) + 2*bbn_ks_c(x, y, z)*
+(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_ddk0_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 
+bbn_ks_c(x, y, z)*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D1 KS_func_pass_args_macro ) + 
+2*bbn_ks_c(x, y, z)*(bbn_ks_dk2_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D2 KS_func_pass_args_macro ) + 
+bbn_ks_k0(x, y, z)*bbn_ks_k2(x, y, z)*(bbn_ks_dddc_D1D1D2 KS_func_pass_args_macro ) + 2*
+bbn_ks_k0(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D2 KS_func_pass_args_macro ) + 
+bbn_ks_k0(x, y, z)*(bbn_ks_ddc_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 
+bbn_ks_k0(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D1 KS_func_pass_args_macro ) + 
+2*bbn_ks_k0(x, y, z)*(bbn_ks_dk2_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_k2(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D2 KS_func_pass_args_macro ) + 
+bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D2 KS_func_pass_args_macro ) + 
+bbn_ks_k2(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D1 KS_func_pass_args_macro ) + 
+2*bbn_ks_k2(x, y, z)*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
+2*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*
+(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D1 KS_func_pass_args_macro )*
+(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 2*
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*
+(bbn_ks_dk2_D1 KS_func_pass_args_macro );
 
     _dddgamma_D1D2D1D2D2[ijk]=
 /* mcode in progress ... */
@@ -4884,26 +4884,26 @@ Derivative(bbn_ks_k2(x, y, z), y);
 // c
 // k1
 // k2
-bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k2(x, y, z), y, (z, 2)) + bbn_ks_c(x, y, z)*
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k1(x, y, z), y, (z, 2)) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), (z, 2)) + 2*
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), y, z) + 
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), (z, 2))*Derivative(bbn_ks_k2(x, y, z), y) + 
-2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), y, z) + 
-bbn_ks_k1(x, y, z)*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), y, (z, 2)) + 
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), (z, 2)) + 
-2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), y, z) + 
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), (z, 2))*Derivative(bbn_ks_k2(x, y, z), y) + 
-2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k2(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), y, z) + 
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), (z, 2)) + 
-2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), y, z) + 
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (z, 2))*Derivative(bbn_ks_k1(x, y, z), y) + 
-2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), y, z) + 
-2*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), z)*
-Derivative(bbn_ks_k2(x, y, z), z) + 2*Derivative(bbn_ks_c(x, y, z), z)*
-Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), z) + 2*
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), z)*
-Derivative(bbn_ks_k2(x, y, z), y);
+bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_dddk2_D1D2D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+bbn_ks_k2(x, y, z)*(bbn_ks_dddk1_D1D2D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D2D2 KS_func_pass_args_macro ) + 2*
+bbn_ks_c(x, y, z)*(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D2 KS_func_pass_args_macro ) + 
+bbn_ks_c(x, y, z)*(bbn_ks_ddk1_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 
+2*bbn_ks_c(x, y, z)*(bbn_ks_dk2_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D2 KS_func_pass_args_macro ) + 
+bbn_ks_k1(x, y, z)*bbn_ks_k2(x, y, z)*(bbn_ks_dddc_D1D2D2 KS_func_pass_args_macro ) + 
+bbn_ks_k1(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D2D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_k1(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D2 KS_func_pass_args_macro ) + 
+bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 
+2*bbn_ks_k1(x, y, z)*(bbn_ks_dk2_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
+bbn_ks_k2(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D2D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_k2(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D2 KS_func_pass_args_macro ) + 
+bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro ) + 
+2*bbn_ks_k2(x, y, z)*(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
+2*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro )*
+(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D2 KS_func_pass_args_macro )*
+(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 2*
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro )*
+(bbn_ks_dk2_D1 KS_func_pass_args_macro );
 
     _dddgamma_D0D1D1D0D0[ijk]=
 /* mcode in progress ... */
@@ -4926,26 +4926,26 @@ Derivative(bbn_ks_k2(x, y, z), y);
 // c
 // k0
 // k1
-bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k1(x, y, z), (x, 2), y) + bbn_ks_c(x, y, z)*
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k0(x, y, z), (x, 2), y) + 2*bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), x, y) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), (x, 2))*Derivative(bbn_ks_k1(x, y, z), y) + 
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), (x, 2)) + 
-2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), x, y) + 
-bbn_ks_k0(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2), y) + 2*
-bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), x, y) + 
-bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2))*Derivative(bbn_ks_k1(x, y, z), y) + 
-bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), (x, 2)) + 
-2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), x, y) + 
-2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), x, y) + 
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2))*Derivative(bbn_ks_k0(x, y, z), y) + 
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), (x, 2)) + 
-2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), x, y) + 
-2*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), x)*
-Derivative(bbn_ks_k1(x, y, z), y) + 2*Derivative(bbn_ks_c(x, y, z), x)*
-Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x) + 2*
-Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x)*
-Derivative(bbn_ks_k1(x, y, z), x);
+bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dddk1_D0D0D1 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+bbn_ks_k1(x, y, z)*(bbn_ks_dddk0_D0D0D1 KS_func_pass_args_macro ) + 2*bbn_ks_c(x, y, z)*
+(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D1 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_ddk0_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro ) + 
+bbn_ks_c(x, y, z)*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D0 KS_func_pass_args_macro ) + 
+2*bbn_ks_c(x, y, z)*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D1 KS_func_pass_args_macro ) + 
+bbn_ks_k0(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_dddc_D0D0D1 KS_func_pass_args_macro ) + 2*
+bbn_ks_k0(x, y, z)*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D1 KS_func_pass_args_macro ) + 
+bbn_ks_k0(x, y, z)*(bbn_ks_ddc_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro ) + 
+bbn_ks_k0(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D0 KS_func_pass_args_macro ) + 
+2*bbn_ks_k0(x, y, z)*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+2*bbn_ks_k1(x, y, z)*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D1 KS_func_pass_args_macro ) + 
+bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro ) + 
+bbn_ks_k1(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D0 KS_func_pass_args_macro ) + 
+2*bbn_ks_k1(x, y, z)*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk1_D1 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro ) + 2*
+(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk1_D0 KS_func_pass_args_macro );
 
     _dddgamma_D0D0D1D2D0[ijk]=
 /* mcode in progress ... */
@@ -4966,22 +4966,22 @@ Derivative(bbn_ks_k1(x, y, z), x);
 // Derivative
 // c
 // k0
-2*bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x, y, z) + 2*
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), y, z) + 
-2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x, z) + 
-2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x, y) + 
-pow(bbn_ks_k0(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), x, y, z) + 2*bbn_ks_k0(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), y, z) + 2*
-bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x, z) + 
-2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x, y) + 
-2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), y, z) + 
-2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), x, z) + 
-2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), x, y) + 
-2*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), y)*
-Derivative(bbn_ks_k0(x, y, z), z) + 2*Derivative(bbn_ks_c(x, y, z), y)*
-Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), z) + 2*
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x)*
-Derivative(bbn_ks_k0(x, y, z), y);
+2*bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dddk0_D0D1D2 KS_func_pass_args_macro ) + 2*
+bbn_ks_c(x, y, z)*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_c(x, y, z)*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_c(x, y, z)*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D1 KS_func_pass_args_macro ) + 
+pow(bbn_ks_k0(x, y, z), 2)*(bbn_ks_dddc_D0D1D2 KS_func_pass_args_macro ) + 2*bbn_ks_k0(x, y, z)*
+(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D2 KS_func_pass_args_macro ) + 2*
+bbn_ks_k0(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_k0(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D1 KS_func_pass_args_macro ) + 
+2*bbn_ks_k0(x, y, z)*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_k0(x, y, z)*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_k0(x, y, z)*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*
+(bbn_ks_dk0_D2 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D1 KS_func_pass_args_macro )*
+(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D2 KS_func_pass_args_macro ) + 2*
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk0_D1 KS_func_pass_args_macro );
 
     _dddgamma_D1D2D1D1D0[ijk]=
 /* mcode in progress ... */
@@ -5004,26 +5004,26 @@ Derivative(bbn_ks_k0(x, y, z), y);
 // c
 // k1
 // k2
-bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x, (y, 2)) + bbn_ks_c(x, y, z)*
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x, (y, 2)) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), (y, 2)) + 2*
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x, y) + 
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), (y, 2))*Derivative(bbn_ks_k2(x, y, z), x) + 
-2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x, y) + 
-bbn_ks_k1(x, y, z)*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), x, (y, 2)) + 
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), (y, 2)) + 
-2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x, y) + 
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), (y, 2))*Derivative(bbn_ks_k2(x, y, z), x) + 
-2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k2(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), x, y) + 
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), (y, 2)) + 
-2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x, y) + 
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (y, 2))*Derivative(bbn_ks_k1(x, y, z), x) + 
-2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), x, y) + 
-2*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), y)*
-Derivative(bbn_ks_k2(x, y, z), y) + 2*Derivative(bbn_ks_c(x, y, z), y)*
-Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), y) + 2*
-Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), y)*
-Derivative(bbn_ks_k2(x, y, z), x);
+bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_dddk2_D0D1D1 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+bbn_ks_k2(x, y, z)*(bbn_ks_dddk1_D0D1D1 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D1 KS_func_pass_args_macro ) + 2*
+bbn_ks_c(x, y, z)*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D1 KS_func_pass_args_macro ) + 
+bbn_ks_c(x, y, z)*(bbn_ks_ddk1_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + 
+2*bbn_ks_c(x, y, z)*(bbn_ks_dk2_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D1 KS_func_pass_args_macro ) + 
+bbn_ks_k1(x, y, z)*bbn_ks_k2(x, y, z)*(bbn_ks_dddc_D0D1D1 KS_func_pass_args_macro ) + 
+bbn_ks_k1(x, y, z)*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D1 KS_func_pass_args_macro ) + 
+2*bbn_ks_k1(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D1 KS_func_pass_args_macro ) + 
+bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + 
+2*bbn_ks_k1(x, y, z)*(bbn_ks_dk2_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+bbn_ks_k2(x, y, z)*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D1 KS_func_pass_args_macro ) + 
+2*bbn_ks_k2(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D1 KS_func_pass_args_macro ) + 
+bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro ) + 
+2*bbn_ks_k2(x, y, z)*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*
+(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D1 KS_func_pass_args_macro )*
+(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 2*
+(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*
+(bbn_ks_dk2_D0 KS_func_pass_args_macro );
 
     _dddgamma_D1D2D2D2D1[ijk]=
 /* mcode in progress ... */
@@ -5046,26 +5046,26 @@ Derivative(bbn_ks_k2(x, y, z), x);
 // c
 // k1
 // k2
-bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k2(x, y, z), y, (z, 2)) + bbn_ks_c(x, y, z)*
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k1(x, y, z), y, (z, 2)) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), (z, 2)) + 2*
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), y, z) + 
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), (z, 2))*Derivative(bbn_ks_k2(x, y, z), y) + 
-2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), y, z) + 
-bbn_ks_k1(x, y, z)*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), y, (z, 2)) + 
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), (z, 2)) + 
-2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), y, z) + 
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), (z, 2))*Derivative(bbn_ks_k2(x, y, z), y) + 
-2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k2(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), y, z) + 
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), (z, 2)) + 
-2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), y, z) + 
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (z, 2))*Derivative(bbn_ks_k1(x, y, z), y) + 
-2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), y, z) + 
-2*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), z)*
-Derivative(bbn_ks_k2(x, y, z), z) + 2*Derivative(bbn_ks_c(x, y, z), z)*
-Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), z) + 2*
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), z)*
-Derivative(bbn_ks_k2(x, y, z), y);
+bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_dddk2_D1D2D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+bbn_ks_k2(x, y, z)*(bbn_ks_dddk1_D1D2D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D2D2 KS_func_pass_args_macro ) + 2*
+bbn_ks_c(x, y, z)*(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D2 KS_func_pass_args_macro ) + 
+bbn_ks_c(x, y, z)*(bbn_ks_ddk1_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 
+2*bbn_ks_c(x, y, z)*(bbn_ks_dk2_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D2 KS_func_pass_args_macro ) + 
+bbn_ks_k1(x, y, z)*bbn_ks_k2(x, y, z)*(bbn_ks_dddc_D1D2D2 KS_func_pass_args_macro ) + 
+bbn_ks_k1(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D2D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_k1(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D2 KS_func_pass_args_macro ) + 
+bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 
+2*bbn_ks_k1(x, y, z)*(bbn_ks_dk2_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
+bbn_ks_k2(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D2D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_k2(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D2 KS_func_pass_args_macro ) + 
+bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro ) + 
+2*bbn_ks_k2(x, y, z)*(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
+2*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro )*
+(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D2 KS_func_pass_args_macro )*
+(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 2*
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro )*
+(bbn_ks_dk2_D1 KS_func_pass_args_macro );
 
     _dddgamma_D0D1D0D0D0[ijk]=
 /* mcode in progress ... */
@@ -5082,17 +5082,17 @@ Derivative(bbn_ks_k2(x, y, z), y);
 // c
 // k0
 // k1
-bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k1(x, y, z), (x, 3)) + bbn_ks_c(x, y, z)*
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k0(x, y, z), (x, 3)) + 3*bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), (x, 2)) + 3*
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), (x, 2))*Derivative(bbn_ks_k1(x, y, z), x) + 
-bbn_ks_k0(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 3)) + 3*bbn_ks_k0(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), (x, 2)) + 3*
-bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2))*Derivative(bbn_ks_k1(x, y, z), x) + 
-3*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), (x, 2)) + 
-3*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2))*Derivative(bbn_ks_k0(x, y, z), x) + 
-6*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), x)*
-Derivative(bbn_ks_k1(x, y, z), x);
+bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dddk1_D0D0D0 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+bbn_ks_k1(x, y, z)*(bbn_ks_dddk0_D0D0D0 KS_func_pass_args_macro ) + 3*bbn_ks_c(x, y, z)*
+(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D0 KS_func_pass_args_macro ) + 3*
+bbn_ks_c(x, y, z)*(bbn_ks_ddk0_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro ) + 
+bbn_ks_k0(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_dddc_D0D0D0 KS_func_pass_args_macro ) + 3*bbn_ks_k0(x, y, z)*
+(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D0 KS_func_pass_args_macro ) + 3*
+bbn_ks_k0(x, y, z)*(bbn_ks_ddc_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro ) + 
+3*bbn_ks_k1(x, y, z)*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D0 KS_func_pass_args_macro ) + 
+3*bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro ) + 
+6*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk1_D0 KS_func_pass_args_macro );
 
     _dddgamma_D1D2D2D1D1[ijk]=
 /* mcode in progress ... */
@@ -5115,26 +5115,26 @@ Derivative(bbn_ks_k1(x, y, z), x);
 // c
 // k1
 // k2
-bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k2(x, y, z), (y, 2), z) + bbn_ks_c(x, y, z)*
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k1(x, y, z), (y, 2), z) + 2*bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), y, z) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k1(x, y, z), (y, 2))*Derivative(bbn_ks_k2(x, y, z), z) + 
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), (y, 2)) + 
-2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), y, z) + 
-bbn_ks_k1(x, y, z)*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (y, 2), z) + 2*
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), y, z) + 
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), (y, 2))*Derivative(bbn_ks_k2(x, y, z), z) + 
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), (y, 2)) + 
-2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k2(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), y, z) + 
-2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), y, z) + 
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (y, 2))*Derivative(bbn_ks_k1(x, y, z), z) + 
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), (y, 2)) + 
-2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), y, z) + 
-2*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), y)*
-Derivative(bbn_ks_k2(x, y, z), z) + 2*Derivative(bbn_ks_c(x, y, z), y)*
-Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), y) + 2*
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), y)*
-Derivative(bbn_ks_k2(x, y, z), y);
+bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_dddk2_D1D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+bbn_ks_k2(x, y, z)*(bbn_ks_dddk1_D1D1D2 KS_func_pass_args_macro ) + 2*bbn_ks_c(x, y, z)*
+(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_ddk1_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 
+bbn_ks_c(x, y, z)*(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D1 KS_func_pass_args_macro ) + 
+2*bbn_ks_c(x, y, z)*(bbn_ks_dk2_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D2 KS_func_pass_args_macro ) + 
+bbn_ks_k1(x, y, z)*bbn_ks_k2(x, y, z)*(bbn_ks_dddc_D1D1D2 KS_func_pass_args_macro ) + 2*
+bbn_ks_k1(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D2 KS_func_pass_args_macro ) + 
+bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 
+bbn_ks_k1(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D1 KS_func_pass_args_macro ) + 
+2*bbn_ks_k1(x, y, z)*(bbn_ks_dk2_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_k2(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D2 KS_func_pass_args_macro ) + 
+bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + 
+bbn_ks_k2(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D1 KS_func_pass_args_macro ) + 
+2*bbn_ks_k2(x, y, z)*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
+2*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*
+(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D1 KS_func_pass_args_macro )*
+(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 2*
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*
+(bbn_ks_dk2_D1 KS_func_pass_args_macro );
 
     _dddgamma_D0D0D0D1D0[ijk]=
 /* mcode in progress ... */
@@ -5151,17 +5151,17 @@ Derivative(bbn_ks_k2(x, y, z), y);
 // Derivative
 // c
 // k0
-2*bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k0(x, y, z), (x, 2), y) + 4*
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), x, y) + 
-2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), (x, 2))*Derivative(bbn_ks_k0(x, y, z), y) + 
-pow(bbn_ks_k0(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), (x, 2), y) + 4*bbn_ks_k0(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), x, y) + 2*
-bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2))*Derivative(bbn_ks_k0(x, y, z), y) + 
-2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), (x, 2)) + 
-4*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), x, y) + 
-4*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), x)*
-Derivative(bbn_ks_k0(x, y, z), y) + 2*Derivative(bbn_ks_c(x, y, z), y)*
-pow(Derivative(bbn_ks_k0(x, y, z), x), 2);
+2*bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dddk0_D0D0D1 KS_func_pass_args_macro ) + 4*
+bbn_ks_c(x, y, z)*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D1 KS_func_pass_args_macro ) + 
+2*bbn_ks_c(x, y, z)*(bbn_ks_ddk0_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro ) + 
+pow(bbn_ks_k0(x, y, z), 2)*(bbn_ks_dddc_D0D0D1 KS_func_pass_args_macro ) + 4*bbn_ks_k0(x, y, z)*
+(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D1 KS_func_pass_args_macro ) + 2*
+bbn_ks_k0(x, y, z)*(bbn_ks_ddc_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro ) + 
+2*bbn_ks_k0(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D0 KS_func_pass_args_macro ) + 
+4*bbn_ks_k0(x, y, z)*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+4*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk0_D1 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D1 KS_func_pass_args_macro )*
+pow((bbn_ks_dk0_D0 KS_func_pass_args_macro ), 2);
 
     _dddgamma_D0D0D0D0D1[ijk]=
 /* mcode in progress ... */
@@ -5178,17 +5178,17 @@ pow(Derivative(bbn_ks_k0(x, y, z), x), 2);
 // Derivative
 // c
 // k0
-2*bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k0(x, y, z), (x, 2), y) + 4*
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), x, y) + 
-2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), (x, 2))*Derivative(bbn_ks_k0(x, y, z), y) + 
-pow(bbn_ks_k0(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), (x, 2), y) + 4*bbn_ks_k0(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), x, y) + 2*
-bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2))*Derivative(bbn_ks_k0(x, y, z), y) + 
-2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), (x, 2)) + 
-4*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), x, y) + 
-4*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), x)*
-Derivative(bbn_ks_k0(x, y, z), y) + 2*Derivative(bbn_ks_c(x, y, z), y)*
-pow(Derivative(bbn_ks_k0(x, y, z), x), 2);
+2*bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dddk0_D0D0D1 KS_func_pass_args_macro ) + 4*
+bbn_ks_c(x, y, z)*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D1 KS_func_pass_args_macro ) + 
+2*bbn_ks_c(x, y, z)*(bbn_ks_ddk0_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro ) + 
+pow(bbn_ks_k0(x, y, z), 2)*(bbn_ks_dddc_D0D0D1 KS_func_pass_args_macro ) + 4*bbn_ks_k0(x, y, z)*
+(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D1 KS_func_pass_args_macro ) + 2*
+bbn_ks_k0(x, y, z)*(bbn_ks_ddc_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro ) + 
+2*bbn_ks_k0(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D0 KS_func_pass_args_macro ) + 
+4*bbn_ks_k0(x, y, z)*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+4*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk0_D1 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D1 KS_func_pass_args_macro )*
+pow((bbn_ks_dk0_D0 KS_func_pass_args_macro ), 2);
 
     _dddgamma_D0D0D0D2D2[ijk]=
 /* mcode in progress ... */
@@ -5205,17 +5205,17 @@ pow(Derivative(bbn_ks_k0(x, y, z), x), 2);
 // Derivative
 // c
 // k0
-2*bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x, (z, 2)) + 2*
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), (z, 2)) + 
-4*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x, z) + 
-pow(bbn_ks_k0(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), x, (z, 2)) + 2*bbn_ks_k0(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), (z, 2)) + 4*
-bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x, z) + 
-2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), (z, 2))*Derivative(bbn_ks_k0(x, y, z), x) + 
-4*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), x, z) + 
-2*Derivative(bbn_ks_c(x, y, z), x)*pow(Derivative(bbn_ks_k0(x, y, z), z), 2) + 4*
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x)*
-Derivative(bbn_ks_k0(x, y, z), z);
+2*bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dddk0_D0D2D2 KS_func_pass_args_macro ) + 2*
+bbn_ks_c(x, y, z)*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D2D2 KS_func_pass_args_macro ) + 
+4*bbn_ks_c(x, y, z)*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D2 KS_func_pass_args_macro ) + 
+pow(bbn_ks_k0(x, y, z), 2)*(bbn_ks_dddc_D0D2D2 KS_func_pass_args_macro ) + 2*bbn_ks_k0(x, y, z)*
+(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D2D2 KS_func_pass_args_macro ) + 4*
+bbn_ks_k0(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_k0(x, y, z)*(bbn_ks_ddc_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro ) + 
+4*bbn_ks_k0(x, y, z)*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
+2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*pow((bbn_ks_dk0_D2 KS_func_pass_args_macro ), 2) + 4*
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk0_D2 KS_func_pass_args_macro );
 
     _dddgamma_D1D2D0D2D1[ijk]=
 /* mcode in progress ... */
@@ -5244,36 +5244,36 @@ Derivative(bbn_ks_k0(x, y, z), z);
 // c
 // k1
 // k2
-bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x, y, z) + bbn_ks_c(x, y, z)*
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x, y, z) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), y, z) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x, z) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x, y) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), y, z) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k2(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x, z) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k2(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x, y) + bbn_ks_k1(x, y, z)*
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), x, y, z) + bbn_ks_k1(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), y, z) + bbn_ks_k1(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x, z) + bbn_ks_k1(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x, y) + bbn_ks_k1(x, y, z)*
-Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), y, z) + bbn_ks_k1(x, y, z)*
-Derivative(bbn_ks_k2(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), x, z) + bbn_ks_k1(x, y, z)*
-Derivative(bbn_ks_k2(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), x, y) + bbn_ks_k2(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), y, z) + bbn_ks_k2(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x, z) + bbn_ks_k2(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x, y) + bbn_ks_k2(x, y, z)*
-Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), y, z) + bbn_ks_k2(x, y, z)*
-Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), x, z) + bbn_ks_k2(x, y, z)*
-Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), x, y) + 
-Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), y)*
-Derivative(bbn_ks_k2(x, y, z), z) + Derivative(bbn_ks_c(x, y, z), x)*
-Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), y) + 
-Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x)*
-Derivative(bbn_ks_k2(x, y, z), z) + Derivative(bbn_ks_c(x, y, z), y)*
-Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x) + 
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x)*
-Derivative(bbn_ks_k2(x, y, z), y) + Derivative(bbn_ks_c(x, y, z), z)*
-Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x);
+bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_dddk2_D0D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+bbn_ks_k2(x, y, z)*(bbn_ks_dddk1_D0D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D1 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk2_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk2_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D1 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
+bbn_ks_k2(x, y, z)*(bbn_ks_dddc_D0D1D2 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
+(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D2 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
+(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D2 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D1 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
+(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
+(bbn_ks_dk2_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
+(bbn_ks_dk2_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
+(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D2 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
+(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D2 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D1 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
+(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
+(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
+(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*
+(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + (bbn_ks_dc_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 
+(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + (bbn_ks_dc_D1 KS_func_pass_args_macro )*
+(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + 
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + (bbn_ks_dc_D2 KS_func_pass_args_macro )*
+(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro );
 
     _dddgamma_D2D2D1D1D2[ijk]=
 /* mcode in progress ... */
@@ -5290,17 +5290,17 @@ Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x);
 // Derivative
 // c
 // k2
-2*bbn_ks_c(x, y, z)*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k2(x, y, z), (y, 2), z) + 4*
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), y, z) + 
-2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), (y, 2))*Derivative(bbn_ks_k2(x, y, z), z) + 
-pow(bbn_ks_k2(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), (y, 2), z) + 4*bbn_ks_k2(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), y, z) + 2*
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (y, 2))*Derivative(bbn_ks_k2(x, y, z), z) + 
-2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), (y, 2)) + 
-4*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k2(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), y, z) + 
-4*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), y)*
-Derivative(bbn_ks_k2(x, y, z), z) + 2*Derivative(bbn_ks_c(x, y, z), z)*
-pow(Derivative(bbn_ks_k2(x, y, z), y), 2);
+2*bbn_ks_c(x, y, z)*bbn_ks_k2(x, y, z)*(bbn_ks_dddk2_D1D1D2 KS_func_pass_args_macro ) + 4*
+bbn_ks_c(x, y, z)*(bbn_ks_dk2_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_c(x, y, z)*(bbn_ks_ddk2_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 
+pow(bbn_ks_k2(x, y, z), 2)*(bbn_ks_dddc_D1D1D2 KS_func_pass_args_macro ) + 4*bbn_ks_k2(x, y, z)*
+(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D2 KS_func_pass_args_macro ) + 2*
+bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_k2(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D1 KS_func_pass_args_macro ) + 
+4*bbn_ks_k2(x, y, z)*(bbn_ks_dk2_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
+4*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro )*
+(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D2 KS_func_pass_args_macro )*
+pow((bbn_ks_dk2_D1 KS_func_pass_args_macro ), 2);
 
     _dddgamma_D1D2D1D1D1[ijk]=
 /* mcode in progress ... */
@@ -5317,17 +5317,17 @@ pow(Derivative(bbn_ks_k2(x, y, z), y), 2);
 // c
 // k1
 // k2
-bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k2(x, y, z), (y, 3)) + bbn_ks_c(x, y, z)*
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k1(x, y, z), (y, 3)) + 3*bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), (y, 2)) + 3*
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), (y, 2))*Derivative(bbn_ks_k2(x, y, z), y) + 
-bbn_ks_k1(x, y, z)*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (y, 3)) + 3*bbn_ks_k1(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), (y, 2)) + 3*
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), (y, 2))*Derivative(bbn_ks_k2(x, y, z), y) + 
-3*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), (y, 2)) + 
-3*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (y, 2))*Derivative(bbn_ks_k1(x, y, z), y) + 
-6*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), y)*
-Derivative(bbn_ks_k2(x, y, z), y);
+bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_dddk2_D1D1D1 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+bbn_ks_k2(x, y, z)*(bbn_ks_dddk1_D1D1D1 KS_func_pass_args_macro ) + 3*bbn_ks_c(x, y, z)*
+(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D1 KS_func_pass_args_macro ) + 3*
+bbn_ks_c(x, y, z)*(bbn_ks_ddk1_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 
+bbn_ks_k1(x, y, z)*bbn_ks_k2(x, y, z)*(bbn_ks_dddc_D1D1D1 KS_func_pass_args_macro ) + 3*bbn_ks_k1(x, y, z)*
+(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D1 KS_func_pass_args_macro ) + 3*
+bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 
+3*bbn_ks_k2(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D1 KS_func_pass_args_macro ) + 
+3*bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro ) + 
+6*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*
+(bbn_ks_dk2_D1 KS_func_pass_args_macro );
 
     _dddgamma_D0D0D1D0D1[ijk]=
 /* mcode in progress ... */
@@ -5344,17 +5344,17 @@ Derivative(bbn_ks_k2(x, y, z), y);
 // Derivative
 // c
 // k0
-2*bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x, (y, 2)) + 2*
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), (y, 2)) + 
-4*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x, y) + 
-pow(bbn_ks_k0(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), x, (y, 2)) + 2*bbn_ks_k0(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), (y, 2)) + 4*
-bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x, y) + 
-2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), (y, 2))*Derivative(bbn_ks_k0(x, y, z), x) + 
-4*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), x, y) + 
-2*Derivative(bbn_ks_c(x, y, z), x)*pow(Derivative(bbn_ks_k0(x, y, z), y), 2) + 4*
-Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x)*
-Derivative(bbn_ks_k0(x, y, z), y);
+2*bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dddk0_D0D1D1 KS_func_pass_args_macro ) + 2*
+bbn_ks_c(x, y, z)*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D1 KS_func_pass_args_macro ) + 
+4*bbn_ks_c(x, y, z)*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D1 KS_func_pass_args_macro ) + 
+pow(bbn_ks_k0(x, y, z), 2)*(bbn_ks_dddc_D0D1D1 KS_func_pass_args_macro ) + 2*bbn_ks_k0(x, y, z)*
+(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D1 KS_func_pass_args_macro ) + 4*
+bbn_ks_k0(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D1 KS_func_pass_args_macro ) + 
+2*bbn_ks_k0(x, y, z)*(bbn_ks_ddc_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro ) + 
+4*bbn_ks_k0(x, y, z)*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*pow((bbn_ks_dk0_D1 KS_func_pass_args_macro ), 2) + 4*
+(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk0_D1 KS_func_pass_args_macro );
 
     _dddgamma_D0D1D0D1D2[ijk]=
 /* mcode in progress ... */
@@ -5383,36 +5383,36 @@ Derivative(bbn_ks_k0(x, y, z), y);
 // c
 // k0
 // k1
-bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x, y, z) + bbn_ks_c(x, y, z)*
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x, y, z) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), y, z) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x, z) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x, y) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), y, z) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x, z) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x, y) + bbn_ks_k0(x, y, z)*
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), x, y, z) + bbn_ks_k0(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), y, z) + bbn_ks_k0(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x, z) + bbn_ks_k0(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x, y) + bbn_ks_k0(x, y, z)*
-Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), y, z) + bbn_ks_k0(x, y, z)*
-Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), x, z) + bbn_ks_k0(x, y, z)*
-Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), x, y) + bbn_ks_k1(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), y, z) + bbn_ks_k1(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x, z) + bbn_ks_k1(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x, y) + bbn_ks_k1(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), y, z) + bbn_ks_k1(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), x, z) + bbn_ks_k1(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), x, y) + 
-Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), y)*
-Derivative(bbn_ks_k1(x, y, z), z) + Derivative(bbn_ks_c(x, y, z), x)*
-Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), y) + 
-Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x)*
-Derivative(bbn_ks_k1(x, y, z), z) + Derivative(bbn_ks_c(x, y, z), y)*
-Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x) + 
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x)*
-Derivative(bbn_ks_k1(x, y, z), y) + Derivative(bbn_ks_c(x, y, z), z)*
-Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x);
+bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dddk1_D0D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+bbn_ks_k1(x, y, z)*(bbn_ks_dddk0_D0D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D1 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D1 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
+bbn_ks_k1(x, y, z)*(bbn_ks_dddc_D0D1D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
+(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
+(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D1 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
+(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
+(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
+(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
+(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D2 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
+(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D2 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D1 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
+(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
+(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
+(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*
+(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + (bbn_ks_dc_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro ) + 
+(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + (bbn_ks_dc_D1 KS_func_pass_args_macro )*
+(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro ) + 
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk1_D1 KS_func_pass_args_macro ) + (bbn_ks_dc_D2 KS_func_pass_args_macro )*
+(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro );
 
     _dddgamma_D0D2D1D2D2[ijk]=
 /* mcode in progress ... */
@@ -5435,26 +5435,26 @@ Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x);
 // c
 // k0
 // k2
-bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k2(x, y, z), y, (z, 2)) + bbn_ks_c(x, y, z)*
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k0(x, y, z), y, (z, 2)) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), (z, 2)) + 2*
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), y, z) + 
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), (z, 2))*Derivative(bbn_ks_k2(x, y, z), y) + 
-2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), y, z) + 
-bbn_ks_k0(x, y, z)*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), y, (z, 2)) + 
-bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), (z, 2)) + 
-2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), y, z) + 
-bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), (z, 2))*Derivative(bbn_ks_k2(x, y, z), y) + 
-2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k2(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), y, z) + 
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), (z, 2)) + 
-2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), y, z) + 
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (z, 2))*Derivative(bbn_ks_k0(x, y, z), y) + 
-2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), y, z) + 
-2*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), z)*
-Derivative(bbn_ks_k2(x, y, z), z) + 2*Derivative(bbn_ks_c(x, y, z), z)*
-Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), z) + 2*
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), z)*
-Derivative(bbn_ks_k2(x, y, z), y);
+bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dddk2_D1D2D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+bbn_ks_k2(x, y, z)*(bbn_ks_dddk0_D1D2D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D2D2 KS_func_pass_args_macro ) + 2*
+bbn_ks_c(x, y, z)*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D2 KS_func_pass_args_macro ) + 
+bbn_ks_c(x, y, z)*(bbn_ks_ddk0_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 
+2*bbn_ks_c(x, y, z)*(bbn_ks_dk2_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D2 KS_func_pass_args_macro ) + 
+bbn_ks_k0(x, y, z)*bbn_ks_k2(x, y, z)*(bbn_ks_dddc_D1D2D2 KS_func_pass_args_macro ) + 
+bbn_ks_k0(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D2D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_k0(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D2 KS_func_pass_args_macro ) + 
+bbn_ks_k0(x, y, z)*(bbn_ks_ddc_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 
+2*bbn_ks_k0(x, y, z)*(bbn_ks_dk2_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
+bbn_ks_k2(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D2D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_k2(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D2 KS_func_pass_args_macro ) + 
+bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro ) + 
+2*bbn_ks_k2(x, y, z)*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
+2*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*
+(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D2 KS_func_pass_args_macro )*
+(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 2*
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*
+(bbn_ks_dk2_D1 KS_func_pass_args_macro );
 
     _dddgamma_D1D1D0D2D2[ijk]=
 /* mcode in progress ... */
@@ -5471,17 +5471,17 @@ Derivative(bbn_ks_k2(x, y, z), y);
 // Derivative
 // c
 // k1
-2*bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x, (z, 2)) + 2*
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), (z, 2)) + 
-4*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x, z) + 
-pow(bbn_ks_k1(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), x, (z, 2)) + 2*bbn_ks_k1(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), (z, 2)) + 4*
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x, z) + 
-2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), (z, 2))*Derivative(bbn_ks_k1(x, y, z), x) + 
-4*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), x, z) + 
-2*Derivative(bbn_ks_c(x, y, z), x)*pow(Derivative(bbn_ks_k1(x, y, z), z), 2) + 4*
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x)*
-Derivative(bbn_ks_k1(x, y, z), z);
+2*bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_dddk1_D0D2D2 KS_func_pass_args_macro ) + 2*
+bbn_ks_c(x, y, z)*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D2D2 KS_func_pass_args_macro ) + 
+4*bbn_ks_c(x, y, z)*(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D2 KS_func_pass_args_macro ) + 
+pow(bbn_ks_k1(x, y, z), 2)*(bbn_ks_dddc_D0D2D2 KS_func_pass_args_macro ) + 2*bbn_ks_k1(x, y, z)*
+(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D2D2 KS_func_pass_args_macro ) + 4*
+bbn_ks_k1(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro ) + 
+4*bbn_ks_k1(x, y, z)*(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
+2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*pow((bbn_ks_dk1_D2 KS_func_pass_args_macro ), 2) + 4*
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk1_D2 KS_func_pass_args_macro );
 
     _dddgamma_D0D1D0D0D2[ijk]=
 /* mcode in progress ... */
@@ -5504,26 +5504,26 @@ Derivative(bbn_ks_k1(x, y, z), z);
 // c
 // k0
 // k1
-bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k1(x, y, z), (x, 2), z) + bbn_ks_c(x, y, z)*
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k0(x, y, z), (x, 2), z) + 2*bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), x, z) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), (x, 2))*Derivative(bbn_ks_k1(x, y, z), z) + 
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), (x, 2)) + 
-2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), x, z) + 
-bbn_ks_k0(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2), z) + 2*
-bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), x, z) + 
-bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2))*Derivative(bbn_ks_k1(x, y, z), z) + 
-bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), (x, 2)) + 
-2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), x, z) + 
-2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), x, z) + 
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2))*Derivative(bbn_ks_k0(x, y, z), z) + 
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), (x, 2)) + 
-2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), x, z) + 
-2*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), x)*
-Derivative(bbn_ks_k1(x, y, z), z) + 2*Derivative(bbn_ks_c(x, y, z), x)*
-Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x) + 2*
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x)*
-Derivative(bbn_ks_k1(x, y, z), x);
+bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dddk1_D0D0D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+bbn_ks_k1(x, y, z)*(bbn_ks_dddk0_D0D0D2 KS_func_pass_args_macro ) + 2*bbn_ks_c(x, y, z)*
+(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_ddk0_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + 
+bbn_ks_c(x, y, z)*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D0 KS_func_pass_args_macro ) + 
+2*bbn_ks_c(x, y, z)*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D2 KS_func_pass_args_macro ) + 
+bbn_ks_k0(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_dddc_D0D0D2 KS_func_pass_args_macro ) + 2*
+bbn_ks_k0(x, y, z)*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D2 KS_func_pass_args_macro ) + 
+bbn_ks_k0(x, y, z)*(bbn_ks_ddc_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + 
+bbn_ks_k0(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D0 KS_func_pass_args_macro ) + 
+2*bbn_ks_k0(x, y, z)*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_k1(x, y, z)*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D2 KS_func_pass_args_macro ) + 
+bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D2 KS_func_pass_args_macro ) + 
+bbn_ks_k1(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D0 KS_func_pass_args_macro ) + 
+2*bbn_ks_k1(x, y, z)*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
+2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro ) + 2*
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk1_D0 KS_func_pass_args_macro );
 
     _dddgamma_D0D1D0D2D2[ijk]=
 /* mcode in progress ... */
@@ -5546,26 +5546,26 @@ Derivative(bbn_ks_k1(x, y, z), x);
 // c
 // k0
 // k1
-bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x, (z, 2)) + bbn_ks_c(x, y, z)*
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x, (z, 2)) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), (z, 2)) + 2*
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x, z) + 
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), (z, 2))*Derivative(bbn_ks_k1(x, y, z), x) + 
-2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x, z) + 
-bbn_ks_k0(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), x, (z, 2)) + 
-bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), (z, 2)) + 
-2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x, z) + 
-bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), (z, 2))*Derivative(bbn_ks_k1(x, y, z), x) + 
-2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), x, z) + 
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), (z, 2)) + 
-2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x, z) + 
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), (z, 2))*Derivative(bbn_ks_k0(x, y, z), x) + 
-2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), x, z) + 
-2*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), z)*
-Derivative(bbn_ks_k1(x, y, z), z) + 2*Derivative(bbn_ks_c(x, y, z), z)*
-Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), z) + 2*
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), z)*
-Derivative(bbn_ks_k1(x, y, z), x);
+bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dddk1_D0D2D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+bbn_ks_k1(x, y, z)*(bbn_ks_dddk0_D0D2D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D2D2 KS_func_pass_args_macro ) + 2*
+bbn_ks_c(x, y, z)*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D2 KS_func_pass_args_macro ) + 
+bbn_ks_c(x, y, z)*(bbn_ks_ddk0_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro ) + 
+2*bbn_ks_c(x, y, z)*(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D2 KS_func_pass_args_macro ) + 
+bbn_ks_k0(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_dddc_D0D2D2 KS_func_pass_args_macro ) + 
+bbn_ks_k0(x, y, z)*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D2D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_k0(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D2 KS_func_pass_args_macro ) + 
+bbn_ks_k0(x, y, z)*(bbn_ks_ddc_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro ) + 
+2*bbn_ks_k0(x, y, z)*(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
+bbn_ks_k1(x, y, z)*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D2D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_k1(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D2 KS_func_pass_args_macro ) + 
+bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro ) + 
+2*bbn_ks_k1(x, y, z)*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
+2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*
+(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D2 KS_func_pass_args_macro )*
+(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + 2*
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*
+(bbn_ks_dk1_D0 KS_func_pass_args_macro );
 
     _dddgamma_D0D2D1D2D0[ijk]=
 /* mcode in progress ... */
@@ -5594,36 +5594,36 @@ Derivative(bbn_ks_k1(x, y, z), x);
 // c
 // k0
 // k2
-bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x, y, z) + bbn_ks_c(x, y, z)*
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x, y, z) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), y, z) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x, z) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x, y) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), y, z) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k2(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x, z) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k2(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x, y) + bbn_ks_k0(x, y, z)*
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), x, y, z) + bbn_ks_k0(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), y, z) + bbn_ks_k0(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x, z) + bbn_ks_k0(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x, y) + bbn_ks_k0(x, y, z)*
-Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), y, z) + bbn_ks_k0(x, y, z)*
-Derivative(bbn_ks_k2(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), x, z) + bbn_ks_k0(x, y, z)*
-Derivative(bbn_ks_k2(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), x, y) + bbn_ks_k2(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), y, z) + bbn_ks_k2(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x, z) + bbn_ks_k2(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x, y) + bbn_ks_k2(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), y, z) + bbn_ks_k2(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), x, z) + bbn_ks_k2(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), x, y) + 
-Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), y)*
-Derivative(bbn_ks_k2(x, y, z), z) + Derivative(bbn_ks_c(x, y, z), x)*
-Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), y) + 
-Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x)*
-Derivative(bbn_ks_k2(x, y, z), z) + Derivative(bbn_ks_c(x, y, z), y)*
-Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x) + 
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x)*
-Derivative(bbn_ks_k2(x, y, z), y) + Derivative(bbn_ks_c(x, y, z), z)*
-Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x);
+bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dddk2_D0D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+bbn_ks_k2(x, y, z)*(bbn_ks_dddk0_D0D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D1 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk2_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk2_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D1 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
+bbn_ks_k2(x, y, z)*(bbn_ks_dddc_D0D1D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
+(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
+(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D1 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
+(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
+(bbn_ks_dk2_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
+(bbn_ks_dk2_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
+(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D2 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
+(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D2 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D1 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
+(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
+(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
+(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*
+(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + (bbn_ks_dc_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 
+(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + (bbn_ks_dc_D1 KS_func_pass_args_macro )*
+(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + 
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + (bbn_ks_dc_D2 KS_func_pass_args_macro )*
+(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro );
 
     _dddgamma_D0D1D0D0D1[ijk]=
 /* mcode in progress ... */
@@ -5646,26 +5646,26 @@ Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x);
 // c
 // k0
 // k1
-bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k1(x, y, z), (x, 2), y) + bbn_ks_c(x, y, z)*
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k0(x, y, z), (x, 2), y) + 2*bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), x, y) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), (x, 2))*Derivative(bbn_ks_k1(x, y, z), y) + 
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), (x, 2)) + 
-2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), x, y) + 
-bbn_ks_k0(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2), y) + 2*
-bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), x, y) + 
-bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2))*Derivative(bbn_ks_k1(x, y, z), y) + 
-bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), (x, 2)) + 
-2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), x, y) + 
-2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), x, y) + 
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2))*Derivative(bbn_ks_k0(x, y, z), y) + 
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), (x, 2)) + 
-2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), x, y) + 
-2*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), x)*
-Derivative(bbn_ks_k1(x, y, z), y) + 2*Derivative(bbn_ks_c(x, y, z), x)*
-Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x) + 2*
-Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x)*
-Derivative(bbn_ks_k1(x, y, z), x);
+bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dddk1_D0D0D1 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+bbn_ks_k1(x, y, z)*(bbn_ks_dddk0_D0D0D1 KS_func_pass_args_macro ) + 2*bbn_ks_c(x, y, z)*
+(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D1 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_ddk0_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro ) + 
+bbn_ks_c(x, y, z)*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D0 KS_func_pass_args_macro ) + 
+2*bbn_ks_c(x, y, z)*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D1 KS_func_pass_args_macro ) + 
+bbn_ks_k0(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_dddc_D0D0D1 KS_func_pass_args_macro ) + 2*
+bbn_ks_k0(x, y, z)*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D1 KS_func_pass_args_macro ) + 
+bbn_ks_k0(x, y, z)*(bbn_ks_ddc_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro ) + 
+bbn_ks_k0(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D0 KS_func_pass_args_macro ) + 
+2*bbn_ks_k0(x, y, z)*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+2*bbn_ks_k1(x, y, z)*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D1 KS_func_pass_args_macro ) + 
+bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro ) + 
+bbn_ks_k1(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D0 KS_func_pass_args_macro ) + 
+2*bbn_ks_k1(x, y, z)*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk1_D1 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro ) + 2*
+(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk1_D0 KS_func_pass_args_macro );
 
     _dddgamma_D1D2D1D1D2[ijk]=
 /* mcode in progress ... */
@@ -5688,26 +5688,26 @@ Derivative(bbn_ks_k1(x, y, z), x);
 // c
 // k1
 // k2
-bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k2(x, y, z), (y, 2), z) + bbn_ks_c(x, y, z)*
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k1(x, y, z), (y, 2), z) + 2*bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), y, z) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k1(x, y, z), (y, 2))*Derivative(bbn_ks_k2(x, y, z), z) + 
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), (y, 2)) + 
-2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), y, z) + 
-bbn_ks_k1(x, y, z)*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (y, 2), z) + 2*
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), y, z) + 
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), (y, 2))*Derivative(bbn_ks_k2(x, y, z), z) + 
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), (y, 2)) + 
-2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k2(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), y, z) + 
-2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), y, z) + 
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (y, 2))*Derivative(bbn_ks_k1(x, y, z), z) + 
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), (y, 2)) + 
-2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), y, z) + 
-2*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), y)*
-Derivative(bbn_ks_k2(x, y, z), z) + 2*Derivative(bbn_ks_c(x, y, z), y)*
-Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), y) + 2*
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), y)*
-Derivative(bbn_ks_k2(x, y, z), y);
+bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_dddk2_D1D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+bbn_ks_k2(x, y, z)*(bbn_ks_dddk1_D1D1D2 KS_func_pass_args_macro ) + 2*bbn_ks_c(x, y, z)*
+(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_ddk1_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 
+bbn_ks_c(x, y, z)*(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D1 KS_func_pass_args_macro ) + 
+2*bbn_ks_c(x, y, z)*(bbn_ks_dk2_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D2 KS_func_pass_args_macro ) + 
+bbn_ks_k1(x, y, z)*bbn_ks_k2(x, y, z)*(bbn_ks_dddc_D1D1D2 KS_func_pass_args_macro ) + 2*
+bbn_ks_k1(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D2 KS_func_pass_args_macro ) + 
+bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 
+bbn_ks_k1(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D1 KS_func_pass_args_macro ) + 
+2*bbn_ks_k1(x, y, z)*(bbn_ks_dk2_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_k2(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D2 KS_func_pass_args_macro ) + 
+bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + 
+bbn_ks_k2(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D1 KS_func_pass_args_macro ) + 
+2*bbn_ks_k2(x, y, z)*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
+2*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*
+(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D1 KS_func_pass_args_macro )*
+(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 2*
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*
+(bbn_ks_dk2_D1 KS_func_pass_args_macro );
 
     _dddgamma_D2D2D0D1D1[ijk]=
 /* mcode in progress ... */
@@ -5724,17 +5724,17 @@ Derivative(bbn_ks_k2(x, y, z), y);
 // Derivative
 // c
 // k2
-2*bbn_ks_c(x, y, z)*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x, (y, 2)) + 2*
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), (y, 2)) + 
-4*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x, y) + 
-pow(bbn_ks_k2(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), x, (y, 2)) + 2*bbn_ks_k2(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), (y, 2)) + 4*
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x, y) + 
-2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (y, 2))*Derivative(bbn_ks_k2(x, y, z), x) + 
-4*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k2(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), x, y) + 
-2*Derivative(bbn_ks_c(x, y, z), x)*pow(Derivative(bbn_ks_k2(x, y, z), y), 2) + 4*
-Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x)*
-Derivative(bbn_ks_k2(x, y, z), y);
+2*bbn_ks_c(x, y, z)*bbn_ks_k2(x, y, z)*(bbn_ks_dddk2_D0D1D1 KS_func_pass_args_macro ) + 2*
+bbn_ks_c(x, y, z)*(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D1 KS_func_pass_args_macro ) + 
+4*bbn_ks_c(x, y, z)*(bbn_ks_dk2_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D1 KS_func_pass_args_macro ) + 
+pow(bbn_ks_k2(x, y, z), 2)*(bbn_ks_dddc_D0D1D1 KS_func_pass_args_macro ) + 2*bbn_ks_k2(x, y, z)*
+(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D1 KS_func_pass_args_macro ) + 4*
+bbn_ks_k2(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D1 KS_func_pass_args_macro ) + 
+2*bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + 
+4*bbn_ks_k2(x, y, z)*(bbn_ks_dk2_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*pow((bbn_ks_dk2_D1 KS_func_pass_args_macro ), 2) + 4*
+(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk2_D1 KS_func_pass_args_macro );
 
     _dddgamma_D1D1D2D2D1[ijk]=
 /* mcode in progress ... */
@@ -5751,17 +5751,17 @@ Derivative(bbn_ks_k2(x, y, z), y);
 // Derivative
 // c
 // k1
-2*bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k1(x, y, z), y, (z, 2)) + 2*
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), (z, 2)) + 
-4*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), y, z) + 
-pow(bbn_ks_k1(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), y, (z, 2)) + 2*bbn_ks_k1(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), (z, 2)) + 4*
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), y, z) + 
-2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), (z, 2))*Derivative(bbn_ks_k1(x, y, z), y) + 
-4*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), y, z) + 
-2*Derivative(bbn_ks_c(x, y, z), y)*pow(Derivative(bbn_ks_k1(x, y, z), z), 2) + 4*
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), y)*
-Derivative(bbn_ks_k1(x, y, z), z);
+2*bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_dddk1_D1D2D2 KS_func_pass_args_macro ) + 2*
+bbn_ks_c(x, y, z)*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D2D2 KS_func_pass_args_macro ) + 
+4*bbn_ks_c(x, y, z)*(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D2 KS_func_pass_args_macro ) + 
+pow(bbn_ks_k1(x, y, z), 2)*(bbn_ks_dddc_D1D2D2 KS_func_pass_args_macro ) + 2*bbn_ks_k1(x, y, z)*
+(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D2D2 KS_func_pass_args_macro ) + 4*
+bbn_ks_k1(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro ) + 
+4*bbn_ks_k1(x, y, z)*(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
+2*(bbn_ks_dc_D1 KS_func_pass_args_macro )*pow((bbn_ks_dk1_D2 KS_func_pass_args_macro ), 2) + 4*
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*
+(bbn_ks_dk1_D2 KS_func_pass_args_macro );
 
     _dddgamma_D0D1D2D1D0[ijk]=
 /* mcode in progress ... */
@@ -5790,36 +5790,36 @@ Derivative(bbn_ks_k1(x, y, z), z);
 // c
 // k0
 // k1
-bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x, y, z) + bbn_ks_c(x, y, z)*
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x, y, z) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), y, z) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x, z) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x, y) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), y, z) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x, z) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x, y) + bbn_ks_k0(x, y, z)*
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), x, y, z) + bbn_ks_k0(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), y, z) + bbn_ks_k0(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x, z) + bbn_ks_k0(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x, y) + bbn_ks_k0(x, y, z)*
-Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), y, z) + bbn_ks_k0(x, y, z)*
-Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), x, z) + bbn_ks_k0(x, y, z)*
-Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), x, y) + bbn_ks_k1(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), y, z) + bbn_ks_k1(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x, z) + bbn_ks_k1(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x, y) + bbn_ks_k1(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), y, z) + bbn_ks_k1(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), x, z) + bbn_ks_k1(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), x, y) + 
-Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), y)*
-Derivative(bbn_ks_k1(x, y, z), z) + Derivative(bbn_ks_c(x, y, z), x)*
-Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), y) + 
-Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x)*
-Derivative(bbn_ks_k1(x, y, z), z) + Derivative(bbn_ks_c(x, y, z), y)*
-Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x) + 
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x)*
-Derivative(bbn_ks_k1(x, y, z), y) + Derivative(bbn_ks_c(x, y, z), z)*
-Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x);
+bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dddk1_D0D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+bbn_ks_k1(x, y, z)*(bbn_ks_dddk0_D0D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D1 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D1 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
+bbn_ks_k1(x, y, z)*(bbn_ks_dddc_D0D1D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
+(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
+(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D1 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
+(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
+(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
+(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
+(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D2 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
+(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D2 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D1 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
+(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
+(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
+(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*
+(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + (bbn_ks_dc_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro ) + 
+(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + (bbn_ks_dc_D1 KS_func_pass_args_macro )*
+(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro ) + 
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk1_D1 KS_func_pass_args_macro ) + (bbn_ks_dc_D2 KS_func_pass_args_macro )*
+(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro );
 
     _dddgamma_D0D2D1D0D2[ijk]=
 /* mcode in progress ... */
@@ -5848,36 +5848,36 @@ Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x);
 // c
 // k0
 // k2
-bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x, y, z) + bbn_ks_c(x, y, z)*
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x, y, z) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), y, z) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x, z) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x, y) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), y, z) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k2(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x, z) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k2(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x, y) + bbn_ks_k0(x, y, z)*
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), x, y, z) + bbn_ks_k0(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), y, z) + bbn_ks_k0(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x, z) + bbn_ks_k0(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x, y) + bbn_ks_k0(x, y, z)*
-Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), y, z) + bbn_ks_k0(x, y, z)*
-Derivative(bbn_ks_k2(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), x, z) + bbn_ks_k0(x, y, z)*
-Derivative(bbn_ks_k2(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), x, y) + bbn_ks_k2(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), y, z) + bbn_ks_k2(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x, z) + bbn_ks_k2(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x, y) + bbn_ks_k2(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), y, z) + bbn_ks_k2(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), x, z) + bbn_ks_k2(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), x, y) + 
-Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), y)*
-Derivative(bbn_ks_k2(x, y, z), z) + Derivative(bbn_ks_c(x, y, z), x)*
-Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), y) + 
-Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x)*
-Derivative(bbn_ks_k2(x, y, z), z) + Derivative(bbn_ks_c(x, y, z), y)*
-Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x) + 
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x)*
-Derivative(bbn_ks_k2(x, y, z), y) + Derivative(bbn_ks_c(x, y, z), z)*
-Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x);
+bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dddk2_D0D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+bbn_ks_k2(x, y, z)*(bbn_ks_dddk0_D0D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D1 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk2_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk2_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D1 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
+bbn_ks_k2(x, y, z)*(bbn_ks_dddc_D0D1D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
+(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
+(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D1 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
+(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
+(bbn_ks_dk2_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
+(bbn_ks_dk2_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
+(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D2 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
+(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D2 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D1 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
+(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
+(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
+(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*
+(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + (bbn_ks_dc_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 
+(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + (bbn_ks_dc_D1 KS_func_pass_args_macro )*
+(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + 
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + (bbn_ks_dc_D2 KS_func_pass_args_macro )*
+(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro );
 
     _dddgamma_D2D2D2D1D0[ijk]=
 /* mcode in progress ... */
@@ -5898,22 +5898,22 @@ Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x);
 // Derivative
 // c
 // k2
-2*bbn_ks_c(x, y, z)*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x, y, z) + 2*
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), y, z) + 
-2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x, z) + 
-2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x, y) + 
-pow(bbn_ks_k2(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), x, y, z) + 2*bbn_ks_k2(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), y, z) + 2*
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x, z) + 
-2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x, y) + 
-2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), y, z) + 
-2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k2(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), x, z) + 
-2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k2(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), x, y) + 
-2*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), y)*
-Derivative(bbn_ks_k2(x, y, z), z) + 2*Derivative(bbn_ks_c(x, y, z), y)*
-Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), z) + 2*
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x)*
-Derivative(bbn_ks_k2(x, y, z), y);
+2*bbn_ks_c(x, y, z)*bbn_ks_k2(x, y, z)*(bbn_ks_dddk2_D0D1D2 KS_func_pass_args_macro ) + 2*
+bbn_ks_c(x, y, z)*(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_c(x, y, z)*(bbn_ks_dk2_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_c(x, y, z)*(bbn_ks_dk2_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D1 KS_func_pass_args_macro ) + 
+pow(bbn_ks_k2(x, y, z), 2)*(bbn_ks_dddc_D0D1D2 KS_func_pass_args_macro ) + 2*bbn_ks_k2(x, y, z)*
+(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D2 KS_func_pass_args_macro ) + 2*
+bbn_ks_k2(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_k2(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D1 KS_func_pass_args_macro ) + 
+2*bbn_ks_k2(x, y, z)*(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_k2(x, y, z)*(bbn_ks_dk2_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_k2(x, y, z)*(bbn_ks_dk2_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro )*
+(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D1 KS_func_pass_args_macro )*
+(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 2*
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk2_D1 KS_func_pass_args_macro );
 
     _dddgamma_D0D1D1D1D2[ijk]=
 /* mcode in progress ... */
@@ -5936,26 +5936,26 @@ Derivative(bbn_ks_k2(x, y, z), y);
 // c
 // k0
 // k1
-bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k1(x, y, z), (y, 2), z) + bbn_ks_c(x, y, z)*
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k0(x, y, z), (y, 2), z) + 2*bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), y, z) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), (y, 2))*Derivative(bbn_ks_k1(x, y, z), z) + 
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), (y, 2)) + 
-2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), y, z) + 
-bbn_ks_k0(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), (y, 2), z) + 2*
-bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), y, z) + 
-bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), (y, 2))*Derivative(bbn_ks_k1(x, y, z), z) + 
-bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), (y, 2)) + 
-2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), y, z) + 
-2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), y, z) + 
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), (y, 2))*Derivative(bbn_ks_k0(x, y, z), z) + 
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), (y, 2)) + 
-2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), y, z) + 
-2*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), y)*
-Derivative(bbn_ks_k1(x, y, z), z) + 2*Derivative(bbn_ks_c(x, y, z), y)*
-Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), y) + 2*
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), y)*
-Derivative(bbn_ks_k1(x, y, z), y);
+bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dddk1_D1D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+bbn_ks_k1(x, y, z)*(bbn_ks_dddk0_D1D1D2 KS_func_pass_args_macro ) + 2*bbn_ks_c(x, y, z)*
+(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_ddk0_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + 
+bbn_ks_c(x, y, z)*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D1 KS_func_pass_args_macro ) + 
+2*bbn_ks_c(x, y, z)*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D2 KS_func_pass_args_macro ) + 
+bbn_ks_k0(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_dddc_D1D1D2 KS_func_pass_args_macro ) + 2*
+bbn_ks_k0(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D2 KS_func_pass_args_macro ) + 
+bbn_ks_k0(x, y, z)*(bbn_ks_ddc_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + 
+bbn_ks_k0(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D1 KS_func_pass_args_macro ) + 
+2*bbn_ks_k0(x, y, z)*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_k1(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D2 KS_func_pass_args_macro ) + 
+bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D2 KS_func_pass_args_macro ) + 
+bbn_ks_k1(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D1 KS_func_pass_args_macro ) + 
+2*bbn_ks_k1(x, y, z)*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
+2*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*
+(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D1 KS_func_pass_args_macro )*
+(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro ) + 2*
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*
+(bbn_ks_dk1_D1 KS_func_pass_args_macro );
 
     _dddgamma_D1D2D1D0D2[ijk]=
 /* mcode in progress ... */
@@ -5984,36 +5984,36 @@ Derivative(bbn_ks_k1(x, y, z), y);
 // c
 // k1
 // k2
-bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x, y, z) + bbn_ks_c(x, y, z)*
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x, y, z) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), y, z) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x, z) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x, y) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), y, z) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k2(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x, z) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k2(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x, y) + bbn_ks_k1(x, y, z)*
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), x, y, z) + bbn_ks_k1(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), y, z) + bbn_ks_k1(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x, z) + bbn_ks_k1(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x, y) + bbn_ks_k1(x, y, z)*
-Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), y, z) + bbn_ks_k1(x, y, z)*
-Derivative(bbn_ks_k2(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), x, z) + bbn_ks_k1(x, y, z)*
-Derivative(bbn_ks_k2(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), x, y) + bbn_ks_k2(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), y, z) + bbn_ks_k2(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x, z) + bbn_ks_k2(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x, y) + bbn_ks_k2(x, y, z)*
-Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), y, z) + bbn_ks_k2(x, y, z)*
-Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), x, z) + bbn_ks_k2(x, y, z)*
-Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), x, y) + 
-Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), y)*
-Derivative(bbn_ks_k2(x, y, z), z) + Derivative(bbn_ks_c(x, y, z), x)*
-Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), y) + 
-Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x)*
-Derivative(bbn_ks_k2(x, y, z), z) + Derivative(bbn_ks_c(x, y, z), y)*
-Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x) + 
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x)*
-Derivative(bbn_ks_k2(x, y, z), y) + Derivative(bbn_ks_c(x, y, z), z)*
-Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x);
+bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_dddk2_D0D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+bbn_ks_k2(x, y, z)*(bbn_ks_dddk1_D0D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D1 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk2_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk2_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D1 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
+bbn_ks_k2(x, y, z)*(bbn_ks_dddc_D0D1D2 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
+(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D2 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
+(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D2 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D1 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
+(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
+(bbn_ks_dk2_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
+(bbn_ks_dk2_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
+(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D2 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
+(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D2 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D1 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
+(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
+(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
+(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*
+(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + (bbn_ks_dc_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 
+(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + (bbn_ks_dc_D1 KS_func_pass_args_macro )*
+(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + 
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + (bbn_ks_dc_D2 KS_func_pass_args_macro )*
+(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro );
 
     _dddgamma_D0D0D2D2D0[ijk]=
 /* mcode in progress ... */
@@ -6030,17 +6030,17 @@ Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x);
 // Derivative
 // c
 // k0
-2*bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x, (z, 2)) + 2*
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), (z, 2)) + 
-4*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x, z) + 
-pow(bbn_ks_k0(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), x, (z, 2)) + 2*bbn_ks_k0(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), (z, 2)) + 4*
-bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x, z) + 
-2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), (z, 2))*Derivative(bbn_ks_k0(x, y, z), x) + 
-4*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), x, z) + 
-2*Derivative(bbn_ks_c(x, y, z), x)*pow(Derivative(bbn_ks_k0(x, y, z), z), 2) + 4*
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x)*
-Derivative(bbn_ks_k0(x, y, z), z);
+2*bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dddk0_D0D2D2 KS_func_pass_args_macro ) + 2*
+bbn_ks_c(x, y, z)*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D2D2 KS_func_pass_args_macro ) + 
+4*bbn_ks_c(x, y, z)*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D2 KS_func_pass_args_macro ) + 
+pow(bbn_ks_k0(x, y, z), 2)*(bbn_ks_dddc_D0D2D2 KS_func_pass_args_macro ) + 2*bbn_ks_k0(x, y, z)*
+(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D2D2 KS_func_pass_args_macro ) + 4*
+bbn_ks_k0(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_k0(x, y, z)*(bbn_ks_ddc_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro ) + 
+4*bbn_ks_k0(x, y, z)*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
+2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*pow((bbn_ks_dk0_D2 KS_func_pass_args_macro ), 2) + 4*
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk0_D2 KS_func_pass_args_macro );
 
     _dddgamma_D0D1D1D0D1[ijk]=
 /* mcode in progress ... */
@@ -6063,26 +6063,26 @@ Derivative(bbn_ks_k0(x, y, z), z);
 // c
 // k0
 // k1
-bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x, (y, 2)) + bbn_ks_c(x, y, z)*
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x, (y, 2)) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), (y, 2)) + 2*
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x, y) + 
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), (y, 2))*Derivative(bbn_ks_k1(x, y, z), x) + 
-2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x, y) + 
-bbn_ks_k0(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), x, (y, 2)) + 
-bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), (y, 2)) + 
-2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x, y) + 
-bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), (y, 2))*Derivative(bbn_ks_k1(x, y, z), x) + 
-2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), x, y) + 
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), (y, 2)) + 
-2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x, y) + 
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), (y, 2))*Derivative(bbn_ks_k0(x, y, z), x) + 
-2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), x, y) + 
-2*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), y)*
-Derivative(bbn_ks_k1(x, y, z), y) + 2*Derivative(bbn_ks_c(x, y, z), y)*
-Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), y) + 2*
-Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), y)*
-Derivative(bbn_ks_k1(x, y, z), x);
+bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dddk1_D0D1D1 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+bbn_ks_k1(x, y, z)*(bbn_ks_dddk0_D0D1D1 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D1 KS_func_pass_args_macro ) + 2*
+bbn_ks_c(x, y, z)*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D1 KS_func_pass_args_macro ) + 
+bbn_ks_c(x, y, z)*(bbn_ks_ddk0_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro ) + 
+2*bbn_ks_c(x, y, z)*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D1 KS_func_pass_args_macro ) + 
+bbn_ks_k0(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_dddc_D0D1D1 KS_func_pass_args_macro ) + 
+bbn_ks_k0(x, y, z)*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D1 KS_func_pass_args_macro ) + 
+2*bbn_ks_k0(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D1 KS_func_pass_args_macro ) + 
+bbn_ks_k0(x, y, z)*(bbn_ks_ddc_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro ) + 
+2*bbn_ks_k0(x, y, z)*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+bbn_ks_k1(x, y, z)*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D1 KS_func_pass_args_macro ) + 
+2*bbn_ks_k1(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D1 KS_func_pass_args_macro ) + 
+bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro ) + 
+2*bbn_ks_k1(x, y, z)*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*
+(bbn_ks_dk1_D1 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D1 KS_func_pass_args_macro )*
+(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro ) + 2*
+(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*
+(bbn_ks_dk1_D0 KS_func_pass_args_macro );
 
     _dddgamma_D0D1D2D2D0[ijk]=
 /* mcode in progress ... */
@@ -6105,26 +6105,26 @@ Derivative(bbn_ks_k1(x, y, z), x);
 // c
 // k0
 // k1
-bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x, (z, 2)) + bbn_ks_c(x, y, z)*
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x, (z, 2)) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), (z, 2)) + 2*
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x, z) + 
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), (z, 2))*Derivative(bbn_ks_k1(x, y, z), x) + 
-2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x, z) + 
-bbn_ks_k0(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), x, (z, 2)) + 
-bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), (z, 2)) + 
-2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x, z) + 
-bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), (z, 2))*Derivative(bbn_ks_k1(x, y, z), x) + 
-2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), x, z) + 
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), (z, 2)) + 
-2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x, z) + 
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), (z, 2))*Derivative(bbn_ks_k0(x, y, z), x) + 
-2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), x, z) + 
-2*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), z)*
-Derivative(bbn_ks_k1(x, y, z), z) + 2*Derivative(bbn_ks_c(x, y, z), z)*
-Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), z) + 2*
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), z)*
-Derivative(bbn_ks_k1(x, y, z), x);
+bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dddk1_D0D2D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+bbn_ks_k1(x, y, z)*(bbn_ks_dddk0_D0D2D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D2D2 KS_func_pass_args_macro ) + 2*
+bbn_ks_c(x, y, z)*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D2 KS_func_pass_args_macro ) + 
+bbn_ks_c(x, y, z)*(bbn_ks_ddk0_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro ) + 
+2*bbn_ks_c(x, y, z)*(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D2 KS_func_pass_args_macro ) + 
+bbn_ks_k0(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_dddc_D0D2D2 KS_func_pass_args_macro ) + 
+bbn_ks_k0(x, y, z)*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D2D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_k0(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D2 KS_func_pass_args_macro ) + 
+bbn_ks_k0(x, y, z)*(bbn_ks_ddc_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro ) + 
+2*bbn_ks_k0(x, y, z)*(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
+bbn_ks_k1(x, y, z)*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D2D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_k1(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D2 KS_func_pass_args_macro ) + 
+bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro ) + 
+2*bbn_ks_k1(x, y, z)*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
+2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*
+(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D2 KS_func_pass_args_macro )*
+(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + 2*
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*
+(bbn_ks_dk1_D0 KS_func_pass_args_macro );
 
     _dddgamma_D0D2D0D1D2[ijk]=
 /* mcode in progress ... */
@@ -6153,36 +6153,36 @@ Derivative(bbn_ks_k1(x, y, z), x);
 // c
 // k0
 // k2
-bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x, y, z) + bbn_ks_c(x, y, z)*
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x, y, z) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), y, z) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x, z) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x, y) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), y, z) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k2(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x, z) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k2(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x, y) + bbn_ks_k0(x, y, z)*
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), x, y, z) + bbn_ks_k0(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), y, z) + bbn_ks_k0(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x, z) + bbn_ks_k0(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x, y) + bbn_ks_k0(x, y, z)*
-Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), y, z) + bbn_ks_k0(x, y, z)*
-Derivative(bbn_ks_k2(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), x, z) + bbn_ks_k0(x, y, z)*
-Derivative(bbn_ks_k2(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), x, y) + bbn_ks_k2(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), y, z) + bbn_ks_k2(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x, z) + bbn_ks_k2(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x, y) + bbn_ks_k2(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), y, z) + bbn_ks_k2(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), x, z) + bbn_ks_k2(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), x, y) + 
-Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), y)*
-Derivative(bbn_ks_k2(x, y, z), z) + Derivative(bbn_ks_c(x, y, z), x)*
-Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), y) + 
-Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x)*
-Derivative(bbn_ks_k2(x, y, z), z) + Derivative(bbn_ks_c(x, y, z), y)*
-Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x) + 
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x)*
-Derivative(bbn_ks_k2(x, y, z), y) + Derivative(bbn_ks_c(x, y, z), z)*
-Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x);
+bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dddk2_D0D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+bbn_ks_k2(x, y, z)*(bbn_ks_dddk0_D0D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D1 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk2_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk2_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D1 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
+bbn_ks_k2(x, y, z)*(bbn_ks_dddc_D0D1D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
+(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
+(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D1 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
+(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
+(bbn_ks_dk2_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
+(bbn_ks_dk2_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
+(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D2 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
+(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D2 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D1 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
+(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
+(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
+(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*
+(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + (bbn_ks_dc_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 
+(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + (bbn_ks_dc_D1 KS_func_pass_args_macro )*
+(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + 
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + (bbn_ks_dc_D2 KS_func_pass_args_macro )*
+(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro );
 
     _dddgamma_D0D2D2D2D1[ijk]=
 /* mcode in progress ... */
@@ -6205,26 +6205,26 @@ Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x);
 // c
 // k0
 // k2
-bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k2(x, y, z), y, (z, 2)) + bbn_ks_c(x, y, z)*
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k0(x, y, z), y, (z, 2)) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), (z, 2)) + 2*
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), y, z) + 
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), (z, 2))*Derivative(bbn_ks_k2(x, y, z), y) + 
-2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), y, z) + 
-bbn_ks_k0(x, y, z)*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), y, (z, 2)) + 
-bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), (z, 2)) + 
-2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), y, z) + 
-bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), (z, 2))*Derivative(bbn_ks_k2(x, y, z), y) + 
-2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k2(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), y, z) + 
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), (z, 2)) + 
-2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), y, z) + 
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (z, 2))*Derivative(bbn_ks_k0(x, y, z), y) + 
-2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), y, z) + 
-2*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), z)*
-Derivative(bbn_ks_k2(x, y, z), z) + 2*Derivative(bbn_ks_c(x, y, z), z)*
-Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), z) + 2*
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), z)*
-Derivative(bbn_ks_k2(x, y, z), y);
+bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dddk2_D1D2D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+bbn_ks_k2(x, y, z)*(bbn_ks_dddk0_D1D2D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D2D2 KS_func_pass_args_macro ) + 2*
+bbn_ks_c(x, y, z)*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D2 KS_func_pass_args_macro ) + 
+bbn_ks_c(x, y, z)*(bbn_ks_ddk0_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 
+2*bbn_ks_c(x, y, z)*(bbn_ks_dk2_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D2 KS_func_pass_args_macro ) + 
+bbn_ks_k0(x, y, z)*bbn_ks_k2(x, y, z)*(bbn_ks_dddc_D1D2D2 KS_func_pass_args_macro ) + 
+bbn_ks_k0(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D2D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_k0(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D2 KS_func_pass_args_macro ) + 
+bbn_ks_k0(x, y, z)*(bbn_ks_ddc_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 
+2*bbn_ks_k0(x, y, z)*(bbn_ks_dk2_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
+bbn_ks_k2(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D2D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_k2(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D2 KS_func_pass_args_macro ) + 
+bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro ) + 
+2*bbn_ks_k2(x, y, z)*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
+2*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*
+(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D2 KS_func_pass_args_macro )*
+(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 2*
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*
+(bbn_ks_dk2_D1 KS_func_pass_args_macro );
 
     _dddgamma_D1D1D0D2D1[ijk]=
 /* mcode in progress ... */
@@ -6245,22 +6245,22 @@ Derivative(bbn_ks_k2(x, y, z), y);
 // Derivative
 // c
 // k1
-2*bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x, y, z) + 2*
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), y, z) + 
-2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x, z) + 
-2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x, y) + 
-pow(bbn_ks_k1(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), x, y, z) + 2*bbn_ks_k1(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), y, z) + 2*
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x, z) + 
-2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x, y) + 
-2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), y, z) + 
-2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), x, z) + 
-2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), x, y) + 
-2*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), y)*
-Derivative(bbn_ks_k1(x, y, z), z) + 2*Derivative(bbn_ks_c(x, y, z), y)*
-Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), z) + 2*
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x)*
-Derivative(bbn_ks_k1(x, y, z), y);
+2*bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_dddk1_D0D1D2 KS_func_pass_args_macro ) + 2*
+bbn_ks_c(x, y, z)*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_c(x, y, z)*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_c(x, y, z)*(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D1 KS_func_pass_args_macro ) + 
+pow(bbn_ks_k1(x, y, z), 2)*(bbn_ks_dddc_D0D1D2 KS_func_pass_args_macro ) + 2*bbn_ks_k1(x, y, z)*
+(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D2 KS_func_pass_args_macro ) + 2*
+bbn_ks_k1(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_k1(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D1 KS_func_pass_args_macro ) + 
+2*bbn_ks_k1(x, y, z)*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_k1(x, y, z)*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_k1(x, y, z)*(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*
+(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D1 KS_func_pass_args_macro )*
+(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + 2*
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk1_D1 KS_func_pass_args_macro );
 
     _dddgamma_D0D0D2D1D0[ijk]=
 /* mcode in progress ... */
@@ -6281,22 +6281,22 @@ Derivative(bbn_ks_k1(x, y, z), y);
 // Derivative
 // c
 // k0
-2*bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x, y, z) + 2*
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), y, z) + 
-2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x, z) + 
-2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x, y) + 
-pow(bbn_ks_k0(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), x, y, z) + 2*bbn_ks_k0(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), y, z) + 2*
-bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x, z) + 
-2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x, y) + 
-2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), y, z) + 
-2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), x, z) + 
-2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), x, y) + 
-2*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), y)*
-Derivative(bbn_ks_k0(x, y, z), z) + 2*Derivative(bbn_ks_c(x, y, z), y)*
-Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), z) + 2*
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x)*
-Derivative(bbn_ks_k0(x, y, z), y);
+2*bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dddk0_D0D1D2 KS_func_pass_args_macro ) + 2*
+bbn_ks_c(x, y, z)*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_c(x, y, z)*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_c(x, y, z)*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D1 KS_func_pass_args_macro ) + 
+pow(bbn_ks_k0(x, y, z), 2)*(bbn_ks_dddc_D0D1D2 KS_func_pass_args_macro ) + 2*bbn_ks_k0(x, y, z)*
+(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D2 KS_func_pass_args_macro ) + 2*
+bbn_ks_k0(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_k0(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D1 KS_func_pass_args_macro ) + 
+2*bbn_ks_k0(x, y, z)*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_k0(x, y, z)*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_k0(x, y, z)*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*
+(bbn_ks_dk0_D2 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D1 KS_func_pass_args_macro )*
+(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D2 KS_func_pass_args_macro ) + 2*
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk0_D1 KS_func_pass_args_macro );
 
     _dddgamma_D1D2D0D1D0[ijk]=
 /* mcode in progress ... */
@@ -6319,26 +6319,26 @@ Derivative(bbn_ks_k0(x, y, z), y);
 // c
 // k1
 // k2
-bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k2(x, y, z), (x, 2), y) + bbn_ks_c(x, y, z)*
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k1(x, y, z), (x, 2), y) + 2*bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), x, y) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k1(x, y, z), (x, 2))*Derivative(bbn_ks_k2(x, y, z), y) + 
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), (x, 2)) + 
-2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), x, y) + 
-bbn_ks_k1(x, y, z)*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2), y) + 2*
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), x, y) + 
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2))*Derivative(bbn_ks_k2(x, y, z), y) + 
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), (x, 2)) + 
-2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), x, y) + 
-2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), x, y) + 
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2))*Derivative(bbn_ks_k1(x, y, z), y) + 
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), (x, 2)) + 
-2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), x, y) + 
-2*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), x)*
-Derivative(bbn_ks_k2(x, y, z), y) + 2*Derivative(bbn_ks_c(x, y, z), x)*
-Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x) + 2*
-Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x)*
-Derivative(bbn_ks_k2(x, y, z), x);
+bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_dddk2_D0D0D1 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+bbn_ks_k2(x, y, z)*(bbn_ks_dddk1_D0D0D1 KS_func_pass_args_macro ) + 2*bbn_ks_c(x, y, z)*
+(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D1 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_ddk1_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 
+bbn_ks_c(x, y, z)*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D0 KS_func_pass_args_macro ) + 
+2*bbn_ks_c(x, y, z)*(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D1 KS_func_pass_args_macro ) + 
+bbn_ks_k1(x, y, z)*bbn_ks_k2(x, y, z)*(bbn_ks_dddc_D0D0D1 KS_func_pass_args_macro ) + 2*
+bbn_ks_k1(x, y, z)*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D1 KS_func_pass_args_macro ) + 
+bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 
+bbn_ks_k1(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D0 KS_func_pass_args_macro ) + 
+2*bbn_ks_k1(x, y, z)*(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+2*bbn_ks_k2(x, y, z)*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D1 KS_func_pass_args_macro ) + 
+bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro ) + 
+bbn_ks_k2(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D0 KS_func_pass_args_macro ) + 
+2*bbn_ks_k2(x, y, z)*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + 2*
+(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk2_D0 KS_func_pass_args_macro );
 
     _dddgamma_D0D2D2D1D2[ijk]=
 /* mcode in progress ... */
@@ -6361,26 +6361,26 @@ Derivative(bbn_ks_k2(x, y, z), x);
 // c
 // k0
 // k2
-bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k2(x, y, z), y, (z, 2)) + bbn_ks_c(x, y, z)*
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k0(x, y, z), y, (z, 2)) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), (z, 2)) + 2*
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), y, z) + 
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), (z, 2))*Derivative(bbn_ks_k2(x, y, z), y) + 
-2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), y, z) + 
-bbn_ks_k0(x, y, z)*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), y, (z, 2)) + 
-bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), (z, 2)) + 
-2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), y, z) + 
-bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), (z, 2))*Derivative(bbn_ks_k2(x, y, z), y) + 
-2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k2(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), y, z) + 
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), (z, 2)) + 
-2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), y, z) + 
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (z, 2))*Derivative(bbn_ks_k0(x, y, z), y) + 
-2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), y, z) + 
-2*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), z)*
-Derivative(bbn_ks_k2(x, y, z), z) + 2*Derivative(bbn_ks_c(x, y, z), z)*
-Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), z) + 2*
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), z)*
-Derivative(bbn_ks_k2(x, y, z), y);
+bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dddk2_D1D2D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+bbn_ks_k2(x, y, z)*(bbn_ks_dddk0_D1D2D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D2D2 KS_func_pass_args_macro ) + 2*
+bbn_ks_c(x, y, z)*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D2 KS_func_pass_args_macro ) + 
+bbn_ks_c(x, y, z)*(bbn_ks_ddk0_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 
+2*bbn_ks_c(x, y, z)*(bbn_ks_dk2_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D2 KS_func_pass_args_macro ) + 
+bbn_ks_k0(x, y, z)*bbn_ks_k2(x, y, z)*(bbn_ks_dddc_D1D2D2 KS_func_pass_args_macro ) + 
+bbn_ks_k0(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D2D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_k0(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D2 KS_func_pass_args_macro ) + 
+bbn_ks_k0(x, y, z)*(bbn_ks_ddc_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 
+2*bbn_ks_k0(x, y, z)*(bbn_ks_dk2_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
+bbn_ks_k2(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D2D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_k2(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D2 KS_func_pass_args_macro ) + 
+bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro ) + 
+2*bbn_ks_k2(x, y, z)*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
+2*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*
+(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D2 KS_func_pass_args_macro )*
+(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 2*
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*
+(bbn_ks_dk2_D1 KS_func_pass_args_macro );
 
     _dddgamma_D0D1D1D2D1[ijk]=
 /* mcode in progress ... */
@@ -6403,26 +6403,26 @@ Derivative(bbn_ks_k2(x, y, z), y);
 // c
 // k0
 // k1
-bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k1(x, y, z), (y, 2), z) + bbn_ks_c(x, y, z)*
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k0(x, y, z), (y, 2), z) + 2*bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), y, z) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), (y, 2))*Derivative(bbn_ks_k1(x, y, z), z) + 
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), (y, 2)) + 
-2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), y, z) + 
-bbn_ks_k0(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), (y, 2), z) + 2*
-bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), y, z) + 
-bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), (y, 2))*Derivative(bbn_ks_k1(x, y, z), z) + 
-bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), (y, 2)) + 
-2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), y, z) + 
-2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), y, z) + 
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), (y, 2))*Derivative(bbn_ks_k0(x, y, z), z) + 
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), (y, 2)) + 
-2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), y, z) + 
-2*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), y)*
-Derivative(bbn_ks_k1(x, y, z), z) + 2*Derivative(bbn_ks_c(x, y, z), y)*
-Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), y) + 2*
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), y)*
-Derivative(bbn_ks_k1(x, y, z), y);
+bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dddk1_D1D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+bbn_ks_k1(x, y, z)*(bbn_ks_dddk0_D1D1D2 KS_func_pass_args_macro ) + 2*bbn_ks_c(x, y, z)*
+(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_ddk0_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + 
+bbn_ks_c(x, y, z)*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D1 KS_func_pass_args_macro ) + 
+2*bbn_ks_c(x, y, z)*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D2 KS_func_pass_args_macro ) + 
+bbn_ks_k0(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_dddc_D1D1D2 KS_func_pass_args_macro ) + 2*
+bbn_ks_k0(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D2 KS_func_pass_args_macro ) + 
+bbn_ks_k0(x, y, z)*(bbn_ks_ddc_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + 
+bbn_ks_k0(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D1 KS_func_pass_args_macro ) + 
+2*bbn_ks_k0(x, y, z)*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_k1(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D2 KS_func_pass_args_macro ) + 
+bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D2 KS_func_pass_args_macro ) + 
+bbn_ks_k1(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D1 KS_func_pass_args_macro ) + 
+2*bbn_ks_k1(x, y, z)*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
+2*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*
+(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D1 KS_func_pass_args_macro )*
+(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro ) + 2*
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*
+(bbn_ks_dk1_D1 KS_func_pass_args_macro );
 
     _dddgamma_D1D2D2D0D0[ijk]=
 /* mcode in progress ... */
@@ -6445,26 +6445,26 @@ Derivative(bbn_ks_k1(x, y, z), y);
 // c
 // k1
 // k2
-bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k2(x, y, z), (x, 2), z) + bbn_ks_c(x, y, z)*
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k1(x, y, z), (x, 2), z) + 2*bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), x, z) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k1(x, y, z), (x, 2))*Derivative(bbn_ks_k2(x, y, z), z) + 
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), (x, 2)) + 
-2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), x, z) + 
-bbn_ks_k1(x, y, z)*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2), z) + 2*
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), x, z) + 
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2))*Derivative(bbn_ks_k2(x, y, z), z) + 
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), (x, 2)) + 
-2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), x, z) + 
-2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), x, z) + 
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2))*Derivative(bbn_ks_k1(x, y, z), z) + 
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), (x, 2)) + 
-2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), x, z) + 
-2*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), x)*
-Derivative(bbn_ks_k2(x, y, z), z) + 2*Derivative(bbn_ks_c(x, y, z), x)*
-Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x) + 2*
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x)*
-Derivative(bbn_ks_k2(x, y, z), x);
+bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_dddk2_D0D0D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+bbn_ks_k2(x, y, z)*(bbn_ks_dddk1_D0D0D2 KS_func_pass_args_macro ) + 2*bbn_ks_c(x, y, z)*
+(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_ddk1_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 
+bbn_ks_c(x, y, z)*(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D0 KS_func_pass_args_macro ) + 
+2*bbn_ks_c(x, y, z)*(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D2 KS_func_pass_args_macro ) + 
+bbn_ks_k1(x, y, z)*bbn_ks_k2(x, y, z)*(bbn_ks_dddc_D0D0D2 KS_func_pass_args_macro ) + 2*
+bbn_ks_k1(x, y, z)*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D2 KS_func_pass_args_macro ) + 
+bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 
+bbn_ks_k1(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D0 KS_func_pass_args_macro ) + 
+2*bbn_ks_k1(x, y, z)*(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_k2(x, y, z)*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D2 KS_func_pass_args_macro ) + 
+bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + 
+bbn_ks_k2(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D0 KS_func_pass_args_macro ) + 
+2*bbn_ks_k2(x, y, z)*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
+2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + 2*
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk2_D0 KS_func_pass_args_macro );
 
     _dddgamma_D0D1D2D0D0[ijk]=
 /* mcode in progress ... */
@@ -6487,26 +6487,26 @@ Derivative(bbn_ks_k2(x, y, z), x);
 // c
 // k0
 // k1
-bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k1(x, y, z), (x, 2), z) + bbn_ks_c(x, y, z)*
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k0(x, y, z), (x, 2), z) + 2*bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), x, z) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), (x, 2))*Derivative(bbn_ks_k1(x, y, z), z) + 
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), (x, 2)) + 
-2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), x, z) + 
-bbn_ks_k0(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2), z) + 2*
-bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), x, z) + 
-bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2))*Derivative(bbn_ks_k1(x, y, z), z) + 
-bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), (x, 2)) + 
-2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), x, z) + 
-2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), x, z) + 
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2))*Derivative(bbn_ks_k0(x, y, z), z) + 
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), (x, 2)) + 
-2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), x, z) + 
-2*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), x)*
-Derivative(bbn_ks_k1(x, y, z), z) + 2*Derivative(bbn_ks_c(x, y, z), x)*
-Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x) + 2*
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x)*
-Derivative(bbn_ks_k1(x, y, z), x);
+bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dddk1_D0D0D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+bbn_ks_k1(x, y, z)*(bbn_ks_dddk0_D0D0D2 KS_func_pass_args_macro ) + 2*bbn_ks_c(x, y, z)*
+(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_ddk0_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + 
+bbn_ks_c(x, y, z)*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D0 KS_func_pass_args_macro ) + 
+2*bbn_ks_c(x, y, z)*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D2 KS_func_pass_args_macro ) + 
+bbn_ks_k0(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_dddc_D0D0D2 KS_func_pass_args_macro ) + 2*
+bbn_ks_k0(x, y, z)*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D2 KS_func_pass_args_macro ) + 
+bbn_ks_k0(x, y, z)*(bbn_ks_ddc_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + 
+bbn_ks_k0(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D0 KS_func_pass_args_macro ) + 
+2*bbn_ks_k0(x, y, z)*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_k1(x, y, z)*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D2 KS_func_pass_args_macro ) + 
+bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D2 KS_func_pass_args_macro ) + 
+bbn_ks_k1(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D0 KS_func_pass_args_macro ) + 
+2*bbn_ks_k1(x, y, z)*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
+2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro ) + 2*
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk1_D0 KS_func_pass_args_macro );
 
     _dddgamma_D1D2D1D2D0[ijk]=
 /* mcode in progress ... */
@@ -6535,36 +6535,36 @@ Derivative(bbn_ks_k1(x, y, z), x);
 // c
 // k1
 // k2
-bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x, y, z) + bbn_ks_c(x, y, z)*
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x, y, z) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), y, z) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x, z) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x, y) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), y, z) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k2(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x, z) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k2(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x, y) + bbn_ks_k1(x, y, z)*
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), x, y, z) + bbn_ks_k1(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), y, z) + bbn_ks_k1(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x, z) + bbn_ks_k1(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x, y) + bbn_ks_k1(x, y, z)*
-Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), y, z) + bbn_ks_k1(x, y, z)*
-Derivative(bbn_ks_k2(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), x, z) + bbn_ks_k1(x, y, z)*
-Derivative(bbn_ks_k2(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), x, y) + bbn_ks_k2(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), y, z) + bbn_ks_k2(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x, z) + bbn_ks_k2(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x, y) + bbn_ks_k2(x, y, z)*
-Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), y, z) + bbn_ks_k2(x, y, z)*
-Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), x, z) + bbn_ks_k2(x, y, z)*
-Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), x, y) + 
-Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), y)*
-Derivative(bbn_ks_k2(x, y, z), z) + Derivative(bbn_ks_c(x, y, z), x)*
-Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), y) + 
-Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x)*
-Derivative(bbn_ks_k2(x, y, z), z) + Derivative(bbn_ks_c(x, y, z), y)*
-Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x) + 
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x)*
-Derivative(bbn_ks_k2(x, y, z), y) + Derivative(bbn_ks_c(x, y, z), z)*
-Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x);
+bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_dddk2_D0D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+bbn_ks_k2(x, y, z)*(bbn_ks_dddk1_D0D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D1 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk2_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk2_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D1 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
+bbn_ks_k2(x, y, z)*(bbn_ks_dddc_D0D1D2 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
+(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D2 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
+(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D2 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D1 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
+(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
+(bbn_ks_dk2_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
+(bbn_ks_dk2_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
+(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D2 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
+(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D2 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D1 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
+(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
+(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
+(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*
+(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + (bbn_ks_dc_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 
+(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + (bbn_ks_dc_D1 KS_func_pass_args_macro )*
+(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + 
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + (bbn_ks_dc_D2 KS_func_pass_args_macro )*
+(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro );
 
     _dddgamma_D2D2D1D0D1[ijk]=
 /* mcode in progress ... */
@@ -6581,17 +6581,17 @@ Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x);
 // Derivative
 // c
 // k2
-2*bbn_ks_c(x, y, z)*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x, (y, 2)) + 2*
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), (y, 2)) + 
-4*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x, y) + 
-pow(bbn_ks_k2(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), x, (y, 2)) + 2*bbn_ks_k2(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), (y, 2)) + 4*
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x, y) + 
-2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (y, 2))*Derivative(bbn_ks_k2(x, y, z), x) + 
-4*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k2(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), x, y) + 
-2*Derivative(bbn_ks_c(x, y, z), x)*pow(Derivative(bbn_ks_k2(x, y, z), y), 2) + 4*
-Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x)*
-Derivative(bbn_ks_k2(x, y, z), y);
+2*bbn_ks_c(x, y, z)*bbn_ks_k2(x, y, z)*(bbn_ks_dddk2_D0D1D1 KS_func_pass_args_macro ) + 2*
+bbn_ks_c(x, y, z)*(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D1 KS_func_pass_args_macro ) + 
+4*bbn_ks_c(x, y, z)*(bbn_ks_dk2_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D1 KS_func_pass_args_macro ) + 
+pow(bbn_ks_k2(x, y, z), 2)*(bbn_ks_dddc_D0D1D1 KS_func_pass_args_macro ) + 2*bbn_ks_k2(x, y, z)*
+(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D1 KS_func_pass_args_macro ) + 4*
+bbn_ks_k2(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D1 KS_func_pass_args_macro ) + 
+2*bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + 
+4*bbn_ks_k2(x, y, z)*(bbn_ks_dk2_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*pow((bbn_ks_dk2_D1 KS_func_pass_args_macro ), 2) + 4*
+(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk2_D1 KS_func_pass_args_macro );
 
     _dddgamma_D2D2D1D2D2[ijk]=
 /* mcode in progress ... */
@@ -6608,17 +6608,17 @@ Derivative(bbn_ks_k2(x, y, z), y);
 // Derivative
 // c
 // k2
-2*bbn_ks_c(x, y, z)*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k2(x, y, z), y, (z, 2)) + 2*
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), (z, 2)) + 
-4*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), y, z) + 
-pow(bbn_ks_k2(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), y, (z, 2)) + 2*bbn_ks_k2(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), (z, 2)) + 4*
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), y, z) + 
-2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (z, 2))*Derivative(bbn_ks_k2(x, y, z), y) + 
-4*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k2(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), y, z) + 
-2*Derivative(bbn_ks_c(x, y, z), y)*pow(Derivative(bbn_ks_k2(x, y, z), z), 2) + 4*
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), y)*
-Derivative(bbn_ks_k2(x, y, z), z);
+2*bbn_ks_c(x, y, z)*bbn_ks_k2(x, y, z)*(bbn_ks_dddk2_D1D2D2 KS_func_pass_args_macro ) + 2*
+bbn_ks_c(x, y, z)*(bbn_ks_dk2_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D2D2 KS_func_pass_args_macro ) + 
+4*bbn_ks_c(x, y, z)*(bbn_ks_dk2_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D2 KS_func_pass_args_macro ) + 
+pow(bbn_ks_k2(x, y, z), 2)*(bbn_ks_dddc_D1D2D2 KS_func_pass_args_macro ) + 2*bbn_ks_k2(x, y, z)*
+(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D2D2 KS_func_pass_args_macro ) + 4*
+bbn_ks_k2(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 
+4*bbn_ks_k2(x, y, z)*(bbn_ks_dk2_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
+2*(bbn_ks_dc_D1 KS_func_pass_args_macro )*pow((bbn_ks_dk2_D2 KS_func_pass_args_macro ), 2) + 4*
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro )*
+(bbn_ks_dk2_D2 KS_func_pass_args_macro );
 
     _dddgamma_D1D1D1D0D0[ijk]=
 /* mcode in progress ... */
@@ -6635,17 +6635,17 @@ Derivative(bbn_ks_k2(x, y, z), z);
 // Derivative
 // c
 // k1
-2*bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k1(x, y, z), (x, 2), y) + 4*
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), x, y) + 
-2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), (x, 2))*Derivative(bbn_ks_k1(x, y, z), y) + 
-pow(bbn_ks_k1(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), (x, 2), y) + 4*bbn_ks_k1(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), x, y) + 2*
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2))*Derivative(bbn_ks_k1(x, y, z), y) + 
-2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), (x, 2)) + 
-4*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), x, y) + 
-4*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), x)*
-Derivative(bbn_ks_k1(x, y, z), y) + 2*Derivative(bbn_ks_c(x, y, z), y)*
-pow(Derivative(bbn_ks_k1(x, y, z), x), 2);
+2*bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_dddk1_D0D0D1 KS_func_pass_args_macro ) + 4*
+bbn_ks_c(x, y, z)*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D1 KS_func_pass_args_macro ) + 
+2*bbn_ks_c(x, y, z)*(bbn_ks_ddk1_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro ) + 
+pow(bbn_ks_k1(x, y, z), 2)*(bbn_ks_dddc_D0D0D1 KS_func_pass_args_macro ) + 4*bbn_ks_k1(x, y, z)*
+(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D1 KS_func_pass_args_macro ) + 2*
+bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro ) + 
+2*bbn_ks_k1(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D0 KS_func_pass_args_macro ) + 
+4*bbn_ks_k1(x, y, z)*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+4*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk1_D1 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D1 KS_func_pass_args_macro )*
+pow((bbn_ks_dk1_D0 KS_func_pass_args_macro ), 2);
 
     _dddgamma_D0D1D1D0D2[ijk]=
 /* mcode in progress ... */
@@ -6674,36 +6674,36 @@ pow(Derivative(bbn_ks_k1(x, y, z), x), 2);
 // c
 // k0
 // k1
-bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x, y, z) + bbn_ks_c(x, y, z)*
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x, y, z) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), y, z) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x, z) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x, y) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), y, z) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x, z) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x, y) + bbn_ks_k0(x, y, z)*
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), x, y, z) + bbn_ks_k0(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), y, z) + bbn_ks_k0(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x, z) + bbn_ks_k0(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x, y) + bbn_ks_k0(x, y, z)*
-Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), y, z) + bbn_ks_k0(x, y, z)*
-Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), x, z) + bbn_ks_k0(x, y, z)*
-Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), x, y) + bbn_ks_k1(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), y, z) + bbn_ks_k1(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x, z) + bbn_ks_k1(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x, y) + bbn_ks_k1(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), y, z) + bbn_ks_k1(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), x, z) + bbn_ks_k1(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), x, y) + 
-Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), y)*
-Derivative(bbn_ks_k1(x, y, z), z) + Derivative(bbn_ks_c(x, y, z), x)*
-Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), y) + 
-Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x)*
-Derivative(bbn_ks_k1(x, y, z), z) + Derivative(bbn_ks_c(x, y, z), y)*
-Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x) + 
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x)*
-Derivative(bbn_ks_k1(x, y, z), y) + Derivative(bbn_ks_c(x, y, z), z)*
-Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x);
+bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dddk1_D0D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+bbn_ks_k1(x, y, z)*(bbn_ks_dddk0_D0D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D1 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D1 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
+bbn_ks_k1(x, y, z)*(bbn_ks_dddc_D0D1D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
+(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
+(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D1 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
+(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
+(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
+(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
+(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D2 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
+(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D2 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D1 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
+(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
+(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
+(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*
+(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + (bbn_ks_dc_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro ) + 
+(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + (bbn_ks_dc_D1 KS_func_pass_args_macro )*
+(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro ) + 
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk1_D1 KS_func_pass_args_macro ) + (bbn_ks_dc_D2 KS_func_pass_args_macro )*
+(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro );
 
     _dddgamma_D0D2D2D2D0[ijk]=
 /* mcode in progress ... */
@@ -6726,26 +6726,26 @@ Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x);
 // c
 // k0
 // k2
-bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x, (z, 2)) + bbn_ks_c(x, y, z)*
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x, (z, 2)) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), (z, 2)) + 2*
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x, z) + 
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), (z, 2))*Derivative(bbn_ks_k2(x, y, z), x) + 
-2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x, z) + 
-bbn_ks_k0(x, y, z)*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), x, (z, 2)) + 
-bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), (z, 2)) + 
-2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x, z) + 
-bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), (z, 2))*Derivative(bbn_ks_k2(x, y, z), x) + 
-2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k2(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), x, z) + 
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), (z, 2)) + 
-2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x, z) + 
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (z, 2))*Derivative(bbn_ks_k0(x, y, z), x) + 
-2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), x, z) + 
-2*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), z)*
-Derivative(bbn_ks_k2(x, y, z), z) + 2*Derivative(bbn_ks_c(x, y, z), z)*
-Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), z) + 2*
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), z)*
-Derivative(bbn_ks_k2(x, y, z), x);
+bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dddk2_D0D2D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+bbn_ks_k2(x, y, z)*(bbn_ks_dddk0_D0D2D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D2D2 KS_func_pass_args_macro ) + 2*
+bbn_ks_c(x, y, z)*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D2 KS_func_pass_args_macro ) + 
+bbn_ks_c(x, y, z)*(bbn_ks_ddk0_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + 
+2*bbn_ks_c(x, y, z)*(bbn_ks_dk2_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D2 KS_func_pass_args_macro ) + 
+bbn_ks_k0(x, y, z)*bbn_ks_k2(x, y, z)*(bbn_ks_dddc_D0D2D2 KS_func_pass_args_macro ) + 
+bbn_ks_k0(x, y, z)*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D2D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_k0(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D2 KS_func_pass_args_macro ) + 
+bbn_ks_k0(x, y, z)*(bbn_ks_ddc_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + 
+2*bbn_ks_k0(x, y, z)*(bbn_ks_dk2_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
+bbn_ks_k2(x, y, z)*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D2D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_k2(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D2 KS_func_pass_args_macro ) + 
+bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro ) + 
+2*bbn_ks_k2(x, y, z)*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
+2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*
+(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D2 KS_func_pass_args_macro )*
+(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 2*
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*
+(bbn_ks_dk2_D0 KS_func_pass_args_macro );
 
     _dddgamma_D2D2D2D2D2[ijk]=
 /* mcode in progress ... */
@@ -6758,12 +6758,12 @@ Derivative(bbn_ks_k2(x, y, z), x);
 // Derivative
 // c
 // k2
-2*bbn_ks_c(x, y, z)*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k2(x, y, z), (z, 3)) + 6*
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), (z, 2)) + 
-pow(bbn_ks_k2(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), (z, 3)) + 6*bbn_ks_k2(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), (z, 2)) + 6*
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (z, 2))*Derivative(bbn_ks_k2(x, y, z), z) + 
-6*Derivative(bbn_ks_c(x, y, z), z)*pow(Derivative(bbn_ks_k2(x, y, z), z), 2);
+2*bbn_ks_c(x, y, z)*bbn_ks_k2(x, y, z)*(bbn_ks_dddk2_D2D2D2 KS_func_pass_args_macro ) + 6*
+bbn_ks_c(x, y, z)*(bbn_ks_dk2_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D2D2 KS_func_pass_args_macro ) + 
+pow(bbn_ks_k2(x, y, z), 2)*(bbn_ks_dddc_D2D2D2 KS_func_pass_args_macro ) + 6*bbn_ks_k2(x, y, z)*
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D2D2 KS_func_pass_args_macro ) + 6*
+bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 
+6*(bbn_ks_dc_D2 KS_func_pass_args_macro )*pow((bbn_ks_dk2_D2 KS_func_pass_args_macro ), 2);
 
     _dddgamma_D0D2D2D0D1[ijk]=
 /* mcode in progress ... */
@@ -6792,36 +6792,36 @@ bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (z, 2))*Derivative(bbn_ks_k2(x,
 // c
 // k0
 // k2
-bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x, y, z) + bbn_ks_c(x, y, z)*
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x, y, z) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), y, z) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x, z) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x, y) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), y, z) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k2(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x, z) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k2(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x, y) + bbn_ks_k0(x, y, z)*
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), x, y, z) + bbn_ks_k0(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), y, z) + bbn_ks_k0(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x, z) + bbn_ks_k0(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x, y) + bbn_ks_k0(x, y, z)*
-Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), y, z) + bbn_ks_k0(x, y, z)*
-Derivative(bbn_ks_k2(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), x, z) + bbn_ks_k0(x, y, z)*
-Derivative(bbn_ks_k2(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), x, y) + bbn_ks_k2(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), y, z) + bbn_ks_k2(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x, z) + bbn_ks_k2(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x, y) + bbn_ks_k2(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), y, z) + bbn_ks_k2(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), x, z) + bbn_ks_k2(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), x, y) + 
-Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), y)*
-Derivative(bbn_ks_k2(x, y, z), z) + Derivative(bbn_ks_c(x, y, z), x)*
-Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), y) + 
-Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x)*
-Derivative(bbn_ks_k2(x, y, z), z) + Derivative(bbn_ks_c(x, y, z), y)*
-Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x) + 
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x)*
-Derivative(bbn_ks_k2(x, y, z), y) + Derivative(bbn_ks_c(x, y, z), z)*
-Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x);
+bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dddk2_D0D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+bbn_ks_k2(x, y, z)*(bbn_ks_dddk0_D0D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D1 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk2_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk2_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D1 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
+bbn_ks_k2(x, y, z)*(bbn_ks_dddc_D0D1D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
+(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
+(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D1 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
+(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
+(bbn_ks_dk2_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
+(bbn_ks_dk2_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
+(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D2 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
+(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D2 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D1 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
+(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
+(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
+(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*
+(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + (bbn_ks_dc_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 
+(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + (bbn_ks_dc_D1 KS_func_pass_args_macro )*
+(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + 
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + (bbn_ks_dc_D2 KS_func_pass_args_macro )*
+(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro );
 
     _dddgamma_D0D2D1D1D2[ijk]=
 /* mcode in progress ... */
@@ -6844,26 +6844,26 @@ Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x);
 // c
 // k0
 // k2
-bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k2(x, y, z), (y, 2), z) + bbn_ks_c(x, y, z)*
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k0(x, y, z), (y, 2), z) + 2*bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), y, z) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), (y, 2))*Derivative(bbn_ks_k2(x, y, z), z) + 
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), (y, 2)) + 
-2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), y, z) + 
-bbn_ks_k0(x, y, z)*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (y, 2), z) + 2*
-bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), y, z) + 
-bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), (y, 2))*Derivative(bbn_ks_k2(x, y, z), z) + 
-bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), (y, 2)) + 
-2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k2(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), y, z) + 
-2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), y, z) + 
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (y, 2))*Derivative(bbn_ks_k0(x, y, z), z) + 
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), (y, 2)) + 
-2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), y, z) + 
-2*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), y)*
-Derivative(bbn_ks_k2(x, y, z), z) + 2*Derivative(bbn_ks_c(x, y, z), y)*
-Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), y) + 2*
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), y)*
-Derivative(bbn_ks_k2(x, y, z), y);
+bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dddk2_D1D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+bbn_ks_k2(x, y, z)*(bbn_ks_dddk0_D1D1D2 KS_func_pass_args_macro ) + 2*bbn_ks_c(x, y, z)*
+(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_ddk0_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 
+bbn_ks_c(x, y, z)*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D1 KS_func_pass_args_macro ) + 
+2*bbn_ks_c(x, y, z)*(bbn_ks_dk2_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D2 KS_func_pass_args_macro ) + 
+bbn_ks_k0(x, y, z)*bbn_ks_k2(x, y, z)*(bbn_ks_dddc_D1D1D2 KS_func_pass_args_macro ) + 2*
+bbn_ks_k0(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D2 KS_func_pass_args_macro ) + 
+bbn_ks_k0(x, y, z)*(bbn_ks_ddc_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 
+bbn_ks_k0(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D1 KS_func_pass_args_macro ) + 
+2*bbn_ks_k0(x, y, z)*(bbn_ks_dk2_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_k2(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D2 KS_func_pass_args_macro ) + 
+bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D2 KS_func_pass_args_macro ) + 
+bbn_ks_k2(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D1 KS_func_pass_args_macro ) + 
+2*bbn_ks_k2(x, y, z)*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
+2*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*
+(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D1 KS_func_pass_args_macro )*
+(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 2*
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*
+(bbn_ks_dk2_D1 KS_func_pass_args_macro );
 
     _dddgamma_D2D2D0D0D2[ijk]=
 /* mcode in progress ... */
@@ -6880,17 +6880,17 @@ Derivative(bbn_ks_k2(x, y, z), y);
 // Derivative
 // c
 // k2
-2*bbn_ks_c(x, y, z)*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k2(x, y, z), (x, 2), z) + 4*
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), x, z) + 
-2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), (x, 2))*Derivative(bbn_ks_k2(x, y, z), z) + 
-pow(bbn_ks_k2(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), (x, 2), z) + 4*bbn_ks_k2(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), x, z) + 2*
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2))*Derivative(bbn_ks_k2(x, y, z), z) + 
-2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), (x, 2)) + 
-4*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), x, z) + 
-4*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), x)*
-Derivative(bbn_ks_k2(x, y, z), z) + 2*Derivative(bbn_ks_c(x, y, z), z)*
-pow(Derivative(bbn_ks_k2(x, y, z), x), 2);
+2*bbn_ks_c(x, y, z)*bbn_ks_k2(x, y, z)*(bbn_ks_dddk2_D0D0D2 KS_func_pass_args_macro ) + 4*
+bbn_ks_c(x, y, z)*(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_c(x, y, z)*(bbn_ks_ddk2_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 
+pow(bbn_ks_k2(x, y, z), 2)*(bbn_ks_dddc_D0D0D2 KS_func_pass_args_macro ) + 4*bbn_ks_k2(x, y, z)*
+(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D2 KS_func_pass_args_macro ) + 2*
+bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_k2(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D0 KS_func_pass_args_macro ) + 
+4*bbn_ks_k2(x, y, z)*(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
+4*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D2 KS_func_pass_args_macro )*
+pow((bbn_ks_dk2_D0 KS_func_pass_args_macro ), 2);
 
     _dddgamma_D2D2D2D0D0[ijk]=
 /* mcode in progress ... */
@@ -6907,17 +6907,17 @@ pow(Derivative(bbn_ks_k2(x, y, z), x), 2);
 // Derivative
 // c
 // k2
-2*bbn_ks_c(x, y, z)*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k2(x, y, z), (x, 2), z) + 4*
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), x, z) + 
-2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), (x, 2))*Derivative(bbn_ks_k2(x, y, z), z) + 
-pow(bbn_ks_k2(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), (x, 2), z) + 4*bbn_ks_k2(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), x, z) + 2*
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2))*Derivative(bbn_ks_k2(x, y, z), z) + 
-2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), (x, 2)) + 
-4*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), x, z) + 
-4*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), x)*
-Derivative(bbn_ks_k2(x, y, z), z) + 2*Derivative(bbn_ks_c(x, y, z), z)*
-pow(Derivative(bbn_ks_k2(x, y, z), x), 2);
+2*bbn_ks_c(x, y, z)*bbn_ks_k2(x, y, z)*(bbn_ks_dddk2_D0D0D2 KS_func_pass_args_macro ) + 4*
+bbn_ks_c(x, y, z)*(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_c(x, y, z)*(bbn_ks_ddk2_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 
+pow(bbn_ks_k2(x, y, z), 2)*(bbn_ks_dddc_D0D0D2 KS_func_pass_args_macro ) + 4*bbn_ks_k2(x, y, z)*
+(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D2 KS_func_pass_args_macro ) + 2*
+bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_k2(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D0 KS_func_pass_args_macro ) + 
+4*bbn_ks_k2(x, y, z)*(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
+4*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D2 KS_func_pass_args_macro )*
+pow((bbn_ks_dk2_D0 KS_func_pass_args_macro ), 2);
 
     _dddgamma_D2D2D0D2D0[ijk]=
 /* mcode in progress ... */
@@ -6934,17 +6934,17 @@ pow(Derivative(bbn_ks_k2(x, y, z), x), 2);
 // Derivative
 // c
 // k2
-2*bbn_ks_c(x, y, z)*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k2(x, y, z), (x, 2), z) + 4*
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), x, z) + 
-2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), (x, 2))*Derivative(bbn_ks_k2(x, y, z), z) + 
-pow(bbn_ks_k2(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), (x, 2), z) + 4*bbn_ks_k2(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), x, z) + 2*
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2))*Derivative(bbn_ks_k2(x, y, z), z) + 
-2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), (x, 2)) + 
-4*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), x, z) + 
-4*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), x)*
-Derivative(bbn_ks_k2(x, y, z), z) + 2*Derivative(bbn_ks_c(x, y, z), z)*
-pow(Derivative(bbn_ks_k2(x, y, z), x), 2);
+2*bbn_ks_c(x, y, z)*bbn_ks_k2(x, y, z)*(bbn_ks_dddk2_D0D0D2 KS_func_pass_args_macro ) + 4*
+bbn_ks_c(x, y, z)*(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_c(x, y, z)*(bbn_ks_ddk2_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 
+pow(bbn_ks_k2(x, y, z), 2)*(bbn_ks_dddc_D0D0D2 KS_func_pass_args_macro ) + 4*bbn_ks_k2(x, y, z)*
+(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D2 KS_func_pass_args_macro ) + 2*
+bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_k2(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D0 KS_func_pass_args_macro ) + 
+4*bbn_ks_k2(x, y, z)*(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
+4*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D2 KS_func_pass_args_macro )*
+pow((bbn_ks_dk2_D0 KS_func_pass_args_macro ), 2);
 
     _dddgamma_D1D1D2D0D1[ijk]=
 /* mcode in progress ... */
@@ -6965,22 +6965,22 @@ pow(Derivative(bbn_ks_k2(x, y, z), x), 2);
 // Derivative
 // c
 // k1
-2*bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x, y, z) + 2*
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), y, z) + 
-2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x, z) + 
-2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x, y) + 
-pow(bbn_ks_k1(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), x, y, z) + 2*bbn_ks_k1(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), y, z) + 2*
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x, z) + 
-2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x, y) + 
-2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), y, z) + 
-2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), x, z) + 
-2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), x, y) + 
-2*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), y)*
-Derivative(bbn_ks_k1(x, y, z), z) + 2*Derivative(bbn_ks_c(x, y, z), y)*
-Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), z) + 2*
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x)*
-Derivative(bbn_ks_k1(x, y, z), y);
+2*bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_dddk1_D0D1D2 KS_func_pass_args_macro ) + 2*
+bbn_ks_c(x, y, z)*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_c(x, y, z)*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_c(x, y, z)*(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D1 KS_func_pass_args_macro ) + 
+pow(bbn_ks_k1(x, y, z), 2)*(bbn_ks_dddc_D0D1D2 KS_func_pass_args_macro ) + 2*bbn_ks_k1(x, y, z)*
+(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D2 KS_func_pass_args_macro ) + 2*
+bbn_ks_k1(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_k1(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D1 KS_func_pass_args_macro ) + 
+2*bbn_ks_k1(x, y, z)*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_k1(x, y, z)*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_k1(x, y, z)*(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*
+(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D1 KS_func_pass_args_macro )*
+(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + 2*
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk1_D1 KS_func_pass_args_macro );
 
     _dddgamma_D2D2D0D0D0[ijk]=
 /* mcode in progress ... */
@@ -6993,12 +6993,12 @@ Derivative(bbn_ks_k1(x, y, z), y);
 // Derivative
 // c
 // k2
-2*bbn_ks_c(x, y, z)*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k2(x, y, z), (x, 3)) + 6*
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), (x, 2)) + 
-pow(bbn_ks_k2(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), (x, 3)) + 6*bbn_ks_k2(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), (x, 2)) + 6*
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2))*Derivative(bbn_ks_k2(x, y, z), x) + 
-6*Derivative(bbn_ks_c(x, y, z), x)*pow(Derivative(bbn_ks_k2(x, y, z), x), 2);
+2*bbn_ks_c(x, y, z)*bbn_ks_k2(x, y, z)*(bbn_ks_dddk2_D0D0D0 KS_func_pass_args_macro ) + 6*
+bbn_ks_c(x, y, z)*(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D0 KS_func_pass_args_macro ) + 
+pow(bbn_ks_k2(x, y, z), 2)*(bbn_ks_dddc_D0D0D0 KS_func_pass_args_macro ) + 6*bbn_ks_k2(x, y, z)*
+(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D0 KS_func_pass_args_macro ) + 6*
+bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + 
+6*(bbn_ks_dc_D0 KS_func_pass_args_macro )*pow((bbn_ks_dk2_D0 KS_func_pass_args_macro ), 2);
 
     _dddgamma_D2D2D2D0D2[ijk]=
 /* mcode in progress ... */
@@ -7015,17 +7015,17 @@ bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2))*Derivative(bbn_ks_k2(x,
 // Derivative
 // c
 // k2
-2*bbn_ks_c(x, y, z)*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x, (z, 2)) + 2*
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), (z, 2)) + 
-4*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x, z) + 
-pow(bbn_ks_k2(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), x, (z, 2)) + 2*bbn_ks_k2(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), (z, 2)) + 4*
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x, z) + 
-2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (z, 2))*Derivative(bbn_ks_k2(x, y, z), x) + 
-4*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k2(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), x, z) + 
-2*Derivative(bbn_ks_c(x, y, z), x)*pow(Derivative(bbn_ks_k2(x, y, z), z), 2) + 4*
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x)*
-Derivative(bbn_ks_k2(x, y, z), z);
+2*bbn_ks_c(x, y, z)*bbn_ks_k2(x, y, z)*(bbn_ks_dddk2_D0D2D2 KS_func_pass_args_macro ) + 2*
+bbn_ks_c(x, y, z)*(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D2D2 KS_func_pass_args_macro ) + 
+4*bbn_ks_c(x, y, z)*(bbn_ks_dk2_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D2 KS_func_pass_args_macro ) + 
+pow(bbn_ks_k2(x, y, z), 2)*(bbn_ks_dddc_D0D2D2 KS_func_pass_args_macro ) + 2*bbn_ks_k2(x, y, z)*
+(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D2D2 KS_func_pass_args_macro ) + 4*
+bbn_ks_k2(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + 
+4*bbn_ks_k2(x, y, z)*(bbn_ks_dk2_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
+2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*pow((bbn_ks_dk2_D2 KS_func_pass_args_macro ), 2) + 4*
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk2_D2 KS_func_pass_args_macro );
 
     _dddgamma_D0D2D2D0D2[ijk]=
 /* mcode in progress ... */
@@ -7048,26 +7048,26 @@ Derivative(bbn_ks_k2(x, y, z), z);
 // c
 // k0
 // k2
-bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x, (z, 2)) + bbn_ks_c(x, y, z)*
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x, (z, 2)) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), (z, 2)) + 2*
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x, z) + 
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), (z, 2))*Derivative(bbn_ks_k2(x, y, z), x) + 
-2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x, z) + 
-bbn_ks_k0(x, y, z)*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), x, (z, 2)) + 
-bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), (z, 2)) + 
-2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x, z) + 
-bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), (z, 2))*Derivative(bbn_ks_k2(x, y, z), x) + 
-2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k2(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), x, z) + 
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), (z, 2)) + 
-2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x, z) + 
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (z, 2))*Derivative(bbn_ks_k0(x, y, z), x) + 
-2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), x, z) + 
-2*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), z)*
-Derivative(bbn_ks_k2(x, y, z), z) + 2*Derivative(bbn_ks_c(x, y, z), z)*
-Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), z) + 2*
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), z)*
-Derivative(bbn_ks_k2(x, y, z), x);
+bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dddk2_D0D2D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+bbn_ks_k2(x, y, z)*(bbn_ks_dddk0_D0D2D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D2D2 KS_func_pass_args_macro ) + 2*
+bbn_ks_c(x, y, z)*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D2 KS_func_pass_args_macro ) + 
+bbn_ks_c(x, y, z)*(bbn_ks_ddk0_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + 
+2*bbn_ks_c(x, y, z)*(bbn_ks_dk2_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D2 KS_func_pass_args_macro ) + 
+bbn_ks_k0(x, y, z)*bbn_ks_k2(x, y, z)*(bbn_ks_dddc_D0D2D2 KS_func_pass_args_macro ) + 
+bbn_ks_k0(x, y, z)*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D2D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_k0(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D2 KS_func_pass_args_macro ) + 
+bbn_ks_k0(x, y, z)*(bbn_ks_ddc_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + 
+2*bbn_ks_k0(x, y, z)*(bbn_ks_dk2_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
+bbn_ks_k2(x, y, z)*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D2D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_k2(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D2 KS_func_pass_args_macro ) + 
+bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro ) + 
+2*bbn_ks_k2(x, y, z)*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
+2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*
+(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D2 KS_func_pass_args_macro )*
+(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 2*
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*
+(bbn_ks_dk2_D0 KS_func_pass_args_macro );
 
     _dddgamma_D0D2D2D2D2[ijk]=
 /* mcode in progress ... */
@@ -7084,17 +7084,17 @@ Derivative(bbn_ks_k2(x, y, z), x);
 // c
 // k0
 // k2
-bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k2(x, y, z), (z, 3)) + bbn_ks_c(x, y, z)*
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k0(x, y, z), (z, 3)) + 3*bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), (z, 2)) + 3*
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), (z, 2))*Derivative(bbn_ks_k2(x, y, z), z) + 
-bbn_ks_k0(x, y, z)*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (z, 3)) + 3*bbn_ks_k0(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), (z, 2)) + 3*
-bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), (z, 2))*Derivative(bbn_ks_k2(x, y, z), z) + 
-3*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), (z, 2)) + 
-3*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (z, 2))*Derivative(bbn_ks_k0(x, y, z), z) + 
-6*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), z)*
-Derivative(bbn_ks_k2(x, y, z), z);
+bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dddk2_D2D2D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+bbn_ks_k2(x, y, z)*(bbn_ks_dddk0_D2D2D2 KS_func_pass_args_macro ) + 3*bbn_ks_c(x, y, z)*
+(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D2D2 KS_func_pass_args_macro ) + 3*
+bbn_ks_c(x, y, z)*(bbn_ks_ddk0_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 
+bbn_ks_k0(x, y, z)*bbn_ks_k2(x, y, z)*(bbn_ks_dddc_D2D2D2 KS_func_pass_args_macro ) + 3*bbn_ks_k0(x, y, z)*
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D2D2 KS_func_pass_args_macro ) + 3*
+bbn_ks_k0(x, y, z)*(bbn_ks_ddc_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 
+3*bbn_ks_k2(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D2D2 KS_func_pass_args_macro ) + 
+3*bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D2 KS_func_pass_args_macro ) + 
+6*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*
+(bbn_ks_dk2_D2 KS_func_pass_args_macro );
 
     _dddgamma_D1D1D0D0D0[ijk]=
 /* mcode in progress ... */
@@ -7107,12 +7107,12 @@ Derivative(bbn_ks_k2(x, y, z), z);
 // Derivative
 // c
 // k1
-2*bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k1(x, y, z), (x, 3)) + 6*
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), (x, 2)) + 
-pow(bbn_ks_k1(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), (x, 3)) + 6*bbn_ks_k1(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), (x, 2)) + 6*
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2))*Derivative(bbn_ks_k1(x, y, z), x) + 
-6*Derivative(bbn_ks_c(x, y, z), x)*pow(Derivative(bbn_ks_k1(x, y, z), x), 2);
+2*bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_dddk1_D0D0D0 KS_func_pass_args_macro ) + 6*
+bbn_ks_c(x, y, z)*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D0 KS_func_pass_args_macro ) + 
+pow(bbn_ks_k1(x, y, z), 2)*(bbn_ks_dddc_D0D0D0 KS_func_pass_args_macro ) + 6*bbn_ks_k1(x, y, z)*
+(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D0 KS_func_pass_args_macro ) + 6*
+bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro ) + 
+6*(bbn_ks_dc_D0 KS_func_pass_args_macro )*pow((bbn_ks_dk1_D0 KS_func_pass_args_macro ), 2);
 
     _dddgamma_D1D2D2D0D1[ijk]=
 /* mcode in progress ... */
@@ -7141,36 +7141,36 @@ bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2))*Derivative(bbn_ks_k1(x,
 // c
 // k1
 // k2
-bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x, y, z) + bbn_ks_c(x, y, z)*
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x, y, z) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), y, z) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x, z) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x, y) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), y, z) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k2(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x, z) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k2(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x, y) + bbn_ks_k1(x, y, z)*
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), x, y, z) + bbn_ks_k1(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), y, z) + bbn_ks_k1(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x, z) + bbn_ks_k1(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x, y) + bbn_ks_k1(x, y, z)*
-Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), y, z) + bbn_ks_k1(x, y, z)*
-Derivative(bbn_ks_k2(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), x, z) + bbn_ks_k1(x, y, z)*
-Derivative(bbn_ks_k2(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), x, y) + bbn_ks_k2(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), y, z) + bbn_ks_k2(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x, z) + bbn_ks_k2(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x, y) + bbn_ks_k2(x, y, z)*
-Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), y, z) + bbn_ks_k2(x, y, z)*
-Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), x, z) + bbn_ks_k2(x, y, z)*
-Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), x, y) + 
-Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), y)*
-Derivative(bbn_ks_k2(x, y, z), z) + Derivative(bbn_ks_c(x, y, z), x)*
-Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), y) + 
-Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x)*
-Derivative(bbn_ks_k2(x, y, z), z) + Derivative(bbn_ks_c(x, y, z), y)*
-Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x) + 
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x)*
-Derivative(bbn_ks_k2(x, y, z), y) + Derivative(bbn_ks_c(x, y, z), z)*
-Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x);
+bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_dddk2_D0D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+bbn_ks_k2(x, y, z)*(bbn_ks_dddk1_D0D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D1 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk2_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk2_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D1 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
+bbn_ks_k2(x, y, z)*(bbn_ks_dddc_D0D1D2 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
+(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D2 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
+(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D2 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D1 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
+(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
+(bbn_ks_dk2_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
+(bbn_ks_dk2_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
+(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D2 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
+(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D2 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D1 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
+(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
+(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
+(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*
+(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + (bbn_ks_dc_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 
+(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + (bbn_ks_dc_D1 KS_func_pass_args_macro )*
+(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + 
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + (bbn_ks_dc_D2 KS_func_pass_args_macro )*
+(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro );
 
     _dddgamma_D0D0D1D1D0[ijk]=
 /* mcode in progress ... */
@@ -7187,17 +7187,17 @@ Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x);
 // Derivative
 // c
 // k0
-2*bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x, (y, 2)) + 2*
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), (y, 2)) + 
-4*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x, y) + 
-pow(bbn_ks_k0(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), x, (y, 2)) + 2*bbn_ks_k0(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), (y, 2)) + 4*
-bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x, y) + 
-2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), (y, 2))*Derivative(bbn_ks_k0(x, y, z), x) + 
-4*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), x, y) + 
-2*Derivative(bbn_ks_c(x, y, z), x)*pow(Derivative(bbn_ks_k0(x, y, z), y), 2) + 4*
-Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x)*
-Derivative(bbn_ks_k0(x, y, z), y);
+2*bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dddk0_D0D1D1 KS_func_pass_args_macro ) + 2*
+bbn_ks_c(x, y, z)*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D1 KS_func_pass_args_macro ) + 
+4*bbn_ks_c(x, y, z)*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D1 KS_func_pass_args_macro ) + 
+pow(bbn_ks_k0(x, y, z), 2)*(bbn_ks_dddc_D0D1D1 KS_func_pass_args_macro ) + 2*bbn_ks_k0(x, y, z)*
+(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D1 KS_func_pass_args_macro ) + 4*
+bbn_ks_k0(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D1 KS_func_pass_args_macro ) + 
+2*bbn_ks_k0(x, y, z)*(bbn_ks_ddc_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro ) + 
+4*bbn_ks_k0(x, y, z)*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*pow((bbn_ks_dk0_D1 KS_func_pass_args_macro ), 2) + 4*
+(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk0_D1 KS_func_pass_args_macro );
 
     _dddgamma_D1D1D1D0D2[ijk]=
 /* mcode in progress ... */
@@ -7218,22 +7218,22 @@ Derivative(bbn_ks_k0(x, y, z), y);
 // Derivative
 // c
 // k1
-2*bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x, y, z) + 2*
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), y, z) + 
-2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x, z) + 
-2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x, y) + 
-pow(bbn_ks_k1(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), x, y, z) + 2*bbn_ks_k1(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), y, z) + 2*
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), x, z) + 
-2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x, y) + 
-2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), y, z) + 
-2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), x, z) + 
-2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), x, y) + 
-2*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), y)*
-Derivative(bbn_ks_k1(x, y, z), z) + 2*Derivative(bbn_ks_c(x, y, z), y)*
-Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), z) + 2*
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x)*
-Derivative(bbn_ks_k1(x, y, z), y);
+2*bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_dddk1_D0D1D2 KS_func_pass_args_macro ) + 2*
+bbn_ks_c(x, y, z)*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_c(x, y, z)*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_c(x, y, z)*(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D1 KS_func_pass_args_macro ) + 
+pow(bbn_ks_k1(x, y, z), 2)*(bbn_ks_dddc_D0D1D2 KS_func_pass_args_macro ) + 2*bbn_ks_k1(x, y, z)*
+(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D2 KS_func_pass_args_macro ) + 2*
+bbn_ks_k1(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_k1(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D1 KS_func_pass_args_macro ) + 
+2*bbn_ks_k1(x, y, z)*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_k1(x, y, z)*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_k1(x, y, z)*(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*
+(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D1 KS_func_pass_args_macro )*
+(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + 2*
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk1_D1 KS_func_pass_args_macro );
 
     _dddgamma_D2D2D1D0D2[ijk]=
 /* mcode in progress ... */
@@ -7254,22 +7254,22 @@ Derivative(bbn_ks_k1(x, y, z), y);
 // Derivative
 // c
 // k2
-2*bbn_ks_c(x, y, z)*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x, y, z) + 2*
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), y, z) + 
-2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x, z) + 
-2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x, y) + 
-pow(bbn_ks_k2(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), x, y, z) + 2*bbn_ks_k2(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), y, z) + 2*
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), x, z) + 
-2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x, y) + 
-2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), y, z) + 
-2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k2(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), x, z) + 
-2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k2(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), x, y) + 
-2*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), y)*
-Derivative(bbn_ks_k2(x, y, z), z) + 2*Derivative(bbn_ks_c(x, y, z), y)*
-Derivative(bbn_ks_k2(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), z) + 2*
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x)*
-Derivative(bbn_ks_k2(x, y, z), y);
+2*bbn_ks_c(x, y, z)*bbn_ks_k2(x, y, z)*(bbn_ks_dddk2_D0D1D2 KS_func_pass_args_macro ) + 2*
+bbn_ks_c(x, y, z)*(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_c(x, y, z)*(bbn_ks_dk2_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_c(x, y, z)*(bbn_ks_dk2_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D1 KS_func_pass_args_macro ) + 
+pow(bbn_ks_k2(x, y, z), 2)*(bbn_ks_dddc_D0D1D2 KS_func_pass_args_macro ) + 2*bbn_ks_k2(x, y, z)*
+(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D2 KS_func_pass_args_macro ) + 2*
+bbn_ks_k2(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_k2(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D1 KS_func_pass_args_macro ) + 
+2*bbn_ks_k2(x, y, z)*(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_k2(x, y, z)*(bbn_ks_dk2_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_k2(x, y, z)*(bbn_ks_dk2_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro )*
+(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D1 KS_func_pass_args_macro )*
+(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 2*
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk2_D1 KS_func_pass_args_macro );
 
     _dddgamma_D0D2D1D1D1[ijk]=
 /* mcode in progress ... */
@@ -7286,17 +7286,17 @@ Derivative(bbn_ks_k2(x, y, z), y);
 // c
 // k0
 // k2
-bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k2(x, y, z), (y, 3)) + bbn_ks_c(x, y, z)*
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k0(x, y, z), (y, 3)) + 3*bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), (y, 2)) + 3*
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), (y, 2))*Derivative(bbn_ks_k2(x, y, z), y) + 
-bbn_ks_k0(x, y, z)*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (y, 3)) + 3*bbn_ks_k0(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), (y, 2)) + 3*
-bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), (y, 2))*Derivative(bbn_ks_k2(x, y, z), y) + 
-3*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), (y, 2)) + 
-3*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (y, 2))*Derivative(bbn_ks_k0(x, y, z), y) + 
-6*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), y)*
-Derivative(bbn_ks_k2(x, y, z), y);
+bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dddk2_D1D1D1 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+bbn_ks_k2(x, y, z)*(bbn_ks_dddk0_D1D1D1 KS_func_pass_args_macro ) + 3*bbn_ks_c(x, y, z)*
+(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D1 KS_func_pass_args_macro ) + 3*
+bbn_ks_c(x, y, z)*(bbn_ks_ddk0_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 
+bbn_ks_k0(x, y, z)*bbn_ks_k2(x, y, z)*(bbn_ks_dddc_D1D1D1 KS_func_pass_args_macro ) + 3*bbn_ks_k0(x, y, z)*
+(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D1 KS_func_pass_args_macro ) + 3*
+bbn_ks_k0(x, y, z)*(bbn_ks_ddc_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 
+3*bbn_ks_k2(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D1 KS_func_pass_args_macro ) + 
+3*bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro ) + 
+6*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*
+(bbn_ks_dk2_D1 KS_func_pass_args_macro );
 
     _dddgamma_D0D0D2D0D0[ijk]=
 /* mcode in progress ... */
@@ -7313,17 +7313,17 @@ Derivative(bbn_ks_k2(x, y, z), y);
 // Derivative
 // c
 // k0
-2*bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k0(x, y, z), (x, 2), z) + 4*
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), x, z) + 
-2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), (x, 2))*Derivative(bbn_ks_k0(x, y, z), z) + 
-pow(bbn_ks_k0(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), (x, 2), z) + 4*bbn_ks_k0(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), x, z) + 2*
-bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), (x, 2))*Derivative(bbn_ks_k0(x, y, z), z) + 
-2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), (x, 2)) + 
-4*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), x, z) + 
-4*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), x)*
-Derivative(bbn_ks_k0(x, y, z), z) + 2*Derivative(bbn_ks_c(x, y, z), z)*
-pow(Derivative(bbn_ks_k0(x, y, z), x), 2);
+2*bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dddk0_D0D0D2 KS_func_pass_args_macro ) + 4*
+bbn_ks_c(x, y, z)*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_c(x, y, z)*(bbn_ks_ddk0_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D2 KS_func_pass_args_macro ) + 
+pow(bbn_ks_k0(x, y, z), 2)*(bbn_ks_dddc_D0D0D2 KS_func_pass_args_macro ) + 4*bbn_ks_k0(x, y, z)*
+(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D2 KS_func_pass_args_macro ) + 2*
+bbn_ks_k0(x, y, z)*(bbn_ks_ddc_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_k0(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D0 KS_func_pass_args_macro ) + 
+4*bbn_ks_k0(x, y, z)*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
+4*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk0_D2 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D2 KS_func_pass_args_macro )*
+pow((bbn_ks_dk0_D0 KS_func_pass_args_macro ), 2);
 
     _dddgamma_D0D1D1D2D2[ijk]=
 /* mcode in progress ... */
@@ -7346,26 +7346,26 @@ pow(Derivative(bbn_ks_k0(x, y, z), x), 2);
 // c
 // k0
 // k1
-bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k1(x, y, z), y, (z, 2)) + bbn_ks_c(x, y, z)*
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k0(x, y, z), y, (z, 2)) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), (z, 2)) + 2*
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), y, z) + 
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), (z, 2))*Derivative(bbn_ks_k1(x, y, z), y) + 
-2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), y, z) + 
-bbn_ks_k0(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), y, (z, 2)) + 
-bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), (z, 2)) + 
-2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), y, z) + 
-bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), (z, 2))*Derivative(bbn_ks_k1(x, y, z), y) + 
-2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), y, z) + 
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), (z, 2)) + 
-2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), y, z) + 
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), (z, 2))*Derivative(bbn_ks_k0(x, y, z), y) + 
-2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), y, z) + 
-2*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), z)*
-Derivative(bbn_ks_k1(x, y, z), z) + 2*Derivative(bbn_ks_c(x, y, z), z)*
-Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), z) + 2*
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), z)*
-Derivative(bbn_ks_k1(x, y, z), y);
+bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dddk1_D1D2D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+bbn_ks_k1(x, y, z)*(bbn_ks_dddk0_D1D2D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D2D2 KS_func_pass_args_macro ) + 2*
+bbn_ks_c(x, y, z)*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D2 KS_func_pass_args_macro ) + 
+bbn_ks_c(x, y, z)*(bbn_ks_ddk0_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro ) + 
+2*bbn_ks_c(x, y, z)*(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D2 KS_func_pass_args_macro ) + 
+bbn_ks_k0(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_dddc_D1D2D2 KS_func_pass_args_macro ) + 
+bbn_ks_k0(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D2D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_k0(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D2 KS_func_pass_args_macro ) + 
+bbn_ks_k0(x, y, z)*(bbn_ks_ddc_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro ) + 
+2*bbn_ks_k0(x, y, z)*(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
+bbn_ks_k1(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D2D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_k1(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D2 KS_func_pass_args_macro ) + 
+bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro ) + 
+2*bbn_ks_k1(x, y, z)*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
+2*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*
+(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D2 KS_func_pass_args_macro )*
+(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + 2*
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*
+(bbn_ks_dk1_D1 KS_func_pass_args_macro );
 
     _dddgamma_D0D0D2D0D1[ijk]=
 /* mcode in progress ... */
@@ -7386,22 +7386,22 @@ Derivative(bbn_ks_k1(x, y, z), y);
 // Derivative
 // c
 // k0
-2*bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x, y, z) + 2*
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), y, z) + 
-2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x, z) + 
-2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x, y) + 
-pow(bbn_ks_k0(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), x, y, z) + 2*bbn_ks_k0(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), y, z) + 2*
-bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x, z) + 
-2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x, y) + 
-2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), y, z) + 
-2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), x, z) + 
-2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), x, y) + 
-2*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), y)*
-Derivative(bbn_ks_k0(x, y, z), z) + 2*Derivative(bbn_ks_c(x, y, z), y)*
-Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), z) + 2*
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x)*
-Derivative(bbn_ks_k0(x, y, z), y);
+2*bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dddk0_D0D1D2 KS_func_pass_args_macro ) + 2*
+bbn_ks_c(x, y, z)*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_c(x, y, z)*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_c(x, y, z)*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D1 KS_func_pass_args_macro ) + 
+pow(bbn_ks_k0(x, y, z), 2)*(bbn_ks_dddc_D0D1D2 KS_func_pass_args_macro ) + 2*bbn_ks_k0(x, y, z)*
+(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D2 KS_func_pass_args_macro ) + 2*
+bbn_ks_k0(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_k0(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D1 KS_func_pass_args_macro ) + 
+2*bbn_ks_k0(x, y, z)*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_k0(x, y, z)*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_k0(x, y, z)*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*
+(bbn_ks_dk0_D2 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D1 KS_func_pass_args_macro )*
+(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D2 KS_func_pass_args_macro ) + 2*
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk0_D1 KS_func_pass_args_macro );
 
     _dddgamma_D0D0D0D2D1[ijk]=
 /* mcode in progress ... */
@@ -7422,22 +7422,22 @@ Derivative(bbn_ks_k0(x, y, z), y);
 // Derivative
 // c
 // k0
-2*bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x, y, z) + 2*
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), y, z) + 
-2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x, z) + 
-2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x, y) + 
-pow(bbn_ks_k0(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), x, y, z) + 2*bbn_ks_k0(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), y, z) + 2*
-bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), x, z) + 
-2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x, y) + 
-2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_c(x, y, z), y, z) + 
-2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), x, z) + 
-2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), x, y) + 
-2*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), y)*
-Derivative(bbn_ks_k0(x, y, z), z) + 2*Derivative(bbn_ks_c(x, y, z), y)*
-Derivative(bbn_ks_k0(x, y, z), x)*Derivative(bbn_ks_k0(x, y, z), z) + 2*
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), x)*
-Derivative(bbn_ks_k0(x, y, z), y);
+2*bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dddk0_D0D1D2 KS_func_pass_args_macro ) + 2*
+bbn_ks_c(x, y, z)*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_c(x, y, z)*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_c(x, y, z)*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D1 KS_func_pass_args_macro ) + 
+pow(bbn_ks_k0(x, y, z), 2)*(bbn_ks_dddc_D0D1D2 KS_func_pass_args_macro ) + 2*bbn_ks_k0(x, y, z)*
+(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D2 KS_func_pass_args_macro ) + 2*
+bbn_ks_k0(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_k0(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D1 KS_func_pass_args_macro ) + 
+2*bbn_ks_k0(x, y, z)*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_k0(x, y, z)*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_k0(x, y, z)*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*
+(bbn_ks_dk0_D2 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D1 KS_func_pass_args_macro )*
+(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D2 KS_func_pass_args_macro ) + 2*
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*
+(bbn_ks_dk0_D1 KS_func_pass_args_macro );
 
     _dddgamma_D0D2D2D1D1[ijk]=
 /* mcode in progress ... */
@@ -7460,26 +7460,26 @@ Derivative(bbn_ks_k0(x, y, z), y);
 // c
 // k0
 // k2
-bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k2(x, y, z), (y, 2), z) + bbn_ks_c(x, y, z)*
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k0(x, y, z), (y, 2), z) + 2*bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), y, z) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k0(x, y, z), (y, 2))*Derivative(bbn_ks_k2(x, y, z), z) + 
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), (y, 2)) + 
-2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), y, z) + 
-bbn_ks_k0(x, y, z)*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (y, 2), z) + 2*
-bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k2(x, y, z), y, z) + 
-bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), (y, 2))*Derivative(bbn_ks_k2(x, y, z), z) + 
-bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), (y, 2)) + 
-2*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k2(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), y, z) + 
-2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), y, z) + 
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (y, 2))*Derivative(bbn_ks_k0(x, y, z), z) + 
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), (y, 2)) + 
-2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k0(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), y, z) + 
-2*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k0(x, y, z), y)*
-Derivative(bbn_ks_k2(x, y, z), z) + 2*Derivative(bbn_ks_c(x, y, z), y)*
-Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), y) + 2*
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), y)*
-Derivative(bbn_ks_k2(x, y, z), y);
+bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dddk2_D1D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+bbn_ks_k2(x, y, z)*(bbn_ks_dddk0_D1D1D2 KS_func_pass_args_macro ) + 2*bbn_ks_c(x, y, z)*
+(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_ddk0_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 
+bbn_ks_c(x, y, z)*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D1 KS_func_pass_args_macro ) + 
+2*bbn_ks_c(x, y, z)*(bbn_ks_dk2_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D2 KS_func_pass_args_macro ) + 
+bbn_ks_k0(x, y, z)*bbn_ks_k2(x, y, z)*(bbn_ks_dddc_D1D1D2 KS_func_pass_args_macro ) + 2*
+bbn_ks_k0(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D2 KS_func_pass_args_macro ) + 
+bbn_ks_k0(x, y, z)*(bbn_ks_ddc_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 
+bbn_ks_k0(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D1 KS_func_pass_args_macro ) + 
+2*bbn_ks_k0(x, y, z)*(bbn_ks_dk2_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_k2(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D2 KS_func_pass_args_macro ) + 
+bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D2 KS_func_pass_args_macro ) + 
+bbn_ks_k2(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D1 KS_func_pass_args_macro ) + 
+2*bbn_ks_k2(x, y, z)*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
+2*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*
+(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D1 KS_func_pass_args_macro )*
+(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 2*
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*
+(bbn_ks_dk2_D1 KS_func_pass_args_macro );
 
     _dddgamma_D0D0D2D2D2[ijk]=
 /* mcode in progress ... */
@@ -7492,12 +7492,12 @@ Derivative(bbn_ks_k2(x, y, z), y);
 // Derivative
 // c
 // k0
-2*bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*Derivative(bbn_ks_k0(x, y, z), (z, 3)) + 6*
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k0(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), (z, 2)) + 
-pow(bbn_ks_k0(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), (z, 3)) + 6*bbn_ks_k0(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k0(x, y, z), (z, 2)) + 6*
-bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), (z, 2))*Derivative(bbn_ks_k0(x, y, z), z) + 
-6*Derivative(bbn_ks_c(x, y, z), z)*pow(Derivative(bbn_ks_k0(x, y, z), z), 2);
+2*bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dddk0_D2D2D2 KS_func_pass_args_macro ) + 6*
+bbn_ks_c(x, y, z)*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D2D2 KS_func_pass_args_macro ) + 
+pow(bbn_ks_k0(x, y, z), 2)*(bbn_ks_dddc_D2D2D2 KS_func_pass_args_macro ) + 6*bbn_ks_k0(x, y, z)*
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D2D2 KS_func_pass_args_macro ) + 6*
+bbn_ks_k0(x, y, z)*(bbn_ks_ddc_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D2 KS_func_pass_args_macro ) + 
+6*(bbn_ks_dc_D2 KS_func_pass_args_macro )*pow((bbn_ks_dk0_D2 KS_func_pass_args_macro ), 2);
 
     _dddgamma_D1D1D2D1D1[ijk]=
 /* mcode in progress ... */
@@ -7514,17 +7514,17 @@ bbn_ks_k0(x, y, z)*Derivative(bbn_ks_c(x, y, z), (z, 2))*Derivative(bbn_ks_k0(x,
 // Derivative
 // c
 // k1
-2*bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k1(x, y, z), (y, 2), z) + 4*
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), y, z) + 
-2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), (y, 2))*Derivative(bbn_ks_k1(x, y, z), z) + 
-pow(bbn_ks_k1(x, y, z), 2)*Derivative(bbn_ks_c(x, y, z), (y, 2), z) + 4*bbn_ks_k1(x, y, z)*
-Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), y, z) + 2*
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), (y, 2))*Derivative(bbn_ks_k1(x, y, z), z) + 
-2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), (y, 2)) + 
-4*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k1(x, y, z), y)*Derivative(bbn_ks_c(x, y, z), y, z) + 
-4*Derivative(bbn_ks_c(x, y, z), y)*Derivative(bbn_ks_k1(x, y, z), y)*
-Derivative(bbn_ks_k1(x, y, z), z) + 2*Derivative(bbn_ks_c(x, y, z), z)*
-pow(Derivative(bbn_ks_k1(x, y, z), y), 2);
+2*bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_dddk1_D1D1D2 KS_func_pass_args_macro ) + 4*
+bbn_ks_c(x, y, z)*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_c(x, y, z)*(bbn_ks_ddk1_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + 
+pow(bbn_ks_k1(x, y, z), 2)*(bbn_ks_dddc_D1D1D2 KS_func_pass_args_macro ) + 4*bbn_ks_k1(x, y, z)*
+(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D2 KS_func_pass_args_macro ) + 2*
+bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_k1(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D1 KS_func_pass_args_macro ) + 
+4*bbn_ks_k1(x, y, z)*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
+4*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*
+(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D2 KS_func_pass_args_macro )*
+pow((bbn_ks_dk1_D1 KS_func_pass_args_macro ), 2);
 
     _dddgamma_D1D2D0D2D2[ijk]=
 /* mcode in progress ... */
@@ -7547,26 +7547,26 @@ pow(Derivative(bbn_ks_k1(x, y, z), y), 2);
 // c
 // k1
 // k2
-bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k2(x, y, z), x, (z, 2)) + bbn_ks_c(x, y, z)*
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k1(x, y, z), x, (z, 2)) + bbn_ks_c(x, y, z)*
-Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), (z, 2)) + 2*
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x, z) + 
-bbn_ks_c(x, y, z)*Derivative(bbn_ks_k1(x, y, z), (z, 2))*Derivative(bbn_ks_k2(x, y, z), x) + 
-2*bbn_ks_c(x, y, z)*Derivative(bbn_ks_k2(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x, z) + 
-bbn_ks_k1(x, y, z)*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), x, (z, 2)) + 
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), (z, 2)) + 
-2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k2(x, y, z), x, z) + 
-bbn_ks_k1(x, y, z)*Derivative(bbn_ks_c(x, y, z), (z, 2))*Derivative(bbn_ks_k2(x, y, z), x) + 
-2*bbn_ks_k1(x, y, z)*Derivative(bbn_ks_k2(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), x, z) + 
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), (z, 2)) + 
-2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), x, z) + 
-bbn_ks_k2(x, y, z)*Derivative(bbn_ks_c(x, y, z), (z, 2))*Derivative(bbn_ks_k1(x, y, z), x) + 
-2*bbn_ks_k2(x, y, z)*Derivative(bbn_ks_k1(x, y, z), z)*Derivative(bbn_ks_c(x, y, z), x, z) + 
-2*Derivative(bbn_ks_c(x, y, z), x)*Derivative(bbn_ks_k1(x, y, z), z)*
-Derivative(bbn_ks_k2(x, y, z), z) + 2*Derivative(bbn_ks_c(x, y, z), z)*
-Derivative(bbn_ks_k1(x, y, z), x)*Derivative(bbn_ks_k2(x, y, z), z) + 2*
-Derivative(bbn_ks_c(x, y, z), z)*Derivative(bbn_ks_k1(x, y, z), z)*
-Derivative(bbn_ks_k2(x, y, z), x);
+bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_dddk2_D0D2D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+bbn_ks_k2(x, y, z)*(bbn_ks_dddk1_D0D2D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
+(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D2D2 KS_func_pass_args_macro ) + 2*
+bbn_ks_c(x, y, z)*(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D2 KS_func_pass_args_macro ) + 
+bbn_ks_c(x, y, z)*(bbn_ks_ddk1_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + 
+2*bbn_ks_c(x, y, z)*(bbn_ks_dk2_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D2 KS_func_pass_args_macro ) + 
+bbn_ks_k1(x, y, z)*bbn_ks_k2(x, y, z)*(bbn_ks_dddc_D0D2D2 KS_func_pass_args_macro ) + 
+bbn_ks_k1(x, y, z)*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D2D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_k1(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D2 KS_func_pass_args_macro ) + 
+bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + 
+2*bbn_ks_k1(x, y, z)*(bbn_ks_dk2_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
+bbn_ks_k2(x, y, z)*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D2D2 KS_func_pass_args_macro ) + 
+2*bbn_ks_k2(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D2 KS_func_pass_args_macro ) + 
+bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro ) + 
+2*bbn_ks_k2(x, y, z)*(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
+2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro )*
+(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D2 KS_func_pass_args_macro )*
+(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 2*
+(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro )*
+(bbn_ks_dk2_D0 KS_func_pass_args_macro );
   }
 }
 

@@ -17,7 +17,9 @@
 # 
 # $ cpi bbn_ks_free_data_c_k0_k1_k2_kt.math > \
 #   bbn_ks_free_data_c_k0_k1_k2_kt.c && \
-#   sed -i '/Welcome to Cpi/,$d' bbn_ks_free_data_c_k0_k1_k2_kt.c
+#   sed -i '/Welcome to Cpi/,$d' bbn_ks_free_data_c_k0_k1_k2_kt.c && \
+#   sed -i -E -f bbn_ks_free_data_substitute_derives.sed bbn_ks_free_data_c_k0_k1_k2_kt.c
+
 
 Dimension = 3;
 point     = x;

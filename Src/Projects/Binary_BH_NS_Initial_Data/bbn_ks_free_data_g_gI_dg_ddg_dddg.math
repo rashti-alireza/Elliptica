@@ -15,7 +15,8 @@
 #   sed -i -E 's/\bk0\b\(/bbn_ks_k0\(/g' bbn_ks_free_data_g_gI_dg_ddg_dddg.c && \
 #   sed -i -E 's/\bk1\b\(/bbn_ks_k1\(/g' bbn_ks_free_data_g_gI_dg_ddg_dddg.c && \
 #   sed -i -E 's/\bk2\b\(/bbn_ks_k2\(/g' bbn_ks_free_data_g_gI_dg_ddg_dddg.c && \
-#   sed -i -E 's/\bc\b\(/bbn_ks_c\(/g'   bbn_ks_free_data_g_gI_dg_ddg_dddg.c
+#   sed -i -E 's/\bc\b\(/bbn_ks_c\(/g'   bbn_ks_free_data_g_gI_dg_ddg_dddg.c && \
+#   sed -i -E -f bbn_ks_free_data_substitute_derives.sed bbn_ks_free_data_g_gI_dg_ddg_dddg.c
 
 Dimension = 3;
 point     = x;
@@ -217,6 +218,31 @@ Command["sed -i 's/_,/,/g'"];
 ``
 `print('#include "bbn_headers.h"')`
 `print('#include "bbn_ks_free_data_analytic.h"')`
+``
+
+`print('#undef x')`
+`print('#undef y')`
+`print('#undef z')`
+`print('')`
+`print('#define KS_set_args \\')`
+`print('  struct KS_Arg_S ksa[1];\\')`
+`print('  ksa->x = x;\\')`
+`print('  ksa->y = y;\\')`
+`print('  ksa->z = z;\\')`
+`print('  ksa->X = bbn_ks_X KS_func_pass_args_macro;\\')`
+`print('  ksa->Y = bbn_ks_Y KS_func_pass_args_macro;\\')`
+`print('  ksa->Z = bbn_ks_Z KS_func_pass_args_macro;\\')`
+`print('  ksa->R = bbn_ks_R KS_func_pass_args_macro;\\')`
+`print('  ksa->dX_D0 = bbn_ks_dX_D0 KS_func_pass_args_macro;\\')`
+`print('  ksa->dX_D1 = bbn_ks_dX_D1 KS_func_pass_args_macro;\\')`
+`print('  ksa->dX_D2 = bbn_ks_dX_D2 KS_func_pass_args_macro;\\')`
+`print('  ksa->dY_D0 = bbn_ks_dY_D0 KS_func_pass_args_macro;\\')`
+`print('  ksa->dY_D1 = bbn_ks_dY_D1 KS_func_pass_args_macro;\\')`
+`print('  ksa->dY_D2 = bbn_ks_dY_D2 KS_func_pass_args_macro;\\')`
+`print('  ksa->dZ_D0 = bbn_ks_dZ_D0 KS_func_pass_args_macro;\\')`
+`print('  ksa->dZ_D1 = bbn_ks_dZ_D1 KS_func_pass_args_macro;\\')`
+`print('  ksa->dZ_D2 = bbn_ks_dZ_D2 KS_func_pass_args_macro;')`
+`print('')`
 
 ### NOTE the function "get_v" is for geting the value of a field
 ### according to the parameter and the given name. it is used for
@@ -272,6 +298,8 @@ Command["sed -i 's/_,/,/g'"];
 `print('      x = patch->node[ijk]->x[0]-BH_center_x;')`
 `print('      y = patch->node[ijk]->x[1]-BH_center_y;')`
 `print('      z = patch->node[ijk]->x[2]-BH_center_z;')`
+`print('      KS_set_args')`
+
 `print('      _gamma_D0D0[ijk] =')`
 `print(mcode(_g00))`
 ``
@@ -388,6 +416,8 @@ Command["sed -i 's/_,/,/g'"];
 `print('    x = patch->node[ijk]->x[0]-BH_center_x;')`
 `print('    y = patch->node[ijk]->x[1]-BH_center_y;')`
 `print('    z = patch->node[ijk]->x[2]-BH_center_z;')`
+`print('    KS_set_args')`
+
 `print('')`
 `print('    _dgamma_D1D2D2[ijk]=')`
 `print(mcode(_dg12_D2))`
@@ -520,6 +550,8 @@ Command["sed -i 's/_,/,/g'"];
 `print('    x = patch->node[ijk]->x[0]-BH_center_x;')`
 `print('    y = patch->node[ijk]->x[1]-BH_center_y;')`
 `print('    z = patch->node[ijk]->x[2]-BH_center_z;')`
+`print('    KS_set_args')`
+
 `print('')`
 `print('    _ddgamma_D2D2D0D2[ijk]=')`
 `print(     mcode(_ddg22_D0D2))`
@@ -866,6 +898,7 @@ Command["sed -i 's/_,/,/g'"];
 `print('    x = patch->node[ijk]->x[0]-BH_center_x;')`
 `print('    y = patch->node[ijk]->x[1]-BH_center_y;')`
 `print('    z = patch->node[ijk]->x[2]-BH_center_z;')`
+`print('    KS_set_args')`
 `print('')`
 `print('    _dddgamma_D0D1D2D2D1[ijk]=')`
 `print(     mcode(_dddg01_D2D2D1))`
