@@ -161,6 +161,28 @@ void bbn_rm_1st_2nd_derivatives_Kij(Patch_T *const patch);
 void bbn_1st_2nd_derivatives_Kij(Patch_T *const patch);
 void bbn_extrinsic_K_DiDj(Patch_T *const patch);
 
+void bbn_free_data_g_gI_analytic(
+        Patch_T *const patch,
+        double *(*get_v)(const char *const fname,void *params),
+        void *params);
+void bbn_free_data_dg_analytic(
+	Patch_T *const patch, 
+	double *(*get_v)(const char *const fname,void *params),
+	void *params);
+void bbn_free_data_ddg_analytic(
+	Patch_T *const patch, 
+	double *(*get_v)(const char *const fname,void *params),
+	void *params);
+void bbn_free_data_dddg_analytic(
+	Patch_T *const patch, 
+	double *(*get_v)(const char *const fname,void *params),
+	void *params);
+	
+	
+void bbn_ks_free_data_set_params(Grid_T *const grid);
+double *bbn_ks_read_analytic(const char *const name, void *params);
+
+
 #endif
 
 
