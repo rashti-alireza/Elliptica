@@ -66,11 +66,16 @@ void bbn_ks_free_data_set_params(Grid_T *const grid)
 
   assert(!EQL(B2,0));
   /* rotation */
-  if (!EQL(chi,0))/* otherwise tR is 0 */
+  if (!EQL(chi,0))/* otherwise R is 0 */
   {
     phiz = arctan(chi_U1,chi_U0);
     phiy = acos(chi_U2/chi);
     assert(isfinite(phiy));
+  }
+  else
+  {
+    phiz = 0.;
+    phiy = 0.;
   }
 
   UNUSED(grid);
