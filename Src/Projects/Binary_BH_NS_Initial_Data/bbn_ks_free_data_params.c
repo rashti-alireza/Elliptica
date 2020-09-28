@@ -81,3 +81,29 @@ void bbn_ks_free_data_set_params(Grid_T *const grid)
   UNUSED(grid);
 }
 
+/* ->: pointer to field to write.
+// if does not exist add field. 
+// note: this version is simple and params is just the patch. */
+double *bbn_ks_read_analytic(const char *const name, void *params);
+double *bbn_ks_read_analytic(const char *const name, void *params)
+{
+  Patch_T *const patch = params;
+  Field_T *u   = 0;
+  const int fn = _Ind(name);
+  
+  if (fn < 0)/* if there is not such a field */
+  {
+    u = add_field(name,0,patch,YES);
+  }
+  else
+  {
+    u = patch->pool[fn];
+    empty_field(u);
+    u->v = alloc_double(patch->nn);
+  }
+  
+  return u->v;
+}
+
+
+

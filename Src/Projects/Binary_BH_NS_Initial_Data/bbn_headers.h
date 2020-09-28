@@ -169,6 +169,7 @@ void bbn_free_data_dddg_analytic(
 	double *(*get_v)(const char *const fname,void *params),
 	void *params);
 
+double *bbn_ks_read_analytic(const char *const name, void *params);
 
 #endif
 
