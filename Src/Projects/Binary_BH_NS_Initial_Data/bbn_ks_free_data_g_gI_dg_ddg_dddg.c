@@ -1,5 +1,30 @@
 #include "bbn_headers.h"
 #include "bbn_ks_free_data_analytic.h"
+#undef x
+#undef y
+#undef z
+
+#define KS_func_pass_args_sed KS_func_pass_args_macro
+
+#define KS_set_args \
+  struct KS_Arg_S ksa[1];\
+  ksa->x = x;\
+  ksa->y = y;\
+  ksa->z = z;\
+  ksa->X = bbn_ks_X KS_func_pass_args_macro;\
+  ksa->Y = bbn_ks_Y KS_func_pass_args_macro;\
+  ksa->Z = bbn_ks_Z KS_func_pass_args_macro;\
+  ksa->R = bbn_ks_R KS_func_pass_args_macro;\
+  ksa->dX_D0 = bbn_ks_dX_D0 KS_func_pass_args_sed;\
+  ksa->dX_D1 = bbn_ks_dX_D1 KS_func_pass_args_sed;\
+  ksa->dX_D2 = bbn_ks_dX_D2 KS_func_pass_args_sed;\
+  ksa->dY_D0 = bbn_ks_dY_D0 KS_func_pass_args_sed;\
+  ksa->dY_D1 = bbn_ks_dY_D1 KS_func_pass_args_sed;\
+  ksa->dY_D2 = bbn_ks_dY_D2 KS_func_pass_args_sed;\
+  ksa->dZ_D0 = bbn_ks_dZ_D0 KS_func_pass_args_sed;\
+  ksa->dZ_D1 = bbn_ks_dZ_D1 KS_func_pass_args_sed;\
+  ksa->dZ_D2 = bbn_ks_dZ_D2 KS_func_pass_args_sed;
+
 void bbn_free_data_g_gI_analytic(
         Patch_T *const patch,
         double *(*get_v)(const char *const fname,void *params),
@@ -26,7 +51,6 @@ void bbn_free_data_g_gI_analytic(
   const double BH_center_z = Pgetd("BH_center_z");
   const unsigned nn = patch->nn;
   unsigned ijk;
-
     double *const _gamma_D2D2 = get_v("_gamma_D2D2",params);
     double *const _gamma_D0D2 = get_v("_gamma_D0D2",params);
     double *const _gamma_D0D0 = get_v("_gamma_D0D0",params);
@@ -46,6 +70,7 @@ void bbn_free_data_g_gI_analytic(
       x = patch->node[ijk]->x[0]-BH_center_x;
       y = patch->node[ijk]->x[1]-BH_center_y;
       z = patch->node[ijk]->x[2]-BH_center_z;
+      KS_set_args
       _gamma_D0D0[ijk] =
 /* mcode in progress ... */
 // Not supported in C:
@@ -198,7 +223,7 @@ void bbn_free_data_dg_analytic(
   const double BH_center_z = Pgetd("BH_center_z");
   const unsigned nn = patch->nn;
   unsigned ijk;
-
+  
 double *const _dgamma_D1D2D2 = get_v("_dgamma_D1D2D2",params);
 double *const _dgamma_D0D0D1 = get_v("_dgamma_D0D0D1",params);
 double *const _dgamma_D0D2D1 = get_v("_dgamma_D0D2D1",params);
@@ -224,6 +249,7 @@ double *const _dgamma_D2D2D2 = get_v("_dgamma_D2D2D2",params);
     x = patch->node[ijk]->x[0]-BH_center_x;
     y = patch->node[ijk]->x[1]-BH_center_y;
     z = patch->node[ijk]->x[2]-BH_center_z;
+    KS_set_args
 
     _dgamma_D1D2D2[ijk]=
 /* mcode in progress ... */
@@ -440,6 +466,7 @@ void bbn_free_data_ddg_analytic(
 	double *(*get_v)(const char *const fname,void *params),
 	void *params)
 {
+
   const double BH_center_x = Pgetd("BH_center_x");
   const double BH_center_y = Pgetd("BH_center_y");
   const double BH_center_z = Pgetd("BH_center_z");
@@ -507,6 +534,7 @@ double *const _ddgamma_D2D2D0D1 = get_v("_ddgamma_D2D2D0D1",params);
     x = patch->node[ijk]->x[0]-BH_center_x;
     y = patch->node[ijk]->x[1]-BH_center_y;
     z = patch->node[ijk]->x[2]-BH_center_z;
+    KS_set_args
 
     _ddgamma_D2D2D0D2[ijk]=
 /* mcode in progress ... */
@@ -1744,6 +1772,7 @@ double *const _dddgamma_D1D2D0D2D2 = get_v("_dddgamma_D1D2D0D2D2",params);
     x = patch->node[ijk]->x[0]-BH_center_x;
     y = patch->node[ijk]->x[1]-BH_center_y;
     z = patch->node[ijk]->x[2]-BH_center_z;
+    KS_set_args
 
     _dddgamma_D0D1D2D2D1[ijk]=
 /* mcode in progress ... */
