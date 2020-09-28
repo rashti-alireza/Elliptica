@@ -224,6 +224,9 @@ Command["sed -i 's/_,/,/g'"];
 `print('#undef y')`
 `print('#undef z')`
 `print('')`
+### the immediate following macro prevent sed substitution.
+`print('#define KS_func_pass_args_sed KS_func_pass_args_macro')`
+`print('')`
 `print('#define KS_set_args \\')`
 `print('  struct KS_Arg_S ksa[1];\\')`
 `print('  ksa->x = x;\\')`
@@ -233,15 +236,15 @@ Command["sed -i 's/_,/,/g'"];
 `print('  ksa->Y = bbn_ks_Y KS_func_pass_args_macro;\\')`
 `print('  ksa->Z = bbn_ks_Z KS_func_pass_args_macro;\\')`
 `print('  ksa->R = bbn_ks_R KS_func_pass_args_macro;\\')`
-`print('  ksa->dX_D0 = bbn_ks_dX_D0 KS_func_pass_args_macro;\\')`
-`print('  ksa->dX_D1 = bbn_ks_dX_D1 KS_func_pass_args_macro;\\')`
-`print('  ksa->dX_D2 = bbn_ks_dX_D2 KS_func_pass_args_macro;\\')`
-`print('  ksa->dY_D0 = bbn_ks_dY_D0 KS_func_pass_args_macro;\\')`
-`print('  ksa->dY_D1 = bbn_ks_dY_D1 KS_func_pass_args_macro;\\')`
-`print('  ksa->dY_D2 = bbn_ks_dY_D2 KS_func_pass_args_macro;\\')`
-`print('  ksa->dZ_D0 = bbn_ks_dZ_D0 KS_func_pass_args_macro;\\')`
-`print('  ksa->dZ_D1 = bbn_ks_dZ_D1 KS_func_pass_args_macro;\\')`
-`print('  ksa->dZ_D2 = bbn_ks_dZ_D2 KS_func_pass_args_macro;')`
+`print('  ksa->dX_D0 = bbn_ks_dX_D0 KS_func_pass_args_sed;\\')`
+`print('  ksa->dX_D1 = bbn_ks_dX_D1 KS_func_pass_args_sed;\\')`
+`print('  ksa->dX_D2 = bbn_ks_dX_D2 KS_func_pass_args_sed;\\')`
+`print('  ksa->dY_D0 = bbn_ks_dY_D0 KS_func_pass_args_sed;\\')`
+`print('  ksa->dY_D1 = bbn_ks_dY_D1 KS_func_pass_args_sed;\\')`
+`print('  ksa->dY_D2 = bbn_ks_dY_D2 KS_func_pass_args_sed;\\')`
+`print('  ksa->dZ_D0 = bbn_ks_dZ_D0 KS_func_pass_args_sed;\\')`
+`print('  ksa->dZ_D1 = bbn_ks_dZ_D1 KS_func_pass_args_sed;\\')`
+`print('  ksa->dZ_D2 = bbn_ks_dZ_D2 KS_func_pass_args_sed;')`
 `print('')`
 
 ### NOTE the function "get_v" is for geting the value of a field
