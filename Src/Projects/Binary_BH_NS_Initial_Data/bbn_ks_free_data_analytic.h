@@ -49,7 +49,7 @@ struct KS_Arg_S
 };
 
 /* function args */
-#define KS_func_args_macro  (const struct KS_Arg_S *const ksa)
+#define KS_func_args_macro  (const struct KS_Arg_S *const ksa __attribute__((unused)))
 
 /* pass special argument to each function */   
 #define KS_func_pass_args_macro  (ksa)
