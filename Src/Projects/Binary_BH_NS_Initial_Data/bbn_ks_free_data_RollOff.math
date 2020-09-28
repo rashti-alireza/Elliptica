@@ -1,0 +1,214 @@
+### analytic Kerr-Schild free data : attenuation function
+###
+
+#########################
+### H O W  T O  U S E ###
+#########################
+# Issue the following:
+# 
+# $ cpi bbn_ks_free_data_RollOff.math > \
+#   bbn_ks_free_data_RollOff.c && \
+#   sed -i '/Welcome to Cpi/,$d' bbn_ks_free_data_RollOff.c
+
+Dimension = 3;
+point     = x;
+C_macro=name_(diff(name).doit());
+C_macro2=print('KS_func_def_macro(name)KS_func_args_macro;');
+C_macro3=print('KS_func_def_macro(name)KS_func_args_macro')\n\
+	print('{')\n\
+	print('return')\n\
+	print(mcode(name));\n\
+	print('}');
+
+## libs
+`from __future__ import division`
+`from sympy import *`
+`from sympy.tensor.tensor import TensorIndexType, TensorHead`
+`from sympy.tensor.tensor import tensor_indices`
+`from sympy.functions import transpose`
+`from sympy.parsing.mathematica import mathematica`
+`import sys`
+`import re`
+`import os`
+
+### ccode generator
+`def mcode(m,s=2):`
+`  print('/* mcode in progress ... */')`
+`  sys.stdout.flush()`
+`  m = (m).doit()`
+`  code = ""`
+`  if (s==1):`
+`    pid = os.getpid()`
+`    mfile_name=".mfile_temp_{}".format(pid)`
+`    cfile_name=".cfile_temp_{}".format(pid)`
+`    rhs  =""`
+`    try:`
+`      rhs  = mathematica_code((m).doit())`
+`    except:`
+`      rhs  = mathematica_code(m)`
+``
+`    math_code  = rhs + ";\n"`
+`    math_code += "Simplify[%];\n"`
+`    math_code += "c=CForm[%];\n"`
+`    math_code += "Print[c]"+"\n"`
+## write into mathematica file
+`    mfile = open(mfile_name,"w")`
+`    mfile.write(math_code)`
+`    mfile.close()`
+
+## run mathematica and output into another
+`    cmd = "math -run -noprompt < {} 1> {}".format(mfile_name,cfile_name)`
+`    ret=os.system(cmd)`
+
+## read math results.
+`    cfile=open(cfile_name,"r")`
+`    code =cfile.read()`
+`    cfile.close()`
+
+## delete the files
+`    cmd = "rm -rf {} {}".format(mfile_name,cfile_name)`
+`    os.system(cmd)`
+`  elif (s==2):`
+`    code = ccode(simplify(m))`
+`  else:`
+`    code = ccode(m)`
+``
+## return the code and break long lines
+`  code = '{};'.format(code)`
+`  code = re.sub(r'\b1.0\*\b','',code)`
+`  code = re.sub(r'(.{50,70}[\+\-\*/]+\s?)','\\1{}n'.format("\\"),code)`
+``
+`  return code`
+``
+
+### simplify using mathematica or sympy or none:
+`def msimplify(m,msg="...",s="mathematica"):`
+`  print('/* msimplify({}) */'.format(msg))`
+`  sys.stdout.flush()`
+`  code = ""`
+`  if (s=="mathematica"):`# if you want mathematica
+`    pid = os.getpid()`
+`    mfile_name=".mfile_temp_{}".format(pid)`
+`    cfile_name=".cfile_temp_{}".format(pid)`
+`    rhs  =""`
+`    try:`
+`      rhs  = mathematica_code((m).doit())`
+`    except:`
+`      rhs  = mathematica_code(m)`
+``
+`    math_code  = rhs + ";\n"`
+`    math_code += "Simplify[%,TimeConstraint->1000];\n"`
+`    math_code += "Print[%]"+"\n"`
+## write into mathematica file
+`    mfile = open(mfile_name,"w")`
+`    mfile.write(math_code)`
+`    mfile.close()`
+
+## run mathematica and output into another
+`    cmd = "math -run -noprompt < {} 1> {}".format(mfile_name,cfile_name)`
+`    ret=os.system(cmd)`
+
+## read math results.
+`    cfile=open(cfile_name,"r")`
+`    code =cfile.read()`
+`    cfile.close()`
+
+## delete the files
+`    cmd = "rm -rf {} {}".format(mfile_name,cfile_name)`
+`    os.system(cmd)`
+`    return mathematica(code)`
+`  elif(s=="sympy"):` ## if you wanna simpy simplify
+`    code = simplify(m)`
+`    return code`
+`  else:` ## no simplification
+`    return m`
+``
+``
+``
+`### symbols`
+`x,y,z               = symbols('x,y,z')`
+`r0,M_BH,a_BH,Lambda = symbols('r0,M_BH,a_BH,Lambda')`
+``
+`### functions`
+`rolloff=symbols('rolloff',cls=Function)`
+
+`### evaluates:`
+`r=(x**2+y**2+z**2)**(0.5)`
+`rolloff = exp(-(r/r0)**4)`
+``
+`print('#include "bbn_ks_free_data_analytic.h"')`
+``
+Declare =
+{
+#### diff
+
+ # d rolloff
+ (obj = Field,name = drolloff, rank = D, C_macro);
+ # dd rolloff
+ (obj = Field,name = ddrolloff, rank = DD, C_macro);
+ # ddd rolloff
+ (obj = Field,name = dddrolloff, rank = DDD, C_macro);
+
+#### c function declarations
+
+ # rolloff
+ (obj = Field,name = rolloff, rank = 0, C_macro2);
+ # drolloff
+ (obj = Field,name = drolloff, rank = D, C_macro2);
+ # dd rolloff
+ (obj = Field,name = ddrolloff, rank = DD, C_macro2);
+ # ddd rolloff
+ (obj = Field,name = dddrolloff, rank = DDD, C_macro2);
+
+#### c function definition
+
+ # rolloff
+ (obj = Field,name = rolloff, rank = 0, C_macro3);
+ # drolloff
+ (obj = Field,name = drolloff, rank = D, C_macro3);
+ # dd rolloff
+ (obj = Field,name = ddrolloff, rank = DD, C_macro3);
+ # ddd rolloff
+ (obj = Field,name = dddrolloff, rank = DDD, C_macro3);
+
+}
+
+# symmetries:
+Symm[ddrolloff(i,j)    = ddrolloff(j,i)];
+Symm[dddrolloff(i,j,k) = dddrolloff(j,i,k)];
+
+
+### make it ready for python:
+### remove C comments:
+Command["sed -i 's/\/\* declaring: \*\///'"];
+
+### remove spaces:
+Command["sed -i 's/^  d/d/g'"];
+Command["sed -i "s/^  print('KS_func/print('KS_func/g""];
+
+### derivatives d/dx
+Command["sed -i 's/0)\.doit/,x)\.doit/g'"];
+### derivatives d/dy
+Command["sed -i 's/1)\.doit/,y)\.doit/g'"];
+### derivatives d/dz
+Command["sed -i 's/2)\.doit/,z)\.doit/g'"];
+### no doit
+Command["sed -i 's/\.doit()//g'"];
+### indices
+Command["sed -i 's/D,/,/g'"];
+Command["sed -i 's/diff(d/diff(/g'"];
+Command["sed -i 's/_(diff/=(diff/g'"];
+Command["sed -i 's/_,/,/g'"];
+
+### functions:
+Command["sed -i 's/double/double /g'"];
+Command["sed -i 's/KS_func_args_macro/ KS_func_args_macro/g'"];
+
+### remove C comments:
+Command["sed -i '1,5d'"];
+### run python
+Comand["python "];
+#Comand["cat "];
+
+### rm redundants
+Comand["rm "];
