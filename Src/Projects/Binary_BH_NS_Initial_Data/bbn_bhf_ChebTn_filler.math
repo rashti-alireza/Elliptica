@@ -73,14 +73,14 @@ point     = x;
 `  dnf  = lambdify(x,diff(f(x),(x,n)))`
 `  eqs.append(dnf(-1))`
 `  c += 1`
-`  if (c > N_remain/2):`
+`  if (c >= N_remain/2):`
 `    break`
 ``
 `for n in range (3,POLY_ORDER):`
 `  dnf  = lambdify(x,diff(f(x),(x,n)))`
 `  eqs.append(dnf(1))`
 `  c += 1`
-`  if (c > N_remain-1):`
+`  if (c == N_remain):`
 `   break`
 ``
 
