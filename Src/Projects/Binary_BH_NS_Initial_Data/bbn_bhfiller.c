@@ -483,6 +483,7 @@ static int bhf_ChebTn_Ylm(struct BHFiller_S *const bhf)
   unsigned p,fld;
   
   /* update all coeffs to avoid race condition */
+  bbn_ks_free_data_set_params(grid);
   printf("|--> Updating coefficients ...\n");
   fflush(stdout);
   OpenMP_Patch_Pragma(omp parallel for)
@@ -491,7 +492,11 @@ static int bhf_ChebTn_Ylm(struct BHFiller_S *const bhf)
     Patch_T *patch = bhf->patches_outBH[p];
     unsigned f;
 
-    bbn_1st_2nd_derivatives_conformal_metric(patch);
+    if(0)/* deprecated */
+      bbn_1st_2nd_derivatives_conformal_metric(patch);
+    bbn_free_data_dg_analytic(patch,bbn_ks_read_analytic,patch);
+    bbn_free_data_ddg_analytic(patch,bbn_ks_read_analytic,patch);
+    
     bbn_add_and_take_2nd_derivatives_K(patch);
     bbn_extrinsic_K_DiDj(patch);
     bbn_1st_2nd_derivatives_Kij(patch);
