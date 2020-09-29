@@ -10,11 +10,8 @@
 /* these fields to be extrapolated  */
 static const char *const fields_name[] = 
 {
-  "psi","eta",
+  "psi","eta","K",
   "Beta_U0","Beta_U1","Beta_U2",
-  "K_DiDj_D0D0","K_DiDj_D0D1",
-  "K_DiDj_D0D2","K_DiDj_D1D1",
-  "K_DiDj_D1D2","K_DiDj_D2D2",
 0/* end */
 };
 
@@ -492,14 +489,10 @@ static int bhf_ChebTn_Ylm(struct BHFiller_S *const bhf)
     Patch_T *patch = bhf->patches_outBH[p];
     unsigned f;
 
-    if(0)/* deprecated */
-      bbn_1st_2nd_derivatives_conformal_metric(patch);
-    bbn_free_data_dg_analytic(patch,bbn_ks_read_analytic,patch);
-    bbn_free_data_ddg_analytic(patch,bbn_ks_read_analytic,patch);
-    
+    //bbn_1st_2nd_derivatives_conformal_metric(patch);
+    /* trK derivatives */
+    bbn_update_derivative_K(patch);
     bbn_add_and_take_2nd_derivatives_K(patch);
-    bbn_extrinsic_K_DiDj(patch);
-    bbn_1st_2nd_derivatives_Kij(patch);
     
     Field_T *R1_f = patch->CoordSysInfo->CubedSphericalCoord->R1_f;
     Field_T *R2_f = patch->CoordSysInfo->CubedSphericalCoord->R2_f;
@@ -770,7 +763,7 @@ static int bhf_ChebTn_Ylm(struct BHFiller_S *const bhf)
       }/* for (ijk = 0; ijk < nn; ++ijk) */
     }/* for (f = 0; f < nf ++f) */
     
-    if (0)/* if extrapolating K_ij no longer need below: */
+    if (1)
     {
      READ_v(Beta_U0)
      READ_v(Beta_U1)
@@ -804,6 +797,8 @@ static int bhf_ChebTn_Ylm(struct BHFiller_S *const bhf)
   }/* for (p = 0; p < npi; p++) */
   
   /* free */
+  if (0)
+  {
   bbn_rm_1st_2nd_derivatives_conformal_metric
     (GetPatch("right_BH_surrounding_up",grid));
   bbn_rm_1st_2nd_derivatives_conformal_metric
@@ -829,6 +824,7 @@ static int bhf_ChebTn_Ylm(struct BHFiller_S *const bhf)
     (GetPatch("right_BH_surrounding_back",grid));
   bbn_rm_1st_2nd_derivatives_Kij
     (GetPatch("right_BH_surrounding_front",grid));
+  }
     
   return EXIT_SUCCESS;
 }
