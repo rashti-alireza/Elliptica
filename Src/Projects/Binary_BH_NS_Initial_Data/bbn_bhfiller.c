@@ -6,14 +6,12 @@
 
 #include "bbn_bhfiller.h"
 
+
 /* these fields to be extrapolated  */
 static const char *const fields_name[] = 
 {
   "psi","eta",
   "Beta_U0","Beta_U1","Beta_U2",
-  "_gamma_D0D0","_gamma_D0D1",
-  "_gamma_D0D2","_gamma_D1D1",
-  "_gamma_D1D2","_gamma_D2D2",
   "K_DiDj_D0D0","K_DiDj_D0D1",
   "K_DiDj_D0D2","K_DiDj_D1D1",
   "K_DiDj_D1D2","K_DiDj_D2D2",
@@ -478,6 +476,7 @@ static int bhf_ChebTn_Ylm(struct BHFiller_S *const bhf)
   const unsigned lmax   = bhf->lmax;
   const unsigned Ntheta = bhf->Ntheta;
   const unsigned Nphi   = bhf->Nphi;
+  const double gMAX  = 2.;
   const double rfill = Pgetd("r_excision");
   const double rfill3= pow(rfill,3);
   unsigned p,fld;
@@ -638,6 +637,96 @@ static int bhf_ChebTn_Ylm(struct BHFiller_S *const bhf)
     /* add field in side the BH */
     bbn_add_fields_in_patch(patch);
     
+    /* make g and gI */
+    bbn_free_data_g_gI_analytic(patch,bbn_ks_read_analytic,patch);
+    /* remove singularity in g and gI */
+    WRITE_v(_gamma_D2D2)
+    WRITE_v(_gamma_D0D2)
+    WRITE_v(_gamma_D0D0)
+    WRITE_v(_gamma_D0D1)
+    WRITE_v(_gamma_D1D2)
+    WRITE_v(_gamma_D1D1)
+    REALLOC_v_WRITE_v(_gammaI_U2U2)
+    REALLOC_v_WRITE_v(_gammaI_U0U2)
+    REALLOC_v_WRITE_v(_gammaI_U0U0)
+    REALLOC_v_WRITE_v(_gammaI_U0U1)
+    REALLOC_v_WRITE_v(_gammaI_U1U2)
+    REALLOC_v_WRITE_v(_gammaI_U1U1)
+    
+    for (ijk = 0; ijk < nn; ++ijk)
+    {
+      DEF_RELATIVE_x
+      DEF_RELATIVE_y
+      DEF_RELATIVE_z
+      DEF_RELATIVE_r
+      
+      if (r>rfill) 
+        r = rfill;
+      double w = bbn_bhf_smoother(r,rfill,rfill/2.);
+      
+      _gamma_D0D0[ijk] = w*_gamma_D0D0[ijk]+(1-w)*gMAX;
+      _gamma_D1D1[ijk] = w*_gamma_D1D1[ijk]+(1-w)*gMAX;
+      _gamma_D2D2[ijk] = w*_gamma_D2D2[ijk]+(1-w)*gMAX;
+      _gamma_D0D1[ijk] = w*_gamma_D0D1[ijk];
+      _gamma_D0D2[ijk] = w*_gamma_D0D2[ijk];
+      _gamma_D1D2[ijk] = w*_gamma_D1D2[ijk];
+      
+      /* _gammaI =  _gamma inverse */
+      COMPUTE_gammaI(_gamma_D0D0[ijk],_gamma_D0D1[ijk],_gamma_D0D2[ijk],
+                     _gamma_D0D1[ijk],_gamma_D1D1[ijk],_gamma_D1D2[ijk],
+                     _gamma_D0D2[ijk],_gamma_D1D2[ijk],_gamma_D2D2[ijk])
+                     
+      /* quick test check _gamma * _gammaI = delta */
+      if (1)
+      {
+          double delta_U0D0 = 
+        _gammaI_U0U0[ijk]*_gamma_D0D0[ijk] + _gammaI_U0U1[ijk]*
+        _gamma_D0D1[ijk] + _gammaI_U0U2[ijk]*_gamma_D0D2[ijk];
+
+          double delta_U0D1 = 
+        _gammaI_U0U0[ijk]*_gamma_D0D1[ijk] + _gammaI_U0U1[ijk]*
+        _gamma_D1D1[ijk] + _gammaI_U0U2[ijk]*_gamma_D1D2[ijk];
+
+          double delta_U0D2 = 
+        _gammaI_U0U0[ijk]*_gamma_D0D2[ijk] + _gammaI_U0U1[ijk]*
+        _gamma_D1D2[ijk] + _gammaI_U0U2[ijk]*_gamma_D2D2[ijk];
+
+          double delta_U1D2 = 
+        _gammaI_U0U1[ijk]*_gamma_D0D2[ijk] + _gammaI_U1U1[ijk]*
+        _gamma_D1D2[ijk] + _gammaI_U1U2[ijk]*_gamma_D2D2[ijk];
+
+          double delta_U1D0 = 
+        _gammaI_U0U1[ijk]*_gamma_D0D0[ijk] + _gammaI_U1U1[ijk]*
+        _gamma_D0D1[ijk] + _gammaI_U1U2[ijk]*_gamma_D0D2[ijk];
+
+         double delta_U1D1 = 
+        _gammaI_U0U1[ijk]*_gamma_D0D1[ijk] + _gammaI_U1U1[ijk]*
+        _gamma_D1D1[ijk] + _gammaI_U1U2[ijk]*_gamma_D1D2[ijk];
+
+          double delta_U2D2 = 
+        _gammaI_U0U2[ijk]*_gamma_D0D2[ijk] + _gammaI_U1U2[ijk]*
+        _gamma_D1D2[ijk] + _gammaI_U2U2[ijk]*_gamma_D2D2[ijk];
+
+          double delta_U2D0 = 
+        _gammaI_U0U2[ijk]*_gamma_D0D0[ijk] + _gammaI_U1U2[ijk]*
+        _gamma_D0D1[ijk] + _gammaI_U2U2[ijk]*_gamma_D0D2[ijk];
+
+          double delta_U2D1 = 
+        _gammaI_U0U2[ijk]*_gamma_D0D1[ijk] + _gammaI_U1U2[ijk]*
+        _gamma_D1D1[ijk] + _gammaI_U2U2[ijk]*_gamma_D1D2[ijk];
+
+        if(!EQL(delta_U1D1,1))  Error0("_gammaI is not correct!\n");
+        if(!EQL(delta_U0D1,0))  Error0("_gammaI is not correct!\n");
+        if(!EQL(delta_U0D2,0))  Error0("_gammaI is not correct!\n");
+        if(!EQL(delta_U1D2,0))  Error0("_gammaI is not correct!\n");
+        if(!EQL(delta_U0D0,1))  Error0("_gammaI is not correct!\n");
+        if(!EQL(delta_U2D1,0))  Error0("_gammaI is not correct!\n");
+        if(!EQL(delta_U2D2,1))  Error0("_gammaI is not correct!\n");
+        if(!EQL(delta_U2D0,0))  Error0("_gammaI is not correct!\n");
+        if(!EQL(delta_U1D0,0))  Error0("_gammaI is not correct!\n");
+      }
+    }/* for (ijk = 0; ijk < nn; ++ijk) */
+    
     /* loop over all fields to be extrapolated */
     for (f = 0; f < nf; ++f)
     {
@@ -682,19 +771,6 @@ static int bhf_ChebTn_Ylm(struct BHFiller_S *const bhf)
     
     if (0)/* if extrapolating K_ij no longer need below: */
     {
-     /* _gammaI */
-     REALLOC_v_WRITE_v(_gammaI_U2U2)
-     REALLOC_v_WRITE_v(_gammaI_U0U2)
-     REALLOC_v_WRITE_v(_gammaI_U0U0)
-     REALLOC_v_WRITE_v(_gammaI_U0U1)
-     REALLOC_v_WRITE_v(_gammaI_U1U2)
-     REALLOC_v_WRITE_v(_gammaI_U1U1)
-     READ_v(_gamma_D2D2)
-     READ_v(_gamma_D0D2)
-     READ_v(_gamma_D0D0)
-     READ_v(_gamma_D0D1)
-     READ_v(_gamma_D1D2)
-     READ_v(_gamma_D1D1)
      READ_v(Beta_U0)
      READ_v(Beta_U1)
      READ_v(Beta_U2)
@@ -711,60 +787,6 @@ static int bhf_ChebTn_Ylm(struct BHFiller_S *const bhf)
        B0_U0[ijk] = Beta_U0[ijk]-B1_U0[ijk];
        B0_U1[ijk] = Beta_U1[ijk]-B1_U1[ijk];
        B0_U2[ijk] = Beta_U2[ijk]-B1_U2[ijk];
-       /* _gammaI =  _gamma inverse */
-       COMPUTE_gammaI(_gamma_D0D0[ijk],_gamma_D0D1[ijk],_gamma_D0D2[ijk],
-                      _gamma_D0D1[ijk],_gamma_D1D1[ijk],_gamma_D1D2[ijk],
-                      _gamma_D0D2[ijk],_gamma_D1D2[ijk],_gamma_D2D2[ijk])
-                      
-       /* quick test check _gamma * _gammaI = delta */
-       if (0)
-       {
-           double delta_U0D0 = 
-         _gammaI_U0U0[ijk]*_gamma_D0D0[ijk] + _gammaI_U0U1[ijk]*
-         _gamma_D0D1[ijk] + _gammaI_U0U2[ijk]*_gamma_D0D2[ijk];
-
-           double delta_U0D1 = 
-         _gammaI_U0U0[ijk]*_gamma_D0D1[ijk] + _gammaI_U0U1[ijk]*
-         _gamma_D1D1[ijk] + _gammaI_U0U2[ijk]*_gamma_D1D2[ijk];
-
-           double delta_U0D2 = 
-         _gammaI_U0U0[ijk]*_gamma_D0D2[ijk] + _gammaI_U0U1[ijk]*
-         _gamma_D1D2[ijk] + _gammaI_U0U2[ijk]*_gamma_D2D2[ijk];
-
-           double delta_U1D2 = 
-         _gammaI_U0U1[ijk]*_gamma_D0D2[ijk] + _gammaI_U1U1[ijk]*
-         _gamma_D1D2[ijk] + _gammaI_U1U2[ijk]*_gamma_D2D2[ijk];
-
-           double delta_U1D0 = 
-         _gammaI_U0U1[ijk]*_gamma_D0D0[ijk] + _gammaI_U1U1[ijk]*
-         _gamma_D0D1[ijk] + _gammaI_U1U2[ijk]*_gamma_D0D2[ijk];
-
-          double delta_U1D1 = 
-         _gammaI_U0U1[ijk]*_gamma_D0D1[ijk] + _gammaI_U1U1[ijk]*
-         _gamma_D1D1[ijk] + _gammaI_U1U2[ijk]*_gamma_D1D2[ijk];
-
-           double delta_U2D2 = 
-         _gammaI_U0U2[ijk]*_gamma_D0D2[ijk] + _gammaI_U1U2[ijk]*
-         _gamma_D1D2[ijk] + _gammaI_U2U2[ijk]*_gamma_D2D2[ijk];
-
-           double delta_U2D0 = 
-         _gammaI_U0U2[ijk]*_gamma_D0D0[ijk] + _gammaI_U1U2[ijk]*
-         _gamma_D0D1[ijk] + _gammaI_U2U2[ijk]*_gamma_D0D2[ijk];
-
-           double delta_U2D1 = 
-         _gammaI_U0U2[ijk]*_gamma_D0D1[ijk] + _gammaI_U1U2[ijk]*
-         _gamma_D1D1[ijk] + _gammaI_U2U2[ijk]*_gamma_D1D2[ijk];
-
-         if(!EQL(delta_U1D1,1))  Error0("_gammaI is not correct!\n");
-         if(!EQL(delta_U0D1,0))  Error0("_gammaI is not correct!\n");
-         if(!EQL(delta_U0D2,0))  Error0("_gammaI is not correct!\n");
-         if(!EQL(delta_U1D2,0))  Error0("_gammaI is not correct!\n");
-         if(!EQL(delta_U0D0,1))  Error0("_gammaI is not correct!\n");
-         if(!EQL(delta_U2D1,0))  Error0("_gammaI is not correct!\n");
-         if(!EQL(delta_U2D2,1))  Error0("_gammaI is not correct!\n");
-         if(!EQL(delta_U2D0,0))  Error0("_gammaI is not correct!\n");
-         if(!EQL(delta_U1D0,0))  Error0("_gammaI is not correct!\n");
-       }
      }/* for (ijk = 0; ijk < nn; ++ijk) */
      /* update derivatives */
      bbn_update_derivative_Beta_U0(patch);
@@ -2629,17 +2651,18 @@ double bbn_bhf_smoother(const double r, const double rmax,const double rmin)
 {
   double ret = 0;
   
-  if (GRTEQL(r,rmax))
+  if (r >= rmax)
     return 1;
-  else if (LSSEQL(r,rmin))
+  else if (r <= rmin)
     return 0;
   else
   {
+    return bbn_bhf_poly_smoother(r,rmax,rmin);
+    
     if (0)
       return polynomial5(r,rmax,rmin);
-    if (1)
+    if (0)
       return polynomial7(r,rmax,rmin);
-    
   }
   
   return ret;
