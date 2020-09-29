@@ -489,7 +489,6 @@ static int bhf_ChebTn_Ylm(struct BHFiller_S *const bhf)
     Patch_T *patch = bhf->patches_outBH[p];
     unsigned f;
 
-    //bbn_1st_2nd_derivatives_conformal_metric(patch);
     /* trK derivatives */
     bbn_update_derivative_K(patch);
     bbn_add_and_take_2nd_derivatives_K(patch);
@@ -671,7 +670,7 @@ static int bhf_ChebTn_Ylm(struct BHFiller_S *const bhf)
                      _gamma_D0D2[ijk],_gamma_D1D2[ijk],_gamma_D2D2[ijk])
                      
       /* quick test check _gamma * _gammaI = delta */
-      if (1)
+      if (0)
       {
           double delta_U0D0 = 
         _gammaI_U0U0[ijk]*_gamma_D0D0[ijk] + _gammaI_U0U1[ijk]*
@@ -796,36 +795,6 @@ static int bhf_ChebTn_Ylm(struct BHFiller_S *const bhf)
     }
   }/* for (p = 0; p < npi; p++) */
   
-  /* free */
-  if (0)
-  {
-  bbn_rm_1st_2nd_derivatives_conformal_metric
-    (GetPatch("right_BH_surrounding_up",grid));
-  bbn_rm_1st_2nd_derivatives_conformal_metric
-    (GetPatch("right_BH_surrounding_down",grid));
-  bbn_rm_1st_2nd_derivatives_conformal_metric
-    (GetPatch("right_BH_surrounding_left",grid));
-  bbn_rm_1st_2nd_derivatives_conformal_metric
-    (GetPatch("right_BH_surrounding_right",grid));
-  bbn_rm_1st_2nd_derivatives_conformal_metric
-    (GetPatch("right_BH_surrounding_back",grid));
-  bbn_rm_1st_2nd_derivatives_conformal_metric
-    (GetPatch("right_BH_surrounding_front",grid));
-  
-  bbn_rm_1st_2nd_derivatives_Kij
-    (GetPatch("right_BH_surrounding_up",grid));
-  bbn_rm_1st_2nd_derivatives_Kij
-    (GetPatch("right_BH_surrounding_down",grid));
-  bbn_rm_1st_2nd_derivatives_Kij
-    (GetPatch("right_BH_surrounding_left",grid));
-  bbn_rm_1st_2nd_derivatives_Kij
-    (GetPatch("right_BH_surrounding_right",grid));
-  bbn_rm_1st_2nd_derivatives_Kij
-    (GetPatch("right_BH_surrounding_back",grid));
-  bbn_rm_1st_2nd_derivatives_Kij
-    (GetPatch("right_BH_surrounding_front",grid));
-  }
-    
   return EXIT_SUCCESS;
 }
 
