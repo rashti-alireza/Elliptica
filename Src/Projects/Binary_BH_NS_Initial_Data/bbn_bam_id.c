@@ -432,6 +432,7 @@ bam_output_doctest
     "_gamma_D0D0","_gamma_D0D1",
     "_gamma_D1D2","_gamma_D1D1",
     "Beta_U0","Beta_U1","Beta_U2","bam_alpha",
+    "B0_U0","B0_U1","B0_U2",
     "bam_adm_K_D0D0","bam_adm_K_D0D1",
     "bam_adm_K_D0D2","bam_adm_K_D1D1",
     "bam_adm_K_D1D2","bam_adm_K_D2D2",
