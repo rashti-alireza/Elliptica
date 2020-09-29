@@ -1,0 +1,119 @@
+### Find the coeffs a_i of F(x) = \sum { a_i ChebTn(i,x) } such that
+### F(rmax) = 1 and F(rmin) = 0 and this function is very smooth.
+### Note: one can increase the number of polynomial by changing
+### POLY_ORDER variable and recompile this file.
+###
+### Note: minimum of POLY_ORDER is 4
+###
+### Note: x here is in [-1,1] and 
+### x = (2*r-rmax-rmin)/(rmax-rmin)
+###
+
+#########################
+### H O W  T O  U S E ###
+#########################
+# Issue the following:
+# 
+# $ cpi bbn_bhf_polynomial_smoother.math > \
+#   bbn_bhf_polynomial_smoother.c && \
+#   sed -i '/Welcome to Cpi/,$d' bbn_bhf_polynomial_smoother.c 
+
+
+Dimension = 3;
+point     = x;
+
+## libs
+`from __future__ import division`
+`from sympy import *`
+`from sympy.solvers import solve`
+`from sympy.parsing.mathematica import mathematica`
+`import sys`
+`import re`
+`import os`
+
+### polynomial order
+`POLY_ORDER = 15`
+
+`if (POLY_ORDER < 5):`
+`  raise Exception('Too small order.')`
+
+### ccode generator
+`def mcode(m):`
+`  code = ccode(simplify(m))`
+`  code = '{};'.format(code)`
+`  code = re.sub(r'\b1.0\*\b','',code)`
+`  code = re.sub(r'(.{50,70}[\+\-\*/]+\s?)','\\1{}n'.format("\\"),code)`
+``
+`  return code`
+``
+
+`### symbols`
+`x      = symbols('x')`
+`a_symb = symbols('a:{}'.format(POLY_ORDER))`
+``
+### smoother:
+`def f(x,order=POLY_ORDER,a=a_symb,sol=0,s=0):`
+`  smoother = 0`
+``
+`  if (s==0):`
+`    for i in range(order):`	
+`      smoother += a[i]*chebyshevt(i,x)`
+`  else:`
+`    for i in range(order):`
+`      smoother += (sol[0][a[i]])*chebyshevt(i,x)`
+``
+`  return smoother;`
+``
+
+### constraints:
+`eqs = [f(1)-1,f(-1)]`
+``
+## remaining constraints:
+## at x = -1:
+`N_remain = POLY_ORDER-2`
+`c = 0`
+`for n in range (1,POLY_ORDER):`
+`  dnf  = lambdify(x,diff(f(x),(x,n)))`
+`  eqs.append(dnf(-1))`
+`  c += 1`
+`  if (c >= N_remain/2):`
+`    break`
+``
+## at x = 1:
+`for n in range (1,POLY_ORDER):`
+`  dnf  = lambdify(x,diff(f(x),(x,n)))`
+`  eqs.append(dnf(1))`
+`  c += 1`
+`  if (c == N_remain):`
+`   break`
+``
+
+``
+`sol=solve(eqs,a_symb,check=True,dict=True)`
+``
+
+## print C function:
+`arg="(const double r,const double rmax,const double rmin)"`
+`print('')`
+`print('#include "bbn_headers.h"')`
+`print('')`
+`print('double bbn_bhf_poly_smoother')`
+`print('{}'.format(arg))`
+`print(';')`
+`print('double bbn_bhf_poly_smoother')`
+`print('{}'.format(arg))`
+`print('{')`
+`print('const double x = (2*r-rmax-rmin)/(rmax-rmin);')`
+`print('return')`
+`print(mcode(f(x,POLY_ORDER,a_symb,sol,1)))`
+`print('}')`
+
+### make it ready for python:
+### remove C comments:
+Command["sed -i '1,5d'"];
+
+Command["python"];
+#Command["cat"];
+Command["rm"];
+
+
