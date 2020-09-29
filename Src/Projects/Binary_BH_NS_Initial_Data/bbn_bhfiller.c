@@ -479,6 +479,7 @@ static int bhf_ChebTn_Ylm(struct BHFiller_S *const bhf)
   const double gMAX  = 2.;
   const double rfill = Pgetd("r_excision");
   const double rfill3= pow(rfill,3);
+  const double rmin  = rfill/2.;
   unsigned p,fld;
   
   /* update all coeffs to avoid race condition */
@@ -660,9 +661,9 @@ static int bhf_ChebTn_Ylm(struct BHFiller_S *const bhf)
       DEF_RELATIVE_z
       DEF_RELATIVE_r
       
-      if (r>rfill) 
+      if (r > rfill)
         r = rfill;
-      double w = bbn_bhf_smoother(r,rfill,rfill/2.);
+      double w = bbn_bhf_smoother(r,rfill,rmin);
       
       _gamma_D0D0[ijk] = w*_gamma_D0D0[ijk]+(1-w)*gMAX;
       _gamma_D1D1[ijk] = w*_gamma_D1D1[ijk]+(1-w)*gMAX;
