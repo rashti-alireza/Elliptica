@@ -762,6 +762,22 @@ static int bhf_ChebTn_Ylm(struct BHFiller_S *const bhf)
       }/* for (ijk = 0; ijk < nn; ++ijk) */
     }/* for (f = 0; f < nf ++f) */
     
+    /* push trK to 0 to avoid alpha < 0 at the BH center. */
+    WRITE_v(K)
+    for (ijk = 0; ijk < nn; ++ijk)
+    {
+      DEF_RELATIVE_x
+      DEF_RELATIVE_y
+      DEF_RELATIVE_z
+      DEF_RELATIVE_r
+      
+      if (r > rfill)
+        r = rfill;
+    
+      double w = bbn_bhf_smoother(r,rfill,rmin);
+      K[ijk] = w*K[ijk];
+    }
+    
     if (1)
     {
      READ_v(Beta_U0)
