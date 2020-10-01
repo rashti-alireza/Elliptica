@@ -473,7 +473,7 @@ static int bhf_ChebTn_Ylm(struct BHFiller_S *const bhf)
   const unsigned lmax   = bhf->lmax;
   const unsigned Ntheta = bhf->Ntheta;
   const unsigned Nphi   = bhf->Nphi;
-  const double gMAX  = 2.;
+  const double gMAX  = 1;
   const double rfill = Pgetd("r_excision");
   const double rfill3= pow(rfill,3);
   const double rmin  = rfill/2.;
@@ -763,22 +763,45 @@ static int bhf_ChebTn_Ylm(struct BHFiller_S *const bhf)
     }/* for (f = 0; f < nf ++f) */
     
     /* push trK to 0 to avoid alpha < 0 at the BH center. */
-    WRITE_v(K)
-    for (ijk = 0; ijk < nn; ++ijk)
-    {
-      DEF_RELATIVE_x
-      DEF_RELATIVE_y
-      DEF_RELATIVE_z
-      DEF_RELATIVE_r
-      
-      if (r > rfill)
-        r = rfill;
-    
-      double w = bbn_bhf_smoother(r,rfill,rmin);
-      K[ijk] = w*K[ijk];
-    }
-    
     if (1)
+    {
+     WRITE_v(K)
+     for (ijk = 0; ijk < nn; ++ijk)
+     {
+       DEF_RELATIVE_x
+       DEF_RELATIVE_y
+       DEF_RELATIVE_z
+       DEF_RELATIVE_r
+       
+       if (r > rfill)
+         r = rfill;
+     
+       double w = bbn_bhf_smoother(r,rfill,rmin);
+       K[ijk]   = w*K[ijk];
+     }
+    }
+    if (1)/* push Beta^i = 0 at the center of BH */
+    {
+     WRITE_v(Beta_U0)
+     WRITE_v(Beta_U1)
+     WRITE_v(Beta_U2)
+     for (ijk = 0; ijk < nn; ++ijk)
+     {
+       DEF_RELATIVE_x
+       DEF_RELATIVE_y
+       DEF_RELATIVE_z
+       DEF_RELATIVE_r
+       
+       if (r > rfill)
+         r = rfill;
+     
+       double w     = bbn_bhf_smoother(r,rfill,rmin);
+       Beta_U0[ijk] = w*Beta_U0[ijk];
+       Beta_U1[ijk] = w*Beta_U1[ijk];
+       Beta_U2[ijk] = w*Beta_U2[ijk];
+     }
+    }
+    if (1)/* for Kij */
     {
      READ_v(Beta_U0)
      READ_v(Beta_U1)
