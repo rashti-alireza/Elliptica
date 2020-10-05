@@ -144,18 +144,24 @@ auto_gen_c_file := $(TOP)/Src/Main/$(CORE_DIR)/$(auto_gen_c_file_name)
 # and the name of the project directory assumed to be the same.
 PROJECT_NAMES := $(foreach d,$(PROJECT),$(notdir $d))
 PROJECT_NAMES := $(strip $(PROJECT_NAMES))
-# the following module(s) are mandatory for compilation;
+# the following module(s) or project are mandatory for compilation;
 # thus, if they don't exist auto generate a function with their 
 # folder name but, the generated function does nothing, only return.
 # NOTE: one must adjust $(auto_gen_c_file) target as well.
-## print modules
+# NOTE: project returns EXIT_FAILURE.
+
+## modules:
 SPECIAL_PR_MODULE_NAMES =
-# add the followings if the following required module(s) has 
-# not been added. it must auto be generated.
-pr_required  = $(MODULE_DIR)/Prints/pr_hdf5_silo
-#pr_required +=
+# if the following required module(s) has not been added:
+required_mod = $(MODULE_DIR)/Prints/pr_hdf5_silo
 # get those module which are not listed in $(MODULE)
-SPECIAL_PR_MODULE_NAMES = $(notdir $(filter-out $(MODULE),$(pr_required)))
+SPECIAL_PR_MODULE_NAMES = $(notdir $(filter-out $(MODULE),$(required_mod)))
+
+## required Projects
+SPECIAL_PR_PROJECT_NAMES =
+# if the following required project(s) has not been added:
+required_pro = $(PROJECT_DIR)/Approximate_Killing_Vector
+SPECIAL_PR_PROJECT_NAMES = $(notdir $(filter-out $(PROJECT),$(required_pro)))
 
 ########################################################################
 ################################
@@ -252,7 +258,7 @@ $(auto_gen_c_file): $(DEPENDENCY_FILES)
 	@echo "int create_db_projects(void);" >> $(auto_gen_c_file)
 	@for p in $(PROJECT_NAMES); \
 	  do \
-	    echo "int " $$p "(void);" >> $(auto_gen_c_file) ;\
+	    echo "int " $$p "(void *vp);" >> $(auto_gen_c_file) ;\
 	   done;
 # --> add function to add the projects:
 	@echo "int create_db_projects(void){" >> $(auto_gen_c_file)
@@ -262,15 +268,22 @@ $(auto_gen_c_file): $(DEPENDENCY_FILES)
 	   done;
 	@echo "  return EXIT_SUCCESS;" >> $(auto_gen_c_file)
 	@echo "}" >> $(auto_gen_c_file)
+# --> add function if spacial project does not exist:
+	@for m in $(SPECIAL_PR_PROJECT_NAMES); \
+	  do \
+	   echo "int " $$m "(void *vp);" >> $(auto_gen_c_file) ; \
+	   echo "int " $$m "(void *vp){" >> $(auto_gen_c_file) ; \
+	   echo "UNUSED(vp);" >> $(auto_gen_c_file) ; \
+	   echo "return EXIT_FAILURE;}" >> $(auto_gen_c_file) ; \
+	 done
 # --> add function if spacial print module does not exist:
 	@for m in $(SPECIAL_PR_MODULE_NAMES); \
 	  do \
 	   echo "void " $$m "(Pr_Field_T *const pr);" >> $(auto_gen_c_file) ; \
 	   echo "void " $$m "(Pr_Field_T *const pr){" >> $(auto_gen_c_file) ; \
-	   echo "UNUSED(pr);" >> $(auto_gen_c_file) ; \
-	   echo "return;}" >> $(auto_gen_c_file) ; \
+	   echo "UNUSED(pr);}" >> $(auto_gen_c_file) ; \
 	 done
-	
+	 	
 ##
 ## if EXEC_DIR does not exist make it.	
 $(EXEC_DIR):
@@ -307,6 +320,8 @@ clean:
 	@-rm -rf $(LIB_DIR)
 	@$(call PR_TASK_relPATH,"rm -rf",$(EXEC_DIR))
 	@-rm -rf $(EXEC_DIR)
+	@$(call PR_TASK_relPATH,"rm -rf",$(auto_gen_c_file))
+	@-rm -rf $(auto_gen_c_file)
 # --> invoke submakes to clean dependency files:
 	@for d in $(C_DIRS); \
 	  do \

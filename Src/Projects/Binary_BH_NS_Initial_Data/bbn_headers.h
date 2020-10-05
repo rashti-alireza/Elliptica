@@ -8,7 +8,7 @@
 #include "maths_general_lib.h"
 #include "manifold_lib.h"
 #include "utilities_lib.h"
-#include "maths_approximation_lib.h"
+#include "maths_spectral_methods_lib.h"
 #include "maths_calculus_lib.h"
 #include "physics_EoS_lib.h"
 #include "physics_StressEnergyTensor_lib.h"
@@ -160,6 +160,15 @@ void bbn_bhf_ChebTn_extrapolate (double *const a,const double fr0,const double f
 void bbn_rm_1st_2nd_derivatives_Kij(Patch_T *const patch);
 void bbn_1st_2nd_derivatives_Kij(Patch_T *const patch);
 void bbn_extrinsic_K_DiDj(Patch_T *const patch);
+void bbn_populate_spin_integrands_akv(Patch_T *const patch,const double *const normal[3]);
+
+void 
+bbn_define_spin_akv
+  (
+  double S[3]/* spin Sx,Sy,Sz */,
+  Grid_T *const grid/* grid */,
+  const char *const kind/* "NS" or "BH" */
+  );
 
 void bbn_free_data_g_gI_analytic(
         Patch_T *const patch,
@@ -178,10 +187,8 @@ void bbn_free_data_dddg_analytic(
 	double *(*get_v)(const char *const fname,void *params),
 	void *params);
 	
-	
 void bbn_ks_free_data_set_params(Grid_T *const grid);
 double *bbn_ks_read_analytic(const char *const name, void *params);
-
 
 #endif
 

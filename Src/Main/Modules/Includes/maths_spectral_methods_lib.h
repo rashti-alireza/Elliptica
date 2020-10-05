@@ -1,5 +1,5 @@
-#ifndef maths_approximation_LIB_H
-#define maths_approximation_LIB_H
+#ifndef maths_spectral_methods_LIB_H
+#define maths_spectral_methods_LIB_H
 
 
 struct INTERPOLATION_T;
@@ -66,6 +66,85 @@ double *df_dtheta_Ylm(const double *const realClm,const double *const imagClm,co
 unsigned lm2n(const unsigned l, const unsigned m);
 double *alloc_ClmYlm(unsigned Lmax);
 void free_interpolation(Interpolation_T *interp_s);
+
+double *
+r2cft_2d_df_dphi1
+(
+  const double *const realC/* real part of coeffs */,
+  const double *const imagC/* imag part of coeffs */,
+  const unsigned Nphi0/* number of point in phi0 direction */,
+  const unsigned Nphi1/* number of point in phi1 direction */
+);
+
+double 
+r2cft_2d_interpolation
+(
+  const double *const realC/* real part of coeffs */,
+  const double *const imagC/* imag part of coeffs */,
+  const unsigned Nphi0/* number of point in phi0 direction */,
+  const unsigned Nphi1/* number of point in phi1 direction */,
+  const double phi0/* point of interest at phi0 dir */,
+  const double phi1/* point of interest at phi0 dir */
+);
+
+double *
+r2cft_2d_df_dphi0
+(
+  const double *const realC/* real part of coeffs */,
+  const double *const imagC/* imag part of coeffs */,
+  const unsigned Nphi0/* number of point in phi0 direction */,
+  const unsigned Nphi1/* number of point in phi1 direction */
+);
+
+void
+r2cft_2d_coeffs
+(
+  const double *const f/* field values */,
+  const unsigned Nphi0/* number of point in phi0 direction */, 
+  const unsigned Nphi1/* number of point in phi1 direction */,
+  double **const realC/* real part of coeffs, allocates memory */,
+  double **const imagC/* imag part of coeffs, allocates memory*/
+);
+
+double
+r2cft_2d_coeffs_S2
+(
+  const double *const f/* field values given on theta and phi coords. */,
+  unsigned Ntheta/* number of point in theta direction */, 
+  const unsigned Nphi/* number of point in phi direction */,
+  double **const realC/* real part of coeffs, allocates memory */,
+  double **const imagC/* imag part of coeffs, allocates memory*/,
+  const int improve/* if 1, it tries to improve the expansion, otherwise no. */
+);
+
+double 
+r2cft_2d_interpolation_S2
+(
+  const double *const realC/* real part of coeffs */,
+  const double *const imagC/* imag part of coeffs */,
+  const unsigned Ntheta/* number of point in theta direction */,
+  const unsigned Nphi/* number of point in phi direction */,
+  const double theta/* point of interest at theta dir */,
+  const double phi/* point of interest at phi dir */
+);
+
+double *
+r2cft_2d_df_dphi_S2
+(
+  const double *const realC/* real part of coeffs */,
+  const double *const imagC/* imag part of coeffs */,
+  const unsigned Ntheta/* number of point in theta direction */,
+  const unsigned Nphi/* number of point in phi direction */
+);
+
+double *
+r2cft_2d_df_dtheta_S2
+(
+  const double *const realC/* real part of coeffs */,
+  const double *const imagC/* imag part of coeffs */,
+  const unsigned Ntheta/* number of point in theta direction */,
+  const unsigned Nphi/* number of point in phi direction */
+);
 
 
 #endif

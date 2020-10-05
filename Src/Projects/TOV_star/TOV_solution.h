@@ -2,7 +2,7 @@
 #include "physics_EoS_lib.h"
 #include "maths_general_lib.h"
 #include "maths_calculus_lib.h"
-#include "maths_approximation_lib.h"
+#include "maths_spectral_methods_lib.h"
 #include "TOV_lib.h"
 
 TOV_T *TOV_solution(TOV_T *const TOV);

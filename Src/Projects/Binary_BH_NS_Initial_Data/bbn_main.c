@@ -6,7 +6,7 @@
 #include "bbn_main.h"
 
 /* constructing initial data for system of binary black hole neutron star */
-int Binary_BH_NS_Initial_Data(void)
+int Binary_BH_NS_Initial_Data(void *vp)
 {
   /* if this is a convergent test */
   if (strcmp_i(PgetsEZ("elliptic_convergence_test"),"yes"))
@@ -20,6 +20,7 @@ int Binary_BH_NS_Initial_Data(void)
   else
     bbn_construct_id();
  
+  UNUSED(vp);
   return EXIT_SUCCESS;
 }
 

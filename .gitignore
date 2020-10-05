@@ -1,8 +1,8 @@
 # Ignore the following:
 Src/Projects/Approximate_Killing_Vector/*
 Src/Projects/Approximate_Killing_Vector
-Src/Projects/Binary_NS_Initial_Data
 Src/Projects/Binary_NS_Initial_Data/*
+Src/Projects/Binary_NS_Initial_Data
 
 # ignore backup joe files:
 *.*~ 

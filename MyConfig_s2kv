@@ -23,15 +23,18 @@ MODULE += $(MODULE_DIR)/Error_Handlings
 MODULE += $(MODULE_DIR)/Text_and_File_Tools
 MODULE += $(MODULE_DIR)/Prints
 MODULE += $(MODULE_DIR)/Utilities
-MODULE += $(MODULE_DIR)/Maths/Linear_Algebra
-MODULE += $(MODULE_DIR)/Maths/Field_Analysis
-MODULE += $(MODULE_DIR)/Maths/Equation_Solvings
-MODULE += $(MODULE_DIR)/Maths/Matrix_Solvers
-MODULE += $(MODULE_DIR)/Maths/General
-MODULE += $(MODULE_DIR)/Maths/Spectral_Methods
-MODULE += $(MODULE_DIR)/Maths/Special_Functions
+MODULE += $(MODULE_DIR)/Maths/Analytic
+MODULE += $(MODULE_DIR)/Maths/Approximation
 MODULE += $(MODULE_DIR)/Maths/Calculus
 MODULE += $(MODULE_DIR)/Maths/Complex
+MODULE += $(MODULE_DIR)/Maths/Complex_Numbers
+MODULE += $(MODULE_DIR)/Maths/Equation_Solvings
+MODULE += $(MODULE_DIR)/Maths/Field_Analysis
+MODULE += $(MODULE_DIR)/Maths/General
+MODULE += $(MODULE_DIR)/Maths/Linear_Algebra
+MODULE += $(MODULE_DIR)/Maths/Matrix_Solvers
+MODULE += $(MODULE_DIR)/Maths/Special_Functions
+MODULE += $(MODULE_DIR)/Maths/Spectral_Methods
 MODULE += $(MODULE_DIR)/Physics/StressEnergy_Tensor
 MODULE += $(MODULE_DIR)/Physics/EoS
 MODULE += $(MODULE_DIR)/Physics/Observables
@@ -49,6 +52,8 @@ MODULE += $(MODULE_DIR)/Physics/Transformation
 #PROJECT += $(PROJECT_DIR)/Tests/Modules_Test
 PROJECT += $(PROJECT_DIR)/TOV_star
 PROJECT += $(PROJECT_DIR)/Binary_BH_NS_Initial_Data
+PROJECT += $(PROJECT_DIR)/Approximate_Killing_Vector
+
 ########################################################################
 ##########################
 ## compiler and its flags:
@@ -58,8 +63,8 @@ PROJECT += $(PROJECT_DIR)/Binary_BH_NS_Initial_Data
 CC = gcc
 
 ### compiler flags:
-#OFLAGS += -fopenmp -g3
-OFLAGS += -fopenmp -O3
+OFLAGS += -fopenmp -g3
+#OFLAGS += -fopenmp -O3
 
 ### warninng flags for the compiler
 #WARN +=# no warnings
@@ -85,6 +90,8 @@ DFLAGS += -DPragma_OpenMP_2d -DPragma_OpenMP_1d -DPragma_OpenMP_Patch
 # special includes for suit-sparse and related
 SPECIAL_INCS += -I/usr/include/suitesparse
 SPECIAL_LIBS += -lblas -lgfortran -llapack -lumfpack
+# gsl
+SPECIAL_LIBS += -lgsl -lgslcblas
 
 # special libraries for plotting and data file
 SPECIAL_LIBS += -lsiloh5

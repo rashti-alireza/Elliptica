@@ -1,6 +1,9 @@
-#ifndef maths_analytic_LIB_H
-#define maths_analytic_LIB_H
+#ifndef maths_special_function_LIB_H
+#define maths_special_function_LIB_H
 
+#include <complex.h>
+#undef I
+#define imagI _Complex_I
 
 double *c_f(Patch_T *const patch);
 double *x_f(Patch_T *const patch);
@@ -103,11 +106,53 @@ double *sinx_f_yz(Patch_T *const patch);
 double *sinx_f_xyz(Patch_T *const patch);
 double poly5_f_point(const double x,const double y,const double z);
 int Factorial(const int n);
-double associated_legendre(const int l, const int m, const double x);
-void init_associated_legendre(void);
-void init_Ylm(void);
-void init_dYlm_dphi(void);
-void init_dYlm_dtheta(void);
+double Cheb_U(const int n, const double x);
+double Cheb_Tn(const int n, const double x);
+double d2T_dx2(const int n, const double x);
+
+double 
+d_associated_legendre_dtheta
+  (
+  const int l/* l in P^l_m(x) */,
+  const int m/* m in P^l_m(x), 0 <= m <= l*/,
+  const double x/* x in P^l_m(x), -1 <= x=cos(theta) <= 1 */
+  );
+
+double 
+associated_legendre
+  (
+  const int l/* l in P^l_m(x) */,
+  const int m/* m in P^l_m(x), 0 <= m <= l*/,
+  const double x/* x in P^l_m(x), -1 <= x=cos(theta) <= 1 */
+  );
+
+double complex 
+Ylm
+  (
+  const int l/* l in Y_l^m(theta,phi) */, 
+  const int m/* m in Y_l^m(theta,phi), -l <= m <= l */, 
+  const double theta/* theta in Y_l^m(theta,phi) */,
+  const double phi/*  phi in Y_l^m(theta,phi) */
+  );
+
+double complex 
+dYlm_dphi
+  (
+  const int l/* l in Y_l^m(theta,phi) */, 
+  const int m/* m in Y_l^m(theta,phi), -l <= m <= l */, 
+  const double theta/* theta in Y_l^m(theta,phi) */,
+  const double phi/*  phi in Y_l^m(theta,phi) */
+  );
+
+double complex 
+dYlm_dtheta
+  (
+  const int l/* l in Y_l^m(theta,phi) */, 
+  const int m/* m in Y_l^m(theta,phi), -l <= m <= l */, 
+  const double theta/* theta in Y_l^m(theta,phi) */,
+  const double phi/*  phi in Y_l^m(theta,phi) */
+  );
+
 
 #endif
 

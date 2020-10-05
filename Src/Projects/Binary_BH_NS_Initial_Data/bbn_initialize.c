@@ -4887,6 +4887,10 @@ static Grid_T *TOV_KerrSchild_approximation(void)
   printf("} Initializing fields & grid using TOV & Kerr-Schild solutions ==> Done.\n");
   pr_line_custom('=');
   
+  /* test */
+  //find_AKV(grid,"NS");
+  find_AKV(grid,"BH");
+  /* end */
   return grid;
 }
 
@@ -7082,4 +7086,38 @@ void bbn_create_grid_prototype_BC(Grid_T *const grid)
   free(grid_temp);
 
 }
+
+/* find approximate Killing vector on BH or NS 
+//
+// Algorithm:
+// ==========
+// 1. induce the 2-d metric on S2 (induce manp)
+// 2. solve AKV equation and find AKV on S2.
+// 3. include AKV into manifold M (inclusion map)
+*/
+static void find_AKV(Grid_T *const grid,const char *const type)
+{
+  FUNC_TIC
+  UNUSED(type);
+  //Psets("akv_object","NS");
+  /* solve the AKV equation to find z */
+  Approximate_Killing_Vector(grid);
+
+  /* test */
+  printf("printing fields:\n");
+  Pr_Field_T *pr  = init_PrField(grid);
+  pr->folder = Pgets("Diagnostics");
+  pr_fields(pr);
+  free_PrField(pr);
+  
+  /* test spin */
+  double S[3] = {0};
+  //bbn_define_spin_akv(S,grid,"NS");
+  printf("S=(%g,%g,%g)\n",S[0],S[1],S[2]);
+  FUNC_TOC
+  
+  /* test */
+  exit(0);
+}
+
 

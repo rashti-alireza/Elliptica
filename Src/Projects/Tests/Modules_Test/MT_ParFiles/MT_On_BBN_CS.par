@@ -14,8 +14,9 @@ Test_Solver_Consistency               = yes
 Test_Math_General                     = yes
 Test_Schur_Complement                 = yes
 Test_EoS                              = yes
-Test_Integral                         = yes
+Test_Integration                      = yes
 Test_Ylm_Transformation               = yes
+Test_FourierTransformation            = yes
 
 #-----------------------------------------------------------------------#
 # Grid and Geometry:                                                    #

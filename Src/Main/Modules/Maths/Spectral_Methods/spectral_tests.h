@@ -4,14 +4,18 @@
 #include "error_handling_lib.h"
 #include "utilities_lib.h"
 #include "maths_general_lib.h"
-#include "maths_analytic_lib.h"
+#include "maths_special_functions_lib.h"
 #include "maths_calculus_lib.h"
-#include "maths_approximation_lib.h"
-#include "maths_complex_numbers_lib.h"
+#include "maths_spectral_methods_lib.h"
+#include "maths_complex_lib.h"
 #include "fields_lib.h"
 
 #define DO 1
-#define NOT_DO 0
+#define DO_NOT 0
+#define IJ(i,j,n)  ((j)+(i)*(n))
+#define Cos(a) cos(a)
+#define Sin(a) sin(a)
+#define Power(a,b) pow(a,b)
 
 /* types of derivatives; new one "must" be added to one before the last */
 enum FUNC_E
@@ -63,6 +67,9 @@ static int Ylm_trans_test(Grid_T *const grid);
 int Ylm_transformation_tests(Grid_T *const grid);
 static int Ylm_derivatives_test(Grid_T *const grid);
 static void free_func_Patch2Pdouble(sFunc_Patch2Pdouble_T **func);
+static int r2cft_2d_EquiSpaced_test(Grid_T *const grid);
+static int r2cft_2d_EquiSpaced_S2_test(Grid_T *const grid);
+
 
 
 

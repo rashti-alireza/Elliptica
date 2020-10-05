@@ -8,7 +8,7 @@
 
 /* solving the problem of TOV stars
 // ->return value: if succeeds EXIT_SUCCESS */
-int TOV_star(void)
+int TOV_star(void *vp)
 {
   /* print some description */
   pr_clock();
@@ -85,5 +85,6 @@ int TOV_star(void)
   pr_clock();
   pr_line_custom('=');
   
+  UNUSED(vp);
   return EXIT_SUCCESS;
 }

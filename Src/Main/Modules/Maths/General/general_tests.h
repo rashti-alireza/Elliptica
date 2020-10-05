@@ -4,7 +4,7 @@
 #include "maths_general_lib.h"
 
 #define DO 1
-#define NOT_DO 0
+#define DO_NOT 0
 
 void summation_tests(void);
 static int various_sums_of_cos_test(void);

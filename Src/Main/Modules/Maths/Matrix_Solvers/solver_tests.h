@@ -4,13 +4,13 @@
 #include "error_handling_lib.h"
 #include "utilities_lib.h"
 #include "maths_general_lib.h"
-#include "maths_analytic_lib.h"
+#include "maths_special_functions_lib.h"
 #include "maths_calculus_lib.h"
 #include "maths_linear_algebra_lib.h"
 #include "maths_matrix_solvers_lib.h"
 
 #define DO 1
-#define NOT_DO 0
+#define DO_NOT 0
 
 static int test_solver_umfpack_di(void);
 static int test_solver_series_umfpack_di(void);

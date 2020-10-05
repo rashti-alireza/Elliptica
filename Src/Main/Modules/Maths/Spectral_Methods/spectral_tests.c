@@ -3,7 +3,7 @@
 // July 2018
 */
 
-#include "approximation_tests.h"
+#include "spectral_tests.h"
 #define ArgM(a) a,#a/*used for being more accurate in naming and fast */
 #define MAXSTR 400
 
@@ -14,8 +14,18 @@ int fourier_transformation_tests(Grid_T *const grid)
   
   if (DO)
   {
-    printf("Fourier transformation test: real to complex Fourier transformation: \n");
+    printf("Fourier transformation test: real to complex Fourier transformation 1-D: \n");
     cft_c2r_r2c_1d_EquiSpaced_test(grid);
+  }
+  if (DO)
+  {
+    printf("Fourier transformation test: real to complex Fourier transformation 2-D: \n");
+    r2cft_2d_EquiSpaced_test(grid);
+  }
+  if (DO)
+  {
+    printf("Fourier transformation test: real to complex Fourier transformation 2-D on S2: \n");
+    r2cft_2d_EquiSpaced_S2_test(grid);
   }
   
   return EXIT_SUCCESS;
@@ -58,7 +68,6 @@ static int Ylm_trans_test(Grid_T *const grid)
   unsigned i,j,l,m,lm;
   
   /* initialize tables */
-  init_Ylm();
   init_Legendre_root_function();
   
   if (regex_search("[[:digit:]]+",par))
@@ -97,6 +106,7 @@ static int Ylm_trans_test(Grid_T *const grid)
   df = 0.;
   /* now let's see how Ylm sum works: */
   printf("--> For Ntheta = %u, Nphi = %u, Lmax = %u:\n",Ntheta,Nphi,lmax);
+  printf("sum:\n");
   /* for each theta and phi */
   for (i = 0; i < Ntheta; ++i)
   {
@@ -115,17 +125,42 @@ static int Ylm_trans_test(Grid_T *const grid)
           int mp = (int)m;
           lm   = lm2n(l,m);
           
-          sum += (realClm[lm]+I*imagClm[lm])*Ylm(l,mp,theta,phi);/* m >= 0 */
-          sum += sign[m%2]*(realClm[lm]-I*imagClm[lm])*Ylm(l,-mp,theta,phi);/* m < 0 */
+          sum += (realClm[lm]+imagI*imagClm[lm])*Ylm((int)l,mp,theta,phi);/* m >= 0 */
+          sum += sign[m%2]*(realClm[lm]-imagI*imagClm[lm])*Ylm((int)l,-mp,theta,phi);/* m < 0 */
         }
         lm   = lm2n(l,0);
-        sum += (realClm[lm]+I*imagClm[lm])*Ylm(l,0,theta,phi);/* m == 0 */
+        sum += (realClm[lm]+imagI*imagClm[lm])*Ylm((int)l,0,theta,phi);/* m == 0 */
       }
       if (df < fabs(creal(sum)-fr))
         df = fabs(creal(sum)-fr);
     }
   }/* for (i = 0; i < Ntheta; ++i) */
   printf("Max Error = %e\n",df);
+  
+  /* let's do some interpolation: */
+  if (1)
+  {
+    double *ran_theta = make_random_number(Ntheta,0,M_PI);
+    double *ran_phi   = make_random_number(Nphi,0,2*M_PI);
+    printf("Interpolation:       f(x):                diff:\n");
+    df = 0;
+    for (i = 0; i < Ntheta; ++i)
+    {
+      double x = ran_theta[i];
+      for (j = 0; j < Nphi; ++j)
+      {
+        double y = ran_phi[j];
+        double fr = creal(Ylm(4,3,x,y));
+        double fi = interpolation_Ylm(realClm,imagClm,lmax,x,y);
+        printf("%+0.15f   %+0.15f   %+e\n",fi,fr,fi-fr);
+        if (df<fabs(fi-fr))
+          df = fabs(fi-fr);
+      }
+    }
+    printf("Max Error = %e\n",df);
+    _free(ran_theta);
+    _free(ran_phi);
+  }
   
   free(f);
   free(realClm);
@@ -156,7 +191,6 @@ static int Ylm_derivatives_test(Grid_T *const grid)
   unsigned i,j;
   
   /* initialize tables */
-  init_Ylm();
   init_Legendre_root_function();
   
   if (regex_search("[[:digit:]]+",par))
@@ -166,7 +200,7 @@ static int Ylm_derivatives_test(Grid_T *const grid)
     _free(s);
   }
   else
-    N = 10;
+    N = 14;
   
   /* setting grid size */  
   Ntheta = Nphi = N;
@@ -188,8 +222,8 @@ static int Ylm_derivatives_test(Grid_T *const grid)
     {
       phi = j*2*M_PI/Nphi;
       f[j+Nphi*i]        = creal(Ylm(6,-5,theta,phi));
-      f_dphi[j+Nphi*i]   = creal(-15.0/32.0*sqrt(1001)*I*exp(-5*I*phi)*pow(sin(theta), 5)*cos(theta)/sqrt(M_PI));
-      f_dtheta[j+Nphi*i] = creal((3.0/32.0)*sqrt(1001)*(5 - 6*pow(sin(theta), 2))*exp(-5*I*phi)*pow(sin(theta), 4)/sqrt(M_PI));
+      f_dphi[j+Nphi*i]   = creal(-15.0/32.0*sqrt(1001)*imagI*cexp(-5*imagI*phi)*pow(sin(theta), 5)*cos(theta)/sqrt(M_PI));
+      f_dtheta[j+Nphi*i] = creal((3.0/32.0)*sqrt(1001)*(5 - 6*pow(sin(theta), 2))*cexp(-5*imagI*phi)*pow(sin(theta), 4)/sqrt(M_PI));
     }
   }
   /* calculating coeffs */
@@ -244,6 +278,266 @@ static int Ylm_derivatives_test(Grid_T *const grid)
 }
 
 
+/* testing : r2cft_2d functions interpolations, derivatives, etc
+// ->return value: TEST_SUCCESSFUL */
+static int r2cft_2d_EquiSpaced_test(Grid_T *const grid)
+{
+  const unsigned Nphi0 = 9;
+  const unsigned Nphi1 = 13;
+  const unsigned l0 = Nphi0/2+1;
+  const unsigned l1 = Nphi1/2+1;
+  const unsigned l0l1 = l0*l1;
+  double *f = alloc_double(Nphi0*Nphi1);
+  double *df_dx = alloc_double(Nphi0*Nphi1);
+  double *df_dy = alloc_double(Nphi0*Nphi1);
+  double *df_dphi0 = 0, *df_dphi1 = 0;
+  double *realC = 0;
+  double *imagC = 0; 
+  double x,y;
+  unsigned i,j,m0,m1,ij;
+  
+  /* populate the values */
+  for (i = 0; i < Nphi0; ++i)
+  {
+    x = 2.*i*M_PI/Nphi0;
+    for (j = 0; j < Nphi1; ++j)
+    {
+      y = 2.*j*M_PI/Nphi1;
+      
+      f[IJ(i,j,Nphi1)] = 1 + Cos(x) - Power(Cos(x),2) + 
+          Cos(y) + Sin(x) + Sin(4*x)/2. + Sin(y) + 
+          Power(Sin(x),2)*Power(Sin(y),2) - Power(Sin(x) + Sin(y),2) - 
+          Sin(6*y)/2.;
+          
+      df_dx[IJ(i,j,Nphi1)] = Cos(x) + 2*Cos(4*x) - 
+            Sin(x) - 2*Cos(x)*Sin(y) + Sin(2*x)*Power(Sin(y),2);
+      df_dy[IJ(i,j,Nphi1)] = Cos(y) - 3*Cos(6*y) - Sin(y) - 
+            2*Cos(y)*(Sin(x) + Sin(y)) + Power(Sin(x),2)*Sin(2*y);
+
+
+    }
+  }
+  
+  /* calculating coeffs */
+  r2cft_2d_coeffs(f,Nphi0,Nphi1,&realC,&imagC);
+  
+  /* print bases */
+  if(1)
+  {
+    printf("Bases: Crr+Cri*I\n");
+    for (m0 = 0; m0 < l0; ++m0)
+    {
+      for (m1 = 0; m1 < l1; ++m1)
+      {
+        unsigned m0m1 = IJ(m0,m1,l1);
+        printf("Crr(%u,%u)+Cri(%u,%u)I = %+.2f %+.2fI\n",
+              m0,m1,m0,m1,realC[m0m1],imagC[m0m1]);
+      }
+    }
+    
+    printf("Bases: Cir+Cii*I\n");
+    for (m0 = 0; m0 < l0; ++m0)
+    {
+      for (m1 = 0; m1 < l1; ++m1)
+      {
+        unsigned m0m1 = IJ(m0,m1,l1);
+        printf("Cir(%u,%u)+Cii(%u,%u)I = %+.2f %+.2fI\n",
+              m0,m1,m0,m1,realC[l0l1+m0m1],imagC[l0l1+m0m1]);
+      }
+    }
+  }
+  /* let's do some interpolation: */
+  double *ran_phi0 = make_random_number(Nphi0,0,2*M_PI);
+  double *ran_phi1 = make_random_number(Nphi1,0,2*M_PI);
+  if (1)
+  {
+    printf("Interpolation:       f(x):                diff:\n");
+    for (i = 0; i < Nphi0; ++i)
+    {
+      x = ran_phi0[i];
+      for (j = 0; j < Nphi1; ++j)
+      {
+        y = ran_phi1[j];
+        double fr = 1 + Cos(x) - Power(Cos(x),2) + 
+          Cos(y) + Sin(x) + Sin(4*x)/2. + Sin(y) + 
+          Power(Sin(x),2)*Power(Sin(y),2) - Power(Sin(x) + Sin(y),2) - 
+          Sin(6*y)/2.;
+                    
+        double fi = r2cft_2d_interpolation(realC,imagC,Nphi0,Nphi1,x,y);
+        printf("%+0.15f   %+0.15f   %+e\n",fi,fr,fi-fr);
+      }
+    }
+  }
+
+  /* derivative tests: */
+  df_dphi0 = r2cft_2d_df_dphi0(realC,imagC,Nphi0,Nphi1);
+  df_dphi1 = r2cft_2d_df_dphi1(realC,imagC,Nphi0,Nphi1);
+  
+  printf("df(x)/dphi0|num:     df(x)/dphi0|anl:     diff:\n");
+  for (i = 0; i < Nphi0; ++i)
+  {
+    for (j = 0; j < Nphi1; ++j)
+    {
+      ij=IJ(i,j,Nphi1);
+      printf("%+0.15f   %+0.15f   %+e\n",
+          df_dphi0[ij],df_dx[ij],df_dphi0[ij]-df_dx[ij]);
+    }
+  }
+    
+  printf("df(x)/dphi1|num:     df(x)/dphi1|anl:     diff:\n");
+  for (i = 0; i < Nphi0; ++i)
+  {
+    for (j = 0; j < Nphi1; ++j)
+    {
+      ij=IJ(i,j,Nphi1);
+      printf("%+0.15f   %+0.15f   %+e\n",
+          df_dphi1[ij],df_dy[ij],df_dphi1[ij]-df_dy[ij]);
+    }
+  }
+    
+  free(f);
+  free(realC);
+  free(imagC);
+  free(df_dphi0);
+  free(df_dphi1);
+  free(df_dx);
+  free(df_dy);
+  free(ran_phi0);
+  free(ran_phi1);
+  
+  UNUSED(grid);
+  return TEST_SUCCESSFUL;
+}
+
+/* testing : r2cft_2d functions interpolations, derivatives, etc on S2
+// ->return value: TEST_SUCCESSFUL */
+static int r2cft_2d_EquiSpaced_S2_test(Grid_T *const grid)
+{
+  const unsigned Ntheta = 10;
+  const unsigned Nphi = 10;
+  const unsigned l0   = Ntheta;
+  const unsigned l1   = Nphi/2+1;
+  const unsigned l0l1 = l0*l1;
+  double *f = alloc_double(Ntheta*Nphi);
+  double *df_dx = alloc_double(Ntheta*Nphi);
+  double *df_dy = alloc_double(Ntheta*Nphi);
+  double *df_dtheta = 0, *df_dphi = 0;
+  double *realC = 0;
+  double *imagC = 0; 
+  double x,y;
+  unsigned i,j,ij,m0,m1;
+ 
+  /* populate the values */
+  for (i = 0; i < Ntheta; ++i)
+  {
+    x = i*M_PI/(Ntheta-1);
+    for (j = 0; j < Nphi; ++j)
+    {
+      y = 2.*j*M_PI/Nphi;
+      
+      f[IJ(i,j,Nphi)] =  (2*sin(2*x)*cos(y)+1)*cos(x);
+           
+      df_dx[IJ(i,j,Nphi)] = 4*Power(Cos(x),3)*Cos(y) - Sin(x) 
+                            - 8*Cos(x)*Cos(y)*Power(Sin(x),2);
+      df_dy[IJ(i,j,Nphi)] = -4*Power(Cos(x),2)*Sin(x)*Sin(y);
+
+
+    }
+  }
+  
+  /* calculating coeffs */
+  r2cft_2d_coeffs_S2(f,Ntheta,Nphi,&realC,&imagC,1);
+  /* print bases */
+  if(1)
+  {
+    const double eps = 1E-6;
+    printf("Large Bases: Crr+Cri*I\n");
+    for (m0 = 0; m0 < l0; ++m0)
+    {
+      for (m1 = 0; m1 < l1; ++m1)
+      {
+        unsigned m0m1 = IJ(m0,m1,l1);
+        if ( GRT(fabs(realC[m0m1]),eps) ||
+             GRT(fabs(imagC[m0m1]),eps) )
+        printf("Crr(%u,%u)+Cri(%u,%u)I = %g %gI\n",
+              m0,m1,m0,m1,realC[m0m1],imagC[m0m1]);
+      }
+    }
+    
+    printf("Bases: Cir+Cii*I\n");
+    for (m0 = 0; m0 < l0; ++m0)
+    {
+      for (m1 = 0; m1 < l1; ++m1)
+      {
+        unsigned m0m1 = IJ(m0,m1,l1);
+        if ( GRT(fabs(realC[l0l1+m0m1]),eps) ||
+             GRT(fabs(imagC[l0l1+m0m1]),eps))
+        printf("Cir(%u,%u)+Cii(%u,%u)I = %+g %+gI\n",
+              m0,m1,m0,m1,realC[l0l1+m0m1],imagC[l0l1+m0m1]);
+      }
+    }
+  }
+  /* let's do some interpolation: */
+  double *ran_theta = make_random_number(Ntheta,0,M_PI);
+  double *ran_phi = make_random_number(Nphi,0,2*M_PI);
+  if (1)
+  {
+    printf("Interpolation:       f(x):                diff:\n");
+    for (i = 0; i < Ntheta; ++i)
+    {
+      x = ran_theta[i];
+      for (j = 0; j < Nphi; ++j)
+      {
+        y = ran_phi[j];
+        double fr = (2*sin(2*x)*cos(y)+1)*cos(x);
+        double fi = r2cft_2d_interpolation_S2(realC,imagC,Ntheta,Nphi,x,y);
+        printf("%+0.15f   %+0.15f   %+e\n",fi,fr,fi-fr);
+      }
+    }
+  }
+
+  /* derivative tests: */
+  if (1)
+  {
+    df_dtheta = r2cft_2d_df_dtheta_S2(realC,imagC,Ntheta,Nphi);
+    df_dphi   = r2cft_2d_df_dphi_S2(realC,imagC,Ntheta,Nphi);
+    
+    printf("df(x)/dtheta|num:     df(x)/dtheta|anl:     diff:\n");
+    for (i = 0; i < Ntheta; ++i)
+    {
+      for (j = 0; j < Nphi; ++j)
+      {
+        ij=IJ(i,j,Nphi);
+        printf("%+0.15f   %+0.15f   %+e\n",
+            df_dtheta[ij],df_dx[ij],df_dtheta[ij]-df_dx[ij]);
+      }
+    }
+      
+    printf("df(x)/dphi|num:     df(x)/dphi|anl:     diff:\n");
+    for (i = 0; i < Ntheta; ++i)
+    {
+      for (j = 0; j < Nphi; ++j)
+      {
+        ij=IJ(i,j,Nphi);
+        printf("%+0.15f   %+0.15f   %+e\n",
+            df_dphi[ij],df_dy[ij],df_dphi[ij]-df_dy[ij]);
+      }
+    }
+    free(df_dtheta);
+    free(df_dphi);
+  }  
+  free(f);
+  free(realC);
+  free(imagC);
+  free(df_dx);
+  free(df_dy);
+  free(ran_theta);
+  free(ran_phi);
+  
+  UNUSED(grid);
+  return TEST_SUCCESSFUL;
+}
+
 /* testing : r2cft_1d_EquiSpaced_coeffs function.
 // ->return value: TEST_SUCCESSFUL */
 static int cft_c2r_r2c_1d_EquiSpaced_test(Grid_T *const grid)
@@ -251,7 +545,7 @@ static int cft_c2r_r2c_1d_EquiSpaced_test(Grid_T *const grid)
   unsigned N = 0;
   const char *const par = Pgets("Test_FourierTransformation");
   double *f;/* f(x) x = [0,2pi] */
-  double complex *c;/* f(x) = c_i*exp(I*i*x) */
+  double complex *c;/* f(x) = c_i*exp(imagI*i*x) */
   double x;
   unsigned i,j;
   
@@ -281,7 +575,7 @@ static int cft_c2r_r2c_1d_EquiSpaced_test(Grid_T *const grid)
     double complex fc = 0;
     fc = c[0];
     for (j = 1; j < N/2+1; ++j)
-      fc += c[j]*cexp(I*(double)j*x)+conj(c[j])*cexp(-I*(double)j*x);
+      fc += c[j]*cexp(imagI*(double)j*x)+conj(c[j])*cexp(-imagI*(double)j*x);
     printf("%+0.15f%+0.15fI   %+0.15f   %+e\n",creal(fc),cimag(fc),f[i],creal(fc)-f[i]);
   }
   
@@ -296,7 +590,7 @@ static int cft_c2r_r2c_1d_EquiSpaced_test(Grid_T *const grid)
     double fr = sin(2*x)*cos(x)+Pow2(sin(4*x));
     fi = c[0];
     for (j = 1; j < N/2+1; ++j)
-      fi += c[j]*cexp(I*(double)j*x)+conj(c[j])*cexp(-I*(double)j*x);
+      fi += c[j]*cexp(imagI*(double)j*x)+conj(c[j])*cexp(-imagI*(double)j*x);
     printf("%+0.15f%+0.15fI   %+0.15f   %+e\n",creal(fi),cimag(fi),fr,creal(fi)-fr);
   }
   
@@ -350,44 +644,44 @@ int interpolation_tests(Grid_T *const grid)
     Y = make_random_number(n[1],min[1],max[1]);
     Z = make_random_number(n[2],min[2],max[2]);
     
-    if (NOT_DO)
+    if (DO)
     {
       printf("Interpolation test:      X direction, patch %10s =>",patch->name);
       status = interpolation_tests_X(field,X,n[0]);
       check_test_result(status);
     }
     
-    if (NOT_DO)
+    if (DO)
     {
       printf("Interpolation test:      Y direction, patch %10s =>",patch->name);
       status = interpolation_tests_Y(field,Y,n[1]);
       check_test_result(status);
     }
-    if (NOT_DO)
+    if (DO)
     {
       printf("Interpolation test:      Z direction, patch %10s =>",patch->name);
       status = interpolation_tests_Z(field,Z,n[2]);
       check_test_result(status);
     }
-    if (NOT_DO)
+    if (DO)
     {
       printf("Interpolation test: X & Y directions, patch %10s =>",patch->name);
       status = interpolation_tests_XY(field,X,Y,n[0],n[1]);
       check_test_result(status);
     }
-    if (NOT_DO)
+    if (DO)
     {
       printf("Interpolation test: X & Z directions, patch %10s =>",patch->name);
       status = interpolation_tests_XZ(field,X,Z,n[0],n[2]);
       check_test_result(status);
     } 
-    if (NOT_DO)
+    if (DO)
     {
       printf("Interpolation test: Y & Z directions, patch %10s =>",patch->name);
       status = interpolation_tests_YZ(field,Y,Z,n[1],n[2]);
       check_test_result(status);
     }
-    if (NOT_DO)
+    if (DO)
     {
       printf("Interpolation test:              3-D, patch %10s =>",patch->name);
       status = interpolation_tests_XYZ(field,X,Y,Z,n[0],n[1],n[2]);
@@ -402,7 +696,7 @@ int interpolation_tests(Grid_T *const grid)
     remove_field(field);
   }
   
-  if (NOT_DO)
+  if (DO)
   {
       printf("Interpolation test:            Neville Iterative Method =>");
       status = interpolation_tests_Neville_1d();

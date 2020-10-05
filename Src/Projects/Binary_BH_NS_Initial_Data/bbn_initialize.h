@@ -1,9 +1,10 @@
 #include "bbn_headers.h"
 #include "utilities_lib.h"
-#include "maths_approximation_lib.h"
-#include "maths_analytic_lib.h"
+#include "maths_spectral_methods_lib.h"
+#include "maths_special_functions_lib.h"
 #include "physics_observables_lib.h"
 #include "maths_equation_solvings_lib.h"
+#include "AKV_lib.h"
 #include <unistd.h>
 #include <dirent.h>
 #include <sys/stat.h>
@@ -177,6 +178,9 @@ static void find_XYZ_and_patch_of_theta_phi_BH_CS(double *const X,Patch_T **cons
 static void force_balance_ddCM_Omega(Grid_T *const grid);
 void bbn_create_grid_prototype_BC(Grid_T *const grid);
 void bbn_bam_error(const char *const msg,const char *const file,const int line);
+static void find_AKV(Grid_T *const grid,const char *const type);
+
+
 
 
 

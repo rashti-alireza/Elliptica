@@ -61,7 +61,6 @@ const unsigned Lmax/* maximum l (inclusive) for the expansion */)
   unsigned i,j,l,m,lm;
   
   /* initialize tables */
-  init_Ylm();
   init_Legendre_root_function();
   
   /* making the integrands, note: array must be in order */
@@ -102,8 +101,8 @@ const unsigned Lmax/* maximum l (inclusive) for the expansion */)
       lm = lm2n(l,m);
       for (i = 0; i < Ntheta; ++i)
       { 
-        real_fYlm[i] = creal(Ylm(l,(int)m,theta[i],0))*creal(v[m][i]);
-        imag_fYlm[i] = creal(Ylm(l,(int)m,theta[i],0))*cimag(v[m][i]);
+        real_fYlm[i] = creal(Ylm((int)l,(int)m,theta[i],0))*creal(v[m][i]);
+        imag_fYlm[i] = creal(Ylm((int)l,(int)m,theta[i],0))*cimag(v[m][i]);
       }
       I2->GQ_Legendre->f = real_fYlm;
       realClm[lm]        = execute_integration(I2);
@@ -127,9 +126,6 @@ double interpolation_Ylm(const double *const realClm,const double *const imagClm
   double complex sum = 0;
   unsigned l,m,lm;
   
-  /* initialize Ylm table */
-  init_Ylm();
-  
   for (l = 0; l <= Lmax; ++l)
   {
     for (m = 1; m <= l; ++m)
@@ -137,11 +133,11 @@ double interpolation_Ylm(const double *const realClm,const double *const imagClm
       int mp = (int)m;
       lm   = lm2n(l,m);
       
-      sum += (realClm[lm]+I*imagClm[lm])*Ylm(l,mp,theta,phi);/* m >= 0 */
-      sum += sign[m%2]*(realClm[lm]-I*imagClm[lm])*Ylm(l,-mp,theta,phi);/* m < 0 */
+      sum += (realClm[lm]+imagI*imagClm[lm])*Ylm((int)l,mp,theta,phi);/* m >= 1 */
+      sum += sign[m%2]*(realClm[lm]-imagI*imagClm[lm])*Ylm((int)l,-mp,theta,phi);/* m < 0 */
     }
     lm   = lm2n(l,0);
-    sum += (realClm[lm]+I*imagClm[lm])*Ylm(l,0,theta,phi);/* m == 0 */
+    sum += (realClm[lm]+imagI*imagClm[lm])*Ylm((int)l,0,theta,phi);/* m == 0 */
   }
 
   return creal(sum);
@@ -158,7 +154,6 @@ double *df_dphi_Ylm(const double *const realClm,const double *const imagClm,cons
   unsigned i,j,l,m,lm;
   
   /* initialize tables */
-  init_dYlm_dphi();
   init_Legendre_root_function();
   
   for (i = 0; i < Ntheta; ++i)
@@ -174,11 +169,11 @@ double *df_dphi_Ylm(const double *const realClm,const double *const imagClm,cons
         {
           int mp = (int)m;
           lm   = lm2n(l,m);
-          sum += (realClm[lm]+I*imagClm[lm])*dYlm_dphi(l,mp,theta,phi);/* m >= 0 */
-          sum += sign[m%2]*(realClm[lm]-I*imagClm[lm])*dYlm_dphi(l,-mp,theta,phi);/* m < 0 */
+          sum += (realClm[lm]+imagI*imagClm[lm])*dYlm_dphi((int)l,mp,theta,phi);/* m >= 0 */
+          sum += sign[m%2]*(realClm[lm]-imagI*imagClm[lm])*dYlm_dphi((int)l,-mp,theta,phi);/* m < 0 */
         }
         //lm   = lm2n(l,0);
-        //sum += (realClm[lm]+I*imagClm[lm])*dYlm_dphi(l,0,theta,phi);/* m == 0 */
+        //sum += (realClm[lm]+imagI*imagClm[lm])*dYlm_dphi(l,0,theta,phi);/* m == 0 */
       }
       df_dphi[j+i*Nphi] = creal(sum);
     }/* end of for (j = 0; j < Nphi; ++j) */
@@ -198,7 +193,6 @@ double *df_dtheta_Ylm(const double *const realClm,const double *const imagClm,co
   unsigned i,j,l,m,lm;
   
   /* initialize tables */
-  init_dYlm_dtheta();
   init_Legendre_root_function();
   
   for (i = 0; i < Ntheta; ++i)
@@ -214,11 +208,11 @@ double *df_dtheta_Ylm(const double *const realClm,const double *const imagClm,co
         {
           int mp = (int)m;
           lm   = lm2n(l,m);
-          sum += (realClm[lm]+I*imagClm[lm])*dYlm_dtheta(l,mp,theta,phi);/* m >= 0 */
-          sum += sign[m%2]*(realClm[lm]-I*imagClm[lm])*dYlm_dtheta(l,-mp,theta,phi);/* m < 0 */
+          sum += (realClm[lm]+imagI*imagClm[lm])*dYlm_dtheta((int)l,mp,theta,phi);/* m >= 0 */
+          sum += sign[m%2]*(realClm[lm]-imagI*imagClm[lm])*dYlm_dtheta((int)l,-mp,theta,phi);/* m < 0 */
         }
         lm   = lm2n(l,0);
-        sum += (realClm[lm]+I*imagClm[lm])*dYlm_dtheta(l,0,theta,phi);/* m == 0 */
+        sum += (realClm[lm]+imagI*imagClm[lm])*dYlm_dtheta((int)l,0,theta,phi);/* m == 0 */
       }
       df_dtheta[j+i*Nphi] = creal(sum);
     }/* end of for (j = 0; j < Nphi; ++j) */
@@ -254,11 +248,11 @@ unsigned lm2n(const unsigned l, const unsigned m)
   return l*(l+1)/2+m;
 }
 
-/* ->return value \integral_{0}^{2pi} f(phi)*exp(I*m*phi)dphi (trapezoidal rule) */
+/* ->return value \integral_{0}^{2pi} f(phi)*exp(imagI*m*phi)dphi (trapezoidal rule) */
 static double complex integrate_expImphi(const double *const f, const unsigned n/* f array dimension */,const int m)
 {
   double complex i0 = 0;
-  const double complex phi0 = 2.*I*M_PI/n;
+  const double complex phi0 = 2.*imagI*M_PI/n;
   unsigned i;
   
   for (i = 0; i < n; ++i)

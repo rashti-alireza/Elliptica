@@ -6,7 +6,7 @@
 #include "poisson0_main.h"
 
 /* testing Poisson equations on cubed spherical and box kind grid */
-int Poisson0(void)
+int Poisson0(void *vp)
 {
   Grid_T *grid;
   
@@ -38,5 +38,6 @@ int Poisson0(void)
   
   pr_clock();
   
+  UNUSED(vp);
   return EXIT_SUCCESS;
 }

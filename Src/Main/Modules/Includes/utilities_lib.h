@@ -86,7 +86,8 @@ how_much_memory
     const char *const unit/* gb,mb,kb */
   );
 
-
+void header_and_clock(const char *const msg);
+void footer_and_clock(const char *const msg);
 
 #endif
 

@@ -1,7 +1,7 @@
 #include "bbn_headers.h"
 #include "utilities_lib.h"
-#include "maths_approximation_lib.h"
-#include "maths_analytic_lib.h"
+#include "maths_spectral_methods_lib.h"
+#include "maths_special_functions_lib.h"
 #include "maths_equation_solvings_lib.h"
 
 /* constants */

@@ -10,7 +10,7 @@ void summation_tests(void)
 {
   int status;
   
-  if(NOT_DO)
+  if(DO_NOT)
   {
     status = various_sums_of_cos_test();
     printf("Various sums of cosine functions:");

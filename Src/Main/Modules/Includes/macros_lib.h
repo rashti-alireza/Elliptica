@@ -41,6 +41,12 @@
 #define Y_(i)	Y_coord((i),patch)
 #define Z_(i)	Z_coord((i),patch)
 
+/* function is called  */
+#define FUNC_TIC header_and_clock(__func__);
+
+/* function ends  */
+#define FUNC_TOC footer_and_clock(__func__);
+
 /* relative (x,y,z) and r respect to center of patch */
 #define DEF_RELATIVE_x  double x=patch->node[ijk]->x[0]-patch->c[0];
 #define DEF_RELATIVE_y  double y=patch->node[ijk]->x[1]-patch->c[1];
@@ -53,7 +59,7 @@
 #define REMOVE_FIELD(xNAME)            remove_field(xNAME);/* remove the field utterly */
 #define DECLARE_FIELD(xNAME)           Field_T *const xNAME = patch->pool[Ind(#xNAME)];/* access to the whole field */
 #define DECLARE_AND_EMPTY_FIELD(xNAME) DECLARE_FIELD(xNAME)/* declare field */\
-                                       empty_field(xNAME);/* free v,v2 and info of field */
+                                       empty_field(xNAME);/* free v,v2,v3 and info of field */
                                        
 /* access to the memory values to modify */
 #define WRITE_v(xNAME)  const int _field_index_of_##xNAME = Ind(#xNAME);\
