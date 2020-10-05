@@ -57,9 +57,9 @@ typedef enum DD_T
   _x_/* for Carteisian 0-coord */,
   _y_/* for Carteisian 1-coord */,
   _z_/* for Carteisian 2-coord */,
-  _a_/* for Curvilinear 0-coord */,
-  _b_/* for Curvilinear 1-coord */,
-  _c_/* for Curvilinear 2-coord */,
+  _a_/* for Curvilinear 0-coord (coordinate patch) */,
+  _b_/* for Curvilinear 1-coord (coordinate patch) */,
+  _c_/* for Curvilinear 2-coord (coordinate patch) */,
   N_DD_T/* number of total DD_T*/,
   UNDEFINED_DIR/* for referring to undefined Dd_T */,
   _3_ = 3/* number three for tracking dimensions for different quantities */
@@ -69,7 +69,8 @@ typedef enum DD_T
 typedef struct NODE_T
 {
   double x[3];/* for Cartesian value x,y,z */
-  double *X;/* for general curvilinear value a,b,c */
+  double *X;/* for general curvilinear value a,b,c 
+            // it's the coordinate the patch uses. */
 }Node_T;
 
 /* point */
