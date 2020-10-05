@@ -4889,6 +4889,7 @@ static Grid_T *TOV_KerrSchild_approximation(void)
   
   /* test */
   //find_AKV(grid,"NS");
+  if(0)
   find_AKV(grid,"BH");
   /* end */
   return grid;
