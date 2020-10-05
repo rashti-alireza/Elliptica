@@ -2444,12 +2444,14 @@ void alloc_patches_BBN_CubedSpherical_grid(Grid_T *const grid)
   
 }
 
-/* memory alloc patches for BBN_Split_CubedSpherical type */
-void alloc_patches_BBN_Split_CubedSpherical_grid(Grid_T *const grid)
+/* set parameters of split cubed spherical, number of splits etc.
+// this must be called in characteristic function */
+void set_params_split_CS(Grid_T *const grid)
 {
+  /* resolution in each dir. */
   const unsigned givenN[3] = {(unsigned)Pgeti("n_a"),
-                   (unsigned)Pgeti("n_b"),
-                   (unsigned)Pgeti("n_c")};/* resolution in each dir. */
+                              (unsigned)Pgeti("n_b"),
+                              (unsigned)Pgeti("n_c")};
   const unsigned maxN[3] = {(unsigned)Pgeti("SplitCS_max_n_a"),
                             (unsigned)Pgeti("SplitCS_max_n_b"),
                             (unsigned)Pgeti("SplitCS_max_n_c")};
@@ -2495,14 +2497,10 @@ void alloc_patches_BBN_Split_CubedSpherical_grid(Grid_T *const grid)
   /* now each patch split in Nsd */
   Np *= (Nsd[0]*Nsd[1]*Nsd[2]);
   
-  grid->patch = calloc((Np+1),sizeof(*grid->patch));
-  IsNull(grid->patch);
+  /* set total number of paches: */
+  Pseti("SplitCS_Npatches",(int)Np);
   
-  for (i = 0; i < Np; i++)
-  {
-    grid->patch[i] = calloc(1,sizeof(*grid->patch[i]));
-    IsNull(grid->patch[i]);
-  }
+  UNUSED(grid);
   
   /* test */
   if (1)
@@ -2518,6 +2516,23 @@ void alloc_patches_BBN_Split_CubedSpherical_grid(Grid_T *const grid)
          Nns[0],Nns[1],Nns[2],
          Nsd[0],Nsd[1],Nsd[2],
          Np);
+}
+
+/* memory alloc patches for BBN_Split_CubedSpherical type */
+void alloc_patches_BBN_Split_CubedSpherical_grid(Grid_T *const grid)
+{
+  const unsigned Np = Pgeti("SplitCS_Npatches");
+  unsigned i;
+  
+  grid->patch = calloc((Np+1),sizeof(*grid->patch));
+  IsNull(grid->patch);
+  
+  for (i = 0; i < Np; i++)
+  {
+    grid->patch[i] = calloc(1,sizeof(*grid->patch[i]));
+    IsNull(grid->patch[i]);
+  }
+  
 }
 
 /* memory alloc patches for single neutron star using cubed spherical + box grid */

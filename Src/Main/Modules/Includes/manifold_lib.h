@@ -292,7 +292,7 @@ void alloc_patches(Grid_T *const grid);
 void free_grid(Grid_T *grid);
 void free_patch(Patch_T *patch);
 void free_grid_db(void);
-
+void set_params_split_CS(Grid_T *const grid);
 
 
 
