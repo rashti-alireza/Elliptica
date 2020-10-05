@@ -2483,6 +2483,10 @@ void alloc_patches_BBN_Split_CubedSpherical_grid(Grid_T *const grid)
   Pseti("n_a",(int)Nns[0]);
   Pseti("n_b",(int)Nns[1]);
   Pseti("n_c",(int)Nns[2]);
+  /* number of splits in each direction */
+  Pseti("SplitCS_Nsplit_a",(int)Nsd[0]);
+  Pseti("SplitCS_Nsplit_b",(int)Nsd[1]);
+  Pseti("SplitCS_Nsplit_c",(int)Nsd[2]);
   
   outermost = (unsigned) PgetiEZ("Number_of_Outermost_Split");
   if (outermost != (unsigned)INT_MAX)
