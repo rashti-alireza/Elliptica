@@ -2444,19 +2444,52 @@ void alloc_patches_BBN_CubedSpherical_grid(Grid_T *const grid)
   
 }
 
-/* memory alloc patches for BBN_CubedSpherical type */
+/* memory alloc patches for BBN_Split_CubedSpherical type */
 void alloc_patches_BBN_Split_CubedSpherical_grid(Grid_T *const grid)
 {
-  unsigned Np = 23;/* number of patches without outermost's 
+  const unsigned givenN[3] = {(unsigned)Pgeti("n_a"),
+                   (unsigned)Pgeti("n_b"),
+                   (unsigned)Pgeti("n_c")};/* resolution in each dir. */
+  const unsigned maxN[3] = {(unsigned)Pgeti("SplitCS_max_n_a"),
+                            (unsigned)Pgeti("SplitCS_max_n_b"),
+                            (unsigned)Pgeti("SplitCS_max_n_c")};
+  unsigned newN[3] = {0};/* new number of nodes in each direction */
+  unsigned Nsd[3]  = {0};/* number of splits in each dir. */
+  unsigned Nns[3]  = {0};/* number of nodes in each split patch */
+  unsigned Np = 23;/* total number of main patches
                    3 sets of cubed sphere = 3*6
                    4 filling boxex
                    1 central box */
-  unsigned outermost;
-  unsigned i;
+  unsigned outermost;/* number of outermost patches */
+  unsigned i,n[3] = {0};
+  
+  /* for each direction divide until the max resolution */
+  for (i = 0; i < 3; ++i)
+  {
+    unsigned d = 1;/* divide */
+    n[i] = givenN[i]/d;
+    while (n[i] > maxN[i])
+    {
+      d++;
+      n[i] = givenN[i]/d;
+      assert(d < givenN[i]);
+    }
+    Nsd[i] = d;
+    /* adjust givenN */
+    newN[i] = d*n[i];
+    Nns[i]  = n[i];
+  }
+  /* adjust parameters */
+  Pseti("n_a",(int)Nns[0]);
+  Pseti("n_b",(int)Nns[1]);
+  Pseti("n_c",(int)Nns[2]);
   
   outermost = (unsigned) PgetiEZ("Number_of_Outermost_Split");
   if (outermost != (unsigned)INT_MAX)
     Np += 6*outermost;
+  
+  /* now each patch split in Nsd */
+  Np *= (Nsd[0]*Nsd[1]*Nsd[2]);
   
   grid->patch = calloc((Np+1),sizeof(*grid->patch));
   IsNull(grid->patch);
@@ -2467,6 +2500,20 @@ void alloc_patches_BBN_Split_CubedSpherical_grid(Grid_T *const grid)
     IsNull(grid->patch[i]);
   }
   
+  /* test */
+  if (1)
+  printf("par n   = (%u,%u,%u)\n"
+         "new n   = (%u,%u,%u)\n"
+         "max_n   = (%u,%u,%u)\n"
+         "n_abc   = (%u,%u,%u)\n"
+         "split   = (%u,%u,%u)\n"
+         "Npatch  = %u \n",
+         givenN[0],givenN[1],givenN[2],
+         newN[0],newN[1],newN[2],
+         maxN[0],maxN[1],maxN[2],
+         Nns[0],Nns[1],Nns[2],
+         Nsd[0],Nsd[1],Nsd[2],
+         Np);
 }
 
 /* memory alloc patches for single neutron star using cubed spherical + box grid */
@@ -4875,3 +4922,5 @@ void test_CubedSpherical_Coordinates(Grid_T *const grid)
   else
     printf("Testing Cubed Spherical Coordinates: [-].\n");
 }
+
+

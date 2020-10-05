@@ -584,7 +584,7 @@ void grid_characteristics_example(Grid_T *const grid)
   else if (strcmp_i(kind,"BNS_CubedSpherical_grid"))
     characteristics_BNS_CS_grid_eg(grid); 
     
-  else if (strcmp_i(kind,"BBN_CubedSpherical_grid"))
+  else if (strcmp_i(kind,"BBN_Split_CubedSpherical_grid"))
     characteristics_BBN_CS_grid_eg(grid); 
    
   else
