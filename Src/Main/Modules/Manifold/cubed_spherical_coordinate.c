@@ -2444,6 +2444,31 @@ void alloc_patches_BBN_CubedSpherical_grid(Grid_T *const grid)
   
 }
 
+/* memory alloc patches for BBN_CubedSpherical type */
+void alloc_patches_BBN_Split_CubedSpherical_grid(Grid_T *const grid)
+{
+  unsigned Np = 23;/* number of patches without outermost's 
+                   3 sets of cubed sphere = 3*6
+                   4 filling boxex
+                   1 central box */
+  unsigned outermost;
+  unsigned i;
+  
+  outermost = (unsigned) PgetiEZ("Number_of_Outermost_Split");
+  if (outermost != (unsigned)INT_MAX)
+    Np += 6*outermost;
+  
+  grid->patch = calloc((Np+1),sizeof(*grid->patch));
+  IsNull(grid->patch);
+  
+  for (i = 0; i < Np; i++)
+  {
+    grid->patch[i] = calloc(1,sizeof(*grid->patch[i]));
+    IsNull(grid->patch[i]);
+  }
+  
+}
+
 /* memory alloc patches for single neutron star using cubed spherical + box grid */
 void alloc_patches_SNS_CubedSpherical_Box_grid(Grid_T *const grid)
 {
