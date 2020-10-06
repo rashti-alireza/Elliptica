@@ -128,6 +128,175 @@ void fill_patches_BBN_CubedSpherical_grid(Grid_T *const grid)
 
 }
 
+/* filling split cubed spherical coordinate patches for BBN grid */
+void fill_patches_BBN_Split_CubedSpherical_grid(Grid_T *const grid)
+{
+  const unsigned N_outermost_split = (unsigned) Pgeti("Number_of_Outermost_Split");
+  unsigned i,pn;
+  
+  pn = 0; /* patch number */
+  populate_left_NS_central_box(grid,pn++);/* +1 */
+  populate_left_NS(grid,pn);
+  pn += 6; /* +6 cubed sphere */
+  populate_left_NS_surrounding(grid,pn);
+  pn += 6; /* +6 cubed sphere */
+  populate_right_BH_surrounding(grid,pn);
+  pn += 6; /* +6 cubed sphere */
+  populate_filling_box_CubedSpherical(grid,pn++,UP);
+  populate_filling_box_CubedSpherical(grid,pn++,DOWN);
+  populate_filling_box_CubedSpherical(grid,pn++,BACK);
+  populate_filling_box_CubedSpherical(grid,pn++,FRONT);
+  
+  for (i = 0; i < N_outermost_split; i++)
+  {
+    populate_outermost(grid,pn,i);
+    pn += 6; /* +6 cubed sphere */
+  }
+
+}
+
+/* populating properties of patch for a object,
+// this fills basics of patches which cover the object
+// (not the center which fills with a box) */
+static void 
+fill_object_Split_CS
+  (
+  Grid_T *const grid,
+  unsigned *const pn,/* starting patch number,is increased for each add */
+  const char *const obj,/* NS, BH or etc. */
+  const char *const dir/* "left" or "right" should be lower case */)
+{
+  const unsigned Nsplt[3] = {Pgeti("SplitCS_Nsplit_a"),
+                             Pgeti("SplitCS_Nsplit_b"),
+                             Pgeti("SplitCS_Nsplit_c")};
+  /* step in each direction, note X in [-1,1]x[-1,1]x[0,1]. */
+  const double step[3] = {2./Nsplt[0],2./Nsplt[1],1./Nsplt[2]};
+  /* sides, NOTE: the order is important, it MUST be like FLAG_T */
+  const char *const sside[] = {"up","down","left",
+                               "right","back","front",0};
+  unsigned sd[3];/* split directions */
+  unsigned p;/* patch number */
+  
+  assert(dir);
+  assert(obj);
+  /* shoule be lower case */
+  assert(!strcmp(dir,"left") || !strcmp(dir,"right"));
+  
+  for (sd[0] = 0; sd[0] < Nsplt[0]; ++sd[0])
+  {
+    double min[3] = {0},max[3] = {0};
+    char stem_name[100]  = {'\0'};
+    char stem_surfu[100] = {'\0'};
+    char stem_surfd[100] = {'\0'};
+    char suffix[100]     = {'\0'};
+    
+    min[0] = -1 + step[0]*sd[0];
+    max[0] = -1 + step[0]*(sd[0]+1);
+    
+    sprintf(stem_surfu,"grid%u_%s_%s_surface_function_u",grid->gn,dir,obj);
+    sprintf(stem_surfd,"grid%u_%s_%s_surface_function_d",grid->gn,dir,obj);
+    sprintf(stem_name,"grid%u_%s_%s",grid->gn,dir,obj);
+    sprintf(suffix,"%u%u%u",sd[0],sd[1],sd[2]);
+        
+    for (sd[1] = 0; sd[1] < Nsplt[1]; ++sd[1])
+    {
+      min[1] = -1 + step[1]*sd[1];
+      max[1] = -1 + step[1]*(sd[1]+1);
+
+      for (sd[2] = 0; sd[2] < Nsplt[2]; ++sd[2])
+      {
+        min[2] = 0 + step[1]*sd[2];
+        max[2] = 0 + step[1]*(sd[2]+1);
+        for (p = *pn; p < *pn+6; p++)
+        {
+          Patch_T *const patch = grid->patch[p];
+          Field_T *R1 = add_field("surface_function_d",0,patch,NO);
+          Field_T *R2 = add_field("surface_function_u",0,patch,NO);
+          double *R1_array,*R2_array;
+          Flag_T side = (Flag_T)(p-*pn);
+          char par[1000]  = {'\0'};
+          char name[1000] = {'\0'};
+          unsigned ijk;
+          
+          assert(sside[side]);
+          
+          /* filling flags */
+          patch->CoordSysInfo->CubedSphericalCoord->side = side;
+          patch->CoordSysInfo->CubedSphericalCoord->type = OBJ_T_SCS;
+          
+          /* filling grid */
+          patch->grid = grid;
+          
+          /* filling patch number */
+          patch->pn = p;
+          
+          /* filling inner boundary */
+          patch->innerB = 0;
+          
+          /* filling n */
+          patch->n[0] = (unsigned)Pgeti("n_a");
+          patch->n[1] = (unsigned)Pgeti("n_b");
+          patch->n[2] = (unsigned)Pgeti("n_c");
+          
+          /* filling nn */
+          patch->nn = total_nodes_patch(patch);
+          
+          /* filling name */
+          sprintf(name,"%s_%s_%s",stem_name,sside[side],suffix);
+          patch->name = dup_s(name);
+          
+          /* filling Rs */
+          sprintf(par,"%s_%s_%s",stem_surfd,sside[side],suffix);
+          R1_array = Pgetdd(par);
+          patch->CoordSysInfo->CubedSphericalCoord->R1_f = R1;
+          R1->v = alloc_double(patch->nn);
+          for (ijk = 0; ijk < patch->nn; ++ijk)
+            R1->v[ijk] = R1_array[ijk];
+        
+          sprintf(par,"%s_%s_%s",stem_name,sside[side],suffix);
+          R2_array = Pgetdd(par);
+          patch->CoordSysInfo->CubedSphericalCoord->R2_f = R2;
+          R2->v = alloc_double(patch->nn);
+          for (ijk = 0; ijk < patch->nn; ++ijk)
+            R2->v[ijk] = R2_array[ijk];
+          
+          /* filling center */
+          sprintf(par,"grid%u_%s_%s_center_a",grid->gn,dir,obj);
+          patch->c[0] = Pgetd(par);
+          sprintf(par,"grid%u_%s_%s_center_b",grid->gn,dir,obj);
+          patch->c[1] = Pgetd(par);
+          sprintf(par,"grid%u_%s_%s_center_c",grid->gn,dir,obj);
+          patch->c[2] = Pgetd(par);
+          
+           /* filling min */
+          patch->min[0] = min[0];
+          patch->min[1] = min[1];
+          patch->min[2] = min[2];
+
+          /* filling max */
+          patch->max[0] = max[0];
+          patch->max[1] = max[1];
+          patch->max[2] = max[2];
+          
+          /* filling flags */
+          patch->coordsys = CubedSpherical;
+          
+          /* collocation */
+          patch->collocation[0] = Chebyshev_Extrema;
+          patch->collocation[1] = Chebyshev_Extrema;
+          patch->collocation[2] = Chebyshev_Extrema;
+          
+          /* basis */
+          patch->basis[0] = Chebyshev_Tn_BASIS;
+          patch->basis[1] = Chebyshev_Tn_BASIS;
+          patch->basis[2] = Chebyshev_Tn_BASIS;
+        }/* for (p = pn; p < pn+6; p++) */
+        *pn +=6;/* increase by 6 for each split*/
+      }/* for (sd[2] = 0; sd[2] < Nsplt[2]; ++sd[2]) */
+    }/* for (sd[1] = 0; sd[1] < Nsplt[1]; ++sd[1]) */
+  }/* for (sd[0] = 0; sd[0] < Nsplt[0]; ++sd[0]) */
+}
+
 /* making value of coords. it is a general function for cubed spherical type */
 void make_nodes_CubedSpherical_coord(Patch_T *const patch)
 {
