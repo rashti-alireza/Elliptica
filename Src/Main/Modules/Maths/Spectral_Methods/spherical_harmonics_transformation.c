@@ -7,13 +7,16 @@
 
 /* calculatinf coefficents of spherical harmonic Clm for:
 // f(theta,phi) = \sum_{l=0}^{l=lmax} \sum_{m = -l}^{l} C_{lm}*Y_{lm}(thata,phi)
-// Y_{lm}=\left( -1\right) ^{m}\sqrt {\frac {2l+1} {4\pi }\frac {\left( l-m\right) !} {\left( l+m\right) !}}P_{1}^{m}\left( \cos \theta \right) e^{im\varphi }
+// Y_{lm}=\left( -1\right) ^{m}\sqrt {\frac {2l+1} {4\pi }\frac {\left( l-m\right) !} 
+//         {\left( l+m\right) !}}P_{1}^{m}\left( \cos \theta \right) e^{im\varphi }
 // 
 // some notes:
 // ===========
 // o. l is inclusive
 // o. f(theta, phi) is given in a 1d array with this mapping:
-//    f(i,j) = f[j+i*Nphi]
+//    f(i,j) = f[j+i*Nphi] = f[IJ_Ylm(i,j,Nphi)]
+// o. It's the best to set Ntheta = Ntheta_Ylm(lmax) and
+//    Nphi = Nphi_Ylm(lmax).
 // o. Clm = realC[lm2n(l,m,lmax)] + imagC[lm2n(l,m,lmax)]*I;
 // o. Clm is only calculated for m >= 0, since C(l,-m) = (-1)^m C*(l,m)
 // o. since m >= 0 the total memory is N = (Lmax+1)*Lmax/2 + Lmax+1
