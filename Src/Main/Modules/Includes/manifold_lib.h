@@ -249,6 +249,25 @@ typedef struct NEEDLE_T
   unsigned Ng;/* numbef of guess patches */
 }Needle_T;
 
+/* characteristics info of grid */
+#define NPARAMS_GRID_CHAR (2) /* for now only two objects */
+typedef struct GRID_CHAR_T
+{
+ Grid_T *grid;/* the grid */
+ double S;/* separation between the objects */
+ struct/* for each object */
+ {
+  const char *obj;/* BH or NS */
+  const char *side;/* left or right (must be lower case) */
+  const double *relClm;/* Re(Clm) at Ylm expansion of surface function */
+  const double *imgClm;/* Im(Clm) at Ylm expansion of surface function */
+  double lmax;/* lmax in Ylm expansion */
+  double l,w,h;/* length(x), width(y) and hight(z) of the central cube */
+  double r_min,r_max;/* min and max of surface function */
+ }params[NPARAMS_GRID_CHAR][1];
+ 
+}Grid_Char_T;
+#undef NPARAMS_GRID_CHAR
 
 double point_value(const unsigned i, const struct Collocation_s *const coll_s);
 void initialize_collocation_struct(const Patch_T *const patch,struct Collocation_s *const colloc,const unsigned dir);
@@ -292,8 +311,8 @@ void alloc_patches(Grid_T *const grid);
 void free_grid(Grid_T *grid);
 void free_patch(Patch_T *patch);
 void free_grid_db(void);
-void set_params_split_CS(Grid_T *const grid);
-
+void set_params_split_CS(Grid_Char_T *const grid_char);
+void theta_phi_of_XY_CS(double *const theta,double *const phi,const double *const X,const Flag_T side);
 
 
 #endif
