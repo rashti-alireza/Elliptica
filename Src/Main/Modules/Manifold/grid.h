@@ -5,6 +5,7 @@
 #include "manifold_lib.h"
 #include "fields_lib.h"
 #include "maths_equation_solvings_lib.h"
+#include "coordinate_shared_lib.h"
 
 extern Grid_T **grids_global;
 
