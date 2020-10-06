@@ -799,7 +799,7 @@ static void characteristics_BBN_Split_CS_grid_eg(Grid_T *const grid)
   grid_char->S    = C;
   /* NS */
   grid_char->params[ns]->obj    = "NS";
-  grid_char->params[ns]->side   = "left";
+  grid_char->params[ns]->dir    = "left";
   grid_char->params[ns]->relClm = reClm_rns;
   grid_char->params[ns]->imgClm = imClm_rns;
   grid_char->params[ns]->lmax   = lmax;
@@ -810,7 +810,7 @@ static void characteristics_BBN_Split_CS_grid_eg(Grid_T *const grid)
   grid_char->params[ns]->h      = box_size_l;
   /* BH */
   grid_char->params[bh]->obj    = "BH";
-  grid_char->params[bh]->side   = "right";
+  grid_char->params[bh]->dir    = "right";
   grid_char->params[bh]->relClm = reClm_rbh;
   grid_char->params[bh]->imgClm = imClm_rbh;
   grid_char->params[bh]->lmax   = lmax;

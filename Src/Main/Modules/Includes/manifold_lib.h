@@ -258,10 +258,10 @@ typedef struct GRID_CHAR_T
  struct/* for each object */
  {
   const char *obj;/* BH or NS */
-  const char *side;/* left or right (must be lower case) */
+  const char *dir;/* left or right (must be lower case) */
   const double *relClm;/* Re(Clm) at Ylm expansion of surface function */
   const double *imgClm;/* Im(Clm) at Ylm expansion of surface function */
-  double lmax;/* lmax in Ylm expansion */
+  unsigned lmax;/* lmax in Ylm expansion */
   double l,w,h;/* length(x), width(y) and hight(z) of the central cube */
   double r_min,r_max;/* min and max of surface function */
  }params[NPARAMS_GRID_CHAR][1];
