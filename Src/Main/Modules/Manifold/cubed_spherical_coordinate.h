@@ -65,6 +65,6 @@ int x_of_X(double *const x,const double *const X,const Patch_T *const patch);
 void test_CubedSpherical_Coordinates(Grid_T *const grid);
 void alloc_patches_SNS_CubedSpherical_grid(Grid_T *const grid);
 void alloc_patches_BBN_Split_CubedSpherical_grid(Grid_T *const grid);
-void set_params_split_CS(Grid_T *const grid);
+void set_params_split_CS(Grid_Char_T *const grid_char);
 void fill_patches_BBN_Split_CubedSpherical_grid(Grid_T *const grid);
 
