@@ -45,5 +45,6 @@ static int x_of_X_Cartesian_coord(double *const x,const double *const X,const Pa
 static int X_of_x_Cartesian_coord(double *const X,const double *const x);
 void free_needle(Needle_T *needle);
 void *alloc_needle(void);
+void theta_phi_of_XY_CS(double *const theta,double *const phi,const double *const X,const Flag_T side);
 
 
