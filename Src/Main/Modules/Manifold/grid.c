@@ -135,6 +135,9 @@ static void fill_patches(Grid_T *const grid)
   else if (strcmp_i(grid->kind,"BNS_CubedSpherical_grid"))
     fill_patches_BNS_CubedSpherical_grid(grid); 
     
+  else if (strcmp_i(grid->kind,"BBN_Split_CubedSpherical_grid"))
+    fill_patches_BBN_Split_CubedSpherical_grid(grid); 
+    
   else if (strcmp_i(grid->kind,"BBN_CubedSpherical_grid"))
     fill_patches_BBN_CubedSpherical_grid(grid); 
     
