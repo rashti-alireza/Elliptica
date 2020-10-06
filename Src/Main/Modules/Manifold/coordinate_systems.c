@@ -1104,8 +1104,8 @@ static void NS_BH_surface_Split_CS_grid_eg(Grid_T *const grid,const double R_NS_
     struct Collocation_s coll_s[2] = {0};
     double X[2],r,min[3] = {0},max[3] = {0};
     char par[1000]    = {'\0'};
-    char stem[1000]   = {'\0'};
-    char suffix[1000] = {'\0'};
+    char stem[100]   = {'\0'};
+    char suffix[100] = {'\0'};
     unsigned N[3],n,i,j,k,N_total;
     
     min[0] = -1 + step[0]*sd[0];
@@ -1118,8 +1118,8 @@ static void NS_BH_surface_Split_CS_grid_eg(Grid_T *const grid,const double R_NS_
     
       for (sd[2] = 0; sd[2] < Nsplt[2]; ++sd[2])
       {
-        min[2] = 0  + step[1]*sd[2];
-        max[2] = -1 + step[1]*(sd[2]+1);
+        min[2] = 0 + step[1]*sd[2];
+        max[2] = 0 + step[1]*(sd[2]+1);
         r      = 0 + (R_NS_l/Nsplt[2])*(sd[2]+1);
         
         sprintf(stem,"grid%u_left_NS_surface_function",grid->gn);
