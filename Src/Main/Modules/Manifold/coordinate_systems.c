@@ -742,133 +742,96 @@ static void characteristics_BBN_CS_grid_eg(Grid_T *const grid)
   free(R_outermost);
 }
 
-/* calculating the main characteristic of grid for BBN_Split_CubedSpherical grid */
+/* example of calculating the main characteristic of grid for 
+// BBN_Split_CubedSpherical grid. 
+// note: NS and BH sufaces are required to be given in Ylm expansions. */
 static void characteristics_BBN_Split_CS_grid_eg(Grid_T *const grid)
 {
-  /* set number of splits, points in each directions etc. */
-  set_params_split_CS(grid);
-  
   /* calculate the characteristics of this grid */
+  Grid_Char_T grid_char[1] = {0};/* grid characteristics */
+  const unsigned ns = 0, bh = 1;
+  const unsigned lmax   = 5;
+  const unsigned Ntheta = Ntheta_Ylm(lmax);
+  const unsigned Nphi   = Nphi_Ylm(lmax);
+  const unsigned Ntot   = Ntotal_Ylm(lmax);
   const unsigned gn   = grid->gn;
   const double C      = Pgetd("BH_NS_separation");
   const double R_NS_l = Pgetd("NS_radius"),
                bh_m   = Pgetd("BH_mass"),
                bh_chi = Pgetd("BH_dimensionless_spin"),
                R_BH_r = bh_m*(1+sqrt(1-Pow2(bh_chi)));
-               
-  double box_size_l;
-  const unsigned N_Outermost_Split = (unsigned)Pgeti("Number_of_Outermost_Split"); 
-  double *R_outermost = calloc(N_Outermost_Split,sizeof(*R_outermost));
-  unsigned nlb[3]/*left box*/;
-  char var[100] = {'\0'};
-  char par[100] = {'\0'};
-  char val[100] = {'\0'};
+  double *rns = alloc_double(Ntot);/* surface function r = r(th,ph). */
+  double *rbh = alloc_double(Ntot);/* surface function r = r(th,ph). */
+  double *reClm_rns = alloc_ClmYlm(lmax),
+         *imClm_rns = alloc_ClmYlm(lmax);
+  double *reClm_rbh = alloc_ClmYlm(lmax),
+         *imClm_rbh = alloc_ClmYlm(lmax);
+  double box_size_l,box_size_r;
   const char *kind;
-  unsigned i;
+  unsigned ij;
+  
+  /* set surface functions (required in Ylm) */
+  /* initialize tables */
+  init_Legendre_root_function();
+  for (ij = 0; ij < Ntot; ++ij)
+  {
+    rns[ij] = R_NS_l;
+    rbh[ij] = R_BH_r;
+  }
+  /* calculating coeffs */
+  get_Ylm_coeffs(reClm_rns,imClm_rns,rns,Ntheta,Nphi,lmax);
+  get_Ylm_coeffs(reClm_rbh,imClm_rbh,rbh,Ntheta,Nphi,lmax);
   
   /* finding the kind of grid */
   kind = Pgets("grid_kind");
   grid->kind = dup_s(kind);
   
-  assert(GRT(C,0));
-  assert(GRT(R_NS_l,0));
-  assert(GRT(R_BH_r,0));
+  assert(C > 0);
+  assert(R_NS_l > 0);
+  assert(R_BH_r > 0);
   assert(LSS(2*R_NS_l,C));
   assert(LSS(2*R_BH_r,C));
   
-  /* making NS and BH surfaces function */
-  NS_BH_surface_Split_CS_grid_eg(grid,R_NS_l,R_BH_r,bh_m*bh_chi);
+  box_size_r = box_size_l = Pgetd("left_central_box_length_ratio")*R_NS_l;
   
-  box_size_l = Pgetd("left_central_box_length_ratio")*R_NS_l;
+  /* set char of grid */
+  grid_char->grid = grid;
+  grid_char->S    = C;
+  /* NS */
+  grid_char->params[ns]->obj    = "NS";
+  grid_char->params[ns]->side   = "left";
+  grid_char->params[ns]->relClm = reClm_rns;
+  grid_char->params[ns]->imgClm = imClm_rns;
+  grid_char->params[ns]->lmax   = lmax;
+  grid_char->params[ns]->r_min  = R_NS_l;
+  grid_char->params[ns]->r_max  = R_NS_l;
+  grid_char->params[ns]->l      = box_size_l;
+  grid_char->params[ns]->w      = box_size_l;
+  grid_char->params[ns]->h      = box_size_l;
+  /* BH */
+  grid_char->params[bh]->obj    = "BH";
+  grid_char->params[bh]->side   = "right";
+  grid_char->params[bh]->relClm = reClm_rbh;
+  grid_char->params[bh]->imgClm = imClm_rbh;
+  grid_char->params[bh]->lmax   = lmax;
+  grid_char->params[bh]->r_min  = R_BH_r;
+  grid_char->params[bh]->r_max  = R_BH_r;
+  grid_char->params[bh]->l      = box_size_r;
+  grid_char->params[bh]->w      = box_size_r;
+  grid_char->params[bh]->h      = box_size_r;
   
-  for (i = 0; i < N_Outermost_Split; i++)
-  {
-    sprintf(var,"Outermost%u_radius",i);
-    R_outermost[i] = Pgetd(var);
-    
-    if (LSS(R_outermost[i],2*C))
-      Error0("the radius of outermost patches must be greater than twice of BNS distance.");
-    
-    if (i > 0)
-      if (LSSEQL(R_outermost[i],R_outermost[i-1]))
-        Error0("The radius of outermost must be increasing.");
-    
-  }
+  /* set number of splits, points in each directions,
+  // surface functions etc. */
+  set_params_split_CS(grid_char);
   
-  /* filling n */
+  /* free */
+  _free(rns);
+  _free(rbh);
+  _free(reClm_rns);
+  _free(imClm_rns);
+  _free(reClm_rbh);
+  _free(imClm_rbh);
   
-  /* left box */
-  nlb[0] = (unsigned)Pgeti("n_a");
-  nlb[1] = (unsigned)Pgeti("n_b");
-  nlb[2] = (unsigned)Pgeti("n_c");
-    
-  /* adding the results to the parameter data base */
-  
-  /* n_a, n_b, n_c */
-  /* left box */
-  sprintf(par,"grid%u_left_central_box_n_a",gn);
-  sprintf(val,"%u",nlb[0]);
-  add_parameter_string(par,val);
-  
-  sprintf(par,"grid%u_left_central_box_n_b",gn);
-  sprintf(val,"%u",nlb[1]);
-  add_parameter_string(par,val);
-  
-  sprintf(par,"grid%u_left_central_box_n_c",gn);
-  sprintf(val,"%u",nlb[2]);
-  add_parameter_string(par,val);
-  
-  /* size a,b,c */
-  sprintf(par,"grid%u_left_central_box_size_a",gn);
-  add_parameter_double(par,box_size_l);
-  
-  sprintf(par,"grid%u_left_central_box_size_b",gn);
-  add_parameter_double(par,box_size_l);
-  
-  sprintf(par,"grid%u_left_central_box_size_c",gn);
-  add_parameter_double(par,box_size_l);
-  
-  /* surrounding box length */
-  sprintf(par,"grid%u_surrounding_box_length",gn);
-  add_parameter_double(par,C);
-  
-  /* R1 and R2 outermost */
-  sprintf(par,"grid%u_outermost%u_R2",gn,0);
-  add_parameter_double(par,R_outermost[0]);
-    
-  for (i = 1; i < N_Outermost_Split; i++)
-  {
-    /* R1: */
-    sprintf(par,"grid%u_outermost%u_R1",gn,i);
-    add_parameter_double(par,R_outermost[i-1]);
-    
-    /* R2: */
-    sprintf(par,"grid%u_outermost%u_R2",gn,i);
-    add_parameter_double(par,R_outermost[i]);
-    
-  }
-  
-  /* assuming the center of left NS at (0,-C/2,0) */
-  sprintf(par,"grid%u_left_NS_center_a",gn);
-  add_parameter_double(par,0.0);
-  
-  sprintf(par,"grid%u_left_NS_center_b",gn);
-  add_parameter_double(par,-C/2);
-  
-  sprintf(par,"grid%u_left_NS_center_c",gn);
-  add_parameter_double(par,0.0);
-  
-  /* assuming the center of right BH at (0,C/2,0) */
-  sprintf(par,"grid%u_right_BH_center_a",gn);
-  add_parameter_double(par,0.0);
-  
-  sprintf(par,"grid%u_right_BH_center_b",gn);
-  add_parameter_double(par,C/2);
-  
-  sprintf(par,"grid%u_right_BH_center_c",gn);
-  add_parameter_double(par,0.0);
-  
-  free(R_outermost);
 }
 
 /* making  NS and BH surfaces function */
@@ -1082,205 +1045,6 @@ static void NS_BH_surface_CS_grid_eg(Grid_T *const grid,const double R_NS_l,cons
   add_parameter_array(par,R,N_total);
   
   free(R);
-}
-
-/* making NS and BH surfaces function */
-static void NS_BH_surface_Split_CS_grid_eg(Grid_T *const grid,const double R_NS_l,const double R_BH_r,const double a_BH)
-{
-
-  /* number of split in each direction. */
-  const unsigned Nsplt[3] = {Pgeti("SplitCS_Nsplit_a"),
-                             Pgeti("SplitCS_Nsplit_b"),
-                             Pgeti("SplitCS_Nsplit_c")};
-  /* step in each direction, note X in [-1,1]x[-1,1]x[0,1]. */
-  const double step[3]    = {2./Nsplt[0],2./Nsplt[1],1./Nsplt[2]};
-  unsigned sd[3];/* split directions */
-  
-  /* left NS */
-  for (sd[0] = 0; sd[0] < Nsplt[0]; ++sd[0])
-  {
-    double *R = 0;
-    Patch_T patch[1] = {0};
-    struct Collocation_s coll_s[2] = {0};
-    double X[2],r,min[3] = {0},max[3] = {0};
-    char par[1000]    = {'\0'};
-    char stem[100]   = {'\0'};
-    char suffix[100] = {'\0'};
-    unsigned N[3],n,i,j,k,N_total;
-    
-    min[0] = -1 + step[0]*sd[0];
-    max[0] = -1 + step[0]*(sd[0]+1);
-    
-    for (sd[1] = 0; sd[1] < Nsplt[1]; ++sd[1])
-    {
-      min[1] = -1 + step[1]*sd[1];
-      max[1] = -1 + step[1]*(sd[1]+1);
-    
-      for (sd[2] = 0; sd[2] < Nsplt[2]; ++sd[2])
-      {
-        min[2] = 0 + step[1]*sd[2];
-        max[2] = 0 + step[1]*(sd[2]+1);
-        r      = 0 + (R_NS_l/Nsplt[2])*(sd[2]+1);
-        
-        sprintf(stem,"grid%u_left_NS_surface_function",grid->gn);
-        sprintf(suffix,"%u%u%u",sd[0],sd[1],sd[2]);
-        
-        /* filling min */
-        patch->min[0] = min[0];
-        patch->min[1] = min[1];
-        patch->min[2] = min[2];
-
-        /* filling max */
-        patch->max[0] = max[0];
-        patch->max[1] = max[1];
-        patch->max[2] = max[2];
-        
-        /* collocation */
-        patch->collocation[0] = Chebyshev_Extrema;
-        patch->collocation[1] = Chebyshev_Extrema;
-        patch->collocation[2] = Chebyshev_Extrema;
-
-        /* basis */
-        patch->basis[0] = Chebyshev_Tn_BASIS;
-        patch->basis[1] = Chebyshev_Tn_BASIS;
-        patch->basis[2] = Chebyshev_Tn_BASIS;
-        
-        /* left NS */
-        
-        /* filling N */
-        N[0] = (unsigned)Pgeti("n_a");
-        N[1] = (unsigned)Pgeti("n_b");
-        N[2] = (unsigned)Pgeti("n_c");
-        patch->n[0] = N[0];
-        patch->n[1] = N[1];
-        patch->n[2] = N[2];
-        
-        initialize_collocation_struct(patch,&coll_s[0],0);
-        initialize_collocation_struct(patch,&coll_s[1],1);
-          
-        N_total = N[0]*N[1]*N[2];
-        
-        /* NS surface */
-        R = alloc_double(N_total);
-        for (i = 0; i < N[0]; ++i)
-          for (j = 0; j < N[1]; ++j)
-            for (k = 0; k < N[2]; ++k)
-              R[L(N,i,j,k)] = r;
-        
-        sprintf(par,"%s_up_%s",stem,suffix);
-        add_parameter_array(par,R,N_total);
-        
-        sprintf(par,"%s_down_%s",stem,suffix);
-        add_parameter_array(par,R,N_total);
-        
-        sprintf(par,"%s_back_%s",stem,suffix);
-        add_parameter_array(par,R,N_total);
-        
-        sprintf(par,"%s_front_%s",stem,suffix);
-        add_parameter_array(par,R,N_total);
-        
-        sprintf(par,"%s_left_%s",stem,suffix);
-        add_parameter_array(par,R,N_total);
-        
-        sprintf(par,"%s_right_%s",stem,suffix);
-        add_parameter_array(par,R,N_total);
-        
-        free(R);
-      }
-    }
-  }
-  
-  /* right BH */
-  for (sd[0] = 0; sd[0] < Nsplt[0]; ++sd[0])
-  {
-    double *R = 0;
-    Patch_T patch[1] = {0};
-    struct Collocation_s coll_s[2] = {0};
-    double X[2],r,min[3] = {0},max[3] = {0};
-    char par[1000]    = {'\0'};
-    char stem[1000]   = {'\0'};
-    char suffix[1000] = {'\0'};
-    unsigned N[3],n,i,j,k,N_total;
-    
-    min[0] = -1 + step[0]*sd[0];
-    max[0] = -1 + step[0]*(sd[0]+1);
-    
-    for (sd[1] = 0; sd[1] < Nsplt[1]; ++sd[1])
-    {
-      min[1] = -1 + step[1]*sd[1];
-      max[1] = -1 + step[1]*(sd[1]+1);
-    
-      for (sd[2] = 0; sd[2] < Nsplt[2]; ++sd[2])
-      {
-        min[2] = 0  + step[1]*sd[2];
-        max[2] = -1 + step[1]*(sd[2]+1);
-        r      = 0 + (R_BH_r/Nsplt[2])*(sd[2]+1);
-        
-        sprintf(stem,"grid%u_right_BH_surface_function",grid->gn);
-        sprintf(suffix,"%u%u%u",sd[0],sd[1],sd[2]);
-        
-        /* filling min */
-        patch->min[0] = min[0];
-        patch->min[1] = min[1];
-        patch->min[2] = min[2];
-
-        /* filling max */
-        patch->max[0] = max[0];
-        patch->max[1] = max[1];
-        patch->max[2] = max[2];
-        
-        /* collocation */
-        patch->collocation[0] = Chebyshev_Extrema;
-        patch->collocation[1] = Chebyshev_Extrema;
-        patch->collocation[2] = Chebyshev_Extrema;
-
-        /* basis */
-        patch->basis[0] = Chebyshev_Tn_BASIS;
-        patch->basis[1] = Chebyshev_Tn_BASIS;
-        patch->basis[2] = Chebyshev_Tn_BASIS;
-        
-        /* filling N */
-        N[0] = (unsigned)Pgeti("n_a");
-        N[1] = (unsigned)Pgeti("n_b");
-        N[2] = (unsigned)Pgeti("n_c");
-        patch->n[0] = N[0];
-        patch->n[1] = N[1];
-        patch->n[2] = N[2];
-        
-        initialize_collocation_struct(patch,&coll_s[0],0);
-        initialize_collocation_struct(patch,&coll_s[1],1);
-          
-        N_total = N[0]*N[1]*N[2];
-        
-        /* surface */
-        R = alloc_double(N_total);
-        for (i = 0; i < N[0]; ++i)
-          for (j = 0; j < N[1]; ++j)
-            for (k = 0; k < N[2]; ++k)
-              R[L(N,i,j,k)] = r;
-        
-        sprintf(par,"%s_up_%s",stem,suffix);
-        add_parameter_array(par,R,N_total);
-        
-        sprintf(par,"%s_down_%s",stem,suffix);
-        add_parameter_array(par,R,N_total);
-        
-        sprintf(par,"%s_back_%s",stem,suffix);
-        add_parameter_array(par,R,N_total);
-        
-        sprintf(par,"%s_front_%s",stem,suffix);
-        add_parameter_array(par,R,N_total);
-        
-        sprintf(par,"%s_left_%s",stem,suffix);
-        add_parameter_array(par,R,N_total);
-        
-        sprintf(par,"%s_right_%s",stem,suffix);
-        add_parameter_array(par,R,N_total);
-        
-        free(R);
-      }
-    }
-  }
 }
 
 /* calculating the main characteristic of grid for BNS_CubedSpherical grid */
