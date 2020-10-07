@@ -754,7 +754,6 @@ static void characteristics_BBN_Split_CS_grid_eg(Grid_T *const grid)
   const unsigned Ntheta = Ntheta_Ylm(lmax);
   const unsigned Nphi   = Nphi_Ylm(lmax);
   const unsigned Ntot   = Ntotal_Ylm(lmax);
-  const unsigned gn   = grid->gn;
   const double C      = Pgetd("BH_NS_separation");
   const double R_NS_l = Pgetd("NS_radius"),
                bh_m   = Pgetd("BH_mass"),
