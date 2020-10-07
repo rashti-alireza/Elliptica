@@ -181,7 +181,7 @@ populate_CS_patch_SplitCS
   unsigned p;/* patch number */
   
   /* object name */
-  set_object_name_split_CS(obj,par);
+  set_object_name_split_CS(obj,obj0);
   
   if (dir0 == NONE)
   {
@@ -195,7 +195,7 @@ populate_CS_patch_SplitCS
     type = OJ_T_SCS;
   }
   
-  assert(dir == LEFT || dir == RIGHT || dir == NONE);
+  assert(dir0 == LEFT || dir0 == RIGHT || dir0 == NONE);
   
   for (d0 = 0; d0 < Nsd[0]; d0++)
   {
@@ -2614,7 +2614,7 @@ void alloc_patches_BBN_CubedSpherical_grid(Grid_T *const grid)
 
 /* given type of the object (lower case or capital) if exists
 // it writes the object name correctly, otherwise gives error. */
-static void set_object_name_split_CS(char *const obj,const char *const type)
+void set_object_name_split_CS(char *const obj,const char *const type)
 {
   assert(obj);
   

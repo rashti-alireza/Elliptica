@@ -67,7 +67,7 @@ void alloc_patches_SNS_CubedSpherical_grid(Grid_T *const grid);
 void alloc_patches_BBN_Split_CubedSpherical_grid(Grid_T *const grid);
 void set_params_split_CS(Grid_Char_T *const grid_char);
 void fill_patches_BBN_Split_CubedSpherical_grid(Grid_T *const grid);
-static void set_object_name_split_CS(char *const obj,const char *const type);
+void set_object_name_split_CS(char *const obj,const char *const type);
 
 void 
 populate_CS_patch_SplitCS
