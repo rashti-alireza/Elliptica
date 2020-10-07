@@ -131,7 +131,7 @@ void fill_patches_BBN_CubedSpherical_grid(Grid_T *const grid)
 /* filling split cubed spherical coordinate patches for BBN grid */
 void fill_patches_BBN_Split_CubedSpherical_grid(Grid_T *const grid)
 {
-  const unsigned outermost = (unsigned)Pgeti("Number_of_Outermost_Split");
+  const double r_outermost = Pgetd("Outermost_radius");
   unsigned i,pn;
   
   pn = 0; /* patch number */
@@ -2610,6 +2610,26 @@ void alloc_patches_BBN_CubedSpherical_grid(Grid_T *const grid)
   
 }
 
+/* given type of the object (lower case or capital) if exists
+// it writes the object name correctly, otherwise gives error. */
+static void set_object_name_split_CS(char *const obj,const char *const type)
+{
+  assert(obj);
+  
+  unsigned i = 0;
+  while (SCS_ObjType[i])
+  {
+    if (strcmp_i(SCS_ObjType[i],type))
+    {
+      sprintf(obj,"%s",SCS_ObjType[i]);
+      return;
+    }
+    i++;
+  }
+  
+  Error0("No such object name!\n");
+}
+
 /* set parameters of split cubed spherical, number of splits,
 // surface functions etc.
 // this must be called in characteristic function */
@@ -2716,10 +2736,11 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
     char parU[STR_SIZE3] = {'\0'};
     char parD[STR_SIZE3] = {'\0'};
     char par[STR_SIZE3]  = {'\0'};
+    char obj[STR_SIZE1]  = {'\0'};
     unsigned N_total,p;
     
-    const char *obj = grid_char->params[obj_n]->obj;
-    const char *dir = grid_char->params[obj_n]->dir;
+    const char *obj0 = grid_char->params[obj_n]->obj;
+    const char *dir  = grid_char->params[obj_n]->dir;
     double l = grid_char->params[obj_n]->l;
     double w = grid_char->params[obj_n]->w;
     double h = grid_char->params[obj_n]->h;
@@ -2730,6 +2751,8 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
     double rmin = sqrt(Pow2(l)+Pow2(w)+Pow2(h))/2.;
     double rmax = grid_char->params[obj_n]->r_min;
     double rstep = (rmax-rmin)/Nsd[2];
+    
+    set_object_name_split_CS(obj,obj0);
     
     /* some checks */
     assert(rstep > 0);
@@ -2820,8 +2843,8 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
               SCS_par_sigma(parU,SigmaU);
               SCS_par_sigma(parD,SigmaD);              
               //test
-              printf("%s",parU);
-              printf("%s",parD);
+              printf("~>%s\n",parU);
+              printf("~>%s\n",parD);
               //end
               
               X[2] = 1;
@@ -2865,8 +2888,8 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
                 Error0(NO_OPTION);
               
               //test
-              printf("%s",parU);
-              printf("%s",parD);
+              printf("~>%s\n",parU);
+              printf("~>%s\n",parD);
               //end
               
               X[2] = DBL_MAX;/* catch error */
@@ -2897,8 +2920,8 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
               SCS_par_sigma(parD,SigmaD);
               
               //test
-              printf("%s",parU);
-              printf("%s",parD);
+              printf("~>%s\n",parU);
+              printf("~>%s\n",parD);
               //end
               
               double xc;
@@ -2941,8 +2964,8 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
               SCS_par_sigma(parD,SigmaD);
               
               //test
-              printf("%s",parU);
-              printf("%s",parD);
+              printf("~>%s\n",parU);
+              printf("~>%s\n",parD);
               //end
               
               for (i = 0; i < Nns[0]; ++i)
@@ -2987,10 +3010,11 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
     }
     
     /* set parameter for centeral box */
-    obj = "central_box";
+    obj0 = "central_box";
     step[0] = l/Nsd[0];
     step[1] = w/Nsd[1];
     step[2] = h/Nsd[2];
+    set_object_name_split_CS(obj,obj0);
     
     if (!strcmp(dir,"left"))
     {
@@ -3108,6 +3132,7 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
     double rstep = (rmax-rmin)/Nsd[2];
     
     sprintf(obj,"%s_surrounding",objstem);
+    set_object_name_split_CS(obj,obj);
     
     /* some checks */
     assert(l > 0 && w > 0 && h > 0);
@@ -3194,8 +3219,8 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
               SCS_par_sigma(parD,SigmaD);              
               
               //test
-              printf("%s",parU);
-              printf("%s",parD);
+              printf("~>%s\n",parU);
+              printf("~>%s\n",parD);
               //end
               
               double xc;
@@ -3265,8 +3290,8 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
               SCS_par_sigma(parD,SigmaD);
               
               //test
-              printf("%s",parU);
-              printf("%s",parD);
+              printf("~>%s\n",parU);
+              printf("~>%s\n",parD);
               //end
               
               double xc;
@@ -3310,8 +3335,8 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
               SCS_par_sigma(parD,SigmaD);
               
               //test
-              printf("%s",parU);
-              printf("%s",parD);
+              printf("~>%s\n",parU);
+              printf("~>%s\n",parD);
               //end
               
               for (i = 0; i < Nns[0]; ++i)
@@ -3377,10 +3402,11 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
     char parU[STR_SIZE3] = {'\0'};
     char parD[STR_SIZE3] = {'\0'};
     char par[STR_SIZE3]  = {'\0'};
+    char obj[STR_SIZE1]  = {'\0'};
     unsigned N_total,p;
     
     /* find r step */
-    const char *obj = "outermost";
+    const char *obj0 = "outermost";
     double l = 2*S;
     double w = 2*S;
     double h = 2*S;
@@ -3388,6 +3414,7 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
     double rmax = Pgetd("outermost_radius");
     double rstep = (rmax-rmin)/Nsd[2];
     
+    set_object_name_split_CS(obj,obj0);
     /* some checks */
     assert(l > 0 && w > 0 && h > 0);
     if(2*S > rmax)
@@ -3474,8 +3501,8 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
               SCS_par_sigma(parD,SigmaD)              
               
               //test
-              printf("%s",parU);
-              printf("%s",parD);
+              printf("~>%s\n",parU);
+              printf("~>%s\n",parD);
               //end
               
               for (i = 0; i < Nns[0]; ++i)
@@ -3540,8 +3567,8 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
               SCS_par_sigma(parD,SigmaD)
               
               //test
-              printf("%s",parU);
-              printf("%s",parD);
+              printf("~>%s\n",parU);
+              printf("~>%s\n",parD);
               //end
               
               double xc;
@@ -3582,8 +3609,8 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
               SCS_par_sigma(parD,SigmaD)
               
               //test
-              printf("%s",parU);
-              printf("%s",parD);
+              printf("~>%s\n",parU);
+              printf("~>%s\n",parD);
               //end
               
               for (i = 0; i < Nns[0]; ++i)
@@ -3631,10 +3658,13 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
   {
     double step[3] = {0};
     char par[STR_SIZE3]  = {'\0'};
-    const char *obj = "filling_box";
+    char obj[STR_SIZE1]  = {'\0'};
+    const char *obj0 = "filling_box";
     const char *dir;
     double l,w,h;
     Flag_T side = fbox[obj_n];
+    
+    set_object_name_split_CS(obj,obj0);
     
     /* set length and centers */
     double cen[3] = {0};
