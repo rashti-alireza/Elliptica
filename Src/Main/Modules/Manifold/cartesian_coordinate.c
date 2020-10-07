@@ -179,6 +179,110 @@ void fill_patches_Cartesian_grid(Grid_T *const grid)
   
 }
 
+/* populating properties of a box patch for split cubed spherical.
+// like: filling_box, central_box. */
+void 
+populate_box_patch_SplitCS
+  (
+  Grid_T *const grid,
+  const char *const obj0,/* filling_box,central_box. */
+  const Flag_T dir0,/* direction */
+  unsigned *const pn/* starting patch number,is increased for each add */
+  )
+
+{
+  const unsigned Nsd[3] = {(unsigned)Pgeti("SplitCS_Nsplit_a"),
+                           (unsigned)Pgeti("SplitCS_Nsplit_b"),
+                           (unsigned)Pgeti("SplitCS_Nsplit_c")};
+  char par[STR_SIZE3]  = {'\0'};
+  char obj[STR_SIZE1]  = {'\0'};
+  char name[STR_SIZE3] = {'\0'};
+  const char *const dir = StrSide[dir0];
+  unsigned d0,d1,d2;
+  unsigned p;/* patch number */
+  
+  /* object name */
+  set_object_name_split_CS(obj,obj0);
+  
+  for (d0 = 0; d0 < Nsd[0]; d0++)
+  {
+    for (d1 = 0; d1 <  Nsd[1]; d1++)
+    {
+      for (d2 = 0; d2 <  Nsd[2]; d2++)
+      {
+        for (p = *pn; p < *pn+6; ++p)
+        {
+          Patch_T *const patch = grid->patch[p];
+          Flag_T side = (Flag_T)(p-(*pn));
+          
+          assert(StrSide[side]);
+          
+          /* filling grid */
+          patch->grid = grid;
+          
+          /* filling patch number */
+          patch->pn = p;
+          
+          /* filling inner boundary */
+          patch->innerB = 0;
+          
+          /* filling n */
+          patch->n[0] = (unsigned)Pgeti("SplitCS_n_a");
+          patch->n[1] = (unsigned)Pgeti("SplitCS_n_b");
+          patch->n[2] = (unsigned)Pgeti("SplitCS_n_c");
+          
+          /* filling nn */
+          patch->nn = total_nodes_patch(patch);
+          
+          /* filling name */
+          SCS_par_name(name);
+          patch->name = dup_s(name);
+          
+          /* filling center */
+          SCS_par_center(par,"a");
+          patch->c[0] = Pgetd(par);
+          SCS_par_center(par,"b");
+          patch->c[1] = Pgetd(par);
+          SCS_par_center(par,"c");
+          patch->c[2] = Pgetd(par);
+          
+          /* filling size */
+          SCS_par_boxlen(par,"l");
+          patch->s[0] = Pgetd(par);
+          SCS_par_boxlen(par,"w");
+          patch->s[1] = Pgetd(par);
+          SCS_par_boxlen(par,"h");
+          patch->s[2] = Pgetd(par);
+          
+          /* filling min: min = center-l/2 */
+          patch->min[0] = patch->c[0]-patch->s[0]/2;
+          patch->min[1] = patch->c[1]-patch->s[1]/2;
+          patch->min[2] = patch->c[2]-patch->s[2]/2;
+
+          /* filling max: max = center+l/2 */
+          patch->max[0] = patch->c[0]+patch->s[0]/2;
+          patch->max[1] = patch->c[1]+patch->s[1]/2;
+          patch->max[2] = patch->c[2]+patch->s[2]/2;
+
+          /* filling flags */
+          patch->coordsys = Cartesian;
+          
+          /* collocation */
+          patch->collocation[0] = Chebyshev_Extrema;
+          patch->collocation[1] = Chebyshev_Extrema;
+          patch->collocation[2] = Chebyshev_Extrema;
+          
+          /* basis */
+          patch->basis[0] = Chebyshev_Tn_BASIS;
+          patch->basis[1] = Chebyshev_Tn_BASIS;
+          patch->basis[2] = Chebyshev_Tn_BASIS;
+        }/* for (p = *pn; p < *pn+6; ++p) */
+        *pn += 6;
+      }
+    }
+  }
+}
+
 /* populating properties of the box at the middle of left NS */
 void populate_left_NS_central_box(Grid_T *const grid,const unsigned pn)
 {
