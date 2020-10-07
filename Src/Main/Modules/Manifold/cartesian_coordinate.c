@@ -247,11 +247,11 @@ populate_box_patch_SplitCS
           patch->c[2] = Pgetd(par);
           
           /* filling size */
-          SCS_par_boxlen(par,"l");
+          SCS_par_box_length(par,"l");
           patch->s[0] = Pgetd(par);
-          SCS_par_boxlen(par,"w");
+          SCS_par_box_length(par,"w");
           patch->s[1] = Pgetd(par);
-          SCS_par_boxlen(par,"h");
+          SCS_par_box_length(par,"h");
           patch->s[2] = Pgetd(par);
           
           /* filling min: min = center-l/2 */

@@ -47,7 +47,7 @@
 /* par format for box lengths.
 // NOTE: d0,d1,d2,grid,dir and obj are required.
 // ex: grid1_central_box_len_a_leftX0Y2Z3 */
-#define SCS_par_boxlen(par,axis) \
+#define SCS_par_box_length(par,axis) \
   sprintf(par,"grid%u_%s_len_%s_%s"SCS_suffix,\
   grid->gn,obj,axis,dir,d0,d1,d2);
 

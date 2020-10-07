@@ -3087,13 +3087,13 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
       {
         for (d2 = 0; d2 <  Nsd[2]; d2++)
         {
-          SCS_par_boxlen(par,"l");
+          SCS_par_box_length(par,"l");
           Psetd(par,step[0]);
          
-          SCS_par_boxlen(par,"w");
+          SCS_par_box_length(par,"w");
           Psetd(par,step[1]);
          
-          SCS_par_boxlen(par,"h");
+          SCS_par_box_length(par,"h");
           Psetd(par,step[2]);
         }/* for (d2 = 0; d2 <  Nsd[2]; d2++) */
       }/* for (d1 = 0; d1 <  Nsd[1]; d1++) */
@@ -3821,13 +3821,13 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
       {
         for (d2 = 0; d2 <  Nsd[2]; d2++)
         {
-           SCS_par_boxlen(par,"l");
+           SCS_par_box_length(par,"l");
            Psetd(par,step[0]);
            
-           SCS_par_boxlen(par,"w");
+           SCS_par_box_length(par,"w");
            Psetd(par,step[1]);
            
-           SCS_par_boxlen(par,"h");
+           SCS_par_box_length(par,"h");
            Psetd(par,step[2]);
         }/* for (d2 = 0; d2 <  Nsd[2]; d2++) */
       }/* for (d1 = 0; d1 <  Nsd[1]; d1++) */
