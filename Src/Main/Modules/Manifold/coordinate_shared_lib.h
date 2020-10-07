@@ -17,16 +17,16 @@
 /* split cubed spherical suffix */
 #define SCS_suffix "X%uY%uZ%u"
 
+/* surface function stem */
+#define SigmaU "sigmaU"
+#define SigmaD "sigmaD"
+
 /* par format for surface function.
 // NOTE: d0,d1,d2,grid,dir,obj and side are required.
 // ex: grid1_sigmaU_left_NS_backX0Y2Z3 */
 #define SCS_par_sigma(par,sigma) \
   sprintf(par,"grid%u_%s_%s_%s_%s"SCS_suffix,\
   grid->gn,sigma,dir,obj,StrSide[side],d0,d1,d2);
-
-/* surface function stem */
-#define SigmaU "sigmaU"
-#define SigmaD "sigmaD"
 
 /* par format for center of patch with respect to the 
 // reference Cartesian coords. 
