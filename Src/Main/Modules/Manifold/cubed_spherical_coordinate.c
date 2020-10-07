@@ -2761,6 +2761,24 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
           rdown  = rmin + rstep*d2;
           rup    = rmin + rstep*(d2+1);
           
+          /* set min and max parameters */
+          for (p = 0; p < 6; ++p)
+          {
+            Flag_T side = (Flag_T)(p);
+            SCS_par_min(par,0);
+            Psetd(par,min[0]);
+            SCS_par_min(par,1);
+            Psetd(par,min[1]);
+            SCS_par_min(par,2);
+            Psetd(par,min[2]);
+            SCS_par_max(par,0);
+            Psetd(par,max[0]);
+            SCS_par_max(par,1);
+            Psetd(par,max[1]);
+            SCS_par_max(par,2);
+            Psetd(par,max[2]);
+          }
+          
           /* filling min */
           patch->min[0] = min[0];
           patch->min[1] = min[1];
@@ -2968,52 +2986,89 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
       SCS_par_center(par,"c");
       Psetd(par,0.0);
     }
+    
     /* set parameter for centeral box */
     obj = "central_box";
+    step[0] = l/Nsd[0];
+    step[1] = w/Nsd[1];
+    step[2] = h/Nsd[2];
     
     if (!strcmp(dir,"left"))
     {
       Flag_T side = LEFT;
-      /* assuming objects are on y-axis */
-      SCS_par_center(par,"a");
-      Psetd(par,0.0);
-      SCS_par_center(par,"b");
-      Psetd(par,-S/2.);
-      SCS_par_center(par,"c");
-      Psetd(par,0.0);
+      double cen[3] = {0};
+      /* orign center (0,-S/2.,0) */
+      cen[0] = -l/2.;
+      for (d0 = 0; d0 < Nsd[0]; d0++)
+      {
+        cen[0] += (d0*step[0]+step[0]/2.);
+        cen[1] = -S/2.-w/2.;
+        for (d1 = 0; d1 <  Nsd[1]; d1++)
+        {
+          cen[1] += (d1*step[1]+step[1]/2.);
+          cen[2] = -h/2.;
+          for (d2 = 0; d2 <  Nsd[2]; d2++)
+          {
+            cen[2] += (d2*step[2]+step[2]/2.);
+            
+            /* assuming objects are on y-axis */
+            SCS_par_center(par,"a");
+            Psetd(par,cen[0]);
+            SCS_par_center(par,"b");
+            Psetd(par,cen[1]);
+            SCS_par_center(par,"c");
+            Psetd(par,cen[2]);
+          }
+        }
+      }
     }
     else if (!strcmp(dir,"right"))
     {
       Flag_T side = RIGHT;
-      /* assuming objects are on y-axis */
-      SCS_par_center(par,"a");
-      Psetd(par,0.0);
-      SCS_par_center(par,"b");
-      Psetd(par,S/2.);
-      SCS_par_center(par,"c");
-      Psetd(par,0.0);
+      double cen[3] = {0};
+      /* orign center (0,S/2.,0) */
+      cen[0] = -l/2.;
+      for (d0 = 0; d0 < Nsd[0]; d0++)
+      {
+        cen[0] += (d0*step[0]+step[0]/2.);
+        cen[1] = S/2.-w/2.;
+        for (d1 = 0; d1 <  Nsd[1]; d1++)
+        {
+          cen[1] += (d1*step[1]+step[1]/2.);
+          cen[2] = -h/2.;
+          for (d2 = 0; d2 <  Nsd[2]; d2++)
+          {
+            cen[2] += (d2*step[2]+step[2]/2.);
+            
+            /* assuming objects are on y-axis */
+            SCS_par_center(par,"a");
+            Psetd(par,cen[0]);
+            SCS_par_center(par,"b");
+            Psetd(par,cen[1]);
+            SCS_par_center(par,"c");
+            Psetd(par,cen[2]);
+          }
+        }
+      }
     }
     else
       Error0(NO_OPTION);
     
-    step[0] = l/Nsd[0];
-    step[1] = w/Nsd[1];
-    step[2] = h/Nsd[2];
-    /* set lengths  */
+    /* set lengths */
     for (d0 = 0; d0 < Nsd[0]; d0++)
     {
       for (d1 = 0; d1 <  Nsd[1]; d1++)
       {
         for (d2 = 0; d2 <  Nsd[2]; d2++)
         {
-           SCS_par_boxlen(par,"l");
-           Psetd(par,step[0]);
-           
-           SCS_par_boxlen(par,"w");
-           Psetd(par,step[1]);
-           
-           SCS_par_boxlen(par,"h");
-           Psetd(par,step[2]);
+          SCS_par_boxlen(par,"l");
+          Psetd(par,step[0]);
+         
+          SCS_par_boxlen(par,"w");
+          Psetd(par,step[1]);
+         
+          SCS_par_boxlen(par,"h");
+          Psetd(par,step[2]);
         }/* for (d2 = 0; d2 <  Nsd[2]; d2++) */
       }/* for (d1 = 0; d1 <  Nsd[1]; d1++) */
     }/* for (d0 = 0; d0 < Nsd[0]; d0++) */
@@ -3078,6 +3133,24 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
           
           rdown  = rmin + rstep*d2;
           rup    = rmin + rstep*(d2+1);
+          
+          /* set min and max parameters */
+          for (p = 0; p < 6; ++p)
+          {
+            Flag_T side = (Flag_T)(p);
+            SCS_par_min(par,0);
+            Psetd(par,min[0]);
+            SCS_par_min(par,1);
+            Psetd(par,min[1]);
+            SCS_par_min(par,2);
+            Psetd(par,min[2]);
+            SCS_par_max(par,0);
+            Psetd(par,max[0]);
+            SCS_par_max(par,1);
+            Psetd(par,max[1]);
+            SCS_par_max(par,2);
+            Psetd(par,max[2]);
+          }
           
           /* filling min */
           patch->min[0] = min[0];
@@ -3339,6 +3412,25 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
           rdown  = rmin + rstep*d2;
           rup    = rmin + rstep*(d2+1);
           
+          /* set min and max parameters */
+          for (p = 0; p < 6; ++p)
+          {
+            Flag_T side = (Flag_T)(p);
+            SCS_par_min(par,0);
+            Psetd(par,min[0]);
+            SCS_par_min(par,1);
+            Psetd(par,min[1]);
+            SCS_par_min(par,2);
+            Psetd(par,min[2]);
+            SCS_par_max(par,0);
+            Psetd(par,max[0]);
+            SCS_par_max(par,1);
+            Psetd(par,max[1]);
+            SCS_par_max(par,2);
+            Psetd(par,max[2]);
+          }
+            
+          
           /* filling min */
           patch->min[0] = min[0];
           patch->min[1] = min[1];
@@ -3545,6 +3637,7 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
     Flag_T side = fbox[obj_n];
     
     /* set length and centers */
+    double cen[3] = {0};
     switch(fbox[obj_n])
     {
       case UP:
@@ -3552,52 +3645,132 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
         l = S;
         w = 2*S;
         h = 0.5*S;
-        /* set center of patch */
-        SCS_par_center(par,"a");
-        Psetd(par,0.0);
-        SCS_par_center(par,"b");
-        Psetd(par,0.0);
-        SCS_par_center(par,"c");
-        Psetd(par,3./4.*S);
+        step[0] = l/Nsd[0];
+        step[1] = w/Nsd[1];
+        step[2] = h/Nsd[2];
+        /* orign center (0,0,3./4.*S) */
+        cen[0] = -l/2.;
+        for (d0 = 0; d0 < Nsd[0]; d0++)
+        {
+          cen[0] += (d0*step[0]+step[0]/2.);
+          cen[1]  = -w/2.;
+          for (d1 = 0; d1 <  Nsd[1]; d1++)
+          {
+            cen[1] += (d1*step[1]+step[1]/2.);
+            cen[2] = 3./4.*S -h/2.;
+            for (d2 = 0; d2 <  Nsd[2]; d2++)
+            {
+              cen[2] += (d2*step[2]+step[2]/2.);
+              
+              /* assuming objects are on y-axis */
+              SCS_par_center(par,"a");
+              Psetd(par,cen[0]);
+              SCS_par_center(par,"b");
+              Psetd(par,cen[1]);
+              SCS_par_center(par,"c");
+              Psetd(par,cen[2]);
+            }
+          }
+        }
       break;
       case DOWN:
         dir = "down";
         l = S;
         w = 2*S;
         h = 0.5*S;
-        /* set center of patch */
-        SCS_par_center(par,"a");
-        Psetd(par,0.0);
-        SCS_par_center(par,"b");
-        Psetd(par,0.0);
-        SCS_par_center(par,"c");
-        Psetd(par,-3./4.*S);
+        step[0] = l/Nsd[0];
+        step[1] = w/Nsd[1];
+        step[2] = h/Nsd[2];
+        /* orign center (0,0,-3./4.*S) */
+        cen[0] = -l/2.;
+        for (d0 = 0; d0 < Nsd[0]; d0++)
+        {
+          cen[0] += (d0*step[0]+step[0]/2.);
+          cen[1]  = -w/2.;
+          for (d1 = 0; d1 <  Nsd[1]; d1++)
+          {
+            cen[1] += (d1*step[1]+step[1]/2.);
+            cen[2] = -3./4.*S -h/2.;
+            for (d2 = 0; d2 <  Nsd[2]; d2++)
+            {
+              cen[2] += (d2*step[2]+step[2]/2.);
+              
+              /* assuming objects are on y-axis */
+              SCS_par_center(par,"a");
+              Psetd(par,cen[0]);
+              SCS_par_center(par,"b");
+              Psetd(par,cen[1]);
+              SCS_par_center(par,"c");
+              Psetd(par,cen[2]);
+            }
+          }
+        }
       break;
       case BACK:
         dir = "back";
         l = 0.5*S;
         w = 2*S;
         h = 2*S;
-        /* set center of patch */
-        SCS_par_center(par,"a");
-        Psetd(par,-3./4.*S);
-        SCS_par_center(par,"b");
-        Psetd(par,0.0);
-        SCS_par_center(par,"c");
-        Psetd(par,0.0);
+        step[0] = l/Nsd[0];
+        step[1] = w/Nsd[1];
+        step[2] = h/Nsd[2];
+        /* orign center (-3./4.*S,0,0) */
+        cen[0] = -3./4.*S -l/2.;
+        for (d0 = 0; d0 < Nsd[0]; d0++)
+        {
+          cen[0] += (d0*step[0]+step[0]/2.);
+          cen[1]  = -w/2.;
+          for (d1 = 0; d1 <  Nsd[1]; d1++)
+          {
+            cen[1] += (d1*step[1]+step[1]/2.);
+            cen[2] = -h/2.;
+            for (d2 = 0; d2 <  Nsd[2]; d2++)
+            {
+              cen[2] += (d2*step[2]+step[2]/2.);
+              
+              /* assuming objects are on y-axis */
+              SCS_par_center(par,"a");
+              Psetd(par,cen[0]);
+              SCS_par_center(par,"b");
+              Psetd(par,cen[1]);
+              SCS_par_center(par,"c");
+              Psetd(par,cen[2]);
+            }
+          }
+        }
       break;
       case FRONT:
         dir = "front";
         l = 0.5*S;
         w = 2*S;
         h = 2*S;
-        /* set center of patch */
-        SCS_par_center(par,"a");
-        Psetd(par,3./4.*S);
-        SCS_par_center(par,"b");
-        Psetd(par,0.0);
-        SCS_par_center(par,"c");
-        Psetd(par,0.0);
+        step[0] = l/Nsd[0];
+        step[1] = w/Nsd[1];
+        step[2] = h/Nsd[2];
+        /* orign center (3./4.*S,0,0) */
+        cen[0] = 3./4.*S -l/2.;
+        for (d0 = 0; d0 < Nsd[0]; d0++)
+        {
+          cen[0] += (d0*step[0]+step[0]/2.);
+          cen[1]  = -w/2.;
+          for (d1 = 0; d1 <  Nsd[1]; d1++)
+          {
+            cen[1] += (d1*step[1]+step[1]/2.);
+            cen[2] = -h/2.;
+            for (d2 = 0; d2 <  Nsd[2]; d2++)
+            {
+              cen[2] += (d2*step[2]+step[2]/2.);
+              
+              /* assuming objects are on y-axis */
+              SCS_par_center(par,"a");
+              Psetd(par,cen[0]);
+              SCS_par_center(par,"b");
+              Psetd(par,cen[1]);
+              SCS_par_center(par,"c");
+              Psetd(par,cen[2]);
+            }
+          }
+        }
       break;
       default:
         Error0(NO_OPTION);

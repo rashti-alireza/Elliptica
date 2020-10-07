@@ -43,6 +43,21 @@
   sprintf(par,"grid%u_%s_len_%s_%s"SCS_suffix,\
   grid->gn,obj,axis,dir,d0,d1,d2);
 
+/* par format for patch->min[index]
+// NOTE: d0,d1,d2,grid,dir,obj and side are required.
+// ex: grid1_left_NS_up_min2X0Y2Z3 */
+#define SCS_par_min(par,index) \
+  sprintf(par,"grid%u_%s_%s_%s_min%u"SCS_suffix,\
+  grid->gn,dir,obj,StrSide[side],index,d0,d1,d2);
+
+/* par format for patch->max[index].
+// NOTE: d0,d1,d2,grid,dir,obj and side are required.
+// ex: grid1_left_NS_up_max2X0Y2Z3 */
+#define SCS_par_max(par,index) \
+  sprintf(par,"grid%u_%s_%s_%s_max%u"SCS_suffix,\
+  grid->gn,dir,obj,StrSide[side],index,d0,d1,d2);
+
+
 /* sides, NOTE: the order is important, it MUST be like FLAG_T */
 static const char *const StrSide[] = 
   {"up","down","left",
