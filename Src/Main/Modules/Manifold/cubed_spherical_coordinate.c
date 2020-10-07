@@ -153,7 +153,6 @@ void fill_patches_BBN_Split_CubedSpherical_grid(Grid_T *const grid)
   
   /* set innerB for BH_surrounding */
   printf("WARNING:\n~~~~~~~~~> set innerB for BH_surrounding\n");
-  printf("WARNING:\n~~~~~~~~~> set number of patches!!!\n");
   
 }
 
