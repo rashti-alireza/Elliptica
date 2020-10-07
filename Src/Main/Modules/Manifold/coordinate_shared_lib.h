@@ -32,9 +32,17 @@
 // reference Cartesian coords. 
 // NOTE: grid,dir,obj and side are required.
 // ex: grid1_left_BH_front_center_a */
-#define SCS_par_center(par,axis) \
+#define SCS_par_CS_center(par,axis) \
   sprintf(par,"grid%u_%s_%s_center_%s_%s",\
   grid->gn,dir,obj,StrSide[side],axis);
+
+/* par format for center of patch with respect to the 
+// reference Cartesian coords. 
+// NOTE: grid,dir,obj,d0,d1,d2 and side are required.
+// ex: grid1_left_central_box_left_center_aX0Y0Z1 */
+#define SCS_par_box_center(par,axis) \
+  sprintf(par,"grid%u_%s_%s_center_%s_%s"SCS_suffix,\
+  grid->gn,dir,obj,StrSide[side],axis,d0,d1,d2);
 
 /* par format for box lengths.
 // NOTE: d0,d1,d2,grid,dir and obj are required.

@@ -254,11 +254,11 @@ populate_CS_patch_SplitCS
           }
           
           /* filling center */
-          SCS_par_center(par,"a");
+          SCS_par_CS_center(par,"a");
           patch->c[0] = Pgetd(par);
-          SCS_par_center(par,"b");
+          SCS_par_CS_center(par,"b");
           patch->c[1] = Pgetd(par);
-          SCS_par_center(par,"c");
+          SCS_par_CS_center(par,"c");
           patch->c[2] = Pgetd(par);
           
            /* filling min */
@@ -2997,10 +2997,10 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
     for (p = 0; p < 6; ++p)
     {
       Flag_T side = (Flag_T)(p);
-      SCS_par_center(par,"a");
+      SCS_par_CS_center(par,"a");
       Psetd(par,0.0);
     
-      SCS_par_center(par,"b");
+      SCS_par_CS_center(par,"b");
       if (!strcmp(dir,"left"))
         Psetd(par,-S/2.);
       else if (!strcmp(dir,"right"))
@@ -3008,7 +3008,7 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
       else
         Error0(NO_OPTION);
       
-      SCS_par_center(par,"c");
+      SCS_par_CS_center(par,"c");
       Psetd(par,0.0);
     }
     
@@ -3038,11 +3038,11 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
             cen[2] += (d2*step[2]+step[2]/2.);
             
             /* assuming objects are on y-axis */
-            SCS_par_center(par,"a");
+            SCS_par_box_center(par,"a");
             Psetd(par,cen[0]);
-            SCS_par_center(par,"b");
+            SCS_par_box_center(par,"b");
             Psetd(par,cen[1]);
-            SCS_par_center(par,"c");
+            SCS_par_box_center(par,"c");
             Psetd(par,cen[2]);
           }
         }
@@ -3067,11 +3067,11 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
             cen[2] += (d2*step[2]+step[2]/2.);
             
             /* assuming objects are on y-axis */
-            SCS_par_center(par,"a");
+            SCS_par_box_center(par,"a");
             Psetd(par,cen[0]);
-            SCS_par_center(par,"b");
+            SCS_par_box_center(par,"b");
             Psetd(par,cen[1]);
-            SCS_par_center(par,"c");
+            SCS_par_box_center(par,"c");
             Psetd(par,cen[2]);
           }
         }
@@ -3369,10 +3369,10 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
             
       /* set center of patch */
       /* assuming objects are on y-axis */
-      SCS_par_center(par,"a");
+      SCS_par_CS_center(par,"a");
       Psetd(par,0.0);
     
-      SCS_par_center(par,"b");
+      SCS_par_CS_center(par,"b");
       if (!strcmp(dir,"left"))
         Psetd(par,-S/2.);
       else if (!strcmp(dir,"right"))
@@ -3380,7 +3380,7 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
       else
         Error0(NO_OPTION);
       
-      SCS_par_center(par,"c");
+      SCS_par_CS_center(par,"c");
       Psetd(par,0.0);
     }
   }
@@ -3643,13 +3643,13 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
             
       /* set center of patch */
       /* assuming objects are on y-axis */
-      SCS_par_center(par,"a");
+      SCS_par_CS_center(par,"a");
       Psetd(par,0.0);
     
-      SCS_par_center(par,"b");
+      SCS_par_CS_center(par,"b");
       Psetd(par,0.0);
       
-      SCS_par_center(par,"c");
+      SCS_par_CS_center(par,"c");
       Psetd(par,0.0);
     }
   }
@@ -3696,11 +3696,11 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
               cen[2] += (d2*step[2]+step[2]/2.);
               
               /* assuming objects are on y-axis */
-              SCS_par_center(par,"a");
+              SCS_par_box_center(par,"a");
               Psetd(par,cen[0]);
-              SCS_par_center(par,"b");
+              SCS_par_box_center(par,"b");
               Psetd(par,cen[1]);
-              SCS_par_center(par,"c");
+              SCS_par_box_center(par,"c");
               Psetd(par,cen[2]);
             }
           }
@@ -3729,11 +3729,11 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
               cen[2] += (d2*step[2]+step[2]/2.);
               
               /* assuming objects are on y-axis */
-              SCS_par_center(par,"a");
+              SCS_par_box_center(par,"a");
               Psetd(par,cen[0]);
-              SCS_par_center(par,"b");
+              SCS_par_box_center(par,"b");
               Psetd(par,cen[1]);
-              SCS_par_center(par,"c");
+              SCS_par_box_center(par,"c");
               Psetd(par,cen[2]);
             }
           }
@@ -3762,11 +3762,11 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
               cen[2] += (d2*step[2]+step[2]/2.);
               
               /* assuming objects are on y-axis */
-              SCS_par_center(par,"a");
+              SCS_par_box_center(par,"a");
               Psetd(par,cen[0]);
-              SCS_par_center(par,"b");
+              SCS_par_box_center(par,"b");
               Psetd(par,cen[1]);
-              SCS_par_center(par,"c");
+              SCS_par_box_center(par,"c");
               Psetd(par,cen[2]);
             }
           }
@@ -3795,11 +3795,11 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
               cen[2] += (d2*step[2]+step[2]/2.);
               
               /* assuming objects are on y-axis */
-              SCS_par_center(par,"a");
+              SCS_par_box_center(par,"a");
               Psetd(par,cen[0]);
-              SCS_par_center(par,"b");
+              SCS_par_box_center(par,"b");
               Psetd(par,cen[1]);
-              SCS_par_center(par,"c");
+              SCS_par_box_center(par,"c");
               Psetd(par,cen[2]);
             }
           }

@@ -239,11 +239,11 @@ populate_box_patch_SplitCS
           patch->name = dup_s(name);
           
           /* filling center */
-          SCS_par_center(par,"a");
+          SCS_par_box_center(par,"a");
           patch->c[0] = Pgetd(par);
-          SCS_par_center(par,"b");
+          SCS_par_box_center(par,"b");
           patch->c[1] = Pgetd(par);
-          SCS_par_center(par,"c");
+          SCS_par_box_center(par,"c");
           patch->c[2] = Pgetd(par);
           
           /* filling size */
