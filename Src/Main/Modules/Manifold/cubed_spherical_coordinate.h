@@ -69,3 +69,11 @@ void set_params_split_CS(Grid_Char_T *const grid_char);
 void fill_patches_BBN_Split_CubedSpherical_grid(Grid_T *const grid);
 static void set_object_name_split_CS(char *const obj,const char *const type);
 
+void 
+populate_CS_patch_SplitCS
+  (
+  Grid_T *const grid,
+  const char *const obj0,/* NS, BH or etc. */
+  const Flag_T dir0,/* "left" or "right" should be lower case */
+  unsigned *const pn/* starting patch number,is increased for each add */
+  );
