@@ -3079,19 +3079,15 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
       Flag_T side = LEFT;
       double cen[3] = {0};
       /* orign center (0,-S/2.,0) */
-      cen[0] = -l/2.;
+      cen[0] = -l/2.+step[0]/2.;
       for (d0 = 0; d0 < Nsd[0]; d0++)
       {
-        cen[0] += (d0*step[0]+step[0]/2.);
-        cen[1] = -S/2.-w/2.;
+        cen[1] = -S/2.-w/2.+step[1]/2.;
         for (d1 = 0; d1 <  Nsd[1]; d1++)
         {
-          cen[1] += (d1*step[1]+step[1]/2.);
-          cen[2] = -h/2.;
+          cen[2] = -h/2.+step[2]/2.;
           for (d2 = 0; d2 <  Nsd[2]; d2++)
           {
-            cen[2] += (d2*step[2]+step[2]/2.);
-            
             /* assuming objects are on y-axis */
             SCS_par_box_center(par,"a");
             Psetd(par,cen[0]);
@@ -3099,8 +3095,12 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
             Psetd(par,cen[1]);
             SCS_par_box_center(par,"c");
             Psetd(par,cen[2]);
+            
+            cen[2] += step[2];
           }
+          cen[1] += step[1];
         }
+        cen[0] += step[0];
       }
     }
     else if (!strcmp(dir,"right"))
@@ -3108,19 +3108,15 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
       Flag_T side = RIGHT;
       double cen[3] = {0};
       /* orign center (0,S/2.,0) */
-      cen[0] = -l/2.;
+      cen[0] = -l/2.+step[0]/2.;
       for (d0 = 0; d0 < Nsd[0]; d0++)
       {
-        cen[0] += (d0*step[0]+step[0]/2.);
-        cen[1] = S/2.-w/2.;
+        cen[1] = S/2.-w/2.+step[1]/2.;
         for (d1 = 0; d1 <  Nsd[1]; d1++)
         {
-          cen[1] += (d1*step[1]+step[1]/2.);
-          cen[2] = -h/2.;
+          cen[2] = -h/2.+step[2]/2.;
           for (d2 = 0; d2 <  Nsd[2]; d2++)
           {
-            cen[2] += (d2*step[2]+step[2]/2.);
-            
             /* assuming objects are on y-axis */
             SCS_par_box_center(par,"a");
             Psetd(par,cen[0]);
@@ -3128,8 +3124,12 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
             Psetd(par,cen[1]);
             SCS_par_box_center(par,"c");
             Psetd(par,cen[2]);
+            
+            cen[2] += step[2];
           }
+          cen[1] += step[1];
         }
+        cen[0] += step[0];
       }
     }
     else
@@ -3737,19 +3737,15 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
         step[1] = w/Nsd[1];
         step[2] = h/Nsd[2];
         /* orign center (0,0,3./4.*S) */
-        cen[0] = -l/2.;
+        cen[0] = -l/2.+step[0]/2.;
         for (d0 = 0; d0 < Nsd[0]; d0++)
         {
-          cen[0] += (d0*step[0]+step[0]/2.);
-          cen[1]  = -w/2.;
+          cen[1]  = -w/2.+step[1]/2.;
           for (d1 = 0; d1 <  Nsd[1]; d1++)
           {
-            cen[1] += (d1*step[1]+step[1]/2.);
-            cen[2] = 3./4.*S -h/2.;
+            cen[2] = (3./4.)*S -h/2.+step[2]/2.;
             for (d2 = 0; d2 <  Nsd[2]; d2++)
             {
-              cen[2] += (d2*step[2]+step[2]/2.);
-              
               /* assuming objects are on y-axis */
               SCS_par_box_center(par,"a");
               Psetd(par,cen[0]);
@@ -3757,8 +3753,12 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
               Psetd(par,cen[1]);
               SCS_par_box_center(par,"c");
               Psetd(par,cen[2]);
+              
+              cen[2] += step[2];
             }
+            cen[1] += step[1];
           }
+          cen[0] += step[0];
         }
       break;
       case DOWN:
@@ -3770,19 +3770,15 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
         step[1] = w/Nsd[1];
         step[2] = h/Nsd[2];
         /* orign center (0,0,-3./4.*S) */
-        cen[0] = -l/2.;
+        cen[0] = -l/2.+step[0]/2.;
         for (d0 = 0; d0 < Nsd[0]; d0++)
         {
-          cen[0] += (d0*step[0]+step[0]/2.);
-          cen[1]  = -w/2.;
+          cen[1]  = -w/2.+step[1]/2.;
           for (d1 = 0; d1 <  Nsd[1]; d1++)
           {
-            cen[1] += (d1*step[1]+step[1]/2.);
-            cen[2] = -3./4.*S -h/2.;
+            cen[2] = (-3./4.)*S -h/2.+step[2]/2.;
             for (d2 = 0; d2 <  Nsd[2]; d2++)
             {
-              cen[2] += (d2*step[2]+step[2]/2.);
-              
               /* assuming objects are on y-axis */
               SCS_par_box_center(par,"a");
               Psetd(par,cen[0]);
@@ -3790,8 +3786,12 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
               Psetd(par,cen[1]);
               SCS_par_box_center(par,"c");
               Psetd(par,cen[2]);
+              
+              cen[2] += step[2];
             }
+            cen[1] += step[1];
           }
+          cen[0] += step[0];
         }
       break;
       case BACK:
@@ -3803,19 +3803,15 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
         step[1] = w/Nsd[1];
         step[2] = h/Nsd[2];
         /* orign center (-3./4.*S,0,0) */
-        cen[0] = -3./4.*S -l/2.;
+        cen[0] = (-3./4.)*S-l/2.+step[0]/2.;
         for (d0 = 0; d0 < Nsd[0]; d0++)
         {
-          cen[0] += (d0*step[0]+step[0]/2.);
-          cen[1]  = -w/2.;
+          cen[1]  = -w/2.+step[1]/2.;
           for (d1 = 0; d1 <  Nsd[1]; d1++)
           {
-            cen[1] += (d1*step[1]+step[1]/2.);
-            cen[2] = -h/2.;
+            cen[2] = -h/2.+step[2]/2.;
             for (d2 = 0; d2 <  Nsd[2]; d2++)
             {
-              cen[2] += (d2*step[2]+step[2]/2.);
-              
               /* assuming objects are on y-axis */
               SCS_par_box_center(par,"a");
               Psetd(par,cen[0]);
@@ -3823,8 +3819,12 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
               Psetd(par,cen[1]);
               SCS_par_box_center(par,"c");
               Psetd(par,cen[2]);
+              
+              cen[2] += step[2];
             }
+            cen[1] += step[1];
           }
+          cen[0] += step[0];
         }
       break;
       case FRONT:
@@ -3836,19 +3836,15 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
         step[1] = w/Nsd[1];
         step[2] = h/Nsd[2];
         /* orign center (3./4.*S,0,0) */
-        cen[0] = 3./4.*S -l/2.;
+        cen[0] = (3./4.)*S-l/2.+step[0]/2.;
         for (d0 = 0; d0 < Nsd[0]; d0++)
         {
-          cen[0] += (d0*step[0]+step[0]/2.);
-          cen[1]  = -w/2.;
+          cen[1]  = -w/2.+step[1]/2.;
           for (d1 = 0; d1 <  Nsd[1]; d1++)
           {
-            cen[1] += (d1*step[1]+step[1]/2.);
-            cen[2] = -h/2.;
+            cen[2] = -h/2.+step[2]/2.;
             for (d2 = 0; d2 <  Nsd[2]; d2++)
             {
-              cen[2] += (d2*step[2]+step[2]/2.);
-              
               /* assuming objects are on y-axis */
               SCS_par_box_center(par,"a");
               Psetd(par,cen[0]);
@@ -3856,8 +3852,12 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
               Psetd(par,cen[1]);
               SCS_par_box_center(par,"c");
               Psetd(par,cen[2]);
+              
+              cen[2] += step[2];
             }
+            cen[1] += step[1];
           }
+          cen[0] += step[0];
         }
       break;
       default:
