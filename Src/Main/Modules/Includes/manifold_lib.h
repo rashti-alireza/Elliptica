@@ -319,10 +319,9 @@ populate_CS_patch_SplitCS
   (
   Grid_T *const grid,
   const char *const obj0,/* NS, BH or etc. */
-  const Flag_T dir0,/* "left" or "right" should be lower case */
+  const Flag_T dir0,/* LEFT or RIGHT or NONE */
   unsigned *const pn/* starting patch number,is increased for each add */
   );
-
 
 #endif
 

@@ -135,12 +135,12 @@ void fill_patches_BBN_Split_CubedSpherical_grid(Grid_T *const grid)
   const double r_outermost = Pgetd("Outermost_radius");
   unsigned pn = 0; /* patch number */
   
-  /* boxes 
+  /* boxes */ 
   populate_box_patch_SplitCS(grid,"central_box",LEFT,&pn);
   populate_box_patch_SplitCS(grid,"filling_box",UP,&pn);
   populate_box_patch_SplitCS(grid,"filling_box",DOWN,&pn);
   populate_box_patch_SplitCS(grid,"filling_box",BACK,&pn);
-  populate_box_patch_SplitCS(grid,"filling_box",FRONT,&pn); */
+  populate_box_patch_SplitCS(grid,"filling_box",FRONT,&pn);
   
   /* cubed sphericals */
   populate_CS_patch_SplitCS(grid,"NS",LEFT,&pn);
@@ -150,17 +150,20 @@ void fill_patches_BBN_Split_CubedSpherical_grid(Grid_T *const grid)
     populate_CS_patch_SplitCS(grid,"outermost",NONE,&pn);
   
   assert(pn == (unsigned)Pgeti("SplitCS_Npatches"));
+  
+  /* set innerB for BH_surrounding */
+  printf("WARNING:\n~~~~~~~~~> set innerB for BH_surrounding\n");
+  
 }
 
-/* populating properties of patch for a object,
-// this fills basics of patches which cover the object
-// (not the center which fills with a box) */
+/* populating properties of a patch for a split cubed spherical object,
+// like: BH, NS, surroundings, outermost. */
 void 
 populate_CS_patch_SplitCS
   (
   Grid_T *const grid,
   const char *const obj0,/* NS, BH or etc. */
-  const Flag_T dir0,/* "left" or "right" should be lower case */
+  const Flag_T dir0,/* LEFT or RIGHT or NONE */
   unsigned *const pn/* starting patch number,is increased for each add */
   )
 {
@@ -191,6 +194,8 @@ populate_CS_patch_SplitCS
     dir = StrSide[dir0];
     type = OJ_T_SCS;
   }
+  
+  assert(dir == LEFT || dir == RIGHT || dir == NONE);
   
   for (d0 = 0; d0 < Nsd[0]; d0++)
   {
