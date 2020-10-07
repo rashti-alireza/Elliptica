@@ -2684,7 +2684,11 @@ void set_object_name_split_CS(char *const obj,const char *const type)
 
 /* set parameters of split cubed spherical, number of splits,
 // surface functions etc.
-// this must be called in characteristic function */
+// this must be called in characteristic function.
+// NOTE: this also sets parameters of those regions
+// which are not used in grid, (for example, BH patches which scooped out
+// from grid); thus, one can later use these parameters if wants to
+// cover those regions for instance in BH filler. */
 void set_params_split_CS(Grid_Char_T *const grid_char)
 {
   Grid_T *const grid = grid_char->grid; assert(grid);
