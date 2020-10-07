@@ -173,6 +173,7 @@ populate_CS_patch_SplitCS
   char obj[STR_SIZE1]  = {'\0'};
   char name[STR_SIZE3] = {'\0'};
   const char *dir      = 0;
+  Flag_T type = UNDEFINED;
   unsigned d0,d1,d2,ijk;
   unsigned p;/* patch number */
   
@@ -183,10 +184,12 @@ populate_CS_patch_SplitCS
   {
     assert(strcmp_i(obj0,"outermost"));
     dir = "all";
+    type = OT_T_SCS;
   }
   else
   {
     dir = StrSide[dir0];
+    type = OJ_T_SCS;
   }
   
   for (d0 = 0; d0 < Nsd[0]; d0++)
@@ -207,7 +210,7 @@ populate_CS_patch_SplitCS
           
           /* filling flags */
           patch->CoordSysInfo->CubedSphericalCoord->side = side;
-          patch->CoordSysInfo->CubedSphericalCoord->type = OBJ_T_SCS;
+          patch->CoordSysInfo->CubedSphericalCoord->type = type;
           
           /* filling grid */
           patch->grid = grid;
