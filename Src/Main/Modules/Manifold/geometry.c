@@ -2514,7 +2514,7 @@ void alloc_nodes(Grid_T *const grid)
     
     n = grid->patch[i]->n;
     grid->patch[i]->node = 
-      malloc((n[0]*n[1]*n[2]+1)*sizeof(*grid->patch[i]->node));
+      calloc((n[0]*n[1]*n[2]+1),sizeof(*grid->patch[i]->node));
     IsNull(grid->patch[i]->node);
     
     node = grid->patch[i]->node;
