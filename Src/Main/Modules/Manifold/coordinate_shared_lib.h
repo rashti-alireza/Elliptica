@@ -58,11 +58,26 @@
   grid->gn,dir,obj,StrSide[side],index,d0,d1,d2);
 
 
+/* par format for patch->name.
+// NOTE: d0,d1,d2,grid,dir,obj and side are required.
+// ex: grid1_left_NS_up_X0Y2Z3 */
+#define SCS_par_name(par) \
+  sprintf(par,"grid%u_%s_%s_%s"SCS_suffix,\
+  grid->gn,dir,obj,StrSide[side],d0,d1,d2);
+
+
 /* sides, NOTE: the order is important, it MUST be like FLAG_T */
 static const char *const StrSide[] = 
   {"up","down","left",
   "right","back","front",
   0};
+
+/* allowed object: */
+static const char *const SCS_ObjType[] = 
+ {"NS","BH","central_box","filling_box",
+  "NS_surrounding","BH_surrounding",
+  "outermost",0
+ };
 
 /* enum for jacobian */
 enum enum_dA_da
