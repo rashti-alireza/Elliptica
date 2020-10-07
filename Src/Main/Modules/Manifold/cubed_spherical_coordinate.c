@@ -427,6 +427,56 @@ void make_nodes_CubedSpherical_coord(Patch_T *const patch)
         x[c]+= C[c];
       }
     break;
+    case OJ_T_SCS:
+      for (l = 0; l < nn; l++)
+      {
+        double *X = alloc_double(3);
+        double *x = patch->node[l]->x;
+        double x1,x2,d;
+        
+        IJK(l,n,&i,&j,&k);
+        X[0] = point_value(i,&coll_s[0]);
+        X[1] = point_value(j,&coll_s[1]);
+        X[2] = point_value(k,&coll_s[2]);
+        d = sqrt(1+Pow2(X[0])+Pow2(X[1]));
+        patch->node[l]->X = X;
+        x1 = S*R1_f->v[L(n,i,j,0)]/d;
+        x2 = S*R2_f->v[L(n,i,j,0)]/d;
+        
+        x[c] = x1+(x2-x1)*X[2];
+        x[a] = S*x[c]*X[0];
+        x[b] = S*x[c]*X[1];
+        
+        x[a]+= C[a];
+        x[b]+= C[b];
+        x[c]+= C[c];
+      }
+      break;
+    case OT_T_SCS:
+      for (l = 0; l < nn; l++)
+      {
+        double *X = alloc_double(3);
+        double *x = patch->node[l]->x;
+        double x1,x2,d;
+        
+        IJK(l,n,&i,&j,&k);
+        X[0] = point_value(i,&coll_s[0]);
+        X[1] = point_value(j,&coll_s[1]);
+        X[2] = point_value(k,&coll_s[2]);
+        d = sqrt(1+Pow2(X[0])+Pow2(X[1]));
+        patch->node[l]->X = X;
+        x1 = S*R1_f->v[L(n,i,j,0)]/d;
+        x2 = S*R2_f->v[L(n,i,j,0)]/d;
+        
+        x[c] = x1+(x2-x1)*X[2];
+        x[a] = S*x[c]*X[0];
+        x[b] = S*x[c]*X[1];
+        
+        x[a]+= C[a];
+        x[b]+= C[b];
+        x[c]+= C[c];
+      }
+      break;
     default:
       Error0(NO_OPTION);
   }
