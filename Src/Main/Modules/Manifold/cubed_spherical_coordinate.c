@@ -380,7 +380,7 @@ void make_nodes_CubedSpherical_coord(Patch_T *const patch)
       {
         double *X = alloc_double(3);
         double *x = patch->node[l]->x;
-        double x1,L,d;
+        double x1,ratio,d;
         
         IJK(l,n,&i,&j,&k);
         X[0] = point_value(i,&coll_s[0]);
@@ -389,9 +389,9 @@ void make_nodes_CubedSpherical_coord(Patch_T *const patch)
         d = sqrt(1+Pow2(X[0])+Pow2(X[1]));
         patch->node[l]->X = X;
         x1 = xc1;
-        L  = 1.-S*d*xc1/R2;
+        ratio  = 1.-S*d*xc1/R2;
         
-        x[c] = x1/(1.-L*X[2]);
+        x[c] = x1/(1.-ratio*X[2]);
         x[a] = S*x[c]*X[0];
         x[b] = S*x[c]*X[1];
         
@@ -405,7 +405,7 @@ void make_nodes_CubedSpherical_coord(Patch_T *const patch)
       {
         double *X = alloc_double(3);
         double *x = patch->node[l]->x;
-        double x1,L,d;
+        double x1,ratio,d;
         
         IJK(l,n,&i,&j,&k);
         X[0] = point_value(i,&coll_s[0]);
@@ -415,9 +415,9 @@ void make_nodes_CubedSpherical_coord(Patch_T *const patch)
         patch->node[l]->X = X;
         
         x1 = S*R1/d;
-        L  = 1.-R1/R2;
+        ratio  = 1.-R1/R2;
         
-        x[c] = x1/(1.-L*X[2]);
+        x[c] = x1/(1.-ratio*X[2]);
         x[a] = S*x[c]*X[0];
         x[b] = S*x[c]*X[1];
         
@@ -456,7 +456,7 @@ void make_nodes_CubedSpherical_coord(Patch_T *const patch)
       {
         double *X = alloc_double(3);
         double *x = patch->node[l]->x;
-        double x1,x2,d;
+        double x1,ratio,d;
         
         IJK(l,n,&i,&j,&k);
         X[0] = point_value(i,&coll_s[0]);
@@ -465,9 +465,9 @@ void make_nodes_CubedSpherical_coord(Patch_T *const patch)
         d = sqrt(1+Pow2(X[0])+Pow2(X[1]));
         patch->node[l]->X = X;
         x1 = S*R1_f->v[L(n,i,j,0)]/d;
-        x2 = S*R2_f->v[L(n,i,j,0)]/d;
+        ratio  = 1.-S*d*x1/(R2_f->v[L(n,i,j,0)]);
         
-        x[c] = x1+(x2-x1)*X[2];
+        x[c] = x1/(1.-ratio*X[2]);
         x[a] = S*x[c]*X[0];
         x[b] = S*x[c]*X[1];
         
@@ -3376,8 +3376,7 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
                   for (k = 0; k < Nns[2]; ++k)
                   {
                     rD[L(Nns,i,j,k)] = r;
-                    rU[L(Nns,i,j,k)] = xc*
-                              sqrt(1+Pow2(X[0])+Pow2(X[1]));
+                    rU[L(Nns,i,j,k)] = xc*sqrt(1+Pow2(X[0])+Pow2(X[1]));
                   }
                 }
               }
