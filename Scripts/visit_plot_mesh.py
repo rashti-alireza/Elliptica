@@ -4,6 +4,7 @@
 #
 # 1. with windows:
 # $ visit -cli -s visit_plot_mesh.py "regex name of file name" --path .
+# ex: $ visit -cli -s visit_plot_mesh.py "left_central_box_left_X.Y.Z..*"
 # 
 # 2. without windows: 
 # $ visit -nowin -cli -s visit_plot_mesh.py "regex name of file name" --path .
