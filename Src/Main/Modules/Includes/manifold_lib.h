@@ -314,6 +314,15 @@ void free_grid_db(void);
 void set_params_split_CS(Grid_Char_T *const grid_char);
 void theta_phi_of_XY_CS(double *const theta,double *const phi,const double *const X,const Flag_T side);
 
+void 
+populate_CS_patch_SplitCS
+  (
+  Grid_T *const grid,
+  const char *const obj0,/* NS, BH or etc. */
+  const Flag_T dir0,/* "left" or "right" should be lower case */
+  unsigned *const pn/* starting patch number,is increased for each add */
+  );
+
 
 #endif
 
