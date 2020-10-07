@@ -131,7 +131,7 @@ void fill_patches_BBN_CubedSpherical_grid(Grid_T *const grid)
 /* filling split cubed spherical coordinate patches for BBN grid */
 void fill_patches_BBN_Split_CubedSpherical_grid(Grid_T *const grid)
 {
-  const unsigned N_outermost_split = (unsigned) Pgeti("Number_of_Outermost_Split");
+  const unsigned outermost = (unsigned)Pgeti("Number_of_Outermost_Split");
   unsigned i,pn;
   
   pn = 0; /* patch number */
@@ -2635,7 +2635,7 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
                    3 sets of cubed sphere = 3*6
                    4 filling boxex
                    1 central box */
-  unsigned outermost;/* number of outermost patches */
+  const double r_outermost = Pgetd("Outermost_radius");
   
   /* for each direction divide until the max resolution */
   for (i = 0; i < 3; ++i)
@@ -2654,17 +2654,16 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
     Nns[i]  = n[i];
   }
   /* adjust parameters */
-  Pseti("n_a",(int)Nns[0]);
-  Pseti("n_b",(int)Nns[1]);
-  Pseti("n_c",(int)Nns[2]);
+  Pseti("SplitCS_n_a",(int)Nns[0]);
+  Pseti("SplitCS_n_b",(int)Nns[1]);
+  Pseti("SplitCS_n_c",(int)Nns[2]);
   /* number of splits in each direction */
   Pseti("SplitCS_Nsplit_a",(int)Nsd[0]);
   Pseti("SplitCS_Nsplit_b",(int)Nsd[1]);
   Pseti("SplitCS_Nsplit_c",(int)Nsd[2]);
   
-  outermost = (unsigned) PgetiEZ("Number_of_Outermost_Split");
-  if (outermost != (unsigned)INT_MAX)
-    Np += 6*outermost;
+  if (!EQL(r_outermost,0))
+    Np += 6;
   
   /* now each patch split in Nsd */
   Np *= (Nsd[0]*Nsd[1]*Nsd[2]);
@@ -3359,6 +3358,7 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
   }
   
   /* populate parameters for outermost patches */
+  if (!EQL(r_outermost,0))/* if there is any outermost patch */
   for (obj_n = 0; obj_n < 1; ++obj_n)
   {
     /* note (X,Y,Z) in [-1,1]x[-1,1]x[0,1]. */
