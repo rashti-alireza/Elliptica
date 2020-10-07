@@ -2672,8 +2672,6 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
   /* set total number of paches: */
   Pseti("SplitCS_Npatches",(int)Np);
   
-  UNUSED(grid);
-  
   /* test */
   if (1)
   printf("par n   = (%u,%u,%u)\n"
@@ -2696,12 +2694,12 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
   unsigned obj_n;/* BH or NS */
   
   /* two different direction */
-  assert(!strstr(grid_char->params[0]->side,grid_char->params[1]->side));
+  assert(!strstr(grid_char->params[0]->dir,grid_char->params[1]->dir));
   
   if(S < 0)
     Error0("The distance between the two compact objects "
            "must be positive.\n");
-  /* first populate parameters only for objects */
+  /* first populate parameters only for objects NS/BH */
   for (obj_n = 0; obj_n < 2; ++obj_n)
   {
     /* note (X,Y,Z) in [-1,1]x[-1,1]x[0,1]. */
@@ -2721,27 +2719,28 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
     char par[STR_SIZE3]  = {'\0'};
     unsigned N_total,p;
     
-    /* find r step */
     const char *obj = grid_char->params[obj_n]->obj;
-    const char *dir = grid_char->params[obj_n]->side;
+    const char *dir = grid_char->params[obj_n]->dir;
     double l = grid_char->params[obj_n]->l;
     double w = grid_char->params[obj_n]->w;
     double h = grid_char->params[obj_n]->h;
     const double *reClm = grid_char->params[obj_n]->relClm;
     const double *imClm = grid_char->params[obj_n]->imgClm;
     unsigned lmax = grid_char->params[obj_n]->lmax;
+    /* find r step */
     double rmin = sqrt(Pow2(l)+Pow2(w)+Pow2(h))/2.;
     double rmax = grid_char->params[obj_n]->r_min;
     double rstep = (rmax-rmin)/Nsd[2];
     
     /* some checks */
+    assert(rstep > 0);
     assert(l > 0 && w > 0 && h > 0);
     /* must be lower case letters */
     assert(!strcmp(dir,"left") || !strcmp(dir,"right"));
     
     if(rmax < 0)
       Error1("%s object must have positive radius.\n",dir);
-    if(2*rmax < S)
+    if(2*rmax > S)
       Error1("%s object radius is too big.\n",dir);
 
     for (d0 = 0; d0 < Nsd[0]; d0++)
@@ -2820,7 +2819,8 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
                   for (k = 0; k < Nns[2]; ++k)
                   {
                     rU[L(Nns,i,j,k)] = r;
-                    rD[L(Nns,i,j,k)] = rmax;
+                    rD[L(Nns,i,j,k)] = rdown;
+                    assert(r>rdown);
                   }
                 }
               }
@@ -2841,9 +2841,9 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
               if (side == UP || side == DOWN)
                 xc = h/2.;
               else if (side == LEFT || side == RIGHT)
-                xc = l/2.;
-              else if (side == BACK || side == FRONT)
                 xc = w/2.;
+              else if (side == BACK || side == FRONT)
+                xc = l/2.;
               else
                 Error0(NO_OPTION);
               
@@ -2862,8 +2862,7 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
                   for (k = 0; k < Nns[2]; ++k)
                   {
                     rU[L(Nns,i,j,k)] = rup;
-                    rD[L(Nns,i,j,k)] = xc*
-                              sqrt(1+Pow2(X[0])+Pow2(X[1]));
+                    rD[L(Nns,i,j,k)] = xc*sqrt(1+Pow2(X[0])+Pow2(X[1]));
                   }
                 }
               }
@@ -2871,7 +2870,7 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
               update_parameter_array(parD,rD,N_total);
             }/* for (p = 0; p < 6; ++p) */
           }
-          /* if only one level one of them has flat surface */
+          /* if only one level => one of them has flat surface */
           else if (d2 == 0 && Nsd[2] == 1)
           {
             for (p = 0; p < 6; ++p)
@@ -2889,9 +2888,9 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
               if (side == UP || side == DOWN)
                 xc = h/2.;
               else if (side == LEFT || side == RIGHT)
-                xc = l/2.;
-              else if (side == BACK || side == FRONT)
                 xc = w/2.;
+              else if (side == BACK || side == FRONT)
+                xc = l/2.;
               else
                 Error0(NO_OPTION);
 
@@ -2907,8 +2906,7 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
                   for (k = 0; k < Nns[2]; ++k)
                   {
                     rU[L(Nns,i,j,k)] = r;
-                    rD[L(Nns,i,j,k)] = xc*
-                              sqrt(1+Pow2(X[0])+Pow2(X[1]));
+                    rD[L(Nns,i,j,k)] = xc*sqrt(1+Pow2(X[0])+Pow2(X[1]));
                   }
                 }
               }
@@ -2930,13 +2928,10 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
               printf("%s",parD);
               //end
               
-              X[2] = DBL_MAX;/* catch error */
               for (i = 0; i < Nns[0]; ++i)
               {
-                X[0] = point_value(i,&coll_s[0]);
                 for (j = 0; j < Nns[1]; ++j)
                 {
-                  X[1] = point_value(j,&coll_s[1]);
                   for (k = 0; k < Nns[2]; ++k)
                   {
                     rU[L(Nns,i,j,k)] = rup;
@@ -2956,8 +2951,9 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
     
     /* set center of patch */
     /* assuming objects are on y-axis */
+    for (p = 0; p < 6; ++p)
     {
-      Flag_T side = LEFT;
+      Flag_T side = (Flag_T)(p);
       SCS_par_center(par,"a");
       Psetd(par,0.0);
     
@@ -2973,25 +2969,32 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
       Psetd(par,0.0);
     }
     /* set parameter for centeral box */
+    obj = "central_box";
+    
+    if (!strcmp(dir,"left"))
     {
-      Flag_T side = (Flag_T)(p);
-      
-      obj = "central_box";
+      Flag_T side = LEFT;
       /* assuming objects are on y-axis */
       SCS_par_center(par,"a");
       Psetd(par,0.0);
-    
       SCS_par_center(par,"b");
-      if (!strcmp(dir,"left"))
-        Psetd(par,-S/2.);
-      else if (!strcmp(dir,"right"))
-        Psetd(par,S/2.);
-      else
-        Error0(NO_OPTION);
-      
+      Psetd(par,-S/2.);
       SCS_par_center(par,"c");
       Psetd(par,0.0);
     }
+    else if (!strcmp(dir,"right"))
+    {
+      Flag_T side = RIGHT;
+      /* assuming objects are on y-axis */
+      SCS_par_center(par,"a");
+      Psetd(par,0.0);
+      SCS_par_center(par,"b");
+      Psetd(par,S/2.);
+      SCS_par_center(par,"c");
+      Psetd(par,0.0);
+    }
+    else
+      Error0(NO_OPTION);
     
     step[0] = l/Nsd[0];
     step[1] = w/Nsd[1];
@@ -3039,7 +3042,7 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
     
     /* find r step */
     const char *objstem = grid_char->params[obj_n]->obj;
-    const char *dir = grid_char->params[obj_n]->side;
+    const char *dir = grid_char->params[obj_n]->dir;
     double l = S;
     double w = S;
     double h = S;
@@ -3056,6 +3059,7 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
     assert(l > 0 && w > 0 && h > 0);
     /* must be lower case letters */
     assert(!strcmp(dir,"left") || !strcmp(dir,"right"));
+    assert(rstep > 0);
     
     for (d0 = 0; d0 < Nsd[0]; d0++)
     {
@@ -3126,9 +3130,9 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
               if (side == UP || side == DOWN)
                 xc = h/2.;
               else if (side == LEFT || side == RIGHT)
-                xc = l/2.;
-              else if (side == BACK || side == FRONT)
                 xc = w/2.;
+              else if (side == BACK || side == FRONT)
+                xc = l/2.;
               else
                 Error0(NO_OPTION);
               
@@ -3197,9 +3201,9 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
               if (side == UP || side == DOWN)
                 xc = h/2.;
               else if (side == LEFT || side == RIGHT)
-                xc = l/2.;
-              else if (side == BACK || side == FRONT)
                 xc = w/2.;
+              else if (side == BACK || side == FRONT)
+                xc = l/2.;
               else
                 Error0(NO_OPTION);
 
@@ -3238,13 +3242,10 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
               printf("%s",parD);
               //end
               
-              X[2] = DBL_MAX;/* catch error */
               for (i = 0; i < Nns[0]; ++i)
               {
-                X[0] = point_value(i,&coll_s[0]);
                 for (j = 0; j < Nns[1]; ++j)
                 {
-                  X[1] = point_value(j,&coll_s[1]);
                   for (k = 0; k < Nns[2]; ++k)
                   {
                     rU[L(Nns,i,j,k)] = rup;
@@ -3318,6 +3319,7 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
     assert(l > 0 && w > 0 && h > 0);
     if(2*S > rmax)
       Error0("Outermost radius is too small\n");
+    assert(rstep > 0);
     
     for (d0 = 0; d0 < Nsd[0]; d0++)
     {
@@ -3384,13 +3386,10 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
               printf("%s",parD);
               //end
               
-              X[2] = 1;
               for (i = 0; i < Nns[0]; ++i)
               {
-                X[0] = point_value(i,&coll_s[0]);
                 for (j = 0; j < Nns[1]; ++j)
                 {
-                  X[1] = point_value(j,&coll_s[1]);
                   for (k = 0; k < Nns[2]; ++k)
                   {
                     rU[L(Nns,i,j,k)] = rup;
@@ -3415,9 +3414,9 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
               if (side == UP || side == DOWN)
                 xc = h/2.;
               else if (side == LEFT || side == RIGHT)
-                xc = l/2.;
-              else if (side == BACK || side == FRONT)
                 xc = w/2.;
+              else if (side == BACK || side == FRONT)
+                xc = l/2.;
               else
                 Error0(NO_OPTION);
               
@@ -3457,9 +3456,9 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
               if (side == UP || side == DOWN)
                 xc = h/2.;
               else if (side == LEFT || side == RIGHT)
-                xc = l/2.;
-              else if (side == BACK || side == FRONT)
                 xc = w/2.;
+              else if (side == BACK || side == FRONT)
+                xc = l/2.;
               else
                 Error0(NO_OPTION);
 
@@ -3495,13 +3494,10 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
               printf("%s",parD);
               //end
               
-              X[2] = DBL_MAX;/* catch error */
               for (i = 0; i < Nns[0]; ++i)
               {
-                X[0] = point_value(i,&coll_s[0]);
                 for (j = 0; j < Nns[1]; ++j)
                 {
-                  X[1] = point_value(j,&coll_s[1]);
                   for (k = 0; k < Nns[2]; ++k)
                   {
                     rU[L(Nns,i,j,k)] = rup;
@@ -3560,7 +3556,7 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
         SCS_par_center(par,"a");
         Psetd(par,0.0);
         SCS_par_center(par,"b");
-        Psetd(par,0);
+        Psetd(par,0.0);
         SCS_par_center(par,"c");
         Psetd(par,3./4.*S);
       break;
@@ -3573,7 +3569,7 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
         SCS_par_center(par,"a");
         Psetd(par,0.0);
         SCS_par_center(par,"b");
-        Psetd(par,0);
+        Psetd(par,0.0);
         SCS_par_center(par,"c");
         Psetd(par,-3./4.*S);
       break;
@@ -3586,9 +3582,9 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
         SCS_par_center(par,"a");
         Psetd(par,-3./4.*S);
         SCS_par_center(par,"b");
-        Psetd(par,0);
+        Psetd(par,0.0);
         SCS_par_center(par,"c");
-        Psetd(par,0);
+        Psetd(par,0.0);
       break;
       case FRONT:
         dir = "front";
@@ -3599,9 +3595,9 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
         SCS_par_center(par,"a");
         Psetd(par,3./4.*S);
         SCS_par_center(par,"b");
-        Psetd(par,0);
+        Psetd(par,0.0);
         SCS_par_center(par,"c");
-        Psetd(par,0);
+        Psetd(par,0.0);
       break;
       default:
         Error0(NO_OPTION);
