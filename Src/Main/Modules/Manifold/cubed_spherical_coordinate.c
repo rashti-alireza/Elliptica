@@ -2782,8 +2782,9 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
     const double Xm = -1,XM = 1;
     const double Ym = -1,YM = 1;
     const double Zm = 0 ,ZM = 1;
-    /* step in each direction, note X in [-1,1]x[-1,1]x[0,1]. */
-    double step[3] = {(XM-Xm)/Nsd[0],(YM-Ym)/Nsd[1],(ZM-Zm)/Nsd[2]};
+    /* step in each direction, note X in [-1,1]x[-1,1]x[0,1]. 
+    // also NOTE that Z min and max are 0 and 1 in cubed spherical. */
+    double step[3] = {(XM-Xm)/Nsd[0],(YM-Ym)/Nsd[1],DBL_MAX};
     double min[3] = {0},max[3] = {0};
     double rup,rdown;
     double th = 0,ph = 0,X[3] = {0};
@@ -2835,8 +2836,8 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
         
         for (d2 = 0; d2 <  Nsd[2]; d2++)
         {
-          min[2] = Zm + step[2]*d2;
-          max[2] = Zm + step[2]*(d2+1);
+          min[2] = Zm;
+          max[2] = ZM;
           
           rdown  = rmin + rstep*d2;
           rup    = rmin + rstep*(d2+1);
@@ -3162,8 +3163,9 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
     const double Xm = -1,XM = 1;
     const double Ym = -1,YM = 1;
     const double Zm = 0 ,ZM = 1;
-    /* step in each direction, note X in [-1,1]x[-1,1]x[0,1]. */
-    const double step[3] = {(XM-Xm)/Nsd[0],(YM-Ym)/Nsd[1],(ZM-Zm)/Nsd[2]};
+    /* step in each direction, note X in [-1,1]x[-1,1]x[0,1]. 
+    // also NOTE that Z min and max are 0 and 1 in cubed spherical. */
+    const double step[3] = {(XM-Xm)/Nsd[0],(YM-Ym)/Nsd[1],DBL_MAX};
     double min[3] = {0},max[3] = {0};
     double rup,rdown;
     double th = 0,ph = 0,X[3] = {0};
@@ -3210,8 +3212,8 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
         
         for (d2 = 0; d2 <  Nsd[2]; d2++)
         {
-          min[2] = Zm + step[2]*d2;
-          max[2] = Zm + step[2]*(d2+1);
+          min[2] = Zm;
+          max[2] = ZM;
           
           rdown  = rmin + rstep*d2;
           rup    = rmin + rstep*(d2+1);
@@ -3448,8 +3450,9 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
     const double Xm = -1,XM = 1;
     const double Ym = -1,YM = 1;
     const double Zm = 0 ,ZM = 1;
-    /* step in each direction, note X in [-1,1]x[-1,1]x[0,1]. */
-    const double step[3] = {(XM-Xm)/Nsd[0],(YM-Ym)/Nsd[1],(ZM-Zm)/Nsd[2]};
+    /* step in each direction, note X in [-1,1]x[-1,1]x[0,1]. 
+    // also NOTE that Z min and max are 0 and 1 in cubed spherical. */
+    const double step[3] = {(XM-Xm)/Nsd[0],(YM-Ym)/Nsd[1],DBL_MAX};
     double min[3] = {0},max[3] = {0};
     double rup,rdown;
     double X[3] = {0};
@@ -3491,8 +3494,8 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
         
         for (d2 = 0; d2 <  Nsd[2]; d2++)
         {
-          min[2] = Zm + step[2]*d2;
-          max[2] = Zm + step[2]*(d2+1);
+          min[2] = Zm;
+          max[2] = ZM;
           
           rdown  = rmin + rstep*d2;
           rup    = rmin + rstep*(d2+1);
