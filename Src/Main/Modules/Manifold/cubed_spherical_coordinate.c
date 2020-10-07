@@ -2806,7 +2806,8 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
     const double *imClm = grid_char->params[obj_n]->imgClm;
     unsigned lmax = grid_char->params[obj_n]->lmax;
     /* find r step */
-    double rmin = sqrt(Pow2(l)+Pow2(w)+Pow2(h))/2.;
+    double diag = sqrt(Pow2(l)+Pow2(w)+Pow2(h))/2.;
+    double rmin = l/2 > MaxMag_d(w/2,h/2) ? l/2 : MaxMag_d(w/2,h/2);
     double rmax = grid_char->params[obj_n]->r_min;
     double rstep = (rmax-rmin)/Nsd[2];
     
@@ -2816,6 +2817,7 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
     assert(rmax > 0);
     assert(rstep > 0);
     assert(l > 0 && w > 0 && h > 0);
+    
     /* must be lower case letters */
     assert(!strcmp(dir,"left") || !strcmp(dir,"right"));
     
@@ -2842,6 +2844,7 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
           rdown  = rmin + rstep*d2;
           rup    = rmin + rstep*(d2+1);
           
+          assert(rup > diag);
           /* set min and max parameters */
           for (p = 0; p < 6; ++p)
           {
@@ -3187,7 +3190,8 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
     const double *reClm = grid_char->params[obj_n]->relClm;
     const double *imClm = grid_char->params[obj_n]->imgClm;
     unsigned lmax = grid_char->params[obj_n]->lmax;
-    double rmax = sqrt(Pow2(l)+Pow2(w)+Pow2(h))/2.;
+    double diag = sqrt(Pow2(l)+Pow2(w)+Pow2(h))/2.;
+    double rmax = l/2 > MaxMag_d(w/2,h/2) ? l/2 : MaxMag_d(w/2,h/2);
     double rmin = grid_char->params[obj_n]->r_min;
     double rstep = (rmax-rmin)/Nsd[2];
     
@@ -3217,6 +3221,8 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
           
           rdown  = rmin + rstep*d2;
           rup    = rmin + rstep*(d2+1);
+          
+          assert(rup < diag);
           
           /* set min and max parameters */
           for (p = 0; p < 6; ++p)
