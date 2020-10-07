@@ -15,7 +15,7 @@
 
 /* some conventions: */
 /* split cubed spherical suffix */
-#define SCS_suffix "X%uY%uZ%u"
+#define SCS_suffix "_X%uY%uZ%u"
 
 /* surface function stem */
 #define SigmaU "sigmaU"

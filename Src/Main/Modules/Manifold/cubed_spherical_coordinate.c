@@ -153,6 +153,7 @@ void fill_patches_BBN_Split_CubedSpherical_grid(Grid_T *const grid)
   
   /* set innerB for BH_surrounding */
   printf("WARNING:\n~~~~~~~~~> set innerB for BH_surrounding\n");
+  printf("WARNING:\n~~~~~~~~~> set number of patches!!!\n");
   
 }
 
@@ -2691,6 +2692,7 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
   Np *= (Nsd[0]*Nsd[1]*Nsd[2]);
   
   /* set total number of paches: */
+  assert(Np);
   Pseti("SplitCS_Npatches",(int)Np);
   
   /* test */
@@ -3832,6 +3834,7 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
         }/* for (d2 = 0; d2 <  Nsd[2]; d2++) */
       }/* for (d1 = 0; d1 <  Nsd[1]; d1++) */
     }/* for (d0 = 0; d0 < Nsd[0]; d0++) */
+    obj_n++;
   }
   
   
