@@ -774,7 +774,7 @@ IsItCovering
       sprintf(s,"(%s)",region);
     
     /* if the request is obvious */  
-    if (strstr_i(s,patch->CoordSysInfo->region))
+    if (strstr_i(patch->CoordSysInfo->region,s))
     {
       return 1;
     }

@@ -220,9 +220,13 @@ populate_box_patch_SplitCS
           sprintf(patch->CoordSysInfo->region,
             "(%s_%s)(%s_%s)",dir,region,dir,obj);
         }
-        else
+        else if (strcmp_i(region,"filling_box"))
+        {
           sprintf(patch->CoordSysInfo->region,
-            "(%s_%s)",dir,region);
+            "(%s)",region);
+        }
+        else
+          Error0(NO_OPTION);
         
         /* filling grid */
         patch->grid = grid;
