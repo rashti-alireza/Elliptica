@@ -698,19 +698,36 @@ void theta_phi_of_XY_CS(double *const theta,double *const phi,const double *cons
   }
 }
 
-/* ->: collected patches which cover the object. */
-//Patch_T **
-//collect_patches
-  //(
-  //Grid_T *const grid,/* the grid */
-  //const char *const obj,/* BH/NS etc. see the list below */
-  //const Flag_T side/* LEFT or RIGHT */
-  //)
-//{
-  //Patch_T **patches = 0;
-  //unsigned np;
+/* ->: collected patches which cover the object and number of patches Np
+// which cover the specified region. */
+Patch_T **
+collect_patches
+  (
+  Grid_T *const grid,/* the grid */
+  const char *const region,/* see the list in IsItCovering function */
+  const Flag_T side,/* LEFT or RIGHT or NONE */
+  unsigned *const Np/* number of patches found */
+  )
+{
+  Patch_T **patches = 0;
+  unsigned np,p;
   
-//}
+  np = 0;
+  FOR_ALL_PATCHES(p,grid)
+  {
+    Patch_T *patch = grid->patch[p];
+    if (IsItCovering(patch,region,side))
+    {
+      patches = realloc(patches,(np+1)*sizeof(*patches));
+      IsNull(patches);
+      patches[np] = patch;
+      ++np;
+    }
+  }
+  
+  *Np = np;
+  return patches;
+}
 
 /* ->: Is this patch covering this region? yes = 1, no = 0. 
 // list of regions:
