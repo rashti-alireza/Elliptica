@@ -725,6 +725,10 @@ collect_patches
     }
   }
   
+  /* check if there is no such region */
+  if (np == 0)
+    Error0("No such a region!");
+  
   *Np = np;
   return patches;
 }
@@ -775,9 +779,7 @@ IsItCovering
     
     /* if the request is obvious */  
     if (strstr_i(patch->CoordSysInfo->region,s))
-    {
       return 1;
-    }
   }
   else
   {
