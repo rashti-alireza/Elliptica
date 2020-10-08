@@ -596,6 +596,62 @@ void make_JacobianT_CubedSpherical_coord(Patch_T *const patch)
         Error0(NO_JOB);
     }/* end of switch */
   }/* end of else if (type == OT_T2_CS) */
+  else if (type == OJ_T_SCS)
+  {
+    switch (side)
+    {
+      case UP:
+        patch->JacobianT->j      = JT_NS_T_CS_up;
+      break;
+      case DOWN:
+        patch->JacobianT->j      = JT_NS_T_CS_down;
+      break;
+      case LEFT:
+        patch->JacobianT->j      = JT_NS_T_CS_left;
+      break;
+      case RIGHT:
+        patch->JacobianT->j      = JT_NS_T_CS_right;
+      break;
+      case BACK:
+        patch->JacobianT->j      = JT_NS_T_CS_back;
+      break;
+      case FRONT:
+        patch->JacobianT->j      = JT_NS_T_CS_front;
+      break;
+      default:
+        Error0(NO_JOB);
+    }/* end of switch */
+    R12_derivatives_SCS(patch);/* surface function derivative */
+  }/* end of if (type == OJ_T_SCS) */
+  else if (type == OT_T_SCS)
+  {
+    switch (side)
+    {
+      case UP:
+        patch->JacobianT->j      = JT_NS_T_CS_up;
+      break;
+      case DOWN:
+        patch->JacobianT->j      = JT_NS_T_CS_down;
+      break;
+      case LEFT:
+        patch->JacobianT->j      = JT_NS_T_CS_left;
+      break;
+      case RIGHT:
+        patch->JacobianT->j      = JT_NS_T_CS_right;
+      break;
+      case BACK:
+        patch->JacobianT->j      = JT_NS_T_CS_back;
+      break;
+      case FRONT:
+        patch->JacobianT->j      = JT_NS_T_CS_front;
+      break;
+      default:
+        Error0(NO_JOB);
+    }/* end of switch */
+    R12_derivatives_SCS(patch);/* surface function derivative */
+  }/* end of if (type == OT_T_SCS) */
+  else
+    Error0(NO_OPTION);
   
 }
 
@@ -665,6 +721,67 @@ static void R2_derivative(Patch_T *const patch)
   patch->CoordSysInfo->CubedSphericalCoord->dR2_dx = dR2_dx;
   patch->CoordSysInfo->CubedSphericalCoord->dR2_dy = dR2_dy;
   patch->CoordSysInfo->CubedSphericalCoord->dR2_dz = dR2_dz;
+}
+
+/* preparing R1 and R2 derivatives (surface functions ) 
+// of Split Cubed Spherical coords.
+// NOTE: one must remove dR_? after each updating of R. */
+static void R12_derivatives_SCS(Patch_T *const patch)
+{
+  Field_T *dR2_dX = add_field("dR2_dX",0,patch,NO),
+          *dR2_dY = add_field("dR2_dY",0,patch,NO),
+          *dR2_dx = add_field("dR2_dx",0,patch,YES),
+          *dR2_dy = add_field("dR2_dy",0,patch,YES),
+          *dR2_dz = add_field("dR2_dz",0,patch,YES);
+  Field_T *const R2 = patch->pool[Ind(SigmaU)];
+  
+  Field_T *dR1_dX = add_field("dR1_dX",0,patch,NO),
+          *dR1_dY = add_field("dR1_dY",0,patch,NO),
+          *dR1_dx = add_field("dR1_dx",0,patch,YES),
+          *dR1_dy = add_field("dR1_dy",0,patch,YES),
+          *dR1_dz = add_field("dR1_dz",0,patch,YES);
+  Field_T *const R1 = patch->pool[Ind(SigmaD)];
+  
+  const unsigned nn = patch->nn;
+  unsigned ijk;
+          
+  dR2_dX->v = Partial_Derivative(R2,"a");
+  dR2_dY->v = Partial_Derivative(R2,"b");
+  
+  dR1_dX->v = Partial_Derivative(R1,"a");
+  dR1_dY->v = Partial_Derivative(R1,"b");
+    
+  for (ijk = 0; ijk < nn; ++ijk)
+  {
+    dR2_dx->v[ijk] = dR2_dX->v[ijk]*dq2_dq1(patch,_a_,_x_,ijk)+
+                     dR2_dY->v[ijk]*dq2_dq1(patch,_b_,_x_,ijk);
+    dR2_dy->v[ijk] = dR2_dX->v[ijk]*dq2_dq1(patch,_a_,_y_,ijk)+
+                     dR2_dY->v[ijk]*dq2_dq1(patch,_b_,_y_,ijk);
+    dR2_dz->v[ijk] = dR2_dX->v[ijk]*dq2_dq1(patch,_a_,_z_,ijk)+
+                     dR2_dY->v[ijk]*dq2_dq1(patch,_b_,_z_,ijk);
+                     
+    dR1_dx->v[ijk] = dR1_dX->v[ijk]*dq2_dq1(patch,_a_,_x_,ijk)+
+                     dR1_dY->v[ijk]*dq2_dq1(patch,_b_,_x_,ijk);
+    dR1_dy->v[ijk] = dR1_dX->v[ijk]*dq2_dq1(patch,_a_,_y_,ijk)+
+                     dR1_dY->v[ijk]*dq2_dq1(patch,_b_,_y_,ijk);
+    dR1_dz->v[ijk] = dR1_dX->v[ijk]*dq2_dq1(patch,_a_,_z_,ijk)+
+                     dR1_dY->v[ijk]*dq2_dq1(patch,_b_,_z_,ijk);
+  }
+                      
+  remove_field(dR2_dX);
+  remove_field(dR2_dY);
+  
+  remove_field(dR1_dX);
+  remove_field(dR1_dY);
+  
+  patch->CoordSysInfo->CubedSphericalCoord->dR2_dx = dR2_dx;
+  patch->CoordSysInfo->CubedSphericalCoord->dR2_dy = dR2_dy;
+  patch->CoordSysInfo->CubedSphericalCoord->dR2_dz = dR2_dz;
+  
+  patch->CoordSysInfo->CubedSphericalCoord->dR1_dx = dR1_dx;
+  patch->CoordSysInfo->CubedSphericalCoord->dR1_dy = dR1_dy;
+  patch->CoordSysInfo->CubedSphericalCoord->dR1_dz = dR1_dz;
+  
 }
 
 /* interpolation of 2d field of radius R (surface function)

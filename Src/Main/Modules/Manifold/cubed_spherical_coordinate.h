@@ -68,6 +68,7 @@ void alloc_patches_BBN_Split_CubedSpherical_grid(Grid_T *const grid);
 void set_params_split_CS(Grid_Char_T *const grid_char);
 void fill_patches_BBN_Split_CubedSpherical_grid(Grid_T *const grid);
 void set_object_name_split_CS(char *const obj,const char *const type);
+static void R12_derivatives_SCS(Patch_T *const patch);
 
 void 
 populate_CS_patch_SplitCS
