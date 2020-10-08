@@ -152,6 +152,7 @@ void fill_patches_BBN_Split_CubedSpherical_grid(Grid_T *const grid)
   assert(pn == (unsigned)Pgeti("SplitCS_Npatches"));
   
   /* set innerB for BH_surrounding */
+  grid->np = pn;
   unsigned nbh = 0,p;
   Patch_T **patches = 
     collect_patches(grid,"BH_surrounding_surface",RIGHT,&nbh);
@@ -163,7 +164,6 @@ void fill_patches_BBN_Split_CubedSpherical_grid(Grid_T *const grid)
   }
   
   _free(patches);
-  
 }
 
 /* populating properties of a patch for a split cubed spherical object,
