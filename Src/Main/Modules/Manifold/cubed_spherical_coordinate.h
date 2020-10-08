@@ -70,6 +70,9 @@ void fill_patches_BBN_Split_CubedSpherical_grid(Grid_T *const grid);
 void set_object_name_split_CS(char *const obj,const char *const type);
 static void R12_derivatives_SCS(Patch_T *const patch);
 
+double JT_OJ_T_SCS(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const unsigned p);
+double JT_OT_T_SCS(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const unsigned p);
+
 void 
 populate_CS_patch_SplitCS
   (
