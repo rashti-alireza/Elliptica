@@ -239,7 +239,7 @@ populate_CS_patch_SplitCS
             else
               sprintf(patch->CoordSysInfo->region,"%s_%s",dir,obj);
           }
-          if (strcmp_i(obj,"outermost"))
+          else if (strcmp_i(obj,"outermost"))
           {
             sprintf(patch->CoordSysInfo->region,"%s",obj);
           }
