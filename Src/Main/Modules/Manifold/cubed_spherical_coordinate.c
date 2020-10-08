@@ -136,11 +136,11 @@ void fill_patches_BBN_Split_CubedSpherical_grid(Grid_T *const grid)
   unsigned pn = 0; /* patch number */
   
   /* boxes */ 
-  populate_box_patch_SplitCS(grid,"central_box",LEFT,&pn);
-  populate_box_patch_SplitCS(grid,"filling_box",UP,&pn);
-  populate_box_patch_SplitCS(grid,"filling_box",DOWN,&pn);
-  populate_box_patch_SplitCS(grid,"filling_box",BACK,&pn);
-  populate_box_patch_SplitCS(grid,"filling_box",FRONT,&pn);
+  populate_box_patch_SplitCS(grid,"central_box",LEFT,&pn ,"NS");
+  populate_box_patch_SplitCS(grid,"filling_box",UP,&pn   ,"filling_box");
+  populate_box_patch_SplitCS(grid,"filling_box",DOWN,&pn ,"filling_box");
+  populate_box_patch_SplitCS(grid,"filling_box",BACK,&pn ,"filling_box");
+  populate_box_patch_SplitCS(grid,"filling_box",FRONT,&pn,"filling_box");
   
   /* cubed sphericals */
   populate_CS_patch_SplitCS(grid,"NS",LEFT,&pn);
@@ -212,6 +212,31 @@ populate_CS_patch_SplitCS
           double *rU = 0, *rD = 0;
           
           assert(StrSide[side]);
+          
+          /* covering region */
+          if (strcmp_i(obj,"NS") || strcmp_i(obj,"BH"))
+          {
+            if (d2 == Nsd[2]-1)/* if on surface */
+              sprintf(patch->CoordSysInfo->region,"%s_%s_surface",dir,obj);
+            else
+              sprintf(patch->CoordSysInfo->region,"%s_%s",dir,obj);
+          }
+          else if (strcmp_i(obj,"NS_surrounding") || 
+                   strcmp_i(obj,"BH_surrounding"))
+          {
+            if (d2 == 0)/* if on surface */
+              sprintf(patch->CoordSysInfo->region,"%s_%s_surface",dir,obj);
+            else
+              sprintf(patch->CoordSysInfo->region,"%s_%s",dir,obj);
+          }
+          if (strcmp_i(obj,"outermost"))
+          {
+            sprintf(patch->CoordSysInfo->region,"%s",obj);
+          }
+          else
+          {
+            Error0(NO_OPTION);
+          }
           
           /* filling flags */
           patch->CoordSysInfo->CubedSphericalCoord->side = side;

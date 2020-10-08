@@ -1,12 +1,9 @@
 #ifndef manifold_LIB_H
 #define manifold_LIB_H
 
-
-
 /* forward declaration structures */
 struct FIELD_T;
 struct SOLVING_MAN_T;
-
 
 /* collocation */
 typedef enum COLLOCATION_T
@@ -172,6 +169,7 @@ typedef struct PATCH_T
   Coord_T coordsys;/* coord sys used in this patch */
   struct
   {
+   char region[100];/* region this patch covers */
    struct
    {
     Flag_T side;/* the side of this cubed coord, up, down, etc. */
@@ -336,11 +334,11 @@ populate_box_patch_SplitCS
   Grid_T *const grid,
   const char *const obj0,/* filling_box,central_box. */
   const Flag_T dir0,/* direction */
-  unsigned *const pn/* starting patch number,is increased for each add */
+  unsigned *const pn,/* starting patch number,is increased for each add */
+  const char *const region/* covering region */
   );
-
-
-
+  
+  
 #endif
 
 
