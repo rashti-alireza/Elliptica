@@ -42,17 +42,15 @@ void make_JacobianT_Cartesian_coord(Patch_T *const patch)
 */
 double JT_Cartesian_patch(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const unsigned p)
 {
-  double j;
+  double j = 0;
   
   if (q2_e%3 == q1_e%3)/* e.g. _y_%3 = 1 and _b_%3 = 1 */
     j = 1;
-  else
-    j = 0;
     
+  return j;
+  
   UNUSED(patch);
   UNUSED(p);
-  
-  return j;
 }
 
 /*filling patch struct for Cartesian*/
