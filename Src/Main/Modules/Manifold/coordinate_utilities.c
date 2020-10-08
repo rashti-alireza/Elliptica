@@ -769,26 +769,14 @@ IsItCovering
   if (strcmp_i(patch->grid->kind,"BBN_Split_CubedSpherical_grid"))
   {
     if (side)
-      sprintf(s,"%s_%s",side,region);
+      sprintf(s,"(%s_%s)",side,region);
     else
-      sprintf(s,"%s",region);
+      sprintf(s,"(%s)",region);
     
     /* if the request is obvious */  
-    if (strcmp_i(s,patch->CoordSysInfo->region))
+    if (strstr_i(s,patch->CoordSysInfo->region))
     {
       return 1;
-    }
-    /* if this is central box, the convention for region 
-    // is , in regex, (left|right)_(NS|BH) */
-    else if (strcmp_i(s,"central_box"))  
-    {
-      char s2[999] = {'\0'};
-      sprintf(s2,"%s_NS",side);/* if (left|right)_NS */
-      if (strcmp_i(s2,patch->CoordSysInfo->region))
-        return 1;
-      sprintf(s2,"%s_BH",side);/* if (left|right)_BH */
-      if (strcmp_i(s2,patch->CoordSysInfo->region))
-        return 1;
     }
   }
   else

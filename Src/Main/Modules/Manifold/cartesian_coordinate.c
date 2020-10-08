@@ -215,7 +215,14 @@ populate_box_patch_SplitCS
         assert(StrSide[side]);
         
         /* cover region */
-        sprintf(patch->CoordSysInfo->region,"%s_%s",dir,region);
+        if (strcmp_i(region,"NS") || strcmp_i(region,"BH"))
+        {
+          sprintf(patch->CoordSysInfo->region,
+            "(%s_%s)(%s_%s)",dir,region,dir,obj);
+        }
+        else
+          sprintf(patch->CoordSysInfo->region,
+            "(%s_%s)",dir,region);
         
         /* filling grid */
         patch->grid = grid;

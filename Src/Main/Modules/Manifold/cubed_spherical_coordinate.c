@@ -227,21 +227,25 @@ populate_CS_patch_SplitCS
           if (strcmp_i(obj,"NS") || strcmp_i(obj,"BH"))
           {
             if (d2 == Nsd[2]-1)/* if on surface */
-              sprintf(patch->CoordSysInfo->region,"%s_%s_surface",dir,obj);
+              sprintf(patch->CoordSysInfo->region,
+                "(%s_%s)(%s_%s_surface)",dir,obj,dir,obj);
             else
-              sprintf(patch->CoordSysInfo->region,"%s_%s",dir,obj);
+              sprintf(patch->CoordSysInfo->region,
+                "(%s_%s)",dir,obj);
           }
           else if (strcmp_i(obj,"NS_surrounding") || 
                    strcmp_i(obj,"BH_surrounding"))
           {
             if (d2 == 0)/* if on surface */
-              sprintf(patch->CoordSysInfo->region,"%s_%s_surface",dir,obj);
+              sprintf(patch->CoordSysInfo->region,
+                "(%s_%s)(%s_%s_surface)",dir,obj,dir,obj);
             else
-              sprintf(patch->CoordSysInfo->region,"%s_%s",dir,obj);
+              sprintf(patch->CoordSysInfo->region,
+                "(%s_%s)",dir,obj);
           }
           else if (strcmp_i(obj,"outermost"))
           {
-            sprintf(patch->CoordSysInfo->region,"%s",obj);
+            sprintf(patch->CoordSysInfo->region,"(%s)",obj);
           }
           else
           {

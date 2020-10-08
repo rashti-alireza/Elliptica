@@ -169,7 +169,7 @@ typedef struct PATCH_T
   Coord_T coordsys;/* coord sys used in this patch */
   struct
   {
-   char region[100];/* region this patch covers */
+   char region[100];/* region this patch covers, parentheses separated */
    struct
    {
     Flag_T side;/* the side of this cubed coord, up, down, etc. */
