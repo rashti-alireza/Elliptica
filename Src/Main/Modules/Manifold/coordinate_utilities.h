@@ -11,6 +11,7 @@ typedef enum MODE_T
   FORCE_IN
 }Mode_T;
 
+/* DON'T MODIFY */
 enum Limit
 {
   MIN0 = 0,
