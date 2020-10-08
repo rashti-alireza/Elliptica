@@ -465,7 +465,7 @@ void make_nodes_CubedSpherical_coord(Patch_T *const patch)
         d = sqrt(1+Pow2(X[0])+Pow2(X[1]));
         patch->node[l]->X = X;
         x1 = S*R1_f->v[L(n,i,j,0)]/d;
-        ratio  = 1.-S*d*x1/(R2_f->v[L(n,i,j,0)]);
+        ratio  = 1.-R1_f->v[L(n,i,j,0)]/(R2_f->v[L(n,i,j,0)]);
         
         x[c] = x1/(1.-ratio*X[2]);
         x[a] = S*x[c]*X[0];
@@ -4211,6 +4211,136 @@ double JT_OJ_T_SCS(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const u
       dxc2_dz *= S;
       
       J = ((kd[k==l]-dxc1_dz)-(x[k]-xc1)*(dxc2_dz-dxc1_dz)/(xc2-xc1))/(xc2-xc1);
+    break;
+    default:
+      Error0("No such an enum!\n");
+  }
+  
+  return J;
+}
+
+/* Jacobian transformation for split cubed spherical patch.type: OT_T_SCS
+// convention:
+// _a_ = X, _b_ = Y, _c_ = Z
+// ->return value: dq2/dq1 */
+double JT_OT_T_SCS(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const unsigned p)
+{
+  /* ds/ds = 1 */
+  if (q2_e == q1_e)
+    return 1;
+    
+  double J = 0;
+  enum enum_dA_da dA_da = dA_da_UNDEFINED;
+  const double *const C = patch->c;
+  const double kd[2] = {0.,1.};/* delta Kronecker */
+  const double S   = patch->JacobianT->SCS->sign; /* sign */
+  const unsigned i = patch->JacobianT->SCS->iper;
+  const unsigned j = patch->JacobianT->SCS->jper;
+  const unsigned k = patch->JacobianT->SCS->kper;
+  const double x[3] = {patch->node[p]->x[0]-C[0],
+                       patch->node[p]->x[1]-C[1],
+                       patch->node[p]->x[2]-C[2]};
+  const double *const X = patch->node[p]->X;
+  double d1,d3;
+  unsigned l;
+  double xc1,ratio,R1,R2,
+         dxc1_dx,dxc1_dy,dxc1_dz,
+         dratio_dx,dratio_dy,dratio_dz,
+         dR1_dx,dR1_dy,dR1_dz,
+         dR2_dx,dR2_dy,dR2_dz;
+  
+  dA_da = get_dA_da(q2_e,q1_e);
+  switch(dA_da)
+  {
+    case da_dx:
+      l = 0;
+      J = S*(kd[i==l]-x[i]*kd[k==l]/x[k])/x[k];
+    break;
+    case da_dy:
+      l = 1;
+      J = S*(kd[i==l]-x[i]*kd[k==l]/x[k])/x[k];
+    break;
+    case da_dz:
+      l = 2;
+      J = S*(kd[i==l]-x[i]*kd[k==l]/x[k])/x[k];
+    break;
+    case db_dx:
+      l = 0;
+      J = S*(kd[j==l]-x[j]*kd[k==l]/x[k])/x[k];
+    break;
+    case db_dy:
+      l = 1;
+      J = S*(kd[j==l]-x[j]*kd[k==l]/x[k])/x[k];
+    break;
+    case db_dz:
+      l = 2;
+      J = S*(kd[j==l]-x[j]*kd[k==l]/x[k])/x[k];
+    break;
+    case dc_dx:
+      l = 0;
+      d1 = sqrt(1+Pow2(X[0])+Pow2(X[1]));
+      d3 = Power3(d1);
+      
+      R1  = patch->CoordSysInfo->CubedSphericalCoord->R1_f->v[p];
+      R2  = patch->CoordSysInfo->CubedSphericalCoord->R2_f->v[p];
+      
+      ratio = 1-R1/R2;
+      
+      dR1_dx = patch->CoordSysInfo->CubedSphericalCoord->dR1_dx->v[p];
+      dR2_dx = patch->CoordSysInfo->CubedSphericalCoord->dR2_dx->v[p];
+      
+      dratio_dx = (-dR1_dx+dR2_dx*R1/R2)/R2;
+      
+      xc1 = S*R1/d1;
+      
+      dxc1_dx  = dR1_dx/d1-R1*(X[0]*JT_OT_T_SCS(patch,_a_,_x_,p)+X[1]*JT_OT_T_SCS(patch,_b_,_x_,p))/d3;
+      dxc1_dx *= S;
+      
+      J = ((-dxc1_dx+xc1*kd[k==l]/x[k])/x[k]-X[3]*dratio_dx)/ratio;
+    break;
+    case dc_dy:
+      l  = 1;
+      d1 = sqrt(1+Pow2(X[0])+Pow2(X[1]));
+      d3 = Power3(d1);
+      
+      R1  = patch->CoordSysInfo->CubedSphericalCoord->R1_f->v[p];
+      R2  = patch->CoordSysInfo->CubedSphericalCoord->R2_f->v[p];
+      
+      ratio = 1-R1/R2;
+      
+      dR1_dy = patch->CoordSysInfo->CubedSphericalCoord->dR1_dy->v[p];
+      dR2_dy = patch->CoordSysInfo->CubedSphericalCoord->dR2_dy->v[p];
+      
+      dratio_dy = (-dR1_dy+dR2_dy*R1/R2)/R2;
+      
+      xc1 = S*R1/d1;
+      
+      dxc1_dy  = dR1_dy/d1-R1*(X[0]*JT_OT_T_SCS(patch,_a_,_y_,p)+X[1]*JT_OT_T_SCS(patch,_b_,_y_,p))/d3;
+      dxc1_dy *= S;
+      
+      J = ((-dxc1_dy+xc1*kd[k==l]/x[k])/x[k]-X[3]*dratio_dy)/ratio;
+    break;
+    case dc_dz:
+      l  = 2;
+      d1 = sqrt(1+Pow2(X[0])+Pow2(X[1]));
+      d3 = Power3(d1);
+      
+      R1  = patch->CoordSysInfo->CubedSphericalCoord->R1_f->v[p];
+      R2  = patch->CoordSysInfo->CubedSphericalCoord->R2_f->v[p];
+      
+      ratio = 1-R1/R2;
+      
+      dR1_dz = patch->CoordSysInfo->CubedSphericalCoord->dR1_dz->v[p];
+      dR2_dz = patch->CoordSysInfo->CubedSphericalCoord->dR2_dz->v[p];
+      
+      dratio_dz = (-dR1_dz+dR2_dz*R1/R2)/R2;
+      
+      xc1 = S*R1/d1;
+      
+      dxc1_dz  = dR1_dz/d1-R1*(X[0]*JT_OT_T_SCS(patch,_a_,_z_,p)+X[1]*JT_OT_T_SCS(patch,_b_,_z_,p))/d3;
+      dxc1_dz *= S;
+      
+      J = ((-dxc1_dz+xc1*kd[k==l]/x[k])/x[k]-X[3]*dratio_dz)/ratio;
     break;
     default:
       Error0("No such an enum!\n");
