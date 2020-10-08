@@ -229,44 +229,6 @@ static void set_df_dn_and_pair(Grid_T *const grid)
   
   /* one can add a function here if needs specific arrangement of df_dn */
   
-  /* favor Drichlet BC for sourrounding patches for face = K_n2*/
-  if (strcmp_i(grid->kind,"BBN_CubedSpherical_grid") ||
-      strcmp_i(grid->kind,"BNS_CubedSpherical_grid")   )
-  {
-    FOR_ALL_PATCHES(pa,grid)
-    {
-      Patch_T *patch = grid->patch[pa];
-      
-      if ( !IsItNSSurroundingPatch(patch) &&
-           !IsItHorizonPatch(patch))
-        continue;
-      
-      face = patch->interface;
-      unsigned sf;
-      
-      for (sf = 0; sf < face[K_n2]->ns; ++sf)
-      {
-        subf = face[K_n2]->subface[sf];
-        Subf_T **chain = 0;
-        unsigned nc;
-        
-        if (!subf->touch || strstr(subf->flags_str,"Dn:"))
-          continue;
-      
-        /* make the whole chain and determine the last ring by null pointer and so for next pointer */
-        chain = compose_the_chain(subf);
-        nc = countf(chain);
-        
-        if (nc == 1)
-          Error0("There is no other subface matches to this subface.");
-      
-       set_df_dn(chain[0],0);
-       free_2d(chain);
-        
-      }/* end of for (sf = 0; sf < face[f]->ns; ++sf) */
-    }/* FOR_ALL_PATCHES(pa,grid) */
-  }/* if (strcmp_i(grid->kind,"BBN_CubedSpherical_grid")) */
-  
   /* go thru all patches and set one Dirichlet BC for each */
   FOR_ALL_PATCHES(pa,grid)
   {
@@ -1848,6 +1810,20 @@ static void FindInnerB_CS_coord(Patch_T *const patch)
           point[i]->innerB = 0;
     }
   }
+  else if (strcmp_i(patch->grid->kind,"BBN_Split_CubedSpherical_grid"))
+  {
+    FOR_ALL(f,interface)
+    {
+      Point_T **point = interface[f]->point;
+      
+      if (patch->innerB && f == K_0)
+        FOR_ALL(i,point)
+          point[i]->innerB = 1;
+      else
+        FOR_ALL(i,point)
+          point[i]->innerB = 0;
+    }
+  }
   else if (strcmp_i(patch->grid->kind,"SNS_CubedSpherical+Box_grid"))
   {
     FOR_ALL(f,interface)
@@ -1906,6 +1882,17 @@ static void FindExterF_CS_coord(Patch_T *const patch)
     }
   }
   else if (strcmp_i(patch->grid->kind,"BBN_CubedSpherical_grid"))
+  {
+    FOR_ALL(f,interface)
+    {
+      Point_T **point = interface[f]->point;
+      FOR_ALL(i,point)
+      {
+        point[i]->exterF = 1;
+      }
+    }
+  }
+  else if (strcmp_i(patch->grid->kind,"BBN_Split_CubedSpherical_grid"))
   {
     FOR_ALL(f,interface)
     {
