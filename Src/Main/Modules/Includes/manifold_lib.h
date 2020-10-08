@@ -337,7 +337,14 @@ populate_box_patch_SplitCS
   unsigned *const pn,/* starting patch number,is increased for each add */
   const char *const region/* covering region */
   );
-  
+
+int 
+IsItCovering
+  (
+  const Patch_T *const patch,/* the patch */
+  const char *const region,/* BH/NS etc. see the list above */
+  const Flag_T Fside/* LEFT or RIGHT or NONE (side of region, if any) */
+  );  
   
 #endif
 

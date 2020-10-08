@@ -3,7 +3,7 @@
 #include "maths_general_lib.h"
 #include "manifold_lib.h"
 #include "fields_lib.h"
-
+#include "coordinate_shared_lib.h"
 
 typedef enum MODE_T
 {
@@ -48,4 +48,13 @@ void free_needle(Needle_T *needle);
 void *alloc_needle(void);
 void theta_phi_of_XY_CS(double *const theta,double *const phi,const double *const X,const Flag_T side);
 
+int 
+IsItCovering
+  (
+  const Patch_T *const patch,/* the patch */
+  const char *const region,/* BH/NS etc. see the list above */
+  const Flag_T Fside/* LEFT or RIGHT or NONE (side of region, if any) */
+  );
+  
+  
 

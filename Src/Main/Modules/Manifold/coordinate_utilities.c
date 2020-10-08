@@ -698,3 +698,88 @@ void theta_phi_of_XY_CS(double *const theta,double *const phi,const double *cons
   }
 }
 
+/* ->: collected patches which cover the object. */
+//Patch_T **
+//collect_patches
+  //(
+  //Grid_T *const grid,/* the grid */
+  //const char *const obj,/* BH/NS etc. see the list below */
+  //const Flag_T side/* LEFT or RIGHT */
+  //)
+//{
+  //Patch_T **patches = 0;
+  //unsigned np;
+  
+//}
+
+/* ->: Is this patch covering this region? yes = 1, no = 0. 
+// list of regions:
+// 
+// "NS" == the whole NS patches including central box (if any)
+// "BH" == the whole BH patches including central box (if any)
+// "NS_surface" == only patches include the NS surface from inside
+// "BH_surface" == only patches include the BH surface from inside
+// "NS_surface_surrounding" == only patches include the NS surface from outside
+// "BH_surface_surrounding" == only patches include the BH surface from outside
+// "NS_surrounding" == the whole NS surrounding patches
+// "BH_surrounding" == the whole NS surrounding patches
+// "outermost" == the whole outermost patches
+// "filling_box" == only patches cover the filling box
+// "central_box" == only patches cover the central box
+//
+// ex:
+// ===
+// IsItCovering(patch,"outermost",NONE);  => outemost patch?
+// IsItCovering(patch,"NS_surface",LEFT); => NS_surface patch?
+*/
+int 
+IsItCovering
+  (
+  const Patch_T *const patch,/* the patch */
+  const char *const region,/* BH/NS etc. see the list above */
+  const Flag_T Fside/* LEFT or RIGHT or NONE (side of region, if any) */
+  )
+{
+  int ret = 0;  
+  const char *side = 0;
+  char s[999] = {'\0'};
+   
+  if(Fside == LEFT || Fside == RIGHT)
+    side = StrSide[Fside];
+  else
+    side = 0;
+    
+  if (strcmp_i(patch->grid->kind,"BBN_Split_CubedSpherical_grid"))
+  {
+    if (side)
+      sprintf(s,"%s_%s",side,region);
+    else
+      sprintf(s,"%s",region);
+    
+    /* if the request is obvious */  
+    if (strcmp_i(s,patch->CoordSysInfo->region))
+    {
+      return 1;
+    }
+    /* if this is central box, the convention for region 
+    // is , in regex, (left|right)_(NS|BH) */
+    else if (strcmp_i(s,"central_box"))  
+    {
+      char s2[999] = {'\0'};
+      sprintf(s2,"%s_NS",side);/* if (left|right)_NS */
+      if (strcmp_i(s2,patch->CoordSysInfo->region))
+        return 1;
+      sprintf(s2,"%s_BH",side);/* if (left|right)_BH */
+      if (strcmp_i(s2,patch->CoordSysInfo->region))
+        return 1;
+    }
+  }
+  else
+  {
+    Error0(NO_OPTION);
+  }
+  
+  return ret;
+}
+
+
