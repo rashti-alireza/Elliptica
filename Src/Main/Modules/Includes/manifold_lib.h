@@ -155,6 +155,13 @@ typedef struct JACOBIAN_TRANS_T
   double (*j)(struct PATCH_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const unsigned p);/* function for transformation */
   double *dX_dx[3][3];/* saving some transformation to save time for dX[0..2]/dx[0..2] */
   double *dx_dX[3][3];/* saving some transformation to save time dx[0..2]/dX[0..2] */
+  /* split cubed spherical stuffs */
+  struct
+  {
+   double sign;/* sign */
+   unsigned iper,jper,kper;/* permutation */
+  }SCS[1];
+  
 }JacobianTrans_T;
 
 /* patch */

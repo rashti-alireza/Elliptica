@@ -598,57 +598,35 @@ void make_JacobianT_CubedSpherical_coord(Patch_T *const patch)
   }/* end of else if (type == OT_T2_CS) */
   else if (type == OJ_T_SCS)
   {
-    switch (side)
-    {
-      case UP:
-        patch->JacobianT->j      = JT_NS_T_CS_up;
-      break;
-      case DOWN:
-        patch->JacobianT->j      = JT_NS_T_CS_down;
-      break;
-      case LEFT:
-        patch->JacobianT->j      = JT_NS_T_CS_left;
-      break;
-      case RIGHT:
-        patch->JacobianT->j      = JT_NS_T_CS_right;
-      break;
-      case BACK:
-        patch->JacobianT->j      = JT_NS_T_CS_back;
-      break;
-      case FRONT:
-        patch->JacobianT->j      = JT_NS_T_CS_front;
-      break;
-      default:
-        Error0(NO_JOB);
-    }/* end of switch */
-    R12_derivatives_SCS(patch);/* surface function derivative */
+    /* transformation function */
+    patch->JacobianT->j  = JT_OJ_T_SCS;
+    
+    /* set sign and permutations */
+    double sign = 0,iper = 0,jper = 0,kper = 0;
+    SignAndIndex_permutation_CubedSphere(side,&iper,&jper,&kper,&sign);
+    patch->JacobianT->SCS->sign = sign;
+    patch->JacobianT->SCS->iper = iper;
+    patch->JacobianT->SCS->jper = jper;
+    patch->JacobianT->SCS->kper = kper;
+    
+    /* surface function derivative */
+    R12_derivatives_SCS(patch);
   }/* end of if (type == OJ_T_SCS) */
   else if (type == OT_T_SCS)
   {
-    switch (side)
-    {
-      case UP:
-        patch->JacobianT->j      = JT_NS_T_CS_up;
-      break;
-      case DOWN:
-        patch->JacobianT->j      = JT_NS_T_CS_down;
-      break;
-      case LEFT:
-        patch->JacobianT->j      = JT_NS_T_CS_left;
-      break;
-      case RIGHT:
-        patch->JacobianT->j      = JT_NS_T_CS_right;
-      break;
-      case BACK:
-        patch->JacobianT->j      = JT_NS_T_CS_back;
-      break;
-      case FRONT:
-        patch->JacobianT->j      = JT_NS_T_CS_front;
-      break;
-      default:
-        Error0(NO_JOB);
-    }/* end of switch */
-    R12_derivatives_SCS(patch);/* surface function derivative */
+    /* transformation function */
+    patch->JacobianT->j  = JT_OT_T_SCS;
+    
+    /* set sign and permutations */
+    double sign = 0,iper = 0,jper = 0,kper = 0;
+    SignAndIndex_permutation_CubedSphere(side,&iper,&jper,&kper,&sign);
+    patch->JacobianT->SCS->sign = sign;
+    patch->JacobianT->SCS->iper = iper;
+    patch->JacobianT->SCS->jper = jper;
+    patch->JacobianT->SCS->kper = kper;
+    
+    /* surface function derivative */
+    R12_derivatives_SCS(patch);
   }/* end of if (type == OT_T_SCS) */
   else
     Error0(NO_OPTION);
