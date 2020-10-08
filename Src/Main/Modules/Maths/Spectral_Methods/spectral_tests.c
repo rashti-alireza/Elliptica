@@ -1469,9 +1469,9 @@ int derivative_tests(Grid_T *const grid)
           free(numc[e]);
           
           if (flg == YES)
-            printf("[+].(E_an,E_nu)=(%g,%g)\n",error->E_an,error->E_nu);
+            printf("[+].(E_an,E_nu)=(%e,%e)\n",error->E_an,error->E_nu);
           else
-            printf("[-].(E_an,E_nu)=(%g,%g)\n",error->E_an,error->E_nu);
+            printf("[-].(E_an,E_nu)=(%e,%e)\n",error->E_an,error->E_nu);
         }
       }/* end of for (e = FUNC_x; e < N_FUNC; ++e) */
       free(anac[FUNC]);
