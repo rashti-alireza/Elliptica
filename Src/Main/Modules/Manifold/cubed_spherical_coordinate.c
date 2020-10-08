@@ -152,7 +152,17 @@ void fill_patches_BBN_Split_CubedSpherical_grid(Grid_T *const grid)
   assert(pn == (unsigned)Pgeti("SplitCS_Npatches"));
   
   /* set innerB for BH_surrounding */
-  printf("WARNING:\n~~~~~~~~~> set innerB for BH_surrounding\n");
+  unsigned nbh = 0,p;
+  Patch_T **patches = 
+    collect_patches(grid,"BH_surrounding_surface",RIGHT,&nbh);
+  
+  for (p = 0; p < nbh; ++p)
+  {
+    Patch_T *patch = patches[p];
+    patch->innerB = 1;
+  }
+  
+  _free(patches);
   
 }
 
