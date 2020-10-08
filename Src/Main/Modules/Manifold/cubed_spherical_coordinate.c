@@ -4335,7 +4335,7 @@ double JT_OT_T_SCS(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const u
       dxc1_dx  = dR1_dx/d1-R1*(X[0]*JT_OT_T_SCS(patch,_a_,_x_,p)+X[1]*JT_OT_T_SCS(patch,_b_,_x_,p))/d3;
       dxc1_dx *= S;
       
-      J = ((-dxc1_dx+xc1*kd[k==l]/x[k])/x[k]-X[3]*dratio_dx)/ratio;
+      J = ((-dxc1_dx+xc1*kd[k==l]/x[k])/x[k]-X[2]*dratio_dx)/ratio;
     break;
     case dc_dy:
       l  = 1;
@@ -4357,7 +4357,7 @@ double JT_OT_T_SCS(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const u
       dxc1_dy  = dR1_dy/d1-R1*(X[0]*JT_OT_T_SCS(patch,_a_,_y_,p)+X[1]*JT_OT_T_SCS(patch,_b_,_y_,p))/d3;
       dxc1_dy *= S;
       
-      J = ((-dxc1_dy+xc1*kd[k==l]/x[k])/x[k]-X[3]*dratio_dy)/ratio;
+      J = ((-dxc1_dy+xc1*kd[k==l]/x[k])/x[k]-X[2]*dratio_dy)/ratio;
     break;
     case dc_dz:
       l  = 2;
@@ -4379,7 +4379,7 @@ double JT_OT_T_SCS(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const u
       dxc1_dz  = dR1_dz/d1-R1*(X[0]*JT_OT_T_SCS(patch,_a_,_z_,p)+X[1]*JT_OT_T_SCS(patch,_b_,_z_,p))/d3;
       dxc1_dz *= S;
       
-      J = ((-dxc1_dz+xc1*kd[k==l]/x[k])/x[k]-X[3]*dratio_dz)/ratio;
+      J = ((-dxc1_dz+xc1*kd[k==l]/x[k])/x[k]-X[2]*dratio_dz)/ratio;
     break;
     default:
       Error0("No such an enum!\n");
