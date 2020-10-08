@@ -242,13 +242,13 @@ int x_of_X(double *const x,const double *const X,const Patch_T *const patch)
 // ->return value 1 if it is successful, otherwise 0. */
 static int x_of_X_Cartesian_coord(double *const x,const double *const X,const Patch_T *const patch)
 {
-  UNUSED(patch);  
-  
   x[0] = X[0];
   x[1] = X[1];
   x[2] = X[2];
   
   return 1;
+  
+  UNUSED(patch);  
 }
 
 /* find x in cartesian coord correspond to X (general coords) 
@@ -264,17 +264,45 @@ static int x_of_X_CS_coord(double *const x,const double *const X,const Patch_T *
   Field_T *R1_f = patch->CoordSysInfo->CubedSphericalCoord->R1_f,
           *R2_f = patch->CoordSysInfo->CubedSphericalCoord->R2_f;
   const double xc1 = patch->CoordSysInfo->CubedSphericalCoord->xc1,
-               xc2 = patch->CoordSysInfo->CubedSphericalCoord->xc2,
-                R1 = patch->CoordSysInfo->CubedSphericalCoord->R1,
-                R2 = patch->CoordSysInfo->CubedSphericalCoord->R2;
+               xc2 = patch->CoordSysInfo->CubedSphericalCoord->xc2;
+  double R1 = patch->CoordSysInfo->CubedSphericalCoord->R1,
+         R2 = patch->CoordSysInfo->CubedSphericalCoord->R2;
   const double *const C = patch->c;/* center of origine translated */
-  double x1,x2,d,L;
+  double x1,x2,d,ratio;
   double x_test[3],X_test[3],dX;
   
   SignAndIndex_permutation_CubedSphere(side,&a,&b,&c,&S);
 
   switch (type)
   {
+    case OJ_T_SCS:
+      d = sqrt(1+Pow2(X[0])+Pow2(X[1]));
+      x1 = S*R_interpolation_CS(R1_f,X)/d;
+      x2 = S*R_interpolation_CS(R2_f,X)/d;
+      
+      x[c] = x1+(x2-x1)*X[2];
+      x[a] = S*x[c]*X[0];
+      x[b] = S*x[c]*X[1];
+      
+      x[a]+= C[a];
+      x[b]+= C[b];
+      x[c]+= C[c];
+      break;
+    case OT_T_SCS:
+      R1 = R_interpolation_CS(R1_f,X);
+      R2 = R_interpolation_CS(R2_f,X);
+      ratio = 1.-R1/R2;
+      d = sqrt(1+Pow2(X[0])+Pow2(X[1]));
+      x1 = S*R1/d;
+      
+      x[c] = x1/(1.-ratio*X[2]);
+      x[a] = S*x[c]*X[0];
+      x[b] = S*x[c]*X[1];
+      
+      x[a]+= C[a];
+      x[b]+= C[b];
+      x[c]+= C[c];
+    break;
     case NS_T_CS:
       d = sqrt(1+Pow2(X[0])+Pow2(X[1]));
       x1 = xc1;
@@ -304,9 +332,9 @@ static int x_of_X_CS_coord(double *const x,const double *const X,const Patch_T *
     case OT_T1_CS:
       d  = sqrt(1+Pow2(X[0])+Pow2(X[1]));
       x1 = xc1;
-      L  = 1.-S*d*xc1/R2;
+      ratio  = 1.-S*d*xc1/R2;
       
-      x[c] = x1/(1-L*X[2]);
+      x[c] = x1/(1-ratio*X[2]);
       x[a] = S*x[c]*X[0];
       x[b] = S*x[c]*X[1];
       
@@ -315,11 +343,11 @@ static int x_of_X_CS_coord(double *const x,const double *const X,const Patch_T *
       x[c]+= C[c];
     break;
     case OT_T2_CS:
-      L = 1.-R1/R2;
+      ratio = 1.-R1/R2;
       d = sqrt(1+Pow2(X[0])+Pow2(X[1]));
       x1 = S*R1/d;
       
-      x[c] = x1/(1.-L*X[2]);
+      x[c] = x1/(1.-ratio*X[2]);
       x[a] = S*x[c]*X[0];
       x[b] = S*x[c]*X[1];
       
@@ -375,10 +403,10 @@ static int X_of_x_CS_coord(double *const X,const double *const cart,const Patch_
   Field_T *R1_f = patch->CoordSysInfo->CubedSphericalCoord->R1_f,
           *R2_f = patch->CoordSysInfo->CubedSphericalCoord->R2_f;
   const double xc1 = patch->CoordSysInfo->CubedSphericalCoord->xc1,
-               xc2 = patch->CoordSysInfo->CubedSphericalCoord->xc2,
-                R1 = patch->CoordSysInfo->CubedSphericalCoord->R1,
-                R2 = patch->CoordSysInfo->CubedSphericalCoord->R2;
-  double x1,x2,d,L;
+               xc2 = patch->CoordSysInfo->CubedSphericalCoord->xc2;
+  double R1 = patch->CoordSysInfo->CubedSphericalCoord->R1,
+         R2 = patch->CoordSysInfo->CubedSphericalCoord->R2;
+  double x1,x2,d,ratio;
   double x_test[3],X_test[3],dx;
  
   SignAndIndex_permutation_CubedSphere(side,&i,&j,&k,&S);
@@ -388,6 +416,20 @@ static int X_of_x_CS_coord(double *const X,const double *const cart,const Patch_
   
   switch (type)
   {
+    case OJ_T_SCS:
+      d    = sqrt(1+Pow2(X[0])+Pow2(X[1]));
+      x1   = S*R_interpolation_CS(R1_f,X)/d;
+      x2   = S*R_interpolation_CS(R2_f,X)/d;
+      X[2] = (x[k]-x1)/(x2-x1);
+    break;
+    case OT_T_SCS:
+      R1 = R_interpolation_CS(R1_f,X);
+      R2 = R_interpolation_CS(R2_f,X);
+      ratio = 1.-R1/R2;
+      d  = sqrt(1+Pow2(X[0])+Pow2(X[1]));
+      x1 = S*R1/d;
+      X[2] = (1-x1/x[k])/ratio;
+    break;
     case NS_T_CS:
       d = sqrt(1+Pow2(X[0])+Pow2(X[1]));
       x1 = xc1;
@@ -402,14 +444,14 @@ static int X_of_x_CS_coord(double *const X,const double *const cart,const Patch_
     break;
     case OT_T1_CS:
       d = sqrt(1+Pow2(X[0])+Pow2(X[1]));
-      L = 1.-S*d*xc1/R2;
-      X[2] = (1-xc1/x[k])/L;
+      ratio = 1.-S*d*xc1/R2;
+      X[2] = (1-xc1/x[k])/ratio;
     break;
     case OT_T2_CS:
-      L = 1.-R1/R2;
+      ratio = 1.-R1/R2;
       d  = sqrt(1+Pow2(X[0])+Pow2(X[1]));
       x1 = S*R1/d;
-      X[2] = (1-x1/x[k])/L;
+      X[2] = (1-x1/x[k])/ratio;
     break;
     default:
       Error0(NO_OPTION);
