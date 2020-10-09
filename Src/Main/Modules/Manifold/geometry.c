@@ -1937,7 +1937,7 @@ static void FindExterF_CS_coord(Patch_T *const patch)
     }
   }
   else
-    Error0(INCOMPLETE_FUNC);
+    Error0(NO_OPTION);
 }
 
 /* filling point[?]->N */

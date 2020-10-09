@@ -800,10 +800,10 @@ void shell_command(const char *const cmd)
 {
   int ret;
   printf("shell command:\n");
-  printf("$ %s",cmd);
+  printf("$  %s\n",cmd);
   fflush(stdout);
   ret = system(cmd);
-  printf("   ===> returned (%d).\n",ret);
+  printf("=> returned (%d).\n",ret);
   fflush(stdout);
 }
 
