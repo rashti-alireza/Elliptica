@@ -5,8 +5,8 @@
 
 #include "geometry.h"
 
-#define EPS 1E-5
-#define FACE_NUM 6
+static const double   ScaleFactor = 1E-5;/* scale factor */
+static const unsigned NFaces      = 6;/* total number of faces */
 
 /* 
 // realizing the geometry of grid such as how patches are glued
@@ -1341,11 +1341,11 @@ static int IsOutBndry(PointSet_T *const Pnt)
     Patch_T *const patch = Pnt->Pnt->patch;
     double *x = patch->node[node]->x;
     double *N1 = Pnt->Pnt->N;
-    double eps = root_square(3,x,0)*EPS;
+    double eps = root_square(3,x,0)*ScaleFactor;
     double q[3];
     unsigned ans;
     
-    eps = GRT(eps,EPS) ? eps : EPS;
+    eps = GRT(eps,ScaleFactor) ? eps : ScaleFactor;
     
     if (Pnt->type == EDGE)
     {
@@ -1411,11 +1411,11 @@ static int IsInnBndry(PointSet_T *const Pnt)
     Patch_T *const patch = Pnt->Pnt->patch;
     double *x = patch->node[node]->x;
     double *N1 = Pnt->Pnt->N;
-    double eps = root_square(3,x,0)*EPS;
+    double eps = root_square(3,x,0)*ScaleFactor;
     double q[3];
     unsigned ans;
     
-    eps = GRT(eps,EPS) ? eps : EPS;
+    eps = GRT(eps,ScaleFactor) ? eps : ScaleFactor;
     
     if (Pnt->type == EDGE)
     {
@@ -1537,14 +1537,14 @@ static int ReachBnd(PointSet_T *const Pnt,const unsigned p,const unsigned f)
   double *x = patch->node[node]->x;
   double *N1 = Pnt->Pnt->N;
   double *N2 = Pnt->adjPnt[p].fs[f].N2;
-  double eps = root_square(3,x,0)*EPS;
+  double eps = root_square(3,x,0)*ScaleFactor;
   double q[3];
   unsigned ans;
   
-  eps = GRT(eps,EPS) ? eps : EPS;
-  q[0] = x[0]+eps*N1[0]+EPS*N2[0];
-  q[1] = x[1]+eps*N1[1]+EPS*N2[1];
-  q[2] = x[2]+eps*N1[2]+EPS*N2[2];
+  eps = GRT(eps,ScaleFactor) ? eps : ScaleFactor;
+  q[0] = x[0]+eps*N1[0]+ScaleFactor*N2[0];
+  q[1] = x[1]+eps*N1[1]+ScaleFactor*N2[1];
+  q[2] = x[2]+eps*N1[2]+ScaleFactor*N2[2];
   
   Needle_T *needle = alloc_needle();
   needle->grid = patch->grid;
@@ -2163,12 +2163,12 @@ void make_normal_outward(Point_T *const point)
 {
   const double *const x = point->patch->node[point->ind]->x;
   
-  double eps = root_square(3,x,0)*EPS;
+  double eps = root_square(3,x,0)*ScaleFactor;
   Needle_T *needle = alloc_needle();
   const double *N = point->N;
   double q[3];/* q = pnt+eps*N */
   
-  eps = GRT(eps,EPS) ? eps : EPS;
+  eps = GRT(eps,ScaleFactor) ? eps : ScaleFactor;
   q[0] = x[0]+eps*N[0];
   q[1] = x[1]+eps*N[1];
   q[2] = x[2]+eps*N[2];
@@ -2555,10 +2555,10 @@ void alloc_interface(Patch_T *const patch)
   unsigned i;
   assert(patch);
   
-  patch->interface = calloc(FACE_NUM+1,sizeof(*patch->interface));
+  patch->interface = calloc(NFaces+1,sizeof(*patch->interface));
   IsNull(patch->interface);
   
-  for (i = 0; i < FACE_NUM; i++)
+  for (i = 0; i < NFaces; i++)
   {
     patch->interface[i] = calloc(1,sizeof(*patch->interface[i]));
     IsNull(patch->interface[i]);
