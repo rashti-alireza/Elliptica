@@ -19,26 +19,55 @@
 */
 int realize_geometry(Grid_T *const grid)
 {
-  unsigned i;
-  
   pr_line_custom('=');
   printf("{ Realizing boundary conditions for each patch ...\n");
   
   /* keep track of counted points; 1 means counted, 0 means not. */
   unsigned **point_flag = calloc(grid->np,sizeof(*point_flag));
   IsNull(point_flag);
-  
-  FOR_ALL(i,grid->patch)
+  unsigned p;
+
+  OpenMP_Patch_Pragma(omp parallel for)
+  for (p = 0; p < grid->np; ++p)
   {
-    Patch_T *const patch = grid->patch[i];
+    Patch_T *const patch = grid->patch[p];
     
-    point_flag[i] = calloc(patch->nn,sizeof(*point_flag[i]));
-    IsNull(point_flag[i]);
+    point_flag[p] = calloc(patch->nn,sizeof(*point_flag[p]));
+    IsNull(point_flag[p]);
     
     alloc_interface(patch);/* allocating interfaces */
     fill_basics(patch);/* filling basic elements */
     fill_N(patch);/* filling point[?]->N */
     flush_houseK(patch);/* set all of housK flag to zero */
+  }  
+  
+  OpenMP_Patch_Pragma(omp parallel for)
+  for (p = 0; p < grid->np; ++p)
+  {
+    Patch_T *const patch = grid->patch[p];
+    unsigned f,nf;
+    
+    /* populate PointSet_T  */
+    nf = countf(patch->interface);
+    for (f = 0; f < nf; ++f)
+    {
+      Interface_T *interface = patch->interface[f];
+      PointSet_T **innerP, **edgeP;
+      unsigned i;
+      
+      init_Points(interface,&innerP,&edgeP);
+      interface->innerP = innerP;
+      interface->edgeP  = edgeP;
+      
+      FOR_ALL(i,innerP)
+      {
+        find_adjPnt(innerP[i]);
+      }
+      FOR_ALL(i,edgeP)
+      {
+        find_adjPnt(edgeP[i]);
+      }
+    }
   }
   
   /* find various geometry of each point */
@@ -47,6 +76,9 @@ int realize_geometry(Grid_T *const grid)
   /* freeing Point_T */
   free_points(grid);
   
+  //test
+  pr_interfaces(grid);
+ 
   /* set df_dn flags */
   set_df_dn_and_pair(grid);
   
@@ -58,8 +90,7 @@ int realize_geometry(Grid_T *const grid)
   
   /* printing boundary for test purposes */
   if(test_print(PRINT_INTERFACES))
-    pr_interfaces(grid);
- 
+    
   /* freeing */
   free_2d_mem(point_flag,grid->np);
   
@@ -834,14 +865,16 @@ static int realize_neighbor(Patch_T *const patch,unsigned **const point_flag)
   for (f = nf-1; f >= 0 ; f--)
   {
     Interface_T *interface = patch->interface[f];
-    PointSet_T **innerP, **edgeP;
-    init_Points(interface,&innerP,&edgeP);/* initializing inner and 
-                                          // edge points */
+    PointSet_T **innerP    = interface->innerP;
+    PointSet_T **edgeP     = interface->edgeP;
+    
     realize_adj(innerP,point_flag);/* first, realizing the adjacency, INNER one */
     realize_adj(edgeP,point_flag);/* second, realizing the adjacency, EDGE one */
     
     free_PointSet(innerP);
     free_PointSet(edgeP);
+    interface->innerP = 0;
+    interface->edgeP  = 0;
   }
   
   return EXIT_SUCCESS;
@@ -886,7 +919,6 @@ static int realize_adj(PointSet_T **const Pnt,unsigned **const point_flag)
     if (point_flag[pnt->patch->pn][pnt->ind]) 
       continue;
     
-    find_adjPnt(Pnt[p]);
     analyze_adjPnt(Pnt[p],point_flag);
   }
   
@@ -2599,6 +2631,10 @@ void free_patch_interface(Patch_T *const patch)
       _free(subface[i]);
     }
     _free(subface);
+    
+    /* free point set */
+    _free(face[f]->innerP);
+    _free(face[f]->edgeP);
     
     /* free face */
     _free(face[f]);
