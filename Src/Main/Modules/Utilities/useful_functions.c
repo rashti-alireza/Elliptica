@@ -798,10 +798,13 @@ void dbprint(const double *v,const unsigned n,const char *const desc)
 /* issue a shell command using system */
 void shell_command(const char *const cmd)
 {
+  int ret;
   printf("shell command:\n");
-  printf("$ %s\n",cmd);
+  printf("$ %s",cmd);
   fflush(stdout);
-  system(cmd);
+  ret = system(cmd);
+  printf("   ===> returned (%d).\n",ret);
+  fflush(stdout);
 }
 
 /* return value-> N*sizeof(double), using calloc*/
