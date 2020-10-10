@@ -127,3 +127,7 @@ fill_N
   );
 
 
+static void add_to_subface_scs(const Point_T *const pnt);
+static void find_tentative_adj_subfaces_scs(Patch_T *const patch);
+
+
