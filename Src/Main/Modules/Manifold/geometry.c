@@ -62,7 +62,7 @@ static void ri_split_cubed_spherical(Grid_T *const grid)
     /* set all of housK flag to zero */
     flush_houseK(patch);
     /* tentative subfaces of the adjacent patches */
-    find_tentative_adj_subfaces_scs(patch);
+    find_tentative_adj_faces_scs(patch);
   }  
   
 }
@@ -2875,18 +2875,17 @@ static void flush_houseK(Patch_T *const patch)
 
 
 /* displace the center point along the normal and find where the new
-// point takes place to find the adjacent patch and subface.
+// point takes place to find the adjacent patch and adjacent face.
 // this function has many assumptions which is only for 
 // split cubed spherical. */
-static void find_tentative_adj_subfaces_scs(Patch_T *const patch)
+static void find_tentative_adj_faces_scs(Patch_T *const patch)
 {
   Interface_T **const interface = patch->interface;
   const double *N, *x;
   double q[3] = {0};/* q = x+eps*N */
   double eps;
-  Needle_T *needle = 0;
   char s[999] = {'\0'};
-  unsigned f,ans,p;
+  unsigned f,ans,p,ans2;
   
   FOR_ALL(f,interface)
   {
@@ -2899,13 +2898,12 @@ static void find_tentative_adj_subfaces_scs(Patch_T *const patch)
     q[1] = x[1]+eps*N[1];
     q[2] = x[2]+eps*N[2];
     
-    needle = alloc_needle();
+    Needle_T *needle = alloc_needle();
     needle->grid = patch->grid;
     needle_ex(needle,patch);
     needle->x = q;
     point_finder(needle);
     ans = needle->Nans;
-    free_needle(needle);
     
     /* if no patch found 3 possibility {innerB,outerB,gap} */
     if (!ans)
@@ -2931,15 +2929,15 @@ static void find_tentative_adj_subfaces_scs(Patch_T *const patch)
         q[1] = x[1]+eps*N[1];
         q[2] = x[2]+eps*N[2];
     
-        needle = alloc_needle();
-        needle->grid = patch->grid;
-        needle_ex(needle,patch);
-        needle->x = q;
-        point_finder(needle);
-        ans = needle->Nans;
-        free_needle(needle);
+        Needle_T *needle2 = alloc_needle();
+        needle2->grid = patch->grid;
+        needle_ex(needle2,patch);
+        needle2->x = q;
+        point_finder(needle2);
+        ans2 = needle2->Nans;
+        free_needle(needle2);
         
-        if (!ans)/* there is really no other patch => outer-boundary */
+        if (!ans2)/* there is really no other patch => outer-boundary */
         {
           patch->outerB  = 1;
           Point_T **pnt = interface[f]->point;
@@ -2961,7 +2959,11 @@ static void find_tentative_adj_subfaces_scs(Patch_T *const patch)
         
       }
     }/* if (!ans) */
-    
+    else/* find tentative subfaces for this interface */
+    {
+      
+    }
+    free_needle(needle);
   }
 }
 
