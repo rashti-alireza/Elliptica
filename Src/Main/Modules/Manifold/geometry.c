@@ -29,10 +29,11 @@ int realize_geometry(Grid_T *const grid)
   }  
   
   //test
+  
+  FUNC_TOC
   pr_interfaces(grid);
   exit(0);
   
-  FUNC_TOC
   return EXIT_SUCCESS;
 } 
 
@@ -2226,7 +2227,7 @@ static void fill_basics(Patch_T *const patch)
   for (f = I_0; f < TOT_FACE; f++)
   {
     Point_T **point;
-    unsigned i,j,k,im,iM,jm,jM,km,kM,sum;/* m for min and M for max */
+    unsigned i,j,k,l,im,iM,jm,jM,km,kM,sum;/* m for min and M for max */
     unsigned t = 0;/* test purposes */
     
     set_min_max_sum(n,f,&im,&iM,&jm,&jM,&km,&kM,&sum);
@@ -2240,10 +2241,12 @@ static void fill_basics(Patch_T *const patch)
     FOR_ijk(i,j,k,im,iM,jm,jM,km,kM)
     {
       unsigned p = L2(n,f,i,j,k);
-      point[p]->ind = L(n,i,j,k);
+      point[p]->ind = l = L(n,i,j,k);
       point[p]->face = f;
       point[p]->patch = patch;
       point[p]->exterF= 1;
+      if (IsOnEdge(n,l))
+        point[p]->IsOnEdge = 1;
       t++;
     }
     assert(t == sum);
@@ -2641,8 +2644,8 @@ static void fill_adjPnt(PointSet_T *const pnt,const unsigned N)
 // put the vector made by the difference of these two points in N.
 // this is the approximate tangent vector. note, the tangent
 // vector won't be "NORMALIZED". I want to keep the magnetitue to be of
-// the order of grid size.
-*/
+// the order of grid size. 
+// NOTE: the given pnt must be on edge otherwise N is 0. */
 void tangent(const Point_T *const pnt,double *const N)
 {
   const unsigned *const n = pnt->patch->n;
@@ -2914,9 +2917,10 @@ static void find_tentative_adj_faces_scs(Patch_T *const patch)
   double q[3] = {0};/* q = x+eps*N */
   double eps;
   char s[999] = {'\0'};
-  unsigned f,ans,p,ans2;
+  int f;
+  unsigned ans,p,ans2;
   
-  FOR_ALL(f,interface)
+  for (f = (int)NFaces-1; f >= 0; --f)
   {
     N = interface[f]->centerN;
     x = interface[f]->centerx;
@@ -2979,9 +2983,7 @@ static void find_tentative_adj_faces_scs(Patch_T *const patch)
         }
         else/* gap */
         {
-          sprintf(s,"At %s on face[%u] = '%s' \n "
-                    "no adjacent patch found.",
-                  patch->name,f,FaceName[f]);
+          err_spr(s,x);
           Error1("Unexpected gap between patches!\n %s\n",s);
         }
         
@@ -3044,10 +3046,65 @@ static void find_tentative_adj_faces_scs(Patch_T *const patch)
               add_to_subface_scs(pnt[p]);
             }
             /* it means not all points on this surface are on a same
-            // adjacent patch, for example edge points reach few patches. */
+            // adjacent patch, for example ,filling_box reaches few patches.
+            // thus, we should find their adjacent patch. */
             else
             {
-              Error0("!?");
+              unsigned ans3;
+              double Ntan[3];/* tanget vector for tilting */
+              double Ntilt[3];/* tilting vector */
+              const double T = 0.1;/* tilting angle is arctan(T) */
+              double nrm;
+              
+              eps = root_square(3,pnt_x,0)*ScaleFactor;
+              eps = GRT(eps,ScaleFactor) ? eps : ScaleFactor;
+              
+              if (pnt[p]->IsOnEdge)
+              {
+                tangent(pnt[p],Ntan);
+                nrm = root_square(3,Ntan,0);
+                if (EQL(nrm,0))
+                  Error0("Normal vector is null!");
+                  
+                /* make it unit */  
+                Ntan[0] /= nrm;
+                Ntan[1] /= nrm;
+                Ntan[2] /= nrm;
+                
+                Ntilt[0] = pnt[p]->N[0]+T*Ntan[0];
+                Ntilt[1] = pnt[p]->N[1]+T*Ntan[1];
+                Ntilt[2] = pnt[p]->N[2]+T*Ntan[2];
+                
+                q[0] = x[0]+eps*Ntilt[0];
+                q[1] = x[1]+eps*Ntilt[1];
+                q[2] = x[2]+eps*Ntilt[2];
+              }
+              else
+              {
+                q[0] = x[0]+eps*pnt[p]->N[0];
+                q[1] = x[1]+eps*pnt[p]->N[1];
+                q[2] = x[2]+eps*pnt[p]->N[2];
+              }
+              
+              Needle_T *needle2 = alloc_needle();
+              needle2->grid = patch->grid;
+              needle_ex(needle2,patch);
+              needle2->x = q;
+              point_finder(needle2);
+              ans3 = needle2->Nans;
+              
+              if (!ans3)
+              {
+                //if (pnt[p]->IsOnEdge)
+                  //Error0("edge point!\n");
+                err_spr(s,pnt_x);
+                Error1("Unexpected gap between patches!\n %s\n",s);
+              }
+              
+              assert(ans3);
+              
+              free_needle(needle2);
+          
             }
           }
         }

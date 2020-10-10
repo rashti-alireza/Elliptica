@@ -4,6 +4,13 @@
 #include "maths_general_lib.h"
 #include "manifold_lib.h"
 
+/* handy error sprintf, note: patch and f are required  */
+#define err_spr(s,x)  \
+sprintf(s,\
+  "At %s on face[%u](%s) for \n"\
+  " point (%g,%g,%g) no adjacent patch found!",\
+  patch->name,f,FaceName[f],(x)[0],(x)[1],(x)[2]);
+
 
 /* type point */
 enum Type
