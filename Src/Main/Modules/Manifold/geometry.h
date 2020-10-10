@@ -127,7 +127,7 @@ fill_N
   );
 
 
-static void add_to_subface_scs(const Point_T *const pnt);
+static void add_to_subface_scs(Point_T *const pnt);
 static void find_tentative_adj_faces_scs(Patch_T *const patch);
-
+static void add_point_scs(SubFace_T *const subface,const Point_T *const pnt);
 

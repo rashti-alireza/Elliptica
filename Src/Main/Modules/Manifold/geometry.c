@@ -7,7 +7,9 @@
 
 static const double   ScaleFactor = 1E-5;/* scale factor */
 static const unsigned NFaces      = 6;/* total number of faces */
-
+/* schematic names for surfaces correspond to FACE_T enum. */
+static const char *FaceName[] = {"X == 0","X == 1","Y == 0","Y == 1",
+                                 "Z == 0","Z == 1",0};
 /* 
 // realizing interfaces of each patch to set boundary condition
 // at elliptic solver based on the type of this interface, such as
@@ -777,7 +779,7 @@ static void add_to_subface(const Point_T *const pnt,const char *const lead)
 }
 
 /* add this point to the best fit of subfaces */
-static void add_to_subface_scs(const Point_T *const pnt)
+static void add_to_subface_scs(Point_T *const pnt)
 {
   Interface_T *const face = pnt->patch->interface[pnt->face];
   SubFace_T *subface;
@@ -873,7 +875,8 @@ static void add_to_subface_scs(const Point_T *const pnt)
   }
   
   /* add this point to the subface */
-  add_point(subface,pnt);
+  add_point_scs(subface,pnt);
+  pnt->houseK = 1;
 }
 
 /* adding one point adequately to the pertinent sub-face */
@@ -890,6 +893,25 @@ static void add_point(SubFace_T *const subface,const Point_T *const pnt)
       realloc(subface->adjid,(subface->np+1)*sizeof(*subface->adjid));
     IsNull(subface->adjid);
     subface->adjid[subface->np] = pnt->adjPoint->ind;
+  }
+  
+  subface->np++;
+}
+
+/* adding one point adequately to the pertinent sub-face */
+static void add_point_scs(SubFace_T *const subface,const Point_T *const pnt)
+{
+  subface->id = 
+    realloc(subface->id,(subface->np+1)*sizeof(*subface->id));
+  IsNull(subface->id);
+  subface->id[subface->np] = pnt->ind;
+  
+  if (pnt->copy == 1)
+  {
+    subface->adjid = 
+      realloc(subface->adjid,(subface->np+1)*sizeof(*subface->adjid));
+    IsNull(subface->adjid);
+    subface->adjid[subface->np] = pnt->AdjPntInd;
   }
   
   subface->np++;
@@ -2924,7 +2946,6 @@ static void find_tentative_adj_faces_scs(Patch_T *const patch)
         for (p = 0; p < interface[f]->np; ++p)
         {
           pnt[p]->innerB = 1;
-          pnt[p]->houseK = 1;
           add_to_subface_scs(pnt[p]);
         }
       }
@@ -2952,15 +2973,15 @@ static void find_tentative_adj_faces_scs(Patch_T *const patch)
           for (p = 0; p < interface[f]->np; ++p)
           {
             pnt[p]->outerB = 1;
-            pnt[p]->houseK = 1;
             add_to_subface_scs(pnt[p]);
           }
 
         }
         else/* gap */
         {
-          sprintf(s,"At %s on face %u no adjacent patch found.",
-                  patch->name,f);
+          sprintf(s,"At %s on face[%u] = '%s' \n "
+                    "no adjacent patch found.",
+                  patch->name,f,FaceName[f]);
           Error1("Unexpected gap between patches!\n %s\n",s);
         }
         
@@ -2968,15 +2989,16 @@ static void find_tentative_adj_faces_scs(Patch_T *const patch)
     }/* if (!ans) */
     else/* find tentative faces for this interface */
     {
+      Point_T **pnt = interface[f]->point;
       Grid_T *grid = patch->grid;
       double idealN1N2 = -1;
       unsigned i;
-      /* find the adjacet interfaces */
+      /* find the adjacet interfaces for each adjPatch */
       for (i = 0; i < ans; ++i)
       {
         Patch_T *adjpatch = grid->patch[needle->ans[i]];
         double min = DBL_MAX;
-        unsigned adjface,adjfn,best_adjface;
+        unsigned adjfn,best_adjface;
         
         /* find the best adjface */
         for (adjfn = 0; adjfn < NFaces; ++adjfn)
@@ -2989,7 +3011,47 @@ static void find_tentative_adj_faces_scs(Patch_T *const patch)
             min          = fabsdif;
           }
         }
-        /* find subface pertinent to adjface */
+        /* add point to the pertinent subface for this adjface */
+        for (p = 0; p < interface[f]->np; ++p)
+        {
+          
+          if (!pnt[p]->houseK)
+          {
+            unsigned ind = pnt[p]->ind;
+            double adjX[3] = {0};
+            const double *pnt_x = patch->node[ind]->x;
+            Flag_T iscp = NONE;
+            unsigned adjind;
+            /* find this point on adjpatch */
+            if (X_of_x(adjX,pnt_x,adjpatch))
+            {
+              pnt[p]->touch    = 1;
+              pnt[p]->adjPatch = adjpatch->pn;
+              pnt[p]->adjFace  = best_adjface;
+              
+              /* if this is a copy? */
+              adjind = find_node(pnt_x,adjpatch,&iscp);
+              if (iscp == FOUND)
+              {
+                pnt[p]->copy = 1;
+                pnt[p]->AdjPntInd = adjind;
+              }
+              else
+              {
+                /* if this is a interpolation => copy = 0*/
+                set_sameXYZ(pnt[p],best_adjface);
+              }
+              add_to_subface_scs(pnt[p]);
+            }
+            /* it means not all points on this surface are on a same
+            // adjacent patch, for example edge points reach few patches. */
+            else
+            {
+              Error0("!?");
+            }
+          }
+        }
+
       }
     }
     free_needle(needle);
