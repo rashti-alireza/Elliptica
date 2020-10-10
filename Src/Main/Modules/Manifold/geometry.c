@@ -61,9 +61,16 @@ static void ri_split_cubed_spherical(Grid_T *const grid)
     fill_N(patch);
     /* set all of housK flag to zero */
     flush_houseK(patch);
+  }
+    
+  OpenMP_Patch_Pragma(omp parallel for)
+  for (p = 0; p < grid->np; ++p)
+  {
+    Patch_T *const patch = grid->patch[p];
+    
     /* tentative subfaces of the adjacent patches */
     find_tentative_adj_faces_scs(patch);
-  }  
+  }
   
 }
 
@@ -2959,9 +2966,31 @@ static void find_tentative_adj_faces_scs(Patch_T *const patch)
         
       }
     }/* if (!ans) */
-    else/* find tentative subfaces for this interface */
+    else/* find tentative faces for this interface */
     {
-      
+      Grid_T *grid = patch->grid;
+      double idealN1N2 = -1;
+      unsigned i;
+      /* find the adjacet interfaces */
+      for (i = 0; i < ans; ++i)
+      {
+        Patch_T *adjpatch = grid->patch[needle->ans[i]];
+        double min = DBL_MAX;
+        unsigned adjface,adjfn,best_adjface;
+        
+        /* find the best adjface */
+        for (adjfn = 0; adjfn < NFaces; ++adjfn)
+        {
+          double N1dotN2 = dot(3,adjpatch->interface[adjfn]->centerN,N);
+          double fabsdif = fabs(N1dotN2-idealN1N2);
+          if (min > fabsdif)
+          {
+            best_adjface = adjfn;
+            min          = fabsdif;
+          }
+        }
+        /* find subface pertinent to adjface */
+      }
     }
     free_needle(needle);
   }
