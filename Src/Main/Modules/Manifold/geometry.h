@@ -118,3 +118,8 @@ void alloc_interface(Patch_T *const patch);
 void *alloc_point(const unsigned s);
 void free_points(Grid_T *const grid);
 void free_patch_interface(Patch_T *const patch);
+static void ri_split_cubed_spherical(Grid_T *const grid);
+static void ri_general_method(Grid_T *const grid);
+
+
+

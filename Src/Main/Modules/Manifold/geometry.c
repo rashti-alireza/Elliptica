@@ -9,19 +9,57 @@ static const double   ScaleFactor = 1E-5;/* scale factor */
 static const unsigned NFaces      = 6;/* total number of faces */
 
 /* 
-// realizing the geometry of grid such as how patches are glued
-// normal vectors at boundary, boundary of grid and etc.
-// basically, it goes through all of points on interfaces of a patch,
-// finding their normals and adjacent points and then studying
-// how best this point and its neighbor matched.
-// NOTE: NOT THREAD SAFE!
-// ->return value: EXIT_SUCCESS
-*/
+// realizing interfaces of each patch to set boundary condition
+// at elliptic solver based on the type of this interface, such as
+// Drichlet or Neumman.
+// ->return value: EXIT_SUCCESS. */
 int realize_geometry(Grid_T *const grid)
 {
-  pr_line_custom('=');
-  printf("{ Realizing boundary conditions for each patch ...\n");
+  FUNC_TIC
   
+  if (strcmp_i(grid->kind,"BBN_Split_CubedSpherical_grid"))
+  {
+    ri_split_cubed_spherical(grid);
+  }
+  else
+  {
+    ri_general_method(grid);
+  }  
+  
+  FUNC_TOC
+  return EXIT_SUCCESS;
+} 
+
+/* realizing interfaces for split cubed spherical grid kind.
+// this function is required cos ri_general is very slow specially
+// when the number of points and interface's are many, like split 
+// cubed spherical (SCS), and also ri_general is failing for this 
+// kind of grid. in this algo. we use the fact that in SCS 
+// all interfaces either touch each other or reach innerB or outerB.
+// furthermore, there is no overlapping patch. */
+static void ri_split_cubed_spherical(Grid_T *const grid)
+{
+  /* since all interfaces are nicely touching, only figure out
+  // the center of an interface (approximately center) 
+  // touches which other face. */
+  unsigned p;
+
+  OpenMP_Patch_Pragma(omp parallel for)
+  for (p = 0; p < grid->np; ++p)
+  {
+    Patch_T *const patch = grid->patch[p];
+    
+    alloc_interface(patch);/* allocating interfaces */
+    fill_basics(patch);/* filling basic elements */
+    fill_N(patch);/* filling point[?]->N */
+    flush_houseK(patch);/* set all of housK flag to zero */
+  }  
+  
+}
+
+/* realize interfaces a general method (works for many kind of grid) */
+static void ri_general_method(Grid_T *const grid)
+{
   /* keep track of counted points; 1 means counted, 0 means not. */
   unsigned **point_flag = calloc(grid->np,sizeof(*point_flag));
   IsNull(point_flag);
@@ -90,14 +128,10 @@ int realize_geometry(Grid_T *const grid)
   
   /* printing boundary for test purposes */
   if(test_print(PRINT_INTERFACES))
-    
+    pr_interfaces(grid);
+   
   /* freeing */
   free_2d_mem(point_flag,grid->np);
-  
-  printf("} Realizing boundary conditions for each patch ==> Done.\n");
-  pr_clock();
-  pr_line_custom('=');
-  return EXIT_SUCCESS;
 }
 
 
