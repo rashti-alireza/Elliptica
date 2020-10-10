@@ -2007,11 +2007,16 @@ static void FindExterF_CS_coord(Patch_T *const patch)
 }
 
 /* filling point[?]->N */
-static void fill_N(Patch_T *const patch)
+static void 
+fill_N
+  (
+    Patch_T *const patch
+  )
 {
   Interface_T **interface = patch->interface;
   unsigned i,f;
   
+  /* set normal vector for all face points */
   FOR_ALL(f,interface)
   {
     Point_T **point = interface[f]->point;
@@ -2020,6 +2025,47 @@ static void fill_N(Patch_T *const patch)
     {
       normal_vec(point[i]);
     }
+  }
+  /* set normal vector for only center (roughly) of each face */
+  FOR_ALL(f,interface)
+  {
+    const unsigned *n = interface[f]->patch->n;
+    unsigned ih = (n[0]-1)/2;
+    unsigned jh = (n[1]-1)/2;
+    unsigned kh = (n[2]-1)/2;
+    unsigned ijk;
+    
+    switch(f)
+    {
+      case I_0:
+        ijk = L(n,0,jh,kh);
+        break;
+      case I_n0:
+        ijk = L(n,n[0]-1,jh,kh);
+        break; 
+      case J_0:
+        ijk = L(n,ih,0,kh);
+        break; 
+      case J_n1:
+        ijk = L(n,ih,n[1]-1,kh);
+        break; 
+      case K_0:
+        ijk = L(n,ih,jh,0);
+        break; 
+      case K_n2:
+        ijk = L(n,ih,jh,n[2]-1);
+        break;
+      default:
+        Error0("There is not such interface.\n");
+    }
+    Point_T point[1] = {0};
+    point->ind   = ijk;
+    point->patch = interface[f]->patch;
+    point->face  = f;
+    normal_vec(point);
+    interface[f]->centerN[0] = point->N[0];
+    interface[f]->centerN[1] = point->N[1];
+    interface[f]->centerN[2] = point->N[2];
   }
 }
 
@@ -2677,4 +2723,39 @@ void free_patch_interface(Patch_T *const patch)
 
   patch->interface = 0;
 }
+
+/* check if all of houseKs have been marked */
+static void check_houseK(Patch_T *const patch)
+{
+  Interface_T **const interface = patch->interface;
+  const unsigned nf = countf(interface);
+  Node_T *node;
+  unsigned i,f;
+  
+  for (f = 0; f < nf; f++)
+    for (i = 0; i < interface[f]->np; i++)
+      if (interface[f]->point[i]->houseK == 0)
+      {
+        node = patch->node[interface[f]->point[i]->ind];
+        double *x = node->x;
+        fprintf(stderr,"This point(%f,%f,%f) has not been found.\n",
+                        x[0],x[1],x[2]);
+        Error0("Incomplete function.\n");
+      }
+}
+
+/* setting all of houseK (house keeping) flags 
+// in Point_T to zero for given patch */
+static void flush_houseK(Patch_T *const patch)
+{
+  Interface_T **const interface = patch->interface;
+  const unsigned nf = countf(interface);
+  unsigned i,f;
+  
+  for (f = 0; f < nf; f++)
+    for (i = 0; i < interface[f]->np; i++)
+      interface[f]->point[i]->houseK = 0;
+}
+
+
 

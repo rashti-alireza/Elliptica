@@ -59,7 +59,6 @@ typedef struct SUBF_T
 }Subf_T;
 
 static void fill_basics(Patch_T *const patch);
-static void fill_N(Patch_T *const patch);
 static void fill_geometry(Grid_T * const grid,unsigned **const point_flag);
 static void FindInnerB_Cartesian_coord(Patch_T *const patch);
 static void FindExterF_Cartesian_coord(Patch_T *const patch);
@@ -97,8 +96,6 @@ void point_finder(Needle_T *const needle);
 double *normal_vec(Point_T *const point);
 void needle_ex(Needle_T *const needle,const Patch_T *const patch);
 void needle_in(Needle_T *const needle,const Patch_T *const patch);
-void flush_houseK(Patch_T *const patch);
-void check_houseK(const Patch_T *const patch);
 unsigned find_node(const double *const x, const Patch_T *const patch,Flag_T *const flg);
 unsigned node_onFace(const double *const x, const unsigned f,const Patch_T *const patch);
 int realize_geometry(Grid_T *const grid);
@@ -120,6 +117,13 @@ void free_points(Grid_T *const grid);
 void free_patch_interface(Patch_T *const patch);
 static void ri_split_cubed_spherical(Grid_T *const grid);
 static void ri_general_method(Grid_T *const grid);
+static void check_houseK(Patch_T *const patch);
+static void flush_houseK(Patch_T *const patch);
 
+static void 
+fill_N
+  (
+    Patch_T *const patch
+  );
 
 
