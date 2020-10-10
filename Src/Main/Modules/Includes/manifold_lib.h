@@ -4,6 +4,7 @@
 /* forward declaration structures */
 struct FIELD_T;
 struct SOLVING_MAN_T;
+struct POINTSET_T;
 
 /* collocation */
 typedef enum COLLOCATION_T
@@ -132,6 +133,8 @@ typedef struct INTERFACE_T
   unsigned fn;/* its interface number */
   unsigned ns;/* number of subfaces */
   Point_T **point;/* points on the interface */
+  struct POINTSET_T **innerP;/* all points on the interface but edge */
+  struct POINTSET_T **edgeP;/* all edge points on the interface  */
   SubFace_T **subface;/* subset of points on this interface with same flags */
 }Interface_T;
 
