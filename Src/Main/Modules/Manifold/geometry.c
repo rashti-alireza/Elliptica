@@ -26,6 +26,10 @@ int realize_geometry(Grid_T *const grid)
     ri_general_method(grid);
   }  
   
+  //test
+  pr_interfaces(grid);
+  exit(0);
+  
   FUNC_TOC
   return EXIT_SUCCESS;
 } 
@@ -827,7 +831,7 @@ static void add_to_subface_scs(const Point_T *const pnt)
   for (sf = 0; sf < face->ns; ++sf)
   {
     subface = face->subface[sf];
-    if (strcmp_i(subface->flags_str,flags))
+    if (!strcmp(subface->flags_str,flags))
     {
       found = FOUND;
       break;
