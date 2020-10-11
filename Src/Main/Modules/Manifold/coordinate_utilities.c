@@ -459,14 +459,12 @@ static int X_of_x_CS_coord(double *const X,const double *const cart,const Patch_
   
   /* adujusting boundary number to avoid some unexpeted behavior
   // due to round off error. */
-  if (EQL(X[0],1))  X[0] = 1;
-  if (EQL(X[0],-1)) X[0] = -1;
-  
-  if (EQL(X[1],1))  X[1] = 1;
-  if (EQL(X[1],-1)) X[1] = -1;
-  
-  if (EQL(X[2],1))  X[2] = 1;
-  if (EQL(X[2],0))  X[2] = 0;
+  if (GRTEQL(X[0],patch->max[0]))  X[0] = patch->max[0];
+  if (LSSEQL(X[0],patch->min[0]))  X[0] = patch->min[0];
+  if (GRTEQL(X[1],patch->max[1]))  X[1] = patch->max[1];
+  if (LSSEQL(X[1],patch->min[1]))  X[1] = patch->min[1];
+  if (GRTEQL(X[2],patch->max[2]))  X[2] = patch->max[2];
+  if (LSSEQL(X[2],patch->min[2]))  X[2] = patch->min[2];  
   
   /* test the solution */
   if (check_flg)
