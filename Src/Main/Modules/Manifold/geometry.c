@@ -3083,33 +3083,15 @@ static void find_tentative_adj_faces_scs(Patch_T *const patch,unsigned *const po
           else
           {
             unsigned Nfound2;
-            double Ntan[3];/* tanget vector for tilting */
-            double Ntilt[3];/* tilting vector */
-            const double T = 0.1;/* tilting angle is arctan(T) */
-            double nrm;
             
             eps = root_square(3,pnt_x,0)*ScaleFactor;
             eps = GRT(eps,ScaleFactor) ? eps : ScaleFactor;
             
             if (pnt[p]->IsOnEdge)
             {
-              tangent(pnt[p],Ntan);
-              nrm = root_square(3,Ntan,0);
-              if (EQL(nrm,0))
-                Error0("Normal vector is null!");
-                
-              /* make it unit */  
-              Ntan[0] /= nrm;
-              Ntan[1] /= nrm;
-              Ntan[2] /= nrm;
-              
-              Ntilt[0] = pnt[p]->N[0]+T*Ntan[0];
-              Ntilt[1] = pnt[p]->N[1]+T*Ntan[1];
-              Ntilt[2] = pnt[p]->N[2]+T*Ntan[2];
-              
-              q[0] = pnt_x[0]+eps*Ntilt[0];
-              q[1] = pnt_x[1]+eps*Ntilt[1];
-              q[2] = pnt_x[2]+eps*Ntilt[2];
+              q[0] = pnt_x[0];
+              q[1] = pnt_x[1];
+              q[2] = pnt_x[2];
             }
             else
             {
