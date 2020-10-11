@@ -12,6 +12,12 @@ sprintf(s,\
   patch->name,f,FaceName[f],(x)[0],(x)[1],(x)[2]);
 
 
+/* handy error sprintf for warning about normal match  */
+#define warn_normal_spr(s,patch,adj_patch)  \
+   sprintf(s,"~> Warning!\nfor '%s' and \nadjacent '%s':\n"\
+   "normal vectors are not align: angle = %g degree(s).\n",\
+   patch->name,adj_patch->name,acos(min)*180/M_PI);
+
 /* type point */
 enum Type
 {

@@ -79,6 +79,13 @@ static void ri_split_cubed_spherical(Grid_T *const grid)
     find_tentative_adj_faces_scs(patch,point_flag[p]);
   }
   
+  /* check if all points have been found */
+  OpenMP_Patch_Pragma(omp parallel for)
+  for (p = 0; p < grid->np; ++p)
+  {
+    check_houseK(grid->patch[p]);
+  }
+  
   /* freeing */
   free_2d_mem(point_flag,grid->np);
 }
@@ -2962,6 +2969,7 @@ static void find_tentative_adj_faces_scs(Patch_T *const patch,unsigned *const po
         {
           pnt[p]->innerB = 1;
           add_to_subface_scs(pnt[p]);
+          point_flag[pnt[p]->ind] = 1;
         }
       }
       else
@@ -2990,6 +2998,7 @@ static void find_tentative_adj_faces_scs(Patch_T *const patch,unsigned *const po
           {
             pnt[p]->outerB = 1;
             add_to_subface_scs(pnt[p]);
+            point_flag[pnt[p]->ind] = 1;
           }
 
         }
@@ -3031,9 +3040,8 @@ static void find_tentative_adj_faces_scs(Patch_T *const patch,unsigned *const po
       }
       if (min > ScaleFactor)
       {
-        printf("~> Warning! %s:\n"
-            "   normal vectors are not align: angle = %g degree(s).\n",
-            patch->name,acos(min)*180/M_PI);
+        warn_normal_spr(s,patch,center_adjpatch);
+        printf("%s\n",s);
         fflush(stdout);
       }
       
@@ -3150,9 +3158,8 @@ static void find_tentative_adj_faces_scs(Patch_T *const patch,unsigned *const po
             }
             if (min > ScaleFactor)
             {
-              printf("~> Warning! %s:\n"
-               "   normal vectors are not align: angle = %g degree(s).\n",
-               patch->name,acos(min)*180/M_PI);
+              warn_normal_spr(s,patch,pnt_adjpatch);
+              printf("%s\n",s);
               fflush(stdout);
             }
             /* find this point on adjpatch */
@@ -3188,6 +3195,7 @@ static void find_tentative_adj_faces_scs(Patch_T *const patch,unsigned *const po
         }/* if (!point_flag[pnt[p]->ind]) */
         else
         {
+          /* might happen point_flag is set but houseK not set. */
           pnt[p]->houseK = 1;
         }
       }/* for (p = 0; p < interface[f]->np; ++p) */
