@@ -46,15 +46,19 @@ int realize_geometry(Grid_T *const grid)
 // furthermore, there is no overlapping patch. */
 static void ri_split_cubed_spherical(Grid_T *const grid)
 {
-  /* since all interfaces are nicely touching, only figure out
-  // the center of an interface (approximately center) 
-  // touches which other face. */
+  /* keep track of counted points; 1 means counted, 0 means not. */
+  unsigned **point_flag = calloc(grid->np,sizeof(*point_flag));
+  IsNull(point_flag);
+  
   unsigned p;
 
   OpenMP_Patch_Pragma(omp parallel for)
   for (p = 0; p < grid->np; ++p)
   {
     Patch_T *const patch = grid->patch[p];
+    
+    point_flag[p] = calloc(patch->nn,sizeof(*point_flag[p]));
+    IsNull(point_flag[p]);
     
     /* allocating interfaces */
     alloc_interface(patch);
@@ -72,9 +76,11 @@ static void ri_split_cubed_spherical(Grid_T *const grid)
     Patch_T *const patch = grid->patch[p];
     
     /* tentative subfaces of the adjacent patches */
-    find_tentative_adj_faces_scs(patch);
+    find_tentative_adj_faces_scs(patch,point_flag[p]);
   }
   
+  /* freeing */
+  free_2d_mem(point_flag,grid->np);
 }
 
 /* realize interfaces a general method (works for many kind of grid) */
@@ -2910,42 +2916,47 @@ static void flush_houseK(Patch_T *const patch)
 // point takes place to find the adjacent patch and adjacent face.
 // this function has many assumptions which is only for 
 // split cubed spherical. */
-static void find_tentative_adj_faces_scs(Patch_T *const patch)
+static void find_tentative_adj_faces_scs(Patch_T *const patch,unsigned *const point_flag)
 {
   Interface_T **const interface = patch->interface;
-  const double *N, *x;
+  Grid_T *const grid = patch->grid;
+  const double idealN1N2 = -1;
   double q[3] = {0};/* q = x+eps*N */
   double eps;
+  double min = DBL_MAX;
   char s[999] = {'\0'};
   int f;
-  unsigned ans,p,ans2;
+  unsigned i,p;
   
   for (f = (int)NFaces-1; f >= 0; --f)
   {
-    N = interface[f]->centerN;
-    x = interface[f]->centerx;
-    eps = root_square(3,x,0)*ScaleFactor;
+    const double *centerN, *centerx;
+    unsigned Nfound0;
+    
+    centerN = interface[f]->centerN;
+    centerx = interface[f]->centerx;
+    eps = root_square(3,centerx,0)*ScaleFactor;
     eps = GRT(eps,ScaleFactor) ? eps : ScaleFactor;
     
-    q[0] = x[0]+eps*N[0];
-    q[1] = x[1]+eps*N[1];
-    q[2] = x[2]+eps*N[2];
+    q[0] = centerx[0]+eps*centerN[0];
+    q[1] = centerx[1]+eps*centerN[1];
+    q[2] = centerx[2]+eps*centerN[2];
     
-    Needle_T *needle = alloc_needle();
-    needle->grid = patch->grid;
-    needle_ex(needle,patch);
-    needle->x = q;
-    point_finder(needle);
-    ans = needle->Nans;
+    Needle_T *needle0 = alloc_needle();
+    needle0->grid = grid;
+    needle_ex(needle0,patch);
+    needle0->x = q;
+    point_finder(needle0);
+    Nfound0 = needle0->Nans;
     
-    /* if no patch found 3 possibility {innerB,outerB,gap} */
-    if (!ans)
+    /* if no patch found 3 possibilities = {innerB,outerB,gap} */
+    if (!Nfound0)
     {
       if (patch->innerB)
       {
         assert(patch->innerB);/* we expect this */
         
-        Point_T **pnt = interface[f]->point;
+        Point_T **const pnt = interface[f]->point;
         /* make all of this interface point in one innerB subface */
         for (p = 0; p < interface[f]->np; ++p)
         {
@@ -2956,20 +2967,21 @@ static void find_tentative_adj_faces_scs(Patch_T *const patch)
       else
       {
         /* make sure there is really no other patches */
-        eps = root_square(3,x,0)+2;/* make sure eps is not 0 */
-        q[0] = x[0]+eps*N[0];
-        q[1] = x[1]+eps*N[1];
-        q[2] = x[2]+eps*N[2];
+        unsigned Nfound1;
+        eps = root_square(3,centerx,0)+2;/* make sure eps is not 0 */
+        q[0] = centerx[0]+eps*centerN[0];
+        q[1] = centerx[1]+eps*centerN[1];
+        q[2] = centerx[2]+eps*centerN[2];
     
-        Needle_T *needle2 = alloc_needle();
-        needle2->grid = patch->grid;
-        needle_ex(needle2,patch);
-        needle2->x = q;
-        point_finder(needle2);
-        ans2 = needle2->Nans;
-        free_needle(needle2);
+        Needle_T *needle1 = alloc_needle();
+        needle1->grid = grid;
+        needle_ex(needle1,patch);
+        needle1->x = q;
+        point_finder(needle1);
+        Nfound1 = needle1->Nans;
+        free_needle(needle1);
         
-        if (!ans2)/* there is really no other patch => outer-boundary */
+        if (!Nfound1)/* there is really no other patch => outer-boundary */
         {
           patch->outerB  = 1;
           Point_T **pnt = interface[f]->point;
@@ -2983,56 +2995,175 @@ static void find_tentative_adj_faces_scs(Patch_T *const patch)
         }
         else/* gap */
         {
-          err_spr(s,x);
+          err_spr(s,centerx);
           Error1("Unexpected gap between patches!\n %s\n",s);
         }
         
       }
-    }/* if (!ans) */
+    }/* if (!Nfound0) */
     else/* find tentative faces for this interface */
     {
-      Point_T **pnt = interface[f]->point;
-      Grid_T *grid = patch->grid;
-      double idealN1N2 = -1;
-      unsigned i;
-      /* find the adjacet interfaces for each adjPatch */
-      for (i = 0; i < ans; ++i)
+      Point_T **const pnt = interface[f]->point;
+      const Patch_T *center_adjpatch = 0;
+      unsigned center_adjface;
+      
+      min = DBL_MAX;
+      
+      /* find the best adjacet adjPatch for center */
+      for (i = 0; i < Nfound0; ++i)
       {
-        Patch_T *adjpatch = grid->patch[needle->ans[i]];
-        double min = DBL_MAX;
-        unsigned adjfn,best_adjface;
+        const Patch_T *adjpatch = grid->patch[needle0->ans[i]];
+        unsigned adjfn;
         
         /* find the best adjface */
         for (adjfn = 0; adjfn < NFaces; ++adjfn)
         {
-          double N1dotN2 = dot(3,adjpatch->interface[adjfn]->centerN,N);
+          double N1dotN2 = 
+            dot(3,adjpatch->interface[adjfn]->centerN,centerN);
           double fabsdif = fabs(N1dotN2-idealN1N2);
           if (min > fabsdif)
           {
-            best_adjface = adjfn;
-            min          = fabsdif;
+            center_adjface  = adjfn;
+            center_adjpatch = adjpatch;
+            min             = fabsdif;
           }
         }
-        /* add point to the pertinent subface for this adjface */
-        for (p = 0; p < interface[f]->np; ++p)
+      }
+      if (min > ScaleFactor)
+      {
+        printf("~> Warning! %s:\n"
+            "   normal vectors are not align: angle = %g degree(s).\n",
+            patch->name,acos(min)*180/M_PI);
+        fflush(stdout);
+      }
+      
+      /* add point to the pertinent subface for this adjface */
+      for (p = 0; p < interface[f]->np; ++p)
+      {
+        if (!point_flag[pnt[p]->ind])
         {
+          unsigned ind = pnt[p]->ind;
+          double adjX[3] = {0};
+          const double *pnt_x = patch->node[ind]->x;
+          Flag_T iscp = NONE;
+          unsigned adjind;
           
-          if (!pnt[p]->houseK)
+          /* first find this point on center adjpatch */
+          if (X_of_x(adjX,pnt_x,center_adjpatch))
           {
-            unsigned ind = pnt[p]->ind;
-            double adjX[3] = {0};
-            const double *pnt_x = patch->node[ind]->x;
-            Flag_T iscp = NONE;
-            unsigned adjind;
+            pnt[p]->touch    = 1;
+            pnt[p]->adjPatch = center_adjpatch->pn;
+            pnt[p]->adjFace  = center_adjface;
+            
+            /* if this is a copy? */
+            adjind = find_node(pnt_x,center_adjpatch,&iscp);
+            if (iscp == FOUND)
+            {
+              pnt[p]->copy = 1;
+              pnt[p]->AdjPntInd = adjind;
+            }
+            else
+            {
+              /* if this is a interpolation => copy = 0*/
+              set_sameXYZ(pnt[p],center_adjface);
+            }
+            add_to_subface_scs(pnt[p]);
+          }
+          /* it means not all points on this surface are on a same
+          // adjacent patch, for example ,filling_box reaches few patches.
+          // thus, we should find their adjacent patch. */
+          else
+          {
+            unsigned Nfound2;
+            double Ntan[3];/* tanget vector for tilting */
+            double Ntilt[3];/* tilting vector */
+            const double T = 0.1;/* tilting angle is arctan(T) */
+            double nrm;
+            
+            eps = root_square(3,pnt_x,0)*ScaleFactor;
+            eps = GRT(eps,ScaleFactor) ? eps : ScaleFactor;
+            
+            if (pnt[p]->IsOnEdge)
+            {
+              tangent(pnt[p],Ntan);
+              nrm = root_square(3,Ntan,0);
+              if (EQL(nrm,0))
+                Error0("Normal vector is null!");
+                
+              /* make it unit */  
+              Ntan[0] /= nrm;
+              Ntan[1] /= nrm;
+              Ntan[2] /= nrm;
+              
+              Ntilt[0] = pnt[p]->N[0]+T*Ntan[0];
+              Ntilt[1] = pnt[p]->N[1]+T*Ntan[1];
+              Ntilt[2] = pnt[p]->N[2]+T*Ntan[2];
+              
+              q[0] = pnt_x[0]+eps*Ntilt[0];
+              q[1] = pnt_x[1]+eps*Ntilt[1];
+              q[2] = pnt_x[2]+eps*Ntilt[2];
+            }
+            else
+            {
+              q[0] = pnt_x[0]+eps*pnt[p]->N[0];
+              q[1] = pnt_x[1]+eps*pnt[p]->N[1];
+              q[2] = pnt_x[2]+eps*pnt[p]->N[2];
+            }
+            
+            Needle_T *needle2 = alloc_needle();
+            needle2->grid = grid;
+            needle_ex(needle2,patch);
+            needle2->x = q;
+            point_finder(needle2);
+            Nfound2 = needle2->Nans;
+            
+            if (!Nfound2)
+            {
+              err_spr(s,pnt_x);
+              Error1("Unexpected gap between patches!\n %s\n",s);
+            }
+            
+            /* having found this point now add to pertinent subface */
+            /* first find the best adjface */
+            const Patch_T *pnt_adjpatch = 0;
+            unsigned pnt_adjface;
+            
+            min = DBL_MAX;
+            for (i = 0; i < Nfound2; ++i)
+            {
+              unsigned adjfn;
+              
+              /* find the best adjface */
+              for (adjfn = 0; adjfn < NFaces; ++adjfn)
+              {
+                const Patch_T *adjpatch = grid->patch[needle2->ans[i]];
+                double N1dotN2 = 
+                  dot(3,pnt[p]->N,adjpatch->interface[adjfn]->centerN);
+                double fabsdif = fabs(N1dotN2-idealN1N2);
+                if (min > fabsdif)
+                {
+                  pnt_adjface  = adjfn;
+                  pnt_adjpatch = adjpatch;
+                  min          = fabsdif;
+                }
+              }
+            }
+            if (min > ScaleFactor)
+            {
+              printf("~> Warning! %s:\n"
+               "   normal vectors are not align: angle = %g degree(s).\n",
+               patch->name,acos(min)*180/M_PI);
+              fflush(stdout);
+            }
             /* find this point on adjpatch */
-            if (X_of_x(adjX,pnt_x,adjpatch))
+            if (X_of_x(adjX,pnt_x,pnt_adjpatch))
             {
               pnt[p]->touch    = 1;
-              pnt[p]->adjPatch = adjpatch->pn;
-              pnt[p]->adjFace  = best_adjface;
-              
+              pnt[p]->adjPatch = pnt_adjpatch->pn;
+              pnt[p]->adjFace  = pnt_adjface;
+            
               /* if this is a copy? */
-              adjind = find_node(pnt_x,adjpatch,&iscp);
+              adjind = find_node(pnt_x,pnt_adjpatch,&iscp);
               if (iscp == FOUND)
               {
                 pnt[p]->copy = 1;
@@ -3041,77 +3172,27 @@ static void find_tentative_adj_faces_scs(Patch_T *const patch)
               else
               {
                 /* if this is a interpolation => copy = 0*/
-                set_sameXYZ(pnt[p],best_adjface);
+                set_sameXYZ(pnt[p],pnt_adjface);
               }
               add_to_subface_scs(pnt[p]);
             }
-            /* it means not all points on this surface are on a same
-            // adjacent patch, for example ,filling_box reaches few patches.
-            // thus, we should find their adjacent patch. */
             else
             {
-              unsigned ans3;
-              double Ntan[3];/* tanget vector for tilting */
-              double Ntilt[3];/* tilting vector */
-              const double T = 0.1;/* tilting angle is arctan(T) */
-              double nrm;
-              
-              eps = root_square(3,pnt_x,0)*ScaleFactor;
-              eps = GRT(eps,ScaleFactor) ? eps : ScaleFactor;
-              
-              if (pnt[p]->IsOnEdge)
-              {
-                tangent(pnt[p],Ntan);
-                nrm = root_square(3,Ntan,0);
-                if (EQL(nrm,0))
-                  Error0("Normal vector is null!");
-                  
-                /* make it unit */  
-                Ntan[0] /= nrm;
-                Ntan[1] /= nrm;
-                Ntan[2] /= nrm;
-                
-                Ntilt[0] = pnt[p]->N[0]+T*Ntan[0];
-                Ntilt[1] = pnt[p]->N[1]+T*Ntan[1];
-                Ntilt[2] = pnt[p]->N[2]+T*Ntan[2];
-                
-                q[0] = x[0]+eps*Ntilt[0];
-                q[1] = x[1]+eps*Ntilt[1];
-                q[2] = x[2]+eps*Ntilt[2];
-              }
-              else
-              {
-                q[0] = x[0]+eps*pnt[p]->N[0];
-                q[1] = x[1]+eps*pnt[p]->N[1];
-                q[2] = x[2]+eps*pnt[p]->N[2];
-              }
-              
-              Needle_T *needle2 = alloc_needle();
-              needle2->grid = patch->grid;
-              needle_ex(needle2,patch);
-              needle2->x = q;
-              point_finder(needle2);
-              ans3 = needle2->Nans;
-              
-              if (!ans3)
-              {
-                //if (pnt[p]->IsOnEdge)
-                  //Error0("edge point!\n");
-                err_spr(s,pnt_x);
-                Error1("Unexpected gap between patches!\n %s\n",s);
-              }
-              
-              assert(ans3);
-              
-              free_needle(needle2);
-          
+              err_spr(s,pnt_x);
+              Error1("Unexpected gap between patches!\n %s\n",s);
             }
+            free_needle(needle2);
+        
           }
+          point_flag[pnt[p]->ind] = 1;
+        }/* if (!point_flag[pnt[p]->ind]) */
+        else
+        {
+          pnt[p]->houseK = 1;
         }
-
-      }
+      }/* for (p = 0; p < interface[f]->np; ++p) */
     }
-    free_needle(needle);
+    free_needle(needle0);
   }
 }
 
