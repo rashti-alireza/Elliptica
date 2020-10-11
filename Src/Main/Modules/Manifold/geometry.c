@@ -5,6 +5,7 @@
 
 #include "geometry.h"
 
+static const double   Huge_Eps    = 2;
 static const double   ScaleFactor = 1E-5;/* scale factor */
 static const unsigned NFaces      = 6;/* total number of faces */
 /* schematic names for surfaces correspond to FACE_T enum. */
@@ -2929,7 +2930,7 @@ static void find_tentative_adj_faces_scs(Patch_T *const patch,unsigned *const po
   Grid_T *const grid = patch->grid;
   const double idealN1N2 = -1;
   double q[3] = {0};/* q = x+eps*N */
-  double eps;
+  double eps,N1dotN2;
   double min = DBL_MAX;
   char s[999] = {'\0'};
   int f;
@@ -2937,62 +2938,78 @@ static void find_tentative_adj_faces_scs(Patch_T *const patch,unsigned *const po
   
   for (f = (int)NFaces-1; f >= 0; --f)
   {
+    Needle_T *needle0 = 0;
     const double *centerN, *centerx;
     unsigned Nfound0;
     
     centerN = interface[f]->centerN;
     centerx = interface[f]->centerx;
-    eps = root_square(3,centerx,0)*ScaleFactor;
-    eps = GRT(eps,ScaleFactor) ? eps : ScaleFactor;
     
-    q[0] = centerx[0]+eps*centerN[0];
-    q[1] = centerx[1]+eps*centerN[1];
-    q[2] = centerx[2]+eps*centerN[2];
-    
-    Needle_T *needle0 = alloc_needle();
+    /* try without normal */
+    q[0] = centerx[0];
+    q[1] = centerx[1];
+    q[2] = centerx[2];
+    needle0 = alloc_needle();
     needle0->grid = grid;
     needle_ex(needle0,patch);
     needle0->x = q;
     point_finder(needle0);
     Nfound0 = needle0->Nans;
-    
-    /* if no patch found 3 possibilities = {innerB,outerB,gap} */
+    /* try again with normal */
     if (!Nfound0)
     {
-      if (patch->innerB)
-      {
-        assert(patch->innerB);/* we expect this */
-        
-        Point_T **const pnt = interface[f]->point;
-        /* make all of this interface point in one innerB subface */
-        for (p = 0; p < interface[f]->np; ++p)
-        {
-          pnt[p]->innerB = 1;
-          add_to_subface_scs(pnt[p]);
-          point_flag[pnt[p]->ind] = 1;
-        }
-      }
-      else
-      {
-        /* make sure there is really no other patches */
-        unsigned Nfound1;
-        eps = root_square(3,centerx,0)+2;/* make sure eps is not 0 */
-        q[0] = centerx[0]+eps*centerN[0];
-        q[1] = centerx[1]+eps*centerN[1];
-        q[2] = centerx[2]+eps*centerN[2];
+      eps = root_square(3,centerx,0)*ScaleFactor;
+      eps = GRT(eps,ScaleFactor) ? eps : ScaleFactor;
+      q[0] = centerx[0]+eps*centerN[0];
+      q[1] = centerx[1]+eps*centerN[1];
+      q[2] = centerx[2]+eps*centerN[2];
+      free_needle(needle0);
+      needle0 = alloc_needle();
+      needle0->grid = grid;
+      needle_ex(needle0,patch);
+      needle0->x = q;
+      point_finder(needle0);
+      Nfound0 = needle0->Nans;
+    }
     
-        Needle_T *needle1 = alloc_needle();
-        needle1->grid = grid;
-        needle_ex(needle1,patch);
-        needle1->x = q;
-        point_finder(needle1);
-        Nfound1 = needle1->Nans;
-        free_needle(needle1);
+    /* if still no patch found 3 possibilities = {innerB,outerB,gap} */
+    if (!Nfound0)
+    {
+      /* make sure there is really no other patches */
+      unsigned Nfound1;
         
-        if (!Nfound1)/* there is really no other patch => outer-boundary */
+      eps = root_square(3,centerx,0)*ScaleFactor;
+      eps = GRT(eps,ScaleFactor) ? eps : ScaleFactor;
+      eps += Huge_Eps;
+      q[0] = centerx[0]+eps*centerN[0];
+      q[1] = centerx[1]+eps*centerN[1];
+      q[2] = centerx[2]+eps*centerN[2];
+  
+      Needle_T *needle1 = alloc_needle();
+      needle1->grid = grid;
+      needle_ex(needle1,patch);
+      needle1->x = q;
+      point_finder(needle1);
+      Nfound1 = needle1->Nans;
+      free_needle(needle1);
+      
+      if (!Nfound1)/* there is really no other patch => outer/innter-boundary */
+      {
+        Point_T **const pnt = interface[f]->point;
+        
+        if (patch->innerB)/* we expect this */
+        {
+          /* make all of this interface point in one innerB subface */
+          for (p = 0; p < interface[f]->np; ++p)
+          {
+            pnt[p]->innerB = 1;
+            add_to_subface_scs(pnt[p]);
+            point_flag[pnt[p]->ind] = 1;
+          }
+        } 
+        else/* it must be outerB */
         {
           patch->outerB  = 1;
-          Point_T **pnt = interface[f]->point;
           /* make all of this interface point in one innerB subface */
           for (p = 0; p < interface[f]->np; ++p)
           {
@@ -3000,14 +3017,12 @@ static void find_tentative_adj_faces_scs(Patch_T *const patch,unsigned *const po
             add_to_subface_scs(pnt[p]);
             point_flag[pnt[p]->ind] = 1;
           }
-
         }
-        else/* gap */
-        {
-          err_spr(s,centerx);
-          Error1("Unexpected gap between patches!\n %s\n",s);
-        }
-        
+      }
+      else
+      {
+        err_spr(s,centerx);
+        Error1("Unexpected gap between patches!\n %s\n",s);
       }
     }/* if (!Nfound0) */
     else/* find tentative faces for this interface */
@@ -3027,7 +3042,7 @@ static void find_tentative_adj_faces_scs(Patch_T *const patch,unsigned *const po
         /* find the best adjface */
         for (adjfn = 0; adjfn < NFaces; ++adjfn)
         {
-          double N1dotN2 = 
+          N1dotN2 = 
             dot(3,adjpatch->interface[adjfn]->centerN,centerN);
           double fabsdif = fabs(N1dotN2-idealN1N2);
           if (min > fabsdif)
@@ -3040,7 +3055,7 @@ static void find_tentative_adj_faces_scs(Patch_T *const patch,unsigned *const po
       }
       if (min > ScaleFactor)
       {
-        warn_normal_spr(s,patch,center_adjpatch);
+        warn_normal_spr(s,patch,center_adjpatch,center_adjface);
         printf("%s\n",s);
         fflush(stdout);
       }
@@ -3127,8 +3142,8 @@ static void find_tentative_adj_faces_scs(Patch_T *const patch,unsigned *const po
               for (adjfn = 0; adjfn < NFaces; ++adjfn)
               {
                 const Patch_T *adjpatch = grid->patch[needle2->ans[i]];
-                double N1dotN2 = 
-                  dot(3,pnt[p]->N,adjpatch->interface[adjfn]->centerN);
+                N1dotN2 = 
+                  dot(3,centerN,adjpatch->interface[adjfn]->centerN);
                 double fabsdif = fabs(N1dotN2-idealN1N2);
                 if (min > fabsdif)
                 {
@@ -3140,7 +3155,7 @@ static void find_tentative_adj_faces_scs(Patch_T *const patch,unsigned *const po
             }
             if (min > ScaleFactor)
             {
-              warn_normal_spr(s,patch,pnt_adjpatch);
+              warn_normal_spr(s,patch,pnt_adjpatch,pnt_adjface);
               printf("%s\n",s);
               fflush(stdout);
             }

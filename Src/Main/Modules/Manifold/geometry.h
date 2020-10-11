@@ -13,10 +13,11 @@ sprintf(s,\
 
 
 /* handy error sprintf for warning about normal match  */
-#define warn_normal_spr(s,patch,adj_patch)  \
-   sprintf(s,"~> Warning!\nfor '%s' and \nadjacent '%s':\n"\
+#define warn_normal_spr(s,patch,adj_patch,adj_face)  \
+   sprintf(s,"~> Warning!\nfor '%s' on %s and \nadjacent '%s' on %s:\n"\
    "normal vectors are not align: angle = %g degree(s).\n",\
-   patch->name,adj_patch->name,acos(min)*180/M_PI);
+   patch->name,FaceName[f],\
+   adj_patch->name,FaceName[adj_face],acos(N1dotN2)*180/M_PI);
 
 /* type point */
 enum Type
