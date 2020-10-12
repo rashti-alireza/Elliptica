@@ -8,10 +8,13 @@
 /* making coordinates of nodes */
 int make_nodes(Grid_T *const grid)
 {
-  int i;
-  FOR_ALL(i,grid->patch)
+  const unsigned np = grid->np;
+  unsigned p;
+  
+  OpenMP_Patch_Pragma(omp parallel for)
+  for (p = 0; p < np; ++p)
   {
-    Patch_T *patch = grid->patch[i];
+    Patch_T *patch = grid->patch[p];
     
     /* if coord is Cartesian */
     if (patch->coordsys == Cartesian)
