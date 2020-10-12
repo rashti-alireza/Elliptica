@@ -5,7 +5,6 @@
 
 #include "coordinate_utilities.h"
 
-#define RES_EPS 1E-11
 
 /* find the point in patches given by needle and fill
 // the needle with the answers.
@@ -193,9 +192,7 @@ static void find(Needle_T *const needle,Mode_T mode)
     
     a = X_of_x(X,needle->x,patch);
     
-    fill_limits(lim,patch);
-    
-    if (a && IsInside(X,lim))
+    if (a)
       needle_ans(needle,patch);
       
   }
@@ -210,7 +207,7 @@ int X_of_x(double *const X,const double *const x,const Patch_T *const patch)
   int r = 0;
   
   if (patch->coordsys == Cartesian)
-    r = X_of_x_Cartesian_coord(X,x);
+    r = X_of_x_Cartesian_coord(X,x,patch);
   else if (patch->coordsys == CubedSpherical)
     r = X_of_x_CS_coord(X,x,patch,1);
   else
@@ -246,9 +243,13 @@ static int x_of_X_Cartesian_coord(double *const x,const double *const X,const Pa
   x[1] = X[1];
   x[2] = X[2];
   
-  return 1;
-  
-  UNUSED(patch);  
+  /* test if this is a valid answer */
+  double h[3];
+  set_h_coord(h,patch);
+  if (IsInside(x,patch->min,patch->max,h))
+    return 1;
+ 
+  return 0;
 }
 
 /* find x in cartesian coord correspond to X (general coords) 
@@ -362,12 +363,17 @@ static int x_of_X_CS_coord(double *const x,const double *const X,const Patch_T *
   /* test the solution */
   if (check_flg)
   {
+    double h[3],hrs;
+    set_h_coord(h,patch);
+    hrs = root_square(3,h,0);
+    
     x_test[0] = x[0];
     x_test[1] = x[1];
     x_test[2] = x[2];
     X_of_x_CS_coord(X_test,x_test,patch,0);
     dX = root_square(3,X,X_test);
-    if (!EQL(dX,0))
+    
+    if (!EQL_coord(dX,0,hrs))
       return 0;
   }
   
@@ -377,13 +383,19 @@ static int x_of_X_CS_coord(double *const x,const double *const X,const Patch_T *
 /* find point X correspond to x for patch with Cartesian coord.
 // ->return value: 1 if it is successful, otherwise 0.
 */
-static int X_of_x_Cartesian_coord(double *const X,const double *const x)
+static int X_of_x_Cartesian_coord(double *const X,const double *const x,const Patch_T *const patch)
 {
   X[0] = x[0];
   X[1] = x[1];
   X[2] = x[2];
   
-  return 1;
+  /* test if this is a valid answer */
+  double h[3];
+  set_h_coord(h,patch);
+  if (IsInside(X,patch->min,patch->max,h))
+    return 1;
+  
+  return 0;
 }
 
 /* find point X correspond to cart-coord for patch with cubed spherical coord.
@@ -408,7 +420,8 @@ static int X_of_x_CS_coord(double *const X,const double *const cart,const Patch_
          R2 = patch->CoordSysInfo->CubedSphericalCoord->R2;
   double x1,x2,d,ratio;
   double x_test[3],X_test[3],dx;
- 
+  double h[3];
+  
   SignAndIndex_permutation_CubedSphere(side,&i,&j,&k,&S);
   
   X[0] = S*x[i]/x[k];
@@ -459,16 +472,27 @@ static int X_of_x_CS_coord(double *const X,const double *const cart,const Patch_
   
   /* adujusting boundary number to avoid some unexpeted behavior
   // due to round off error. */
-  if (GRTEQL(X[0],patch->max[0]))  X[0] = patch->max[0];
-  if (LSSEQL(X[0],patch->min[0]))  X[0] = patch->min[0];
-  if (GRTEQL(X[1],patch->max[1]))  X[1] = patch->max[1];
-  if (LSSEQL(X[1],patch->min[1]))  X[1] = patch->min[1];
-  if (GRTEQL(X[2],patch->max[2]))  X[2] = patch->max[2];
-  if (LSSEQL(X[2],patch->min[2]))  X[2] = patch->min[2];  
+  set_h_coord(h,patch);
+  if (EQL_coord(X[0],patch->max[0],h[0]))  X[0] = patch->max[0];
+  if (EQL_coord(X[0],patch->min[0],h[0]))  X[0] = patch->min[0];
+  if (EQL_coord(X[1],patch->max[1],h[1]))  X[1] = patch->max[1];
+  if (EQL_coord(X[1],patch->min[1],h[1]))  X[1] = patch->min[1];
+  if (EQL_coord(X[2],patch->max[2],h[2]))  X[2] = patch->max[2];
+  if (EQL_coord(X[2],patch->min[2],h[2]))  X[2] = patch->min[2];  
   
   /* test the solution */
   if (check_flg)
   {
+    unsigned interval_test = 0;
+    double hrs = root_square(3,h,0);
+    
+    if (IsInside(X,patch->min,patch->max,h))
+       interval_test = 1;
+    
+    if (!interval_test)
+      return 0;
+      
+    /* test if it gives you the same x coords */
     X_test[0] = X[0];
     X_test[1] = X[1];
     X_test[2] = X[2];
@@ -476,41 +500,11 @@ static int X_of_x_CS_coord(double *const X,const double *const cart,const Patch_
     dx = root_square(3,cart,x_test);
     double scale = MaxMag_d(root_square(3,cart,0),root_square(3,x_test,0));
     scale = scale < 1 ? 1 : scale;
-    if (!EQL(dx/scale,0))
+    if (!EQL_coord(dx/scale,0,hrs))
       return 0;
   }
   
   return 1;
-}
-
-/* fill limits based on patch boundary */
-static void fill_limits(double *const lim, const Patch_T *const patch)
-{
-  lim[MIN0] = patch->min[0];
-  lim[MIN1] = patch->min[1];
-  lim[MIN2] = patch->min[2];
-  lim[MAX0] = patch->max[0];
-  lim[MAX1] = patch->max[1];
-  lim[MAX2] = patch->max[2];
-}
-
-/* if x occurs inside the limits (boundary of a patch).
-// ->return value : 1 if yes, 0 otherwise.
-*/
-static int IsInside(const double *const x,const double *const lim)
-{
-  int v = 0;
-  
-  if (
-      LSSEQL(x[0],lim[MAX0]) && GRTEQL(x[0],lim[MIN0]) &&
-      LSSEQL(x[1],lim[MAX1]) && GRTEQL(x[1],lim[MIN1]) &&
-      LSSEQL(x[2],lim[MAX2]) && GRTEQL(x[2],lim[MIN2])
-      )
-    v = 1;
-  else
-    v = 0;
-    
-  return v;
 }
 
 /* given point and patch find if the is any node collocated 
@@ -520,11 +514,11 @@ static int IsInside(const double *const x,const double *const lim)
 unsigned find_node(const double *const x, const Patch_T *const patch,Flag_T *const flg)
 {
   unsigned v = UINT_MAX;
-  double res = RES_EPS*root_square(3,x,0);/* resolution */
+  double res = EPS_res*root_square(3,x,0);/* resolution */
   unsigned i;
   double *y, nrm;
 
-  res = GRT(res,RES_EPS) ? res : RES_EPS;
+  res = GRT(res,EPS_res) ? res : EPS_res;
   *flg = NONE;
     
   FOR_ALL(i,patch->node)
@@ -788,3 +782,17 @@ IsItCovering
 }
 
 
+/* find a reasonable small distance for this patch and put it in h. */
+static void set_h_coord(double *const h,const Patch_T *const patch)
+{
+  const unsigned *const n = patch->n;
+  const double h_patch[3] = {EPS_coord*((patch->max[0]-patch->min[0])/n[0]),
+                             EPS_coord*((patch->max[1]-patch->min[1])/n[1]),
+                             EPS_coord*((patch->max[2]-patch->min[2])/n[2])
+                            };
+                            
+ h[0] = h_patch[0] > EPS_res ? h_patch[0] : EPS_res;
+ h[1] = h_patch[1] > EPS_res ? h_patch[1] : EPS_res;
+ h[2] = h_patch[2] > EPS_res ? h_patch[2] : EPS_res;
+ 
+}

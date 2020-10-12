@@ -5,6 +5,24 @@
 #include "fields_lib.h"
 #include "coordinate_shared_lib.h"
 
+
+/* dealing with coordinates and round off error */
+#define EPS_res   1E-10
+#define EPS_coord 1E-5 /* this is got from experiments */
+/* h is an small distance, for instance grid space */
+#define LSS_coord(x,y,h)    ((x) < (y)-(h))
+#define GRT_coord(x,y,h)    ((x) > (y)+(h))
+#define EQL_coord(x,y,h)    (((x) < (y)+(h)) && ((x) > (y)-(h)))
+#define LSSEQL_coord(x,y,h) (LSS_coord(x,y,h) || EQL_coord(x,y,h))
+#define GRTEQL_coord(x,y,h) (GRT_coord(x,y,h) || EQL_coord(x,y,h))
+
+/* find if x takes place inside the interval [min,max] */
+#define IsInside(x,min,max,h) \
+  ( LSSEQL_coord(x[0],max[0],h[0]) && GRTEQL_coord(x[0],min[0],h[0]) && \
+    LSSEQL_coord(x[1],max[1],h[1]) && GRTEQL_coord(x[1],min[1],h[1]) && \
+    LSSEQL_coord(x[2],max[2],h[2]) && GRTEQL_coord(x[2],min[2],h[2]))
+
+
 typedef enum MODE_T
 {
   GUESS,
@@ -29,8 +47,6 @@ void needle_in(Needle_T *const needle,const Patch_T *const patch);
 void needle_guess(Needle_T *const needle,const Patch_T *const patch);
 void needle_ans(Needle_T *const needle,const Patch_T *const patch);
 static void find(Needle_T *const needle,Mode_T mode);
-static int IsInside(const double *const x,const double *const lim);
-static void fill_limits(double *const lim, const Patch_T *const patch);
 int X_of_x(double *const X,const double *const x,const Patch_T *const patch);
 unsigned find_node(const double *const x, const Patch_T *const patch,Flag_T *const flg);
 double x_coord(const unsigned i,const Patch_T *const patch);
@@ -43,7 +59,7 @@ int x_of_X(double *const x,const double *const X,const Patch_T *const patch);
 static int x_of_X_CS_coord(double *const x,const double *const X,const Patch_T *const patch,const int check_flg);
 static int X_of_x_CS_coord(double *const X,const double *const cart,const Patch_T *const patch,const int check_flg);
 static int x_of_X_Cartesian_coord(double *const x,const double *const X,const Patch_T *const patch);
-static int X_of_x_Cartesian_coord(double *const X,const double *const x);
+static int X_of_x_Cartesian_coord(double *const X,const double *const x,const Patch_T *const patch);
 void free_needle(Needle_T *needle);
 void *alloc_needle(void);
 void theta_phi_of_XY_CS(double *const theta,double *const phi,const double *const X,const Flag_T side);
@@ -67,6 +83,7 @@ collect_patches
   unsigned *const Np/* number of patches found */
   );
  
+static void set_h_coord(double *const h,const Patch_T *const patch);
 
 
- 
+
