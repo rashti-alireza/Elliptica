@@ -553,7 +553,7 @@ unsigned find_node(const double *const x, const Patch_T *const patch,Flag_T *con
   {
     y = patch->node[i]->x;
     nrm = root_square(3,x,y);
-    if (LSSEQL_coord(nrm,res,EPS_coord))
+    if (LSSEQL_coord(nrm,res,EPS_coord_general))
     {
       v = i;
       res = nrm;
