@@ -6,9 +6,18 @@
 #include "coordinate_shared_lib.h"
 
 
-/* dealing with coordinates and round off error */
-#define EPS_res   1E-10
-#define EPS_coord 1E-5 /* this is got from experiments */
+/* dealing with coordinates and round off error between the boundaries
+// the followings got from experiment. */
+#define EPS_res           (1E-8)
+#define EPS_coord         (1E-5)
+#define EPS_coord_OB_SCS1 (1E-1)
+#define EPS_coord_OB_SCS2 (1E-3)
+#define EPS_coord_OT_SCS1 (1E-1)
+#define EPS_coord_OT_SCS2 (1E-3)
+#define EPS_coord_LOW_n1  (1E0)
+#define EPS_coord_LOW_n2  (1E-1)
+#define LOW_n             (9)
+
 /* h is an small distance, for instance grid space */
 #define LSS_coord(x,y,h)    ((x) < (y)-(h))
 #define GRT_coord(x,y,h)    ((x) > (y)+(h))
@@ -18,9 +27,18 @@
 
 /* find if x takes place inside the interval [min,max] */
 #define IsInside(x,min,max,h) \
-  ( LSSEQL_coord(x[0],max[0],h[0]) && GRTEQL_coord(x[0],min[0],h[0]) && \
-    LSSEQL_coord(x[1],max[1],h[1]) && GRTEQL_coord(x[1],min[1],h[1]) && \
-    LSSEQL_coord(x[2],max[2],h[2]) && GRTEQL_coord(x[2],min[2],h[2]))
+  ( LSSEQL_coord(x[0],max[0],h) && GRTEQL_coord(x[0],min[0],h) && \
+    LSSEQL_coord(x[1],max[1],h) && GRTEQL_coord(x[1],min[1],h) && \
+    LSSEQL_coord(x[2],max[2],h) && GRTEQL_coord(x[2],min[2],h))
+
+
+/* find a reasonable small distance for this patch and put it in h. */
+#define set_h_coord(h,patch,scale) \
+{\
+  h[0] = scale*(patch->max[0]-patch->min[0])/patch->n[0];\
+  h[1] = scale*(patch->max[1]-patch->min[1])/patch->n[1];\
+  h[2] = scale*(patch->max[2]-patch->min[2])/patch->n[2];\
+}
 
 
 typedef enum MODE_T
@@ -83,7 +101,4 @@ collect_patches
   unsigned *const Np/* number of patches found */
   );
  
-static void set_h_coord(double *const h,const Patch_T *const patch);
-
-
 

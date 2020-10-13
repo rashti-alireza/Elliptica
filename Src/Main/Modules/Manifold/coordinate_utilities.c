@@ -244,9 +244,7 @@ static int x_of_X_Cartesian_coord(double *const x,const double *const X,const Pa
   x[2] = X[2];
   
   /* test if this is a valid answer */
-  double h[3];
-  set_h_coord(h,patch);
-  if (IsInside(x,patch->min,patch->max,h))
+  if (IsInside(x,patch->min,patch->max,EPS_coord))
     return 1;
  
   return 0;
@@ -288,6 +286,7 @@ static int x_of_X_CS_coord(double *const x,const double *const X,const Patch_T *
       x[a]+= C[a];
       x[b]+= C[b];
       x[c]+= C[c];
+      
       break;
     case OT_T_SCS:
       R1 = R_interpolation_CS(R1_f,X);
@@ -295,7 +294,6 @@ static int x_of_X_CS_coord(double *const x,const double *const X,const Patch_T *
       ratio = 1.-R1/R2;
       d = sqrt(1+Pow2(X[0])+Pow2(X[1]));
       x1 = S*R1/d;
-      
       x[c] = x1/(1.-ratio*X[2]);
       x[a] = S*x[c]*X[0];
       x[b] = S*x[c]*X[1];
@@ -303,6 +301,7 @@ static int x_of_X_CS_coord(double *const x,const double *const X,const Patch_T *
       x[a]+= C[a];
       x[b]+= C[b];
       x[c]+= C[c];
+      
     break;
     case NS_T_CS:
       d = sqrt(1+Pow2(X[0])+Pow2(X[1]));
@@ -363,17 +362,13 @@ static int x_of_X_CS_coord(double *const x,const double *const X,const Patch_T *
   /* test the solution */
   if (check_flg)
   {
-    double h[3],hrs;
-    set_h_coord(h,patch);
-    hrs = root_square(3,h,0);
-    
     x_test[0] = x[0];
     x_test[1] = x[1];
     x_test[2] = x[2];
     X_of_x_CS_coord(X_test,x_test,patch,0);
     dX = root_square(3,X,X_test);
     
-    if (!EQL_coord(dX,0,hrs))
+    if (!EQL_coord(dX,0,EPS_coord))
       return 0;
   }
   
@@ -390,9 +385,7 @@ static int X_of_x_Cartesian_coord(double *const X,const double *const x,const Pa
   X[2] = x[2];
   
   /* test if this is a valid answer */
-  double h[3];
-  set_h_coord(h,patch);
-  if (IsInside(X,patch->min,patch->max,h))
+  if (IsInside(X,patch->min,patch->max,EPS_coord))
     return 1;
   
   return 0;
@@ -420,7 +413,8 @@ static int X_of_x_CS_coord(double *const X,const double *const cart,const Patch_
          R2 = patch->CoordSysInfo->CubedSphericalCoord->R2;
   double x1,x2,d,ratio;
   double x_test[3],X_test[3],dx;
-  double h[3];
+  double eps = EPS_coord;
+  const unsigned *n;
   
   SignAndIndex_permutation_CubedSphere(side,&i,&j,&k,&S);
   
@@ -434,6 +428,24 @@ static int X_of_x_CS_coord(double *const X,const double *const cart,const Patch_
       x1   = S*R_interpolation_CS(R1_f,X)/d;
       x2   = S*R_interpolation_CS(R2_f,X)/d;
       X[2] = (x[k]-x1)/(x2-x1);
+      
+      /*  for error */
+      n = patch->n;
+      if (patch->nsplit[2] == 1)
+      {
+        if (n[2] < LOW_n)
+          eps = EPS_coord_LOW_n1/(n[0]*n[1]*n[2]);
+        else
+          eps = EPS_coord_OB_SCS1/(n[0]*n[1]*n[2]);
+      }
+      else
+      {
+        if (n[2] < LOW_n)
+          eps = EPS_coord_LOW_n2/(n[0]*n[1]*n[2]);
+        else
+          eps = EPS_coord_OB_SCS2/(n[0]*n[1]*n[2]);
+      }
+      
     break;
     case OT_T_SCS:
       R1 = R_interpolation_CS(R1_f,X);
@@ -442,6 +454,24 @@ static int X_of_x_CS_coord(double *const X,const double *const cart,const Patch_
       d  = sqrt(1+Pow2(X[0])+Pow2(X[1]));
       x1 = S*R1/d;
       X[2] = (1-x1/x[k])/ratio;
+      
+      /*  for error */
+      n = patch->n;
+      if (patch->nsplit[2] == 1)
+      {
+        if (n[2] < LOW_n)
+          eps = EPS_coord_LOW_n1/(n[0]*n[1]*n[2]);
+        else
+          eps = EPS_coord_OT_SCS1/(n[0]*n[1]*n[2]);
+      }
+      else
+      {
+        if (n[2] < LOW_n)
+          eps = EPS_coord_LOW_n2/(n[0]*n[1]*n[2]);
+        else
+          eps = EPS_coord_OT_SCS2/(n[0]*n[1]*n[2]);
+      }
+
     break;
     case NS_T_CS:
       d = sqrt(1+Pow2(X[0])+Pow2(X[1]));
@@ -472,21 +502,19 @@ static int X_of_x_CS_coord(double *const X,const double *const cart,const Patch_
   
   /* adujusting boundary number to avoid some unexpeted behavior
   // due to round off error. */
-  set_h_coord(h,patch);
-  if (EQL_coord(X[0],patch->max[0],h[0]))  X[0] = patch->max[0];
-  if (EQL_coord(X[0],patch->min[0],h[0]))  X[0] = patch->min[0];
-  if (EQL_coord(X[1],patch->max[1],h[1]))  X[1] = patch->max[1];
-  if (EQL_coord(X[1],patch->min[1],h[1]))  X[1] = patch->min[1];
-  if (EQL_coord(X[2],patch->max[2],h[2]))  X[2] = patch->max[2];
-  if (EQL_coord(X[2],patch->min[2],h[2]))  X[2] = patch->min[2];  
+  if (EQL_coord(X[0],patch->max[0],eps))  X[0] = patch->max[0];
+  if (EQL_coord(X[0],patch->min[0],eps))  X[0] = patch->min[0];
+  if (EQL_coord(X[1],patch->max[1],eps))  X[1] = patch->max[1];
+  if (EQL_coord(X[1],patch->min[1],eps))  X[1] = patch->min[1];
+  if (EQL_coord(X[2],patch->max[2],eps))  X[2] = patch->max[2];
+  if (EQL_coord(X[2],patch->min[2],eps))  X[2] = patch->min[2];  
   
   /* test the solution */
   if (check_flg)
   {
     unsigned interval_test = 0;
-    double hrs = root_square(3,h,0);
     
-    if (IsInside(X,patch->min,patch->max,h))
+    if (IsInside(X,patch->min,patch->max,eps))
        interval_test = 1;
     
     if (!interval_test)
@@ -500,7 +528,7 @@ static int X_of_x_CS_coord(double *const X,const double *const cart,const Patch_
     dx = root_square(3,cart,x_test);
     double scale = MaxMag_d(root_square(3,cart,0),root_square(3,x_test,0));
     scale = scale < 1 ? 1 : scale;
-    if (!EQL_coord(dx/scale,0,hrs))
+    if (!EQL_coord(dx/scale,0,eps))
       return 0;
   }
   
@@ -782,17 +810,3 @@ IsItCovering
 }
 
 
-/* find a reasonable small distance for this patch and put it in h. */
-static void set_h_coord(double *const h,const Patch_T *const patch)
-{
-  const unsigned *const n = patch->n;
-  const double h_patch[3] = {EPS_coord*((patch->max[0]-patch->min[0])/n[0]),
-                             EPS_coord*((patch->max[1]-patch->min[1])/n[1]),
-                             EPS_coord*((patch->max[2]-patch->min[2])/n[2])
-                            };
-                            
- h[0] = h_patch[0] > EPS_res ? h_patch[0] : EPS_res;
- h[1] = h_patch[1] > EPS_res ? h_patch[1] : EPS_res;
- h[2] = h_patch[2] > EPS_res ? h_patch[2] : EPS_res;
- 
-}
