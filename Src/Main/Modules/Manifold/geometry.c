@@ -70,14 +70,12 @@ static void ri_split_cubed_spherical(Grid_T *const grid)
     /* set all of housK flag to zero */
     flush_houseK(patch);
   }
-    
+  
+  /* find all subfaces but how they connected */  
   OpenMP_Patch_Pragma(omp parallel for)
   for (p = 0; p < grid->np; ++p)
   {
-    Patch_T *const patch = grid->patch[p];
-    
-    /* tentative subfaces of the adjacent patches */
-    find_tentative_adj_faces_scs(patch,point_flag[p]);
+    find_subfaces_scs(grid->patch[p],point_flag[p]);
   }
   
   /* check if all points have been found */
@@ -2924,7 +2922,7 @@ static void flush_houseK(Patch_T *const patch)
 // point takes place to find the adjacent patch and adjacent face.
 // this function has many assumptions which is only for 
 // split cubed spherical. */
-static void find_tentative_adj_faces_scs(Patch_T *const patch,unsigned *const point_flag)
+static void find_subfaces_scs(Patch_T *const patch,unsigned *const point_flag)
 {
   Interface_T **const interface = patch->interface;
   Grid_T *const grid = patch->grid;
