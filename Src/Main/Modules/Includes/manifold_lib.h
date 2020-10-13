@@ -82,6 +82,8 @@ typedef struct POINT_T
   unsigned face    ;/* the interface in which this point located */
   unsigned adjFace ;/* adjacent face used in interpolation */
   unsigned adjPatch;/* adjacent patch used in interpolation default is UINT_MAX */
+  unsigned AdjPntInd;/* adjacent point index correspond to adjPatch */
+  unsigned IsOnEdge:1;/* if on edge 1 otherwise 0 */
   unsigned sameX  : 1;/* 1 if addjacent face is on X = const */
   unsigned sameY  : 1;/* 1 if addjacent face is on Y = const */
   unsigned sameZ  : 1;/* 1 if addjacent face is on Z = const */
@@ -133,9 +135,11 @@ typedef struct INTERFACE_T
   unsigned fn;/* its interface number */
   unsigned ns;/* number of subfaces */
   Point_T **point;/* points on the interface */
+  SubFace_T **subface;/* subset of points on this interface with same flags */
   struct POINTSET_T **innerP;/* all points on the interface but edge */
   struct POINTSET_T **edgeP;/* all edge points on the interface  */
-  SubFace_T **subface;/* subset of points on this interface with same flags */
+  double centerN[3];/* unit outward normal at the center of this face. */
+  double centerx[3];/* x-coords of center of this face. */
 }Interface_T;
 
 struct Collocation_s
@@ -172,7 +176,7 @@ typedef struct PATCH_T
   Coord_T coordsys;/* coord sys used in this patch */
   struct
   {
-   char region[100];/* region this patch covers, parentheses separated */
+   char region[999];/* region this patch covers, parentheses separated */
    struct
    {
     Flag_T side;/* the side of this cubed coord, up, down, etc. */
@@ -199,6 +203,7 @@ typedef struct PATCH_T
                    */
   unsigned n[3];/* number of points (nodes) in each direction */
   unsigned nn;/* number of nodes in this patch */
+  unsigned nsplit[3];/* number of splits taken place for this type */
   unsigned pn;/* its patch number i.e. patch[pn] = patch */
   unsigned nfld;/* number of fields */
   double c[3];/* center */
