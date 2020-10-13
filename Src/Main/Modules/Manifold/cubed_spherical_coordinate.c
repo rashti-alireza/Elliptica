@@ -2858,6 +2858,8 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
                    1 central box */
   const double r_outermost = Pgetd("Outermost_radius");
   
+  assert(maxN[0]>2 && maxN[1]>2 && maxN[2]>2);
+  
   /* for each direction divide until the max resolution */
   for (i = 0; i < 3; ++i)
   {
