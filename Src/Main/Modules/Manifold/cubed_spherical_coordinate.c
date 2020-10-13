@@ -262,9 +262,6 @@ populate_CS_patch_SplitCS
           /* filling patch number */
           patch->pn = p;
           
-          /* filling inner boundary */
-          patch->innerB = 0;
-          
           /* filling n */
           patch->n[0] = (unsigned)Pgeti("SplitCS_n_a");
           patch->n[1] = (unsigned)Pgeti("SplitCS_n_b");
@@ -273,6 +270,11 @@ populate_CS_patch_SplitCS
           /* filling nn */
           patch->nn = total_nodes_patch(patch);
           
+          /* filling number of split */
+          patch->nsplit[0] = Nsd[0];
+          patch->nsplit[1] = Nsd[1];
+          patch->nsplit[2] = Nsd[2];
+
           /* filling name */
           SCS_par_name(name);
           patch->name = dup_s(name);
@@ -553,6 +555,7 @@ void make_JacobianT_CubedSpherical_coord(Patch_T *const patch)
         Error0(NO_JOB);
     }/* end of switch */
     R2_derivative(patch);/* surface function derivative */
+    make_coeffs_2d(patch->CoordSysInfo->CubedSphericalCoord->R2_f,0,1);
   }/* end of if (type == NS_T_CS) */
   
   else if (type == SR_T_CS)
@@ -581,6 +584,7 @@ void make_JacobianT_CubedSpherical_coord(Patch_T *const patch)
         Error0(NO_JOB);
     }/* end of switch */
     R1_derivative(patch);/* surface function derivative */
+    make_coeffs_2d(patch->CoordSysInfo->CubedSphericalCoord->R1_f,0,1);
   }/* end of else if (type == SR_T_CS) */
   
   else if (type == OT_T1_CS)
@@ -651,6 +655,9 @@ void make_JacobianT_CubedSpherical_coord(Patch_T *const patch)
     
     /* surface function derivative */
     R12_derivatives_SCS(patch);
+    make_coeffs_2d(patch->CoordSysInfo->CubedSphericalCoord->R1_f,0,1);
+    make_coeffs_2d(patch->CoordSysInfo->CubedSphericalCoord->R2_f,0,1);
+    
   }/* end of if (type == OJ_T_SCS) */
   else if (type == OT_T_SCS)
   {
@@ -668,6 +675,8 @@ void make_JacobianT_CubedSpherical_coord(Patch_T *const patch)
     
     /* surface function derivative */
     R12_derivatives_SCS(patch);
+    make_coeffs_2d(patch->CoordSysInfo->CubedSphericalCoord->R1_f,0,1);
+    make_coeffs_2d(patch->CoordSysInfo->CubedSphericalCoord->R2_f,0,1);
   }/* end of if (type == OT_T_SCS) */
   else
     Error0(NO_OPTION);
@@ -2943,7 +2952,7 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
     unsigned lmax = grid_char->params[obj_n]->lmax;
     /* find r step */
     double diag = sqrt(Pow2(l)+Pow2(w)+Pow2(h))/2.;
-    double rmin = l/2 > MaxMag_d(w/2,h/2) ? l/2 : MaxMag_d(w/2,h/2);
+    double rmin = diag;
     double rmax = grid_char->params[obj_n]->r_min;
     double rstep = (rmax-rmin)/Nsd[2];
     
@@ -3040,10 +3049,6 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
               Flag_T side = (Flag_T)(p);
               SCS_par_sigma(parU,SigmaU);
               SCS_par_sigma(parD,SigmaD);              
-              //test
-              printf("~>%s\n",parU);
-              printf("~>%s\n",parD);
-              //end
               
               X[2] = 1;
               for (i = 0; i < Nns[0]; ++i)
@@ -3085,11 +3090,6 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
               else
                 Error0(NO_OPTION);
               
-              //test
-              printf("~>%s\n",parU);
-              printf("~>%s\n",parD);
-              //end
-              
               X[2] = DBL_MAX;/* catch error */
               for (i = 0; i < Nns[0]; ++i)
               {
@@ -3116,11 +3116,6 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
               Flag_T side = (Flag_T)(p);
               SCS_par_sigma(parU,SigmaU);
               SCS_par_sigma(parD,SigmaD);
-              
-              //test
-              printf("~>%s\n",parU);
-              printf("~>%s\n",parD);
-              //end
               
               double xc;
               if (side == UP || side == DOWN)
@@ -3160,11 +3155,6 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
               Flag_T side = (Flag_T)(p);
               SCS_par_sigma(parU,SigmaU);
               SCS_par_sigma(parD,SigmaD);
-              
-              //test
-              printf("~>%s\n",parU);
-              printf("~>%s\n",parD);
-              //end
               
               for (i = 0; i < Nns[0]; ++i)
               {
@@ -3420,11 +3410,6 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
               SCS_par_sigma(parU,SigmaU);
               SCS_par_sigma(parD,SigmaD);              
               
-              //test
-              printf("~>%s\n",parU);
-              printf("~>%s\n",parD);
-              //end
-              
               double xc;
               if (side == UP || side == DOWN)
                 xc = h/2.;
@@ -3491,11 +3476,6 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
               SCS_par_sigma(parU,SigmaU);
               SCS_par_sigma(parD,SigmaD);
               
-              //test
-              printf("~>%s\n",parU);
-              printf("~>%s\n",parD);
-              //end
-              
               double xc;
               if (side == UP || side == DOWN)
                 xc = h/2.;
@@ -3534,11 +3514,6 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
               Flag_T side = (Flag_T)(p);
               SCS_par_sigma(parU,SigmaU);
               SCS_par_sigma(parD,SigmaD);
-              
-              //test
-              printf("~>%s\n",parU);
-              printf("~>%s\n",parD);
-              //end
               
               for (i = 0; i < Nns[0]; ++i)
               {
@@ -3702,11 +3677,6 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
               SCS_par_sigma(parU,SigmaU)
               SCS_par_sigma(parD,SigmaD)              
               
-              //test
-              printf("~>%s\n",parU);
-              printf("~>%s\n",parD);
-              //end
-              
               for (i = 0; i < Nns[0]; ++i)
               {
                 for (j = 0; j < Nns[1]; ++j)
@@ -3768,11 +3738,6 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
               SCS_par_sigma(parU,SigmaU)
               SCS_par_sigma(parD,SigmaD)
               
-              //test
-              printf("~>%s\n",parU);
-              printf("~>%s\n",parD);
-              //end
-              
               double xc;
               if (side == UP || side == DOWN)
                 xc = h/2.;
@@ -3809,11 +3774,6 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
               Flag_T side = (Flag_T)(p);
               SCS_par_sigma(parU,SigmaU)
               SCS_par_sigma(parD,SigmaD)
-              
-              //test
-              printf("~>%s\n",parU);
-              printf("~>%s\n",parD);
-              //end
               
               for (i = 0; i < Nns[0]; ++i)
               {
@@ -3863,7 +3823,7 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
     char obj[STR_SIZE1]  = {'\0'};
     const char *obj0 = "filling_box";
     const char *dir;
-    double l,w,h;
+    double l = 0, w = 0, h = 0;
     Flag_T side = fbox[obj_n];
     
     set_object_name_split_CS(obj,obj0);
