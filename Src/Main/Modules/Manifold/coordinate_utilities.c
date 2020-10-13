@@ -429,7 +429,7 @@ static int X_of_x_CS_coord(double *const X,const double *const cart,const Patch_
       x2   = S*R_interpolation_CS(R2_f,X)/d;
       X[2] = (x[k]-x1)/(x2-x1);
       
-      /*  for error */
+      /*  for interpolation error */
       n = patch->n;
       if (patch->nsplit[2] == 1)
       {
@@ -455,7 +455,7 @@ static int X_of_x_CS_coord(double *const X,const double *const cart,const Patch_
       x1 = S*R1/d;
       X[2] = (1-x1/x[k])/ratio;
       
-      /*  for error */
+      /*  for interpolation error */
       n = patch->n;
       if (patch->nsplit[2] == 1)
       {
@@ -501,7 +501,7 @@ static int X_of_x_CS_coord(double *const X,const double *const cart,const Patch_
   }
   
   /* adujusting boundary number to avoid some unexpeted behavior
-  // due to round off error. */
+  // due to interpolation error. */
   if (EQL_coord(X[0],patch->max[0],eps))  X[0] = patch->max[0];
   if (EQL_coord(X[0],patch->min[0],eps))  X[0] = patch->min[0];
   if (EQL_coord(X[1],patch->max[1],eps))  X[1] = patch->max[1];
@@ -553,7 +553,7 @@ unsigned find_node(const double *const x, const Patch_T *const patch,Flag_T *con
   {
     y = patch->node[i]->x;
     nrm = root_square(3,x,y);
-    if (LSSEQL(nrm,res))
+    if (LSSEQL_coord(nrm,res,EPS_coord))
     {
       v = i;
       res = nrm;
