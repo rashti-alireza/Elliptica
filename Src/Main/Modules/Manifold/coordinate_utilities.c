@@ -244,7 +244,7 @@ static int x_of_X_Cartesian_coord(double *const x,const double *const X,const Pa
   x[2] = X[2];
   
   /* test if this is a valid answer */
-  if (IsInside(x,patch->min,patch->max,EPS_coord))
+  if (IsInside(x,patch->min,patch->max,EPS_coord_general))
     return 1;
  
   return 0;
@@ -368,7 +368,7 @@ static int x_of_X_CS_coord(double *const x,const double *const X,const Patch_T *
     X_of_x_CS_coord(X_test,x_test,patch,0);
     dX = root_square(3,X,X_test);
     
-    if (!EQL_coord(dX,0,EPS_coord))
+    if (!EQL_coord(dX,0,EPS_coord_general))
       return 0;
   }
   
@@ -385,7 +385,7 @@ static int X_of_x_Cartesian_coord(double *const X,const double *const x,const Pa
   X[2] = x[2];
   
   /* test if this is a valid answer */
-  if (IsInside(X,patch->min,patch->max,EPS_coord))
+  if (IsInside(X,patch->min,patch->max,EPS_coord_general))
     return 1;
   
   return 0;
@@ -413,7 +413,7 @@ static int X_of_x_CS_coord(double *const X,const double *const cart,const Patch_
          R2 = patch->CoordSysInfo->CubedSphericalCoord->R2;
   double x1,x2,d,ratio;
   double x_test[3],X_test[3],dx;
-  double eps = EPS_coord;
+  double eps = EPS_coord_general;
   const unsigned *n;
   
   SignAndIndex_permutation_CubedSphere(side,&i,&j,&k,&S);
@@ -542,11 +542,11 @@ static int X_of_x_CS_coord(double *const X,const double *const cart,const Patch_
 unsigned find_node(const double *const x, const Patch_T *const patch,Flag_T *const flg)
 {
   unsigned v = UINT_MAX;
-  double res = EPS_res*root_square(3,x,0);/* resolution */
+  double res = EPS_collocation*root_square(3,x,0);/* resolution */
   unsigned i;
   double *y, nrm;
 
-  res = GRT(res,EPS_res) ? res : EPS_res;
+  res = GRT(res,EPS_collocation) ? res : EPS_collocation;
   *flg = NONE;
     
   FOR_ALL(i,patch->node)
