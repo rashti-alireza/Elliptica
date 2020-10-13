@@ -2187,7 +2187,7 @@ fill_N
     unsigned ih = (n[0]-1)/2;
     unsigned jh = (n[1]-1)/2;
     unsigned kh = (n[2]-1)/2;
-    unsigned ijk;
+    unsigned ijk= UINT_MAX;
     
     switch(f)
     {
@@ -3030,7 +3030,7 @@ static void find_tentative_adj_faces_scs(Patch_T *const patch,unsigned *const po
     {
       Point_T **const pnt = interface[f]->point;
       const Patch_T *center_adjpatch = 0;
-      unsigned center_adjface;
+      unsigned center_adjface = UINT_MAX;
       
       min = DBL_MAX;
       
@@ -3165,7 +3165,7 @@ static void find_tentative_adj_faces_scs(Patch_T *const patch,unsigned *const po
             /* having found this point now add to pertinent subface */
             /* first find the best adjface */
             const Patch_T *pnt_adjpatch = 0;
-            unsigned pnt_adjface;
+            unsigned pnt_adjface = UINT_MAX;
             
             min = DBL_MAX;
             for (i = 0; i < Nfound2; ++i)

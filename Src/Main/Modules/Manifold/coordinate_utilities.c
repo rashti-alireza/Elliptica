@@ -186,7 +186,6 @@ static void find(Needle_T *const needle,Mode_T mode)
   for (i = 0; i < np; i++)
   {
     double X[3];
-    double lim[TOT_Limit];
     Patch_T *patch = needle->grid->patch[p[i]];
     int a;
     
