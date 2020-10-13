@@ -234,9 +234,6 @@ populate_box_patch_SplitCS
         /* filling patch number */
         patch->pn = p;
         
-        /* filling inner boundary */
-        patch->innerB = 0;
-        
         /* filling n */
         patch->n[0] = (unsigned)Pgeti("SplitCS_n_a");
         patch->n[1] = (unsigned)Pgeti("SplitCS_n_b");
@@ -245,6 +242,11 @@ populate_box_patch_SplitCS
         /* filling nn */
         patch->nn = total_nodes_patch(patch);
         
+        /* filling number of split */
+        patch->nsplit[0] = Nsd[0];
+        patch->nsplit[1] = Nsd[1];
+        patch->nsplit[2] = Nsd[2];
+
         /* filling name */
         SCS_par_name(name);
         patch->name = dup_s(name);
