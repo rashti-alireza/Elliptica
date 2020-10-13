@@ -2938,6 +2938,7 @@ static void find_tentative_adj_faces_scs(Patch_T *const patch,unsigned *const po
   
   for (f = (int)NFaces-1; f >= 0; --f)
   {
+    /* FIRST: find the adjacent patch to the center. */
     Needle_T *needle0 = 0;
     const double *centerN, *centerx;
     unsigned Nfound0;
@@ -3022,10 +3023,10 @@ static void find_tentative_adj_faces_scs(Patch_T *const patch,unsigned *const po
       else
       {
         err_spr(s,centerx);
-        Error1("Unexpected gap between patches!\n %s\n",s);
+        Error1(" Unexpected gap between patches!\n %s\n",s);
       }
     }/* if (!Nfound0) */
-    else/* find tentative faces for this interface */
+    else/* find adjacent subfaces for this interface */
     {
       Point_T **const pnt = interface[f]->point;
       const Patch_T *center_adjpatch = 0;
@@ -3060,18 +3061,19 @@ static void find_tentative_adj_faces_scs(Patch_T *const patch,unsigned *const po
         fflush(stdout);
       }
       
-      /* add point to the pertinent subface for this adjface */
+      /* havining found the potential face to this patch 
+      // add point to the pertinent subface. */
       for (p = 0; p < interface[f]->np; ++p)
       {
         if (!point_flag[pnt[p]->ind])
         {
           unsigned ind = pnt[p]->ind;
-          double adjX[3] = {0};
-          const double *pnt_x = patch->node[ind]->x;
-          Flag_T iscp = NONE;
           unsigned adjind;
+          const double *pnt_x = patch->node[ind]->x;
+          double adjX[3] = {0};
+          Flag_T iscp = NONE;
           
-          /* first find this point on center adjpatch */
+          /* first try to find this point on center adjpatch */
           if (X_of_x(adjX,pnt_x,center_adjpatch))
           {
             pnt[p]->touch    = 1;
@@ -3097,7 +3099,8 @@ static void find_tentative_adj_faces_scs(Patch_T *const patch,unsigned *const po
           // thus, we should find their adjacent patch. */
           else
           {
-            unsigned Nfound2;
+            Needle_T *needle2 = 0;
+            unsigned Nfound2 = 0;
             
             eps = root_square(3,pnt_x,0)*ScaleFactor;
             eps = GRT(eps,ScaleFactor) ? eps : ScaleFactor;
@@ -3107,25 +3110,56 @@ static void find_tentative_adj_faces_scs(Patch_T *const patch,unsigned *const po
               q[0] = pnt_x[0];
               q[1] = pnt_x[1];
               q[2] = pnt_x[2];
+              needle2 = alloc_needle();
+              needle2->grid = grid;
+              needle_ex(needle2,patch);
+              needle2->x = q;
+              point_finder(needle2);
+              Nfound2 = needle2->Nans;
             }
             else
             {
-              q[0] = pnt_x[0]+eps*pnt[p]->N[0];
-              q[1] = pnt_x[1]+eps*pnt[p]->N[1];
-              q[2] = pnt_x[2]+eps*pnt[p]->N[2];
+              q[0] = pnt_x[0];
+              q[1] = pnt_x[1];
+              q[2] = pnt_x[2];
+              needle2 = alloc_needle();
+              needle2->grid = grid;
+              needle_ex(needle2,patch);
+              needle2->x = q;
+              point_finder(needle2);
+              Nfound2 = needle2->Nans;
+              /* try with normal */
+              if (!Nfound2)
+              {
+                free_needle(needle2);
+                q[0] = pnt_x[0]+eps*pnt[p]->N[0];
+                q[1] = pnt_x[1]+eps*pnt[p]->N[1];
+                q[2] = pnt_x[2]+eps*pnt[p]->N[2];
+                needle2 = alloc_needle();
+                needle2->grid = grid;
+                needle_ex(needle2,patch);
+                needle2->x = q;
+                point_finder(needle2);
+                Nfound2 = needle2->Nans;
+              }
             }
-            
-            Needle_T *needle2 = alloc_needle();
-            needle2->grid = grid;
-            needle_ex(needle2,patch);
-            needle2->x = q;
-            point_finder(needle2);
-            Nfound2 = needle2->Nans;
             
             if (!Nfound2)
             {
-              err_spr(s,pnt_x);
-              Error1("Unexpected gap between patches!\n %s\n",s);
+            
+              /* test why could not find the adjacent patch */
+              double tt_X[3];
+              int tt_ret = X_of_x(tt_X,pnt_x,center_adjpatch);
+              printf("%s: [%g,%g]x[%g,%g]x[%g,%g]\n"
+                     "%d <- X_of_x((%0.15f,%0.15f,%0.15f))\n",
+              center_adjpatch->name,
+              center_adjpatch->min[0],center_adjpatch->max[0],
+              center_adjpatch->min[1],center_adjpatch->max[1],
+              center_adjpatch->min[2],center_adjpatch->max[2],
+              tt_ret,tt_X[0],tt_X[1],tt_X[2]);
+              fflush(stdout);
+              err_spr_adj(s,pnt_x,center_adjpatch,center_adjface);
+              Error1(" Point not found!\n %s\n",s);
             }
             
             /* having found this point now add to pertinent subface */
@@ -3175,15 +3209,26 @@ static void find_tentative_adj_faces_scs(Patch_T *const patch,unsigned *const po
               }
               else
               {
-                /* if this is a interpolation => copy = 0*/
+                /* if this is an interpolation => copy = 0*/
                 set_sameXYZ(pnt[p],pnt_adjface);
               }
               add_to_subface_scs(pnt[p]);
             }
             else
             {
-              err_spr(s,pnt_x);
-              Error1("Unexpected gap between patches!\n %s\n",s);
+              /* test why could not find the adjacent patch */
+              double tt_X[3];
+              int tt_ret = X_of_x(tt_X,pnt_x,center_adjpatch);
+              printf("%s: [%g,%g]x[%g,%g]x[%g,%g]\n"
+                     "%d <- X_of_x((%0.15f,%0.15f,%0.15f))\n",
+              center_adjpatch->name,
+              center_adjpatch->min[0],center_adjpatch->max[0],
+              center_adjpatch->min[1],center_adjpatch->max[1],
+              center_adjpatch->min[2],center_adjpatch->max[2],
+              tt_ret,tt_X[0],tt_X[1],tt_X[2]);
+              fflush(stdout);
+              err_spr_adj(s,pnt_x,center_adjpatch,center_adjface);
+              Error1(" Point not found!\n %s\n",s);
             }
             free_needle(needle2);
         

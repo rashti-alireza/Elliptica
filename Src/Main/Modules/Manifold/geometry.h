@@ -5,10 +5,20 @@
 #include "manifold_lib.h"
 
 /* handy error sprintf, note: patch and f are required  */
+#define err_spr_adj(s,x,adjpatch,adjface)  \
+sprintf(s,\
+  "At '%s' on face[%u](%s) for \n"\
+  " point (%g,%g,%g) no adjacent patch found!\n"\
+  " Possible adjacent patch is:\n '%s' on face[%s].\n"\
+  " Please consider to increase the resolution.",\
+  patch->name,f,FaceName[f],adjpatch->name,FaceName[adjface],\
+  (x)[0],(x)[1],(x)[2]);
+
 #define err_spr(s,x)  \
 sprintf(s,\
-  "At %s on face[%u](%s) for \n"\
-  " point (%g,%g,%g) no adjacent patch found!",\
+  "At '%s' on face[%u](%s) for \n"\
+  " point (%g,%g,%g) no adjacent patch found!\n"\
+  " Please consider to increase the resolution.",\
   patch->name,f,FaceName[f],(x)[0],(x)[1],(x)[2]);
 
 
@@ -16,6 +26,7 @@ sprintf(s,\
 #define warn_normal_spr(s,patch,adj_patch,adj_face)  \
    sprintf(s,"~> Warning!\nfor '%s' on %s and \nadjacent '%s' on %s:\n"\
    "normal vectors are not align: angle = %g degree(s).\n",\
+   "Please consider to increase the resolution.",\
    patch->name,FaceName[f],\
    adj_patch->name,FaceName[adj_face],acos(N1dotN2)*180/M_PI);
 
