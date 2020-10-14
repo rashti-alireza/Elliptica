@@ -84,10 +84,8 @@ static void ri_split_cubed_spherical(Grid_T *const grid)
     check_houseK(grid->patch[p]);
   }
   
-  //pr_interfaces(grid);
-  
   /* set df_dn flags */
-  set_df_dn_and_pair(grid);
+  set_df_dn_scs(grid);
   
   /* taking some precaution and adding more info at your whim */
   misc(grid);
@@ -324,6 +322,157 @@ static void test_subfaces(const Grid_T *const grid)
     
   }/* FOR_ALL(pa,grid->patch) */
   
+}
+
+/* setting df_dn flags (Drichlet or Nueman B.C) for
+// split cubed spherical. */
+static void set_df_dn_scs(Grid_T *const grid)
+{
+  unsigned p;
+  
+  /* one can add a function here if needs specific arrangement of df_dn */
+  
+  /* set at least one Dirichlet to avoid inf condition number */
+  FOR_ALL_PATCHES(p,grid)
+  {
+    Interface_T **faces;
+    
+    faces = grid->patch[p]->interface;
+    set_one_Dirichlet_BC_scs(grid,faces);
+  
+  }
+  
+  
+}
+
+/* given faces set one Dirichlet BC such that there be no confilict */
+static void 
+set_one_Dirichlet_BC_scs
+  (Grid_T *const grid,Interface_T **const faces)
+{
+  unsigned f;
+  char str[999] = {'\0'};
+  
+  FOR_ALL(f,faces)
+  {
+    Interface_T *face = faces[f];
+    unsigned nsub = face->ns;
+    unsigned adjf[MAX_ARR_UINT];
+    unsigned adjp[MAX_ARR_UINT];
+    unsigned nadj;
+    unsigned s,i;
+    Flag_T set = NONE;
+    
+    /* init */
+    for (i = 0; i < MAX_ARR_UINT; ++i)
+    {
+      adjf[i] = UINT_MAX;
+      adjp[i] = UINT_MAX;
+    }
+    
+    /* find all adjacent patch and face to this face */
+    adjf[0] = face->fn;
+    adjp[0] = face->patch->pn;
+    nadj = find_adjface_adjpatch_scs(grid,adjf,adjp,1);
+    
+    if (nadj)
+    {
+      for (s = 0; s < nsub; ++s)
+      {
+        SubFace_T *subf = face->subface[s];
+        
+        /* check if there is any BC set for this face */
+        if (strstr(subf->flags_str,"Dn") && subf->touch)
+        {
+          set = YES;
+        }
+        else/* set Dirichlet BC for this and all of its adjacents */
+        {
+          for (i = 0; i < nadj; ++i)
+          {
+            Patch_T *adjpatch    = grid->patch[adjp[i]];
+            Interface_T *adjface = adjpatch->interface[adjf[i]];
+            unsigned s2;
+            for (s2 = 0; s2 < adjface->ns; ++s2)
+            {
+              SubFace_T *subf2 = adjface->subface[s2];
+              /* make sure no BC has set. */
+              assert(!strstr(subf2->flags_str,"Dn")); 
+              /* set Nueman for adjacent */
+              subf2->df_dn = 1;
+              sprintf(str,"%sDn1",subf2->flags_str);
+              _free(subf2->flags_str);
+              subf2->flags_str = dup_s(str);
+            }
+      
+          }
+        }
+        if (set == YES)
+          break;
+      }
+    }
+    
+    if (set == YES)
+      break;
+    
+  }
+  
+}
+
+/* given a face it sets Dirichlet or Neumann BC if possible
+// and error if something is not consistent. */
+//static unsigned set_BC_scs()
+//{
+  
+//}
+
+/* ->: number of found adjacent patches and adjacent facees + index */
+static unsigned 
+find_adjface_adjpatch_scs
+  (
+  Grid_T *const grid,/* the grid */
+  unsigned adjface[MAX_ARR_UINT],/* hold adjacent face number to the adjface[0] */
+  unsigned adjpatch[MAX_ARR_UINT],/* hold adjacent patch number to the adjpatch[0] */
+  unsigned index/* starting index, initial is 1 since index 0 is filled */
+  )
+{
+  SubFace_T **const subf = grid->patch[adjpatch[index-1]]->
+                           interface[adjface[index-1]]->subface;
+  const unsigned ns = grid->patch[adjpatch[index-1]]->
+                      interface[adjface[index-1]]->ns;
+  unsigned s,i;
+  
+  for (s = 0; s < ns; ++s)
+  {
+    if(subf[s]->touch)
+    {
+      unsigned adjf = subf[s]->adjFace;
+      unsigned adjp = subf[s]->adjPatch;
+      Flag_T flg = NONE;
+      
+      for (i = 0; i < index; ++i)
+      {
+        if (adjface[i] == adjf && adjpatch[i] == adjp)
+        {
+          flg = FOUND;
+        }
+      }
+      if (flg != FOUND)
+      {
+        adjface[index]  = adjf;
+        adjpatch[index] = adjp;
+        index++;
+        if (index == MAX_ARR_UINT)
+        {
+          Error0("Increase MAX_ARR_UINT macro.");
+        }
+        index = find_adjface_adjpatch_scs(grid,adjface,adjpatch,index);
+      }
+      
+    }
+  }
+  
+  return index;
 }
 
 /* setting df_dn flags inside sub-faces. this flag says if we have 

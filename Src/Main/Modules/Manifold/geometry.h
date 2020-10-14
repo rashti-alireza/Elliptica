@@ -30,6 +30,10 @@ sprintf(s,\
    patch->name,FaceName[f],adj_patch->name,\
    FaceName[adj_face],acos(N1dotN2)*180/M_PI);
 
+/* handy array size for uint */
+#define MAX_ARR_UINT (10)
+
+
 /* type point */
 enum Type
 {
@@ -155,4 +159,24 @@ fill_N
 static void add_to_subface_scs(Point_T *const pnt);
 static void find_subfaces_scs(Patch_T *const patch,unsigned *const point_flag);
 static void add_point_scs(SubFace_T *const subface,const Point_T *const pnt);
+
+
+
+static void set_df_dn_scs(Grid_T *const grid);
+
+static unsigned 
+find_adjface_adjpatch_scs
+  (
+  Grid_T *const grid,/* the grid */
+  unsigned adjface[MAX_ARR_UINT],/* hold adjacent face number to the adjface[0] */
+  unsigned adjpatch[MAX_ARR_UINT],/* hold adjacent patch number to the adjpatch[0] */
+  unsigned index/* starting index, initial is 1 since index 0 is filled */
+  );
+ 
+
+static void 
+set_one_Dirichlet_BC_scs
+  (Grid_T *const grid,Interface_T **const faces);
+  
+
 
