@@ -896,6 +896,7 @@ static void add_to_subface_scs(Point_T *const pnt)
     subface->patch     = pnt->patch;
     subface->flags_str = dup_s(flags);
     subface->sn        = face->ns-1;
+    subface->adjsn     = UINT_MAX;
     subface->face      = pnt->face;
     subface->adjFace   = pnt->adjFace;
     subface->adjPatch  = pnt->adjPatch;
