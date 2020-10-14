@@ -31,7 +31,7 @@ sprintf(s,\
    FaceName[adj_face],acos(N1dotN2)*180/M_PI);
 
 /* handy array size for uint */
-#define MAX_ARR_UINT (10)
+#define MAX_ARR_UINT (20)
 
 
 /* type point */
