@@ -340,6 +340,13 @@ static void set_df_dn_scs(Grid_T *const grid)
     set_one_Dirichlet_BC_scs(grid,faces);
   }
   
+  /* set remaining BC for the rest of interfaces */
+  FOR_ALL_PATCHES(p,grid)
+  {
+    Interface_T **faces = grid->patch[p]->interface;
+    set_remaining_BC_scs(grid,faces);
+  }
+  
   
 }
 
@@ -357,7 +364,6 @@ set_one_Dirichlet_BC_scs
     unsigned adjp[MAX_ARR_UINT];
     unsigned nadj,adj;
     unsigned i;
-    Flag_T set = NONE;
     
     /* init */
     for (i = 0; i < MAX_ARR_UINT; ++i)
@@ -369,36 +375,103 @@ set_one_Dirichlet_BC_scs
     
     if (nadj)
     {
-      unsigned bc = 0;
+      unsigned bc = UINT_MAX;
       for (adj = 0; adj < nadj; ++adj)
       {
         Patch_T *adjpatch    = grid->patch[adjp[adj]];
         Interface_T *adjface = adjpatch->interface[adjf[adj]];
-        if (adjface->df_dn != 0)/* means not pristine */
+        if (adjface->df_dn_set)/* means not pristine */
         {
           bc = adjface->df_dn;
         }
       }
-      if (bc == 0)/* if bc remains pristine */
+      if (bc == UINT_MAX)/* if bc remains pristine */
       {
-        face->df_dn = 2;/* set Dirichlet */
-        set = YES;
+        face->df_dn = 0;/* set Dirichlet */
+        face->df_dn_set = 1;
+      }
+      else if (bc == 0)/* if adj is Dirichlet */
+      {
+        face->df_dn = 1;/* set Neumann */
+        face->df_dn_set = 1;
       }
       else if (bc == 1)/* if adj is Neumann */
       {
-        face->df_dn = 2;/* set Dirichlet */
-        set = YES;
+        face->df_dn = 0;/* set Dirichlet */
+        face->df_dn_set = 1;
       }
-      else/* if adj is Dirichlet */
+      else
       {
-        face->df_dn = 1;/* set Neumann */
+        Error0(NO_OPTION);
       }
       
       /* set BC for face, adjface and their subfaces */
       set_consistent_adj_bc_scs(grid,adjf,adjp,face,nadj);
       
-      if (set == YES)
+      if (face->df_dn_set)
         break;
+    }
+  } 
+}
+
+/* set the remaining BS consistently */
+static void 
+set_remaining_BC_scs
+  (Grid_T *const grid,Interface_T **const faces)
+{
+  unsigned f;
+  
+  FOR_ALL(f,faces)
+  {
+    Interface_T *face = faces[f];
+    unsigned adjf[MAX_ARR_UINT];
+    unsigned adjp[MAX_ARR_UINT];
+    unsigned nadj,adj;
+    unsigned i;
+    
+    /* init */
+    for (i = 0; i < MAX_ARR_UINT; ++i)
+    {
+      adjf[i] = UINT_MAX;
+      adjp[i] = UINT_MAX;
+    }
+    nadj = find_adjface_adjpatch_scs(face,adjf,adjp);
+    
+    if (nadj)
+    {
+      unsigned bc = UINT_MAX;
+      for (adj = 0; adj < nadj; ++adj)
+      {
+        Patch_T *adjpatch    = grid->patch[adjp[adj]];
+        Interface_T *adjface = adjpatch->interface[adjf[adj]];
+        if (adjface->df_dn_set)/* means not pristine */
+        {
+          bc = adjface->df_dn;
+        }
+      }
+      if (bc == UINT_MAX)/* if bc remains pristine */
+      {
+        face->df_dn = 1;/* set Neumann */
+        face->df_dn_set = 1;
+      }
+      else if (bc == 0)/* if adj is Dirichlet */
+      {
+        face->df_dn = 1;/* set Neumann */
+        face->df_dn_set = 1;
+      }
+      else if (bc == 1)/* if adj is Neumann */
+      {
+        face->df_dn = 0;/* set Dirichlet */
+        face->df_dn_set = 1;
+      }
+      else
+      {
+        Error0(NO_OPTION);
+      }
+      
+      /* set BC for face, adjface and their subfaces */
+      set_consistent_adj_bc_scs(grid,adjf,adjp,face,nadj);
+      
     }
   } 
 }
@@ -425,15 +498,17 @@ set_consistent_adj_bc_scs
     Patch_T *adjp     = grid->patch[adjpatch[adj]];
     Interface_T *adjf = adjp->interface[adjface[adj]];
     
-    if (adjf->df_dn == face->df_dn)/* means conflict */
+    if (adjf->df_dn_set && adjf->df_dn == face->df_dn)/* means conflict */
       Error0("Conflict between the faces boundary conditions.");
       
-    if (face->df_dn == 2)
+    if (face->df_dn == 0)
       adjf->df_dn = 1;
     else if (face->df_dn == 1)
-      adjf->df_dn = 2;
+      adjf->df_dn = 0;
     else
       Error0("Wrong number!\n");
+    
+    adjf->df_dn_set = 1;
   }
   
   /* set flags for subfaces of the face */
@@ -441,13 +516,11 @@ set_consistent_adj_bc_scs
   {
     SubFace_T *subf = face->subface[s];
     
-    if (strstr(subf->flags_str,"Dn") && subf->touch)
-      Error0("Flag is already set!");
+    if (strstr(subf->flags_str,"Dn") && 
+        subf->touch && face->df_dn != subf->df_dn)
+      Error0("BC flags conflict!");
     
-    if (face->df_dn == 1)  
-      subf->df_dn = 1;
-    else
-      subf->df_dn = 0;
+    subf->df_dn = face->df_dn;
       
     sprintf(str,"%sDn%u",subf->flags_str,subf->df_dn);
     _free(subf->flags_str);

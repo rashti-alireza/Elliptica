@@ -188,3 +188,8 @@ set_consistent_adj_bc_scs
   );
 
 
+static void 
+set_remaining_BC_scs
+  (Grid_T *const grid,Interface_T **const faces);
+
+ 
