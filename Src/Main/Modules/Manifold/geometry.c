@@ -32,7 +32,6 @@ int realize_geometry(Grid_T *const grid)
   //test
   
   FUNC_TOC
-  pr_interfaces(grid);
   exit(0);
   
   return EXIT_SUCCESS;
@@ -85,8 +84,25 @@ static void ri_split_cubed_spherical(Grid_T *const grid)
     check_houseK(grid->patch[p]);
   }
   
+  //pr_interfaces(grid);
+  
+  /* set df_dn flags */
+  set_df_dn_and_pair(grid);
+  
+  /* taking some precaution and adding more info at your whim */
+  misc(grid);
+  
+  /* testing */
+  test_subfaces(grid);
+  
+  /* printing boundary for test purposes */
+  if(test_print(PRINT_INTERFACES))
+    pr_interfaces(grid);
+  
   /* freeing */
+  free_points(grid);
   free_2d_mem(point_flag,grid->np);
+  
 }
 
 /* realize interfaces a general method (works for many kind of grid) */
@@ -735,7 +751,13 @@ static SubFace_T *find_subface(const SubFace_T *const sub)
   }/* end of else */
   
   if (flg == NONE)
-    Error0("The related subface could not be found.\n");
+  {
+    char msg[999] = {'\0'};
+    sprintf(msg,"(%s,%s) <- patch\n(%s,%s) <- adjacent\n%s <- flags.",
+    sub->patch->name,FaceName[sub->face],
+    face->patch->name,FaceName[face->fn],sub->flags_str);
+    Error1("The related subface could not be found!\n%s\n",msg);
+  }
     
   return sub2;
 }
