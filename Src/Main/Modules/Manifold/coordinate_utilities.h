@@ -9,7 +9,7 @@
 /* dealing with coordinates and interpolation error between the boundaries
 // the followings got from experiment. */
 #define EPS_collocation   (1E-8)
-#define EPS_coord_general (1E-5)
+#define EPS_coord_general (1E-8)
 #define EPS_coord_OB_SCS1 (1E-1)
 #define EPS_coord_OB_SCS2 (1E-3)
 #define EPS_coord_OT_SCS1 (1E-1)
