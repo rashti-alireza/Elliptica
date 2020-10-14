@@ -167,16 +167,24 @@ static void set_df_dn_scs(Grid_T *const grid);
 static unsigned 
 find_adjface_adjpatch_scs
   (
-  Grid_T *const grid,/* the grid */
-  unsigned adjface[MAX_ARR_UINT],/* hold adjacent face number to the adjface[0] */
-  unsigned adjpatch[MAX_ARR_UINT],/* hold adjacent patch number to the adjpatch[0] */
-  unsigned index/* starting index, initial is 1 since index 0 is filled */
+  Interface_T *const face,/* the face */
+  unsigned adjface[MAX_ARR_UINT],/* hold adjacent face number to the given face */
+  unsigned adjpatch[MAX_ARR_UINT]/* hold adjacent patch number to the given face */
   );
- 
 
 static void 
 set_one_Dirichlet_BC_scs
   (Grid_T *const grid,Interface_T **const faces);
   
+
+static void 
+set_consistent_adj_bc_scs
+  (
+  Grid_T *const grid,
+  const unsigned adjface[MAX_ARR_UINT],
+  const unsigned adjpatch[MAX_ARR_UINT],
+  Interface_T *const face,
+  const unsigned nadj/* number of adjacent */
+  );
 
 
