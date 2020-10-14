@@ -1571,7 +1571,7 @@ static void miscellany_in_sewing(Patch_T *const patch)
 }
 
 /* populating sewing struct in each patch using subfaces
-// and geometry of grid. in effect, we duplicate sufaces in order
+// and geometry of grid. in effect, we duplicate subfaces in order
 // for each patch can make boundary condition without causing racing
 // condition for each thread. thus, each patch knows exactly what others
 // and itself need for boundary conditions like interpolation and continuity.
