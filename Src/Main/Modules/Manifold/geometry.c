@@ -44,6 +44,7 @@ int realize_geometry(Grid_T *const grid)
 static void ri_split_cubed_spherical(Grid_T *const grid)
 {
   FUNC_TIC
+  
   /* keep track of counted points; 1 means counted, 0 means not. */
   unsigned **point_flag = calloc(grid->np,sizeof(*point_flag));
   IsNull(point_flag);
@@ -166,9 +167,6 @@ static void ri_general_method(Grid_T *const grid)
   /* freeing Point_T */
   free_points(grid);
   
-  //test
-  pr_interfaces(grid);
- 
   /* set df_dn flags */
   set_df_dn_and_pair(grid);
   
