@@ -3095,7 +3095,7 @@ find_adjacent_scs
       }
       
       /* havining found the potential face to this patch 
-      // add point to the pertinent subface. */
+      // find point to the pertinent adjacent. */
       for (p = 0; p < interface[f]->np; ++p)
       {
         if (!point_flag[pnt[p]->ind])
@@ -3126,6 +3126,7 @@ find_adjacent_scs
               
               pnt[p]->copy = 1;
               pnt[p]->adjInd = adjind;
+              pnt[p]->adjIndF= UINT_MAX;/* catch error */
               /* find index of adjacent point on face. */
               for (ip = 0; ip < nadjp; ++ip)
               {
@@ -3140,7 +3141,6 @@ find_adjacent_scs
             {
               /* if this is a interpolation => copy = 0*/
               set_sameXYZ(pnt[p],center_adjface);
-              //add_to_subface_scs(pnt[p]);
             }
           }
           /* it means not all points on this surface are on a same
@@ -3211,7 +3211,6 @@ find_adjacent_scs
               Error1(" Point not found!\n %s\n",s);
             }
             
-            /* having found this point now add to pertinent subface */
             /* first find the best adjface */
             const Patch_T *pnt_adjpatch = 0;
             unsigned pnt_adjface = UINT_MAX;
@@ -3262,6 +3261,7 @@ find_adjacent_scs
                 
                 pnt[p]->copy = 1;
                 pnt[p]->adjInd = adjind;
+                pnt[p]->adjIndF= UINT_MAX;/* catch error */
                 /* find index of adjacent point on face. */
                 for (ip = 0; ip < nadjp; ++ip)
                 {
@@ -3276,7 +3276,6 @@ find_adjacent_scs
               {
                 /* if this is a interpolation => copy = 0*/
                 set_sameXYZ(pnt[p],center_adjface);
-                //add_to_subface_scs(pnt[p]);
               }
             }
             else
@@ -3340,12 +3339,13 @@ static void set_subfaces_scs(Grid_T *const grid,Patch_T *const patch)
           unsigned adji = pnt[p]->adjIndF;
           Point_T *adjpnt = 
             grid->patch[adjp]->interface[adjf]->point[adji];
+          
+          /* set flags and add to subface */
           adjpnt->touch = 1;
           adjpnt->copy  = 1;
           adjpnt->adjFace  = pnt[p]->face;
           adjpnt->adjPatch = pnt[p]->patch->pn;
           adjpnt->adjInd   = pnt[p]->ind;
-          
           add_to_subface_scs(adjpnt);
         }
       }
