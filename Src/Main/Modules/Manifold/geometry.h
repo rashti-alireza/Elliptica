@@ -30,10 +30,6 @@ sprintf(s,\
    patch->name,FaceName[f],adj_patch->name,\
    FaceName[adj_face],acos(N1dotN2)*180/M_PI);
 
-/* handy array size for uint */
-#define MAX_ARR_UINT (20)
-
-
 /* type point */
 enum Type
 {
@@ -148,49 +144,10 @@ static void ri_split_cubed_spherical(Grid_T *const grid);
 static void ri_general_method(Grid_T *const grid);
 static void check_houseK(Patch_T *const patch);
 static void flush_houseK(Patch_T *const patch);
-
-static void 
-fill_N
-  (
-    Patch_T *const patch
-  );
-
-
+static void fill_N(Patch_T *const patch);
 static void add_to_subface_scs(Point_T *const pnt);
 static void add_point_scs(SubFace_T *const subface,const Point_T *const pnt);
-
-
-
-static void set_df_dn_scs(Grid_T *const grid);
-
-static unsigned 
-find_adjface_adjpatch_scs
-  (
-  Interface_T *const face,/* the face */
-  unsigned adjface[MAX_ARR_UINT],/* hold adjacent face number to the given face */
-  unsigned adjpatch[MAX_ARR_UINT]/* hold adjacent patch number to the given face */
-  );
-
-static void 
-set_one_Dirichlet_BC_scs
-  (Grid_T *const grid,Interface_T **const faces);
-  
-
-static void 
-set_consistent_adj_bc_scs
-  (
-  Grid_T *const grid,
-  const unsigned adjface[MAX_ARR_UINT],
-  const unsigned adjpatch[MAX_ARR_UINT],
-  Interface_T *const face,
-  const unsigned nadj/* number of adjacent */
-  );
-
-
-static void 
-set_remaining_BC_scs
-  (Grid_T *const grid,Interface_T **const faces);
-
+static void set_subfaces_scs(Grid_T *const grid,Patch_T *const patch);
 
 static void 
 find_adjacent_scs
@@ -200,6 +157,4 @@ find_adjacent_scs
   unsigned *const point_flag
   );
 
-
-static void set_subfaces_scs(Grid_T *const grid,Patch_T *const patch);
 

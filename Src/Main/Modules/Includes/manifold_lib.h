@@ -141,10 +141,6 @@ typedef struct INTERFACE_T
   struct POINTSET_T **edgeP;/* all edge points on the interface  */
   double centerN[3];/* unit outward normal at the center of this face. */
   double centerx[3];/* x-coords of center of this face. */
-  unsigned df_dn:1;/* 1 = Neumann, 0 = Dirichlet BC */
-  unsigned df_dn_set:1;/* 0 = not set, 1 = set. */
-  unsigned innerB:1;/* 1 = inner boundary  */
-  unsigned outerB:1;/* 1 = outer boundary */
 }Interface_T;
 
 struct Collocation_s
