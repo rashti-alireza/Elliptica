@@ -20,7 +20,8 @@ int realize_geometry(Grid_T *const grid)
 {
   FUNC_TIC
   
-  if (strcmp_i(grid->kind,"BBN_Split_CubedSpherical_grid"))
+  //if (strcmp_i(grid->kind,"BBN_Split_CubedSpherical_grid"))
+  if (Pgeti("temp"))
   {
     ri_split_cubed_spherical(grid);
   }
@@ -485,11 +486,12 @@ static void set_one_Dirichlet_BC(Interface_T **const face)
   unsigned nc;/* number of chain */
   SubFace_T *subf;
   unsigned sf,f; 
-  Flag_T flg = NONE;
+  Flag_T flg = NONE,IsSet=NO;
   
   FOR_ALL(f,face)
   {
-    flg = NONE;
+    flg   = NONE;
+    IsSet = NO;
     /* check if there is any BC set for this face */
     for (sf = 0; sf < face[f]->ns; ++sf)
     {
@@ -507,14 +509,24 @@ static void set_one_Dirichlet_BC(Interface_T **const face)
     for (sf = 0; sf < face[f]->ns; ++sf)
     {
       subf = face[f]->subface[sf];
-      /* make the whole chain and determine the last ring by null pointer and so for next pointer */
+      /* make the whole chain and determine the last ring 
+      // by null pointer and so for next pointer */
       chain = compose_the_chain(subf);
       nc = countf(chain);
       if (nc == 1)
         Error0("There is no other subface matches to this subface.");
       set_df_dn(chain[0],0);
       free_2d(chain);
+      IsSet = YES;
     }
+    if(IsSet != YES)
+    {
+      char msg[999] = {'\0'};
+      sprintf(msg,"Could not set Dirichlet for:\n(%s,%s)",
+      face[f]->patch->name,FaceName[f]);
+      Error0(msg);
+    }
+    break;/* => only need only one face */
   }/* end of FOR_ALL(f,face) */
     
 }
