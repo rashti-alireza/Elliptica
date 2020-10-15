@@ -46,6 +46,7 @@ int realize_geometry(Grid_T *const grid)
 // furthermore, there is no overlapping patch. */
 static void ri_split_cubed_spherical(Grid_T *const grid)
 {
+  FUNC_TIC
   /* keep track of counted points; 1 means counted, 0 means not. */
   unsigned **point_flag = calloc(grid->np,sizeof(*point_flag));
   IsNull(point_flag);
@@ -101,11 +102,13 @@ static void ri_split_cubed_spherical(Grid_T *const grid)
   free_points(grid);
   free_2d_mem(point_flag,grid->np);
   
+  FUNC_TOC
 }
 
 /* realize interfaces a general method (works for many kind of grid) */
 static void ri_general_method(Grid_T *const grid)
 {
+  FUNC_TIC
   /* keep track of counted points; 1 means counted, 0 means not. */
   unsigned **point_flag = calloc(grid->np,sizeof(*point_flag));
   IsNull(point_flag);
@@ -178,6 +181,7 @@ static void ri_general_method(Grid_T *const grid)
    
   /* freeing */
   free_2d_mem(point_flag,grid->np);
+  FUNC_TOC
 }
 
 
@@ -347,6 +351,19 @@ static void set_df_dn_scs(Grid_T *const grid)
     set_remaining_BC_scs(grid,faces);
   }
   
+  /* test all subfaces set */
+  FOR_ALL_PATCHES(p,grid)
+  {
+    unsigned f;
+    for (f = 0; f < NFaces; ++f)
+    {
+      Interface_T *face = grid->patch[p]->interface[f];
+      
+      if (!face->df_dn_set && !face->innerB && !face->outerB)
+        Error0("No flag!");
+    }
+    
+  }
   
 }
 
@@ -413,7 +430,7 @@ set_one_Dirichlet_BC_scs
       
       face->df_dn_set = 1;
       /* set BC for face, its subfaces and adjface */
-      set_consistent_adj_bc_scs(grid,adjf,adjp,face,nadj);
+      set_consistent_adj_bc_scs(grid,adjf,adjp,face,1);
       
       /* since one BC needed -> break */
       break;
@@ -477,7 +494,7 @@ set_remaining_BC_scs
       }
       
       /* set BC for face, adjface and their subfaces */
-      set_consistent_adj_bc_scs(grid,adjf,adjp,face,nadj);
+      set_consistent_adj_bc_scs(grid,adjf,adjp,face,1);
       face->df_dn_set = 1;
     }
   } 
@@ -512,6 +529,8 @@ set_consistent_adj_bc_scs
               adjf->patch->name,FaceName[adjf->fn]);
       Error1("Conflict between the faces boundary conditions:\n%s",str);
     }
+    else if (adjf->df_dn_set)
+      continue;
       
     if (face->df_dn == 0)
       adjf->df_dn = 1;
@@ -3306,6 +3325,7 @@ static void find_subfaces_scs(Patch_T *const patch,unsigned *const point_flag)
             add_to_subface_scs(pnt[p]);
             point_flag[pnt[p]->ind] = 1;
           }
+          interface[f]->innerB = 1;
         } 
         else/* it must be outerB */
         {
@@ -3317,6 +3337,7 @@ static void find_subfaces_scs(Patch_T *const patch,unsigned *const point_flag)
             add_to_subface_scs(pnt[p]);
             point_flag[pnt[p]->ind] = 1;
           }
+          interface[f]->outerB = 1;
         }
       }
       else
