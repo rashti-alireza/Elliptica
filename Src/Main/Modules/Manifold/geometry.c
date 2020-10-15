@@ -32,7 +32,7 @@ int realize_geometry(Grid_T *const grid)
   //test
   
   FUNC_TOC
-  exit(0);
+  //exit(0);
   
   return EXIT_SUCCESS;
 } 
@@ -365,6 +365,14 @@ set_one_Dirichlet_BC_scs
     unsigned nadj,adj;
     unsigned i;
     
+    /* if it is already set to Dirichlet => satisfy */
+    if (face->df_dn_set && face->df_dn == 0)
+      break;
+     
+    /* if its Neumann */  
+    if (face->df_dn_set)
+      continue;
+      
     /* init */
     for (i = 0; i < MAX_ARR_UINT; ++i)
     {
@@ -383,33 +391,32 @@ set_one_Dirichlet_BC_scs
         if (adjface->df_dn_set)/* means not pristine */
         {
           bc = adjface->df_dn;
+          break;
         }
       }
       if (bc == UINT_MAX)/* if bc remains pristine */
       {
         face->df_dn = 0;/* set Dirichlet */
-        face->df_dn_set = 1;
       }
       else if (bc == 0)/* if adj is Dirichlet */
       {
         face->df_dn = 1;/* set Neumann */
-        face->df_dn_set = 1;
       }
       else if (bc == 1)/* if adj is Neumann */
       {
         face->df_dn = 0;/* set Dirichlet */
-        face->df_dn_set = 1;
       }
       else
       {
         Error0(NO_OPTION);
       }
       
-      /* set BC for face, adjface and their subfaces */
+      face->df_dn_set = 1;
+      /* set BC for face, its subfaces and adjface */
       set_consistent_adj_bc_scs(grid,adjf,adjp,face,nadj);
       
-      if (face->df_dn_set)
-        break;
+      /* since one BC needed -> break */
+      break;
     }
   } 
 }
@@ -429,6 +436,9 @@ set_remaining_BC_scs
     unsigned nadj,adj;
     unsigned i;
     
+    if (face->df_dn_set)
+      continue;
+    
     /* init */
     for (i = 0; i < MAX_ARR_UINT; ++i)
     {
@@ -452,17 +462,14 @@ set_remaining_BC_scs
       if (bc == UINT_MAX)/* if bc remains pristine */
       {
         face->df_dn = 1;/* set Neumann */
-        face->df_dn_set = 1;
       }
       else if (bc == 0)/* if adj is Dirichlet */
       {
         face->df_dn = 1;/* set Neumann */
-        face->df_dn_set = 1;
       }
       else if (bc == 1)/* if adj is Neumann */
       {
         face->df_dn = 0;/* set Dirichlet */
-        face->df_dn_set = 1;
       }
       else
       {
@@ -471,7 +478,7 @@ set_remaining_BC_scs
       
       /* set BC for face, adjface and their subfaces */
       set_consistent_adj_bc_scs(grid,adjf,adjp,face,nadj);
-      
+      face->df_dn_set = 1;
     }
   } 
 }
@@ -499,7 +506,12 @@ set_consistent_adj_bc_scs
     Interface_T *adjf = adjp->interface[adjface[adj]];
     
     if (adjf->df_dn_set && adjf->df_dn == face->df_dn)/* means conflict */
-      Error0("Conflict between the faces boundary conditions.");
+    {
+      sprintf(str,"(%s,%s) <- patch\n(%s,%s) <- adjacent\n",
+              face->patch->name,FaceName[face->fn],
+              adjf->patch->name,FaceName[adjf->fn]);
+      Error1("Conflict between the faces boundary conditions:\n%s",str);
+    }
       
     if (face->df_dn == 0)
       adjf->df_dn = 1;
@@ -509,6 +521,23 @@ set_consistent_adj_bc_scs
       Error0("Wrong number!\n");
     
     adjf->df_dn_set = 1;
+    
+    /* set flags for subfaces of the adjface */
+    for (s = 0; s < adjf->ns; ++s)
+    {
+      SubFace_T *subf = adjf->subface[s];
+      
+      if (strstr(subf->flags_str,"Dn") && 
+          subf->touch && adjf->df_dn != subf->df_dn)
+        Error0("BC flags conflict!");
+      
+      subf->df_dn = adjf->df_dn;
+        
+      sprintf(str,"%sDn%u",subf->flags_str,subf->df_dn);
+      _free(subf->flags_str);
+      subf->flags_str = dup_s(str);
+    }
+    
   }
   
   /* set flags for subfaces of the face */
