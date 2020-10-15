@@ -157,7 +157,6 @@ fill_N
 
 
 static void add_to_subface_scs(Point_T *const pnt);
-static void find_subfaces_scs(Patch_T *const patch,unsigned *const point_flag);
 static void add_point_scs(SubFace_T *const subface,const Point_T *const pnt);
 
 
@@ -192,4 +191,15 @@ static void
 set_remaining_BC_scs
   (Grid_T *const grid,Interface_T **const faces);
 
- 
+
+static void 
+find_adjacent_scs
+  (
+  Grid_T *const grid,
+  Patch_T *const patch,
+  unsigned *const point_flag
+  );
+
+
+static void set_subfaces_scs(Grid_T *const grid,Patch_T *const patch);
+

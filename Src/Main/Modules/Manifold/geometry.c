@@ -29,10 +29,7 @@ int realize_geometry(Grid_T *const grid)
     ri_general_method(grid);
   }  
   
-  //test
-  
   FUNC_TOC
-  //exit(0);
   
   return EXIT_SUCCESS;
 } 
@@ -75,7 +72,13 @@ static void ri_split_cubed_spherical(Grid_T *const grid)
   OpenMP_Patch_Pragma(omp parallel for)
   for (p = 0; p < grid->np; ++p)
   {
-    find_subfaces_scs(grid->patch[p],point_flag[p]);
+    find_adjacent_scs(grid,grid->patch[p],point_flag[p]);
+  }
+  
+  /* not thread safe */
+  for (p = 0; p < grid->np; ++p)
+  {
+    set_subfaces_scs(grid,grid->patch[p]);
   }
   
   /* check if all points have been found */
@@ -86,17 +89,21 @@ static void ri_split_cubed_spherical(Grid_T *const grid)
   }
   
   /* set df_dn flags */
+  set_df_dn_and_pair(grid);
+  
+  /* set df_dn flags */
+  if(0)
   set_df_dn_scs(grid);
   
   /* taking some precaution and adding more info at your whim */
-  //misc(grid);
+  misc(grid);
   
   /* testing */
-  //test_subfaces(grid);
+  test_subfaces(grid);
   
   /* printing boundary for test purposes */
-  //if(test_print(PRINT_INTERFACES))
-    //pr_interfaces(grid);
+  if(test_print(PRINT_INTERFACES))
+    pr_interfaces(grid);
   
   /* freeing */
   free_points(grid);
@@ -1110,7 +1117,8 @@ static void add_to_subface(const Point_T *const pnt,const char *const lead)
   add_point(subface,pnt);
 }
 
-/* add this point to the best fit of subfaces */
+/* add this point to the best fit of subfaces
+// note: this also set pnt->houseK */
 static void add_to_subface_scs(Point_T *const pnt)
 {
   Interface_T *const face = pnt->patch->interface[pnt->face];
@@ -1244,7 +1252,7 @@ static void add_point_scs(SubFace_T *const subface,const Point_T *const pnt)
     subface->adjid = 
       realloc(subface->adjid,(subface->np+1)*sizeof(*subface->adjid));
     IsNull(subface->adjid);
-    subface->adjid[subface->np] = pnt->AdjPntInd;
+    subface->adjid[subface->np] = pnt->adjInd;
   }
   
   subface->np++;
@@ -3240,12 +3248,18 @@ static void flush_houseK(Patch_T *const patch)
 
 /* displace the center point along the normal and find where the new
 // point takes place to find the adjacent patch and adjacent face.
+// also it finds innerB and outerB and set their flags.
 // this function has many assumptions which is only for 
 // split cubed spherical. */
-static void find_subfaces_scs(Patch_T *const patch,unsigned *const point_flag)
+static void 
+find_adjacent_scs
+  (
+  Grid_T *const grid,
+  Patch_T *const patch,
+  unsigned *const point_flag
+  )
 {
   Interface_T **const interface = patch->interface;
-  Grid_T *const grid = patch->grid;
   const double idealN1N2 = -1;
   double q[3] = {0};/* q = x+eps*N */
   double eps,N1dotN2;
@@ -3404,15 +3418,31 @@ static void find_subfaces_scs(Patch_T *const patch,unsigned *const point_flag)
             adjind = find_node(pnt_x,center_adjpatch,&iscp);
             if (iscp == FOUND)
             {
+              unsigned adjp = pnt[p]->adjPatch;
+              unsigned adjf = pnt[p]->adjFace;
+              unsigned nadjp = grid->patch[adjp]->interface[adjf]->np;
+              Point_T **adjpnt = 
+                grid->patch[adjp]->interface[adjf]->point;
+              unsigned ip;
+              
               pnt[p]->copy = 1;
-              pnt[p]->AdjPntInd = adjind;
+              pnt[p]->adjInd = adjind;
+              /* find index of adjacent point on face. */
+              for (ip = 0; ip < nadjp; ++ip)
+              {
+                 if (adjpnt[ip]->ind == adjind)
+                 {
+                   pnt[p]->adjIndF = ip;
+                   break;
+                 }
+              }
             }
             else
             {
               /* if this is a interpolation => copy = 0*/
               set_sameXYZ(pnt[p],center_adjface);
+              //add_to_subface_scs(pnt[p]);
             }
-            add_to_subface_scs(pnt[p]);
           }
           /* it means not all points on this surface are on a same
           // adjacent patch, for example ,filling_box reaches few patches.
@@ -3517,22 +3547,38 @@ static void find_subfaces_scs(Patch_T *const patch,unsigned *const point_flag)
             if (X_of_x(adjX,pnt_x,pnt_adjpatch))
             {
               pnt[p]->touch    = 1;
-              pnt[p]->adjPatch = pnt_adjpatch->pn;
-              pnt[p]->adjFace  = pnt_adjface;
-            
+              pnt[p]->adjPatch = center_adjpatch->pn;
+              pnt[p]->adjFace  = center_adjface;
+              
               /* if this is a copy? */
-              adjind = find_node(pnt_x,pnt_adjpatch,&iscp);
+              adjind = find_node(pnt_x,center_adjpatch,&iscp);
               if (iscp == FOUND)
               {
+                unsigned adjp = pnt[p]->adjPatch;
+                unsigned adjf = pnt[p]->adjFace;
+                unsigned nadjp = grid->patch[adjp]->interface[adjf]->np;
+                Point_T **adjpnt = 
+                  grid->patch[adjp]->interface[adjf]->point;
+                unsigned ip;
+                
                 pnt[p]->copy = 1;
-                pnt[p]->AdjPntInd = adjind;
+                pnt[p]->adjInd = adjind;
+                /* find index of adjacent point on face. */
+                for (ip = 0; ip < nadjp; ++ip)
+                {
+                   if (adjpnt[ip]->ind == adjind)
+                   {
+                     pnt[p]->adjIndF = ip;
+                     break;
+                   }
+                }
               }
               else
               {
-                /* if this is an interpolation => copy = 0*/
-                set_sameXYZ(pnt[p],pnt_adjface);
+                /* if this is a interpolation => copy = 0*/
+                set_sameXYZ(pnt[p],center_adjface);
+                //add_to_subface_scs(pnt[p]);
               }
-              add_to_subface_scs(pnt[p]);
             }
             else
             {
@@ -3553,11 +3599,16 @@ static void find_subfaces_scs(Patch_T *const patch,unsigned *const point_flag)
             free_needle(needle2);
         
           }
+          /* NOTE: for interpolation and copy points the houseK is not
+          // set. */
           point_flag[pnt[p]->ind] = 1;
+          
         }/* if (!point_flag[pnt[p]->ind]) */
-        else
+        
+        else/* means point_flag[pnt[p]->ind] is set but houseK might no
+            // set, for instance an edge point might set from one side
+            // but not from the other side. */
         {
-          /* might happen point_flag is set but houseK not set. */
           pnt[p]->houseK = 1;
         }
       }/* for (p = 0; p < interface[f]->np; ++p) */
@@ -3566,6 +3617,42 @@ static void find_subfaces_scs(Patch_T *const patch,unsigned *const point_flag)
   }
 }
 
-
+/* having found the adjacent points now set the correspondence
+// subfaces consistently. */
+static void set_subfaces_scs(Grid_T *const grid,Patch_T *const patch)
+{
+  Interface_T **const interface = patch->interface;
+  unsigned f;
+  
+  for (f = 0; f < NFaces; ++f)
+  {
+    unsigned p;
+    for (p = 0; p < interface[f]->np; ++p)
+    {
+      Point_T **const pnt = interface[f]->point;
+      
+      if (!pnt[p]->houseK)
+      {
+        add_to_subface_scs(pnt[p]);
+        if (pnt[p]->copy)/* copy */
+        {
+          unsigned adjf = pnt[p]->adjFace;
+          unsigned adjp = pnt[p]->adjPatch;
+          unsigned adji = pnt[p]->adjIndF;
+          Point_T *adjpnt = 
+            grid->patch[adjp]->interface[adjf]->point[adji];
+          adjpnt->touch = 1;
+          adjpnt->copy  = 1;
+          adjpnt->adjFace  = pnt[p]->face;
+          adjpnt->adjPatch = pnt[p]->patch->pn;
+          adjpnt->adjInd   = pnt[p]->ind;
+          
+          add_to_subface_scs(adjpnt);
+        }
+      }
+    }
+  }
+  
+}
 
 

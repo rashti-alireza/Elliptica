@@ -82,7 +82,8 @@ typedef struct POINT_T
   unsigned face    ;/* the interface in which this point located */
   unsigned adjFace ;/* adjacent face used in interpolation */
   unsigned adjPatch;/* adjacent patch used in interpolation default is UINT_MAX */
-  unsigned AdjPntInd;/* adjacent point index correspond to adjPatch */
+  unsigned adjInd;/* adjacent point index correspond to adjPatch node[adjInd] */
+  unsigned adjIndF;/* adjacent point index correspond to adjFace point[adjIndF] */
   unsigned IsOnEdge:1;/* if on edge 1 otherwise 0 */
   unsigned sameX  : 1;/* 1 if addjacent face is on X = const */
   unsigned sameY  : 1;/* 1 if addjacent face is on Y = const */
