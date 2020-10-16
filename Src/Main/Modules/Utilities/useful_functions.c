@@ -147,14 +147,15 @@ int IsOnFace(const double *const x, const Patch_T *const patch,unsigned *const f
   for (u = 0; u < TOT_FACE; u++)
     f[u] = 0;
   
-  X_of_x(X,x,patch);
-  
   c = 0;
-  for (u = 0; u < TOT_FACE; u++)
+  if(X_of_x(X,x,patch))
   {
-    f[u] = check_interface(X,patch,u);
-    
-    if (f[u] == 1) c++;
+    for (u = 0; u < TOT_FACE; u++)
+    {
+      f[u] = check_interface(X,patch,u);
+      
+      if (f[u] == 1) c++;
+    }
   }
   
   return c;
