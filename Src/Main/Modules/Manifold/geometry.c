@@ -3146,6 +3146,7 @@ find_adjacent_scs
                    break;
                  }
               }
+              assert(pnt[p]->adjIndF != UINT_MAX);
             }
             else
             {
@@ -3172,6 +3173,7 @@ find_adjacent_scs
               needle2 = alloc_needle();
               needle2->grid = grid;
               needle_ex(needle2,patch);
+              needle_ex(needle2,center_adjpatch);
               needle2->x = q;
               point_finder(needle2);
               Nfound2 = needle2->Nans;
@@ -3184,6 +3186,7 @@ find_adjacent_scs
               needle2 = alloc_needle();
               needle2->grid = grid;
               needle_ex(needle2,patch);
+              needle_ex(needle2,center_adjpatch);
               needle2->x = q;
               point_finder(needle2);
               Nfound2 = needle2->Nans;
@@ -3197,6 +3200,7 @@ find_adjacent_scs
                 needle2 = alloc_needle();
                 needle2->grid = grid;
                 needle_ex(needle2,patch);
+                needle_ex(needle2,center_adjpatch);
                 needle2->x = q;
                 point_finder(needle2);
                 Nfound2 = needle2->Nans;
@@ -3228,15 +3232,21 @@ find_adjacent_scs
             min = DBL_MAX;
             for (i = 0; i < Nfound2; ++i)
             {
+              const Patch_T *adjpatch = grid->patch[needle2->ans[i]];
+              unsigned onface[NFaces];
+              unsigned Nonface = IsOnFace(pnt_x,adjpatch,onface);
               unsigned adjfn;
               
               /* find the best adjface */
               for (adjfn = 0; adjfn < NFaces; ++adjfn)
               {
-                const Patch_T *adjpatch = grid->patch[needle2->ans[i]];
+                if (!onface[adjfn])
+                  continue;
+                  
                 N1dotN2 = 
                   dot(3,centerN,adjpatch->interface[adjfn]->centerN);
                 double fabsdif = fabs(N1dotN2-idealN1N2);
+                
                 if (min > fabsdif)
                 {
                   pnt_adjface  = adjfn;
@@ -3255,11 +3265,11 @@ find_adjacent_scs
             if (X_of_x(adjX,pnt_x,pnt_adjpatch))
             {
               pnt[p]->touch    = 1;
-              pnt[p]->adjPatch = center_adjpatch->pn;
-              pnt[p]->adjFace  = center_adjface;
+              pnt[p]->adjPatch = pnt_adjpatch->pn;
+              pnt[p]->adjFace  = pnt_adjface;
               
               /* if this is a copy? */
-              adjind = find_node(pnt_x,center_adjpatch,&iscp);
+              adjind = find_node(pnt_x,pnt_adjpatch,&iscp);
               if (iscp == FOUND)
               {
                 unsigned adjp = pnt[p]->adjPatch;
@@ -3281,11 +3291,14 @@ find_adjacent_scs
                      break;
                    }
                 }
+                
+                /* could not find the point! why? */
+                assert(pnt[p]->adjIndF != UINT_MAX);
               }
               else
               {
                 /* if this is a interpolation => copy = 0*/
-                set_sameXYZ(pnt[p],center_adjface);
+                set_sameXYZ(pnt[p],pnt_adjface);
               }
             }
             else
