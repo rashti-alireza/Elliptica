@@ -3234,10 +3234,10 @@ find_adjacent_scs
             {
               const Patch_T *adjpatch = grid->patch[needle2->ans[i]];
               unsigned onface[NFaces];
-              unsigned Nonface = IsOnFace(pnt_x,adjpatch,onface);
               unsigned adjfn;
               
-              /* find the best adjface */
+              /* find the best adjface if it is on face at all */
+              if(IsOnFace(pnt_x,adjpatch,onface))
               for (adjfn = 0; adjfn < NFaces; ++adjfn)
               {
                 if (!onface[adjfn])
