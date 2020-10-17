@@ -220,9 +220,12 @@ static int solve_field(Solve_Equations_T *const SolveEqs)
         
         char *msg1 = making_B_and_E(patch);
         char *msg2 = making_E_prime_and_f_prime(patch);/* free{B,E} */
-        char *msg3 = making_F_and_C(patch);/* free C and save C_ccs */
+        char *msg3 = making_F_and_C(patch);
         char *msg4 = making_F_by_f_prime(patch);
         char *msg5 = making_F_by_E_prime(patch);/* free {F} */
+        char *msg6 = making_sub_S_matrix(patch);/* free C and 
+                                                // F_by_E_prime_reg
+                                                // and save subS */
         
         sprintf(msg,"{ %s ...\n\n"
                     "%s\n"
@@ -230,9 +233,10 @@ static int solve_field(Solve_Equations_T *const SolveEqs)
                     "%s\n"
                     "%s\n"
                     "%s\n"
+                    "%s\n"
                     "} %s --> Done. ( Wall-Clock = %.0fs )\n",
                 patch->name,
-                msg1,msg2,msg3,msg4,msg5,
+                msg1,msg2,msg3,msg4,msg5,msg6,
                 patch->name,
                 get_time_sec()-tic);
                 
@@ -244,6 +248,7 @@ static int solve_field(Solve_Equations_T *const SolveEqs)
         free(msg3);
         free(msg4);
         free(msg5);
+        free(msg6);
         free(msg);
       }
       
@@ -258,7 +263,7 @@ static int solve_field(Solve_Equations_T *const SolveEqs)
       /* compute S */
       printf("{ Compute S ...\n");
       time_temp = get_time_sec();
-      S = compute_S(grid);/* free {C_ccs,FE'} */
+      S = compute_S(grid);/* free {subS} */
       printf("} Compute S --> Done. ( Wall-Clock = %.0fs )\n\n",get_time_sec()-time_temp);
       fflush(stdout);
       
@@ -510,6 +515,94 @@ static Matrix_T *compute_S(Grid_T *const grid)
   
 }
 
+/* ->: some info.
+// having FE' and C compute S = C - FE' which is Schur->subS. */
+static char *making_sub_S_matrix(Patch_T *const patch)
+{
+  const double time1 = get_time_sec();
+  DDM_Schur_Complement_T *const Schur = 
+              patch->solving_man->method->SchurC;
+  const unsigned Np          = Schur->np;
+  const unsigned *const NI_p = Schur->NI_p;
+  const unsigned NI          = Schur->NI;
+  const unsigned NI_total    = Schur->NI_total;
+  Matrix_T **const FxE = Schur->F_by_E_prime_reg;
+  Matrix_T **const C   = Schur->C;
+  Matrix_T **stack     = calloc(Np,sizeof(*stack)); IsNull(stack);
+  double **a,**b,**c;
+  long a_row,a_col,b_row,b_col;
+  long row,col;
+  unsigned p;  
+  char *msg = calloc(1000,1);
+  IsNull(msg);
+  
+  for (p = 0; p < Np; ++p)
+  {
+    if (FxE[p]&&C[p])/* if both FE' and C are none empty */
+    {
+      a_row = FxE[p]->row;
+      a_col = FxE[p]->col;
+      b_row = C[p]->row;
+      b_col = C[p]->col;
+      /* some checks */
+      assert(a_row == b_row);
+      assert(a_col == b_col);
+      assert(FxE[p]->reg_f && C[p]->reg_f);
+      
+      stack[p] = alloc_matrix(REG_SF,a_row,a_col);
+      a = FxE[p]->reg->A;
+      b = C[p]->reg->A;
+      c = stack[p]->reg->A;
+      
+      for (row = 0; row < a_row; ++row)
+        for (col = 0; col < a_col; ++col)
+          c[row][col] = b[row][col]-a[row][col];
+      
+      free_matrix(C[p]);
+      free_matrix(FxE[p]);
+    }
+    else if (FxE[p])
+    {
+      a_row = FxE[p]->row;
+      a_col = FxE[p]->col;
+      assert(FxE[p]->reg_f);
+      stack[p] = FxE[p];
+      a = FxE[p]->reg->A;
+      c = stack[p]->reg->A;
+      
+      for (row = 0; row < a_row; ++row)
+        for (col = 0; col < a_col; ++col)
+          c[row][col] = -a[row][col];
+      
+      FxE[p] = 0;
+    }
+    else if (C[p])
+    {
+      b_row = C[p]->row;
+      b_col = C[p]->col;
+      assert(C[p]->reg_f);
+      stack[p] = C[p];
+      C[p] = 0;
+    }
+    
+  }
+  
+  Schur->subS = compress_stack2ccs(stack,Np,NI_p,NI_total,NI,YES);
+  
+  /* free */
+  _free(C);
+  _free(FxE);
+  Schur->F_by_E_prime_reg = 0;
+  Schur->C = 0;
+  _free(stack);
+  
+  sprintf(msg,"{ Make subS ...\n"
+              "} Make subS --> Done. ( Wall-Clock = %.0fs )\n",
+              get_time_sec()-time1);
+  
+  return msg;
+}
+
 /* allocate and compute S ccs long format storage
 // note: it frees C_ccs's and F_by_E_primes.
 // ->return value: S matrix. */
@@ -520,25 +613,11 @@ static Matrix_T *compute_S_CCS_long(Grid_T *const grid)
                   grid->patch[0]->solving_man->method->SchurC->NI_total;
   const unsigned npatch = grid->np;
   Matrix_T *S = alloc_matrix(CCS_L_SF,NI_total,NI_total);
-  Matrix_T **subS;
   long *Ap = 0;
   long *Ai = 0;
   double *Ax = 0;
   long i,j,nnz,R;
   unsigned p;
-  
-  subS = calloc(npatch,sizeof(*subS));
-  IsNull(subS);
-  
-  DDM_SCHUR_COMPLEMENT_OpenMP(omp parallel for)
-  for (p = 0; p < npatch; ++p)
-  {
-    Patch_T *patch = grid->patch[p];
-    DDM_Schur_Complement_T *Schur = patch->solving_man->method->SchurC;
-    subS[p] = CCSOpCCS(Schur->C_ccs,Schur->F_by_E_prime,'-');
-    free_matrix(Schur->C_ccs);
-    free_matrix(Schur->F_by_E_prime);
-  }
   
   /* to be safe we used long format data type */
   Ap = calloc(NI_total+1,sizeof(*Ap));
@@ -546,10 +625,13 @@ static Matrix_T *compute_S_CCS_long(Grid_T *const grid)
   R = nnz = 0;
   for (p = 0; p < npatch; ++p)
   {
-    int *Ap1    = subS[p]->ccs->Ap;
-    int *Ai1    = subS[p]->ccs->Ai;
-    double *Ax1 = subS[p]->ccs->Ax;
-    long Nc1    = subS[p]->col;
+    Patch_T *patch = grid->patch[p];
+    DDM_Schur_Complement_T *Schur = patch->solving_man->method->SchurC;
+    Matrix_T *subS = Schur->subS;
+    int *Ap1    = subS->ccs->Ap;
+    int *Ai1    = subS->ccs->Ai;
+    double *Ax1 = subS->ccs->Ax;
+    long Nc1    = subS->col;
     
     Ai = realloc(Ai,(long unsigned)(Ap[R]+Ap1[Nc1])*sizeof(*Ai));
     IsNull(Ai);
@@ -569,9 +651,8 @@ static Matrix_T *compute_S_CCS_long(Grid_T *const grid)
     nnz  += Ap1[Nc1];
     Ap[R] = nnz;
     
-    free_matrix(subS[p]);
+    free_matrix(subS);
   }
-  free(subS);
   
   S->ccs_long->Ap = Ap;
   S->ccs_long->Ai = Ai;
@@ -590,7 +671,6 @@ static Matrix_T *compute_S_CCS(Grid_T *const grid)
                   grid->patch[0]->solving_man->method->SchurC->NI_total;
   const unsigned npatch = grid->np;
   Matrix_T *S = alloc_matrix(CCS_SF,NI_total,NI_total);
-  Matrix_T **subS;
   int *Ap = 0;
   int *Ai = 0;
   double *Ax = 0;
@@ -598,28 +678,18 @@ static Matrix_T *compute_S_CCS(Grid_T *const grid)
   long i,j,R;
   unsigned p;
   
-  subS = calloc(npatch,sizeof(*subS));
-  IsNull(subS);
-  
-  DDM_SCHUR_COMPLEMENT_OpenMP(omp parallel for)
-  for (p = 0; p < npatch; ++p)
-  {
-    Patch_T *patch = grid->patch[p];
-    DDM_Schur_Complement_T *Schur = patch->solving_man->method->SchurC;
-    subS[p] = CCSOpCCS(Schur->C_ccs,Schur->F_by_E_prime,'-');
-    free_matrix(Schur->C_ccs);
-    free_matrix(Schur->F_by_E_prime);
-  }
-  
   Ap = calloc(NI_total+1,sizeof(*Ap));
   IsNull(Ap);
   R = nnz = 0;
   for (p = 0; p < npatch; ++p)
   {
-    int *Ap1    = subS[p]->ccs->Ap;
-    int *Ai1    = subS[p]->ccs->Ai;
-    double *Ax1 = subS[p]->ccs->Ax;
-    long Nc1    = subS[p]->col;
+    Patch_T *patch = grid->patch[p];
+    DDM_Schur_Complement_T *Schur = patch->solving_man->method->SchurC;
+    Matrix_T *subS = Schur->subS;
+    int *Ap1    = subS->ccs->Ap;
+    int *Ai1    = subS->ccs->Ai;
+    double *Ax1 = subS->ccs->Ax;
+    long Nc1    = subS->col;
     
     Ai = realloc(Ai,(long unsigned)(Ap[R]+Ap1[Nc1])*sizeof(*Ai));
     IsNull(Ai);
@@ -639,9 +709,8 @@ static Matrix_T *compute_S_CCS(Grid_T *const grid)
     nnz  += Ap1[Nc1];
     Ap[R] = nnz;
     
-    free_matrix(subS[p]);
+    free_matrix(subS);
   }
-  free(subS);
   
   S->ccs->Ap = Ap;
   S->ccs->Ai = Ai;
@@ -710,31 +779,28 @@ static char *making_F_by_E_prime(Patch_T *const patch)
   const double time1 = get_time_sec();
   DDM_Schur_Complement_T *const Schur = patch->solving_man->method->SchurC;
   const unsigned np = Schur->np;
-  const unsigned *const NI_p = Schur->NI_p;
-  const unsigned NI = Schur->NI;
-  const unsigned NI_total = Schur->NI_total;
-  Matrix_T **stack = calloc(np,sizeof(*stack));
   const Matrix_T *const E_Trans_prime = Schur->E_Trans_prime;
   Matrix_T *MxM;
   unsigned p;
   char *msg = calloc(1000,1);
   IsNull(msg);
   
+  Schur->F_by_E_prime_reg = calloc(np,sizeof(*Schur->F_by_E_prime_reg));
+  IsNull(Schur->F_by_E_prime_reg);
+  
   for (p = 0; p < np; ++p)
   {
-    Matrix_T *F = Schur->F[p];
+    Matrix_T *F     = Schur->F[p];
+    Matrix_T **FxEprime = Schur->F_by_E_prime_reg;
     
     if (F)
     {
       MxM = matrix_by_matrix(F,E_Trans_prime,"a*transpose(b)");
       free_matrix(F);
-      stack[p] = MxM;
+      FxEprime[p] = MxM;
     }
   }
   free(Schur->F);
-  
-  Schur->F_by_E_prime = compress_stack2ccs(stack,np,NI_p,NI_total,NI,YES);
-  free(stack);
   
   sprintf(msg,"{ Make F*E' ...\n"
               "} Make F*E' --> Done. ( Wall-Clock = %.0fs )\n",
@@ -826,11 +892,6 @@ static char *making_F_and_C(Patch_T *const patch)
       populate_F_and_C(patch,pair);/* filling F and C pertinent to this pair */
     }
   }
-  
-  /* compress all of C matrices in each patch to ccs  */
-  Schur->C_ccs = compress_stack2ccs(Schur->C,np,Schur->NI_p,Schur->NI_total,Schur->NI,YES);
-  free(Schur->C);
-  Schur->C = 0;
   
   sprintf(msg,"{ Populate F and C ...\n"
               "} Populate F and C --> Done. ( Wall-Clock = %.0fs )\n",
