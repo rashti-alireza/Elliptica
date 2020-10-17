@@ -224,7 +224,7 @@ static int solve_field(Solve_Equations_T *const SolveEqs)
         char *msg4 = making_F_by_f_prime(patch);
         char *msg5 = making_F_by_E_prime(patch);/* free {F} */
         char *msg6 = making_sub_S_matrix(patch);/* free C and 
-                                                // F_by_E_prime_reg
+                                                // F_by_E_prime
                                                 // and save subS */
         
         sprintf(msg,"{ %s ...\n\n"
@@ -503,7 +503,6 @@ static char *solve_Sy_g_prime(Matrix_T *const S,double *const g_prime,Grid_T *co
 }
 
 /* allocate and compute S in either ccs or ccs long format.
-// note: it frees C_ccs's and F_by_E_primes.
 // ->return value: S matrix. */
 static Matrix_T *compute_S(Grid_T *const grid)
 {
@@ -526,7 +525,7 @@ static char *making_sub_S_matrix(Patch_T *const patch)
   const unsigned *const NI_p = Schur->NI_p;
   const unsigned NI          = Schur->NI;
   const unsigned NI_total    = Schur->NI_total;
-  Matrix_T **const FxE = Schur->F_by_E_prime_reg;
+  Matrix_T **const FxE = Schur->F_by_E_prime;
   Matrix_T **const C   = Schur->C;
   Matrix_T **stack     = calloc(Np,sizeof(*stack)); IsNull(stack);
   double **a,**b,**c;
@@ -592,7 +591,7 @@ static char *making_sub_S_matrix(Patch_T *const patch)
   /* free */
   _free(C);
   _free(FxE);
-  Schur->F_by_E_prime_reg = 0;
+  Schur->F_by_E_prime = 0;
   Schur->C = 0;
   _free(stack);
   
@@ -604,7 +603,6 @@ static char *making_sub_S_matrix(Patch_T *const patch)
 }
 
 /* allocate and compute S ccs long format storage
-// note: it frees C_ccs's and F_by_E_primes.
 // ->return value: S matrix. */
 static Matrix_T *compute_S_CCS_long(Grid_T *const grid)
 {
@@ -662,7 +660,6 @@ static Matrix_T *compute_S_CCS_long(Grid_T *const grid)
 }
 
 /* allocate and compute S ccs format storage
-// note: it frees C_ccs's and F_by_E_primes.
 // ->return value: S matrix. */
 static Matrix_T *compute_S_CCS(Grid_T *const grid)
 {
@@ -785,13 +782,13 @@ static char *making_F_by_E_prime(Patch_T *const patch)
   char *msg = calloc(1000,1);
   IsNull(msg);
   
-  Schur->F_by_E_prime_reg = calloc(np,sizeof(*Schur->F_by_E_prime_reg));
-  IsNull(Schur->F_by_E_prime_reg);
+  Schur->F_by_E_prime = calloc(np,sizeof(*Schur->F_by_E_prime));
+  IsNull(Schur->F_by_E_prime);
   
   for (p = 0; p < np; ++p)
   {
     Matrix_T *F     = Schur->F[p];
-    Matrix_T **FxEprime = Schur->F_by_E_prime_reg;
+    Matrix_T **FxEprime = Schur->F_by_E_prime;
     
     if (F)
     {
