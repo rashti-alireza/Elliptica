@@ -90,8 +90,8 @@ static void ri_split_cubed_spherical(Grid_T *const grid)
     check_houseK(grid->patch[p]);
   }
   
-  /* set df_dn flags */
-  set_df_dn_and_pair(grid);
+  /* set df_dn flags and pair subfaces. */
+  pair_subfaces_and_set_bc(grid);
   
   /* taking some precaution and adding more info at your whim */
   misc(grid);
@@ -3382,6 +3382,126 @@ static void set_subfaces_scs(Grid_T *const grid,Patch_T *const patch)
     }
   }
   
+}
+
+/* pairing subfaces and setting BC Drichlet or Neumann BC consistently */
+static void pair_subfaces_and_set_bc(Grid_T *const grid)
+{
+  /* struct for ranking of faces to more Nof the higher rank */
+  struct face_rank_S
+  {
+    unsigned pn;/* patch number */
+    unsigned fn;/* face number */
+    unsigned Nof;/* number of other faces */
+  };
+  
+  const unsigned Nfrank = grid->np*NFaces;
+  /* face rank */
+  struct face_rank_S *frank = calloc(Nfrank,sizeof(*frank));IsNull(frank);
+  unsigned nfr = 0;
+  Interface_T **faces = 0;
+  //Interface_T *face   = 0;
+  SubFace_T *ssubf = 0;
+  SubFace_T *osubf = 0;
+  unsigned p,f,sf,i,j;
+  
+  /* pair all of the subfaces and count number of adjacent faces. */
+  nfr = 0;
+  FOR_ALL_PATCHES(p,grid)
+  {
+    faces = grid->patch[p]->interface;
+    
+    FOR_ALL(f,faces)
+    {
+      frank[nfr].pn = grid->patch[p]->pn;
+      frank[nfr].fn = f;
+      frank[nfr].Nof = counter_n_adjacent_faces(faces[f]);
+      nfr++;
+      
+      for (sf = 0; sf < faces[f]->ns; ++sf)
+      {
+        ssubf = faces[f]->subface[sf];
+        
+        if (!ssubf->touch)
+          continue;
+        
+        osubf = find_subface(ssubf);/* juxtapose subface */
+        ssubf->adjsn = osubf->sn;
+      }
+    }
+  }
+  assert(nfr == Nfrank);
+  
+  /* rank faces */
+  for (i = 0; i < Nfrank; ++i)
+  {
+    for (j = i+1; j < Nfrank; ++j)
+    {
+      /* swap */
+      if (frank[j].Nof > frank[i].Nof)
+      {
+        struct face_rank_S temp;
+        temp     = frank[j];
+        frank[j] = frank[i];
+        frank[i] = temp;
+      }
+    }
+  }
+  
+  /* set BC for the ones with the largest number of neighbors */
+  
+  /* make sure all have on Drichlet */
+  
+  /* set the rest of flags consistently */
+  
+  /* free */
+  _free(frank);
+}
+
+/* count the number of adjacent faces the give face has */
+static unsigned counter_n_adjacent_faces(const Interface_T *const face)
+{
+  unsigned count = 0;
+  unsigned *pn = 0,*fn = 0;/* adjacent patch and face number */
+  unsigned sf;
+  
+  for (sf = 0; sf < face->ns; ++sf)
+  {
+    const SubFace_T *subf = face->subface[sf];
+    
+    if (!subf->touch)
+      continue;
+    
+    /* check repetition */
+    Flag_T rep = NO;
+    unsigned r;
+    for (r = 0; r < count; ++r)
+    {
+      if (pn[r] == subf->adjPatch && fn[r] == subf->adjFace)
+      {
+        rep = YES;
+        break;
+      }
+    }
+    if (rep == YES)
+      continue;
+    
+    /* no repetition => add them */
+    pn = realloc(pn,(count+1)*sizeof(*pn)); 
+    IsNull(pn);
+    fn = realloc(fn,(count+1)*sizeof(*fn)); 
+    IsNull(fn);
+    
+    pn[count] = subf->adjPatch;
+    fn[count] = subf->adjFace;
+    
+    count++;
+  }
+  
+  _free(pn);
+  _free(fn); 
+  
+  return count;   
 }
 
 

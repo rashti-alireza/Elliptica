@@ -157,4 +157,6 @@ find_adjacent_scs
   unsigned *const point_flag
   );
 
+static void pair_subfaces_and_set_bc(Grid_T *const grid);
+static unsigned counter_n_adjacent_faces(const Interface_T *const face);
 
