@@ -122,7 +122,7 @@ int direct_solver_umfpack_dl(void *vp)
             "o.  Solver Wall-Clock = %g(s)\n",
              row,col,
              1/Info[UMFPACK_RCOND],
-             (1-Info[UMFPACK_NZ]/(row*col))*100.,
+             (1-(double)Ap[col]/((double)row*col))*100.,
              (int)Control[UMFPACK_IRSTEP],
              Info[UMFPACK_PEAK_MEMORY]*Info[UMFPACK_SIZE_OF_UNIT]/Gb,
              Info[UMFPACK_FLOPS],
