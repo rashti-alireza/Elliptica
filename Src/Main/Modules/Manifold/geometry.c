@@ -3399,10 +3399,17 @@ static void pair_subfaces_and_set_bc(Grid_T *const grid)
   /* face rank */
   struct face_rank_S *frank = calloc(Nfrank,sizeof(*frank));IsNull(frank);
   unsigned nfr = 0;
-  Interface_T **faces = 0;
-  //Interface_T *face   = 0;
+  /* if this patch has Drichlet 1 otherwise 0 */
+  unsigned *isD = calloc(grid->np,sizeof(*isD));IsNull(isD);
+  /* notation: o prefix letter means other */
+  Interface_T **faces;
+  Interface_T *face;
+  Interface_T *oface;
+  Patch_T *patch;
+  Patch_T *opatch;
   SubFace_T *ssubf = 0;
   SubFace_T *osubf = 0;
+  unsigned bc;/* 0 = Dirichlet, 1 = Neumann */
   unsigned p,f,sf,i,j;
   
   /* pair all of the subfaces and count number of adjacent faces. */
@@ -3448,14 +3455,54 @@ static void pair_subfaces_and_set_bc(Grid_T *const grid)
     }
   }
   
-  /* set BC for the ones with the largest number of neighbors */
+  /* set BC for the ones with the largest number of neighbors.
+  // start with Dirichlet since derivative might be not very accurate
+  // in outermost which generally have the highest rank */
+  for (i = 0; i < Nfrank; ++i)
+  {
+    patch = grid->patch[frank[i].pn];
+    face  = patch->interface[frank[i].fn];
+    
+    if (face->df_dn_set) continue;
+    
+    bc = 0;
+    /* if it has already Dirichlet */
+    if (isD[patch->pn])
+    {
+      bc = 1;
+    }
+      
+    face->df_dn = bc%2;
+    face->df_dn_set = 1;
+    
+    if (!face->df_dn) isD[patch->pn] = 1;
+    
+    for (sf = 0; sf < face->ns; ++sf)
+    {
+      ssubf = face->subface[sf];
+      if (!ssubf->touch) continue;
+      
+      opatch = grid->patch[ssubf->adjPatch];
+      oface  = opatch->interface[ssubf->adjFace];
+      
+      if(oface->df_dn_set && oface->df_dn != (bc+1)%2)
+        Error0("Wrong BC arrangement!");
+      
+      oface->df_dn = (bc+1)%2;
+      oface->df_dn_set = 1;
+      
+      if (!oface->df_dn) isD[opatch->pn] = 1;
+    }
+      
+  }
+  /* set the subface flags correspondingly */
   
-  /* make sure all have on Drichlet */
-  
-  /* set the rest of flags consistently */
   
   /* free */
   _free(frank);
+  _free(isD);
+  
+  exit(0);
 }
 
 /* count the number of adjacent faces the give face has */
