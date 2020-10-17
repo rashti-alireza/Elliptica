@@ -3410,6 +3410,7 @@ static void pair_subfaces_and_set_bc(Grid_T *const grid)
   SubFace_T *ssubf = 0;
   SubFace_T *osubf = 0;
   unsigned bc;/* 0 = Dirichlet, 1 = Neumann */
+  char sflgs[999] = {'\0'};
   unsigned p,f,sf,i,j;
   
   /* pair all of the subfaces and count number of adjacent faces. */
@@ -3496,13 +3497,31 @@ static void pair_subfaces_and_set_bc(Grid_T *const grid)
       
   }
   /* set the subface flags correspondingly */
-  
+  FOR_ALL_PATCHES(p,grid)
+  {
+    faces = grid->patch[p]->interface;
+    
+    FOR_ALL(f,faces)
+    {
+      for (sf = 0; sf < faces[f]->ns; ++sf)
+      {
+        ssubf = faces[f]->subface[sf];
+        
+        if (!ssubf->touch)
+          continue;
+        
+        assert(faces[f]->df_dn_set);
+        ssubf->df_dn = faces[f]->df_dn;
+        sprintf(sflgs,"%s,Dn:%u",ssubf->flags_str,ssubf->df_dn);
+        _free(ssubf->flags_str);
+        ssubf->flags_str = dup_s(sflgs);
+      }
+    }
+  }
   
   /* free */
   _free(frank);
   _free(isD);
-  
-  exit(0);
 }
 
 /* count the number of adjacent faces the give face has */
