@@ -83,7 +83,7 @@ int direct_solver_umfpack_dl(void *vp)
   double Info[UMFPACK_INFO];
   long status;
   double time1 = get_time_sec();
-  const double gb = 1E6;
+  const double gbunit = Info[UMFPACK_SIZE_OF_UNIT]/1.0E6;
   
   if (!umf->a->ccs_l_f)
     Error0("The matrix a in a.x = b in umfpack must be in CCS long format.\n");
@@ -119,13 +119,13 @@ int direct_solver_umfpack_dl(void *vp)
             "o.  Number of Flops   = %g\n"
             "o.  Number of Realloc = %g\n"
             "o.  Solver Wall-Clock = %g(s)\n",
-                                            row,col,
-                                            1/Info[UMFPACK_RCOND],
-                                            (int)Control[UMFPACK_IRSTEP],
-                                            Info[UMFPACK_PEAK_MEMORY]/gb,
-                                            Info[UMFPACK_FLOPS],
-                                            Info[UMFPACK_NUMERIC_REALLOC],
-                                            get_time_sec()-time1);
+                                     row,col,
+                                     1/Info[UMFPACK_RCOND],
+                                     (int)Control[UMFPACK_IRSTEP],
+                                     Info[UMFPACK_PEAK_MEMORY]*gbunit,
+                                     Info[UMFPACK_FLOPS],
+                                     Info[UMFPACK_NUMERIC_REALLOC],
+                                     get_time_sec()-time1);
 
   return EXIT_SUCCESS;
 }
