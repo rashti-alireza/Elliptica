@@ -169,8 +169,9 @@ static void ri_general_method(Grid_T *const grid)
   free_points(grid);
   
   /* set df_dn flags */
-  set_df_dn_and_pair(grid);
-  
+  if(0) set_df_dn_and_pair(grid);/* deprecated */
+  else  pair_subfaces_and_set_bc(grid);
+
   /* taking some precaution and adding more info at your whim */
   misc(grid);
   
