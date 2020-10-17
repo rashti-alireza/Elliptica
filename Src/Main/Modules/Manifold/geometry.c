@@ -345,7 +345,7 @@ static void set_df_dn_and_pair(Grid_T *const grid)
   unsigned pa,f;
   
   /* one can add a function here if needs specific arrangement of df_dn */
-  
+
   /* go thru all patches and set one Dirichlet BC for each */
   FOR_ALL_PATCHES(pa,grid)
   {
@@ -540,7 +540,7 @@ static void set_df_dn(Subf_T *const ring,const unsigned df_dn)
   Subf_T *prev = 0;
   const unsigned AS = strlen(",Dn:?")+1;/* size of attached */
   char tail[10];
-  unsigned f,ss;
+  unsigned f,sl;
   
   f = df_dn;
   for (next = ring; next; next = next->next)
@@ -548,17 +548,24 @@ static void set_df_dn(Subf_T *const ring,const unsigned df_dn)
     if (next->set == 1)
     { 
       if (next->subf->df_dn != f%2)
-        Error0("Wrong df_dn flags was found.");
+      {
+        char msg[999] = {'\0'};
+        sprintf(msg,
+          "(%s, %s) <- patch\n(%s, %s) <- adjacent\nflags:\n%s\n%s\n",
+        next->prev->subf->patch->name,FaceName[next->prev->subf->face],
+        next->subf->patch->name,FaceName[next->subf->face],
+        next->prev->subf->flags_str,next->subf->flags_str);
+        Error1("Wrong df_dn flags was found!\n%s\n",msg);
+      }
       else
       {
         ++f;
         continue;
       }
     }
-      
     next->subf->df_dn = f%2;
-    ss = (unsigned) strlen(next->subf->flags_str)+AS;
-    next->subf->flags_str = realloc(next->subf->flags_str,ss);
+    sl = (unsigned) strlen(next->subf->flags_str)+AS;
+    next->subf->flags_str = realloc(next->subf->flags_str,sl);
     IsNull(next->subf->flags_str);
     sprintf(tail,",Dn:%u",f%2);
     strcat(next->subf->flags_str,tail);
@@ -581,8 +588,8 @@ static void set_df_dn(Subf_T *const ring,const unsigned df_dn)
     }
     
     prev->subf->df_dn = f%2;
-    ss = (unsigned) strlen(prev->subf->flags_str)+AS;
-    prev->subf->flags_str = realloc(prev->subf->flags_str,ss);
+    sl = (unsigned) strlen(prev->subf->flags_str)+AS;
+    prev->subf->flags_str = realloc(prev->subf->flags_str,sl);
     IsNull(prev->subf->flags_str);
     sprintf(tail,",Dn:%u",f%2);
     strcat(prev->subf->flags_str,tail);
