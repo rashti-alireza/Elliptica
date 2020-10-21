@@ -49,7 +49,6 @@ def plot(regex,data_path):
   
   SetWindowLayout(1)
   
-  # half of the patches
   SetActiveWindow(1)
   for i in range(0,n):
     OpenDatabase(files_name[i], 0)
@@ -507,6 +506,8 @@ def plot(regex,data_path):
       MeshAtts.pointSizePixels = 2
       MeshAtts.opacity = 1
       SetPlotOptions(MeshAtts)
+  # saving the session
+  SaveSession("{}/visit_plot_mesh{}.session".format(data_path,os.getpid()))
 
   
 ##} plot
