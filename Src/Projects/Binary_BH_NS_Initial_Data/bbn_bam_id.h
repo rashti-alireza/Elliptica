@@ -58,6 +58,8 @@ struct interpolation_points
   double *X,*Y,*Z;/* (X,Y,Z) coords */
   unsigned *patchn;/* patch number for each coord */
   unsigned npoints;/* number of coords */
+  unsigned **f_index;/* field index for each patch and for each field
+                     // ex: f_index[p][f] = for patch p and field f. */
 };
 
 void bbn_bam_export_id(void);

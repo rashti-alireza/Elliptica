@@ -85,6 +85,7 @@ static void interpolate_and_write(Grid_T *const grid,struct interpolation_points
   char msg[STR_LEN_MAX];
   char *const p_msg = msg;/* to avoid GCC warning for FWriteP_bin */
   double *interp_v = 0;
+  unsigned count_f;
   unsigned p,f;
     
   /* populating pnt->(X,Y,Z) and pnt->patchn */
@@ -174,6 +175,31 @@ static void interpolate_and_write(Grid_T *const grid,struct interpolation_points
     }
   }
   
+  /* set f_index, note: it must be set right before interpolation
+  // to make sure all fields are added already. */
+  pnt->f_index = calloc(grid->np,sizeof(*pnt->f_index)); 
+  IsNull(pnt->f_index);
+  /* count f */
+  count_f = 0;
+  while(fields_name[count_f])
+    ++count_f;
+  
+  for (p = 0; p < grid->np; ++p)
+  {
+    Patch_T *patch  = grid->patch[p];
+    assert(patch->pn == p);
+    
+    pnt->f_index[p] = calloc(count_f,sizeof(*pnt->f_index[p]));
+    IsNull(pnt->f_index[p]);
+    
+    f = 0;
+    while(fields_name[f])
+    {
+      pnt->f_index[p][f] = Ind(fields_name[f]);
+      ++f;
+    }
+  }
+  
   /* open fields_file and start interpolating and writing */
   file = Fopen(fields_file_path,"wb");
   fprintf(file,"# this file contains values of %s\n",bam_fields_name);
@@ -194,7 +220,7 @@ static void interpolate_and_write(Grid_T *const grid,struct interpolation_points
     {
       Patch_T *patch  = grid->patch[pnt->patchn[p]];
       Interpolation_T *interp_s = init_interpolation();
-      interp_s->field = patch->pool[Ind(fields_name[f])];
+      interp_s->field = patch->pool[pnt->f_index[patch->pn][f]];
       interp_s->XYZ_dir_flag = 1;
       interp_s->X = pnt->X[p];
       interp_s->Y = pnt->Y[p];
@@ -266,6 +292,8 @@ static void interpolate_and_write(Grid_T *const grid,struct interpolation_points
   _free(interp_v);
   free_2d(fields_name);
   free_2d(bam_fields);
+  free_2d_mem(pnt->f_index,grid->np);
+  pnt->f_index = 0;
 }
 
 /* load grid from the checkpoint file */
@@ -451,6 +479,7 @@ bam_output_doctest
   char fname[1000] = {'\0'};
   double *interp_v = 0;
   FILE *file;
+  unsigned count_f;
   unsigned i,p,f;
   
   printf("|--> bam doctest ...\n");
@@ -552,6 +581,32 @@ bam_output_doctest
       fn++;
     }
   }
+  
+  /* set f_index, note: it must be set right before interpolation
+  // to make sure all fields are added already. */
+  pnt->f_index = calloc(grid->np,sizeof(*pnt->f_index)); 
+  IsNull(pnt->f_index);
+  /* count f */
+  count_f = 0;
+  while(fields_name[count_f])
+    ++count_f;
+  
+  for (p = 0; p < grid->np; ++p)
+  {
+    Patch_T *patch  = grid->patch[p];
+    assert(patch->pn == p);
+    
+    pnt->f_index[p] = calloc(count_f,sizeof(*pnt->f_index[p]));
+    IsNull(pnt->f_index[p]);
+    
+    f = 0;
+    while(fields_name[f])
+    {
+      pnt->f_index[p][f] = Ind(fields_name[f]);
+      ++f;
+    }
+  }
+  
     
   interp_v = alloc_double(npoints);
   f = 0;
@@ -563,7 +618,7 @@ bam_output_doctest
     {
       Patch_T *patch  = grid->patch[pnt->patchn[p]];
       Interpolation_T *interp_s = init_interpolation();
-      interp_s->field = patch->pool[Ind(fields_name[f])];
+      interp_s->field = patch->pool[pnt->f_index[patch->pn][f]];
       interp_s->XYZ_dir_flag = 1;
       interp_s->X = pnt->X[p];
       interp_s->Y = pnt->Y[p];
@@ -695,6 +750,8 @@ bam_output_doctest
   }/* if(?) */
   
   bbn_print_fields(grid,0,".");
+  free_2d_mem(pnt->f_index,grid->np);
+  pnt->f_index = 0;
 }
 
 
