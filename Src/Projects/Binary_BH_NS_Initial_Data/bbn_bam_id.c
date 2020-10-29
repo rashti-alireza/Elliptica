@@ -471,9 +471,9 @@ bam_output_doctest
   const int Smoother     = 0;/* 0: no smoother, 1: use smoother. */
   const double rfill     = Pgetd("r_excision");
   const double rmin      = rfill/2.;
-  const double Ly        = 100;/* length of y-axis */
+  const double Ly        = 120;/* length of y-axis */
   const double y0        = -Ly/2; /* initial y */
-  const unsigned npoints = 2000;
+  const unsigned npoints = 2500;
   const double x0        = 0;/* x-axis */
   const double step      = Ly/npoints;
   char fname[1000] = {'\0'};
