@@ -473,10 +473,12 @@ static int bhf_ChebTn_Ylm(struct BHFiller_S *const bhf)
   const unsigned lmax   = bhf->lmax;
   const unsigned Ntheta = bhf->Ntheta;
   const unsigned Nphi   = bhf->Nphi;
-  const double gMAX  = 1;
+  const double gMAX_D0  = 1;
+  const double gMAX_D1  = 4;
+  const double gMAX_D2  = 1;
   const double rfill = Pgetd("r_excision");
   const double rfill3= pow(rfill,3);
-  const double rmin  = rfill/2.;
+  const double rmin  = rfill/5.;
   unsigned p,fld;
   
   /* update all coeffs to avoid race condition */
@@ -657,9 +659,9 @@ static int bhf_ChebTn_Ylm(struct BHFiller_S *const bhf)
         r = rfill;
       double w = bbn_bhf_smoother(r,rfill,rmin);
       
-      _gamma_D0D0[ijk] = w*_gamma_D0D0[ijk]+(1-w)*gMAX;
-      _gamma_D1D1[ijk] = w*_gamma_D1D1[ijk]+(1-w)*gMAX;
-      _gamma_D2D2[ijk] = w*_gamma_D2D2[ijk]+(1-w)*gMAX;
+      _gamma_D0D0[ijk] = w*_gamma_D0D0[ijk]+(1-w)*gMAX_D0;
+      _gamma_D1D1[ijk] = w*_gamma_D1D1[ijk]+(1-w)*gMAX_D1;
+      _gamma_D2D2[ijk] = w*_gamma_D2D2[ijk]+(1-w)*gMAX_D2;
       _gamma_D0D1[ijk] = w*_gamma_D0D1[ijk];
       _gamma_D0D2[ijk] = w*_gamma_D0D2[ijk];
       _gamma_D1D2[ijk] = w*_gamma_D1D2[ijk];
@@ -762,7 +764,7 @@ static int bhf_ChebTn_Ylm(struct BHFiller_S *const bhf)
       }/* for (ijk = 0; ijk < nn; ++ijk) */
     }/* for (f = 0; f < nf ++f) */
     
-    /* push trK to 0 to avoid alpha < 0 at the BH center. */
+    /* push trK to 0. */
     if (1)
     {
      WRITE_v(K)
@@ -780,7 +782,7 @@ static int bhf_ChebTn_Ylm(struct BHFiller_S *const bhf)
        K[ijk]   = w*K[ijk];
      }
     }
-    if (1)/* push Beta^i = 0 at the center of BH */
+    if (0)/* push Beta^i = 0 at the center of BH */
     {
      WRITE_v(Beta_U0)
      WRITE_v(Beta_U1)
