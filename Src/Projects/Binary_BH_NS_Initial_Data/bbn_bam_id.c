@@ -472,12 +472,15 @@ bam_output_doctest
     "bam_adm_g_D0D2","bam_adm_g_D1D1",
     "bam_adm_g_D1D2","bam_adm_g_D2D2",
     "bam_bssn_chi","bam_bssn_psi","bam_bssn_K",
-    "bam_bssn_K_D0D0","bam_bssn_K_D0D1",
-    "bam_bssn_K_D0D2","bam_bssn_K_D1D1",
-    "bam_bssn_K_D1D2","bam_bssn_K_D2D2",
+    "bam_bssn_A_D0D0","bam_bssn_A_D0D1",
+    "bam_bssn_A_D0D2","bam_bssn_A_D1D1",
+    "bam_bssn_A_D1D2","bam_bssn_A_D2D2",
     "bam_bssn_g_D0D0","bam_bssn_g_D0D1",
     "bam_bssn_g_D0D2","bam_bssn_g_D1D1",
     "bam_bssn_g_D1D2","bam_bssn_g_D2D2",
+    "bam_bssn_gI_U0U0","bam_bssn_gI_U0U1",
+    "bam_bssn_gI_U0U2","bam_bssn_gI_U1U1",
+    "bam_bssn_gI_U1U2","bam_bssn_gI_U2U2",
     0};
   const int Smoother     = 0;/* 0: no smoother, 1: use smoother. */
   const double rfill     = Pgetd("r_excision");
@@ -591,6 +594,14 @@ bam_output_doctest
       make_coeffs_3d(field);
       fn++;
     }
+  }
+  
+  /* compute bssn fields */
+  OpenMP_Patch_Pragma(omp parallel for)
+  for (p = 0; p < grid->np; ++p)
+  {
+    Patch_T *patch = grid->patch[p];
+    bbn_bam_adm_to_bssn(patch);
   }
   
   /* set f_index, note: it must be set right before interpolation

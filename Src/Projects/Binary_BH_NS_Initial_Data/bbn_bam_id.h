@@ -76,6 +76,9 @@ bam_output_doctest
   struct interpolation_points *const pnt/* where interpolation takes place */
   );
 
+void bbn_bam_adm_to_bssn(Patch_T *const patch);
+
+
 
 
 
