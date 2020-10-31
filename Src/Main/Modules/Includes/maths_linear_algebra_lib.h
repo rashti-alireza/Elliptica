@@ -62,27 +62,27 @@
 // ijk: the point on the patch
 // m: matrix name stem, t: matrix index.
 // ex: m = g and t = D, => MLA_CONC(m,t,1,2) = g_D1D2. */
-#define Determinant_Matrix_3x3_Symmetric_Field(m,t,ijk,det) \
-   Determinant_Matrix_3x3(det,\
+#define Matrix_Determinant_3x3_Symmetric_Field(m,t,ijk) \
+ (Matrix_Determinant_3x3(\
    MLA_CONC(m,t,0,0)[ijk],MLA_CONC(m,t,0,1)[ijk],MLA_CONC(m,t,0,2)[ijk],\
    MLA_CONC(m,t,0,1)[ijk],MLA_CONC(m,t,1,1)[ijk],MLA_CONC(m,t,1,2)[ijk],\
-   MLA_CONC(m,t,0,2)[ijk],MLA_CONC(m,t,1,2)[ijk],MLA_CONC(m,t,2,2)[ijk])
+   MLA_CONC(m,t,0,2)[ijk],MLA_CONC(m,t,1,2)[ijk],MLA_CONC(m,t,2,2)[ijk]))
 
 /* determinant of a 3x3 symmetric matrix for variable
 // answer is put in det.
 // m: matrix name stem, t: matrix index.
 // ex: m = g and t = D, => MLA_CONC(m,t,1,2) = g_D1D2. */
-#define Determinant_Matrix_3x3_Symmetric_Var(m,t,det) \
-   Determinant_Matrix_3x3(det,\
+#define Matrix_Determinant_3x3_Symmetric_Var(m,t) \
+ (Matrix_Determinant_3x3(\
    MLA_CONC(m,t,0,0),MLA_CONC(m,t,0,1),MLA_CONC(m,t,0,2),\
    MLA_CONC(m,t,0,1),MLA_CONC(m,t,1,1),MLA_CONC(m,t,1,2),\
-   MLA_CONC(m,t,0,2),MLA_CONC(m,t,1,2),MLA_CONC(m,t,2,2))
+   MLA_CONC(m,t,0,2),MLA_CONC(m,t,1,2),MLA_CONC(m,t,2,2)))
 
 /* determinant of a general 3x3 matrix with component a?? */
-#define Determinant_Matrix_3x3(det,a00,a01,a02,a10,a11,a12,a20,a21,a22) \
-  det = a00 *a11 *a22  - a00 *a12 *a21  -\
-        a01 *a10 *a22  + a01 *a12 *a20  +\
-        a02 *a10 *a21  - a02 *a11 *a20;
+#define Matrix_Determinant_3x3(a00,a01,a02,a10,a11,a12,a20,a21,a22) \
+    (a00 *a11 *a22  - a00 *a12 *a21  -\
+     a01 *a10 *a22  + a01 *a12 *a20  +\
+     a02 *a10 *a21  - a02 *a11 *a20)
 
 
 /* matrix storage format */
