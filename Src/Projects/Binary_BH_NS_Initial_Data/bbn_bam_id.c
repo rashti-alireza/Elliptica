@@ -455,25 +455,36 @@ bam_output_doctest
   )
 {
   const char *const fields_name[] = {
-    "bam_chi","psi","eta","K",
+    "psi","eta","K",
+    "Beta_U0","Beta_U1","Beta_U2","bam_alpha",
+    "B0_U0","B0_U1","B0_U2",
     "_gamma_D2D2","_gamma_D0D2",
     "_gamma_D0D0","_gamma_D0D1",
     "_gamma_D1D2","_gamma_D1D1",
-    "Beta_U0","Beta_U1","Beta_U2","bam_alpha",
-    "B0_U0","B0_U1","B0_U2",
+    "_gammaI_U2U2","_gammaI_U0U2",
+    "_gammaI_U0U0","_gammaI_U0U1",
+    "_gammaI_U1U2","_gammaI_U1U1",
+    
     "bam_adm_K_D0D0","bam_adm_K_D0D1",
     "bam_adm_K_D0D2","bam_adm_K_D1D1",
     "bam_adm_K_D1D2","bam_adm_K_D2D2",
     "bam_adm_g_D0D0","bam_adm_g_D0D1",
     "bam_adm_g_D0D2","bam_adm_g_D1D1",
     "bam_adm_g_D1D2","bam_adm_g_D2D2",
+    "bam_bssn_chi","bam_bssn_psi","bam_bssn_K",
+    "bam_bssn_K_D0D0","bam_bssn_K_D0D1",
+    "bam_bssn_K_D0D2","bam_bssn_K_D1D1",
+    "bam_bssn_K_D1D2","bam_bssn_K_D2D2",
+    "bam_bssn_g_D0D0","bam_bssn_g_D0D1",
+    "bam_bssn_g_D0D2","bam_bssn_g_D1D1",
+    "bam_bssn_g_D1D2","bam_bssn_g_D2D2",
     0};
   const int Smoother     = 0;/* 0: no smoother, 1: use smoother. */
   const double rfill     = Pgetd("r_excision");
   const double rmin      = rfill/2.;
-  const double Ly        = 120;/* length of y-axis */
+  const double Ly        = 150;/* length of y-axis */
   const double y0        = -Ly/2; /* initial y */
-  const unsigned npoints = 2500;
+  const unsigned npoints = 3000;
   const double x0        = 0;/* x-axis */
   const double step      = Ly/npoints;
   char fname[1000] = {'\0'};
