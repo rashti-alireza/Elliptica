@@ -579,7 +579,7 @@ bam_output_doctest
     free_needle(needle);
   }
   
-  /* set bam fields based on initial data to be usable for bam */
+  /* set bam ADM fields based on initial data to be usable for bam */
   bbn_bam_set_bam_fields(grid);
   
   /* compute bssn fields */
