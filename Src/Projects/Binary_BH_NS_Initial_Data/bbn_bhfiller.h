@@ -3,6 +3,7 @@
 #include "maths_spectral_methods_lib.h"
 #include "maths_special_functions_lib.h"
 #include "maths_equation_solvings_lib.h"
+#include "maths_linear_algebra_lib.h"
 
 /* constants */
 #define MAX_STR  (100)
@@ -21,17 +22,6 @@
 /* math */
 #define Power(a,b) pow(a,b)
 #define Sqrt(a) sqrt(a)
-
-/* _gamma inverse */
-#define COMPUTE_gammaI(a00,a01,a02,a10,a11,a12,a20,a21,a22) \
-  { \
-  _gammaI_U0U0[ijk] = (a11*a22 - a12*a21)/(a00*a11*a22 - a00*a12*a21 - a01*a10*a22 + a01*a12*a20 + a02*a10*a21 - a02*a11*a20); \
-  _gammaI_U0U1[ijk] = (-a01*a22 + a02*a21)/(a00*a11*a22 - a00*a12*a21 - a01*a10*a22 + a01*a12*a20 + a02*a10*a21 - a02*a11*a20); \
-  _gammaI_U0U2[ijk] = (a01*a12 - a02*a11)/(a00*a11*a22 - a00*a12*a21 - a01*a10*a22 + a01*a12*a20 + a02*a10*a21 - a02*a11*a20); \
-  _gammaI_U1U1[ijk] = a00*(a00*a22 - a02*a20)/((a00*a11 - a01*a10)*(a00*a22 - a02*a20) - (a00*a12 - a02*a10)*(a00*a21 - a01*a20)); \
-  _gammaI_U1U2[ijk] =-a00*(a00*a12 - a02*a10)/((a00*a11 - a01*a10)*(a00*a22 - a02*a20) - (a00*a12 - a02*a10)*(a00*a21 - a01*a20)); \
-  _gammaI_U2U2[ijk] = a00*(a00*a11 - a01*a10)/((a00*a11 - a01*a10)*(a00*a22 - a02*a20) - (a00*a12 - a02*a10)*(a00*a21 - a01*a20)); \
-  }
 
 /* all needed items for bhfiller function */
 struct BHFiller_S

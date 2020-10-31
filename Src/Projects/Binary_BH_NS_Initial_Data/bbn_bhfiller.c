@@ -85,7 +85,7 @@ bhf_init
     const double fr0_alpha       = 0.2;
     const double fr0_psi         = 2;
     const double fr0_eta         = fr0_alpha*fr0_psi;
-    const unsigned lmax   = 20;/* L max in Ylm */
+    const unsigned lmax   = 10;/* L max in Ylm */
     const unsigned Ntheta = 2*lmax+1;
     const unsigned Nphi   = 2*lmax+1;
     const unsigned N      = Ntheta*Nphi;
@@ -667,12 +667,10 @@ static int bhf_ChebTn_Ylm(struct BHFiller_S *const bhf)
       _gamma_D1D2[ijk] = w*_gamma_D1D2[ijk];
       
       /* _gammaI =  _gamma inverse */
-      COMPUTE_gammaI(_gamma_D0D0[ijk],_gamma_D0D1[ijk],_gamma_D0D2[ijk],
-                     _gamma_D0D1[ijk],_gamma_D1D1[ijk],_gamma_D1D2[ijk],
-                     _gamma_D0D2[ijk],_gamma_D1D2[ijk],_gamma_D2D2[ijk])
-                     
+      Matrix_Inverse_3x3_Symmetric_Field(_gamma,D,_gammaI,U,ijk);
+      
       /* quick test check _gamma * _gammaI = delta */
-      if (0)
+      if (1)
       {
           double delta_U0D0 = 
         _gammaI_U0U0[ijk]*_gamma_D0D0[ijk] + _gammaI_U0U1[ijk]*
@@ -1206,10 +1204,8 @@ static int bhf_WTGR(struct BHFiller_S *const bhf)
       WTGR_EXTRAPOLATE_gammabar(gamma_D1D1)
       
       /* _gammaI =  _gamma inverse */
-      COMPUTE_gammaI(_gamma_D0D0[ijk],_gamma_D0D1[ijk],_gamma_D0D2[ijk],
-                     _gamma_D0D1[ijk],_gamma_D1D1[ijk],_gamma_D1D2[ijk],
-                     _gamma_D0D2[ijk],_gamma_D1D2[ijk],_gamma_D2D2[ijk])
-                     
+      Matrix_Inverse_3x3_Symmetric_Field(_gamma,D,_gammaI,U,ijk);
+      
       /* quick test check _gamma * _gammaI = delta */
       if (0)
       {
@@ -1706,10 +1702,9 @@ static int bhf_4th_Poly_Ylm(struct BHFiller_S *const bhf)
       B0_U1[ijk] = Beta_U1[ijk]-B1_U1[ijk];
       B0_U2[ijk] = Beta_U2[ijk]-B1_U2[ijk];
       /* _gammaI =  _gamma inverse */
-      COMPUTE_gammaI(_gamma_D0D0[ijk],_gamma_D0D1[ijk],_gamma_D0D2[ijk],
-                     _gamma_D0D1[ijk],_gamma_D1D1[ijk],_gamma_D1D2[ijk],
-                     _gamma_D0D2[ijk],_gamma_D1D2[ijk],_gamma_D2D2[ijk])
-                     
+      /* _gammaI =  _gamma inverse */
+      Matrix_Inverse_3x3_Symmetric_Field(_gamma,D,_gammaI,U,ijk);
+      
       /* quick test check _gamma * _gammaI = delta */
       if (0)
       {
@@ -2208,9 +2203,7 @@ static int bhf_ell_Brown(struct BHFiller_S *const bhf)
       B0_U1[ijk] = Beta_U1[ijk]-B1_U1[ijk];
       B0_U2[ijk] = Beta_U2[ijk]-B1_U2[ijk];
       /* _gammaI =  _gamma inverse */
-      COMPUTE_gammaI(_gamma_D0D0[ijk],_gamma_D0D1[ijk],_gamma_D0D2[ijk],
-                     _gamma_D0D1[ijk],_gamma_D1D1[ijk],_gamma_D1D2[ijk],
-                     _gamma_D0D2[ijk],_gamma_D1D2[ijk],_gamma_D2D2[ijk])
+      Matrix_Inverse_3x3_Symmetric_Field(_gamma,D,_gammaI,U,ijk);
                      
       /* quick test check _gamma * _gammaI = delta */
       if (0)
