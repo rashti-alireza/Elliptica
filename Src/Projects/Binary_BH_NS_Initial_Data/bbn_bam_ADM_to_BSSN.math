@@ -68,7 +68,7 @@ Declare =
   # bam bssn K
   (obj = Field,name = bam_bssn_K, rank = 0, C_macro2);
 
-  # detgb
+  # det adm_g
   (obj = variable,name = detgb, none);
 
 }
@@ -85,13 +85,12 @@ Symm[bam_bssn_A(i,j)  = bam_bssn_A(j,i)];
 ` {`
 
   ## conformal factors:
-  ` double detgb;`
-  ` Determinant_Matrix_3x3_Symmetric_Field(bam_adm_g,D,ijk,detgb);`
+  ` double detgb=Matrix_Determinant_3x3_Symmetric_Field(bam_adm_g,D,ijk);`
   ``
   psi12 = detgb;
-  psi   = psi12**(1/12);
   psim4 = psi12**(-1/3);
-
+  psi   = psi12**(1/12);
+  
   ## basic rescaling:
   bssn_g(-i,-j) = psim4 * bam_adm_g(i,j);
   Symm[bssn_g(i,j) = bssn_g(j,i)];
@@ -99,14 +98,12 @@ Symm[bam_bssn_A(i,j)  = bam_bssn_A(j,i)];
   Symm[Kt(i,j) = Kt(j,i)];
   
   ## inverse bssn metric:
-  ## init variables
-  bssn_gI(i,j) = KD(i,j);
+  bssn_gI(i,j) = KD(i,j);# init variables
   Symm[bssn_gI(i,j) = bssn_gI(j,i)];
-  ## now populate the matrix
   ` Matrix_Inverse_3x3_Symmetric_Var(bssn_g,D,bssn_gI,U);`
 
   ## additional variables:
-  K =  bam_bssn_gI(i,j)*Kt(-i,-j);
+  K =  bssn_gI(i,j)*Kt(-i,-j);
   A(-i,-j)    = bam_adm_K(i,j)-bam_adm_g(i,j)*K/3;
   symm[A(i,j) = A(j,i)];
   bssn_A(-i,-j)    = psim4 *A(i,j);

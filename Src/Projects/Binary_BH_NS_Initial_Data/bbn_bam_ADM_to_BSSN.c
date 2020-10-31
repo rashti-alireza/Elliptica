@@ -53,17 +53,16 @@ void bbn_bam_adm_to_bssn(Patch_T *const patch)
  unsigned ijk;
  for(ijk = 0; ijk < nn; ++ijk)
  {
- double detgb;
- Determinant_Matrix_3x3_Symmetric_Field(bam_adm_g,D,ijk,detgb);
+ double detgb=Matrix_Determinant_3x3_Symmetric_Field(bam_adm_g,D,ijk);
 
   double psi12 = 
 detgb;
 
-  double psi = 
-pow(psi12, 0.083333333333333329);
-
   double psim4 = 
 pow(psi12, -0.33333333333333331);
+
+  double psi = 
+pow(psi12, 0.083333333333333329);
 
   double bssn_g_D0D0 = 
 bam_adm_g_D0D0[ijk]*psim4;
@@ -121,9 +120,9 @@ bam_adm_K_D0D0[ijk]*psim4;
 
  Matrix_Inverse_3x3_Symmetric_Var(bssn_g,D,bssn_gI,U);
  double K = 
-Kt_U0U0*bam_bssn_gI_U0U0[ijk] + 2.0*Kt_U0U1*bam_bssn_gI_U0U1[ijk] +
-2.0*Kt_U0U2*bam_bssn_gI_U0U2[ijk] + Kt_U1U1*bam_bssn_gI_U1U1[ijk] +
-2.0*Kt_U1U2*bam_bssn_gI_U1U2[ijk] + Kt_U2U2*bam_bssn_gI_U2U2[ijk];
+Kt_U0U0*bssn_gI_U0U0 + 2.0*Kt_U0U1*bssn_gI_U0U1 + 2.0*Kt_U0U2*
+bssn_gI_U0U2 + Kt_U1U1*bssn_gI_U1U1 + 2.0*Kt_U1U2*bssn_gI_U1U2 +
+Kt_U2U2*bssn_gI_U2U2;
 
  double A_D1D2 = 
 -1.0/3.0*K*bam_adm_g_D1D2[ijk] + bam_adm_K_D1D2[ijk];
