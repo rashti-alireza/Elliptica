@@ -581,6 +581,14 @@ bam_output_doctest
   /* set bam fields based on initial data to be usable for bam */
   bbn_bam_set_bam_fields(grid);
   
+  /* compute bssn fields */
+  OpenMP_Patch_Pragma(omp parallel for)
+  for (p = 0; p < grid->np; ++p)
+  {
+    Patch_T *patch = grid->patch[p];
+    bbn_bam_adm_to_bssn(patch);
+  }
+    
   /* to avoid race condition between threads write all coeffs */
   OpenMP_Patch_Pragma(omp parallel for)
   for (p = 0; p < grid->np; ++p)
@@ -594,14 +602,6 @@ bam_output_doctest
       make_coeffs_3d(field);
       fn++;
     }
-  }
-  
-  /* compute bssn fields */
-  OpenMP_Patch_Pragma(omp parallel for)
-  for (p = 0; p < grid->np; ++p)
-  {
-    Patch_T *patch = grid->patch[p];
-    bbn_bam_adm_to_bssn(patch);
   }
   
   /* set f_index, note: it must be set right before interpolation
