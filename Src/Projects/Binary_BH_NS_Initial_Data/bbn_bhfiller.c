@@ -670,7 +670,7 @@ static int bhf_ChebTn_Ylm(struct BHFiller_S *const bhf)
       Matrix_Inverse_3x3_Symmetric_Field(_gamma,D,_gammaI,U,ijk);
       
       /* quick test check _gamma * _gammaI = delta */
-      if (1)
+      if (0)
       {
           double delta_U0D0 = 
         _gammaI_U0U0[ijk]*_gamma_D0D0[ijk] + _gammaI_U0U1[ijk]*
