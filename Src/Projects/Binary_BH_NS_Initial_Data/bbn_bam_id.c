@@ -483,6 +483,7 @@ bam_output_doctest
     "bam_bssn_gI_U1U2","bam_bssn_gI_U2U2",
     0};
   const int Smoother     = 0;/* 0: no smoother, 1: use smoother. */
+  const double SmallDet  = 1E-3;
   const double rfill     = Pgetd("r_excision");
   const double rmin      = rfill/2.;
   const double Ly        = 150;/* length of y-axis */
@@ -700,7 +701,7 @@ bam_output_doctest
   }/* while(fields_name[f]) */
   _free(interp_v);
   
-  if (1)/* check det(metric) */
+  if (1)/* check det(ADM metric) */
   {
     const char *const adm_g[] = {
     "bam_adm_g_D0D0","bam_adm_g_D0D1","bam_adm_g_D0D2",
@@ -762,9 +763,80 @@ bam_output_doctest
               gzz*gxy*gxy  - gyy*gxz*gxz -
               gxx*gyz*gyz);
 
-      if(detg <= 0)
+      if(detg <= SmallDet)
       {
-        printf("det(g_ij(%g,%g,%g))=%g\n",
+        printf("det(ADM_g_ij(%g,%g,%g))=%g\n",
+             pnt->x[p], pnt->y[p], pnt->z[p],detg);
+      }
+      free_interpolation(interp_s);
+    }
+  }/* if(?) */
+
+  if (1)/* check det(BSSN metric) */
+  {
+    const char *const bssn_g[] = {
+    "bam_bssn_g_D0D0","bam_bssn_g_D0D1","bam_bssn_g_D0D2",
+    "bam_bssn_g_D1D1","bam_bssn_g_D1D2","bam_bssn_g_D2D2",
+    0
+    };
+    /* to avoid race condition between threads write all coeffs */
+    OpenMP_Patch_Pragma(omp parallel for)
+    for (p = 0; p < grid->np; ++p)
+    {
+      Patch_T *patch = grid->patch[p];
+      unsigned fn = 0;
+      
+      while(bssn_g[fn])
+      {
+        Field_T *field = patch->pool[Ind(bssn_g[fn])];
+        make_coeffs_3d(field);
+        fn++;
+      }
+    }
+    /* interpolating each fields at the all given points */
+    OpenMP_1d_Pragma(omp parallel for)
+    for (p = 0; p < npoints; ++p)
+    {
+      Patch_T *patch  = grid->patch[pnt->patchn[p]];
+      double gxx,gyy,gzz,gxy,gxz,gyz,detg;
+      
+      Interpolation_T *interp_s = init_interpolation();
+      interp_s->XYZ_dir_flag = 1;
+      interp_s->X = pnt->X[p];
+      interp_s->Y = pnt->Y[p];
+      interp_s->Z = pnt->Z[p];
+      
+      interp_s->field = patch->pool[Ind("bam_bssn_g_D0D0")];
+      plan_interpolation(interp_s);
+      gxx = execute_interpolation(interp_s);
+      
+      interp_s->field = patch->pool[Ind("bam_bssn_g_D0D1")];
+      plan_interpolation(interp_s);
+      gxy = execute_interpolation(interp_s);
+      
+      interp_s->field = patch->pool[Ind("bam_bssn_g_D0D2")];
+      plan_interpolation(interp_s);
+      gxz = execute_interpolation(interp_s);
+      
+      interp_s->field = patch->pool[Ind("bam_bssn_g_D1D1")];
+      plan_interpolation(interp_s);
+      gyy = execute_interpolation(interp_s);
+      
+      interp_s->field = patch->pool[Ind("bam_bssn_g_D1D2")];
+      plan_interpolation(interp_s);
+      gyz = execute_interpolation(interp_s);
+      
+      interp_s->field = patch->pool[Ind("bam_bssn_g_D2D2")];
+      plan_interpolation(interp_s);
+      gzz = execute_interpolation(interp_s);
+      
+      detg=(2.*gxy*gxz*gyz + gxx*gyy*gzz -
+              gzz*gxy*gxy  - gyy*gxz*gxz -
+              gxx*gyz*gyz);
+
+      if(detg <= SmallDet)
+      {
+        printf("det(BSSN_g_ij(%g,%g,%g))=%g\n",
              pnt->x[p], pnt->y[p], pnt->z[p],detg);
       }
       free_interpolation(interp_s);
