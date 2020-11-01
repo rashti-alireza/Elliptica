@@ -85,7 +85,7 @@ bhf_init
     const double fr0_alpha       = 0.2;
     const double fr0_psi         = 2;
     const double fr0_eta         = fr0_alpha*fr0_psi;
-    const unsigned lmax   = 10;/* L max in Ylm */
+    const unsigned lmax   = 20;/* L max in Ylm */
     const unsigned Ntheta = 2*lmax+1;
     const unsigned Nphi   = 2*lmax+1;
     const unsigned N      = Ntheta*Nphi;
