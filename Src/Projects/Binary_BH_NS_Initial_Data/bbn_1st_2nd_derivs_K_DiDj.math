@@ -15,8 +15,8 @@ C_macro1 = DECLARE_FIELD(name);
 `#define add_field_and_get_field(name) \`
 ` ADD_FIELD(name); DECLARE_FIELD(name);`
 ``
-`void bbn_1st_2nd_derivatives_Kij(Patch_T *const patch);`
-`void bbn_1st_2nd_derivatives_Kij(Patch_T *const patch)`
+`void bbn_1st_2nd_derivatives_adm_Kij(Patch_T *const patch);`
+`void bbn_1st_2nd_derivatives_adm_Kij(Patch_T *const patch)`
 `{`
 
 ## add to fields on M

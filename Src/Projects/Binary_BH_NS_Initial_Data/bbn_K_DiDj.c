@@ -10,8 +10,8 @@
 #define add_field_and_prep_field(name) \
  if (_Ind(#name) < 0) {ADD_FIELD(name)} REALLOC_v_WRITE_v(name)
 
-void bbn_extrinsic_K_DiDj(Patch_T *const patch);
-void bbn_extrinsic_K_DiDj(Patch_T *const patch)
+void bbn_adm_Kij(Patch_T *const patch);
+void bbn_adm_Kij(Patch_T *const patch)
 {
 
   /* declaring: */
