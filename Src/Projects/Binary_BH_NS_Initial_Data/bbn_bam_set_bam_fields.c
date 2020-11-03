@@ -8,12 +8,13 @@
 
 #define add_field_and_alloc_field(name) ADD_FIELD(name) REALLOC_v_WRITE_v(name)
 
-void bbn_extrinsic_K_DiDj(Patch_T *const patch);
+void bbn_adm_Kij(Patch_T *const patch);
 void bbn_bam_set_bam_fields(Grid_T *const grid);
 void bbn_bam_set_bam_fields(Grid_T *const grid)
 {
   unsigned p;
   const unsigned np = grid->np;
+  const int BH_Kij = PgetiEZ("bbn_bhf_make_adm_Kij");
 
   OpenMP_Patch_Pragma(omp parallel for)
   for (p = 0; p < np; ++p)
@@ -21,7 +22,8 @@ void bbn_bam_set_bam_fields(Grid_T *const grid)
   Patch_T *patch = grid->patch[p];
   unsigned nn    = patch->nn;
   unsigned ijk;
-    bbn_extrinsic_K_DiDj(patch);
+  if (BH_Kij == 1 || !IsItInsideBHPatch(patch))
+    bbn_adm_Kij(patch);
 
 
   /* declaring: */
@@ -29,56 +31,56 @@ void bbn_bam_set_bam_fields(Grid_T *const grid)
   add_field_and_alloc_field(bam_grhd_rho)
   add_field_and_alloc_field(bam_grhd_p)
   add_field_and_alloc_field(bam_grhd_epsl)
-  add_field_and_alloc_field(bam_Beta_U1)
   add_field_and_alloc_field(bam_Beta_U0)
+  add_field_and_alloc_field(bam_Beta_U1)
   add_field_and_alloc_field(bam_Beta_U2)
+  add_field_and_alloc_field(bam_adm_g_D0D0)
   add_field_and_alloc_field(bam_adm_g_D0D1)
   add_field_and_alloc_field(bam_adm_g_D0D2)
-  add_field_and_alloc_field(bam_adm_g_D0D0)
   add_field_and_alloc_field(bam_adm_g_D2D2)
   add_field_and_alloc_field(bam_adm_g_D1D1)
   add_field_and_alloc_field(bam_adm_g_D1D2)
   add_field_and_alloc_field(bam_adm_K_D1D1)
+  add_field_and_alloc_field(bam_adm_K_D2D2)
   add_field_and_alloc_field(bam_adm_K_D0D0)
+  add_field_and_alloc_field(bam_adm_K_D0D1)
   add_field_and_alloc_field(bam_adm_K_D0D2)
   add_field_and_alloc_field(bam_adm_K_D1D2)
-  add_field_and_alloc_field(bam_adm_K_D2D2)
-  add_field_and_alloc_field(bam_adm_K_D0D1)
-  add_field_and_alloc_field(bam_grhd_v_U2)
   add_field_and_alloc_field(bam_grhd_v_U0)
   add_field_and_alloc_field(bam_grhd_v_U1)
+  add_field_and_alloc_field(bam_grhd_v_U2)
   add_field_and_alloc_field(bam_chi)
-  READ_v(K_DiDj_D1D1)
-  READ_v(K_DiDj_D1D2)
   READ_v(K_DiDj_D0D2)
-  READ_v(K_DiDj_D2D2)
   READ_v(K_DiDj_D0D1)
   READ_v(K_DiDj_D0D0)
+  READ_v(K_DiDj_D1D2)
+  READ_v(K_DiDj_D1D1)
+  READ_v(K_DiDj_D2D2)
   READ_v(Beta_U1)
   READ_v(Beta_U0)
   READ_v(Beta_U2)
   READ_v(psi)
   READ_v(eta)
   READ_v(enthalpy)
+  READ_v(W_U1)
   READ_v(W_U0)
   READ_v(W_U2)
-  READ_v(W_U1)
-  READ_v(dphi_D1)
   READ_v(dphi_D2)
+  READ_v(dphi_D1)
   READ_v(dphi_D0)
   READ_v(u0)
-  READ_v(_gamma_D1D1)
-  READ_v(_gamma_D0D1)
-  READ_v(_gamma_D0D0)
-  READ_v(_gamma_D1D2)
   READ_v(_gamma_D2D2)
   READ_v(_gamma_D0D2)
-  READ_v(_gammaI_U1U1)
+  READ_v(_gamma_D0D0)
+  READ_v(_gamma_D0D1)
+  READ_v(_gamma_D1D2)
+  READ_v(_gamma_D1D1)
+  READ_v(_gammaI_U0U2)
   READ_v(_gammaI_U0U0)
   READ_v(_gammaI_U0U1)
-  READ_v(_gammaI_U2U2)
-  READ_v(_gammaI_U0U2)
   READ_v(_gammaI_U1U2)
+  READ_v(_gammaI_U1U1)
+  READ_v(_gammaI_U2U2)
 
 
   for(ijk = 0; ijk < nn; ++ijk)
@@ -90,8 +92,8 @@ pow(psi[ijk], 4);
    bam_Beta_U0[ijk] = Beta_U0[ijk];
    bam_Beta_U1[ijk] = Beta_U1[ijk];
    bam_Beta_U2[ijk] = Beta_U2[ijk];
-   double adm_g_D1D1 = 
-_gamma_D1D1[ijk]*psi4;
+   double adm_g_D0D2 = 
+_gamma_D0D2[ijk]*psi4;
 
    double adm_g_D0D1 = 
 _gamma_D0D1[ijk]*psi4;
@@ -102,46 +104,46 @@ _gamma_D0D0[ijk]*psi4;
    double adm_g_D1D2 = 
 _gamma_D1D2[ijk]*psi4;
 
-   double adm_g_D0D2 = 
-_gamma_D0D2[ijk]*psi4;
+   double adm_g_D1D1 = 
+_gamma_D1D1[ijk]*psi4;
 
    double adm_g_D2D2 = 
 _gamma_D2D2[ijk]*psi4;
 
 
    /* populating: */
+   bam_adm_g_D0D0[ijk] = adm_g_D0D0;
    bam_adm_g_D0D1[ijk] = adm_g_D0D1;
    bam_adm_g_D0D2[ijk] = adm_g_D0D2;
-   bam_adm_g_D0D0[ijk] = adm_g_D0D0;
    bam_adm_g_D2D2[ijk] = adm_g_D2D2;
    bam_adm_g_D1D1[ijk] = adm_g_D1D1;
    bam_adm_g_D1D2[ijk] = adm_g_D1D2;
-   double Kdd_D1D1 = 
-K_DiDj_D1D1[ijk];
+   double Kdd_D0D0 = 
+K_DiDj_D0D0[ijk];
 
    double Kdd_D2D2 = 
 K_DiDj_D2D2[ijk];
 
-   double Kdd_D0D1 = 
-K_DiDj_D0D1[ijk];
+   double Kdd_D0D2 = 
+K_DiDj_D0D2[ijk];
 
    double Kdd_D1D2 = 
 K_DiDj_D1D2[ijk];
 
-   double Kdd_D0D0 = 
-K_DiDj_D0D0[ijk];
+   double Kdd_D1D1 = 
+K_DiDj_D1D1[ijk];
 
-   double Kdd_D0D2 = 
-K_DiDj_D0D2[ijk];
+   double Kdd_D0D1 = 
+K_DiDj_D0D1[ijk];
 
 
    /* populating: */
    bam_adm_K_D1D1[ijk] = Kdd_D1D1;
+   bam_adm_K_D2D2[ijk] = Kdd_D2D2;
    bam_adm_K_D0D0[ijk] = Kdd_D0D0;
+   bam_adm_K_D0D1[ijk] = Kdd_D0D1;
    bam_adm_K_D0D2[ijk] = Kdd_D0D2;
    bam_adm_K_D1D2[ijk] = Kdd_D1D2;
-   bam_adm_K_D2D2[ijk] = Kdd_D2D2;
-   bam_adm_K_D0D1[ijk] = Kdd_D0D1;
    bam_chi[ijk] = 1/psi4;
   }
   if (IsItNSPatch(patch))
@@ -152,9 +154,9 @@ K_DiDj_D0D2[ijk];
   double psim4 = 
 pow(psi[ijk], -4);
 
-  double grhd_v_U2 = 
-(W_U2[ijk] + psim4*(_gammaI_U0U2[ijk]*dphi_D0[ijk] + _gammaI_U1U2[ijk]*
-dphi_D1[ijk] + _gammaI_U2U2[ijk]*dphi_D2[ijk]))/(bam_alpha[ijk]*
+  double grhd_v_U1 = 
+(W_U1[ijk] + psim4*(_gammaI_U0U1[ijk]*dphi_D0[ijk] + _gammaI_U1U1[ijk]*
+dphi_D1[ijk] + _gammaI_U1U2[ijk]*dphi_D2[ijk]))/(bam_alpha[ijk]*
 enthalpy[ijk]*u0[ijk]);
 
   double grhd_v_U0 = 
@@ -162,16 +164,16 @@ enthalpy[ijk]*u0[ijk]);
 dphi_D1[ijk] + _gammaI_U0U2[ijk]*dphi_D2[ijk]))/(bam_alpha[ijk]*
 enthalpy[ijk]*u0[ijk]);
 
-  double grhd_v_U1 = 
-(W_U1[ijk] + psim4*(_gammaI_U0U1[ijk]*dphi_D0[ijk] + _gammaI_U1U1[ijk]*
-dphi_D1[ijk] + _gammaI_U1U2[ijk]*dphi_D2[ijk]))/(bam_alpha[ijk]*
+  double grhd_v_U2 = 
+(W_U2[ijk] + psim4*(_gammaI_U0U2[ijk]*dphi_D0[ijk] + _gammaI_U1U2[ijk]*
+dphi_D1[ijk] + _gammaI_U2U2[ijk]*dphi_D2[ijk]))/(bam_alpha[ijk]*
 enthalpy[ijk]*u0[ijk]);
 
 
   /* populating: */
-  bam_grhd_v_U2[ijk] = grhd_v_U2;
   bam_grhd_v_U0[ijk] = grhd_v_U0;
   bam_grhd_v_U1[ijk] = grhd_v_U1;
+  bam_grhd_v_U2[ijk] = grhd_v_U2;
 
   eos->h = enthalpy[ijk];
   if(!isfinite(eos->h) || LSSEQL(eos->h,1))

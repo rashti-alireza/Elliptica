@@ -123,7 +123,15 @@ void bbn_set_default_parameters(void)
   // 1. Bisect_Single: using bisect method.
   // 2. Steepest_Descent: using steepest descent method. */
   Pset_default("NS_surface_root_finder","Bisect_Single");
- 
+  
+  /* making amd K_{ij} inside the BH:
+  // values:
+  // 1 == to constrcut adm K_{ij} using other fields 
+  //      like gamma_{ij}, beta^i etc.
+  // 0 == extrapolate dm K_{ij} using its values on the horizon.
+  // */
+  Pset_default("bbn_bhf_make_adm_Kij","0");
+   
 }
 
 
