@@ -12,7 +12,10 @@ static const char *const fields_name[] =
 {
   "psi","eta","K",
   "Beta_U0","Beta_U1","Beta_U2",
-0/* end */
+  "K_DiDj_D0D0","K_DiDj_D0D1",
+  "K_DiDj_D0D2","K_DiDj_D1D1",
+  "K_DiDj_D1D2","K_DiDj_D2D2",
+  0/* end */
 };
 
 /* ->: EXIT_SUCCESS if succeeds, otherwise an error code
@@ -473,12 +476,12 @@ static int bhf_ChebTn_Ylm(struct BHFiller_S *const bhf)
   const unsigned lmax   = bhf->lmax;
   const unsigned Ntheta = bhf->Ntheta;
   const unsigned Nphi   = bhf->Nphi;
-  const double gMAX_D0  = 1;
+  const double gMAX_D0  = 4;
   const double gMAX_D1  = 4;
-  const double gMAX_D2  = 1;
+  const double gMAX_D2  = 4;
   const double rfill = Pgetd("r_excision");
   const double rfill3= pow(rfill,3);
-  const double rmin  = rfill/5.;
+  const double rmin  = rfill/2.;
   unsigned p,fld;
   
   /* update all coeffs to avoid race condition */
@@ -494,6 +497,9 @@ static int bhf_ChebTn_Ylm(struct BHFiller_S *const bhf)
     /* trK derivatives */
     bbn_update_derivative_K(patch);
     bbn_add_and_take_2nd_derivatives_K(patch);
+    /* populate adm K_ij and its derivatives */
+    bbn_adm_Kij(patch);
+    bbn_1st_2nd_derivatives_adm_Kij(patch);
     
     Field_T *R1_f = patch->CoordSysInfo->CubedSphericalCoord->R1_f;
     Field_T *R2_f = patch->CoordSysInfo->CubedSphericalCoord->R2_f;
@@ -763,7 +769,7 @@ static int bhf_ChebTn_Ylm(struct BHFiller_S *const bhf)
     }/* for (f = 0; f < nf ++f) */
     
     /* push trK to 0. */
-    if (1)
+    if (0)
     {
      WRITE_v(K)
      for (ijk = 0; ijk < nn; ++ijk)
@@ -801,8 +807,11 @@ static int bhf_ChebTn_Ylm(struct BHFiller_S *const bhf)
        Beta_U2[ijk] = w*Beta_U2[ijk];
      }
     }
-    if (1)/* for Kij */
+    if (0)/* if you want construct Kij from other fields
+          // you need the followings: */
     {
+     Pseti("bbn_bhf_make_adm_Kij",1);
+     
      READ_v(Beta_U0)
      READ_v(Beta_U1)
      READ_v(Beta_U2)
