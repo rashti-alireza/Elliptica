@@ -86,7 +86,7 @@ bhf_init
     const double fr0_K_DiDj_D2D2 = 0;
     const double fr0_K           = 0;
     const double fr0_alpha       = 0.2;
-    const double fr0_psi         = 2;
+    const double fr0_psi         = 2;/* big enough */
     const double fr0_eta         = fr0_alpha*fr0_psi;
     const unsigned lmax   = 20;/* L max in Ylm */
     const unsigned Ntheta = 2*lmax+1;
@@ -476,12 +476,12 @@ static int bhf_ChebTn_Ylm(struct BHFiller_S *const bhf)
   const unsigned lmax   = bhf->lmax;
   const unsigned Ntheta = bhf->Ntheta;
   const unsigned Nphi   = bhf->Nphi;
-  const double gMAX_D0  = 4;
-  const double gMAX_D1  = 4;
-  const double gMAX_D2  = 4;
   const double rfill = Pgetd("r_excision");
   const double rfill3= pow(rfill,3);
   const double rmin  = rfill/2.;
+  const double gMAX_D0  = rfill/2;
+  const double gMAX_D1  = rfill/2;
+  const double gMAX_D2  = rfill/2;
   unsigned p,fld;
   
   /* update all coeffs to avoid race condition */
