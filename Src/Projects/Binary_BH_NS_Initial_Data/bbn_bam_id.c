@@ -486,7 +486,7 @@ bam_output_doctest
     0};
   
   const int Puncture     = 1;/* 0: no smoother, 1: use smoother. */
-  const double SmallR    = 1E-2;
+  const double SmallR    = 1E-10;
   const double SmallDet  = 1E-3;
   const double rfill     = Pgetd("r_excision");
   const double rmin      = rfill/2.;
@@ -710,6 +710,13 @@ bam_output_doctest
   }/* while(fields_name[f]) */
   _free(interp_v);
   
+  /* horizon location */
+  sprintf(fname,"horizon_%.1f.txt",x0);
+  file = Fopen(fname,"w");
+  fprintf(file,"# y-coord_of_horizon dummy_value\n");
+  fprintf(file,"%f  %f\n",Pgetd("BH_center_y")-rfill,1.);
+  fprintf(file,"%f  %f\n",Pgetd("BH_center_y")+rfill,1.);
+  fclose(file);
   
   if (!Puncture && 1)/* check det(ADM metric) */
   {
