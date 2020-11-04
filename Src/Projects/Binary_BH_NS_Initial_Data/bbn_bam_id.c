@@ -75,9 +75,12 @@ void bbn_bam_export_id(void)
 static void interpolate_and_write(Grid_T *const grid,struct interpolation_points *const pnt)
 {
   FILE *file = 0;
-  const int Puncture     = 0;/* 0: no smoother, 1: use smoother. */
+  const int Puncture_gij = 1;/* 1:puncture lik adm g_ij. */
+  const int Puncture_Kij = 1;/* 1:puncture lik adm K_ij. */
   const double rfill     = Pgetd("r_excision");
   const double rmin      = rfill/2.;
+  const double SmallR    = 1E-2;
+  const double Mb        = 8*rfill;/* bare BH mass */
   const unsigned npoints = pnt->npoints;
   char **fields_name = 0,**bam_fields = 0;
   char title_line[STR_LEN_MAX];
@@ -229,8 +232,8 @@ static void interpolate_and_write(Grid_T *const grid,struct interpolation_points
       interp_v[p] = execute_interpolation(interp_s);
       free_interpolation(interp_s);
       
-      /* smoothing the data inside the BH further */
-      if (Puncture)
+      /* make adm_K and adm_g puncture like */
+      if (Puncture_Kij || Puncture_gij)
       {
         if (!IsItInsideBHPatch(patch))
           continue;
@@ -241,22 +244,22 @@ static void interpolate_and_write(Grid_T *const grid,struct interpolation_points
         double r = sqrt(Pow2(x)+Pow2(y)+Pow2(z));
         
         /* adm_Kij */
-        if (strstr(fields_name[f],"bam_adm_K_"))
+        if (Puncture_Kij && strstr(fields_name[f],"bam_adm_K_"))
           interp_v[p] *= bbn_bhf_smoother(r,rfill,rmin);
         /* adm_gij */  
-        else if (strstr(fields_name[f],"bam_adm_g_"))
+        else if (Puncture_gij && strstr(fields_name[f],"bam_adm_g_"))
         {
           double w = bbn_bhf_smoother(r,rfill,rmin);
           /* diagonal entries */
           if (strstr(fields_name[f],"D0D0") ||
               strstr(fields_name[f],"D1D1") ||
               strstr(fields_name[f],"D2D2"))
-              interp_v[p] = w*interp_v[p] +(1-w)*Big_value;
+              interp_v[p] = w*interp_v[p] + (1-w)*(Mb/(r+SmallR));
           /* off diagnoal entries */    
           else
              interp_v[p] *= w;
         }  
-      }/* if (Puncture) */
+      }/* if (Puncture_Kij || Puncture_gij) */
     }
     
     for (p = 0; p < npoints; ++p)
