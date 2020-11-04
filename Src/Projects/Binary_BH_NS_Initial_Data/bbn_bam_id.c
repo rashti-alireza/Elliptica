@@ -455,8 +455,10 @@ bam_output_doctest
   )
 {
   const char *const fields_name[] = {
-    "psi","eta","K",
-    "Beta_U0","Beta_U1","Beta_U2","bam_alpha",
+    "psi","eta","K","bam_alpha",
+    
+    "Beta_U0","Beta_U1","Beta_U2",
+    
     "_gamma_D2D2","_gamma_D0D2",
     "_gamma_D0D0","_gamma_D0D1",
     "_gamma_D1D2","_gamma_D1D1",
@@ -467,6 +469,7 @@ bam_output_doctest
     "bam_adm_K_D0D0","bam_adm_K_D0D1",
     "bam_adm_K_D0D2","bam_adm_K_D1D1",
     "bam_adm_K_D1D2","bam_adm_K_D2D2",
+    
     "bam_adm_g_D0D0","bam_adm_g_D0D1",
     "bam_adm_g_D0D2","bam_adm_g_D1D1",
     "bam_adm_g_D1D2","bam_adm_g_D2D2",
@@ -474,9 +477,11 @@ bam_output_doctest
     
   const char *const bssn_fields_name[] = {
     "bam_bssn_chi","bam_bssn_psi","bam_bssn_K",
+    
     "bam_bssn_A_D0D0","bam_bssn_A_D0D1",
     "bam_bssn_A_D0D2","bam_bssn_A_D1D1",
     "bam_bssn_A_D1D2","bam_bssn_A_D2D2",
+    
     "bam_bssn_g_D0D0","bam_bssn_g_D0D1",
     "bam_bssn_g_D0D2","bam_bssn_g_D1D1",
     "bam_bssn_g_D1D2","bam_bssn_g_D2D2",
@@ -485,12 +490,14 @@ bam_output_doctest
     "bam_bssn_gI_U1U2","bam_bssn_gI_U2U2",
     0};
   
-  const int Puncture     = 1;/* 0: no smoother, 1: use smoother. */
-  const double SmallR    = 1E-10;
+  const int Puncture_gij = 1;/* 1:puncture lik adm g_ij. */
+  const int Puncture_Kij = 1;/* 1:puncture lik adm K_ij. */
+  const int Puncture     = (Puncture_Kij || Puncture_gij);
+  const double SmallR    = 1E-2;
   const double SmallDet  = 1E-3;
   const double rfill     = Pgetd("r_excision");
   const double rmin      = rfill/2.;
-  const double Mb        = rfill/2.;/* bare BH mass */
+  const double Mb        = 8*rfill;/* bare BH mass */
   const double Ly        = 150;/* length of y-axis */
   const double y0        = -Ly/2; /* initial y */
   const unsigned npoints = 3000;
@@ -587,18 +594,6 @@ bam_output_doctest
   /* set bam ADM fields based on initial data to be usable for bam */
   bbn_bam_set_bam_fields(grid);
   
-  /* compute bssn fields */
-  if (Puncture == 0)/* if puncture is used fields are modified 
-                    // during the write thus no point to make bssn here.*/
-  {
-    OpenMP_Patch_Pragma(omp parallel for)
-    for (p = 0; p < grid->np; ++p)
-    {
-      Patch_T *patch = grid->patch[p];
-      bbn_bam_adm_to_bssn(patch);
-    }
-  }
-    
   /* to avoid race condition between threads write all coeffs */
   OpenMP_Patch_Pragma(omp parallel for)
   for (p = 0; p < grid->np; ++p)
@@ -658,8 +653,9 @@ bam_output_doctest
       plan_interpolation(interp_s);
       interp_v[p] = execute_interpolation(interp_s);
       free_interpolation(interp_s);
-      /* smoothing the data inside the BH further */
-      if (Puncture)
+      
+      /* make adm_K and adm_g puncture like */
+      if (Puncture_Kij || Puncture_gij)
       {
         if (!IsItInsideBHPatch(patch))
           continue;
@@ -670,10 +666,10 @@ bam_output_doctest
         double r = sqrt(Pow2(x)+Pow2(y)+Pow2(z));
         
         /* adm_Kij */
-        if (strstr(fields_name[f],"bam_adm_K_"))
+        if (Puncture_Kij && strstr(fields_name[f],"bam_adm_K_"))
           interp_v[p] *= bbn_bhf_smoother(r,rfill,rmin);
         /* adm_gij */  
-        else if (strstr(fields_name[f],"bam_adm_g_"))
+        else if (Puncture_gij && strstr(fields_name[f],"bam_adm_g_"))
         {
           double w = bbn_bhf_smoother(r,rfill,rmin);
           /* diagonal entries */
@@ -685,7 +681,7 @@ bam_output_doctest
           else
              interp_v[p] *= w;
         }  
-      }/* if (Puncture) */
+      }/* if (Puncture_Kij || Puncture_gij) */
     }
     
     /* write */
@@ -708,6 +704,8 @@ bam_output_doctest
     fclose(file);
     f++;
   }/* while(fields_name[f]) */
+  free_2d_mem(pnt->f_index,grid->np);
+  pnt->f_index = 0;
   _free(interp_v);
   
   /* horizon location */
@@ -718,7 +716,8 @@ bam_output_doctest
   fprintf(file,"%f  %f\n",Pgetd("BH_center_y")+rfill,1.);
   fclose(file);
   
-  if (!Puncture && 1)/* check det(ADM metric) */
+  if (!Puncture)/* check det(ADM metric), for puncture 
+                // fileds cannot be expanded */
   {
     const char *const adm_g[] = {
     "bam_adm_g_D0D0","bam_adm_g_D0D1","bam_adm_g_D0D2",
@@ -787,12 +786,12 @@ bam_output_doctest
       }
       free_interpolation(interp_s);
     }
-  }/* if(?) */
+  }/* if(!Puncture) */
 
-  /* make bssn variables if puncture is asked */
+
+  /* 1. modify adm variables to be puncture like */
   if (Puncture)
   {
-    /* 1. modify adm variables to be puncture like */
     OpenMP_Patch_Pragma(omp parallel for)
     for (p = 0; p < grid->np; p++)
     {
@@ -805,6 +804,8 @@ bam_output_doctest
         unsigned fi = 0;
         while(fields_name[fi])
         {
+          if (strstr(fields_name[fi],"bam_adm_K_") ||
+              strstr(fields_name[fi],"bam_adm_g_")   )
           for (ijk = 0; ijk < nn; ++ijk)
           {
             DEF_RELATIVE_x
@@ -813,7 +814,7 @@ bam_output_doctest
             DEF_RELATIVE_r
           
             /* adm_Kij */
-            if (strstr(fields_name[fi],"bam_adm_K_"))
+            if (Puncture_Kij && strstr(fields_name[fi],"bam_adm_K_"))
             {
               Field_T *fld = patch->pool[Ind(fields_name[fi])];
               free_coeffs(fld);
@@ -821,7 +822,7 @@ bam_output_doctest
               fld->v[ijk] *= bbn_bhf_smoother(r,rfill,rmin);
             }
             /* adm_gij */  
-            else if (strstr(fields_name[fi],"bam_adm_g_"))
+            else if (Puncture_gij && strstr(fields_name[fi],"bam_adm_g_"))
             {
               Field_T *fld = patch->pool[Ind(fields_name[fi])];
               free_coeffs(fld);
@@ -841,13 +842,13 @@ bam_output_doctest
         }
       }
     }
-    /* 2. compute bssn form adm variables */
-    OpenMP_Patch_Pragma(omp parallel for)
-    for (p = 0; p < grid->np; ++p)
-    {
-      Patch_T *patch = grid->patch[p];
-      bbn_bam_adm_to_bssn(patch);
-    }
+  }
+  /* 2. compute bssn form adm variables */
+  OpenMP_Patch_Pragma(omp parallel for)
+  for (p = 0; p < grid->np; ++p)
+  {
+    Patch_T *patch = grid->patch[p];
+    bbn_bam_adm_to_bssn(patch);
   }
   /* 3. interpolate and write */
   /* to avoid race condition between threads write all coeffs */
@@ -980,8 +981,7 @@ bam_output_doctest
   }/* if(?) */
   
   bbn_print_fields(grid,0,".");
-  free_2d_mem(pnt->f_index,grid->np);
-  pnt->f_index = 0;
+  
 }
 
 
