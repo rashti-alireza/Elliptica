@@ -810,6 +810,12 @@ static int bhf_ChebTn_Ylm(struct BHFiller_S *const bhf)
     if (0)/* if you want construct Kij from other fields
           // you need the followings: */
     {
+     /* making amd K_{ij} inside the BH:
+     // values:
+     // 1 == to constrcut adm K_{ij} using other fields 
+     //      like gamma_{ij}, beta^i etc.
+     // 0 == extrapolate dm K_{ij} using its values on the horizon.
+     // */
      Pseti("bbn_bhf_make_adm_Kij",1);
      
      READ_v(Beta_U0)
