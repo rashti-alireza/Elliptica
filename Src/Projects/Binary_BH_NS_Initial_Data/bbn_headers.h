@@ -69,6 +69,21 @@ struct items_S
   unsigned K;
 };
 
+/* alpha and beta for exporting of ID */
+struct IDGauge_S
+{
+  Grid_T *grid;
+  const char *lapse_type;/* o. XCTS: whatever make XCTS eqs.
+                         // o. one: 1.
+                         // o. puncture1:  alpha = 1/psi^2. */
+  const char *shift_type;/* o. XCTS: whatever make XCTS eqs.
+                         // o. zero: 0. */
+  double Mb;/* bare mass */
+  double r_CutOff;/* smalles R for puncture */
+  /* puncture like for psi ~ 1+Mb/(r+r_CutOff) */
+  double (*psi_punc0)(const double r, const double Mb,const double r_CutOff);
+};
+
 void bbn_free_data_Gamma_patch(Patch_T *const patch);
 void bbn_study_initial_data(Grid_T *const grid);
 void bbn_print_fields(Grid_T *const grid,const unsigned iteration, const char *const folder);

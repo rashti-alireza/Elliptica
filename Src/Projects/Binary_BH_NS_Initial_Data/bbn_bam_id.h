@@ -77,8 +77,7 @@ bam_output_doctest
   );
 
 void bbn_bam_adm_to_bssn(Patch_T *const patch);
-
-
+static double psi_punc0(const double r, const double Mb,const double r_CutOff);
 
 
 

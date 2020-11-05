@@ -79,7 +79,7 @@ static void interpolate_and_write(Grid_T *const grid,struct interpolation_points
   const int Puncture_Kij = 1;/* 1:puncture lik adm K_ij. */
   const double rfill     = Pgetd("r_excision");
   const double rmin      = rfill/2.;
-  const double SmallR    = 1E-2;
+  const double r_CutOff  = 1E-2;
   const double Mb        = 8*rfill;/* bare BH mass */
   const unsigned npoints = pnt->npoints;
   char **fields_name = 0,**bam_fields = 0;
@@ -254,7 +254,7 @@ static void interpolate_and_write(Grid_T *const grid,struct interpolation_points
           if (strstr(fields_name[f],"D0D0") ||
               strstr(fields_name[f],"D1D1") ||
               strstr(fields_name[f],"D2D2"))
-              interp_v[p] = w*interp_v[p] + (1-w)*(Mb/(r+SmallR));
+              interp_v[p] = w*interp_v[p] + (1-w)*psi_punc0(r,Mb,r_CutOff);
           /* off diagnoal entries */    
           else
              interp_v[p] *= w;
@@ -496,7 +496,9 @@ bam_output_doctest
   const int Puncture_gij = 1;/* 1:puncture lik adm g_ij. */
   const int Puncture_Kij = 1;/* 1:puncture lik adm K_ij. */
   const int Puncture     = (Puncture_Kij || Puncture_gij);
-  const double SmallR    = 1E-2;
+  const char *const lapse_type = "puncture1";/* see bbn_bam_set_gauges */
+  const char *const shift_type = "zero";/* see bbn_bam_set_gauges */
+  const double r_CutOff  = 1E-2;
   const double SmallDet  = 1E-3;
   const double rfill     = Pgetd("r_excision");
   const double rmin      = rfill/2.;
@@ -597,6 +599,16 @@ bam_output_doctest
   /* set bam ADM fields based on initial data to be usable for bam */
   bbn_bam_set_bam_fields(grid);
   
+  /* set lapse and shift gauges */
+  struct IDGauge_S gauge[1] = {0};
+  gauge->grid       = grid;
+  gauge->lapse_type = lapse_type;
+  gauge->shift_type = shift_type;
+  gauge->Mb         = Mb;
+  gauge->r_CutOff   = r_CutOff;
+  gauge->psi_punc0  = psi_punc0;
+  bbn_bam_set_gauges(gauge);
+  
   /* to avoid race condition between threads write all coeffs */
   OpenMP_Patch_Pragma(omp parallel for)
   for (p = 0; p < grid->np; ++p)
@@ -679,7 +691,7 @@ bam_output_doctest
           if (strstr(fields_name[f],"D0D0") ||
               strstr(fields_name[f],"D1D1") ||
               strstr(fields_name[f],"D2D2"))
-              interp_v[p] = w*interp_v[p] +(1-w)*(Mb/(r+SmallR));
+              interp_v[p] = w*interp_v[p] +(1-w)*psi_punc0(r,Mb,r_CutOff);
           /* off diagnoal entries */    
           else
              interp_v[p] *= w;
@@ -835,7 +847,7 @@ bam_output_doctest
               if (strstr(fields_name[fi],"D0D0") ||
                   strstr(fields_name[fi],"D1D1") ||
                   strstr(fields_name[fi],"D2D2"))
-                  fld->v[ijk] = w*fld->v[ijk] +(1-w)*(Mb/(r+SmallR));
+                  fld->v[ijk] = w*fld->v[ijk] +(1-w)*psi_punc0(r,Mb,r_CutOff);
               /* off diagnoal entries */    
               else
                  fld->v[ijk] *= w;
@@ -853,6 +865,8 @@ bam_output_doctest
     Patch_T *patch = grid->patch[p];
     bbn_bam_adm_to_bssn(patch);
   }
+  if (Puncture_alpha)
+    bbn_bam_
   /* 3. interpolate and write */
   /* to avoid race condition between threads write all coeffs */
   OpenMP_Patch_Pragma(omp parallel for)
@@ -987,4 +1001,10 @@ bam_output_doctest
   
 }
 
+
+/* puncture like for psi ~ 1+Mb/(r+r_CutOff) */
+static double psi_punc0(const double r, const double Mb,const double r_CutOff)
+{
+  return Mb/(r+r_CutOff);
+}
 
