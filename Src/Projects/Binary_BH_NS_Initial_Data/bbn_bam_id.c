@@ -458,8 +458,7 @@ bam_output_doctest
   )
 {
   const char *const fields_name[] = {
-    "psi","eta","K","bam_alpha",
-    
+    "psi","eta","K",
     "Beta_U0","Beta_U1","Beta_U2",
     
     "_gamma_D2D2","_gamma_D0D2",
@@ -468,6 +467,9 @@ bam_output_doctest
     "_gammaI_U2U2","_gammaI_U0U2",
     "_gammaI_U0U0","_gammaI_U0U1",
     "_gammaI_U1U2","_gammaI_U1U1",
+    
+    "bam_alpha",
+    "bam_Beta_U0","bam_Beta_U1","bam_Beta_U2",
     
     "bam_adm_K_D0D0","bam_adm_K_D0D1",
     "bam_adm_K_D0D2","bam_adm_K_D1D1",
@@ -606,6 +608,8 @@ bam_output_doctest
   gauge->shift_type = shift_type;
   gauge->Mb         = Mb;
   gauge->r_CutOff   = r_CutOff;
+  gauge->rfill      = rfill;
+  gauge->rmin       = rmin;
   gauge->psi_punc0  = psi_punc0;
   bbn_bam_set_gauges(gauge);
   
@@ -865,8 +869,6 @@ bam_output_doctest
     Patch_T *patch = grid->patch[p];
     bbn_bam_adm_to_bssn(patch);
   }
-  if (Puncture_alpha)
-    bbn_bam_
   /* 3. interpolate and write */
   /* to avoid race condition between threads write all coeffs */
   OpenMP_Patch_Pragma(omp parallel for)
