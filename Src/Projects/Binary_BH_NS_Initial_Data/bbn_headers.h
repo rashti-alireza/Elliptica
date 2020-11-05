@@ -69,17 +69,20 @@ struct items_S
   unsigned K;
 };
 
-/* alpha and beta for exporting of ID */
+/* alpha and beta (gauges) for exporting of ID */
 struct IDGauge_S
 {
   Grid_T *grid;
-  const char *lapse_type;/* o. XCTS: whatever make XCTS eqs.
-                         // o. one: 1.
-                         // o. puncture1:  alpha = 1/psi^2. */
-  const char *shift_type;/* o. XCTS: whatever make XCTS eqs.
-                         // o. zero: 0. */
+  const char *lapse_type;/* o. XCTS: whatever made by XCTS eqs.
+                         // o. one: set all to 1.
+                         // o. puncture1: alpha = 1/(bssn_psi)^2. 
+                         // o. puncture2: alpha = 1/(1+bssn_psi^4). */
+  const char *shift_type;/* o. XCTS: whatever made by XCTS eqs.
+                         // o. zero: set all to 0. */
   double Mb;/* bare mass */
   double r_CutOff;/* smalles R for puncture */
+  double rfill;/* where the BH filling started, generally BH radius */
+  double rmin;/* how much inside the BH, rmin <= rfill */
   /* puncture like for psi ~ 1+Mb/(r+r_CutOff) */
   double (*psi_punc0)(const double r, const double Mb,const double r_CutOff);
 };
@@ -204,6 +207,8 @@ void bbn_free_data_dddg_analytic(
 	
 void bbn_ks_free_data_set_params(Grid_T *const grid);
 double *bbn_ks_read_analytic(const char *const name, void *params);
+void bbn_bam_set_gauges(struct IDGauge_S *const gauge);
+
 
 #endif
 
