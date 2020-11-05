@@ -77,6 +77,8 @@ static void interpolate_and_write(Grid_T *const grid,struct interpolation_points
   FILE *file = 0;
   const int Puncture_gij = 1;/* 1:puncture lik adm g_ij. */
   const int Puncture_Kij = 1;/* 1:puncture lik adm K_ij. */
+  const char *const lapse_type = "puncture1";/* see bbn_bam_set_gauges */
+  const char *const shift_type = "zero";/* see bbn_bam_set_gauges */
   const double rfill     = Pgetd("r_excision");
   const double rmin      = rfill/2.;
   const double r_CutOff  = 1E-2;
@@ -162,6 +164,18 @@ static void interpolate_and_write(Grid_T *const grid,struct interpolation_points
   
   /* set bam fields based on initial data to be usable for bam */
   bbn_bam_set_bam_fields(grid);
+  
+  /* set lapse and shift gauges */
+  struct IDGauge_S gauge[1] = {0};
+  gauge->grid       = grid;
+  gauge->lapse_type = lapse_type;
+  gauge->shift_type = shift_type;
+  gauge->Mb         = Mb;
+  gauge->r_CutOff   = r_CutOff;
+  gauge->rfill      = rfill;
+  gauge->rmin       = rmin;
+  gauge->psi_punc0  = psi_punc0;
+  bbn_bam_set_gauges(gauge);
   
   /* to avoid race condition between threads write all coeffs */
   OpenMP_Patch_Pragma(omp parallel for)
