@@ -243,7 +243,7 @@ bhf_init
     }
     assert(i == npo);
     assert(j == npi);
-  }/* if (strcmp_i(method,"3rd_ChebTn_Ylm")) */
+  }/* if (strcmp_i(method,"ChebTn_Ylm")) */
   /* using George's thesis method */
   else if (strcmp_i(method,"WTGR"))
   {
