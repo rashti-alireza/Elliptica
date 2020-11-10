@@ -11,7 +11,11 @@ static char fields_file_path[STR_LEN_MAX];
 static char checkpoint_path[STR_LEN_MAX];
 static char bam_fields_name[STR_LEN_MAX];
 static char bam_BHfiller_method[STR_LEN_MAX];
-  
+static const int Puncture_gij = 1;/* 1:puncture lik adm g_ij. */
+static const int Puncture_Kij = 1;/* 1:puncture lik adm K_ij. */
+static const char *const lapse_type = "XCTS";/* see bbn_bam_set_gauges */
+static const char *const shift_type = "XCTS";/* see bbn_bam_set_gauges */  
+
 /* exporting initial data for bam.
 // it writes the required fields into a file to be read by bam. */
 void bbn_bam_export_id(void)
@@ -75,10 +79,6 @@ void bbn_bam_export_id(void)
 static void interpolate_and_write(Grid_T *const grid,struct interpolation_points *const pnt)
 {
   FILE *file = 0;
-  const int Puncture_gij = 1;/* 1:puncture lik adm g_ij. */
-  const int Puncture_Kij = 1;/* 1:puncture lik adm K_ij. */
-  const char *const lapse_type = "puncture1";/* see bbn_bam_set_gauges */
-  const char *const shift_type = "zero";/* see bbn_bam_set_gauges */
   const double rfill     = Pgetd("r_excision");
   const double rmin      = rfill/2.;
   const double r_CutOff  = 1E-2;
@@ -509,11 +509,7 @@ bam_output_doctest
     "bam_bssn_gI_U1U2","bam_bssn_gI_U2U2",
     0};
   
-  const int Puncture_gij = 1;/* 1:puncture lik adm g_ij. */
-  const int Puncture_Kij = 1;/* 1:puncture lik adm K_ij. */
   const int Puncture     = (Puncture_Kij || Puncture_gij);
-  const char *const lapse_type = "puncture1";/* see bbn_bam_set_gauges */
-  const char *const shift_type = "zero";/* see bbn_bam_set_gauges */
   const double r_CutOff  = 1E-2;
   const double SmallDet  = 1E-3;
   const double rfill     = Pgetd("r_excision");
