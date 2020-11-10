@@ -21,6 +21,9 @@ void bbn_populate_free_data(Grid_T *const grid)
     return;
   }
   
+  /* for analytic calculation */
+  bbn_ks_free_data_set_params(grid);
+  
   /* populate conformal metric and its inverse */
   bbn_free_data_gammas(grid);
   printf("Conformal metric and its inverse ~> Done.\n");
@@ -196,6 +199,14 @@ void bbn_free_data_dGamma(Grid_T *const grid)
 // this function does that. */
 void bbn_1st_derivatives_conformal_metric(Patch_T *const patch)
 {
+  const int analytic = 1;
+  
+  if (analytic)
+  {
+    bbn_free_data_dg_analytic(patch,bbn_ks_read_analytic,patch);
+  }
+  else
+  {
   /* declaring conformal metric */
   DECLARE_FIELD(_gamma_D2D2)
   DECLARE_FIELD(_gamma_D0D2)
@@ -262,7 +273,7 @@ void bbn_1st_derivatives_conformal_metric(Patch_T *const patch)
   _dgamma_D1D2D0->v = Partial_Derivative(_gamma_D1D2,"x");
   _dgamma_D1D1D1->v = Partial_Derivative(_gamma_D1D1,"y");
   _dgamma_D2D2D1->v = Partial_Derivative(_gamma_D2D2,"y");
-
+  }
 }
 
 /* freeing conformal metric derivatives */
@@ -313,6 +324,23 @@ void bbn_rm_1st_derivatives_conformal_metric(Patch_T *const patch)
 /* populate conformal metric and its inverse */
 void bbn_free_data_gammas(Grid_T *const grid)
 {
+  const int analytic = 1;
+  const unsigned np = grid->np;
+  unsigned p;
+    
+  /* analytic calculation of conformal metric */
+  if (analytic)
+  {
+    OpenMP_Patch_Pragma(omp parallel for)
+    for(p = 0; p < np; ++p)
+    {
+      Patch_T *patch = grid->patch[p];
+      bbn_free_data_g_gI_analytic(patch,bbn_ks_read_analytic,patch);
+    }
+  }
+  /* numeric calculation of conformal metric */
+  else
+  {
   /* roll off distance at exp(-(r/r0)^4)  */
   const double r0          = Pgetd("BH_KerrSchild_RollOff");
   const double BH_center_x = Pgetd("BH_center_x");
@@ -320,7 +348,6 @@ void bbn_free_data_gammas(Grid_T *const grid)
   const double BH_center_z = Pgetd("BH_center_z");
   const double M_BH        = Pgetd("BH_irreducible_mass");
   const double a_BH        = Pgetd("BH_net_spin");
-  unsigned p;
   
   /* populate tB tR */
   Transformation_T *tB = initialize_transformation();
@@ -430,6 +457,7 @@ void bbn_free_data_gammas(Grid_T *const grid)
   }
   free_transformation(tB);
   free_transformation(tR);
+  }/* else */
 }
 
 /* trace of Kerr Schild extrinsic curvature */
