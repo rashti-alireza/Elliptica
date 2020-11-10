@@ -11,7 +11,7 @@ static char fields_file_path[STR_LEN_MAX];
 static char checkpoint_path[STR_LEN_MAX];
 static char bam_fields_name[STR_LEN_MAX];
 static char bam_BHfiller_method[STR_LEN_MAX];
-static const int Puncture_gij = 1;/* 1:puncture lik adm g_ij. */
+static const int Puncture_gij = 0;/* 1:puncture lik adm g_ij. */
 static const int Puncture_Kij = 1;/* 1:puncture lik adm K_ij. */
 static const char *const lapse_type = "XCTS";/* see bbn_bam_set_gauges */
 static const char *const shift_type = "XCTS";/* see bbn_bam_set_gauges */  
