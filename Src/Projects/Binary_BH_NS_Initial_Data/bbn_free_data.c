@@ -21,7 +21,7 @@ void bbn_populate_free_data(Grid_T *const grid)
     return;
   }
   
-  /* for analytic calculation */
+  /* IMPORTANT initialization for analytic calculation */
   bbn_ks_free_data_set_params(grid);
   
   /* populate conformal metric and its inverse */
@@ -52,9 +52,21 @@ void bbn_populate_free_data(Grid_T *const grid)
 /* partial derivtive of _Gamma, used in covariant derivative and _R */
 void bbn_free_data_dGamma(Grid_T *const grid)
 {
+  const int analytic = 1;
   const unsigned np = grid->np;
   unsigned p;
-
+  
+  if (analytic)
+  {
+    OpenMP_Patch_Pragma(omp parallel for)
+    for(p = 0; p < np; ++p)
+    {
+      Patch_T *patch = grid->patch[p];
+      bbn_free_date_dGammaConf(patch);
+    }
+  }
+  else
+  {
   OpenMP_Patch_Pragma(omp parallel for)
   for(p = 0; p < np; ++p)
   {
@@ -192,6 +204,7 @@ void bbn_free_data_dGamma(Grid_T *const grid)
     _dGamma_U0D2D2D2->v = Partial_Derivative(_Gamma_U0D2D2,"z");
     _dGamma_U0D0D1D2->v = Partial_Derivative(_Gamma_U0D0D1,"z");
 
+  }
   }
 }
 
