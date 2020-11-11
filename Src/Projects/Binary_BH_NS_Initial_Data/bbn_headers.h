@@ -208,6 +208,7 @@ void bbn_free_data_dddg_analytic(
 void bbn_ks_free_data_set_params(Grid_T *const grid);
 double *bbn_ks_read_analytic(const char *const name, void *params);
 void bbn_bam_set_gauges(struct IDGauge_S *const gauge);
+void bbn_free_date_dGammaConf(Patch_T *const patch);
 
 
 #endif

@@ -1,0 +1,67 @@
+# partial derivative of Christoffer symbol _Gamma compatible with _gamma
+
+# Manifold or grid Dimension
+Dimension = 3;
+
+# point on manifold shown by:
+Point = ijk;
+
+C_macro = READ_v(name);
+C_macro2 = REALLOC_v_WRITE_v(name);
+
+# main function:
+`#include "bbn_headers.h"`
+``
+``
+`void bbn_free_date_dGammaConf(Patch_T *const patch);`
+`void bbn_free_date_dGammaConf(Patch_T *const patch)`
+`{`
+
+`  bbn_free_data_dg_analytic(patch,bbn_ks_read_analytic,patch);`
+`  bbn_free_data_ddg_analytic(patch,bbn_ks_read_analytic,patch);`
+``
+Declare = 
+{
+ # conformal metric inverse
+ (obj = Field,name = _gammaI, rank = UU, C_macro);
+
+ # partial derivative of conformal metric
+ (obj = Field,name = _dgamma, rank = DDD, C_macro);
+
+ # partial derivative of conformal metric
+ (obj = Field,name = _ddgamma, rank = DDDD, C_macro);
+
+ # Christoffer symbol value
+ (obj = Field,name = _dGamma, rank = UDDD, C_macro2);
+}
+
+# symmetries:
+Symm[_gammaI(i,j)      = _gammaI(j,i)];
+Symm[_dgamma(i,j,k)    = _dgamma(j,i,k)];
+Symm[_ddgamma(i,j,k,l) = _ddgamma(j,i,k,l)];
+Symm[_dGamma(i,j,k,l)  = _dGamma(i,k,j,l)];
+
+`  const unsigned nn = patch->nn;`
+`  unsigned ijk;`
+`  for(ijk = 0; ijk < nn; ++ijk)`
+`  {`
+
+  ## d(_gammaI)/dx
+  dgI(i,n,-m) = - _gammaI(i,-k)*_gammaI(-j,n)*_dgamma(k,j,m);
+  Symm[dgI(i,n,m) = dgI(n,i,m)];
+
+  ## d(_Gamma)/dx
+  dGamma(i,-k,-l,-j) = \
+    1/2*dgI(i,m,j)*KD(-m,-mp)*(_dgamma(mp,k,l)+_dgamma(mp,l,k)-_dgamma(k,l,mp)) \
+    + 1/2*_gammaI(i,-m)*(_ddgamma(m,k,l,j)+_ddgamma(m,l,k,j)-_ddgamma(k,l,m,j));
+  Symm[dGamma(i,k,l,j) = dGamma(i,l,k,j)];
+
+  ## populate
+  Cpopulate[_dGamma = dGamma];
+
+`  }`
+``
+`  bbn_rm_1st_2nd_derivatives_conformal_metric(patch);`
+``
+`}`
+
