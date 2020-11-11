@@ -476,6 +476,11 @@ void bbn_free_data_gammas(Grid_T *const grid)
 /* trace of Kerr Schild extrinsic curvature */
 void bbn_free_data_tr_KSKij(Grid_T *const grid)
 {
+  /* roll off distance at exp(-(r/r0)^4)  */
+  const double r02         = Pow2(Pgetd("BH_KerrSchild_RollOff"));
+  const double BH_center_x = Pgetd("BH_center_x");
+  const double BH_center_y = Pgetd("BH_center_y");
+  const double BH_center_z = Pgetd("BH_center_z");
   const unsigned np = grid->np;
   unsigned p;
 
@@ -483,6 +488,8 @@ void bbn_free_data_tr_KSKij(Grid_T *const grid)
   for(p = 0; p < np; ++p)
   {
     Patch_T *patch = grid->patch[p];
+    unsigned nn,ijk;
+    nn = patch->nn;
     
     /* populating Kerr Schild gammas, lapse and shift: */
     populate_KSgammas_KSalpha_KSBeta(patch);
@@ -496,6 +503,20 @@ void bbn_free_data_tr_KSKij(Grid_T *const grid)
     /* populate KS trKij */
     bbn_free_data_KS_trKij(patch);
     
+    /* attenuate K */
+    WRITE_v(K)
+    for (ijk = 0; ijk < nn; ++ijk)
+    {
+      double x,y,z,r2,e;
+      
+      x = patch->node[ijk]->x[0]-BH_center_x;
+      y = patch->node[ijk]->x[1]-BH_center_y;
+      z = patch->node[ijk]->x[2]-BH_center_z;
+      r2 = Pow2(x)+Pow2(y)+Pow2(z);
+      e  = exp(-Pow2(r2/r02));
+      
+      K[ijk] *= e;
+    }
     /* now free */
     free_KSfields(patch);
   }/* end of for(p = 0; p < np; ++p) */
