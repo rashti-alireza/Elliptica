@@ -132,7 +132,7 @@ void fill_patches_BBN_CubedSpherical_grid(Grid_T *const grid)
 // the BH inside is scooped out */
 void fill_patches_Split_CubedSpherical_NS_excisedBH_grid(Grid_T *const grid)
 {
-  const double r_outermost = Pgetd("Outermost_radius");
+  const double r_outermost = Pgetd("grid_outermost_radius");
   unsigned pn = 0; /* patch number */
   
   /* boxes */ 
@@ -2858,7 +2858,7 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
                    3 sets of cubed sphere = 3*6
                    4 filling boxex
                    1 central box */
-  const double r_outermost = Pgetd("Outermost_radius");
+  const double r_outermost = Pgetd("grid_outermost_radius");
   
   assert(maxN[0]>2 && maxN[1]>2 && maxN[2]>2);
   
