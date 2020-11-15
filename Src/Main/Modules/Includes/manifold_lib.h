@@ -288,7 +288,7 @@ typedef struct GRID_CHAR_T
 double point_value(const unsigned i, const struct Collocation_s *const coll_s);
 void initialize_collocation_struct(const Patch_T *const patch,struct Collocation_s *const colloc,const unsigned dir);
 int make_patches(Grid_T *const grid);
-int realize_geometry(Grid_T *const grid);
+int realize_interfaces(Grid_T *const grid);
 int make_JacobianT(Grid_T *const grid);
 int X_of_x(double *const X,const double *const x,const Patch_T *const patch);
 int x_of_X(double *const x,const double *const X,const Patch_T *const patch);

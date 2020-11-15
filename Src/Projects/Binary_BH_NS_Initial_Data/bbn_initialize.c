@@ -5572,7 +5572,7 @@ static Grid_T *creat_bbn_grid_CS(struct Grid_Params_S *const GridParams)
     printf("~> Making patches from scratch ...\n");
     
     make_patches(grid_next);/* making patch(es) to cover the grid */
-    realize_geometry(grid_next);/* realizing the geometry of whole grid
+    realize_interfaces(grid_next);/* realizing the geometry of whole grid
                      // including the way patches have been sewed,
                      // normal to the boundary, 
                      // outer-boundary, inner boundary and etc. */
@@ -7031,7 +7031,7 @@ void bbn_create_grid_prototype_BC(Grid_T *const grid)
   
   printf("~> Making patches from scratch with prototype surfaces ...\n");
   make_patches(grid_temp);/* making patch(es) to cover the grid */
-  realize_geometry(grid_temp);/* realizing the geometry of whole grid
+  realize_interfaces(grid_temp);/* realizing the geometry of whole grid
                    // including the way patches have been sewed,
                    // normal to the boundary, 
                    // outer-boundary, inner boundary and etc. */

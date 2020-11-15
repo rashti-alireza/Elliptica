@@ -318,7 +318,7 @@ Grid_T *bbn_init_from_checkpoint(FILE *const file)
     if(!strcmp_i(PgetsEZ("bbn_bam_export_id"),"yes"))
     {
       /* realizing the geometry */
-      realize_geometry(grid);
+      realize_interfaces(grid);
     }
   }
   

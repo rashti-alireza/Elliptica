@@ -16,7 +16,7 @@ static const char *FaceName[] = {"X == 0","X == 1","Y == 0","Y == 1",
 // at elliptic solver based on the type of this interface, such as
 // Drichlet or Neumman.
 // ->return value: EXIT_SUCCESS. */
-int realize_geometry(Grid_T *const grid)
+int realize_interfaces(Grid_T *const grid)
 {
   FUNC_TIC
   
