@@ -20,8 +20,7 @@ int realize_geometry(Grid_T *const grid)
 {
   FUNC_TIC
   
-  //if (strcmp_i(grid->kind,"grid_SplitCubedSpherical(NS,excised_BH)"))
-  if (1)
+  if (strcmp_i(grid->kind,"SplitCubedSpherical(NS+excised_BH)"))
   {
     ri_split_cubed_spherical(grid);
   }
@@ -2068,7 +2067,7 @@ static void FindInnerB_CS_coord(Patch_T *const patch)
           point[i]->innerB = 0;
     }
   }
-  else if (strcmp_i(patch->grid->kind,"BBN_Split_CubedSpherical_grid"))
+  else if (strcmp_i(patch->grid->kind,"SplitCubedSpherical(NS+excised_BH)"))
   {
     FOR_ALL(f,interface)
     {
@@ -2150,7 +2149,7 @@ static void FindExterF_CS_coord(Patch_T *const patch)
       }
     }
   }
-  else if (strcmp_i(patch->grid->kind,"BBN_Split_CubedSpherical_grid"))
+  else if (strcmp_i(patch->grid->kind,"SplitCubedSpherical(NS+excised_BH)"))
   {
     FOR_ALL(f,interface)
     {

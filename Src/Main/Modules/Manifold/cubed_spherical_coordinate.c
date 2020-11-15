@@ -130,7 +130,7 @@ void fill_patches_BBN_CubedSpherical_grid(Grid_T *const grid)
 
 /* filling split cubed spherical coordinate patches for BBN grid 
 // the BH inside is scooped out */
-void fill_patches_BBN_Split_CubedSpherical_grid(Grid_T *const grid)
+void fill_patches_Split_CubedSpherical_NS_excisedBH_grid(Grid_T *const grid)
 {
   const double r_outermost = Pgetd("Outermost_radius");
   unsigned pn = 0; /* patch number */
@@ -4004,7 +4004,7 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
 } 
 
 /* memory alloc patches for BBN_Split_CubedSpherical type */
-void alloc_patches_BBN_Split_CubedSpherical_grid(Grid_T *const grid)
+void alloc_patches_Split_CubedSpherical_NS_excisedBH_grid(Grid_T *const grid)
 {
   const unsigned Np = (unsigned)Pgeti("SplitCS_Npatches");
   unsigned i;

@@ -789,7 +789,7 @@ IsItCovering
   else
     side = 0;
     
-  if (strcmp_i(patch->grid->kind,"BBN_Split_CubedSpherical_grid"))
+  if (strcmp_i(patch->grid->kind,"SplitCubedSpherical(NS+excised_BH)"))
   {
     if (side)
       sprintf(s,"(%s_%s)",side,region);
