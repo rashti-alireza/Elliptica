@@ -20,8 +20,8 @@ int realize_geometry(Grid_T *const grid)
 {
   FUNC_TIC
   
-  //if (strcmp_i(grid->kind,"BBN_Split_CubedSpherical_grid"))
-  if (Pgeti("temp"))
+  //if (strcmp_i(grid->kind,"grid_SplitCubedSpherical(NS,excised_BH)"))
+  if (1)
   {
     ri_split_cubed_spherical(grid);
   }
@@ -81,13 +81,6 @@ static void ri_split_cubed_spherical(Grid_T *const grid)
   for (p = 0; p < grid->np; ++p)
   {
     set_subfaces_scs(grid,grid->patch[p]);
-  }
-  
-  /* check if all points have been found */
-  OpenMP_Patch_Pragma(omp parallel for)
-  for (p = 0; p < grid->np; ++p)
-  {
-    check_houseK(grid->patch[p]);
   }
   
   /* set df_dn flags and pair subfaces. */
