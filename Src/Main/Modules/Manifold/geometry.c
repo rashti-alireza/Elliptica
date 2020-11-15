@@ -3457,16 +3457,43 @@ static void pair_subfaces_and_set_bc(Grid_T *const grid)
   {
     patch = grid->patch[frank[i].pn];
     face  = patch->interface[frank[i].fn];
+    int Favor_Dirichlet = 1;
     
     if (face->df_dn_set) continue;
     
-    bc = 0;
+    /* test if we can favor Dirichlet: */
+    
     /* if it has already Dirichlet */
-    if (isD[patch->pn])
+    if (isD[patch->pn]) bc = 1;
+    else                bc = 0;
+    
+    for (sf = 0; sf < face->ns; ++sf)
     {
-      bc = 1;
-    }
+      ssubf = face->subface[sf];
+      if (!ssubf->touch) continue;
       
+      opatch = grid->patch[ssubf->adjPatch];
+      oface  = opatch->interface[ssubf->adjFace];
+      
+      /* if confilict => can't do Dirichlet */
+      if(oface->df_dn_set && oface->df_dn != (bc+1)%2)
+      {
+        Favor_Dirichlet = 0;
+        break;
+      }
+    }
+    
+    if (Favor_Dirichlet)
+    {
+      if (isD[patch->pn]) bc = 1;
+      else                bc = 0;
+    }
+    else/* favor Nuemann */
+    {
+      if (isD[patch->pn]) bc = 0;
+      else                bc = 1;
+    }
+    
     face->df_dn = bc%2;
     face->df_dn_set = 1;
     
@@ -3488,7 +3515,6 @@ static void pair_subfaces_and_set_bc(Grid_T *const grid)
       
       if (!oface->df_dn) isD[opatch->pn] = 1;
     }
-      
   }
   /* set the subface flags correspondingly */
   FOR_ALL_PATCHES(p,grid)
