@@ -590,7 +590,7 @@ void grid_characteristics_example(Grid_T *const grid)
   else if (strcmp_i(kind,"BBN_CubedSpherical_grid"))
     characteristics_BBN_CS_grid_eg(grid); 
    
-  else if (strcmp_i(kind,"SplitCubedSpherical(NS+BH)"))
+  else if (strcmp_i(kind,"SplitCubedSpherical(BH+NS)"))
     characteristics_SCS_NS_BH_eg(grid); 
     
   else
