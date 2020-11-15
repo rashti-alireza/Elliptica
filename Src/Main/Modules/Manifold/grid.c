@@ -145,8 +145,8 @@ static void fill_patches(Grid_T *const grid)
   else if (strcmp_i(grid->kind,"BNS_CubedSpherical_grid"))
     fill_patches_BNS_CubedSpherical_grid(grid); 
     
-  else if (strcmp_i(grid->kind,"SplitCubedSpherical(NS+excised_BH)"))
-    fill_patches_Split_CubedSpherical_NS_excisedBH_grid(grid); 
+  else if (strcmp_i(grid->kind,"SplitCubedSpherical(NS+BH)"))
+    fill_patches_Split_CubedSpherical_NS_BH_grid(grid); 
     
   else if (strcmp_i(grid->kind,"BBN_CubedSpherical_grid"))
     fill_patches_BBN_CubedSpherical_grid(grid); 
@@ -240,8 +240,8 @@ void alloc_patches(Grid_T *const grid)
 {
   if (strcmp_i(grid->kind,"Cartesian_grid"))
     alloc_patches_Cartesian_grid(grid);
-  else if (strcmp_i(grid->kind,"SplitCubedSpherical(NS+excised_BH)"))
-    alloc_patches_Split_CubedSpherical_NS_excisedBH_grid(grid);
+  else if (strcmp_i(grid->kind,"SplitCubedSpherical(NS+BH)"))
+    alloc_patches_Split_CubedSpherical_NS_BH_grid(grid);
   else if (strcmp_i(grid->kind,"BNS_Spherical_grid"))
     alloc_patches_BNS_Spherical_grid(grid);
   else if (strcmp_i(grid->kind,"BNS_CubedSpherical_grid"))

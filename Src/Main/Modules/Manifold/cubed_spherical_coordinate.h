@@ -64,9 +64,9 @@ double R_interpolation_CS(Field_T *const R,const double *const X);
 int x_of_X(double *const x,const double *const X,const Patch_T *const patch);
 void test_CubedSpherical_Coordinates(Grid_T *const grid);
 void alloc_patches_SNS_CubedSpherical_grid(Grid_T *const grid);
-void alloc_patches_Split_CubedSpherical_NS_excisedBH_grid(Grid_T *const grid);
+void alloc_patches_Split_CubedSpherical_NS_BH_grid(Grid_T *const grid);
 void set_params_split_CS(Grid_Char_T *const grid_char);
-void fill_patches_Split_CubedSpherical_NS_excisedBH_grid(Grid_T *const grid);
+void fill_patches_Split_CubedSpherical_NS_BH_grid(Grid_T *const grid);
 void set_object_name_split_CS(char *const obj,const char *const type);
 static void R12_derivatives_SCS(Patch_T *const patch);
 

@@ -590,8 +590,8 @@ void grid_characteristics_example(Grid_T *const grid)
   else if (strcmp_i(kind,"BBN_CubedSpherical_grid"))
     characteristics_BBN_CS_grid_eg(grid); 
    
-  else if (strcmp_i(kind,"SplitCubedSpherical(NS+excised_BH)"))
-    characteristics_SCS_NS_excisedBH_eg(grid); 
+  else if (strcmp_i(kind,"SplitCubedSpherical(NS+BH)"))
+    characteristics_SCS_NS_BH_eg(grid); 
     
   else
     Error1("There is no such %s grid kind.\n",grid->kind);
@@ -748,7 +748,7 @@ static void characteristics_BBN_CS_grid_eg(Grid_T *const grid)
 /* example of calculating the main characteristic of grid for 
 // BBN_Split_CubedSpherical grid. 
 // note: NS and BH sufaces are required to be given in Ylm expansions. */
-static void characteristics_SCS_NS_excisedBH_eg(Grid_T *const grid)
+static void characteristics_SCS_NS_BH_eg(Grid_T *const grid)
 {
   /* calculate the characteristics of this grid */
   Grid_Char_T grid_char[1] = {0};/* grid characteristics */
