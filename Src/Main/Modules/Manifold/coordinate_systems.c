@@ -758,17 +758,17 @@ static void characteristics_SCS_NS_BH_eg(Grid_T *const grid)
   const unsigned Nphi   = Nphi_Ylm(lmax);
   const unsigned Ntot   = Ntotal_Ylm(lmax);
   const double C      = Pgetd("BH_NS_separation");
-  const double R_NS_l = Pgetd("NS_radius"),
+  const double R_NS   = Pgetd("NS_radius"),
                bh_m   = Pgetd("BH_mass"),
                bh_chi = Pgetd("BH_dimensionless_spin"),
-               R_BH_r = bh_m*(1+sqrt(1-Pow2(bh_chi)));
+               R_BH = bh_m*(1+sqrt(1-Pow2(bh_chi)));
   double *rns = alloc_double(Ntot);/* surface function r = r(th,ph). */
   double *rbh = alloc_double(Ntot);/* surface function r = r(th,ph). */
   double *reClm_rns = alloc_ClmYlm(lmax),
          *imClm_rns = alloc_ClmYlm(lmax);
   double *reClm_rbh = alloc_ClmYlm(lmax),
          *imClm_rbh = alloc_ClmYlm(lmax);
-  double box_size_l,box_size_r;
+  double box_size_ns,box_size_bh;
   const char *kind;
   unsigned ij;
   
@@ -777,8 +777,8 @@ static void characteristics_SCS_NS_BH_eg(Grid_T *const grid)
   init_Legendre_root_function();
   for (ij = 0; ij < Ntot; ++ij)
   {
-    rns[ij] = R_NS_l;
-    rbh[ij] = R_BH_r;
+    rns[ij] = R_NS;
+    rbh[ij] = R_BH;
   }
   /* calculating coeffs */
   get_Ylm_coeffs(reClm_rns,imClm_rns,rns,Ntheta,Nphi,lmax);
@@ -789,38 +789,41 @@ static void characteristics_SCS_NS_BH_eg(Grid_T *const grid)
   grid->kind = dup_s(kind);
   
   assert(C > 0);
-  assert(R_NS_l > 0);
-  assert(R_BH_r > 0);
-  assert(LSS(2*R_NS_l,C));
-  assert(LSS(2*R_BH_r,C));
+  assert(R_NS > 0);
+  assert(R_BH > 0);
+  assert(LSS(2*R_NS,C));
+  assert(LSS(2*R_BH,C));
   
-  box_size_r = box_size_l = Pgetd("left_central_box_length_ratio")*R_NS_l;
+  box_size_ns = Pgetd("grid_box_length_ratio_NS")*R_NS;
+  box_size_bh = Pgetd("grid_box_length_ratio_BH")*R_BH;
   
   /* set char of grid */
   grid_char->grid = grid;
   grid_char->S    = C;
   /* NS */
   grid_char->params[ns]->obj    = "NS";
-  grid_char->params[ns]->dir    = "left";
+  grid_char->params[ns]->dir    = Pgets("grid_set_NS");
+  grid_char->params[bh]->type   = 0;
   grid_char->params[ns]->relClm = reClm_rns;
   grid_char->params[ns]->imgClm = imClm_rns;
   grid_char->params[ns]->lmax   = lmax;
-  grid_char->params[ns]->r_min  = R_NS_l;
-  grid_char->params[ns]->r_max  = R_NS_l;
-  grid_char->params[ns]->l      = box_size_l;
-  grid_char->params[ns]->w      = box_size_l;
-  grid_char->params[ns]->h      = box_size_l;
+  grid_char->params[ns]->r_min  = R_NS;
+  grid_char->params[ns]->r_max  = R_NS;
+  grid_char->params[ns]->l      = box_size_ns;
+  grid_char->params[ns]->w      = box_size_ns;
+  grid_char->params[ns]->h      = box_size_ns;
   /* BH */
   grid_char->params[bh]->obj    = "BH";
-  grid_char->params[bh]->dir    = "right";
+  grid_char->params[bh]->dir    = Pgets("grid_set_BH");
+  grid_char->params[bh]->type   = Pgets("grid_set_BH");
   grid_char->params[bh]->relClm = reClm_rbh;
   grid_char->params[bh]->imgClm = imClm_rbh;
   grid_char->params[bh]->lmax   = lmax;
-  grid_char->params[bh]->r_min  = R_BH_r;
-  grid_char->params[bh]->r_max  = R_BH_r;
-  grid_char->params[bh]->l      = box_size_r;
-  grid_char->params[bh]->w      = box_size_r;
-  grid_char->params[bh]->h      = box_size_r;
+  grid_char->params[bh]->r_min  = R_BH;
+  grid_char->params[bh]->r_max  = R_BH;
+  grid_char->params[bh]->l      = box_size_bh;
+  grid_char->params[bh]->w      = box_size_bh;
+  grid_char->params[bh]->h      = box_size_bh;
   
   /* set number of splits, points in each directions,
   // surface functions etc. */
