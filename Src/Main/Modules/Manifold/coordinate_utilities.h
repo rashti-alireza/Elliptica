@@ -87,7 +87,7 @@ IsItCovering
   (
   const Patch_T *const patch,/* the patch */
   const char *const region,/* BH/NS etc. see the list above */
-  const Flag_T Fside/* LEFT or RIGHT or NONE (side of region, if any) */
+  const Flag_T Fside/* LEFT or RIGHT or CENTER or NONE (side of region, if any) */
   );
   
   
@@ -97,7 +97,7 @@ collect_patches
   (
   Grid_T *const grid,/* the grid */
   const char *const region,/* see the list in IsItCovering function */
-  const Flag_T side,/* LEFT or RIGHT or NONE */
+  const Flag_T side,/* LEFT or RIGHT or CENTER or NONE */
   unsigned *const Np/* number of patches found */
   );
  

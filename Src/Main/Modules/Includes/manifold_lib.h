@@ -336,7 +336,7 @@ populate_CS_patch_SplitCS
   (
   Grid_T *const grid,
   const char *const obj0,/* NS, BH or etc. */
-  const Flag_T dir0,/* LEFT or RIGHT or NONE */
+  const Flag_T dir0,/* LEFT or RIGHT or CENTER or NONE */
   unsigned *const pn/* starting patch number,is increased for each add */
   );
 
@@ -355,7 +355,7 @@ IsItCovering
   (
   const Patch_T *const patch,/* the patch */
   const char *const region,/* BH/NS etc. see the list above */
-  const Flag_T Fside/* LEFT or RIGHT or NONE (side of region, if any) */
+  const Flag_T Fside/* LEFT or RIGHT or CENTER or NONE (side of region, if any) */
   );  
   
 Patch_T **
@@ -363,7 +363,7 @@ collect_patches
   (
   Grid_T *const grid,/* the grid */
   const char *const region,/* see the list in IsItCovering function */
-  const Flag_T side,/* LEFT or RIGHT or NONE */
+  const Flag_T side,/* LEFT or RIGHT or CENTER or NONE */
   unsigned *const Np/* number of patches found */
   );
 
