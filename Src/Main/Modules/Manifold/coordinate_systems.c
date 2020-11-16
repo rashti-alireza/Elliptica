@@ -830,7 +830,6 @@ static void characteristics_SCS_eg(Grid_T *const grid)
     grid_char->params[bh]->l      = box_size_bh;
     grid_char->params[bh]->w      = box_size_bh;
     grid_char->params[bh]->h      = box_size_bh;
-    grid_char->params[bh]->BHdomain = Pgets("grid_set_BH");
     
     /* set number of splits, points in each directions,
     // surface functions etc. */
@@ -1001,7 +1000,6 @@ static void characteristics_SCS_eg(Grid_T *const grid)
     grid_char->params[bh2]->l      = box_size_bh2;
     grid_char->params[bh2]->w      = box_size_bh2;
     grid_char->params[bh2]->h      = box_size_bh2;
-    grid_char->params[bh2]->BHdomain = Pgets("grid_set_BH");
     
     /* set number of splits, points in each directions,
     // surface functions etc. */
@@ -1067,7 +1065,6 @@ static void characteristics_SCS_eg(Grid_T *const grid)
     grid_char->params[bh]->l      = box_size_bh;
     grid_char->params[bh]->w      = box_size_bh;
     grid_char->params[bh]->h      = box_size_bh;
-    grid_char->params[bh]->BHdomain = Pgets("grid_set_BH");
     
     /* set number of splits, points in each directions,
     // surface functions etc. */

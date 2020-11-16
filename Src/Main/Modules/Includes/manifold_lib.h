@@ -276,7 +276,6 @@ typedef struct GRID_CHAR_T
  {
   const char *obj;/* BH or NS */
   const char *dir;/* left or right (must be lower case) */
-  const char *BHdomain;/* filled or excised (for BH) */
   const double *relClm;/* Re(Clm) at Ylm expansion of surface function */
   const double *imgClm;/* Im(Clm) at Ylm expansion of surface function */
   unsigned lmax;/* lmax in Ylm expansion */
