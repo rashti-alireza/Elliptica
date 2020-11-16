@@ -2854,13 +2854,90 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
   unsigned newN[3] = {0};/* new number of nodes in each direction */
   unsigned Nsd[3]  = {0};/* number of splits in each dir. */
   unsigned Nns[3]  = {0};/* number of nodes in each split patch */
-  unsigned Np = 23;/* total number of main patches
-                   3 sets of cubed sphere = 3*6
-                   4 filling boxex
-                   1 central box */
+  unsigned Np      = 0;/* total number of main patches */
   const double r_outermost = Pgetd("grid_outermost_radius");
   
   assert(maxN[0]>2 && maxN[1]>2 && maxN[2]>2);
+  
+  if (Pcmps("grid_kind","SplitCubedSpherical(BH+NS)"))
+  {
+    if (strstr_i(Pgets("grid_set_BH"),"excised"))
+    {
+      Np = 23;/* total number of main patches
+              // 3 sets of cubed sphere = 3*6
+              // 4 filling boxes
+              // 1 central box */
+    }
+    else if (strstr_i(Pgets("grid_set_BH"),"filled"))
+    {
+      Np = 30;/* total number of main patches
+              // 4 sets of cubed sphere = 4*6
+              // 4 filling boxes
+              // 2 central box */
+    }
+    else
+    {
+      Error0(NO_OPTION);
+    }
+  }
+  else if (Pcmps("grid_kind","SplitCubedSpherical(NS+NS)"))
+  {
+      Np = 30;/* total number of main patches
+              // 4 sets of cubed sphere = 4*6
+              // 4 filling boxes
+              // 2 central box */
+  }
+  else if (Pcmps("grid_kind","SplitCubedSpherical(BH+BH)"))
+  {
+    if (strstr_i(Pgets("grid_set_BH1"),"excised") && 
+        strstr_i(Pgets("grid_set_BH2"),"excised"))
+    {
+      Np = 16;/* total number of main patches
+              // 2 sets of cubed sphere = 2*6
+              // 4 filling boxes
+              // 0 central box */
+    }
+    else if (strstr_i(Pgets("grid_set_BH1"),"filled") && 
+             strstr_i(Pgets("grid_set_BH2"),"filled"))
+    {
+      Np = 30;/* total number of main patches
+              // 4 sets of cubed sphere = 4*6
+              // 4 filling boxes
+              // 2 central box */
+    }
+    else
+    {
+      Error0(NO_OPTION);
+    }
+  }
+  else if (Pcmps("grid_kind","SplitCubedSpherical(NS)"))
+  {
+    Np = 13;/* total number of main patches
+            // 2 sets of cubed sphere = 2*6
+            // 1 central box */
+  }
+  else if (Pcmps("grid_kind","SplitCubedSpherical(BH)"))
+  {
+    if (strstr_i(Pgets("grid_set_BH"),"excised"))
+    {
+      Np = 6;/* total number of main patches
+             // 1 sets of cubed sphere = 1*6 */
+    }
+    else if (strstr_i(Pgets("grid_set_BH"),"filled"))
+    {
+      Np = 13;/* total number of main patches
+              // 2 sets of cubed sphere = 2*6
+              // 1 central box */
+    }
+    else
+    {
+      Error0(NO_OPTION);
+    }
+  }
+  else
+  {
+    Error0(NO_OPTION);
+  }
   
   /* for each direction divide until the max resolution */
   for (i = 0; i < 3; ++i)
