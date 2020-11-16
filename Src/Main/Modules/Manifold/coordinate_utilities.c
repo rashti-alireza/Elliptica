@@ -780,6 +780,7 @@ IsItCovering
   const Flag_T Fside/* LEFT or RIGHT or NONE (side of region, if any) */
   )
 {
+  Grid_T *const grid = patch->grid;
   int ret = 0;  
   const char *side = 0;
   char s[999] = {'\0'};
@@ -789,7 +790,12 @@ IsItCovering
   else
     side = 0;
     
-  if (strcmp_i(patch->grid->kind,"SplitCubedSpherical(BH+NS)"))
+  if (strcmp_i(grid->kind,"SplitCubedSpherical(BH+NS)") ||
+      strcmp_i(grid->kind,"SplitCubedSpherical(NS+NS)") ||
+      strcmp_i(grid->kind,"SplitCubedSpherical(BH+BH)") ||
+      strcmp_i(grid->kind,"SplitCubedSpherical(NS)")    ||
+      strcmp_i(grid->kind,"SplitCubedSpherical(BH)")
+     )
   {
     if (side)
       sprintf(s,"(%s_%s)",side,region);
