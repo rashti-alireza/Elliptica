@@ -238,10 +238,16 @@ void *alloc_grid(void)
 /* allocating memory for patches based on type of coord sys */
 void alloc_patches(Grid_T *const grid)
 {
-  if (strcmp_i(grid->kind,"Cartesian_grid"))
+  if (strcmp_i(grid->kind,"SplitCubedSpherical(BH+NS)") ||
+      strcmp_i(grid->kind,"SplitCubedSpherical(NS+NS)") ||
+      strcmp_i(grid->kind,"SplitCubedSpherical(BH+BH)") ||
+      strcmp_i(grid->kind,"SplitCubedSpherical(NS)")    ||
+      strcmp_i(grid->kind,"SplitCubedSpherical(BH)")
+     )
+    alloc_patches_Split_CubedSpherical_grid(grid);
+  
+  else if (strcmp_i(grid->kind,"Cartesian_grid"))
     alloc_patches_Cartesian_grid(grid);
-  else if (strcmp_i(grid->kind,"SplitCubedSpherical(BH+NS)"))
-    alloc_patches_Split_CubedSpherical_NS_BH_grid(grid);
   else if (strcmp_i(grid->kind,"BNS_Spherical_grid"))
     alloc_patches_BNS_Spherical_grid(grid);
   else if (strcmp_i(grid->kind,"BNS_CubedSpherical_grid"))

@@ -4964,7 +4964,7 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
 } 
 
 /* memory alloc patches for BBN_Split_CubedSpherical type */
-void alloc_patches_Split_CubedSpherical_NS_BH_grid(Grid_T *const grid)
+void alloc_patches_Split_CubedSpherical_grid(Grid_T *const grid)
 {
   const unsigned Np = (unsigned)Pgeti("SplitCS_Npatches");
   unsigned i;
