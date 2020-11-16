@@ -4,6 +4,31 @@
 #include "maths_general_lib.h"
 #include "manifold_lib.h"
 
+/* handy error sprintf, note: patch and f are required  */
+#define err_spr_adj(s,x,adjpatch,adjface)  \
+sprintf(s,\
+  "At '%s' on %s for \n"\
+  " point (%g,%g,%g) no adjacent patch found!\n"\
+  " Possible adjacent patch is:\n '%s' on %s.\n"\
+  " Please consider to increase the resolution.",\
+  patch->name,FaceName[f],(x)[0],(x)[1],(x)[2],\
+  adjpatch->name,FaceName[adjface]);
+
+#define err_spr(s,x)  \
+sprintf(s,\
+  "At '%s' on %s for \n"\
+  " point (%g,%g,%g) no adjacent patch found!\n"\
+  " Please consider to increase the resolution.",\
+  patch->name,FaceName[f],(x)[0],(x)[1],(x)[2]);
+
+
+/* handy error sprintf for warning about normal match  */
+#define warn_normal_spr(s,patch,adj_patch,adj_face)  \
+   sprintf(s,"~> Warning!\nfor '%s' on %s and \nadjacent '%s' on %s:\n"\
+   "normal vectors are not align: angle = %g degree(s).\n"\
+   "Please consider to increase the resolution.",\
+   patch->name,FaceName[f],adj_patch->name,\
+   FaceName[adj_face],acos(N1dotN2)*180/M_PI);
 
 /* type point */
 enum Type
@@ -59,7 +84,6 @@ typedef struct SUBF_T
 }Subf_T;
 
 static void fill_basics(Patch_T *const patch);
-static void fill_N(Patch_T *const patch);
 static void fill_geometry(Grid_T * const grid,unsigned **const point_flag);
 static void FindInnerB_Cartesian_coord(Patch_T *const patch);
 static void FindExterF_Cartesian_coord(Patch_T *const patch);
@@ -97,11 +121,9 @@ void point_finder(Needle_T *const needle);
 double *normal_vec(Point_T *const point);
 void needle_ex(Needle_T *const needle,const Patch_T *const patch);
 void needle_in(Needle_T *const needle,const Patch_T *const patch);
-void flush_houseK(Patch_T *const patch);
-void check_houseK(const Patch_T *const patch);
 unsigned find_node(const double *const x, const Patch_T *const patch,Flag_T *const flg);
 unsigned node_onFace(const double *const x, const unsigned f,const Patch_T *const patch);
-int realize_geometry(Grid_T *const grid);
+int realize_interfaces(Grid_T *const grid);
 void make_normal_outward(Point_T *const point);
 static void misc(Grid_T *const grid);
 static int IsMatchedOtherInnerSubface(PointSet_T *const Pnt);
@@ -118,3 +140,23 @@ void alloc_interface(Patch_T *const patch);
 void *alloc_point(const unsigned s);
 void free_points(Grid_T *const grid);
 void free_patch_interface(Patch_T *const patch);
+static void ri_split_cubed_spherical(Grid_T *const grid);
+static void ri_general_method(Grid_T *const grid);
+static void check_houseK(Patch_T *const patch);
+static void flush_houseK(Patch_T *const patch);
+static void fill_N(Patch_T *const patch);
+static void add_to_subface_scs(Point_T *const pnt);
+static void add_point_scs(SubFace_T *const subface,const Point_T *const pnt);
+static void set_subfaces_scs(Grid_T *const grid,Patch_T *const patch);
+
+static void 
+find_adjacent_scs
+  (
+  Grid_T *const grid,
+  Patch_T *const patch,
+  unsigned *const point_flag
+  );
+
+static void pair_subfaces_and_set_bc(Grid_T *const grid);
+static unsigned counter_n_adjacent_faces(const Interface_T *const face);
+

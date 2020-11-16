@@ -497,7 +497,7 @@ static void bbn_phi_grid_CS(Grid_T *const phi_grid,Grid_T *const grid)
   assert(i==7);
   
   /* now let's fill up phi_grid->patch[?]->interface */
-  realize_geometry(phi_grid);      
+  realize_interfaces(phi_grid);      
 }
 
 static void bbn_XCTS_fill_db_eqs(sEquation_T ***const field_eq, 

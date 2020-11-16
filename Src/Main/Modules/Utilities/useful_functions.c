@@ -147,14 +147,15 @@ int IsOnFace(const double *const x, const Patch_T *const patch,unsigned *const f
   for (u = 0; u < TOT_FACE; u++)
     f[u] = 0;
   
-  X_of_x(X,x,patch);
-  
   c = 0;
-  for (u = 0; u < TOT_FACE; u++)
+  if(X_of_x(X,x,patch))
   {
-    f[u] = check_interface(X,patch,u);
-    
-    if (f[u] == 1) c++;
+    for (u = 0; u < TOT_FACE; u++)
+    {
+      f[u] = check_interface(X,patch,u);
+      
+      if (f[u] == 1) c++;
+    }
   }
   
   return c;
@@ -798,10 +799,13 @@ void dbprint(const double *v,const unsigned n,const char *const desc)
 /* issue a shell command using system */
 void shell_command(const char *const cmd)
 {
+  int ret;
   printf("shell command:\n");
-  printf("$ %s\n",cmd);
+  printf("$  %s\n",cmd);
   fflush(stdout);
-  system(cmd);
+  ret = system(cmd);
+  printf("=> returned (%d).\n",ret);
+  fflush(stdout);
 }
 
 /* return value-> N*sizeof(double), using calloc*/

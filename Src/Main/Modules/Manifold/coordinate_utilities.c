@@ -5,7 +5,6 @@
 
 #include "coordinate_utilities.h"
 
-#define RES_EPS 1E-11
 
 /* find the point in patches given by needle and fill
 // the needle with the answers.
@@ -187,15 +186,12 @@ static void find(Needle_T *const needle,Mode_T mode)
   for (i = 0; i < np; i++)
   {
     double X[3];
-    double lim[TOT_Limit];
     Patch_T *patch = needle->grid->patch[p[i]];
     int a;
     
     a = X_of_x(X,needle->x,patch);
     
-    fill_limits(lim,patch);
-    
-    if (a && IsInside(X,lim))
+    if (a)
       needle_ans(needle,patch);
       
   }
@@ -210,7 +206,7 @@ int X_of_x(double *const X,const double *const x,const Patch_T *const patch)
   int r = 0;
   
   if (patch->coordsys == Cartesian)
-    r = X_of_x_Cartesian_coord(X,x);
+    r = X_of_x_Cartesian_coord(X,x,patch);
   else if (patch->coordsys == CubedSpherical)
     r = X_of_x_CS_coord(X,x,patch,1);
   else
@@ -242,13 +238,15 @@ int x_of_X(double *const x,const double *const X,const Patch_T *const patch)
 // ->return value 1 if it is successful, otherwise 0. */
 static int x_of_X_Cartesian_coord(double *const x,const double *const X,const Patch_T *const patch)
 {
-  UNUSED(patch);  
-  
   x[0] = X[0];
   x[1] = X[1];
   x[2] = X[2];
   
-  return 1;
+  /* test if this is a valid answer */
+  if (IsInside(x,patch->min,patch->max,EPS_coord_general))
+    return 1;
+ 
+  return 0;
 }
 
 /* find x in cartesian coord correspond to X (general coords) 
@@ -264,17 +262,46 @@ static int x_of_X_CS_coord(double *const x,const double *const X,const Patch_T *
   Field_T *R1_f = patch->CoordSysInfo->CubedSphericalCoord->R1_f,
           *R2_f = patch->CoordSysInfo->CubedSphericalCoord->R2_f;
   const double xc1 = patch->CoordSysInfo->CubedSphericalCoord->xc1,
-               xc2 = patch->CoordSysInfo->CubedSphericalCoord->xc2,
-                R1 = patch->CoordSysInfo->CubedSphericalCoord->R1,
-                R2 = patch->CoordSysInfo->CubedSphericalCoord->R2;
+               xc2 = patch->CoordSysInfo->CubedSphericalCoord->xc2;
+  double R1 = patch->CoordSysInfo->CubedSphericalCoord->R1,
+         R2 = patch->CoordSysInfo->CubedSphericalCoord->R2;
   const double *const C = patch->c;/* center of origine translated */
-  double x1,x2,d,L;
+  double x1,x2,d,ratio;
   double x_test[3],X_test[3],dX;
   
   SignAndIndex_permutation_CubedSphere(side,&a,&b,&c,&S);
 
   switch (type)
   {
+    case OJ_T_SCS:
+      d = sqrt(1+Pow2(X[0])+Pow2(X[1]));
+      x1 = S*R_interpolation_CS(R1_f,X)/d;
+      x2 = S*R_interpolation_CS(R2_f,X)/d;
+      
+      x[c] = x1+(x2-x1)*X[2];
+      x[a] = S*x[c]*X[0];
+      x[b] = S*x[c]*X[1];
+      
+      x[a]+= C[a];
+      x[b]+= C[b];
+      x[c]+= C[c];
+      
+      break;
+    case OT_T_SCS:
+      R1 = R_interpolation_CS(R1_f,X);
+      R2 = R_interpolation_CS(R2_f,X);
+      ratio = 1.-R1/R2;
+      d = sqrt(1+Pow2(X[0])+Pow2(X[1]));
+      x1 = S*R1/d;
+      x[c] = x1/(1.-ratio*X[2]);
+      x[a] = S*x[c]*X[0];
+      x[b] = S*x[c]*X[1];
+      
+      x[a]+= C[a];
+      x[b]+= C[b];
+      x[c]+= C[c];
+      
+    break;
     case NS_T_CS:
       d = sqrt(1+Pow2(X[0])+Pow2(X[1]));
       x1 = xc1;
@@ -304,9 +331,9 @@ static int x_of_X_CS_coord(double *const x,const double *const X,const Patch_T *
     case OT_T1_CS:
       d  = sqrt(1+Pow2(X[0])+Pow2(X[1]));
       x1 = xc1;
-      L  = 1.-S*d*xc1/R2;
+      ratio  = 1.-S*d*xc1/R2;
       
-      x[c] = x1/(1-L*X[2]);
+      x[c] = x1/(1-ratio*X[2]);
       x[a] = S*x[c]*X[0];
       x[b] = S*x[c]*X[1];
       
@@ -315,11 +342,11 @@ static int x_of_X_CS_coord(double *const x,const double *const X,const Patch_T *
       x[c]+= C[c];
     break;
     case OT_T2_CS:
-      L = 1.-R1/R2;
+      ratio = 1.-R1/R2;
       d = sqrt(1+Pow2(X[0])+Pow2(X[1]));
       x1 = S*R1/d;
       
-      x[c] = x1/(1.-L*X[2]);
+      x[c] = x1/(1.-ratio*X[2]);
       x[a] = S*x[c]*X[0];
       x[b] = S*x[c]*X[1];
       
@@ -339,7 +366,8 @@ static int x_of_X_CS_coord(double *const x,const double *const X,const Patch_T *
     x_test[2] = x[2];
     X_of_x_CS_coord(X_test,x_test,patch,0);
     dX = root_square(3,X,X_test);
-    if (!EQL(dX,0))
+    
+    if (!EQL_coord(dX,0,EPS_coord_general))
       return 0;
   }
   
@@ -349,13 +377,17 @@ static int x_of_X_CS_coord(double *const x,const double *const X,const Patch_T *
 /* find point X correspond to x for patch with Cartesian coord.
 // ->return value: 1 if it is successful, otherwise 0.
 */
-static int X_of_x_Cartesian_coord(double *const X,const double *const x)
+static int X_of_x_Cartesian_coord(double *const X,const double *const x,const Patch_T *const patch)
 {
   X[0] = x[0];
   X[1] = x[1];
   X[2] = x[2];
   
-  return 1;
+  /* test if this is a valid answer */
+  if (IsInside(X,patch->min,patch->max,EPS_coord_general))
+    return 1;
+  
+  return 0;
 }
 
 /* find point X correspond to cart-coord for patch with cubed spherical coord.
@@ -375,12 +407,14 @@ static int X_of_x_CS_coord(double *const X,const double *const cart,const Patch_
   Field_T *R1_f = patch->CoordSysInfo->CubedSphericalCoord->R1_f,
           *R2_f = patch->CoordSysInfo->CubedSphericalCoord->R2_f;
   const double xc1 = patch->CoordSysInfo->CubedSphericalCoord->xc1,
-               xc2 = patch->CoordSysInfo->CubedSphericalCoord->xc2,
-                R1 = patch->CoordSysInfo->CubedSphericalCoord->R1,
-                R2 = patch->CoordSysInfo->CubedSphericalCoord->R2;
-  double x1,x2,d,L;
+               xc2 = patch->CoordSysInfo->CubedSphericalCoord->xc2;
+  double R1 = patch->CoordSysInfo->CubedSphericalCoord->R1,
+         R2 = patch->CoordSysInfo->CubedSphericalCoord->R2;
+  double x1,x2,d,ratio;
   double x_test[3],X_test[3],dx;
- 
+  double eps = EPS_coord_general;
+  const unsigned *n;
+  
   SignAndIndex_permutation_CubedSphere(side,&i,&j,&k,&S);
   
   X[0] = S*x[i]/x[k];
@@ -388,6 +422,56 @@ static int X_of_x_CS_coord(double *const X,const double *const cart,const Patch_
   
   switch (type)
   {
+    case OJ_T_SCS:
+      d    = sqrt(1+Pow2(X[0])+Pow2(X[1]));
+      x1   = S*R_interpolation_CS(R1_f,X)/d;
+      x2   = S*R_interpolation_CS(R2_f,X)/d;
+      X[2] = (x[k]-x1)/(x2-x1);
+      
+      /*  for interpolation error */
+      n = patch->n;
+      if (patch->nsplit[2] == 1)
+      {
+        if (n[2] < LOW_n)
+          eps = EPS_coord_LOW_n1/(n[0]*n[1]*n[2]);
+        else
+          eps = EPS_coord_OB_SCS1/(n[0]*n[1]*n[2]);
+      }
+      else
+      {
+        if (n[2] < LOW_n)
+          eps = EPS_coord_LOW_n2/(n[0]*n[1]*n[2]);
+        else
+          eps = EPS_coord_OB_SCS2/(n[0]*n[1]*n[2]);
+      }
+      
+    break;
+    case OT_T_SCS:
+      R1 = R_interpolation_CS(R1_f,X);
+      R2 = R_interpolation_CS(R2_f,X);
+      ratio = 1.-R1/R2;
+      d  = sqrt(1+Pow2(X[0])+Pow2(X[1]));
+      x1 = S*R1/d;
+      X[2] = (1-x1/x[k])/ratio;
+      
+      /*  for interpolation error */
+      n = patch->n;
+      if (patch->nsplit[2] == 1)
+      {
+        if (n[2] < LOW_n)
+          eps = EPS_coord_LOW_n1/(n[0]*n[1]*n[2]);
+        else
+          eps = EPS_coord_OT_SCS1/(n[0]*n[1]*n[2]);
+      }
+      else
+      {
+        if (n[2] < LOW_n)
+          eps = EPS_coord_LOW_n2/(n[0]*n[1]*n[2]);
+        else
+          eps = EPS_coord_OT_SCS2/(n[0]*n[1]*n[2]);
+      }
+
+    break;
     case NS_T_CS:
       d = sqrt(1+Pow2(X[0])+Pow2(X[1]));
       x1 = xc1;
@@ -402,33 +486,40 @@ static int X_of_x_CS_coord(double *const X,const double *const cart,const Patch_
     break;
     case OT_T1_CS:
       d = sqrt(1+Pow2(X[0])+Pow2(X[1]));
-      L = 1.-S*d*xc1/R2;
-      X[2] = (1-xc1/x[k])/L;
+      ratio = 1.-S*d*xc1/R2;
+      X[2] = (1-xc1/x[k])/ratio;
     break;
     case OT_T2_CS:
-      L = 1.-R1/R2;
+      ratio = 1.-R1/R2;
       d  = sqrt(1+Pow2(X[0])+Pow2(X[1]));
       x1 = S*R1/d;
-      X[2] = (1-x1/x[k])/L;
+      X[2] = (1-x1/x[k])/ratio;
     break;
     default:
       Error0(NO_OPTION);
   }
   
   /* adujusting boundary number to avoid some unexpeted behavior
-  // due to round off error. */
-  if (EQL(X[0],1))  X[0] = 1;
-  if (EQL(X[0],-1)) X[0] = -1;
-  
-  if (EQL(X[1],1))  X[1] = 1;
-  if (EQL(X[1],-1)) X[1] = -1;
-  
-  if (EQL(X[2],1))  X[2] = 1;
-  if (EQL(X[2],0))  X[2] = 0;
+  // due to interpolation error. */
+  if (EQL_coord(X[0],patch->max[0],eps))  X[0] = patch->max[0];
+  if (EQL_coord(X[0],patch->min[0],eps))  X[0] = patch->min[0];
+  if (EQL_coord(X[1],patch->max[1],eps))  X[1] = patch->max[1];
+  if (EQL_coord(X[1],patch->min[1],eps))  X[1] = patch->min[1];
+  if (EQL_coord(X[2],patch->max[2],eps))  X[2] = patch->max[2];
+  if (EQL_coord(X[2],patch->min[2],eps))  X[2] = patch->min[2];  
   
   /* test the solution */
   if (check_flg)
   {
+    unsigned interval_test = 0;
+    
+    if (IsInside(X,patch->min,patch->max,eps))
+       interval_test = 1;
+    
+    if (!interval_test)
+      return 0;
+      
+    /* test if it gives you the same x coords */
     X_test[0] = X[0];
     X_test[1] = X[1];
     X_test[2] = X[2];
@@ -436,41 +527,11 @@ static int X_of_x_CS_coord(double *const X,const double *const cart,const Patch_
     dx = root_square(3,cart,x_test);
     double scale = MaxMag_d(root_square(3,cart,0),root_square(3,x_test,0));
     scale = scale < 1 ? 1 : scale;
-    if (!EQL(dx/scale,0))
+    if (!EQL_coord(dx/scale,0,eps))
       return 0;
   }
   
   return 1;
-}
-
-/* fill limits based on patch boundary */
-static void fill_limits(double *const lim, const Patch_T *const patch)
-{
-  lim[MIN0] = patch->min[0];
-  lim[MIN1] = patch->min[1];
-  lim[MIN2] = patch->min[2];
-  lim[MAX0] = patch->max[0];
-  lim[MAX1] = patch->max[1];
-  lim[MAX2] = patch->max[2];
-}
-
-/* if x occurs inside the limits (boundary of a patch).
-// ->return value : 1 if yes, 0 otherwise.
-*/
-static int IsInside(const double *const x,const double *const lim)
-{
-  int v = 0;
-  
-  if (
-      LSSEQL(x[0],lim[MAX0]) && GRTEQL(x[0],lim[MIN0]) &&
-      LSSEQL(x[1],lim[MAX1]) && GRTEQL(x[1],lim[MIN1]) &&
-      LSSEQL(x[2],lim[MAX2]) && GRTEQL(x[2],lim[MIN2])
-      )
-    v = 1;
-  else
-    v = 0;
-    
-  return v;
 }
 
 /* given point and patch find if the is any node collocated 
@@ -480,18 +541,18 @@ static int IsInside(const double *const x,const double *const lim)
 unsigned find_node(const double *const x, const Patch_T *const patch,Flag_T *const flg)
 {
   unsigned v = UINT_MAX;
-  double res = RES_EPS*root_square(3,x,0);/* resolution */
+  double res = EPS_collocation*root_square(3,x,0);/* resolution */
   unsigned i;
   double *y, nrm;
 
-  res = GRT(res,RES_EPS) ? res : RES_EPS;
+  res = GRT(res,EPS_collocation) ? res : EPS_collocation;
   *flg = NONE;
     
   FOR_ALL(i,patch->node)
   {
     y = patch->node[i]->x;
     nrm = root_square(3,x,y);
-    if (LSSEQL(nrm,res))
+    if (LSSEQL_coord(nrm,res,EPS_coord_general))
     {
       v = i;
       res = nrm;
@@ -567,4 +628,190 @@ void free_needle(Needle_T *needle)
   
   free(needle);
 }
+
+/* given (X,Y) in a specified surface of Z from NS/BH in cubed spherical coords
+// it finds the associated polar and azimuthal angels on the surface.
+// note: it does not depend on Z */
+void theta_phi_of_XY_CS(double *const theta,double *const phi,const double *const X,const Flag_T side)
+{
+  const double a = X[0];
+  const double b = X[1];
+  const double d = sqrt(1+Pow2(a)+Pow2(b));
+  
+  switch (side)
+  {
+    case UP:
+      *phi   = arctan(b,a);
+      *theta = acos(1/d);
+    break;
+    case DOWN:
+      *phi   = arctan(a,b);
+      *theta = acos(-1/d);
+    break;
+    case LEFT:
+      *phi   = arctan(-1,a);
+      *theta = acos(b/d);
+    break;
+    case RIGHT:
+      *phi   = arctan(1,b);
+      *theta = acos(a/d);
+    break;
+    case BACK:
+      *phi   = arctan(b,-1);
+      *theta = acos(a/d);
+    break;
+    case FRONT:
+      *phi   = arctan(a,1);
+      *theta = acos(b/d);
+    break;
+    default:
+      Error0(NO_OPTION);
+  }
+  
+  /* more test */
+  if(0)
+  {
+    double th = *theta;
+    double ph = *phi;
+    switch (side)
+    {
+      case UP:
+        if (!EQL(X[0],tan(th)*cos(ph)))
+          Error0("Wrong transformation");
+        if (!EQL(X[1],tan(th)*sin(ph)))
+          Error0("Wrong transformation");
+      break;
+      case DOWN:
+        if (!EQL(X[0],-tan(th)*sin(ph)))
+          Error0("Wrong transformation");
+        if (!EQL(X[1],-tan(th)*cos(ph)))
+          Error0("Wrong transformation");
+      break;
+      case LEFT:
+        if (!EQL(X[0],-1./tan(ph)))
+          Error0("Wrong transformation");
+        if (!EQL(X[1],-1./(tan(th)*sin(ph))))
+          Error0("Wrong transformation");
+      break;
+      case RIGHT:
+        if (!EQL(X[0],1./(tan(th)*sin(ph))))
+          Error0("Wrong transformation");
+        if (!EQL(X[1],1./tan(ph)))
+          Error0("Wrong transformation");
+      break;
+      case BACK:
+        if (!EQL(X[0],-1./(tan(th)*cos(ph))))
+          Error0("Wrong transformation");
+        if (!EQL(X[1],-tan(ph)))
+          Error0("Wrong transformation");
+      break;
+      case FRONT:
+        if (!EQL(X[0],tan(ph)))
+          Error0("Wrong transformation");
+        if (!EQL(X[1],1/(tan(th)*cos(ph))))
+          Error0("Wrong transformation");
+      break;
+      default:
+        Error0(NO_OPTION);
+    }
+  }
+}
+
+/* ->: collected patches which cover the object and number of patches Np
+// which cover the specified region. */
+Patch_T **
+collect_patches
+  (
+  Grid_T *const grid,/* the grid */
+  const char *const region,/* see the list in IsItCovering function */
+  const Flag_T side,/* LEFT or RIGHT or CENTER or NONE */
+  unsigned *const Np/* number of patches found */
+  )
+{
+  Patch_T **patches = 0;
+  unsigned np,p;
+  
+  np = 0;
+  FOR_ALL_PATCHES(p,grid)
+  {
+    Patch_T *patch = grid->patch[p];
+    if (IsItCovering(patch,region,side))
+    {
+      patches = realloc(patches,(np+1)*sizeof(*patches));
+      IsNull(patches);
+      patches[np] = patch;
+      ++np;
+    }
+  }
+  
+  /* check if there is no such region */
+  if (np == 0)
+    Error0("No such region!");
+  
+  *Np = np;
+  return patches;
+}
+
+/* ->: Is this patch covering this region? yes = 1, no = 0. 
+// list of regions:
+// 
+// "NS" == the whole NS patches including central box (if any)
+// "BH" == the whole BH patches including central box (if any)
+// "NS_surface" == only patches include the NS surface from inside
+// "BH_surface" == only patches include the BH surface from inside
+// "NS_surrounding_surface" == only patches include the NS surface from outside
+// "BH_surrounding_surface" == only patches include the BH surface from outside
+// "NS_surrounding" == the whole NS surrounding patches
+// "BH_surrounding" == the whole NS surrounding patches
+// "outermost" == the whole outermost patches
+// "filling_box" == only patches cover the filling box
+// "central_box" == only patches cover the central box
+//
+// ex:
+// ===
+// IsItCovering(patch,"outermost",NONE);  => outemost patch?
+// IsItCovering(patch,"NS_surface",LEFT); => NS_surface patch?
+*/
+int 
+IsItCovering
+  (
+  const Patch_T *const patch,/* the patch */
+  const char *const region,/* BH/NS etc. see the list above */
+  const Flag_T Fside/* LEFT or RIGHT or CENTER or NONE (side of region, if any) */
+  )
+{
+  Grid_T *const grid = patch->grid;
+  int ret = 0;  
+  const char *side = 0;
+  char s[999] = {'\0'};
+   
+  if(Fside == LEFT || Fside == RIGHT || Fside == CENTER)
+    side = StrSide[Fside];
+  else
+    side = 0;
+    
+  if (strcmp_i(grid->kind,"SplitCubedSpherical(BH+NS)") ||
+      strcmp_i(grid->kind,"SplitCubedSpherical(NS+NS)") ||
+      strcmp_i(grid->kind,"SplitCubedSpherical(BH+BH)") ||
+      strcmp_i(grid->kind,"SplitCubedSpherical(NS)")    ||
+      strcmp_i(grid->kind,"SplitCubedSpherical(BH)")
+     )
+  {
+    if (side)
+      sprintf(s,"(%s_%s)",side,region);
+    else
+      sprintf(s,"(%s)",region);
+    
+    /* if the request is obvious */  
+    if (strstr_i(patch->CoordSysInfo->region,s))
+      return 1;
+  }
+  else
+  {
+    Error0(NO_OPTION);
+  }
+  
+  return ret;
+}
+
 

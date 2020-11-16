@@ -11,3 +11,17 @@ void fill_patches_Cartesian_grid(Grid_T *const grid);
 void populate_right_box_sns(Grid_T *const grid,const unsigned pn);
 void populate_central_NS_central_box(Grid_T *const grid,const unsigned pn);
 void populate_right_BH_central_box(Grid_T *const grid,const unsigned pn);
+
+
+void 
+populate_box_patch_SplitCS
+  (
+  Grid_T *const grid,
+  const char *const obj0,/* filling_box,central_box. */
+  const Flag_T dir0,/* direction */
+  unsigned *const pn,/* starting patch number,is increased for each add */
+  const char *const region/* covering region */
+  );
+  
+  
+  

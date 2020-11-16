@@ -98,9 +98,9 @@ SUB_MAKE_FLAGS += --warn-undefined-variables
 ##############
 CC     = gcc
 # some default flags for the compiler
-OFLAGS = -g
-WARN   = -Wall
-DFLAGS =
+OFLAGS =# to be determined in MyConfig
+WARN   =# to be determined in MyConfig
+DFLAGS =# to be determined in MyConfig
 # finding c files inter-dependencies using DEPFLAGS flag of the compiler
 DEPFLAGS = -M
 # ar command to archive the object files

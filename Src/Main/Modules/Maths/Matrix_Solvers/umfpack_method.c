@@ -83,6 +83,7 @@ int direct_solver_umfpack_dl(void *vp)
   double Info[UMFPACK_INFO];
   long status;
   double time1 = get_time_sec();
+  const double Gb = 1.0E9;
   
   if (!umf->a->ccs_l_f)
     Error0("The matrix a in a.x = b in umfpack must be in CCS long format.\n");
@@ -113,13 +114,21 @@ int direct_solver_umfpack_dl(void *vp)
             "o.  Solver            = UMFPACK_dl\n"
             "o.  Matrix Dimension  = %dx%d\n"
             "o.  Condition Number  = %e\n"
-            "o.  Refinement_Step   = %d\n" 
+            "o.  Sparsity          = %0.2f(%%)\n"
+            "o.  Refinement Step   = %d\n"
+            "o.  Peak Memory       = %g(Gbs)\n"
+            "o.  Number of Flops   = %g\n"
+            "o.  Number of Realloc = %g\n"
             "o.  Solver Wall-Clock = %g(s)\n",
-                                           row,col,
-                                           1/Info[UMFPACK_RCOND],
-                                           (int)Control[UMFPACK_IRSTEP],
-                                           get_time_sec()-time1);
-  
+             row,col,
+             1/Info[UMFPACK_RCOND],
+             (1-(double)Ap[col]/((double)row*col))*100.,
+             (int)Control[UMFPACK_IRSTEP],
+             Info[UMFPACK_PEAK_MEMORY]*Info[UMFPACK_SIZE_OF_UNIT]/Gb,
+             Info[UMFPACK_FLOPS],
+             Info[UMFPACK_NUMERIC_REALLOC],
+             get_time_sec()-time1);
+
   return EXIT_SUCCESS;
 }
 

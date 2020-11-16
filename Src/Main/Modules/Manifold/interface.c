@@ -3,52 +3,92 @@
 // June 2018
 */
 
-#include "geometry.h"
+#include "interface.h"
 
-#define EPS 1E-5
-#define FACE_NUM 6
-
+static const double   Huge_Eps    = 2;
+static const double   ScaleFactor = 1E-5;/* scale factor */
+static const unsigned NFaces      = 6;/* total number of faces */
+/* schematic names for surfaces correspond to FACE_T enum. */
+static const char *FaceName[] = {"X == 0","X == 1","Y == 0","Y == 1",
+                                 "Z == 0","Z == 1",0};
 /* 
-// realizing the geometry of grid such as how patches are glued
-// normal vectors at boundary, boundary of grid and etc.
-// basically, it goes through all of points on interfaces of a patch,
-// finding their normals and adjacent points and then studying
-// how best this point and its neighbor matched.
-// NOTE: NOT THREAD SAFE!
-// ->return value: EXIT_SUCCESS
-*/
-int realize_geometry(Grid_T *const grid)
+// realizing interfaces of each patch to set boundary condition
+// at elliptic solver based on the type of this interface, such as
+// Drichlet or Neumman.
+// ->return value: EXIT_SUCCESS. */
+int realize_interfaces(Grid_T *const grid)
 {
-  unsigned i;
+  FUNC_TIC
   
-  pr_line_custom('=');
-  printf("{ Realizing boundary conditions for each patch ...\n");
+  if (strcmp_i(grid->kind,"SplitCubedSpherical(BH+NS)") ||
+      strcmp_i(grid->kind,"SplitCubedSpherical(NS+NS)") ||
+      strcmp_i(grid->kind,"SplitCubedSpherical(BH+BH)") ||
+      strcmp_i(grid->kind,"SplitCubedSpherical(NS)")    ||
+      strcmp_i(grid->kind,"SplitCubedSpherical(BH)")
+     )
+  {
+    ri_split_cubed_spherical(grid);
+  }
+  else
+  {
+    ri_general_method(grid);
+  }  
+  
+  FUNC_TOC
+  
+  return EXIT_SUCCESS;
+} 
+
+/* realizing interfaces for split cubed spherical grid kind.
+// this function is required cos ri_general is very slow specially
+// when the number of points and interface's are many, like split 
+// cubed spherical (SCS), and also ri_general is failing for this 
+// kind of grid. in this algo. we use the fact that in SCS 
+// all interfaces either touch each other or reach innerB or outerB.
+// furthermore, there is no overlapping patch. */
+static void ri_split_cubed_spherical(Grid_T *const grid)
+{
+  FUNC_TIC
   
   /* keep track of counted points; 1 means counted, 0 means not. */
   unsigned **point_flag = calloc(grid->np,sizeof(*point_flag));
   IsNull(point_flag);
   
-  FOR_ALL(i,grid->patch)
+  unsigned p;
+
+  OpenMP_Patch_Pragma(omp parallel for)
+  for (p = 0; p < grid->np; ++p)
   {
-    Patch_T *const patch = grid->patch[i];
+    Patch_T *const patch = grid->patch[p];
     
-    point_flag[i] = calloc(patch->nn,sizeof(*point_flag[i]));
-    IsNull(point_flag[i]);
+    point_flag[p] = calloc(patch->nn,sizeof(*point_flag[p]));
+    IsNull(point_flag[p]);
     
-    alloc_interface(patch);/* allocating interfaces */
-    fill_basics(patch);/* filling basic elements */
-    fill_N(patch);/* filling point[?]->N */
-    flush_houseK(patch);/* set all of housK flag to zero */
+    /* allocating interfaces */
+    alloc_interface(patch);
+    /* filling basic elements */
+    fill_basics(patch);
+    /* filling point[?]->N */
+    fill_N(patch);
+    /* set all of housK flag to zero */
+    flush_houseK(patch);
   }
   
-  /* find various geometry of each point */
-  fill_geometry(grid,point_flag);
+  /* find all subfaces but how they connected */  
+  OpenMP_Patch_Pragma(omp parallel for)
+  for (p = 0; p < grid->np; ++p)
+  {
+    find_adjacent_scs(grid,grid->patch[p],point_flag[p]);
+  }
   
-  /* freeing Point_T */
-  free_points(grid);
+  /* not thread safe */
+  for (p = 0; p < grid->np; ++p)
+  {
+    set_subfaces_scs(grid,grid->patch[p]);
+  }
   
-  /* set df_dn flags */
-  set_df_dn_and_pair(grid);
+  /* set df_dn flags and pair subfaces. */
+  pair_subfaces_and_set_bc(grid);
   
   /* taking some precaution and adding more info at your whim */
   misc(grid);
@@ -59,14 +99,89 @@ int realize_geometry(Grid_T *const grid)
   /* printing boundary for test purposes */
   if(test_print(PRINT_INTERFACES))
     pr_interfaces(grid);
- 
+  
   /* freeing */
+  free_points(grid);
   free_2d_mem(point_flag,grid->np);
   
-  printf("} Realizing boundary conditions for each patch ==> Done.\n");
-  pr_clock();
-  pr_line_custom('=');
-  return EXIT_SUCCESS;
+  FUNC_TOC
+}
+
+/* realize interfaces a general method (works for many kind of grid) */
+static void ri_general_method(Grid_T *const grid)
+{
+  FUNC_TIC
+  /* keep track of counted points; 1 means counted, 0 means not. */
+  unsigned **point_flag = calloc(grid->np,sizeof(*point_flag));
+  IsNull(point_flag);
+  unsigned p;
+
+  OpenMP_Patch_Pragma(omp parallel for)
+  for (p = 0; p < grid->np; ++p)
+  {
+    Patch_T *const patch = grid->patch[p];
+    
+    point_flag[p] = calloc(patch->nn,sizeof(*point_flag[p]));
+    IsNull(point_flag[p]);
+    
+    alloc_interface(patch);/* allocating interfaces */
+    fill_basics(patch);/* filling basic elements */
+    fill_N(patch);/* filling point[?]->N */
+    flush_houseK(patch);/* set all of housK flag to zero */
+  }  
+  
+  OpenMP_Patch_Pragma(omp parallel for)
+  for (p = 0; p < grid->np; ++p)
+  {
+    Patch_T *const patch = grid->patch[p];
+    unsigned f,nf;
+    
+    /* populate PointSet_T  */
+    nf = countf(patch->interface);
+    for (f = 0; f < nf; ++f)
+    {
+      Interface_T *interface = patch->interface[f];
+      PointSet_T **innerP, **edgeP;
+      unsigned i;
+      
+      init_Points(interface,&innerP,&edgeP);
+      interface->innerP = innerP;
+      interface->edgeP  = edgeP;
+      
+      FOR_ALL(i,innerP)
+      {
+        find_adjPnt(innerP[i]);
+      }
+      FOR_ALL(i,edgeP)
+      {
+        find_adjPnt(edgeP[i]);
+      }
+    }
+  }
+  
+  /* find various geometry of each point */
+  fill_geometry(grid,point_flag);
+  
+  /* freeing Point_T */
+  free_points(grid);
+  
+  /* set df_dn flags */
+  if(0) set_df_dn_and_pair(grid);/* deprecated */
+  else  pair_subfaces_and_set_bc(grid);
+
+  /* taking some precaution and adding more info at your whim */
+  misc(grid);
+  
+  /* testing */
+  test_subfaces(grid);
+  
+  /* printing boundary for test purposes */
+  if(test_print(PRINT_INTERFACES))
+    pr_interfaces(grid);
+   
+  /* freeing */
+  free_2d_mem(point_flag,grid->np);
+  FUNC_TOC
 }
 
 
@@ -228,45 +343,7 @@ static void set_df_dn_and_pair(Grid_T *const grid)
   unsigned pa,f;
   
   /* one can add a function here if needs specific arrangement of df_dn */
-  
-  /* favor Drichlet BC for sourrounding patches for face = K_n2*/
-  if (strcmp_i(grid->kind,"BBN_CubedSpherical_grid") ||
-      strcmp_i(grid->kind,"BNS_CubedSpherical_grid")   )
-  {
-    FOR_ALL_PATCHES(pa,grid)
-    {
-      Patch_T *patch = grid->patch[pa];
-      
-      if ( !IsItNSSurroundingPatch(patch) &&
-           !IsItHorizonPatch(patch))
-        continue;
-      
-      face = patch->interface;
-      unsigned sf;
-      
-      for (sf = 0; sf < face[K_n2]->ns; ++sf)
-      {
-        subf = face[K_n2]->subface[sf];
-        Subf_T **chain = 0;
-        unsigned nc;
-        
-        if (!subf->touch || strstr(subf->flags_str,"Dn:"))
-          continue;
-      
-        /* make the whole chain and determine the last ring by null pointer and so for next pointer */
-        chain = compose_the_chain(subf);
-        nc = countf(chain);
-        
-        if (nc == 1)
-          Error0("There is no other subface matches to this subface.");
-      
-       set_df_dn(chain[0],0);
-       free_2d(chain);
-        
-      }/* end of for (sf = 0; sf < face[f]->ns; ++sf) */
-    }/* FOR_ALL_PATCHES(pa,grid) */
-  }/* if (strcmp_i(grid->kind,"BBN_CubedSpherical_grid")) */
-  
+
   /* go thru all patches and set one Dirichlet BC for each */
   FOR_ALL_PATCHES(pa,grid)
   {
@@ -407,11 +484,12 @@ static void set_one_Dirichlet_BC(Interface_T **const face)
   unsigned nc;/* number of chain */
   SubFace_T *subf;
   unsigned sf,f; 
-  Flag_T flg = NONE;
+  Flag_T flg = NONE,IsSet=NO;
   
   FOR_ALL(f,face)
   {
-    flg = NONE;
+    flg   = NONE;
+    IsSet = NO;
     /* check if there is any BC set for this face */
     for (sf = 0; sf < face[f]->ns; ++sf)
     {
@@ -429,14 +507,24 @@ static void set_one_Dirichlet_BC(Interface_T **const face)
     for (sf = 0; sf < face[f]->ns; ++sf)
     {
       subf = face[f]->subface[sf];
-      /* make the whole chain and determine the last ring by null pointer and so for next pointer */
+      /* make the whole chain and determine the last ring 
+      // by null pointer and so for next pointer */
       chain = compose_the_chain(subf);
       nc = countf(chain);
       if (nc == 1)
         Error0("There is no other subface matches to this subface.");
       set_df_dn(chain[0],0);
       free_2d(chain);
+      IsSet = YES;
     }
+    if(IsSet != YES)
+    {
+      char msg[999] = {'\0'};
+      sprintf(msg,"Could not set Dirichlet for:\n(%s,%s)",
+      face[f]->patch->name,FaceName[f]);
+      Error0(msg);
+    }
+    break;/* => only need only one face */
   }/* end of FOR_ALL(f,face) */
     
 }
@@ -450,7 +538,7 @@ static void set_df_dn(Subf_T *const ring,const unsigned df_dn)
   Subf_T *prev = 0;
   const unsigned AS = strlen(",Dn:?")+1;/* size of attached */
   char tail[10];
-  unsigned f,ss;
+  unsigned f,sl;
   
   f = df_dn;
   for (next = ring; next; next = next->next)
@@ -458,17 +546,24 @@ static void set_df_dn(Subf_T *const ring,const unsigned df_dn)
     if (next->set == 1)
     { 
       if (next->subf->df_dn != f%2)
-        Error0("Wrong df_dn flags was found.");
+      {
+        char msg[999] = {'\0'};
+        sprintf(msg,
+          "(%s, %s) <- patch\n(%s, %s) <- adjacent\nflags:\n%s\n%s\n",
+        next->prev->subf->patch->name,FaceName[next->prev->subf->face],
+        next->subf->patch->name,FaceName[next->subf->face],
+        next->prev->subf->flags_str,next->subf->flags_str);
+        Error1("Wrong df_dn flags was found!\n%s\n",msg);
+      }
       else
       {
         ++f;
         continue;
       }
     }
-      
     next->subf->df_dn = f%2;
-    ss = (unsigned) strlen(next->subf->flags_str)+AS;
-    next->subf->flags_str = realloc(next->subf->flags_str,ss);
+    sl = (unsigned) strlen(next->subf->flags_str)+AS;
+    next->subf->flags_str = realloc(next->subf->flags_str,sl);
     IsNull(next->subf->flags_str);
     sprintf(tail,",Dn:%u",f%2);
     strcat(next->subf->flags_str,tail);
@@ -491,8 +586,8 @@ static void set_df_dn(Subf_T *const ring,const unsigned df_dn)
     }
     
     prev->subf->df_dn = f%2;
-    ss = (unsigned) strlen(prev->subf->flags_str)+AS;
-    prev->subf->flags_str = realloc(prev->subf->flags_str,ss);
+    sl = (unsigned) strlen(prev->subf->flags_str)+AS;
+    prev->subf->flags_str = realloc(prev->subf->flags_str,sl);
     IsNull(prev->subf->flags_str);
     sprintf(tail,",Dn:%u",f%2);
     strcat(prev->subf->flags_str,tail);
@@ -676,7 +771,13 @@ static SubFace_T *find_subface(const SubFace_T *const sub)
   }/* end of else */
   
   if (flg == NONE)
-    Error0("The related subface could not be found.\n");
+  {
+    char msg[999] = {'\0'};
+    sprintf(msg,"(%s,%s) <- patch\n(%s,%s) <- adjacent\n%s <- flags.",
+    sub->patch->name,FaceName[sub->face],
+    face->patch->name,FaceName[face->fn],sub->flags_str);
+    Error1("The related subface could not be found!\n%s\n",msg);
+  }
     
   return sub2;
 }
@@ -732,6 +833,109 @@ static void add_to_subface(const Point_T *const pnt,const char *const lead)
   add_point(subface,pnt);
 }
 
+/* add this point to the best fit of subfaces
+// note: this also set pnt->houseK */
+static void add_to_subface_scs(Point_T *const pnt)
+{
+  Interface_T *const face = pnt->patch->interface[pnt->face];
+  SubFace_T *subface;
+  char flags[999] = {'\0'};
+  char tmp[999]   = {'\0'};
+  Flag_T found;
+  unsigned sf;
+  
+  /* fill flags */
+  sprintf(flags,"p%uf%u",pnt->patch->pn,pnt->face);
+  /* touch */
+  if (pnt->touch == 1) 	strcat(flags,"t1");
+  else 			strcat(flags,"t0");
+  /* copy */
+  if (pnt->copy == 1)   strcat(flags,"c1");
+  else 			strcat(flags,"c0");
+  if (strstr(flags,"t1c0"))/* interpolation onto adjFace */
+  {
+    tmp[0] = '\0';
+    sprintf(tmp,"ap%uaf%u",pnt->adjPatch,pnt->adjFace);
+    strcat(flags,tmp);
+    /* sameX */
+    if (pnt->sameX == 1)  strcat(flags,"X1");
+    else 		  strcat(flags,"X0");
+    /* sameY */
+    if (pnt->sameY == 1)  strcat(flags,"Y1");
+    else		  strcat(flags,"Y0");
+    /* sameZ */
+    if (pnt->sameZ == 1)  strcat(flags,"Z1");
+    else		  strcat(flags,"Z0");
+  }
+  else if (strstr(flags,"t1c1"))/* copy to adj */
+  {
+    tmp[0] = '\0';
+    sprintf(tmp,"ap%uaf%u",pnt->adjPatch,pnt->adjFace);
+    strcat(flags,tmp);
+    strcat(flags,"X-Y-Z-");
+  }
+  else/* interpolation inside adjPatch.note: touch:0,copy:0 doen't exist*/
+  {
+    tmp[0] = '\0';
+    sprintf(tmp,"ap%uaf-",pnt->adjPatch);
+    strcat(flags,tmp);
+    strcat(flags,"X-Y-Z-");
+  }
+  /* outerB */
+  if (pnt->outerB == 1) strcat(flags,"oB1");
+  else 			strcat(flags,"oB0");
+  /* innerB */
+  if (pnt->innerB == 1) strcat(flags,"iB1");
+  else 			strcat(flags,"iB0");
+  /* exterF */
+  if (pnt->exterF == 1) strcat(flags,"eF1");
+  else 			strcat(flags,"eF0");
+  
+  /* compare flags with the previous sub-faces */
+  found = NONE;
+  for (sf = 0; sf < face->ns; ++sf)
+  {
+    subface = face->subface[sf];
+    if (!strcmp(subface->flags_str,flags))
+    {
+      found = FOUND;
+      break;
+    }
+  }
+  if (found == NONE)
+  {
+    face->subface = 
+      realloc(face->subface,(face->ns+1)*sizeof(*face->subface));
+    IsNull(face->subface);
+    face->subface[face->ns] = 
+      calloc(1,sizeof(*face->subface[face->ns]));
+    IsNull(face->subface[face->ns]);
+    subface = face->subface[face->ns];
+    face->ns++;
+    
+    /* setting flags of this new sub face */
+    subface->patch     = pnt->patch;
+    subface->flags_str = dup_s(flags);
+    subface->sn        = face->ns-1;
+    subface->adjsn     = UINT_MAX;
+    subface->face      = pnt->face;
+    subface->adjFace   = pnt->adjFace;
+    subface->adjPatch  = pnt->adjPatch;
+    subface->sameX     = pnt->sameX;
+    subface->sameY     = pnt->sameY;
+    subface->sameZ     = pnt->sameZ;
+    subface->touch     = pnt->touch;
+    subface->copy      = pnt->copy;
+    subface->exterF    = pnt->exterF;
+    subface->outerB    = pnt->outerB;
+    subface->innerB    = pnt->innerB;
+  }
+  
+  /* add this point to the subface */
+  add_point_scs(subface,pnt);
+  pnt->houseK = 1;
+}
+
 /* adding one point adequately to the pertinent sub-face */
 static void add_point(SubFace_T *const subface,const Point_T *const pnt)
 {
@@ -746,6 +950,25 @@ static void add_point(SubFace_T *const subface,const Point_T *const pnt)
       realloc(subface->adjid,(subface->np+1)*sizeof(*subface->adjid));
     IsNull(subface->adjid);
     subface->adjid[subface->np] = pnt->adjPoint->ind;
+  }
+  
+  subface->np++;
+}
+
+/* adding one point adequately to the pertinent sub-face */
+static void add_point_scs(SubFace_T *const subface,const Point_T *const pnt)
+{
+  subface->id = 
+    realloc(subface->id,(subface->np+1)*sizeof(*subface->id));
+  IsNull(subface->id);
+  subface->id[subface->np] = pnt->ind;
+  
+  if (pnt->copy == 1)
+  {
+    subface->adjid = 
+      realloc(subface->adjid,(subface->np+1)*sizeof(*subface->adjid));
+    IsNull(subface->adjid);
+    subface->adjid[subface->np] = pnt->adjInd;
   }
   
   subface->np++;
@@ -872,14 +1095,16 @@ static int realize_neighbor(Patch_T *const patch,unsigned **const point_flag)
   for (f = nf-1; f >= 0 ; f--)
   {
     Interface_T *interface = patch->interface[f];
-    PointSet_T **innerP, **edgeP;
-    init_Points(interface,&innerP,&edgeP);/* initializing inner and 
-                                          // edge points */
+    PointSet_T **innerP    = interface->innerP;
+    PointSet_T **edgeP     = interface->edgeP;
+    
     realize_adj(innerP,point_flag);/* first, realizing the adjacency, INNER one */
     realize_adj(edgeP,point_flag);/* second, realizing the adjacency, EDGE one */
     
     free_PointSet(innerP);
     free_PointSet(edgeP);
+    interface->innerP = 0;
+    interface->edgeP  = 0;
   }
   
   return EXIT_SUCCESS;
@@ -924,7 +1149,6 @@ static int realize_adj(PointSet_T **const Pnt,unsigned **const point_flag)
     if (point_flag[pnt->patch->pn][pnt->ind]) 
       continue;
     
-    find_adjPnt(Pnt[p]);
     analyze_adjPnt(Pnt[p],point_flag);
   }
   
@@ -1347,11 +1571,11 @@ static int IsOutBndry(PointSet_T *const Pnt)
     Patch_T *const patch = Pnt->Pnt->patch;
     double *x = patch->node[node]->x;
     double *N1 = Pnt->Pnt->N;
-    double eps = root_square(3,x,0)*EPS;
+    double eps = root_square(3,x,0)*ScaleFactor;
     double q[3];
     unsigned ans;
     
-    eps = GRT(eps,EPS) ? eps : EPS;
+    eps = GRT(eps,ScaleFactor) ? eps : ScaleFactor;
     
     if (Pnt->type == EDGE)
     {
@@ -1417,11 +1641,11 @@ static int IsInnBndry(PointSet_T *const Pnt)
     Patch_T *const patch = Pnt->Pnt->patch;
     double *x = patch->node[node]->x;
     double *N1 = Pnt->Pnt->N;
-    double eps = root_square(3,x,0)*EPS;
+    double eps = root_square(3,x,0)*ScaleFactor;
     double q[3];
     unsigned ans;
     
-    eps = GRT(eps,EPS) ? eps : EPS;
+    eps = GRT(eps,ScaleFactor) ? eps : ScaleFactor;
     
     if (Pnt->type == EDGE)
     {
@@ -1543,14 +1767,14 @@ static int ReachBnd(PointSet_T *const Pnt,const unsigned p,const unsigned f)
   double *x = patch->node[node]->x;
   double *N1 = Pnt->Pnt->N;
   double *N2 = Pnt->adjPnt[p].fs[f].N2;
-  double eps = root_square(3,x,0)*EPS;
+  double eps = root_square(3,x,0)*ScaleFactor;
   double q[3];
   unsigned ans;
   
-  eps = GRT(eps,EPS) ? eps : EPS;
-  q[0] = x[0]+eps*N1[0]+EPS*N2[0];
-  q[1] = x[1]+eps*N1[1]+EPS*N2[1];
-  q[2] = x[2]+eps*N1[2]+EPS*N2[2];
+  eps = GRT(eps,ScaleFactor) ? eps : ScaleFactor;
+  q[0] = x[0]+eps*N1[0]+ScaleFactor*N2[0];
+  q[1] = x[1]+eps*N1[1]+ScaleFactor*N2[1];
+  q[2] = x[2]+eps*N1[2]+ScaleFactor*N2[2];
   
   Needle_T *needle = alloc_needle();
   needle->grid = patch->grid;
@@ -1848,6 +2072,20 @@ static void FindInnerB_CS_coord(Patch_T *const patch)
           point[i]->innerB = 0;
     }
   }
+  else if (strcmp_i(patch->grid->kind,"SplitCubedSpherical(BH+NS)"))
+  {
+    FOR_ALL(f,interface)
+    {
+      Point_T **point = interface[f]->point;
+      
+      if (patch->innerB && f == K_0)
+        FOR_ALL(i,point)
+          point[i]->innerB = 1;
+      else
+        FOR_ALL(i,point)
+          point[i]->innerB = 0;
+    }
+  }
   else if (strcmp_i(patch->grid->kind,"SNS_CubedSpherical+Box_grid"))
   {
     FOR_ALL(f,interface)
@@ -1916,6 +2154,17 @@ static void FindExterF_CS_coord(Patch_T *const patch)
       }
     }
   }
+  else if (strcmp_i(patch->grid->kind,"SplitCubedSpherical(BH+NS)"))
+  {
+    FOR_ALL(f,interface)
+    {
+      Point_T **point = interface[f]->point;
+      FOR_ALL(i,point)
+      {
+        point[i]->exterF = 1;
+      }
+    }
+  }
   else if (strcmp_i(patch->grid->kind,"SNS_CubedSpherical+Box_grid"))
   {
     FOR_ALL(f,interface)
@@ -1950,15 +2199,20 @@ static void FindExterF_CS_coord(Patch_T *const patch)
     }
   }
   else
-    Error0(INCOMPLETE_FUNC);
+    Error0(NO_OPTION);
 }
 
 /* filling point[?]->N */
-static void fill_N(Patch_T *const patch)
+static void 
+fill_N
+  (
+    Patch_T *const patch
+  )
 {
   Interface_T **interface = patch->interface;
   unsigned i,f;
   
+  /* set normal vector for all face points */
   FOR_ALL(f,interface)
   {
     Point_T **point = interface[f]->point;
@@ -1967,6 +2221,52 @@ static void fill_N(Patch_T *const patch)
     {
       normal_vec(point[i]);
     }
+  }
+  /* set normal vector for only center (roughly) of each face */
+  FOR_ALL(f,interface)
+  {
+    const unsigned *n = interface[f]->patch->n;
+    unsigned ih = (n[0]-1)/2;
+    unsigned jh = (n[1]-1)/2;
+    unsigned kh = (n[2]-1)/2;
+    unsigned ijk= UINT_MAX;
+    
+    switch(f)
+    {
+      case I_0:
+        ijk = L(n,0,jh,kh);
+        break;
+      case I_n0:
+        ijk = L(n,n[0]-1,jh,kh);
+        break; 
+      case J_0:
+        ijk = L(n,ih,0,kh);
+        break; 
+      case J_n1:
+        ijk = L(n,ih,n[1]-1,kh);
+        break; 
+      case K_0:
+        ijk = L(n,ih,jh,0);
+        break; 
+      case K_n2:
+        ijk = L(n,ih,jh,n[2]-1);
+        break;
+      default:
+        Error0("There is not such interface.\n");
+    }
+    Point_T point[1] = {0};
+    point->ind   = ijk;
+    point->patch = interface[f]->patch;
+    point->face  = f;
+    normal_vec(point);
+    /* center normal */
+    interface[f]->centerN[0] = point->N[0];
+    interface[f]->centerN[1] = point->N[1];
+    interface[f]->centerN[2] = point->N[2];
+    /* center x coords */
+    interface[f]->centerx[0] = patch->node[ijk]->x[0];
+    interface[f]->centerx[1] = patch->node[ijk]->x[1];
+    interface[f]->centerx[2] = patch->node[ijk]->x[2];
   }
 }
 
@@ -1983,7 +2283,7 @@ static void fill_basics(Patch_T *const patch)
   for (f = I_0; f < TOT_FACE; f++)
   {
     Point_T **point;
-    unsigned i,j,k,im,iM,jm,jM,km,kM,sum;/* m for min and M for max */
+    unsigned i,j,k,l,im,iM,jm,jM,km,kM,sum;/* m for min and M for max */
     unsigned t = 0;/* test purposes */
     
     set_min_max_sum(n,f,&im,&iM,&jm,&jM,&km,&kM,&sum);
@@ -1997,9 +2297,12 @@ static void fill_basics(Patch_T *const patch)
     FOR_ijk(i,j,k,im,iM,jm,jM,km,kM)
     {
       unsigned p = L2(n,f,i,j,k);
-      point[p]->ind = L(n,i,j,k);
+      point[p]->ind = l = L(n,i,j,k);
       point[p]->face = f;
       point[p]->patch = patch;
+      point[p]->exterF= 1;
+      if (IsOnEdge(n,l))
+        point[p]->IsOnEdge = 1;
       t++;
     }
     assert(t == sum);
@@ -2144,12 +2447,12 @@ void make_normal_outward(Point_T *const point)
 {
   const double *const x = point->patch->node[point->ind]->x;
   
-  double eps = root_square(3,x,0)*EPS;
+  double eps = root_square(3,x,0)*ScaleFactor;
   Needle_T *needle = alloc_needle();
   const double *N = point->N;
   double q[3];/* q = pnt+eps*N */
   
-  eps = GRT(eps,EPS) ? eps : EPS;
+  eps = GRT(eps,ScaleFactor) ? eps : ScaleFactor;
   q[0] = x[0]+eps*N[0];
   q[1] = x[1]+eps*N[1];
   q[2] = x[2]+eps*N[2];
@@ -2397,8 +2700,8 @@ static void fill_adjPnt(PointSet_T *const pnt,const unsigned N)
 // put the vector made by the difference of these two points in N.
 // this is the approximate tangent vector. note, the tangent
 // vector won't be "NORMALIZED". I want to keep the magnetitue to be of
-// the order of grid size.
-*/
+// the order of grid size. 
+// NOTE: the given pnt must be on edge otherwise N is 0. */
 void tangent(const Point_T *const pnt,double *const N)
 {
   const unsigned *const n = pnt->patch->n;
@@ -2514,7 +2817,7 @@ void alloc_nodes(Grid_T *const grid)
     
     n = grid->patch[i]->n;
     grid->patch[i]->node = 
-      malloc((n[0]*n[1]*n[2]+1)*sizeof(*grid->patch[i]->node));
+      calloc((n[0]*n[1]*n[2]+1),sizeof(*grid->patch[i]->node));
     IsNull(grid->patch[i]->node);
     
     node = grid->patch[i]->node;
@@ -2536,10 +2839,10 @@ void alloc_interface(Patch_T *const patch)
   unsigned i;
   assert(patch);
   
-  patch->interface = calloc(FACE_NUM+1,sizeof(*patch->interface));
+  patch->interface = calloc(NFaces+1,sizeof(*patch->interface));
   IsNull(patch->interface);
   
-  for (i = 0; i < FACE_NUM; i++)
+  for (i = 0; i < NFaces; i++)
   {
     patch->interface[i] = calloc(1,sizeof(*patch->interface[i]));
     IsNull(patch->interface[i]);
@@ -2613,6 +2916,10 @@ void free_patch_interface(Patch_T *const patch)
     }
     _free(subface);
     
+    /* free point set */
+    _free(face[f]->innerP);
+    _free(face[f]->edgeP);
+    
     /* free face */
     _free(face[f]);
   }
@@ -2620,4 +2927,671 @@ void free_patch_interface(Patch_T *const patch)
 
   patch->interface = 0;
 }
+
+/* check if all of houseKs have been marked */
+static void check_houseK(Patch_T *const patch)
+{
+  Interface_T **const interface = patch->interface;
+  const unsigned nf = countf(interface);
+  Node_T *node;
+  unsigned i,f;
+  
+  for (f = 0; f < nf; f++)
+    for (i = 0; i < interface[f]->np; i++)
+      if (interface[f]->point[i]->houseK == 0)
+      {
+        node = patch->node[interface[f]->point[i]->ind];
+        double *x = node->x;
+        fprintf(stderr,"This point(%f,%f,%f) has not been found.\n",
+                        x[0],x[1],x[2]);
+        Error0("Incomplete function.\n");
+      }
+}
+
+/* setting all of houseK (house keeping) flags 
+// in Point_T to zero for given patch */
+static void flush_houseK(Patch_T *const patch)
+{
+  Interface_T **const interface = patch->interface;
+  const unsigned nf = countf(interface);
+  unsigned i,f;
+  
+  for (f = 0; f < nf; f++)
+    for (i = 0; i < interface[f]->np; i++)
+      interface[f]->point[i]->houseK = 0;
+}
+
+
+/* displace the center point along the normal and find where the new
+// point takes place to find the adjacent patch and adjacent face.
+// also it finds innerB and outerB and set their flags.
+// this function has many assumptions which is only for 
+// split cubed spherical. */
+static void 
+find_adjacent_scs
+  (
+  Grid_T *const grid,
+  Patch_T *const patch,
+  unsigned *const point_flag
+  )
+{
+  Interface_T **const interface = patch->interface;
+  const double idealN1N2 = -1;
+  double q[3] = {0};/* q = x+eps*N */
+  double eps,N1dotN2;
+  double min = DBL_MAX;
+  char s[999] = {'\0'};
+  int f;
+  unsigned i,p;
+  
+  for (f = (int)NFaces-1; f >= 0; --f)
+  {
+    /* FIRST: find the adjacent patch to the center. */
+    Needle_T *needle0 = 0;
+    const double *centerN, *centerx;
+    unsigned Nfound0;
+    
+    centerN = interface[f]->centerN;
+    centerx = interface[f]->centerx;
+    
+    /* try without normal */
+    q[0] = centerx[0];
+    q[1] = centerx[1];
+    q[2] = centerx[2];
+    needle0 = alloc_needle();
+    needle0->grid = grid;
+    needle_ex(needle0,patch);
+    needle0->x = q;
+    point_finder(needle0);
+    Nfound0 = needle0->Nans;
+    /* try again with normal */
+    if (!Nfound0)
+    {
+      eps = root_square(3,centerx,0)*ScaleFactor;
+      eps = GRT(eps,ScaleFactor) ? eps : ScaleFactor;
+      q[0] = centerx[0]+eps*centerN[0];
+      q[1] = centerx[1]+eps*centerN[1];
+      q[2] = centerx[2]+eps*centerN[2];
+      free_needle(needle0);
+      needle0 = alloc_needle();
+      needle0->grid = grid;
+      needle_ex(needle0,patch);
+      needle0->x = q;
+      point_finder(needle0);
+      Nfound0 = needle0->Nans;
+    }
+    
+    /* if still no patch found 3 possibilities = {innerB,outerB,gap} */
+    if (!Nfound0)
+    {
+      /* make sure there is really no other patches */
+      unsigned Nfound1;
+        
+      eps = root_square(3,centerx,0)*ScaleFactor;
+      eps = GRT(eps,ScaleFactor) ? eps : ScaleFactor;
+      eps += Huge_Eps;
+      q[0] = centerx[0]+eps*centerN[0];
+      q[1] = centerx[1]+eps*centerN[1];
+      q[2] = centerx[2]+eps*centerN[2];
+  
+      Needle_T *needle1 = alloc_needle();
+      needle1->grid = grid;
+      needle_ex(needle1,patch);
+      needle1->x = q;
+      point_finder(needle1);
+      Nfound1 = needle1->Nans;
+      free_needle(needle1);
+      
+      if (!Nfound1)/* there is really no other patch => outer/innter-boundary */
+      {
+        Point_T **const pnt = interface[f]->point;
+        
+        if (patch->innerB)/* we expect this */
+        {
+          /* make all of this interface point in one innerB subface */
+          for (p = 0; p < interface[f]->np; ++p)
+          {
+            pnt[p]->innerB = 1;
+            add_to_subface_scs(pnt[p]);
+            point_flag[pnt[p]->ind] = 1;
+          }
+        } 
+        else/* it must be outerB */
+        {
+          patch->outerB  = 1;
+          /* make all of this interface point in one innerB subface */
+          for (p = 0; p < interface[f]->np; ++p)
+          {
+            pnt[p]->outerB = 1;
+            add_to_subface_scs(pnt[p]);
+            point_flag[pnt[p]->ind] = 1;
+          }
+        }
+      }
+      else
+      {
+        err_spr(s,centerx);
+        Error1(" Unexpected gap between patches!\n %s\n",s);
+      }
+    }/* if (!Nfound0) */
+    else/* find adjacent subfaces for this interface */
+    {
+      Point_T **const pnt = interface[f]->point;
+      const Patch_T *center_adjpatch = 0;
+      unsigned center_adjface = UINT_MAX;
+      
+      min = DBL_MAX;
+      
+      /* find the best adjacet adjPatch for center */
+      for (i = 0; i < Nfound0; ++i)
+      {
+        const Patch_T *adjpatch = grid->patch[needle0->ans[i]];
+        unsigned adjfn;
+        
+        /* find the best adjface */
+        for (adjfn = 0; adjfn < NFaces; ++adjfn)
+        {
+          N1dotN2 = 
+            dot(3,adjpatch->interface[adjfn]->centerN,centerN);
+          double fabsdif = fabs(N1dotN2-idealN1N2);
+          if (min > fabsdif)
+          {
+            center_adjface  = adjfn;
+            center_adjpatch = adjpatch;
+            min             = fabsdif;
+          }
+        }
+      }
+      if (min > ScaleFactor)
+      {
+        warn_normal_spr(s,patch,center_adjpatch,center_adjface);
+        printf("%s\n",s);
+        fflush(stdout);
+      }
+      
+      /* havining found the potential face to this patch 
+      // find point to the pertinent adjacent. */
+      for (p = 0; p < interface[f]->np; ++p)
+      {
+        if (!point_flag[pnt[p]->ind])
+        {
+          unsigned ind = pnt[p]->ind;
+          unsigned adjind;
+          const double *pnt_x = patch->node[ind]->x;
+          double adjX[3] = {0};
+          Flag_T iscp = NONE;
+          
+          /* first try to find this point on center adjpatch */
+          if (X_of_x(adjX,pnt_x,center_adjpatch))
+          {
+            pnt[p]->touch    = 1;
+            pnt[p]->adjPatch = center_adjpatch->pn;
+            pnt[p]->adjFace  = center_adjface;
+            
+            /* if this is a copy? */
+            adjind = find_node(pnt_x,center_adjpatch,&iscp);
+            if (iscp == FOUND)
+            {
+              unsigned adjp = pnt[p]->adjPatch;
+              unsigned adjf = pnt[p]->adjFace;
+              unsigned nadjp = grid->patch[adjp]->interface[adjf]->np;
+              Point_T **adjpnt = 
+                grid->patch[adjp]->interface[adjf]->point;
+              unsigned ip;
+              
+              pnt[p]->copy = 1;
+              pnt[p]->adjInd = adjind;
+              pnt[p]->adjIndF= UINT_MAX;/* catch error */
+              /* find index of adjacent point on face. */
+              for (ip = 0; ip < nadjp; ++ip)
+              {
+                 if (adjpnt[ip]->ind == adjind)
+                 {
+                   pnt[p]->adjIndF = ip;
+                   break;
+                 }
+              }
+              assert(pnt[p]->adjIndF != UINT_MAX);
+            }
+            else
+            {
+              /* if this is a interpolation => copy = 0*/
+              set_sameXYZ(pnt[p],center_adjface);
+            }
+          }
+          /* it means not all points on this surface are on a same
+          // adjacent patch, for example ,filling_box reaches few patches.
+          // thus, we should find their adjacent patch. */
+          else
+          {
+            Needle_T *needle2 = 0;
+            unsigned Nfound2 = 0;
+            
+            eps = root_square(3,pnt_x,0)*ScaleFactor;
+            eps = GRT(eps,ScaleFactor) ? eps : ScaleFactor;
+            
+            if (pnt[p]->IsOnEdge)
+            {
+              q[0] = pnt_x[0];
+              q[1] = pnt_x[1];
+              q[2] = pnt_x[2];
+              needle2 = alloc_needle();
+              needle2->grid = grid;
+              needle_ex(needle2,patch);
+              needle_ex(needle2,center_adjpatch);
+              needle2->x = q;
+              point_finder(needle2);
+              Nfound2 = needle2->Nans;
+            }
+            else
+            {
+              q[0] = pnt_x[0];
+              q[1] = pnt_x[1];
+              q[2] = pnt_x[2];
+              needle2 = alloc_needle();
+              needle2->grid = grid;
+              needle_ex(needle2,patch);
+              needle_ex(needle2,center_adjpatch);
+              needle2->x = q;
+              point_finder(needle2);
+              Nfound2 = needle2->Nans;
+              /* try with normal */
+              if (!Nfound2)
+              {
+                free_needle(needle2);
+                q[0] = pnt_x[0]+eps*pnt[p]->N[0];
+                q[1] = pnt_x[1]+eps*pnt[p]->N[1];
+                q[2] = pnt_x[2]+eps*pnt[p]->N[2];
+                needle2 = alloc_needle();
+                needle2->grid = grid;
+                needle_ex(needle2,patch);
+                needle_ex(needle2,center_adjpatch);
+                needle2->x = q;
+                point_finder(needle2);
+                Nfound2 = needle2->Nans;
+              }
+            }
+            
+            if (!Nfound2)
+            {
+            
+              /* test why could not find the adjacent patch */
+              double tt_X[3];
+              int tt_ret = X_of_x(tt_X,pnt_x,center_adjpatch);
+              printf("%s: [%g,%g]x[%g,%g]x[%g,%g]\n"
+                     "%d <- X_of_x((%0.15f,%0.15f,%0.15f))\n",
+              center_adjpatch->name,
+              center_adjpatch->min[0],center_adjpatch->max[0],
+              center_adjpatch->min[1],center_adjpatch->max[1],
+              center_adjpatch->min[2],center_adjpatch->max[2],
+              tt_ret,tt_X[0],tt_X[1],tt_X[2]);
+              fflush(stdout);
+              err_spr_adj(s,pnt_x,center_adjpatch,center_adjface);
+              Error1(" Point not found!\n %s\n",s);
+            }
+            
+            /* first find the best adjface */
+            const Patch_T *pnt_adjpatch = 0;
+            unsigned pnt_adjface = UINT_MAX;
+            
+            min = DBL_MAX;
+            for (i = 0; i < Nfound2; ++i)
+            {
+              const Patch_T *adjpatch = grid->patch[needle2->ans[i]];
+              unsigned onface[NFaces];
+              unsigned adjfn;
+              
+              /* find the best adjface if it is on face at all */
+              if(IsOnFace(pnt_x,adjpatch,onface))
+              for (adjfn = 0; adjfn < NFaces; ++adjfn)
+              {
+                if (!onface[adjfn])
+                  continue;
+                  
+                N1dotN2 = 
+                  dot(3,centerN,adjpatch->interface[adjfn]->centerN);
+                double fabsdif = fabs(N1dotN2-idealN1N2);
+                
+                if (min > fabsdif)
+                {
+                  pnt_adjface  = adjfn;
+                  pnt_adjpatch = adjpatch;
+                  min          = fabsdif;
+                }
+              }
+            }
+            if (min > ScaleFactor)
+            {
+              warn_normal_spr(s,patch,pnt_adjpatch,pnt_adjface);
+              printf("%s\n",s);
+              fflush(stdout);
+            }
+            /* find this point on adjpatch */
+            if (X_of_x(adjX,pnt_x,pnt_adjpatch))
+            {
+              pnt[p]->touch    = 1;
+              pnt[p]->adjPatch = pnt_adjpatch->pn;
+              pnt[p]->adjFace  = pnt_adjface;
+              
+              /* if this is a copy? */
+              adjind = find_node(pnt_x,pnt_adjpatch,&iscp);
+              if (iscp == FOUND)
+              {
+                unsigned adjp = pnt[p]->adjPatch;
+                unsigned adjf = pnt[p]->adjFace;
+                unsigned nadjp = grid->patch[adjp]->interface[adjf]->np;
+                Point_T **adjpnt = 
+                  grid->patch[adjp]->interface[adjf]->point;
+                unsigned ip;
+                
+                pnt[p]->copy = 1;
+                pnt[p]->adjInd = adjind;
+                pnt[p]->adjIndF= UINT_MAX;/* catch error */
+                /* find index of adjacent point on face. */
+                for (ip = 0; ip < nadjp; ++ip)
+                {
+                   if (adjpnt[ip]->ind == adjind)
+                   {
+                     pnt[p]->adjIndF = ip;
+                     break;
+                   }
+                }
+                
+                /* could not find the point! why? */
+                assert(pnt[p]->adjIndF != UINT_MAX);
+              }
+              else
+              {
+                /* if this is a interpolation => copy = 0*/
+                set_sameXYZ(pnt[p],pnt_adjface);
+              }
+            }
+            else
+            {
+              /* test why could not find the adjacent patch */
+              double tt_X[3];
+              int tt_ret = X_of_x(tt_X,pnt_x,center_adjpatch);
+              printf("%s: [%g,%g]x[%g,%g]x[%g,%g]\n"
+                     "%d <- X_of_x((%0.15f,%0.15f,%0.15f))\n",
+              center_adjpatch->name,
+              center_adjpatch->min[0],center_adjpatch->max[0],
+              center_adjpatch->min[1],center_adjpatch->max[1],
+              center_adjpatch->min[2],center_adjpatch->max[2],
+              tt_ret,tt_X[0],tt_X[1],tt_X[2]);
+              fflush(stdout);
+              err_spr_adj(s,pnt_x,center_adjpatch,center_adjface);
+              Error1(" Point not found!\n %s\n",s);
+            }
+            free_needle(needle2);
+        
+          }
+          /* NOTE: for interpolation and copy points the houseK is not
+          // set. */
+          point_flag[pnt[p]->ind] = 1;
+          
+        }/* if (!point_flag[pnt[p]->ind]) */
+        
+        else/* means point_flag[pnt[p]->ind] is set but houseK might no
+            // set, for instance an edge point might set from one side
+            // but not from the other side. */
+        {
+          pnt[p]->houseK = 1;
+        }
+      }/* for (p = 0; p < interface[f]->np; ++p) */
+    }
+    free_needle(needle0);
+  }
+}
+
+/* having found the adjacent points now set the correspondence
+// subfaces consistently. */
+static void set_subfaces_scs(Grid_T *const grid,Patch_T *const patch)
+{
+  Interface_T **const interface = patch->interface;
+  unsigned f;
+  
+  for (f = 0; f < NFaces; ++f)
+  {
+    unsigned p;
+    for (p = 0; p < interface[f]->np; ++p)
+    {
+      Point_T **const pnt = interface[f]->point;
+      
+      if (!pnt[p]->houseK)
+      {
+        add_to_subface_scs(pnt[p]);
+        if (pnt[p]->copy)/* copy */
+        {
+          unsigned adjf = pnt[p]->adjFace;
+          unsigned adjp = pnt[p]->adjPatch;
+          unsigned adji = pnt[p]->adjIndF;
+          Point_T *adjpnt = 
+            grid->patch[adjp]->interface[adjf]->point[adji];
+          
+          /* set flags and add to subface */
+          adjpnt->touch = 1;
+          adjpnt->copy  = 1;
+          adjpnt->adjFace  = pnt[p]->face;
+          adjpnt->adjPatch = pnt[p]->patch->pn;
+          adjpnt->adjInd   = pnt[p]->ind;
+          add_to_subface_scs(adjpnt);
+        }
+      }
+    }
+  }
+  
+}
+
+/* pairing subfaces and setting BC Drichlet or Neumann BC consistently */
+static void pair_subfaces_and_set_bc(Grid_T *const grid)
+{
+  /* struct for ranking of faces to more Nof the higher rank */
+  struct face_rank_S
+  {
+    unsigned pn;/* patch number */
+    unsigned fn;/* face number */
+    unsigned Nof;/* number of other faces */
+  };
+  
+  const unsigned Nfrank = grid->np*NFaces;
+  /* face rank */
+  struct face_rank_S *frank = calloc(Nfrank,sizeof(*frank));IsNull(frank);
+  unsigned nfr = 0;
+  /* if this patch has Drichlet 1 otherwise 0 */
+  unsigned *isD = calloc(grid->np,sizeof(*isD));IsNull(isD);
+  /* notation: o prefix letter means other */
+  Interface_T **faces;
+  Interface_T *face;
+  Interface_T *oface;
+  Patch_T *patch;
+  Patch_T *opatch;
+  SubFace_T *ssubf = 0;
+  SubFace_T *osubf = 0;
+  unsigned bc;/* 0 = Dirichlet, 1 = Neumann */
+  char sflgs[999] = {'\0'};
+  unsigned p,f,sf,i,j;
+  
+  /* pair all of the subfaces and count number of adjacent faces. */
+  nfr = 0;
+  FOR_ALL_PATCHES(p,grid)
+  {
+    faces = grid->patch[p]->interface;
+    
+    FOR_ALL(f,faces)
+    {
+      frank[nfr].pn = grid->patch[p]->pn;
+      frank[nfr].fn = f;
+      frank[nfr].Nof = counter_n_adjacent_faces(faces[f]);
+      nfr++;
+      
+      for (sf = 0; sf < faces[f]->ns; ++sf)
+      {
+        ssubf = faces[f]->subface[sf];
+        
+        if (!ssubf->touch)
+          continue;
+        
+        osubf = find_subface(ssubf);/* juxtapose subface */
+        ssubf->adjsn = osubf->sn;
+      }
+    }
+  }
+  assert(nfr == Nfrank);
+  
+  /* rank faces */
+  for (i = 0; i < Nfrank; ++i)
+  {
+    for (j = i+1; j < Nfrank; ++j)
+    {
+      /* swap */
+      if (frank[j].Nof > frank[i].Nof)
+      {
+        struct face_rank_S temp;
+        temp     = frank[j];
+        frank[j] = frank[i];
+        frank[i] = temp;
+      }
+    }
+  }
+  
+  /* set BC for the ones with the largest number of neighbors.
+  // start with Dirichlet since derivative might be not very accurate
+  // in outermost which generally have the highest rank */
+  for (i = 0; i < Nfrank; ++i)
+  {
+    patch = grid->patch[frank[i].pn];
+    face  = patch->interface[frank[i].fn];
+    int Favor_Dirichlet = 1;
+    
+    if (face->df_dn_set) continue;
+    
+    /* test if we can favor Dirichlet: */
+    
+    /* if it has already Dirichlet */
+    if (isD[patch->pn]) bc = 1;
+    else                bc = 0;
+    
+    for (sf = 0; sf < face->ns; ++sf)
+    {
+      ssubf = face->subface[sf];
+      if (!ssubf->touch) continue;
+      
+      opatch = grid->patch[ssubf->adjPatch];
+      oface  = opatch->interface[ssubf->adjFace];
+      
+      /* if confilict => can't do Dirichlet */
+      if(oface->df_dn_set && oface->df_dn != (bc+1)%2)
+      {
+        Favor_Dirichlet = 0;
+        break;
+      }
+    }
+    
+    if (Favor_Dirichlet)
+    {
+      if (isD[patch->pn]) bc = 1;
+      else                bc = 0;
+    }
+    else/* favor Nuemann */
+    {
+      if (isD[patch->pn]) bc = 0;
+      else                bc = 1;
+    }
+    
+    face->df_dn = bc%2;
+    face->df_dn_set = 1;
+    
+    if (!face->df_dn) isD[patch->pn] = 1;
+    
+    for (sf = 0; sf < face->ns; ++sf)
+    {
+      ssubf = face->subface[sf];
+      if (!ssubf->touch) continue;
+      
+      opatch = grid->patch[ssubf->adjPatch];
+      oface  = opatch->interface[ssubf->adjFace];
+      
+      if(oface->df_dn_set && oface->df_dn != (bc+1)%2)
+        Error0("Wrong BC arrangement!");
+      
+      oface->df_dn = (bc+1)%2;
+      oface->df_dn_set = 1;
+      
+      if (!oface->df_dn) isD[opatch->pn] = 1;
+    }
+  }
+  /* set the subface flags correspondingly */
+  FOR_ALL_PATCHES(p,grid)
+  {
+    faces = grid->patch[p]->interface;
+    
+    FOR_ALL(f,faces)
+    {
+      for (sf = 0; sf < faces[f]->ns; ++sf)
+      {
+        ssubf = faces[f]->subface[sf];
+        
+        if (!ssubf->touch)
+          continue;
+        
+        assert(faces[f]->df_dn_set);
+        ssubf->df_dn = faces[f]->df_dn;
+        sprintf(sflgs,"%s,Dn:%u",ssubf->flags_str,ssubf->df_dn);
+        _free(ssubf->flags_str);
+        ssubf->flags_str = dup_s(sflgs);
+      }
+    }
+  }
+  
+  /* free */
+  _free(frank);
+  _free(isD);
+}
+
+/* count the number of adjacent faces the give face has */
+static unsigned counter_n_adjacent_faces(const Interface_T *const face)
+{
+  unsigned count = 0;
+  unsigned *pn = 0,*fn = 0;/* adjacent patch and face number */
+  unsigned sf;
+  
+  for (sf = 0; sf < face->ns; ++sf)
+  {
+    const SubFace_T *subf = face->subface[sf];
+    
+    if (!subf->touch)
+      continue;
+    
+    /* check repetition */
+    Flag_T rep = NO;
+    unsigned r;
+    for (r = 0; r < count; ++r)
+    {
+      if (pn[r] == subf->adjPatch && fn[r] == subf->adjFace)
+      {
+        rep = YES;
+        break;
+      }
+    }
+    if (rep == YES)
+      continue;
+    
+    /* no repetition => add them */
+    pn = realloc(pn,(count+1)*sizeof(*pn)); 
+    IsNull(pn);
+    fn = realloc(fn,(count+1)*sizeof(*fn)); 
+    IsNull(fn);
+    
+    pn[count] = subf->adjPatch;
+    fn[count] = subf->adjFace;
+    
+    count++;
+  }
+  
+  _free(pn);
+  _free(fn); 
+  
+  return count;   
+}
+
 

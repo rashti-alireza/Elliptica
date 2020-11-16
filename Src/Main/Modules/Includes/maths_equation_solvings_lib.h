@@ -109,10 +109,11 @@ typedef struct DDM_SCHUR_COMPLEMENT_T
   struct MATRIX_T *B;
   struct MATRIX_T *E_Trans;/* NOE: this is TRANSPOSE of E */
   struct MATRIX_T *E_Trans_prime;/* NOTE: it is E' of E_Trnas. */
-  struct MATRIX_T *F_by_E_prime;/* it is made in CCS format */
+  struct MATRIX_T **F_by_E_prime;/* F*E' for each patch in regular format */
   struct MATRIX_T **F;
   struct MATRIX_T **C;
-  struct MATRIX_T *C_ccs;/* combining all of the C's into one CCS format matrix */
+  struct MATRIX_T *subS;/* subS = C - F_by_E_prime_reg in ccs format */
+  
   Sewing_T **sewing;/* sewing[patch_number] */
   unsigned nsewing;/* number of sewings which is = number of patches */
   unsigned np;/* total number of patches */

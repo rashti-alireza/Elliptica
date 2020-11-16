@@ -1,6 +1,14 @@
 #ifndef maths_spectral_methods_LIB_H
 #define maths_spectral_methods_LIB_H
 
+/* 1d array index for Ylm */
+#define IJ_Ylm(i,j,Nphi) ((j)+(i)*(Nphi))
+/* Nphi at Ylm */
+#define Nphi_Ylm(lmax) (2*(lmax)+1)
+/* Ntheta at Ylm */
+#define Ntheta_Ylm(lmax) (2*(lmax)+1)
+/* Ntheta*Nphi at Ylm */
+#define Ntotal_Ylm(lmax) (Ntheta_Ylm(lmax)*Nphi_Ylm(lmax))
 
 struct INTERPOLATION_T;
 struct FIELD_T;

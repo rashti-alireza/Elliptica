@@ -5,6 +5,7 @@
 #include "manifold_lib.h"
 #include "fields_lib.h"
 #include "maths_equation_solvings_lib.h"
+#include "coordinate_shared_lib.h"
 
 extern Grid_T **grids_global;
 
@@ -25,10 +26,9 @@ void alloc_patches_BBN_CubedSpherical_grid(Grid_T *const grid);
 void alloc_patches_SNS_CubedSpherical_Box_grid(Grid_T *const grid);
 void alloc_patches_SNS_CubedSpherical_grid(Grid_T *const grid);
 void alloc_patches_SBH_CubedSpherical_grid(Grid_T *const grid);
+void fill_patches_Split_CubedSpherical_grid(Grid_T *const grid);
 int make_nodes(Grid_T *const grid);
 int make_JacobianT(Grid_T *const grid);
-void check_houseK(Patch_T *const patch);
-void flush_houseK(Patch_T *const patch);
 Patch_T make_temp_patch(const Patch_T *const patch);
 void free_temp_patch(Patch_T *const patch);
 static char *coord_sys_str(const Patch_T *const patch,char *const str);

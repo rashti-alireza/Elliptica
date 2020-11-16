@@ -2139,7 +2139,7 @@ static int bhf_ell_Brown(struct BHFiller_S *const bhf)
     inbh_grid->patch[p]->solving_man->method->SchurC = 0;
   }
   /* now let's fill up inbh_grid->patch[?]->interface */
-  realize_geometry(inbh_grid);
+  realize_interfaces(inbh_grid);
   
   /* add special grids */
   for (f = 0; f < Nf; ++f)

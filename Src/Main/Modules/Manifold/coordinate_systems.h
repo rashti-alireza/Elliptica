@@ -39,3 +39,5 @@ static void characteristics_BBN_CS_grid_eg(Grid_T *const grid);
 static void NS_BH_surface_CS_grid_eg(Grid_T *const grid,const double R_NS_l,const double R_BH_r,const double a_BH);
 static double dq_dN(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const unsigned p);
 void test_dq_dN(Grid_T *const grid);
+static void characteristics_SCS_eg(Grid_T *const grid);
+
