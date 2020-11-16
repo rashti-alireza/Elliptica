@@ -3610,7 +3610,7 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
     double w = 2*S;
     double h = 2*S;
     double rmin = sqrt(Pow2(l)+Pow2(w)+Pow2(h))/2.;
-    double rmax = Pgetd("outermost_radius");
+    double rmax = Pgetd("grid_outermost_radius");
     double rstep = (rmax-rmin)/Nsd[2];
     
     set_object_name_split_CS(obj,obj0);
