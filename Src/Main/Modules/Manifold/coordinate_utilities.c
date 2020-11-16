@@ -759,8 +759,8 @@ collect_patches
 // "BH" == the whole BH patches including central box (if any)
 // "NS_surface" == only patches include the NS surface from inside
 // "BH_surface" == only patches include the BH surface from inside
-// "NS_surface_surrounding" == only patches include the NS surface from outside
-// "BH_surface_surrounding" == only patches include the BH surface from outside
+// "NS_surrounding_surface" == only patches include the NS surface from outside
+// "BH_surrounding_surface" == only patches include the BH surface from outside
 // "NS_surrounding" == the whole NS surrounding patches
 // "BH_surrounding" == the whole NS surrounding patches
 // "outermost" == the whole outermost patches
@@ -785,7 +785,7 @@ IsItCovering
   const char *side = 0;
   char s[999] = {'\0'};
    
-  if(Fside == LEFT || Fside == RIGHT)
+  if(Fside == LEFT || Fside == RIGHT || Fside == CENTER)
     side = StrSide[Fside];
   else
     side = 0;
