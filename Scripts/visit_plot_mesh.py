@@ -17,6 +17,7 @@ from __future__ import division
 import re
 import os
 import argparse
+from argparse import RawTextHelpFormatter
 
 ## quick options:
 # turn on random mesh coloring
@@ -529,8 +530,12 @@ def collect_files(regex,data_path):
 
 ##{ pars_arguments
 def pars_arguments():
-  notes = '"A VisIt script to visualize patch/mesh in Elliptica"'
-  parser = argparse.ArgumentParser(description=notes)
+  notes = """
+  A VisIt script to visualize patch/mesh in Elliptica
+  Usage example:
+  visit -cli -s visit_plot_mesh.py "(left_central_box_left|left_NS_Up)_X.Y.Z.*" 
+          """
+  parser = argparse.ArgumentParser(description=notes,formatter_class=RawTextHelpFormatter)
   parser.add_argument('regex'   , action = 'store',type=str, help = 'Python format regex for file names')
   parser.add_argument('--path =', action = 'store',default = os.getcwd(),dest="data_path", type=str, help = 'Default is .')
   args = parser.parse_args()
