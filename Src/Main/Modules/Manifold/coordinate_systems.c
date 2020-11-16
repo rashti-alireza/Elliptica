@@ -590,8 +590,13 @@ void grid_characteristics_example(Grid_T *const grid)
   else if (strcmp_i(kind,"BBN_CubedSpherical_grid"))
     characteristics_BBN_CS_grid_eg(grid); 
    
-  else if (strcmp_i(kind,"SplitCubedSpherical(BH+NS)"))
-    characteristics_SCS_NS_BH_eg(grid); 
+  else if (strcmp_i(kind,"SplitCubedSpherical(BH+NS)") ||
+           strcmp_i(kind,"SplitCubedSpherical(NS+NS)") ||
+           strcmp_i(kind,"SplitCubedSpherical(BH+BH)") ||
+           strcmp_i(kind,"SplitCubedSpherical(NS)")    ||
+           strcmp_i(kind,"SplitCubedSpherical(BH)")
+          )
+    characteristics_SCS_eg(grid); 
     
   else
     Error1("There is no such %s grid kind.\n",grid->kind);
@@ -746,95 +751,397 @@ static void characteristics_BBN_CS_grid_eg(Grid_T *const grid)
 }
 
 /* example of calculating the main characteristic of grid for 
-// BBN_Split_CubedSpherical grid. 
+// split cubed spherical.
 // note: NS and BH sufaces are required to be given in Ylm expansions. */
-static void characteristics_SCS_NS_BH_eg(Grid_T *const grid)
+static void characteristics_SCS_eg(Grid_T *const grid)
 {
   /* calculate the characteristics of this grid */
   Grid_Char_T grid_char[1] = {0};/* grid characteristics */
-  const unsigned ns = 0, bh = 1;
-  const unsigned lmax   = 5;
-  const unsigned Ntheta = Ntheta_Ylm(lmax);
-  const unsigned Nphi   = Nphi_Ylm(lmax);
-  const unsigned Ntot   = Ntotal_Ylm(lmax);
-  const double C      = Pgetd("BH_NS_separation");
-  const double R_NS   = Pgetd("NS_radius"),
-               bh_m   = Pgetd("BH_mass"),
-               bh_chi = Pgetd("BH_dimensionless_spin"),
-               R_BH = bh_m*(1+sqrt(1-Pow2(bh_chi)));
-  double *rns = alloc_double(Ntot);/* surface function r = r(th,ph). */
-  double *rbh = alloc_double(Ntot);/* surface function r = r(th,ph). */
-  double *reClm_rns = alloc_ClmYlm(lmax),
-         *imClm_rns = alloc_ClmYlm(lmax);
-  double *reClm_rbh = alloc_ClmYlm(lmax),
-         *imClm_rbh = alloc_ClmYlm(lmax);
-  double box_size_ns,box_size_bh;
-  const char *kind;
-  unsigned ij;
   
-  /* set surface functions (required in Ylm) */
-  /* initialize tables */
-  init_Legendre_root_function();
-  for (ij = 0; ij < Ntot; ++ij)
+  if (Pcmps("grid_kind","SplitCubedSpherical(BH+NS)"))
   {
-    rns[ij] = R_NS;
-    rbh[ij] = R_BH;
+    const unsigned ns = 0, bh = 1;
+    const unsigned lmax   = 5;
+    const unsigned Ntheta = Ntheta_Ylm(lmax);
+    const unsigned Nphi   = Nphi_Ylm(lmax);
+    const unsigned Ntot   = Ntotal_Ylm(lmax);
+    const double C      = Pgetd("BH_NS_separation");
+    const double R_NS   = Pgetd("NS_radius"),
+                 bh_m   = Pgetd("BH_mass"),
+                 bh_chi = Pgetd("BH_dimensionless_spin"),
+                 R_BH = bh_m*(1+sqrt(1-Pow2(bh_chi)));
+    double *rns = alloc_double(Ntot);/* surface function r = r(th,ph). */
+    double *rbh = alloc_double(Ntot);/* surface function r = r(th,ph). */
+    double *reClm_rns = alloc_ClmYlm(lmax),
+           *imClm_rns = alloc_ClmYlm(lmax);
+    double *reClm_rbh = alloc_ClmYlm(lmax),
+           *imClm_rbh = alloc_ClmYlm(lmax);
+    double box_size_ns,box_size_bh;
+    const char *kind;
+    unsigned ij;
+    
+    /* set surface functions (required in Ylm) */
+    /* initialize tables */
+    init_Legendre_root_function();
+    for (ij = 0; ij < Ntot; ++ij)
+    {
+      rns[ij] = R_NS;
+      rbh[ij] = R_BH;
+    }
+    /* calculating coeffs */
+    get_Ylm_coeffs(reClm_rns,imClm_rns,rns,Ntheta,Nphi,lmax);
+    get_Ylm_coeffs(reClm_rbh,imClm_rbh,rbh,Ntheta,Nphi,lmax);
+    
+    /* finding the kind of grid */
+    kind = Pgets("grid_kind");
+    grid->kind = dup_s(kind);
+    
+    assert(C > 0);
+    assert(R_NS > 0);
+    assert(R_BH > 0);
+    assert(LSS(2*R_NS,C));
+    assert(LSS(2*R_BH,C));
+    
+    box_size_ns = Pgetd("grid_box_length_ratio_NS")*R_NS;
+    box_size_bh = Pgetd("grid_box_length_ratio_BH")*R_BH;
+    
+    /* set char of grid */
+    grid_char->grid = grid;
+    grid_char->S    = C;
+    /* NS */
+    grid_char->params[ns]->obj    = "NS";
+    grid_char->params[ns]->dir    = Pgets("grid_set_NS");
+    grid_char->params[ns]->relClm = reClm_rns;
+    grid_char->params[ns]->imgClm = imClm_rns;
+    grid_char->params[ns]->lmax   = lmax;
+    grid_char->params[ns]->r_min  = R_NS;
+    grid_char->params[ns]->r_max  = R_NS;
+    grid_char->params[ns]->l      = box_size_ns;
+    grid_char->params[ns]->w      = box_size_ns;
+    grid_char->params[ns]->h      = box_size_ns;
+    /* BH */
+    grid_char->params[bh]->obj    = "BH";
+    grid_char->params[bh]->dir    = Pgets("grid_set_BH");
+    grid_char->params[bh]->relClm = reClm_rbh;
+    grid_char->params[bh]->imgClm = imClm_rbh;
+    grid_char->params[bh]->lmax   = lmax;
+    grid_char->params[bh]->r_min  = R_BH;
+    grid_char->params[bh]->r_max  = R_BH;
+    grid_char->params[bh]->l      = box_size_bh;
+    grid_char->params[bh]->w      = box_size_bh;
+    grid_char->params[bh]->h      = box_size_bh;
+    grid_char->params[bh]->BHdomain = Pgets("grid_set_BH");
+    
+    /* set number of splits, points in each directions,
+    // surface functions etc. */
+    set_params_split_CS(grid_char);
+    
+    /* free */
+    _free(rns);
+    _free(rbh);
+    _free(reClm_rns);
+    _free(imClm_rns);
+    _free(reClm_rbh);
+    _free(imClm_rbh);
   }
-  /* calculating coeffs */
-  get_Ylm_coeffs(reClm_rns,imClm_rns,rns,Ntheta,Nphi,lmax);
-  get_Ylm_coeffs(reClm_rbh,imClm_rbh,rbh,Ntheta,Nphi,lmax);
-  
-  /* finding the kind of grid */
-  kind = Pgets("grid_kind");
-  grid->kind = dup_s(kind);
-  
-  assert(C > 0);
-  assert(R_NS > 0);
-  assert(R_BH > 0);
-  assert(LSS(2*R_NS,C));
-  assert(LSS(2*R_BH,C));
-  
-  box_size_ns = Pgetd("grid_box_length_ratio_NS")*R_NS;
-  box_size_bh = Pgetd("grid_box_length_ratio_BH")*R_BH;
-  
-  /* set char of grid */
-  grid_char->grid = grid;
-  grid_char->S    = C;
-  /* NS */
-  grid_char->params[ns]->obj    = "NS";
-  grid_char->params[ns]->dir    = Pgets("grid_set_NS");
-  grid_char->params[ns]->relClm = reClm_rns;
-  grid_char->params[ns]->imgClm = imClm_rns;
-  grid_char->params[ns]->lmax   = lmax;
-  grid_char->params[ns]->r_min  = R_NS;
-  grid_char->params[ns]->r_max  = R_NS;
-  grid_char->params[ns]->l      = box_size_ns;
-  grid_char->params[ns]->w      = box_size_ns;
-  grid_char->params[ns]->h      = box_size_ns;
-  /* BH */
-  grid_char->params[bh]->obj    = "BH";
-  grid_char->params[bh]->dir    = Pgets("grid_set_BH");
-  grid_char->params[bh]->relClm = reClm_rbh;
-  grid_char->params[bh]->imgClm = imClm_rbh;
-  grid_char->params[bh]->lmax   = lmax;
-  grid_char->params[bh]->r_min  = R_BH;
-  grid_char->params[bh]->r_max  = R_BH;
-  grid_char->params[bh]->l      = box_size_bh;
-  grid_char->params[bh]->w      = box_size_bh;
-  grid_char->params[bh]->h      = box_size_bh;
-  grid_char->params[bh]->BHdomain = Pgets("grid_set_BH");
-  
-  /* set number of splits, points in each directions,
-  // surface functions etc. */
-  set_params_split_CS(grid_char);
-  
-  /* free */
-  _free(rns);
-  _free(rbh);
-  _free(reClm_rns);
-  _free(imClm_rns);
-  _free(reClm_rbh);
-  _free(imClm_rbh);
+  else if (Pcmps("grid_kind","SplitCubedSpherical(NS+NS)"))
+  {
+    const unsigned ns1 = 0, ns2 = 1;
+    const unsigned lmax   = 5;
+    const unsigned Ntheta = Ntheta_Ylm(lmax);
+    const unsigned Nphi   = Nphi_Ylm(lmax);
+    const unsigned Ntot   = Ntotal_Ylm(lmax);
+    const double C      = Pgetd("NS_NS_separation");
+    const double R_NS1  = Pgetd("NS_radius1"),
+                 R_NS2  = Pgetd("NS_radius2");
+    double *rns1 = alloc_double(Ntot);/* surface function r = r(th,ph). */
+    double *rns2 = alloc_double(Ntot);/* surface function r = r(th,ph). */
+    double *reClm_rns1 = alloc_ClmYlm(lmax),
+           *imClm_rns1 = alloc_ClmYlm(lmax);
+    double *reClm_rns2 = alloc_ClmYlm(lmax),
+           *imClm_rns2 = alloc_ClmYlm(lmax);
+    double box_size_ns1,box_size_ns2;
+    const char *kind;
+    unsigned ij;
+    
+    /* set surface functions (required in Ylm) */
+    /* initialize tables */
+    init_Legendre_root_function();
+    for (ij = 0; ij < Ntot; ++ij)
+    {
+      rns1[ij] = R_NS1;
+      rns2[ij] = R_NS2;
+    }
+    /* calculating coeffs */
+    get_Ylm_coeffs(reClm_rns1,imClm_rns1,rns1,Ntheta,Nphi,lmax);
+    get_Ylm_coeffs(reClm_rns2,imClm_rns2,rns2,Ntheta,Nphi,lmax);
+    
+    /* finding the kind of grid */
+    kind = Pgets("grid_kind");
+    grid->kind = dup_s(kind);
+    
+    assert(C > 0);
+    assert(R_NS1 > 0);
+    assert(R_NS2 > 0);
+    assert(LSS(2*R_NS1,C));
+    assert(LSS(2*R_NS2,C));
+    
+    box_size_ns1 = Pgetd("grid_box_length_ratio_NS1")*R_NS1;
+    box_size_ns2 = Pgetd("grid_box_length_ratio_NS2")*R_NS2;
+    
+    /* set char of grid */
+    grid_char->grid = grid;
+    grid_char->S    = C;
+    /* NS */
+    grid_char->params[ns1]->obj    = "NS";
+    grid_char->params[ns1]->dir    = Pgets("grid_set_NS1");
+    grid_char->params[ns1]->relClm = reClm_rns1;
+    grid_char->params[ns1]->imgClm = imClm_rns1;
+    grid_char->params[ns1]->lmax   = lmax;
+    grid_char->params[ns1]->r_min  = R_NS1;
+    grid_char->params[ns1]->r_max  = R_NS1;
+    grid_char->params[ns1]->l      = box_size_ns1;
+    grid_char->params[ns1]->w      = box_size_ns1;
+    grid_char->params[ns1]->h      = box_size_ns1;
+    /* NS */
+    grid_char->params[ns2]->obj    = "NS";
+    grid_char->params[ns2]->dir    = Pgets("grid_set_NS2");
+    grid_char->params[ns2]->relClm = reClm_rns2;
+    grid_char->params[ns2]->imgClm = imClm_rns2;
+    grid_char->params[ns2]->lmax   = lmax;
+    grid_char->params[ns2]->r_min  = R_NS2;
+    grid_char->params[ns2]->r_max  = R_NS2;
+    grid_char->params[ns2]->l      = box_size_ns2;
+    grid_char->params[ns2]->w      = box_size_ns2;
+    grid_char->params[ns2]->h      = box_size_ns2;
+    
+    /* set number of splits, points in each directions,
+    // surface functions etc. */
+    set_params_split_CS(grid_char);
+    
+    /* free */
+    _free(rns1);
+    _free(rns2);
+    _free(reClm_rns1);
+    _free(imClm_rns1);
+    _free(reClm_rns2);
+    _free(imClm_rns2);
+  }
+  else if (Pcmps("grid_kind","SplitCubedSpherical(BH+BH)"))
+  {
+    const unsigned bh1 = 0, bh2 = 1;
+    const unsigned lmax   = 5;
+    const unsigned Ntheta = Ntheta_Ylm(lmax);
+    const unsigned Nphi   = Nphi_Ylm(lmax);
+    const unsigned Ntot   = Ntotal_Ylm(lmax);
+    const double C       = Pgetd("BH_BH_separation");
+    const double bh1_m   = Pgetd("BH_mass1"),
+                 bh1_chi = Pgetd("BH_dimensionless_spin1"),
+                 R_BH1   = bh1_m*(1+sqrt(1-Pow2(bh1_chi))),
+                 bh2_m   = Pgetd("BH_mass2"),
+                 bh2_chi = Pgetd("BH_dimensionless_spin2"),
+                 R_BH2 = bh2_m*(1+sqrt(1-Pow2(bh2_chi)));
+    double *rbh1 = alloc_double(Ntot);/* surface function r = r(th,ph). */
+    double *rbh2 = alloc_double(Ntot);/* surface function r = r(th,ph). */
+    double *reClm_rbh1 = alloc_ClmYlm(lmax),
+           *imClm_rbh1 = alloc_ClmYlm(lmax);
+    double *reClm_rbh2 = alloc_ClmYlm(lmax),
+           *imClm_rbh2 = alloc_ClmYlm(lmax);
+    double box_size_bh1,box_size_bh2;
+    const char *kind;
+    unsigned ij;
+    
+    /* set surface functions (required in Ylm) */
+    /* initialize tables */
+    init_Legendre_root_function();
+    for (ij = 0; ij < Ntot; ++ij)
+    {
+      rbh1[ij] = R_BH1;
+      rbh2[ij] = R_BH2;
+    }
+    /* calculating coeffs */
+    get_Ylm_coeffs(reClm_rbh1,imClm_rbh1,rbh1,Ntheta,Nphi,lmax);
+    get_Ylm_coeffs(reClm_rbh2,imClm_rbh2,rbh2,Ntheta,Nphi,lmax);
+    
+    /* finding the kind of grid */
+    kind = Pgets("grid_kind");
+    grid->kind = dup_s(kind);
+    
+    assert(C > 0);
+    assert(R_BH1 > 0);
+    assert(R_BH2 > 0);
+    assert(LSS(2*R_BH1,C));
+    assert(LSS(2*R_BH2,C));
+    
+    box_size_bh1 = Pgetd("grid_box_length_ratio_BH1")*R_BH1;
+    box_size_bh2 = Pgetd("grid_box_length_ratio_BH2")*R_BH2;
+    
+    /* set char of grid */
+    grid_char->grid = grid;
+    grid_char->S    = C;
+    /* NS */
+    grid_char->params[bh1]->obj    = "BH";
+    grid_char->params[bh1]->dir    = Pgets("grid_set_BH1");
+    grid_char->params[bh1]->relClm = reClm_rbh1;
+    grid_char->params[bh1]->imgClm = imClm_rbh1;
+    grid_char->params[bh1]->lmax   = lmax;
+    grid_char->params[bh1]->r_min  = R_BH1;
+    grid_char->params[bh1]->r_max  = R_BH1;
+    grid_char->params[bh1]->l      = box_size_bh1;
+    grid_char->params[bh1]->w      = box_size_bh1;
+    grid_char->params[bh1]->h      = box_size_bh1;
+    /* BH */
+    grid_char->params[bh2]->obj    = "BH";
+    grid_char->params[bh2]->dir    = Pgets("grid_set_BH2");
+    grid_char->params[bh2]->relClm = reClm_rbh2;
+    grid_char->params[bh2]->imgClm = imClm_rbh2;
+    grid_char->params[bh2]->lmax   = lmax;
+    grid_char->params[bh2]->r_min  = R_BH2;
+    grid_char->params[bh2]->r_max  = R_BH2;
+    grid_char->params[bh2]->l      = box_size_bh2;
+    grid_char->params[bh2]->w      = box_size_bh2;
+    grid_char->params[bh2]->h      = box_size_bh2;
+    grid_char->params[bh2]->BHdomain = Pgets("grid_set_BH");
+    
+    /* set number of splits, points in each directions,
+    // surface functions etc. */
+    set_params_split_CS(grid_char);
+    
+    /* free */
+    _free(rbh1);
+    _free(rbh2);
+    _free(reClm_rbh1);
+    _free(imClm_rbh1);
+    _free(reClm_rbh2);
+    _free(imClm_rbh2);
+  }
+  else if (Pcmps("grid_kind","SplitCubedSpherical(BH)"))
+  {
+    const unsigned bh     = 0;
+    const unsigned lmax   = 5;
+    const unsigned Ntheta = Ntheta_Ylm(lmax);
+    const unsigned Nphi   = Nphi_Ylm(lmax);
+    const unsigned Ntot   = Ntotal_Ylm(lmax);
+    const double C      = Pgetd("grid_surrounding_box_length");
+    const double bh_m   = Pgetd("BH_mass"),
+                 bh_chi = Pgetd("BH_dimensionless_spin"),
+                 R_BH = bh_m*(1+sqrt(1-Pow2(bh_chi)));
+    double *rbh = alloc_double(Ntot);/* surface function r = r(th,ph). */
+    double *reClm_rbh = alloc_ClmYlm(lmax),
+           *imClm_rbh = alloc_ClmYlm(lmax);
+    double box_size_bh;
+    const char *kind;
+    unsigned ij;
+    
+    /* set surface functions (required in Ylm) */
+    /* initialize tables */
+    init_Legendre_root_function();
+    for (ij = 0; ij < Ntot; ++ij)
+    {
+      rbh[ij] = R_BH;
+    }
+    /* calculating coeffs */
+    get_Ylm_coeffs(reClm_rbh,imClm_rbh,rbh,Ntheta,Nphi,lmax);
+    
+    /* finding the kind of grid */
+    kind = Pgets("grid_kind");
+    grid->kind = dup_s(kind);
+    
+    assert(C > 0);
+    assert(R_BH > 0);
+    assert(LSS(2*R_BH,C));
+    
+    box_size_bh = Pgetd("grid_box_length_ratio_BH")*R_BH;
+    
+    /* set char of grid */
+    grid_char->grid = grid;
+    grid_char->S    = C;
+    /* BH */
+    grid_char->params[bh]->obj    = "BH";
+    grid_char->params[bh]->dir    = Pgets("grid_set_BH");
+    grid_char->params[bh]->relClm = reClm_rbh;
+    grid_char->params[bh]->imgClm = imClm_rbh;
+    grid_char->params[bh]->lmax   = lmax;
+    grid_char->params[bh]->r_min  = R_BH;
+    grid_char->params[bh]->r_max  = R_BH;
+    grid_char->params[bh]->l      = box_size_bh;
+    grid_char->params[bh]->w      = box_size_bh;
+    grid_char->params[bh]->h      = box_size_bh;
+    grid_char->params[bh]->BHdomain = Pgets("grid_set_BH");
+    
+    /* set number of splits, points in each directions,
+    // surface functions etc. */
+    set_params_split_CS(grid_char);
+    
+    /* free */
+    _free(rbh);
+    _free(reClm_rbh);
+    _free(imClm_rbh);
+  }
+  else if (Pcmps("grid_kind","SplitCubedSpherical(NS)"))
+  {
+    const unsigned ns = 0;
+    const unsigned lmax   = 5;
+    const unsigned Ntheta = Ntheta_Ylm(lmax);
+    const unsigned Nphi   = Nphi_Ylm(lmax);
+    const unsigned Ntot   = Ntotal_Ylm(lmax);
+    const double C      = Pgetd("grid_surrounding_box_length");
+    const double R_NS   = Pgetd("NS_radius");
+    double *rns = alloc_double(Ntot);/* surface function r = r(th,ph). */
+    double *reClm_rns = alloc_ClmYlm(lmax),
+           *imClm_rns = alloc_ClmYlm(lmax);
+    double box_size_ns;
+    const char *kind;
+    unsigned ij;
+    
+    /* set surface functions (required in Ylm) */
+    /* initialize tables */
+    init_Legendre_root_function();
+    for (ij = 0; ij < Ntot; ++ij)
+    {
+      rns[ij] = R_NS;
+    }
+    /* calculating coeffs */
+    get_Ylm_coeffs(reClm_rns,imClm_rns,rns,Ntheta,Nphi,lmax);
+    
+    /* finding the kind of grid */
+    kind = Pgets("grid_kind");
+    grid->kind = dup_s(kind);
+    
+    assert(C > 0);
+    assert(R_NS > 0);
+    assert(LSS(2*R_NS,C));
+    
+    box_size_ns = Pgetd("grid_box_length_ratio_NS")*R_NS;
+    
+    /* set char of grid */
+    grid_char->grid = grid;
+    grid_char->S    = C;
+    /* NS */
+    grid_char->params[ns]->obj    = "NS";
+    grid_char->params[ns]->dir    = Pgets("grid_set_NS");
+    grid_char->params[ns]->relClm = reClm_rns;
+    grid_char->params[ns]->imgClm = imClm_rns;
+    grid_char->params[ns]->lmax   = lmax;
+    grid_char->params[ns]->r_min  = R_NS;
+    grid_char->params[ns]->r_max  = R_NS;
+    grid_char->params[ns]->l      = box_size_ns;
+    grid_char->params[ns]->w      = box_size_ns;
+    grid_char->params[ns]->h      = box_size_ns;
+    
+    /* set number of splits, points in each directions,
+    // surface functions etc. */
+    set_params_split_CS(grid_char);
+    
+    /* free */
+    _free(rns);
+    _free(reClm_rns);
+    _free(imClm_rns);
+  }
+  else
+  {
+    Error0(NO_OPTION);
+  }
   
 }
 
