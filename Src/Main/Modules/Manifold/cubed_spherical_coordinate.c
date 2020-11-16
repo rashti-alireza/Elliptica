@@ -2913,12 +2913,30 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
          Np);
   /* } */
   
-  /* set surface functions for all patches */
-  /* { */
+  /* set parameters for all patches for Binary system */
+  if (Pcmps("grid_kind","SplitCubedSpherical(BH+NS)") ||
+      Pcmps("grid_kind","SplitCubedSpherical(NS+NS)") ||
+      Pcmps("grid_kind","SplitCubedSpherical(BH+BH)"))
+  
+  { 
   const double S  = grid_char->S;/* separation */
   unsigned obj_n;/* BH or NS */
   
   /* two different direction */
+  if (strstr(grid_char->params[0]->dir,"left"))
+    grid_char->params[0]->dir = "left";
+  else if (strstr(grid_char->params[0]->dir,"right"))
+    grid_char->params[0]->dir = "right";
+  else
+    Error0("Bad argument.");
+    
+  if (strstr(grid_char->params[1]->dir,"left"))
+    grid_char->params[0]->dir = "left";
+  else if (strstr(grid_char->params[1]->dir,"right"))
+    grid_char->params[1]->dir = "right";
+  else
+    Error0("Bad argument.");
+    
   assert(!strstr(grid_char->params[0]->dir,grid_char->params[1]->dir));
   
   if(S < 0)
@@ -3997,9 +4015,11 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
     }/* for (d0 = 0; d0 < Nsd[0]; d0++) */
     obj_n++;
   }
-  
-  
-  /* } */
+  }/* binary */
+  else
+  {
+    Error0(NO_OPTION);
+  }
   
 } 
 
