@@ -803,7 +803,6 @@ static void characteristics_SCS_NS_BH_eg(Grid_T *const grid)
   /* NS */
   grid_char->params[ns]->obj    = "NS";
   grid_char->params[ns]->dir    = Pgets("grid_set_NS");
-  grid_char->params[bh]->type   = 0;
   grid_char->params[ns]->relClm = reClm_rns;
   grid_char->params[ns]->imgClm = imClm_rns;
   grid_char->params[ns]->lmax   = lmax;
@@ -815,7 +814,6 @@ static void characteristics_SCS_NS_BH_eg(Grid_T *const grid)
   /* BH */
   grid_char->params[bh]->obj    = "BH";
   grid_char->params[bh]->dir    = Pgets("grid_set_BH");
-  grid_char->params[bh]->type   = Pgets("grid_set_BH");
   grid_char->params[bh]->relClm = reClm_rbh;
   grid_char->params[bh]->imgClm = imClm_rbh;
   grid_char->params[bh]->lmax   = lmax;
@@ -824,6 +822,7 @@ static void characteristics_SCS_NS_BH_eg(Grid_T *const grid)
   grid_char->params[bh]->l      = box_size_bh;
   grid_char->params[bh]->w      = box_size_bh;
   grid_char->params[bh]->h      = box_size_bh;
+  grid_char->params[bh]->BHdomain = Pgets("grid_set_BH");
   
   /* set number of splits, points in each directions,
   // surface functions etc. */
