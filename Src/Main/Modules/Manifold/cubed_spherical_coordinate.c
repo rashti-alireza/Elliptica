@@ -4332,6 +4332,7 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
   const double S  = grid_char->S;/* size of box around the single object */
   unsigned obj_n;/* BH or NS */
   
+  assert(strstr_i(grid_char->params[0]->dir,"center"));
   grid_char->params[0]->dir = "center";
   
   if(S < 0)
@@ -4957,9 +4958,9 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
     
     /* find r step */
     const char *obj0 = "outermost";
-    double l = 2*S;
-    double w = 2*S;
-    double h = 2*S;
+    double l = S;
+    double w = S;
+    double h = S;
     double rmin = sqrt(Pow2(l)+Pow2(w)+Pow2(h))/2.;
     double rmax = Pgetd("grid_outermost_radius");
     double rstep = (rmax-rmin)/Nsd[2];
