@@ -746,7 +746,7 @@ collect_patches
   
   /* check if there is no such region */
   if (np == 0)
-    Error0("No such a region!");
+    Error0("No such region!");
   
   *Np = np;
   return patches;
