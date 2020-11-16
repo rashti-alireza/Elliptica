@@ -426,7 +426,7 @@ populate_CS_patch_SplitCS
   if (dir0 == NONE)
   {
     assert(strcmp_i(obj0,"outermost"));
-    dir = "all";
+    dir = "NA";
     type = OT_T_SCS;
   }
   else
@@ -3903,7 +3903,7 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
     double rup,rdown;
     double X[3] = {0};
     double *rU = 0, *rD = 0;
-    const char *const dir = "all";
+    const char *const dir = "NA";
     Patch_T patch[1] = {0};
     struct Collocation_s coll_s[2] = {0};
     char parU[STR_SIZE3] = {'\0'};
@@ -4946,7 +4946,7 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
     double rup,rdown;
     double X[3] = {0};
     double *rU = 0, *rD = 0;
-    const char *const dir = "all";
+    const char *const dir = "NA";
     Patch_T patch[1] = {0};
     struct Collocation_s coll_s[2] = {0};
     char parU[STR_SIZE3] = {'\0'};
