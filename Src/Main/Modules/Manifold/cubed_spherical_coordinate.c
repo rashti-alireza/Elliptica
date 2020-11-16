@@ -130,7 +130,7 @@ void fill_patches_BBN_CubedSpherical_grid(Grid_T *const grid)
 
 /* filling split cubed spherical coordinate patches for BBN grid 
 // the BH inside is scooped out */
-void fill_patches_Split_CubedSpherical_NS_BH_grid(Grid_T *const grid)
+void fill_patches_Split_CubedSpherical_grid(Grid_T *const grid)
 {
   const double r_outermost = Pgetd("grid_outermost_radius");
   unsigned pn = 0; /* patch number */
