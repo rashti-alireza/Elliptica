@@ -19,6 +19,13 @@
 typedef enum FLAG_T
 {
   UNDEFINED = -1,
+  UP    = 0,
+  DOWN  = 1,
+  LEFT  = 2,
+  RIGHT = 3,
+  BACK  = 4,
+  FRONT = 5,
+  CENTER= 6,
   NONE,
   NO,
   YES,
@@ -30,13 +37,6 @@ typedef enum FLAG_T
   BRUTE_FORCE,
   FATAL,
   INITIALIZE,
-  UP    = 0,
-  DOWN  = 1,
-  LEFT  = 2,
-  RIGHT = 3,
-  BACK  = 4,
-  FRONT = 5,
-  CENTER= 6,
   NS_T_CS,/* NS type in cubed spherical. note: NS could be any compact object like BH etc. */
   SR_T_CS,/* surrounding type in cubed spherical */
   OT_T1_CS,/* outermost type1 in cubed spherical */
