@@ -20,7 +20,12 @@ int realize_interfaces(Grid_T *const grid)
 {
   FUNC_TIC
   
-  if (strcmp_i(grid->kind,"SplitCubedSpherical(BH+NS)"))
+  if (strcmp_i(grid->kind,"SplitCubedSpherical(BH+NS)") ||
+      strcmp_i(grid->kind,"SplitCubedSpherical(NS+NS)") ||
+      strcmp_i(grid->kind,"SplitCubedSpherical(BH+BH)") ||
+      strcmp_i(grid->kind,"SplitCubedSpherical(NS)")    ||
+      strcmp_i(grid->kind,"SplitCubedSpherical(BH)")
+     )
   {
     ri_split_cubed_spherical(grid);
   }
