@@ -78,6 +78,7 @@
 static const char *const StrSide[] = 
   {"up","down","left",
   "right","back","front",
+  "center",
   0};
 
 /* allowed object: */

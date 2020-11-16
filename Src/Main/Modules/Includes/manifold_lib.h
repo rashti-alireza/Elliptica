@@ -270,7 +270,8 @@ typedef struct NEEDLE_T
 typedef struct GRID_CHAR_T
 {
  Grid_T *grid;/* the grid */
- double S;/* separation between the objects */
+ double S;/* separation between the objects in a binary system or 
+          // the size of box around the single object. */
  struct/* for each object */
  {
   const char *obj;/* BH or NS */
