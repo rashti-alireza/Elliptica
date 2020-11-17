@@ -218,7 +218,7 @@ void add_parameter(const char *const lv, const char *const rv)
 
 /* some iterative parameter may have multiplicity with (x?), e.g:
 // par = 1->2(x2)->5(x3)->8
-// this function parse it and return it in regular format, i.e:
+// this function parses it and returns it in regular format, i.e:
 // par = 1->2->2->5->5->5->8
 // ->return value: an iterative parameter with regular format */
 static char *parse_multiplicity_of_iterative_parameter(const char *const rv)
