@@ -10,6 +10,10 @@
 #include "maths_equation_solvings_lib.h"
 #include "fields_lib.h"
 
+/* string size */
+#define MSG_SIZE1 (999)
+#define MSG_SIZE2 (9999)
+/* openmp */
 #define DDM_SCHUR_COMPLEMENT_OpenMP(x) _Pragma ( #x )
 
 typedef enum DDM_SCHUR_COMPLEMENT_FLAG_T

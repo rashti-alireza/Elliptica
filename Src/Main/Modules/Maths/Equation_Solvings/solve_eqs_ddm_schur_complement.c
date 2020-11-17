@@ -215,7 +215,7 @@ static int solve_field(Solve_Equations_T *const SolveEqs)
       {
         Patch_T *patch = grid->patch[p];
         double tic = get_time_sec();
-        char *msg  = calloc(10000,1); 
+        char *msg  = calloc(MSG_SIZE2,1); 
         IsNull(msg);
         
         char *msg1 = making_B_and_E(patch);
@@ -282,7 +282,8 @@ static int solve_field(Solve_Equations_T *const SolveEqs)
         Patch_T *patch    = grid->patch[p];
         Solving_Man_T *SM = patch->solving_man;
         char *field_name  = SM->field_name[SM->cf];
-        char msg1[1000],msg2[1000],msg3[1000],msg4[1000],msg5[1000];
+        char msg1[MSG_SIZE1],msg2[MSG_SIZE1],msg3[MSG_SIZE1],
+            msg4[MSG_SIZE1],msg5[MSG_SIZE1];
         double tic;
         double w_lambda = patch->solving_man->settings->relaxation_factor;
         
@@ -466,7 +467,7 @@ static char *solve_Sy_g_prime(Matrix_T *const S,double *const g_prime,Grid_T *co
   DDM_Schur_Complement_T *Schur;
   unsigned R = 0;
   unsigned p;
-  char *msg = calloc(10000,1);
+  char *msg = calloc(MSG_SIZE2,1);
   IsNull(msg);
   
   umfpack->a = S;
@@ -532,7 +533,7 @@ static char *making_sub_S_matrix(Patch_T *const patch)
   long a_row,a_col,b_row,b_col;
   long row,col;
   unsigned p;  
-  char *msg = calloc(1000,1);
+  char *msg = calloc(MSG_SIZE1,1);
   IsNull(msg);
   
   for (p = 0; p < Np; ++p)
@@ -779,7 +780,7 @@ static char *making_F_by_E_prime(Patch_T *const patch)
   const Matrix_T *const E_Trans_prime = Schur->E_Trans_prime;
   Matrix_T *MxM;
   unsigned p;
-  char *msg = calloc(1000,1);
+  char *msg = calloc(MSG_SIZE1,1);
   IsNull(msg);
   
   Schur->F_by_E_prime = calloc(np,sizeof(*Schur->F_by_E_prime));
@@ -822,7 +823,7 @@ static char *making_F_by_f_prime(Patch_T *const patch)
   const double *const f_prime = Schur->f_prime;
   double *const F_by_f_prime = alloc_double(Schur->NI_total);
   unsigned p;
-  char *msg = calloc(1000,1);
+  char *msg = calloc(MSG_SIZE1,1);
   IsNull(msg);
   
   for (p = 0; p < np; ++p)
@@ -853,7 +854,7 @@ static char *making_F_and_C(Patch_T *const patch)
   Sewing_T **const sewing = Schur->sewing;
   const unsigned np = Schur->np;
   unsigned p;
-  char *msg = calloc(1000,1);
+  char *msg = calloc(MSG_SIZE1,1);
   IsNull(msg);
   
   /* allocation matrices */
@@ -1297,7 +1298,7 @@ static char *making_E_prime_and_f_prime(Patch_T *const patch)
   Umfpack_T *umfpack = init_umfpack();
   unsigned ns = 1;
   unsigned i;
-  char *msg = calloc(10000,1);
+  char *msg = calloc(MSG_SIZE2,1);
   IsNull(msg);
   
   /* normal version (= 0), otherwise long */
@@ -1377,7 +1378,7 @@ static char *making_B_and_E(Patch_T *const patch)
   const long Bcol = (long)S->method->SchurC->NS;
   const long Erow = (long)S->method->SchurC->NS;
   const long Ecol = (long)S->method->SchurC->NI;
-  char *msg = calloc(1000,1);
+  char *msg = calloc(MSG_SIZE1,1);
   IsNull(msg);
   
   S->method->SchurC->B       = alloc_matrix(REG_SF,Brow,Bcol);
@@ -3031,7 +3032,7 @@ void calculate_equation_residual(Solve_Equations_T *const SolveEqs)
     {
       Patch_T *patch = grid->patch[0];
       DDM_Schur_Complement_T *Schur = patch->solving_man->method->SchurC;
-      char field_res[1000];
+      char field_res[MSG_SIZE1];
       sprintf(field_res,"%s_residual",field_name[f]);
       
       empty_field(patch->pool[Ind(field_res)]);
@@ -3069,7 +3070,7 @@ void calculate_equation_residual(Solve_Equations_T *const SolveEqs)
       {
         Patch_T *patch = grid->patch[p];
         DDM_Schur_Complement_T *Schur = patch->solving_man->method->SchurC;
-        char field_res[1000];
+        char field_res[MSG_SIZE1];
         sprintf(field_res,"%s_residual",field_name[f]);
       
         empty_field(patch->pool[Ind(field_res)]);
