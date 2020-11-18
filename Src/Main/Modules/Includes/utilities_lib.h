@@ -89,6 +89,14 @@ how_much_memory
 void header_and_clock(const char *const msg);
 void footer_and_clock(const char *const msg);
 
+void 
+update_parameters_and_directories
+  (
+   const unsigned main_loop_iter,
+   const char *const dir_name_format/* eg: "BBN_%s_%ux%ux%u" */
+  );
+
+
 #endif
 
 
