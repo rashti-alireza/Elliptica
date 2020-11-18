@@ -3078,9 +3078,9 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
   const unsigned givenN[3] = {(unsigned)Pgeti("n_a"),
                               (unsigned)Pgeti("n_b"),
                               (unsigned)Pgeti("n_c")};
-  const unsigned maxN[3] = {(unsigned)Pgeti("SplitCS_max_n_a"),
-                            (unsigned)Pgeti("SplitCS_max_n_b"),
-                            (unsigned)Pgeti("SplitCS_max_n_c")};
+  const unsigned maxN[3] = {(unsigned)Pgeti("grid_SplitCS_max_n_a"),
+                            (unsigned)Pgeti("grid_SplitCS_max_n_b"),
+                            (unsigned)Pgeti("grid_SplitCS_max_n_c")};
   unsigned newN[3] = {0};/* new number of nodes in each direction */
   unsigned Nsd[3]  = {0};/* number of splits in each dir. */
   unsigned Nns[3]  = {0};/* number of nodes in each split patch */
