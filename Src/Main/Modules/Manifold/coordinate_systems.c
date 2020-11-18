@@ -757,6 +757,9 @@ static void characteristics_SCS_eg(Grid_T *const grid)
 {
   /* calculate the characteristics of this grid */
   Grid_Char_T grid_char[1] = {0};/* grid characteristics */
+  /* finding the kind of grid */
+  kind = Pgets("grid_kind");
+  grid->kind = dup_s(kind);
   
   if (Pcmps("grid_kind","SplitCubedSpherical(BH+NS)"))
   {
@@ -792,9 +795,6 @@ static void characteristics_SCS_eg(Grid_T *const grid)
     get_Ylm_coeffs(reClm_rns,imClm_rns,rns,Ntheta,Nphi,lmax);
     get_Ylm_coeffs(reClm_rbh,imClm_rbh,rbh,Ntheta,Nphi,lmax);
     
-    /* finding the kind of grid */
-    kind = Pgets("grid_kind");
-    grid->kind = dup_s(kind);
     
     assert(C > 0);
     assert(R_NS > 0);
@@ -874,10 +874,6 @@ static void characteristics_SCS_eg(Grid_T *const grid)
     /* calculating coeffs */
     get_Ylm_coeffs(reClm_rns1,imClm_rns1,rns1,Ntheta,Nphi,lmax);
     get_Ylm_coeffs(reClm_rns2,imClm_rns2,rns2,Ntheta,Nphi,lmax);
-    
-    /* finding the kind of grid */
-    kind = Pgets("grid_kind");
-    grid->kind = dup_s(kind);
     
     assert(C > 0);
     assert(R_NS1 > 0);
@@ -962,10 +958,6 @@ static void characteristics_SCS_eg(Grid_T *const grid)
     get_Ylm_coeffs(reClm_rbh1,imClm_rbh1,rbh1,Ntheta,Nphi,lmax);
     get_Ylm_coeffs(reClm_rbh2,imClm_rbh2,rbh2,Ntheta,Nphi,lmax);
     
-    /* finding the kind of grid */
-    kind = Pgets("grid_kind");
-    grid->kind = dup_s(kind);
-    
     assert(C > 0);
     assert(R_BH1 > 0);
     assert(R_BH2 > 0);
@@ -1041,10 +1033,6 @@ static void characteristics_SCS_eg(Grid_T *const grid)
     /* calculating coeffs */
     get_Ylm_coeffs(reClm_rbh,imClm_rbh,rbh,Ntheta,Nphi,lmax);
     
-    /* finding the kind of grid */
-    kind = Pgets("grid_kind");
-    grid->kind = dup_s(kind);
-    
     assert(C > 0);
     assert(R_BH > 0);
     assert(LSS(2*R_BH,C));
@@ -1100,10 +1088,6 @@ static void characteristics_SCS_eg(Grid_T *const grid)
     }
     /* calculating coeffs */
     get_Ylm_coeffs(reClm_rns,imClm_rns,rns,Ntheta,Nphi,lmax);
-    
-    /* finding the kind of grid */
-    kind = Pgets("grid_kind");
-    grid->kind = dup_s(kind);
     
     assert(C > 0);
     assert(R_NS > 0);
