@@ -24,12 +24,12 @@ update_parameters_and_directories
   unsigned iter;/* number of iterations have been performed for the simulation */
   unsigned n[3];/* number of points */
   const char *path_par = Pgets("output_directory_path");
-  char folder_name_next[1000] = {'\0'},
-       folder_name_prev[1000] = {'\0'};
+  char folder_name_next[STR_SIZE2] = {'\0'},
+       folder_name_prev[STR_SIZE2] = {'\0'};
   char *folder_path,*folder_path2;
   const char *const parfile_name = Pgets("parameter_file_name");
   const char *const parfile_stem = Pgets("parameter_file_name_stem");
-  char cp_cmd[STR_LEN_MAX];
+  char cp_cmd[STR_SIZE2];
   char *str;
   unsigned i;
   
@@ -113,3 +113,55 @@ update_parameters_and_directories
     Pseti("did_resolution_change?",1);
   }
 }
+
+
+/* free given grid and parameters related to the given grid.
+// these parameters must start with "grid%u_". 
+// note: it only frees grid if keep_grid == 0. */
+void free_grid_and_its_parameters(Grid_T *grid,const int keep_grid)
+{
+  FUNC_TIC
+  
+  if (!grid)/* if grid is empty do nothing */
+  {
+    FUNC_TOC
+    return;
+  }
+ 
+  extern Parameter_T **parameters_global;
+  char suffix[STR_SIZE1] = {'\0'};
+  unsigned i,np,gn;
+  
+  if (keep_grid)
+  {
+    /* since one might set grid_next = grid_prev already */
+    gn   = grid->gn-1;
+    grid = 0;
+  }
+  else
+  {
+    gn = grid->gn;
+    free_grid(grid);
+  }  
+  
+  np = 0;
+  while (parameters_global != 0 && parameters_global[np] != 0)
+    np++;
+  
+  sprintf(suffix,"grid%u_",gn);/* parameters related to this grid */
+  for (i = 0; i < np;)/* no increment */
+  {
+    if (strstr(parameters_global[i]->lv,suffix))
+    {
+      /* note: the last par is put in palce of removed par
+      // so don't increment i */
+      free_parameter(parameters_global[i]->lv);
+      np--;
+    }
+    else
+      i++;
+  }
+  
+  FUNC_TOC
+}
+
