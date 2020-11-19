@@ -269,7 +269,8 @@ typedef struct NEEDLE_T
 #define NPARAMS_GRID_CHAR (2) /* for now only two objects */
 typedef struct GRID_CHAR_T
 {
- Grid_T *grid;/* the grid */
+ Grid_T *grid;/* the new grid */
+ Grid_T *lgrid;/* the last grid (before grid) */
  double S;/* separation between the objects in a binary system or 
           // the size of box around the single object. */
  struct/* for each object */
@@ -367,7 +368,10 @@ collect_patches
   unsigned *const Np/* number of patches found */
   );
 
-  
+Grid_Char_T *init_grid_char(Grid_T *const last_grid);
+void free_grid_char(Grid_Char_T *g);
+
+
 #endif
 
 

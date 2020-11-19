@@ -815,4 +815,19 @@ IsItCovering
   return ret;
 }
 
+/* initialize */
+Grid_Char_T *init_grid_char(Grid_T *const last_grid)
+{
+  Grid_Char_T *g = calloc(1,sizeof(*g));IsNull(g);
+  g->lgrid = last_grid;
+  
+  return g;
+}
+
+/* note: entries like relClm or imgClm etc 
+// are assumed to be freed separately. */
+void free_grid_char(Grid_Char_T *g)
+{
+  _free(g);
+}
 
