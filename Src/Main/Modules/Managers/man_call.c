@@ -3,14 +3,17 @@
 // November 2020
 */
 
-/* call the algorithms pertinent to system update and adjustments */
+/* call the project pertinent to system update and adjustments */
 
-#include "cobj_manager.h"
+#include "man_call.h"
 
 /* call the requested function */
-int NS_update(Compact_Obj_T *const obj,const cmd_T cmd)
+int Update(Compact_Obj_T *const obj,const cmd_T cmd)
 {
   int ret = -1;
+  
+  obj->cmd = cmd;
+  
   UNUSED(obj);
   switch (cmd)
   {
@@ -32,21 +35,6 @@ int NS_update(Compact_Obj_T *const obj,const cmd_T cmd)
     case EXTRAPOLATE_OUTSIDE:
       ret = extrapolate_matter_outside_star(obj);
     break;*/
-    default:
-      Error0(NO_OPTION);
-  }
-  
-  return ret;
-}
-
-
-/* call the requested function */
-int BH_update(Compact_Obj_T *const obj,const cmd_T cmd)
-{
-  int ret = -1;
-  UNUSED(obj);
-  switch (cmd)
-  {
     /*case AH_RADIUS:
       ret = update_apparent_horizon_radius(obj);
     break;
@@ -56,26 +44,15 @@ int BH_update(Compact_Obj_T *const obj,const cmd_T cmd)
     case AH_NORMAL_VECTOR:
       ret = update_apparent_horizon_normal(obj);
     break;*/
-    default:
-      Error0(NO_OPTION);
-  }
-  
-  return ret;
-}
-
-/* call the requested function */
-int system_update(Compact_Obj_T *const obj,const cmd_T cmd)
-{
-  int ret = -1;
-  UNUSED(obj);
-  switch (cmd)
-  {
     /*case P_ADM:
       ret = adjust_ADM_momentum(obj);
     break;*/
     default:
       Error0(NO_OPTION);
   }
+  
+  /* set to no command to catch bug */
+  obj->cmd = CMD_UNDEFINED;
   
   return ret;
 }

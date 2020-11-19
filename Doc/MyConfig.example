@@ -37,7 +37,6 @@ MODULE += $(MODULE_DIR)/Physics/StressEnergy_Tensor
 MODULE += $(MODULE_DIR)/Physics/EoS
 MODULE += $(MODULE_DIR)/Physics/Observables
 MODULE += $(MODULE_DIR)/Physics/Transformation
-MODULE += $(MODULE_DIR)/Physics/Compact_Object
 
 # one can comment out these module(s):
 #MODULE += $(MODULE_DIR)/Prints/pr_hdf5_silo

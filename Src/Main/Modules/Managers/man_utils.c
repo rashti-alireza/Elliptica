@@ -5,7 +5,7 @@
 
 /* utilities for various purposes */
 
-#include "cobj_utils.h"
+#include "man_utils.h"
 
 Compact_Obj_T *
 init_compact_obj

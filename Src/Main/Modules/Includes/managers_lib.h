@@ -1,5 +1,5 @@
-#ifndef physics_COMPACT_OBJ_LIB_H
-#define physics_COMPACT_OBJ_LIB_H
+#ifndef managers_LIB_H
+#define managers_LIB_H
 
 /* commands, DON'T change the numeration and ADD after one to the last */
 typedef enum CMD_T
@@ -38,6 +38,7 @@ typedef struct COMPACT_OBJ_T
 {
  Grid_T *grid;
  Grid_Char_T *grid_char;/* grid character when used for surface finder */
+ cmd_T *cmd;/* current command */
  Com_Obj_T type;/* BH1,NS2, NS, etc */
  const char *stype;/* string of type (above) used for parameter prefix */
  Com_Obj_T sys;/* system: BHNS, NSNS, BHBH, etc */
