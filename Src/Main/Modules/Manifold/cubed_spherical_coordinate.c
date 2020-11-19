@@ -3106,8 +3106,11 @@ void set_object_name_split_CS(char *const obj,const char *const type)
 // thus in future one can use this components for similar purposes. */
 void set_params_split_CS(Grid_Char_T *const grid_char)
 {
+  Grid_T *const grid = grid_char->grid;/* this is the new grid */
   unsigned n[3] = {0};
   unsigned i,j,k,d0,d1,d2;
+  
+  assert(grid);
   
   /* first find out the splits and resolutions */
   /* { */

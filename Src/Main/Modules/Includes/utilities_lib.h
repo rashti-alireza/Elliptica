@@ -96,7 +96,7 @@ update_parameters_and_directories
    const char *const dir_name_format/* eg: "BBN_%s_%ux%ux%u" */
   );
 
-void free_grid_and_its_parameters(Grid_T *grid);
+void free_grid_and_its_parameters(Grid_T *grid,const int keep_grid);
 
 #endif
 

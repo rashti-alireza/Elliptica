@@ -115,6 +115,7 @@ update_parameters_and_directories
 }
 
 
+extern Parameter_T **parameters_global;
 /* free given grid and parameters related to the given grid.
 // these parameters must start with "grid%u_". 
 // note: it only frees grid if keep_grid == 0. */
@@ -128,7 +129,6 @@ void free_grid_and_its_parameters(Grid_T *grid,const int keep_grid)
     return;
   }
  
-  extern Parameter_T **parameters_global;
   char suffix[STR_SIZE1] = {'\0'};
   unsigned i,np,gn;
   

@@ -757,9 +757,7 @@ static void characteristics_SCS_eg(Grid_T *const grid)
 {
   /* calculate the characteristics of this grid */
   Grid_Char_T grid_char[1] = {0};/* grid characteristics */
-  /* finding the kind of grid */
-  kind = Pgets("grid_kind");
-  grid->kind = dup_s(kind);
+  grid->kind = dup_s(Pgets("grid_kind"));
   
   if (Pcmps("grid_kind","SplitCubedSpherical(BH+NS)"))
   {
@@ -780,7 +778,6 @@ static void characteristics_SCS_eg(Grid_T *const grid)
     double *reClm_rbh = alloc_ClmYlm(lmax),
            *imClm_rbh = alloc_ClmYlm(lmax);
     double box_size_ns,box_size_bh;
-    const char *kind;
     unsigned ij;
     
     /* set surface functions (required in Ylm) */
@@ -860,7 +857,6 @@ static void characteristics_SCS_eg(Grid_T *const grid)
     double *reClm_rns2 = alloc_ClmYlm(lmax),
            *imClm_rns2 = alloc_ClmYlm(lmax);
     double box_size_ns1,box_size_ns2;
-    const char *kind;
     unsigned ij;
     
     /* set surface functions (required in Ylm) */
@@ -943,7 +939,6 @@ static void characteristics_SCS_eg(Grid_T *const grid)
     double *reClm_rbh2 = alloc_ClmYlm(lmax),
            *imClm_rbh2 = alloc_ClmYlm(lmax);
     double box_size_bh1,box_size_bh2;
-    const char *kind;
     unsigned ij;
     
     /* set surface functions (required in Ylm) */
@@ -1020,7 +1015,6 @@ static void characteristics_SCS_eg(Grid_T *const grid)
     double *reClm_rbh = alloc_ClmYlm(lmax),
            *imClm_rbh = alloc_ClmYlm(lmax);
     double box_size_bh;
-    const char *kind;
     unsigned ij;
     
     /* set surface functions (required in Ylm) */
@@ -1076,7 +1070,6 @@ static void characteristics_SCS_eg(Grid_T *const grid)
     double *reClm_rns = alloc_ClmYlm(lmax),
            *imClm_rns = alloc_ClmYlm(lmax);
     double box_size_ns;
-    const char *kind;
     unsigned ij;
     
     /* set surface functions (required in Ylm) */
