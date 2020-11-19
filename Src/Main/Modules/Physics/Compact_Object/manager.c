@@ -12,7 +12,7 @@ int NS_update(Compact_Obj_T *const obj,const cmd_T cmd)
 {
   int ret = -1;
   
-  switch (cms)
+  switch (cmd)
   {
     case STRESS_ENERGY:
       ret = update_stress_energy_tensor(obj);
@@ -45,7 +45,7 @@ int BH_update(Compact_Obj_T *const obj,const cmd_T cmd)
 {
   int ret = -1;
   
-  switch (cms)
+  switch (cmd)
   {
     case AH_RADIUS:
       ret = update_apparent_horizon_radius(obj);
@@ -68,7 +68,7 @@ int system_update(Compact_Obj_T *const obj,const cmd_T cmd)
 {
   int ret = -1;
   
-  switch (cms)
+  switch (cmd)
   {
     case P_ADM:
       ret = adjust_ADM_momentum(obj);

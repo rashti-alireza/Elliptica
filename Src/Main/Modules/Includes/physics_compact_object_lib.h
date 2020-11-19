@@ -28,9 +28,9 @@ typedef enum COMP_OBJ_T
  BH,
  BH1,
  BH2,
- BHNS
+ BHNS,
  BHBH,
- NSNS,
+ NSNS
 }Com_Obj_T;
 
 /* struct for compact object */
@@ -67,7 +67,7 @@ static const char *cmd_enum_str[] =
 };
 
 Compact_Obj_T *init_compact_obj(Grid_T *const grid,const char *const sobj);
-void free_compact_obj(Grid_T *const grid *obj);
+void free_compact_obj(Compact_Obj_T *obj);
 
 #endif
 
