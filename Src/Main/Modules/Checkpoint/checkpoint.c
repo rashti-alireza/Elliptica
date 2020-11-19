@@ -701,3 +701,152 @@ void read_fields_from_checkpoint(Grid_T *const grid,FILE *const file)
     Error0("It could not find the field footer.\n");
   _free(match_str);
 }
+
+
+/* loading the grid and parameters from checkpoint file.
+// No check at this stage, we assume every thing is consistence.
+// NOTE: this only load the grid and parameter without fields.
+// fields must be added separately and then be read by function:
+// read_fields_from_checkpoint. 
+// the path of checkpoint file is saved in "checkpoint_file_path". */
+Grid_T *load_checkpoint_file(void)
+{
+  /* print some descriptions */
+  pr_line_custom('=');
+  printf("{ Initializing from checkpoint file ...\n");
+  
+  Grid_T *grid = 0;
+  FILE *file   = 0;
+  const char *const checkpoint_file_path = Pgets("checkpoint_file_path");
+  
+  if (access(checkpoint_file_path,F_OK))/* if file does not exist */
+    Error1("Checkpoint file does not exist at\n%s\n",checkpoint_file_path);
+    
+  file = Fopen(checkpoint_file_path,"r");
+  IsNull(file);
+  
+  grid = init_from_checkpoint(file);
+  
+  fclose(file);
+  
+  printf("} Initializing from checkpoint file ==> Done.\n");
+  pr_clock();
+  pr_line_custom('=');
+  
+  return grid;
+}
+
+/* check if there is a consistence checkpoint file to be used 
+// for initialization.
+// -> return value : 1 if exists, 0 otherwise. */
+int can_we_use_checkpoint(void)
+{
+  int ret = 0;
+  const int FOLDER_TYPE   = 4;
+  const unsigned MAX_LIST_NUM = 10;
+  DIR *prev_dir;
+  struct dirent *ent;
+  struct stat st = {0};/* status of files */
+  FILE *checkpoint_file = 0;
+  Parameter_T *par;
+  const char *const cur_out_dir = Pgets("output_directory_path");
+  const char *const cur_folder_name  = strrchr(cur_out_dir,'/')+1;
+  const char *const cur_folder_affix = strrchr(cur_folder_name,'_')+1;
+  int cur_folder_index = atoi(cur_folder_affix);
+  char prev_out_dir[MAX_ARRx4];
+  char prev_folder_name[MAX_ARRx2];
+  char folder_stem[MAX_ARR];
+  char out_dir_stem[MAX_ARRx2];
+  char *prev_data_folder_list[MAX_LIST_NUM];
+  char prev_data_file_path[MAX_ARRx5];
+  char *aux,str[MAX_ARRx5];
+  long latest_mtime = 0;
+  unsigned count,i;
+  
+  /* if there is no previous folder */
+  if (!cur_folder_index)
+    return 0;
+  
+  /* if there is a previous folder check the contents
+  // see if there is any useful checkpoint file and finally 
+  // find the latest one. */
+  
+  sprintf(out_dir_stem,"%s",cur_out_dir);
+  aux    = strrchr(out_dir_stem,'/');
+  aux[0] = '\0';
+  
+  sprintf(folder_stem,"%s",cur_folder_name);
+  aux    = strrchr(folder_stem,'_');
+  aux[0] = '\0';
+  
+  sprintf(prev_folder_name,"%s"FOLDER_AFFIX,
+          folder_stem,cur_folder_index-1);
+  
+  sprintf(prev_out_dir,"%s/%s",out_dir_stem,prev_folder_name);
+  
+  /* open previous directory */        
+  prev_dir = opendir(prev_out_dir);
+  if (!prev_dir)/* if cannot be opened */
+    return 0;
+  
+  count = 0;  
+  ent = readdir(prev_dir);
+  while (ent)
+  {
+    if (ent->d_type == FOLDER_TYPE)/* if this a folder */
+    {
+      if (!strcmp(ent->d_name,".") || !strcmp(ent->d_name,".."))
+      {
+        ent = readdir(prev_dir);
+        continue;
+      }
+      assert(count < MAX_LIST_NUM);/* if it grater increase MAX_LIST_NUM */
+      prev_data_folder_list[count] = dup_s(ent->d_name);
+      count++;
+    }
+    ent = readdir(prev_dir);
+  }
+  closedir(prev_dir);  
+  
+  /* having found the data folder, find the latest checkpoint file */
+  latest_mtime = 0;
+  for (i = 0; i < count; ++i)
+  {
+    sprintf(str,"%s/%s/%s",prev_out_dir,
+       prev_data_folder_list[i],CHECKPOINT_FILE_NAME);
+    
+    /* if the file exists */
+    if(!stat(str, &st))
+    {
+      /* if it is later */
+      if (st.st_mtime > latest_mtime)
+      {
+        /* if the checkpoint file written completely */
+        if (is_checkpoint_sound(str))
+        {
+          sprintf(prev_data_file_path,"%s",str);
+          latest_mtime = st.st_mtime;
+          ret = 1;/* ---> where we set ret = 1 */
+        }
+      }
+    }/* end of if(!stat(str, &st)) */
+  }
+  
+  /* free  */
+  for (i  = 0; i < count; ++i)
+    free(prev_data_folder_list[i]);
+  
+  /* set the path of checkpoint file and some preparation */
+  if (ret)
+  {
+    Psets("checkpoint_file_path",prev_data_file_path);
+    
+    printf("~> checkpoint file found at:\n%s\n",prev_data_file_path);
+    
+    /* remove the current directory */
+    sprintf(str,"rm -rf %s",cur_out_dir);
+    shell_command(str);
+  }
+  
+  return ret;
+}

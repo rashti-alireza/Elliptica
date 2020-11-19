@@ -26,6 +26,9 @@ struct checkpoint_header
  char *grid_kind;
 };
 
+
+Grid_T *load_checkpoint_file(void);
+int can_we_use_checkpoint(void);
 void write_checkpoint(Grid_T *const grid);
 void read_fields_from_checkpoint(Grid_T *const grid,FILE *const file);
 Grid_T *initi_from_checkpoint(FILE *const file);
