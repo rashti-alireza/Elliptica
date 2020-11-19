@@ -791,12 +791,7 @@ IsItCovering
   else
     side = 0;
     
-  if (strcmp_i(grid->kind,"SplitCubedSpherical(BH+NS)") ||
-      strcmp_i(grid->kind,"SplitCubedSpherical(NS+NS)") ||
-      strcmp_i(grid->kind,"SplitCubedSpherical(BH+BH)") ||
-      strcmp_i(grid->kind,"SplitCubedSpherical(NS)")    ||
-      strcmp_i(grid->kind,"SplitCubedSpherical(BH)")
-     )
+  if (strstr_i(grid->kind,"SplitCubedSpherical("))
   {
     if (side)
       sprintf(s,"(%s_%s)",side,region);
