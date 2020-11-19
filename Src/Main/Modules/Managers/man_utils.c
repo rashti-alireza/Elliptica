@@ -17,6 +17,9 @@ init_obj_man
   Obj_Man_T *obj = calloc(1,sizeof(*obj)); IsNull(obj);
   const char *spos  = 0;
   
+  /* what should i do for BHNS? */
+  assert(obj->region);
+  
   obj->grid = grid;
   obj->type = type;
   

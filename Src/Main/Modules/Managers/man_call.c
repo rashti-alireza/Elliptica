@@ -19,7 +19,7 @@ int Update(Obj_Man_T *const obj,const cmd_T cmd)
   {
     case STRESS_ENERGY:
       ret = Tij_update(obj);
-    //break;
+    break;
     /*case EULER_CONST:
       ret = update_Euler_constant(obj);
     break;
