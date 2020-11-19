@@ -39,7 +39,7 @@ typedef struct COMPACT_OBJ_T
  Grid_T *grid;
  Grid_Char_T *grid_char;/* grid character when used for surface finder */
  Com_Obj_T type;/* BH1,NS2, NS, etc */
- const char *stype;/* string of type (above) */
+ const char *stype;/* string of type (above) used for parameter prefix */
  Com_Obj_T sys;/* system: BHNS, NSNS, BHBH, etc */
  Flag_T pos;/* position of the object with respect to the whole grid
             // i.e. (LEFT|RIGHT|CENTER|NONE) */
