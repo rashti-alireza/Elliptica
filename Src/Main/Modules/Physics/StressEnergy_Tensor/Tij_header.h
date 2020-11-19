@@ -12,6 +12,12 @@
 int Tij_update(Obj_Man_T *const obj);
 int Tij_mount(Obj_Man_T *const obj);
 void Tij_ideal_fluid_CTS_add_fields(Obj_Man_T *const obj);
+void Tij_ideal_fluid_CTS_update(Obj_Man_T *const obj);
+void Tij_IF_CTS_enthalpy(Patch_T *const patch);
+void Tij_IF_CTS_u0(Patch_T *const patch);
+void Tij_IF_CTS_psi6J_Ui(Patch_T *const patch);
+void Tij_IF_CTS_psi6E(Patch_T *const patch);
+void Tij_IF_CTS_psi6S(Patch_T *const patch);
 
 #endif
 

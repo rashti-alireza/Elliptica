@@ -38,7 +38,7 @@ int Tij_mount(Obj_Man_T *const obj)
   if (Pcmps("Tij_fluid","ideal_fluid") && 
       Pcmps("Tij_decomposition","CTS"))
   {
-    Tij_ideal_fluid_CTS_add_field(obj);
+    Tij_ideal_fluid_CTS_add_fields(obj);
   }
   else
     Error0(NO_OPTION);
