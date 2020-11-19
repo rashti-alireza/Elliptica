@@ -22,8 +22,8 @@
 #define Error1(x,y) abort_error_string(x,y,__FILE__,__LINE__)
 #define Ind(x)  LookUpField_E(x,patch)/* gives error if field is not found */
 #define _Ind(x) LookUpField(x,patch)/* gives minus if field is not found */
-#define FOR_ALL_PATCHES(n,grid) for ((n) = 0; (n) < grid->np; ++(n))/* loop over all patches of the given grid */
-#define FOR_ALL_POINTS(n,patch) for ((n) = 0; (n) < patch->nn; ++(n))/* loop over all points of the given patch */
+#define FOR_ALL_PATCHES(n,grid) for ((n) = 0; (n) < (grid)->np; ++(n))/* loop over all patches of the given grid */
+#define FOR_ALL_POINTS(n,patch) for ((n) = 0; (n) < (patch)->nn; ++(n))/* loop over all points of the given patch */
 #define FOR_ALL(x,y) for((x) = 0; y[(x)] != 0; (x)++)
 #define TIMER_ON(x) double x = get_time_sec();
 #define TIMER_OFF(x) pr_spent_time(x,#x);
