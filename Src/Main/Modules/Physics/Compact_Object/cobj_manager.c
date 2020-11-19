@@ -5,19 +5,19 @@
 
 /* call the algorithms pertinent to system update and adjustments */
 
-#include "manager.h"
+#include "cobj_manager.h"
 
 /* call the requested function */
 int NS_update(Compact_Obj_T *const obj,const cmd_T cmd)
 {
   int ret = -1;
-  
+  UNUSED(obj);
   switch (cmd)
   {
-    case STRESS_ENERGY:
-      ret = update_stress_energy_tensor(obj);
-    break;
-    case EULER_CONST:
+    //case STRESS_ENERGY:
+      //ret = update_stress_energy_tensor(obj);
+    //break;
+    /*case EULER_CONST:
       ret = update_Euler_constant(obj);
     break;
     case FORCE_BALANCE:
@@ -31,7 +31,7 @@ int NS_update(Compact_Obj_T *const obj,const cmd_T cmd)
     break;
     case EXTRAPOLATE_OUTSIDE:
       ret = extrapolate_matter_outside_star(obj);
-    break;
+    break;*/
     default:
       Error0(NO_OPTION);
   }
@@ -44,10 +44,10 @@ int NS_update(Compact_Obj_T *const obj,const cmd_T cmd)
 int BH_update(Compact_Obj_T *const obj,const cmd_T cmd)
 {
   int ret = -1;
-  
+  UNUSED(obj);
   switch (cmd)
   {
-    case AH_RADIUS:
+    /*case AH_RADIUS:
       ret = update_apparent_horizon_radius(obj);
     break;
     case AH_OMEGA:
@@ -55,7 +55,7 @@ int BH_update(Compact_Obj_T *const obj,const cmd_T cmd)
     break;
     case AH_NORMAL_VECTOR:
       ret = update_apparent_horizon_normal(obj);
-    break;
+    break;*/
     default:
       Error0(NO_OPTION);
   }
@@ -67,12 +67,12 @@ int BH_update(Compact_Obj_T *const obj,const cmd_T cmd)
 int system_update(Compact_Obj_T *const obj,const cmd_T cmd)
 {
   int ret = -1;
-  
+  UNUSED(obj);
   switch (cmd)
   {
-    case P_ADM:
+    /*case P_ADM:
       ret = adjust_ADM_momentum(obj);
-    break;
+    break;*/
     default:
       Error0(NO_OPTION);
   }

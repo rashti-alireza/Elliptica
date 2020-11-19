@@ -49,22 +49,6 @@ typedef struct COMPACT_OBJ_T
  
 }Compact_Obj_T;
 
-/* NOTE this MUST be as the same order as cmd_T */
-static const char *cmd_enum_str[] =
-{
- "CMD_UNDEFINED",
- "STRESS_ENERGY",
- "EULER_CONST",
- "AH_RADIUS",
- "P_ADM",
- "AH_OMEGA",
- "FORCE_BALANCE",
- "FIX_CENTER",
- "FIND_SURFACE",
- "AH_NORMAL_VECTOR",
- "EXTRAPOLATE_OUTSIDE",
- 0
-};
 
 Compact_Obj_T *init_compact_obj(Grid_T *const grid,const char *const sobj);
 void free_compact_obj(Compact_Obj_T *obj);
