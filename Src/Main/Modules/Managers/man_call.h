@@ -21,8 +21,6 @@
 };*/
 
 
-int NS_update(Compact_Obj_T *const obj,const cmd_T cmd);
-int BH_update(Compact_Obj_T *const obj,const cmd_T cmd);
-int system_update(Compact_Obj_T *const obj,const cmd_T cmd);
+int Update(Obj_Man_T *const obj,const cmd_T cmd);
 
 

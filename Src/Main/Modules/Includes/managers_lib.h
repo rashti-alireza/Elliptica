@@ -33,8 +33,8 @@ typedef enum COMP_OBJ_T
  NSNS
 }Com_Obj_T;
 
-/* struct for compact object */
-typedef struct COMPACT_OBJ_T
+/* struct for object manager */
+typedef struct OBJ_MAN_T
 {
  Grid_T *grid;
  Grid_Char_T *grid_char;/* grid character when used for surface finder */
@@ -48,11 +48,11 @@ typedef struct COMPACT_OBJ_T
                   // used for patch collections */
  
  
-}Compact_Obj_T;
+}Obj_Man_T;
 
 
-Compact_Obj_T *init_compact_obj(Grid_T *const grid,const Com_Obj_T type);
-void free_compact_obj(Compact_Obj_T *obj);
+Obj_Man_T *init_obj_man(Grid_T *const grid,const Com_Obj_T type);
+void free_obj_man(Obj_Man_T *obj);
 
 #endif
 

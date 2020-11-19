@@ -7,14 +7,14 @@
 
 #include "man_utils.h"
 
-Compact_Obj_T *
-init_compact_obj
+Obj_Man_T *
+init_obj_man
  (
  Grid_T *const grid/* computation grid */,
  const Com_Obj_T type/* object type NS,BH,etc */
  )
 {
-  Compact_Obj_T *obj = calloc(1,sizeof(*obj)); IsNull(obj);
+  Obj_Man_T *obj = calloc(1,sizeof(*obj)); IsNull(obj);
   const char *spos  = 0;
   
   obj->grid = grid;
@@ -161,7 +161,7 @@ init_compact_obj
 }
 
 /* free  */
-void free_compact_obj(Compact_Obj_T *obj)
+void free_obj_man(Obj_Man_T *obj)
 {
   _free(obj);
 }

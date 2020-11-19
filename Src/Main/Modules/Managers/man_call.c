@@ -8,7 +8,7 @@
 #include "man_call.h"
 
 /* call the requested function */
-int Update(Compact_Obj_T *const obj,const cmd_T cmd)
+int Update(Obj_Man_T *const obj,const cmd_T cmd)
 {
   int ret = -1;
   
