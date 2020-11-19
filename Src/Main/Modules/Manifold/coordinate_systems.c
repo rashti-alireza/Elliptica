@@ -888,7 +888,7 @@ static void characteristics_SCS_eg(Grid_T *const grid)
     grid_char->grid = grid;
     grid_char->S    = C;
     /* NS */
-    grid_char->params[ns1]->obj    = "NS";
+    grid_char->params[ns1]->obj    = "NS1";
     grid_char->params[ns1]->dir    = Pgets("grid_set_NS1");
     grid_char->params[ns1]->relClm = reClm_rns1;
     grid_char->params[ns1]->imgClm = imClm_rns1;
@@ -899,7 +899,7 @@ static void characteristics_SCS_eg(Grid_T *const grid)
     grid_char->params[ns1]->w      = box_size_ns1;
     grid_char->params[ns1]->h      = box_size_ns1;
     /* NS */
-    grid_char->params[ns2]->obj    = "NS";
+    grid_char->params[ns2]->obj    = "NS2";
     grid_char->params[ns2]->dir    = Pgets("grid_set_NS2");
     grid_char->params[ns2]->relClm = reClm_rns2;
     grid_char->params[ns2]->imgClm = imClm_rns2;
@@ -971,7 +971,7 @@ static void characteristics_SCS_eg(Grid_T *const grid)
     grid_char->grid = grid;
     grid_char->S    = C;
     /* NS */
-    grid_char->params[bh1]->obj    = "BH";
+    grid_char->params[bh1]->obj    = "BH1";
     grid_char->params[bh1]->dir    = Pgets("grid_set_BH1");
     grid_char->params[bh1]->relClm = reClm_rbh1;
     grid_char->params[bh1]->imgClm = imClm_rbh1;
@@ -982,7 +982,7 @@ static void characteristics_SCS_eg(Grid_T *const grid)
     grid_char->params[bh1]->w      = box_size_bh1;
     grid_char->params[bh1]->h      = box_size_bh1;
     /* BH */
-    grid_char->params[bh2]->obj    = "BH";
+    grid_char->params[bh2]->obj    = "BH2";
     grid_char->params[bh2]->dir    = Pgets("grid_set_BH2");
     grid_char->params[bh2]->relClm = reClm_rbh2;
     grid_char->params[bh2]->imgClm = imClm_rbh2;

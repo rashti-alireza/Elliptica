@@ -216,8 +216,8 @@ void fill_patches_Split_CubedSpherical_grid(Grid_T *const grid)
     }
     
     /* boxes */ 
-    populate_box_patch_SplitCS(grid,"central_box",ns_side1,&pn ,"NS");
-    populate_box_patch_SplitCS(grid,"central_box",ns_side2,&pn ,"NS");
+    populate_box_patch_SplitCS(grid,"central_box",ns_side1,&pn ,"NS1");
+    populate_box_patch_SplitCS(grid,"central_box",ns_side2,&pn ,"NS2");
     
     populate_box_patch_SplitCS(grid,"filling_box",UP,&pn   ,"filling_box");
     populate_box_patch_SplitCS(grid,"filling_box",DOWN,&pn ,"filling_box");
@@ -225,10 +225,10 @@ void fill_patches_Split_CubedSpherical_grid(Grid_T *const grid)
     populate_box_patch_SplitCS(grid,"filling_box",FRONT,&pn,"filling_box");
     
     /* cubed sphericals */
-    populate_CS_patch_SplitCS(grid,"NS",ns_side1,&pn);
-    populate_CS_patch_SplitCS(grid,"NS_surrounding",ns_side1,&pn);
-    populate_CS_patch_SplitCS(grid,"NS",ns_side2,&pn);
-    populate_CS_patch_SplitCS(grid,"NS_surrounding",ns_side2,&pn);
+    populate_CS_patch_SplitCS(grid,"NS1",ns_side1,&pn);
+    populate_CS_patch_SplitCS(grid,"NS1_surrounding",ns_side1,&pn);
+    populate_CS_patch_SplitCS(grid,"NS2",ns_side2,&pn);
+    populate_CS_patch_SplitCS(grid,"NS2_surrounding",ns_side2,&pn);
     
     if (!EQL(r_outermost,0))
       populate_CS_patch_SplitCS(grid,"outermost",NONE,&pn);
@@ -271,8 +271,8 @@ void fill_patches_Split_CubedSpherical_grid(Grid_T *const grid)
     populate_box_patch_SplitCS(grid,"filling_box",FRONT,&pn,"filling_box");
     
     /* cubed sphericals */
-    populate_CS_patch_SplitCS(grid,"BH_surrounding",bh_side1,&pn);
-    populate_CS_patch_SplitCS(grid,"BH_surrounding",bh_side2,&pn);
+    populate_CS_patch_SplitCS(grid,"BH1_surrounding",bh_side1,&pn);
+    populate_CS_patch_SplitCS(grid,"BH2_surrounding",bh_side2,&pn);
     
     if (!EQL(r_outermost,0))
       populate_CS_patch_SplitCS(grid,"outermost",NONE,&pn);
@@ -280,10 +280,10 @@ void fill_patches_Split_CubedSpherical_grid(Grid_T *const grid)
     /* NOTE: order matters */
     if (bh_filled == YES)
     {
-      populate_CS_patch_SplitCS(grid,"BH",bh_side1,&pn);
-      populate_box_patch_SplitCS(grid,"central_box",bh_side1,&pn ,"BH");
-      populate_CS_patch_SplitCS(grid,"BH",bh_side2,&pn);
-      populate_box_patch_SplitCS(grid,"central_box",bh_side2,&pn ,"BH");
+      populate_CS_patch_SplitCS(grid,"BH1",bh_side1,&pn);
+      populate_box_patch_SplitCS(grid,"central_box",bh_side1,&pn ,"BH1");
+      populate_CS_patch_SplitCS(grid,"BH2",bh_side2,&pn);
+      populate_box_patch_SplitCS(grid,"central_box",bh_side2,&pn ,"BH2");
     }
     else
     {
@@ -292,7 +292,7 @@ void fill_patches_Split_CubedSpherical_grid(Grid_T *const grid)
       Patch_T **patches = 0;
      
       /* BH1 */
-      patches = collect_patches(grid,"BH_surrounding_surface",bh_side1,&nbh);
+      patches = collect_patches(grid,"BH1_surrounding_surface",bh_side1,&nbh);
       for (p = 0; p < nbh; ++p)
       {
         Patch_T *patch = patches[p];
@@ -301,7 +301,7 @@ void fill_patches_Split_CubedSpherical_grid(Grid_T *const grid)
       _free(patches);
       
       /* BH 2 */
-      patches = collect_patches(grid,"BH_surrounding_surface",bh_side2,&nbh);
+      patches = collect_patches(grid,"BH2_surrounding_surface",bh_side2,&nbh);
       for (p = 0; p < nbh; ++p)
       {
         Patch_T *patch = patches[p];
@@ -465,6 +465,44 @@ populate_CS_patch_SplitCS
           }
           else if (strcmp_i(obj,"NS_surrounding") || 
                    strcmp_i(obj,"BH_surrounding"))
+          {
+            if (d2 == 0)/* if on surface */
+              sprintf(patch->CoordSysInfo->region,
+                "(%s_%s)(%s_%s_surface)",dir,obj,dir,obj);
+            else
+              sprintf(patch->CoordSysInfo->region,
+                "(%s_%s)",dir,obj);
+          }
+          else if (strcmp_i(obj,"NS1") || strcmp_i(obj,"BH1"))
+          {
+            if (d2 == Nsd[2]-1)/* if on surface */
+              sprintf(patch->CoordSysInfo->region,
+                "(%s_%s)(%s_%s_surface)",dir,obj,dir,obj);
+            else
+              sprintf(patch->CoordSysInfo->region,
+                "(%s_%s)",dir,obj);
+          }
+          else if (strcmp_i(obj,"NS1_surrounding") || 
+                   strcmp_i(obj,"BH1_surrounding"))
+          {
+            if (d2 == 0)/* if on surface */
+              sprintf(patch->CoordSysInfo->region,
+                "(%s_%s)(%s_%s_surface)",dir,obj,dir,obj);
+            else
+              sprintf(patch->CoordSysInfo->region,
+                "(%s_%s)",dir,obj);
+          }
+          else if (strcmp_i(obj,"NS2") || strcmp_i(obj,"BH2"))
+          {
+            if (d2 == Nsd[2]-1)/* if on surface */
+              sprintf(patch->CoordSysInfo->region,
+                "(%s_%s)(%s_%s_surface)",dir,obj,dir,obj);
+            else
+              sprintf(patch->CoordSysInfo->region,
+                "(%s_%s)",dir,obj);
+          }
+          else if (strcmp_i(obj,"NS2_surrounding") || 
+                   strcmp_i(obj,"BH2_surrounding"))
           {
             if (d2 == 0)/* if on surface */
               sprintf(patch->CoordSysInfo->region,

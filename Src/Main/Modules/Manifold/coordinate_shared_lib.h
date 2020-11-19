@@ -83,8 +83,13 @@ static const char *const StrSide[] =
 
 /* allowed object: */
 static const char *const SCS_ObjType[] = 
- {"NS","BH","central_box","filling_box",
+ {"NS","BH",
   "NS_surrounding","BH_surrounding",
+  "NS1","BH1",
+  "NS1_surrounding","BH1_surrounding",
+  "NS2","BH2",
+  "NS2_surrounding","BH2_surrounding",
+  "central_box","filling_box",
   "outermost",0
  };
 

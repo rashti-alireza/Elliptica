@@ -753,24 +753,25 @@ collect_patches
 }
 
 /* ->: Is this patch covering this region? yes = 1, no = 0. 
-// list of regions:
+// list of regions (? can be 1 2 or nothing):
 // 
-// "NS" == the whole NS patches including central box (if any)
-// "BH" == the whole BH patches including central box (if any)
-// "NS_surface" == only patches include the NS surface from inside
-// "BH_surface" == only patches include the BH surface from inside
-// "NS_surrounding_surface" == only patches include the NS surface from outside
-// "BH_surrounding_surface" == only patches include the BH surface from outside
-// "NS_surrounding" == the whole NS surrounding patches
-// "BH_surrounding" == the whole NS surrounding patches
+// "NS?" == the whole NS patches including central box (if any)
+// "BH?" == the whole BH patches including central box (if any)
+// "NS?_surface" == only patches include the NS surface from inside
+// "BH?_surface" == only patches include the BH surface from inside
+// "NS?_surrounding_surface" == only patches include the NS surface from outside
+// "BH?_surrounding_surface" == only patches include the BH surface from outside
+// "NS?_surrounding" == the whole NS surrounding patches
+// "BH?_surrounding" == the whole NS surrounding patches
 // "outermost" == the whole outermost patches
 // "filling_box" == only patches cover the filling box
 // "central_box" == only patches cover the central box
 //
 // ex:
 // ===
-// IsItCovering(patch,"outermost",NONE);  => outemost patch?
-// IsItCovering(patch,"NS_surface",LEFT); => NS_surface patch?
+// IsItCovering(patch,"outermost",NONE);   => outemost patch?
+// IsItCovering(patch,"NS_surface",LEFT);  => NS_surface patch?
+// IsItCovering(patch,"NS2_surface",LEFT); => NS2_surface patch?
 */
 int 
 IsItCovering
