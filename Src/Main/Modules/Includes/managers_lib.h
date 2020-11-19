@@ -1,6 +1,11 @@
 #ifndef managers_LIB_H
 #define managers_LIB_H
 
+/* if the given patch does NOT cover the region issue continue.
+// this is generally used in a loop over all patches */
+#define ONLY_IF_COVER(patch,obj) \
+ if (!IsItCovering(patch,obj->region,obj->pos)) {continue;}
+
 /* commands, DON'T change the numeration and ADD after one to the last */
 typedef enum CMD_T
 {
@@ -39,6 +44,7 @@ typedef struct OBJ_MAN_T
  Grid_T *grid;
  Grid_Char_T *grid_char;/* grid character when used for surface finder */
  cmd_T cmd;/* current command */
+ const char *region;/* grid region you want to issue the command/ */
  Com_Obj_T type;/* BH1,NS2, NS, etc */
  const char *stype;/* string of type (above) used for parameter prefix */
  Com_Obj_T sys;/* system: BHNS, NSNS, BHBH, etc */
