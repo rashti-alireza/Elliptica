@@ -4,7 +4,7 @@
 
 
 /* NOTE this MUST be as the same order as cmd_T */
-static const char *cmd_enum_str[] =
+/*static const char *cmd_enum_str[] =
 {
  "CMD_UNDEFINED",
  "STRESS_ENERGY",
@@ -18,7 +18,7 @@ static const char *cmd_enum_str[] =
  "AH_NORMAL_VECTOR",
  "EXTRAPOLATE_OUTSIDE",
  0
-};
+};*/
 
 
 int NS_update(Compact_Obj_T *const obj,const cmd_T cmd);

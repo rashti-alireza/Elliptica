@@ -9,6 +9,6 @@ init_compact_obj
  const Com_Obj_T type/* object type NS,BH,etc */
  );
 
-void free_compact_obj(Grid_T *const grid *obj);
+void free_compact_obj(Compact_Obj_T *obj);
 
 

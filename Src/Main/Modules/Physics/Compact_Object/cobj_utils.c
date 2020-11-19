@@ -16,7 +16,7 @@ init_compact_obj
 {
   Compact_Obj_T *obj = calloc(1,sizeof(*obj)); IsNull(obj);
   const char *spos  = 0;
-  const char *sproj = Pgets("project");
+  
   obj->grid = grid;
   obj->type = type;
   
@@ -161,7 +161,7 @@ init_compact_obj
 }
 
 /* free  */
-void free_compact_obj(Grid_T *const grid *obj)
+void free_compact_obj(Compact_Obj_T *obj)
 {
   _free(obj);
 }

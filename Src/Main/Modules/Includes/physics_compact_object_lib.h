@@ -50,7 +50,7 @@ typedef struct COMPACT_OBJ_T
 }Compact_Obj_T;
 
 
-Compact_Obj_T *init_compact_obj(Grid_T *const grid,const char *const sobj);
+Compact_Obj_T *init_compact_obj(Grid_T *const grid,const Com_Obj_T type);
 void free_compact_obj(Compact_Obj_T *obj);
 
 #endif
