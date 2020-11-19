@@ -45,7 +45,6 @@ void write_checkpoint(Grid_T *const grid)
   
   FILE *file = 0;
   const char *const out_dir = Pgets("iteration_output");
-  const unsigned sol_it_n = (unsigned)PgetiEZ("solving_iteration_number");
   char file_path[MAX_ARR];
   char msg[MAX_ARR];
   char *const p_msg = msg;/* to avoid GCC warning for FWriteP_bin */
@@ -85,9 +84,6 @@ void write_checkpoint(Grid_T *const grid)
   
   /* replace checkpoint file with the previous */
   move_checkpoint_file();
-  
-  /* write bbn properties mainly used for id reader */
-  print_properties(grid,sol_it_n,out_dir,"w",0);
   
   printf("} Writing checkpoint file ==> Done.\n");
   pr_clock();
@@ -234,18 +230,12 @@ static void write_fields(const Grid_T *const grid)
     unsigned nn = patch->nn;
     unsigned f,count_nfld;
     
-    if (IsItInsideBHPatch(patch))
-    {
-      Error0("what to do here?")
-      continue;
-    }
-      
     /* count number fields we want to save */
     count_nfld = 0;
     for (f = 0; f < patch->nfld; ++f)
     {
       Field_T *field = patch->pool[f];
-      if (DoSaveField(field))
+      if (strstr_i(list,field->name))
         count_nfld++;
     }
     FWriteV_bin(count_nfld,1);
@@ -272,7 +262,6 @@ Grid_T *init_from_checkpoint(FILE *const file)
 {
   Grid_T *grid = 0;
   struct checkpoint_header alloc_info[1] = {0};
-  double W_temp;
   
   /* reading the header for allocations */
   read_header(alloc_info,file);
@@ -747,8 +736,6 @@ int can_we_use_checkpoint(void)
   DIR *prev_dir;
   struct dirent *ent;
   struct stat st = {0};/* status of files */
-  FILE *checkpoint_file = 0;
-  Parameter_T *par;
   const char *const cur_out_dir = Pgets("output_directory_path");
   const char *const cur_folder_name  = strrchr(cur_out_dir,'/')+1;
   const char *const cur_folder_affix = strrchr(cur_folder_name,'_')+1;

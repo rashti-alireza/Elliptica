@@ -1,10 +1,15 @@
-#include "headers.h"
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
-#include "text_and_file_tools_lib.h"
+#include <dirent.h>
+#include "core_lib.h"
+#include "fields_lib.h"
 
-#define MAX_ARR (500)
+#define MAX_ARR   (400)
+#define MAX_ARRx2 (2*MAX_ARR)
+#define MAX_ARRx3 (3*MAX_ARR)
+#define MAX_ARRx4 (4*MAX_ARR)
+#define MAX_ARRx5 (5*MAX_ARR)
 #define ALLOC_HEADER "#{ALLOCATION#"
 #define ALLOC_FOOTER "#}ALLOCATION#"
 #define PARAM_HEADER "#{PARAM#"
@@ -31,7 +36,7 @@ Grid_T *load_checkpoint_file(void);
 int can_we_use_checkpoint(void);
 void write_checkpoint(Grid_T *const grid);
 void read_fields_from_checkpoint(Grid_T *const grid,FILE *const file);
-Grid_T *initi_from_checkpoint(FILE *const file);
+Grid_T *init_from_checkpoint(FILE *const file);
 Parameter_T *parameter_query_from_checkpoint(const char *const par_name,FILE *const file);
 int is_checkpoint_sound(const char *const file_path);
 static void move_checkpoint_file(void);
