@@ -1,6 +1,6 @@
 #include "core_lib.h"
 #include "utilities_lib.h"
-#include "physics_compact_object_lib.h"
+#include "managers_lib.h"
 
 
 /* NOTE this MUST be as the same order as cmd_T */

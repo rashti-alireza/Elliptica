@@ -24,6 +24,7 @@ MODULE += $(MODULE_DIR)/Text_and_File_Tools
 MODULE += $(MODULE_DIR)/Prints
 MODULE += $(MODULE_DIR)/Utilities
 MODULE += $(MODULE_DIR)/Checkpoint
+MODULE += $(MODULE_DIR)/Managers
 MODULE += $(MODULE_DIR)/Maths/Linear_Algebra
 MODULE += $(MODULE_DIR)/Maths/Field_Analysis
 MODULE += $(MODULE_DIR)/Maths/Equation_Solvings

@@ -38,7 +38,7 @@ typedef struct OBJ_MAN_T
 {
  Grid_T *grid;
  Grid_Char_T *grid_char;/* grid character when used for surface finder */
- cmd_T *cmd;/* current command */
+ cmd_T cmd;/* current command */
  Com_Obj_T type;/* BH1,NS2, NS, etc */
  const char *stype;/* string of type (above) used for parameter prefix */
  Com_Obj_T sys;/* system: BHNS, NSNS, BHBH, etc */
