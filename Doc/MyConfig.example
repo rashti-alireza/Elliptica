@@ -23,6 +23,7 @@ MODULE += $(MODULE_DIR)/Error_Handlings
 MODULE += $(MODULE_DIR)/Text_and_File_Tools
 MODULE += $(MODULE_DIR)/Prints
 MODULE += $(MODULE_DIR)/Utilities
+MODULE += $(MODULE_DIR)/Checkpoint
 MODULE += $(MODULE_DIR)/Maths/Linear_Algebra
 MODULE += $(MODULE_DIR)/Maths/Field_Analysis
 MODULE += $(MODULE_DIR)/Maths/Equation_Solvings
@@ -36,6 +37,7 @@ MODULE += $(MODULE_DIR)/Physics/StressEnergy_Tensor
 MODULE += $(MODULE_DIR)/Physics/EoS
 MODULE += $(MODULE_DIR)/Physics/Observables
 MODULE += $(MODULE_DIR)/Physics/Transformation
+MODULE += $(MODULE_DIR)/Physics/Compact_Object
 
 # one can comment out these module(s):
 #MODULE += $(MODULE_DIR)/Prints/pr_hdf5_silo
@@ -47,8 +49,10 @@ MODULE += $(MODULE_DIR)/Physics/Transformation
 
 #PROJECT += $(PROJECT_DIR)/Poissons/Poisson0
 #PROJECT += $(PROJECT_DIR)/Tests/Modules_Test
-PROJECT += $(PROJECT_DIR)/TOV_star
-PROJECT += $(PROJECT_DIR)/Binary_BH_NS_Initial_Data
+#PROJECT += $(PROJECT_DIR)/TOV_star
+#PROJECT += $(PROJECT_DIR)/Binary_BH_NS_Initial_Data
+#PROJECT += $(PROJECT_DIR)/BH_NS_Initial_Data
+
 ########################################################################
 ##########################
 ## compiler and its flags:
