@@ -5,6 +5,11 @@ Src/Projects/Binary_NS_Initial_Data/*
 Src/Projects/Binary_NS_Initial_Data
 Src/Projects/BH_Initial_Data
 Src/Projects/BH_NS_Initial_Data
+Src/Projects/EoS
+Src/Projects/Stress_Energy_Tensor
+Src/Projects/Free_Data_Initial_Data
+
+
 
 # ignore backup joe files:
 *.*~ 
