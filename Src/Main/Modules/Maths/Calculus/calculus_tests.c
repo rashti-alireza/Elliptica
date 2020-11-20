@@ -54,11 +54,10 @@ static int fdS_spectral(Grid_T *const grid)
   Patch_T *patch;
   unsigned nn,ijk,p;
   const unsigned *n;
-  double r;
   double analytic = 0,numeric = 0;
   
   /* to test this function we use f = 1, so it means we calculate the volume */
-  if (strcmp_i(grid->kind,"Cartesian_grid"))
+  if (grid->kind == Box)
   {
     analytic = 0;
     numeric  = 0;
@@ -157,21 +156,22 @@ static int fdS_spectral(Grid_T *const grid)
             numeric,analytic,numeric-analytic);
     
   }
-  else if (strcmp_i(grid->kind,"BBN_CubedSpherical_grid"))
+  else if (grid->kind == CubedSpherical_BHNS)
   {
+    double r;
     printf("BBN_CubedSpherical_grid:\n");
     
-    /* testing NS sphere surface: */
+    // testing NS sphere surface:
     printf("\n--> Integral{f(x)dS}|at NS surface section:\n");
     
     r = Pgetd("NS_radius");
     analytic = 4*M_PI*pow(r,2);
     numeric  = 0;
-    /* go over all patches */
+    // go over all patches
     FOR_ALL_PATCHES(p,grid)
     {
       patch   = grid->patch[p];
-      if (!IsItNSPatch(patch))
+      if (!IsItCovering(patch,"NS",LEFT))
         continue;
       if (strstr(patch->name,"left_central_box"))
         continue;
@@ -203,7 +203,7 @@ static int fdS_spectral(Grid_T *const grid)
       I->g12 = g12;
       I->g22 = g22;
 
-      /* for Z = const */
+      // for Z = const
       I->Spectral->Z_surface = 1;
       I->Spectral->K         = n[2]-1; 
       plan_integration(I);
@@ -224,13 +224,13 @@ static int fdS_spectral(Grid_T *const grid)
     printf("=> numeric = %e, analytic = %e, diff. = %e\n",
            numeric,analytic,numeric-analytic);
            
-    /* testing outermost0 sphere surface: */
+    // testing outermost0 sphere surface:
     printf("\n--> Integral{f(x)dS}|at sphere surface of outermost0 section:\n");
     
     r = Pgetd("Outermost0_radius");
     analytic = 4*M_PI*pow(r,2);
     numeric  = 0;
-    /* go over all patches */
+    // go over all patches
     FOR_ALL_PATCHES(p,grid)
     {
       patch   = grid->patch[p];
@@ -264,7 +264,7 @@ static int fdS_spectral(Grid_T *const grid)
       I->g12 = g12;
       I->g22 = g22;
 
-      /* for Z = const */
+      // for Z = const
       I->Spectral->Z_surface = 1;
       I->Spectral->K         = n[2]-1; 
       plan_integration(I);
@@ -285,13 +285,13 @@ static int fdS_spectral(Grid_T *const grid)
     printf("=> numeric = %e, analytic = %e, diff. = %e\n",
            numeric,analytic,numeric-analytic);
            
-    /* testing outermost0 cube surface: */
+    // testing outermost0 cube surface:
     printf("\n--> Integral{f(x)dS}|at plane surface of outermost0 section:\n");
     
     r = 2*Pgetd("BH_NS_separation");
     analytic = 6*Pow2(r);
     numeric  = 0;
-    /* go over all patches */
+    // go over all patches
     FOR_ALL_PATCHES(p,grid)
     {
       patch   = grid->patch[p];
@@ -325,7 +325,7 @@ static int fdS_spectral(Grid_T *const grid)
       I->g12 = g12;
       I->g22 = g22;
 
-      /* for Z = const */
+      // for Z = const
       I->Spectral->Z_surface = 1;
       I->Spectral->K         = 0; 
       plan_integration(I);
@@ -360,11 +360,10 @@ static int fdV_spectral(Grid_T *const grid)
   Field_T *f;
   Patch_T *patch;
   unsigned nn,ijk,p;
-  double r;
   double analytic = 0,numeric = 0;
   
   /* to test this function we use f = 1, so it means we calculate the volume */
-  if (strcmp_i(grid->kind,"Cartesian_grid"))
+  if (grid->kind == Box)
   {
     analytic = 0;
     numeric = 0;
@@ -424,18 +423,20 @@ static int fdV_spectral(Grid_T *const grid)
     printf("=> numeric = %e, analytic = %e, diff. = %e\n",
             numeric,analytic,numeric-analytic);
   }
-  else if (strcmp_i(grid->kind,"BBN_CubedSpherical_grid"))
+  else if (grid->kind == CubedSpherical_BHNS)
   {
+    double r;
+
     printf("BBN_CubedSpherical_grid:\n");
     
-    /* testing outermost0: */
+    // testing outermost0: 
     printf("\n--> Integral{f(x)dV}|at outermost0 section:\n");
     
     r = Pgetd("Outermost0_radius");
     analytic = 4./3.*M_PI*pow(r,3)-pow(2*Pgetd("BH_NS_separation"),3);
     numeric  = 0;
     
-    /* go over all patches */
+    // go over all patches 
     FOR_ALL_PATCHES(p,grid)
     {
       patch   = grid->patch[p];
@@ -486,18 +487,18 @@ static int fdV_spectral(Grid_T *const grid)
     printf("=> numeric = %e, analytic = %e, diff. = %e\n",
            numeric,analytic,numeric-analytic);
            
-    /* testing NS: */
+    // testing NS: 
     printf("\n--> Integral{f(x)dV}|at NS section:\n");
     
     r = Pgetd("NS_radius");
     analytic = 4./3.*M_PI*pow(r,3);
     numeric  = 0;
     
-    /* go over all patches */
+    // go over all patches 
     FOR_ALL_PATCHES(p,grid)
     {
       patch   = grid->patch[p];
-      if (!IsItNSPatch(patch))
+      if (!IsItCovering(patch,"NS",LEFT))
         continue;
       
       I  = init_integration();
@@ -544,14 +545,14 @@ static int fdV_spectral(Grid_T *const grid)
     printf("=> numeric = %e, analytic = %e, diff. = %e\n",
            numeric,analytic,numeric-analytic);
            
-    /* testing NS surrounding: */
+    // testing NS surrounding: 
     printf("\n--> Integral{f(x)dV}|at NS surrounding ection:\n");
     
     r = Pgetd("NS_radius");
     analytic = pow(Pgetd("BH_NS_separation"),3)-4./3.*M_PI*pow(r,3);
     numeric  = 0;
     
-    /* go over all patches */
+    // go over all patches 
     FOR_ALL_PATCHES(p,grid)
     {
       patch   = grid->patch[p];
@@ -603,7 +604,9 @@ static int fdV_spectral(Grid_T *const grid)
            numeric,analytic,numeric-analytic);
            
   }
-  
+  else
+    Error0(NO_OPTION);
+    
   return EXIT_SUCCESS;
 }
 
