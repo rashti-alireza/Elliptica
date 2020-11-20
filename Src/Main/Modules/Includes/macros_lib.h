@@ -80,7 +80,10 @@
 #define READ_v_UNUSED(xNAME)  READ_v(xNAME)\
                               UNUSED(xNAME);
 
-                                        
+/* take partial derivatives, 
+// NOTE: no semicolon at the end to be more flexible */
+#define dField_di(xNAME) partial_derivative(patch->pool[Ind(#xNAME)])
+
 /* it compactifies the prepration of Jacobian of derivatives */
 #define JACOBIAN_DERIVATIVE(xNAME) const char *types_##xNAME[] = {#xNAME,0};\
                                    prepare_Js_jacobian_eq(patch,types_##xNAME);\
