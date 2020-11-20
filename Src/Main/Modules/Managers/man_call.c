@@ -16,14 +16,19 @@ int man_tune_call(Obj_Man_T *const obj,const cmd_T cmd,
   
   obj->cmd = cmd;
   
+  if(!obj->region)
+  {
+    Error0("NO region specified!\n");
+  }
+  
   switch (cmd)
   {
     case STRESS_ENERGY:
       ret = Tij_tune(obj);
     break;
-    case EULER_CONST:
-      ret = star_tune(obj);
-    break;
+    //case EULER_CONST:
+      //ret = star_tune(obj);
+    //break;
     /*case FORCE_BALANCE:
       ret = star_tunes(obj);
     break;
@@ -55,8 +60,9 @@ int man_tune_call(Obj_Man_T *const obj,const cmd_T cmd,
       Error0(msg);
   }
   
-  /* set to no command to catch bug */
-  obj->cmd = CMD_UNDEFINED;
+  /* set to 0 to catch bug and miss you */
+  obj->cmd    = CMD_UNDEFINED;
+  obj->region = 0;
   
   return ret;
 }
