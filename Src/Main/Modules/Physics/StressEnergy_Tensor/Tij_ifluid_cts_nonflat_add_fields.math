@@ -4,20 +4,20 @@ Dimension = 3;
 # point on manifold shown by:
 Point = ijk;
 
-C_macro = ADD_FIELD(name);
+C_macro  = ADD_FIELD(name);
+C_macro2 = ADD_AND_ALLOC_FIELD(name);# Improtant to set source 0 everywhere.
 
 `#include "Tij_header.h"`
 ``
 ``
 
-`void Tij_idealfluid_CTS_nonflat_add_fields(Obj_Man_T *const obj);`
-`void Tij_idealfluid_CTS_nonflat_add_fields(Obj_Man_T *const obj)`
+`void Tij_idealfluid_CTS_nonflat_add_fields(Grid_T *const grid)`
 `{`
 
 ` unsigned p;`
-` FOR_ALL_PATCHES(p,obj->grid)`
+` FOR_ALL_PATCHES(p,grid)`
 ` {`
-` Patch_T *patch = obj->grid->patch[p];`
+` Patch_T *patch = grid->patch[p];`
 ``
 Declare =
 {
@@ -40,13 +40,13 @@ Declare =
  (obj = Field,name = drho0, rank = D, C_macro);
 
  # EConf
- (obj = Field,name = EConf, rank = 0, C_macro);
+ (obj = Field,name = EConf, rank = 0, C_macro2);
 
  # JConf
- (obj = Field,name = JConf, rank = 0, C_macro);
+ (obj = Field,name = JConf, rank = 0, C_macro2);
 
  # SConf
- (obj = Field,name = SConf, rank = 0, C_macro);
+ (obj = Field,name = SConf, rank = 0, C_macro2);
 
 }
 ` }`

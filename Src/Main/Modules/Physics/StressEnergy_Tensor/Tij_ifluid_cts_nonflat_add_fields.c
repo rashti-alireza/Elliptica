@@ -7,13 +7,12 @@
 #include "Tij_header.h"
 
 
-void Tij_idealfluid_CTS_nonflat_add_fields(Obj_Man_T *const obj);
-void Tij_idealfluid_CTS_nonflat_add_fields(Obj_Man_T *const obj)
+void Tij_idealfluid_CTS_nonflat_add_fields(Grid_T *const grid)
 {
  unsigned p;
- FOR_ALL_PATCHES(p,obj->grid)
+ FOR_ALL_PATCHES(p,grid)
  {
- Patch_T *patch = obj->grid->patch[p];
+ Patch_T *patch = grid->patch[p];
 
 
   /* declaring: */
@@ -29,9 +28,9 @@ void Tij_idealfluid_CTS_nonflat_add_fields(Obj_Man_T *const obj)
   ADD_FIELD(drho0_D2)
   ADD_FIELD(drho0_D0)
   ADD_FIELD(drho0_D1)
-  ADD_FIELD(EConf)
-  ADD_FIELD(JConf)
-  ADD_FIELD(SConf)
+  ADD_AND_ALLOC_FIELD(EConf)
+  ADD_AND_ALLOC_FIELD(JConf)
+  ADD_AND_ALLOC_FIELD(SConf)
 
 
  }
