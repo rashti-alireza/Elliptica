@@ -137,7 +137,7 @@ static void write_header(const Grid_T *const grid)
   fprintf(file,"number_of_parameters=%u\n",np);
   //fprintf(file,"number_of_patches=%u\n",grid->np);
   fprintf(file,"grid_number=%u\n",grid->gn);
-  fprintf(file,"grid_kind=%s\n",grid->kind);
+  fprintf(file,"grid_kind=%s\n",Pgets("grid_kind"));
   fprintf(file,"%s\n",ALLOC_FOOTER);
   fclose(file);
 }
@@ -405,7 +405,7 @@ static void alloc_db(struct checkpoint_header *const alloc_info)
   grid       = alloc_grid();
   grid->gn   = grid_number;
   //grid->np   = npatch;
-  grid->kind = alloc_info->grid_kind;
+  grid->kind = set_grid_kind(alloc_info->grid_kind);
   
   alloc_info->grid = grid;
 }
@@ -660,9 +660,6 @@ void read_fields_from_checkpoint(Grid_T *const grid,FILE *const file)
   {
     Patch_T *patch = grid->patch[p];
     unsigned f,count_nfld;
-    
-    if (IsItInsideBHPatch(patch))
-      continue;
     
     FReadV_bin(count_nfld);
     assert(count_nfld);
