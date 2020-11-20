@@ -24,11 +24,20 @@ Declare =
  # enthalpy
  (obj = Field,name = enthalpy, rank = 0, C_macro);
 
+ # denthalpy
+ (obj = Field,name = denthalpy, rank = D, C_macro);
+
  # u0
  (obj = Field,name = u0, rank = 0, C_macro);
+ 
+ # du0
+ (obj = Field,name = du0, rank = D, C_macro);
 
  # rho0
  (obj = Field,name = rho0, rank = 0, C_macro);
+
+ # rho0
+ (obj = Field,name = drho0, rank = D, C_macro);
 
  # EConf
  (obj = Field,name = EConf, rank = 0, C_macro);
