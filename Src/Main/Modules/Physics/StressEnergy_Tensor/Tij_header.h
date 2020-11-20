@@ -10,7 +10,7 @@
 #include "managers_lib.h"
 #include "fields_lib.h"
 
-int Tij_update(Obj_Man_T *const obj);
+int Tij_tune(Obj_Man_T *const obj);
 int Tij_mount(Obj_Man_T *const obj);
 void Tij_idealfluid_CTS_nonflat_add_fields(Grid_T *const grid);
 void Tij_idealfluid_CTS_nonflat_update(Obj_Man_T *const obj);

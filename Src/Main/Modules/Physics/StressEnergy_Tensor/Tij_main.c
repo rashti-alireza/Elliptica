@@ -10,7 +10,7 @@
 #include "Tij_main.h"
 
 /* update stress energy tensor */
-int Tij_update(Obj_Man_T *const obj)
+int Tij_tune(Obj_Man_T *const obj)
 {
   if (Pcmps("Tij_fluid","ideal_fluid") && 
       Pcmps("Tij_decomposition","CTS") &&
