@@ -18,9 +18,9 @@ void Tij_idealfluid_CTS_nonflat_update(Obj_Man_T *const obj)
   const double Euler_const = OPgetd(par,obj,"Euler_equation_constant");
   unsigned p;
   
-  printf("~> weight update  = %e\n"
-         "~> neat it?       = %d\n"
-         "-> Euler constant = %e\n",
+  printf(PRETTY0"weight update  = %e\n"
+         PRETTY0"neat it?       = %d\n"
+         PRETTY0"Euler constant = %e\n",
          W,neat,Euler_const);
   fflush(stdout);
          

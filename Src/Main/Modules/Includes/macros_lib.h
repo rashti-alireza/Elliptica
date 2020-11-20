@@ -2,11 +2,13 @@
 #define macros_LIB_H
 
 
-/* some useful messages */
+/* some useful messages and prints*/
 #define INCOMPLETE_FUNC "Other options have not been developed yet for this part!\n"
 #define NO_JOB "No job has been defined for this case."
 #define NO_OPTION "No such option has been defined."
 #define ERROR_MASSAGE  ":(\n\nERROR and EXIT:\n"
+#define PRETTY0         "|--> "
+#define PRETTY1         "~> "
 
 /* some general macros */
 #define FOLDER_AFFIX "_%02d"/* that's how folders are named */
