@@ -12,9 +12,10 @@ void Tij_idealfluid_CTS_nonflat_update(Obj_Man_T *const obj)
   FUNC_TIC
   
   Grid_T *const grid  = obj->grid;
-  char par[OPAR_SIZE] = {'\0'};
+  char par[OPAR_LEN] = {'\0'};
   const double W  = OPgetd(par,obj,"enthalpy_update_weight");
   const int  neat = OPgeti(par,obj,"enthalpy_neat");
+  const double Euler_const = OPgetd(par,obj,"Euler_equation_constant");
   unsigned p;
   
   FOR_ALL_PATCHES(p,grid)
@@ -23,7 +24,8 @@ void Tij_idealfluid_CTS_nonflat_update(Obj_Man_T *const obj)
     
     ONLY_IF_COVER(patch,obj);
     
-    RELAX_UPDATE_FUNC(Tij_IF_CTS_nonflat_enthalpy,patch,enthalpy,W);
+    RELAX_UPDATE_FUNC(Tij_IF_CTS_nonflat_enthalpy(patch,Euler_const),
+                      patch,enthalpy,W);
     
     if (neat)
       Tij_neat_enthalpy(patch);

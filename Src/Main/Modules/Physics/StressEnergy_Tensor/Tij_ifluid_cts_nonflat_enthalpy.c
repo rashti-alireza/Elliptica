@@ -7,7 +7,7 @@
 #include "Tij_header.h"
 
 
-void Tij_IF_CTS_nonflat_enthalpy(Patch_T *const patch)
+void Tij_IF_CTS_nonflat_enthalpy(Patch_T *const patch,const double Euler_C)
 {
   const unsigned nn = patch->nn;
   unsigned ijk;
@@ -39,7 +39,6 @@ void Tij_IF_CTS_nonflat_enthalpy(Patch_T *const patch)
   READ_v(psi)
 
 
-  const double Euler_C = Pgetd("Euler_equation_constant");
   for(ijk = 0; ijk < nn; ++ijk)
   {
   double alpha = 
