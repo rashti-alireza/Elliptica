@@ -12,15 +12,15 @@ void Tij_idealfluid_CTS_nonflat_update(Obj_Man_T *const obj)
   FUNC_TIC
   
   Grid_T *const grid  = obj->grid;
-  char par[OPAR_LEN] = {'\0'};
-  const double W  = OPgetd(par,obj,"enthalpy_update_weight");
-  const int  neat = OPgeti(par,obj,"enthalpy_neat");
-  const double Euler_const = OPgetd(par,obj,"Euler_equation_constant");
+  char opar[OPAR_LEN] = {'\0'};
+  const double W  = Getd("enthalpy_update_weight");
+  const int  neat = Geti("enthalpy_neat");
+  const double Euler_const = Getd("Euler_equation_constant");
   unsigned p;
   
-  printf(PRETTY0"weight update  = %e\n"
-         PRETTY0"neat it?       = %d\n"
-         PRETTY0"Euler constant = %e\n",
+  printf(Pretty0"weight update  = %e\n"
+         Pretty0"neat it?       = %d\n"
+         Pretty0"Euler constant = %e\n",
          W,neat,Euler_const);
   fflush(stdout);
          
