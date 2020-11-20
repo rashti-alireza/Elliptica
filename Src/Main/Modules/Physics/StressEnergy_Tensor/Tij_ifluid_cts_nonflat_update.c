@@ -18,6 +18,12 @@ void Tij_idealfluid_CTS_nonflat_update(Obj_Man_T *const obj)
   const double Euler_const = OPgetd(par,obj,"Euler_equation_constant");
   unsigned p;
   
+  printf("~> weight update  = %e\n"
+         "~> neat it?       = %d\n"
+         "-> Euler constant = %e\n",
+         W,neat,Euler_const);
+  fflush(stdout);
+         
   FOR_ALL_PATCHES(p,grid)
   {
     Patch_T *patch = grid->patch[p];
@@ -83,3 +89,4 @@ void Tij_neat_enthalpy(Patch_T *const patch)
   }
 
 }
+
