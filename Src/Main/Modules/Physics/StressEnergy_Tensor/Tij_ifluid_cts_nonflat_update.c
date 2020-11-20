@@ -14,7 +14,7 @@ void Tij_idealfluid_CTS_nonflat_update(Obj_Man_T *const obj)
   Grid_T *const grid  = obj->grid;
   char par[OPAR_SIZE] = {'\0'};
   const double W  = OPgetd(par,obj,"enthalpy_update_weight");
-  //const int  neat = OPgeti(par,obj,"enthalpy_neat");
+  const int  neat = OPgeti(par,obj,"enthalpy_neat");
   unsigned p;
   
   FOR_ALL_PATCHES(p,grid)
@@ -25,8 +25,8 @@ void Tij_idealfluid_CTS_nonflat_update(Obj_Man_T *const obj)
     
     RELAX_UPDATE_FUNC(Tij_IF_CTS_nonflat_enthalpy,patch,enthalpy,W);
     
-    //if (neat)
-      //neat_enthalpy(patch);
+    if (neat)
+      Tij_neat_enthalpy(patch);
     
     Tij_eos_update_rho0(patch);
     Tij_IF_CTS_nonflat_u0(patch);
@@ -65,3 +65,19 @@ void Tij_eos_update_rho0(Patch_T *const patch)
   free_EoS(eos);
 }
 
+/* after finding new NS surface, root finder might find h ~ 1
+// so put it h = 1, to prevent nan in matter fields  */
+void Tij_neat_enthalpy(Patch_T *const patch)
+{
+  WRITE_v(enthalpy)
+  
+  const unsigned nn = patch->nn;
+  unsigned ijk;
+  
+  for (ijk = 0; ijk < nn; ++ijk)
+  {
+    if (LSSEQL(enthalpy[ijk],1))
+      enthalpy[ijk] = 1;
+  }
+
+}

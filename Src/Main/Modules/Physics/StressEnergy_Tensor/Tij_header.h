@@ -21,6 +21,8 @@ void Tij_IF_CTS_nonflat_psi6E(Patch_T *const patch);
 void Tij_IF_CTS_nonflat_psi6S(Patch_T *const patch);
 void Tij_IF_CTS_nonflat_derives(Patch_T *const patch);
 void Tij_eos_update_rho0(Patch_T *const patch);
+void Tij_neat_enthalpy(Patch_T *const patch);
+
 
 #endif
 
