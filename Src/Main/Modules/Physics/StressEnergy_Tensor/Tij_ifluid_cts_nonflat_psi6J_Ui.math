@@ -24,7 +24,7 @@ Ccode["  unsigned ijk;"];
 Declare = 
 {
  # conformal metric inverse
- (obj = Field,name = _gammaI, rank = UU, C_macro);
+ (obj = Field,name = igConf, rank = UU, C_macro);
 
  # enthalpy
  (obj = Field,name = rho0, rank = 0, C_macro);
@@ -50,7 +50,7 @@ Declare =
 }
 
 # symmetries:
-Symm[_gammaI(i,j)  = _gammaI(j,i)];
+Symm[igConf(i,j)  = igConf(j,i)];
 
 # calculate JConf:
 Ccode["  for(ijk = 0; ijk < nn; ++ijk)"];
@@ -58,7 +58,7 @@ Ccode["  {"];
      alpha  = eta/psi;
      psim4  = psi**(-4);
      psi6   = psi**(6);
-     j_u(i) = psi6*alpha*u0*rho0*(psim4*_gammaI(i,j)*dphi(-j)+W(i));
+     j_u(i) = psi6*alpha*u0*rho0*(psim4*igConf(i,j)*dphi(-j)+W(i));
      Cpopulate[JConf = j_u];
 Ccode["  }"];
 
