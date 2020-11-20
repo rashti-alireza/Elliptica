@@ -152,7 +152,7 @@
 #define TEST_UNSUCCESSFUL 1
 
 /* relax fashion update of a field by a function 
-// func_updator = the function updates the field
+// func_updator = the function updates the field (with its arguments)
 // patch        = computing patch
 // fld          = field name (not in string format)
 // w            = update weight (<=1.) */
@@ -169,7 +169,7 @@
   const double *old_value__##fld = new_field__##fld->v;\
   new_field__##fld->v = 0;\
   /* update */\
-  func_updator(patch);\
+  func_updator;\
   for ((ijk__##fld) = 0; (ijk__##fld) < patch->nn; ++(ijk__##fld))\
   {\
     new_field__##fld->v[(ijk__##fld)] = \
@@ -177,7 +177,7 @@
       (w2_##fld)*old_value__##fld[(ijk__##fld)];\
   }\
  }\
- else {func_updator(patch);}\
+ else {func_updator;}\
 }
 
 

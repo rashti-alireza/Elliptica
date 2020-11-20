@@ -1,8 +1,8 @@
 #ifndef managers_LIB_H
 #define managers_LIB_H
 
-/* size of an object parameter */
-#define OPAR_SIZE (99)
+/* string length of an object parameter */
+#define OPAR_LEN (99)
 
 /* if the given patch does NOT cover the region issue continue.
 // this is generally used in a loop over all patches */
