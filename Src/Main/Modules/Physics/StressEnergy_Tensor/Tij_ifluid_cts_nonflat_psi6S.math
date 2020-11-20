@@ -26,7 +26,7 @@ Declare =
 {
 
  # conformal metric 
- (obj = Field,name = _gamma, rank = DD, C_macro);
+ (obj = Field,name = gConf, rank = DD, C_macro);
 
  # conformal metric inverse
  (obj = Field,name = _gammaI, rank = UU, C_macro);
@@ -57,7 +57,7 @@ Declare =
 
 # symmetries:
 Symm[_gammaI(i,j)  = _gammaI(j,i)];
-Symm[_gamma(i,j)   = _gamma(j,i)];
+Symm[gConf(i,j)   = gConf(j,i)];
 
 # calculate SConf:
 Ccode["  EoS_T *eos = initialize_EoS();"];
@@ -68,7 +68,7 @@ Ccode["    double p = eos->pressure(eos);"];
      psim4 = psi**(-4);
      psi4  = psi**(4);
      psi6  = psi**(6);
-     P2    = psim4*_gammaI(i,j)*dphi(-i)*dphi(-j)+2*dphi(-i)*W(i)+psi4*_gamma(-i,-j)*W(i)*W(j);
+     P2    = psim4*_gammaI(i,j)*dphi(-i)*dphi(-j)+2*dphi(-i)*W(i)+psi4*gConf(-i,-j)*W(i)*W(j);
      Sbar = psi6*(rho0*P2/enthalpy+3*p);
      Ccode["  SConf[ijk] = Sbar;"];
 Ccode["  }"];
