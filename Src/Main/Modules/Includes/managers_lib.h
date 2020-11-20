@@ -1,10 +1,20 @@
 #ifndef managers_LIB_H
 #define managers_LIB_H
 
+/* size of an object parameter */
+#define OPAR_SIZE (99)
+
 /* if the given patch does NOT cover the region issue continue.
 // this is generally used in a loop over all patches */
 #define ONLY_IF_COVER(patch,obj) \
  if (!IsItCovering(patch,obj->region,obj->pos)) {continue;}
+
+/* get double parameter for this given object. ex: 
+// obj->stype = "NS1",par = "enthalpy_update_weight" => 
+// s = "NS1_enthalpy_update_weight"; thus, we can have various parameter
+// calls with the same concept for different compact objects. */
+#define OPgetd(opar,obj,par) \
+ (sprintf(opar,"%s_%s",obj->stype,par) ? Pgetd(opar) : DBL_MAX)
 
 /* commands, DON'T change the numeration and ADD after one to the last */
 typedef enum CMD_T

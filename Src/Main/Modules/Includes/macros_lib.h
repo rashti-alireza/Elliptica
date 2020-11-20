@@ -148,6 +148,30 @@
 #define TEST_SUCCESSFUL 0
 #define TEST_UNSUCCESSFUL 1
 
+/* relax fashion update of a field by a function 
+// func_updator = the function updates the field
+// patch        = computing patch
+// fld          = field name (not in string format)
+// w            = update weight (<=1.) */
+#define RELAX_UPDATE_FUNC(func_updator,patch,fld,w) \
+{\
+ double w2_##fld = 1.-(w);/* weight */\
+ unsigned ijk__##fld;/* dummy index */\
+ /* find field and take care of values */\
+ Field_T *const new_field__##fld = patch->pool[Ind(#fld)];\
+ free_coeffs(new_field__##fld);\
+ const double *old_value__##fld = new_field__##fld->v;\
+ new_field__##fld->v = 0;\
+ /* update */\
+ func_updator(patch);\
+ for ((ijk__##fld) = 0; (ijk__##fld) < patch->nn; ++(ijk__##fld))\
+ {\
+   new_field__##fld->v[(ijk__##fld)] = \
+     (w)*new_field__##fld->v[(ijk__##fld)]+\
+     (w2_##fld)*old_value__##fld[(ijk__##fld)];\
+ }\
+}
+
 
 #endif
 
