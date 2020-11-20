@@ -7,7 +7,7 @@
 #include "Tij_header.h"
 
 
-void Tij_IF_CTS_psi6S(Patch_T *const patch)
+void Tij_IF_CTS_nonflat_psi6S(Patch_T *const patch)
 {
   if (!IsItNSPatch(patch))
   {

@@ -23,16 +23,16 @@ void Tij_idealfluid_CTS_nonflat_update(Obj_Man_T *const obj)
     
     ONLY_IF_COVER(patch,obj);
     
-    RELAX_UPDATE_FUNC(Tij_IF_CTS_enthalpy,patch,enthalpy,W);
+    RELAX_UPDATE_FUNC(Tij_IF_CTS_nonflat_enthalpy,patch,enthalpy,W);
     
     //if (neat)
       //neat_enthalpy(patch);
     
-    //Tij_IF_CTS_rho0(patch);
-    Tij_IF_CTS_u0(patch);
-    Tij_IF_CTS_psi6J_Ui(patch);
-    Tij_IF_CTS_psi6E(patch);
-    Tij_IF_CTS_psi6S(patch);
+    //Tij_IF_CTS_nonflat_rho0(patch);
+    Tij_IF_CTS_nonflat_u0(patch);
+    Tij_IF_CTS_nonflat_psi6J_Ui(patch);
+    Tij_IF_CTS_nonflat_psi6E(patch);
+    Tij_IF_CTS_nonflat_psi6S(patch);
     
     //update_partial_derivatives(enthalpy);
     //update_partial_derivatives(rho0);

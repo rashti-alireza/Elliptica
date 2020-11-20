@@ -7,7 +7,7 @@
 #include "Tij_header.h"
 
 
-void Tij_IF_CTS_u0(Patch_T *const patch)
+void Tij_IF_CTS_nonflat_u0(Patch_T *const patch)
 {
   if (!IsItNSPatch(patch))
     return;
