@@ -19,24 +19,24 @@ int man_tune_call(Obj_Man_T *const obj,const cmd_T cmd,
   switch (cmd)
   {
     case STRESS_ENERGY:
-      ret = Tij_update(obj);
+      ret = Tij_tune(obj);
     break;
-    /*case EULER_CONST:
-      ret = update_Euler_constant(obj);
+    case EULER_CONST:
+      ret = star_tune(obj);
     break;
-    case FORCE_BALANCE:
-      ret = adjust_force_balance_eq(obj);
+    /*case FORCE_BALANCE:
+      ret = star_tunes(obj);
     break;
     case FIX_CENTER:
-      ret = fix_star_center(obj);
+      ret = star_tunes(obj);
     break;
     case FIND_SURFACE:
-      ret = find_star_surface(obj);
+      ret = star_tunes(obj);
     break;
     case EXTRAPOLATE_OUTSIDE:
-      ret = extrapolate_matter_outside_star(obj);
-    break;*/
-    /*case AH_RADIUS:
+      ret = star_tunes(obj);
+    break;
+    case AH_RADIUS:
       ret = update_apparent_horizon_radius(obj);
     break;
     case AH_OMEGA:
