@@ -16,11 +16,20 @@ int Tij_update(Obj_Man_T *const obj)
       Pcmps("Tij_decomposition","CTS") &&
       Pcmps("Tij_gConf","non_flat"))
   {
-    Tij_idealfluid_CTS_nonflat_update(obj);
+    switch (obj->cmd)
+    {
+      case STRESS_ENERGY:
+        Tij_idealfluid_CTS_nonflat_update(obj);
+      break;
+      default:
+        Error0(NO_OPTION);
+    }
   }
   else
+  {
     Error0(NO_OPTION);
-  
+  }
+    
   return EXIT_SUCCESS;
 }
 
