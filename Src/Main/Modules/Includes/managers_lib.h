@@ -20,20 +20,20 @@
 #define OPgeti(opar,obj,par) \
  (sprintf(opar,"%s_%s",obj->stype,par) ? Pgeti(opar) : INT_MAX)
 
-/* commands, DON'T change the numeration and ADD after one to the last */
+/* commands, DON'T change the numeration. */
 typedef enum CMD_T
 {
  CMD_UNDEFINED = 0,
- STRESS_ENERGY = 1,
- EULER_CONST   = 2,
- AH_RADIUS     = 3,
- P_ADM         = 4,
- AH_OMEGA      = 5,
- FORCE_BALANCE = 6,
- FIX_CENTER    = 7,
- FIND_SURFACE  = 8,
- AH_NORMAL_VECTOR    = 9,
- EXTRAPOLATE_OUTSIDE = 10,
+ STRESS_ENERGY,
+ EULER_CONST,
+ AH_RADIUS,
+ P_ADM,
+ AH_OMEGA,
+ FORCE_BALANCE,
+ FIX_CENTER,
+ FIND_SURFACE,
+ AH_NORMAL_VECTOR,
+ EXTRAPOLATE_OUTSIDE,
  CMD_END
 }cmd_T;
 
