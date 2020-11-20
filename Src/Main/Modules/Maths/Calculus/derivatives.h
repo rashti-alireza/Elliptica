@@ -17,6 +17,7 @@ typedef enum METHOD_T
 }Method_T;
 
 /* function for taking spectral derivative */
+double *partial_derivative(struct FIELD_T *const dfield);
 typedef double *SpecDerivative_Func_T(Field_T *const f,const Dd_T dir);
 double *Covariant_Derivative(Field_T *const f,const char *task);
 double *Partial_Derivative(Field_T *const f,const char *task);

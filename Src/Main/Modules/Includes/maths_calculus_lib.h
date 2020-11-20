@@ -52,6 +52,7 @@ typedef struct INTEGRATION_T
 }Integration_T;
 
 double *Partial_Derivative(struct FIELD_T *const f,const char *task);
+double *partial_derivative(struct FIELD_T *const dfield);
 void free_integration(Integration_T *I);
 void plan_integration(Integration_T *const I);
 double execute_integration(Integration_T *const I);

@@ -6,7 +6,87 @@
 #include "derivatives.h"
 #define DELIMIT '|'
 #define COMMA ','
-#define MAX_STR_LEN 100
+#define MAX_STR_LEN (100)
+
+/* this function parses the dfield->name and then takes partial derivative 
+// in Cartesian coords (this can be changend lated by a if statement)
+// some conventions:
+// 1. each order of derivative shown by 'd' char at the 
+//    beginning of field name:
+//    e.g. dddpsi_D0D0D0 means 3rd order derivative of psi;
+// 2. the derivatives are all lower indexed(covariant)
+//    - no metric is involed.
+// 3. all of the previous order dervatives must have been
+//    taken, thus, if ddpsi_D0D0 is being sought, dpsi_D0
+//    must be ready.
+// 4. all coeffs of field get free at each call.
+// ->return value: value of the derivative. */
+double *partial_derivative(struct FIELD_T *const dfield)
+{
+  /* some checks */
+  if(!dfield->name)
+    Error0("No field name!");
+    
+  Patch_T *const patch = dfield->patch;
+  char dfield_name[MAX_STR_LEN];/* dpsi_D0 */
+  Field_T *field = 0;
+  int deriv_type = -1;/* d/dx = 0, d/dy = 1, d/dz = 2 */
+  char *D, *stem;
+  unsigned slen;
+  
+  sprintf(dfield_name,"%s",dfield->name);
+  
+  /* parse the dfield_name: */
+  /* deriv_type: */
+  slen = (unsigned) strlen(dfield_name);
+  assert(slen>3);
+  D    = &dfield_name[slen-1];
+  if      (D[0] == '0') deriv_type = 0;
+  else if (D[0] == '1') deriv_type = 1;
+  else if (D[0] == '2') deriv_type = 2;
+  else			Error0("Wrong derivative format.");
+  /* extract field_name: */
+  stem = &dfield_name[slen-3];/* rewind 3 chars back */
+  /* if stem -> _ in dpsi_ */
+  if (stem[0] != '_') stem++;
+  
+  stem[0] = '\0';/* kill last index */
+  stem = dfield_name;
+  /* for quantities like: _d3g00_D1 */
+  if(stem[0] == '_') 
+  {
+    stem++;
+    assert(stem[0] == 'd');
+    stem[0] = '_';/* => _dg00_D1 */
+  }
+  else/* non quantities like: dpsi_D0*/
+  {
+    assert(stem[0] == 'd');
+    stem[0] = '\0';/* kill first d */
+    stem++;
+  }
+  
+  /* field */
+  field = patch->pool[Ind(stem)];
+  if(!field->v)
+  {
+    Error1("Wrong order of derivatives!"
+           "No field values for '%s'",field->name);
+  }
+  empty_field(dfield);
+    
+  /* take derivatives */
+  if (deriv_type == 0)
+    dfield->v = Partial_Derivative(field,"x");
+  else if (deriv_type == 1)
+    dfield->v = Partial_Derivative(field,"y");
+  else if (deriv_type == 2)
+    dfield->v = Partial_Derivative(field,"z");
+  else
+    Error0(NO_OPTION);
+
+  return dfield->v;  
+}
 
 /* Covariant Derivative function.
 // it takes covariant derivative of a given field.
