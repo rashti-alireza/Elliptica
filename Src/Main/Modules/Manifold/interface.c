@@ -20,11 +20,12 @@ int realize_interfaces(Grid_T *const grid)
 {
   FUNC_TIC
   
-  if (strcmp_i(grid->kind,"SplitCubedSpherical(BH+NS)") ||
-      strcmp_i(grid->kind,"SplitCubedSpherical(NS+NS)") ||
-      strcmp_i(grid->kind,"SplitCubedSpherical(BH+BH)") ||
-      strcmp_i(grid->kind,"SplitCubedSpherical(NS)")    ||
-      strcmp_i(grid->kind,"SplitCubedSpherical(BH)")
+  
+  if (grid->kind == SplitCubedSpherical_BHNS ||
+      grid->kind == SplitCubedSpherical_NSNS ||
+      grid->kind == SplitCubedSpherical_BHBH ||
+      grid->kind == SplitCubedSpherical_NS   ||
+      grid->kind == SplitCubedSpherical_BH
      )
   {
     ri_split_cubed_spherical(grid);
@@ -2047,7 +2048,7 @@ static void FindInnerB_CS_coord(Patch_T *const patch)
   Interface_T **interface = patch->interface;
   unsigned i,f;
   
-  if (strcmp_i(patch->grid->kind,"BNS_CubedSpherical_grid"))
+  if (patch->grid->kind == CubedSpherical_NSNS)
   {
     FOR_ALL(f,interface)
     {
@@ -2058,7 +2059,7 @@ static void FindInnerB_CS_coord(Patch_T *const patch)
       }
     }
   }
-  else if (strcmp_i(patch->grid->kind,"BBN_CubedSpherical_grid"))
+  else if (patch->grid->kind == CubedSpherical_BHNS)
   {
     FOR_ALL(f,interface)
     {
@@ -2072,7 +2073,7 @@ static void FindInnerB_CS_coord(Patch_T *const patch)
           point[i]->innerB = 0;
     }
   }
-  else if (strcmp_i(patch->grid->kind,"SplitCubedSpherical(BH+NS)"))
+  else if (patch->grid->kind == SplitCubedSpherical_BHNS)
   {
     FOR_ALL(f,interface)
     {
@@ -2086,7 +2087,7 @@ static void FindInnerB_CS_coord(Patch_T *const patch)
           point[i]->innerB = 0;
     }
   }
-  else if (strcmp_i(patch->grid->kind,"SNS_CubedSpherical+Box_grid"))
+  /* else if (strcmp_i(patch->grid->kind,"SNS_CubedSpherical+Box_grid"))
   {
     FOR_ALL(f,interface)
     {
@@ -2121,7 +2122,7 @@ static void FindInnerB_CS_coord(Patch_T *const patch)
         FOR_ALL(i,point)
           point[i]->innerB = 0;
     }
-  }
+  }*/
   else
     Error0(INCOMPLETE_FUNC);
 }
@@ -2132,7 +2133,7 @@ static void FindExterF_CS_coord(Patch_T *const patch)
   Interface_T **interface = patch->interface;
   unsigned i,f;
   
-  if (strcmp_i(patch->grid->kind,"BNS_CubedSpherical_grid"))
+  if (patch->grid->kind == CubedSpherical_NSNS)
   {
     FOR_ALL(f,interface)
     {
@@ -2143,7 +2144,7 @@ static void FindExterF_CS_coord(Patch_T *const patch)
       }
     }
   }
-  else if (strcmp_i(patch->grid->kind,"BBN_CubedSpherical_grid"))
+  else if (patch->grid->kind == CubedSpherical_BHNS)
   {
     FOR_ALL(f,interface)
     {
@@ -2154,7 +2155,7 @@ static void FindExterF_CS_coord(Patch_T *const patch)
       }
     }
   }
-  else if (strcmp_i(patch->grid->kind,"SplitCubedSpherical(BH+NS)"))
+  else if (patch->grid->kind == SplitCubedSpherical_BHNS)
   {
     FOR_ALL(f,interface)
     {
@@ -2165,7 +2166,7 @@ static void FindExterF_CS_coord(Patch_T *const patch)
       }
     }
   }
-  else if (strcmp_i(patch->grid->kind,"SNS_CubedSpherical+Box_grid"))
+  /*else if (strcmp_i(patch->grid->kind,"SNS_CubedSpherical+Box_grid"))
   {
     FOR_ALL(f,interface)
     {
@@ -2197,7 +2198,7 @@ static void FindExterF_CS_coord(Patch_T *const patch)
         point[i]->exterF = 1;
       }
     }
-  }
+  } */
   else
     Error0(NO_OPTION);
 }

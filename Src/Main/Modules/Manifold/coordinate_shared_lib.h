@@ -119,6 +119,8 @@ enum enum_dA_da get_dA_da(const Dd_T q2_e, const Dd_T q1_e);
 double dq2_dq1(Patch_T *const patch,const Dd_T q2_e, const Dd_T q1_e,const unsigned p);
 void alloc_patches_Split_CubedSpherical_grid(Grid_T *const grid);
 void set_object_name_split_CS(char *const obj,const char *const type);
+Grid_Kind_T set_grid_kind(const char *const grid_kind);
+
 
 
 

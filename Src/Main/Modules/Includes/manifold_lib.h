@@ -32,6 +32,20 @@ typedef enum COORD_T
   CubedSpherical
 }Coord_T;
 
+/* grid kind */
+typedef enum GRID_KIND_T
+{
+  UNDEFINED_GRID_KIND = 0,
+  SplitCubedSpherical_NS,
+  SplitCubedSpherical_BH,
+  SplitCubedSpherical_NSNS,
+  SplitCubedSpherical_BHNS,
+  SplitCubedSpherical_BHBH,
+  CubedSpherical_BHNS,
+  CubedSpherical_NSNS,
+  Box
+}Grid_Kind_T;
+
 /* face (interface) number */
 typedef enum FACE_T
 {
@@ -232,7 +246,7 @@ typedef struct PATCH_T
 /* grid */
 typedef struct GRID_T
 {
-  char *kind;/* type of grid which refers how we cover the grid */
+  Grid_Kind_T kind;/* type of grid which refers how we cover the grid */
   Patch_T **patch;/* covering patch */
   unsigned gn;/* grid number */
   unsigned np;/* number of patches on grid */

@@ -790,8 +790,14 @@ IsItCovering
     side = StrSide[Fside];
   else
     side = 0;
-    
-  if (strstr_i(grid->kind,"SplitCubedSpherical("))
+  
+  
+  if (grid->kind == SplitCubedSpherical_BHNS ||
+      grid->kind == SplitCubedSpherical_NSNS ||
+      grid->kind == SplitCubedSpherical_BHBH ||
+      grid->kind == SplitCubedSpherical_NS   ||
+      grid->kind == SplitCubedSpherical_BH
+     )
   {
     if (side)
       sprintf(s,"(%s_%s)",side,region);
@@ -824,5 +830,39 @@ Grid_Char_T *init_grid_char(Grid_T *const last_grid)
 void free_grid_char(Grid_Char_T *g)
 {
   _free(g);
+}
+
+Grid_Kind_T set_grid_kind(const char *const grid_kind)
+{
+  Grid_Kind_T ret = UNDEFINED_GRID_KIND;
+  
+  if (strcmp_i(grid_kind,"SplitCubedSpherical(BH+NS)"))
+    ret = SplitCubedSpherical_BHNS;
+    
+  else if (strcmp_i(grid_kind,"SplitCubedSpherical(NS+NS)"))
+    ret = SplitCubedSpherical_NSNS;
+    
+  else if (strcmp_i(grid_kind,"SplitCubedSpherical(BH+BH)"))
+    ret = SplitCubedSpherical_BHBH;
+    
+  else if (strcmp_i(grid_kind,"SplitCubedSpherical(NS)"))
+    ret = SplitCubedSpherical_NS;
+    
+  else if (strcmp_i(grid_kind,"SplitCubedSpherical(BH)"))
+    ret = SplitCubedSpherical_BH;
+    
+  else if (strcmp_i(grid_kind,"CubedSpherical(BH+NS)"))
+   ret = CubedSpherical_BHNS;
+   
+  else if (strcmp_i(grid_kind,"CubedSpherical(NS+NS)"))
+   ret = CubedSpherical_NSNS;
+   
+  else if (strcmp_i(grid_kind,"box"))
+   ret = Box; 
+   
+  else
+    Error1("There is no such %s grid kind.\n",grid_kind);
+  
+  return ret;
 }
 

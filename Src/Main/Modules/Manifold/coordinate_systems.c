@@ -599,7 +599,7 @@ void grid_characteristics_example(Grid_T *const grid)
     characteristics_SCS_eg(grid); 
     
   else
-    Error1("There is no such %s grid kind.\n",grid->kind);
+    Error1("There is no such %s grid kind.\n",kind);
   
 }
 
@@ -607,7 +607,7 @@ void grid_characteristics_example(Grid_T *const grid)
 static void characteristics_Cartesian_grid_eg(Grid_T *const grid)
 {
   /* this type of grid is so simple; nothing to calculate. */
-  grid->kind = dup_s(Pgets("grid_kind"));
+  grid->kind = set_grid_kind(Pgets("grid_kind"));
 }
 
 /* calculating the main characteristic of grid for BBN_CubedSpherical grid */
@@ -633,7 +633,7 @@ static void characteristics_BBN_CS_grid_eg(Grid_T *const grid)
   
   /* finding the kind of grid */
   kind = Pgets("grid_kind");
-  grid->kind = dup_s(kind);
+  grid->kind = set_grid_kind(kind);
   
   assert(GRT(C,0));
   assert(GRT(R_NS_l,0));
@@ -757,7 +757,7 @@ static void characteristics_SCS_eg(Grid_T *const grid)
 {
   /* calculate the characteristics of this grid */
   Grid_Char_T grid_char[1] = {0};/* grid characteristics */
-  grid->kind = dup_s(Pgets("grid_kind"));
+  grid->kind = set_grid_kind(Pgets("grid_kind"));
   
   if (Pcmps("grid_kind","SplitCubedSpherical(BH+NS)"))
   {

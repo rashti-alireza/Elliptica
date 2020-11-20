@@ -104,6 +104,7 @@ collect_patches
 
 Grid_Char_T *init_grid_char(Grid_T *const last_grid);
 void free_grid_char(Grid_Char_T *g);
+Grid_Kind_T set_grid_kind(const char *const grid_kind);
 
 
 

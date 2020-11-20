@@ -136,15 +136,15 @@ static char *collocation_str(const Patch_T *const patch,char *const str)
 /* filling patch struct */
 static void fill_patches(Grid_T *const grid)
 {
-  if (strcmp_i(grid->kind,"SplitCubedSpherical(BH+NS)") ||
-      strcmp_i(grid->kind,"SplitCubedSpherical(NS+NS)") ||
-      strcmp_i(grid->kind,"SplitCubedSpherical(BH+BH)") ||
-      strcmp_i(grid->kind,"SplitCubedSpherical(NS)")    ||
-      strcmp_i(grid->kind,"SplitCubedSpherical(BH)")
+  if (grid->kind == SplitCubedSpherical_BHNS ||
+      grid->kind == SplitCubedSpherical_NSNS ||
+      grid->kind == SplitCubedSpherical_BHBH ||
+      grid->kind == SplitCubedSpherical_NS   ||
+      grid->kind == SplitCubedSpherical_BH
      )
     fill_patches_Split_CubedSpherical_grid(grid); 
 
-  else if (strcmp_i(grid->kind,"Cartesian_grid"))
+  /* else if (strcmp_i(grid->kind,"Cartesian_grid"))
     fill_patches_Cartesian_grid(grid);
   
   else if (strcmp_i(grid->kind,"BNS_Spherical_grid"))
@@ -163,10 +163,10 @@ static void fill_patches(Grid_T *const grid)
     fill_patches_SNS_CubedSpherical_grid(grid); 
     
   else if (strcmp_i(grid->kind,"SBH_CubedSpherical_grid"))
-    fill_patches_SBH_CubedSpherical_grid(grid); 
+    fill_patches_SBH_CubedSpherical_grid(grid); */
     
   else
-    Error1("There is no such '%s' grid kind.\n",grid->kind);
+    Error1("There is no such '%s' grid kind.\n",Pgets("grid_kind"));
 }
 
 /* making a temporary patch for thread safety purposes */
@@ -243,15 +243,15 @@ void *alloc_grid(void)
 /* allocating memory for patches based on type of coord sys */
 void alloc_patches(Grid_T *const grid)
 {
-  if (strcmp_i(grid->kind,"SplitCubedSpherical(BH+NS)") ||
-      strcmp_i(grid->kind,"SplitCubedSpherical(NS+NS)") ||
-      strcmp_i(grid->kind,"SplitCubedSpherical(BH+BH)") ||
-      strcmp_i(grid->kind,"SplitCubedSpherical(NS)")    ||
-      strcmp_i(grid->kind,"SplitCubedSpherical(BH)")
+  if (grid->kind == SplitCubedSpherical_BHNS ||
+      grid->kind == SplitCubedSpherical_NSNS ||
+      grid->kind == SplitCubedSpherical_BHBH ||
+      grid->kind == SplitCubedSpherical_NS   ||
+      grid->kind == SplitCubedSpherical_BH
      )
     alloc_patches_Split_CubedSpherical_grid(grid);
   
-  else if (strcmp_i(grid->kind,"Cartesian_grid"))
+  /*else if (strcmp_i(grid->kind,"Cartesian_grid"))
     alloc_patches_Cartesian_grid(grid);
   else if (strcmp_i(grid->kind,"BNS_Spherical_grid"))
     alloc_patches_BNS_Spherical_grid(grid);
@@ -264,9 +264,9 @@ void alloc_patches(Grid_T *const grid)
   else if (strcmp_i(grid->kind,"SNS_CubedSpherical_grid"))
     alloc_patches_SNS_CubedSpherical_grid(grid);
   else if (strcmp_i(grid->kind,"SBH_CubedSpherical_grid"))
-    alloc_patches_SBH_CubedSpherical_grid(grid);
+    alloc_patches_SBH_CubedSpherical_grid(grid);*/
   else
-    Error1("No such %s kind for grid.\n",grid->kind);
+    Error1("No such %s kind for grid.\n",Pgets("grid_kind"));
 }
 
 /* free the given grid completely */
@@ -283,7 +283,6 @@ void free_grid(Grid_T *grid)
     free_patch(patch);
   }
   _free(grid->patch);
-  _free(grid->kind);
   
   /* shrink the grids_global */
   Grid_T *last_grid = 0;
