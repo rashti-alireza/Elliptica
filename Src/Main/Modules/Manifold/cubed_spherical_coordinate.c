@@ -134,7 +134,7 @@ void fill_patches_Split_CubedSpherical_grid(Grid_T *const grid)
   const double r_outermost = Pgetd("grid_outermost_radius");
   unsigned pn = 0; /* patch number */
   
-  if (grid->kind == SplitCubedSpherical_BHNS)
+  if (grid->kind == Grid_SplitCubedSpherical_BHNS)
   {
     Flag_T ns_side = NONE, bh_side = NONE;
     Flag_T bh_filled = NONE;
@@ -200,7 +200,7 @@ void fill_patches_Split_CubedSpherical_grid(Grid_T *const grid)
     }
     
   }
-  else if (grid->kind == SplitCubedSpherical_NSNS)
+  else if (grid->kind == Grid_SplitCubedSpherical_NSNS)
   {
     Flag_T ns_side1 = NONE, ns_side2 = NONE;
     
@@ -234,7 +234,7 @@ void fill_patches_Split_CubedSpherical_grid(Grid_T *const grid)
       populate_CS_patch_SplitCS(grid,"outermost",NONE,&pn);
  
   }
-  else if (grid->kind == SplitCubedSpherical_BHBH)
+  else if (grid->kind == Grid_SplitCubedSpherical_BHBH)
   {
     Flag_T bh_side1 = NONE, bh_side2 = NONE;
     Flag_T bh_filled = NONE;
@@ -310,7 +310,7 @@ void fill_patches_Split_CubedSpherical_grid(Grid_T *const grid)
       _free(patches);
     }
   }
-  else if (grid->kind == SplitCubedSpherical_BH)
+  else if (grid->kind == Grid_SplitCubedSpherical_BH)
   {
     Flag_T bh_side    = NONE;
     Flag_T bh_filled = NONE;
@@ -365,7 +365,7 @@ void fill_patches_Split_CubedSpherical_grid(Grid_T *const grid)
     }
     
   }
-  else if (grid->kind == SplitCubedSpherical_NS)
+  else if (grid->kind == Grid_SplitCubedSpherical_NS)
   {
     Flag_T ns_side = NONE;
     

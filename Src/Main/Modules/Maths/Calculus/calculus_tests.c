@@ -57,7 +57,7 @@ static int fdS_spectral(Grid_T *const grid)
   double analytic = 0,numeric = 0;
   
   /* to test this function we use f = 1, so it means we calculate the volume */
-  if (grid->kind == Box)
+  if (grid->kind == Grid_Box)
   {
     analytic = 0;
     numeric  = 0;
@@ -156,7 +156,7 @@ static int fdS_spectral(Grid_T *const grid)
             numeric,analytic,numeric-analytic);
     
   }
-  else if (grid->kind == CubedSpherical_BHNS)
+  else if (grid->kind == Grid_CubedSpherical_BHNS)
   {
     double r;
     printf("BBN_CubedSpherical_grid:\n");
@@ -363,7 +363,7 @@ static int fdV_spectral(Grid_T *const grid)
   double analytic = 0,numeric = 0;
   
   /* to test this function we use f = 1, so it means we calculate the volume */
-  if (grid->kind == Box)
+  if (grid->kind == Grid_Box)
   {
     analytic = 0;
     numeric = 0;
@@ -423,7 +423,7 @@ static int fdV_spectral(Grid_T *const grid)
     printf("=> numeric = %e, analytic = %e, diff. = %e\n",
             numeric,analytic,numeric-analytic);
   }
-  else if (grid->kind == CubedSpherical_BHNS)
+  else if (grid->kind == Grid_CubedSpherical_BHNS)
   {
     double r;
 

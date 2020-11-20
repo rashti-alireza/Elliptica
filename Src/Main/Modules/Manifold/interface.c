@@ -21,11 +21,11 @@ int realize_interfaces(Grid_T *const grid)
   FUNC_TIC
   
   
-  if (grid->kind == SplitCubedSpherical_BHNS ||
-      grid->kind == SplitCubedSpherical_NSNS ||
-      grid->kind == SplitCubedSpherical_BHBH ||
-      grid->kind == SplitCubedSpherical_NS   ||
-      grid->kind == SplitCubedSpherical_BH
+  if (grid->kind == Grid_SplitCubedSpherical_BHNS ||
+      grid->kind == Grid_SplitCubedSpherical_NSNS ||
+      grid->kind == Grid_SplitCubedSpherical_BHBH ||
+      grid->kind == Grid_SplitCubedSpherical_NS   ||
+      grid->kind == Grid_SplitCubedSpherical_BH
      )
   {
     ri_split_cubed_spherical(grid);
@@ -2048,7 +2048,7 @@ static void FindInnerB_CS_coord(Patch_T *const patch)
   Interface_T **interface = patch->interface;
   unsigned i,f;
   
-  if (patch->grid->kind == CubedSpherical_NSNS)
+  if (patch->grid->kind == Grid_CubedSpherical_NSNS)
   {
     FOR_ALL(f,interface)
     {
@@ -2059,7 +2059,7 @@ static void FindInnerB_CS_coord(Patch_T *const patch)
       }
     }
   }
-  else if (patch->grid->kind == CubedSpherical_BHNS)
+  else if (patch->grid->kind == Grid_CubedSpherical_BHNS)
   {
     FOR_ALL(f,interface)
     {
@@ -2073,7 +2073,7 @@ static void FindInnerB_CS_coord(Patch_T *const patch)
           point[i]->innerB = 0;
     }
   }
-  else if (patch->grid->kind == SplitCubedSpherical_BHNS)
+  else if (patch->grid->kind == Grid_SplitCubedSpherical_BHNS)
   {
     FOR_ALL(f,interface)
     {
@@ -2133,7 +2133,7 @@ static void FindExterF_CS_coord(Patch_T *const patch)
   Interface_T **interface = patch->interface;
   unsigned i,f;
   
-  if (patch->grid->kind == CubedSpherical_NSNS)
+  if (patch->grid->kind == Grid_CubedSpherical_NSNS)
   {
     FOR_ALL(f,interface)
     {
@@ -2144,7 +2144,7 @@ static void FindExterF_CS_coord(Patch_T *const patch)
       }
     }
   }
-  else if (patch->grid->kind == CubedSpherical_BHNS)
+  else if (patch->grid->kind == Grid_CubedSpherical_BHNS)
   {
     FOR_ALL(f,interface)
     {
@@ -2155,7 +2155,7 @@ static void FindExterF_CS_coord(Patch_T *const patch)
       }
     }
   }
-  else if (patch->grid->kind == SplitCubedSpherical_BHNS)
+  else if (patch->grid->kind == Grid_SplitCubedSpherical_BHNS)
   {
     FOR_ALL(f,interface)
     {

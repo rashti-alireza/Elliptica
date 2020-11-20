@@ -35,15 +35,15 @@ typedef enum COORD_T
 /* grid kind */
 typedef enum GRID_KIND_T
 {
-  UNDEFINED_GRID_KIND = 0,
-  SplitCubedSpherical_NS,
-  SplitCubedSpherical_BH,
-  SplitCubedSpherical_NSNS,
-  SplitCubedSpherical_BHNS,
-  SplitCubedSpherical_BHBH,
-  CubedSpherical_BHNS,
-  CubedSpherical_NSNS,
-  Box
+  Grid_UNDEFINED = 0,
+  Grid_SplitCubedSpherical_NS,
+  Grid_SplitCubedSpherical_BH,
+  Grid_SplitCubedSpherical_NSNS,
+  Grid_SplitCubedSpherical_BHNS,
+  Grid_SplitCubedSpherical_BHBH,
+  Grid_CubedSpherical_BHNS,
+  Grid_CubedSpherical_NSNS,
+  Grid_Box
 }Grid_Kind_T;
 
 /* face (interface) number */

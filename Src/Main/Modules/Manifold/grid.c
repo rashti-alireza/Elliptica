@@ -136,11 +136,11 @@ static char *collocation_str(const Patch_T *const patch,char *const str)
 /* filling patch struct */
 static void fill_patches(Grid_T *const grid)
 {
-  if (grid->kind == SplitCubedSpherical_BHNS ||
-      grid->kind == SplitCubedSpherical_NSNS ||
-      grid->kind == SplitCubedSpherical_BHBH ||
-      grid->kind == SplitCubedSpherical_NS   ||
-      grid->kind == SplitCubedSpherical_BH
+  if (grid->kind == Grid_SplitCubedSpherical_BHNS ||
+      grid->kind == Grid_SplitCubedSpherical_NSNS ||
+      grid->kind == Grid_SplitCubedSpherical_BHBH ||
+      grid->kind == Grid_SplitCubedSpherical_NS   ||
+      grid->kind == Grid_SplitCubedSpherical_BH
      )
     fill_patches_Split_CubedSpherical_grid(grid); 
 
@@ -243,11 +243,11 @@ void *alloc_grid(void)
 /* allocating memory for patches based on type of coord sys */
 void alloc_patches(Grid_T *const grid)
 {
-  if (grid->kind == SplitCubedSpherical_BHNS ||
-      grid->kind == SplitCubedSpherical_NSNS ||
-      grid->kind == SplitCubedSpherical_BHBH ||
-      grid->kind == SplitCubedSpherical_NS   ||
-      grid->kind == SplitCubedSpherical_BH
+  if (grid->kind == Grid_SplitCubedSpherical_BHNS ||
+      grid->kind == Grid_SplitCubedSpherical_NSNS ||
+      grid->kind == Grid_SplitCubedSpherical_BHBH ||
+      grid->kind == Grid_SplitCubedSpherical_NS   ||
+      grid->kind == Grid_SplitCubedSpherical_BH
      )
     alloc_patches_Split_CubedSpherical_grid(grid);
   
