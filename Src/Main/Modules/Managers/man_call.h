@@ -2,6 +2,7 @@
 #include "utilities_lib.h"
 #include "managers_lib.h"
 #include "physics_StressEnergyTensor_lib.h"
+#include "physics_star_lib.h"
 
 #define STR_LEN (999)
 

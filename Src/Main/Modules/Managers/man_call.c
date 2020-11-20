@@ -26,9 +26,9 @@ int man_tune_call(Obj_Man_T *const obj,const cmd_T cmd,
     case STRESS_ENERGY:
       ret = Tij_tune(obj);
     break;
-    //case EULER_CONST:
-      //ret = star_tune(obj);
-    //break;
+    case EULER_CONST:
+      ret = star_tune(obj);
+    break;
     /*case FORCE_BALANCE:
       ret = star_tunes(obj);
     break;
