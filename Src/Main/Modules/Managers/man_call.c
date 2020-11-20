@@ -8,13 +8,14 @@
 #include "man_call.h"
 
 /* call the requested function */
-int Update(Obj_Man_T *const obj,const cmd_T cmd)
+int man_tune_call(Obj_Man_T *const obj,const cmd_T cmd,
+                  const char *const file, const int line)
 {
   int ret = -1;
+  char msg[STR_LEN] = {'\0'};
   
   obj->cmd = cmd;
   
-  UNUSED(obj);
   switch (cmd)
   {
     case STRESS_ENERGY:
@@ -48,7 +49,10 @@ int Update(Obj_Man_T *const obj,const cmd_T cmd)
       ret = adjust_ADM_momentum(obj);
     break;*/
     default:
-      Error0(NO_OPTION);
+      sprintf(msg,"No such command found!\n"
+              "Incident triggered at\n"
+              "file = %s\nline = %d",file,line);
+      Error0(msg);
   }
   
   /* set to no command to catch bug */
