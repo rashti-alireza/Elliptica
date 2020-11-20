@@ -70,8 +70,7 @@ double *partial_derivative(struct FIELD_T *const dfield)
   field = patch->pool[Ind(stem)];
   if(!field->v)
   {
-    Error1("Wrong order of derivatives!"
-           "No field values for '%s'",field->name);
+    Error1("No field values for '%s'",field->name);
   }
   empty_field(dfield);
     

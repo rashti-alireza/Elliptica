@@ -36,7 +36,7 @@ Declare =
  # rho0
  (obj = Field,name = rho0, rank = 0, C_macro);
 
- # rho0
+ # drho0
  (obj = Field,name = drho0, rank = D, C_macro);
 
  # EConf
