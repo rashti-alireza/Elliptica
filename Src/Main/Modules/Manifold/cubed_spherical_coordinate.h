@@ -1,4 +1,4 @@
-#include "coordinate_shared_lib.h"
+#include "manifold_header.h"
 #include "maths_calculus_lib.h"
 #include "maths_spectral_methods_lib.h"
 #include "fields_lib.h"

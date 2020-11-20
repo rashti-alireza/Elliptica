@@ -1,4 +1,4 @@
-#include "coordinate_shared_lib.h"
+#include "manifold_header.h"
 
 void make_nodes_Cartesian_coord(Patch_T *const patch);
 void make_JacobianT_Cartesian_coord(Patch_T *const patch);

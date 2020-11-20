@@ -3,7 +3,7 @@
 #include "maths_general_lib.h"
 #include "manifold_lib.h"
 #include "fields_lib.h"
-#include "coordinate_shared_lib.h"
+#include "manifold_header.h"
 
 
 /* dealing with coordinates and interpolation error between the boundaries

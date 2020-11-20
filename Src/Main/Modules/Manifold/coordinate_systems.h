@@ -1,4 +1,4 @@
-#include "coordinate_shared_lib.h"
+#include "manifold_header.h"
 
 #define ADJ_00  (a11*a22 - a12*a21)
 #define ADJ_01 (-a01*a22 + a02*a21)

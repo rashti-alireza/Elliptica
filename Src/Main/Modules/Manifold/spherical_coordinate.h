@@ -1,4 +1,4 @@
-#include "coordinate_shared_lib.h"
+#include "manifold_header.h"
 
 void make_nodes_Spherical_coord(Patch_T *const patch);
 void fill_patches_BNS_Spherical_grid(Grid_T *const grid);
