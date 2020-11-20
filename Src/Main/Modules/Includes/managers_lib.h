@@ -16,6 +16,10 @@
 #define OPgetd(opar,obj,par) \
  (sprintf(opar,"%s_%s",obj->stype,par) ? Pgetd(opar) : DBL_MAX)
 
+/* same as OPgetd but for integer type */ 
+#define OPgeti(opar,obj,par) \
+ (sprintf(opar,"%s_%s",obj->stype,par) ? Pgeti(opar) : INT_MAX)
+
 /* commands, DON'T change the numeration and ADD after one to the last */
 typedef enum CMD_T
 {
