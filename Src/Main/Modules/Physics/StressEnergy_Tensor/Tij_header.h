@@ -12,7 +12,7 @@
 
 int Tij_update(Obj_Man_T *const obj);
 int Tij_mount(Obj_Man_T *const obj);
-void Tij_idealfluid_CTS_nonflat_add_fields(Obj_Man_T *const obj);
+void Tij_idealfluid_CTS_nonflat_add_fields(Grid_T *const grid);
 void Tij_idealfluid_CTS_nonflat_update(Obj_Man_T *const obj);
 void Tij_IF_CTS_nonflat_enthalpy(Patch_T *const patch);
 void Tij_IF_CTS_nonflat_u0(Patch_T *const patch);

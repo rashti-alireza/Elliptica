@@ -44,7 +44,7 @@ int Tij_mount(Obj_Man_T *const obj)
       Pcmps("Tij_decomposition","CTS") &&
       Pcmps("Tij_gConf","non_flat"))
   {
-    Tij_idealfluid_CTS_nonflat_add_fields(obj);
+    Tij_idealfluid_CTS_nonflat_add_fields(obj->grid);
   }
   else
     Error0(NO_OPTION);
