@@ -11,7 +11,9 @@ void Tij_ideal_fluid_CTS_update(Obj_Man_T *const obj)
 {
   FUNC_TIC
   
-  Grid_T *const grid = obj->grid;  
+  Grid_T *const grid  = obj->grid;
+  char par[OPAR_SIZE] = {'\0'};
+  const double W  = OPgetd(par,obj,"enthalpy_update_weight");
   unsigned p;
   
   FOR_ALL_PATCHES(p,grid)
@@ -20,7 +22,8 @@ void Tij_ideal_fluid_CTS_update(Obj_Man_T *const obj)
     
     ONLY_IF_COVER(patch,obj);
     
-    Tij_IF_CTS_enthalpy(patch);
+    RELAX_UPDATE_FUNC(Tij_IF_CTS_enthalpy,patch,enthalpy,W);
+    
     Tij_IF_CTS_u0(patch);
     Tij_IF_CTS_psi6J_Ui(patch);
     Tij_IF_CTS_psi6E(patch);
