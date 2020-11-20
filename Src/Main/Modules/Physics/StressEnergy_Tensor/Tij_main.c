@@ -34,7 +34,7 @@ int Tij_tune(Obj_Man_T *const obj)
 }
 
 /* adding default parameters and fields. */
-int Tij_mount(Obj_Man_T *const obj)
+int Tij_mount(Grid_T *const grid)
 {
   /* decomposition type:
   // CTS (conformal thin sandwich): like: Phys. Rev. D 100, 124046  */
@@ -53,7 +53,7 @@ int Tij_mount(Obj_Man_T *const obj)
       Pcmps("Tij_decomposition","CTS") &&
       Pcmps("Tij_gConf","non_flat"))
   {
-    Tij_idealfluid_CTS_nonflat_add_fields(obj->grid);
+    Tij_idealfluid_CTS_nonflat_add_fields(grid);
   }
   else
     Error0(NO_OPTION);

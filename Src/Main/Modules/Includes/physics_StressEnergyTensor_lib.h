@@ -2,7 +2,7 @@
 #define physics_StressEnergyTensor_LIB_H
 
 int Tij_tune(Obj_Man_T *const obj);
-int Tij_mount(Obj_Man_T *const obj);
+int Tij_mount(Grid_T *const grid);
 
 
 #endif
