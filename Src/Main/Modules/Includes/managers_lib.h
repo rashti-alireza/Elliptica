@@ -12,13 +12,32 @@
 /* get double parameter for this given object. ex: 
 // obj->stype = "NS1",par = "enthalpy_update_weight" => 
 // s = "NS1_enthalpy_update_weight"; thus, we can have various parameter
-// calls with the same concept for different compact objects. */
-#define OPgetd(opar,obj,par) \
+// calls with the same concept for different compact objects.
+// NOTE: obj and opar MUST be defined. */
+#define Getd(par) \
  (sprintf(opar,"%s_%s",obj->stype,par) ? Pgetd(opar) : DBL_MAX)
 
-/* same as OPgetd but for integer type */ 
-#define OPgeti(opar,obj,par) \
+/* same as Getd but for integer type */ 
+#define Geti(par) \
  (sprintf(opar,"%s_%s",obj->stype,par) ? Pgeti(opar) : INT_MAX)
+ 
+/* same as Getd but for string type */ 
+#define Gets(par) \
+ (sprintf(opar,"%s_%s",obj->stype,par) ? Pgets(opar) : CHAR_MIN)
+
+
+/* set double parameter for this given object. ex: 
+// obj->stype = "NS1",par = "enthalpy_update_weight" => 
+// s = "NS1_enthalpy_update_weight"; thus, we can have various parameter
+// calls with the same concept for different compact objects.
+// NOTE: obj and opar MUST be defined. */
+#define Setd(par,val) \
+{sprintf(opar,"%s_%s",obj->stype,par); Psetd(opar,(val));}
+
+/* same as Setd but for integer */
+#define Seti(par,val) \
+{sprintf(opar,"%s_%s",obj->stype,par); Pseti(opar,(val));}
+
 
 /* commands, DON'T change the numeration. */
 typedef enum CMD_T
