@@ -4,9 +4,8 @@
 # given all of the fields needed for 
 # S = T(mu,nu)*gamma(i,j)*gamma(-i,-mu)*gamma(-j,-nu)
 # it builds "total momentum density * psi^6", 
-# where psi is conformal factor, and puts it to _S. 
-# note: if patch does not contain fluid, it does nothing.
-# note: it depends on u0, so better first to call Tij_IF_u0 function.
+# where psi is conformal factor, and puts it to SConf. 
+# note: it depends on u0, so first to call Tij_IF_CTS_nonflat_u0 function.
 
 # Manifold or grid Dimension
 Dimension = 3;
@@ -19,16 +18,6 @@ C_macro2 = REALLOC_v_WRITE_v(name);
 Ccode["#include "Tij_header.h"\n\n"];
 Ccode["void Tij_IF_CTS_nonflat_psi6S(Patch_T *const patch)"];
 Ccode["{"];
-
-`  if (!IsItNSPatch(patch))`
-`  {`
-`    if (_Ind("_S") >= 0)`
-`    {`
-`      REALLOC_v_WRITE_v(_S)`
-`      UNUSED(_S)`
-`    }`
-`    return;`
-`  }`
 
 Ccode["  const unsigned nn = patch->nn;"];
 Ccode["  unsigned ijk;"];
@@ -60,8 +49,8 @@ Declare =
  # pressure
  (obj = Variable,name = p, rank = 0, None);
 
- # _S
- (obj = Field,name = _S, rank = 0, C_macro2);
+ # SConf
+ (obj = Field,name = SConf, rank = 0, C_macro2);
 
 
 }
@@ -70,7 +59,7 @@ Declare =
 Symm[_gammaI(i,j)  = _gammaI(j,i)];
 Symm[_gamma(i,j)   = _gamma(j,i)];
 
-# calculate _S:
+# calculate SConf:
 Ccode["  EoS_T *eos = initialize_EoS();"];
 Ccode["  for(ijk = 0; ijk < nn; ++ijk)"];
 Ccode["  {"];
@@ -81,7 +70,7 @@ Ccode["    double p = eos->pressure(eos);"];
      psi6  = psi**(6);
      P2    = psim4*_gammaI(i,j)*dphi(-i)*dphi(-j)+2*dphi(-i)*W(i)+psi4*_gamma(-i,-j)*W(i)*W(j);
      Sbar = psi6*(rho0*P2/enthalpy+3*p);
-     Ccode["  _S[ijk] = Sbar;"];
+     Ccode["  SConf[ijk] = Sbar;"];
 Ccode["  }"];
 Ccode["  free_EoS(eos);"];
 

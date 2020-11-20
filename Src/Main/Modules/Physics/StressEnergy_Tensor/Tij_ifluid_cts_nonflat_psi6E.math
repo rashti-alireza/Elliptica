@@ -3,9 +3,8 @@
 # thus, Tij_IF_CTS means stress enerfy of ideal fluid in CTS method. 
 # given all of the fields needed for E = T(mu,nu)*n(-mu)*n(-nu)
 # it builds "total energy density * psi^6", where psi is conformal factor,
-# and puts it to _E.
-# note: if patch does not contain fluid, it does nothing.
-# note: it depends on u0, so better first to call Tij_IF_u0 function.
+# and puts it to EConf.
+# note: it depends on u0, so first to call Tij_IF_CTS_nonflat_u0 function.
 
 # Manifold or grid Dimension
 Dimension = 3;
@@ -18,16 +17,6 @@ C_macro2 = REALLOC_v_WRITE_v(name);
 Ccode["#include "Tij_header.h"\n\n"];
 Ccode["void Tij_IF_CTS_nonflat_psi6E(Patch_T *const patch)"];
 Ccode["{"];
-`  if (!IsItNSPatch(patch))`
-`  {`
-`    if (_Ind("_E") >= 0)`
-`    {`
-`      REALLOC_v_WRITE_v(_E)`
-`      UNUSED(_E)`
-`    }`
-`    return;`
-`  }`
-
 
 Ccode["  const unsigned nn = patch->nn;"];
 Ccode["  unsigned ijk;"];
@@ -53,12 +42,12 @@ Declare =
  # pressure
  (obj = Variable,name = p, rank = 0, None);
 
- # _E
- (obj = Field,name = _E, rank = 0, C_macro2);
+ # EConf
+ (obj = Field,name = EConf, rank = 0, C_macro2);
 
 }
 
-# calculate _E:
+# calculate EConf:
 Ccode["  EoS_T *eos = initialize_EoS();"];
 Ccode["  for(ijk = 0; ijk < nn; ++ijk)"];
 Ccode["  {"];
@@ -67,7 +56,7 @@ Ccode["    double p = eos->pressure(eos);"];
      alpha = eta/psi;
      psi6  = psi**(6);
      Ebar  = psi6*(rho0*enthalpy*(u0*alpha)**2 - p);
-     Ccode["  _E[ijk] = Ebar;"];
+     Ccode["  EConf[ijk] = Ebar;"];
 Ccode["  }"];
 Ccode["  free_EoS(eos);"];
 

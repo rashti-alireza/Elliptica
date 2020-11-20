@@ -3,9 +3,8 @@
 # thus, Tij_IF_CTS means stress enerfy of ideal fluid in CTS method. 
 # given all of the fields needed for J = -gamma(i,-mu)*T(mu,nu)*n(-nu) 
 # it builds "momentum current * psi^6", where psi is conformal factor,
-# and puts it to _J_U?.
-# note: if patch does not contain fluid, it does nothing.
-# note: it depends on u0, so better first to call Tij_IF_u0 function. */
+# and puts it to JConf_U?.
+# note: it depends on u0, so first to call Tij_IF_CTS_nonflat_u0 function. */
 
 # Manifold or grid Dimension
 Dimension = 3;
@@ -18,26 +17,6 @@ C_macro2 = REALLOC_v_WRITE_v(name);
 Ccode["#include "Tij_header.h"\n\n"];
 Ccode["void Tij_IF_CTS_nonflat_psi6J_Ui(Patch_T *const patch)"];
 Ccode["{"];
-
-`  if (!IsItNSPatch(patch))`
-`  {`
-`    if (_Ind("_J_U0") >= 0)`
-`    {`
-`      REALLOC_v_WRITE_v(_J_U0)`
-`      UNUSED(_J_U0)`
-`    }`
-`    if (_Ind("_J_U1") >= 0)`
-`    {`
-`      REALLOC_v_WRITE_v(_J_U1)`
-`      UNUSED(_J_U1)`
-`    }`
-`    if (_Ind("_J_U2") >= 0)`
-`    {`
-`      REALLOC_v_WRITE_v(_J_U2)`
-`      UNUSED(_J_U2)`
-`    }`
-`    return;`
-`  }`
 
 Ccode["  const unsigned nn = patch->nn;"];
 Ccode["  unsigned ijk;"];
@@ -57,7 +36,7 @@ Declare =
  (obj = Field,name = dphi, rank = D, C_macro);
 
  # conformal momentum current
- (obj = Field,name = _J, rank = U, C_macro2);
+ (obj = Field,name = JConf, rank = U, C_macro2);
 
  # eta
  (obj = Field,name = eta, rank = 0, C_macro);
@@ -73,14 +52,14 @@ Declare =
 # symmetries:
 Symm[_gammaI(i,j)  = _gammaI(j,i)];
 
-# calculate _J:
+# calculate JConf:
 Ccode["  for(ijk = 0; ijk < nn; ++ijk)"];
 Ccode["  {"];
      alpha  = eta/psi;
      psim4  = psi**(-4);
      psi6   = psi**(6);
      j_u(i) = psi6*alpha*u0*rho0*(psim4*_gammaI(i,j)*dphi(-j)+W(i));
-     Cpopulate[_J = j_u];
+     Cpopulate[JConf = j_u];
 Ccode["  }"];
 
 Ccode["}"];
