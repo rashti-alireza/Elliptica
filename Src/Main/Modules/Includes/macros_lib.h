@@ -160,16 +160,21 @@
  /* find field and take care of values */\
  Field_T *const new_field__##fld = patch->pool[Ind(#fld)];\
  free_coeffs(new_field__##fld);\
- const double *old_value__##fld = new_field__##fld->v;\
- new_field__##fld->v = 0;\
- /* update */\
- func_updator(patch);\
- for ((ijk__##fld) = 0; (ijk__##fld) < patch->nn; ++(ijk__##fld))\
+ /* if we can relax update */\
+ if (new_field__##fld->v)\
  {\
-   new_field__##fld->v[(ijk__##fld)] = \
-     (w)*new_field__##fld->v[(ijk__##fld)]+\
-     (w2_##fld)*old_value__##fld[(ijk__##fld)];\
+  const double *old_value__##fld = new_field__##fld->v;\
+  new_field__##fld->v = 0;\
+  /* update */\
+  func_updator(patch);\
+  for ((ijk__##fld) = 0; (ijk__##fld) < patch->nn; ++(ijk__##fld))\
+  {\
+    new_field__##fld->v[(ijk__##fld)] = \
+      (w)*new_field__##fld->v[(ijk__##fld)]+\
+      (w2_##fld)*old_value__##fld[(ijk__##fld)];\
+  }\
  }\
+ else {func_updator(patch);}\
 }
 
 
