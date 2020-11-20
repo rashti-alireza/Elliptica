@@ -1,0 +1,30 @@
+# Manifold or grid Dimension
+Dimension = 3;
+
+# point on manifold shown by:
+Point = ijk;
+
+C_macro = partial_derivative(name);
+
+`#include "Tij_header.h"`
+``
+``
+
+`void Tij_IF_CTS_nonflat_derives(Patch_T *const patch);`
+`void Tij_IF_CTS_nonflat_derives(Patch_T *const patch)`
+`{`
+``
+Declare =
+{
+
+ # denthalpy
+ (obj = Field,name = denthalpy, rank = D, C_macro);
+
+ # du0
+ (obj = Field,name = du0, rank = D, C_macro);
+
+ # drho0
+ (obj = Field,name = drho0, rank = D, C_macro);
+
+}
+`}`
