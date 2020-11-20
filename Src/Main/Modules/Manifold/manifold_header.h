@@ -1,3 +1,6 @@
+#ifndef manifold_header_LIB_H
+#define manifold_header_LIB_H
+
 #include "core_lib.h"
 #include "error_handling_lib.h"
 #include "utilities_lib.h"
@@ -121,6 +124,7 @@ void alloc_patches_Split_CubedSpherical_grid(Grid_T *const grid);
 void set_object_name_split_CS(char *const obj,const char *const type);
 Grid_Kind_T set_grid_kind(const char *const grid_kind);
 
+#endif
 
 
 
