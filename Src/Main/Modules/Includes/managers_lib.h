@@ -23,7 +23,7 @@
  
 /* same as Getd but for string type */ 
 #define Gets(par) \
- (sprintf(opar,"%s_%s",obj->stype,par) ? Pgets(opar) : CHAR_MIN)
+ (sprintf(opar,"%s_%s",obj->stype,par) ? Pgets(opar) : NULL)
 
 
 /* set double parameter for this given object. ex: 
