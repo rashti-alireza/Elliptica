@@ -13,15 +13,15 @@ void Tij_IF_CTS_nonflat_derives(Patch_T *const patch)
 
 
   /* declaring: */
-  partial_derivative(denthalpy_D2)
-  partial_derivative(denthalpy_D0)
-  partial_derivative(denthalpy_D1)
-  partial_derivative(du0_D0)
-  partial_derivative(du0_D1)
-  partial_derivative(du0_D2)
-  partial_derivative(drho0_D2)
-  partial_derivative(drho0_D0)
-  partial_derivative(drho0_D1)
+  dField_di(denthalpy_D2);
+  dField_di(denthalpy_D0);
+  dField_di(denthalpy_D1);
+  dField_di(du0_D0);
+  dField_di(du0_D1);
+  dField_di(du0_D2);
+  dField_di(drho0_D2);
+  dField_di(drho0_D0);
+  dField_di(drho0_D1);
 
 
 }

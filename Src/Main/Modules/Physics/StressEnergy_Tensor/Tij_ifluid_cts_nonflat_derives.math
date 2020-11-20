@@ -4,7 +4,7 @@ Dimension = 3;
 # point on manifold shown by:
 Point = ijk;
 
-C_macro = partial_derivative(name);
+C_macro = dField_di(name);;
 
 `#include "Tij_header.h"`
 ``
