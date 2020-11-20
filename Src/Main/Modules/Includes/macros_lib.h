@@ -7,8 +7,8 @@
 #define NO_JOB "No job has been defined for this case."
 #define NO_OPTION "No such option has been defined."
 #define ERROR_MASSAGE  ":(\n\nERROR and EXIT:\n"
-#define PRETTY0         "|--> "
-#define PRETTY1         "~> "
+#define Pretty0         "|--> "
+#define Pretty1         "~> "
 
 /* some general macros */
 #define FOLDER_AFFIX "_%02d"/* that's how folders are named */
