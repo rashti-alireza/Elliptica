@@ -28,15 +28,40 @@ void Tij_idealfluid_CTS_nonflat_update(Obj_Man_T *const obj)
     //if (neat)
       //neat_enthalpy(patch);
     
-    //Tij_IF_CTS_nonflat_rho0(patch);
+    Tij_eos_update_rho0(patch);
     Tij_IF_CTS_nonflat_u0(patch);
+    Tij_IF_CTS_nonflat_derives(patch);
+    /* sources */
     Tij_IF_CTS_nonflat_psi6J_Ui(patch);
     Tij_IF_CTS_nonflat_psi6E(patch);
     Tij_IF_CTS_nonflat_psi6S(patch);
-    
-    //update_partial_derivatives(enthalpy);
-    //update_partial_derivatives(rho0);
   }
   
   FUNC_TOC
 }
+
+/* updating rho0 using eos */
+void Tij_eos_update_rho0(Patch_T *const patch)
+{
+  EoS_T *eos = initialize_EoS();
+  READ_v(enthalpy)
+  REALLOC_v_WRITE_v(rho0)
+  const unsigned nn = patch->nn;
+  unsigned ijk;
+
+  for (ijk = 0; ijk < nn; ++ijk)
+  {
+    eos->h    = enthalpy[ijk];
+    rho0[ijk] = eos->rest_mass_density(eos);
+    
+    /* make sure rho0 won't get nan due to Gibbs phenomena or 
+    // when finding NS surface. */
+    if (!isfinite(rho0[ijk]))
+    {
+      //printf("Put rho0(h = %g) = 0.\n",enthalpy[ijk]);
+      rho0[ijk] = 0;
+    }
+  }
+  free_EoS(eos);
+}
+

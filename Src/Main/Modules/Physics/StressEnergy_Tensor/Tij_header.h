@@ -3,6 +3,7 @@
 
 #include "core_lib.h"
 #include "maths_general_lib.h"
+#include "maths_calculus_lib.h"
 #include "manifold_lib.h"
 #include "utilities_lib.h"
 #include "physics_EoS_lib.h"
@@ -19,7 +20,7 @@ void Tij_IF_CTS_nonflat_psi6J_Ui(Patch_T *const patch);
 void Tij_IF_CTS_nonflat_psi6E(Patch_T *const patch);
 void Tij_IF_CTS_nonflat_psi6S(Patch_T *const patch);
 void Tij_IF_CTS_nonflat_derives(Patch_T *const patch);
-
+void Tij_eos_update_rho0(Patch_T *const patch);
 
 #endif
 
