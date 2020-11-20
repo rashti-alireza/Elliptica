@@ -4,7 +4,7 @@
 */
 
 
-#include "IdealFluid_CTS_lib.h"
+#include "Tij_header.h"
 
 
 void Tij_IF_CTS_psi6J_Ui(Patch_T *const patch)

@@ -4,13 +4,20 @@
 */
 
 
-#include "IdealFluid_CTS_lib.h"
+#include "Tij_header.h"
 
 
-void Tij_IF_CTS_u0(Patch_T *const patch)
+void Tij_IF_CTS_psi6S(Patch_T *const patch)
 {
   if (!IsItNSPatch(patch))
+  {
+    if (_Ind("_S") >= 0)
+    {
+      REALLOC_v_WRITE_v(_S)
+      UNUSED(_S)
+    }
     return;
+  }
   const unsigned nn = patch->nn;
   unsigned ijk;
 
@@ -34,23 +41,26 @@ void Tij_IF_CTS_u0(Patch_T *const patch)
   READ_v(dphi_D2)
   READ_v(dphi_D1)
   READ_v(dphi_D0)
-  READ_v(eta)
   READ_v(psi)
-  REALLOC_v_WRITE_v(u0)
+  READ_v(rho0)
+  REALLOC_v_WRITE_v(_S)
 
 
+  EoS_T *eos = initialize_EoS();
   for(ijk = 0; ijk < nn; ++ijk)
   {
-  double alpha = 
-eta[ijk]/psi[ijk];
-
-  double psim4 = 
+    eos->h   = enthalpy[ijk];
+    double p = eos->pressure(eos);
+    double psim4 = 
 pow(psi[ijk], -4);
 
-  double psi4 = 
+    double psi4 = 
 pow(psi[ijk], 4);
 
-  double P2 = 
+    double psi6 = 
+pow(psi[ijk], 6);
+
+    double P2 = 
 2.0*W_U0[ijk]*dphi_D0[ijk] + 2.0*W_U1[ijk]*dphi_D1[ijk] + 2.0*
 W_U2[ijk]*dphi_D2[ijk] + psi4*(pow(W_U0[ijk], 2)*_gamma_D0D0[ijk] +
 2.0*W_U0[ijk]*W_U1[ijk]*_gamma_D0D1[ijk] + 2.0*W_U0[ijk]*W_U2[ijk]*
@@ -62,9 +72,10 @@ dphi_D2[ijk] + _gammaI_U1U1[ijk]*pow(dphi_D1[ijk], 2) + 2.0*
 _gammaI_U1U2[ijk]*dphi_D1[ijk]*dphi_D2[ijk] + _gammaI_U2U2[ijk]*
 pow(dphi_D2[ijk], 2));
 
-  double u_mu0 = 
-sqrt(P2 + pow(enthalpy[ijk], 2))/(alpha*enthalpy[ijk]);
+    double Sbar = 
+psi6*(P2*rho0[ijk]/enthalpy[ijk] + 3*p);
 
-  u0[ijk] = u_mu0;
+  _S[ijk] = Sbar;
   }
+  free_EoS(eos);
 }

@@ -10,8 +10,8 @@ C_macro = ADD_FIELD(name);
 ``
 ``
 
-`void Tij_ideal_fluid_CTS_add_fields(Obj_Man_T *const obj);`
-`void Tij_ideal_fluid_CTS_add_fields(Obj_Man_T *const obj)`
+`void Tij_idealfluid_CTS_nonflat_add_fields(Obj_Man_T *const obj);`
+`void Tij_idealfluid_CTS_nonflat_add_fields(Obj_Man_T *const obj)`
 `{`
 
 ` unsigned p;`

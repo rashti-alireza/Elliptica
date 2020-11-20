@@ -4,7 +4,7 @@
 */
 
 
-#include "IdealFluid_CTS_lib.h"
+#include "Tij_header.h"
 
 
 void Tij_IF_CTS_enthalpy(Patch_T *const patch)

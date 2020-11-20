@@ -7,8 +7,8 @@
 #include "Tij_header.h"
 
 
-void Tij_ideal_fluid_CTS_add_fields(Obj_Man_T *const obj);
-void Tij_ideal_fluid_CTS_add_fields(Obj_Man_T *const obj)
+void Tij_idealfluid_CTS_nonflat_add_fields(Obj_Man_T *const obj);
+void Tij_idealfluid_CTS_nonflat_add_fields(Obj_Man_T *const obj)
 {
  unsigned p;
  FOR_ALL_PATCHES(p,obj->grid)
