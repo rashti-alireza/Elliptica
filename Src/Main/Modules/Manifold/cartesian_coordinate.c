@@ -218,17 +218,17 @@ populate_box_patch_SplitCS
         if (strcmp_i(region,"NS") || strcmp_i(region,"BH"))
         {
           sprintf(patch->CoordSysInfo->region,
-            "(%s_%s)(%s_%s)(%s)",dir,region,dir,obj,region);
+            "(%s)(%s_%s)(%s_%s)",region,dir,region,dir,obj);
         }
         else if (strcmp_i(region,"NS1") || strcmp_i(region,"NS2"))
         {
           sprintf(patch->CoordSysInfo->region,
-            "(%s_%s)(%s_%s)(%s)",dir,region,dir,obj,region);
+            "(%s)(%s_%s)(%s_%s)",region,dir,region,dir,obj);
         }
         else if (strcmp_i(region,"BH1") || strcmp_i(region,"BH2"))
         {
           sprintf(patch->CoordSysInfo->region,
-            "(%s_%s)(%s_%s)(%s)",dir,region,dir,obj,region);
+            "(%s)(%s_%s)(%s_%s)",region,dir,region,dir,obj);
         }
         else if (strcmp_i(region,"filling_box"))
         {
