@@ -7,21 +7,19 @@
 // =========
 //
 // * initialize observable *
-// Observable_T *obs = init_observable(grid,plan_items_func,free_items_func);
+// Observable_T *obs = init_observable(grid,"observable?");
 //
 // * specifiy which obeservable *
-// obs->quantity = "ADM(P,J)|BBN"  #=> compute P and J ADM for the system 
+// obs->quantity = "ADM(P,J)|SYS"  #=> compute P and J ADM for the system 
 // obs->quantity = "ADM(P,J)|NS"   #=> compute P and J ADM for single NS 
 // obs->quantity = "ADM(P,J)|BH"   #=> compute P and J ADM for single BH
-// obs->quantity = "Kommar(M)|BBN" #=> compute Kommar mass for the system 
+// obs->quantity = "Kommar(M)|SYS" #=> compute Kommar mass for the system 
 // obs->quantity = "Kommar(M)|NS"  #=> compute kommar mass for NS 
 // obs->quantity = "Kommar(M)|BH"  #=> compute Kommar mass for BH
-// obs->quantity = "ADM(M)|BBN"    #=> compute ADM mass for the system 
+// obs->quantity = "ADM(M)|SYS"    #=> compute ADM mass for the system 
 // obs->quantity = "ADM(M)|NS"     #=> compute ADM mass for NS 
 // obs->quantity = "ADM(M)|BH"     #=> compute ADM mass for BH
 //
-// * plan observable *
-// plan_observable(obs);# it finds out the related patches, physical metric etc.
 //
 // * calculate the observable example:*
 // double Px_ADM = obs->Px(obs);# x component
@@ -54,10 +52,10 @@ void obs_plan(Observable_T *obs)
 {
   Grid_T *const grid = obs->grid;
   
-  if (!strcmp_i(grid->kind,"BBN_CubedSpherical_grid"))
-    Error0(NO_OPTION);
+  if (grid->kind == Grid_SplitCubedSpherical_BHNS)
+  {
       
-  if (strcmp_i(obs->quantity,"ADM(P,J)|BBN"))
+  if (strcmp_i(obs->quantity,"ADM(P,J)|SYS"))
   {  
     const unsigned N_outermost = (unsigned) Pgeti("Number_of_Outermost_Split");
     Patch_T **patches = 0,*patch = 0;
@@ -524,7 +522,7 @@ void obs_plan(Observable_T *obs)
     obs->M = obs_Kommar_mass;
     free(patches);
   }
-  else if (strcmp_i(obs->quantity,"Kommar(M)|BBN"))
+  else if (strcmp_i(obs->quantity,"Kommar(M)|SYS"))
   {  
     Patch_T **patches = 0,*patch = 0;
     struct items_S **kommar = 0;
@@ -611,7 +609,7 @@ void obs_plan(Observable_T *obs)
     obs->M = obs_Kommar_mass;
     free(patches);
   }
-  else if (strcmp_i(obs->quantity,"ADM(M)|BBN"))
+  else if (strcmp_i(obs->quantity,"ADM(M)|SYS"))
   {  
     const unsigned N_outermost = (unsigned) Pgeti("Number_of_Outermost_Split");
     Patch_T **patches = 0,*patch = 0;
@@ -907,7 +905,10 @@ void obs_plan(Observable_T *obs)
   }
   else
     Error1("There is no such '%s' plan.\n",obs->quantity);
-  
+    
+  }/* if (grid->kind == Grid_SplitCubedSpherical_BHNS) */
+  else
+    Error0(NO_OPTION);
 }
 
 /* populating normal outward vector for surrounding patches according to the given dir 
