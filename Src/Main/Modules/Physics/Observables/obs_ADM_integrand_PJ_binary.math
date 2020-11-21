@@ -19,7 +19,7 @@ C_macro3 = declare_and_alloc_xi(name);
 `#include "maths_general_lib.h"`
 `#include "maths_calculus_lib.h"`
 `#include "fields_lib.h"`
-`#include "bbn_headers.h"`
+`#include "obs_headers.h"`
 ``
 `#define declare_and_alloc_xi(name) \`
 	`  double *name = alloc_double(nn);`
@@ -30,8 +30,8 @@ C_macro3 = declare_and_alloc_xi(name);
          `  ADD_FIELD(name);REALLOC_v_WRITE_v(name);`
 ``
 ``
-`void bbn_populate_ADM_integrand_PdS_GdV_binary(const Observable_T *const obs);`
-`void bbn_populate_ADM_integrand_PdS_GdV_binary(const Observable_T *const obs)`
+`void obs_populate_ADM_integrand_PdS_GdV_binary(const Observable_T *const obs);`
+`void obs_populate_ADM_integrand_PdS_GdV_binary(const Observable_T *const obs)`
 `{`
 `  struct items_S **adm = obs->items;`
 `  const unsigned N = obs->Nitems;`

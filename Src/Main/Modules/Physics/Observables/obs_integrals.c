@@ -35,7 +35,7 @@
 // free_observable(obs);
 */
 
-#include "bbn_observables.h"
+#include "obs_observables.h"
 #define VOLUME_INTEGRAL 1 /* put it to 1 if you want \int{Gdv} */
 
 /* plan and populate items_S sturct and obs struct
@@ -50,7 +50,7 @@
 // 5. populate the integrands
 // 6. assign the pertinent functions for the calculation.
 // */
-void bbn_plan_obs_CS(Observable_T *obs)
+void obs_plan_obs_CS(Observable_T *obs)
 {
   Grid_T *const grid = obs->grid;
   
@@ -175,13 +175,13 @@ void bbn_plan_obs_CS(Observable_T *obs)
         n_physical_metric_surrounding(adm[n],_c_);
       }
     }
-    obs->Px = ADM_momentum_x_BBN_CS;
-    obs->Py = ADM_momentum_y_BBN_CS;
-    obs->Pz = ADM_momentum_z_BBN_CS;
-    obs->Jx = ADM_angular_momentum_x_BBN_CS;
-    obs->Jy = ADM_angular_momentum_y_BBN_CS;
-    obs->Jz = ADM_angular_momentum_z_BBN_CS;
-    bbn_populate_ADM_integrand_PdS_GdV_binary(obs);
+    obs->Px = ADM_momentum_x_BHNS_CS;
+    obs->Py = ADM_momentum_y_BHNS_CS;
+    obs->Pz = ADM_momentum_z_BHNS_CS;
+    obs->Jx = ADM_angular_momentum_x_BHNS_CS;
+    obs->Jy = ADM_angular_momentum_y_BHNS_CS;
+    obs->Jz = ADM_angular_momentum_z_BHNS_CS;
+    obs_populate_ADM_integrand_PdS_GdV_binary(obs);
     free(patches);
   }
   else if (strcmp_i(obs->quantity,"ADM(P,J)|NS"))
@@ -263,13 +263,13 @@ void bbn_plan_obs_CS(Observable_T *obs)
       adm[n]->K = 0;
       n_physical_metric_surrounding(adm[n],_c_);
     }
-    obs->Px = ADM_momentum_x_BBN_CS;
-    obs->Py = ADM_momentum_y_BBN_CS;
-    obs->Pz = ADM_momentum_z_BBN_CS;
-    obs->Jx = ADM_angular_momentum_x_BBN_CS;
-    obs->Jy = ADM_angular_momentum_y_BBN_CS;
-    obs->Jz = ADM_angular_momentum_z_BBN_CS;
-    bbn_populate_ADM_integrand_PdS_GdV_single(obs);
+    obs->Px = ADM_momentum_x_BHNS_CS;
+    obs->Py = ADM_momentum_y_BHNS_CS;
+    obs->Pz = ADM_momentum_z_BHNS_CS;
+    obs->Jx = ADM_angular_momentum_x_BHNS_CS;
+    obs->Jy = ADM_angular_momentum_y_BHNS_CS;
+    obs->Jz = ADM_angular_momentum_z_BHNS_CS;
+    obs_populate_ADM_integrand_PdS_GdV_single(obs);
     free(patches);
   }
   else if (strcmp_i(obs->quantity,"ADM(P,J)|BH"))
@@ -351,13 +351,13 @@ void bbn_plan_obs_CS(Observable_T *obs)
       adm[n]->K = 0;
       n_physical_metric_surrounding(adm[n],_c_);
     }
-    obs->Px = ADM_momentum_x_BBN_CS;
-    obs->Py = ADM_momentum_y_BBN_CS;
-    obs->Pz = ADM_momentum_z_BBN_CS;
-    obs->Jx = ADM_angular_momentum_x_BBN_CS;
-    obs->Jy = ADM_angular_momentum_y_BBN_CS;
-    obs->Jz = ADM_angular_momentum_z_BBN_CS;
-    bbn_populate_ADM_integrand_PdS_GdV_single(obs);
+    obs->Px = ADM_momentum_x_BHNS_CS;
+    obs->Py = ADM_momentum_y_BHNS_CS;
+    obs->Pz = ADM_momentum_z_BHNS_CS;
+    obs->Jx = ADM_angular_momentum_x_BHNS_CS;
+    obs->Jy = ADM_angular_momentum_y_BHNS_CS;
+    obs->Jz = ADM_angular_momentum_z_BHNS_CS;
+    obs_populate_ADM_integrand_PdS_GdV_single(obs);
     free(patches);
   }
   else if (strcmp_i(obs->quantity,"Kommar(M)|BH"))
@@ -439,7 +439,7 @@ void bbn_plan_obs_CS(Observable_T *obs)
       kommar[n]->K = 0;
       n_physical_metric_surrounding(kommar[n],_c_);
     }
-    obs->M = bbn_Kommar_mass;
+    obs->M = obs_Kommar_mass;
     free(patches);
   }
   else if (strcmp_i(obs->quantity,"Kommar(M)|NS"))
@@ -521,7 +521,7 @@ void bbn_plan_obs_CS(Observable_T *obs)
       kommar[n]->K = 0;
       n_physical_metric_surrounding(kommar[n],_c_);
     }
-    obs->M = bbn_Kommar_mass;
+    obs->M = obs_Kommar_mass;
     free(patches);
   }
   else if (strcmp_i(obs->quantity,"Kommar(M)|BBN"))
@@ -608,7 +608,7 @@ void bbn_plan_obs_CS(Observable_T *obs)
       kommar[n]->K = patch->n[2]-1;
       n_physical_metric_surrounding(kommar[n],_c_);
     }
-    obs->M = bbn_Kommar_mass;
+    obs->M = obs_Kommar_mass;
     free(patches);
   }
   else if (strcmp_i(obs->quantity,"ADM(M)|BBN"))
@@ -747,7 +747,7 @@ void bbn_plan_obs_CS(Observable_T *obs)
         n_conformal_metric_surrounding(adm[n],_c_);
       }
     }
-    obs->M = bbn_ADM_mass;
+    obs->M = obs_ADM_mass;
     free(patches);
   }
   else if (strcmp_i(obs->quantity,"ADM(M)|BH"))
@@ -827,7 +827,7 @@ void bbn_plan_obs_CS(Observable_T *obs)
       adm[n]->K = 0;
       n_physical_metric_surrounding(adm[n],_c_);
     }
-    obs->M = bbn_BH_ADM_mass;
+    obs->M = obs_BH_ADM_mass;
     free(patches);
   }
   else if (strcmp_i(obs->quantity,"ADM(M)|NS"))
@@ -902,7 +902,7 @@ void bbn_plan_obs_CS(Observable_T *obs)
       adm[n]->g22 = g22;
       
     }
-    obs->M = bbn_ADM_mass;
+    obs->M = obs_ADM_mass;
     free(patches);
   }
   else
@@ -999,7 +999,7 @@ n_U2[ijk] + _gamma_D2D2[ijk]*pow(n_U2[ijk], 2));
 }
 
 /* free stuct Observable_T */
-void bbn_free_obs_CS(Observable_T *obs)
+void obs_free_obs_CS(Observable_T *obs)
 {
   if (!obs)
     return;
@@ -1094,7 +1094,7 @@ void bbn_free_obs_CS(Observable_T *obs)
 }
 
 /* calculating ADM momentum in x component */
-static double ADM_momentum_x_BBN_CS(Observable_T *const obs)
+static double ADM_momentum_x_BHNS_CS(Observable_T *const obs)
 {
   double Px = 0;
   struct items_S **const adm = obs->items;
@@ -1164,7 +1164,7 @@ static double ADM_momentum_x_BBN_CS(Observable_T *const obs)
 }
 
 /* calculating ADM momentum in x component */
-static double ADM_momentum_y_BBN_CS(Observable_T *const obs)
+static double ADM_momentum_y_BHNS_CS(Observable_T *const obs)
 {
   double Py = 0;
   struct items_S **const adm = obs->items;
@@ -1234,7 +1234,7 @@ static double ADM_momentum_y_BBN_CS(Observable_T *const obs)
 }
 
 /* calculating ADM momentum in x component */
-static double ADM_momentum_z_BBN_CS(Observable_T *const obs)
+static double ADM_momentum_z_BHNS_CS(Observable_T *const obs)
 {
   double Pz = 0;
   struct items_S **const adm = obs->items;
@@ -1304,7 +1304,7 @@ static double ADM_momentum_z_BBN_CS(Observable_T *const obs)
 }
 
 /* calculating ADM angular momentum in z component */
-static double ADM_angular_momentum_z_BBN_CS(Observable_T *const obs)
+static double ADM_angular_momentum_z_BHNS_CS(Observable_T *const obs)
 {
   double Jz = 0;
   struct items_S **const adm = obs->items;
@@ -1376,7 +1376,7 @@ static double ADM_angular_momentum_z_BBN_CS(Observable_T *const obs)
 }
 
 /* calculating ADM angular momentum in x component */
-static double ADM_angular_momentum_x_BBN_CS(Observable_T *const obs)
+static double ADM_angular_momentum_x_BHNS_CS(Observable_T *const obs)
 {
   double Jx = 0;
   struct items_S **const adm = obs->items;
@@ -1447,7 +1447,7 @@ static double ADM_angular_momentum_x_BBN_CS(Observable_T *const obs)
 }
 
 /* calculating ADM angular momentum in y component */
-static double ADM_angular_momentum_y_BBN_CS(Observable_T *const obs)
+static double ADM_angular_momentum_y_BHNS_CS(Observable_T *const obs)
 {
   double Jy = 0;
   struct items_S **const adm = obs->items;
@@ -1519,7 +1519,7 @@ static double ADM_angular_momentum_y_BBN_CS(Observable_T *const obs)
 }
 
 /* approximate spin using : S_a = \frac{1}{8\pi}\oint{\xi_{ai} K^{ij}ds^{2}_j} */
-void bbn_define_spin_integral(double S[3],Grid_T *const grid,const char *const kind)
+void obs_define_spin_integral(double S[3],Grid_T *const grid,const char *const kind)
 {
   if (!strcmp_i(grid->kind,"BBN_CubedSpherical_grid"))
     Error0(NO_OPTION);
@@ -1602,7 +1602,7 @@ void bbn_define_spin_integral(double S[3],Grid_T *const grid,const char *const k
     n_comp[0] = normal->n_U0;
     n_comp[1] = normal->n_U1;
     n_comp[2] = normal->n_U2;
-    bbn_populate_spin_integrands_Campanelli(patch,obj_center,n_comp);
+    obs_populate_spin_integrands_Campanelli(patch,obj_center,n_comp);
     
     /* surface integral */
     I  = init_integration();
@@ -1654,7 +1654,7 @@ void bbn_define_spin_integral(double S[3],Grid_T *const grid,const char *const k
 
 /* approximate spin using : S_a = \frac{1}{8\pi}\oint{\xi_{ai} K^{ij}ds^{2}_j} */
 void 
-bbn_define_spin_akv
+obs_define_spin_akv
   (
   double S[3]/* spin Sx,Sy,Sz */,
   Grid_T *const grid/* grid */,
@@ -1737,7 +1737,7 @@ bbn_define_spin_akv
     n_comp[0] = normal->n_U0;
     n_comp[1] = normal->n_U1;
     n_comp[2] = normal->n_U2;
-    bbn_populate_spin_integrands_akv(patch,n_comp);
+    obs_populate_spin_integrands_akv(patch,n_comp);
     
     /* surface integral */
     I  = init_integration();
@@ -1789,7 +1789,7 @@ bbn_define_spin_akv
 }
 
 /* approximate spin using : S = J - RxP */
-void bbn_define_spin_JRP(double S[3],Grid_T *const grid,const char *const kind)
+void obs_define_spin_JRP(double S[3],Grid_T *const grid,const char *const kind)
 {
   double J[3] = {0,0,0};
   double R[3] = {0,0,0};
@@ -1798,7 +1798,7 @@ void bbn_define_spin_JRP(double S[3],Grid_T *const grid,const char *const kind)
   /* NS spins */
   if (strcmp_i(kind,"NS"))
   {
-    bbn_Rc_NS(R,grid);
+    obs_Rc_NS(R,grid);
     P[0] = Pgetd("NS_Px_ADM");
     P[1] = Pgetd("NS_Py_ADM");
     P[2] = Pgetd("NS_Pz_ADM");
@@ -1808,7 +1808,7 @@ void bbn_define_spin_JRP(double S[3],Grid_T *const grid,const char *const kind)
   }
   else if (strcmp_i(kind,"BH"))
   {
-    bbn_Rc_BH(R,grid);
+    obs_Rc_BH(R,grid);
     P[0] = Pgetd("BH_Px_ADM");
     P[1] = Pgetd("BH_Py_ADM");
     P[2] = Pgetd("BH_Pz_ADM");
