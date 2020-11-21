@@ -38,7 +38,7 @@ typedef enum FLAG_T
   FATAL,
   INITIALIZE,
   NS_T_CS,/* NS type in cubed spherical. note: NS could be any compact object like BH etc. */
-  SR_T_CS,/* surrounding type in cubed spherical */
+  SR_T_CS,/* around type in cubed spherical */
   OT_T1_CS,/* outermost type1 in cubed spherical */
   OT_T2_CS,/* outermost type2 in cubed spherical */
   OJ_T_SCS,/* object type in split cubed spherical eg:NS/BH_around */

@@ -863,7 +863,7 @@ static void find_XYZ_and_patch_of_theta_phi_BH_CS(double *const X,Patch_T **cons
   Flag_T found_flg = NO;
   unsigned p;
   
-  X[2] = 0;/* since we are on BH surface from BH surrounding side */
+  X[2] = 0;/* since we are on BH surface from BH around side */
   
   /* check all of BH patches in which (x,y,z) and 
   // (X,Y,Z) and (theta,phi) are consistent */

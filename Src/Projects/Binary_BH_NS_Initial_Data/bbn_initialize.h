@@ -31,7 +31,7 @@ struct NS_surface_RootFinder_S
   double *N;/* the direction of increasing or decreasing of x = x0+N*d */
   //double Euler_C;/* Euler equation const. */
   //double scale;/* to avoid long step in root finder */
-  //double maxR;/* max R allowed for NS surrounding */
+  //double maxR;/* max R allowed for NS around */
 };
 
 /* this struct is adjustments and requirements for making of a new grid */

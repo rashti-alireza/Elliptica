@@ -707,7 +707,7 @@ static void characteristics_BBN_CS_grid_eg(Grid_T *const grid)
   sprintf(par,"grid%u_left_central_box_size_c",gn);
   add_parameter_double(par,box_size_l);
   
-  /* surrounding box length */
+  /* around box length */
   sprintf(par,"grid%u_around_box_length",gn);
   add_parameter_double(par,C);
   
@@ -1462,7 +1462,7 @@ static void characteristics_BNS_CS_grid_eg(Grid_T *const grid)
   sprintf(par,"grid%u_right_central_box_size_c",gn);
   add_parameter_double(par,box_size_r);
   
-  /* surrounding box length */
+  /* around box length */
   sprintf(par,"grid%u_around_box_length",gn);
   add_parameter_double(par,C);
   
@@ -1566,7 +1566,7 @@ static void characteristics_BNS_Spherical_grid_eg(Grid_T *const grid)
   
   /* adding the results to the parameter data base: */
   
-  /* R2 surroundings */
+  /* R2 arounds */
   sprintf(par,"grid%u_left_NS_Surrounding_R2",gn);
   add_parameter_double(par,R_Surr_l);
   

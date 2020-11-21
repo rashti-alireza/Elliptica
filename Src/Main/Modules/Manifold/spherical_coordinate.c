@@ -332,7 +332,7 @@ static void populate_right_NS_sphere(Grid_T *const grid,const unsigned pn)
     
 }
 
-/* populating properties of patch for left NS's surrounding */
+/* populating properties of patch for left NS's around */
 static void populate_left_NS_around_sphere(Grid_T *const grid,const unsigned pn)
 {
   Patch_T *const patch = grid->patch[pn];
@@ -464,7 +464,7 @@ static void populate_left_NS_around_sphere(Grid_T *const grid,const unsigned pn)
     
 }
 
-/* populating properties of patch for right NS's surrounding */
+/* populating properties of patch for right NS's around */
 static void populate_right_NS_around_sphere(Grid_T *const grid,const unsigned pn)
 {
   Patch_T *const patch = grid->patch[pn];

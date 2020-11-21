@@ -222,7 +222,7 @@ void obs_plan(Observable_T *obs)
     unsigned p = 0;
     unsigned n,N,ijk,nn;
     
-    N = 6/* 6 sides for surroundings */;
+    N = 6/* 6 sides for arounds */;
         
     patches = calloc(N,sizeof(*patches));
     IsNull(patches);  
@@ -236,7 +236,7 @@ void obs_plan(Observable_T *obs)
     
     /* first collect all of the patches required */
     p = 0;
-    /* surroundings for surface integrals */
+    /* arounds for surface integrals */
     patches[p++] = GetPatch("right_BH_around_up",grid);
     patches[p++] = GetPatch("right_BH_around_down",grid);
     patches[p++] = GetPatch("right_BH_around_left",grid);
@@ -310,7 +310,7 @@ void obs_plan(Observable_T *obs)
     unsigned p = 0;
     unsigned n,N,ijk,nn;
     
-    N = 6/* 6 sides for surroundings */;
+    N = 6/* 6 sides for arounds */;
         
     patches = calloc(N,sizeof(*patches));
     IsNull(patches);  
@@ -324,7 +324,7 @@ void obs_plan(Observable_T *obs)
     
     /* first collect all of the patches required */
     p = 0;
-    /* surroundings for surface integrals */
+    /* arounds for surface integrals */
     patches[p++] = GetPatch("right_BH_around_up",grid);
     patches[p++] = GetPatch("right_BH_around_down",grid);
     patches[p++] = GetPatch("right_BH_around_left",grid);
@@ -392,7 +392,7 @@ void obs_plan(Observable_T *obs)
     unsigned p = 0;
     unsigned n,N,ijk,nn;
     
-    N = 6/* 6 sides for surroundings */;
+    N = 6/* 6 sides for arounds */;
         
     patches = calloc(N,sizeof(*patches));
     IsNull(patches);  
@@ -406,7 +406,7 @@ void obs_plan(Observable_T *obs)
     
     /* first collect all of the patches required */
     p = 0;
-    /* surroundings for surface integrals */
+    /* arounds for surface integrals */
     patches[p++] = GetPatch("left_NS_around_up",grid);
     patches[p++] = GetPatch("left_NS_around_down",grid);
     patches[p++] = GetPatch("left_NS_around_left",grid);
@@ -474,7 +474,7 @@ void obs_plan(Observable_T *obs)
     unsigned p = 0;
     unsigned n,N,ijk,nn;
     
-    N = 10/* 10 sides for surroundings */;
+    N = 10/* 10 sides for arounds */;
         
     patches = calloc(N,sizeof(*patches));
     IsNull(patches);  
@@ -488,7 +488,7 @@ void obs_plan(Observable_T *obs)
     
     /* first collect all of the patches required */
     p = 0;
-    /* surroundings for surface integrals */
+    /* arounds for surface integrals */
     patches[p++] = GetPatch("left_NS_around_up",grid);
     patches[p++] = GetPatch("left_NS_around_down",grid);
     patches[p++] = GetPatch("left_NS_around_left",grid);
@@ -567,8 +567,8 @@ void obs_plan(Observable_T *obs)
       Error0("No outermost patch for integration.\n");
     N = 6*N_outermost/* outermosts */ +
         4/* 4 filling boxes */        +
-        19/* box+NS+surroundings for vol integral */ +
-        6/* 6 sides for surroundings for area integral */;
+        19/* box+NS+arounds for vol integral */ +
+        6/* 6 sides for arounds for area integral */;
     patches = calloc(N,sizeof(*patches));
     IsNull(patches);  
     
@@ -629,7 +629,7 @@ void obs_plan(Observable_T *obs)
     patches[p++] = GetPatch("right_BH_around_back",grid);
     patches[p++] = GetPatch("right_BH_around_front",grid);
     
-    /* surroundings for surface integrals. NOTE: the order matters */
+    /* arounds for surface integrals. NOTE: the order matters */
     surface_index = p;
     patches[p++] = GetPatch("right_BH_around_up",grid);
     patches[p++] = GetPatch("right_BH_around_down",grid);
@@ -700,7 +700,7 @@ void obs_plan(Observable_T *obs)
     unsigned p = 0;
     unsigned n,N,ijk,nn;
     
-    N = 6/* 6 sides for surroundings for area integral */;
+    N = 6/* 6 sides for arounds for area integral */;
     patches = calloc(N,sizeof(*patches));
     IsNull(patches);  
     
@@ -713,7 +713,7 @@ void obs_plan(Observable_T *obs)
     
     /* first collect all of the patches required */
     p = 0;
-    /* surroundings for surface integrals. */
+    /* arounds for surface integrals. */
     patches[p++] = GetPatch("right_BH_around_up",grid);
     patches[p++] = GetPatch("right_BH_around_down",grid);
     patches[p++] = GetPatch("right_BH_around_left",grid);
@@ -856,7 +856,7 @@ void obs_plan(Observable_T *obs)
     Error0(NO_OPTION);
 }
 
-/* populating normal outward vector for surrounding patches according to the given dir 
+/* populating normal outward vector for around patches according to the given dir 
 // NOTE: the normaliztion is respect to the physical metric gamma_{ij} */
 static void n_physical_metric_around(struct items_S *const adm,const Dd_T dir)
 {
@@ -901,7 +901,7 @@ n_U2[ijk] + gConf_D2D2[ijk]*pow(n_U2[ijk], 2));
   adm->n_U2 = n_U2;
 }
 
-/* populating normal outward vector for surrounding patches according to the given dir 
+/* populating normal outward vector for around patches according to the given dir 
 // NOTE: the normaliztion is respect to the conformal metric gamma_{ij} */
 static void n_conformal_metric_around(struct items_S *const adm,const Dd_T dir)
 {
@@ -1480,7 +1480,7 @@ void obs_define_spin_integral(double S[3],Grid_T *const grid,const char *const k
   /* NS spins */
   if (strcmp_i(kind,"NS"))
   {
-     /* surroundings for surface integrals */
+     /* arounds for surface integrals */
     patches[p++] = GetPatch("left_NS_around_up",grid);
     patches[p++] = GetPatch("left_NS_around_down",grid);
     patches[p++] = GetPatch("left_NS_around_left",grid);
@@ -1494,7 +1494,7 @@ void obs_define_spin_integral(double S[3],Grid_T *const grid,const char *const k
   /* BH spins */
   if (strcmp_i(kind,"BH"))
   {
-    /* surroundings for surface integrals */
+    /* arounds for surface integrals */
     patches[p++] = GetPatch("right_BH_around_up",grid);
     patches[p++] = GetPatch("right_BH_around_down",grid);
     patches[p++] = GetPatch("right_BH_around_left",grid);
@@ -1621,7 +1621,7 @@ obs_define_spin_akv
   /* NS spins */
   if (strcmp_i(kind,"NS"))
   {
-     /* surroundings for surface integrals */
+     /* arounds for surface integrals */
     patches[p++] = GetPatch("left_NS_around_up",grid);
     patches[p++] = GetPatch("left_NS_around_down",grid);
     patches[p++] = GetPatch("left_NS_around_left",grid);
@@ -1632,7 +1632,7 @@ obs_define_spin_akv
   /* BH spins */
   if (strcmp_i(kind,"BH"))
   {
-    /* surroundings for surface integrals */
+    /* arounds for surface integrals */
     patches[p++] = GetPatch("right_BH_around_up",grid);
     patches[p++] = GetPatch("right_BH_around_down",grid);
     patches[p++] = GetPatch("right_BH_around_left",grid);

@@ -1075,7 +1075,7 @@ static void adjust_NS_center_draw_enthalpy(Grid_T *const grid)
       x[2] = patch->node[ijk]->x[2]+R[2];
       assert(find_X_and_patch(x,hint,grid,Xp,&patchp));
       
-      /* if point x located outside of NS surrounding */
+      /* if point x located outside of NS around */
       if (!IsItNSPatch(patchp) && !IsItNSSurroundingPatch(patchp))
         shifted_enthalpy[ijk] = 1;
       else
@@ -2487,7 +2487,7 @@ static void interpolate_and_initialize_to_next_grid(Grid_T *const grid_next,Grid
       }
     }/* end of for (p = 0; p < np; ++p) */
     
-    /* interpolating from the NS and surrounding patches: */
+    /* interpolating from the NS and around patches: */
     Patch_T *NS_patches[13] = {0};/* 2*6 cubed spherical + 1 box*/
     unsigned count = 0;
     for (p = 0; p < np; ++p)
@@ -2642,7 +2642,7 @@ static void interpolate_and_initialize_to_next_grid(Grid_T *const grid_next,Grid
       }
     }/* end of for (p = 0; p < np; ++p) */
     
-    /* interpolating from the NS, BH surrounding patches: */
+    /* interpolating from the NS, BH around patches: */
     Patch_T *NS_BH_patches[19] = {0};/* 3*6 cubed spherical + 1 box*/
     unsigned count = 0;
     for (p = 0; p < np; ++p)
@@ -3557,7 +3557,7 @@ static void find_XYZ_and_patch_of_theta_phi_BH_CS(double *const X,Patch_T **cons
   Flag_T found_flg = NO;
   unsigned p;
   
-  X[2] = 0;/* since we are on BH surface from BH surrounding side */
+  X[2] = 0;/* since we are on BH surface from BH around side */
   
   /* check all of BH patches in which (x,y,z) and 
   // (X,Y,Z) and (theta,phi) are consistent */
@@ -3793,7 +3793,7 @@ static void extrapolate_insideBH_CS_linear(Grid_T *const grid)
     if (!IsItInsideBHPatch(patch))
       continue;
       
-    Patch_T *BHsur_patch;/* corresponding bh surrounding patch */
+    Patch_T *BHsur_patch;/* corresponding bh around patch */
     const unsigned *n = patch->n;
     double x[3],X[3],N[3];
     double rh,r,R;
@@ -3829,7 +3829,7 @@ static void extrapolate_insideBH_CS_linear(Grid_T *const grid)
       continue;
     }
     
-    /* find the corresponding BH surrounding patch to be used for extrapolation */
+    /* find the corresponding BH around patch to be used for extrapolation */
     char stem[1000];
     char *affix = regex_find("_[[:alpha:]]{2,5}$",patch->name);/* finding the side of the patch */
     assert(affix);
@@ -4011,7 +4011,7 @@ static void extrapolate_insideBH_CS_C0_Ylm(Grid_T *const grid,const char *const 
   // to extrapolate the field outside the BH. */
   FOR_ALL_PATCHES(p,grid)
   {
-    /* surrounding patch */
+    /* around patch */
     Patch_T *patch = grid->patch[p];
     const unsigned nn = patch->nn;
     Field_T *field;
@@ -4048,9 +4048,9 @@ static void extrapolate_insideBH_CS_C0_Ylm(Grid_T *const grid,const char *const 
 #undef ij
 #endif
 
-/* extrapolating phi, dphi and W in NS surrounding coords 
+/* extrapolating phi, dphi and W in NS around coords 
 // in case they are needed for interpolation to the next grid
-// or in calculation of enthalpy at NS surrounding patches.
+// or in calculation of enthalpy at NS around patches.
 // for extrapolation we demand:
 // the phi field and its normal derivative at the NS surface be
 // continues and it decreases exponentially, i.e. phi = a*exp(-att*(r-r0))+b.
@@ -4065,7 +4065,7 @@ static void extrapolate_outsideNS_CS_exp_continuity_method(Grid_T *const grid)
   
   FOR_ALL_PATCHES(p,grid)
   {
-    /* surrounding patch */
+    /* around patch */
     Patch_T *patch = grid->patch[p];
     const unsigned *n = patch->n;
     const unsigned nn = patch->nn;
@@ -4332,7 +4332,7 @@ static void extrapolate_outsideNS_CS_Ylm_method(Grid_T *const grid,const char *c
   // to extrapolate the field outside the NS. */
   FOR_ALL_PATCHES(p,grid)
   {
-    /* surrounding patch */
+    /* around patch */
     Patch_T *patch = grid->patch[p];
     const unsigned nn = patch->nn;
     Field_T *field;
@@ -4406,9 +4406,9 @@ static double interpolate_Clm_r_Ylm_3d(double *const realClm,double *const imagC
   return interp;
 }
 
-/* extrapolating phi, dphi and W in NS surrounding coords 
+/* extrapolating phi, dphi and W in NS around coords 
 // in case they are needed for interpolation to the next grid
-// or in calculation of enthalpy at NS surrounding patches.
+// or in calculation of enthalpy at NS around patches.
 // for extrapolation we demand:
 // the fields spread out in the same fashion as it is changing toward 
 // the NS sarface. what we have :
@@ -4418,9 +4418,9 @@ static double interpolate_Clm_r_Ylm_3d(double *const realClm,double *const imagC
 // a = (r_max-r2)/(r2-r1)
 // b = (r1*r_max-Pow2(r2))/(r1-r2)
 // r_out = a*r_in + b, where (r_in) r_out is r (inside)outside NS and
-// r_max is the max radius in NS surrounding patch.
+// r_max is the max radius in NS around patch.
 // in effect, it means we emulate the trend of the fields inside of NS
-// from r1 to r2 in NS surrounding, from r2 to r_max. */
+// from r1 to r2 in NS around, from r2 to r_max. */
 static void extrapolate_outsideNS_CS_slop_method(Grid_T *const grid)
 {
   const double FACTOR = 0.9;/* r1 = FACTOR*r2 */
@@ -4430,7 +4430,7 @@ static void extrapolate_outsideNS_CS_slop_method(Grid_T *const grid)
   
   FOR_ALL_PATCHES(p,grid)
   {
-    /* surrounding patch */
+    /* around patch */
     Patch_T *patch = grid->patch[p];
     if (!IsItNSSurroundingPatch(patch))
       continue;
@@ -4491,7 +4491,7 @@ static void extrapolate_outsideNS_CS_slop_method(Grid_T *const grid)
     {
       for (j = 0; j < n[1]; ++j)
       {
-        /* calculate r_max at NS surrounding patch */
+        /* calculate r_max at NS around patch */
         ijk = L(n,i,j,n[2]-1);
         x[0] = patch->node[ijk]->x[0]-patch->c[0];
         x[1] = patch->node[ijk]->x[1]-patch->c[1];
@@ -4652,7 +4652,7 @@ static void extrapolate_outsideNS_CS_slop_method(Grid_T *const grid)
     dphi_D1->v = Partial_Derivative(phi_field,"y");
     dphi_D0->v = Partial_Derivative(phi_field,"x");
     
-    /* populating enthalpy and its derivatives in NS surroundings */
+    /* populating enthalpy and its derivatives in NS arounds */
     if (1)/* decrease enthalpy exponentially from the NS surface */
     {
       /* note: patch refers to NS_around patch */
@@ -5467,7 +5467,7 @@ static Grid_T *creat_bbn_grid_CS(struct Grid_Params_S *const GridParams)
   sprintf(par,"grid%u_left_central_box_size_c",gn);
   Psetd(par,box_size_l);
   
-  /* surrounding box length */
+  /* around box length */
   sprintf(par,"grid%u_around_box_length",gn);
   Psetd(par,S);
   
@@ -5664,7 +5664,7 @@ static Grid_T *creat_bbn_grid_CS(struct Grid_Params_S *const GridParams)
     /* since the resolution is not changed copy the geometry */
     move_geometry(grid_next,grid_prev);
     
-    /* since the geometry BH surrounding patches are pristine
+    /* since the geometry BH around patches are pristine
     // move patch->solving_man->jacobian */
     FOR_ALL_PATCHES(p,grid_next)
     {
@@ -6818,7 +6818,7 @@ static void extrapolate_fluid_fields_outsideNS(Grid_T *const grid)
       /* calculating the derivatives of the enthalpy */
       FOR_ALL_PATCHES(p,grid)
       {
-        /* surrounding patch */
+        /* around patch */
         Patch_T *patch = grid->patch[p];
         if (!IsItNSSurroundingPatch(patch))
           continue;

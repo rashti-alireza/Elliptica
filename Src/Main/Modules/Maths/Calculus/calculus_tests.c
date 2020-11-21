@@ -545,8 +545,8 @@ static int fdV_spectral(Grid_T *const grid)
     printf("=> numeric = %e, analytic = %e, diff. = %e\n",
            numeric,analytic,numeric-analytic);
            
-    // testing NS surrounding: 
-    printf("\n--> Integral{f(x)dV}|at NS surrounding section:\n");
+    // testing NS around: 
+    printf("\n--> Integral{f(x)dV}|at NS around section:\n");
     
     r = Pgetd("NS_radius");
     analytic = pow(Pgetd("BH_NS_separation"),3)-4./3.*M_PI*pow(r,3);

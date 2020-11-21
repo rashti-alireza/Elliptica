@@ -397,7 +397,7 @@ void fill_patches_Split_CubedSpherical_grid(Grid_T *const grid)
 }
 
 /* populating properties of a patch for a split cubed spherical object,
-// like: BH, NS, surroundings, outermost. */
+// like: BH, NS, arounds, outermost. */
 void 
 populate_CS_patch_SplitCS
   (
@@ -1886,7 +1886,7 @@ static void populate_right_NS(Grid_T *const grid,const unsigned pn)
   }
 }
 
-/* populating properties of patch for right NS surrounding */
+/* populating properties of patch for right NS around */
 static void populate_right_NS_around(Grid_T *const grid,const unsigned pn)
 {
   unsigned p;/* patch */
@@ -2080,7 +2080,7 @@ static void populate_right_NS_around(Grid_T *const grid,const unsigned pn)
   }
 }
 
-/* populating properties of patch for right BH surrounding */
+/* populating properties of patch for right BH around */
 static void populate_right_BH_around(Grid_T *const grid,const unsigned pn)
 {
   unsigned p;/* patch */
@@ -2274,7 +2274,7 @@ static void populate_right_BH_around(Grid_T *const grid,const unsigned pn)
   }
 }
 
-/* populating properties of patch for left NS surrounding */
+/* populating properties of patch for left NS around */
 static void populate_left_NS_around(Grid_T *const grid,const unsigned pn)
 {
   unsigned p;/* patch */
@@ -2468,7 +2468,7 @@ static void populate_left_NS_around(Grid_T *const grid,const unsigned pn)
   }
 }
 
-/* populating properties of patch for central BH surrounding */
+/* populating properties of patch for central BH around */
 static void populate_central_BH_around(Grid_T *const grid,const unsigned pn)
 {
   unsigned p;/* patch */
@@ -2662,7 +2662,7 @@ static void populate_central_BH_around(Grid_T *const grid,const unsigned pn)
   }
 }
 
-/* populating properties of patch for central NS surrounding */
+/* populating properties of patch for central NS around */
 static void populate_central_NS_around(Grid_T *const grid,const unsigned pn)
 {
   unsigned p;/* patch */
@@ -3661,7 +3661,7 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
     }/* for (d0 = 0; d0 < Nsd[0]; d0++) */
   }
   
-  /* populate parameters surroundings of objects. */
+  /* populate parameters arounds of objects. */
   for (obj_n = 0; obj_n < Num_Obj; ++obj_n)
   {
     /* note (X,Y,Z) in [-1,1]x[-1,1]x[0,1]. */
@@ -4712,7 +4712,7 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
     }/* for (d0 = 0; d0 < Nsd[0]; d0++) */
   }
   
-  /* populate parameters surroundings of objects. */
+  /* populate parameters arounds of objects. */
   for (obj_n = 0; obj_n < Num_Obj; ++obj_n)
   {
     /* note (X,Y,Z) in [-1,1]x[-1,1]x[0,1]. */
