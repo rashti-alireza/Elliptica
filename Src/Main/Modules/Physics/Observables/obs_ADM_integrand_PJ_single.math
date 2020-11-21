@@ -54,10 +54,10 @@ Declare =
  (obj = Field,name = _A_UiUj, rank = UU, C_macro);
 
  # conformal metric 
- (obj = Field,name = _gamma, rank = DD, C_macro);
+ (obj = Field,name = gConf, rank = DD, C_macro);
 
  # conformal metric inverse
- (obj = Field,name = _gammaI, rank = UU, C_macro);
+ (obj = Field,name = igConf, rank = UU, C_macro);
 
  # conformal factor
  (obj = Field,name = psi, rank = 0, C_macro);
@@ -85,8 +85,8 @@ Declare =
 }
 # symmetries:
 Symm[_A_UiUj(i,j)  = _A_UiUj(j,i)];
-Symm[_gammaI(i,j)  = _gammaI(j,i)];
-Symm[_gamma(i,j)   = _gamma(j,i)];
+Symm[igConf(i,j)  = igConf(j,i)];
+Symm[gConf(i,j)   = gConf(j,i)];
 #Symm[_Gamma(i,j,k) = _Gamma(i,k,j)];
 
 ``
@@ -112,13 +112,13 @@ Symm[_gamma(i,j)   = _gamma(j,i)];
 
        # P^{ij} = psi^(-10) \bar A^{ij} -2/3 K psi^{-4} \bar\gamma^{ij}
        # P^{ij}*n^{k}*\gamma_{jk} => cancels psi^(-4) so don't write it:
-       P(i,j) = _A_UiUj(i,j)/psi6-(2/3)*K*_gammaI(i,j);
+       P(i,j) = _A_UiUj(i,j)/psi6-(2/3)*K*igConf(i,j);
        Symm[P(i,j)  = P(j,i)];
 
 # lower the index for better result:
-       Pn(i)  = P(l,j)*n(k)*_gamma(-j,-k)*_gamma(-l,i)*psi4;
+       Pn(i)  = P(l,j)*n(k)*gConf(-j,-k)*gConf(-l,i)*psi4;
 # the following won't give a good value for single BH!
-#      Pn(i)  = P(l,j)*n(k)*_gamma(-j,-k)*KD(-l,i);
+#      Pn(i)  = P(l,j)*n(k)*gConf(-j,-k)*KD(-l,i);
 
        xiP(i) = EIJK(i,j,k)*xi(-j)*Pn(-k);
 

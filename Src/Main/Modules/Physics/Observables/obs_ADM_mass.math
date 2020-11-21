@@ -42,10 +42,10 @@ Declare =
  (obj = Field,name = ddpsi, rank = DD, C_macro);
 
  # conformal metric 
- #(obj = Field,name = _gamma, rank = DD, C_macro);
+ #(obj = Field,name = gConf, rank = DD, C_macro);
 
  # conformal metric inverse
- (obj = Field,name = _gammaI, rank = UU, C_macro);
+ (obj = Field,name = igConf, rank = UU, C_macro);
 
  # Christoffer symbol value
  (obj = Field,name = _Gamma, rank = UDD, C_macro);
@@ -63,7 +63,7 @@ Declare =
  (obj = variable,name = att, none);
 }
 # symmetries:
-Symm[_gammaI(i,j)  = _gammaI(j,i)];
+Symm[igConf(i,j)  = igConf(j,i)];
 Symm[ddpsi(i,j)    = ddpsi(j,i)];
 Symm[_Gamma(i,j,k) = _Gamma(i,k,j)];
 
@@ -121,8 +121,8 @@ Symm[_Gamma(i,j,k) = _Gamma(i,k,j)];
 `      DEF_RELATIVE_z`
 `      DEF_RELATIVE_r`
 `      double att = r > CUTOFF ? 0:1;`
-       M_v = _gammaI(i,j)*ddpsi(-i,-j) -\
-             _gammaI(-i,-j)*_Gamma(l,i,j)*dpsi(-l);
+       M_v = igConf(i,j)*ddpsi(-i,-j) -\
+             igConf(-i,-j)*_Gamma(l,i,j)*dpsi(-l);
 `      ADM_mass_integrand_V[ijk] = M_v*att;`
 `      }`
 `      }`
