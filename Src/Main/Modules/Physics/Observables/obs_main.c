@@ -27,7 +27,7 @@
 // free_observable(obs);
 */
 
-#include "observable_quantities.h"
+#include "obs_main.h"
 
 /* initialzing stuct Observable_T */
 Observable_T *init_observable(void *grid,void (*plan_items)(struct OBSERVABLE_T *obs),void (*free_items)(struct OBSERVABLE_T *obs))

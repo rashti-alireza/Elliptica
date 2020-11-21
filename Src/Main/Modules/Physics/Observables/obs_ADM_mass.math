@@ -1,0 +1,148 @@
+# computing ADM Mass for the given configuration.
+
+# Manifold or grid Dimension
+Dimension = 3;
+
+# point on manifold shown by:
+Point = ijk;
+
+C_macro  = READ_v(name);
+C_macro2 = add_and_get_field(name);
+
+`#include "bbn_headers.h"`
+``
+`#define add_and_get_field(name) \`
+         `  if (_Ind(#name) >= 0)\`# means if it exists already
+         `  {DECLARE_FIELD(name);REMOVE_FIELD(name);}\`
+         `  ADD_FIELD(name);REALLOC_v_WRITE_v(name);`
+``
+``
+`double bbn_ADM_mass(Observable_T *const obs);`
+`double bbn_ADM_mass(Observable_T *const obs)`
+`{`
+`  double adm_mass = 0;`
+`  struct items_S **adm = obs->items;`
+`  const unsigned N = obs->Nitems;`
+`  const double CUTOFF = 1E3;`
+`  unsigned p;`
+``
+`  for(p = 0; p < N; ++p)`
+`  {`
+`  Patch_T *patch = adm[p]->patch;`
+``
+Declare = 
+{
+ # conformal factor
+ #(obj = Field,name = psi, rank = 0, C_macro);
+
+ # conformal factor first derivative 
+ (obj = Field,name = dpsi, rank = D, C_macro);
+
+ # conformal factor second derivative 
+ (obj = Field,name = ddpsi, rank = DD, C_macro);
+
+ # conformal metric 
+ #(obj = Field,name = _gamma, rank = DD, C_macro);
+
+ # conformal metric inverse
+ (obj = Field,name = _gammaI, rank = UU, C_macro);
+
+ # Christoffer symbol value
+ (obj = Field,name = _Gamma, rank = UDD, C_macro);
+
+ # normal vector components
+ (obj = Field,name = n, rank = U, none);
+
+ # integrand P
+ (obj = Field,name = ADM_mass_integrand_S, rank = 0, none);
+
+ # integrand G
+ (obj = Field,name = ADM_mass_integrand_V, rank = 0, none);
+
+ # attenuation factor
+ (obj = variable,name = att, none);
+}
+# symmetries:
+Symm[_gammaI(i,j)  = _gammaI(j,i)];
+Symm[ddpsi(i,j)    = ddpsi(j,i)];
+Symm[_Gamma(i,j,k) = _Gamma(i,k,j)];
+
+`    unsigned nn = patch->nn;`
+`    unsigned ijk;`
+``
+# populating the integrands:
+
+# if this is surface integral.
+`    if (adm[p]->surface_integration_flg)`
+`    {`
+`      ADD_FIELD(ADM_mass_integrand_S)`
+`      {` # make it local variable
+`      const double *n_U0 = adm[p]->n_U0;`
+`      const double *n_U1 = adm[p]->n_U1;`
+`      const double *n_U2 = adm[p]->n_U2;`
+`      REALLOC_v_WRITE_v(ADM_mass_integrand_S)`
+`      for (ijk = 0; ijk < nn; ++ijk)`
+`      {`
+       M_s = n(i)*dpsi(-i);
+`      ADM_mass_integrand_S[ijk] = M_s;`
+`      }`
+`      }`
+`      DECLARE_FIELD(ADM_mass_integrand_S)`
+`      Integration_T *I = init_integration();`
+`      I->type = "Integral{f(x)dS},Spectral";`
+`      I->Spectral->f = ADM_mass_integrand_S;`
+`      I->g00 = adm[p]->g00;`
+`      I->g01 = adm[p]->g01;`
+`      I->g02 = adm[p]->g02;`
+`      I->g11 = adm[p]->g11;`
+`      I->g12 = adm[p]->g12;`
+`      I->g22 = adm[p]->g22;`
+`      I->Spectral->X_surface = adm[p]->X_surface;`
+`      I->Spectral->Y_surface = adm[p]->Y_surface;`
+`      I->Spectral->Z_surface = adm[p]->Z_surface;`
+`      I->Spectral->I         = adm[p]->I;`
+`      I->Spectral->J         = adm[p]->J;`
+`      I->Spectral->K         = adm[p]->K;`
+`      plan_integration(I);`
+`      adm_mass += execute_integration(I);`
+`      free_integration(I);`
+`      REMOVE_FIELD(ADM_mass_integrand_S)`
+`    }`
+# if this is volume integral.
+`    else`
+`    {`
+`      ADD_FIELD(ADM_mass_integrand_V)`
+`      {` # make it local variable
+`      REALLOC_v_WRITE_v(ADM_mass_integrand_V)`
+`      for (ijk = 0; ijk < nn; ++ijk)`
+`      {`
+`      DEF_RELATIVE_x`
+`      DEF_RELATIVE_y`
+`      DEF_RELATIVE_z`
+`      DEF_RELATIVE_r`
+`      double att = r > CUTOFF ? 0:1;`
+       M_v = _gammaI(i,j)*ddpsi(-i,-j) -\
+             _gammaI(-i,-j)*_Gamma(l,i,j)*dpsi(-l);
+`      ADM_mass_integrand_V[ijk] = M_v*att;`
+`      }`
+`      }`
+`      DECLARE_FIELD(ADM_mass_integrand_V)`
+`      Integration_T *I = init_integration();`
+`      I->type = "Integral{f(x)dV},Spectral";`
+`      I->Spectral->f = ADM_mass_integrand_V;`
+`      I->g00 = adm[p]->g00;`
+`      I->g01 = adm[p]->g01;`
+`      I->g02 = adm[p]->g02;`
+`      I->g11 = adm[p]->g11;`
+`      I->g12 = adm[p]->g12;`
+`      I->g22 = adm[p]->g22;`
+`      plan_integration(I);`
+`      adm_mass += execute_integration(I);`
+`      free_integration(I);`
+`      REMOVE_FIELD(ADM_mass_integrand_V)`
+`    }`
+``
+`  }`# end of for(p = 0; p < N; ++p)
+`  adm_mass /= (-2*M_PI);`
+`  return adm_mass;`
+`}`
