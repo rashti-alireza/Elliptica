@@ -41,7 +41,7 @@ typedef enum FLAG_T
   SR_T_CS,/* surrounding type in cubed spherical */
   OT_T1_CS,/* outermost type1 in cubed spherical */
   OT_T2_CS,/* outermost type2 in cubed spherical */
-  OJ_T_SCS,/* object type in split cubed spherical eg:NS/BH_surrounding */
+  OJ_T_SCS,/* object type in split cubed spherical eg:NS/BH_around */
   OT_T_SCS,/* outermost type in split cubed spherical (compactified) */
   NOT_INITIALIZE
 }Flag_T;

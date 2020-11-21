@@ -3029,7 +3029,7 @@ static void find_NS_surface_Ylm_SD_CS(Grid_T *const grid,struct Grid_Params_S *c
         /* finding the juxtapose patch of this NS patch */
         affix = regex_find("_[[:alpha:]]{2,5}$",patch->name);
         assert(affix);
-        sprintf(stem,"left_NS_surrounding%s",affix);
+        sprintf(stem,"left_NS_around%s",affix);
         free(affix);
         h_patch = GetPatch(stem,grid);
       }
@@ -3269,7 +3269,7 @@ static void find_NS_surface_Ylm_bisect_CS(Grid_T *const grid,struct Grid_Params_
         /* finding the juxtapose patch of this NS patch */
         affix = regex_find("_[[:alpha:]]{2,5}$",patch->name);
         assert(affix);
-        sprintf(stem,"left_NS_surrounding%s",affix);
+        sprintf(stem,"left_NS_around%s",affix);
         free(affix);
         h_patch = GetPatch(stem,grid);
       }
@@ -3833,7 +3833,7 @@ static void extrapolate_insideBH_CS_linear(Grid_T *const grid)
     char stem[1000];
     char *affix = regex_find("_[[:alpha:]]{2,5}$",patch->name);/* finding the side of the patch */
     assert(affix);
-    sprintf(stem,"right_BH_surrounding%s",affix);
+    sprintf(stem,"right_BH_around%s",affix);
     free(affix);
     BHsur_patch = GetPatch(stem,grid);
     
@@ -4655,7 +4655,7 @@ static void extrapolate_outsideNS_CS_slop_method(Grid_T *const grid)
     /* populating enthalpy and its derivatives in NS surroundings */
     if (1)/* decrease enthalpy exponentially from the NS surface */
     {
-      /* note: patch refers to NS_surrounding patch */
+      /* note: patch refers to NS_around patch */
       
       REALLOC_v_WRITE_v(enthalpy)
       /* find the corresponding NS patch to be used for extrapolation */
@@ -5468,7 +5468,7 @@ static Grid_T *creat_bbn_grid_CS(struct Grid_Params_S *const GridParams)
   Psetd(par,box_size_l);
   
   /* surrounding box length */
-  sprintf(par,"grid%u_surrounding_box_length",gn);
+  sprintf(par,"grid%u_around_box_length",gn);
   Psetd(par,S);
   
   /* right box. NOTE: this is needed when we fill the excision region */

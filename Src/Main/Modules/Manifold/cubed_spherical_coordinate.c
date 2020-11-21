@@ -12,7 +12,7 @@ void fill_patches_SBH_CubedSpherical_grid(Grid_T *const grid)
   unsigned i,pn;
   
   pn = 0;
-  populate_central_BH_surrounding(grid,pn);
+  populate_central_BH_around(grid,pn);
   pn += 6; /* +6 cubed sphere */
   
   for (i = 0; i < N_outermost_split; i++)
@@ -33,7 +33,7 @@ void fill_patches_SNS_CubedSpherical_grid(Grid_T *const grid)
   populate_central_NS_central_box(grid,pn++);/* +1 */
   populate_central_NS(grid,pn);
   pn += 6; /* +6 cubed sphere */
-  populate_central_NS_surrounding(grid,pn);
+  populate_central_NS_around(grid,pn);
   pn += 6; /* +6 cubed sphere */
   
   for (i = 0; i < N_outermost_split; i++)
@@ -54,7 +54,7 @@ void fill_patches_SNS_CubedSpherical_Box_grid(Grid_T *const grid)
   populate_left_NS_central_box(grid,pn++);/* +1 */
   populate_left_NS(grid,pn);
   pn += 6; /* +6 cubed sphere */
-  populate_left_NS_surrounding(grid,pn);
+  populate_left_NS_around(grid,pn);
   pn += 6; /* +6 cubed sphere */
   populate_right_box_sns(grid,pn);
   pn += 1; /* +1 box */
@@ -81,12 +81,12 @@ void fill_patches_BNS_CubedSpherical_grid(Grid_T *const grid)
   populate_left_NS_central_box(grid,pn++);/* +1 */
   populate_left_NS(grid,pn);
   pn += 6; /* +6 cubed sphere */
-  populate_left_NS_surrounding(grid,pn);
+  populate_left_NS_around(grid,pn);
   pn += 6; /* +6 cubed sphere */
   populate_right_NS_central_box(grid,pn++);/*+1 */
   populate_right_NS(grid,pn);
   pn += 6; /* +6 cubed sphere */
-  populate_right_NS_surrounding(grid,pn);
+  populate_right_NS_around(grid,pn);
   pn += 6; /* +6 cubed sphere */
   populate_filling_box_CubedSpherical(grid,pn++,UP);
   populate_filling_box_CubedSpherical(grid,pn++,DOWN);
@@ -111,9 +111,9 @@ void fill_patches_BBN_CubedSpherical_grid(Grid_T *const grid)
   populate_left_NS_central_box(grid,pn++);/* +1 */
   populate_left_NS(grid,pn);
   pn += 6; /* +6 cubed sphere */
-  populate_left_NS_surrounding(grid,pn);
+  populate_left_NS_around(grid,pn);
   pn += 6; /* +6 cubed sphere */
-  populate_right_BH_surrounding(grid,pn);
+  populate_right_BH_around(grid,pn);
   pn += 6; /* +6 cubed sphere */
   populate_filling_box_CubedSpherical(grid,pn++,UP);
   populate_filling_box_CubedSpherical(grid,pn++,DOWN);
@@ -171,8 +171,8 @@ void fill_patches_Split_CubedSpherical_grid(Grid_T *const grid)
     
     /* cubed sphericals */
     populate_CS_patch_SplitCS(grid,"NS",ns_side,&pn);
-    populate_CS_patch_SplitCS(grid,"NS_surrounding",ns_side,&pn);
-    populate_CS_patch_SplitCS(grid,"BH_surrounding",bh_side,&pn);
+    populate_CS_patch_SplitCS(grid,"NS_around",ns_side,&pn);
+    populate_CS_patch_SplitCS(grid,"BH_around",bh_side,&pn);
     
     if (!EQL(r_outermost,0))
       populate_CS_patch_SplitCS(grid,"outermost",NONE,&pn);
@@ -185,10 +185,10 @@ void fill_patches_Split_CubedSpherical_grid(Grid_T *const grid)
     }
     else
     {
-      /* set innerB for BH_surrounding */
+      /* set innerB for BH_around */
       unsigned nbh = 0,p;
       Patch_T **patches = 
-        collect_patches(grid,"BH_surrounding_surface",bh_side,&nbh);
+        collect_patches(grid,"BH_around_surface",bh_side,&nbh);
       
       for (p = 0; p < nbh; ++p)
       {
@@ -226,9 +226,9 @@ void fill_patches_Split_CubedSpherical_grid(Grid_T *const grid)
     
     /* cubed sphericals */
     populate_CS_patch_SplitCS(grid,"NS1",ns_side1,&pn);
-    populate_CS_patch_SplitCS(grid,"NS1_surrounding",ns_side1,&pn);
+    populate_CS_patch_SplitCS(grid,"NS1_around",ns_side1,&pn);
     populate_CS_patch_SplitCS(grid,"NS2",ns_side2,&pn);
-    populate_CS_patch_SplitCS(grid,"NS2_surrounding",ns_side2,&pn);
+    populate_CS_patch_SplitCS(grid,"NS2_around",ns_side2,&pn);
     
     if (!EQL(r_outermost,0))
       populate_CS_patch_SplitCS(grid,"outermost",NONE,&pn);
@@ -271,8 +271,8 @@ void fill_patches_Split_CubedSpherical_grid(Grid_T *const grid)
     populate_box_patch_SplitCS(grid,"filling_box",FRONT,&pn,"filling_box");
     
     /* cubed sphericals */
-    populate_CS_patch_SplitCS(grid,"BH1_surrounding",bh_side1,&pn);
-    populate_CS_patch_SplitCS(grid,"BH2_surrounding",bh_side2,&pn);
+    populate_CS_patch_SplitCS(grid,"BH1_around",bh_side1,&pn);
+    populate_CS_patch_SplitCS(grid,"BH2_around",bh_side2,&pn);
     
     if (!EQL(r_outermost,0))
       populate_CS_patch_SplitCS(grid,"outermost",NONE,&pn);
@@ -287,12 +287,12 @@ void fill_patches_Split_CubedSpherical_grid(Grid_T *const grid)
     }
     else
     {
-      /* set innerB for BH_surrounding */
+      /* set innerB for BH_around */
       unsigned nbh = 0,p;
       Patch_T **patches = 0;
      
       /* BH1 */
-      patches = collect_patches(grid,"BH1_surrounding_surface",bh_side1,&nbh);
+      patches = collect_patches(grid,"BH1_around_surface",bh_side1,&nbh);
       for (p = 0; p < nbh; ++p)
       {
         Patch_T *patch = patches[p];
@@ -301,7 +301,7 @@ void fill_patches_Split_CubedSpherical_grid(Grid_T *const grid)
       _free(patches);
       
       /* BH 2 */
-      patches = collect_patches(grid,"BH2_surrounding_surface",bh_side2,&nbh);
+      patches = collect_patches(grid,"BH2_around_surface",bh_side2,&nbh);
       for (p = 0; p < nbh; ++p)
       {
         Patch_T *patch = patches[p];
@@ -337,7 +337,7 @@ void fill_patches_Split_CubedSpherical_grid(Grid_T *const grid)
     }
     
     /* cubed sphericals */
-    populate_CS_patch_SplitCS(grid,"BH_surrounding",bh_side,&pn);
+    populate_CS_patch_SplitCS(grid,"BH_around",bh_side,&pn);
     
     if (!EQL(r_outermost,0))
       populate_CS_patch_SplitCS(grid,"outermost",NONE,&pn);
@@ -350,12 +350,12 @@ void fill_patches_Split_CubedSpherical_grid(Grid_T *const grid)
     }
     else
     {
-      /* set innerB for BH_surrounding */
+      /* set innerB for BH_around */
       unsigned nbh = 0,p;
       Patch_T **patches = 0;
      
       /* BH */
-      patches = collect_patches(grid,"BH_surrounding_surface",bh_side,&nbh);
+      patches = collect_patches(grid,"BH_around_surface",bh_side,&nbh);
       for (p = 0; p < nbh; ++p)
       {
         Patch_T *patch = patches[p];
@@ -379,7 +379,7 @@ void fill_patches_Split_CubedSpherical_grid(Grid_T *const grid)
     }
     
     /* cubed sphericals */
-    populate_CS_patch_SplitCS(grid,"NS_surrounding",ns_side,&pn);
+    populate_CS_patch_SplitCS(grid,"NS_around",ns_side,&pn);
     populate_CS_patch_SplitCS(grid,"NS",ns_side,&pn);
     /* box */
     populate_box_patch_SplitCS(grid,"central_box",ns_side,&pn ,"NS");
@@ -464,8 +464,8 @@ populate_CS_patch_SplitCS
               sprintf(patch->CoordSysInfo->region,
                 "(%s)(%s_%s)",obj,dir,obj);
           }
-          else if (strcmp_i(obj,"NS_surrounding") || 
-                   strcmp_i(obj,"BH_surrounding"))
+          else if (strcmp_i(obj,"NS_around") || 
+                   strcmp_i(obj,"BH_around"))
           {
             if (d2 == 0)/* if on surface */
               sprintf(patch->CoordSysInfo->region,
@@ -485,8 +485,8 @@ populate_CS_patch_SplitCS
               sprintf(patch->CoordSysInfo->region,
                 "(%s)(%s_%s)",obj,dir,obj);
           }
-          else if (strcmp_i(obj,"NS1_surrounding") || 
-                   strcmp_i(obj,"BH1_surrounding"))
+          else if (strcmp_i(obj,"NS1_around") || 
+                   strcmp_i(obj,"BH1_around"))
           {
             if (d2 == 0)/* if on surface */
               sprintf(patch->CoordSysInfo->region,
@@ -506,8 +506,8 @@ populate_CS_patch_SplitCS
               sprintf(patch->CoordSysInfo->region,
                 "(%s)(%s_%s)",obj,dir,obj);
           }
-          else if (strcmp_i(obj,"NS2_surrounding") || 
-                   strcmp_i(obj,"BH2_surrounding"))
+          else if (strcmp_i(obj,"NS2_around") || 
+                   strcmp_i(obj,"BH2_around"))
           {
             if (d2 == 0)/* if on surface */
               sprintf(patch->CoordSysInfo->region,
@@ -1887,7 +1887,7 @@ static void populate_right_NS(Grid_T *const grid,const unsigned pn)
 }
 
 /* populating properties of patch for right NS surrounding */
-static void populate_right_NS_surrounding(Grid_T *const grid,const unsigned pn)
+static void populate_right_NS_around(Grid_T *const grid,const unsigned pn)
 {
   unsigned p;/* patch */
   
@@ -1943,14 +1943,14 @@ static void populate_right_NS_surrounding(Grid_T *const grid,const unsigned pn)
     {
       case UP:
         /* filling name */
-        sprintf(name,"grid%u_right_NS_surrounding_up",grid->gn);
+        sprintf(name,"grid%u_right_NS_around_up",grid->gn);
         patch->name = dup_s(name);
         
         /* filling Rs */
         sprintf(var,"grid%u_right_NS_surface_function_up",grid->gn);
         R1_array = Pgetdd(var);
         patch->CoordSysInfo->CubedSphericalCoord->R1_f = R1;
-        sprintf(var,"grid%u_surrounding_box_length",grid->gn);
+        sprintf(var,"grid%u_around_box_length",grid->gn);
         patch->CoordSysInfo->CubedSphericalCoord->xc2 = Pgetd(var)/2.;
         R1->v = alloc_double(patch->nn);
         
@@ -1960,14 +1960,14 @@ static void populate_right_NS_surrounding(Grid_T *const grid,const unsigned pn)
       break;
       case DOWN:
         /* filling name */
-        sprintf(name,"grid%u_right_NS_surrounding_down",grid->gn);
+        sprintf(name,"grid%u_right_NS_around_down",grid->gn);
         patch->name = dup_s(name);
         
         /* filling Rs */
         sprintf(var,"grid%u_right_NS_surface_function_down",grid->gn);
         R1_array = Pgetdd(var);
         patch->CoordSysInfo->CubedSphericalCoord->R1_f = R1;
-        sprintf(var,"grid%u_surrounding_box_length",grid->gn);
+        sprintf(var,"grid%u_around_box_length",grid->gn);
         patch->CoordSysInfo->CubedSphericalCoord->xc2 = -Pgetd(var)/2.;
         R1->v = alloc_double(patch->nn);
         
@@ -1977,14 +1977,14 @@ static void populate_right_NS_surrounding(Grid_T *const grid,const unsigned pn)
       break;
       case LEFT:
         /* filling name */
-        sprintf(name,"grid%u_right_NS_surrounding_left",grid->gn);
+        sprintf(name,"grid%u_right_NS_around_left",grid->gn);
         patch->name = dup_s(name);
         
         /* filling Rs */
         sprintf(var,"grid%u_right_NS_surface_function_left",grid->gn);
         R1_array = Pgetdd(var);
         patch->CoordSysInfo->CubedSphericalCoord->R1_f = R1;
-        sprintf(var,"grid%u_surrounding_box_length",grid->gn);
+        sprintf(var,"grid%u_around_box_length",grid->gn);
         patch->CoordSysInfo->CubedSphericalCoord->xc2 = -Pgetd(var)/2.;
         R1->v = alloc_double(patch->nn);
         
@@ -1994,14 +1994,14 @@ static void populate_right_NS_surrounding(Grid_T *const grid,const unsigned pn)
       break;
       case RIGHT:
         /* filling name */
-        sprintf(name,"grid%u_right_NS_surrounding_right",grid->gn);
+        sprintf(name,"grid%u_right_NS_around_right",grid->gn);
         patch->name = dup_s(name);
         
         /* filling Rs */
         sprintf(var,"grid%u_right_NS_surface_function_right",grid->gn);
         R1_array = Pgetdd(var);
         patch->CoordSysInfo->CubedSphericalCoord->R1_f = R1;
-        sprintf(var,"grid%u_surrounding_box_length",grid->gn);
+        sprintf(var,"grid%u_around_box_length",grid->gn);
         patch->CoordSysInfo->CubedSphericalCoord->xc2 = Pgetd(var)/2.;
         R1->v = alloc_double(patch->nn);
         
@@ -2011,14 +2011,14 @@ static void populate_right_NS_surrounding(Grid_T *const grid,const unsigned pn)
       break;
       case BACK:
         /* filling name */
-        sprintf(name,"grid%u_right_NS_surrounding_back",grid->gn);
+        sprintf(name,"grid%u_right_NS_around_back",grid->gn);
         patch->name = dup_s(name);
         
         /* filling Rs */
         sprintf(var,"grid%u_right_NS_surface_function_back",grid->gn);
         R1_array = Pgetdd(var);
         patch->CoordSysInfo->CubedSphericalCoord->R1_f = R1;
-        sprintf(var,"grid%u_surrounding_box_length",grid->gn);
+        sprintf(var,"grid%u_around_box_length",grid->gn);
         patch->CoordSysInfo->CubedSphericalCoord->xc2 = -Pgetd(var)/2.;
         R1->v = alloc_double(patch->nn);
         
@@ -2028,14 +2028,14 @@ static void populate_right_NS_surrounding(Grid_T *const grid,const unsigned pn)
       break;
       case FRONT:
         /* filling name */
-        sprintf(name,"grid%u_right_NS_surrounding_front",grid->gn);
+        sprintf(name,"grid%u_right_NS_around_front",grid->gn);
         patch->name = dup_s(name);
         
         /* filling Rs */
         sprintf(var,"grid%u_right_NS_surface_function_front",grid->gn);
         R1_array = Pgetdd(var);
         patch->CoordSysInfo->CubedSphericalCoord->R1_f = R1;
-        sprintf(var,"grid%u_surrounding_box_length",grid->gn);
+        sprintf(var,"grid%u_around_box_length",grid->gn);
         patch->CoordSysInfo->CubedSphericalCoord->xc2 = Pgetd(var)/2.;
         R1->v = alloc_double(patch->nn);
         
@@ -2081,7 +2081,7 @@ static void populate_right_NS_surrounding(Grid_T *const grid,const unsigned pn)
 }
 
 /* populating properties of patch for right BH surrounding */
-static void populate_right_BH_surrounding(Grid_T *const grid,const unsigned pn)
+static void populate_right_BH_around(Grid_T *const grid,const unsigned pn)
 {
   unsigned p;/* patch */
   
@@ -2137,14 +2137,14 @@ static void populate_right_BH_surrounding(Grid_T *const grid,const unsigned pn)
     {
       case UP:
         /* filling name */
-        sprintf(name,"grid%u_right_BH_surrounding_up",grid->gn);
+        sprintf(name,"grid%u_right_BH_around_up",grid->gn);
         patch->name = dup_s(name);
         
         /* filling Rs */
         sprintf(var,"grid%u_right_BH_surface_function_up",grid->gn);
         R1_array = Pgetdd(var);
         patch->CoordSysInfo->CubedSphericalCoord->R1_f = R1;
-        sprintf(var,"grid%u_surrounding_box_length",grid->gn);
+        sprintf(var,"grid%u_around_box_length",grid->gn);
         patch->CoordSysInfo->CubedSphericalCoord->xc2 = Pgetd(var)/2.;
         R1->v = alloc_double(patch->nn);
         
@@ -2154,14 +2154,14 @@ static void populate_right_BH_surrounding(Grid_T *const grid,const unsigned pn)
       break;
       case DOWN:
         /* filling name */
-        sprintf(name,"grid%u_right_BH_surrounding_down",grid->gn);
+        sprintf(name,"grid%u_right_BH_around_down",grid->gn);
         patch->name = dup_s(name);
         
         /* filling Rs */
         sprintf(var,"grid%u_right_BH_surface_function_down",grid->gn);
         R1_array = Pgetdd(var);
         patch->CoordSysInfo->CubedSphericalCoord->R1_f = R1;
-        sprintf(var,"grid%u_surrounding_box_length",grid->gn);
+        sprintf(var,"grid%u_around_box_length",grid->gn);
         patch->CoordSysInfo->CubedSphericalCoord->xc2 = -Pgetd(var)/2.;
         R1->v = alloc_double(patch->nn);
         
@@ -2171,14 +2171,14 @@ static void populate_right_BH_surrounding(Grid_T *const grid,const unsigned pn)
       break;
       case LEFT:
         /* filling name */
-        sprintf(name,"grid%u_right_BH_surrounding_left",grid->gn);
+        sprintf(name,"grid%u_right_BH_around_left",grid->gn);
         patch->name = dup_s(name);
         
         /* filling Rs */
         sprintf(var,"grid%u_right_BH_surface_function_left",grid->gn);
         R1_array = Pgetdd(var);
         patch->CoordSysInfo->CubedSphericalCoord->R1_f = R1;
-        sprintf(var,"grid%u_surrounding_box_length",grid->gn);
+        sprintf(var,"grid%u_around_box_length",grid->gn);
         patch->CoordSysInfo->CubedSphericalCoord->xc2 = -Pgetd(var)/2.;
         R1->v = alloc_double(patch->nn);
         
@@ -2188,14 +2188,14 @@ static void populate_right_BH_surrounding(Grid_T *const grid,const unsigned pn)
       break;
       case RIGHT:
         /* filling name */
-        sprintf(name,"grid%u_right_BH_surrounding_right",grid->gn);
+        sprintf(name,"grid%u_right_BH_around_right",grid->gn);
         patch->name = dup_s(name);
         
         /* filling Rs */
         sprintf(var,"grid%u_right_BH_surface_function_right",grid->gn);
         R1_array = Pgetdd(var);
         patch->CoordSysInfo->CubedSphericalCoord->R1_f = R1;
-        sprintf(var,"grid%u_surrounding_box_length",grid->gn);
+        sprintf(var,"grid%u_around_box_length",grid->gn);
         patch->CoordSysInfo->CubedSphericalCoord->xc2 = Pgetd(var)/2.;
         R1->v = alloc_double(patch->nn);
         
@@ -2205,14 +2205,14 @@ static void populate_right_BH_surrounding(Grid_T *const grid,const unsigned pn)
       break;
       case BACK:
         /* filling name */
-        sprintf(name,"grid%u_right_BH_surrounding_back",grid->gn);
+        sprintf(name,"grid%u_right_BH_around_back",grid->gn);
         patch->name = dup_s(name);
         
         /* filling Rs */
         sprintf(var,"grid%u_right_BH_surface_function_back",grid->gn);
         R1_array = Pgetdd(var);
         patch->CoordSysInfo->CubedSphericalCoord->R1_f = R1;
-        sprintf(var,"grid%u_surrounding_box_length",grid->gn);
+        sprintf(var,"grid%u_around_box_length",grid->gn);
         patch->CoordSysInfo->CubedSphericalCoord->xc2 = -Pgetd(var)/2.;
         R1->v = alloc_double(patch->nn);
         
@@ -2222,14 +2222,14 @@ static void populate_right_BH_surrounding(Grid_T *const grid,const unsigned pn)
       break;
       case FRONT:
         /* filling name */
-        sprintf(name,"grid%u_right_BH_surrounding_front",grid->gn);
+        sprintf(name,"grid%u_right_BH_around_front",grid->gn);
         patch->name = dup_s(name);
         
         /* filling Rs */
         sprintf(var,"grid%u_right_BH_surface_function_front",grid->gn);
         R1_array = Pgetdd(var);
         patch->CoordSysInfo->CubedSphericalCoord->R1_f = R1;
-        sprintf(var,"grid%u_surrounding_box_length",grid->gn);
+        sprintf(var,"grid%u_around_box_length",grid->gn);
         patch->CoordSysInfo->CubedSphericalCoord->xc2 = Pgetd(var)/2.;
         R1->v = alloc_double(patch->nn);
         
@@ -2275,7 +2275,7 @@ static void populate_right_BH_surrounding(Grid_T *const grid,const unsigned pn)
 }
 
 /* populating properties of patch for left NS surrounding */
-static void populate_left_NS_surrounding(Grid_T *const grid,const unsigned pn)
+static void populate_left_NS_around(Grid_T *const grid,const unsigned pn)
 {
   unsigned p;/* patch */
   
@@ -2331,14 +2331,14 @@ static void populate_left_NS_surrounding(Grid_T *const grid,const unsigned pn)
     {
       case UP:
         /* filling name */
-        sprintf(name,"grid%u_left_NS_surrounding_up",grid->gn);
+        sprintf(name,"grid%u_left_NS_around_up",grid->gn);
         patch->name = dup_s(name);
         
         /* filling Rs */
         sprintf(var,"grid%u_left_NS_surface_function_up",grid->gn);
         R1_array = Pgetdd(var);
         patch->CoordSysInfo->CubedSphericalCoord->R1_f = R1;
-        sprintf(var,"grid%u_surrounding_box_length",grid->gn);
+        sprintf(var,"grid%u_around_box_length",grid->gn);
         patch->CoordSysInfo->CubedSphericalCoord->xc2 = Pgetd(var)/2.;
         R1->v = alloc_double(patch->nn);
         
@@ -2348,14 +2348,14 @@ static void populate_left_NS_surrounding(Grid_T *const grid,const unsigned pn)
       break;
       case DOWN:
         /* filling name */
-        sprintf(name,"grid%u_left_NS_surrounding_down",grid->gn);
+        sprintf(name,"grid%u_left_NS_around_down",grid->gn);
         patch->name = dup_s(name);
         
         /* filling Rs */
         sprintf(var,"grid%u_left_NS_surface_function_down",grid->gn);
         R1_array = Pgetdd(var);
         patch->CoordSysInfo->CubedSphericalCoord->R1_f = R1;
-        sprintf(var,"grid%u_surrounding_box_length",grid->gn);
+        sprintf(var,"grid%u_around_box_length",grid->gn);
         patch->CoordSysInfo->CubedSphericalCoord->xc2 = -Pgetd(var)/2.;
         R1->v = alloc_double(patch->nn);
         
@@ -2365,14 +2365,14 @@ static void populate_left_NS_surrounding(Grid_T *const grid,const unsigned pn)
       break;
       case LEFT:
         /* filling name */
-        sprintf(name,"grid%u_left_NS_surrounding_left",grid->gn);
+        sprintf(name,"grid%u_left_NS_around_left",grid->gn);
         patch->name = dup_s(name);
         
         /* filling Rs */
         sprintf(var,"grid%u_left_NS_surface_function_left",grid->gn);
         R1_array = Pgetdd(var);
         patch->CoordSysInfo->CubedSphericalCoord->R1_f = R1;
-        sprintf(var,"grid%u_surrounding_box_length",grid->gn);
+        sprintf(var,"grid%u_around_box_length",grid->gn);
         patch->CoordSysInfo->CubedSphericalCoord->xc2 = -Pgetd(var)/2.;
         R1->v = alloc_double(patch->nn);
         
@@ -2382,14 +2382,14 @@ static void populate_left_NS_surrounding(Grid_T *const grid,const unsigned pn)
       break;
       case RIGHT:
         /* filling name */
-        sprintf(name,"grid%u_left_NS_surrounding_right",grid->gn);
+        sprintf(name,"grid%u_left_NS_around_right",grid->gn);
         patch->name = dup_s(name);
         
         /* filling Rs */
         sprintf(var,"grid%u_left_NS_surface_function_right",grid->gn);
         R1_array = Pgetdd(var);
         patch->CoordSysInfo->CubedSphericalCoord->R1_f = R1;
-        sprintf(var,"grid%u_surrounding_box_length",grid->gn);
+        sprintf(var,"grid%u_around_box_length",grid->gn);
         patch->CoordSysInfo->CubedSphericalCoord->xc2 = Pgetd(var)/2.;
         R1->v = alloc_double(patch->nn);
         
@@ -2399,14 +2399,14 @@ static void populate_left_NS_surrounding(Grid_T *const grid,const unsigned pn)
       break;
       case BACK:
         /* filling name */
-        sprintf(name,"grid%u_left_NS_surrounding_back",grid->gn);
+        sprintf(name,"grid%u_left_NS_around_back",grid->gn);
         patch->name = dup_s(name);
         
         /* filling Rs */
         sprintf(var,"grid%u_left_NS_surface_function_back",grid->gn);
         R1_array = Pgetdd(var);
         patch->CoordSysInfo->CubedSphericalCoord->R1_f = R1;
-        sprintf(var,"grid%u_surrounding_box_length",grid->gn);
+        sprintf(var,"grid%u_around_box_length",grid->gn);
         patch->CoordSysInfo->CubedSphericalCoord->xc2 = -Pgetd(var)/2.;
         R1->v = alloc_double(patch->nn);
         
@@ -2416,14 +2416,14 @@ static void populate_left_NS_surrounding(Grid_T *const grid,const unsigned pn)
       break;
       case FRONT:
         /* filling name */
-        sprintf(name,"grid%u_left_NS_surrounding_front",grid->gn);
+        sprintf(name,"grid%u_left_NS_around_front",grid->gn);
         patch->name = dup_s(name);
         
         /* filling Rs */
         sprintf(var,"grid%u_left_NS_surface_function_front",grid->gn);
         R1_array = Pgetdd(var);
         patch->CoordSysInfo->CubedSphericalCoord->R1_f = R1;
-        sprintf(var,"grid%u_surrounding_box_length",grid->gn);
+        sprintf(var,"grid%u_around_box_length",grid->gn);
         patch->CoordSysInfo->CubedSphericalCoord->xc2 = Pgetd(var)/2.;
         R1->v = alloc_double(patch->nn);
         
@@ -2469,7 +2469,7 @@ static void populate_left_NS_surrounding(Grid_T *const grid,const unsigned pn)
 }
 
 /* populating properties of patch for central BH surrounding */
-static void populate_central_BH_surrounding(Grid_T *const grid,const unsigned pn)
+static void populate_central_BH_around(Grid_T *const grid,const unsigned pn)
 {
   unsigned p;/* patch */
   
@@ -2525,14 +2525,14 @@ static void populate_central_BH_surrounding(Grid_T *const grid,const unsigned pn
     {
       case UP:
         /* filling name */
-        sprintf(name,"grid%u_BH_surrounding_up",grid->gn);
+        sprintf(name,"grid%u_BH_around_up",grid->gn);
         patch->name = dup_s(name);
         
         /* filling Rs */
         sprintf(var,"grid%u_BH_surface_function_up",grid->gn);
         R1_array = Pgetdd(var);
         patch->CoordSysInfo->CubedSphericalCoord->R1_f = R1;
-        sprintf(var,"grid%u_surrounding_box_length",grid->gn);
+        sprintf(var,"grid%u_around_box_length",grid->gn);
         patch->CoordSysInfo->CubedSphericalCoord->xc2 = Pgetd(var);
         R1->v = alloc_double(patch->nn);
         
@@ -2542,14 +2542,14 @@ static void populate_central_BH_surrounding(Grid_T *const grid,const unsigned pn
       break;
       case DOWN:
         /* filling name */
-        sprintf(name,"grid%u_BH_surrounding_down",grid->gn);
+        sprintf(name,"grid%u_BH_around_down",grid->gn);
         patch->name = dup_s(name);
         
         /* filling Rs */
         sprintf(var,"grid%u_BH_surface_function_down",grid->gn);
         R1_array = Pgetdd(var);
         patch->CoordSysInfo->CubedSphericalCoord->R1_f = R1;
-        sprintf(var,"grid%u_surrounding_box_length",grid->gn);
+        sprintf(var,"grid%u_around_box_length",grid->gn);
         patch->CoordSysInfo->CubedSphericalCoord->xc2 = -Pgetd(var);
         R1->v = alloc_double(patch->nn);
         
@@ -2559,14 +2559,14 @@ static void populate_central_BH_surrounding(Grid_T *const grid,const unsigned pn
       break;
       case LEFT:
         /* filling name */
-        sprintf(name,"grid%u_BH_surrounding_left",grid->gn);
+        sprintf(name,"grid%u_BH_around_left",grid->gn);
         patch->name = dup_s(name);
         
         /* filling Rs */
         sprintf(var,"grid%u_BH_surface_function_left",grid->gn);
         R1_array = Pgetdd(var);
         patch->CoordSysInfo->CubedSphericalCoord->R1_f = R1;
-        sprintf(var,"grid%u_surrounding_box_length",grid->gn);
+        sprintf(var,"grid%u_around_box_length",grid->gn);
         patch->CoordSysInfo->CubedSphericalCoord->xc2 = -Pgetd(var);
         R1->v = alloc_double(patch->nn);
         
@@ -2576,14 +2576,14 @@ static void populate_central_BH_surrounding(Grid_T *const grid,const unsigned pn
       break;
       case RIGHT:
         /* filling name */
-        sprintf(name,"grid%u_BH_surrounding_right",grid->gn);
+        sprintf(name,"grid%u_BH_around_right",grid->gn);
         patch->name = dup_s(name);
         
         /* filling Rs */
         sprintf(var,"grid%u_BH_surface_function_right",grid->gn);
         R1_array = Pgetdd(var);
         patch->CoordSysInfo->CubedSphericalCoord->R1_f = R1;
-        sprintf(var,"grid%u_surrounding_box_length",grid->gn);
+        sprintf(var,"grid%u_around_box_length",grid->gn);
         patch->CoordSysInfo->CubedSphericalCoord->xc2 = Pgetd(var);
         R1->v = alloc_double(patch->nn);
         
@@ -2593,14 +2593,14 @@ static void populate_central_BH_surrounding(Grid_T *const grid,const unsigned pn
       break;
       case BACK:
         /* filling name */
-        sprintf(name,"grid%u_BH_surrounding_back",grid->gn);
+        sprintf(name,"grid%u_BH_around_back",grid->gn);
         patch->name = dup_s(name);
         
         /* filling Rs */
         sprintf(var,"grid%u_BH_surface_function_back",grid->gn);
         R1_array = Pgetdd(var);
         patch->CoordSysInfo->CubedSphericalCoord->R1_f = R1;
-        sprintf(var,"grid%u_surrounding_box_length",grid->gn);
+        sprintf(var,"grid%u_around_box_length",grid->gn);
         patch->CoordSysInfo->CubedSphericalCoord->xc2 = -Pgetd(var);
         R1->v = alloc_double(patch->nn);
         
@@ -2610,14 +2610,14 @@ static void populate_central_BH_surrounding(Grid_T *const grid,const unsigned pn
       break;
       case FRONT:
         /* filling name */
-        sprintf(name,"grid%u_BH_surrounding_front",grid->gn);
+        sprintf(name,"grid%u_BH_around_front",grid->gn);
         patch->name = dup_s(name);
         
         /* filling Rs */
         sprintf(var,"grid%u_BH_surface_function_front",grid->gn);
         R1_array = Pgetdd(var);
         patch->CoordSysInfo->CubedSphericalCoord->R1_f = R1;
-        sprintf(var,"grid%u_surrounding_box_length",grid->gn);
+        sprintf(var,"grid%u_around_box_length",grid->gn);
         patch->CoordSysInfo->CubedSphericalCoord->xc2 = Pgetd(var);
         R1->v = alloc_double(patch->nn);
         
@@ -2663,7 +2663,7 @@ static void populate_central_BH_surrounding(Grid_T *const grid,const unsigned pn
 }
 
 /* populating properties of patch for central NS surrounding */
-static void populate_central_NS_surrounding(Grid_T *const grid,const unsigned pn)
+static void populate_central_NS_around(Grid_T *const grid,const unsigned pn)
 {
   unsigned p;/* patch */
   
@@ -2719,14 +2719,14 @@ static void populate_central_NS_surrounding(Grid_T *const grid,const unsigned pn
     {
       case UP:
         /* filling name */
-        sprintf(name,"grid%u_NS_surrounding_up",grid->gn);
+        sprintf(name,"grid%u_NS_around_up",grid->gn);
         patch->name = dup_s(name);
         
         /* filling Rs */
         sprintf(var,"grid%u_NS_surface_function_up",grid->gn);
         R1_array = Pgetdd(var);
         patch->CoordSysInfo->CubedSphericalCoord->R1_f = R1;
-        sprintf(var,"grid%u_surrounding_box_length",grid->gn);
+        sprintf(var,"grid%u_around_box_length",grid->gn);
         patch->CoordSysInfo->CubedSphericalCoord->xc2 = Pgetd(var);
         R1->v = alloc_double(patch->nn);
         
@@ -2736,14 +2736,14 @@ static void populate_central_NS_surrounding(Grid_T *const grid,const unsigned pn
       break;
       case DOWN:
         /* filling name */
-        sprintf(name,"grid%u_NS_surrounding_down",grid->gn);
+        sprintf(name,"grid%u_NS_around_down",grid->gn);
         patch->name = dup_s(name);
         
         /* filling Rs */
         sprintf(var,"grid%u_NS_surface_function_down",grid->gn);
         R1_array = Pgetdd(var);
         patch->CoordSysInfo->CubedSphericalCoord->R1_f = R1;
-        sprintf(var,"grid%u_surrounding_box_length",grid->gn);
+        sprintf(var,"grid%u_around_box_length",grid->gn);
         patch->CoordSysInfo->CubedSphericalCoord->xc2 = -Pgetd(var);
         R1->v = alloc_double(patch->nn);
         
@@ -2753,14 +2753,14 @@ static void populate_central_NS_surrounding(Grid_T *const grid,const unsigned pn
       break;
       case LEFT:
         /* filling name */
-        sprintf(name,"grid%u_NS_surrounding_left",grid->gn);
+        sprintf(name,"grid%u_NS_around_left",grid->gn);
         patch->name = dup_s(name);
         
         /* filling Rs */
         sprintf(var,"grid%u_NS_surface_function_left",grid->gn);
         R1_array = Pgetdd(var);
         patch->CoordSysInfo->CubedSphericalCoord->R1_f = R1;
-        sprintf(var,"grid%u_surrounding_box_length",grid->gn);
+        sprintf(var,"grid%u_around_box_length",grid->gn);
         patch->CoordSysInfo->CubedSphericalCoord->xc2 = -Pgetd(var);
         R1->v = alloc_double(patch->nn);
         
@@ -2770,14 +2770,14 @@ static void populate_central_NS_surrounding(Grid_T *const grid,const unsigned pn
       break;
       case RIGHT:
         /* filling name */
-        sprintf(name,"grid%u_NS_surrounding_right",grid->gn);
+        sprintf(name,"grid%u_NS_around_right",grid->gn);
         patch->name = dup_s(name);
         
         /* filling Rs */
         sprintf(var,"grid%u_NS_surface_function_right",grid->gn);
         R1_array = Pgetdd(var);
         patch->CoordSysInfo->CubedSphericalCoord->R1_f = R1;
-        sprintf(var,"grid%u_surrounding_box_length",grid->gn);
+        sprintf(var,"grid%u_around_box_length",grid->gn);
         patch->CoordSysInfo->CubedSphericalCoord->xc2 = Pgetd(var);
         R1->v = alloc_double(patch->nn);
         
@@ -2787,14 +2787,14 @@ static void populate_central_NS_surrounding(Grid_T *const grid,const unsigned pn
       break;
       case BACK:
         /* filling name */
-        sprintf(name,"grid%u_NS_surrounding_back",grid->gn);
+        sprintf(name,"grid%u_NS_around_back",grid->gn);
         patch->name = dup_s(name);
         
         /* filling Rs */
         sprintf(var,"grid%u_NS_surface_function_back",grid->gn);
         R1_array = Pgetdd(var);
         patch->CoordSysInfo->CubedSphericalCoord->R1_f = R1;
-        sprintf(var,"grid%u_surrounding_box_length",grid->gn);
+        sprintf(var,"grid%u_around_box_length",grid->gn);
         patch->CoordSysInfo->CubedSphericalCoord->xc2 = -Pgetd(var);
         R1->v = alloc_double(patch->nn);
         
@@ -2804,14 +2804,14 @@ static void populate_central_NS_surrounding(Grid_T *const grid,const unsigned pn
       break;
       case FRONT:
         /* filling name */
-        sprintf(name,"grid%u_NS_surrounding_front",grid->gn);
+        sprintf(name,"grid%u_NS_around_front",grid->gn);
         patch->name = dup_s(name);
         
         /* filling Rs */
         sprintf(var,"grid%u_NS_surface_function_front",grid->gn);
         R1_array = Pgetdd(var);
         patch->CoordSysInfo->CubedSphericalCoord->R1_f = R1;
-        sprintf(var,"grid%u_surrounding_box_length",grid->gn);
+        sprintf(var,"grid%u_around_box_length",grid->gn);
         patch->CoordSysInfo->CubedSphericalCoord->xc2 = Pgetd(var);
         R1->v = alloc_double(patch->nn);
         
@@ -2890,27 +2890,27 @@ static void populate_outermost(Grid_T *const grid,const unsigned pn,const unsign
       switch(side)
       {
         case UP:
-          sprintf(var,"grid%u_surrounding_box_length",grid->gn);
+          sprintf(var,"grid%u_around_box_length",grid->gn);
           patch->CoordSysInfo->CubedSphericalCoord->xc1 = Pgetd(var); 
         break;
         case DOWN:
-          sprintf(var,"grid%u_surrounding_box_length",grid->gn);
+          sprintf(var,"grid%u_around_box_length",grid->gn);
           patch->CoordSysInfo->CubedSphericalCoord->xc1 = -Pgetd(var); 
         break;
         case LEFT:
-          sprintf(var,"grid%u_surrounding_box_length",grid->gn);
+          sprintf(var,"grid%u_around_box_length",grid->gn);
           patch->CoordSysInfo->CubedSphericalCoord->xc1 = -Pgetd(var);         
         break;
         case RIGHT:
-          sprintf(var,"grid%u_surrounding_box_length",grid->gn);
+          sprintf(var,"grid%u_around_box_length",grid->gn);
           patch->CoordSysInfo->CubedSphericalCoord->xc1 = Pgetd(var);         
         break;
         case BACK:
-          sprintf(var,"grid%u_surrounding_box_length",grid->gn);
+          sprintf(var,"grid%u_around_box_length",grid->gn);
           patch->CoordSysInfo->CubedSphericalCoord->xc1 = -Pgetd(var);           
         break;
         case FRONT:
-          sprintf(var,"grid%u_surrounding_box_length",grid->gn);
+          sprintf(var,"grid%u_around_box_length",grid->gn);
           patch->CoordSysInfo->CubedSphericalCoord->xc1 = Pgetd(var);         
         break;
         default:
@@ -3697,7 +3697,7 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
     double rmin = grid_char->params[obj_n]->r_min;
     double rstep = (rmax-rmin)/Nsd[2];
     
-    sprintf(obj,"%s_surrounding",objstem);
+    sprintf(obj,"%s_around",objstem);
     set_object_name_split_CS(obj,obj);
     
     /* some checks */
@@ -4748,7 +4748,7 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
     double rmin = grid_char->params[obj_n]->r_min;
     double rstep = (rmax-rmin)/Nsd[2];
     
-    sprintf(obj,"%s_surrounding",objstem);
+    sprintf(obj,"%s_around",objstem);
     set_object_name_split_CS(obj,obj);
     
     /* some checks */

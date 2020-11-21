@@ -56,12 +56,12 @@ void fill_patches_BNS_Spherical_grid(Grid_T *const grid)
   
   pn = 0;
   populate_left_NS_sphere(grid,pn++);
-  populate_left_NS_surrounding_sphere(grid,pn++);
+  populate_left_NS_around_sphere(grid,pn++);
   for (i = 0; i < N_outermost_split; i++)
     Error0(NO_JOB);
  
   populate_right_NS_sphere(grid,pn++);
-  populate_right_NS_surrounding_sphere(grid,pn++);
+  populate_right_NS_around_sphere(grid,pn++);
   for (i = 0; i < N_outermost_split; i++)
     Error0(NO_JOB);
 
@@ -333,7 +333,7 @@ static void populate_right_NS_sphere(Grid_T *const grid,const unsigned pn)
 }
 
 /* populating properties of patch for left NS's surrounding */
-static void populate_left_NS_surrounding_sphere(Grid_T *const grid,const unsigned pn)
+static void populate_left_NS_around_sphere(Grid_T *const grid,const unsigned pn)
 {
   Patch_T *const patch = grid->patch[pn];
   Field_T *R1 = add_field("R1_radius",0,patch,NO);
@@ -356,7 +356,7 @@ static void populate_left_NS_surrounding_sphere(Grid_T *const grid,const unsigne
   patch->innerB = 0;
   
   /* filling name */
-  sprintf(name,"grid%u_left_NS_surrounding",grid->gn);
+  sprintf(name,"grid%u_left_NS_around",grid->gn);
   patch->name = dup_s(name);
   
   /* filling n */
@@ -465,7 +465,7 @@ static void populate_left_NS_surrounding_sphere(Grid_T *const grid,const unsigne
 }
 
 /* populating properties of patch for right NS's surrounding */
-static void populate_right_NS_surrounding_sphere(Grid_T *const grid,const unsigned pn)
+static void populate_right_NS_around_sphere(Grid_T *const grid,const unsigned pn)
 {
   Patch_T *const patch = grid->patch[pn];
   Field_T *R1 = add_field("R1_radius",0,patch,NO);
@@ -488,7 +488,7 @@ static void populate_right_NS_surrounding_sphere(Grid_T *const grid,const unsign
   patch->innerB = 0;
   
   /* filling name */
-  sprintf(name,"grid%u_right_NS_surrounding",grid->gn);
+  sprintf(name,"grid%u_right_NS_around",grid->gn);
   patch->name = dup_s(name);
   
   /* filling n */

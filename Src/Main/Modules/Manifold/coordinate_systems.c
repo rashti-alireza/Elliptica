@@ -708,7 +708,7 @@ static void characteristics_BBN_CS_grid_eg(Grid_T *const grid)
   add_parameter_double(par,box_size_l);
   
   /* surrounding box length */
-  sprintf(par,"grid%u_surrounding_box_length",gn);
+  sprintf(par,"grid%u_around_box_length",gn);
   add_parameter_double(par,C);
   
   /* R1 and R2 outermost */
@@ -1007,7 +1007,7 @@ static void characteristics_SCS_eg(Grid_T *const grid)
     const unsigned Ntheta = Ntheta_Ylm(lmax);
     const unsigned Nphi   = Nphi_Ylm(lmax);
     const unsigned Ntot   = Ntotal_Ylm(lmax);
-    const double C      = Pgetd("grid_surrounding_box_length");
+    const double C      = Pgetd("grid_around_box_length");
     const double bh_m   = Pgetd("BH_mass"),
                  bh_chi = Pgetd("BH_dimensionless_spin"),
                  R_BH = bh_m*(1+sqrt(1-Pow2(bh_chi)));
@@ -1064,7 +1064,7 @@ static void characteristics_SCS_eg(Grid_T *const grid)
     const unsigned Ntheta = Ntheta_Ylm(lmax);
     const unsigned Nphi   = Nphi_Ylm(lmax);
     const unsigned Ntot   = Ntotal_Ylm(lmax);
-    const double C      = Pgetd("grid_surrounding_box_length");
+    const double C      = Pgetd("grid_around_box_length");
     const double R_NS   = Pgetd("NS_radius");
     double *rns = alloc_double(Ntot);/* surface function r = r(th,ph). */
     double *reClm_rns = alloc_ClmYlm(lmax),
@@ -1463,7 +1463,7 @@ static void characteristics_BNS_CS_grid_eg(Grid_T *const grid)
   add_parameter_double(par,box_size_r);
   
   /* surrounding box length */
-  sprintf(par,"grid%u_surrounding_box_length",gn);
+  sprintf(par,"grid%u_around_box_length",gn);
   add_parameter_double(par,C);
   
   /* R1 and R2 outermost */

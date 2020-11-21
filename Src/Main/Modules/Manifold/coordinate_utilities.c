@@ -721,8 +721,8 @@ void theta_phi_of_XY_CS(double *const theta,double *const phi,const double *cons
 // which cover the specified region.
 // one can collect an assortment of patches separated with comma, eg:
 //
-// Patch_T **patches = collect_patches(grid,"NS1_surrounding,NS1",NONE,&np); 
-// which cover NS1 and NS1_surrounding regardless of direction. */
+// Patch_T **patches = collect_patches(grid,"NS1_around,NS1",NONE,&np); 
+// which cover NS1 and NS1_around regardless of direction. */
 Patch_T **
 collect_patches
   (
@@ -775,10 +775,10 @@ collect_patches
 // "BH?" == the whole BH patches including central box (if any)
 // "NS?_surface" == only patches include the NS surface from inside
 // "BH?_surface" == only patches include the BH surface from inside
-// "NS?_surrounding_surface" == only patches include the NS surface from outside
-// "BH?_surrounding_surface" == only patches include the BH surface from outside
-// "NS?_surrounding" == the whole NS surrounding patches
-// "BH?_surrounding" == the whole NS surrounding patches
+// "NS?_around_surface" == only patches include the NS surface from outside
+// "BH?_around_surface" == only patches include the BH surface from outside
+// "NS?_around" == the whole NS surrounding patches
+// "BH?_around" == the whole NS surrounding patches
 // "outermost" == the whole outermost patches
 // "filling_box" == only patches cover the filling box
 // "central_box" == only patches cover the central box

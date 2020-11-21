@@ -1050,12 +1050,12 @@ static int bhf_WTGR(struct BHFiller_S *const bhf)
   /* update coeffs to avoid race condition */
   patch_numbers       = alloc_needle();
   patch_numbers->grid = grid;
-  needle_in(patch_numbers,GetPatch("right_BH_surrounding_up",grid));
-  needle_in(patch_numbers,GetPatch("right_BH_surrounding_down",grid));
-  needle_in(patch_numbers,GetPatch("right_BH_surrounding_left",grid));
-  needle_in(patch_numbers,GetPatch("right_BH_surrounding_right",grid));
-  needle_in(patch_numbers,GetPatch("right_BH_surrounding_back",grid));
-  needle_in(patch_numbers,GetPatch("right_BH_surrounding_front",grid));
+  needle_in(patch_numbers,GetPatch("right_BH_around_up",grid));
+  needle_in(patch_numbers,GetPatch("right_BH_around_down",grid));
+  needle_in(patch_numbers,GetPatch("right_BH_around_left",grid));
+  needle_in(patch_numbers,GetPatch("right_BH_around_right",grid));
+  needle_in(patch_numbers,GetPatch("right_BH_around_back",grid));
+  needle_in(patch_numbers,GetPatch("right_BH_around_front",grid));
   if (patch_numbers->Nin != npo)
     bbn_bam_error("Wrong patch number",__FILE__,__LINE__);
   
@@ -1114,12 +1114,12 @@ static int bhf_WTGR(struct BHFiller_S *const bhf)
     /* fill needle */
     Needle_T *needle = alloc_needle();
     needle->grid = grid;
-    needle_in(needle,GetPatch("right_BH_surrounding_up",grid));
-    needle_in(needle,GetPatch("right_BH_surrounding_down",grid));
-    needle_in(needle,GetPatch("right_BH_surrounding_left",grid));
-    needle_in(needle,GetPatch("right_BH_surrounding_right",grid));
-    needle_in(needle,GetPatch("right_BH_surrounding_back",grid));
-    needle_in(needle,GetPatch("right_BH_surrounding_front",grid));
+    needle_in(needle,GetPatch("right_BH_around_up",grid));
+    needle_in(needle,GetPatch("right_BH_around_down",grid));
+    needle_in(needle,GetPatch("right_BH_around_left",grid));
+    needle_in(needle,GetPatch("right_BH_around_right",grid));
+    needle_in(needle,GetPatch("right_BH_around_back",grid));
+    needle_in(needle,GetPatch("right_BH_around_front",grid));
     
     bbn_add_fields_in_patch(patch);
     REALLOC_v_WRITE_v(Beta_U0)
@@ -1290,12 +1290,12 @@ static int bhf_WTGR(struct BHFiller_S *const bhf)
   
   /* free */
   free_needle(patch_numbers);
-  bbn_rm_1st_derivatives_conformal_metric(GetPatch("right_BH_surrounding_up",grid));
-  bbn_rm_1st_derivatives_conformal_metric(GetPatch("right_BH_surrounding_down",grid));
-  bbn_rm_1st_derivatives_conformal_metric(GetPatch("right_BH_surrounding_left",grid));
-  bbn_rm_1st_derivatives_conformal_metric(GetPatch("right_BH_surrounding_right",grid));
-  bbn_rm_1st_derivatives_conformal_metric(GetPatch("right_BH_surrounding_back",grid));
-  bbn_rm_1st_derivatives_conformal_metric(GetPatch("right_BH_surrounding_front",grid));
+  bbn_rm_1st_derivatives_conformal_metric(GetPatch("right_BH_around_up",grid));
+  bbn_rm_1st_derivatives_conformal_metric(GetPatch("right_BH_around_down",grid));
+  bbn_rm_1st_derivatives_conformal_metric(GetPatch("right_BH_around_left",grid));
+  bbn_rm_1st_derivatives_conformal_metric(GetPatch("right_BH_around_right",grid));
+  bbn_rm_1st_derivatives_conformal_metric(GetPatch("right_BH_around_back",grid));
+  bbn_rm_1st_derivatives_conformal_metric(GetPatch("right_BH_around_front",grid));
   /* free all coeffs */
   for (p = 0; p < grid->np; p++)
   {
@@ -1785,17 +1785,17 @@ static int bhf_4th_Poly_Ylm(struct BHFiller_S *const bhf)
   
   /* free */
   bbn_rm_1st_2nd_derivatives_conformal_metric
-    (GetPatch("right_BH_surrounding_up",grid));
+    (GetPatch("right_BH_around_up",grid));
   bbn_rm_1st_2nd_derivatives_conformal_metric
-    (GetPatch("right_BH_surrounding_down",grid));
+    (GetPatch("right_BH_around_down",grid));
   bbn_rm_1st_2nd_derivatives_conformal_metric
-    (GetPatch("right_BH_surrounding_left",grid));
+    (GetPatch("right_BH_around_left",grid));
   bbn_rm_1st_2nd_derivatives_conformal_metric
-    (GetPatch("right_BH_surrounding_right",grid));
+    (GetPatch("right_BH_around_right",grid));
   bbn_rm_1st_2nd_derivatives_conformal_metric
-    (GetPatch("right_BH_surrounding_back",grid));
+    (GetPatch("right_BH_around_back",grid));
   bbn_rm_1st_2nd_derivatives_conformal_metric
-    (GetPatch("right_BH_surrounding_front",grid));
+    (GetPatch("right_BH_around_front",grid));
     
   return EXIT_SUCCESS;
 }
@@ -2285,17 +2285,17 @@ static int bhf_ell_Brown(struct BHFiller_S *const bhf)
   
   /* free */
   bbn_rm_1st_2nd_derivatives_conformal_metric
-    (GetPatch("right_BH_surrounding_up",bhf->grid));
+    (GetPatch("right_BH_around_up",bhf->grid));
   bbn_rm_1st_2nd_derivatives_conformal_metric
-    (GetPatch("right_BH_surrounding_down",bhf->grid));
+    (GetPatch("right_BH_around_down",bhf->grid));
   bbn_rm_1st_2nd_derivatives_conformal_metric
-    (GetPatch("right_BH_surrounding_left",bhf->grid));
+    (GetPatch("right_BH_around_left",bhf->grid));
   bbn_rm_1st_2nd_derivatives_conformal_metric
-    (GetPatch("right_BH_surrounding_right",bhf->grid));
+    (GetPatch("right_BH_around_right",bhf->grid));
   bbn_rm_1st_2nd_derivatives_conformal_metric
-    (GetPatch("right_BH_surrounding_back",bhf->grid));
+    (GetPatch("right_BH_around_back",bhf->grid));
   bbn_rm_1st_2nd_derivatives_conformal_metric
-    (GetPatch("right_BH_surrounding_front",bhf->grid));
+    (GetPatch("right_BH_around_front",bhf->grid));
   
   /* free SolveEqs and special grid */
   free_solve_equations(SolveEqs);

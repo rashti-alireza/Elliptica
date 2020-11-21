@@ -635,7 +635,7 @@ void populate_filling_box_CubedSpherical(Grid_T *const grid,const unsigned pn,co
     sprintf(name,"grid%u_filling_box_up",grid->gn);
     patch->name = dup_s(name);
     
-    sprintf(var,"grid%u_surrounding_box_length",grid->gn);
+    sprintf(var,"grid%u_around_box_length",grid->gn);
     l = Pgetd(var);
     
     /* filling center */
@@ -664,7 +664,7 @@ void populate_filling_box_CubedSpherical(Grid_T *const grid,const unsigned pn,co
     sprintf(name,"grid%u_filling_box_down",grid->gn);
     patch->name = dup_s(name);
     
-    sprintf(var,"grid%u_surrounding_box_length",grid->gn);
+    sprintf(var,"grid%u_around_box_length",grid->gn);
     l = Pgetd(var);
     
     /* filling center */
@@ -693,7 +693,7 @@ void populate_filling_box_CubedSpherical(Grid_T *const grid,const unsigned pn,co
     sprintf(name,"grid%u_filling_box_back",grid->gn);
     patch->name = dup_s(name);
     
-    sprintf(var,"grid%u_surrounding_box_length",grid->gn);
+    sprintf(var,"grid%u_around_box_length",grid->gn);
     l = Pgetd(var);
     
     /* filling center */
@@ -722,7 +722,7 @@ void populate_filling_box_CubedSpherical(Grid_T *const grid,const unsigned pn,co
     sprintf(name,"grid%u_filling_box_front",grid->gn);
     patch->name = dup_s(name);
     
-    sprintf(var,"grid%u_surrounding_box_length",grid->gn);
+    sprintf(var,"grid%u_around_box_length",grid->gn);
     l = Pgetd(var);
     
     /* filling center */

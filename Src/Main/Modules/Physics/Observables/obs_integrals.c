@@ -60,7 +60,7 @@ void obs_plan(Observable_T *obs)
     Patch_T **patches = 0,*patch = 0;
     char stem[1000];
     char *region = "outermost,filling_box,"
-                   "NS_surrounding_surface,BH_surrounding_surface"
+                   "NS_around_surface,BH_around_surface"
     struct items_S **adm = 0;
     unsigned p = 0;
     unsigned n,N,ijk,nn;
@@ -118,13 +118,13 @@ void obs_plan(Observable_T *obs)
       adm[n]->g22 = g22;
       
       /* surface integrals params */
-      if (IsItCovering(patch,"NS_surrounding_surface",NONE) ||
-          IsItCovering(patch,"BH_surrounding_surface",NONE)  )
+      if (IsItCovering(patch,"NS_around_surface",NONE) ||
+          IsItCovering(patch,"BH_around_surface",NONE)  )
       {
         adm[n]->surface_integration_flg = 1;
         adm[n]->Z_surface = 1;
         adm[n]->K = patch->n[2]-1;
-        n_physical_metric_surrounding(adm[n],_c_);
+        n_physical_metric_around(adm[n],_c_);
       }
     }
     obs->Px = ADM_momentum_x_BHNS_CS;
@@ -203,7 +203,7 @@ void obs_plan(Observable_T *obs)
         adm[n]->surface_integration_flg = 1;
         adm[n]->Z_surface = 1;
         adm[n]->K = 0;
-        n_physical_metric_surrounding(adm[n],_c_);
+        n_physical_metric_around(adm[n],_c_);
       }
     }
     obs->Px = ADM_momentum_x_BHNS_CS;
@@ -237,12 +237,12 @@ void obs_plan(Observable_T *obs)
     /* first collect all of the patches required */
     p = 0;
     /* surroundings for surface integrals */
-    patches[p++] = GetPatch("right_BH_surrounding_up",grid);
-    patches[p++] = GetPatch("right_BH_surrounding_down",grid);
-    patches[p++] = GetPatch("right_BH_surrounding_left",grid);
-    patches[p++] = GetPatch("right_BH_surrounding_right",grid);
-    patches[p++] = GetPatch("right_BH_surrounding_back",grid);
-    patches[p++] = GetPatch("right_BH_surrounding_front",grid);
+    patches[p++] = GetPatch("right_BH_around_up",grid);
+    patches[p++] = GetPatch("right_BH_around_down",grid);
+    patches[p++] = GetPatch("right_BH_around_left",grid);
+    patches[p++] = GetPatch("right_BH_around_right",grid);
+    patches[p++] = GetPatch("right_BH_around_back",grid);
+    patches[p++] = GetPatch("right_BH_around_front",grid);
     
     assert(p==N);
     
@@ -292,7 +292,7 @@ void obs_plan(Observable_T *obs)
       adm[n]->surface_integration_flg = 1;
       adm[n]->Z_surface = 1;
       adm[n]->K = 0;
-      n_physical_metric_surrounding(adm[n],_c_);
+      n_physical_metric_around(adm[n],_c_);
     }
     obs->Px = ADM_momentum_x_BHNS_CS;
     obs->Py = ADM_momentum_y_BHNS_CS;
@@ -325,12 +325,12 @@ void obs_plan(Observable_T *obs)
     /* first collect all of the patches required */
     p = 0;
     /* surroundings for surface integrals */
-    patches[p++] = GetPatch("right_BH_surrounding_up",grid);
-    patches[p++] = GetPatch("right_BH_surrounding_down",grid);
-    patches[p++] = GetPatch("right_BH_surrounding_left",grid);
-    patches[p++] = GetPatch("right_BH_surrounding_right",grid);
-    patches[p++] = GetPatch("right_BH_surrounding_back",grid);
-    patches[p++] = GetPatch("right_BH_surrounding_front",grid);
+    patches[p++] = GetPatch("right_BH_around_up",grid);
+    patches[p++] = GetPatch("right_BH_around_down",grid);
+    patches[p++] = GetPatch("right_BH_around_left",grid);
+    patches[p++] = GetPatch("right_BH_around_right",grid);
+    patches[p++] = GetPatch("right_BH_around_back",grid);
+    patches[p++] = GetPatch("right_BH_around_front",grid);
     
     assert(p==N);
     
@@ -380,7 +380,7 @@ void obs_plan(Observable_T *obs)
       kommar[n]->surface_integration_flg = 1;
       kommar[n]->Z_surface = 1;
       kommar[n]->K = 0;
-      n_physical_metric_surrounding(kommar[n],_c_);
+      n_physical_metric_around(kommar[n],_c_);
     }
     obs->M = obs_Kommar_mass;
     free(patches);
@@ -407,12 +407,12 @@ void obs_plan(Observable_T *obs)
     /* first collect all of the patches required */
     p = 0;
     /* surroundings for surface integrals */
-    patches[p++] = GetPatch("left_NS_surrounding_up",grid);
-    patches[p++] = GetPatch("left_NS_surrounding_down",grid);
-    patches[p++] = GetPatch("left_NS_surrounding_left",grid);
-    patches[p++] = GetPatch("left_NS_surrounding_right",grid);
-    patches[p++] = GetPatch("left_NS_surrounding_back",grid);
-    patches[p++] = GetPatch("left_NS_surrounding_front",grid);
+    patches[p++] = GetPatch("left_NS_around_up",grid);
+    patches[p++] = GetPatch("left_NS_around_down",grid);
+    patches[p++] = GetPatch("left_NS_around_left",grid);
+    patches[p++] = GetPatch("left_NS_around_right",grid);
+    patches[p++] = GetPatch("left_NS_around_back",grid);
+    patches[p++] = GetPatch("left_NS_around_front",grid);
     
     assert(p==N);
     
@@ -462,7 +462,7 @@ void obs_plan(Observable_T *obs)
       kommar[n]->surface_integration_flg = 1;
       kommar[n]->Z_surface = 1;
       kommar[n]->K = 0;
-      n_physical_metric_surrounding(kommar[n],_c_);
+      n_physical_metric_around(kommar[n],_c_);
     }
     obs->M = obs_Kommar_mass;
     free(patches);
@@ -489,17 +489,17 @@ void obs_plan(Observable_T *obs)
     /* first collect all of the patches required */
     p = 0;
     /* surroundings for surface integrals */
-    patches[p++] = GetPatch("left_NS_surrounding_up",grid);
-    patches[p++] = GetPatch("left_NS_surrounding_down",grid);
-    patches[p++] = GetPatch("left_NS_surrounding_left",grid);
-    patches[p++] = GetPatch("left_NS_surrounding_back",grid);
-    patches[p++] = GetPatch("left_NS_surrounding_front",grid);
+    patches[p++] = GetPatch("left_NS_around_up",grid);
+    patches[p++] = GetPatch("left_NS_around_down",grid);
+    patches[p++] = GetPatch("left_NS_around_left",grid);
+    patches[p++] = GetPatch("left_NS_around_back",grid);
+    patches[p++] = GetPatch("left_NS_around_front",grid);
     
-    patches[p++] = GetPatch("right_BH_surrounding_up",grid);
-    patches[p++] = GetPatch("right_BH_surrounding_down",grid);
-    patches[p++] = GetPatch("right_BH_surrounding_right",grid);
-    patches[p++] = GetPatch("right_BH_surrounding_back",grid);
-    patches[p++] = GetPatch("right_BH_surrounding_front",grid);
+    patches[p++] = GetPatch("right_BH_around_up",grid);
+    patches[p++] = GetPatch("right_BH_around_down",grid);
+    patches[p++] = GetPatch("right_BH_around_right",grid);
+    patches[p++] = GetPatch("right_BH_around_back",grid);
+    patches[p++] = GetPatch("right_BH_around_front",grid);
 
     assert(p==N);
     
@@ -549,7 +549,7 @@ void obs_plan(Observable_T *obs)
       kommar[n]->surface_integration_flg = 1;
       kommar[n]->Z_surface = 1;
       kommar[n]->K = patch->n[2]-1;
-      n_physical_metric_surrounding(kommar[n],_c_);
+      n_physical_metric_around(kommar[n],_c_);
     }
     obs->M = obs_Kommar_mass;
     free(patches);
@@ -615,28 +615,28 @@ void obs_plan(Observable_T *obs)
     patches[p++] = GetPatch("left_NS_front",grid);
     patches[p++] = GetPatch("left_central_box",grid);
       
-    patches[p++] = GetPatch("left_NS_surrounding_up",grid);
-    patches[p++] = GetPatch("left_NS_surrounding_down",grid);
-    patches[p++] = GetPatch("left_NS_surrounding_left",grid);
-    patches[p++] = GetPatch("left_NS_surrounding_right",grid);
-    patches[p++] = GetPatch("left_NS_surrounding_back",grid);
-    patches[p++] = GetPatch("left_NS_surrounding_front",grid);
+    patches[p++] = GetPatch("left_NS_around_up",grid);
+    patches[p++] = GetPatch("left_NS_around_down",grid);
+    patches[p++] = GetPatch("left_NS_around_left",grid);
+    patches[p++] = GetPatch("left_NS_around_right",grid);
+    patches[p++] = GetPatch("left_NS_around_back",grid);
+    patches[p++] = GetPatch("left_NS_around_front",grid);
     
-    patches[p++] = GetPatch("right_BH_surrounding_up",grid);
-    patches[p++] = GetPatch("right_BH_surrounding_down",grid);
-    patches[p++] = GetPatch("right_BH_surrounding_left",grid);
-    patches[p++] = GetPatch("right_BH_surrounding_right",grid);
-    patches[p++] = GetPatch("right_BH_surrounding_back",grid);
-    patches[p++] = GetPatch("right_BH_surrounding_front",grid);
+    patches[p++] = GetPatch("right_BH_around_up",grid);
+    patches[p++] = GetPatch("right_BH_around_down",grid);
+    patches[p++] = GetPatch("right_BH_around_left",grid);
+    patches[p++] = GetPatch("right_BH_around_right",grid);
+    patches[p++] = GetPatch("right_BH_around_back",grid);
+    patches[p++] = GetPatch("right_BH_around_front",grid);
     
     /* surroundings for surface integrals. NOTE: the order matters */
     surface_index = p;
-    patches[p++] = GetPatch("right_BH_surrounding_up",grid);
-    patches[p++] = GetPatch("right_BH_surrounding_down",grid);
-    patches[p++] = GetPatch("right_BH_surrounding_left",grid);
-    patches[p++] = GetPatch("right_BH_surrounding_right",grid);
-    patches[p++] = GetPatch("right_BH_surrounding_back",grid);
-    patches[p++] = GetPatch("right_BH_surrounding_front",grid);
+    patches[p++] = GetPatch("right_BH_around_up",grid);
+    patches[p++] = GetPatch("right_BH_around_down",grid);
+    patches[p++] = GetPatch("right_BH_around_left",grid);
+    patches[p++] = GetPatch("right_BH_around_right",grid);
+    patches[p++] = GetPatch("right_BH_around_back",grid);
+    patches[p++] = GetPatch("right_BH_around_front",grid);
     
     assert(p==N);
     
@@ -682,12 +682,12 @@ void obs_plan(Observable_T *obs)
       
       /* surface integrals params */
       if ( n >= surface_index && 
-           regex_search(".+right_BH_surrounding.+",patch->name) )
+           regex_search(".+right_BH_around.+",patch->name) )
       {
         adm[n]->surface_integration_flg = 1;
         adm[n]->Z_surface = 1;
         adm[n]->K = 0;
-        n_conformal_metric_surrounding(adm[n],_c_);
+        n_conformal_metric_around(adm[n],_c_);
       }
     }
     obs->M = obs_ADM_mass;
@@ -714,12 +714,12 @@ void obs_plan(Observable_T *obs)
     /* first collect all of the patches required */
     p = 0;
     /* surroundings for surface integrals. */
-    patches[p++] = GetPatch("right_BH_surrounding_up",grid);
-    patches[p++] = GetPatch("right_BH_surrounding_down",grid);
-    patches[p++] = GetPatch("right_BH_surrounding_left",grid);
-    patches[p++] = GetPatch("right_BH_surrounding_right",grid);
-    patches[p++] = GetPatch("right_BH_surrounding_back",grid);
-    patches[p++] = GetPatch("right_BH_surrounding_front",grid);
+    patches[p++] = GetPatch("right_BH_around_up",grid);
+    patches[p++] = GetPatch("right_BH_around_down",grid);
+    patches[p++] = GetPatch("right_BH_around_left",grid);
+    patches[p++] = GetPatch("right_BH_around_right",grid);
+    patches[p++] = GetPatch("right_BH_around_back",grid);
+    patches[p++] = GetPatch("right_BH_around_front",grid);
     
     assert(p==N);
     
@@ -768,7 +768,7 @@ void obs_plan(Observable_T *obs)
       adm[n]->surface_integration_flg = 1;
       adm[n]->Z_surface = 1;
       adm[n]->K = 0;
-      n_physical_metric_surrounding(adm[n],_c_);
+      n_physical_metric_around(adm[n],_c_);
     }
     obs->M = obs_BH_ADM_mass;
     free(patches);
@@ -858,7 +858,7 @@ void obs_plan(Observable_T *obs)
 
 /* populating normal outward vector for surrounding patches according to the given dir 
 // NOTE: the normaliztion is respect to the physical metric gamma_{ij} */
-static void n_physical_metric_surrounding(struct items_S *const adm,const Dd_T dir)
+static void n_physical_metric_around(struct items_S *const adm,const Dd_T dir)
 {
   Patch_T *const patch = adm->patch;
   const unsigned nn = patch->nn;
@@ -903,7 +903,7 @@ n_U2[ijk] + gConf_D2D2[ijk]*pow(n_U2[ijk], 2));
 
 /* populating normal outward vector for surrounding patches according to the given dir 
 // NOTE: the normaliztion is respect to the conformal metric gamma_{ij} */
-static void n_conformal_metric_surrounding(struct items_S *const adm,const Dd_T dir)
+static void n_conformal_metric_around(struct items_S *const adm,const Dd_T dir)
 {
   Patch_T *const patch = adm->patch;
   const unsigned nn = patch->nn;
@@ -1481,12 +1481,12 @@ void obs_define_spin_integral(double S[3],Grid_T *const grid,const char *const k
   if (strcmp_i(kind,"NS"))
   {
      /* surroundings for surface integrals */
-    patches[p++] = GetPatch("left_NS_surrounding_up",grid);
-    patches[p++] = GetPatch("left_NS_surrounding_down",grid);
-    patches[p++] = GetPatch("left_NS_surrounding_left",grid);
-    patches[p++] = GetPatch("left_NS_surrounding_right",grid);
-    patches[p++] = GetPatch("left_NS_surrounding_back",grid);
-    patches[p++] = GetPatch("left_NS_surrounding_front",grid);
+    patches[p++] = GetPatch("left_NS_around_up",grid);
+    patches[p++] = GetPatch("left_NS_around_down",grid);
+    patches[p++] = GetPatch("left_NS_around_left",grid);
+    patches[p++] = GetPatch("left_NS_around_right",grid);
+    patches[p++] = GetPatch("left_NS_around_back",grid);
+    patches[p++] = GetPatch("left_NS_around_front",grid);
     obj_center[0]= Pgetd("NS_center_x");
     obj_center[1]= Pgetd("NS_center_y");
     obj_center[2]= Pgetd("NS_center_z");
@@ -1495,12 +1495,12 @@ void obs_define_spin_integral(double S[3],Grid_T *const grid,const char *const k
   if (strcmp_i(kind,"BH"))
   {
     /* surroundings for surface integrals */
-    patches[p++] = GetPatch("right_BH_surrounding_up",grid);
-    patches[p++] = GetPatch("right_BH_surrounding_down",grid);
-    patches[p++] = GetPatch("right_BH_surrounding_left",grid);
-    patches[p++] = GetPatch("right_BH_surrounding_right",grid);
-    patches[p++] = GetPatch("right_BH_surrounding_back",grid);
-    patches[p++] = GetPatch("right_BH_surrounding_front",grid);
+    patches[p++] = GetPatch("right_BH_around_up",grid);
+    patches[p++] = GetPatch("right_BH_around_down",grid);
+    patches[p++] = GetPatch("right_BH_around_left",grid);
+    patches[p++] = GetPatch("right_BH_around_right",grid);
+    patches[p++] = GetPatch("right_BH_around_back",grid);
+    patches[p++] = GetPatch("right_BH_around_front",grid);
     obj_center[0]= Pgetd("BH_center_x");
     obj_center[1]= Pgetd("BH_center_y");
     obj_center[2]= Pgetd("BH_center_z");
@@ -1544,7 +1544,7 @@ void obs_define_spin_integral(double S[3],Grid_T *const grid,const char *const k
     }
     
     normal->patch = patch;
-    n_physical_metric_surrounding(normal,_c_);
+    n_physical_metric_around(normal,_c_);
     n_comp[0] = normal->n_U0;
     n_comp[1] = normal->n_U1;
     n_comp[2] = normal->n_U2;
@@ -1622,23 +1622,23 @@ obs_define_spin_akv
   if (strcmp_i(kind,"NS"))
   {
      /* surroundings for surface integrals */
-    patches[p++] = GetPatch("left_NS_surrounding_up",grid);
-    patches[p++] = GetPatch("left_NS_surrounding_down",grid);
-    patches[p++] = GetPatch("left_NS_surrounding_left",grid);
-    patches[p++] = GetPatch("left_NS_surrounding_right",grid);
-    patches[p++] = GetPatch("left_NS_surrounding_back",grid);
-    patches[p++] = GetPatch("left_NS_surrounding_front",grid);
+    patches[p++] = GetPatch("left_NS_around_up",grid);
+    patches[p++] = GetPatch("left_NS_around_down",grid);
+    patches[p++] = GetPatch("left_NS_around_left",grid);
+    patches[p++] = GetPatch("left_NS_around_right",grid);
+    patches[p++] = GetPatch("left_NS_around_back",grid);
+    patches[p++] = GetPatch("left_NS_around_front",grid);
   }
   /* BH spins */
   if (strcmp_i(kind,"BH"))
   {
     /* surroundings for surface integrals */
-    patches[p++] = GetPatch("right_BH_surrounding_up",grid);
-    patches[p++] = GetPatch("right_BH_surrounding_down",grid);
-    patches[p++] = GetPatch("right_BH_surrounding_left",grid);
-    patches[p++] = GetPatch("right_BH_surrounding_right",grid);
-    patches[p++] = GetPatch("right_BH_surrounding_back",grid);
-    patches[p++] = GetPatch("right_BH_surrounding_front",grid);
+    patches[p++] = GetPatch("right_BH_around_up",grid);
+    patches[p++] = GetPatch("right_BH_around_down",grid);
+    patches[p++] = GetPatch("right_BH_around_left",grid);
+    patches[p++] = GetPatch("right_BH_around_right",grid);
+    patches[p++] = GetPatch("right_BH_around_back",grid);
+    patches[p++] = GetPatch("right_BH_around_front",grid);
   }  
   assert(p==N);
   
@@ -1679,7 +1679,7 @@ obs_define_spin_akv
     }
     
     normal->patch = patch;
-    n_physical_metric_surrounding(normal,_c_);
+    n_physical_metric_around(normal,_c_);
     n_comp[0] = normal->n_U0;
     n_comp[1] = normal->n_U1;
     n_comp[2] = normal->n_U2;

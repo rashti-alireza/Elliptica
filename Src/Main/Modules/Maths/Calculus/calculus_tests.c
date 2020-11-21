@@ -556,7 +556,7 @@ static int fdV_spectral(Grid_T *const grid)
     FOR_ALL_PATCHES(p,grid)
     {
       patch   = grid->patch[p];
-      if (!strstr(patch->name,"left_NS_surrounding"))
+      if (!strstr(patch->name,"left_NS_around"))
         continue;
       
       I  = init_integration();

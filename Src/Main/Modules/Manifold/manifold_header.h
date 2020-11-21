@@ -87,11 +87,11 @@ static const char *const StrSide[] =
 /* allowed object: */
 static const char *const SCS_ObjType[] = 
  {"NS","BH",
-  "NS_surrounding","BH_surrounding",
+  "NS_around","BH_around",
   "NS1","BH1",
-  "NS1_surrounding","BH1_surrounding",
+  "NS1_around","BH1_around",
   "NS2","BH2",
-  "NS2_surrounding","BH2_surrounding",
+  "NS2_around","BH2_around",
   "central_box","filling_box",
   "outermost",0
  };
