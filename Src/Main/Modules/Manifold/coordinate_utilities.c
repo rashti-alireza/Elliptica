@@ -775,8 +775,8 @@ collect_patches
 // "BH?" == the whole BH patches including central box (if any)
 // "NS?_surface" == only patches include the NS surface from inside
 // "BH?_surface" == only patches include the BH surface from inside
-// "NS?_around_surface" == only patches include the NS surface from outside
-// "BH?_around_surface" == only patches include the BH surface from outside
+// "NS?_around_ibndry" == only patches include the NS surface from outside
+// "BH?_around_ibndry" == only patches include the BH surface from outside
 // "NS?_around" == the whole NS around patches
 // "BH?_around" == the whole NS around patches
 // "outermost" == the whole outermost patches

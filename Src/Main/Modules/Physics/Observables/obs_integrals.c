@@ -60,7 +60,7 @@ void obs_plan(Observable_T *obs)
     Patch_T **patches = 0,*patch = 0;
     char stem[1000];
     char *region = "outermost,filling_box,"
-                   "NS_around_surface,BH_around_surface"
+                   "NS_around_ibndry,BH_around_ibndry"
     struct items_S **adm = 0;
     unsigned p = 0;
     unsigned n,N,ijk,nn;
@@ -118,8 +118,8 @@ void obs_plan(Observable_T *obs)
       adm[n]->g22 = g22;
       
       /* surface integrals params */
-      if (IsItCovering(patch,"NS_around_surface",NONE) ||
-          IsItCovering(patch,"BH_around_surface",NONE)  )
+      if (IsItCovering(patch,"NS_around_ibndry",NONE) ||
+          IsItCovering(patch,"BH_around_ibndry",NONE)  )
       {
         adm[n]->surface_integration_flg = 1;
         adm[n]->Z_surface = 1;
