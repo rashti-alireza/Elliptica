@@ -471,17 +471,15 @@ populate_CS_patch_SplitCS
           {
             if (d2 == Nsd[2]-1)/* if on Outer Boundary */
               sprintf(patch->CoordSysInfo->region,
-                "(%s)(%s_OB)(%s_%s)(%s_%s_OB)",
-                 obj,obj,        dir,obj,dir,obj);
+                "(%s)(%s_OB)",obj,obj);
             
             else if (d2 == 0)/* if on Inner Boundary */
               sprintf(patch->CoordSysInfo->region,
-               "(%s)(%s_IB)(%s_%s)(%s_%s_IB)",
-               obj,obj,        dir,obj,dir,obj);
+               "(%s)(%s_IB)",obj,obj);
             
             else
               sprintf(patch->CoordSysInfo->region,
-                "(%s)(%s_%s)",obj,dir,obj);
+                "(%s)",obj);
           }
           else
           {
