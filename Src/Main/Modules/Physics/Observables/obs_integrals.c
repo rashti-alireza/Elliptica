@@ -139,12 +139,12 @@ void obs_plan_obs_CS(Observable_T *obs)
       double *g12 = alloc_double(nn);
       double *g22 = alloc_double(nn);
       
-      READ_v(_gamma_D2D2)
-      READ_v(_gamma_D0D2)
-      READ_v(_gamma_D0D0)
-      READ_v(_gamma_D0D1)
-      READ_v(_gamma_D1D2)
-      READ_v(_gamma_D1D1)
+      READ_v(gConf_D2D2)
+      READ_v(gConf_D0D2)
+      READ_v(gConf_D0D0)
+      READ_v(gConf_D0D1)
+      READ_v(gConf_D1D2)
+      READ_v(gConf_D1D1)
       READ_v(psi);
       
       adm[n]->patch = patch;
@@ -152,12 +152,12 @@ void obs_plan_obs_CS(Observable_T *obs)
       for (ijk = 0; ijk < nn; ++ijk)
       {
         double psi4 = Pow2(psi[ijk])*Pow2(psi[ijk]);
-        g00[ijk] = psi4*_gamma_D0D0[ijk];
-        g01[ijk] = psi4*_gamma_D0D1[ijk];
-        g02[ijk] = psi4*_gamma_D0D2[ijk];
-        g11[ijk] = psi4*_gamma_D1D1[ijk];
-        g12[ijk] = psi4*_gamma_D1D2[ijk];
-        g22[ijk] = psi4*_gamma_D2D2[ijk];
+        g00[ijk] = psi4*gConf_D0D0[ijk];
+        g01[ijk] = psi4*gConf_D0D1[ijk];
+        g02[ijk] = psi4*gConf_D0D2[ijk];
+        g11[ijk] = psi4*gConf_D1D1[ijk];
+        g12[ijk] = psi4*gConf_D1D2[ijk];
+        g22[ijk] = psi4*gConf_D2D2[ijk];
       }
       adm[n]->g00 = g00;
       adm[n]->g01 = g01;
@@ -230,12 +230,12 @@ void obs_plan_obs_CS(Observable_T *obs)
       double *g12 = alloc_double(nn);
       double *g22 = alloc_double(nn);
       
-      READ_v(_gamma_D2D2)
-      READ_v(_gamma_D0D2)
-      READ_v(_gamma_D0D0)
-      READ_v(_gamma_D0D1)
-      READ_v(_gamma_D1D2)
-      READ_v(_gamma_D1D1)
+      READ_v(gConf_D2D2)
+      READ_v(gConf_D0D2)
+      READ_v(gConf_D0D0)
+      READ_v(gConf_D0D1)
+      READ_v(gConf_D1D2)
+      READ_v(gConf_D1D1)
       READ_v(psi);
       
       adm[n]->patch = patch;
@@ -243,12 +243,12 @@ void obs_plan_obs_CS(Observable_T *obs)
       for (ijk = 0; ijk < nn; ++ijk)
       {
         double psi4 = Pow2(psi[ijk])*Pow2(psi[ijk]);
-        g00[ijk] = psi4*_gamma_D0D0[ijk];
-        g01[ijk] = psi4*_gamma_D0D1[ijk];
-        g02[ijk] = psi4*_gamma_D0D2[ijk];
-        g11[ijk] = psi4*_gamma_D1D1[ijk];
-        g12[ijk] = psi4*_gamma_D1D2[ijk];
-        g22[ijk] = psi4*_gamma_D2D2[ijk];
+        g00[ijk] = psi4*gConf_D0D0[ijk];
+        g01[ijk] = psi4*gConf_D0D1[ijk];
+        g02[ijk] = psi4*gConf_D0D2[ijk];
+        g11[ijk] = psi4*gConf_D1D1[ijk];
+        g12[ijk] = psi4*gConf_D1D2[ijk];
+        g22[ijk] = psi4*gConf_D2D2[ijk];
       }
       adm[n]->g00 = g00;
       adm[n]->g01 = g01;
@@ -318,12 +318,12 @@ void obs_plan_obs_CS(Observable_T *obs)
       double *g12 = alloc_double(nn);
       double *g22 = alloc_double(nn);
       
-      READ_v(_gamma_D2D2)
-      READ_v(_gamma_D0D2)
-      READ_v(_gamma_D0D0)
-      READ_v(_gamma_D0D1)
-      READ_v(_gamma_D1D2)
-      READ_v(_gamma_D1D1)
+      READ_v(gConf_D2D2)
+      READ_v(gConf_D0D2)
+      READ_v(gConf_D0D0)
+      READ_v(gConf_D0D1)
+      READ_v(gConf_D1D2)
+      READ_v(gConf_D1D1)
       READ_v(psi);
       
       adm[n]->patch = patch;
@@ -331,12 +331,12 @@ void obs_plan_obs_CS(Observable_T *obs)
       for (ijk = 0; ijk < nn; ++ijk)
       {
         double psi4 = Pow2(psi[ijk])*Pow2(psi[ijk]);
-        g00[ijk] = psi4*_gamma_D0D0[ijk];
-        g01[ijk] = psi4*_gamma_D0D1[ijk];
-        g02[ijk] = psi4*_gamma_D0D2[ijk];
-        g11[ijk] = psi4*_gamma_D1D1[ijk];
-        g12[ijk] = psi4*_gamma_D1D2[ijk];
-        g22[ijk] = psi4*_gamma_D2D2[ijk];
+        g00[ijk] = psi4*gConf_D0D0[ijk];
+        g01[ijk] = psi4*gConf_D0D1[ijk];
+        g02[ijk] = psi4*gConf_D0D2[ijk];
+        g11[ijk] = psi4*gConf_D1D1[ijk];
+        g12[ijk] = psi4*gConf_D1D2[ijk];
+        g22[ijk] = psi4*gConf_D2D2[ijk];
       }
       adm[n]->g00 = g00;
       adm[n]->g01 = g01;
@@ -406,12 +406,12 @@ void obs_plan_obs_CS(Observable_T *obs)
       double *g12 = alloc_double(nn);
       double *g22 = alloc_double(nn);
       
-      READ_v(_gamma_D2D2)
-      READ_v(_gamma_D0D2)
-      READ_v(_gamma_D0D0)
-      READ_v(_gamma_D0D1)
-      READ_v(_gamma_D1D2)
-      READ_v(_gamma_D1D1)
+      READ_v(gConf_D2D2)
+      READ_v(gConf_D0D2)
+      READ_v(gConf_D0D0)
+      READ_v(gConf_D0D1)
+      READ_v(gConf_D1D2)
+      READ_v(gConf_D1D1)
       READ_v(psi);
       
       kommar[n]->patch = patch;
@@ -419,12 +419,12 @@ void obs_plan_obs_CS(Observable_T *obs)
       for (ijk = 0; ijk < nn; ++ijk)
       {
         double psi4 = Pow2(psi[ijk])*Pow2(psi[ijk]);
-        g00[ijk] = psi4*_gamma_D0D0[ijk];
-        g01[ijk] = psi4*_gamma_D0D1[ijk];
-        g02[ijk] = psi4*_gamma_D0D2[ijk];
-        g11[ijk] = psi4*_gamma_D1D1[ijk];
-        g12[ijk] = psi4*_gamma_D1D2[ijk];
-        g22[ijk] = psi4*_gamma_D2D2[ijk];
+        g00[ijk] = psi4*gConf_D0D0[ijk];
+        g01[ijk] = psi4*gConf_D0D1[ijk];
+        g02[ijk] = psi4*gConf_D0D2[ijk];
+        g11[ijk] = psi4*gConf_D1D1[ijk];
+        g12[ijk] = psi4*gConf_D1D2[ijk];
+        g22[ijk] = psi4*gConf_D2D2[ijk];
       }
       kommar[n]->g00 = g00;
       kommar[n]->g01 = g01;
@@ -488,12 +488,12 @@ void obs_plan_obs_CS(Observable_T *obs)
       double *g12 = alloc_double(nn);
       double *g22 = alloc_double(nn);
       
-      READ_v(_gamma_D2D2)
-      READ_v(_gamma_D0D2)
-      READ_v(_gamma_D0D0)
-      READ_v(_gamma_D0D1)
-      READ_v(_gamma_D1D2)
-      READ_v(_gamma_D1D1)
+      READ_v(gConf_D2D2)
+      READ_v(gConf_D0D2)
+      READ_v(gConf_D0D0)
+      READ_v(gConf_D0D1)
+      READ_v(gConf_D1D2)
+      READ_v(gConf_D1D1)
       READ_v(psi);
       
       kommar[n]->patch = patch;
@@ -501,12 +501,12 @@ void obs_plan_obs_CS(Observable_T *obs)
       for (ijk = 0; ijk < nn; ++ijk)
       {
         double psi4 = Pow2(psi[ijk])*Pow2(psi[ijk]);
-        g00[ijk] = psi4*_gamma_D0D0[ijk];
-        g01[ijk] = psi4*_gamma_D0D1[ijk];
-        g02[ijk] = psi4*_gamma_D0D2[ijk];
-        g11[ijk] = psi4*_gamma_D1D1[ijk];
-        g12[ijk] = psi4*_gamma_D1D2[ijk];
-        g22[ijk] = psi4*_gamma_D2D2[ijk];
+        g00[ijk] = psi4*gConf_D0D0[ijk];
+        g01[ijk] = psi4*gConf_D0D1[ijk];
+        g02[ijk] = psi4*gConf_D0D2[ijk];
+        g11[ijk] = psi4*gConf_D1D1[ijk];
+        g12[ijk] = psi4*gConf_D1D2[ijk];
+        g22[ijk] = psi4*gConf_D2D2[ijk];
       }
       kommar[n]->g00 = g00;
       kommar[n]->g01 = g01;
@@ -575,12 +575,12 @@ void obs_plan_obs_CS(Observable_T *obs)
       double *g12 = alloc_double(nn);
       double *g22 = alloc_double(nn);
       
-      READ_v(_gamma_D2D2)
-      READ_v(_gamma_D0D2)
-      READ_v(_gamma_D0D0)
-      READ_v(_gamma_D0D1)
-      READ_v(_gamma_D1D2)
-      READ_v(_gamma_D1D1)
+      READ_v(gConf_D2D2)
+      READ_v(gConf_D0D2)
+      READ_v(gConf_D0D0)
+      READ_v(gConf_D0D1)
+      READ_v(gConf_D1D2)
+      READ_v(gConf_D1D1)
       READ_v(psi);
       
       kommar[n]->patch = patch;
@@ -588,12 +588,12 @@ void obs_plan_obs_CS(Observable_T *obs)
       for (ijk = 0; ijk < nn; ++ijk)
       {
         double psi4 = Pow2(psi[ijk])*Pow2(psi[ijk]);
-        g00[ijk] = psi4*_gamma_D0D0[ijk];
-        g01[ijk] = psi4*_gamma_D0D1[ijk];
-        g02[ijk] = psi4*_gamma_D0D2[ijk];
-        g11[ijk] = psi4*_gamma_D1D1[ijk];
-        g12[ijk] = psi4*_gamma_D1D2[ijk];
-        g22[ijk] = psi4*_gamma_D2D2[ijk];
+        g00[ijk] = psi4*gConf_D0D0[ijk];
+        g01[ijk] = psi4*gConf_D0D1[ijk];
+        g02[ijk] = psi4*gConf_D0D2[ijk];
+        g11[ijk] = psi4*gConf_D1D1[ijk];
+        g12[ijk] = psi4*gConf_D1D2[ijk];
+        g22[ijk] = psi4*gConf_D2D2[ijk];
       }
       kommar[n]->g00 = g00;
       kommar[n]->g01 = g01;
@@ -712,23 +712,23 @@ void obs_plan_obs_CS(Observable_T *obs)
       double *g12 = alloc_double(nn);
       double *g22 = alloc_double(nn);
       
-      READ_v(_gamma_D2D2)
-      READ_v(_gamma_D0D2)
-      READ_v(_gamma_D0D0)
-      READ_v(_gamma_D0D1)
-      READ_v(_gamma_D1D2)
-      READ_v(_gamma_D1D1)
+      READ_v(gConf_D2D2)
+      READ_v(gConf_D0D2)
+      READ_v(gConf_D0D0)
+      READ_v(gConf_D0D1)
+      READ_v(gConf_D1D2)
+      READ_v(gConf_D1D1)
       
       adm[n]->patch = patch;
       /* populate metric components, it uses conformal metric */ 
       for (ijk = 0; ijk < nn; ++ijk)
       {
-        g00[ijk] = _gamma_D0D0[ijk];
-        g01[ijk] = _gamma_D0D1[ijk];
-        g02[ijk] = _gamma_D0D2[ijk];
-        g11[ijk] = _gamma_D1D1[ijk];
-        g12[ijk] = _gamma_D1D2[ijk];
-        g22[ijk] = _gamma_D2D2[ijk];
+        g00[ijk] = gConf_D0D0[ijk];
+        g01[ijk] = gConf_D0D1[ijk];
+        g02[ijk] = gConf_D0D2[ijk];
+        g11[ijk] = gConf_D1D1[ijk];
+        g12[ijk] = gConf_D1D2[ijk];
+        g22[ijk] = gConf_D2D2[ijk];
       }
       adm[n]->g00 = g00;
       adm[n]->g01 = g01;
@@ -795,12 +795,12 @@ void obs_plan_obs_CS(Observable_T *obs)
       double *g12 = alloc_double(nn);
       double *g22 = alloc_double(nn);
       
-      READ_v(_gamma_D2D2)
-      READ_v(_gamma_D0D2)
-      READ_v(_gamma_D0D0)
-      READ_v(_gamma_D0D1)
-      READ_v(_gamma_D1D2)
-      READ_v(_gamma_D1D1)
+      READ_v(gConf_D2D2)
+      READ_v(gConf_D0D2)
+      READ_v(gConf_D0D0)
+      READ_v(gConf_D0D1)
+      READ_v(gConf_D1D2)
+      READ_v(gConf_D1D1)
       READ_v(psi);
 
       adm[n]->patch = patch;
@@ -808,12 +808,12 @@ void obs_plan_obs_CS(Observable_T *obs)
       for (ijk = 0; ijk < nn; ++ijk)
       {
         double psi4 = Pow2(psi[ijk])*Pow2(psi[ijk]);
-        g00[ijk] = psi4*_gamma_D0D0[ijk];
-        g01[ijk] = psi4*_gamma_D0D1[ijk];
-        g02[ijk] = psi4*_gamma_D0D2[ijk];
-        g11[ijk] = psi4*_gamma_D1D1[ijk];
-        g12[ijk] = psi4*_gamma_D1D2[ijk];
-        g22[ijk] = psi4*_gamma_D2D2[ijk];
+        g00[ijk] = psi4*gConf_D0D0[ijk];
+        g01[ijk] = psi4*gConf_D0D1[ijk];
+        g02[ijk] = psi4*gConf_D0D2[ijk];
+        g11[ijk] = psi4*gConf_D1D1[ijk];
+        g12[ijk] = psi4*gConf_D1D2[ijk];
+        g22[ijk] = psi4*gConf_D2D2[ijk];
       }
       adm[n]->g00 = g00;
       adm[n]->g01 = g01;
@@ -876,23 +876,23 @@ void obs_plan_obs_CS(Observable_T *obs)
       double *g12 = alloc_double(nn);
       double *g22 = alloc_double(nn);
       
-      READ_v(_gamma_D2D2)
-      READ_v(_gamma_D0D2)
-      READ_v(_gamma_D0D0)
-      READ_v(_gamma_D0D1)
-      READ_v(_gamma_D1D2)
-      READ_v(_gamma_D1D1)
+      READ_v(gConf_D2D2)
+      READ_v(gConf_D0D2)
+      READ_v(gConf_D0D0)
+      READ_v(gConf_D0D1)
+      READ_v(gConf_D1D2)
+      READ_v(gConf_D1D1)
       
       adm[n]->patch = patch;
       /* populate metric components, it uses conformal metric */ 
       for (ijk = 0; ijk < nn; ++ijk)
       {
-        g00[ijk] = _gamma_D0D0[ijk];
-        g01[ijk] = _gamma_D0D1[ijk];
-        g02[ijk] = _gamma_D0D2[ijk];
-        g11[ijk] = _gamma_D1D1[ijk];
-        g12[ijk] = _gamma_D1D2[ijk];
-        g22[ijk] = _gamma_D2D2[ijk];
+        g00[ijk] = gConf_D0D0[ijk];
+        g01[ijk] = gConf_D0D1[ijk];
+        g02[ijk] = gConf_D0D2[ijk];
+        g11[ijk] = gConf_D1D1[ijk];
+        g12[ijk] = gConf_D1D2[ijk];
+        g22[ijk] = gConf_D2D2[ijk];
       }
       adm[n]->g00 = g00;
       adm[n]->g01 = g01;
@@ -921,12 +921,12 @@ static void n_physical_metric_surrounding(struct items_S *const adm,const Dd_T d
   double *n_U2 = alloc_double(nn);
   unsigned ijk;
   
-  READ_v(_gamma_D2D2)
-  READ_v(_gamma_D0D2)
-  READ_v(_gamma_D0D0)
-  READ_v(_gamma_D0D1)
-  READ_v(_gamma_D1D2)
-  READ_v(_gamma_D1D1)
+  READ_v(gConf_D2D2)
+  READ_v(gConf_D0D2)
+  READ_v(gConf_D0D0)
+  READ_v(gConf_D0D1)
+  READ_v(gConf_D1D2)
+  READ_v(gConf_D1D1)
   READ_v(psi);
     
   for (ijk = 0; ijk < nn; ++ijk)
@@ -938,10 +938,10 @@ static void n_physical_metric_surrounding(struct items_S *const adm,const Dd_T d
     /* normalization */
     double psi4 = Pow2(psi[ijk])*Pow2(psi[ijk]);
     double Norm2 = 
-psi4*(_gamma_D0D0[ijk]*pow(n_U0[ijk], 2) + 2.0*_gamma_D0D1[ijk]*
-n_U0[ijk]*n_U1[ijk] + 2.0*_gamma_D0D2[ijk]*n_U0[ijk]*n_U2[ijk] +
-_gamma_D1D1[ijk]*pow(n_U1[ijk], 2) + 2.0*_gamma_D1D2[ijk]*n_U1[ijk]*
-n_U2[ijk] + _gamma_D2D2[ijk]*pow(n_U2[ijk], 2));
+psi4*(gConf_D0D0[ijk]*pow(n_U0[ijk], 2) + 2.0*gConf_D0D1[ijk]*
+n_U0[ijk]*n_U1[ijk] + 2.0*gConf_D0D2[ijk]*n_U0[ijk]*n_U2[ijk] +
+gConf_D1D1[ijk]*pow(n_U1[ijk], 2) + 2.0*gConf_D1D2[ijk]*n_U1[ijk]*
+n_U2[ijk] + gConf_D2D2[ijk]*pow(n_U2[ijk], 2));
 
     double Norm = sqrt(Norm2);
     
@@ -966,12 +966,12 @@ static void n_conformal_metric_surrounding(struct items_S *const adm,const Dd_T 
   double *n_U2 = alloc_double(nn);
   unsigned ijk;
   
-  READ_v(_gamma_D2D2)
-  READ_v(_gamma_D0D2)
-  READ_v(_gamma_D0D0)
-  READ_v(_gamma_D0D1)
-  READ_v(_gamma_D1D2)
-  READ_v(_gamma_D1D1)
+  READ_v(gConf_D2D2)
+  READ_v(gConf_D0D2)
+  READ_v(gConf_D0D0)
+  READ_v(gConf_D0D1)
+  READ_v(gConf_D1D2)
+  READ_v(gConf_D1D1)
     
   for (ijk = 0; ijk < nn; ++ijk)
   {
@@ -981,10 +981,10 @@ static void n_conformal_metric_surrounding(struct items_S *const adm,const Dd_T 
     
     /* normalization */
     double Norm2 = 
-(_gamma_D0D0[ijk]*pow(n_U0[ijk], 2) + 2.0*_gamma_D0D1[ijk]*
-n_U0[ijk]*n_U1[ijk] + 2.0*_gamma_D0D2[ijk]*n_U0[ijk]*n_U2[ijk] +
-_gamma_D1D1[ijk]*pow(n_U1[ijk], 2) + 2.0*_gamma_D1D2[ijk]*n_U1[ijk]*
-n_U2[ijk] + _gamma_D2D2[ijk]*pow(n_U2[ijk], 2));
+(gConf_D0D0[ijk]*pow(n_U0[ijk], 2) + 2.0*gConf_D0D1[ijk]*
+n_U0[ijk]*n_U1[ijk] + 2.0*gConf_D0D2[ijk]*n_U0[ijk]*n_U2[ijk] +
+gConf_D1D1[ijk]*pow(n_U1[ijk], 2) + 2.0*gConf_D1D2[ijk]*n_U1[ijk]*
+n_U2[ijk] + gConf_D2D2[ijk]*pow(n_U2[ijk], 2));
 
     double Norm = sqrt(Norm2);
     
@@ -1577,24 +1577,24 @@ void obs_define_spin_integral(double S[3],Grid_T *const grid,const char *const k
     double *g22 = alloc_double(nn);
     unsigned ijk;
     
-    READ_v(_gamma_D2D2)
-    READ_v(_gamma_D0D2)
-    READ_v(_gamma_D0D0)
-    READ_v(_gamma_D0D1)
-    READ_v(_gamma_D1D2)
-    READ_v(_gamma_D1D1)
+    READ_v(gConf_D2D2)
+    READ_v(gConf_D0D2)
+    READ_v(gConf_D0D0)
+    READ_v(gConf_D0D1)
+    READ_v(gConf_D1D2)
+    READ_v(gConf_D1D1)
     READ_v(psi);
     
     /* populate metric components */ 
     for (ijk = 0; ijk < nn; ++ijk)
     {
       double psi4 = Pow2(psi[ijk])*Pow2(psi[ijk]);
-      g00[ijk] = psi4*_gamma_D0D0[ijk];
-      g01[ijk] = psi4*_gamma_D0D1[ijk];
-      g02[ijk] = psi4*_gamma_D0D2[ijk];
-      g11[ijk] = psi4*_gamma_D1D1[ijk];
-      g12[ijk] = psi4*_gamma_D1D2[ijk];
-      g22[ijk] = psi4*_gamma_D2D2[ijk];
+      g00[ijk] = psi4*gConf_D0D0[ijk];
+      g01[ijk] = psi4*gConf_D0D1[ijk];
+      g02[ijk] = psi4*gConf_D0D2[ijk];
+      g11[ijk] = psi4*gConf_D1D1[ijk];
+      g12[ijk] = psi4*gConf_D1D2[ijk];
+      g22[ijk] = psi4*gConf_D2D2[ijk];
     }
     
     normal->patch = patch;
@@ -1712,24 +1712,24 @@ obs_define_spin_akv
     double *g22 = alloc_double(nn);
     unsigned ijk;
     
-    READ_v(_gamma_D2D2)
-    READ_v(_gamma_D0D2)
-    READ_v(_gamma_D0D0)
-    READ_v(_gamma_D0D1)
-    READ_v(_gamma_D1D2)
-    READ_v(_gamma_D1D1)
+    READ_v(gConf_D2D2)
+    READ_v(gConf_D0D2)
+    READ_v(gConf_D0D0)
+    READ_v(gConf_D0D1)
+    READ_v(gConf_D1D2)
+    READ_v(gConf_D1D1)
     READ_v(psi);
     
     /* populate metric components */ 
     for (ijk = 0; ijk < nn; ++ijk)
     {
       double psi4 = Pow2(psi[ijk])*Pow2(psi[ijk]);
-      g00[ijk] = psi4*_gamma_D0D0[ijk];
-      g01[ijk] = psi4*_gamma_D0D1[ijk];
-      g02[ijk] = psi4*_gamma_D0D2[ijk];
-      g11[ijk] = psi4*_gamma_D1D1[ijk];
-      g12[ijk] = psi4*_gamma_D1D2[ijk];
-      g22[ijk] = psi4*_gamma_D2D2[ijk];
+      g00[ijk] = psi4*gConf_D0D0[ijk];
+      g01[ijk] = psi4*gConf_D0D1[ijk];
+      g02[ijk] = psi4*gConf_D0D2[ijk];
+      g11[ijk] = psi4*gConf_D1D1[ijk];
+      g12[ijk] = psi4*gConf_D1D2[ijk];
+      g22[ijk] = psi4*gConf_D2D2[ijk];
     }
     
     normal->patch = patch;
