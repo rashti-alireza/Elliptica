@@ -736,6 +736,9 @@ collect_patches
   char **reg = read_separated_items_in_string(region,',');
   unsigned np,p;
   
+  /* init */
+  *Np = 0;
+  
   np = 0;
   FOR_ALL_PATCHES(p,grid)
   {
