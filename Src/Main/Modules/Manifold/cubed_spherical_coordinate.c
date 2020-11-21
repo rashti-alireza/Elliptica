@@ -188,7 +188,7 @@ void fill_patches_Split_CubedSpherical_grid(Grid_T *const grid)
       /* set innerB for BH_around */
       unsigned nbh = 0,p;
       Patch_T **patches = 
-        collect_patches(grid,"BH_around_ibndry",bh_side,&nbh);
+        collect_patches(grid,"BH_around_IB",bh_side,&nbh);
       
       for (p = 0; p < nbh; ++p)
       {
@@ -292,7 +292,7 @@ void fill_patches_Split_CubedSpherical_grid(Grid_T *const grid)
       Patch_T **patches = 0;
      
       /* BH1 */
-      patches = collect_patches(grid,"BH1_around_ibndry",bh_side1,&nbh);
+      patches = collect_patches(grid,"BH1_around_IB",bh_side1,&nbh);
       for (p = 0; p < nbh; ++p)
       {
         Patch_T *patch = patches[p];
@@ -301,7 +301,7 @@ void fill_patches_Split_CubedSpherical_grid(Grid_T *const grid)
       _free(patches);
       
       /* BH 2 */
-      patches = collect_patches(grid,"BH2_around_ibndry",bh_side2,&nbh);
+      patches = collect_patches(grid,"BH2_around_IB",bh_side2,&nbh);
       for (p = 0; p < nbh; ++p)
       {
         Patch_T *patch = patches[p];
@@ -355,7 +355,7 @@ void fill_patches_Split_CubedSpherical_grid(Grid_T *const grid)
       Patch_T **patches = 0;
      
       /* BH */
-      patches = collect_patches(grid,"BH_around_ibndry",bh_side,&nbh);
+      patches = collect_patches(grid,"BH_around_IB",bh_side,&nbh);
       for (p = 0; p < nbh; ++p)
       {
         Patch_T *patch = patches[p];
