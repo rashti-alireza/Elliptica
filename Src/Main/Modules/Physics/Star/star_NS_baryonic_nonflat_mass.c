@@ -14,7 +14,7 @@ double star_NS_baryonic_nonflat_mass(Obj_Man_T *const obj,const double Euler_C)
   FOR_ALL_PATCHES(p,obj->grid)
   {
     Patch_T *patch = obj->grid->patch[p];
-    ONLY_IF_COVER(patch,obj);
+    if_not_cover(patch,obj) continue;
 
     ADD_AND_ALLOC_FIELD(baryonic_mass_integrand)
     DECLARE_FIELD(baryonic_mass_integrand)

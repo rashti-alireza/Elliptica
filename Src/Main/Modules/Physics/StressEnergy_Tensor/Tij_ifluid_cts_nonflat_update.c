@@ -28,7 +28,7 @@ void Tij_idealfluid_CTS_nonflat_update(Obj_Man_T *const obj)
   {
     Patch_T *patch = grid->patch[p];
     
-    ONLY_IF_COVER(patch,obj);
+    if_not_cover(patch,obj)  continue;
     
     RELAX_UPDATE_FUNC(Tij_IF_CTS_nonflat_enthalpy(patch,Euler_const),
                       patch,enthalpy,W);
