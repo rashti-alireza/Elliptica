@@ -35,7 +35,7 @@
 // free_observable(obs);
 */
 
-#include "obs_observables.h"
+#include "obs_header.h"
 #define VOLUME_INTEGRAL 1 /* put it to 1 if you want \int{Gdv} */
 
 /* plan and populate items_S sturct and obs struct
