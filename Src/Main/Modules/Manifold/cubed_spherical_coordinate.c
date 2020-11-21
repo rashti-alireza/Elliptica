@@ -454,72 +454,34 @@ populate_CS_patch_SplitCS
           assert(StrSide[side]);
           
           /* covering region */
-          if (strcmp_i(obj,"NS") || strcmp_i(obj,"BH"))
+          if (strcmp_i(obj,"NS")         || 
+              strcmp_i(obj,"NS1")        ||
+              strcmp_i(obj,"NS2")        || 
+              strcmp_i(obj,"BH")         ||
+              strcmp_i(obj,"BH1")        || 
+              strcmp_i(obj,"BH2")        ||
+              strcmp_i(obj,"NS_around")  ||
+              strcmp_i(obj,"NS1_around") ||
+              strcmp_i(obj,"NS2_around") ||
+              strcmp_i(obj,"BH_around")  ||
+              strcmp_i(obj,"BH1_around") ||
+              strcmp_i(obj,"BH2_around") ||
+              strcmp_i(obj,"outermost")
+             )
           {
-            if (d2 == Nsd[2]-1)/* if on surface */
+            if (d2 == Nsd[2]-1)/* if on Outer Boundary */
               sprintf(patch->CoordSysInfo->region,
-                "(%s)(%s_surface)(%s_%s)(%s_%s_surface)",
+                "(%s)(%s_OB)(%s_%s)(%s_%s_OB)",
                  obj,obj,        dir,obj,dir,obj);
+            
+            else if (d2 == 0)/* if on Inner Boundary */
+              sprintf(patch->CoordSysInfo->region,
+               "(%s)(%s_IB)(%s_%s)(%s_%s_IB)",
+               obj,obj,        dir,obj,dir,obj);
+            
             else
               sprintf(patch->CoordSysInfo->region,
                 "(%s)(%s_%s)",obj,dir,obj);
-          }
-          else if (strcmp_i(obj,"NS_around") || 
-                   strcmp_i(obj,"BH_around"))
-          {
-            if (d2 == 0)/* if on surface */
-              sprintf(patch->CoordSysInfo->region,
-               "(%s)(%s_surface)(%s_%s)(%s_%s_surface)",
-                 obj,obj,        dir,obj,dir,obj);
-            else
-              sprintf(patch->CoordSysInfo->region,
-                "(%s)(%s_%s)",obj,dir,obj);
-          }
-          else if (strcmp_i(obj,"NS1") || strcmp_i(obj,"BH1"))
-          {
-            if (d2 == Nsd[2]-1)/* if on surface */
-              sprintf(patch->CoordSysInfo->region,
-               "(%s)(%s_surface)(%s_%s)(%s_%s_surface)",
-                 obj,obj,        dir,obj,dir,obj);
-            else
-              sprintf(patch->CoordSysInfo->region,
-                "(%s)(%s_%s)",obj,dir,obj);
-          }
-          else if (strcmp_i(obj,"NS1_around") || 
-                   strcmp_i(obj,"BH1_around"))
-          {
-            if (d2 == 0)/* if on surface */
-              sprintf(patch->CoordSysInfo->region,
-               "(%s)(%s_surface)(%s_%s)(%s_%s_surface)",
-                 obj,obj,        dir,obj,dir,obj);
-            else
-              sprintf(patch->CoordSysInfo->region,
-                "(%s)(%s_%s)",obj,dir,obj);
-          }
-          else if (strcmp_i(obj,"NS2") || strcmp_i(obj,"BH2"))
-          {
-            if (d2 == Nsd[2]-1)/* if on surface */
-              sprintf(patch->CoordSysInfo->region,
-               "(%s)(%s_surface)(%s_%s)(%s_%s_surface)",
-                 obj,obj,        dir,obj,dir,obj);
-            else
-              sprintf(patch->CoordSysInfo->region,
-                "(%s)(%s_%s)",obj,dir,obj);
-          }
-          else if (strcmp_i(obj,"NS2_around") || 
-                   strcmp_i(obj,"BH2_around"))
-          {
-            if (d2 == 0)/* if on surface */
-              sprintf(patch->CoordSysInfo->region,
-               "(%s)(%s_surface)(%s_%s)(%s_%s_surface)",
-                 obj,obj,        dir,obj,dir,obj);
-            else
-              sprintf(patch->CoordSysInfo->region,
-                "(%s)(%s_%s)",obj,dir,obj);
-          }
-          else if (strcmp_i(obj,"outermost"))
-          {
-            sprintf(patch->CoordSysInfo->region,"(%s)",obj);
           }
           else
           {
