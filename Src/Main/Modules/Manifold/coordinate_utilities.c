@@ -773,10 +773,12 @@ collect_patches
 // 
 // "NS?" == the whole NS patches including central box (if any)
 // "BH?" == the whole BH patches including central box (if any)
-// "NS?_surface" == only patches include the NS surface from inside
-// "BH?_surface" == only patches include the BH surface from inside
-// "NS?_around_IB" == only patches include the NS surface from outside
-// "BH?_around_IB" == only patches include the BH surface from outside
+// "NS?_OB" == only patches include the Outer Boundary i.e NS surface from inside.
+// "BH?_OB" == only patches include the Outer Boundary i.e BH surface from inside.
+// "NS?_around_IB" == only patches include the Inner Boundary i.e NS surface from outside
+// "BH?_around_IB" == only patches include the Inner Boundary i.e BH surface from outside
+// "NS?_around_OB" == only patches include the Outer Boundary i.e farthest surface
+// "BH?_around_OB" == only patches include the Outer Boundary i.e farthest surface
 // "NS?_around" == the whole NS around patches
 // "BH?_around" == the whole NS around patches
 // "outermost" == the whole outermost patches
