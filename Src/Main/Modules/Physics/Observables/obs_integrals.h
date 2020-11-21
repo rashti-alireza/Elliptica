@@ -7,8 +7,8 @@
 #include "fields_lib.h"
 #include "obs_headers.h"
 
-void obs_plan_obs_CS(Observable_T *obs);
-void obs_free_obs_CS(Observable_T *obs);
+void obs_plan(Observable_T *obs);
+void obs_free(Observable_T *obs);
 void obs_populate_ADM_integrand_PdS_GdV_binary(const Observable_T *const obs);
 void obs_populate_ADM_integrand_PdS_GdV_single(const Observable_T *const obs);
 double obs_Kommar_mass(Observable_T *const obs);

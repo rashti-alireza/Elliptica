@@ -50,7 +50,7 @@
 // 5. populate the integrands
 // 6. assign the pertinent functions for the calculation.
 // */
-void obs_plan_obs_CS(Observable_T *obs)
+void obs_plan(Observable_T *obs)
 {
   Grid_T *const grid = obs->grid;
   
@@ -999,7 +999,7 @@ n_U2[ijk] + gConf_D2D2[ijk]*pow(n_U2[ijk], 2));
 }
 
 /* free stuct Observable_T */
-void obs_free_obs_CS(Observable_T *obs)
+void obs_free(Observable_T *obs)
 {
   if (!obs)
     return;
