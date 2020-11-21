@@ -171,7 +171,7 @@ static int fdS_spectral(Grid_T *const grid)
     FOR_ALL_PATCHES(p,grid)
     {
       patch   = grid->patch[p];
-      if (!IsItCovering(patch,"NS",LEFT))
+      if (!IsItCovering(patch,"NS"))
         continue;
       if (strstr(patch->name,"left_central_box"))
         continue;
@@ -498,7 +498,7 @@ static int fdV_spectral(Grid_T *const grid)
     FOR_ALL_PATCHES(p,grid)
     {
       patch   = grid->patch[p];
-      if (!IsItCovering(patch,"NS",LEFT))
+      if (!IsItCovering(patch,"NS"))
         continue;
       
       I  = init_integration();

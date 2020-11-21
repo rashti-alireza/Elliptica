@@ -7,12 +7,12 @@
 /* if the given patch DOES cover the region. 
 // this is generally used in a loop over all patches */ 
 #define if_cover(patch,obj)     \
- if(IsItCovering(patch,obj->region,obj->pos))
+ if(IsItCovering(patch,obj->region))
  
 /* if the given patch DOES NOT cover the region. 
 // this is generally used in a loop over all patches */ 
 #define if_not_cover(patch,obj) \
- if(!IsItCovering(patch,obj->region,obj->pos))
+ if(!IsItCovering(patch,obj->region))
 
 /* get double parameter for this given object. ex: 
 // obj->stype = "NS1",par = "enthalpy_update_weight" => 
