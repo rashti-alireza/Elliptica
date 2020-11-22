@@ -25,11 +25,12 @@
 void obs_populate_ADM_integrand_PdS_GdV_binary(const Observable_T *const obs);
 void obs_populate_ADM_integrand_PdS_GdV_binary(const Observable_T *const obs)
 {
+  Physics_T *const phys = obs->phys;
   struct items_S **adm = obs->items;
   const unsigned N = obs->Nitems;
-  const double x_cm = Pgetd("x_CM");
-  const double y_cm = Pgetd("y_CM");
-  const double z_cm = 0;
+  const double x_cm = Getd("x_CM");
+  const double y_cm = Getd("y_CM");
+  const double z_cm = Getd("z_CM");
   const double CUTOFF = 1E3;
   unsigned p;
 
