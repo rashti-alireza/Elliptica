@@ -68,3 +68,57 @@ static double Euler_eq_const_gConf_rootfinder_eq(void *params,const double *cons
   return star_NS_baryonic_gConf_mass(par->phys,x[0]) - par->NS_baryonic_mass;
 }
 
+
+
+
+/* calculate W = Omega_NS x (r-C_NS) */
+void star_W_spin_vector_idealfluid_update(Physics_T *const phys)
+{
+  FUNC_TIC
+  
+  Grid_T *const grid = phys->grid;
+  double Omega_NS[3],C_NS[3];
+  unsigned p;
+  
+  Omega_NS[0] = Getd("Omega_U0");
+  Omega_NS[1] = Getd("Omega_U1");
+  Omega_NS[2] = Getd("Omega_U2");
+  C_NS[0]     = Getd("Center_x");
+  C_NS[1]     = Getd("Center_y");
+  C_NS[2]     = Getd("Center_z");
+  
+  FOR_ALL_PATCHES(p,grid)
+  {
+    Patch_T *patch = grid->patch[p];
+    
+    if_not_cover(patch,phys) continue;
+    
+    W_spin_vector_idealfluid(patch,Omega_NS,C_NS);
+    
+  }
+  
+  FUNC_TOC
+}
+
+/* calculate W = Omega_NS x (r-C_NS) */
+void W_spin_vector_idealfluid(Patch_T *const patch,const double Omega_NS[3],const double C_NS[3])
+{
+  REALLOC_v_WRITE_v(W_U0)
+  REALLOC_v_WRITE_v(W_U1)
+  REALLOC_v_WRITE_v(W_U2)
+  unsigned nn = patch->nn;
+  unsigned ijk;
+  
+  for (ijk = 0; ijk < nn; ++ijk)
+  {
+    double x = patch->node[ijk]->x[0]-C_NS[0];
+    double y = patch->node[ijk]->x[1]-C_NS[1];
+    double z = patch->node[ijk]->x[2]-C_NS[2];
+    
+    /* spin part */
+    W_U0[ijk] = Omega_NS[1]*z-Omega_NS[2]*y;
+    W_U1[ijk] = Omega_NS[2]*x-Omega_NS[0]*z;
+    W_U2[ijk] = Omega_NS[0]*y-Omega_NS[1]*x;
+  }
+  
+}
