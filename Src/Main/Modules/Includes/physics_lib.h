@@ -1,5 +1,5 @@
-#ifndef managers_LIB_H
-#define managers_LIB_H
+#ifndef physics_LIB_H
+#define physics_LIB_H
 
 /* string length of an object parameter */
 #define OPAR_LEN (99)
@@ -117,6 +117,8 @@ typedef struct OBJ_MAN_T
 
 
 Obj_Man_T *init_obj_man(Grid_T *const grid,const Com_Obj_T type);
+int physics(Obj_Man_T *const obj,const cmd_T cmd,
+            const char *const file, const int line);
 void free_obj_man(Obj_Man_T *obj);
 
 #endif

@@ -8,7 +8,7 @@
 #include "utilities_lib.h"
 #include "physics_EoS_lib.h"
 #include "physics_observables_lib.h"
-#include "managers_lib.h"
+#include "physics_lib.h"
 #include "fields_lib.h"
 #include "maths_equation_solvings_lib.h"
 

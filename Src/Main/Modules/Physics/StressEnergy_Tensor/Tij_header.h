@@ -7,7 +7,7 @@
 #include "manifold_lib.h"
 #include "utilities_lib.h"
 #include "physics_EoS_lib.h"
-#include "managers_lib.h"
+#include "physics_lib.h"
 #include "fields_lib.h"
 
 int Tij_tune(Obj_Man_T *const obj);
