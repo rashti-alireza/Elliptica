@@ -1,15 +1,15 @@
-#ifndef physics_observables_LIB_H
-#define physics_observables_LIB_H
+#ifndef physics_observe_LIB_H
+#define physics_observe_LIB_H
 
-#define OBSERVABLE_STR_LEN (99)
+#define OBSERVE_STR_LEN (99)
 
 /* forward declaration */
 struct PHYSICS_T;
 
-/* struct for physics observables */
-typedef struct OBSERVABLE_T
+/* struct for physics observe */
+typedef struct OBSERVE_T
 {
-  char quantity[OBSERVABLE_STR_LEN];/* which quantity is computed */
+  char quantity[OBSERVE_STR_LEN];/* which quantity is computed */
   Grid_T *grid;/* computational grid */
   struct PHYSICS_T *phys;/* physics pertinent to compact object of interest */
   void *items;/* this is general struct that composes 
@@ -19,22 +19,21 @@ typedef struct OBSERVABLE_T
   unsigned Nitems;/* number of items */
   
   /* functions to calculate momentums in each direction */
-  double (*Px)(struct OBSERVABLE_T *const obs);
-  double (*Py)(struct OBSERVABLE_T *const obs);
-  double (*Pz)(struct OBSERVABLE_T *const obs);
-  double (*Jx)(struct OBSERVABLE_T *const obs);
-  double (*Jy)(struct OBSERVABLE_T *const obs);
-  double (*Jz)(struct OBSERVABLE_T *const obs);
+  double (*Px)(struct OBSERVE_T *const obs);
+  double (*Py)(struct OBSERVE_T *const obs);
+  double (*Pz)(struct OBSERVE_T *const obs);
+  double (*Jx)(struct OBSERVE_T *const obs);
+  double (*Jy)(struct OBSERVE_T *const obs);
+  double (*Jz)(struct OBSERVE_T *const obs);
   
   /* function to calculate mass */
-  double (*M)(struct OBSERVABLE_T *const obs);
-}Observable_T;
+  double (*M)(struct OBSERVE_T *const obs);
+}Observe_T;
 
 
-Observable_T *init_observable(struct PHYSICS_T *const phys,const char *const sq);
-void free_observable(Observable_T *obs);
+int observe(struct PHYSICS_T *const phys,const char *const sq,double *const save);
 
-#undef OBSERVABLE_STR_LEN
+#undef OBSERVE_STR_LEN
 
 #endif
 

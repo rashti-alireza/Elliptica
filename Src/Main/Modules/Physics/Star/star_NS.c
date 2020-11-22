@@ -20,7 +20,7 @@ void star_idealfluid_NS_gConf_find_Euler_const(Physics_T *const phys)
   double guess[1] = {Getd("Euler_equation_constant")};
   const double RESIDUAL = sqrt(Getd("RootFinder_Tolerance"));
   struct NS_Euler_eq_const_RootFinder_S params[1] = {0};
-  Observable_T *obs = 0;
+  Observe_T *obs = 0;
   double bar_mass,adm_mass,kommar_mass;
   
   bar_mass = star_NS_baryonic_gConf_mass(phys,guess[0]);

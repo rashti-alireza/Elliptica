@@ -7,7 +7,7 @@
 // =========
 //
 // * initialize observable *
-// Observable_T *obs = init_observable(object,string_quantity);
+// Observe_T *obs = init_observable(object,string_quantity);
 // to see the list of string_quantity see "obs_integrals.c"
 //
 // * after initialization calculate the observable. example:*
@@ -25,10 +25,10 @@
 
 #include "obs_main.h"
 
-/* initialzing stuct Observable_T for sq look explanation on top. */
-Observable_T *init_observable(Physics_T *const phys,const char *const sq)
+/* initialzing stuct Observe_T for sq look explanation on top. */
+Observe_T *init_observable(Physics_T *const phys,const char *const sq)
 {
-  Observable_T *const obs = calloc(1,sizeof(*obs));
+  Observe_T *const obs = calloc(1,sizeof(*obs));
   IsNull(obs);
 
   obs->phys  = phys;
@@ -41,8 +41,8 @@ Observable_T *init_observable(Physics_T *const phys,const char *const sq)
 }
 
 
-/* free stuct Observable_T and items */
-void free_observable(Observable_T *obs)
+/* free stuct Observe_T and items */
+void free_observable(Observe_T *obs)
 {
   if (!obs)
     return;

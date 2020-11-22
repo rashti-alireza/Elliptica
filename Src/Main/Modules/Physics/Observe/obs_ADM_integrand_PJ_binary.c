@@ -5,7 +5,7 @@
 
 
 #include "core_lib.h"
-#include "physics_observables_lib.h"
+#include "physics_observe_lib.h"
 #include "utilities_lib.h"
 #include "manifold_lib.h"
 #include "maths_general_lib.h"
@@ -22,8 +22,8 @@
   ADD_FIELD(name);REALLOC_v_WRITE_v(name);
 
 
-void obs_populate_ADM_integrand_PdS_GdV_binary(const Observable_T *const obs);
-void obs_populate_ADM_integrand_PdS_GdV_binary(const Observable_T *const obs)
+void obs_populate_ADM_integrand_PdS_GdV_binary(const Observe_T *const obs);
+void obs_populate_ADM_integrand_PdS_GdV_binary(const Observe_T *const obs)
 {
   Physics_T *const phys = obs->phys;
   struct items_S **adm = obs->items;

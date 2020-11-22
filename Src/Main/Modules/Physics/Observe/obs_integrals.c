@@ -55,7 +55,7 @@
 // 5. populate the integrands
 // 6. assign the pertinent functions for the calculation.
 // */
-void obs_plan(Observable_T *obs)
+void obs_plan(Observe_T *obs)
 {
   Grid_T *const grid = obs->grid;
   
@@ -856,7 +856,7 @@ n_U2[ijk] + gConf_D2D2[ijk]*pow(n_U2[ijk], 2));
 }
 
 /* calculating ADM momentum in x component */
-static double ADM_momentum_x_BHNS_CS(Observable_T *const obs)
+static double ADM_momentum_x_BHNS_CS(Observe_T *const obs)
 {
   double Px = 0;
   struct items_S **const adm = obs->items;
@@ -926,7 +926,7 @@ static double ADM_momentum_x_BHNS_CS(Observable_T *const obs)
 }
 
 /* calculating ADM momentum in x component */
-static double ADM_momentum_y_BHNS_CS(Observable_T *const obs)
+static double ADM_momentum_y_BHNS_CS(Observe_T *const obs)
 {
   double Py = 0;
   struct items_S **const adm = obs->items;
@@ -996,7 +996,7 @@ static double ADM_momentum_y_BHNS_CS(Observable_T *const obs)
 }
 
 /* calculating ADM momentum in x component */
-static double ADM_momentum_z_BHNS_CS(Observable_T *const obs)
+static double ADM_momentum_z_BHNS_CS(Observe_T *const obs)
 {
   double Pz = 0;
   struct items_S **const adm = obs->items;
@@ -1066,7 +1066,7 @@ static double ADM_momentum_z_BHNS_CS(Observable_T *const obs)
 }
 
 /* calculating ADM angular momentum in z component */
-static double ADM_angular_momentum_z_BHNS_CS(Observable_T *const obs)
+static double ADM_angular_momentum_z_BHNS_CS(Observe_T *const obs)
 {
   double Jz = 0;
   struct items_S **const adm = obs->items;
@@ -1138,7 +1138,7 @@ static double ADM_angular_momentum_z_BHNS_CS(Observable_T *const obs)
 }
 
 /* calculating ADM angular momentum in x component */
-static double ADM_angular_momentum_x_BHNS_CS(Observable_T *const obs)
+static double ADM_angular_momentum_x_BHNS_CS(Observe_T *const obs)
 {
   double Jx = 0;
   struct items_S **const adm = obs->items;
@@ -1209,7 +1209,7 @@ static double ADM_angular_momentum_x_BHNS_CS(Observable_T *const obs)
 }
 
 /* calculating ADM angular momentum in y component */
-static double ADM_angular_momentum_y_BHNS_CS(Observable_T *const obs)
+static double ADM_angular_momentum_y_BHNS_CS(Observe_T *const obs)
 {
   double Jy = 0;
   struct items_S **const adm = obs->items;

@@ -7,8 +7,8 @@
 #include "obs_header.h"
 
 
-double obs_BH_ADM_mass(Observable_T *const obs);
-double obs_BH_ADM_mass(Observable_T *const obs)
+double obs_BH_ADM_mass(Observe_T *const obs);
+double obs_BH_ADM_mass(Observe_T *const obs)
 {
   double adm_mass = 0;
   struct items_S **adm = obs->items;

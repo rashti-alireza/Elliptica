@@ -2,7 +2,7 @@
 #define obs_LIB_H
 
 #include "core_lib.h"
-#include "physics_observables_lib.h"
+#include "physics_observe_lib.h"
 #include "utilities_lib.h"
 #include "manifold_lib.h"
 #include "maths_general_lib.h"
@@ -40,15 +40,15 @@ struct items_S
   unsigned K;
 };
 
-double obs_ADM_mass(Observable_T *const obs);
-double obs_BH_ADM_mass(Observable_T *const obs);
-double obs_Kommar_mass(Observable_T *const obs);
-double obs_ADM_mass(Observable_T *const obs);
+double obs_ADM_mass(Observe_T *const obs);
+double obs_BH_ADM_mass(Observe_T *const obs);
+double obs_Kommar_mass(Observe_T *const obs);
+double obs_ADM_mass(Observe_T *const obs);
 void obs_populate_spin_integrands_akv(Patch_T *const patch,const double *const normal[3]);
 void obs_populate_spin_integrands_Campanelli(Patch_T *const patch,const double xc[3],const double *const normal[3]);
 void obs_Rc_NS(double Rc[3],Physics_T *const phys);
-void obs_populate_ADM_integrand_PdS_GdV_binary(const Observable_T *const obs);
-void obs_populate_ADM_integrand_PdS_GdV_single(const Observable_T *const obs);
+void obs_populate_ADM_integrand_PdS_GdV_binary(const Observe_T *const obs);
+void obs_populate_ADM_integrand_PdS_GdV_single(const Observe_T *const obs);
 
 #endif
 

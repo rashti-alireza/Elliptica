@@ -12,8 +12,8 @@
   ADD_FIELD(name);REALLOC_v_WRITE_v(name);
 
 
-double obs_ADM_mass(Observable_T *const obs);
-double obs_ADM_mass(Observable_T *const obs)
+double obs_ADM_mass(Observe_T *const obs);
+double obs_ADM_mass(Observe_T *const obs)
 {
   double adm_mass = 0;
   struct items_S **adm = obs->items;
