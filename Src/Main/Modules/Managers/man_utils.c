@@ -26,15 +26,21 @@ init_obj_man
   
   if (Pcmps("project","BH_NS_initial_data"))
   {
-    obj->sys = BHNS;
+    obj->sys  = BHNS;
+    obj->ssys = "BHNS";
+    
   }
   else if (Pcmps("project","NS_NS_initial_data"))
   {
-    obj->sys = NSNS;
+    obj->sys  = NSNS;
+    obj->ssys = "NSNS";
+    
   }
   else if (Pcmps("project","BH_BH_initial_data"))
   {
-    obj->sys = BHBH;
+    obj->sys  = BHBH;
+    obj->ssys = "BHBH";
+    
   }
   else
     Error0(NO_OPTION);

@@ -31,6 +31,23 @@
  (sprintf(opar,"%s_%s",obj->stype,par) ? Pgets(opar) : NULL)
 
 
+/* get double parameter for the given system. ex: 
+// obj->ssys = "BHNS",par = "CM_x" => 
+// s = "BHNS_CM_x"; thus, we can have various parameter
+// calls with the same concept for different systems.
+// NOTE: obj and opar MUST be defined. */
+#define sysGetd(par) \
+ (sprintf(opar,"%s_%s",obj->stype,par) ? Pgetd(opar) : DBL_MAX)
+
+/* same as Getd but for integer type */ 
+#define sysGeti(par) \
+ (sprintf(opar,"%s_%s",obj->stype,par) ? Pgeti(opar) : INT_MAX)
+ 
+/* same as Getd but for string type */ 
+#define sysGets(par) \
+ (sprintf(opar,"%s_%s",obj->stype,par) ? Pgets(opar) : NULL)
+
+
 /* set double parameter for this given object. ex: 
 // obj->stype = "NS1",par = "enthalpy_update_weight" => 
 // s = "NS1_enthalpy_update_weight"; thus, we can have various parameter
@@ -83,9 +100,13 @@ typedef struct OBJ_MAN_T
  Grid_Char_T *grid_char;/* grid character when used for surface finder */
  cmd_T cmd;/* current command */
  const char *region;/* grid region you want to issue the command/ */
+ 
  Com_Obj_T type;/* BH1,NS2, NS, etc */
  const char *stype;/* string of type (above) used for parameter prefix */
+ 
  Com_Obj_T sys;/* system: BHNS, NSNS, BHBH, etc */
+ const char *ssys;/* string type of system: "BHNS", "NSNS", etc */
+ 
  Flag_T pos;/* position of the object with respect to the whole grid
             // i.e. (LEFT|RIGHT|CENTER|NONE) */
  const char *spos;/* string type for position above, 
