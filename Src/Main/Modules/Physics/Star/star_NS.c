@@ -13,7 +13,6 @@ void star_idealfluid_NS_nonflat_find_Euler_const(Obj_Man_T *const obj)
 {
   FUNC_TIC
   
-  Grid_T *const grid = obj->grid;
   Root_Finder_T *root = init_root_finder(1);
   char opar[OPAR_LEN] = {'\0'};
   const double W1  = Getd("Euler_const_update_weight");
@@ -26,11 +25,11 @@ void star_idealfluid_NS_nonflat_find_Euler_const(Obj_Man_T *const obj)
   double bar_mass,adm_mass,kommar_mass;
   
   bar_mass = star_NS_baryonic_nonflat_mass(obj,guess[0]);
-  obs = init_observable(grid,"ADM(M)|NS");
+  obs = init_observable(obj,"ADM(M)|NS");
   adm_mass = obs->M(obs);
   free_observable(obs);
   
-  obs = init_observable(grid,"Kommar(M)|NS");
+  obs = init_observable(obj,"Kommar(M)|NS");
   kommar_mass = obs->M(obs);
   free_observable(obs);
 

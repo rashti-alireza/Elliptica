@@ -7,16 +7,16 @@
 // =========
 //
 // * initialize observable *
-// Observable_T *obs = init_observable(grid,sq); # in which sq is:
+// Observable_T *obs = init_observable(object,sq); # in which sq is:
 //
 // * list of quantities *
-// "ADM(P,J)|SYS"  #=> compute P and J ADM for the system 
+// "ADM(P,J)|BHNS"  #=> compute P and J ADM for the system 
 // "ADM(P,J)|NS"   #=> compute P and J ADM for single NS 
 // "ADM(P,J)|BH"   #=> compute P and J ADM for single BH
-// "Kommar(M)|SYS" #=> compute Kommar mass for the system 
+// "Kommar(M)|BHNS" #=> compute Kommar mass for the system 
 // "Kommar(M)|NS"  #=> compute kommar mass for NS 
 // "Kommar(M)|BH"  #=> compute Kommar mass for BH
-// "ADM(M)|SYS"    #=> compute ADM mass for the system 
+// "ADM(M)|BHNS"    #=> compute ADM mass for the system 
 // "ADM(M)|NS"     #=> compute ADM mass for NS 
 // "ADM(M)|BH"     #=> compute ADM mass for BH
 //
@@ -56,7 +56,7 @@ void obs_plan(Observable_T *obs)
   if (grid->kind == Grid_SplitCubedSpherical_BHNS)
   {
       
-  if (strcmp_i(obs->quantity,"ADM(P,J)|SYS"))
+  if (strcmp_i(obs->quantity,"ADM(P,J)|BHNS"))
   {  
     Patch_T **patches = 0;
     Patch_T *patch    = 0;
@@ -423,7 +423,7 @@ void obs_plan(Observable_T *obs)
     obs->M = obs_Kommar_mass;
     free(patches);
   }
-  else if (strcmp_i(obs->quantity,"Kommar(M)|SYS"))
+  else if (strcmp_i(obs->quantity,"Kommar(M)|BHNS"))
   {  
     Patch_T **patches = 0;
     Patch_T *patch    = 0;
@@ -511,7 +511,7 @@ void obs_plan(Observable_T *obs)
     obs->M = obs_Kommar_mass;
     free(patches);
   }
-  else if (strcmp_i(obs->quantity,"ADM(M)|SYS"))
+  else if (strcmp_i(obs->quantity,"ADM(M)|BHNS"))
   {  
     Patch_T **patches1 = 0,**patches2 = 0;
     Patch_T *patch    = 0;

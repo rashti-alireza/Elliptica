@@ -7,21 +7,10 @@
 // =========
 //
 // * initialize observable *
-// Observable_T *obs = init_observable(grid,sq); # in which sq is:
+// Observable_T *obs = init_observable(object,string_quantity);
+// to see the list of string_quantity see "obs_integrals.c"
 //
-// * list of quantities *
-// "ADM(P,J)|SYS"  #=> compute P and J ADM for the system 
-// "ADM(P,J)|NS"   #=> compute P and J ADM for single NS 
-// "ADM(P,J)|BH"   #=> compute P and J ADM for single BH
-// "Kommar(M)|SYS" #=> compute Kommar mass for the system 
-// "Kommar(M)|NS"  #=> compute kommar mass for NS 
-// "Kommar(M)|BH"  #=> compute Kommar mass for BH
-// "ADM(M)|SYS"    #=> compute ADM mass for the system 
-// "ADM(M)|NS"     #=> compute ADM mass for NS 
-// "ADM(M)|BH"     #=> compute ADM mass for BH
-//
-//
-// * after initialization calculate the observable example:*
+// * after initialization calculate the observable. example:*
 // double Px_ADM = obs->Px(obs);# x component
 // double Py_ADM = obs->Py(obs);# y component
 // double Pz_ADM = obs->Pz(obs);# z component
@@ -37,13 +26,14 @@
 #include "obs_main.h"
 
 /* initialzing stuct Observable_T for sq look explanation on top. */
-Observable_T *init_observable(Grid_T *const grid,const char *const sq)
+Observable_T *init_observable(Obj_Man_T *const obj,const char *const sq)
 {
   Observable_T *const obs = calloc(1,sizeof(*obs));
   IsNull(obs);
 
-  obs->grid     = grid;
-  obs->quantity = sq;
+  obs->obj      = obj;
+  obs->grid     = obj->grid;
+  sprintf(obs->quantity,"%s|%s",sq,obj->stype);
   
   obs_plan(obs);
   
@@ -56,7 +46,6 @@ void free_observable(Observable_T *obs)
 {
   if (!obs)
     return;
-  
     
   if (obs->grid->kind == Grid_SplitCubedSpherical_BHNS)
   {  

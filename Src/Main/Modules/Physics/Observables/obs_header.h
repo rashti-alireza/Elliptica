@@ -8,6 +8,7 @@
 #include "maths_general_lib.h"
 #include "maths_calculus_lib.h"
 #include "fields_lib.h"
+#include "managers_lib.h"
 
 /* items needed to calculate Ps and Js ADMs */
 struct items_S
