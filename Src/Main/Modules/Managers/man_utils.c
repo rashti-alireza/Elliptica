@@ -17,7 +17,8 @@ init_obj_man
   Obj_Man_T *obj = calloc(1,sizeof(*obj)); IsNull(obj);
   const char *spos  = 0;
   
-  /* what should i do for BHNS? */
+  Error0("/* what should i do for BHNS region? */");
+  
   assert(obj->region);
   
   obj->grid = grid;
@@ -153,7 +154,8 @@ init_obj_man
       
     break;
     case BHNS:
-      obj->pos = NONE;
+      obj->stype = "BHNS";
+      obj->pos   = NONE;
       
     break;
     default:
