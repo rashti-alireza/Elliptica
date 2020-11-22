@@ -1,9 +1,7 @@
-#include "core_lib.h"
-#include "physics_observables_lib.h"
-#include "utilities_lib.h"
+#include "obs_header.h"
 
-Observable_T *init_observable(void *grid,void (*plan_items)(struct OBSERVABLE_T *obs),void (*free_items)(struct OBSERVABLE_T *obs));
-void plan_observable(Observable_T *const obs);
+Observable_T *init_observable(Grid_T *const grid,const char *const sq);
 void free_observable(Observable_T *obs);
+void obs_plan(Observable_T *obs);
 
 

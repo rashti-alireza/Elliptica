@@ -1,11 +1,6 @@
 #include "obs_header.h"
 
 void obs_plan(Observable_T *obs);
-void obs_free(Observable_T *obs);
-void obs_populate_ADM_integrand_PdS_GdV_binary(const Observable_T *const obs);
-void obs_populate_ADM_integrand_PdS_GdV_single(const Observable_T *const obs);
-double obs_Kommar_mass(Observable_T *const obs);
-double obs_ADM_mass(Observable_T *const obs);
 void obs_define_spin_integral(double S[3],Grid_T *const grid,const char *const kind);
 void obs_define_spin_JRP(double S[3],Grid_T *const grid,const char *const kind);
 void obs_define_spin_akv(double S[3],Grid_T *const grid,const char *const kind);

@@ -41,10 +41,13 @@ struct items_S
 
 double obs_ADM_mass(Observable_T *const obs);
 double obs_BH_ADM_mass(Observable_T *const obs);
+double obs_Kommar_mass(Observable_T *const obs);
+double obs_ADM_mass(Observable_T *const obs);
 void obs_populate_spin_integrands_akv(Patch_T *const patch,const double *const normal[3]);
 void obs_populate_spin_integrands_Campanelli(Patch_T *const patch,const double xc[3],const double *const normal[3]);
 void obs_Rc_NS(double Rc[3],Grid_T *const grid);
-
+void obs_populate_ADM_integrand_PdS_GdV_binary(const Observable_T *const obs);
+void obs_populate_ADM_integrand_PdS_GdV_single(const Observable_T *const obs);
 
 #endif
 

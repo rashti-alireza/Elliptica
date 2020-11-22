@@ -7,21 +7,21 @@
 // =========
 //
 // * initialize observable *
-// Observable_T *obs = init_observable(grid,"observable?");
+// Observable_T *obs = init_observable(grid,sq); # in which sq is:
 //
-// * specifiy which obeservable *
-// obs->quantity = "ADM(P,J)|SYS"  #=> compute P and J ADM for the system 
-// obs->quantity = "ADM(P,J)|NS"   #=> compute P and J ADM for single NS 
-// obs->quantity = "ADM(P,J)|BH"   #=> compute P and J ADM for single BH
-// obs->quantity = "Kommar(M)|SYS" #=> compute Kommar mass for the system 
-// obs->quantity = "Kommar(M)|NS"  #=> compute kommar mass for NS 
-// obs->quantity = "Kommar(M)|BH"  #=> compute Kommar mass for BH
-// obs->quantity = "ADM(M)|SYS"    #=> compute ADM mass for the system 
-// obs->quantity = "ADM(M)|NS"     #=> compute ADM mass for NS 
-// obs->quantity = "ADM(M)|BH"     #=> compute ADM mass for BH
+// * list of quantities *
+// "ADM(P,J)|SYS"  #=> compute P and J ADM for the system 
+// "ADM(P,J)|NS"   #=> compute P and J ADM for single NS 
+// "ADM(P,J)|BH"   #=> compute P and J ADM for single BH
+// "Kommar(M)|SYS" #=> compute Kommar mass for the system 
+// "Kommar(M)|NS"  #=> compute kommar mass for NS 
+// "Kommar(M)|BH"  #=> compute Kommar mass for BH
+// "ADM(M)|SYS"    #=> compute ADM mass for the system 
+// "ADM(M)|NS"     #=> compute ADM mass for NS 
+// "ADM(M)|BH"     #=> compute ADM mass for BH
 //
 //
-// * calculate the observable example:*
+// * after initialization calculate the observable example:*
 // double Px_ADM = obs->Px(obs);# x component
 // double Py_ADM = obs->Py(obs);# y component
 // double Pz_ADM = obs->Pz(obs);# z component
@@ -29,7 +29,8 @@
 // double Jy_ADM = obs->Jy(obs);# y component of angular momentum
 // double Jz_ADM = obs->Jz(obs);# z component of angular momentum
 // double M_ADM  = obs->M(obs) ;# a specifed mass for example ADM mass
-// *free*
+//
+// * free *
 // free_observable(obs);
 */
 
@@ -57,7 +58,8 @@ void obs_plan(Observable_T *obs)
       
   if (strcmp_i(obs->quantity,"ADM(P,J)|SYS"))
   {  
-    Patch_T **patches = 0,*patch = 0;
+    Patch_T **patches = 0;
+    Patch_T *patch    = 0;
     const char *region = "outermost,filling_box,"
                          "NS_around_OB,BH_around_OB";
     struct items_S **adm = 0;
@@ -136,7 +138,8 @@ void obs_plan(Observable_T *obs)
   }
   else if (strcmp_i(obs->quantity,"ADM(P,J)|NS"))
   {  
-    Patch_T **patches = 0,*patch = 0;
+    Patch_T **patches = 0;
+    Patch_T *patch    = 0;
     struct items_S **adm = 0;
     const char *region = "NS_OB";
     unsigned n,N,ijk,nn;
@@ -209,7 +212,8 @@ void obs_plan(Observable_T *obs)
   }
   else if (strcmp_i(obs->quantity,"ADM(P,J)|BH"))
   {  
-    Patch_T **patches = 0,*patch = 0;
+    Patch_T **patches = 0;
+    Patch_T *patch    = 0;
     struct items_S **adm = 0;
     const char *region = "BH_around_IB";
     unsigned n,N,ijk,nn;
@@ -283,7 +287,8 @@ void obs_plan(Observable_T *obs)
   }
   else if (strcmp_i(obs->quantity,"Kommar(M)|BH"))
   {  
-    Patch_T **patches = 0,*patch = 0;
+    Patch_T **patches = 0;
+    Patch_T *patch    = 0;
     struct items_S **kommar = 0;
     const char *region = "BH_around_IB";
     unsigned n,N,ijk,nn;
@@ -351,7 +356,8 @@ void obs_plan(Observable_T *obs)
   }
   else if (strcmp_i(obs->quantity,"Kommar(M)|NS"))
   {  
-    Patch_T **patches = 0,*patch = 0;
+    Patch_T **patches = 0;
+    Patch_T *patch    = 0;
     struct items_S **kommar = 0;
     const char *region = "NS_OB";
     unsigned n,N,ijk,nn;
@@ -419,7 +425,8 @@ void obs_plan(Observable_T *obs)
   }
   else if (strcmp_i(obs->quantity,"Kommar(M)|SYS"))
   {  
-    Patch_T **patches = 0,*patch = 0;
+    Patch_T **patches = 0;
+    Patch_T *patch    = 0;
     struct items_S **kommar = 0;
     unsigned p = 0;
     unsigned n,N,ijk,nn;
@@ -506,7 +513,8 @@ void obs_plan(Observable_T *obs)
   }
   else if (strcmp_i(obs->quantity,"ADM(M)|SYS"))
   {  
-    Patch_T **patches1 = 0,**patches2 = 0,*patch = 0;
+    Patch_T **patches1 = 0,**patches2 = 0;
+    Patch_T *patch    = 0;
     const char *region;
     struct items_S **adm = 0;
     unsigned n,N1,N2,ijk,nn;
@@ -617,7 +625,8 @@ void obs_plan(Observable_T *obs)
   }
   else if (strcmp_i(obs->quantity,"ADM(M)|BH"))
   {  
-    Patch_T **patches = 0,*patch = 0;
+    Patch_T **patches = 0;
+    Patch_T *patch    = 0;
     struct items_S **adm = 0;
     const char *region = "BH_around_IB";
     unsigned n,N,ijk,nn;
@@ -684,7 +693,8 @@ void obs_plan(Observable_T *obs)
   }
   else if (strcmp_i(obs->quantity,"ADM(M)|NS"))
   {  
-    Patch_T **patches = 0,*patch = 0;
+    Patch_T **patches = 0;
+    Patch_T *patch    = 0;
     struct items_S **adm = 0;
     const char *region = "NS";
     unsigned n,N,ijk,nn;
@@ -837,104 +847,6 @@ n_U2[ijk] + gConf_D2D2[ijk]*pow(n_U2[ijk], 2));
   adm->n_U0 = n_U0;
   adm->n_U1 = n_U1;
   adm->n_U2 = n_U2;
-}
-
-/* free stuct Observable_T */
-void obs_free(Observable_T *obs)
-{
-  if (!obs)
-    return;
-  
-  struct items_S **adm = obs->items;
-  unsigned i;
-    
-  if (obs->grid->kind == Grid_SplitCubedSpherical_BHNS)
-  {  
-    
-  for (i = 0; i < obs->Nitems; ++i)
-  {
-    Patch_T *patch = adm[i]->patch;
-    if (patch)
-    {
-      if (_Ind("ADM_integrand_P_U0") >= 0)
-      {
-        DECLARE_FIELD(ADM_integrand_P_U0);
-        REMOVE_FIELD(ADM_integrand_P_U0);
-      }
-      if (_Ind("ADM_integrand_P_U1") >= 0)
-      {
-        DECLARE_FIELD(ADM_integrand_P_U1);
-        REMOVE_FIELD(ADM_integrand_P_U1);
-      }
-      if (_Ind("ADM_integrand_P_U2") >= 0)
-      {
-        DECLARE_FIELD(ADM_integrand_P_U2);
-        REMOVE_FIELD(ADM_integrand_P_U2);
-      }
-      if (_Ind("ADM_integrand_G_U0") >= 0)
-      {
-        DECLARE_FIELD(ADM_integrand_G_U0);
-        REMOVE_FIELD(ADM_integrand_G_U0);
-      }
-      if (_Ind("ADM_integrand_G_U1") >= 0)
-      {
-        DECLARE_FIELD(ADM_integrand_G_U1);
-        REMOVE_FIELD(ADM_integrand_G_U1);
-      }
-      if (_Ind("ADM_integrand_G_U2") >= 0)
-      {
-        DECLARE_FIELD(ADM_integrand_G_U2);
-        REMOVE_FIELD(ADM_integrand_G_U2);
-      }
-      
-      if (_Ind("ADM_integrand_xiP_U0") >= 0)
-      {
-        DECLARE_FIELD(ADM_integrand_xiP_U0);
-        REMOVE_FIELD(ADM_integrand_xiP_U0);
-      }
-      if (_Ind("ADM_integrand_xiP_U2") >= 0)
-      {
-        DECLARE_FIELD(ADM_integrand_xiP_U2);
-        REMOVE_FIELD(ADM_integrand_xiP_U2);
-      }
-      if (_Ind("ADM_integrand_xiP_U1") >= 0)
-      {
-        DECLARE_FIELD(ADM_integrand_xiP_U1);
-        REMOVE_FIELD(ADM_integrand_xiP_U1);
-      }
-      
-      if (_Ind("ADM_integrand_xiG_U0") >= 0)
-      {
-        DECLARE_FIELD(ADM_integrand_xiG_U0);
-        REMOVE_FIELD(ADM_integrand_xiG_U0);
-      }
-      if (_Ind("ADM_integrand_xiG_U2") >= 0)
-      {
-        DECLARE_FIELD(ADM_integrand_xiG_U2);
-        REMOVE_FIELD(ADM_integrand_xiG_U2);
-      }
-      if (_Ind("ADM_integrand_xiG_U1") >= 0)
-      {
-        DECLARE_FIELD(ADM_integrand_xiG_U1);
-        REMOVE_FIELD(ADM_integrand_xiG_U1);
-      }
-    }
-    _free(adm[i]->g00);
-    _free(adm[i]->g01);
-    _free(adm[i]->g02);
-    _free(adm[i]->g11);
-    _free(adm[i]->g12);
-    _free(adm[i]->g22);
-    _free(adm[i]->n_U0);
-    _free(adm[i]->n_U1);
-    _free(adm[i]->n_U2);
-    
-    free(adm[i]);
-  }
-  _free(adm);
-  }
-  else
-    Error0(NO_OPTION);
 }
 
 /* calculating ADM momentum in x component */

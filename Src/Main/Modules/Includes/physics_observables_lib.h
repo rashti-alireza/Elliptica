@@ -22,16 +22,10 @@ typedef struct OBSERVABLE_T
   
   /* function to calculate mass */
   double (*M)(struct OBSERVABLE_T *const obs);
-  
-  /* preparing functions and freeing functions of items stuct
-  // these functions are populated during initilization of Observable_T */
-  void (*plan_items)(struct OBSERVABLE_T *obs);
-  void (*free_items)(struct OBSERVABLE_T *obs);
 }Observable_T;
 
 
-Observable_T *init_observable(void *grid,void (*plan_items)(struct OBSERVABLE_T *obs),void (*free_items)(struct OBSERVABLE_T *obs));
-void plan_observable(Observable_T *const obs);
+Observable_T *init_observable(Grid_T *const grid,const char *const sq);
 void free_observable(Observable_T *obs);
 
 
