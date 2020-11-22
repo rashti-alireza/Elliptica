@@ -12,7 +12,6 @@ void Tij_idealfluid_CTS_gConf_update(Physics_T *const obj)
   FUNC_TIC
   
   Grid_T *const grid  = obj->grid;
-  char opar[OPAR_LEN] = {'\0'};
   const double W  = Getd("enthalpy_update_weight");
   const int  neat = Geti("enthalpy_neat");
   const double Euler_const = Getd("Euler_equation_constant");

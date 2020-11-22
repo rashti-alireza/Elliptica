@@ -14,7 +14,6 @@ void star_idealfluid_NS_gConf_find_Euler_const(Physics_T *const obj)
   FUNC_TIC
   
   Root_Finder_T *root = init_root_finder(1);
-  char opar[OPAR_LEN] = {'\0'};
   const double W1  = Getd("Euler_const_update_weight");
   const double W2  = 1-W1;
   double *Euler_const = 0;

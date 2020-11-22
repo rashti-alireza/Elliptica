@@ -16,7 +16,6 @@ void obs_Rc_NS(double Rc[3],Physics_T *const obj);
 void obs_Rc_NS(double Rc[3],Physics_T *const obj)
 {
   Grid_T *const grid = obj->grid;
-  char opar[OPAR_LEN];
   const double Madm = Getd("ADM_mass");
   const double x_CM = sysGetd("x_CM");
   const double y_CM = sysGetd("y_CM");

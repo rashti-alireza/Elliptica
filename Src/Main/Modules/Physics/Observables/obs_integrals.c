@@ -1277,7 +1277,6 @@ static double ADM_angular_momentum_y_BHNS_CS(Observable_T *const obs)
 /* approximate spin using : S_a = \frac{1}{8\pi}\oint{\xi_{ai} K^{ij}ds^{2}_j} */
 void obs_define_spin_integral(double S[3],Physics_T *const obj)
 {
-  char opar[OPAR_LEN];
   Patch_T **patches = 0;
   double obj_center[3] = {0};
   const char *region = 0;
@@ -1551,7 +1550,6 @@ void obs_define_spin_akv(double S[3],Physics_T *const obj)
 /* approximate spin using : S = J - RxP */
 void obs_define_spin_JRP(double S[3],Physics_T *const obj)
 {
-  char opar[OPAR_LEN];
   double J[3] = {0,0,0};
   double R[3] = {0,0,0};
   double P[3] = {0,0,0};
@@ -1591,7 +1589,6 @@ void obs_define_spin_JRP(double S[3],Physics_T *const obj)
 void obs_Rc_BH(double Rc[3],Physics_T *const obj)
 {
   Grid_T *const grid = obj->grid;
-  char opar[OPAR_LEN];
   const double AH_area = Getd("AH_area");
   const double x_CM = sysGetd("x_CM");
   const double y_CM = sysGetd("y_CM");
