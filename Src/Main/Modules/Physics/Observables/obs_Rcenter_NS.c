@@ -12,12 +12,15 @@
   ADD_FIELD(name);REALLOC_v_WRITE_v(name);
 
 
-void obs_Rc_NS(double Rc[3],Grid_T *const grid);
-void obs_Rc_NS(double Rc[3],Grid_T *const grid)
+void obs_Rc_NS(double Rc[3],Obj_Man_T *const obj);
+void obs_Rc_NS(double Rc[3],Obj_Man_T *const obj)
 {
-  const double Madm = Pgetd("NS_ADM_mass");
-  const double x_CM = Pgetd("x_CM");
-  const double y_CM = Pgetd("y_CM");
+  Grid_T *const grid = obj->grid;
+  char opar[OPAR_LEN];
+  const double Madm = Getd("ADM_mass");
+  const double x_CM = sysGetd("x_CM");
+  const double y_CM = sysGetd("y_CM");
+  const double z_CM = sysGetd("z_CM");
   unsigned p;
 
   Rc[0] = 0;
@@ -110,7 +113,7 @@ igConf_U1U2[ijk] + ddpsi_D2D2[ijk]*igConf_U2U2[ijk];
     double z = patch->node[ijk]->x[2];
     Rc_integrandx[ijk] = D2psi*(x-x_CM);
     Rc_integrandy[ijk] = D2psi*(y-y_CM);
-    Rc_integrandz[ijk] = D2psi*(z);
+    Rc_integrandz[ijk] = D2psi*(z-z_CM);
     }
     }
     DECLARE_FIELD(Rc_integrandx)
