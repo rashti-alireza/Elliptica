@@ -7,19 +7,27 @@
 // =========
 //
 // * initialize observable *
-// Observable_T *obs = init_observable(object,sq); # in which sq is:
+// observe(phys,sq,save); # the observed value saves in save 
+//                          # and sq is one of the followings:
 //
 // * list of quantities *
-// "ADM(P,J)|BHNS"  #=> compute P and J ADM for the system 
+// "ADM(P,J)|BHNS" #=> compute P and J ADM for the system 
 // "ADM(P,J)|NS"   #=> compute P and J ADM for single NS 
 // "ADM(P,J)|BH"   #=> compute P and J ADM for single BH
 // "Kommar(M)|BHNS" #=> compute Kommar mass for the system 
 // "Kommar(M)|NS"  #=> compute kommar mass for NS 
 // "Kommar(M)|BH"  #=> compute Kommar mass for BH
-// "ADM(M)|BHNS"    #=> compute ADM mass for the system 
+// "ADM(M)|BHNS"   #=> compute ADM mass for the system 
 // "ADM(M)|NS"     #=> compute ADM mass for NS 
 // "ADM(M)|BH"     #=> compute ADM mass for BH
+// "CM|obj"        #=> compute the center of mass of object obj (NS?/BH?)
+// "Spin|obj|method" #=> compute spin of object obj (NS?/BH?) 
+//                       with the specified method below:
 //
+// spin calculation methods:
+// Campanelli: gr-qc/0612076v4
+// JRB:        Phys. Rev. D 100, 124046
+// AKV:        Phys.Rev.D78:084017,2008
 //
 // * after initialization calculate the observable example:*
 // double Px_ADM = obs->Px(obs);# x component
@@ -30,8 +38,6 @@
 // double Jz_ADM = obs->Jz(obs);# z component of angular momentum
 // double M_ADM  = obs->M(obs) ;# a specifed mass for example ADM mass
 //
-// * free *
-// free_observable(obs);
 */
 
 #include "obs_integrals.h"

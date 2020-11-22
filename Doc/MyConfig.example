@@ -36,7 +36,7 @@ MODULE += $(MODULE_DIR)/Maths/Complex
 MODULE += $(MODULE_DIR)/Physics/StressEnergy_Tensor
 MODULE += $(MODULE_DIR)/Physics
 MODULE += $(MODULE_DIR)/Physics/EoS
-MODULE += $(MODULE_DIR)/Physics/Observables
+MODULE += $(MODULE_DIR)/Physics/Observe
 MODULE += $(MODULE_DIR)/Physics/Transformation
 MODULE += $(MODULE_DIR)/Physics/Star
 
