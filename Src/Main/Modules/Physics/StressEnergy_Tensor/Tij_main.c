@@ -10,16 +10,16 @@
 #include "Tij_main.h"
 
 /* update stress energy tensor */
-int Tij_tune(Physics_T *const obj)
+int Tij_tune(Physics_T *const phys)
 {
   if (Pcmps("Tij_fluid","ideal_fluid") && 
       Pcmps("Tij_decomposition","CTS") &&
       Pcmps("Tij_gConf","non_flat"))
   {
-    switch (obj->cmd)
+    switch (phys->cmd)
     {
       case STRESS_ENERGY:
-        Tij_idealfluid_CTS_gConf_update(obj);
+        Tij_idealfluid_CTS_gConf_update(phys);
       break;
       default:
         Error0(NO_OPTION);

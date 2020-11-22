@@ -8,7 +8,7 @@
 #include "phys_main.h"
 
 /* call the requested function */
-int physics(Physics_T *const obj,const cmd_T cmd,
+int physics(Physics_T *const phys,const cmd_T cmd,
             const char *const file, const int line)
 {
   int ret = -1;
@@ -68,7 +68,7 @@ int physics(Physics_T *const obj,const cmd_T cmd,
 }
 
 /* call the requested function */
-//int Mount(Physics_T *const obj,const cmd_T cmd)
+//int Mount(Physics_T *const phys,const cmd_T cmd)
 //{
   //int ret = -1;
   

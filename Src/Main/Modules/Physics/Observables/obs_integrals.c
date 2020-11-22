@@ -1275,7 +1275,7 @@ static double ADM_angular_momentum_y_BHNS_CS(Observable_T *const obs)
 }
 
 /* approximate spin using : S_a = \frac{1}{8\pi}\oint{\xi_{ai} K^{ij}ds^{2}_j} */
-void obs_define_spin_integral(double S[3],Physics_T *const obj)
+void obs_define_spin_integral(double S[3],Physics_T *const phys)
 {
   Patch_T **patches = 0;
   double obj_center[3] = {0};
@@ -1289,27 +1289,27 @@ void obs_define_spin_integral(double S[3],Physics_T *const obj)
   obj_center[2]= Getd("center_z");
   
   /* NS spins */
-  if (strcmp_i(obj->stype,"NS"))
+  if (strcmp_i(phys->stype,"NS"))
   {
     region = "NS_around_IB";
   }
-  else if (strcmp_i(obj->stype,"NS1"))
+  else if (strcmp_i(phys->stype,"NS1"))
   {
     region = "NS1_around_IB";
   }
-  else if (strcmp_i(obj->stype,"NS2"))
+  else if (strcmp_i(phys->stype,"NS2"))
   {
     region = "NS2_around_IB";
   }
-  else if (strcmp_i(obj->stype,"BH"))
+  else if (strcmp_i(phys->stype,"BH"))
   {
     region = "NS_around_IB";
   }
-  else if (strcmp_i(obj->stype,"BH1"))
+  else if (strcmp_i(phys->stype,"BH1"))
   {
     region = "NS_around_IB";
   }
-  else if (strcmp_i(obj->stype,"BH2"))
+  else if (strcmp_i(phys->stype,"BH2"))
   {
     region = "NS_around_IB";
   }
@@ -1318,7 +1318,7 @@ void obs_define_spin_integral(double S[3],Physics_T *const obj)
     Error0(NO_OPTION);
   }
   
-  patches = collect_patches(obj->grid,region,&N);
+  patches = collect_patches(phys->grid,region,&N);
   
   /* carry out the integral for each patch */
   for (p = 0; p < N; ++p)
@@ -1415,7 +1415,7 @@ void obs_define_spin_integral(double S[3],Physics_T *const obj)
 
 
 /* approximate spin using : S_a = \frac{1}{8\pi}\oint{\xi_{ai} K^{ij}ds^{2}_j} */
-void obs_define_spin_akv(double S[3],Physics_T *const obj)
+void obs_define_spin_akv(double S[3],Physics_T *const phys)
 {
   Patch_T **patches = 0;
   const char *region = 0;
@@ -1424,27 +1424,27 @@ void obs_define_spin_akv(double S[3],Physics_T *const obj)
   S[0] = S[1] = S[2] = 0;
   
   /* NS spins */
-  if (strcmp_i(obj->stype,"NS"))
+  if (strcmp_i(phys->stype,"NS"))
   {
     region = "NS_around_IB";
   }
-  else if (strcmp_i(obj->stype,"NS1"))
+  else if (strcmp_i(phys->stype,"NS1"))
   {
     region = "NS1_around_IB";
   }
-  else if (strcmp_i(obj->stype,"NS2"))
+  else if (strcmp_i(phys->stype,"NS2"))
   {
     region = "NS2_around_IB";
   }
-  else if (strcmp_i(obj->stype,"BH"))
+  else if (strcmp_i(phys->stype,"BH"))
   {
     region = "NS_around_IB";
   }
-  else if (strcmp_i(obj->stype,"BH1"))
+  else if (strcmp_i(phys->stype,"BH1"))
   {
     region = "NS_around_IB";
   }
-  else if (strcmp_i(obj->stype,"BH2"))
+  else if (strcmp_i(phys->stype,"BH2"))
   {
     region = "NS_around_IB";
   }
@@ -1453,7 +1453,7 @@ void obs_define_spin_akv(double S[3],Physics_T *const obj)
     Error0(NO_OPTION);
   }
   
-  patches = collect_patches(obj->grid,region,&N);
+  patches = collect_patches(phys->grid,region,&N);
 
   
   /* carry out the integral for each patch */
@@ -1548,7 +1548,7 @@ void obs_define_spin_akv(double S[3],Physics_T *const obj)
 }
 
 /* approximate spin using : S = J - RxP */
-void obs_define_spin_JRP(double S[3],Physics_T *const obj)
+void obs_define_spin_JRP(double S[3],Physics_T *const phys)
 {
   double J[3] = {0,0,0};
   double R[3] = {0,0,0};
@@ -1562,19 +1562,19 @@ void obs_define_spin_JRP(double S[3],Physics_T *const obj)
   J[2] = Getd("Jz_ADM");
   
   /* NS spins */
-  if (strcmp_i(obj->stype,"NS")  ||
-      strcmp_i(obj->stype,"NS1") ||
-      strcmp_i(obj->stype,"NS2")
+  if (strcmp_i(phys->stype,"NS")  ||
+      strcmp_i(phys->stype,"NS1") ||
+      strcmp_i(phys->stype,"NS2")
      )
   {
-    obs_Rc_NS(R,obj);
+    obs_Rc_NS(R,phys);
   }
-  else if (strcmp_i(obj->stype,"BH")  ||
-           strcmp_i(obj->stype,"BH1") ||
-           strcmp_i(obj->stype,"BH2")
+  else if (strcmp_i(phys->stype,"BH")  ||
+           strcmp_i(phys->stype,"BH1") ||
+           strcmp_i(phys->stype,"BH2")
           )
   {
-    obs_Rc_BH(R,obj);
+    obs_Rc_BH(R,phys);
   }
   else
     Error0(NO_OPTION);
@@ -1586,9 +1586,9 @@ void obs_define_spin_JRP(double S[3],Physics_T *const obj)
 
 
 /* calculating physical center of BH to be used in spin calculations */
-void obs_Rc_BH(double Rc[3],Physics_T *const obj)
+void obs_Rc_BH(double Rc[3],Physics_T *const phys)
 {
-  Grid_T *const grid = obj->grid;
+  Grid_T *const grid = phys->grid;
   const double AH_area = Getd("AH_area");
   const double x_CM = sysGetd("x_CM");
   const double y_CM = sysGetd("y_CM");

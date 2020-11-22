@@ -7,11 +7,11 @@
 
 
 /* updating all matter related and their derivatives. */
-void Tij_idealfluid_CTS_gConf_update(Physics_T *const obj)
+void Tij_idealfluid_CTS_gConf_update(Physics_T *const phys)
 {
   FUNC_TIC
   
-  Grid_T *const grid  = obj->grid;
+  Grid_T *const grid  = phys->grid;
   const double W  = Getd("enthalpy_update_weight");
   const int  neat = Geti("enthalpy_neat");
   const double Euler_const = Getd("Euler_equation_constant");
@@ -27,7 +27,7 @@ void Tij_idealfluid_CTS_gConf_update(Physics_T *const obj)
   {
     Patch_T *patch = grid->patch[p];
     
-    if_not_cover(patch,obj)  continue;
+    if_not_cover(patch,phys)  continue;
     
     RELAX_UPDATE_FUNC(Tij_IF_CTS_gConf_enthalpy(patch,Euler_const),
                       patch,enthalpy,W);

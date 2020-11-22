@@ -11,15 +11,15 @@
 #include "phys_main.h"
 
 /* call the requested function */
-int physics(Physics_T *const obj,const cmd_T cmd,
+int physics(Physics_T *const phys,const cmd_T cmd,
             const char *const file, const int line)
 {
   int ret = -1;
   char msg[STR_LEN] = {'\0'};
   
-  obj->cmd = cmd;
+  phys->cmd = cmd;
   
-  if(!obj->region)
+  if(!phys->region)
   {
     Error0("NO region specified!\n");
   }
@@ -27,34 +27,34 @@ int physics(Physics_T *const obj,const cmd_T cmd,
   switch (cmd)
   {
     case STRESS_ENERGY:
-      ret = Tij_tune(obj);
+      ret = Tij_tune(phys);
     break;
     case EULER_CONST:
-      ret = star_tune(obj);
+      ret = star_tune(phys);
     break;
     /*case FORCE_BALANCE:
-      ret = star_tunes(obj);
+      ret = star_tunes(phys);
     break;
     case FIX_CENTER:
-      ret = star_tunes(obj);
+      ret = star_tunes(phys);
     break;
     case FIND_SURFACE:
-      ret = star_tunes(obj);
+      ret = star_tunes(phys);
     break;
     case EXTRAPOLATE_OUTSIDE:
-      ret = star_tunes(obj);
+      ret = star_tunes(phys);
     break;
     case AH_RADIUS:
-      ret = update_apparent_horizon_radius(obj);
+      ret = update_apparent_horizon_radius(phys);
     break;
     case AH_OMEGA:
-      ret = update_apparent_horizon_omega(obj);
+      ret = update_apparent_horizon_omega(phys);
     break;
     case AH_NORMAL_VECTOR:
-      ret = update_apparent_horizon_normal(obj);
+      ret = update_apparent_horizon_normal(phys);
     break;*/
     /*case P_ADM:
-      ret = adjust_ADM_momentum(obj);
+      ret = adjust_ADM_momentum(phys);
     break;*/
     default:
       sprintf(msg,"No such command found!\n"
@@ -64,58 +64,58 @@ int physics(Physics_T *const obj,const cmd_T cmd,
   }
   
   /* set to 0 to catch bug and miss you */
-  obj->cmd    = CMD_UNDEFINED;
-  obj->region = 0;
+  phys->cmd    = CMD_UNDEFINED;
+  phys->region = 0;
   
   return ret;
 }
 
 /* call the requested function */
-//int Mount(Physics_T *const obj,const cmd_T cmd)
+//int Mount(Physics_T *const phys,const cmd_T cmd)
 //{
   //int ret = -1;
   
-  //obj->cmd = cmd;
+  //phys->cmd = cmd;
   
-  //UNUSED(obj);
+  //UNUSED(phys);
   //switch (cmd)
   //{
     //case STRESS_ENERGY:
-      //ret = Tij_mount(obj);
+      //ret = Tij_mount(phys);
     //break;
     /*case EULER_CONST:
-      ret = update_Euler_constant(obj);
+      ret = update_Euler_constant(phys);
     break;
     case FORCE_BALANCE:
-      ret = adjust_force_balance_eq(obj);
+      ret = adjust_force_balance_eq(phys);
     break;
     case FIX_CENTER:
-      ret = fix_star_center(obj);
+      ret = fix_star_center(phys);
     break;
     case FIND_SURFACE:
-      ret = find_star_surface(obj);
+      ret = find_star_surface(phys);
     break;
     case EXTRAPOLATE_OUTSIDE:
-      ret = extrapolate_matter_outside_star(obj);
+      ret = extrapolate_matter_outside_star(phys);
     break;*/
     /*case AH_RADIUS:
-      ret = update_apparent_horizon_radius(obj);
+      ret = update_apparent_horizon_radius(phys);
     break;
     case AH_OMEGA:
-      ret = update_apparent_horizon_omega(obj);
+      ret = update_apparent_horizon_omega(phys);
     break;
     case AH_NORMAL_VECTOR:
-      ret = update_apparent_horizon_normal(obj);
+      ret = update_apparent_horizon_normal(phys);
     break;*/
     /*case P_ADM:
-      ret = adjust_ADM_momentum(obj);
+      ret = adjust_ADM_momentum(phys);
     break;*/
     //default:
       //Error0(NO_OPTION);
   //}
   
   /* set to no command to catch bug */
-//  obj->cmd = CMD_UNDEFINED;
+//  phys->cmd = CMD_UNDEFINED;
   
   //return ret;
 //}
@@ -127,32 +127,32 @@ init_physics
  const Com_Obj_T type/* object type NS,BH,etc */
  )
 {
-  Physics_T *obj = calloc(1,sizeof(*obj)); IsNull(obj);
+  Physics_T *phys = calloc(1,sizeof(*phys)); IsNull(phys);
   const char *spos  = 0;
   
   Error0("/* what should i do for BHNS region? */");
   
-  assert(obj->region);
+  assert(phys->region);
   
-  obj->grid = grid;
-  obj->type = type;
+  phys->grid = grid;
+  phys->type = type;
   
   if (Pcmps("project","BH_NS_initial_data"))
   {
-    obj->sys  = BHNS;
-    obj->ssys = "BHNS";
+    phys->sys  = BHNS;
+    phys->ssys = "BHNS";
     
   }
   else if (Pcmps("project","NS_NS_initial_data"))
   {
-    obj->sys  = NSNS;
-    obj->ssys = "NSNS";
+    phys->sys  = NSNS;
+    phys->ssys = "NSNS";
     
   }
   else if (Pcmps("project","BH_BH_initial_data"))
   {
-    obj->sys  = BHBH;
-    obj->ssys = "BHBH";
+    phys->sys  = BHBH;
+    phys->ssys = "BHBH";
     
   }
   else
@@ -161,132 +161,132 @@ init_physics
   switch(type)
   {
     case NS:
-      obj->stype = "NS";
+      phys->stype = "NS";
       spos = Pgets("grid_set_NS");
       if (strstr_i(spos,"left"))
       {
-        obj->pos  = LEFT;
-        obj->spos = "left";
+        phys->pos  = LEFT;
+        phys->spos = "left";
       }
       else if (strstr_i(spos,"right"))
       {
-        obj->pos  = RIGHT;
-        obj->spos = "right";
+        phys->pos  = RIGHT;
+        phys->spos = "right";
       }
       else if (strstr_i(spos,"center"))
       {
-        obj->pos  = CENTER;
-        obj->spos = "center";
+        phys->pos  = CENTER;
+        phys->spos = "center";
       }
       else
         Error0(NO_OPTION);
         
     break;
     case NS1:
-      obj->stype = "NS1";
+      phys->stype = "NS1";
       spos = Pgets("grid_set_NS1");
       if (strstr_i(spos,"left"))
       {
-        obj->pos  = LEFT;
-        obj->spos = "left";
+        phys->pos  = LEFT;
+        phys->spos = "left";
       }
       else if (strstr_i(spos,"right"))
       {
-        obj->pos  = RIGHT;
-        obj->spos = "right";
+        phys->pos  = RIGHT;
+        phys->spos = "right";
       }
       else
         Error0(NO_OPTION);
       
     break;
     case NS2:
-      obj->stype = "NS2";
+      phys->stype = "NS2";
       spos = Pgets("grid_set_NS2");
       if (strstr_i(spos,"left"))
       {
-        obj->pos  = LEFT;
-        obj->spos = "left";
+        phys->pos  = LEFT;
+        phys->spos = "left";
       }
       else if (strstr_i(spos,"right"))
       {
-        obj->pos  = RIGHT;
-        obj->spos = "right";
+        phys->pos  = RIGHT;
+        phys->spos = "right";
       }
       else
         Error0(NO_OPTION);
       
     break;
     case BH:
-      obj->stype = "BH";
+      phys->stype = "BH";
       spos = Pgets("grid_set_BH");
       if (strstr_i(spos,"left"))
       {
-        obj->pos  = LEFT;
-        obj->spos = "left";
+        phys->pos  = LEFT;
+        phys->spos = "left";
       }
       else if (strstr_i(spos,"right"))
       {
-        obj->pos  = RIGHT;
-        obj->spos = "right";
+        phys->pos  = RIGHT;
+        phys->spos = "right";
       }
       else if (strstr_i(spos,"center"))
       {
-        obj->pos  = CENTER;
-        obj->spos = "center";
+        phys->pos  = CENTER;
+        phys->spos = "center";
       }
       else
         Error0(NO_OPTION);
         
     break;
     case BH1:
-      obj->stype = "BH1";
+      phys->stype = "BH1";
       spos = Pgets("grid_set_BH1");
       if (strstr_i(spos,"left"))
       {
-        obj->pos  = LEFT;
-        obj->spos = "left";
+        phys->pos  = LEFT;
+        phys->spos = "left";
       }
       else if (strstr_i(spos,"right"))
       {
-        obj->pos  = RIGHT;
-        obj->spos = "right";
+        phys->pos  = RIGHT;
+        phys->spos = "right";
       }
       else
         Error0(NO_OPTION);
       
     break;
     case BH2:
-      obj->stype = "BH2";
+      phys->stype = "BH2";
       spos = Pgets("grid_set_BH2");
       if (strstr_i(spos,"left"))
       {
-        obj->pos  = LEFT;
-        obj->spos = "left";
+        phys->pos  = LEFT;
+        phys->spos = "left";
       }
       else if (strstr_i(spos,"right"))
       {
-        obj->pos  = RIGHT;
-        obj->spos = "right";
+        phys->pos  = RIGHT;
+        phys->spos = "right";
       }
       else
         Error0(NO_OPTION);
       
     break;
     case BHNS:
-      obj->stype = "BHNS";
-      obj->pos   = NONE;
+      phys->stype = "BHNS";
+      phys->pos   = NONE;
       
     break;
     default:
       Error0(NO_OPTION);
   }
   
-  return obj;
+  return phys;
 }
 
 /* free  */
-void free_physics(Physics_T *obj)
+void free_physics(Physics_T *phys)
 {
-  _free(obj);
+  _free(phys);
 }
 

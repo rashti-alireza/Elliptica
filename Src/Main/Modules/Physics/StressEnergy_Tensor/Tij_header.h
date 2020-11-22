@@ -10,10 +10,10 @@
 #include "physics_lib.h"
 #include "fields_lib.h"
 
-int Tij_tune(Physics_T *const obj);
+int Tij_tune(Physics_T *const phys);
 int Tij_mount(Grid_T *const grid);
 void Tij_idealfluid_CTS_gConf_add_fields(Grid_T *const grid);
-void Tij_idealfluid_CTS_gConf_update(Physics_T *const obj);
+void Tij_idealfluid_CTS_gConf_update(Physics_T *const phys);
 void Tij_IF_CTS_gConf_enthalpy(Patch_T *const patch,const double Euler_C);
 void Tij_IF_CTS_gConf_u0(Patch_T *const patch);
 void Tij_IF_CTS_gConf_psi6J_Ui(Patch_T *const patch);

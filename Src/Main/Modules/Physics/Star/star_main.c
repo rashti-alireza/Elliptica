@@ -10,17 +10,17 @@
 #include "star_main.h"
 
 /* update stress energy tensor */
-int star_tune(Physics_T *const obj)
+int star_tune(Physics_T *const phys)
 {
 
   if (Pcmps("star_type","NS")           &&
       Pcmps("star_fluid","ideal_fluid") && 
       Pcmps("star_gConf","non_flat"))
   {
-    switch (obj->cmd)
+    switch (phys->cmd)
     {
       case EULER_CONST:
-        star_idealfluid_NS_gConf_find_Euler_const(obj);
+        star_idealfluid_NS_gConf_find_Euler_const(phys);
       break;
       default:
         Error0(NO_OPTION);

@@ -26,14 +26,14 @@
 #include "obs_main.h"
 
 /* initialzing stuct Observable_T for sq look explanation on top. */
-Observable_T *init_observable(Physics_T *const obj,const char *const sq)
+Observable_T *init_observable(Physics_T *const phys,const char *const sq)
 {
   Observable_T *const obs = calloc(1,sizeof(*obs));
   IsNull(obs);
 
-  obs->obj      = obj;
-  obs->grid     = obj->grid;
-  sprintf(obs->quantity,"%s|%s",sq,obj->stype);
+  obs->phys  = phys;
+  obs->grid  = phys->grid;
+  sprintf(obs->quantity,"%s|%s",sq,phys->stype);
   
   obs_plan(obs);
   

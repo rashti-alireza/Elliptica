@@ -6,7 +6,7 @@
 
 #define STR_LEN (999)
 
-int physics(Physics_T *const obj,const cmd_T cmd,
+int physics(Physics_T *const phys,const cmd_T cmd,
             const char *const file, const int line);
 
 Physics_T *
