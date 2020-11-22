@@ -1275,47 +1275,51 @@ static double ADM_angular_momentum_y_BHNS_CS(Observable_T *const obs)
 }
 
 /* approximate spin using : S_a = \frac{1}{8\pi}\oint{\xi_{ai} K^{ij}ds^{2}_j} */
-void obs_define_spin_integral(double S[3],Grid_T *const grid,const char *const kind)
+void obs_define_spin_integral(double S[3],Obj_Man_T *const obj)
 {
-  //if (!strcmp_i(grid->kind,"BBN_CubedSpherical_grid"))
-    Error0(NO_OPTION);
-    
-  const unsigned N     = 6;  
+  char opar[OPAR_LEN];
+  Patch_T **patches = 0;
   double obj_center[3] = {0};
-  Patch_T *patches[N];
-  unsigned p = 0;
+  const char *region = 0;
+  unsigned N,p = 0;
   
   S[0] = S[1] = S[2] = 0;
   
+  obj_center[0]= Getd("center_x");
+  obj_center[1]= Getd("center_y");
+  obj_center[2]= Getd("center_z");
+  
   /* NS spins */
-  if (strcmp_i(kind,"NS"))
+  if (strcmp_i(obj->stype,"NS"))
   {
-     /* arounds for surface integrals */
-    patches[p++] = GetPatch("left_NS_around_up",grid);
-    patches[p++] = GetPatch("left_NS_around_down",grid);
-    patches[p++] = GetPatch("left_NS_around_left",grid);
-    patches[p++] = GetPatch("left_NS_around_right",grid);
-    patches[p++] = GetPatch("left_NS_around_back",grid);
-    patches[p++] = GetPatch("left_NS_around_front",grid);
-    obj_center[0]= Pgetd("NS_center_x");
-    obj_center[1]= Pgetd("NS_center_y");
-    obj_center[2]= Pgetd("NS_center_z");
+    region = "NS_around_IB";
   }
-  /* BH spins */
-  if (strcmp_i(kind,"BH"))
+  else if (strcmp_i(obj->stype,"NS1"))
   {
-    /* arounds for surface integrals */
-    patches[p++] = GetPatch("right_BH_around_up",grid);
-    patches[p++] = GetPatch("right_BH_around_down",grid);
-    patches[p++] = GetPatch("right_BH_around_left",grid);
-    patches[p++] = GetPatch("right_BH_around_right",grid);
-    patches[p++] = GetPatch("right_BH_around_back",grid);
-    patches[p++] = GetPatch("right_BH_around_front",grid);
-    obj_center[0]= Pgetd("BH_center_x");
-    obj_center[1]= Pgetd("BH_center_y");
-    obj_center[2]= Pgetd("BH_center_z");
-  }  
-  assert(p==N);
+    region = "NS1_around_IB";
+  }
+  else if (strcmp_i(obj->stype,"NS2"))
+  {
+    region = "NS2_around_IB";
+  }
+  else if (strcmp_i(obj->stype,"BH"))
+  {
+    region = "NS_around_IB";
+  }
+  else if (strcmp_i(obj->stype,"BH1"))
+  {
+    region = "NS_around_IB";
+  }
+  else if (strcmp_i(obj->stype,"BH2"))
+  {
+    region = "NS_around_IB";
+  }
+  else
+  {
+    Error0(NO_OPTION);
+  }
+  
+  patches = collect_patches(obj->grid,region,&N);
   
   /* carry out the integral for each patch */
   for (p = 0; p < N; ++p)
@@ -1402,6 +1406,9 @@ void obs_define_spin_integral(double S[3],Grid_T *const grid,const char *const k
     _free(g12);
     _free(g22);
   }
+  
+  _free(patches);
+  
   S[0] /= (8*M_PI);
   S[1] /= (8*M_PI);
   S[2] /= (8*M_PI);
@@ -1409,49 +1416,46 @@ void obs_define_spin_integral(double S[3],Grid_T *const grid,const char *const k
 
 
 /* approximate spin using : S_a = \frac{1}{8\pi}\oint{\xi_{ai} K^{ij}ds^{2}_j} */
-void 
-obs_define_spin_akv
-  (
-  double S[3]/* spin Sx,Sy,Sz */,
-  Grid_T *const grid/* grid */,
-  const char *const kind/* "NS" or "BH" */
-  )
+void obs_define_spin_akv(double S[3],Obj_Man_T *const obj)
 {
-  FUNC_TIC
-  
-  
-  //if (!strcmp_i(grid->kind,"BBN_CubedSpherical_grid"))
-    Error0(NO_OPTION);
-    
-  const unsigned N     = 6;  
-  Patch_T *patches[N];
-  unsigned p = 0;
+  Patch_T **patches = 0;
+  const char *region = 0;
+  unsigned N,p = 0;
   
   S[0] = S[1] = S[2] = 0;
   
   /* NS spins */
-  if (strcmp_i(kind,"NS"))
+  if (strcmp_i(obj->stype,"NS"))
   {
-     /* arounds for surface integrals */
-    patches[p++] = GetPatch("left_NS_around_up",grid);
-    patches[p++] = GetPatch("left_NS_around_down",grid);
-    patches[p++] = GetPatch("left_NS_around_left",grid);
-    patches[p++] = GetPatch("left_NS_around_right",grid);
-    patches[p++] = GetPatch("left_NS_around_back",grid);
-    patches[p++] = GetPatch("left_NS_around_front",grid);
+    region = "NS_around_IB";
   }
-  /* BH spins */
-  if (strcmp_i(kind,"BH"))
+  else if (strcmp_i(obj->stype,"NS1"))
   {
-    /* arounds for surface integrals */
-    patches[p++] = GetPatch("right_BH_around_up",grid);
-    patches[p++] = GetPatch("right_BH_around_down",grid);
-    patches[p++] = GetPatch("right_BH_around_left",grid);
-    patches[p++] = GetPatch("right_BH_around_right",grid);
-    patches[p++] = GetPatch("right_BH_around_back",grid);
-    patches[p++] = GetPatch("right_BH_around_front",grid);
-  }  
-  assert(p==N);
+    region = "NS1_around_IB";
+  }
+  else if (strcmp_i(obj->stype,"NS2"))
+  {
+    region = "NS2_around_IB";
+  }
+  else if (strcmp_i(obj->stype,"BH"))
+  {
+    region = "NS_around_IB";
+  }
+  else if (strcmp_i(obj->stype,"BH1"))
+  {
+    region = "NS_around_IB";
+  }
+  else if (strcmp_i(obj->stype,"BH2"))
+  {
+    region = "NS_around_IB";
+  }
+  else
+  {
+    Error0(NO_OPTION);
+  }
+  
+  patches = collect_patches(obj->grid,region,&N);
+
   
   /* carry out the integral for each patch */
   for (p = 0; p < N; ++p)
@@ -1542,36 +1546,37 @@ obs_define_spin_akv
   S[1] /= (8*M_PI);
   S[2] /= (8*M_PI);
   
-  FUNC_TOC
 }
 
 /* approximate spin using : S = J - RxP */
-void obs_define_spin_JRP(double S[3],Grid_T *const grid,const char *const kind)
+void obs_define_spin_JRP(double S[3],Obj_Man_T *const obj)
 {
+  char opar[OPAR_LEN];
   double J[3] = {0,0,0};
   double R[3] = {0,0,0};
   double P[3] = {0,0,0};
+
+  P[0] = Getd("Px_ADM");
+  P[1] = Getd("Py_ADM");
+  P[2] = Getd("Pz_ADM");
+  J[0] = Getd("Jx_ADM");
+  J[1] = Getd("Jy_ADM");
+  J[2] = Getd("Jz_ADM");
   
   /* NS spins */
-  if (strcmp_i(kind,"NS"))
+  if (strcmp_i(obj->stype,"NS")  ||
+      strcmp_i(obj->stype,"NS1") ||
+      strcmp_i(obj->stype,"NS2")
+     )
   {
-    obs_Rc_NS(R,grid);
-    P[0] = Pgetd("NS_Px_ADM");
-    P[1] = Pgetd("NS_Py_ADM");
-    P[2] = Pgetd("NS_Pz_ADM");
-    J[0] = Pgetd("NS_Jx_ADM");
-    J[1] = Pgetd("NS_Jy_ADM");
-    J[2] = Pgetd("NS_Jz_ADM");
+    obs_Rc_NS(R,obj);
   }
-  else if (strcmp_i(kind,"BH"))
+  else if (strcmp_i(obj->stype,"BH")  ||
+           strcmp_i(obj->stype,"BH1") ||
+           strcmp_i(obj->stype,"BH2")
+          )
   {
-    obs_Rc_BH(R,grid);
-    P[0] = Pgetd("BH_Px_ADM");
-    P[1] = Pgetd("BH_Py_ADM");
-    P[2] = Pgetd("BH_Pz_ADM");
-    J[0] = Pgetd("BH_Jx_ADM");
-    J[1] = Pgetd("BH_Jy_ADM");
-    J[2] = Pgetd("BH_Jz_ADM");
+    obs_Rc_BH(R,obj);
   }
   else
     Error0(NO_OPTION);
@@ -1583,11 +1588,14 @@ void obs_define_spin_JRP(double S[3],Grid_T *const grid,const char *const kind)
 
 
 /* calculating physical center of BH to be used in spin calculations */
-void obs_Rc_BH(double Rc[3],Grid_T *const grid)
+void obs_Rc_BH(double Rc[3],Obj_Man_T *const obj)
 {
-  const double AH_area = Pgetd("BH_AH_area");
-  const double x_CM = Pgetd("x_CM");
-  const double y_CM = Pgetd("y_CM");
+  Grid_T *const grid = obj->grid;
+  char opar[OPAR_LEN];
+  const double AH_area = Getd("AH_area");
+  const double x_CM = sysGetd("x_CM");
+  const double y_CM = sysGetd("y_CM");
+  const double z_CM = sysGetd("z_CM");
   unsigned p;
 
   Rc[0] = 0;
@@ -1640,7 +1648,7 @@ void obs_Rc_BH(double Rc[3],Grid_T *const grid)
         g22[ijk] = psi4*gConf_D2D2[ijk];
         Rc_integrandx[ijk] = x-x_CM;
         Rc_integrandy[ijk] = y-y_CM;
-        Rc_integrandz[ijk] = z;
+        Rc_integrandz[ijk] = z-z_CM;
       }
     }
     DECLARE_FIELD(Rc_integrandx)
