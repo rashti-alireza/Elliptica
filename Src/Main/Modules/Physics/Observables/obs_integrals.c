@@ -59,14 +59,14 @@ void obs_plan(Observable_T *obs)
   {  
     Patch_T **patches = 0,*patch = 0;
     char stem[1000];
-    char *region = "outermost,filling_box,"
-                   "NS_around_IB,BH_around_IB"
+    const char *region = "outermost,filling_box,"
+                         "NS_around_OB,BH_around_OB"
     struct items_S **adm = 0;
     unsigned p = 0;
     unsigned n,N,ijk,nn;
     
     /* first collect all of the patches required */
-    patches = collect_patches(grid,region,NONE,&N);
+    patches = collect_patches(grid,region,&N);
     
     /* alloc memory for all patches */
     adm = calloc(N,sizeof(*adm));
@@ -118,8 +118,8 @@ void obs_plan(Observable_T *obs)
       adm[n]->g22 = g22;
       
       /* surface integrals params */
-      if (IsItCovering(patch,"NS_around_IB",NONE) ||
-          IsItCovering(patch,"BH_around_IB",NONE)  )
+      if (IsItCovering(patch,"NS_around_OB") ||
+          IsItCovering(patch,"BH_around_OB")  )
       {
         adm[n]->surface_integration_flg = 1;
         adm[n]->Z_surface = 1;
@@ -140,12 +140,12 @@ void obs_plan(Observable_T *obs)
   {  
     Patch_T **patches = 0,*patch = 0;
     struct items_S **adm = 0;
-    char *region = "NS";
+    const char *region = "NS_OB";
     unsigned p = 0;
     unsigned n,N,ijk,nn;
     
     /* first collect all of the patches required */
-    patches = collect_patches(grid,region,NONE,&N);
+    patches = collect_patches(grid,region,&N);
     
     /* alloc memory for all patches */
     adm = calloc(N,sizeof(*adm));
@@ -195,16 +195,11 @@ void obs_plan(Observable_T *obs)
       adm[n]->g11 = g11;
       adm[n]->g12 = g12;
       adm[n]->g22 = g22;
-      
       /* surface integral */
-      /* surface integrals params */
-      if (IsItCovering(patch,"NS_surface",NONE))
-      {
-        adm[n]->surface_integration_flg = 1;
-        adm[n]->Z_surface = 1;
-        adm[n]->K = 0;
-        n_physical_metric_around(adm[n],_c_);
-      }
+      adm[n]->surface_integration_flg = 1;
+      adm[n]->Z_surface = 1;
+      adm[n]->K = patch->n[2]->1;
+      n_physical_metric_around(adm[n],_c_);
     }
     obs->Px = ADM_momentum_x_BHNS_CS;
     obs->Py = ADM_momentum_y_BHNS_CS;
@@ -219,13 +214,12 @@ void obs_plan(Observable_T *obs)
   {  
     Patch_T **patches = 0,*patch = 0;
     struct items_S **adm = 0;
+    const char *region = "BH_around_IB";
     unsigned p = 0;
     unsigned n,N,ijk,nn;
     
-    N = 6/* 6 sides for arounds */;
-        
-    patches = calloc(N,sizeof(*patches));
-    IsNull(patches);  
+    /* first collect all of the patches required */
+    patches = collect_patches(grid,region,&N);
     
     /* alloc memory for all patches */
     adm = calloc(N,sizeof(*adm));
@@ -233,19 +227,7 @@ void obs_plan(Observable_T *obs)
     /* this is where we link to obs struct */
     obs->items = adm;
     obs->Nitems = N;
-    
-    /* first collect all of the patches required */
-    p = 0;
-    /* arounds for surface integrals */
-    patches[p++] = GetPatch("right_BH_around_up",grid);
-    patches[p++] = GetPatch("right_BH_around_down",grid);
-    patches[p++] = GetPatch("right_BH_around_left",grid);
-    patches[p++] = GetPatch("right_BH_around_right",grid);
-    patches[p++] = GetPatch("right_BH_around_back",grid);
-    patches[p++] = GetPatch("right_BH_around_front",grid);
-    
-    assert(p==N);
-    
+      
     /* fill ADM struct for each patch */
     for (n = 0; n < N; ++n)
     {
@@ -306,34 +288,21 @@ void obs_plan(Observable_T *obs)
   else if (strcmp_i(obs->quantity,"Kommar(M)|BH"))
   {  
     Patch_T **patches = 0,*patch = 0;
-    struct items_S **kommar = 0;
+    struct items_S **adm = 0;
+    const char *region = "BH_around_IB";
     unsigned p = 0;
     unsigned n,N,ijk,nn;
     
-    N = 6/* 6 sides for arounds */;
-        
-    patches = calloc(N,sizeof(*patches));
-    IsNull(patches);  
+    /* first collect all of the patches required */
+    patches = collect_patches(grid,region,&N);
     
     /* alloc memory for all patches */
-    kommar = calloc(N,sizeof(*kommar));
-    IsNull(kommar);
+    adm = calloc(N,sizeof(*adm));
+    IsNull(adm);
     /* this is where we link to obs struct */
-    obs->items = kommar;
+    obs->items = adm;
     obs->Nitems = N;
-    
-    /* first collect all of the patches required */
-    p = 0;
-    /* arounds for surface integrals */
-    patches[p++] = GetPatch("right_BH_around_up",grid);
-    patches[p++] = GetPatch("right_BH_around_down",grid);
-    patches[p++] = GetPatch("right_BH_around_left",grid);
-    patches[p++] = GetPatch("right_BH_around_right",grid);
-    patches[p++] = GetPatch("right_BH_around_back",grid);
-    patches[p++] = GetPatch("right_BH_around_front",grid);
-    
-    assert(p==N);
-    
+        
     /* fill kommar struct for each patch */
     for (n = 0; n < N; ++n)
     {
@@ -388,34 +357,21 @@ void obs_plan(Observable_T *obs)
   else if (strcmp_i(obs->quantity,"Kommar(M)|NS"))
   {  
     Patch_T **patches = 0,*patch = 0;
-    struct items_S **kommar = 0;
+    struct items_S **adm = 0;
+    const char *region = "NS_OB";
     unsigned p = 0;
     unsigned n,N,ijk,nn;
     
-    N = 6/* 6 sides for arounds */;
-        
-    patches = calloc(N,sizeof(*patches));
-    IsNull(patches);  
+    /* first collect all of the patches required */
+    patches = collect_patches(grid,region,&N);
     
     /* alloc memory for all patches */
-    kommar = calloc(N,sizeof(*kommar));
-    IsNull(kommar);
+    adm = calloc(N,sizeof(*adm));
+    IsNull(adm);
     /* this is where we link to obs struct */
-    obs->items = kommar;
+    obs->items = adm;
     obs->Nitems = N;
-    
-    /* first collect all of the patches required */
-    p = 0;
-    /* arounds for surface integrals */
-    patches[p++] = GetPatch("left_NS_around_up",grid);
-    patches[p++] = GetPatch("left_NS_around_down",grid);
-    patches[p++] = GetPatch("left_NS_around_left",grid);
-    patches[p++] = GetPatch("left_NS_around_right",grid);
-    patches[p++] = GetPatch("left_NS_around_back",grid);
-    patches[p++] = GetPatch("left_NS_around_front",grid);
-    
-    assert(p==N);
-    
+        
     /* fill kommar struct for each patch */
     for (n = 0; n < N; ++n)
     {
@@ -461,7 +417,7 @@ void obs_plan(Observable_T *obs)
       /* surface integral */
       kommar[n]->surface_integration_flg = 1;
       kommar[n]->Z_surface = 1;
-      kommar[n]->K = 0;
+      kommar[n]->K = patch->n[2]-1;
       n_physical_metric_around(kommar[n],_c_);
     }
     obs->M = obs_Kommar_mass;
@@ -556,92 +512,29 @@ void obs_plan(Observable_T *obs)
   }
   else if (strcmp_i(obs->quantity,"ADM(M)|SYS"))
   {  
-    const unsigned N_outermost = (unsigned) Pgeti("Number_of_Outermost_Split");
-    Patch_T **patches = 0,*patch = 0;
+    Patch_T **patches1 = 0,**patches2 = 0,*patch = 0;
     char stem[1000];
+    const char *region;
     struct items_S **adm = 0;
-    unsigned p = 0,surface_index = 0;
-    unsigned n,N,ijk,nn;
+    unsigned p = 0;
+    unsigned n,N1,N2,ijk,nn;
     
-    if (N_outermost == 0)
-      Error0("No outermost patch for integration.\n");
-    N = 6*N_outermost/* outermosts */ +
-        4/* 4 filling boxes */        +
-        19/* box+NS+arounds for vol integral */ +
-        6/* 6 sides for arounds for area integral */;
-    patches = calloc(N,sizeof(*patches));
-    IsNull(patches);  
+    /* volume part */
+    region   = "outermost,filling_box,NS,NS_around,BH_around"
+    patches1 = collect_patches(grid,region,&N1);
+    /* surface part */
+    region   = "BH_around_IB";
+    patches2 = collect_patches(grid,region,&N2);
     
     /* alloc memory for all patches */
-    adm = calloc(N,sizeof(*adm));
+    adm = calloc((N1+N2),sizeof(*adm));
     IsNull(adm);
     /* this is where we link to obs struct */
     obs->items = adm;
-    obs->Nitems = N;
+    obs->Nitems = N1+N2;
     
-    /* first collect all of the patches required */
-    p = 0;
-    for (n = 0; n < N_outermost; ++n)
-    {
-      sprintf(stem,"outermost%u_up",n);
-      patches[p++]   = GetPatch(stem,grid);
-      
-      sprintf(stem,"outermost%u_down",n);
-      patches[p++] = GetPatch(stem,grid);
-      
-      sprintf(stem,"outermost%u_back",n);
-      patches[p++] = GetPatch(stem,grid);
-      
-      sprintf(stem,"outermost%u_front",n);
-      patches[p++] = GetPatch(stem,grid);
-      
-      sprintf(stem,"outermost%u_left",n);
-      patches[p++] = GetPatch(stem,grid);
-      
-      sprintf(stem,"outermost%u_right",n);
-      patches[p++] = GetPatch(stem,grid);
-    }
-    /* filling box for vol integrals */
-    patches[p++] = GetPatch("filling_box_up",grid);
-    patches[p++] = GetPatch("filling_box_down",grid);
-    patches[p++] = GetPatch("filling_box_back",grid);
-    patches[p++] = GetPatch("filling_box_front",grid);
-    
-    patches[p++] = GetPatch("left_NS_up",grid);
-    patches[p++] = GetPatch("left_NS_down",grid);
-    patches[p++] = GetPatch("left_NS_left",grid);
-    patches[p++] = GetPatch("left_NS_right",grid);
-    patches[p++] = GetPatch("left_NS_back",grid);
-    patches[p++] = GetPatch("left_NS_front",grid);
-    patches[p++] = GetPatch("left_central_box",grid);
-      
-    patches[p++] = GetPatch("left_NS_around_up",grid);
-    patches[p++] = GetPatch("left_NS_around_down",grid);
-    patches[p++] = GetPatch("left_NS_around_left",grid);
-    patches[p++] = GetPatch("left_NS_around_right",grid);
-    patches[p++] = GetPatch("left_NS_around_back",grid);
-    patches[p++] = GetPatch("left_NS_around_front",grid);
-    
-    patches[p++] = GetPatch("right_BH_around_up",grid);
-    patches[p++] = GetPatch("right_BH_around_down",grid);
-    patches[p++] = GetPatch("right_BH_around_left",grid);
-    patches[p++] = GetPatch("right_BH_around_right",grid);
-    patches[p++] = GetPatch("right_BH_around_back",grid);
-    patches[p++] = GetPatch("right_BH_around_front",grid);
-    
-    /* arounds for surface integrals. NOTE: the order matters */
-    surface_index = p;
-    patches[p++] = GetPatch("right_BH_around_up",grid);
-    patches[p++] = GetPatch("right_BH_around_down",grid);
-    patches[p++] = GetPatch("right_BH_around_left",grid);
-    patches[p++] = GetPatch("right_BH_around_right",grid);
-    patches[p++] = GetPatch("right_BH_around_back",grid);
-    patches[p++] = GetPatch("right_BH_around_front",grid);
-    
-    assert(p==N);
-    
-    /* fill ADM struct for each patch */
-    for (n = 0; n < N; ++n)
+    /* fill ADM struct for each patch volume part */
+    for (n = 0; n < N1; ++n)
     {
       adm[n] = calloc(1,sizeof(*adm[n]));
       IsNull(adm[n]);
@@ -680,29 +573,65 @@ void obs_plan(Observable_T *obs)
       adm[n]->g12 = g12;
       adm[n]->g22 = g22;
       
-      /* surface integrals params */
-      if ( n >= surface_index && 
-           regex_search(".+right_BH_around.+",patch->name) )
+    }
+    free(patches1);
+    
+    for (n = N1; n < N2; ++n)
+    {
+      adm[n] = calloc(1,sizeof(*adm[n]));
+      IsNull(adm[n]);
+      patch = patches[n];
+      nn    = patch->nn;
+      
+      double *g00 = alloc_double(nn);
+      double *g01 = alloc_double(nn);
+      double *g02 = alloc_double(nn);
+      double *g11 = alloc_double(nn);
+      double *g12 = alloc_double(nn);
+      double *g22 = alloc_double(nn);
+      
+      READ_v(gConf_D2D2)
+      READ_v(gConf_D0D2)
+      READ_v(gConf_D0D0)
+      READ_v(gConf_D0D1)
+      READ_v(gConf_D1D2)
+      READ_v(gConf_D1D1)
+      
+      adm[n]->patch = patch;
+      /* populate metric components, it uses conformal metric */ 
+      for (ijk = 0; ijk < nn; ++ijk)
       {
-        adm[n]->surface_integration_flg = 1;
-        adm[n]->Z_surface = 1;
-        adm[n]->K = 0;
-        n_conformal_metric_around(adm[n],_c_);
+        g00[ijk] = gConf_D0D0[ijk];
+        g01[ijk] = gConf_D0D1[ijk];
+        g02[ijk] = gConf_D0D2[ijk];
+        g11[ijk] = gConf_D1D1[ijk];
+        g12[ijk] = gConf_D1D2[ijk];
+        g22[ijk] = gConf_D2D2[ijk];
       }
+      adm[n]->g00 = g00;
+      adm[n]->g01 = g01;
+      adm[n]->g02 = g02;
+      adm[n]->g11 = g11;
+      adm[n]->g12 = g12;
+      adm[n]->g22 = g22;
+      
+      adm[n]->surface_integration_flg = 1;
+      adm[n]->Z_surface = 1;
+      adm[n]->K = 0;
+      n_conformal_metric_around(adm[n],_c_);
     }
     obs->M = obs_ADM_mass;
-    free(patches);
+    free(patches2);
   }
   else if (strcmp_i(obs->quantity,"ADM(M)|BH"))
   {  
     Patch_T **patches = 0,*patch = 0;
     struct items_S **adm = 0;
-    unsigned p = 0;
+    const char *region = "BH_around_IB";
     unsigned n,N,ijk,nn;
     
-    N = 6/* 6 sides for arounds for area integral */;
-    patches = calloc(N,sizeof(*patches));
-    IsNull(patches);  
+    /* first collect all of the patches required */
+    patches = collect_patches(grid,region,&N);
     
     /* alloc memory for all patches */
     adm = calloc(N,sizeof(*adm));
@@ -710,18 +639,6 @@ void obs_plan(Observable_T *obs)
     /* this is where we link to obs struct */
     obs->items = adm;
     obs->Nitems = N;
-    
-    /* first collect all of the patches required */
-    p = 0;
-    /* arounds for surface integrals. */
-    patches[p++] = GetPatch("right_BH_around_up",grid);
-    patches[p++] = GetPatch("right_BH_around_down",grid);
-    patches[p++] = GetPatch("right_BH_around_left",grid);
-    patches[p++] = GetPatch("right_BH_around_right",grid);
-    patches[p++] = GetPatch("right_BH_around_back",grid);
-    patches[p++] = GetPatch("right_BH_around_front",grid);
-    
-    assert(p==N);
     
     /* fill ADM struct for each patch */
     for (n = 0; n < N; ++n)
@@ -777,32 +694,18 @@ void obs_plan(Observable_T *obs)
   {  
     Patch_T **patches = 0,*patch = 0;
     struct items_S **adm = 0;
-    unsigned p = 0;
+    const char *region = "NS";
     unsigned n,N,ijk,nn;
     
-    N = 7/* 6 Ns patches for vol integral */;
-    patches = calloc(N,sizeof(*patches));
-    IsNull(patches);  
-    
+    /* first collect all of the patches required */
+    patches = collect_patches(grid,region,&N);
+  
     /* alloc memory for all patches */
     adm = calloc(N,sizeof(*adm));
     IsNull(adm);
     /* this is where we link to obs struct */
     obs->items = adm;
     obs->Nitems = N;
-    
-    /* first collect all of the patches required */
-    p = 0;
-    /* vol integrals. */
-    patches[p++] = GetPatch("left_NS_up",grid);
-    patches[p++] = GetPatch("left_NS_down",grid);
-    patches[p++] = GetPatch("left_NS_left",grid);
-    patches[p++] = GetPatch("left_NS_right",grid);
-    patches[p++] = GetPatch("left_NS_back",grid);
-    patches[p++] = GetPatch("left_NS_front",grid);
-    patches[p++] = GetPatch("left_central_box",grid);
-    
-    assert(p==N);
     
     /* fill ADM struct for each patch */
     for (n = 0; n < N; ++n)
@@ -949,12 +852,12 @@ void obs_free(Observable_T *obs)
 {
   if (!obs)
     return;
-    
-  if (!strcmp_i(obs->grid->kind,"BBN_CubedSpherical_grid"))
-    Error0(NO_OPTION);
   
   struct items_S **adm = obs->items;
   unsigned i;
+    
+  if (obs->grid->kind == Grid_SplitCubedSpherical_BHNS)
+  {  
     
   for (i = 0; i < obs->Nitems; ++i)
   {
@@ -1037,6 +940,9 @@ void obs_free(Observable_T *obs)
     free(adm[i]);
   }
   _free(adm);
+  }
+  else
+    Error0(NO_OPTION);
 }
 
 /* calculating ADM momentum in x component */
@@ -1609,7 +1515,8 @@ obs_define_spin_akv
 {
   FUNC_TIC
   
-  if (!strcmp_i(grid->kind,"BBN_CubedSpherical_grid"))
+  
+  //if (!strcmp_i(grid->kind,"BBN_CubedSpherical_grid"))
     Error0(NO_OPTION);
     
   const unsigned N     = 6;  
