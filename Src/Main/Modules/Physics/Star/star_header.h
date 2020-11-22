@@ -21,6 +21,7 @@ struct NS_Euler_eq_const_RootFinder_S
 
 void star_idealfluid_NS_gConf_find_Euler_const(Physics_T *const phys);
 double star_NS_baryonic_gConf_mass(Physics_T *const phys,const double Euler_C);
+void star_NS_idealfluid_gConf_add_fields(Grid_T *const grid);
 
 #endif
 

@@ -59,7 +59,7 @@ int star_mount(Grid_T *const grid)
       Pcmps("star_fluid","ideal_fluid") && 
       Pcmps("star_gConf","non_flat"))
   {
-    UNUSED(grid);
+   star_NS_idealfluid_gConf_add_fields(grid);
   }
   /* one can for instance add various params here for example:
   // else if (Pcmps("star_type","BS+WD")) */

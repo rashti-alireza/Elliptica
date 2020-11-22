@@ -1,0 +1,40 @@
+# Manifold or grid Dimension
+Dimension = 3;
+
+# point on manifold shown by:
+Point = ijk;
+
+C_macro  = ADD_FIELD(name);
+C_macro2 = ADD_AND_ALLOC_FIELD(name);# Improtant to set source 0 everywhere.
+
+`#include "star_header.h"`
+``
+``
+
+`void star_NS_idealfluid_gConf_add_fields(Grid_T *const grid);`
+`void star_NS_idealfluid_gConf_add_fields(Grid_T *const grid)`
+`{`
+
+` unsigned p;`
+` FOR_ALL_PATCHES(p,grid)`
+` {`
+` Patch_T *patch = grid->patch[p];`
+``
+Declare =
+{
+ # phi: scalar for the irrotational part of fluid i.e h*u = dphi+W
+ (obj = Field,name = phi, rank = 0, C_macro);
+
+ # W: spin part of fluid W^i 
+ (obj = Field,name = W, rank = U, C_macro);
+
+ # dphi
+ (obj = Field,name = dphi, rank = D, C_macro);
+
+ # ddphi
+ (obj = Field,name = ddphi, rank = DD, C_macro);
+}
+Symm[ddphi(i,j)=ddphi(j,i)];
+
+` }`
+`}`
