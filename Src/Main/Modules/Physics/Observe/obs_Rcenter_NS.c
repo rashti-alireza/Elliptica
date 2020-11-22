@@ -12,9 +12,11 @@
   ADD_FIELD(name);REALLOC_v_WRITE_v(name);
 
 
-void obs_Rc_NS(double Rc[3],Physics_T *const phys);
-void obs_Rc_NS(double Rc[3],Physics_T *const phys)
+void obs_Rc_NS(Observe_T *const obs);
+void obs_Rc_NS(Observe_T *const obs)
 {
+  Physics_T *const phys = obs->phys;
+  double *const Rc = obs->ret;
   Grid_T *const grid = phys->grid;
   const double Madm = Getd("ADM_mass");
   const double x_CM = sysGetd("x_CM");

@@ -725,6 +725,24 @@ void obs_calculate(Observe_T *const obs)
     obs->ret[0] = obs_ADM_mass(obs);
     free(patches);
   }
+  else if (strcmp_i(obs->quantity,"CM"))
+  {
+    if (obs->phys->type == BH)      Rc_BH(obs);
+    else if (obs->phys->type == NS) obs_Rc_NS(obs);
+    else                            Error0(NO_OPTION);
+  }
+  else if (strcmp_i(obs->quantity,"Spin|JRP"))
+  {
+    define_spin_JRP(obs);
+  }
+  else if (strcmp_i(obs->quantity,"Spin|Campanelli"))
+  {
+    define_spin_campanelli(obs);
+  }
+  else if (strcmp_i(obs->quantity,"Spin|AKV"))
+  {
+    define_spin_akv(obs);
+  }
   else
     Error1("There is no such '%s' plan.\n",obs->quantity);
     
@@ -1247,8 +1265,10 @@ static double ADM_angular_momentum_y_BHNS_CS(Observe_T *const obs)
 }
 
 /* approximate spin using : S_a = \frac{1}{8\pi}\oint{\xi_{ai} K^{ij}ds^{2}_j} */
-void obs_define_spin_integral(double S[3],Physics_T *const phys)
+static void define_spin_campanelli(Observe_T *const obs)
 {
+  Physics_T *const phys = obs->phys;
+  double *const S = obs->ret;
   Patch_T **patches = 0;
   double obj_center[3] = {0};
   const char *region = 0;
@@ -1387,8 +1407,10 @@ void obs_define_spin_integral(double S[3],Physics_T *const phys)
 
 
 /* approximate spin using : S_a = \frac{1}{8\pi}\oint{\xi_{ai} K^{ij}ds^{2}_j} */
-void obs_define_spin_akv(double S[3],Physics_T *const phys)
+static void define_spin_akv(Observe_T *const obs)
 {
+  Physics_T *const phys = obs->phys;
+  double *const S = obs->ret;
   Patch_T **patches = 0;
   const char *region = 0;
   unsigned N,p = 0;
@@ -1520,8 +1542,10 @@ void obs_define_spin_akv(double S[3],Physics_T *const phys)
 }
 
 /* approximate spin using : S = J - RxP */
-void obs_define_spin_JRP(double S[3],Physics_T *const phys)
+static void define_spin_JRP(Observe_T *const obs)
 {
+  Physics_T *const phys = obs->phys;
+  double *const S = obs->ret;
   double J[3] = {0,0,0};
   double R[3] = {0,0,0};
   double P[3] = {0,0,0};
@@ -1539,14 +1563,14 @@ void obs_define_spin_JRP(double S[3],Physics_T *const phys)
       strcmp_i(phys->stype,"NS2")
      )
   {
-    obs_Rc_NS(R,phys);
+    obs_Rc_NS(obs);
   }
   else if (strcmp_i(phys->stype,"BH")  ||
            strcmp_i(phys->stype,"BH1") ||
            strcmp_i(phys->stype,"BH2")
           )
   {
-    obs_Rc_BH(R,phys);
+    Rc_BH(obs);
   }
   else
     Error0(NO_OPTION);
@@ -1558,13 +1582,15 @@ void obs_define_spin_JRP(double S[3],Physics_T *const phys)
 
 
 /* calculating physical center of BH to be used in spin calculations */
-void obs_Rc_BH(double Rc[3],Physics_T *const phys)
+static void Rc_BH(Observe_T *const obs)
 {
-  Grid_T *const grid = phys->grid;
-  const double AH_area = Getd("AH_area");
+  Physics_T *const phys = obs->phys;
+  Grid_T *const grid    = phys->grid;
+  const double AH_area  = Getd("AH_area");
   const double x_CM = sysGetd("x_CM");
   const double y_CM = sysGetd("y_CM");
   const double z_CM = sysGetd("z_CM");
+  double *const Rc  = obs->ret;
   unsigned p;
 
   Rc[0] = 0;

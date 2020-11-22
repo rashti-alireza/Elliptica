@@ -20,8 +20,8 @@
 // "ADM(M)|BHNS"   #=> compute ADM mass for the system 
 // "ADM(M)|NS"     #=> compute ADM mass for NS 
 // "ADM(M)|BH"     #=> compute ADM mass for BH
-// "CM|obj"        #=> compute the center of mass of object obj (NS?/BH?)
-// "Spin|obj|method" #=> compute spin of object obj (NS?/BH?) 
+// "CM"          #=> compute the center of mass of phys->type
+// "Spin|method" #=> compute spin of object phys->type
 //                       with the specified method below:
 //
 // spin calculation methods:

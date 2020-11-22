@@ -18,15 +18,16 @@ C_macro2 = add_and_get_field(name);
 ``
 ``
 
-`void obs_Rc_NS(double Rc[3],Physics_T *const phys);`
-`void obs_Rc_NS(double Rc[3],Physics_T *const phys)`
-`{`
+`void obs_Rc_NS(Observe_T *const obs);`
+`void obs_Rc_NS(Observe_T *const obs)`
+`{` 
+`  Physics_T *const phys = obs->phys;`
+`  double *const Rc = obs->ret;`
 `  Grid_T *const grid = phys->grid;`
 `  const double Madm = Getd("ADM_mass");`
 `  const double x_CM = sysGetd("x_CM");`
 `  const double y_CM = sysGetd("y_CM");`
 `  const double z_CM = sysGetd("z_CM");`
-
 `  unsigned p;`
 ``
 `  Rc[0] = 0;`
