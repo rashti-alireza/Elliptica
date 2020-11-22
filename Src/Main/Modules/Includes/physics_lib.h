@@ -18,15 +18,18 @@
 // phys->stype = "NS1",par = "enthalpy_update_weight" => 
 // s = "NS1_enthalpy_update_weight"; thus, we can have various parameter
 // calls with the same concept for different compact objects.
-// NOTE: phys MUST be defined. */
+// NOTE: phys MUST be defined. 
+// NOTE: not thread safe. */
 #define Getd(par) \
  (sprintf(phys->par,"%s_%s",phys->stype,par) ? Pgetd(phys->par) : DBL_MAX)
 
-/* same as Getd but for integer type */ 
+/* same as Getd but for integer type.
+// NOTE: not thread safe. */
 #define Geti(par) \
  (sprintf(phys->par,"%s_%s",phys->stype,par) ? Pgeti(phys->par) : INT_MAX)
  
-/* same as Getd but for string type */ 
+/* same as Getd but for string type
+// NOTE: not thread safe. */
 #define Gets(par) \
  (sprintf(phys->par,"%s_%s",phys->stype,par) ? Pgets(phys->par) : NULL)
 
@@ -35,15 +38,18 @@
 // phys->ssys = "BHNS",par = "x_CM" => 
 // s = "BHNS_x_CM"; thus, we can have various parameter
 // calls with the same concept for different systems.
-// NOTE: phys MUST be defined. */
+// NOTE: phys MUST be defined.
+// NOTE: not thread safe. */
 #define sysGetd(par) \
  (sprintf(phys->par,"%s_%s",phys->stype,par) ? Pgetd(phys->par) : DBL_MAX)
 
-/* same as Getd but for integer type */ 
+/* same as Getd but for integer type
+// NOTE: not thread safe. */
 #define sysGeti(par) \
  (sprintf(phys->par,"%s_%s",phys->stype,par) ? Pgeti(phys->par) : INT_MAX)
  
-/* same as Getd but for string type */ 
+/* same as Getd but for string type
+// NOTE: not thread safe. */
 #define sysGets(par) \
  (sprintf(phys->par,"%s_%s",phys->stype,par) ? Pgets(phys->par) : NULL)
 
@@ -52,11 +58,13 @@
 // phys->stype = "NS1",par = "enthalpy_update_weight" => 
 // s = "NS1_enthalpy_update_weight"; thus, we can have various parameter
 // calls with the same concept for different compact objects.
-// NOTE: phys MUST be defined. */
+// NOTE: phys MUST be defined.
+// NOTE: not thread safe. */
 #define Setd(par,val) \
 {sprintf(phys->par,"%s_%s",phys->stype,par); Psetd(phys->par,(val));}
 
-/* same as Setd but for integer */
+/* same as Setd but for integer.
+// NOTE: not thread safe. */
 #define Seti(par,val) \
 {sprintf(phys->par,"%s_%s",phys->stype,par); Pseti(phys->par,(val));}
 
