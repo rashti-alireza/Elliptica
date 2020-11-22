@@ -36,7 +36,13 @@
 #include "obs_main.h"
 
 /* calculate the quantity of interest sq based on given physics 
-// and then return in ret variable. */
+// and then return in ret variable. 
+// NOTE: one must provide enough memory for return value in ret; 
+// for instace for "ADM(P,J)" one need 6 double type memory.
+// NOTE: the order of population for "ADM(P,J)" is:
+// Px = ret[0], py = ret[1], pz = ret[2]
+// Jx = ret[3], Jy = ret[4], Jz = ret[5]
+// and generally for index quantities (x,y,z) fills with order (0,1,2). */
 int observe(Physics_T *const phys,const char *const sq,double *const ret)
 {
   Observe_T *const obs = calloc(1,sizeof(*obs));
