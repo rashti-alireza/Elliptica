@@ -19,10 +19,8 @@ int physics(Physics_T *const phys,const cmd_T cmd,
   
   phys->cmd = cmd;
   
-  if(!phys->region)
-  {
-    Error0("NO region specified!\n");
-  }
+  /* note: first must set phys->cmd */
+  set_phys_default_region(phys);
   
   switch (cmd)
   {
@@ -290,3 +288,13 @@ void free_physics(Physics_T *phys)
   _free(phys);
 }
 
+/* set phys->region, if it's already set by the user skip  */
+static void set_phys_default_region(Physics_T *const phys)
+{
+  if (phys->region)
+    return;
+  
+  /* set natural region, later one can make it more sophisticated */
+  phys->region = phys->stype;
+    
+}

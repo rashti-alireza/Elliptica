@@ -17,6 +17,9 @@ init_physics
  );
 
 void free_physics(Physics_T *obj);
+static void set_phys_default_region(Physics_T *const phys);
+
+
 
 
 
