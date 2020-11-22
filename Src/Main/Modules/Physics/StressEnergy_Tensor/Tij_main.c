@@ -19,7 +19,7 @@ int Tij_tune(Physics_T *const obj)
     switch (obj->cmd)
     {
       case STRESS_ENERGY:
-        Tij_idealfluid_CTS_nonflat_update(obj);
+        Tij_idealfluid_CTS_gConf_update(obj);
       break;
       default:
         Error0(NO_OPTION);
@@ -53,7 +53,7 @@ int Tij_mount(Grid_T *const grid)
       Pcmps("Tij_decomposition","CTS") &&
       Pcmps("Tij_gConf","non_flat"))
   {
-    Tij_idealfluid_CTS_nonflat_add_fields(grid);
+    Tij_idealfluid_CTS_gConf_add_fields(grid);
   }
   else
     Error0(NO_OPTION);

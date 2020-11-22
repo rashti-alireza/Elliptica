@@ -15,7 +15,7 @@ C_macro  = READ_v(name);
 C_macro2 = REALLOC_v_WRITE_v(name);
 Ccode["#include "Tij_header.h"\n\n"];
 
-Ccode["void Tij_IF_CTS_nonflat_enthalpy(Patch_T *const patch,const double Euler_C)"];
+Ccode["void Tij_IF_CTS_gConf_enthalpy(Patch_T *const patch,const double Euler_C)"];
 Ccode["{"];
 #`  const double R_MAX = 1E2;`
 Ccode["  const unsigned nn = patch->nn;"];

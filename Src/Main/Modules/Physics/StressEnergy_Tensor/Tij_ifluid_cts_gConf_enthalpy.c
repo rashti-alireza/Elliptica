@@ -7,7 +7,7 @@
 #include "Tij_header.h"
 
 
-void Tij_IF_CTS_nonflat_enthalpy(Patch_T *const patch,const double Euler_C)
+void Tij_IF_CTS_gConf_enthalpy(Patch_T *const patch,const double Euler_C)
 {
   const unsigned nn = patch->nn;
   unsigned ijk;

@@ -11,7 +11,7 @@ C_macro2 = ADD_AND_ALLOC_FIELD(name);# Improtant to set source 0 everywhere.
 ``
 ``
 
-`void Tij_idealfluid_CTS_nonflat_add_fields(Grid_T *const grid)`
+`void Tij_idealfluid_CTS_gConf_add_fields(Grid_T *const grid)`
 `{`
 
 ` unsigned p;`

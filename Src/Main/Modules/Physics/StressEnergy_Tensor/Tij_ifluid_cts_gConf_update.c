@@ -3,11 +3,11 @@
 // August 2019
 */
 
-#include "Tij_ifluid_cts_nonflat_update.h"
+#include "Tij_ifluid_cts_gConf_update.h"
 
 
 /* updating all matter related and their derivatives. */
-void Tij_idealfluid_CTS_nonflat_update(Physics_T *const obj)
+void Tij_idealfluid_CTS_gConf_update(Physics_T *const obj)
 {
   FUNC_TIC
   
@@ -30,19 +30,19 @@ void Tij_idealfluid_CTS_nonflat_update(Physics_T *const obj)
     
     if_not_cover(patch,obj)  continue;
     
-    RELAX_UPDATE_FUNC(Tij_IF_CTS_nonflat_enthalpy(patch,Euler_const),
+    RELAX_UPDATE_FUNC(Tij_IF_CTS_gConf_enthalpy(patch,Euler_const),
                       patch,enthalpy,W);
     
     if (neat)
       Tij_neat_enthalpy(patch);
     
     Tij_eos_update_rho0(patch);
-    Tij_IF_CTS_nonflat_u0(patch);
-    Tij_IF_CTS_nonflat_derives(patch);
+    Tij_IF_CTS_gConf_u0(patch);
+    Tij_IF_CTS_gConf_derives(patch);
     /* sources */
-    Tij_IF_CTS_nonflat_psi6J_Ui(patch);
-    Tij_IF_CTS_nonflat_psi6E(patch);
-    Tij_IF_CTS_nonflat_psi6S(patch);
+    Tij_IF_CTS_gConf_psi6J_Ui(patch);
+    Tij_IF_CTS_gConf_psi6E(patch);
+    Tij_IF_CTS_gConf_psi6S(patch);
   }
   
   FUNC_TOC

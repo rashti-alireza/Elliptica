@@ -9,7 +9,7 @@
 #include "star_NS.h"
 
 /* find Euler equation constant to meet NS baryonic mass */
-void star_idealfluid_NS_nonflat_find_Euler_const(Physics_T *const obj)
+void star_idealfluid_NS_gConf_find_Euler_const(Physics_T *const obj)
 {
   FUNC_TIC
   
@@ -24,7 +24,7 @@ void star_idealfluid_NS_nonflat_find_Euler_const(Physics_T *const obj)
   Observable_T *obs = 0;
   double bar_mass,adm_mass,kommar_mass;
   
-  bar_mass = star_NS_baryonic_nonflat_mass(obj,guess[0]);
+  bar_mass = star_NS_baryonic_gConf_mass(obj,guess[0]);
   obs = init_observable(obj,"ADM(M)|NS");
   adm_mass = obs->M(obs);
   free_observable(obs);
@@ -49,7 +49,7 @@ void star_idealfluid_NS_nonflat_find_Euler_const(Physics_T *const obj)
   root->MaxIter     = (unsigned)Geti("RootFinder_Max_Number_of_Iteration");
   root->x_gss       = guess;
   root->params      = params;
-  root->f[0]        = Euler_eq_const_nonflat_rootfinder_eq;
+  root->f[0]        = Euler_eq_const_gConf_rootfinder_eq;
   root->verbose     = 1;
   plan_root_finder(root);
   
@@ -68,10 +68,10 @@ void star_idealfluid_NS_nonflat_find_Euler_const(Physics_T *const obj)
 }
 
 /* root finder eqution for Euler equation constant */
-static double Euler_eq_const_nonflat_rootfinder_eq(void *params,const double *const x)
+static double Euler_eq_const_gConf_rootfinder_eq(void *params,const double *const x)
 {
   struct NS_Euler_eq_const_RootFinder_S *const par = params; 
   
-  return star_NS_baryonic_nonflat_mass(par->obj,x[0]) - par->NS_baryonic_mass;
+  return star_NS_baryonic_gConf_mass(par->obj,x[0]) - par->NS_baryonic_mass;
 }
 

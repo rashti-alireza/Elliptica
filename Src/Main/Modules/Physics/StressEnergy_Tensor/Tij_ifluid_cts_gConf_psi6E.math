@@ -4,7 +4,7 @@
 # given all of the fields needed for E = T(mu,nu)*n(-mu)*n(-nu)
 # it builds "total energy density * psi^6", where psi is conformal factor,
 # and puts it to EConf.
-# note: it depends on u0, so first to call Tij_IF_CTS_nonflat_u0 function.
+# note: it depends on u0, so first to call Tij_IF_CTS_gConf_u0 function.
 
 # Manifold or grid Dimension
 Dimension = 3;
@@ -15,7 +15,7 @@ Point = ijk;
 C_macro = READ_v(name);
 C_macro2 = REALLOC_v_WRITE_v(name);
 Ccode["#include "Tij_header.h"\n\n"];
-Ccode["void Tij_IF_CTS_nonflat_psi6E(Patch_T *const patch)"];
+Ccode["void Tij_IF_CTS_gConf_psi6E(Patch_T *const patch)"];
 Ccode["{"];
 
 Ccode["  const unsigned nn = patch->nn;"];

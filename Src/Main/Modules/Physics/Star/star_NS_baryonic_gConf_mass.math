@@ -10,7 +10,7 @@ C_macro  = READ_v(name);
 # return the baryonic mass of NS calculated by integrating
 # rest mass density (measured by Eulerain observer) over NS volume
 # for each given Euler equation constant.
-`double star_NS_baryonic_nonflat_mass(Physics_T *const obj,const double Euler_C)`
+`double star_NS_baryonic_gConf_mass(Physics_T *const obj,const double Euler_C)`
 `{`
 `  double NS_baryonic_mass = 0;`
 `  unsigned p;`

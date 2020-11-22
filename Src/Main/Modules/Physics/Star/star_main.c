@@ -20,7 +20,7 @@ int star_tune(Physics_T *const obj)
     switch (obj->cmd)
     {
       case EULER_CONST:
-        star_idealfluid_NS_nonflat_find_Euler_const(obj);
+        star_idealfluid_NS_gConf_find_Euler_const(obj);
       break;
       default:
         Error0(NO_OPTION);
