@@ -1,6 +1,6 @@
 #include "obs_header.h"
 
-void obs_plan(Observe_T *obs);
+void obs_calculate(Observe_T *const obs);
 void obs_define_spin_integral(double S[3],Physics_T *const phys);
 void obs_define_spin_JRP(double S[3],Physics_T *const phys);
 void obs_define_spin_akv(double S[3],Physics_T *const phys);

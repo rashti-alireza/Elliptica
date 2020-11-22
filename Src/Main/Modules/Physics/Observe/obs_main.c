@@ -7,42 +7,56 @@
 // =========
 //
 // * initialize observable *
-// Observe_T *obs = init_observable(object,string_quantity);
-// to see the list of string_quantity see "obs_integrals.c"
+// observe(phys,sq,save); # the observed value saves in save 
+//                          # and sq is one of the followings:
 //
-// * after initialization calculate the observable. example:*
-// double Px_ADM = obs->Px(obs);# x component
-// double Py_ADM = obs->Py(obs);# y component
-// double Pz_ADM = obs->Pz(obs);# z component
-// double Jx_ADM = obs->Jx(obs);# x component of angular momentum
-// double Jy_ADM = obs->Jy(obs);# y component of angular momentum
-// double Jz_ADM = obs->Jz(obs);# z component of angular momentum
-// double M_ADM  = obs->M(obs) ;# a specifed mass for example ADM mass
+// * list of quantities *
+// "ADM(P,J)|BHNS" #=> compute P and J ADM for the system 
+// "ADM(P,J)|NS"   #=> compute P and J ADM for single NS 
+// "ADM(P,J)|BH"   #=> compute P and J ADM for single BH
+// "Kommar(M)|BHNS" #=> compute Kommar mass for the system 
+// "Kommar(M)|NS"  #=> compute kommar mass for NS 
+// "Kommar(M)|BH"  #=> compute Kommar mass for BH
+// "ADM(M)|BHNS"   #=> compute ADM mass for the system 
+// "ADM(M)|NS"     #=> compute ADM mass for NS 
+// "ADM(M)|BH"     #=> compute ADM mass for BH
+// "CM|obj"        #=> compute the center of mass of object obj (NS?/BH?)
+// "Spin|obj|method" #=> compute spin of object obj (NS?/BH?) 
+//                       with the specified method below:
 //
-// * free *
-// free_observable(obs);
+// spin calculation methods:
+// Campanelli: gr-qc/0612076v4
+// JRB:        Phys. Rev. D 100, 124046
+// AKV:        Phys.Rev.D78:084017,2008
+//
+//
 */
+
 
 #include "obs_main.h"
 
-/* initialzing stuct Observe_T for sq look explanation on top. */
-Observe_T *init_observable(Physics_T *const phys,const char *const sq)
+/* calculate the quantity of interest sq based on given physics 
+// and then return in ret variable. */
+int observe(Physics_T *const phys,const char *const sq,double *const ret)
 {
   Observe_T *const obs = calloc(1,sizeof(*obs));
   IsNull(obs);
 
   obs->phys  = phys;
   obs->grid  = phys->grid;
+  obs->ret   = ret;
+  
   sprintf(obs->quantity,"%s|%s",sq,phys->stype);
   
-  obs_plan(obs);
+  obs_calculate(obs);
+  free_obs(obs);
   
-  return obs;
+  return EXIT_SUCCESS;
 }
 
 
 /* free stuct Observe_T and items */
-void free_observable(Observe_T *obs)
+static void free_obs(Observe_T *obs)
 {
   if (!obs)
     return;

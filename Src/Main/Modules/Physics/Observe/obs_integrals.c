@@ -3,42 +3,6 @@
 // September 2019
 */
 
-/* synopsis:
-// =========
-//
-// * initialize observable *
-// observe(phys,sq,save); # the observed value saves in save 
-//                          # and sq is one of the followings:
-//
-// * list of quantities *
-// "ADM(P,J)|BHNS" #=> compute P and J ADM for the system 
-// "ADM(P,J)|NS"   #=> compute P and J ADM for single NS 
-// "ADM(P,J)|BH"   #=> compute P and J ADM for single BH
-// "Kommar(M)|BHNS" #=> compute Kommar mass for the system 
-// "Kommar(M)|NS"  #=> compute kommar mass for NS 
-// "Kommar(M)|BH"  #=> compute Kommar mass for BH
-// "ADM(M)|BHNS"   #=> compute ADM mass for the system 
-// "ADM(M)|NS"     #=> compute ADM mass for NS 
-// "ADM(M)|BH"     #=> compute ADM mass for BH
-// "CM|obj"        #=> compute the center of mass of object obj (NS?/BH?)
-// "Spin|obj|method" #=> compute spin of object obj (NS?/BH?) 
-//                       with the specified method below:
-//
-// spin calculation methods:
-// Campanelli: gr-qc/0612076v4
-// JRB:        Phys. Rev. D 100, 124046
-// AKV:        Phys.Rev.D78:084017,2008
-//
-// * after initialization calculate the observable example:*
-// double Px_ADM = obs->Px(obs);# x component
-// double Py_ADM = obs->Py(obs);# y component
-// double Pz_ADM = obs->Pz(obs);# z component
-// double Jx_ADM = obs->Jx(obs);# x component of angular momentum
-// double Jy_ADM = obs->Jy(obs);# y component of angular momentum
-// double Jz_ADM = obs->Jz(obs);# z component of angular momentum
-// double M_ADM  = obs->M(obs) ;# a specifed mass for example ADM mass
-//
-*/
 
 #include "obs_integrals.h"
 #define VOLUME_INTEGRAL 1 /* put it to 1 if you want \int{Gdv} */
@@ -55,7 +19,7 @@
 // 5. populate the integrands
 // 6. assign the pertinent functions for the calculation.
 // */
-void obs_plan(Observe_T *obs)
+void obs_calculate(Observe_T *const obs)
 {
   Grid_T *const grid = obs->grid;
   
@@ -133,13 +97,14 @@ void obs_plan(Observe_T *obs)
         n_physical_metric_around(adm[n],_c_);
       }
     }
-    obs->Px = ADM_momentum_x_BHNS_CS;
-    obs->Py = ADM_momentum_y_BHNS_CS;
-    obs->Pz = ADM_momentum_z_BHNS_CS;
-    obs->Jx = ADM_angular_momentum_x_BHNS_CS;
-    obs->Jy = ADM_angular_momentum_y_BHNS_CS;
-    obs->Jz = ADM_angular_momentum_z_BHNS_CS;
+    
     obs_populate_ADM_integrand_PdS_GdV_binary(obs);
+    obs->ret[0] = ADM_momentum_x_BHNS_CS(obs);
+    obs->ret[1] = ADM_momentum_y_BHNS_CS(obs);
+    obs->ret[2] = ADM_momentum_z_BHNS_CS(obs);
+    obs->ret[3] = ADM_angular_momentum_x_BHNS_CS(obs);
+    obs->ret[4] = ADM_angular_momentum_y_BHNS_CS(obs);
+    obs->ret[5] = ADM_angular_momentum_z_BHNS_CS(obs);
     free(patches);
   }
   else if (strcmp_i(obs->quantity,"ADM(P,J)|NS"))
@@ -207,13 +172,14 @@ void obs_plan(Observe_T *obs)
       adm[n]->K = patch->n[2]-1;
       n_physical_metric_around(adm[n],_c_);
     }
-    obs->Px = ADM_momentum_x_BHNS_CS;
-    obs->Py = ADM_momentum_y_BHNS_CS;
-    obs->Pz = ADM_momentum_z_BHNS_CS;
-    obs->Jx = ADM_angular_momentum_x_BHNS_CS;
-    obs->Jy = ADM_angular_momentum_y_BHNS_CS;
-    obs->Jz = ADM_angular_momentum_z_BHNS_CS;
+    
     obs_populate_ADM_integrand_PdS_GdV_single(obs);
+    obs->ret[0] = ADM_momentum_x_BHNS_CS(obs);
+    obs->ret[1] = ADM_momentum_y_BHNS_CS(obs);
+    obs->ret[2] = ADM_momentum_z_BHNS_CS(obs);
+    obs->ret[3] = ADM_angular_momentum_x_BHNS_CS(obs);
+    obs->ret[4] = ADM_angular_momentum_y_BHNS_CS(obs);
+    obs->ret[5] = ADM_angular_momentum_z_BHNS_CS(obs);
     free(patches);
   }
   else if (strcmp_i(obs->quantity,"ADM(P,J)|BH"))
@@ -282,13 +248,13 @@ void obs_plan(Observe_T *obs)
       adm[n]->K = 0;
       n_physical_metric_around(adm[n],_c_);
     }
-    obs->Px = ADM_momentum_x_BHNS_CS;
-    obs->Py = ADM_momentum_y_BHNS_CS;
-    obs->Pz = ADM_momentum_z_BHNS_CS;
-    obs->Jx = ADM_angular_momentum_x_BHNS_CS;
-    obs->Jy = ADM_angular_momentum_y_BHNS_CS;
-    obs->Jz = ADM_angular_momentum_z_BHNS_CS;
     obs_populate_ADM_integrand_PdS_GdV_single(obs);
+    obs->ret[0] = ADM_momentum_x_BHNS_CS(obs);
+    obs->ret[1] = ADM_momentum_y_BHNS_CS(obs);
+    obs->ret[2] = ADM_momentum_z_BHNS_CS(obs);
+    obs->ret[3] = ADM_angular_momentum_x_BHNS_CS(obs);
+    obs->ret[4] = ADM_angular_momentum_y_BHNS_CS(obs);
+    obs->ret[5] = ADM_angular_momentum_z_BHNS_CS(obs);
     free(patches);
   }
   else if (strcmp_i(obs->quantity,"Kommar(M)|BH"))
@@ -357,7 +323,7 @@ void obs_plan(Observe_T *obs)
       kommar[n]->K = 0;
       n_physical_metric_around(kommar[n],_c_);
     }
-    obs->M = obs_Kommar_mass;
+    obs->ret[0] = obs_Kommar_mass(obs);
     free(patches);
   }
   else if (strcmp_i(obs->quantity,"Kommar(M)|NS"))
@@ -426,7 +392,7 @@ void obs_plan(Observe_T *obs)
       kommar[n]->K = patch->n[2]-1;
       n_physical_metric_around(kommar[n],_c_);
     }
-    obs->M = obs_Kommar_mass;
+    obs->ret[0] = obs_Kommar_mass(obs);
     free(patches);
   }
   else if (strcmp_i(obs->quantity,"Kommar(M)|BHNS"))
@@ -514,7 +480,7 @@ void obs_plan(Observe_T *obs)
       kommar[n]->K = patch->n[2]-1;
       n_physical_metric_around(kommar[n],_c_);
     }
-    obs->M = obs_Kommar_mass;
+    obs->ret[0] = obs_Kommar_mass(obs);
     free(patches);
   }
   else if (strcmp_i(obs->quantity,"ADM(M)|BHNS"))
@@ -626,7 +592,7 @@ void obs_plan(Observe_T *obs)
       adm[n]->K = 0;
       n_conformal_metric_around(adm[n],_c_);
     }
-    obs->M = obs_ADM_mass;
+    obs->ret[0] = obs_ADM_mass(obs);
     free(patches2);
   }
   else if (strcmp_i(obs->quantity,"ADM(M)|BH"))
@@ -694,7 +660,7 @@ void obs_plan(Observe_T *obs)
       adm[n]->K = 0;
       n_physical_metric_around(adm[n],_c_);
     }
-    obs->M = obs_BH_ADM_mass;
+    obs->ret[0] = obs_BH_ADM_mass(obs);
     free(patches);
   }
   else if (strcmp_i(obs->quantity,"ADM(M)|NS"))
@@ -756,7 +722,7 @@ void obs_plan(Observe_T *obs)
       adm[n]->g22 = g22;
       
     }
-    obs->M = obs_ADM_mass;
+    obs->ret[0] = obs_ADM_mass(obs);
     free(patches);
   }
   else
