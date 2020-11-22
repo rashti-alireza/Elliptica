@@ -13,6 +13,7 @@ void star_idealfluid_NS_nonflat_find_Euler_const(Obj_Man_T *const obj)
 {
   FUNC_TIC
   
+  Grid_T *const grid = obj->grid;
   Root_Finder_T *root = init_root_finder(1);
   char opar[OPAR_LEN] = {'\0'};
   const double W1  = Getd("Euler_const_update_weight");
@@ -21,19 +22,15 @@ void star_idealfluid_NS_nonflat_find_Euler_const(Obj_Man_T *const obj)
   double guess[1] = {Getd("Euler_equation_constant")};
   const double RESIDUAL = sqrt(Getd("RootFinder_Tolerance"));
   struct NS_Euler_eq_const_RootFinder_S params[1] = {0};
-  //Observable_T *obs = 0;
-  //double bar_mass,adm_mass,kommar_mass;
+  Observable_T *obs = 0;
+  double bar_mass,adm_mass,kommar_mass;
   
-  //bar_mass = star_NS_baryonic_nonflat_mass(obj,guess[0]);
-  /*obs = init_observable(grid,bbn_plan_obs_CS,bbn_free_obs_CS);
-  obs->quantity = "ADM(M)|NS";
-  plan_observable(obs);
+  bar_mass = star_NS_baryonic_nonflat_mass(obj,guess[0]);
+  obs = init_observable(grid,"ADM(M)|NS");
   adm_mass = obs->M(obs);
   free_observable(obs);
   
-  obs = init_observable(grid,bbn_plan_obs_CS,bbn_free_obs_CS);
-  obs->quantity = "Kommar(M)|NS";
-  plan_observable(obs);
+  obs = init_observable(grid,"Kommar(M)|NS");
   kommar_mass = obs->M(obs);
   free_observable(obs);
 
@@ -43,7 +40,7 @@ void star_idealfluid_NS_nonflat_find_Euler_const(Obj_Man_T *const obj)
   
   Setd("baryonic_mass_current",bar_mass);
   Setd("ADM_mass",adm_mass);
-  Setd("Kommar_mass",kommar_mass);*/
+  Setd("Kommar_mass",kommar_mass);
   
   params->obj = obj;
   params->NS_baryonic_mass = Getd("baryonic_mass");
