@@ -1,0 +1,86 @@
+# populating spin integrand using approximate Killing vector (AKV)
+
+# Manifold or grid Dimension
+Dimension = 3;
+
+# point on manifold shown by:
+Point = ijk;
+
+C_macro  = READ_v(name);
+C_macro2 = add_and_get_field(name);
+
+`#include "obs_header.h"`
+``
+``
+`#define add_and_get_field(name) \`
+         `  if (_Ind(#name) >= 0)\`# means if it exists already
+         `  {DECLARE_FIELD(name);REMOVE_FIELD(name);}\`
+         `  ADD_FIELD(name);REALLOC_v_WRITE_v(name);`
+``
+``
+`void obs_populate_spin_integrands_akv(Patch_T *const patch,const double *const normal[3]);`
+`void obs_populate_spin_integrands_akv(Patch_T *const patch,const double *const normal[3])`
+`{`
+`  const unsigned nn = patch->nn;`
+`  unsigned ijk;`
+
+Declare = 
+{
+  # _A^{ij}
+ (obj = Field,name = _A_UiUj, rank = UU, C_macro);
+
+ # conformal metric 
+ (obj = Field,name = gConf, rank = DD, C_macro);
+
+ # trKij
+ #(obj = Field,name = K, rank = 0, C_macro);
+
+ # psi
+ (obj = Field,name = psi, rank = 0, C_macro);
+
+ # normal vector components
+ (obj = Field,name = n, rank = U, none);
+ 
+ # AKV0
+ (obj = Field,name = AKV0, rank = U, C_macro);
+
+ # AKV1
+ (obj = Field,name = AKV1, rank = U, C_macro);
+
+ # AKV2
+ (obj = Field,name = AKV2, rank = U, C_macro);
+
+ # integrand xiP
+ (obj = Field,name = SPIN_integrand, rank = U, C_macro2);
+
+}
+# symmetries:
+Symm[_A_UiUj(i,j)  = _A_UiUj(j,i)];
+#Symm[igConf(i,j)  = igConf(j,i)];
+Symm[gConf(i,j)   = gConf(j,i)];
+#Symm[_Gamma(i,j,k) = _Gamma(i,k,j)];
+
+``
+# populating the integrands:
+`   const double *const n_U0 = normal[0];`
+`   const double *const n_U1 = normal[1];`
+`   const double *const n_U2 = normal[2];`
+
+`   for (ijk = 0; ijk < nn; ++ijk)`
+`   {`
+    # note K^ij ~ psi^(-10)_A^{ij} but there is two gamma multiplication
+    # in which gamma ~ psi^4 => psi^(-2)
+    psim2 = psi**(-2);
+    Pn(-i) = _A_UiUj(l,j)*gConf(-j,-k)*n(k)*psim2*gConf(-l,i);
+
+    s0 = AKV0(k)*Pn(-k);
+    s1 = AKV1(k)*Pn(-k);
+    s2 = AKV2(k)*Pn(-k);
+
+`   SPIN_integrand_U0[ijk] = s0;`
+`   SPIN_integrand_U1[ijk] = s1;`
+`   SPIN_integrand_U2[ijk] = s2;`
+
+`   }`
+``
+`}`

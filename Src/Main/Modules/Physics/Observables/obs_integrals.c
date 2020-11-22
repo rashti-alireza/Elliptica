@@ -33,7 +33,7 @@
 // free_observable(obs);
 */
 
-#include "obs_header.h"
+#include "obs_integrals.h"
 #define VOLUME_INTEGRAL 1 /* put it to 1 if you want \int{Gdv} */
 
 /* plan and populate items_S sturct and obs struct
@@ -58,11 +58,9 @@ void obs_plan(Observable_T *obs)
   if (strcmp_i(obs->quantity,"ADM(P,J)|SYS"))
   {  
     Patch_T **patches = 0,*patch = 0;
-    char stem[1000];
     const char *region = "outermost,filling_box,"
-                         "NS_around_OB,BH_around_OB"
+                         "NS_around_OB,BH_around_OB";
     struct items_S **adm = 0;
-    unsigned p = 0;
     unsigned n,N,ijk,nn;
     
     /* first collect all of the patches required */
@@ -141,7 +139,6 @@ void obs_plan(Observable_T *obs)
     Patch_T **patches = 0,*patch = 0;
     struct items_S **adm = 0;
     const char *region = "NS_OB";
-    unsigned p = 0;
     unsigned n,N,ijk,nn;
     
     /* first collect all of the patches required */
@@ -198,7 +195,7 @@ void obs_plan(Observable_T *obs)
       /* surface integral */
       adm[n]->surface_integration_flg = 1;
       adm[n]->Z_surface = 1;
-      adm[n]->K = patch->n[2]->1;
+      adm[n]->K = patch->n[2]-1;
       n_physical_metric_around(adm[n],_c_);
     }
     obs->Px = ADM_momentum_x_BHNS_CS;
@@ -215,7 +212,6 @@ void obs_plan(Observable_T *obs)
     Patch_T **patches = 0,*patch = 0;
     struct items_S **adm = 0;
     const char *region = "BH_around_IB";
-    unsigned p = 0;
     unsigned n,N,ijk,nn;
     
     /* first collect all of the patches required */
@@ -288,19 +284,18 @@ void obs_plan(Observable_T *obs)
   else if (strcmp_i(obs->quantity,"Kommar(M)|BH"))
   {  
     Patch_T **patches = 0,*patch = 0;
-    struct items_S **adm = 0;
+    struct items_S **kommar = 0;
     const char *region = "BH_around_IB";
-    unsigned p = 0;
     unsigned n,N,ijk,nn;
     
     /* first collect all of the patches required */
     patches = collect_patches(grid,region,&N);
     
     /* alloc memory for all patches */
-    adm = calloc(N,sizeof(*adm));
-    IsNull(adm);
+    kommar = calloc(N,sizeof(*kommar));
+    IsNull(kommar);
     /* this is where we link to obs struct */
-    obs->items = adm;
+    obs->items = kommar;
     obs->Nitems = N;
         
     /* fill kommar struct for each patch */
@@ -357,19 +352,18 @@ void obs_plan(Observable_T *obs)
   else if (strcmp_i(obs->quantity,"Kommar(M)|NS"))
   {  
     Patch_T **patches = 0,*patch = 0;
-    struct items_S **adm = 0;
+    struct items_S **kommar = 0;
     const char *region = "NS_OB";
-    unsigned p = 0;
     unsigned n,N,ijk,nn;
     
     /* first collect all of the patches required */
     patches = collect_patches(grid,region,&N);
     
     /* alloc memory for all patches */
-    adm = calloc(N,sizeof(*adm));
-    IsNull(adm);
+    kommar = calloc(N,sizeof(*kommar));
+    IsNull(kommar);
     /* this is where we link to obs struct */
-    obs->items = adm;
+    obs->items = kommar;
     obs->Nitems = N;
         
     /* fill kommar struct for each patch */
@@ -513,14 +507,12 @@ void obs_plan(Observable_T *obs)
   else if (strcmp_i(obs->quantity,"ADM(M)|SYS"))
   {  
     Patch_T **patches1 = 0,**patches2 = 0,*patch = 0;
-    char stem[1000];
     const char *region;
     struct items_S **adm = 0;
-    unsigned p = 0;
     unsigned n,N1,N2,ijk,nn;
     
     /* volume part */
-    region   = "outermost,filling_box,NS,NS_around,BH_around"
+    region   = "outermost,filling_box,NS,NS_around,BH_around";
     patches1 = collect_patches(grid,region,&N1);
     /* surface part */
     region   = "BH_around_IB";
@@ -538,7 +530,7 @@ void obs_plan(Observable_T *obs)
     {
       adm[n] = calloc(1,sizeof(*adm[n]));
       IsNull(adm[n]);
-      patch = patches[n];
+      patch = patches1[n];
       nn    = patch->nn;
       
       double *g00 = alloc_double(nn);
@@ -580,7 +572,7 @@ void obs_plan(Observable_T *obs)
     {
       adm[n] = calloc(1,sizeof(*adm[n]));
       IsNull(adm[n]);
-      patch = patches[n];
+      patch = patches2[n-N1];
       nn    = patch->nn;
       
       double *g00 = alloc_double(nn);
@@ -1373,7 +1365,7 @@ static double ADM_angular_momentum_y_BHNS_CS(Observable_T *const obs)
 /* approximate spin using : S_a = \frac{1}{8\pi}\oint{\xi_{ai} K^{ij}ds^{2}_j} */
 void obs_define_spin_integral(double S[3],Grid_T *const grid,const char *const kind)
 {
-  if (!strcmp_i(grid->kind,"BBN_CubedSpherical_grid"))
+  //if (!strcmp_i(grid->kind,"BBN_CubedSpherical_grid"))
     Error0(NO_OPTION);
     
   const unsigned N     = 6;  
@@ -1678,3 +1670,105 @@ void obs_define_spin_JRP(double S[3],Grid_T *const grid,const char *const kind)
 }
 
 
+/* calculating physical center of BH to be used in spin calculations */
+void obs_Rc_BH(double Rc[3],Grid_T *const grid)
+{
+  const double AH_area = Pgetd("BH_AH_area");
+  const double x_CM = Pgetd("x_CM");
+  const double y_CM = Pgetd("y_CM");
+  unsigned p;
+
+  Rc[0] = 0;
+  Rc[1] = 0;
+  Rc[2] = 0;
+  FOR_ALL_PATCHES(p,grid)
+  {
+    Patch_T *patch = grid->patch[p];
+    
+    if (!IsItCovering(patch,"BH_around_IB"))
+      continue;
+      
+    unsigned ijk;
+    unsigned nn = patch->nn;
+    
+    READ_v(gConf_D2D2)
+    READ_v(gConf_D0D2)
+    READ_v(gConf_D0D0)
+    READ_v(gConf_D0D1)
+    READ_v(gConf_D1D2)
+    READ_v(gConf_D1D1)
+    READ_v(psi);
+    ADD_FIELD(Rc_integrandx)
+    ADD_FIELD(Rc_integrandy)
+    ADD_FIELD(Rc_integrandz)
+    
+    double *g00 = alloc_double(nn);
+    double *g01 = alloc_double(nn);
+    double *g02 = alloc_double(nn);
+    double *g11 = alloc_double(nn);
+    double *g12 = alloc_double(nn);
+    double *g22 = alloc_double(nn);
+    
+    {/* local variables */
+      REALLOC_v_WRITE_v(Rc_integrandx)
+      REALLOC_v_WRITE_v(Rc_integrandy)
+      REALLOC_v_WRITE_v(Rc_integrandz)
+
+      FOR_ALL_POINTS(ijk,patch)
+      {
+        double x = patch->node[ijk]->x[0];
+        double y = patch->node[ijk]->x[1];
+        double z = patch->node[ijk]->x[2];
+        double psi4 = Pow2(psi[ijk])*Pow2(psi[ijk]);
+        g00[ijk] = psi4*gConf_D0D0[ijk];
+        g01[ijk] = psi4*gConf_D0D1[ijk];
+        g02[ijk] = psi4*gConf_D0D2[ijk];
+        g11[ijk] = psi4*gConf_D1D1[ijk];
+        g12[ijk] = psi4*gConf_D1D2[ijk];
+        g22[ijk] = psi4*gConf_D2D2[ijk];
+        Rc_integrandx[ijk] = x-x_CM;
+        Rc_integrandy[ijk] = y-y_CM;
+        Rc_integrandz[ijk] = z;
+      }
+    }
+    DECLARE_FIELD(Rc_integrandx)
+    DECLARE_FIELD(Rc_integrandy)
+    DECLARE_FIELD(Rc_integrandz)
+    Integration_T *I = init_integration();
+    I->type = "Integral{f(x)dS},Spectral";
+    I->g00 = g00;
+    I->g01 = g01;
+    I->g02 = g02;
+    I->g11 = g11;
+    I->g12 = g12;
+    I->g22 = g22;
+    I->Spectral->Z_surface = 1;
+    I->Spectral->K         = 0;
+    
+    I->Spectral->f = Rc_integrandx;
+    plan_integration(I);
+    Rc[0] += execute_integration(I);
+    
+    I->Spectral->f = Rc_integrandy;
+    plan_integration(I);
+    Rc[1] += execute_integration(I);
+    
+    I->Spectral->f = Rc_integrandz;
+    plan_integration(I);
+    Rc[2] += execute_integration(I);
+    
+    free_integration(I);
+    REMOVE_FIELD(Rc_integrandx)
+    REMOVE_FIELD(Rc_integrandy)
+    REMOVE_FIELD(Rc_integrandz)
+    free(g00);
+    free(g01);
+    free(g02);
+    free(g11);
+    free(g12);
+    free(g22);
+  }
+  Rc[0] /= (AH_area);
+  Rc[1] /= (AH_area);
+  Rc[2] /= (AH_area);
+}
