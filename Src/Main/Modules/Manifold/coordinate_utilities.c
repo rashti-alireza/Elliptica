@@ -717,12 +717,12 @@ void theta_phi_of_XY_CS(double *const theta,double *const phi,const double *cons
   }
 }
 
-/* ->: collected patches which cover the object and number of patches Np
-// which cover the specified region.
+/* ->: collected patches which cover the region and number of patches Np.
 // one can collect an assortment of patches separated with comma, eg:
 //
 // Patch_T **patches = collect_patches(grid,"NS1_around,NS1",NONE,&np); 
-// which cover NS1 and NS1_around regardless of direction. */
+// which cover NS1 and NS1_around regardless of direction. 
+// note: it's blind with respect to repetition in the specified region. */
 Patch_T **
 collect_patches
   (
@@ -761,7 +761,7 @@ collect_patches
   
   /* check if there is no such region */
   if (np == 0)
-    Error0("No such region!");
+    Error1("No such '%s'!",region);
   
   *Np = np;
   return patches;
