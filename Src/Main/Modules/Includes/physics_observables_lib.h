@@ -11,7 +11,7 @@ typedef struct OBSERVABLE_T
 {
   char quantity[OBSERVABLE_STR_LEN];/* which quantity is computed */
   Grid_T *grid;/* computational grid */
-  struct PHYSICS_T *obj;/* compact object */
+  struct PHYSICS_T *phys;/* physics pertinent to compact object of interest */
   void *items;/* this is general struct that composes 
                // the needed material and items to calculate 
                // the quantities of interest. this struct is populated
@@ -31,7 +31,7 @@ typedef struct OBSERVABLE_T
 }Observable_T;
 
 
-Observable_T *init_observable(struct PHYSICS_T *const obj,const char *const sq);
+Observable_T *init_observable(struct PHYSICS_T *const phys,const char *const sq);
 void free_observable(Observable_T *obs);
 
 #undef OBSERVABLE_STR_LEN
