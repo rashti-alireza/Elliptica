@@ -1,64 +1,64 @@
 #ifndef physics_LIB_H
 #define physics_LIB_H
 
-/* string length of an object parameter */
-#define OPAR_LEN (99)
+/* string length for parameter in Physics */
+#define PAR_LEN (99)
 
 /* if the given patch DOES cover the region. 
 // this is generally used in a loop over all patches */ 
-#define if_cover(patch,obj)     \
- if(IsItCovering(patch,obj->region))
+#define if_cover(patch,phys)     \
+ if(IsItCovering(patch,phys->region))
  
 /* if the given patch DOES NOT cover the region. 
 // this is generally used in a loop over all patches */ 
-#define if_not_cover(patch,obj) \
- if(!IsItCovering(patch,obj->region))
+#define if_not_cover(patch,phys) \
+ if(!IsItCovering(patch,phys->region))
 
-/* get double parameter for this given object. ex: 
-// obj->stype = "NS1",par = "enthalpy_update_weight" => 
+/* get double parameter for the given physics. ex: 
+// phys->stype = "NS1",par = "enthalpy_update_weight" => 
 // s = "NS1_enthalpy_update_weight"; thus, we can have various parameter
 // calls with the same concept for different compact objects.
-// NOTE: obj and opar MUST be defined. */
+// NOTE: phys MUST be defined. */
 #define Getd(par) \
- (sprintf(opar,"%s_%s",obj->stype,par) ? Pgetd(opar) : DBL_MAX)
+ (sprintf(phys->par,"%s_%s",phys->stype,par) ? Pgetd(phys->par) : DBL_MAX)
 
 /* same as Getd but for integer type */ 
 #define Geti(par) \
- (sprintf(opar,"%s_%s",obj->stype,par) ? Pgeti(opar) : INT_MAX)
+ (sprintf(phys->par,"%s_%s",phys->stype,par) ? Pgeti(phys->par) : INT_MAX)
  
 /* same as Getd but for string type */ 
 #define Gets(par) \
- (sprintf(opar,"%s_%s",obj->stype,par) ? Pgets(opar) : NULL)
+ (sprintf(phys->par,"%s_%s",phys->stype,par) ? Pgets(phys->par) : NULL)
 
 
 /* get double parameter for the given system. ex: 
-// obj->ssys = "BHNS",par = "x_CM" => 
+// phys->ssys = "BHNS",par = "x_CM" => 
 // s = "BHNS_x_CM"; thus, we can have various parameter
 // calls with the same concept for different systems.
-// NOTE: obj and opar MUST be defined. */
+// NOTE: phys MUST be defined. */
 #define sysGetd(par) \
- (sprintf(opar,"%s_%s",obj->stype,par) ? Pgetd(opar) : DBL_MAX)
+ (sprintf(phys->par,"%s_%s",phys->stype,par) ? Pgetd(phys->par) : DBL_MAX)
 
 /* same as Getd but for integer type */ 
 #define sysGeti(par) \
- (sprintf(opar,"%s_%s",obj->stype,par) ? Pgeti(opar) : INT_MAX)
+ (sprintf(phys->par,"%s_%s",phys->stype,par) ? Pgeti(phys->par) : INT_MAX)
  
 /* same as Getd but for string type */ 
 #define sysGets(par) \
- (sprintf(opar,"%s_%s",obj->stype,par) ? Pgets(opar) : NULL)
+ (sprintf(phys->par,"%s_%s",phys->stype,par) ? Pgets(phys->par) : NULL)
 
 
-/* set double parameter for this given object. ex: 
-// obj->stype = "NS1",par = "enthalpy_update_weight" => 
+/* set double parameter for the given physics. ex: 
+// phys->stype = "NS1",par = "enthalpy_update_weight" => 
 // s = "NS1_enthalpy_update_weight"; thus, we can have various parameter
 // calls with the same concept for different compact objects.
-// NOTE: obj and opar MUST be defined. */
+// NOTE: phys MUST be defined. */
 #define Setd(par,val) \
-{sprintf(opar,"%s_%s",obj->stype,par); Psetd(opar,(val));}
+{sprintf(phys->par,"%s_%s",phys->stype,par); Psetd(phys->par,(val));}
 
 /* same as Setd but for integer */
 #define Seti(par,val) \
-{sprintf(opar,"%s_%s",obj->stype,par); Pseti(opar,(val));}
+{sprintf(phys->par,"%s_%s",phys->stype,par); Pseti(phys->par,(val));}
 
 
 /* commands, DON'T change the numeration. */
@@ -93,7 +93,7 @@ typedef enum COMP_OBJ_T
  NSNS
 }Com_Obj_T;
 
-/* struct for object manager */
+/* struct for physics manager */
 typedef struct PHYSICS_T
 {
  Grid_T *grid;
@@ -112,14 +112,15 @@ typedef struct PHYSICS_T
  const char *spos;/* string type for position above, 
                   // used for patch collections */
  
- 
+ char par[PAR_LEN];/* related parameter for to be inquired. */
 }Physics_T;
 
+#undef PAR_LEN
 
 Physics_T *init_physics(Grid_T *const grid,const Com_Obj_T type);
-int physics(Physics_T *const obj,const cmd_T cmd,
+int physics(Physics_T *const phys,const cmd_T cmd,
             const char *const file, const int line);
-void free_physics(Physics_T *obj);
+void free_physics(Physics_T *phys);
 
 #endif
 
