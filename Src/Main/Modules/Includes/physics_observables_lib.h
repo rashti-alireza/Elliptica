@@ -1,13 +1,15 @@
 #ifndef physics_observables_LIB_H
 #define physics_observables_LIB_H
 
+#define OBSERVABLE_STR_LEN (99)
+
 /* forward declaration */
 struct OBJ_MAN_T;
 
 /* struct for physics observables */
 typedef struct OBSERVABLE_T
 {
-  const char *quantity;/* which quantity is computed */
+  char quantity[OBSERVABLE_STR_LEN];/* which quantity is computed */
   Grid_T *grid;/* computational grid */
   struct OBJ_MAN_T *obj;/* compact object */
   void *items;/* this is general struct that composes 
@@ -32,6 +34,7 @@ typedef struct OBSERVABLE_T
 Observable_T *init_observable(struct OBJ_MAN_T *const obj,const char *const sq);
 void free_observable(Observable_T *obs);
 
+#undef OBSERVABLE_STR_LEN
 
 #endif
 
