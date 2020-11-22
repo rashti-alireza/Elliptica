@@ -3,7 +3,10 @@
 // November 2020
 */
 
-/* call the project pertinent to system update and adjustments */
+/* call the project pertinent to system update and adjustments among
+// others. this is supposed to be a physics manager of various physics
+// projects and concepts. this helps to stay on track for further 
+// developments and easily using of physics between the projects. */
 
 #include "phys_main.h"
 
