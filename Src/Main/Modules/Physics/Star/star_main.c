@@ -10,7 +10,7 @@
 #include "star_main.h"
 
 /* update stress energy tensor */
-int star_tune(Obj_Man_T *const obj)
+int star_tune(Physics_T *const obj)
 {
 
   if (Pcmps("star_type","NS")           &&

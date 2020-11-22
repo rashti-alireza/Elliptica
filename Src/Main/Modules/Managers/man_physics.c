@@ -8,7 +8,7 @@
 #include "phys_main.h"
 
 /* call the requested function */
-int physics(Obj_Man_T *const obj,const cmd_T cmd,
+int physics(Physics_T *const obj,const cmd_T cmd,
             const char *const file, const int line)
 {
   int ret = -1;
@@ -68,7 +68,7 @@ int physics(Obj_Man_T *const obj,const cmd_T cmd,
 }
 
 /* call the requested function */
-//int Mount(Obj_Man_T *const obj,const cmd_T cmd)
+//int Mount(Physics_T *const obj,const cmd_T cmd)
 //{
   //int ret = -1;
   
@@ -117,14 +117,14 @@ int physics(Obj_Man_T *const obj,const cmd_T cmd,
   //return ret;
 //}
 
-Obj_Man_T *
-init_obj_man
+Physics_T *
+init_physics
  (
  Grid_T *const grid/* computation grid */,
  const Com_Obj_T type/* object type NS,BH,etc */
  )
 {
-  Obj_Man_T *obj = calloc(1,sizeof(*obj)); IsNull(obj);
+  Physics_T *obj = calloc(1,sizeof(*obj)); IsNull(obj);
   const char *spos  = 0;
   
   Error0("/* what should i do for BHNS region? */");
@@ -282,7 +282,7 @@ init_obj_man
 }
 
 /* free  */
-void free_obj_man(Obj_Man_T *obj)
+void free_physics(Physics_T *obj)
 {
   _free(obj);
 }

@@ -12,8 +12,8 @@
   ADD_FIELD(name);REALLOC_v_WRITE_v(name);
 
 
-void obs_Rc_NS(double Rc[3],Obj_Man_T *const obj);
-void obs_Rc_NS(double Rc[3],Obj_Man_T *const obj)
+void obs_Rc_NS(double Rc[3],Physics_T *const obj);
+void obs_Rc_NS(double Rc[3],Physics_T *const obj)
 {
   Grid_T *const grid = obj->grid;
   char opar[OPAR_LEN];

@@ -32,8 +32,8 @@
 
 
 /* get double parameter for the given system. ex: 
-// obj->ssys = "BHNS",par = "CM_x" => 
-// s = "BHNS_CM_x"; thus, we can have various parameter
+// obj->ssys = "BHNS",par = "x_CM" => 
+// s = "BHNS_x_CM"; thus, we can have various parameter
 // calls with the same concept for different systems.
 // NOTE: obj and opar MUST be defined. */
 #define sysGetd(par) \
@@ -94,7 +94,7 @@ typedef enum COMP_OBJ_T
 }Com_Obj_T;
 
 /* struct for object manager */
-typedef struct OBJ_MAN_T
+typedef struct PHYSICS_T
 {
  Grid_T *grid;
  Grid_Char_T *grid_char;/* grid character when used for surface finder */
@@ -113,13 +113,13 @@ typedef struct OBJ_MAN_T
                   // used for patch collections */
  
  
-}Obj_Man_T;
+}Physics_T;
 
 
-Obj_Man_T *init_obj_man(Grid_T *const grid,const Com_Obj_T type);
-int physics(Obj_Man_T *const obj,const cmd_T cmd,
+Physics_T *init_physics(Grid_T *const grid,const Com_Obj_T type);
+int physics(Physics_T *const obj,const cmd_T cmd,
             const char *const file, const int line);
-void free_obj_man(Obj_Man_T *obj);
+void free_physics(Physics_T *obj);
 
 #endif
 

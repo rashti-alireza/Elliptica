@@ -6,7 +6,7 @@
 
 #include "star_header.h"
 
-double star_NS_baryonic_nonflat_mass(Obj_Man_T *const obj,const double Euler_C)
+double star_NS_baryonic_nonflat_mass(Physics_T *const obj,const double Euler_C)
 {
   double NS_baryonic_mass = 0;
   unsigned p;

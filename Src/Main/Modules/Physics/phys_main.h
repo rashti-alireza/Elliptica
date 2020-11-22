@@ -6,17 +6,17 @@
 
 #define STR_LEN (999)
 
-int physics(Obj_Man_T *const obj,const cmd_T cmd,
+int physics(Physics_T *const obj,const cmd_T cmd,
             const char *const file, const int line);
 
-Obj_Man_T *
-init_obj_man
+Physics_T *
+init_physics
  (
  Grid_T *const grid/* computation grid */,
  const Com_Obj_T type/* object type NS,BH,etc */
  );
 
-void free_obj_man(Obj_Man_T *obj);
+void free_physics(Physics_T *obj);
 
 
 

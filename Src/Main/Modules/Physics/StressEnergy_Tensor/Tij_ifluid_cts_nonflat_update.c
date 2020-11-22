@@ -7,7 +7,7 @@
 
 
 /* updating all matter related and their derivatives. */
-void Tij_idealfluid_CTS_nonflat_update(Obj_Man_T *const obj)
+void Tij_idealfluid_CTS_nonflat_update(Physics_T *const obj)
 {
   FUNC_TIC
   

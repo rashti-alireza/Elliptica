@@ -26,7 +26,7 @@
 #include "obs_main.h"
 
 /* initialzing stuct Observable_T for sq look explanation on top. */
-Observable_T *init_observable(Obj_Man_T *const obj,const char *const sq)
+Observable_T *init_observable(Physics_T *const obj,const char *const sq)
 {
   Observable_T *const obs = calloc(1,sizeof(*obs));
   IsNull(obs);

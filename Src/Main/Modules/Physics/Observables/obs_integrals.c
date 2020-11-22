@@ -1275,7 +1275,7 @@ static double ADM_angular_momentum_y_BHNS_CS(Observable_T *const obs)
 }
 
 /* approximate spin using : S_a = \frac{1}{8\pi}\oint{\xi_{ai} K^{ij}ds^{2}_j} */
-void obs_define_spin_integral(double S[3],Obj_Man_T *const obj)
+void obs_define_spin_integral(double S[3],Physics_T *const obj)
 {
   char opar[OPAR_LEN];
   Patch_T **patches = 0;
@@ -1416,7 +1416,7 @@ void obs_define_spin_integral(double S[3],Obj_Man_T *const obj)
 
 
 /* approximate spin using : S_a = \frac{1}{8\pi}\oint{\xi_{ai} K^{ij}ds^{2}_j} */
-void obs_define_spin_akv(double S[3],Obj_Man_T *const obj)
+void obs_define_spin_akv(double S[3],Physics_T *const obj)
 {
   Patch_T **patches = 0;
   const char *region = 0;
@@ -1549,7 +1549,7 @@ void obs_define_spin_akv(double S[3],Obj_Man_T *const obj)
 }
 
 /* approximate spin using : S = J - RxP */
-void obs_define_spin_JRP(double S[3],Obj_Man_T *const obj)
+void obs_define_spin_JRP(double S[3],Physics_T *const obj)
 {
   char opar[OPAR_LEN];
   double J[3] = {0,0,0};
@@ -1588,7 +1588,7 @@ void obs_define_spin_JRP(double S[3],Obj_Man_T *const obj)
 
 
 /* calculating physical center of BH to be used in spin calculations */
-void obs_Rc_BH(double Rc[3],Obj_Man_T *const obj)
+void obs_Rc_BH(double Rc[3],Physics_T *const obj)
 {
   Grid_T *const grid = obj->grid;
   char opar[OPAR_LEN];

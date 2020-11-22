@@ -9,7 +9,7 @@
 #include "star_NS.h"
 
 /* find Euler equation constant to meet NS baryonic mass */
-void star_idealfluid_NS_nonflat_find_Euler_const(Obj_Man_T *const obj)
+void star_idealfluid_NS_nonflat_find_Euler_const(Physics_T *const obj)
 {
   FUNC_TIC
   
