@@ -876,6 +876,99 @@ Grid_Kind_T set_grid_kind(const char *const grid_kind)
   return ret;
 }
 
+/* given (X,Y,Z) in cubed spherical or split cubed spherical coords
+// it finds the associated polar and azimuthal angels for given X.
+// works for both split and normal cubed spherical. */
+void find_theta_phi_of_XYZ_CS(double *const theta,double *const phi,
+                              const double *const X,const Flag_T side)
+{
+  const double a = X[0];
+  const double b = X[1];
+  const double d = sqrt(1+Pow2(a)+Pow2(b));
+  
+  switch (side)
+  {
+    case UP:
+      *phi   = arctan(b,a);
+      *theta = acos(1/d);
+    break;
+    case DOWN:
+      *phi   = arctan(a,b);
+      *theta = acos(-1/d);
+    break;
+    case LEFT:
+      *phi   = arctan(-1,a);
+      *theta = acos(b/d);
+    break;
+    case RIGHT:
+      *phi   = arctan(1,b);
+      *theta = acos(a/d);
+    break;
+    case BACK:
+      *phi   = arctan(b,-1);
+      *theta = acos(a/d);
+    break;
+    case FRONT:
+      *phi   = arctan(a,1);
+      *theta = acos(b/d);
+    break;
+    default:
+      Error0(NO_OPTION);
+  }
+  
+  /* more test */
+  if(1)
+  {
+    printf("doing test:\n");
+    fflush(stdout);
+    
+    double th = *theta;
+    double ph = *phi;
+    switch (side)
+    {
+      case UP:
+        if (!EQL(X[0],tan(th)*cos(ph)))
+          Error0("Wrong transformation");
+        if (!EQL(X[1],tan(th)*sin(ph)))
+          Error0("Wrong transformation");
+      break;
+      case DOWN:
+        if (!EQL(X[0],-tan(th)*sin(ph)))
+          Error0("Wrong transformation");
+        if (!EQL(X[1],-tan(th)*cos(ph)))
+          Error0("Wrong transformation");
+      break;
+      case LEFT:
+        if (!EQL(X[0],-1./tan(ph)))
+          Error0("Wrong transformation");
+        if (!EQL(X[1],-1./(tan(th)*sin(ph))))
+          Error0("Wrong transformation");
+      break;
+      case RIGHT:
+        if (!EQL(X[0],1./(tan(th)*sin(ph))))
+          Error0("Wrong transformation");
+        if (!EQL(X[1],1./tan(ph)))
+          Error0("Wrong transformation");
+      break;
+      case BACK:
+        if (!EQL(X[0],-1./(tan(th)*cos(ph))))
+          Error0("Wrong transformation");
+        if (!EQL(X[1],-tan(ph)))
+          Error0("Wrong transformation");
+      break;
+      case FRONT:
+        if (!EQL(X[0],tan(ph)))
+          Error0("Wrong transformation");
+        if (!EQL(X[1],1/(tan(th)*cos(ph))))
+          Error0("Wrong transformation");
+      break;
+      default:
+        Error0(NO_OPTION);
+    }
+  }
+}
+
+
 /* given theta, phi and knowing the fact that they are on a surface, 
 // it finds the corresponding patch and X,Y,Z coordinate. 
 // works for both split and normal cubed spherical. */
