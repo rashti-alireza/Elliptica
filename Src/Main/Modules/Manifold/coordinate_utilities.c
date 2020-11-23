@@ -748,9 +748,10 @@ collect_patches
     {
       if (IsItCovering(patch,region))
       {
-        patches = realloc(patches,(np+1)*sizeof(*patches));
+        patches = realloc(patches,(np+2)*sizeof(*patches));
         IsNull(patches);
-        patches[np] = patch;
+        patches[np]   = patch;
+        patches[np+1] = 0;
         ++np;
       }
     i++;
@@ -875,3 +876,134 @@ Grid_Kind_T set_grid_kind(const char *const grid_kind)
   return ret;
 }
 
+/* given theta, phi and knowing the fact that they are on a surface, 
+// it finds the corresponding patch and X,Y,Z coordinate. 
+// works for both split and normal cubed spherical. */
+void 
+find_XYZ_and_patch_of_theta_phi_CS
+ (
+ double *const X/* found X,Y,Z Note: X[2] must be filled 
+                // to determine the surface */,
+ Patch_T **const ppatch,/* found patch */
+ const double theta/* given theta */,
+ const double phi/* given phi */,
+ Patch_T **const patches,/* search among these patches */
+ const unsigned Np/* number of patches */
+ )
+{
+  const double tan_phi    = tan(phi);
+  const double cos_theta  = cos(theta);
+  const double tan_phi2   = Pow2(tan_phi);
+  const double cos_theta2 = Pow2(cos_theta);
+  Flag_T found_flg = NO;
+  unsigned p;
+  
+  /* check all of the given patches in which (x,y,z) and 
+  // (X,Y,Z) and (theta,phi) are consistent */
+  for (p = 0; p < Np; ++p)
+  {
+    Patch_T *patch = patches[p];
+    
+    Flag_T side = patch->CoordSysInfo->CubedSphericalCoord->side;
+    const double *c = patch->c;
+    double a = 0, b = 0;
+    double a_sign = 0,b_sign = 0,c_sign = 0;
+    double x[3],phi2,theta2,r;
+    
+    /* we know that theta = 0 or Pi occures only at UP or DOWN patches
+    // so don't bother to follow algorithm all the way down.
+    // furthermore, this prevent 0 in denominator of unrelated patches. */
+    if (EQL(theta,0) || EQL(theta,M_PI))
+    {
+      if (side == LEFT || side == RIGHT || 
+          side == BACK || side == FRONT   )
+        continue;
+    }
+    
+    /* first calculate the magnetitude of a and b 
+    // which are related to X[0] and X[1] with a sign */
+    switch (side)
+    {
+      case UP:
+        a = sqrt((1 - cos_theta2)/(cos_theta2 + cos_theta2*tan_phi2));
+        b = tan_phi*sqrt((1 - cos_theta2)/(cos_theta2*(1 + tan_phi2)));
+      break;
+      case DOWN:
+        b = sqrt((1 - cos_theta2)/(cos_theta2 + cos_theta2*tan_phi2));
+        a = tan_phi*sqrt((1 - cos_theta2)/(cos_theta2*(1 + tan_phi2)));
+      break;
+      case LEFT:
+        a = 1/tan_phi;
+        b = sqrt((cos_theta2 + cos_theta2*tan_phi2)/((1. - cos_theta2)*tan_phi2));
+      break;
+      case RIGHT:
+        b = 1/tan_phi;
+        a = sqrt((cos_theta2 + cos_theta2*tan_phi2)/((1. - cos_theta2)*tan_phi2));
+      break;
+      case BACK:
+        a = sqrt((cos_theta2 + cos_theta2*tan_phi2)/(1 - cos_theta2));
+        b = tan_phi;
+      break;
+      case FRONT:
+        b = sqrt((cos_theta2 + cos_theta2*tan_phi2)/(1 - cos_theta2));
+        a = tan_phi;
+      break;
+      default:
+        Error0(NO_OPTION);
+    }
+    
+    /* having found the magnitude of a and b, we need to find out the sign of them.
+    // this is done by paying attention to side, signum(cos_theta) and range of tanphi */
+    switch (side)
+    {
+      case UP:
+        arctan_argument_signum(&b_sign,&a_sign,phi);
+      break;
+      case DOWN:
+        arctan_argument_signum(&a_sign,&b_sign,phi);
+      break;
+      case LEFT:
+        arctan_argument_signum(&c_sign,&a_sign,phi);
+        if (cos_theta > 0) b_sign = 1;
+        else		   b_sign = -1;
+      break;
+      case RIGHT:
+        arctan_argument_signum(&c_sign,&b_sign,phi);
+        if (cos_theta > 0) a_sign = 1;
+        else		   a_sign = -1;
+      break;
+      case BACK:
+        arctan_argument_signum(&b_sign,&c_sign,phi);
+        if (cos_theta > 0) a_sign = 1;
+        else		   a_sign = -1;
+      break;
+      case FRONT:
+        arctan_argument_signum(&a_sign,&c_sign,phi);
+        if (cos_theta > 0) b_sign = 1;
+        else		   b_sign = -1;
+      break;
+      default:
+        Error0(NO_OPTION);
+    }
+    
+    X[0] = fabs(a)*a_sign;
+    X[1] = fabs(b)*b_sign;
+    
+    /* check if x of X really gives you the correct angles */
+    x_of_X(x,X,patch);
+    x[0] -= c[0];
+    x[1] -= c[1];
+    x[2] -= c[2];
+    r = root_square(3,x,0);
+    theta2 = acos(x[2]/r);
+    phi2   = arctan(x[1],x[0]);
+    if (EQL(theta2,theta) && EQL(phi2,phi))
+    {
+      found_flg = YES;
+      *ppatch = patch;
+      break;
+    }
+  }
+  if (found_flg == NO)
+    Error0("(X,Y,Z) or patch could not be found.\n");
+}

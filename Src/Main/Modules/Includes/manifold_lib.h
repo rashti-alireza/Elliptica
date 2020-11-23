@@ -386,6 +386,18 @@ Grid_Char_T *init_grid_char(Grid_T *const last_grid);
 void free_grid_char(Grid_Char_T *g);
 Grid_Kind_T set_grid_kind(const char *const grid_kind);
 
+void 
+find_XYZ_and_patch_of_theta_phi_CS
+ (
+ double *const X/* found X,Y,Z Note: X[2] must be filled 
+                // to determine the surface */,
+ Patch_T **const ppatch,/* found patch */
+ const double theta/* given theta */,
+ const double phi/* given phi */,
+ Patch_T **const patches,/* search among these patches */
+ const unsigned Np/* number of patches */
+ );
+
 #endif
 
 
