@@ -17,7 +17,7 @@ int physics(Physics_T *const phys,const cmd_T cmd,
   int ret = -1;
   char msg[STR_LEN] = {'\0'};
   
-  phys->cmd = cmd;
+  phys->cmd   = cmd;
   
   /* note: first must set phys->cmd */
   set_phys_default_region(phys);
@@ -39,7 +39,7 @@ int physics(Physics_T *const phys,const cmd_T cmd,
     case FIND_SURFACE:
       ret = star_tunes(phys);
     break;
-    case EXTRAPOLATE_OUTSIDE:
+    case EXTRAPOLATE:
       ret = star_tunes(phys);
     break;
     case AH_RADIUS:
@@ -298,3 +298,225 @@ static void set_phys_default_region(Physics_T *const phys)
   phys->region = phys->stype;
     
 }
+
+/* ->: stype with correct indices.
+// since we have different indices for objects like NS1, BH2 etc
+// and some function are very similar but the stype indices are different
+// this function gets a prototype and with respect to the given
+// physics adjust the correct stype. eg:
+// if phys->type = NS2 => 
+// phy_return_correct_stype(phys,"NS_around") = "NS2_around". */
+const char *phys_return_correct_stype(Physics_T *const phys,
+                               const char *const stype)
+{
+  if (strcmp_i(stype,"NS"))
+  {
+    if (phys->type == NS)
+      return "NS";
+    else if (phys->type == NS1)
+      return "NS1";
+    else if (phys->type == NS2)
+      return "NS2";
+    else
+      Error0(NO_OPTION);
+    
+  }
+  else if (strcmp_i(stype,"NS_around"))
+  {
+    if (phys->type == NS)
+      return "NS_around";
+    else if (phys->type == NS1)
+      return "NS1_around";
+    else if (phys->type == NS2)
+      return "NS2_around";
+    else
+      Error0(NO_OPTION);
+    
+  }
+  else if (strcmp_i(stype,"NS_around_IB"))
+  {
+    if (phys->type == NS)
+      return "NS_around_IB";
+    else if (phys->type == NS1)
+      return "NS1_around_IB";
+    else if (phys->type == NS2)
+      return "NS2_around_IB";
+    else
+      Error0(NO_OPTION);
+  }
+  else if (strcmp_i(stype,"NS_around_OB"))
+  {
+    if (phys->type == NS)
+      return "NS_around_OB";
+    else if (phys->type == NS1)
+      return "NS1_around_OB";
+    else if (phys->type == NS2)
+      return "NS2_around_OB";
+    else
+      Error0(NO_OPTION);
+  }
+  else if (strcmp_i(stype,"BH"))
+  {
+    if (phys->type == BH)
+      return "BH";
+    else if (phys->type == BH1)
+      return "BH1";
+    else if (phys->type == BH2)
+      return "BH2";
+    else
+      Error0(NO_OPTION);
+    
+  }
+  else if (strcmp_i(stype,"BH_around"))
+  {
+    if (phys->type == BH)
+      return "BH_around";
+    else if (phys->type == BH1)
+      return "BH1_around";
+    else if (phys->type == BH2)
+      return "BH2_around";
+    else
+      Error0(NO_OPTION);
+    
+  }
+  else if (strcmp_i(stype,"BH_around_IB"))
+  {
+    if (phys->type == BH)
+      return "BH_around_IB";
+    else if (phys->type == BH1)
+      return "BH1_around_IB";
+    else if (phys->type == BH2)
+      return "BH2_around_IB";
+    else
+      Error0(NO_OPTION);
+  }
+  else if (strcmp_i(stype,"BH_around_OB"))
+  {
+    if (phys->type == BH)
+      return "BH_around_OB";
+    else if (phys->type == BH1)
+      return "BH1_around_OB";
+    else if (phys->type == BH2)
+      return "BH2_around_OB";
+    else
+      Error0(NO_OPTION);
+  }
+  else if (strcmp_i(stype,"NS1"))
+  {
+    if (phys->type == NS1)
+      return "NS1";
+    else
+      Error0("Wrong stype!");
+  }
+  else if (strcmp_i(stype,"NS2"))
+  {
+    if (phys->type == NS2)
+      return "NS2";
+    else
+      Error0("Wrong stype!");
+  }
+  else if (strcmp_i(stype,"NS1_around"))
+  {
+    if (phys->type == NS1)
+      return "NS1_around";
+    else
+      Error0("Wrong stype!");
+  }
+  else if (strcmp_i(stype,"NS2_around"))
+  {
+    if (phys->type == NS2)
+      return "NS2_around";
+    else
+      Error0("Wrong stype!");
+  }
+  else if (strcmp_i(stype,"NS1_around_IB"))
+  {
+    if (phys->type == NS1)
+      return "NS1_around_IB";
+    else
+      Error0("Wrong stype!");
+  }
+  else if (strcmp_i(stype,"NS2_around_IB"))
+  {
+    if (phys->type == NS2)
+      return "NS2_around_IB";
+    else
+      Error0("Wrong stype!");
+  }
+  else if (strcmp_i(stype,"NS1_around_OB"))
+  {
+    if (phys->type == NS1)
+      return "NS1_around_OB";
+    else
+      Error0("Wrong stype!");
+  }
+  else if (strcmp_i(stype,"NS2_around_OB"))
+  {
+    if (phys->type == NS2)
+      return "NS2_around_OB";
+    else
+      Error0("Wrong stype!");
+  }
+  
+  else if (strcmp_i(stype,"BH1"))
+  {
+    if (phys->type == BH1)
+      return "BH1";
+    else
+      Error0("Wrong stype!");
+  }
+  else if (strcmp_i(stype,"BH2"))
+  {
+    if (phys->type == BH2)
+      return "BH2";
+    else
+      Error0("Wrong stype!");
+  }
+  else if (strcmp_i(stype,"BH1_around"))
+  {
+    if (phys->type == BH1)
+      return "BH1_around";
+    else
+      Error0("Wrong stype!");
+  }
+  else if (strcmp_i(stype,"BH2_around"))
+  {
+    if (phys->type == BH2)
+      return "BH2_around";
+    else
+      Error0("Wrong stype!");
+  }
+  else if (strcmp_i(stype,"BH1_around_IB"))
+  {
+    if (phys->type == BH1)
+      return "BH1_around_IB";
+    else
+      Error0("Wrong stype!");
+  }
+  else if (strcmp_i(stype,"BH2_around_IB"))
+  {
+    if (phys->type == BH2)
+      return "BH2_around_IB";
+    else
+      Error0("Wrong stype!");
+  }
+  else if (strcmp_i(stype,"BH1_around_OB"))
+  {
+    if (phys->type == BH1)
+      return "BH1_around_OB";
+    else
+      Error0("Wrong stype!");
+  }
+  else if (strcmp_i(stype,"BH2_around_OB"))
+  {
+    if (phys->type == BH2)
+      return "BH2_around_OB";
+    else
+      Error0("Wrong stype!");
+  }
+  else
+    Error1("No replacement for %s\n",stype);
+  
+  return 0;
+}
+

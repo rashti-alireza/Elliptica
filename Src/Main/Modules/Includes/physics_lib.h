@@ -73,6 +73,10 @@
 #define Sets(param_name,val) \
 {sprintf(phys->par,"%s_%s",phys->stype,param_name); Psets(phys->par,(val));}
 
+/* handy macro for "phy_return_correct_stype" function.
+// NOTE: phys must be defined. */
+#define Ftype(s) phys_return_correct_stype(phys,s)
+
 
 /* commands, DON'T change the numeration. */
 typedef enum CMD_T
@@ -87,7 +91,7 @@ typedef enum CMD_T
  FIX_CENTER,
  FIND_SURFACE,
  AH_NORMAL_VECTOR,
- EXTRAPOLATE_OUTSIDE,
+ EXTRAPOLATE,
  CMD_END
 }cmd_T;
 
