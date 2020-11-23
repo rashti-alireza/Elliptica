@@ -1007,3 +1007,25 @@ find_XYZ_and_patch_of_theta_phi_CS
   if (found_flg == NO)
     Error0("(X,Y,Z) or patch could not be found.\n");
 }
+
+/* ->: first patch has the Cartesian point x or null if no patch has this.
+// get a Cartesian point x and collection of patches,
+// it returns the first patch has this point.
+// Np is the number of patches. */
+Patch_T *x_in_which_patch(const double x[3],Patch_T **const patches,
+                          const unsigned Np)
+{
+  double X[3] = {0};
+  unsigned p;
+  
+  for (p = 0; p < Np; ++p)
+  {
+    Patch_T *patch = patches[p];
+    
+    if (X_of_x(X,x,patch))
+      return patch;
+  }
+  
+  return 0;
+}
+

@@ -398,6 +398,11 @@ find_XYZ_and_patch_of_theta_phi_CS
  const unsigned Np/* number of patches */
  );
 
+Patch_T *x_in_which_patch(const double x[3],Patch_T **const patches,
+                          const unsigned Np);
+                          
+
+
 #endif
 
 
