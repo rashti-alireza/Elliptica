@@ -27,6 +27,7 @@
 #define FOR_ALL_PATCHES(n,grid) for ((n) = 0; (n) < (grid)->np; ++(n))/* loop over all patches of the given grid */
 #define FOR_ALL_POINTS(n,patch) for ((n) = 0; (n) < (patch)->nn; ++(n))/* loop over all points of the given patch */
 #define FOR_ALL(x,y) for((x) = 0; y[(x)] != 0; (x)++)
+#define forall_ijk   for (unsigned ijk = 0; ijk < patch->nn; ++ijk)/* define ijk and loop */
 #define TIMER_ON(x) double x = get_time_sec();
 #define TIMER_OFF(x) pr_spent_time(x,#x);
 #define FOR_SURFACE(x,y,z,n0,n1,n2) (z) = (n2); for ((x) = 0; (x) < (n0); ++(x))\
