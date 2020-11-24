@@ -1,8 +1,9 @@
 #ifndef physics_LIB_H
 #define physics_LIB_H
 
-/* string length for parameter in Physics */
-#define PAR_LEN (99)
+/* string length for string in Physics */
+#define PAR_LEN   (99)
+#define STEMP_LEN (99)
 
 /* if the given patch DOES cover the region. 
 // this is generally used in a loop over all patches */ 
@@ -75,7 +76,7 @@
 
 /* handy macro for "phy_return_correct_stype" function.
 // NOTE: phys must be defined. */
-#define Ftype(s) phys_return_correct_stype(phys,s)
+#define Ftype(s) phys_autoindex_stype(phys,s)
 
 
 /* commands, DON'T change the numeration. */
@@ -135,16 +136,18 @@ typedef struct PHYSICS_T
                   // used for patch collections */
  
  char par[PAR_LEN];/* related parameter for to be inquired. */
+ char stemp[STEMP_LEN];/* a temperory string for various use. */
+ 
 }Physics_T;
-
 #undef PAR_LEN
+#undef STEMP_LEN
 
 Physics_T *init_physics(Grid_T *const grid,const Com_Obj_T type);
 int physics(Physics_T *const phys,const cmd_T cmd,
             const char *const file, const int line);
 void free_physics(Physics_T *phys);
 
-const char *phys_return_correct_stype(Physics_T *const phys,
+const char *phys_autoindex_stype(Physics_T *const phys,
                                const char *const stype);
 
 
