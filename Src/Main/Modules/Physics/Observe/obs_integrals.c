@@ -1281,29 +1281,14 @@ static void define_spin_campanelli(Observe_T *const obs)
   obj_center[2]= Getd("center_z");
   
   /* NS spins */
-  if (strcmp_i(phys->stype,"NS"))
+  if (phys->ctype == NS)
   {
-    region = "NS_around_IB";
+    region = Ftype("NS_around_IB");
   }
-  else if (strcmp_i(phys->stype,"NS1"))
+  /* BH spins */
+  else if (phys->ctype == BH)
   {
-    region = "NS1_around_IB";
-  }
-  else if (strcmp_i(phys->stype,"NS2"))
-  {
-    region = "NS2_around_IB";
-  }
-  else if (strcmp_i(phys->stype,"BH"))
-  {
-    region = "NS_around_IB";
-  }
-  else if (strcmp_i(phys->stype,"BH1"))
-  {
-    region = "NS_around_IB";
-  }
-  else if (strcmp_i(phys->stype,"BH2"))
-  {
-    region = "NS_around_IB";
+    region = Ftype("BH_around_IB");
   }
   else
   {
@@ -1418,29 +1403,14 @@ static void define_spin_akv(Observe_T *const obs)
   S[0] = S[1] = S[2] = 0;
   
   /* NS spins */
-  if (strcmp_i(phys->stype,"NS"))
+  if (phys->ctype == NS)
   {
-    region = "NS_around_IB";
+    region = Ftype("NS_around_IB");
   }
-  else if (strcmp_i(phys->stype,"NS1"))
+  /* BH spins */
+  else if (phys->ctype == BH)
   {
-    region = "NS1_around_IB";
-  }
-  else if (strcmp_i(phys->stype,"NS2"))
-  {
-    region = "NS2_around_IB";
-  }
-  else if (strcmp_i(phys->stype,"BH"))
-  {
-    region = "NS_around_IB";
-  }
-  else if (strcmp_i(phys->stype,"BH1"))
-  {
-    region = "NS_around_IB";
-  }
-  else if (strcmp_i(phys->stype,"BH2"))
-  {
-    region = "NS_around_IB";
+    region = Ftype("BH_around_IB");
   }
   else
   {
@@ -1558,17 +1528,11 @@ static void define_spin_JRP(Observe_T *const obs)
   J[2] = Getd("Jz_ADM");
   
   /* NS spins */
-  if (strcmp_i(phys->stype,"NS")  ||
-      strcmp_i(phys->stype,"NS1") ||
-      strcmp_i(phys->stype,"NS2")
-     )
+  if (phys->ctype == NS)
   {
     obs_Rc_NS(obs);
   }
-  else if (strcmp_i(phys->stype,"BH")  ||
-           strcmp_i(phys->stype,"BH1") ||
-           strcmp_i(phys->stype,"BH2")
-          )
+  else if (phys->ctype == BH)
   {
     Rc_BH(obs);
   }
