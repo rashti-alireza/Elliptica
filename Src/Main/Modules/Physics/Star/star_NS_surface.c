@@ -3,7 +3,7 @@
 // November 2020
 */
 
-/* various utilities related to surface of stars. */
+/* various utilities related to surface of NS stars. */
 
 #include "star_NS_surface.h"
 
