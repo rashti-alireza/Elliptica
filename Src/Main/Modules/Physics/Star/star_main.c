@@ -14,23 +14,29 @@ int star_tune(Physics_T *const phys)
 {
   int ret = -1;
   
-  if (Pcmps("star_type","NS")           &&
-      Pcmps("star_fluid","ideal_fluid") && 
-      Pcmps("star_gConf","non_flat"))
+  if (Pcmps("star_type","NS"))
   {
-    switch (phys->cmd)
+    if (Pcmps("star_NS_fluid","ideal_fluid") && 
+        Pcmps("star_NS_gConf","non_flat"))
     {
-      case EULER_CONST:
-        ret = star_NS_idealfluid_gConf_find_Euler_const(phys);
-      break;
-      case EXTRAPOLATE:
-        ret = star_NS_idealfluid_extrapolate_matter_fields(phys);
-      break;
-      case FIND_SURFACE:
-        ret = star_NS_find_star_surface(phys);
-      break;
-      default:
-        Error0(NO_OPTION);
+      switch (phys->cmd)
+      {
+        case EULER_CONST:
+          ret = star_NS_idealfluid_gConf_find_Euler_const(phys);
+        break;
+        case EXTRAPOLATE:
+          ret = star_NS_idealfluid_extrapolate_matter_fields(phys);
+        break;
+        case FIND_SURFACE:
+          ret = star_NS_find_star_surface(phys);
+        break;
+        default:
+          Error0(NO_OPTION);
+      }
+    }
+    else
+    {
+      Error0(NO_OPTION);
     }
   }
   else
@@ -53,29 +59,34 @@ int star_mount(Grid_T *const grid)
   // and in the file for other systems. */
   Pset_default("star_type","NS");
   
-  /* fluid type:
-  // ideal_fluid: like: Phys. Rev. D 100, 124046  */
-  Pset_default("star_fluid","ideal_fluid");
-  
-  /* conformal metric type: 
-  // flat     => gConf  = delta_{ij},
-  // non_flat => gConf != delta_{ij}. */
-  Pset_default("star_gConf","non_flat");
-  
-  /* how to extrapolate matter fields outside the NS :
-  // slop_method: required to have C^2 field across the boundary. */
-  Pset_default("star_extrapolate_matter_fields","poly2");
-  
-  /* which root finder to be used to find NS surface :
-  // slop_method: required to have C^2 field across the boundary. */
-  Pset_default("star_NS_surface_finder","bisection");
-  
-  
-  if (Pcmps("star_type","NS")           &&
-      Pcmps("star_fluid","ideal_fluid") && 
-      Pcmps("star_gConf","non_flat"))
+  if (Pcmps("star_type","NS"))
   {
-   star_NS_idealfluid_gConf_add_fields(grid);
+    /* fluid type:
+    // ideal_fluid: like: Phys. Rev. D 100, 124046  */
+    Pset_default("star_NS_fluid","ideal_fluid");
+    
+    /* conformal metric type: 
+    // flat     => gConf  = delta_{ij},
+    // non_flat => gConf != delta_{ij}. */
+    Pset_default("star_NS_gConf","non_flat");
+    
+    /* how to extrapolate matter fields outside the NS :
+    // slop_method: required to have C^2 field across the boundary. */
+    Pset_default("star_NS_extrapolate_matter_fields","poly2");
+    
+    /* which root finder to be used to find NS surface :
+    // slop_method: required to have C^2 field across the boundary. */
+    Pset_default("star_NS_surface_finder","bisection");
+    
+    if(Pcmps("star_NS_fluid","ideal_fluid") &&
+       Pcmps("star_NS_gConf","non_flat"))
+    {
+      star_NS_idealfluid_gConf_add_fields(grid);
+    }
+    else
+    {
+      Error0(NO_OPTION);
+    }
   }
   /* one can for instance add various params here for example:
   // else if (Pcmps("star_type","BS+WD")) */
