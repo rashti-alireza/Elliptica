@@ -5,7 +5,7 @@
 
 /* various utilities related to surface of stars. */
 
-#include "star_surface.h"
+#include "star_NS_surface.h"
 
 /* ->: EXIT_SUCCESS if succeeds, otherwise an error code
 // extrapolate given fields_name outside star surface.
