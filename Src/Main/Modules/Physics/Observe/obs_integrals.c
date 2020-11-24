@@ -727,9 +727,9 @@ void obs_calculate(Observe_T *const obs)
   }
   else if (strcmp_i(obs->quantity,"CM"))
   {
-    if (obs->phys->type == BH)      Rc_BH(obs);
-    else if (obs->phys->type == NS) obs_Rc_NS(obs);
-    else                            Error0(NO_OPTION);
+    if (obs->phys->ctype == BH)      Rc_BH(obs);
+    else if (obs->phys->ctype == NS) obs_Rc_NS(obs);
+    else                             Error0(NO_OPTION);
   }
   else if (strcmp_i(obs->quantity,"Spin|JRP"))
   {
