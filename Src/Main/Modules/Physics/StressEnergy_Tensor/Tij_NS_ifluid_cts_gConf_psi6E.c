@@ -7,7 +7,7 @@
 #include "Tij_header.h"
 
 
-void Tij_IF_CTS_gConf_psi6E(Patch_T *const patch)
+void Tij_NS_IF_CTS_gConf_psi6E(Patch_T *const patch)
 {
   const unsigned nn = patch->nn;
   unsigned ijk;

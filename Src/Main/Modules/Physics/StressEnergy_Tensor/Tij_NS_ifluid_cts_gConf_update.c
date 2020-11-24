@@ -7,7 +7,7 @@
 
 
 /* updating all matter related and their derivatives. */
-void Tij_idealfluid_CTS_gConf_update(Physics_T *const phys)
+void Tij_NS_idealfluid_CTS_gConf_update(Physics_T *const phys)
 {
   FUNC_TIC
   
@@ -29,26 +29,26 @@ void Tij_idealfluid_CTS_gConf_update(Physics_T *const phys)
     
     if_not_cover(patch,phys)  continue;
     
-    RELAX_UPDATE_FUNC(Tij_IF_CTS_gConf_enthalpy(patch,Euler_const),
+    RELAX_UPDATE_FUNC(Tij_NS_IF_CTS_gConf_enthalpy(patch,Euler_const),
                       patch,enthalpy,W);
     
     if (neat)
-      Tij_neat_enthalpy(patch);
+      Tij_NS_neat_enthalpy(patch);
     
-    Tij_eos_update_rho0(patch);
-    Tij_IF_CTS_gConf_u0(patch);
-    Tij_IF_CTS_gConf_derives(patch);
+    Tij_NS_eos_update_rho0(patch);
+    Tij_NS_IF_CTS_gConf_u0(patch);
+    Tij_NS_IF_CTS_gConf_derives(patch);
     /* sources */
-    Tij_IF_CTS_gConf_psi6J_Ui(patch);
-    Tij_IF_CTS_gConf_psi6E(patch);
-    Tij_IF_CTS_gConf_psi6S(patch);
+    Tij_NS_IF_CTS_gConf_psi6J_Ui(patch);
+    Tij_NS_IF_CTS_gConf_psi6E(patch);
+    Tij_NS_IF_CTS_gConf_psi6S(patch);
   }
   
   FUNC_TOC
 }
 
 /* updating rho0 using eos */
-void Tij_eos_update_rho0(Patch_T *const patch)
+void Tij_NS_eos_update_rho0(Patch_T *const patch)
 {
   EoS_T *eos = initialize_EoS();
   READ_v(enthalpy)
@@ -74,7 +74,7 @@ void Tij_eos_update_rho0(Patch_T *const patch)
 
 /* after finding new NS surface, root finder might find h ~ 1
 // so put it h = 1, to prevent nan in matter fields  */
-void Tij_neat_enthalpy(Patch_T *const patch)
+void Tij_NS_neat_enthalpy(Patch_T *const patch)
 {
   WRITE_v(enthalpy)
   

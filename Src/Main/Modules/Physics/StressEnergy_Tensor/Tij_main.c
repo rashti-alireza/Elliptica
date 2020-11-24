@@ -20,7 +20,7 @@ int Tij_tune(Physics_T *const phys)
       switch (phys->cmd)
       {
         case STRESS_ENERGY:
-          Tij_idealfluid_CTS_gConf_update(phys);
+          Tij_NS_idealfluid_CTS_gConf_update(phys);
         break;
         default:
           Error0(NO_OPTION);
@@ -60,7 +60,7 @@ int Tij_mount(Grid_T *const grid)
     if (Pcmps("Tij_NS_decomposition","CTS") &&
         Pcmps("Tij_NS_gConf","non_flat"))
     {
-      Tij_idealfluid_CTS_gConf_add_fields(grid);
+      Tij_NS_idealfluid_CTS_gConf_add_fields(grid);
     }
     else
     {
