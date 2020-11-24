@@ -12,17 +12,23 @@
 /* update stress energy tensor */
 int Tij_tune(Physics_T *const phys)
 {
-  if (Pcmps("Tij_fluid","ideal_fluid") && 
-      Pcmps("Tij_decomposition","CTS") &&
-      Pcmps("Tij_gConf","non_flat"))
+  if (Pcmps("Tij_fluid","NS_ideal_fluid"))
   {
-    switch (phys->cmd)
+    if(Pcmps("Tij_NS_decomposition","CTS") &&
+       Pcmps("Tij_NS_gConf","non_flat"))
     {
-      case STRESS_ENERGY:
-        Tij_idealfluid_CTS_gConf_update(phys);
-      break;
-      default:
-        Error0(NO_OPTION);
+      switch (phys->cmd)
+      {
+        case STRESS_ENERGY:
+          Tij_idealfluid_CTS_gConf_update(phys);
+        break;
+        default:
+          Error0(NO_OPTION);
+      }
+    }
+    else
+    {
+      Error0(NO_OPTION);
     }
   }
   else
@@ -36,24 +42,30 @@ int Tij_tune(Physics_T *const phys)
 /* adding default parameters and fields. */
 int Tij_mount(Grid_T *const grid)
 {
-  /* decomposition type:
-  // CTS (conformal thin sandwich): like: Phys. Rev. D 100, 124046  */
-  Pset_default("Tij_decomposition","CTS");
-  
   /* fluid type:
-  // ideal_fluid: like: Phys. Rev. D 100, 124046  */
-  Pset_default("Tij_fluid","ideal_fluid");
+  // NS_ideal_fluid: like: Phys. Rev. D 100, 124046  */
+  Pset_default("Tij_fluid","NS_ideal_fluid");
   
-  /* conformal metric type: 
-  // flat     => gConf  = delta_{ij},
-  // non_flat => gConf != delta_{ij}. */
-  Pset_default("Tij_gConf","non_flat");
-  
-  if (Pcmps("Tij_fluid","ideal_fluid") && 
-      Pcmps("Tij_decomposition","CTS") &&
-      Pcmps("Tij_gConf","non_flat"))
+  if (Pcmps("Tij_fluid","NS_ideal_fluid"))
   {
-    Tij_idealfluid_CTS_gConf_add_fields(grid);
+    /* decomposition type:
+    // CTS (conformal thin sandwich): like: Phys. Rev. D 100, 124046  */
+    Pset_default("Tij_NS_decomposition","CTS");
+    
+    /* conformal metric type: 
+    // flat     => gConf  = delta_{ij},
+    // non_flat => gConf != delta_{ij}. */
+    Pset_default("Tij_NS_gConf","non_flat");
+    
+    if (Pcmps("Tij_NS_decomposition","CTS") &&
+        Pcmps("Tij_NS_gConf","non_flat"))
+    {
+      Tij_idealfluid_CTS_gConf_add_fields(grid);
+    }
+    else
+    {
+      Error0(NO_OPTION);
+    }
   }
   else
     Error0(NO_OPTION);
