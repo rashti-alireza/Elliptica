@@ -10,7 +10,7 @@
 #include "Tij_main.h"
 
 /* update stress energy tensor */
-int Tij_tune(Physics_T *const phys)
+int Tij_main(Physics_T *const phys)
 {
   if (Pcmps("Tij_fluid","NS_ideal_fluid"))
   {

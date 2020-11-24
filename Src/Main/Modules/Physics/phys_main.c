@@ -29,22 +29,22 @@ int physics(Physics_T *const phys,const cmd_T cmd,
   switch (cmd)
   {
     case STRESS_ENERGY:
-      ret = Tij_tune(phys);
+      ret = Tij_main(phys);
     break;
     case EULER_CONST:
-      ret = star_tune(phys);
+      ret = star_main(phys);
     break;
     case FIND_SURFACE:
-      ret = star_tune(phys);
+      ret = star_main(phys);
     break;
     case EXTRAPOLATE:
-      ret = star_tune(phys);
+      ret = star_main(phys);
     break;
     /*case FORCE_BALANCE:
-      ret = star_tunes(phys);
+      ret = star_main(phys);
     break;
     case FIX_CENTER:
-      ret = star_tunes(phys);
+      ret = star_main(phys);
     break;
     case AH_RADIUS:
       ret = update_apparent_horizon_radius(phys);
