@@ -34,16 +34,16 @@ int physics(Physics_T *const phys,const cmd_T cmd,
     case EULER_CONST:
       ret = star_tune(phys);
     break;
+    case FIND_SURFACE:
+      ret = star_tune(phys);
+    break;
+    case EXTRAPOLATE:
+      ret = star_tune(phys);
+    break;
     /*case FORCE_BALANCE:
       ret = star_tunes(phys);
     break;
     case FIX_CENTER:
-      ret = star_tunes(phys);
-    break;
-    case FIND_SURFACE:
-      ret = star_tunes(phys);
-    break;
-    case EXTRAPOLATE:
       ret = star_tunes(phys);
     break;
     case AH_RADIUS:
