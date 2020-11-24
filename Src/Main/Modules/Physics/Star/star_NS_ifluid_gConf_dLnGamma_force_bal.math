@@ -1,0 +1,118 @@
+# forece balance eqution for root finder
+
+# Manifold or grid Dimension
+Dimension = 3;
+
+# point on manifold shown by:
+Point = ijk;
+
+C_macro = READ_v(name);
+
+`#include "star_header.h"`
+``
+# calculate d(Ln(Gamma))/d(x^dir) used in force balance eq.
+`double star_NS_idealfluid_gConf_dLnGamma_force_bal(Patch_T *const patch,const double *const NS_centerX,const int dir);`
+`double star_NS_idealfluid_gConf_dLnGamma_force_bal(Patch_T *const patch,const double *const NS_centerX,const int dir)`
+`{`
+
+Declare = 
+{
+
+ # conformal metric 
+ (obj = Field,name = gConf, rank = DD, C_macro);
+
+ # spin part of fluid
+ (obj = Field,name = W, rank = U, C_macro);
+
+ # d(phi)/d? for irrotional part of fluid
+ (obj = Field,name = dphi, rank = D, C_macro);
+
+ # eta
+ (obj = Field,name = eta, rank = 0, C_macro);
+
+ # Beta
+ (obj = Field,name = Beta, rank = U, C_macro);
+
+ # Killing vector xi^i, assumed 0
+ #(obj = Field,name = xi, rank = U, C_macro);
+
+ # conformal factor
+ (obj = Field,name = psi, rank = 0, C_macro);
+
+ # enthalpy
+ (obj = Field,name = enthalpy, rank = 0, C_macro);
+
+ # u^0
+ (obj = Field,name = u0, rank = 0, C_macro);
+
+}
+# symmetries:
+Symm[gConf(i,j)   = gConf(j,i)];
+
+`ADD_AND_ALLOC_FIELD(GAMMA_fb);`
+`ADD_FIELD(dGAMMA_fb);`
+
+`DECLARE_FIELD(GAMMA_fb);`
+`DECLARE_FIELD(dGAMMA_fb);`
+
+# calculating Gamma
+`const unsigned nn = patch->nn;`
+`unsigned ijk;`  
+`for (ijk = 0; ijk < nn; ++ijk)`
+`{`
+    alpha  = eta/psi;
+    alpha2 = alpha**2;
+    psi4   = psi**4;
+    t(i)   = Beta(i)+W(i)/(enthalpy*u0);
+    t2     = psi4*t(-i)*t(-j)*gConf(i,j);
+    v      = t(i)*dphi(-i)/(alpha2*enthalpy*u0) + \
+             psi4*gConf(i,j)*W(-i)*W(-j)/((alpha*enthalpy*u0)**2);
+    G      = alpha*u0*(1-v)/((1-t2/alpha2)**(0.5));
+
+    ``
+    `GAMMA_fb->v[ijk]  = G;`
+`}`
+
+`if (dir == 0)`
+`  dGAMMA_fb->v  = Partial_Derivative(GAMMA_fb,"x");`
+`else if (dir == 1)`
+`  dGAMMA_fb->v  = Partial_Derivative(GAMMA_fb,"y");`
+`else if (dir == 2)`
+`  dGAMMA_fb->v  = Partial_Derivative(GAMMA_fb,"z");`
+`else`
+`  Error0(NO_OPTION);`
+``
+`Interpolation_T *interp_GAMMA   = init_interpolation();`
+`Interpolation_T *interp_dGAMMA  = init_interpolation();`
+``
+`interp_GAMMA->field   = GAMMA_fb;`
+`interp_dGAMMA->field  = dGAMMA_fb;`
+``
+`interp_GAMMA->X = NS_centerX[0];`
+`interp_GAMMA->Y = NS_centerX[1];`
+`interp_GAMMA->Z = NS_centerX[2];`
+`interp_GAMMA->XYZ_dir_flag = 1;`
+``
+`interp_dGAMMA->X = NS_centerX[0];`
+`interp_dGAMMA->Y = NS_centerX[1];`
+`interp_dGAMMA->Z = NS_centerX[2];`
+`interp_dGAMMA->XYZ_dir_flag = 1;`
+``
+`plan_interpolation(interp_GAMMA);`
+`plan_interpolation(interp_dGAMMA);`
+``
+`const double g  = execute_interpolation(interp_GAMMA);`
+`const double dg = execute_interpolation(interp_dGAMMA);`
+`const double f  = dg/g;`
+`if(!isfinite(f))` # if f goes banana!
+`{`
+`  Error0("Force balance equation was failed.\n");`
+`}`
+``
+`REMOVE_FIELD(GAMMA_fb);`
+`REMOVE_FIELD(dGAMMA_fb);`
+`free_interpolation(interp_GAMMA);`
+`free_interpolation(interp_dGAMMA);`
+``
+`return f;`
+`}`
