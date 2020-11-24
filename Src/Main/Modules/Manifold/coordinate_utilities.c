@@ -720,7 +720,7 @@ void theta_phi_of_XY_CS(double *const theta,double *const phi,const double *cons
 /* ->: collected patches which cover the region and number of patches Np.
 // one can collect an assortment of patches separated with comma, eg:
 //
-// Patch_T **patches = collect_patches(grid,"NS1_around,NS1",NONE,&np); 
+// Patch_T **patches = collect_patches(grid,"NS1_around,NS1",&np); 
 // which cover NS1 and NS1_around regardless of direction. 
 // note: it's blind with respect to repetition in the specified region. */
 Patch_T **
@@ -1132,5 +1132,69 @@ Patch_T *x_in_which_patch(const double x[3],Patch_T **const patches,
   }
   
   return 0;
+}
+
+/* ->: first patch has patch coords. X or null if no patch has this.
+// get a patch coords. X and collection of patches,
+// it returns the first patch has this point.
+// Np is the number of patches. 
+// some times, you know the X coords but not the patch, for instance, 
+// in mass_shedding function this becomes handy.
+// note: the collection of patch must be refine enough to
+// avoid potential wrong return since X is not uniqe. */
+Patch_T *X_in_which_patch(const double X[3],Patch_T **const patches,
+                          const unsigned Np)
+{
+  double x[3] = {0};
+  unsigned p;
+  
+  for (p = 0; p < Np; ++p)
+  {
+    Patch_T *patch = patches[p];
+    
+    if (x_of_X(x,X,patch))
+      return patch;
+  }
+  
+  return 0;
+}
+
+/* ->: collected patches which have the given regex match in patch->name.
+// ex:
+// Patch_T **patches = regex_collect_patches(grid,".+(left|right)_NS.?_around.+",&np); 
+// which in a NSNS system covers NS1_around and NS2_around regardless of direction. */
+Patch_T **
+regex_collect_patches
+  (
+  Grid_T *const grid,/* the grid */
+  const char *const regex,/* regex */
+  unsigned *const Np/* number of patches found */
+  )
+{
+  Patch_T **patches = 0;
+  unsigned np,p;
+  
+  /* init */
+  *Np = 0;
+  
+  np = 0;
+  FOR_ALL_PATCHES(p,grid)
+  {
+    Patch_T *patch = grid->patch[p];
+    if (regex_search(regex,patch->name))
+    {
+      patches = realloc(patches,(np+2)*sizeof(*patches));
+      IsNull(patches);
+      patches[np]   = patch;
+      patches[np+1] = 0;
+      ++np;
+    }
+  }
+  /* check */
+  if (np == 0)
+    Error1("No name was matched for '%s'!",regex);
+  
+  *Np = np;
+  return patches;
 }
 

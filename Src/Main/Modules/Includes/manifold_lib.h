@@ -402,9 +402,19 @@ find_XYZ_and_patch_of_theta_phi_CS
 
 Patch_T *x_in_which_patch(const double x[3],Patch_T **const patches,
                           const unsigned Np);
+Patch_T *X_in_which_patch(const double x[3],Patch_T **const patches,
+                          const unsigned Np);
 
 void find_theta_phi_of_XYZ_CS(double *const theta,double *const phi,
                               const double *const X,const Flag_T side);                          
+
+Patch_T **
+regex_collect_patches
+  (
+  Grid_T *const grid,/* the grid */
+  const char *const regex,/* regex */
+  unsigned *const Np/* number of patches found */
+  );
 
 
 
