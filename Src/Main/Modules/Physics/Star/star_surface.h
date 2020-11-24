@@ -1,0 +1,84 @@
+#include "star_header.h"
+#include "maths_spectral_methods_lib.h"
+#include "maths_special_functions_lib.h"
+#include "maths_linear_algebra_lib.h"
+
+/* constants */
+#define MAX_STR  (100)
+#define MAX_STR2 (200)
+#define MAX_STR_LARGE (1000)
+
+/* 2 indices */
+#define IJ(i,j,n)  ((j)+(i)*(n))
+/* 2 indices with symmetry for n = 3 */
+#define IJsymm3(i,j)  \
+ ((j)>=(i) ? \
+  (5*(((j)+(i)*2)/6)+((j)+(i)*2)%6) : \
+  (5*(((i)+(j)*2)/6)+((i)+(j)*2)%6))
+
+/* math */
+#define Power(a,b) pow(a,b)
+#define Sqrt(a) sqrt(a)
+
+/* struct for general purposes */
+struct Demand_S
+{
+ double r0,r1,r;/* for extrapolation. */
+ double fr0,fr1,dfr0,ddfr0;/* f(r0),f(r1), df(r0)/dr, d^2f(r0)/dr^2 */
+};
+
+/* all needed items for extrapolation function */
+struct Extrap_S
+{
+  Physics_T *phys;/* the physics of interest */
+  Grid_T *grid;/* the grid */
+  Patch_T **patches_out;/* patches outside where extrapolation takes place */
+  Patch_T **patches_in;/* patches inside where fields already exist */
+  unsigned npi;/* number of patches inside  */
+  unsigned npo;/* number of patches outside */
+  unsigned lmax;/* max l in Ylm expansion */
+  unsigned Ntheta;/* number of points in theta direction */
+  unsigned Nphi;/* number of points in phi direction */
+  unsigned NCoeffs;/* number of coeffs for in extrapolant function */
+  unsigned nf;/* number of fields */
+  char method[MAX_STR];/* the specified methods */
+  struct
+  {
+    char f[MAX_STR];/* f */
+    char df[3][MAX_STR];/* df/dx */
+    char ddf[6][MAX_STR];/* d^2f/dx^2 */
+    double (*func_r0)(void *const params);/* function as we close to r0 */
+  }**fld;/* field info */
+  double (*extrap)(struct Demand_S *const demand);/* function used for extrapolation (approximation) */
+  int (*fmain)(struct Extrap_S *const extap);/* call this to extrapolate  */
+};
+
+
+int 
+star_extrapolate
+  (
+  Physics_T *const phys/* physics of interest */,
+  const char **fields_name/* ends determined by 0 */,
+  const char *const method/* the method to be used for extrapolating */
+  );
+  
+
+static struct Extrap_S* 
+extrap_init
+  (
+  Physics_T *const phys/* physics of interest */,
+  const char **fields_name/* ends determined by 0 */,
+  const char *const method/* the method or instruction 
+                          // to be used for extrapolating */
+  );
+
+static void collect_names(struct Extrap_S *const extrap,
+                          const char **const fields_name,
+                          const unsigned nf);
+static void extrap_free(struct Extrap_S *const extrap);
+static int fmain_f_df_ddf_CS(struct Extrap_S *const extrap);
+static double approx_exp2(struct Demand_S *const demand);
+static double approx_poly2(struct Demand_S *const demand);
+
+
+
