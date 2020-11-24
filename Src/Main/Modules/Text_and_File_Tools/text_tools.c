@@ -381,3 +381,111 @@ char **read_separated_items_in_string(const char *const string,const char delimi
   return items;
 }
 
+/* ->: EXIT_SUCCESS or sprinf or error.
+// replace the matches match of given string orig by repl
+// and write into save.
+// NOTE: save must have enough memory.  */
+int replace_str(const char *const orig/* original */,
+                const char *const regex_pattern/* regex pattern */,
+                const char *const repl/* replace by this piece */,
+                char *const save/* write the result in save  */)
+{
+
+  regex_t regex;
+  const char *c = orig;
+  const unsigned n_matches = 1;/* number of matches */
+  regmatch_t match[n_matches];
+  int status;
+    
+  status = regcomp(&regex,regex_pattern,REG_EXTENDED);
+  if (status)
+    Error0("Regular expression Faild. It could be wrong pattern or memory failure.\n");
+
+  status = regexec(&regex,c,n_matches,match,0);
+  
+  if (status)/* if no match is found write orig to save. */
+  {
+    regfree(&regex);
+    return (sprintf(save,"%s",orig));
+  }
+  else/*  there is at least one match */
+  {
+    unsigned i = 0;
+    while(!status)
+    {
+      const char *o  = c;
+      int len = match[0].rm_eo/* The offset in string of the end of the substring.  */
+               -match[0].rm_so;/* The offset in string of the beginning of a substring. */
+      
+      /* write the leading */
+      while (c != &o[match[0].rm_so])
+      {
+        save[i] = *c;
+        c++;
+        i++;
+      }
+      unsigned j = 0;
+      /* replace */
+      while (repl[j] != '\0')
+        save[i++] = repl[j++];
+      
+      c += len;/* skip match */
+      status = regexec(&regex,c,n_matches,match,0);
+    }
+    /* write the leading */
+    while (*c != '\0')
+    {
+      save[i] = *c;
+      i++;
+      c++;
+    }
+    save[i] = '\0';
+    regfree(&regex);
+  }
+  
+  status = regexec(&regex,c,n_matches,match,0);
+  
+  if (status)/* if no match is found write orig to save. */
+  {
+    regfree(&regex);
+    return (sprintf(save,"%s",orig));
+  }
+  else/*  there is at least one match */
+  {
+    unsigned i = 0;
+    while(!status)
+    {
+      const char *o  = c;
+      int len = match[0].rm_eo/* The offset in string of the end of the substring.  */
+               -match[0].rm_so;/* The offset in string of the beginning of a substring. */
+      
+      /* write the leading */
+      while (c != &o[match[0].rm_so])
+      {
+        save[i] = *c;
+        c++;
+        i++;
+      }
+      unsigned j = 0;
+      /* replace */
+      while (repl[j] != '\0')
+        save[i++] = repl[j++];
+      
+      c += len;/* skip match */
+      status = regexec(&regex,c,n_matches,match,0);
+    }
+    /* write the leading */
+    while (*c != '\0')
+    {
+      save[i] = *c;
+      i++;
+      c++;
+    }
+    save[i] = '\0';
+    regfree(&regex);
+  }
+  
+  return EXIT_SUCCESS;
+}
+
+

@@ -12,4 +12,10 @@ unsigned find_index_string(char **const heystack,const unsigned N,const char *co
 int regex_search(const char *const regex_pattern,const char *const str);
 char *regex_find(const char *const regex_pattern,const char *const str);
 char **read_separated_items_in_string(const char *const string,const char delimiter);
+int replace_str(const char *const orig/* original */,
+                const char *const regex_pattern/* regex pattern */,
+                const char *const repl/* replace by this piece */,
+                char *const save/* write the result in save  */);
+                
+
 
