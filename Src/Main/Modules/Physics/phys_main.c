@@ -159,6 +159,7 @@ init_physics
   switch(type)
   {
     case NS:
+      phys->ctype = NS;
       phys->stype = "NS";
       spos = Pgets("grid_set_NS");
       if (strstr_i(spos,"left"))
@@ -181,6 +182,7 @@ init_physics
         
     break;
     case NS1:
+      phys->ctype = NS;
       phys->stype = "NS1";
       spos = Pgets("grid_set_NS1");
       if (strstr_i(spos,"left"))
@@ -198,6 +200,7 @@ init_physics
       
     break;
     case NS2:
+      phys->ctype = NS;
       phys->stype = "NS2";
       spos = Pgets("grid_set_NS2");
       if (strstr_i(spos,"left"))
@@ -215,6 +218,7 @@ init_physics
       
     break;
     case BH:
+      phys->ctype = BH;
       phys->stype = "BH";
       spos = Pgets("grid_set_BH");
       if (strstr_i(spos,"left"))
@@ -237,6 +241,7 @@ init_physics
         
     break;
     case BH1:
+      phys->ctype = BH;
       phys->stype = "BH1";
       spos = Pgets("grid_set_BH1");
       if (strstr_i(spos,"left"))
@@ -254,6 +259,7 @@ init_physics
       
     break;
     case BH2:
+      phys->ctype = BH;
       phys->stype = "BH2";
       spos = Pgets("grid_set_BH2");
       if (strstr_i(spos,"left"))
@@ -299,7 +305,7 @@ static void set_phys_default_region(Physics_T *const phys)
     
 }
 
-/* ->: stype with correct indices.
+/* ->: stype with correct indices (kind of auto spell).
 // since we have different indices for objects like NS1, BH2 etc
 // and some function are very similar but the stype indices are different
 // this function gets a prototype and with respect to the given

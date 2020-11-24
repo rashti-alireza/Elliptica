@@ -120,6 +120,9 @@ typedef struct PHYSICS_T
  cmd_T cmd;/* current command */
  const char *region;/* grid region you want to issue the command/ */
  
+ Com_Obj_T ctype;/* handy for avoid many ifs; for instance when everything 
+                 // is the same for NS, NS1 and NS2 one can check only 
+                 // if (ctype == NS) ... . */
  Com_Obj_T type;/* BH1,NS2, NS, etc */
  const char *stype;/* string of type (above) used for parameter prefix */
  
