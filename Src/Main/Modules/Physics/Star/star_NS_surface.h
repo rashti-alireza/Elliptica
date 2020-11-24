@@ -70,7 +70,7 @@ struct Extrap_S
 
 
 int 
-star_extrapolate
+star_NS_extrapolate
   (
   Physics_T *const phys/* physics of interest */,
   const char **fields_name/* ends determined by 0 */,

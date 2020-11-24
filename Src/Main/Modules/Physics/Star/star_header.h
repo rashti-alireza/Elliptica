@@ -25,7 +25,7 @@ void star_NS_idealfluid_gConf_add_fields(Grid_T *const grid);
 int star_NS_idealfluid_extrapolate_matter_fields(Physics_T *const phys);
 
 int 
-star_extrapolate
+star_NS_extrapolate
   (
   Physics_T *const phys/* physics of interest */,
   const char **fields_name/* ends determined by 0 */,
