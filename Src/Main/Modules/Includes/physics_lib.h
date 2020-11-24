@@ -42,17 +42,17 @@
 // NOTE: phys MUST be defined.
 // NOTE: not thread safe. */
 #define sysGetd(param_name) \
- (sprintf(phys->par,"%s_%s",phys->stype,param_name) ? Pgetd(phys->par) : DBL_MAX)
+ (sprintf(phys->par,"%s_%s",phys->ssys,param_name) ? Pgetd(phys->par) : DBL_MAX)
 
-/* same as Getd but for integer type
+/* same as sysGetd but for integer type
 // NOTE: not thread safe. */
 #define sysGeti(param_name) \
- (sprintf(phys->par,"%s_%s",phys->stype,param_name) ? Pgeti(phys->par) : INT_MAX)
+ (sprintf(phys->par,"%s_%s",phys->ssys,param_name) ? Pgeti(phys->par) : INT_MAX)
  
-/* same as Getd but for string type
+/* same as sysGetd but for string type
 // NOTE: not thread safe. */
 #define sysGets(param_name) \
- (sprintf(phys->par,"%s_%s",phys->stype,param_name) ? Pgets(phys->par) : NULL)
+ (sprintf(phys->par,"%s_%s",phys->ssys,param_name) ? Pgets(phys->par) : NULL)
 
 
 /* set double parameter for the given physics. ex: 
