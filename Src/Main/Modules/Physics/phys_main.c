@@ -19,8 +19,12 @@ int physics(Physics_T *const phys,const cmd_T cmd,
   
   phys->cmd   = cmd;
   
+  /* if initialy user already specifed a region, make a backup */
+  if (phys->region)
+    phys->Uregion = phys->region;
+    
   /* note: first must set phys->cmd */
-  set_phys_default_region(phys);
+  phys_set_region(phys);
   
   switch (cmd)
   {
@@ -61,7 +65,7 @@ int physics(Physics_T *const phys,const cmd_T cmd,
       Error0(msg);
   }
   
-  /* set to 0 to catch bug and miss you */
+  /* set to 0 to trap bugs */
   phys->cmd    = CMD_UNDEFINED;
   phys->region = 0;
   
@@ -127,10 +131,6 @@ init_physics
 {
   Physics_T *phys = calloc(1,sizeof(*phys)); IsNull(phys);
   const char *spos  = 0;
-  
-  Error0("/* what should i do for BHNS region? */");
-  
-  assert(phys->region);
   
   phys->grid = grid;
   phys->type = type;
@@ -294,15 +294,14 @@ void free_physics(Physics_T *phys)
   _free(phys);
 }
 
-/* set phys->region, if it's already set by the user skip  */
-static void set_phys_default_region(Physics_T *const phys)
+/* set default phys->region  */
+void phys_set_region(Physics_T *const phys)
 {
-  if (phys->region)
-    return;
-  
   /* set natural region, later one can make it more sophisticated */
-  phys->region = phys->stype;
-    
+  if (phys->Uregion)
+    phys->region = phys->Uregion;
+  else
+    phys->region = phys->stype;
 }
 
 /* ->: stype with correct indices (kind of auto spell).

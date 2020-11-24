@@ -119,7 +119,10 @@ typedef struct PHYSICS_T
  unsigned igc;/* index of grid_char for this physics. */
  
  cmd_T cmd;/* current command */
- const char *region;/* grid region you want to issue the command/ */
+ const char *region;/* grid region you want to issue the command */
+ const char *Uregion;/* grid region specifed by User before to issue 
+                     // the command, this is a backup, in case we need 
+                     // to change region from original value. */
  
  Com_Obj_T ctype;/* handy for avoid many ifs; for instance when everything 
                  // is the same for NS, NS1 and NS2 one can check only 
@@ -146,7 +149,7 @@ Physics_T *init_physics(Grid_T *const grid,const Com_Obj_T type);
 int physics(Physics_T *const phys,const cmd_T cmd,
             const char *const file, const int line);
 void free_physics(Physics_T *phys);
-
+void phys_set_region(Physics_T *const phys);
 const char *phys_autoindex_stype(Physics_T *const phys,
                                const char *const stype);
 
