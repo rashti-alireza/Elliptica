@@ -20,6 +20,19 @@
 #define Power(a,b) pow(a,b)
 #define Sqrt(a) sqrt(a)
 
+/* root finder struct for NS surface eq */
+struct NS_surface_RootFinder_S
+{
+  Patch_T **hpatches;/* all possible patches to find h */
+  unsigned Nph;/* number of hpatches */
+  void *root_finder;
+  double x0[3];/* (x,y,z) at the surface */
+  double *N;/* the direction of increasing or decreasing of x = x0+N*d */
+  //double Euler_C;/* Euler equation const. */
+  //double scale;/* to avoid long step in root finder */
+  //double maxR;/* max R allowed for NS around */
+};
+
 /* struct for general purposes */
 struct Demand_S
 {
@@ -81,6 +94,12 @@ static void extrap_free(struct Extrap_S *const extrap);
 static int fmain_f_df_ddf_CS(struct Extrap_S *const extrap);
 static double approx_exp2(struct Demand_S *const demand);
 static double approx_poly2(struct Demand_S *const demand);
+static void find_NS_surface_Ylm_bisect_CS(Physics_T *const phys);
+static double NS_surface_enthalpy_root_finder_eq(void *params,const double *const x);
+static double NS_surface_denthalpy_dr_root_finder(void *params,const double *const x,const unsigned dir);
+double star_NS_mass_shedding_indicator(Physics_T *const phys);
+int star_NS_find_star_surface(Physics_T *const phys);
+
 
 
 
