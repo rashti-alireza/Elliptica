@@ -19,10 +19,10 @@ struct NS_Euler_eq_const_RootFinder_S
   double NS_baryonic_mass;
 };
 
-void star_NS_idealfluid_gConf_find_Euler_const(Physics_T *const phys);
+int star_NS_idealfluid_gConf_find_Euler_const(Physics_T *const phys);
 double star_NS_baryonic_gConf_mass(Physics_T *const phys,const double Euler_C);
 void star_NS_idealfluid_gConf_add_fields(Grid_T *const grid);
-void star_NS_idealfluid_extrapolate_matter_fields(Physics_T *const phys);
+int star_NS_idealfluid_extrapolate_matter_fields(Physics_T *const phys);
 
 int 
 star_extrapolate
@@ -32,6 +32,9 @@ star_extrapolate
   const char *const method/* the method to be used for extrapolating */
   );
   
-  
+
+double star_NS_mass_shedding_indicator(Physics_T *const phys);
+int star_NS_find_star_surface(Physics_T *const phys);
+
 #endif
 
