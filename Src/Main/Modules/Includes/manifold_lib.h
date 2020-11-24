@@ -1,6 +1,9 @@
 #ifndef manifold_LIB_H
 #define manifold_LIB_H
 
+/* for now only two objects */
+#define NPARAMS_GRID_CHAR (2)
+
 /* forward declaration structures */
 struct FIELD_T;
 struct SOLVING_MAN_T;
@@ -280,7 +283,6 @@ typedef struct NEEDLE_T
 }Needle_T;
 
 /* characteristics info of grid */
-#define NPARAMS_GRID_CHAR (2) /* for now only two objects */
 typedef struct GRID_CHAR_T
 {
  Grid_T *grid;/* the new grid */
@@ -291,15 +293,15 @@ typedef struct GRID_CHAR_T
  {
   const char *obj;/* BH or NS */
   const char *dir;/* left or right (must be lower case) */
-  const double *relClm;/* Re(Clm) at Ylm expansion of surface function */
-  const double *imgClm;/* Im(Clm) at Ylm expansion of surface function */
+  double *relClm;/* Re(Clm) at Ylm expansion of surface function */
+  double *imgClm;/* Im(Clm) at Ylm expansion of surface function */
   unsigned lmax;/* lmax in Ylm expansion */
   double l,w,h;/* length(x), width(y) and hight(z) of the central cube */
   double r_min,r_max;/* min and max of surface function */
+  unsigned occupied:1;/* 1, if it occupied already, otherwise 0. */
  }params[NPARAMS_GRID_CHAR][1];
  
 }Grid_Char_T;
-#undef NPARAMS_GRID_CHAR
 
 double point_value(const unsigned i, const struct Collocation_s *const coll_s);
 void initialize_collocation_struct(const Patch_T *const patch,struct Collocation_s *const colloc,const unsigned dir);
