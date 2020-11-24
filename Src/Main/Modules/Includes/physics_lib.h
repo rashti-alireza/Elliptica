@@ -139,6 +139,11 @@ int physics(Physics_T *const phys,const cmd_T cmd,
             const char *const file, const int line);
 void free_physics(Physics_T *phys);
 
+const char *phys_return_correct_stype(Physics_T *const phys,
+                               const char *const stype);
+
+
+
 #endif
 
 
