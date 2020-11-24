@@ -78,6 +78,8 @@
 // NOTE: phys must be defined. */
 #define Ftype(s) phys_autoindex_stype(phys,s)
 
+/* physics function */
+#define Physics(phys,cmd) physics(phys,cmd,__FILE__,__LINE__)
 
 /* commands, DON'T change the numeration. */
 typedef enum CMD_T
