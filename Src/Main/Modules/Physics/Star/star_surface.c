@@ -210,7 +210,7 @@ static int fmain_f_df_ddf_CS(struct Extrap_S *const extrap)
      empty_field(field);
      field->v = alloc_double(patch->nn);
      
-     forall_ijk
+     FOR_ALL_ijk
      {
       Patch_T *patchp = 0;/* patch prime to be used for f,df,ddf */
       double th = 0,ph = 0;
