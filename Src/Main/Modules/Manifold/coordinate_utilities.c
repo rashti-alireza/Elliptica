@@ -732,7 +732,6 @@ collect_patches
   )
 {
   Patch_T **patches = 0;
-  char **reg = read_separated_items_in_string(region,',');
   unsigned np,p;
   
   /* init */
@@ -742,23 +741,15 @@ collect_patches
   FOR_ALL_PATCHES(p,grid)
   {
     Patch_T *patch = grid->patch[p];
-    unsigned i = 0;
-    
-    while (reg[i])
+    if (IsItCovering(patch,region))
     {
-      if (IsItCovering(patch,region))
-      {
-        patches = realloc(patches,(np+2)*sizeof(*patches));
-        IsNull(patches);
-        patches[np]   = patch;
-        patches[np+1] = 0;
-        ++np;
-      }
-    i++;
+      patches = realloc(patches,(np+2)*sizeof(*patches));
+      IsNull(patches);
+      patches[np]   = patch;
+      patches[np+1] = 0;
+      ++np;
     }
   }
-  
-  free_2d(reg);
   
   /* check if there is no such region */
   if (np == 0)
@@ -794,6 +785,7 @@ collect_patches
 // IsItCovering(patch,"outermost");     => outemost patch?
 // IsItCovering(patch,"NS_OB");         => NS_surface patch?
 // IsItCovering(patch,"NS2_OB");        => NS2_surface patch?
+// IsItCovering(patch,"NS1,NS2_OB");    => NS1 or NS2_surface patch?
 // IsItCovering(patch,"NS2_around_IB"); => patches cover NS2 surface from around patches
 */
 int 
@@ -804,8 +796,10 @@ IsItCovering
   )
 {
   Grid_T *const grid = patch->grid;
+  char **reg = read_separated_items_in_string(region,',');
   int ret = 0;  
   char s[999] = {'\0'};
+  unsigned i = 0;
   
   if (grid->kind == Grid_SplitCubedSpherical_BHNS ||
       grid->kind == Grid_SplitCubedSpherical_NSNS ||
@@ -814,9 +808,17 @@ IsItCovering
       grid->kind == Grid_SplitCubedSpherical_BH
      )
   {
-    sprintf(s,"(%s)",region);
-    if (strstr_i(patch->CoordSysInfo->region,s))
-      return 1;
+    i = 0;
+    while (reg[i])
+    {
+      sprintf(s,"(%s)",reg[i]);
+      if (strstr_i(patch->CoordSysInfo->region,s))
+      {
+        free_2d(reg);
+        return 1;
+      }
+      i++;
+    }
   }
   else
   {
