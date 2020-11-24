@@ -9,7 +9,7 @@
 #include "star_NS.h"
 
 /* find Euler equation constant to meet NS baryonic mass */
-void star_idealfluid_NS_gConf_find_Euler_const(Physics_T *const phys)
+int star_NS_idealfluid_gConf_find_Euler_const(Physics_T *const phys)
 {
   FUNC_TIC
   
@@ -58,6 +58,7 @@ void star_idealfluid_NS_gConf_find_Euler_const(Physics_T *const phys)
   free_root_finder(root);
   
   FUNC_TOC
+  return EXIT_SUCCESS;
 }
 
 /* root finder eqution for Euler equation constant */
@@ -68,7 +69,27 @@ static double Euler_eq_const_gConf_rootfinder_eq(void *params,const double *cons
   return star_NS_baryonic_gConf_mass(par->phys,x[0]) - par->NS_baryonic_mass;
 }
 
-
+/* extrapolate matter fields out NS */
+int star_NS_idealfluid_extrapolate_matter_fields(Physics_T *const phys)
+{
+  FUNC_TIC
+  
+  if(Pcmps("star_extrapolate_matter_fields","poly2"))
+  {
+    /* make phi, W => enthalpy */
+    const char *fields_name[] = {"phi","enthalpy",0};
+    star_extrapolate(phys,fields_name,"poly2");
+    phys->region = Ftype("NS_around");
+    star_W_spin_vector_idealfluid_update(phys);
+  }
+  else
+  {
+    Error0(NO_OPTION);
+  }
+  
+  FUNC_TOC
+  return EXIT_SUCCESS;
+}
 
 
 /* calculate W = Omega_NS x (r-C_NS) */
@@ -122,3 +143,4 @@ void W_spin_vector_idealfluid(Patch_T *const patch,const double Omega_NS[3],cons
   }
   
 }
+
