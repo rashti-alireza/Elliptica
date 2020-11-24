@@ -3,7 +3,7 @@
 // August 2019
 */
 
-#include "Tij_ifluid_cts_gConf_update.h"
+#include "Tij_NS_ifluid_cts_gConf_update.h"
 
 
 /* updating all matter related and their derivatives. */
