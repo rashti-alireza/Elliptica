@@ -115,6 +115,8 @@ typedef struct PHYSICS_T
 {
  Grid_T *grid;
  Grid_Char_T *grid_char;/* grid character when used for surface finder */
+ unsigned igc;/* index of grid_char for this physics. */
+ 
  cmd_T cmd;/* current command */
  const char *region;/* grid region you want to issue the command/ */
  
