@@ -48,6 +48,8 @@ struct Extrap_S
     char df[3][MAX_STR];/* df/dx */
     char ddf[6][MAX_STR];/* d^2f/dx^2 */
     double (*func_r0)(void *const params);/* function as we close to r0 */
+    unsigned did_add_df:1;/* 1 if automatically adds required df fields  , otherwise 0. */
+    unsigned did_add_ddf:1;/* 1 if automatically adds required ddf fields, otherwise 0. */
   }**fld;/* field info */
   double (*extrap)(struct Demand_S *const demand);/* function used for extrapolation (approximation) */
   int (*fmain)(struct Extrap_S *const extap);/* call this to extrapolate  */

@@ -164,11 +164,15 @@ static int fmain_f_df_ddf_CS(struct Extrap_S *const extrap)
       {
         int indxf = _Ind(extrap->fld[f]->df[ii]);
         if (indxf >= 0)
+        {
          make_coeffs_2d(patch->pool[indxf],0,1);
+        }
         else
-        Error0("This kind of extrapolate depends on "
-                "first and second order derivatives.\n"
-                "If there in not any, please use or add another option.");
+        {
+         extrap->fld[f]->did_add_df = 1;
+         Field_T *df = add_field(extrap->fld[f]->df[ii],0,patch,NO);
+         partial_derivative(df);
+        }
       }
       
       /* must have ddfield */
@@ -176,11 +180,15 @@ static int fmain_f_df_ddf_CS(struct Extrap_S *const extrap)
       {
         int indxf = _Ind(extrap->fld[f]->ddf[ii]);
         if (indxf >= 0)
+        {
           make_coeffs_2d(patch->pool[indxf],0,1);
+        }
         else
-         Error0("This kind of extrapolate depends on "
-                "first and second order derivatives.\n"
-                "If there in not any, please use or add another option.");
+        {
+         extrap->fld[f]->did_add_ddf = 1;
+         Field_T *ddf = add_field(extrap->fld[f]->ddf[ii],0,patch,NO);
+         partial_derivative(ddf);
+        }
       }
       
       ++f;
@@ -319,6 +327,35 @@ static int fmain_f_df_ddf_CS(struct Extrap_S *const extrap)
      ++f;
     }
   }
+  
+  /* remove automatically added fields */
+  for (p = 0; p < npi; p++)
+  {
+    Patch_T *patch = extrap->patches_in[p];
+    unsigned f = 0;
+
+    for (f = 0; f < nf; ++f)
+    {
+      int ii;
+      
+      if (extrap->fld[f]->did_add_df)
+      for (ii = 0; ii < 3; ++ii)
+      {
+         Field_T *df = patch->pool[Ind(extrap->fld[f]->df[ii])];
+         REMOVE_FIELD(df);
+      }
+      
+      if (extrap->fld[f]->did_add_ddf)
+      for (ii = 0; ii < 6; ++ii)
+      {
+        Field_T *ddf = patch->pool[Ind(extrap->fld[f]->ddf[ii])];
+        REMOVE_FIELD(ddf);
+      }
+      
+      ++f;
+    }
+  }
+  
   return EXIT_SUCCESS;
 }
 
