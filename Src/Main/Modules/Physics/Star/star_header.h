@@ -11,6 +11,7 @@
 #include "physics_lib.h"
 #include "fields_lib.h"
 #include "maths_equation_solvings_lib.h"
+#include "maths_spectral_methods_lib.h"
 
 /* root finder struc for Euler eq const */  
 struct NS_Euler_eq_const_RootFinder_S
@@ -18,6 +19,35 @@ struct NS_Euler_eq_const_RootFinder_S
   Physics_T *phys;
   double NS_baryonic_mass;
 };
+
+/* root finder structure for NS center */
+struct NC_Center_RootFinder_S
+{
+  Patch_T *patches;
+  unsigned Np;/* number of patches */
+  Root_Finder_T *root_finder;
+};
+
+/* root finder struc for force balance equation */  
+struct Force_Balance_RootFinder_S
+{
+  Patch_T *patch;
+  //Root_Finder_T *root_finder;
+  double dLnGamma;
+  double y_CM;
+  double x_CM;
+  double Vr;
+  double D;
+  double Omega_BHNS;
+  const double *X;
+  const double *V2CM;
+  unsigned find_y_CM: 1;
+  unsigned find_x_CM: 1;
+  unsigned find_Omega: 1;
+  int dir;/* direction of derivative */
+};
+
+
 
 int star_NS_idealfluid_gConf_find_Euler_const(Physics_T *const phys);
 double star_NS_baryonic_gConf_mass(Physics_T *const phys,const double Euler_C);
@@ -35,6 +65,9 @@ star_NS_extrapolate
 
 double star_NS_mass_shedding_indicator(Physics_T *const phys);
 int star_NS_find_star_surface(Physics_T *const phys);
+int star_NS_idealfluid_gConf_force_balance(Physics_T *const phys);
+double star_NS_idealfluid_gConf_dLnGamma_force_bal(Patch_T *const patch,const double *const NS_centerX,const int dir);
+double star_NS_idealfluid_gConf_root_force_bal(void *params,const double *const x);
 
 #endif
 
