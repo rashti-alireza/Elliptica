@@ -835,10 +835,22 @@ Grid_Char_T *init_grid_char(Grid_T *const last_grid)
   return g;
 }
 
-/* note: entries like relClm or imgClm etc 
-// are assumed to be freed separately. */
+/* free all entries of Grid_Char_T */
 void free_grid_char(Grid_Char_T *g)
 {
+  unsigned i;
+  
+  if (!g)
+    return;
+  
+  for (i = 0; i < NPARAMS_GRID_CHAR; ++i)
+  {
+    if (g->params[i]->occupied)
+    {
+    _free(g->params[i]->relClm);
+    _free(g->params[i]->imgClm);
+    }
+  }
   _free(g);
 }
 
