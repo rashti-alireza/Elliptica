@@ -18,9 +18,11 @@ init_physics
 
 void free_physics(Physics_T *obj);
 static void set_phys_default_region(Physics_T *const phys);
-const char *phys_return_correct_stype(Physics_T *const phys,
+const char *phys_autoindex_stype(Physics_T *const phys,
                                const char *const stype);
-                              
+
+
+
 
 
 

@@ -311,218 +311,34 @@ static void set_phys_default_region(Physics_T *const phys)
 // this function gets a prototype and with respect to the given
 // physics adjust the correct stype. eg:
 // if phys->type = NS2 => 
-// phy_return_correct_stype(phys,"NS_around") = "NS2_around". */
-const char *phys_return_correct_stype(Physics_T *const phys,
+// phys_autoindex_stype(phys,"NS,NS_around") = "NS2,NS2_around". 
+// NOTE: it's not very limited, please see the if's in the function.
+// NOTE: not thread safe */
+const char *phys_autoindex_stype(Physics_T *const phys,
                                const char *const stype)
 {
-  if (strcmp_i(stype,"NS"))
-  {
-    if (phys->type == NS)
-      return "NS";
-    else if (phys->type == NS1)
-      return "NS1";
-    else if (phys->type == NS2)
-      return "NS2";
-    else
-      Error0(NO_OPTION);
-    
-  }
-  else if (strcmp_i(stype,"NS_around"))
-  {
-    if (phys->type == NS)
-      return "NS_around";
-    else if (phys->type == NS1)
-      return "NS1_around";
-    else if (phys->type == NS2)
-      return "NS2_around";
-    else
-      Error0(NO_OPTION);
-    
-  }
-  else if (strcmp_i(stype,"NS_around_IB"))
-  {
-    if (phys->type == NS)
-      return "NS_around_IB";
-    else if (phys->type == NS1)
-      return "NS1_around_IB";
-    else if (phys->type == NS2)
-      return "NS2_around_IB";
-    else
-      Error0(NO_OPTION);
-  }
-  else if (strcmp_i(stype,"NS_around_OB"))
-  {
-    if (phys->type == NS)
-      return "NS_around_OB";
-    else if (phys->type == NS1)
-      return "NS1_around_OB";
-    else if (phys->type == NS2)
-      return "NS2_around_OB";
-    else
-      Error0(NO_OPTION);
-  }
-  else if (strcmp_i(stype,"BH"))
-  {
-    if (phys->type == BH)
-      return "BH";
-    else if (phys->type == BH1)
-      return "BH1";
-    else if (phys->type == BH2)
-      return "BH2";
-    else
-      Error0(NO_OPTION);
-    
-  }
-  else if (strcmp_i(stype,"BH_around"))
-  {
-    if (phys->type == BH)
-      return "BH_around";
-    else if (phys->type == BH1)
-      return "BH1_around";
-    else if (phys->type == BH2)
-      return "BH2_around";
-    else
-      Error0(NO_OPTION);
-    
-  }
-  else if (strcmp_i(stype,"BH_around_IB"))
-  {
-    if (phys->type == BH)
-      return "BH_around_IB";
-    else if (phys->type == BH1)
-      return "BH1_around_IB";
-    else if (phys->type == BH2)
-      return "BH2_around_IB";
-    else
-      Error0(NO_OPTION);
-  }
-  else if (strcmp_i(stype,"BH_around_OB"))
-  {
-    if (phys->type == BH)
-      return "BH_around_OB";
-    else if (phys->type == BH1)
-      return "BH1_around_OB";
-    else if (phys->type == BH2)
-      return "BH2_around_OB";
-    else
-      Error0(NO_OPTION);
-  }
-  else if (strcmp_i(stype,"NS1"))
-  {
-    if (phys->type == NS1)
-      return "NS1";
-    else
-      Error0("Wrong stype!");
-  }
-  else if (strcmp_i(stype,"NS2"))
-  {
-    if (phys->type == NS2)
-      return "NS2";
-    else
-      Error0("Wrong stype!");
-  }
-  else if (strcmp_i(stype,"NS1_around"))
-  {
-    if (phys->type == NS1)
-      return "NS1_around";
-    else
-      Error0("Wrong stype!");
-  }
-  else if (strcmp_i(stype,"NS2_around"))
-  {
-    if (phys->type == NS2)
-      return "NS2_around";
-    else
-      Error0("Wrong stype!");
-  }
-  else if (strcmp_i(stype,"NS1_around_IB"))
-  {
-    if (phys->type == NS1)
-      return "NS1_around_IB";
-    else
-      Error0("Wrong stype!");
-  }
-  else if (strcmp_i(stype,"NS2_around_IB"))
-  {
-    if (phys->type == NS2)
-      return "NS2_around_IB";
-    else
-      Error0("Wrong stype!");
-  }
-  else if (strcmp_i(stype,"NS1_around_OB"))
-  {
-    if (phys->type == NS1)
-      return "NS1_around_OB";
-    else
-      Error0("Wrong stype!");
-  }
-  else if (strcmp_i(stype,"NS2_around_OB"))
-  {
-    if (phys->type == NS2)
-      return "NS2_around_OB";
-    else
-      Error0("Wrong stype!");
-  }
+  /* some checks: */
+  /* if there is no NS or BH */
+  if (!strstr(stype,"NS") && !strstr(stype,"BH"))
+      Error1("Argument (%s) is not supported!",stype);
+  /* if two different object asked, right now this is not supported! */
+  if (strstr(stype,"NS") && strstr(stype,"BH"))
+      Error1("Two different objects (%s) are not supported!",stype);
+  if (strstr(stype,"BH1") && strstr(stype,"BH2"))
+      Error1("Two different objects (%s) are not supported!",stype);
+  if (strstr(stype,"NS1") && strstr(stype,"NS2"))
+      Error1("Two different objects (%s) are not supported!",stype);
   
-  else if (strcmp_i(stype,"BH1"))
-  {
-    if (phys->type == BH1)
-      return "BH1";
-    else
-      Error0("Wrong stype!");
-  }
-  else if (strcmp_i(stype,"BH2"))
-  {
-    if (phys->type == BH2)
-      return "BH2";
-    else
-      Error0("Wrong stype!");
-  }
-  else if (strcmp_i(stype,"BH1_around"))
-  {
-    if (phys->type == BH1)
-      return "BH1_around";
-    else
-      Error0("Wrong stype!");
-  }
-  else if (strcmp_i(stype,"BH2_around"))
-  {
-    if (phys->type == BH2)
-      return "BH2_around";
-    else
-      Error0("Wrong stype!");
-  }
-  else if (strcmp_i(stype,"BH1_around_IB"))
-  {
-    if (phys->type == BH1)
-      return "BH1_around_IB";
-    else
-      Error0("Wrong stype!");
-  }
-  else if (strcmp_i(stype,"BH2_around_IB"))
-  {
-    if (phys->type == BH2)
-      return "BH2_around_IB";
-    else
-      Error0("Wrong stype!");
-  }
-  else if (strcmp_i(stype,"BH1_around_OB"))
-  {
-    if (phys->type == BH1)
-      return "BH1_around_OB";
-    else
-      Error0("Wrong stype!");
-  }
-  else if (strcmp_i(stype,"BH2_around_OB"))
-  {
-    if (phys->type == BH2)
-      return "BH2_around_OB";
-    else
-      Error0("Wrong stype!");
-  }
-  else
-    Error1("No replacement for %s\n",stype);
+  /* if indices 1 or 2 is already taken into account 
+  // or the object doesn't have any index, don't change anything. */
+  if (phys->type == NS  || phys->type == BH ||
+      strchr(stype,'1') || strchr(stype,'2'))
+    return stype;
   
-  return 0;
+  /* having made sure everything is find now do a simple autoindex
+  // it replace NS (BH) with NSi (BHi) in which i is the correct index. */
+  replace_str(stype,"(NS|BH)",phys->stype,phys->stemp);
+  
+  return phys->stemp;
 }
 
