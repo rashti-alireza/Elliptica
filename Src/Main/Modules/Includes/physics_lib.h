@@ -7,12 +7,12 @@
 
 /* if the given patch DOES cover the region. 
 // this is generally used in a loop over all patches */ 
-#define if_cover(patch,phys)     \
+#define IF_cover(patch,phys)     \
  if(IsItCovering(patch,phys->region))
  
 /* if the given patch DOES NOT cover the region. 
 // this is generally used in a loop over all patches */ 
-#define if_not_cover(patch,phys) \
+#define IF_not_cover(patch,phys) \
  if(!IsItCovering(patch,phys->region))
 
 /* get double parameter for the given physics. ex: 
