@@ -756,7 +756,8 @@ static void characteristics_BBN_CS_grid_eg(Grid_T *const grid)
 static void characteristics_SCS_eg(Grid_T *const grid)
 {
   /* calculate the characteristics of this grid */
-  Grid_Char_T grid_char[1] = {0};/* grid characteristics */
+  Grid_Char_T *grid_char = init_grid_char(0);
+  
   grid->kind = set_grid_kind(Pgets("grid_kind"));
   
   if (Pcmps("grid_kind","SplitCubedSpherical(BH+NS)"))
@@ -816,6 +817,8 @@ static void characteristics_SCS_eg(Grid_T *const grid)
     grid_char->params[ns]->l      = box_size_ns;
     grid_char->params[ns]->w      = box_size_ns;
     grid_char->params[ns]->h      = box_size_ns;
+    grid_char->params[ns]->occupied = 1;
+    
     /* BH */
     grid_char->params[bh]->obj    = "BH";
     grid_char->params[bh]->dir    = Pgets("grid_set_BH");
@@ -827,6 +830,7 @@ static void characteristics_SCS_eg(Grid_T *const grid)
     grid_char->params[bh]->l      = box_size_bh;
     grid_char->params[bh]->w      = box_size_bh;
     grid_char->params[bh]->h      = box_size_bh;
+    grid_char->params[bh]->occupied = 1;
     
     /* set number of splits, points in each directions,
     // surface functions etc. */
@@ -835,10 +839,7 @@ static void characteristics_SCS_eg(Grid_T *const grid)
     /* free */
     _free(rns);
     _free(rbh);
-    _free(reClm_rns);
-    _free(imClm_rns);
-    _free(reClm_rbh);
-    _free(imClm_rbh);
+    free_grid_char(grid_char);
   }
   else if (Pcmps("grid_kind","SplitCubedSpherical(NS+NS)"))
   {
@@ -894,6 +895,8 @@ static void characteristics_SCS_eg(Grid_T *const grid)
     grid_char->params[ns1]->l      = box_size_ns1;
     grid_char->params[ns1]->w      = box_size_ns1;
     grid_char->params[ns1]->h      = box_size_ns1;
+    grid_char->params[ns1]->occupied = 1;
+
     /* NS */
     grid_char->params[ns2]->obj    = "NS2";
     grid_char->params[ns2]->dir    = Pgets("grid_set_NS2");
@@ -905,7 +908,8 @@ static void characteristics_SCS_eg(Grid_T *const grid)
     grid_char->params[ns2]->l      = box_size_ns2;
     grid_char->params[ns2]->w      = box_size_ns2;
     grid_char->params[ns2]->h      = box_size_ns2;
-    
+    grid_char->params[ns2]->occupied = 1;
+
     /* set number of splits, points in each directions,
     // surface functions etc. */
     set_params_split_CS(grid_char);
@@ -913,10 +917,7 @@ static void characteristics_SCS_eg(Grid_T *const grid)
     /* free */
     _free(rns1);
     _free(rns2);
-    _free(reClm_rns1);
-    _free(imClm_rns1);
-    _free(reClm_rns2);
-    _free(imClm_rns2);
+    free_grid_char(grid_char);
   }
   else if (Pcmps("grid_kind","SplitCubedSpherical(BH+BH)"))
   {
@@ -965,7 +966,7 @@ static void characteristics_SCS_eg(Grid_T *const grid)
     /* set char of grid */
     grid_char->grid = grid;
     grid_char->S    = C;
-    /* NS */
+    /* BH */
     grid_char->params[bh1]->obj    = "BH1";
     grid_char->params[bh1]->dir    = Pgets("grid_set_BH1");
     grid_char->params[bh1]->relClm = reClm_rbh1;
@@ -976,6 +977,8 @@ static void characteristics_SCS_eg(Grid_T *const grid)
     grid_char->params[bh1]->l      = box_size_bh1;
     grid_char->params[bh1]->w      = box_size_bh1;
     grid_char->params[bh1]->h      = box_size_bh1;
+    grid_char->params[bh1]->occupied = 1;
+
     /* BH */
     grid_char->params[bh2]->obj    = "BH2";
     grid_char->params[bh2]->dir    = Pgets("grid_set_BH2");
@@ -987,7 +990,8 @@ static void characteristics_SCS_eg(Grid_T *const grid)
     grid_char->params[bh2]->l      = box_size_bh2;
     grid_char->params[bh2]->w      = box_size_bh2;
     grid_char->params[bh2]->h      = box_size_bh2;
-    
+    grid_char->params[bh2]->occupied = 1;
+
     /* set number of splits, points in each directions,
     // surface functions etc. */
     set_params_split_CS(grid_char);
@@ -995,10 +999,7 @@ static void characteristics_SCS_eg(Grid_T *const grid)
     /* free */
     _free(rbh1);
     _free(rbh2);
-    _free(reClm_rbh1);
-    _free(imClm_rbh1);
-    _free(reClm_rbh2);
-    _free(imClm_rbh2);
+    free_grid_char(grid_char);
   }
   else if (Pcmps("grid_kind","SplitCubedSpherical(BH)"))
   {
@@ -1047,15 +1048,15 @@ static void characteristics_SCS_eg(Grid_T *const grid)
     grid_char->params[bh]->l      = box_size_bh;
     grid_char->params[bh]->w      = box_size_bh;
     grid_char->params[bh]->h      = box_size_bh;
-    
+    grid_char->params[bh]->occupied = 1;
+
     /* set number of splits, points in each directions,
     // surface functions etc. */
     set_params_split_CS(grid_char);
     
     /* free */
     _free(rbh);
-    _free(reClm_rbh);
-    _free(imClm_rbh);
+    free_grid_char(grid_char);
   }
   else if (Pcmps("grid_kind","SplitCubedSpherical(NS)"))
   {
@@ -1102,15 +1103,15 @@ static void characteristics_SCS_eg(Grid_T *const grid)
     grid_char->params[ns]->l      = box_size_ns;
     grid_char->params[ns]->w      = box_size_ns;
     grid_char->params[ns]->h      = box_size_ns;
-    
+    grid_char->params[ns]->occupied = 1;
+
     /* set number of splits, points in each directions,
     // surface functions etc. */
     set_params_split_CS(grid_char);
     
     /* free */
     _free(rns);
-    _free(reClm_rns);
-    _free(imClm_rns);
+    free_grid_char(grid_char);
   }
   else
   {
