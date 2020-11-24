@@ -19,7 +19,7 @@ C_macro  = READ_v(name);
 `  {`
 `    Patch_T *patch = phys->grid->patch[p];`
 
-`    if_not_cover(patch,phys) continue;`
+`    IF_not_cover(patch,phys) continue;`
 ``
 `    ADD_AND_ALLOC_FIELD(baryonic_mass_integrand)`
 `    DECLARE_FIELD(baryonic_mass_integrand)`

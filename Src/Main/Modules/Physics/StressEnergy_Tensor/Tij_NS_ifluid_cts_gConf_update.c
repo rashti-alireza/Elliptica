@@ -27,7 +27,7 @@ void Tij_NS_idealfluid_CTS_gConf_update(Physics_T *const phys)
   {
     Patch_T *patch = grid->patch[p];
     
-    if_not_cover(patch,phys)  continue;
+    IF_not_cover(patch,phys)  continue;
     
     RELAX_UPDATE_FUNC(Tij_NS_IF_CTS_gConf_enthalpy(patch,Euler_const),
                       patch,enthalpy,W);

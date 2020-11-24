@@ -14,7 +14,7 @@ double star_NS_baryonic_gConf_mass(Physics_T *const phys,const double Euler_C)
   FOR_ALL_PATCHES(p,phys->grid)
   {
     Patch_T *patch = phys->grid->patch[p];
-    if_not_cover(patch,phys) continue;
+    IF_not_cover(patch,phys) continue;
 
     ADD_AND_ALLOC_FIELD(baryonic_mass_integrand)
     DECLARE_FIELD(baryonic_mass_integrand)

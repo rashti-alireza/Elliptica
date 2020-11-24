@@ -115,7 +115,7 @@ void star_W_spin_vector_idealfluid_update(Physics_T *const phys)
   {
     Patch_T *patch = grid->patch[p];
     
-    if_not_cover(patch,phys) continue;
+    IF_not_cover(patch,phys) continue;
     
     W_spin_vector_idealfluid(patch,Omega_NS,C_NS);
     
