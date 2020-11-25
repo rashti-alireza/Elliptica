@@ -882,7 +882,7 @@ double star_NS_mass_shedding_indicator(Physics_T *const phys)
     double N[3] = {0},X[3] = {0},x[3] = {0};
     double r,theta,phi;
     char regex[99] = {'\0'};
-    const char *side;
+    const char *side = 0;
     unsigned Np;
     
     /* opposite */
