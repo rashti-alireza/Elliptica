@@ -431,13 +431,14 @@ static void force_balance_eq_root_finders(Physics_T *const phys,const int dir, c
   
   Root_Finder_T *root = init_root_finder(1);
   root->description   = s;
-  root->verbose       = Geti("RootFinder_verbose");
   root->type          = Gets("RootFinder_Method");
   root->tolerance     = Getd("RootFinder_Tolerance");
   root->MaxIter       = (unsigned)Geti("RootFinder_Iteration");
   root->x_gss         = guess;
   root->params        = params;
   root->f[0]          = star_NS_idealfluid_gConf_root_force_bal;
+  if (strstr_i(Gets("RootFinder_verbose"),"yes"))
+    root->verbose = 1;
   
   plan_root_finder(root);
   

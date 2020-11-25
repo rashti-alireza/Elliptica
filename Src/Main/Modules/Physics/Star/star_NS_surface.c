@@ -538,7 +538,9 @@ static void find_NS_surface_Ylm_bisect_CS(Physics_T *const phys)
   root->MaxIter   = (unsigned)Geti("RootFinder_Iteration");
   root->params    = par;
   root->f[0]      = NS_surface_enthalpy_root_finder_eq;
-  root->verbose   = Geti("RootFinder_verbose");
+  if (strstr_i(Gets("RootFinder_verbose"),"yes"))
+    root->verbose = 1;
+    
   plan_root_finder(root);
   
   /* parameters for root finder */
