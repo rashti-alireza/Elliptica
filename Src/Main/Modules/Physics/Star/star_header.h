@@ -38,7 +38,7 @@ struct Force_Balance_RootFinder_S
   double x_CM;
   double Vr;
   double D;
-  double Omega_BHNS;
+  double Omega;
   const double *X;
   const double *V2CM;
   unsigned find_y_CM: 1;

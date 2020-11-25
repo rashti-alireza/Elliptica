@@ -337,7 +337,7 @@ static void force_balance_eq_root_finders(Physics_T *const phys,const int dir, c
                                Getd("center_y"),
                                Getd("center_z")};
   const double RESIDUAL     = sqrt(Getd("RootFinder_Tolerance"));
-  const double Omega_BHNS   = sysGetd("angular_velocity");
+  const double Omega_sys   = sysGetd("angular_velocity");
   const double x_CM         = sysGetd("x_CM");
   const double y_CM         = sysGetd("y_CM");
   const double Scale        = 0.1;/* scale the weight */
@@ -377,13 +377,13 @@ static void force_balance_eq_root_finders(Physics_T *const phys,const int dir, c
     params->find_Omega = 1;
     params->x_CM       = x_CM;
     params->y_CM       = y_CM;
-    guess[0]           = Omega_BHNS;
-    old_par            = Omega_BHNS;
+    guess[0]           = Omega_sys;
+    old_par            = Omega_sys;
   }
   else if (strcmp_i("x_CM",par))
   {
     params->find_x_CM  = 1;
-    params->Omega_BHNS = Omega_BHNS;
+    params->Omega      = Omega_sys;
     params->y_CM       = y_CM;
     guess[0]           = x_CM;
     old_par            = x_CM;
@@ -391,7 +391,7 @@ static void force_balance_eq_root_finders(Physics_T *const phys,const int dir, c
   else if (strcmp_i("y_CM",par))
   {
     params->find_y_CM  = 1;
-    params->Omega_BHNS = Omega_BHNS;
+    params->Omega      = Omega_sys;
     params->x_CM       = x_CM;
     guess[0]           = y_CM;
     old_par            = y_CM;
@@ -436,8 +436,7 @@ static void force_balance_eq_root_finders(Physics_T *const phys,const int dir, c
   root->MaxIter       = (unsigned)Geti("RootFinder_Max_Number_of_Iteration");
   root->x_gss         = guess;
   root->params        = params;
-  
-  Error0("WHAT TO DO for B?");//root->f[0]          = force_balance_root_finder_eq;
+  root->f[0]          = star_NS_idealfluid_gConf_root_force_bal;
   
   plan_root_finder(root);
   
