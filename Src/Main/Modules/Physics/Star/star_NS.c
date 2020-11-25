@@ -337,7 +337,7 @@ static void force_balance_eq_root_finders(Physics_T *const phys,const int dir, c
                                Getd("center_y"),
                                Getd("center_z")};
   const double RESIDUAL     = sqrt(Getd("RootFinder_Tolerance"));
-  const double Omega_sys   = sysGetd("angular_velocity");
+  const double Omega_sys    = sysGetd("angular_velocity");
   const double x_CM         = sysGetd("x_CM");
   const double y_CM         = sysGetd("y_CM");
   const double Scale        = 0.1;/* scale the weight */
@@ -349,7 +349,7 @@ static void force_balance_eq_root_finders(Physics_T *const phys,const int dir, c
   struct Force_Balance_RootFinder_S params[1] = {0};
   Patch_T *patch    = 0;
   Patch_T **patches = 0;
-  char desc[1000] = {'\0'};
+  char s[1000] = {'\0'};
   unsigned Np;
   char reg[99];
   
@@ -426,11 +426,12 @@ static void force_balance_eq_root_finders(Physics_T *const phys,const int dir, c
   else
     Error0(NO_OPTION);
   
-  sprintf(desc,"Solving Force Balance Eq. for '%s' at direction 'x^%d'",par,dir);
+  sprintf(s,"Solving Force Balance Eq. "
+               "for '%s' at direction 'x^%d'",par,dir);
   
   Root_Finder_T *root = init_root_finder(1);
-  root->description   = desc;
-  root->verbose       = 1;
+  root->description   = s;
+  root->verbose       = Geti("RootFinder_verbose");
   root->type          = Gets("RootFinder_Method");
   root->tolerance     = Getd("RootFinder_Tolerance");
   root->MaxIter       = (unsigned)Geti("RootFinder_Max_Number_of_Iteration");
@@ -454,10 +455,12 @@ static void force_balance_eq_root_finders(Physics_T *const phys,const int dir, c
     W2  = 1-W1;
   }
   new_par[0] = W1*new_par[0]+W2*old_par;
-  Psetd(par,new_par[0]);
+  
+  /* update parameter */
+  sprintf(s,"%s_%s",phys->ssys,par);
+  Psetd(s,new_par[0]);
   
   /* since B1 has been changed let's update the pertinent fields */
-  
   Error0("WHAT TO DO for B?");//update_B1_dB1_Beta_dBete_Aij_dAij(grid);
   
   free_root_finder(root);
