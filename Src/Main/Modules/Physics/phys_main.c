@@ -28,7 +28,7 @@ int physics(Physics_T *const phys,const cmd_T cmd,
   
   switch (cmd)
   {
-    case STRESS_ENERGY:
+    case UPDATE_STRESS_ENERGY:
       ret = Tij_main(phys);
     break;
     case EULER_CONST:
@@ -82,7 +82,7 @@ int physics(Physics_T *const phys,const cmd_T cmd,
   //UNUSED(phys);
   //switch (cmd)
   //{
-    //case STRESS_ENERGY:
+    //case UPDATE_STRESS_ENERGY:
       //ret = Tij_mount(phys);
     //break;
     /*case EULER_CONST:

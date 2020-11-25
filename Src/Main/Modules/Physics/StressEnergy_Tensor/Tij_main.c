@@ -19,7 +19,7 @@ int Tij_main(Physics_T *const phys)
     {
       switch (phys->cmd)
       {
-        case STRESS_ENERGY:
+        case UPDATE_STRESS_ENERGY:
           Tij_NS_idealfluid_CTS_gConf_update(phys);
         break;
         default:
