@@ -30,7 +30,7 @@ int star_main(Physics_T *const phys)
         case FIND_SURFACE:
           ret = star_NS_find_star_surface(phys);
         break;
-        case FORCE_BALANCE:
+        case TUNE_FORCE_BALANCE:
           ret = star_NS_idealfluid_gConf_force_balance(phys);
         break;
         
