@@ -463,6 +463,7 @@ static void force_balance_eq_root_finders(Physics_T *const phys,const int dir, c
   
   /* since B1 has been changed let's update the pertinent fields */
   Error0("WHAT TO DO for B?");//update_B1_dB1_Beta_dBete_Aij_dAij(grid);
+  // ??Physics(phys,UPDATE_SHIFT_GAUGE);
   
   free_root_finder(root);
   free(new_par);
