@@ -21,7 +21,7 @@ int star_main(Physics_T *const phys)
     {
       switch (phys->cmd)
       {
-        case EULER_CONST:
+        case TUNE_EULER_CONST:
           ret = star_NS_idealfluid_gConf_find_Euler_const(phys);
         break;
         case EXTRAPOLATE:

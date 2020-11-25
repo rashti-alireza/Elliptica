@@ -31,7 +31,7 @@ int physics(Physics_T *const phys,const cmd_T cmd,
     case UPDATE_STRESS_ENERGY:
       ret = Tij_main(phys);
     break;
-    case EULER_CONST:
+    case TUNE_EULER_CONST:
       ret = star_main(phys);
     break;
     case FIND_SURFACE:
@@ -85,7 +85,7 @@ int physics(Physics_T *const phys,const cmd_T cmd,
     //case UPDATE_STRESS_ENERGY:
       //ret = Tij_mount(phys);
     //break;
-    /*case EULER_CONST:
+    /*case TUNE_EULER_CONST:
       ret = update_Euler_constant(phys);
     break;
     case FORCE_BALANCE:
