@@ -239,7 +239,7 @@ static void write_fields(const Grid_T *const grid)
     count_nfld = 0;
     for (f = 0; f < patch->nfld; ++f)
     {
-      Field_T *field = patch->pool[f];
+      Field_T *field = patch->fields[f];
       if (DoSaveField(field))
         count_nfld++;
     }
@@ -247,7 +247,7 @@ static void write_fields(const Grid_T *const grid)
     
     for (f = 0; f < patch->nfld; ++f)
     {
-      Field_T *field = patch->pool[f];
+      Field_T *field = patch->fields[f];
       if (DoSaveField(field))
       {
         FWriteP_bin(field->name,strlen(field->name)+1);
@@ -801,7 +801,7 @@ static void read_fields(struct checkpoint_header *const alloc_info,FILE *const f
       FReadP_bin(v);
       //FReadP_bin(attr);
       
-      field = patch->pool[Ind(name)];
+      field = patch->fields[Ind(name)];
       _free(name);
       field->v = v;
       v = 0;

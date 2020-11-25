@@ -67,7 +67,7 @@ double *partial_derivative(struct FIELD_T *const dfield)
   }
   
   /* field */
-  field = patch->pool[Ind(stem)];
+  field = patch->fields[Ind(stem)];
   if(!field->v)
   {
     Error1("No field values for '%s'",field->name);

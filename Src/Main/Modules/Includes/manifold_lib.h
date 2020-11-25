@@ -233,11 +233,11 @@ typedef struct PATCH_T
   Node_T **node;/* node info */
   Interface_T **interface;/* interface info  */
   JacobianTrans_T *JacobianT;/* Jacobian transformation between the coords */
-  struct FIELD_T **pool;/* pool of fields, 
-                 // notation: pool[Ind("Phi_f")] refers 
+  struct FIELD_T **fields;/* all fields for this patch, 
+                 // notation: fields[Ind("Phi_f")] refers 
                  // to field phi. note: Ind is macro.
                  // one can access to values of field on this 
-                 // patch like pool[Ind("phi_f")]->v */
+                 // patch like fields[Ind("phi_f")]->v */
   struct SOLVING_MAN_T *solving_man;/* solving management */
   unsigned innerB:1;/* if this patch has inner boundary 1 otherwise 0 */
   unsigned outerB:1;/* if this patch has outer boundary 1 otherwise 0 */

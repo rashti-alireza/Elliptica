@@ -57,27 +57,27 @@
 #define DEF_RELATIVE_r  double r=sqrt(Pow2(x)+Pow2(y)+Pow2(z));
 
 /* variables and fields macors */
-#define ADD_AND_ALLOC_FIELD(xNAME)     add_field(#xNAME,0,patch,YES);/* add field to patch->pool and alloc memory */
-#define ADD_FIELD(xNAME)               add_field(#xNAME,0,patch,NO);/* add field to patch->pool BUT not alloc memory */
+#define ADD_AND_ALLOC_FIELD(xNAME)     add_field(#xNAME,0,patch,YES);/* add field to patch->fields and alloc memory */
+#define ADD_FIELD(xNAME)               add_field(#xNAME,0,patch,NO);/* add field to patch->fields BUT not alloc memory */
 #define REMOVE_FIELD(xNAME)            remove_field(xNAME);/* remove the field utterly */
-#define DECLARE_FIELD(xNAME)           Field_T *const xNAME = patch->pool[Ind(#xNAME)];/* access to the whole field */
+#define DECLARE_FIELD(xNAME)           Field_T *const xNAME = patch->fields[Ind(#xNAME)];/* access to the whole field */
 #define DECLARE_AND_EMPTY_FIELD(xNAME) DECLARE_FIELD(xNAME)/* declare field */\
                                        empty_field(xNAME);/* free v,v2,v3 and info of field */
                                        
 /* access to the memory values to modify */
 #define WRITE_v(xNAME)  const int _field_index_of_##xNAME = Ind(#xNAME);\
-                        free_coeffs(patch->pool[_field_index_of_##xNAME]);\
-                        double *const xNAME = patch->pool[_field_index_of_##xNAME]->v;
+                        free_coeffs(patch->fields[_field_index_of_##xNAME]);\
+                        double *const xNAME = patch->fields[_field_index_of_##xNAME]->v;
                         
 /* access to the memory values READ ONLY */
-#define READ_v(xNAME)   const double *const xNAME = patch->pool[Ind(#xNAME)]->v;
+#define READ_v(xNAME)   const double *const xNAME = patch->fields[Ind(#xNAME)]->v;
 
 /* it frees v,v2,info of field and alloc memory for v */
 #define REALLOC_v_WRITE_v(xNAME)   const int _field_index_of_##xNAME = Ind(#xNAME);\
-                                   Field_T *const _F_##xNAME         = patch->pool[_field_index_of_##xNAME];\
+                                   Field_T *const _F_##xNAME         = patch->fields[_field_index_of_##xNAME];\
                                    empty_field(_F_##xNAME);\
                                    _F_##xNAME->v                     = alloc_double(patch->nn);\
-                                   double *const xNAME               = patch->pool[_field_index_of_##xNAME]->v;
+                                   double *const xNAME               = patch->fields[_field_index_of_##xNAME]->v;
 
 /* access to the memory values READ ONLY and unuse to avoid gcc warning */
 #define READ_v_UNUSED(xNAME)  READ_v(xNAME)\
@@ -85,7 +85,7 @@
 
 /* take partial derivatives, 
 // NOTE: no semicolon at the end to be more flexible */
-#define dField_di(xNAME) partial_derivative(patch->pool[Ind(#xNAME)])
+#define dField_di(xNAME) partial_derivative(patch->fields[Ind(#xNAME)])
 
 /* it compactifies the prepration of Jacobian of derivatives */
 #define JACOBIAN_DERIVATIVE(xNAME) const char *types_##xNAME[] = {#xNAME,0};\
@@ -164,7 +164,7 @@
  double w2_##fld = 1.-(w);/* weight */\
  unsigned ijk__##fld;/* dummy index */\
  /* find field and take care of values */\
- Field_T *const new_field__##fld = patch->pool[Ind(#fld)];\
+ Field_T *const new_field__##fld = patch->fields[Ind(#fld)];\
  free_coeffs(new_field__##fld);\
  /* if we can relax update */\
  if (new_field__##fld->v)\

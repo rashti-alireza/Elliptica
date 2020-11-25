@@ -8,7 +8,7 @@
 #define PR_FORMAT "(p%u,d%u,c%d,b%d)"
 
 /* add field with the specified name and attribute to
-// the pool in the given patch.
+// the fields in the given patch.
 // if alloc_flg == YES, it also allocates memroy for v on the patch.
 // note: if attribute is null, the field attribute is (3dim).
 // note: one can simulate 2-d fields by replicating the value of
@@ -51,17 +51,17 @@ Field_T *add_field(const char *const name,const char *attribute,Patch_T *const p
       IsNull(fld->v);
     }
     
-    patch->pool = 
-      realloc(patch->pool,(patch->nfld+1)*sizeof(*patch->pool));
-    IsNull(patch->pool);
-    patch->pool[patch->nfld] = fld;
+    patch->fields = 
+      realloc(patch->fields,(patch->nfld+1)*sizeof(*patch->fields));
+    IsNull(patch->fields);
+    patch->fields[patch->nfld] = fld;
     ++patch->nfld;
   }
   
   return fld;
 }
 
-/* remove the given field from the pool and then shrink the pool.
+/* remove the given field from the fields and then shrink the fields.
 // NOTE: THE INDEX OF VARIABLES ARE DYNAMIC,
 // SO IT IS UNSAFE TO SAVE AN INDEX AND USED IT LATER. ONLY THE VALUES AND
 // POINTER TO VALUES ARE STATIC AND SAFE TO SAVE.
@@ -78,13 +78,13 @@ void remove_field(Field_T *f)
   if (remove_ind < 0) 
     return;
   
-  Field_T *remove_fld = patch->pool[remove_ind];
-  Field_T *last_fld   = patch->pool[patch->nfld-1];
-  patch->pool[remove_ind] = last_fld;
+  Field_T *remove_fld = patch->fields[remove_ind];
+  Field_T *last_fld   = patch->fields[patch->nfld-1];
+  patch->fields[remove_ind] = last_fld;
  
   free_field(remove_fld);
-  patch->pool = realloc(patch->pool,(patch->nfld)*sizeof(*patch->pool));
-  IsNull(patch->pool);
+  patch->fields = realloc(patch->fields,(patch->nfld)*sizeof(*patch->fields));
+  IsNull(patch->fields);
   
   --patch->nfld;
 }
@@ -121,23 +121,23 @@ void add_attribute(Field_T *const fld,const char *const attribute)
   
 }
 
-/* given name and patch find the index of a field in the pool.
-// ->return value: index of field in the pool. INT_MIN if doesn't exist. */
+/* given name and patch find the index of a field in the fields.
+// ->return value: index of field in the fields. INT_MIN if doesn't exist. */
 int LookUpField(const char *const name,const Patch_T *const patch)
 {
   int ind = INT_MIN;
   int i;
   
-  if (!patch->pool)
+  if (!patch->fields)
     return ind;
     
   for (i = 0; i < (int)patch->nfld; ++i )
   {
-    if (!patch->pool[i])
+    if (!patch->fields[i])
       continue;
-    else if(!patch->pool[i]->name)
+    else if(!patch->fields[i]->name)
       continue;
-    else if (!strcmp(patch->pool[i]->name,name))
+    else if (!strcmp(patch->fields[i]->name,name))
     {
       ind = i;
       break;
@@ -147,8 +147,8 @@ int LookUpField(const char *const name,const Patch_T *const patch)
   return ind;
 }
 
-/* given name and patch find the index of a field in the pool.
-// ->return value: index of field in the pool, OR gives error if it could not find it. */
+/* given name and patch find the index of a field in the fields.
+// ->return value: index of field in the fields, OR gives error if it could not find it. */
 int LookUpField_E(const char *const name,const Patch_T *const patch)
 {
   int ind = LookUpField(name,patch);

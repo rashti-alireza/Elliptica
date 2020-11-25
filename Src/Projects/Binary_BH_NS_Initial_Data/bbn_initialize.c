@@ -2813,7 +2813,7 @@ static double interpolate_from_patch_prim(const char *const field,const double *
 {
   double interp;
   Interpolation_T *interp_s = init_interpolation();
-  Field_T *const F_field    = patch->pool[Ind(field)];
+  Field_T *const F_field    = patch->fields[Ind(field)];
   
   interp_s->field = F_field;
   interp_s->X = X[0];
@@ -2995,7 +2995,7 @@ static void find_NS_surface_Ylm_SD_CS(Grid_T *const grid,struct Grid_Params_S *c
       
       /* find enthalpy at the (X,Y,Z) */
       Interpolation_T *interp_h = init_interpolation();
-      interp_h->field = patch->pool[Ind("enthalpy")];
+      interp_h->field = patch->fields[Ind("enthalpy")];
       interp_h->XY_dir_flag  = 1;
       interp_h->X            = X[0];
       interp_h->Y            = X[1];
@@ -3235,7 +3235,7 @@ static void find_NS_surface_Ylm_bisect_CS(Grid_T *const grid,struct Grid_Params_
       
       /* find enthalpy at the (X,Y,Z) */
       Interpolation_T *interp_h = init_interpolation();
-      interp_h->field = patch->pool[Ind("enthalpy")];
+      interp_h->field = patch->fields[Ind("enthalpy")];
       interp_h->XY_dir_flag  = 1;
       interp_h->X            = X[0];
       interp_h->Y            = X[1];
@@ -3975,7 +3975,7 @@ static void extrapolate_insideBH_CS_C0_Ylm(Grid_T *const grid,const char *const 
         
       /* find field at the (X,Y,Z) */
       Interpolation_T *interp = init_interpolation();
-      interp->field = patch->pool[Ind(field_name)];
+      interp->field = patch->fields[Ind(field_name)];
       interp->XYZ_dir_flag = 1;
       interp->X            = X[0];
       interp->Y            = X[1];
@@ -4021,7 +4021,7 @@ static void extrapolate_insideBH_CS_C0_Ylm(Grid_T *const grid,const char *const 
     if (!IsItInsideBHPatch(patch))
       continue;
       
-    field = patch->pool[Ind(field_name)];
+    field = patch->fields[Ind(field_name)];
     empty_field(field);
     field->v = alloc_double(patch->nn);
     v = field->v;
@@ -4114,16 +4114,16 @@ static void extrapolate_outsideNS_CS_exp_continuity_method(Grid_T *const grid)
     
     /* prepare interpolation arguments for phi and dphi */
     Interpolation_T *interp_phi = init_interpolation();
-    interp_phi->field = NS_patch->pool[LookUpField_E("phi",NS_patch)];
+    interp_phi->field = NS_patch->fields[LookUpField_E("phi",NS_patch)];
     interp_phi->XYZ_dir_flag = 1;
     plan_interpolation(interp_phi);
     
     Interpolation_T *interp_d0phi = init_interpolation();
     Interpolation_T *interp_d1phi = init_interpolation();
     Interpolation_T *interp_d2phi = init_interpolation();
-    interp_d0phi->field = NS_patch->pool[LookUpField_E("dphi_D0",NS_patch)];
-    interp_d1phi->field = NS_patch->pool[LookUpField_E("dphi_D1",NS_patch)];
-    interp_d2phi->field = NS_patch->pool[LookUpField_E("dphi_D2",NS_patch)];
+    interp_d0phi->field = NS_patch->fields[LookUpField_E("dphi_D0",NS_patch)];
+    interp_d1phi->field = NS_patch->fields[LookUpField_E("dphi_D1",NS_patch)];
+    interp_d2phi->field = NS_patch->fields[LookUpField_E("dphi_D2",NS_patch)];
     interp_d0phi->XYZ_dir_flag = 1;
     interp_d1phi->XYZ_dir_flag = 1;
     interp_d2phi->XYZ_dir_flag = 1;
@@ -4198,7 +4198,7 @@ static void extrapolate_outsideNS_CS_exp_continuity_method(Grid_T *const grid)
     free_interpolation(interp_d1phi);
     free_interpolation(interp_d2phi);
 
-    Field_T *phi_field = patch->pool[Ind("phi")];
+    Field_T *phi_field = patch->fields[Ind("phi")];
     dphi_D2->v = Partial_Derivative(phi_field,"z");
     dphi_D1->v = Partial_Derivative(phi_field,"y");
     dphi_D0->v = Partial_Derivative(phi_field,"x");
@@ -4206,7 +4206,7 @@ static void extrapolate_outsideNS_CS_exp_continuity_method(Grid_T *const grid)
     /*
     Tij_IF_CTS_enthalpy(patch);
       
-    Field_T *enthalpy = patch->pool[Ind("enthalpy")];
+    Field_T *enthalpy = patch->fields[Ind("enthalpy")];
     DECLARE_AND_EMPTY_FIELD(denthalpy_D2)
     DECLARE_AND_EMPTY_FIELD(denthalpy_D1)
     DECLARE_AND_EMPTY_FIELD(denthalpy_D0)
@@ -4296,7 +4296,7 @@ static void extrapolate_outsideNS_CS_Ylm_method(Grid_T *const grid,const char *c
         
       /* find field at the (X,Y,Z) */
       Interpolation_T *interp = init_interpolation();
-      interp->field = patch->pool[Ind(field_name)];
+      interp->field = patch->fields[Ind(field_name)];
       interp->XYZ_dir_flag = 1;
       interp->X            = X[0];
       interp->Y            = X[1];
@@ -4342,7 +4342,7 @@ static void extrapolate_outsideNS_CS_Ylm_method(Grid_T *const grid,const char *c
     if (!IsItNSSurroundingPatch(patch))
       continue;
       
-    field = patch->pool[Ind(field_name)];
+    field = patch->fields[Ind(field_name)];
     empty_field(field);
     field->v = alloc_double(patch->nn);
     v = field->v;
@@ -4467,22 +4467,22 @@ static void extrapolate_outsideNS_CS_slop_method(Grid_T *const grid)
     
     /* prepare interpolation arguments */
     Interpolation_T *interp_phi = init_interpolation();
-    interp_phi->field = NS_patch->pool[LookUpField_E("phi",NS_patch)];
+    interp_phi->field = NS_patch->fields[LookUpField_E("phi",NS_patch)];
     interp_phi->XYZ_dir_flag = 1;
     plan_interpolation(interp_phi);
 
     Interpolation_T *interp_W_U0 = init_interpolation();
-    interp_W_U0->field = NS_patch->pool[LookUpField_E("W_U0",NS_patch)];
+    interp_W_U0->field = NS_patch->fields[LookUpField_E("W_U0",NS_patch)];
     interp_W_U0->XYZ_dir_flag = 1;
     plan_interpolation(interp_W_U0);
 
     Interpolation_T *interp_W_U1 = init_interpolation();
-    interp_W_U1->field = NS_patch->pool[LookUpField_E("W_U1",NS_patch)];
+    interp_W_U1->field = NS_patch->fields[LookUpField_E("W_U1",NS_patch)];
     interp_W_U1->XYZ_dir_flag = 1;
     plan_interpolation(interp_W_U1);
 
     Interpolation_T *interp_W_U2 = init_interpolation();
-    interp_W_U2->field = NS_patch->pool[LookUpField_E("W_U2",NS_patch)];
+    interp_W_U2->field = NS_patch->fields[LookUpField_E("W_U2",NS_patch)];
     interp_W_U2->XYZ_dir_flag = 1;
     plan_interpolation(interp_W_U2);
 
@@ -4647,7 +4647,7 @@ static void extrapolate_outsideNS_CS_slop_method(Grid_T *const grid)
     free_interpolation(interp_W_U1);
     free_interpolation(interp_W_U2);
 
-    Field_T *phi_field = patch->pool[Ind("phi")];
+    Field_T *phi_field = patch->fields[Ind("phi")];
     dphi_D2->v = Partial_Derivative(phi_field,"z");
     dphi_D1->v = Partial_Derivative(phi_field,"y");
     dphi_D0->v = Partial_Derivative(phi_field,"x");
@@ -4667,7 +4667,7 @@ static void extrapolate_outsideNS_CS_slop_method(Grid_T *const grid)
       
       /* prepare interpolation arguments */
       Interpolation_T *interp_h = init_interpolation();
-      interp_h->field = NS_patch->pool[LookUpField_E("enthalpy",NS_patch)];
+      interp_h->field = NS_patch->fields[LookUpField_E("enthalpy",NS_patch)];
       interp_h->XYZ_dir_flag = 1;
       plan_interpolation(interp_h);
 
@@ -4712,7 +4712,7 @@ static void extrapolate_outsideNS_CS_slop_method(Grid_T *const grid)
     else
       Error0(NO_OPTION);
       
-    Field_T *enthalpy = patch->pool[Ind("enthalpy")];
+    Field_T *enthalpy = patch->fields[Ind("enthalpy")];
     DECLARE_AND_EMPTY_FIELD(denthalpy_D2)
     DECLARE_AND_EMPTY_FIELD(denthalpy_D1)
     DECLARE_AND_EMPTY_FIELD(denthalpy_D0)
@@ -5934,7 +5934,7 @@ static void NS_BH_surface_CubedSpherical_grid(Grid_T *const grid,struct Grid_Par
         Grid_T *grid_prev      = GridParams->grid_prev;
         Patch_T *patch_prev    = GetPatch("left_NS_up",grid_prev);
         const int R0_ind       = LookUpField_E("surface_function",patch_prev);
-        const double *const R0 = patch_prev->pool[R0_ind]->v;
+        const double *const R0 = patch_prev->fields[R0_ind]->v;
         
         for (i = 0; i < N[0]; ++i)
           for (j = 0; j < N[1]; ++j)
@@ -5966,7 +5966,7 @@ static void NS_BH_surface_CubedSpherical_grid(Grid_T *const grid,struct Grid_Par
         Grid_T *grid_prev      = GridParams->grid_prev;
         Patch_T *patch_prev    = GetPatch("left_NS_down",grid_prev);
         const int R0_ind       = LookUpField_E("surface_function",patch_prev);
-        const double *const R0 = patch_prev->pool[R0_ind]->v;
+        const double *const R0 = patch_prev->fields[R0_ind]->v;
         
         for (i = 0; i < N[0]; ++i)
           for (j = 0; j < N[1]; ++j)
@@ -5998,7 +5998,7 @@ static void NS_BH_surface_CubedSpherical_grid(Grid_T *const grid,struct Grid_Par
         Grid_T *grid_prev      = GridParams->grid_prev;
         Patch_T *patch_prev    = GetPatch("left_NS_back",grid_prev);
         const int R0_ind       = LookUpField_E("surface_function",patch_prev);
-        const double *const R0 = patch_prev->pool[R0_ind]->v;
+        const double *const R0 = patch_prev->fields[R0_ind]->v;
         
         for (i = 0; i < N[0]; ++i)
           for (j = 0; j < N[1]; ++j)
@@ -6030,7 +6030,7 @@ static void NS_BH_surface_CubedSpherical_grid(Grid_T *const grid,struct Grid_Par
         Grid_T *grid_prev      = GridParams->grid_prev;
         Patch_T *patch_prev    = GetPatch("left_NS_front",grid_prev);
         const int R0_ind       = LookUpField_E("surface_function",patch_prev);
-        const double *const R0 = patch_prev->pool[R0_ind]->v;
+        const double *const R0 = patch_prev->fields[R0_ind]->v;
         
         for (i = 0; i < N[0]; ++i)
           for (j = 0; j < N[1]; ++j)
@@ -6062,7 +6062,7 @@ static void NS_BH_surface_CubedSpherical_grid(Grid_T *const grid,struct Grid_Par
         Grid_T *grid_prev      = GridParams->grid_prev;
         Patch_T *patch_prev    = GetPatch("left_NS_left",grid_prev);
         const int R0_ind       = LookUpField_E("surface_function",patch_prev);
-        const double *const R0 = patch_prev->pool[R0_ind]->v;
+        const double *const R0 = patch_prev->fields[R0_ind]->v;
         
         for (i = 0; i < N[0]; ++i)
           for (j = 0; j < N[1]; ++j)
@@ -6095,7 +6095,7 @@ static void NS_BH_surface_CubedSpherical_grid(Grid_T *const grid,struct Grid_Par
         Grid_T *grid_prev      = GridParams->grid_prev;
         Patch_T *patch_prev    = GetPatch("left_NS_right",grid_prev);
         const int R0_ind       = LookUpField_E("surface_function",patch_prev);
-        const double *const R0 = patch_prev->pool[R0_ind]->v;
+        const double *const R0 = patch_prev->fields[R0_ind]->v;
         
         for (i = 0; i < N[0]; ++i)
           for (j = 0; j < N[1]; ++j)
@@ -6683,11 +6683,11 @@ static double bbn_NS_surface_enthalpy_eq(void *params,const double *const x)
     
   /* find enthalpy at the (X,Y,Z) */
   h_ind = _Ind("enthalpy");
-  if (!patch->pool[h_ind]->v)/* if there is no enthalpy defined in the patch */
+  if (!patch->fields[h_ind]->v)/* if there is no enthalpy defined in the patch */
     return -1;
     
   Interpolation_T *interp_h = init_interpolation();
-  interp_h->field = patch->pool[h_ind];
+  interp_h->field = patch->fields[h_ind];
   interp_h->XYZ_dir_flag  = 1;
   interp_h->X            = X[0];
   interp_h->Y            = X[1];
@@ -6737,7 +6737,7 @@ static double bbn_NS_surface_denthalpy_dr(void *params,const double *const x,con
   if (dh_dx_ind < 0)/* if there is no enthalpy defined in the patch */
     return 1;
   interp_dh_dx = init_interpolation();
-  interp_dh_dx->field = patch->pool[dh_dx_ind];
+  interp_dh_dx->field = patch->fields[dh_dx_ind];
   interp_dh_dx->X = X[0];
   interp_dh_dx->Y = X[1];
   interp_dh_dx->Z = X[2];
@@ -6750,7 +6750,7 @@ static double bbn_NS_surface_denthalpy_dr(void *params,const double *const x,con
   if (dh_dy_ind < 0)/* if there is no enthalpy defined in the patch */
     return 1;
   interp_dh_dy = init_interpolation();
-  interp_dh_dy->field = patch->pool[dh_dy_ind];
+  interp_dh_dy->field = patch->fields[dh_dy_ind];
   interp_dh_dy->X = X[0];
   interp_dh_dy->Y = X[1];
   interp_dh_dy->Z = X[2];
@@ -6763,7 +6763,7 @@ static double bbn_NS_surface_denthalpy_dr(void *params,const double *const x,con
   if (dh_dz_ind < 0)/* if there is no enthalpy defined in the patch */
     return 1;
   interp_dh_dz = init_interpolation();
-  interp_dh_dz->field = patch->pool[dh_dz_ind];
+  interp_dh_dz->field = patch->fields[dh_dz_ind];
   interp_dh_dz->X = X[0];
   interp_dh_dz->Y = X[1];
   interp_dh_dz->Z = X[2];
@@ -6823,7 +6823,7 @@ static void extrapolate_fluid_fields_outsideNS(Grid_T *const grid)
         if (!IsItNSSurroundingPatch(patch))
           continue;
         
-        Field_T *enthalpy = patch->pool[Ind("enthalpy")];
+        Field_T *enthalpy = patch->fields[Ind("enthalpy")];
         DECLARE_AND_EMPTY_FIELD(denthalpy_D2)
         DECLARE_AND_EMPTY_FIELD(denthalpy_D1)
         DECLARE_AND_EMPTY_FIELD(denthalpy_D0)

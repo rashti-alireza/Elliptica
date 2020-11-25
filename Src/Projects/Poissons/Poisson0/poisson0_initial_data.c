@@ -15,7 +15,7 @@ int poisson0_initial_data_alpha(Grid_T *const grid)
   FOR_ALL_PATCHES(p,grid)
   {
     Patch_T *patch = grid->patch[p];
-    double *alpha = patch->pool[Ind("alpha")]->v;
+    double *alpha = patch->fields[Ind("alpha")]->v;
     unsigned n;
     
     FOR_ALL_POINTS(n,patch)

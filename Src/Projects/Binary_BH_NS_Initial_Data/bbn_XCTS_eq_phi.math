@@ -149,7 +149,7 @@ F_eq = t1+rho0*(t2+t3+t4)+t5+t6+att*((1-rho0/rhoc)**4)*t3;
 `    double X[3] = {0};`
 ``
 `    X_of_x(X,NS_center,patch);`
-`    interp_phi0->field = patch->pool[Ind("phi")];`
+`    interp_phi0->field = patch->fields[Ind("phi")];`
 `    interp_phi0->X = X[0];`
 `    interp_phi0->Y = X[1];`
 `    interp_phi0->Z = X[2];`

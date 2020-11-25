@@ -157,7 +157,7 @@ static int fmain_f_df_ddf_CS(struct Extrap_S *const extrap)
       int ii;
       
       /* must have the field */
-      make_coeffs_2d(patch->pool[Ind(extrap->fld[f]->f)],0,1);
+      make_coeffs_2d(patch->fields[Ind(extrap->fld[f]->f)],0,1);
       
       /* must have dfield */
       for (ii = 0; ii < 3; ++ii)
@@ -165,7 +165,7 @@ static int fmain_f_df_ddf_CS(struct Extrap_S *const extrap)
         int indxf = _Ind(extrap->fld[f]->df[ii]);
         if (indxf >= 0)
         {
-         make_coeffs_2d(patch->pool[indxf],0,1);
+         make_coeffs_2d(patch->fields[indxf],0,1);
         }
         else
         {
@@ -181,7 +181,7 @@ static int fmain_f_df_ddf_CS(struct Extrap_S *const extrap)
         int indxf = _Ind(extrap->fld[f]->ddf[ii]);
         if (indxf >= 0)
         {
-          make_coeffs_2d(patch->pool[indxf],0,1);
+          make_coeffs_2d(patch->fields[indxf],0,1);
         }
         else
         {
@@ -206,7 +206,7 @@ static int fmain_f_df_ddf_CS(struct Extrap_S *const extrap)
     {
      struct Demand_S demand[1] = {0};
      
-     Field_T *field = patch->pool[Ind(extrap->fld[f]->f)];
+     Field_T *field = patch->fields[Ind(extrap->fld[f]->f)];
      empty_field(field);
      field->v = alloc_double(patch->nn);
      
@@ -272,14 +272,14 @@ static int fmain_f_df_ddf_CS(struct Extrap_S *const extrap)
        Error0(NO_OPTION);
        
       /* f value at r = r0 = rSurf*/
-      interp_s->field = patchp->pool[Ind(extrap->fld[f]->f)];
+      interp_s->field = patchp->fields[Ind(extrap->fld[f]->f)];
       plan_interpolation(interp_s);
       fr0 = execute_interpolation(interp_s);
        
       /* df/dx value */
       for (d1 = 0; d1 < 3; d1++)
       {
-        interp_s->field = patchp->pool[Ind(extrap->fld[f]->df[d1])];
+        interp_s->field = patchp->fields[Ind(extrap->fld[f]->df[d1])];
         plan_interpolation(interp_s);
         df_dx[d1] = execute_interpolation(interp_s);
       }
@@ -290,7 +290,7 @@ static int fmain_f_df_ddf_CS(struct Extrap_S *const extrap)
         for (d2 = d1; d2 < 3; d2++)
         {
           interp_s->field = 
-            patchp->pool[Ind(extrap->fld[f]->ddf[IJsymm3(d1,d2)])];
+            patchp->fields[Ind(extrap->fld[f]->ddf[IJsymm3(d1,d2)])];
           plan_interpolation(interp_s);
           ddf_ddx[IJsymm3(d1,d2)] = execute_interpolation(interp_s);
         }
@@ -341,14 +341,14 @@ static int fmain_f_df_ddf_CS(struct Extrap_S *const extrap)
       if (extrap->fld[f]->did_add_df)
       for (ii = 0; ii < 3; ++ii)
       {
-         Field_T *df = patch->pool[Ind(extrap->fld[f]->df[ii])];
+         Field_T *df = patch->fields[Ind(extrap->fld[f]->df[ii])];
          REMOVE_FIELD(df);
       }
       
       if (extrap->fld[f]->did_add_ddf)
       for (ii = 0; ii < 6; ++ii)
       {
-        Field_T *ddf = patch->pool[Ind(extrap->fld[f]->ddf[ii])];
+        Field_T *ddf = patch->fields[Ind(extrap->fld[f]->ddf[ii])];
         REMOVE_FIELD(ddf);
       }
       
@@ -568,7 +568,7 @@ static void find_NS_surface_Ylm_bisect_CS(Physics_T *const phys)
       
       /* find enthalpy at the (X,Y,Z) */
       Interpolation_T *interp_h = init_interpolation();
-      interp_h->field = patch->pool[Ind("enthalpy")];
+      interp_h->field = patch->fields[Ind("enthalpy")];
       interp_h->XY_dir_flag  = 1;
       interp_h->X            = X[0];
       interp_h->Y            = X[1];
@@ -777,11 +777,11 @@ static double NS_surface_enthalpy_root_finder_eq(void *params,const double *cons
   /* find enthalpy at the (X,Y,Z) */
   assert(X_of_x(X,y,patch));
   h_ind = Ind("enthalpy");
-  if (!patch->pool[h_ind]->v)/* if there is no enthalpy defined in the patch */
+  if (!patch->fields[h_ind]->v)/* if there is no enthalpy defined in the patch */
     return -1.;
     
   Interpolation_T *interp_h = init_interpolation();
-  interp_h->field = patch->pool[h_ind];
+  interp_h->field = patch->fields[h_ind];
   interp_h->XYZ_dir_flag = 1;
   interp_h->X            = X[0];
   interp_h->Y            = X[1];
@@ -825,7 +825,7 @@ static double NS_surface_denthalpy_dr_root_finder(void *params,const double *con
   if (dh_dx_ind < 0)/* if there is no enthalpy defined in the patch */
     return 1;
   interp_dh_dx = init_interpolation();
-  interp_dh_dx->field = patch->pool[dh_dx_ind];
+  interp_dh_dx->field = patch->fields[dh_dx_ind];
   interp_dh_dx->X = X[0];
   interp_dh_dx->Y = X[1];
   interp_dh_dx->Z = X[2];
@@ -838,7 +838,7 @@ static double NS_surface_denthalpy_dr_root_finder(void *params,const double *con
   if (dh_dy_ind < 0)/* if there is no enthalpy defined in the patch */
     return 1;
   interp_dh_dy = init_interpolation();
-  interp_dh_dy->field = patch->pool[dh_dy_ind];
+  interp_dh_dy->field = patch->fields[dh_dy_ind];
   interp_dh_dy->X = X[0];
   interp_dh_dy->Y = X[1];
   interp_dh_dy->Z = X[2];
@@ -851,7 +851,7 @@ static double NS_surface_denthalpy_dr_root_finder(void *params,const double *con
   if (dh_dz_ind < 0)/* if there is no enthalpy defined in the patch */
     return 1;
   interp_dh_dz = init_interpolation();
-  interp_dh_dz->field = patch->pool[dh_dz_ind];
+  interp_dh_dz->field = patch->fields[dh_dz_ind];
   interp_dh_dz->X = X[0];
   interp_dh_dz->Y = X[1];
   interp_dh_dz->Z = X[2];
@@ -914,20 +914,20 @@ double star_NS_mass_shedding_indicator(Physics_T *const phys)
     interp_s->XY_dir_flag = 1;
     
     /* derivatives */
-    interp_s->field = patch->pool[Ind("denthalpy_D0")];
+    interp_s->field = patch->fields[Ind("denthalpy_D0")];
     plan_interpolation(interp_s);
     dh_eq[0] = execute_interpolation(interp_s);
     
-    interp_s->field = patch->pool[Ind("denthalpy_D1")];
+    interp_s->field = patch->fields[Ind("denthalpy_D1")];
     plan_interpolation(interp_s);
     dh_eq[1] = execute_interpolation(interp_s);
     
-    interp_s->field = patch->pool[Ind("denthalpy_D2")];
+    interp_s->field = patch->fields[Ind("denthalpy_D2")];
     plan_interpolation(interp_s);
     dh_eq[2] = execute_interpolation(interp_s);
     
     /* value */
-    interp_s->field = patch->pool[Ind("enthalpy")];
+    interp_s->field = patch->fields[Ind("enthalpy")];
     plan_interpolation(interp_s);
     h_eq = execute_interpolation(interp_s);
     
@@ -958,20 +958,20 @@ double star_NS_mass_shedding_indicator(Physics_T *const phys)
     interp_s->XY_dir_flag = 1;
     
     /* derivatives */
-    interp_s->field = patch->pool[Ind("denthalpy_D0")];
+    interp_s->field = patch->fields[Ind("denthalpy_D0")];
     plan_interpolation(interp_s);
     dh_pole[0] = execute_interpolation(interp_s);
     
-    interp_s->field = patch->pool[Ind("denthalpy_D1")];
+    interp_s->field = patch->fields[Ind("denthalpy_D1")];
     plan_interpolation(interp_s);
     dh_pole[1] = execute_interpolation(interp_s);
     
-    interp_s->field = patch->pool[Ind("denthalpy_D2")];
+    interp_s->field = patch->fields[Ind("denthalpy_D2")];
     plan_interpolation(interp_s);
     dh_pole[2] = execute_interpolation(interp_s);
     
     /* value */
-    interp_s->field = patch->pool[Ind("enthalpy")];
+    interp_s->field = patch->fields[Ind("enthalpy")];
     plan_interpolation(interp_s);
     h_pole = execute_interpolation(interp_s);
     dr_dlnh_pole = (N[0]*dh_pole[0]+N[1]*dh_pole[1]+N[2]*dh_pole[2])/h_pole;

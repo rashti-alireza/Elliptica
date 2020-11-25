@@ -30,7 +30,7 @@ int mt_initial_data_alpha(Grid_T *const grid)
   FOR_ALL_PATCHES(p,grid)
   {
     Patch_T *patch = grid->patch[p];
-    double *alpha = patch->pool[Ind("alpha")]->v;
+    double *alpha = patch->fields[Ind("alpha")]->v;
     unsigned n;
     
     FOR_ALL_POINTS(n,patch)
@@ -49,7 +49,7 @@ static void *eq_alpha(void *vp1,void *vp2)
 {
   Patch_T *const patch = vp1;
   DDM_Schur_Complement_T *const S = vp2;
-  Field_T *const alpha = patch->pool[Ind("alpha")];
+  Field_T *const alpha = patch->fields[Ind("alpha")];
   double *const F = S->f;
   const unsigned *const node  = S->inv;/* inverse map to node */
   double *alpha_xx = Partial_Derivative(alpha,"x,x");
@@ -84,7 +84,7 @@ static void *bc_alpha(void *vp1,void *vp2)
   Patch_T *const patch = bc->patch;
   const unsigned *const node = bc->node;/* nodes at boundary */
   const unsigned N = bc->nn;/* number of nodes at boundary */
-  double *const alpha = patch->pool[Ind("alpha")]->v;
+  double *const alpha = patch->fields[Ind("alpha")]->v;
   unsigned n,ijk;
   
   /* alpha at outer boundary */

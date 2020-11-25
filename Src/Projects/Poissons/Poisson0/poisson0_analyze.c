@@ -31,7 +31,7 @@ int poisson0_analyze_answer(const Grid_T *const grid)
   FOR_ALL_PATCHES(p,grid)
   {
     Patch_T *patch = grid->patch[p];
-    Field_T *f = patch->pool[Ind("alpha_real")];
+    Field_T *f = patch->fields[Ind("alpha_real")];
     remove_field(f);
   }
   

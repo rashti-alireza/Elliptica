@@ -97,7 +97,7 @@ double *bbn_ks_read_analytic(const char *const name, void *params)
   }
   else
   {
-    u = patch->pool[fn];
+    u = patch->fields[fn];
     empty_field(u);
     u->v = alloc_double(patch->nn);
   }

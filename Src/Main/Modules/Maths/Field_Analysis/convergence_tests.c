@@ -29,8 +29,8 @@ int analytic_numeric_convergence_test(const Grid_T *const grid,const char *const
   {
     patch      = grid->patch[p];
     nn         = patch->nn;
-    f_analytic = patch->pool[Ind(f_analytic_name)];
-    f_numeric  = patch->pool[Ind(f_numeric_name)];
+    f_analytic = patch->fields[Ind(f_analytic_name)];
+    f_numeric  = patch->fields[Ind(f_numeric_name)];
     diff       = alloc_double(nn);
     
     for (i = 0; i < nn; ++i)

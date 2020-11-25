@@ -926,7 +926,7 @@ static void R1_derivative(Patch_T *const patch)
           *dR1_dx = add_field("dR1_dx",0,patch,YES),
           *dR1_dy = add_field("dR1_dy",0,patch,YES),
           *dR1_dz = add_field("dR1_dz",0,patch,YES);
-  Field_T *const R1 = patch->pool[Ind("surface_function")];
+  Field_T *const R1 = patch->fields[Ind("surface_function")];
   const unsigned nn = patch->nn;
   unsigned ijk;
           
@@ -960,7 +960,7 @@ static void R2_derivative(Patch_T *const patch)
           *dR2_dx = add_field("dR2_dx",0,patch,YES),
           *dR2_dy = add_field("dR2_dy",0,patch,YES),
           *dR2_dz = add_field("dR2_dz",0,patch,YES);
-  Field_T *const R2 = patch->pool[Ind("surface_function")];
+  Field_T *const R2 = patch->fields[Ind("surface_function")];
   const unsigned nn = patch->nn;
   unsigned ijk;
           
@@ -995,14 +995,14 @@ static void R12_derivatives_SCS(Patch_T *const patch)
           *dR2_dx = add_field("dR2_dx",0,patch,YES),
           *dR2_dy = add_field("dR2_dy",0,patch,YES),
           *dR2_dz = add_field("dR2_dz",0,patch,YES);
-  Field_T *const R2 = patch->pool[Ind(SigmaU)];
+  Field_T *const R2 = patch->fields[Ind(SigmaU)];
   
   Field_T *dR1_dX = add_field("dR1_dX",0,patch,NO),
           *dR1_dY = add_field("dR1_dY",0,patch,NO),
           *dR1_dx = add_field("dR1_dx",0,patch,YES),
           *dR1_dy = add_field("dR1_dy",0,patch,YES),
           *dR1_dz = add_field("dR1_dz",0,patch,YES);
-  Field_T *const R1 = patch->pool[Ind(SigmaD)];
+  Field_T *const R1 = patch->fields[Ind(SigmaD)];
   
   const unsigned nn = patch->nn;
   unsigned ijk;

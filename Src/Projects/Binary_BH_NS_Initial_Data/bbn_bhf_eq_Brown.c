@@ -21,13 +21,13 @@ void *bbn_bhf_eq_Brown(void *vp1,void *vp2)
 
 
 sprintf(eq_fld_name,"src_%s",fld_name);
-const double *const B = patch->pool[Ind(eq_fld_name)]->v;
+const double *const B = patch->fields[Ind(eq_fld_name)]->v;
 sprintf(eq_fld_name,"dd%s_D0D0",fld_name);
-const double *const ddB_xx = patch->pool[Ind(eq_fld_name)]->v;
+const double *const ddB_xx = patch->fields[Ind(eq_fld_name)]->v;
 sprintf(eq_fld_name,"dd%s_D1D1",fld_name);
-const double *const ddB_yy = patch->pool[Ind(eq_fld_name)]->v;
+const double *const ddB_yy = patch->fields[Ind(eq_fld_name)]->v;
 sprintf(eq_fld_name,"dd%s_D2D2",fld_name);
-const double *const ddB_zz = patch->pool[Ind(eq_fld_name)]->v;
+const double *const ddB_zz = patch->fields[Ind(eq_fld_name)]->v;
   DDM_SCHUR_EQ_OPEN
 
   double F_eq = 

@@ -348,7 +348,7 @@ static void update_field(Patch_T *const patch)
   const double *const x = Schur->x;
   const unsigned cf = patch->solving_man->cf;
   const char *const field_name = patch->solving_man->field_name[cf];
-  Field_T *const f = patch->pool[Ind(field_name)];
+  Field_T *const f = patch->fields[Ind(field_name)];
   const double lambda = patch->solving_man->settings->relaxation_factor;
   const double *const u_old = f->v;
   double *const u_new = f->v;
@@ -383,7 +383,7 @@ static void update_field_single_patch(Patch_T *const patch)
   const double *const x = Schur->x;
   const unsigned cf = patch->solving_man->cf;
   const char *const field_name = patch->solving_man->field_name[cf];
-  Field_T *const f = patch->pool[Ind(field_name)];
+  Field_T *const f = patch->fields[Ind(field_name)];
   const double lambda = patch->solving_man->settings->relaxation_factor;
   const double *const u_old = f->v;
   double *const u_new = f->v;
@@ -2181,7 +2181,7 @@ static void pg_collocation(Patch_T *const patch, Pair_T *const pair)
   SubFace_T *const subface = pair->subface;
   const unsigned cf = patch->solving_man->cf;
   const char *const field_name = patch->solving_man->field_name[cf];
-  Field_T *const f   = patch->pool[Ind(field_name)];
+  Field_T *const f   = patch->fields[Ind(field_name)];
   const unsigned ppn = pair->patchN;
   const unsigned NSubFP = subface->np;
   const unsigned *node = 0;
@@ -2243,7 +2243,7 @@ static void pg_interpolation(Patch_T *const patch, Pair_T *const pair)
   SubFace_T *const subface = pair->subface;
   const unsigned cf = patch->solving_man->cf;
   const char *const field_name = patch->solving_man->field_name[cf];
-  Field_T *const f   = patch->pool[Ind(field_name)];
+  Field_T *const f   = patch->fields[Ind(field_name)];
   const unsigned np = subface->np;
   const unsigned ppn = pair->patchN;
   double *const pg = pair->pg; 
@@ -2831,7 +2831,7 @@ static Matrix_T *making_J_Old_Fashion(Solve_Equations_T *const SolveEqs)
   for (pn = 0; pn < npatch; ++pn)
   {
     Patch_T *patch2 = grid->patch[pn];
-    Field_T *f = patch2->pool[LookUpField(SolveEqs->field_name,patch2)];
+    Field_T *f = patch2->fields[LookUpField(SolveEqs->field_name,patch2)];
     double EPS = CONST/patch2->nn;
     
     for (df = 0; df < patch2->nn; ++df)
@@ -3035,10 +3035,10 @@ void calculate_equation_residual(Solve_Equations_T *const SolveEqs)
       char field_res[MSG_SIZE1];
       sprintf(field_res,"%s_residual",field_name[f]);
       
-      empty_field(patch->pool[Ind(field_res)]);
-      patch->pool[Ind(field_res)]->v = alloc_double(patch->nn);
+      empty_field(patch->fields[Ind(field_res)]);
+      patch->fields[Ind(field_res)]->v = alloc_double(patch->nn);
         
-      double *const res = patch->pool[Ind(field_res)]->v;
+      double *const res = patch->fields[Ind(field_res)]->v;
       const unsigned NS = Schur->NS;
       const unsigned *const inv = Schur->inv;
       unsigned s,s_node;
@@ -3073,10 +3073,10 @@ void calculate_equation_residual(Solve_Equations_T *const SolveEqs)
         char field_res[MSG_SIZE1];
         sprintf(field_res,"%s_residual",field_name[f]);
       
-        empty_field(patch->pool[Ind(field_res)]);
-        patch->pool[Ind(field_res)]->v = alloc_double(patch->nn);
+        empty_field(patch->fields[Ind(field_res)]);
+        patch->fields[Ind(field_res)]->v = alloc_double(patch->nn);
         
-        double *const res = patch->pool[Ind(field_res)]->v;
+        double *const res = patch->fields[Ind(field_res)]->v;
         const unsigned NS = Schur->NS;
         const unsigned NI = Schur->NI;
         const unsigned *const inv  = Schur->inv;

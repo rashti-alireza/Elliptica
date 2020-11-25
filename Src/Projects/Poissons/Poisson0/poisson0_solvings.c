@@ -21,7 +21,7 @@ int poisson0_solve_eq(Grid_T *const grid)
   
   /* initializing and solving */
   initialize_solving_man(grid,field_eq,bc_eq,jacobian_field_eq,jacobian_bc_eq);/* populating solution managing */
-  enable_fields(grid);/* allocating required fields in patch->pool */
+  enable_fields(grid);/* allocating required fields in patch->fields */
   poisson0_initial_data_alpha(grid);/* initial data for field alpha */
   
   SolveEqs->solving_order = Pgets("Solving_Order");

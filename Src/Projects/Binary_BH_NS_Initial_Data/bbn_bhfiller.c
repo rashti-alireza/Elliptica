@@ -511,10 +511,10 @@ static int bhf_ChebTn_Ylm(struct BHFiller_S *const bhf)
     /* make coeffs for all fields inside this patch */
     for (f = 0; f < patch->nfld; ++f)
     {
-      if (patch->pool[f]->v      &&
-          patch->pool[f] != R1_f && 
-          patch->pool[f] != R2_f    )
-        make_coeffs_2d(patch->pool[f],0,1);/* X and Y direction */
+      if (patch->fields[f]->v      &&
+          patch->fields[f] != R1_f && 
+          patch->fields[f] != R2_f    )
+        make_coeffs_2d(patch->fields[f],0,1);/* X and Y direction */
     }
   }
   
@@ -565,7 +565,7 @@ static int bhf_ChebTn_Ylm(struct BHFiller_S *const bhf)
         interp_s->Y = X[1];
         interp_s->K = 0;
         /* f value at r = r0 and r = 0*/
-        interp_s->field = patch->pool[Ind(bhf->fld[fld]->f)];
+        interp_s->field = patch->fields[Ind(bhf->fld[fld]->f)];
         plan_interpolation(interp_s);
         fr1 = execute_interpolation(interp_s);
         fr0 = bhf->fld[fld]->f_r0;
@@ -573,7 +573,7 @@ static int bhf_ChebTn_Ylm(struct BHFiller_S *const bhf)
         /* df/dx value */
         for (d1 = 0; d1 < 3; d1++)
         {
-          interp_s->field = patch->pool[Ind(bhf->fld[fld]->df[d1])];
+          interp_s->field = patch->fields[Ind(bhf->fld[fld]->df[d1])];
           plan_interpolation(interp_s);
           df_dx[d1] = execute_interpolation(interp_s);
         }
@@ -583,7 +583,7 @@ static int bhf_ChebTn_Ylm(struct BHFiller_S *const bhf)
           for (d2 = d1; d2 < 3; d2++)
           {
             interp_s->field = 
-              patch->pool[Ind(bhf->fld[fld]->ddf[IJsymm3(d1,d2)])];
+              patch->fields[Ind(bhf->fld[fld]->ddf[IJsymm3(d1,d2)])];
             plan_interpolation(interp_s);
             ddf_ddx[IJsymm3(d1,d2)] = execute_interpolation(interp_s);
           }
@@ -736,7 +736,7 @@ static int bhf_ChebTn_Ylm(struct BHFiller_S *const bhf)
       if (f_indx < 0)
         u = add_field(bhf->fld[f]->f,0,patch,NO);
       else
-        u = patch->pool[f_indx];
+        u = patch->fields[f_indx];
        
       empty_field(u);
       u->v      = alloc_double(patch->nn);
@@ -1077,10 +1077,10 @@ static int bhf_WTGR(struct BHFiller_S *const bhf)
     /* make coeffs for all fields inside this patch */
     for (f = 0; f < patch->nfld; ++f)
     {
-      if (patch->pool[f]->v      &&
-          patch->pool[f] != R1_f && 
-          patch->pool[f] != R2_f    )
-        make_coeffs_3d(patch->pool[f]);
+      if (patch->fields[f]->v      &&
+          patch->fields[f] != R1_f && 
+          patch->fields[f] != R2_f    )
+        make_coeffs_3d(patch->fields[f]);
     }
     
   }
@@ -1303,7 +1303,7 @@ static int bhf_WTGR(struct BHFiller_S *const bhf)
     unsigned f;
     for (f = 0; f < patch->nfld; ++f)
     {
-      free_coeffs(patch->pool[f]);
+      free_coeffs(patch->fields[f]);
     }
   }
   printf("|--> memory usege     = %0.2f(Gb)\n",how_much_memory("gb"));
@@ -1336,7 +1336,7 @@ static double interpolate_from_patch_prim(const char *const field,const double *
 {
   double interp;
   Interpolation_T *interp_s = init_interpolation();
-  Field_T *const F_field    = patch->pool[Ind(field)];
+  Field_T *const F_field    = patch->fields[Ind(field)];
   
   interp_s->field = F_field;
   interp_s->X = X[0];
@@ -1481,10 +1481,10 @@ static int bhf_4th_Poly_Ylm(struct BHFiller_S *const bhf)
     /* make coeffs for all fields inside this patch */
     for (f = 0; f < patch->nfld; ++f)
     {
-      if (patch->pool[f]->v      &&
-          patch->pool[f] != R1_f && 
-          patch->pool[f] != R2_f    )
-        make_coeffs_3d(patch->pool[f]);
+      if (patch->fields[f]->v      &&
+          patch->fields[f] != R1_f && 
+          patch->fields[f] != R2_f    )
+        make_coeffs_3d(patch->fields[f]);
     }
   }
   
@@ -1546,7 +1546,7 @@ static int bhf_4th_Poly_Ylm(struct BHFiller_S *const bhf)
         interp_s->X = Xr_2[0];
         interp_s->Y = Xr_2[1];
         interp_s->Z = Xr_2[2];
-        interp_s->field = patch->pool[Ind(bhf->fld[fld]->f)];
+        interp_s->field = patch->fields[Ind(bhf->fld[fld]->f)];
         plan_interpolation(interp_s);
         fr_2 = execute_interpolation(interp_s);
         
@@ -1554,7 +1554,7 @@ static int bhf_4th_Poly_Ylm(struct BHFiller_S *const bhf)
         interp_s->X = X[0];
         interp_s->Y = X[1];
         interp_s->Z = X[2];
-        interp_s->field = patch->pool[Ind(bhf->fld[fld]->f)];
+        interp_s->field = patch->fields[Ind(bhf->fld[fld]->f)];
         plan_interpolation(interp_s);
         fr_1 = execute_interpolation(interp_s);
         /* r = 0 */
@@ -1563,7 +1563,7 @@ static int bhf_4th_Poly_Ylm(struct BHFiller_S *const bhf)
         /* df/dx value */
         for (d1 = 0; d1 < 3; d1++)
         {
-          interp_s->field = patch->pool[Ind(bhf->fld[fld]->df[d1])];
+          interp_s->field = patch->fields[Ind(bhf->fld[fld]->df[d1])];
           plan_interpolation(interp_s);
           df_dx[d1] = execute_interpolation(interp_s);
         }
@@ -1573,7 +1573,7 @@ static int bhf_4th_Poly_Ylm(struct BHFiller_S *const bhf)
           for (d2 = d1; d2 < 3; d2++)
           {
             interp_s->field = 
-              patch->pool[Ind(bhf->fld[fld]->ddf[IJsymm3(d1,d2)])];
+              patch->fields[Ind(bhf->fld[fld]->ddf[IJsymm3(d1,d2)])];
             plan_interpolation(interp_s);
             ddf_ddx[IJsymm3(d1,d2)] = execute_interpolation(interp_s);
           }
@@ -1656,7 +1656,7 @@ static int bhf_4th_Poly_Ylm(struct BHFiller_S *const bhf)
     /* loop over all fields to be extrapolated */
     for (f = 0; f < nf; ++f)
     {
-      Field_T *u = patch->pool[Ind(bhf->fld[f]->f)];
+      Field_T *u = patch->fields[Ind(bhf->fld[f]->f)];
       empty_field(u);
       u->v      = alloc_double(patch->nn);
       double *v = u->v;
@@ -1849,10 +1849,10 @@ static int bhf_ell_Brown(struct BHFiller_S *const bhf)
     /* make coeffs for all fields inside this patch */
     for (fn = 0; fn < patch->nfld; ++fn)
     {
-      if (patch->pool[fn]->v      &&
-          patch->pool[fn] != R1_f && 
-          patch->pool[fn] != R2_f    )
-        make_coeffs_2d(patch->pool[fn],0,1);/* X and Y direction */
+      if (patch->fields[fn]->v      &&
+          patch->fields[fn] != R1_f && 
+          patch->fields[fn] != R2_f    )
+        make_coeffs_2d(patch->fields[fn],0,1);/* X and Y direction */
     }
   }
   
@@ -2000,13 +2000,13 @@ static int bhf_ell_Brown(struct BHFiller_S *const bhf)
       unsigned i,j,k,ijk,_i,_j;
       
       sprintf(s,"bc_%s.0",bhf->fld[f]->f);
-      double *bc0 = patch->pool[Ind(s)]->v;
+      double *bc0 = patch->fields[Ind(s)]->v;
       
       sprintf(s,"bc_%s.1",bhf->fld[f]->f);
-      double *bc1 = patch->pool[Ind(s)]->v;
+      double *bc1 = patch->fields[Ind(s)]->v;
       
       sprintf(s,"bc_%s.2",bhf->fld[f]->f);
-      double *bc2 = patch->pool[Ind(s)]->v;
+      double *bc2 = patch->fields[Ind(s)]->v;
       
       for (i = 0; i < n[0]; ++i)
       {
@@ -2047,7 +2047,7 @@ static int bhf_ell_Brown(struct BHFiller_S *const bhf)
           interp_s->K = 0;
           /* f value at r = r1 */
           interp_s->field = 
-            patchp->pool[LookUpField_E(bhf->fld[f]->f,patchp)];
+            patchp->fields[LookUpField_E(bhf->fld[f]->f,patchp)];
           plan_interpolation(interp_s);
           fr1 = execute_interpolation(interp_s);
           
@@ -2055,7 +2055,7 @@ static int bhf_ell_Brown(struct BHFiller_S *const bhf)
           for (d1 = 0; d1 < 3; d1++)
           {
             interp_s->field = 
-              patchp->pool[LookUpField_E(bhf->fld[f]->df[d1],patchp)];
+              patchp->fields[LookUpField_E(bhf->fld[f]->df[d1],patchp)];
             plan_interpolation(interp_s);
             df_dx[d1] = execute_interpolation(interp_s);
           }
@@ -2065,7 +2065,7 @@ static int bhf_ell_Brown(struct BHFiller_S *const bhf)
             for (d2 = d1; d2 < 3; d2++)
             {
               interp_s->field = 
-                patchp->pool[LookUpField_E(bhf->fld[f]->ddf[IJsymm3(d1,d2)],patchp)];
+                patchp->fields[LookUpField_E(bhf->fld[f]->ddf[IJsymm3(d1,d2)],patchp)];
               plan_interpolation(interp_s);
               ddf_ddx[IJsymm3(d1,d2)] = execute_interpolation(interp_s);
             }
@@ -2178,8 +2178,8 @@ static int bhf_ell_Brown(struct BHFiller_S *const bhf)
     for (fn = 0; fn < Nf; ++fn)
     {
       sprintf(s,"%s.0",bhf->fld[fn]->f);
-      const double *sol = patch->pool[Ind(s)]->v;
-      Field_T *u = patch->pool[Ind(bhf->fld[fn]->f)];
+      const double *sol = patch->fields[Ind(s)]->v;
+      Field_T *u = patch->fields[Ind(bhf->fld[fn]->f)];
       empty_field(u);
       u->v      = alloc_double(patch->nn);
       double *v = u->v;
@@ -2426,37 +2426,37 @@ bbn_bhf_ell_Brown_field_update
   char s[MAX_STR2] = {'\0'};
   
   /* field */
-  Field_T *const f = patch->pool[Ind(name)];
+  Field_T *const f = patch->fields[Ind(name)];
   
   /* dfield/d? */
   sprintf(s,"d%s_D0",name);
-  Field_T *const df_dx = patch->pool[Ind(s)];
+  Field_T *const df_dx = patch->fields[Ind(s)];
   empty_field(df_dx);
   df_dx->v = Partial_Derivative(f,"x");
   
   sprintf(s,"d%s_D1",name);
-  Field_T *const df_dy = patch->pool[Ind(s)];
+  Field_T *const df_dy = patch->fields[Ind(s)];
   empty_field(df_dy);
   df_dy->v = Partial_Derivative(f,"y"); 
   
   sprintf(s,"d%s_D2",name);
-  Field_T *const df_dz = patch->pool[Ind(s)];
+  Field_T *const df_dz = patch->fields[Ind(s)];
   empty_field(df_dz);
   df_dz->v = Partial_Derivative(f,"z"); 
   
   /* d^2field/d?^2 */
   sprintf(s,"dd%s_D0D0",name);
-  Field_T *const ddf_ddx = patch->pool[Ind(s)];
+  Field_T *const ddf_ddx = patch->fields[Ind(s)];
   empty_field(ddf_ddx);
   ddf_ddx->v = Partial_Derivative(df_dx,"x");
   
   sprintf(s,"dd%s_D1D1",name);
-  Field_T *const ddf_ddy = patch->pool[Ind(s)];
+  Field_T *const ddf_ddy = patch->fields[Ind(s)];
   empty_field(ddf_ddy);
   ddf_ddy->v = Partial_Derivative(df_dy,"y");
   
   sprintf(s,"dd%s_D2D2",name);
-  Field_T *const ddf_ddz = patch->pool[Ind(s)];
+  Field_T *const ddf_ddz = patch->fields[Ind(s)];
   empty_field(ddf_ddz);
   ddf_ddz->v = Partial_Derivative(df_dz,"z");
 }
@@ -2501,11 +2501,11 @@ bbn_bhf_ell_Brown_source_update
       break;
       
     /* src1 */
-    src1 = patch->pool[Ind(s1)];
+    src1 = patch->fields[Ind(s1)];
     empty_field(src1);
     src1->v = alloc_double(patch->nn);/* set to zero */
     /* src2 */
-    src2 = patch->pool[Ind(s2)];
+    src2 = patch->fields[Ind(s2)];
     
     /* copy */
     for (ijk = 0; ijk < nn; ++ijk)

@@ -368,7 +368,7 @@ static void fill_jacobian_direct_method_1stOrder(double **const J, Patch_T *cons
     Jf->v[lmn] -= EPS;
   }/* end of for (lmn = 0; lmn < nn; ++lmn) */
   
-  Field_T *f = temp_patch.pool[LookUpField("j_1st_deriv_field",&temp_patch)];
+  Field_T *f = temp_patch.fields[LookUpField("j_1st_deriv_field",&temp_patch)];
   remove_field(f);
   free_temp_patch(&temp_patch);
 }
@@ -414,7 +414,7 @@ static void fill_jacobian_direct_method_2ndOrder(double **const J, Patch_T *cons
   }/* end of for (lmn = 0; lmn < nn; ++lmn) */
   
   /* removing field and freeing memories */
-  Field_T *f = temp_patch.pool[LookUpField("j",&temp_patch)];
+  Field_T *f = temp_patch.fields[LookUpField("j",&temp_patch)];
   remove_field(f);
   free_temp_patch(&temp_patch);
 }
@@ -649,7 +649,7 @@ static void fill_jacobian_spectral_method_2ndOrder(double **const J, Patch_T *co
   }/* end of for (lmn = 0; lmn < nn; ++lmn) */
   
   /* removing field and freeing memories */
-  Field_T *f = temp_patch.pool[LookUpField("j_1st_deriv_field",&temp_patch)];
+  Field_T *f = temp_patch.fields[LookUpField("j_1st_deriv_field",&temp_patch)];
   remove_field(f);
   free_temp_patch(&temp_patch);
 }

@@ -450,8 +450,8 @@ void pr_field_difference(const Grid_T *const grid,const char *const fld1,const c
   FOR_ALL(i,grid->patch)
   {
     Patch_T *patch = grid->patch[i];
-    const double *f1 = patch->pool[Ind(fld1)]->v;
-    const double *f2 = patch->pool[Ind(fld2)]->v;
+    const double *f1 = patch->fields[Ind(fld1)]->v;
+    const double *f2 = patch->fields[Ind(fld2)]->v;
     unsigned U = patch->nn;
     
     sprintf(dir,"%s/%s-%s.%s",path,fld1,fld2,patch->name);

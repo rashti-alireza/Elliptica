@@ -457,7 +457,7 @@ static void pr_scalar_on_structured_mesh_3d_silo(const Pr_Field_T *const pr)
   mesh_name++;
   
   /* if field does not exists or empty */
-  if (v_ind < 0 || !patch->pool[v_ind]->v)
+  if (v_ind < 0 || !patch->fields[v_ind]->v)
     return;
   
   /* fields value */
@@ -465,7 +465,7 @@ static void pr_scalar_on_structured_mesh_3d_silo(const Pr_Field_T *const pr)
   for (ijk = 0; ijk < nn; ++ijk)
   {
     IJK(ijk,n,&i,&j,&k);
-    data[row2col(i,j,k)] = patch->pool[v_ind]->v[ijk];
+    data[row2col(i,j,k)] = patch->fields[v_ind]->v[ijk];
   }
    
   DB_ret = DBPutQuadvar1(dbfile,subg->field,mesh_name,
@@ -516,9 +516,9 @@ static void pr_vector_on_structured_mesh_3d_silo(const Pr_Field_T *const pr)
       v_ind0 < 0 || 
       v_ind1 < 0 || 
       v_ind2 < 0 ||
-      !patch->pool[v_ind0]->v ||
-      !patch->pool[v_ind1]->v || 
-      !patch->pool[v_ind2]->v
+      !patch->fields[v_ind0]->v ||
+      !patch->fields[v_ind1]->v || 
+      !patch->fields[v_ind2]->v
       )
     return;
   
@@ -530,9 +530,9 @@ static void pr_vector_on_structured_mesh_3d_silo(const Pr_Field_T *const pr)
   for (ijk = 0; ijk < nn; ++ijk)
   {
     IJK(ijk,n,&i,&j,&k);
-    comp[0][row2col(i,j,k)] = patch->pool[v_ind0]->v[ijk];
-    comp[1][row2col(i,j,k)] = patch->pool[v_ind1]->v[ijk];
-    comp[2][row2col(i,j,k)] = patch->pool[v_ind2]->v[ijk];
+    comp[0][row2col(i,j,k)] = patch->fields[v_ind0]->v[ijk];
+    comp[1][row2col(i,j,k)] = patch->fields[v_ind1]->v[ijk];
+    comp[2][row2col(i,j,k)] = patch->fields[v_ind2]->v[ijk];
   }
   
   sprintf(desc,"Vector_%s_%s_%s",

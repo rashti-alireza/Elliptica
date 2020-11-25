@@ -129,8 +129,8 @@ static void update_fields_relaxed_scheme(Grid_T *const grid)
       if (_Ind(field_new) < 0)
         continue;
         
-      Field_T *f_old  = patch->pool[Ind(field_old)];
-      Field_T *f_new  = patch->pool[Ind(field_new)];
+      Field_T *f_old  = patch->fields[Ind(field_old)];
+      Field_T *f_new  = patch->fields[Ind(field_new)];
       
       /* if the field is not defined in this patch */
       if (!f_new->v)
@@ -178,8 +178,8 @@ static void save_fields(Grid_T *const grid)
       /* if no field defined in this patch */
       if (_Ind(fname0) < 0) continue;
         
-      Field_T *f_old  = patch->pool[Ind(fname_old)];
-      Field_T *f0     = patch->pool[Ind(fname0)];
+      Field_T *f_old  = patch->fields[Ind(fname_old)];
+      Field_T *f0     = patch->fields[Ind(fname0)];
       
       /* if no field defined in this patch */
       if (!f0->v) continue;
@@ -320,7 +320,7 @@ static void bbn_backtrack(Grid_T *const grid,const char *const name)
   for (p = 0; p < npatch; ++p)
   {
     Patch_T *patch  = grid->patch[p];
-    Field_T *f      = patch->pool[Ind(name)];
+    Field_T *f      = patch->fields[Ind(name)];
     double *v = f->v;
     const double *last_sol = patch->solving_man->settings->last_sol;
     unsigned ijk;

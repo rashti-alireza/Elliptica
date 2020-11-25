@@ -17,7 +17,7 @@
 #define Power(a,b) pow(a,b)
 #define Sqrt(a) sqrt(a)
 #define prep_and_call(x) REALLOC_v_WRITE_v(x)\
-                         const double *const other_##x = patchp->pool[LookUpField_E(#x,patchp)]->v;
+                         const double *const other_##x = patchp->fields[LookUpField_E(#x,patchp)]->v;
 #define copy_values(x)   x[ijk] = other_##x[ijk];
 
 typedef void fAdjustment_t (Grid_T *const grid);

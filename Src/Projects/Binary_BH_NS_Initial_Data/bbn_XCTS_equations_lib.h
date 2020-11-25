@@ -2,14 +2,14 @@
 #define READ_v_IF_ON_HORIZON(xNAME) \
  double *xNAME = 0;/* so it gets segfault if mistakenly the value is acquired. */\
  if (IsItHorizonPatch(patch))\
-   xNAME = patch->pool[Ind(#xNAME)]->v;\
+   xNAME = patch->fields[Ind(#xNAME)]->v;\
  UNUSED(xNAME);
 
 /* defining macro such that only gets the field value if the patch covers the NS. */
 #define READ_v_IF_IN_NS(xNAME) \
  double *xNAME = 0;/* so it gets segfault if mistakenly the value is acquired. */\
  if (IsItNSPatch(patch))\
-   xNAME = patch->pool[Ind(#xNAME)]->v;
+   xNAME = patch->fields[Ind(#xNAME)]->v;
  
 void *bbn_eq_psi(void *vp1,void *vp2);
 void *bbn_bc_psi(void *vp1,void *vp2);

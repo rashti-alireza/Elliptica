@@ -234,7 +234,7 @@ static void write_fields(const Grid_T *const grid)
     count_nfld = 0;
     for (f = 0; f < patch->nfld; ++f)
     {
-      Field_T *field = patch->pool[f];
+      Field_T *field = patch->fields[f];
       if (strstr_i(list,field->name))
         count_nfld++;
     }
@@ -242,7 +242,7 @@ static void write_fields(const Grid_T *const grid)
     
     for (f = 0; f < patch->nfld; ++f)
     {
-      Field_T *field = patch->pool[f];
+      Field_T *field = patch->fields[f];
       if (strstr_i(list,field->name))
       {
         FWriteP_bin(field->name,strlen(field->name)+1);
@@ -674,7 +674,7 @@ void read_fields_from_checkpoint(Grid_T *const grid,FILE *const file)
       FReadP_bin(v);
       //FReadP_bin(attr);
       
-      field = patch->pool[Ind(name)];
+      field = patch->fields[Ind(name)];
       _free(name);
       field->v = v;
       v = 0;

@@ -191,14 +191,14 @@ void add_special_grid_solve_equations(Grid_T *const grid,const char *const name,
   solve->Sgrid[N]->name  = dup_s(name);
 }
 
-/* sync pool and solving_man->jacobian of grid and special grid; THUS,
+/* sync fields and solving_man->jacobian of grid and special grid; THUS,
 // DON'T USED "free_patch_SolMan_jacobian" for special grid.
 // since each field might be solved in a special grid 
-// so each patch of the grid shares the same pool but different
-// interface structure; however, pointer to pool might get changes
+// so each patch of the grid shares the same fields but different
+// interface structure; however, pointer to fields might get changes
 // due to free or add field while solving and calculating some equations.
 // these changes must be considered while moving to the next spcial gird. 
-// this function sync all of the pool according to the latest grid. */
+// this function sync all of the fields according to the latest grid. */
 void sync_patch_pools(const Grid_T*const latest_grid,Solve_Equations_T *const solve)
 {
   /* if there is no special grid so don't bother */
@@ -226,7 +226,7 @@ void sync_patch_pools(const Grid_T*const latest_grid,Solve_Equations_T *const so
   
       if (!strcmp(name2,name1))
       {
-        patch2->pool = patch1->pool;
+        patch2->fields = patch1->fields;
         patch2->nfld = patch1->nfld;
         
         /* if patch1 has any jacobians */
@@ -259,7 +259,7 @@ void sync_patch_pools(const Grid_T*const latest_grid,Solve_Equations_T *const so
     
         if (!strcmp(name2,name1))
         {
-          patch2->pool = patch1->pool;
+          patch2->fields = patch1->fields;
           patch2->nfld = patch1->nfld;
           /* if patch1 has any jacobians */
           if (patch1->solving_man)

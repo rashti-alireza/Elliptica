@@ -1115,7 +1115,7 @@ static double ADM_momentum_x_BBN_CS(Observable_T *const obs)
     
     I  = init_integration();
     I->type = "Integral{f(x)dS},Spectral";
-    I->Spectral->f = patch->pool[Ind("ADM_integrand_P_U0")];
+    I->Spectral->f = patch->fields[Ind("ADM_integrand_P_U0")];
     I->g00 = adm[p]->g00;
     I->g01 = adm[p]->g01;
     I->g02 = adm[p]->g02;
@@ -1146,7 +1146,7 @@ static double ADM_momentum_x_BBN_CS(Observable_T *const obs)
     
     I  = init_integration();
     I->type = "Integral{f(x)dV},Spectral";
-    I->Spectral->f = patch->pool[Ind("ADM_integrand_G_U0")];
+    I->Spectral->f = patch->fields[Ind("ADM_integrand_G_U0")];
     I->g00 = adm[p]->g00;
     I->g01 = adm[p]->g01;
     I->g02 = adm[p]->g02;
@@ -1185,7 +1185,7 @@ static double ADM_momentum_y_BBN_CS(Observable_T *const obs)
     
     I  = init_integration();
     I->type = "Integral{f(x)dS},Spectral";
-    I->Spectral->f = patch->pool[Ind("ADM_integrand_P_U1")];
+    I->Spectral->f = patch->fields[Ind("ADM_integrand_P_U1")];
     I->g00 = adm[p]->g00;
     I->g01 = adm[p]->g01;
     I->g02 = adm[p]->g02;
@@ -1216,7 +1216,7 @@ static double ADM_momentum_y_BBN_CS(Observable_T *const obs)
     
     I  = init_integration();
     I->type = "Integral{f(x)dV},Spectral";
-    I->Spectral->f = patch->pool[Ind("ADM_integrand_G_U1")];
+    I->Spectral->f = patch->fields[Ind("ADM_integrand_G_U1")];
     I->g00 = adm[p]->g00;
     I->g01 = adm[p]->g01;
     I->g02 = adm[p]->g02;
@@ -1255,7 +1255,7 @@ static double ADM_momentum_z_BBN_CS(Observable_T *const obs)
     
     I  = init_integration();
     I->type = "Integral{f(x)dS},Spectral";
-    I->Spectral->f = patch->pool[Ind("ADM_integrand_P_U2")];
+    I->Spectral->f = patch->fields[Ind("ADM_integrand_P_U2")];
     I->g00 = adm[p]->g00;
     I->g01 = adm[p]->g01;
     I->g02 = adm[p]->g02;
@@ -1286,7 +1286,7 @@ static double ADM_momentum_z_BBN_CS(Observable_T *const obs)
     
     I  = init_integration();
     I->type = "Integral{f(x)dV},Spectral";
-    I->Spectral->f = patch->pool[Ind("ADM_integrand_G_U2")];
+    I->Spectral->f = patch->fields[Ind("ADM_integrand_G_U2")];
     I->g00 = adm[p]->g00;
     I->g01 = adm[p]->g01;
     I->g02 = adm[p]->g02;
@@ -1320,7 +1320,7 @@ static double ADM_angular_momentum_z_BBN_CS(Observable_T *const obs)
       continue;
     
     Patch_T *patch = adm[p]->patch;
-    Field_T *xiPz = patch->pool[Ind("ADM_integrand_xiP_U2")];
+    Field_T *xiPz = patch->fields[Ind("ADM_integrand_xiP_U2")];
     
     I  = init_integration();
     I->type = "Integral{f(x)dS},Spectral";
@@ -1353,7 +1353,7 @@ static double ADM_angular_momentum_z_BBN_CS(Observable_T *const obs)
       continue;
 
     Patch_T *patch = adm[p]->patch;
-    Field_T *xiGz = patch->pool[Ind("ADM_integrand_xiG_U2")];
+    Field_T *xiGz = patch->fields[Ind("ADM_integrand_xiG_U2")];
     
     I  = init_integration();
     I->type = "Integral{f(x)dV},Spectral";
@@ -1392,7 +1392,7 @@ static double ADM_angular_momentum_x_BBN_CS(Observable_T *const obs)
       continue;
    
     Patch_T *patch = adm[p]->patch;
-    Field_T *xiPx = patch->pool[Ind("ADM_integrand_xiP_U0")];
+    Field_T *xiPx = patch->fields[Ind("ADM_integrand_xiP_U0")];
     
     I  = init_integration();
     I->type = "Integral{f(x)dS},Spectral";
@@ -1424,7 +1424,7 @@ static double ADM_angular_momentum_x_BBN_CS(Observable_T *const obs)
       continue;
    
     Patch_T *patch = adm[p]->patch;
-    Field_T *xiGx = patch->pool[Ind("ADM_integrand_xiG_U0")];
+    Field_T *xiGx = patch->fields[Ind("ADM_integrand_xiG_U0")];
     
     I  = init_integration();
     I->type = "Integral{f(x)dV},Spectral";
@@ -1463,7 +1463,7 @@ static double ADM_angular_momentum_y_BBN_CS(Observable_T *const obs)
       continue;
     
     Patch_T *patch = adm[p]->patch;
-    Field_T *xiPy = patch->pool[Ind("ADM_integrand_xiP_U1")];
+    Field_T *xiPy = patch->fields[Ind("ADM_integrand_xiP_U1")];
     
     I  = init_integration();
     I->type = "Integral{f(x)dS},Spectral";
@@ -1496,7 +1496,7 @@ static double ADM_angular_momentum_y_BBN_CS(Observable_T *const obs)
       continue;
    
     Patch_T *patch = adm[p]->patch;
-    Field_T *xiGy = patch->pool[Ind("ADM_integrand_xiG_U1")];
+    Field_T *xiGy = patch->fields[Ind("ADM_integrand_xiG_U1")];
     
     I  = init_integration();
     I->type = "Integral{f(x)dV},Spectral";
@@ -1616,15 +1616,15 @@ void bbn_define_spin_integral(double S[3],Grid_T *const grid,const char *const k
     I->Spectral->Z_surface = 1;
     I->Spectral->K         = 0;
     
-    I->Spectral->f = patch->pool[Ind("SPIN_integrand_U0")];
+    I->Spectral->f = patch->fields[Ind("SPIN_integrand_U0")];
     plan_integration(I);
     S[0] += execute_integration(I);
     
-    I->Spectral->f = patch->pool[Ind("SPIN_integrand_U1")];
+    I->Spectral->f = patch->fields[Ind("SPIN_integrand_U1")];
     plan_integration(I);
     S[1] += execute_integration(I);
     
-    I->Spectral->f = patch->pool[Ind("SPIN_integrand_U2")];
+    I->Spectral->f = patch->fields[Ind("SPIN_integrand_U2")];
     plan_integration(I);
     S[2] += execute_integration(I);
     
@@ -1751,15 +1751,15 @@ bbn_define_spin_akv
     I->Spectral->Z_surface = 1;
     I->Spectral->K         = 0;
     
-    I->Spectral->f = patch->pool[Ind("SPIN_integrand_U0")];
+    I->Spectral->f = patch->fields[Ind("SPIN_integrand_U0")];
     plan_integration(I);
     S[0] += execute_integration(I);
     
-    I->Spectral->f = patch->pool[Ind("SPIN_integrand_U1")];
+    I->Spectral->f = patch->fields[Ind("SPIN_integrand_U1")];
     plan_integration(I);
     S[1] += execute_integration(I);
     
-    I->Spectral->f = patch->pool[Ind("SPIN_integrand_U2")];
+    I->Spectral->f = patch->fields[Ind("SPIN_integrand_U2")];
     plan_integration(I);
     S[2] += execute_integration(I);
     

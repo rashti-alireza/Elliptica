@@ -204,7 +204,7 @@ void test_dInterp_a_df(Grid_T *const grid)
   {
     Patch_T *patch = grid->patch[p];
     add_field("phi_field",0,patch,YES);
-    Field_T *phi_field = patch->pool[Ind("phi_field")];
+    Field_T *phi_field = patch->fields[Ind("phi_field")];
     double *phi = phi_field->v;
     unsigned i;
     
@@ -261,7 +261,7 @@ static void test_dInterp_x_df_YZ_Tn_Ex(Field_T *const phi_field)
   Patch_T *const patch = phi_field->patch;
   Flag_T flg = NONE;
   add_field("phi_field_x",0,patch,NO);
-  Field_T *phi_field_x = patch->pool[Ind("phi_field_x")];
+  Field_T *phi_field_x = patch->fields[Ind("phi_field_x")];
   SubFace_T sf[1] = {0};
   fdInterp_dfs_T *dInterp_spec = 0;
   Interpolation_T *interp_s = init_interpolation();
@@ -326,7 +326,7 @@ static void test_dInterp_y_df_YZ_Tn_Ex(Field_T *const phi_field)
   Patch_T *const patch = phi_field->patch;
   Flag_T flg = NONE;
   add_field("phi_field_y",0,patch,NO);
-  Field_T *phi_field_y = patch->pool[Ind("phi_field_y")];
+  Field_T *phi_field_y = patch->fields[Ind("phi_field_y")];
   SubFace_T sf[1] = {0};
   fdInterp_dfs_T *dInterp_spec = 0;
   Interpolation_T *interp_s = init_interpolation();
@@ -391,7 +391,7 @@ static void test_dInterp_z_df_YZ_Tn_Ex(Field_T *const phi_field)
   Patch_T *const patch = phi_field->patch;
   Flag_T flg = NONE;
   add_field("phi_field_z",0,patch,NO);
-  Field_T *phi_field_z = patch->pool[Ind("phi_field_z")];
+  Field_T *phi_field_z = patch->fields[Ind("phi_field_z")];
   SubFace_T sf[1] = {0};
   fdInterp_dfs_T *dInterp_spec = 0;
   Interpolation_T *interp_s = init_interpolation();
@@ -514,7 +514,7 @@ static void test_dInterp_x_df_XZ_Tn_Ex(Field_T *const phi_field)
   Patch_T *const patch = phi_field->patch;
   Flag_T flg = NONE;
   add_field("phi_field_x",0,patch,NO);
-  Field_T *phi_field_x = patch->pool[Ind("phi_field_x")];
+  Field_T *phi_field_x = patch->fields[Ind("phi_field_x")];
   SubFace_T sf[1] = {0};
   fdInterp_dfs_T *dInterp_spec = 0;
   Interpolation_T *interp_s = init_interpolation();
@@ -579,7 +579,7 @@ static void test_dInterp_y_df_XZ_Tn_Ex(Field_T *const phi_field)
   Patch_T *const patch = phi_field->patch;
   Flag_T flg = NONE;
   add_field("phi_field_y",0,patch,NO);
-  Field_T *phi_field_y = patch->pool[Ind("phi_field_y")];
+  Field_T *phi_field_y = patch->fields[Ind("phi_field_y")];
   SubFace_T sf[1] = {0};
   fdInterp_dfs_T *dInterp_spec = 0;
   Interpolation_T *interp_s = init_interpolation();
@@ -644,7 +644,7 @@ static void test_dInterp_z_df_XZ_Tn_Ex(Field_T *const phi_field)
   Patch_T *const patch = phi_field->patch;
   Flag_T flg = NONE;
   add_field("phi_field_z",0,patch,NO);
-  Field_T *phi_field_z = patch->pool[Ind("phi_field_z")];
+  Field_T *phi_field_z = patch->fields[Ind("phi_field_z")];
   SubFace_T sf[1] = {0};
   fdInterp_dfs_T *dInterp_spec = 0;
   Interpolation_T *interp_s = init_interpolation();
@@ -767,7 +767,7 @@ static void test_dInterp_x_df_XY_Tn_Ex(Field_T *const phi_field)
   Patch_T *const patch = phi_field->patch;
   Flag_T flg = NONE;
   add_field("phi_field_x",0,patch,NO);
-  Field_T *phi_field_x = patch->pool[Ind("phi_field_x")];
+  Field_T *phi_field_x = patch->fields[Ind("phi_field_x")];
   SubFace_T sf[1] = {0};
   fdInterp_dfs_T *dInterp_spec = 0;
   Interpolation_T *interp_s = init_interpolation();
@@ -832,7 +832,7 @@ static void test_dInterp_y_df_XY_Tn_Ex(Field_T *const phi_field)
   Patch_T *const patch = phi_field->patch;
   Flag_T flg = NONE;
   add_field("phi_field_y",0,patch,NO);
-  Field_T *phi_field_y = patch->pool[Ind("phi_field_y")];
+  Field_T *phi_field_y = patch->fields[Ind("phi_field_y")];
   SubFace_T sf[1] = {0};
   fdInterp_dfs_T *dInterp_spec = 0;
   Interpolation_T *interp_s = init_interpolation();
@@ -897,7 +897,7 @@ static void test_dInterp_z_df_XY_Tn_Ex(Field_T *const phi_field)
   Patch_T *const patch = phi_field->patch;
   Flag_T flg = NONE;
   add_field("phi_field_z",0,patch,NO);
-  Field_T *phi_field_z = patch->pool[Ind("phi_field_z")];
+  Field_T *phi_field_z = patch->fields[Ind("phi_field_z")];
   SubFace_T sf[1] = {0};
   fdInterp_dfs_T *dInterp_spec = 0;
   Interpolation_T *interp_s = init_interpolation();
@@ -1018,7 +1018,7 @@ static void test_dInterp_x_df_XYZ_Tn_Ex(Field_T *const phi_field)
   Patch_T *const patch = phi_field->patch;
   Flag_T flg = NONE;
   add_field("phi_field_x",0,patch,NO);
-  Field_T *phi_field_x = patch->pool[Ind("phi_field_x")];
+  Field_T *phi_field_x = patch->fields[Ind("phi_field_x")];
   SubFace_T sf[1] = {0};
   fdInterp_dfs_T *dInterp_spec = 0;
   Interpolation_T *interp_s = init_interpolation();
@@ -1080,7 +1080,7 @@ static void test_dInterp_y_df_XYZ_Tn_Ex(Field_T *const phi_field)
   Patch_T *const patch = phi_field->patch;
   Flag_T flg = NONE;
   add_field("phi_field_y",0,patch,NO);
-  Field_T *phi_field_y = patch->pool[Ind("phi_field_y")];
+  Field_T *phi_field_y = patch->fields[Ind("phi_field_y")];
   SubFace_T sf[1] = {0};
   fdInterp_dfs_T *dInterp_spec = 0;
   Interpolation_T *interp_s = init_interpolation();
@@ -1142,7 +1142,7 @@ static void test_dInterp_z_df_XYZ_Tn_Ex(Field_T *const phi_field)
   Patch_T *const patch = phi_field->patch;
   Flag_T flg = NONE;
   add_field("phi_field_z",0,patch,NO);
-  Field_T *phi_field_z = patch->pool[Ind("phi_field_z")];
+  Field_T *phi_field_z = patch->fields[Ind("phi_field_z")];
   SubFace_T sf[1] = {0};
   fdInterp_dfs_T *dInterp_spec = 0;
   Interpolation_T *interp_s = init_interpolation();

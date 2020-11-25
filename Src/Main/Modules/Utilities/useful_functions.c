@@ -439,7 +439,7 @@ void print_spectral_expansion_truncation_error(Grid_T *const grid)
     
     for (f = 0; f < nfld; ++f)
     {
-      Field_T *field = patch->pool[f];
+      Field_T *field = patch->fields[f];
       
       /* skip residual fields */
       if (strstr(field->name,"_residual"))

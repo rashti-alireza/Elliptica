@@ -201,7 +201,7 @@ t5 + t6;
     double X[3] = {0};
 
     X_of_x(X,NS_center,patch);
-    interp_phi0->field = patch->pool[Ind("phi")];
+    interp_phi0->field = patch->fields[Ind("phi")];
     interp_phi0->X = X[0];
     interp_phi0->Y = X[1];
     interp_phi0->Z = X[2];

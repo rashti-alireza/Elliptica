@@ -181,7 +181,7 @@ Patch_T make_temp_patch(const Patch_T *const patch)
   tmp_patch.name = 0;
   //tmp_patch.node = patch->node;
   tmp_patch.interface = 0;
-  tmp_patch.pool = 0;
+  tmp_patch.fields = 0;
   tmp_patch.solving_man = 0;
 
   return tmp_patch;
@@ -190,8 +190,8 @@ Patch_T make_temp_patch(const Patch_T *const patch)
 /* freeing the temporary made patch */
 void free_temp_patch(Patch_T *const patch)
 {
-  if (patch->pool != 0)
-    free(patch->pool);
+  if (patch->fields != 0)
+    free(patch->fields);
 }
 
 /* free the whole date base of grid */
@@ -330,10 +330,10 @@ void free_patch(Patch_T *patch)
   }
   for (f = 0; f < patch->nfld; ++f)
   {
-    Field_T *field = patch->pool[f];
+    Field_T *field = patch->fields[f];
     free_field(field);
   }
-  _free(patch->pool);
+  _free(patch->fields);
   _free(patch->JacobianT);
   free_patch_interface(patch);
   if (patch->solving_man)

@@ -9,7 +9,7 @@
 
 #define add_field_and_prep_field(name) ADD_FIELD(name) REALLOC_v_WRITE_v(name)
 #define add_field_NoMem_and_declare_field(name) ADD_FIELD(name)\
-                                      Field_T *const f##name = patch->pool[Ind(#name)];
+                                      Field_T *const f##name = patch->fields[Ind(#name)];
 void bbn_update_psi10A_UiUj(Patch_T *const patch)
 {
 
@@ -338,12 +338,12 @@ pow(_A_UUij_U2U2, 2)*pow(_gamma_D2D2[ijk], 2);
   add_field_NoMem_and_declare_field(_dLBij_U0U2D0)
   add_field_NoMem_and_declare_field(_dLBij_U0U2D1)
   add_field_NoMem_and_declare_field(_dLBij_U0U2D2)
-  Field_T *f_LBij_U2U2 = patch->pool[Ind("_LBij_U2U2")];
-  Field_T *f_LBij_U1U2 = patch->pool[Ind("_LBij_U1U2")];
-  Field_T *f_LBij_U1U1 = patch->pool[Ind("_LBij_U1U1")];
-  Field_T *f_LBij_U0U2 = patch->pool[Ind("_LBij_U0U2")];
-  Field_T *f_LBij_U0U1 = patch->pool[Ind("_LBij_U0U1")];
-  Field_T *f_LBij_U0U0 = patch->pool[Ind("_LBij_U0U0")];
+  Field_T *f_LBij_U2U2 = patch->fields[Ind("_LBij_U2U2")];
+  Field_T *f_LBij_U1U2 = patch->fields[Ind("_LBij_U1U2")];
+  Field_T *f_LBij_U1U1 = patch->fields[Ind("_LBij_U1U1")];
+  Field_T *f_LBij_U0U2 = patch->fields[Ind("_LBij_U0U2")];
+  Field_T *f_LBij_U0U1 = patch->fields[Ind("_LBij_U0U1")];
+  Field_T *f_LBij_U0U0 = patch->fields[Ind("_LBij_U0U0")];
   f_dLBij_U2U2D2->v = Partial_Derivative(f_LBij_U2U2,"z");
   f_dLBij_U2U2D0->v = Partial_Derivative(f_LBij_U2U2,"x");
   f_dLBij_U2U2D1->v = Partial_Derivative(f_LBij_U2U2,"y");

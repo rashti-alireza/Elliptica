@@ -11,8 +11,8 @@ void make_nodes_Spherical_coord(Patch_T *const patch)
   struct Collocation_s coll_s[3] = {0};
   const unsigned U = patch->nn;
   const unsigned *const n = patch->n;
-  const Field_T *const R1_field = patch->pool[Ind("R1_radius")];
-  const Field_T *const R2_field = patch->pool[Ind("R2_radius")];
+  const Field_T *const R1_field = patch->fields[Ind("R1_radius")];
+  const Field_T *const R2_field = patch->fields[Ind("R2_radius")];
   double R1,R2;
   const double *const c = patch->c;/* center of origine translated */
   unsigned i,j,k,l;

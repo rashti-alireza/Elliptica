@@ -186,7 +186,7 @@ static void interpolate_and_write(Grid_T *const grid,struct interpolation_points
     
     while(fields_name[fn])
     {
-      Field_T *field = patch->pool[Ind(fields_name[fn])];
+      Field_T *field = patch->fields[Ind(fields_name[fn])];
       make_coeffs_3d(field);
       fn++;
     }
@@ -237,7 +237,7 @@ static void interpolate_and_write(Grid_T *const grid,struct interpolation_points
     {
       Patch_T *patch  = grid->patch[pnt->patchn[p]];
       Interpolation_T *interp_s = init_interpolation();
-      interp_s->field = patch->pool[pnt->f_index[patch->pn][f]];
+      interp_s->field = patch->fields[pnt->f_index[patch->pn][f]];
       interp_s->XYZ_dir_flag = 1;
       interp_s->X = pnt->X[p];
       interp_s->Y = pnt->Y[p];
@@ -632,7 +632,7 @@ bam_output_doctest
     
     while(fields_name[fn])
     {
-      Field_T *field = patch->pool[Ind(fields_name[fn])];
+      Field_T *field = patch->fields[Ind(fields_name[fn])];
       make_coeffs_3d(field);
       fn++;
     }
@@ -674,7 +674,7 @@ bam_output_doctest
     {
       Patch_T *patch  = grid->patch[pnt->patchn[p]];
       Interpolation_T *interp_s = init_interpolation();
-      interp_s->field = patch->pool[pnt->f_index[patch->pn][f]];
+      interp_s->field = patch->fields[pnt->f_index[patch->pn][f]];
       interp_s->XYZ_dir_flag = 1;
       interp_s->X = pnt->X[p];
       interp_s->Y = pnt->Y[p];
@@ -762,7 +762,7 @@ bam_output_doctest
       
       while(adm_g[fn])
       {
-        Field_T *field = patch->pool[Ind(adm_g[fn])];
+        Field_T *field = patch->fields[Ind(adm_g[fn])];
         make_coeffs_3d(field);
         fn++;
       }
@@ -780,27 +780,27 @@ bam_output_doctest
       interp_s->Y = pnt->Y[p];
       interp_s->Z = pnt->Z[p];
       
-      interp_s->field = patch->pool[Ind("bam_adm_g_D0D0")];
+      interp_s->field = patch->fields[Ind("bam_adm_g_D0D0")];
       plan_interpolation(interp_s);
       gxx = execute_interpolation(interp_s);
       
-      interp_s->field = patch->pool[Ind("bam_adm_g_D0D1")];
+      interp_s->field = patch->fields[Ind("bam_adm_g_D0D1")];
       plan_interpolation(interp_s);
       gxy = execute_interpolation(interp_s);
       
-      interp_s->field = patch->pool[Ind("bam_adm_g_D0D2")];
+      interp_s->field = patch->fields[Ind("bam_adm_g_D0D2")];
       plan_interpolation(interp_s);
       gxz = execute_interpolation(interp_s);
       
-      interp_s->field = patch->pool[Ind("bam_adm_g_D1D1")];
+      interp_s->field = patch->fields[Ind("bam_adm_g_D1D1")];
       plan_interpolation(interp_s);
       gyy = execute_interpolation(interp_s);
       
-      interp_s->field = patch->pool[Ind("bam_adm_g_D1D2")];
+      interp_s->field = patch->fields[Ind("bam_adm_g_D1D2")];
       plan_interpolation(interp_s);
       gyz = execute_interpolation(interp_s);
       
-      interp_s->field = patch->pool[Ind("bam_adm_g_D2D2")];
+      interp_s->field = patch->fields[Ind("bam_adm_g_D2D2")];
       plan_interpolation(interp_s);
       gzz = execute_interpolation(interp_s);
       
@@ -845,7 +845,7 @@ bam_output_doctest
             /* adm_Kij */
             if (Puncture_Kij && strstr(fields_name[fi],"bam_adm_K_"))
             {
-              Field_T *fld = patch->pool[Ind(fields_name[fi])];
+              Field_T *fld = patch->fields[Ind(fields_name[fi])];
               free_coeffs(fld);
               
               fld->v[ijk] *= bbn_bhf_smoother(r,rfill,rmin);
@@ -853,7 +853,7 @@ bam_output_doctest
             /* adm_gij */  
             else if (Puncture_gij && strstr(fields_name[fi],"bam_adm_g_"))
             {
-              Field_T *fld = patch->pool[Ind(fields_name[fi])];
+              Field_T *fld = patch->fields[Ind(fields_name[fi])];
               free_coeffs(fld);
             
               double w = bbn_bhf_smoother(r,rfill,rmin);
@@ -889,7 +889,7 @@ bam_output_doctest
     
     while(bssn_fields_name[fn])
     {
-      Field_T *field = patch->pool[Ind(fields_name[fn])];
+      Field_T *field = patch->fields[Ind(fields_name[fn])];
       make_coeffs_3d(field);
       fn++;
     }
@@ -906,7 +906,7 @@ bam_output_doctest
     {
       Patch_T *patch  = grid->patch[pnt->patchn[p]];
       Interpolation_T *interp_s = init_interpolation();
-      interp_s->field = patch->pool[Ind(bssn_fields_name[f])];
+      interp_s->field = patch->fields[Ind(bssn_fields_name[f])];
       interp_s->XYZ_dir_flag = 1;
       interp_s->X = pnt->X[p];
       interp_s->Y = pnt->Y[p];
@@ -954,7 +954,7 @@ bam_output_doctest
       
       while(bssn_g[fn])
       {
-        Field_T *field = patch->pool[Ind(bssn_g[fn])];
+        Field_T *field = patch->fields[Ind(bssn_g[fn])];
         make_coeffs_3d(field);
         fn++;
       }
@@ -972,27 +972,27 @@ bam_output_doctest
       interp_s->Y = pnt->Y[p];
       interp_s->Z = pnt->Z[p];
       
-      interp_s->field = patch->pool[Ind("bam_bssn_g_D0D0")];
+      interp_s->field = patch->fields[Ind("bam_bssn_g_D0D0")];
       plan_interpolation(interp_s);
       gxx = execute_interpolation(interp_s);
       
-      interp_s->field = patch->pool[Ind("bam_bssn_g_D0D1")];
+      interp_s->field = patch->fields[Ind("bam_bssn_g_D0D1")];
       plan_interpolation(interp_s);
       gxy = execute_interpolation(interp_s);
       
-      interp_s->field = patch->pool[Ind("bam_bssn_g_D0D2")];
+      interp_s->field = patch->fields[Ind("bam_bssn_g_D0D2")];
       plan_interpolation(interp_s);
       gxz = execute_interpolation(interp_s);
       
-      interp_s->field = patch->pool[Ind("bam_bssn_g_D1D1")];
+      interp_s->field = patch->fields[Ind("bam_bssn_g_D1D1")];
       plan_interpolation(interp_s);
       gyy = execute_interpolation(interp_s);
       
-      interp_s->field = patch->pool[Ind("bam_bssn_g_D1D2")];
+      interp_s->field = patch->fields[Ind("bam_bssn_g_D1D2")];
       plan_interpolation(interp_s);
       gyz = execute_interpolation(interp_s);
       
-      interp_s->field = patch->pool[Ind("bam_bssn_g_D2D2")];
+      interp_s->field = patch->fields[Ind("bam_bssn_g_D2D2")];
       plan_interpolation(interp_s);
       gzz = execute_interpolation(interp_s);
       
