@@ -7,6 +7,8 @@ Dimension = 3;
 Point = ijk;
 
 C_macro = READ_v(name);
+C_arg   =;
+
 
 `#include "star_header.h"`
 ``
@@ -22,48 +24,30 @@ C_macro = READ_v(name);
 `const double Vr       = par->Vr;`
 `const double D        = par->D;`
 `const double *const V2CM = par->V2CM; `
-`double Omega_BHNS = 0, y_CM = 0, x_CM = 0;`
+`double Omega = 0, y_CM = 0, x_CM = 0;`
 `unsigned ijk;`  
 ``
 `if(par->find_y_CM)`
 `{`
-`  Omega_BHNS = par->Omega_BHNS;`
-`  y_CM       = x[0];`
-`  x_CM       = par->x_CM;`
+`  Omega = par->Omega;`
+`  y_CM  = x[0];`
+`  x_CM  = par->x_CM;`
 `}`
 `else if(par->find_x_CM)`
 `{`
-`  Omega_BHNS = par->Omega_BHNS;`
-`  y_CM       = par->y_CM;`
-`  x_CM       = x[0];`
+`  Omega = par->Omega;`
+`  y_CM  = par->y_CM;`
+`  x_CM  = x[0];`
 `}`
 `else if(par->find_Omega)`
 `{`
-`  Omega_BHNS = x[0];`
-`  y_CM       = par->y_CM;`
-`  x_CM       = par->x_CM;`
+`  Omega = x[0];`
+`  y_CM  = par->y_CM;`
+`  x_CM  = par->x_CM;`
 `}`
 `else`
 `  Error0(NO_OPTION);`
 ``
-`/* B^1 */`
-`REALLOC_v_WRITE_v(B1_U0)`
-`REALLOC_v_WRITE_v(B1_U1)`
-`REALLOC_v_WRITE_v(B1_U2)`
-`for (ijk = 0; ijk < nn; ++ijk)`
-`{`
-  `double x0     = patch->node[ijk]->x[0];`
-  `double y0     = patch->node[ijk]->x[1];`
-  
-  `B1_U0[ijk] = Omega_BHNS*(-y0+y_CM)+Vr*(x0-x_CM)/D;`
-  `B1_U1[ijk] = Omega_BHNS*(x0-x_CM)+Vr*(y0-y_CM)/D;`
-  `B1_U2[ijk] = 0;`
-`}`
-
-`bbn_update_Beta_U0(patch);`
-`bbn_update_Beta_U1(patch);`
-`bbn_update_Beta_U2(patch);`
-
 Declare = 
 {
 
@@ -79,8 +63,14 @@ Declare =
  # eta
  (obj = Field,name = eta, rank = 0, C_macro);
 
- # Beta
- (obj = Field,name = Beta, rank = U, C_macro);
+ # beta
+ #(obj = Field,name = beta, rank = U, C_macro);
+
+ # beta = B0+B1
+ (obj = Field,name = B0, rank = U, C_macro);
+
+ # beta = B0+B1
+ (obj = Field,name = B1, rank = U, none,C_arg);
 
  # Killing vector xi^i, assumed 0
  #(obj = Field,name = xi, rank = U, C_macro);
@@ -108,14 +98,23 @@ Symm[gConf(i,j)   = gConf(j,i)];
 # calculating Gamma tilda represented by Gtilda
 `for (ijk = 0; ijk < nn; ++ijk)`
 `{`
-    alpha  = eta/psi;
-    alpha2 = alpha**2;
-    psi4   = psi**4;
-    t(i)   = Beta(i)+W(i)/(enthalpy*u0);
-    t2     = psi4*t(-i)*t(-j)*gConf(i,j);
-    Gtilda = alpha2-t2;
-    ``
-    `Gtilda_rf->v[ijk] = Gtilda;`
+
+  `double x0  = patch->node[ijk]->x[0];`
+  `double y0  = patch->node[ijk]->x[1];`
+  
+  `double B1_U0 = Omega*(-y0+y_CM)+Vr*(x0-x_CM)/D;`
+  `double B1_U1 = Omega*(x0-x_CM)+Vr*(y0-y_CM)/D;`
+  `double B1_U2 = 0;`
+
+   beta(i)    = B0(i)+B1(i);
+   alpha      = eta/psi;
+   alpha2     = alpha**2;
+   psi4       = psi**4;
+   t(i)       = beta(i)+W(i)/(enthalpy*u0);
+   t2         = psi4*t(-i)*t(-j)*gConf(i,j);
+   Gtilda     = alpha2-t2;
+   ``
+   `Gtilda_rf->v[ijk] = Gtilda;`
 `}`
 ``
 
