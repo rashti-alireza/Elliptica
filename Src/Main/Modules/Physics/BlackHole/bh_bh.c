@@ -67,8 +67,12 @@ static void tune_AH_radius_irreducible_mass_perfect_s2(Physics_T *const phys)
   Psetd("max_radius",r_bh);
   
   if (EQL(dr,0))/* => no change in AH surface */
+  {
     Seti("did_AH_surface_change?",0);
+  }
   else          /* => change in AH surface */
+  {
     Seti("did_AH_surface_change?",1);
+  }
   
 }

@@ -13,6 +13,7 @@
 #include "maths_equation_solvings_lib.h"
 #include "maths_spectral_methods_lib.h"
 
+int bh_tune_apparent_horizon_radius(Physics_T *const phys);
 
 #endif
 
