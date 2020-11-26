@@ -804,8 +804,8 @@ IsItCovering
   if (grid->kind == Grid_SplitCubedSpherical_BHNS ||
       grid->kind == Grid_SplitCubedSpherical_NSNS ||
       grid->kind == Grid_SplitCubedSpherical_BHBH ||
-      grid->kind == Grid_SplitCubedSpherical_NS   ||
-      grid->kind == Grid_SplitCubedSpherical_BH
+      grid->kind == Grid_SplitCubedSpherical_SNS  ||
+      grid->kind == Grid_SplitCubedSpherical_SBH
      )
   {
     i = 0;
@@ -870,10 +870,10 @@ Grid_Kind_T set_grid_kind(const char *const grid_kind)
     ret = Grid_SplitCubedSpherical_BHBH;
     
   else if (strcmp_i(grid_kind,"SplitCubedSpherical(NS)"))
-    ret = Grid_SplitCubedSpherical_NS;
+    ret = Grid_SplitCubedSpherical_SNS;
     
   else if (strcmp_i(grid_kind,"SplitCubedSpherical(BH)"))
-    ret = Grid_SplitCubedSpherical_BH;
+    ret = Grid_SplitCubedSpherical_SBH;
     
   else if (strcmp_i(grid_kind,"CubedSpherical(BH+NS)"))
    ret = Grid_CubedSpherical_BHNS;

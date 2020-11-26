@@ -39,8 +39,8 @@ typedef enum COORD_T
 typedef enum GRID_KIND_T
 {
   Grid_UNDEFINED = 0,
-  Grid_SplitCubedSpherical_NS,
-  Grid_SplitCubedSpherical_BH,
+  Grid_SplitCubedSpherical_SNS,
+  Grid_SplitCubedSpherical_SBH,
   Grid_SplitCubedSpherical_NSNS,
   Grid_SplitCubedSpherical_BHNS,
   Grid_SplitCubedSpherical_BHBH,

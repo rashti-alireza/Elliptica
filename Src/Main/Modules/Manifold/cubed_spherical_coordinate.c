@@ -310,7 +310,7 @@ void fill_patches_Split_CubedSpherical_grid(Grid_T *const grid)
       _free(patches);
     }
   }
-  else if (grid->kind == Grid_SplitCubedSpherical_BH)
+  else if (grid->kind == Grid_SplitCubedSpherical_SBH)
   {
     Flag_T bh_side    = NONE;
     Flag_T bh_filled = NONE;
@@ -365,7 +365,7 @@ void fill_patches_Split_CubedSpherical_grid(Grid_T *const grid)
     }
     
   }
-  else if (grid->kind == Grid_SplitCubedSpherical_NS)
+  else if (grid->kind == Grid_SplitCubedSpherical_SNS)
   {
     Flag_T ns_side = NONE;
     

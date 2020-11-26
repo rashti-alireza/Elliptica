@@ -139,8 +139,8 @@ static void fill_patches(Grid_T *const grid)
   if (grid->kind == Grid_SplitCubedSpherical_BHNS ||
       grid->kind == Grid_SplitCubedSpherical_NSNS ||
       grid->kind == Grid_SplitCubedSpherical_BHBH ||
-      grid->kind == Grid_SplitCubedSpherical_NS   ||
-      grid->kind == Grid_SplitCubedSpherical_BH
+      grid->kind == Grid_SplitCubedSpherical_SNS  ||
+      grid->kind == Grid_SplitCubedSpherical_SBH
      )
     fill_patches_Split_CubedSpherical_grid(grid); 
 
@@ -246,8 +246,8 @@ void alloc_patches(Grid_T *const grid)
   if (grid->kind == Grid_SplitCubedSpherical_BHNS ||
       grid->kind == Grid_SplitCubedSpherical_NSNS ||
       grid->kind == Grid_SplitCubedSpherical_BHBH ||
-      grid->kind == Grid_SplitCubedSpherical_NS   ||
-      grid->kind == Grid_SplitCubedSpherical_BH
+      grid->kind == Grid_SplitCubedSpherical_SNS  ||
+      grid->kind == Grid_SplitCubedSpherical_SBH
      )
     alloc_patches_Split_CubedSpherical_grid(grid);
   
