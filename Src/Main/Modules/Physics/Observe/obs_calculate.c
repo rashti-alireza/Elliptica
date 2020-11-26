@@ -725,21 +725,23 @@ void obs_calculate(Observe_T *const obs)
     obs->ret[0] = obs_ADM_mass(obs);
     free(patches);
   }
-  else if (strcmp_i(obs->quantity,"CM"))
+  else if (strcmp_i(obs->quantity,"CM|BH"))
   {
-    if (obs->phys->ctype == BH)      Rc_BH(obs);
-    else if (obs->phys->ctype == NS) obs_Rc_NS(obs);
-    else                             Error0(NO_OPTION);
+    Rc_BH(obs);
   }
-  else if (strcmp_i(obs->quantity,"Spin|JRP"))
+  else if (strcmp_i(obs->quantity,"CM|NS"))
+  {
+    obs_Rc_NS(obs);
+  }
+  else if (strstr_i(obs->quantity,"Spin|JRP|"))
   {
     define_spin_JRP(obs);
   }
-  else if (strcmp_i(obs->quantity,"Spin|Campanelli"))
+  else if (strstr_i(obs->quantity,"Spin|Campanelli|"))
   {
     define_spin_campanelli(obs);
   }
-  else if (strcmp_i(obs->quantity,"Spin|AKV"))
+  else if (strstr_i(obs->quantity,"Spin|AKV|"))
   {
     define_spin_akv(obs);
   }
