@@ -74,6 +74,26 @@
 #define Sets(param_name,val) \
 {sprintf(phys->par,"%s_%s",phys->stype,param_name); Psets(phys->par,(val));}
 
+/* set double parameter for physical system. ex: 
+// phys->ssys = "SBH",par = "Px_ADM" => 
+// s = "SBH_Px_ADM"; thus, we can have various parameter
+// calls with the same concept for different situations.
+// NOTE: phys MUST be defined.
+// NOTE: not thread safe. */
+#define sysSetd(param_name,val) \
+{sprintf(phys->par,"%s_%s",phys->ssys,param_name); Psetd(phys->par,(val));}
+
+/* same as sysSetd but for integer.
+// NOTE: not thread safe. */
+#define sysSeti(param_name,val) \
+{sprintf(phys->par,"%s_%s",phys->ssys,param_name); Pseti(phys->par,(val));}
+
+/* same as sysSetd but for string.
+// NOTE: not thread safe. */
+#define sysSets(param_name,val) \
+{sprintf(phys->par,"%s_%s",phys->ssys,param_name); Psets(phys->par,(val));}
+
+
 /* handy string comparison against various values */
 #define IF_sval(par,val) if(strcmp_i(Gets(par),val))
 
@@ -102,7 +122,7 @@ typedef enum CMD_T
  CMD_END
 }cmd_T;
 
-/* compact object type */
+/* various compact object types situation */
 typedef enum COMP_OBJ_T
 {
  OBJ_UNDEFINED = 0,
@@ -114,7 +134,9 @@ typedef enum COMP_OBJ_T
  BH2,
  BHNS,
  BHBH,
- NSNS
+ NSNS,
+ SNS,
+ SBH
 }Com_Obj_T;
 
 /* struct for physics manager */
@@ -149,7 +171,6 @@ typedef struct PHYSICS_T
  char stemp[STEMP_LEN];/* a temperory string for various use. */
  Grid_T **gridtemp;/* temporaty grid for mygrid function */
  unsigned Ngridtemp;/* number of gridtemp */
- 
  
 }Physics_T;
 #undef PAR_LEN
