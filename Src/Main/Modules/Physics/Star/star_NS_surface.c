@@ -90,8 +90,8 @@ extrap_init
     if (grid->kind == Grid_SplitCubedSpherical_NSNS ||
         grid->kind == Grid_SplitCubedSpherical_BHBH ||
         grid->kind == Grid_SplitCubedSpherical_BHNS ||
-        grid->kind == Grid_SplitCubedSpherical_BH   ||
-        grid->kind == Grid_SplitCubedSpherical_NS   ||
+        grid->kind == Grid_SplitCubedSpherical_SBH  ||
+        grid->kind == Grid_SplitCubedSpherical_SNS  ||
         grid->kind == Grid_CubedSpherical_BHNS      ||
         grid->kind == Grid_CubedSpherical_NSNS
        )
@@ -870,7 +870,7 @@ static double NS_surface_denthalpy_dr_root_finder(void *params,const double *con
 // Chi = {d(ln h)/dr|equator}/{d(ln h)/dr|pole} */
 double star_NS_mass_shedding_indicator(Physics_T *const phys)
 {
-  if (phys->grid->kind == Grid_SplitCubedSpherical_NS   ||
+  if (phys->grid->kind == Grid_SplitCubedSpherical_SNS  ||
       phys->grid->kind == Grid_SplitCubedSpherical_NSNS ||
       phys->grid->kind == Grid_SplitCubedSpherical_BHNS
      )
