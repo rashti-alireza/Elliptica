@@ -139,10 +139,13 @@ typedef enum COMP_OBJ_T
  SBH
 }Com_Obj_T;
 
+/* forward declaration */
+struct GRID_T;
+
 /* struct for physics manager */
 typedef struct PHYSICS_T
 {
- Grid_T *grid;
+ struct GRID_T *grid;
  Grid_Char_T *grid_char;/* grid character when used for surface finder */
  unsigned igc;/* index of grid_char for this physics. */
  
@@ -169,14 +172,14 @@ typedef struct PHYSICS_T
  char par[PAR_LEN];/* related parameter for to be inquired. */
  /* some temp variables */
  char stemp[STEMP_LEN];/* a temperory string for various use. */
- Grid_T **gridtemp;/* temporaty grid for mygrid function */
+ struct GRID_T **gridtemp;/* temporaty grid for mygrid function */
  unsigned Ngridtemp;/* number of gridtemp */
  
 }Physics_T;
 #undef PAR_LEN
 #undef STEMP_LEN
 
-Physics_T *init_physics(Grid_T *const grid,const Com_Obj_T type);
+Physics_T *init_physics(struct GRID_T *const grid,const Com_Obj_T type);
 int physics_main(Physics_T *const phys,const cmd_T cmd,
             const char *const file, const int line);
 void free_physics(Physics_T *phys);
@@ -184,7 +187,7 @@ void phys_set_region(Physics_T *const phys);
 const char *phys_autoindex_stype(Physics_T *const phys,
                                const char *const stype);
 
-Grid_T *mygrid(Physics_T *const phys,const char *const region);
+struct GRID_T *mygrid(Physics_T *const phys,const char *const region);
 
 #endif
 

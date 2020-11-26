@@ -3,6 +3,9 @@
 
 #define EOS_MAX_STR (400)
 
+/* forward declaration */
+struct GRID_T;
+
 /* struct for equation of states */
 typedef struct EquationOfState_T
 {
@@ -31,7 +34,7 @@ typedef struct EquationOfState_T
 
 EoS_T *initialize_EoS(void);
 void free_EoS(EoS_T *eos);
-void test_EoS(Grid_T *const grid);
+void test_EoS(struct GRID_T *const grid);
 
 
 #endif

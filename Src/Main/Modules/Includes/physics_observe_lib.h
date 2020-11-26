@@ -5,13 +5,15 @@
 
 /* forward declaration */
 struct PHYSICS_T;
+struct GRID_T;
+
 
 /* struct for physics observe */
 typedef struct OBSERVE_T
 {
   char quantity[OBSERVE_STR_LEN];/* which quantity is computed */
   double *ret;/* return value */
-  Grid_T *grid;/* computational grid */
+  struct GRID_T *grid;/* computational grid */
   struct PHYSICS_T *phys;/* physics pertinent to compact object of interest */
   void *items;/* this is general struct that composes 
                // the needed material and items to calculate 
