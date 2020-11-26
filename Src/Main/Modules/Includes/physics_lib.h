@@ -74,12 +74,15 @@
 #define Sets(param_name,val) \
 {sprintf(phys->par,"%s_%s",phys->stype,param_name); Psets(phys->par,(val));}
 
+/* handy string comparison against various values */
+#define IF_sval(par,val) if(strcmp_i(Gets(par),val))
+
 /* handy macro for "phy_return_correct_stype" function.
 // NOTE: phys must be defined. */
 #define Ftype(s) phys_autoindex_stype(phys,s)
 
 /* physics function */
-#define Physics(phys,cmd) physics(phys,cmd,__FILE__,__LINE__)
+#define physics(phys,cmd) physics_main(phys,cmd,__FILE__,__LINE__)
 
 /* commands, DON'T change the numeration. */
 typedef enum CMD_T
@@ -87,7 +90,7 @@ typedef enum CMD_T
  CMD_UNDEFINED = 0,
  TUNE_EULER_CONST,
  TUNE_FORCE_BALANCE,
- TUNE_CENTER,
+ TUNE_NS_CENTER,
  TUNE_AH_RADIUS,
  TUNE_P_ADM,
  TUNE_AH_OMEGA,
@@ -141,21 +144,23 @@ typedef struct PHYSICS_T
                   // used for patch collections */
  
  char par[PAR_LEN];/* related parameter for to be inquired. */
+ /* some temp variables */
  char stemp[STEMP_LEN];/* a temperory string for various use. */
+ Grid_T *gridtemp;/* temporaty grid for mygrid function */
  
 }Physics_T;
 #undef PAR_LEN
 #undef STEMP_LEN
 
 Physics_T *init_physics(Grid_T *const grid,const Com_Obj_T type);
-int physics(Physics_T *const phys,const cmd_T cmd,
+int physics_main(Physics_T *const phys,const cmd_T cmd,
             const char *const file, const int line);
 void free_physics(Physics_T *phys);
 void phys_set_region(Physics_T *const phys);
 const char *phys_autoindex_stype(Physics_T *const phys,
                                const char *const stype);
 
-
+Grid_T *mygrid(Physics_T *const phys,const char *const region);
 
 #endif
 

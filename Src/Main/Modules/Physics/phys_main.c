@@ -11,7 +11,7 @@
 #include "phys_main.h"
 
 /* call the requested function */
-int physics(Physics_T *const phys,const cmd_T cmd,
+int physics_main(Physics_T *const phys,const cmd_T cmd,
             const char *const file, const int line)
 {
   int ret = -1;
@@ -291,6 +291,12 @@ init_physics
 /* free  */
 void free_physics(Physics_T *phys)
 {
+  if (phys)
+  {
+    if (phys->gridtemp)
+      _free(phys->gridtemp->patch);
+  free(phys->gridtemp);
+  }
   _free(phys);
 }
 
@@ -339,5 +345,33 @@ const char *phys_autoindex_stype(Physics_T *const phys,
   replace_str(stype,"(NS|BH)",phys->stype,phys->stemp);
   
   return phys->stemp;
+}
+
+
+/* a handy function to gather pertinent patches to the given region
+// into a grid. 
+// NOTE: no need to free, it is freed when free_physics is called.
+// NOTE: if twice is called without free, it frees the previous value. */
+Grid_T *mygrid(Physics_T *const phys,const char *const region)
+{
+  unsigned Np;
+  Patch_T **patches = collect_patches(phys->grid,Ftype(region),&Np);
+  
+  /* if non empty, free */
+  if (phys->gridtemp)
+  {
+    _free(phys->gridtemp->patch);
+    free(phys->gridtemp);
+    phys->gridtemp = 0;
+  }
+  
+  phys->gridtemp = calloc(1,sizeof(*phys->gridtemp));
+  IsNull(phys->gridtemp);
+  
+  phys->gridtemp->patch = patches;
+  phys->gridtemp->np    = Np;
+  
+  return phys->gridtemp;
+  
 }
 

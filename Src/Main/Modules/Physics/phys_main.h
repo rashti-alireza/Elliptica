@@ -6,7 +6,7 @@
 
 #define STR_LEN (999)
 
-int physics(Physics_T *const phys,const cmd_T cmd,
+int physics_main(Physics_T *const phys,const cmd_T cmd,
             const char *const file, const int line);
 
 Physics_T *
@@ -21,6 +21,7 @@ void phys_set_region(Physics_T *const phys);
 const char *phys_autoindex_stype(Physics_T *const phys,
                                const char *const stype);
 
+Grid_T *mygrid(Physics_T *const phys,const char *const region);
 
 
 
