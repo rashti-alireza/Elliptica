@@ -378,8 +378,10 @@ Grid_T *mygrid(Physics_T *const phys,const char *const region)
   phys->gridtemp[ng]   = calloc(1,sizeof(*phys->gridtemp[ng]));
   IsNull(phys->gridtemp[ng]);
   
+  phys->gridtemp[ng]->kind  = phys->grid->kind;
   phys->gridtemp[ng]->patch = patches;
   phys->gridtemp[ng]->np    = Np;
+  
   
   return phys->gridtemp[ng];
 }
