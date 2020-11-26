@@ -28,25 +28,25 @@ int physics_main(Physics_T *const phys,const cmd_T cmd,
   
   switch (cmd)
   {
-    case UPDATE_STRESS_ENERGY:
-      ret = Tij_main(phys);
-    break;
     case TUNE_EULER_CONST:
       ret = star_main(phys);
     break;
-    case FIND_SURFACE:
+    case TUNE_FORCE_BALANCE:
       ret = star_main(phys);
     break;
-    case EXTRAPOLATE:
+    case TUNE_NS_CENTER:
       ret = star_main(phys);
     break;
-    /*case FORCE_BALANCE:
+    case FIND_STAR_SURFACE:
       ret = star_main(phys);
     break;
-    case FIX_CENTER:
+    case UPDATE_STRESS_ENERGY:
+      ret = Tij_main(phys);
+    break;
+    case EXTRAPOLATE_MATTERS:
       ret = star_main(phys);
     break;
-    case AH_RADIUS:
+   /* case AH_RADIUS:
       ret = update_apparent_horizon_radius(phys);
     break;
     case AH_OMEGA:

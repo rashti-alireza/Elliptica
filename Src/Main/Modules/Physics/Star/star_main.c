@@ -24,17 +24,17 @@ int star_main(Physics_T *const phys)
         case TUNE_EULER_CONST:
           ret = star_NS_idealfluid_gConf_find_Euler_const(phys);
         break;
-        case EXTRAPOLATE:
+        case EXTRAPOLATE_MATTERS:
           ret = star_NS_idealfluid_extrapolate_matter_fields(phys);
         break;
-        case FIND_SURFACE:
+        case FIND_STAR_SURFACE:
           ret = star_NS_find_star_surface(phys);
         break;
         case TUNE_FORCE_BALANCE:
           ret = star_NS_idealfluid_gConf_force_balance(phys);
         break;
         case TUNE_NS_CENTER:
-          ret = star_NS_idealfluid_gConf_force_balance(phys);
+          ret = star_NS_keep_center_fixed(phys);
         break;
         
         default:
