@@ -14,21 +14,16 @@ int star_NS_keep_center_fixed(Physics_T *const phys)
 {
   FUNC_TIC
   
-  Patch_T *patch    = 0;
-  Patch_T **patches = 0;
+  Grid_T *const grid = mygrid(phys,"NS");
+  Patch_T *patch     = 0;
   const double NS_center[3] = {Getd("center_x"),
                                Getd("center_y"),
                                Getd("center_z")};
   Interpolation_T *interp_s = init_interpolation();
   double dh1[3] = {0},dh2[3] = {0}, X[3] = {0};
-  unsigned Np;
-  char reg[99];
-  
-  sprintf(reg,"%s_cent.*",phys->spos);
-  patches = regex_collect_patches(phys->grid,reg,&Np);
   
   /* initial values before adjustments */
-  patch = x_in_which_patch(NS_center,patches,Np);
+  patch = x_in_which_patch(NS_center,grid->patch,grid->np);
   assert(patch);
   assert(X_of_x(X,NS_center,patch));
   
@@ -102,7 +97,6 @@ int star_NS_keep_center_fixed(Physics_T *const phys)
   printf(Pretty0"dh2/dz-dh1/dz = %+g\n",dh2[2]-dh1[2]);
  
   free_interpolation(interp_s);
-  _free(patches);
   
   FUNC_TOC
   return EXIT_SUCCESS;
@@ -113,8 +107,8 @@ int star_NS_idealfluid_gConf_force_balance(Physics_T *const phys)
 {
   FUNC_TIC
   
-  Patch_T *patch    = 0;
-  Patch_T **patches = 0;
+  Grid_T *const grid = mygrid(phys,"NS");
+  Patch_T *patch     = 0;
   const double NS_center[3] = {Getd("center_x"),
                                Getd("center_y"),
                                Getd("center_z")};
@@ -122,14 +116,9 @@ int star_NS_idealfluid_gConf_force_balance(Physics_T *const phys)
   Interpolation_T *interp_s = init_interpolation();
   char *adjust[3];
   double dh1[3] = {0},dh2[3] = {0}, X[3] = {0};
-  unsigned Np;
-  char reg[99];
-  
-  sprintf(reg,"%s_cent.*",phys->spos);
-  patches = regex_collect_patches(phys->grid,reg,&Np);
   
   /* initial values before adjustments */
-  patch = x_in_which_patch(NS_center,patches,Np);
+  patch = x_in_which_patch(NS_center,grid->patch,grid->np);
   assert(patch);
   assert(X_of_x(X,NS_center,patch));
   
@@ -222,7 +211,6 @@ int star_NS_idealfluid_gConf_force_balance(Physics_T *const phys)
   printf(Pretty0"dh2/dz-dh1/dz = %+g\n",dh2[2]-dh1[2]);
  
   free_interpolation(interp_s);
-  _free(patches);
   
   FUNC_TOC
   return EXIT_SUCCESS;
@@ -433,6 +421,7 @@ static void force_balance_ddCM_Omega(Physics_T *const phys)
 /* find parameter par using force balance equation in direction dir */
 static void force_balance_eq_root_finders(Physics_T *const phys,const int dir, const char *const par)
 {
+  Grid_T *const grid        = mygrid(phys,"NS");
   const double D            = sysGetd("separation");
   const double Vr           = sysGetd("infall_velocity");
   const double NS_center[3] = {Getd("center_x"),
@@ -450,16 +439,10 @@ static void force_balance_eq_root_finders(Physics_T *const phys,const int dir, c
   double guess[1],X[3],V2CM[2]={0,0};
   struct Force_Balance_RootFinder_S params[1] = {0};
   Patch_T *patch    = 0;
-  Patch_T **patches = 0;
-  char s[1000] = {'\0'};
-  unsigned Np;
-  char reg[99];
-  
-  sprintf(reg,"%s_cent.*",phys->spos);
-  patches = regex_collect_patches(phys->grid,reg,&Np);
+  char s[999] = {'\0'};
   
   /* initial values before adjustments */
-  patch = x_in_which_patch(NS_center,patches,Np);
+  patch = x_in_which_patch(NS_center,grid->patch,grid->np);
   assert(patch);
   assert(X_of_x(X,NS_center,patch));
   
@@ -569,7 +552,6 @@ static void force_balance_eq_root_finders(Physics_T *const phys,const int dir, c
   
   free_root_finder(root);
   free(new_par);
-  _free(patches);
 }
 
 /* getting adjustment str, returns the relevant function. */
