@@ -1016,6 +1016,7 @@ find_XYZ_and_patch_of_theta_phi_CS
     double a = 0, b = 0;
     double a_sign = 0,b_sign = 0,c_sign = 0;
     double x[3],phi2,theta2,r;
+    int IsInside;
     
     /* we know that theta = 0 or Pi occures only at UP or DOWN patches
     // so don't bother to follow algorithm all the way down.
@@ -1097,14 +1098,14 @@ find_XYZ_and_patch_of_theta_phi_CS
     X[1] = fabs(b)*b_sign;
     
     /* check if x of X really gives you the correct angles */
-    x_of_X(x,X,patch);
+    IsInside = x_of_X(x,X,patch);
     x[0] -= c[0];
     x[1] -= c[1];
     x[2] -= c[2];
     r = root_square(3,x,0);
     theta2 = acos(x[2]/r);
     phi2   = arctan(x[1],x[0]);
-    if (EQL(theta2,theta) && EQL(phi2,phi))
+    if (EQL(theta2,theta) && EQL(phi2,phi) && IsInside)
     {
       found_flg = YES;
       *ppatch = patch;
