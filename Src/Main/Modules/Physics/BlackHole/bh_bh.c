@@ -16,7 +16,7 @@ int bh_tune_black_hole_radius(Physics_T *const phys)
   
   IF_sval("tune_BH_radius_criteria","fix_irreducible_mass")
   {
-    IF_sval("surface_type","perfect_sphere")
+    IF_sval("surface_type","perfect_s2")
       tune_BH_radius_irreducible_mass_perfect_s2(phys);
     else
       Error0(NO_OPTION);
@@ -33,7 +33,7 @@ int bh_find_black_hole_surface(Physics_T *const phys)
 {
   FUNC_TIC
   
-  IF_sval("surface_type","perfect_sphere")
+  IF_sval("surface_type","perfect_s2")
   {
     find_bh_surface_perfect_s2(phys);
   }

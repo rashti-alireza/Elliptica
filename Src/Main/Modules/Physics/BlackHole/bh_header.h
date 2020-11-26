@@ -17,6 +17,13 @@
 int bh_tune_black_hole_radius(Physics_T *const phys);
 int bh_find_black_hole_surface(Physics_T *const phys);
 int bh_fill_inside_black_hole(Physics_T *const phys);
+double bh_bhf_poly_smoother
+(const double r,const double rmax,const double rmin);
+
+void bh_bhf_ChebTn_extrapolate
+(double *const a,const double fr0,const double fr1,const double dfdr,const double ddfddr,const double rfill,const unsigned N);
+
+
 
 #endif
 

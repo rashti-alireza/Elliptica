@@ -22,10 +22,9 @@ int bh_main(Physics_T *const phys)
     case FIND_BH_SURFACE:
       ret = bh_find_black_hole_surface(phys);
     break;
-    
-    //case BH_FILLER:
-      //ret = bh_fill_inside_black_hole(phys);
-    //break;
+    case FILL_BH:
+      ret = bh_fill_inside_black_hole(phys);
+    break;
     
     default:
       Error0(NO_OPTION);
