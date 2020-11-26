@@ -4,7 +4,7 @@
 # April 2020     #
 ##################
 
-# a general make file for each module or project.
+# a general submake file for each module or project.
 # this make file gathers all of c files and make object files
 # from them and put them in the specified directory. finally,
 # by using (AR) command, it archive all of the object files to later
