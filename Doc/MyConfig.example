@@ -39,6 +39,7 @@ MODULE += $(MODULE_DIR)/Physics/EoS
 MODULE += $(MODULE_DIR)/Physics/Observe
 MODULE += $(MODULE_DIR)/Physics/Transformation
 MODULE += $(MODULE_DIR)/Physics/Star
+MODULE += $(MODULE_DIR)/Physics/System
 
 # one can comment out these module(s):
 #MODULE += $(MODULE_DIR)/Prints/pr_hdf5_silo
