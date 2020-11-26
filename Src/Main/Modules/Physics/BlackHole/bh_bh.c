@@ -10,13 +10,16 @@
 
 
 /* adjust AH radius to meet a criteria for instant the mass is fixed */
-int bh_tune_apparent_horizon_radius(Physics_T *const phys)
+int bh_tune_black_hole_radius(Physics_T *const phys)
 {
   FUNC_TIC
   
-  IF_sval("tune_apparent_horizon","fix_irreducible_mass,perfect_sphere")
+  IF_sval("tune_BH_radius_criteria","fix_irreducible_mass")
   {
-    tune_AH_radius_irreducible_mass_perfect_s2(phys);
+    IF_sval("surface_type","perfect_sphere")
+      tune_BH_radius_irreducible_mass_perfect_s2(phys);
+    else
+      Error0(NO_OPTION);
   }
   else
     Error0(NO_OPTION);
@@ -25,9 +28,60 @@ int bh_tune_apparent_horizon_radius(Physics_T *const phys)
   return EXIT_SUCCESS;
 }
 
-/* adjust the apparent horizon radius to acquire the desired BH irreducible mass
+/* find bh surface, mainly for grid setup */
+int bh_find_black_hole_surface(Physics_T *const phys)
+{
+  FUNC_TIC
+  
+  IF_sval("surface_type","perfect_sphere")
+  {
+    find_bh_surface_perfect_s2(phys);
+  }
+  else
+    Error0(NO_OPTION);
+  
+  FUNC_TOC
+  return EXIT_SUCCESS;
+}
+
+/* setting grid characteristic */
+static void find_bh_surface_perfect_s2(Physics_T *const phys)
+{
+  Grid_Char_T *grid_char = phys->grid_char;
+  const unsigned lmax   = (unsigned)Geti("surface_Ylm_expansion_max_l");
+  const unsigned Ntheta = Ntheta_Ylm(lmax);
+  const unsigned Nphi   = Nphi_Ylm(lmax);
+  const unsigned Ntot   = Ntotal_Ylm(lmax);
+  const double R_BH     = Getd("perfect_S2_radius");
+  double *rbh = alloc_double(Ntot);/* surface function r = r(th,ph). */
+  double *reClm_rbh = alloc_ClmYlm(lmax),
+         *imClm_rbh = alloc_ClmYlm(lmax);
+  unsigned ij;
+  
+  init_Legendre_root_function();
+  for (ij = 0; ij < Ntot; ++ij)
+  {
+    rbh[ij] = R_BH;
+  }
+  /* calculating coeffs */
+  get_Ylm_coeffs(reClm_rbh,imClm_rbh,rbh,Ntheta,Nphi,lmax);
+  
+  assert(!grid_char->params[phys->igc]->occupied);
+  grid_char->params[phys->igc]->obj    = phys->stype;
+  grid_char->params[phys->igc]->dir    = phys->spos;
+  grid_char->params[phys->igc]->relClm = reClm_rbh;
+  grid_char->params[phys->igc]->imgClm = imClm_rbh;
+  grid_char->params[phys->igc]->r_min  = Getd("min_radius");
+  grid_char->params[phys->igc]->r_max  = Getd("max_radius");
+  grid_char->params[phys->igc]->lmax   = lmax;
+  grid_char->params[phys->igc]->occupied = 1;
+    
+}
+
+
+/* adjust the BH radius to acquire the desired BH irreducible mass
 // when the bh is a perfect sphere in x coords. */
-static void tune_AH_radius_irreducible_mass_perfect_s2(Physics_T *const phys)
+static void tune_BH_radius_irreducible_mass_perfect_s2(Physics_T *const phys)
 {
   const double target_bh_mass = Getd("irreducible_mass");
   const double current_r_bh   = Getd("perfect_S2_radius");
