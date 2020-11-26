@@ -54,10 +54,10 @@ int regex_search(const char *const regex_pattern,const char *const str);
 char *regex_find(const char *const regex_pattern,const char *const str);
 char **read_separated_items_in_string(const char *const string,const char delimiter);
 void *fopen_and_check(const char *const file_path,const char *const mode,const char *const file_dbg, const int line_dbg);
-int replace_str(const char *const orig/* original */,
-                const char *const regex_pattern/* regex pattern */,
-                const char *const repl/* replace by this piece */,
-                char *const save/* write the result in save  */);
+int regex_replace(const char *const orig/* original */,
+                  const char *const regex_pattern/* regex pattern */,
+                  const char *const repl/* replace by this piece */,
+                  char *const save/* write the result in save  */);
 
 
 #endif

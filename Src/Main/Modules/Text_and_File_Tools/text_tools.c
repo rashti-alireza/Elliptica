@@ -385,10 +385,10 @@ char **read_separated_items_in_string(const char *const string,const char delimi
 // replace the matches match of given string orig by repl
 // and write into save.
 // NOTE: save must have enough memory.  */
-int replace_str(const char *const orig/* original */,
-                const char *const regex_pattern/* regex pattern */,
-                const char *const repl/* replace by this piece */,
-                char *const save/* write the result in save  */)
+int regex_replace(const char *const orig/* original */,
+                  const char *const regex_pattern/* regex pattern */,
+                  const char *const repl/* replace by this piece */,
+                  char *const save/* write the result in save  */)
 {
 
   regex_t regex;

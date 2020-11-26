@@ -354,7 +354,7 @@ const char *phys_autoindex_stype(Physics_T *const phys,
   
   /* having made sure everything is find now do a simple autoindex
   // it replace NS (BH) with NSi (BHi) in which i is the correct index. */
-  replace_str(stype,"(NS|BH)",phys->stype,phys->stemp);
+  regex_replace(stype,"(NS|BH)",phys->stype,phys->stemp);
   
   return phys->stemp;
 }
