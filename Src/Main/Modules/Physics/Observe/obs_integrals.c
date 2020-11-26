@@ -26,7 +26,7 @@ void obs_calculate(Observe_T *const obs)
   if (grid->kind == Grid_SplitCubedSpherical_BHNS)
   {
       
-  if (strcmp_i(obs->quantity,"ADM(P,J)|BHNS"))
+  if (strcmp_i(obs->quantity,"ADM(P,J)|system"))
   {  
     Patch_T **patches = 0;
     Patch_T *patch    = 0;
@@ -395,7 +395,7 @@ void obs_calculate(Observe_T *const obs)
     obs->ret[0] = obs_Kommar_mass(obs);
     free(patches);
   }
-  else if (strcmp_i(obs->quantity,"Kommar(M)|BHNS"))
+  else if (strcmp_i(obs->quantity,"Kommar(M)|system"))
   {  
     Patch_T **patches = 0;
     Patch_T *patch    = 0;
@@ -483,7 +483,7 @@ void obs_calculate(Observe_T *const obs)
     obs->ret[0] = obs_Kommar_mass(obs);
     free(patches);
   }
-  else if (strcmp_i(obs->quantity,"ADM(M)|BHNS"))
+  else if (strcmp_i(obs->quantity,"ADM(M)|system"))
   {  
     Patch_T **patches1 = 0,**patches2 = 0;
     Patch_T *patch    = 0;
