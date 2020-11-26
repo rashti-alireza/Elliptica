@@ -1,5 +1,5 @@
-#ifndef physics_bh_LIB_H
-#define physics_bh_LIB_H
+#ifndef physics_blackhole_LIB_H
+#define physics_blackhole_LIB_H
 
 /* forward declaration */
 struct PHYSICS_T;
