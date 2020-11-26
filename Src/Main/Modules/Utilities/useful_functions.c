@@ -688,3 +688,26 @@ void footer_and_clock(const char *const msg)
   fflush(stdout);
 }
 
+/* ->: field(X)|patch
+// given field name, X and patch, interpolates the value of 
+// the field at X on this patch */
+double f_of_X(const char *const field_name,
+              const double *const X/* patch coords */,
+              Patch_T *const patch)
+{
+  double interp;
+  Interpolation_T *interp_s = init_interpolation();
+  Field_T *const F_field    = patch->fields[Ind(field_name)];
+  
+  interp_s->field = F_field;
+  interp_s->X = X[0];
+  interp_s->Y = X[1];
+  interp_s->Z = X[2];
+  interp_s->XYZ_dir_flag = 1;
+  plan_interpolation(interp_s);
+  interp = execute_interpolation(interp_s);
+  free_interpolation(interp_s);
+  
+  return interp;
+}
+

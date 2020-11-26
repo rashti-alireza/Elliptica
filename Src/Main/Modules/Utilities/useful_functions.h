@@ -4,6 +4,8 @@
 #include "utilities_lib.h"
 #include "maths_general_lib.h"
 #include "fields_lib.h"
+#include "maths_spectral_methods_lib.h"
+
 #include <sys/resource.h>
 
 #define EPS 1E-11
@@ -54,6 +56,9 @@ how_much_memory
 
 void header_and_clock(const char *const msg);
 void footer_and_clock(const char *const msg);
+double f_of_X(const char *const field,
+              const double *const X/* patch coords */,
+              Patch_T *const patch);
 
 
 

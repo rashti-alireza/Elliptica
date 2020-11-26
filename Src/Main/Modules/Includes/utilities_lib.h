@@ -90,6 +90,11 @@ update_parameters_and_directories
 
 void free_grid_and_its_parameters(Grid_T *grid,const int keep_grid);
 
+double f_of_X(const char *const field,
+              const double *const X/* patch coords */,
+              Patch_T *const patch);
+
+
 #endif
 
 
