@@ -4,7 +4,7 @@
 */
 
 
-#include "obs_integrals.h"
+#include "obs_calculate.h"
 #define VOLUME_INTEGRAL 1 /* put it to 1 if you want \int{Gdv} */
 
 /* plan and populate items_S sturct and obs struct
