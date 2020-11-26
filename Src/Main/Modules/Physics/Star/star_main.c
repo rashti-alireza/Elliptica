@@ -9,7 +9,7 @@
 
 #include "star_main.h"
 
-/* update stress energy tensor */
+/* main function to issue commands */
 int star_main(Physics_T *const phys)
 {
   int ret = -1;

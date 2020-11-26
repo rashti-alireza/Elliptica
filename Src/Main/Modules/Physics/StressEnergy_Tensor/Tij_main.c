@@ -9,7 +9,7 @@
 
 #include "Tij_main.h"
 
-/* update stress energy tensor */
+/* main function to issue command */
 int Tij_main(Physics_T *const phys)
 {
   if (Pcmps("Tij_fluid","NS_ideal_fluid"))
