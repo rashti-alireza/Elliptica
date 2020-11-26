@@ -139,19 +139,26 @@ init_physics
   {
     phys->sys  = BHNS;
     phys->ssys = "BHNS";
-    
   }
   else if (Pcmps("project","NS_NS_initial_data"))
   {
     phys->sys  = NSNS;
     phys->ssys = "NSNS";
-    
   }
   else if (Pcmps("project","BH_BH_initial_data"))
   {
     phys->sys  = BHBH;
     phys->ssys = "BHBH";
-    
+  }
+  else if (Pcmps("project","BH_initial_data"))
+  {
+    phys->sys  = SBH;
+    phys->ssys = "SBH";/* important to have different name for system */
+  }
+  else if (Pcmps("project","NS_initial_data"))
+  {
+    phys->sys  = SNS;
+    phys->ssys = "SNS";/* important to have different name for system */
   }
   else
     Error0(NO_OPTION);
