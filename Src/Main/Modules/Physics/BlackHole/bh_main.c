@@ -16,11 +16,15 @@ int bh_main(Physics_T *const phys)
   
   switch (phys->cmd)
   {
-    case TUNE_AH_RADIUS:
-      ret = bh_tune_apparent_horizon_radius(phys);
+    case TUNE_BH_RADIUS:
+      ret = bh_tune_black_hole_radius(phys);
     break;
+    case FIND_BH_SURFACE:
+      ret = bh_find_black_hole_surface(phys);
+    break;
+    
     //case BH_FILLER:
-      //ret = bh_fill_black_hole_inside(phys);
+      //ret = bh_fill_inside_black_hole(phys);
     //break;
     
     default:
