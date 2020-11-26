@@ -11,15 +11,16 @@
 //                          # and sq is one of the followings:
 //
 // * list of quantities *
-// "ADM(P,J)|system" #=> compute P and J ADM for the system 
+// "ADM(P,J)|BHNS" #=> compute P and J ADM for the BHNS 
 // "ADM(P,J)|NS"   #=> compute P and J ADM for single NS 
 // "ADM(P,J)|BH"   #=> compute P and J ADM for single BH
-// "Kommar(M)|system" #=> compute Kommar mass for the system 
+// "Kommar(M)|BHNS" #=> compute Kommar mass for the BHNS 
 // "Kommar(M)|NS"  #=> compute kommar mass for NS 
 // "Kommar(M)|BH"  #=> compute Kommar mass for BH
-// "ADM(M)|system"   #=> compute ADM mass for the system 
+// "ADM(M)|BHNS"   #=> compute ADM mass for the BHNS 
 // "ADM(M)|NS"     #=> compute ADM mass for NS 
 // "ADM(M)|BH"     #=> compute ADM mass for BH
+// "Irreducible(M)|BH" #=> irreducible mass of BH
 // "CM"          #=> compute the center of mass of phys->type
 // "Spin|method" #=> compute spin of object phys->type
 //                       with the specified method below:

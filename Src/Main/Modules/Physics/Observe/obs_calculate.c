@@ -26,7 +26,7 @@ void obs_calculate(Observe_T *const obs)
   if (grid->kind == Grid_SplitCubedSpherical_BHNS)
   {
       
-  if (strcmp_i(obs->quantity,"ADM(P,J)|system"))
+  if (strcmp_i(obs->quantity,"ADM(P,J)|BHNS"))
   {  
     Patch_T **patches = 0;
     Patch_T *patch    = 0;
@@ -395,7 +395,7 @@ void obs_calculate(Observe_T *const obs)
     obs->ret[0] = obs_Kommar_mass(obs);
     free(patches);
   }
-  else if (strcmp_i(obs->quantity,"Kommar(M)|system"))
+  else if (strcmp_i(obs->quantity,"Kommar(M)|BHNS"))
   {  
     Patch_T **patches = 0;
     Patch_T *patch    = 0;
@@ -483,7 +483,7 @@ void obs_calculate(Observe_T *const obs)
     obs->ret[0] = obs_Kommar_mass(obs);
     free(patches);
   }
-  else if (strcmp_i(obs->quantity,"ADM(M)|system"))
+  else if (strcmp_i(obs->quantity,"ADM(M)|BHNS"))
   {  
     Patch_T **patches1 = 0,**patches2 = 0;
     Patch_T *patch    = 0;
@@ -742,6 +742,10 @@ void obs_calculate(Observe_T *const obs)
   else if (strcmp_i(obs->quantity,"Spin|AKV"))
   {
     define_spin_akv(obs);
+  }
+  else if (strcmp_i(obs->quantity,"Irreducible(M)|BH"))
+  {
+    obs_BH_irreducible_mass_CS(obs);
   }
   else
     Error1("There is no such '%s' plan.\n",obs->quantity);

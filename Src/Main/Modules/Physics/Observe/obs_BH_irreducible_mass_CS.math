@@ -1,0 +1,128 @@
+# Manifold or grid Dimension
+Dimension = 3;
+
+# point on manifold shown by:
+Point = ijk;
+
+C_macro  = READ_v(name);
+C_macro2 = REALLOC_v_WRITE_v(name);
+
+`#include "obs_header.h"\n`
+
+# return the irreducible mass of BH for cubed spherical coords
+# this mass is proportional to the proper area of the apparent horizon.
+`void obs_BH_irreducible_mass_CS(Observe_T *const obs);`
+`void obs_BH_irreducible_mass_CS(Observe_T *const obs)`
+`{`
+`  Physics_T *const phys = obs->phys;`
+`  Grid_T *const grid = mygrid(phys,"BH_around_IB");`
+`  double A_AH = 0;`
+`  unsigned p;`
+``
+`  FOR_ALL_PATCHES(p,grid)`
+`  {`
+`    Patch_T *patch = grid->patch[p];`
+`    unsigned nn    = patch->nn;`
+`    unsigned ijk;`
+``
+`    ADD_FIELD(A_AH_integrand)`
+``
+`    double *g00 = alloc_double(nn);`
+`    double *g01 = alloc_double(nn);`
+`    double *g02 = alloc_double(nn);`
+`    double *g11 = alloc_double(nn);`
+`    double *g12 = alloc_double(nn);`
+`    double *g22 = alloc_double(nn);`
+
+Declare = 
+{
+ # conformal metric 
+ (obj = Field,name = gConf, rank = DD, C_macro);
+
+ # conformal metric inverse
+ #(obj = Field,name = igConf, rank = UU, C_macro);
+
+ # _A^{ij}
+ #(obj = Field,name = _A_UiUj, rank = UU, C_macro);
+
+ # eta
+ #(obj = Field,name = eta, rank = 0, C_macro);
+
+ # deta
+ #(obj = Field,name = deta, rank = D, C_macro);
+
+ # Beta
+ #(obj = Field,name = Beta, rank = U, C_macro);
+
+ # trKij
+ #(obj = Field,name = K, rank = 0, C_macro);
+
+ # Killing vector xi^i, assumed 0
+ #(obj = Field,name = xi, rank = U, C_macro);
+
+ # conformal factor
+ (obj = Field,name = psi, rank = 0, C_macro);
+
+ # d(conformal factor)
+ #(obj = Field,name = dpsi, rank = D, C_macro);
+
+ # normal vector on AH
+ #(obj = Field,name = _HS, rank = U, C_macro);
+
+ # integrand P
+ #(obj = Field,name = BH_irreducible_mass_integrand, rank = 0, none);
+
+}
+# symmetries:
+#Symm[_A_UiUj(i,j)  = _A_UiUj(j,i)];
+#Symm[igConf(i,j)  = igConf(j,i)];
+Symm[gConf(i,j)   = gConf(j,i)];
+
+`{`# make it local variables
+`    REALLOC_v_WRITE_v(A_AH_integrand)`
+
+# populate inegrand and physical metric for the integration
+`    for(ijk = 0; ijk < nn; ++ijk)`
+`    {`
+       psi4  = psi**4;
+`      A_AH_integrand[ijk] = 1;`
+`      /* metric */`
+`      g00[ijk] = psi4*gConf_D0D0[ijk];`
+`      g01[ijk] = psi4*gConf_D0D1[ijk];`
+`      g02[ijk] = psi4*gConf_D0D2[ijk];`
+`      g11[ijk] = psi4*gConf_D1D1[ijk];`
+`      g12[ijk] = psi4*gConf_D1D2[ijk];`
+`      g22[ijk] = psi4*gConf_D2D2[ijk];`
+`    }`
+`}`
+``
+`  DECLARE_FIELD(A_AH_integrand)`
+`  Integration_T *I = init_integration();`
+`  I->type = "Integral{f(x)dS},Spectral";`
+`  I->Spectral->f = A_AH_integrand;`
+`  I->g00 = g00;`
+`  I->g01 = g01;`
+`  I->g02 = g02;`
+`  I->g11 = g11;`
+`  I->g12 = g12;`
+`  I->g22 = g22;`
+`  I->Spectral->Z_surface = 1;`
+`  I->Spectral->K         = 0;`
+
+`  plan_integration(I);`
+`  A_AH += execute_integration(I);`
+``
+`  free_integration(I);`
+`  REMOVE_FIELD(A_AH_integrand)`
+`  free(g00);`
+`  free(g01);`
+`  free(g02);`
+`  free(g11);`
+`  free(g12);`
+`  free(g22);`
+
+`  }`# end of FOR_ALL_PATCHES
+`  Setd("AH_area",A_AH);`
+``
+`  obs->ret[0] = sqrt(A_AH/(16*M_PI));`
+`}`
