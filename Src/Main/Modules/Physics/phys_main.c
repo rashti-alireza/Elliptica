@@ -291,11 +291,16 @@ init_physics
 /* free  */
 void free_physics(Physics_T *phys)
 {
+  unsigned i;
+  
   if (phys)
   {
-    if (phys->gridtemp)
-      _free(phys->gridtemp->patch);
-  free(phys->gridtemp);
+    for (i = 0; i < phys->Ngridtemp; ++i)
+    {
+      _free(phys->gridtemp[i]->patch);
+      _free(phys->gridtemp[i]);
+    }
+  _free(phys->gridtemp);
   }
   _free(phys);
 }
@@ -350,28 +355,25 @@ const char *phys_autoindex_stype(Physics_T *const phys,
 
 /* a handy function to gather pertinent patches to the given region
 // into a grid. 
-// NOTE: no need to free, it is freed when free_physics is called.
-// NOTE: if twice is called without free, it frees the previous value. */
+// NOTE: no need to free, it is freed when free_physics is called. 
+// NOTE: at each call it adds one grid to phys->gridtemp. */
 Grid_T *mygrid(Physics_T *const phys,const char *const region)
 {
+  const unsigned ng = phys->Ngridtemp;
   unsigned Np;
   Patch_T **patches = collect_patches(phys->grid,Ftype(region),&Np);
   
-  /* if non empty, free */
-  if (phys->gridtemp)
-  {
-    _free(phys->gridtemp->patch);
-    free(phys->gridtemp);
-    phys->gridtemp = 0;
-  }
-  
-  phys->gridtemp = calloc(1,sizeof(*phys->gridtemp));
+  phys->gridtemp = realloc(phys->gridtemp,(ng+2)*sizeof(*phys->gridtemp));
   IsNull(phys->gridtemp);
   
-  phys->gridtemp->patch = patches;
-  phys->gridtemp->np    = Np;
+  phys->Ngridtemp      = ng+1;
+  phys->gridtemp[ng+1] = 0;
+  phys->gridtemp[ng]   = calloc(1,sizeof(*phys->gridtemp[ng]));
+  IsNull(phys->gridtemp[ng]);
   
-  return phys->gridtemp;
+  phys->gridtemp[ng]->patch = patches;
+  phys->gridtemp[ng]->np    = Np;
   
+  return phys->gridtemp[ng];
 }
 

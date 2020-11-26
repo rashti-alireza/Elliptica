@@ -147,7 +147,9 @@ typedef struct PHYSICS_T
  char par[PAR_LEN];/* related parameter for to be inquired. */
  /* some temp variables */
  char stemp[STEMP_LEN];/* a temperory string for various use. */
- Grid_T *gridtemp;/* temporaty grid for mygrid function */
+ Grid_T **gridtemp;/* temporaty grid for mygrid function */
+ unsigned Ngridtemp;/* number of gridtemp */
+ 
  
 }Physics_T;
 #undef PAR_LEN
