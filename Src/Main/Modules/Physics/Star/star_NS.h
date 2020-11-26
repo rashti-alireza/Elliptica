@@ -22,5 +22,15 @@ static void force_balance_ddy_Omega(Physics_T *const phys);
 static void force_balance_ddz_Omega(Physics_T *const phys);
 static void force_balance_ddCM_Omega(Physics_T *const phys);
 static void force_balance_eq_root_finders(Physics_T *const phys,const int dir, const char *const par);
+static double dh_dx0_root_finder_eq(void *params,const double *const x);
+static double dh_dx1_root_finder_eq(void *params,const double *const x);
+static double dh_dx2_root_finder_eq(void *params,const double *const x);
+void star_NS_find_where_denthalpy_is_0(Physics_T *const phys,double xdh0[3]);
+int star_NS_keep_center_fixed(Physics_T *const phys);
+static void adjust_NS_center_interpolation(Physics_T *const phys);
+static void adjust_NS_center_Taylor_expansion(Physics_T *const phys);
+
+
+
 
 

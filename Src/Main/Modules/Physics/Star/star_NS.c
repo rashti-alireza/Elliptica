@@ -8,6 +8,106 @@
 
 #include "star_NS.h"
 
+/* adjust NS center to be fixed at a specific location otherwise
+// the star might drift away. */
+int star_NS_keep_center_fixed(Physics_T *const phys)
+{
+  FUNC_TIC
+  
+  Patch_T *patch    = 0;
+  Patch_T **patches = 0;
+  const double NS_center[3] = {Getd("center_x"),
+                               Getd("center_y"),
+                               Getd("center_z")};
+  Interpolation_T *interp_s = init_interpolation();
+  double dh1[3] = {0},dh2[3] = {0}, X[3] = {0};
+  unsigned Np;
+  char reg[99];
+  
+  sprintf(reg,"%s_cent.*",phys->spos);
+  patches = regex_collect_patches(phys->grid,reg,&Np);
+  
+  /* initial values before adjustments */
+  patch = x_in_which_patch(NS_center,patches,Np);
+  assert(patch);
+  assert(X_of_x(X,NS_center,patch));
+  
+  DECLARE_FIELD(denthalpy_D0);
+  DECLARE_FIELD(denthalpy_D1);
+  DECLARE_FIELD(denthalpy_D2);
+  
+  interp_s->X = X[0];
+  interp_s->Y = X[1];
+  interp_s->Z = X[2];
+  interp_s->XYZ_dir_flag = 1;
+  
+  interp_s->field = denthalpy_D0;
+  plan_interpolation(interp_s);
+  dh1[0] = execute_interpolation(interp_s);
+  
+  interp_s->field = denthalpy_D1;
+  plan_interpolation(interp_s);
+  dh1[1] = execute_interpolation(interp_s);
+  
+  interp_s->field = denthalpy_D2;
+  plan_interpolation(interp_s);
+  dh1[2] = execute_interpolation(interp_s);
+
+  IF_sval("adjust_center_method","Interpolation")
+  {
+    adjust_NS_center_interpolation(phys);
+  }
+  else IF_sval("adjust_center_method","Taylor_expansion")
+  {
+    adjust_NS_center_Taylor_expansion(phys);
+  }
+  else
+    Error0(NO_OPTION);
+
+  /* note: enthalpy is already updated! */
+  
+  interp_s->field = denthalpy_D0;
+  plan_interpolation(interp_s);
+  dh2[0] = execute_interpolation(interp_s);
+  
+  interp_s->field = denthalpy_D1;
+  plan_interpolation(interp_s);
+  dh2[1] = execute_interpolation(interp_s);
+  
+  interp_s->field = denthalpy_D2;
+  plan_interpolation(interp_s);
+  dh2[2] = execute_interpolation(interp_s);
+  
+  /* print initial values before adjustments */
+  printf(Pretty0"Enthalpy derivatives at NS center before force balance eq.:\n");
+  printf(Pretty0"dh(%g,%g,%g)/dx = %+g\n",
+    NS_center[0],NS_center[1],NS_center[2],dh1[0]);
+  printf(Pretty0"dh(%g,%g,%g)/dy = %+g\n",
+    NS_center[0],NS_center[1],NS_center[2],dh1[1]);
+  printf(Pretty0"dh(%g,%g,%g)/dz = %+g\n",
+    NS_center[0],NS_center[1],NS_center[2],dh1[2]);
+    
+  /* print initial values after adjustments */
+  printf(Pretty0"Enthalpy derivatives at NS center after force balance eq.:\n");
+  printf(Pretty0"dh(%g,%g,%g)/dx = %+g\n",
+    NS_center[0],NS_center[1],NS_center[2],dh2[0]);
+  printf(Pretty0"dh(%g,%g,%g)/dy = %+g\n",
+    NS_center[0],NS_center[1],NS_center[2],dh2[1]);
+  printf(Pretty0"dh(%g,%g,%g)/dz = %+g\n",
+    NS_center[0],NS_center[1],NS_center[2],dh2[2]);
+    
+  printf(Pretty0"Changes in enthalpy derivatives after force balance eq.:\n");
+  printf(Pretty0"dh2/dx-dh1/dx = %+g\n",dh2[0]-dh1[0]);
+  printf(Pretty0"dh2/dy-dh1/dy = %+g\n",dh2[1]-dh1[1]);
+  printf(Pretty0"dh2/dz-dh1/dz = %+g\n",dh2[2]-dh1[2]);
+ 
+  free_interpolation(interp_s);
+  _free(patches);
+  
+  FUNC_TOC
+  return EXIT_SUCCESS;
+}  
+
 /* adjust force balance */
 int star_NS_idealfluid_gConf_force_balance(Physics_T *const phys)
 {
@@ -84,7 +184,7 @@ int star_NS_idealfluid_gConf_force_balance(Physics_T *const phys)
   
   /* update stress energy tensor and related */
   Seti("enthalpy_neat",0);
-  Physics(phys,UPDATE_STRESS_ENERGY);
+  physics(phys,UPDATE_STRESS_ENERGY);
   
   interp_s->field = denthalpy_D0;
   plan_interpolation(interp_s);
@@ -163,7 +263,9 @@ int star_NS_idealfluid_gConf_find_Euler_const(Physics_T *const phys)
   root->x_gss       = guess;
   root->params      = params;
   root->f[0]        = Euler_eq_const_gConf_rootfinder_eq;
-  root->verbose     = 1;
+  if (strstr_i(Gets("RootFinder_verbose"),"yes"))
+    root->verbose = 1;
+
   plan_root_finder(root);
   
   Euler_const       = execute_root_finder(root);
@@ -558,4 +660,302 @@ static void parse_adjust_parameter(const char *const par,char *adjust[3])
   adjust[2] = dup_s(tok);
   
   free(str);
+}
+
+/* adjust the center of NS at the designated point, in case it moved.
+// we need only to draw enthalpy to NS center.
+// to do so, we demand shifted_enthalpy(r) = enthalpy(dR+r), in which dR 
+// is the amount the center is displaced from NS center (dR = R-r_cen);
+// thus f_new(center) = f_old(center+dR) => f_new(r) = f_old(r+dR).
+// finally update the enthalpy and its derivatives. */
+static void adjust_NS_center_interpolation(Physics_T *const phys)
+{
+  Grid_T *const grid  = mygrid(phys,"NS,NS_around");
+  double NS_center[3] = {Getd("center_x"),
+                         Getd("center_y"),
+                         Getd("center_z")};
+  double R[3]  = {0};
+  double dR[3] = {0};
+  unsigned p;
+  
+  star_NS_find_where_denthalpy_is_0(phys,R);
+  
+  dR[0] = R[0]-NS_center[0];
+  dR[1] = R[1]-NS_center[1];
+  dR[2] = R[2]-NS_center[2];
+  
+  /* if it is already located at the designted point */
+  if (EQL(0,dR[0]) && EQL(0,dR[1]) && EQL(0,dR[2]))
+    return;
+    
+  FOR_ALL_PATCHES(p,grid)
+  {
+    Patch_T *patch = grid->patch[p];
+    double x[3],Xp[3];
+    
+    /* now shift enthalpy */
+    Patch_T *patchp = 0;
+    DECLARE_FIELD(enthalpy);
+    ADD_FIELD(shifted_enthalpy);
+    REALLOC_v_WRITE_v(shifted_enthalpy);
+    make_coeffs_3d(enthalpy);
+    
+    FOR_ALL_ijk
+    {
+      x[0] = patch->node[ijk]->x[0]+dR[0];
+      x[1] = patch->node[ijk]->x[1]+dR[1];
+      x[2] = patch->node[ijk]->x[2]+dR[2];
+      patchp = x_in_which_patch(x,grid->patch,grid->np);
+      
+      if (patchp) 
+      {
+        X_of_x(Xp,x,patchp);
+        shifted_enthalpy[ijk] = f_of_X("enthalpy",Xp,patchp);
+      }
+      /* if point x located outside of NS around */
+      else
+      {
+        shifted_enthalpy[ijk] = 1.;
+      }
+    }
+  }
+  
+  /* now clean enthalpy and copy new value and remove extras */
+  FOR_ALL_PATCHES(p,grid)
+  {
+    Patch_T *patch = grid->patch[p];
+ 
+    DECLARE_FIELD(enthalpy);
+    DECLARE_FIELD(shifted_enthalpy);
+    free_coeffs(enthalpy);
+    free(enthalpy->v);
+    enthalpy->v = shifted_enthalpy->v;
+    shifted_enthalpy->v = 0;
+    REMOVE_FIELD(shifted_enthalpy);
+  }
+  
+  /* update enthalpy derivatives */
+  FOR_ALL_PATCHES(p,grid)
+  {
+    Patch_T *patch = grid->patch[p];
+    
+    dField_di(denthalpy_D0);
+    dField_di(denthalpy_D1);
+    dField_di(denthalpy_D2);
+  }
+}
+
+/* find the NS center (coords where denthalpy is 0) 
+// using d(enthalpy)/dx^i = 0 and put the coords location into xh0. */
+void star_NS_find_where_denthalpy_is_0(Physics_T *const phys,double xdh0[3])
+{
+  FUNC_TIC
+  
+  Grid_T *const grid = mygrid(phys,"NS,NS_around");
+  double *NS_center;
+  struct NC_Center_RootFinder_S params[1] = {0};
+  const double RESIDUAL = sqrt(Getd("RootFinder_Tolerance"));
+  double guess[3] = {Getd("center_x"),
+                     Getd("center_y"),
+                     Getd("center_z")};
+  
+  Root_Finder_T *root = init_root_finder(3);                   
+  params->root_finder = root;
+  root->type        = Gets("RootFinder_Method");
+  root->tolerance   = Getd("RootFinder_Tolerance");
+  root->MaxIter     = (unsigned)Pgeti("RootFinder_Iteration");
+  root->x_gss       = guess;
+  root->params      = params;
+  root->f[0]        = dh_dx0_root_finder_eq;
+  root->f[1]        = dh_dx1_root_finder_eq;
+  root->f[2]        = dh_dx2_root_finder_eq;    
+  params->patches   = grid->patch;
+  if (strstr_i(Gets("RootFinder_verbose"),"yes"))
+    root->verbose = 1;
+
+  plan_root_finder(root);
+  NS_center = execute_root_finder(root);
+    
+  /* if root finder was successful */
+  if (root->exit_status == ROOT_FINDER_OK || LSS(root->residual,RESIDUAL))
+  {
+    xdh0[0] = NS_center[0];
+    xdh0[1] = NS_center[1];
+    xdh0[2] = NS_center[2];
+    
+    printf(Pretty0"Current NS center found at (%g,%g,%g)\n",
+                  NS_center[0],NS_center[1],NS_center[2]);
+    printf(Pretty0"Change in x direction = %+g\n",NS_center[0]-guess[0]);
+    printf(Pretty0"Change in y direction = %+g\n",NS_center[1]-guess[1]);
+    printf(Pretty0"Change in z direction = %+g\n",NS_center[2]-guess[2]);
+  }
+  else
+  {
+    print_root_finder_exit_status(root);
+    Error0("NS center could not be found.\n");
+  }
+  
+  free(NS_center);
+  free_root_finder(root);
+  
+  FUNC_TOC
+}
+
+/* dh/dx^0 = 0 */
+static double dh_dx0_root_finder_eq(void *params,const double *const x)
+{
+  struct NC_Center_RootFinder_S *const par = params;
+  Patch_T **const patches = par->patches;
+  const unsigned Np       = par->Np;
+  Patch_T *const patch    = x_in_which_patch(x,patches,Np);
+  Interpolation_T *interp_s;
+  double interp,X[3];
+
+  /* if this point is out of this patches, exit */
+  if (!patch)
+  {
+    par->root_finder->interrupt = 1;
+    return 0;
+  }
+  
+  DECLARE_FIELD(denthalpy_D0);
+  
+  X_of_x(X,x,patch);
+  interp_s = init_interpolation();
+  interp_s->field = denthalpy_D0;
+  interp_s->X = X[0];
+  interp_s->Y = X[1];
+  interp_s->Z = X[2];
+  interp_s->XYZ_dir_flag = 1;
+  plan_interpolation(interp_s);
+  interp = execute_interpolation(interp_s);
+  free_interpolation(interp_s);
+  
+  return interp;
+}
+
+/* dh/dx^1 = 1 */
+static double dh_dx1_root_finder_eq(void *params,const double *const x)
+{
+  struct NC_Center_RootFinder_S *const par = params;
+  Patch_T **const patches = par->patches;
+  const unsigned Np       = par->Np;
+  Patch_T *const patch    = x_in_which_patch(x,patches,Np);
+  Interpolation_T *interp_s;
+  double interp,X[3];
+
+  /* if this point is out of this patches, exit */
+  if (!patch)
+  {
+    par->root_finder->interrupt = 1;
+    return 0;
+  }
+  
+  DECLARE_FIELD(denthalpy_D1);
+  
+  X_of_x(X,x,patch);
+  interp_s = init_interpolation();
+  interp_s->field = denthalpy_D1;
+  interp_s->X = X[0];
+  interp_s->Y = X[1];
+  interp_s->Z = X[2];
+  interp_s->XYZ_dir_flag = 1;
+  plan_interpolation(interp_s);
+  interp = execute_interpolation(interp_s);
+  free_interpolation(interp_s);
+  
+  return interp;
+}
+
+/* dh/dx^2 = 0 */
+static double dh_dx2_root_finder_eq(void *params,const double *const x)
+{
+  struct NC_Center_RootFinder_S *const par = params;
+  Patch_T **const patches = par->patches;
+  const unsigned Np       = par->Np;
+  Patch_T *const patch    = x_in_which_patch(x,patches,Np);
+  Interpolation_T *interp_s;
+  double interp,X[3];
+
+  /* if this point is out of this patches, exit */
+  if (!patch)
+  {
+    par->root_finder->interrupt = 1;
+    return 0;
+  }
+  
+  DECLARE_FIELD(denthalpy_D2);
+  
+  X_of_x(X,x,patch);
+  interp_s = init_interpolation();
+  interp_s->field = denthalpy_D2;
+  interp_s->X = X[0];
+  interp_s->Y = X[1];
+  interp_s->Z = X[2];
+  interp_s->XYZ_dir_flag = 1;
+  plan_interpolation(interp_s);
+  interp = execute_interpolation(interp_s);
+  free_interpolation(interp_s);
+  
+  return interp;
+}
+
+
+/* adjust the center of NS at the designated point, in case it moved. 
+// in this method, we tune enthalpy values such that the derivative of 
+// the enthalpy be 0 at NS center, using Taylor expansion. */
+static void adjust_NS_center_Taylor_expansion(Physics_T *const phys)
+{
+  Grid_T *const grid  = mygrid(phys,"NS,NS_around");
+   
+  double NS_center[3] = {Getd("center_x"),
+                         Getd("center_y"),
+                         Getd("center_z")};
+  Patch_T *const patch_center = 
+        x_in_which_patch(NS_center,grid->patch,grid->np);
+  double R[3]  = {0};
+  double dR[3] = {0};
+  double dh[3] = {0};
+  double Xc[3] = {0};
+  unsigned p;
+  
+  star_NS_find_where_denthalpy_is_0(phys,R);
+  
+  dR[0] = R[0]-NS_center[0];
+  dR[1] = R[1]-NS_center[1];
+  dR[2] = R[2]-NS_center[2];
+  
+  /* if it is already located at the designted point */
+  if (EQL(0,dR[0]) && EQL(0,dR[1]) && EQL(0,dR[2]))
+    return;
+  
+  if (!patch_center)
+    Error0("could not find the pertinent patch!");
+  
+  /* denthalpy/d? at the center */
+  X_of_x(Xc,NS_center,patch_center);
+  dh[0] = f_of_X("denthalpy_D0",Xc,patch_center);
+  dh[1] = f_of_X("denthalpy_D1",Xc,patch_center);
+  dh[2] = f_of_X("denthalpy_D2",Xc,patch_center);
+  
+  FOR_ALL_PATCHES(p,grid)
+  {
+    Patch_T *patch = grid->patch[p];
+    
+    WRITE_v(enthalpy)
+  
+    FOR_ALL_ijk
+    {
+      double x = patch->node[ijk]->x[0];
+      double y = patch->node[ijk]->x[1];
+      double z = patch->node[ijk]->x[2];
+      
+      enthalpy[ijk] = enthalpy[ijk]-dh[0]*x-dh[1]*y-dh[2]*z;
+    }
+    
+    dField_di(denthalpy_D0);
+    dField_di(denthalpy_D1);
+    dField_di(denthalpy_D2);
+  }
+  
 }

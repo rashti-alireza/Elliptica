@@ -33,6 +33,9 @@ int star_main(Physics_T *const phys)
         case TUNE_FORCE_BALANCE:
           ret = star_NS_idealfluid_gConf_force_balance(phys);
         break;
+        case TUNE_NS_CENTER:
+          ret = star_NS_idealfluid_gConf_force_balance(phys);
+        break;
         
         default:
           Error0(NO_OPTION);
