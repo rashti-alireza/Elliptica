@@ -674,6 +674,7 @@ static void find_NS_surface_Ylm_bisect_CS(Physics_T *const phys)
     
     Seti("did_NS_surface_finder_work?",0);
   
+    assert(!grid_char->params[phys->igc]->occupied);
     grid_char->params[phys->igc]->obj   = phys->stype;
     grid_char->params[phys->igc]->dir   = phys->spos;
     grid_char->params[phys->igc]->r_max = Getd("max_radius");
@@ -701,6 +702,7 @@ static void find_NS_surface_Ylm_bisect_CS(Physics_T *const phys)
   /* calculating coeffs */
   get_Ylm_coeffs(realClm,imagClm,Rnew_NS,Ntheta,Nphi,lmax);
 
+  assert(!grid_char->params[phys->igc]->occupied);
   grid_char->params[phys->igc]->obj    = phys->stype;
   grid_char->params[phys->igc]->dir    = phys->spos;
   grid_char->params[phys->igc]->relClm = realClm;
