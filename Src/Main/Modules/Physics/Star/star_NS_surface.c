@@ -33,12 +33,14 @@ star_NS_extrapolate
   )
 {
   FUNC_TIC
-  printf(Pretty0"method = %s\n",method);
   
-  if (phys->type != NS)
+  if (phys->ctype != NS)
    Error0("Wrong physics!");
   
   int ret = -1;
+  
+  
+  printf(Pretty0"method = %s\n",method);
   
   /* initialize */
   struct Extrap_S *const extrap = extrap_init(phys,fields_name,method);
@@ -135,8 +137,11 @@ static void extrap_free(struct Extrap_S *const extrap)
 
 /* ->: EXIT_SUCESS if succeeds, otherwise an error code.
 // this function finds field values and its derivative
-// on the surface with the known values of the field. 
-// requirement:f, df, ddf and the grid must be cubed spherical type. */
+// on the surface with the known values of the field and then
+// using them to extrapolate.
+// requirement:f, df, ddf and the grid must be cubed spherical type.
+// note: if it could not find df and ddf, it makes them and after
+// is done with them, removes them. */
 static int fmain_f_df_ddf_CS(struct Extrap_S *const extrap)
 {
   const unsigned npo = extrap->npo;
@@ -169,6 +174,9 @@ static int fmain_f_df_ddf_CS(struct Extrap_S *const extrap)
         }
         else
         {
+         printf(Pretty0"could not find %s in %s "
+                       "=> calculate it numerically ...\n",
+                       extrap->fld[f]->df[ii],patch->name);
          extrap->fld[f]->did_add_df = 1;
          Field_T *df = add_field(extrap->fld[f]->df[ii],0,patch,NO);
          partial_derivative(df);
@@ -185,6 +193,9 @@ static int fmain_f_df_ddf_CS(struct Extrap_S *const extrap)
         }
         else
         {
+         printf(Pretty0"could not find %s in %s "
+                       "=> calculate it numerically ...\n",
+                       extrap->fld[f]->ddf[ii],patch->name);
          extrap->fld[f]->did_add_ddf = 1;
          Field_T *ddf = add_field(extrap->fld[f]->ddf[ii],0,patch,NO);
          partial_derivative(ddf);
@@ -224,19 +235,13 @@ static int fmain_f_df_ddf_CS(struct Extrap_S *const extrap)
       unsigned d1,d2;/* derivative */
 
       /* find th and ph and X */
-      if (patch->coordsys == CubedSpherical)
-      {
-       find_theta_phi_of_XYZ_CS(&th,&ph,patch->node[ijk]->X,
-             patch->CoordSysInfo->CubedSphericalCoord->side);
-       /* find xp in patch_in */
-       X[2] = 1.;
-       find_XYZ_and_patch_of_theta_phi_CS(X,&patchp,th,ph,
-                                          extrap->patches_in,npi);
-      }
-      else
-       Error0(NO_OPTION);
-      
-      
+      find_theta_phi_of_XYZ_CS(&th,&ph,patch->node[ijk]->X,
+           patch->CoordSysInfo->CubedSphericalCoord->side);
+      /* find xp in patch_in */
+      X[2] = 1.;
+      find_XYZ_and_patch_of_theta_phi_CS(X,&patchp,th,ph,
+                                        extrap->patches_in,npi);
+    
       /* find r */
       assert(x_of_X(x,X,patch));
       x[0] -= patchp->c[0];
