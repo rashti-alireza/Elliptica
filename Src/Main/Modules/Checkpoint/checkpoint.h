@@ -4,6 +4,7 @@
 #include <dirent.h>
 #include "core_lib.h"
 #include "fields_lib.h"
+#include "physics_lib.h"
 
 #define MAX_ARR   (400)
 #define MAX_ARRx2 (2*MAX_ARR)
@@ -32,9 +33,9 @@ struct checkpoint_header
 };
 
 
+void write_checkpoint(Physics_T *const phys);
 Grid_T *load_checkpoint_file(void);
 int can_we_use_checkpoint(void);
-void write_checkpoint(Grid_T *const grid);
 void read_fields_from_checkpoint(Grid_T *const grid,FILE *const file);
 Grid_T *init_from_checkpoint(FILE *const file);
 Parameter_T *parameter_query_from_checkpoint(const char *const par_name,FILE *const file);

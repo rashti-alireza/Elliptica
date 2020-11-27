@@ -27,9 +27,10 @@ static Parameter_T **modified_checkpoint_par;/* modified pars in par file
 
 /* write checkpoint for the given grid 
 // NOTE: the order of writing and reading is crucial */
-void write_checkpoint(Grid_T *const grid)
+void write_checkpoint(Physics_T *const phys)
 {
-    
+  Grid_T *const grid = phys->grid;
+  
   /* print some descriptions */
   pr_line_custom('=');
   printf("{ Writing checkpoint file ...\n");
