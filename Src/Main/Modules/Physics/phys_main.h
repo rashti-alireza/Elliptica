@@ -3,6 +3,7 @@
 #include "physics_lib.h"
 #include "physics_StressEnergyTensor_lib.h"
 #include "physics_star_lib.h"
+#include "physics_blackhole_lib.h"
 
 #define STR_LEN (999)
 

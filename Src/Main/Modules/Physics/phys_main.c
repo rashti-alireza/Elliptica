@@ -14,7 +14,7 @@
 int physics_main(Physics_T *const phys,const cmd_T cmd,
             const char *const file, const int line)
 {
-  int ret = -1;
+  int ret = EXIT_SUCCESS;
   char msg[STR_LEN] = {'\0'};
   
   phys->cmd   = cmd;
@@ -46,21 +46,18 @@ int physics_main(Physics_T *const phys,const cmd_T cmd,
     case EXTRAPOLATE_MATTERS:
       ret = star_main(phys);
     break;
-   /* case AH_RADIUS:
-      ret = update_apparent_horizon_radius(phys);
+   case FIND_BH_SURFACE:
+      ret = bh_main(phys);
     break;
-    case AH_OMEGA:
-      ret = update_apparent_horizon_omega(phys);
+    case TUNE_BH_RADIUS:
+      ret = bh_main(phys);
     break;
-    case AH_NORMAL_VECTOR:
-      ret = update_apparent_horizon_normal(phys);
-    break;*/
-    /*case P_ADM:
-      ret = adjust_ADM_momentum(phys);
-    break;*/
+    case FILL_BH:
+      ret = bh_main(phys);
+    break;
     default:
       sprintf(msg,"No such command found!\n"
-              "Incident triggered at\n"
+              "Incident triggered at:\n"
               "file = %s\nline = %d",file,line);
       Error0(msg);
   }
@@ -163,12 +160,12 @@ init_physics
     phys->sys  = BHBH;
     phys->ssys = "BHBH";
   }
-  else if (Pcmps("project","BH_initial_data"))
+  else if (Pcmps("project","Single_BH_initial_data"))
   {
     phys->sys  = SBH;
     phys->ssys = "SBH";/* important to have different name for system */
   }
-  else if (Pcmps("project","NS_initial_data"))
+  else if (Pcmps("project","Sinlge_NS_initial_data"))
   {
     phys->sys  = SNS;
     phys->ssys = "SNS";/* important to have different name for system */
@@ -296,6 +293,19 @@ init_physics
         Error0(NO_OPTION);
       
     break;
+    case SBH:
+      phys->ctype = BH;
+      phys->stype = "BH";
+      spos = Pgets("grid_set_BH");
+      if (strstr_i(spos,"center"))
+      {
+        phys->pos  = CENTER;
+        phys->spos = "center";
+      }
+      else
+        Error0(NO_OPTION);
+      
+    break;
     case BHNS:
       phys->stype = "BHNS";
       phys->pos   = NONE;
@@ -329,6 +339,8 @@ void free_physics(Physics_T *phys)
       free_grid_params(phys->grid);
       free_grid(phys->grid);
     }
+    
+    free_grid_char(phys->grid_char);
     free(phys);
   }
 }
