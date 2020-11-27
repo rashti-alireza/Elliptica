@@ -122,7 +122,8 @@ static void parse_adjust_parameter(const char *const par,char *adjust[3])
 /* find y_CM by demanding Px_ADM = 0 */
 static void Px_ADM_is0_by_y_CM(Physics_T *const phys)
 {
-  double dy_CM = 0,y_CM_new,px;
+  double dy_CM = 0,y_CM_new;
+  const double px    = sysGetd("Px_ADM");
   const double W     = sysGetd("P_ADM_control_update_weight");
   const double dP    = sysGetd("P_ADM_control_tolerance");
   const double Omega = sysGetd("angular_velocity");
@@ -130,9 +131,6 @@ static void Px_ADM_is0_by_y_CM(Physics_T *const phys)
   const double admM  = sysGetd("ADM_mass");
   
   printf(Pretty0"adjusting Px_ADM by y_CM ...\n");
-  
-  /* get P_ADM */
-  px  = Pgetd("Px_ADM");
   
   /* changing center of mass */
   dy_CM    = -px/(Omega*(admM));
@@ -148,7 +146,8 @@ static void Px_ADM_is0_by_y_CM(Physics_T *const phys)
 /* find x_CM by demanding Py_ADM = 0 */
 static void Py_ADM_is0_by_x_CM(Physics_T *const phys)
 {
-  double  dx_CM = 0,x_CM_new,py;
+  double  dx_CM = 0,x_CM_new;
+  const double py    = sysGetd("Py_ADM");
   const double W     = sysGetd("P_ADM_control_update_weight");
   const double dP    = sysGetd("P_ADM_control_tolerance");
   const double Omega = sysGetd("angular_velocity");
@@ -156,9 +155,6 @@ static void Py_ADM_is0_by_x_CM(Physics_T *const phys)
   const double admM  = sysGetd("ADM_mass");
   
   printf(Pretty0"adjusting Py_ADM by x_CM ...\n");
-  
-  /* get P_ADM */
-  py  = sysGetd("Py_ADM");
   
   /* changing center of mass */
   dx_CM    = py/(Omega*(admM));

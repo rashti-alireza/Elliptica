@@ -26,6 +26,7 @@
 /* all needed items for bhfiller function */
 struct BHFiller_S
 {
+  Physics_T *phys;
   Grid_T *grid;/* the grid */
   Patch_T **patches_outBH;/* patches outside the BH */
   Patch_T **patches_inBH;/* patches inside the BH */

@@ -117,8 +117,8 @@ static void tune_BH_radius_irreducible_mass_perfect_s2(Physics_T *const phys)
 
   r_bh = current_r_bh + W*dr;
   
-  Psetd("min_radius",r_bh);
-  Psetd("max_radius",r_bh);
+  Setd("min_radius",r_bh);
+  Setd("max_radius",r_bh);
   
   if (EQL(dr,0))/* => no change in AH surface */
   {

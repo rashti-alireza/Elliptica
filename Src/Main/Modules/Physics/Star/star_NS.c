@@ -745,7 +745,7 @@ void star_NS_find_where_denthalpy_is_0(Physics_T *const phys,double xdh0[3])
   params->root_finder = root;
   root->type        = Gets("RootFinder_Method");
   root->tolerance   = Getd("RootFinder_Tolerance");
-  root->MaxIter     = (unsigned)Pgeti("RootFinder_Iteration");
+  root->MaxIter     = (unsigned)Geti("RootFinder_Iteration");
   root->x_gss       = guess;
   root->params      = params;
   root->f[0]        = dh_dx0_root_finder_eq;

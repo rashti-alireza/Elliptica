@@ -76,6 +76,8 @@ bhf_init
   )
 {
   struct BHFiller_S *const bhf = calloc(1,sizeof(*bhf));IsNull(bhf);
+  /* physics */
+  bhf->phys = phys;
   /* grid */
   Grid_T *const grid = phys->grid;
   bhf->grid = grid;
@@ -314,6 +316,7 @@ static void bhf_free(struct BHFiller_S *const bhf)
 // and only for perfect sphere. */
 static int bhf_ChebTn_Ylm_pefect_S2_CS(struct BHFiller_S *const bhf)
 {
+  Physics_T *const phys  = bhf->phys;
   const unsigned NCoeffs = bhf->NCoeffs;
   const unsigned npo     = bhf->npo;
   const unsigned npi     = bhf->npi;
@@ -321,7 +324,7 @@ static int bhf_ChebTn_Ylm_pefect_S2_CS(struct BHFiller_S *const bhf)
   const unsigned lmax   = bhf->lmax;
   const unsigned Ntheta = bhf->Ntheta;
   const unsigned Nphi   = bhf->Nphi;
-  const double rfill = Pgetd("perfect_S2_radius");
+  const double rfill = Getd("perfect_S2_radius");
   const double rfill3= pow(rfill,3);
   unsigned p,fld;
 
