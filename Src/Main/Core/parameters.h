@@ -1,8 +1,15 @@
 #include "core_lib.h"
 #include "error_handling_lib.h"
 
+#define PAR_LEN  (300)
 #define STR_SIZE1 (99)
 #define STR_SIZE2 (999)
+
+/* prefix the given string str with the given prefix pre and 
+// return string prepar.
+// NOTE: prepar must be defined. */
+#define PrefixIt(pre,str) (sprintf(prepar,"%s%s",pre,str) ? prepar : 0)
+
 
 /* global variables */
 extern Parameter_T **parameters_global;
@@ -42,6 +49,7 @@ int
 update_iteration_params
   (
    const unsigned main_loop_iter,
+   const char *const prefix/* parameter prefix */,
    const char *const dir_name_format/* eg: "BHNS_%s_%ux%ux%u" */
   );
 

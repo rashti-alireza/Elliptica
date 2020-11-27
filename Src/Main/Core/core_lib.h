@@ -62,6 +62,7 @@ int
 update_iteration_params
   (
    const unsigned main_loop_iter,
+   const char *const prefix/* parameter prefix */,
    const char *const dir_name_format/* eg: "BHNS_%s_%ux%ux%u" */
   );
 
