@@ -80,16 +80,6 @@ how_much_memory
 
 void header_and_clock(const char *const msg);
 void footer_and_clock(const char *const msg);
-
-void 
-update_parameters_and_directories
-  (
-   const unsigned main_loop_iter,
-   const char *const dir_name_format/* eg: "BBN_%s_%ux%ux%u" */
-  );
-
-void free_grid_and_its_parameters(Grid_T *grid,const int keep_grid);
-
 double f_of_X(const char *const field,
               const double *const X/* patch coords */,
               Patch_T *const patch);

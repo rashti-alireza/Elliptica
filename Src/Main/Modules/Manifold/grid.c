@@ -351,5 +351,35 @@ void free_patch(Patch_T *patch)
   free(patch);
 }
 
+extern Parameter_T **parameters_global;
+/* free all paramters that used for grid initialization
+// which start with grid[0-9]+_. */
+void free_grid_params(const Grid_T *const grid)
+{
+  if (!grid)
+    return;
+  
+  char suffix[STR_LEN1] = {'\0'};
+  unsigned i,np;
+  
+  np = 0;
+  while (parameters_global != 0 && parameters_global[np] != 0)
+    np++;
+  
+  sprintf(suffix,"grid%u_",grid->gn);/* parameters related to this grid */
+  for (i = 0; i < np;)/* no increment */
+  {
+    if (strstr(parameters_global[i]->lv,suffix))
+    {
+      /* note: the last par is put in palce of removed par
+      // so don't increment i */
+      free_parameter(parameters_global[i]->lv);
+      np--;
+    }
+    else
+      i++;
+  }
+}
+
 
 

@@ -417,6 +417,9 @@ regex_collect_patches
   );
 
 
+void free_grid_params(const Grid_T *const grid);
+
+
 
 #endif
 

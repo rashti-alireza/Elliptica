@@ -7,6 +7,9 @@
 #include "maths_equation_solvings_lib.h"
 #include "manifold_header.h"
 
+/* string length */
+#define STR_LEN1 (99)
+
 extern Grid_T **grids_global;
 
 int make_patches(Grid_T *const grid);
@@ -38,5 +41,5 @@ void *alloc_grid(void);
 void alloc_patches(Grid_T *const grid);
 void free_grid(Grid_T *grid);
 void free_patch(Patch_T *patch);
-
+void free_grid_params(const Grid_T *const grid);
 
