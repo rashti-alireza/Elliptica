@@ -122,17 +122,30 @@ int physics_main(Physics_T *const phys,const cmd_T cmd,
   //return ret;
 //}
 
+/* initialize a phys from a parent_phys(if any).
+// note: for parant physics, one must set phys->grid manually 
+// after initialization. */
 Physics_T *
 init_physics
  (
- Grid_T *const grid/* computation grid */,
+ Physics_T *const parent_phys/* if null, it means this is a parent physics */,
  const Com_Obj_T type/* object type NS,BH,etc */
  )
 {
   Physics_T *phys = calloc(1,sizeof(*phys)); IsNull(phys);
   const char *spos  = 0;
   
-  phys->grid = grid;
+  /* if given parent_phys in not null => we have a child physics */
+  if (parent_phys)
+  {
+    phys->grid         = parent_phys->grid;
+    phys->IsThisParent = 0;
+  }
+  else
+  {
+    phys->IsThisParent = 1;
+  }
+  
   phys->type = type;
   
   if (Pcmps("project","BH_NS_initial_data"))
@@ -302,14 +315,22 @@ void free_physics(Physics_T *phys)
   
   if (phys)
   {
+    /* free temp grid */
     for (i = 0; i < phys->Ngridtemp; ++i)
     {
       _free(phys->gridtemp[i]->patch);
       _free(phys->gridtemp[i]);
     }
-  _free(phys->gridtemp);
+    _free(phys->gridtemp);
+  
+    /* free grid and its parameters */
+    if (phys->IsThisParent)
+    {
+      free_grid_params(phys->grid);
+      free_grid(phys->grid);
+    }
+    free(phys);
   }
-  _free(phys);
 }
 
 /* set default phys->region  */

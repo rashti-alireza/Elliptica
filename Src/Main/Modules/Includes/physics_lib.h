@@ -150,6 +150,7 @@ typedef struct PHYSICS_T
  unsigned igc;/* index of grid_char for this physics. */
  
  cmd_T cmd;/* current command */
+ unsigned IsThisParent:1;/* if this is a parent physics 1, otherwise 0. */
  const char *region;/* grid region you want to issue the command */
  const char *Uregion;/* grid region specifed by User before to issue 
                      // the command, this is a backup, in case we need 
@@ -179,7 +180,7 @@ typedef struct PHYSICS_T
 #undef PAR_LEN
 #undef STEMP_LEN
 
-Physics_T *init_physics(struct GRID_T *const grid,const Com_Obj_T type);
+Physics_T *init_physics(Physics_T *const parent_phys,const Com_Obj_T type);
 int physics_main(Physics_T *const phys,const cmd_T cmd,
             const char *const file, const int line);
 void free_physics(Physics_T *phys);
