@@ -58,6 +58,14 @@ void free_parameter(const char *const par_name);
 void free_given_parameter(Parameter_T *par);
 void free_parameter_db(void);
 
+int 
+update_iteration_params
+  (
+   const unsigned main_loop_iter,
+   const char *const dir_name_format/* eg: "BHNS_%s_%ux%ux%u" */
+  );
+
+
 #endif
 
 

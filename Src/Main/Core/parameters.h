@@ -1,6 +1,9 @@
 #include "core_lib.h"
 #include "error_handling_lib.h"
 
+#define STR_SIZE1 (99)
+#define STR_SIZE2 (999)
+
 /* global variables */
 extern Parameter_T **parameters_global;
 
@@ -34,6 +37,14 @@ void *alloc_parameter(Parameter_T ***const mem);
 void free_parameter(const char *const par_name);
 void free_given_parameter(Parameter_T *par);
 void free_parameter_db(void);
+
+int 
+update_iteration_params
+  (
+   const unsigned main_loop_iter,
+   const char *const dir_name_format/* eg: "BHNS_%s_%ux%ux%u" */
+  );
+
 
 
 
