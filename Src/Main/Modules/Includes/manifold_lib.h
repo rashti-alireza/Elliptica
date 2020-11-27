@@ -285,8 +285,7 @@ typedef struct NEEDLE_T
 /* characteristics info of grid */
 typedef struct GRID_CHAR_T
 {
- Grid_T *grid;/* the new grid */
- Grid_T *lgrid;/* the last grid (before grid) */
+ Grid_T *grid;/* the new pristine grid */
  double S;/* separation between the objects in a binary system or 
           // the size of box around the single object. */
  struct/* for each object */
@@ -384,7 +383,7 @@ collect_patches
   unsigned *const Np/* number of patches found */
   );
 
-Grid_Char_T *init_grid_char(Grid_T *const last_grid);
+Grid_Char_T *init_grid_char(Grid_T *const new_grid);
 void free_grid_char(Grid_Char_T *g);
 Grid_Kind_T set_grid_kind(const char *const grid_kind);
 
