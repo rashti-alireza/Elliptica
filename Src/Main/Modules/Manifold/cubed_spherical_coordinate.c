@@ -3078,7 +3078,10 @@ void set_params_split_CS(Grid_Char_T *const grid_char)
   
   assert(grid);
   
-  /* first find out the splits and resolutions */
+  /* first the kind of grid */
+  grid->kind = set_grid_kind(Pgets("grid_kind"));
+  
+  /* find out the splits and resolutions */
   /* { */
   /* resolution in each dir. */
   const unsigned givenN[3] = {(unsigned)Pgeti("n_a"),
