@@ -28,15 +28,15 @@ int physics_main(Physics_T *const phys,const cmd_T cmd,
   
   switch (cmd)
   {
-    case TUNE_EULER_CONST:
+    case TUNE_STAR_EULER_CONST:
       ret = star_main(phys);
     break;
     
-    case TUNE_FORCE_BALANCE:
+    case TUNE_STAR_FORCE_BALANCE:
       ret = star_main(phys);
     break;
     
-    case TUNE_NS_CENTER:
+    case TUNE_STAR_CENTER:
       ret = star_main(phys);
     break;
     
@@ -76,15 +76,15 @@ int physics_main(Physics_T *const phys,const cmd_T cmd,
       ret = bh_main(phys);
     break;
     
-    case NS_START:
+    case STAR_START:
       ret = star_main(phys);
     break;
     
-    case NS_ADD_FIELDS:
+    case STAR_ADD_FIELDS:
       ret = star_main(phys);
     break;
     
-    case NS_ADD_PARAMS:
+    case STAR_ADD_PARAMS:
       ret = star_main(phys);
     break;
     
