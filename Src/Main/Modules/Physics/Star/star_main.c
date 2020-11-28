@@ -12,7 +12,9 @@
 /* main function to issue commands */
 int star_main(Physics_T *const phys)
 {
-  int ret = -1;
+  int ret = EXIT_SUCCESS;
+  
+  assert(phys->ctype == NS);
   
   if (Pcmps("star_type","NS"))
   {

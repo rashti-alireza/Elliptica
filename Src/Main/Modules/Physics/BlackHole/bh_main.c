@@ -12,7 +12,9 @@
 /* main function to issue commands */
 int bh_main(Physics_T *const phys)
 {
-  int ret = -1;
+  int ret = EXIT_SUCCESS;
+  
+  assert(phys->ctype == BH);
   
   switch (phys->cmd)
   {
