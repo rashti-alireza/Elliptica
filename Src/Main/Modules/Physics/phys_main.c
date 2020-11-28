@@ -55,6 +55,10 @@ int physics_main(Physics_T *const phys,const cmd_T cmd,
     case FILL_BH:
       ret = bh_main(phys);
     break;
+    case BH_GRID_INITIAL_PARAMS:
+      ret = bh_main(phys);
+    break;
+    
     default:
       sprintf(msg,"No such command found!\n"
               "Incident triggered at:\n"
@@ -340,7 +344,6 @@ void free_physics(Physics_T *phys)
       free_grid(phys->grid);
     }
     
-    free_grid_char(phys->grid_char);
     free(phys);
   }
 }
