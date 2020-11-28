@@ -13,13 +13,14 @@
 /* update stress energy tensor */
 int sys_main(Physics_T *const phys)
 {
-  int ret = -1;
+  int ret = EXIT_SUCCESS;
   
   switch (phys->cmd)
   {
-    case TUNE_P_ADM:
-      ret = sys_tune_ADM_momenta(phys);
+    case TUNE_SYS_P_ADM:
+      ret = tune_system_ADM_momenta(phys);
     break;
+    
     default:
       Error0(NO_OPTION);
   }
@@ -27,10 +28,16 @@ int sys_main(Physics_T *const phys)
   return ret;
 }
 
-/* adding default parameters and fields. */
-int sys_mount(Grid_T *const grid)
+/* tune adm momenta */
+static int tune_system_ADM_momenta(Physics_T *const phys)
 {
-  UNUSED(grid);
-  return EXIT_SUCCESS;
+  FUNC_TIC
+  
+  int ret = EXIT_SUCCESS;
+  
+  ret = sys_tune_ADM_momenta(phys);
+  
+  FUNC_TOC
+  return ret;
 }
 
