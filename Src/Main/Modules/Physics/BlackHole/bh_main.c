@@ -27,8 +27,14 @@ int bh_main(Physics_T *const phys)
     case FILL_BH:
       ret = bh_fill_inside_black_hole(phys);
     break;
-    case BH_GRID_INITIAL_PARAMS:
-      ret = bh_set_initial_grid_parameters(phys);
+    case BH_START:
+      ret = bh_start_off(phys);
+    break;
+    case BH_ADD_PARAMS:
+      ret = bh_add_params(phys);
+    break;
+    case BH_ADD_FIELDS:
+      ret = bh_add_fields(phys);
     break;
     
     default:
@@ -38,10 +44,5 @@ int bh_main(Physics_T *const phys)
   return ret;
 }
 
-/* adding default parameters and fields. */
-int bh_mount(Grid_T *const grid)
-{
-  UNUSED(grid);
-  return EXIT_SUCCESS;
-}
+
 

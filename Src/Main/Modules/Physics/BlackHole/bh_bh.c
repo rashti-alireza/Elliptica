@@ -44,16 +44,16 @@ int bh_find_black_hole_surface(Physics_T *const phys)
   return EXIT_SUCCESS;
 }
 
-/* set initial paramters pertinent to grid, used mostly 
+/* set initial feature of blach holes, mostly used 
 // for the very first time that we need to make grid. */
-int bh_set_initial_grid_parameters(Physics_T *const phys)
+int bh_start_off(Physics_T *const phys)
 {
   FUNC_TIC
   
-  IF_sval("grid_initial_parameters","KerrSchild")
+  IF_sval("start_off","KerrSchild")
   {
     IF_sval("surface_type","perfect_s2")
-      init_grid_params_KerrSchild_perfect_s2(phys);
+      start_off_KerrSchild_perfect_s2(phys);
     else
       Error0(NO_OPTION);
   }
@@ -64,8 +64,9 @@ int bh_set_initial_grid_parameters(Physics_T *const phys)
   return EXIT_SUCCESS;
 }
 
-/* use KerrSchild to set initial grid params assuming perfect S2 */
-static void init_grid_params_KerrSchild_perfect_s2(Physics_T *const phys)
+/* use KerrSchild assuming pefect S2 to start off black hole
+// paramters and domain shape etc. */
+static void start_off_KerrSchild_perfect_s2(Physics_T *const phys)
 {
   FUNC_TIC
   
@@ -184,3 +185,19 @@ static void tune_BH_radius_irreducible_mass_perfect_s2(Physics_T *const phys)
   }
   
 }
+
+/* adding default parameters. */
+int bh_add_params(Physics_T *const phys)
+{
+  UNUSED(phys);
+  return EXIT_SUCCESS;
+}
+
+/* adding fields. */
+int bh_add_fields(Physics_T *const phys)
+{
+  UNUSED(phys);
+  return EXIT_SUCCESS;
+}
+
+
