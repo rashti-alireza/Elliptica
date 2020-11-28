@@ -189,14 +189,22 @@ static void tune_BH_radius_irreducible_mass_perfect_s2(Physics_T *const phys)
 /* adding default parameters. */
 int bh_add_params(Physics_T *const phys)
 {
+  FUNC_TIC
+  
   UNUSED(phys);
+  
+  FUNC_TOC
   return EXIT_SUCCESS;
 }
 
 /* adding fields. */
 int bh_add_fields(Physics_T *const phys)
 {
+  FUNC_TIC
+  
   UNUSED(phys);
+  
+  FUNC_TOC
   return EXIT_SUCCESS;
 }
 
