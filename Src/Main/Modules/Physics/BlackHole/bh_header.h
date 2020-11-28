@@ -23,6 +23,7 @@ double bh_bhf_poly_smoother
 void bh_bhf_ChebTn_extrapolate
 (double *const a,const double fr0,const double fr1,const double dfdr,const double ddfddr,const double rfill,const unsigned N);
 
+int bh_set_initial_grid_parameters(Physics_T *const phys);
 
 
 #endif

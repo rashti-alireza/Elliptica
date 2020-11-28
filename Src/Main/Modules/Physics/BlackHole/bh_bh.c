@@ -44,7 +44,61 @@ int bh_find_black_hole_surface(Physics_T *const phys)
   return EXIT_SUCCESS;
 }
 
-/* setting grid characteristic */
+/* set initial paramters pertinent to grid, used mostly 
+// for the very first time that we need to make grid. */
+int bh_set_initial_grid_parameters(Physics_T *const phys)
+{
+  FUNC_TIC
+  
+  IF_sval("grid_initial_parameters","KerrSchild")
+  {
+    IF_sval("surface_type","perfect_s2")
+      init_grid_params_KerrSchild_perfect_s2(phys);
+    else
+      Error0(NO_OPTION);
+  }
+  else
+    Error0(NO_OPTION);
+  
+  FUNC_TOC
+  return EXIT_SUCCESS;
+}
+
+/* use KerrSchild to set initial grid params assuming perfect S2 */
+static void init_grid_params_KerrSchild_perfect_s2(Physics_T *const phys)
+{
+  FUNC_TIC
+  
+  const double bh_chi_x    = Getd("chi_U0");
+  const double bh_chi_y    = Getd("chi_U1");
+  const double bh_chi_z    = Getd("chi_U2");
+  const double bh_irr_mass = Getd("irreducible_mass");
+  const double bh_R        = 1.5*bh_irr_mass;/* approximate initial radius */
+  const double bh_chi      = sqrt(Pow2(bh_chi_x)+Pow2(bh_chi_y)+Pow2(bh_chi_z));
+  const double bh_a        = bh_chi*bh_irr_mass;
+  
+  /* check size of bh_chi */
+  if (GRT(bh_chi,1))
+    Error0("BH spin is too large!\n");
+  
+  /* set initial grid parameters */
+  Setd("perfect_S2_radius",bh_R);
+  Setd("min_radius",bh_R);
+  Setd("max_radius",bh_R);
+  
+  printf("%s properties:\n",phys->stype);
+  printf(Pretty0"%s radius (Kerr-Schild Coords.) ~ %+e\n",phys->stype,bh_R);
+  printf(Pretty0"%s irreducible mass             ~ %+e\n",phys->stype,bh_irr_mass);
+  printf(Pretty0"%s dimensionless spin (x comp.) = %+e\n",phys->stype,bh_chi_x);
+  printf(Pretty0"%s dimensionless spin (y comp.) = %+e\n",phys->stype,bh_chi_y);
+  printf(Pretty0"%s dimensionless spin (z comp.) = %+e\n",phys->stype,bh_chi_z);
+  printf(Pretty0"%s approximate net spin         ~ %+e\n",phys->stype,bh_a);
+  
+  FUNC_TOC
+}
+
+
+/* find BH surface and then set grid characteristic */
 static void find_bh_surface_perfect_s2(Physics_T *const phys)
 {
   Grid_Char_T *grid_char = phys->grid_char;
