@@ -12,22 +12,32 @@
 /* main function to issue command */
 int Tij_main(Physics_T *const phys)
 {
+  int ret = EXIT_SUCCESS;
+  
   switch (phys->cmd)
   {
     case UPDATE_STRESS_ENERGY:
-      Tij_update_stress_energy_tensor(phys);
+      ret = update_stress_energy_tensor(phys);
+    break;
+    
+    case STRESS_ENERGY_ADD_PARAMS:
+      ret = add_stress_energy_parameters(phys);
+    break;
+    
+    case STRESS_ENERGY_ADD_FIELDS:
+      ret = add_stress_energy_tensor_fields(phys);
     break;
     
     default:
       Error0(NO_OPTION);
   }
   
-  return EXIT_SUCCESS;
+  return ret;
 }
 
 
 /* add default parameters */
-int Tij_add_params(Physics_T *const phys)
+static int add_stress_energy_parameters(Physics_T *const phys)
 {
   FUNC_TIC
   
@@ -59,7 +69,7 @@ int Tij_add_params(Physics_T *const phys)
 }
 
 /* add fields parameters */
-int Tij_add_fields(Physics_T *const phys)
+static int add_stress_energy_tensor_fields(Physics_T *const phys)
 {
   FUNC_TIC
   
@@ -76,7 +86,7 @@ int Tij_add_fields(Physics_T *const phys)
 }
 
 /* update stress energy tensor */
-int Tij_update_stress_energy_tensor(Physics_T *const phys)
+static int update_stress_energy_tensor(Physics_T *const phys)
 {
   FUNC_TIC
   if (Pcmps("Tij_fluid","NS_ideal_fluid"))
