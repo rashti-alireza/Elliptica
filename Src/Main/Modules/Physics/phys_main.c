@@ -31,34 +31,60 @@ int physics_main(Physics_T *const phys,const cmd_T cmd,
     case TUNE_EULER_CONST:
       ret = star_main(phys);
     break;
+    
     case TUNE_FORCE_BALANCE:
       ret = star_main(phys);
     break;
+    
     case TUNE_NS_CENTER:
       ret = star_main(phys);
     break;
+    
     case FIND_STAR_SURFACE:
       ret = star_main(phys);
     break;
+    
     case UPDATE_STRESS_ENERGY:
       ret = Tij_main(phys);
     break;
+    
     case EXTRAPOLATE_MATTERS:
       ret = star_main(phys);
     break;
-   case FIND_BH_SURFACE:
+    
+    case FIND_BH_SURFACE:
       ret = bh_main(phys);
     break;
+    
     case TUNE_BH_RADIUS:
       ret = bh_main(phys);
     break;
+    
     case FILL_BH:
       ret = bh_main(phys);
     break;
+    
     case BH_START:
       ret = bh_main(phys);
     break;
+    
+    case BH_ADD_PARAMS:
+      ret = bh_main(phys);
+    break;
+    
+    case BH_ADD_FIELDS:
+      ret = bh_main(phys);
+    break;
+    
     case NS_START:
+      ret = star_main(phys);
+    break;
+    
+    case NS_ADD_FIELDS:
+      ret = star_main(phys);
+    break;
+    
+    case NS_ADD_PARAMS:
       ret = star_main(phys);
     break;
     
