@@ -16,59 +16,223 @@ int star_main(Physics_T *const phys)
   
   assert(phys->ctype == NS);
   
+  switch (phys->cmd)
+  {
+    case TUNE_STAR_EULER_CONST:
+      ret = tune_star_Euler_constant(phys);
+    break;
+    
+    case EXTRAPOLATE_MATTERS:
+      ret = extrapolate_matter(phys);
+    break;
+    
+    case FIND_STAR_SURFACE:
+      ret = find_star_surface(phys);
+    break;
+    
+    case TUNE_STAR_FORCE_BALANCE:
+      ret = tune_star_force_balance_equation(phys);
+    break;
+    
+    case TUNE_STAR_CENTER:
+      ret = tune_star_center(phys);
+    break;
+    
+    case STAR_ADD_PARAMS:
+      ret = star_add_parameters(phys);
+    break;
+    
+    case STAR_ADD_FIELDS:
+      ret = star_add_fields(phys);
+    break;
+    
+    //case STAR_START:
+      //ret = star_NS_start_off(phys);
+    //break;
+    
+    default:
+      Error0(NO_OPTION);
+  }
+  
+  return ret;
+}
+
+/* tune Euler constant in fluid eqs. */
+static int tune_star_Euler_constant(Physics_T *const phys)
+{
+  FUNC_TIC
+  
+  int ret = EXIT_SUCCESS;
+  
   if (Pcmps("star_type","NS"))
   {
     if (Pcmps("star_NS_fluid","ideal_fluid") && 
         Pcmps("star_NS_gConf","non_flat"))
     {
-      switch (phys->cmd)
-      {
-        case TUNE_EULER_CONST:
-          ret = star_NS_idealfluid_gConf_find_Euler_const(phys);
-        break;
-        
-        case EXTRAPOLATE_MATTERS:
-          ret = star_NS_idealfluid_extrapolate_matter_fields(phys);
-        break;
-        
-        case FIND_STAR_SURFACE:
-          ret = star_NS_find_star_surface(phys);
-        break;
-        
-        case TUNE_FORCE_BALANCE:
-          ret = star_NS_idealfluid_gConf_force_balance(phys);
-        break;
-        
-        case TUNE_NS_CENTER:
-          ret = star_NS_keep_center_fixed(phys);
-        break;
-        
-        case NS_ADD_PARAMS:
-          ret = star_NS_add_params(phys);
-        break;
-        
-        case NS_ADD_FIELDS:
-          ret = star_NS_add_fields(phys);
-        break;
-        
-        //case NS_START:
-          //ret = star_NS_start_off(phys);
-        //break;
-        
-        default:
-          Error0(NO_OPTION);
-      }
+      ret = star_NS_idealfluid_gConf_find_Euler_const(phys);
     }
     else
-    {
       Error0(NO_OPTION);
-    }
   }
   else
-  {
     Error0(NO_OPTION);
-  }
-    
+ 
+  FUNC_TOC
   return ret;
+}
+
+/* extrapolate matter where there is no matter! */
+static int extrapolate_matter(Physics_T *const phys)
+{
+  FUNC_TIC
+  
+  int ret = EXIT_SUCCESS;
+  
+  if (Pcmps("star_type","NS"))
+  {
+    if (Pcmps("star_NS_fluid","ideal_fluid") && 
+        Pcmps("star_NS_gConf","non_flat"))
+    {
+      ret = star_NS_idealfluid_extrapolate_matter_fields(phys);
+    }
+    else
+      Error0(NO_OPTION);
+  }
+  else
+    Error0(NO_OPTION);
+ 
+  FUNC_TOC
+  return ret;
+}
+
+/*  find star surface */
+static int find_star_surface(Physics_T *const phys)
+{
+  FUNC_TIC
+  
+  int ret = EXIT_SUCCESS;
+  
+  if (Pcmps("star_type","NS"))
+  {
+    if (Pcmps("star_NS_fluid","ideal_fluid") && 
+        Pcmps("star_NS_gConf","non_flat"))
+    {
+      ret = star_NS_find_star_surface(phys);
+    }
+    else
+      Error0(NO_OPTION);
+  }
+  else
+    Error0(NO_OPTION);
+ 
+  FUNC_TOC
+  return ret;
+}
+
+/* tune force balance eq. */
+static int tune_star_force_balance_equation(Physics_T *const phys)
+{
+  FUNC_TIC
+  
+  int ret = EXIT_SUCCESS;
+  
+  if (Pcmps("star_type","NS"))
+  {
+    if (Pcmps("star_NS_fluid","ideal_fluid") && 
+        Pcmps("star_NS_gConf","non_flat"))
+    {
+      ret = star_NS_idealfluid_gConf_force_balance(phys);
+    }
+    else
+      Error0(NO_OPTION);
+  }
+  else
+    Error0(NO_OPTION);
+ 
+  FUNC_TOC
+  return ret;
+}
+
+/* keep NS center fixed */
+static int tune_star_center(Physics_T *const phys)
+{
+  FUNC_TIC
+  
+  int ret = EXIT_SUCCESS;
+  
+  if (Pcmps("star_type","NS"))
+  {
+    if (Pcmps("star_NS_fluid","ideal_fluid") && 
+        Pcmps("star_NS_gConf","non_flat"))
+    {
+      ret = star_NS_keep_center_fixed(phys);
+    }
+    else
+      Error0(NO_OPTION);
+  }
+  else
+    Error0(NO_OPTION);
+ 
+  FUNC_TOC
+  return ret;
+}
+
+/* star add fields */
+static int star_add_fields(Physics_T *const phys)
+{
+  FUNC_TIC
+  
+  int ret = EXIT_SUCCESS;
+  
+  if (Pcmps("star_type","NS"))
+  {
+    if (Pcmps("star_NS_fluid","ideal_fluid") && 
+        Pcmps("star_NS_gConf","non_flat"))
+    {
+      star_NS_idealfluid_gConf_add_fields(phys->grid);
+    }
+    else
+      Error0(NO_OPTION);
+  }
+  else
+    Error0(NO_OPTION);
+ 
+  FUNC_TOC
+  return ret;
+}
+
+/* add default parameters */
+static int star_add_parameters(Physics_T *const phys)
+{
+  FUNC_TIC
+  
+  /* star type:
+  // options:
+  // NS: neutron star  */
+  Pset_default("star_type","NS");
+
+  
+  if (Pcmps("star_type","NS"))
+  {
+    /* fluid type:
+    // options:
+    // ideal_fluid: like: Phys. Rev. D 100, 124046  */
+    Pset_default("star_NS_fluid","ideal_fluid");
+    
+    /* conformal metric type: 
+    // options:
+    // flat     => gConf  = delta_{ij},
+    // non_flat => gConf != delta_{ij}. */
+    Pset_default("star_NS_gConf","non_flat");
+    
+  }
+  else
+    Error0(NO_OPTION);
+ 
+  
+  UNUSED(phys);
+  
+  FUNC_TOC
+  return EXIT_SUCCESS;
 }
 
