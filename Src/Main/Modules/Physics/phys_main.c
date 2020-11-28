@@ -55,8 +55,11 @@ int physics_main(Physics_T *const phys,const cmd_T cmd,
     case FILL_BH:
       ret = bh_main(phys);
     break;
-    case BH_GRID_INITIAL_PARAMS:
+    case BH_START:
       ret = bh_main(phys);
+    break;
+    case NS_START:
+      ret = star_main(phys);
     break;
     
     default:
@@ -72,56 +75,6 @@ int physics_main(Physics_T *const phys,const cmd_T cmd,
   
   return ret;
 }
-
-/* call the requested function */
-//int Mount(Physics_T *const phys,const cmd_T cmd)
-//{
-  //int ret = -1;
-  
-  //phys->cmd = cmd;
-  
-  //UNUSED(phys);
-  //switch (cmd)
-  //{
-    //case UPDATE_STRESS_ENERGY:
-      //ret = Tij_mount(phys);
-    //break;
-    /*case TUNE_EULER_CONST:
-      ret = update_Euler_constant(phys);
-    break;
-    case FORCE_BALANCE:
-      ret = adjust_force_balance_eq(phys);
-    break;
-    case FIX_CENTER:
-      ret = fix_star_center(phys);
-    break;
-    case FIND_SURFACE:
-      ret = find_star_surface(phys);
-    break;
-    case EXTRAPOLATE_OUTSIDE:
-      ret = extrapolate_matter_outside_star(phys);
-    break;*/
-    /*case AH_RADIUS:
-      ret = update_apparent_horizon_radius(phys);
-    break;
-    case AH_OMEGA:
-      ret = update_apparent_horizon_omega(phys);
-    break;
-    case AH_NORMAL_VECTOR:
-      ret = update_apparent_horizon_normal(phys);
-    break;*/
-    /*case P_ADM:
-      ret = adjust_ADM_momentum(phys);
-    break;*/
-    //default:
-      //Error0(NO_OPTION);
-  //}
-  
-  /* set to no command to catch bug */
-//  phys->cmd = CMD_UNDEFINED;
-  
-  //return ret;
-//}
 
 /* initialize a phys from a parent_phys(if any).
 // note: for parant physics, one must set phys->grid manually 
