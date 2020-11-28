@@ -29,7 +29,11 @@ void star_NS_find_where_denthalpy_is_0(Physics_T *const phys,double xdh0[3]);
 int star_NS_keep_center_fixed(Physics_T *const phys);
 static void adjust_NS_center_interpolation(Physics_T *const phys);
 static void adjust_NS_center_Taylor_expansion(Physics_T *const phys);
+int star_NS_add_params(Physics_T *const phys);
+int star_NS_add_fields(Physics_T *const phys);
 
+
+  
 
 
 
