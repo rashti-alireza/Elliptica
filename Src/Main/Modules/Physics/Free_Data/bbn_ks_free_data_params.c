@@ -6,7 +6,7 @@
 /* setting parameters e.g. global variables for 
 // analytic Kerr-Schild free data  NOTE: NOT thread safe. */
 
-#include "bbn_headers.h"
+#include "frda_header.h"
 
 /* for external variables. NOTE: MUST be the same as 
 // the one in 'bbn_ks_free_data_analytic.h' DON'T CHANGE. */

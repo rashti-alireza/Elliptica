@@ -1,4 +1,4 @@
-#include "bbn_headers.h"
+#include "frda_header.h"
 
 /* for external variables DON'T CHANGE THIS */
 #define KS_glob_var(x) (bbn_ks_glob##x)
