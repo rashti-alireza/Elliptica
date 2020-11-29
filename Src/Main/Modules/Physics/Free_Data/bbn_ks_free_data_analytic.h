@@ -99,20 +99,31 @@ extern double Lambda;/* flat data => 0, kerr-schild => 1 */
 
 void bbn_free_data_g_gI_analytic(
         Patch_T *const patch,
-        double *(*get_v)(const char *const fname,void *params),
-        void *params);
+        const double BH_center_x,
+        const double BH_center_y,
+        const double BH_center_z,
+        const char *const stem);
+        
 void bbn_free_data_dg_analytic(
-	Patch_T *const patch, 
-	double *(*get_v)(const char *const fname,void *params),
-	void *params);
+        Patch_T *const patch,
+        const double BH_center_x,
+        const double BH_center_y,
+        const double BH_center_z,
+        const char *const stem);
+	
 void bbn_free_data_ddg_analytic(
-	Patch_T *const patch, 
-	double *(*get_v)(const char *const fname,void *params),
-	void *params);
+        Patch_T *const patch,
+        const double BH_center_x,
+        const double BH_center_y,
+        const double BH_center_z,
+        const char *const stem);
+
 void bbn_free_data_dddg_analytic(
-	Patch_T *const patch, 
-	double *(*get_v)(const char *const fname,void *params),
-	void *params);
+        Patch_T *const patch,
+        const double BH_center_x,
+        const double BH_center_y,
+        const double BH_center_z,
+        const char *const stem);
 
 KS_func_def_macro(K0)KS_func_args_macro;
 KS_func_def_macro(dK0_D1)KS_func_args_macro;

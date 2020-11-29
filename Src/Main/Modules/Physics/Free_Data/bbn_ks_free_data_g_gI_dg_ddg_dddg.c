@@ -32,29 +32,41 @@
 
 void bbn_free_data_g_gI_analytic(
         Patch_T *const patch,
-        double *(*get_v)(const char *const fname,void *params),
-        void *params);
+        const double BH_center_x,
+        const double BH_center_y,
+        const double BH_center_z,
+        const char *const stem);
+        
 void bbn_free_data_dg_analytic(
-	Patch_T *const patch, 
-	double *(*get_v)(const char *const fname,void *params),
-	void *params);
+        Patch_T *const patch,
+        const double BH_center_x,
+        const double BH_center_y,
+        const double BH_center_z,
+        const char *const stem);
+	
 void bbn_free_data_ddg_analytic(
-	Patch_T *const patch, 
-	double *(*get_v)(const char *const fname,void *params),
-	void *params);
+        Patch_T *const patch,
+        const double BH_center_x,
+        const double BH_center_y,
+        const double BH_center_z,
+        const char *const stem);
+
 void bbn_free_data_dddg_analytic(
-	Patch_T *const patch, 
-	double *(*get_v)(const char *const fname,void *params),
-	void *params);
+        Patch_T *const patch,
+        const double BH_center_x,
+        const double BH_center_y,
+        const double BH_center_z,
+        const char *const stem);
+
 void bbn_free_data_g_gI_analytic(
- Patch_T *const patch,
- double *(*get_v)(const char *const fname,void *params),
- void *params)
+        Patch_T *const patch,
+        const double BH_center_x,
+        const double BH_center_y,
+        const double BH_center_z,
+        const char *const stem)
+
 {
   char f_name[STR_LEN];
-  const double BH_center_x = Pgetd("BH_center_x");
-  const double BH_center_y = Pgetd("BH_center_y");
-  const double BH_center_z = Pgetd("BH_center_z");
   const unsigned nn = patch->nn;
   unsigned ijk;
     double *const _gamma_D2D2 = get_v(gConf_stem,"D2D2");
@@ -220,15 +232,15 @@ bbn_ks_c(x, y, z) + 1);
     }
 }
 void bbn_free_data_dg_analytic(
-	Patch_T *const patch, 
-	double *(*get_v)(const char *const fname,void *params),
-	void *params)
+        Patch_T *const patch,
+        const double BH_center_x,
+        const double BH_center_y,
+        const double BH_center_z,
+        const char *const stem)
+
 {
 
   char f_name[STR_LEN];
-  const double BH_center_x = Pgetd("BH_center_x");
-  const double BH_center_y = Pgetd("BH_center_y");
-  const double BH_center_z = Pgetd("BH_center_z");
   const unsigned nn = patch->nn;
   unsigned ijk;
   
@@ -470,15 +482,15 @@ bbn_ks_k1(x, y, z)*(bbn_ks_dk0_D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)
 }
 
 void bbn_free_data_ddg_analytic(
-	Patch_T *const patch, 
-	double *(*get_v)(const char *const fname,void *params),
-	void *params)
+        Patch_T *const patch,
+        const double BH_center_x,
+        const double BH_center_y,
+        const double BH_center_z,
+        const char *const stem)
+
 {
 
   char f_name[STR_LEN];
-  const double BH_center_x = Pgetd("BH_center_x");
-  const double BH_center_y = Pgetd("BH_center_y");
-  const double BH_center_z = Pgetd("BH_center_z");
   const unsigned nn = patch->nn;
   unsigned ijk;
 
@@ -1601,15 +1613,15 @@ pow(bbn_ks_k2(x, y, z), 2)*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 2*bbn_ks
 }
 
 void bbn_free_data_dddg_analytic(
-	Patch_T *const patch, 
-	double *(*get_v)(const char *const fname,void *params),
-	void *params)
+        Patch_T *const patch,
+        const double BH_center_x,
+        const double BH_center_y,
+        const double BH_center_z,
+        const char *const stem)
+
 {
 
   char f_name[STR_LEN];
-  const double BH_center_x = Pgetd("BH_center_x");
-  const double BH_center_y = Pgetd("BH_center_y");
-  const double BH_center_z = Pgetd("BH_center_z");
   const unsigned nn = patch->nn;
   unsigned ijk;
 

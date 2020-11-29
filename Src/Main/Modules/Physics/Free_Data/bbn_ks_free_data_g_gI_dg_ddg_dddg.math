@@ -262,33 +262,44 @@ Command["sed -i 's/_,/,/g'"];
 
 `print('void bbn_free_data_g_gI_analytic(')`
 `print('        Patch_T *const patch,')`
-`print('        double *(*get_v)(const char *const fname,void *params),')`
-`print('        void *params);')`
+`print('        const double BH_center_x,')`
+`print('        const double BH_center_y,')`
+`print('        const double BH_center_z,')`
+`print('        const char *const stem);')`
+
 
 `print('void bbn_free_data_dg_analytic(')`
-`print('	Patch_T *const patch, ')`
-`print('	double *(*get_v)(const char *const fname,void *params),')`
-`print('	void *params);')`
+`print('        Patch_T *const patch,')`
+`print('        const double BH_center_x,')`
+`print('        const double BH_center_y,')`
+`print('        const double BH_center_z,')`
+`print('        const char *const stem);')`
+
 
 `print('void bbn_free_data_ddg_analytic(')`
-`print('	Patch_T *const patch, ')`
-`print('	double *(*get_v)(const char *const fname,void *params),')`
-`print('	void *params);')`
+`print('        Patch_T *const patch,')`
+`print('        const double BH_center_x,')`
+`print('        const double BH_center_y,')`
+`print('        const double BH_center_z,')`
+`print('        const char *const stem);')`
+
 
 `print('void bbn_free_data_dddg_analytic(')`
-`print('	Patch_T *const patch, ')`
-`print('	double *(*get_v)(const char *const fname,void *params),')`
-`print('	void *params);')`
+`print('        Patch_T *const patch,')`
+`print('        const double BH_center_x,')`
+`print('        const double BH_center_y,')`
+`print('        const double BH_center_z,')`
+`print('        const char *const stem);')`
 
 `print('void bbn_free_data_g_gI_analytic(')`
-`print(' Patch_T *const patch,')`
-`print(' double *(*get_v)(const char *const fname,void *params),')`
-`print(' void *params)')`
+`print('        Patch_T *const patch,')`
+`print('        const double BH_center_x,')`
+`print('        const double BH_center_y,')`
+`print('        const double BH_center_z,')`
+`print('        const char *const stem)')`
+
 `print('{')`
 `print('  char f_name[STR_LEN];')`
-`print('  const double BH_center_x = Pgetd("BH_center_x");')`
-`print('  const double BH_center_y = Pgetd("BH_center_y");')`
-`print('  const double BH_center_z = Pgetd("BH_center_z");')`
 `print('  const unsigned nn = patch->nn;')`
 `print('  unsigned ijk;')`
 ``
@@ -394,14 +405,14 @@ Command["sed -i 's/_,/,/g'"];
 `print('}')`
 ``
 `print('void bbn_free_data_dg_analytic(')`
-`print('	Patch_T *const patch, ')`
-`print('	double *(*get_v)(const char *const fname,void *params),')`
-`print('	void *params)')`
+`print('        Patch_T *const patch,')`
+`print('        const double BH_center_x,')`
+`print('        const double BH_center_y,')`
+`print('        const double BH_center_z,')`
+`print('        const char *const stem)')`
+
 `print('{')`
 `print('  char f_name[STR_LEN];')`
-`print('  const double BH_center_x = Pgetd("BH_center_x");')`
-`print('  const double BH_center_y = Pgetd("BH_center_y");')`
-`print('  const double BH_center_z = Pgetd("BH_center_z");')`
 `print('  const unsigned nn = patch->nn;')`
 `print('  unsigned ijk;')`
 `print('  ')`
@@ -492,15 +503,14 @@ Command["sed -i 's/_,/,/g'"];
 ``
 `print('')`
 `print('void bbn_free_data_ddg_analytic(')`
-`print('	Patch_T *const patch, ')`
-`print('	double *(*get_v)(const char *const fname,void *params),')`
-`print('	void *params)')`
+`print('        Patch_T *const patch,')`
+`print('        const double BH_center_x,')`
+`print('        const double BH_center_y,')`
+`print('        const double BH_center_z,')`
+`print('        const char *const stem)')`
+
 `print('{')`
-`print('')`
 `print('  char f_name[STR_LEN];')`
-`print('  const double BH_center_x = Pgetd("BH_center_x");')`
-`print('  const double BH_center_y = Pgetd("BH_center_y");')`
-`print('  const double BH_center_z = Pgetd("BH_center_z");')`
 `print('  const unsigned nn = patch->nn;')`
 `print('  unsigned ijk;')`
 `print('')`
@@ -733,14 +743,14 @@ Command["sed -i 's/_,/,/g'"];
 `print('}')`
 `print('')`
 `print('void bbn_free_data_dddg_analytic(')`
-`print('	Patch_T *const patch, ')`
-`print('	double *(*get_v)(const char *const fname,void *params),')`
-`print('	void *params)')`
+`print('        Patch_T *const patch,')`
+`print('        const double BH_center_x,')`
+`print('        const double BH_center_y,')`
+`print('        const double BH_center_z,')`
+`print('        const char *const stem)')`
+
 `print('{')`
 `print('  char f_name[STR_LEN];')`
-`print('  const double BH_center_x = Pgetd("BH_center_x");')`
-`print('  const double BH_center_y = Pgetd("BH_center_y");')`
-`print('  const double BH_center_z = Pgetd("BH_center_z");')`
 `print('  const unsigned nn = patch->nn;')`
 `print('  unsigned ijk;')`
 `print('')`
