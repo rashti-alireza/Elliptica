@@ -173,7 +173,7 @@ C_macro3=print('KS_func_def_macro(name)KS_func_args_macro')\n\
 `H  = KS_Hfunc(m,_r,a,Z(x,y,z),Lambda)`
 ``
 ``
-`print('#include "frda_ks_free_data_analytic.h"')`
+`print('#include "frda_ks_free_data_header.h"')`
 ``
 Declare =
 {

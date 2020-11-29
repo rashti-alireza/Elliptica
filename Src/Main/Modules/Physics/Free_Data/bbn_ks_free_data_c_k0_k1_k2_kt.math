@@ -213,7 +213,7 @@ C_macro3=print('KS_func_def_macro(name)KS_func_args_macro')\n\
 `kt,k0,k1,k2 = get_ks(Bx,By,Bz,B2,phiy,phiz)`
 `c           = 2*frda_ks_H(x,y,z)*frda_ks_rolloff(x,y,z)`
 ``
-`print('#include "frda_ks_free_data_analytic.h"')`
+`print('#include "frda_ks_free_data_header.h"')`
 ``
 Declare =
 {

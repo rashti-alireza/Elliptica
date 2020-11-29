@@ -136,7 +136,7 @@ C_macro3=print('KS_func_def_macro(name)KS_func_args_macro')\n\
 `r=(x**2+y**2+z**2)**(0.5)`
 `rolloff = exp(-(r/r0)**4)`
 ``
-`print('#include "frda_ks_free_data_analytic.h"')`
+`print('#include "frda_ks_free_data_header.h"')`
 ``
 Declare =
 {

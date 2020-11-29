@@ -9,7 +9,7 @@
 #include "frda_header.h"
 
 /* for external variables. NOTE: MUST be the same as 
-// the one in 'frda_ks_free_data_analytic.h' DON'T CHANGE. */
+// the one in 'frda_ks_free_data_header.h' DON'T CHANGE. */
 #define KS_glob_var(x) frda_ks_glob##x
 
 #define M_BH    KS_glob_var(M_BH) /* BH mass */
