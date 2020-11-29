@@ -15,7 +15,7 @@ int Tij_main(Physics_T *const phys)
   
   switch (phys->cmd)
   {
-    case UPDATE_STRESS_ENERGY:
+    case STRESS_ENERGY_UPDATE:
       ret = update_stress_energy_tensor(phys);
     break;
     

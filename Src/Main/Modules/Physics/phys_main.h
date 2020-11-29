@@ -5,6 +5,7 @@
 #include "physics_star_lib.h"
 #include "physics_blackhole_lib.h"
 #include "physics_freedata_lib.h"
+#include "physics_system_lib.h"
 
 
 #define STR_LEN (999)

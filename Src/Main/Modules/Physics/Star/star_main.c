@@ -17,23 +17,23 @@ int star_main(Physics_T *const phys)
   
   switch (phys->cmd)
   {
-    case TUNE_STAR_EULER_CONST:
+    case STAR_TUNE_EULER_CONST:
       ret = tune_star_Euler_constant(phys);
     break;
     
-    case EXTRAPOLATE_MATTERS:
+    case STAR_EXTRAPOLATE_MATTERS:
       ret = extrapolate_matter(phys);
     break;
     
-    case FIND_STAR_SURFACE:
+    case STAR_FIND_SURFACE:
       ret = find_star_surface(phys);
     break;
     
-    case TUNE_STAR_FORCE_BALANCE:
+    case STAR_TUNE_FORCE_BALANCE:
       ret = tune_star_force_balance_equation(phys);
     break;
     
-    case TUNE_STAR_CENTER:
+    case STAR_TUNE_CENTER:
       ret = tune_star_center(phys);
     break;
     

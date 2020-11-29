@@ -28,72 +28,39 @@ int physics_main(Physics_T *const phys,const cmd_T cmd,
   
   switch (cmd)
   {
-    case TUNE_STAR_EULER_CONST:
+    case STAR_TUNE_EULER_CONST:
+    case STAR_TUNE_FORCE_BALANCE:
+    case STAR_TUNE_CENTER:
+    case STAR_FIND_SURFACE:
+    case STAR_START:
+    case STAR_ADD_FIELDS:
+    case STAR_ADD_PARAMS:
+    case STAR_EXTRAPOLATE_MATTERS:
       ret = star_main(phys);
     break;
     
-    case TUNE_STAR_FORCE_BALANCE:
-      ret = star_main(phys);
-    break;
-    
-    case TUNE_STAR_CENTER:
-      ret = star_main(phys);
-    break;
-    
-    case FIND_STAR_SURFACE:
-      ret = star_main(phys);
-    break;
-    
-    case UPDATE_STRESS_ENERGY:
+    case STRESS_ENERGY_UPDATE:
+    case STRESS_ENERGY_ADD_PARAMS:
+    case STRESS_ENERGY_ADD_FIELDS:
       ret = Tij_main(phys);
     break;
     
-    case EXTRAPOLATE_MATTERS:
-      ret = star_main(phys);
-    break;
-    
-    case FIND_BH_SURFACE:
-      ret = bh_main(phys);
-    break;
-    
-    case TUNE_BH_RADIUS:
-      ret = bh_main(phys);
-    break;
-    
-    case FILL_BH:
-      ret = bh_main(phys);
-    break;
-    
+    case BH_FIND_SURFACE:
+    case BH_TUNE_RADIUS:
+    case BH_FILL:
     case BH_START:
-      ret = bh_main(phys);
-    break;
-    
     case BH_ADD_PARAMS:
-      ret = bh_main(phys);
-    break;
-    
     case BH_ADD_FIELDS:
       ret = bh_main(phys);
     break;
     
-    case STAR_START:
-      ret = star_main(phys);
-    break;
-    
-    case STAR_ADD_FIELDS:
-      ret = star_main(phys);
-    break;
-    
-    case STAR_ADD_PARAMS:
-      ret = star_main(phys);
-    break;
-    
     case FREE_DATA_ADD_PARAMS:
-      ret = frd_main(phys);
-    break;
-    
     case FREE_DATA_ADD_FIELDS:
       ret = frd_main(phys);
+    break;
+    
+    case SYS_TUNE_P_ADM:
+      ret = sys_main(phys);
     break;
     
     default:

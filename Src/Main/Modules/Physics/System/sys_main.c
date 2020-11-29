@@ -16,7 +16,7 @@ int sys_main(Physics_T *const phys)
   
   switch (phys->cmd)
   {
-    case TUNE_SYS_P_ADM:
+    case SYS_TUNE_P_ADM:
       ret = tune_system_ADM_momenta(phys);
     break;
     
