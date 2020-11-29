@@ -8,8 +8,7 @@
 /* making the patches which cover the grid */
 int make_patches(Grid_T *const grid)
 {
-  pr_line_custom('=');
-  printf("{ Making the patches ...\n");
+  FUNC_TIC
   
   unsigned p;
   
@@ -49,17 +48,15 @@ int make_patches(Grid_T *const grid)
     const Patch_T *patch = grid->patch[p];
     char str[1000];
     
-    printf("|--> %s:\n",patch->name);
-    printf("     |--> Resolution  = %ux%ux%u\n",patch->n[0],patch->n[1],patch->n[2]);
-    printf("     |--> Coord. Sys. = %s\n",coord_sys_str(patch,str));
-    printf("     |--> Collocation = %s\n",collocation_str(patch,str));
-    printf("     |--> Bases       = %s\n",bases_str(patch,str));
+    printf(Pretty0"%s:\n",patch->name);
+    printf("     Resolution  = %ux%ux%u\n",patch->n[0],patch->n[1],patch->n[2]);
+    printf("     Coord. Sys. = %s\n",coord_sys_str(patch,str));
+    printf("     Collocation = %s\n",collocation_str(patch,str));
+    printf("     Bases       = %s\n",bases_str(patch,str));
     
   }
-  printf("} Making the patches ==> Done.\n");
-  pr_clock();
-  pr_line_custom('=');
   
+  FUNC_TOC
   return EXIT_SUCCESS;
 }
 
