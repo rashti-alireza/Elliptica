@@ -32,36 +32,30 @@ double r0;/* roll off radius */
 double Lambda;/* flat data => 0, kerr-schild => 1 */
 
 
-void frda_ks_free_data_set_params(Grid_T *const grid);
-void frda_ks_free_data_set_params(Grid_T *const grid)
+void frda_ks_free_data_set_params(Physics_T *const phys);
+void frda_ks_free_data_set_params(Physics_T *const phys)
 {
-  const double BH_center_x = Pgetd("BH_center_x");
-  const double BH_center_y = Pgetd("BH_center_y");
-  const double chi_U0      = Pgetd("BH_chi_U0");
-  const double chi_U1      = Pgetd("BH_chi_U1");
-  const double chi_U2      = Pgetd("BH_chi_U2");
-  const double y_CM        = Pgetd("y_CM");
-  const double x_CM        = Pgetd("x_CM");
-  const double Omega_BHNS  = Pgetd("BH_NS_angular_velocity");
+  const double BH_center_x = Getd("center_x");
+  const double BH_center_y = Getd("center_y");
+  const double chi_U0      = Getd("chi_U0");
+  const double chi_U1      = Getd("chi_U1");
+  const double chi_U2      = Getd("chi_U2");
+  const double y_CM        = Getd("y_CM");
+  const double x_CM        = Getd("x_CM");
+  const double Omega       = sysGetd("angular_velocity");
   const double chi         = sqrt(Pow2(chi_U0)+Pow2(chi_U1)+Pow2(chi_U2));
   
-  r0   = Pgetd("BH_KerrSchild_RollOff");
-  M_BH = Pgetd("BH_irreducible_mass");
-  a_BH = Pgetd("BH_net_spin");
-  
-  if (Pcmps("BH_NS_free_data_metric","conformally_flat_metric"))
-    Lambda = 0;
-  else if (Pcmps("BH_NS_free_data_metric","Boosted_KerrSchild_metric"))
-    Lambda = 1;
-  else
-    Error0(NO_OPTION);
+  r0   = Getd("KerrSchild_RollOff");
+  M_BH = Getd("irreducible_mass");
+  a_BH = Getd("net_spin");
+  Lambda = 1;
 
   assert(LSSEQL(chi,1));
 
   /* boost */
-  Bx = -Omega_BHNS*(BH_center_y-y_CM);
-  By =  Omega_BHNS*(BH_center_x-x_CM);
-  Bz = Pgetd("BH_Vz");
+  Bx = -Omega*(BH_center_y-y_CM);
+  By =  Omega*(BH_center_x-x_CM);
+  Bz = Getd("Vz");
   B2 = Pow2(Bx)+Pow2(By)+Pow2(Bz);
 
   assert(!EQL(B2,0));
@@ -78,6 +72,5 @@ void frda_ks_free_data_set_params(Grid_T *const grid)
     phiy = 0.;
   }
 
-  UNUSED(grid);
 }
 
