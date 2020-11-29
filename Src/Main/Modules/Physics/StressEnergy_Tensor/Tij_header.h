@@ -10,6 +10,10 @@
 #include "physics_lib.h"
 #include "fields_lib.h"
 
+/* parameter prefix */
+#define P_ "Tij_"
+
+
 int Tij_main(Physics_T *const phys);
 int Tij_mount(Grid_T *const grid);
 void Tij_NS_idealfluid_CTS_gConf_add_fields(Grid_T *const grid);

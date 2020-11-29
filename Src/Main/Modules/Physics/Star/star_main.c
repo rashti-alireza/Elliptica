@@ -63,10 +63,10 @@ static int tune_star_Euler_constant(Physics_T *const phys)
   
   int ret = EXIT_SUCCESS;
   
-  if (Pcmps("star_type","NS"))
+  if (Pcmps(P_"type","NS"))
   {
-    if (Pcmps("star_NS_fluid","ideal_fluid") && 
-        Pcmps("star_NS_gConf","general"))
+    if (Pcmps(P_"NS_fluid","ideal_fluid") && 
+        Pcmps(P_"NS_gConf","general"))
     {
       ret = star_NS_idealfluid_gConf_find_Euler_const(phys);
     }
@@ -87,10 +87,10 @@ static int extrapolate_matter(Physics_T *const phys)
   
   int ret = EXIT_SUCCESS;
   
-  if (Pcmps("star_type","NS"))
+  if (Pcmps(P_"type","NS"))
   {
-    if (Pcmps("star_NS_fluid","ideal_fluid") && 
-        Pcmps("star_NS_gConf","general"))
+    if (Pcmps(P_"NS_fluid","ideal_fluid") && 
+        Pcmps(P_"NS_gConf","general"))
     {
       ret = star_NS_idealfluid_extrapolate_matter_fields(phys);
     }
@@ -111,10 +111,10 @@ static int find_star_surface(Physics_T *const phys)
   
   int ret = EXIT_SUCCESS;
   
-  if (Pcmps("star_type","NS"))
+  if (Pcmps(P_"type","NS"))
   {
-    if (Pcmps("star_NS_fluid","ideal_fluid") && 
-        Pcmps("star_NS_gConf","general"))
+    if (Pcmps(P_"NS_fluid","ideal_fluid") && 
+        Pcmps(P_"NS_gConf","general"))
     {
       ret = star_NS_find_star_surface(phys);
     }
@@ -135,10 +135,10 @@ static int tune_star_force_balance_equation(Physics_T *const phys)
   
   int ret = EXIT_SUCCESS;
   
-  if (Pcmps("star_type","NS"))
+  if (Pcmps(P_"type","NS"))
   {
-    if (Pcmps("star_NS_fluid","ideal_fluid") && 
-        Pcmps("star_NS_gConf","general"))
+    if (Pcmps(P_"NS_fluid","ideal_fluid") && 
+        Pcmps(P_"NS_gConf","general"))
     {
       ret = star_NS_idealfluid_gConf_force_balance(phys);
     }
@@ -159,10 +159,10 @@ static int tune_star_center(Physics_T *const phys)
   
   int ret = EXIT_SUCCESS;
   
-  if (Pcmps("star_type","NS"))
+  if (Pcmps(P_"type","NS"))
   {
-    if (Pcmps("star_NS_fluid","ideal_fluid") && 
-        Pcmps("star_NS_gConf","general"))
+    if (Pcmps(P_"NS_fluid","ideal_fluid") && 
+        Pcmps(P_"NS_gConf","general"))
     {
       ret = star_NS_keep_center_fixed(phys);
     }
@@ -183,10 +183,10 @@ static int star_add_fields(Physics_T *const phys)
   
   int ret = EXIT_SUCCESS;
   
-  if (Pcmps("star_type","NS"))
+  if (Pcmps(P_"type","NS"))
   {
-    if (Pcmps("star_NS_fluid","ideal_fluid") && 
-        Pcmps("star_NS_gConf","general"))
+    if (Pcmps(P_"NS_fluid","ideal_fluid") && 
+        Pcmps(P_"NS_gConf","general"))
     {
       star_NS_idealfluid_gConf_add_fields(phys->grid);
     }
@@ -208,31 +208,31 @@ static int star_add_parameters(Physics_T *const phys)
   /* star type:
   // options:
   // NS: neutron star  */
-  Pset_default("star_type","NS");
+  Pset_default(P_"type","NS");
 
   
-  if (Pcmps("star_type","NS"))
+  if (Pcmps(P_"type","NS"))
   {
     /* fluid type:
     // options:
     // ideal_fluid: like: Phys. Rev. D 100, 124046  */
-    Pset_default("star_NS_fluid","ideal_fluid");
+    Pset_default(P_"NS_fluid","ideal_fluid");
     
     /* conformal metric type: 
     // options:
     // flat   :  => gConf  = delta_{ij},
     // general:  => general gConf. */
-    Pset_default("star_NS_gConf","general");
+    Pset_default(P_"NS_gConf","general");
     
     /* how to extrapolate matter fields outside the NS :
     // options:
     // slop_method: required to have C^2 field across the boundary. */
-    Pset_default("star_NS_extrapolate_matter_fields","poly2");
+    Pset_default(P_"NS_extrapolate_matter_fields","poly2");
     
     /* which root finder to be used to find NS surface :
     // options:
     // slop_method: required to have C^2 field across the boundary. */
-    Pset_default("star_NS_surface_finder","bisection");
+    Pset_default(P_"NS_surface_finder","bisection");
   }
   else
     Error0(NO_OPTION);

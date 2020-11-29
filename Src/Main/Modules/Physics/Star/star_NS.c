@@ -284,7 +284,7 @@ int star_NS_idealfluid_extrapolate_matter_fields(Physics_T *const phys)
 {
   FUNC_TIC
   
-  if(Pcmps("star_NS_extrapolate_matter_fields","poly2"))
+  if(Pcmps(P_"NS_extrapolate_matter_fields","poly2"))
   {
     /* make phi, W => enthalpy */
     const char *fields_name[] = {"phi","enthalpy",0};

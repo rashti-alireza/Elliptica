@@ -13,6 +13,10 @@
 #include "maths_equation_solvings_lib.h"
 #include "maths_spectral_methods_lib.h"
 
+/* parameter prefix */
+#define P_ "star_"
+
+
 /* root finder struc for Euler eq const */  
 struct NS_Euler_eq_const_RootFinder_S
 {

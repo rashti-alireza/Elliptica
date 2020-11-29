@@ -9,6 +9,10 @@
 #include "physics_lib.h"
 #include "fields_lib.h"
 
+/* parameter prefix */
+#define P_ "free_data_"
+
+
 int frd_main(Physics_T *const phys);
 
 

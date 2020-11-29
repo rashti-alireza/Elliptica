@@ -40,6 +40,8 @@ static int add_free_data_params(Physics_T *const phys)
 {
   FUNC_TIC
   
+  Pset_default(P_"","");
+  
   UNUSED(phys);
   FUNC_TOC
   return EXIT_SUCCESS;

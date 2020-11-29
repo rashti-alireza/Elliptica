@@ -998,7 +998,7 @@ double star_NS_mass_shedding_indicator(Physics_T *const phys)
 /* find NS surface */
 int star_NS_find_star_surface(Physics_T *const phys)
 {
-  if (Pcmps("star_NS_surface_finder","bisection"))
+  if (Pcmps(P_"NS_surface_finder","bisection"))
   {
     find_NS_surface_Ylm_bisect_CS(phys);
   }

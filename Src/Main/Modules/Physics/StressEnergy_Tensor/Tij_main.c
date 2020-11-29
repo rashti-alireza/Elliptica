@@ -43,20 +43,20 @@ static int add_stress_energy_parameters(Physics_T *const phys)
   /* fluid type:
   // options:
   // NS_ideal_fluid: like: Phys. Rev. D 100, 124046  */
-  Pset_default("Tij_fluid","NS_ideal_fluid");
+  Pset_default(P_"fluid","NS_ideal_fluid");
   
-  if (Pcmps("Tij_fluid","NS_ideal_fluid"))
+  if (Pcmps(P_"fluid","NS_ideal_fluid"))
   {
     /* decomposition type:
     // options:
     // CTS (conformal thin sandwich): like: Phys. Rev. D 100, 124046  */
-    Pset_default("Tij_NS_decomposition","CTS");
+    Pset_default(P_"NS_decomposition","CTS");
     
     /* conformal metric type: 
     // options:
     // flat    => gConf  = delta_{ij},
     // general => a general gConf. */
-    Pset_default("Tij_NS_gConf","general");
+    Pset_default(P_"NS_gConf","general");
   }
   else
     Error0(NO_OPTION);
@@ -72,8 +72,8 @@ static int add_stress_energy_tensor_fields(Physics_T *const phys)
 {
   FUNC_TIC
   
-  if (Pcmps("Tij_NS_decomposition","CTS") &&
-      Pcmps("Tij_NS_gConf","general"))
+  if (Pcmps(P_"NS_decomposition","CTS") &&
+      Pcmps(P_"NS_gConf","general"))
   {
     Tij_NS_idealfluid_CTS_gConf_add_fields(phys->grid);
   }
@@ -88,10 +88,10 @@ static int add_stress_energy_tensor_fields(Physics_T *const phys)
 static int update_stress_energy_tensor(Physics_T *const phys)
 {
   FUNC_TIC
-  if (Pcmps("Tij_fluid","NS_ideal_fluid"))
+  if (Pcmps(P_"fluid","NS_ideal_fluid"))
   {
-    if(Pcmps("Tij_NS_decomposition","CTS") &&
-       Pcmps("Tij_NS_gConf","general"))
+    if(Pcmps(P_"NS_decomposition","CTS") &&
+       Pcmps(P_"NS_gConf","general"))
     {
       Tij_NS_idealfluid_CTS_gConf_update(phys);
     }
