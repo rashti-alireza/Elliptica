@@ -88,6 +88,14 @@ int physics_main(Physics_T *const phys,const cmd_T cmd,
       ret = star_main(phys);
     break;
     
+    case FREE_DATA_ADD_PARAMS:
+      ret = frd_main(phys);
+    break;
+    
+    case FREE_DATA_ADD_FIELDS:
+      ret = frd_main(phys);
+    break;
+    
     default:
       sprintf(msg,"No such command found!\n"
               "Incident triggered at:\n"
