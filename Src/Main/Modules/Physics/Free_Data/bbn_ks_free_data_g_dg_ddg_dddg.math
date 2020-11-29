@@ -9,14 +9,14 @@
 #########################
 # Issue the following (TAKES A VERY VERY LONG TIME):
 # 
-# $ cpi bbn_ks_free_data_g_gI_dg_ddg_dddg.math > \
-#   bbn_ks_free_data_g_gI_dg_ddg_dddg.c && \
-#   sed -i '/Welcome to Cpi/,$d' bbn_ks_free_data_g_gI_dg_ddg_dddg.c && \
-#   sed -i -E 's/\bk0\b\(/bbn_ks_k0\(/g' bbn_ks_free_data_g_gI_dg_ddg_dddg.c && \
-#   sed -i -E 's/\bk1\b\(/bbn_ks_k1\(/g' bbn_ks_free_data_g_gI_dg_ddg_dddg.c && \
-#   sed -i -E 's/\bk2\b\(/bbn_ks_k2\(/g' bbn_ks_free_data_g_gI_dg_ddg_dddg.c && \
-#   sed -i -E 's/\bc\b\(/bbn_ks_c\(/g'   bbn_ks_free_data_g_gI_dg_ddg_dddg.c && \
-#   sed -i -E -f bbn_ks_free_data_substitute_derives.sed bbn_ks_free_data_g_gI_dg_ddg_dddg.c
+# $ cpi bbn_ks_free_data_g_dg_ddg_dddg.math > \
+#   bbn_ks_free_data_g_dg_ddg_dddg.c && \
+#   sed -i '/Welcome to Cpi/,$d' bbn_ks_free_data_g_dg_ddg_dddg.c && \
+#   sed -i -E 's/\bk0\b\(/bbn_ks_k0\(/g' bbn_ks_free_data_g_dg_ddg_dddg.c && \
+#   sed -i -E 's/\bk1\b\(/bbn_ks_k1\(/g' bbn_ks_free_data_g_dg_ddg_dddg.c && \
+#   sed -i -E 's/\bk2\b\(/bbn_ks_k2\(/g' bbn_ks_free_data_g_dg_ddg_dddg.c && \
+#   sed -i -E 's/\bc\b\(/bbn_ks_c\(/g'   bbn_ks_free_data_g_dg_ddg_dddg.c && \
+#   sed -i -E -f bbn_ks_free_data_substitute_derives.sed bbn_ks_free_data_g_dg_ddg_dddg.c
 
 Dimension = 3;
 point     = x;
@@ -260,7 +260,7 @@ Command["sed -i 's/_,/,/g'"];
 ### according to the parameter and the given name. it is used for
 ### different name formats
 
-`print('void bbn_free_data_g_gI_analytic(')`
+`print('void bbn_free_data_g_analytic(')`
 `print('        Patch_T *const patch,')`
 `print('        const double BH_center_x,')`
 `print('        const double BH_center_y,')`
@@ -291,7 +291,7 @@ Command["sed -i 's/_,/,/g'"];
 `print('        const double BH_center_z,')`
 `print('        const char *const stem);')`
 
-`print('void bbn_free_data_g_gI_analytic(')`
+`print('void bbn_free_data_g_analytic(')`
 `print('        Patch_T *const patch,')`
 `print('        const double BH_center_x,')`
 `print('        const double BH_center_y,')`
@@ -303,18 +303,18 @@ Command["sed -i 's/_,/,/g'"];
 `print('  const unsigned nn = patch->nn;')`
 `print('  unsigned ijk;')`
 ``
-`print('    double *const _gamma_D2D2 = get_v(gConf_stem,"D2D2");')`
-`print('    double *const _gamma_D0D2 = get_v(gConf_stem,"D0D2");')`
-`print('    double *const _gamma_D0D0 = get_v(gConf_stem,"D0D0");')`
-`print('    double *const _gamma_D0D1 = get_v(gConf_stem,"D0D1");')`
-`print('    double *const _gamma_D1D2 = get_v(gConf_stem,"D1D2");')`
-`print('    double *const _gamma_D1D1 = get_v(gConf_stem,"D1D1");')`
-`print('    double *const _gammaI_U0U2 = get_v(igConf_stem,"U0U2");')`
-`print('    double *const _gammaI_U0U0 = get_v(igConf_stem,"U0U0");')`
-`print('    double *const _gammaI_U0U1 = get_v(igConf_stem,"U0U1");')`
-`print('    double *const _gammaI_U1U2 = get_v(igConf_stem,"U1U2");')`
-`print('    double *const _gammaI_U1U1 = get_v(igConf_stem,"U1U1");')`
-`print('    double *const _gammaI_U2U2 = get_v(igConf_stem,"U2U2");')`
+`print(stem,"D2D2");')`
+`print(stem,"D0D2");')`
+`print(stem,"D0D0");')`
+`print(stem,"D0D1");')`
+`print(stem,"D1D2");')`
+`print(stem,"D1D1");')`
+`print(stem,"U0U2");')`
+`print(stem,"U0U0");')`
+`print(stem,"U0U1");')`
+`print(stem,"U1U2");')`
+`print(stem,"U1U1");')`
+`print(stem,"U2U2");')`
 `print('    ')`
 `print('    for (ijk = 0; ijk < nn; ++ijk)')`
 `print('    {')`
@@ -342,65 +342,6 @@ Command["sed -i 's/_,/,/g'"];
 `print('      _gamma_D2D2[ijk] =')`
 `print(mcode(_g22))`
 ``
-`print('      _gammaI_U0U0[ijk] =')`
-`print(mcode(_ig00))`
-``
-`print('      _gammaI_U0U1[ijk] =')`
-`print(mcode(_ig01))`
-``
-`print('      _gammaI_U0U2[ijk] =')`
-`print(mcode(_ig02))`
-``
-`print('      _gammaI_U1U1[ijk] =')`
-`print(mcode(_ig11))`
-``
-`print('      _gammaI_U1U2[ijk] =')`
-`print(mcode(_ig12))`
-``
-`print('      _gammaI_U2U2[ijk] =')`
-`print(mcode(_ig22))`
-``
-`print('      /* quick test check _gamma * _gammaI = delta */')`
-`print('      if (0)')`
-`print('      {')`
-`print('          double delta_U0D0 = ')`
-`print('        _gammaI_U0U0[ijk]*_gamma_D0D0[ijk] + _gammaI_U0U1[ijk]*')`
-`print('        _gamma_D0D1[ijk] + _gammaI_U0U2[ijk]*_gamma_D0D2[ijk];')`
-`print('          double delta_U0D1 = ')`
-`print('        _gammaI_U0U0[ijk]*_gamma_D0D1[ijk] + _gammaI_U0U1[ijk]*')`
-`print('        _gamma_D1D1[ijk] + _gammaI_U0U2[ijk]*_gamma_D1D2[ijk];')`
-`print('          double delta_U0D2 = ')`
-`print('        _gammaI_U0U0[ijk]*_gamma_D0D2[ijk] + _gammaI_U0U1[ijk]*')`
-`print('        _gamma_D1D2[ijk] + _gammaI_U0U2[ijk]*_gamma_D2D2[ijk];')`
-`print('          double delta_U1D2 = ')`
-`print('        _gammaI_U0U1[ijk]*_gamma_D0D2[ijk] + _gammaI_U1U1[ijk]*')`
-`print('        _gamma_D1D2[ijk] + _gammaI_U1U2[ijk]*_gamma_D2D2[ijk];')`
-`print('          double delta_U1D0 = ')`
-`print('        _gammaI_U0U1[ijk]*_gamma_D0D0[ijk] + _gammaI_U1U1[ijk]*')`
-`print('        _gamma_D0D1[ijk] + _gammaI_U1U2[ijk]*_gamma_D0D2[ijk];')`
-`print('         double delta_U1D1 = ')`
-`print('        _gammaI_U0U1[ijk]*_gamma_D0D1[ijk] + _gammaI_U1U1[ijk]*')`
-`print('        _gamma_D1D1[ijk] + _gammaI_U1U2[ijk]*_gamma_D1D2[ijk];')`
-`print('        ')`
-`print('          double delta_U2D2 = ')`
-`print('        _gammaI_U0U2[ijk]*_gamma_D0D2[ijk] + _gammaI_U1U2[ijk]*')`
-`print('        _gamma_D1D2[ijk] + _gammaI_U2U2[ijk]*_gamma_D2D2[ijk];')`
-`print('          double delta_U2D0 = ')`
-`print('        _gammaI_U0U2[ijk]*_gamma_D0D0[ijk] + _gammaI_U1U2[ijk]*')`
-`print('        _gamma_D0D1[ijk] + _gammaI_U2U2[ijk]*_gamma_D0D2[ijk];')`
-`print('          double delta_U2D1 = ')`
-`print('        _gammaI_U0U2[ijk]*_gamma_D0D1[ijk] + _gammaI_U1U2[ijk]*')`
-`print('        _gamma_D1D1[ijk] + _gammaI_U2U2[ijk]*_gamma_D1D2[ijk];')`
-`print('        if(!EQL(delta_U1D1,1)||!isfinite(delta_U1D1))  Error0("_gammaI is not correct!\\n");')`
-`print('        if(!EQL(delta_U0D1,0)||!isfinite(delta_U0D1))  Error0("_gammaI is not correct!\\n");')`
-`print('        if(!EQL(delta_U0D2,0)||!isfinite(delta_U0D2))  Error0("_gammaI is not correct!\\n");')`
-`print('        if(!EQL(delta_U1D2,0)||!isfinite(delta_U1D2))  Error0("_gammaI is not correct!\\n");')`
-`print('        if(!EQL(delta_U0D0,1)||!isfinite(delta_U0D0))  Error0("_gammaI is not correct!\\n");')`
-`print('        if(!EQL(delta_U2D1,0)||!isfinite(delta_U2D1))  Error0("_gammaI is not correct!\\n");')`
-`print('        if(!EQL(delta_U2D2,1)||!isfinite(delta_U2D2))  Error0("_gammaI is not correct!\\n");')`
-`print('        if(!EQL(delta_U2D0,0)||!isfinite(delta_U2D0))  Error0("_gammaI is not correct!\\n");')`
-`print('        if(!EQL(delta_U1D0,0)||!isfinite(delta_U1D0))  Error0("_gammaI is not correct!\\n");')`
-`print('      }')`
 `print('    }')`
 `print('}')`
 ``
@@ -416,24 +357,24 @@ Command["sed -i 's/_,/,/g'"];
 `print('  const unsigned nn = patch->nn;')`
 `print('  unsigned ijk;')`
 `print('  ')`
-`print('double *const _dgamma_D1D2D2 = get_v(dgConf_stem,"D1D2D2");')`
-`print('double *const _dgamma_D0D0D1 = get_v(dgConf_stem,"D0D0D1");')`
-`print('double *const _dgamma_D0D2D1 = get_v(dgConf_stem,"D0D2D1");')`
-`print('double *const _dgamma_D0D1D0 = get_v(dgConf_stem,"D0D1D0");')`
-`print('double *const _dgamma_D1D2D1 = get_v(dgConf_stem,"D1D2D1");')`
-`print('double *const _dgamma_D2D2D0 = get_v(dgConf_stem,"D2D2D0");')`
-`print('double *const _dgamma_D0D0D0 = get_v(dgConf_stem,"D0D0D0");')`
-`print('double *const _dgamma_D0D0D2 = get_v(dgConf_stem,"D0D0D2");')`
-`print('double *const _dgamma_D0D2D2 = get_v(dgConf_stem,"D0D2D2");')`
-`print('double *const _dgamma_D2D2D1 = get_v(dgConf_stem,"D2D2D1");')`
-`print('double *const _dgamma_D0D1D1 = get_v(dgConf_stem,"D0D1D1");')`
-`print('double *const _dgamma_D0D2D0 = get_v(dgConf_stem,"D0D2D0");')`
-`print('double *const _dgamma_D1D2D0 = get_v(dgConf_stem,"D1D2D0");')`
-`print('double *const _dgamma_D1D1D1 = get_v(dgConf_stem,"D1D1D1");')`
-`print('double *const _dgamma_D0D1D2 = get_v(dgConf_stem,"D0D1D2");')`
-`print('double *const _dgamma_D1D1D0 = get_v(dgConf_stem,"D1D1D0");')`
-`print('double *const _dgamma_D1D1D2 = get_v(dgConf_stem,"D1D1D2");')`
-`print('double *const _dgamma_D2D2D2 = get_v(dgConf_stem,"D2D2D2");')`
+`print(stem,"D1D2D2");')`
+`print(stem,"D0D0D1");')`
+`print(stem,"D0D2D1");')`
+`print(stem,"D0D1D0");')`
+`print(stem,"D1D2D1");')`
+`print(stem,"D2D2D0");')`
+`print(stem,"D0D0D0");')`
+`print(stem,"D0D0D2");')`
+`print(stem,"D0D2D2");')`
+`print(stem,"D2D2D1");')`
+`print(stem,"D0D1D1");')`
+`print(stem,"D0D2D0");')`
+`print(stem,"D1D2D0");')`
+`print(stem,"D1D1D1");')`
+`print(stem,"D0D1D2");')`
+`print(stem,"D1D1D0");')`
+`print(stem,"D1D1D2");')`
+`print(stem,"D2D2D2");')`
 `print('')`
 `print('  for (ijk = 0; ijk < nn; ++ijk) ')`
 `print('  {')`
@@ -514,60 +455,60 @@ Command["sed -i 's/_,/,/g'"];
 `print('  const unsigned nn = patch->nn;')`
 `print('  unsigned ijk;')`
 `print('')`
-`print('double *const _ddgamma_D2D2D0D2 = get_v(ddgConf_stem,"D2D2D0D2");')`
-`print('double *const _ddgamma_D0D1D0D1 = get_v(ddgConf_stem,"D0D1D0D1");')`
-`print('double *const _ddgamma_D1D1D0D1 = get_v(ddgConf_stem,"D1D1D0D1");')`
-`print('double *const _ddgamma_D1D2D0D1 = get_v(ddgConf_stem,"D1D2D0D1");')`
-`print('double *const _ddgamma_D0D0D1D0 = get_v(ddgConf_stem,"D0D0D1D0");')`
-`print('double *const _ddgamma_D1D1D2D0 = get_v(ddgConf_stem,"D1D1D2D0");')`
-`print('double *const _ddgamma_D0D0D0D1 = get_v(ddgConf_stem,"D0D0D0D1");')`
-`print('double *const _ddgamma_D1D1D0D0 = get_v(ddgConf_stem,"D1D1D0D0");')`
-`print('double *const _ddgamma_D0D0D2D2 = get_v(ddgConf_stem,"D0D0D2D2");')`
-`print('double *const _ddgamma_D2D2D1D1 = get_v(ddgConf_stem,"D2D2D1D1");')`
-`print('double *const _ddgamma_D2D2D2D2 = get_v(ddgConf_stem,"D2D2D2D2");')`
-`print('double *const _ddgamma_D0D0D2D0 = get_v(ddgConf_stem,"D0D0D2D0");')`
-`print('double *const _ddgamma_D0D2D2D1 = get_v(ddgConf_stem,"D0D2D2D1");')`
-`print('double *const _ddgamma_D1D2D0D2 = get_v(ddgConf_stem,"D1D2D0D2");')`
-`print('double *const _ddgamma_D1D2D1D0 = get_v(ddgConf_stem,"D1D2D1D0");')`
-`print('double *const _ddgamma_D2D2D2D0 = get_v(ddgConf_stem,"D2D2D2D0");')`
-`print('double *const _ddgamma_D0D0D0D0 = get_v(ddgConf_stem,"D0D0D0D0");')`
-`print('double *const _ddgamma_D0D0D1D1 = get_v(ddgConf_stem,"D0D0D1D1");')`
-`print('double *const _ddgamma_D0D1D0D2 = get_v(ddgConf_stem,"D0D1D0D2");')`
-`print('double *const _ddgamma_D1D2D1D1 = get_v(ddgConf_stem,"D1D2D1D1");')`
-`print('double *const _ddgamma_D0D2D1D1 = get_v(ddgConf_stem,"D0D2D1D1");')`
-`print('double *const _ddgamma_D1D2D2D2 = get_v(ddgConf_stem,"D1D2D2D2");')`
-`print('double *const _ddgamma_D2D2D1D2 = get_v(ddgConf_stem,"D2D2D1D2");')`
-`print('double *const _ddgamma_D0D1D2D0 = get_v(ddgConf_stem,"D0D1D2D0");')`
-`print('double *const _ddgamma_D0D2D2D0 = get_v(ddgConf_stem,"D0D2D2D0");')`
-`print('double *const _ddgamma_D0D1D1D0 = get_v(ddgConf_stem,"D0D1D1D0");')`
-`print('double *const _ddgamma_D1D2D2D0 = get_v(ddgConf_stem,"D1D2D2D0");')`
-`print('double *const _ddgamma_D1D1D1D0 = get_v(ddgConf_stem,"D1D1D1D0");')`
-`print('double *const _ddgamma_D1D2D1D2 = get_v(ddgConf_stem,"D1D2D1D2");')`
-`print('double *const _ddgamma_D1D2D0D0 = get_v(ddgConf_stem,"D1D2D0D0");')`
-`print('double *const _ddgamma_D0D0D0D2 = get_v(ddgConf_stem,"D0D0D0D2");')`
-`print('double *const _ddgamma_D2D2D2D1 = get_v(ddgConf_stem,"D2D2D2D1");')`
-`print('double *const _ddgamma_D0D2D0D0 = get_v(ddgConf_stem,"D0D2D0D0");')`
-`print('double *const _ddgamma_D0D2D0D1 = get_v(ddgConf_stem,"D0D2D0D1");')`
-`print('double *const _ddgamma_D1D1D1D1 = get_v(ddgConf_stem,"D1D1D1D1");')`
-`print('double *const _ddgamma_D0D1D0D0 = get_v(ddgConf_stem,"D0D1D0D0");')`
-`print('double *const _ddgamma_D1D1D2D2 = get_v(ddgConf_stem,"D1D1D2D2");')`
-`print('double *const _ddgamma_D0D2D1D2 = get_v(ddgConf_stem,"D0D2D1D2");')`
-`print('double *const _ddgamma_D0D1D2D1 = get_v(ddgConf_stem,"D0D1D2D1");')`
-`print('double *const _ddgamma_D0D1D1D2 = get_v(ddgConf_stem,"D0D1D1D2");')`
-`print('double *const _ddgamma_D1D1D2D1 = get_v(ddgConf_stem,"D1D1D2D1");')`
-`print('double *const _ddgamma_D0D1D1D1 = get_v(ddgConf_stem,"D0D1D1D1");')`
-`print('double *const _ddgamma_D0D2D1D0 = get_v(ddgConf_stem,"D0D2D1D0");')`
-`print('double *const _ddgamma_D2D2D1D0 = get_v(ddgConf_stem,"D2D2D1D0");')`
-`print('double *const _ddgamma_D0D1D2D2 = get_v(ddgConf_stem,"D0D1D2D2");')`
-`print('double *const _ddgamma_D2D2D0D0 = get_v(ddgConf_stem,"D2D2D0D0");')`
-`print('double *const _ddgamma_D0D0D2D1 = get_v(ddgConf_stem,"D0D0D2D1");')`
-`print('double *const _ddgamma_D0D2D2D2 = get_v(ddgConf_stem,"D0D2D2D2");')`
-`print('double *const _ddgamma_D1D1D1D2 = get_v(ddgConf_stem,"D1D1D1D2");')`
-`print('double *const _ddgamma_D1D2D2D1 = get_v(ddgConf_stem,"D1D2D2D1");')`
-`print('double *const _ddgamma_D0D0D1D2 = get_v(ddgConf_stem,"D0D0D1D2");')`
-`print('double *const _ddgamma_D0D2D0D2 = get_v(ddgConf_stem,"D0D2D0D2");')`
-`print('double *const _ddgamma_D1D1D0D2 = get_v(ddgConf_stem,"D1D1D0D2");')`
-`print('double *const _ddgamma_D2D2D0D1 = get_v(ddgConf_stem,"D2D2D0D1");')`
+`print(stem,"D2D2D0D2");')`
+`print(stem,"D0D1D0D1");')`
+`print(stem,"D1D1D0D1");')`
+`print(stem,"D1D2D0D1");')`
+`print(stem,"D0D0D1D0");')`
+`print(stem,"D1D1D2D0");')`
+`print(stem,"D0D0D0D1");')`
+`print(stem,"D1D1D0D0");')`
+`print(stem,"D0D0D2D2");')`
+`print(stem,"D2D2D1D1");')`
+`print(stem,"D2D2D2D2");')`
+`print(stem,"D0D0D2D0");')`
+`print(stem,"D0D2D2D1");')`
+`print(stem,"D1D2D0D2");')`
+`print(stem,"D1D2D1D0");')`
+`print(stem,"D2D2D2D0");')`
+`print(stem,"D0D0D0D0");')`
+`print(stem,"D0D0D1D1");')`
+`print(stem,"D0D1D0D2");')`
+`print(stem,"D1D2D1D1");')`
+`print(stem,"D0D2D1D1");')`
+`print(stem,"D1D2D2D2");')`
+`print(stem,"D2D2D1D2");')`
+`print(stem,"D0D1D2D0");')`
+`print(stem,"D0D2D2D0");')`
+`print(stem,"D0D1D1D0");')`
+`print(stem,"D1D2D2D0");')`
+`print(stem,"D1D1D1D0");')`
+`print(stem,"D1D2D1D2");')`
+`print(stem,"D1D2D0D0");')`
+`print(stem,"D0D0D0D2");')`
+`print(stem,"D2D2D2D1");')`
+`print(stem,"D0D2D0D0");')`
+`print(stem,"D0D2D0D1");')`
+`print(stem,"D1D1D1D1");')`
+`print(stem,"D0D1D0D0");')`
+`print(stem,"D1D1D2D2");')`
+`print(stem,"D0D2D1D2");')`
+`print(stem,"D0D1D2D1");')`
+`print(stem,"D0D1D1D2");')`
+`print(stem,"D1D1D2D1");')`
+`print(stem,"D0D1D1D1");')`
+`print(stem,"D0D2D1D0");')`
+`print(stem,"D2D2D1D0");')`
+`print(stem,"D0D1D2D2");')`
+`print(stem,"D2D2D0D0");')`
+`print(stem,"D0D0D2D1");')`
+`print(stem,"D0D2D2D2");')`
+`print(stem,"D1D1D1D2");')`
+`print(stem,"D1D2D2D1");')`
+`print(stem,"D0D0D1D2");')`
+`print(stem,"D0D2D0D2");')`
+`print(stem,"D1D1D0D2");')`
+`print(stem,"D2D2D0D1");')`
 `print('')`
 `print('  for (ijk = 0; ijk < nn; ++ijk) ')`
 `print('  {')`
@@ -754,168 +695,168 @@ Command["sed -i 's/_,/,/g'"];
 `print('  const unsigned nn = patch->nn;')`
 `print('  unsigned ijk;')`
 `print('')`
-`print('double *const _dddgamma_D0D1D2D2D1 = get_v(dddgConf_stem,"D0D1D2D2D1");')`
-`print('double *const _dddgamma_D0D1D2D0D1 = get_v(dddgConf_stem,"D0D1D2D0D1");')`
-`print('double *const _dddgamma_D1D2D0D2D0 = get_v(dddgConf_stem,"D1D2D0D2D0");')`
-`print('double *const _dddgamma_D1D1D1D2D1 = get_v(dddgConf_stem,"D1D1D1D2D1");')`
-`print('double *const _dddgamma_D0D2D0D0D1 = get_v(dddgConf_stem,"D0D2D0D0D1");')`
-`print('double *const _dddgamma_D0D2D0D2D2 = get_v(dddgConf_stem,"D0D2D0D2D2");')`
-`print('double *const _dddgamma_D2D2D2D1D2 = get_v(dddgConf_stem,"D2D2D2D1D2");')`
-`print('double *const _dddgamma_D0D1D0D2D0 = get_v(dddgConf_stem,"D0D1D0D2D0");')`
-`print('double *const _dddgamma_D1D1D2D2D0 = get_v(dddgConf_stem,"D1D1D2D2D0");')`
-`print('double *const _dddgamma_D0D2D0D2D1 = get_v(dddgConf_stem,"D0D2D0D2D1");')`
-`print('double *const _dddgamma_D1D1D2D1D0 = get_v(dddgConf_stem,"D1D1D2D1D0");')`
-`print('double *const _dddgamma_D1D1D0D1D2 = get_v(dddgConf_stem,"D1D1D0D1D2");')`
-`print('double *const _dddgamma_D0D2D1D1D0 = get_v(dddgConf_stem,"D0D2D1D1D0");')`
-`print('double *const _dddgamma_D1D1D1D0D1 = get_v(dddgConf_stem,"D1D1D1D0D1");')`
-`print('double *const _dddgamma_D0D0D2D1D1 = get_v(dddgConf_stem,"D0D0D2D1D1");')`
-`print('double *const _dddgamma_D0D1D2D1D2 = get_v(dddgConf_stem,"D0D1D2D1D2");')`
-`print('double *const _dddgamma_D0D0D0D1D1 = get_v(dddgConf_stem,"D0D0D0D1D1");')`
-`print('double *const _dddgamma_D2D2D1D2D1 = get_v(dddgConf_stem,"D2D2D1D2D1");')`
-`print('double *const _dddgamma_D1D1D1D2D2 = get_v(dddgConf_stem,"D1D1D1D2D2");')`
-`print('double *const _dddgamma_D2D2D2D2D1 = get_v(dddgConf_stem,"D2D2D2D2D1");')`
-`print('double *const _dddgamma_D2D2D1D0D0 = get_v(dddgConf_stem,"D2D2D1D0D0");')`
-`print('double *const _dddgamma_D0D1D2D1D1 = get_v(dddgConf_stem,"D0D1D2D1D1");')`
-`print('double *const _dddgamma_D1D1D2D2D2 = get_v(dddgConf_stem,"D1D1D2D2D2");')`
-`print('double *const _dddgamma_D1D2D1D0D1 = get_v(dddgConf_stem,"D1D2D1D0D1");')`
-`print('double *const _dddgamma_D0D1D1D1D0 = get_v(dddgConf_stem,"D0D1D1D1D0");')`
-`print('double *const _dddgamma_D2D2D2D0D1 = get_v(dddgConf_stem,"D2D2D2D0D1");')`
-`print('double *const _dddgamma_D1D2D2D2D2 = get_v(dddgConf_stem,"D1D2D2D2D2");')`
-`print('double *const _dddgamma_D1D2D1D2D1 = get_v(dddgConf_stem,"D1D2D1D2D1");')`
-`print('double *const _dddgamma_D2D2D0D2D1 = get_v(dddgConf_stem,"D2D2D0D2D1");')`
-`print('double *const _dddgamma_D1D1D2D1D2 = get_v(dddgConf_stem,"D1D1D2D1D2");')`
-`print('double *const _dddgamma_D1D2D2D1D0 = get_v(dddgConf_stem,"D1D2D2D1D0");')`
-`print('double *const _dddgamma_D1D2D0D0D1 = get_v(dddgConf_stem,"D1D2D0D0D1");')`
-`print('double *const _dddgamma_D0D2D0D1D1 = get_v(dddgConf_stem,"D0D2D0D1D1");')`
-`print('double *const _dddgamma_D0D2D1D0D1 = get_v(dddgConf_stem,"D0D2D1D0D1");')`
-`print('double *const _dddgamma_D0D0D0D1D2 = get_v(dddgConf_stem,"D0D0D0D1D2");')`
-`print('double *const _dddgamma_D0D0D2D1D2 = get_v(dddgConf_stem,"D0D0D2D1D2");')`
-`print('double *const _dddgamma_D0D1D0D1D0 = get_v(dddgConf_stem,"D0D1D0D1D0");')`
-`print('double *const _dddgamma_D1D2D1D0D0 = get_v(dddgConf_stem,"D1D2D1D0D0");')`
-`print('double *const _dddgamma_D0D2D1D0D0 = get_v(dddgConf_stem,"D0D2D1D0D0");')`
-`print('double *const _dddgamma_D1D2D0D1D1 = get_v(dddgConf_stem,"D1D2D0D1D1");')`
-`print('double *const _dddgamma_D0D1D2D0D2 = get_v(dddgConf_stem,"D0D1D2D0D2");')`
-`print('double *const _dddgamma_D1D1D2D0D0 = get_v(dddgConf_stem,"D1D1D2D0D0");')`
-`print('double *const _dddgamma_D0D1D2D2D2 = get_v(dddgConf_stem,"D0D1D2D2D2");')`
-`print('double *const _dddgamma_D0D0D2D0D2 = get_v(dddgConf_stem,"D0D0D2D0D2");')`
-`print('double *const _dddgamma_D0D0D0D0D2 = get_v(dddgConf_stem,"D0D0D0D0D2");')`
-`print('double *const _dddgamma_D1D1D0D1D1 = get_v(dddgConf_stem,"D1D1D0D1D1");')`
-`print('double *const _dddgamma_D2D2D0D0D1 = get_v(dddgConf_stem,"D2D2D0D0D1");')`
-`print('double *const _dddgamma_D0D0D1D2D2 = get_v(dddgConf_stem,"D0D0D1D2D2");')`
-`print('double *const _dddgamma_D1D1D0D2D0 = get_v(dddgConf_stem,"D1D1D0D2D0");')`
-`print('double *const _dddgamma_D0D1D1D2D0 = get_v(dddgConf_stem,"D0D1D1D2D0");')`
-`print('double *const _dddgamma_D1D1D0D0D1 = get_v(dddgConf_stem,"D1D1D0D0D1");')`
-`print('double *const _dddgamma_D1D1D0D0D2 = get_v(dddgConf_stem,"D1D1D0D0D2");')`
-`print('double *const _dddgamma_D1D2D0D1D2 = get_v(dddgConf_stem,"D1D2D0D1D2");')`
-`print('double *const _dddgamma_D0D0D1D0D2 = get_v(dddgConf_stem,"D0D0D1D0D2");')`
-`print('double *const _dddgamma_D0D0D0D2D0 = get_v(dddgConf_stem,"D0D0D0D2D0");')`
-`print('double *const _dddgamma_D2D2D2D1D1 = get_v(dddgConf_stem,"D2D2D2D1D1");')`
-`print('double *const _dddgamma_D0D2D0D0D2 = get_v(dddgConf_stem,"D0D2D0D0D2");')`
-`print('double *const _dddgamma_D2D2D2D2D0 = get_v(dddgConf_stem,"D2D2D2D2D0");')`
-`print('double *const _dddgamma_D0D2D0D0D0 = get_v(dddgConf_stem,"D0D2D0D0D0");')`
-`print('double *const _dddgamma_D2D2D1D2D0 = get_v(dddgConf_stem,"D2D2D1D2D0");')`
-`print('double *const _dddgamma_D1D1D0D1D0 = get_v(dddgConf_stem,"D1D1D0D1D0");')`
-`print('double *const _dddgamma_D1D2D2D0D2 = get_v(dddgConf_stem,"D1D2D2D0D2");')`
-`print('double *const _dddgamma_D0D1D0D1D1 = get_v(dddgConf_stem,"D0D1D0D1D1");')`
-`print('double *const _dddgamma_D2D2D0D2D2 = get_v(dddgConf_stem,"D2D2D0D2D2");')`
-`print('double *const _dddgamma_D1D2D2D1D2 = get_v(dddgConf_stem,"D1D2D2D1D2");')`
-`print('double *const _dddgamma_D2D2D1D1D1 = get_v(dddgConf_stem,"D2D2D1D1D1");')`
-`print('double *const _dddgamma_D0D0D0D0D0 = get_v(dddgConf_stem,"D0D0D0D0D0");')`
-`print('double *const _dddgamma_D0D0D1D2D1 = get_v(dddgConf_stem,"D0D0D1D2D1");')`
-`print('double *const _dddgamma_D1D1D1D1D0 = get_v(dddgConf_stem,"D1D1D1D1D0");')`
-`print('double *const _dddgamma_D1D1D1D1D1 = get_v(dddgConf_stem,"D1D1D1D1D1");')`
-`print('double *const _dddgamma_D1D1D1D2D0 = get_v(dddgConf_stem,"D1D1D1D2D0");')`
-`print('double *const _dddgamma_D0D1D0D2D1 = get_v(dddgConf_stem,"D0D1D0D2D1");')`
-`print('double *const _dddgamma_D2D2D1D1D0 = get_v(dddgConf_stem,"D2D2D1D1D0");')`
-`print('double *const _dddgamma_D1D2D2D2D0 = get_v(dddgConf_stem,"D1D2D2D2D0");')`
-`print('double *const _dddgamma_D0D0D1D1D2 = get_v(dddgConf_stem,"D0D0D1D1D2");')`
-`print('double *const _dddgamma_D0D2D0D2D0 = get_v(dddgConf_stem,"D0D2D0D2D0");')`
-`print('double *const _dddgamma_D0D0D1D0D0 = get_v(dddgConf_stem,"D0D0D1D0D0");')`
-`print('double *const _dddgamma_D0D2D2D1D0 = get_v(dddgConf_stem,"D0D2D2D1D0");')`
-`print('double *const _dddgamma_D0D2D2D0D0 = get_v(dddgConf_stem,"D0D2D2D0D0");')`
-`print('double *const _dddgamma_D1D1D1D1D2 = get_v(dddgConf_stem,"D1D1D1D1D2");')`
-`print('double *const _dddgamma_D0D0D2D2D1 = get_v(dddgConf_stem,"D0D0D2D2D1");')`
-`print('double *const _dddgamma_D2D2D0D1D0 = get_v(dddgConf_stem,"D2D2D0D1D0");')`
-`print('double *const _dddgamma_D1D1D2D0D2 = get_v(dddgConf_stem,"D1D1D2D0D2");')`
-`print('double *const _dddgamma_D0D1D1D1D1 = get_v(dddgConf_stem,"D0D1D1D1D1");')`
-`print('double *const _dddgamma_D1D2D0D0D0 = get_v(dddgConf_stem,"D1D2D0D0D0");')`
-`print('double *const _dddgamma_D1D2D0D0D2 = get_v(dddgConf_stem,"D1D2D0D0D2");')`
-`print('double *const _dddgamma_D2D2D0D1D2 = get_v(dddgConf_stem,"D2D2D0D1D2");')`
-`print('double *const _dddgamma_D0D0D1D1D1 = get_v(dddgConf_stem,"D0D0D1D1D1");')`
-`print('double *const _dddgamma_D0D2D0D1D0 = get_v(dddgConf_stem,"D0D2D0D1D0");')`
-`print('double *const _dddgamma_D0D2D1D2D1 = get_v(dddgConf_stem,"D0D2D1D2D1");')`
-`print('double *const _dddgamma_D1D2D1D2D2 = get_v(dddgConf_stem,"D1D2D1D2D2");')`
-`print('double *const _dddgamma_D0D1D1D0D0 = get_v(dddgConf_stem,"D0D1D1D0D0");')`
-`print('double *const _dddgamma_D0D0D1D2D0 = get_v(dddgConf_stem,"D0D0D1D2D0");')`
-`print('double *const _dddgamma_D1D2D1D1D0 = get_v(dddgConf_stem,"D1D2D1D1D0");')`
-`print('double *const _dddgamma_D1D2D2D2D1 = get_v(dddgConf_stem,"D1D2D2D2D1");')`
-`print('double *const _dddgamma_D0D1D0D0D0 = get_v(dddgConf_stem,"D0D1D0D0D0");')`
-`print('double *const _dddgamma_D1D2D2D1D1 = get_v(dddgConf_stem,"D1D2D2D1D1");')`
-`print('double *const _dddgamma_D0D0D0D1D0 = get_v(dddgConf_stem,"D0D0D0D1D0");')`
-`print('double *const _dddgamma_D0D0D0D0D1 = get_v(dddgConf_stem,"D0D0D0D0D1");')`
-`print('double *const _dddgamma_D0D0D0D2D2 = get_v(dddgConf_stem,"D0D0D0D2D2");')`
-`print('double *const _dddgamma_D1D2D0D2D1 = get_v(dddgConf_stem,"D1D2D0D2D1");')`
-`print('double *const _dddgamma_D2D2D1D1D2 = get_v(dddgConf_stem,"D2D2D1D1D2");')`
-`print('double *const _dddgamma_D1D2D1D1D1 = get_v(dddgConf_stem,"D1D2D1D1D1");')`
-`print('double *const _dddgamma_D0D0D1D0D1 = get_v(dddgConf_stem,"D0D0D1D0D1");')`
-`print('double *const _dddgamma_D0D1D0D1D2 = get_v(dddgConf_stem,"D0D1D0D1D2");')`
-`print('double *const _dddgamma_D0D2D1D2D2 = get_v(dddgConf_stem,"D0D2D1D2D2");')`
-`print('double *const _dddgamma_D1D1D0D2D2 = get_v(dddgConf_stem,"D1D1D0D2D2");')`
-`print('double *const _dddgamma_D0D1D0D0D2 = get_v(dddgConf_stem,"D0D1D0D0D2");')`
-`print('double *const _dddgamma_D0D1D0D2D2 = get_v(dddgConf_stem,"D0D1D0D2D2");')`
-`print('double *const _dddgamma_D0D2D1D2D0 = get_v(dddgConf_stem,"D0D2D1D2D0");')`
-`print('double *const _dddgamma_D0D1D0D0D1 = get_v(dddgConf_stem,"D0D1D0D0D1");')`
-`print('double *const _dddgamma_D1D2D1D1D2 = get_v(dddgConf_stem,"D1D2D1D1D2");')`
-`print('double *const _dddgamma_D2D2D0D1D1 = get_v(dddgConf_stem,"D2D2D0D1D1");')`
-`print('double *const _dddgamma_D1D1D2D2D1 = get_v(dddgConf_stem,"D1D1D2D2D1");')`
-`print('double *const _dddgamma_D0D1D2D1D0 = get_v(dddgConf_stem,"D0D1D2D1D0");')`
-`print('double *const _dddgamma_D0D2D1D0D2 = get_v(dddgConf_stem,"D0D2D1D0D2");')`
-`print('double *const _dddgamma_D2D2D2D1D0 = get_v(dddgConf_stem,"D2D2D2D1D0");')`
-`print('double *const _dddgamma_D0D1D1D1D2 = get_v(dddgConf_stem,"D0D1D1D1D2");')`
-`print('double *const _dddgamma_D1D2D1D0D2 = get_v(dddgConf_stem,"D1D2D1D0D2");')`
-`print('double *const _dddgamma_D0D0D2D2D0 = get_v(dddgConf_stem,"D0D0D2D2D0");')`
-`print('double *const _dddgamma_D0D1D1D0D1 = get_v(dddgConf_stem,"D0D1D1D0D1");')`
-`print('double *const _dddgamma_D0D1D2D2D0 = get_v(dddgConf_stem,"D0D1D2D2D0");')`
-`print('double *const _dddgamma_D0D2D0D1D2 = get_v(dddgConf_stem,"D0D2D0D1D2");')`
-`print('double *const _dddgamma_D0D2D2D2D1 = get_v(dddgConf_stem,"D0D2D2D2D1");')`
-`print('double *const _dddgamma_D1D1D0D2D1 = get_v(dddgConf_stem,"D1D1D0D2D1");')`
-`print('double *const _dddgamma_D0D0D2D1D0 = get_v(dddgConf_stem,"D0D0D2D1D0");')`
-`print('double *const _dddgamma_D1D2D0D1D0 = get_v(dddgConf_stem,"D1D2D0D1D0");')`
-`print('double *const _dddgamma_D0D2D2D1D2 = get_v(dddgConf_stem,"D0D2D2D1D2");')`
-`print('double *const _dddgamma_D0D1D1D2D1 = get_v(dddgConf_stem,"D0D1D1D2D1");')`
-`print('double *const _dddgamma_D1D2D2D0D0 = get_v(dddgConf_stem,"D1D2D2D0D0");')`
-`print('double *const _dddgamma_D0D1D2D0D0 = get_v(dddgConf_stem,"D0D1D2D0D0");')`
-`print('double *const _dddgamma_D1D2D1D2D0 = get_v(dddgConf_stem,"D1D2D1D2D0");')`
-`print('double *const _dddgamma_D2D2D1D0D1 = get_v(dddgConf_stem,"D2D2D1D0D1");')`
-`print('double *const _dddgamma_D2D2D1D2D2 = get_v(dddgConf_stem,"D2D2D1D2D2");')`
-`print('double *const _dddgamma_D1D1D1D0D0 = get_v(dddgConf_stem,"D1D1D1D0D0");')`
-`print('double *const _dddgamma_D0D1D1D0D2 = get_v(dddgConf_stem,"D0D1D1D0D2");')`
-`print('double *const _dddgamma_D0D2D2D2D0 = get_v(dddgConf_stem,"D0D2D2D2D0");')`
-`print('double *const _dddgamma_D2D2D2D2D2 = get_v(dddgConf_stem,"D2D2D2D2D2");')`
-`print('double *const _dddgamma_D0D2D2D0D1 = get_v(dddgConf_stem,"D0D2D2D0D1");')`
-`print('double *const _dddgamma_D0D2D1D1D2 = get_v(dddgConf_stem,"D0D2D1D1D2");')`
-`print('double *const _dddgamma_D2D2D0D0D2 = get_v(dddgConf_stem,"D2D2D0D0D2");')`
-`print('double *const _dddgamma_D2D2D2D0D0 = get_v(dddgConf_stem,"D2D2D2D0D0");')`
-`print('double *const _dddgamma_D2D2D0D2D0 = get_v(dddgConf_stem,"D2D2D0D2D0");')`
-`print('double *const _dddgamma_D1D1D2D0D1 = get_v(dddgConf_stem,"D1D1D2D0D1");')`
-`print('double *const _dddgamma_D2D2D0D0D0 = get_v(dddgConf_stem,"D2D2D0D0D0");')`
-`print('double *const _dddgamma_D2D2D2D0D2 = get_v(dddgConf_stem,"D2D2D2D0D2");')`
-`print('double *const _dddgamma_D0D2D2D0D2 = get_v(dddgConf_stem,"D0D2D2D0D2");')`
-`print('double *const _dddgamma_D0D2D2D2D2 = get_v(dddgConf_stem,"D0D2D2D2D2");')`
-`print('double *const _dddgamma_D1D1D0D0D0 = get_v(dddgConf_stem,"D1D1D0D0D0");')`
-`print('double *const _dddgamma_D1D2D2D0D1 = get_v(dddgConf_stem,"D1D2D2D0D1");')`
-`print('double *const _dddgamma_D0D0D1D1D0 = get_v(dddgConf_stem,"D0D0D1D1D0");')`
-`print('double *const _dddgamma_D1D1D1D0D2 = get_v(dddgConf_stem,"D1D1D1D0D2");')`
-`print('double *const _dddgamma_D2D2D1D0D2 = get_v(dddgConf_stem,"D2D2D1D0D2");')`
-`print('double *const _dddgamma_D0D2D1D1D1 = get_v(dddgConf_stem,"D0D2D1D1D1");')`
-`print('double *const _dddgamma_D0D0D2D0D0 = get_v(dddgConf_stem,"D0D0D2D0D0");')`
-`print('double *const _dddgamma_D0D1D1D2D2 = get_v(dddgConf_stem,"D0D1D1D2D2");')`
-`print('double *const _dddgamma_D0D0D2D0D1 = get_v(dddgConf_stem,"D0D0D2D0D1");')`
-`print('double *const _dddgamma_D0D0D0D2D1 = get_v(dddgConf_stem,"D0D0D0D2D1");')`
-`print('double *const _dddgamma_D0D2D2D1D1 = get_v(dddgConf_stem,"D0D2D2D1D1");')`
-`print('double *const _dddgamma_D0D0D2D2D2 = get_v(dddgConf_stem,"D0D0D2D2D2");')`
-`print('double *const _dddgamma_D1D1D2D1D1 = get_v(dddgConf_stem,"D1D1D2D1D1");')`
-`print('double *const _dddgamma_D1D2D0D2D2 = get_v(dddgConf_stem,"D1D2D0D2D2");')`
+`print(stem,"D0D1D2D2D1");')`
+`print(stem,"D0D1D2D0D1");')`
+`print(stem,"D1D2D0D2D0");')`
+`print(stem,"D1D1D1D2D1");')`
+`print(stem,"D0D2D0D0D1");')`
+`print(stem,"D0D2D0D2D2");')`
+`print(stem,"D2D2D2D1D2");')`
+`print(stem,"D0D1D0D2D0");')`
+`print(stem,"D1D1D2D2D0");')`
+`print(stem,"D0D2D0D2D1");')`
+`print(stem,"D1D1D2D1D0");')`
+`print(stem,"D1D1D0D1D2");')`
+`print(stem,"D0D2D1D1D0");')`
+`print(stem,"D1D1D1D0D1");')`
+`print(stem,"D0D0D2D1D1");')`
+`print(stem,"D0D1D2D1D2");')`
+`print(stem,"D0D0D0D1D1");')`
+`print(stem,"D2D2D1D2D1");')`
+`print(stem,"D1D1D1D2D2");')`
+`print(stem,"D2D2D2D2D1");')`
+`print(stem,"D2D2D1D0D0");')`
+`print(stem,"D0D1D2D1D1");')`
+`print(stem,"D1D1D2D2D2");')`
+`print(stem,"D1D2D1D0D1");')`
+`print(stem,"D0D1D1D1D0");')`
+`print(stem,"D2D2D2D0D1");')`
+`print(stem,"D1D2D2D2D2");')`
+`print(stem,"D1D2D1D2D1");')`
+`print(stem,"D2D2D0D2D1");')`
+`print(stem,"D1D1D2D1D2");')`
+`print(stem,"D1D2D2D1D0");')`
+`print(stem,"D1D2D0D0D1");')`
+`print(stem,"D0D2D0D1D1");')`
+`print(stem,"D0D2D1D0D1");')`
+`print(stem,"D0D0D0D1D2");')`
+`print(stem,"D0D0D2D1D2");')`
+`print(stem,"D0D1D0D1D0");')`
+`print(stem,"D1D2D1D0D0");')`
+`print(stem,"D0D2D1D0D0");')`
+`print(stem,"D1D2D0D1D1");')`
+`print(stem,"D0D1D2D0D2");')`
+`print(stem,"D1D1D2D0D0");')`
+`print(stem,"D0D1D2D2D2");')`
+`print(stem,"D0D0D2D0D2");')`
+`print(stem,"D0D0D0D0D2");')`
+`print(stem,"D1D1D0D1D1");')`
+`print(stem,"D2D2D0D0D1");')`
+`print(stem,"D0D0D1D2D2");')`
+`print(stem,"D1D1D0D2D0");')`
+`print(stem,"D0D1D1D2D0");')`
+`print(stem,"D1D1D0D0D1");')`
+`print(stem,"D1D1D0D0D2");')`
+`print(stem,"D1D2D0D1D2");')`
+`print(stem,"D0D0D1D0D2");')`
+`print(stem,"D0D0D0D2D0");')`
+`print(stem,"D2D2D2D1D1");')`
+`print(stem,"D0D2D0D0D2");')`
+`print(stem,"D2D2D2D2D0");')`
+`print(stem,"D0D2D0D0D0");')`
+`print(stem,"D2D2D1D2D0");')`
+`print(stem,"D1D1D0D1D0");')`
+`print(stem,"D1D2D2D0D2");')`
+`print(stem,"D0D1D0D1D1");')`
+`print(stem,"D2D2D0D2D2");')`
+`print(stem,"D1D2D2D1D2");')`
+`print(stem,"D2D2D1D1D1");')`
+`print(stem,"D0D0D0D0D0");')`
+`print(stem,"D0D0D1D2D1");')`
+`print(stem,"D1D1D1D1D0");')`
+`print(stem,"D1D1D1D1D1");')`
+`print(stem,"D1D1D1D2D0");')`
+`print(stem,"D0D1D0D2D1");')`
+`print(stem,"D2D2D1D1D0");')`
+`print(stem,"D1D2D2D2D0");')`
+`print(stem,"D0D0D1D1D2");')`
+`print(stem,"D0D2D0D2D0");')`
+`print(stem,"D0D0D1D0D0");')`
+`print(stem,"D0D2D2D1D0");')`
+`print(stem,"D0D2D2D0D0");')`
+`print(stem,"D1D1D1D1D2");')`
+`print(stem,"D0D0D2D2D1");')`
+`print(stem,"D2D2D0D1D0");')`
+`print(stem,"D1D1D2D0D2");')`
+`print(stem,"D0D1D1D1D1");')`
+`print(stem,"D1D2D0D0D0");')`
+`print(stem,"D1D2D0D0D2");')`
+`print(stem,"D2D2D0D1D2");')`
+`print(stem,"D0D0D1D1D1");')`
+`print(stem,"D0D2D0D1D0");')`
+`print(stem,"D0D2D1D2D1");')`
+`print(stem,"D1D2D1D2D2");')`
+`print(stem,"D0D1D1D0D0");')`
+`print(stem,"D0D0D1D2D0");')`
+`print(stem,"D1D2D1D1D0");')`
+`print(stem,"D1D2D2D2D1");')`
+`print(stem,"D0D1D0D0D0");')`
+`print(stem,"D1D2D2D1D1");')`
+`print(stem,"D0D0D0D1D0");')`
+`print(stem,"D0D0D0D0D1");')`
+`print(stem,"D0D0D0D2D2");')`
+`print(stem,"D1D2D0D2D1");')`
+`print(stem,"D2D2D1D1D2");')`
+`print(stem,"D1D2D1D1D1");')`
+`print(stem,"D0D0D1D0D1");')`
+`print(stem,"D0D1D0D1D2");')`
+`print(stem,"D0D2D1D2D2");')`
+`print(stem,"D1D1D0D2D2");')`
+`print(stem,"D0D1D0D0D2");')`
+`print(stem,"D0D1D0D2D2");')`
+`print(stem,"D0D2D1D2D0");')`
+`print(stem,"D0D1D0D0D1");')`
+`print(stem,"D1D2D1D1D2");')`
+`print(stem,"D2D2D0D1D1");')`
+`print(stem,"D1D1D2D2D1");')`
+`print(stem,"D0D1D2D1D0");')`
+`print(stem,"D0D2D1D0D2");')`
+`print(stem,"D2D2D2D1D0");')`
+`print(stem,"D0D1D1D1D2");')`
+`print(stem,"D1D2D1D0D2");')`
+`print(stem,"D0D0D2D2D0");')`
+`print(stem,"D0D1D1D0D1");')`
+`print(stem,"D0D1D2D2D0");')`
+`print(stem,"D0D2D0D1D2");')`
+`print(stem,"D0D2D2D2D1");')`
+`print(stem,"D1D1D0D2D1");')`
+`print(stem,"D0D0D2D1D0");')`
+`print(stem,"D1D2D0D1D0");')`
+`print(stem,"D0D2D2D1D2");')`
+`print(stem,"D0D1D1D2D1");')`
+`print(stem,"D1D2D2D0D0");')`
+`print(stem,"D0D1D2D0D0");')`
+`print(stem,"D1D2D1D2D0");')`
+`print(stem,"D2D2D1D0D1");')`
+`print(stem,"D2D2D1D2D2");')`
+`print(stem,"D1D1D1D0D0");')`
+`print(stem,"D0D1D1D0D2");')`
+`print(stem,"D0D2D2D2D0");')`
+`print(stem,"D2D2D2D2D2");')`
+`print(stem,"D0D2D2D0D1");')`
+`print(stem,"D0D2D1D1D2");')`
+`print(stem,"D2D2D0D0D2");')`
+`print(stem,"D2D2D2D0D0");')`
+`print(stem,"D2D2D0D2D0");')`
+`print(stem,"D1D1D2D0D1");')`
+`print(stem,"D2D2D0D0D0");')`
+`print(stem,"D2D2D2D0D2");')`
+`print(stem,"D0D2D2D0D2");')`
+`print(stem,"D0D2D2D2D2");')`
+`print(stem,"D1D1D0D0D0");')`
+`print(stem,"D1D2D2D0D1");')`
+`print(stem,"D0D0D1D1D0");')`
+`print(stem,"D1D1D1D0D2");')`
+`print(stem,"D2D2D1D0D2");')`
+`print(stem,"D0D2D1D1D1");')`
+`print(stem,"D0D0D2D0D0");')`
+`print(stem,"D0D1D1D2D2");')`
+`print(stem,"D0D0D2D0D1");')`
+`print(stem,"D0D0D0D2D1");')`
+`print(stem,"D0D2D2D1D1");')`
+`print(stem,"D0D0D2D2D2");')`
+`print(stem,"D1D1D2D1D1");')`
+`print(stem,"D1D2D0D2D2");')`
 `print('')`
 `print('')`
 `print('  for (ijk = 0; ijk < nn; ++ijk) ')`

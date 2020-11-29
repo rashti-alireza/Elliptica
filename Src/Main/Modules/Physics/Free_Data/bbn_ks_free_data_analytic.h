@@ -97,7 +97,7 @@ extern double B2;/* B^i B_i */
 extern double r0;/* roll off radius */
 extern double Lambda;/* flat data => 0, kerr-schild => 1 */
 
-void bbn_free_data_g_gI_analytic(
+void bbn_free_data_g_analytic(
         Patch_T *const patch,
         const double BH_center_x,
         const double BH_center_y,

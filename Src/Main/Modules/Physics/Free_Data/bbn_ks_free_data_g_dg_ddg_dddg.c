@@ -30,7 +30,7 @@
   ksa->dZ_D1 = bbn_ks_dZ_D1 KS_func_pass_args_sed;\
   ksa->dZ_D2 = bbn_ks_dZ_D2 KS_func_pass_args_sed;
 
-void bbn_free_data_g_gI_analytic(
+void bbn_free_data_g_analytic(
         Patch_T *const patch,
         const double BH_center_x,
         const double BH_center_y,
@@ -58,7 +58,7 @@ void bbn_free_data_dddg_analytic(
         const double BH_center_z,
         const char *const stem);
 
-void bbn_free_data_g_gI_analytic(
+void bbn_free_data_g_analytic(
         Patch_T *const patch,
         const double BH_center_x,
         const double BH_center_y,
@@ -69,18 +69,12 @@ void bbn_free_data_g_gI_analytic(
   char f_name[STR_LEN];
   const unsigned nn = patch->nn;
   unsigned ijk;
-    double *const _gamma_D2D2 = get_v(gConf_stem,"D2D2");
-    double *const _gamma_D0D2 = get_v(gConf_stem,"D0D2");
-    double *const _gamma_D0D0 = get_v(gConf_stem,"D0D0");
-    double *const _gamma_D0D1 = get_v(gConf_stem,"D0D1");
-    double *const _gamma_D1D2 = get_v(gConf_stem,"D1D2");
-    double *const _gamma_D1D1 = get_v(gConf_stem,"D1D1");
-    double *const _gammaI_U0U2 = get_v(igConf_stem,"U0U2");
-    double *const _gammaI_U0U0 = get_v(igConf_stem,"U0U0");
-    double *const _gammaI_U0U1 = get_v(igConf_stem,"U0U1");
-    double *const _gammaI_U1U2 = get_v(igConf_stem,"U1U2");
-    double *const _gammaI_U1U1 = get_v(igConf_stem,"U1U1");
-    double *const _gammaI_U2U2 = get_v(igConf_stem,"U2U2");
+    double *const _gamma_D2D2 = get_v(stem,"D2D2");
+    double *const _gamma_D0D2 = get_v(stem,"D0D2");
+    double *const _gamma_D0D0 = get_v(stem,"D0D0");
+    double *const _gamma_D0D1 = get_v(stem,"D0D1");
+    double *const _gamma_D1D2 = get_v(stem,"D1D2");
+    double *const _gamma_D1D1 = get_v(stem,"D1D1");
     
     for (ijk = 0; ijk < nn; ++ijk)
     {
@@ -128,107 +122,6 @@ bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*bbn_ks_k2(x, y, z);
 // c
 // k2
 bbn_ks_c(x, y, z)*pow(bbn_ks_k2(x, y, z), 2) + 1.0;
-      _gammaI_U0U0[ijk] =
-/* mcode in progress ... */
-// Not supported in C:
-// c
-// k0
-// k1
-// k2
-((pow(bbn_ks_k1(x, y, z), 2) + pow(bbn_ks_k2(x, y, z), 2))*bbn_ks_c(x, y, z) + 1)/
-((pow(bbn_ks_k0(x, y, z), 2) + pow(bbn_ks_k1(x, y, z), 2) + pow(bbn_ks_k2(x, y, z), 2))*
-bbn_ks_c(x, y, z) + 1);
-      _gammaI_U0U1[ijk] =
-/* mcode in progress ... */
-// Not supported in C:
-// c
-// k0
-// k1
-// k2
--bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*bbn_ks_k1(x, y, z)/((pow(bbn_ks_k0(x, y, z), 2) + 
-pow(bbn_ks_k1(x, y, z), 2) + pow(bbn_ks_k2(x, y, z), 2))*bbn_ks_c(x, y, z) + 
-1);
-      _gammaI_U0U2[ijk] =
-/* mcode in progress ... */
-// Not supported in C:
-// c
-// k0
-// k1
-// k2
--bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*bbn_ks_k2(x, y, z)/((pow(bbn_ks_k0(x, y, z), 2) + 
-pow(bbn_ks_k1(x, y, z), 2) + pow(bbn_ks_k2(x, y, z), 2))*bbn_ks_c(x, y, z) + 
-1);
-      _gammaI_U1U1[ijk] =
-/* mcode in progress ... */
-// Not supported in C:
-// c
-// k0
-// k1
-// k2
-((pow(bbn_ks_k0(x, y, z), 2) + pow(bbn_ks_k2(x, y, z), 2))*bbn_ks_c(x, y, z) + 1)/
-((pow(bbn_ks_k0(x, y, z), 2) + pow(bbn_ks_k1(x, y, z), 2) + pow(bbn_ks_k2(x, y, z), 2))*
-bbn_ks_c(x, y, z) + 1);
-      _gammaI_U1U2[ijk] =
-/* mcode in progress ... */
-// Not supported in C:
-// c
-// k0
-// k1
-// k2
--bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*bbn_ks_k2(x, y, z)/((pow(bbn_ks_k0(x, y, z), 2) + 
-pow(bbn_ks_k1(x, y, z), 2) + pow(bbn_ks_k2(x, y, z), 2))*bbn_ks_c(x, y, z) + 
-1);
-      _gammaI_U2U2[ijk] =
-/* mcode in progress ... */
-// Not supported in C:
-// c
-// k0
-// k1
-// k2
-((pow(bbn_ks_k0(x, y, z), 2) + pow(bbn_ks_k1(x, y, z), 2))*bbn_ks_c(x, y, z) + 1)/
-((pow(bbn_ks_k0(x, y, z), 2) + pow(bbn_ks_k1(x, y, z), 2) + pow(bbn_ks_k2(x, y, z), 2))*
-bbn_ks_c(x, y, z) + 1);
-      /* quick test check _gamma * _gammaI = delta */
-      if (0)
-      {
-          double delta_U0D0 = 
-        _gammaI_U0U0[ijk]*_gamma_D0D0[ijk] + _gammaI_U0U1[ijk]*
-        _gamma_D0D1[ijk] + _gammaI_U0U2[ijk]*_gamma_D0D2[ijk];
-          double delta_U0D1 = 
-        _gammaI_U0U0[ijk]*_gamma_D0D1[ijk] + _gammaI_U0U1[ijk]*
-        _gamma_D1D1[ijk] + _gammaI_U0U2[ijk]*_gamma_D1D2[ijk];
-          double delta_U0D2 = 
-        _gammaI_U0U0[ijk]*_gamma_D0D2[ijk] + _gammaI_U0U1[ijk]*
-        _gamma_D1D2[ijk] + _gammaI_U0U2[ijk]*_gamma_D2D2[ijk];
-          double delta_U1D2 = 
-        _gammaI_U0U1[ijk]*_gamma_D0D2[ijk] + _gammaI_U1U1[ijk]*
-        _gamma_D1D2[ijk] + _gammaI_U1U2[ijk]*_gamma_D2D2[ijk];
-          double delta_U1D0 = 
-        _gammaI_U0U1[ijk]*_gamma_D0D0[ijk] + _gammaI_U1U1[ijk]*
-        _gamma_D0D1[ijk] + _gammaI_U1U2[ijk]*_gamma_D0D2[ijk];
-         double delta_U1D1 = 
-        _gammaI_U0U1[ijk]*_gamma_D0D1[ijk] + _gammaI_U1U1[ijk]*
-        _gamma_D1D1[ijk] + _gammaI_U1U2[ijk]*_gamma_D1D2[ijk];
-        
-          double delta_U2D2 = 
-        _gammaI_U0U2[ijk]*_gamma_D0D2[ijk] + _gammaI_U1U2[ijk]*
-        _gamma_D1D2[ijk] + _gammaI_U2U2[ijk]*_gamma_D2D2[ijk];
-          double delta_U2D0 = 
-        _gammaI_U0U2[ijk]*_gamma_D0D0[ijk] + _gammaI_U1U2[ijk]*
-        _gamma_D0D1[ijk] + _gammaI_U2U2[ijk]*_gamma_D0D2[ijk];
-          double delta_U2D1 = 
-        _gammaI_U0U2[ijk]*_gamma_D0D1[ijk] + _gammaI_U1U2[ijk]*
-        _gamma_D1D1[ijk] + _gammaI_U2U2[ijk]*_gamma_D1D2[ijk];
-        if(!EQL(delta_U1D1,1)||!isfinite(delta_U1D1))  Error0("_gammaI is not correct!\n");
-        if(!EQL(delta_U0D1,0)||!isfinite(delta_U0D1))  Error0("_gammaI is not correct!\n");
-        if(!EQL(delta_U0D2,0)||!isfinite(delta_U0D2))  Error0("_gammaI is not correct!\n");
-        if(!EQL(delta_U1D2,0)||!isfinite(delta_U1D2))  Error0("_gammaI is not correct!\n");
-        if(!EQL(delta_U0D0,1)||!isfinite(delta_U0D0))  Error0("_gammaI is not correct!\n");
-        if(!EQL(delta_U2D1,0)||!isfinite(delta_U2D1))  Error0("_gammaI is not correct!\n");
-        if(!EQL(delta_U2D2,1)||!isfinite(delta_U2D2))  Error0("_gammaI is not correct!\n");
-        if(!EQL(delta_U2D0,0)||!isfinite(delta_U2D0))  Error0("_gammaI is not correct!\n");
-        if(!EQL(delta_U1D0,0)||!isfinite(delta_U1D0))  Error0("_gammaI is not correct!\n");
-      }
     }
 }
 void bbn_free_data_dg_analytic(
@@ -244,24 +137,24 @@ void bbn_free_data_dg_analytic(
   const unsigned nn = patch->nn;
   unsigned ijk;
   
-double *const _dgamma_D1D2D2 = get_v(dgConf_stem,"D1D2D2");
-double *const _dgamma_D0D0D1 = get_v(dgConf_stem,"D0D0D1");
-double *const _dgamma_D0D2D1 = get_v(dgConf_stem,"D0D2D1");
-double *const _dgamma_D0D1D0 = get_v(dgConf_stem,"D0D1D0");
-double *const _dgamma_D1D2D1 = get_v(dgConf_stem,"D1D2D1");
-double *const _dgamma_D2D2D0 = get_v(dgConf_stem,"D2D2D0");
-double *const _dgamma_D0D0D0 = get_v(dgConf_stem,"D0D0D0");
-double *const _dgamma_D0D0D2 = get_v(dgConf_stem,"D0D0D2");
-double *const _dgamma_D0D2D2 = get_v(dgConf_stem,"D0D2D2");
-double *const _dgamma_D2D2D1 = get_v(dgConf_stem,"D2D2D1");
-double *const _dgamma_D0D1D1 = get_v(dgConf_stem,"D0D1D1");
-double *const _dgamma_D0D2D0 = get_v(dgConf_stem,"D0D2D0");
-double *const _dgamma_D1D2D0 = get_v(dgConf_stem,"D1D2D0");
-double *const _dgamma_D1D1D1 = get_v(dgConf_stem,"D1D1D1");
-double *const _dgamma_D0D1D2 = get_v(dgConf_stem,"D0D1D2");
-double *const _dgamma_D1D1D0 = get_v(dgConf_stem,"D1D1D0");
-double *const _dgamma_D1D1D2 = get_v(dgConf_stem,"D1D1D2");
-double *const _dgamma_D2D2D2 = get_v(dgConf_stem,"D2D2D2");
+double *const _dgamma_D1D2D2 = get_v(stem,"D1D2D2");
+double *const _dgamma_D0D0D1 = get_v(stem,"D0D0D1");
+double *const _dgamma_D0D2D1 = get_v(stem,"D0D2D1");
+double *const _dgamma_D0D1D0 = get_v(stem,"D0D1D0");
+double *const _dgamma_D1D2D1 = get_v(stem,"D1D2D1");
+double *const _dgamma_D2D2D0 = get_v(stem,"D2D2D0");
+double *const _dgamma_D0D0D0 = get_v(stem,"D0D0D0");
+double *const _dgamma_D0D0D2 = get_v(stem,"D0D0D2");
+double *const _dgamma_D0D2D2 = get_v(stem,"D0D2D2");
+double *const _dgamma_D2D2D1 = get_v(stem,"D2D2D1");
+double *const _dgamma_D0D1D1 = get_v(stem,"D0D1D1");
+double *const _dgamma_D0D2D0 = get_v(stem,"D0D2D0");
+double *const _dgamma_D1D2D0 = get_v(stem,"D1D2D0");
+double *const _dgamma_D1D1D1 = get_v(stem,"D1D1D1");
+double *const _dgamma_D0D1D2 = get_v(stem,"D0D1D2");
+double *const _dgamma_D1D1D0 = get_v(stem,"D1D1D0");
+double *const _dgamma_D1D1D2 = get_v(stem,"D1D1D2");
+double *const _dgamma_D2D2D2 = get_v(stem,"D2D2D2");
 
   for (ijk = 0; ijk < nn; ++ijk) 
   {
@@ -494,60 +387,60 @@ void bbn_free_data_ddg_analytic(
   const unsigned nn = patch->nn;
   unsigned ijk;
 
-double *const _ddgamma_D2D2D0D2 = get_v(ddgConf_stem,"D2D2D0D2");
-double *const _ddgamma_D0D1D0D1 = get_v(ddgConf_stem,"D0D1D0D1");
-double *const _ddgamma_D1D1D0D1 = get_v(ddgConf_stem,"D1D1D0D1");
-double *const _ddgamma_D1D2D0D1 = get_v(ddgConf_stem,"D1D2D0D1");
-double *const _ddgamma_D0D0D1D0 = get_v(ddgConf_stem,"D0D0D1D0");
-double *const _ddgamma_D1D1D2D0 = get_v(ddgConf_stem,"D1D1D2D0");
-double *const _ddgamma_D0D0D0D1 = get_v(ddgConf_stem,"D0D0D0D1");
-double *const _ddgamma_D1D1D0D0 = get_v(ddgConf_stem,"D1D1D0D0");
-double *const _ddgamma_D0D0D2D2 = get_v(ddgConf_stem,"D0D0D2D2");
-double *const _ddgamma_D2D2D1D1 = get_v(ddgConf_stem,"D2D2D1D1");
-double *const _ddgamma_D2D2D2D2 = get_v(ddgConf_stem,"D2D2D2D2");
-double *const _ddgamma_D0D0D2D0 = get_v(ddgConf_stem,"D0D0D2D0");
-double *const _ddgamma_D0D2D2D1 = get_v(ddgConf_stem,"D0D2D2D1");
-double *const _ddgamma_D1D2D0D2 = get_v(ddgConf_stem,"D1D2D0D2");
-double *const _ddgamma_D1D2D1D0 = get_v(ddgConf_stem,"D1D2D1D0");
-double *const _ddgamma_D2D2D2D0 = get_v(ddgConf_stem,"D2D2D2D0");
-double *const _ddgamma_D0D0D0D0 = get_v(ddgConf_stem,"D0D0D0D0");
-double *const _ddgamma_D0D0D1D1 = get_v(ddgConf_stem,"D0D0D1D1");
-double *const _ddgamma_D0D1D0D2 = get_v(ddgConf_stem,"D0D1D0D2");
-double *const _ddgamma_D1D2D1D1 = get_v(ddgConf_stem,"D1D2D1D1");
-double *const _ddgamma_D0D2D1D1 = get_v(ddgConf_stem,"D0D2D1D1");
-double *const _ddgamma_D1D2D2D2 = get_v(ddgConf_stem,"D1D2D2D2");
-double *const _ddgamma_D2D2D1D2 = get_v(ddgConf_stem,"D2D2D1D2");
-double *const _ddgamma_D0D1D2D0 = get_v(ddgConf_stem,"D0D1D2D0");
-double *const _ddgamma_D0D2D2D0 = get_v(ddgConf_stem,"D0D2D2D0");
-double *const _ddgamma_D0D1D1D0 = get_v(ddgConf_stem,"D0D1D1D0");
-double *const _ddgamma_D1D2D2D0 = get_v(ddgConf_stem,"D1D2D2D0");
-double *const _ddgamma_D1D1D1D0 = get_v(ddgConf_stem,"D1D1D1D0");
-double *const _ddgamma_D1D2D1D2 = get_v(ddgConf_stem,"D1D2D1D2");
-double *const _ddgamma_D1D2D0D0 = get_v(ddgConf_stem,"D1D2D0D0");
-double *const _ddgamma_D0D0D0D2 = get_v(ddgConf_stem,"D0D0D0D2");
-double *const _ddgamma_D2D2D2D1 = get_v(ddgConf_stem,"D2D2D2D1");
-double *const _ddgamma_D0D2D0D0 = get_v(ddgConf_stem,"D0D2D0D0");
-double *const _ddgamma_D0D2D0D1 = get_v(ddgConf_stem,"D0D2D0D1");
-double *const _ddgamma_D1D1D1D1 = get_v(ddgConf_stem,"D1D1D1D1");
-double *const _ddgamma_D0D1D0D0 = get_v(ddgConf_stem,"D0D1D0D0");
-double *const _ddgamma_D1D1D2D2 = get_v(ddgConf_stem,"D1D1D2D2");
-double *const _ddgamma_D0D2D1D2 = get_v(ddgConf_stem,"D0D2D1D2");
-double *const _ddgamma_D0D1D2D1 = get_v(ddgConf_stem,"D0D1D2D1");
-double *const _ddgamma_D0D1D1D2 = get_v(ddgConf_stem,"D0D1D1D2");
-double *const _ddgamma_D1D1D2D1 = get_v(ddgConf_stem,"D1D1D2D1");
-double *const _ddgamma_D0D1D1D1 = get_v(ddgConf_stem,"D0D1D1D1");
-double *const _ddgamma_D0D2D1D0 = get_v(ddgConf_stem,"D0D2D1D0");
-double *const _ddgamma_D2D2D1D0 = get_v(ddgConf_stem,"D2D2D1D0");
-double *const _ddgamma_D0D1D2D2 = get_v(ddgConf_stem,"D0D1D2D2");
-double *const _ddgamma_D2D2D0D0 = get_v(ddgConf_stem,"D2D2D0D0");
-double *const _ddgamma_D0D0D2D1 = get_v(ddgConf_stem,"D0D0D2D1");
-double *const _ddgamma_D0D2D2D2 = get_v(ddgConf_stem,"D0D2D2D2");
-double *const _ddgamma_D1D1D1D2 = get_v(ddgConf_stem,"D1D1D1D2");
-double *const _ddgamma_D1D2D2D1 = get_v(ddgConf_stem,"D1D2D2D1");
-double *const _ddgamma_D0D0D1D2 = get_v(ddgConf_stem,"D0D0D1D2");
-double *const _ddgamma_D0D2D0D2 = get_v(ddgConf_stem,"D0D2D0D2");
-double *const _ddgamma_D1D1D0D2 = get_v(ddgConf_stem,"D1D1D0D2");
-double *const _ddgamma_D2D2D0D1 = get_v(ddgConf_stem,"D2D2D0D1");
+double *const _ddgamma_D2D2D0D2 = get_v(stem,"D2D2D0D2");
+double *const _ddgamma_D0D1D0D1 = get_v(stem,"D0D1D0D1");
+double *const _ddgamma_D1D1D0D1 = get_v(stem,"D1D1D0D1");
+double *const _ddgamma_D1D2D0D1 = get_v(stem,"D1D2D0D1");
+double *const _ddgamma_D0D0D1D0 = get_v(stem,"D0D0D1D0");
+double *const _ddgamma_D1D1D2D0 = get_v(stem,"D1D1D2D0");
+double *const _ddgamma_D0D0D0D1 = get_v(stem,"D0D0D0D1");
+double *const _ddgamma_D1D1D0D0 = get_v(stem,"D1D1D0D0");
+double *const _ddgamma_D0D0D2D2 = get_v(stem,"D0D0D2D2");
+double *const _ddgamma_D2D2D1D1 = get_v(stem,"D2D2D1D1");
+double *const _ddgamma_D2D2D2D2 = get_v(stem,"D2D2D2D2");
+double *const _ddgamma_D0D0D2D0 = get_v(stem,"D0D0D2D0");
+double *const _ddgamma_D0D2D2D1 = get_v(stem,"D0D2D2D1");
+double *const _ddgamma_D1D2D0D2 = get_v(stem,"D1D2D0D2");
+double *const _ddgamma_D1D2D1D0 = get_v(stem,"D1D2D1D0");
+double *const _ddgamma_D2D2D2D0 = get_v(stem,"D2D2D2D0");
+double *const _ddgamma_D0D0D0D0 = get_v(stem,"D0D0D0D0");
+double *const _ddgamma_D0D0D1D1 = get_v(stem,"D0D0D1D1");
+double *const _ddgamma_D0D1D0D2 = get_v(stem,"D0D1D0D2");
+double *const _ddgamma_D1D2D1D1 = get_v(stem,"D1D2D1D1");
+double *const _ddgamma_D0D2D1D1 = get_v(stem,"D0D2D1D1");
+double *const _ddgamma_D1D2D2D2 = get_v(stem,"D1D2D2D2");
+double *const _ddgamma_D2D2D1D2 = get_v(stem,"D2D2D1D2");
+double *const _ddgamma_D0D1D2D0 = get_v(stem,"D0D1D2D0");
+double *const _ddgamma_D0D2D2D0 = get_v(stem,"D0D2D2D0");
+double *const _ddgamma_D0D1D1D0 = get_v(stem,"D0D1D1D0");
+double *const _ddgamma_D1D2D2D0 = get_v(stem,"D1D2D2D0");
+double *const _ddgamma_D1D1D1D0 = get_v(stem,"D1D1D1D0");
+double *const _ddgamma_D1D2D1D2 = get_v(stem,"D1D2D1D2");
+double *const _ddgamma_D1D2D0D0 = get_v(stem,"D1D2D0D0");
+double *const _ddgamma_D0D0D0D2 = get_v(stem,"D0D0D0D2");
+double *const _ddgamma_D2D2D2D1 = get_v(stem,"D2D2D2D1");
+double *const _ddgamma_D0D2D0D0 = get_v(stem,"D0D2D0D0");
+double *const _ddgamma_D0D2D0D1 = get_v(stem,"D0D2D0D1");
+double *const _ddgamma_D1D1D1D1 = get_v(stem,"D1D1D1D1");
+double *const _ddgamma_D0D1D0D0 = get_v(stem,"D0D1D0D0");
+double *const _ddgamma_D1D1D2D2 = get_v(stem,"D1D1D2D2");
+double *const _ddgamma_D0D2D1D2 = get_v(stem,"D0D2D1D2");
+double *const _ddgamma_D0D1D2D1 = get_v(stem,"D0D1D2D1");
+double *const _ddgamma_D0D1D1D2 = get_v(stem,"D0D1D1D2");
+double *const _ddgamma_D1D1D2D1 = get_v(stem,"D1D1D2D1");
+double *const _ddgamma_D0D1D1D1 = get_v(stem,"D0D1D1D1");
+double *const _ddgamma_D0D2D1D0 = get_v(stem,"D0D2D1D0");
+double *const _ddgamma_D2D2D1D0 = get_v(stem,"D2D2D1D0");
+double *const _ddgamma_D0D1D2D2 = get_v(stem,"D0D1D2D2");
+double *const _ddgamma_D2D2D0D0 = get_v(stem,"D2D2D0D0");
+double *const _ddgamma_D0D0D2D1 = get_v(stem,"D0D0D2D1");
+double *const _ddgamma_D0D2D2D2 = get_v(stem,"D0D2D2D2");
+double *const _ddgamma_D1D1D1D2 = get_v(stem,"D1D1D1D2");
+double *const _ddgamma_D1D2D2D1 = get_v(stem,"D1D2D2D1");
+double *const _ddgamma_D0D0D1D2 = get_v(stem,"D0D0D1D2");
+double *const _ddgamma_D0D2D0D2 = get_v(stem,"D0D2D0D2");
+double *const _ddgamma_D1D1D0D2 = get_v(stem,"D1D1D0D2");
+double *const _ddgamma_D2D2D0D1 = get_v(stem,"D2D2D0D1");
 
   for (ijk = 0; ijk < nn; ++ijk) 
   {
@@ -1625,168 +1518,168 @@ void bbn_free_data_dddg_analytic(
   const unsigned nn = patch->nn;
   unsigned ijk;
 
-double *const _dddgamma_D0D1D2D2D1 = get_v(dddgConf_stem,"D0D1D2D2D1");
-double *const _dddgamma_D0D1D2D0D1 = get_v(dddgConf_stem,"D0D1D2D0D1");
-double *const _dddgamma_D1D2D0D2D0 = get_v(dddgConf_stem,"D1D2D0D2D0");
-double *const _dddgamma_D1D1D1D2D1 = get_v(dddgConf_stem,"D1D1D1D2D1");
-double *const _dddgamma_D0D2D0D0D1 = get_v(dddgConf_stem,"D0D2D0D0D1");
-double *const _dddgamma_D0D2D0D2D2 = get_v(dddgConf_stem,"D0D2D0D2D2");
-double *const _dddgamma_D2D2D2D1D2 = get_v(dddgConf_stem,"D2D2D2D1D2");
-double *const _dddgamma_D0D1D0D2D0 = get_v(dddgConf_stem,"D0D1D0D2D0");
-double *const _dddgamma_D1D1D2D2D0 = get_v(dddgConf_stem,"D1D1D2D2D0");
-double *const _dddgamma_D0D2D0D2D1 = get_v(dddgConf_stem,"D0D2D0D2D1");
-double *const _dddgamma_D1D1D2D1D0 = get_v(dddgConf_stem,"D1D1D2D1D0");
-double *const _dddgamma_D1D1D0D1D2 = get_v(dddgConf_stem,"D1D1D0D1D2");
-double *const _dddgamma_D0D2D1D1D0 = get_v(dddgConf_stem,"D0D2D1D1D0");
-double *const _dddgamma_D1D1D1D0D1 = get_v(dddgConf_stem,"D1D1D1D0D1");
-double *const _dddgamma_D0D0D2D1D1 = get_v(dddgConf_stem,"D0D0D2D1D1");
-double *const _dddgamma_D0D1D2D1D2 = get_v(dddgConf_stem,"D0D1D2D1D2");
-double *const _dddgamma_D0D0D0D1D1 = get_v(dddgConf_stem,"D0D0D0D1D1");
-double *const _dddgamma_D2D2D1D2D1 = get_v(dddgConf_stem,"D2D2D1D2D1");
-double *const _dddgamma_D1D1D1D2D2 = get_v(dddgConf_stem,"D1D1D1D2D2");
-double *const _dddgamma_D2D2D2D2D1 = get_v(dddgConf_stem,"D2D2D2D2D1");
-double *const _dddgamma_D2D2D1D0D0 = get_v(dddgConf_stem,"D2D2D1D0D0");
-double *const _dddgamma_D0D1D2D1D1 = get_v(dddgConf_stem,"D0D1D2D1D1");
-double *const _dddgamma_D1D1D2D2D2 = get_v(dddgConf_stem,"D1D1D2D2D2");
-double *const _dddgamma_D1D2D1D0D1 = get_v(dddgConf_stem,"D1D2D1D0D1");
-double *const _dddgamma_D0D1D1D1D0 = get_v(dddgConf_stem,"D0D1D1D1D0");
-double *const _dddgamma_D2D2D2D0D1 = get_v(dddgConf_stem,"D2D2D2D0D1");
-double *const _dddgamma_D1D2D2D2D2 = get_v(dddgConf_stem,"D1D2D2D2D2");
-double *const _dddgamma_D1D2D1D2D1 = get_v(dddgConf_stem,"D1D2D1D2D1");
-double *const _dddgamma_D2D2D0D2D1 = get_v(dddgConf_stem,"D2D2D0D2D1");
-double *const _dddgamma_D1D1D2D1D2 = get_v(dddgConf_stem,"D1D1D2D1D2");
-double *const _dddgamma_D1D2D2D1D0 = get_v(dddgConf_stem,"D1D2D2D1D0");
-double *const _dddgamma_D1D2D0D0D1 = get_v(dddgConf_stem,"D1D2D0D0D1");
-double *const _dddgamma_D0D2D0D1D1 = get_v(dddgConf_stem,"D0D2D0D1D1");
-double *const _dddgamma_D0D2D1D0D1 = get_v(dddgConf_stem,"D0D2D1D0D1");
-double *const _dddgamma_D0D0D0D1D2 = get_v(dddgConf_stem,"D0D0D0D1D2");
-double *const _dddgamma_D0D0D2D1D2 = get_v(dddgConf_stem,"D0D0D2D1D2");
-double *const _dddgamma_D0D1D0D1D0 = get_v(dddgConf_stem,"D0D1D0D1D0");
-double *const _dddgamma_D1D2D1D0D0 = get_v(dddgConf_stem,"D1D2D1D0D0");
-double *const _dddgamma_D0D2D1D0D0 = get_v(dddgConf_stem,"D0D2D1D0D0");
-double *const _dddgamma_D1D2D0D1D1 = get_v(dddgConf_stem,"D1D2D0D1D1");
-double *const _dddgamma_D0D1D2D0D2 = get_v(dddgConf_stem,"D0D1D2D0D2");
-double *const _dddgamma_D1D1D2D0D0 = get_v(dddgConf_stem,"D1D1D2D0D0");
-double *const _dddgamma_D0D1D2D2D2 = get_v(dddgConf_stem,"D0D1D2D2D2");
-double *const _dddgamma_D0D0D2D0D2 = get_v(dddgConf_stem,"D0D0D2D0D2");
-double *const _dddgamma_D0D0D0D0D2 = get_v(dddgConf_stem,"D0D0D0D0D2");
-double *const _dddgamma_D1D1D0D1D1 = get_v(dddgConf_stem,"D1D1D0D1D1");
-double *const _dddgamma_D2D2D0D0D1 = get_v(dddgConf_stem,"D2D2D0D0D1");
-double *const _dddgamma_D0D0D1D2D2 = get_v(dddgConf_stem,"D0D0D1D2D2");
-double *const _dddgamma_D1D1D0D2D0 = get_v(dddgConf_stem,"D1D1D0D2D0");
-double *const _dddgamma_D0D1D1D2D0 = get_v(dddgConf_stem,"D0D1D1D2D0");
-double *const _dddgamma_D1D1D0D0D1 = get_v(dddgConf_stem,"D1D1D0D0D1");
-double *const _dddgamma_D1D1D0D0D2 = get_v(dddgConf_stem,"D1D1D0D0D2");
-double *const _dddgamma_D1D2D0D1D2 = get_v(dddgConf_stem,"D1D2D0D1D2");
-double *const _dddgamma_D0D0D1D0D2 = get_v(dddgConf_stem,"D0D0D1D0D2");
-double *const _dddgamma_D0D0D0D2D0 = get_v(dddgConf_stem,"D0D0D0D2D0");
-double *const _dddgamma_D2D2D2D1D1 = get_v(dddgConf_stem,"D2D2D2D1D1");
-double *const _dddgamma_D0D2D0D0D2 = get_v(dddgConf_stem,"D0D2D0D0D2");
-double *const _dddgamma_D2D2D2D2D0 = get_v(dddgConf_stem,"D2D2D2D2D0");
-double *const _dddgamma_D0D2D0D0D0 = get_v(dddgConf_stem,"D0D2D0D0D0");
-double *const _dddgamma_D2D2D1D2D0 = get_v(dddgConf_stem,"D2D2D1D2D0");
-double *const _dddgamma_D1D1D0D1D0 = get_v(dddgConf_stem,"D1D1D0D1D0");
-double *const _dddgamma_D1D2D2D0D2 = get_v(dddgConf_stem,"D1D2D2D0D2");
-double *const _dddgamma_D0D1D0D1D1 = get_v(dddgConf_stem,"D0D1D0D1D1");
-double *const _dddgamma_D2D2D0D2D2 = get_v(dddgConf_stem,"D2D2D0D2D2");
-double *const _dddgamma_D1D2D2D1D2 = get_v(dddgConf_stem,"D1D2D2D1D2");
-double *const _dddgamma_D2D2D1D1D1 = get_v(dddgConf_stem,"D2D2D1D1D1");
-double *const _dddgamma_D0D0D0D0D0 = get_v(dddgConf_stem,"D0D0D0D0D0");
-double *const _dddgamma_D0D0D1D2D1 = get_v(dddgConf_stem,"D0D0D1D2D1");
-double *const _dddgamma_D1D1D1D1D0 = get_v(dddgConf_stem,"D1D1D1D1D0");
-double *const _dddgamma_D1D1D1D1D1 = get_v(dddgConf_stem,"D1D1D1D1D1");
-double *const _dddgamma_D1D1D1D2D0 = get_v(dddgConf_stem,"D1D1D1D2D0");
-double *const _dddgamma_D0D1D0D2D1 = get_v(dddgConf_stem,"D0D1D0D2D1");
-double *const _dddgamma_D2D2D1D1D0 = get_v(dddgConf_stem,"D2D2D1D1D0");
-double *const _dddgamma_D1D2D2D2D0 = get_v(dddgConf_stem,"D1D2D2D2D0");
-double *const _dddgamma_D0D0D1D1D2 = get_v(dddgConf_stem,"D0D0D1D1D2");
-double *const _dddgamma_D0D2D0D2D0 = get_v(dddgConf_stem,"D0D2D0D2D0");
-double *const _dddgamma_D0D0D1D0D0 = get_v(dddgConf_stem,"D0D0D1D0D0");
-double *const _dddgamma_D0D2D2D1D0 = get_v(dddgConf_stem,"D0D2D2D1D0");
-double *const _dddgamma_D0D2D2D0D0 = get_v(dddgConf_stem,"D0D2D2D0D0");
-double *const _dddgamma_D1D1D1D1D2 = get_v(dddgConf_stem,"D1D1D1D1D2");
-double *const _dddgamma_D0D0D2D2D1 = get_v(dddgConf_stem,"D0D0D2D2D1");
-double *const _dddgamma_D2D2D0D1D0 = get_v(dddgConf_stem,"D2D2D0D1D0");
-double *const _dddgamma_D1D1D2D0D2 = get_v(dddgConf_stem,"D1D1D2D0D2");
-double *const _dddgamma_D0D1D1D1D1 = get_v(dddgConf_stem,"D0D1D1D1D1");
-double *const _dddgamma_D1D2D0D0D0 = get_v(dddgConf_stem,"D1D2D0D0D0");
-double *const _dddgamma_D1D2D0D0D2 = get_v(dddgConf_stem,"D1D2D0D0D2");
-double *const _dddgamma_D2D2D0D1D2 = get_v(dddgConf_stem,"D2D2D0D1D2");
-double *const _dddgamma_D0D0D1D1D1 = get_v(dddgConf_stem,"D0D0D1D1D1");
-double *const _dddgamma_D0D2D0D1D0 = get_v(dddgConf_stem,"D0D2D0D1D0");
-double *const _dddgamma_D0D2D1D2D1 = get_v(dddgConf_stem,"D0D2D1D2D1");
-double *const _dddgamma_D1D2D1D2D2 = get_v(dddgConf_stem,"D1D2D1D2D2");
-double *const _dddgamma_D0D1D1D0D0 = get_v(dddgConf_stem,"D0D1D1D0D0");
-double *const _dddgamma_D0D0D1D2D0 = get_v(dddgConf_stem,"D0D0D1D2D0");
-double *const _dddgamma_D1D2D1D1D0 = get_v(dddgConf_stem,"D1D2D1D1D0");
-double *const _dddgamma_D1D2D2D2D1 = get_v(dddgConf_stem,"D1D2D2D2D1");
-double *const _dddgamma_D0D1D0D0D0 = get_v(dddgConf_stem,"D0D1D0D0D0");
-double *const _dddgamma_D1D2D2D1D1 = get_v(dddgConf_stem,"D1D2D2D1D1");
-double *const _dddgamma_D0D0D0D1D0 = get_v(dddgConf_stem,"D0D0D0D1D0");
-double *const _dddgamma_D0D0D0D0D1 = get_v(dddgConf_stem,"D0D0D0D0D1");
-double *const _dddgamma_D0D0D0D2D2 = get_v(dddgConf_stem,"D0D0D0D2D2");
-double *const _dddgamma_D1D2D0D2D1 = get_v(dddgConf_stem,"D1D2D0D2D1");
-double *const _dddgamma_D2D2D1D1D2 = get_v(dddgConf_stem,"D2D2D1D1D2");
-double *const _dddgamma_D1D2D1D1D1 = get_v(dddgConf_stem,"D1D2D1D1D1");
-double *const _dddgamma_D0D0D1D0D1 = get_v(dddgConf_stem,"D0D0D1D0D1");
-double *const _dddgamma_D0D1D0D1D2 = get_v(dddgConf_stem,"D0D1D0D1D2");
-double *const _dddgamma_D0D2D1D2D2 = get_v(dddgConf_stem,"D0D2D1D2D2");
-double *const _dddgamma_D1D1D0D2D2 = get_v(dddgConf_stem,"D1D1D0D2D2");
-double *const _dddgamma_D0D1D0D0D2 = get_v(dddgConf_stem,"D0D1D0D0D2");
-double *const _dddgamma_D0D1D0D2D2 = get_v(dddgConf_stem,"D0D1D0D2D2");
-double *const _dddgamma_D0D2D1D2D0 = get_v(dddgConf_stem,"D0D2D1D2D0");
-double *const _dddgamma_D0D1D0D0D1 = get_v(dddgConf_stem,"D0D1D0D0D1");
-double *const _dddgamma_D1D2D1D1D2 = get_v(dddgConf_stem,"D1D2D1D1D2");
-double *const _dddgamma_D2D2D0D1D1 = get_v(dddgConf_stem,"D2D2D0D1D1");
-double *const _dddgamma_D1D1D2D2D1 = get_v(dddgConf_stem,"D1D1D2D2D1");
-double *const _dddgamma_D0D1D2D1D0 = get_v(dddgConf_stem,"D0D1D2D1D0");
-double *const _dddgamma_D0D2D1D0D2 = get_v(dddgConf_stem,"D0D2D1D0D2");
-double *const _dddgamma_D2D2D2D1D0 = get_v(dddgConf_stem,"D2D2D2D1D0");
-double *const _dddgamma_D0D1D1D1D2 = get_v(dddgConf_stem,"D0D1D1D1D2");
-double *const _dddgamma_D1D2D1D0D2 = get_v(dddgConf_stem,"D1D2D1D0D2");
-double *const _dddgamma_D0D0D2D2D0 = get_v(dddgConf_stem,"D0D0D2D2D0");
-double *const _dddgamma_D0D1D1D0D1 = get_v(dddgConf_stem,"D0D1D1D0D1");
-double *const _dddgamma_D0D1D2D2D0 = get_v(dddgConf_stem,"D0D1D2D2D0");
-double *const _dddgamma_D0D2D0D1D2 = get_v(dddgConf_stem,"D0D2D0D1D2");
-double *const _dddgamma_D0D2D2D2D1 = get_v(dddgConf_stem,"D0D2D2D2D1");
-double *const _dddgamma_D1D1D0D2D1 = get_v(dddgConf_stem,"D1D1D0D2D1");
-double *const _dddgamma_D0D0D2D1D0 = get_v(dddgConf_stem,"D0D0D2D1D0");
-double *const _dddgamma_D1D2D0D1D0 = get_v(dddgConf_stem,"D1D2D0D1D0");
-double *const _dddgamma_D0D2D2D1D2 = get_v(dddgConf_stem,"D0D2D2D1D2");
-double *const _dddgamma_D0D1D1D2D1 = get_v(dddgConf_stem,"D0D1D1D2D1");
-double *const _dddgamma_D1D2D2D0D0 = get_v(dddgConf_stem,"D1D2D2D0D0");
-double *const _dddgamma_D0D1D2D0D0 = get_v(dddgConf_stem,"D0D1D2D0D0");
-double *const _dddgamma_D1D2D1D2D0 = get_v(dddgConf_stem,"D1D2D1D2D0");
-double *const _dddgamma_D2D2D1D0D1 = get_v(dddgConf_stem,"D2D2D1D0D1");
-double *const _dddgamma_D2D2D1D2D2 = get_v(dddgConf_stem,"D2D2D1D2D2");
-double *const _dddgamma_D1D1D1D0D0 = get_v(dddgConf_stem,"D1D1D1D0D0");
-double *const _dddgamma_D0D1D1D0D2 = get_v(dddgConf_stem,"D0D1D1D0D2");
-double *const _dddgamma_D0D2D2D2D0 = get_v(dddgConf_stem,"D0D2D2D2D0");
-double *const _dddgamma_D2D2D2D2D2 = get_v(dddgConf_stem,"D2D2D2D2D2");
-double *const _dddgamma_D0D2D2D0D1 = get_v(dddgConf_stem,"D0D2D2D0D1");
-double *const _dddgamma_D0D2D1D1D2 = get_v(dddgConf_stem,"D0D2D1D1D2");
-double *const _dddgamma_D2D2D0D0D2 = get_v(dddgConf_stem,"D2D2D0D0D2");
-double *const _dddgamma_D2D2D2D0D0 = get_v(dddgConf_stem,"D2D2D2D0D0");
-double *const _dddgamma_D2D2D0D2D0 = get_v(dddgConf_stem,"D2D2D0D2D0");
-double *const _dddgamma_D1D1D2D0D1 = get_v(dddgConf_stem,"D1D1D2D0D1");
-double *const _dddgamma_D2D2D0D0D0 = get_v(dddgConf_stem,"D2D2D0D0D0");
-double *const _dddgamma_D2D2D2D0D2 = get_v(dddgConf_stem,"D2D2D2D0D2");
-double *const _dddgamma_D0D2D2D0D2 = get_v(dddgConf_stem,"D0D2D2D0D2");
-double *const _dddgamma_D0D2D2D2D2 = get_v(dddgConf_stem,"D0D2D2D2D2");
-double *const _dddgamma_D1D1D0D0D0 = get_v(dddgConf_stem,"D1D1D0D0D0");
-double *const _dddgamma_D1D2D2D0D1 = get_v(dddgConf_stem,"D1D2D2D0D1");
-double *const _dddgamma_D0D0D1D1D0 = get_v(dddgConf_stem,"D0D0D1D1D0");
-double *const _dddgamma_D1D1D1D0D2 = get_v(dddgConf_stem,"D1D1D1D0D2");
-double *const _dddgamma_D2D2D1D0D2 = get_v(dddgConf_stem,"D2D2D1D0D2");
-double *const _dddgamma_D0D2D1D1D1 = get_v(dddgConf_stem,"D0D2D1D1D1");
-double *const _dddgamma_D0D0D2D0D0 = get_v(dddgConf_stem,"D0D0D2D0D0");
-double *const _dddgamma_D0D1D1D2D2 = get_v(dddgConf_stem,"D0D1D1D2D2");
-double *const _dddgamma_D0D0D2D0D1 = get_v(dddgConf_stem,"D0D0D2D0D1");
-double *const _dddgamma_D0D0D0D2D1 = get_v(dddgConf_stem,"D0D0D0D2D1");
-double *const _dddgamma_D0D2D2D1D1 = get_v(dddgConf_stem,"D0D2D2D1D1");
-double *const _dddgamma_D0D0D2D2D2 = get_v(dddgConf_stem,"D0D0D2D2D2");
-double *const _dddgamma_D1D1D2D1D1 = get_v(dddgConf_stem,"D1D1D2D1D1");
-double *const _dddgamma_D1D2D0D2D2 = get_v(dddgConf_stem,"D1D2D0D2D2");
+double *const _dddgamma_D0D1D2D2D1 = get_v(stem,"D0D1D2D2D1");
+double *const _dddgamma_D0D1D2D0D1 = get_v(stem,"D0D1D2D0D1");
+double *const _dddgamma_D1D2D0D2D0 = get_v(stem,"D1D2D0D2D0");
+double *const _dddgamma_D1D1D1D2D1 = get_v(stem,"D1D1D1D2D1");
+double *const _dddgamma_D0D2D0D0D1 = get_v(stem,"D0D2D0D0D1");
+double *const _dddgamma_D0D2D0D2D2 = get_v(stem,"D0D2D0D2D2");
+double *const _dddgamma_D2D2D2D1D2 = get_v(stem,"D2D2D2D1D2");
+double *const _dddgamma_D0D1D0D2D0 = get_v(stem,"D0D1D0D2D0");
+double *const _dddgamma_D1D1D2D2D0 = get_v(stem,"D1D1D2D2D0");
+double *const _dddgamma_D0D2D0D2D1 = get_v(stem,"D0D2D0D2D1");
+double *const _dddgamma_D1D1D2D1D0 = get_v(stem,"D1D1D2D1D0");
+double *const _dddgamma_D1D1D0D1D2 = get_v(stem,"D1D1D0D1D2");
+double *const _dddgamma_D0D2D1D1D0 = get_v(stem,"D0D2D1D1D0");
+double *const _dddgamma_D1D1D1D0D1 = get_v(stem,"D1D1D1D0D1");
+double *const _dddgamma_D0D0D2D1D1 = get_v(stem,"D0D0D2D1D1");
+double *const _dddgamma_D0D1D2D1D2 = get_v(stem,"D0D1D2D1D2");
+double *const _dddgamma_D0D0D0D1D1 = get_v(stem,"D0D0D0D1D1");
+double *const _dddgamma_D2D2D1D2D1 = get_v(stem,"D2D2D1D2D1");
+double *const _dddgamma_D1D1D1D2D2 = get_v(stem,"D1D1D1D2D2");
+double *const _dddgamma_D2D2D2D2D1 = get_v(stem,"D2D2D2D2D1");
+double *const _dddgamma_D2D2D1D0D0 = get_v(stem,"D2D2D1D0D0");
+double *const _dddgamma_D0D1D2D1D1 = get_v(stem,"D0D1D2D1D1");
+double *const _dddgamma_D1D1D2D2D2 = get_v(stem,"D1D1D2D2D2");
+double *const _dddgamma_D1D2D1D0D1 = get_v(stem,"D1D2D1D0D1");
+double *const _dddgamma_D0D1D1D1D0 = get_v(stem,"D0D1D1D1D0");
+double *const _dddgamma_D2D2D2D0D1 = get_v(stem,"D2D2D2D0D1");
+double *const _dddgamma_D1D2D2D2D2 = get_v(stem,"D1D2D2D2D2");
+double *const _dddgamma_D1D2D1D2D1 = get_v(stem,"D1D2D1D2D1");
+double *const _dddgamma_D2D2D0D2D1 = get_v(stem,"D2D2D0D2D1");
+double *const _dddgamma_D1D1D2D1D2 = get_v(stem,"D1D1D2D1D2");
+double *const _dddgamma_D1D2D2D1D0 = get_v(stem,"D1D2D2D1D0");
+double *const _dddgamma_D1D2D0D0D1 = get_v(stem,"D1D2D0D0D1");
+double *const _dddgamma_D0D2D0D1D1 = get_v(stem,"D0D2D0D1D1");
+double *const _dddgamma_D0D2D1D0D1 = get_v(stem,"D0D2D1D0D1");
+double *const _dddgamma_D0D0D0D1D2 = get_v(stem,"D0D0D0D1D2");
+double *const _dddgamma_D0D0D2D1D2 = get_v(stem,"D0D0D2D1D2");
+double *const _dddgamma_D0D1D0D1D0 = get_v(stem,"D0D1D0D1D0");
+double *const _dddgamma_D1D2D1D0D0 = get_v(stem,"D1D2D1D0D0");
+double *const _dddgamma_D0D2D1D0D0 = get_v(stem,"D0D2D1D0D0");
+double *const _dddgamma_D1D2D0D1D1 = get_v(stem,"D1D2D0D1D1");
+double *const _dddgamma_D0D1D2D0D2 = get_v(stem,"D0D1D2D0D2");
+double *const _dddgamma_D1D1D2D0D0 = get_v(stem,"D1D1D2D0D0");
+double *const _dddgamma_D0D1D2D2D2 = get_v(stem,"D0D1D2D2D2");
+double *const _dddgamma_D0D0D2D0D2 = get_v(stem,"D0D0D2D0D2");
+double *const _dddgamma_D0D0D0D0D2 = get_v(stem,"D0D0D0D0D2");
+double *const _dddgamma_D1D1D0D1D1 = get_v(stem,"D1D1D0D1D1");
+double *const _dddgamma_D2D2D0D0D1 = get_v(stem,"D2D2D0D0D1");
+double *const _dddgamma_D0D0D1D2D2 = get_v(stem,"D0D0D1D2D2");
+double *const _dddgamma_D1D1D0D2D0 = get_v(stem,"D1D1D0D2D0");
+double *const _dddgamma_D0D1D1D2D0 = get_v(stem,"D0D1D1D2D0");
+double *const _dddgamma_D1D1D0D0D1 = get_v(stem,"D1D1D0D0D1");
+double *const _dddgamma_D1D1D0D0D2 = get_v(stem,"D1D1D0D0D2");
+double *const _dddgamma_D1D2D0D1D2 = get_v(stem,"D1D2D0D1D2");
+double *const _dddgamma_D0D0D1D0D2 = get_v(stem,"D0D0D1D0D2");
+double *const _dddgamma_D0D0D0D2D0 = get_v(stem,"D0D0D0D2D0");
+double *const _dddgamma_D2D2D2D1D1 = get_v(stem,"D2D2D2D1D1");
+double *const _dddgamma_D0D2D0D0D2 = get_v(stem,"D0D2D0D0D2");
+double *const _dddgamma_D2D2D2D2D0 = get_v(stem,"D2D2D2D2D0");
+double *const _dddgamma_D0D2D0D0D0 = get_v(stem,"D0D2D0D0D0");
+double *const _dddgamma_D2D2D1D2D0 = get_v(stem,"D2D2D1D2D0");
+double *const _dddgamma_D1D1D0D1D0 = get_v(stem,"D1D1D0D1D0");
+double *const _dddgamma_D1D2D2D0D2 = get_v(stem,"D1D2D2D0D2");
+double *const _dddgamma_D0D1D0D1D1 = get_v(stem,"D0D1D0D1D1");
+double *const _dddgamma_D2D2D0D2D2 = get_v(stem,"D2D2D0D2D2");
+double *const _dddgamma_D1D2D2D1D2 = get_v(stem,"D1D2D2D1D2");
+double *const _dddgamma_D2D2D1D1D1 = get_v(stem,"D2D2D1D1D1");
+double *const _dddgamma_D0D0D0D0D0 = get_v(stem,"D0D0D0D0D0");
+double *const _dddgamma_D0D0D1D2D1 = get_v(stem,"D0D0D1D2D1");
+double *const _dddgamma_D1D1D1D1D0 = get_v(stem,"D1D1D1D1D0");
+double *const _dddgamma_D1D1D1D1D1 = get_v(stem,"D1D1D1D1D1");
+double *const _dddgamma_D1D1D1D2D0 = get_v(stem,"D1D1D1D2D0");
+double *const _dddgamma_D0D1D0D2D1 = get_v(stem,"D0D1D0D2D1");
+double *const _dddgamma_D2D2D1D1D0 = get_v(stem,"D2D2D1D1D0");
+double *const _dddgamma_D1D2D2D2D0 = get_v(stem,"D1D2D2D2D0");
+double *const _dddgamma_D0D0D1D1D2 = get_v(stem,"D0D0D1D1D2");
+double *const _dddgamma_D0D2D0D2D0 = get_v(stem,"D0D2D0D2D0");
+double *const _dddgamma_D0D0D1D0D0 = get_v(stem,"D0D0D1D0D0");
+double *const _dddgamma_D0D2D2D1D0 = get_v(stem,"D0D2D2D1D0");
+double *const _dddgamma_D0D2D2D0D0 = get_v(stem,"D0D2D2D0D0");
+double *const _dddgamma_D1D1D1D1D2 = get_v(stem,"D1D1D1D1D2");
+double *const _dddgamma_D0D0D2D2D1 = get_v(stem,"D0D0D2D2D1");
+double *const _dddgamma_D2D2D0D1D0 = get_v(stem,"D2D2D0D1D0");
+double *const _dddgamma_D1D1D2D0D2 = get_v(stem,"D1D1D2D0D2");
+double *const _dddgamma_D0D1D1D1D1 = get_v(stem,"D0D1D1D1D1");
+double *const _dddgamma_D1D2D0D0D0 = get_v(stem,"D1D2D0D0D0");
+double *const _dddgamma_D1D2D0D0D2 = get_v(stem,"D1D2D0D0D2");
+double *const _dddgamma_D2D2D0D1D2 = get_v(stem,"D2D2D0D1D2");
+double *const _dddgamma_D0D0D1D1D1 = get_v(stem,"D0D0D1D1D1");
+double *const _dddgamma_D0D2D0D1D0 = get_v(stem,"D0D2D0D1D0");
+double *const _dddgamma_D0D2D1D2D1 = get_v(stem,"D0D2D1D2D1");
+double *const _dddgamma_D1D2D1D2D2 = get_v(stem,"D1D2D1D2D2");
+double *const _dddgamma_D0D1D1D0D0 = get_v(stem,"D0D1D1D0D0");
+double *const _dddgamma_D0D0D1D2D0 = get_v(stem,"D0D0D1D2D0");
+double *const _dddgamma_D1D2D1D1D0 = get_v(stem,"D1D2D1D1D0");
+double *const _dddgamma_D1D2D2D2D1 = get_v(stem,"D1D2D2D2D1");
+double *const _dddgamma_D0D1D0D0D0 = get_v(stem,"D0D1D0D0D0");
+double *const _dddgamma_D1D2D2D1D1 = get_v(stem,"D1D2D2D1D1");
+double *const _dddgamma_D0D0D0D1D0 = get_v(stem,"D0D0D0D1D0");
+double *const _dddgamma_D0D0D0D0D1 = get_v(stem,"D0D0D0D0D1");
+double *const _dddgamma_D0D0D0D2D2 = get_v(stem,"D0D0D0D2D2");
+double *const _dddgamma_D1D2D0D2D1 = get_v(stem,"D1D2D0D2D1");
+double *const _dddgamma_D2D2D1D1D2 = get_v(stem,"D2D2D1D1D2");
+double *const _dddgamma_D1D2D1D1D1 = get_v(stem,"D1D2D1D1D1");
+double *const _dddgamma_D0D0D1D0D1 = get_v(stem,"D0D0D1D0D1");
+double *const _dddgamma_D0D1D0D1D2 = get_v(stem,"D0D1D0D1D2");
+double *const _dddgamma_D0D2D1D2D2 = get_v(stem,"D0D2D1D2D2");
+double *const _dddgamma_D1D1D0D2D2 = get_v(stem,"D1D1D0D2D2");
+double *const _dddgamma_D0D1D0D0D2 = get_v(stem,"D0D1D0D0D2");
+double *const _dddgamma_D0D1D0D2D2 = get_v(stem,"D0D1D0D2D2");
+double *const _dddgamma_D0D2D1D2D0 = get_v(stem,"D0D2D1D2D0");
+double *const _dddgamma_D0D1D0D0D1 = get_v(stem,"D0D1D0D0D1");
+double *const _dddgamma_D1D2D1D1D2 = get_v(stem,"D1D2D1D1D2");
+double *const _dddgamma_D2D2D0D1D1 = get_v(stem,"D2D2D0D1D1");
+double *const _dddgamma_D1D1D2D2D1 = get_v(stem,"D1D1D2D2D1");
+double *const _dddgamma_D0D1D2D1D0 = get_v(stem,"D0D1D2D1D0");
+double *const _dddgamma_D0D2D1D0D2 = get_v(stem,"D0D2D1D0D2");
+double *const _dddgamma_D2D2D2D1D0 = get_v(stem,"D2D2D2D1D0");
+double *const _dddgamma_D0D1D1D1D2 = get_v(stem,"D0D1D1D1D2");
+double *const _dddgamma_D1D2D1D0D2 = get_v(stem,"D1D2D1D0D2");
+double *const _dddgamma_D0D0D2D2D0 = get_v(stem,"D0D0D2D2D0");
+double *const _dddgamma_D0D1D1D0D1 = get_v(stem,"D0D1D1D0D1");
+double *const _dddgamma_D0D1D2D2D0 = get_v(stem,"D0D1D2D2D0");
+double *const _dddgamma_D0D2D0D1D2 = get_v(stem,"D0D2D0D1D2");
+double *const _dddgamma_D0D2D2D2D1 = get_v(stem,"D0D2D2D2D1");
+double *const _dddgamma_D1D1D0D2D1 = get_v(stem,"D1D1D0D2D1");
+double *const _dddgamma_D0D0D2D1D0 = get_v(stem,"D0D0D2D1D0");
+double *const _dddgamma_D1D2D0D1D0 = get_v(stem,"D1D2D0D1D0");
+double *const _dddgamma_D0D2D2D1D2 = get_v(stem,"D0D2D2D1D2");
+double *const _dddgamma_D0D1D1D2D1 = get_v(stem,"D0D1D1D2D1");
+double *const _dddgamma_D1D2D2D0D0 = get_v(stem,"D1D2D2D0D0");
+double *const _dddgamma_D0D1D2D0D0 = get_v(stem,"D0D1D2D0D0");
+double *const _dddgamma_D1D2D1D2D0 = get_v(stem,"D1D2D1D2D0");
+double *const _dddgamma_D2D2D1D0D1 = get_v(stem,"D2D2D1D0D1");
+double *const _dddgamma_D2D2D1D2D2 = get_v(stem,"D2D2D1D2D2");
+double *const _dddgamma_D1D1D1D0D0 = get_v(stem,"D1D1D1D0D0");
+double *const _dddgamma_D0D1D1D0D2 = get_v(stem,"D0D1D1D0D2");
+double *const _dddgamma_D0D2D2D2D0 = get_v(stem,"D0D2D2D2D0");
+double *const _dddgamma_D2D2D2D2D2 = get_v(stem,"D2D2D2D2D2");
+double *const _dddgamma_D0D2D2D0D1 = get_v(stem,"D0D2D2D0D1");
+double *const _dddgamma_D0D2D1D1D2 = get_v(stem,"D0D2D1D1D2");
+double *const _dddgamma_D2D2D0D0D2 = get_v(stem,"D2D2D0D0D2");
+double *const _dddgamma_D2D2D2D0D0 = get_v(stem,"D2D2D2D0D0");
+double *const _dddgamma_D2D2D0D2D0 = get_v(stem,"D2D2D0D2D0");
+double *const _dddgamma_D1D1D2D0D1 = get_v(stem,"D1D1D2D0D1");
+double *const _dddgamma_D2D2D0D0D0 = get_v(stem,"D2D2D0D0D0");
+double *const _dddgamma_D2D2D2D0D2 = get_v(stem,"D2D2D2D0D2");
+double *const _dddgamma_D0D2D2D0D2 = get_v(stem,"D0D2D2D0D2");
+double *const _dddgamma_D0D2D2D2D2 = get_v(stem,"D0D2D2D2D2");
+double *const _dddgamma_D1D1D0D0D0 = get_v(stem,"D1D1D0D0D0");
+double *const _dddgamma_D1D2D2D0D1 = get_v(stem,"D1D2D2D0D1");
+double *const _dddgamma_D0D0D1D1D0 = get_v(stem,"D0D0D1D1D0");
+double *const _dddgamma_D1D1D1D0D2 = get_v(stem,"D1D1D1D0D2");
+double *const _dddgamma_D2D2D1D0D2 = get_v(stem,"D2D2D1D0D2");
+double *const _dddgamma_D0D2D1D1D1 = get_v(stem,"D0D2D1D1D1");
+double *const _dddgamma_D0D0D2D0D0 = get_v(stem,"D0D0D2D0D0");
+double *const _dddgamma_D0D1D1D2D2 = get_v(stem,"D0D1D1D2D2");
+double *const _dddgamma_D0D0D2D0D1 = get_v(stem,"D0D0D2D0D1");
+double *const _dddgamma_D0D0D0D2D1 = get_v(stem,"D0D0D0D2D1");
+double *const _dddgamma_D0D2D2D1D1 = get_v(stem,"D0D2D2D1D1");
+double *const _dddgamma_D0D0D2D2D2 = get_v(stem,"D0D0D2D2D2");
+double *const _dddgamma_D1D1D2D1D1 = get_v(stem,"D1D1D2D1D1");
+double *const _dddgamma_D1D2D0D2D2 = get_v(stem,"D1D2D0D2D2");
 
 
   for (ijk = 0; ijk < nn; ++ijk) 
