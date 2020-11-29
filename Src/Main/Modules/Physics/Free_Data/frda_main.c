@@ -96,7 +96,7 @@ static int populate_free_data(Physics_T *const phys)
       Pcmps(P_"conformal_Ricci"             ,"KerrSchild") 
      )
   {
-    
+    UNUSED(phys);
   }
   else
     Error0(NO_OPTION);
