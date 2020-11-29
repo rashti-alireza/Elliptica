@@ -7,7 +7,7 @@
 #define STR_LEN (99)
 
 #define get_v(stem,indices) \
- (sprintf(f_name,"%s_%s",stem,indices)?patch->fields[Ind(f_name)]->v:0)
+ (sprintf(f_name,"%s_%s",stem,indices) && !free_coeffs(patch->fields[Ind(f_name)])?patch->fields[Ind(f_name)]->v:0)
  
 #define KS_func_pass_args_sed KS_func_pass_args_macro
 

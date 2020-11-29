@@ -230,7 +230,7 @@ Command["sed -i 's/_,/,/g'"];
 `print('')`
 `print('')`
 `print('#define get_v(stem,indices) \\')`
-`print('(sprintf(f_name,"%s_%s",stem,indices)?patch->fields[Ind(f_name)]->v:0)')`
+`print('(sprintf(f_name,"%s_%s",stem,indices) && !free_coeffs(patch->fields[Ind(f_name)])?patch->fields[Ind(f_name)]->v:0)')`
 `print('')`
 `print('')`
 ### the immediate following macro prevent sed substitution.
