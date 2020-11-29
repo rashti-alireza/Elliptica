@@ -23,9 +23,9 @@ int frda_main(Physics_T *const phys)
       ret = add_free_data_fields(phys);
     break;
     
-    //case FREE_DATA_POPULATE:
-      //ret = populate_free_data(phys);
-    //break;
+    case FREE_DATA_POPULATE:
+      ret = populate_free_data(phys);
+    break;
     
     default:
       Error0(NO_OPTION);
@@ -86,3 +86,20 @@ static int add_free_data_fields(Physics_T *const phys)
   return EXIT_SUCCESS; 
 }
 
+
+/* populate free data */
+static int populate_free_data(Physics_T *const phys)
+{
+  if (Pcmps(P_"conformal_metric"            ,"KerrSchild") &&
+      Pcmps(P_"conformal_Christoffel_symbol","KerrSchild") &&
+      Pcmps(P_"trK"                         ,"KerrSchild") &&
+      Pcmps(P_"conformal_Ricci"             ,"KerrSchild") 
+     )
+  {
+    
+  }
+  else
+    Error0(NO_OPTION);
+  
+  return EXIT_SUCCESS;
+}
