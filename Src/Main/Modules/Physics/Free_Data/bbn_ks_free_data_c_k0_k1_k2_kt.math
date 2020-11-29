@@ -15,10 +15,10 @@
 #########################
 # Issue the following:
 # 
-# $ cpi bbn_ks_free_data_c_k0_k1_k2_kt.math > \
-#   bbn_ks_free_data_c_k0_k1_k2_kt.c && \
-#   sed -i '/Welcome to Cpi/,$d' bbn_ks_free_data_c_k0_k1_k2_kt.c && \
-#   sed -i -E -f bbn_ks_free_data_substitute_derives.sed bbn_ks_free_data_c_k0_k1_k2_kt.c
+# $ cpi frda_ks_free_data_c_k0_k1_k2_kt.math > \
+#   frda_ks_free_data_c_k0_k1_k2_kt.c && \
+#   sed -i '/Welcome to Cpi/,$d' frda_ks_free_data_c_k0_k1_k2_kt.c && \
+#   sed -i -E -f frda_ks_free_data_substitute_derives.sed frda_ks_free_data_c_k0_k1_k2_kt.c
 
 
 Dimension = 3;
@@ -143,11 +143,11 @@ C_macro3=print('KS_func_def_macro(name)KS_func_args_macro')\n\
 `phiy,phiz           = symbols('phiy,phiz')`
 ``
 `### functions`
-`bbn_ks_K0  = symbols('bbn_ks_K0',cls=Function)`
-`bbn_ks_K1  = symbols('bbn_ks_K1',cls=Function)`
-`bbn_ks_K2  = symbols('bbn_ks_K2',cls=Function)`
-`bbn_ks_H   = symbols('bbn_ks_H',cls=Function)`
-`bbn_ks_rolloff = symbols('bbn_ks_rolloff',cls=Function)`
+`frda_ks_K0  = symbols('frda_ks_K0',cls=Function)`
+`frda_ks_K1  = symbols('frda_ks_K1',cls=Function)`
+`frda_ks_K2  = symbols('frda_ks_K2',cls=Function)`
+`frda_ks_H   = symbols('frda_ks_H',cls=Function)`
+`frda_ks_rolloff = symbols('frda_ks_rolloff',cls=Function)`
 
 ``
 `### perform boost and rotation transformation, dir = [1,-1]`
@@ -200,8 +200,8 @@ C_macro3=print('KS_func_def_macro(name)KS_func_args_macro')\n\
 `  tB       = Boost_matrix(Bx,By,Bz,B2)`
 `  tRy, tRz = Rotation_matrix(phiy,phiz)`
 `  _k_mu    = transpose(Matrix(`
-           `[[1,bbn_ks_K0(x,y,z),`
-           `bbn_ks_K1(x,y,z),bbn_ks_K2(x,y,z)]]))`
+           `[[1,frda_ks_K0(x,y,z),`
+           `frda_ks_K1(x,y,z),frda_ks_K2(x,y,z)]]))`
 `  k_mu     = Boost_Rotation(tB,tRy,tRz,1,_k_mu)`
 `  kt = (k_mu[0,0])`
 `  k0 = (k_mu[1,0])`
@@ -211,9 +211,9 @@ C_macro3=print('KS_func_def_macro(name)KS_func_args_macro')\n\
 ``
 `### evaluates:`
 `kt,k0,k1,k2 = get_ks(Bx,By,Bz,B2,phiy,phiz)`
-`c           = 2*bbn_ks_H(x,y,z)*bbn_ks_rolloff(x,y,z)`
+`c           = 2*frda_ks_H(x,y,z)*frda_ks_rolloff(x,y,z)`
 ``
-`print('#include "bbn_ks_free_data_analytic.h"')`
+`print('#include "frda_ks_free_data_analytic.h"')`
 ``
 Declare =
 {

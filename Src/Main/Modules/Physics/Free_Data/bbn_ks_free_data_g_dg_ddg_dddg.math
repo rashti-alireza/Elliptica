@@ -9,14 +9,14 @@
 #########################
 # Issue the following (TAKES A VERY VERY LONG TIME):
 # 
-# $ cpi bbn_ks_free_data_g_dg_ddg_dddg.math > \
-#   bbn_ks_free_data_g_dg_ddg_dddg.c && \
-#   sed -i '/Welcome to Cpi/,$d' bbn_ks_free_data_g_dg_ddg_dddg.c && \
-#   sed -i -E 's/\bk0\b\(/bbn_ks_k0\(/g' bbn_ks_free_data_g_dg_ddg_dddg.c && \
-#   sed -i -E 's/\bk1\b\(/bbn_ks_k1\(/g' bbn_ks_free_data_g_dg_ddg_dddg.c && \
-#   sed -i -E 's/\bk2\b\(/bbn_ks_k2\(/g' bbn_ks_free_data_g_dg_ddg_dddg.c && \
-#   sed -i -E 's/\bc\b\(/bbn_ks_c\(/g'   bbn_ks_free_data_g_dg_ddg_dddg.c && \
-#   sed -i -E -f bbn_ks_free_data_substitute_derives.sed bbn_ks_free_data_g_dg_ddg_dddg.c
+# $ cpi frda_ks_free_data_g_dg_ddg_dddg.math > \
+#   frda_ks_free_data_g_dg_ddg_dddg.c && \
+#   sed -i '/Welcome to Cpi/,$d' frda_ks_free_data_g_dg_ddg_dddg.c && \
+#   sed -i -E 's/\bk0\b\(/frda_ks_k0\(/g' frda_ks_free_data_g_dg_ddg_dddg.c && \
+#   sed -i -E 's/\bk1\b\(/frda_ks_k1\(/g' frda_ks_free_data_g_dg_ddg_dddg.c && \
+#   sed -i -E 's/\bk2\b\(/frda_ks_k2\(/g' frda_ks_free_data_g_dg_ddg_dddg.c && \
+#   sed -i -E 's/\bc\b\(/frda_ks_c\(/g'   frda_ks_free_data_g_dg_ddg_dddg.c && \
+#   sed -i -E -f frda_ks_free_data_substitute_derives.sed frda_ks_free_data_g_dg_ddg_dddg.c
 
 Dimension = 3;
 point     = x;
@@ -217,7 +217,7 @@ Command["sed -i 's/_,/,/g'"];
 ``
 ``
 `print('#include "frda_header.h"')`
-`print('#include "bbn_ks_free_data_analytic.h"')`
+`print('#include "frda_ks_free_data_analytic.h"')`
 ``
 
 `print('#undef x')`
@@ -241,26 +241,26 @@ Command["sed -i 's/_,/,/g'"];
 `print('  ksa->x = x;\\')`
 `print('  ksa->y = y;\\')`
 `print('  ksa->z = z;\\')`
-`print('  ksa->X = bbn_ks_X KS_func_pass_args_macro;\\')`
-`print('  ksa->Y = bbn_ks_Y KS_func_pass_args_macro;\\')`
-`print('  ksa->Z = bbn_ks_Z KS_func_pass_args_macro;\\')`
-`print('  ksa->R = bbn_ks_R KS_func_pass_args_macro;\\')`
-`print('  ksa->dX_D0 = bbn_ks_dX_D0 KS_func_pass_args_sed;\\')`
-`print('  ksa->dX_D1 = bbn_ks_dX_D1 KS_func_pass_args_sed;\\')`
-`print('  ksa->dX_D2 = bbn_ks_dX_D2 KS_func_pass_args_sed;\\')`
-`print('  ksa->dY_D0 = bbn_ks_dY_D0 KS_func_pass_args_sed;\\')`
-`print('  ksa->dY_D1 = bbn_ks_dY_D1 KS_func_pass_args_sed;\\')`
-`print('  ksa->dY_D2 = bbn_ks_dY_D2 KS_func_pass_args_sed;\\')`
-`print('  ksa->dZ_D0 = bbn_ks_dZ_D0 KS_func_pass_args_sed;\\')`
-`print('  ksa->dZ_D1 = bbn_ks_dZ_D1 KS_func_pass_args_sed;\\')`
-`print('  ksa->dZ_D2 = bbn_ks_dZ_D2 KS_func_pass_args_sed;')`
+`print('  ksa->X = frda_ks_X KS_func_pass_args_macro;\\')`
+`print('  ksa->Y = frda_ks_Y KS_func_pass_args_macro;\\')`
+`print('  ksa->Z = frda_ks_Z KS_func_pass_args_macro;\\')`
+`print('  ksa->R = frda_ks_R KS_func_pass_args_macro;\\')`
+`print('  ksa->dX_D0 = frda_ks_dX_D0 KS_func_pass_args_sed;\\')`
+`print('  ksa->dX_D1 = frda_ks_dX_D1 KS_func_pass_args_sed;\\')`
+`print('  ksa->dX_D2 = frda_ks_dX_D2 KS_func_pass_args_sed;\\')`
+`print('  ksa->dY_D0 = frda_ks_dY_D0 KS_func_pass_args_sed;\\')`
+`print('  ksa->dY_D1 = frda_ks_dY_D1 KS_func_pass_args_sed;\\')`
+`print('  ksa->dY_D2 = frda_ks_dY_D2 KS_func_pass_args_sed;\\')`
+`print('  ksa->dZ_D0 = frda_ks_dZ_D0 KS_func_pass_args_sed;\\')`
+`print('  ksa->dZ_D1 = frda_ks_dZ_D1 KS_func_pass_args_sed;\\')`
+`print('  ksa->dZ_D2 = frda_ks_dZ_D2 KS_func_pass_args_sed;')`
 `print('')`
 
 ### NOTE the function "get_v" is for geting the value of a field
 ### according to the parameter and the given name. it is used for
 ### different name formats
 
-`print('void bbn_free_data_g_analytic(')`
+`print('void frda_free_data_g_analytic(')`
 `print('        Patch_T *const patch,')`
 `print('        const double BH_center_x,')`
 `print('        const double BH_center_y,')`
@@ -268,7 +268,7 @@ Command["sed -i 's/_,/,/g'"];
 `print('        const char *const stem);')`
 
 
-`print('void bbn_free_data_dg_analytic(')`
+`print('void frda_free_data_dg_analytic(')`
 `print('        Patch_T *const patch,')`
 `print('        const double BH_center_x,')`
 `print('        const double BH_center_y,')`
@@ -276,7 +276,7 @@ Command["sed -i 's/_,/,/g'"];
 `print('        const char *const stem);')`
 
 
-`print('void bbn_free_data_ddg_analytic(')`
+`print('void frda_free_data_ddg_analytic(')`
 `print('        Patch_T *const patch,')`
 `print('        const double BH_center_x,')`
 `print('        const double BH_center_y,')`
@@ -284,14 +284,14 @@ Command["sed -i 's/_,/,/g'"];
 `print('        const char *const stem);')`
 
 
-`print('void bbn_free_data_dddg_analytic(')`
+`print('void frda_free_data_dddg_analytic(')`
 `print('        Patch_T *const patch,')`
 `print('        const double BH_center_x,')`
 `print('        const double BH_center_y,')`
 `print('        const double BH_center_z,')`
 `print('        const char *const stem);')`
 
-`print('void bbn_free_data_g_analytic(')`
+`print('void frda_free_data_g_analytic(')`
 `print('        Patch_T *const patch,')`
 `print('        const double BH_center_x,')`
 `print('        const double BH_center_y,')`
@@ -345,7 +345,7 @@ Command["sed -i 's/_,/,/g'"];
 `print('    }')`
 `print('}')`
 ``
-`print('void bbn_free_data_dg_analytic(')`
+`print('void frda_free_data_dg_analytic(')`
 `print('        Patch_T *const patch,')`
 `print('        const double BH_center_x,')`
 `print('        const double BH_center_y,')`
@@ -443,7 +443,7 @@ Command["sed -i 's/_,/,/g'"];
 `print('}')`
 ``
 `print('')`
-`print('void bbn_free_data_ddg_analytic(')`
+`print('void frda_free_data_ddg_analytic(')`
 `print('        Patch_T *const patch,')`
 `print('        const double BH_center_x,')`
 `print('        const double BH_center_y,')`
@@ -683,7 +683,7 @@ Command["sed -i 's/_,/,/g'"];
 `print('  }	')`
 `print('}')`
 `print('')`
-`print('void bbn_free_data_dddg_analytic(')`
+`print('void frda_free_data_dddg_analytic(')`
 `print('        Patch_T *const patch,')`
 `print('        const double BH_center_x,')`
 `print('        const double BH_center_y,')`

@@ -1,5 +1,5 @@
 #include "frda_header.h"
-#include "bbn_ks_free_data_analytic.h"
+#include "frda_ks_free_data_analytic.h"
 #undef x
 #undef y
 #undef z
@@ -16,49 +16,49 @@
   ksa->x = x;\
   ksa->y = y;\
   ksa->z = z;\
-  ksa->X = bbn_ks_X KS_func_pass_args_macro;\
-  ksa->Y = bbn_ks_Y KS_func_pass_args_macro;\
-  ksa->Z = bbn_ks_Z KS_func_pass_args_macro;\
-  ksa->R = bbn_ks_R KS_func_pass_args_macro;\
-  ksa->dX_D0 = bbn_ks_dX_D0 KS_func_pass_args_sed;\
-  ksa->dX_D1 = bbn_ks_dX_D1 KS_func_pass_args_sed;\
-  ksa->dX_D2 = bbn_ks_dX_D2 KS_func_pass_args_sed;\
-  ksa->dY_D0 = bbn_ks_dY_D0 KS_func_pass_args_sed;\
-  ksa->dY_D1 = bbn_ks_dY_D1 KS_func_pass_args_sed;\
-  ksa->dY_D2 = bbn_ks_dY_D2 KS_func_pass_args_sed;\
-  ksa->dZ_D0 = bbn_ks_dZ_D0 KS_func_pass_args_sed;\
-  ksa->dZ_D1 = bbn_ks_dZ_D1 KS_func_pass_args_sed;\
-  ksa->dZ_D2 = bbn_ks_dZ_D2 KS_func_pass_args_sed;
+  ksa->X = frda_ks_X KS_func_pass_args_macro;\
+  ksa->Y = frda_ks_Y KS_func_pass_args_macro;\
+  ksa->Z = frda_ks_Z KS_func_pass_args_macro;\
+  ksa->R = frda_ks_R KS_func_pass_args_macro;\
+  ksa->dX_D0 = frda_ks_dX_D0 KS_func_pass_args_sed;\
+  ksa->dX_D1 = frda_ks_dX_D1 KS_func_pass_args_sed;\
+  ksa->dX_D2 = frda_ks_dX_D2 KS_func_pass_args_sed;\
+  ksa->dY_D0 = frda_ks_dY_D0 KS_func_pass_args_sed;\
+  ksa->dY_D1 = frda_ks_dY_D1 KS_func_pass_args_sed;\
+  ksa->dY_D2 = frda_ks_dY_D2 KS_func_pass_args_sed;\
+  ksa->dZ_D0 = frda_ks_dZ_D0 KS_func_pass_args_sed;\
+  ksa->dZ_D1 = frda_ks_dZ_D1 KS_func_pass_args_sed;\
+  ksa->dZ_D2 = frda_ks_dZ_D2 KS_func_pass_args_sed;
 
-void bbn_free_data_g_analytic(
+void frda_free_data_g_analytic(
         Patch_T *const patch,
         const double BH_center_x,
         const double BH_center_y,
         const double BH_center_z,
         const char *const stem);
         
-void bbn_free_data_dg_analytic(
+void frda_free_data_dg_analytic(
         Patch_T *const patch,
         const double BH_center_x,
         const double BH_center_y,
         const double BH_center_z,
         const char *const stem);
 	
-void bbn_free_data_ddg_analytic(
+void frda_free_data_ddg_analytic(
         Patch_T *const patch,
         const double BH_center_x,
         const double BH_center_y,
         const double BH_center_z,
         const char *const stem);
 
-void bbn_free_data_dddg_analytic(
+void frda_free_data_dddg_analytic(
         Patch_T *const patch,
         const double BH_center_x,
         const double BH_center_y,
         const double BH_center_z,
         const char *const stem);
 
-void bbn_free_data_g_analytic(
+void frda_free_data_g_analytic(
         Patch_T *const patch,
         const double BH_center_x,
         const double BH_center_y,
@@ -88,43 +88,43 @@ void bbn_free_data_g_analytic(
 // Not supported in C:
 // c
 // k0
-bbn_ks_c(x, y, z)*pow(bbn_ks_k0(x, y, z), 2) + 1.0;
+frda_ks_c(x, y, z)*pow(frda_ks_k0(x, y, z), 2) + 1.0;
       _gamma_D0D1[ijk] =
 /* mcode in progress ... */
 // Not supported in C:
 // c
 // k0
 // k1
-bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*bbn_ks_k1(x, y, z);
+frda_ks_c(x, y, z)*frda_ks_k0(x, y, z)*frda_ks_k1(x, y, z);
       _gamma_D0D2[ijk] =
 /* mcode in progress ... */
 // Not supported in C:
 // c
 // k0
 // k2
-bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*bbn_ks_k2(x, y, z);
+frda_ks_c(x, y, z)*frda_ks_k0(x, y, z)*frda_ks_k2(x, y, z);
       _gamma_D1D1[ijk] =
 /* mcode in progress ... */
 // Not supported in C:
 // c
 // k1
-bbn_ks_c(x, y, z)*pow(bbn_ks_k1(x, y, z), 2) + 1.0;
+frda_ks_c(x, y, z)*pow(frda_ks_k1(x, y, z), 2) + 1.0;
       _gamma_D1D2[ijk] =
 /* mcode in progress ... */
 // Not supported in C:
 // c
 // k1
 // k2
-bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*bbn_ks_k2(x, y, z);
+frda_ks_c(x, y, z)*frda_ks_k1(x, y, z)*frda_ks_k2(x, y, z);
       _gamma_D2D2[ijk] =
 /* mcode in progress ... */
 // Not supported in C:
 // c
 // k2
-bbn_ks_c(x, y, z)*pow(bbn_ks_k2(x, y, z), 2) + 1.0;
+frda_ks_c(x, y, z)*pow(frda_ks_k2(x, y, z), 2) + 1.0;
     }
 }
-void bbn_free_data_dg_analytic(
+void frda_free_data_dg_analytic(
         Patch_T *const patch,
         const double BH_center_x,
         const double BH_center_y,
@@ -173,9 +173,9 @@ double *const _dgamma_D2D2D2 = get_v(stem,"D2D2D2");
 // c
 // k1
 // k2
-bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-bbn_ks_k2(x, y, z)*(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*bbn_ks_k2(x, y, z)*
-(bbn_ks_dc_D2 KS_func_pass_args_macro );
+frda_ks_c(x, y, z)*frda_ks_k1(x, y, z)*(frda_ks_dk2_D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+frda_ks_k2(x, y, z)*(frda_ks_dk1_D2 KS_func_pass_args_macro ) + frda_ks_k1(x, y, z)*frda_ks_k2(x, y, z)*
+(frda_ks_dc_D2 KS_func_pass_args_macro );
 
     _dgamma_D0D0D1[ijk]=
 /* mcode in progress ... */
@@ -184,8 +184,8 @@ bbn_ks_k2(x, y, z)*(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)
 // Derivative
 // c
 // k0
-(2*bbn_ks_c(x, y, z)*(bbn_ks_dk0_D1 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
-(bbn_ks_dc_D1 KS_func_pass_args_macro ))*bbn_ks_k0(x, y, z);
+(2*frda_ks_c(x, y, z)*(frda_ks_dk0_D1 KS_func_pass_args_macro ) + frda_ks_k0(x, y, z)*
+(frda_ks_dc_D1 KS_func_pass_args_macro ))*frda_ks_k0(x, y, z);
 
     _dgamma_D0D2D1[ijk]=
 /* mcode in progress ... */
@@ -196,9 +196,9 @@ bbn_ks_k2(x, y, z)*(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)
 // c
 // k0
 // k2
-bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-bbn_ks_k2(x, y, z)*(bbn_ks_dk0_D1 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*bbn_ks_k2(x, y, z)*
-(bbn_ks_dc_D1 KS_func_pass_args_macro );
+frda_ks_c(x, y, z)*frda_ks_k0(x, y, z)*(frda_ks_dk2_D1 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+frda_ks_k2(x, y, z)*(frda_ks_dk0_D1 KS_func_pass_args_macro ) + frda_ks_k0(x, y, z)*frda_ks_k2(x, y, z)*
+(frda_ks_dc_D1 KS_func_pass_args_macro );
 
     _dgamma_D0D1D0[ijk]=
 /* mcode in progress ... */
@@ -209,9 +209,9 @@ bbn_ks_k2(x, y, z)*(bbn_ks_dk0_D1 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)
 // c
 // k0
 // k1
-bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dk1_D0 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-bbn_ks_k1(x, y, z)*(bbn_ks_dk0_D0 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*bbn_ks_k1(x, y, z)*
-(bbn_ks_dc_D0 KS_func_pass_args_macro );
+frda_ks_c(x, y, z)*frda_ks_k0(x, y, z)*(frda_ks_dk1_D0 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+frda_ks_k1(x, y, z)*(frda_ks_dk0_D0 KS_func_pass_args_macro ) + frda_ks_k0(x, y, z)*frda_ks_k1(x, y, z)*
+(frda_ks_dc_D0 KS_func_pass_args_macro );
 
     _dgamma_D1D2D1[ijk]=
 /* mcode in progress ... */
@@ -222,9 +222,9 @@ bbn_ks_k1(x, y, z)*(bbn_ks_dk0_D0 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)
 // c
 // k1
 // k2
-bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-bbn_ks_k2(x, y, z)*(bbn_ks_dk1_D1 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*bbn_ks_k2(x, y, z)*
-(bbn_ks_dc_D1 KS_func_pass_args_macro );
+frda_ks_c(x, y, z)*frda_ks_k1(x, y, z)*(frda_ks_dk2_D1 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+frda_ks_k2(x, y, z)*(frda_ks_dk1_D1 KS_func_pass_args_macro ) + frda_ks_k1(x, y, z)*frda_ks_k2(x, y, z)*
+(frda_ks_dc_D1 KS_func_pass_args_macro );
 
     _dgamma_D2D2D0[ijk]=
 /* mcode in progress ... */
@@ -233,8 +233,8 @@ bbn_ks_k2(x, y, z)*(bbn_ks_dk1_D1 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)
 // Derivative
 // c
 // k2
-(2*bbn_ks_c(x, y, z)*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
-(bbn_ks_dc_D0 KS_func_pass_args_macro ))*bbn_ks_k2(x, y, z);
+(2*frda_ks_c(x, y, z)*(frda_ks_dk2_D0 KS_func_pass_args_macro ) + frda_ks_k2(x, y, z)*
+(frda_ks_dc_D0 KS_func_pass_args_macro ))*frda_ks_k2(x, y, z);
 
     _dgamma_D0D0D0[ijk]=
 /* mcode in progress ... */
@@ -243,8 +243,8 @@ bbn_ks_k2(x, y, z)*(bbn_ks_dk1_D1 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)
 // Derivative
 // c
 // k0
-(2*bbn_ks_c(x, y, z)*(bbn_ks_dk0_D0 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
-(bbn_ks_dc_D0 KS_func_pass_args_macro ))*bbn_ks_k0(x, y, z);
+(2*frda_ks_c(x, y, z)*(frda_ks_dk0_D0 KS_func_pass_args_macro ) + frda_ks_k0(x, y, z)*
+(frda_ks_dc_D0 KS_func_pass_args_macro ))*frda_ks_k0(x, y, z);
 
     _dgamma_D0D0D2[ijk]=
 /* mcode in progress ... */
@@ -253,8 +253,8 @@ bbn_ks_k2(x, y, z)*(bbn_ks_dk1_D1 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)
 // Derivative
 // c
 // k0
-(2*bbn_ks_c(x, y, z)*(bbn_ks_dk0_D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
-(bbn_ks_dc_D2 KS_func_pass_args_macro ))*bbn_ks_k0(x, y, z);
+(2*frda_ks_c(x, y, z)*(frda_ks_dk0_D2 KS_func_pass_args_macro ) + frda_ks_k0(x, y, z)*
+(frda_ks_dc_D2 KS_func_pass_args_macro ))*frda_ks_k0(x, y, z);
 
     _dgamma_D0D2D2[ijk]=
 /* mcode in progress ... */
@@ -265,9 +265,9 @@ bbn_ks_k2(x, y, z)*(bbn_ks_dk1_D1 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)
 // c
 // k0
 // k2
-bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-bbn_ks_k2(x, y, z)*(bbn_ks_dk0_D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*bbn_ks_k2(x, y, z)*
-(bbn_ks_dc_D2 KS_func_pass_args_macro );
+frda_ks_c(x, y, z)*frda_ks_k0(x, y, z)*(frda_ks_dk2_D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+frda_ks_k2(x, y, z)*(frda_ks_dk0_D2 KS_func_pass_args_macro ) + frda_ks_k0(x, y, z)*frda_ks_k2(x, y, z)*
+(frda_ks_dc_D2 KS_func_pass_args_macro );
 
     _dgamma_D2D2D1[ijk]=
 /* mcode in progress ... */
@@ -276,8 +276,8 @@ bbn_ks_k2(x, y, z)*(bbn_ks_dk0_D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)
 // Derivative
 // c
 // k2
-(2*bbn_ks_c(x, y, z)*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
-(bbn_ks_dc_D1 KS_func_pass_args_macro ))*bbn_ks_k2(x, y, z);
+(2*frda_ks_c(x, y, z)*(frda_ks_dk2_D1 KS_func_pass_args_macro ) + frda_ks_k2(x, y, z)*
+(frda_ks_dc_D1 KS_func_pass_args_macro ))*frda_ks_k2(x, y, z);
 
     _dgamma_D0D1D1[ijk]=
 /* mcode in progress ... */
@@ -288,9 +288,9 @@ bbn_ks_k2(x, y, z)*(bbn_ks_dk0_D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)
 // c
 // k0
 // k1
-bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dk1_D1 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-bbn_ks_k1(x, y, z)*(bbn_ks_dk0_D1 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*bbn_ks_k1(x, y, z)*
-(bbn_ks_dc_D1 KS_func_pass_args_macro );
+frda_ks_c(x, y, z)*frda_ks_k0(x, y, z)*(frda_ks_dk1_D1 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+frda_ks_k1(x, y, z)*(frda_ks_dk0_D1 KS_func_pass_args_macro ) + frda_ks_k0(x, y, z)*frda_ks_k1(x, y, z)*
+(frda_ks_dc_D1 KS_func_pass_args_macro );
 
     _dgamma_D0D2D0[ijk]=
 /* mcode in progress ... */
@@ -301,9 +301,9 @@ bbn_ks_k1(x, y, z)*(bbn_ks_dk0_D1 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)
 // c
 // k0
 // k2
-bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-bbn_ks_k2(x, y, z)*(bbn_ks_dk0_D0 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*bbn_ks_k2(x, y, z)*
-(bbn_ks_dc_D0 KS_func_pass_args_macro );
+frda_ks_c(x, y, z)*frda_ks_k0(x, y, z)*(frda_ks_dk2_D0 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+frda_ks_k2(x, y, z)*(frda_ks_dk0_D0 KS_func_pass_args_macro ) + frda_ks_k0(x, y, z)*frda_ks_k2(x, y, z)*
+(frda_ks_dc_D0 KS_func_pass_args_macro );
 
     _dgamma_D1D2D0[ijk]=
 /* mcode in progress ... */
@@ -314,9 +314,9 @@ bbn_ks_k2(x, y, z)*(bbn_ks_dk0_D0 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)
 // c
 // k1
 // k2
-bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-bbn_ks_k2(x, y, z)*(bbn_ks_dk1_D0 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*bbn_ks_k2(x, y, z)*
-(bbn_ks_dc_D0 KS_func_pass_args_macro );
+frda_ks_c(x, y, z)*frda_ks_k1(x, y, z)*(frda_ks_dk2_D0 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+frda_ks_k2(x, y, z)*(frda_ks_dk1_D0 KS_func_pass_args_macro ) + frda_ks_k1(x, y, z)*frda_ks_k2(x, y, z)*
+(frda_ks_dc_D0 KS_func_pass_args_macro );
 
     _dgamma_D1D1D1[ijk]=
 /* mcode in progress ... */
@@ -325,8 +325,8 @@ bbn_ks_k2(x, y, z)*(bbn_ks_dk1_D0 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)
 // Derivative
 // c
 // k1
-(2*bbn_ks_c(x, y, z)*(bbn_ks_dk1_D1 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
-(bbn_ks_dc_D1 KS_func_pass_args_macro ))*bbn_ks_k1(x, y, z);
+(2*frda_ks_c(x, y, z)*(frda_ks_dk1_D1 KS_func_pass_args_macro ) + frda_ks_k1(x, y, z)*
+(frda_ks_dc_D1 KS_func_pass_args_macro ))*frda_ks_k1(x, y, z);
 
     _dgamma_D0D1D2[ijk]=
 /* mcode in progress ... */
@@ -337,9 +337,9 @@ bbn_ks_k2(x, y, z)*(bbn_ks_dk1_D0 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)
 // c
 // k0
 // k1
-bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-bbn_ks_k1(x, y, z)*(bbn_ks_dk0_D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*bbn_ks_k1(x, y, z)*
-(bbn_ks_dc_D2 KS_func_pass_args_macro );
+frda_ks_c(x, y, z)*frda_ks_k0(x, y, z)*(frda_ks_dk1_D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+frda_ks_k1(x, y, z)*(frda_ks_dk0_D2 KS_func_pass_args_macro ) + frda_ks_k0(x, y, z)*frda_ks_k1(x, y, z)*
+(frda_ks_dc_D2 KS_func_pass_args_macro );
 
     _dgamma_D1D1D0[ijk]=
 /* mcode in progress ... */
@@ -348,8 +348,8 @@ bbn_ks_k1(x, y, z)*(bbn_ks_dk0_D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)
 // Derivative
 // c
 // k1
-(2*bbn_ks_c(x, y, z)*(bbn_ks_dk1_D0 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
-(bbn_ks_dc_D0 KS_func_pass_args_macro ))*bbn_ks_k1(x, y, z);
+(2*frda_ks_c(x, y, z)*(frda_ks_dk1_D0 KS_func_pass_args_macro ) + frda_ks_k1(x, y, z)*
+(frda_ks_dc_D0 KS_func_pass_args_macro ))*frda_ks_k1(x, y, z);
 
     _dgamma_D1D1D2[ijk]=
 /* mcode in progress ... */
@@ -358,8 +358,8 @@ bbn_ks_k1(x, y, z)*(bbn_ks_dk0_D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)
 // Derivative
 // c
 // k1
-(2*bbn_ks_c(x, y, z)*(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
-(bbn_ks_dc_D2 KS_func_pass_args_macro ))*bbn_ks_k1(x, y, z);
+(2*frda_ks_c(x, y, z)*(frda_ks_dk1_D2 KS_func_pass_args_macro ) + frda_ks_k1(x, y, z)*
+(frda_ks_dc_D2 KS_func_pass_args_macro ))*frda_ks_k1(x, y, z);
 
     _dgamma_D2D2D2[ijk]=
 /* mcode in progress ... */
@@ -368,13 +368,13 @@ bbn_ks_k1(x, y, z)*(bbn_ks_dk0_D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)
 // Derivative
 // c
 // k2
-(2*bbn_ks_c(x, y, z)*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
-(bbn_ks_dc_D2 KS_func_pass_args_macro ))*bbn_ks_k2(x, y, z);
+(2*frda_ks_c(x, y, z)*(frda_ks_dk2_D2 KS_func_pass_args_macro ) + frda_ks_k2(x, y, z)*
+(frda_ks_dc_D2 KS_func_pass_args_macro ))*frda_ks_k2(x, y, z);
 
   }
 }
 
-void bbn_free_data_ddg_analytic(
+void frda_free_data_ddg_analytic(
         Patch_T *const patch,
         const double BH_center_x,
         const double BH_center_y,
@@ -461,11 +461,11 @@ double *const _ddgamma_D2D2D0D1 = get_v(stem,"D2D2D0D1");
 // Derivative
 // c
 // k2
-2*bbn_ks_c(x, y, z)*bbn_ks_k2(x, y, z)*(bbn_ks_ddk2_D0D2 KS_func_pass_args_macro ) + 2*bbn_ks_c(x, y, z)*
-(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 
-pow(bbn_ks_k2(x, y, z), 2)*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + 2*bbn_ks_k2(x, y, z)*
-(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 2*bbn_ks_k2(x, y, z)*
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro );
+2*frda_ks_c(x, y, z)*frda_ks_k2(x, y, z)*(frda_ks_ddk2_D0D2 KS_func_pass_args_macro ) + 2*frda_ks_c(x, y, z)*
+(frda_ks_dk2_D0 KS_func_pass_args_macro )*(frda_ks_dk2_D2 KS_func_pass_args_macro ) + 
+pow(frda_ks_k2(x, y, z), 2)*(frda_ks_ddc_D0D2 KS_func_pass_args_macro ) + 2*frda_ks_k2(x, y, z)*
+(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_dk2_D2 KS_func_pass_args_macro ) + 2*frda_ks_k2(x, y, z)*
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_dk2_D0 KS_func_pass_args_macro );
 
     _ddgamma_D0D1D0D1[ijk]=
 /* mcode in progress ... */
@@ -482,15 +482,15 @@ pow(bbn_ks_k2(x, y, z), 2)*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + 2*bbn_ks
 // c
 // k0
 // k1
-bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_ddk1_D0D1 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-bbn_ks_k1(x, y, z)*(bbn_ks_ddk0_D0D1 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
-bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
-(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
-(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
-(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
-(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro );
+frda_ks_c(x, y, z)*frda_ks_k0(x, y, z)*(frda_ks_ddk1_D0D1 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+frda_ks_k1(x, y, z)*(frda_ks_ddk0_D0D1 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk0_D0 KS_func_pass_args_macro )*(frda_ks_dk1_D1 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk0_D1 KS_func_pass_args_macro )*(frda_ks_dk1_D0 KS_func_pass_args_macro ) + frda_ks_k0(x, y, z)*
+frda_ks_k1(x, y, z)*(frda_ks_ddc_D0D1 KS_func_pass_args_macro ) + frda_ks_k0(x, y, z)*
+(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_dk1_D1 KS_func_pass_args_macro ) + frda_ks_k0(x, y, z)*
+(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_dk1_D0 KS_func_pass_args_macro ) + frda_ks_k1(x, y, z)*
+(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_dk0_D1 KS_func_pass_args_macro ) + frda_ks_k1(x, y, z)*
+(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_dk0_D0 KS_func_pass_args_macro );
 
     _ddgamma_D1D1D0D1[ijk]=
 /* mcode in progress ... */
@@ -503,11 +503,11 @@ bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, 
 // Derivative
 // c
 // k1
-2*bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_ddk1_D0D1 KS_func_pass_args_macro ) + 2*bbn_ks_c(x, y, z)*
-(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro ) + 
-pow(bbn_ks_k1(x, y, z), 2)*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 2*bbn_ks_k1(x, y, z)*
-(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro ) + 2*bbn_ks_k1(x, y, z)*
-(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro );
+2*frda_ks_c(x, y, z)*frda_ks_k1(x, y, z)*(frda_ks_ddk1_D0D1 KS_func_pass_args_macro ) + 2*frda_ks_c(x, y, z)*
+(frda_ks_dk1_D0 KS_func_pass_args_macro )*(frda_ks_dk1_D1 KS_func_pass_args_macro ) + 
+pow(frda_ks_k1(x, y, z), 2)*(frda_ks_ddc_D0D1 KS_func_pass_args_macro ) + 2*frda_ks_k1(x, y, z)*
+(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_dk1_D1 KS_func_pass_args_macro ) + 2*frda_ks_k1(x, y, z)*
+(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_dk1_D0 KS_func_pass_args_macro );
 
     _ddgamma_D1D2D0D1[ijk]=
 /* mcode in progress ... */
@@ -524,15 +524,15 @@ pow(bbn_ks_k1(x, y, z), 2)*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 2*bbn_ks
 // c
 // k1
 // k2
-bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_ddk2_D0D1 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-bbn_ks_k2(x, y, z)*(bbn_ks_ddk1_D0D1 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
-bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
-(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
-(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
-(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
-(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro );
+frda_ks_c(x, y, z)*frda_ks_k1(x, y, z)*(frda_ks_ddk2_D0D1 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+frda_ks_k2(x, y, z)*(frda_ks_ddk1_D0D1 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk1_D0 KS_func_pass_args_macro )*(frda_ks_dk2_D1 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk1_D1 KS_func_pass_args_macro )*(frda_ks_dk2_D0 KS_func_pass_args_macro ) + frda_ks_k1(x, y, z)*
+frda_ks_k2(x, y, z)*(frda_ks_ddc_D0D1 KS_func_pass_args_macro ) + frda_ks_k1(x, y, z)*
+(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_dk2_D1 KS_func_pass_args_macro ) + frda_ks_k1(x, y, z)*
+(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_dk2_D0 KS_func_pass_args_macro ) + frda_ks_k2(x, y, z)*
+(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_dk1_D1 KS_func_pass_args_macro ) + frda_ks_k2(x, y, z)*
+(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_dk1_D0 KS_func_pass_args_macro );
 
     _ddgamma_D0D0D1D0[ijk]=
 /* mcode in progress ... */
@@ -545,11 +545,11 @@ bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, 
 // Derivative
 // c
 // k0
-2*bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_ddk0_D0D1 KS_func_pass_args_macro ) + 2*bbn_ks_c(x, y, z)*
-(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro ) + 
-pow(bbn_ks_k0(x, y, z), 2)*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 2*bbn_ks_k0(x, y, z)*
-(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro ) + 2*bbn_ks_k0(x, y, z)*
-(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro );
+2*frda_ks_c(x, y, z)*frda_ks_k0(x, y, z)*(frda_ks_ddk0_D0D1 KS_func_pass_args_macro ) + 2*frda_ks_c(x, y, z)*
+(frda_ks_dk0_D0 KS_func_pass_args_macro )*(frda_ks_dk0_D1 KS_func_pass_args_macro ) + 
+pow(frda_ks_k0(x, y, z), 2)*(frda_ks_ddc_D0D1 KS_func_pass_args_macro ) + 2*frda_ks_k0(x, y, z)*
+(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_dk0_D1 KS_func_pass_args_macro ) + 2*frda_ks_k0(x, y, z)*
+(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_dk0_D0 KS_func_pass_args_macro );
 
     _ddgamma_D1D1D2D0[ijk]=
 /* mcode in progress ... */
@@ -562,11 +562,11 @@ pow(bbn_ks_k0(x, y, z), 2)*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 2*bbn_ks
 // Derivative
 // c
 // k1
-2*bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_ddk1_D0D2 KS_func_pass_args_macro ) + 2*bbn_ks_c(x, y, z)*
-(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + 
-pow(bbn_ks_k1(x, y, z), 2)*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + 2*bbn_ks_k1(x, y, z)*
-(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + 2*bbn_ks_k1(x, y, z)*
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro );
+2*frda_ks_c(x, y, z)*frda_ks_k1(x, y, z)*(frda_ks_ddk1_D0D2 KS_func_pass_args_macro ) + 2*frda_ks_c(x, y, z)*
+(frda_ks_dk1_D0 KS_func_pass_args_macro )*(frda_ks_dk1_D2 KS_func_pass_args_macro ) + 
+pow(frda_ks_k1(x, y, z), 2)*(frda_ks_ddc_D0D2 KS_func_pass_args_macro ) + 2*frda_ks_k1(x, y, z)*
+(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_dk1_D2 KS_func_pass_args_macro ) + 2*frda_ks_k1(x, y, z)*
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_dk1_D0 KS_func_pass_args_macro );
 
     _ddgamma_D0D0D0D1[ijk]=
 /* mcode in progress ... */
@@ -579,11 +579,11 @@ pow(bbn_ks_k1(x, y, z), 2)*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + 2*bbn_ks
 // Derivative
 // c
 // k0
-2*bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_ddk0_D0D1 KS_func_pass_args_macro ) + 2*bbn_ks_c(x, y, z)*
-(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro ) + 
-pow(bbn_ks_k0(x, y, z), 2)*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 2*bbn_ks_k0(x, y, z)*
-(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro ) + 2*bbn_ks_k0(x, y, z)*
-(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro );
+2*frda_ks_c(x, y, z)*frda_ks_k0(x, y, z)*(frda_ks_ddk0_D0D1 KS_func_pass_args_macro ) + 2*frda_ks_c(x, y, z)*
+(frda_ks_dk0_D0 KS_func_pass_args_macro )*(frda_ks_dk0_D1 KS_func_pass_args_macro ) + 
+pow(frda_ks_k0(x, y, z), 2)*(frda_ks_ddc_D0D1 KS_func_pass_args_macro ) + 2*frda_ks_k0(x, y, z)*
+(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_dk0_D1 KS_func_pass_args_macro ) + 2*frda_ks_k0(x, y, z)*
+(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_dk0_D0 KS_func_pass_args_macro );
 
     _ddgamma_D1D1D0D0[ijk]=
 /* mcode in progress ... */
@@ -594,10 +594,10 @@ pow(bbn_ks_k0(x, y, z), 2)*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 2*bbn_ks
 // Derivative
 // c
 // k1
-2*bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_ddk1_D0D0 KS_func_pass_args_macro ) + 2*
-bbn_ks_c(x, y, z)*pow((bbn_ks_dk1_D0 KS_func_pass_args_macro ), 2) + pow(bbn_ks_k1(x, y, z), 2)*
-(bbn_ks_ddc_D0D0 KS_func_pass_args_macro ) + 4*bbn_ks_k1(x, y, z)*(bbn_ks_dc_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk1_D0 KS_func_pass_args_macro );
+2*frda_ks_c(x, y, z)*frda_ks_k1(x, y, z)*(frda_ks_ddk1_D0D0 KS_func_pass_args_macro ) + 2*
+frda_ks_c(x, y, z)*pow((frda_ks_dk1_D0 KS_func_pass_args_macro ), 2) + pow(frda_ks_k1(x, y, z), 2)*
+(frda_ks_ddc_D0D0 KS_func_pass_args_macro ) + 4*frda_ks_k1(x, y, z)*(frda_ks_dc_D0 KS_func_pass_args_macro )*
+(frda_ks_dk1_D0 KS_func_pass_args_macro );
 
     _ddgamma_D0D0D2D2[ijk]=
 /* mcode in progress ... */
@@ -608,10 +608,10 @@ bbn_ks_c(x, y, z)*pow((bbn_ks_dk1_D0 KS_func_pass_args_macro ), 2) + pow(bbn_ks_
 // Derivative
 // c
 // k0
-2*bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_ddk0_D2D2 KS_func_pass_args_macro ) + 2*
-bbn_ks_c(x, y, z)*pow((bbn_ks_dk0_D2 KS_func_pass_args_macro ), 2) + pow(bbn_ks_k0(x, y, z), 2)*
-(bbn_ks_ddc_D2D2 KS_func_pass_args_macro ) + 4*bbn_ks_k0(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*
-(bbn_ks_dk0_D2 KS_func_pass_args_macro );
+2*frda_ks_c(x, y, z)*frda_ks_k0(x, y, z)*(frda_ks_ddk0_D2D2 KS_func_pass_args_macro ) + 2*
+frda_ks_c(x, y, z)*pow((frda_ks_dk0_D2 KS_func_pass_args_macro ), 2) + pow(frda_ks_k0(x, y, z), 2)*
+(frda_ks_ddc_D2D2 KS_func_pass_args_macro ) + 4*frda_ks_k0(x, y, z)*(frda_ks_dc_D2 KS_func_pass_args_macro )*
+(frda_ks_dk0_D2 KS_func_pass_args_macro );
 
     _ddgamma_D2D2D1D1[ijk]=
 /* mcode in progress ... */
@@ -622,10 +622,10 @@ bbn_ks_c(x, y, z)*pow((bbn_ks_dk0_D2 KS_func_pass_args_macro ), 2) + pow(bbn_ks_
 // Derivative
 // c
 // k2
-2*bbn_ks_c(x, y, z)*bbn_ks_k2(x, y, z)*(bbn_ks_ddk2_D1D1 KS_func_pass_args_macro ) + 2*
-bbn_ks_c(x, y, z)*pow((bbn_ks_dk2_D1 KS_func_pass_args_macro ), 2) + pow(bbn_ks_k2(x, y, z), 2)*
-(bbn_ks_ddc_D1D1 KS_func_pass_args_macro ) + 4*bbn_ks_k2(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*
-(bbn_ks_dk2_D1 KS_func_pass_args_macro );
+2*frda_ks_c(x, y, z)*frda_ks_k2(x, y, z)*(frda_ks_ddk2_D1D1 KS_func_pass_args_macro ) + 2*
+frda_ks_c(x, y, z)*pow((frda_ks_dk2_D1 KS_func_pass_args_macro ), 2) + pow(frda_ks_k2(x, y, z), 2)*
+(frda_ks_ddc_D1D1 KS_func_pass_args_macro ) + 4*frda_ks_k2(x, y, z)*(frda_ks_dc_D1 KS_func_pass_args_macro )*
+(frda_ks_dk2_D1 KS_func_pass_args_macro );
 
     _ddgamma_D2D2D2D2[ijk]=
 /* mcode in progress ... */
@@ -636,10 +636,10 @@ bbn_ks_c(x, y, z)*pow((bbn_ks_dk2_D1 KS_func_pass_args_macro ), 2) + pow(bbn_ks_
 // Derivative
 // c
 // k2
-2*bbn_ks_c(x, y, z)*bbn_ks_k2(x, y, z)*(bbn_ks_ddk2_D2D2 KS_func_pass_args_macro ) + 2*
-bbn_ks_c(x, y, z)*pow((bbn_ks_dk2_D2 KS_func_pass_args_macro ), 2) + pow(bbn_ks_k2(x, y, z), 2)*
-(bbn_ks_ddc_D2D2 KS_func_pass_args_macro ) + 4*bbn_ks_k2(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*
-(bbn_ks_dk2_D2 KS_func_pass_args_macro );
+2*frda_ks_c(x, y, z)*frda_ks_k2(x, y, z)*(frda_ks_ddk2_D2D2 KS_func_pass_args_macro ) + 2*
+frda_ks_c(x, y, z)*pow((frda_ks_dk2_D2 KS_func_pass_args_macro ), 2) + pow(frda_ks_k2(x, y, z), 2)*
+(frda_ks_ddc_D2D2 KS_func_pass_args_macro ) + 4*frda_ks_k2(x, y, z)*(frda_ks_dc_D2 KS_func_pass_args_macro )*
+(frda_ks_dk2_D2 KS_func_pass_args_macro );
 
     _ddgamma_D0D0D2D0[ijk]=
 /* mcode in progress ... */
@@ -652,11 +652,11 @@ bbn_ks_c(x, y, z)*pow((bbn_ks_dk2_D2 KS_func_pass_args_macro ), 2) + pow(bbn_ks_
 // Derivative
 // c
 // k0
-2*bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_ddk0_D0D2 KS_func_pass_args_macro ) + 2*bbn_ks_c(x, y, z)*
-(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D2 KS_func_pass_args_macro ) + 
-pow(bbn_ks_k0(x, y, z), 2)*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + 2*bbn_ks_k0(x, y, z)*
-(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D2 KS_func_pass_args_macro ) + 2*bbn_ks_k0(x, y, z)*
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro );
+2*frda_ks_c(x, y, z)*frda_ks_k0(x, y, z)*(frda_ks_ddk0_D0D2 KS_func_pass_args_macro ) + 2*frda_ks_c(x, y, z)*
+(frda_ks_dk0_D0 KS_func_pass_args_macro )*(frda_ks_dk0_D2 KS_func_pass_args_macro ) + 
+pow(frda_ks_k0(x, y, z), 2)*(frda_ks_ddc_D0D2 KS_func_pass_args_macro ) + 2*frda_ks_k0(x, y, z)*
+(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_dk0_D2 KS_func_pass_args_macro ) + 2*frda_ks_k0(x, y, z)*
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_dk0_D0 KS_func_pass_args_macro );
 
     _ddgamma_D0D2D2D1[ijk]=
 /* mcode in progress ... */
@@ -673,15 +673,15 @@ pow(bbn_ks_k0(x, y, z), 2)*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + 2*bbn_ks
 // c
 // k0
 // k2
-bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_ddk2_D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-bbn_ks_k2(x, y, z)*(bbn_ks_ddk0_D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
-bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
-(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
-(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D2 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro );
+frda_ks_c(x, y, z)*frda_ks_k0(x, y, z)*(frda_ks_ddk2_D1D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+frda_ks_k2(x, y, z)*(frda_ks_ddk0_D1D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk0_D1 KS_func_pass_args_macro )*(frda_ks_dk2_D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk0_D2 KS_func_pass_args_macro )*(frda_ks_dk2_D1 KS_func_pass_args_macro ) + frda_ks_k0(x, y, z)*
+frda_ks_k2(x, y, z)*(frda_ks_ddc_D1D2 KS_func_pass_args_macro ) + frda_ks_k0(x, y, z)*
+(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_dk2_D2 KS_func_pass_args_macro ) + frda_ks_k0(x, y, z)*
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_dk2_D1 KS_func_pass_args_macro ) + frda_ks_k2(x, y, z)*
+(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_dk0_D2 KS_func_pass_args_macro ) + frda_ks_k2(x, y, z)*
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_dk0_D1 KS_func_pass_args_macro );
 
     _ddgamma_D1D2D0D2[ijk]=
 /* mcode in progress ... */
@@ -698,15 +698,15 @@ bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, 
 // c
 // k1
 // k2
-bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_ddk2_D0D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-bbn_ks_k2(x, y, z)*(bbn_ks_ddk1_D0D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
-bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
-(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
-(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro );
+frda_ks_c(x, y, z)*frda_ks_k1(x, y, z)*(frda_ks_ddk2_D0D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+frda_ks_k2(x, y, z)*(frda_ks_ddk1_D0D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk1_D0 KS_func_pass_args_macro )*(frda_ks_dk2_D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk1_D2 KS_func_pass_args_macro )*(frda_ks_dk2_D0 KS_func_pass_args_macro ) + frda_ks_k1(x, y, z)*
+frda_ks_k2(x, y, z)*(frda_ks_ddc_D0D2 KS_func_pass_args_macro ) + frda_ks_k1(x, y, z)*
+(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_dk2_D2 KS_func_pass_args_macro ) + frda_ks_k1(x, y, z)*
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_dk2_D0 KS_func_pass_args_macro ) + frda_ks_k2(x, y, z)*
+(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_dk1_D2 KS_func_pass_args_macro ) + frda_ks_k2(x, y, z)*
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_dk1_D0 KS_func_pass_args_macro );
 
     _ddgamma_D1D2D1D0[ijk]=
 /* mcode in progress ... */
@@ -723,15 +723,15 @@ bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, 
 // c
 // k1
 // k2
-bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_ddk2_D0D1 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-bbn_ks_k2(x, y, z)*(bbn_ks_ddk1_D0D1 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
-bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
-(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
-(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
-(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
-(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro );
+frda_ks_c(x, y, z)*frda_ks_k1(x, y, z)*(frda_ks_ddk2_D0D1 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+frda_ks_k2(x, y, z)*(frda_ks_ddk1_D0D1 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk1_D0 KS_func_pass_args_macro )*(frda_ks_dk2_D1 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk1_D1 KS_func_pass_args_macro )*(frda_ks_dk2_D0 KS_func_pass_args_macro ) + frda_ks_k1(x, y, z)*
+frda_ks_k2(x, y, z)*(frda_ks_ddc_D0D1 KS_func_pass_args_macro ) + frda_ks_k1(x, y, z)*
+(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_dk2_D1 KS_func_pass_args_macro ) + frda_ks_k1(x, y, z)*
+(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_dk2_D0 KS_func_pass_args_macro ) + frda_ks_k2(x, y, z)*
+(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_dk1_D1 KS_func_pass_args_macro ) + frda_ks_k2(x, y, z)*
+(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_dk1_D0 KS_func_pass_args_macro );
 
     _ddgamma_D2D2D2D0[ijk]=
 /* mcode in progress ... */
@@ -744,11 +744,11 @@ bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, 
 // Derivative
 // c
 // k2
-2*bbn_ks_c(x, y, z)*bbn_ks_k2(x, y, z)*(bbn_ks_ddk2_D0D2 KS_func_pass_args_macro ) + 2*bbn_ks_c(x, y, z)*
-(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 
-pow(bbn_ks_k2(x, y, z), 2)*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + 2*bbn_ks_k2(x, y, z)*
-(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 2*bbn_ks_k2(x, y, z)*
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro );
+2*frda_ks_c(x, y, z)*frda_ks_k2(x, y, z)*(frda_ks_ddk2_D0D2 KS_func_pass_args_macro ) + 2*frda_ks_c(x, y, z)*
+(frda_ks_dk2_D0 KS_func_pass_args_macro )*(frda_ks_dk2_D2 KS_func_pass_args_macro ) + 
+pow(frda_ks_k2(x, y, z), 2)*(frda_ks_ddc_D0D2 KS_func_pass_args_macro ) + 2*frda_ks_k2(x, y, z)*
+(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_dk2_D2 KS_func_pass_args_macro ) + 2*frda_ks_k2(x, y, z)*
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_dk2_D0 KS_func_pass_args_macro );
 
     _ddgamma_D0D0D0D0[ijk]=
 /* mcode in progress ... */
@@ -759,10 +759,10 @@ pow(bbn_ks_k2(x, y, z), 2)*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + 2*bbn_ks
 // Derivative
 // c
 // k0
-2*bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_ddk0_D0D0 KS_func_pass_args_macro ) + 2*
-bbn_ks_c(x, y, z)*pow((bbn_ks_dk0_D0 KS_func_pass_args_macro ), 2) + pow(bbn_ks_k0(x, y, z), 2)*
-(bbn_ks_ddc_D0D0 KS_func_pass_args_macro ) + 4*bbn_ks_k0(x, y, z)*(bbn_ks_dc_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk0_D0 KS_func_pass_args_macro );
+2*frda_ks_c(x, y, z)*frda_ks_k0(x, y, z)*(frda_ks_ddk0_D0D0 KS_func_pass_args_macro ) + 2*
+frda_ks_c(x, y, z)*pow((frda_ks_dk0_D0 KS_func_pass_args_macro ), 2) + pow(frda_ks_k0(x, y, z), 2)*
+(frda_ks_ddc_D0D0 KS_func_pass_args_macro ) + 4*frda_ks_k0(x, y, z)*(frda_ks_dc_D0 KS_func_pass_args_macro )*
+(frda_ks_dk0_D0 KS_func_pass_args_macro );
 
     _ddgamma_D0D0D1D1[ijk]=
 /* mcode in progress ... */
@@ -773,10 +773,10 @@ bbn_ks_c(x, y, z)*pow((bbn_ks_dk0_D0 KS_func_pass_args_macro ), 2) + pow(bbn_ks_
 // Derivative
 // c
 // k0
-2*bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_ddk0_D1D1 KS_func_pass_args_macro ) + 2*
-bbn_ks_c(x, y, z)*pow((bbn_ks_dk0_D1 KS_func_pass_args_macro ), 2) + pow(bbn_ks_k0(x, y, z), 2)*
-(bbn_ks_ddc_D1D1 KS_func_pass_args_macro ) + 4*bbn_ks_k0(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*
-(bbn_ks_dk0_D1 KS_func_pass_args_macro );
+2*frda_ks_c(x, y, z)*frda_ks_k0(x, y, z)*(frda_ks_ddk0_D1D1 KS_func_pass_args_macro ) + 2*
+frda_ks_c(x, y, z)*pow((frda_ks_dk0_D1 KS_func_pass_args_macro ), 2) + pow(frda_ks_k0(x, y, z), 2)*
+(frda_ks_ddc_D1D1 KS_func_pass_args_macro ) + 4*frda_ks_k0(x, y, z)*(frda_ks_dc_D1 KS_func_pass_args_macro )*
+(frda_ks_dk0_D1 KS_func_pass_args_macro );
 
     _ddgamma_D0D1D0D2[ijk]=
 /* mcode in progress ... */
@@ -793,15 +793,15 @@ bbn_ks_c(x, y, z)*pow((bbn_ks_dk0_D1 KS_func_pass_args_macro ), 2) + pow(bbn_ks_
 // c
 // k0
 // k1
-bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_ddk1_D0D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-bbn_ks_k1(x, y, z)*(bbn_ks_ddk0_D0D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
-bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
-(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
-(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D2 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro );
+frda_ks_c(x, y, z)*frda_ks_k0(x, y, z)*(frda_ks_ddk1_D0D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+frda_ks_k1(x, y, z)*(frda_ks_ddk0_D0D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk0_D0 KS_func_pass_args_macro )*(frda_ks_dk1_D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk0_D2 KS_func_pass_args_macro )*(frda_ks_dk1_D0 KS_func_pass_args_macro ) + frda_ks_k0(x, y, z)*
+frda_ks_k1(x, y, z)*(frda_ks_ddc_D0D2 KS_func_pass_args_macro ) + frda_ks_k0(x, y, z)*
+(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_dk1_D2 KS_func_pass_args_macro ) + frda_ks_k0(x, y, z)*
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_dk1_D0 KS_func_pass_args_macro ) + frda_ks_k1(x, y, z)*
+(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_dk0_D2 KS_func_pass_args_macro ) + frda_ks_k1(x, y, z)*
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_dk0_D0 KS_func_pass_args_macro );
 
     _ddgamma_D1D2D1D1[ijk]=
 /* mcode in progress ... */
@@ -815,12 +815,12 @@ bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, 
 // c
 // k1
 // k2
-bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_ddk2_D1D1 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-bbn_ks_k2(x, y, z)*(bbn_ks_ddk1_D1D1 KS_func_pass_args_macro ) + 2*bbn_ks_c(x, y, z)*
-(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
-bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D1D1 KS_func_pass_args_macro ) + 2*bbn_ks_k1(x, y, z)*
-(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 2*bbn_ks_k2(x, y, z)*
-(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro );
+frda_ks_c(x, y, z)*frda_ks_k1(x, y, z)*(frda_ks_ddk2_D1D1 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+frda_ks_k2(x, y, z)*(frda_ks_ddk1_D1D1 KS_func_pass_args_macro ) + 2*frda_ks_c(x, y, z)*
+(frda_ks_dk1_D1 KS_func_pass_args_macro )*(frda_ks_dk2_D1 KS_func_pass_args_macro ) + frda_ks_k1(x, y, z)*
+frda_ks_k2(x, y, z)*(frda_ks_ddc_D1D1 KS_func_pass_args_macro ) + 2*frda_ks_k1(x, y, z)*
+(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_dk2_D1 KS_func_pass_args_macro ) + 2*frda_ks_k2(x, y, z)*
+(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_dk1_D1 KS_func_pass_args_macro );
 
     _ddgamma_D0D2D1D1[ijk]=
 /* mcode in progress ... */
@@ -834,12 +834,12 @@ bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D1D1 KS_func_pass_args_macro ) + 2*bbn_ks_k1(x, y
 // c
 // k0
 // k2
-bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_ddk2_D1D1 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-bbn_ks_k2(x, y, z)*(bbn_ks_ddk0_D1D1 KS_func_pass_args_macro ) + 2*bbn_ks_c(x, y, z)*
-(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
-bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D1D1 KS_func_pass_args_macro ) + 2*bbn_ks_k0(x, y, z)*
-(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 2*bbn_ks_k2(x, y, z)*
-(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro );
+frda_ks_c(x, y, z)*frda_ks_k0(x, y, z)*(frda_ks_ddk2_D1D1 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+frda_ks_k2(x, y, z)*(frda_ks_ddk0_D1D1 KS_func_pass_args_macro ) + 2*frda_ks_c(x, y, z)*
+(frda_ks_dk0_D1 KS_func_pass_args_macro )*(frda_ks_dk2_D1 KS_func_pass_args_macro ) + frda_ks_k0(x, y, z)*
+frda_ks_k2(x, y, z)*(frda_ks_ddc_D1D1 KS_func_pass_args_macro ) + 2*frda_ks_k0(x, y, z)*
+(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_dk2_D1 KS_func_pass_args_macro ) + 2*frda_ks_k2(x, y, z)*
+(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_dk0_D1 KS_func_pass_args_macro );
 
     _ddgamma_D1D2D2D2[ijk]=
 /* mcode in progress ... */
@@ -853,12 +853,12 @@ bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D1D1 KS_func_pass_args_macro ) + 2*bbn_ks_k0(x, y
 // c
 // k1
 // k2
-bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_ddk2_D2D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-bbn_ks_k2(x, y, z)*(bbn_ks_ddk1_D2D2 KS_func_pass_args_macro ) + 2*bbn_ks_c(x, y, z)*
-(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
-bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D2D2 KS_func_pass_args_macro ) + 2*bbn_ks_k1(x, y, z)*
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 2*bbn_ks_k2(x, y, z)*
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro );
+frda_ks_c(x, y, z)*frda_ks_k1(x, y, z)*(frda_ks_ddk2_D2D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+frda_ks_k2(x, y, z)*(frda_ks_ddk1_D2D2 KS_func_pass_args_macro ) + 2*frda_ks_c(x, y, z)*
+(frda_ks_dk1_D2 KS_func_pass_args_macro )*(frda_ks_dk2_D2 KS_func_pass_args_macro ) + frda_ks_k1(x, y, z)*
+frda_ks_k2(x, y, z)*(frda_ks_ddc_D2D2 KS_func_pass_args_macro ) + 2*frda_ks_k1(x, y, z)*
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_dk2_D2 KS_func_pass_args_macro ) + 2*frda_ks_k2(x, y, z)*
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_dk1_D2 KS_func_pass_args_macro );
 
     _ddgamma_D2D2D1D2[ijk]=
 /* mcode in progress ... */
@@ -871,11 +871,11 @@ bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D2D2 KS_func_pass_args_macro ) + 2*bbn_ks_k1(x, y
 // Derivative
 // c
 // k2
-2*bbn_ks_c(x, y, z)*bbn_ks_k2(x, y, z)*(bbn_ks_ddk2_D1D2 KS_func_pass_args_macro ) + 2*bbn_ks_c(x, y, z)*
-(bbn_ks_dk2_D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 
-pow(bbn_ks_k2(x, y, z), 2)*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + 2*bbn_ks_k2(x, y, z)*
-(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 2*bbn_ks_k2(x, y, z)*
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro );
+2*frda_ks_c(x, y, z)*frda_ks_k2(x, y, z)*(frda_ks_ddk2_D1D2 KS_func_pass_args_macro ) + 2*frda_ks_c(x, y, z)*
+(frda_ks_dk2_D1 KS_func_pass_args_macro )*(frda_ks_dk2_D2 KS_func_pass_args_macro ) + 
+pow(frda_ks_k2(x, y, z), 2)*(frda_ks_ddc_D1D2 KS_func_pass_args_macro ) + 2*frda_ks_k2(x, y, z)*
+(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_dk2_D2 KS_func_pass_args_macro ) + 2*frda_ks_k2(x, y, z)*
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_dk2_D1 KS_func_pass_args_macro );
 
     _ddgamma_D0D1D2D0[ijk]=
 /* mcode in progress ... */
@@ -892,15 +892,15 @@ pow(bbn_ks_k2(x, y, z), 2)*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + 2*bbn_ks
 // c
 // k0
 // k1
-bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_ddk1_D0D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-bbn_ks_k1(x, y, z)*(bbn_ks_ddk0_D0D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
-bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
-(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
-(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D2 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro );
+frda_ks_c(x, y, z)*frda_ks_k0(x, y, z)*(frda_ks_ddk1_D0D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+frda_ks_k1(x, y, z)*(frda_ks_ddk0_D0D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk0_D0 KS_func_pass_args_macro )*(frda_ks_dk1_D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk0_D2 KS_func_pass_args_macro )*(frda_ks_dk1_D0 KS_func_pass_args_macro ) + frda_ks_k0(x, y, z)*
+frda_ks_k1(x, y, z)*(frda_ks_ddc_D0D2 KS_func_pass_args_macro ) + frda_ks_k0(x, y, z)*
+(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_dk1_D2 KS_func_pass_args_macro ) + frda_ks_k0(x, y, z)*
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_dk1_D0 KS_func_pass_args_macro ) + frda_ks_k1(x, y, z)*
+(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_dk0_D2 KS_func_pass_args_macro ) + frda_ks_k1(x, y, z)*
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_dk0_D0 KS_func_pass_args_macro );
 
     _ddgamma_D0D2D2D0[ijk]=
 /* mcode in progress ... */
@@ -917,15 +917,15 @@ bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, 
 // c
 // k0
 // k2
-bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_ddk2_D0D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-bbn_ks_k2(x, y, z)*(bbn_ks_ddk0_D0D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
-bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
-(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
-(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D2 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro );
+frda_ks_c(x, y, z)*frda_ks_k0(x, y, z)*(frda_ks_ddk2_D0D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+frda_ks_k2(x, y, z)*(frda_ks_ddk0_D0D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk0_D0 KS_func_pass_args_macro )*(frda_ks_dk2_D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk0_D2 KS_func_pass_args_macro )*(frda_ks_dk2_D0 KS_func_pass_args_macro ) + frda_ks_k0(x, y, z)*
+frda_ks_k2(x, y, z)*(frda_ks_ddc_D0D2 KS_func_pass_args_macro ) + frda_ks_k0(x, y, z)*
+(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_dk2_D2 KS_func_pass_args_macro ) + frda_ks_k0(x, y, z)*
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_dk2_D0 KS_func_pass_args_macro ) + frda_ks_k2(x, y, z)*
+(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_dk0_D2 KS_func_pass_args_macro ) + frda_ks_k2(x, y, z)*
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_dk0_D0 KS_func_pass_args_macro );
 
     _ddgamma_D0D1D1D0[ijk]=
 /* mcode in progress ... */
@@ -942,15 +942,15 @@ bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, 
 // c
 // k0
 // k1
-bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_ddk1_D0D1 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-bbn_ks_k1(x, y, z)*(bbn_ks_ddk0_D0D1 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
-bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
-(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
-(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
-(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
-(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro );
+frda_ks_c(x, y, z)*frda_ks_k0(x, y, z)*(frda_ks_ddk1_D0D1 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+frda_ks_k1(x, y, z)*(frda_ks_ddk0_D0D1 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk0_D0 KS_func_pass_args_macro )*(frda_ks_dk1_D1 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk0_D1 KS_func_pass_args_macro )*(frda_ks_dk1_D0 KS_func_pass_args_macro ) + frda_ks_k0(x, y, z)*
+frda_ks_k1(x, y, z)*(frda_ks_ddc_D0D1 KS_func_pass_args_macro ) + frda_ks_k0(x, y, z)*
+(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_dk1_D1 KS_func_pass_args_macro ) + frda_ks_k0(x, y, z)*
+(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_dk1_D0 KS_func_pass_args_macro ) + frda_ks_k1(x, y, z)*
+(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_dk0_D1 KS_func_pass_args_macro ) + frda_ks_k1(x, y, z)*
+(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_dk0_D0 KS_func_pass_args_macro );
 
     _ddgamma_D1D2D2D0[ijk]=
 /* mcode in progress ... */
@@ -967,15 +967,15 @@ bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, 
 // c
 // k1
 // k2
-bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_ddk2_D0D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-bbn_ks_k2(x, y, z)*(bbn_ks_ddk1_D0D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
-bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
-(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
-(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro );
+frda_ks_c(x, y, z)*frda_ks_k1(x, y, z)*(frda_ks_ddk2_D0D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+frda_ks_k2(x, y, z)*(frda_ks_ddk1_D0D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk1_D0 KS_func_pass_args_macro )*(frda_ks_dk2_D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk1_D2 KS_func_pass_args_macro )*(frda_ks_dk2_D0 KS_func_pass_args_macro ) + frda_ks_k1(x, y, z)*
+frda_ks_k2(x, y, z)*(frda_ks_ddc_D0D2 KS_func_pass_args_macro ) + frda_ks_k1(x, y, z)*
+(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_dk2_D2 KS_func_pass_args_macro ) + frda_ks_k1(x, y, z)*
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_dk2_D0 KS_func_pass_args_macro ) + frda_ks_k2(x, y, z)*
+(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_dk1_D2 KS_func_pass_args_macro ) + frda_ks_k2(x, y, z)*
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_dk1_D0 KS_func_pass_args_macro );
 
     _ddgamma_D1D1D1D0[ijk]=
 /* mcode in progress ... */
@@ -988,11 +988,11 @@ bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, 
 // Derivative
 // c
 // k1
-2*bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_ddk1_D0D1 KS_func_pass_args_macro ) + 2*bbn_ks_c(x, y, z)*
-(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro ) + 
-pow(bbn_ks_k1(x, y, z), 2)*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 2*bbn_ks_k1(x, y, z)*
-(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro ) + 2*bbn_ks_k1(x, y, z)*
-(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro );
+2*frda_ks_c(x, y, z)*frda_ks_k1(x, y, z)*(frda_ks_ddk1_D0D1 KS_func_pass_args_macro ) + 2*frda_ks_c(x, y, z)*
+(frda_ks_dk1_D0 KS_func_pass_args_macro )*(frda_ks_dk1_D1 KS_func_pass_args_macro ) + 
+pow(frda_ks_k1(x, y, z), 2)*(frda_ks_ddc_D0D1 KS_func_pass_args_macro ) + 2*frda_ks_k1(x, y, z)*
+(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_dk1_D1 KS_func_pass_args_macro ) + 2*frda_ks_k1(x, y, z)*
+(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_dk1_D0 KS_func_pass_args_macro );
 
     _ddgamma_D1D2D1D2[ijk]=
 /* mcode in progress ... */
@@ -1009,15 +1009,15 @@ pow(bbn_ks_k1(x, y, z), 2)*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 2*bbn_ks
 // c
 // k1
 // k2
-bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_ddk2_D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-bbn_ks_k2(x, y, z)*(bbn_ks_ddk1_D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
-bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
-(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
-(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro );
+frda_ks_c(x, y, z)*frda_ks_k1(x, y, z)*(frda_ks_ddk2_D1D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+frda_ks_k2(x, y, z)*(frda_ks_ddk1_D1D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk1_D1 KS_func_pass_args_macro )*(frda_ks_dk2_D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk1_D2 KS_func_pass_args_macro )*(frda_ks_dk2_D1 KS_func_pass_args_macro ) + frda_ks_k1(x, y, z)*
+frda_ks_k2(x, y, z)*(frda_ks_ddc_D1D2 KS_func_pass_args_macro ) + frda_ks_k1(x, y, z)*
+(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_dk2_D2 KS_func_pass_args_macro ) + frda_ks_k1(x, y, z)*
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_dk2_D1 KS_func_pass_args_macro ) + frda_ks_k2(x, y, z)*
+(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_dk1_D2 KS_func_pass_args_macro ) + frda_ks_k2(x, y, z)*
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_dk1_D1 KS_func_pass_args_macro );
 
     _ddgamma_D1D2D0D0[ijk]=
 /* mcode in progress ... */
@@ -1031,12 +1031,12 @@ bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, 
 // c
 // k1
 // k2
-bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_ddk2_D0D0 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-bbn_ks_k2(x, y, z)*(bbn_ks_ddk1_D0D0 KS_func_pass_args_macro ) + 2*bbn_ks_c(x, y, z)*
-(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
-bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D0D0 KS_func_pass_args_macro ) + 2*bbn_ks_k1(x, y, z)*
-(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + 2*bbn_ks_k2(x, y, z)*
-(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro );
+frda_ks_c(x, y, z)*frda_ks_k1(x, y, z)*(frda_ks_ddk2_D0D0 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+frda_ks_k2(x, y, z)*(frda_ks_ddk1_D0D0 KS_func_pass_args_macro ) + 2*frda_ks_c(x, y, z)*
+(frda_ks_dk1_D0 KS_func_pass_args_macro )*(frda_ks_dk2_D0 KS_func_pass_args_macro ) + frda_ks_k1(x, y, z)*
+frda_ks_k2(x, y, z)*(frda_ks_ddc_D0D0 KS_func_pass_args_macro ) + 2*frda_ks_k1(x, y, z)*
+(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_dk2_D0 KS_func_pass_args_macro ) + 2*frda_ks_k2(x, y, z)*
+(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_dk1_D0 KS_func_pass_args_macro );
 
     _ddgamma_D0D0D0D2[ijk]=
 /* mcode in progress ... */
@@ -1049,11 +1049,11 @@ bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D0D0 KS_func_pass_args_macro ) + 2*bbn_ks_k1(x, y
 // Derivative
 // c
 // k0
-2*bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_ddk0_D0D2 KS_func_pass_args_macro ) + 2*bbn_ks_c(x, y, z)*
-(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D2 KS_func_pass_args_macro ) + 
-pow(bbn_ks_k0(x, y, z), 2)*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + 2*bbn_ks_k0(x, y, z)*
-(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D2 KS_func_pass_args_macro ) + 2*bbn_ks_k0(x, y, z)*
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro );
+2*frda_ks_c(x, y, z)*frda_ks_k0(x, y, z)*(frda_ks_ddk0_D0D2 KS_func_pass_args_macro ) + 2*frda_ks_c(x, y, z)*
+(frda_ks_dk0_D0 KS_func_pass_args_macro )*(frda_ks_dk0_D2 KS_func_pass_args_macro ) + 
+pow(frda_ks_k0(x, y, z), 2)*(frda_ks_ddc_D0D2 KS_func_pass_args_macro ) + 2*frda_ks_k0(x, y, z)*
+(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_dk0_D2 KS_func_pass_args_macro ) + 2*frda_ks_k0(x, y, z)*
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_dk0_D0 KS_func_pass_args_macro );
 
     _ddgamma_D2D2D2D1[ijk]=
 /* mcode in progress ... */
@@ -1066,11 +1066,11 @@ pow(bbn_ks_k0(x, y, z), 2)*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + 2*bbn_ks
 // Derivative
 // c
 // k2
-2*bbn_ks_c(x, y, z)*bbn_ks_k2(x, y, z)*(bbn_ks_ddk2_D1D2 KS_func_pass_args_macro ) + 2*bbn_ks_c(x, y, z)*
-(bbn_ks_dk2_D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 
-pow(bbn_ks_k2(x, y, z), 2)*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + 2*bbn_ks_k2(x, y, z)*
-(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 2*bbn_ks_k2(x, y, z)*
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro );
+2*frda_ks_c(x, y, z)*frda_ks_k2(x, y, z)*(frda_ks_ddk2_D1D2 KS_func_pass_args_macro ) + 2*frda_ks_c(x, y, z)*
+(frda_ks_dk2_D1 KS_func_pass_args_macro )*(frda_ks_dk2_D2 KS_func_pass_args_macro ) + 
+pow(frda_ks_k2(x, y, z), 2)*(frda_ks_ddc_D1D2 KS_func_pass_args_macro ) + 2*frda_ks_k2(x, y, z)*
+(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_dk2_D2 KS_func_pass_args_macro ) + 2*frda_ks_k2(x, y, z)*
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_dk2_D1 KS_func_pass_args_macro );
 
     _ddgamma_D0D2D0D0[ijk]=
 /* mcode in progress ... */
@@ -1084,12 +1084,12 @@ pow(bbn_ks_k2(x, y, z), 2)*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + 2*bbn_ks
 // c
 // k0
 // k2
-bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_ddk2_D0D0 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-bbn_ks_k2(x, y, z)*(bbn_ks_ddk0_D0D0 KS_func_pass_args_macro ) + 2*bbn_ks_c(x, y, z)*
-(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
-bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D0D0 KS_func_pass_args_macro ) + 2*bbn_ks_k0(x, y, z)*
-(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + 2*bbn_ks_k2(x, y, z)*
-(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro );
+frda_ks_c(x, y, z)*frda_ks_k0(x, y, z)*(frda_ks_ddk2_D0D0 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+frda_ks_k2(x, y, z)*(frda_ks_ddk0_D0D0 KS_func_pass_args_macro ) + 2*frda_ks_c(x, y, z)*
+(frda_ks_dk0_D0 KS_func_pass_args_macro )*(frda_ks_dk2_D0 KS_func_pass_args_macro ) + frda_ks_k0(x, y, z)*
+frda_ks_k2(x, y, z)*(frda_ks_ddc_D0D0 KS_func_pass_args_macro ) + 2*frda_ks_k0(x, y, z)*
+(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_dk2_D0 KS_func_pass_args_macro ) + 2*frda_ks_k2(x, y, z)*
+(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_dk0_D0 KS_func_pass_args_macro );
 
     _ddgamma_D0D2D0D1[ijk]=
 /* mcode in progress ... */
@@ -1106,15 +1106,15 @@ bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D0D0 KS_func_pass_args_macro ) + 2*bbn_ks_k0(x, y
 // c
 // k0
 // k2
-bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_ddk2_D0D1 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-bbn_ks_k2(x, y, z)*(bbn_ks_ddk0_D0D1 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
-bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
-(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
-(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
-(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
-(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro );
+frda_ks_c(x, y, z)*frda_ks_k0(x, y, z)*(frda_ks_ddk2_D0D1 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+frda_ks_k2(x, y, z)*(frda_ks_ddk0_D0D1 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk0_D0 KS_func_pass_args_macro )*(frda_ks_dk2_D1 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk0_D1 KS_func_pass_args_macro )*(frda_ks_dk2_D0 KS_func_pass_args_macro ) + frda_ks_k0(x, y, z)*
+frda_ks_k2(x, y, z)*(frda_ks_ddc_D0D1 KS_func_pass_args_macro ) + frda_ks_k0(x, y, z)*
+(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_dk2_D1 KS_func_pass_args_macro ) + frda_ks_k0(x, y, z)*
+(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_dk2_D0 KS_func_pass_args_macro ) + frda_ks_k2(x, y, z)*
+(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_dk0_D1 KS_func_pass_args_macro ) + frda_ks_k2(x, y, z)*
+(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_dk0_D0 KS_func_pass_args_macro );
 
     _ddgamma_D1D1D1D1[ijk]=
 /* mcode in progress ... */
@@ -1125,10 +1125,10 @@ bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, 
 // Derivative
 // c
 // k1
-2*bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_ddk1_D1D1 KS_func_pass_args_macro ) + 2*
-bbn_ks_c(x, y, z)*pow((bbn_ks_dk1_D1 KS_func_pass_args_macro ), 2) + pow(bbn_ks_k1(x, y, z), 2)*
-(bbn_ks_ddc_D1D1 KS_func_pass_args_macro ) + 4*bbn_ks_k1(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*
-(bbn_ks_dk1_D1 KS_func_pass_args_macro );
+2*frda_ks_c(x, y, z)*frda_ks_k1(x, y, z)*(frda_ks_ddk1_D1D1 KS_func_pass_args_macro ) + 2*
+frda_ks_c(x, y, z)*pow((frda_ks_dk1_D1 KS_func_pass_args_macro ), 2) + pow(frda_ks_k1(x, y, z), 2)*
+(frda_ks_ddc_D1D1 KS_func_pass_args_macro ) + 4*frda_ks_k1(x, y, z)*(frda_ks_dc_D1 KS_func_pass_args_macro )*
+(frda_ks_dk1_D1 KS_func_pass_args_macro );
 
     _ddgamma_D0D1D0D0[ijk]=
 /* mcode in progress ... */
@@ -1142,12 +1142,12 @@ bbn_ks_c(x, y, z)*pow((bbn_ks_dk1_D1 KS_func_pass_args_macro ), 2) + pow(bbn_ks_
 // c
 // k0
 // k1
-bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_ddk1_D0D0 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-bbn_ks_k1(x, y, z)*(bbn_ks_ddk0_D0D0 KS_func_pass_args_macro ) + 2*bbn_ks_c(x, y, z)*
-(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
-bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D0D0 KS_func_pass_args_macro ) + 2*bbn_ks_k0(x, y, z)*
-(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro ) + 2*bbn_ks_k1(x, y, z)*
-(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro );
+frda_ks_c(x, y, z)*frda_ks_k0(x, y, z)*(frda_ks_ddk1_D0D0 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+frda_ks_k1(x, y, z)*(frda_ks_ddk0_D0D0 KS_func_pass_args_macro ) + 2*frda_ks_c(x, y, z)*
+(frda_ks_dk0_D0 KS_func_pass_args_macro )*(frda_ks_dk1_D0 KS_func_pass_args_macro ) + frda_ks_k0(x, y, z)*
+frda_ks_k1(x, y, z)*(frda_ks_ddc_D0D0 KS_func_pass_args_macro ) + 2*frda_ks_k0(x, y, z)*
+(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_dk1_D0 KS_func_pass_args_macro ) + 2*frda_ks_k1(x, y, z)*
+(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_dk0_D0 KS_func_pass_args_macro );
 
     _ddgamma_D1D1D2D2[ijk]=
 /* mcode in progress ... */
@@ -1158,10 +1158,10 @@ bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D0D0 KS_func_pass_args_macro ) + 2*bbn_ks_k0(x, y
 // Derivative
 // c
 // k1
-2*bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_ddk1_D2D2 KS_func_pass_args_macro ) + 2*
-bbn_ks_c(x, y, z)*pow((bbn_ks_dk1_D2 KS_func_pass_args_macro ), 2) + pow(bbn_ks_k1(x, y, z), 2)*
-(bbn_ks_ddc_D2D2 KS_func_pass_args_macro ) + 4*bbn_ks_k1(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*
-(bbn_ks_dk1_D2 KS_func_pass_args_macro );
+2*frda_ks_c(x, y, z)*frda_ks_k1(x, y, z)*(frda_ks_ddk1_D2D2 KS_func_pass_args_macro ) + 2*
+frda_ks_c(x, y, z)*pow((frda_ks_dk1_D2 KS_func_pass_args_macro ), 2) + pow(frda_ks_k1(x, y, z), 2)*
+(frda_ks_ddc_D2D2 KS_func_pass_args_macro ) + 4*frda_ks_k1(x, y, z)*(frda_ks_dc_D2 KS_func_pass_args_macro )*
+(frda_ks_dk1_D2 KS_func_pass_args_macro );
 
     _ddgamma_D0D2D1D2[ijk]=
 /* mcode in progress ... */
@@ -1178,15 +1178,15 @@ bbn_ks_c(x, y, z)*pow((bbn_ks_dk1_D2 KS_func_pass_args_macro ), 2) + pow(bbn_ks_
 // c
 // k0
 // k2
-bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_ddk2_D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-bbn_ks_k2(x, y, z)*(bbn_ks_ddk0_D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
-bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
-(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
-(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D2 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro );
+frda_ks_c(x, y, z)*frda_ks_k0(x, y, z)*(frda_ks_ddk2_D1D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+frda_ks_k2(x, y, z)*(frda_ks_ddk0_D1D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk0_D1 KS_func_pass_args_macro )*(frda_ks_dk2_D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk0_D2 KS_func_pass_args_macro )*(frda_ks_dk2_D1 KS_func_pass_args_macro ) + frda_ks_k0(x, y, z)*
+frda_ks_k2(x, y, z)*(frda_ks_ddc_D1D2 KS_func_pass_args_macro ) + frda_ks_k0(x, y, z)*
+(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_dk2_D2 KS_func_pass_args_macro ) + frda_ks_k0(x, y, z)*
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_dk2_D1 KS_func_pass_args_macro ) + frda_ks_k2(x, y, z)*
+(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_dk0_D2 KS_func_pass_args_macro ) + frda_ks_k2(x, y, z)*
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_dk0_D1 KS_func_pass_args_macro );
 
     _ddgamma_D0D1D2D1[ijk]=
 /* mcode in progress ... */
@@ -1203,15 +1203,15 @@ bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, 
 // c
 // k0
 // k1
-bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_ddk1_D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-bbn_ks_k1(x, y, z)*(bbn_ks_ddk0_D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
-bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
-(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
-(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D2 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro );
+frda_ks_c(x, y, z)*frda_ks_k0(x, y, z)*(frda_ks_ddk1_D1D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+frda_ks_k1(x, y, z)*(frda_ks_ddk0_D1D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk0_D1 KS_func_pass_args_macro )*(frda_ks_dk1_D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk0_D2 KS_func_pass_args_macro )*(frda_ks_dk1_D1 KS_func_pass_args_macro ) + frda_ks_k0(x, y, z)*
+frda_ks_k1(x, y, z)*(frda_ks_ddc_D1D2 KS_func_pass_args_macro ) + frda_ks_k0(x, y, z)*
+(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_dk1_D2 KS_func_pass_args_macro ) + frda_ks_k0(x, y, z)*
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_dk1_D1 KS_func_pass_args_macro ) + frda_ks_k1(x, y, z)*
+(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_dk0_D2 KS_func_pass_args_macro ) + frda_ks_k1(x, y, z)*
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_dk0_D1 KS_func_pass_args_macro );
 
     _ddgamma_D0D1D1D2[ijk]=
 /* mcode in progress ... */
@@ -1228,15 +1228,15 @@ bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, 
 // c
 // k0
 // k1
-bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_ddk1_D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-bbn_ks_k1(x, y, z)*(bbn_ks_ddk0_D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
-bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
-(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
-(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D2 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro );
+frda_ks_c(x, y, z)*frda_ks_k0(x, y, z)*(frda_ks_ddk1_D1D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+frda_ks_k1(x, y, z)*(frda_ks_ddk0_D1D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk0_D1 KS_func_pass_args_macro )*(frda_ks_dk1_D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk0_D2 KS_func_pass_args_macro )*(frda_ks_dk1_D1 KS_func_pass_args_macro ) + frda_ks_k0(x, y, z)*
+frda_ks_k1(x, y, z)*(frda_ks_ddc_D1D2 KS_func_pass_args_macro ) + frda_ks_k0(x, y, z)*
+(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_dk1_D2 KS_func_pass_args_macro ) + frda_ks_k0(x, y, z)*
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_dk1_D1 KS_func_pass_args_macro ) + frda_ks_k1(x, y, z)*
+(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_dk0_D2 KS_func_pass_args_macro ) + frda_ks_k1(x, y, z)*
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_dk0_D1 KS_func_pass_args_macro );
 
     _ddgamma_D1D1D2D1[ijk]=
 /* mcode in progress ... */
@@ -1249,11 +1249,11 @@ bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, 
 // Derivative
 // c
 // k1
-2*bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_ddk1_D1D2 KS_func_pass_args_macro ) + 2*bbn_ks_c(x, y, z)*
-(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + 
-pow(bbn_ks_k1(x, y, z), 2)*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + 2*bbn_ks_k1(x, y, z)*
-(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + 2*bbn_ks_k1(x, y, z)*
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro );
+2*frda_ks_c(x, y, z)*frda_ks_k1(x, y, z)*(frda_ks_ddk1_D1D2 KS_func_pass_args_macro ) + 2*frda_ks_c(x, y, z)*
+(frda_ks_dk1_D1 KS_func_pass_args_macro )*(frda_ks_dk1_D2 KS_func_pass_args_macro ) + 
+pow(frda_ks_k1(x, y, z), 2)*(frda_ks_ddc_D1D2 KS_func_pass_args_macro ) + 2*frda_ks_k1(x, y, z)*
+(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_dk1_D2 KS_func_pass_args_macro ) + 2*frda_ks_k1(x, y, z)*
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_dk1_D1 KS_func_pass_args_macro );
 
     _ddgamma_D0D1D1D1[ijk]=
 /* mcode in progress ... */
@@ -1267,12 +1267,12 @@ pow(bbn_ks_k1(x, y, z), 2)*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + 2*bbn_ks
 // c
 // k0
 // k1
-bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_ddk1_D1D1 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-bbn_ks_k1(x, y, z)*(bbn_ks_ddk0_D1D1 KS_func_pass_args_macro ) + 2*bbn_ks_c(x, y, z)*
-(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
-bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D1D1 KS_func_pass_args_macro ) + 2*bbn_ks_k0(x, y, z)*
-(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro ) + 2*bbn_ks_k1(x, y, z)*
-(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro );
+frda_ks_c(x, y, z)*frda_ks_k0(x, y, z)*(frda_ks_ddk1_D1D1 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+frda_ks_k1(x, y, z)*(frda_ks_ddk0_D1D1 KS_func_pass_args_macro ) + 2*frda_ks_c(x, y, z)*
+(frda_ks_dk0_D1 KS_func_pass_args_macro )*(frda_ks_dk1_D1 KS_func_pass_args_macro ) + frda_ks_k0(x, y, z)*
+frda_ks_k1(x, y, z)*(frda_ks_ddc_D1D1 KS_func_pass_args_macro ) + 2*frda_ks_k0(x, y, z)*
+(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_dk1_D1 KS_func_pass_args_macro ) + 2*frda_ks_k1(x, y, z)*
+(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_dk0_D1 KS_func_pass_args_macro );
 
     _ddgamma_D0D2D1D0[ijk]=
 /* mcode in progress ... */
@@ -1289,15 +1289,15 @@ bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D1D1 KS_func_pass_args_macro ) + 2*bbn_ks_k0(x, y
 // c
 // k0
 // k2
-bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_ddk2_D0D1 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-bbn_ks_k2(x, y, z)*(bbn_ks_ddk0_D0D1 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
-bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
-(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
-(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
-(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
-(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro );
+frda_ks_c(x, y, z)*frda_ks_k0(x, y, z)*(frda_ks_ddk2_D0D1 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+frda_ks_k2(x, y, z)*(frda_ks_ddk0_D0D1 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk0_D0 KS_func_pass_args_macro )*(frda_ks_dk2_D1 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk0_D1 KS_func_pass_args_macro )*(frda_ks_dk2_D0 KS_func_pass_args_macro ) + frda_ks_k0(x, y, z)*
+frda_ks_k2(x, y, z)*(frda_ks_ddc_D0D1 KS_func_pass_args_macro ) + frda_ks_k0(x, y, z)*
+(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_dk2_D1 KS_func_pass_args_macro ) + frda_ks_k0(x, y, z)*
+(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_dk2_D0 KS_func_pass_args_macro ) + frda_ks_k2(x, y, z)*
+(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_dk0_D1 KS_func_pass_args_macro ) + frda_ks_k2(x, y, z)*
+(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_dk0_D0 KS_func_pass_args_macro );
 
     _ddgamma_D2D2D1D0[ijk]=
 /* mcode in progress ... */
@@ -1310,11 +1310,11 @@ bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, 
 // Derivative
 // c
 // k2
-2*bbn_ks_c(x, y, z)*bbn_ks_k2(x, y, z)*(bbn_ks_ddk2_D0D1 KS_func_pass_args_macro ) + 2*bbn_ks_c(x, y, z)*
-(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 
-pow(bbn_ks_k2(x, y, z), 2)*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 2*bbn_ks_k2(x, y, z)*
-(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 2*bbn_ks_k2(x, y, z)*
-(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro );
+2*frda_ks_c(x, y, z)*frda_ks_k2(x, y, z)*(frda_ks_ddk2_D0D1 KS_func_pass_args_macro ) + 2*frda_ks_c(x, y, z)*
+(frda_ks_dk2_D0 KS_func_pass_args_macro )*(frda_ks_dk2_D1 KS_func_pass_args_macro ) + 
+pow(frda_ks_k2(x, y, z), 2)*(frda_ks_ddc_D0D1 KS_func_pass_args_macro ) + 2*frda_ks_k2(x, y, z)*
+(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_dk2_D1 KS_func_pass_args_macro ) + 2*frda_ks_k2(x, y, z)*
+(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_dk2_D0 KS_func_pass_args_macro );
 
     _ddgamma_D0D1D2D2[ijk]=
 /* mcode in progress ... */
@@ -1328,12 +1328,12 @@ pow(bbn_ks_k2(x, y, z), 2)*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 2*bbn_ks
 // c
 // k0
 // k1
-bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_ddk1_D2D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-bbn_ks_k1(x, y, z)*(bbn_ks_ddk0_D2D2 KS_func_pass_args_macro ) + 2*bbn_ks_c(x, y, z)*
-(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
-bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D2D2 KS_func_pass_args_macro ) + 2*bbn_ks_k0(x, y, z)*
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + 2*bbn_ks_k1(x, y, z)*
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D2 KS_func_pass_args_macro );
+frda_ks_c(x, y, z)*frda_ks_k0(x, y, z)*(frda_ks_ddk1_D2D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+frda_ks_k1(x, y, z)*(frda_ks_ddk0_D2D2 KS_func_pass_args_macro ) + 2*frda_ks_c(x, y, z)*
+(frda_ks_dk0_D2 KS_func_pass_args_macro )*(frda_ks_dk1_D2 KS_func_pass_args_macro ) + frda_ks_k0(x, y, z)*
+frda_ks_k1(x, y, z)*(frda_ks_ddc_D2D2 KS_func_pass_args_macro ) + 2*frda_ks_k0(x, y, z)*
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_dk1_D2 KS_func_pass_args_macro ) + 2*frda_ks_k1(x, y, z)*
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_dk0_D2 KS_func_pass_args_macro );
 
     _ddgamma_D2D2D0D0[ijk]=
 /* mcode in progress ... */
@@ -1344,10 +1344,10 @@ bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D2D2 KS_func_pass_args_macro ) + 2*bbn_ks_k0(x, y
 // Derivative
 // c
 // k2
-2*bbn_ks_c(x, y, z)*bbn_ks_k2(x, y, z)*(bbn_ks_ddk2_D0D0 KS_func_pass_args_macro ) + 2*
-bbn_ks_c(x, y, z)*pow((bbn_ks_dk2_D0 KS_func_pass_args_macro ), 2) + pow(bbn_ks_k2(x, y, z), 2)*
-(bbn_ks_ddc_D0D0 KS_func_pass_args_macro ) + 4*bbn_ks_k2(x, y, z)*(bbn_ks_dc_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk2_D0 KS_func_pass_args_macro );
+2*frda_ks_c(x, y, z)*frda_ks_k2(x, y, z)*(frda_ks_ddk2_D0D0 KS_func_pass_args_macro ) + 2*
+frda_ks_c(x, y, z)*pow((frda_ks_dk2_D0 KS_func_pass_args_macro ), 2) + pow(frda_ks_k2(x, y, z), 2)*
+(frda_ks_ddc_D0D0 KS_func_pass_args_macro ) + 4*frda_ks_k2(x, y, z)*(frda_ks_dc_D0 KS_func_pass_args_macro )*
+(frda_ks_dk2_D0 KS_func_pass_args_macro );
 
     _ddgamma_D0D0D2D1[ijk]=
 /* mcode in progress ... */
@@ -1360,11 +1360,11 @@ bbn_ks_c(x, y, z)*pow((bbn_ks_dk2_D0 KS_func_pass_args_macro ), 2) + pow(bbn_ks_
 // Derivative
 // c
 // k0
-2*bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_ddk0_D1D2 KS_func_pass_args_macro ) + 2*bbn_ks_c(x, y, z)*
-(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D2 KS_func_pass_args_macro ) + 
-pow(bbn_ks_k0(x, y, z), 2)*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + 2*bbn_ks_k0(x, y, z)*
-(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D2 KS_func_pass_args_macro ) + 2*bbn_ks_k0(x, y, z)*
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro );
+2*frda_ks_c(x, y, z)*frda_ks_k0(x, y, z)*(frda_ks_ddk0_D1D2 KS_func_pass_args_macro ) + 2*frda_ks_c(x, y, z)*
+(frda_ks_dk0_D1 KS_func_pass_args_macro )*(frda_ks_dk0_D2 KS_func_pass_args_macro ) + 
+pow(frda_ks_k0(x, y, z), 2)*(frda_ks_ddc_D1D2 KS_func_pass_args_macro ) + 2*frda_ks_k0(x, y, z)*
+(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_dk0_D2 KS_func_pass_args_macro ) + 2*frda_ks_k0(x, y, z)*
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_dk0_D1 KS_func_pass_args_macro );
 
     _ddgamma_D0D2D2D2[ijk]=
 /* mcode in progress ... */
@@ -1378,12 +1378,12 @@ pow(bbn_ks_k0(x, y, z), 2)*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + 2*bbn_ks
 // c
 // k0
 // k2
-bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_ddk2_D2D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-bbn_ks_k2(x, y, z)*(bbn_ks_ddk0_D2D2 KS_func_pass_args_macro ) + 2*bbn_ks_c(x, y, z)*
-(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
-bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D2D2 KS_func_pass_args_macro ) + 2*bbn_ks_k0(x, y, z)*
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 2*bbn_ks_k2(x, y, z)*
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D2 KS_func_pass_args_macro );
+frda_ks_c(x, y, z)*frda_ks_k0(x, y, z)*(frda_ks_ddk2_D2D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+frda_ks_k2(x, y, z)*(frda_ks_ddk0_D2D2 KS_func_pass_args_macro ) + 2*frda_ks_c(x, y, z)*
+(frda_ks_dk0_D2 KS_func_pass_args_macro )*(frda_ks_dk2_D2 KS_func_pass_args_macro ) + frda_ks_k0(x, y, z)*
+frda_ks_k2(x, y, z)*(frda_ks_ddc_D2D2 KS_func_pass_args_macro ) + 2*frda_ks_k0(x, y, z)*
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_dk2_D2 KS_func_pass_args_macro ) + 2*frda_ks_k2(x, y, z)*
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_dk0_D2 KS_func_pass_args_macro );
 
     _ddgamma_D1D1D1D2[ijk]=
 /* mcode in progress ... */
@@ -1396,11 +1396,11 @@ bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D2D2 KS_func_pass_args_macro ) + 2*bbn_ks_k0(x, y
 // Derivative
 // c
 // k1
-2*bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_ddk1_D1D2 KS_func_pass_args_macro ) + 2*bbn_ks_c(x, y, z)*
-(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + 
-pow(bbn_ks_k1(x, y, z), 2)*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + 2*bbn_ks_k1(x, y, z)*
-(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + 2*bbn_ks_k1(x, y, z)*
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro );
+2*frda_ks_c(x, y, z)*frda_ks_k1(x, y, z)*(frda_ks_ddk1_D1D2 KS_func_pass_args_macro ) + 2*frda_ks_c(x, y, z)*
+(frda_ks_dk1_D1 KS_func_pass_args_macro )*(frda_ks_dk1_D2 KS_func_pass_args_macro ) + 
+pow(frda_ks_k1(x, y, z), 2)*(frda_ks_ddc_D1D2 KS_func_pass_args_macro ) + 2*frda_ks_k1(x, y, z)*
+(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_dk1_D2 KS_func_pass_args_macro ) + 2*frda_ks_k1(x, y, z)*
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_dk1_D1 KS_func_pass_args_macro );
 
     _ddgamma_D1D2D2D1[ijk]=
 /* mcode in progress ... */
@@ -1417,15 +1417,15 @@ pow(bbn_ks_k1(x, y, z), 2)*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + 2*bbn_ks
 // c
 // k1
 // k2
-bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_ddk2_D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-bbn_ks_k2(x, y, z)*(bbn_ks_ddk1_D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
-bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
-(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
-(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro );
+frda_ks_c(x, y, z)*frda_ks_k1(x, y, z)*(frda_ks_ddk2_D1D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+frda_ks_k2(x, y, z)*(frda_ks_ddk1_D1D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk1_D1 KS_func_pass_args_macro )*(frda_ks_dk2_D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk1_D2 KS_func_pass_args_macro )*(frda_ks_dk2_D1 KS_func_pass_args_macro ) + frda_ks_k1(x, y, z)*
+frda_ks_k2(x, y, z)*(frda_ks_ddc_D1D2 KS_func_pass_args_macro ) + frda_ks_k1(x, y, z)*
+(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_dk2_D2 KS_func_pass_args_macro ) + frda_ks_k1(x, y, z)*
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_dk2_D1 KS_func_pass_args_macro ) + frda_ks_k2(x, y, z)*
+(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_dk1_D2 KS_func_pass_args_macro ) + frda_ks_k2(x, y, z)*
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_dk1_D1 KS_func_pass_args_macro );
 
     _ddgamma_D0D0D1D2[ijk]=
 /* mcode in progress ... */
@@ -1438,11 +1438,11 @@ bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, 
 // Derivative
 // c
 // k0
-2*bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_ddk0_D1D2 KS_func_pass_args_macro ) + 2*bbn_ks_c(x, y, z)*
-(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D2 KS_func_pass_args_macro ) + 
-pow(bbn_ks_k0(x, y, z), 2)*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + 2*bbn_ks_k0(x, y, z)*
-(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D2 KS_func_pass_args_macro ) + 2*bbn_ks_k0(x, y, z)*
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro );
+2*frda_ks_c(x, y, z)*frda_ks_k0(x, y, z)*(frda_ks_ddk0_D1D2 KS_func_pass_args_macro ) + 2*frda_ks_c(x, y, z)*
+(frda_ks_dk0_D1 KS_func_pass_args_macro )*(frda_ks_dk0_D2 KS_func_pass_args_macro ) + 
+pow(frda_ks_k0(x, y, z), 2)*(frda_ks_ddc_D1D2 KS_func_pass_args_macro ) + 2*frda_ks_k0(x, y, z)*
+(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_dk0_D2 KS_func_pass_args_macro ) + 2*frda_ks_k0(x, y, z)*
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_dk0_D1 KS_func_pass_args_macro );
 
     _ddgamma_D0D2D0D2[ijk]=
 /* mcode in progress ... */
@@ -1459,15 +1459,15 @@ pow(bbn_ks_k0(x, y, z), 2)*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + 2*bbn_ks
 // c
 // k0
 // k2
-bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_ddk2_D0D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-bbn_ks_k2(x, y, z)*(bbn_ks_ddk0_D0D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
-bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
-(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
-(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D2 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro );
+frda_ks_c(x, y, z)*frda_ks_k0(x, y, z)*(frda_ks_ddk2_D0D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+frda_ks_k2(x, y, z)*(frda_ks_ddk0_D0D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk0_D0 KS_func_pass_args_macro )*(frda_ks_dk2_D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk0_D2 KS_func_pass_args_macro )*(frda_ks_dk2_D0 KS_func_pass_args_macro ) + frda_ks_k0(x, y, z)*
+frda_ks_k2(x, y, z)*(frda_ks_ddc_D0D2 KS_func_pass_args_macro ) + frda_ks_k0(x, y, z)*
+(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_dk2_D2 KS_func_pass_args_macro ) + frda_ks_k0(x, y, z)*
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_dk2_D0 KS_func_pass_args_macro ) + frda_ks_k2(x, y, z)*
+(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_dk0_D2 KS_func_pass_args_macro ) + frda_ks_k2(x, y, z)*
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_dk0_D0 KS_func_pass_args_macro );
 
     _ddgamma_D1D1D0D2[ijk]=
 /* mcode in progress ... */
@@ -1480,11 +1480,11 @@ bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, 
 // Derivative
 // c
 // k1
-2*bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_ddk1_D0D2 KS_func_pass_args_macro ) + 2*bbn_ks_c(x, y, z)*
-(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + 
-pow(bbn_ks_k1(x, y, z), 2)*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + 2*bbn_ks_k1(x, y, z)*
-(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + 2*bbn_ks_k1(x, y, z)*
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro );
+2*frda_ks_c(x, y, z)*frda_ks_k1(x, y, z)*(frda_ks_ddk1_D0D2 KS_func_pass_args_macro ) + 2*frda_ks_c(x, y, z)*
+(frda_ks_dk1_D0 KS_func_pass_args_macro )*(frda_ks_dk1_D2 KS_func_pass_args_macro ) + 
+pow(frda_ks_k1(x, y, z), 2)*(frda_ks_ddc_D0D2 KS_func_pass_args_macro ) + 2*frda_ks_k1(x, y, z)*
+(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_dk1_D2 KS_func_pass_args_macro ) + 2*frda_ks_k1(x, y, z)*
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_dk1_D0 KS_func_pass_args_macro );
 
     _ddgamma_D2D2D0D1[ijk]=
 /* mcode in progress ... */
@@ -1497,15 +1497,15 @@ pow(bbn_ks_k1(x, y, z), 2)*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + 2*bbn_ks
 // Derivative
 // c
 // k2
-2*bbn_ks_c(x, y, z)*bbn_ks_k2(x, y, z)*(bbn_ks_ddk2_D0D1 KS_func_pass_args_macro ) + 2*bbn_ks_c(x, y, z)*
-(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 
-pow(bbn_ks_k2(x, y, z), 2)*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 2*bbn_ks_k2(x, y, z)*
-(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 2*bbn_ks_k2(x, y, z)*
-(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro );
+2*frda_ks_c(x, y, z)*frda_ks_k2(x, y, z)*(frda_ks_ddk2_D0D1 KS_func_pass_args_macro ) + 2*frda_ks_c(x, y, z)*
+(frda_ks_dk2_D0 KS_func_pass_args_macro )*(frda_ks_dk2_D1 KS_func_pass_args_macro ) + 
+pow(frda_ks_k2(x, y, z), 2)*(frda_ks_ddc_D0D1 KS_func_pass_args_macro ) + 2*frda_ks_k2(x, y, z)*
+(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_dk2_D1 KS_func_pass_args_macro ) + 2*frda_ks_k2(x, y, z)*
+(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_dk2_D0 KS_func_pass_args_macro );
   }	
 }
 
-void bbn_free_data_dddg_analytic(
+void frda_free_data_dddg_analytic(
         Patch_T *const patch,
         const double BH_center_x,
         const double BH_center_y,
@@ -1711,26 +1711,26 @@ double *const _dddgamma_D1D2D0D2D2 = get_v(stem,"D1D2D0D2D2");
 // c
 // k0
 // k1
-bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dddk1_D1D2D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-bbn_ks_k1(x, y, z)*(bbn_ks_dddk0_D1D2D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D2D2 KS_func_pass_args_macro ) + 2*
-bbn_ks_c(x, y, z)*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D2 KS_func_pass_args_macro ) + 
-bbn_ks_c(x, y, z)*(bbn_ks_ddk0_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro ) + 
-2*bbn_ks_c(x, y, z)*(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D2 KS_func_pass_args_macro ) + 
-bbn_ks_k0(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_dddc_D1D2D2 KS_func_pass_args_macro ) + 
-bbn_ks_k0(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D2D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_k0(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D2 KS_func_pass_args_macro ) + 
-bbn_ks_k0(x, y, z)*(bbn_ks_ddc_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro ) + 
-2*bbn_ks_k0(x, y, z)*(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
-bbn_ks_k1(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D2D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_k1(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D2 KS_func_pass_args_macro ) + 
-bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro ) + 
-2*bbn_ks_k1(x, y, z)*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
-2*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*
-(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D2 KS_func_pass_args_macro )*
-(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + 2*
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*
-(bbn_ks_dk1_D1 KS_func_pass_args_macro );
+frda_ks_c(x, y, z)*frda_ks_k0(x, y, z)*(frda_ks_dddk1_D1D2D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+frda_ks_k1(x, y, z)*(frda_ks_dddk0_D1D2D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk0_D1 KS_func_pass_args_macro )*(frda_ks_ddk1_D2D2 KS_func_pass_args_macro ) + 2*
+frda_ks_c(x, y, z)*(frda_ks_dk0_D2 KS_func_pass_args_macro )*(frda_ks_ddk1_D1D2 KS_func_pass_args_macro ) + 
+frda_ks_c(x, y, z)*(frda_ks_ddk0_D2D2 KS_func_pass_args_macro )*(frda_ks_dk1_D1 KS_func_pass_args_macro ) + 
+2*frda_ks_c(x, y, z)*(frda_ks_dk1_D2 KS_func_pass_args_macro )*(frda_ks_ddk0_D1D2 KS_func_pass_args_macro ) + 
+frda_ks_k0(x, y, z)*frda_ks_k1(x, y, z)*(frda_ks_dddc_D1D2D2 KS_func_pass_args_macro ) + 
+frda_ks_k0(x, y, z)*(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk1_D2D2 KS_func_pass_args_macro ) + 
+2*frda_ks_k0(x, y, z)*(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk1_D1D2 KS_func_pass_args_macro ) + 
+frda_ks_k0(x, y, z)*(frda_ks_ddc_D2D2 KS_func_pass_args_macro )*(frda_ks_dk1_D1 KS_func_pass_args_macro ) + 
+2*frda_ks_k0(x, y, z)*(frda_ks_dk1_D2 KS_func_pass_args_macro )*(frda_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
+frda_ks_k1(x, y, z)*(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk0_D2D2 KS_func_pass_args_macro ) + 
+2*frda_ks_k1(x, y, z)*(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk0_D1D2 KS_func_pass_args_macro ) + 
+frda_ks_k1(x, y, z)*(frda_ks_ddc_D2D2 KS_func_pass_args_macro )*(frda_ks_dk0_D1 KS_func_pass_args_macro ) + 
+2*frda_ks_k1(x, y, z)*(frda_ks_dk0_D2 KS_func_pass_args_macro )*(frda_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
+2*(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_dk0_D2 KS_func_pass_args_macro )*
+(frda_ks_dk1_D2 KS_func_pass_args_macro ) + 2*(frda_ks_dc_D2 KS_func_pass_args_macro )*
+(frda_ks_dk0_D1 KS_func_pass_args_macro )*(frda_ks_dk1_D2 KS_func_pass_args_macro ) + 2*
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_dk0_D2 KS_func_pass_args_macro )*
+(frda_ks_dk1_D1 KS_func_pass_args_macro );
 
     _dddgamma_D0D1D2D0D1[ijk]=
 /* mcode in progress ... */
@@ -1759,36 +1759,36 @@ bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_
 // c
 // k0
 // k1
-bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dddk1_D0D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-bbn_ks_k1(x, y, z)*(bbn_ks_dddk0_D0D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D1 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D1 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
-bbn_ks_k1(x, y, z)*(bbn_ks_dddc_D0D1D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
-(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
-(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D1 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
-(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
-(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
-(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
-(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D2 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
-(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D2 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D1 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
-(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
-(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
-(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
-(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*
-(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + (bbn_ks_dc_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro ) + 
-(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + (bbn_ks_dc_D1 KS_func_pass_args_macro )*
-(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro ) + 
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk1_D1 KS_func_pass_args_macro ) + (bbn_ks_dc_D2 KS_func_pass_args_macro )*
-(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro );
+frda_ks_c(x, y, z)*frda_ks_k0(x, y, z)*(frda_ks_dddk1_D0D1D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+frda_ks_k1(x, y, z)*(frda_ks_dddk0_D0D1D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk0_D0 KS_func_pass_args_macro )*(frda_ks_ddk1_D1D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk0_D1 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk0_D2 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D1 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk1_D0 KS_func_pass_args_macro )*(frda_ks_ddk0_D1D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk1_D1 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk1_D2 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D1 KS_func_pass_args_macro ) + frda_ks_k0(x, y, z)*
+frda_ks_k1(x, y, z)*(frda_ks_dddc_D0D1D2 KS_func_pass_args_macro ) + frda_ks_k0(x, y, z)*
+(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk1_D1D2 KS_func_pass_args_macro ) + frda_ks_k0(x, y, z)*
+(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D2 KS_func_pass_args_macro ) + frda_ks_k0(x, y, z)*
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D1 KS_func_pass_args_macro ) + frda_ks_k0(x, y, z)*
+(frda_ks_dk1_D0 KS_func_pass_args_macro )*(frda_ks_ddc_D1D2 KS_func_pass_args_macro ) + frda_ks_k0(x, y, z)*
+(frda_ks_dk1_D1 KS_func_pass_args_macro )*(frda_ks_ddc_D0D2 KS_func_pass_args_macro ) + frda_ks_k0(x, y, z)*
+(frda_ks_dk1_D2 KS_func_pass_args_macro )*(frda_ks_ddc_D0D1 KS_func_pass_args_macro ) + frda_ks_k1(x, y, z)*
+(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk0_D1D2 KS_func_pass_args_macro ) + frda_ks_k1(x, y, z)*
+(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D2 KS_func_pass_args_macro ) + frda_ks_k1(x, y, z)*
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D1 KS_func_pass_args_macro ) + frda_ks_k1(x, y, z)*
+(frda_ks_dk0_D0 KS_func_pass_args_macro )*(frda_ks_ddc_D1D2 KS_func_pass_args_macro ) + frda_ks_k1(x, y, z)*
+(frda_ks_dk0_D1 KS_func_pass_args_macro )*(frda_ks_ddc_D0D2 KS_func_pass_args_macro ) + frda_ks_k1(x, y, z)*
+(frda_ks_dk0_D2 KS_func_pass_args_macro )*(frda_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_dk0_D1 KS_func_pass_args_macro )*
+(frda_ks_dk1_D2 KS_func_pass_args_macro ) + (frda_ks_dc_D0 KS_func_pass_args_macro )*
+(frda_ks_dk0_D2 KS_func_pass_args_macro )*(frda_ks_dk1_D1 KS_func_pass_args_macro ) + 
+(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_dk0_D0 KS_func_pass_args_macro )*
+(frda_ks_dk1_D2 KS_func_pass_args_macro ) + (frda_ks_dc_D1 KS_func_pass_args_macro )*
+(frda_ks_dk0_D2 KS_func_pass_args_macro )*(frda_ks_dk1_D0 KS_func_pass_args_macro ) + 
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_dk0_D0 KS_func_pass_args_macro )*
+(frda_ks_dk1_D1 KS_func_pass_args_macro ) + (frda_ks_dc_D2 KS_func_pass_args_macro )*
+(frda_ks_dk0_D1 KS_func_pass_args_macro )*(frda_ks_dk1_D0 KS_func_pass_args_macro );
 
     _dddgamma_D1D2D0D2D0[ijk]=
 /* mcode in progress ... */
@@ -1811,26 +1811,26 @@ bbn_ks_k1(x, y, z)*(bbn_ks_dddc_D0D1D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, 
 // c
 // k1
 // k2
-bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_dddk2_D0D0D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-bbn_ks_k2(x, y, z)*(bbn_ks_dddk1_D0D0D2 KS_func_pass_args_macro ) + 2*bbn_ks_c(x, y, z)*
-(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_ddk1_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 
-bbn_ks_c(x, y, z)*(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D0 KS_func_pass_args_macro ) + 
-2*bbn_ks_c(x, y, z)*(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D2 KS_func_pass_args_macro ) + 
-bbn_ks_k1(x, y, z)*bbn_ks_k2(x, y, z)*(bbn_ks_dddc_D0D0D2 KS_func_pass_args_macro ) + 2*
-bbn_ks_k1(x, y, z)*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D2 KS_func_pass_args_macro ) + 
-bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 
-bbn_ks_k1(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D0 KS_func_pass_args_macro ) + 
-2*bbn_ks_k1(x, y, z)*(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_k2(x, y, z)*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D2 KS_func_pass_args_macro ) + 
-bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + 
-bbn_ks_k2(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D0 KS_func_pass_args_macro ) + 
-2*bbn_ks_k2(x, y, z)*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
-2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + 2*
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk2_D0 KS_func_pass_args_macro );
+frda_ks_c(x, y, z)*frda_ks_k1(x, y, z)*(frda_ks_dddk2_D0D0D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+frda_ks_k2(x, y, z)*(frda_ks_dddk1_D0D0D2 KS_func_pass_args_macro ) + 2*frda_ks_c(x, y, z)*
+(frda_ks_dk1_D0 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_ddk1_D0D0 KS_func_pass_args_macro )*(frda_ks_dk2_D2 KS_func_pass_args_macro ) + 
+frda_ks_c(x, y, z)*(frda_ks_dk1_D2 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D0 KS_func_pass_args_macro ) + 
+2*frda_ks_c(x, y, z)*(frda_ks_dk2_D0 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D2 KS_func_pass_args_macro ) + 
+frda_ks_k1(x, y, z)*frda_ks_k2(x, y, z)*(frda_ks_dddc_D0D0D2 KS_func_pass_args_macro ) + 2*
+frda_ks_k1(x, y, z)*(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D2 KS_func_pass_args_macro ) + 
+frda_ks_k1(x, y, z)*(frda_ks_ddc_D0D0 KS_func_pass_args_macro )*(frda_ks_dk2_D2 KS_func_pass_args_macro ) + 
+frda_ks_k1(x, y, z)*(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D0 KS_func_pass_args_macro ) + 
+2*frda_ks_k1(x, y, z)*(frda_ks_dk2_D0 KS_func_pass_args_macro )*(frda_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
+2*frda_ks_k2(x, y, z)*(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D2 KS_func_pass_args_macro ) + 
+frda_ks_k2(x, y, z)*(frda_ks_ddc_D0D0 KS_func_pass_args_macro )*(frda_ks_dk1_D2 KS_func_pass_args_macro ) + 
+frda_ks_k2(x, y, z)*(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D0 KS_func_pass_args_macro ) + 
+2*frda_ks_k2(x, y, z)*(frda_ks_dk1_D0 KS_func_pass_args_macro )*(frda_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
+2*(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_dk1_D0 KS_func_pass_args_macro )*
+(frda_ks_dk2_D2 KS_func_pass_args_macro ) + 2*(frda_ks_dc_D0 KS_func_pass_args_macro )*
+(frda_ks_dk1_D2 KS_func_pass_args_macro )*(frda_ks_dk2_D0 KS_func_pass_args_macro ) + 2*
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_dk1_D0 KS_func_pass_args_macro )*
+(frda_ks_dk2_D0 KS_func_pass_args_macro );
 
     _dddgamma_D1D1D1D2D1[ijk]=
 /* mcode in progress ... */
@@ -1847,17 +1847,17 @@ bbn_ks_k2(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D0 KS_
 // Derivative
 // c
 // k1
-2*bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_dddk1_D1D1D2 KS_func_pass_args_macro ) + 4*
-bbn_ks_c(x, y, z)*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_c(x, y, z)*(bbn_ks_ddk1_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + 
-pow(bbn_ks_k1(x, y, z), 2)*(bbn_ks_dddc_D1D1D2 KS_func_pass_args_macro ) + 4*bbn_ks_k1(x, y, z)*
-(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D2 KS_func_pass_args_macro ) + 2*
-bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_k1(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D1 KS_func_pass_args_macro ) + 
-4*bbn_ks_k1(x, y, z)*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
-4*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*
-(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D2 KS_func_pass_args_macro )*
-pow((bbn_ks_dk1_D1 KS_func_pass_args_macro ), 2);
+2*frda_ks_c(x, y, z)*frda_ks_k1(x, y, z)*(frda_ks_dddk1_D1D1D2 KS_func_pass_args_macro ) + 4*
+frda_ks_c(x, y, z)*(frda_ks_dk1_D1 KS_func_pass_args_macro )*(frda_ks_ddk1_D1D2 KS_func_pass_args_macro ) + 
+2*frda_ks_c(x, y, z)*(frda_ks_ddk1_D1D1 KS_func_pass_args_macro )*(frda_ks_dk1_D2 KS_func_pass_args_macro ) + 
+pow(frda_ks_k1(x, y, z), 2)*(frda_ks_dddc_D1D1D2 KS_func_pass_args_macro ) + 4*frda_ks_k1(x, y, z)*
+(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk1_D1D2 KS_func_pass_args_macro ) + 2*
+frda_ks_k1(x, y, z)*(frda_ks_ddc_D1D1 KS_func_pass_args_macro )*(frda_ks_dk1_D2 KS_func_pass_args_macro ) + 
+2*frda_ks_k1(x, y, z)*(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk1_D1D1 KS_func_pass_args_macro ) + 
+4*frda_ks_k1(x, y, z)*(frda_ks_dk1_D1 KS_func_pass_args_macro )*(frda_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
+4*(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_dk1_D1 KS_func_pass_args_macro )*
+(frda_ks_dk1_D2 KS_func_pass_args_macro ) + 2*(frda_ks_dc_D2 KS_func_pass_args_macro )*
+pow((frda_ks_dk1_D1 KS_func_pass_args_macro ), 2);
 
     _dddgamma_D0D2D0D0D1[ijk]=
 /* mcode in progress ... */
@@ -1880,26 +1880,26 @@ pow((bbn_ks_dk1_D1 KS_func_pass_args_macro ), 2);
 // c
 // k0
 // k2
-bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dddk2_D0D0D1 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-bbn_ks_k2(x, y, z)*(bbn_ks_dddk0_D0D0D1 KS_func_pass_args_macro ) + 2*bbn_ks_c(x, y, z)*
-(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D1 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_ddk0_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 
-bbn_ks_c(x, y, z)*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D0 KS_func_pass_args_macro ) + 
-2*bbn_ks_c(x, y, z)*(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D1 KS_func_pass_args_macro ) + 
-bbn_ks_k0(x, y, z)*bbn_ks_k2(x, y, z)*(bbn_ks_dddc_D0D0D1 KS_func_pass_args_macro ) + 2*
-bbn_ks_k0(x, y, z)*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D1 KS_func_pass_args_macro ) + 
-bbn_ks_k0(x, y, z)*(bbn_ks_ddc_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 
-bbn_ks_k0(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D0 KS_func_pass_args_macro ) + 
-2*bbn_ks_k0(x, y, z)*(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
-2*bbn_ks_k2(x, y, z)*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D1 KS_func_pass_args_macro ) + 
-bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro ) + 
-bbn_ks_k2(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D0 KS_func_pass_args_macro ) + 
-2*bbn_ks_k2(x, y, z)*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
-2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + 2*
-(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk2_D0 KS_func_pass_args_macro );
+frda_ks_c(x, y, z)*frda_ks_k0(x, y, z)*(frda_ks_dddk2_D0D0D1 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+frda_ks_k2(x, y, z)*(frda_ks_dddk0_D0D0D1 KS_func_pass_args_macro ) + 2*frda_ks_c(x, y, z)*
+(frda_ks_dk0_D0 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D1 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_ddk0_D0D0 KS_func_pass_args_macro )*(frda_ks_dk2_D1 KS_func_pass_args_macro ) + 
+frda_ks_c(x, y, z)*(frda_ks_dk0_D1 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D0 KS_func_pass_args_macro ) + 
+2*frda_ks_c(x, y, z)*(frda_ks_dk2_D0 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D1 KS_func_pass_args_macro ) + 
+frda_ks_k0(x, y, z)*frda_ks_k2(x, y, z)*(frda_ks_dddc_D0D0D1 KS_func_pass_args_macro ) + 2*
+frda_ks_k0(x, y, z)*(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D1 KS_func_pass_args_macro ) + 
+frda_ks_k0(x, y, z)*(frda_ks_ddc_D0D0 KS_func_pass_args_macro )*(frda_ks_dk2_D1 KS_func_pass_args_macro ) + 
+frda_ks_k0(x, y, z)*(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D0 KS_func_pass_args_macro ) + 
+2*frda_ks_k0(x, y, z)*(frda_ks_dk2_D0 KS_func_pass_args_macro )*(frda_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+2*frda_ks_k2(x, y, z)*(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D1 KS_func_pass_args_macro ) + 
+frda_ks_k2(x, y, z)*(frda_ks_ddc_D0D0 KS_func_pass_args_macro )*(frda_ks_dk0_D1 KS_func_pass_args_macro ) + 
+frda_ks_k2(x, y, z)*(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D0 KS_func_pass_args_macro ) + 
+2*frda_ks_k2(x, y, z)*(frda_ks_dk0_D0 KS_func_pass_args_macro )*(frda_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+2*(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_dk0_D0 KS_func_pass_args_macro )*
+(frda_ks_dk2_D1 KS_func_pass_args_macro ) + 2*(frda_ks_dc_D0 KS_func_pass_args_macro )*
+(frda_ks_dk0_D1 KS_func_pass_args_macro )*(frda_ks_dk2_D0 KS_func_pass_args_macro ) + 2*
+(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_dk0_D0 KS_func_pass_args_macro )*
+(frda_ks_dk2_D0 KS_func_pass_args_macro );
 
     _dddgamma_D0D2D0D2D2[ijk]=
 /* mcode in progress ... */
@@ -1922,26 +1922,26 @@ bbn_ks_k2(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D0 KS_
 // c
 // k0
 // k2
-bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dddk2_D0D2D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-bbn_ks_k2(x, y, z)*(bbn_ks_dddk0_D0D2D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D2D2 KS_func_pass_args_macro ) + 2*
-bbn_ks_c(x, y, z)*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D2 KS_func_pass_args_macro ) + 
-bbn_ks_c(x, y, z)*(bbn_ks_ddk0_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + 
-2*bbn_ks_c(x, y, z)*(bbn_ks_dk2_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D2 KS_func_pass_args_macro ) + 
-bbn_ks_k0(x, y, z)*bbn_ks_k2(x, y, z)*(bbn_ks_dddc_D0D2D2 KS_func_pass_args_macro ) + 
-bbn_ks_k0(x, y, z)*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D2D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_k0(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D2 KS_func_pass_args_macro ) + 
-bbn_ks_k0(x, y, z)*(bbn_ks_ddc_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + 
-2*bbn_ks_k0(x, y, z)*(bbn_ks_dk2_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
-bbn_ks_k2(x, y, z)*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D2D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_k2(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D2 KS_func_pass_args_macro ) + 
-bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro ) + 
-2*bbn_ks_k2(x, y, z)*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
-2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*
-(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D2 KS_func_pass_args_macro )*
-(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 2*
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*
-(bbn_ks_dk2_D0 KS_func_pass_args_macro );
+frda_ks_c(x, y, z)*frda_ks_k0(x, y, z)*(frda_ks_dddk2_D0D2D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+frda_ks_k2(x, y, z)*(frda_ks_dddk0_D0D2D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk0_D0 KS_func_pass_args_macro )*(frda_ks_ddk2_D2D2 KS_func_pass_args_macro ) + 2*
+frda_ks_c(x, y, z)*(frda_ks_dk0_D2 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D2 KS_func_pass_args_macro ) + 
+frda_ks_c(x, y, z)*(frda_ks_ddk0_D2D2 KS_func_pass_args_macro )*(frda_ks_dk2_D0 KS_func_pass_args_macro ) + 
+2*frda_ks_c(x, y, z)*(frda_ks_dk2_D2 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D2 KS_func_pass_args_macro ) + 
+frda_ks_k0(x, y, z)*frda_ks_k2(x, y, z)*(frda_ks_dddc_D0D2D2 KS_func_pass_args_macro ) + 
+frda_ks_k0(x, y, z)*(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk2_D2D2 KS_func_pass_args_macro ) + 
+2*frda_ks_k0(x, y, z)*(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D2 KS_func_pass_args_macro ) + 
+frda_ks_k0(x, y, z)*(frda_ks_ddc_D2D2 KS_func_pass_args_macro )*(frda_ks_dk2_D0 KS_func_pass_args_macro ) + 
+2*frda_ks_k0(x, y, z)*(frda_ks_dk2_D2 KS_func_pass_args_macro )*(frda_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
+frda_ks_k2(x, y, z)*(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk0_D2D2 KS_func_pass_args_macro ) + 
+2*frda_ks_k2(x, y, z)*(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D2 KS_func_pass_args_macro ) + 
+frda_ks_k2(x, y, z)*(frda_ks_ddc_D2D2 KS_func_pass_args_macro )*(frda_ks_dk0_D0 KS_func_pass_args_macro ) + 
+2*frda_ks_k2(x, y, z)*(frda_ks_dk0_D2 KS_func_pass_args_macro )*(frda_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
+2*(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_dk0_D2 KS_func_pass_args_macro )*
+(frda_ks_dk2_D2 KS_func_pass_args_macro ) + 2*(frda_ks_dc_D2 KS_func_pass_args_macro )*
+(frda_ks_dk0_D0 KS_func_pass_args_macro )*(frda_ks_dk2_D2 KS_func_pass_args_macro ) + 2*
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_dk0_D2 KS_func_pass_args_macro )*
+(frda_ks_dk2_D0 KS_func_pass_args_macro );
 
     _dddgamma_D2D2D2D1D2[ijk]=
 /* mcode in progress ... */
@@ -1958,17 +1958,17 @@ bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_
 // Derivative
 // c
 // k2
-2*bbn_ks_c(x, y, z)*bbn_ks_k2(x, y, z)*(bbn_ks_dddk2_D1D2D2 KS_func_pass_args_macro ) + 2*
-bbn_ks_c(x, y, z)*(bbn_ks_dk2_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D2D2 KS_func_pass_args_macro ) + 
-4*bbn_ks_c(x, y, z)*(bbn_ks_dk2_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D2 KS_func_pass_args_macro ) + 
-pow(bbn_ks_k2(x, y, z), 2)*(bbn_ks_dddc_D1D2D2 KS_func_pass_args_macro ) + 2*bbn_ks_k2(x, y, z)*
-(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D2D2 KS_func_pass_args_macro ) + 4*
-bbn_ks_k2(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 
-4*bbn_ks_k2(x, y, z)*(bbn_ks_dk2_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
-2*(bbn_ks_dc_D1 KS_func_pass_args_macro )*pow((bbn_ks_dk2_D2 KS_func_pass_args_macro ), 2) + 4*
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro )*
-(bbn_ks_dk2_D2 KS_func_pass_args_macro );
+2*frda_ks_c(x, y, z)*frda_ks_k2(x, y, z)*(frda_ks_dddk2_D1D2D2 KS_func_pass_args_macro ) + 2*
+frda_ks_c(x, y, z)*(frda_ks_dk2_D1 KS_func_pass_args_macro )*(frda_ks_ddk2_D2D2 KS_func_pass_args_macro ) + 
+4*frda_ks_c(x, y, z)*(frda_ks_dk2_D2 KS_func_pass_args_macro )*(frda_ks_ddk2_D1D2 KS_func_pass_args_macro ) + 
+pow(frda_ks_k2(x, y, z), 2)*(frda_ks_dddc_D1D2D2 KS_func_pass_args_macro ) + 2*frda_ks_k2(x, y, z)*
+(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk2_D2D2 KS_func_pass_args_macro ) + 4*
+frda_ks_k2(x, y, z)*(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk2_D1D2 KS_func_pass_args_macro ) + 
+2*frda_ks_k2(x, y, z)*(frda_ks_ddc_D2D2 KS_func_pass_args_macro )*(frda_ks_dk2_D1 KS_func_pass_args_macro ) + 
+4*frda_ks_k2(x, y, z)*(frda_ks_dk2_D2 KS_func_pass_args_macro )*(frda_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
+2*(frda_ks_dc_D1 KS_func_pass_args_macro )*pow((frda_ks_dk2_D2 KS_func_pass_args_macro ), 2) + 4*
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_dk2_D1 KS_func_pass_args_macro )*
+(frda_ks_dk2_D2 KS_func_pass_args_macro );
 
     _dddgamma_D0D1D0D2D0[ijk]=
 /* mcode in progress ... */
@@ -1991,26 +1991,26 @@ bbn_ks_k2(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D2 KS_
 // c
 // k0
 // k1
-bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dddk1_D0D0D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-bbn_ks_k1(x, y, z)*(bbn_ks_dddk0_D0D0D2 KS_func_pass_args_macro ) + 2*bbn_ks_c(x, y, z)*
-(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_ddk0_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + 
-bbn_ks_c(x, y, z)*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D0 KS_func_pass_args_macro ) + 
-2*bbn_ks_c(x, y, z)*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D2 KS_func_pass_args_macro ) + 
-bbn_ks_k0(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_dddc_D0D0D2 KS_func_pass_args_macro ) + 2*
-bbn_ks_k0(x, y, z)*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D2 KS_func_pass_args_macro ) + 
-bbn_ks_k0(x, y, z)*(bbn_ks_ddc_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + 
-bbn_ks_k0(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D0 KS_func_pass_args_macro ) + 
-2*bbn_ks_k0(x, y, z)*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_k1(x, y, z)*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D2 KS_func_pass_args_macro ) + 
-bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D2 KS_func_pass_args_macro ) + 
-bbn_ks_k1(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D0 KS_func_pass_args_macro ) + 
-2*bbn_ks_k1(x, y, z)*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
-2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro ) + 2*
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk1_D0 KS_func_pass_args_macro );
+frda_ks_c(x, y, z)*frda_ks_k0(x, y, z)*(frda_ks_dddk1_D0D0D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+frda_ks_k1(x, y, z)*(frda_ks_dddk0_D0D0D2 KS_func_pass_args_macro ) + 2*frda_ks_c(x, y, z)*
+(frda_ks_dk0_D0 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_ddk0_D0D0 KS_func_pass_args_macro )*(frda_ks_dk1_D2 KS_func_pass_args_macro ) + 
+frda_ks_c(x, y, z)*(frda_ks_dk0_D2 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D0 KS_func_pass_args_macro ) + 
+2*frda_ks_c(x, y, z)*(frda_ks_dk1_D0 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D2 KS_func_pass_args_macro ) + 
+frda_ks_k0(x, y, z)*frda_ks_k1(x, y, z)*(frda_ks_dddc_D0D0D2 KS_func_pass_args_macro ) + 2*
+frda_ks_k0(x, y, z)*(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D2 KS_func_pass_args_macro ) + 
+frda_ks_k0(x, y, z)*(frda_ks_ddc_D0D0 KS_func_pass_args_macro )*(frda_ks_dk1_D2 KS_func_pass_args_macro ) + 
+frda_ks_k0(x, y, z)*(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D0 KS_func_pass_args_macro ) + 
+2*frda_ks_k0(x, y, z)*(frda_ks_dk1_D0 KS_func_pass_args_macro )*(frda_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
+2*frda_ks_k1(x, y, z)*(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D2 KS_func_pass_args_macro ) + 
+frda_ks_k1(x, y, z)*(frda_ks_ddc_D0D0 KS_func_pass_args_macro )*(frda_ks_dk0_D2 KS_func_pass_args_macro ) + 
+frda_ks_k1(x, y, z)*(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D0 KS_func_pass_args_macro ) + 
+2*frda_ks_k1(x, y, z)*(frda_ks_dk0_D0 KS_func_pass_args_macro )*(frda_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
+2*(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_dk0_D0 KS_func_pass_args_macro )*
+(frda_ks_dk1_D2 KS_func_pass_args_macro ) + 2*(frda_ks_dc_D0 KS_func_pass_args_macro )*
+(frda_ks_dk0_D2 KS_func_pass_args_macro )*(frda_ks_dk1_D0 KS_func_pass_args_macro ) + 2*
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_dk0_D0 KS_func_pass_args_macro )*
+(frda_ks_dk1_D0 KS_func_pass_args_macro );
 
     _dddgamma_D1D1D2D2D0[ijk]=
 /* mcode in progress ... */
@@ -2027,17 +2027,17 @@ bbn_ks_k1(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D0 KS_
 // Derivative
 // c
 // k1
-2*bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_dddk1_D0D2D2 KS_func_pass_args_macro ) + 2*
-bbn_ks_c(x, y, z)*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D2D2 KS_func_pass_args_macro ) + 
-4*bbn_ks_c(x, y, z)*(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D2 KS_func_pass_args_macro ) + 
-pow(bbn_ks_k1(x, y, z), 2)*(bbn_ks_dddc_D0D2D2 KS_func_pass_args_macro ) + 2*bbn_ks_k1(x, y, z)*
-(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D2D2 KS_func_pass_args_macro ) + 4*
-bbn_ks_k1(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro ) + 
-4*bbn_ks_k1(x, y, z)*(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
-2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*pow((bbn_ks_dk1_D2 KS_func_pass_args_macro ), 2) + 4*
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk1_D2 KS_func_pass_args_macro );
+2*frda_ks_c(x, y, z)*frda_ks_k1(x, y, z)*(frda_ks_dddk1_D0D2D2 KS_func_pass_args_macro ) + 2*
+frda_ks_c(x, y, z)*(frda_ks_dk1_D0 KS_func_pass_args_macro )*(frda_ks_ddk1_D2D2 KS_func_pass_args_macro ) + 
+4*frda_ks_c(x, y, z)*(frda_ks_dk1_D2 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D2 KS_func_pass_args_macro ) + 
+pow(frda_ks_k1(x, y, z), 2)*(frda_ks_dddc_D0D2D2 KS_func_pass_args_macro ) + 2*frda_ks_k1(x, y, z)*
+(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk1_D2D2 KS_func_pass_args_macro ) + 4*
+frda_ks_k1(x, y, z)*(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D2 KS_func_pass_args_macro ) + 
+2*frda_ks_k1(x, y, z)*(frda_ks_ddc_D2D2 KS_func_pass_args_macro )*(frda_ks_dk1_D0 KS_func_pass_args_macro ) + 
+4*frda_ks_k1(x, y, z)*(frda_ks_dk1_D2 KS_func_pass_args_macro )*(frda_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
+2*(frda_ks_dc_D0 KS_func_pass_args_macro )*pow((frda_ks_dk1_D2 KS_func_pass_args_macro ), 2) + 4*
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_dk1_D0 KS_func_pass_args_macro )*
+(frda_ks_dk1_D2 KS_func_pass_args_macro );
 
     _dddgamma_D0D2D0D2D1[ijk]=
 /* mcode in progress ... */
@@ -2066,36 +2066,36 @@ bbn_ks_k1(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D2 KS_
 // c
 // k0
 // k2
-bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dddk2_D0D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-bbn_ks_k2(x, y, z)*(bbn_ks_dddk0_D0D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D1 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk2_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk2_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D1 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
-bbn_ks_k2(x, y, z)*(bbn_ks_dddc_D0D1D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
-(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
-(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D1 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
-(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
-(bbn_ks_dk2_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
-(bbn_ks_dk2_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
-(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D2 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
-(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D2 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D1 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
-(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
-(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
-(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
-(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*
-(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + (bbn_ks_dc_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 
-(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + (bbn_ks_dc_D1 KS_func_pass_args_macro )*
-(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + 
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + (bbn_ks_dc_D2 KS_func_pass_args_macro )*
-(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro );
+frda_ks_c(x, y, z)*frda_ks_k0(x, y, z)*(frda_ks_dddk2_D0D1D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+frda_ks_k2(x, y, z)*(frda_ks_dddk0_D0D1D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk0_D0 KS_func_pass_args_macro )*(frda_ks_ddk2_D1D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk0_D1 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk0_D2 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D1 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk2_D0 KS_func_pass_args_macro )*(frda_ks_ddk0_D1D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk2_D1 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk2_D2 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D1 KS_func_pass_args_macro ) + frda_ks_k0(x, y, z)*
+frda_ks_k2(x, y, z)*(frda_ks_dddc_D0D1D2 KS_func_pass_args_macro ) + frda_ks_k0(x, y, z)*
+(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk2_D1D2 KS_func_pass_args_macro ) + frda_ks_k0(x, y, z)*
+(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D2 KS_func_pass_args_macro ) + frda_ks_k0(x, y, z)*
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D1 KS_func_pass_args_macro ) + frda_ks_k0(x, y, z)*
+(frda_ks_dk2_D0 KS_func_pass_args_macro )*(frda_ks_ddc_D1D2 KS_func_pass_args_macro ) + frda_ks_k0(x, y, z)*
+(frda_ks_dk2_D1 KS_func_pass_args_macro )*(frda_ks_ddc_D0D2 KS_func_pass_args_macro ) + frda_ks_k0(x, y, z)*
+(frda_ks_dk2_D2 KS_func_pass_args_macro )*(frda_ks_ddc_D0D1 KS_func_pass_args_macro ) + frda_ks_k2(x, y, z)*
+(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk0_D1D2 KS_func_pass_args_macro ) + frda_ks_k2(x, y, z)*
+(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D2 KS_func_pass_args_macro ) + frda_ks_k2(x, y, z)*
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D1 KS_func_pass_args_macro ) + frda_ks_k2(x, y, z)*
+(frda_ks_dk0_D0 KS_func_pass_args_macro )*(frda_ks_ddc_D1D2 KS_func_pass_args_macro ) + frda_ks_k2(x, y, z)*
+(frda_ks_dk0_D1 KS_func_pass_args_macro )*(frda_ks_ddc_D0D2 KS_func_pass_args_macro ) + frda_ks_k2(x, y, z)*
+(frda_ks_dk0_D2 KS_func_pass_args_macro )*(frda_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_dk0_D1 KS_func_pass_args_macro )*
+(frda_ks_dk2_D2 KS_func_pass_args_macro ) + (frda_ks_dc_D0 KS_func_pass_args_macro )*
+(frda_ks_dk0_D2 KS_func_pass_args_macro )*(frda_ks_dk2_D1 KS_func_pass_args_macro ) + 
+(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_dk0_D0 KS_func_pass_args_macro )*
+(frda_ks_dk2_D2 KS_func_pass_args_macro ) + (frda_ks_dc_D1 KS_func_pass_args_macro )*
+(frda_ks_dk0_D2 KS_func_pass_args_macro )*(frda_ks_dk2_D0 KS_func_pass_args_macro ) + 
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_dk0_D0 KS_func_pass_args_macro )*
+(frda_ks_dk2_D1 KS_func_pass_args_macro ) + (frda_ks_dc_D2 KS_func_pass_args_macro )*
+(frda_ks_dk0_D1 KS_func_pass_args_macro )*(frda_ks_dk2_D0 KS_func_pass_args_macro );
 
     _dddgamma_D1D1D2D1D0[ijk]=
 /* mcode in progress ... */
@@ -2116,22 +2116,22 @@ bbn_ks_k2(x, y, z)*(bbn_ks_dddc_D0D1D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, 
 // Derivative
 // c
 // k1
-2*bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_dddk1_D0D1D2 KS_func_pass_args_macro ) + 2*
-bbn_ks_c(x, y, z)*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_c(x, y, z)*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_c(x, y, z)*(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D1 KS_func_pass_args_macro ) + 
-pow(bbn_ks_k1(x, y, z), 2)*(bbn_ks_dddc_D0D1D2 KS_func_pass_args_macro ) + 2*bbn_ks_k1(x, y, z)*
-(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D2 KS_func_pass_args_macro ) + 2*
-bbn_ks_k1(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_k1(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D1 KS_func_pass_args_macro ) + 
-2*bbn_ks_k1(x, y, z)*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_k1(x, y, z)*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_k1(x, y, z)*(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
-2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*
-(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D1 KS_func_pass_args_macro )*
-(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + 2*
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk1_D1 KS_func_pass_args_macro );
+2*frda_ks_c(x, y, z)*frda_ks_k1(x, y, z)*(frda_ks_dddk1_D0D1D2 KS_func_pass_args_macro ) + 2*
+frda_ks_c(x, y, z)*(frda_ks_dk1_D0 KS_func_pass_args_macro )*(frda_ks_ddk1_D1D2 KS_func_pass_args_macro ) + 
+2*frda_ks_c(x, y, z)*(frda_ks_dk1_D1 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D2 KS_func_pass_args_macro ) + 
+2*frda_ks_c(x, y, z)*(frda_ks_dk1_D2 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D1 KS_func_pass_args_macro ) + 
+pow(frda_ks_k1(x, y, z), 2)*(frda_ks_dddc_D0D1D2 KS_func_pass_args_macro ) + 2*frda_ks_k1(x, y, z)*
+(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk1_D1D2 KS_func_pass_args_macro ) + 2*
+frda_ks_k1(x, y, z)*(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D2 KS_func_pass_args_macro ) + 
+2*frda_ks_k1(x, y, z)*(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D1 KS_func_pass_args_macro ) + 
+2*frda_ks_k1(x, y, z)*(frda_ks_dk1_D0 KS_func_pass_args_macro )*(frda_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
+2*frda_ks_k1(x, y, z)*(frda_ks_dk1_D1 KS_func_pass_args_macro )*(frda_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
+2*frda_ks_k1(x, y, z)*(frda_ks_dk1_D2 KS_func_pass_args_macro )*(frda_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+2*(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_dk1_D1 KS_func_pass_args_macro )*
+(frda_ks_dk1_D2 KS_func_pass_args_macro ) + 2*(frda_ks_dc_D1 KS_func_pass_args_macro )*
+(frda_ks_dk1_D0 KS_func_pass_args_macro )*(frda_ks_dk1_D2 KS_func_pass_args_macro ) + 2*
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_dk1_D0 KS_func_pass_args_macro )*
+(frda_ks_dk1_D1 KS_func_pass_args_macro );
 
     _dddgamma_D1D1D0D1D2[ijk]=
 /* mcode in progress ... */
@@ -2152,22 +2152,22 @@ bbn_ks_k1(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D2 KS_
 // Derivative
 // c
 // k1
-2*bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_dddk1_D0D1D2 KS_func_pass_args_macro ) + 2*
-bbn_ks_c(x, y, z)*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_c(x, y, z)*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_c(x, y, z)*(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D1 KS_func_pass_args_macro ) + 
-pow(bbn_ks_k1(x, y, z), 2)*(bbn_ks_dddc_D0D1D2 KS_func_pass_args_macro ) + 2*bbn_ks_k1(x, y, z)*
-(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D2 KS_func_pass_args_macro ) + 2*
-bbn_ks_k1(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_k1(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D1 KS_func_pass_args_macro ) + 
-2*bbn_ks_k1(x, y, z)*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_k1(x, y, z)*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_k1(x, y, z)*(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
-2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*
-(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D1 KS_func_pass_args_macro )*
-(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + 2*
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk1_D1 KS_func_pass_args_macro );
+2*frda_ks_c(x, y, z)*frda_ks_k1(x, y, z)*(frda_ks_dddk1_D0D1D2 KS_func_pass_args_macro ) + 2*
+frda_ks_c(x, y, z)*(frda_ks_dk1_D0 KS_func_pass_args_macro )*(frda_ks_ddk1_D1D2 KS_func_pass_args_macro ) + 
+2*frda_ks_c(x, y, z)*(frda_ks_dk1_D1 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D2 KS_func_pass_args_macro ) + 
+2*frda_ks_c(x, y, z)*(frda_ks_dk1_D2 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D1 KS_func_pass_args_macro ) + 
+pow(frda_ks_k1(x, y, z), 2)*(frda_ks_dddc_D0D1D2 KS_func_pass_args_macro ) + 2*frda_ks_k1(x, y, z)*
+(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk1_D1D2 KS_func_pass_args_macro ) + 2*
+frda_ks_k1(x, y, z)*(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D2 KS_func_pass_args_macro ) + 
+2*frda_ks_k1(x, y, z)*(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D1 KS_func_pass_args_macro ) + 
+2*frda_ks_k1(x, y, z)*(frda_ks_dk1_D0 KS_func_pass_args_macro )*(frda_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
+2*frda_ks_k1(x, y, z)*(frda_ks_dk1_D1 KS_func_pass_args_macro )*(frda_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
+2*frda_ks_k1(x, y, z)*(frda_ks_dk1_D2 KS_func_pass_args_macro )*(frda_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+2*(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_dk1_D1 KS_func_pass_args_macro )*
+(frda_ks_dk1_D2 KS_func_pass_args_macro ) + 2*(frda_ks_dc_D1 KS_func_pass_args_macro )*
+(frda_ks_dk1_D0 KS_func_pass_args_macro )*(frda_ks_dk1_D2 KS_func_pass_args_macro ) + 2*
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_dk1_D0 KS_func_pass_args_macro )*
+(frda_ks_dk1_D1 KS_func_pass_args_macro );
 
     _dddgamma_D0D2D1D1D0[ijk]=
 /* mcode in progress ... */
@@ -2190,26 +2190,26 @@ bbn_ks_k1(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D2 KS_
 // c
 // k0
 // k2
-bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dddk2_D0D1D1 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-bbn_ks_k2(x, y, z)*(bbn_ks_dddk0_D0D1D1 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D1 KS_func_pass_args_macro ) + 2*
-bbn_ks_c(x, y, z)*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D1 KS_func_pass_args_macro ) + 
-bbn_ks_c(x, y, z)*(bbn_ks_ddk0_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + 
-2*bbn_ks_c(x, y, z)*(bbn_ks_dk2_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D1 KS_func_pass_args_macro ) + 
-bbn_ks_k0(x, y, z)*bbn_ks_k2(x, y, z)*(bbn_ks_dddc_D0D1D1 KS_func_pass_args_macro ) + 
-bbn_ks_k0(x, y, z)*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D1 KS_func_pass_args_macro ) + 
-2*bbn_ks_k0(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D1 KS_func_pass_args_macro ) + 
-bbn_ks_k0(x, y, z)*(bbn_ks_ddc_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + 
-2*bbn_ks_k0(x, y, z)*(bbn_ks_dk2_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
-bbn_ks_k2(x, y, z)*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D1 KS_func_pass_args_macro ) + 
-2*bbn_ks_k2(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D1 KS_func_pass_args_macro ) + 
-bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro ) + 
-2*bbn_ks_k2(x, y, z)*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
-2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*
-(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D1 KS_func_pass_args_macro )*
-(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 2*
-(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*
-(bbn_ks_dk2_D0 KS_func_pass_args_macro );
+frda_ks_c(x, y, z)*frda_ks_k0(x, y, z)*(frda_ks_dddk2_D0D1D1 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+frda_ks_k2(x, y, z)*(frda_ks_dddk0_D0D1D1 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk0_D0 KS_func_pass_args_macro )*(frda_ks_ddk2_D1D1 KS_func_pass_args_macro ) + 2*
+frda_ks_c(x, y, z)*(frda_ks_dk0_D1 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D1 KS_func_pass_args_macro ) + 
+frda_ks_c(x, y, z)*(frda_ks_ddk0_D1D1 KS_func_pass_args_macro )*(frda_ks_dk2_D0 KS_func_pass_args_macro ) + 
+2*frda_ks_c(x, y, z)*(frda_ks_dk2_D1 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D1 KS_func_pass_args_macro ) + 
+frda_ks_k0(x, y, z)*frda_ks_k2(x, y, z)*(frda_ks_dddc_D0D1D1 KS_func_pass_args_macro ) + 
+frda_ks_k0(x, y, z)*(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk2_D1D1 KS_func_pass_args_macro ) + 
+2*frda_ks_k0(x, y, z)*(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D1 KS_func_pass_args_macro ) + 
+frda_ks_k0(x, y, z)*(frda_ks_ddc_D1D1 KS_func_pass_args_macro )*(frda_ks_dk2_D0 KS_func_pass_args_macro ) + 
+2*frda_ks_k0(x, y, z)*(frda_ks_dk2_D1 KS_func_pass_args_macro )*(frda_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+frda_ks_k2(x, y, z)*(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk0_D1D1 KS_func_pass_args_macro ) + 
+2*frda_ks_k2(x, y, z)*(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D1 KS_func_pass_args_macro ) + 
+frda_ks_k2(x, y, z)*(frda_ks_ddc_D1D1 KS_func_pass_args_macro )*(frda_ks_dk0_D0 KS_func_pass_args_macro ) + 
+2*frda_ks_k2(x, y, z)*(frda_ks_dk0_D1 KS_func_pass_args_macro )*(frda_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+2*(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_dk0_D1 KS_func_pass_args_macro )*
+(frda_ks_dk2_D1 KS_func_pass_args_macro ) + 2*(frda_ks_dc_D1 KS_func_pass_args_macro )*
+(frda_ks_dk0_D0 KS_func_pass_args_macro )*(frda_ks_dk2_D1 KS_func_pass_args_macro ) + 2*
+(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_dk0_D1 KS_func_pass_args_macro )*
+(frda_ks_dk2_D0 KS_func_pass_args_macro );
 
     _dddgamma_D1D1D1D0D1[ijk]=
 /* mcode in progress ... */
@@ -2226,17 +2226,17 @@ bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_
 // Derivative
 // c
 // k1
-2*bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_dddk1_D0D1D1 KS_func_pass_args_macro ) + 2*
-bbn_ks_c(x, y, z)*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D1 KS_func_pass_args_macro ) + 
-4*bbn_ks_c(x, y, z)*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D1 KS_func_pass_args_macro ) + 
-pow(bbn_ks_k1(x, y, z), 2)*(bbn_ks_dddc_D0D1D1 KS_func_pass_args_macro ) + 2*bbn_ks_k1(x, y, z)*
-(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D1 KS_func_pass_args_macro ) + 4*
-bbn_ks_k1(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D1 KS_func_pass_args_macro ) + 
-2*bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro ) + 
-4*bbn_ks_k1(x, y, z)*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
-2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*pow((bbn_ks_dk1_D1 KS_func_pass_args_macro ), 2) + 4*
-(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk1_D1 KS_func_pass_args_macro );
+2*frda_ks_c(x, y, z)*frda_ks_k1(x, y, z)*(frda_ks_dddk1_D0D1D1 KS_func_pass_args_macro ) + 2*
+frda_ks_c(x, y, z)*(frda_ks_dk1_D0 KS_func_pass_args_macro )*(frda_ks_ddk1_D1D1 KS_func_pass_args_macro ) + 
+4*frda_ks_c(x, y, z)*(frda_ks_dk1_D1 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D1 KS_func_pass_args_macro ) + 
+pow(frda_ks_k1(x, y, z), 2)*(frda_ks_dddc_D0D1D1 KS_func_pass_args_macro ) + 2*frda_ks_k1(x, y, z)*
+(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk1_D1D1 KS_func_pass_args_macro ) + 4*
+frda_ks_k1(x, y, z)*(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D1 KS_func_pass_args_macro ) + 
+2*frda_ks_k1(x, y, z)*(frda_ks_ddc_D1D1 KS_func_pass_args_macro )*(frda_ks_dk1_D0 KS_func_pass_args_macro ) + 
+4*frda_ks_k1(x, y, z)*(frda_ks_dk1_D1 KS_func_pass_args_macro )*(frda_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+2*(frda_ks_dc_D0 KS_func_pass_args_macro )*pow((frda_ks_dk1_D1 KS_func_pass_args_macro ), 2) + 4*
+(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_dk1_D0 KS_func_pass_args_macro )*
+(frda_ks_dk1_D1 KS_func_pass_args_macro );
 
     _dddgamma_D0D0D2D1D1[ijk]=
 /* mcode in progress ... */
@@ -2253,17 +2253,17 @@ bbn_ks_k1(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D1 KS_
 // Derivative
 // c
 // k0
-2*bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dddk0_D1D1D2 KS_func_pass_args_macro ) + 4*
-bbn_ks_c(x, y, z)*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_c(x, y, z)*(bbn_ks_ddk0_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D2 KS_func_pass_args_macro ) + 
-pow(bbn_ks_k0(x, y, z), 2)*(bbn_ks_dddc_D1D1D2 KS_func_pass_args_macro ) + 4*bbn_ks_k0(x, y, z)*
-(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D2 KS_func_pass_args_macro ) + 2*
-bbn_ks_k0(x, y, z)*(bbn_ks_ddc_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_k0(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D1 KS_func_pass_args_macro ) + 
-4*bbn_ks_k0(x, y, z)*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
-4*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*
-(bbn_ks_dk0_D2 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D2 KS_func_pass_args_macro )*
-pow((bbn_ks_dk0_D1 KS_func_pass_args_macro ), 2);
+2*frda_ks_c(x, y, z)*frda_ks_k0(x, y, z)*(frda_ks_dddk0_D1D1D2 KS_func_pass_args_macro ) + 4*
+frda_ks_c(x, y, z)*(frda_ks_dk0_D1 KS_func_pass_args_macro )*(frda_ks_ddk0_D1D2 KS_func_pass_args_macro ) + 
+2*frda_ks_c(x, y, z)*(frda_ks_ddk0_D1D1 KS_func_pass_args_macro )*(frda_ks_dk0_D2 KS_func_pass_args_macro ) + 
+pow(frda_ks_k0(x, y, z), 2)*(frda_ks_dddc_D1D1D2 KS_func_pass_args_macro ) + 4*frda_ks_k0(x, y, z)*
+(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk0_D1D2 KS_func_pass_args_macro ) + 2*
+frda_ks_k0(x, y, z)*(frda_ks_ddc_D1D1 KS_func_pass_args_macro )*(frda_ks_dk0_D2 KS_func_pass_args_macro ) + 
+2*frda_ks_k0(x, y, z)*(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk0_D1D1 KS_func_pass_args_macro ) + 
+4*frda_ks_k0(x, y, z)*(frda_ks_dk0_D1 KS_func_pass_args_macro )*(frda_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
+4*(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_dk0_D1 KS_func_pass_args_macro )*
+(frda_ks_dk0_D2 KS_func_pass_args_macro ) + 2*(frda_ks_dc_D2 KS_func_pass_args_macro )*
+pow((frda_ks_dk0_D1 KS_func_pass_args_macro ), 2);
 
     _dddgamma_D0D1D2D1D2[ijk]=
 /* mcode in progress ... */
@@ -2286,26 +2286,26 @@ pow((bbn_ks_dk0_D1 KS_func_pass_args_macro ), 2);
 // c
 // k0
 // k1
-bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dddk1_D1D2D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-bbn_ks_k1(x, y, z)*(bbn_ks_dddk0_D1D2D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D2D2 KS_func_pass_args_macro ) + 2*
-bbn_ks_c(x, y, z)*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D2 KS_func_pass_args_macro ) + 
-bbn_ks_c(x, y, z)*(bbn_ks_ddk0_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro ) + 
-2*bbn_ks_c(x, y, z)*(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D2 KS_func_pass_args_macro ) + 
-bbn_ks_k0(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_dddc_D1D2D2 KS_func_pass_args_macro ) + 
-bbn_ks_k0(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D2D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_k0(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D2 KS_func_pass_args_macro ) + 
-bbn_ks_k0(x, y, z)*(bbn_ks_ddc_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro ) + 
-2*bbn_ks_k0(x, y, z)*(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
-bbn_ks_k1(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D2D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_k1(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D2 KS_func_pass_args_macro ) + 
-bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro ) + 
-2*bbn_ks_k1(x, y, z)*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
-2*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*
-(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D2 KS_func_pass_args_macro )*
-(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + 2*
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*
-(bbn_ks_dk1_D1 KS_func_pass_args_macro );
+frda_ks_c(x, y, z)*frda_ks_k0(x, y, z)*(frda_ks_dddk1_D1D2D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+frda_ks_k1(x, y, z)*(frda_ks_dddk0_D1D2D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk0_D1 KS_func_pass_args_macro )*(frda_ks_ddk1_D2D2 KS_func_pass_args_macro ) + 2*
+frda_ks_c(x, y, z)*(frda_ks_dk0_D2 KS_func_pass_args_macro )*(frda_ks_ddk1_D1D2 KS_func_pass_args_macro ) + 
+frda_ks_c(x, y, z)*(frda_ks_ddk0_D2D2 KS_func_pass_args_macro )*(frda_ks_dk1_D1 KS_func_pass_args_macro ) + 
+2*frda_ks_c(x, y, z)*(frda_ks_dk1_D2 KS_func_pass_args_macro )*(frda_ks_ddk0_D1D2 KS_func_pass_args_macro ) + 
+frda_ks_k0(x, y, z)*frda_ks_k1(x, y, z)*(frda_ks_dddc_D1D2D2 KS_func_pass_args_macro ) + 
+frda_ks_k0(x, y, z)*(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk1_D2D2 KS_func_pass_args_macro ) + 
+2*frda_ks_k0(x, y, z)*(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk1_D1D2 KS_func_pass_args_macro ) + 
+frda_ks_k0(x, y, z)*(frda_ks_ddc_D2D2 KS_func_pass_args_macro )*(frda_ks_dk1_D1 KS_func_pass_args_macro ) + 
+2*frda_ks_k0(x, y, z)*(frda_ks_dk1_D2 KS_func_pass_args_macro )*(frda_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
+frda_ks_k1(x, y, z)*(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk0_D2D2 KS_func_pass_args_macro ) + 
+2*frda_ks_k1(x, y, z)*(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk0_D1D2 KS_func_pass_args_macro ) + 
+frda_ks_k1(x, y, z)*(frda_ks_ddc_D2D2 KS_func_pass_args_macro )*(frda_ks_dk0_D1 KS_func_pass_args_macro ) + 
+2*frda_ks_k1(x, y, z)*(frda_ks_dk0_D2 KS_func_pass_args_macro )*(frda_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
+2*(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_dk0_D2 KS_func_pass_args_macro )*
+(frda_ks_dk1_D2 KS_func_pass_args_macro ) + 2*(frda_ks_dc_D2 KS_func_pass_args_macro )*
+(frda_ks_dk0_D1 KS_func_pass_args_macro )*(frda_ks_dk1_D2 KS_func_pass_args_macro ) + 2*
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_dk0_D2 KS_func_pass_args_macro )*
+(frda_ks_dk1_D1 KS_func_pass_args_macro );
 
     _dddgamma_D0D0D0D1D1[ijk]=
 /* mcode in progress ... */
@@ -2322,17 +2322,17 @@ bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_
 // Derivative
 // c
 // k0
-2*bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dddk0_D0D1D1 KS_func_pass_args_macro ) + 2*
-bbn_ks_c(x, y, z)*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D1 KS_func_pass_args_macro ) + 
-4*bbn_ks_c(x, y, z)*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D1 KS_func_pass_args_macro ) + 
-pow(bbn_ks_k0(x, y, z), 2)*(bbn_ks_dddc_D0D1D1 KS_func_pass_args_macro ) + 2*bbn_ks_k0(x, y, z)*
-(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D1 KS_func_pass_args_macro ) + 4*
-bbn_ks_k0(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D1 KS_func_pass_args_macro ) + 
-2*bbn_ks_k0(x, y, z)*(bbn_ks_ddc_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro ) + 
-4*bbn_ks_k0(x, y, z)*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
-2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*pow((bbn_ks_dk0_D1 KS_func_pass_args_macro ), 2) + 4*
-(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk0_D1 KS_func_pass_args_macro );
+2*frda_ks_c(x, y, z)*frda_ks_k0(x, y, z)*(frda_ks_dddk0_D0D1D1 KS_func_pass_args_macro ) + 2*
+frda_ks_c(x, y, z)*(frda_ks_dk0_D0 KS_func_pass_args_macro )*(frda_ks_ddk0_D1D1 KS_func_pass_args_macro ) + 
+4*frda_ks_c(x, y, z)*(frda_ks_dk0_D1 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D1 KS_func_pass_args_macro ) + 
+pow(frda_ks_k0(x, y, z), 2)*(frda_ks_dddc_D0D1D1 KS_func_pass_args_macro ) + 2*frda_ks_k0(x, y, z)*
+(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk0_D1D1 KS_func_pass_args_macro ) + 4*
+frda_ks_k0(x, y, z)*(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D1 KS_func_pass_args_macro ) + 
+2*frda_ks_k0(x, y, z)*(frda_ks_ddc_D1D1 KS_func_pass_args_macro )*(frda_ks_dk0_D0 KS_func_pass_args_macro ) + 
+4*frda_ks_k0(x, y, z)*(frda_ks_dk0_D1 KS_func_pass_args_macro )*(frda_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+2*(frda_ks_dc_D0 KS_func_pass_args_macro )*pow((frda_ks_dk0_D1 KS_func_pass_args_macro ), 2) + 4*
+(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_dk0_D0 KS_func_pass_args_macro )*
+(frda_ks_dk0_D1 KS_func_pass_args_macro );
 
     _dddgamma_D2D2D1D2D1[ijk]=
 /* mcode in progress ... */
@@ -2349,17 +2349,17 @@ bbn_ks_k0(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D1 KS_
 // Derivative
 // c
 // k2
-2*bbn_ks_c(x, y, z)*bbn_ks_k2(x, y, z)*(bbn_ks_dddk2_D1D1D2 KS_func_pass_args_macro ) + 4*
-bbn_ks_c(x, y, z)*(bbn_ks_dk2_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_c(x, y, z)*(bbn_ks_ddk2_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 
-pow(bbn_ks_k2(x, y, z), 2)*(bbn_ks_dddc_D1D1D2 KS_func_pass_args_macro ) + 4*bbn_ks_k2(x, y, z)*
-(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D2 KS_func_pass_args_macro ) + 2*
-bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_k2(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D1 KS_func_pass_args_macro ) + 
-4*bbn_ks_k2(x, y, z)*(bbn_ks_dk2_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
-4*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro )*
-(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D2 KS_func_pass_args_macro )*
-pow((bbn_ks_dk2_D1 KS_func_pass_args_macro ), 2);
+2*frda_ks_c(x, y, z)*frda_ks_k2(x, y, z)*(frda_ks_dddk2_D1D1D2 KS_func_pass_args_macro ) + 4*
+frda_ks_c(x, y, z)*(frda_ks_dk2_D1 KS_func_pass_args_macro )*(frda_ks_ddk2_D1D2 KS_func_pass_args_macro ) + 
+2*frda_ks_c(x, y, z)*(frda_ks_ddk2_D1D1 KS_func_pass_args_macro )*(frda_ks_dk2_D2 KS_func_pass_args_macro ) + 
+pow(frda_ks_k2(x, y, z), 2)*(frda_ks_dddc_D1D1D2 KS_func_pass_args_macro ) + 4*frda_ks_k2(x, y, z)*
+(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk2_D1D2 KS_func_pass_args_macro ) + 2*
+frda_ks_k2(x, y, z)*(frda_ks_ddc_D1D1 KS_func_pass_args_macro )*(frda_ks_dk2_D2 KS_func_pass_args_macro ) + 
+2*frda_ks_k2(x, y, z)*(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk2_D1D1 KS_func_pass_args_macro ) + 
+4*frda_ks_k2(x, y, z)*(frda_ks_dk2_D1 KS_func_pass_args_macro )*(frda_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
+4*(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_dk2_D1 KS_func_pass_args_macro )*
+(frda_ks_dk2_D2 KS_func_pass_args_macro ) + 2*(frda_ks_dc_D2 KS_func_pass_args_macro )*
+pow((frda_ks_dk2_D1 KS_func_pass_args_macro ), 2);
 
     _dddgamma_D1D1D1D2D2[ijk]=
 /* mcode in progress ... */
@@ -2376,17 +2376,17 @@ pow((bbn_ks_dk2_D1 KS_func_pass_args_macro ), 2);
 // Derivative
 // c
 // k1
-2*bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_dddk1_D1D2D2 KS_func_pass_args_macro ) + 2*
-bbn_ks_c(x, y, z)*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D2D2 KS_func_pass_args_macro ) + 
-4*bbn_ks_c(x, y, z)*(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D2 KS_func_pass_args_macro ) + 
-pow(bbn_ks_k1(x, y, z), 2)*(bbn_ks_dddc_D1D2D2 KS_func_pass_args_macro ) + 2*bbn_ks_k1(x, y, z)*
-(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D2D2 KS_func_pass_args_macro ) + 4*
-bbn_ks_k1(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro ) + 
-4*bbn_ks_k1(x, y, z)*(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
-2*(bbn_ks_dc_D1 KS_func_pass_args_macro )*pow((bbn_ks_dk1_D2 KS_func_pass_args_macro ), 2) + 4*
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*
-(bbn_ks_dk1_D2 KS_func_pass_args_macro );
+2*frda_ks_c(x, y, z)*frda_ks_k1(x, y, z)*(frda_ks_dddk1_D1D2D2 KS_func_pass_args_macro ) + 2*
+frda_ks_c(x, y, z)*(frda_ks_dk1_D1 KS_func_pass_args_macro )*(frda_ks_ddk1_D2D2 KS_func_pass_args_macro ) + 
+4*frda_ks_c(x, y, z)*(frda_ks_dk1_D2 KS_func_pass_args_macro )*(frda_ks_ddk1_D1D2 KS_func_pass_args_macro ) + 
+pow(frda_ks_k1(x, y, z), 2)*(frda_ks_dddc_D1D2D2 KS_func_pass_args_macro ) + 2*frda_ks_k1(x, y, z)*
+(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk1_D2D2 KS_func_pass_args_macro ) + 4*
+frda_ks_k1(x, y, z)*(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk1_D1D2 KS_func_pass_args_macro ) + 
+2*frda_ks_k1(x, y, z)*(frda_ks_ddc_D2D2 KS_func_pass_args_macro )*(frda_ks_dk1_D1 KS_func_pass_args_macro ) + 
+4*frda_ks_k1(x, y, z)*(frda_ks_dk1_D2 KS_func_pass_args_macro )*(frda_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
+2*(frda_ks_dc_D1 KS_func_pass_args_macro )*pow((frda_ks_dk1_D2 KS_func_pass_args_macro ), 2) + 4*
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_dk1_D1 KS_func_pass_args_macro )*
+(frda_ks_dk1_D2 KS_func_pass_args_macro );
 
     _dddgamma_D2D2D2D2D1[ijk]=
 /* mcode in progress ... */
@@ -2403,17 +2403,17 @@ bbn_ks_k1(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D2 KS_
 // Derivative
 // c
 // k2
-2*bbn_ks_c(x, y, z)*bbn_ks_k2(x, y, z)*(bbn_ks_dddk2_D1D2D2 KS_func_pass_args_macro ) + 2*
-bbn_ks_c(x, y, z)*(bbn_ks_dk2_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D2D2 KS_func_pass_args_macro ) + 
-4*bbn_ks_c(x, y, z)*(bbn_ks_dk2_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D2 KS_func_pass_args_macro ) + 
-pow(bbn_ks_k2(x, y, z), 2)*(bbn_ks_dddc_D1D2D2 KS_func_pass_args_macro ) + 2*bbn_ks_k2(x, y, z)*
-(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D2D2 KS_func_pass_args_macro ) + 4*
-bbn_ks_k2(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 
-4*bbn_ks_k2(x, y, z)*(bbn_ks_dk2_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
-2*(bbn_ks_dc_D1 KS_func_pass_args_macro )*pow((bbn_ks_dk2_D2 KS_func_pass_args_macro ), 2) + 4*
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro )*
-(bbn_ks_dk2_D2 KS_func_pass_args_macro );
+2*frda_ks_c(x, y, z)*frda_ks_k2(x, y, z)*(frda_ks_dddk2_D1D2D2 KS_func_pass_args_macro ) + 2*
+frda_ks_c(x, y, z)*(frda_ks_dk2_D1 KS_func_pass_args_macro )*(frda_ks_ddk2_D2D2 KS_func_pass_args_macro ) + 
+4*frda_ks_c(x, y, z)*(frda_ks_dk2_D2 KS_func_pass_args_macro )*(frda_ks_ddk2_D1D2 KS_func_pass_args_macro ) + 
+pow(frda_ks_k2(x, y, z), 2)*(frda_ks_dddc_D1D2D2 KS_func_pass_args_macro ) + 2*frda_ks_k2(x, y, z)*
+(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk2_D2D2 KS_func_pass_args_macro ) + 4*
+frda_ks_k2(x, y, z)*(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk2_D1D2 KS_func_pass_args_macro ) + 
+2*frda_ks_k2(x, y, z)*(frda_ks_ddc_D2D2 KS_func_pass_args_macro )*(frda_ks_dk2_D1 KS_func_pass_args_macro ) + 
+4*frda_ks_k2(x, y, z)*(frda_ks_dk2_D2 KS_func_pass_args_macro )*(frda_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
+2*(frda_ks_dc_D1 KS_func_pass_args_macro )*pow((frda_ks_dk2_D2 KS_func_pass_args_macro ), 2) + 4*
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_dk2_D1 KS_func_pass_args_macro )*
+(frda_ks_dk2_D2 KS_func_pass_args_macro );
 
     _dddgamma_D2D2D1D0D0[ijk]=
 /* mcode in progress ... */
@@ -2430,17 +2430,17 @@ bbn_ks_k2(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D2 KS_
 // Derivative
 // c
 // k2
-2*bbn_ks_c(x, y, z)*bbn_ks_k2(x, y, z)*(bbn_ks_dddk2_D0D0D1 KS_func_pass_args_macro ) + 4*
-bbn_ks_c(x, y, z)*(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D1 KS_func_pass_args_macro ) + 
-2*bbn_ks_c(x, y, z)*(bbn_ks_ddk2_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 
-pow(bbn_ks_k2(x, y, z), 2)*(bbn_ks_dddc_D0D0D1 KS_func_pass_args_macro ) + 4*bbn_ks_k2(x, y, z)*
-(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D1 KS_func_pass_args_macro ) + 2*
-bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 
-2*bbn_ks_k2(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D0 KS_func_pass_args_macro ) + 
-4*bbn_ks_k2(x, y, z)*(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
-4*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D1 KS_func_pass_args_macro )*
-pow((bbn_ks_dk2_D0 KS_func_pass_args_macro ), 2);
+2*frda_ks_c(x, y, z)*frda_ks_k2(x, y, z)*(frda_ks_dddk2_D0D0D1 KS_func_pass_args_macro ) + 4*
+frda_ks_c(x, y, z)*(frda_ks_dk2_D0 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D1 KS_func_pass_args_macro ) + 
+2*frda_ks_c(x, y, z)*(frda_ks_ddk2_D0D0 KS_func_pass_args_macro )*(frda_ks_dk2_D1 KS_func_pass_args_macro ) + 
+pow(frda_ks_k2(x, y, z), 2)*(frda_ks_dddc_D0D0D1 KS_func_pass_args_macro ) + 4*frda_ks_k2(x, y, z)*
+(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D1 KS_func_pass_args_macro ) + 2*
+frda_ks_k2(x, y, z)*(frda_ks_ddc_D0D0 KS_func_pass_args_macro )*(frda_ks_dk2_D1 KS_func_pass_args_macro ) + 
+2*frda_ks_k2(x, y, z)*(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D0 KS_func_pass_args_macro ) + 
+4*frda_ks_k2(x, y, z)*(frda_ks_dk2_D0 KS_func_pass_args_macro )*(frda_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+4*(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_dk2_D0 KS_func_pass_args_macro )*
+(frda_ks_dk2_D1 KS_func_pass_args_macro ) + 2*(frda_ks_dc_D1 KS_func_pass_args_macro )*
+pow((frda_ks_dk2_D0 KS_func_pass_args_macro ), 2);
 
     _dddgamma_D0D1D2D1D1[ijk]=
 /* mcode in progress ... */
@@ -2463,26 +2463,26 @@ pow((bbn_ks_dk2_D0 KS_func_pass_args_macro ), 2);
 // c
 // k0
 // k1
-bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dddk1_D1D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-bbn_ks_k1(x, y, z)*(bbn_ks_dddk0_D1D1D2 KS_func_pass_args_macro ) + 2*bbn_ks_c(x, y, z)*
-(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_ddk0_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + 
-bbn_ks_c(x, y, z)*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D1 KS_func_pass_args_macro ) + 
-2*bbn_ks_c(x, y, z)*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D2 KS_func_pass_args_macro ) + 
-bbn_ks_k0(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_dddc_D1D1D2 KS_func_pass_args_macro ) + 2*
-bbn_ks_k0(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D2 KS_func_pass_args_macro ) + 
-bbn_ks_k0(x, y, z)*(bbn_ks_ddc_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + 
-bbn_ks_k0(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D1 KS_func_pass_args_macro ) + 
-2*bbn_ks_k0(x, y, z)*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_k1(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D2 KS_func_pass_args_macro ) + 
-bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D2 KS_func_pass_args_macro ) + 
-bbn_ks_k1(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D1 KS_func_pass_args_macro ) + 
-2*bbn_ks_k1(x, y, z)*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
-2*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*
-(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D1 KS_func_pass_args_macro )*
-(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro ) + 2*
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*
-(bbn_ks_dk1_D1 KS_func_pass_args_macro );
+frda_ks_c(x, y, z)*frda_ks_k0(x, y, z)*(frda_ks_dddk1_D1D1D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+frda_ks_k1(x, y, z)*(frda_ks_dddk0_D1D1D2 KS_func_pass_args_macro ) + 2*frda_ks_c(x, y, z)*
+(frda_ks_dk0_D1 KS_func_pass_args_macro )*(frda_ks_ddk1_D1D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_ddk0_D1D1 KS_func_pass_args_macro )*(frda_ks_dk1_D2 KS_func_pass_args_macro ) + 
+frda_ks_c(x, y, z)*(frda_ks_dk0_D2 KS_func_pass_args_macro )*(frda_ks_ddk1_D1D1 KS_func_pass_args_macro ) + 
+2*frda_ks_c(x, y, z)*(frda_ks_dk1_D1 KS_func_pass_args_macro )*(frda_ks_ddk0_D1D2 KS_func_pass_args_macro ) + 
+frda_ks_k0(x, y, z)*frda_ks_k1(x, y, z)*(frda_ks_dddc_D1D1D2 KS_func_pass_args_macro ) + 2*
+frda_ks_k0(x, y, z)*(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk1_D1D2 KS_func_pass_args_macro ) + 
+frda_ks_k0(x, y, z)*(frda_ks_ddc_D1D1 KS_func_pass_args_macro )*(frda_ks_dk1_D2 KS_func_pass_args_macro ) + 
+frda_ks_k0(x, y, z)*(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk1_D1D1 KS_func_pass_args_macro ) + 
+2*frda_ks_k0(x, y, z)*(frda_ks_dk1_D1 KS_func_pass_args_macro )*(frda_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
+2*frda_ks_k1(x, y, z)*(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk0_D1D2 KS_func_pass_args_macro ) + 
+frda_ks_k1(x, y, z)*(frda_ks_ddc_D1D1 KS_func_pass_args_macro )*(frda_ks_dk0_D2 KS_func_pass_args_macro ) + 
+frda_ks_k1(x, y, z)*(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk0_D1D1 KS_func_pass_args_macro ) + 
+2*frda_ks_k1(x, y, z)*(frda_ks_dk0_D1 KS_func_pass_args_macro )*(frda_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
+2*(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_dk0_D1 KS_func_pass_args_macro )*
+(frda_ks_dk1_D2 KS_func_pass_args_macro ) + 2*(frda_ks_dc_D1 KS_func_pass_args_macro )*
+(frda_ks_dk0_D2 KS_func_pass_args_macro )*(frda_ks_dk1_D1 KS_func_pass_args_macro ) + 2*
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_dk0_D1 KS_func_pass_args_macro )*
+(frda_ks_dk1_D1 KS_func_pass_args_macro );
 
     _dddgamma_D1D1D2D2D2[ijk]=
 /* mcode in progress ... */
@@ -2495,12 +2495,12 @@ bbn_ks_k1(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D1 KS_
 // Derivative
 // c
 // k1
-2*bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_dddk1_D2D2D2 KS_func_pass_args_macro ) + 6*
-bbn_ks_c(x, y, z)*(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D2D2 KS_func_pass_args_macro ) + 
-pow(bbn_ks_k1(x, y, z), 2)*(bbn_ks_dddc_D2D2D2 KS_func_pass_args_macro ) + 6*bbn_ks_k1(x, y, z)*
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D2D2 KS_func_pass_args_macro ) + 6*
-bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + 
-6*(bbn_ks_dc_D2 KS_func_pass_args_macro )*pow((bbn_ks_dk1_D2 KS_func_pass_args_macro ), 2);
+2*frda_ks_c(x, y, z)*frda_ks_k1(x, y, z)*(frda_ks_dddk1_D2D2D2 KS_func_pass_args_macro ) + 6*
+frda_ks_c(x, y, z)*(frda_ks_dk1_D2 KS_func_pass_args_macro )*(frda_ks_ddk1_D2D2 KS_func_pass_args_macro ) + 
+pow(frda_ks_k1(x, y, z), 2)*(frda_ks_dddc_D2D2D2 KS_func_pass_args_macro ) + 6*frda_ks_k1(x, y, z)*
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk1_D2D2 KS_func_pass_args_macro ) + 6*
+frda_ks_k1(x, y, z)*(frda_ks_ddc_D2D2 KS_func_pass_args_macro )*(frda_ks_dk1_D2 KS_func_pass_args_macro ) + 
+6*(frda_ks_dc_D2 KS_func_pass_args_macro )*pow((frda_ks_dk1_D2 KS_func_pass_args_macro ), 2);
 
     _dddgamma_D1D2D1D0D1[ijk]=
 /* mcode in progress ... */
@@ -2523,26 +2523,26 @@ bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_
 // c
 // k1
 // k2
-bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_dddk2_D0D1D1 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-bbn_ks_k2(x, y, z)*(bbn_ks_dddk1_D0D1D1 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D1 KS_func_pass_args_macro ) + 2*
-bbn_ks_c(x, y, z)*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D1 KS_func_pass_args_macro ) + 
-bbn_ks_c(x, y, z)*(bbn_ks_ddk1_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + 
-2*bbn_ks_c(x, y, z)*(bbn_ks_dk2_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D1 KS_func_pass_args_macro ) + 
-bbn_ks_k1(x, y, z)*bbn_ks_k2(x, y, z)*(bbn_ks_dddc_D0D1D1 KS_func_pass_args_macro ) + 
-bbn_ks_k1(x, y, z)*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D1 KS_func_pass_args_macro ) + 
-2*bbn_ks_k1(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D1 KS_func_pass_args_macro ) + 
-bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + 
-2*bbn_ks_k1(x, y, z)*(bbn_ks_dk2_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
-bbn_ks_k2(x, y, z)*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D1 KS_func_pass_args_macro ) + 
-2*bbn_ks_k2(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D1 KS_func_pass_args_macro ) + 
-bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro ) + 
-2*bbn_ks_k2(x, y, z)*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
-2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*
-(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D1 KS_func_pass_args_macro )*
-(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 2*
-(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*
-(bbn_ks_dk2_D0 KS_func_pass_args_macro );
+frda_ks_c(x, y, z)*frda_ks_k1(x, y, z)*(frda_ks_dddk2_D0D1D1 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+frda_ks_k2(x, y, z)*(frda_ks_dddk1_D0D1D1 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk1_D0 KS_func_pass_args_macro )*(frda_ks_ddk2_D1D1 KS_func_pass_args_macro ) + 2*
+frda_ks_c(x, y, z)*(frda_ks_dk1_D1 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D1 KS_func_pass_args_macro ) + 
+frda_ks_c(x, y, z)*(frda_ks_ddk1_D1D1 KS_func_pass_args_macro )*(frda_ks_dk2_D0 KS_func_pass_args_macro ) + 
+2*frda_ks_c(x, y, z)*(frda_ks_dk2_D1 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D1 KS_func_pass_args_macro ) + 
+frda_ks_k1(x, y, z)*frda_ks_k2(x, y, z)*(frda_ks_dddc_D0D1D1 KS_func_pass_args_macro ) + 
+frda_ks_k1(x, y, z)*(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk2_D1D1 KS_func_pass_args_macro ) + 
+2*frda_ks_k1(x, y, z)*(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D1 KS_func_pass_args_macro ) + 
+frda_ks_k1(x, y, z)*(frda_ks_ddc_D1D1 KS_func_pass_args_macro )*(frda_ks_dk2_D0 KS_func_pass_args_macro ) + 
+2*frda_ks_k1(x, y, z)*(frda_ks_dk2_D1 KS_func_pass_args_macro )*(frda_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+frda_ks_k2(x, y, z)*(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk1_D1D1 KS_func_pass_args_macro ) + 
+2*frda_ks_k2(x, y, z)*(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D1 KS_func_pass_args_macro ) + 
+frda_ks_k2(x, y, z)*(frda_ks_ddc_D1D1 KS_func_pass_args_macro )*(frda_ks_dk1_D0 KS_func_pass_args_macro ) + 
+2*frda_ks_k2(x, y, z)*(frda_ks_dk1_D1 KS_func_pass_args_macro )*(frda_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+2*(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_dk1_D1 KS_func_pass_args_macro )*
+(frda_ks_dk2_D1 KS_func_pass_args_macro ) + 2*(frda_ks_dc_D1 KS_func_pass_args_macro )*
+(frda_ks_dk1_D0 KS_func_pass_args_macro )*(frda_ks_dk2_D1 KS_func_pass_args_macro ) + 2*
+(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_dk1_D1 KS_func_pass_args_macro )*
+(frda_ks_dk2_D0 KS_func_pass_args_macro );
 
     _dddgamma_D0D1D1D1D0[ijk]=
 /* mcode in progress ... */
@@ -2565,26 +2565,26 @@ bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_
 // c
 // k0
 // k1
-bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dddk1_D0D1D1 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-bbn_ks_k1(x, y, z)*(bbn_ks_dddk0_D0D1D1 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D1 KS_func_pass_args_macro ) + 2*
-bbn_ks_c(x, y, z)*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D1 KS_func_pass_args_macro ) + 
-bbn_ks_c(x, y, z)*(bbn_ks_ddk0_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro ) + 
-2*bbn_ks_c(x, y, z)*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D1 KS_func_pass_args_macro ) + 
-bbn_ks_k0(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_dddc_D0D1D1 KS_func_pass_args_macro ) + 
-bbn_ks_k0(x, y, z)*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D1 KS_func_pass_args_macro ) + 
-2*bbn_ks_k0(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D1 KS_func_pass_args_macro ) + 
-bbn_ks_k0(x, y, z)*(bbn_ks_ddc_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro ) + 
-2*bbn_ks_k0(x, y, z)*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
-bbn_ks_k1(x, y, z)*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D1 KS_func_pass_args_macro ) + 
-2*bbn_ks_k1(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D1 KS_func_pass_args_macro ) + 
-bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro ) + 
-2*bbn_ks_k1(x, y, z)*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
-2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*
-(bbn_ks_dk1_D1 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D1 KS_func_pass_args_macro )*
-(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro ) + 2*
-(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*
-(bbn_ks_dk1_D0 KS_func_pass_args_macro );
+frda_ks_c(x, y, z)*frda_ks_k0(x, y, z)*(frda_ks_dddk1_D0D1D1 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+frda_ks_k1(x, y, z)*(frda_ks_dddk0_D0D1D1 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk0_D0 KS_func_pass_args_macro )*(frda_ks_ddk1_D1D1 KS_func_pass_args_macro ) + 2*
+frda_ks_c(x, y, z)*(frda_ks_dk0_D1 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D1 KS_func_pass_args_macro ) + 
+frda_ks_c(x, y, z)*(frda_ks_ddk0_D1D1 KS_func_pass_args_macro )*(frda_ks_dk1_D0 KS_func_pass_args_macro ) + 
+2*frda_ks_c(x, y, z)*(frda_ks_dk1_D1 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D1 KS_func_pass_args_macro ) + 
+frda_ks_k0(x, y, z)*frda_ks_k1(x, y, z)*(frda_ks_dddc_D0D1D1 KS_func_pass_args_macro ) + 
+frda_ks_k0(x, y, z)*(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk1_D1D1 KS_func_pass_args_macro ) + 
+2*frda_ks_k0(x, y, z)*(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D1 KS_func_pass_args_macro ) + 
+frda_ks_k0(x, y, z)*(frda_ks_ddc_D1D1 KS_func_pass_args_macro )*(frda_ks_dk1_D0 KS_func_pass_args_macro ) + 
+2*frda_ks_k0(x, y, z)*(frda_ks_dk1_D1 KS_func_pass_args_macro )*(frda_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+frda_ks_k1(x, y, z)*(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk0_D1D1 KS_func_pass_args_macro ) + 
+2*frda_ks_k1(x, y, z)*(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D1 KS_func_pass_args_macro ) + 
+frda_ks_k1(x, y, z)*(frda_ks_ddc_D1D1 KS_func_pass_args_macro )*(frda_ks_dk0_D0 KS_func_pass_args_macro ) + 
+2*frda_ks_k1(x, y, z)*(frda_ks_dk0_D1 KS_func_pass_args_macro )*(frda_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+2*(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_dk0_D1 KS_func_pass_args_macro )*
+(frda_ks_dk1_D1 KS_func_pass_args_macro ) + 2*(frda_ks_dc_D1 KS_func_pass_args_macro )*
+(frda_ks_dk0_D0 KS_func_pass_args_macro )*(frda_ks_dk1_D1 KS_func_pass_args_macro ) + 2*
+(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_dk0_D1 KS_func_pass_args_macro )*
+(frda_ks_dk1_D0 KS_func_pass_args_macro );
 
     _dddgamma_D2D2D2D0D1[ijk]=
 /* mcode in progress ... */
@@ -2605,22 +2605,22 @@ bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_
 // Derivative
 // c
 // k2
-2*bbn_ks_c(x, y, z)*bbn_ks_k2(x, y, z)*(bbn_ks_dddk2_D0D1D2 KS_func_pass_args_macro ) + 2*
-bbn_ks_c(x, y, z)*(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_c(x, y, z)*(bbn_ks_dk2_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_c(x, y, z)*(bbn_ks_dk2_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D1 KS_func_pass_args_macro ) + 
-pow(bbn_ks_k2(x, y, z), 2)*(bbn_ks_dddc_D0D1D2 KS_func_pass_args_macro ) + 2*bbn_ks_k2(x, y, z)*
-(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D2 KS_func_pass_args_macro ) + 2*
-bbn_ks_k2(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_k2(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D1 KS_func_pass_args_macro ) + 
-2*bbn_ks_k2(x, y, z)*(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_k2(x, y, z)*(bbn_ks_dk2_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_k2(x, y, z)*(bbn_ks_dk2_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
-2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro )*
-(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D1 KS_func_pass_args_macro )*
-(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 2*
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk2_D1 KS_func_pass_args_macro );
+2*frda_ks_c(x, y, z)*frda_ks_k2(x, y, z)*(frda_ks_dddk2_D0D1D2 KS_func_pass_args_macro ) + 2*
+frda_ks_c(x, y, z)*(frda_ks_dk2_D0 KS_func_pass_args_macro )*(frda_ks_ddk2_D1D2 KS_func_pass_args_macro ) + 
+2*frda_ks_c(x, y, z)*(frda_ks_dk2_D1 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D2 KS_func_pass_args_macro ) + 
+2*frda_ks_c(x, y, z)*(frda_ks_dk2_D2 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D1 KS_func_pass_args_macro ) + 
+pow(frda_ks_k2(x, y, z), 2)*(frda_ks_dddc_D0D1D2 KS_func_pass_args_macro ) + 2*frda_ks_k2(x, y, z)*
+(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk2_D1D2 KS_func_pass_args_macro ) + 2*
+frda_ks_k2(x, y, z)*(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D2 KS_func_pass_args_macro ) + 
+2*frda_ks_k2(x, y, z)*(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D1 KS_func_pass_args_macro ) + 
+2*frda_ks_k2(x, y, z)*(frda_ks_dk2_D0 KS_func_pass_args_macro )*(frda_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
+2*frda_ks_k2(x, y, z)*(frda_ks_dk2_D1 KS_func_pass_args_macro )*(frda_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
+2*frda_ks_k2(x, y, z)*(frda_ks_dk2_D2 KS_func_pass_args_macro )*(frda_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+2*(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_dk2_D1 KS_func_pass_args_macro )*
+(frda_ks_dk2_D2 KS_func_pass_args_macro ) + 2*(frda_ks_dc_D1 KS_func_pass_args_macro )*
+(frda_ks_dk2_D0 KS_func_pass_args_macro )*(frda_ks_dk2_D2 KS_func_pass_args_macro ) + 2*
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_dk2_D0 KS_func_pass_args_macro )*
+(frda_ks_dk2_D1 KS_func_pass_args_macro );
 
     _dddgamma_D1D2D2D2D2[ijk]=
 /* mcode in progress ... */
@@ -2637,17 +2637,17 @@ bbn_ks_k2(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D2 KS_
 // c
 // k1
 // k2
-bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_dddk2_D2D2D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-bbn_ks_k2(x, y, z)*(bbn_ks_dddk1_D2D2D2 KS_func_pass_args_macro ) + 3*bbn_ks_c(x, y, z)*
-(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D2D2 KS_func_pass_args_macro ) + 3*
-bbn_ks_c(x, y, z)*(bbn_ks_ddk1_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 
-bbn_ks_k1(x, y, z)*bbn_ks_k2(x, y, z)*(bbn_ks_dddc_D2D2D2 KS_func_pass_args_macro ) + 3*bbn_ks_k1(x, y, z)*
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D2D2 KS_func_pass_args_macro ) + 3*
-bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 
-3*bbn_ks_k2(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D2D2 KS_func_pass_args_macro ) + 
-3*bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + 
-6*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro )*
-(bbn_ks_dk2_D2 KS_func_pass_args_macro );
+frda_ks_c(x, y, z)*frda_ks_k1(x, y, z)*(frda_ks_dddk2_D2D2D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+frda_ks_k2(x, y, z)*(frda_ks_dddk1_D2D2D2 KS_func_pass_args_macro ) + 3*frda_ks_c(x, y, z)*
+(frda_ks_dk1_D2 KS_func_pass_args_macro )*(frda_ks_ddk2_D2D2 KS_func_pass_args_macro ) + 3*
+frda_ks_c(x, y, z)*(frda_ks_ddk1_D2D2 KS_func_pass_args_macro )*(frda_ks_dk2_D2 KS_func_pass_args_macro ) + 
+frda_ks_k1(x, y, z)*frda_ks_k2(x, y, z)*(frda_ks_dddc_D2D2D2 KS_func_pass_args_macro ) + 3*frda_ks_k1(x, y, z)*
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk2_D2D2 KS_func_pass_args_macro ) + 3*
+frda_ks_k1(x, y, z)*(frda_ks_ddc_D2D2 KS_func_pass_args_macro )*(frda_ks_dk2_D2 KS_func_pass_args_macro ) + 
+3*frda_ks_k2(x, y, z)*(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk1_D2D2 KS_func_pass_args_macro ) + 
+3*frda_ks_k2(x, y, z)*(frda_ks_ddc_D2D2 KS_func_pass_args_macro )*(frda_ks_dk1_D2 KS_func_pass_args_macro ) + 
+6*(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_dk1_D2 KS_func_pass_args_macro )*
+(frda_ks_dk2_D2 KS_func_pass_args_macro );
 
     _dddgamma_D1D2D1D2D1[ijk]=
 /* mcode in progress ... */
@@ -2670,26 +2670,26 @@ bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_
 // c
 // k1
 // k2
-bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_dddk2_D1D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-bbn_ks_k2(x, y, z)*(bbn_ks_dddk1_D1D1D2 KS_func_pass_args_macro ) + 2*bbn_ks_c(x, y, z)*
-(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_ddk1_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 
-bbn_ks_c(x, y, z)*(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D1 KS_func_pass_args_macro ) + 
-2*bbn_ks_c(x, y, z)*(bbn_ks_dk2_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D2 KS_func_pass_args_macro ) + 
-bbn_ks_k1(x, y, z)*bbn_ks_k2(x, y, z)*(bbn_ks_dddc_D1D1D2 KS_func_pass_args_macro ) + 2*
-bbn_ks_k1(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D2 KS_func_pass_args_macro ) + 
-bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 
-bbn_ks_k1(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D1 KS_func_pass_args_macro ) + 
-2*bbn_ks_k1(x, y, z)*(bbn_ks_dk2_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_k2(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D2 KS_func_pass_args_macro ) + 
-bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + 
-bbn_ks_k2(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D1 KS_func_pass_args_macro ) + 
-2*bbn_ks_k2(x, y, z)*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
-2*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*
-(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D1 KS_func_pass_args_macro )*
-(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 2*
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*
-(bbn_ks_dk2_D1 KS_func_pass_args_macro );
+frda_ks_c(x, y, z)*frda_ks_k1(x, y, z)*(frda_ks_dddk2_D1D1D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+frda_ks_k2(x, y, z)*(frda_ks_dddk1_D1D1D2 KS_func_pass_args_macro ) + 2*frda_ks_c(x, y, z)*
+(frda_ks_dk1_D1 KS_func_pass_args_macro )*(frda_ks_ddk2_D1D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_ddk1_D1D1 KS_func_pass_args_macro )*(frda_ks_dk2_D2 KS_func_pass_args_macro ) + 
+frda_ks_c(x, y, z)*(frda_ks_dk1_D2 KS_func_pass_args_macro )*(frda_ks_ddk2_D1D1 KS_func_pass_args_macro ) + 
+2*frda_ks_c(x, y, z)*(frda_ks_dk2_D1 KS_func_pass_args_macro )*(frda_ks_ddk1_D1D2 KS_func_pass_args_macro ) + 
+frda_ks_k1(x, y, z)*frda_ks_k2(x, y, z)*(frda_ks_dddc_D1D1D2 KS_func_pass_args_macro ) + 2*
+frda_ks_k1(x, y, z)*(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk2_D1D2 KS_func_pass_args_macro ) + 
+frda_ks_k1(x, y, z)*(frda_ks_ddc_D1D1 KS_func_pass_args_macro )*(frda_ks_dk2_D2 KS_func_pass_args_macro ) + 
+frda_ks_k1(x, y, z)*(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk2_D1D1 KS_func_pass_args_macro ) + 
+2*frda_ks_k1(x, y, z)*(frda_ks_dk2_D1 KS_func_pass_args_macro )*(frda_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
+2*frda_ks_k2(x, y, z)*(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk1_D1D2 KS_func_pass_args_macro ) + 
+frda_ks_k2(x, y, z)*(frda_ks_ddc_D1D1 KS_func_pass_args_macro )*(frda_ks_dk1_D2 KS_func_pass_args_macro ) + 
+frda_ks_k2(x, y, z)*(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk1_D1D1 KS_func_pass_args_macro ) + 
+2*frda_ks_k2(x, y, z)*(frda_ks_dk1_D1 KS_func_pass_args_macro )*(frda_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
+2*(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_dk1_D1 KS_func_pass_args_macro )*
+(frda_ks_dk2_D2 KS_func_pass_args_macro ) + 2*(frda_ks_dc_D1 KS_func_pass_args_macro )*
+(frda_ks_dk1_D2 KS_func_pass_args_macro )*(frda_ks_dk2_D1 KS_func_pass_args_macro ) + 2*
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_dk1_D1 KS_func_pass_args_macro )*
+(frda_ks_dk2_D1 KS_func_pass_args_macro );
 
     _dddgamma_D2D2D0D2D1[ijk]=
 /* mcode in progress ... */
@@ -2710,22 +2710,22 @@ bbn_ks_k2(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D1 KS_
 // Derivative
 // c
 // k2
-2*bbn_ks_c(x, y, z)*bbn_ks_k2(x, y, z)*(bbn_ks_dddk2_D0D1D2 KS_func_pass_args_macro ) + 2*
-bbn_ks_c(x, y, z)*(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_c(x, y, z)*(bbn_ks_dk2_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_c(x, y, z)*(bbn_ks_dk2_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D1 KS_func_pass_args_macro ) + 
-pow(bbn_ks_k2(x, y, z), 2)*(bbn_ks_dddc_D0D1D2 KS_func_pass_args_macro ) + 2*bbn_ks_k2(x, y, z)*
-(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D2 KS_func_pass_args_macro ) + 2*
-bbn_ks_k2(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_k2(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D1 KS_func_pass_args_macro ) + 
-2*bbn_ks_k2(x, y, z)*(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_k2(x, y, z)*(bbn_ks_dk2_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_k2(x, y, z)*(bbn_ks_dk2_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
-2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro )*
-(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D1 KS_func_pass_args_macro )*
-(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 2*
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk2_D1 KS_func_pass_args_macro );
+2*frda_ks_c(x, y, z)*frda_ks_k2(x, y, z)*(frda_ks_dddk2_D0D1D2 KS_func_pass_args_macro ) + 2*
+frda_ks_c(x, y, z)*(frda_ks_dk2_D0 KS_func_pass_args_macro )*(frda_ks_ddk2_D1D2 KS_func_pass_args_macro ) + 
+2*frda_ks_c(x, y, z)*(frda_ks_dk2_D1 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D2 KS_func_pass_args_macro ) + 
+2*frda_ks_c(x, y, z)*(frda_ks_dk2_D2 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D1 KS_func_pass_args_macro ) + 
+pow(frda_ks_k2(x, y, z), 2)*(frda_ks_dddc_D0D1D2 KS_func_pass_args_macro ) + 2*frda_ks_k2(x, y, z)*
+(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk2_D1D2 KS_func_pass_args_macro ) + 2*
+frda_ks_k2(x, y, z)*(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D2 KS_func_pass_args_macro ) + 
+2*frda_ks_k2(x, y, z)*(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D1 KS_func_pass_args_macro ) + 
+2*frda_ks_k2(x, y, z)*(frda_ks_dk2_D0 KS_func_pass_args_macro )*(frda_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
+2*frda_ks_k2(x, y, z)*(frda_ks_dk2_D1 KS_func_pass_args_macro )*(frda_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
+2*frda_ks_k2(x, y, z)*(frda_ks_dk2_D2 KS_func_pass_args_macro )*(frda_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+2*(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_dk2_D1 KS_func_pass_args_macro )*
+(frda_ks_dk2_D2 KS_func_pass_args_macro ) + 2*(frda_ks_dc_D1 KS_func_pass_args_macro )*
+(frda_ks_dk2_D0 KS_func_pass_args_macro )*(frda_ks_dk2_D2 KS_func_pass_args_macro ) + 2*
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_dk2_D0 KS_func_pass_args_macro )*
+(frda_ks_dk2_D1 KS_func_pass_args_macro );
 
     _dddgamma_D1D1D2D1D2[ijk]=
 /* mcode in progress ... */
@@ -2742,17 +2742,17 @@ bbn_ks_k2(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D2 KS_
 // Derivative
 // c
 // k1
-2*bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_dddk1_D1D2D2 KS_func_pass_args_macro ) + 2*
-bbn_ks_c(x, y, z)*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D2D2 KS_func_pass_args_macro ) + 
-4*bbn_ks_c(x, y, z)*(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D2 KS_func_pass_args_macro ) + 
-pow(bbn_ks_k1(x, y, z), 2)*(bbn_ks_dddc_D1D2D2 KS_func_pass_args_macro ) + 2*bbn_ks_k1(x, y, z)*
-(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D2D2 KS_func_pass_args_macro ) + 4*
-bbn_ks_k1(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro ) + 
-4*bbn_ks_k1(x, y, z)*(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
-2*(bbn_ks_dc_D1 KS_func_pass_args_macro )*pow((bbn_ks_dk1_D2 KS_func_pass_args_macro ), 2) + 4*
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*
-(bbn_ks_dk1_D2 KS_func_pass_args_macro );
+2*frda_ks_c(x, y, z)*frda_ks_k1(x, y, z)*(frda_ks_dddk1_D1D2D2 KS_func_pass_args_macro ) + 2*
+frda_ks_c(x, y, z)*(frda_ks_dk1_D1 KS_func_pass_args_macro )*(frda_ks_ddk1_D2D2 KS_func_pass_args_macro ) + 
+4*frda_ks_c(x, y, z)*(frda_ks_dk1_D2 KS_func_pass_args_macro )*(frda_ks_ddk1_D1D2 KS_func_pass_args_macro ) + 
+pow(frda_ks_k1(x, y, z), 2)*(frda_ks_dddc_D1D2D2 KS_func_pass_args_macro ) + 2*frda_ks_k1(x, y, z)*
+(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk1_D2D2 KS_func_pass_args_macro ) + 4*
+frda_ks_k1(x, y, z)*(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk1_D1D2 KS_func_pass_args_macro ) + 
+2*frda_ks_k1(x, y, z)*(frda_ks_ddc_D2D2 KS_func_pass_args_macro )*(frda_ks_dk1_D1 KS_func_pass_args_macro ) + 
+4*frda_ks_k1(x, y, z)*(frda_ks_dk1_D2 KS_func_pass_args_macro )*(frda_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
+2*(frda_ks_dc_D1 KS_func_pass_args_macro )*pow((frda_ks_dk1_D2 KS_func_pass_args_macro ), 2) + 4*
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_dk1_D1 KS_func_pass_args_macro )*
+(frda_ks_dk1_D2 KS_func_pass_args_macro );
 
     _dddgamma_D1D2D2D1D0[ijk]=
 /* mcode in progress ... */
@@ -2781,36 +2781,36 @@ bbn_ks_k1(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D2 KS_
 // c
 // k1
 // k2
-bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_dddk2_D0D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-bbn_ks_k2(x, y, z)*(bbn_ks_dddk1_D0D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D1 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk2_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk2_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D1 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
-bbn_ks_k2(x, y, z)*(bbn_ks_dddc_D0D1D2 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
-(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D2 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
-(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D2 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D1 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
-(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
-(bbn_ks_dk2_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
-(bbn_ks_dk2_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
-(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D2 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
-(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D2 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D1 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
-(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
-(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
-(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
-(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*
-(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + (bbn_ks_dc_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 
-(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + (bbn_ks_dc_D1 KS_func_pass_args_macro )*
-(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + 
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + (bbn_ks_dc_D2 KS_func_pass_args_macro )*
-(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro );
+frda_ks_c(x, y, z)*frda_ks_k1(x, y, z)*(frda_ks_dddk2_D0D1D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+frda_ks_k2(x, y, z)*(frda_ks_dddk1_D0D1D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk1_D0 KS_func_pass_args_macro )*(frda_ks_ddk2_D1D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk1_D1 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk1_D2 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D1 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk2_D0 KS_func_pass_args_macro )*(frda_ks_ddk1_D1D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk2_D1 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk2_D2 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D1 KS_func_pass_args_macro ) + frda_ks_k1(x, y, z)*
+frda_ks_k2(x, y, z)*(frda_ks_dddc_D0D1D2 KS_func_pass_args_macro ) + frda_ks_k1(x, y, z)*
+(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk2_D1D2 KS_func_pass_args_macro ) + frda_ks_k1(x, y, z)*
+(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D2 KS_func_pass_args_macro ) + frda_ks_k1(x, y, z)*
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D1 KS_func_pass_args_macro ) + frda_ks_k1(x, y, z)*
+(frda_ks_dk2_D0 KS_func_pass_args_macro )*(frda_ks_ddc_D1D2 KS_func_pass_args_macro ) + frda_ks_k1(x, y, z)*
+(frda_ks_dk2_D1 KS_func_pass_args_macro )*(frda_ks_ddc_D0D2 KS_func_pass_args_macro ) + frda_ks_k1(x, y, z)*
+(frda_ks_dk2_D2 KS_func_pass_args_macro )*(frda_ks_ddc_D0D1 KS_func_pass_args_macro ) + frda_ks_k2(x, y, z)*
+(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk1_D1D2 KS_func_pass_args_macro ) + frda_ks_k2(x, y, z)*
+(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D2 KS_func_pass_args_macro ) + frda_ks_k2(x, y, z)*
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D1 KS_func_pass_args_macro ) + frda_ks_k2(x, y, z)*
+(frda_ks_dk1_D0 KS_func_pass_args_macro )*(frda_ks_ddc_D1D2 KS_func_pass_args_macro ) + frda_ks_k2(x, y, z)*
+(frda_ks_dk1_D1 KS_func_pass_args_macro )*(frda_ks_ddc_D0D2 KS_func_pass_args_macro ) + frda_ks_k2(x, y, z)*
+(frda_ks_dk1_D2 KS_func_pass_args_macro )*(frda_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_dk1_D1 KS_func_pass_args_macro )*
+(frda_ks_dk2_D2 KS_func_pass_args_macro ) + (frda_ks_dc_D0 KS_func_pass_args_macro )*
+(frda_ks_dk1_D2 KS_func_pass_args_macro )*(frda_ks_dk2_D1 KS_func_pass_args_macro ) + 
+(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_dk1_D0 KS_func_pass_args_macro )*
+(frda_ks_dk2_D2 KS_func_pass_args_macro ) + (frda_ks_dc_D1 KS_func_pass_args_macro )*
+(frda_ks_dk1_D2 KS_func_pass_args_macro )*(frda_ks_dk2_D0 KS_func_pass_args_macro ) + 
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_dk1_D0 KS_func_pass_args_macro )*
+(frda_ks_dk2_D1 KS_func_pass_args_macro ) + (frda_ks_dc_D2 KS_func_pass_args_macro )*
+(frda_ks_dk1_D1 KS_func_pass_args_macro )*(frda_ks_dk2_D0 KS_func_pass_args_macro );
 
     _dddgamma_D1D2D0D0D1[ijk]=
 /* mcode in progress ... */
@@ -2833,26 +2833,26 @@ bbn_ks_k2(x, y, z)*(bbn_ks_dddc_D0D1D2 KS_func_pass_args_macro ) + bbn_ks_k1(x, 
 // c
 // k1
 // k2
-bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_dddk2_D0D0D1 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-bbn_ks_k2(x, y, z)*(bbn_ks_dddk1_D0D0D1 KS_func_pass_args_macro ) + 2*bbn_ks_c(x, y, z)*
-(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D1 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_ddk1_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 
-bbn_ks_c(x, y, z)*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D0 KS_func_pass_args_macro ) + 
-2*bbn_ks_c(x, y, z)*(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D1 KS_func_pass_args_macro ) + 
-bbn_ks_k1(x, y, z)*bbn_ks_k2(x, y, z)*(bbn_ks_dddc_D0D0D1 KS_func_pass_args_macro ) + 2*
-bbn_ks_k1(x, y, z)*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D1 KS_func_pass_args_macro ) + 
-bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 
-bbn_ks_k1(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D0 KS_func_pass_args_macro ) + 
-2*bbn_ks_k1(x, y, z)*(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
-2*bbn_ks_k2(x, y, z)*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D1 KS_func_pass_args_macro ) + 
-bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro ) + 
-bbn_ks_k2(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D0 KS_func_pass_args_macro ) + 
-2*bbn_ks_k2(x, y, z)*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
-2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + 2*
-(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk2_D0 KS_func_pass_args_macro );
+frda_ks_c(x, y, z)*frda_ks_k1(x, y, z)*(frda_ks_dddk2_D0D0D1 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+frda_ks_k2(x, y, z)*(frda_ks_dddk1_D0D0D1 KS_func_pass_args_macro ) + 2*frda_ks_c(x, y, z)*
+(frda_ks_dk1_D0 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D1 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_ddk1_D0D0 KS_func_pass_args_macro )*(frda_ks_dk2_D1 KS_func_pass_args_macro ) + 
+frda_ks_c(x, y, z)*(frda_ks_dk1_D1 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D0 KS_func_pass_args_macro ) + 
+2*frda_ks_c(x, y, z)*(frda_ks_dk2_D0 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D1 KS_func_pass_args_macro ) + 
+frda_ks_k1(x, y, z)*frda_ks_k2(x, y, z)*(frda_ks_dddc_D0D0D1 KS_func_pass_args_macro ) + 2*
+frda_ks_k1(x, y, z)*(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D1 KS_func_pass_args_macro ) + 
+frda_ks_k1(x, y, z)*(frda_ks_ddc_D0D0 KS_func_pass_args_macro )*(frda_ks_dk2_D1 KS_func_pass_args_macro ) + 
+frda_ks_k1(x, y, z)*(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D0 KS_func_pass_args_macro ) + 
+2*frda_ks_k1(x, y, z)*(frda_ks_dk2_D0 KS_func_pass_args_macro )*(frda_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+2*frda_ks_k2(x, y, z)*(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D1 KS_func_pass_args_macro ) + 
+frda_ks_k2(x, y, z)*(frda_ks_ddc_D0D0 KS_func_pass_args_macro )*(frda_ks_dk1_D1 KS_func_pass_args_macro ) + 
+frda_ks_k2(x, y, z)*(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D0 KS_func_pass_args_macro ) + 
+2*frda_ks_k2(x, y, z)*(frda_ks_dk1_D0 KS_func_pass_args_macro )*(frda_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+2*(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_dk1_D0 KS_func_pass_args_macro )*
+(frda_ks_dk2_D1 KS_func_pass_args_macro ) + 2*(frda_ks_dc_D0 KS_func_pass_args_macro )*
+(frda_ks_dk1_D1 KS_func_pass_args_macro )*(frda_ks_dk2_D0 KS_func_pass_args_macro ) + 2*
+(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_dk1_D0 KS_func_pass_args_macro )*
+(frda_ks_dk2_D0 KS_func_pass_args_macro );
 
     _dddgamma_D0D2D0D1D1[ijk]=
 /* mcode in progress ... */
@@ -2875,26 +2875,26 @@ bbn_ks_k2(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D0 KS_
 // c
 // k0
 // k2
-bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dddk2_D0D1D1 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-bbn_ks_k2(x, y, z)*(bbn_ks_dddk0_D0D1D1 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D1 KS_func_pass_args_macro ) + 2*
-bbn_ks_c(x, y, z)*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D1 KS_func_pass_args_macro ) + 
-bbn_ks_c(x, y, z)*(bbn_ks_ddk0_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + 
-2*bbn_ks_c(x, y, z)*(bbn_ks_dk2_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D1 KS_func_pass_args_macro ) + 
-bbn_ks_k0(x, y, z)*bbn_ks_k2(x, y, z)*(bbn_ks_dddc_D0D1D1 KS_func_pass_args_macro ) + 
-bbn_ks_k0(x, y, z)*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D1 KS_func_pass_args_macro ) + 
-2*bbn_ks_k0(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D1 KS_func_pass_args_macro ) + 
-bbn_ks_k0(x, y, z)*(bbn_ks_ddc_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + 
-2*bbn_ks_k0(x, y, z)*(bbn_ks_dk2_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
-bbn_ks_k2(x, y, z)*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D1 KS_func_pass_args_macro ) + 
-2*bbn_ks_k2(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D1 KS_func_pass_args_macro ) + 
-bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro ) + 
-2*bbn_ks_k2(x, y, z)*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
-2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*
-(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D1 KS_func_pass_args_macro )*
-(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 2*
-(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*
-(bbn_ks_dk2_D0 KS_func_pass_args_macro );
+frda_ks_c(x, y, z)*frda_ks_k0(x, y, z)*(frda_ks_dddk2_D0D1D1 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+frda_ks_k2(x, y, z)*(frda_ks_dddk0_D0D1D1 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk0_D0 KS_func_pass_args_macro )*(frda_ks_ddk2_D1D1 KS_func_pass_args_macro ) + 2*
+frda_ks_c(x, y, z)*(frda_ks_dk0_D1 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D1 KS_func_pass_args_macro ) + 
+frda_ks_c(x, y, z)*(frda_ks_ddk0_D1D1 KS_func_pass_args_macro )*(frda_ks_dk2_D0 KS_func_pass_args_macro ) + 
+2*frda_ks_c(x, y, z)*(frda_ks_dk2_D1 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D1 KS_func_pass_args_macro ) + 
+frda_ks_k0(x, y, z)*frda_ks_k2(x, y, z)*(frda_ks_dddc_D0D1D1 KS_func_pass_args_macro ) + 
+frda_ks_k0(x, y, z)*(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk2_D1D1 KS_func_pass_args_macro ) + 
+2*frda_ks_k0(x, y, z)*(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D1 KS_func_pass_args_macro ) + 
+frda_ks_k0(x, y, z)*(frda_ks_ddc_D1D1 KS_func_pass_args_macro )*(frda_ks_dk2_D0 KS_func_pass_args_macro ) + 
+2*frda_ks_k0(x, y, z)*(frda_ks_dk2_D1 KS_func_pass_args_macro )*(frda_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+frda_ks_k2(x, y, z)*(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk0_D1D1 KS_func_pass_args_macro ) + 
+2*frda_ks_k2(x, y, z)*(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D1 KS_func_pass_args_macro ) + 
+frda_ks_k2(x, y, z)*(frda_ks_ddc_D1D1 KS_func_pass_args_macro )*(frda_ks_dk0_D0 KS_func_pass_args_macro ) + 
+2*frda_ks_k2(x, y, z)*(frda_ks_dk0_D1 KS_func_pass_args_macro )*(frda_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+2*(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_dk0_D1 KS_func_pass_args_macro )*
+(frda_ks_dk2_D1 KS_func_pass_args_macro ) + 2*(frda_ks_dc_D1 KS_func_pass_args_macro )*
+(frda_ks_dk0_D0 KS_func_pass_args_macro )*(frda_ks_dk2_D1 KS_func_pass_args_macro ) + 2*
+(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_dk0_D1 KS_func_pass_args_macro )*
+(frda_ks_dk2_D0 KS_func_pass_args_macro );
 
     _dddgamma_D0D2D1D0D1[ijk]=
 /* mcode in progress ... */
@@ -2917,26 +2917,26 @@ bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_
 // c
 // k0
 // k2
-bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dddk2_D0D1D1 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-bbn_ks_k2(x, y, z)*(bbn_ks_dddk0_D0D1D1 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D1 KS_func_pass_args_macro ) + 2*
-bbn_ks_c(x, y, z)*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D1 KS_func_pass_args_macro ) + 
-bbn_ks_c(x, y, z)*(bbn_ks_ddk0_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + 
-2*bbn_ks_c(x, y, z)*(bbn_ks_dk2_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D1 KS_func_pass_args_macro ) + 
-bbn_ks_k0(x, y, z)*bbn_ks_k2(x, y, z)*(bbn_ks_dddc_D0D1D1 KS_func_pass_args_macro ) + 
-bbn_ks_k0(x, y, z)*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D1 KS_func_pass_args_macro ) + 
-2*bbn_ks_k0(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D1 KS_func_pass_args_macro ) + 
-bbn_ks_k0(x, y, z)*(bbn_ks_ddc_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + 
-2*bbn_ks_k0(x, y, z)*(bbn_ks_dk2_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
-bbn_ks_k2(x, y, z)*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D1 KS_func_pass_args_macro ) + 
-2*bbn_ks_k2(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D1 KS_func_pass_args_macro ) + 
-bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro ) + 
-2*bbn_ks_k2(x, y, z)*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
-2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*
-(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D1 KS_func_pass_args_macro )*
-(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 2*
-(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*
-(bbn_ks_dk2_D0 KS_func_pass_args_macro );
+frda_ks_c(x, y, z)*frda_ks_k0(x, y, z)*(frda_ks_dddk2_D0D1D1 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+frda_ks_k2(x, y, z)*(frda_ks_dddk0_D0D1D1 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk0_D0 KS_func_pass_args_macro )*(frda_ks_ddk2_D1D1 KS_func_pass_args_macro ) + 2*
+frda_ks_c(x, y, z)*(frda_ks_dk0_D1 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D1 KS_func_pass_args_macro ) + 
+frda_ks_c(x, y, z)*(frda_ks_ddk0_D1D1 KS_func_pass_args_macro )*(frda_ks_dk2_D0 KS_func_pass_args_macro ) + 
+2*frda_ks_c(x, y, z)*(frda_ks_dk2_D1 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D1 KS_func_pass_args_macro ) + 
+frda_ks_k0(x, y, z)*frda_ks_k2(x, y, z)*(frda_ks_dddc_D0D1D1 KS_func_pass_args_macro ) + 
+frda_ks_k0(x, y, z)*(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk2_D1D1 KS_func_pass_args_macro ) + 
+2*frda_ks_k0(x, y, z)*(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D1 KS_func_pass_args_macro ) + 
+frda_ks_k0(x, y, z)*(frda_ks_ddc_D1D1 KS_func_pass_args_macro )*(frda_ks_dk2_D0 KS_func_pass_args_macro ) + 
+2*frda_ks_k0(x, y, z)*(frda_ks_dk2_D1 KS_func_pass_args_macro )*(frda_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+frda_ks_k2(x, y, z)*(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk0_D1D1 KS_func_pass_args_macro ) + 
+2*frda_ks_k2(x, y, z)*(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D1 KS_func_pass_args_macro ) + 
+frda_ks_k2(x, y, z)*(frda_ks_ddc_D1D1 KS_func_pass_args_macro )*(frda_ks_dk0_D0 KS_func_pass_args_macro ) + 
+2*frda_ks_k2(x, y, z)*(frda_ks_dk0_D1 KS_func_pass_args_macro )*(frda_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+2*(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_dk0_D1 KS_func_pass_args_macro )*
+(frda_ks_dk2_D1 KS_func_pass_args_macro ) + 2*(frda_ks_dc_D1 KS_func_pass_args_macro )*
+(frda_ks_dk0_D0 KS_func_pass_args_macro )*(frda_ks_dk2_D1 KS_func_pass_args_macro ) + 2*
+(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_dk0_D1 KS_func_pass_args_macro )*
+(frda_ks_dk2_D0 KS_func_pass_args_macro );
 
     _dddgamma_D0D0D0D1D2[ijk]=
 /* mcode in progress ... */
@@ -2957,22 +2957,22 @@ bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_
 // Derivative
 // c
 // k0
-2*bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dddk0_D0D1D2 KS_func_pass_args_macro ) + 2*
-bbn_ks_c(x, y, z)*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_c(x, y, z)*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_c(x, y, z)*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D1 KS_func_pass_args_macro ) + 
-pow(bbn_ks_k0(x, y, z), 2)*(bbn_ks_dddc_D0D1D2 KS_func_pass_args_macro ) + 2*bbn_ks_k0(x, y, z)*
-(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D2 KS_func_pass_args_macro ) + 2*
-bbn_ks_k0(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_k0(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D1 KS_func_pass_args_macro ) + 
-2*bbn_ks_k0(x, y, z)*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_k0(x, y, z)*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_k0(x, y, z)*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
-2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*
-(bbn_ks_dk0_D2 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D1 KS_func_pass_args_macro )*
-(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D2 KS_func_pass_args_macro ) + 2*
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk0_D1 KS_func_pass_args_macro );
+2*frda_ks_c(x, y, z)*frda_ks_k0(x, y, z)*(frda_ks_dddk0_D0D1D2 KS_func_pass_args_macro ) + 2*
+frda_ks_c(x, y, z)*(frda_ks_dk0_D0 KS_func_pass_args_macro )*(frda_ks_ddk0_D1D2 KS_func_pass_args_macro ) + 
+2*frda_ks_c(x, y, z)*(frda_ks_dk0_D1 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D2 KS_func_pass_args_macro ) + 
+2*frda_ks_c(x, y, z)*(frda_ks_dk0_D2 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D1 KS_func_pass_args_macro ) + 
+pow(frda_ks_k0(x, y, z), 2)*(frda_ks_dddc_D0D1D2 KS_func_pass_args_macro ) + 2*frda_ks_k0(x, y, z)*
+(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk0_D1D2 KS_func_pass_args_macro ) + 2*
+frda_ks_k0(x, y, z)*(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D2 KS_func_pass_args_macro ) + 
+2*frda_ks_k0(x, y, z)*(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D1 KS_func_pass_args_macro ) + 
+2*frda_ks_k0(x, y, z)*(frda_ks_dk0_D0 KS_func_pass_args_macro )*(frda_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
+2*frda_ks_k0(x, y, z)*(frda_ks_dk0_D1 KS_func_pass_args_macro )*(frda_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
+2*frda_ks_k0(x, y, z)*(frda_ks_dk0_D2 KS_func_pass_args_macro )*(frda_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+2*(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_dk0_D1 KS_func_pass_args_macro )*
+(frda_ks_dk0_D2 KS_func_pass_args_macro ) + 2*(frda_ks_dc_D1 KS_func_pass_args_macro )*
+(frda_ks_dk0_D0 KS_func_pass_args_macro )*(frda_ks_dk0_D2 KS_func_pass_args_macro ) + 2*
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_dk0_D0 KS_func_pass_args_macro )*
+(frda_ks_dk0_D1 KS_func_pass_args_macro );
 
     _dddgamma_D0D0D2D1D2[ijk]=
 /* mcode in progress ... */
@@ -2989,17 +2989,17 @@ bbn_ks_k0(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D2 KS_
 // Derivative
 // c
 // k0
-2*bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dddk0_D1D2D2 KS_func_pass_args_macro ) + 2*
-bbn_ks_c(x, y, z)*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D2D2 KS_func_pass_args_macro ) + 
-4*bbn_ks_c(x, y, z)*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D2 KS_func_pass_args_macro ) + 
-pow(bbn_ks_k0(x, y, z), 2)*(bbn_ks_dddc_D1D2D2 KS_func_pass_args_macro ) + 2*bbn_ks_k0(x, y, z)*
-(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D2D2 KS_func_pass_args_macro ) + 4*
-bbn_ks_k0(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_k0(x, y, z)*(bbn_ks_ddc_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro ) + 
-4*bbn_ks_k0(x, y, z)*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
-2*(bbn_ks_dc_D1 KS_func_pass_args_macro )*pow((bbn_ks_dk0_D2 KS_func_pass_args_macro ), 2) + 4*
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*
-(bbn_ks_dk0_D2 KS_func_pass_args_macro );
+2*frda_ks_c(x, y, z)*frda_ks_k0(x, y, z)*(frda_ks_dddk0_D1D2D2 KS_func_pass_args_macro ) + 2*
+frda_ks_c(x, y, z)*(frda_ks_dk0_D1 KS_func_pass_args_macro )*(frda_ks_ddk0_D2D2 KS_func_pass_args_macro ) + 
+4*frda_ks_c(x, y, z)*(frda_ks_dk0_D2 KS_func_pass_args_macro )*(frda_ks_ddk0_D1D2 KS_func_pass_args_macro ) + 
+pow(frda_ks_k0(x, y, z), 2)*(frda_ks_dddc_D1D2D2 KS_func_pass_args_macro ) + 2*frda_ks_k0(x, y, z)*
+(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk0_D2D2 KS_func_pass_args_macro ) + 4*
+frda_ks_k0(x, y, z)*(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk0_D1D2 KS_func_pass_args_macro ) + 
+2*frda_ks_k0(x, y, z)*(frda_ks_ddc_D2D2 KS_func_pass_args_macro )*(frda_ks_dk0_D1 KS_func_pass_args_macro ) + 
+4*frda_ks_k0(x, y, z)*(frda_ks_dk0_D2 KS_func_pass_args_macro )*(frda_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
+2*(frda_ks_dc_D1 KS_func_pass_args_macro )*pow((frda_ks_dk0_D2 KS_func_pass_args_macro ), 2) + 4*
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_dk0_D1 KS_func_pass_args_macro )*
+(frda_ks_dk0_D2 KS_func_pass_args_macro );
 
     _dddgamma_D0D1D0D1D0[ijk]=
 /* mcode in progress ... */
@@ -3022,26 +3022,26 @@ bbn_ks_k0(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D2 KS_
 // c
 // k0
 // k1
-bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dddk1_D0D0D1 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-bbn_ks_k1(x, y, z)*(bbn_ks_dddk0_D0D0D1 KS_func_pass_args_macro ) + 2*bbn_ks_c(x, y, z)*
-(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D1 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_ddk0_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro ) + 
-bbn_ks_c(x, y, z)*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D0 KS_func_pass_args_macro ) + 
-2*bbn_ks_c(x, y, z)*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D1 KS_func_pass_args_macro ) + 
-bbn_ks_k0(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_dddc_D0D0D1 KS_func_pass_args_macro ) + 2*
-bbn_ks_k0(x, y, z)*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D1 KS_func_pass_args_macro ) + 
-bbn_ks_k0(x, y, z)*(bbn_ks_ddc_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro ) + 
-bbn_ks_k0(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D0 KS_func_pass_args_macro ) + 
-2*bbn_ks_k0(x, y, z)*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
-2*bbn_ks_k1(x, y, z)*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D1 KS_func_pass_args_macro ) + 
-bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro ) + 
-bbn_ks_k1(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D0 KS_func_pass_args_macro ) + 
-2*bbn_ks_k1(x, y, z)*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
-2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk1_D1 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro ) + 2*
-(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk1_D0 KS_func_pass_args_macro );
+frda_ks_c(x, y, z)*frda_ks_k0(x, y, z)*(frda_ks_dddk1_D0D0D1 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+frda_ks_k1(x, y, z)*(frda_ks_dddk0_D0D0D1 KS_func_pass_args_macro ) + 2*frda_ks_c(x, y, z)*
+(frda_ks_dk0_D0 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D1 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_ddk0_D0D0 KS_func_pass_args_macro )*(frda_ks_dk1_D1 KS_func_pass_args_macro ) + 
+frda_ks_c(x, y, z)*(frda_ks_dk0_D1 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D0 KS_func_pass_args_macro ) + 
+2*frda_ks_c(x, y, z)*(frda_ks_dk1_D0 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D1 KS_func_pass_args_macro ) + 
+frda_ks_k0(x, y, z)*frda_ks_k1(x, y, z)*(frda_ks_dddc_D0D0D1 KS_func_pass_args_macro ) + 2*
+frda_ks_k0(x, y, z)*(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D1 KS_func_pass_args_macro ) + 
+frda_ks_k0(x, y, z)*(frda_ks_ddc_D0D0 KS_func_pass_args_macro )*(frda_ks_dk1_D1 KS_func_pass_args_macro ) + 
+frda_ks_k0(x, y, z)*(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D0 KS_func_pass_args_macro ) + 
+2*frda_ks_k0(x, y, z)*(frda_ks_dk1_D0 KS_func_pass_args_macro )*(frda_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+2*frda_ks_k1(x, y, z)*(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D1 KS_func_pass_args_macro ) + 
+frda_ks_k1(x, y, z)*(frda_ks_ddc_D0D0 KS_func_pass_args_macro )*(frda_ks_dk0_D1 KS_func_pass_args_macro ) + 
+frda_ks_k1(x, y, z)*(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D0 KS_func_pass_args_macro ) + 
+2*frda_ks_k1(x, y, z)*(frda_ks_dk0_D0 KS_func_pass_args_macro )*(frda_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+2*(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_dk0_D0 KS_func_pass_args_macro )*
+(frda_ks_dk1_D1 KS_func_pass_args_macro ) + 2*(frda_ks_dc_D0 KS_func_pass_args_macro )*
+(frda_ks_dk0_D1 KS_func_pass_args_macro )*(frda_ks_dk1_D0 KS_func_pass_args_macro ) + 2*
+(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_dk0_D0 KS_func_pass_args_macro )*
+(frda_ks_dk1_D0 KS_func_pass_args_macro );
 
     _dddgamma_D1D2D1D0D0[ijk]=
 /* mcode in progress ... */
@@ -3064,26 +3064,26 @@ bbn_ks_k1(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D0 KS_
 // c
 // k1
 // k2
-bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_dddk2_D0D0D1 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-bbn_ks_k2(x, y, z)*(bbn_ks_dddk1_D0D0D1 KS_func_pass_args_macro ) + 2*bbn_ks_c(x, y, z)*
-(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D1 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_ddk1_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 
-bbn_ks_c(x, y, z)*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D0 KS_func_pass_args_macro ) + 
-2*bbn_ks_c(x, y, z)*(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D1 KS_func_pass_args_macro ) + 
-bbn_ks_k1(x, y, z)*bbn_ks_k2(x, y, z)*(bbn_ks_dddc_D0D0D1 KS_func_pass_args_macro ) + 2*
-bbn_ks_k1(x, y, z)*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D1 KS_func_pass_args_macro ) + 
-bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 
-bbn_ks_k1(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D0 KS_func_pass_args_macro ) + 
-2*bbn_ks_k1(x, y, z)*(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
-2*bbn_ks_k2(x, y, z)*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D1 KS_func_pass_args_macro ) + 
-bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro ) + 
-bbn_ks_k2(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D0 KS_func_pass_args_macro ) + 
-2*bbn_ks_k2(x, y, z)*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
-2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + 2*
-(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk2_D0 KS_func_pass_args_macro );
+frda_ks_c(x, y, z)*frda_ks_k1(x, y, z)*(frda_ks_dddk2_D0D0D1 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+frda_ks_k2(x, y, z)*(frda_ks_dddk1_D0D0D1 KS_func_pass_args_macro ) + 2*frda_ks_c(x, y, z)*
+(frda_ks_dk1_D0 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D1 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_ddk1_D0D0 KS_func_pass_args_macro )*(frda_ks_dk2_D1 KS_func_pass_args_macro ) + 
+frda_ks_c(x, y, z)*(frda_ks_dk1_D1 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D0 KS_func_pass_args_macro ) + 
+2*frda_ks_c(x, y, z)*(frda_ks_dk2_D0 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D1 KS_func_pass_args_macro ) + 
+frda_ks_k1(x, y, z)*frda_ks_k2(x, y, z)*(frda_ks_dddc_D0D0D1 KS_func_pass_args_macro ) + 2*
+frda_ks_k1(x, y, z)*(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D1 KS_func_pass_args_macro ) + 
+frda_ks_k1(x, y, z)*(frda_ks_ddc_D0D0 KS_func_pass_args_macro )*(frda_ks_dk2_D1 KS_func_pass_args_macro ) + 
+frda_ks_k1(x, y, z)*(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D0 KS_func_pass_args_macro ) + 
+2*frda_ks_k1(x, y, z)*(frda_ks_dk2_D0 KS_func_pass_args_macro )*(frda_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+2*frda_ks_k2(x, y, z)*(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D1 KS_func_pass_args_macro ) + 
+frda_ks_k2(x, y, z)*(frda_ks_ddc_D0D0 KS_func_pass_args_macro )*(frda_ks_dk1_D1 KS_func_pass_args_macro ) + 
+frda_ks_k2(x, y, z)*(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D0 KS_func_pass_args_macro ) + 
+2*frda_ks_k2(x, y, z)*(frda_ks_dk1_D0 KS_func_pass_args_macro )*(frda_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+2*(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_dk1_D0 KS_func_pass_args_macro )*
+(frda_ks_dk2_D1 KS_func_pass_args_macro ) + 2*(frda_ks_dc_D0 KS_func_pass_args_macro )*
+(frda_ks_dk1_D1 KS_func_pass_args_macro )*(frda_ks_dk2_D0 KS_func_pass_args_macro ) + 2*
+(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_dk1_D0 KS_func_pass_args_macro )*
+(frda_ks_dk2_D0 KS_func_pass_args_macro );
 
     _dddgamma_D0D2D1D0D0[ijk]=
 /* mcode in progress ... */
@@ -3106,26 +3106,26 @@ bbn_ks_k2(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D0 KS_
 // c
 // k0
 // k2
-bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dddk2_D0D0D1 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-bbn_ks_k2(x, y, z)*(bbn_ks_dddk0_D0D0D1 KS_func_pass_args_macro ) + 2*bbn_ks_c(x, y, z)*
-(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D1 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_ddk0_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 
-bbn_ks_c(x, y, z)*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D0 KS_func_pass_args_macro ) + 
-2*bbn_ks_c(x, y, z)*(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D1 KS_func_pass_args_macro ) + 
-bbn_ks_k0(x, y, z)*bbn_ks_k2(x, y, z)*(bbn_ks_dddc_D0D0D1 KS_func_pass_args_macro ) + 2*
-bbn_ks_k0(x, y, z)*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D1 KS_func_pass_args_macro ) + 
-bbn_ks_k0(x, y, z)*(bbn_ks_ddc_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 
-bbn_ks_k0(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D0 KS_func_pass_args_macro ) + 
-2*bbn_ks_k0(x, y, z)*(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
-2*bbn_ks_k2(x, y, z)*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D1 KS_func_pass_args_macro ) + 
-bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro ) + 
-bbn_ks_k2(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D0 KS_func_pass_args_macro ) + 
-2*bbn_ks_k2(x, y, z)*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
-2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + 2*
-(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk2_D0 KS_func_pass_args_macro );
+frda_ks_c(x, y, z)*frda_ks_k0(x, y, z)*(frda_ks_dddk2_D0D0D1 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+frda_ks_k2(x, y, z)*(frda_ks_dddk0_D0D0D1 KS_func_pass_args_macro ) + 2*frda_ks_c(x, y, z)*
+(frda_ks_dk0_D0 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D1 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_ddk0_D0D0 KS_func_pass_args_macro )*(frda_ks_dk2_D1 KS_func_pass_args_macro ) + 
+frda_ks_c(x, y, z)*(frda_ks_dk0_D1 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D0 KS_func_pass_args_macro ) + 
+2*frda_ks_c(x, y, z)*(frda_ks_dk2_D0 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D1 KS_func_pass_args_macro ) + 
+frda_ks_k0(x, y, z)*frda_ks_k2(x, y, z)*(frda_ks_dddc_D0D0D1 KS_func_pass_args_macro ) + 2*
+frda_ks_k0(x, y, z)*(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D1 KS_func_pass_args_macro ) + 
+frda_ks_k0(x, y, z)*(frda_ks_ddc_D0D0 KS_func_pass_args_macro )*(frda_ks_dk2_D1 KS_func_pass_args_macro ) + 
+frda_ks_k0(x, y, z)*(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D0 KS_func_pass_args_macro ) + 
+2*frda_ks_k0(x, y, z)*(frda_ks_dk2_D0 KS_func_pass_args_macro )*(frda_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+2*frda_ks_k2(x, y, z)*(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D1 KS_func_pass_args_macro ) + 
+frda_ks_k2(x, y, z)*(frda_ks_ddc_D0D0 KS_func_pass_args_macro )*(frda_ks_dk0_D1 KS_func_pass_args_macro ) + 
+frda_ks_k2(x, y, z)*(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D0 KS_func_pass_args_macro ) + 
+2*frda_ks_k2(x, y, z)*(frda_ks_dk0_D0 KS_func_pass_args_macro )*(frda_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+2*(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_dk0_D0 KS_func_pass_args_macro )*
+(frda_ks_dk2_D1 KS_func_pass_args_macro ) + 2*(frda_ks_dc_D0 KS_func_pass_args_macro )*
+(frda_ks_dk0_D1 KS_func_pass_args_macro )*(frda_ks_dk2_D0 KS_func_pass_args_macro ) + 2*
+(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_dk0_D0 KS_func_pass_args_macro )*
+(frda_ks_dk2_D0 KS_func_pass_args_macro );
 
     _dddgamma_D1D2D0D1D1[ijk]=
 /* mcode in progress ... */
@@ -3148,26 +3148,26 @@ bbn_ks_k2(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D0 KS_
 // c
 // k1
 // k2
-bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_dddk2_D0D1D1 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-bbn_ks_k2(x, y, z)*(bbn_ks_dddk1_D0D1D1 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D1 KS_func_pass_args_macro ) + 2*
-bbn_ks_c(x, y, z)*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D1 KS_func_pass_args_macro ) + 
-bbn_ks_c(x, y, z)*(bbn_ks_ddk1_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + 
-2*bbn_ks_c(x, y, z)*(bbn_ks_dk2_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D1 KS_func_pass_args_macro ) + 
-bbn_ks_k1(x, y, z)*bbn_ks_k2(x, y, z)*(bbn_ks_dddc_D0D1D1 KS_func_pass_args_macro ) + 
-bbn_ks_k1(x, y, z)*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D1 KS_func_pass_args_macro ) + 
-2*bbn_ks_k1(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D1 KS_func_pass_args_macro ) + 
-bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + 
-2*bbn_ks_k1(x, y, z)*(bbn_ks_dk2_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
-bbn_ks_k2(x, y, z)*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D1 KS_func_pass_args_macro ) + 
-2*bbn_ks_k2(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D1 KS_func_pass_args_macro ) + 
-bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro ) + 
-2*bbn_ks_k2(x, y, z)*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
-2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*
-(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D1 KS_func_pass_args_macro )*
-(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 2*
-(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*
-(bbn_ks_dk2_D0 KS_func_pass_args_macro );
+frda_ks_c(x, y, z)*frda_ks_k1(x, y, z)*(frda_ks_dddk2_D0D1D1 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+frda_ks_k2(x, y, z)*(frda_ks_dddk1_D0D1D1 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk1_D0 KS_func_pass_args_macro )*(frda_ks_ddk2_D1D1 KS_func_pass_args_macro ) + 2*
+frda_ks_c(x, y, z)*(frda_ks_dk1_D1 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D1 KS_func_pass_args_macro ) + 
+frda_ks_c(x, y, z)*(frda_ks_ddk1_D1D1 KS_func_pass_args_macro )*(frda_ks_dk2_D0 KS_func_pass_args_macro ) + 
+2*frda_ks_c(x, y, z)*(frda_ks_dk2_D1 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D1 KS_func_pass_args_macro ) + 
+frda_ks_k1(x, y, z)*frda_ks_k2(x, y, z)*(frda_ks_dddc_D0D1D1 KS_func_pass_args_macro ) + 
+frda_ks_k1(x, y, z)*(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk2_D1D1 KS_func_pass_args_macro ) + 
+2*frda_ks_k1(x, y, z)*(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D1 KS_func_pass_args_macro ) + 
+frda_ks_k1(x, y, z)*(frda_ks_ddc_D1D1 KS_func_pass_args_macro )*(frda_ks_dk2_D0 KS_func_pass_args_macro ) + 
+2*frda_ks_k1(x, y, z)*(frda_ks_dk2_D1 KS_func_pass_args_macro )*(frda_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+frda_ks_k2(x, y, z)*(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk1_D1D1 KS_func_pass_args_macro ) + 
+2*frda_ks_k2(x, y, z)*(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D1 KS_func_pass_args_macro ) + 
+frda_ks_k2(x, y, z)*(frda_ks_ddc_D1D1 KS_func_pass_args_macro )*(frda_ks_dk1_D0 KS_func_pass_args_macro ) + 
+2*frda_ks_k2(x, y, z)*(frda_ks_dk1_D1 KS_func_pass_args_macro )*(frda_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+2*(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_dk1_D1 KS_func_pass_args_macro )*
+(frda_ks_dk2_D1 KS_func_pass_args_macro ) + 2*(frda_ks_dc_D1 KS_func_pass_args_macro )*
+(frda_ks_dk1_D0 KS_func_pass_args_macro )*(frda_ks_dk2_D1 KS_func_pass_args_macro ) + 2*
+(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_dk1_D1 KS_func_pass_args_macro )*
+(frda_ks_dk2_D0 KS_func_pass_args_macro );
 
     _dddgamma_D0D1D2D0D2[ijk]=
 /* mcode in progress ... */
@@ -3190,26 +3190,26 @@ bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_
 // c
 // k0
 // k1
-bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dddk1_D0D2D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-bbn_ks_k1(x, y, z)*(bbn_ks_dddk0_D0D2D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D2D2 KS_func_pass_args_macro ) + 2*
-bbn_ks_c(x, y, z)*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D2 KS_func_pass_args_macro ) + 
-bbn_ks_c(x, y, z)*(bbn_ks_ddk0_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro ) + 
-2*bbn_ks_c(x, y, z)*(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D2 KS_func_pass_args_macro ) + 
-bbn_ks_k0(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_dddc_D0D2D2 KS_func_pass_args_macro ) + 
-bbn_ks_k0(x, y, z)*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D2D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_k0(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D2 KS_func_pass_args_macro ) + 
-bbn_ks_k0(x, y, z)*(bbn_ks_ddc_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro ) + 
-2*bbn_ks_k0(x, y, z)*(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
-bbn_ks_k1(x, y, z)*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D2D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_k1(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D2 KS_func_pass_args_macro ) + 
-bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro ) + 
-2*bbn_ks_k1(x, y, z)*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
-2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*
-(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D2 KS_func_pass_args_macro )*
-(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + 2*
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*
-(bbn_ks_dk1_D0 KS_func_pass_args_macro );
+frda_ks_c(x, y, z)*frda_ks_k0(x, y, z)*(frda_ks_dddk1_D0D2D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+frda_ks_k1(x, y, z)*(frda_ks_dddk0_D0D2D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk0_D0 KS_func_pass_args_macro )*(frda_ks_ddk1_D2D2 KS_func_pass_args_macro ) + 2*
+frda_ks_c(x, y, z)*(frda_ks_dk0_D2 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D2 KS_func_pass_args_macro ) + 
+frda_ks_c(x, y, z)*(frda_ks_ddk0_D2D2 KS_func_pass_args_macro )*(frda_ks_dk1_D0 KS_func_pass_args_macro ) + 
+2*frda_ks_c(x, y, z)*(frda_ks_dk1_D2 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D2 KS_func_pass_args_macro ) + 
+frda_ks_k0(x, y, z)*frda_ks_k1(x, y, z)*(frda_ks_dddc_D0D2D2 KS_func_pass_args_macro ) + 
+frda_ks_k0(x, y, z)*(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk1_D2D2 KS_func_pass_args_macro ) + 
+2*frda_ks_k0(x, y, z)*(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D2 KS_func_pass_args_macro ) + 
+frda_ks_k0(x, y, z)*(frda_ks_ddc_D2D2 KS_func_pass_args_macro )*(frda_ks_dk1_D0 KS_func_pass_args_macro ) + 
+2*frda_ks_k0(x, y, z)*(frda_ks_dk1_D2 KS_func_pass_args_macro )*(frda_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
+frda_ks_k1(x, y, z)*(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk0_D2D2 KS_func_pass_args_macro ) + 
+2*frda_ks_k1(x, y, z)*(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D2 KS_func_pass_args_macro ) + 
+frda_ks_k1(x, y, z)*(frda_ks_ddc_D2D2 KS_func_pass_args_macro )*(frda_ks_dk0_D0 KS_func_pass_args_macro ) + 
+2*frda_ks_k1(x, y, z)*(frda_ks_dk0_D2 KS_func_pass_args_macro )*(frda_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
+2*(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_dk0_D2 KS_func_pass_args_macro )*
+(frda_ks_dk1_D2 KS_func_pass_args_macro ) + 2*(frda_ks_dc_D2 KS_func_pass_args_macro )*
+(frda_ks_dk0_D0 KS_func_pass_args_macro )*(frda_ks_dk1_D2 KS_func_pass_args_macro ) + 2*
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_dk0_D2 KS_func_pass_args_macro )*
+(frda_ks_dk1_D0 KS_func_pass_args_macro );
 
     _dddgamma_D1D1D2D0D0[ijk]=
 /* mcode in progress ... */
@@ -3226,17 +3226,17 @@ bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_
 // Derivative
 // c
 // k1
-2*bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_dddk1_D0D0D2 KS_func_pass_args_macro ) + 4*
-bbn_ks_c(x, y, z)*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_c(x, y, z)*(bbn_ks_ddk1_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + 
-pow(bbn_ks_k1(x, y, z), 2)*(bbn_ks_dddc_D0D0D2 KS_func_pass_args_macro ) + 4*bbn_ks_k1(x, y, z)*
-(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D2 KS_func_pass_args_macro ) + 2*
-bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_k1(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D0 KS_func_pass_args_macro ) + 
-4*bbn_ks_k1(x, y, z)*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
-4*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D2 KS_func_pass_args_macro )*
-pow((bbn_ks_dk1_D0 KS_func_pass_args_macro ), 2);
+2*frda_ks_c(x, y, z)*frda_ks_k1(x, y, z)*(frda_ks_dddk1_D0D0D2 KS_func_pass_args_macro ) + 4*
+frda_ks_c(x, y, z)*(frda_ks_dk1_D0 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D2 KS_func_pass_args_macro ) + 
+2*frda_ks_c(x, y, z)*(frda_ks_ddk1_D0D0 KS_func_pass_args_macro )*(frda_ks_dk1_D2 KS_func_pass_args_macro ) + 
+pow(frda_ks_k1(x, y, z), 2)*(frda_ks_dddc_D0D0D2 KS_func_pass_args_macro ) + 4*frda_ks_k1(x, y, z)*
+(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D2 KS_func_pass_args_macro ) + 2*
+frda_ks_k1(x, y, z)*(frda_ks_ddc_D0D0 KS_func_pass_args_macro )*(frda_ks_dk1_D2 KS_func_pass_args_macro ) + 
+2*frda_ks_k1(x, y, z)*(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D0 KS_func_pass_args_macro ) + 
+4*frda_ks_k1(x, y, z)*(frda_ks_dk1_D0 KS_func_pass_args_macro )*(frda_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
+4*(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_dk1_D0 KS_func_pass_args_macro )*
+(frda_ks_dk1_D2 KS_func_pass_args_macro ) + 2*(frda_ks_dc_D2 KS_func_pass_args_macro )*
+pow((frda_ks_dk1_D0 KS_func_pass_args_macro ), 2);
 
     _dddgamma_D0D1D2D2D2[ijk]=
 /* mcode in progress ... */
@@ -3253,17 +3253,17 @@ pow((bbn_ks_dk1_D0 KS_func_pass_args_macro ), 2);
 // c
 // k0
 // k1
-bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dddk1_D2D2D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-bbn_ks_k1(x, y, z)*(bbn_ks_dddk0_D2D2D2 KS_func_pass_args_macro ) + 3*bbn_ks_c(x, y, z)*
-(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D2D2 KS_func_pass_args_macro ) + 3*
-bbn_ks_c(x, y, z)*(bbn_ks_ddk0_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + 
-bbn_ks_k0(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_dddc_D2D2D2 KS_func_pass_args_macro ) + 3*bbn_ks_k0(x, y, z)*
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D2D2 KS_func_pass_args_macro ) + 3*
-bbn_ks_k0(x, y, z)*(bbn_ks_ddc_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + 
-3*bbn_ks_k1(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D2D2 KS_func_pass_args_macro ) + 
-3*bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D2 KS_func_pass_args_macro ) + 
-6*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*
-(bbn_ks_dk1_D2 KS_func_pass_args_macro );
+frda_ks_c(x, y, z)*frda_ks_k0(x, y, z)*(frda_ks_dddk1_D2D2D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+frda_ks_k1(x, y, z)*(frda_ks_dddk0_D2D2D2 KS_func_pass_args_macro ) + 3*frda_ks_c(x, y, z)*
+(frda_ks_dk0_D2 KS_func_pass_args_macro )*(frda_ks_ddk1_D2D2 KS_func_pass_args_macro ) + 3*
+frda_ks_c(x, y, z)*(frda_ks_ddk0_D2D2 KS_func_pass_args_macro )*(frda_ks_dk1_D2 KS_func_pass_args_macro ) + 
+frda_ks_k0(x, y, z)*frda_ks_k1(x, y, z)*(frda_ks_dddc_D2D2D2 KS_func_pass_args_macro ) + 3*frda_ks_k0(x, y, z)*
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk1_D2D2 KS_func_pass_args_macro ) + 3*
+frda_ks_k0(x, y, z)*(frda_ks_ddc_D2D2 KS_func_pass_args_macro )*(frda_ks_dk1_D2 KS_func_pass_args_macro ) + 
+3*frda_ks_k1(x, y, z)*(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk0_D2D2 KS_func_pass_args_macro ) + 
+3*frda_ks_k1(x, y, z)*(frda_ks_ddc_D2D2 KS_func_pass_args_macro )*(frda_ks_dk0_D2 KS_func_pass_args_macro ) + 
+6*(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_dk0_D2 KS_func_pass_args_macro )*
+(frda_ks_dk1_D2 KS_func_pass_args_macro );
 
     _dddgamma_D0D0D2D0D2[ijk]=
 /* mcode in progress ... */
@@ -3280,17 +3280,17 @@ bbn_ks_k0(x, y, z)*(bbn_ks_ddc_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_
 // Derivative
 // c
 // k0
-2*bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dddk0_D0D2D2 KS_func_pass_args_macro ) + 2*
-bbn_ks_c(x, y, z)*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D2D2 KS_func_pass_args_macro ) + 
-4*bbn_ks_c(x, y, z)*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D2 KS_func_pass_args_macro ) + 
-pow(bbn_ks_k0(x, y, z), 2)*(bbn_ks_dddc_D0D2D2 KS_func_pass_args_macro ) + 2*bbn_ks_k0(x, y, z)*
-(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D2D2 KS_func_pass_args_macro ) + 4*
-bbn_ks_k0(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_k0(x, y, z)*(bbn_ks_ddc_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro ) + 
-4*bbn_ks_k0(x, y, z)*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
-2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*pow((bbn_ks_dk0_D2 KS_func_pass_args_macro ), 2) + 4*
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk0_D2 KS_func_pass_args_macro );
+2*frda_ks_c(x, y, z)*frda_ks_k0(x, y, z)*(frda_ks_dddk0_D0D2D2 KS_func_pass_args_macro ) + 2*
+frda_ks_c(x, y, z)*(frda_ks_dk0_D0 KS_func_pass_args_macro )*(frda_ks_ddk0_D2D2 KS_func_pass_args_macro ) + 
+4*frda_ks_c(x, y, z)*(frda_ks_dk0_D2 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D2 KS_func_pass_args_macro ) + 
+pow(frda_ks_k0(x, y, z), 2)*(frda_ks_dddc_D0D2D2 KS_func_pass_args_macro ) + 2*frda_ks_k0(x, y, z)*
+(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk0_D2D2 KS_func_pass_args_macro ) + 4*
+frda_ks_k0(x, y, z)*(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D2 KS_func_pass_args_macro ) + 
+2*frda_ks_k0(x, y, z)*(frda_ks_ddc_D2D2 KS_func_pass_args_macro )*(frda_ks_dk0_D0 KS_func_pass_args_macro ) + 
+4*frda_ks_k0(x, y, z)*(frda_ks_dk0_D2 KS_func_pass_args_macro )*(frda_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
+2*(frda_ks_dc_D0 KS_func_pass_args_macro )*pow((frda_ks_dk0_D2 KS_func_pass_args_macro ), 2) + 4*
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_dk0_D0 KS_func_pass_args_macro )*
+(frda_ks_dk0_D2 KS_func_pass_args_macro );
 
     _dddgamma_D0D0D0D0D2[ijk]=
 /* mcode in progress ... */
@@ -3307,17 +3307,17 @@ bbn_ks_k0(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D2 KS_
 // Derivative
 // c
 // k0
-2*bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dddk0_D0D0D2 KS_func_pass_args_macro ) + 4*
-bbn_ks_c(x, y, z)*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_c(x, y, z)*(bbn_ks_ddk0_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D2 KS_func_pass_args_macro ) + 
-pow(bbn_ks_k0(x, y, z), 2)*(bbn_ks_dddc_D0D0D2 KS_func_pass_args_macro ) + 4*bbn_ks_k0(x, y, z)*
-(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D2 KS_func_pass_args_macro ) + 2*
-bbn_ks_k0(x, y, z)*(bbn_ks_ddc_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_k0(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D0 KS_func_pass_args_macro ) + 
-4*bbn_ks_k0(x, y, z)*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
-4*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk0_D2 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D2 KS_func_pass_args_macro )*
-pow((bbn_ks_dk0_D0 KS_func_pass_args_macro ), 2);
+2*frda_ks_c(x, y, z)*frda_ks_k0(x, y, z)*(frda_ks_dddk0_D0D0D2 KS_func_pass_args_macro ) + 4*
+frda_ks_c(x, y, z)*(frda_ks_dk0_D0 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D2 KS_func_pass_args_macro ) + 
+2*frda_ks_c(x, y, z)*(frda_ks_ddk0_D0D0 KS_func_pass_args_macro )*(frda_ks_dk0_D2 KS_func_pass_args_macro ) + 
+pow(frda_ks_k0(x, y, z), 2)*(frda_ks_dddc_D0D0D2 KS_func_pass_args_macro ) + 4*frda_ks_k0(x, y, z)*
+(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D2 KS_func_pass_args_macro ) + 2*
+frda_ks_k0(x, y, z)*(frda_ks_ddc_D0D0 KS_func_pass_args_macro )*(frda_ks_dk0_D2 KS_func_pass_args_macro ) + 
+2*frda_ks_k0(x, y, z)*(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D0 KS_func_pass_args_macro ) + 
+4*frda_ks_k0(x, y, z)*(frda_ks_dk0_D0 KS_func_pass_args_macro )*(frda_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
+4*(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_dk0_D0 KS_func_pass_args_macro )*
+(frda_ks_dk0_D2 KS_func_pass_args_macro ) + 2*(frda_ks_dc_D2 KS_func_pass_args_macro )*
+pow((frda_ks_dk0_D0 KS_func_pass_args_macro ), 2);
 
     _dddgamma_D1D1D0D1D1[ijk]=
 /* mcode in progress ... */
@@ -3334,17 +3334,17 @@ pow((bbn_ks_dk0_D0 KS_func_pass_args_macro ), 2);
 // Derivative
 // c
 // k1
-2*bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_dddk1_D0D1D1 KS_func_pass_args_macro ) + 2*
-bbn_ks_c(x, y, z)*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D1 KS_func_pass_args_macro ) + 
-4*bbn_ks_c(x, y, z)*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D1 KS_func_pass_args_macro ) + 
-pow(bbn_ks_k1(x, y, z), 2)*(bbn_ks_dddc_D0D1D1 KS_func_pass_args_macro ) + 2*bbn_ks_k1(x, y, z)*
-(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D1 KS_func_pass_args_macro ) + 4*
-bbn_ks_k1(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D1 KS_func_pass_args_macro ) + 
-2*bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro ) + 
-4*bbn_ks_k1(x, y, z)*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
-2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*pow((bbn_ks_dk1_D1 KS_func_pass_args_macro ), 2) + 4*
-(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk1_D1 KS_func_pass_args_macro );
+2*frda_ks_c(x, y, z)*frda_ks_k1(x, y, z)*(frda_ks_dddk1_D0D1D1 KS_func_pass_args_macro ) + 2*
+frda_ks_c(x, y, z)*(frda_ks_dk1_D0 KS_func_pass_args_macro )*(frda_ks_ddk1_D1D1 KS_func_pass_args_macro ) + 
+4*frda_ks_c(x, y, z)*(frda_ks_dk1_D1 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D1 KS_func_pass_args_macro ) + 
+pow(frda_ks_k1(x, y, z), 2)*(frda_ks_dddc_D0D1D1 KS_func_pass_args_macro ) + 2*frda_ks_k1(x, y, z)*
+(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk1_D1D1 KS_func_pass_args_macro ) + 4*
+frda_ks_k1(x, y, z)*(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D1 KS_func_pass_args_macro ) + 
+2*frda_ks_k1(x, y, z)*(frda_ks_ddc_D1D1 KS_func_pass_args_macro )*(frda_ks_dk1_D0 KS_func_pass_args_macro ) + 
+4*frda_ks_k1(x, y, z)*(frda_ks_dk1_D1 KS_func_pass_args_macro )*(frda_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+2*(frda_ks_dc_D0 KS_func_pass_args_macro )*pow((frda_ks_dk1_D1 KS_func_pass_args_macro ), 2) + 4*
+(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_dk1_D0 KS_func_pass_args_macro )*
+(frda_ks_dk1_D1 KS_func_pass_args_macro );
 
     _dddgamma_D2D2D0D0D1[ijk]=
 /* mcode in progress ... */
@@ -3361,17 +3361,17 @@ bbn_ks_k1(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D1 KS_
 // Derivative
 // c
 // k2
-2*bbn_ks_c(x, y, z)*bbn_ks_k2(x, y, z)*(bbn_ks_dddk2_D0D0D1 KS_func_pass_args_macro ) + 4*
-bbn_ks_c(x, y, z)*(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D1 KS_func_pass_args_macro ) + 
-2*bbn_ks_c(x, y, z)*(bbn_ks_ddk2_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 
-pow(bbn_ks_k2(x, y, z), 2)*(bbn_ks_dddc_D0D0D1 KS_func_pass_args_macro ) + 4*bbn_ks_k2(x, y, z)*
-(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D1 KS_func_pass_args_macro ) + 2*
-bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 
-2*bbn_ks_k2(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D0 KS_func_pass_args_macro ) + 
-4*bbn_ks_k2(x, y, z)*(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
-4*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D1 KS_func_pass_args_macro )*
-pow((bbn_ks_dk2_D0 KS_func_pass_args_macro ), 2);
+2*frda_ks_c(x, y, z)*frda_ks_k2(x, y, z)*(frda_ks_dddk2_D0D0D1 KS_func_pass_args_macro ) + 4*
+frda_ks_c(x, y, z)*(frda_ks_dk2_D0 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D1 KS_func_pass_args_macro ) + 
+2*frda_ks_c(x, y, z)*(frda_ks_ddk2_D0D0 KS_func_pass_args_macro )*(frda_ks_dk2_D1 KS_func_pass_args_macro ) + 
+pow(frda_ks_k2(x, y, z), 2)*(frda_ks_dddc_D0D0D1 KS_func_pass_args_macro ) + 4*frda_ks_k2(x, y, z)*
+(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D1 KS_func_pass_args_macro ) + 2*
+frda_ks_k2(x, y, z)*(frda_ks_ddc_D0D0 KS_func_pass_args_macro )*(frda_ks_dk2_D1 KS_func_pass_args_macro ) + 
+2*frda_ks_k2(x, y, z)*(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D0 KS_func_pass_args_macro ) + 
+4*frda_ks_k2(x, y, z)*(frda_ks_dk2_D0 KS_func_pass_args_macro )*(frda_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+4*(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_dk2_D0 KS_func_pass_args_macro )*
+(frda_ks_dk2_D1 KS_func_pass_args_macro ) + 2*(frda_ks_dc_D1 KS_func_pass_args_macro )*
+pow((frda_ks_dk2_D0 KS_func_pass_args_macro ), 2);
 
     _dddgamma_D0D0D1D2D2[ijk]=
 /* mcode in progress ... */
@@ -3388,17 +3388,17 @@ pow((bbn_ks_dk2_D0 KS_func_pass_args_macro ), 2);
 // Derivative
 // c
 // k0
-2*bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dddk0_D1D2D2 KS_func_pass_args_macro ) + 2*
-bbn_ks_c(x, y, z)*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D2D2 KS_func_pass_args_macro ) + 
-4*bbn_ks_c(x, y, z)*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D2 KS_func_pass_args_macro ) + 
-pow(bbn_ks_k0(x, y, z), 2)*(bbn_ks_dddc_D1D2D2 KS_func_pass_args_macro ) + 2*bbn_ks_k0(x, y, z)*
-(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D2D2 KS_func_pass_args_macro ) + 4*
-bbn_ks_k0(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_k0(x, y, z)*(bbn_ks_ddc_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro ) + 
-4*bbn_ks_k0(x, y, z)*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
-2*(bbn_ks_dc_D1 KS_func_pass_args_macro )*pow((bbn_ks_dk0_D2 KS_func_pass_args_macro ), 2) + 4*
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*
-(bbn_ks_dk0_D2 KS_func_pass_args_macro );
+2*frda_ks_c(x, y, z)*frda_ks_k0(x, y, z)*(frda_ks_dddk0_D1D2D2 KS_func_pass_args_macro ) + 2*
+frda_ks_c(x, y, z)*(frda_ks_dk0_D1 KS_func_pass_args_macro )*(frda_ks_ddk0_D2D2 KS_func_pass_args_macro ) + 
+4*frda_ks_c(x, y, z)*(frda_ks_dk0_D2 KS_func_pass_args_macro )*(frda_ks_ddk0_D1D2 KS_func_pass_args_macro ) + 
+pow(frda_ks_k0(x, y, z), 2)*(frda_ks_dddc_D1D2D2 KS_func_pass_args_macro ) + 2*frda_ks_k0(x, y, z)*
+(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk0_D2D2 KS_func_pass_args_macro ) + 4*
+frda_ks_k0(x, y, z)*(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk0_D1D2 KS_func_pass_args_macro ) + 
+2*frda_ks_k0(x, y, z)*(frda_ks_ddc_D2D2 KS_func_pass_args_macro )*(frda_ks_dk0_D1 KS_func_pass_args_macro ) + 
+4*frda_ks_k0(x, y, z)*(frda_ks_dk0_D2 KS_func_pass_args_macro )*(frda_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
+2*(frda_ks_dc_D1 KS_func_pass_args_macro )*pow((frda_ks_dk0_D2 KS_func_pass_args_macro ), 2) + 4*
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_dk0_D1 KS_func_pass_args_macro )*
+(frda_ks_dk0_D2 KS_func_pass_args_macro );
 
     _dddgamma_D1D1D0D2D0[ijk]=
 /* mcode in progress ... */
@@ -3415,17 +3415,17 @@ bbn_ks_k0(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D2 KS_
 // Derivative
 // c
 // k1
-2*bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_dddk1_D0D0D2 KS_func_pass_args_macro ) + 4*
-bbn_ks_c(x, y, z)*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_c(x, y, z)*(bbn_ks_ddk1_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + 
-pow(bbn_ks_k1(x, y, z), 2)*(bbn_ks_dddc_D0D0D2 KS_func_pass_args_macro ) + 4*bbn_ks_k1(x, y, z)*
-(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D2 KS_func_pass_args_macro ) + 2*
-bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_k1(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D0 KS_func_pass_args_macro ) + 
-4*bbn_ks_k1(x, y, z)*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
-4*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D2 KS_func_pass_args_macro )*
-pow((bbn_ks_dk1_D0 KS_func_pass_args_macro ), 2);
+2*frda_ks_c(x, y, z)*frda_ks_k1(x, y, z)*(frda_ks_dddk1_D0D0D2 KS_func_pass_args_macro ) + 4*
+frda_ks_c(x, y, z)*(frda_ks_dk1_D0 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D2 KS_func_pass_args_macro ) + 
+2*frda_ks_c(x, y, z)*(frda_ks_ddk1_D0D0 KS_func_pass_args_macro )*(frda_ks_dk1_D2 KS_func_pass_args_macro ) + 
+pow(frda_ks_k1(x, y, z), 2)*(frda_ks_dddc_D0D0D2 KS_func_pass_args_macro ) + 4*frda_ks_k1(x, y, z)*
+(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D2 KS_func_pass_args_macro ) + 2*
+frda_ks_k1(x, y, z)*(frda_ks_ddc_D0D0 KS_func_pass_args_macro )*(frda_ks_dk1_D2 KS_func_pass_args_macro ) + 
+2*frda_ks_k1(x, y, z)*(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D0 KS_func_pass_args_macro ) + 
+4*frda_ks_k1(x, y, z)*(frda_ks_dk1_D0 KS_func_pass_args_macro )*(frda_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
+4*(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_dk1_D0 KS_func_pass_args_macro )*
+(frda_ks_dk1_D2 KS_func_pass_args_macro ) + 2*(frda_ks_dc_D2 KS_func_pass_args_macro )*
+pow((frda_ks_dk1_D0 KS_func_pass_args_macro ), 2);
 
     _dddgamma_D0D1D1D2D0[ijk]=
 /* mcode in progress ... */
@@ -3454,36 +3454,36 @@ pow((bbn_ks_dk1_D0 KS_func_pass_args_macro ), 2);
 // c
 // k0
 // k1
-bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dddk1_D0D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-bbn_ks_k1(x, y, z)*(bbn_ks_dddk0_D0D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D1 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D1 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
-bbn_ks_k1(x, y, z)*(bbn_ks_dddc_D0D1D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
-(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
-(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D1 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
-(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
-(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
-(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
-(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D2 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
-(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D2 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D1 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
-(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
-(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
-(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
-(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*
-(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + (bbn_ks_dc_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro ) + 
-(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + (bbn_ks_dc_D1 KS_func_pass_args_macro )*
-(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro ) + 
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk1_D1 KS_func_pass_args_macro ) + (bbn_ks_dc_D2 KS_func_pass_args_macro )*
-(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro );
+frda_ks_c(x, y, z)*frda_ks_k0(x, y, z)*(frda_ks_dddk1_D0D1D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+frda_ks_k1(x, y, z)*(frda_ks_dddk0_D0D1D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk0_D0 KS_func_pass_args_macro )*(frda_ks_ddk1_D1D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk0_D1 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk0_D2 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D1 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk1_D0 KS_func_pass_args_macro )*(frda_ks_ddk0_D1D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk1_D1 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk1_D2 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D1 KS_func_pass_args_macro ) + frda_ks_k0(x, y, z)*
+frda_ks_k1(x, y, z)*(frda_ks_dddc_D0D1D2 KS_func_pass_args_macro ) + frda_ks_k0(x, y, z)*
+(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk1_D1D2 KS_func_pass_args_macro ) + frda_ks_k0(x, y, z)*
+(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D2 KS_func_pass_args_macro ) + frda_ks_k0(x, y, z)*
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D1 KS_func_pass_args_macro ) + frda_ks_k0(x, y, z)*
+(frda_ks_dk1_D0 KS_func_pass_args_macro )*(frda_ks_ddc_D1D2 KS_func_pass_args_macro ) + frda_ks_k0(x, y, z)*
+(frda_ks_dk1_D1 KS_func_pass_args_macro )*(frda_ks_ddc_D0D2 KS_func_pass_args_macro ) + frda_ks_k0(x, y, z)*
+(frda_ks_dk1_D2 KS_func_pass_args_macro )*(frda_ks_ddc_D0D1 KS_func_pass_args_macro ) + frda_ks_k1(x, y, z)*
+(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk0_D1D2 KS_func_pass_args_macro ) + frda_ks_k1(x, y, z)*
+(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D2 KS_func_pass_args_macro ) + frda_ks_k1(x, y, z)*
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D1 KS_func_pass_args_macro ) + frda_ks_k1(x, y, z)*
+(frda_ks_dk0_D0 KS_func_pass_args_macro )*(frda_ks_ddc_D1D2 KS_func_pass_args_macro ) + frda_ks_k1(x, y, z)*
+(frda_ks_dk0_D1 KS_func_pass_args_macro )*(frda_ks_ddc_D0D2 KS_func_pass_args_macro ) + frda_ks_k1(x, y, z)*
+(frda_ks_dk0_D2 KS_func_pass_args_macro )*(frda_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_dk0_D1 KS_func_pass_args_macro )*
+(frda_ks_dk1_D2 KS_func_pass_args_macro ) + (frda_ks_dc_D0 KS_func_pass_args_macro )*
+(frda_ks_dk0_D2 KS_func_pass_args_macro )*(frda_ks_dk1_D1 KS_func_pass_args_macro ) + 
+(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_dk0_D0 KS_func_pass_args_macro )*
+(frda_ks_dk1_D2 KS_func_pass_args_macro ) + (frda_ks_dc_D1 KS_func_pass_args_macro )*
+(frda_ks_dk0_D2 KS_func_pass_args_macro )*(frda_ks_dk1_D0 KS_func_pass_args_macro ) + 
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_dk0_D0 KS_func_pass_args_macro )*
+(frda_ks_dk1_D1 KS_func_pass_args_macro ) + (frda_ks_dc_D2 KS_func_pass_args_macro )*
+(frda_ks_dk0_D1 KS_func_pass_args_macro )*(frda_ks_dk1_D0 KS_func_pass_args_macro );
 
     _dddgamma_D1D1D0D0D1[ijk]=
 /* mcode in progress ... */
@@ -3500,17 +3500,17 @@ bbn_ks_k1(x, y, z)*(bbn_ks_dddc_D0D1D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, 
 // Derivative
 // c
 // k1
-2*bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_dddk1_D0D0D1 KS_func_pass_args_macro ) + 4*
-bbn_ks_c(x, y, z)*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D1 KS_func_pass_args_macro ) + 
-2*bbn_ks_c(x, y, z)*(bbn_ks_ddk1_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro ) + 
-pow(bbn_ks_k1(x, y, z), 2)*(bbn_ks_dddc_D0D0D1 KS_func_pass_args_macro ) + 4*bbn_ks_k1(x, y, z)*
-(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D1 KS_func_pass_args_macro ) + 2*
-bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro ) + 
-2*bbn_ks_k1(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D0 KS_func_pass_args_macro ) + 
-4*bbn_ks_k1(x, y, z)*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
-4*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk1_D1 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D1 KS_func_pass_args_macro )*
-pow((bbn_ks_dk1_D0 KS_func_pass_args_macro ), 2);
+2*frda_ks_c(x, y, z)*frda_ks_k1(x, y, z)*(frda_ks_dddk1_D0D0D1 KS_func_pass_args_macro ) + 4*
+frda_ks_c(x, y, z)*(frda_ks_dk1_D0 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D1 KS_func_pass_args_macro ) + 
+2*frda_ks_c(x, y, z)*(frda_ks_ddk1_D0D0 KS_func_pass_args_macro )*(frda_ks_dk1_D1 KS_func_pass_args_macro ) + 
+pow(frda_ks_k1(x, y, z), 2)*(frda_ks_dddc_D0D0D1 KS_func_pass_args_macro ) + 4*frda_ks_k1(x, y, z)*
+(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D1 KS_func_pass_args_macro ) + 2*
+frda_ks_k1(x, y, z)*(frda_ks_ddc_D0D0 KS_func_pass_args_macro )*(frda_ks_dk1_D1 KS_func_pass_args_macro ) + 
+2*frda_ks_k1(x, y, z)*(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D0 KS_func_pass_args_macro ) + 
+4*frda_ks_k1(x, y, z)*(frda_ks_dk1_D0 KS_func_pass_args_macro )*(frda_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+4*(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_dk1_D0 KS_func_pass_args_macro )*
+(frda_ks_dk1_D1 KS_func_pass_args_macro ) + 2*(frda_ks_dc_D1 KS_func_pass_args_macro )*
+pow((frda_ks_dk1_D0 KS_func_pass_args_macro ), 2);
 
     _dddgamma_D1D1D0D0D2[ijk]=
 /* mcode in progress ... */
@@ -3527,17 +3527,17 @@ pow((bbn_ks_dk1_D0 KS_func_pass_args_macro ), 2);
 // Derivative
 // c
 // k1
-2*bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_dddk1_D0D0D2 KS_func_pass_args_macro ) + 4*
-bbn_ks_c(x, y, z)*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_c(x, y, z)*(bbn_ks_ddk1_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + 
-pow(bbn_ks_k1(x, y, z), 2)*(bbn_ks_dddc_D0D0D2 KS_func_pass_args_macro ) + 4*bbn_ks_k1(x, y, z)*
-(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D2 KS_func_pass_args_macro ) + 2*
-bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_k1(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D0 KS_func_pass_args_macro ) + 
-4*bbn_ks_k1(x, y, z)*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
-4*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D2 KS_func_pass_args_macro )*
-pow((bbn_ks_dk1_D0 KS_func_pass_args_macro ), 2);
+2*frda_ks_c(x, y, z)*frda_ks_k1(x, y, z)*(frda_ks_dddk1_D0D0D2 KS_func_pass_args_macro ) + 4*
+frda_ks_c(x, y, z)*(frda_ks_dk1_D0 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D2 KS_func_pass_args_macro ) + 
+2*frda_ks_c(x, y, z)*(frda_ks_ddk1_D0D0 KS_func_pass_args_macro )*(frda_ks_dk1_D2 KS_func_pass_args_macro ) + 
+pow(frda_ks_k1(x, y, z), 2)*(frda_ks_dddc_D0D0D2 KS_func_pass_args_macro ) + 4*frda_ks_k1(x, y, z)*
+(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D2 KS_func_pass_args_macro ) + 2*
+frda_ks_k1(x, y, z)*(frda_ks_ddc_D0D0 KS_func_pass_args_macro )*(frda_ks_dk1_D2 KS_func_pass_args_macro ) + 
+2*frda_ks_k1(x, y, z)*(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D0 KS_func_pass_args_macro ) + 
+4*frda_ks_k1(x, y, z)*(frda_ks_dk1_D0 KS_func_pass_args_macro )*(frda_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
+4*(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_dk1_D0 KS_func_pass_args_macro )*
+(frda_ks_dk1_D2 KS_func_pass_args_macro ) + 2*(frda_ks_dc_D2 KS_func_pass_args_macro )*
+pow((frda_ks_dk1_D0 KS_func_pass_args_macro ), 2);
 
     _dddgamma_D1D2D0D1D2[ijk]=
 /* mcode in progress ... */
@@ -3566,36 +3566,36 @@ pow((bbn_ks_dk1_D0 KS_func_pass_args_macro ), 2);
 // c
 // k1
 // k2
-bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_dddk2_D0D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-bbn_ks_k2(x, y, z)*(bbn_ks_dddk1_D0D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D1 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk2_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk2_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D1 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
-bbn_ks_k2(x, y, z)*(bbn_ks_dddc_D0D1D2 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
-(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D2 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
-(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D2 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D1 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
-(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
-(bbn_ks_dk2_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
-(bbn_ks_dk2_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
-(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D2 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
-(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D2 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D1 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
-(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
-(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
-(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
-(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*
-(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + (bbn_ks_dc_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 
-(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + (bbn_ks_dc_D1 KS_func_pass_args_macro )*
-(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + 
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + (bbn_ks_dc_D2 KS_func_pass_args_macro )*
-(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro );
+frda_ks_c(x, y, z)*frda_ks_k1(x, y, z)*(frda_ks_dddk2_D0D1D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+frda_ks_k2(x, y, z)*(frda_ks_dddk1_D0D1D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk1_D0 KS_func_pass_args_macro )*(frda_ks_ddk2_D1D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk1_D1 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk1_D2 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D1 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk2_D0 KS_func_pass_args_macro )*(frda_ks_ddk1_D1D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk2_D1 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk2_D2 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D1 KS_func_pass_args_macro ) + frda_ks_k1(x, y, z)*
+frda_ks_k2(x, y, z)*(frda_ks_dddc_D0D1D2 KS_func_pass_args_macro ) + frda_ks_k1(x, y, z)*
+(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk2_D1D2 KS_func_pass_args_macro ) + frda_ks_k1(x, y, z)*
+(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D2 KS_func_pass_args_macro ) + frda_ks_k1(x, y, z)*
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D1 KS_func_pass_args_macro ) + frda_ks_k1(x, y, z)*
+(frda_ks_dk2_D0 KS_func_pass_args_macro )*(frda_ks_ddc_D1D2 KS_func_pass_args_macro ) + frda_ks_k1(x, y, z)*
+(frda_ks_dk2_D1 KS_func_pass_args_macro )*(frda_ks_ddc_D0D2 KS_func_pass_args_macro ) + frda_ks_k1(x, y, z)*
+(frda_ks_dk2_D2 KS_func_pass_args_macro )*(frda_ks_ddc_D0D1 KS_func_pass_args_macro ) + frda_ks_k2(x, y, z)*
+(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk1_D1D2 KS_func_pass_args_macro ) + frda_ks_k2(x, y, z)*
+(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D2 KS_func_pass_args_macro ) + frda_ks_k2(x, y, z)*
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D1 KS_func_pass_args_macro ) + frda_ks_k2(x, y, z)*
+(frda_ks_dk1_D0 KS_func_pass_args_macro )*(frda_ks_ddc_D1D2 KS_func_pass_args_macro ) + frda_ks_k2(x, y, z)*
+(frda_ks_dk1_D1 KS_func_pass_args_macro )*(frda_ks_ddc_D0D2 KS_func_pass_args_macro ) + frda_ks_k2(x, y, z)*
+(frda_ks_dk1_D2 KS_func_pass_args_macro )*(frda_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_dk1_D1 KS_func_pass_args_macro )*
+(frda_ks_dk2_D2 KS_func_pass_args_macro ) + (frda_ks_dc_D0 KS_func_pass_args_macro )*
+(frda_ks_dk1_D2 KS_func_pass_args_macro )*(frda_ks_dk2_D1 KS_func_pass_args_macro ) + 
+(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_dk1_D0 KS_func_pass_args_macro )*
+(frda_ks_dk2_D2 KS_func_pass_args_macro ) + (frda_ks_dc_D1 KS_func_pass_args_macro )*
+(frda_ks_dk1_D2 KS_func_pass_args_macro )*(frda_ks_dk2_D0 KS_func_pass_args_macro ) + 
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_dk1_D0 KS_func_pass_args_macro )*
+(frda_ks_dk2_D1 KS_func_pass_args_macro ) + (frda_ks_dc_D2 KS_func_pass_args_macro )*
+(frda_ks_dk1_D1 KS_func_pass_args_macro )*(frda_ks_dk2_D0 KS_func_pass_args_macro );
 
     _dddgamma_D0D0D1D0D2[ijk]=
 /* mcode in progress ... */
@@ -3616,22 +3616,22 @@ bbn_ks_k2(x, y, z)*(bbn_ks_dddc_D0D1D2 KS_func_pass_args_macro ) + bbn_ks_k1(x, 
 // Derivative
 // c
 // k0
-2*bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dddk0_D0D1D2 KS_func_pass_args_macro ) + 2*
-bbn_ks_c(x, y, z)*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_c(x, y, z)*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_c(x, y, z)*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D1 KS_func_pass_args_macro ) + 
-pow(bbn_ks_k0(x, y, z), 2)*(bbn_ks_dddc_D0D1D2 KS_func_pass_args_macro ) + 2*bbn_ks_k0(x, y, z)*
-(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D2 KS_func_pass_args_macro ) + 2*
-bbn_ks_k0(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_k0(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D1 KS_func_pass_args_macro ) + 
-2*bbn_ks_k0(x, y, z)*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_k0(x, y, z)*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_k0(x, y, z)*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
-2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*
-(bbn_ks_dk0_D2 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D1 KS_func_pass_args_macro )*
-(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D2 KS_func_pass_args_macro ) + 2*
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk0_D1 KS_func_pass_args_macro );
+2*frda_ks_c(x, y, z)*frda_ks_k0(x, y, z)*(frda_ks_dddk0_D0D1D2 KS_func_pass_args_macro ) + 2*
+frda_ks_c(x, y, z)*(frda_ks_dk0_D0 KS_func_pass_args_macro )*(frda_ks_ddk0_D1D2 KS_func_pass_args_macro ) + 
+2*frda_ks_c(x, y, z)*(frda_ks_dk0_D1 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D2 KS_func_pass_args_macro ) + 
+2*frda_ks_c(x, y, z)*(frda_ks_dk0_D2 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D1 KS_func_pass_args_macro ) + 
+pow(frda_ks_k0(x, y, z), 2)*(frda_ks_dddc_D0D1D2 KS_func_pass_args_macro ) + 2*frda_ks_k0(x, y, z)*
+(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk0_D1D2 KS_func_pass_args_macro ) + 2*
+frda_ks_k0(x, y, z)*(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D2 KS_func_pass_args_macro ) + 
+2*frda_ks_k0(x, y, z)*(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D1 KS_func_pass_args_macro ) + 
+2*frda_ks_k0(x, y, z)*(frda_ks_dk0_D0 KS_func_pass_args_macro )*(frda_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
+2*frda_ks_k0(x, y, z)*(frda_ks_dk0_D1 KS_func_pass_args_macro )*(frda_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
+2*frda_ks_k0(x, y, z)*(frda_ks_dk0_D2 KS_func_pass_args_macro )*(frda_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+2*(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_dk0_D1 KS_func_pass_args_macro )*
+(frda_ks_dk0_D2 KS_func_pass_args_macro ) + 2*(frda_ks_dc_D1 KS_func_pass_args_macro )*
+(frda_ks_dk0_D0 KS_func_pass_args_macro )*(frda_ks_dk0_D2 KS_func_pass_args_macro ) + 2*
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_dk0_D0 KS_func_pass_args_macro )*
+(frda_ks_dk0_D1 KS_func_pass_args_macro );
 
     _dddgamma_D0D0D0D2D0[ijk]=
 /* mcode in progress ... */
@@ -3648,17 +3648,17 @@ bbn_ks_k0(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D2 KS_
 // Derivative
 // c
 // k0
-2*bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dddk0_D0D0D2 KS_func_pass_args_macro ) + 4*
-bbn_ks_c(x, y, z)*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_c(x, y, z)*(bbn_ks_ddk0_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D2 KS_func_pass_args_macro ) + 
-pow(bbn_ks_k0(x, y, z), 2)*(bbn_ks_dddc_D0D0D2 KS_func_pass_args_macro ) + 4*bbn_ks_k0(x, y, z)*
-(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D2 KS_func_pass_args_macro ) + 2*
-bbn_ks_k0(x, y, z)*(bbn_ks_ddc_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_k0(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D0 KS_func_pass_args_macro ) + 
-4*bbn_ks_k0(x, y, z)*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
-4*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk0_D2 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D2 KS_func_pass_args_macro )*
-pow((bbn_ks_dk0_D0 KS_func_pass_args_macro ), 2);
+2*frda_ks_c(x, y, z)*frda_ks_k0(x, y, z)*(frda_ks_dddk0_D0D0D2 KS_func_pass_args_macro ) + 4*
+frda_ks_c(x, y, z)*(frda_ks_dk0_D0 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D2 KS_func_pass_args_macro ) + 
+2*frda_ks_c(x, y, z)*(frda_ks_ddk0_D0D0 KS_func_pass_args_macro )*(frda_ks_dk0_D2 KS_func_pass_args_macro ) + 
+pow(frda_ks_k0(x, y, z), 2)*(frda_ks_dddc_D0D0D2 KS_func_pass_args_macro ) + 4*frda_ks_k0(x, y, z)*
+(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D2 KS_func_pass_args_macro ) + 2*
+frda_ks_k0(x, y, z)*(frda_ks_ddc_D0D0 KS_func_pass_args_macro )*(frda_ks_dk0_D2 KS_func_pass_args_macro ) + 
+2*frda_ks_k0(x, y, z)*(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D0 KS_func_pass_args_macro ) + 
+4*frda_ks_k0(x, y, z)*(frda_ks_dk0_D0 KS_func_pass_args_macro )*(frda_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
+4*(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_dk0_D0 KS_func_pass_args_macro )*
+(frda_ks_dk0_D2 KS_func_pass_args_macro ) + 2*(frda_ks_dc_D2 KS_func_pass_args_macro )*
+pow((frda_ks_dk0_D0 KS_func_pass_args_macro ), 2);
 
     _dddgamma_D2D2D2D1D1[ijk]=
 /* mcode in progress ... */
@@ -3675,17 +3675,17 @@ pow((bbn_ks_dk0_D0 KS_func_pass_args_macro ), 2);
 // Derivative
 // c
 // k2
-2*bbn_ks_c(x, y, z)*bbn_ks_k2(x, y, z)*(bbn_ks_dddk2_D1D1D2 KS_func_pass_args_macro ) + 4*
-bbn_ks_c(x, y, z)*(bbn_ks_dk2_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_c(x, y, z)*(bbn_ks_ddk2_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 
-pow(bbn_ks_k2(x, y, z), 2)*(bbn_ks_dddc_D1D1D2 KS_func_pass_args_macro ) + 4*bbn_ks_k2(x, y, z)*
-(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D2 KS_func_pass_args_macro ) + 2*
-bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_k2(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D1 KS_func_pass_args_macro ) + 
-4*bbn_ks_k2(x, y, z)*(bbn_ks_dk2_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
-4*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro )*
-(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D2 KS_func_pass_args_macro )*
-pow((bbn_ks_dk2_D1 KS_func_pass_args_macro ), 2);
+2*frda_ks_c(x, y, z)*frda_ks_k2(x, y, z)*(frda_ks_dddk2_D1D1D2 KS_func_pass_args_macro ) + 4*
+frda_ks_c(x, y, z)*(frda_ks_dk2_D1 KS_func_pass_args_macro )*(frda_ks_ddk2_D1D2 KS_func_pass_args_macro ) + 
+2*frda_ks_c(x, y, z)*(frda_ks_ddk2_D1D1 KS_func_pass_args_macro )*(frda_ks_dk2_D2 KS_func_pass_args_macro ) + 
+pow(frda_ks_k2(x, y, z), 2)*(frda_ks_dddc_D1D1D2 KS_func_pass_args_macro ) + 4*frda_ks_k2(x, y, z)*
+(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk2_D1D2 KS_func_pass_args_macro ) + 2*
+frda_ks_k2(x, y, z)*(frda_ks_ddc_D1D1 KS_func_pass_args_macro )*(frda_ks_dk2_D2 KS_func_pass_args_macro ) + 
+2*frda_ks_k2(x, y, z)*(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk2_D1D1 KS_func_pass_args_macro ) + 
+4*frda_ks_k2(x, y, z)*(frda_ks_dk2_D1 KS_func_pass_args_macro )*(frda_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
+4*(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_dk2_D1 KS_func_pass_args_macro )*
+(frda_ks_dk2_D2 KS_func_pass_args_macro ) + 2*(frda_ks_dc_D2 KS_func_pass_args_macro )*
+pow((frda_ks_dk2_D1 KS_func_pass_args_macro ), 2);
 
     _dddgamma_D0D2D0D0D2[ijk]=
 /* mcode in progress ... */
@@ -3708,26 +3708,26 @@ pow((bbn_ks_dk2_D1 KS_func_pass_args_macro ), 2);
 // c
 // k0
 // k2
-bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dddk2_D0D0D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-bbn_ks_k2(x, y, z)*(bbn_ks_dddk0_D0D0D2 KS_func_pass_args_macro ) + 2*bbn_ks_c(x, y, z)*
-(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_ddk0_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 
-bbn_ks_c(x, y, z)*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D0 KS_func_pass_args_macro ) + 
-2*bbn_ks_c(x, y, z)*(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D2 KS_func_pass_args_macro ) + 
-bbn_ks_k0(x, y, z)*bbn_ks_k2(x, y, z)*(bbn_ks_dddc_D0D0D2 KS_func_pass_args_macro ) + 2*
-bbn_ks_k0(x, y, z)*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D2 KS_func_pass_args_macro ) + 
-bbn_ks_k0(x, y, z)*(bbn_ks_ddc_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 
-bbn_ks_k0(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D0 KS_func_pass_args_macro ) + 
-2*bbn_ks_k0(x, y, z)*(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_k2(x, y, z)*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D2 KS_func_pass_args_macro ) + 
-bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D2 KS_func_pass_args_macro ) + 
-bbn_ks_k2(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D0 KS_func_pass_args_macro ) + 
-2*bbn_ks_k2(x, y, z)*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
-2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + 2*
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk2_D0 KS_func_pass_args_macro );
+frda_ks_c(x, y, z)*frda_ks_k0(x, y, z)*(frda_ks_dddk2_D0D0D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+frda_ks_k2(x, y, z)*(frda_ks_dddk0_D0D0D2 KS_func_pass_args_macro ) + 2*frda_ks_c(x, y, z)*
+(frda_ks_dk0_D0 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_ddk0_D0D0 KS_func_pass_args_macro )*(frda_ks_dk2_D2 KS_func_pass_args_macro ) + 
+frda_ks_c(x, y, z)*(frda_ks_dk0_D2 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D0 KS_func_pass_args_macro ) + 
+2*frda_ks_c(x, y, z)*(frda_ks_dk2_D0 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D2 KS_func_pass_args_macro ) + 
+frda_ks_k0(x, y, z)*frda_ks_k2(x, y, z)*(frda_ks_dddc_D0D0D2 KS_func_pass_args_macro ) + 2*
+frda_ks_k0(x, y, z)*(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D2 KS_func_pass_args_macro ) + 
+frda_ks_k0(x, y, z)*(frda_ks_ddc_D0D0 KS_func_pass_args_macro )*(frda_ks_dk2_D2 KS_func_pass_args_macro ) + 
+frda_ks_k0(x, y, z)*(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D0 KS_func_pass_args_macro ) + 
+2*frda_ks_k0(x, y, z)*(frda_ks_dk2_D0 KS_func_pass_args_macro )*(frda_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
+2*frda_ks_k2(x, y, z)*(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D2 KS_func_pass_args_macro ) + 
+frda_ks_k2(x, y, z)*(frda_ks_ddc_D0D0 KS_func_pass_args_macro )*(frda_ks_dk0_D2 KS_func_pass_args_macro ) + 
+frda_ks_k2(x, y, z)*(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D0 KS_func_pass_args_macro ) + 
+2*frda_ks_k2(x, y, z)*(frda_ks_dk0_D0 KS_func_pass_args_macro )*(frda_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
+2*(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_dk0_D0 KS_func_pass_args_macro )*
+(frda_ks_dk2_D2 KS_func_pass_args_macro ) + 2*(frda_ks_dc_D0 KS_func_pass_args_macro )*
+(frda_ks_dk0_D2 KS_func_pass_args_macro )*(frda_ks_dk2_D0 KS_func_pass_args_macro ) + 2*
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_dk0_D0 KS_func_pass_args_macro )*
+(frda_ks_dk2_D0 KS_func_pass_args_macro );
 
     _dddgamma_D2D2D2D2D0[ijk]=
 /* mcode in progress ... */
@@ -3744,17 +3744,17 @@ bbn_ks_k2(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D0 KS_
 // Derivative
 // c
 // k2
-2*bbn_ks_c(x, y, z)*bbn_ks_k2(x, y, z)*(bbn_ks_dddk2_D0D2D2 KS_func_pass_args_macro ) + 2*
-bbn_ks_c(x, y, z)*(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D2D2 KS_func_pass_args_macro ) + 
-4*bbn_ks_c(x, y, z)*(bbn_ks_dk2_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D2 KS_func_pass_args_macro ) + 
-pow(bbn_ks_k2(x, y, z), 2)*(bbn_ks_dddc_D0D2D2 KS_func_pass_args_macro ) + 2*bbn_ks_k2(x, y, z)*
-(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D2D2 KS_func_pass_args_macro ) + 4*
-bbn_ks_k2(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + 
-4*bbn_ks_k2(x, y, z)*(bbn_ks_dk2_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
-2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*pow((bbn_ks_dk2_D2 KS_func_pass_args_macro ), 2) + 4*
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk2_D2 KS_func_pass_args_macro );
+2*frda_ks_c(x, y, z)*frda_ks_k2(x, y, z)*(frda_ks_dddk2_D0D2D2 KS_func_pass_args_macro ) + 2*
+frda_ks_c(x, y, z)*(frda_ks_dk2_D0 KS_func_pass_args_macro )*(frda_ks_ddk2_D2D2 KS_func_pass_args_macro ) + 
+4*frda_ks_c(x, y, z)*(frda_ks_dk2_D2 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D2 KS_func_pass_args_macro ) + 
+pow(frda_ks_k2(x, y, z), 2)*(frda_ks_dddc_D0D2D2 KS_func_pass_args_macro ) + 2*frda_ks_k2(x, y, z)*
+(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk2_D2D2 KS_func_pass_args_macro ) + 4*
+frda_ks_k2(x, y, z)*(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D2 KS_func_pass_args_macro ) + 
+2*frda_ks_k2(x, y, z)*(frda_ks_ddc_D2D2 KS_func_pass_args_macro )*(frda_ks_dk2_D0 KS_func_pass_args_macro ) + 
+4*frda_ks_k2(x, y, z)*(frda_ks_dk2_D2 KS_func_pass_args_macro )*(frda_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
+2*(frda_ks_dc_D0 KS_func_pass_args_macro )*pow((frda_ks_dk2_D2 KS_func_pass_args_macro ), 2) + 4*
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_dk2_D0 KS_func_pass_args_macro )*
+(frda_ks_dk2_D2 KS_func_pass_args_macro );
 
     _dddgamma_D0D2D0D0D0[ijk]=
 /* mcode in progress ... */
@@ -3771,17 +3771,17 @@ bbn_ks_k2(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D2 KS_
 // c
 // k0
 // k2
-bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dddk2_D0D0D0 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-bbn_ks_k2(x, y, z)*(bbn_ks_dddk0_D0D0D0 KS_func_pass_args_macro ) + 3*bbn_ks_c(x, y, z)*
-(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D0 KS_func_pass_args_macro ) + 3*
-bbn_ks_c(x, y, z)*(bbn_ks_ddk0_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + 
-bbn_ks_k0(x, y, z)*bbn_ks_k2(x, y, z)*(bbn_ks_dddc_D0D0D0 KS_func_pass_args_macro ) + 3*bbn_ks_k0(x, y, z)*
-(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D0 KS_func_pass_args_macro ) + 3*
-bbn_ks_k0(x, y, z)*(bbn_ks_ddc_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + 
-3*bbn_ks_k2(x, y, z)*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D0 KS_func_pass_args_macro ) + 
-3*bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro ) + 
-6*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk2_D0 KS_func_pass_args_macro );
+frda_ks_c(x, y, z)*frda_ks_k0(x, y, z)*(frda_ks_dddk2_D0D0D0 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+frda_ks_k2(x, y, z)*(frda_ks_dddk0_D0D0D0 KS_func_pass_args_macro ) + 3*frda_ks_c(x, y, z)*
+(frda_ks_dk0_D0 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D0 KS_func_pass_args_macro ) + 3*
+frda_ks_c(x, y, z)*(frda_ks_ddk0_D0D0 KS_func_pass_args_macro )*(frda_ks_dk2_D0 KS_func_pass_args_macro ) + 
+frda_ks_k0(x, y, z)*frda_ks_k2(x, y, z)*(frda_ks_dddc_D0D0D0 KS_func_pass_args_macro ) + 3*frda_ks_k0(x, y, z)*
+(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D0 KS_func_pass_args_macro ) + 3*
+frda_ks_k0(x, y, z)*(frda_ks_ddc_D0D0 KS_func_pass_args_macro )*(frda_ks_dk2_D0 KS_func_pass_args_macro ) + 
+3*frda_ks_k2(x, y, z)*(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D0 KS_func_pass_args_macro ) + 
+3*frda_ks_k2(x, y, z)*(frda_ks_ddc_D0D0 KS_func_pass_args_macro )*(frda_ks_dk0_D0 KS_func_pass_args_macro ) + 
+6*(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_dk0_D0 KS_func_pass_args_macro )*
+(frda_ks_dk2_D0 KS_func_pass_args_macro );
 
     _dddgamma_D2D2D1D2D0[ijk]=
 /* mcode in progress ... */
@@ -3802,22 +3802,22 @@ bbn_ks_k0(x, y, z)*(bbn_ks_ddc_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_
 // Derivative
 // c
 // k2
-2*bbn_ks_c(x, y, z)*bbn_ks_k2(x, y, z)*(bbn_ks_dddk2_D0D1D2 KS_func_pass_args_macro ) + 2*
-bbn_ks_c(x, y, z)*(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_c(x, y, z)*(bbn_ks_dk2_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_c(x, y, z)*(bbn_ks_dk2_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D1 KS_func_pass_args_macro ) + 
-pow(bbn_ks_k2(x, y, z), 2)*(bbn_ks_dddc_D0D1D2 KS_func_pass_args_macro ) + 2*bbn_ks_k2(x, y, z)*
-(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D2 KS_func_pass_args_macro ) + 2*
-bbn_ks_k2(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_k2(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D1 KS_func_pass_args_macro ) + 
-2*bbn_ks_k2(x, y, z)*(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_k2(x, y, z)*(bbn_ks_dk2_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_k2(x, y, z)*(bbn_ks_dk2_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
-2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro )*
-(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D1 KS_func_pass_args_macro )*
-(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 2*
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk2_D1 KS_func_pass_args_macro );
+2*frda_ks_c(x, y, z)*frda_ks_k2(x, y, z)*(frda_ks_dddk2_D0D1D2 KS_func_pass_args_macro ) + 2*
+frda_ks_c(x, y, z)*(frda_ks_dk2_D0 KS_func_pass_args_macro )*(frda_ks_ddk2_D1D2 KS_func_pass_args_macro ) + 
+2*frda_ks_c(x, y, z)*(frda_ks_dk2_D1 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D2 KS_func_pass_args_macro ) + 
+2*frda_ks_c(x, y, z)*(frda_ks_dk2_D2 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D1 KS_func_pass_args_macro ) + 
+pow(frda_ks_k2(x, y, z), 2)*(frda_ks_dddc_D0D1D2 KS_func_pass_args_macro ) + 2*frda_ks_k2(x, y, z)*
+(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk2_D1D2 KS_func_pass_args_macro ) + 2*
+frda_ks_k2(x, y, z)*(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D2 KS_func_pass_args_macro ) + 
+2*frda_ks_k2(x, y, z)*(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D1 KS_func_pass_args_macro ) + 
+2*frda_ks_k2(x, y, z)*(frda_ks_dk2_D0 KS_func_pass_args_macro )*(frda_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
+2*frda_ks_k2(x, y, z)*(frda_ks_dk2_D1 KS_func_pass_args_macro )*(frda_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
+2*frda_ks_k2(x, y, z)*(frda_ks_dk2_D2 KS_func_pass_args_macro )*(frda_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+2*(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_dk2_D1 KS_func_pass_args_macro )*
+(frda_ks_dk2_D2 KS_func_pass_args_macro ) + 2*(frda_ks_dc_D1 KS_func_pass_args_macro )*
+(frda_ks_dk2_D0 KS_func_pass_args_macro )*(frda_ks_dk2_D2 KS_func_pass_args_macro ) + 2*
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_dk2_D0 KS_func_pass_args_macro )*
+(frda_ks_dk2_D1 KS_func_pass_args_macro );
 
     _dddgamma_D1D1D0D1D0[ijk]=
 /* mcode in progress ... */
@@ -3834,17 +3834,17 @@ bbn_ks_k2(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D2 KS_
 // Derivative
 // c
 // k1
-2*bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_dddk1_D0D0D1 KS_func_pass_args_macro ) + 4*
-bbn_ks_c(x, y, z)*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D1 KS_func_pass_args_macro ) + 
-2*bbn_ks_c(x, y, z)*(bbn_ks_ddk1_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro ) + 
-pow(bbn_ks_k1(x, y, z), 2)*(bbn_ks_dddc_D0D0D1 KS_func_pass_args_macro ) + 4*bbn_ks_k1(x, y, z)*
-(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D1 KS_func_pass_args_macro ) + 2*
-bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro ) + 
-2*bbn_ks_k1(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D0 KS_func_pass_args_macro ) + 
-4*bbn_ks_k1(x, y, z)*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
-4*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk1_D1 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D1 KS_func_pass_args_macro )*
-pow((bbn_ks_dk1_D0 KS_func_pass_args_macro ), 2);
+2*frda_ks_c(x, y, z)*frda_ks_k1(x, y, z)*(frda_ks_dddk1_D0D0D1 KS_func_pass_args_macro ) + 4*
+frda_ks_c(x, y, z)*(frda_ks_dk1_D0 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D1 KS_func_pass_args_macro ) + 
+2*frda_ks_c(x, y, z)*(frda_ks_ddk1_D0D0 KS_func_pass_args_macro )*(frda_ks_dk1_D1 KS_func_pass_args_macro ) + 
+pow(frda_ks_k1(x, y, z), 2)*(frda_ks_dddc_D0D0D1 KS_func_pass_args_macro ) + 4*frda_ks_k1(x, y, z)*
+(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D1 KS_func_pass_args_macro ) + 2*
+frda_ks_k1(x, y, z)*(frda_ks_ddc_D0D0 KS_func_pass_args_macro )*(frda_ks_dk1_D1 KS_func_pass_args_macro ) + 
+2*frda_ks_k1(x, y, z)*(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D0 KS_func_pass_args_macro ) + 
+4*frda_ks_k1(x, y, z)*(frda_ks_dk1_D0 KS_func_pass_args_macro )*(frda_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+4*(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_dk1_D0 KS_func_pass_args_macro )*
+(frda_ks_dk1_D1 KS_func_pass_args_macro ) + 2*(frda_ks_dc_D1 KS_func_pass_args_macro )*
+pow((frda_ks_dk1_D0 KS_func_pass_args_macro ), 2);
 
     _dddgamma_D1D2D2D0D2[ijk]=
 /* mcode in progress ... */
@@ -3867,26 +3867,26 @@ pow((bbn_ks_dk1_D0 KS_func_pass_args_macro ), 2);
 // c
 // k1
 // k2
-bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_dddk2_D0D2D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-bbn_ks_k2(x, y, z)*(bbn_ks_dddk1_D0D2D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D2D2 KS_func_pass_args_macro ) + 2*
-bbn_ks_c(x, y, z)*(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D2 KS_func_pass_args_macro ) + 
-bbn_ks_c(x, y, z)*(bbn_ks_ddk1_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + 
-2*bbn_ks_c(x, y, z)*(bbn_ks_dk2_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D2 KS_func_pass_args_macro ) + 
-bbn_ks_k1(x, y, z)*bbn_ks_k2(x, y, z)*(bbn_ks_dddc_D0D2D2 KS_func_pass_args_macro ) + 
-bbn_ks_k1(x, y, z)*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D2D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_k1(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D2 KS_func_pass_args_macro ) + 
-bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + 
-2*bbn_ks_k1(x, y, z)*(bbn_ks_dk2_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
-bbn_ks_k2(x, y, z)*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D2D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_k2(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D2 KS_func_pass_args_macro ) + 
-bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro ) + 
-2*bbn_ks_k2(x, y, z)*(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
-2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro )*
-(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D2 KS_func_pass_args_macro )*
-(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 2*
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro )*
-(bbn_ks_dk2_D0 KS_func_pass_args_macro );
+frda_ks_c(x, y, z)*frda_ks_k1(x, y, z)*(frda_ks_dddk2_D0D2D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+frda_ks_k2(x, y, z)*(frda_ks_dddk1_D0D2D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk1_D0 KS_func_pass_args_macro )*(frda_ks_ddk2_D2D2 KS_func_pass_args_macro ) + 2*
+frda_ks_c(x, y, z)*(frda_ks_dk1_D2 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D2 KS_func_pass_args_macro ) + 
+frda_ks_c(x, y, z)*(frda_ks_ddk1_D2D2 KS_func_pass_args_macro )*(frda_ks_dk2_D0 KS_func_pass_args_macro ) + 
+2*frda_ks_c(x, y, z)*(frda_ks_dk2_D2 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D2 KS_func_pass_args_macro ) + 
+frda_ks_k1(x, y, z)*frda_ks_k2(x, y, z)*(frda_ks_dddc_D0D2D2 KS_func_pass_args_macro ) + 
+frda_ks_k1(x, y, z)*(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk2_D2D2 KS_func_pass_args_macro ) + 
+2*frda_ks_k1(x, y, z)*(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D2 KS_func_pass_args_macro ) + 
+frda_ks_k1(x, y, z)*(frda_ks_ddc_D2D2 KS_func_pass_args_macro )*(frda_ks_dk2_D0 KS_func_pass_args_macro ) + 
+2*frda_ks_k1(x, y, z)*(frda_ks_dk2_D2 KS_func_pass_args_macro )*(frda_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
+frda_ks_k2(x, y, z)*(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk1_D2D2 KS_func_pass_args_macro ) + 
+2*frda_ks_k2(x, y, z)*(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D2 KS_func_pass_args_macro ) + 
+frda_ks_k2(x, y, z)*(frda_ks_ddc_D2D2 KS_func_pass_args_macro )*(frda_ks_dk1_D0 KS_func_pass_args_macro ) + 
+2*frda_ks_k2(x, y, z)*(frda_ks_dk1_D2 KS_func_pass_args_macro )*(frda_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
+2*(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_dk1_D2 KS_func_pass_args_macro )*
+(frda_ks_dk2_D2 KS_func_pass_args_macro ) + 2*(frda_ks_dc_D2 KS_func_pass_args_macro )*
+(frda_ks_dk1_D0 KS_func_pass_args_macro )*(frda_ks_dk2_D2 KS_func_pass_args_macro ) + 2*
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_dk1_D2 KS_func_pass_args_macro )*
+(frda_ks_dk2_D0 KS_func_pass_args_macro );
 
     _dddgamma_D0D1D0D1D1[ijk]=
 /* mcode in progress ... */
@@ -3909,26 +3909,26 @@ bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_
 // c
 // k0
 // k1
-bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dddk1_D0D1D1 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-bbn_ks_k1(x, y, z)*(bbn_ks_dddk0_D0D1D1 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D1 KS_func_pass_args_macro ) + 2*
-bbn_ks_c(x, y, z)*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D1 KS_func_pass_args_macro ) + 
-bbn_ks_c(x, y, z)*(bbn_ks_ddk0_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro ) + 
-2*bbn_ks_c(x, y, z)*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D1 KS_func_pass_args_macro ) + 
-bbn_ks_k0(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_dddc_D0D1D1 KS_func_pass_args_macro ) + 
-bbn_ks_k0(x, y, z)*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D1 KS_func_pass_args_macro ) + 
-2*bbn_ks_k0(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D1 KS_func_pass_args_macro ) + 
-bbn_ks_k0(x, y, z)*(bbn_ks_ddc_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro ) + 
-2*bbn_ks_k0(x, y, z)*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
-bbn_ks_k1(x, y, z)*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D1 KS_func_pass_args_macro ) + 
-2*bbn_ks_k1(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D1 KS_func_pass_args_macro ) + 
-bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro ) + 
-2*bbn_ks_k1(x, y, z)*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
-2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*
-(bbn_ks_dk1_D1 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D1 KS_func_pass_args_macro )*
-(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro ) + 2*
-(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*
-(bbn_ks_dk1_D0 KS_func_pass_args_macro );
+frda_ks_c(x, y, z)*frda_ks_k0(x, y, z)*(frda_ks_dddk1_D0D1D1 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+frda_ks_k1(x, y, z)*(frda_ks_dddk0_D0D1D1 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk0_D0 KS_func_pass_args_macro )*(frda_ks_ddk1_D1D1 KS_func_pass_args_macro ) + 2*
+frda_ks_c(x, y, z)*(frda_ks_dk0_D1 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D1 KS_func_pass_args_macro ) + 
+frda_ks_c(x, y, z)*(frda_ks_ddk0_D1D1 KS_func_pass_args_macro )*(frda_ks_dk1_D0 KS_func_pass_args_macro ) + 
+2*frda_ks_c(x, y, z)*(frda_ks_dk1_D1 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D1 KS_func_pass_args_macro ) + 
+frda_ks_k0(x, y, z)*frda_ks_k1(x, y, z)*(frda_ks_dddc_D0D1D1 KS_func_pass_args_macro ) + 
+frda_ks_k0(x, y, z)*(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk1_D1D1 KS_func_pass_args_macro ) + 
+2*frda_ks_k0(x, y, z)*(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D1 KS_func_pass_args_macro ) + 
+frda_ks_k0(x, y, z)*(frda_ks_ddc_D1D1 KS_func_pass_args_macro )*(frda_ks_dk1_D0 KS_func_pass_args_macro ) + 
+2*frda_ks_k0(x, y, z)*(frda_ks_dk1_D1 KS_func_pass_args_macro )*(frda_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+frda_ks_k1(x, y, z)*(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk0_D1D1 KS_func_pass_args_macro ) + 
+2*frda_ks_k1(x, y, z)*(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D1 KS_func_pass_args_macro ) + 
+frda_ks_k1(x, y, z)*(frda_ks_ddc_D1D1 KS_func_pass_args_macro )*(frda_ks_dk0_D0 KS_func_pass_args_macro ) + 
+2*frda_ks_k1(x, y, z)*(frda_ks_dk0_D1 KS_func_pass_args_macro )*(frda_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+2*(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_dk0_D1 KS_func_pass_args_macro )*
+(frda_ks_dk1_D1 KS_func_pass_args_macro ) + 2*(frda_ks_dc_D1 KS_func_pass_args_macro )*
+(frda_ks_dk0_D0 KS_func_pass_args_macro )*(frda_ks_dk1_D1 KS_func_pass_args_macro ) + 2*
+(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_dk0_D1 KS_func_pass_args_macro )*
+(frda_ks_dk1_D0 KS_func_pass_args_macro );
 
     _dddgamma_D2D2D0D2D2[ijk]=
 /* mcode in progress ... */
@@ -3945,17 +3945,17 @@ bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_
 // Derivative
 // c
 // k2
-2*bbn_ks_c(x, y, z)*bbn_ks_k2(x, y, z)*(bbn_ks_dddk2_D0D2D2 KS_func_pass_args_macro ) + 2*
-bbn_ks_c(x, y, z)*(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D2D2 KS_func_pass_args_macro ) + 
-4*bbn_ks_c(x, y, z)*(bbn_ks_dk2_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D2 KS_func_pass_args_macro ) + 
-pow(bbn_ks_k2(x, y, z), 2)*(bbn_ks_dddc_D0D2D2 KS_func_pass_args_macro ) + 2*bbn_ks_k2(x, y, z)*
-(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D2D2 KS_func_pass_args_macro ) + 4*
-bbn_ks_k2(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + 
-4*bbn_ks_k2(x, y, z)*(bbn_ks_dk2_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
-2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*pow((bbn_ks_dk2_D2 KS_func_pass_args_macro ), 2) + 4*
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk2_D2 KS_func_pass_args_macro );
+2*frda_ks_c(x, y, z)*frda_ks_k2(x, y, z)*(frda_ks_dddk2_D0D2D2 KS_func_pass_args_macro ) + 2*
+frda_ks_c(x, y, z)*(frda_ks_dk2_D0 KS_func_pass_args_macro )*(frda_ks_ddk2_D2D2 KS_func_pass_args_macro ) + 
+4*frda_ks_c(x, y, z)*(frda_ks_dk2_D2 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D2 KS_func_pass_args_macro ) + 
+pow(frda_ks_k2(x, y, z), 2)*(frda_ks_dddc_D0D2D2 KS_func_pass_args_macro ) + 2*frda_ks_k2(x, y, z)*
+(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk2_D2D2 KS_func_pass_args_macro ) + 4*
+frda_ks_k2(x, y, z)*(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D2 KS_func_pass_args_macro ) + 
+2*frda_ks_k2(x, y, z)*(frda_ks_ddc_D2D2 KS_func_pass_args_macro )*(frda_ks_dk2_D0 KS_func_pass_args_macro ) + 
+4*frda_ks_k2(x, y, z)*(frda_ks_dk2_D2 KS_func_pass_args_macro )*(frda_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
+2*(frda_ks_dc_D0 KS_func_pass_args_macro )*pow((frda_ks_dk2_D2 KS_func_pass_args_macro ), 2) + 4*
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_dk2_D0 KS_func_pass_args_macro )*
+(frda_ks_dk2_D2 KS_func_pass_args_macro );
 
     _dddgamma_D1D2D2D1D2[ijk]=
 /* mcode in progress ... */
@@ -3978,26 +3978,26 @@ bbn_ks_k2(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D2 KS_
 // c
 // k1
 // k2
-bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_dddk2_D1D2D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-bbn_ks_k2(x, y, z)*(bbn_ks_dddk1_D1D2D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D2D2 KS_func_pass_args_macro ) + 2*
-bbn_ks_c(x, y, z)*(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D2 KS_func_pass_args_macro ) + 
-bbn_ks_c(x, y, z)*(bbn_ks_ddk1_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 
-2*bbn_ks_c(x, y, z)*(bbn_ks_dk2_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D2 KS_func_pass_args_macro ) + 
-bbn_ks_k1(x, y, z)*bbn_ks_k2(x, y, z)*(bbn_ks_dddc_D1D2D2 KS_func_pass_args_macro ) + 
-bbn_ks_k1(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D2D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_k1(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D2 KS_func_pass_args_macro ) + 
-bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 
-2*bbn_ks_k1(x, y, z)*(bbn_ks_dk2_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
-bbn_ks_k2(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D2D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_k2(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D2 KS_func_pass_args_macro ) + 
-bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro ) + 
-2*bbn_ks_k2(x, y, z)*(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
-2*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro )*
-(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D2 KS_func_pass_args_macro )*
-(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 2*
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro )*
-(bbn_ks_dk2_D1 KS_func_pass_args_macro );
+frda_ks_c(x, y, z)*frda_ks_k1(x, y, z)*(frda_ks_dddk2_D1D2D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+frda_ks_k2(x, y, z)*(frda_ks_dddk1_D1D2D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk1_D1 KS_func_pass_args_macro )*(frda_ks_ddk2_D2D2 KS_func_pass_args_macro ) + 2*
+frda_ks_c(x, y, z)*(frda_ks_dk1_D2 KS_func_pass_args_macro )*(frda_ks_ddk2_D1D2 KS_func_pass_args_macro ) + 
+frda_ks_c(x, y, z)*(frda_ks_ddk1_D2D2 KS_func_pass_args_macro )*(frda_ks_dk2_D1 KS_func_pass_args_macro ) + 
+2*frda_ks_c(x, y, z)*(frda_ks_dk2_D2 KS_func_pass_args_macro )*(frda_ks_ddk1_D1D2 KS_func_pass_args_macro ) + 
+frda_ks_k1(x, y, z)*frda_ks_k2(x, y, z)*(frda_ks_dddc_D1D2D2 KS_func_pass_args_macro ) + 
+frda_ks_k1(x, y, z)*(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk2_D2D2 KS_func_pass_args_macro ) + 
+2*frda_ks_k1(x, y, z)*(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk2_D1D2 KS_func_pass_args_macro ) + 
+frda_ks_k1(x, y, z)*(frda_ks_ddc_D2D2 KS_func_pass_args_macro )*(frda_ks_dk2_D1 KS_func_pass_args_macro ) + 
+2*frda_ks_k1(x, y, z)*(frda_ks_dk2_D2 KS_func_pass_args_macro )*(frda_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
+frda_ks_k2(x, y, z)*(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk1_D2D2 KS_func_pass_args_macro ) + 
+2*frda_ks_k2(x, y, z)*(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk1_D1D2 KS_func_pass_args_macro ) + 
+frda_ks_k2(x, y, z)*(frda_ks_ddc_D2D2 KS_func_pass_args_macro )*(frda_ks_dk1_D1 KS_func_pass_args_macro ) + 
+2*frda_ks_k2(x, y, z)*(frda_ks_dk1_D2 KS_func_pass_args_macro )*(frda_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
+2*(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_dk1_D2 KS_func_pass_args_macro )*
+(frda_ks_dk2_D2 KS_func_pass_args_macro ) + 2*(frda_ks_dc_D2 KS_func_pass_args_macro )*
+(frda_ks_dk1_D1 KS_func_pass_args_macro )*(frda_ks_dk2_D2 KS_func_pass_args_macro ) + 2*
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_dk1_D2 KS_func_pass_args_macro )*
+(frda_ks_dk2_D1 KS_func_pass_args_macro );
 
     _dddgamma_D2D2D1D1D1[ijk]=
 /* mcode in progress ... */
@@ -4010,12 +4010,12 @@ bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_
 // Derivative
 // c
 // k2
-2*bbn_ks_c(x, y, z)*bbn_ks_k2(x, y, z)*(bbn_ks_dddk2_D1D1D1 KS_func_pass_args_macro ) + 6*
-bbn_ks_c(x, y, z)*(bbn_ks_dk2_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D1 KS_func_pass_args_macro ) + 
-pow(bbn_ks_k2(x, y, z), 2)*(bbn_ks_dddc_D1D1D1 KS_func_pass_args_macro ) + 6*bbn_ks_k2(x, y, z)*
-(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D1 KS_func_pass_args_macro ) + 6*
-bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 
-6*(bbn_ks_dc_D1 KS_func_pass_args_macro )*pow((bbn_ks_dk2_D1 KS_func_pass_args_macro ), 2);
+2*frda_ks_c(x, y, z)*frda_ks_k2(x, y, z)*(frda_ks_dddk2_D1D1D1 KS_func_pass_args_macro ) + 6*
+frda_ks_c(x, y, z)*(frda_ks_dk2_D1 KS_func_pass_args_macro )*(frda_ks_ddk2_D1D1 KS_func_pass_args_macro ) + 
+pow(frda_ks_k2(x, y, z), 2)*(frda_ks_dddc_D1D1D1 KS_func_pass_args_macro ) + 6*frda_ks_k2(x, y, z)*
+(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk2_D1D1 KS_func_pass_args_macro ) + 6*
+frda_ks_k2(x, y, z)*(frda_ks_ddc_D1D1 KS_func_pass_args_macro )*(frda_ks_dk2_D1 KS_func_pass_args_macro ) + 
+6*(frda_ks_dc_D1 KS_func_pass_args_macro )*pow((frda_ks_dk2_D1 KS_func_pass_args_macro ), 2);
 
     _dddgamma_D0D0D0D0D0[ijk]=
 /* mcode in progress ... */
@@ -4028,12 +4028,12 @@ bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_
 // Derivative
 // c
 // k0
-2*bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dddk0_D0D0D0 KS_func_pass_args_macro ) + 6*
-bbn_ks_c(x, y, z)*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D0 KS_func_pass_args_macro ) + 
-pow(bbn_ks_k0(x, y, z), 2)*(bbn_ks_dddc_D0D0D0 KS_func_pass_args_macro ) + 6*bbn_ks_k0(x, y, z)*
-(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D0 KS_func_pass_args_macro ) + 6*
-bbn_ks_k0(x, y, z)*(bbn_ks_ddc_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro ) + 
-6*(bbn_ks_dc_D0 KS_func_pass_args_macro )*pow((bbn_ks_dk0_D0 KS_func_pass_args_macro ), 2);
+2*frda_ks_c(x, y, z)*frda_ks_k0(x, y, z)*(frda_ks_dddk0_D0D0D0 KS_func_pass_args_macro ) + 6*
+frda_ks_c(x, y, z)*(frda_ks_dk0_D0 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D0 KS_func_pass_args_macro ) + 
+pow(frda_ks_k0(x, y, z), 2)*(frda_ks_dddc_D0D0D0 KS_func_pass_args_macro ) + 6*frda_ks_k0(x, y, z)*
+(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D0 KS_func_pass_args_macro ) + 6*
+frda_ks_k0(x, y, z)*(frda_ks_ddc_D0D0 KS_func_pass_args_macro )*(frda_ks_dk0_D0 KS_func_pass_args_macro ) + 
+6*(frda_ks_dc_D0 KS_func_pass_args_macro )*pow((frda_ks_dk0_D0 KS_func_pass_args_macro ), 2);
 
     _dddgamma_D0D0D1D2D1[ijk]=
 /* mcode in progress ... */
@@ -4050,17 +4050,17 @@ bbn_ks_k0(x, y, z)*(bbn_ks_ddc_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_
 // Derivative
 // c
 // k0
-2*bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dddk0_D1D1D2 KS_func_pass_args_macro ) + 4*
-bbn_ks_c(x, y, z)*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_c(x, y, z)*(bbn_ks_ddk0_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D2 KS_func_pass_args_macro ) + 
-pow(bbn_ks_k0(x, y, z), 2)*(bbn_ks_dddc_D1D1D2 KS_func_pass_args_macro ) + 4*bbn_ks_k0(x, y, z)*
-(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D2 KS_func_pass_args_macro ) + 2*
-bbn_ks_k0(x, y, z)*(bbn_ks_ddc_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_k0(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D1 KS_func_pass_args_macro ) + 
-4*bbn_ks_k0(x, y, z)*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
-4*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*
-(bbn_ks_dk0_D2 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D2 KS_func_pass_args_macro )*
-pow((bbn_ks_dk0_D1 KS_func_pass_args_macro ), 2);
+2*frda_ks_c(x, y, z)*frda_ks_k0(x, y, z)*(frda_ks_dddk0_D1D1D2 KS_func_pass_args_macro ) + 4*
+frda_ks_c(x, y, z)*(frda_ks_dk0_D1 KS_func_pass_args_macro )*(frda_ks_ddk0_D1D2 KS_func_pass_args_macro ) + 
+2*frda_ks_c(x, y, z)*(frda_ks_ddk0_D1D1 KS_func_pass_args_macro )*(frda_ks_dk0_D2 KS_func_pass_args_macro ) + 
+pow(frda_ks_k0(x, y, z), 2)*(frda_ks_dddc_D1D1D2 KS_func_pass_args_macro ) + 4*frda_ks_k0(x, y, z)*
+(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk0_D1D2 KS_func_pass_args_macro ) + 2*
+frda_ks_k0(x, y, z)*(frda_ks_ddc_D1D1 KS_func_pass_args_macro )*(frda_ks_dk0_D2 KS_func_pass_args_macro ) + 
+2*frda_ks_k0(x, y, z)*(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk0_D1D1 KS_func_pass_args_macro ) + 
+4*frda_ks_k0(x, y, z)*(frda_ks_dk0_D1 KS_func_pass_args_macro )*(frda_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
+4*(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_dk0_D1 KS_func_pass_args_macro )*
+(frda_ks_dk0_D2 KS_func_pass_args_macro ) + 2*(frda_ks_dc_D2 KS_func_pass_args_macro )*
+pow((frda_ks_dk0_D1 KS_func_pass_args_macro ), 2);
 
     _dddgamma_D1D1D1D1D0[ijk]=
 /* mcode in progress ... */
@@ -4077,17 +4077,17 @@ pow((bbn_ks_dk0_D1 KS_func_pass_args_macro ), 2);
 // Derivative
 // c
 // k1
-2*bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_dddk1_D0D1D1 KS_func_pass_args_macro ) + 2*
-bbn_ks_c(x, y, z)*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D1 KS_func_pass_args_macro ) + 
-4*bbn_ks_c(x, y, z)*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D1 KS_func_pass_args_macro ) + 
-pow(bbn_ks_k1(x, y, z), 2)*(bbn_ks_dddc_D0D1D1 KS_func_pass_args_macro ) + 2*bbn_ks_k1(x, y, z)*
-(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D1 KS_func_pass_args_macro ) + 4*
-bbn_ks_k1(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D1 KS_func_pass_args_macro ) + 
-2*bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro ) + 
-4*bbn_ks_k1(x, y, z)*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
-2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*pow((bbn_ks_dk1_D1 KS_func_pass_args_macro ), 2) + 4*
-(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk1_D1 KS_func_pass_args_macro );
+2*frda_ks_c(x, y, z)*frda_ks_k1(x, y, z)*(frda_ks_dddk1_D0D1D1 KS_func_pass_args_macro ) + 2*
+frda_ks_c(x, y, z)*(frda_ks_dk1_D0 KS_func_pass_args_macro )*(frda_ks_ddk1_D1D1 KS_func_pass_args_macro ) + 
+4*frda_ks_c(x, y, z)*(frda_ks_dk1_D1 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D1 KS_func_pass_args_macro ) + 
+pow(frda_ks_k1(x, y, z), 2)*(frda_ks_dddc_D0D1D1 KS_func_pass_args_macro ) + 2*frda_ks_k1(x, y, z)*
+(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk1_D1D1 KS_func_pass_args_macro ) + 4*
+frda_ks_k1(x, y, z)*(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D1 KS_func_pass_args_macro ) + 
+2*frda_ks_k1(x, y, z)*(frda_ks_ddc_D1D1 KS_func_pass_args_macro )*(frda_ks_dk1_D0 KS_func_pass_args_macro ) + 
+4*frda_ks_k1(x, y, z)*(frda_ks_dk1_D1 KS_func_pass_args_macro )*(frda_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+2*(frda_ks_dc_D0 KS_func_pass_args_macro )*pow((frda_ks_dk1_D1 KS_func_pass_args_macro ), 2) + 4*
+(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_dk1_D0 KS_func_pass_args_macro )*
+(frda_ks_dk1_D1 KS_func_pass_args_macro );
 
     _dddgamma_D1D1D1D1D1[ijk]=
 /* mcode in progress ... */
@@ -4100,12 +4100,12 @@ bbn_ks_k1(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D1 KS_
 // Derivative
 // c
 // k1
-2*bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_dddk1_D1D1D1 KS_func_pass_args_macro ) + 6*
-bbn_ks_c(x, y, z)*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D1 KS_func_pass_args_macro ) + 
-pow(bbn_ks_k1(x, y, z), 2)*(bbn_ks_dddc_D1D1D1 KS_func_pass_args_macro ) + 6*bbn_ks_k1(x, y, z)*
-(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D1 KS_func_pass_args_macro ) + 6*
-bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro ) + 
-6*(bbn_ks_dc_D1 KS_func_pass_args_macro )*pow((bbn_ks_dk1_D1 KS_func_pass_args_macro ), 2);
+2*frda_ks_c(x, y, z)*frda_ks_k1(x, y, z)*(frda_ks_dddk1_D1D1D1 KS_func_pass_args_macro ) + 6*
+frda_ks_c(x, y, z)*(frda_ks_dk1_D1 KS_func_pass_args_macro )*(frda_ks_ddk1_D1D1 KS_func_pass_args_macro ) + 
+pow(frda_ks_k1(x, y, z), 2)*(frda_ks_dddc_D1D1D1 KS_func_pass_args_macro ) + 6*frda_ks_k1(x, y, z)*
+(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk1_D1D1 KS_func_pass_args_macro ) + 6*
+frda_ks_k1(x, y, z)*(frda_ks_ddc_D1D1 KS_func_pass_args_macro )*(frda_ks_dk1_D1 KS_func_pass_args_macro ) + 
+6*(frda_ks_dc_D1 KS_func_pass_args_macro )*pow((frda_ks_dk1_D1 KS_func_pass_args_macro ), 2);
 
     _dddgamma_D1D1D1D2D0[ijk]=
 /* mcode in progress ... */
@@ -4126,22 +4126,22 @@ bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_
 // Derivative
 // c
 // k1
-2*bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_dddk1_D0D1D2 KS_func_pass_args_macro ) + 2*
-bbn_ks_c(x, y, z)*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_c(x, y, z)*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_c(x, y, z)*(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D1 KS_func_pass_args_macro ) + 
-pow(bbn_ks_k1(x, y, z), 2)*(bbn_ks_dddc_D0D1D2 KS_func_pass_args_macro ) + 2*bbn_ks_k1(x, y, z)*
-(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D2 KS_func_pass_args_macro ) + 2*
-bbn_ks_k1(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_k1(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D1 KS_func_pass_args_macro ) + 
-2*bbn_ks_k1(x, y, z)*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_k1(x, y, z)*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_k1(x, y, z)*(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
-2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*
-(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D1 KS_func_pass_args_macro )*
-(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + 2*
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk1_D1 KS_func_pass_args_macro );
+2*frda_ks_c(x, y, z)*frda_ks_k1(x, y, z)*(frda_ks_dddk1_D0D1D2 KS_func_pass_args_macro ) + 2*
+frda_ks_c(x, y, z)*(frda_ks_dk1_D0 KS_func_pass_args_macro )*(frda_ks_ddk1_D1D2 KS_func_pass_args_macro ) + 
+2*frda_ks_c(x, y, z)*(frda_ks_dk1_D1 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D2 KS_func_pass_args_macro ) + 
+2*frda_ks_c(x, y, z)*(frda_ks_dk1_D2 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D1 KS_func_pass_args_macro ) + 
+pow(frda_ks_k1(x, y, z), 2)*(frda_ks_dddc_D0D1D2 KS_func_pass_args_macro ) + 2*frda_ks_k1(x, y, z)*
+(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk1_D1D2 KS_func_pass_args_macro ) + 2*
+frda_ks_k1(x, y, z)*(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D2 KS_func_pass_args_macro ) + 
+2*frda_ks_k1(x, y, z)*(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D1 KS_func_pass_args_macro ) + 
+2*frda_ks_k1(x, y, z)*(frda_ks_dk1_D0 KS_func_pass_args_macro )*(frda_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
+2*frda_ks_k1(x, y, z)*(frda_ks_dk1_D1 KS_func_pass_args_macro )*(frda_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
+2*frda_ks_k1(x, y, z)*(frda_ks_dk1_D2 KS_func_pass_args_macro )*(frda_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+2*(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_dk1_D1 KS_func_pass_args_macro )*
+(frda_ks_dk1_D2 KS_func_pass_args_macro ) + 2*(frda_ks_dc_D1 KS_func_pass_args_macro )*
+(frda_ks_dk1_D0 KS_func_pass_args_macro )*(frda_ks_dk1_D2 KS_func_pass_args_macro ) + 2*
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_dk1_D0 KS_func_pass_args_macro )*
+(frda_ks_dk1_D1 KS_func_pass_args_macro );
 
     _dddgamma_D0D1D0D2D1[ijk]=
 /* mcode in progress ... */
@@ -4170,36 +4170,36 @@ bbn_ks_k1(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D2 KS_
 // c
 // k0
 // k1
-bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dddk1_D0D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-bbn_ks_k1(x, y, z)*(bbn_ks_dddk0_D0D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D1 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D1 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
-bbn_ks_k1(x, y, z)*(bbn_ks_dddc_D0D1D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
-(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
-(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D1 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
-(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
-(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
-(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
-(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D2 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
-(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D2 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D1 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
-(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
-(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
-(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
-(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*
-(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + (bbn_ks_dc_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro ) + 
-(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + (bbn_ks_dc_D1 KS_func_pass_args_macro )*
-(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro ) + 
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk1_D1 KS_func_pass_args_macro ) + (bbn_ks_dc_D2 KS_func_pass_args_macro )*
-(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro );
+frda_ks_c(x, y, z)*frda_ks_k0(x, y, z)*(frda_ks_dddk1_D0D1D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+frda_ks_k1(x, y, z)*(frda_ks_dddk0_D0D1D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk0_D0 KS_func_pass_args_macro )*(frda_ks_ddk1_D1D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk0_D1 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk0_D2 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D1 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk1_D0 KS_func_pass_args_macro )*(frda_ks_ddk0_D1D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk1_D1 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk1_D2 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D1 KS_func_pass_args_macro ) + frda_ks_k0(x, y, z)*
+frda_ks_k1(x, y, z)*(frda_ks_dddc_D0D1D2 KS_func_pass_args_macro ) + frda_ks_k0(x, y, z)*
+(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk1_D1D2 KS_func_pass_args_macro ) + frda_ks_k0(x, y, z)*
+(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D2 KS_func_pass_args_macro ) + frda_ks_k0(x, y, z)*
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D1 KS_func_pass_args_macro ) + frda_ks_k0(x, y, z)*
+(frda_ks_dk1_D0 KS_func_pass_args_macro )*(frda_ks_ddc_D1D2 KS_func_pass_args_macro ) + frda_ks_k0(x, y, z)*
+(frda_ks_dk1_D1 KS_func_pass_args_macro )*(frda_ks_ddc_D0D2 KS_func_pass_args_macro ) + frda_ks_k0(x, y, z)*
+(frda_ks_dk1_D2 KS_func_pass_args_macro )*(frda_ks_ddc_D0D1 KS_func_pass_args_macro ) + frda_ks_k1(x, y, z)*
+(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk0_D1D2 KS_func_pass_args_macro ) + frda_ks_k1(x, y, z)*
+(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D2 KS_func_pass_args_macro ) + frda_ks_k1(x, y, z)*
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D1 KS_func_pass_args_macro ) + frda_ks_k1(x, y, z)*
+(frda_ks_dk0_D0 KS_func_pass_args_macro )*(frda_ks_ddc_D1D2 KS_func_pass_args_macro ) + frda_ks_k1(x, y, z)*
+(frda_ks_dk0_D1 KS_func_pass_args_macro )*(frda_ks_ddc_D0D2 KS_func_pass_args_macro ) + frda_ks_k1(x, y, z)*
+(frda_ks_dk0_D2 KS_func_pass_args_macro )*(frda_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_dk0_D1 KS_func_pass_args_macro )*
+(frda_ks_dk1_D2 KS_func_pass_args_macro ) + (frda_ks_dc_D0 KS_func_pass_args_macro )*
+(frda_ks_dk0_D2 KS_func_pass_args_macro )*(frda_ks_dk1_D1 KS_func_pass_args_macro ) + 
+(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_dk0_D0 KS_func_pass_args_macro )*
+(frda_ks_dk1_D2 KS_func_pass_args_macro ) + (frda_ks_dc_D1 KS_func_pass_args_macro )*
+(frda_ks_dk0_D2 KS_func_pass_args_macro )*(frda_ks_dk1_D0 KS_func_pass_args_macro ) + 
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_dk0_D0 KS_func_pass_args_macro )*
+(frda_ks_dk1_D1 KS_func_pass_args_macro ) + (frda_ks_dc_D2 KS_func_pass_args_macro )*
+(frda_ks_dk0_D1 KS_func_pass_args_macro )*(frda_ks_dk1_D0 KS_func_pass_args_macro );
 
     _dddgamma_D2D2D1D1D0[ijk]=
 /* mcode in progress ... */
@@ -4216,17 +4216,17 @@ bbn_ks_k1(x, y, z)*(bbn_ks_dddc_D0D1D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, 
 // Derivative
 // c
 // k2
-2*bbn_ks_c(x, y, z)*bbn_ks_k2(x, y, z)*(bbn_ks_dddk2_D0D1D1 KS_func_pass_args_macro ) + 2*
-bbn_ks_c(x, y, z)*(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D1 KS_func_pass_args_macro ) + 
-4*bbn_ks_c(x, y, z)*(bbn_ks_dk2_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D1 KS_func_pass_args_macro ) + 
-pow(bbn_ks_k2(x, y, z), 2)*(bbn_ks_dddc_D0D1D1 KS_func_pass_args_macro ) + 2*bbn_ks_k2(x, y, z)*
-(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D1 KS_func_pass_args_macro ) + 4*
-bbn_ks_k2(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D1 KS_func_pass_args_macro ) + 
-2*bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + 
-4*bbn_ks_k2(x, y, z)*(bbn_ks_dk2_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
-2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*pow((bbn_ks_dk2_D1 KS_func_pass_args_macro ), 2) + 4*
-(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk2_D1 KS_func_pass_args_macro );
+2*frda_ks_c(x, y, z)*frda_ks_k2(x, y, z)*(frda_ks_dddk2_D0D1D1 KS_func_pass_args_macro ) + 2*
+frda_ks_c(x, y, z)*(frda_ks_dk2_D0 KS_func_pass_args_macro )*(frda_ks_ddk2_D1D1 KS_func_pass_args_macro ) + 
+4*frda_ks_c(x, y, z)*(frda_ks_dk2_D1 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D1 KS_func_pass_args_macro ) + 
+pow(frda_ks_k2(x, y, z), 2)*(frda_ks_dddc_D0D1D1 KS_func_pass_args_macro ) + 2*frda_ks_k2(x, y, z)*
+(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk2_D1D1 KS_func_pass_args_macro ) + 4*
+frda_ks_k2(x, y, z)*(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D1 KS_func_pass_args_macro ) + 
+2*frda_ks_k2(x, y, z)*(frda_ks_ddc_D1D1 KS_func_pass_args_macro )*(frda_ks_dk2_D0 KS_func_pass_args_macro ) + 
+4*frda_ks_k2(x, y, z)*(frda_ks_dk2_D1 KS_func_pass_args_macro )*(frda_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+2*(frda_ks_dc_D0 KS_func_pass_args_macro )*pow((frda_ks_dk2_D1 KS_func_pass_args_macro ), 2) + 4*
+(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_dk2_D0 KS_func_pass_args_macro )*
+(frda_ks_dk2_D1 KS_func_pass_args_macro );
 
     _dddgamma_D1D2D2D2D0[ijk]=
 /* mcode in progress ... */
@@ -4249,26 +4249,26 @@ bbn_ks_k2(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D1 KS_
 // c
 // k1
 // k2
-bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_dddk2_D0D2D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-bbn_ks_k2(x, y, z)*(bbn_ks_dddk1_D0D2D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D2D2 KS_func_pass_args_macro ) + 2*
-bbn_ks_c(x, y, z)*(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D2 KS_func_pass_args_macro ) + 
-bbn_ks_c(x, y, z)*(bbn_ks_ddk1_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + 
-2*bbn_ks_c(x, y, z)*(bbn_ks_dk2_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D2 KS_func_pass_args_macro ) + 
-bbn_ks_k1(x, y, z)*bbn_ks_k2(x, y, z)*(bbn_ks_dddc_D0D2D2 KS_func_pass_args_macro ) + 
-bbn_ks_k1(x, y, z)*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D2D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_k1(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D2 KS_func_pass_args_macro ) + 
-bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + 
-2*bbn_ks_k1(x, y, z)*(bbn_ks_dk2_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
-bbn_ks_k2(x, y, z)*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D2D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_k2(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D2 KS_func_pass_args_macro ) + 
-bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro ) + 
-2*bbn_ks_k2(x, y, z)*(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
-2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro )*
-(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D2 KS_func_pass_args_macro )*
-(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 2*
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro )*
-(bbn_ks_dk2_D0 KS_func_pass_args_macro );
+frda_ks_c(x, y, z)*frda_ks_k1(x, y, z)*(frda_ks_dddk2_D0D2D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+frda_ks_k2(x, y, z)*(frda_ks_dddk1_D0D2D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk1_D0 KS_func_pass_args_macro )*(frda_ks_ddk2_D2D2 KS_func_pass_args_macro ) + 2*
+frda_ks_c(x, y, z)*(frda_ks_dk1_D2 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D2 KS_func_pass_args_macro ) + 
+frda_ks_c(x, y, z)*(frda_ks_ddk1_D2D2 KS_func_pass_args_macro )*(frda_ks_dk2_D0 KS_func_pass_args_macro ) + 
+2*frda_ks_c(x, y, z)*(frda_ks_dk2_D2 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D2 KS_func_pass_args_macro ) + 
+frda_ks_k1(x, y, z)*frda_ks_k2(x, y, z)*(frda_ks_dddc_D0D2D2 KS_func_pass_args_macro ) + 
+frda_ks_k1(x, y, z)*(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk2_D2D2 KS_func_pass_args_macro ) + 
+2*frda_ks_k1(x, y, z)*(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D2 KS_func_pass_args_macro ) + 
+frda_ks_k1(x, y, z)*(frda_ks_ddc_D2D2 KS_func_pass_args_macro )*(frda_ks_dk2_D0 KS_func_pass_args_macro ) + 
+2*frda_ks_k1(x, y, z)*(frda_ks_dk2_D2 KS_func_pass_args_macro )*(frda_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
+frda_ks_k2(x, y, z)*(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk1_D2D2 KS_func_pass_args_macro ) + 
+2*frda_ks_k2(x, y, z)*(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D2 KS_func_pass_args_macro ) + 
+frda_ks_k2(x, y, z)*(frda_ks_ddc_D2D2 KS_func_pass_args_macro )*(frda_ks_dk1_D0 KS_func_pass_args_macro ) + 
+2*frda_ks_k2(x, y, z)*(frda_ks_dk1_D2 KS_func_pass_args_macro )*(frda_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
+2*(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_dk1_D2 KS_func_pass_args_macro )*
+(frda_ks_dk2_D2 KS_func_pass_args_macro ) + 2*(frda_ks_dc_D2 KS_func_pass_args_macro )*
+(frda_ks_dk1_D0 KS_func_pass_args_macro )*(frda_ks_dk2_D2 KS_func_pass_args_macro ) + 2*
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_dk1_D2 KS_func_pass_args_macro )*
+(frda_ks_dk2_D0 KS_func_pass_args_macro );
 
     _dddgamma_D0D0D1D1D2[ijk]=
 /* mcode in progress ... */
@@ -4285,17 +4285,17 @@ bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_
 // Derivative
 // c
 // k0
-2*bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dddk0_D1D1D2 KS_func_pass_args_macro ) + 4*
-bbn_ks_c(x, y, z)*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_c(x, y, z)*(bbn_ks_ddk0_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D2 KS_func_pass_args_macro ) + 
-pow(bbn_ks_k0(x, y, z), 2)*(bbn_ks_dddc_D1D1D2 KS_func_pass_args_macro ) + 4*bbn_ks_k0(x, y, z)*
-(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D2 KS_func_pass_args_macro ) + 2*
-bbn_ks_k0(x, y, z)*(bbn_ks_ddc_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_k0(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D1 KS_func_pass_args_macro ) + 
-4*bbn_ks_k0(x, y, z)*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
-4*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*
-(bbn_ks_dk0_D2 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D2 KS_func_pass_args_macro )*
-pow((bbn_ks_dk0_D1 KS_func_pass_args_macro ), 2);
+2*frda_ks_c(x, y, z)*frda_ks_k0(x, y, z)*(frda_ks_dddk0_D1D1D2 KS_func_pass_args_macro ) + 4*
+frda_ks_c(x, y, z)*(frda_ks_dk0_D1 KS_func_pass_args_macro )*(frda_ks_ddk0_D1D2 KS_func_pass_args_macro ) + 
+2*frda_ks_c(x, y, z)*(frda_ks_ddk0_D1D1 KS_func_pass_args_macro )*(frda_ks_dk0_D2 KS_func_pass_args_macro ) + 
+pow(frda_ks_k0(x, y, z), 2)*(frda_ks_dddc_D1D1D2 KS_func_pass_args_macro ) + 4*frda_ks_k0(x, y, z)*
+(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk0_D1D2 KS_func_pass_args_macro ) + 2*
+frda_ks_k0(x, y, z)*(frda_ks_ddc_D1D1 KS_func_pass_args_macro )*(frda_ks_dk0_D2 KS_func_pass_args_macro ) + 
+2*frda_ks_k0(x, y, z)*(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk0_D1D1 KS_func_pass_args_macro ) + 
+4*frda_ks_k0(x, y, z)*(frda_ks_dk0_D1 KS_func_pass_args_macro )*(frda_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
+4*(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_dk0_D1 KS_func_pass_args_macro )*
+(frda_ks_dk0_D2 KS_func_pass_args_macro ) + 2*(frda_ks_dc_D2 KS_func_pass_args_macro )*
+pow((frda_ks_dk0_D1 KS_func_pass_args_macro ), 2);
 
     _dddgamma_D0D2D0D2D0[ijk]=
 /* mcode in progress ... */
@@ -4318,26 +4318,26 @@ pow((bbn_ks_dk0_D1 KS_func_pass_args_macro ), 2);
 // c
 // k0
 // k2
-bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dddk2_D0D0D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-bbn_ks_k2(x, y, z)*(bbn_ks_dddk0_D0D0D2 KS_func_pass_args_macro ) + 2*bbn_ks_c(x, y, z)*
-(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_ddk0_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 
-bbn_ks_c(x, y, z)*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D0 KS_func_pass_args_macro ) + 
-2*bbn_ks_c(x, y, z)*(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D2 KS_func_pass_args_macro ) + 
-bbn_ks_k0(x, y, z)*bbn_ks_k2(x, y, z)*(bbn_ks_dddc_D0D0D2 KS_func_pass_args_macro ) + 2*
-bbn_ks_k0(x, y, z)*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D2 KS_func_pass_args_macro ) + 
-bbn_ks_k0(x, y, z)*(bbn_ks_ddc_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 
-bbn_ks_k0(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D0 KS_func_pass_args_macro ) + 
-2*bbn_ks_k0(x, y, z)*(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_k2(x, y, z)*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D2 KS_func_pass_args_macro ) + 
-bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D2 KS_func_pass_args_macro ) + 
-bbn_ks_k2(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D0 KS_func_pass_args_macro ) + 
-2*bbn_ks_k2(x, y, z)*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
-2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + 2*
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk2_D0 KS_func_pass_args_macro );
+frda_ks_c(x, y, z)*frda_ks_k0(x, y, z)*(frda_ks_dddk2_D0D0D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+frda_ks_k2(x, y, z)*(frda_ks_dddk0_D0D0D2 KS_func_pass_args_macro ) + 2*frda_ks_c(x, y, z)*
+(frda_ks_dk0_D0 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_ddk0_D0D0 KS_func_pass_args_macro )*(frda_ks_dk2_D2 KS_func_pass_args_macro ) + 
+frda_ks_c(x, y, z)*(frda_ks_dk0_D2 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D0 KS_func_pass_args_macro ) + 
+2*frda_ks_c(x, y, z)*(frda_ks_dk2_D0 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D2 KS_func_pass_args_macro ) + 
+frda_ks_k0(x, y, z)*frda_ks_k2(x, y, z)*(frda_ks_dddc_D0D0D2 KS_func_pass_args_macro ) + 2*
+frda_ks_k0(x, y, z)*(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D2 KS_func_pass_args_macro ) + 
+frda_ks_k0(x, y, z)*(frda_ks_ddc_D0D0 KS_func_pass_args_macro )*(frda_ks_dk2_D2 KS_func_pass_args_macro ) + 
+frda_ks_k0(x, y, z)*(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D0 KS_func_pass_args_macro ) + 
+2*frda_ks_k0(x, y, z)*(frda_ks_dk2_D0 KS_func_pass_args_macro )*(frda_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
+2*frda_ks_k2(x, y, z)*(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D2 KS_func_pass_args_macro ) + 
+frda_ks_k2(x, y, z)*(frda_ks_ddc_D0D0 KS_func_pass_args_macro )*(frda_ks_dk0_D2 KS_func_pass_args_macro ) + 
+frda_ks_k2(x, y, z)*(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D0 KS_func_pass_args_macro ) + 
+2*frda_ks_k2(x, y, z)*(frda_ks_dk0_D0 KS_func_pass_args_macro )*(frda_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
+2*(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_dk0_D0 KS_func_pass_args_macro )*
+(frda_ks_dk2_D2 KS_func_pass_args_macro ) + 2*(frda_ks_dc_D0 KS_func_pass_args_macro )*
+(frda_ks_dk0_D2 KS_func_pass_args_macro )*(frda_ks_dk2_D0 KS_func_pass_args_macro ) + 2*
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_dk0_D0 KS_func_pass_args_macro )*
+(frda_ks_dk2_D0 KS_func_pass_args_macro );
 
     _dddgamma_D0D0D1D0D0[ijk]=
 /* mcode in progress ... */
@@ -4354,17 +4354,17 @@ bbn_ks_k2(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D0 KS_
 // Derivative
 // c
 // k0
-2*bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dddk0_D0D0D1 KS_func_pass_args_macro ) + 4*
-bbn_ks_c(x, y, z)*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D1 KS_func_pass_args_macro ) + 
-2*bbn_ks_c(x, y, z)*(bbn_ks_ddk0_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro ) + 
-pow(bbn_ks_k0(x, y, z), 2)*(bbn_ks_dddc_D0D0D1 KS_func_pass_args_macro ) + 4*bbn_ks_k0(x, y, z)*
-(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D1 KS_func_pass_args_macro ) + 2*
-bbn_ks_k0(x, y, z)*(bbn_ks_ddc_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro ) + 
-2*bbn_ks_k0(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D0 KS_func_pass_args_macro ) + 
-4*bbn_ks_k0(x, y, z)*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
-4*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk0_D1 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D1 KS_func_pass_args_macro )*
-pow((bbn_ks_dk0_D0 KS_func_pass_args_macro ), 2);
+2*frda_ks_c(x, y, z)*frda_ks_k0(x, y, z)*(frda_ks_dddk0_D0D0D1 KS_func_pass_args_macro ) + 4*
+frda_ks_c(x, y, z)*(frda_ks_dk0_D0 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D1 KS_func_pass_args_macro ) + 
+2*frda_ks_c(x, y, z)*(frda_ks_ddk0_D0D0 KS_func_pass_args_macro )*(frda_ks_dk0_D1 KS_func_pass_args_macro ) + 
+pow(frda_ks_k0(x, y, z), 2)*(frda_ks_dddc_D0D0D1 KS_func_pass_args_macro ) + 4*frda_ks_k0(x, y, z)*
+(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D1 KS_func_pass_args_macro ) + 2*
+frda_ks_k0(x, y, z)*(frda_ks_ddc_D0D0 KS_func_pass_args_macro )*(frda_ks_dk0_D1 KS_func_pass_args_macro ) + 
+2*frda_ks_k0(x, y, z)*(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D0 KS_func_pass_args_macro ) + 
+4*frda_ks_k0(x, y, z)*(frda_ks_dk0_D0 KS_func_pass_args_macro )*(frda_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+4*(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_dk0_D0 KS_func_pass_args_macro )*
+(frda_ks_dk0_D1 KS_func_pass_args_macro ) + 2*(frda_ks_dc_D1 KS_func_pass_args_macro )*
+pow((frda_ks_dk0_D0 KS_func_pass_args_macro ), 2);
 
     _dddgamma_D0D2D2D1D0[ijk]=
 /* mcode in progress ... */
@@ -4393,36 +4393,36 @@ pow((bbn_ks_dk0_D0 KS_func_pass_args_macro ), 2);
 // c
 // k0
 // k2
-bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dddk2_D0D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-bbn_ks_k2(x, y, z)*(bbn_ks_dddk0_D0D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D1 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk2_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk2_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D1 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
-bbn_ks_k2(x, y, z)*(bbn_ks_dddc_D0D1D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
-(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
-(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D1 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
-(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
-(bbn_ks_dk2_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
-(bbn_ks_dk2_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
-(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D2 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
-(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D2 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D1 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
-(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
-(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
-(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
-(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*
-(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + (bbn_ks_dc_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 
-(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + (bbn_ks_dc_D1 KS_func_pass_args_macro )*
-(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + 
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + (bbn_ks_dc_D2 KS_func_pass_args_macro )*
-(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro );
+frda_ks_c(x, y, z)*frda_ks_k0(x, y, z)*(frda_ks_dddk2_D0D1D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+frda_ks_k2(x, y, z)*(frda_ks_dddk0_D0D1D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk0_D0 KS_func_pass_args_macro )*(frda_ks_ddk2_D1D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk0_D1 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk0_D2 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D1 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk2_D0 KS_func_pass_args_macro )*(frda_ks_ddk0_D1D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk2_D1 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk2_D2 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D1 KS_func_pass_args_macro ) + frda_ks_k0(x, y, z)*
+frda_ks_k2(x, y, z)*(frda_ks_dddc_D0D1D2 KS_func_pass_args_macro ) + frda_ks_k0(x, y, z)*
+(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk2_D1D2 KS_func_pass_args_macro ) + frda_ks_k0(x, y, z)*
+(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D2 KS_func_pass_args_macro ) + frda_ks_k0(x, y, z)*
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D1 KS_func_pass_args_macro ) + frda_ks_k0(x, y, z)*
+(frda_ks_dk2_D0 KS_func_pass_args_macro )*(frda_ks_ddc_D1D2 KS_func_pass_args_macro ) + frda_ks_k0(x, y, z)*
+(frda_ks_dk2_D1 KS_func_pass_args_macro )*(frda_ks_ddc_D0D2 KS_func_pass_args_macro ) + frda_ks_k0(x, y, z)*
+(frda_ks_dk2_D2 KS_func_pass_args_macro )*(frda_ks_ddc_D0D1 KS_func_pass_args_macro ) + frda_ks_k2(x, y, z)*
+(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk0_D1D2 KS_func_pass_args_macro ) + frda_ks_k2(x, y, z)*
+(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D2 KS_func_pass_args_macro ) + frda_ks_k2(x, y, z)*
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D1 KS_func_pass_args_macro ) + frda_ks_k2(x, y, z)*
+(frda_ks_dk0_D0 KS_func_pass_args_macro )*(frda_ks_ddc_D1D2 KS_func_pass_args_macro ) + frda_ks_k2(x, y, z)*
+(frda_ks_dk0_D1 KS_func_pass_args_macro )*(frda_ks_ddc_D0D2 KS_func_pass_args_macro ) + frda_ks_k2(x, y, z)*
+(frda_ks_dk0_D2 KS_func_pass_args_macro )*(frda_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_dk0_D1 KS_func_pass_args_macro )*
+(frda_ks_dk2_D2 KS_func_pass_args_macro ) + (frda_ks_dc_D0 KS_func_pass_args_macro )*
+(frda_ks_dk0_D2 KS_func_pass_args_macro )*(frda_ks_dk2_D1 KS_func_pass_args_macro ) + 
+(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_dk0_D0 KS_func_pass_args_macro )*
+(frda_ks_dk2_D2 KS_func_pass_args_macro ) + (frda_ks_dc_D1 KS_func_pass_args_macro )*
+(frda_ks_dk0_D2 KS_func_pass_args_macro )*(frda_ks_dk2_D0 KS_func_pass_args_macro ) + 
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_dk0_D0 KS_func_pass_args_macro )*
+(frda_ks_dk2_D1 KS_func_pass_args_macro ) + (frda_ks_dc_D2 KS_func_pass_args_macro )*
+(frda_ks_dk0_D1 KS_func_pass_args_macro )*(frda_ks_dk2_D0 KS_func_pass_args_macro );
 
     _dddgamma_D0D2D2D0D0[ijk]=
 /* mcode in progress ... */
@@ -4445,26 +4445,26 @@ bbn_ks_k2(x, y, z)*(bbn_ks_dddc_D0D1D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, 
 // c
 // k0
 // k2
-bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dddk2_D0D0D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-bbn_ks_k2(x, y, z)*(bbn_ks_dddk0_D0D0D2 KS_func_pass_args_macro ) + 2*bbn_ks_c(x, y, z)*
-(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_ddk0_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 
-bbn_ks_c(x, y, z)*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D0 KS_func_pass_args_macro ) + 
-2*bbn_ks_c(x, y, z)*(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D2 KS_func_pass_args_macro ) + 
-bbn_ks_k0(x, y, z)*bbn_ks_k2(x, y, z)*(bbn_ks_dddc_D0D0D2 KS_func_pass_args_macro ) + 2*
-bbn_ks_k0(x, y, z)*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D2 KS_func_pass_args_macro ) + 
-bbn_ks_k0(x, y, z)*(bbn_ks_ddc_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 
-bbn_ks_k0(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D0 KS_func_pass_args_macro ) + 
-2*bbn_ks_k0(x, y, z)*(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_k2(x, y, z)*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D2 KS_func_pass_args_macro ) + 
-bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D2 KS_func_pass_args_macro ) + 
-bbn_ks_k2(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D0 KS_func_pass_args_macro ) + 
-2*bbn_ks_k2(x, y, z)*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
-2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + 2*
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk2_D0 KS_func_pass_args_macro );
+frda_ks_c(x, y, z)*frda_ks_k0(x, y, z)*(frda_ks_dddk2_D0D0D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+frda_ks_k2(x, y, z)*(frda_ks_dddk0_D0D0D2 KS_func_pass_args_macro ) + 2*frda_ks_c(x, y, z)*
+(frda_ks_dk0_D0 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_ddk0_D0D0 KS_func_pass_args_macro )*(frda_ks_dk2_D2 KS_func_pass_args_macro ) + 
+frda_ks_c(x, y, z)*(frda_ks_dk0_D2 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D0 KS_func_pass_args_macro ) + 
+2*frda_ks_c(x, y, z)*(frda_ks_dk2_D0 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D2 KS_func_pass_args_macro ) + 
+frda_ks_k0(x, y, z)*frda_ks_k2(x, y, z)*(frda_ks_dddc_D0D0D2 KS_func_pass_args_macro ) + 2*
+frda_ks_k0(x, y, z)*(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D2 KS_func_pass_args_macro ) + 
+frda_ks_k0(x, y, z)*(frda_ks_ddc_D0D0 KS_func_pass_args_macro )*(frda_ks_dk2_D2 KS_func_pass_args_macro ) + 
+frda_ks_k0(x, y, z)*(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D0 KS_func_pass_args_macro ) + 
+2*frda_ks_k0(x, y, z)*(frda_ks_dk2_D0 KS_func_pass_args_macro )*(frda_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
+2*frda_ks_k2(x, y, z)*(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D2 KS_func_pass_args_macro ) + 
+frda_ks_k2(x, y, z)*(frda_ks_ddc_D0D0 KS_func_pass_args_macro )*(frda_ks_dk0_D2 KS_func_pass_args_macro ) + 
+frda_ks_k2(x, y, z)*(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D0 KS_func_pass_args_macro ) + 
+2*frda_ks_k2(x, y, z)*(frda_ks_dk0_D0 KS_func_pass_args_macro )*(frda_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
+2*(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_dk0_D0 KS_func_pass_args_macro )*
+(frda_ks_dk2_D2 KS_func_pass_args_macro ) + 2*(frda_ks_dc_D0 KS_func_pass_args_macro )*
+(frda_ks_dk0_D2 KS_func_pass_args_macro )*(frda_ks_dk2_D0 KS_func_pass_args_macro ) + 2*
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_dk0_D0 KS_func_pass_args_macro )*
+(frda_ks_dk2_D0 KS_func_pass_args_macro );
 
     _dddgamma_D1D1D1D1D2[ijk]=
 /* mcode in progress ... */
@@ -4481,17 +4481,17 @@ bbn_ks_k2(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D0 KS_
 // Derivative
 // c
 // k1
-2*bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_dddk1_D1D1D2 KS_func_pass_args_macro ) + 4*
-bbn_ks_c(x, y, z)*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_c(x, y, z)*(bbn_ks_ddk1_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + 
-pow(bbn_ks_k1(x, y, z), 2)*(bbn_ks_dddc_D1D1D2 KS_func_pass_args_macro ) + 4*bbn_ks_k1(x, y, z)*
-(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D2 KS_func_pass_args_macro ) + 2*
-bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_k1(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D1 KS_func_pass_args_macro ) + 
-4*bbn_ks_k1(x, y, z)*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
-4*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*
-(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D2 KS_func_pass_args_macro )*
-pow((bbn_ks_dk1_D1 KS_func_pass_args_macro ), 2);
+2*frda_ks_c(x, y, z)*frda_ks_k1(x, y, z)*(frda_ks_dddk1_D1D1D2 KS_func_pass_args_macro ) + 4*
+frda_ks_c(x, y, z)*(frda_ks_dk1_D1 KS_func_pass_args_macro )*(frda_ks_ddk1_D1D2 KS_func_pass_args_macro ) + 
+2*frda_ks_c(x, y, z)*(frda_ks_ddk1_D1D1 KS_func_pass_args_macro )*(frda_ks_dk1_D2 KS_func_pass_args_macro ) + 
+pow(frda_ks_k1(x, y, z), 2)*(frda_ks_dddc_D1D1D2 KS_func_pass_args_macro ) + 4*frda_ks_k1(x, y, z)*
+(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk1_D1D2 KS_func_pass_args_macro ) + 2*
+frda_ks_k1(x, y, z)*(frda_ks_ddc_D1D1 KS_func_pass_args_macro )*(frda_ks_dk1_D2 KS_func_pass_args_macro ) + 
+2*frda_ks_k1(x, y, z)*(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk1_D1D1 KS_func_pass_args_macro ) + 
+4*frda_ks_k1(x, y, z)*(frda_ks_dk1_D1 KS_func_pass_args_macro )*(frda_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
+4*(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_dk1_D1 KS_func_pass_args_macro )*
+(frda_ks_dk1_D2 KS_func_pass_args_macro ) + 2*(frda_ks_dc_D2 KS_func_pass_args_macro )*
+pow((frda_ks_dk1_D1 KS_func_pass_args_macro ), 2);
 
     _dddgamma_D0D0D2D2D1[ijk]=
 /* mcode in progress ... */
@@ -4508,17 +4508,17 @@ pow((bbn_ks_dk1_D1 KS_func_pass_args_macro ), 2);
 // Derivative
 // c
 // k0
-2*bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dddk0_D1D2D2 KS_func_pass_args_macro ) + 2*
-bbn_ks_c(x, y, z)*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D2D2 KS_func_pass_args_macro ) + 
-4*bbn_ks_c(x, y, z)*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D2 KS_func_pass_args_macro ) + 
-pow(bbn_ks_k0(x, y, z), 2)*(bbn_ks_dddc_D1D2D2 KS_func_pass_args_macro ) + 2*bbn_ks_k0(x, y, z)*
-(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D2D2 KS_func_pass_args_macro ) + 4*
-bbn_ks_k0(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_k0(x, y, z)*(bbn_ks_ddc_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro ) + 
-4*bbn_ks_k0(x, y, z)*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
-2*(bbn_ks_dc_D1 KS_func_pass_args_macro )*pow((bbn_ks_dk0_D2 KS_func_pass_args_macro ), 2) + 4*
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*
-(bbn_ks_dk0_D2 KS_func_pass_args_macro );
+2*frda_ks_c(x, y, z)*frda_ks_k0(x, y, z)*(frda_ks_dddk0_D1D2D2 KS_func_pass_args_macro ) + 2*
+frda_ks_c(x, y, z)*(frda_ks_dk0_D1 KS_func_pass_args_macro )*(frda_ks_ddk0_D2D2 KS_func_pass_args_macro ) + 
+4*frda_ks_c(x, y, z)*(frda_ks_dk0_D2 KS_func_pass_args_macro )*(frda_ks_ddk0_D1D2 KS_func_pass_args_macro ) + 
+pow(frda_ks_k0(x, y, z), 2)*(frda_ks_dddc_D1D2D2 KS_func_pass_args_macro ) + 2*frda_ks_k0(x, y, z)*
+(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk0_D2D2 KS_func_pass_args_macro ) + 4*
+frda_ks_k0(x, y, z)*(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk0_D1D2 KS_func_pass_args_macro ) + 
+2*frda_ks_k0(x, y, z)*(frda_ks_ddc_D2D2 KS_func_pass_args_macro )*(frda_ks_dk0_D1 KS_func_pass_args_macro ) + 
+4*frda_ks_k0(x, y, z)*(frda_ks_dk0_D2 KS_func_pass_args_macro )*(frda_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
+2*(frda_ks_dc_D1 KS_func_pass_args_macro )*pow((frda_ks_dk0_D2 KS_func_pass_args_macro ), 2) + 4*
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_dk0_D1 KS_func_pass_args_macro )*
+(frda_ks_dk0_D2 KS_func_pass_args_macro );
 
     _dddgamma_D2D2D0D1D0[ijk]=
 /* mcode in progress ... */
@@ -4535,17 +4535,17 @@ bbn_ks_k0(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D2 KS_
 // Derivative
 // c
 // k2
-2*bbn_ks_c(x, y, z)*bbn_ks_k2(x, y, z)*(bbn_ks_dddk2_D0D0D1 KS_func_pass_args_macro ) + 4*
-bbn_ks_c(x, y, z)*(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D1 KS_func_pass_args_macro ) + 
-2*bbn_ks_c(x, y, z)*(bbn_ks_ddk2_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 
-pow(bbn_ks_k2(x, y, z), 2)*(bbn_ks_dddc_D0D0D1 KS_func_pass_args_macro ) + 4*bbn_ks_k2(x, y, z)*
-(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D1 KS_func_pass_args_macro ) + 2*
-bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 
-2*bbn_ks_k2(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D0 KS_func_pass_args_macro ) + 
-4*bbn_ks_k2(x, y, z)*(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
-4*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D1 KS_func_pass_args_macro )*
-pow((bbn_ks_dk2_D0 KS_func_pass_args_macro ), 2);
+2*frda_ks_c(x, y, z)*frda_ks_k2(x, y, z)*(frda_ks_dddk2_D0D0D1 KS_func_pass_args_macro ) + 4*
+frda_ks_c(x, y, z)*(frda_ks_dk2_D0 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D1 KS_func_pass_args_macro ) + 
+2*frda_ks_c(x, y, z)*(frda_ks_ddk2_D0D0 KS_func_pass_args_macro )*(frda_ks_dk2_D1 KS_func_pass_args_macro ) + 
+pow(frda_ks_k2(x, y, z), 2)*(frda_ks_dddc_D0D0D1 KS_func_pass_args_macro ) + 4*frda_ks_k2(x, y, z)*
+(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D1 KS_func_pass_args_macro ) + 2*
+frda_ks_k2(x, y, z)*(frda_ks_ddc_D0D0 KS_func_pass_args_macro )*(frda_ks_dk2_D1 KS_func_pass_args_macro ) + 
+2*frda_ks_k2(x, y, z)*(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D0 KS_func_pass_args_macro ) + 
+4*frda_ks_k2(x, y, z)*(frda_ks_dk2_D0 KS_func_pass_args_macro )*(frda_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+4*(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_dk2_D0 KS_func_pass_args_macro )*
+(frda_ks_dk2_D1 KS_func_pass_args_macro ) + 2*(frda_ks_dc_D1 KS_func_pass_args_macro )*
+pow((frda_ks_dk2_D0 KS_func_pass_args_macro ), 2);
 
     _dddgamma_D1D1D2D0D2[ijk]=
 /* mcode in progress ... */
@@ -4562,17 +4562,17 @@ pow((bbn_ks_dk2_D0 KS_func_pass_args_macro ), 2);
 // Derivative
 // c
 // k1
-2*bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_dddk1_D0D2D2 KS_func_pass_args_macro ) + 2*
-bbn_ks_c(x, y, z)*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D2D2 KS_func_pass_args_macro ) + 
-4*bbn_ks_c(x, y, z)*(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D2 KS_func_pass_args_macro ) + 
-pow(bbn_ks_k1(x, y, z), 2)*(bbn_ks_dddc_D0D2D2 KS_func_pass_args_macro ) + 2*bbn_ks_k1(x, y, z)*
-(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D2D2 KS_func_pass_args_macro ) + 4*
-bbn_ks_k1(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro ) + 
-4*bbn_ks_k1(x, y, z)*(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
-2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*pow((bbn_ks_dk1_D2 KS_func_pass_args_macro ), 2) + 4*
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk1_D2 KS_func_pass_args_macro );
+2*frda_ks_c(x, y, z)*frda_ks_k1(x, y, z)*(frda_ks_dddk1_D0D2D2 KS_func_pass_args_macro ) + 2*
+frda_ks_c(x, y, z)*(frda_ks_dk1_D0 KS_func_pass_args_macro )*(frda_ks_ddk1_D2D2 KS_func_pass_args_macro ) + 
+4*frda_ks_c(x, y, z)*(frda_ks_dk1_D2 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D2 KS_func_pass_args_macro ) + 
+pow(frda_ks_k1(x, y, z), 2)*(frda_ks_dddc_D0D2D2 KS_func_pass_args_macro ) + 2*frda_ks_k1(x, y, z)*
+(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk1_D2D2 KS_func_pass_args_macro ) + 4*
+frda_ks_k1(x, y, z)*(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D2 KS_func_pass_args_macro ) + 
+2*frda_ks_k1(x, y, z)*(frda_ks_ddc_D2D2 KS_func_pass_args_macro )*(frda_ks_dk1_D0 KS_func_pass_args_macro ) + 
+4*frda_ks_k1(x, y, z)*(frda_ks_dk1_D2 KS_func_pass_args_macro )*(frda_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
+2*(frda_ks_dc_D0 KS_func_pass_args_macro )*pow((frda_ks_dk1_D2 KS_func_pass_args_macro ), 2) + 4*
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_dk1_D0 KS_func_pass_args_macro )*
+(frda_ks_dk1_D2 KS_func_pass_args_macro );
 
     _dddgamma_D0D1D1D1D1[ijk]=
 /* mcode in progress ... */
@@ -4589,17 +4589,17 @@ bbn_ks_k1(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D2 KS_
 // c
 // k0
 // k1
-bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dddk1_D1D1D1 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-bbn_ks_k1(x, y, z)*(bbn_ks_dddk0_D1D1D1 KS_func_pass_args_macro ) + 3*bbn_ks_c(x, y, z)*
-(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D1 KS_func_pass_args_macro ) + 3*
-bbn_ks_c(x, y, z)*(bbn_ks_ddk0_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro ) + 
-bbn_ks_k0(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_dddc_D1D1D1 KS_func_pass_args_macro ) + 3*bbn_ks_k0(x, y, z)*
-(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D1 KS_func_pass_args_macro ) + 3*
-bbn_ks_k0(x, y, z)*(bbn_ks_ddc_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro ) + 
-3*bbn_ks_k1(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D1 KS_func_pass_args_macro ) + 
-3*bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro ) + 
-6*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*
-(bbn_ks_dk1_D1 KS_func_pass_args_macro );
+frda_ks_c(x, y, z)*frda_ks_k0(x, y, z)*(frda_ks_dddk1_D1D1D1 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+frda_ks_k1(x, y, z)*(frda_ks_dddk0_D1D1D1 KS_func_pass_args_macro ) + 3*frda_ks_c(x, y, z)*
+(frda_ks_dk0_D1 KS_func_pass_args_macro )*(frda_ks_ddk1_D1D1 KS_func_pass_args_macro ) + 3*
+frda_ks_c(x, y, z)*(frda_ks_ddk0_D1D1 KS_func_pass_args_macro )*(frda_ks_dk1_D1 KS_func_pass_args_macro ) + 
+frda_ks_k0(x, y, z)*frda_ks_k1(x, y, z)*(frda_ks_dddc_D1D1D1 KS_func_pass_args_macro ) + 3*frda_ks_k0(x, y, z)*
+(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk1_D1D1 KS_func_pass_args_macro ) + 3*
+frda_ks_k0(x, y, z)*(frda_ks_ddc_D1D1 KS_func_pass_args_macro )*(frda_ks_dk1_D1 KS_func_pass_args_macro ) + 
+3*frda_ks_k1(x, y, z)*(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk0_D1D1 KS_func_pass_args_macro ) + 
+3*frda_ks_k1(x, y, z)*(frda_ks_ddc_D1D1 KS_func_pass_args_macro )*(frda_ks_dk0_D1 KS_func_pass_args_macro ) + 
+6*(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_dk0_D1 KS_func_pass_args_macro )*
+(frda_ks_dk1_D1 KS_func_pass_args_macro );
 
     _dddgamma_D1D2D0D0D0[ijk]=
 /* mcode in progress ... */
@@ -4616,17 +4616,17 @@ bbn_ks_k0(x, y, z)*(bbn_ks_ddc_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_
 // c
 // k1
 // k2
-bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_dddk2_D0D0D0 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-bbn_ks_k2(x, y, z)*(bbn_ks_dddk1_D0D0D0 KS_func_pass_args_macro ) + 3*bbn_ks_c(x, y, z)*
-(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D0 KS_func_pass_args_macro ) + 3*
-bbn_ks_c(x, y, z)*(bbn_ks_ddk1_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + 
-bbn_ks_k1(x, y, z)*bbn_ks_k2(x, y, z)*(bbn_ks_dddc_D0D0D0 KS_func_pass_args_macro ) + 3*bbn_ks_k1(x, y, z)*
-(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D0 KS_func_pass_args_macro ) + 3*
-bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + 
-3*bbn_ks_k2(x, y, z)*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D0 KS_func_pass_args_macro ) + 
-3*bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro ) + 
-6*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk2_D0 KS_func_pass_args_macro );
+frda_ks_c(x, y, z)*frda_ks_k1(x, y, z)*(frda_ks_dddk2_D0D0D0 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+frda_ks_k2(x, y, z)*(frda_ks_dddk1_D0D0D0 KS_func_pass_args_macro ) + 3*frda_ks_c(x, y, z)*
+(frda_ks_dk1_D0 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D0 KS_func_pass_args_macro ) + 3*
+frda_ks_c(x, y, z)*(frda_ks_ddk1_D0D0 KS_func_pass_args_macro )*(frda_ks_dk2_D0 KS_func_pass_args_macro ) + 
+frda_ks_k1(x, y, z)*frda_ks_k2(x, y, z)*(frda_ks_dddc_D0D0D0 KS_func_pass_args_macro ) + 3*frda_ks_k1(x, y, z)*
+(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D0 KS_func_pass_args_macro ) + 3*
+frda_ks_k1(x, y, z)*(frda_ks_ddc_D0D0 KS_func_pass_args_macro )*(frda_ks_dk2_D0 KS_func_pass_args_macro ) + 
+3*frda_ks_k2(x, y, z)*(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D0 KS_func_pass_args_macro ) + 
+3*frda_ks_k2(x, y, z)*(frda_ks_ddc_D0D0 KS_func_pass_args_macro )*(frda_ks_dk1_D0 KS_func_pass_args_macro ) + 
+6*(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_dk1_D0 KS_func_pass_args_macro )*
+(frda_ks_dk2_D0 KS_func_pass_args_macro );
 
     _dddgamma_D1D2D0D0D2[ijk]=
 /* mcode in progress ... */
@@ -4649,26 +4649,26 @@ bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_
 // c
 // k1
 // k2
-bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_dddk2_D0D0D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-bbn_ks_k2(x, y, z)*(bbn_ks_dddk1_D0D0D2 KS_func_pass_args_macro ) + 2*bbn_ks_c(x, y, z)*
-(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_ddk1_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 
-bbn_ks_c(x, y, z)*(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D0 KS_func_pass_args_macro ) + 
-2*bbn_ks_c(x, y, z)*(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D2 KS_func_pass_args_macro ) + 
-bbn_ks_k1(x, y, z)*bbn_ks_k2(x, y, z)*(bbn_ks_dddc_D0D0D2 KS_func_pass_args_macro ) + 2*
-bbn_ks_k1(x, y, z)*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D2 KS_func_pass_args_macro ) + 
-bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 
-bbn_ks_k1(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D0 KS_func_pass_args_macro ) + 
-2*bbn_ks_k1(x, y, z)*(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_k2(x, y, z)*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D2 KS_func_pass_args_macro ) + 
-bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + 
-bbn_ks_k2(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D0 KS_func_pass_args_macro ) + 
-2*bbn_ks_k2(x, y, z)*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
-2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + 2*
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk2_D0 KS_func_pass_args_macro );
+frda_ks_c(x, y, z)*frda_ks_k1(x, y, z)*(frda_ks_dddk2_D0D0D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+frda_ks_k2(x, y, z)*(frda_ks_dddk1_D0D0D2 KS_func_pass_args_macro ) + 2*frda_ks_c(x, y, z)*
+(frda_ks_dk1_D0 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_ddk1_D0D0 KS_func_pass_args_macro )*(frda_ks_dk2_D2 KS_func_pass_args_macro ) + 
+frda_ks_c(x, y, z)*(frda_ks_dk1_D2 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D0 KS_func_pass_args_macro ) + 
+2*frda_ks_c(x, y, z)*(frda_ks_dk2_D0 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D2 KS_func_pass_args_macro ) + 
+frda_ks_k1(x, y, z)*frda_ks_k2(x, y, z)*(frda_ks_dddc_D0D0D2 KS_func_pass_args_macro ) + 2*
+frda_ks_k1(x, y, z)*(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D2 KS_func_pass_args_macro ) + 
+frda_ks_k1(x, y, z)*(frda_ks_ddc_D0D0 KS_func_pass_args_macro )*(frda_ks_dk2_D2 KS_func_pass_args_macro ) + 
+frda_ks_k1(x, y, z)*(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D0 KS_func_pass_args_macro ) + 
+2*frda_ks_k1(x, y, z)*(frda_ks_dk2_D0 KS_func_pass_args_macro )*(frda_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
+2*frda_ks_k2(x, y, z)*(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D2 KS_func_pass_args_macro ) + 
+frda_ks_k2(x, y, z)*(frda_ks_ddc_D0D0 KS_func_pass_args_macro )*(frda_ks_dk1_D2 KS_func_pass_args_macro ) + 
+frda_ks_k2(x, y, z)*(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D0 KS_func_pass_args_macro ) + 
+2*frda_ks_k2(x, y, z)*(frda_ks_dk1_D0 KS_func_pass_args_macro )*(frda_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
+2*(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_dk1_D0 KS_func_pass_args_macro )*
+(frda_ks_dk2_D2 KS_func_pass_args_macro ) + 2*(frda_ks_dc_D0 KS_func_pass_args_macro )*
+(frda_ks_dk1_D2 KS_func_pass_args_macro )*(frda_ks_dk2_D0 KS_func_pass_args_macro ) + 2*
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_dk1_D0 KS_func_pass_args_macro )*
+(frda_ks_dk2_D0 KS_func_pass_args_macro );
 
     _dddgamma_D2D2D0D1D2[ijk]=
 /* mcode in progress ... */
@@ -4689,22 +4689,22 @@ bbn_ks_k2(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D0 KS_
 // Derivative
 // c
 // k2
-2*bbn_ks_c(x, y, z)*bbn_ks_k2(x, y, z)*(bbn_ks_dddk2_D0D1D2 KS_func_pass_args_macro ) + 2*
-bbn_ks_c(x, y, z)*(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_c(x, y, z)*(bbn_ks_dk2_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_c(x, y, z)*(bbn_ks_dk2_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D1 KS_func_pass_args_macro ) + 
-pow(bbn_ks_k2(x, y, z), 2)*(bbn_ks_dddc_D0D1D2 KS_func_pass_args_macro ) + 2*bbn_ks_k2(x, y, z)*
-(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D2 KS_func_pass_args_macro ) + 2*
-bbn_ks_k2(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_k2(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D1 KS_func_pass_args_macro ) + 
-2*bbn_ks_k2(x, y, z)*(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_k2(x, y, z)*(bbn_ks_dk2_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_k2(x, y, z)*(bbn_ks_dk2_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
-2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro )*
-(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D1 KS_func_pass_args_macro )*
-(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 2*
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk2_D1 KS_func_pass_args_macro );
+2*frda_ks_c(x, y, z)*frda_ks_k2(x, y, z)*(frda_ks_dddk2_D0D1D2 KS_func_pass_args_macro ) + 2*
+frda_ks_c(x, y, z)*(frda_ks_dk2_D0 KS_func_pass_args_macro )*(frda_ks_ddk2_D1D2 KS_func_pass_args_macro ) + 
+2*frda_ks_c(x, y, z)*(frda_ks_dk2_D1 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D2 KS_func_pass_args_macro ) + 
+2*frda_ks_c(x, y, z)*(frda_ks_dk2_D2 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D1 KS_func_pass_args_macro ) + 
+pow(frda_ks_k2(x, y, z), 2)*(frda_ks_dddc_D0D1D2 KS_func_pass_args_macro ) + 2*frda_ks_k2(x, y, z)*
+(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk2_D1D2 KS_func_pass_args_macro ) + 2*
+frda_ks_k2(x, y, z)*(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D2 KS_func_pass_args_macro ) + 
+2*frda_ks_k2(x, y, z)*(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D1 KS_func_pass_args_macro ) + 
+2*frda_ks_k2(x, y, z)*(frda_ks_dk2_D0 KS_func_pass_args_macro )*(frda_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
+2*frda_ks_k2(x, y, z)*(frda_ks_dk2_D1 KS_func_pass_args_macro )*(frda_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
+2*frda_ks_k2(x, y, z)*(frda_ks_dk2_D2 KS_func_pass_args_macro )*(frda_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+2*(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_dk2_D1 KS_func_pass_args_macro )*
+(frda_ks_dk2_D2 KS_func_pass_args_macro ) + 2*(frda_ks_dc_D1 KS_func_pass_args_macro )*
+(frda_ks_dk2_D0 KS_func_pass_args_macro )*(frda_ks_dk2_D2 KS_func_pass_args_macro ) + 2*
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_dk2_D0 KS_func_pass_args_macro )*
+(frda_ks_dk2_D1 KS_func_pass_args_macro );
 
     _dddgamma_D0D0D1D1D1[ijk]=
 /* mcode in progress ... */
@@ -4717,12 +4717,12 @@ bbn_ks_k2(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D2 KS_
 // Derivative
 // c
 // k0
-2*bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dddk0_D1D1D1 KS_func_pass_args_macro ) + 6*
-bbn_ks_c(x, y, z)*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D1 KS_func_pass_args_macro ) + 
-pow(bbn_ks_k0(x, y, z), 2)*(bbn_ks_dddc_D1D1D1 KS_func_pass_args_macro ) + 6*bbn_ks_k0(x, y, z)*
-(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D1 KS_func_pass_args_macro ) + 6*
-bbn_ks_k0(x, y, z)*(bbn_ks_ddc_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro ) + 
-6*(bbn_ks_dc_D1 KS_func_pass_args_macro )*pow((bbn_ks_dk0_D1 KS_func_pass_args_macro ), 2);
+2*frda_ks_c(x, y, z)*frda_ks_k0(x, y, z)*(frda_ks_dddk0_D1D1D1 KS_func_pass_args_macro ) + 6*
+frda_ks_c(x, y, z)*(frda_ks_dk0_D1 KS_func_pass_args_macro )*(frda_ks_ddk0_D1D1 KS_func_pass_args_macro ) + 
+pow(frda_ks_k0(x, y, z), 2)*(frda_ks_dddc_D1D1D1 KS_func_pass_args_macro ) + 6*frda_ks_k0(x, y, z)*
+(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk0_D1D1 KS_func_pass_args_macro ) + 6*
+frda_ks_k0(x, y, z)*(frda_ks_ddc_D1D1 KS_func_pass_args_macro )*(frda_ks_dk0_D1 KS_func_pass_args_macro ) + 
+6*(frda_ks_dc_D1 KS_func_pass_args_macro )*pow((frda_ks_dk0_D1 KS_func_pass_args_macro ), 2);
 
     _dddgamma_D0D2D0D1D0[ijk]=
 /* mcode in progress ... */
@@ -4745,26 +4745,26 @@ bbn_ks_k0(x, y, z)*(bbn_ks_ddc_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_
 // c
 // k0
 // k2
-bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dddk2_D0D0D1 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-bbn_ks_k2(x, y, z)*(bbn_ks_dddk0_D0D0D1 KS_func_pass_args_macro ) + 2*bbn_ks_c(x, y, z)*
-(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D1 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_ddk0_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 
-bbn_ks_c(x, y, z)*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D0 KS_func_pass_args_macro ) + 
-2*bbn_ks_c(x, y, z)*(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D1 KS_func_pass_args_macro ) + 
-bbn_ks_k0(x, y, z)*bbn_ks_k2(x, y, z)*(bbn_ks_dddc_D0D0D1 KS_func_pass_args_macro ) + 2*
-bbn_ks_k0(x, y, z)*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D1 KS_func_pass_args_macro ) + 
-bbn_ks_k0(x, y, z)*(bbn_ks_ddc_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 
-bbn_ks_k0(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D0 KS_func_pass_args_macro ) + 
-2*bbn_ks_k0(x, y, z)*(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
-2*bbn_ks_k2(x, y, z)*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D1 KS_func_pass_args_macro ) + 
-bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro ) + 
-bbn_ks_k2(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D0 KS_func_pass_args_macro ) + 
-2*bbn_ks_k2(x, y, z)*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
-2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + 2*
-(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk2_D0 KS_func_pass_args_macro );
+frda_ks_c(x, y, z)*frda_ks_k0(x, y, z)*(frda_ks_dddk2_D0D0D1 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+frda_ks_k2(x, y, z)*(frda_ks_dddk0_D0D0D1 KS_func_pass_args_macro ) + 2*frda_ks_c(x, y, z)*
+(frda_ks_dk0_D0 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D1 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_ddk0_D0D0 KS_func_pass_args_macro )*(frda_ks_dk2_D1 KS_func_pass_args_macro ) + 
+frda_ks_c(x, y, z)*(frda_ks_dk0_D1 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D0 KS_func_pass_args_macro ) + 
+2*frda_ks_c(x, y, z)*(frda_ks_dk2_D0 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D1 KS_func_pass_args_macro ) + 
+frda_ks_k0(x, y, z)*frda_ks_k2(x, y, z)*(frda_ks_dddc_D0D0D1 KS_func_pass_args_macro ) + 2*
+frda_ks_k0(x, y, z)*(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D1 KS_func_pass_args_macro ) + 
+frda_ks_k0(x, y, z)*(frda_ks_ddc_D0D0 KS_func_pass_args_macro )*(frda_ks_dk2_D1 KS_func_pass_args_macro ) + 
+frda_ks_k0(x, y, z)*(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D0 KS_func_pass_args_macro ) + 
+2*frda_ks_k0(x, y, z)*(frda_ks_dk2_D0 KS_func_pass_args_macro )*(frda_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+2*frda_ks_k2(x, y, z)*(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D1 KS_func_pass_args_macro ) + 
+frda_ks_k2(x, y, z)*(frda_ks_ddc_D0D0 KS_func_pass_args_macro )*(frda_ks_dk0_D1 KS_func_pass_args_macro ) + 
+frda_ks_k2(x, y, z)*(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D0 KS_func_pass_args_macro ) + 
+2*frda_ks_k2(x, y, z)*(frda_ks_dk0_D0 KS_func_pass_args_macro )*(frda_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+2*(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_dk0_D0 KS_func_pass_args_macro )*
+(frda_ks_dk2_D1 KS_func_pass_args_macro ) + 2*(frda_ks_dc_D0 KS_func_pass_args_macro )*
+(frda_ks_dk0_D1 KS_func_pass_args_macro )*(frda_ks_dk2_D0 KS_func_pass_args_macro ) + 2*
+(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_dk0_D0 KS_func_pass_args_macro )*
+(frda_ks_dk2_D0 KS_func_pass_args_macro );
 
     _dddgamma_D0D2D1D2D1[ijk]=
 /* mcode in progress ... */
@@ -4787,26 +4787,26 @@ bbn_ks_k2(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D0 KS_
 // c
 // k0
 // k2
-bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dddk2_D1D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-bbn_ks_k2(x, y, z)*(bbn_ks_dddk0_D1D1D2 KS_func_pass_args_macro ) + 2*bbn_ks_c(x, y, z)*
-(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_ddk0_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 
-bbn_ks_c(x, y, z)*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D1 KS_func_pass_args_macro ) + 
-2*bbn_ks_c(x, y, z)*(bbn_ks_dk2_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D2 KS_func_pass_args_macro ) + 
-bbn_ks_k0(x, y, z)*bbn_ks_k2(x, y, z)*(bbn_ks_dddc_D1D1D2 KS_func_pass_args_macro ) + 2*
-bbn_ks_k0(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D2 KS_func_pass_args_macro ) + 
-bbn_ks_k0(x, y, z)*(bbn_ks_ddc_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 
-bbn_ks_k0(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D1 KS_func_pass_args_macro ) + 
-2*bbn_ks_k0(x, y, z)*(bbn_ks_dk2_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_k2(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D2 KS_func_pass_args_macro ) + 
-bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D2 KS_func_pass_args_macro ) + 
-bbn_ks_k2(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D1 KS_func_pass_args_macro ) + 
-2*bbn_ks_k2(x, y, z)*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
-2*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*
-(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D1 KS_func_pass_args_macro )*
-(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 2*
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*
-(bbn_ks_dk2_D1 KS_func_pass_args_macro );
+frda_ks_c(x, y, z)*frda_ks_k0(x, y, z)*(frda_ks_dddk2_D1D1D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+frda_ks_k2(x, y, z)*(frda_ks_dddk0_D1D1D2 KS_func_pass_args_macro ) + 2*frda_ks_c(x, y, z)*
+(frda_ks_dk0_D1 KS_func_pass_args_macro )*(frda_ks_ddk2_D1D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_ddk0_D1D1 KS_func_pass_args_macro )*(frda_ks_dk2_D2 KS_func_pass_args_macro ) + 
+frda_ks_c(x, y, z)*(frda_ks_dk0_D2 KS_func_pass_args_macro )*(frda_ks_ddk2_D1D1 KS_func_pass_args_macro ) + 
+2*frda_ks_c(x, y, z)*(frda_ks_dk2_D1 KS_func_pass_args_macro )*(frda_ks_ddk0_D1D2 KS_func_pass_args_macro ) + 
+frda_ks_k0(x, y, z)*frda_ks_k2(x, y, z)*(frda_ks_dddc_D1D1D2 KS_func_pass_args_macro ) + 2*
+frda_ks_k0(x, y, z)*(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk2_D1D2 KS_func_pass_args_macro ) + 
+frda_ks_k0(x, y, z)*(frda_ks_ddc_D1D1 KS_func_pass_args_macro )*(frda_ks_dk2_D2 KS_func_pass_args_macro ) + 
+frda_ks_k0(x, y, z)*(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk2_D1D1 KS_func_pass_args_macro ) + 
+2*frda_ks_k0(x, y, z)*(frda_ks_dk2_D1 KS_func_pass_args_macro )*(frda_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
+2*frda_ks_k2(x, y, z)*(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk0_D1D2 KS_func_pass_args_macro ) + 
+frda_ks_k2(x, y, z)*(frda_ks_ddc_D1D1 KS_func_pass_args_macro )*(frda_ks_dk0_D2 KS_func_pass_args_macro ) + 
+frda_ks_k2(x, y, z)*(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk0_D1D1 KS_func_pass_args_macro ) + 
+2*frda_ks_k2(x, y, z)*(frda_ks_dk0_D1 KS_func_pass_args_macro )*(frda_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
+2*(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_dk0_D1 KS_func_pass_args_macro )*
+(frda_ks_dk2_D2 KS_func_pass_args_macro ) + 2*(frda_ks_dc_D1 KS_func_pass_args_macro )*
+(frda_ks_dk0_D2 KS_func_pass_args_macro )*(frda_ks_dk2_D1 KS_func_pass_args_macro ) + 2*
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_dk0_D1 KS_func_pass_args_macro )*
+(frda_ks_dk2_D1 KS_func_pass_args_macro );
 
     _dddgamma_D1D2D1D2D2[ijk]=
 /* mcode in progress ... */
@@ -4829,26 +4829,26 @@ bbn_ks_k2(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D1 KS_
 // c
 // k1
 // k2
-bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_dddk2_D1D2D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-bbn_ks_k2(x, y, z)*(bbn_ks_dddk1_D1D2D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D2D2 KS_func_pass_args_macro ) + 2*
-bbn_ks_c(x, y, z)*(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D2 KS_func_pass_args_macro ) + 
-bbn_ks_c(x, y, z)*(bbn_ks_ddk1_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 
-2*bbn_ks_c(x, y, z)*(bbn_ks_dk2_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D2 KS_func_pass_args_macro ) + 
-bbn_ks_k1(x, y, z)*bbn_ks_k2(x, y, z)*(bbn_ks_dddc_D1D2D2 KS_func_pass_args_macro ) + 
-bbn_ks_k1(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D2D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_k1(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D2 KS_func_pass_args_macro ) + 
-bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 
-2*bbn_ks_k1(x, y, z)*(bbn_ks_dk2_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
-bbn_ks_k2(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D2D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_k2(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D2 KS_func_pass_args_macro ) + 
-bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro ) + 
-2*bbn_ks_k2(x, y, z)*(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
-2*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro )*
-(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D2 KS_func_pass_args_macro )*
-(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 2*
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro )*
-(bbn_ks_dk2_D1 KS_func_pass_args_macro );
+frda_ks_c(x, y, z)*frda_ks_k1(x, y, z)*(frda_ks_dddk2_D1D2D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+frda_ks_k2(x, y, z)*(frda_ks_dddk1_D1D2D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk1_D1 KS_func_pass_args_macro )*(frda_ks_ddk2_D2D2 KS_func_pass_args_macro ) + 2*
+frda_ks_c(x, y, z)*(frda_ks_dk1_D2 KS_func_pass_args_macro )*(frda_ks_ddk2_D1D2 KS_func_pass_args_macro ) + 
+frda_ks_c(x, y, z)*(frda_ks_ddk1_D2D2 KS_func_pass_args_macro )*(frda_ks_dk2_D1 KS_func_pass_args_macro ) + 
+2*frda_ks_c(x, y, z)*(frda_ks_dk2_D2 KS_func_pass_args_macro )*(frda_ks_ddk1_D1D2 KS_func_pass_args_macro ) + 
+frda_ks_k1(x, y, z)*frda_ks_k2(x, y, z)*(frda_ks_dddc_D1D2D2 KS_func_pass_args_macro ) + 
+frda_ks_k1(x, y, z)*(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk2_D2D2 KS_func_pass_args_macro ) + 
+2*frda_ks_k1(x, y, z)*(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk2_D1D2 KS_func_pass_args_macro ) + 
+frda_ks_k1(x, y, z)*(frda_ks_ddc_D2D2 KS_func_pass_args_macro )*(frda_ks_dk2_D1 KS_func_pass_args_macro ) + 
+2*frda_ks_k1(x, y, z)*(frda_ks_dk2_D2 KS_func_pass_args_macro )*(frda_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
+frda_ks_k2(x, y, z)*(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk1_D2D2 KS_func_pass_args_macro ) + 
+2*frda_ks_k2(x, y, z)*(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk1_D1D2 KS_func_pass_args_macro ) + 
+frda_ks_k2(x, y, z)*(frda_ks_ddc_D2D2 KS_func_pass_args_macro )*(frda_ks_dk1_D1 KS_func_pass_args_macro ) + 
+2*frda_ks_k2(x, y, z)*(frda_ks_dk1_D2 KS_func_pass_args_macro )*(frda_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
+2*(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_dk1_D2 KS_func_pass_args_macro )*
+(frda_ks_dk2_D2 KS_func_pass_args_macro ) + 2*(frda_ks_dc_D2 KS_func_pass_args_macro )*
+(frda_ks_dk1_D1 KS_func_pass_args_macro )*(frda_ks_dk2_D2 KS_func_pass_args_macro ) + 2*
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_dk1_D2 KS_func_pass_args_macro )*
+(frda_ks_dk2_D1 KS_func_pass_args_macro );
 
     _dddgamma_D0D1D1D0D0[ijk]=
 /* mcode in progress ... */
@@ -4871,26 +4871,26 @@ bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_
 // c
 // k0
 // k1
-bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dddk1_D0D0D1 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-bbn_ks_k1(x, y, z)*(bbn_ks_dddk0_D0D0D1 KS_func_pass_args_macro ) + 2*bbn_ks_c(x, y, z)*
-(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D1 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_ddk0_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro ) + 
-bbn_ks_c(x, y, z)*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D0 KS_func_pass_args_macro ) + 
-2*bbn_ks_c(x, y, z)*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D1 KS_func_pass_args_macro ) + 
-bbn_ks_k0(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_dddc_D0D0D1 KS_func_pass_args_macro ) + 2*
-bbn_ks_k0(x, y, z)*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D1 KS_func_pass_args_macro ) + 
-bbn_ks_k0(x, y, z)*(bbn_ks_ddc_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro ) + 
-bbn_ks_k0(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D0 KS_func_pass_args_macro ) + 
-2*bbn_ks_k0(x, y, z)*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
-2*bbn_ks_k1(x, y, z)*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D1 KS_func_pass_args_macro ) + 
-bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro ) + 
-bbn_ks_k1(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D0 KS_func_pass_args_macro ) + 
-2*bbn_ks_k1(x, y, z)*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
-2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk1_D1 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro ) + 2*
-(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk1_D0 KS_func_pass_args_macro );
+frda_ks_c(x, y, z)*frda_ks_k0(x, y, z)*(frda_ks_dddk1_D0D0D1 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+frda_ks_k1(x, y, z)*(frda_ks_dddk0_D0D0D1 KS_func_pass_args_macro ) + 2*frda_ks_c(x, y, z)*
+(frda_ks_dk0_D0 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D1 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_ddk0_D0D0 KS_func_pass_args_macro )*(frda_ks_dk1_D1 KS_func_pass_args_macro ) + 
+frda_ks_c(x, y, z)*(frda_ks_dk0_D1 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D0 KS_func_pass_args_macro ) + 
+2*frda_ks_c(x, y, z)*(frda_ks_dk1_D0 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D1 KS_func_pass_args_macro ) + 
+frda_ks_k0(x, y, z)*frda_ks_k1(x, y, z)*(frda_ks_dddc_D0D0D1 KS_func_pass_args_macro ) + 2*
+frda_ks_k0(x, y, z)*(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D1 KS_func_pass_args_macro ) + 
+frda_ks_k0(x, y, z)*(frda_ks_ddc_D0D0 KS_func_pass_args_macro )*(frda_ks_dk1_D1 KS_func_pass_args_macro ) + 
+frda_ks_k0(x, y, z)*(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D0 KS_func_pass_args_macro ) + 
+2*frda_ks_k0(x, y, z)*(frda_ks_dk1_D0 KS_func_pass_args_macro )*(frda_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+2*frda_ks_k1(x, y, z)*(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D1 KS_func_pass_args_macro ) + 
+frda_ks_k1(x, y, z)*(frda_ks_ddc_D0D0 KS_func_pass_args_macro )*(frda_ks_dk0_D1 KS_func_pass_args_macro ) + 
+frda_ks_k1(x, y, z)*(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D0 KS_func_pass_args_macro ) + 
+2*frda_ks_k1(x, y, z)*(frda_ks_dk0_D0 KS_func_pass_args_macro )*(frda_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+2*(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_dk0_D0 KS_func_pass_args_macro )*
+(frda_ks_dk1_D1 KS_func_pass_args_macro ) + 2*(frda_ks_dc_D0 KS_func_pass_args_macro )*
+(frda_ks_dk0_D1 KS_func_pass_args_macro )*(frda_ks_dk1_D0 KS_func_pass_args_macro ) + 2*
+(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_dk0_D0 KS_func_pass_args_macro )*
+(frda_ks_dk1_D0 KS_func_pass_args_macro );
 
     _dddgamma_D0D0D1D2D0[ijk]=
 /* mcode in progress ... */
@@ -4911,22 +4911,22 @@ bbn_ks_k1(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D0 KS_
 // Derivative
 // c
 // k0
-2*bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dddk0_D0D1D2 KS_func_pass_args_macro ) + 2*
-bbn_ks_c(x, y, z)*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_c(x, y, z)*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_c(x, y, z)*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D1 KS_func_pass_args_macro ) + 
-pow(bbn_ks_k0(x, y, z), 2)*(bbn_ks_dddc_D0D1D2 KS_func_pass_args_macro ) + 2*bbn_ks_k0(x, y, z)*
-(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D2 KS_func_pass_args_macro ) + 2*
-bbn_ks_k0(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_k0(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D1 KS_func_pass_args_macro ) + 
-2*bbn_ks_k0(x, y, z)*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_k0(x, y, z)*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_k0(x, y, z)*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
-2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*
-(bbn_ks_dk0_D2 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D1 KS_func_pass_args_macro )*
-(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D2 KS_func_pass_args_macro ) + 2*
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk0_D1 KS_func_pass_args_macro );
+2*frda_ks_c(x, y, z)*frda_ks_k0(x, y, z)*(frda_ks_dddk0_D0D1D2 KS_func_pass_args_macro ) + 2*
+frda_ks_c(x, y, z)*(frda_ks_dk0_D0 KS_func_pass_args_macro )*(frda_ks_ddk0_D1D2 KS_func_pass_args_macro ) + 
+2*frda_ks_c(x, y, z)*(frda_ks_dk0_D1 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D2 KS_func_pass_args_macro ) + 
+2*frda_ks_c(x, y, z)*(frda_ks_dk0_D2 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D1 KS_func_pass_args_macro ) + 
+pow(frda_ks_k0(x, y, z), 2)*(frda_ks_dddc_D0D1D2 KS_func_pass_args_macro ) + 2*frda_ks_k0(x, y, z)*
+(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk0_D1D2 KS_func_pass_args_macro ) + 2*
+frda_ks_k0(x, y, z)*(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D2 KS_func_pass_args_macro ) + 
+2*frda_ks_k0(x, y, z)*(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D1 KS_func_pass_args_macro ) + 
+2*frda_ks_k0(x, y, z)*(frda_ks_dk0_D0 KS_func_pass_args_macro )*(frda_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
+2*frda_ks_k0(x, y, z)*(frda_ks_dk0_D1 KS_func_pass_args_macro )*(frda_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
+2*frda_ks_k0(x, y, z)*(frda_ks_dk0_D2 KS_func_pass_args_macro )*(frda_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+2*(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_dk0_D1 KS_func_pass_args_macro )*
+(frda_ks_dk0_D2 KS_func_pass_args_macro ) + 2*(frda_ks_dc_D1 KS_func_pass_args_macro )*
+(frda_ks_dk0_D0 KS_func_pass_args_macro )*(frda_ks_dk0_D2 KS_func_pass_args_macro ) + 2*
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_dk0_D0 KS_func_pass_args_macro )*
+(frda_ks_dk0_D1 KS_func_pass_args_macro );
 
     _dddgamma_D1D2D1D1D0[ijk]=
 /* mcode in progress ... */
@@ -4949,26 +4949,26 @@ bbn_ks_k0(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D2 KS_
 // c
 // k1
 // k2
-bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_dddk2_D0D1D1 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-bbn_ks_k2(x, y, z)*(bbn_ks_dddk1_D0D1D1 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D1 KS_func_pass_args_macro ) + 2*
-bbn_ks_c(x, y, z)*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D1 KS_func_pass_args_macro ) + 
-bbn_ks_c(x, y, z)*(bbn_ks_ddk1_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + 
-2*bbn_ks_c(x, y, z)*(bbn_ks_dk2_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D1 KS_func_pass_args_macro ) + 
-bbn_ks_k1(x, y, z)*bbn_ks_k2(x, y, z)*(bbn_ks_dddc_D0D1D1 KS_func_pass_args_macro ) + 
-bbn_ks_k1(x, y, z)*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D1 KS_func_pass_args_macro ) + 
-2*bbn_ks_k1(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D1 KS_func_pass_args_macro ) + 
-bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + 
-2*bbn_ks_k1(x, y, z)*(bbn_ks_dk2_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
-bbn_ks_k2(x, y, z)*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D1 KS_func_pass_args_macro ) + 
-2*bbn_ks_k2(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D1 KS_func_pass_args_macro ) + 
-bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro ) + 
-2*bbn_ks_k2(x, y, z)*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
-2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*
-(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D1 KS_func_pass_args_macro )*
-(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 2*
-(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*
-(bbn_ks_dk2_D0 KS_func_pass_args_macro );
+frda_ks_c(x, y, z)*frda_ks_k1(x, y, z)*(frda_ks_dddk2_D0D1D1 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+frda_ks_k2(x, y, z)*(frda_ks_dddk1_D0D1D1 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk1_D0 KS_func_pass_args_macro )*(frda_ks_ddk2_D1D1 KS_func_pass_args_macro ) + 2*
+frda_ks_c(x, y, z)*(frda_ks_dk1_D1 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D1 KS_func_pass_args_macro ) + 
+frda_ks_c(x, y, z)*(frda_ks_ddk1_D1D1 KS_func_pass_args_macro )*(frda_ks_dk2_D0 KS_func_pass_args_macro ) + 
+2*frda_ks_c(x, y, z)*(frda_ks_dk2_D1 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D1 KS_func_pass_args_macro ) + 
+frda_ks_k1(x, y, z)*frda_ks_k2(x, y, z)*(frda_ks_dddc_D0D1D1 KS_func_pass_args_macro ) + 
+frda_ks_k1(x, y, z)*(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk2_D1D1 KS_func_pass_args_macro ) + 
+2*frda_ks_k1(x, y, z)*(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D1 KS_func_pass_args_macro ) + 
+frda_ks_k1(x, y, z)*(frda_ks_ddc_D1D1 KS_func_pass_args_macro )*(frda_ks_dk2_D0 KS_func_pass_args_macro ) + 
+2*frda_ks_k1(x, y, z)*(frda_ks_dk2_D1 KS_func_pass_args_macro )*(frda_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+frda_ks_k2(x, y, z)*(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk1_D1D1 KS_func_pass_args_macro ) + 
+2*frda_ks_k2(x, y, z)*(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D1 KS_func_pass_args_macro ) + 
+frda_ks_k2(x, y, z)*(frda_ks_ddc_D1D1 KS_func_pass_args_macro )*(frda_ks_dk1_D0 KS_func_pass_args_macro ) + 
+2*frda_ks_k2(x, y, z)*(frda_ks_dk1_D1 KS_func_pass_args_macro )*(frda_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+2*(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_dk1_D1 KS_func_pass_args_macro )*
+(frda_ks_dk2_D1 KS_func_pass_args_macro ) + 2*(frda_ks_dc_D1 KS_func_pass_args_macro )*
+(frda_ks_dk1_D0 KS_func_pass_args_macro )*(frda_ks_dk2_D1 KS_func_pass_args_macro ) + 2*
+(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_dk1_D1 KS_func_pass_args_macro )*
+(frda_ks_dk2_D0 KS_func_pass_args_macro );
 
     _dddgamma_D1D2D2D2D1[ijk]=
 /* mcode in progress ... */
@@ -4991,26 +4991,26 @@ bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_
 // c
 // k1
 // k2
-bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_dddk2_D1D2D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-bbn_ks_k2(x, y, z)*(bbn_ks_dddk1_D1D2D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D2D2 KS_func_pass_args_macro ) + 2*
-bbn_ks_c(x, y, z)*(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D2 KS_func_pass_args_macro ) + 
-bbn_ks_c(x, y, z)*(bbn_ks_ddk1_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 
-2*bbn_ks_c(x, y, z)*(bbn_ks_dk2_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D2 KS_func_pass_args_macro ) + 
-bbn_ks_k1(x, y, z)*bbn_ks_k2(x, y, z)*(bbn_ks_dddc_D1D2D2 KS_func_pass_args_macro ) + 
-bbn_ks_k1(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D2D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_k1(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D2 KS_func_pass_args_macro ) + 
-bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 
-2*bbn_ks_k1(x, y, z)*(bbn_ks_dk2_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
-bbn_ks_k2(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D2D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_k2(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D2 KS_func_pass_args_macro ) + 
-bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro ) + 
-2*bbn_ks_k2(x, y, z)*(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
-2*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro )*
-(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D2 KS_func_pass_args_macro )*
-(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 2*
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro )*
-(bbn_ks_dk2_D1 KS_func_pass_args_macro );
+frda_ks_c(x, y, z)*frda_ks_k1(x, y, z)*(frda_ks_dddk2_D1D2D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+frda_ks_k2(x, y, z)*(frda_ks_dddk1_D1D2D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk1_D1 KS_func_pass_args_macro )*(frda_ks_ddk2_D2D2 KS_func_pass_args_macro ) + 2*
+frda_ks_c(x, y, z)*(frda_ks_dk1_D2 KS_func_pass_args_macro )*(frda_ks_ddk2_D1D2 KS_func_pass_args_macro ) + 
+frda_ks_c(x, y, z)*(frda_ks_ddk1_D2D2 KS_func_pass_args_macro )*(frda_ks_dk2_D1 KS_func_pass_args_macro ) + 
+2*frda_ks_c(x, y, z)*(frda_ks_dk2_D2 KS_func_pass_args_macro )*(frda_ks_ddk1_D1D2 KS_func_pass_args_macro ) + 
+frda_ks_k1(x, y, z)*frda_ks_k2(x, y, z)*(frda_ks_dddc_D1D2D2 KS_func_pass_args_macro ) + 
+frda_ks_k1(x, y, z)*(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk2_D2D2 KS_func_pass_args_macro ) + 
+2*frda_ks_k1(x, y, z)*(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk2_D1D2 KS_func_pass_args_macro ) + 
+frda_ks_k1(x, y, z)*(frda_ks_ddc_D2D2 KS_func_pass_args_macro )*(frda_ks_dk2_D1 KS_func_pass_args_macro ) + 
+2*frda_ks_k1(x, y, z)*(frda_ks_dk2_D2 KS_func_pass_args_macro )*(frda_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
+frda_ks_k2(x, y, z)*(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk1_D2D2 KS_func_pass_args_macro ) + 
+2*frda_ks_k2(x, y, z)*(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk1_D1D2 KS_func_pass_args_macro ) + 
+frda_ks_k2(x, y, z)*(frda_ks_ddc_D2D2 KS_func_pass_args_macro )*(frda_ks_dk1_D1 KS_func_pass_args_macro ) + 
+2*frda_ks_k2(x, y, z)*(frda_ks_dk1_D2 KS_func_pass_args_macro )*(frda_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
+2*(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_dk1_D2 KS_func_pass_args_macro )*
+(frda_ks_dk2_D2 KS_func_pass_args_macro ) + 2*(frda_ks_dc_D2 KS_func_pass_args_macro )*
+(frda_ks_dk1_D1 KS_func_pass_args_macro )*(frda_ks_dk2_D2 KS_func_pass_args_macro ) + 2*
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_dk1_D2 KS_func_pass_args_macro )*
+(frda_ks_dk2_D1 KS_func_pass_args_macro );
 
     _dddgamma_D0D1D0D0D0[ijk]=
 /* mcode in progress ... */
@@ -5027,17 +5027,17 @@ bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_
 // c
 // k0
 // k1
-bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dddk1_D0D0D0 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-bbn_ks_k1(x, y, z)*(bbn_ks_dddk0_D0D0D0 KS_func_pass_args_macro ) + 3*bbn_ks_c(x, y, z)*
-(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D0 KS_func_pass_args_macro ) + 3*
-bbn_ks_c(x, y, z)*(bbn_ks_ddk0_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro ) + 
-bbn_ks_k0(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_dddc_D0D0D0 KS_func_pass_args_macro ) + 3*bbn_ks_k0(x, y, z)*
-(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D0 KS_func_pass_args_macro ) + 3*
-bbn_ks_k0(x, y, z)*(bbn_ks_ddc_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro ) + 
-3*bbn_ks_k1(x, y, z)*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D0 KS_func_pass_args_macro ) + 
-3*bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro ) + 
-6*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk1_D0 KS_func_pass_args_macro );
+frda_ks_c(x, y, z)*frda_ks_k0(x, y, z)*(frda_ks_dddk1_D0D0D0 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+frda_ks_k1(x, y, z)*(frda_ks_dddk0_D0D0D0 KS_func_pass_args_macro ) + 3*frda_ks_c(x, y, z)*
+(frda_ks_dk0_D0 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D0 KS_func_pass_args_macro ) + 3*
+frda_ks_c(x, y, z)*(frda_ks_ddk0_D0D0 KS_func_pass_args_macro )*(frda_ks_dk1_D0 KS_func_pass_args_macro ) + 
+frda_ks_k0(x, y, z)*frda_ks_k1(x, y, z)*(frda_ks_dddc_D0D0D0 KS_func_pass_args_macro ) + 3*frda_ks_k0(x, y, z)*
+(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D0 KS_func_pass_args_macro ) + 3*
+frda_ks_k0(x, y, z)*(frda_ks_ddc_D0D0 KS_func_pass_args_macro )*(frda_ks_dk1_D0 KS_func_pass_args_macro ) + 
+3*frda_ks_k1(x, y, z)*(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D0 KS_func_pass_args_macro ) + 
+3*frda_ks_k1(x, y, z)*(frda_ks_ddc_D0D0 KS_func_pass_args_macro )*(frda_ks_dk0_D0 KS_func_pass_args_macro ) + 
+6*(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_dk0_D0 KS_func_pass_args_macro )*
+(frda_ks_dk1_D0 KS_func_pass_args_macro );
 
     _dddgamma_D1D2D2D1D1[ijk]=
 /* mcode in progress ... */
@@ -5060,26 +5060,26 @@ bbn_ks_k0(x, y, z)*(bbn_ks_ddc_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_
 // c
 // k1
 // k2
-bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_dddk2_D1D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-bbn_ks_k2(x, y, z)*(bbn_ks_dddk1_D1D1D2 KS_func_pass_args_macro ) + 2*bbn_ks_c(x, y, z)*
-(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_ddk1_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 
-bbn_ks_c(x, y, z)*(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D1 KS_func_pass_args_macro ) + 
-2*bbn_ks_c(x, y, z)*(bbn_ks_dk2_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D2 KS_func_pass_args_macro ) + 
-bbn_ks_k1(x, y, z)*bbn_ks_k2(x, y, z)*(bbn_ks_dddc_D1D1D2 KS_func_pass_args_macro ) + 2*
-bbn_ks_k1(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D2 KS_func_pass_args_macro ) + 
-bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 
-bbn_ks_k1(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D1 KS_func_pass_args_macro ) + 
-2*bbn_ks_k1(x, y, z)*(bbn_ks_dk2_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_k2(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D2 KS_func_pass_args_macro ) + 
-bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + 
-bbn_ks_k2(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D1 KS_func_pass_args_macro ) + 
-2*bbn_ks_k2(x, y, z)*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
-2*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*
-(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D1 KS_func_pass_args_macro )*
-(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 2*
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*
-(bbn_ks_dk2_D1 KS_func_pass_args_macro );
+frda_ks_c(x, y, z)*frda_ks_k1(x, y, z)*(frda_ks_dddk2_D1D1D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+frda_ks_k2(x, y, z)*(frda_ks_dddk1_D1D1D2 KS_func_pass_args_macro ) + 2*frda_ks_c(x, y, z)*
+(frda_ks_dk1_D1 KS_func_pass_args_macro )*(frda_ks_ddk2_D1D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_ddk1_D1D1 KS_func_pass_args_macro )*(frda_ks_dk2_D2 KS_func_pass_args_macro ) + 
+frda_ks_c(x, y, z)*(frda_ks_dk1_D2 KS_func_pass_args_macro )*(frda_ks_ddk2_D1D1 KS_func_pass_args_macro ) + 
+2*frda_ks_c(x, y, z)*(frda_ks_dk2_D1 KS_func_pass_args_macro )*(frda_ks_ddk1_D1D2 KS_func_pass_args_macro ) + 
+frda_ks_k1(x, y, z)*frda_ks_k2(x, y, z)*(frda_ks_dddc_D1D1D2 KS_func_pass_args_macro ) + 2*
+frda_ks_k1(x, y, z)*(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk2_D1D2 KS_func_pass_args_macro ) + 
+frda_ks_k1(x, y, z)*(frda_ks_ddc_D1D1 KS_func_pass_args_macro )*(frda_ks_dk2_D2 KS_func_pass_args_macro ) + 
+frda_ks_k1(x, y, z)*(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk2_D1D1 KS_func_pass_args_macro ) + 
+2*frda_ks_k1(x, y, z)*(frda_ks_dk2_D1 KS_func_pass_args_macro )*(frda_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
+2*frda_ks_k2(x, y, z)*(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk1_D1D2 KS_func_pass_args_macro ) + 
+frda_ks_k2(x, y, z)*(frda_ks_ddc_D1D1 KS_func_pass_args_macro )*(frda_ks_dk1_D2 KS_func_pass_args_macro ) + 
+frda_ks_k2(x, y, z)*(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk1_D1D1 KS_func_pass_args_macro ) + 
+2*frda_ks_k2(x, y, z)*(frda_ks_dk1_D1 KS_func_pass_args_macro )*(frda_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
+2*(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_dk1_D1 KS_func_pass_args_macro )*
+(frda_ks_dk2_D2 KS_func_pass_args_macro ) + 2*(frda_ks_dc_D1 KS_func_pass_args_macro )*
+(frda_ks_dk1_D2 KS_func_pass_args_macro )*(frda_ks_dk2_D1 KS_func_pass_args_macro ) + 2*
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_dk1_D1 KS_func_pass_args_macro )*
+(frda_ks_dk2_D1 KS_func_pass_args_macro );
 
     _dddgamma_D0D0D0D1D0[ijk]=
 /* mcode in progress ... */
@@ -5096,17 +5096,17 @@ bbn_ks_k2(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D1 KS_
 // Derivative
 // c
 // k0
-2*bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dddk0_D0D0D1 KS_func_pass_args_macro ) + 4*
-bbn_ks_c(x, y, z)*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D1 KS_func_pass_args_macro ) + 
-2*bbn_ks_c(x, y, z)*(bbn_ks_ddk0_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro ) + 
-pow(bbn_ks_k0(x, y, z), 2)*(bbn_ks_dddc_D0D0D1 KS_func_pass_args_macro ) + 4*bbn_ks_k0(x, y, z)*
-(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D1 KS_func_pass_args_macro ) + 2*
-bbn_ks_k0(x, y, z)*(bbn_ks_ddc_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro ) + 
-2*bbn_ks_k0(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D0 KS_func_pass_args_macro ) + 
-4*bbn_ks_k0(x, y, z)*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
-4*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk0_D1 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D1 KS_func_pass_args_macro )*
-pow((bbn_ks_dk0_D0 KS_func_pass_args_macro ), 2);
+2*frda_ks_c(x, y, z)*frda_ks_k0(x, y, z)*(frda_ks_dddk0_D0D0D1 KS_func_pass_args_macro ) + 4*
+frda_ks_c(x, y, z)*(frda_ks_dk0_D0 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D1 KS_func_pass_args_macro ) + 
+2*frda_ks_c(x, y, z)*(frda_ks_ddk0_D0D0 KS_func_pass_args_macro )*(frda_ks_dk0_D1 KS_func_pass_args_macro ) + 
+pow(frda_ks_k0(x, y, z), 2)*(frda_ks_dddc_D0D0D1 KS_func_pass_args_macro ) + 4*frda_ks_k0(x, y, z)*
+(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D1 KS_func_pass_args_macro ) + 2*
+frda_ks_k0(x, y, z)*(frda_ks_ddc_D0D0 KS_func_pass_args_macro )*(frda_ks_dk0_D1 KS_func_pass_args_macro ) + 
+2*frda_ks_k0(x, y, z)*(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D0 KS_func_pass_args_macro ) + 
+4*frda_ks_k0(x, y, z)*(frda_ks_dk0_D0 KS_func_pass_args_macro )*(frda_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+4*(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_dk0_D0 KS_func_pass_args_macro )*
+(frda_ks_dk0_D1 KS_func_pass_args_macro ) + 2*(frda_ks_dc_D1 KS_func_pass_args_macro )*
+pow((frda_ks_dk0_D0 KS_func_pass_args_macro ), 2);
 
     _dddgamma_D0D0D0D0D1[ijk]=
 /* mcode in progress ... */
@@ -5123,17 +5123,17 @@ pow((bbn_ks_dk0_D0 KS_func_pass_args_macro ), 2);
 // Derivative
 // c
 // k0
-2*bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dddk0_D0D0D1 KS_func_pass_args_macro ) + 4*
-bbn_ks_c(x, y, z)*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D1 KS_func_pass_args_macro ) + 
-2*bbn_ks_c(x, y, z)*(bbn_ks_ddk0_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro ) + 
-pow(bbn_ks_k0(x, y, z), 2)*(bbn_ks_dddc_D0D0D1 KS_func_pass_args_macro ) + 4*bbn_ks_k0(x, y, z)*
-(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D1 KS_func_pass_args_macro ) + 2*
-bbn_ks_k0(x, y, z)*(bbn_ks_ddc_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro ) + 
-2*bbn_ks_k0(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D0 KS_func_pass_args_macro ) + 
-4*bbn_ks_k0(x, y, z)*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
-4*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk0_D1 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D1 KS_func_pass_args_macro )*
-pow((bbn_ks_dk0_D0 KS_func_pass_args_macro ), 2);
+2*frda_ks_c(x, y, z)*frda_ks_k0(x, y, z)*(frda_ks_dddk0_D0D0D1 KS_func_pass_args_macro ) + 4*
+frda_ks_c(x, y, z)*(frda_ks_dk0_D0 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D1 KS_func_pass_args_macro ) + 
+2*frda_ks_c(x, y, z)*(frda_ks_ddk0_D0D0 KS_func_pass_args_macro )*(frda_ks_dk0_D1 KS_func_pass_args_macro ) + 
+pow(frda_ks_k0(x, y, z), 2)*(frda_ks_dddc_D0D0D1 KS_func_pass_args_macro ) + 4*frda_ks_k0(x, y, z)*
+(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D1 KS_func_pass_args_macro ) + 2*
+frda_ks_k0(x, y, z)*(frda_ks_ddc_D0D0 KS_func_pass_args_macro )*(frda_ks_dk0_D1 KS_func_pass_args_macro ) + 
+2*frda_ks_k0(x, y, z)*(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D0 KS_func_pass_args_macro ) + 
+4*frda_ks_k0(x, y, z)*(frda_ks_dk0_D0 KS_func_pass_args_macro )*(frda_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+4*(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_dk0_D0 KS_func_pass_args_macro )*
+(frda_ks_dk0_D1 KS_func_pass_args_macro ) + 2*(frda_ks_dc_D1 KS_func_pass_args_macro )*
+pow((frda_ks_dk0_D0 KS_func_pass_args_macro ), 2);
 
     _dddgamma_D0D0D0D2D2[ijk]=
 /* mcode in progress ... */
@@ -5150,17 +5150,17 @@ pow((bbn_ks_dk0_D0 KS_func_pass_args_macro ), 2);
 // Derivative
 // c
 // k0
-2*bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dddk0_D0D2D2 KS_func_pass_args_macro ) + 2*
-bbn_ks_c(x, y, z)*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D2D2 KS_func_pass_args_macro ) + 
-4*bbn_ks_c(x, y, z)*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D2 KS_func_pass_args_macro ) + 
-pow(bbn_ks_k0(x, y, z), 2)*(bbn_ks_dddc_D0D2D2 KS_func_pass_args_macro ) + 2*bbn_ks_k0(x, y, z)*
-(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D2D2 KS_func_pass_args_macro ) + 4*
-bbn_ks_k0(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_k0(x, y, z)*(bbn_ks_ddc_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro ) + 
-4*bbn_ks_k0(x, y, z)*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
-2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*pow((bbn_ks_dk0_D2 KS_func_pass_args_macro ), 2) + 4*
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk0_D2 KS_func_pass_args_macro );
+2*frda_ks_c(x, y, z)*frda_ks_k0(x, y, z)*(frda_ks_dddk0_D0D2D2 KS_func_pass_args_macro ) + 2*
+frda_ks_c(x, y, z)*(frda_ks_dk0_D0 KS_func_pass_args_macro )*(frda_ks_ddk0_D2D2 KS_func_pass_args_macro ) + 
+4*frda_ks_c(x, y, z)*(frda_ks_dk0_D2 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D2 KS_func_pass_args_macro ) + 
+pow(frda_ks_k0(x, y, z), 2)*(frda_ks_dddc_D0D2D2 KS_func_pass_args_macro ) + 2*frda_ks_k0(x, y, z)*
+(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk0_D2D2 KS_func_pass_args_macro ) + 4*
+frda_ks_k0(x, y, z)*(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D2 KS_func_pass_args_macro ) + 
+2*frda_ks_k0(x, y, z)*(frda_ks_ddc_D2D2 KS_func_pass_args_macro )*(frda_ks_dk0_D0 KS_func_pass_args_macro ) + 
+4*frda_ks_k0(x, y, z)*(frda_ks_dk0_D2 KS_func_pass_args_macro )*(frda_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
+2*(frda_ks_dc_D0 KS_func_pass_args_macro )*pow((frda_ks_dk0_D2 KS_func_pass_args_macro ), 2) + 4*
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_dk0_D0 KS_func_pass_args_macro )*
+(frda_ks_dk0_D2 KS_func_pass_args_macro );
 
     _dddgamma_D1D2D0D2D1[ijk]=
 /* mcode in progress ... */
@@ -5189,36 +5189,36 @@ bbn_ks_k0(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D2 KS_
 // c
 // k1
 // k2
-bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_dddk2_D0D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-bbn_ks_k2(x, y, z)*(bbn_ks_dddk1_D0D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D1 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk2_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk2_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D1 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
-bbn_ks_k2(x, y, z)*(bbn_ks_dddc_D0D1D2 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
-(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D2 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
-(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D2 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D1 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
-(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
-(bbn_ks_dk2_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
-(bbn_ks_dk2_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
-(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D2 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
-(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D2 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D1 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
-(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
-(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
-(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
-(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*
-(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + (bbn_ks_dc_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 
-(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + (bbn_ks_dc_D1 KS_func_pass_args_macro )*
-(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + 
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + (bbn_ks_dc_D2 KS_func_pass_args_macro )*
-(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro );
+frda_ks_c(x, y, z)*frda_ks_k1(x, y, z)*(frda_ks_dddk2_D0D1D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+frda_ks_k2(x, y, z)*(frda_ks_dddk1_D0D1D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk1_D0 KS_func_pass_args_macro )*(frda_ks_ddk2_D1D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk1_D1 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk1_D2 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D1 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk2_D0 KS_func_pass_args_macro )*(frda_ks_ddk1_D1D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk2_D1 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk2_D2 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D1 KS_func_pass_args_macro ) + frda_ks_k1(x, y, z)*
+frda_ks_k2(x, y, z)*(frda_ks_dddc_D0D1D2 KS_func_pass_args_macro ) + frda_ks_k1(x, y, z)*
+(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk2_D1D2 KS_func_pass_args_macro ) + frda_ks_k1(x, y, z)*
+(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D2 KS_func_pass_args_macro ) + frda_ks_k1(x, y, z)*
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D1 KS_func_pass_args_macro ) + frda_ks_k1(x, y, z)*
+(frda_ks_dk2_D0 KS_func_pass_args_macro )*(frda_ks_ddc_D1D2 KS_func_pass_args_macro ) + frda_ks_k1(x, y, z)*
+(frda_ks_dk2_D1 KS_func_pass_args_macro )*(frda_ks_ddc_D0D2 KS_func_pass_args_macro ) + frda_ks_k1(x, y, z)*
+(frda_ks_dk2_D2 KS_func_pass_args_macro )*(frda_ks_ddc_D0D1 KS_func_pass_args_macro ) + frda_ks_k2(x, y, z)*
+(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk1_D1D2 KS_func_pass_args_macro ) + frda_ks_k2(x, y, z)*
+(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D2 KS_func_pass_args_macro ) + frda_ks_k2(x, y, z)*
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D1 KS_func_pass_args_macro ) + frda_ks_k2(x, y, z)*
+(frda_ks_dk1_D0 KS_func_pass_args_macro )*(frda_ks_ddc_D1D2 KS_func_pass_args_macro ) + frda_ks_k2(x, y, z)*
+(frda_ks_dk1_D1 KS_func_pass_args_macro )*(frda_ks_ddc_D0D2 KS_func_pass_args_macro ) + frda_ks_k2(x, y, z)*
+(frda_ks_dk1_D2 KS_func_pass_args_macro )*(frda_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_dk1_D1 KS_func_pass_args_macro )*
+(frda_ks_dk2_D2 KS_func_pass_args_macro ) + (frda_ks_dc_D0 KS_func_pass_args_macro )*
+(frda_ks_dk1_D2 KS_func_pass_args_macro )*(frda_ks_dk2_D1 KS_func_pass_args_macro ) + 
+(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_dk1_D0 KS_func_pass_args_macro )*
+(frda_ks_dk2_D2 KS_func_pass_args_macro ) + (frda_ks_dc_D1 KS_func_pass_args_macro )*
+(frda_ks_dk1_D2 KS_func_pass_args_macro )*(frda_ks_dk2_D0 KS_func_pass_args_macro ) + 
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_dk1_D0 KS_func_pass_args_macro )*
+(frda_ks_dk2_D1 KS_func_pass_args_macro ) + (frda_ks_dc_D2 KS_func_pass_args_macro )*
+(frda_ks_dk1_D1 KS_func_pass_args_macro )*(frda_ks_dk2_D0 KS_func_pass_args_macro );
 
     _dddgamma_D2D2D1D1D2[ijk]=
 /* mcode in progress ... */
@@ -5235,17 +5235,17 @@ bbn_ks_k2(x, y, z)*(bbn_ks_dddc_D0D1D2 KS_func_pass_args_macro ) + bbn_ks_k1(x, 
 // Derivative
 // c
 // k2
-2*bbn_ks_c(x, y, z)*bbn_ks_k2(x, y, z)*(bbn_ks_dddk2_D1D1D2 KS_func_pass_args_macro ) + 4*
-bbn_ks_c(x, y, z)*(bbn_ks_dk2_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_c(x, y, z)*(bbn_ks_ddk2_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 
-pow(bbn_ks_k2(x, y, z), 2)*(bbn_ks_dddc_D1D1D2 KS_func_pass_args_macro ) + 4*bbn_ks_k2(x, y, z)*
-(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D2 KS_func_pass_args_macro ) + 2*
-bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_k2(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D1 KS_func_pass_args_macro ) + 
-4*bbn_ks_k2(x, y, z)*(bbn_ks_dk2_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
-4*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro )*
-(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D2 KS_func_pass_args_macro )*
-pow((bbn_ks_dk2_D1 KS_func_pass_args_macro ), 2);
+2*frda_ks_c(x, y, z)*frda_ks_k2(x, y, z)*(frda_ks_dddk2_D1D1D2 KS_func_pass_args_macro ) + 4*
+frda_ks_c(x, y, z)*(frda_ks_dk2_D1 KS_func_pass_args_macro )*(frda_ks_ddk2_D1D2 KS_func_pass_args_macro ) + 
+2*frda_ks_c(x, y, z)*(frda_ks_ddk2_D1D1 KS_func_pass_args_macro )*(frda_ks_dk2_D2 KS_func_pass_args_macro ) + 
+pow(frda_ks_k2(x, y, z), 2)*(frda_ks_dddc_D1D1D2 KS_func_pass_args_macro ) + 4*frda_ks_k2(x, y, z)*
+(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk2_D1D2 KS_func_pass_args_macro ) + 2*
+frda_ks_k2(x, y, z)*(frda_ks_ddc_D1D1 KS_func_pass_args_macro )*(frda_ks_dk2_D2 KS_func_pass_args_macro ) + 
+2*frda_ks_k2(x, y, z)*(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk2_D1D1 KS_func_pass_args_macro ) + 
+4*frda_ks_k2(x, y, z)*(frda_ks_dk2_D1 KS_func_pass_args_macro )*(frda_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
+4*(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_dk2_D1 KS_func_pass_args_macro )*
+(frda_ks_dk2_D2 KS_func_pass_args_macro ) + 2*(frda_ks_dc_D2 KS_func_pass_args_macro )*
+pow((frda_ks_dk2_D1 KS_func_pass_args_macro ), 2);
 
     _dddgamma_D1D2D1D1D1[ijk]=
 /* mcode in progress ... */
@@ -5262,17 +5262,17 @@ pow((bbn_ks_dk2_D1 KS_func_pass_args_macro ), 2);
 // c
 // k1
 // k2
-bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_dddk2_D1D1D1 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-bbn_ks_k2(x, y, z)*(bbn_ks_dddk1_D1D1D1 KS_func_pass_args_macro ) + 3*bbn_ks_c(x, y, z)*
-(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D1 KS_func_pass_args_macro ) + 3*
-bbn_ks_c(x, y, z)*(bbn_ks_ddk1_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 
-bbn_ks_k1(x, y, z)*bbn_ks_k2(x, y, z)*(bbn_ks_dddc_D1D1D1 KS_func_pass_args_macro ) + 3*bbn_ks_k1(x, y, z)*
-(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D1 KS_func_pass_args_macro ) + 3*
-bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 
-3*bbn_ks_k2(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D1 KS_func_pass_args_macro ) + 
-3*bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro ) + 
-6*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*
-(bbn_ks_dk2_D1 KS_func_pass_args_macro );
+frda_ks_c(x, y, z)*frda_ks_k1(x, y, z)*(frda_ks_dddk2_D1D1D1 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+frda_ks_k2(x, y, z)*(frda_ks_dddk1_D1D1D1 KS_func_pass_args_macro ) + 3*frda_ks_c(x, y, z)*
+(frda_ks_dk1_D1 KS_func_pass_args_macro )*(frda_ks_ddk2_D1D1 KS_func_pass_args_macro ) + 3*
+frda_ks_c(x, y, z)*(frda_ks_ddk1_D1D1 KS_func_pass_args_macro )*(frda_ks_dk2_D1 KS_func_pass_args_macro ) + 
+frda_ks_k1(x, y, z)*frda_ks_k2(x, y, z)*(frda_ks_dddc_D1D1D1 KS_func_pass_args_macro ) + 3*frda_ks_k1(x, y, z)*
+(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk2_D1D1 KS_func_pass_args_macro ) + 3*
+frda_ks_k1(x, y, z)*(frda_ks_ddc_D1D1 KS_func_pass_args_macro )*(frda_ks_dk2_D1 KS_func_pass_args_macro ) + 
+3*frda_ks_k2(x, y, z)*(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk1_D1D1 KS_func_pass_args_macro ) + 
+3*frda_ks_k2(x, y, z)*(frda_ks_ddc_D1D1 KS_func_pass_args_macro )*(frda_ks_dk1_D1 KS_func_pass_args_macro ) + 
+6*(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_dk1_D1 KS_func_pass_args_macro )*
+(frda_ks_dk2_D1 KS_func_pass_args_macro );
 
     _dddgamma_D0D0D1D0D1[ijk]=
 /* mcode in progress ... */
@@ -5289,17 +5289,17 @@ bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_
 // Derivative
 // c
 // k0
-2*bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dddk0_D0D1D1 KS_func_pass_args_macro ) + 2*
-bbn_ks_c(x, y, z)*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D1 KS_func_pass_args_macro ) + 
-4*bbn_ks_c(x, y, z)*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D1 KS_func_pass_args_macro ) + 
-pow(bbn_ks_k0(x, y, z), 2)*(bbn_ks_dddc_D0D1D1 KS_func_pass_args_macro ) + 2*bbn_ks_k0(x, y, z)*
-(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D1 KS_func_pass_args_macro ) + 4*
-bbn_ks_k0(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D1 KS_func_pass_args_macro ) + 
-2*bbn_ks_k0(x, y, z)*(bbn_ks_ddc_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro ) + 
-4*bbn_ks_k0(x, y, z)*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
-2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*pow((bbn_ks_dk0_D1 KS_func_pass_args_macro ), 2) + 4*
-(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk0_D1 KS_func_pass_args_macro );
+2*frda_ks_c(x, y, z)*frda_ks_k0(x, y, z)*(frda_ks_dddk0_D0D1D1 KS_func_pass_args_macro ) + 2*
+frda_ks_c(x, y, z)*(frda_ks_dk0_D0 KS_func_pass_args_macro )*(frda_ks_ddk0_D1D1 KS_func_pass_args_macro ) + 
+4*frda_ks_c(x, y, z)*(frda_ks_dk0_D1 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D1 KS_func_pass_args_macro ) + 
+pow(frda_ks_k0(x, y, z), 2)*(frda_ks_dddc_D0D1D1 KS_func_pass_args_macro ) + 2*frda_ks_k0(x, y, z)*
+(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk0_D1D1 KS_func_pass_args_macro ) + 4*
+frda_ks_k0(x, y, z)*(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D1 KS_func_pass_args_macro ) + 
+2*frda_ks_k0(x, y, z)*(frda_ks_ddc_D1D1 KS_func_pass_args_macro )*(frda_ks_dk0_D0 KS_func_pass_args_macro ) + 
+4*frda_ks_k0(x, y, z)*(frda_ks_dk0_D1 KS_func_pass_args_macro )*(frda_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+2*(frda_ks_dc_D0 KS_func_pass_args_macro )*pow((frda_ks_dk0_D1 KS_func_pass_args_macro ), 2) + 4*
+(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_dk0_D0 KS_func_pass_args_macro )*
+(frda_ks_dk0_D1 KS_func_pass_args_macro );
 
     _dddgamma_D0D1D0D1D2[ijk]=
 /* mcode in progress ... */
@@ -5328,36 +5328,36 @@ bbn_ks_k0(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D1 KS_
 // c
 // k0
 // k1
-bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dddk1_D0D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-bbn_ks_k1(x, y, z)*(bbn_ks_dddk0_D0D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D1 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D1 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
-bbn_ks_k1(x, y, z)*(bbn_ks_dddc_D0D1D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
-(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
-(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D1 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
-(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
-(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
-(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
-(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D2 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
-(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D2 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D1 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
-(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
-(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
-(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
-(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*
-(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + (bbn_ks_dc_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro ) + 
-(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + (bbn_ks_dc_D1 KS_func_pass_args_macro )*
-(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro ) + 
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk1_D1 KS_func_pass_args_macro ) + (bbn_ks_dc_D2 KS_func_pass_args_macro )*
-(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro );
+frda_ks_c(x, y, z)*frda_ks_k0(x, y, z)*(frda_ks_dddk1_D0D1D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+frda_ks_k1(x, y, z)*(frda_ks_dddk0_D0D1D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk0_D0 KS_func_pass_args_macro )*(frda_ks_ddk1_D1D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk0_D1 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk0_D2 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D1 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk1_D0 KS_func_pass_args_macro )*(frda_ks_ddk0_D1D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk1_D1 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk1_D2 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D1 KS_func_pass_args_macro ) + frda_ks_k0(x, y, z)*
+frda_ks_k1(x, y, z)*(frda_ks_dddc_D0D1D2 KS_func_pass_args_macro ) + frda_ks_k0(x, y, z)*
+(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk1_D1D2 KS_func_pass_args_macro ) + frda_ks_k0(x, y, z)*
+(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D2 KS_func_pass_args_macro ) + frda_ks_k0(x, y, z)*
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D1 KS_func_pass_args_macro ) + frda_ks_k0(x, y, z)*
+(frda_ks_dk1_D0 KS_func_pass_args_macro )*(frda_ks_ddc_D1D2 KS_func_pass_args_macro ) + frda_ks_k0(x, y, z)*
+(frda_ks_dk1_D1 KS_func_pass_args_macro )*(frda_ks_ddc_D0D2 KS_func_pass_args_macro ) + frda_ks_k0(x, y, z)*
+(frda_ks_dk1_D2 KS_func_pass_args_macro )*(frda_ks_ddc_D0D1 KS_func_pass_args_macro ) + frda_ks_k1(x, y, z)*
+(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk0_D1D2 KS_func_pass_args_macro ) + frda_ks_k1(x, y, z)*
+(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D2 KS_func_pass_args_macro ) + frda_ks_k1(x, y, z)*
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D1 KS_func_pass_args_macro ) + frda_ks_k1(x, y, z)*
+(frda_ks_dk0_D0 KS_func_pass_args_macro )*(frda_ks_ddc_D1D2 KS_func_pass_args_macro ) + frda_ks_k1(x, y, z)*
+(frda_ks_dk0_D1 KS_func_pass_args_macro )*(frda_ks_ddc_D0D2 KS_func_pass_args_macro ) + frda_ks_k1(x, y, z)*
+(frda_ks_dk0_D2 KS_func_pass_args_macro )*(frda_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_dk0_D1 KS_func_pass_args_macro )*
+(frda_ks_dk1_D2 KS_func_pass_args_macro ) + (frda_ks_dc_D0 KS_func_pass_args_macro )*
+(frda_ks_dk0_D2 KS_func_pass_args_macro )*(frda_ks_dk1_D1 KS_func_pass_args_macro ) + 
+(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_dk0_D0 KS_func_pass_args_macro )*
+(frda_ks_dk1_D2 KS_func_pass_args_macro ) + (frda_ks_dc_D1 KS_func_pass_args_macro )*
+(frda_ks_dk0_D2 KS_func_pass_args_macro )*(frda_ks_dk1_D0 KS_func_pass_args_macro ) + 
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_dk0_D0 KS_func_pass_args_macro )*
+(frda_ks_dk1_D1 KS_func_pass_args_macro ) + (frda_ks_dc_D2 KS_func_pass_args_macro )*
+(frda_ks_dk0_D1 KS_func_pass_args_macro )*(frda_ks_dk1_D0 KS_func_pass_args_macro );
 
     _dddgamma_D0D2D1D2D2[ijk]=
 /* mcode in progress ... */
@@ -5380,26 +5380,26 @@ bbn_ks_k1(x, y, z)*(bbn_ks_dddc_D0D1D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, 
 // c
 // k0
 // k2
-bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dddk2_D1D2D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-bbn_ks_k2(x, y, z)*(bbn_ks_dddk0_D1D2D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D2D2 KS_func_pass_args_macro ) + 2*
-bbn_ks_c(x, y, z)*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D2 KS_func_pass_args_macro ) + 
-bbn_ks_c(x, y, z)*(bbn_ks_ddk0_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 
-2*bbn_ks_c(x, y, z)*(bbn_ks_dk2_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D2 KS_func_pass_args_macro ) + 
-bbn_ks_k0(x, y, z)*bbn_ks_k2(x, y, z)*(bbn_ks_dddc_D1D2D2 KS_func_pass_args_macro ) + 
-bbn_ks_k0(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D2D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_k0(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D2 KS_func_pass_args_macro ) + 
-bbn_ks_k0(x, y, z)*(bbn_ks_ddc_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 
-2*bbn_ks_k0(x, y, z)*(bbn_ks_dk2_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
-bbn_ks_k2(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D2D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_k2(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D2 KS_func_pass_args_macro ) + 
-bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro ) + 
-2*bbn_ks_k2(x, y, z)*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
-2*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*
-(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D2 KS_func_pass_args_macro )*
-(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 2*
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*
-(bbn_ks_dk2_D1 KS_func_pass_args_macro );
+frda_ks_c(x, y, z)*frda_ks_k0(x, y, z)*(frda_ks_dddk2_D1D2D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+frda_ks_k2(x, y, z)*(frda_ks_dddk0_D1D2D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk0_D1 KS_func_pass_args_macro )*(frda_ks_ddk2_D2D2 KS_func_pass_args_macro ) + 2*
+frda_ks_c(x, y, z)*(frda_ks_dk0_D2 KS_func_pass_args_macro )*(frda_ks_ddk2_D1D2 KS_func_pass_args_macro ) + 
+frda_ks_c(x, y, z)*(frda_ks_ddk0_D2D2 KS_func_pass_args_macro )*(frda_ks_dk2_D1 KS_func_pass_args_macro ) + 
+2*frda_ks_c(x, y, z)*(frda_ks_dk2_D2 KS_func_pass_args_macro )*(frda_ks_ddk0_D1D2 KS_func_pass_args_macro ) + 
+frda_ks_k0(x, y, z)*frda_ks_k2(x, y, z)*(frda_ks_dddc_D1D2D2 KS_func_pass_args_macro ) + 
+frda_ks_k0(x, y, z)*(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk2_D2D2 KS_func_pass_args_macro ) + 
+2*frda_ks_k0(x, y, z)*(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk2_D1D2 KS_func_pass_args_macro ) + 
+frda_ks_k0(x, y, z)*(frda_ks_ddc_D2D2 KS_func_pass_args_macro )*(frda_ks_dk2_D1 KS_func_pass_args_macro ) + 
+2*frda_ks_k0(x, y, z)*(frda_ks_dk2_D2 KS_func_pass_args_macro )*(frda_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
+frda_ks_k2(x, y, z)*(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk0_D2D2 KS_func_pass_args_macro ) + 
+2*frda_ks_k2(x, y, z)*(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk0_D1D2 KS_func_pass_args_macro ) + 
+frda_ks_k2(x, y, z)*(frda_ks_ddc_D2D2 KS_func_pass_args_macro )*(frda_ks_dk0_D1 KS_func_pass_args_macro ) + 
+2*frda_ks_k2(x, y, z)*(frda_ks_dk0_D2 KS_func_pass_args_macro )*(frda_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
+2*(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_dk0_D2 KS_func_pass_args_macro )*
+(frda_ks_dk2_D2 KS_func_pass_args_macro ) + 2*(frda_ks_dc_D2 KS_func_pass_args_macro )*
+(frda_ks_dk0_D1 KS_func_pass_args_macro )*(frda_ks_dk2_D2 KS_func_pass_args_macro ) + 2*
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_dk0_D2 KS_func_pass_args_macro )*
+(frda_ks_dk2_D1 KS_func_pass_args_macro );
 
     _dddgamma_D1D1D0D2D2[ijk]=
 /* mcode in progress ... */
@@ -5416,17 +5416,17 @@ bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_
 // Derivative
 // c
 // k1
-2*bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_dddk1_D0D2D2 KS_func_pass_args_macro ) + 2*
-bbn_ks_c(x, y, z)*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D2D2 KS_func_pass_args_macro ) + 
-4*bbn_ks_c(x, y, z)*(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D2 KS_func_pass_args_macro ) + 
-pow(bbn_ks_k1(x, y, z), 2)*(bbn_ks_dddc_D0D2D2 KS_func_pass_args_macro ) + 2*bbn_ks_k1(x, y, z)*
-(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D2D2 KS_func_pass_args_macro ) + 4*
-bbn_ks_k1(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro ) + 
-4*bbn_ks_k1(x, y, z)*(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
-2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*pow((bbn_ks_dk1_D2 KS_func_pass_args_macro ), 2) + 4*
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk1_D2 KS_func_pass_args_macro );
+2*frda_ks_c(x, y, z)*frda_ks_k1(x, y, z)*(frda_ks_dddk1_D0D2D2 KS_func_pass_args_macro ) + 2*
+frda_ks_c(x, y, z)*(frda_ks_dk1_D0 KS_func_pass_args_macro )*(frda_ks_ddk1_D2D2 KS_func_pass_args_macro ) + 
+4*frda_ks_c(x, y, z)*(frda_ks_dk1_D2 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D2 KS_func_pass_args_macro ) + 
+pow(frda_ks_k1(x, y, z), 2)*(frda_ks_dddc_D0D2D2 KS_func_pass_args_macro ) + 2*frda_ks_k1(x, y, z)*
+(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk1_D2D2 KS_func_pass_args_macro ) + 4*
+frda_ks_k1(x, y, z)*(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D2 KS_func_pass_args_macro ) + 
+2*frda_ks_k1(x, y, z)*(frda_ks_ddc_D2D2 KS_func_pass_args_macro )*(frda_ks_dk1_D0 KS_func_pass_args_macro ) + 
+4*frda_ks_k1(x, y, z)*(frda_ks_dk1_D2 KS_func_pass_args_macro )*(frda_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
+2*(frda_ks_dc_D0 KS_func_pass_args_macro )*pow((frda_ks_dk1_D2 KS_func_pass_args_macro ), 2) + 4*
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_dk1_D0 KS_func_pass_args_macro )*
+(frda_ks_dk1_D2 KS_func_pass_args_macro );
 
     _dddgamma_D0D1D0D0D2[ijk]=
 /* mcode in progress ... */
@@ -5449,26 +5449,26 @@ bbn_ks_k1(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D2 KS_
 // c
 // k0
 // k1
-bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dddk1_D0D0D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-bbn_ks_k1(x, y, z)*(bbn_ks_dddk0_D0D0D2 KS_func_pass_args_macro ) + 2*bbn_ks_c(x, y, z)*
-(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_ddk0_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + 
-bbn_ks_c(x, y, z)*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D0 KS_func_pass_args_macro ) + 
-2*bbn_ks_c(x, y, z)*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D2 KS_func_pass_args_macro ) + 
-bbn_ks_k0(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_dddc_D0D0D2 KS_func_pass_args_macro ) + 2*
-bbn_ks_k0(x, y, z)*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D2 KS_func_pass_args_macro ) + 
-bbn_ks_k0(x, y, z)*(bbn_ks_ddc_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + 
-bbn_ks_k0(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D0 KS_func_pass_args_macro ) + 
-2*bbn_ks_k0(x, y, z)*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_k1(x, y, z)*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D2 KS_func_pass_args_macro ) + 
-bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D2 KS_func_pass_args_macro ) + 
-bbn_ks_k1(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D0 KS_func_pass_args_macro ) + 
-2*bbn_ks_k1(x, y, z)*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
-2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro ) + 2*
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk1_D0 KS_func_pass_args_macro );
+frda_ks_c(x, y, z)*frda_ks_k0(x, y, z)*(frda_ks_dddk1_D0D0D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+frda_ks_k1(x, y, z)*(frda_ks_dddk0_D0D0D2 KS_func_pass_args_macro ) + 2*frda_ks_c(x, y, z)*
+(frda_ks_dk0_D0 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_ddk0_D0D0 KS_func_pass_args_macro )*(frda_ks_dk1_D2 KS_func_pass_args_macro ) + 
+frda_ks_c(x, y, z)*(frda_ks_dk0_D2 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D0 KS_func_pass_args_macro ) + 
+2*frda_ks_c(x, y, z)*(frda_ks_dk1_D0 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D2 KS_func_pass_args_macro ) + 
+frda_ks_k0(x, y, z)*frda_ks_k1(x, y, z)*(frda_ks_dddc_D0D0D2 KS_func_pass_args_macro ) + 2*
+frda_ks_k0(x, y, z)*(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D2 KS_func_pass_args_macro ) + 
+frda_ks_k0(x, y, z)*(frda_ks_ddc_D0D0 KS_func_pass_args_macro )*(frda_ks_dk1_D2 KS_func_pass_args_macro ) + 
+frda_ks_k0(x, y, z)*(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D0 KS_func_pass_args_macro ) + 
+2*frda_ks_k0(x, y, z)*(frda_ks_dk1_D0 KS_func_pass_args_macro )*(frda_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
+2*frda_ks_k1(x, y, z)*(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D2 KS_func_pass_args_macro ) + 
+frda_ks_k1(x, y, z)*(frda_ks_ddc_D0D0 KS_func_pass_args_macro )*(frda_ks_dk0_D2 KS_func_pass_args_macro ) + 
+frda_ks_k1(x, y, z)*(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D0 KS_func_pass_args_macro ) + 
+2*frda_ks_k1(x, y, z)*(frda_ks_dk0_D0 KS_func_pass_args_macro )*(frda_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
+2*(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_dk0_D0 KS_func_pass_args_macro )*
+(frda_ks_dk1_D2 KS_func_pass_args_macro ) + 2*(frda_ks_dc_D0 KS_func_pass_args_macro )*
+(frda_ks_dk0_D2 KS_func_pass_args_macro )*(frda_ks_dk1_D0 KS_func_pass_args_macro ) + 2*
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_dk0_D0 KS_func_pass_args_macro )*
+(frda_ks_dk1_D0 KS_func_pass_args_macro );
 
     _dddgamma_D0D1D0D2D2[ijk]=
 /* mcode in progress ... */
@@ -5491,26 +5491,26 @@ bbn_ks_k1(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D0 KS_
 // c
 // k0
 // k1
-bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dddk1_D0D2D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-bbn_ks_k1(x, y, z)*(bbn_ks_dddk0_D0D2D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D2D2 KS_func_pass_args_macro ) + 2*
-bbn_ks_c(x, y, z)*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D2 KS_func_pass_args_macro ) + 
-bbn_ks_c(x, y, z)*(bbn_ks_ddk0_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro ) + 
-2*bbn_ks_c(x, y, z)*(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D2 KS_func_pass_args_macro ) + 
-bbn_ks_k0(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_dddc_D0D2D2 KS_func_pass_args_macro ) + 
-bbn_ks_k0(x, y, z)*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D2D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_k0(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D2 KS_func_pass_args_macro ) + 
-bbn_ks_k0(x, y, z)*(bbn_ks_ddc_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro ) + 
-2*bbn_ks_k0(x, y, z)*(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
-bbn_ks_k1(x, y, z)*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D2D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_k1(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D2 KS_func_pass_args_macro ) + 
-bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro ) + 
-2*bbn_ks_k1(x, y, z)*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
-2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*
-(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D2 KS_func_pass_args_macro )*
-(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + 2*
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*
-(bbn_ks_dk1_D0 KS_func_pass_args_macro );
+frda_ks_c(x, y, z)*frda_ks_k0(x, y, z)*(frda_ks_dddk1_D0D2D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+frda_ks_k1(x, y, z)*(frda_ks_dddk0_D0D2D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk0_D0 KS_func_pass_args_macro )*(frda_ks_ddk1_D2D2 KS_func_pass_args_macro ) + 2*
+frda_ks_c(x, y, z)*(frda_ks_dk0_D2 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D2 KS_func_pass_args_macro ) + 
+frda_ks_c(x, y, z)*(frda_ks_ddk0_D2D2 KS_func_pass_args_macro )*(frda_ks_dk1_D0 KS_func_pass_args_macro ) + 
+2*frda_ks_c(x, y, z)*(frda_ks_dk1_D2 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D2 KS_func_pass_args_macro ) + 
+frda_ks_k0(x, y, z)*frda_ks_k1(x, y, z)*(frda_ks_dddc_D0D2D2 KS_func_pass_args_macro ) + 
+frda_ks_k0(x, y, z)*(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk1_D2D2 KS_func_pass_args_macro ) + 
+2*frda_ks_k0(x, y, z)*(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D2 KS_func_pass_args_macro ) + 
+frda_ks_k0(x, y, z)*(frda_ks_ddc_D2D2 KS_func_pass_args_macro )*(frda_ks_dk1_D0 KS_func_pass_args_macro ) + 
+2*frda_ks_k0(x, y, z)*(frda_ks_dk1_D2 KS_func_pass_args_macro )*(frda_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
+frda_ks_k1(x, y, z)*(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk0_D2D2 KS_func_pass_args_macro ) + 
+2*frda_ks_k1(x, y, z)*(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D2 KS_func_pass_args_macro ) + 
+frda_ks_k1(x, y, z)*(frda_ks_ddc_D2D2 KS_func_pass_args_macro )*(frda_ks_dk0_D0 KS_func_pass_args_macro ) + 
+2*frda_ks_k1(x, y, z)*(frda_ks_dk0_D2 KS_func_pass_args_macro )*(frda_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
+2*(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_dk0_D2 KS_func_pass_args_macro )*
+(frda_ks_dk1_D2 KS_func_pass_args_macro ) + 2*(frda_ks_dc_D2 KS_func_pass_args_macro )*
+(frda_ks_dk0_D0 KS_func_pass_args_macro )*(frda_ks_dk1_D2 KS_func_pass_args_macro ) + 2*
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_dk0_D2 KS_func_pass_args_macro )*
+(frda_ks_dk1_D0 KS_func_pass_args_macro );
 
     _dddgamma_D0D2D1D2D0[ijk]=
 /* mcode in progress ... */
@@ -5539,36 +5539,36 @@ bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_
 // c
 // k0
 // k2
-bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dddk2_D0D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-bbn_ks_k2(x, y, z)*(bbn_ks_dddk0_D0D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D1 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk2_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk2_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D1 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
-bbn_ks_k2(x, y, z)*(bbn_ks_dddc_D0D1D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
-(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
-(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D1 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
-(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
-(bbn_ks_dk2_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
-(bbn_ks_dk2_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
-(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D2 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
-(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D2 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D1 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
-(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
-(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
-(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
-(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*
-(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + (bbn_ks_dc_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 
-(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + (bbn_ks_dc_D1 KS_func_pass_args_macro )*
-(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + 
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + (bbn_ks_dc_D2 KS_func_pass_args_macro )*
-(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro );
+frda_ks_c(x, y, z)*frda_ks_k0(x, y, z)*(frda_ks_dddk2_D0D1D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+frda_ks_k2(x, y, z)*(frda_ks_dddk0_D0D1D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk0_D0 KS_func_pass_args_macro )*(frda_ks_ddk2_D1D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk0_D1 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk0_D2 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D1 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk2_D0 KS_func_pass_args_macro )*(frda_ks_ddk0_D1D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk2_D1 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk2_D2 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D1 KS_func_pass_args_macro ) + frda_ks_k0(x, y, z)*
+frda_ks_k2(x, y, z)*(frda_ks_dddc_D0D1D2 KS_func_pass_args_macro ) + frda_ks_k0(x, y, z)*
+(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk2_D1D2 KS_func_pass_args_macro ) + frda_ks_k0(x, y, z)*
+(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D2 KS_func_pass_args_macro ) + frda_ks_k0(x, y, z)*
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D1 KS_func_pass_args_macro ) + frda_ks_k0(x, y, z)*
+(frda_ks_dk2_D0 KS_func_pass_args_macro )*(frda_ks_ddc_D1D2 KS_func_pass_args_macro ) + frda_ks_k0(x, y, z)*
+(frda_ks_dk2_D1 KS_func_pass_args_macro )*(frda_ks_ddc_D0D2 KS_func_pass_args_macro ) + frda_ks_k0(x, y, z)*
+(frda_ks_dk2_D2 KS_func_pass_args_macro )*(frda_ks_ddc_D0D1 KS_func_pass_args_macro ) + frda_ks_k2(x, y, z)*
+(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk0_D1D2 KS_func_pass_args_macro ) + frda_ks_k2(x, y, z)*
+(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D2 KS_func_pass_args_macro ) + frda_ks_k2(x, y, z)*
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D1 KS_func_pass_args_macro ) + frda_ks_k2(x, y, z)*
+(frda_ks_dk0_D0 KS_func_pass_args_macro )*(frda_ks_ddc_D1D2 KS_func_pass_args_macro ) + frda_ks_k2(x, y, z)*
+(frda_ks_dk0_D1 KS_func_pass_args_macro )*(frda_ks_ddc_D0D2 KS_func_pass_args_macro ) + frda_ks_k2(x, y, z)*
+(frda_ks_dk0_D2 KS_func_pass_args_macro )*(frda_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_dk0_D1 KS_func_pass_args_macro )*
+(frda_ks_dk2_D2 KS_func_pass_args_macro ) + (frda_ks_dc_D0 KS_func_pass_args_macro )*
+(frda_ks_dk0_D2 KS_func_pass_args_macro )*(frda_ks_dk2_D1 KS_func_pass_args_macro ) + 
+(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_dk0_D0 KS_func_pass_args_macro )*
+(frda_ks_dk2_D2 KS_func_pass_args_macro ) + (frda_ks_dc_D1 KS_func_pass_args_macro )*
+(frda_ks_dk0_D2 KS_func_pass_args_macro )*(frda_ks_dk2_D0 KS_func_pass_args_macro ) + 
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_dk0_D0 KS_func_pass_args_macro )*
+(frda_ks_dk2_D1 KS_func_pass_args_macro ) + (frda_ks_dc_D2 KS_func_pass_args_macro )*
+(frda_ks_dk0_D1 KS_func_pass_args_macro )*(frda_ks_dk2_D0 KS_func_pass_args_macro );
 
     _dddgamma_D0D1D0D0D1[ijk]=
 /* mcode in progress ... */
@@ -5591,26 +5591,26 @@ bbn_ks_k2(x, y, z)*(bbn_ks_dddc_D0D1D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, 
 // c
 // k0
 // k1
-bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dddk1_D0D0D1 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-bbn_ks_k1(x, y, z)*(bbn_ks_dddk0_D0D0D1 KS_func_pass_args_macro ) + 2*bbn_ks_c(x, y, z)*
-(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D1 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_ddk0_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro ) + 
-bbn_ks_c(x, y, z)*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D0 KS_func_pass_args_macro ) + 
-2*bbn_ks_c(x, y, z)*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D1 KS_func_pass_args_macro ) + 
-bbn_ks_k0(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_dddc_D0D0D1 KS_func_pass_args_macro ) + 2*
-bbn_ks_k0(x, y, z)*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D1 KS_func_pass_args_macro ) + 
-bbn_ks_k0(x, y, z)*(bbn_ks_ddc_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro ) + 
-bbn_ks_k0(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D0 KS_func_pass_args_macro ) + 
-2*bbn_ks_k0(x, y, z)*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
-2*bbn_ks_k1(x, y, z)*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D1 KS_func_pass_args_macro ) + 
-bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro ) + 
-bbn_ks_k1(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D0 KS_func_pass_args_macro ) + 
-2*bbn_ks_k1(x, y, z)*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
-2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk1_D1 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro ) + 2*
-(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk1_D0 KS_func_pass_args_macro );
+frda_ks_c(x, y, z)*frda_ks_k0(x, y, z)*(frda_ks_dddk1_D0D0D1 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+frda_ks_k1(x, y, z)*(frda_ks_dddk0_D0D0D1 KS_func_pass_args_macro ) + 2*frda_ks_c(x, y, z)*
+(frda_ks_dk0_D0 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D1 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_ddk0_D0D0 KS_func_pass_args_macro )*(frda_ks_dk1_D1 KS_func_pass_args_macro ) + 
+frda_ks_c(x, y, z)*(frda_ks_dk0_D1 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D0 KS_func_pass_args_macro ) + 
+2*frda_ks_c(x, y, z)*(frda_ks_dk1_D0 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D1 KS_func_pass_args_macro ) + 
+frda_ks_k0(x, y, z)*frda_ks_k1(x, y, z)*(frda_ks_dddc_D0D0D1 KS_func_pass_args_macro ) + 2*
+frda_ks_k0(x, y, z)*(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D1 KS_func_pass_args_macro ) + 
+frda_ks_k0(x, y, z)*(frda_ks_ddc_D0D0 KS_func_pass_args_macro )*(frda_ks_dk1_D1 KS_func_pass_args_macro ) + 
+frda_ks_k0(x, y, z)*(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D0 KS_func_pass_args_macro ) + 
+2*frda_ks_k0(x, y, z)*(frda_ks_dk1_D0 KS_func_pass_args_macro )*(frda_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+2*frda_ks_k1(x, y, z)*(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D1 KS_func_pass_args_macro ) + 
+frda_ks_k1(x, y, z)*(frda_ks_ddc_D0D0 KS_func_pass_args_macro )*(frda_ks_dk0_D1 KS_func_pass_args_macro ) + 
+frda_ks_k1(x, y, z)*(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D0 KS_func_pass_args_macro ) + 
+2*frda_ks_k1(x, y, z)*(frda_ks_dk0_D0 KS_func_pass_args_macro )*(frda_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+2*(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_dk0_D0 KS_func_pass_args_macro )*
+(frda_ks_dk1_D1 KS_func_pass_args_macro ) + 2*(frda_ks_dc_D0 KS_func_pass_args_macro )*
+(frda_ks_dk0_D1 KS_func_pass_args_macro )*(frda_ks_dk1_D0 KS_func_pass_args_macro ) + 2*
+(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_dk0_D0 KS_func_pass_args_macro )*
+(frda_ks_dk1_D0 KS_func_pass_args_macro );
 
     _dddgamma_D1D2D1D1D2[ijk]=
 /* mcode in progress ... */
@@ -5633,26 +5633,26 @@ bbn_ks_k1(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D0 KS_
 // c
 // k1
 // k2
-bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_dddk2_D1D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-bbn_ks_k2(x, y, z)*(bbn_ks_dddk1_D1D1D2 KS_func_pass_args_macro ) + 2*bbn_ks_c(x, y, z)*
-(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_ddk1_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 
-bbn_ks_c(x, y, z)*(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D1 KS_func_pass_args_macro ) + 
-2*bbn_ks_c(x, y, z)*(bbn_ks_dk2_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D2 KS_func_pass_args_macro ) + 
-bbn_ks_k1(x, y, z)*bbn_ks_k2(x, y, z)*(bbn_ks_dddc_D1D1D2 KS_func_pass_args_macro ) + 2*
-bbn_ks_k1(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D2 KS_func_pass_args_macro ) + 
-bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 
-bbn_ks_k1(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D1 KS_func_pass_args_macro ) + 
-2*bbn_ks_k1(x, y, z)*(bbn_ks_dk2_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_k2(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D2 KS_func_pass_args_macro ) + 
-bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + 
-bbn_ks_k2(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D1 KS_func_pass_args_macro ) + 
-2*bbn_ks_k2(x, y, z)*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
-2*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*
-(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D1 KS_func_pass_args_macro )*
-(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 2*
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*
-(bbn_ks_dk2_D1 KS_func_pass_args_macro );
+frda_ks_c(x, y, z)*frda_ks_k1(x, y, z)*(frda_ks_dddk2_D1D1D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+frda_ks_k2(x, y, z)*(frda_ks_dddk1_D1D1D2 KS_func_pass_args_macro ) + 2*frda_ks_c(x, y, z)*
+(frda_ks_dk1_D1 KS_func_pass_args_macro )*(frda_ks_ddk2_D1D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_ddk1_D1D1 KS_func_pass_args_macro )*(frda_ks_dk2_D2 KS_func_pass_args_macro ) + 
+frda_ks_c(x, y, z)*(frda_ks_dk1_D2 KS_func_pass_args_macro )*(frda_ks_ddk2_D1D1 KS_func_pass_args_macro ) + 
+2*frda_ks_c(x, y, z)*(frda_ks_dk2_D1 KS_func_pass_args_macro )*(frda_ks_ddk1_D1D2 KS_func_pass_args_macro ) + 
+frda_ks_k1(x, y, z)*frda_ks_k2(x, y, z)*(frda_ks_dddc_D1D1D2 KS_func_pass_args_macro ) + 2*
+frda_ks_k1(x, y, z)*(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk2_D1D2 KS_func_pass_args_macro ) + 
+frda_ks_k1(x, y, z)*(frda_ks_ddc_D1D1 KS_func_pass_args_macro )*(frda_ks_dk2_D2 KS_func_pass_args_macro ) + 
+frda_ks_k1(x, y, z)*(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk2_D1D1 KS_func_pass_args_macro ) + 
+2*frda_ks_k1(x, y, z)*(frda_ks_dk2_D1 KS_func_pass_args_macro )*(frda_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
+2*frda_ks_k2(x, y, z)*(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk1_D1D2 KS_func_pass_args_macro ) + 
+frda_ks_k2(x, y, z)*(frda_ks_ddc_D1D1 KS_func_pass_args_macro )*(frda_ks_dk1_D2 KS_func_pass_args_macro ) + 
+frda_ks_k2(x, y, z)*(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk1_D1D1 KS_func_pass_args_macro ) + 
+2*frda_ks_k2(x, y, z)*(frda_ks_dk1_D1 KS_func_pass_args_macro )*(frda_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
+2*(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_dk1_D1 KS_func_pass_args_macro )*
+(frda_ks_dk2_D2 KS_func_pass_args_macro ) + 2*(frda_ks_dc_D1 KS_func_pass_args_macro )*
+(frda_ks_dk1_D2 KS_func_pass_args_macro )*(frda_ks_dk2_D1 KS_func_pass_args_macro ) + 2*
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_dk1_D1 KS_func_pass_args_macro )*
+(frda_ks_dk2_D1 KS_func_pass_args_macro );
 
     _dddgamma_D2D2D0D1D1[ijk]=
 /* mcode in progress ... */
@@ -5669,17 +5669,17 @@ bbn_ks_k2(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D1 KS_
 // Derivative
 // c
 // k2
-2*bbn_ks_c(x, y, z)*bbn_ks_k2(x, y, z)*(bbn_ks_dddk2_D0D1D1 KS_func_pass_args_macro ) + 2*
-bbn_ks_c(x, y, z)*(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D1 KS_func_pass_args_macro ) + 
-4*bbn_ks_c(x, y, z)*(bbn_ks_dk2_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D1 KS_func_pass_args_macro ) + 
-pow(bbn_ks_k2(x, y, z), 2)*(bbn_ks_dddc_D0D1D1 KS_func_pass_args_macro ) + 2*bbn_ks_k2(x, y, z)*
-(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D1 KS_func_pass_args_macro ) + 4*
-bbn_ks_k2(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D1 KS_func_pass_args_macro ) + 
-2*bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + 
-4*bbn_ks_k2(x, y, z)*(bbn_ks_dk2_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
-2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*pow((bbn_ks_dk2_D1 KS_func_pass_args_macro ), 2) + 4*
-(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk2_D1 KS_func_pass_args_macro );
+2*frda_ks_c(x, y, z)*frda_ks_k2(x, y, z)*(frda_ks_dddk2_D0D1D1 KS_func_pass_args_macro ) + 2*
+frda_ks_c(x, y, z)*(frda_ks_dk2_D0 KS_func_pass_args_macro )*(frda_ks_ddk2_D1D1 KS_func_pass_args_macro ) + 
+4*frda_ks_c(x, y, z)*(frda_ks_dk2_D1 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D1 KS_func_pass_args_macro ) + 
+pow(frda_ks_k2(x, y, z), 2)*(frda_ks_dddc_D0D1D1 KS_func_pass_args_macro ) + 2*frda_ks_k2(x, y, z)*
+(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk2_D1D1 KS_func_pass_args_macro ) + 4*
+frda_ks_k2(x, y, z)*(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D1 KS_func_pass_args_macro ) + 
+2*frda_ks_k2(x, y, z)*(frda_ks_ddc_D1D1 KS_func_pass_args_macro )*(frda_ks_dk2_D0 KS_func_pass_args_macro ) + 
+4*frda_ks_k2(x, y, z)*(frda_ks_dk2_D1 KS_func_pass_args_macro )*(frda_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+2*(frda_ks_dc_D0 KS_func_pass_args_macro )*pow((frda_ks_dk2_D1 KS_func_pass_args_macro ), 2) + 4*
+(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_dk2_D0 KS_func_pass_args_macro )*
+(frda_ks_dk2_D1 KS_func_pass_args_macro );
 
     _dddgamma_D1D1D2D2D1[ijk]=
 /* mcode in progress ... */
@@ -5696,17 +5696,17 @@ bbn_ks_k2(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D1 KS_
 // Derivative
 // c
 // k1
-2*bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_dddk1_D1D2D2 KS_func_pass_args_macro ) + 2*
-bbn_ks_c(x, y, z)*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D2D2 KS_func_pass_args_macro ) + 
-4*bbn_ks_c(x, y, z)*(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D2 KS_func_pass_args_macro ) + 
-pow(bbn_ks_k1(x, y, z), 2)*(bbn_ks_dddc_D1D2D2 KS_func_pass_args_macro ) + 2*bbn_ks_k1(x, y, z)*
-(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D2D2 KS_func_pass_args_macro ) + 4*
-bbn_ks_k1(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro ) + 
-4*bbn_ks_k1(x, y, z)*(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
-2*(bbn_ks_dc_D1 KS_func_pass_args_macro )*pow((bbn_ks_dk1_D2 KS_func_pass_args_macro ), 2) + 4*
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*
-(bbn_ks_dk1_D2 KS_func_pass_args_macro );
+2*frda_ks_c(x, y, z)*frda_ks_k1(x, y, z)*(frda_ks_dddk1_D1D2D2 KS_func_pass_args_macro ) + 2*
+frda_ks_c(x, y, z)*(frda_ks_dk1_D1 KS_func_pass_args_macro )*(frda_ks_ddk1_D2D2 KS_func_pass_args_macro ) + 
+4*frda_ks_c(x, y, z)*(frda_ks_dk1_D2 KS_func_pass_args_macro )*(frda_ks_ddk1_D1D2 KS_func_pass_args_macro ) + 
+pow(frda_ks_k1(x, y, z), 2)*(frda_ks_dddc_D1D2D2 KS_func_pass_args_macro ) + 2*frda_ks_k1(x, y, z)*
+(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk1_D2D2 KS_func_pass_args_macro ) + 4*
+frda_ks_k1(x, y, z)*(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk1_D1D2 KS_func_pass_args_macro ) + 
+2*frda_ks_k1(x, y, z)*(frda_ks_ddc_D2D2 KS_func_pass_args_macro )*(frda_ks_dk1_D1 KS_func_pass_args_macro ) + 
+4*frda_ks_k1(x, y, z)*(frda_ks_dk1_D2 KS_func_pass_args_macro )*(frda_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
+2*(frda_ks_dc_D1 KS_func_pass_args_macro )*pow((frda_ks_dk1_D2 KS_func_pass_args_macro ), 2) + 4*
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_dk1_D1 KS_func_pass_args_macro )*
+(frda_ks_dk1_D2 KS_func_pass_args_macro );
 
     _dddgamma_D0D1D2D1D0[ijk]=
 /* mcode in progress ... */
@@ -5735,36 +5735,36 @@ bbn_ks_k1(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D2 KS_
 // c
 // k0
 // k1
-bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dddk1_D0D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-bbn_ks_k1(x, y, z)*(bbn_ks_dddk0_D0D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D1 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D1 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
-bbn_ks_k1(x, y, z)*(bbn_ks_dddc_D0D1D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
-(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
-(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D1 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
-(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
-(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
-(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
-(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D2 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
-(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D2 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D1 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
-(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
-(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
-(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
-(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*
-(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + (bbn_ks_dc_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro ) + 
-(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + (bbn_ks_dc_D1 KS_func_pass_args_macro )*
-(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro ) + 
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk1_D1 KS_func_pass_args_macro ) + (bbn_ks_dc_D2 KS_func_pass_args_macro )*
-(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro );
+frda_ks_c(x, y, z)*frda_ks_k0(x, y, z)*(frda_ks_dddk1_D0D1D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+frda_ks_k1(x, y, z)*(frda_ks_dddk0_D0D1D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk0_D0 KS_func_pass_args_macro )*(frda_ks_ddk1_D1D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk0_D1 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk0_D2 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D1 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk1_D0 KS_func_pass_args_macro )*(frda_ks_ddk0_D1D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk1_D1 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk1_D2 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D1 KS_func_pass_args_macro ) + frda_ks_k0(x, y, z)*
+frda_ks_k1(x, y, z)*(frda_ks_dddc_D0D1D2 KS_func_pass_args_macro ) + frda_ks_k0(x, y, z)*
+(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk1_D1D2 KS_func_pass_args_macro ) + frda_ks_k0(x, y, z)*
+(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D2 KS_func_pass_args_macro ) + frda_ks_k0(x, y, z)*
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D1 KS_func_pass_args_macro ) + frda_ks_k0(x, y, z)*
+(frda_ks_dk1_D0 KS_func_pass_args_macro )*(frda_ks_ddc_D1D2 KS_func_pass_args_macro ) + frda_ks_k0(x, y, z)*
+(frda_ks_dk1_D1 KS_func_pass_args_macro )*(frda_ks_ddc_D0D2 KS_func_pass_args_macro ) + frda_ks_k0(x, y, z)*
+(frda_ks_dk1_D2 KS_func_pass_args_macro )*(frda_ks_ddc_D0D1 KS_func_pass_args_macro ) + frda_ks_k1(x, y, z)*
+(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk0_D1D2 KS_func_pass_args_macro ) + frda_ks_k1(x, y, z)*
+(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D2 KS_func_pass_args_macro ) + frda_ks_k1(x, y, z)*
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D1 KS_func_pass_args_macro ) + frda_ks_k1(x, y, z)*
+(frda_ks_dk0_D0 KS_func_pass_args_macro )*(frda_ks_ddc_D1D2 KS_func_pass_args_macro ) + frda_ks_k1(x, y, z)*
+(frda_ks_dk0_D1 KS_func_pass_args_macro )*(frda_ks_ddc_D0D2 KS_func_pass_args_macro ) + frda_ks_k1(x, y, z)*
+(frda_ks_dk0_D2 KS_func_pass_args_macro )*(frda_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_dk0_D1 KS_func_pass_args_macro )*
+(frda_ks_dk1_D2 KS_func_pass_args_macro ) + (frda_ks_dc_D0 KS_func_pass_args_macro )*
+(frda_ks_dk0_D2 KS_func_pass_args_macro )*(frda_ks_dk1_D1 KS_func_pass_args_macro ) + 
+(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_dk0_D0 KS_func_pass_args_macro )*
+(frda_ks_dk1_D2 KS_func_pass_args_macro ) + (frda_ks_dc_D1 KS_func_pass_args_macro )*
+(frda_ks_dk0_D2 KS_func_pass_args_macro )*(frda_ks_dk1_D0 KS_func_pass_args_macro ) + 
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_dk0_D0 KS_func_pass_args_macro )*
+(frda_ks_dk1_D1 KS_func_pass_args_macro ) + (frda_ks_dc_D2 KS_func_pass_args_macro )*
+(frda_ks_dk0_D1 KS_func_pass_args_macro )*(frda_ks_dk1_D0 KS_func_pass_args_macro );
 
     _dddgamma_D0D2D1D0D2[ijk]=
 /* mcode in progress ... */
@@ -5793,36 +5793,36 @@ bbn_ks_k1(x, y, z)*(bbn_ks_dddc_D0D1D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, 
 // c
 // k0
 // k2
-bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dddk2_D0D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-bbn_ks_k2(x, y, z)*(bbn_ks_dddk0_D0D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D1 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk2_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk2_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D1 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
-bbn_ks_k2(x, y, z)*(bbn_ks_dddc_D0D1D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
-(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
-(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D1 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
-(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
-(bbn_ks_dk2_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
-(bbn_ks_dk2_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
-(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D2 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
-(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D2 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D1 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
-(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
-(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
-(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
-(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*
-(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + (bbn_ks_dc_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 
-(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + (bbn_ks_dc_D1 KS_func_pass_args_macro )*
-(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + 
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + (bbn_ks_dc_D2 KS_func_pass_args_macro )*
-(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro );
+frda_ks_c(x, y, z)*frda_ks_k0(x, y, z)*(frda_ks_dddk2_D0D1D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+frda_ks_k2(x, y, z)*(frda_ks_dddk0_D0D1D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk0_D0 KS_func_pass_args_macro )*(frda_ks_ddk2_D1D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk0_D1 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk0_D2 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D1 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk2_D0 KS_func_pass_args_macro )*(frda_ks_ddk0_D1D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk2_D1 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk2_D2 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D1 KS_func_pass_args_macro ) + frda_ks_k0(x, y, z)*
+frda_ks_k2(x, y, z)*(frda_ks_dddc_D0D1D2 KS_func_pass_args_macro ) + frda_ks_k0(x, y, z)*
+(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk2_D1D2 KS_func_pass_args_macro ) + frda_ks_k0(x, y, z)*
+(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D2 KS_func_pass_args_macro ) + frda_ks_k0(x, y, z)*
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D1 KS_func_pass_args_macro ) + frda_ks_k0(x, y, z)*
+(frda_ks_dk2_D0 KS_func_pass_args_macro )*(frda_ks_ddc_D1D2 KS_func_pass_args_macro ) + frda_ks_k0(x, y, z)*
+(frda_ks_dk2_D1 KS_func_pass_args_macro )*(frda_ks_ddc_D0D2 KS_func_pass_args_macro ) + frda_ks_k0(x, y, z)*
+(frda_ks_dk2_D2 KS_func_pass_args_macro )*(frda_ks_ddc_D0D1 KS_func_pass_args_macro ) + frda_ks_k2(x, y, z)*
+(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk0_D1D2 KS_func_pass_args_macro ) + frda_ks_k2(x, y, z)*
+(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D2 KS_func_pass_args_macro ) + frda_ks_k2(x, y, z)*
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D1 KS_func_pass_args_macro ) + frda_ks_k2(x, y, z)*
+(frda_ks_dk0_D0 KS_func_pass_args_macro )*(frda_ks_ddc_D1D2 KS_func_pass_args_macro ) + frda_ks_k2(x, y, z)*
+(frda_ks_dk0_D1 KS_func_pass_args_macro )*(frda_ks_ddc_D0D2 KS_func_pass_args_macro ) + frda_ks_k2(x, y, z)*
+(frda_ks_dk0_D2 KS_func_pass_args_macro )*(frda_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_dk0_D1 KS_func_pass_args_macro )*
+(frda_ks_dk2_D2 KS_func_pass_args_macro ) + (frda_ks_dc_D0 KS_func_pass_args_macro )*
+(frda_ks_dk0_D2 KS_func_pass_args_macro )*(frda_ks_dk2_D1 KS_func_pass_args_macro ) + 
+(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_dk0_D0 KS_func_pass_args_macro )*
+(frda_ks_dk2_D2 KS_func_pass_args_macro ) + (frda_ks_dc_D1 KS_func_pass_args_macro )*
+(frda_ks_dk0_D2 KS_func_pass_args_macro )*(frda_ks_dk2_D0 KS_func_pass_args_macro ) + 
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_dk0_D0 KS_func_pass_args_macro )*
+(frda_ks_dk2_D1 KS_func_pass_args_macro ) + (frda_ks_dc_D2 KS_func_pass_args_macro )*
+(frda_ks_dk0_D1 KS_func_pass_args_macro )*(frda_ks_dk2_D0 KS_func_pass_args_macro );
 
     _dddgamma_D2D2D2D1D0[ijk]=
 /* mcode in progress ... */
@@ -5843,22 +5843,22 @@ bbn_ks_k2(x, y, z)*(bbn_ks_dddc_D0D1D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, 
 // Derivative
 // c
 // k2
-2*bbn_ks_c(x, y, z)*bbn_ks_k2(x, y, z)*(bbn_ks_dddk2_D0D1D2 KS_func_pass_args_macro ) + 2*
-bbn_ks_c(x, y, z)*(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_c(x, y, z)*(bbn_ks_dk2_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_c(x, y, z)*(bbn_ks_dk2_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D1 KS_func_pass_args_macro ) + 
-pow(bbn_ks_k2(x, y, z), 2)*(bbn_ks_dddc_D0D1D2 KS_func_pass_args_macro ) + 2*bbn_ks_k2(x, y, z)*
-(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D2 KS_func_pass_args_macro ) + 2*
-bbn_ks_k2(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_k2(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D1 KS_func_pass_args_macro ) + 
-2*bbn_ks_k2(x, y, z)*(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_k2(x, y, z)*(bbn_ks_dk2_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_k2(x, y, z)*(bbn_ks_dk2_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
-2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro )*
-(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D1 KS_func_pass_args_macro )*
-(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 2*
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk2_D1 KS_func_pass_args_macro );
+2*frda_ks_c(x, y, z)*frda_ks_k2(x, y, z)*(frda_ks_dddk2_D0D1D2 KS_func_pass_args_macro ) + 2*
+frda_ks_c(x, y, z)*(frda_ks_dk2_D0 KS_func_pass_args_macro )*(frda_ks_ddk2_D1D2 KS_func_pass_args_macro ) + 
+2*frda_ks_c(x, y, z)*(frda_ks_dk2_D1 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D2 KS_func_pass_args_macro ) + 
+2*frda_ks_c(x, y, z)*(frda_ks_dk2_D2 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D1 KS_func_pass_args_macro ) + 
+pow(frda_ks_k2(x, y, z), 2)*(frda_ks_dddc_D0D1D2 KS_func_pass_args_macro ) + 2*frda_ks_k2(x, y, z)*
+(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk2_D1D2 KS_func_pass_args_macro ) + 2*
+frda_ks_k2(x, y, z)*(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D2 KS_func_pass_args_macro ) + 
+2*frda_ks_k2(x, y, z)*(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D1 KS_func_pass_args_macro ) + 
+2*frda_ks_k2(x, y, z)*(frda_ks_dk2_D0 KS_func_pass_args_macro )*(frda_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
+2*frda_ks_k2(x, y, z)*(frda_ks_dk2_D1 KS_func_pass_args_macro )*(frda_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
+2*frda_ks_k2(x, y, z)*(frda_ks_dk2_D2 KS_func_pass_args_macro )*(frda_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+2*(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_dk2_D1 KS_func_pass_args_macro )*
+(frda_ks_dk2_D2 KS_func_pass_args_macro ) + 2*(frda_ks_dc_D1 KS_func_pass_args_macro )*
+(frda_ks_dk2_D0 KS_func_pass_args_macro )*(frda_ks_dk2_D2 KS_func_pass_args_macro ) + 2*
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_dk2_D0 KS_func_pass_args_macro )*
+(frda_ks_dk2_D1 KS_func_pass_args_macro );
 
     _dddgamma_D0D1D1D1D2[ijk]=
 /* mcode in progress ... */
@@ -5881,26 +5881,26 @@ bbn_ks_k2(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D2 KS_
 // c
 // k0
 // k1
-bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dddk1_D1D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-bbn_ks_k1(x, y, z)*(bbn_ks_dddk0_D1D1D2 KS_func_pass_args_macro ) + 2*bbn_ks_c(x, y, z)*
-(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_ddk0_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + 
-bbn_ks_c(x, y, z)*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D1 KS_func_pass_args_macro ) + 
-2*bbn_ks_c(x, y, z)*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D2 KS_func_pass_args_macro ) + 
-bbn_ks_k0(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_dddc_D1D1D2 KS_func_pass_args_macro ) + 2*
-bbn_ks_k0(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D2 KS_func_pass_args_macro ) + 
-bbn_ks_k0(x, y, z)*(bbn_ks_ddc_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + 
-bbn_ks_k0(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D1 KS_func_pass_args_macro ) + 
-2*bbn_ks_k0(x, y, z)*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_k1(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D2 KS_func_pass_args_macro ) + 
-bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D2 KS_func_pass_args_macro ) + 
-bbn_ks_k1(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D1 KS_func_pass_args_macro ) + 
-2*bbn_ks_k1(x, y, z)*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
-2*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*
-(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D1 KS_func_pass_args_macro )*
-(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro ) + 2*
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*
-(bbn_ks_dk1_D1 KS_func_pass_args_macro );
+frda_ks_c(x, y, z)*frda_ks_k0(x, y, z)*(frda_ks_dddk1_D1D1D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+frda_ks_k1(x, y, z)*(frda_ks_dddk0_D1D1D2 KS_func_pass_args_macro ) + 2*frda_ks_c(x, y, z)*
+(frda_ks_dk0_D1 KS_func_pass_args_macro )*(frda_ks_ddk1_D1D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_ddk0_D1D1 KS_func_pass_args_macro )*(frda_ks_dk1_D2 KS_func_pass_args_macro ) + 
+frda_ks_c(x, y, z)*(frda_ks_dk0_D2 KS_func_pass_args_macro )*(frda_ks_ddk1_D1D1 KS_func_pass_args_macro ) + 
+2*frda_ks_c(x, y, z)*(frda_ks_dk1_D1 KS_func_pass_args_macro )*(frda_ks_ddk0_D1D2 KS_func_pass_args_macro ) + 
+frda_ks_k0(x, y, z)*frda_ks_k1(x, y, z)*(frda_ks_dddc_D1D1D2 KS_func_pass_args_macro ) + 2*
+frda_ks_k0(x, y, z)*(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk1_D1D2 KS_func_pass_args_macro ) + 
+frda_ks_k0(x, y, z)*(frda_ks_ddc_D1D1 KS_func_pass_args_macro )*(frda_ks_dk1_D2 KS_func_pass_args_macro ) + 
+frda_ks_k0(x, y, z)*(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk1_D1D1 KS_func_pass_args_macro ) + 
+2*frda_ks_k0(x, y, z)*(frda_ks_dk1_D1 KS_func_pass_args_macro )*(frda_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
+2*frda_ks_k1(x, y, z)*(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk0_D1D2 KS_func_pass_args_macro ) + 
+frda_ks_k1(x, y, z)*(frda_ks_ddc_D1D1 KS_func_pass_args_macro )*(frda_ks_dk0_D2 KS_func_pass_args_macro ) + 
+frda_ks_k1(x, y, z)*(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk0_D1D1 KS_func_pass_args_macro ) + 
+2*frda_ks_k1(x, y, z)*(frda_ks_dk0_D1 KS_func_pass_args_macro )*(frda_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
+2*(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_dk0_D1 KS_func_pass_args_macro )*
+(frda_ks_dk1_D2 KS_func_pass_args_macro ) + 2*(frda_ks_dc_D1 KS_func_pass_args_macro )*
+(frda_ks_dk0_D2 KS_func_pass_args_macro )*(frda_ks_dk1_D1 KS_func_pass_args_macro ) + 2*
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_dk0_D1 KS_func_pass_args_macro )*
+(frda_ks_dk1_D1 KS_func_pass_args_macro );
 
     _dddgamma_D1D2D1D0D2[ijk]=
 /* mcode in progress ... */
@@ -5929,36 +5929,36 @@ bbn_ks_k1(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D1 KS_
 // c
 // k1
 // k2
-bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_dddk2_D0D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-bbn_ks_k2(x, y, z)*(bbn_ks_dddk1_D0D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D1 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk2_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk2_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D1 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
-bbn_ks_k2(x, y, z)*(bbn_ks_dddc_D0D1D2 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
-(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D2 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
-(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D2 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D1 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
-(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
-(bbn_ks_dk2_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
-(bbn_ks_dk2_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
-(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D2 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
-(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D2 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D1 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
-(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
-(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
-(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
-(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*
-(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + (bbn_ks_dc_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 
-(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + (bbn_ks_dc_D1 KS_func_pass_args_macro )*
-(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + 
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + (bbn_ks_dc_D2 KS_func_pass_args_macro )*
-(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro );
+frda_ks_c(x, y, z)*frda_ks_k1(x, y, z)*(frda_ks_dddk2_D0D1D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+frda_ks_k2(x, y, z)*(frda_ks_dddk1_D0D1D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk1_D0 KS_func_pass_args_macro )*(frda_ks_ddk2_D1D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk1_D1 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk1_D2 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D1 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk2_D0 KS_func_pass_args_macro )*(frda_ks_ddk1_D1D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk2_D1 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk2_D2 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D1 KS_func_pass_args_macro ) + frda_ks_k1(x, y, z)*
+frda_ks_k2(x, y, z)*(frda_ks_dddc_D0D1D2 KS_func_pass_args_macro ) + frda_ks_k1(x, y, z)*
+(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk2_D1D2 KS_func_pass_args_macro ) + frda_ks_k1(x, y, z)*
+(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D2 KS_func_pass_args_macro ) + frda_ks_k1(x, y, z)*
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D1 KS_func_pass_args_macro ) + frda_ks_k1(x, y, z)*
+(frda_ks_dk2_D0 KS_func_pass_args_macro )*(frda_ks_ddc_D1D2 KS_func_pass_args_macro ) + frda_ks_k1(x, y, z)*
+(frda_ks_dk2_D1 KS_func_pass_args_macro )*(frda_ks_ddc_D0D2 KS_func_pass_args_macro ) + frda_ks_k1(x, y, z)*
+(frda_ks_dk2_D2 KS_func_pass_args_macro )*(frda_ks_ddc_D0D1 KS_func_pass_args_macro ) + frda_ks_k2(x, y, z)*
+(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk1_D1D2 KS_func_pass_args_macro ) + frda_ks_k2(x, y, z)*
+(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D2 KS_func_pass_args_macro ) + frda_ks_k2(x, y, z)*
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D1 KS_func_pass_args_macro ) + frda_ks_k2(x, y, z)*
+(frda_ks_dk1_D0 KS_func_pass_args_macro )*(frda_ks_ddc_D1D2 KS_func_pass_args_macro ) + frda_ks_k2(x, y, z)*
+(frda_ks_dk1_D1 KS_func_pass_args_macro )*(frda_ks_ddc_D0D2 KS_func_pass_args_macro ) + frda_ks_k2(x, y, z)*
+(frda_ks_dk1_D2 KS_func_pass_args_macro )*(frda_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_dk1_D1 KS_func_pass_args_macro )*
+(frda_ks_dk2_D2 KS_func_pass_args_macro ) + (frda_ks_dc_D0 KS_func_pass_args_macro )*
+(frda_ks_dk1_D2 KS_func_pass_args_macro )*(frda_ks_dk2_D1 KS_func_pass_args_macro ) + 
+(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_dk1_D0 KS_func_pass_args_macro )*
+(frda_ks_dk2_D2 KS_func_pass_args_macro ) + (frda_ks_dc_D1 KS_func_pass_args_macro )*
+(frda_ks_dk1_D2 KS_func_pass_args_macro )*(frda_ks_dk2_D0 KS_func_pass_args_macro ) + 
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_dk1_D0 KS_func_pass_args_macro )*
+(frda_ks_dk2_D1 KS_func_pass_args_macro ) + (frda_ks_dc_D2 KS_func_pass_args_macro )*
+(frda_ks_dk1_D1 KS_func_pass_args_macro )*(frda_ks_dk2_D0 KS_func_pass_args_macro );
 
     _dddgamma_D0D0D2D2D0[ijk]=
 /* mcode in progress ... */
@@ -5975,17 +5975,17 @@ bbn_ks_k2(x, y, z)*(bbn_ks_dddc_D0D1D2 KS_func_pass_args_macro ) + bbn_ks_k1(x, 
 // Derivative
 // c
 // k0
-2*bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dddk0_D0D2D2 KS_func_pass_args_macro ) + 2*
-bbn_ks_c(x, y, z)*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D2D2 KS_func_pass_args_macro ) + 
-4*bbn_ks_c(x, y, z)*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D2 KS_func_pass_args_macro ) + 
-pow(bbn_ks_k0(x, y, z), 2)*(bbn_ks_dddc_D0D2D2 KS_func_pass_args_macro ) + 2*bbn_ks_k0(x, y, z)*
-(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D2D2 KS_func_pass_args_macro ) + 4*
-bbn_ks_k0(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_k0(x, y, z)*(bbn_ks_ddc_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro ) + 
-4*bbn_ks_k0(x, y, z)*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
-2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*pow((bbn_ks_dk0_D2 KS_func_pass_args_macro ), 2) + 4*
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk0_D2 KS_func_pass_args_macro );
+2*frda_ks_c(x, y, z)*frda_ks_k0(x, y, z)*(frda_ks_dddk0_D0D2D2 KS_func_pass_args_macro ) + 2*
+frda_ks_c(x, y, z)*(frda_ks_dk0_D0 KS_func_pass_args_macro )*(frda_ks_ddk0_D2D2 KS_func_pass_args_macro ) + 
+4*frda_ks_c(x, y, z)*(frda_ks_dk0_D2 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D2 KS_func_pass_args_macro ) + 
+pow(frda_ks_k0(x, y, z), 2)*(frda_ks_dddc_D0D2D2 KS_func_pass_args_macro ) + 2*frda_ks_k0(x, y, z)*
+(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk0_D2D2 KS_func_pass_args_macro ) + 4*
+frda_ks_k0(x, y, z)*(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D2 KS_func_pass_args_macro ) + 
+2*frda_ks_k0(x, y, z)*(frda_ks_ddc_D2D2 KS_func_pass_args_macro )*(frda_ks_dk0_D0 KS_func_pass_args_macro ) + 
+4*frda_ks_k0(x, y, z)*(frda_ks_dk0_D2 KS_func_pass_args_macro )*(frda_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
+2*(frda_ks_dc_D0 KS_func_pass_args_macro )*pow((frda_ks_dk0_D2 KS_func_pass_args_macro ), 2) + 4*
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_dk0_D0 KS_func_pass_args_macro )*
+(frda_ks_dk0_D2 KS_func_pass_args_macro );
 
     _dddgamma_D0D1D1D0D1[ijk]=
 /* mcode in progress ... */
@@ -6008,26 +6008,26 @@ bbn_ks_k0(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D2 KS_
 // c
 // k0
 // k1
-bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dddk1_D0D1D1 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-bbn_ks_k1(x, y, z)*(bbn_ks_dddk0_D0D1D1 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D1 KS_func_pass_args_macro ) + 2*
-bbn_ks_c(x, y, z)*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D1 KS_func_pass_args_macro ) + 
-bbn_ks_c(x, y, z)*(bbn_ks_ddk0_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro ) + 
-2*bbn_ks_c(x, y, z)*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D1 KS_func_pass_args_macro ) + 
-bbn_ks_k0(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_dddc_D0D1D1 KS_func_pass_args_macro ) + 
-bbn_ks_k0(x, y, z)*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D1 KS_func_pass_args_macro ) + 
-2*bbn_ks_k0(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D1 KS_func_pass_args_macro ) + 
-bbn_ks_k0(x, y, z)*(bbn_ks_ddc_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro ) + 
-2*bbn_ks_k0(x, y, z)*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
-bbn_ks_k1(x, y, z)*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D1 KS_func_pass_args_macro ) + 
-2*bbn_ks_k1(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D1 KS_func_pass_args_macro ) + 
-bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro ) + 
-2*bbn_ks_k1(x, y, z)*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
-2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*
-(bbn_ks_dk1_D1 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D1 KS_func_pass_args_macro )*
-(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro ) + 2*
-(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*
-(bbn_ks_dk1_D0 KS_func_pass_args_macro );
+frda_ks_c(x, y, z)*frda_ks_k0(x, y, z)*(frda_ks_dddk1_D0D1D1 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+frda_ks_k1(x, y, z)*(frda_ks_dddk0_D0D1D1 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk0_D0 KS_func_pass_args_macro )*(frda_ks_ddk1_D1D1 KS_func_pass_args_macro ) + 2*
+frda_ks_c(x, y, z)*(frda_ks_dk0_D1 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D1 KS_func_pass_args_macro ) + 
+frda_ks_c(x, y, z)*(frda_ks_ddk0_D1D1 KS_func_pass_args_macro )*(frda_ks_dk1_D0 KS_func_pass_args_macro ) + 
+2*frda_ks_c(x, y, z)*(frda_ks_dk1_D1 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D1 KS_func_pass_args_macro ) + 
+frda_ks_k0(x, y, z)*frda_ks_k1(x, y, z)*(frda_ks_dddc_D0D1D1 KS_func_pass_args_macro ) + 
+frda_ks_k0(x, y, z)*(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk1_D1D1 KS_func_pass_args_macro ) + 
+2*frda_ks_k0(x, y, z)*(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D1 KS_func_pass_args_macro ) + 
+frda_ks_k0(x, y, z)*(frda_ks_ddc_D1D1 KS_func_pass_args_macro )*(frda_ks_dk1_D0 KS_func_pass_args_macro ) + 
+2*frda_ks_k0(x, y, z)*(frda_ks_dk1_D1 KS_func_pass_args_macro )*(frda_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+frda_ks_k1(x, y, z)*(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk0_D1D1 KS_func_pass_args_macro ) + 
+2*frda_ks_k1(x, y, z)*(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D1 KS_func_pass_args_macro ) + 
+frda_ks_k1(x, y, z)*(frda_ks_ddc_D1D1 KS_func_pass_args_macro )*(frda_ks_dk0_D0 KS_func_pass_args_macro ) + 
+2*frda_ks_k1(x, y, z)*(frda_ks_dk0_D1 KS_func_pass_args_macro )*(frda_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+2*(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_dk0_D1 KS_func_pass_args_macro )*
+(frda_ks_dk1_D1 KS_func_pass_args_macro ) + 2*(frda_ks_dc_D1 KS_func_pass_args_macro )*
+(frda_ks_dk0_D0 KS_func_pass_args_macro )*(frda_ks_dk1_D1 KS_func_pass_args_macro ) + 2*
+(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_dk0_D1 KS_func_pass_args_macro )*
+(frda_ks_dk1_D0 KS_func_pass_args_macro );
 
     _dddgamma_D0D1D2D2D0[ijk]=
 /* mcode in progress ... */
@@ -6050,26 +6050,26 @@ bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_
 // c
 // k0
 // k1
-bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dddk1_D0D2D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-bbn_ks_k1(x, y, z)*(bbn_ks_dddk0_D0D2D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D2D2 KS_func_pass_args_macro ) + 2*
-bbn_ks_c(x, y, z)*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D2 KS_func_pass_args_macro ) + 
-bbn_ks_c(x, y, z)*(bbn_ks_ddk0_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro ) + 
-2*bbn_ks_c(x, y, z)*(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D2 KS_func_pass_args_macro ) + 
-bbn_ks_k0(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_dddc_D0D2D2 KS_func_pass_args_macro ) + 
-bbn_ks_k0(x, y, z)*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D2D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_k0(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D2 KS_func_pass_args_macro ) + 
-bbn_ks_k0(x, y, z)*(bbn_ks_ddc_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro ) + 
-2*bbn_ks_k0(x, y, z)*(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
-bbn_ks_k1(x, y, z)*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D2D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_k1(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D2 KS_func_pass_args_macro ) + 
-bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro ) + 
-2*bbn_ks_k1(x, y, z)*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
-2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*
-(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D2 KS_func_pass_args_macro )*
-(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + 2*
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*
-(bbn_ks_dk1_D0 KS_func_pass_args_macro );
+frda_ks_c(x, y, z)*frda_ks_k0(x, y, z)*(frda_ks_dddk1_D0D2D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+frda_ks_k1(x, y, z)*(frda_ks_dddk0_D0D2D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk0_D0 KS_func_pass_args_macro )*(frda_ks_ddk1_D2D2 KS_func_pass_args_macro ) + 2*
+frda_ks_c(x, y, z)*(frda_ks_dk0_D2 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D2 KS_func_pass_args_macro ) + 
+frda_ks_c(x, y, z)*(frda_ks_ddk0_D2D2 KS_func_pass_args_macro )*(frda_ks_dk1_D0 KS_func_pass_args_macro ) + 
+2*frda_ks_c(x, y, z)*(frda_ks_dk1_D2 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D2 KS_func_pass_args_macro ) + 
+frda_ks_k0(x, y, z)*frda_ks_k1(x, y, z)*(frda_ks_dddc_D0D2D2 KS_func_pass_args_macro ) + 
+frda_ks_k0(x, y, z)*(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk1_D2D2 KS_func_pass_args_macro ) + 
+2*frda_ks_k0(x, y, z)*(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D2 KS_func_pass_args_macro ) + 
+frda_ks_k0(x, y, z)*(frda_ks_ddc_D2D2 KS_func_pass_args_macro )*(frda_ks_dk1_D0 KS_func_pass_args_macro ) + 
+2*frda_ks_k0(x, y, z)*(frda_ks_dk1_D2 KS_func_pass_args_macro )*(frda_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
+frda_ks_k1(x, y, z)*(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk0_D2D2 KS_func_pass_args_macro ) + 
+2*frda_ks_k1(x, y, z)*(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D2 KS_func_pass_args_macro ) + 
+frda_ks_k1(x, y, z)*(frda_ks_ddc_D2D2 KS_func_pass_args_macro )*(frda_ks_dk0_D0 KS_func_pass_args_macro ) + 
+2*frda_ks_k1(x, y, z)*(frda_ks_dk0_D2 KS_func_pass_args_macro )*(frda_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
+2*(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_dk0_D2 KS_func_pass_args_macro )*
+(frda_ks_dk1_D2 KS_func_pass_args_macro ) + 2*(frda_ks_dc_D2 KS_func_pass_args_macro )*
+(frda_ks_dk0_D0 KS_func_pass_args_macro )*(frda_ks_dk1_D2 KS_func_pass_args_macro ) + 2*
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_dk0_D2 KS_func_pass_args_macro )*
+(frda_ks_dk1_D0 KS_func_pass_args_macro );
 
     _dddgamma_D0D2D0D1D2[ijk]=
 /* mcode in progress ... */
@@ -6098,36 +6098,36 @@ bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_
 // c
 // k0
 // k2
-bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dddk2_D0D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-bbn_ks_k2(x, y, z)*(bbn_ks_dddk0_D0D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D1 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk2_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk2_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D1 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
-bbn_ks_k2(x, y, z)*(bbn_ks_dddc_D0D1D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
-(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
-(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D1 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
-(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
-(bbn_ks_dk2_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
-(bbn_ks_dk2_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
-(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D2 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
-(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D2 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D1 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
-(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
-(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
-(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
-(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*
-(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + (bbn_ks_dc_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 
-(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + (bbn_ks_dc_D1 KS_func_pass_args_macro )*
-(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + 
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + (bbn_ks_dc_D2 KS_func_pass_args_macro )*
-(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro );
+frda_ks_c(x, y, z)*frda_ks_k0(x, y, z)*(frda_ks_dddk2_D0D1D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+frda_ks_k2(x, y, z)*(frda_ks_dddk0_D0D1D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk0_D0 KS_func_pass_args_macro )*(frda_ks_ddk2_D1D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk0_D1 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk0_D2 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D1 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk2_D0 KS_func_pass_args_macro )*(frda_ks_ddk0_D1D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk2_D1 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk2_D2 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D1 KS_func_pass_args_macro ) + frda_ks_k0(x, y, z)*
+frda_ks_k2(x, y, z)*(frda_ks_dddc_D0D1D2 KS_func_pass_args_macro ) + frda_ks_k0(x, y, z)*
+(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk2_D1D2 KS_func_pass_args_macro ) + frda_ks_k0(x, y, z)*
+(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D2 KS_func_pass_args_macro ) + frda_ks_k0(x, y, z)*
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D1 KS_func_pass_args_macro ) + frda_ks_k0(x, y, z)*
+(frda_ks_dk2_D0 KS_func_pass_args_macro )*(frda_ks_ddc_D1D2 KS_func_pass_args_macro ) + frda_ks_k0(x, y, z)*
+(frda_ks_dk2_D1 KS_func_pass_args_macro )*(frda_ks_ddc_D0D2 KS_func_pass_args_macro ) + frda_ks_k0(x, y, z)*
+(frda_ks_dk2_D2 KS_func_pass_args_macro )*(frda_ks_ddc_D0D1 KS_func_pass_args_macro ) + frda_ks_k2(x, y, z)*
+(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk0_D1D2 KS_func_pass_args_macro ) + frda_ks_k2(x, y, z)*
+(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D2 KS_func_pass_args_macro ) + frda_ks_k2(x, y, z)*
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D1 KS_func_pass_args_macro ) + frda_ks_k2(x, y, z)*
+(frda_ks_dk0_D0 KS_func_pass_args_macro )*(frda_ks_ddc_D1D2 KS_func_pass_args_macro ) + frda_ks_k2(x, y, z)*
+(frda_ks_dk0_D1 KS_func_pass_args_macro )*(frda_ks_ddc_D0D2 KS_func_pass_args_macro ) + frda_ks_k2(x, y, z)*
+(frda_ks_dk0_D2 KS_func_pass_args_macro )*(frda_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_dk0_D1 KS_func_pass_args_macro )*
+(frda_ks_dk2_D2 KS_func_pass_args_macro ) + (frda_ks_dc_D0 KS_func_pass_args_macro )*
+(frda_ks_dk0_D2 KS_func_pass_args_macro )*(frda_ks_dk2_D1 KS_func_pass_args_macro ) + 
+(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_dk0_D0 KS_func_pass_args_macro )*
+(frda_ks_dk2_D2 KS_func_pass_args_macro ) + (frda_ks_dc_D1 KS_func_pass_args_macro )*
+(frda_ks_dk0_D2 KS_func_pass_args_macro )*(frda_ks_dk2_D0 KS_func_pass_args_macro ) + 
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_dk0_D0 KS_func_pass_args_macro )*
+(frda_ks_dk2_D1 KS_func_pass_args_macro ) + (frda_ks_dc_D2 KS_func_pass_args_macro )*
+(frda_ks_dk0_D1 KS_func_pass_args_macro )*(frda_ks_dk2_D0 KS_func_pass_args_macro );
 
     _dddgamma_D0D2D2D2D1[ijk]=
 /* mcode in progress ... */
@@ -6150,26 +6150,26 @@ bbn_ks_k2(x, y, z)*(bbn_ks_dddc_D0D1D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, 
 // c
 // k0
 // k2
-bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dddk2_D1D2D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-bbn_ks_k2(x, y, z)*(bbn_ks_dddk0_D1D2D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D2D2 KS_func_pass_args_macro ) + 2*
-bbn_ks_c(x, y, z)*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D2 KS_func_pass_args_macro ) + 
-bbn_ks_c(x, y, z)*(bbn_ks_ddk0_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 
-2*bbn_ks_c(x, y, z)*(bbn_ks_dk2_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D2 KS_func_pass_args_macro ) + 
-bbn_ks_k0(x, y, z)*bbn_ks_k2(x, y, z)*(bbn_ks_dddc_D1D2D2 KS_func_pass_args_macro ) + 
-bbn_ks_k0(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D2D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_k0(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D2 KS_func_pass_args_macro ) + 
-bbn_ks_k0(x, y, z)*(bbn_ks_ddc_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 
-2*bbn_ks_k0(x, y, z)*(bbn_ks_dk2_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
-bbn_ks_k2(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D2D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_k2(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D2 KS_func_pass_args_macro ) + 
-bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro ) + 
-2*bbn_ks_k2(x, y, z)*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
-2*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*
-(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D2 KS_func_pass_args_macro )*
-(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 2*
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*
-(bbn_ks_dk2_D1 KS_func_pass_args_macro );
+frda_ks_c(x, y, z)*frda_ks_k0(x, y, z)*(frda_ks_dddk2_D1D2D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+frda_ks_k2(x, y, z)*(frda_ks_dddk0_D1D2D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk0_D1 KS_func_pass_args_macro )*(frda_ks_ddk2_D2D2 KS_func_pass_args_macro ) + 2*
+frda_ks_c(x, y, z)*(frda_ks_dk0_D2 KS_func_pass_args_macro )*(frda_ks_ddk2_D1D2 KS_func_pass_args_macro ) + 
+frda_ks_c(x, y, z)*(frda_ks_ddk0_D2D2 KS_func_pass_args_macro )*(frda_ks_dk2_D1 KS_func_pass_args_macro ) + 
+2*frda_ks_c(x, y, z)*(frda_ks_dk2_D2 KS_func_pass_args_macro )*(frda_ks_ddk0_D1D2 KS_func_pass_args_macro ) + 
+frda_ks_k0(x, y, z)*frda_ks_k2(x, y, z)*(frda_ks_dddc_D1D2D2 KS_func_pass_args_macro ) + 
+frda_ks_k0(x, y, z)*(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk2_D2D2 KS_func_pass_args_macro ) + 
+2*frda_ks_k0(x, y, z)*(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk2_D1D2 KS_func_pass_args_macro ) + 
+frda_ks_k0(x, y, z)*(frda_ks_ddc_D2D2 KS_func_pass_args_macro )*(frda_ks_dk2_D1 KS_func_pass_args_macro ) + 
+2*frda_ks_k0(x, y, z)*(frda_ks_dk2_D2 KS_func_pass_args_macro )*(frda_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
+frda_ks_k2(x, y, z)*(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk0_D2D2 KS_func_pass_args_macro ) + 
+2*frda_ks_k2(x, y, z)*(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk0_D1D2 KS_func_pass_args_macro ) + 
+frda_ks_k2(x, y, z)*(frda_ks_ddc_D2D2 KS_func_pass_args_macro )*(frda_ks_dk0_D1 KS_func_pass_args_macro ) + 
+2*frda_ks_k2(x, y, z)*(frda_ks_dk0_D2 KS_func_pass_args_macro )*(frda_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
+2*(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_dk0_D2 KS_func_pass_args_macro )*
+(frda_ks_dk2_D2 KS_func_pass_args_macro ) + 2*(frda_ks_dc_D2 KS_func_pass_args_macro )*
+(frda_ks_dk0_D1 KS_func_pass_args_macro )*(frda_ks_dk2_D2 KS_func_pass_args_macro ) + 2*
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_dk0_D2 KS_func_pass_args_macro )*
+(frda_ks_dk2_D1 KS_func_pass_args_macro );
 
     _dddgamma_D1D1D0D2D1[ijk]=
 /* mcode in progress ... */
@@ -6190,22 +6190,22 @@ bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_
 // Derivative
 // c
 // k1
-2*bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_dddk1_D0D1D2 KS_func_pass_args_macro ) + 2*
-bbn_ks_c(x, y, z)*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_c(x, y, z)*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_c(x, y, z)*(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D1 KS_func_pass_args_macro ) + 
-pow(bbn_ks_k1(x, y, z), 2)*(bbn_ks_dddc_D0D1D2 KS_func_pass_args_macro ) + 2*bbn_ks_k1(x, y, z)*
-(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D2 KS_func_pass_args_macro ) + 2*
-bbn_ks_k1(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_k1(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D1 KS_func_pass_args_macro ) + 
-2*bbn_ks_k1(x, y, z)*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_k1(x, y, z)*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_k1(x, y, z)*(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
-2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*
-(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D1 KS_func_pass_args_macro )*
-(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + 2*
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk1_D1 KS_func_pass_args_macro );
+2*frda_ks_c(x, y, z)*frda_ks_k1(x, y, z)*(frda_ks_dddk1_D0D1D2 KS_func_pass_args_macro ) + 2*
+frda_ks_c(x, y, z)*(frda_ks_dk1_D0 KS_func_pass_args_macro )*(frda_ks_ddk1_D1D2 KS_func_pass_args_macro ) + 
+2*frda_ks_c(x, y, z)*(frda_ks_dk1_D1 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D2 KS_func_pass_args_macro ) + 
+2*frda_ks_c(x, y, z)*(frda_ks_dk1_D2 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D1 KS_func_pass_args_macro ) + 
+pow(frda_ks_k1(x, y, z), 2)*(frda_ks_dddc_D0D1D2 KS_func_pass_args_macro ) + 2*frda_ks_k1(x, y, z)*
+(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk1_D1D2 KS_func_pass_args_macro ) + 2*
+frda_ks_k1(x, y, z)*(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D2 KS_func_pass_args_macro ) + 
+2*frda_ks_k1(x, y, z)*(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D1 KS_func_pass_args_macro ) + 
+2*frda_ks_k1(x, y, z)*(frda_ks_dk1_D0 KS_func_pass_args_macro )*(frda_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
+2*frda_ks_k1(x, y, z)*(frda_ks_dk1_D1 KS_func_pass_args_macro )*(frda_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
+2*frda_ks_k1(x, y, z)*(frda_ks_dk1_D2 KS_func_pass_args_macro )*(frda_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+2*(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_dk1_D1 KS_func_pass_args_macro )*
+(frda_ks_dk1_D2 KS_func_pass_args_macro ) + 2*(frda_ks_dc_D1 KS_func_pass_args_macro )*
+(frda_ks_dk1_D0 KS_func_pass_args_macro )*(frda_ks_dk1_D2 KS_func_pass_args_macro ) + 2*
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_dk1_D0 KS_func_pass_args_macro )*
+(frda_ks_dk1_D1 KS_func_pass_args_macro );
 
     _dddgamma_D0D0D2D1D0[ijk]=
 /* mcode in progress ... */
@@ -6226,22 +6226,22 @@ bbn_ks_k1(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D2 KS_
 // Derivative
 // c
 // k0
-2*bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dddk0_D0D1D2 KS_func_pass_args_macro ) + 2*
-bbn_ks_c(x, y, z)*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_c(x, y, z)*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_c(x, y, z)*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D1 KS_func_pass_args_macro ) + 
-pow(bbn_ks_k0(x, y, z), 2)*(bbn_ks_dddc_D0D1D2 KS_func_pass_args_macro ) + 2*bbn_ks_k0(x, y, z)*
-(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D2 KS_func_pass_args_macro ) + 2*
-bbn_ks_k0(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_k0(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D1 KS_func_pass_args_macro ) + 
-2*bbn_ks_k0(x, y, z)*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_k0(x, y, z)*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_k0(x, y, z)*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
-2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*
-(bbn_ks_dk0_D2 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D1 KS_func_pass_args_macro )*
-(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D2 KS_func_pass_args_macro ) + 2*
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk0_D1 KS_func_pass_args_macro );
+2*frda_ks_c(x, y, z)*frda_ks_k0(x, y, z)*(frda_ks_dddk0_D0D1D2 KS_func_pass_args_macro ) + 2*
+frda_ks_c(x, y, z)*(frda_ks_dk0_D0 KS_func_pass_args_macro )*(frda_ks_ddk0_D1D2 KS_func_pass_args_macro ) + 
+2*frda_ks_c(x, y, z)*(frda_ks_dk0_D1 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D2 KS_func_pass_args_macro ) + 
+2*frda_ks_c(x, y, z)*(frda_ks_dk0_D2 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D1 KS_func_pass_args_macro ) + 
+pow(frda_ks_k0(x, y, z), 2)*(frda_ks_dddc_D0D1D2 KS_func_pass_args_macro ) + 2*frda_ks_k0(x, y, z)*
+(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk0_D1D2 KS_func_pass_args_macro ) + 2*
+frda_ks_k0(x, y, z)*(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D2 KS_func_pass_args_macro ) + 
+2*frda_ks_k0(x, y, z)*(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D1 KS_func_pass_args_macro ) + 
+2*frda_ks_k0(x, y, z)*(frda_ks_dk0_D0 KS_func_pass_args_macro )*(frda_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
+2*frda_ks_k0(x, y, z)*(frda_ks_dk0_D1 KS_func_pass_args_macro )*(frda_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
+2*frda_ks_k0(x, y, z)*(frda_ks_dk0_D2 KS_func_pass_args_macro )*(frda_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+2*(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_dk0_D1 KS_func_pass_args_macro )*
+(frda_ks_dk0_D2 KS_func_pass_args_macro ) + 2*(frda_ks_dc_D1 KS_func_pass_args_macro )*
+(frda_ks_dk0_D0 KS_func_pass_args_macro )*(frda_ks_dk0_D2 KS_func_pass_args_macro ) + 2*
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_dk0_D0 KS_func_pass_args_macro )*
+(frda_ks_dk0_D1 KS_func_pass_args_macro );
 
     _dddgamma_D1D2D0D1D0[ijk]=
 /* mcode in progress ... */
@@ -6264,26 +6264,26 @@ bbn_ks_k0(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D2 KS_
 // c
 // k1
 // k2
-bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_dddk2_D0D0D1 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-bbn_ks_k2(x, y, z)*(bbn_ks_dddk1_D0D0D1 KS_func_pass_args_macro ) + 2*bbn_ks_c(x, y, z)*
-(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D1 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_ddk1_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 
-bbn_ks_c(x, y, z)*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D0 KS_func_pass_args_macro ) + 
-2*bbn_ks_c(x, y, z)*(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D1 KS_func_pass_args_macro ) + 
-bbn_ks_k1(x, y, z)*bbn_ks_k2(x, y, z)*(bbn_ks_dddc_D0D0D1 KS_func_pass_args_macro ) + 2*
-bbn_ks_k1(x, y, z)*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D1 KS_func_pass_args_macro ) + 
-bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 
-bbn_ks_k1(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D0 KS_func_pass_args_macro ) + 
-2*bbn_ks_k1(x, y, z)*(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
-2*bbn_ks_k2(x, y, z)*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D1 KS_func_pass_args_macro ) + 
-bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro ) + 
-bbn_ks_k2(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D0 KS_func_pass_args_macro ) + 
-2*bbn_ks_k2(x, y, z)*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
-2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + 2*
-(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk2_D0 KS_func_pass_args_macro );
+frda_ks_c(x, y, z)*frda_ks_k1(x, y, z)*(frda_ks_dddk2_D0D0D1 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+frda_ks_k2(x, y, z)*(frda_ks_dddk1_D0D0D1 KS_func_pass_args_macro ) + 2*frda_ks_c(x, y, z)*
+(frda_ks_dk1_D0 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D1 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_ddk1_D0D0 KS_func_pass_args_macro )*(frda_ks_dk2_D1 KS_func_pass_args_macro ) + 
+frda_ks_c(x, y, z)*(frda_ks_dk1_D1 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D0 KS_func_pass_args_macro ) + 
+2*frda_ks_c(x, y, z)*(frda_ks_dk2_D0 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D1 KS_func_pass_args_macro ) + 
+frda_ks_k1(x, y, z)*frda_ks_k2(x, y, z)*(frda_ks_dddc_D0D0D1 KS_func_pass_args_macro ) + 2*
+frda_ks_k1(x, y, z)*(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D1 KS_func_pass_args_macro ) + 
+frda_ks_k1(x, y, z)*(frda_ks_ddc_D0D0 KS_func_pass_args_macro )*(frda_ks_dk2_D1 KS_func_pass_args_macro ) + 
+frda_ks_k1(x, y, z)*(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D0 KS_func_pass_args_macro ) + 
+2*frda_ks_k1(x, y, z)*(frda_ks_dk2_D0 KS_func_pass_args_macro )*(frda_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+2*frda_ks_k2(x, y, z)*(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D1 KS_func_pass_args_macro ) + 
+frda_ks_k2(x, y, z)*(frda_ks_ddc_D0D0 KS_func_pass_args_macro )*(frda_ks_dk1_D1 KS_func_pass_args_macro ) + 
+frda_ks_k2(x, y, z)*(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D0 KS_func_pass_args_macro ) + 
+2*frda_ks_k2(x, y, z)*(frda_ks_dk1_D0 KS_func_pass_args_macro )*(frda_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+2*(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_dk1_D0 KS_func_pass_args_macro )*
+(frda_ks_dk2_D1 KS_func_pass_args_macro ) + 2*(frda_ks_dc_D0 KS_func_pass_args_macro )*
+(frda_ks_dk1_D1 KS_func_pass_args_macro )*(frda_ks_dk2_D0 KS_func_pass_args_macro ) + 2*
+(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_dk1_D0 KS_func_pass_args_macro )*
+(frda_ks_dk2_D0 KS_func_pass_args_macro );
 
     _dddgamma_D0D2D2D1D2[ijk]=
 /* mcode in progress ... */
@@ -6306,26 +6306,26 @@ bbn_ks_k2(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D0 KS_
 // c
 // k0
 // k2
-bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dddk2_D1D2D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-bbn_ks_k2(x, y, z)*(bbn_ks_dddk0_D1D2D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D2D2 KS_func_pass_args_macro ) + 2*
-bbn_ks_c(x, y, z)*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D2 KS_func_pass_args_macro ) + 
-bbn_ks_c(x, y, z)*(bbn_ks_ddk0_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 
-2*bbn_ks_c(x, y, z)*(bbn_ks_dk2_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D2 KS_func_pass_args_macro ) + 
-bbn_ks_k0(x, y, z)*bbn_ks_k2(x, y, z)*(bbn_ks_dddc_D1D2D2 KS_func_pass_args_macro ) + 
-bbn_ks_k0(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D2D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_k0(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D2 KS_func_pass_args_macro ) + 
-bbn_ks_k0(x, y, z)*(bbn_ks_ddc_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 
-2*bbn_ks_k0(x, y, z)*(bbn_ks_dk2_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
-bbn_ks_k2(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D2D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_k2(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D2 KS_func_pass_args_macro ) + 
-bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro ) + 
-2*bbn_ks_k2(x, y, z)*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
-2*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*
-(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D2 KS_func_pass_args_macro )*
-(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 2*
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*
-(bbn_ks_dk2_D1 KS_func_pass_args_macro );
+frda_ks_c(x, y, z)*frda_ks_k0(x, y, z)*(frda_ks_dddk2_D1D2D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+frda_ks_k2(x, y, z)*(frda_ks_dddk0_D1D2D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk0_D1 KS_func_pass_args_macro )*(frda_ks_ddk2_D2D2 KS_func_pass_args_macro ) + 2*
+frda_ks_c(x, y, z)*(frda_ks_dk0_D2 KS_func_pass_args_macro )*(frda_ks_ddk2_D1D2 KS_func_pass_args_macro ) + 
+frda_ks_c(x, y, z)*(frda_ks_ddk0_D2D2 KS_func_pass_args_macro )*(frda_ks_dk2_D1 KS_func_pass_args_macro ) + 
+2*frda_ks_c(x, y, z)*(frda_ks_dk2_D2 KS_func_pass_args_macro )*(frda_ks_ddk0_D1D2 KS_func_pass_args_macro ) + 
+frda_ks_k0(x, y, z)*frda_ks_k2(x, y, z)*(frda_ks_dddc_D1D2D2 KS_func_pass_args_macro ) + 
+frda_ks_k0(x, y, z)*(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk2_D2D2 KS_func_pass_args_macro ) + 
+2*frda_ks_k0(x, y, z)*(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk2_D1D2 KS_func_pass_args_macro ) + 
+frda_ks_k0(x, y, z)*(frda_ks_ddc_D2D2 KS_func_pass_args_macro )*(frda_ks_dk2_D1 KS_func_pass_args_macro ) + 
+2*frda_ks_k0(x, y, z)*(frda_ks_dk2_D2 KS_func_pass_args_macro )*(frda_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
+frda_ks_k2(x, y, z)*(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk0_D2D2 KS_func_pass_args_macro ) + 
+2*frda_ks_k2(x, y, z)*(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk0_D1D2 KS_func_pass_args_macro ) + 
+frda_ks_k2(x, y, z)*(frda_ks_ddc_D2D2 KS_func_pass_args_macro )*(frda_ks_dk0_D1 KS_func_pass_args_macro ) + 
+2*frda_ks_k2(x, y, z)*(frda_ks_dk0_D2 KS_func_pass_args_macro )*(frda_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
+2*(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_dk0_D2 KS_func_pass_args_macro )*
+(frda_ks_dk2_D2 KS_func_pass_args_macro ) + 2*(frda_ks_dc_D2 KS_func_pass_args_macro )*
+(frda_ks_dk0_D1 KS_func_pass_args_macro )*(frda_ks_dk2_D2 KS_func_pass_args_macro ) + 2*
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_dk0_D2 KS_func_pass_args_macro )*
+(frda_ks_dk2_D1 KS_func_pass_args_macro );
 
     _dddgamma_D0D1D1D2D1[ijk]=
 /* mcode in progress ... */
@@ -6348,26 +6348,26 @@ bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_
 // c
 // k0
 // k1
-bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dddk1_D1D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-bbn_ks_k1(x, y, z)*(bbn_ks_dddk0_D1D1D2 KS_func_pass_args_macro ) + 2*bbn_ks_c(x, y, z)*
-(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_ddk0_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + 
-bbn_ks_c(x, y, z)*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D1 KS_func_pass_args_macro ) + 
-2*bbn_ks_c(x, y, z)*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D2 KS_func_pass_args_macro ) + 
-bbn_ks_k0(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_dddc_D1D1D2 KS_func_pass_args_macro ) + 2*
-bbn_ks_k0(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D2 KS_func_pass_args_macro ) + 
-bbn_ks_k0(x, y, z)*(bbn_ks_ddc_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + 
-bbn_ks_k0(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D1 KS_func_pass_args_macro ) + 
-2*bbn_ks_k0(x, y, z)*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_k1(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D2 KS_func_pass_args_macro ) + 
-bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D2 KS_func_pass_args_macro ) + 
-bbn_ks_k1(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D1 KS_func_pass_args_macro ) + 
-2*bbn_ks_k1(x, y, z)*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
-2*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*
-(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D1 KS_func_pass_args_macro )*
-(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro ) + 2*
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*
-(bbn_ks_dk1_D1 KS_func_pass_args_macro );
+frda_ks_c(x, y, z)*frda_ks_k0(x, y, z)*(frda_ks_dddk1_D1D1D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+frda_ks_k1(x, y, z)*(frda_ks_dddk0_D1D1D2 KS_func_pass_args_macro ) + 2*frda_ks_c(x, y, z)*
+(frda_ks_dk0_D1 KS_func_pass_args_macro )*(frda_ks_ddk1_D1D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_ddk0_D1D1 KS_func_pass_args_macro )*(frda_ks_dk1_D2 KS_func_pass_args_macro ) + 
+frda_ks_c(x, y, z)*(frda_ks_dk0_D2 KS_func_pass_args_macro )*(frda_ks_ddk1_D1D1 KS_func_pass_args_macro ) + 
+2*frda_ks_c(x, y, z)*(frda_ks_dk1_D1 KS_func_pass_args_macro )*(frda_ks_ddk0_D1D2 KS_func_pass_args_macro ) + 
+frda_ks_k0(x, y, z)*frda_ks_k1(x, y, z)*(frda_ks_dddc_D1D1D2 KS_func_pass_args_macro ) + 2*
+frda_ks_k0(x, y, z)*(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk1_D1D2 KS_func_pass_args_macro ) + 
+frda_ks_k0(x, y, z)*(frda_ks_ddc_D1D1 KS_func_pass_args_macro )*(frda_ks_dk1_D2 KS_func_pass_args_macro ) + 
+frda_ks_k0(x, y, z)*(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk1_D1D1 KS_func_pass_args_macro ) + 
+2*frda_ks_k0(x, y, z)*(frda_ks_dk1_D1 KS_func_pass_args_macro )*(frda_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
+2*frda_ks_k1(x, y, z)*(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk0_D1D2 KS_func_pass_args_macro ) + 
+frda_ks_k1(x, y, z)*(frda_ks_ddc_D1D1 KS_func_pass_args_macro )*(frda_ks_dk0_D2 KS_func_pass_args_macro ) + 
+frda_ks_k1(x, y, z)*(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk0_D1D1 KS_func_pass_args_macro ) + 
+2*frda_ks_k1(x, y, z)*(frda_ks_dk0_D1 KS_func_pass_args_macro )*(frda_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
+2*(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_dk0_D1 KS_func_pass_args_macro )*
+(frda_ks_dk1_D2 KS_func_pass_args_macro ) + 2*(frda_ks_dc_D1 KS_func_pass_args_macro )*
+(frda_ks_dk0_D2 KS_func_pass_args_macro )*(frda_ks_dk1_D1 KS_func_pass_args_macro ) + 2*
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_dk0_D1 KS_func_pass_args_macro )*
+(frda_ks_dk1_D1 KS_func_pass_args_macro );
 
     _dddgamma_D1D2D2D0D0[ijk]=
 /* mcode in progress ... */
@@ -6390,26 +6390,26 @@ bbn_ks_k1(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D1 KS_
 // c
 // k1
 // k2
-bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_dddk2_D0D0D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-bbn_ks_k2(x, y, z)*(bbn_ks_dddk1_D0D0D2 KS_func_pass_args_macro ) + 2*bbn_ks_c(x, y, z)*
-(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_ddk1_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 
-bbn_ks_c(x, y, z)*(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D0 KS_func_pass_args_macro ) + 
-2*bbn_ks_c(x, y, z)*(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D2 KS_func_pass_args_macro ) + 
-bbn_ks_k1(x, y, z)*bbn_ks_k2(x, y, z)*(bbn_ks_dddc_D0D0D2 KS_func_pass_args_macro ) + 2*
-bbn_ks_k1(x, y, z)*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D2 KS_func_pass_args_macro ) + 
-bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 
-bbn_ks_k1(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D0 KS_func_pass_args_macro ) + 
-2*bbn_ks_k1(x, y, z)*(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_k2(x, y, z)*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D2 KS_func_pass_args_macro ) + 
-bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + 
-bbn_ks_k2(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D0 KS_func_pass_args_macro ) + 
-2*bbn_ks_k2(x, y, z)*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
-2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + 2*
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk2_D0 KS_func_pass_args_macro );
+frda_ks_c(x, y, z)*frda_ks_k1(x, y, z)*(frda_ks_dddk2_D0D0D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+frda_ks_k2(x, y, z)*(frda_ks_dddk1_D0D0D2 KS_func_pass_args_macro ) + 2*frda_ks_c(x, y, z)*
+(frda_ks_dk1_D0 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_ddk1_D0D0 KS_func_pass_args_macro )*(frda_ks_dk2_D2 KS_func_pass_args_macro ) + 
+frda_ks_c(x, y, z)*(frda_ks_dk1_D2 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D0 KS_func_pass_args_macro ) + 
+2*frda_ks_c(x, y, z)*(frda_ks_dk2_D0 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D2 KS_func_pass_args_macro ) + 
+frda_ks_k1(x, y, z)*frda_ks_k2(x, y, z)*(frda_ks_dddc_D0D0D2 KS_func_pass_args_macro ) + 2*
+frda_ks_k1(x, y, z)*(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D2 KS_func_pass_args_macro ) + 
+frda_ks_k1(x, y, z)*(frda_ks_ddc_D0D0 KS_func_pass_args_macro )*(frda_ks_dk2_D2 KS_func_pass_args_macro ) + 
+frda_ks_k1(x, y, z)*(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D0 KS_func_pass_args_macro ) + 
+2*frda_ks_k1(x, y, z)*(frda_ks_dk2_D0 KS_func_pass_args_macro )*(frda_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
+2*frda_ks_k2(x, y, z)*(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D2 KS_func_pass_args_macro ) + 
+frda_ks_k2(x, y, z)*(frda_ks_ddc_D0D0 KS_func_pass_args_macro )*(frda_ks_dk1_D2 KS_func_pass_args_macro ) + 
+frda_ks_k2(x, y, z)*(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D0 KS_func_pass_args_macro ) + 
+2*frda_ks_k2(x, y, z)*(frda_ks_dk1_D0 KS_func_pass_args_macro )*(frda_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
+2*(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_dk1_D0 KS_func_pass_args_macro )*
+(frda_ks_dk2_D2 KS_func_pass_args_macro ) + 2*(frda_ks_dc_D0 KS_func_pass_args_macro )*
+(frda_ks_dk1_D2 KS_func_pass_args_macro )*(frda_ks_dk2_D0 KS_func_pass_args_macro ) + 2*
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_dk1_D0 KS_func_pass_args_macro )*
+(frda_ks_dk2_D0 KS_func_pass_args_macro );
 
     _dddgamma_D0D1D2D0D0[ijk]=
 /* mcode in progress ... */
@@ -6432,26 +6432,26 @@ bbn_ks_k2(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D0 KS_
 // c
 // k0
 // k1
-bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dddk1_D0D0D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-bbn_ks_k1(x, y, z)*(bbn_ks_dddk0_D0D0D2 KS_func_pass_args_macro ) + 2*bbn_ks_c(x, y, z)*
-(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_ddk0_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + 
-bbn_ks_c(x, y, z)*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D0 KS_func_pass_args_macro ) + 
-2*bbn_ks_c(x, y, z)*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D2 KS_func_pass_args_macro ) + 
-bbn_ks_k0(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_dddc_D0D0D2 KS_func_pass_args_macro ) + 2*
-bbn_ks_k0(x, y, z)*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D2 KS_func_pass_args_macro ) + 
-bbn_ks_k0(x, y, z)*(bbn_ks_ddc_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + 
-bbn_ks_k0(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D0 KS_func_pass_args_macro ) + 
-2*bbn_ks_k0(x, y, z)*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_k1(x, y, z)*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D2 KS_func_pass_args_macro ) + 
-bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D2 KS_func_pass_args_macro ) + 
-bbn_ks_k1(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D0 KS_func_pass_args_macro ) + 
-2*bbn_ks_k1(x, y, z)*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
-2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro ) + 2*
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk1_D0 KS_func_pass_args_macro );
+frda_ks_c(x, y, z)*frda_ks_k0(x, y, z)*(frda_ks_dddk1_D0D0D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+frda_ks_k1(x, y, z)*(frda_ks_dddk0_D0D0D2 KS_func_pass_args_macro ) + 2*frda_ks_c(x, y, z)*
+(frda_ks_dk0_D0 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_ddk0_D0D0 KS_func_pass_args_macro )*(frda_ks_dk1_D2 KS_func_pass_args_macro ) + 
+frda_ks_c(x, y, z)*(frda_ks_dk0_D2 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D0 KS_func_pass_args_macro ) + 
+2*frda_ks_c(x, y, z)*(frda_ks_dk1_D0 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D2 KS_func_pass_args_macro ) + 
+frda_ks_k0(x, y, z)*frda_ks_k1(x, y, z)*(frda_ks_dddc_D0D0D2 KS_func_pass_args_macro ) + 2*
+frda_ks_k0(x, y, z)*(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D2 KS_func_pass_args_macro ) + 
+frda_ks_k0(x, y, z)*(frda_ks_ddc_D0D0 KS_func_pass_args_macro )*(frda_ks_dk1_D2 KS_func_pass_args_macro ) + 
+frda_ks_k0(x, y, z)*(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D0 KS_func_pass_args_macro ) + 
+2*frda_ks_k0(x, y, z)*(frda_ks_dk1_D0 KS_func_pass_args_macro )*(frda_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
+2*frda_ks_k1(x, y, z)*(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D2 KS_func_pass_args_macro ) + 
+frda_ks_k1(x, y, z)*(frda_ks_ddc_D0D0 KS_func_pass_args_macro )*(frda_ks_dk0_D2 KS_func_pass_args_macro ) + 
+frda_ks_k1(x, y, z)*(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D0 KS_func_pass_args_macro ) + 
+2*frda_ks_k1(x, y, z)*(frda_ks_dk0_D0 KS_func_pass_args_macro )*(frda_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
+2*(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_dk0_D0 KS_func_pass_args_macro )*
+(frda_ks_dk1_D2 KS_func_pass_args_macro ) + 2*(frda_ks_dc_D0 KS_func_pass_args_macro )*
+(frda_ks_dk0_D2 KS_func_pass_args_macro )*(frda_ks_dk1_D0 KS_func_pass_args_macro ) + 2*
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_dk0_D0 KS_func_pass_args_macro )*
+(frda_ks_dk1_D0 KS_func_pass_args_macro );
 
     _dddgamma_D1D2D1D2D0[ijk]=
 /* mcode in progress ... */
@@ -6480,36 +6480,36 @@ bbn_ks_k1(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D0 KS_
 // c
 // k1
 // k2
-bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_dddk2_D0D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-bbn_ks_k2(x, y, z)*(bbn_ks_dddk1_D0D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D1 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk2_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk2_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D1 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
-bbn_ks_k2(x, y, z)*(bbn_ks_dddc_D0D1D2 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
-(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D2 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
-(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D2 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D1 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
-(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
-(bbn_ks_dk2_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
-(bbn_ks_dk2_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
-(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D2 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
-(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D2 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D1 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
-(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
-(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
-(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
-(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*
-(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + (bbn_ks_dc_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 
-(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + (bbn_ks_dc_D1 KS_func_pass_args_macro )*
-(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + 
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + (bbn_ks_dc_D2 KS_func_pass_args_macro )*
-(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro );
+frda_ks_c(x, y, z)*frda_ks_k1(x, y, z)*(frda_ks_dddk2_D0D1D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+frda_ks_k2(x, y, z)*(frda_ks_dddk1_D0D1D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk1_D0 KS_func_pass_args_macro )*(frda_ks_ddk2_D1D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk1_D1 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk1_D2 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D1 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk2_D0 KS_func_pass_args_macro )*(frda_ks_ddk1_D1D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk2_D1 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk2_D2 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D1 KS_func_pass_args_macro ) + frda_ks_k1(x, y, z)*
+frda_ks_k2(x, y, z)*(frda_ks_dddc_D0D1D2 KS_func_pass_args_macro ) + frda_ks_k1(x, y, z)*
+(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk2_D1D2 KS_func_pass_args_macro ) + frda_ks_k1(x, y, z)*
+(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D2 KS_func_pass_args_macro ) + frda_ks_k1(x, y, z)*
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D1 KS_func_pass_args_macro ) + frda_ks_k1(x, y, z)*
+(frda_ks_dk2_D0 KS_func_pass_args_macro )*(frda_ks_ddc_D1D2 KS_func_pass_args_macro ) + frda_ks_k1(x, y, z)*
+(frda_ks_dk2_D1 KS_func_pass_args_macro )*(frda_ks_ddc_D0D2 KS_func_pass_args_macro ) + frda_ks_k1(x, y, z)*
+(frda_ks_dk2_D2 KS_func_pass_args_macro )*(frda_ks_ddc_D0D1 KS_func_pass_args_macro ) + frda_ks_k2(x, y, z)*
+(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk1_D1D2 KS_func_pass_args_macro ) + frda_ks_k2(x, y, z)*
+(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D2 KS_func_pass_args_macro ) + frda_ks_k2(x, y, z)*
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D1 KS_func_pass_args_macro ) + frda_ks_k2(x, y, z)*
+(frda_ks_dk1_D0 KS_func_pass_args_macro )*(frda_ks_ddc_D1D2 KS_func_pass_args_macro ) + frda_ks_k2(x, y, z)*
+(frda_ks_dk1_D1 KS_func_pass_args_macro )*(frda_ks_ddc_D0D2 KS_func_pass_args_macro ) + frda_ks_k2(x, y, z)*
+(frda_ks_dk1_D2 KS_func_pass_args_macro )*(frda_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_dk1_D1 KS_func_pass_args_macro )*
+(frda_ks_dk2_D2 KS_func_pass_args_macro ) + (frda_ks_dc_D0 KS_func_pass_args_macro )*
+(frda_ks_dk1_D2 KS_func_pass_args_macro )*(frda_ks_dk2_D1 KS_func_pass_args_macro ) + 
+(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_dk1_D0 KS_func_pass_args_macro )*
+(frda_ks_dk2_D2 KS_func_pass_args_macro ) + (frda_ks_dc_D1 KS_func_pass_args_macro )*
+(frda_ks_dk1_D2 KS_func_pass_args_macro )*(frda_ks_dk2_D0 KS_func_pass_args_macro ) + 
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_dk1_D0 KS_func_pass_args_macro )*
+(frda_ks_dk2_D1 KS_func_pass_args_macro ) + (frda_ks_dc_D2 KS_func_pass_args_macro )*
+(frda_ks_dk1_D1 KS_func_pass_args_macro )*(frda_ks_dk2_D0 KS_func_pass_args_macro );
 
     _dddgamma_D2D2D1D0D1[ijk]=
 /* mcode in progress ... */
@@ -6526,17 +6526,17 @@ bbn_ks_k2(x, y, z)*(bbn_ks_dddc_D0D1D2 KS_func_pass_args_macro ) + bbn_ks_k1(x, 
 // Derivative
 // c
 // k2
-2*bbn_ks_c(x, y, z)*bbn_ks_k2(x, y, z)*(bbn_ks_dddk2_D0D1D1 KS_func_pass_args_macro ) + 2*
-bbn_ks_c(x, y, z)*(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D1 KS_func_pass_args_macro ) + 
-4*bbn_ks_c(x, y, z)*(bbn_ks_dk2_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D1 KS_func_pass_args_macro ) + 
-pow(bbn_ks_k2(x, y, z), 2)*(bbn_ks_dddc_D0D1D1 KS_func_pass_args_macro ) + 2*bbn_ks_k2(x, y, z)*
-(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D1 KS_func_pass_args_macro ) + 4*
-bbn_ks_k2(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D1 KS_func_pass_args_macro ) + 
-2*bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + 
-4*bbn_ks_k2(x, y, z)*(bbn_ks_dk2_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
-2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*pow((bbn_ks_dk2_D1 KS_func_pass_args_macro ), 2) + 4*
-(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk2_D1 KS_func_pass_args_macro );
+2*frda_ks_c(x, y, z)*frda_ks_k2(x, y, z)*(frda_ks_dddk2_D0D1D1 KS_func_pass_args_macro ) + 2*
+frda_ks_c(x, y, z)*(frda_ks_dk2_D0 KS_func_pass_args_macro )*(frda_ks_ddk2_D1D1 KS_func_pass_args_macro ) + 
+4*frda_ks_c(x, y, z)*(frda_ks_dk2_D1 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D1 KS_func_pass_args_macro ) + 
+pow(frda_ks_k2(x, y, z), 2)*(frda_ks_dddc_D0D1D1 KS_func_pass_args_macro ) + 2*frda_ks_k2(x, y, z)*
+(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk2_D1D1 KS_func_pass_args_macro ) + 4*
+frda_ks_k2(x, y, z)*(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D1 KS_func_pass_args_macro ) + 
+2*frda_ks_k2(x, y, z)*(frda_ks_ddc_D1D1 KS_func_pass_args_macro )*(frda_ks_dk2_D0 KS_func_pass_args_macro ) + 
+4*frda_ks_k2(x, y, z)*(frda_ks_dk2_D1 KS_func_pass_args_macro )*(frda_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+2*(frda_ks_dc_D0 KS_func_pass_args_macro )*pow((frda_ks_dk2_D1 KS_func_pass_args_macro ), 2) + 4*
+(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_dk2_D0 KS_func_pass_args_macro )*
+(frda_ks_dk2_D1 KS_func_pass_args_macro );
 
     _dddgamma_D2D2D1D2D2[ijk]=
 /* mcode in progress ... */
@@ -6553,17 +6553,17 @@ bbn_ks_k2(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D1 KS_
 // Derivative
 // c
 // k2
-2*bbn_ks_c(x, y, z)*bbn_ks_k2(x, y, z)*(bbn_ks_dddk2_D1D2D2 KS_func_pass_args_macro ) + 2*
-bbn_ks_c(x, y, z)*(bbn_ks_dk2_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D2D2 KS_func_pass_args_macro ) + 
-4*bbn_ks_c(x, y, z)*(bbn_ks_dk2_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D2 KS_func_pass_args_macro ) + 
-pow(bbn_ks_k2(x, y, z), 2)*(bbn_ks_dddc_D1D2D2 KS_func_pass_args_macro ) + 2*bbn_ks_k2(x, y, z)*
-(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D2D2 KS_func_pass_args_macro ) + 4*
-bbn_ks_k2(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 
-4*bbn_ks_k2(x, y, z)*(bbn_ks_dk2_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
-2*(bbn_ks_dc_D1 KS_func_pass_args_macro )*pow((bbn_ks_dk2_D2 KS_func_pass_args_macro ), 2) + 4*
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro )*
-(bbn_ks_dk2_D2 KS_func_pass_args_macro );
+2*frda_ks_c(x, y, z)*frda_ks_k2(x, y, z)*(frda_ks_dddk2_D1D2D2 KS_func_pass_args_macro ) + 2*
+frda_ks_c(x, y, z)*(frda_ks_dk2_D1 KS_func_pass_args_macro )*(frda_ks_ddk2_D2D2 KS_func_pass_args_macro ) + 
+4*frda_ks_c(x, y, z)*(frda_ks_dk2_D2 KS_func_pass_args_macro )*(frda_ks_ddk2_D1D2 KS_func_pass_args_macro ) + 
+pow(frda_ks_k2(x, y, z), 2)*(frda_ks_dddc_D1D2D2 KS_func_pass_args_macro ) + 2*frda_ks_k2(x, y, z)*
+(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk2_D2D2 KS_func_pass_args_macro ) + 4*
+frda_ks_k2(x, y, z)*(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk2_D1D2 KS_func_pass_args_macro ) + 
+2*frda_ks_k2(x, y, z)*(frda_ks_ddc_D2D2 KS_func_pass_args_macro )*(frda_ks_dk2_D1 KS_func_pass_args_macro ) + 
+4*frda_ks_k2(x, y, z)*(frda_ks_dk2_D2 KS_func_pass_args_macro )*(frda_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
+2*(frda_ks_dc_D1 KS_func_pass_args_macro )*pow((frda_ks_dk2_D2 KS_func_pass_args_macro ), 2) + 4*
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_dk2_D1 KS_func_pass_args_macro )*
+(frda_ks_dk2_D2 KS_func_pass_args_macro );
 
     _dddgamma_D1D1D1D0D0[ijk]=
 /* mcode in progress ... */
@@ -6580,17 +6580,17 @@ bbn_ks_k2(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D2 KS_
 // Derivative
 // c
 // k1
-2*bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_dddk1_D0D0D1 KS_func_pass_args_macro ) + 4*
-bbn_ks_c(x, y, z)*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D1 KS_func_pass_args_macro ) + 
-2*bbn_ks_c(x, y, z)*(bbn_ks_ddk1_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro ) + 
-pow(bbn_ks_k1(x, y, z), 2)*(bbn_ks_dddc_D0D0D1 KS_func_pass_args_macro ) + 4*bbn_ks_k1(x, y, z)*
-(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D1 KS_func_pass_args_macro ) + 2*
-bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro ) + 
-2*bbn_ks_k1(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D0 KS_func_pass_args_macro ) + 
-4*bbn_ks_k1(x, y, z)*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
-4*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk1_D1 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D1 KS_func_pass_args_macro )*
-pow((bbn_ks_dk1_D0 KS_func_pass_args_macro ), 2);
+2*frda_ks_c(x, y, z)*frda_ks_k1(x, y, z)*(frda_ks_dddk1_D0D0D1 KS_func_pass_args_macro ) + 4*
+frda_ks_c(x, y, z)*(frda_ks_dk1_D0 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D1 KS_func_pass_args_macro ) + 
+2*frda_ks_c(x, y, z)*(frda_ks_ddk1_D0D0 KS_func_pass_args_macro )*(frda_ks_dk1_D1 KS_func_pass_args_macro ) + 
+pow(frda_ks_k1(x, y, z), 2)*(frda_ks_dddc_D0D0D1 KS_func_pass_args_macro ) + 4*frda_ks_k1(x, y, z)*
+(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D1 KS_func_pass_args_macro ) + 2*
+frda_ks_k1(x, y, z)*(frda_ks_ddc_D0D0 KS_func_pass_args_macro )*(frda_ks_dk1_D1 KS_func_pass_args_macro ) + 
+2*frda_ks_k1(x, y, z)*(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D0 KS_func_pass_args_macro ) + 
+4*frda_ks_k1(x, y, z)*(frda_ks_dk1_D0 KS_func_pass_args_macro )*(frda_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+4*(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_dk1_D0 KS_func_pass_args_macro )*
+(frda_ks_dk1_D1 KS_func_pass_args_macro ) + 2*(frda_ks_dc_D1 KS_func_pass_args_macro )*
+pow((frda_ks_dk1_D0 KS_func_pass_args_macro ), 2);
 
     _dddgamma_D0D1D1D0D2[ijk]=
 /* mcode in progress ... */
@@ -6619,36 +6619,36 @@ pow((bbn_ks_dk1_D0 KS_func_pass_args_macro ), 2);
 // c
 // k0
 // k1
-bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dddk1_D0D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-bbn_ks_k1(x, y, z)*(bbn_ks_dddk0_D0D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D1 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D1 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
-bbn_ks_k1(x, y, z)*(bbn_ks_dddc_D0D1D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
-(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
-(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D1 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
-(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
-(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
-(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
-(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D2 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
-(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D2 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D1 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
-(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
-(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
-(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
-(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*
-(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + (bbn_ks_dc_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro ) + 
-(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + (bbn_ks_dc_D1 KS_func_pass_args_macro )*
-(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro ) + 
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk1_D1 KS_func_pass_args_macro ) + (bbn_ks_dc_D2 KS_func_pass_args_macro )*
-(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro );
+frda_ks_c(x, y, z)*frda_ks_k0(x, y, z)*(frda_ks_dddk1_D0D1D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+frda_ks_k1(x, y, z)*(frda_ks_dddk0_D0D1D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk0_D0 KS_func_pass_args_macro )*(frda_ks_ddk1_D1D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk0_D1 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk0_D2 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D1 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk1_D0 KS_func_pass_args_macro )*(frda_ks_ddk0_D1D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk1_D1 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk1_D2 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D1 KS_func_pass_args_macro ) + frda_ks_k0(x, y, z)*
+frda_ks_k1(x, y, z)*(frda_ks_dddc_D0D1D2 KS_func_pass_args_macro ) + frda_ks_k0(x, y, z)*
+(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk1_D1D2 KS_func_pass_args_macro ) + frda_ks_k0(x, y, z)*
+(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D2 KS_func_pass_args_macro ) + frda_ks_k0(x, y, z)*
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D1 KS_func_pass_args_macro ) + frda_ks_k0(x, y, z)*
+(frda_ks_dk1_D0 KS_func_pass_args_macro )*(frda_ks_ddc_D1D2 KS_func_pass_args_macro ) + frda_ks_k0(x, y, z)*
+(frda_ks_dk1_D1 KS_func_pass_args_macro )*(frda_ks_ddc_D0D2 KS_func_pass_args_macro ) + frda_ks_k0(x, y, z)*
+(frda_ks_dk1_D2 KS_func_pass_args_macro )*(frda_ks_ddc_D0D1 KS_func_pass_args_macro ) + frda_ks_k1(x, y, z)*
+(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk0_D1D2 KS_func_pass_args_macro ) + frda_ks_k1(x, y, z)*
+(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D2 KS_func_pass_args_macro ) + frda_ks_k1(x, y, z)*
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D1 KS_func_pass_args_macro ) + frda_ks_k1(x, y, z)*
+(frda_ks_dk0_D0 KS_func_pass_args_macro )*(frda_ks_ddc_D1D2 KS_func_pass_args_macro ) + frda_ks_k1(x, y, z)*
+(frda_ks_dk0_D1 KS_func_pass_args_macro )*(frda_ks_ddc_D0D2 KS_func_pass_args_macro ) + frda_ks_k1(x, y, z)*
+(frda_ks_dk0_D2 KS_func_pass_args_macro )*(frda_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_dk0_D1 KS_func_pass_args_macro )*
+(frda_ks_dk1_D2 KS_func_pass_args_macro ) + (frda_ks_dc_D0 KS_func_pass_args_macro )*
+(frda_ks_dk0_D2 KS_func_pass_args_macro )*(frda_ks_dk1_D1 KS_func_pass_args_macro ) + 
+(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_dk0_D0 KS_func_pass_args_macro )*
+(frda_ks_dk1_D2 KS_func_pass_args_macro ) + (frda_ks_dc_D1 KS_func_pass_args_macro )*
+(frda_ks_dk0_D2 KS_func_pass_args_macro )*(frda_ks_dk1_D0 KS_func_pass_args_macro ) + 
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_dk0_D0 KS_func_pass_args_macro )*
+(frda_ks_dk1_D1 KS_func_pass_args_macro ) + (frda_ks_dc_D2 KS_func_pass_args_macro )*
+(frda_ks_dk0_D1 KS_func_pass_args_macro )*(frda_ks_dk1_D0 KS_func_pass_args_macro );
 
     _dddgamma_D0D2D2D2D0[ijk]=
 /* mcode in progress ... */
@@ -6671,26 +6671,26 @@ bbn_ks_k1(x, y, z)*(bbn_ks_dddc_D0D1D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, 
 // c
 // k0
 // k2
-bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dddk2_D0D2D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-bbn_ks_k2(x, y, z)*(bbn_ks_dddk0_D0D2D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D2D2 KS_func_pass_args_macro ) + 2*
-bbn_ks_c(x, y, z)*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D2 KS_func_pass_args_macro ) + 
-bbn_ks_c(x, y, z)*(bbn_ks_ddk0_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + 
-2*bbn_ks_c(x, y, z)*(bbn_ks_dk2_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D2 KS_func_pass_args_macro ) + 
-bbn_ks_k0(x, y, z)*bbn_ks_k2(x, y, z)*(bbn_ks_dddc_D0D2D2 KS_func_pass_args_macro ) + 
-bbn_ks_k0(x, y, z)*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D2D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_k0(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D2 KS_func_pass_args_macro ) + 
-bbn_ks_k0(x, y, z)*(bbn_ks_ddc_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + 
-2*bbn_ks_k0(x, y, z)*(bbn_ks_dk2_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
-bbn_ks_k2(x, y, z)*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D2D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_k2(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D2 KS_func_pass_args_macro ) + 
-bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro ) + 
-2*bbn_ks_k2(x, y, z)*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
-2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*
-(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D2 KS_func_pass_args_macro )*
-(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 2*
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*
-(bbn_ks_dk2_D0 KS_func_pass_args_macro );
+frda_ks_c(x, y, z)*frda_ks_k0(x, y, z)*(frda_ks_dddk2_D0D2D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+frda_ks_k2(x, y, z)*(frda_ks_dddk0_D0D2D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk0_D0 KS_func_pass_args_macro )*(frda_ks_ddk2_D2D2 KS_func_pass_args_macro ) + 2*
+frda_ks_c(x, y, z)*(frda_ks_dk0_D2 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D2 KS_func_pass_args_macro ) + 
+frda_ks_c(x, y, z)*(frda_ks_ddk0_D2D2 KS_func_pass_args_macro )*(frda_ks_dk2_D0 KS_func_pass_args_macro ) + 
+2*frda_ks_c(x, y, z)*(frda_ks_dk2_D2 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D2 KS_func_pass_args_macro ) + 
+frda_ks_k0(x, y, z)*frda_ks_k2(x, y, z)*(frda_ks_dddc_D0D2D2 KS_func_pass_args_macro ) + 
+frda_ks_k0(x, y, z)*(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk2_D2D2 KS_func_pass_args_macro ) + 
+2*frda_ks_k0(x, y, z)*(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D2 KS_func_pass_args_macro ) + 
+frda_ks_k0(x, y, z)*(frda_ks_ddc_D2D2 KS_func_pass_args_macro )*(frda_ks_dk2_D0 KS_func_pass_args_macro ) + 
+2*frda_ks_k0(x, y, z)*(frda_ks_dk2_D2 KS_func_pass_args_macro )*(frda_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
+frda_ks_k2(x, y, z)*(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk0_D2D2 KS_func_pass_args_macro ) + 
+2*frda_ks_k2(x, y, z)*(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D2 KS_func_pass_args_macro ) + 
+frda_ks_k2(x, y, z)*(frda_ks_ddc_D2D2 KS_func_pass_args_macro )*(frda_ks_dk0_D0 KS_func_pass_args_macro ) + 
+2*frda_ks_k2(x, y, z)*(frda_ks_dk0_D2 KS_func_pass_args_macro )*(frda_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
+2*(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_dk0_D2 KS_func_pass_args_macro )*
+(frda_ks_dk2_D2 KS_func_pass_args_macro ) + 2*(frda_ks_dc_D2 KS_func_pass_args_macro )*
+(frda_ks_dk0_D0 KS_func_pass_args_macro )*(frda_ks_dk2_D2 KS_func_pass_args_macro ) + 2*
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_dk0_D2 KS_func_pass_args_macro )*
+(frda_ks_dk2_D0 KS_func_pass_args_macro );
 
     _dddgamma_D2D2D2D2D2[ijk]=
 /* mcode in progress ... */
@@ -6703,12 +6703,12 @@ bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_
 // Derivative
 // c
 // k2
-2*bbn_ks_c(x, y, z)*bbn_ks_k2(x, y, z)*(bbn_ks_dddk2_D2D2D2 KS_func_pass_args_macro ) + 6*
-bbn_ks_c(x, y, z)*(bbn_ks_dk2_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D2D2 KS_func_pass_args_macro ) + 
-pow(bbn_ks_k2(x, y, z), 2)*(bbn_ks_dddc_D2D2D2 KS_func_pass_args_macro ) + 6*bbn_ks_k2(x, y, z)*
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D2D2 KS_func_pass_args_macro ) + 6*
-bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 
-6*(bbn_ks_dc_D2 KS_func_pass_args_macro )*pow((bbn_ks_dk2_D2 KS_func_pass_args_macro ), 2);
+2*frda_ks_c(x, y, z)*frda_ks_k2(x, y, z)*(frda_ks_dddk2_D2D2D2 KS_func_pass_args_macro ) + 6*
+frda_ks_c(x, y, z)*(frda_ks_dk2_D2 KS_func_pass_args_macro )*(frda_ks_ddk2_D2D2 KS_func_pass_args_macro ) + 
+pow(frda_ks_k2(x, y, z), 2)*(frda_ks_dddc_D2D2D2 KS_func_pass_args_macro ) + 6*frda_ks_k2(x, y, z)*
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk2_D2D2 KS_func_pass_args_macro ) + 6*
+frda_ks_k2(x, y, z)*(frda_ks_ddc_D2D2 KS_func_pass_args_macro )*(frda_ks_dk2_D2 KS_func_pass_args_macro ) + 
+6*(frda_ks_dc_D2 KS_func_pass_args_macro )*pow((frda_ks_dk2_D2 KS_func_pass_args_macro ), 2);
 
     _dddgamma_D0D2D2D0D1[ijk]=
 /* mcode in progress ... */
@@ -6737,36 +6737,36 @@ bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_
 // c
 // k0
 // k2
-bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dddk2_D0D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-bbn_ks_k2(x, y, z)*(bbn_ks_dddk0_D0D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D1 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk2_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk2_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D1 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
-bbn_ks_k2(x, y, z)*(bbn_ks_dddc_D0D1D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
-(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
-(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D1 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
-(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
-(bbn_ks_dk2_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, y, z)*
-(bbn_ks_dk2_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
-(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D2 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
-(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D2 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D1 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
-(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
-(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
-(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
-(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*
-(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + (bbn_ks_dc_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 
-(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + (bbn_ks_dc_D1 KS_func_pass_args_macro )*
-(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + 
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + (bbn_ks_dc_D2 KS_func_pass_args_macro )*
-(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro );
+frda_ks_c(x, y, z)*frda_ks_k0(x, y, z)*(frda_ks_dddk2_D0D1D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+frda_ks_k2(x, y, z)*(frda_ks_dddk0_D0D1D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk0_D0 KS_func_pass_args_macro )*(frda_ks_ddk2_D1D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk0_D1 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk0_D2 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D1 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk2_D0 KS_func_pass_args_macro )*(frda_ks_ddk0_D1D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk2_D1 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk2_D2 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D1 KS_func_pass_args_macro ) + frda_ks_k0(x, y, z)*
+frda_ks_k2(x, y, z)*(frda_ks_dddc_D0D1D2 KS_func_pass_args_macro ) + frda_ks_k0(x, y, z)*
+(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk2_D1D2 KS_func_pass_args_macro ) + frda_ks_k0(x, y, z)*
+(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D2 KS_func_pass_args_macro ) + frda_ks_k0(x, y, z)*
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D1 KS_func_pass_args_macro ) + frda_ks_k0(x, y, z)*
+(frda_ks_dk2_D0 KS_func_pass_args_macro )*(frda_ks_ddc_D1D2 KS_func_pass_args_macro ) + frda_ks_k0(x, y, z)*
+(frda_ks_dk2_D1 KS_func_pass_args_macro )*(frda_ks_ddc_D0D2 KS_func_pass_args_macro ) + frda_ks_k0(x, y, z)*
+(frda_ks_dk2_D2 KS_func_pass_args_macro )*(frda_ks_ddc_D0D1 KS_func_pass_args_macro ) + frda_ks_k2(x, y, z)*
+(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk0_D1D2 KS_func_pass_args_macro ) + frda_ks_k2(x, y, z)*
+(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D2 KS_func_pass_args_macro ) + frda_ks_k2(x, y, z)*
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D1 KS_func_pass_args_macro ) + frda_ks_k2(x, y, z)*
+(frda_ks_dk0_D0 KS_func_pass_args_macro )*(frda_ks_ddc_D1D2 KS_func_pass_args_macro ) + frda_ks_k2(x, y, z)*
+(frda_ks_dk0_D1 KS_func_pass_args_macro )*(frda_ks_ddc_D0D2 KS_func_pass_args_macro ) + frda_ks_k2(x, y, z)*
+(frda_ks_dk0_D2 KS_func_pass_args_macro )*(frda_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_dk0_D1 KS_func_pass_args_macro )*
+(frda_ks_dk2_D2 KS_func_pass_args_macro ) + (frda_ks_dc_D0 KS_func_pass_args_macro )*
+(frda_ks_dk0_D2 KS_func_pass_args_macro )*(frda_ks_dk2_D1 KS_func_pass_args_macro ) + 
+(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_dk0_D0 KS_func_pass_args_macro )*
+(frda_ks_dk2_D2 KS_func_pass_args_macro ) + (frda_ks_dc_D1 KS_func_pass_args_macro )*
+(frda_ks_dk0_D2 KS_func_pass_args_macro )*(frda_ks_dk2_D0 KS_func_pass_args_macro ) + 
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_dk0_D0 KS_func_pass_args_macro )*
+(frda_ks_dk2_D1 KS_func_pass_args_macro ) + (frda_ks_dc_D2 KS_func_pass_args_macro )*
+(frda_ks_dk0_D1 KS_func_pass_args_macro )*(frda_ks_dk2_D0 KS_func_pass_args_macro );
 
     _dddgamma_D0D2D1D1D2[ijk]=
 /* mcode in progress ... */
@@ -6789,26 +6789,26 @@ bbn_ks_k2(x, y, z)*(bbn_ks_dddc_D0D1D2 KS_func_pass_args_macro ) + bbn_ks_k0(x, 
 // c
 // k0
 // k2
-bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dddk2_D1D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-bbn_ks_k2(x, y, z)*(bbn_ks_dddk0_D1D1D2 KS_func_pass_args_macro ) + 2*bbn_ks_c(x, y, z)*
-(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_ddk0_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 
-bbn_ks_c(x, y, z)*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D1 KS_func_pass_args_macro ) + 
-2*bbn_ks_c(x, y, z)*(bbn_ks_dk2_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D2 KS_func_pass_args_macro ) + 
-bbn_ks_k0(x, y, z)*bbn_ks_k2(x, y, z)*(bbn_ks_dddc_D1D1D2 KS_func_pass_args_macro ) + 2*
-bbn_ks_k0(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D2 KS_func_pass_args_macro ) + 
-bbn_ks_k0(x, y, z)*(bbn_ks_ddc_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 
-bbn_ks_k0(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D1 KS_func_pass_args_macro ) + 
-2*bbn_ks_k0(x, y, z)*(bbn_ks_dk2_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_k2(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D2 KS_func_pass_args_macro ) + 
-bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D2 KS_func_pass_args_macro ) + 
-bbn_ks_k2(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D1 KS_func_pass_args_macro ) + 
-2*bbn_ks_k2(x, y, z)*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
-2*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*
-(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D1 KS_func_pass_args_macro )*
-(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 2*
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*
-(bbn_ks_dk2_D1 KS_func_pass_args_macro );
+frda_ks_c(x, y, z)*frda_ks_k0(x, y, z)*(frda_ks_dddk2_D1D1D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+frda_ks_k2(x, y, z)*(frda_ks_dddk0_D1D1D2 KS_func_pass_args_macro ) + 2*frda_ks_c(x, y, z)*
+(frda_ks_dk0_D1 KS_func_pass_args_macro )*(frda_ks_ddk2_D1D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_ddk0_D1D1 KS_func_pass_args_macro )*(frda_ks_dk2_D2 KS_func_pass_args_macro ) + 
+frda_ks_c(x, y, z)*(frda_ks_dk0_D2 KS_func_pass_args_macro )*(frda_ks_ddk2_D1D1 KS_func_pass_args_macro ) + 
+2*frda_ks_c(x, y, z)*(frda_ks_dk2_D1 KS_func_pass_args_macro )*(frda_ks_ddk0_D1D2 KS_func_pass_args_macro ) + 
+frda_ks_k0(x, y, z)*frda_ks_k2(x, y, z)*(frda_ks_dddc_D1D1D2 KS_func_pass_args_macro ) + 2*
+frda_ks_k0(x, y, z)*(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk2_D1D2 KS_func_pass_args_macro ) + 
+frda_ks_k0(x, y, z)*(frda_ks_ddc_D1D1 KS_func_pass_args_macro )*(frda_ks_dk2_D2 KS_func_pass_args_macro ) + 
+frda_ks_k0(x, y, z)*(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk2_D1D1 KS_func_pass_args_macro ) + 
+2*frda_ks_k0(x, y, z)*(frda_ks_dk2_D1 KS_func_pass_args_macro )*(frda_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
+2*frda_ks_k2(x, y, z)*(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk0_D1D2 KS_func_pass_args_macro ) + 
+frda_ks_k2(x, y, z)*(frda_ks_ddc_D1D1 KS_func_pass_args_macro )*(frda_ks_dk0_D2 KS_func_pass_args_macro ) + 
+frda_ks_k2(x, y, z)*(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk0_D1D1 KS_func_pass_args_macro ) + 
+2*frda_ks_k2(x, y, z)*(frda_ks_dk0_D1 KS_func_pass_args_macro )*(frda_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
+2*(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_dk0_D1 KS_func_pass_args_macro )*
+(frda_ks_dk2_D2 KS_func_pass_args_macro ) + 2*(frda_ks_dc_D1 KS_func_pass_args_macro )*
+(frda_ks_dk0_D2 KS_func_pass_args_macro )*(frda_ks_dk2_D1 KS_func_pass_args_macro ) + 2*
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_dk0_D1 KS_func_pass_args_macro )*
+(frda_ks_dk2_D1 KS_func_pass_args_macro );
 
     _dddgamma_D2D2D0D0D2[ijk]=
 /* mcode in progress ... */
@@ -6825,17 +6825,17 @@ bbn_ks_k2(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D1 KS_
 // Derivative
 // c
 // k2
-2*bbn_ks_c(x, y, z)*bbn_ks_k2(x, y, z)*(bbn_ks_dddk2_D0D0D2 KS_func_pass_args_macro ) + 4*
-bbn_ks_c(x, y, z)*(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_c(x, y, z)*(bbn_ks_ddk2_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 
-pow(bbn_ks_k2(x, y, z), 2)*(bbn_ks_dddc_D0D0D2 KS_func_pass_args_macro ) + 4*bbn_ks_k2(x, y, z)*
-(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D2 KS_func_pass_args_macro ) + 2*
-bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_k2(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D0 KS_func_pass_args_macro ) + 
-4*bbn_ks_k2(x, y, z)*(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
-4*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D2 KS_func_pass_args_macro )*
-pow((bbn_ks_dk2_D0 KS_func_pass_args_macro ), 2);
+2*frda_ks_c(x, y, z)*frda_ks_k2(x, y, z)*(frda_ks_dddk2_D0D0D2 KS_func_pass_args_macro ) + 4*
+frda_ks_c(x, y, z)*(frda_ks_dk2_D0 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D2 KS_func_pass_args_macro ) + 
+2*frda_ks_c(x, y, z)*(frda_ks_ddk2_D0D0 KS_func_pass_args_macro )*(frda_ks_dk2_D2 KS_func_pass_args_macro ) + 
+pow(frda_ks_k2(x, y, z), 2)*(frda_ks_dddc_D0D0D2 KS_func_pass_args_macro ) + 4*frda_ks_k2(x, y, z)*
+(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D2 KS_func_pass_args_macro ) + 2*
+frda_ks_k2(x, y, z)*(frda_ks_ddc_D0D0 KS_func_pass_args_macro )*(frda_ks_dk2_D2 KS_func_pass_args_macro ) + 
+2*frda_ks_k2(x, y, z)*(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D0 KS_func_pass_args_macro ) + 
+4*frda_ks_k2(x, y, z)*(frda_ks_dk2_D0 KS_func_pass_args_macro )*(frda_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
+4*(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_dk2_D0 KS_func_pass_args_macro )*
+(frda_ks_dk2_D2 KS_func_pass_args_macro ) + 2*(frda_ks_dc_D2 KS_func_pass_args_macro )*
+pow((frda_ks_dk2_D0 KS_func_pass_args_macro ), 2);
 
     _dddgamma_D2D2D2D0D0[ijk]=
 /* mcode in progress ... */
@@ -6852,17 +6852,17 @@ pow((bbn_ks_dk2_D0 KS_func_pass_args_macro ), 2);
 // Derivative
 // c
 // k2
-2*bbn_ks_c(x, y, z)*bbn_ks_k2(x, y, z)*(bbn_ks_dddk2_D0D0D2 KS_func_pass_args_macro ) + 4*
-bbn_ks_c(x, y, z)*(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_c(x, y, z)*(bbn_ks_ddk2_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 
-pow(bbn_ks_k2(x, y, z), 2)*(bbn_ks_dddc_D0D0D2 KS_func_pass_args_macro ) + 4*bbn_ks_k2(x, y, z)*
-(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D2 KS_func_pass_args_macro ) + 2*
-bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_k2(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D0 KS_func_pass_args_macro ) + 
-4*bbn_ks_k2(x, y, z)*(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
-4*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D2 KS_func_pass_args_macro )*
-pow((bbn_ks_dk2_D0 KS_func_pass_args_macro ), 2);
+2*frda_ks_c(x, y, z)*frda_ks_k2(x, y, z)*(frda_ks_dddk2_D0D0D2 KS_func_pass_args_macro ) + 4*
+frda_ks_c(x, y, z)*(frda_ks_dk2_D0 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D2 KS_func_pass_args_macro ) + 
+2*frda_ks_c(x, y, z)*(frda_ks_ddk2_D0D0 KS_func_pass_args_macro )*(frda_ks_dk2_D2 KS_func_pass_args_macro ) + 
+pow(frda_ks_k2(x, y, z), 2)*(frda_ks_dddc_D0D0D2 KS_func_pass_args_macro ) + 4*frda_ks_k2(x, y, z)*
+(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D2 KS_func_pass_args_macro ) + 2*
+frda_ks_k2(x, y, z)*(frda_ks_ddc_D0D0 KS_func_pass_args_macro )*(frda_ks_dk2_D2 KS_func_pass_args_macro ) + 
+2*frda_ks_k2(x, y, z)*(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D0 KS_func_pass_args_macro ) + 
+4*frda_ks_k2(x, y, z)*(frda_ks_dk2_D0 KS_func_pass_args_macro )*(frda_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
+4*(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_dk2_D0 KS_func_pass_args_macro )*
+(frda_ks_dk2_D2 KS_func_pass_args_macro ) + 2*(frda_ks_dc_D2 KS_func_pass_args_macro )*
+pow((frda_ks_dk2_D0 KS_func_pass_args_macro ), 2);
 
     _dddgamma_D2D2D0D2D0[ijk]=
 /* mcode in progress ... */
@@ -6879,17 +6879,17 @@ pow((bbn_ks_dk2_D0 KS_func_pass_args_macro ), 2);
 // Derivative
 // c
 // k2
-2*bbn_ks_c(x, y, z)*bbn_ks_k2(x, y, z)*(bbn_ks_dddk2_D0D0D2 KS_func_pass_args_macro ) + 4*
-bbn_ks_c(x, y, z)*(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_c(x, y, z)*(bbn_ks_ddk2_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 
-pow(bbn_ks_k2(x, y, z), 2)*(bbn_ks_dddc_D0D0D2 KS_func_pass_args_macro ) + 4*bbn_ks_k2(x, y, z)*
-(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D2 KS_func_pass_args_macro ) + 2*
-bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_k2(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D0 KS_func_pass_args_macro ) + 
-4*bbn_ks_k2(x, y, z)*(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
-4*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D2 KS_func_pass_args_macro )*
-pow((bbn_ks_dk2_D0 KS_func_pass_args_macro ), 2);
+2*frda_ks_c(x, y, z)*frda_ks_k2(x, y, z)*(frda_ks_dddk2_D0D0D2 KS_func_pass_args_macro ) + 4*
+frda_ks_c(x, y, z)*(frda_ks_dk2_D0 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D2 KS_func_pass_args_macro ) + 
+2*frda_ks_c(x, y, z)*(frda_ks_ddk2_D0D0 KS_func_pass_args_macro )*(frda_ks_dk2_D2 KS_func_pass_args_macro ) + 
+pow(frda_ks_k2(x, y, z), 2)*(frda_ks_dddc_D0D0D2 KS_func_pass_args_macro ) + 4*frda_ks_k2(x, y, z)*
+(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D2 KS_func_pass_args_macro ) + 2*
+frda_ks_k2(x, y, z)*(frda_ks_ddc_D0D0 KS_func_pass_args_macro )*(frda_ks_dk2_D2 KS_func_pass_args_macro ) + 
+2*frda_ks_k2(x, y, z)*(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D0 KS_func_pass_args_macro ) + 
+4*frda_ks_k2(x, y, z)*(frda_ks_dk2_D0 KS_func_pass_args_macro )*(frda_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
+4*(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_dk2_D0 KS_func_pass_args_macro )*
+(frda_ks_dk2_D2 KS_func_pass_args_macro ) + 2*(frda_ks_dc_D2 KS_func_pass_args_macro )*
+pow((frda_ks_dk2_D0 KS_func_pass_args_macro ), 2);
 
     _dddgamma_D1D1D2D0D1[ijk]=
 /* mcode in progress ... */
@@ -6910,22 +6910,22 @@ pow((bbn_ks_dk2_D0 KS_func_pass_args_macro ), 2);
 // Derivative
 // c
 // k1
-2*bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_dddk1_D0D1D2 KS_func_pass_args_macro ) + 2*
-bbn_ks_c(x, y, z)*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_c(x, y, z)*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_c(x, y, z)*(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D1 KS_func_pass_args_macro ) + 
-pow(bbn_ks_k1(x, y, z), 2)*(bbn_ks_dddc_D0D1D2 KS_func_pass_args_macro ) + 2*bbn_ks_k1(x, y, z)*
-(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D2 KS_func_pass_args_macro ) + 2*
-bbn_ks_k1(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_k1(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D1 KS_func_pass_args_macro ) + 
-2*bbn_ks_k1(x, y, z)*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_k1(x, y, z)*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_k1(x, y, z)*(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
-2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*
-(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D1 KS_func_pass_args_macro )*
-(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + 2*
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk1_D1 KS_func_pass_args_macro );
+2*frda_ks_c(x, y, z)*frda_ks_k1(x, y, z)*(frda_ks_dddk1_D0D1D2 KS_func_pass_args_macro ) + 2*
+frda_ks_c(x, y, z)*(frda_ks_dk1_D0 KS_func_pass_args_macro )*(frda_ks_ddk1_D1D2 KS_func_pass_args_macro ) + 
+2*frda_ks_c(x, y, z)*(frda_ks_dk1_D1 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D2 KS_func_pass_args_macro ) + 
+2*frda_ks_c(x, y, z)*(frda_ks_dk1_D2 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D1 KS_func_pass_args_macro ) + 
+pow(frda_ks_k1(x, y, z), 2)*(frda_ks_dddc_D0D1D2 KS_func_pass_args_macro ) + 2*frda_ks_k1(x, y, z)*
+(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk1_D1D2 KS_func_pass_args_macro ) + 2*
+frda_ks_k1(x, y, z)*(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D2 KS_func_pass_args_macro ) + 
+2*frda_ks_k1(x, y, z)*(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D1 KS_func_pass_args_macro ) + 
+2*frda_ks_k1(x, y, z)*(frda_ks_dk1_D0 KS_func_pass_args_macro )*(frda_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
+2*frda_ks_k1(x, y, z)*(frda_ks_dk1_D1 KS_func_pass_args_macro )*(frda_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
+2*frda_ks_k1(x, y, z)*(frda_ks_dk1_D2 KS_func_pass_args_macro )*(frda_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+2*(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_dk1_D1 KS_func_pass_args_macro )*
+(frda_ks_dk1_D2 KS_func_pass_args_macro ) + 2*(frda_ks_dc_D1 KS_func_pass_args_macro )*
+(frda_ks_dk1_D0 KS_func_pass_args_macro )*(frda_ks_dk1_D2 KS_func_pass_args_macro ) + 2*
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_dk1_D0 KS_func_pass_args_macro )*
+(frda_ks_dk1_D1 KS_func_pass_args_macro );
 
     _dddgamma_D2D2D0D0D0[ijk]=
 /* mcode in progress ... */
@@ -6938,12 +6938,12 @@ bbn_ks_k1(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D2 KS_
 // Derivative
 // c
 // k2
-2*bbn_ks_c(x, y, z)*bbn_ks_k2(x, y, z)*(bbn_ks_dddk2_D0D0D0 KS_func_pass_args_macro ) + 6*
-bbn_ks_c(x, y, z)*(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D0 KS_func_pass_args_macro ) + 
-pow(bbn_ks_k2(x, y, z), 2)*(bbn_ks_dddc_D0D0D0 KS_func_pass_args_macro ) + 6*bbn_ks_k2(x, y, z)*
-(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D0 KS_func_pass_args_macro ) + 6*
-bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + 
-6*(bbn_ks_dc_D0 KS_func_pass_args_macro )*pow((bbn_ks_dk2_D0 KS_func_pass_args_macro ), 2);
+2*frda_ks_c(x, y, z)*frda_ks_k2(x, y, z)*(frda_ks_dddk2_D0D0D0 KS_func_pass_args_macro ) + 6*
+frda_ks_c(x, y, z)*(frda_ks_dk2_D0 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D0 KS_func_pass_args_macro ) + 
+pow(frda_ks_k2(x, y, z), 2)*(frda_ks_dddc_D0D0D0 KS_func_pass_args_macro ) + 6*frda_ks_k2(x, y, z)*
+(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D0 KS_func_pass_args_macro ) + 6*
+frda_ks_k2(x, y, z)*(frda_ks_ddc_D0D0 KS_func_pass_args_macro )*(frda_ks_dk2_D0 KS_func_pass_args_macro ) + 
+6*(frda_ks_dc_D0 KS_func_pass_args_macro )*pow((frda_ks_dk2_D0 KS_func_pass_args_macro ), 2);
 
     _dddgamma_D2D2D2D0D2[ijk]=
 /* mcode in progress ... */
@@ -6960,17 +6960,17 @@ bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_
 // Derivative
 // c
 // k2
-2*bbn_ks_c(x, y, z)*bbn_ks_k2(x, y, z)*(bbn_ks_dddk2_D0D2D2 KS_func_pass_args_macro ) + 2*
-bbn_ks_c(x, y, z)*(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D2D2 KS_func_pass_args_macro ) + 
-4*bbn_ks_c(x, y, z)*(bbn_ks_dk2_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D2 KS_func_pass_args_macro ) + 
-pow(bbn_ks_k2(x, y, z), 2)*(bbn_ks_dddc_D0D2D2 KS_func_pass_args_macro ) + 2*bbn_ks_k2(x, y, z)*
-(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D2D2 KS_func_pass_args_macro ) + 4*
-bbn_ks_k2(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + 
-4*bbn_ks_k2(x, y, z)*(bbn_ks_dk2_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
-2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*pow((bbn_ks_dk2_D2 KS_func_pass_args_macro ), 2) + 4*
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk2_D2 KS_func_pass_args_macro );
+2*frda_ks_c(x, y, z)*frda_ks_k2(x, y, z)*(frda_ks_dddk2_D0D2D2 KS_func_pass_args_macro ) + 2*
+frda_ks_c(x, y, z)*(frda_ks_dk2_D0 KS_func_pass_args_macro )*(frda_ks_ddk2_D2D2 KS_func_pass_args_macro ) + 
+4*frda_ks_c(x, y, z)*(frda_ks_dk2_D2 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D2 KS_func_pass_args_macro ) + 
+pow(frda_ks_k2(x, y, z), 2)*(frda_ks_dddc_D0D2D2 KS_func_pass_args_macro ) + 2*frda_ks_k2(x, y, z)*
+(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk2_D2D2 KS_func_pass_args_macro ) + 4*
+frda_ks_k2(x, y, z)*(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D2 KS_func_pass_args_macro ) + 
+2*frda_ks_k2(x, y, z)*(frda_ks_ddc_D2D2 KS_func_pass_args_macro )*(frda_ks_dk2_D0 KS_func_pass_args_macro ) + 
+4*frda_ks_k2(x, y, z)*(frda_ks_dk2_D2 KS_func_pass_args_macro )*(frda_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
+2*(frda_ks_dc_D0 KS_func_pass_args_macro )*pow((frda_ks_dk2_D2 KS_func_pass_args_macro ), 2) + 4*
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_dk2_D0 KS_func_pass_args_macro )*
+(frda_ks_dk2_D2 KS_func_pass_args_macro );
 
     _dddgamma_D0D2D2D0D2[ijk]=
 /* mcode in progress ... */
@@ -6993,26 +6993,26 @@ bbn_ks_k2(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D2 KS_
 // c
 // k0
 // k2
-bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dddk2_D0D2D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-bbn_ks_k2(x, y, z)*(bbn_ks_dddk0_D0D2D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D2D2 KS_func_pass_args_macro ) + 2*
-bbn_ks_c(x, y, z)*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D2 KS_func_pass_args_macro ) + 
-bbn_ks_c(x, y, z)*(bbn_ks_ddk0_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + 
-2*bbn_ks_c(x, y, z)*(bbn_ks_dk2_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D2 KS_func_pass_args_macro ) + 
-bbn_ks_k0(x, y, z)*bbn_ks_k2(x, y, z)*(bbn_ks_dddc_D0D2D2 KS_func_pass_args_macro ) + 
-bbn_ks_k0(x, y, z)*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D2D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_k0(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D2 KS_func_pass_args_macro ) + 
-bbn_ks_k0(x, y, z)*(bbn_ks_ddc_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + 
-2*bbn_ks_k0(x, y, z)*(bbn_ks_dk2_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
-bbn_ks_k2(x, y, z)*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D2D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_k2(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D2 KS_func_pass_args_macro ) + 
-bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro ) + 
-2*bbn_ks_k2(x, y, z)*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
-2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*
-(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D2 KS_func_pass_args_macro )*
-(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 2*
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*
-(bbn_ks_dk2_D0 KS_func_pass_args_macro );
+frda_ks_c(x, y, z)*frda_ks_k0(x, y, z)*(frda_ks_dddk2_D0D2D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+frda_ks_k2(x, y, z)*(frda_ks_dddk0_D0D2D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk0_D0 KS_func_pass_args_macro )*(frda_ks_ddk2_D2D2 KS_func_pass_args_macro ) + 2*
+frda_ks_c(x, y, z)*(frda_ks_dk0_D2 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D2 KS_func_pass_args_macro ) + 
+frda_ks_c(x, y, z)*(frda_ks_ddk0_D2D2 KS_func_pass_args_macro )*(frda_ks_dk2_D0 KS_func_pass_args_macro ) + 
+2*frda_ks_c(x, y, z)*(frda_ks_dk2_D2 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D2 KS_func_pass_args_macro ) + 
+frda_ks_k0(x, y, z)*frda_ks_k2(x, y, z)*(frda_ks_dddc_D0D2D2 KS_func_pass_args_macro ) + 
+frda_ks_k0(x, y, z)*(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk2_D2D2 KS_func_pass_args_macro ) + 
+2*frda_ks_k0(x, y, z)*(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D2 KS_func_pass_args_macro ) + 
+frda_ks_k0(x, y, z)*(frda_ks_ddc_D2D2 KS_func_pass_args_macro )*(frda_ks_dk2_D0 KS_func_pass_args_macro ) + 
+2*frda_ks_k0(x, y, z)*(frda_ks_dk2_D2 KS_func_pass_args_macro )*(frda_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
+frda_ks_k2(x, y, z)*(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk0_D2D2 KS_func_pass_args_macro ) + 
+2*frda_ks_k2(x, y, z)*(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D2 KS_func_pass_args_macro ) + 
+frda_ks_k2(x, y, z)*(frda_ks_ddc_D2D2 KS_func_pass_args_macro )*(frda_ks_dk0_D0 KS_func_pass_args_macro ) + 
+2*frda_ks_k2(x, y, z)*(frda_ks_dk0_D2 KS_func_pass_args_macro )*(frda_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
+2*(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_dk0_D2 KS_func_pass_args_macro )*
+(frda_ks_dk2_D2 KS_func_pass_args_macro ) + 2*(frda_ks_dc_D2 KS_func_pass_args_macro )*
+(frda_ks_dk0_D0 KS_func_pass_args_macro )*(frda_ks_dk2_D2 KS_func_pass_args_macro ) + 2*
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_dk0_D2 KS_func_pass_args_macro )*
+(frda_ks_dk2_D0 KS_func_pass_args_macro );
 
     _dddgamma_D0D2D2D2D2[ijk]=
 /* mcode in progress ... */
@@ -7029,17 +7029,17 @@ bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_
 // c
 // k0
 // k2
-bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dddk2_D2D2D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-bbn_ks_k2(x, y, z)*(bbn_ks_dddk0_D2D2D2 KS_func_pass_args_macro ) + 3*bbn_ks_c(x, y, z)*
-(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D2D2 KS_func_pass_args_macro ) + 3*
-bbn_ks_c(x, y, z)*(bbn_ks_ddk0_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 
-bbn_ks_k0(x, y, z)*bbn_ks_k2(x, y, z)*(bbn_ks_dddc_D2D2D2 KS_func_pass_args_macro ) + 3*bbn_ks_k0(x, y, z)*
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D2D2 KS_func_pass_args_macro ) + 3*
-bbn_ks_k0(x, y, z)*(bbn_ks_ddc_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 
-3*bbn_ks_k2(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D2D2 KS_func_pass_args_macro ) + 
-3*bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D2 KS_func_pass_args_macro ) + 
-6*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*
-(bbn_ks_dk2_D2 KS_func_pass_args_macro );
+frda_ks_c(x, y, z)*frda_ks_k0(x, y, z)*(frda_ks_dddk2_D2D2D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+frda_ks_k2(x, y, z)*(frda_ks_dddk0_D2D2D2 KS_func_pass_args_macro ) + 3*frda_ks_c(x, y, z)*
+(frda_ks_dk0_D2 KS_func_pass_args_macro )*(frda_ks_ddk2_D2D2 KS_func_pass_args_macro ) + 3*
+frda_ks_c(x, y, z)*(frda_ks_ddk0_D2D2 KS_func_pass_args_macro )*(frda_ks_dk2_D2 KS_func_pass_args_macro ) + 
+frda_ks_k0(x, y, z)*frda_ks_k2(x, y, z)*(frda_ks_dddc_D2D2D2 KS_func_pass_args_macro ) + 3*frda_ks_k0(x, y, z)*
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk2_D2D2 KS_func_pass_args_macro ) + 3*
+frda_ks_k0(x, y, z)*(frda_ks_ddc_D2D2 KS_func_pass_args_macro )*(frda_ks_dk2_D2 KS_func_pass_args_macro ) + 
+3*frda_ks_k2(x, y, z)*(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk0_D2D2 KS_func_pass_args_macro ) + 
+3*frda_ks_k2(x, y, z)*(frda_ks_ddc_D2D2 KS_func_pass_args_macro )*(frda_ks_dk0_D2 KS_func_pass_args_macro ) + 
+6*(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_dk0_D2 KS_func_pass_args_macro )*
+(frda_ks_dk2_D2 KS_func_pass_args_macro );
 
     _dddgamma_D1D1D0D0D0[ijk]=
 /* mcode in progress ... */
@@ -7052,12 +7052,12 @@ bbn_ks_k0(x, y, z)*(bbn_ks_ddc_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_
 // Derivative
 // c
 // k1
-2*bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_dddk1_D0D0D0 KS_func_pass_args_macro ) + 6*
-bbn_ks_c(x, y, z)*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D0 KS_func_pass_args_macro ) + 
-pow(bbn_ks_k1(x, y, z), 2)*(bbn_ks_dddc_D0D0D0 KS_func_pass_args_macro ) + 6*bbn_ks_k1(x, y, z)*
-(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D0 KS_func_pass_args_macro ) + 6*
-bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro ) + 
-6*(bbn_ks_dc_D0 KS_func_pass_args_macro )*pow((bbn_ks_dk1_D0 KS_func_pass_args_macro ), 2);
+2*frda_ks_c(x, y, z)*frda_ks_k1(x, y, z)*(frda_ks_dddk1_D0D0D0 KS_func_pass_args_macro ) + 6*
+frda_ks_c(x, y, z)*(frda_ks_dk1_D0 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D0 KS_func_pass_args_macro ) + 
+pow(frda_ks_k1(x, y, z), 2)*(frda_ks_dddc_D0D0D0 KS_func_pass_args_macro ) + 6*frda_ks_k1(x, y, z)*
+(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D0 KS_func_pass_args_macro ) + 6*
+frda_ks_k1(x, y, z)*(frda_ks_ddc_D0D0 KS_func_pass_args_macro )*(frda_ks_dk1_D0 KS_func_pass_args_macro ) + 
+6*(frda_ks_dc_D0 KS_func_pass_args_macro )*pow((frda_ks_dk1_D0 KS_func_pass_args_macro ), 2);
 
     _dddgamma_D1D2D2D0D1[ijk]=
 /* mcode in progress ... */
@@ -7086,36 +7086,36 @@ bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_
 // c
 // k1
 // k2
-bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_dddk2_D0D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-bbn_ks_k2(x, y, z)*(bbn_ks_dddk1_D0D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D1 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk2_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk2_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D1 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
-bbn_ks_k2(x, y, z)*(bbn_ks_dddc_D0D1D2 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
-(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D2 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
-(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D2 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D1 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
-(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
-(bbn_ks_dk2_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + bbn_ks_k1(x, y, z)*
-(bbn_ks_dk2_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
-(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D2 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
-(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D2 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D1 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
-(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
-(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + bbn_ks_k2(x, y, z)*
-(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
-(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*
-(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + (bbn_ks_dc_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 
-(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + (bbn_ks_dc_D1 KS_func_pass_args_macro )*
-(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + 
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + (bbn_ks_dc_D2 KS_func_pass_args_macro )*
-(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro );
+frda_ks_c(x, y, z)*frda_ks_k1(x, y, z)*(frda_ks_dddk2_D0D1D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+frda_ks_k2(x, y, z)*(frda_ks_dddk1_D0D1D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk1_D0 KS_func_pass_args_macro )*(frda_ks_ddk2_D1D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk1_D1 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk1_D2 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D1 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk2_D0 KS_func_pass_args_macro )*(frda_ks_ddk1_D1D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk2_D1 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk2_D2 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D1 KS_func_pass_args_macro ) + frda_ks_k1(x, y, z)*
+frda_ks_k2(x, y, z)*(frda_ks_dddc_D0D1D2 KS_func_pass_args_macro ) + frda_ks_k1(x, y, z)*
+(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk2_D1D2 KS_func_pass_args_macro ) + frda_ks_k1(x, y, z)*
+(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D2 KS_func_pass_args_macro ) + frda_ks_k1(x, y, z)*
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D1 KS_func_pass_args_macro ) + frda_ks_k1(x, y, z)*
+(frda_ks_dk2_D0 KS_func_pass_args_macro )*(frda_ks_ddc_D1D2 KS_func_pass_args_macro ) + frda_ks_k1(x, y, z)*
+(frda_ks_dk2_D1 KS_func_pass_args_macro )*(frda_ks_ddc_D0D2 KS_func_pass_args_macro ) + frda_ks_k1(x, y, z)*
+(frda_ks_dk2_D2 KS_func_pass_args_macro )*(frda_ks_ddc_D0D1 KS_func_pass_args_macro ) + frda_ks_k2(x, y, z)*
+(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk1_D1D2 KS_func_pass_args_macro ) + frda_ks_k2(x, y, z)*
+(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D2 KS_func_pass_args_macro ) + frda_ks_k2(x, y, z)*
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D1 KS_func_pass_args_macro ) + frda_ks_k2(x, y, z)*
+(frda_ks_dk1_D0 KS_func_pass_args_macro )*(frda_ks_ddc_D1D2 KS_func_pass_args_macro ) + frda_ks_k2(x, y, z)*
+(frda_ks_dk1_D1 KS_func_pass_args_macro )*(frda_ks_ddc_D0D2 KS_func_pass_args_macro ) + frda_ks_k2(x, y, z)*
+(frda_ks_dk1_D2 KS_func_pass_args_macro )*(frda_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_dk1_D1 KS_func_pass_args_macro )*
+(frda_ks_dk2_D2 KS_func_pass_args_macro ) + (frda_ks_dc_D0 KS_func_pass_args_macro )*
+(frda_ks_dk1_D2 KS_func_pass_args_macro )*(frda_ks_dk2_D1 KS_func_pass_args_macro ) + 
+(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_dk1_D0 KS_func_pass_args_macro )*
+(frda_ks_dk2_D2 KS_func_pass_args_macro ) + (frda_ks_dc_D1 KS_func_pass_args_macro )*
+(frda_ks_dk1_D2 KS_func_pass_args_macro )*(frda_ks_dk2_D0 KS_func_pass_args_macro ) + 
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_dk1_D0 KS_func_pass_args_macro )*
+(frda_ks_dk2_D1 KS_func_pass_args_macro ) + (frda_ks_dc_D2 KS_func_pass_args_macro )*
+(frda_ks_dk1_D1 KS_func_pass_args_macro )*(frda_ks_dk2_D0 KS_func_pass_args_macro );
 
     _dddgamma_D0D0D1D1D0[ijk]=
 /* mcode in progress ... */
@@ -7132,17 +7132,17 @@ bbn_ks_k2(x, y, z)*(bbn_ks_dddc_D0D1D2 KS_func_pass_args_macro ) + bbn_ks_k1(x, 
 // Derivative
 // c
 // k0
-2*bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dddk0_D0D1D1 KS_func_pass_args_macro ) + 2*
-bbn_ks_c(x, y, z)*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D1 KS_func_pass_args_macro ) + 
-4*bbn_ks_c(x, y, z)*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D1 KS_func_pass_args_macro ) + 
-pow(bbn_ks_k0(x, y, z), 2)*(bbn_ks_dddc_D0D1D1 KS_func_pass_args_macro ) + 2*bbn_ks_k0(x, y, z)*
-(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D1 KS_func_pass_args_macro ) + 4*
-bbn_ks_k0(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D1 KS_func_pass_args_macro ) + 
-2*bbn_ks_k0(x, y, z)*(bbn_ks_ddc_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro ) + 
-4*bbn_ks_k0(x, y, z)*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
-2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*pow((bbn_ks_dk0_D1 KS_func_pass_args_macro ), 2) + 4*
-(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk0_D1 KS_func_pass_args_macro );
+2*frda_ks_c(x, y, z)*frda_ks_k0(x, y, z)*(frda_ks_dddk0_D0D1D1 KS_func_pass_args_macro ) + 2*
+frda_ks_c(x, y, z)*(frda_ks_dk0_D0 KS_func_pass_args_macro )*(frda_ks_ddk0_D1D1 KS_func_pass_args_macro ) + 
+4*frda_ks_c(x, y, z)*(frda_ks_dk0_D1 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D1 KS_func_pass_args_macro ) + 
+pow(frda_ks_k0(x, y, z), 2)*(frda_ks_dddc_D0D1D1 KS_func_pass_args_macro ) + 2*frda_ks_k0(x, y, z)*
+(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk0_D1D1 KS_func_pass_args_macro ) + 4*
+frda_ks_k0(x, y, z)*(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D1 KS_func_pass_args_macro ) + 
+2*frda_ks_k0(x, y, z)*(frda_ks_ddc_D1D1 KS_func_pass_args_macro )*(frda_ks_dk0_D0 KS_func_pass_args_macro ) + 
+4*frda_ks_k0(x, y, z)*(frda_ks_dk0_D1 KS_func_pass_args_macro )*(frda_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+2*(frda_ks_dc_D0 KS_func_pass_args_macro )*pow((frda_ks_dk0_D1 KS_func_pass_args_macro ), 2) + 4*
+(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_dk0_D0 KS_func_pass_args_macro )*
+(frda_ks_dk0_D1 KS_func_pass_args_macro );
 
     _dddgamma_D1D1D1D0D2[ijk]=
 /* mcode in progress ... */
@@ -7163,22 +7163,22 @@ bbn_ks_k0(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D1 KS_
 // Derivative
 // c
 // k1
-2*bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_dddk1_D0D1D2 KS_func_pass_args_macro ) + 2*
-bbn_ks_c(x, y, z)*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_c(x, y, z)*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_c(x, y, z)*(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D1 KS_func_pass_args_macro ) + 
-pow(bbn_ks_k1(x, y, z), 2)*(bbn_ks_dddc_D0D1D2 KS_func_pass_args_macro ) + 2*bbn_ks_k1(x, y, z)*
-(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D2 KS_func_pass_args_macro ) + 2*
-bbn_ks_k1(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_k1(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D1 KS_func_pass_args_macro ) + 
-2*bbn_ks_k1(x, y, z)*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_k1(x, y, z)*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_k1(x, y, z)*(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
-2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*
-(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D1 KS_func_pass_args_macro )*
-(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + 2*
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk1_D1 KS_func_pass_args_macro );
+2*frda_ks_c(x, y, z)*frda_ks_k1(x, y, z)*(frda_ks_dddk1_D0D1D2 KS_func_pass_args_macro ) + 2*
+frda_ks_c(x, y, z)*(frda_ks_dk1_D0 KS_func_pass_args_macro )*(frda_ks_ddk1_D1D2 KS_func_pass_args_macro ) + 
+2*frda_ks_c(x, y, z)*(frda_ks_dk1_D1 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D2 KS_func_pass_args_macro ) + 
+2*frda_ks_c(x, y, z)*(frda_ks_dk1_D2 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D1 KS_func_pass_args_macro ) + 
+pow(frda_ks_k1(x, y, z), 2)*(frda_ks_dddc_D0D1D2 KS_func_pass_args_macro ) + 2*frda_ks_k1(x, y, z)*
+(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk1_D1D2 KS_func_pass_args_macro ) + 2*
+frda_ks_k1(x, y, z)*(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D2 KS_func_pass_args_macro ) + 
+2*frda_ks_k1(x, y, z)*(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D1 KS_func_pass_args_macro ) + 
+2*frda_ks_k1(x, y, z)*(frda_ks_dk1_D0 KS_func_pass_args_macro )*(frda_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
+2*frda_ks_k1(x, y, z)*(frda_ks_dk1_D1 KS_func_pass_args_macro )*(frda_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
+2*frda_ks_k1(x, y, z)*(frda_ks_dk1_D2 KS_func_pass_args_macro )*(frda_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+2*(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_dk1_D1 KS_func_pass_args_macro )*
+(frda_ks_dk1_D2 KS_func_pass_args_macro ) + 2*(frda_ks_dc_D1 KS_func_pass_args_macro )*
+(frda_ks_dk1_D0 KS_func_pass_args_macro )*(frda_ks_dk1_D2 KS_func_pass_args_macro ) + 2*
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_dk1_D0 KS_func_pass_args_macro )*
+(frda_ks_dk1_D1 KS_func_pass_args_macro );
 
     _dddgamma_D2D2D1D0D2[ijk]=
 /* mcode in progress ... */
@@ -7199,22 +7199,22 @@ bbn_ks_k1(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D2 KS_
 // Derivative
 // c
 // k2
-2*bbn_ks_c(x, y, z)*bbn_ks_k2(x, y, z)*(bbn_ks_dddk2_D0D1D2 KS_func_pass_args_macro ) + 2*
-bbn_ks_c(x, y, z)*(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_c(x, y, z)*(bbn_ks_dk2_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_c(x, y, z)*(bbn_ks_dk2_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D1 KS_func_pass_args_macro ) + 
-pow(bbn_ks_k2(x, y, z), 2)*(bbn_ks_dddc_D0D1D2 KS_func_pass_args_macro ) + 2*bbn_ks_k2(x, y, z)*
-(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D2 KS_func_pass_args_macro ) + 2*
-bbn_ks_k2(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_k2(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D1 KS_func_pass_args_macro ) + 
-2*bbn_ks_k2(x, y, z)*(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_k2(x, y, z)*(bbn_ks_dk2_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_k2(x, y, z)*(bbn_ks_dk2_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
-2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro )*
-(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D1 KS_func_pass_args_macro )*
-(bbn_ks_dk2_D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 2*
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk2_D1 KS_func_pass_args_macro );
+2*frda_ks_c(x, y, z)*frda_ks_k2(x, y, z)*(frda_ks_dddk2_D0D1D2 KS_func_pass_args_macro ) + 2*
+frda_ks_c(x, y, z)*(frda_ks_dk2_D0 KS_func_pass_args_macro )*(frda_ks_ddk2_D1D2 KS_func_pass_args_macro ) + 
+2*frda_ks_c(x, y, z)*(frda_ks_dk2_D1 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D2 KS_func_pass_args_macro ) + 
+2*frda_ks_c(x, y, z)*(frda_ks_dk2_D2 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D1 KS_func_pass_args_macro ) + 
+pow(frda_ks_k2(x, y, z), 2)*(frda_ks_dddc_D0D1D2 KS_func_pass_args_macro ) + 2*frda_ks_k2(x, y, z)*
+(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk2_D1D2 KS_func_pass_args_macro ) + 2*
+frda_ks_k2(x, y, z)*(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D2 KS_func_pass_args_macro ) + 
+2*frda_ks_k2(x, y, z)*(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D1 KS_func_pass_args_macro ) + 
+2*frda_ks_k2(x, y, z)*(frda_ks_dk2_D0 KS_func_pass_args_macro )*(frda_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
+2*frda_ks_k2(x, y, z)*(frda_ks_dk2_D1 KS_func_pass_args_macro )*(frda_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
+2*frda_ks_k2(x, y, z)*(frda_ks_dk2_D2 KS_func_pass_args_macro )*(frda_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+2*(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_dk2_D1 KS_func_pass_args_macro )*
+(frda_ks_dk2_D2 KS_func_pass_args_macro ) + 2*(frda_ks_dc_D1 KS_func_pass_args_macro )*
+(frda_ks_dk2_D0 KS_func_pass_args_macro )*(frda_ks_dk2_D2 KS_func_pass_args_macro ) + 2*
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_dk2_D0 KS_func_pass_args_macro )*
+(frda_ks_dk2_D1 KS_func_pass_args_macro );
 
     _dddgamma_D0D2D1D1D1[ijk]=
 /* mcode in progress ... */
@@ -7231,17 +7231,17 @@ bbn_ks_k2(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D2 KS_
 // c
 // k0
 // k2
-bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dddk2_D1D1D1 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-bbn_ks_k2(x, y, z)*(bbn_ks_dddk0_D1D1D1 KS_func_pass_args_macro ) + 3*bbn_ks_c(x, y, z)*
-(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D1 KS_func_pass_args_macro ) + 3*
-bbn_ks_c(x, y, z)*(bbn_ks_ddk0_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 
-bbn_ks_k0(x, y, z)*bbn_ks_k2(x, y, z)*(bbn_ks_dddc_D1D1D1 KS_func_pass_args_macro ) + 3*bbn_ks_k0(x, y, z)*
-(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D1 KS_func_pass_args_macro ) + 3*
-bbn_ks_k0(x, y, z)*(bbn_ks_ddc_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 
-3*bbn_ks_k2(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D1 KS_func_pass_args_macro ) + 
-3*bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro ) + 
-6*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*
-(bbn_ks_dk2_D1 KS_func_pass_args_macro );
+frda_ks_c(x, y, z)*frda_ks_k0(x, y, z)*(frda_ks_dddk2_D1D1D1 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+frda_ks_k2(x, y, z)*(frda_ks_dddk0_D1D1D1 KS_func_pass_args_macro ) + 3*frda_ks_c(x, y, z)*
+(frda_ks_dk0_D1 KS_func_pass_args_macro )*(frda_ks_ddk2_D1D1 KS_func_pass_args_macro ) + 3*
+frda_ks_c(x, y, z)*(frda_ks_ddk0_D1D1 KS_func_pass_args_macro )*(frda_ks_dk2_D1 KS_func_pass_args_macro ) + 
+frda_ks_k0(x, y, z)*frda_ks_k2(x, y, z)*(frda_ks_dddc_D1D1D1 KS_func_pass_args_macro ) + 3*frda_ks_k0(x, y, z)*
+(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk2_D1D1 KS_func_pass_args_macro ) + 3*
+frda_ks_k0(x, y, z)*(frda_ks_ddc_D1D1 KS_func_pass_args_macro )*(frda_ks_dk2_D1 KS_func_pass_args_macro ) + 
+3*frda_ks_k2(x, y, z)*(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk0_D1D1 KS_func_pass_args_macro ) + 
+3*frda_ks_k2(x, y, z)*(frda_ks_ddc_D1D1 KS_func_pass_args_macro )*(frda_ks_dk0_D1 KS_func_pass_args_macro ) + 
+6*(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_dk0_D1 KS_func_pass_args_macro )*
+(frda_ks_dk2_D1 KS_func_pass_args_macro );
 
     _dddgamma_D0D0D2D0D0[ijk]=
 /* mcode in progress ... */
@@ -7258,17 +7258,17 @@ bbn_ks_k0(x, y, z)*(bbn_ks_ddc_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_
 // Derivative
 // c
 // k0
-2*bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dddk0_D0D0D2 KS_func_pass_args_macro ) + 4*
-bbn_ks_c(x, y, z)*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_c(x, y, z)*(bbn_ks_ddk0_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D2 KS_func_pass_args_macro ) + 
-pow(bbn_ks_k0(x, y, z), 2)*(bbn_ks_dddc_D0D0D2 KS_func_pass_args_macro ) + 4*bbn_ks_k0(x, y, z)*
-(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D2 KS_func_pass_args_macro ) + 2*
-bbn_ks_k0(x, y, z)*(bbn_ks_ddc_D0D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_k0(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D0 KS_func_pass_args_macro ) + 
-4*bbn_ks_k0(x, y, z)*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
-4*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk0_D2 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D2 KS_func_pass_args_macro )*
-pow((bbn_ks_dk0_D0 KS_func_pass_args_macro ), 2);
+2*frda_ks_c(x, y, z)*frda_ks_k0(x, y, z)*(frda_ks_dddk0_D0D0D2 KS_func_pass_args_macro ) + 4*
+frda_ks_c(x, y, z)*(frda_ks_dk0_D0 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D2 KS_func_pass_args_macro ) + 
+2*frda_ks_c(x, y, z)*(frda_ks_ddk0_D0D0 KS_func_pass_args_macro )*(frda_ks_dk0_D2 KS_func_pass_args_macro ) + 
+pow(frda_ks_k0(x, y, z), 2)*(frda_ks_dddc_D0D0D2 KS_func_pass_args_macro ) + 4*frda_ks_k0(x, y, z)*
+(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D2 KS_func_pass_args_macro ) + 2*
+frda_ks_k0(x, y, z)*(frda_ks_ddc_D0D0 KS_func_pass_args_macro )*(frda_ks_dk0_D2 KS_func_pass_args_macro ) + 
+2*frda_ks_k0(x, y, z)*(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D0 KS_func_pass_args_macro ) + 
+4*frda_ks_k0(x, y, z)*(frda_ks_dk0_D0 KS_func_pass_args_macro )*(frda_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
+4*(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_dk0_D0 KS_func_pass_args_macro )*
+(frda_ks_dk0_D2 KS_func_pass_args_macro ) + 2*(frda_ks_dc_D2 KS_func_pass_args_macro )*
+pow((frda_ks_dk0_D0 KS_func_pass_args_macro ), 2);
 
     _dddgamma_D0D1D1D2D2[ijk]=
 /* mcode in progress ... */
@@ -7291,26 +7291,26 @@ pow((bbn_ks_dk0_D0 KS_func_pass_args_macro ), 2);
 // c
 // k0
 // k1
-bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dddk1_D1D2D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-bbn_ks_k1(x, y, z)*(bbn_ks_dddk0_D1D2D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D2D2 KS_func_pass_args_macro ) + 2*
-bbn_ks_c(x, y, z)*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D2 KS_func_pass_args_macro ) + 
-bbn_ks_c(x, y, z)*(bbn_ks_ddk0_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro ) + 
-2*bbn_ks_c(x, y, z)*(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D2 KS_func_pass_args_macro ) + 
-bbn_ks_k0(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_dddc_D1D2D2 KS_func_pass_args_macro ) + 
-bbn_ks_k0(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D2D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_k0(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D2 KS_func_pass_args_macro ) + 
-bbn_ks_k0(x, y, z)*(bbn_ks_ddc_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro ) + 
-2*bbn_ks_k0(x, y, z)*(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
-bbn_ks_k1(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D2D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_k1(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D2 KS_func_pass_args_macro ) + 
-bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro ) + 
-2*bbn_ks_k1(x, y, z)*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
-2*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*
-(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D2 KS_func_pass_args_macro )*
-(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + 2*
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*
-(bbn_ks_dk1_D1 KS_func_pass_args_macro );
+frda_ks_c(x, y, z)*frda_ks_k0(x, y, z)*(frda_ks_dddk1_D1D2D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+frda_ks_k1(x, y, z)*(frda_ks_dddk0_D1D2D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk0_D1 KS_func_pass_args_macro )*(frda_ks_ddk1_D2D2 KS_func_pass_args_macro ) + 2*
+frda_ks_c(x, y, z)*(frda_ks_dk0_D2 KS_func_pass_args_macro )*(frda_ks_ddk1_D1D2 KS_func_pass_args_macro ) + 
+frda_ks_c(x, y, z)*(frda_ks_ddk0_D2D2 KS_func_pass_args_macro )*(frda_ks_dk1_D1 KS_func_pass_args_macro ) + 
+2*frda_ks_c(x, y, z)*(frda_ks_dk1_D2 KS_func_pass_args_macro )*(frda_ks_ddk0_D1D2 KS_func_pass_args_macro ) + 
+frda_ks_k0(x, y, z)*frda_ks_k1(x, y, z)*(frda_ks_dddc_D1D2D2 KS_func_pass_args_macro ) + 
+frda_ks_k0(x, y, z)*(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk1_D2D2 KS_func_pass_args_macro ) + 
+2*frda_ks_k0(x, y, z)*(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk1_D1D2 KS_func_pass_args_macro ) + 
+frda_ks_k0(x, y, z)*(frda_ks_ddc_D2D2 KS_func_pass_args_macro )*(frda_ks_dk1_D1 KS_func_pass_args_macro ) + 
+2*frda_ks_k0(x, y, z)*(frda_ks_dk1_D2 KS_func_pass_args_macro )*(frda_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
+frda_ks_k1(x, y, z)*(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk0_D2D2 KS_func_pass_args_macro ) + 
+2*frda_ks_k1(x, y, z)*(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk0_D1D2 KS_func_pass_args_macro ) + 
+frda_ks_k1(x, y, z)*(frda_ks_ddc_D2D2 KS_func_pass_args_macro )*(frda_ks_dk0_D1 KS_func_pass_args_macro ) + 
+2*frda_ks_k1(x, y, z)*(frda_ks_dk0_D2 KS_func_pass_args_macro )*(frda_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
+2*(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_dk0_D2 KS_func_pass_args_macro )*
+(frda_ks_dk1_D2 KS_func_pass_args_macro ) + 2*(frda_ks_dc_D2 KS_func_pass_args_macro )*
+(frda_ks_dk0_D1 KS_func_pass_args_macro )*(frda_ks_dk1_D2 KS_func_pass_args_macro ) + 2*
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_dk0_D2 KS_func_pass_args_macro )*
+(frda_ks_dk1_D1 KS_func_pass_args_macro );
 
     _dddgamma_D0D0D2D0D1[ijk]=
 /* mcode in progress ... */
@@ -7331,22 +7331,22 @@ bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_
 // Derivative
 // c
 // k0
-2*bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dddk0_D0D1D2 KS_func_pass_args_macro ) + 2*
-bbn_ks_c(x, y, z)*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_c(x, y, z)*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_c(x, y, z)*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D1 KS_func_pass_args_macro ) + 
-pow(bbn_ks_k0(x, y, z), 2)*(bbn_ks_dddc_D0D1D2 KS_func_pass_args_macro ) + 2*bbn_ks_k0(x, y, z)*
-(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D2 KS_func_pass_args_macro ) + 2*
-bbn_ks_k0(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_k0(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D1 KS_func_pass_args_macro ) + 
-2*bbn_ks_k0(x, y, z)*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_k0(x, y, z)*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_k0(x, y, z)*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
-2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*
-(bbn_ks_dk0_D2 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D1 KS_func_pass_args_macro )*
-(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D2 KS_func_pass_args_macro ) + 2*
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk0_D1 KS_func_pass_args_macro );
+2*frda_ks_c(x, y, z)*frda_ks_k0(x, y, z)*(frda_ks_dddk0_D0D1D2 KS_func_pass_args_macro ) + 2*
+frda_ks_c(x, y, z)*(frda_ks_dk0_D0 KS_func_pass_args_macro )*(frda_ks_ddk0_D1D2 KS_func_pass_args_macro ) + 
+2*frda_ks_c(x, y, z)*(frda_ks_dk0_D1 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D2 KS_func_pass_args_macro ) + 
+2*frda_ks_c(x, y, z)*(frda_ks_dk0_D2 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D1 KS_func_pass_args_macro ) + 
+pow(frda_ks_k0(x, y, z), 2)*(frda_ks_dddc_D0D1D2 KS_func_pass_args_macro ) + 2*frda_ks_k0(x, y, z)*
+(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk0_D1D2 KS_func_pass_args_macro ) + 2*
+frda_ks_k0(x, y, z)*(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D2 KS_func_pass_args_macro ) + 
+2*frda_ks_k0(x, y, z)*(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D1 KS_func_pass_args_macro ) + 
+2*frda_ks_k0(x, y, z)*(frda_ks_dk0_D0 KS_func_pass_args_macro )*(frda_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
+2*frda_ks_k0(x, y, z)*(frda_ks_dk0_D1 KS_func_pass_args_macro )*(frda_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
+2*frda_ks_k0(x, y, z)*(frda_ks_dk0_D2 KS_func_pass_args_macro )*(frda_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+2*(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_dk0_D1 KS_func_pass_args_macro )*
+(frda_ks_dk0_D2 KS_func_pass_args_macro ) + 2*(frda_ks_dc_D1 KS_func_pass_args_macro )*
+(frda_ks_dk0_D0 KS_func_pass_args_macro )*(frda_ks_dk0_D2 KS_func_pass_args_macro ) + 2*
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_dk0_D0 KS_func_pass_args_macro )*
+(frda_ks_dk0_D1 KS_func_pass_args_macro );
 
     _dddgamma_D0D0D0D2D1[ijk]=
 /* mcode in progress ... */
@@ -7367,22 +7367,22 @@ bbn_ks_k0(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D2 KS_
 // Derivative
 // c
 // k0
-2*bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dddk0_D0D1D2 KS_func_pass_args_macro ) + 2*
-bbn_ks_c(x, y, z)*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_c(x, y, z)*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_c(x, y, z)*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D1 KS_func_pass_args_macro ) + 
-pow(bbn_ks_k0(x, y, z), 2)*(bbn_ks_dddc_D0D1D2 KS_func_pass_args_macro ) + 2*bbn_ks_k0(x, y, z)*
-(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D2 KS_func_pass_args_macro ) + 2*
-bbn_ks_k0(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_k0(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D1 KS_func_pass_args_macro ) + 
-2*bbn_ks_k0(x, y, z)*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_k0(x, y, z)*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_k0(x, y, z)*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
-2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*
-(bbn_ks_dk0_D2 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D1 KS_func_pass_args_macro )*
-(bbn_ks_dk0_D0 KS_func_pass_args_macro )*(bbn_ks_dk0_D2 KS_func_pass_args_macro ) + 2*
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D0 KS_func_pass_args_macro )*
-(bbn_ks_dk0_D1 KS_func_pass_args_macro );
+2*frda_ks_c(x, y, z)*frda_ks_k0(x, y, z)*(frda_ks_dddk0_D0D1D2 KS_func_pass_args_macro ) + 2*
+frda_ks_c(x, y, z)*(frda_ks_dk0_D0 KS_func_pass_args_macro )*(frda_ks_ddk0_D1D2 KS_func_pass_args_macro ) + 
+2*frda_ks_c(x, y, z)*(frda_ks_dk0_D1 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D2 KS_func_pass_args_macro ) + 
+2*frda_ks_c(x, y, z)*(frda_ks_dk0_D2 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D1 KS_func_pass_args_macro ) + 
+pow(frda_ks_k0(x, y, z), 2)*(frda_ks_dddc_D0D1D2 KS_func_pass_args_macro ) + 2*frda_ks_k0(x, y, z)*
+(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk0_D1D2 KS_func_pass_args_macro ) + 2*
+frda_ks_k0(x, y, z)*(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D2 KS_func_pass_args_macro ) + 
+2*frda_ks_k0(x, y, z)*(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk0_D0D1 KS_func_pass_args_macro ) + 
+2*frda_ks_k0(x, y, z)*(frda_ks_dk0_D0 KS_func_pass_args_macro )*(frda_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
+2*frda_ks_k0(x, y, z)*(frda_ks_dk0_D1 KS_func_pass_args_macro )*(frda_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
+2*frda_ks_k0(x, y, z)*(frda_ks_dk0_D2 KS_func_pass_args_macro )*(frda_ks_ddc_D0D1 KS_func_pass_args_macro ) + 
+2*(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_dk0_D1 KS_func_pass_args_macro )*
+(frda_ks_dk0_D2 KS_func_pass_args_macro ) + 2*(frda_ks_dc_D1 KS_func_pass_args_macro )*
+(frda_ks_dk0_D0 KS_func_pass_args_macro )*(frda_ks_dk0_D2 KS_func_pass_args_macro ) + 2*
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_dk0_D0 KS_func_pass_args_macro )*
+(frda_ks_dk0_D1 KS_func_pass_args_macro );
 
     _dddgamma_D0D2D2D1D1[ijk]=
 /* mcode in progress ... */
@@ -7405,26 +7405,26 @@ bbn_ks_k0(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D0D2 KS_
 // c
 // k0
 // k2
-bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dddk2_D1D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-bbn_ks_k2(x, y, z)*(bbn_ks_dddk0_D1D1D2 KS_func_pass_args_macro ) + 2*bbn_ks_c(x, y, z)*
-(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_ddk0_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 
-bbn_ks_c(x, y, z)*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D1 KS_func_pass_args_macro ) + 
-2*bbn_ks_c(x, y, z)*(bbn_ks_dk2_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D2 KS_func_pass_args_macro ) + 
-bbn_ks_k0(x, y, z)*bbn_ks_k2(x, y, z)*(bbn_ks_dddc_D1D1D2 KS_func_pass_args_macro ) + 2*
-bbn_ks_k0(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D2 KS_func_pass_args_macro ) + 
-bbn_ks_k0(x, y, z)*(bbn_ks_ddc_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 
-bbn_ks_k0(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D1D1 KS_func_pass_args_macro ) + 
-2*bbn_ks_k0(x, y, z)*(bbn_ks_dk2_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_k2(x, y, z)*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D2 KS_func_pass_args_macro ) + 
-bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D2 KS_func_pass_args_macro ) + 
-bbn_ks_k2(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D1 KS_func_pass_args_macro ) + 
-2*bbn_ks_k2(x, y, z)*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
-2*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*
-(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D1 KS_func_pass_args_macro )*
-(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D1 KS_func_pass_args_macro ) + 2*
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D1 KS_func_pass_args_macro )*
-(bbn_ks_dk2_D1 KS_func_pass_args_macro );
+frda_ks_c(x, y, z)*frda_ks_k0(x, y, z)*(frda_ks_dddk2_D1D1D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+frda_ks_k2(x, y, z)*(frda_ks_dddk0_D1D1D2 KS_func_pass_args_macro ) + 2*frda_ks_c(x, y, z)*
+(frda_ks_dk0_D1 KS_func_pass_args_macro )*(frda_ks_ddk2_D1D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_ddk0_D1D1 KS_func_pass_args_macro )*(frda_ks_dk2_D2 KS_func_pass_args_macro ) + 
+frda_ks_c(x, y, z)*(frda_ks_dk0_D2 KS_func_pass_args_macro )*(frda_ks_ddk2_D1D1 KS_func_pass_args_macro ) + 
+2*frda_ks_c(x, y, z)*(frda_ks_dk2_D1 KS_func_pass_args_macro )*(frda_ks_ddk0_D1D2 KS_func_pass_args_macro ) + 
+frda_ks_k0(x, y, z)*frda_ks_k2(x, y, z)*(frda_ks_dddc_D1D1D2 KS_func_pass_args_macro ) + 2*
+frda_ks_k0(x, y, z)*(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk2_D1D2 KS_func_pass_args_macro ) + 
+frda_ks_k0(x, y, z)*(frda_ks_ddc_D1D1 KS_func_pass_args_macro )*(frda_ks_dk2_D2 KS_func_pass_args_macro ) + 
+frda_ks_k0(x, y, z)*(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk2_D1D1 KS_func_pass_args_macro ) + 
+2*frda_ks_k0(x, y, z)*(frda_ks_dk2_D1 KS_func_pass_args_macro )*(frda_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
+2*frda_ks_k2(x, y, z)*(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk0_D1D2 KS_func_pass_args_macro ) + 
+frda_ks_k2(x, y, z)*(frda_ks_ddc_D1D1 KS_func_pass_args_macro )*(frda_ks_dk0_D2 KS_func_pass_args_macro ) + 
+frda_ks_k2(x, y, z)*(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk0_D1D1 KS_func_pass_args_macro ) + 
+2*frda_ks_k2(x, y, z)*(frda_ks_dk0_D1 KS_func_pass_args_macro )*(frda_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
+2*(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_dk0_D1 KS_func_pass_args_macro )*
+(frda_ks_dk2_D2 KS_func_pass_args_macro ) + 2*(frda_ks_dc_D1 KS_func_pass_args_macro )*
+(frda_ks_dk0_D2 KS_func_pass_args_macro )*(frda_ks_dk2_D1 KS_func_pass_args_macro ) + 2*
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_dk0_D1 KS_func_pass_args_macro )*
+(frda_ks_dk2_D1 KS_func_pass_args_macro );
 
     _dddgamma_D0D0D2D2D2[ijk]=
 /* mcode in progress ... */
@@ -7437,12 +7437,12 @@ bbn_ks_k2(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D1D1 KS_
 // Derivative
 // c
 // k0
-2*bbn_ks_c(x, y, z)*bbn_ks_k0(x, y, z)*(bbn_ks_dddk0_D2D2D2 KS_func_pass_args_macro ) + 6*
-bbn_ks_c(x, y, z)*(bbn_ks_dk0_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D2D2 KS_func_pass_args_macro ) + 
-pow(bbn_ks_k0(x, y, z), 2)*(bbn_ks_dddc_D2D2D2 KS_func_pass_args_macro ) + 6*bbn_ks_k0(x, y, z)*
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk0_D2D2 KS_func_pass_args_macro ) + 6*
-bbn_ks_k0(x, y, z)*(bbn_ks_ddc_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D2 KS_func_pass_args_macro ) + 
-6*(bbn_ks_dc_D2 KS_func_pass_args_macro )*pow((bbn_ks_dk0_D2 KS_func_pass_args_macro ), 2);
+2*frda_ks_c(x, y, z)*frda_ks_k0(x, y, z)*(frda_ks_dddk0_D2D2D2 KS_func_pass_args_macro ) + 6*
+frda_ks_c(x, y, z)*(frda_ks_dk0_D2 KS_func_pass_args_macro )*(frda_ks_ddk0_D2D2 KS_func_pass_args_macro ) + 
+pow(frda_ks_k0(x, y, z), 2)*(frda_ks_dddc_D2D2D2 KS_func_pass_args_macro ) + 6*frda_ks_k0(x, y, z)*
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk0_D2D2 KS_func_pass_args_macro ) + 6*
+frda_ks_k0(x, y, z)*(frda_ks_ddc_D2D2 KS_func_pass_args_macro )*(frda_ks_dk0_D2 KS_func_pass_args_macro ) + 
+6*(frda_ks_dc_D2 KS_func_pass_args_macro )*pow((frda_ks_dk0_D2 KS_func_pass_args_macro ), 2);
 
     _dddgamma_D1D1D2D1D1[ijk]=
 /* mcode in progress ... */
@@ -7459,17 +7459,17 @@ bbn_ks_k0(x, y, z)*(bbn_ks_ddc_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk0_D2 KS_
 // Derivative
 // c
 // k1
-2*bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_dddk1_D1D1D2 KS_func_pass_args_macro ) + 4*
-bbn_ks_c(x, y, z)*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_c(x, y, z)*(bbn_ks_ddk1_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + 
-pow(bbn_ks_k1(x, y, z), 2)*(bbn_ks_dddc_D1D1D2 KS_func_pass_args_macro ) + 4*bbn_ks_k1(x, y, z)*
-(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D2 KS_func_pass_args_macro ) + 2*
-bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D1D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_k1(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D1D1 KS_func_pass_args_macro ) + 
-4*bbn_ks_k1(x, y, z)*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*(bbn_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
-4*(bbn_ks_dc_D1 KS_func_pass_args_macro )*(bbn_ks_dk1_D1 KS_func_pass_args_macro )*
-(bbn_ks_dk1_D2 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D2 KS_func_pass_args_macro )*
-pow((bbn_ks_dk1_D1 KS_func_pass_args_macro ), 2);
+2*frda_ks_c(x, y, z)*frda_ks_k1(x, y, z)*(frda_ks_dddk1_D1D1D2 KS_func_pass_args_macro ) + 4*
+frda_ks_c(x, y, z)*(frda_ks_dk1_D1 KS_func_pass_args_macro )*(frda_ks_ddk1_D1D2 KS_func_pass_args_macro ) + 
+2*frda_ks_c(x, y, z)*(frda_ks_ddk1_D1D1 KS_func_pass_args_macro )*(frda_ks_dk1_D2 KS_func_pass_args_macro ) + 
+pow(frda_ks_k1(x, y, z), 2)*(frda_ks_dddc_D1D1D2 KS_func_pass_args_macro ) + 4*frda_ks_k1(x, y, z)*
+(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_ddk1_D1D2 KS_func_pass_args_macro ) + 2*
+frda_ks_k1(x, y, z)*(frda_ks_ddc_D1D1 KS_func_pass_args_macro )*(frda_ks_dk1_D2 KS_func_pass_args_macro ) + 
+2*frda_ks_k1(x, y, z)*(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk1_D1D1 KS_func_pass_args_macro ) + 
+4*frda_ks_k1(x, y, z)*(frda_ks_dk1_D1 KS_func_pass_args_macro )*(frda_ks_ddc_D1D2 KS_func_pass_args_macro ) + 
+4*(frda_ks_dc_D1 KS_func_pass_args_macro )*(frda_ks_dk1_D1 KS_func_pass_args_macro )*
+(frda_ks_dk1_D2 KS_func_pass_args_macro ) + 2*(frda_ks_dc_D2 KS_func_pass_args_macro )*
+pow((frda_ks_dk1_D1 KS_func_pass_args_macro ), 2);
 
     _dddgamma_D1D2D0D2D2[ijk]=
 /* mcode in progress ... */
@@ -7492,26 +7492,26 @@ pow((bbn_ks_dk1_D1 KS_func_pass_args_macro ), 2);
 // c
 // k1
 // k2
-bbn_ks_c(x, y, z)*bbn_ks_k1(x, y, z)*(bbn_ks_dddk2_D0D2D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-bbn_ks_k2(x, y, z)*(bbn_ks_dddk1_D0D2D2 KS_func_pass_args_macro ) + bbn_ks_c(x, y, z)*
-(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D2D2 KS_func_pass_args_macro ) + 2*
-bbn_ks_c(x, y, z)*(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D2 KS_func_pass_args_macro ) + 
-bbn_ks_c(x, y, z)*(bbn_ks_ddk1_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + 
-2*bbn_ks_c(x, y, z)*(bbn_ks_dk2_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D2 KS_func_pass_args_macro ) + 
-bbn_ks_k1(x, y, z)*bbn_ks_k2(x, y, z)*(bbn_ks_dddc_D0D2D2 KS_func_pass_args_macro ) + 
-bbn_ks_k1(x, y, z)*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk2_D2D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_k1(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk2_D0D2 KS_func_pass_args_macro ) + 
-bbn_ks_k1(x, y, z)*(bbn_ks_ddc_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk2_D0 KS_func_pass_args_macro ) + 
-2*bbn_ks_k1(x, y, z)*(bbn_ks_dk2_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
-bbn_ks_k2(x, y, z)*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_ddk1_D2D2 KS_func_pass_args_macro ) + 
-2*bbn_ks_k2(x, y, z)*(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_ddk1_D0D2 KS_func_pass_args_macro ) + 
-bbn_ks_k2(x, y, z)*(bbn_ks_ddc_D2D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D0 KS_func_pass_args_macro ) + 
-2*bbn_ks_k2(x, y, z)*(bbn_ks_dk1_D2 KS_func_pass_args_macro )*(bbn_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
-2*(bbn_ks_dc_D0 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro )*
-(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 2*(bbn_ks_dc_D2 KS_func_pass_args_macro )*
-(bbn_ks_dk1_D0 KS_func_pass_args_macro )*(bbn_ks_dk2_D2 KS_func_pass_args_macro ) + 2*
-(bbn_ks_dc_D2 KS_func_pass_args_macro )*(bbn_ks_dk1_D2 KS_func_pass_args_macro )*
-(bbn_ks_dk2_D0 KS_func_pass_args_macro );
+frda_ks_c(x, y, z)*frda_ks_k1(x, y, z)*(frda_ks_dddk2_D0D2D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+frda_ks_k2(x, y, z)*(frda_ks_dddk1_D0D2D2 KS_func_pass_args_macro ) + frda_ks_c(x, y, z)*
+(frda_ks_dk1_D0 KS_func_pass_args_macro )*(frda_ks_ddk2_D2D2 KS_func_pass_args_macro ) + 2*
+frda_ks_c(x, y, z)*(frda_ks_dk1_D2 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D2 KS_func_pass_args_macro ) + 
+frda_ks_c(x, y, z)*(frda_ks_ddk1_D2D2 KS_func_pass_args_macro )*(frda_ks_dk2_D0 KS_func_pass_args_macro ) + 
+2*frda_ks_c(x, y, z)*(frda_ks_dk2_D2 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D2 KS_func_pass_args_macro ) + 
+frda_ks_k1(x, y, z)*frda_ks_k2(x, y, z)*(frda_ks_dddc_D0D2D2 KS_func_pass_args_macro ) + 
+frda_ks_k1(x, y, z)*(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk2_D2D2 KS_func_pass_args_macro ) + 
+2*frda_ks_k1(x, y, z)*(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk2_D0D2 KS_func_pass_args_macro ) + 
+frda_ks_k1(x, y, z)*(frda_ks_ddc_D2D2 KS_func_pass_args_macro )*(frda_ks_dk2_D0 KS_func_pass_args_macro ) + 
+2*frda_ks_k1(x, y, z)*(frda_ks_dk2_D2 KS_func_pass_args_macro )*(frda_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
+frda_ks_k2(x, y, z)*(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_ddk1_D2D2 KS_func_pass_args_macro ) + 
+2*frda_ks_k2(x, y, z)*(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_ddk1_D0D2 KS_func_pass_args_macro ) + 
+frda_ks_k2(x, y, z)*(frda_ks_ddc_D2D2 KS_func_pass_args_macro )*(frda_ks_dk1_D0 KS_func_pass_args_macro ) + 
+2*frda_ks_k2(x, y, z)*(frda_ks_dk1_D2 KS_func_pass_args_macro )*(frda_ks_ddc_D0D2 KS_func_pass_args_macro ) + 
+2*(frda_ks_dc_D0 KS_func_pass_args_macro )*(frda_ks_dk1_D2 KS_func_pass_args_macro )*
+(frda_ks_dk2_D2 KS_func_pass_args_macro ) + 2*(frda_ks_dc_D2 KS_func_pass_args_macro )*
+(frda_ks_dk1_D0 KS_func_pass_args_macro )*(frda_ks_dk2_D2 KS_func_pass_args_macro ) + 2*
+(frda_ks_dc_D2 KS_func_pass_args_macro )*(frda_ks_dk1_D2 KS_func_pass_args_macro )*
+(frda_ks_dk2_D0 KS_func_pass_args_macro );
   }
 }
 

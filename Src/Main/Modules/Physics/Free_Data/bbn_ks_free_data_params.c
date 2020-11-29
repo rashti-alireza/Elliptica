@@ -9,8 +9,8 @@
 #include "frda_header.h"
 
 /* for external variables. NOTE: MUST be the same as 
-// the one in 'bbn_ks_free_data_analytic.h' DON'T CHANGE. */
-#define KS_glob_var(x) bbn_ks_glob##x
+// the one in 'frda_ks_free_data_analytic.h' DON'T CHANGE. */
+#define KS_glob_var(x) frda_ks_glob##x
 
 #define M_BH    KS_glob_var(M_BH) /* BH mass */
 #define a_BH    KS_glob_var(a_BH) /* BH spin */
@@ -32,8 +32,8 @@ double r0;/* roll off radius */
 double Lambda;/* flat data => 0, kerr-schild => 1 */
 
 
-void bbn_ks_free_data_set_params(Grid_T *const grid);
-void bbn_ks_free_data_set_params(Grid_T *const grid)
+void frda_ks_free_data_set_params(Grid_T *const grid);
+void frda_ks_free_data_set_params(Grid_T *const grid)
 {
   const double BH_center_x = Pgetd("BH_center_x");
   const double BH_center_y = Pgetd("BH_center_y");
@@ -80,30 +80,4 @@ void bbn_ks_free_data_set_params(Grid_T *const grid)
 
   UNUSED(grid);
 }
-
-/* ->: pointer to field to write.
-// if does not exist add field. 
-// note: this version is simple and params is just the patch. */
-double *bbn_ks_read_analytic(const char *const name, void *params);
-double *bbn_ks_read_analytic(const char *const name, void *params)
-{
-  Patch_T *const patch = params;
-  Field_T *u   = 0;
-  const int fn = _Ind(name);
-  
-  if (fn < 0)/* if there is not such a field */
-  {
-    u = add_field(name,0,patch,YES);
-  }
-  else
-  {
-    u = patch->fields[fn];
-    empty_field(u);
-    u->v = alloc_double(patch->nn);
-  }
-  
-  return u->v;
-}
-
-
 

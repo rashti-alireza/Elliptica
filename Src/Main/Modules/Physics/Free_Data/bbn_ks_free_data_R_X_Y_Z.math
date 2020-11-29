@@ -10,14 +10,14 @@
 #########################
 # Issue the following:
 # 
-# $ cpi bbn_ks_free_data_R_X_Y_Z.math > bbn_ks_free_data_R_X_Y_Z.c && \
-#   sed -i '/Welcome to Cpi/,$d' bbn_ks_free_data_R_X_Y_Z.c && \
-#   sed -i -E 's/Blank\((\w+)\)/\1/g' bbn_ks_free_data_R_X_Y_Z.c && \
-#   sed -i -E 's/\bXX\b\(/bbn_ks_X\(/g' bbn_ks_free_data_R_X_Y_Z.c && \
-#   sed -i -E 's/\bYY\b\(/bbn_ks_Y\(/g' bbn_ks_free_data_R_X_Y_Z.c && \
-#   sed -i -E 's/\bZZ\b\(/bbn_ks_Z\(/g' bbn_ks_free_data_R_X_Y_Z.c && \
-#   sed -i -E 's/\bList\b//g' bbn_ks_free_data_R_X_Y_Z.c && \
-#   sed -i -E -f bbn_ks_free_data_substitute_derives.sed bbn_ks_free_data_R_X_Y_Z.c
+# $ cpi frda_ks_free_data_R_X_Y_Z.math > frda_ks_free_data_R_X_Y_Z.c && \
+#   sed -i '/Welcome to Cpi/,$d' frda_ks_free_data_R_X_Y_Z.c && \
+#   sed -i -E 's/Blank\((\w+)\)/\1/g' frda_ks_free_data_R_X_Y_Z.c && \
+#   sed -i -E 's/\bXX\b\(/frda_ks_X\(/g' frda_ks_free_data_R_X_Y_Z.c && \
+#   sed -i -E 's/\bYY\b\(/frda_ks_Y\(/g' frda_ks_free_data_R_X_Y_Z.c && \
+#   sed -i -E 's/\bZZ\b\(/frda_ks_Z\(/g' frda_ks_free_data_R_X_Y_Z.c && \
+#   sed -i -E 's/\bList\b//g' frda_ks_free_data_R_X_Y_Z.c && \
+#   sed -i -E -f frda_ks_free_data_substitute_derives.sed frda_ks_free_data_R_X_Y_Z.c
 
 
 Dimension = 3;
@@ -212,7 +212,7 @@ C_macro3=print('KS_func_def_macro(name)KS_func_args_macro')\n\
 `R    = KS_radius(XX(x,y,z),YY(x,y,z),ZZ(x,y,z),a)`
 
 ``
-`print('#include "bbn_ks_free_data_analytic.h"')`
+`print('#include "frda_ks_free_data_analytic.h"')`
 ``
 Declare =
 {

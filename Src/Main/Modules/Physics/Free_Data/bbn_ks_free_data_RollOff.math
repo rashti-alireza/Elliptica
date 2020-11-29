@@ -6,9 +6,9 @@
 #########################
 # Issue the following:
 # 
-# $ cpi bbn_ks_free_data_RollOff.math > \
-#   bbn_ks_free_data_RollOff.c && \
-#   sed -i '/Welcome to Cpi/,$d' bbn_ks_free_data_RollOff.c
+# $ cpi frda_ks_free_data_RollOff.math > \
+#   frda_ks_free_data_RollOff.c && \
+#   sed -i '/Welcome to Cpi/,$d' frda_ks_free_data_RollOff.c
 
 Dimension = 3;
 point     = x;
@@ -136,7 +136,7 @@ C_macro3=print('KS_func_def_macro(name)KS_func_args_macro')\n\
 `r=(x**2+y**2+z**2)**(0.5)`
 `rolloff = exp(-(r/r0)**4)`
 ``
-`print('#include "bbn_ks_free_data_analytic.h"')`
+`print('#include "frda_ks_free_data_analytic.h"')`
 ``
 Declare =
 {
