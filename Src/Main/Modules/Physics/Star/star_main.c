@@ -67,7 +67,7 @@ static int tune_star_Euler_constant(Physics_T *const phys)
   if (Pcmps("star_type","NS"))
   {
     if (Pcmps("star_NS_fluid","ideal_fluid") && 
-        Pcmps("star_NS_gConf","non_flat"))
+        Pcmps("star_NS_gConf","general"))
     {
       ret = star_NS_idealfluid_gConf_find_Euler_const(phys);
     }
@@ -91,7 +91,7 @@ static int extrapolate_matter(Physics_T *const phys)
   if (Pcmps("star_type","NS"))
   {
     if (Pcmps("star_NS_fluid","ideal_fluid") && 
-        Pcmps("star_NS_gConf","non_flat"))
+        Pcmps("star_NS_gConf","general"))
     {
       ret = star_NS_idealfluid_extrapolate_matter_fields(phys);
     }
@@ -115,7 +115,7 @@ static int find_star_surface(Physics_T *const phys)
   if (Pcmps("star_type","NS"))
   {
     if (Pcmps("star_NS_fluid","ideal_fluid") && 
-        Pcmps("star_NS_gConf","non_flat"))
+        Pcmps("star_NS_gConf","general"))
     {
       ret = star_NS_find_star_surface(phys);
     }
@@ -139,7 +139,7 @@ static int tune_star_force_balance_equation(Physics_T *const phys)
   if (Pcmps("star_type","NS"))
   {
     if (Pcmps("star_NS_fluid","ideal_fluid") && 
-        Pcmps("star_NS_gConf","non_flat"))
+        Pcmps("star_NS_gConf","general"))
     {
       ret = star_NS_idealfluid_gConf_force_balance(phys);
     }
@@ -163,7 +163,7 @@ static int tune_star_center(Physics_T *const phys)
   if (Pcmps("star_type","NS"))
   {
     if (Pcmps("star_NS_fluid","ideal_fluid") && 
-        Pcmps("star_NS_gConf","non_flat"))
+        Pcmps("star_NS_gConf","general"))
     {
       ret = star_NS_keep_center_fixed(phys);
     }
@@ -187,7 +187,7 @@ static int star_add_fields(Physics_T *const phys)
   if (Pcmps("star_type","NS"))
   {
     if (Pcmps("star_NS_fluid","ideal_fluid") && 
-        Pcmps("star_NS_gConf","non_flat"))
+        Pcmps("star_NS_gConf","general"))
     {
       star_NS_idealfluid_gConf_add_fields(phys->grid);
     }
@@ -221,10 +221,19 @@ static int star_add_parameters(Physics_T *const phys)
     
     /* conformal metric type: 
     // options:
-    // flat     => gConf  = delta_{ij},
-    // non_flat => gConf != delta_{ij}. */
-    Pset_default("star_NS_gConf","non_flat");
+    // flat   :  => gConf  = delta_{ij},
+    // general:  => general gConf. */
+    Pset_default("star_NS_gConf","general");
     
+    /* how to extrapolate matter fields outside the NS :
+    // options:
+    // slop_method: required to have C^2 field across the boundary. */
+    Pset_default("star_NS_extrapolate_matter_fields","poly2");
+    
+    /* which root finder to be used to find NS surface :
+    // options:
+    // slop_method: required to have C^2 field across the boundary. */
+    Pset_default("star_NS_surface_finder","bisection");
   }
   else
     Error0(NO_OPTION);

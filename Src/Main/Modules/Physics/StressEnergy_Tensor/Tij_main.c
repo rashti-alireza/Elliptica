@@ -55,9 +55,9 @@ static int add_stress_energy_parameters(Physics_T *const phys)
     
     /* conformal metric type: 
     // options:
-    // flat     => gConf  = delta_{ij},
-    // non_flat => gConf != delta_{ij}. */
-    Pset_default("Tij_NS_gConf","non_flat");
+    // flat    => gConf  = delta_{ij},
+    // general => a general gConf. */
+    Pset_default("Tij_NS_gConf","general");
   }
   else
     Error0(NO_OPTION);
@@ -74,7 +74,7 @@ static int add_stress_energy_tensor_fields(Physics_T *const phys)
   FUNC_TIC
   
   if (Pcmps("Tij_NS_decomposition","CTS") &&
-      Pcmps("Tij_NS_gConf","non_flat"))
+      Pcmps("Tij_NS_gConf","general"))
   {
     Tij_NS_idealfluid_CTS_gConf_add_fields(phys->grid);
   }
@@ -92,7 +92,7 @@ static int update_stress_energy_tensor(Physics_T *const phys)
   if (Pcmps("Tij_fluid","NS_ideal_fluid"))
   {
     if(Pcmps("Tij_NS_decomposition","CTS") &&
-       Pcmps("Tij_NS_gConf","non_flat"))
+       Pcmps("Tij_NS_gConf","general"))
     {
       Tij_NS_idealfluid_CTS_gConf_update(phys);
     }
