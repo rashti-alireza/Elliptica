@@ -9,64 +9,9 @@
 #include "bh_bh.h"
 
 
-/* adjust AH radius to meet a criteria for instant the mass is fixed */
-int bh_tune_black_hole_radius(Physics_T *const phys)
-{
-  FUNC_TIC
-  
-  IF_sval("tune_BH_radius_criteria","fix_irreducible_mass")
-  {
-    IF_sval("surface_type","perfect_s2")
-      tune_BH_radius_irreducible_mass_perfect_s2(phys);
-    else
-      Error0(NO_OPTION);
-  }
-  else
-    Error0(NO_OPTION);
-  
-  FUNC_TOC
-  return EXIT_SUCCESS;
-}
-
-/* find bh surface, mainly for grid setup */
-int bh_find_black_hole_surface(Physics_T *const phys)
-{
-  FUNC_TIC
-  
-  IF_sval("surface_type","perfect_s2")
-  {
-    find_bh_surface_perfect_s2(phys);
-  }
-  else
-    Error0(NO_OPTION);
-  
-  FUNC_TOC
-  return EXIT_SUCCESS;
-}
-
-/* set initial feature of blach holes, mostly used 
-// for the very first time that we need to make grid. */
-int bh_start_off(Physics_T *const phys)
-{
-  FUNC_TIC
-  
-  IF_sval("start_off","KerrSchild")
-  {
-    IF_sval("surface_type","perfect_s2")
-      start_off_KerrSchild_perfect_s2(phys);
-    else
-      Error0(NO_OPTION);
-  }
-  else
-    Error0(NO_OPTION);
-  
-  FUNC_TOC
-  return EXIT_SUCCESS;
-}
-
 /* use KerrSchild assuming pefect S2 to start off black hole
 // paramters and domain shape etc. */
-static void start_off_KerrSchild_perfect_s2(Physics_T *const phys)
+void bh_start_off_KerrSchild_perfect_s2(Physics_T *const phys)
 {
   FUNC_TIC
   
@@ -100,7 +45,7 @@ static void start_off_KerrSchild_perfect_s2(Physics_T *const phys)
 
 
 /* find BH surface and then set grid characteristic */
-static void find_bh_surface_perfect_s2(Physics_T *const phys)
+void bh_find_bh_surface_perfect_s2(Physics_T *const phys)
 {
   Grid_Char_T *grid_char = phys->grid_char;
   const unsigned lmax   = (unsigned)Geti("surface_Ylm_expansion_max_l");
@@ -136,7 +81,7 @@ static void find_bh_surface_perfect_s2(Physics_T *const phys)
 
 /* adjust the BH radius to acquire the desired BH irreducible mass
 // when the bh is a perfect sphere in x coords. */
-static void tune_BH_radius_irreducible_mass_perfect_s2(Physics_T *const phys)
+void bh_tune_BH_radius_irreducible_mass_perfect_s2(Physics_T *const phys)
 {
   const double target_bh_mass = Getd("irreducible_mass");
   const double current_r_bh   = Getd("perfect_S2_radius");
@@ -185,27 +130,4 @@ static void tune_BH_radius_irreducible_mass_perfect_s2(Physics_T *const phys)
   }
   
 }
-
-/* adding default parameters. */
-int bh_add_params(Physics_T *const phys)
-{
-  FUNC_TIC
-  
-  UNUSED(phys);
-  
-  FUNC_TOC
-  return EXIT_SUCCESS;
-}
-
-/* adding fields. */
-int bh_add_fields(Physics_T *const phys)
-{
-  FUNC_TIC
-  
-  assert(phys->grid);
-  
-  FUNC_TOC
-  return EXIT_SUCCESS;
-}
-
 
