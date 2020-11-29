@@ -183,6 +183,8 @@ static int star_add_fields(Physics_T *const phys)
   
   int ret = EXIT_SUCCESS;
   
+  assert(phys->grid);
+  
   if (Pcmps(P_"type","NS"))
   {
     if (Pcmps(P_"NS_fluid","ideal_fluid") && 

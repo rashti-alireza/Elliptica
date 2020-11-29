@@ -72,6 +72,8 @@ static int add_stress_energy_tensor_fields(Physics_T *const phys)
 {
   FUNC_TIC
   
+  assert(phys->grid);
+  
   if (Pcmps(P_"NS_decomposition","CTS") &&
       Pcmps(P_"NS_gConf","general"))
   {
