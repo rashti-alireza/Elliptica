@@ -17,13 +17,13 @@ void frda_add_fields_RicciConf(Grid_T *const grid)
 
 
   /* declaring: */
-  ADD_FIELD(trRicciConf)
-  ADD_FIELD(RicciConf_D0D1)
-  ADD_FIELD(RicciConf_D0D0)
-  ADD_FIELD(RicciConf_D0D2)
-  ADD_FIELD(RicciConf_D1D1)
-  ADD_FIELD(RicciConf_D1D2)
-  ADD_FIELD(RicciConf_D2D2)
+  ADD_AND_ALLOC_FIELD(trRicciConf)
+  ADD_AND_ALLOC_FIELD(RicciConf_D0D1)
+  ADD_AND_ALLOC_FIELD(RicciConf_D0D0)
+  ADD_AND_ALLOC_FIELD(RicciConf_D0D2)
+  ADD_AND_ALLOC_FIELD(RicciConf_D1D1)
+  ADD_AND_ALLOC_FIELD(RicciConf_D1D2)
+  ADD_AND_ALLOC_FIELD(RicciConf_D2D2)
 
 
  }

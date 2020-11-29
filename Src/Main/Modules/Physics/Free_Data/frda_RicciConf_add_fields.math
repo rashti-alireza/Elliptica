@@ -24,10 +24,10 @@ Declare =
 {
 
  # conformal Ricci scalar: igConf * RicciConf
- (obj = Field,name = trRicciConf, rank = 0, C_macro);
+ (obj = Field,name = trRicciConf, rank = 0, C_macro2);
 
  # confromal Ricci tensor
- (obj = Field,name = RicciConf, rank = DD, C_macro);
+ (obj = Field,name = RicciConf, rank = DD, C_macro2);
 
 }
 

@@ -24,15 +24,16 @@ Declare =
 {
 
  # gConf
- (obj = Field,name = gConf, rank = DD, C_macro);
+ (obj = Field,name = gConf, rank = DD, C_macro2);
 
  # igConf
- (obj = Field,name = igConf, rank = UU, C_macro);
+ (obj = Field,name = igConf, rank = UU, C_macro2);
 
  # dgConf
- (obj = Field,name = dgConf, rank = DDD, C_macro);
+ (obj = Field,name = dgConf, rank = DDD, C_macro2);
 
 }
+
 Symm[gConf(i,j)    = gConf(j,i)];
 Symm[igConf(i,j)   = igConf(j,i)];
 Symm[dgConf(i,j,k) = dgConf(j,i,k)];

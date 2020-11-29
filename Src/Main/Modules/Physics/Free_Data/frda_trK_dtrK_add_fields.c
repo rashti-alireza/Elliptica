@@ -17,10 +17,10 @@ void frda_add_fields_trK_dtrK(Grid_T *const grid)
 
 
   /* declaring: */
-  ADD_FIELD(trK)
-  ADD_FIELD(dtrK_D2)
-  ADD_FIELD(dtrK_D1)
-  ADD_FIELD(dtrK_D0)
+  ADD_AND_ALLOC_FIELD(trK)
+  ADD_AND_ALLOC_FIELD(dtrK_D2)
+  ADD_AND_ALLOC_FIELD(dtrK_D1)
+  ADD_AND_ALLOC_FIELD(dtrK_D0)
 
 
  }

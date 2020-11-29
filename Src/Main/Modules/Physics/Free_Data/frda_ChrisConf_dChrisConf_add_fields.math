@@ -24,10 +24,10 @@ Declare =
 {
 
  # ChrisConf
- (obj = Field,name = ChrisConf, rank = UDD, C_macro);
+ (obj = Field,name = ChrisConf, rank = UDD, C_macro2);
 
  # dChrisConf
- (obj = Field,name = dChrisConf, rank = UDDD, C_macro);
+ (obj = Field,name = dChrisConf, rank = UDDD, C_macro2);
 
 }
 

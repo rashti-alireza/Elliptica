@@ -24,10 +24,10 @@ Declare =
 {
 
  # trK
- (obj = Field,name = trK, rank = 0, C_macro);
+ (obj = Field,name = trK, rank = 0, C_macro2);
 
  # dtrK
- (obj = Field,name = dtrK, rank = D, C_macro);
+ (obj = Field,name = dtrK, rank = D, C_macro2);
 
 }
 
