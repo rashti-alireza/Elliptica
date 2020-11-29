@@ -4,6 +4,8 @@
 #undef y
 #undef z
 
+#define STR_LEN (99)
+
 #define get_v(stem,indices) \
  (sprintf(f_name,"%s_%s",stem,indices)?patch->fields[Ind(f_name)]->v:0)
  
@@ -49,6 +51,7 @@ void bbn_free_data_g_gI_analytic(
  double *(*get_v)(const char *const fname,void *params),
  void *params)
 {
+  char f_name[STR_LEN];
   const double BH_center_x = Pgetd("BH_center_x");
   const double BH_center_y = Pgetd("BH_center_y");
   const double BH_center_z = Pgetd("BH_center_z");
@@ -221,6 +224,8 @@ void bbn_free_data_dg_analytic(
 	double *(*get_v)(const char *const fname,void *params),
 	void *params)
 {
+
+  char f_name[STR_LEN];
   const double BH_center_x = Pgetd("BH_center_x");
   const double BH_center_y = Pgetd("BH_center_y");
   const double BH_center_z = Pgetd("BH_center_z");
@@ -470,6 +475,7 @@ void bbn_free_data_ddg_analytic(
 	void *params)
 {
 
+  char f_name[STR_LEN];
   const double BH_center_x = Pgetd("BH_center_x");
   const double BH_center_y = Pgetd("BH_center_y");
   const double BH_center_z = Pgetd("BH_center_z");
@@ -1599,6 +1605,8 @@ void bbn_free_data_dddg_analytic(
 	double *(*get_v)(const char *const fname,void *params),
 	void *params)
 {
+
+  char f_name[STR_LEN];
   const double BH_center_x = Pgetd("BH_center_x");
   const double BH_center_y = Pgetd("BH_center_y");
   const double BH_center_z = Pgetd("BH_center_z");

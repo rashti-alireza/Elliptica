@@ -226,6 +226,9 @@ Command["sed -i 's/_,/,/g'"];
 `print('')`
 `print('')`
 `print('')`
+`print('#define STR_LEN (99)')`
+`print('')`
+`print('')`
 `print('#define get_v(stem,indices) \\')`
 `print('(sprintf(f_name,"%s_%s",stem,indices)?patch->fields[Ind(f_name)]->v:0)')`
 `print('')`
@@ -282,6 +285,7 @@ Command["sed -i 's/_,/,/g'"];
 `print(' double *(*get_v)(const char *const fname,void *params),')`
 `print(' void *params)')`
 `print('{')`
+`print('  char f_name[STR_LEN];')`
 `print('  const double BH_center_x = Pgetd("BH_center_x");')`
 `print('  const double BH_center_y = Pgetd("BH_center_y");')`
 `print('  const double BH_center_z = Pgetd("BH_center_z");')`
@@ -394,6 +398,7 @@ Command["sed -i 's/_,/,/g'"];
 `print('	double *(*get_v)(const char *const fname,void *params),')`
 `print('	void *params)')`
 `print('{')`
+`print('  char f_name[STR_LEN];')`
 `print('  const double BH_center_x = Pgetd("BH_center_x");')`
 `print('  const double BH_center_y = Pgetd("BH_center_y");')`
 `print('  const double BH_center_z = Pgetd("BH_center_z");')`
@@ -492,6 +497,7 @@ Command["sed -i 's/_,/,/g'"];
 `print('	void *params)')`
 `print('{')`
 `print('')`
+`print('  char f_name[STR_LEN];')`
 `print('  const double BH_center_x = Pgetd("BH_center_x");')`
 `print('  const double BH_center_y = Pgetd("BH_center_y");')`
 `print('  const double BH_center_z = Pgetd("BH_center_z");')`
@@ -731,6 +737,7 @@ Command["sed -i 's/_,/,/g'"];
 `print('	double *(*get_v)(const char *const fname,void *params),')`
 `print('	void *params)')`
 `print('{')`
+`print('  char f_name[STR_LEN];')`
 `print('  const double BH_center_x = Pgetd("BH_center_x");')`
 `print('  const double BH_center_y = Pgetd("BH_center_y");')`
 `print('  const double BH_center_z = Pgetd("BH_center_z");')`
