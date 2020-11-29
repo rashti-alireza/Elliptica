@@ -894,12 +894,15 @@ void empty_field(Field_T *fld)
   fld->info = 0; 
 }
 
-/* freeing v2,v3 and info of a field */
-void free_coeffs(Field_T *fld)
+/* ->: return 0 means successful.
+//  freeing v2,v3 and info of a field */
+int free_coeffs(Field_T *fld)
 {
   free_info(fld);
   free_v2(fld);
   free_v3(fld);
+  
+  return 0;
 }
 
 
