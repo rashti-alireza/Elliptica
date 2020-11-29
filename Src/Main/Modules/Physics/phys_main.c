@@ -56,7 +56,7 @@ int physics_main(Physics_T *const phys,const cmd_T cmd,
     
     case FREE_DATA_ADD_PARAMS:
     case FREE_DATA_ADD_FIELDS:
-      ret = frd_main(phys);
+      ret = frda_main(phys);
     break;
     
     case SYS_TUNE_P_ADM:

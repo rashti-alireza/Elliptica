@@ -4,7 +4,7 @@
 /* forward declaration */
 struct PHYSICS_T;
 
-int frd_main(struct PHYSICS_T *const phys);
+int frda_main(struct PHYSICS_T *const phys);
 
 
 #endif

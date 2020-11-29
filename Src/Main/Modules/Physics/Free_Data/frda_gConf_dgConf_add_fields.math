@@ -1,0 +1,42 @@
+# Manifold or grid Dimension
+Dimension = 3;
+
+# point on manifold shown by:
+Point = ijk;
+
+C_macro  = ADD_FIELD(name);
+C_macro2 = ADD_AND_ALLOC_FIELD(name);
+
+`#include "frda_header.h"`
+``
+``
+
+`void frda_add_fields_gConf_dgConf_igConf(Grid_T *const grid);`
+`void frda_add_fields_gConf_dgConf_igConf(Grid_T *const grid)`
+`{`
+
+` unsigned p;`
+` FOR_ALL_PATCHES(p,grid)`
+` {`
+` Patch_T *patch = grid->patch[p];`
+``
+Declare =
+{
+
+ # gConf
+ (obj = Field,name = gConf, rank = DD, C_macro);
+
+ # igConf
+ (obj = Field,name = igConf, rank = UU, C_macro);
+
+ # dgConf
+ (obj = Field,name = dgConf, rank = DDD, C_macro);
+
+}
+Symm[gConf(i,j)    = gConf(j,i)];
+Symm[igConf(i,j)   = igConf(j,i)];
+Symm[dgConf(i,j,k) = dgConf(j,i,k)];
+
+` }`
+`}`
+
