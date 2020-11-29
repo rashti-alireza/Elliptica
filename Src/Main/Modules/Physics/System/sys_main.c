@@ -5,8 +5,7 @@
 
 /* physical system general affairs. one can add new different 
 // function readily by adding new parameter and the name of 
-// the function as shown.
-// note: in a project first mount must be called and then update. */
+// the function as shown. */
 
 #include "sys_main.h"
 

@@ -4,8 +4,7 @@
 */
 
 /* Tij general affairs. one can add new different function readily
-// by adding new parameter and the name of the function as shown. 
-// also in a project first mount must be called and then update. */
+// by adding new parameter and the name of the function as shown. */
 
 #include "Tij_main.h"
 
