@@ -43,6 +43,7 @@ MODULE += $(MODULE_DIR)/Physics/Star
 MODULE += $(MODULE_DIR)/Physics/BlackHole
 MODULE += $(MODULE_DIR)/Physics/System
 MODULE += $(MODULE_DIR)/Physics/Free_Data
+MODULE += $(MODULE_DIR)/Physics/ADM
 
 # one can comment out these module(s):
 #MODULE += $(MODULE_DIR)/Prints/pr_hdf5_silo

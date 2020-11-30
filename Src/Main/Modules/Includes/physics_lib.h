@@ -141,6 +141,14 @@ typedef enum CMD_T
  /* system related */
  SYS_TUNE_P_ADM,
  
+ /* adm related */
+ ADM_ADD_PARAMS,
+ ADM_ADD_FIELDS,
+ ADM_UPDATE_beta,
+ ADM_UPDATE_Kij,
+ ADM_UPDATE_gij,
+ ADM_COMPUTE_CONSTRAINTS,
+ 
  CMD_END
 }cmd_T;
 
