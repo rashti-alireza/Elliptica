@@ -75,7 +75,9 @@
 #define READ_v(xNAME)   const double *const xNAME = patch->fields[Ind(#xNAME)]->v;
 
 /* read only of field->v with specified stem => so the indices are adjusted. 
-// note: stem is a point to char. */
+// note: stem is a pointer to char.
+// in effect, it takes the indices (if any) of xNAME and trails to stem.
+// ex: xNAME = g_D0 and stem = "K" => read field with name "K_D0" */
 #define READ_v_STEM(xNAME,stem) \
  char field__name__##xNAME[MACRO__STR__LEN1] = {'\0'};\
  const char *const field__index__##xNAME   = strrchr(#xNAME,'_');\
@@ -85,7 +87,7 @@
  assert(xNAME);
 
 /* it empty_field and alloc memory for v with specified stem => so the indices are adjusted.
-// note: stem is a point to char. */
+// note: stem is a pointer to char. */
 #define REALLOC_v_WRITE_v_STEM(xNAME,stem) \
  char field__name__##xNAME[MACRO__STR__LEN1] = {'\0'};\
  const char *const field__index__##xNAME   = strrchr(#xNAME,'_');\
@@ -111,6 +113,15 @@
 /* take partial derivatives, 
 // NOTE: no semicolon at the end to be more flexible */
 #define dField_di(xNAME) partial_derivative(patch->fields[Ind(#xNAME)])
+
+/* take partial derivatives with arbitrary stem
+// note: stem is a point to char. */
+#define dField_di_STEM(xNAME,stem) \
+ char field__name__##xNAME[MACRO__STR__LEN1] = {'\0'};\
+ const char *const field__index__##xNAME   = strrchr(#xNAME,'_');\
+ sprintf(field__name__##xNAME,"%s%s",stem,field__index__##xNAME);\
+ partial_derivative(patch->fields[Ind(field__name__##xNAME)]);
+
 
 /* it compactifies the prepration of Jacobian of derivatives */
 #define JACOBIAN_DERIVATIVE(xNAME) const char *types_##xNAME[] = {#xNAME,0};\
