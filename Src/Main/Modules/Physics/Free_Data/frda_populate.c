@@ -8,8 +8,35 @@
 #include "frda_populate.h"
 
 
+/* compute confromal Ricci_{ij} and its trace */
+void frda_conformal_Ricci(Physics_T *const phys,
+                          const char *const ig,
+                          const char *const Chris,
+                          const char *const dChris,
+                          const char *const RicciConf,
+                          const char *const trRicciConf)
+{
+  FUNC_TIC
+  
+  Grid_T *const grid = mygrid(phys,".*");
+  unsigned p;
+  
+  OpenMP_Patch_Pragma(omp parallel for)
+  for (p = 0; p < grid->np; ++p)
+  {
+    Patch_T *patch = grid->patch[p];
+    Ricci_3d(patch,ig,Chris,dChris,RicciConf,trRicciConf);
+  }
+  
+  FUNC_TOC
+}
+
 /* compute Christoffel symbol compatible with given metric */
-void frda_compatible_Christoffel_symbol(Physics_T *const phys,const char *const ig,const char *const dg, const char *const Chris)
+void frda_compatible_Christoffel_symbol(Physics_T *const phys,
+                                        const char *const ig,
+                                        const char *const dg,
+                                        const char *const Chris
+                                       )
 {
   FUNC_TIC
   
@@ -27,7 +54,8 @@ void frda_compatible_Christoffel_symbol(Physics_T *const phys,const char *const 
 }
 
 /* compute 1st derivative Christoffel symbol */
-void frda_1st_derivative_Christoffel_symbol(Physics_T *const phys,const char *const dChris)
+void frda_1st_derivative_Christoffel_symbol(Physics_T *const phys,
+                                            const char *const dChris)
 {
   FUNC_TIC
   

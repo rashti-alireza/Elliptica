@@ -4,4 +4,12 @@
 void frda_populate_gConf_dgConf_igConf_KerrSchild(Physics_T *const phys);
 void frda_compatible_Christoffel_symbol(Physics_T *const phys,const char *const ig,const char *const dg, const char *const Chris);
 void frda_1st_derivative_Christoffel_symbol(Physics_T *const phys,const char *const dChris);
+void frda_conformal_Ricci(Physics_T *const phys,
+                          const char *const ig,
+                          const char *const Chris,
+                          const char *const dChris,
+                          const char *const RicciConf,
+                          const char *const trRicciConf);
+
+
 
