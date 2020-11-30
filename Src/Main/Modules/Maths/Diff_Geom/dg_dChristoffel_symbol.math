@@ -1,0 +1,40 @@
+# take first derivative of Christoffel symbols
+
+
+# Manifold or grid Dimension
+Dimension = 3;
+
+# point on manifold shown by:
+Point = ijk;
+
+C_macro3 = dChristoffel(name);
+
+`#include "dg_header.h"`
+``
+`#define STR_LEN (99)`
+``
+``
+`#define dChristoffel(x) indx = strrchr(#x,'_'); sprintf(fname,"%s%s",dChris,indx); \`
+`    partial_derivative(patch->fields[Ind(fname)]);`
+``
+``
+## stem of field name for Christoffel symbol is dChris
+`void dChristoffel_symbol_3d(Patch_T *const patch,const char *const dChris);`
+`void dChristoffel_symbol_3d(Patch_T *const patch,const char *const dChris)`
+`{`
+
+`char fname[STR_LEN] = {'\0'};`
+`const char *indx = 0;`
+
+Declare = 
+{
+ # Christoffer symbol value
+ (obj = Field,name = dChris, rank = UDDD, C_macro3);
+}
+
+# symmetries:
+Symm[dChris(i,j,k,l) = dChris(i,k,j,l)];
+
+
+`}`
+

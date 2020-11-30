@@ -6,7 +6,7 @@
 struct PATCH_T;
 
 void Christoffel_symbol_3d(struct PATCH_T *const patch,const char *const ig,const char *const dg,const char *const Chris);
-
+void dChristoffel_symbol_3d(Patch_T *const patch,const char *const dChris);
 
 #endif
 
