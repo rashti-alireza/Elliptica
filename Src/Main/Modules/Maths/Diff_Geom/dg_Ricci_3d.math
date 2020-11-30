@@ -1,0 +1,102 @@
+# Ricci tensor and scalar
+
+# Manifold or grid Dimension
+Dimension = 3;
+
+# point on manifold shown by:
+Point = ijk;
+
+# how to access values:
+C_macro1  = Read_v(name,ig);
+C_macro2  = Read_v(name,Chris);
+C_macro3  = Read_v(name,dChris);
+C_macro4  = Write_v(name,Ricci);
+C_macro5  = Write_v(name,trRicci);
+
+`#include "dg_header.h"`
+``
+`#define STR_LEN (99)`
+``
+`#define Read_v(name,stem) indx = strrchr(#name,'_');\`
+`  if(indx){sprintf(fname,"%s%s",stem,indx);}\` # for indexed objects
+`  else{sprintf(fname,"%s",stem);} \`           # for non indexed objects
+`  const double *const name = patch->fields[Ind(fname)]->v;assert(name);`
+``
+``
+`#define Write_v(name,stem) indx = strrchr(#name,'_');\`
+`  if(indx){sprintf(fname,"%s%s",stem,indx);}\` # for indexed objects
+`  else{sprintf(fname,"%s",stem);} \`           # for non indexed objects
+`    free_coeffs(patch->fields[Ind(fname)]); \`
+`    double *const name = patch->fields[Ind(fname)]->v; assert(name);`
+``
+``
+``
+`void Ricci_3d(Patch_T *const patch,const char *const ig,`
+`              const char *const Chris,const char *const dChris,`
+`              const char *const Ricci,const char *const trRicci);`
+``
+## takes the stem of inverse metric, Christoffel and derivative of Christoffel
+## then saves Ricci_{ij} and trRicci = ig^{ij} Ricci_{ij}.
+`void Ricci_3d(Patch_T *const patch,const char *const ig,`
+`              const char *const Chris,const char *const dChris,`
+`              const char *const Ricci,const char *const trRicci)`
+`{`
+
+`char fname[STR_LEN] = {'\0'};`
+`const char *indx = 0;`
+
+Declare = 
+{
+ # conformal metric inverse
+ (obj = Field,name = ig, rank = UU,       C_macro1);
+
+ # Christoffer symbol value
+ (obj = Field,name = Chris, rank = UDD,   C_macro2);
+
+ # partial derivative of conformal metric
+ (obj = Field,name = dChris, rank = UDDD, C_macro3);
+
+ # Ricci tensor
+ (obj = Field,name = Ricci, rank = DD,    C_macro4);
+
+ # trRicci tensor
+ (obj = Field,name = trR, rank = 0,       C_macro5);
+}
+
+# symmetries:
+Symm[ig(i,j)         = ig(j,i)];
+Symm[dChris(i,j,k,l) = dChris(i,k,j,l)];
+Symm[Chris(i,j,k)    = Chris(i,k,j)];
+Symm[Ricci(i,j)      = Ricci(j,i)];
+
+`  FOR_ALL_ijk`
+`  {`
+
+# Ricci calculation:
+#Ric(-a,-b)    = (dChris(c,a,b,i)*KD(-i,-c) - dChris(c,a,i,b)*KD(-i,-c) +\
+#                 Chris(d,a,b)*Chris(c,i,j)*KD(-i,-c)*KD(-j,-d) - \
+#                 Chris(d,a,i)*Chris(c,b,j)*KD(-i,-c)*KD(-j,-d) );
+
+Ric1(-a,-b)    =   dChris(c,ap,bp,i)*KD(-i,-c)*KD(-ap,a)*KD(-bp,b);
+Symm[Ric1(i,j) = Ric1(j,i)];
+
+Ric2(-a,-b)    = - dChris(c,a,i,b)*KD(-i,-c);
+Symm[Ric2(i,j) = Ric2(j,i)];
+
+Ric3(-a,-b)    =   Chris(d,a,b)*Chris(c,i,j)*KD(-i,-c)*KD(-j,-d);
+Symm[Ric3(i,j) = Ric3(j,i)];
+
+Ric4(-a,-b)    = - Chris(d,a,i)*Chris(c,b,j)*KD(-i,-c)*KD(-j,-d);
+Symm[Ric4(i,j) = Ric4(j,i)];
+
+Ric(-a,-b)     = Ric1(-a,-b)+Ric2(-a,-b)+Ric3(-a,-b)+Ric4(-a,-b);
+Symm[Ric(i,j)  = Ric(j,i)];
+
+R              = ig(a,b)*Ric(-a,-b);
+
+`trR[ijk] = R;`
+Cpopulate[Ricci       = Ric];
+
+`  }`
+`}`
+
