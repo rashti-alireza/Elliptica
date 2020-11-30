@@ -260,7 +260,7 @@ Command["sed -i 's/_,/,/g'"];
 ### according to the parameter and the given name. it is used for
 ### different name formats
 
-`print('void frda_free_data_g_analytic(')`
+`print('void frda_kerr_schild_g_analytic(')`
 `print('        Patch_T *const patch,')`
 `print('        const double BH_center_x,')`
 `print('        const double BH_center_y,')`
@@ -268,7 +268,7 @@ Command["sed -i 's/_,/,/g'"];
 `print('        const char *const stem);')`
 
 
-`print('void frda_free_data_dg_analytic(')`
+`print('void frda_kerr_schild_dg_analytic(')`
 `print('        Patch_T *const patch,')`
 `print('        const double BH_center_x,')`
 `print('        const double BH_center_y,')`
@@ -276,7 +276,7 @@ Command["sed -i 's/_,/,/g'"];
 `print('        const char *const stem);')`
 
 
-`print('void frda_free_data_ddg_analytic(')`
+`print('void frda_kerr_schild_ddg_analytic(')`
 `print('        Patch_T *const patch,')`
 `print('        const double BH_center_x,')`
 `print('        const double BH_center_y,')`
@@ -284,14 +284,14 @@ Command["sed -i 's/_,/,/g'"];
 `print('        const char *const stem);')`
 
 
-`print('void frda_free_data_dddg_analytic(')`
+`print('void frda_kerr_schild_dddg_analytic(')`
 `print('        Patch_T *const patch,')`
 `print('        const double BH_center_x,')`
 `print('        const double BH_center_y,')`
 `print('        const double BH_center_z,')`
 `print('        const char *const stem);')`
 
-`print('void frda_free_data_g_analytic(')`
+`print('void frda_kerr_schild_g_analytic(')`
 `print('        Patch_T *const patch,')`
 `print('        const double BH_center_x,')`
 `print('        const double BH_center_y,')`
@@ -345,7 +345,7 @@ Command["sed -i 's/_,/,/g'"];
 `print('    }')`
 `print('}')`
 ``
-`print('void frda_free_data_dg_analytic(')`
+`print('void frda_kerr_schild_dg_analytic(')`
 `print('        Patch_T *const patch,')`
 `print('        const double BH_center_x,')`
 `print('        const double BH_center_y,')`
@@ -443,7 +443,7 @@ Command["sed -i 's/_,/,/g'"];
 `print('}')`
 ``
 `print('')`
-`print('void frda_free_data_ddg_analytic(')`
+`print('void frda_kerr_schild_ddg_analytic(')`
 `print('        Patch_T *const patch,')`
 `print('        const double BH_center_x,')`
 `print('        const double BH_center_y,')`
@@ -683,7 +683,7 @@ Command["sed -i 's/_,/,/g'"];
 `print('  }	')`
 `print('}')`
 `print('')`
-`print('void frda_free_data_dddg_analytic(')`
+`print('void frda_kerr_schild_dddg_analytic(')`
 `print('        Patch_T *const patch,')`
 `print('        const double BH_center_x,')`
 `print('        const double BH_center_y,')`

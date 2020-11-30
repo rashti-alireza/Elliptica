@@ -87,28 +87,28 @@ extern double B2;/* B^i B_i */
 extern double r0;/* roll off radius */
 extern double Lambda;/* flat data => 0, kerr-schild => 1 */
 
-void frda_free_data_g_analytic(
+void frda_kerr_schild_g_analytic(
         Patch_T *const patch,
         const double BH_center_x,
         const double BH_center_y,
         const double BH_center_z,
         const char *const stem);
         
-void frda_free_data_dg_analytic(
+void frda_kerr_schild_dg_analytic(
         Patch_T *const patch,
         const double BH_center_x,
         const double BH_center_y,
         const double BH_center_z,
         const char *const stem);
 	
-void frda_free_data_ddg_analytic(
+void frda_kerr_schild_ddg_analytic(
         Patch_T *const patch,
         const double BH_center_x,
         const double BH_center_y,
         const double BH_center_z,
         const char *const stem);
 
-void frda_free_data_dddg_analytic(
+void frda_kerr_schild_dddg_analytic(
         Patch_T *const patch,
         const double BH_center_x,
         const double BH_center_y,
