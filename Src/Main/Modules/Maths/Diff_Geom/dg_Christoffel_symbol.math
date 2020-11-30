@@ -26,7 +26,9 @@ C_macro3 = write_Chris(name);
 `    double *const x = patch->fields[Ind(fname)]->v; assert(x);`
 ``
 ``
-
+## note: ig and dg are stems of inverse metric and derivative of metric
+## respectively, and Chris is the stem of Christoffel symbols that the
+## results will save in.
 `void Christoffel_symbol_3d(Patch_T *const patch,const char *const ig,const char *const dg,const char *const Chris);`
 `void Christoffel_symbol_3d(Patch_T *const patch,const char *const ig,const char *const dg,const char *const Chris)`
 `{`
