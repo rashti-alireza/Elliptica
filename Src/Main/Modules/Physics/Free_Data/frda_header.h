@@ -2,12 +2,13 @@
 #define frda_LIB_H
 
 #include "core_lib.h"
+#include "fields_lib.h"
 #include "maths_general_lib.h"
 #include "maths_calculus_lib.h"
+#include "maths_diff_geom_lib.h"
 #include "manifold_lib.h"
 #include "utilities_lib.h"
 #include "physics_lib.h"
-#include "fields_lib.h"
 
 /* parameter prefix */
 #define P_ "free_data_"
@@ -59,6 +60,7 @@ void frda_kerr_schild_dddg_analytic(
         const double BH_center_z,
         const char *const stem);
 
+void frda_compatible_Christoffel_symbol(Physics_T *const phys,const char *const ig,const char *const dg, const char *const Chris);
 
 #endif
 

@@ -8,8 +8,30 @@
 #include "frda_populate.h"
 
 
+/* compute Christoffel symbol compatible with given metric */
+void frda_compatible_Christoffel_symbol(Physics_T *const phys,const char *const ig,const char *const dg, const char *const Chris)
+{
+  FUNC_TIC
+  
+  Grid_T *const grid = mygrid(phys,".*");
+  unsigned p;
+  
+  OpenMP_Patch_Pragma(omp parallel for)
+  for (p = 0; p < grid->np; ++p)
+  {
+    Patch_T *patch = grid->patch[p];
+    Christoffel_symbol_3d(patch,ig,dg,Chris);
+  }
+  
+  FUNC_TOC
+}
+
+/* populate confromal metric, inverse of confromal metric 
+// and first order derivative of confromal metric. */
 void frda_populate_gConf_dgConf_igConf_KerrSchild(Physics_T *const phys)
 {
+  FUNC_TIC
+  
   Grid_T *const grid = mygrid(phys,".*");
   const double BHx = Getd("center_x");
   const double BHy = Getd("center_y");
@@ -43,4 +65,6 @@ void frda_populate_gConf_dgConf_igConf_KerrSchild(Physics_T *const phys)
       Matrix_Inverse_3x3_Symmetric_Field(gConf,D,igConf,U,ijk);
     }
   }
+  
+  FUNC_TOC
 }
