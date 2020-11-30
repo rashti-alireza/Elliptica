@@ -107,9 +107,10 @@ static int populate_free_data(Physics_T *const phys)
     frda_1st_derivative_Christoffel_symbol(phys,".*","dChrisConf");
     
     frda_conformal_Ricci(phys,".*","igConf","ChrisConf","dChrisConf",
-                              "RicciConf","trRicciConf");
+                         "RicciConf","trRicciConf");
     
-    //frda_extrinsic_curvature_KerrSchild(phys,".*",?);
+    frda_extrinsic_curvature_KerrSchild(phys,".*","igConf","ChrisConf",
+                                        "Kij","trK","dtrK");
   }
   else
     Error0(NO_OPTION);

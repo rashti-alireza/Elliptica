@@ -20,5 +20,14 @@ void frda_conformal_Ricci(Physics_T *const phys,
                           const char *const RicciConf,
                           const char *const trRicciConf);
 
+void frda_extrinsic_curvature_KerrSchild(Physics_T *const phys,
+                                         const char *const region,
+                                         const char *const ig,
+                                         const char *const Chris,
+                                         const char *const Kij,
+                                         const char *const trK,
+                                         const char *const dtrK);
 
 
+
+                                         

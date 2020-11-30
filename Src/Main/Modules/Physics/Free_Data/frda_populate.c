@@ -11,13 +11,34 @@
 void frda_extrinsic_curvature_KerrSchild(Physics_T *const phys,
                                          const char *const region,
                                          const char *const ig,
+                                         const char *const Chris,
+                                         const char *const Kij,
                                          const char *const trK,
                                          const char *const dtrK)
 {
   FUNC_TIC
   
-  Grid_T *const grid = mygrid(phys,".*");
+  Grid_T *const grid = mygrid(phys,region);
+  const double BHx   = Getd("center_x");
+  const double BHy   = Getd("center_y");
+  const double BHz   = Getd("center_z");
   unsigned p;
+  
+  frda_KerrSchild_set_params(phys);
+  
+  OpenMP_Patch_Pragma(omp parallel for)
+  for (p = 0; p < grid->np; ++p)
+  {
+    Patch_T *patch = grid->patch[p];
+    frda_Kij_trK_KerrSchild(patch,BHx,BHy,BHz,ig,Chris,Kij,trK);
+    
+    dField_di_STEM(dtrK_D0,dtrK);
+    dField_di_STEM(dtrK_D1,dtrK);
+    dField_di_STEM(dtrK_D2,dtrK);
+    
+  }
+  
+  FUNC_TOC
 }
 
 /* compute confromal Ricci_{ij} and its trace */
@@ -31,7 +52,7 @@ void frda_conformal_Ricci(Physics_T *const phys,
 {
   FUNC_TIC
   
-  Grid_T *const grid = mygrid(phys,".*");
+  Grid_T *const grid = mygrid(phys,region);
   unsigned p;
   
   OpenMP_Patch_Pragma(omp parallel for)
@@ -54,7 +75,7 @@ void frda_compatible_Christoffel_symbol(Physics_T *const phys,
 {
   FUNC_TIC
   
-  Grid_T *const grid = mygrid(phys,".*");
+  Grid_T *const grid = mygrid(phys,region);
   unsigned p;
   
   OpenMP_Patch_Pragma(omp parallel for)
@@ -74,7 +95,7 @@ void frda_1st_derivative_Christoffel_symbol(Physics_T *const phys,
 {
   FUNC_TIC
   
-  Grid_T *const grid = mygrid(phys,".*");
+  Grid_T *const grid = mygrid(phys,region);
   unsigned p;
   
   OpenMP_Patch_Pragma(omp parallel for)

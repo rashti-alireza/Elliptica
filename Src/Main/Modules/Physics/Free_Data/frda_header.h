@@ -77,5 +77,21 @@ void frda_conformal_Ricci(Physics_T *const phys,
                           const char *const RicciConf,
                           const char *const trRicciConf);
 
+void frda_Kij_trK_KerrSchild(Patch_T *const patch,
+ const double BH_center_x,const double BH_center_y,
+ const double BH_center_z,const char *const ig,
+ const char *const Chris,const char *const Kij,
+ const char *const trK);
+
+
+void frda_extrinsic_curvature_KerrSchild(Physics_T *const phys,
+                                         const char *const region,
+                                         const char *const ig,
+                                         const char *const Chris,
+                                         const char *const Kij,
+                                         const char *const trK,
+                                         const char *const dtrK);
+
+ 
 #endif
 
