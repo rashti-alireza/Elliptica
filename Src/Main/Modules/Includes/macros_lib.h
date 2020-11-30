@@ -1,6 +1,8 @@
 #ifndef macros_LIB_H
 #define macros_LIB_H
 
+/* str length */
+#define MACRO__STR__LEN1 (99)
 
 /* some useful messages and prints*/
 #define INCOMPLETE_FUNC "Other options have not been developed yet for this part!\n"
@@ -72,7 +74,30 @@
 /* access to the memory values READ ONLY */
 #define READ_v(xNAME)   const double *const xNAME = patch->fields[Ind(#xNAME)]->v;
 
-/* it frees v,v2,info of field and alloc memory for v */
+/* read only of field->v with specified stem => so the indices are adjusted. 
+// note: stem is a point to char. */
+#define READ_v_STEM(xNAME,stem) \
+ char field__name__##xNAME[MACRO__STR__LEN1] = {'\0'};\
+ const char *const field__index__##xNAME   = strrchr(#xNAME,'_');\
+ if (field__index__##xNAME) {sprintf(field__name__##xNAME,"%s%s",stem,field__index__##xNAME);}\
+ else                       {sprintf(field__name__##xNAME,"%s"  ,stem);}\
+ const double *const xNAME = patch->fields[Ind(field__name__##xNAME)]->v;\
+ assert(xNAME);
+
+/* it empty_field and alloc memory for v with specified stem => so the indices are adjusted.
+// note: stem is a point to char. */
+#define REALLOC_v_WRITE_v_STEM(xNAME,stem) \
+ char field__name__##xNAME[MACRO__STR__LEN1] = {'\0'};\
+ const char *const field__index__##xNAME   = strrchr(#xNAME,'_');\
+ if (field__index__##xNAME) {sprintf(field__name__##xNAME,"%s%s",stem,field__index__##xNAME);}\
+ else                       {sprintf(field__name__##xNAME,"%s"  ,stem);}\
+ const int _field_index_of_##xNAME = Ind(field__name__##xNAME);\
+ empty_field(patch->fields[_field_index_of_##xNAME]);\
+ patch->fields[_field_index_of_##xNAME]->v = alloc_double(patch->nn);\
+ double *const xNAME = patch->fields[_field_index_of_##xNAME]->v;\
+ assert(xNAME);
+
+/* it empty_field and alloc memory for v */
 #define REALLOC_v_WRITE_v(xNAME)   const int _field_index_of_##xNAME = Ind(#xNAME);\
                                    Field_T *const _F_##xNAME         = patch->fields[_field_index_of_##xNAME];\
                                    empty_field(_F_##xNAME);\
@@ -182,7 +207,6 @@
  }\
  else {func_updator;}\
 }
-
 
 #endif
 
