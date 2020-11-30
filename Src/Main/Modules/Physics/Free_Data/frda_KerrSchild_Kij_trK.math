@@ -1,0 +1,140 @@
+## computing extrinsic curvature K_{ij}, trK = ig^{ij}*K_{ij}
+## and dtrK for KerrSchild.
+
+# Manifold or grid Dimension
+Dimension = 3;
+
+# point on manifold shown by:
+Point = ijk;
+
+C_macro1  = READ_v_STEM(name,ig);
+C_macro2  = READ_v_STEM(name,Chris);
+C_macro3  = REALLOC_v_WRITE_v_STEM(name,Kij);
+C_macro4  = REALLOC_v_WRITE_v_STEM(name,trK);
+C_macro5  = add_alloc_get(name);
+
+
+`#include "frda_header.h"`
+`#include "frda_KerrSchild_header.h"`
+``
+``
+`#define add_alloc_get(name) ADD_AND_ALLOC_FIELD(name);WRITE_v(name);`
+``
+`#undef x`
+`#undef y`
+`#undef z`
+``
+`#define KS_func_pass_args_sed KS_func_pass_args_macro`
+``
+`#define KS_set_args \`
+`  struct Analytic_Func_Arg_S farg[1];\`
+`  farg->x = x;\`
+`  farg->y = y;\`
+`  farg->z = z;\`
+`  farg->X = frda_ks_X KS_func_pass_args_macro;\`
+`  farg->Y = frda_ks_Y KS_func_pass_args_macro;\`
+`  farg->Z = frda_ks_Z KS_func_pass_args_macro;\`
+`  farg->R = frda_ks_R KS_func_pass_args_macro;\`
+`  farg->dX_D0 = frda_ks_dX_D0 KS_func_pass_args_sed;\`
+`  farg->dX_D1 = frda_ks_dX_D1 KS_func_pass_args_sed;\`
+`  farg->dX_D2 = frda_ks_dX_D2 KS_func_pass_args_sed;\`
+`  farg->dY_D0 = frda_ks_dY_D0 KS_func_pass_args_sed;\`
+`  farg->dY_D1 = frda_ks_dY_D1 KS_func_pass_args_sed;\`
+`  farg->dY_D2 = frda_ks_dY_D2 KS_func_pass_args_sed;\`
+`  farg->dZ_D0 = frda_ks_dZ_D0 KS_func_pass_args_sed;\`
+`  farg->dZ_D1 = frda_ks_dZ_D1 KS_func_pass_args_sed;\`
+`  farg->dZ_D2 = frda_ks_dZ_D2 KS_func_pass_args_sed;`
+``
+``
+
+`void frda_Kij_trK_KerrSchild(Patch_T *const patch,`
+` const double BH_center_x,const double BH_center_y,`
+` const double BH_center_z,const char *const ig,`
+` const char *const Chris,const char *const Kij,`
+` const char *const trK);`
+``
+`void frda_Kij_trK_KerrSchild(Patch_T *const patch,`
+` const double BH_center_x,const double BH_center_y,`
+` const double BH_center_z,const char *const ig,`
+` const char *const Chris,const char *const Kij,`
+` const char *const trK)`
+``
+`{`
+
+Declare =
+{
+  # ig
+  (obj = Field,name = ig, rank = UU, C_macro1);
+
+  # Chris
+  (obj = Field,name = Chris, rank = UDD, C_macro2);
+
+  # Kij
+  (obj = Field,name = Kij, rank = DD, C_macro3);
+
+  # trK
+  (obj = Field,name = trKij, rank = 0, C_macro4);
+
+  # beta
+  (obj = Field,name = KS__beta, rank = D, C_macro5);
+
+  # beta
+  (obj = Field,name = dKS__beta, rank = DD, C_macro5);
+
+  # alpha
+  (obj = Field,name = KS__alpha, rank = 0, C_macro5);
+	
+}
+
+Symm[ig(i,j)      = ig(j,i)];
+Symm[Kij(i,j)     = Kij(j,i)];
+Symm[Chris(i,j,k) = Chris(i,k,j)];
+
+## populate beta_i and alpha
+
+`FOR_ALL_ijk`
+`{`
+`  double x,y,z;`
+`  x = patch->node[ijk]->x[0]-BH_center_x;`
+`  y = patch->node[ijk]->x[1]-BH_center_y;`
+`  z = patch->node[ijk]->x[2]-BH_center_z;`
+`  KS_set_args`
+``
+`  KS__beta_D0[ijk] = frda_ks_c(x,y,z)*frda_ks_kt(x, y, z)*frda_ks_k0(x, y, z);`
+`  KS__beta_D1[ijk] = frda_ks_c(x,y,z)*frda_ks_kt(x, y, z)*frda_ks_k1(x, y, z);`
+`  KS__beta_D2[ijk] = frda_ks_c(x,y,z)*frda_ks_kt(x, y, z)*frda_ks_k2(x, y, z);`
+`  KS__alpha[ijk]   = 1./sqrt(1+frda_ks_c(x,y,z)*frda_ks_k0(x, y, z)*frda_ks_k0(x, y, z));`
+
+`}`
+
+## take derivatives dbeta_i
+
+`dField_di(dKS__beta_D0D0);`
+`dField_di(dKS__beta_D0D1);`
+`dField_di(dKS__beta_D0D2);`
+``
+`dField_di(dKS__beta_D1D0);`
+`dField_di(dKS__beta_D1D1);`
+`dField_di(dKS__beta_D1D2);`
+``
+`dField_di(dKS__beta_D2D0);`
+`dField_di(dKS__beta_D2D1);`
+`dField_di(dKS__beta_D2D2);`
+``
+``
+## covariant derivatives
+`FOR_ALL_ijk`
+`{`
+     DB(-i,-j)       = dKS__beta(i,j)-Chris(l,i,j)*KS__beta(-l);
+     ksKij(-i,-j)    = (DB(i,j)+DB(j,i))/(2*KS__alpha);
+     Symm[ksKij(i,j) = ksKij(j,i)];
+     trk             = ig(i,j)*ksKij(-i,-j);
+
+     Cpopulate[Kij = ksKij];
+     `trKij[ijk] = trk;`
+`}`
+
+`remove_field_with_regex(patch,"^KS__");`
+`remove_field_with_regex(patch,"^dKS__");`
+
+`}`
