@@ -40,7 +40,7 @@ void frda_populate_gConf_dgConf_igConf_KerrSchild(Physics_T *const phys)
     
     FOR_ALL_ijk
     {
-      Matrix_Inverse_3x3_Symmetric_Field(gConf,D,igConf,ijk);
+      Matrix_Inverse_3x3_Symmetric_Field(gConf,D,igConf,U,ijk);
     }
   }
 }
