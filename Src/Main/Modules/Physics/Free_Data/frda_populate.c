@@ -7,9 +7,22 @@
 
 #include "frda_populate.h"
 
+/* compute trK = ig^{ij} K_{ij} and its partial derivatives dtrK */
+void frda_extrinsic_curvature_KerrSchild(Physics_T *const phys,
+                                         const char *const region,
+                                         const char *const ig,
+                                         const char *const trK,
+                                         const char *const dtrK)
+{
+  FUNC_TIC
+  
+  Grid_T *const grid = mygrid(phys,".*");
+  unsigned p;
+}
 
 /* compute confromal Ricci_{ij} and its trace */
 void frda_conformal_Ricci(Physics_T *const phys,
+                          const char *const region,
                           const char *const ig,
                           const char *const Chris,
                           const char *const dChris,
@@ -33,6 +46,7 @@ void frda_conformal_Ricci(Physics_T *const phys,
 
 /* compute Christoffel symbol compatible with given metric */
 void frda_compatible_Christoffel_symbol(Physics_T *const phys,
+                                        const char *const region,
                                         const char *const ig,
                                         const char *const dg,
                                         const char *const Chris
@@ -55,6 +69,7 @@ void frda_compatible_Christoffel_symbol(Physics_T *const phys,
 
 /* compute 1st derivative Christoffel symbol */
 void frda_1st_derivative_Christoffel_symbol(Physics_T *const phys,
+                                            const char *const region,
                                             const char *const dChris)
 {
   FUNC_TIC

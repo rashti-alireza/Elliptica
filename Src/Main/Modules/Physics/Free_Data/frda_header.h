@@ -67,9 +67,10 @@ void frda_kerr_schild_dddg_analytic(
         const double BH_center_z,
         const char *const stem);
 
-void frda_compatible_Christoffel_symbol(Physics_T *const phys,const char *const ig,const char *const dg, const char *const Chris);
-void frda_1st_derivative_Christoffel_symbol(Physics_T *const phys,const char *const dChris);
+void frda_compatible_Christoffel_symbol(Physics_T *const phys,const char *const region,const char *const ig,const char *const dg, const char *const Chris);
+void frda_1st_derivative_Christoffel_symbol(Physics_T *const phys,const char *const region,const char *const dChris);
 void frda_conformal_Ricci(Physics_T *const phys,
+                          const char *const region,
                           const char *const ig,
                           const char *const Chris,
                           const char *const dChris,

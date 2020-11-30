@@ -102,14 +102,14 @@ static int populate_free_data(Physics_T *const phys)
     frda_populate_gConf_dgConf_igConf_KerrSchild(phys,".*","gConf",
                                                 "igConf","dgConf");
     
-    frda_compatible_Christoffel_symbol(phys,"igConf","dgConf","ChrisConf");
+    frda_compatible_Christoffel_symbol(phys,".*","igConf","dgConf","ChrisConf");
     
-    frda_1st_derivative_Christoffel_symbol(phys,"dChrisConf");
+    frda_1st_derivative_Christoffel_symbol(phys,".*","dChrisConf");
     
-    frda_conformal_Ricci(phys,"igConf","ChrisConf","dChrisConf",
+    frda_conformal_Ricci(phys,".*","igConf","ChrisConf","dChrisConf",
                               "RicciConf","trRicciConf");
     
-    
+    //frda_extrinsic_curvature_KerrSchild(phys,".*",?);
   }
   else
     Error0(NO_OPTION);
