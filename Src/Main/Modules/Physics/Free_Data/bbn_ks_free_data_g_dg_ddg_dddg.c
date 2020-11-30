@@ -12,23 +12,23 @@
 #define KS_func_pass_args_sed KS_func_pass_args_macro
 
 #define KS_set_args \
-  struct KS_Arg_S ksa[1];\
-  ksa->x = x;\
-  ksa->y = y;\
-  ksa->z = z;\
-  ksa->X = frda_ks_X KS_func_pass_args_macro;\
-  ksa->Y = frda_ks_Y KS_func_pass_args_macro;\
-  ksa->Z = frda_ks_Z KS_func_pass_args_macro;\
-  ksa->R = frda_ks_R KS_func_pass_args_macro;\
-  ksa->dX_D0 = frda_ks_dX_D0 KS_func_pass_args_sed;\
-  ksa->dX_D1 = frda_ks_dX_D1 KS_func_pass_args_sed;\
-  ksa->dX_D2 = frda_ks_dX_D2 KS_func_pass_args_sed;\
-  ksa->dY_D0 = frda_ks_dY_D0 KS_func_pass_args_sed;\
-  ksa->dY_D1 = frda_ks_dY_D1 KS_func_pass_args_sed;\
-  ksa->dY_D2 = frda_ks_dY_D2 KS_func_pass_args_sed;\
-  ksa->dZ_D0 = frda_ks_dZ_D0 KS_func_pass_args_sed;\
-  ksa->dZ_D1 = frda_ks_dZ_D1 KS_func_pass_args_sed;\
-  ksa->dZ_D2 = frda_ks_dZ_D2 KS_func_pass_args_sed;
+  struct Analytic_Func_Arg_S farg[1];\
+  farg->x = x;\
+  farg->y = y;\
+  farg->z = z;\
+  farg->X = frda_ks_X KS_func_pass_args_macro;\
+  farg->Y = frda_ks_Y KS_func_pass_args_macro;\
+  farg->Z = frda_ks_Z KS_func_pass_args_macro;\
+  farg->R = frda_ks_R KS_func_pass_args_macro;\
+  farg->dX_D0 = frda_ks_dX_D0 KS_func_pass_args_sed;\
+  farg->dX_D1 = frda_ks_dX_D1 KS_func_pass_args_sed;\
+  farg->dX_D2 = frda_ks_dX_D2 KS_func_pass_args_sed;\
+  farg->dY_D0 = frda_ks_dY_D0 KS_func_pass_args_sed;\
+  farg->dY_D1 = frda_ks_dY_D1 KS_func_pass_args_sed;\
+  farg->dY_D2 = frda_ks_dY_D2 KS_func_pass_args_sed;\
+  farg->dZ_D0 = frda_ks_dZ_D0 KS_func_pass_args_sed;\
+  farg->dZ_D1 = frda_ks_dZ_D1 KS_func_pass_args_sed;\
+  farg->dZ_D2 = frda_ks_dZ_D2 KS_func_pass_args_sed;
 
 void frda_free_data_g_analytic(
         Patch_T *const patch,

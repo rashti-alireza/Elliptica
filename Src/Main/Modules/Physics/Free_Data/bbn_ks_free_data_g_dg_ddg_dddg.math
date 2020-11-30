@@ -237,23 +237,23 @@ Command["sed -i 's/_,/,/g'"];
 `print('#define KS_func_pass_args_sed KS_func_pass_args_macro')`
 `print('')`
 `print('#define KS_set_args \\')`
-`print('  struct KS_Arg_S ksa[1];\\')`
-`print('  ksa->x = x;\\')`
-`print('  ksa->y = y;\\')`
-`print('  ksa->z = z;\\')`
-`print('  ksa->X = frda_ks_X KS_func_pass_args_macro;\\')`
-`print('  ksa->Y = frda_ks_Y KS_func_pass_args_macro;\\')`
-`print('  ksa->Z = frda_ks_Z KS_func_pass_args_macro;\\')`
-`print('  ksa->R = frda_ks_R KS_func_pass_args_macro;\\')`
-`print('  ksa->dX_D0 = frda_ks_dX_D0 KS_func_pass_args_sed;\\')`
-`print('  ksa->dX_D1 = frda_ks_dX_D1 KS_func_pass_args_sed;\\')`
-`print('  ksa->dX_D2 = frda_ks_dX_D2 KS_func_pass_args_sed;\\')`
-`print('  ksa->dY_D0 = frda_ks_dY_D0 KS_func_pass_args_sed;\\')`
-`print('  ksa->dY_D1 = frda_ks_dY_D1 KS_func_pass_args_sed;\\')`
-`print('  ksa->dY_D2 = frda_ks_dY_D2 KS_func_pass_args_sed;\\')`
-`print('  ksa->dZ_D0 = frda_ks_dZ_D0 KS_func_pass_args_sed;\\')`
-`print('  ksa->dZ_D1 = frda_ks_dZ_D1 KS_func_pass_args_sed;\\')`
-`print('  ksa->dZ_D2 = frda_ks_dZ_D2 KS_func_pass_args_sed;')`
+`print('  struct Analytic_Func_Arg_S farg[1];\\')`
+`print('  farg->x = x;\\')`
+`print('  farg->y = y;\\')`
+`print('  farg->z = z;\\')`
+`print('  farg->X = frda_ks_X KS_func_pass_args_macro;\\')`
+`print('  farg->Y = frda_ks_Y KS_func_pass_args_macro;\\')`
+`print('  farg->Z = frda_ks_Z KS_func_pass_args_macro;\\')`
+`print('  farg->R = frda_ks_R KS_func_pass_args_macro;\\')`
+`print('  farg->dX_D0 = frda_ks_dX_D0 KS_func_pass_args_sed;\\')`
+`print('  farg->dX_D1 = frda_ks_dX_D1 KS_func_pass_args_sed;\\')`
+`print('  farg->dX_D2 = frda_ks_dX_D2 KS_func_pass_args_sed;\\')`
+`print('  farg->dY_D0 = frda_ks_dY_D0 KS_func_pass_args_sed;\\')`
+`print('  farg->dY_D1 = frda_ks_dY_D1 KS_func_pass_args_sed;\\')`
+`print('  farg->dY_D2 = frda_ks_dY_D2 KS_func_pass_args_sed;\\')`
+`print('  farg->dZ_D0 = frda_ks_dZ_D0 KS_func_pass_args_sed;\\')`
+`print('  farg->dZ_D1 = frda_ks_dZ_D1 KS_func_pass_args_sed;\\')`
+`print('  farg->dZ_D2 = frda_ks_dZ_D2 KS_func_pass_args_sed;')`
 `print('')`
 
 ### NOTE the function "get_v" is for geting the value of a field

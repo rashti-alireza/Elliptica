@@ -38,21 +38,11 @@
 /* function names and prototype */
 #define KS_func_def_macro(name) double KS_func_prefix(name)
 
-/* struct for args */
-struct KS_Arg_S
-{
-  double x,y,z;
-  double X,Y,Z,R;
-  double dX_D0,dX_D1,dX_D2;
-  double dY_D0,dY_D1,dY_D2;
-  double dZ_D0,dZ_D1,dZ_D2;
-};
-
 /* function args */
-#define KS_func_args_macro  (const struct KS_Arg_S *const ksa __attribute__((unused)))
+#define KS_func_args_macro  (const struct Analytic_Func_Arg_S *const farg __attribute__((unused)))
 
 /* pass special argument to each function */   
-#define KS_func_pass_args_macro  (ksa)
+#define KS_func_pass_args_macro  (farg)
 
 /* pass arguments for the following functions */
 #define frda_ks_rolloff(x,y,z)  (frda_ks_rolloff KS_func_pass_args_macro)
@@ -67,26 +57,26 @@ struct KS_Arg_S
 #define frda_ks_K1(x,y,z) (frda_ks_K1 KS_func_pass_args_macro)
 #define frda_ks_K2(x,y,z) (frda_ks_K2 KS_func_pass_args_macro)
 
-#define frda_ks_X(x,y,z)  (ksa->X)
-#define frda_ks_Y(x,y,z)  (ksa->Y)
-#define frda_ks_Z(x,y,z)  (ksa->Z)
-#define frda_ks_R(x,y,z)  (ksa->R)
+#define frda_ks_X(x,y,z)  (farg->X)
+#define frda_ks_Y(x,y,z)  (farg->Y)
+#define frda_ks_Z(x,y,z)  (farg->Z)
+#define frda_ks_R(x,y,z)  (farg->R)
 
-#define frda_ks_dX_D0_  (ksa->dX_D0)
-#define frda_ks_dX_D1_  (ksa->dX_D1)
-#define frda_ks_dX_D2_  (ksa->dX_D2)
+#define frda_ks_dX_D0_  (farg->dX_D0)
+#define frda_ks_dX_D1_  (farg->dX_D1)
+#define frda_ks_dX_D2_  (farg->dX_D2)
 
-#define frda_ks_dY_D0_  (ksa->dY_D0)
-#define frda_ks_dY_D1_  (ksa->dY_D1)
-#define frda_ks_dY_D2_  (ksa->dY_D2)
+#define frda_ks_dY_D0_  (farg->dY_D0)
+#define frda_ks_dY_D1_  (farg->dY_D1)
+#define frda_ks_dY_D2_  (farg->dY_D2)
 
-#define frda_ks_dZ_D0_  (ksa->dZ_D0)
-#define frda_ks_dZ_D1_  (ksa->dZ_D1)
-#define frda_ks_dZ_D2_  (ksa->dZ_D2)
+#define frda_ks_dZ_D0_  (farg->dZ_D0)
+#define frda_ks_dZ_D1_  (farg->dZ_D1)
+#define frda_ks_dZ_D2_  (farg->dZ_D2)
 
-#define x  (ksa->x)
-#define y  (ksa->y)
-#define z  (ksa->z)
+#define x  (farg->x)
+#define y  (farg->y)
+#define z  (farg->z)
 
 
 /* global variables */
